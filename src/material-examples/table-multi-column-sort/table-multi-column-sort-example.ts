@@ -1,5 +1,5 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {MatSort, MatTableDataSource} from '@angular/material';
+import {MatMultiSort, MatTableDataSource} from '@angular/material';
 
 export interface PeriodicElement {
   name: string;
@@ -33,7 +33,7 @@ const ELEMENT_DATA: PeriodicElement[] = [
 ];
 
 /**
- * @title Table with multi column sorting.
+ * @title Table with multi column sorting
  */
 @Component({
   selector: 'table-multi-column-sort-example',
@@ -44,9 +44,17 @@ export class TableMultiColumnSortExample implements OnInit {
   displayedColumns: string[] = ['position', 'name', 'weight', 'symbol', 'type'];
   dataSource = new MatTableDataSource<PeriodicElement>(ELEMENT_DATA);
 
-  @ViewChild(MatSort) sort: MatSort;
+  @ViewChild(MatMultiSort) sort: MatMultiSort;
 
   ngOnInit() {
     this.dataSource.sort = this.sort;
+  }
+
+  getSortCounter(position: number, count: number): string {
+    if (count < 2) {
+      return '';
+    }
+
+    return (position + 1).toString();
   }
 }

@@ -271,35 +271,6 @@ describe('MatSort', () => {
     expect(component.matSort.direction).toBe('asc');
   });
 
-  it('when multicolumn sort is enabled should preserve sorting state for previous columns', () => {
-    component.multiColumn = true;
-
-    // Detect any changes that were made in preparation for this test
-    fixture.detectChanges();
-
-    // Reset the sort to make sure there are no side affects from previous tests
-    component.matSort.active = '';
-    component.matSort.direction = {};
-
-    const expectedDirections: {[id: string]: SortDirection } = {
-      overrideDisableClear: 'asc',
-      defaultA: 'desc',
-      defaultB: 'asc',
-      overrideStart: 'desc'
-    };
-
-    const expectedColumns = ['overrideDisableClear', 'defaultA', 'defaultB', 'overrideStart'];
-
-    component.sort('overrideDisableClear');
-    component.sort('defaultA');
-    component.sort('defaultA');
-    component.sort('defaultB');
-    component.sort('overrideStart');
-
-    expect(component.matSort.active).toEqual(expectedColumns);
-    expect(component.matSort.direction).toEqual(expectedDirections);
-  });
-
   it('should throw an error if an MatSortable is not contained within an MatSort directive', () => {
     expect(() => TestBed.createComponent(MatSortHeaderMissingMatSortApp).detectChanges())
         .toThrowError(wrappedErrorMessage(getSortHeaderNotContainedWithinSortError()));
@@ -329,13 +300,6 @@ describe('MatSort', () => {
 
     testSingleColumnSortDirectionSequence(
         fixture, ['asc', 'desc'], 'overrideDisableClear');
-  });
-
-  it('should allow sorting by multiple columns', () => {
-    component.multiColumn = true;
-
-    testMultiColumnSortDirectionSequence(
-        fixture, ['defaultA', 'defaultB']);
   });
 
   it('should apply the aria-labels to the button', () => {
@@ -457,51 +421,6 @@ function testSingleColumnSortDirectionSequence(fixture: ComponentFixture<SimpleM
   expect(component.matSort.direction).toBe(expectedSequence[0]);
 }
 
-/**
- * Performs a sequence of sorting on a multiple columns to see if the sort directions are
- * consistent with expectations. Detects any changes in the fixture to reflect any changes in
- * the inputs and resets the MatSort to remove any side effects from previous tests.
- */
-function testMultiColumnSortDirectionSequence(fixture: ComponentFixture<SimpleMatSortApp>,
-                                               ids: SimpleMatSortAppColumnIds[]) {
-  const expectedSequence: SortDirection[] = ['asc', 'desc'];
-
-  // Detect any changes that were made in preparation for this sort sequence
-  fixture.detectChanges();
-
-  // Reset the sort to make sure there are no side affects from previous tests
-  const component = fixture.componentInstance;
-  component.matSort.active = '';
-  component.matSort.direction = {};
-
-  ids.forEach(id => {
-    // Run through the sequence to confirm the order
-    let actualSequence = expectedSequence.map(() => {
-      component.sort(id);
-
-      // Check that the sort event's active sort is consistent with the MatSort
-      expect(component.matSort.active).toContain(id);
-      expect(component.latestSortEvent.active).toContain(id);
-
-      // Check that the sort event's direction is consistent with the MatSort
-      expect(component.matSort.direction).toBe(component.latestSortEvent.direction);
-      return getDirection(component, id);
-    });
-    expect(actualSequence).toEqual(expectedSequence);
-
-    // Expect that performing one more sort will clear the sort.
-    component.sort(id);
-    expect(component.matSort.active).not.toContain(id);
-    expect(component.latestSortEvent.active).not.toContain(id);
-    expect(getDirection(component, id)).toBe('');
-  });
-}
-
-function getDirection(component: SimpleMatSortApp, id: string) {
-  let direction = component.matSort.direction as { [id: string]: SortDirection };
-  return direction[id];
-}
-
 /** Column IDs of the SimpleMatSortApp for typing of function params in the component (e.g. sort) */
 type SimpleMatSortAppColumnIds = 'defaultA' | 'defaultB' | 'overrideStart' | 'overrideDisableClear';
 
@@ -513,7 +432,6 @@ type SimpleMatSortAppColumnIds = 'defaultA' | 'defaultB' | 'overrideStart' | 'ov
          [matSortStart]="start"
          [matSortDirection]="direction"
          [matSortDisableClear]="disableClear"
-         [matMultiColumn]="multiColumn"
          (matSortChange)="latestSortEvent = $event">
       <div id="defaultA"
            #defaultA
@@ -549,7 +467,6 @@ class SimpleMatSortApp {
   disableClear: boolean;
   disabledColumnSort = false;
   disableAllSort = false;
-  multiColumn = false;
 
   @ViewChild(MatSort) matSort: MatSort;
   @ViewChild('defaultA') defaultA: MatSortHeader;

@@ -17,7 +17,7 @@ import {
   Subscription
 } from 'rxjs';
 import {MatPaginator, PageEvent} from '@angular/material/paginator';
-import {MatSort, Sort} from '@angular/material/sort';
+import {MatSort, MatMultiSort, Sort} from '@angular/material/sort';
 import {map} from 'rxjs/operators';
 
 /**
@@ -73,12 +73,12 @@ export class MatTableDataSource<T> extends DataSource<T> {
    * Instance of the MatSort directive used by the table to control its sorting. Sort changes
    * emitted by the MatSort will trigger an update to the table's rendered data.
    */
-  get sort(): MatSort | null { return this._sort; }
-  set sort(sort: MatSort|null) {
+  get sort(): MatSort | MatMultiSort | null { return this._sort; }
+  set sort(sort: MatSort|MatMultiSort|null) {
     this._sort = sort;
     this._updateChangeSubscription();
   }
-  private _sort: MatSort|null;
+  private _sort: MatSort|MatMultiSort|null;
 
   /**
    * Instance of the MatPaginator component used by the table to control what page of the data is
@@ -130,7 +130,8 @@ export class MatTableDataSource<T> extends DataSource<T> {
    * @param data The array of data that should be sorted.
    * @param sort The connected MatSort that holds the current sort state.
    */
-  sortData: ((data: T[], sort: MatSort) => T[]) = (data: T[], sort: MatSort): T[] => {
+  sortData: ((data: T[], sort: MatSort | MatMultiSort) => T[]) =
+      (data: T[], sort: MatSort | MatMultiSort): T[] => {
 
     const active = Array.isArray(sort.active) ? sort.active : [sort.active];
     if (!active[0]) { return data; }
