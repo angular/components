@@ -20,6 +20,7 @@ import {
   MatNativeDateModule,
   NativeDateModule,
   SEP,
+  MatSingleDateSelection,
 } from '@angular/material/core';
 import {MatFormField, MatFormFieldModule} from '@angular/material/form-field';
 import {By} from '@angular/platform-browser';
