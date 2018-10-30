@@ -61,6 +61,7 @@ export interface CdkDropListContainer<T = any> {
   _getSiblingContainerFromPosition(item: CdkDrag, x: number, y: number):
       CdkDropListContainer | null;
   _canReturnItem(item: CdkDrag, x: number, y: number): boolean;
+  _isOverContainer(x: number, y: number): boolean;
 }
 
 /**

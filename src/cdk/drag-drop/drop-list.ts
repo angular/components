@@ -330,6 +330,16 @@ export class CdkDropList<T = any> implements OnInit, OnDestroy {
     return isInsideClientRect(this._positionCache.self, x, y) && this.enterPredicate(item, this);
   }
 
+ /**
+   * Checks whether an item that is currently over the container,
+   * @param item Item that is being checked.
+   * @param x Position of the item along the X axis.
+   * @param y Position of the item along the Y axis.
+   */
+  _isOverContainer(x: number, y: number): boolean {
+    return isInsideClientRect(this._positionCache.self, x, y);
+  }
+
   /** Refreshes the position cache of the items and sibling containers. */
   private _cachePositions() {
     const isHorizontal = this.orientation === 'horizontal';
