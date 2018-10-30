@@ -133,7 +133,6 @@ export class MatDatepickerContent<D> extends _MatDatepickerContentMixinBase
 // if angular adds support for `exportAs: '$implicit'` on directives.
 /**
  * Component responsible for managing the datepicker popup/dialog.
- * @dynamic
  */
 @Component({
   moduleId: module.id,
@@ -235,9 +234,10 @@ export class MatDatepicker<D> implements OnDestroy, CanColor {
   id: string = `mat-datepicker-${datepickerUid++}`;
 
   /** The currently selected date. */
-  get _selected(): MatDateSelection<D> { return this._validSelected; }
-  set _selected(value: MatDateSelection<D>) { this._validSelected = value; }
-  private _validSelected: MatDateSelection<D> = new MatSingleDateSelection<D>(this._dateAdapter);
+  get _selected(): D | null { return this._dateSelection.asDate(); }
+  set _selected(value: D | null) {
+    this._dateSelection.add(value);
+  }
 
   /** The minimum selectable date. */
   get _minDate(): D | null {
@@ -278,7 +278,7 @@ export class MatDatepicker<D> implements OnDestroy, CanColor {
   readonly _disabledChange = new Subject<boolean>();
 
   /** Emits new selected date when selected date changes. */
-  readonly _selectedChanged = new Subject<MatDateSelection<D>>();
+  readonly _selectedChanged = new Subject<D>();
 
   constructor(private _dialog: MatDialog,
               private _overlay: Overlay,
@@ -309,10 +309,10 @@ export class MatDatepicker<D> implements OnDestroy, CanColor {
 
   /** Selects the given date */
   select(date: D): void {
-    let oldValue = this._selected.getFirstSelectedDate();
-    if (!this._dateAdapter.sameDate(oldValue, this._selected.getFirstSelectedDate())) {
-      this._selected.add(date);
-      this._selectedChanged.next(this._selected);
+    let oldValue = this._dateSelection.asDate();
+    if (!this._dateAdapter.sameDate(oldValue, this._dateSelection.asDate())) {
+      this._dateSelection.add(date);
+      this._selectedChanged.next(this._dateSelection.asDate() || undefined);
     }
   }
 

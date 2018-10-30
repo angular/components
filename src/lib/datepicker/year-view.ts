@@ -38,8 +38,8 @@ import {
   MAT_DATE_FORMATS,
   MatDateFormats,
   MatDateSelection,
-  MAT_SINGLE_DATE_SELECTION_MODEL_FACTORY,
-  DateRange
+  DateRange,
+  MAT_SINGLE_DATE_SELECTION_MODEL_PROVIDER
 } from '@angular/material/core';
 import {Directionality} from '@angular/cdk/bidi';
 import {MatCalendarBody, MatCalendarCell} from './calendar-body';
@@ -57,11 +57,7 @@ import {Subscription} from 'rxjs';
   exportAs: 'matYearView',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [{
-    provide: MatDateSelection,
-    deps: [[new Optional(), new SkipSelf(), MatDateSelection], DateAdapter],
-    useFactory: MAT_SINGLE_DATE_SELECTION_MODEL_FACTORY,
-  }]
+  providers: [MAT_SINGLE_DATE_SELECTION_MODEL_PROVIDER]
 })
 export class MatYearView<D> implements AfterContentInit, OnDestroy {
   /** The date to display in this year view (everything other than the year is ignored). */

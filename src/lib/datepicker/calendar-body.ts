@@ -19,6 +19,7 @@ import {
 import {take} from 'rxjs/operators';
 import {
   MatDateSelection,
+  DateAdapter,
   DateRange,
   MAT_SINGLE_DATE_SELECTION_MODEL_PROVIDER
 } from '@angular/material/core';
@@ -72,9 +73,18 @@ export class MatCalendarBody<D> {
    * @breaking-change 9.0.0 remove selected value.
    */
   @Input()
-  get selectedValue(): D { return this._selectionModel.getFirstSelectedDate()!; }
-  set selectedValue(value: D) {
-    this._selectionModel.add(value);
+  get selectedValue(): number {
+    const date = this._selectionModel.getFirstSelectedDate();
+    return date ? this._dateAdapter.getDate(date) : NaN;
+  }
+  set selectedValue(value: number) {
+    const date = this._selectionModel.getFirstSelectedDate();
+    if (date) {
+      const year = this._dateAdapter.getYear(date);
+      const month = this._dateAdapter.getMonth(date);
+      const clone = this._dateAdapter.createDate(year, month, value);
+      this._selectionModel.add(clone);
+    }
   }
 
   /** The minimum number of free cells needed to fit the label in the first row. */
@@ -97,7 +107,8 @@ export class MatCalendarBody<D> {
 
   constructor(private _elementRef: ElementRef<HTMLElement>,
               private _ngZone: NgZone,
-              private _selectionModel: MatDateSelection<D>) { }
+              private _dateAdapter: DateAdapter<D>,
+              readonly _selectionModel: MatDateSelection<D>) { }
 
   _cellClicked(cell: MatCalendarCell<D>): void {
     if (cell.enabled) {

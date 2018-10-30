@@ -149,9 +149,7 @@ export class MatDatepickerInput<D> implements ControlValueAccessor, OnDestroy, V
 
     this._lastValueValid = !this._selectionModel || this._selectionModel.isValid();
 
-    if (this._selectionModel) {
-      this._formatValue(this._selectionModel.getFirstSelectedDate());
-    }
+    this._formatValue(this._selectionModel.getFirstSelectedDate());
 
     if (!this._dateAdapter.sameDate(value, oldDate)) {
       this._valueChange.emit(value);

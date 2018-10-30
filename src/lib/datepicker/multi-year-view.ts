@@ -35,8 +35,8 @@ import {
 import {
   DateAdapter,
   MatDateSelection,
-  MAT_SINGLE_DATE_SELECTION_MODEL_FACTORY,
-  DateRange
+  DateRange,
+  MAT_SINGLE_DATE_SELECTION_MODEL_PROVIDER
 } from '@angular/material/core';
 import {Directionality} from '@angular/cdk/bidi';
 import {MatCalendarBody, MatCalendarCell} from './calendar-body';
@@ -59,11 +59,7 @@ export const yearsPerRow = 4;
   exportAs: 'matMultiYearView',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [{
-    provide: MatDateSelection,
-    deps: [[new Optional(), new SkipSelf(), MatDateSelection], DateAdapter],
-    useFactory: MAT_SINGLE_DATE_SELECTION_MODEL_FACTORY,
-  }]
+  providers: [MAT_SINGLE_DATE_SELECTION_MODEL_PROVIDER]
 })
 export class MatMultiYearView<D> implements AfterContentInit, OnDestroy {
   /** The date to display in this multi-year view (everything other than the year is ignored). */
