@@ -15,7 +15,6 @@ import {
   PositionStrategy,
   ScrollStrategy,
 } from '@angular/cdk/overlay';
-import {TemplatePortal} from '@angular/cdk/portal';
 import {DOCUMENT} from '@angular/common';
 import {filter, take, switchMap, delay, tap, map} from 'rxjs/operators';
 import {
@@ -118,6 +117,7 @@ export class MatAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
   private _overlayRef: OverlayRef | null;
   private _componentDestroyed = false;
   private _autocompleteDisabled = false;
+  private _autocomplete: MatAutocomplete;
   private _scrollStrategy: () => ScrollStrategy;
 
   /** Old value of the native input. Used to work around issues with the `input` event on IE. */
@@ -142,8 +142,6 @@ export class MatAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
    */
   private _canOpenOnNextFocus = true;
 
-  private _currentPortalAttached: TemplatePortal | null = null;
-
   /** Stream of keyboard events that can close the panel. */
   private readonly _closeKeyEventStream = new Subject<void>();
 
@@ -166,7 +164,15 @@ export class MatAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
   _onTouched = () => {};
 
   /** The autocomplete panel to be attached to this trigger. */
-  @Input('matAutocomplete') autocomplete: MatAutocomplete;
+  @Input('matAutocomplete')
+  get autocomplete(): MatAutocomplete { return this._autocomplete; }
+  set autocomplete(value: MatAutocomplete) {
+    this._autocomplete = value;
+    if (this._overlayRef) {
+      this._overlayRef.detach();
+    }
+    this._closingActionsSubscription.unsubscribe();
+  }
 
   /**
    * Reference relative to which to position the autocomplete panel.
@@ -249,7 +255,6 @@ export class MatAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
     this.autocomplete._isOpen = this._overlayAttached = false;
 
     if (this._overlayRef && this._overlayRef.hasAttached()) {
-      this._currentPortalAttached = null;
       this._overlayRef.detach();
       this._closingActionsSubscription.unsubscribe();
     }
@@ -591,11 +596,6 @@ export class MatAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
           }
         });
       }
-    } else if (this._overlayRef.hasAttached() &&
-      this._currentPortalAttached !== this.autocomplete._portal) {
-      this._currentPortalAttached = null;
-      this._overlayRef.detach();
-      this._closingActionsSubscription.unsubscribe();
     } else {
       // Update the panel width and direction, in case anything has changed.
       this._overlayRef.updateSize({width: this._getPanelWidth()});
@@ -603,7 +603,6 @@ export class MatAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
 
     if (this._overlayRef && !this._overlayRef.hasAttached()) {
       this._overlayRef.attach(this.autocomplete._portal);
-      this._currentPortalAttached = this.autocomplete._portal;
       this._closingActionsSubscription = this._subscribeToClosingActions();
     }
 
