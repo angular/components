@@ -19,6 +19,12 @@ import {
   SimpleChanges,
 } from '@angular/core';
 import {take} from 'rxjs/operators';
+import {
+  MatDateSelection,
+  DateAdapter,
+  DateRange,
+  MAT_SINGLE_DATE_SELECTION_MODEL_PROVIDER
+} from '@angular/material/core';
 
 /**
  * Extra CSS classes that can be associated with a calendar cell.
@@ -28,14 +34,17 @@ export type MatCalendarCellCssClasses = string | string[] | Set<string> | {[key:
 /**
  * An internal class that represents the data corresponding to a single calendar cell.
  * @docs-private
+ * @breaking-change 9.0.0 remove default
  */
-export class MatCalendarCell {
+export class MatCalendarCell<D = any> {
   constructor(public value: number,
               public displayValue: string,
               public ariaLabel: string,
               public enabled: boolean,
+              public range: DateRange<D>,
               public cssClasses?: MatCalendarCellCssClasses) {}
-}
+
+
 
 
 /**
@@ -55,19 +64,37 @@ export class MatCalendarCell {
   exportAs: 'matCalendarBody',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [MAT_SINGLE_DATE_SELECTION_MODEL_PROVIDER],
 })
-export class MatCalendarBody implements OnChanges {
+export class MatCalendarBody<D> implements OnChanges {
   /** The label for the table. (e.g. "Jan 2017"). */
   @Input() label: string;
 
   /** The cells to display in the table. */
-  @Input() rows: MatCalendarCell[][];
+  @Input() rows: MatCalendarCell<D>[][];
 
   /** The value in the table that corresponds to today. */
   @Input() todayValue: number;
 
-  /** The value in the table that is currently selected. */
-  @Input() selectedValue: number;
+  /**
+   * The value in the table that is currently selected.
+   * @deprecated use `selectionModel`
+   * @breaking-change 9.0.0 remove selected value.
+   */
+  @Input()
+  get selectedValue(): number {
+    const date = this._selectionModel.getFirstSelectedDate();
+    return date ? this._dateAdapter.getDate(date) : NaN;
+  }
+  set selectedValue(value: number) {
+    const date = this._selectionModel.getFirstSelectedDate();
+    if (date) {
+      const year = this._dateAdapter.getYear(date);
+      const month = this._dateAdapter.getMonth(date);
+      const clone = this._dateAdapter.createDate(year, month, value);
+      this._selectionModel.add(clone);
+    }
+  }
 
   /** The minimum number of free cells needed to fit the label in the first row. */
   @Input() labelMinRequiredCells: number;
@@ -96,9 +123,12 @@ export class MatCalendarBody implements OnChanges {
   /** Width of an individual cell. */
   _cellWidth: string;
 
-  constructor(private _elementRef: ElementRef<HTMLElement>, private _ngZone: NgZone) { }
+  constructor(private _elementRef: ElementRef<HTMLElement>,
+              private _ngZone: NgZone,
+              private _dateAdapter: DateAdapter<D>,
+              readonly _selectionModel: MatDateSelection<D>) { }
 
-  _cellClicked(cell: MatCalendarCell): void {
+  _cellClicked(cell: MatCalendarCell<D>): void {
     if (cell.enabled) {
       this.selectedValueChange.emit(cell.value);
     }
@@ -130,6 +160,10 @@ export class MatCalendarBody implements OnChanges {
     }
 
     return cellNumber == this.activeCell;
+  }
+
+  _isSelected(item: MatCalendarCell<D>): boolean {
+    return this._selectionModel.overlaps(item.range);
   }
 
   /** Focuses the active cell after the microtask queue is empty. */
