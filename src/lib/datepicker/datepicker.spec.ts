@@ -12,7 +12,7 @@ import {
 import {Component, FactoryProvider, Type, ValueProvider, ViewChild} from '@angular/core';
 import {ComponentFixture, fakeAsync, flush, inject, TestBed, tick} from '@angular/core/testing';
 import {FormControl, FormsModule, NgModel, ReactiveFormsModule} from '@angular/forms';
-import {MAT_DATE_LOCALE, MatNativeDateModule, NativeDateModule} from '@angular/material/core';
+import {MAT_DATE_LOCALE, MatNativeDateModule, NativeDateModule, MatSingleDateSelection} from '@angular/material/core';
 import {MatFormField, MatFormFieldModule} from '@angular/material/form-field';
 import {DEC, JAN, JUL, JUN, SEP} from '@angular/material/testing';
 import {By} from '@angular/platform-browser';

@@ -139,5 +139,12 @@ class StandardCalendarBody {
 }
 
 function createCell(value: number, cellClasses?: MatCalendarCellCssClasses) {
-  return new MatCalendarCell(value, `${value}`, `${value}-label`, true, cellClasses);
+  return new MatCalendarCell(
+    value,
+    `${value}`,
+    `${value}-label`,
+    true,
+    {start: new Date(value), end: new Date(value)},
+    cellClasses
+  );
 }
