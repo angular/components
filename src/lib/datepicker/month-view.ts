@@ -30,11 +30,21 @@ import {
   Output,
   ViewEncapsulation,
   ViewChild,
+  SkipSelf,
+  OnDestroy,
 } from '@angular/core';
-import {DateAdapter, MAT_DATE_FORMATS, MatDateFormats} from '@angular/material/core';
+import {
+  DateAdapter,
+  MAT_DATE_FORMATS,
+  MatDateFormats,
+  MatDateSelection,
+  DateRange,
+  MAT_SINGLE_DATE_SELECTION_MODEL_PROVIDER
+} from '@angular/material/core';
 import {Directionality} from '@angular/cdk/bidi';
 import {MatCalendarBody, MatCalendarCell, MatCalendarCellCssClasses} from './calendar-body';
 import {createMissingDateImplError} from './datepicker-errors';
+import {Subscription} from 'rxjs';
 
 
 const DAYS_PER_WEEK = 7;
@@ -50,9 +60,10 @@ const DAYS_PER_WEEK = 7;
   templateUrl: 'month-view.html',
   exportAs: 'matMonthView',
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [MAT_SINGLE_DATE_SELECTION_MODEL_PROVIDER]
 })
-export class MatMonthView<D> implements AfterContentInit {
+export class MatMonthView<D> implements AfterContentInit, OnDestroy {
   /**
    * The date to display in this month view (everything other than the month and year is ignored).
    */
@@ -69,14 +80,17 @@ export class MatMonthView<D> implements AfterContentInit {
   }
   private _activeDate: D;
 
-  /** The currently selected date. */
+  /**
+   * The currently selected date.
+   * @depricated Use `selectionModel`.
+   * @breaking-change 9.0.0 remove selected.
+   */
   @Input()
-  get selected(): D | null { return this._selected; }
+  get selected(): D | null { return this._selectionModel.getFirstSelectedDate(); }
   set selected(value: D | null) {
-    this._selected = this._getValidDateOrNull(this._dateAdapter.deserialize(value));
-    this._selectedDate = this._getDateInCurrentMonth(this._selected);
+    this._selectionModel.add(value);
+    this.extractDate();
   }
-  private _selected: D | null;
 
   /** The minimum selectable date. */
   @Input()
@@ -110,13 +124,13 @@ export class MatMonthView<D> implements AfterContentInit {
   @Output() readonly activeDateChange: EventEmitter<D> = new EventEmitter<D>();
 
   /** The body of calendar table */
-  @ViewChild(MatCalendarBody) _matCalendarBody: MatCalendarBody;
+  @ViewChild(MatCalendarBody) _matCalendarBody: MatCalendarBody<D>;
 
   /** The label for this month (e.g. "January 2017"). */
   _monthLabel: string;
 
   /** Grid of calendar cells representing the dates of the month. */
-  _weeks: MatCalendarCell[][];
+  _weeks: MatCalendarCell<D>[][];
 
   /** The number of blank cells in the first row before the 1st of the month. */
   _firstWeekOffset: number;
@@ -133,7 +147,10 @@ export class MatMonthView<D> implements AfterContentInit {
   /** The names of the weekdays. */
   _weekdays: {long: string, narrow: string}[];
 
+  private dateSubscription: Subscription;
+
   constructor(private _changeDetectorRef: ChangeDetectorRef,
+              readonly _selectionModel: MatDateSelection<D>,
               @Optional() @Inject(MAT_DATE_FORMATS) private _dateFormats: MatDateFormats,
               @Optional() public _dateAdapter: DateAdapter<D>,
               @Optional() private _dir?: Directionality) {
@@ -155,10 +172,17 @@ export class MatMonthView<D> implements AfterContentInit {
     this._weekdays = weekdays.slice(firstDayOfWeek).concat(weekdays.slice(0, firstDayOfWeek));
 
     this._activeDate = this._dateAdapter.today();
+
+    this.extractDate();
+    this.dateSubscription = _selectionModel.valueChanges.subscribe(() => this.extractDate());
   }
 
   ngAfterContentInit() {
     this._init();
+  }
+
+  ngOnDestroy() {
+    this.dateSubscription.unsubscribe();
   }
 
   /** Handles when a new date is selected. */
@@ -168,10 +192,13 @@ export class MatMonthView<D> implements AfterContentInit {
       const selectedMonth = this._dateAdapter.getMonth(this.activeDate);
       const selectedDate = this._dateAdapter.createDate(selectedYear, selectedMonth, date);
 
+      this._selectionModel.add(selectedDate);
       this.selectedChange.emit(selectedDate);
     }
 
-    this._userSelection.emit();
+    if (this._selectionModel.isComplete()) {
+      this._userSelection.emit();
+    }
   }
 
   /** Handles keydown events on the calendar body when calendar is in month view. */
@@ -240,7 +267,7 @@ export class MatMonthView<D> implements AfterContentInit {
 
   /** Initializes this month view. */
   _init() {
-    this._selectedDate = this._getDateInCurrentMonth(this.selected);
+    this._selectedDate = this._getDateInCurrentMonth(this._selectionModel.getFirstSelectedDate());
     this._todayDate = this._getDateInCurrentMonth(this._dateAdapter.today());
     this._monthLabel =
         this._dateAdapter.getMonthNames('short')[this._dateAdapter.getMonth(this.activeDate)]
@@ -275,12 +302,18 @@ export class MatMonthView<D> implements AfterContentInit {
             this._dateAdapter.getYear(this.activeDate),
             this._dateAdapter.getMonth(this.activeDate), i + 1);
       const enabled = this._shouldEnableDate(date);
+      const range: DateRange<D> = {start: date, end: date};
       const ariaLabel = this._dateAdapter.format(date, this._dateFormats.display.dateA11yLabel);
       const cellClasses = this.dateClass ? this.dateClass(date) : undefined;
 
       this._weeks[this._weeks.length - 1]
-          .push(new MatCalendarCell(i + 1, dateNames[i], ariaLabel, enabled, cellClasses));
+          .push(new MatCalendarCell<D>(i + 1, dateNames[i], ariaLabel, enabled, range, cellClasses));
     }
+  }
+
+  /** Extract selected date from current selection */
+  private extractDate() {
+    this._selectedDate = this._getDateInCurrentMonth(this._selectionModel.getFirstSelectedDate());
   }
 
   /** Date filter for the month */
