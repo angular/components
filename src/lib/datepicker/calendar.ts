@@ -24,8 +24,16 @@ import {
   SimpleChanges,
   ViewChild,
   ViewEncapsulation,
+  SkipSelf,
 } from '@angular/core';
-import {DateAdapter, MAT_DATE_FORMATS, MatDateFormats} from '@angular/material/core';
+import {
+  DateAdapter,
+  MAT_DATE_FORMATS,
+  MatDateFormats,
+  MatDateSelection,
+  MatSingleDateSelection,
+  MAT_SINGLE_DATE_SELECTION_MODEL_PROVIDER
+} from '@angular/material/core';
 import {Subject, Subscription} from 'rxjs';
 import {createMissingDateImplError} from './datepicker-errors';
 import {MatDatepickerIntl} from './datepicker-intl';
@@ -169,6 +177,7 @@ export class MatCalendarHeader<D> {
   exportAs: 'matCalendar',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [MAT_SINGLE_DATE_SELECTION_MODEL_PROVIDER],
 })
 export class MatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDestroy, OnChanges {
   /** An input indicating the type of the header component, if set. */
@@ -197,13 +206,18 @@ export class MatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDes
   /** Whether the calendar should be started in month or year view. */
   @Input() startView: MatCalendarView = 'month';
 
-  /** The currently selected date. */
+  /**
+   * The currently selected date.
+   * @deprecated use `selectionModel` to set selected date
+   * @breaking-change 9.0.0 remove this property.
+   */
   @Input()
-  get selected(): D | null { return this._selected; }
+  get selected(): D | null { return this.selectionModel.getFirstSelectedDate(); }
   set selected(value: D | null) {
-    this._selected = this._getValidDateOrNull(this._dateAdapter.deserialize(value));
+    if (this.selectionModel instanceof MatSingleDateSelection) {
+      this.selectionModel.add(value);
+    }
   }
-  private _selected: D | null;
 
   /** The minimum selectable date. */
   @Input()
@@ -228,7 +242,7 @@ export class MatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDes
   @Input() dateClass: (date: D) => MatCalendarCellCssClasses;
 
   /** Emits when the currently selected date changes. */
-  @Output() readonly selectedChange: EventEmitter<D> = new EventEmitter<D>();
+  @Output() readonly selectedChange = new EventEmitter<D>();
 
   /**
    * Emits the year chosen in multiyear view.
@@ -279,6 +293,7 @@ export class MatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDes
   stateChanges = new Subject<void>();
 
   constructor(_intl: MatDatepickerIntl,
+              readonly selectionModel: MatDateSelection<D>,
               @Optional() private _dateAdapter: DateAdapter<D>,
               @Optional() @Inject(MAT_DATE_FORMATS) private _dateFormats: MatDateFormats,
               private _changeDetectorRef: ChangeDetectorRef) {
@@ -346,10 +361,14 @@ export class MatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDes
     view.ngAfterContentInit();
   }
 
-  /** Handles date selection in the month view. */
-  _dateSelected(date: D): void {
-    if (!this._dateAdapter.sameDate(date, this.selected)) {
-      this.selectedChange.emit(date);
+  /**
+   * Handles date selection in the month view.
+   * @deprecated listen to valueChange in `selectionModel`.
+   * @breaking-change 9.0.0 remove method.
+   */
+  _dateSelected(date: MatDateSelection<D>): void {
+    if (this.selectionModel && !this.selectionModel.isSame(date)) {
+      this.selectedChange.emit(date.getFirstSelectedDate() || undefined);
     }
   }
 
