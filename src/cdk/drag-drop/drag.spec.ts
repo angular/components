@@ -1394,7 +1394,7 @@ describe('CdkDrag', () => {
 
       expect(fixture.componentInstance.droppedSpy).not.toHaveBeenCalled();
     }));
-
+    
     it('should transfer the DOM element from one drop zone to another', fakeAsync(() => {
       const fixture = createComponent(ConnectedDropZones);
       fixture.detectChanges();
@@ -1711,6 +1711,45 @@ describe('CdkDrag', () => {
 
         expect(fixture.componentInstance.droppedSpy).not.toHaveBeenCalled();
     }));
+
+    it('should be able to move the element over a new container and return it when the dropping' +
+      ' item is outside the drop container', fakeAsync(() => {
+      const fixture = createComponent(ConnectedDropZones);
+      fixture.detectChanges();
+
+      const groups = fixture.componentInstance.groupedDragItems;
+      const dropZones = fixture.componentInstance.dropInstances.map(d => d.element.nativeElement);
+      const item = groups[0][1];
+      const initialRect = item.element.nativeElement.getBoundingClientRect();
+      const targetRect = groups[1][2].element.nativeElement.getBoundingClientRect();
+
+      startDraggingViaMouse(fixture, item.element.nativeElement);
+
+      const placeholder = dropZones[0].querySelector('.cdk-drag-placeholder')!;
+
+      expect(placeholder).toBeTruthy();
+      expect(dropZones[0].contains(placeholder))
+          .toBe(true, 'Expected placeholder to be inside the first container.');
+
+      dispatchMouseEvent(document, 'mousemove', targetRect.left + 1, targetRect.top + 1);
+
+      fixture.detectChanges();
+
+      expect(dropZones[1].contains(placeholder))
+          .toBe(true, 'Expected placeholder to be inside second container.');
+
+      dispatchMouseEvent(document, 'mousemove', targetRect.left + -5, targetRect.top - 5);
+      fixture.detectChanges();
+
+      expect(dropZones[0].contains(placeholder))
+          .toBe(true, 'Expected placeholder to be back inside first container.');
+
+      dispatchMouseEvent(document, 'mouseup');
+      fixture.detectChanges();
+
+      expect(fixture.componentInstance.droppedSpy).not.toHaveBeenCalled();
+    }));
+
 
   });
 
