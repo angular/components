@@ -1,3 +1,161 @@
+<a name="7.0.2"></a>
+## 7.0.2 limestone-linguine (2018-10-26)
+
+
+### Bug Fixes
+
+* **button-toggle:** webkit tap highlight conflicting with ripples ([#13721](https://github.com/angular/material2/issues/13721)) ([abd0278](https://github.com/angular/material2/commit/abd0278))
+* **cdk-platform:** pass `{}` to `@NgModule` since passing nothing breaks ([#13792](https://github.com/angular/material2/issues/13792)) ([5abb644](https://github.com/angular/material2/commit/5abb644))
+* **checkbox:** disabled property not being coerced ([#13755](https://github.com/angular/material2/issues/13755)) ([cee8c65](https://github.com/angular/material2/commit/cee8c65)), closes [#13739](https://github.com/angular/material2/issues/13739)
+* **expansion-panel:** don't handle enter/space if modifier is pressed ([#13790](https://github.com/angular/material2/issues/13790)) ([3e6cc77](https://github.com/angular/material2/commit/3e6cc77)), closes [#13783](https://github.com/angular/material2/issues/13783)
+* **radio:** don't show hover ripples on touch devices ([#13701](https://github.com/angular/material2/issues/13701)) ([b89c139](https://github.com/angular/material2/commit/b89c139)), closes [#13675](https://github.com/angular/material2/issues/13675)
+* **slide-toggle:** don't show hover ripples on touch devices ([#13702](https://github.com/angular/material2/issues/13702)) ([9d495f1](https://github.com/angular/material2/commit/9d495f1)), closes [#13675](https://github.com/angular/material2/issues/13675)
+* **stepper:** incorrect border color in dark theme for header with label position ([#13791](https://github.com/angular/material2/issues/13791)) ([afa5a28](https://github.com/angular/material2/commit/afa5a28))
+* **stepper:** selector assuming that there will always be a dir attribute ([#13751](https://github.com/angular/material2/issues/13751)) ([576118e](https://github.com/angular/material2/commit/576118e)), closes [#13741](https://github.com/angular/material2/issues/13741)
+* **stroked-button:** ripples and focus overlay have incorrect radius ([#13745](https://github.com/angular/material2/issues/13745)) ([7877404](https://github.com/angular/material2/commit/7877404)), closes [#13738](https://github.com/angular/material2/issues/13738)
+* **tooltip:** add fallback for touch devices if Hammer isn't loaded ([#13580](https://github.com/angular/material2/issues/13580)) ([9ae6c84](https://github.com/angular/material2/commit/9ae6c84)), closes [#13536](https://github.com/angular/material2/issues/13536)
+
+
+### Features
+
+* **drag-utils:** add utility function for cloning array items from one array to another ([#13743](https://github.com/angular/material2/issues/13743)) ([13395c5](https://github.com/angular/material2/commit/13395c5)), closes [#13100](https://github.com/angular/material2/issues/13100)
+* **ng-add:** add preview URLs for theme choices ([#13723](https://github.com/angular/material2/issues/13723)) ([f1d1fc5](https://github.com/angular/material2/commit/f1d1fc5)), closes [/github.com/angular/angular-cli/blob/907ce5c94c774147c4b52870b3522aed4e087c76/packages/schematics/angular/ng-new/schema.json#L121](https://github.com//github.com/angular/angular-cli/blob/907ce5c94c774147c4b52870b3522aed4e087c76/packages/schematics/angular/ng-new/schema.json/issues/L121) [#13708](https://github.com/angular/material2/issues/13708)
+
+
+
+<a name="7.0.1"></a>
+## 7.0.1 emerald-egret (2018-10-22)
+
+
+### Bug Fixes
+
+* **autocomplete:** not propagating same model value when reset while open ([#13634](https://github.com/angular/material2/issues/13634)) ([2006144](https://github.com/angular/material2/commit/2006144))
+* **button-toggle:** content shifting in IE11 ([#13492](https://github.com/angular/material2/issues/13492)) ([7f5cbe3](https://github.com/angular/material2/commit/7f5cbe3))
+* **datepicker:** don't allow clicks on disabled cells in year and multi-year views ([#13448](https://github.com/angular/material2/issues/13448)) ([85741e0](https://github.com/angular/material2/commit/85741e0))
+* **drag-drop:** not picking up handle that isn't a direct descendant ([#13360](https://github.com/angular/material2/issues/13360)) ([0f05d99](https://github.com/angular/material2/commit/0f05d99))
+* **drag-drop:** preserve previous inline transform ([#13529](https://github.com/angular/material2/issues/13529)) ([2a8da45](https://github.com/angular/material2/commit/2a8da45))
+* **drag-drop:** use passive event listeners for start events ([#13526](https://github.com/angular/material2/issues/13526)) ([5d5fba5](https://github.com/angular/material2/commit/5d5fba5))
+* **expansion-panel:** emitting events twice on some browsers ([#13600](https://github.com/angular/material2/issues/13600)) ([85a3ae0](https://github.com/angular/material2/commit/85a3ae0))
+* **form-field:** native select options blending in with dropdown background on a dark theme ([#13201](https://github.com/angular/material2/issues/13201)) ([b8a6294](https://github.com/angular/material2/commit/b8a6294))
+* **grid-list:** unable to assign numeric zero as gutter size ([#13652](https://github.com/angular/material2/issues/13652)) ([4ffcf74](https://github.com/angular/material2/commit/4ffcf74))
+* **list:** selection list moving focus when an option is destroyed ([#13531](https://github.com/angular/material2/issues/13531)) ([2c4c5ba](https://github.com/angular/material2/commit/2c4c5ba))
+* **menu:** closing parent overlay when pressing escape ([#13442](https://github.com/angular/material2/issues/13442)) ([c3ae922](https://github.com/angular/material2/commit/c3ae922))
+* **menu:** proper focus styling when opened by tap on a touch device ([#13599](https://github.com/angular/material2/issues/13599)) ([c271167](https://github.com/angular/material2/commit/c271167))
+* **progress-bar:** not taking current path after first initialization ([#13628](https://github.com/angular/material2/issues/13628)) ([8e331a7](https://github.com/angular/material2/commit/8e331a7))
+* **radio:** improved alignment for native validation messages ([#13570](https://github.com/angular/material2/issues/13570)) ([dbf5164](https://github.com/angular/material2/commit/dbf5164))
+* **sidenav:** opened and closed events emitting twice on IE and Edge ([#13649](https://github.com/angular/material2/issues/13649)) ([5295e2f](https://github.com/angular/material2/commit/5295e2f))
+* **slider:** update value on mousedown instead of click ([#13020](https://github.com/angular/material2/issues/13020)) ([c995db7](https://github.com/angular/material2/commit/c995db7))
+* **stepper:** custom icons not centered inside circle ([#12947](https://github.com/angular/material2/issues/12947)) ([45edf64](https://github.com/angular/material2/commit/45edf64))
+* **stepper:** emitting the animationDone event twice on some browsers ([#13608](https://github.com/angular/material2/issues/13608)) ([a11ca21](https://github.com/angular/material2/commit/a11ca21)), closes [#13600](https://github.com/angular/material2/issues/13600) [#13587](https://github.com/angular/material2/issues/13587)
+* **stepper:** intl provider not being picked up in lazy-loaded modules ([#12934](https://github.com/angular/material2/issues/12934)) ([00ce69b](https://github.com/angular/material2/commit/00ce69b))
+* **table:** delimit words when filtering ([#13487](https://github.com/angular/material2/issues/13487)) ([1d87b4c](https://github.com/angular/material2/commit/1d87b4c))
+* **text-field:** autosize textarea not resizing on minRows decrease ([#13437](https://github.com/angular/material2/issues/13437)) ([8bae5b4](https://github.com/angular/material2/commit/8bae5b4))
+
+
+### Performance Improvements
+
+* **focus-monitor:** mark event listeners as passive ([#13532](https://github.com/angular/material2/issues/13532)) ([ba0c820](https://github.com/angular/material2/commit/ba0c820))
+
+
+
+<a name="7.0.0"></a>
+# 7.0.0 amethyst-ammonite (2018-10-17)
+
+### Highlights
+
+* Support for [Drag and Drop](https://material.angular.io/cdk/drag-drop/overview) in `@angular/cdk/drag-drop`.
+* Support for [Virtual Scrolling](https://material.angular.io/cdk/scrolling/overview) in `@angular/cdk/scrolling`.
+* Support for native `<select>` element in `<mat-form-field>` .
+* Added `<mat-action-list>`, a list where each item is a `<button>`.
+* Updated component styles throughout the library matching the 2018 Material Design Spec refresh.
+* Added more schematics, with schematics now available for table, drag and drop, tree, address form and more.
+* Added CLI prompts when using `ng add` to assist in setting up HammerJS support, application theming and animations.
+* 250+ bug/performance fixes
+
+
+### Upgrading to 7.0
+
+Using the Angular CLI, you can use the `ng update` command to automatically migrate to the new APIs in for Material and CDK.
+```
+ng update @angular/material
+```
+
+**NOTE:** If you are **using only the CDK** you can automatically migrate using `ng update @angular/cdk` instead.
+
+
+### Breaking Changes
+
+* **ripple:** deprecated `[matRippleSpeedFactor]` and `baseSpeedFactor` for the ripples have been removed. Use the new animation config instead.
+* **overlay:** The `flexibleDiemsions` property on `CdkConnectedOverlay` has been renamed to `flexibleDimensions`
+* **sidenav:** the constructor signature of the `MatDrawerContent` and `MatSidenavContent` has changed.
+* **elevation:** Because `mat-elevation` usages have been moved out of component stylesheets, users who have
+not invoked a theme mixin will not see any elevation shadows on Material components.
+However, users that have created a custom theme which lacks the `elevation` property will
+still see the default black shadows.
+
+Additionally, users who want to use themed elevations in their custom components can create
+their own shorthand mixin:
+
+```sass
+@import '~@angular/material/theming';
+
+$myTheme: ...
+
+@mixin my-elevation($zValue) {
+  @include mat-theme-elevation($zValue, $myTheme);
+}
+
+```
+
+and then invoke `angular-material-theme` with the `$myTheme` variable.
+
+
+
+### Marked for Deprecation
+A number of items throughout the library have been deprecated and are expected to be removed in v8.
+#### CDK
+Collections
+- `SelectionModel.onChange` has been deprecated, use `SelectionModel.changed` instead.
+
+Scrolling
+- `ScrollDispatchModule` has been deprecated, use `ScrollingModule` instead.
+
+Table
+- `CdkTable.setFooterRowDef` has been deprecated, use `CdkTable.addFooterRowDef` and `CdkTable.removeFooterRowDef` instead.
+- `CdkTable.setHeaderRowDef` has been deprecated, use `CdkTable.addHeaderRowDef` and `CdkTable.removeHeaderRowDef` instead.
+
+#### Material
+Dialog
+- `matDialogAnimations.slideDialog` has been deprecated, use `matDialogAnimations.dialogContainer` instead.
+- `MatDialogRef.afterOpen` has been deprecated, use `MatDialogRef.afterOpened` instead.
+- `MatDialogRef.afterClose` has been deprecated, use `MatDialogRef.afterClosed` instead.
+- `MatDialog.afterOpen` has been deprecated, use `MatDialog.afterOpened` instead.
+
+Form Field
+- `<mat-placeholder>` has been deprecated, use `<mat-label>` instead.
+- `MatPlaceholder` has been deprecated, use `MatLabel` instead.
+
+Paginator
+- `$mat-paginator-selector-trigger-min-width` has been deprecated, use `$mat-paginator-selector-trigger-width` instead.
+
+Select
+- `matSelectAnimations.fadeInContent` has been deprecated and will be removed without replacement.
+- The setter method for `MatSelect.focused` has been deprecated, `MatSelect.focused` will become readonly.
+
+Toolbar
+- `$mat-toolbar-height-mobile-portrait` has been deprecated and will be removed without replacement.
+- `$mat-toolbar-height-mobile-landscape` has been deprecated and will be removed without replacement.
+
+**NOTE:** In addition to the specific deprecations listed above, many component constructor methods contain 
+optional parameters which are expected to become required in v8.
+
+
+### Bug Fixes
+
+* **icon:** not taking current path after initialization  ([#13641](https://github.com/angular/material2/issues/13641)) ([df9ec7](https://github.com/angular/material2/commit/df9ec7))
+* **list:** action list items clickable area not stretching the full width ([#13099](https://github.com/angular/material2/issues/13099)) ([f3057fa](https://github.com/angular/material2/commit/f3057fa))
+
+
 <a name="7.0.0-rc.2"></a>
 # 7.0.0-rc.2 (2018-10-15)
 
@@ -179,8 +337,8 @@ still see the default black shadows.
 Additionally, users who want to use themed elevations in their custom components can create
 their own shorthand mixin:
 
-```
-@import '~angular/material/theming';
+```sass
+@import '~@angular/material/theming';
 
 $myTheme: ...
 

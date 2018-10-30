@@ -57,7 +57,7 @@ by the directives:
 
 | Selector            | Description                                                              |
 |---------------------|--------------------------------------------------------------------------|
-| `.cdk-drop-list`         | Corresponds to the `cdkDropList` container.                                  |
+| `.cdk-drop-list`    | Corresponds to the `cdkDropList` container.                                  |
 | `.cdk-drag`         | Corresponds to a `cdkDrag` instance.                                     |
 | `.cdk-drag-preview` | This is the element that will be rendered next to the user's cursor as they're dragging an item in a sortable list. By default the element looks exactly like the element that is being dragged. |
 | `.cdk-drag-placeholder` | This is element that will be shown instead of the real element as it's being dragged inside a `cdkDropList`. By default this will look exactly like the element that is being sorted. |
@@ -103,6 +103,14 @@ By default, this will be a clone of the original element positioned next to the 
 This preview can be customized, though, by providing a custom template via `*cdkDragPreview`:
 
 <!-- example(cdk-drag-drop-custom-preview) -->
+
+### Customizing the drag placeholder
+While a `cdkDrag` element is being dragged, the CDK will create a placeholder element that will
+show where it will be placed when it's dropped. By default the placeholder is a clone of the element
+that is being dragged, however you can replace it with a custom one using the `*cdkDragPlaceholder`
+directive:
+
+<!-- example(cdk-drag-drop-custom-placeholder) -->
 
 ### List orientation
 The `cdkDropList` directive assumes that lists are vertical by default. This can be

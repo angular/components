@@ -33,7 +33,7 @@ import {
 import {
   CanDisableRipple, CanDisableRippleCtor,
   MatLine,
-  MatLineSetter,
+  setLines,
   mixinDisableRipple,
 } from '@angular/material/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
@@ -98,6 +98,7 @@ export class MatListOption extends _MatListOptionMixinBase
 
   private _selected = false;
   private _disabled = false;
+  private _hasFocus = false;
 
   @ContentChild(MatListAvatarCssMatStyler) _avatar: MatListAvatarCssMatStyler;
   @ContentChild(MatListIconCssMatStyler) _icon: MatListIconCssMatStyler;
@@ -160,9 +161,7 @@ export class MatListOption extends _MatListOptionMixinBase
   }
 
   ngAfterContentInit() {
-    // TODO: consider turning the setter into a function, it doesn't do anything as a class.
-    // tslint:disable-next-line:no-unused-expression
-    new MatLineSetter(this._lines, this._element);
+    setLines(this._lines, this._element);
   }
 
   ngOnDestroy(): void {
@@ -172,7 +171,13 @@ export class MatListOption extends _MatListOptionMixinBase
       Promise.resolve().then(() => this.selected = false);
     }
 
-    this.selectionList._removeOptionFromList(this);
+    const hadFocus = this._hasFocus;
+    const newActiveItem = this.selectionList._removeOptionFromList(this);
+
+    // Only move focus if this option was focused at the time it was destroyed.
+    if (hadFocus && newActiveItem) {
+      newActiveItem.focus();
+    }
   }
 
   /** Toggles the selection state of the option. */
@@ -209,10 +214,12 @@ export class MatListOption extends _MatListOptionMixinBase
 
   _handleFocus() {
     this.selectionList._setFocusedOption(this);
+    this._hasFocus = true;
   }
 
   _handleBlur() {
     this.selectionList._onTouched();
+    this._hasFocus = false;
   }
 
   /** Retrieves the DOM element of the component host. */
@@ -385,18 +392,23 @@ export class MatSelectionList extends _MatSelectionListMixinBase implements Focu
     this._keyManager.updateActiveItemIndex(this._getOptionIndex(option));
   }
 
-  /** Removes an option from the selection list and updates the active item. */
-  _removeOptionFromList(option: MatListOption) {
+  /**
+   * Removes an option from the selection list and updates the active item.
+   * @returns Currently-active item.
+   */
+  _removeOptionFromList(option: MatListOption): MatListOption | null {
     const optionIndex = this._getOptionIndex(option);
 
     if (optionIndex > -1 && this._keyManager.activeItemIndex === optionIndex) {
       // Check whether the option is the last item
       if (optionIndex > 0) {
-        this._keyManager.setPreviousItemActive();
+        this._keyManager.updateActiveItemIndex(optionIndex - 1);
       } else if (optionIndex === 0 && this.options.length > 1) {
-        this._keyManager.setNextItemActive();
+        this._keyManager.updateActiveItemIndex(Math.min(optionIndex + 1, this.options.length - 1));
       }
     }
+
+    return this._keyManager.activeItem;
   }
 
   /** Passes relevant key presses to our key manager. */
