@@ -42,6 +42,8 @@ import {
   DateAdapter,
   mixinColor,
   ThemePalette,
+  MatDateSelection,
+  MatSingleDateSelection,
 } from '@angular/material/core';
 import {MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {merge, Subject, Subscription} from 'rxjs';
@@ -129,7 +131,9 @@ export class MatDatepickerContent<D> extends _MatDatepickerContentMixinBase
 // TODO(mmalerba): We use a component instead of a directive here so the user can use implicit
 // template reference variables (e.g. #d vs #d="matDatepicker"). We can change this to a directive
 // if angular adds support for `exportAs: '$implicit'` on directives.
-/** Component responsible for managing the datepicker popup/dialog. */
+/**
+ * Component responsible for managing the datepicker popup/dialog.
+ */
 @Component({
   moduleId: module.id,
   selector: 'mat-datepicker',
@@ -137,6 +141,7 @@ export class MatDatepickerContent<D> extends _MatDatepickerContentMixinBase
   exportAs: 'matDatepicker',
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
+  providers: [{provide: MatDateSelection, useClass: MatSingleDateSelection}]
 })
 export class MatDatepicker<D> implements OnDestroy, CanColor {
   private _scrollStrategy: () => ScrollStrategy;
@@ -229,9 +234,10 @@ export class MatDatepicker<D> implements OnDestroy, CanColor {
   id: string = `mat-datepicker-${datepickerUid++}`;
 
   /** The currently selected date. */
-  get _selected(): D | null { return this._validSelected; }
-  set _selected(value: D | null) { this._validSelected = value; }
-  private _validSelected: D | null = null;
+  get _selected(): D | null { return this._dateSelection.asDate(); }
+  set _selected(value: D | null) {
+    this._dateSelection.add(value);
+  }
 
   /** The minimum selectable date. */
   get _minDate(): D | null {
@@ -278,6 +284,7 @@ export class MatDatepicker<D> implements OnDestroy, CanColor {
               private _overlay: Overlay,
               private _ngZone: NgZone,
               private _viewContainerRef: ViewContainerRef,
+              @Inject(MatDateSelection) readonly _dateSelection: MatSingleDateSelection<D>,
               @Inject(MAT_DATEPICKER_SCROLL_STRATEGY) scrollStrategy: any,
               @Optional() private _dateAdapter: DateAdapter<D>,
               @Optional() private _dir: Directionality,
@@ -302,10 +309,10 @@ export class MatDatepicker<D> implements OnDestroy, CanColor {
 
   /** Selects the given date */
   select(date: D): void {
-    let oldValue = this._selected;
-    this._selected = date;
-    if (!this._dateAdapter.sameDate(oldValue, this._selected)) {
-      this._selectedChanged.next(date);
+    let oldValue = this._dateSelection.asDate();
+    if (!this._dateAdapter.sameDate(oldValue, this._dateSelection.asDate())) {
+      this._dateSelection.add(date);
+      this._selectedChanged.next(this._dateSelection.asDate() || undefined);
     }
   }
 
@@ -328,8 +335,6 @@ export class MatDatepicker<D> implements OnDestroy, CanColor {
       throw Error('A MatDatepicker can only be associated with a single input.');
     }
     this._datepickerInput = input;
-    this._inputSubscription =
-        this._datepickerInput._valueChange.subscribe((value: D | null) => this._selected = value);
   }
 
   /** Open the calendar. */
