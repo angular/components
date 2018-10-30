@@ -168,10 +168,7 @@ export class MatAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
   get autocomplete(): MatAutocomplete { return this._autocomplete; }
   set autocomplete(value: MatAutocomplete) {
     this._autocomplete = value;
-    if (this._overlayRef) {
-      this._overlayRef.detach();
-    }
-    this._closingActionsSubscription.unsubscribe();
+    this._detachOverlay();
   }
 
   /**
@@ -252,12 +249,9 @@ export class MatAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
       this.autocomplete.closed.emit();
     }
 
-    this.autocomplete._isOpen = this._overlayAttached = false;
+    this.autocomplete._isOpen = false;
+    this._detachOverlay();
 
-    if (this._overlayRef && this._overlayRef.hasAttached()) {
-      this._overlayRef.detach();
-      this._closingActionsSubscription.unsubscribe();
-    }
 
     // Note that in some cases this can end up being called after the component is destroyed.
     // Add a check to ensure that we don't try to run change detection on a destroyed view.
@@ -615,6 +609,14 @@ export class MatAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
     // autocomplete won't be shown if there are no options.
     if (this.panelOpen && wasOpen !== this.panelOpen) {
       this.autocomplete.opened.emit();
+    }
+  }
+
+  private _detachOverlay() {
+    this._overlayAttached = false;
+    this._closingActionsSubscription.unsubscribe();
+    if (this._overlayRef) {
+      this._overlayRef.detach();
     }
   }
 
