@@ -113,7 +113,7 @@ export class MatDatepickerInput<D> implements ControlValueAccessor, OnDestroy, V
 
     this._formatValue(this._selectionModel.getFirstSelectedDate());
 
-    this._datepickerSubscription = this._datepicker._dateSelection.valueChanges.subscribe(() => {
+    this._datepickerSubscription = this._datepicker._dateSelection.selectionChange.subscribe(() => {
       this._formatValue(this._selectionModel.getFirstSelectedDate());
       this._cvaOnChange(this._selectionModel.getFirstSelectedDate());
       this._onTouched();
@@ -144,7 +144,7 @@ export class MatDatepickerInput<D> implements ControlValueAccessor, OnDestroy, V
     }
 
     if (!this._dateAdapter.sameDate(value, this._selectionModel.getFirstSelectedDate())) {
-      this._selectionModel.add(value);
+      this._selectionModel.setSelection(value);
     }
 
     this._lastValueValid = !this._selectionModel || this._selectionModel.isValid();
