@@ -6,6 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {Directionality} from '@angular/cdk/bidi';
 import {
   DOWN_ARROW,
   END,
@@ -15,8 +16,8 @@ import {
   PAGE_DOWN,
   PAGE_UP,
   RIGHT_ARROW,
-  UP_ARROW,
   SPACE,
+  UP_ARROW,
 } from '@angular/cdk/keycodes';
 import {
   AfterContentInit,
@@ -25,23 +26,21 @@ import {
   Component,
   EventEmitter,
   Input,
+  OnDestroy,
   Optional,
   Output,
   ViewChild,
   ViewEncapsulation,
-  SkipSelf,
-  OnDestroy,
 } from '@angular/core';
 import {
   DateAdapter,
-  MatDateSelection,
   DateRange,
-  MAT_SINGLE_DATE_SELECTION_MODEL_PROVIDER
+  MAT_SINGLE_DATE_SELECTION_MODEL_PROVIDER,
+  MatDateSelectionModel
 } from '@angular/material/core';
-import {Directionality} from '@angular/cdk/bidi';
+import {Subscription} from 'rxjs';
 import {MatCalendarBody, MatCalendarCell} from './calendar-body';
 import {createMissingDateImplError} from './datepicker-errors';
-import {Subscription} from 'rxjs';
 
 export const yearsPerPage = 24;
 
@@ -127,7 +126,7 @@ export class MatMultiYearView<D> implements AfterContentInit, OnDestroy {
   private dateSubscription: Subscription;
 
   constructor(private _changeDetectorRef: ChangeDetectorRef,
-              private _selected: MatDateSelection<D>,
+              private _selected: MatDateSelectionModel<D>,
               @Optional() public _dateAdapter: DateAdapter<D>,
               @Optional() private _dir?: Directionality) {
     if (!this._dateAdapter) {
