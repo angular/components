@@ -39,7 +39,7 @@ import {
   MAT_DATE_FORMATS,
   MAT_SINGLE_DATE_SELECTION_MODEL_PROVIDER,
   MatDateFormats,
-  MatDateSelectionModel
+  MatDateSelectionModel, MatSingleDateSelectionModel
 } from '@angular/material/core';
 import {Subscription} from 'rxjs';
 import {MatCalendarBody, MatCalendarCell, MatCalendarCellCssClasses} from './calendar-body';
@@ -81,14 +81,16 @@ export class MatMonthView<D> implements AfterContentInit, OnDestroy {
 
   /**
    * The currently selected date.
-   * @depricated Use `selectionModel`.
-   * @breaking-change 9.0.0 remove selected.
+   * @deprecated Please get/set the selection via the `MatDateSelectionModel` instead.
+   * @breaking-change 9.0.0 remove this property.
    */
   @Input()
   get selected(): D | null { return this._selectionModel.getFirstSelectedDate(); }
   set selected(value: D | null) {
-    this._selectionModel.add(value);
-    this.extractDate();
+    if (this._selectionModel instanceof MatSingleDateSelectionModel) {
+      this._selectionModel.setSelection(value);
+      this.extractDate();
+    }
   }
 
   /** The minimum selectable date. */
@@ -173,7 +175,7 @@ export class MatMonthView<D> implements AfterContentInit, OnDestroy {
     this._activeDate = this._dateAdapter.today();
 
     this.extractDate();
-    this.dateSubscription = _selectionModel.valueChanges.subscribe(() => this.extractDate());
+    this.dateSubscription = _selectionModel.selectionChange.subscribe(() => this.extractDate());
   }
 
   ngAfterContentInit() {

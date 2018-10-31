@@ -36,7 +36,7 @@ import {
   DateAdapter,
   DateRange,
   MAT_SINGLE_DATE_SELECTION_MODEL_PROVIDER,
-  MatDateSelectionModel
+  MatDateSelectionModel, MatSingleDateSelectionModel
 } from '@angular/material/core';
 import {Subscription} from 'rxjs';
 import {MatCalendarBody, MatCalendarCell} from './calendar-body';
@@ -76,11 +76,17 @@ export class MatMultiYearView<D> implements AfterContentInit, OnDestroy {
   }
   private _activeDate: D;
 
-  /** The currently selected date. */
+  /**
+   * The currently selected date.
+   * @deprecated Please get/set the selection via the `MatDateSelectionModel` instead.
+   * @breaking-change 9.0.0 remove this property.
+   */
   @Input()
   get selected(): D | null { return this._selected.getFirstSelectedDate(); }
   set selected(value: D | null) {
-    this._selected.add(value);
+    if (this._selected instanceof MatSingleDateSelectionModel) {
+      this._selected.setSelection(value);
+    }
   }
 
   /** The minimum selectable date. */
@@ -135,7 +141,7 @@ export class MatMultiYearView<D> implements AfterContentInit, OnDestroy {
 
     this._activeDate = this._dateAdapter.today();
 
-    this.dateSubscription = _selected.valueChanges.subscribe(() => this.extractYear());
+    this.dateSubscription = _selected.selectionChange.subscribe(() => this.extractYear());
   }
 
   ngAfterContentInit() {
