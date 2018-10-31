@@ -40,10 +40,10 @@ import {
   CanColor,
   CanColorCtor,
   DateAdapter,
+  MatDateSelectionModel,
+  MatSingleDateSelectionModel,
   mixinColor,
   ThemePalette,
-  MatDateSelection,
-  MatSingleDateSelection,
 } from '@angular/material/core';
 import {MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {merge, Subject, Subscription} from 'rxjs';
@@ -141,7 +141,7 @@ export class MatDatepickerContent<D> extends _MatDatepickerContentMixinBase
   exportAs: 'matDatepicker',
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
-  providers: [{provide: MatDateSelection, useClass: MatSingleDateSelection}]
+  providers: [{provide: MatDateSelectionModel, useClass: MatSingleDateSelectionModel}]
 })
 export class MatDatepicker<D> implements OnDestroy, CanColor {
   private _scrollStrategy: () => ScrollStrategy;
@@ -284,7 +284,8 @@ export class MatDatepicker<D> implements OnDestroy, CanColor {
               private _overlay: Overlay,
               private _ngZone: NgZone,
               private _viewContainerRef: ViewContainerRef,
-              @Inject(MatDateSelection) readonly _dateSelection: MatSingleDateSelection<D>,
+              @Inject(MatDateSelectionModel) readonly _dateSelection:
+                  MatSingleDateSelectionModel<D>,
               @Inject(MAT_DATEPICKER_SCROLL_STRATEGY) scrollStrategy: any,
               @Optional() private _dateAdapter: DateAdapter<D>,
               @Optional() private _dir: Directionality,

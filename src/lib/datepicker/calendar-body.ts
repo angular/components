@@ -12,17 +12,17 @@ import {
   ElementRef,
   EventEmitter,
   Input,
+  NgZone,
   Output,
   ViewEncapsulation,
-  NgZone,
 } from '@angular/core';
-import {take} from 'rxjs/operators';
 import {
-  MatDateSelection,
   DateAdapter,
   DateRange,
-  MAT_SINGLE_DATE_SELECTION_MODEL_PROVIDER
+  MAT_SINGLE_DATE_SELECTION_MODEL_PROVIDER,
+  MatDateSelectionModel
 } from '@angular/material/core';
+import {take} from 'rxjs/operators';
 
 /**
  * An internal class that represents the data corresponding to a single calendar cell.
@@ -108,7 +108,7 @@ export class MatCalendarBody<D> {
   constructor(private _elementRef: ElementRef<HTMLElement>,
               private _ngZone: NgZone,
               private _dateAdapter: DateAdapter<D>,
-              readonly _selectionModel: MatDateSelection<D>) { }
+              readonly _selectionModel: MatDateSelectionModel<D>) { }
 
   _cellClicked(cell: MatCalendarCell<D>): void {
     if (cell.enabled) {
