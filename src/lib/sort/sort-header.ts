@@ -60,9 +60,7 @@ interface MatSortHeaderColumnDef {
 }
 
 /**
- * States describing the arrow's animated position (animating fromState to toState).
- * If the fromState is not defined, there will be no animated transition to the toState.
- * @docs-private
+ * Header display strategy that is different based on type of sort being used.
  */
 export interface SortHeaderStrategy {
   isSorted(sortHeader: MatSort | MatMultiSort, id: string): boolean;
@@ -328,6 +326,9 @@ export class MatSortHeader extends _MatSortHeaderMixinBase
   }
 }
 
+/**
+ * Strategy used when MatSort is used
+ */
 class SimpleSortStrategy implements SortHeaderStrategy {
   isSorted(sortHeader: MatSort, id: string) {
     return sortHeader.active == id &&
@@ -343,6 +344,9 @@ class SimpleSortStrategy implements SortHeaderStrategy {
   }
 }
 
+/**
+ * Strategy used when MatMultiSort is used
+ */
 class MultiSortStrategy implements SortHeaderStrategy {
   isSorted(sortHeader: MatMultiSort, id: string) {
     return sortHeader.active && sortHeader.active.indexOf(id) > -1 &&

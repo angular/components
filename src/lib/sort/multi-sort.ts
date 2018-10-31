@@ -23,7 +23,7 @@ import {
 import {Subject} from 'rxjs';
 import {SortDirection} from './sort-direction';
 import {
-  getSortInvalidDirectionError,
+  getMultiSortInvalidDirectionError,
 } from './sort-errors';
 import {
   MatSortable,
@@ -70,7 +70,7 @@ export class MatMultiSort extends _MatSortMixinBase
   get direction(): { [id: string]: SortDirection } { return this._direction; }
   set direction(direction: { [id: string]: SortDirection }) {
     if (isDevMode() && direction && !this.isSortDirectionValid(direction)) {
-      throw getSortInvalidDirectionError(direction);
+      throw getMultiSortInvalidDirectionError(direction);
     }
     this._direction = direction;
   }
