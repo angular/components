@@ -6,12 +6,12 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {FactoryProvider, Optional, SkipSelf, Injectable} from '@angular/core';
+import {FactoryProvider, Injectable, Optional, SkipSelf} from '@angular/core';
 import {Subject} from 'rxjs';
 import {DateAdapter} from './date-adapter';
 
 
-export abstract class MatDateSelection<D> {
+export abstract class MatDateSelectionModel<D> {
   valueChanges = new Subject<void>();
 
   constructor(protected readonly adapter: DateAdapter<D>) {}
@@ -21,11 +21,11 @@ export abstract class MatDateSelection<D> {
   }
 
   abstract add(date: D | null): void;
-  abstract clone(): MatDateSelection<D>;
+  abstract clone(): MatDateSelectionModel<D>;
   abstract getFirstSelectedDate(): D|null;
   abstract getLastSelectedDate(): D|null;
   abstract isComplete(): boolean;
-  abstract isSame(other: MatDateSelection<D>): boolean;
+  abstract isSame(other: MatDateSelectionModel<D>): boolean;
   abstract isValid(): boolean;
   abstract contains(value: D): boolean;
   abstract overlaps(range: DateRange<D>): boolean;
@@ -37,10 +37,10 @@ export interface DateRange<D> {
 }
 
 /**
- * Concrete implementation of a MatDateSelection that holds a single date.
+ * Concrete implementation of a MatDateSelectionModel that holds a single date.
  */
 @Injectable()
-export class MatSingleDateSelection<D> extends MatDateSelection<D> {
+export class MatSingleDateSelectionModel<D> extends MatDateSelectionModel<D> {
   private date: D | null = null;
 
   constructor(adapter: DateAdapter<D>) {
@@ -56,7 +56,7 @@ export class MatSingleDateSelection<D> extends MatDateSelection<D> {
     this.valueChanges.next();
   }
 
-  compareDate(other: MatSingleDateSelection<D>) {
+  compareDate(other: MatSingleDateSelectionModel<D>) {
     const date = this.asDate();
     const otherDate = other.asDate();
     if (date && otherDate) {
@@ -66,8 +66,8 @@ export class MatSingleDateSelection<D> extends MatDateSelection<D> {
     throw Error;
   }
 
-  clone(): MatDateSelection<D> {
-    const cloned = new MatSingleDateSelection<D>(this.adapter);
+  clone(): MatDateSelectionModel<D> {
+    const cloned = new MatSingleDateSelectionModel<D>(this.adapter);
     cloned.setSelection(this.date);
     return cloned;
   }
@@ -78,8 +78,8 @@ export class MatSingleDateSelection<D> extends MatDateSelection<D> {
 
   isComplete() { return !!this.date; }
 
-  isSame(other: MatDateSelection<D>): boolean {
-    return other instanceof MatSingleDateSelection &&
+  isSame(other: MatDateSelectionModel<D>): boolean {
+    return other instanceof MatSingleDateSelectionModel &&
         this.adapter.sameDate(other.getFirstSelectedDate(), this.getFirstSelectedDate());
   }
 
@@ -109,11 +109,11 @@ export class MatSingleDateSelection<D> extends MatDateSelection<D> {
 }
 
 /**
- * Concrete implementation of a MatDateSelection that holds a date range, represented by
+ * Concrete implementation of a MatDateSelectionModel that holds a date range, represented by
  * a start date and an end date.
  */
 @Injectable()
-export class MatRangeDateSelection<D> extends MatDateSelection<D> {
+export class MatRangeDateSelectionModel<D> extends MatDateSelectionModel<D> {
   private start: D | null = null;
   private end: D | null = null;
 
@@ -144,8 +144,8 @@ export class MatRangeDateSelection<D> extends MatDateSelection<D> {
     this.end = range.end;
   }
 
-  clone(): MatDateSelection<D> {
-    const cloned = new MatRangeDateSelection<D>(this.adapter);
+  clone(): MatDateSelectionModel<D> {
+    const cloned = new MatRangeDateSelectionModel<D>(this.adapter);
     cloned.setSelection({start: this.start, end: this.end});
     return cloned;
   }
@@ -162,8 +162,8 @@ export class MatRangeDateSelection<D> extends MatDateSelection<D> {
     return !!(this.start && this.end);
   }
 
-  isSame(other: MatDateSelection<D>): boolean {
-    return other instanceof MatRangeDateSelection &&
+  isSame(other: MatDateSelectionModel<D>): boolean {
+    return other instanceof MatRangeDateSelectionModel &&
         this.adapter.sameDate(this.getFirstSelectedDate(), other.getFirstSelectedDate()) &&
         this.adapter.sameDate(this.getLastSelectedDate(), other.getLastSelectedDate());
   }
@@ -215,13 +215,13 @@ export class MatRangeDateSelection<D> extends MatDateSelection<D> {
   }
 }
 
-export function MAT_SINGLE_DATE_SELECTION_MODEL_FACTORY<D>(parent: MatSingleDateSelection<D>,
+export function MAT_SINGLE_DATE_SELECTION_MODEL_FACTORY<D>(parent: MatSingleDateSelectionModel<D>,
                                                            adapter: DateAdapter<D>) {
-  return parent || new MatSingleDateSelection(adapter);
+  return parent || new MatSingleDateSelectionModel(adapter);
 }
 
 export const MAT_SINGLE_DATE_SELECTION_MODEL_PROVIDER: FactoryProvider = {
-  provide: MatDateSelection,
-  deps: [[new Optional(), new SkipSelf(), MatDateSelection], DateAdapter],
+  provide: MatDateSelectionModel,
+  deps: [[new Optional(), new SkipSelf(), MatDateSelectionModel], DateAdapter],
   useFactory: MAT_SINGLE_DATE_SELECTION_MODEL_FACTORY,
 };
