@@ -2234,15 +2234,12 @@ describe('MatAutocomplete', () => {
     expect(overlayContainerElement.textContent).not.toContain('Second',
       `Expected panel to not display the option of the second autocomplete.`);
 
-    // close overlay
     dispatchFakeEvent(document, 'click');
     fixture.detectChanges();
 
-    // Switch to second autocomplete
     fixture.componentInstance.trigger.autocomplete = fixture.componentInstance.autoTow;
     fixture.detectChanges();
 
-    // reopen agian
     dispatchFakeEvent(input, 'focusin');
     fixture.detectChanges();
 
