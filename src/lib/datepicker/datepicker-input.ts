@@ -32,10 +32,10 @@ import {
 import {
   DateAdapter,
   MAT_DATE_FORMATS,
-  MatSingleDateSelection,
   MatDateFormats,
-  ThemePalette,
-  MatDateSelection
+  MatDateSelectionModel,
+  MatSingleDateSelectionModel,
+  ThemePalette
 } from '@angular/material/core';
 import {MatFormField} from '@angular/material/form-field';
 import {MAT_INPUT_VALUE_ACCESSOR} from '@angular/material/input';
@@ -155,7 +155,7 @@ export class MatDatepickerInput<D> implements ControlValueAccessor, OnDestroy, V
       this._valueChange.emit(value);
     }
   }
-  private _selectionModel: MatSingleDateSelection<D>;
+  private _selectionModel: MatSingleDateSelectionModel<D>;
 
   /** The minimum valid date. */
   @Input()
@@ -376,8 +376,8 @@ export class MatDatepickerInput<D> implements ControlValueAccessor, OnDestroy, V
   }
 
   /** Formats a value and sets it on the input element. */
-  private _formatValue(value: D | MatDateSelection<D> | null) {
-    if (value instanceof MatDateSelection) {
+  private _formatValue(value: D | MatDateSelectionModel<D> | null) {
+    if (value instanceof MatDateSelectionModel) {
       value = value.getFirstSelectedDate();
     }
 
