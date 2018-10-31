@@ -6,39 +6,60 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {FactoryProvider, Injectable, Optional, SkipSelf} from '@angular/core';
+import {FactoryProvider, Injectable, OnDestroy, Optional, SkipSelf} from '@angular/core';
 import {Subject} from 'rxjs';
 import {DateAdapter} from './date-adapter';
 
 
-export abstract class MatDateSelectionModel<D> {
-  valueChanges = new Subject<void>();
+/** A selection model used to represent the currently selected value in a date picker. */
+export abstract class MatDateSelectionModel<D> implements OnDestroy {
+  /** Emits when the selected value has changed. */
+  selectionChange = new Subject<void>();
 
-  constructor(protected readonly adapter: DateAdapter<D>) {}
+  protected constructor(protected readonly adapter: DateAdapter<D>) {}
 
-  dispose() {
-    this.valueChanges.complete();
+  ngOnDestroy() {
+    this.selectionChange.complete();
   }
 
-  abstract add(date: D | null): void;
+  /** Adds a date to the current selection. */
+  abstract add(date: D): void;
+
+  /** Clones this selection model. */
   abstract clone(): MatDateSelectionModel<D>;
+
+  /** Gets the first date in the current selection. */
   abstract getFirstSelectedDate(): D|null;
+
+  /** Gets the last date in the current selection. */
   abstract getLastSelectedDate(): D|null;
+
+  /** Whether the selection is complete for this selection model. */
   abstract isComplete(): boolean;
+
+  /** Whether the selection model contains the same selection as the given selection model. */
   abstract isSame(other: MatDateSelectionModel<D>): boolean;
+
+  /** Whether the current selection is valid. */
   abstract isValid(): boolean;
+
+  /** Whether the given date is contained in the current selection. */
   abstract contains(value: D): boolean;
+
+  /** Whether the given date range overlaps the current selection in any way. */
   abstract overlaps(range: DateRange<D>): boolean;
 }
 
+/** Represents a date range. */
 export interface DateRange<D> {
+  /** The start of the range. */
   start: D | null;
+
+  /** The end of the range. */
   end: D | null;
 }
 
-/**
- * Concrete implementation of a MatDateSelectionModel that holds a single date.
- */
+/** A concrete implementation of a `MatDateSelectionModel` that holds a single date. */
 @Injectable()
 export class MatSingleDateSelectionModel<D> extends MatDateSelectionModel<D> {
   private date: D | null = null;
@@ -47,23 +68,23 @@ export class MatSingleDateSelectionModel<D> extends MatDateSelectionModel<D> {
     super(adapter);
   }
 
+  /** Sets the current selection. */
   setSelection(date: D | null) {
     this.date = date;
   }
 
-  add(date: D | null) {
-    this.date = date;
-    this.valueChanges.next();
+  /** Gets the current selection. */
+  getSelection(): D | null {
+    return this.isValid() ? this.adapter.deserialize(this.date) : null;
   }
 
-  compareDate(other: MatSingleDateSelectionModel<D>) {
-    const date = this.asDate();
-    const otherDate = other.asDate();
-    if (date && otherDate) {
-      return this.adapter.compareDate(date, otherDate);
-    }
-
-    throw Error;
+  /**
+   * Adds the given date to the selection model. For a `MatSingleDateSelectionModel` this means
+   * simply replacing the current selection with the given selection.
+   */
+  add(date: D) {
+    this.date = date;
+    this.selectionChange.next();
   }
 
   clone(): MatDateSelectionModel<D> {
@@ -80,17 +101,13 @@ export class MatSingleDateSelectionModel<D> extends MatDateSelectionModel<D> {
 
   isSame(other: MatDateSelectionModel<D>): boolean {
     return other instanceof MatSingleDateSelectionModel &&
-        this.adapter.sameDate(other.getFirstSelectedDate(), this.getFirstSelectedDate());
+        this.adapter.sameDate(other.date, this.date);
   }
 
   isValid(): boolean {
     return !!(this.date &&
       this.adapter.isDateInstance(this.date) &&
       this.adapter.isValid(this.date));
-  }
-
-  asDate(): D | null {
-    return this.isValid() ? this.adapter.deserialize(this.date) : null;
   }
 
   contains(value: D): boolean {
@@ -121,10 +138,25 @@ export class MatRangeDateSelectionModel<D> extends MatDateSelectionModel<D> {
     super(adapter);
   }
 
+  /** Sets the current selection. */
+  setSelection(range: DateRange<D>) {
+    this.start = range.start;
+    this.end = range.end;
+  }
+
+  /** Gets the current selection. */
+  getSelection(): DateRange<D> {
+    return {
+      start: this.start,
+      end: this.end,
+    };
+  }
+
   /**
-   * Adds an additional date to the range. If no date is set thus far, it will set it to the
-   * beginning. If the beginning is set, it will set it to the end.
-   * If add is called on a complete selection, it will empty the selection and set it as the start.
+   * Adds the given date to the selection model. For a `MatRangeDateSelectionModel` this means:
+   * - Setting the start date if nothing is already selected.
+   * - Setting the end date if the start date is already set but the end is not.
+   * - Clearing the selection and setting the start date if both the start and end are already set.
    */
   add(date: D): void {
     if (!this.start) {
@@ -136,12 +168,7 @@ export class MatRangeDateSelectionModel<D> extends MatDateSelectionModel<D> {
       this.end = null;
     }
 
-    this.valueChanges.next();
-  }
-
-  setSelection(range: DateRange<D>) {
-    this.start = range.start;
-    this.end = range.end;
+    this.selectionChange.next();
   }
 
   clone(): MatDateSelectionModel<D> {
@@ -154,30 +181,19 @@ export class MatRangeDateSelectionModel<D> extends MatDateSelectionModel<D> {
 
   getLastSelectedDate() { return this.end; }
 
-  setFirstSelectedDate(value: D | null) { this.start = value; }
-
-  setLastSelectedDate(value: D | null) { this.end = value; }
-
   isComplete(): boolean {
     return !!(this.start && this.end);
   }
 
   isSame(other: MatDateSelectionModel<D>): boolean {
     return other instanceof MatRangeDateSelectionModel &&
-        this.adapter.sameDate(this.getFirstSelectedDate(), other.getFirstSelectedDate()) &&
-        this.adapter.sameDate(this.getLastSelectedDate(), other.getLastSelectedDate());
+        this.adapter.sameDate(this.start, other.start) &&
+        this.adapter.sameDate(this.end, other.end);
   }
 
   isValid(): boolean {
     return !!(this.start && this.end &&
         this.adapter.isValid(this.start!) && this.adapter.isValid(this.end!));
-  }
-
-  asRange(): DateRange<D> {
-    return {
-      start: this.start,
-      end: this.end,
-    };
   }
 
   contains(value: D): boolean {
