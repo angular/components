@@ -24,15 +24,14 @@ import {
   SimpleChanges,
   ViewChild,
   ViewEncapsulation,
-  SkipSelf,
 } from '@angular/core';
 import {
   DateAdapter,
   MAT_DATE_FORMATS,
+  MAT_SINGLE_DATE_SELECTION_MODEL_PROVIDER,
   MatDateFormats,
-  MatDateSelection,
-  MatSingleDateSelection,
-  MAT_SINGLE_DATE_SELECTION_MODEL_PROVIDER
+  MatDateSelectionModel,
+  MatSingleDateSelectionModel
 } from '@angular/material/core';
 import {Subject, Subscription} from 'rxjs';
 import {createMissingDateImplError} from './datepicker-errors';
@@ -214,7 +213,7 @@ export class MatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDes
   @Input()
   get selected(): D | null { return this.selectionModel.getFirstSelectedDate(); }
   set selected(value: D | null) {
-    if (this.selectionModel instanceof MatSingleDateSelection) {
+    if (this.selectionModel instanceof MatSingleDateSelectionModel) {
       this.selectionModel.add(value);
     }
   }
@@ -293,7 +292,7 @@ export class MatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDes
   stateChanges = new Subject<void>();
 
   constructor(_intl: MatDatepickerIntl,
-              readonly selectionModel: MatDateSelection<D>,
+              readonly selectionModel: MatDateSelectionModel<D>,
               @Optional() private _dateAdapter: DateAdapter<D>,
               @Optional() @Inject(MAT_DATE_FORMATS) private _dateFormats: MatDateFormats,
               private _changeDetectorRef: ChangeDetectorRef) {
@@ -366,7 +365,7 @@ export class MatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDes
    * @deprecated listen to valueChange in `selectionModel`.
    * @breaking-change 9.0.0 remove method.
    */
-  _dateSelected(date: MatDateSelection<D>): void {
+  _dateSelected(date: MatDateSelectionModel<D>): void {
     if (this.selectionModel && !this.selectionModel.isSame(date)) {
       this.selectedChange.emit(date.getFirstSelectedDate() || undefined);
     }
