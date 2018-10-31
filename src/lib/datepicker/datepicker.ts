@@ -234,9 +234,9 @@ export class MatDatepicker<D> implements OnDestroy, CanColor {
   id: string = `mat-datepicker-${datepickerUid++}`;
 
   /** The currently selected date. */
-  get _selected(): D | null { return this._dateSelection.asDate(); }
+  get _selected(): D | null { return this._dateSelection.getSelection(); }
   set _selected(value: D | null) {
-    this._dateSelection.add(value);
+    this._dateSelection.setSelection(value);
   }
 
   /** The minimum selectable date. */
@@ -310,10 +310,10 @@ export class MatDatepicker<D> implements OnDestroy, CanColor {
 
   /** Selects the given date */
   select(date: D): void {
-    let oldValue = this._dateSelection.asDate();
-    if (!this._dateAdapter.sameDate(oldValue, this._dateSelection.asDate())) {
+    let oldValue = this._dateSelection.getSelection();
+    if (!this._dateAdapter.sameDate(oldValue, this._dateSelection.getSelection())) {
       this._dateSelection.add(date);
-      this._selectedChanged.next(this._dateSelection.asDate() || undefined);
+      this._selectedChanged.next(this._dateSelection.getSelection() || undefined);
     }
   }
 
