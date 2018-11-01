@@ -397,7 +397,7 @@ const DOCS: {[key: string]: DocCategory[]} = {
             'table-row-context',
             'table-selection',
             'table-sorting',
-            'table-sticky-column',
+            'table-sticky-columns',
             'table-sticky-footer',
             'table-sticky-header',
         ]},
@@ -459,7 +459,9 @@ const DOCS: {[key: string]: DocCategory[]} = {
           id: 'platform',
           name: 'Platform',
           summary: 'Provides information about the user\'s platform.',
-          examples: []
+          examples: [
+            'cdk-platform-overview',
+          ]
         },
         {
           id: 'portal',
