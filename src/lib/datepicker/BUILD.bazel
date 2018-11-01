@@ -86,6 +86,7 @@ ng_test_library(
     "//src/lib/core",
     "//src/lib/form-field",
     "//src/lib/input",
+    "//src/lib/testing",
     ":datepicker",
   ]
 )
