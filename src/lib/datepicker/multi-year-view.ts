@@ -34,9 +34,9 @@ import {
 } from '@angular/core';
 import {
   DateAdapter,
-  DateRange,
   MAT_SINGLE_DATE_SELECTION_MODEL_PROVIDER,
-  MatDateSelectionModel, MatSingleDateSelectionModel
+  MatDateSelectionModel,
+  MatSingleDateSelectionModel
 } from '@angular/material/core';
 import {Subscription} from 'rxjs';
 import {MatCalendarBody, MatCalendarCell} from './calendar-body';
@@ -248,11 +248,11 @@ export class MatMultiYearView<D> implements AfterContentInit, OnDestroy {
 
   /** Creates an MatCalendarCell for the given year. */
   private _createCellForYear(year: number) {
-    const date: D = this._dateAdapter.createDate(year, 0, 1);
+    const start: D = this._dateAdapter.createDate(year, 0, 1);
     const end: D = this._dateAdapter.createDate(year, 11, 31);
-    const range: DateRange<D> = {start: date, end};
-    const yearName = this._dateAdapter.getYearName(date);
-    return new MatCalendarCell(year, yearName, yearName, this._shouldEnableYear(year), range);
+    const range = {start, end};
+    const yearName = this._dateAdapter.getYearName(start);
+    return new MatCalendarCell(range, yearName, yearName, this._shouldEnableYear(year));
   }
 
   /** Whether the given year is enabled. */
