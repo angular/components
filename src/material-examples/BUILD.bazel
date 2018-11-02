@@ -6,7 +6,7 @@ load("//tools:defaults.bzl", "ng_module")
 
 ng_module(
   name = "examples",
-  srcs = glob(["**/*.ts"]),
+  srcs = glob(["**/*.ts"]) + [":example-module"],
   module_name = "@angular/material-examples",
   assets = glob(["**/*.html", "**/*.css"]),
   deps = [
@@ -30,3 +30,22 @@ ng_package(
   # TODO(devversion): re-enable once we have set up the proper compiler for the ng_package
   tags = ["manual"],
 )
+
+genrule(
+  name = "example-module",
+  srcs = glob(["**/*.ts"]),
+  outs = ["example-module.ts"],
+  cmd = """
+    # As a workaround for https://github.com/bazelbuild/rules_nodejs/issues/404, we pass the
+    # data to the Bazel entry-point through environment variables.
+    export _SOURCE_FILES="$(SRCS)"
+    export _OUTPUT_FILE="$@"
+    export _BASE_DIR="$$(dirname $(location //src/material-examples:index.ts))"
+
+    # Run the bazel entry-point for generating the example module.
+    ./$(location //tools/example-module:bazel-bin)
+  """,
+  tools = ["//tools/example-module:bazel-bin"],
+  output_to_bindir = True,
+)
+
