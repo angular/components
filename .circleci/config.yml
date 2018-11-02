@@ -218,7 +218,8 @@ jobs:
       # CircleCI has a config setting to enforce SSH for all github connections.
       # This is not compatible with our mechanism of using a Personal Access Token
       # to publish the build snapshots. In order to fix this, we unset the global option.
-      - run: git config --global --unset "url.ssh://git@github.com.insteadof"
+      # Don't fail if the option does not exist in the first place.
+      - run: git config --global --unset "url.ssh://git@github.com.insteadof" || true
 
       - *checkout_code
       - *restore_cache
