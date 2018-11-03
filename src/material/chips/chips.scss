@@ -11,7 +11,6 @@ $mat-chip-remove-vertical-padding: 7px;
 $mat-chip-remove-before-margin: 8px;
 $mat-chip-remove-after-padding: 8px;
 
-$mat-chip-avatar-vertical-padding: 0;
 $mat-chip-avatar-before-padding: 0;
 $mat-chip-avatar-before-margin: 4px;
 $mat-chip-avatar-after-margin: 8px;
@@ -42,11 +41,6 @@ $mat-chip-remove-size: 18px;
   align-items: center;
   cursor: default;
   min-height: $mat-chip-min-height;
-
-  // Centering the content using flexbox won't work on IE, if we have
-  // a `min-height` without setting a `height`. This height won't do
-  // anything since it's less than the minimum set above.
-  height: 1px;
 
   .mat-chip-remove.mat-icon {
     width: $mat-chip-remove-size;
@@ -95,12 +89,6 @@ $mat-chip-remove-size: 18px;
     }
   }
 
-  &.mat-chip-with-trailing-icon.mat-chip-with-avatar,
-  &.mat-chip-with-avatar {
-    padding-top: $mat-chip-avatar-vertical-padding;
-    padding-bottom: $mat-chip-avatar-vertical-padding;
-  }
-
   &.mat-chip-with-trailing-icon.mat-chip-with-avatar {
     padding-right: $mat-chip-remove-after-padding;
     padding-left: $mat-chip-avatar-before-padding;
@@ -112,8 +100,6 @@ $mat-chip-remove-size: 18px;
   }
 
   &.mat-chip-with-trailing-icon {
-    padding-top: $mat-chip-remove-vertical-padding;
-    padding-bottom: $mat-chip-remove-vertical-padding;
     padding-right: $mat-chip-remove-after-padding;
     padding-left: $mat-chip-horizontal-padding;
 
@@ -136,8 +122,8 @@ $mat-chip-remove-size: 18px;
   .mat-chip-avatar {
     width: $mat-chip-avatar-size;
     height: $mat-chip-avatar-size;
-    margin-right: $mat-chip-avatar-after-margin;
-    margin-left: $mat-chip-avatar-before-margin;
+    margin: -$mat-chip-vertical-padding $mat-chip-avatar-after-margin (-$mat-chip-vertical-padding)
+        $mat-chip-avatar-before-margin;
 
     [dir='rtl'] & {
       margin-left: $mat-chip-avatar-after-margin;
@@ -150,12 +136,8 @@ $mat-chip-remove-size: 18px;
     width: $mat-chip-remove-size;
     height: $mat-chip-remove-size;
     cursor: pointer;
-  }
-
-  .mat-chip-remove,
-  .mat-chip-trailing-icon {
-    margin-left: $mat-chip-remove-before-margin;
     margin-right: 0;
+    margin-left: $mat-chip-remove-before-margin;
 
     [dir='rtl'] & {
       margin-right: $mat-chip-remove-before-margin;
