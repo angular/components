@@ -101,6 +101,14 @@ export class MatDialogConfig<D = any> {
    */
   restoreFocus?: boolean = true;
 
+  /**
+   * The focusable item to restore focus to if attempting restoreFocus is true.  Can be an object
+   * that has a focus method, or a function that returns this type of object.  If no object is
+   * provided the dialog will attempt to return the focus to the element which had focus when
+   * when the dialog opened.
+   */
+  focusRestoreTarget?: (() => {focus: () => any}) | {focus: () => any};
+
   /** Scroll strategy to be used for the dialog. */
   scrollStrategy?: ScrollStrategy;
 

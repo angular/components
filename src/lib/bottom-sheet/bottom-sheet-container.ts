@@ -192,7 +192,20 @@ export class MatBottomSheetContainer extends BasePortalOutlet implements OnDestr
 
   /** Restores focus to the element that was focused before the bottom sheet was opened. */
   private _restoreFocus() {
-    const toFocus = this._elementFocusedBeforeOpened;
+    let toFocus = this._elementFocusedBeforeOpened as {focus: () => any};
+    if (this.bottomSheetConfig.restoreFocus) {
+      if (this.bottomSheetConfig.focusRestoreTarget) {
+        if (typeof this.bottomSheetConfig.focusRestoreTarget === 'function') {
+          toFocus = this.bottomSheetConfig.focusRestoreTarget();
+        } else {
+          toFocus = this.bottomSheetConfig.focusRestoreTarget;
+        }
+      }
+      // We need the extra check, because IE can set the `activeElement` to null in some cases.
+      if (toFocus && typeof toFocus.focus === 'function') {
+        toFocus.focus();
+      }
+    }
 
     // We need the extra check, because IE can set the `activeElement` to null in some cases.
     if (this.bottomSheetConfig.restoreFocus && toFocus && typeof toFocus.focus === 'function') {

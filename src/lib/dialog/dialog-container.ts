@@ -145,11 +145,19 @@ export class MatDialogContainer extends BasePortalOutlet {
 
   /** Restores focus to the element that was focused before the dialog opened. */
   private _restoreFocus() {
-    const toFocus = this._elementFocusedBeforeDialogWasOpened;
-
-    // We need the extra check, because IE can set the `activeElement` to null in some cases.
-    if (this._config.restoreFocus && toFocus && typeof toFocus.focus === 'function') {
-      toFocus.focus();
+    let toFocus = this._elementFocusedBeforeDialogWasOpened as {focus: () => any};
+    if (this._config.restoreFocus) {
+      if (this._config.focusRestoreTarget) {
+        if (typeof this._config.focusRestoreTarget === 'function') {
+          toFocus = this._config.focusRestoreTarget();
+        } else {
+          toFocus = this._config.focusRestoreTarget;
+        }
+      }
+      // We need the extra check, because IE can set the `activeElement` to null in some cases.
+      if (toFocus && typeof toFocus.focus === 'function') {
+        toFocus.focus();
+      }
     }
 
     if (this._focusTrap) {

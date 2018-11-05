@@ -36,6 +36,7 @@ import {
   MAT_DIALOG_DEFAULT_OPTIONS
 } from './index';
 import {Subject} from 'rxjs';
+import {MatDialogConfig} from './dialog-config';
 
 
 describe('MatDialog', () => {
@@ -1058,7 +1059,61 @@ describe('MatDialog', () => {
       document.body.removeChild(button);
     }));
 
+    describe('focus restoration targeting', () => {
+      let laterFocusedButton: HTMLButtonElement;
+      let initialFocusedButton: HTMLButtonElement;
+      const focusTargetId = 'dialog-focus-restore';
 
+      const checkFocusReturnedToFocusTarget = (config: MatDialogConfig) => {
+        const dialogRef = dialog.open(PizzaMsg, config);
+        flushMicrotasks();
+        viewContainerFixture.detectChanges();
+        flushMicrotasks();
+        dialogRef.close();
+        flushMicrotasks();
+        viewContainerFixture.detectChanges();
+        tick(500);
+
+        expect(document.activeElement!.id).toBe(focusTargetId,
+          'Expected focus to have been restored to the target.');
+      };
+
+      beforeEach(fakeAsync(() => {
+        initialFocusedButton = document.createElement('button');
+        initialFocusedButton.id = 'dialog-focus-initial';
+        laterFocusedButton = document.createElement('button');
+        laterFocusedButton.id = focusTargetId;
+
+        document.body.appendChild(initialFocusedButton);
+        document.body.appendChild(laterFocusedButton);
+        initialFocusedButton.focus();
+      }));
+
+      afterEach(fakeAsync(() => {
+        document.body.removeChild(initialFocusedButton);
+        document.body.removeChild(laterFocusedButton);
+      }));
+
+      it('should allow targetted focus restoration with focusable item', fakeAsync(() => {
+        const config: MatDialogConfig = {
+          viewContainerRef: testViewContainerRef,
+          focusRestoreTarget: laterFocusedButton
+        };
+
+        checkFocusReturnedToFocusTarget(config);
+      }));
+
+      it('should allow targetted focus restoration with function', fakeAsync(() => {
+        const config: MatDialogConfig = {
+          viewContainerRef: testViewContainerRef,
+          focusRestoreTarget: () => {
+            return document.querySelector('#dialog-focus-restore') as HTMLElement;
+          }
+        };
+
+        checkFocusReturnedToFocusTarget(config);
+      }));
+    });
   });
 
   describe('dialog content elements', () => {
