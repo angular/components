@@ -35,11 +35,11 @@ import {
 } from '@angular/core';
 import {
   DateAdapter,
-  DateRange,
   MAT_DATE_FORMATS,
   MAT_SINGLE_DATE_SELECTION_MODEL_PROVIDER,
   MatDateFormats,
-  MatDateSelectionModel, MatSingleDateSelectionModel
+  MatDateSelectionModel,
+  MatSingleDateSelectionModel
 } from '@angular/material/core';
 import {Subscription} from 'rxjs';
 import {MatCalendarBody, MatCalendarCell} from './calendar-body';
@@ -260,15 +260,14 @@ export class MatYearView<D> implements AfterContentInit, OnDestroy {
   /** Creates an MatCalendarCell for the given month. */
   private _createCellForMonth(month: number, monthName: string) {
     const year = this._dateAdapter.getYear(this.activeDate);
-    const startDate = this._dateAdapter.createDate(year, month, 1);
-    const ariaLabel = this._dateAdapter.format(startDate,
-                                               this._dateFormats.display.monthYearA11yLabel);
-    const range: DateRange<D> = {
-      start: startDate,
-      end: this._dateAdapter.createDate(year, month, this._dateAdapter.getNumDaysInMonth(startDate))
+    const start = this._dateAdapter.createDate(year, month, 1);
+    const ariaLabel = this._dateAdapter.format(start, this._dateFormats.display.monthYearA11yLabel);
+    const range = {
+      start,
+      end: this._dateAdapter.createDate(year, month, this._dateAdapter.getNumDaysInMonth(start))
     };
     return new MatCalendarCell(
-        month, monthName.toLocaleUpperCase(), ariaLabel, this._shouldEnableMonth(month), range);
+        range, monthName.toLocaleUpperCase(), ariaLabel, this._shouldEnableMonth(month));
   }
 
   /** Whether the given month is enabled. */

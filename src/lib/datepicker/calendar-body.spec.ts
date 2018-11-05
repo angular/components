@@ -1,7 +1,7 @@
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 import {Component} from '@angular/core';
-import {MatCalendarBody, MatCalendarCell, MatCalendarCellCssClasses} from './calendar-body';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
+import {MatCalendarBody, MatCalendarCell} from './calendar-body';
 
 
 describe('MatCalendarBody', () => {
@@ -140,11 +140,10 @@ class StandardCalendarBody {
 
 function createCell(value: number, cellClasses?: MatCalendarCellCssClasses) {
   return new MatCalendarCell(
-    value,
-    `${value}`,
-    `${value}-label`,
-    true,
-    {start: new Date(value), end: new Date(value)},
-    cellClasses
+      {start: new Date(value), end: new Date(value)},
+      `${value}`,
+      `${value}-label`,
+      true,
+      cellClasses
   );
 }
