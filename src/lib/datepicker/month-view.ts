@@ -35,11 +35,11 @@ import {
 } from '@angular/core';
 import {
   DateAdapter,
-  DateRange,
   MAT_DATE_FORMATS,
   MAT_SINGLE_DATE_SELECTION_MODEL_PROVIDER,
   MatDateFormats,
-  MatDateSelectionModel, MatSingleDateSelectionModel
+  MatDateSelectionModel,
+  MatSingleDateSelectionModel
 } from '@angular/material/core';
 import {Subscription} from 'rxjs';
 import {MatCalendarBody, MatCalendarCell} from './calendar-body';
@@ -300,10 +300,10 @@ export class MatMonthView<D> implements AfterContentInit, OnDestroy {
             this._dateAdapter.getYear(this.activeDate),
             this._dateAdapter.getMonth(this.activeDate), i + 1);
       const enabled = this._shouldEnableDate(date);
-      const range: DateRange<D> = {start: date, end: date};
+      const range = {start: date, end: date};
       const ariaLabel = this._dateAdapter.format(date, this._dateFormats.display.dateA11yLabel);
       this._weeks[this._weeks.length - 1]
-          .push(new MatCalendarCell<D>(i + 1, dateNames[i], ariaLabel, enabled, range));
+          .push(new MatCalendarCell<D>(range, dateNames[i], ariaLabel, enabled));
     }
   }
 
