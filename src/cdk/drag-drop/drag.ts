@@ -66,6 +66,22 @@ export interface CdkDragConfig {
    * considers them to have changed the drag direction.
    */
   pointerDirectionChangeThreshold: number;
+
+  /**
+   * The strategy to take when dropping the item (in non drop zone area)
+   */
+  dropStrategy: CdkDropStrategy
+}
+
+/** Enum to decide what to do when the user drop the item
+ * LastKnownContainer - Drop the item on the Last container the item was dragged hover, no matter where the item is dropped.
+ * ExactLocation - Tries to drop the item in the current location, if the current location 
+ * is not inside a valid drop zonem the item will return to the initial container.
+ */
+export enum CdkDropStrategy {
+  LastKnownContainer,
+  ExactLocation
+
 }
 
 /** Injection token that can be used to configure the behavior of `CdkDrag`. */
@@ -76,7 +92,7 @@ export const CDK_DRAG_CONFIG = new InjectionToken<CdkDragConfig>('CDK_DRAG_CONFI
 
 /** @docs-private */
 export function CDK_DRAG_CONFIG_FACTORY(): CdkDragConfig {
-  return {dragStartThreshold: 5, pointerDirectionChangeThreshold: 5};
+  return {dragStartThreshold: 5, pointerDirectionChangeThreshold: 5, dropStrategy: CdkDropStrategy.LastKnownContainer};
 }
 
 /** Options that can be used to bind a passive event listener. */
@@ -511,7 +527,8 @@ export class CdkDrag<T = any> implements AfterViewInit, OnDestroy {
     // undo dragging an item into a new container.
     if (!newContainer && this.dropContainer !== this._initialContainer &&
         (this._initialContainer._canReturnItem(this, x, y) ||
-         !this.dropContainer._isOverContainer(x, y))) {
+        (this._config.dropStrategy === CdkDropStrategy.ExactLocation &&
+         !this.dropContainer._isOverContainer(x, y)))) {
       newContainer = this._initialContainer;
     }
 

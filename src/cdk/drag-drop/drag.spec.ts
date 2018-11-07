@@ -9,6 +9,7 @@ import {
   ViewChild,
   ViewChildren,
   ViewEncapsulation,
+  ValueProvider,
 } from '@angular/core';
 import {TestBed, ComponentFixture, fakeAsync, flush, tick} from '@angular/core/testing';
 import {DragDropModule} from './drag-drop-module';
@@ -19,7 +20,7 @@ import {
   dispatchTouchEvent,
 } from '@angular/cdk/testing';
 import {Directionality} from '@angular/cdk/bidi';
-import {CdkDrag, CDK_DRAG_CONFIG, CdkDragConfig} from './drag';
+import {CdkDrag, CDK_DRAG_CONFIG, CdkDragConfig, CdkDropStrategy} from './drag';
 import {CdkDragDrop} from './drag-events';
 import {moveItemInArray} from './drag-utils';
 import {CdkDropList} from './drop-list';
@@ -31,11 +32,10 @@ const ITEM_WIDTH = 75;
 describe('CdkDrag', () => {
   function createComponent<T>(componentType: Type<T>, providers: Provider[] = [], dragDistance = 0):
     ComponentFixture<T> {
-    TestBed.configureTestingModule({
-      imports: [DragDropModule],
-      declarations: [componentType, PassthroughComponent],
-      providers: [
-        {
+      // If none of the providers is CDK_DRAG_CONFIG, add the default testing config
+      if(providers.every((provider: any) => 
+      provider.provide && provider.provide !== CDK_DRAG_CONFIG)) {
+        providers.push({
           provide: CDK_DRAG_CONFIG,
           useValue: {
             // We default the `dragDistance` to zero, because the majority of the tests
@@ -44,9 +44,14 @@ describe('CdkDrag', () => {
             dragStartThreshold: dragDistance,
             pointerDirectionChangeThreshold: 5
           } as CdkDragConfig
-        },
-        ...providers
-      ],
+        });
+      }
+
+    TestBed.configureTestingModule({
+      imports: [DragDropModule],
+      declarations: [componentType, PassthroughComponent],
+      providers: providers
+      ,
     }).compileComponents();
 
     return TestBed.createComponent<T>(componentType);
@@ -1714,7 +1719,16 @@ describe('CdkDrag', () => {
 
     it('should be able to move the element over a new container and return it when the dropping' +
       ' item is outside the drop container', fakeAsync(() => {
-      const fixture = createComponent(ConnectedDropZones);
+
+      const fixture = createComponent(ConnectedDropZones,
+         [{
+          provide: CDK_DRAG_CONFIG,
+          useValue: {
+            dragStartThreshold: 0,
+            pointerDirectionChangeThreshold: 5,
+            dropStrategy: CdkDropStrategy.ExactLocation
+          } as CdkDragConfig
+        } as ValueProvider]);
       fixture.detectChanges();
 
       const groups = fixture.componentInstance.groupedDragItems;

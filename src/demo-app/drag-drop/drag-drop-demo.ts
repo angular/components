@@ -13,15 +13,23 @@ import {
   CdkDragDrop,
   moveItemInArray,
   transferArrayItem,
-  copyArrayItem
+  copyArrayItem, 
+  CdkDragConfig,
+  CdkDropStrategy,
+  CDK_DRAG_CONFIG
 } from '@angular/cdk/drag-drop';
-
+ 
 @Component({
   moduleId: module.id,
   selector: 'drag-drop-demo',
   templateUrl: 'drag-drop-demo.html',
   styleUrls: ['drag-drop-demo.css'],
   encapsulation: ViewEncapsulation.None,
+  providers: [{
+    provide: CDK_DRAG_CONFIG,
+    useValue: { dragStartThreshold: 5,pointerDirectionChangeThreshold: 5, dropStrategy: CdkDropStrategy.LastKnownContainer
+    } as CdkDragConfig
+  }]
 })
 export class DragAndDropDemo {
 
