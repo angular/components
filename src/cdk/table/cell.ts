@@ -7,7 +7,7 @@
  */
 
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
-import {ContentChild, Directive, ElementRef, Input, TemplateRef} from '@angular/core';
+import {Attribute, ContentChild, Directive, ElementRef, Input, TemplateRef} from '@angular/core';
 import {CanStick, CanStickCtor, mixinHasStickyInput} from './can-stick';
 
 
@@ -126,8 +126,15 @@ export class BaseCdkCell {
   },
 })
 export class CdkHeaderCell extends BaseCdkCell {
-  constructor(columnDef: CdkColumnDef, elementRef: ElementRef) {
+
+  constructor(
+    columnDef: CdkColumnDef,
+    elementRef: ElementRef,
+    @Attribute('aria-label') ariaLabel: string = '') {
     super(columnDef, elementRef);
+    if (!ariaLabel) {
+      elementRef.nativeElement.setAttribute('aria-label', columnDef.name);
+    }
   }
 }
 

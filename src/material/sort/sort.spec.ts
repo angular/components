@@ -301,7 +301,12 @@ describe('MatSort', () => {
         fixture, ['asc', 'desc'], 'overrideDisableClear');
   });
 
-  it('should apply the aria-labels to the button', () => {
+  it('should apply the aria-labels to the button using the readableLabel', () => {
+    const button = fixture.nativeElement.querySelector('#defaultB button');
+    expect(button.getAttribute('aria-label')).toBe('Change sorting for readable column name');
+  });
+
+  it('should apply the aria-labels to the button based on id if no readableLabel is given', () => {
     const button = fixture.nativeElement.querySelector('#defaultA button');
     expect(button.getAttribute('aria-label')).toBe('Change sorting for defaultA');
   });
@@ -466,7 +471,8 @@ type SimpleMatSortAppColumnIds = 'defaultA' | 'defaultB' | 'overrideStart' | 'ov
       </div>
       <div id="defaultB"
            #defaultB
-           mat-sort-header="defaultB">
+           mat-sort-header="defaultB"
+           mat-sort-header-readable-label="readable column name">
         B
       </div>
       <div id="overrideStart"

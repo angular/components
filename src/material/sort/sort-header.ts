@@ -124,6 +124,12 @@ export class MatSortHeader extends _MatSortHeaderMixinBase
    */
   @Input('mat-sort-header') id: string;
 
+  /**
+   * The label used by aria-label to describe the sorting action.  If no label is provided, this
+   * will default to the mat-sort-header value.
+   */
+  @Input('mat-sort-header-readable-label') label: string;
+
   /** Sets the position of the arrow that displays when sorted. */
   @Input() arrowPosition: 'before' | 'after' = 'after';
 

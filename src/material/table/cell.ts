@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Directive, ElementRef, Input} from '@angular/core';
+import {Attribute, Directive, ElementRef, Input} from '@angular/core';
 import {
   CdkCell,
   CdkCellDef,
@@ -77,8 +77,9 @@ export class MatColumnDef extends CdkColumnDef {
 })
 export class MatHeaderCell extends CdkHeaderCell {
   constructor(columnDef: CdkColumnDef,
-              elementRef: ElementRef<HTMLElement>) {
-    super(columnDef, elementRef);
+              elementRef: ElementRef<HTMLElement>,
+              @Attribute('aria-label') ariaLabel: string = '') {
+    super(columnDef, elementRef, ariaLabel);
     elementRef.nativeElement.classList.add(`mat-column-${columnDef.cssClassFriendlyName}`);
   }
 }

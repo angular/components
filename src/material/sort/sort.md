@@ -40,4 +40,6 @@ by default it will use the id of the column.
 <!-- example(table-sorting) -->
 
 ### Accessibility
-The `aria-label` for the sort button can be set in `MatSortHeaderIntl`.
+The `aria-label` for the sort button can be customized in `MatSortHeaderIntl`.  The value from
+`mat-sort-header-readable-label` if defined will be used as the paramater for the
+`MatSortHeaderIntl.sortButtonLabel` method, otherwise the `mat-sort-header` value is used.

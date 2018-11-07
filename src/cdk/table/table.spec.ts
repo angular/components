@@ -117,6 +117,18 @@ describe('CdkTable', () => {
           });
         });
       });
+
+      it('header cells with the aria-label provided by the user', () => {
+        const headers = tableElement.querySelectorAll('cdk-header-cell');
+        const columnHeader = headers[0];
+        expect(columnHeader.getAttribute('aria-label')).toBe('readable column name');
+      });
+
+      it('header cells with default aria-labels if none are provided', () => {
+        const headers = tableElement.querySelectorAll('cdk-header-cell');
+        const columnHeader = headers[1];
+        expect(columnHeader.getAttribute('aria-label')).toBe('column_b');
+      });
     });
 
     it('should disconnect the data source when table is destroyed', () => {
@@ -1432,7 +1444,8 @@ class BooleanDataSource extends DataSource<boolean> {
   template: `
     <cdk-table [dataSource]="dataSource">
       <ng-container cdkColumnDef="column_a">
-        <cdk-header-cell *cdkHeaderCellDef> Column A </cdk-header-cell>
+        <cdk-header-cell *cdkHeaderCellDef
+                         aria-label="readable column name"> Column A </cdk-header-cell>
         <cdk-cell *cdkCellDef="let row"> {{row.a}} </cdk-cell>
         <cdk-footer-cell *cdkFooterCellDef> Footer A </cdk-footer-cell>
       </ng-container>
