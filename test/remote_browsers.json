@@ -91,7 +91,7 @@
     "device": "iPhone 8",
     "os": "ios",
     "os_version": "11.0",
-    "real_mobile": true
+    "real_mobile": false
   },
   "BROWSERSTACK_IE9": {
     "base": "BrowserStack",
