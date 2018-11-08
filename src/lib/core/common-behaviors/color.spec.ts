@@ -7,13 +7,8 @@ describe('MixinColor', () => {
     const classWithColor = mixinColor(TestClass);
     const instance = new classWithColor();
 
-    expect(instance.color)
-        .toBeFalsy('Expected the mixed-into class to have a color property');
-
-    instance.color = 'accent';
-
-    expect(instance.color)
-        .toBe('accent', 'Expected the mixed-into class to have an updated color property');
+    expect('color' in instance)
+        .toBeTruthy('Expected the mixed-into class to have a color property');
   });
 
   it('should remove old color classes if new color is set', () => {
