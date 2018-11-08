@@ -16,6 +16,7 @@ import {
   PAGE_UP,
   RIGHT_ARROW,
   UP_ARROW,
+  SPACE,
 } from '@angular/cdk/keycodes';
 import {
   AfterContentInit,
@@ -32,7 +33,7 @@ import {
 } from '@angular/core';
 import {DateAdapter, MAT_DATE_FORMATS, MatDateFormats} from '@angular/material/core';
 import {Directionality} from '@angular/cdk/bidi';
-import {MatCalendarBody, MatCalendarCell} from './calendar-body';
+import {MatCalendarBody, MatCalendarCell, MatCalendarCellCssClasses} from './calendar-body';
 import {createMissingDateImplError} from './datepicker-errors';
 
 
@@ -93,8 +94,11 @@ export class MatMonthView<D> implements AfterContentInit {
   }
   private _maxDate: D | null;
 
-  /** A function used to filter which dates are selectable. */
+  /** Function used to filter which dates are selectable. */
   @Input() dateFilter: (date: D) => boolean;
+
+  /** Function that can be used to add custom CSS classes to dates. */
+  @Input() dateClass: (date: D) => MatCalendarCellCssClasses;
 
   /** Emits when a new date is selected. */
   @Output() readonly selectedChange: EventEmitter<D | null> = new EventEmitter<D | null>();
@@ -212,6 +216,7 @@ export class MatMonthView<D> implements AfterContentInit {
             this._dateAdapter.addCalendarMonths(this._activeDate, 1);
         break;
       case ENTER:
+      case SPACE:
         if (!this.dateFilter || this.dateFilter(this._activeDate)) {
           this._dateSelected(this._dateAdapter.getDate(this._activeDate));
           this._userSelection.emit();
@@ -271,8 +276,10 @@ export class MatMonthView<D> implements AfterContentInit {
             this._dateAdapter.getMonth(this.activeDate), i + 1);
       const enabled = this._shouldEnableDate(date);
       const ariaLabel = this._dateAdapter.format(date, this._dateFormats.display.dateA11yLabel);
+      const cellClasses = this.dateClass ? this.dateClass(date) : undefined;
+
       this._weeks[this._weeks.length - 1]
-          .push(new MatCalendarCell(i + 1, dateNames[i], ariaLabel, enabled));
+          .push(new MatCalendarCell(i + 1, dateNames[i], ariaLabel, enabled, cellClasses));
     }
   }
 

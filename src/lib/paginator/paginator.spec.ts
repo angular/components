@@ -1,11 +1,11 @@
 import {async, ComponentFixture, TestBed, inject, tick, fakeAsync} from '@angular/core/testing';
-import {MatPaginatorModule} from './index';
-import {MatPaginator} from './paginator';
 import {Component, ViewChild} from '@angular/core';
-import {MatPaginatorIntl} from './paginator-intl';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {dispatchMouseEvent} from '@angular/cdk/testing';
 import {ThemePalette} from '@angular/material/core';
+import {MatSelect} from '@angular/material/select';
+import {By} from '@angular/platform-browser';
+import {MatPaginatorModule, MatPaginator, MatPaginatorIntl} from './index';
 
 
 describe('MatPaginator', () => {
@@ -101,7 +101,7 @@ describe('MatPaginator', () => {
         intl.changes.next();
         fixture.detectChanges();
 
-        expect(label.textContent).toBe('1337 items per page');
+        expect(label.textContent!.trim()).toBe('1337 items per page');
       }));
   });
 
@@ -338,6 +338,23 @@ describe('MatPaginator', () => {
     }));
   });
 
+  it('should keep track of the right number of pages', () => {
+    component.pageSize = 10;
+    component.length = 100;
+    fixture.detectChanges();
+    expect(paginator.getNumberOfPages()).toBe(10);
+
+    component.pageSize = 10;
+    component.length = 0;
+    fixture.detectChanges();
+    expect(paginator.getNumberOfPages()).toBe(0);
+
+    component.pageSize = 10;
+    component.length = 10;
+    fixture.detectChanges();
+    expect(paginator.getNumberOfPages()).toBe(1);
+  });
+
   it('should show a select only if there are multiple options', () => {
     expect(paginator._displayedPageSizeOptions).toEqual([5, 10, 25, 100]);
     expect(fixture.nativeElement.querySelector('.mat-select')).not.toBeNull();
@@ -374,6 +391,29 @@ describe('MatPaginator', () => {
         .toBeNull('Expected select to be removed.');
   });
 
+  it('should be able to disable all the controls in the paginator via the binding', () => {
+    const select: MatSelect = fixture.debugElement.query(By.directive(MatSelect)).componentInstance;
+
+    fixture.componentInstance.pageIndex = 1;
+    fixture.componentInstance.showFirstLastButtons = true;
+    fixture.detectChanges();
+
+    expect(select.disabled).toBe(false);
+    expect(getPreviousButton(fixture).hasAttribute('disabled')).toBe(false);
+    expect(getNextButton(fixture).hasAttribute('disabled')).toBe(false);
+    expect(getFirstButton(fixture).hasAttribute('disabled')).toBe(false);
+    expect(getLastButton(fixture).hasAttribute('disabled')).toBe(false);
+
+    fixture.componentInstance.disabled = true;
+    fixture.detectChanges();
+
+    expect(select.disabled).toBe(true);
+    expect(getPreviousButton(fixture).hasAttribute('disabled')).toBe(true);
+    expect(getNextButton(fixture).hasAttribute('disabled')).toBe(true);
+    expect(getFirstButton(fixture).hasAttribute('disabled')).toBe(true);
+    expect(getLastButton(fixture).hasAttribute('disabled')).toBe(true);
+  });
+
 });
 
 function getPreviousButton(fixture: ComponentFixture<any>) {
@@ -401,6 +441,7 @@ function getLastButton(fixture: ComponentFixture<any>) {
                    [showFirstLastButtons]="showFirstLastButtons"
                    [length]="length"
                    [color]="color"
+                   [disabled]="disabled"
                    (page)="pageEvent($event)">
     </mat-paginator>
   `,
@@ -412,6 +453,7 @@ class MatPaginatorApp {
   hidePageSize = false;
   showFirstLastButtons = false;
   length = 100;
+  disabled: boolean;
   pageEvent = jasmine.createSpy('page event');
   color: ThemePalette;
 

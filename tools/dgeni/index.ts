@@ -1,13 +1,15 @@
 import {Package} from 'dgeni';
 import {Host} from 'dgeni-packages/typescript/services/ts-host/host';
+import {HighlightNunjucksExtension} from './nunjucks-tags/highlight';
 import {patchLogService} from './patch-log-service';
 import {DocsPrivateFilter} from './processors/docs-private-filter';
 import {Categorizer} from './processors/categorizer';
 import {FilterDuplicateExports} from './processors/filter-duplicate-exports';
 import {MergeInheritedProperties} from './processors/merge-inherited-properties';
-import {ComponentGrouper} from './processors/component-grouper';
+import {EntryPointGrouper} from './processors/entry-point-grouper';
 import {ReadTypeScriptModules} from 'dgeni-packages/typescript/processors/readTypeScriptModules';
 import {TsParser} from 'dgeni-packages/typescript/services/TsParser';
+import {TypeFormatFlags} from 'dgeni-packages/node_modules/typescript';
 import {sync as globSync} from 'glob';
 import * as path from 'path';
 
@@ -62,8 +64,8 @@ apiDocsPackage.processor(new DocsPrivateFilter());
 // Processor that appends categorization flags to the docs, e.g. `isDirective`, `isNgModule`, etc.
 apiDocsPackage.processor(new Categorizer());
 
-// Processor to group components into top-level groups such as "Tabs", "Sidenav", etc.
-apiDocsPackage.processor(new ComponentGrouper());
+// Processor to group docs into top-level entry-points such as "tabs", "sidenav", etc.
+apiDocsPackage.processor(new EntryPointGrouper());
 
 // Configure the log level of the API docs dgeni package.
 apiDocsPackage.config((log: any) => log.level = 'info');
@@ -82,7 +84,7 @@ apiDocsPackage.config((log: any) => patchLogService(log));
 // Configure the output path for written files (i.e., file names).
 apiDocsPackage.config((computePathsProcessor: any) => {
   computePathsProcessor.pathTemplates = [{
-    docTypes: ['componentGroup'],
+    docTypes: ['entry-point'],
     pathTemplate: '${name}',
     outputPathTemplate: '${name}.html',
   }];
@@ -133,6 +135,10 @@ apiDocsPackage.config((tsHost: Host) => {
   // should only use the first leading comment, we need to disable comment concatenation.
   // See for example: src/cdk/coercion/boolean-property.ts
   tsHost.concatMultipleLeadingComments = false;
+
+  // Explicitly disable truncation for types that will be displayed as strings. Otherwise
+  // TypeScript by default truncates long types and causes misleading API documentation.
+  tsHost.typeFormatFlags = TypeFormatFlags.NoTruncation;
 });
 
 // Configure processor for finding nunjucks templates.
@@ -163,4 +169,6 @@ apiDocsPackage.config((templateFinder: any, templateEngine: any) => {
     variableStart: '{$',
     variableEnd: '$}'
   };
+
+  templateEngine.tags.push(new HighlightNunjucksExtension());
 });

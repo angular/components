@@ -1,7 +1,7 @@
 package(default_visibility=["//visibility:public"])
-load("@angular//:index.bzl", "ng_module")
-load("@io_bazel_rules_sass//sass:sass.bzl", "sass_library", "sass_binary")
 
+load("@io_bazel_rules_sass//:defs.bzl", "sass_library", "sass_binary")
+load("//tools:defaults.bzl", "ng_module")
 
 ng_module(
   name = "form-field",
@@ -10,18 +10,25 @@ ng_module(
   assets = [
     ":form-field.css",
     ":form-field-fill.css",
+    ":form-field-input.css",
     ":form-field-legacy.css",
     ":form-field-outline.css",
     ":form-field-standard.css",
-    "//src/lib/input:input.css"
   ] + glob(["**/*.html"]),
   deps = [
-    "//src/lib/core",
+    "@angular//packages/animations",
+    "@angular//packages/common",
+    "@angular//packages/core",
+    "@angular//packages/forms",
+    "@angular//packages/platform-browser/animations",
+    "@rxjs",
+    "@rxjs//operators",
+    "//src/cdk/bidi",
     "//src/cdk/coercion",
     "//src/cdk/observers",
     "//src/cdk/platform",
+    "//src/lib/core",
   ],
-  tsconfig = "//src/lib:tsconfig-build.json",
 )
 
 # TODO(jelbourn): replace this w/ sass_library when it supports acting like a filegroup
@@ -39,6 +46,12 @@ sass_binary(
 sass_binary(
   name = "form_field_fill_scss",
   src = "form-field-fill.scss",
+  deps = ["//src/lib/core:core_scss_lib"],
+)
+
+sass_binary(
+  name = "form_field_input_scss",
+  src = "form-field-input.scss",
   deps = ["//src/lib/core:core_scss_lib"],
 )
 

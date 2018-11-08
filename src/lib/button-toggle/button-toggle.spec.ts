@@ -286,6 +286,17 @@ describe('MatButtonToggle without forms', () => {
       expect(groupNativeElement.getAttribute('aria-disabled')).toBe('true');
     });
 
+    it('should disable the underlying button when the group is disabled', () => {
+      const buttons = buttonToggleNativeElements.map(toggle => toggle.querySelector('button')!);
+
+      expect(buttons.every(input => input.disabled)).toBe(false);
+
+      testComponent.isGroupDisabled = true;
+      fixture.detectChanges();
+
+      expect(buttons.every(input => input.disabled)).toBe(true);
+    });
+
     it('should update the group value when one of the toggles changes', () => {
       expect(groupInstance.value).toBeFalsy();
       buttonToggleLabelElements[0].click();
@@ -712,7 +723,21 @@ describe('MatButtonToggle without forms', () => {
 
       const host = fixture.nativeElement.querySelector('.mat-button-toggle');
 
-      expect(host.hasAttribute('tabindex')).toBe(false);
+      expect(host.getAttribute('tabindex')).toBe('-1');
+    });
+
+    it('should forward focus to the underlying button when the host is focused', () => {
+      const fixture = TestBed.createComponent(ButtonToggleWithTabindex);
+      fixture.detectChanges();
+
+      const host = fixture.nativeElement.querySelector('.mat-button-toggle');
+      const button = host.querySelector('button');
+
+      expect(document.activeElement).not.toBe(button);
+
+      host.focus();
+
+      expect(document.activeElement).toBe(button);
     });
   });
 

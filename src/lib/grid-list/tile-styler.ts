@@ -11,6 +11,12 @@ import {MatGridTile} from './grid-tile';
 import {TileCoordinator} from './tile-coordinator';
 
 /**
+ * RegExp that can be used to check whether a value will
+ * be allowed inside a CSS `calc()` expression.
+ */
+const cssCalcAllowedValue = /^-?\d+((\.\d+)?[A-Za-z%$]?)+$/;
+
+/**
  * Sets the style properties for an individual tile, given the position calculated by the
  * Tile Coordinator.
  * @docs-private
@@ -132,7 +138,7 @@ export abstract class TileStyler {
    * @docs-private
    */
   abstract setRowStyles(tile: MatGridTile, rowIndex: number, percentWidth: number,
-                        gutterWidth: number);
+                        gutterWidth: number): void;
 
   /**
    * Calculates the computed height and returns the correct style property to set.
@@ -146,7 +152,7 @@ export abstract class TileStyler {
    * @param list Grid list that the styler was attached to.
    * @docs-private
    */
-  abstract reset(list: MatGridList);
+  abstract reset(list: MatGridList): void;
 }
 
 
@@ -162,6 +168,10 @@ export class FixedTileStyler extends TileStyler {
   init(gutterSize: string, tracker: TileCoordinator, cols: number, direction: string) {
     super.init(gutterSize, tracker, cols, direction);
     this.fixedRowHeight = normalizeUnits(this.fixedRowHeight);
+
+    if (!cssCalcAllowedValue.test(this.fixedRowHeight)) {
+      throw Error(`Invalid value "${this.fixedRowHeight}" set as rowHeight.`);
+    }
   }
 
   setRowStyles(tile: MatGridTile, rowIndex: number): void {
@@ -178,10 +188,12 @@ export class FixedTileStyler extends TileStyler {
   reset(list: MatGridList) {
     list._setListStyle(['height', null]);
 
-    list._tiles.forEach(tile => {
-      tile._setStyle('top', null);
-      tile._setStyle('height', null);
-    });
+    if (list._tiles) {
+      list._tiles.forEach(tile => {
+        tile._setStyle('top', null);
+        tile._setStyle('height', null);
+      });
+    }
   }
 }
 
@@ -248,7 +260,6 @@ export class RatioTileStyler extends TileStyler {
  * @docs-private
  */
 export class FitTileStyler extends TileStyler {
-
   setRowStyles(tile: MatGridTile, rowIndex: number): void {
     // Percent of the available vertical space that one row takes up.
     let percentHeightPerTile = 100 / this._rowspan;
@@ -264,10 +275,12 @@ export class FitTileStyler extends TileStyler {
   }
 
   reset(list: MatGridList) {
-    list._tiles.forEach(tile => {
-      tile._setStyle('top', null);
-      tile._setStyle('height', null);
-    });
+    if (list._tiles) {
+      list._tiles.forEach(tile => {
+        tile._setStyle('top', null);
+        tile._setStyle('height', null);
+      });
+    }
   }
 }
 

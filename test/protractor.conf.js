@@ -37,13 +37,11 @@ exports.config = {
     browserName: 'chrome',
 
     chromeOptions: {
-      // Inside of Travis, we need to specify `--no-sandbox` because otherwise Chrome cannot
-      // be launched properly due to insufficient permissions in a non-sudo environment.
-      args: process.env['TRAVIS'] ? ['--no-sandbox'] : [],
+      args: [ '--headless', '--window-size=1024,768']
     },
 
     // Enables concurrent testing in the Webdriver. Currently runs three e2e files in parallel.
     shardTestFiles: true,
-    maxInstances: 3,
+    maxInstances: 5,
   }
 };

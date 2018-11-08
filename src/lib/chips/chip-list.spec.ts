@@ -269,6 +269,7 @@ describe('MatChipList', () => {
 
           // Press the LEFT arrow
           chipListInstance._keydown(LEFT_EVENT);
+          chipListInstance._blur(); // Simulate focus leaving the list and going to the chip.
           fixture.detectChanges();
 
           // It focuses the next-to-last item
@@ -290,6 +291,7 @@ describe('MatChipList', () => {
 
           // Press the RIGHT arrow
           chipListInstance._keydown(RIGHT_EVENT);
+          chipListInstance._blur(); // Simulate focus leaving the list and going to the chip.
           fixture.detectChanges();
 
           // It focuses the next-to-last item
@@ -362,6 +364,7 @@ describe('MatChipList', () => {
 
           // Press the RIGHT arrow
           chipListInstance._keydown(RIGHT_EVENT);
+          chipListInstance._blur(); // Simulate focus leaving the list and going to the chip.
           fixture.detectChanges();
 
           // It focuses the next-to-last item
@@ -383,6 +386,7 @@ describe('MatChipList', () => {
 
           // Press the LEFT arrow
           chipListInstance._keydown(LEFT_EVENT);
+          chipListInstance._blur(); // Simulate focus leaving the list and going to the chip.
           fixture.detectChanges();
 
           // It focuses the next-to-last item
@@ -1035,6 +1039,20 @@ describe('MatChipList', () => {
 
       expect(document.activeElement).toBe(nativeInput, 'Expected input to remain focused.');
     }));
+
+    it('should set aria-invalid if the form field is invalid', () => {
+      fixture.componentInstance.control = new FormControl(undefined, [Validators.required]);
+      fixture.detectChanges();
+
+      const input: HTMLInputElement = fixture.nativeElement.querySelector('input');
+
+      expect(input.getAttribute('aria-invalid')).toBe('true');
+
+      fixture.componentInstance.chips.first.selectViaInteraction();
+      fixture.detectChanges();
+
+      expect(input.getAttribute('aria-invalid')).toBe('false');
+    });
 
     describe('keyboard behavior', () => {
       beforeEach(() => {

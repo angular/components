@@ -4,32 +4,37 @@
 @import '../core/style/layout-common';
 @import '../../cdk/a11y/a11y';
 
-.mat-button, .mat-icon-button, .mat-stroked-button, .mat-flat-button {
-  @include mat-button-base;
-}
-
 .mat-button, .mat-icon-button {
   .mat-button-focus-overlay {
-
     opacity: 0;
   }
 }
 
 // Only flat and stroked buttons (not raised, FABs or icon buttons) have a hover style.
 // Use the same visual treatment for hover as for focus.
-.mat-button:hover .mat-button-focus-overlay,
-.mat-stroked-button:hover .mat-button-focus-overlay {
-  opacity: 0.04;
+.mat-button:hover,
+.mat-stroked-button:hover {
+  .mat-button-focus-overlay {
+    opacity: 0.04;
+  }
 }
 
 // Disable the hover styles on non-hover devices. Since this is more of a progressive
 // enhancement and not all desktop browsers support this kind of media query, we can't
 // use something like `@media (hover)`.
 @media (hover: none) {
-  .mat-button:hover .mat-button-focus-overlay,
-  .mat-stroked-button:hover .mat-button-focus-overlay {
-    opacity: 0;
+  .mat-button:hover,
+  .mat-stroked-button:hover {
+    .mat-button-focus-overlay {
+      opacity: 0;
+    }
   }
+}
+
+// Should be placed after the `:hover` styles so the focused
+// styling coming in from `mat-button-base` takes precedence.
+.mat-button, .mat-icon-button, .mat-stroked-button, .mat-flat-button {
+  @include mat-button-base;
 }
 
 .mat-raised-button {
@@ -37,14 +42,23 @@
 }
 
 .mat-stroked-button {
-  @include mat-overridable-elevation(0);
-  border: solid 1px currentColor;
+  border: $mat-stroked-button-border-width solid currentColor;
   padding: $mat-stroked-button-padding;
   line-height: $mat-stroked-button-line-height;
-}
 
-.mat-flat-button {
-  @include mat-overridable-elevation(0);
+  // Since the stroked button has has an actual border that reduces the available space for
+  // child elements such as the ripple container or focus overlay, an inherited border radius
+  // for the absolute-positioned child elements does not work properly. This is because the
+  // child element cannot expand to the same boundaries as the parent element with a border.
+  // In order to work around this issue by *not* hiding overflow, we adjust the child elements
+  // to fully cover the actual button element. This means that the border-radius would be correct
+  // then. See: https://github.com/angular/material2/issues/13738
+  .mat-button-ripple.mat-ripple, .mat-button-focus-overlay {
+    top: -$mat-stroked-button-border-width;
+    left: -$mat-stroked-button-border-width;
+    right: -$mat-stroked-button-border-width;
+    bottom: -$mat-stroked-button-border-width;
+  }
 }
 
 .mat-fab {
@@ -85,13 +99,15 @@
   // Pointer events can be safely disabled because the ripple trigger element is the host element.
   pointer-events: none;
 
-  // Inherit the border radius from the parent so the ripple is clipped when it reaches the edges.
+  // Inherit the border radius from the parent so that focus overlay and ripples don't exceed the
+  // parent button boundaries. Note that an inherited border radius does not work properly if
+  // the actual button element does have a border because it causes the inner content to be
+  // smaller. We have special logic for stroked buttons to handle this scenario.
   border-radius: inherit;
 }
 
 // Element that overlays the button to show focus and hover effects.
 .mat-button-focus-overlay {
-  border-radius: inherit;
   opacity: 0;
 
   transition: $mat-button-focus-transition;

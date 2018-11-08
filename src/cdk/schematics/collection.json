@@ -1,0 +1,17 @@
+{
+  "$schema": "./node_modules/@angular-devkit/schematics/collection-schema.json",
+  "schematics": {
+    "ng-add": {
+      "description": "Installs the Angular CDK",
+      "factory": "./ng-add/index",
+      "schema": "./ng-add/schema.json",
+      "aliases": ["install"]
+    },
+    "drag-drop": {
+      "description": "Generates a component using the Drag and Drop module",
+      "factory": "./ng-generate/drag-drop/index",
+      "schema": "./ng-generate/drag-drop/schema.json",
+      "aliases": ["dragdrop", "drag-and-drop"]
+    }
+  }
+}

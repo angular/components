@@ -13,7 +13,6 @@ module.exports = (config) => {
       require('karma-chrome-launcher'),
       require('karma-firefox-launcher'),
       require('karma-sourcemap-loader'),
-      require('karma-coverage'),
     ],
     files: [
       {pattern: 'node_modules/core-js/client/core.min.js', included: true, watched: false},
@@ -51,12 +50,6 @@ module.exports = (config) => {
 
     reporters: ['dots'],
     autoWatch: false,
-
-    coverageReporter: {
-      type : 'json-summary',
-      dir : 'dist/coverage/',
-      subdir: '.'
-    },
 
     sauceLabs: {
       testName: 'Angular Material Unit Tests',
@@ -100,21 +93,36 @@ module.exports = (config) => {
     },
   });
 
+  if (process.env['CIRCLECI']) {
+    const instanceIndex = Number(process.env['CIRCLE_NODE_INDEX']);
+    const maxParallelInstances = Number(process.env['CIRCLE_NODE_TOTAL']);
+    const tunnelIdentifier = `${process.env['CIRCLE_BUILD_NUM']}-${instanceIndex}`;
+    const buildIdentifier = `angular-material-${tunnelIdentifier}`;
+    const testPlatform = process.env['TEST_PLATFORM'];
+
+    if (testPlatform === 'browserstack') {
+      config.browserStack.build = buildIdentifier;
+      config.browserStack.tunnelIdentifier = tunnelIdentifier;
+    }
+
+    const platformBrowsers = platformMap[testPlatform];
+    const browserInstanceChunks = splitBrowsersIntoInstances(
+        platformBrowsers, maxParallelInstances);
+
+    // Configure Karma to launch the browsers that belong to the given test platform
+    // and instance.
+    config.browsers = browserInstanceChunks[instanceIndex];
+  }
+
   if (process.env['TRAVIS']) {
     const buildId = `TRAVIS #${process.env.TRAVIS_BUILD_NUMBER} (${process.env.TRAVIS_BUILD_ID})`;
-
-    if (process.env['TRAVIS_PULL_REQUEST'] === 'false' &&
-        process.env['MODE'] === "travis_required") {
-
-      config.preprocessors['dist/packages/**/!(*+(.|-)spec).js'] = ['coverage'];
-      config.reporters.push('coverage');
-    }
 
     // The MODE variable is the indicator of what row in the test matrix we're running.
     // It will look like <platform>_<target>, where platform is one of 'saucelabs', 'browserstack'
     // or 'travis'. The target is a reference to different collections of browsers that can run
     // in the previously specified platform.
-    const [platform, target] = process.env.MODE.split('_');
+    // TODO(devversion): when moving Saucelabs and Browserstack to Circle, remove the target part.
+    const [platform] = process.env.MODE.split('_');
 
     if (platform === 'saucelabs') {
       config.sauceLabs.build = buildId;
@@ -132,6 +140,24 @@ module.exports = (config) => {
       config.concurrency = 1;
     }
 
-    config.browsers = platformMap[platform][target.toLowerCase()];
+    config.browsers = platformMap[platform];
   }
 };
+
+/**
+ * Splits the specified browsers into a maximum amount of chunks. The chunk of browsers
+ * are being created deterministically and therefore we get reproducible tests when executing
+ * the same CircleCI instance multiple times.
+ */
+function splitBrowsersIntoInstances(browsers, maxInstances) {
+  let chunks = [];
+  let assignedBrowsers = 0;
+
+  for (let i = 0; i < maxInstances; i++) {
+    const chunkSize = Math.floor((browsers.length - assignedBrowsers) / (maxInstances - i));
+    chunks[i] = browsers.slice(assignedBrowsers, assignedBrowsers + chunkSize);
+    assignedBrowsers += chunkSize;
+  }
+
+  return chunks;
+}

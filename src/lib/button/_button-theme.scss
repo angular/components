@@ -1,5 +1,8 @@
 @import '../core/theming/theming';
+@import '../core/style/elevation';
 @import '../core/typography/typography-utils';
+
+$_mat-button-ripple-opacity: 0.1;
 
 // Applies a focus style to an mat-button element for each of the supported palettes.
 @mixin _mat-button-focus-overlay-color($theme) {
@@ -24,7 +27,7 @@
   }
 }
 
-@mixin _mat-button-ripple-color($theme, $hue, $opacity: 0.1) {
+@mixin _mat-button-ripple-color($theme, $hue, $opacity: $_mat-button-ripple-opacity) {
   $primary: map-get($theme, primary);
   $accent: map-get($theme, accent);
   $warn: map-get($theme, warn);
@@ -86,9 +89,13 @@
     @include _mat-button-theme-property($theme, 'color', default);
     @include _mat-button-focus-overlay-color($theme);
 
-    // Setup the ripple color to be based on the color palette. The opacity can be a bit weaker
-    // than for icon-buttons, because normal and stroked buttons have a focus overlay.
-    @include _mat-button-ripple-color($theme, default);
+    // Setup the ripple color to be based on the text color. This ensures that the ripples
+    // are matching with the current theme palette and are in contrast to the background color
+    // (e.g in themed toolbars).
+    .mat-ripple-element {
+      opacity: $_mat-button-ripple-opacity;
+      background-color: currentColor;
+    }
   }
 
   .mat-button-focus-overlay {
@@ -97,7 +104,7 @@
 
   // Note: this needs a bit extra specificity, because we're not guaranteed the inclusion
   // order of the theme styles and the button reset may end up resetting this as well.
-  .mat-stroked-button:not(.mat-button-disabled) {
+  .mat-stroked-button:not([disabled]) {
     border-color: mat-color($foreground, divider);
   }
 
@@ -111,10 +118,32 @@
     @include _mat-button-ripple-color($theme, default-contrast);
   }
 
-  // Since icon buttons don't have a focus overlay, the ripple opacity should be the higher
-  // than the default value.
-  .mat-icon-button {
-    @include _mat-button-ripple-color($theme, default, 0.2);
+  .mat-stroked-button, .mat-flat-button {
+    @include _mat-theme-overridable-elevation(0, $theme);
+  }
+
+  .mat-raised-button {
+    @include _mat-theme-overridable-elevation(2, $theme);
+
+    &:not([disabled]):active {
+      @include _mat-theme-overridable-elevation(8, $theme);
+    }
+
+    &[disabled] {
+      @include _mat-theme-overridable-elevation(0, $theme);
+    }
+  }
+
+  .mat-fab, .mat-mini-fab {
+    @include _mat-theme-overridable-elevation(6, $theme);
+
+    &:not([disabled]):active {
+      @include _mat-theme-overridable-elevation(12, $theme);
+    }
+
+    &[disabled] {
+      @include _mat-theme-overridable-elevation(0, $theme);
+    }
   }
 }
 

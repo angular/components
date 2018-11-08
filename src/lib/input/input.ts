@@ -69,7 +69,7 @@ export const _MatInputMixinBase: CanUpdateErrorStateCtor & typeof MatInputBase =
   exportAs: 'matInput',
   host: {
     /**
-     * @breaking-change 7.0.0 remove .mat-form-field-autofill-control in favor of AutofillMonitor.
+     * @breaking-change 8.0.0 remove .mat-form-field-autofill-control in favor of AutofillMonitor.
      */
     'class': 'mat-input-element mat-form-field-autofill-control',
     '[class.mat-input-server]': '_isServer',
@@ -232,10 +232,14 @@ export class MatInput extends _MatInputMixinBase implements MatFormFieldControl<
     @Optional() @Self() @Inject(MAT_INPUT_VALUE_ACCESSOR) inputValueAccessor: any,
     private _autofillMonitor: AutofillMonitor,
     ngZone: NgZone) {
+
     super(_defaultErrorStateMatcher, _parentForm, _parentFormGroup, ngControl);
+
+    const element = this._elementRef.nativeElement;
+
     // If no input value accessor was explicitly specified, use the element as the input value
     // accessor.
-    this._inputValueAccessor = inputValueAccessor || this._elementRef.nativeElement;
+    this._inputValueAccessor = inputValueAccessor || element;
 
     this._previousNativeValue = this.value;
 
@@ -262,7 +266,12 @@ export class MatInput extends _MatInputMixinBase implements MatFormFieldControl<
     }
 
     this._isServer = !this._platform.isBrowser;
-    this._isNativeSelect = this._elementRef.nativeElement.nodeName.toLowerCase() === 'select';
+    this._isNativeSelect = element.nodeName.toLowerCase() === 'select';
+
+    if (this._isNativeSelect) {
+      this.controlType = (element as HTMLSelectElement).multiple ? 'mat-native-select-multiple' :
+                                                                   'mat-native-select';
+    }
   }
 
   ngOnInit() {
@@ -323,7 +332,7 @@ export class MatInput extends _MatInputMixinBase implements MatFormFieldControl<
 
   /** Does some manual dirty checking on the native input `value` property. */
   protected _dirtyCheckNativeValue() {
-    const newValue = this.value;
+    const newValue = this._elementRef.nativeElement.value;
 
     if (this._previousNativeValue !== newValue) {
       this._previousNativeValue = newValue;
@@ -392,5 +401,12 @@ export class MatInput extends _MatInputMixinBase implements MatFormFieldControl<
    * Implemented as part of MatFormFieldControl.
    * @docs-private
    */
-  onContainerClick() { this.focus(); }
+  onContainerClick() {
+    // Do not re-focus the input element if the element is already focused. Otherwise it can happen
+    // that someone clicks on a time input and the cursor resets to the "hours" field while the
+    // "minutes" field was actually clicked. See: https://github.com/angular/material2/issues/12849
+    if (!this.focused) {
+      this.focus();
+    }
+  }
 }

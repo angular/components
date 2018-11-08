@@ -7,9 +7,10 @@
  */
 
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
-import {Directive, ElementRef, EventEmitter, Input, Output, Inject, OnChanges} from '@angular/core';
-import {MatChipList} from './chip-list';
+import {Directive, ElementRef, EventEmitter, Inject, Input, OnChanges, Output} from '@angular/core';
 import {MAT_CHIPS_DEFAULT_OPTIONS, MatChipsDefaultOptions} from './chip-default-options';
+import {MatChipList} from './chip-list';
+import {MatChipTextControl} from './chip-text-control';
 
 
 /** Represents an input event on a `matChipInput`. */
@@ -40,9 +41,10 @@ let nextUniqueId = 0;
     '[id]': 'id',
     '[attr.disabled]': 'disabled || null',
     '[attr.placeholder]': 'placeholder || null',
+    '[attr.aria-invalid]': '_chipList && _chipList.ngControl ? _chipList.ngControl.invalid : null',
   }
 })
-export class MatChipInput implements OnChanges {
+export class MatChipInput implements MatChipTextControl, OnChanges {
   /** Whether the control is focused. */
   focused: boolean = false;
   _chipList: MatChipList;

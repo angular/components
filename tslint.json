@@ -118,7 +118,8 @@
       },
       "Directive": {
         "!host": "\\[class\\]"
-      }
+      },
+      "NgModule": "^(?!\\s*$).+"
     }, "src/+(lib|cdk|material-experimental|cdk-experimental)/**/!(*.spec).ts"],
     "require-license-banner": [
       true,
@@ -134,8 +135,10 @@
   "linterOptions": {
     "exclude": [
       // Exclude schematic template files and test cases that can't be linted.
-      "src/lib/schematics/**/files/**/*",
-      "src/lib/schematics/update/test-cases/**/*"
+      "src/lib/schematics/ng-generate/*/files/**/*",
+      "src/cdk/schematics/ng-generate/*/files/**/*",
+      "src/cdk/schematics/ng-update/test-cases/**/*",
+      "src/lib/schematics/ng-update/test-cases/**/*"
     ]
   }
 }

@@ -1,7 +1,7 @@
 package(default_visibility=["//visibility:public"])
-load("@angular//:index.bzl", "ng_module")
-load("@io_bazel_rules_sass//sass:sass.bzl", "sass_library", "sass_binary")
 
+load("@io_bazel_rules_sass//:defs.bzl", "sass_library", "sass_binary")
+load("//tools:defaults.bzl", "ng_module", "ng_test_library", "ng_web_test_suite")
 
 ng_module(
   name = "paginator",
@@ -9,15 +9,16 @@ ng_module(
   module_name = "@angular/material/paginator",
   assets = [":paginator.css"] + glob(["**/*.html"]),
   deps = [
-    "//src/lib/core",
+    "@angular//packages/common",
+    "@angular//packages/core",
+    "@rxjs",
+    "//src/cdk/coercion",
     "//src/lib/button",
+    "//src/lib/core",
     "//src/lib/select",
     "//src/lib/tooltip",
-    "@rxjs",
   ],
-  tsconfig = "//src/lib:tsconfig-build.json",
 )
-
 
 # TODO(jelbourn): replace this w/ sass_library when it supports acting like a filegroup
 filegroup(
@@ -34,4 +35,22 @@ sass_binary(
 sass_library(
   name = "theme",
   srcs = glob(["**/*-theme.scss"]),
+)
+
+ng_test_library(
+  name = "paginator_test_sources",
+  srcs = glob(["**/*.spec.ts"]),
+  deps = [
+    "@angular//packages/platform-browser",
+    "@angular//packages/platform-browser/animations",
+    "//src/cdk/testing",
+    "//src/lib/core",
+    "//src/lib/select",
+    ":paginator",
+  ]
+)
+
+ng_web_test_suite(
+  name = "unit_tests",
+  deps = [":paginator_test_sources"],
 )

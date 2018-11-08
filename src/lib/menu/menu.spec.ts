@@ -164,6 +164,24 @@ describe('MatMenu', () => {
     expect(document.activeElement).toBe(triggerEl);
   }));
 
+  it('should restore focus to the root trigger when the menu was opened by touch', fakeAsync(() => {
+    const fixture = createComponent(SimpleMenu, [], [FakeIcon]);
+    fixture.detectChanges();
+
+    const triggerEl = fixture.componentInstance.triggerEl.nativeElement;
+    dispatchFakeEvent(triggerEl, 'touchstart');
+    triggerEl.click();
+    fixture.detectChanges();
+
+    expect(overlayContainerElement.querySelector('.mat-menu-panel')).toBeTruthy();
+
+    fixture.componentInstance.trigger.closeMenu();
+    fixture.detectChanges();
+    flush();
+
+    expect(document.activeElement).toBe(triggerEl);
+  }));
+
   it('should scroll the panel to the top on open, when it is scrollable', fakeAsync(() => {
     const fixture = createComponent(SimpleMenu, [], [FakeIcon]);
     fixture.detectChanges();
@@ -208,7 +226,7 @@ describe('MatMenu', () => {
       fixture.detectChanges();
       const triggerEl = fixture.componentInstance.triggerEl.nativeElement;
 
-      dispatchFakeEvent(triggerEl, 'mousedown');
+      dispatchMouseEvent(triggerEl, 'mousedown');
       triggerEl.click();
       fixture.detectChanges();
       patchElementFocus(triggerEl);
@@ -222,6 +240,52 @@ describe('MatMenu', () => {
       focusMonitor.stopMonitoring(triggerEl);
     }));
 
+  it('should set proper focus origin when right clicking on trigger, before opening by keyboard',
+    fakeAsync(() => {
+      const fixture = createComponent(SimpleMenu, [], [FakeIcon]);
+      fixture.detectChanges();
+      const triggerEl = fixture.componentInstance.triggerEl.nativeElement;
+
+      patchElementFocus(triggerEl);
+      focusMonitor.monitor(triggerEl, false);
+
+      // Trigger a fake right click.
+      dispatchEvent(triggerEl, createMouseEvent('mousedown', 50, 100, 2));
+
+      // A click without a left button mousedown before it is considered a keyboard open.
+      triggerEl.click();
+      fixture.detectChanges();
+
+      fixture.componentInstance.trigger.closeMenu();
+      fixture.detectChanges();
+      tick(500);
+      fixture.detectChanges();
+
+      expect(triggerEl.classList).toContain('cdk-program-focused');
+      focusMonitor.stopMonitoring(triggerEl);
+    }));
+
+    it('should set the proper focus origin when restoring focus after opening by touch',
+      fakeAsync(() => {
+        const fixture = createComponent(SimpleMenu, [], [FakeIcon]);
+        fixture.detectChanges();
+        const triggerEl = fixture.componentInstance.triggerEl.nativeElement;
+
+        dispatchMouseEvent(triggerEl, 'touchstart');
+        triggerEl.click();
+        fixture.detectChanges();
+        patchElementFocus(triggerEl);
+        focusMonitor.monitor(triggerEl, false);
+        fixture.componentInstance.trigger.closeMenu();
+        fixture.detectChanges();
+        tick(500);
+        fixture.detectChanges();
+        flush();
+
+        expect(triggerEl.classList).toContain('cdk-touch-focused');
+        focusMonitor.stopMonitoring(triggerEl);
+      }));
+
   it('should close the menu when pressing ESCAPE', fakeAsync(() => {
     const fixture = createComponent(SimpleMenu, [], [FakeIcon]);
     fixture.detectChanges();
@@ -229,14 +293,12 @@ describe('MatMenu', () => {
 
     const panel = overlayContainerElement.querySelector('.mat-menu-panel')!;
     const event = createKeyboardEvent('keydown', ESCAPE);
-    const stopPropagationSpy = spyOn(event, 'stopPropagation').and.callThrough();
 
     dispatchEvent(panel, event);
     fixture.detectChanges();
     tick(500);
 
     expect(overlayContainerElement.textContent).toBe('');
-    expect(stopPropagationSpy).toHaveBeenCalled();
   }));
 
   it('should open a custom menu', () => {
@@ -347,12 +409,27 @@ describe('MatMenu', () => {
 
     const triggerEl = fixture.componentInstance.triggerEl.nativeElement;
 
-    dispatchFakeEvent(triggerEl, 'mousedown');
+    dispatchMouseEvent(triggerEl, 'mousedown');
     triggerEl.click();
     fixture.detectChanges();
     tick(500);
 
     expect(fixture.componentInstance.items.first.focus).toHaveBeenCalledWith('mouse');
+  }));
+
+  it('should set the proper focus origin when opening by touch', fakeAsync(() => {
+    const fixture = createComponent(SimpleMenu, [], [FakeIcon]);
+    fixture.detectChanges();
+    spyOn(fixture.componentInstance.items.first, 'focus').and.callThrough();
+
+    const triggerEl = fixture.componentInstance.triggerEl.nativeElement;
+
+    dispatchMouseEvent(triggerEl, 'touchstart');
+    triggerEl.click();
+    fixture.detectChanges();
+    flush();
+
+    expect(fixture.componentInstance.items.first.focus).toHaveBeenCalledWith('touch');
   }));
 
   it('should close the menu when using the CloseScrollStrategy', fakeAsync(() => {
@@ -439,6 +516,39 @@ describe('MatMenu', () => {
       fixture.detectChanges();
     }).toThrowError(/must pass in an mat-menu instance/);
   });
+
+  it('should be able to swap out a menu after the first time it is opened', fakeAsync(() => {
+    const fixture = createComponent(DynamicPanelMenu);
+    fixture.detectChanges();
+    expect(overlayContainerElement.textContent).toBe('');
+
+    fixture.componentInstance.trigger.openMenu();
+    fixture.detectChanges();
+
+    expect(overlayContainerElement.textContent).toContain('One');
+    expect(overlayContainerElement.textContent).not.toContain('Two');
+
+    fixture.componentInstance.trigger.closeMenu();
+    fixture.detectChanges();
+    tick(500);
+    fixture.detectChanges();
+
+    expect(overlayContainerElement.textContent).toBe('');
+
+    fixture.componentInstance.trigger.menu = fixture.componentInstance.secondMenu;
+    fixture.componentInstance.trigger.openMenu();
+    fixture.detectChanges();
+
+    expect(overlayContainerElement.textContent).not.toContain('One');
+    expect(overlayContainerElement.textContent).toContain('Two');
+
+    fixture.componentInstance.trigger.closeMenu();
+    fixture.detectChanges();
+    tick(500);
+    fixture.detectChanges();
+
+    expect(overlayContainerElement.textContent).toBe('');
+  }));
 
   describe('lazy rendering', () => {
     it('should be able to render the menu content lazily', fakeAsync(() => {
@@ -775,7 +885,8 @@ describe('MatMenu', () => {
 
       constructor(ctor: {new(): T; }, inputs: {[key: string]: any} = {}) {
         this.fixture = createComponent(ctor);
-        Object.keys(inputs).forEach(key => this.fixture.componentInstance[key] = inputs[key]);
+        Object.keys(inputs)
+            .forEach(key => (this.fixture.componentInstance as any)[key] = inputs[key]);
         this.fixture.detectChanges();
         this.trigger = this.fixture.componentInstance.triggerEl.nativeElement;
       }
@@ -1970,3 +2081,22 @@ class LazyMenuWithContext {
   @ViewChild('triggerTwo') triggerTwo: MatMenuTrigger;
 }
 
+
+
+@Component({
+  template: `
+    <button [matMenuTriggerFor]="one">Toggle menu</button>
+    <mat-menu #one="matMenu">
+      <button mat-menu-item>One</button>
+    </mat-menu>
+
+    <mat-menu #two="matMenu">
+      <button mat-menu-item>Two</button>
+    </mat-menu>
+  `
+})
+class DynamicPanelMenu {
+  @ViewChild(MatMenuTrigger) trigger: MatMenuTrigger;
+  @ViewChild('one') firstMenu: MatMenu;
+  @ViewChild('two') secondMenu: MatMenu;
+}

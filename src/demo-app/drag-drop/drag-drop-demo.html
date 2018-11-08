@@ -1,54 +1,61 @@
 <div>
-  <div class="list">
+  <div class="demo-list">
+
     <h2>To do</h2>
-    <cdk-drop
-      #one
-      (dropped)="drop($event)"
-      [lockAxis]="axisLock"
-      [data]="todo"
-      [connectedTo]="[two]">
+    <mat-slide-toggle color="primary" [(ngModel)]="cloneMode">
+      Clone Mode
+    </mat-slide-toggle>
+    <div
+      cdkDropList
+      #one="cdkDropList"
+      (cdkDropListDropped)="drop($event)"
+      [cdkDropListLockAxis]="axisLock"
+      [cdkDropListData]="todo"
+      [cdkDropListConnectedTo]="[two]">
       <div *ngFor="let item of todo" cdkDrag>
         {{item}}
         <mat-icon cdkDragHandle svgIcon="dnd-move"></mat-icon>
       </div>
-    </cdk-drop>
+    </div>
   </div>
 
-  <div class="list">
+  <div class="demo-list">
     <h2>Done</h2>
-    <cdk-drop
-      #two
-      (dropped)="drop($event)"
-      [lockAxis]="axisLock"
-      [data]="done"
-      [connectedTo]="[one]">
+    <div
+      cdkDropList
+      #two="cdkDropList"
+      (cdkDropListDropped)="drop($event)"
+      [cdkDropListLockAxis]="axisLock"
+      [cdkDropListData]="done"
+      [cdkDropListConnectedTo]="[one]">
       <div *ngFor="let item of done" cdkDrag>
         {{item}}
         <mat-icon cdkDragHandle svgIcon="dnd-move"></mat-icon>
       </div>
-    </cdk-drop>
+    </div>
   </div>
 </div>
 
 <div>
-  <div class="list horizontal">
+  <div class="demo-list demo-list-horizontal">
     <h2>Horizontal list</h2>
-    <cdk-drop
-      orientation="horizontal"
-      (dropped)="drop($event)"
-      [lockAxis]="axisLock"
-      [data]="horizontalData">
+    <div
+      cdkDropList
+      cdkDropListOrientation="horizontal"
+      (cdkDropListDropped)="drop($event)"
+      [cdkDropListLockAxis]="axisLock"
+      [cdkDropListData]="horizontalData">
       <div *ngFor="let item of horizontalData" cdkDrag>
         {{item}}
         <mat-icon cdkDragHandle svgIcon="dnd-move"></mat-icon>
       </div>
-    </cdk-drop>
+    </div>
   </div>
 </div>
 
-<div class="list">
+<div class="demo-list">
   <h2>Free dragging</h2>
-  <div cdkDrag class="free-draggable" [cdkDragLockAxis]="axisLock">Drag me around</div>
+  <div cdkDrag class="demo-free-draggable" [cdkDragLockAxis]="axisLock">Drag me around</div>
 </div>
 
 <div>

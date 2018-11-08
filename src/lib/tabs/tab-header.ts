@@ -20,6 +20,7 @@ import {
   ElementRef,
   EventEmitter,
   Input,
+  NgZone,
   OnDestroy,
   Optional,
   Output,
@@ -137,14 +138,16 @@ export class MatTabHeader extends _MatTabHeaderMixinBase
   constructor(private _elementRef: ElementRef,
               private _changeDetectorRef: ChangeDetectorRef,
               private _viewportRuler: ViewportRuler,
-              @Optional() private _dir: Directionality) {
+              @Optional() private _dir: Directionality,
+              // @breaking-change 8.0.0 `_ngZone` parameter to be made required.
+              private _ngZone?: NgZone) {
     super();
   }
 
   ngAfterContentChecked(): void {
     // If the number of tab labels have changed, check if scrolling should be enabled
     if (this._tabLabelCount != this._labelWrappers.length) {
-      this._updatePagination();
+      this.updatePagination();
       this._tabLabelCount = this._labelWrappers.length;
       this._changeDetectorRef.markForCheck();
     }
@@ -196,7 +199,6 @@ export class MatTabHeader extends _MatTabHeaderMixinBase
     const resize = this._viewportRuler.change(150);
     const realign = () => {
       this._scrollToLabel(this._selectedIndex);
-      this._updatePagination();
       this._alignInkBarToSelectedTab();
     };
 
@@ -235,15 +237,26 @@ export class MatTabHeader extends _MatTabHeaderMixinBase
    * Callback for when the MutationObserver detects that the content has changed.
    */
   _onContentChanges() {
-    this._updatePagination();
-    this._alignInkBarToSelectedTab();
-    this._changeDetectorRef.markForCheck();
+    const zoneCallback = () => {
+      this.updatePagination();
+      this._alignInkBarToSelectedTab();
+      this._changeDetectorRef.markForCheck();
+    };
+
+    // The content observer runs outside the `NgZone` by default, which
+    // means that we need to bring the callback back in ourselves.
+    // @breaking-change 8.0.0 Remove null check for `_ngZone` once it's a required parameter.
+    this._ngZone ? this._ngZone.run(zoneCallback) : zoneCallback();
   }
 
   /**
-   * Updating the view whether pagination should be enabled or not
+   * Updates the view whether pagination should be enabled or not.
+   *
+   * WARNING: Calling this method can be very costly in terms of performance.  It should be called
+   * as infrequently as possible from outside of the Tabs component as it causes a reflow of the
+   * page.
    */
-  _updatePagination() {
+  updatePagination() {
     this._checkPaginationEnabled();
     this._checkScrollingControls();
     this._updateTabScrollPosition();

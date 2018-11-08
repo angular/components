@@ -48,7 +48,7 @@ export class Platform {
 
   /** Whether the current platform is Apple iOS. */
   IOS: boolean = this.isBrowser && /iPad|iPhone|iPod/.test(navigator.userAgent) &&
-      !(window as any).MSStream;
+      !('MSStream' in window);
 
   /** Whether the current browser is Firefox. */
   // It's difficult to detect the plain Gecko engine, because most of the browsers identify
@@ -68,7 +68,7 @@ export class Platform {
   SAFARI: boolean = this.isBrowser && /safari/i.test(navigator.userAgent) && this.WEBKIT;
 
   /**
-   * @breaking-change v7.0.0 remove optional decorator
+   * @breaking-change 8.0.0 remove optional decorator
    */
   constructor(@Optional() @Inject(PLATFORM_ID) private _platformId?: Object) {
   }

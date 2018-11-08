@@ -67,13 +67,45 @@ describe('MatSnackBar', () => {
     testViewContainerRef = viewContainerFixture.componentInstance.childViewContainer;
   });
 
-  it('should have the role of alert', () => {
-    snackBar.open(simpleMessage, simpleActionLabel);
+  it('should have the role of `alert` with an `assertive` politeness if no announcement message ' +
+     'is provided', () => {
+    snackBar.openFromComponent(BurritosNotification,
+      {announcementMessage: '', politeness: 'assertive'});
 
-    let containerElement = overlayContainerElement.querySelector('snack-bar-container')!;
+    viewContainerFixture.detectChanges();
+
+    const containerElement = overlayContainerElement.querySelector('snack-bar-container')!;
     expect(containerElement.getAttribute('role'))
         .toBe('alert', 'Expected snack bar container to have role="alert"');
-   });
+  });
+
+  it('should have the role of `status` with an `assertive` politeness if an announcement message ' +
+     'is provided', () => {
+      snackBar.openFromComponent(BurritosNotification,
+        {announcementMessage: 'Yay Burritos', politeness: 'assertive'});
+    viewContainerFixture.detectChanges();
+
+    const containerElement = overlayContainerElement.querySelector('snack-bar-container')!;
+    expect(containerElement.getAttribute('role'))
+        .toBe('status', 'Expected snack bar container to have role="status"');
+  });
+
+  it('should have the role of `status` with a `polite` politeness', () => {
+    snackBar.openFromComponent(BurritosNotification, {politeness: 'polite'});
+    viewContainerFixture.detectChanges();
+
+    const containerElement = overlayContainerElement.querySelector('snack-bar-container')!;
+    expect(containerElement.getAttribute('role'))
+        .toBe('status', 'Expected snack bar container to have role="status"');
+  });
+
+  it('should remove the role if the politeness is turned off', () => {
+    snackBar.openFromComponent(BurritosNotification, {politeness: 'off'});
+    viewContainerFixture.detectChanges();
+
+    const containerElement = overlayContainerElement.querySelector('snack-bar-container')!;
+    expect(containerElement.getAttribute('role')).toBeFalsy('Expected role to be removed');
+  });
 
   it('should open and close a snackbar without a ViewContainerRef', fakeAsync(() => {
     let snackBarRef = snackBar.open('Snack time!', 'Chew');
@@ -452,6 +484,18 @@ describe('MatSnackBar', () => {
         .toContain('custom-class', 'Expected class applied through the defaults to be applied.');
   }));
 
+  it('should dismiss the open snack bar on destroy', fakeAsync(() => {
+    snackBar.open(simpleMessage);
+    viewContainerFixture.detectChanges();
+    expect(overlayContainerElement.childElementCount).toBeGreaterThan(0);
+
+    snackBar.ngOnDestroy();
+    viewContainerFixture.detectChanges();
+    flush();
+
+    expect(overlayContainerElement.childElementCount).toBe(0);
+  }));
+
   describe('with custom component', () => {
     it('should open a custom component', () => {
       const snackBarRef = snackBar.openFromComponent(BurritosNotification);
@@ -602,6 +646,18 @@ describe('MatSnackBar with parent MatSnackBar', () => {
 
     expect(overlayContainerElement.textContent)
         .toContain('Taco', 'Expected child snackbar msg to be dismissed by opening from parent');
+  }));
+
+  it('should not dismiss parent snack bar if child is destroyed', fakeAsync(() => {
+    parentSnackBar.open('Pizza');
+    fixture.detectChanges();
+    expect(overlayContainerElement.childElementCount).toBeGreaterThan(0);
+
+    childSnackBar.ngOnDestroy();
+    fixture.detectChanges();
+    flush();
+
+    expect(overlayContainerElement.childElementCount).toBeGreaterThan(0);
   }));
 });
 

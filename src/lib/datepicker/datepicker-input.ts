@@ -36,14 +36,14 @@ import {Subscription} from 'rxjs';
 import {MatDatepicker} from './datepicker';
 import {createMissingDateImplError} from './datepicker-errors';
 
-
+/** @docs-private */
 export const MAT_DATEPICKER_VALUE_ACCESSOR: any = {
   provide: NG_VALUE_ACCESSOR,
   useExisting: forwardRef(() => MatDatepickerInput),
   multi: true
 };
 
-
+/** @docs-private */
 export const MAT_DATEPICKER_VALIDATORS: any = {
   provide: NG_VALIDATORS,
   useExisting: forwardRef(() => MatDatepickerInput),
@@ -276,7 +276,7 @@ export class MatDatepickerInput<D> implements ControlValueAccessor, OnDestroy, V
 
   /**
    * @deprecated
-   * @breaking-change 7.0.0 Use `getConnectedOverlayOrigin` instead
+   * @breaking-change 8.0.0 Use `getConnectedOverlayOrigin` instead
    */
   getPopupConnectionElementRef(): ElementRef {
     return this.getConnectedOverlayOrigin();

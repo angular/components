@@ -5,7 +5,7 @@ import {fakeAsync, tick} from '@angular/core/testing';
 import {createKeyboardEvent} from '@angular/cdk/testing';
 import {ActiveDescendantKeyManager} from './activedescendant-key-manager';
 import {FocusKeyManager} from './focus-key-manager';
-import {ListKeyManager} from './list-key-manager';
+import {ListKeyManager, ListKeyManagerModifierKey} from './list-key-manager';
 import {FocusOrigin} from '../focus-monitor/focus-monitor';
 import {Subject} from 'rxjs';
 
@@ -37,6 +37,10 @@ class FakeQueryList<T> extends QueryList<T> {
   notifyOnChanges() { this.changes.next(this); }
 }
 
+interface KeyEventTestContext {
+  nextKeyEvent: KeyboardEvent;
+  prevKeyEvent: KeyboardEvent;
+}
 
 describe('Key managers', () => {
   let itemList: FakeQueryList<any>;
@@ -94,6 +98,16 @@ describe('Key managers', () => {
       it('should emit tabOut when the tab key is pressed', () => {
         const spy = jasmine.createSpy('tabOut spy');
         keyManager.tabOut.pipe(take(1)).subscribe(spy);
+        keyManager.onKeydown(fakeKeyEvents.tab);
+
+        expect(spy).toHaveBeenCalled();
+      });
+
+      it('should emit tabOut when the tab key is pressed with a modifier', () => {
+        const spy = jasmine.createSpy('tabOut spy');
+        keyManager.tabOut.pipe(take(1)).subscribe(spy);
+
+        Object.defineProperty(fakeKeyEvents.tab, 'shiftKey', {get: () => true});
         keyManager.onKeydown(fakeKeyEvents.tab);
 
         expect(spy).toHaveBeenCalled();
@@ -164,7 +178,7 @@ describe('Key managers', () => {
         expect(fakeKeyEvents.downArrow.defaultPrevented).toBe(false);
       });
 
-      describe('with `vertical` direction', () => {
+      describe('with `vertical` direction', function(this: KeyEventTestContext) {
         beforeEach(() => {
           keyManager.withVerticalOrientation();
           this.nextKeyEvent = createKeyboardEvent('keydown', DOWN_ARROW);
@@ -174,7 +188,7 @@ describe('Key managers', () => {
         runDirectionalKeyTests.call(this);
       });
 
-      describe('with `ltr` direction', () => {
+      describe('with `ltr` direction', function(this: KeyEventTestContext) {
         beforeEach(() => {
           keyManager.withHorizontalOrientation('ltr');
           this.nextKeyEvent = createKeyboardEvent('keydown', RIGHT_ARROW);
@@ -184,7 +198,7 @@ describe('Key managers', () => {
         runDirectionalKeyTests.call(this);
       });
 
-      describe('with `rtl` direction', () => {
+      describe('with `rtl` direction', function(this: KeyEventTestContext) {
         beforeEach(() => {
           keyManager.withHorizontalOrientation('rtl');
           this.nextKeyEvent = createKeyboardEvent('keydown', LEFT_ARROW);
@@ -199,7 +213,7 @@ describe('Key managers', () => {
        * parameters have to be passed in via Jasmine's context object (`this` inside a `beforeEach`)
        * because this function has to run before any `beforeEach`, `beforeAll` etc. hooks.
        */
-      function runDirectionalKeyTests() {
+      function runDirectionalKeyTests(this: KeyEventTestContext) {
         it('should set subsequent items as active when the next key is pressed', () => {
           keyManager.onKeydown(this.nextKeyEvent);
 
@@ -334,6 +348,51 @@ describe('Key managers', () => {
           keyManager.onKeydown(this.prevKeyEvent);
           expect(this.prevKeyEvent.defaultPrevented).toBe(true);
         });
+
+        it('should not do anything for arrow keys if the alt key is held down', () => {
+          runModifierKeyTest(this, 'altKey');
+        });
+
+        it('should not do anything for arrow keys if the control key is held down', () => {
+          runModifierKeyTest(this, 'ctrlKey');
+        });
+
+        it('should not do anything for arrow keys if the meta key is held down', () => {
+          runModifierKeyTest(this, 'metaKey');
+        });
+
+        it('should not do anything for arrow keys if the shift key is held down', () => {
+          runModifierKeyTest(this, 'shiftKey');
+        });
+
+      }
+
+      /** Runs the test that asserts that we handle modifier keys correctly. */
+      function runModifierKeyTest(context: {
+        nextKeyEvent: KeyboardEvent,
+        prevKeyEvent: KeyboardEvent
+      }, modifier: ListKeyManagerModifierKey) {
+        const initialActiveIndex = keyManager.activeItemIndex;
+        const spy = jasmine.createSpy('change spy');
+        const subscription = keyManager.change.subscribe(spy);
+
+        expect(context.nextKeyEvent.defaultPrevented).toBe(false);
+        expect(context.prevKeyEvent.defaultPrevented).toBe(false);
+
+        Object.defineProperty(context.nextKeyEvent, modifier, {get: () => true});
+        Object.defineProperty(context.prevKeyEvent, modifier, {get: () => true});
+
+        keyManager.onKeydown(context.nextKeyEvent);
+        expect(context.nextKeyEvent.defaultPrevented).toBe(false);
+        expect(keyManager.activeItemIndex).toBe(initialActiveIndex);
+        expect(spy).not.toHaveBeenCalled();
+
+        keyManager.onKeydown(context.prevKeyEvent);
+        expect(context.prevKeyEvent.defaultPrevented).toBe(false);
+        expect(keyManager.activeItemIndex).toBe(initialActiveIndex);
+        expect(spy).not.toHaveBeenCalled();
+
+        subscription.unsubscribe();
       }
 
     });

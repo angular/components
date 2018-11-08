@@ -1,5 +1,6 @@
 import {ENTER, ESCAPE, RIGHT_ARROW, UP_ARROW, DOWN_ARROW} from '@angular/cdk/keycodes';
-import {Overlay, OverlayContainer, ScrollDispatcher} from '@angular/cdk/overlay';
+import {Overlay, OverlayContainer} from '@angular/cdk/overlay';
+import {ScrollDispatcher} from '@angular/cdk/scrolling';
 import {
   createKeyboardEvent,
   dispatchEvent,
@@ -603,7 +604,7 @@ describe('MatDatepicker', () => {
 
         // When the calendar is in year view, the first cell should be for a month rather than
         // for a date.
-        expect(firstCalendarCell.textContent)
+        expect(firstCalendarCell.textContent!.trim())
             .toBe('JAN', 'Expected the calendar to be in year-view');
       });
 
@@ -653,7 +654,7 @@ describe('MatDatepicker', () => {
 
         // When the calendar is in year view, the first cell should be for a month rather than
         // for a date.
-        expect(firstCalendarCell.textContent)
+        expect(firstCalendarCell.textContent!.trim())
             .toBe('2016', 'Expected the calendar to be in multi-year-view');
       });
 
@@ -1631,7 +1632,17 @@ describe('MatDatepicker', () => {
 
       expect(document.querySelector('mat-calendar-header')).toBeTruthy();
     }));
+
+    it('should find the custom element', fakeAsync(() => {
+        testComponent.datepicker.open();
+        fixture.detectChanges();
+        flush();
+        fixture.detectChanges();
+
+        expect(document.querySelector('.custom-element')).toBeTruthy();
+    }));
   });
+
 });
 
 
@@ -1884,22 +1895,21 @@ class DatepickerOpeningOnFocus {
 @Component({
   template: `
     <input [matDatepicker]="ch">
-    <mat-datepicker #ch [calendarHeaderComponent]="CustomHeaderForDatepicker"></mat-datepicker>
+    <mat-datepicker #ch [calendarHeaderComponent]="customHeaderForDatePicker"></mat-datepicker>
   `,
 })
 class DatepickerWithCustomHeader {
   @ViewChild('ch') datepicker: MatDatepicker<Date>;
+  customHeaderForDatePicker = CustomHeaderForDatepicker;
 }
 
 @Component({
   template: `
-    <div>Custom element</div>
+    <div class="custom-element">Custom element</div>
     <mat-calendar-header></mat-calendar-header>
   `,
 })
 class CustomHeaderForDatepicker {}
-
-
 
 @Component({
   template: `

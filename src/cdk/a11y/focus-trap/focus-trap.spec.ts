@@ -16,6 +16,7 @@ describe('FocusTrap', () => {
         FocusTrapWithSvg,
         FocusTrapWithoutFocusableElements,
         FocusTrapWithAutoCapture,
+        FocusTrapUnfocusableTarget,
       ],
     });
 
@@ -37,7 +38,7 @@ describe('FocusTrap', () => {
       // focus event handler directly.
       const result = focusTrapInstance.focusFirstTabbableElement();
 
-      expect(document.activeElement.nodeName.toLowerCase())
+      expect(document.activeElement!.nodeName.toLowerCase())
           .toBe('input', 'Expected input element to be focused');
       expect(result).toBe(true, 'Expected return value to be true if focus was shifted.');
     });
@@ -51,7 +52,7 @@ describe('FocusTrap', () => {
       // In iOS button elements are never tabbable, so the last element will be the input.
       const lastElement = new Platform(platformId).IOS ? 'input' : 'button';
 
-      expect(document.activeElement.nodeName.toLowerCase())
+      expect(document.activeElement!.nodeName.toLowerCase())
           .toBe(lastElement, `Expected ${lastElement} element to be focused`);
 
       expect(result).toBe(true, 'Expected return value to be true if focus was shifted.');
@@ -104,7 +105,7 @@ describe('FocusTrap', () => {
       fixture.componentInstance._isFocusTrapEnabled = false;
       fixture.detectChanges();
 
-      expect(anchors.every(current => current.getAttribute('tabindex') === '-1')).toBe(true);
+      expect(anchors.every(current => !current.hasAttribute('tabindex'))).toBe(true);
     });
   });
 
@@ -122,22 +123,34 @@ describe('FocusTrap', () => {
       // Because we can't mimic a real tab press focus change in a unit test, just call the
       // focus event handler directly.
       focusTrapInstance.focusInitialElement();
-      expect(document.activeElement.id).toBe('middle');
+      expect(document.activeElement!.id).toBe('middle');
     });
 
     it('should be able to prioritize the first focus target', () => {
       // Because we can't mimic a real tab press focus change in a unit test, just call the
       // focus event handler directly.
       focusTrapInstance.focusFirstTabbableElement();
-      expect(document.activeElement.id).toBe('first');
+      expect(document.activeElement!.id).toBe('first');
     });
 
     it('should be able to prioritize the last focus target', () => {
       // Because we can't mimic a real tab press focus change in a unit test, just call the
       // focus event handler directly.
       focusTrapInstance.focusLastTabbableElement();
-      expect(document.activeElement.id).toBe('last');
+      expect(document.activeElement!.id).toBe('last');
     });
+
+    it('should warn if the initial focus target is not focusable', () => {
+      const alternateFixture = TestBed.createComponent(FocusTrapUnfocusableTarget);
+      alternateFixture.detectChanges();
+      focusTrapInstance = fixture.componentInstance.focusTrapDirective.focusTrap;
+
+      spyOn(console, 'warn');
+      focusTrapInstance.focusInitialElement();
+
+      expect(console.warn).toHaveBeenCalled();
+    });
+
   });
 
   describe('special cases', () => {
@@ -166,7 +179,7 @@ describe('FocusTrap', () => {
       fixture.detectChanges();
 
       fixture.whenStable().then(() => {
-        expect(document.activeElement.id).toBe('auto-capture-target');
+        expect(document.activeElement!.id).toBe('auto-capture-target');
 
         fixture.destroy();
         expect(document.activeElement).toBe(buttonOutsideTrappedRegion);
@@ -235,6 +248,16 @@ class FocusTrapTargets {
   @ViewChild(CdkTrapFocus) focusTrapDirective: CdkTrapFocus;
 }
 
+@Component({
+  template: `
+    <div cdkTrapFocus>
+      <div cdkFocusInitial></div>
+    </div>
+    `
+})
+class FocusTrapUnfocusableTarget {
+  @ViewChild(CdkTrapFocus) focusTrapDirective: CdkTrapFocus;
+}
 
 @Component({
   template: `

@@ -9,6 +9,7 @@ import {
   PAGE_UP,
   RIGHT_ARROW,
   UP_ARROW,
+  SPACE,
 } from '@angular/cdk/keycodes';
 import {dispatchFakeEvent, dispatchKeyboardEvent} from '@angular/cdk/testing';
 import {Component} from '@angular/core';
@@ -34,6 +35,7 @@ describe('MatMonthView', () => {
         // Test components.
         StandardMonthView,
         MonthViewWithDateFilter,
+        MonthViewWithDateClass,
       ],
       providers: [
         {provide: Directionality, useFactory: () => dir = {value: 'ltr'}}
@@ -256,6 +258,18 @@ describe('MatMonthView', () => {
 
           expect(testComponent.selected).toEqual(new Date(2017, JAN, 4));
         });
+
+        it('should select active date on space', () => {
+          dispatchKeyboardEvent(calendarBodyEl, 'keydown', LEFT_ARROW);
+          fixture.detectChanges();
+
+          expect(testComponent.selected).toEqual(new Date(2017, JAN, 10));
+
+          dispatchKeyboardEvent(calendarBodyEl, 'keydown', SPACE);
+          fixture.detectChanges();
+
+          expect(testComponent.selected).toEqual(new Date(2017, JAN, 4));
+        });
       });
     });
   });
@@ -278,6 +292,26 @@ describe('MatMonthView', () => {
       expect(cells[1].classList).not.toContain('mat-calendar-body-disabled');
     });
   });
+
+  describe('month view with custom date classes', () => {
+    let fixture: ComponentFixture<MonthViewWithDateClass>;
+    let monthViewNativeElement: Element;
+
+    beforeEach(() => {
+      fixture = TestBed.createComponent(MonthViewWithDateClass);
+      fixture.detectChanges();
+
+      let monthViewDebugElement = fixture.debugElement.query(By.directive(MatMonthView));
+      monthViewNativeElement = monthViewDebugElement.nativeElement;
+    });
+
+    it('should be able to add a custom class to some dates', () => {
+      let cells = monthViewNativeElement.querySelectorAll('.mat-calendar-body-cell');
+      expect(cells[0].classList).not.toContain('even');
+      expect(cells[1].classList).toContain('even');
+    });
+  });
+
 });
 
 
@@ -297,5 +331,15 @@ class MonthViewWithDateFilter {
   activeDate = new Date(2017, JAN, 1);
   dateFilter(date: Date) {
     return date.getDate() % 2 == 0;
+  }
+}
+
+@Component({
+  template: `<mat-month-view [activeDate]="activeDate" [dateClass]="dateClass"></mat-month-view>`
+})
+class MonthViewWithDateClass {
+  activeDate = new Date(2017, JAN, 1);
+  dateClass(date: Date) {
+    return date.getDate() % 2 == 0 ? 'even' : undefined;
   }
 }
