@@ -765,7 +765,7 @@ describe('MatButtonToggle without forms', () => {
       expect(fixture.componentInstance.toggles.toArray()[2].checked).toBe(true);
     });
 
-  it('should select falsy button toggle value in multiple selection', () => {
+  it('should select false button toggle value in multiple selection', () => {
     const fixture = TestBed.createComponent(FalsyButtonTogglesInsideButtonToggleGroupMultiple);
     fixture.detectChanges();
 
@@ -779,6 +779,22 @@ describe('MatButtonToggle without forms', () => {
     expect(fixture.componentInstance.toggles.toArray()[0].checked).toBe(true);
     expect(fixture.componentInstance.toggles.toArray()[1].checked).toBe(false);
     expect(fixture.componentInstance.toggles.toArray()[2].checked).toBe(true);
+  });
+
+  it('should select null button toggle value in multiple selection', () => {
+    const fixture = TestBed.createComponent(FalsyButtonTogglesInsideButtonToggleGroupMultiple);
+    fixture.detectChanges();
+
+    expect(fixture.componentInstance.toggles.toArray()[0].checked).toBe(true);
+    expect(fixture.componentInstance.toggles.toArray()[1].checked).toBe(false);
+    expect(fixture.componentInstance.toggles.toArray()[2].checked).toBe(false);
+
+    fixture.componentInstance.value = [0, null];
+    fixture.detectChanges();
+
+    expect(fixture.componentInstance.toggles.toArray()[0].checked).toBe(true);
+    expect(fixture.componentInstance.toggles.toArray()[1].checked).toBe(true);
+    expect(fixture.componentInstance.toggles.toArray()[2].checked).toBe(false);
   });
 });
 

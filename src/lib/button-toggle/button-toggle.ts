@@ -333,7 +333,7 @@ export class MatButtonToggleGroup implements ControlValueAccessor, OnInit, After
   /** Selects a value if there's a toggle that corresponds to it. */
   private _selectValue(value: any) {
     const correspondingOption = this._buttonToggles.find(toggle => {
-      return toggle.value != null && toggle.value === value;
+      return toggle.value === value;
     });
 
     if (correspondingOption) {
