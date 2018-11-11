@@ -382,6 +382,23 @@ describe('MatTabHeader', () => {
     });
 
   });
+
+    it('scroll to last tab', () => {
+        fixture = TestBed.createComponent(SimpleTabHeaderApp);
+        appComponent = fixture.componentInstance;
+        appComponent.tabs = [
+            {label: 'tab one'}, {label: 'tab one'}, {label: 'tab one'}, {label: 'tab one'},
+            {label: 'tab one'}, {label: 'tab one'}, {label: 'tab one'}, {label: 'tab one'},
+        ];
+        const lastTabIndex = appComponent.tabs.length - 1;
+        appComponent.selectedIndex = lastTabIndex;
+
+        fixture.detectChanges();
+        appComponent.tabHeader._scrollToLabel(lastTabIndex);
+
+        expect(appComponent.tabHeader.scrollDistance)
+            .toBe(appComponent.tabHeader._getMaxScrollDistance());
+    });
 });
 
 interface Tab {
