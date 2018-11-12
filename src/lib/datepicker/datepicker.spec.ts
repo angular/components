@@ -33,7 +33,7 @@ import {MatDatepickerInput} from './datepicker-input';
 import {MatDatepickerToggle} from './datepicker-toggle';
 import {MAT_DATEPICKER_SCROLL_STRATEGY, MatDatepickerIntl, MatDatepickerModule} from './index';
 
-describe('MatDatepicker', () => {
+fdescribe('MatDatepicker', () => {
   const SUPPORTS_INTL = typeof Intl != 'undefined';
 
   // Creates a test component fixture.
@@ -658,11 +658,13 @@ describe('MatDatepicker', () => {
             .toBe('2016', 'Expected the calendar to be in multi-year-view');
       });
 
-      it('should fire yearSelected when user selects calendar year in multiyear view',
+      fit('should fire yearSelected when user selects calendar year in multiyear view',
         fakeAsync(() => {
           expect(testComponent.onMultiYearSelection).not.toHaveBeenCalled();
 
+
           testComponent.datepicker.open();
+          console.log('hey');
           fixture.detectChanges();
 
           const cells = document.querySelectorAll('.mat-calendar-body-cell');

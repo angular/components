@@ -27,11 +27,11 @@ import {
   EventEmitter,
   Inject,
   Input,
+  OnDestroy,
   Optional,
   Output,
   ViewChild,
   ViewEncapsulation,
-  OnDestroy,
 } from '@angular/core';
 import {
   DateAdapter,

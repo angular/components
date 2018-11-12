@@ -74,7 +74,6 @@ describe('MatCalendarBody', () => {
           .toBe(cellEls.length - 1, 'Expected remaining cells to be marked as deselected.');
     });
 
-    // tslint:disable-next-line:ban
     it('places label in first row if space is available', () => {
       testComponent.rows[0] = testComponent.rows[0].slice(3);
       testComponent.rows = testComponent.rows.slice();
