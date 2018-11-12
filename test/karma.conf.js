@@ -74,7 +74,7 @@ module.exports = (config) => {
     browserNoActivityTimeout: 300000,
     captureTimeout: 180000,
 
-    browsers: ['ChromeHeadlessLocal'],
+    browsers: ['ChromeHeadless'],
     singleRun: false,
 
     // Try Websocket for a faster transmission first. Fallback to polling if necessary.
