@@ -7,14 +7,22 @@ def _markdown_to_html(ctx):
   args = ctx.actions.args()
   expected_outputs = [];
 
-  for input_file in input_files:
-    basename = input_file.basename.replace('.md', '')
-    output_file = ctx.actions.declare_file("%s.html" % basename)
-    expected_outputs += [output_file]
+  # Add the bazel bin directory to the command arguments. The script needs to know about
+  # the output directory because the input files are not in the same location as the bazel
+  # bin directory.
+  args.add(ctx.bin_dir.path)
 
-    # Add the input file and it's related output to the arguments that
-    # will be passed to the transformer executable.
-    args.add("%s=%s" % (input_file.path, output_file.path))
+  for input_file in input_files:
+    # Remove the extension from the input file path. Note that we should not use `.replace`
+    # here because the extension can be also in upper case.
+    basename = input_file.basename[:-len(".md")]
+
+    # For each input file "xxx.md", we want to write an output file "xxx.html"
+    expected_outputs += [ctx.actions.declare_file("%s.html" % basename)]
+
+    # Add the input file to the command line arguments that will be passed to the
+    # transform-markdown executable.
+    args.add(input_file.path)
 
   # Run the transform markdown executable that transforms the specified source files.
   # Note that we should specify the outputs here because Bazel can then throw an error

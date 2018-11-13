@@ -4,10 +4,14 @@
  */
 
 import {readFileSync, writeFileSync} from 'fs';
+import {join} from 'path';
 
 // These types lack type definitions.
 const marked = require('marked');
 const highlightJs = require('highlight.js');
+
+// Regular expression that matches the markdown extension of a given path.
+const markdownExtension = /.md$/;
 
 // Setup the default options for converting markdown to HTML.
 marked.setOptions({
@@ -23,15 +27,14 @@ marked.setOptions({
 });
 
 if (require.main === module) {
-  // The script expects the input files to be specified in the following format:
-  //    {input_file_path}={output_file_path}
-  // We have to know the output paths because the input path and output path differ
-  // fundamentally within the Bazel sandbox.
-  const inputFiles = process.argv.slice(2).map(argument => argument.split('='));
+  // The script expects the bazel-bin path as first argument. All remaining arguments will be
+  // considered as markdown input files that need to be transformed.
+  const [bazelBinPath, ...inputFiles] = process.argv.slice(2);
 
   // Walk through each input file and write transformed markdown output to the specified
-  // output path.
-  inputFiles.forEach(([inputPath, outputPath]) => {
+  // Bazel bin directory.
+  inputFiles.forEach(inputPath => {
+    const outputPath = join(bazelBinPath, inputPath.replace(markdownExtension, '.html'));
     writeFileSync(outputPath, marked(readFileSync(inputPath, 'utf8')));
   });
 }
