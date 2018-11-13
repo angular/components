@@ -1,5 +1,5 @@
 // TypeScript config that extends the demo-app tsconfig file. This config compiles the
-// "main-aot.ts" file and also enables templage code generation / AOT.
+// "main-aot.ts" file and also enables template code generation / AOT.
 {
   "extends": "./tsconfig-build",
   "compilerOptions": {
