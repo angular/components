@@ -4,7 +4,6 @@ load("//tools:defaults.bzl", "ts_library")
 
 ts_library(
   name = "keycodes",
-  module_name = "@angular/cdk/keycodes",
   srcs = glob(["**/*.ts"], exclude=["**/*.spec.ts"]),
-  deps = ["@matdeps//tslib"],
+  module_name = "@angular/cdk/keycodes",
 )
