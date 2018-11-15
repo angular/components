@@ -1,0 +1,29 @@
+package(default_visibility=["//visibility:public"])
+
+load("//:packages.bzl", "MATERIAL_TARGETS", "CDK_TARGETS")
+load("//tools:defaults.bzl", "ng_module")
+load("//tools:sass_generate_binaries.bzl", "sass_generate_binaries")
+
+# Generate sass binaries for all nested SCSS files.
+sass_generate_binaries("dev_app_scss", glob(["**/*.scss"]))
+
+ng_module(
+  name = "dev-app",
+  srcs = glob(["**/*.ts"], exclude = ["system-config.ts"]),
+  assets = glob(["**/*.html"]) + [":dev_app_scss"],
+  deps = [
+    "@angular//packages/common",
+    "@angular//packages/common/http",
+    "@angular//packages/core",
+    "@angular//packages/elements",
+    "@angular//packages/forms",
+    "@angular//packages/platform-browser",
+    "@angular//packages/platform-browser-dynamic",
+    "@angular//packages/platform-browser/animations",
+    "@angular//packages/router",
+    "@rxjs",
+    "@rxjs//operators",
+    "//src/cdk-experimental",
+    "//src/material-examples:examples",
+  ] + CDK_TARGETS + MATERIAL_TARGETS
+)
