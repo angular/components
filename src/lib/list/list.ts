@@ -74,6 +74,10 @@ export class MatList extends _MatListMixinBase implements CanDisableRipple {
    */
   constructor(private _elementRef?: ElementRef<HTMLElement>) {
     super();
+
+    if (this._getListType() === 'action-list' && _elementRef) {
+      _elementRef.nativeElement.classList.add('mat-action-list');
+    }
   }
 
   _getListType(): 'list' | 'action-list' | null {
