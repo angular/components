@@ -116,6 +116,14 @@ export class CdkDropList<T = any> implements OnInit, OnDestroy {
   /** Locks the position of the draggable elements inside the container along the specified axis. */
   @Input('cdkDropListLockAxis') lockAxis: 'x' | 'y';
 
+  /**
+   * Selector that will be used to determine the direct container element, starting from
+   * the `cdkDropList` element and going down the DOM. Passing an alternate direct container element
+   * is useful when the `cdkDropList` is not the direct parent (i.e. ancestor but not father)
+   * of the draggable elements.
+   */
+  @Input('cdkDropListDirectContainerElement') directContainerElement: string;
+
   /** Whether starting a dragging sequence from this container is disabled. */
   @Input('cdkDropListDisabled')
   get disabled(): boolean { return this._disabled; }
@@ -250,7 +258,11 @@ export class CdkDropList<T = any> implements OnInit, OnDestroy {
       element.parentElement!.insertBefore(placeholder, element);
       this._activeDraggables.splice(newIndex, 0, item);
     } else {
-      this.element.nativeElement.appendChild(placeholder);
+      let element = this.element.nativeElement;
+      if (this.directContainerElement) {
+        element = element.querySelector(this.directContainerElement) || element;
+      }
+      element.appendChild(placeholder);
       this._activeDraggables.push(item);
     }
 

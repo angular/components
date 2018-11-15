@@ -2208,6 +2208,107 @@ describe('CdkDrag', () => {
         expect(fixture.componentInstance.droppedSpy).not.toHaveBeenCalled();
     }));
 
+    it('should be able to return an element to its initial container in the same sequence ' +
+      'and when container is not direct parent and ngFor is not used.', fakeAsync(() => {
+        const fixture =
+          createComponent(ConnectedDropZonesViaGroupWithoutNgForAndNotDirectContainerDirective);
+        fixture.detectChanges();
+
+        const groups = fixture.componentInstance.groupedDragItems;
+        const dropInstances = fixture.componentInstance.dropInstances.toArray();
+        const dropZones = dropInstances
+          .map(d => d.element.nativeElement.firstChild as HTMLElement );
+
+        const group1Length = groups[0].length;
+        const item = groups[0][group1Length - 1];
+        const initialParent = item.element.nativeElement.parentNode;
+        const targetRect = groups[0][group1Length - 2].element
+          .nativeElement.getBoundingClientRect();
+
+        // Change the `connectedTo` so the containers are only connected one-way.
+        dropInstances[0].connectedTo = dropInstances[1];
+        dropInstances[1].connectedTo = [];
+
+        startDraggingViaMouse(fixture, item.element.nativeElement);
+        fixture.detectChanges();
+
+        const placeholder = dropZones[0].querySelector('.cdk-drag-placeholder')!;
+
+        expect(placeholder).toBeTruthy();
+        expect(dropZones[0].contains(placeholder))
+            .toBe(true, 'Expected placeholder to be inside the first container.');
+
+        dispatchMouseEvent(document, 'mousemove', targetRect.left + 1, targetRect.top + 1);
+        fixture.detectChanges();
+
+        expect(dropZones[0].contains(placeholder))
+          .toBe(true, 'Expected placeholder to be inside the first container.');
+
+        expect(dropZones[1].contains(placeholder))
+            .toBe(false, 'Expected placeholder not to be inside second container.');
+
+        dispatchMouseEvent(document, 'mouseup');
+        fixture.detectChanges();
+        flush();
+
+        expect(item.element.nativeElement.parentNode)
+          .toBe(initialParent, 'Expected element to be moved back into its initial parent');
+
+        expect((dropZones[0].parentElement as HTMLElement).childElementCount)
+          .toBe(1, 'Expected drop container to return to original state.');
+    }));
+
+    it('should be able to return an element to its initial container in the same sequence ' +
+      'and when container is not direct parent and ngFor is not used, ' +
+      'even if it is not connected to the current container', fakeAsync(() => {
+        const fixture =
+          createComponent(ConnectedDropZonesViaGroupWithoutNgForAndNotDirectContainerDirective);
+        fixture.detectChanges();
+
+        const groups = fixture.componentInstance.groupedDragItems;
+        const dropInstances = fixture.componentInstance.dropInstances.toArray();
+        const dropZones = dropInstances
+          .map(d => d.element.nativeElement.firstChild as HTMLElement );
+        const item = groups[0][1];
+        const initialParent = item.element.nativeElement.parentNode;
+        const initialRect = item.element.nativeElement.getBoundingClientRect();
+        const targetRect = groups[1][2].element.nativeElement.getBoundingClientRect();
+
+        // Change the `connectedTo` so the containers are only connected one-way.
+        dropInstances[0].connectedTo = dropInstances[1];
+        dropInstances[1].connectedTo = [];
+
+        startDraggingViaMouse(fixture, item.element.nativeElement);
+        fixture.detectChanges();
+
+        const placeholder = dropZones[0].querySelector('.cdk-drag-placeholder')!;
+
+        expect(placeholder).toBeTruthy();
+        expect(dropZones[0].contains(placeholder))
+            .toBe(true, 'Expected placeholder to be inside the first container.');
+
+        dispatchMouseEvent(document, 'mousemove', targetRect.left + 1, targetRect.top + 1);
+        fixture.detectChanges();
+
+        expect(dropZones[1].contains(placeholder))
+            .toBe(true, 'Expected placeholder to be inside second container.');
+
+        dispatchMouseEvent(document, 'mousemove', initialRect.left + 1, initialRect.top + 1);
+        fixture.detectChanges();
+
+        expect(dropZones[0].contains(placeholder))
+            .toBe(true, 'Expected placeholder to be back inside first container.');
+
+        dispatchMouseEvent(document, 'mouseup');
+        fixture.detectChanges();
+        flush();
+
+        expect(item.element.nativeElement.parentNode)
+          .toBe(initialParent, 'Expected element to be moved back into its initial parent');
+
+        expect((dropZones[0].parentElement as HTMLElement).childElementCount)
+          .toBe(1, 'Expected drop container to return to original state.');
+    }));
   });
 
 });
@@ -2520,6 +2621,54 @@ class ConnectedDropZones implements AfterViewInit {
 })
 class ConnectedDropZonesViaGroupDirective extends ConnectedDropZones {}
 
+@Component({
+  encapsulation: ViewEncapsulation.None,
+  styles: [`
+    .inner-drop-list {
+      display: block;
+      width: 100px;
+      min-height: ${ITEM_HEIGHT}px;
+      background: hotpink;
+    }
+
+    .cdk-drag {
+      display: block;
+      height: ${ITEM_HEIGHT}px;
+      background: red;
+    }
+  `],
+  template: `
+    <div cdkDropListGroup>
+
+      <div
+        cdkDropList
+        cdkDropListDirectContainerElement=".inner-drop-list"
+        [cdkDropListData]="todo"
+        (cdkDropListDropped)="droppedSpy($event)">
+        <div class="inner-drop-list">
+          <div [cdkDragData]="item" cdkDrag>Zero</div>
+          <div [cdkDragData]="item" cdkDrag>One</div>
+          <div [cdkDragData]="item" cdkDrag>Two</div>
+          <div [cdkDragData]="item" cdkDrag>Three</div>
+        </div>
+      </div>
+
+      <div
+        cdkDropList
+        cdkDropListDirectContainerElement=".inner-drop-list"
+        [cdkDropListData]="done"
+        (cdkDropListDropped)="droppedSpy($event)">
+        <div class="inner-drop-list">
+          <div [cdkDragData]="item" cdkDrag>Four</div>
+          <div [cdkDragData]="item" cdkDrag>Five</div>
+          <div [cdkDragData]="item" cdkDrag>Six</div>
+        </div>
+      </div>
+    </div>
+  `
+})
+class ConnectedDropZonesViaGroupWithoutNgForAndNotDirectContainerDirective
+  extends ConnectedDropZones {}
 
 @Component({
   template: `
