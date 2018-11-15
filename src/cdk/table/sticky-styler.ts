@@ -11,6 +11,7 @@
  * @docs-private
  */
 import {Direction} from '@angular/cdk/bidi';
+import {EdgeNestedStickyFix} from './edge-nested-sticky-fix';
 
 export type StickyDirection = 'top' | 'bottom' | 'left' | 'right';
 
@@ -25,6 +26,8 @@ export const STICKY_DIRECTIONS: StickyDirection[] = ['top', 'bottom', 'left', 'r
  * @docs-private
  */
 export class StickyStyler {
+  private stickyFix = new EdgeNestedStickyFix();
+
   /**
    * @param isNativeHtmlTable Whether the sticky logic should be based on a table
    *     that uses the native `<table>` element.
@@ -124,20 +127,28 @@ export class StickyStyler {
 
     let stickyHeight = 0;
     for (let rowIndex = 0; rowIndex < rows.length; rowIndex++) {
-      if (!stickyStates[rowIndex]) {
-        continue;
-      }
-
       const row = rows[rowIndex];
-      if (this.isNativeHtmlTable) {
-        for (let j = 0; j < row.children.length; j++) {
-          const cell = row.children[j] as HTMLElement;
-          this._addStickyStyle(cell, position, stickyHeight);
-        }
+
+      // When on Edge and using FlexBox table, we manage sticky rows using a workaround
+      if (this.stickyFix.isBrowserEdge && !this.isNativeHtmlTable) {
+        this.stickyFix.useEdgeFix(row, stickyStates[rowIndex], position, stickyHeight);
       } else {
-        // Flex does not respect the stick positioning on the cells, needs to be applied to the row.
-        // If this is applied on a native table, Safari causes the header to fly in wrong direction.
-        this._addStickyStyle(row, position, stickyHeight);
+        if (!stickyStates[rowIndex]) {
+          continue;
+        }
+
+        if (this.isNativeHtmlTable) {
+          for (let j = 0; j < row.children.length; j++) {
+            const cell = row.children[j] as HTMLElement;
+            this._addStickyStyle(cell, position, stickyHeight);
+          }
+        } else {
+          // Flex does not respect the stick positioning on the cells,
+          //  needs to be applied to the row.
+          // If this is applied on a native table,
+          //  Safari causes the header to fly in wrong direction.
+          this._addStickyStyle(row, position, stickyHeight);
+        }
       }
 
       if (rowIndex === rows.length - 1) {

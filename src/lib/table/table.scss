@@ -66,6 +66,15 @@ mat-cell, mat-header-cell, mat-footer-cell {
   min-height: inherit;
 }
 
+.mat-edge-sticky-row-wrapper {
+  background-color: inherit;
+  overflow: hidden;
+  position: fixed;
+  // Without this, wrappers sometimes go out-of-sync with the position they must reach
+  transition: top 1ms, bottom 1ms;
+  z-index: 100;
+}
+
 /**
  * Native HTML table structure
  */
