@@ -181,6 +181,9 @@ export class CdkDrag<T = any> implements AfterViewInit, OnDestroy {
   /** Root element that will be dragged by the user. */
   private _rootElement: HTMLElement;
 
+  /** Root element parent in which the `_rootElement` resided when dragging began */
+  private _initialRootElementParent: HTMLElement;
+
   /** Subscription to pointer movement events. */
   private _pointerMoveSubscription = Subscription.EMPTY;
 
@@ -411,6 +414,7 @@ export class CdkDrag<T = any> implements AfterViewInit, OnDestroy {
 
     this._hasStartedDragging = this._hasMoved = false;
     this._initialContainer = this.dropContainer;
+    this._initialRootElementParent = this._rootElement.parentNode as HTMLElement;
     this._pointerMoveSubscription = this._dragDropRegistry.pointerMove.subscribe(this._pointerMove);
     this._pointerUpSubscription = this._dragDropRegistry.pointerUp.subscribe(this._pointerUp);
     this._scrollPosition = this._viewportRuler.getViewportScrollPosition();
@@ -549,7 +553,7 @@ export class CdkDrag<T = any> implements AfterViewInit, OnDestroy {
     if (this._nextSibling) {
       this._nextSibling.parentNode!.insertBefore(this._rootElement, this._nextSibling);
     } else {
-      this._initialContainer.element.nativeElement.appendChild(this._rootElement);
+      this._initialRootElementParent.appendChild(this._rootElement);
     }
 
     this._destroyPreview();

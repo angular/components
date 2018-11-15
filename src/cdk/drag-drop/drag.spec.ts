@@ -2208,6 +2208,47 @@ describe('CdkDrag', () => {
         expect(fixture.componentInstance.droppedSpy).not.toHaveBeenCalled();
     }));
 
+    it('should restore the element to its initial DOM position, when not inside an ngFor',
+      fakeAsync(() => {
+        const fixture =
+          createComponent(ListWithoutNgFor);
+
+        fixture.detectChanges();
+
+        const dropInstance = fixture.componentInstance.dropInstances.first;
+        const dropZone = dropInstance.element.nativeElement.firstChild as HTMLElement;
+
+        const item = fixture.componentInstance.rawDragItems.last;
+        const initialParent = item.element.nativeElement.parentNode;
+        const targetRect = fixture.componentInstance.rawDragItems.first
+          .element.nativeElement.getBoundingClientRect();
+
+        startDraggingViaMouse(fixture, item.element.nativeElement);
+        fixture.detectChanges();
+
+        const placeholder = dropZone.querySelector('.cdk-drag-placeholder')!;
+
+        expect(placeholder).toBeTruthy();
+        expect(dropZone.contains(placeholder))
+            .toBe(true, 'Expected placeholder to be inside the first container.');
+
+        dispatchMouseEvent(document, 'mousemove', targetRect.left + 1, targetRect.top + 1);
+        fixture.detectChanges();
+
+        expect(dropZone.contains(placeholder))
+          .toBe(true, 'Expected placeholder to be inside the container.');
+
+        dispatchMouseEvent(document, 'mouseup');
+        fixture.detectChanges();
+        flush();
+
+        expect(item.element.nativeElement.parentNode)
+          .toBe(initialParent, 'Expected element to be moved back into its initial parent');
+
+        expect((dropZone.parentElement as HTMLElement).childElementCount)
+          .toBe(1, 'Expected drop container to return to original state.');
+    }));
+
   });
 
 });
@@ -2520,6 +2561,39 @@ class ConnectedDropZones implements AfterViewInit {
 })
 class ConnectedDropZonesViaGroupDirective extends ConnectedDropZones {}
 
+@Component({
+  encapsulation: ViewEncapsulation.None,
+  styles: [`
+    .inner-drop-list {
+      display: block;
+      width: 100px;
+      min-height: ${ITEM_HEIGHT}px;
+      background: hotpink;
+    }
+
+    .cdk-drag {
+      display: block;
+      height: ${ITEM_HEIGHT}px;
+      background: red;
+    }
+  `],
+  template: `
+    <div
+      cdkDropList
+      [cdkDropListData]="todo">
+      <div class="inner-drop-list">
+        <div [cdkDragData]="item" cdkDrag>Zero</div>
+        <div [cdkDragData]="item" cdkDrag>One</div>
+        <div [cdkDragData]="item" cdkDrag>Two</div>
+        <div [cdkDragData]="item" cdkDrag>Three</div>
+      </div>
+    </div>
+  `
+})
+class ListWithoutNgFor {
+  @ViewChildren(CdkDrag) rawDragItems: QueryList<CdkDrag>;
+  @ViewChildren(CdkDropList) dropInstances: QueryList<CdkDropList>;
+}
 
 @Component({
   template: `
