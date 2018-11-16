@@ -46,7 +46,7 @@ export function moveItemInFormArray(formArray: FormArray, fromIndex: number, toI
     return;
   }
 
-  const delta = from > to ? 1 : -1;
+  const delta = to > from ? 1 : -1;
   for (let i = from; i * delta < to * delta; i += delta) {
     const previous = formArray.at(i);
     const current = formArray.at(i + delta);

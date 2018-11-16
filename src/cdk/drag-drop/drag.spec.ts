@@ -23,9 +23,10 @@ import {
 import {Directionality} from '@angular/cdk/bidi';
 import {CdkDrag, CDK_DRAG_CONFIG, CdkDragConfig} from './drag';
 import {CdkDragDrop} from './drag-events';
-import {moveItemInArray} from './drag-utils';
+import {moveItemInArray, moveItemInFormArray} from './drag-utils';
 import {CdkDropList} from './drop-list';
 import {CdkDragHandle} from './drag-handle';
+import {FormArray, FormGroup, FormControl, ReactiveFormsModule, AbstractControl} from '@angular/forms';
 
 const ITEM_HEIGHT = 25;
 const ITEM_WIDTH = 75;
@@ -2212,6 +2213,68 @@ describe('CdkDrag', () => {
 
 });
 
+
+describe('CdkDrag with FormArray', () => {
+  function createComponent<T>(componentType: Type<T>, providers: Provider[] = [], dragInstance = 0):
+    ComponentFixture<T> {
+    TestBed.configureTestingModule({
+      imports: [DragDropModule, ReactiveFormsModule],
+      declarations: [componentType, PassthroughComponent],
+      providers: [
+        {
+          provide: CDK_DRAG_CONFIG,
+          useValue: {
+            dragStartThreshold: dragInstance,
+            pointerDirectionChangeThreshold: 5
+          } as CdkDragConfig
+        },
+        ...providers
+      ]
+    }).compileComponents();
+
+    return TestBed.createComponent<T>(componentType);
+  }
+
+  describe('draggable with FormArray', () => {
+    it('should move a formArray element', fakeAsync(() => {
+      const fixture = createComponent(FormarrayDragging);
+      fixture.detectChanges();
+      const dragItems = fixture.componentInstance.dragItems;
+      const formArray = fixture.componentInstance.formArray;
+
+      expect(formArray.controls.map(control => (<AbstractControl>control.get('test')).value))
+          .toEqual(['Zero', 'One', 'Two', 'Three']);
+
+      const firstItem = dragItems.first;
+      const thirdItemRect = dragItems.toArray()[2].element.nativeElement.getBoundingClientRect();
+
+      dragElementViaMouse(fixture, firstItem.element.nativeElement,
+          thirdItemRect.left + 1, thirdItemRect.top + 1);
+      flush();
+      fixture.detectChanges();
+
+      expect(fixture.componentInstance.droppedSpy).toHaveBeenCalledTimes(1);
+
+      const event = fixture.componentInstance.droppedSpy.calls.mostRecent().args[0];
+
+      // Assert the event like this, rather than `toHaveBeenCalledWith`, because Jasmine will
+      // go into an infinite loop trying to stringify the event, if the test fails.
+      expect(event).toEqual({
+        previousIndex: 0,
+        currentIndex: 2,
+        item: firstItem,
+        container: fixture.componentInstance.dropInstance,
+        previousContainer: fixture.componentInstance.dropInstance
+      });
+      flush();
+      fixture.detectChanges();
+
+      expect(formArray.controls.map(control => (<AbstractControl>control.get('test')).value))
+        .toEqual(['One', 'Two', 'Zero', 'Three']);
+    }));
+  });
+});
+
 @Component({
   template: `
     <div
@@ -2345,6 +2408,49 @@ class DraggableInDropZone {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 class DraggableInOnPushDropZone extends DraggableInDropZone {}
+
+
+const DROP_ZONE_FORMARRAY = `
+<form [formGroup]="formGroup">
+  <div
+    cdkDropList
+    style="width: 100px; background: pink;"
+    formArrayName="formArray"
+    (cdkDropListDropped)="droppedSpy($event)">
+    <div
+      *ngFor="let control of formArray.controls; let i = index"
+      cdkDrag
+      [style.height.px]="25"
+      [cdkDragData]="control"
+      [formGroupName]="i"
+      style="width: 100%; padding: 20px; box-sizing: border-box; background: red;">
+      <input formControlName="test">
+    </div>
+  </div>
+</form>
+`;
+@Component({template: DROP_ZONE_FORMARRAY})
+class FormarrayDragging {
+  @ViewChildren(CdkDrag) dragItems: QueryList<CdkDrag>;
+  @ViewChild(CdkDropList) dropInstance: CdkDropList;
+  formGroup: FormGroup;
+  sortedSpy = jasmine.createSpy('sorted spy');
+  get formArray() { return this.formGroup.get('formArray') as FormArray; }
+  droppedSpy = jasmine.createSpy('dropped spy').and.callFake((event: CdkDragDrop<FormGroup[]>) => {
+    moveItemInFormArray(this.formArray, event.previousIndex, event.currentIndex);
+  });
+
+  constructor() {
+    this.formGroup = new FormGroup({
+      formArray: new FormArray([
+        new FormGroup({ test: new FormControl('Zero') }),
+        new FormGroup({ test: new FormControl('One') }),
+        new FormGroup({ test: new FormControl('Two') }),
+        new FormGroup({ test: new FormControl('Three') })
+      ])
+    });
+  }
+}
 
 
 @Component({
