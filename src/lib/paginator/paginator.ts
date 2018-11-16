@@ -58,7 +58,7 @@ export class PageEvent {
 /** @docs-private */
 export class MatPaginatorBase {}
 export const _MatPaginatorBase: CanDisableCtor & HasInitializedCtor & typeof MatPaginatorBase =
-  mixinDisabled(mixinInitialized(MatPaginatorBase));
+    mixinDisabled(mixinInitialized(MatPaginatorBase));
 
 /**
  * Component to provide navigation between paged information. Displays the size of the current
@@ -166,7 +166,7 @@ export class MatPaginator extends _MatPaginatorBase implements OnInit, OnDestroy
   _displayedPageSizeOptions: number[];
 
   constructor(public _intl: MatPaginatorIntl,
-    private _changeDetectorRef: ChangeDetectorRef) {
+              private _changeDetectorRef: ChangeDetectorRef) {
     super();
     this._intlChanges = _intl.changes.subscribe(() => this._changeDetectorRef.markForCheck());
   }
@@ -323,8 +323,8 @@ export class MatPaginator extends _MatPaginatorBase implements OnInit, OnDestroy
     // If no page size is provided, use the first page size option or the default page size.
     if (!this.pageSize) {
       this._pageSize = this.pageSizeOptions.length != 0 ?
-        this.pageSizeOptions[0] :
-        DEFAULT_PAGE_SIZE;
+          this.pageSizeOptions[0] :
+          DEFAULT_PAGE_SIZE;
     }
 
     this._displayedPageSizeOptions = this.pageSizeOptions.slice();
