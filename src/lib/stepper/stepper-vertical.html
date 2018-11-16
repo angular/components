@@ -11,18 +11,19 @@
                    [attr.aria-label]="step.ariaLabel || null"
                    [attr.aria-labelledby]="(!step.ariaLabel && step.ariaLabelledby) ? step.ariaLabelledby : null"
                    [index]="i"
-                   [state]="_getIndicatorType(i)"
+                   [state]="_getIndicatorType(i, step.state)"
                    [label]="step.stepLabel || step.label"
                    [selected]="selectedIndex === i"
                    [active]="step.completed || selectedIndex === i || !linear"
                    [optional]="step.optional"
+                   [errorMessage]="step.errorMessage"
                    [iconOverrides]="_iconOverrides">
   </mat-step-header>
 
   <div class="mat-vertical-content-container" [class.mat-stepper-vertical-line]="!isLast">
     <div class="mat-vertical-stepper-content" role="tabpanel"
          [@stepTransition]="_getAnimationDirection(i)"
-         (@stepTransition.done)="_animationDone($event)"
+         (@stepTransition.done)="_animationDone.next($event)"
          [id]="_getStepContentId(i)"
          [attr.aria-labelledby]="_getStepLabelId(i)"
          [attr.aria-expanded]="selectedIndex === i">

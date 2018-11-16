@@ -54,14 +54,14 @@ export class MatSidenavContent extends MatDrawerContent {
   moduleId: module.id,
   selector: 'mat-sidenav',
   exportAs: 'matSidenav',
-  template: '<ng-content></ng-content>',
+  templateUrl: 'drawer.html',
   animations: [matDrawerAnimations.transformDrawer],
   host: {
     'class': 'mat-drawer mat-sidenav',
     'tabIndex': '-1',
     '[@transform]': '_animationState',
-    '(@transform.start)': '_onAnimationStart($event)',
-    '(@transform.done)': '_onAnimationEnd($event)',
+    '(@transform.start)': '_animationStarted.next($event)',
+    '(@transform.done)': '_animationEnd.next($event)',
     // must prevent the browser from aligning text based on value
     '[attr.align]': 'null',
     '[class.mat-drawer-end]': 'position === "end"',

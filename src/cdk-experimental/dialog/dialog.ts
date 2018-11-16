@@ -13,7 +13,9 @@ import {
   Injectable,
   Injector,
   Inject,
-  ComponentRef
+  ComponentRef,
+  OnDestroy,
+  Type
 } from '@angular/core';
 import {ComponentPortal, PortalInjector, TemplatePortal} from '@angular/cdk/portal';
 import {of as observableOf, Observable, Subject, defer} from 'rxjs';
@@ -27,6 +29,7 @@ import {
   Overlay,
   OverlayRef,
   OverlayConfig,
+  ScrollStrategy,
 } from '@angular/cdk/overlay';
 import {startWith} from 'rxjs/operators';
 
@@ -43,7 +46,9 @@ import {
  * Service to open modal dialogs.
  */
 @Injectable()
-export class Dialog {
+export class Dialog implements OnDestroy {
+  private _scrollStrategy: () => ScrollStrategy;
+
   /** Stream that emits when all dialogs are closed. */
   get _afterAllClosed(): Observable<void> {
     return this._parentDialog ? this._parentDialog.afterAllClosed : this._afterAllClosedBase;
@@ -67,8 +72,10 @@ export class Dialog {
   constructor(
       private overlay: Overlay,
       private injector: Injector,
-      @Inject(DIALOG_REF) private dialogRefConstructor,
-      @Inject(DIALOG_SCROLL_STRATEGY) private _scrollStrategy,
+      @Inject(DIALOG_REF) private dialogRefConstructor: Type<DialogRef<any>>,
+      // TODO(crisbeto): the `any` here can be replaced
+      // with the proper type once we start using Ivy.
+      @Inject(DIALOG_SCROLL_STRATEGY) scrollStrategy: any,
       @Optional() @SkipSelf() private _parentDialog: Dialog,
       @Optional() location: Location) {
 
@@ -78,6 +85,8 @@ export class Dialog {
     if (!_parentDialog && location) {
       location.subscribe(() => this.closeAll());
     }
+
+    this._scrollStrategy = scrollStrategy;
   }
 
   /** Gets an open dialog by id. */
@@ -122,6 +131,11 @@ export class Dialog {
 
     this.registerDialogRef(dialogRef);
     return dialogRef;
+  }
+
+  ngOnDestroy() {
+    // Only close all the dialogs at this level.
+    this._openDialogs.forEach(ref => ref.close());
   }
 
   /**
@@ -211,11 +225,12 @@ export class Dialog {
     // Create a reference to the dialog we're creating in order to give the user a handle
     // to modify and close it.
     const dialogRef = new this.dialogRefConstructor(overlayRef, dialogContainer, config.id);
-
     const injector = this._createInjector<T>(config, dialogRef, dialogContainer);
     const contentRef = dialogContainer.attachComponentPortal(
         new ComponentPortal(componentOrTemplateRef, undefined, injector));
+
     dialogRef.componentInstance = contentRef.instance;
+    dialogRef.disableClose = config.disableClose;
 
     dialogRef.updateSize({width: config.width, height: config.height})
              .updatePosition(config.position);

@@ -86,7 +86,7 @@ export class MatExpansionPanelHeader implements OnDestroy, FocusableOption {
     // Avoids focus being lost if the panel contained the focused element and was closed.
     panel.closed
       .pipe(filter(() => panel._containsFocus()))
-      .subscribe(() => _focusMonitor.focusVia(_element.nativeElement, 'program'));
+      .subscribe(() => _focusMonitor.focusVia(_element, 'program'));
 
     _focusMonitor.monitor(_element).subscribe(origin => {
       if (origin && panel.accordion) {
@@ -140,8 +140,11 @@ export class MatExpansionPanelHeader implements OnDestroy, FocusableOption {
       // Toggle for space and enter keys.
       case SPACE:
       case ENTER:
-        event.preventDefault();
-        this._toggle();
+        if (!event.altKey && !event.metaKey && !event.shiftKey && !event.ctrlKey) {
+          event.preventDefault();
+          this._toggle();
+        }
+
         break;
       default:
         if (this.panel.accordion) {
@@ -158,7 +161,7 @@ export class MatExpansionPanelHeader implements OnDestroy, FocusableOption {
    * @docs-private
    */
   focus(origin: FocusOrigin = 'program') {
-    this._focusMonitor.focusVia(this._element.nativeElement, origin);
+    this._focusMonitor.focusVia(this._element, origin);
   }
 
   ngOnDestroy() {

@@ -29,7 +29,9 @@ describe('MatSlideToggle without forms', () => {
       declarations: [
         SlideToggleBasic,
         SlideToggleWithTabindexAttr,
-        SlideToggleWithoutLabel
+        SlideToggleWithoutLabel,
+        SlideToggleProjectedLabel,
+        TextBindingComponent,
       ],
       providers: [
         {provide: HAMMER_GESTURE_CONFIG, useFactory: () => gestureConfig = new TestGestureConfig()},
@@ -346,6 +348,15 @@ describe('MatSlideToggle without forms', () => {
       expect(slideToggle.tabIndex)
         .toBe(5, 'Expected tabIndex property to have been set based on the native attribute');
     }));
+
+    it('should clear the tabindex from the host element', fakeAsync(() => {
+      const fixture = TestBed.createComponent(SlideToggleWithTabindexAttr);
+
+      fixture.detectChanges();
+
+      const slideToggle = fixture.debugElement.query(By.directive(MatSlideToggle)).nativeElement;
+      expect(slideToggle.getAttribute('tabindex')).toBeFalsy();
+    }));
   });
 
   describe('custom action configuration', () => {
@@ -657,7 +668,6 @@ describe('MatSlideToggle without forms', () => {
   describe('without label', () => {
     let fixture: ComponentFixture<SlideToggleWithoutLabel>;
     let testComponent: SlideToggleWithoutLabel;
-    let slideToggleElement: HTMLElement;
     let slideToggleBarElement: HTMLElement;
 
     beforeEach(() => {
@@ -666,7 +676,6 @@ describe('MatSlideToggle without forms', () => {
       const slideToggleDebugEl = fixture.debugElement.query(By.directive(MatSlideToggle));
 
       testComponent = fixture.componentInstance;
-      slideToggleElement = slideToggleDebugEl.nativeElement;
       slideToggleBarElement = slideToggleDebugEl
           .query(By.css('.mat-slide-toggle-bar')).nativeElement;
     });
@@ -697,9 +706,32 @@ describe('MatSlideToggle without forms', () => {
       flushMutationObserver();
       fixture.detectChanges();
 
-      expect(slideToggleElement.classList)
+      expect(slideToggleBarElement.classList)
         .not.toContain('mat-slide-toggle-bar-no-side-margin');
     }));
+  });
+
+  describe('label margin', () => {
+    let fixture: ComponentFixture<SlideToggleProjectedLabel>;
+    let slideToggleBarElement: HTMLElement;
+
+    beforeEach(() => {
+      fixture = TestBed.createComponent(SlideToggleProjectedLabel);
+      slideToggleBarElement = fixture.debugElement
+        .query(By.css('.mat-slide-toggle-bar')).nativeElement;
+
+      fixture.detectChanges();
+    });
+
+    it('should properly update margin if label content is projected', () => {
+      // Do not run the change detection for the fixture manually because we want to verify
+      // that the slide-toggle properly toggles the margin class even if the observe content
+      // output fires outside of the zone.
+      flushMutationObserver();
+
+      expect(slideToggleBarElement.classList).not
+        .toContain('mat-slide-toggle-bar-no-side-margin');
+    });
   });
 });
 
@@ -1086,4 +1118,17 @@ class SlideToggleWithoutLabel {
 class SlideToggleWithModelAndChangeEvent {
   checked: boolean;
   onChange: () => void = () => {};
+}
+
+@Component({
+  template: `<mat-slide-toggle><some-text></some-text></mat-slide-toggle>`
+})
+class SlideToggleProjectedLabel {}
+
+@Component({
+  selector: 'some-text',
+  template: `<span>{{text}}</span>`
+})
+class TextBindingComponent {
+  text: string = 'Some text';
 }

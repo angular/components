@@ -1,0 +1,119 @@
+{# Defines macros for reusable templates. #}
+{% macro method(method) -%}
+  {% include 'method.template.html' %}
+{% endmacro %}
+
+{% macro property(property) -%}
+  {% include 'property.template.html' %}
+{% endmacro %}
+
+{% macro methodList(methodList) -%}
+  {% include 'method-list.template.html' %}
+{% endmacro %}
+
+{% macro propertyList(propertyList) -%}
+  {% include 'property-list.template.html' %}
+{% endmacro %}
+
+{% macro class(class) -%}
+  {% include 'class.template.html' %}
+{% endmacro %}
+
+{% macro interface(interface) -%}
+  {% include 'interface.template.html' %}
+{% endmacro %}
+
+{% macro typeAlias(alias) -%}
+  {% include 'type-alias.template.html' %}
+{% endmacro %}
+
+{% macro constant(constant) -%}
+  {% include 'constant.template.html' %}
+{% endmacro %}
+
+<div class="docs-api">
+  <h2>
+    API reference for Angular {$ doc.packageDisplayName $} {$ doc.displayName $}
+  </h2>
+
+  <p class="docs-api-module-import">
+    <code>
+      import {{$ doc.ngModule.name $}} from '{$ doc.moduleImportPath $}';
+    </code>
+  </p>
+
+  {%- if doc.services.length -%}
+    <h3 id="services" class="docs-header-link docs-api-h3">
+      <span header-link="services"></span>
+      Services
+    </h3>
+    {% for service in doc.services %}
+      {$ class(service) $}
+    {% endfor %}
+  {%- endif -%}
+
+
+  {%- if doc.directives.length -%}
+    <h3 id="directives" class="docs-header-link docs-api-h3">
+      <span header-link="directives"></span>
+      Directives
+    </h3>
+    {% for directive in doc.directives %}
+      {$ class(directive) $}
+    {% endfor %}
+  {%- endif -%}
+
+  {%- if doc.classes.length -%}
+    <h3 id="classes" class="docs-header-link docs-api-h3">
+      <span header-link="classes"></span>
+      Classes
+    </h3>
+    {% for other in doc.classes %}
+      {$ class(other) $}
+    {% endfor %}
+  {%- endif -%}
+
+  {%- if doc.interfaces.length -%}
+    <h3 id="interfaces" class="docs-header-link docs-api-h3">
+      <span header-link="interfaces"></span>
+      Interfaces
+    </h3>
+    {% for item in doc.interfaces %}
+      {$ interface(item) $}
+    {% endfor %}
+  {%- endif -%}
+
+  {%- if doc.functions.length -%}
+    <h3 id="functions" class="docs-header-link docs-api-h3">
+      <span header-link="functions"></span>
+      Functions
+    </h3>
+    {% for item in doc.functions %}
+      {#
+        Since the function docs have a similar structure as method docs, we use
+        the method template.
+      #}
+      {$ method(item) $}
+    {% endfor %}
+  {%- endif -%}
+
+  {%- if doc.typeAliases.length -%}
+    <h3 id="type_aliases" class="docs-header-link docs-api-h3">
+      <span header-link="type_aliases"></span>
+      Type aliases
+    </h3>
+    {% for item in doc.typeAliases %}
+      {$ typeAlias(item) $}
+    {% endfor %}
+  {%- endif -%}
+
+  {%- if doc.constants.length -%}
+    <h3 id="constants" class="docs-header-link docs-api-h3">
+      <span header-link="constants"></span>
+      Constants
+    </h3>
+    {% for item in doc.constants %}
+      {$ constant(item) $}
+    {% endfor %}
+  {%- endif -%}
+</div>

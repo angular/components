@@ -7,7 +7,7 @@
  */
 
 import {CdkDrag} from './drag';
-import {CdkDropContainer} from './drop-container';
+import {CdkDropListContainer} from './drop-list-container';
 
 /** Event emitted when the user starts dragging a draggable. */
 export interface CdkDragStart<T = any> {
@@ -24,7 +24,7 @@ export interface CdkDragEnd<T = any> {
 /** Event emitted when the user moves an item into a new drop container. */
 export interface CdkDragEnter<T = any, I = T> {
   /** Container into which the user has moved the item. */
-  container: CdkDropContainer<T>;
+  container: CdkDropListContainer<T>;
   /** Item that was removed from the container. */
   item: CdkDrag<I>;
 }
@@ -35,7 +35,7 @@ export interface CdkDragEnter<T = any, I = T> {
  */
 export interface CdkDragExit<T = any, I = T> {
   /** Container from which the user has a removed an item. */
-  container: CdkDropContainer<T>;
+  container: CdkDropListContainer<T>;
   /** Item that was removed from the container. */
   item: CdkDrag<I>;
 }
@@ -50,9 +50,9 @@ export interface CdkDragDrop<T, O = T> {
   /** Item that is being dropped. */
   item: CdkDrag;
   /** Container in which the item was dropped. */
-  container: CdkDropContainer<T>;
+  container: CdkDropListContainer<T>;
   /** Container from which the item was picked up. Can be the same as the `container`. */
-  previousContainer: CdkDropContainer<O>;
+  previousContainer: CdkDropListContainer<O>;
 }
 
 /** Event emitted as the user is dragging a draggable item. */
@@ -63,4 +63,11 @@ export interface CdkDragMove<T = any> {
   pointerPosition: {x: number, y: number};
   /** Native event that is causing the dragging. */
   event: MouseEvent | TouchEvent;
+  /**
+   * Indicates the direction in which the user is dragging the element along each axis.
+   * `1` means that the position is increasing (e.g. the user is moving to the right or downwards),
+   * whereas `-1` means that it's decreasing (they're moving to the left or upwards). `0` means
+   * that the position hasn't changed.
+   */
+  delta: {x: -1 | 0 | 1, y: -1 | 0 | 1};
 }

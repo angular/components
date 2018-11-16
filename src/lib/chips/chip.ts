@@ -159,12 +159,12 @@ export class MatChip extends _MatChipMixinBase implements FocusableOption, OnDes
   @Input()
   get selected(): boolean { return this._selected; }
   set selected(value: boolean) {
-    this._selected = coerceBooleanProperty(value);
-    this.selectionChange.emit({
-      source: this,
-      isUserInput: false,
-      selected: value
-    });
+    const coercedValue = coerceBooleanProperty(value);
+
+    if (coercedValue !== this._selected) {
+      this._selected = coercedValue;
+      this._dispatchSelectionChange();
+    }
   }
   protected _selected: boolean = false;
 
@@ -234,10 +234,9 @@ export class MatChip extends _MatChipMixinBase implements FocusableOption, OnDes
     this._chipRipple.setupTriggerEvents(_elementRef.nativeElement);
 
     if (globalOptions) {
+      // TODO(paul): Do not copy each option manually. Allow dynamic global option changes: #9729
       this._ripplesGloballyDisabled = !!globalOptions.disabled;
-      // TODO(paul): Once the speedFactor is removed, we no longer need to copy each single option.
       this.rippleConfig = {
-        speedFactor: globalOptions.baseSpeedFactor,
         animation: globalOptions.animation,
         terminateOnPointerUp: globalOptions.terminateOnPointerUp,
       };
@@ -263,45 +262,32 @@ export class MatChip extends _MatChipMixinBase implements FocusableOption, OnDes
 
   /** Selects the chip. */
   select(): void {
-    this._selected = true;
-    this.selectionChange.emit({
-      source: this,
-      isUserInput: false,
-      selected: true
-    });
+    if (!this._selected) {
+      this._selected = true;
+      this._dispatchSelectionChange();
+    }
   }
 
   /** Deselects the chip. */
   deselect(): void {
-    this._selected = false;
-    this.selectionChange.emit({
-      source: this,
-      isUserInput: false,
-      selected: false
-    });
+    if (this._selected) {
+      this._selected = false;
+      this._dispatchSelectionChange();
+    }
   }
 
   /** Select this chip and emit selected event */
   selectViaInteraction(): void {
-    this._selected = true;
-    // Emit select event when selected changes.
-    this.selectionChange.emit({
-      source: this,
-      isUserInput: true,
-      selected: true
-    });
+    if (!this._selected) {
+      this._selected = true;
+      this._dispatchSelectionChange(true);
+    }
   }
 
   /** Toggles the current selected state of this chip. */
   toggleSelected(isUserInput: boolean = false): boolean {
     this._selected = !this.selected;
-
-    this.selectionChange.emit({
-      source: this,
-      isUserInput,
-      selected: this._selected
-    });
-
+    this._dispatchSelectionChange(isUserInput);
     return this.selected;
   }
 
@@ -326,15 +312,13 @@ export class MatChip extends _MatChipMixinBase implements FocusableOption, OnDes
     }
   }
 
-  /** Ensures events fire properly upon click. */
+  /** Handles click events on the chip. */
   _handleClick(event: Event) {
-    // Check disabled
     if (this.disabled) {
-      return;
+      event.preventDefault();
+    } else {
+      event.stopPropagation();
     }
-
-    event.preventDefault();
-    event.stopPropagation();
   }
 
   /** Handle custom key presses. */
@@ -377,6 +361,14 @@ export class MatChip extends _MatChipMixinBase implements FocusableOption, OnDes
           this._onBlur.next({chip: this});
         });
       });
+  }
+
+  private _dispatchSelectionChange(isUserInput = false) {
+    this.selectionChange.emit({
+      source: this,
+      isUserInput,
+      selected: this._selected
+    });
   }
 }
 

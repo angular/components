@@ -12,21 +12,33 @@ import {
   ElementRef,
   EventEmitter,
   Input,
+  NgZone,
   Output,
   ViewEncapsulation,
-  NgZone,
 } from '@angular/core';
+import {
+  DateAdapter,
+  MAT_SINGLE_DATE_SELECTION_MODEL_PROVIDER,
+  MatDateSelectionModel,
+  MatSingleDateSelectionModel
+} from '@angular/material/core';
 import {take} from 'rxjs/operators';
 
 /**
  * An internal class that represents the data corresponding to a single calendar cell.
  * @docs-private
+ * @breaking-change 9.0.0 remove generic default type
  */
-export class MatCalendarCell {
-  constructor(public value: number,
-              public displayValue: string,
-              public ariaLabel: string,
-              public enabled: boolean) {}
+export class MatCalendarCell<D = unknown> {
+  constructor(
+      /** The range of dates represented by this cell (inclusive). */
+      public range: {start: D, end: D},
+      /** The text value to display in the cell. */
+      public displayValue: string,
+      /** The aria-label to use for the cell. */
+      public ariaLabel: string,
+      /** Whether the cell is enabled. */
+      public enabled: boolean) {}
 }
 
 
@@ -47,28 +59,65 @@ export class MatCalendarCell {
   exportAs: 'matCalendarBody',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [MAT_SINGLE_DATE_SELECTION_MODEL_PROVIDER],
 })
-export class MatCalendarBody {
+// @breaking-change 9.0.0 remove generic default type
+export class MatCalendarBody<D = unknown> {
   /** The label for the table. (e.g. "Jan 2017"). */
   @Input() label: string;
 
   /** The cells to display in the table. */
-  @Input() rows: MatCalendarCell[][];
+  @Input() rows: MatCalendarCell<D>[][];
 
-  /** The value in the table that corresponds to today. */
+  /**
+   * The value in the table that corresponds to today.
+   * @deprecated No longer needed since MatCalendarBody now gets today value from DateAdapter.
+   * @breaking-change 9.0.0 remove this property
+   */
   @Input() todayValue: number;
 
-  /** The value in the table that is currently selected. */
-  @Input() selectedValue: number;
+  /**
+   * The value in the table that is currently selected.
+   * @deprecated Please get/set the selection via the `MatDateSelectionModel` instead.
+   * @breaking-change 9.0.0 remove this property.
+   */
+  @Input()
+  get selectedValue(): number {
+    if (this._selectionModel instanceof MatSingleDateSelectionModel) {
+      const date = this._selectionModel.getSelection();
+      if (date) {
+        const granularity = this._getFirstCellGranularity();
+        if (granularity == 'day') {
+          return this._dateAdapter.getDate(date);
+        } else if (granularity == 'month') {
+          return this._dateAdapter.getMonth(date);
+        } else {
+          return this._dateAdapter.getYear(date);
+        }
+      }
+    }
+    return null!;
+  }
+  set selectedValue(value: number) {
+    if (this._selectionModel instanceof MatSingleDateSelectionModel) {
+      if (value !== null) {
+        const date = this._selectionModel.getSelection() || this._getFirstCellRange().start;
+        const granularity = this._getFirstCellGranularity();
+        const year = granularity == 'year' ? value : this._dateAdapter.getYear(date);
+        const month = granularity == 'month' ? value : this._dateAdapter.getMonth(date);
+        const day = granularity == 'day' ? value : this._dateAdapter.getDate(date);
+        this._selectionModel.setSelection(this._dateAdapter.createDate(year, month, day));
+      } else {
+        this._selectionModel.setSelection(null);
+      }
+    }
+  }
 
   /** The minimum number of free cells needed to fit the label in the first row. */
   @Input() labelMinRequiredCells: number;
 
   /** The number of columns in the table. */
   @Input() numCols = 7;
-
-  /** Whether to allow selection of disabled cells. */
-  @Input() allowDisabledSelection = false;
 
   /** The cell number of the active cell in the table. */
   @Input() activeCell = 0;
@@ -79,16 +128,40 @@ export class MatCalendarBody {
    */
   @Input() cellAspectRatio = 1;
 
-  /** Emits when a new value is selected. */
+  /**
+   * Emits when a new value is selected.
+   * @deprecated Please listen for selection change via the `MatDateSelectionModel` instead.
+   * @breaking-change 9.0.0 remove this property.
+   */
   @Output() readonly selectedValueChange: EventEmitter<number> = new EventEmitter<number>();
 
-  constructor(private _elementRef: ElementRef<HTMLElement>, private _ngZone: NgZone) { }
+  private _today: D;
 
-  _cellClicked(cell: MatCalendarCell): void {
-    if (!this.allowDisabledSelection && !cell.enabled) {
-      return;
+  constructor(private _elementRef: ElementRef<HTMLElement>,
+              private _ngZone: NgZone,
+              private _dateAdapter: DateAdapter<D>,
+              readonly _selectionModel: MatDateSelectionModel<D>) {
+    this._today = this._dateAdapter.today();
+    // Note(mmalerba): This is required to zero out the time portion of the date.
+    // Revisit this when we support time picking.
+    this._today = this._dateAdapter.createDate(
+        this._dateAdapter.getYear(this._today),
+        this._dateAdapter.getMonth(this._today),
+        this._dateAdapter.getDate(this._today));
+  }
+
+  _cellClicked(cell: MatCalendarCell<D>): void {
+    if (cell.enabled && this._selectionModel instanceof MatSingleDateSelectionModel) {
+      const date = cell.range.start;
+      const granularity = this._getFirstCellGranularity();
+      if (granularity == 'year') {
+        this.selectedValueChange.emit(this._dateAdapter.getYear(date));
+      } else if (granularity == 'month') {
+        this.selectedValueChange.emit(this._dateAdapter.getMonth(date));
+      } else {
+        this.selectedValueChange.emit(this._dateAdapter.getDate(date));
+      }
     }
-    this.selectedValueChange.emit(cell.value);
   }
 
   /** The number of blank cells to put at the beginning for the first row. */
@@ -108,6 +181,16 @@ export class MatCalendarBody {
     return cellNumber == this.activeCell;
   }
 
+  _isSelected(item: MatCalendarCell<D>): boolean {
+    return this._selectionModel.overlaps(item.range);
+  }
+
+  _isToday(item: MatCalendarCell<D>): boolean {
+    const today = this._dateAdapter.today();
+    return this._dateAdapter.compareDate(item.range.start, today) <= 0 &&
+        this._dateAdapter.compareDate(item.range.end, today) >= 0;
+  }
+
   /** Focuses the active cell after the microtask queue is empty. */
   _focusActiveCell() {
     this._ngZone.runOutsideAngular(() => {
@@ -120,5 +203,25 @@ export class MatCalendarBody {
         }
       });
     });
+  }
+
+  // @breaking-change 9.0.0 remove when deprecated properties relying on it are removed.
+  private _getFirstCellRange() {
+    return (this.rows && this.rows[0] && this.rows[0][0] && this.rows[0][0].range);
+  }
+
+  // @breaking-change 9.0.0 remove when deprecated properties relying on it are removed.
+  private _getFirstCellGranularity(): 'day' | 'month' | 'year' {
+    const range = this._getFirstCellRange();
+    if (this._dateAdapter.getYear(range.start) == this._dateAdapter.getYear(range.end)) {
+      if (this._dateAdapter.getMonth(range.start) == this._dateAdapter.getMonth(range.end)) {
+        if (this._dateAdapter.getDate(range.start) == this._dateAdapter.getDate(range.end)) {
+          return 'day';
+        }
+        return 'month';
+      }
+      return 'year';
+    }
+    return 'day';
   }
 }

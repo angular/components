@@ -8,11 +8,12 @@
 
 import {Injectable, NgZone, OnDestroy, Inject} from '@angular/core';
 import {DOCUMENT} from '@angular/common';
-import {supportsPassiveEventListeners} from '@angular/cdk/platform';
+import {normalizePassiveListenerOptions} from '@angular/cdk/platform';
 import {Subject} from 'rxjs';
+import {toggleNativeDragInteractions} from './drag-styling';
 
 /** Event options that can be used to bind an active event. */
-const activeEventOptions = supportsPassiveEventListeners() ? {passive: false} : false;
+const activeEventOptions = normalizePassiveListenerOptions({passive: false});
 
 /** Handler for a pointer event callback. */
 type PointerEventHandler = (event: TouchEvent | MouseEvent) => void;
@@ -22,8 +23,8 @@ type PointerEventHandler = (event: TouchEvent | MouseEvent) => void;
  * instances, and manages global event listeners on the `document`.
  * @docs-private
  */
-// Note: this class is generic, rather than referencing CdkDrag and CdkDrop directly, in order to
-// avoid circular imports. If we were to reference them here, importing the registry into the
+// Note: this class is generic, rather than referencing CdkDrag and CdkDropList directly, in order
+// to avoid circular imports. If we were to reference them here, importing the registry into the
 // classes that are registering themselves will introduce a circular import.
 @Injectable({providedIn: 'root'})
 export class DragDropRegistry<I, C extends {id: string}> implements OnDestroy {
@@ -116,6 +117,10 @@ export class DragDropRegistry<I, C extends {id: string}> implements OnDestroy {
       const moveEvent = isTouchEvent ? 'touchmove' : 'mousemove';
       const upEvent = isTouchEvent ? 'touchend' : 'mouseup';
 
+      // We need to disable the native interactions on the entire body, because
+      // the user can start marking text if they drag too far in Safari.
+      toggleNativeDragInteractions(this._document.body, false);
+
       // We explicitly bind __active__ listeners here, because newer browsers will default to
       // passive ones for `mousemove` and `touchmove`. The events need to be active, because we
       // use `preventDefault` to prevent the page from scrolling while the user is dragging.
@@ -136,6 +141,7 @@ export class DragDropRegistry<I, C extends {id: string}> implements OnDestroy {
 
     if (this._activeDragInstances.size === 0) {
       this._clearGlobalListeners();
+      toggleNativeDragInteractions(this._document.body, true);
     }
   }
 

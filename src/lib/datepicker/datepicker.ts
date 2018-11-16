@@ -40,6 +40,8 @@ import {
   CanColor,
   CanColorCtor,
   DateAdapter,
+  MatDateSelectionModel,
+  MatSingleDateSelectionModel,
   mixinColor,
   ThemePalette,
   MatDateSelection,
@@ -131,7 +133,9 @@ export class MatDatepickerContent<D> extends _MatDatepickerContentMixinBase
 // TODO(mmalerba): We use a component instead of a directive here so the user can use implicit
 // template reference variables (e.g. #d vs #d="matDatepicker"). We can change this to a directive
 // if angular adds support for `exportAs: '$implicit'` on directives.
-/** Component responsible for managing the datepicker popup/dialog. */
+/**
+ * Component responsible for managing the datepicker popup/dialog.
+ */
 @Component({
   moduleId: module.id,
   selector: 'mat-datepicker',
@@ -139,8 +143,11 @@ export class MatDatepickerContent<D> extends _MatDatepickerContentMixinBase
   exportAs: 'matDatepicker',
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
+  providers: [{provide: MatDateSelectionModel, useClass: MatSingleDateSelectionModel}]
 })
 export class MatDatepicker<D> implements OnDestroy, CanColor {
+  private _scrollStrategy: () => ScrollStrategy;
+
   /** An input indicating the type of the custom header component for the calendar, if set. */
   @Input() calendarHeaderComponent: ComponentType<any>;
 
@@ -229,9 +236,10 @@ export class MatDatepicker<D> implements OnDestroy, CanColor {
   id: string = `mat-datepicker-${datepickerUid++}`;
 
   /** The currently selected date. */
-  get _selected(): MatDateSelection<D> { return this._validSelected; }
-  set _selected(value: MatDateSelection<D>) { this._validSelected = value; }
-  private _validSelected: MatDateSelection<D> = new MatSingleDateSelection<D>(this._dateAdapter);
+  get _selected(): D | null { return this._dateSelection.getSelection(); }
+  set _selected(value: D | null) {
+    this._dateSelection.setSelection(value);
+  }
 
   /** The minimum selectable date. */
   get _minDate(): D | null {
@@ -278,13 +286,17 @@ export class MatDatepicker<D> implements OnDestroy, CanColor {
               private _overlay: Overlay,
               private _ngZone: NgZone,
               private _viewContainerRef: ViewContainerRef,
-              @Inject(MAT_DATEPICKER_SCROLL_STRATEGY) private _scrollStrategy,
+              @Inject(MatDateSelectionModel) readonly _dateSelection:
+                  MatSingleDateSelectionModel<D>,
+              @Inject(MAT_DATEPICKER_SCROLL_STRATEGY) scrollStrategy: any,
               @Optional() private _dateAdapter: DateAdapter<D>,
               @Optional() private _dir: Directionality,
               @Optional() @Inject(DOCUMENT) private _document: any) {
     if (!this._dateAdapter) {
       throw createMissingDateImplError('DateAdapter');
     }
+
+    this._scrollStrategy = scrollStrategy;
   }
 
   ngOnDestroy() {
@@ -299,11 +311,11 @@ export class MatDatepicker<D> implements OnDestroy, CanColor {
   }
 
   /** Selects the given date */
-  select(date: MatDateSelection<D>): void {
-    let oldValue = this._selected;
-    this._selected = date;
-    if (!this._selected.isSame(oldValue)) {
-      this._selectedChanged.next(this._selected);
+  select(date: D): void {
+    let oldValue = this._dateSelection.getSelection();
+    if (!this._dateAdapter.sameDate(oldValue, date)) {
+      this._dateSelection.add(date);
+      this._selectedChanged.next(this._dateSelection.getSelection() || undefined);
     }
   }
 
@@ -326,8 +338,6 @@ export class MatDatepicker<D> implements OnDestroy, CanColor {
       throw Error('A MatDatepicker can only be associated with a single input.');
     }
     this._datepickerInput = input;
-    this._inputSubscription = this._datepickerInput._valueChange.subscribe(
-          (value: MatDateSelection<D>) => this._selected = value);
   }
 
   /** Open the calendar. */
@@ -463,7 +473,7 @@ export class MatDatepicker<D> implements OnDestroy, CanColor {
       .withTransformOriginOn('.mat-datepicker-content')
       .withFlexibleDimensions(false)
       .withViewportMargin(8)
-      .withPush(false)
+      .withLockedPosition()
       .withPositions([
         {
           originX: 'start',

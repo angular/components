@@ -60,14 +60,18 @@ export const MAT_PROGRESS_BAR_LOCATION = new InjectionToken<MatProgressBarLocati
  * @docs-private
  */
 export interface MatProgressBarLocation {
-  pathname: string;
+  getPathname: () => string;
 }
 
 /** @docs-private */
 export function MAT_PROGRESS_BAR_LOCATION_FACTORY(): MatProgressBarLocation {
   const _document = inject(DOCUMENT);
-  const pathname = (_document && _document.location && _document.location.pathname) || '';
-  return {pathname};
+
+  return {
+    // Note that this needs to be a function, because Angular will only instantiate
+    // this provider once, but we want the current location on each call.
+    getPathname: () => (_document && _document.location && _document.location.pathname) || ''
+  };
 }
 
 
@@ -114,7 +118,7 @@ export class MatProgressBar extends _MatProgressBarMixinBase implements CanColor
     // we can't tell the difference between whether
     // the consumer is using the hash location strategy or not, because `Location` normalizes
     // both `/#/foo/bar` and `/foo/bar` to the same thing.
-    const path = location && location.pathname ? location.pathname.split('#')[0] : '';
+    const path = location ? location.getPathname().split('#')[0] : '';
     this._rectangleFillValue = `url('${path}#${this.progressbarId}')`;
     this._isNoopAnimation = _animationMode === 'NoopAnimations';
   }
@@ -191,7 +195,7 @@ export class MatProgressBar extends _MatProgressBarMixinBase implements CanColor
       // instead only on the animation that we care about (primary value bar's transitionend)
       this._ngZone.runOutsideAngular((() => {
         this._animationEndSubscription =
-            fromEvent(this._primaryValueBar.nativeElement, 'transitionend')
+            fromEvent<TransitionEvent>(this._primaryValueBar.nativeElement, 'transitionend')
             .pipe(filter(((e: TransitionEvent) =>
               e.target === this._primaryValueBar.nativeElement)))
             .subscribe(_ => this._ngZone.run(() => this.emitAnimationEnd()));

@@ -1,5 +1,5 @@
 import {ComponentPortal, PortalModule} from '@angular/cdk/portal';
-import {CdkScrollable, ScrollingModule} from '@angular/cdk/scrolling';
+import {CdkScrollable, ScrollingModule, ViewportRuler} from '@angular/cdk/scrolling';
 import {MockNgZone} from '@angular/cdk/testing';
 import {Component, ElementRef, NgModule, NgZone} from '@angular/core';
 import {inject, TestBed} from '@angular/core/testing';
@@ -13,7 +13,6 @@ import {
   OverlayContainer,
   OverlayModule,
   OverlayRef,
-  ViewportRuler,
 } from '../index';
 
 
@@ -149,6 +148,46 @@ describe('FlexibleConnectedPositionStrategy', () => {
     expect(Math.floor(overlayRect.top)).toBe(Math.floor(originRect.bottom));
 
     document.body.removeChild(originElement);
+  });
+
+  it('should clean up after itself when disposed', () => {
+    const origin = document.createElement('div');
+    const positionStrategy = overlay.position()
+        .flexibleConnectedTo(origin)
+        .withPositions([{
+          overlayX: 'start',
+          overlayY: 'top',
+          originX: 'start',
+          originY: 'bottom'
+        }]);
+
+    // Needs to be in the DOM for IE not to throw an "Unspecified error".
+    document.body.appendChild(origin);
+    attachOverlay({positionStrategy});
+
+    const boundingBox = overlayRef.hostElement;
+    const pane = overlayRef.overlayElement;
+
+    positionStrategy.dispose();
+
+    expect(boundingBox.style.top).toBeFalsy();
+    expect(boundingBox.style.bottom).toBeFalsy();
+    expect(boundingBox.style.left).toBeFalsy();
+    expect(boundingBox.style.right).toBeFalsy();
+    expect(boundingBox.style.width).toBeFalsy();
+    expect(boundingBox.style.height).toBeFalsy();
+    expect(boundingBox.style.alignItems).toBeFalsy();
+    expect(boundingBox.style.justifyContent).toBeFalsy();
+    expect(boundingBox.classList).not.toContain('cdk-overlay-connected-position-bounding-box');
+
+    expect(pane.style.top).toBeFalsy();
+    expect(pane.style.bottom).toBeFalsy();
+    expect(pane.style.left).toBeFalsy();
+    expect(pane.style.right).toBeFalsy();
+    expect(pane.style.position).toBeFalsy();
+
+    overlayRef.dispose();
+    document.body.removeChild(origin);
   });
 
   describe('without flexible dimensions and pushing', () => {
@@ -1704,6 +1743,40 @@ describe('FlexibleConnectedPositionStrategy', () => {
       expect(Math.floor(overlayRect.bottom)).toBe(Math.floor(originRect.top));
       expect(Math.floor(overlayRect.top)).toBe(viewportMargin);
     });
+
+    it('should center flexible overlay with push on a scrolled page', () => {
+      const veryLargeElement = document.createElement('div');
+
+      originElement.style.left = '200px';
+      originElement.style.top = '200px';
+
+      veryLargeElement.style.width = '100%';
+      veryLargeElement.style.height = '2000px';
+      document.body.appendChild(veryLargeElement);
+      window.scroll(0, 250);
+
+      positionStrategy
+        .withFlexibleDimensions()
+        .withPush(true)
+        .withPositions([{
+          overlayY: 'top',
+          overlayX: 'center',
+          originY: 'bottom',
+          originX: 'center'
+        }]);
+
+      attachOverlay({positionStrategy});
+
+      const overlayRect = overlayRef.overlayElement.getBoundingClientRect();
+      const originRect = originElement.getBoundingClientRect();
+
+      expect(Math.floor(overlayRect.left - overlayRect.width / 2))
+          .toBe(Math.floor(originRect.left - originRect.width / 2));
+
+      window.scroll(0, 0);
+      document.body.removeChild(veryLargeElement);
+    });
+
 
   });
 

@@ -31,12 +31,14 @@ import {
   TemplateRef,
   ViewChild,
   ViewEncapsulation,
+  InjectionToken,
 } from '@angular/core';
 import {DOCUMENT} from '@angular/common';
 import {AbstractControl} from '@angular/forms';
 import {CdkStepLabel} from './step-label';
 import {Observable, Subject, of as obaservableOf} from 'rxjs';
 import {startWith, takeUntil} from 'rxjs/operators';
+import {CdkStepHeader} from './step-header';
 
 /** Used to generate unique ID for each stepper component. */
 let nextId = 0;
@@ -65,6 +67,37 @@ export class StepperSelectionEvent {
   previouslySelectedStep: CdkStep;
 }
 
+/** The state of each step. */
+export type StepState = 'number' | 'edit' | 'done' | 'error' | string;
+
+/** Enum to represent the different states of the steps. */
+export const STEP_STATE = {
+  NUMBER: 'number',
+  EDIT: 'edit',
+  DONE: 'done',
+  ERROR: 'error'
+};
+
+/** InjectionToken that can be used to specify the global stepper options. */
+export const MAT_STEPPER_GLOBAL_OPTIONS =
+  new InjectionToken<StepperOptions>('mat-stepper-global-options');
+
+/** Configurable options for stepper. */
+export interface StepperOptions {
+  /**
+   * Whether the stepper should display an error state or not.
+   * Default behavior is assumed to be false.
+   */
+  showError?: boolean;
+
+  /**
+   * Whether the stepper should display the default indicator type
+   * or not.
+   * Default behavior is assumed to be true.
+   */
+  displayDefaultIndicatorType?: boolean;
+}
+
 @Component({
   moduleId: module.id,
   selector: 'cdk-step',
@@ -74,6 +107,10 @@ export class StepperSelectionEvent {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CdkStep implements OnChanges {
+  private _stepperOptions: StepperOptions;
+  _showError: boolean;
+  _displayDefaultIndicatorType: boolean;
+
   /** Template for step label if it exists. */
   @ContentChild(CdkStepLabel) stepLabel: CdkStepLabel;
 
@@ -89,6 +126,9 @@ export class CdkStep implements OnChanges {
   /** Plain text label of the step. */
   @Input() label: string;
 
+  /** Error message to display when there's an error. */
+  @Input() errorMessage: string;
+
   /** Aria label for the tab. */
   @Input('aria-label') ariaLabel: string;
 
@@ -97,6 +137,9 @@ export class CdkStep implements OnChanges {
    * Will be cleared if `aria-label` is set at the same time.
    */
   @Input('aria-labelledby') ariaLabelledby: string;
+
+  /** State of the step. */
+  @Input() state: StepState;
 
   /** Whether the user can return to this step once it has been marked as complted. */
   @Input()
@@ -117,18 +160,39 @@ export class CdkStep implements OnChanges {
   /** Whether step is marked as completed. */
   @Input()
   get completed(): boolean {
-    return this._customCompleted == null ? this._defaultCompleted() : this._customCompleted;
+    return this._customCompleted == null ? this._getDefaultCompleted() : this._customCompleted;
   }
   set completed(value: boolean) {
     this._customCompleted = coerceBooleanProperty(value);
   }
   private _customCompleted: boolean | null = null;
 
-  private _defaultCompleted() {
+  private _getDefaultCompleted() {
     return this.stepControl ? this.stepControl.valid && this.interacted : this.interacted;
   }
 
-  constructor(@Inject(forwardRef(() => CdkStepper)) private _stepper: CdkStepper) { }
+  /** Whether step has an error. */
+  @Input()
+  get hasError(): boolean {
+    return this._customError || this._getDefaultError();
+  }
+  set hasError(value: boolean) {
+    this._customError = coerceBooleanProperty(value);
+  }
+  private _customError: boolean | null = null;
+
+  private _getDefaultError() {
+    return this.stepControl && this.stepControl.invalid && this.interacted;
+  }
+
+  /** @breaking-change 8.0.0 remove the `?` after `stepperOptions` */
+  constructor(
+    @Inject(forwardRef(() => CdkStepper)) private _stepper: CdkStepper,
+    @Optional() @Inject(MAT_STEPPER_GLOBAL_OPTIONS) stepperOptions?: StepperOptions) {
+    this._stepperOptions = stepperOptions ? stepperOptions : {};
+    this._displayDefaultIndicatorType = this._stepperOptions.displayDefaultIndicatorType !== false;
+    this._showError = !!this._stepperOptions.showError;
+  }
 
   /** Selects this step component. */
   select(): void {
@@ -141,6 +205,10 @@ export class CdkStep implements OnChanges {
 
     if (this._customCompleted != null) {
       this._customCompleted = false;
+    }
+
+    if (this._customError != null) {
+      this._customError = false;
     }
 
     if (this.stepControl) {
@@ -175,8 +243,12 @@ export class CdkStepper implements AfterViewInit, OnDestroy {
   /** The list of step components that the stepper is holding. */
   @ContentChildren(CdkStep) _steps: QueryList<CdkStep>;
 
-  /** The list of step headers of the steps in the stepper. */
-  _stepHeader: QueryList<FocusableOption>;
+  /**
+   * The list of step headers of the steps in the stepper.
+   * @deprecated Type to be changed to `QueryList<CdkStepHeader>`.
+   * @breaking-change 8.0.0
+   */
+  @ContentChildren(CdkStepHeader) _stepHeader: QueryList<FocusableOption>;
 
   /** Whether the validity of previous steps should be checked or not. */
   @Input()
@@ -208,7 +280,7 @@ export class CdkStepper implements AfterViewInit, OnDestroy {
   /** The step that is selected. */
   @Input()
   get selected(): CdkStep {
-    // @breaking-change 7.0.0 Change return type to `CdkStep | undefined`.
+    // @breaking-change 8.0.0 Change return type to `CdkStep | undefined`.
     return this._steps ? this._steps.toArray()[this.selectedIndex] : undefined!;
   }
   set selected(step: CdkStep) {
@@ -235,7 +307,10 @@ export class CdkStepper implements AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit() {
-    this._keyManager = new FocusKeyManager(this._stepHeader)
+    // Note that while the step headers are content children by default, any components that
+    // extend this one might have them as view chidren. We initialize the keyboard handling in
+    // AfterViewInit so we're guaranteed for both view and content children to be defined.
+    this._keyManager = new FocusKeyManager<FocusableOption>(this._stepHeader)
       .withWrap()
       .withVerticalOrientation(this._orientation === 'vertical');
 
@@ -301,13 +376,44 @@ export class CdkStepper implements AfterViewInit, OnDestroy {
   }
 
   /** Returns the type of icon to be displayed. */
-  _getIndicatorType(index: number): 'number' | 'edit' | 'done' {
+  _getIndicatorType(index: number, state: StepState = STEP_STATE.NUMBER): StepState {
     const step = this._steps.toArray()[index];
-    if (!step.completed || this._selectedIndex == index) {
-      return 'number';
+    const isCurrentStep = this._isCurrentStep(index);
+
+    return step._displayDefaultIndicatorType
+      ? this._getDefaultIndicatorLogic(step, isCurrentStep)
+      : this._getGuidelineLogic(step, isCurrentStep, state);
+  }
+
+  private _getDefaultIndicatorLogic(step: CdkStep, isCurrentStep: boolean): StepState {
+    if (step._showError && step.hasError && !isCurrentStep) {
+      return STEP_STATE.ERROR;
+    } else if (!step.completed || isCurrentStep) {
+      return STEP_STATE.NUMBER;
     } else {
-      return step.editable ? 'edit' : 'done';
+      return step.editable ? STEP_STATE.EDIT : STEP_STATE.DONE;
     }
+  }
+
+  private _getGuidelineLogic(
+    step: CdkStep,
+    isCurrentStep: boolean,
+    state: StepState = STEP_STATE.NUMBER): StepState {
+    if (step._showError && step.hasError && !isCurrentStep) {
+      return STEP_STATE.ERROR;
+    } else if (step.completed && !isCurrentStep) {
+      return STEP_STATE.DONE;
+    } else if (step.completed && isCurrentStep) {
+      return state;
+    } else if (step.editable && isCurrentStep) {
+      return STEP_STATE.EDIT;
+    } else {
+      return state;
+    }
+  }
+
+  private _isCurrentStep(index: number) {
+    return this._selectedIndex === index;
   }
 
   /** Returns the index of the currently-focused step header. */
@@ -336,19 +442,24 @@ export class CdkStepper implements AfterViewInit, OnDestroy {
   }
 
   _onKeydown(event: KeyboardEvent) {
+    // TODO(crisbeto): move into a CDK utility once
+    // the similar PRs for other components are merged in.
+    const hasModifier = event.altKey || event.shiftKey || event.ctrlKey || event.metaKey;
     const keyCode = event.keyCode;
+    const manager = this._keyManager;
 
-    if (this._keyManager.activeItemIndex != null && (keyCode === SPACE || keyCode === ENTER)) {
-      this.selectedIndex = this._keyManager.activeItemIndex;
+    if (manager.activeItemIndex != null && !hasModifier &&
+        (keyCode === SPACE || keyCode === ENTER)) {
+      this.selectedIndex = manager.activeItemIndex;
       event.preventDefault();
     } else if (keyCode === HOME) {
-      this._keyManager.setFirstItemActive();
+      manager.setFirstItemActive();
       event.preventDefault();
     } else if (keyCode === END) {
-      this._keyManager.setLastItemActive();
+      manager.setLastItemActive();
       event.preventDefault();
     } else {
-      this._keyManager.onKeydown(event);
+      manager.onKeydown(event);
     }
   }
 

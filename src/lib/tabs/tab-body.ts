@@ -146,6 +146,11 @@ export class MatTabBody implements OnInit, OnDestroy {
   /** Position that will be used when the tab is immediately becoming visible after creation. */
   @Input() origin: number;
 
+  // Note that the default value will always be overwritten by `MatTabBody`, but we need one
+  // anyway to prevent the animations module from throwing an error if the body is used on its own.
+  /** Duration for the tab's animation. */
+  @Input() animationDuration: string = '500ms';
+
   /** The shifted index position of the tab body, where zero represents the active center tab. */
   @Input()
   set position(position: number) {
@@ -156,12 +161,12 @@ export class MatTabBody implements OnInit, OnDestroy {
   constructor(private _elementRef: ElementRef<HTMLElement>,
               @Optional() private _dir: Directionality,
               /**
-               * @breaking-change 7.0.0 changeDetectorRef to be made required.
+               * @breaking-change 8.0.0 changeDetectorRef to be made required.
                */
               changeDetectorRef?: ChangeDetectorRef) {
 
     if (this._dir && changeDetectorRef) {
-      this._dirChangeSubscription = this._dir.change.subscribe(dir => {
+      this._dirChangeSubscription = this._dir.change.subscribe((dir: Direction) => {
         this._computePositionAnimationState(dir);
         changeDetectorRef.markForCheck();
       });

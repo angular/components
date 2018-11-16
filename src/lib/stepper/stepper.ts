@@ -7,7 +7,13 @@
  */
 
 import {Directionality} from '@angular/cdk/bidi';
-import {CdkStep, CdkStepper, StepContentPositionState} from '@angular/cdk/stepper';
+import {
+  CdkStep,
+  CdkStepper,
+  StepContentPositionState,
+  MAT_STEPPER_GLOBAL_OPTIONS,
+  StepperOptions
+} from '@angular/cdk/stepper';
 import {AnimationEvent} from '@angular/animations';
 import {
   AfterContentInit,
@@ -21,6 +27,7 @@ import {
   EventEmitter,
   forwardRef,
   Inject,
+  Input,
   Optional,
   Output,
   QueryList,
@@ -32,14 +39,13 @@ import {
 import {FormControl, FormGroupDirective, NgForm} from '@angular/forms';
 import {DOCUMENT} from '@angular/common';
 import {ErrorStateMatcher} from '@angular/material/core';
+import {Subject} from 'rxjs';
+import {takeUntil, distinctUntilChanged} from 'rxjs/operators';
+
 import {MatStepHeader} from './step-header';
 import {MatStepLabel} from './step-label';
-import {takeUntil} from 'rxjs/operators';
 import {matStepperAnimations} from './stepper-animations';
 import {MatStepperIcon, MatStepperIconContext} from './stepper-icon';
-
-// TODO(devversion): workaround for https://github.com/angular/material2/issues/12760
-export const _CdkStepper = CdkStepper;
 
 @Component({
   moduleId: module.id,
@@ -54,9 +60,11 @@ export class MatStep extends CdkStep implements ErrorStateMatcher {
   /** Content for step label given by `<ng-template matStepLabel>`. */
   @ContentChild(MatStepLabel) stepLabel: MatStepLabel;
 
+  /** @breaking-change 8.0.0 remove the `?` after `stepperOptions` */
   constructor(@Inject(forwardRef(() => MatStepper)) stepper: MatStepper,
-              @SkipSelf() private _errorStateMatcher: ErrorStateMatcher) {
-    super(stepper);
+              @SkipSelf() private _errorStateMatcher: ErrorStateMatcher,
+              @Optional() @Inject(MAT_STEPPER_GLOBAL_OPTIONS) stepperOptions?: StepperOptions) {
+    super(stepper, stepperOptions);
   }
 
   /** Custom error state matcher that additionally checks for validity of interacted form. */
@@ -76,7 +84,7 @@ export class MatStep extends CdkStep implements ErrorStateMatcher {
 @Directive({
   selector: '[matStepper]'
 })
-export class MatStepper extends _CdkStepper implements AfterContentInit {
+export class MatStepper extends CdkStepper implements AfterContentInit {
   /** The list of step headers of the steps in the stepper. */
   @ViewChildren(MatStepHeader) _stepHeader: QueryList<MatStepHeader>;
 
@@ -92,27 +100,31 @@ export class MatStepper extends _CdkStepper implements AfterContentInit {
   /** Consumer-specified template-refs to be used to override the header icons. */
   _iconOverrides: {[key: string]: TemplateRef<MatStepperIconContext>} = {};
 
+  /** Stream of animation `done` events when the body expands/collapses. */
+  _animationDone = new Subject<AnimationEvent>();
+
   ngAfterContentInit() {
-    const icons = this._icons.toArray();
-
-    ['edit', 'done', 'number'].forEach(name => {
-      const override = icons.find(icon => icon.name === name);
-
-      if (override) {
-        this._iconOverrides[name] = override.templateRef;
-      }
-    });
+    this._icons.forEach(({name, templateRef}) => this._iconOverrides[name] = templateRef);
 
     // Mark the component for change detection whenever the content children query changes
     this._steps.changes.pipe(takeUntil(this._destroyed)).subscribe(() => this._stateChanged());
-  }
 
-  _animationDone(event: AnimationEvent) {
-    if ((event.toState as StepContentPositionState) === 'current') {
-      this.animationDone.emit();
-    }
+    this._animationDone.pipe(
+      // This needs a `distinctUntilChanged` in order to avoid emitting the same event twice due
+      // to a bug in animations where the `.done` callback gets invoked twice on some browsers.
+      // See https://github.com/angular/angular/issues/24084
+      distinctUntilChanged((x, y) => x.fromState === y.fromState && x.toState === y.toState),
+      takeUntil(this._destroyed)
+    ).subscribe(event => {
+      if ((event.toState as StepContentPositionState) === 'current') {
+        this.animationDone.emit();
+      }
+    });
   }
 }
+
+// TODO(devversion): workaround for https://github.com/angular/material2/issues/12760
+(MatStepper as any)['ctorParameters'] = () => (CdkStepper as any)['ctorParameters'];
 
 @Component({
   moduleId: module.id,
@@ -123,6 +135,8 @@ export class MatStepper extends _CdkStepper implements AfterContentInit {
   inputs: ['selectedIndex'],
   host: {
     'class': 'mat-stepper-horizontal',
+    '[class.mat-stepper-label-position-end]': 'labelPosition == "end"',
+    '[class.mat-stepper-label-position-bottom]': 'labelPosition == "bottom"',
     'aria-orientation': 'horizontal',
     'role': 'tablist',
   },
@@ -131,7 +145,11 @@ export class MatStepper extends _CdkStepper implements AfterContentInit {
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MatHorizontalStepper extends MatStepper { }
+export class MatHorizontalStepper extends MatStepper {
+  /** Whether the label should display in bottom or end position. */
+  @Input()
+  labelPosition: 'bottom' | 'end' = 'end';
+}
 
 @Component({
   moduleId: module.id,

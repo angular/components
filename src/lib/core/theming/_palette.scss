@@ -7,22 +7,22 @@
 
 
 // @deprecated renamed to $dark-primary-text.
-// @breaking-change 7.0.0
+// @breaking-change 8.0.0
 $black-87-opacity: rgba(black, 0.87);
 // @deprecated renamed to $light-primary-text.
-// @breaking-change 7.0.0
+// @breaking-change 8.0.0
 $white-87-opacity: rgba(white, 0.87);
 // @deprecated use $dark-[secondary-text,disabled-text,dividers,focused] instead.
-// @breaking-change 7.0.0
+// @breaking-change 8.0.0
 $black-12-opacity: rgba(black, 0.12);
 // @deprecated use $light-[secondary-text,disabled-text,dividers,focused] instead.
-// @breaking-change 7.0.0
+// @breaking-change 8.0.0
 $white-12-opacity: rgba(white, 0.12);
 // @deprecated use $dark-[secondary-text,disabled-text,dividers,focused] instead.
-// @breaking-change 7.0.0
+// @breaking-change 8.0.0
 $black-6-opacity: rgba(black, 0.06);
 // @deprecated use $light-[secondary-text,disabled-text,dividers,focused] instead.
-// @breaking-change 7.0.0
+// @breaking-change 8.0.0
 $white-6-opacity: rgba(white, 0.06);
 
 $dark-primary-text: rgba(black, 0.87);
@@ -714,6 +714,7 @@ $mat-light-theme-foreground: (
   disabled:          $dark-disabled-text,
   disabled-button:   rgba(black, 0.26),
   disabled-text:     $dark-disabled-text,
+  elevation:         black,
   hint-text:         $dark-disabled-text,
   secondary-text:    $dark-secondary-text,
   icon:              rgba(black, 0.54),
@@ -732,6 +733,7 @@ $mat-dark-theme-foreground: (
   disabled:          $light-disabled-text,
   disabled-button:   rgba(white, 0.3),
   disabled-text:     $light-disabled-text,
+  elevation:         black,
   hint-text:         $light-disabled-text,
   secondary-text:    $light-secondary-text,
   icon:              white,

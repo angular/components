@@ -5,7 +5,7 @@ sudo: false
 node_js:
   # Use the explicit NodeJS LTS version 8.9.4 to avoid any automatic upgrade of the version.
   # This ensures that all Travis jobs run consistently and don't have different Node versions.
-  - '8.11.3'
+  - '8.12.0'
 
 addons:
   jwt:
@@ -25,14 +25,8 @@ branches:
 
 jobs:
   include:
-    - env: "MODE=lint"
-    - env: "MODE=aot"
     - env: "MODE=payload"
-    - env: "MODE=prerender"
-    - env: "MODE=e2e"
     - env: "MODE=saucelabs_required"
-    - env: "MODE=browserstack_required"
-    - env: "MODE=travis_required"
     - env: "DEPLOY_MODE=build-artifacts"
       if: type = push
     - env: "DEPLOY_MODE=docs-content"
@@ -41,19 +35,22 @@ jobs:
       if: type = cron
 env:
   global:
-  - LOGS_DIR=/tmp/angular-material2-build/logs
-  - SAUCE_USERNAME=angular-ci
-  - BROWSER_STACK_USERNAME=angularteam1
-  - BROWSER_STACK_ACCESS_KEY=CaXMeMHD9pr5PHg8N7Jq
-  - BROWSER_PROVIDER_READY_FILE=/tmp/angular-material2-build/readyfile
-  - BROWSER_PROVIDER_ERROR_FILE=/tmp/angular-material2-build/errorfile
+    # Keep Yarn version in sync with Yarn version within Bazel WORKSPACE.
+    - YARN_VERSION=1.9.4
+    - LOGS_DIR=/tmp/angular-material2-build/logs
+    - SAUCE_USERNAME=angular-ci
+    - BROWSER_STACK_USERNAME=angularteam1
+    - BROWSER_STACK_ACCESS_KEY=CaXMeMHD9pr5PHg8N7Jq
+    - BROWSER_PROVIDER_READY_FILE=/tmp/angular-material2-build/readyfile
+    - BROWSER_PROVIDER_ERROR_FILE=/tmp/angular-material2-build/errorfile
 
 before_install:
   - source ./scripts/ci/travis-env.sh
-  - if [[ "$TRAVIS_EVENT_TYPE" == "cron" ]]; then ./scripts/install-angular-snapshot.sh --only-save; fi
+  - source ./scripts/ci/install-yarn.sh
 
 install:
-  - npm install
+  - ./scripts/ci/travis-install.sh
+  - if [[ "$TRAVIS_EVENT_TYPE" == "cron" ]]; then ./scripts/install-angular-snapshot.sh --only-save; fi
 
 before_script:
   - mkdir -p $LOGS_DIR
@@ -62,5 +59,6 @@ script:
   - ./scripts/ci/travis-script.sh
 
 cache:
+  yarn: true
   directories:
     - ./node_modules/

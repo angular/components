@@ -6,6 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {Directionality} from '@angular/cdk/bidi';
 import {
   DOWN_ARROW,
   END,
@@ -15,6 +16,7 @@ import {
   PAGE_DOWN,
   PAGE_UP,
   RIGHT_ARROW,
+  SPACE,
   UP_ARROW,
 } from '@angular/cdk/keycodes';
 import {
@@ -24,13 +26,19 @@ import {
   Component,
   EventEmitter,
   Input,
+  OnDestroy,
   Optional,
   Output,
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
-import {DateAdapter} from '@angular/material/core';
-import {Directionality} from '@angular/cdk/bidi';
+import {
+  DateAdapter,
+  MAT_SINGLE_DATE_SELECTION_MODEL_PROVIDER,
+  MatDateSelectionModel,
+  MatSingleDateSelectionModel
+} from '@angular/material/core';
+import {Subscription} from 'rxjs';
 import {MatCalendarBody, MatCalendarCell} from './calendar-body';
 import {createMissingDateImplError} from './datepicker-errors';
 
@@ -49,9 +57,10 @@ export const yearsPerRow = 4;
   templateUrl: 'multi-year-view.html',
   exportAs: 'matMultiYearView',
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [MAT_SINGLE_DATE_SELECTION_MODEL_PROVIDER]
 })
-export class MatMultiYearView<D> implements AfterContentInit {
+export class MatMultiYearView<D> implements AfterContentInit, OnDestroy {
   /** The date to display in this multi-year view (everything other than the year is ignored). */
   @Input()
   get activeDate(): D { return this._activeDate; }
@@ -67,14 +76,18 @@ export class MatMultiYearView<D> implements AfterContentInit {
   }
   private _activeDate: D;
 
-  /** The currently selected date. */
+  /**
+   * The currently selected date.
+   * @deprecated Please get/set the selection via the `MatDateSelectionModel` instead.
+   * @breaking-change 9.0.0 remove this property.
+   */
   @Input()
-  get selected(): D | null { return this._selected; }
+  get selected(): D | null { return this._selected.getFirstSelectedDate(); }
   set selected(value: D | null) {
-    this._selected = this._getValidDateOrNull(this._dateAdapter.deserialize(value));
-    this._selectedYear = this._selected && this._dateAdapter.getYear(this._selected);
+    if (this._selected instanceof MatSingleDateSelectionModel) {
+      this._selected.setSelection(value);
+    }
   }
-  private _selected: D | null;
 
   /** The minimum selectable date. */
   @Input()
@@ -105,10 +118,10 @@ export class MatMultiYearView<D> implements AfterContentInit {
   @Output() readonly activeDateChange: EventEmitter<D> = new EventEmitter<D>();
 
   /** The body of calendar table */
-  @ViewChild(MatCalendarBody) _matCalendarBody: MatCalendarBody;
+  @ViewChild(MatCalendarBody) _matCalendarBody: MatCalendarBody<D>;
 
   /** Grid of calendar cells representing the currently displayed years. */
-  _years: MatCalendarCell[][];
+  _years: MatCalendarCell<D>[][];
 
   /** The year that today falls on. */
   _todayYear: number;
@@ -116,7 +129,10 @@ export class MatMultiYearView<D> implements AfterContentInit {
   /** The year of the selected date. Null if the selected date is null. */
   _selectedYear: number | null;
 
+  private dateSubscription: Subscription;
+
   constructor(private _changeDetectorRef: ChangeDetectorRef,
+              private _selected: MatDateSelectionModel<D>,
               @Optional() public _dateAdapter: DateAdapter<D>,
               @Optional() private _dir?: Directionality) {
     if (!this._dateAdapter) {
@@ -124,14 +140,21 @@ export class MatMultiYearView<D> implements AfterContentInit {
     }
 
     this._activeDate = this._dateAdapter.today();
+
+    this.dateSubscription = _selected.selectionChange.subscribe(() => this.extractYear());
   }
 
   ngAfterContentInit() {
     this._init();
   }
 
+  ngOnDestroy() {
+    this.dateSubscription.unsubscribe();
+  }
+
   /** Initializes this multi-year view. */
   _init() {
+    this.extractYear();
     this._todayYear = this._dateAdapter.getYear(this._dateAdapter.today());
     let activeYear = this._dateAdapter.getYear(this._activeDate);
     let activeOffset = activeYear % yearsPerPage;
@@ -197,6 +220,7 @@ export class MatMultiYearView<D> implements AfterContentInit {
                 this._activeDate, event.altKey ? yearsPerPage * 10 : yearsPerPage);
         break;
       case ENTER:
+      case SPACE:
         this._yearSelected(this._dateAdapter.getYear(this._activeDate));
         break;
       default:
@@ -224,8 +248,11 @@ export class MatMultiYearView<D> implements AfterContentInit {
 
   /** Creates an MatCalendarCell for the given year. */
   private _createCellForYear(year: number) {
-    let yearName = this._dateAdapter.getYearName(this._dateAdapter.createDate(year, 0, 1));
-    return new MatCalendarCell(year, yearName, yearName, this._shouldEnableYear(year));
+    const start: D = this._dateAdapter.createDate(year, 0, 1);
+    const end: D = this._dateAdapter.createDate(year, 11, 31);
+    const range = {start, end};
+    const yearName = this._dateAdapter.getYearName(start);
+    return new MatCalendarCell(range, yearName, yearName, this._shouldEnableYear(year));
   }
 
   /** Whether the given year is enabled. */
@@ -266,5 +293,10 @@ export class MatMultiYearView<D> implements AfterContentInit {
   /** Determines whether the user has the RTL layout direction. */
   private _isRtl() {
     return this._dir && this._dir.value === 'rtl';
+  }
+
+  private extractYear() {
+    const date = this._selected.getFirstSelectedDate();
+    this._selectedYear = date && this._dateAdapter.getYear(date);
   }
 }

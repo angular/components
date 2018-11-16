@@ -29,12 +29,12 @@
   "dependencies": {
     "tslib": "^1.7.1"
   },
+  "optionalDependencies": {
+    "parse5": "^5.0.0"
+  },
+  "schematics": "./schematics/collection.json",
   "ng-update": {
-    "packageGroup": [
-      "@angular/material",
-      "@angular/cdk",
-      "@angular/material-moment-adapter"
-    ]
+    "migrations": "./schematics/migration.json"
   },
   "sideEffects": false
 }

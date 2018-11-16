@@ -25,6 +25,9 @@ import {
   HasInitializedCtor,
   mixinInitialized,
   ThemePalette,
+  mixinDisabled,
+  CanDisableCtor,
+  CanDisable,
 } from '@angular/material/core';
 
 /** The default page size if there is no page size and there are no provided page size options. */
@@ -40,7 +43,7 @@ export class PageEvent {
 
   /**
    * Index of the page that was selected previously.
-   * @breaking-change 7.0.0 To be made into a required property.
+   * @breaking-change 8.0.0 To be made into a required property.
    */
   previousPageIndex?: number;
 
@@ -54,8 +57,8 @@ export class PageEvent {
 // Boilerplate for applying mixins to MatPaginator.
 /** @docs-private */
 export class MatPaginatorBase {}
-export const _MatPaginatorBase: HasInitializedCtor & typeof MatPaginatorBase =
-    mixinInitialized(MatPaginatorBase);
+export const _MatPaginatorBase: CanDisableCtor & HasInitializedCtor & typeof MatPaginatorBase =
+    mixinDisabled(mixinInitialized(MatPaginatorBase));
 
 /**
  * Component to provide navigation between paged information. Displays the size of the current
@@ -68,13 +71,15 @@ export const _MatPaginatorBase: HasInitializedCtor & typeof MatPaginatorBase =
   exportAs: 'matPaginator',
   templateUrl: 'paginator.html',
   styleUrls: ['paginator.css'],
+  inputs: ['disabled'],
   host: {
     'class': 'mat-paginator',
   },
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
-export class MatPaginator extends _MatPaginatorBase implements OnInit, OnDestroy, HasInitialized {
+export class MatPaginator extends _MatPaginatorBase implements OnInit, OnDestroy, CanDisable,
+  HasInitialized {
   private _initialized: boolean;
   private _intlChanges: Subscription;
 
@@ -190,7 +195,7 @@ export class MatPaginator extends _MatPaginatorBase implements OnInit, OnDestroy
     if (!this.hasNextPage()) { return; }
 
     const previousPageIndex = this.pageIndex;
-    this.pageIndex = this.getNumberOfPages();
+    this.pageIndex = this.getNumberOfPages() - 1;
     this._emitPageEvent(previousPageIndex);
   }
 
@@ -201,13 +206,17 @@ export class MatPaginator extends _MatPaginatorBase implements OnInit, OnDestroy
 
   /** Whether there is a next page. */
   hasNextPage(): boolean {
-    const numberOfPages = this.getNumberOfPages();
-    return this.pageIndex < numberOfPages && this.pageSize != 0;
+    const maxPageIndex = this.getNumberOfPages() - 1;
+    return this.pageIndex < maxPageIndex && this.pageSize != 0;
   }
 
   /** Calculate the number of pages */
   getNumberOfPages(): number {
-    return Math.ceil(this.length / this.pageSize) - 1;
+    if (!this.pageSize) {
+      return 0;
+    }
+
+    return Math.ceil(this.length / this.pageSize);
   }
 
 
@@ -228,6 +237,16 @@ export class MatPaginator extends _MatPaginatorBase implements OnInit, OnDestroy
     this.pageIndex = Math.floor(startIndex / pageSize) || 0;
     this.pageSize = pageSize;
     this._emitPageEvent(previousPageIndex);
+  }
+
+  /** Checks whether the buttons for going forwards should be disabled. */
+  _nextButtonsDisabled() {
+    return this.disabled || !this.hasNextPage();
+  }
+
+  /** Checks whether the buttons for going backwards should be disabled. */
+  _previousButtonsDisabled() {
+    return this.disabled || !this.hasPreviousPage();
   }
 
   /**

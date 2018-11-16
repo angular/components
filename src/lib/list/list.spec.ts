@@ -20,28 +20,13 @@ describe('MatList', () => {
         ListWithMultipleItems,
         ListWithManyLines,
         NavListWithOneAnchorItem,
+        ActionListWithoutType,
+        ActionListWithType
       ],
     });
 
     TestBed.compileComponents();
   }));
-
-  it('should add and remove focus class on focus/blur', () => {
-    let fixture = TestBed.createComponent(ListWithOneAnchorItem);
-    fixture.detectChanges();
-    let listItem = fixture.debugElement.query(By.directive(MatListItem));
-    let listItemEl = fixture.debugElement.query(By.css('.mat-list-item'));
-
-    expect(listItemEl.nativeElement.classList).not.toContain('mat-list-item-focus');
-
-    listItem.componentInstance._handleFocus();
-    fixture.detectChanges();
-    expect(listItemEl.nativeElement.classList).toContain('mat-list-item-focus');
-
-    listItem.componentInstance._handleBlur();
-    fixture.detectChanges();
-    expect(listItemEl.nativeElement.classList).not.toContain('mat-list-item-focus');
-  });
 
   it('should not apply any additional class to a list without lines', () => {
     let fixture = TestBed.createComponent(ListWithOneItem);
@@ -144,6 +129,30 @@ describe('MatList', () => {
     items.forEach(item => expect(item._isRippleDisabled()).toBe(true));
   });
 
+  it('should create an action list', () => {
+    const fixture = TestBed.createComponent(ActionListWithoutType);
+    fixture.detectChanges();
+
+    const items = fixture.componentInstance.listItems;
+    expect(items.length).toBeGreaterThan(0);
+  });
+
+  it('should set default type attribute to button for action list', () => {
+    const fixture = TestBed.createComponent(ActionListWithoutType);
+    fixture.detectChanges();
+
+    const listItemEl = fixture.debugElement.query(By.css('.mat-list-item'));
+    expect(listItemEl.nativeElement.getAttribute('type')).toBe('button');
+  });
+
+  it('should not change type attribute if it is already specified', () => {
+    const fixture = TestBed.createComponent(ActionListWithType);
+    fixture.detectChanges();
+
+    const listItemEl = fixture.debugElement.query(By.css('.mat-list-item'));
+    expect(listItemEl.nativeElement.getAttribute('type')).toBe('submit');
+  });
+
   it('should allow disabling ripples for the whole nav-list', () => {
     let fixture = TestBed.createComponent(NavListWithOneAnchorItem);
     fixture.detectChanges();
@@ -193,6 +202,26 @@ class NavListWithOneAnchorItem extends BaseTestList {
   @ViewChildren(MatListItem) listItems: QueryList<MatListItem>;
   disableItemRipple: boolean = false;
   disableListRipple: boolean = false;
+}
+
+@Component({template: `
+  <mat-action-list>
+    <button mat-list-item>
+      Paprika
+    </button>
+  </mat-action-list>`})
+class ActionListWithoutType extends BaseTestList {
+  @ViewChildren(MatListItem) listItems: QueryList<MatListItem>;
+}
+
+@Component({template: `
+  <mat-action-list>
+    <button mat-list-item type="submit">
+      Paprika
+    </button>
+  </mat-action-list>`})
+class ActionListWithType extends BaseTestList {
+  @ViewChildren(MatListItem) listItems: QueryList<MatListItem>;
 }
 
 @Component({template: `

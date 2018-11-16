@@ -110,6 +110,22 @@ describe('CdkTextareaAutosize', () => {
         .toBeGreaterThan(previousMaxHeight, 'Expected increased max-height with maxRows increase.');
   });
 
+  it('should reduce textarea height when minHeight decreases', () => {
+    expect(textarea.style.minHeight).toBeFalsy();
+
+    fixture.componentInstance.minRows = 6;
+    fixture.detectChanges();
+
+    expect(textarea.style.minHeight).toBeDefined('Expected a min-height to be set via minRows.');
+
+    let previousHeight = parseInt(textarea.style.height!);
+    fixture.componentInstance.minRows = 3;
+    fixture.detectChanges();
+
+    expect(parseInt(textarea.style.height!))
+        .toBeLessThan(previousHeight, 'Expected decreased height with minRows decrease.');
+  });
+
   it('should export the cdkAutosize reference', () => {
     expect(fixture.componentInstance.autosize).toBeTruthy();
     expect(fixture.componentInstance.autosize.resizeToFitContent).toBeTruthy();
@@ -157,7 +173,8 @@ describe('CdkTextareaAutosize', () => {
     // detection should be triggered after a multiline content is set.
     fixture = TestBed.createComponent(AutosizeTextAreaWithContent);
     textarea = fixture.nativeElement.querySelector('textarea');
-    autosize = fixture.debugElement.query(By.css('textarea')).injector.get(CdkTextareaAutosize);
+    autosize = fixture.debugElement.query(By.css('textarea'))
+        .injector.get<CdkTextareaAutosize>(CdkTextareaAutosize);
 
     fixture.componentInstance.content = `
       Line
@@ -223,7 +240,7 @@ describe('CdkTextareaAutosize', () => {
     const fixtureWithoutAutosize = TestBed.createComponent(AutosizeTextareaWithoutAutosize);
     textarea = fixtureWithoutAutosize.nativeElement.querySelector('textarea');
     autosize = fixtureWithoutAutosize.debugElement.query(By.css('textarea'))
-        .injector.get(CdkTextareaAutosize);
+        .injector.get<CdkTextareaAutosize>(CdkTextareaAutosize);
 
     fixtureWithoutAutosize.detectChanges();
 
@@ -274,9 +291,7 @@ const textareaStyleReset = `
 @Component({
   template: `
     <textarea cdkTextareaAutosize [cdkAutosizeMinRows]="minRows" [cdkAutosizeMaxRows]="maxRows"
-        #autosize="cdkTextareaAutosize">
-      {{content}}
-    </textarea>`,
+        #autosize="cdkTextareaAutosize">{{content}}</textarea>`,
   styles: [textareaStyleReset],
 })
 class AutosizeTextAreaWithContent {

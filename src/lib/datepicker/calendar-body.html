@@ -35,14 +35,23 @@
       [class.mat-calendar-body-active]="_isActiveCell(rowIndex, colIndex)"
       [attr.aria-label]="item.ariaLabel"
       [attr.aria-disabled]="!item.enabled || null"
+<<<<<<< HEAD
       [attr.aria-selected]="_isSelected(item.value)"
+=======
+      [attr.aria-selected]="_isSelected(item)"
+>>>>>>> 5b70058a4a290493df9f10814c21bc913f28fb0f
       (click)="_cellClicked(item)"
       [style.width.%]="100 / numCols"
       [style.paddingTop.%]="50 * cellAspectRatio / numCols"
       [style.paddingBottom.%]="50 * cellAspectRatio / numCols">
     <div class="mat-calendar-body-cell-content"
+<<<<<<< HEAD
          [class.mat-calendar-body-selected]="_isSelected(item.value)"
          [class.mat-calendar-body-today]="todayValue === item.value">
+=======
+         [class.mat-calendar-body-selected]="_isSelected(item)"
+         [class.mat-calendar-body-today]="_isToday(item)">
+>>>>>>> 5b70058a4a290493df9f10814c21bc913f28fb0f
       {{item.displayValue}}
     </div>
   </td>

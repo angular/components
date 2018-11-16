@@ -37,11 +37,12 @@ export class FocusTrap {
 
   /** Whether the focus trap is active. */
   get enabled(): boolean { return this._enabled; }
-  set enabled(val: boolean) {
-    this._enabled = val;
+  set enabled(value: boolean) {
+    this._enabled = value;
 
     if (this._startAnchor && this._endAnchor) {
-      this._startAnchor.tabIndex = this._endAnchor.tabIndex = this._enabled ? 0 : -1;
+      this._toggleAnchorTabIndex(value, this._startAnchor);
+      this._toggleAnchorTabIndex(value, this._endAnchor);
     }
   }
   private _enabled: boolean = true;
@@ -152,15 +153,15 @@ export class FocusTrap {
                                                  `[cdk-focus-${bound}]`) as NodeListOf<HTMLElement>;
 
     for (let i = 0; i < markers.length; i++) {
-      // @breaking-change 7.0.0
+      // @breaking-change 8.0.0
       if (markers[i].hasAttribute(`cdk-focus-${bound}`)) {
         console.warn(`Found use of deprecated attribute 'cdk-focus-${bound}', ` +
                      `use 'cdkFocusRegion${bound}' instead. The deprecated ` +
-                     `attribute will be removed in 7.0.0.`, markers[i]);
+                     `attribute will be removed in 8.0.0.`, markers[i]);
       } else if (markers[i].hasAttribute(`cdk-focus-region-${bound}`)) {
         console.warn(`Found use of deprecated attribute 'cdk-focus-region-${bound}', ` +
                      `use 'cdkFocusRegion${bound}' instead. The deprecated attribute ` +
-                     `will be removed in 7.0.0.`, markers[i]);
+                     `will be removed in 8.0.0.`, markers[i]);
       }
     }
 
@@ -181,11 +182,11 @@ export class FocusTrap {
                                                           `[cdkFocusInitial]`) as HTMLElement;
 
     if (redirectToElement) {
-      // @breaking-change 7.0.0
+      // @breaking-change 8.0.0
       if (redirectToElement.hasAttribute(`cdk-focus-initial`)) {
         console.warn(`Found use of deprecated attribute 'cdk-focus-initial', ` +
                     `use 'cdkFocusInitial' instead. The deprecated attribute ` +
-                    `will be removed in 7.0.0`, redirectToElement);
+                    `will be removed in 8.0.0`, redirectToElement);
       }
 
       redirectToElement.focus();
@@ -278,10 +279,21 @@ export class FocusTrap {
   /** Creates an anchor element. */
   private _createAnchor(): HTMLElement {
     const anchor = this._document.createElement('div');
-    anchor.tabIndex = this._enabled ? 0 : -1;
+    this._toggleAnchorTabIndex(this._enabled, anchor);
     anchor.classList.add('cdk-visually-hidden');
     anchor.classList.add('cdk-focus-trap-anchor');
     return anchor;
+  }
+
+  /**
+   * Toggles the `tabindex` of an anchor, based on the enabled state of the focus trap.
+   * @param isEnabled Whether the focus trap is enabled.
+   * @param anchor Anchor on which to toggle the tabindex.
+   */
+  private _toggleAnchorTabIndex(isEnabled: boolean, anchor: HTMLElement) {
+    // Remove the tabindex completely, rather than setting it to -1, because if the
+    // element has a tabindex, the user might still hit it when navigating with the arrow keys.
+    isEnabled ? anchor.setAttribute('tabindex', '0') : anchor.removeAttribute('tabindex');
   }
 
   /** Executes a function when the zone is stable. */
