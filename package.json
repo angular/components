@@ -47,7 +47,7 @@
   "devDependencies": {
     "@angular-devkit/core": "^7.0.4",
     "@angular-devkit/schematics": "^7.0.4",
-    "@angular/bazel": "^7.0.3",
+    "@angular/bazel": "7.0.4",
     "@angular/compiler-cli": "^7.0.3",
     "@angular/http": "^7.0.3",
     "@angular/platform-browser-dynamic": "^7.0.3",

@@ -3,10 +3,11 @@ workspace(name = "angular_material")
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 
 # Add NodeJS rules (explicitly used for sass bundle rules)
+# TODO(gmagolan): update to rules_nodejs 0.16.2 when it is released
 http_archive(
   name = "build_bazel_rules_nodejs",
-  url = "https://github.com/bazelbuild/rules_nodejs/archive/0.15.3.zip",
-  strip_prefix = "rules_nodejs-0.15.3",
+  url = "https://github.com/bazelbuild/rules_nodejs/archive/e373001c571fe879884395f3b8492c9043962eeb.zip",
+  strip_prefix = "rules_nodejs-e373001c571fe879884395f3b8492c9043962eeb",
 )
 
 # Add TypeScript rules
@@ -19,8 +20,8 @@ http_archive(
 # Add Angular source and Bazel rules.
 http_archive(
   name = "angular",
-  url = "https://github.com/angular/angular/archive/2ec05415e24137d44f24b07202c34c5054c968ed.zip",
-  strip_prefix = "angular-2ec05415e24137d44f24b07202c34c5054c968ed",
+  url = "https://github.com/angular/angular/archive/7.0.4.zip",
+  strip_prefix = "angular-7.0.4",
 )
 
 # Add RxJS as repository because those are needed in order to build Angular from source.
@@ -38,10 +39,8 @@ http_archive(
 # Add sass rules
 http_archive(
   name = "io_bazel_rules_sass",
-  # Explicitly depend on SHA c93cadb20753f4e4d4eabe83f8ea882bfb8f2efe because this one includes
-  # the major API overhaul and fix for the NodeJS source map warnings.
-  url = "https://github.com/bazelbuild/rules_sass/archive/c93cadb20753f4e4d4eabe83f8ea882bfb8f2efe.zip",
-  strip_prefix = "rules_sass-c93cadb20753f4e4d4eabe83f8ea882bfb8f2efe",
+  url = "https://github.com/bazelbuild/rules_sass/archive/1.15.0.zip",
+  strip_prefix = "rules_sass-1.15.0",
 )
 
 # Since we are explitly fetching @build_bazel_rules_typescript, we should explicitly ask for
@@ -66,12 +65,14 @@ load("@build_bazel_rules_nodejs//:defs.bzl", "check_bazel_version", "node_reposi
     "yarn_install")
 
 # The minimum bazel version to use with this repo is 0.18.0
+# 0.18.0: support for .bazelignore
 check_bazel_version("0.18.0")
 
 node_repositories(
   # For deterministic builds, specify explicit NodeJS and Yarn versions.
-  node_version = "10.10.0",
-  yarn_version = "1.9.4",
+  node_version = "10.13.0",
+  # Use latest yarn version to support integrity field (added in yarn 1.10)
+  yarn_version = "1.12.1",
 )
 
 # @npm is temporarily needed to build @rxjs from source since its ts_library
@@ -89,7 +90,7 @@ load("@build_bazel_rules_typescript//:defs.bzl", "ts_setup_workspace")
 ts_setup_workspace()
 
 # Setup the Sass rule repositories.
-load("@io_bazel_rules_sass//:defs.bzl", "sass_repositories")
+load("@io_bazel_rules_sass//sass:sass_repositories.bzl", "sass_repositories")
 sass_repositories()
 
 # Setup Angular workspace for building (Bazel managed node modules)

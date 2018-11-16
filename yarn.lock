@@ -28,10 +28,10 @@
   dependencies:
     tslib "^1.9.0"
 
-"@angular/bazel@^7.0.3":
-  version "7.0.3"
-  resolved "https://registry.yarnpkg.com/@angular/bazel/-/bazel-7.0.3.tgz#6ea2c98957f83db5902a2df0e5fed0e36574411c"
-  integrity sha512-IX6HtSht2etmC7IR6DnFpMt0eIedcElYCHu3ghqfIqQo8ZDZQAMbsBo02sYY5qkqRKYyrhzeWxtUoi7uFx9kHA==
+"@angular/bazel@7.0.4":
+  version "7.0.4"
+  resolved "https://registry.yarnpkg.com/@angular/bazel/-/bazel-7.0.4.tgz#e653db2202cfc2b41d592bb70e241bfd56bb99ab"
+  integrity sha512-QukWwQbZlcgzjGWYOwUBpCNlSe0pRrl1gJUOfpHks2mRCL7Nyr/75asMFmpvLCJDbcDGRx/UNQEY/sqUrNWNWw==
   dependencies:
     "@bazel/typescript" "^0.20.3"
     "@types/node" "6.0.84"
@@ -6707,7 +6707,7 @@ karma@^3.0.0:
     tmp "0.0.33"
     useragent "2.2.1"
 
-karma@alexeagle/karma#fa1a84ac881485b5657cb669e9b4e5da77b79f0a:
+"karma@github:alexeagle/karma#fa1a84ac881485b5657cb669e9b4e5da77b79f0a":
   version "1.7.1"
   resolved "https://codeload.github.com/alexeagle/karma/tar.gz/fa1a84ac881485b5657cb669e9b4e5da77b79f0a"
   dependencies:
