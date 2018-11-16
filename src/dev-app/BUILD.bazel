@@ -5,7 +5,10 @@ load("//tools:defaults.bzl", "ng_module")
 load("//tools:sass_generate_binaries.bzl", "sass_generate_binaries")
 
 # Generate sass binaries for all nested SCSS files.
-sass_generate_binaries("dev_app_scss", glob(["**/*.scss"]))
+sass_generate_binaries("dev_app_scss", glob(["**/*.scss"]), [
+  # Needed for the input-demo sass file that uses CDK text-field mixins.
+  "//src/cdk/text-field:text_field_scss_lib"
+])
 
 ng_module(
   name = "dev-app",
