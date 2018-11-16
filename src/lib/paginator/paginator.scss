@@ -99,3 +99,7 @@ $mat-paginator-button-last-increment-icon-margin: 9px;
     transform: rotate(180deg);
   }
 }
+
+.mat-paginator-current-page {
+  font-weight: bold;
+}

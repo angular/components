@@ -26,6 +26,8 @@ export class PaginatorDemo {
   showPageSizeOptions = true;
   showFirstLastButtons = true;
   disabled = false;
+  showPageNumbers = false;
+  pageNumberCount = 3;
 
   pageEvent: PageEvent;
 

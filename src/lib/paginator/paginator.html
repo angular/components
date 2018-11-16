@@ -53,6 +53,29 @@
           <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
         </svg>
       </button>
+      <div *ngIf="showPageNumbers">
+        <button mat-icon-button type="button"
+                class="mat-paginator-page-button-{{previousPage}} mat-icon-button"
+                *ngFor="let previousPage of previousPageNumbers()"
+                (click)="clickPageNumber(previousPage)"
+                [attr.aria-label]="'Skip to page ' + previousPage">
+                {{ previousPage }}
+        </button>
+        <button mat-icon-button type="button"
+                class="mat-paginator-current-page"
+                aria-disabled="true"
+                attr.aria-label="Current Page">
+                {{ currentPageNumber() }}
+        </button>
+      
+        <button mat-icon-button type="button"
+                class="mat-paginator-page-button-{{nextPage}} mat-icon-button"
+                *ngFor="let nextPage of nextPageNumbers()"
+                (click)="clickPageNumber(nextPage)"
+                [attr.aria-label]="'Skip to page ' + nextPage">
+                {{ nextPage }}
+        </button>
+      </div>
       <button mat-icon-button type="button"
               class="mat-paginator-navigation-next"
               (click)="nextPage()"

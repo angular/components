@@ -17,10 +17,15 @@
       <input matInput placeholder="Page Index" type="number" [(ngModel)]="pageIndex">
     </mat-form-field>
 
+    <mat-form-field *ngIf="showPageNumbers">
+      <input matInput placeholder="Count of page numbers" type="number" [(ngModel)]="pageNumberCount">
+    </mat-form-field>
+
     <mat-slide-toggle [(ngModel)]="hidePageSize">Hide page size</mat-slide-toggle>
     <mat-slide-toggle [(ngModel)]="showPageSizeOptions">Show multiple page size options</mat-slide-toggle>
     <mat-slide-toggle [(ngModel)]="showFirstLastButtons">Show first/last buttons</mat-slide-toggle>
     <mat-slide-toggle [(ngModel)]="disabled">Disabled</mat-slide-toggle>
+    <mat-slide-toggle [(ngModel)]="showPageNumbers">Show Page Numbers</mat-slide-toggle>
   </div>
 
   <mat-paginator #paginator
@@ -31,7 +36,9 @@
                  [showFirstLastButtons]="showFirstLastButtons"
                  [pageSizeOptions]="showPageSizeOptions ? pageSizeOptions : []"
                  [hidePageSize]="hidePageSize"
-                 [pageIndex]="pageIndex">
+                 [pageIndex]="pageIndex"
+                 [showPageNumbers]="showPageNumbers"
+                 [pageNumberCount]="pageNumberCount">
   </mat-paginator>
 
   <div> Output event: {{pageEvent | json}} </div>
