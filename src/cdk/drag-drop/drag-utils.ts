@@ -5,6 +5,7 @@
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
+import { FormArray } from '@angular/forms';
 
 /**
  * Moves an item one index in an array to another.
@@ -28,6 +29,30 @@ export function moveItemInArray<T = any>(array: T[], fromIndex: number, toIndex:
   }
 
   array[to] = target;
+}
+
+
+/**
+ * Moves an item in a FormArray to another position.
+ * @param formArray FormArray instance in which to move the item.
+ * @param fromIndex Starting index of the item.
+ * @param toIndex Index to which he item should be moved.
+ */
+export function moveItemInFormArray(formArray: FormArray, fromIndex: number, toIndex: number): void {
+  const from = clamp(fromIndex, formArray.length - 1);
+  const to = clamp(toIndex, formArray.length - 1);
+
+  if (from === to) {
+    return;
+  }
+
+  const delta = from > to ? 1 : -1;
+  for (let i = from; i * delta < to * delta; i += delta) {
+    const previous = formArray.at(i);
+    const current = formArray.at(i + delta);
+    formArray.setControl(i, current);
+    formArray.setControl(i + delta, previous);
+  }
 }
 
 
