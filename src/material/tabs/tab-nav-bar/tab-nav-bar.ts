@@ -68,7 +68,10 @@ const _MatTabNavMixinBase: CanDisableRippleCtor & CanColorCtor & typeof MatTabNa
   inputs: ['color', 'disableRipple'],
   templateUrl: 'tab-nav-bar.html',
   styleUrls: ['tab-nav-bar.css'],
-  host: {'class': 'mat-tab-nav-bar'},
+  host: {
+    'class': 'mat-tab-nav-bar',
+    '[class.mat-tab-nav-bar-inverted]': 'position === "below"',
+  },
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -102,6 +105,9 @@ export class MatTabNav extends _MatTabNavMixinBase
     this._backgroundColor = value;
   }
   private _backgroundColor: ThemePalette;
+
+  /** Position of the tab header, in relation to the content. */
+  @Input() position: 'above' | 'below' = 'above';
 
   constructor(elementRef: ElementRef,
               @Optional() private _dir: Directionality,

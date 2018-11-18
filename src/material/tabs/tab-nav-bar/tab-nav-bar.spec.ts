@@ -217,7 +217,7 @@ describe('MatTabNavBar', () => {
   });
 
   it('should support the native tabindex attribute', () => {
-      const fixture = TestBed.createComponent(TabLinkWithNativeTabindexAttr);
+    const fixture = TestBed.createComponent(TabLinkWithNativeTabindexAttr);
     fixture.detectChanges();
 
     const tabLink = fixture.debugElement.query(By.directive(MatTabLink))
@@ -240,6 +240,20 @@ describe('MatTabNavBar', () => {
     fixture.detectChanges();
 
     expect(tabLink.tabIndex).toBe(3, 'Expected the tabIndex to be have been set to 3.');
+  });
+
+  it('should toggle a class, based on its position', () => {
+    const fixture = TestBed.createComponent(SimpleTabNavBarTestApp);
+    fixture.detectChanges();
+
+    const nav = fixture.nativeElement.querySelector('nav');
+
+    expect(nav.classList).not.toContain('mat-tab-nav-bar-inverted');
+
+    fixture.componentInstance.position = 'below';
+    fixture.detectChanges();
+
+    expect(nav.classList).toContain('mat-tab-nav-bar-inverted');
   });
 
   describe('ripples', () => {
@@ -312,7 +326,7 @@ describe('MatTabNavBar', () => {
 @Component({
   selector: 'test-app',
   template: `
-    <nav mat-tab-nav-bar [disableRipple]="disableRippleOnBar">
+    <nav mat-tab-nav-bar [disableRipple]="disableRippleOnBar" [position]="position">
       <a mat-tab-link
          *ngFor="let tab of tabs; let index = index"
          [active]="activeIndex === index"
@@ -331,6 +345,7 @@ class SimpleTabNavBarTestApp {
   disabled = false;
   disableRippleOnBar = false;
   tabs = [0, 1, 2];
+  position = 'above';
 
   activeIndex = 0;
 }

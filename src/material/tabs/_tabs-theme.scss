@@ -15,12 +15,10 @@
     border-bottom: $header-border;
   }
 
-  .mat-tab-group-inverted-header {
-    .mat-tab-nav-bar,
-    .mat-tab-header {
-      border-top: $header-border;
-      border-bottom: none;
-    }
+  .mat-tab-nav-bar-inverted,
+  .mat-tab-group-inverted-header .mat-tab-header {
+    border-top: $header-border;
+    border-bottom: none;
   }
 
   .mat-tab-label, .mat-tab-link {
