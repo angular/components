@@ -1,8 +1,7 @@
 const path = require('path');
 const {customLaunchers, platformMap} = require('./browser-providers');
 
-module.exports = (config) => {
-
+module.exports = config => {
   config.set({
     basePath: path.join(__dirname, '..'),
     frameworks: ['jasmine'],
@@ -13,7 +12,6 @@ module.exports = (config) => {
       require('karma-chrome-launcher'),
       require('karma-firefox-launcher'),
       require('karma-sourcemap-loader'),
-      require('karma-coverage'),
     ],
     files: [
       {pattern: 'node_modules/core-js/client/core.min.js', included: true, watched: false},
@@ -51,12 +49,6 @@ module.exports = (config) => {
 
     reporters: ['dots'],
     autoWatch: false,
-
-    coverageReporter: {
-      type : 'json-summary',
-      dir : 'dist/coverage/',
-      subdir: '.'
-    },
 
     sauceLabs: {
       testName: 'Angular Material Unit Tests',
@@ -100,38 +92,46 @@ module.exports = (config) => {
     },
   });
 
-  if (process.env['TRAVIS']) {
-    const buildId = `TRAVIS #${process.env.TRAVIS_BUILD_NUMBER} (${process.env.TRAVIS_BUILD_ID})`;
+  if (process.env['CIRCLECI']) {
+    const instanceIndex = Number(process.env['CIRCLE_NODE_INDEX']);
+    const maxParallelInstances = Number(process.env['CIRCLE_NODE_TOTAL']);
+    const tunnelIdentifier =
+        `angular-material-${process.env['CIRCLE_BUILD_NUM']}-${instanceIndex}`;
+    const buildIdentifier = `circleci-${tunnelIdentifier}`;
+    const testPlatform = process.env['TEST_PLATFORM'];
 
-    if (process.env['TRAVIS_PULL_REQUEST'] === 'false' &&
-        process.env['MODE'] === "travis_required") {
-
-      config.preprocessors['dist/packages/**/!(*+(.|-)spec).js'] = ['coverage'];
-      config.reporters.push('coverage');
+    if (testPlatform === 'browserstack') {
+      config.browserStack.build = buildIdentifier;
+      config.browserStack.tunnelIdentifier = tunnelIdentifier;
+    } else if (testPlatform === 'saucelabs') {
+      config.sauceLabs.build = buildIdentifier;
+      config.sauceLabs.tunnelIdentifier = tunnelIdentifier;
     }
 
-    // The MODE variable is the indicator of what row in the test matrix we're running.
-    // It will look like <platform>_<target>, where platform is one of 'saucelabs', 'browserstack'
-    // or 'travis'. The target is a reference to different collections of browsers that can run
-    // in the previously specified platform.
-    const [platform, target] = process.env.MODE.split('_');
+    const platformBrowsers = platformMap[testPlatform];
+    const browserInstanceChunks = splitBrowsersIntoInstances(
+        platformBrowsers, maxParallelInstances);
 
-    if (platform === 'saucelabs') {
-      config.sauceLabs.build = buildId;
-      config.sauceLabs.tunnelIdentifier = process.env.TRAVIS_JOB_ID;
-    } else if (platform === 'browserstack') {
-      config.browserStack.build = buildId;
-      config.browserStack.tunnelIdentifier = process.env.TRAVIS_JOB_ID;
-    } else if (platform !== 'travis') {
-      throw new Error(`Platform "${platform}" unknown, but Travis specified. Exiting.`);
-    }
-
-    if (platform !== 'travis') {
-      // To guarantee a better stability for tests running on external browsers, we disable
-      // concurrency. Stability is compared to speed more important.
-      config.concurrency = 1;
-    }
-
-    config.browsers = platformMap[platform][target.toLowerCase()];
+    // Configure Karma to launch the browsers that belong to the given test platform
+    // and instance.
+    config.browsers = browserInstanceChunks[instanceIndex];
   }
 };
+
+/**
+ * Splits the specified browsers into a maximum amount of chunks. The chunk of browsers
+ * are being created deterministically and therefore we get reproducible tests when executing
+ * the same CircleCI instance multiple times.
+ */
+function splitBrowsersIntoInstances(browsers, maxInstances) {
+  let chunks = [];
+  let assignedBrowsers = 0;
+
+  for (let i = 0; i < maxInstances; i++) {
+    const chunkSize = Math.floor((browsers.length - assignedBrowsers) / (maxInstances - i));
+    chunks[i] = browsers.slice(assignedBrowsers, assignedBrowsers + chunkSize);
+    assignedBrowsers += chunkSize;
+  }
+
+  return chunks;
+}

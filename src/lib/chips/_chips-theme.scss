@@ -5,10 +5,6 @@
 
 $mat-chip-remove-font-size: 18px;
 
-@mixin mat-chips-theme-color($color) {
-  @include mat-chips-color(mat-color($color, default-contrast), mat-color($color));
-}
-
 @mixin mat-chips-color($foreground, $background) {
   background-color: $background;
   color: $foreground;
@@ -17,9 +13,13 @@ $mat-chip-remove-font-size: 18px;
     color: $foreground;
     opacity: 0.4;
   }
+}
 
-  .mat-chip-remove:hover {
-    opacity: 0.54;
+@mixin mat-chips-theme-color($palette) {
+  @include mat-chips-color(mat-color($palette, default-contrast), mat-color($palette));
+
+  .mat-ripple-element {
+    background: mat-color($palette, default-contrast, 0.1);
   }
 }
 
@@ -34,12 +34,21 @@ $mat-chip-remove-font-size: 18px;
   $unselected-background: mat-color($background, unselected-chip);
   $unselected-foreground: mat-color($foreground, text);
 
-
   .mat-chip.mat-standard-chip {
     @include mat-chips-color($unselected-foreground, $unselected-background);
 
-    &:focus {
-      @include _mat-theme-elevation(3, $theme);
+    &:not(.mat-chip-disabled) {
+      &:active {
+        @include _mat-theme-elevation(3, $theme);
+      }
+
+      .mat-chip-remove:hover {
+        opacity: 0.54;
+      }
+    }
+
+    &.mat-chip-disabled {
+      opacity: 0.4;
     }
   }
 

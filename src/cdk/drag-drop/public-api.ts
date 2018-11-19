@@ -6,8 +6,9 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-export * from './drop';
-export * from './drop-container';
+export * from './drop-list';
+export * from './drop-list-group';
+export * from './drop-list-container';
 export * from './drag';
 export * from './drag-handle';
 export * from './drag-events';

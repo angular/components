@@ -604,7 +604,7 @@ describe('MatDatepicker', () => {
 
         // When the calendar is in year view, the first cell should be for a month rather than
         // for a date.
-        expect(firstCalendarCell.textContent)
+        expect(firstCalendarCell.textContent!.trim())
             .toBe('JAN', 'Expected the calendar to be in year-view');
       });
 
@@ -654,7 +654,7 @@ describe('MatDatepicker', () => {
 
         // When the calendar is in year view, the first cell should be for a month rather than
         // for a date.
-        expect(firstCalendarCell.textContent)
+        expect(firstCalendarCell.textContent!.trim())
             .toBe('2016', 'Expected the calendar to be in multi-year-view');
       });
 
@@ -1043,8 +1043,23 @@ describe('MatDatepicker', () => {
 
         const host = fixture.nativeElement.querySelector('.mat-datepicker-toggle');
 
-        expect(host.hasAttribute('tabindex')).toBe(false);
+        expect(host.getAttribute('tabindex')).toBe('-1');
       });
+
+      it('should forward focus to the underlying button when the host is focused', () => {
+        const fixture = createComponent(DatepickerWithTabindexOnToggle, [MatNativeDateModule]);
+        fixture.detectChanges();
+
+        const host = fixture.nativeElement.querySelector('.mat-datepicker-toggle');
+        const button = host.querySelector('button');
+
+        expect(document.activeElement).not.toBe(button);
+
+        host.focus();
+
+        expect(document.activeElement).toBe(button);
+      });
+
     });
 
     describe('datepicker inside mat-form-field', () => {
@@ -1632,7 +1647,17 @@ describe('MatDatepicker', () => {
 
       expect(document.querySelector('mat-calendar-header')).toBeTruthy();
     }));
+
+    it('should find the custom element', fakeAsync(() => {
+        testComponent.datepicker.open();
+        fixture.detectChanges();
+        flush();
+        fixture.detectChanges();
+
+        expect(document.querySelector('.custom-element')).toBeTruthy();
+    }));
   });
+
 });
 
 
@@ -1885,22 +1910,21 @@ class DatepickerOpeningOnFocus {
 @Component({
   template: `
     <input [matDatepicker]="ch">
-    <mat-datepicker #ch [calendarHeaderComponent]="CustomHeaderForDatepicker"></mat-datepicker>
+    <mat-datepicker #ch [calendarHeaderComponent]="customHeaderForDatePicker"></mat-datepicker>
   `,
 })
 class DatepickerWithCustomHeader {
   @ViewChild('ch') datepicker: MatDatepicker<Date>;
+  customHeaderForDatePicker = CustomHeaderForDatepicker;
 }
 
 @Component({
   template: `
-    <div>Custom element</div>
+    <div class="custom-element">Custom element</div>
     <mat-calendar-header></mat-calendar-header>
   `,
 })
 class CustomHeaderForDatepicker {}
-
-
 
 @Component({
   template: `

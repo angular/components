@@ -40,6 +40,9 @@ $mat-slide-toggle-bar-track-width: $mat-slide-toggle-bar-width - $mat-slide-togg
   }
 
   &.mat-disabled {
+    // The value is based on MDC.
+    opacity: 0.38;
+
     .mat-slide-toggle-label, .mat-slide-toggle-thumb-container {
       cursor: default;
     }
@@ -204,7 +207,7 @@ $mat-slide-toggle-bar-track-width: $mat-slide-toggle-bar-width - $mat-slide-togg
     opacity: 0.04;
   }
 
-  .mat-slide-toggle.cdk-focused & {
+  .mat-slide-toggle:not(.mat-disabled).cdk-focused & {
     opacity: 0.12;
   }
 
@@ -213,6 +216,16 @@ $mat-slide-toggle-bar-track-width: $mat-slide-toggle-bar-width - $mat-slide-togg
   // a lot and will cause it to overide the focus styles.
   &, .mat-slide-toggle.mat-disabled .mat-slide-toggle-bar:hover & {
     opacity: 0;
+  }
+
+  // Hover styles will be displayed after tapping on touch devices.
+  // Disable the hover styling if the user's device doesn't support hovering.
+  @media (hover: none) {
+    // Note that we only negate the `:hover` rather than setting it to always be `display: none`,
+    // in order to maintain the focus indication for hybrid touch + keyboard devices.
+    .mat-slide-toggle-bar:hover & {
+      display: none;
+    }
   }
 }
 
@@ -230,6 +243,14 @@ $mat-slide-toggle-bar-track-width: $mat-slide-toggle-bar-width - $mat-slide-togg
 
   .mat-slide-toggle-bar {
     background: #fff;
+
+    // As a focus indication in high contrast mode, we add a dotted outline to the slide-toggle
+    // bar. Since the bar element does not have any padding, we need to specify an outline offset
+    // because otherwise the opaque thumb element will hide the outline.
+    .mat-slide-toggle.cdk-keyboard-focused & {
+      outline: 1px dotted;
+      outline-offset: ($mat-slide-toggle-height - $mat-slide-toggle-bar-height) / 2;
+    }
   }
 }
 

@@ -10,7 +10,13 @@ import {
   RIGHT_ARROW,
   UP_ARROW,
 } from '@angular/cdk/keycodes';
-import {dispatchFakeEvent, dispatchKeyboardEvent, dispatchMouseEvent} from '@angular/cdk/testing';
+import {
+  dispatchFakeEvent,
+  dispatchKeyboardEvent,
+  dispatchMouseEvent,
+  createMouseEvent,
+  dispatchEvent,
+} from '@angular/cdk/testing';
 import {Component, DebugElement, ViewChild, Type} from '@angular/core';
 import {ComponentFixture, TestBed, fakeAsync, flush} from '@angular/core/testing';
 import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
@@ -60,12 +66,20 @@ describe('MatSlider', () => {
       expect(sliderInstance.max).toBe(100);
     });
 
-    it('should update the value on a click', () => {
+    it('should update the value on mousedown', () => {
       expect(sliderInstance.value).toBe(0);
 
-      dispatchClickEventSequence(sliderNativeElement, 0.19);
+      dispatchMousedownEventSequence(sliderNativeElement, 0.19);
 
       expect(sliderInstance.value).toBe(19);
+    });
+
+    it('should not update when pressing the right mouse button', () => {
+      expect(sliderInstance.value).toBe(0);
+
+      dispatchMousedownEventSequence(sliderNativeElement, 0.19, 1);
+
+      expect(sliderInstance.value).toBe(0);
     });
 
     it('should update the value on a slide', () => {
@@ -92,10 +106,10 @@ describe('MatSlider', () => {
       expect(sliderInstance.value).toBe(100);
     });
 
-    it('should update the track fill on click', () => {
+    it('should update the track fill on mousedown', () => {
       expect(trackFillElement.style.transform).toContain('scale3d(0, 1, 1)');
 
-      dispatchClickEventSequence(sliderNativeElement, 0.39);
+      dispatchMousedownEventSequence(sliderNativeElement, 0.39);
       fixture.detectChanges();
 
       expect(trackFillElement.style.transform).toContain('scale3d(0.39, 1, 1)');
@@ -178,7 +192,7 @@ describe('MatSlider', () => {
     });
 
     it('should not have thumb gap when not at min value', () => {
-      dispatchClickEventSequence(sliderNativeElement, 1);
+      dispatchMousedownEventSequence(sliderNativeElement, 1);
       fixture.detectChanges();
 
       // Some browsers use '0' and some use '0px', so leave off the closing paren.
@@ -223,10 +237,10 @@ describe('MatSlider', () => {
       expect(sliderInstance.disabled).toBeTruthy();
     });
 
-    it('should not change the value on click when disabled', () => {
+    it('should not change the value on mousedown when disabled', () => {
       expect(sliderInstance.value).toBe(0);
 
-      dispatchClickEventSequence(sliderNativeElement, 0.63);
+      dispatchMousedownEventSequence(sliderNativeElement, 0.63);
 
       expect(sliderInstance.value).toBe(0);
     });
@@ -248,10 +262,10 @@ describe('MatSlider', () => {
       expect(onChangeSpy).toHaveBeenCalledTimes(0);
     });
 
-    it('should not add the mat-slider-active class on click when disabled', () => {
+    it('should not add the mat-slider-active class on mousedown when disabled', () => {
       expect(sliderNativeElement.classList).not.toContain('mat-slider-active');
 
-      dispatchClickEventSequence(sliderNativeElement, 0.43);
+      dispatchMousedownEventSequence(sliderNativeElement, 0.43);
       fixture.detectChanges();
 
       expect(sliderNativeElement.classList).not.toContain('mat-slider-active');
@@ -305,12 +319,12 @@ describe('MatSlider', () => {
       expect(sliderInstance.max).toBe(6);
     });
 
-    it('should set the correct value on click', () => {
-      dispatchClickEventSequence(sliderNativeElement, 0.09);
+    it('should set the correct value on mousedown', () => {
+      dispatchMousedownEventSequence(sliderNativeElement, 0.09);
       fixture.detectChanges();
 
       // Computed by multiplying the difference between the min and the max by the percentage from
-      // the click and adding that to the minimum.
+      // the mousedown and adding that to the minimum.
       let value = Math.round(4 + (0.09 * (6 - 4)));
       expect(sliderInstance.value).toBe(value);
     });
@@ -320,13 +334,13 @@ describe('MatSlider', () => {
       fixture.detectChanges();
 
       // Computed by multiplying the difference between the min and the max by the percentage from
-      // the click and adding that to the minimum.
+      // the mousedown and adding that to the minimum.
       let value = Math.round(4 + (0.62 * (6 - 4)));
       expect(sliderInstance.value).toBe(value);
     });
 
-    it('should snap the fill to the nearest value on click', () => {
-      dispatchClickEventSequence(sliderNativeElement, 0.68);
+    it('should snap the fill to the nearest value on mousedown', () => {
+      dispatchMousedownEventSequence(sliderNativeElement, 0.68);
       fixture.detectChanges();
 
       // The closest snap is halfway on the slider.
@@ -392,8 +406,8 @@ describe('MatSlider', () => {
       expect(sliderInstance.value).toBe(26);
     });
 
-    it('should set the correct value on click', () => {
-      dispatchClickEventSequence(sliderNativeElement, 0.92);
+    it('should set the correct value on mousedown', () => {
+      dispatchMousedownEventSequence(sliderNativeElement, 0.92);
       fixture.detectChanges();
 
       // On a slider with default max and min the value should be approximately equal to the
@@ -426,17 +440,17 @@ describe('MatSlider', () => {
       trackFillElement = <HTMLElement>sliderNativeElement.querySelector('.mat-slider-track-fill');
     });
 
-    it('should set the correct step value on click', () => {
+    it('should set the correct step value on mousedown', () => {
       expect(sliderInstance.value).toBe(0);
 
-      dispatchClickEventSequence(sliderNativeElement, 0.13);
+      dispatchMousedownEventSequence(sliderNativeElement, 0.13);
       fixture.detectChanges();
 
       expect(sliderInstance.value).toBe(25);
     });
 
-    it('should snap the fill to a step on click', () => {
-      dispatchClickEventSequence(sliderNativeElement, 0.66);
+    it('should snap the fill to a step on mousedown', () => {
+      dispatchMousedownEventSequence(sliderNativeElement, 0.66);
       fixture.detectChanges();
 
       // The closest step is at 75% of the slider.
@@ -596,10 +610,10 @@ describe('MatSlider', () => {
       expect(sliderNativeElement.classList).toContain('mat-slider-thumb-label-showing');
     });
 
-    it('should update the thumb label text on click', () => {
+    it('should update the thumb label text on mousedown', () => {
       expect(thumbLabelTextElement.textContent).toBe('0');
 
-      dispatchClickEventSequence(sliderNativeElement, 0.13);
+      dispatchMousedownEventSequence(sliderNativeElement, 0.13);
       fixture.detectChanges();
 
       // The thumb label text is set to the slider's value. These should always be the same.
@@ -757,10 +771,10 @@ describe('MatSlider', () => {
       sliderNativeElement = sliderDebugElement.nativeElement;
     });
 
-    it('should emit change on click', () => {
+    it('should emit change on mousedown', () => {
       expect(testComponent.onChange).not.toHaveBeenCalled();
 
-      dispatchClickEventSequence(sliderNativeElement, 0.2);
+      dispatchMousedownEventSequence(sliderNativeElement, 0.2);
       fixture.detectChanges();
 
       expect(testComponent.onChange).toHaveBeenCalledTimes(1);
@@ -778,7 +792,7 @@ describe('MatSlider', () => {
     it('should not emit multiple changes for same value', () => {
       expect(testComponent.onChange).not.toHaveBeenCalled();
 
-      dispatchClickEventSequence(sliderNativeElement, 0.6);
+      dispatchMousedownEventSequence(sliderNativeElement, 0.6);
       dispatchSlideEventSequence(sliderNativeElement, 0.6, 0.6, gestureConfig);
       fixture.detectChanges();
 
@@ -790,7 +804,7 @@ describe('MatSlider', () => {
       expect(testComponent.onChange).not.toHaveBeenCalled();
       expect(testComponent.onInput).not.toHaveBeenCalled();
 
-      dispatchClickEventSequence(sliderNativeElement, 0.2);
+      dispatchMousedownEventSequence(sliderNativeElement, 0.2);
       fixture.detectChanges();
 
       expect(testComponent.onChange).toHaveBeenCalledTimes(1);
@@ -802,7 +816,7 @@ describe('MatSlider', () => {
       expect(testComponent.onChange).toHaveBeenCalledTimes(1);
       expect(testComponent.onInput).toHaveBeenCalledTimes(1);
 
-      dispatchClickEventSequence(sliderNativeElement, 0.2);
+      dispatchMousedownEventSequence(sliderNativeElement, 0.2);
       fixture.detectChanges();
 
       expect(testComponent.onChange).toHaveBeenCalledTimes(2);
@@ -846,7 +860,7 @@ describe('MatSlider', () => {
     it('should emit an input event when clicking', () => {
       expect(testComponent.onChange).not.toHaveBeenCalled();
 
-      dispatchClickEventSequence(sliderNativeElement, 0.75);
+      dispatchMousedownEventSequence(sliderNativeElement, 0.75);
 
       fixture.detectChanges();
 
@@ -1017,7 +1031,7 @@ describe('MatSlider', () => {
       testComponent.invert = true;
       fixture.detectChanges();
 
-      dispatchClickEventSequence(sliderNativeElement, 0.3);
+      dispatchMousedownEventSequence(sliderNativeElement, 0.3);
       fixture.detectChanges();
 
       expect(sliderInstance.value).toBe(70);
@@ -1027,7 +1041,7 @@ describe('MatSlider', () => {
       testComponent.dir = 'rtl';
       fixture.detectChanges();
 
-      dispatchClickEventSequence(sliderNativeElement, 0.3);
+      dispatchMousedownEventSequence(sliderNativeElement, 0.3);
       fixture.detectChanges();
 
       expect(sliderInstance.value).toBe(70);
@@ -1038,7 +1052,7 @@ describe('MatSlider', () => {
       testComponent.invert = true;
       fixture.detectChanges();
 
-      dispatchClickEventSequence(sliderNativeElement, 0.3);
+      dispatchMousedownEventSequence(sliderNativeElement, 0.3);
       fixture.detectChanges();
 
       expect(sliderInstance.value).toBe(30);
@@ -1155,39 +1169,39 @@ describe('MatSlider', () => {
       trackFillElement = <HTMLElement>sliderNativeElement.querySelector('.mat-slider-track-fill');
     });
 
-    it('updates value on click', () => {
-      dispatchClickEventSequence(sliderNativeElement, 0.3);
+    it('updates value on mousedown', () => {
+      dispatchMousedownEventSequence(sliderNativeElement, 0.3);
       fixture.detectChanges();
 
       expect(sliderInstance.value).toBe(70);
     });
 
-    it('updates value on click in inverted mode', () => {
+    it('updates value on mousedown in inverted mode', () => {
       testComponent.invert = true;
       fixture.detectChanges();
 
-      dispatchClickEventSequence(sliderNativeElement, 0.3);
+      dispatchMousedownEventSequence(sliderNativeElement, 0.3);
       fixture.detectChanges();
 
       expect(sliderInstance.value).toBe(30);
     });
 
-    it('should update the track fill on click', () => {
+    it('should update the track fill on mousedown', () => {
       expect(trackFillElement.style.transform).toContain('scale3d(1, 0, 1)');
 
-      dispatchClickEventSequence(sliderNativeElement, 0.39);
+      dispatchMousedownEventSequence(sliderNativeElement, 0.39);
       fixture.detectChanges();
 
       expect(trackFillElement.style.transform).toContain('scale3d(1, 0.61, 1)');
     });
 
-    it('should update the track fill on click in inverted mode', () => {
+    it('should update the track fill on mousedown in inverted mode', () => {
       testComponent.invert = true;
       fixture.detectChanges();
 
       expect(trackFillElement.style.transform).toContain('scale3d(1, 0, 1)');
 
-      dispatchClickEventSequence(sliderNativeElement, 0.39);
+      dispatchMousedownEventSequence(sliderNativeElement, 0.39);
       fixture.detectChanges();
 
       expect(trackFillElement.style.transform).toContain('scale3d(1, 0.39, 1)');
@@ -1241,10 +1255,10 @@ describe('MatSlider', () => {
       sliderNativeElement = sliderDebugElement.nativeElement;
     });
 
-    it('should update the model on click', () => {
+    it('should update the model on mousedown', () => {
       expect(testComponent.val).toBe(0);
 
-      dispatchClickEventSequence(sliderNativeElement, 0.76);
+      dispatchMousedownEventSequence(sliderNativeElement, 0.76);
       fixture.detectChanges();
 
       expect(testComponent.val).toBe(76);
@@ -1313,10 +1327,10 @@ describe('MatSlider', () => {
       expect(testComponent.control.value).toBe(0);
     });
 
-    it('should update the control on click', () => {
+    it('should update the control on mousedown', () => {
       expect(testComponent.control.value).toBe(0);
 
-      dispatchClickEventSequence(sliderNativeElement, 0.76);
+      dispatchMousedownEventSequence(sliderNativeElement, 0.76);
       fixture.detectChanges();
 
       expect(testComponent.control.value).toBe(76);
@@ -1368,7 +1382,7 @@ describe('MatSlider', () => {
 
       // After changing the value, the control should become dirty (not pristine),
       // but remain untouched.
-      dispatchClickEventSequence(sliderNativeElement, 0.5);
+      dispatchMousedownEventSequence(sliderNativeElement, 0.5);
       fixture.detectChanges();
 
       expect(sliderControl.valid).toBe(true);
@@ -1404,7 +1418,7 @@ describe('MatSlider', () => {
       expect(testComponent.value).toBe(0);
       expect(testComponent.slider.value).toBe(0);
 
-      dispatchClickEventSequence(sliderNativeElement, 0.1);
+      dispatchMousedownEventSequence(sliderNativeElement, 0.1);
       fixture.detectChanges();
 
       expect(testComponent.value).toBe(10);
@@ -1594,20 +1608,22 @@ class SliderWithTwoWayBinding {
 }
 
 /**
- * Dispatches a click event sequence (consisting of moueseenter, click) from an element.
- * Note: The mouse event truncates the position for the click.
+ * Dispatches a mousedown event sequence (consisting of moueseenter, mousedown) from an element.
+ * Note: The mouse event truncates the position for the event.
  * @param sliderElement The mat-slider element from which the event will be dispatched.
- * @param percentage The percentage of the slider where the click should occur. Used to find the
- * physical location of the click.
+ * @param percentage The percentage of the slider where the event should occur. Used to find the
+ * physical location of the pointer.
+ * @param button Button that should be held down when starting to drag the slider.
  */
-function dispatchClickEventSequence(sliderElement: HTMLElement, percentage: number): void {
-  let trackElement = sliderElement.querySelector('.mat-slider-wrapper')!;
-  let dimensions = trackElement.getBoundingClientRect();
-  let x = dimensions.left + (dimensions.width * percentage);
-  let y = dimensions.top + (dimensions.height * percentage);
+function dispatchMousedownEventSequence(sliderElement: HTMLElement, percentage: number,
+                                        button = 0): void {
+  const trackElement = sliderElement.querySelector('.mat-slider-wrapper')!;
+  const dimensions = trackElement.getBoundingClientRect();
+  const x = dimensions.left + (dimensions.width * percentage);
+  const y = dimensions.top + (dimensions.height * percentage);
 
   dispatchMouseenterEvent(sliderElement);
-  dispatchMouseEvent(sliderElement, 'click', x, y);
+  dispatchEvent(sliderElement, createMouseEvent('mousedown', x, y, button));
 }
 
 /**
@@ -1687,7 +1703,7 @@ function dispatchSlideEndEvent(sliderElement: HTMLElement, percent: number,
 
 /**
  * Dispatches a mouseenter event from an element.
- * Note: The mouse event truncates the position for the click.
+ * Note: The mouse event truncates the position for the event.
  * @param element The element from which the event will be dispatched.
  */
 function dispatchMouseenterEvent(element: HTMLElement): void {

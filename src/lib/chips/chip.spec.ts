@@ -4,6 +4,7 @@ import {createKeyboardEvent, dispatchFakeEvent} from '@angular/cdk/testing';
 import {Component, DebugElement} from '@angular/core';
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
+import {Subject} from 'rxjs';
 import {MatChip, MatChipEvent, MatChipSelectionChange, MatChipsModule} from './index';
 
 
@@ -20,7 +21,10 @@ describe('Chips', () => {
       imports: [MatChipsModule],
       declarations: [BasicChip, SingleChip],
       providers: [{
-        provide: Directionality, useFactory: () => ({value: dir})
+        provide: Directionality, useFactory: () => ({
+          value: dir,
+          change: new Subject()
+        })
       }]
     });
 
@@ -35,7 +39,7 @@ describe('Chips', () => {
 
       chipDebugElement = fixture.debugElement.query(By.directive(MatChip));
       chipNativeElement = chipDebugElement.nativeElement;
-      chipInstance = chipDebugElement.injector.get(MatChip);
+      chipInstance = chipDebugElement.injector.get<MatChip>(MatChip);
 
       document.body.appendChild(chipNativeElement);
     });
@@ -59,7 +63,7 @@ describe('Chips', () => {
 
       chipDebugElement = fixture.debugElement.query(By.directive(MatChip));
       chipNativeElement = chipDebugElement.nativeElement;
-      chipInstance = chipDebugElement.injector.get(MatChip);
+      chipInstance = chipDebugElement.injector.get<MatChip>(MatChip);
       testComponent = fixture.debugElement.componentInstance;
 
       document.body.appendChild(chipNativeElement);
@@ -148,6 +152,55 @@ describe('Chips', () => {
         fixture.detectChanges();
 
         expect(event.defaultPrevented).toBe(true);
+      });
+
+      it('should not dispatch `selectionChange` event when deselecting a non-selected chip', () => {
+        chipInstance.deselect();
+
+        const spy = jasmine.createSpy('selectionChange spy');
+        const subscription = chipInstance.selectionChange.subscribe(spy);
+
+        chipInstance.deselect();
+
+        expect(spy).not.toHaveBeenCalled();
+        subscription.unsubscribe();
+      });
+
+      it('should not dispatch `selectionChange` event when selecting a selected chip', () => {
+        chipInstance.select();
+
+        const spy = jasmine.createSpy('selectionChange spy');
+        const subscription = chipInstance.selectionChange.subscribe(spy);
+
+        chipInstance.select();
+
+        expect(spy).not.toHaveBeenCalled();
+        subscription.unsubscribe();
+      });
+
+      it('should not dispatch `selectionChange` event when selecting a selected chip via ' +
+        'user interaction', () => {
+          chipInstance.select();
+
+          const spy = jasmine.createSpy('selectionChange spy');
+          const subscription = chipInstance.selectionChange.subscribe(spy);
+
+          chipInstance.selectViaInteraction();
+
+          expect(spy).not.toHaveBeenCalled();
+          subscription.unsubscribe();
+        });
+
+      it('should not dispatch `selectionChange` through setter if the value did not change', () => {
+        chipInstance.selected = false;
+
+        const spy = jasmine.createSpy('selectionChange spy');
+        const subscription = chipInstance.selectionChange.subscribe(spy);
+
+        chipInstance.selected = false;
+
+        expect(spy).not.toHaveBeenCalled();
+        subscription.unsubscribe();
       });
 
     });

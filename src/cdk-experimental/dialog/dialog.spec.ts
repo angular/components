@@ -618,6 +618,20 @@ describe('Dialog', () => {
     expect(spy).toHaveBeenCalled();
   }));
 
+  it('should close all open dialogs on destroy', fakeAsync(() => {
+    dialog.openFromComponent(PizzaMsg, { viewContainerRef: testViewContainerRef });
+    dialog.openFromComponent(PizzaMsg, { viewContainerRef: testViewContainerRef });
+
+    viewContainerFixture.detectChanges();
+    expect(overlayContainerElement.querySelectorAll('cdk-dialog-container').length).toBe(2);
+
+    dialog.ngOnDestroy();
+    viewContainerFixture.detectChanges();
+    flush();
+
+    expect(overlayContainerElement.querySelectorAll('cdk-dialog-container').length).toBe(0);
+  }));
+
   describe('passing in data', () => {
     it('should be able to pass in data', () => {
       let config = {
@@ -682,7 +696,7 @@ describe('Dialog', () => {
   });
 
   describe('disableClose option', () => {
-    it('should prevent closing via clicks on the backdrop', () => {
+    it('should prevent closing via clicks on the backdrop', fakeAsync(() => {
       dialog.openFromComponent(PizzaMsg, {
         disableClose: true,
         viewContainerRef: testViewContainerRef
@@ -692,11 +706,13 @@ describe('Dialog', () => {
 
       let backdrop = overlayContainerElement.querySelector('.cdk-overlay-backdrop') as HTMLElement;
       backdrop.click();
+      viewContainerFixture.detectChanges();
+      flush();
 
       expect(overlayContainerElement.querySelector('cdk-dialog-container')).toBeTruthy();
-    });
+    }));
 
-    it('should prevent closing via the escape key', () => {
+    it('should prevent closing via the escape key', fakeAsync(() => {
       dialog.openFromComponent(PizzaMsg, {
         disableClose: true,
         viewContainerRef: testViewContainerRef
@@ -704,9 +720,11 @@ describe('Dialog', () => {
 
       viewContainerFixture.detectChanges();
       dispatchKeyboardEvent(document.body, 'keydown', ESCAPE);
+      viewContainerFixture.detectChanges();
+      flush();
 
       expect(overlayContainerElement.querySelector('cdk-dialog-container')).toBeTruthy();
-    });
+    }));
 
     it('should allow for the disableClose option to be updated while open', fakeAsync(() => {
       let dialogRef = dialog.openFromComponent(PizzaMsg, {
@@ -804,7 +822,7 @@ describe('Dialog', () => {
       viewContainerFixture.detectChanges();
       flushMicrotasks();
 
-      expect(document.activeElement.tagName)
+      expect(document.activeElement!.tagName)
           .toBe('INPUT', 'Expected first tabbable element (input) in the dialog to be focused.');
     }));
 
@@ -817,7 +835,7 @@ describe('Dialog', () => {
       viewContainerFixture.detectChanges();
       flushMicrotasks();
 
-      expect(document.activeElement.tagName).not.toBe('INPUT');
+      expect(document.activeElement!.tagName).not.toBe('INPUT');
     }));
 
     it('should re-focus trigger element when dialog closes', fakeAsync(() => {
@@ -834,18 +852,18 @@ describe('Dialog', () => {
       viewContainerFixture.detectChanges();
       flushMicrotasks();
 
-      expect(document.activeElement.id)
+      expect(document.activeElement!.id)
           .not.toBe('dialog-trigger', 'Expected the focus to change when dialog was opened.');
 
       dialogRef.close();
-      expect(document.activeElement.id).not.toBe('dialog-trigger',
+      expect(document.activeElement!.id).not.toBe('dialog-trigger',
           'Expcted the focus not to have changed before the animation finishes.');
 
       flushMicrotasks();
       viewContainerFixture.detectChanges();
       flush();
 
-      expect(document.activeElement.id).toBe('dialog-trigger',
+      expect(document.activeElement!.id).toBe('dialog-trigger',
           'Expected that the trigger was refocused after the dialog is closed.');
 
       document.body.removeChild(button);
@@ -876,7 +894,7 @@ describe('Dialog', () => {
       viewContainerFixture.detectChanges();
       flushMicrotasks();
 
-      expect(document.activeElement.id).toBe('input-to-be-focused',
+      expect(document.activeElement!.id).toBe('input-to-be-focused',
           'Expected that the trigger was refocused after the dialog is closed.');
 
       document.body.removeChild(button);
@@ -891,7 +909,7 @@ describe('Dialog', () => {
         viewContainerFixture.detectChanges();
         flushMicrotasks();
 
-        expect(document.activeElement.tagName.toLowerCase())
+        expect(document.activeElement!.tagName.toLowerCase())
             .toBe('cdk-dialog-container', 'Expected dialog container to be focused.');
       }));
 
@@ -990,6 +1008,22 @@ describe('Dialog with a parent Dialog', () => {
       expect(overlayContainerElement.textContent!.trim())
           .toBe('', 'Expected closeAll on parent Dialog to close dialog opened by child');
     }));
+
+  it('should not close the parent dialogs, when a child is destroyed', fakeAsync(() => {
+    parentDialog.openFromComponent(PizzaMsg);
+    fixture.detectChanges();
+    flush();
+
+    expect(overlayContainerElement.textContent)
+        .toContain('Pizza', 'Expected a dialog to be opened');
+
+    childDialog.ngOnDestroy();
+    fixture.detectChanges();
+    flush();
+
+    expect(overlayContainerElement.textContent)
+        .toContain('Pizza', 'Expected a dialog to remain opened');
+  }));
 
   it('should close the top dialog via the escape key', fakeAsync(() => {
     childDialog.openFromComponent(PizzaMsg);

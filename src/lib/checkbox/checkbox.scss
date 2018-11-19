@@ -240,6 +240,14 @@ $_mat-checkbox-mark-stroke-size: 2 / 15 * $mat-checkbox-size !default;
   ._mat-animation-noopable & {
     transition: none;
   }
+
+  @include cdk-high-contrast {
+    // Note that we change the border style of the checkbox frame to dotted because this
+    // is how IE/Edge similarly treats native checkboxes in high contrast mode.
+    .mat-checkbox.cdk-keyboard-focused & {
+      border-style: dotted;
+    }
+  }
 }
 
 .mat-checkbox-background {
@@ -266,7 +274,7 @@ $_mat-checkbox-mark-stroke-size: 2 / 15 * $mat-checkbox-size !default;
     opacity: 0.04;
   }
 
-  .mat-checkbox.cdk-focused & {
+  .mat-checkbox.cdk-keyboard-focused & {
     opacity: 0.12;
   }
 

@@ -9,13 +9,10 @@
 import {CdkTextareaAutosize} from '@angular/cdk/text-field';
 import {Directive, Input} from '@angular/core';
 
-// TODO(devversion): Workaround for https://github.com/angular/material2/issues/12760
-export const _CdkTextareaAutosize = CdkTextareaAutosize;
-
 /**
  * Directive to automatically resize a textarea to fit its content.
  * @deprecated Use `cdkTextareaAutosize` from `@angular/cdk/text-field` instead.
- * @breaking-change 7.0.0
+ * @breaking-change 8.0.0
  */
 @Directive({
   selector: 'textarea[mat-autosize], textarea[matTextareaAutosize]',
@@ -29,7 +26,7 @@ export const _CdkTextareaAutosize = CdkTextareaAutosize;
     '(input)': '_noopInputHandler()',
   },
 })
-export class MatTextareaAutosize extends _CdkTextareaAutosize {
+export class MatTextareaAutosize extends CdkTextareaAutosize {
   @Input()
   get matAutosizeMinRows(): number { return this.minRows; }
   set matAutosizeMinRows(value: number) { this.minRows = value; }

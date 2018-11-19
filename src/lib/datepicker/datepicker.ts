@@ -50,6 +50,7 @@ import {MatCalendar} from './calendar';
 import {matDatepickerAnimations} from './datepicker-animations';
 import {createMissingDateImplError} from './datepicker-errors';
 import {MatDatepickerInput} from './datepicker-input';
+import {MatCalendarCellCssClasses} from './calendar-body';
 
 /** Used to generate a unique ID for each datepicker instance. */
 let datepickerUid = 0;
@@ -139,6 +140,8 @@ export class MatDatepickerContent<D> extends _MatDatepickerContentMixinBase
   encapsulation: ViewEncapsulation.None,
 })
 export class MatDatepicker<D> implements OnDestroy, CanColor {
+  private _scrollStrategy: () => ScrollStrategy;
+
   /** An input indicating the type of the custom header component for the calendar, if set. */
   @Input() calendarHeaderComponent: ComponentType<any>;
 
@@ -210,6 +213,9 @@ export class MatDatepicker<D> implements OnDestroy, CanColor {
   /** Classes to be passed to the date picker panel. Supports the same syntax as `ngClass`. */
   @Input() panelClass: string | string[];
 
+  /** Function that can be used to add custom CSS classes to dates. */
+  @Input() dateClass: (date: D) => MatCalendarCellCssClasses;
+
   /** Emits when the datepicker has been opened. */
   @Output('opened') openedStream: EventEmitter<void> = new EventEmitter<void>();
 
@@ -276,13 +282,15 @@ export class MatDatepicker<D> implements OnDestroy, CanColor {
               private _overlay: Overlay,
               private _ngZone: NgZone,
               private _viewContainerRef: ViewContainerRef,
-              @Inject(MAT_DATEPICKER_SCROLL_STRATEGY) private _scrollStrategy,
+              @Inject(MAT_DATEPICKER_SCROLL_STRATEGY) scrollStrategy: any,
               @Optional() private _dateAdapter: DateAdapter<D>,
               @Optional() private _dir: Directionality,
               @Optional() @Inject(DOCUMENT) private _document: any) {
     if (!this._dateAdapter) {
       throw createMissingDateImplError('DateAdapter');
     }
+
+    this._scrollStrategy = scrollStrategy;
   }
 
   ngOnDestroy() {
@@ -461,7 +469,7 @@ export class MatDatepicker<D> implements OnDestroy, CanColor {
       .withTransformOriginOn('.mat-datepicker-content')
       .withFlexibleDimensions(false)
       .withViewportMargin(8)
-      .withPush(false)
+      .withLockedPosition()
       .withPositions([
         {
           originX: 'start',

@@ -1,5 +1,3 @@
-/* tslint:disable */
-
 /**
  * @license
  * Copyright Google LLC All Rights Reserved.
@@ -58,7 +56,7 @@ function addDeclarationToNgModule(options: ComponentOptions): Rule {
     }
 
     const modulePath = options.module;
-    const source = readIntoSourceFile(host, modulePath);
+    let source = readIntoSourceFile(host, modulePath);
 
     const componentPath = `/${options.path}/`
       + (options.flat ? '' : strings.dasherize(options.name) + '/')
@@ -83,9 +81,9 @@ function addDeclarationToNgModule(options: ComponentOptions): Rule {
 
     if (options.export) {
       // Need to refresh the AST because we overwrote the file in the host.
-      const source = readIntoSourceFile(host, modulePath);
-      const exportRecorder = host.beginUpdate(modulePath);
+      source = readIntoSourceFile(host, modulePath);
 
+      const exportRecorder = host.beginUpdate(modulePath);
       const exportChanges = addExportToModule(
         source,
         modulePath,
@@ -102,9 +100,9 @@ function addDeclarationToNgModule(options: ComponentOptions): Rule {
 
     if (options.entryComponent) {
       // Need to refresh the AST because we overwrote the file in the host.
-      const source = readIntoSourceFile(host, modulePath);
-      const entryComponentRecorder = host.beginUpdate(modulePath);
+      source = readIntoSourceFile(host, modulePath);
 
+      const entryComponentRecorder = host.beginUpdate(modulePath);
       const entryComponentChanges = addEntryComponentToModule(
         source,
         modulePath,
@@ -181,7 +179,9 @@ export function buildComponent(options: ComponentOptions,
       .forEach(optionName => options[optionName] = defaultComponentOptions[optionName]);
 
     if (options.path === undefined) {
-      options.path = buildDefaultPath(project);
+      // TODO(jelbourn): figure out if the need for this `as any` is a bug due to two different
+      // incompatible `WorkspaceProject` classes in @angular-devkit
+      options.path = buildDefaultPath(project as any);
     }
 
     options.module = findModuleFromOptions(host, options);

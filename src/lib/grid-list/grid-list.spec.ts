@@ -46,6 +46,14 @@ describe('MatGridList', () => {
     }).not.toThrow();
   });
 
+  it('should preserve value when zero is set as row height', () => {
+    const fixture = createComponent(GridListWithUnspecifiedRowHeight);
+    const gridList = fixture.debugElement.query(By.directive(MatGridList)).componentInstance;
+
+    gridList.rowHeight = 0;
+    expect(gridList.rowHeight).toBe('0');
+  });
+
   it('should set the columns to zero if a negative number is passed in', () => {
     const fixture = createComponent(GridListWithDynamicCols);
     fixture.detectChanges();
@@ -137,6 +145,36 @@ describe('MatGridList', () => {
     // check vertical gutter
     expect(getStyle(tiles[0], 'height')).toBe('100px');
     expect(getStyle(tiles[2], 'top')).toBe('101px');
+  });
+
+  it('should be able to set the gutter size to zero', () => {
+    const fixture = createComponent(GridListWithUnspecifiedGutterSize);
+    const gridList = fixture.debugElement.query(By.directive(MatGridList));
+
+    gridList.componentInstance.gutterSize = 0;
+    fixture.detectChanges();
+
+    const tiles = fixture.debugElement.queryAll(By.css('mat-grid-tile'));
+
+    // check horizontal gutter
+    expect(getStyle(tiles[0], 'width')).toBe('100px');
+    expect(getComputedLeft(tiles[1])).toBe(100);
+
+    // check vertical gutter
+    expect(getStyle(tiles[0], 'height')).toBe('100px');
+    expect(getStyle(tiles[2], 'top')).toBe('100px');
+  });
+
+  it('should lay out the tiles correctly for a nested grid list', () => {
+    const fixture = createComponent(NestedGridList);
+    fixture.detectChanges();
+
+    const innerTiles = fixture.debugElement.queryAll(
+        By.css('mat-grid-tile mat-grid-list mat-grid-tile'));
+
+    expect(getStyle(innerTiles[0], 'top')).toBe('0px');
+    expect(getStyle(innerTiles[1], 'top')).toBe('101px');
+    expect(getStyle(innerTiles[2], 'top')).toBe('202px');
   });
 
   it('should set the gutter size if passed', () => {
@@ -389,6 +427,17 @@ describe('MatGridList', () => {
     expect(getStyle(tile, 'padding-top')).toBe('200px');
   });
 
+  it('should throw if an invalid value is set as the `rowHeight`', () => {
+    const fixture = createComponent(GridListWithUnspecifiedRowHeight);
+    const gridList = fixture.debugElement.query(By.directive(MatGridList));
+
+    expect(() => {
+      // Note the semicolon at the end which will be an invalid value on some browsers (see #13252).
+      gridList.componentInstance.rowHeight = '350px;';
+      fixture.detectChanges();
+    }).toThrowError(/^Invalid value/);
+  });
+
 });
 
 
@@ -624,3 +673,19 @@ class GridListWithRtl { }
   `
 })
 class GridListWithIndirectTileDescendants {}
+
+
+@Component({template: `
+    <div style="width:200px">
+      <mat-grid-list cols="2" rowHeight="100px">
+        <mat-grid-tile></mat-grid-tile>
+        <mat-grid-tile>
+          <mat-grid-list cols="1" rowHeight="100px">
+            <mat-grid-tile></mat-grid-tile>
+            <mat-grid-tile></mat-grid-tile>
+            <mat-grid-tile></mat-grid-tile>
+          </mat-grid-list>
+        </mat-grid-tile>
+      </mat-grid-list>
+    </div>`})
+class NestedGridList { }

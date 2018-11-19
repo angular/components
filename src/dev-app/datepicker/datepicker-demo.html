@@ -1,0 +1,166 @@
+<h2>Options</h2>
+<p>
+  <mat-checkbox [(ngModel)]="touch">Use touch UI</mat-checkbox>
+  <mat-checkbox [(ngModel)]="filterOdd">Filter odd years, months and dates</mat-checkbox>
+  <mat-checkbox [(ngModel)]="yearView">Start in year view</mat-checkbox>
+  <mat-checkbox [(ngModel)]="datepickerDisabled">Disable datepicker</mat-checkbox>
+  <mat-checkbox [(ngModel)]="inputDisabled">Disable input</mat-checkbox>
+  <mat-form-field>
+    <mat-select [(ngModel)]="color" placeholder="Color">
+      <mat-option value="primary">Primary</mat-option>
+      <mat-option value="accent">Accent</mat-option>
+      <mat-option value="warn">Warn</mat-option>
+    </mat-select>
+  </mat-form-field>
+</p>
+<p>
+  <mat-form-field color="accent">
+    <mat-label>Min date</mat-label>
+    <input matInput [matDatepicker]="minDatePicker" [(ngModel)]="minDate"
+        [disabled]="inputDisabled" [max]="maxDate">
+    <mat-datepicker-toggle matSuffix [for]="minDatePicker"></mat-datepicker-toggle>
+    <mat-datepicker #minDatePicker [touchUi]="touch" [disabled]="datepickerDisabled"></mat-datepicker>
+  </mat-form-field>
+  <mat-form-field color="accent">
+    <mat-label>Max date</mat-label>
+    <input matInput [matDatepicker]="maxDatePicker" [(ngModel)]="maxDate"
+        [disabled]="inputDisabled" [min]="minDate">
+    <mat-datepicker-toggle matSuffix [for]="maxDatePicker"></mat-datepicker-toggle>
+    <mat-datepicker #maxDatePicker [touchUi]="touch" [disabled]="datepickerDisabled"></mat-datepicker>
+  </mat-form-field>
+</p>
+<p>
+  <mat-form-field color="accent">
+    <mat-label>Start at date</mat-label>
+    <input matInput [matDatepicker]="startAtPicker" [(ngModel)]="startAt"
+        [disabled]="inputDisabled">
+    <mat-datepicker-toggle matSuffix [for]="startAtPicker"></mat-datepicker-toggle>
+    <mat-datepicker #startAtPicker [touchUi]="touch" [disabled]="datepickerDisabled"></mat-datepicker>
+  </mat-form-field>
+</p>
+
+<h2>Result</h2>
+
+<p>
+  <mat-datepicker-toggle [for]="resultPicker"></mat-datepicker-toggle>
+  <mat-form-field>
+    <mat-label>Pick a date</mat-label>
+    <input matInput
+           #resultPickerModel="ngModel"
+           [matDatepicker]="resultPicker"
+           [(ngModel)]="date"
+           [min]="minDate"
+           [max]="maxDate"
+           [matDatepickerFilter]="filterOdd ? dateFilter : null"
+           [disabled]="inputDisabled"
+           (dateInput)="onDateInput($event)"
+           (dateChange)="onDateChange($event)">
+    <mat-datepicker
+        #resultPicker
+        [touchUi]="touch"
+        [disabled]="datepickerDisabled"
+        [startAt]="startAt"
+        [startView]="yearView ? 'year' : 'month'"
+        [color]="color">
+    </mat-datepicker>
+    <mat-error *ngIf="resultPickerModel.hasError('matDatepickerParse')">
+      "{{resultPickerModel.getError('matDatepickerParse').text}}" is not a valid date!
+    </mat-error>
+    <mat-error *ngIf="resultPickerModel.hasError('matDatepickerMin')">Too early!</mat-error>
+    <mat-error *ngIf="resultPickerModel.hasError('matDatepickerMax')">Too late!</mat-error>
+    <mat-error *ngIf="resultPickerModel.hasError('matDatepickerFilter')">Date unavailable!</mat-error>
+  </mat-form-field>
+</p>
+<p>Last input: {{lastDateInput}}</p>
+<p>Last change: {{lastDateChange}}</p>
+<br>
+<p>
+  <input #resultPickerModel2
+         [matDatepicker]="resultPicker2"
+         [(ngModel)]="date"
+         [min]="minDate"
+         [max]="maxDate"
+         [disabled]="inputDisabled"
+         [matDatepickerFilter]="filterOdd ? dateFilter : null"
+         placeholder="Pick a date">
+  <mat-datepicker-toggle [for]="resultPicker2"></mat-datepicker-toggle>
+  <mat-datepicker
+      #resultPicker2
+      [touchUi]="touch"
+      [disabled]="datepickerDisabled"
+      [startAt]="startAt"
+      [startView]="yearView ? 'year' : 'month'">
+  </mat-datepicker>
+</p>
+
+<h2>Input disabled datepicker</h2>
+<p>
+  <mat-datepicker-toggle [for]="datePicker1"></mat-datepicker-toggle>
+  <mat-form-field>
+    <mat-label>Input disabled</mat-label>
+    <input matInput [matDatepicker]="datePicker1" [(ngModel)]="date" [min]="minDate" [max]="maxDate"
+           [matDatepickerFilter]="filterOdd ? dateFilter : null" disabled>
+    <mat-datepicker #datePicker1 [touchUi]="touch" [startAt]="startAt"
+                    [startView]="yearView ? 'year' : 'month'"></mat-datepicker>
+  </mat-form-field>
+</p>
+
+<h2>Input disabled via FormControl</h2>
+<p>
+  <mat-datepicker-toggle [for]="datePicker2"></mat-datepicker-toggle>
+  <mat-form-field>
+    <mat-label>FormControl disabled</mat-label>
+    <input matInput [matDatepicker]="datePicker2" [formControl]="dateCtrl" [min]="minDate"
+           [max]="maxDate" [matDatepickerFilter]="filterOdd ? dateFilter : null">
+    <mat-datepicker #datePicker2 [touchUi]="touch" [startAt]="startAt"
+                    [startView]="yearView ? 'year' : 'month'"></mat-datepicker>
+  </mat-form-field>
+
+  <button mat-button (click)="dateCtrl.disabled ? dateCtrl.enable() : dateCtrl.disable()">
+    {{dateCtrl.disabled ? 'Enable' : 'Disable'}} FormControl
+  </button>
+</p>
+
+<h2>Input disabled, datepicker popup enabled</h2>
+<p>
+  <mat-datepicker-toggle [for]="datePicker3"></mat-datepicker-toggle>
+  <mat-form-field>
+    <mat-label>Input disabled, datepicker enabled</mat-label>
+    <input matInput disabled [matDatepicker]="datePicker3" [(ngModel)]="date" [min]="minDate"
+           [max]="maxDate" [matDatepickerFilter]="filterOdd ? dateFilter : null">
+    <mat-datepicker #datePicker3 [touchUi]="touch" [disabled]="false" [startAt]="startAt"
+                    [startView]="yearView ? 'year' : 'month'"></mat-datepicker>
+  </mat-form-field>
+</p>
+
+<h2>Datepicker with value property binding</h2>
+<p>
+  <mat-datepicker-toggle [for]="datePicker4"></mat-datepicker-toggle>
+  <mat-form-field>
+    <mat-label>Value binding</mat-label>
+    <input matInput [matDatepicker]="datePicker4" [value]="date" [min]="minDate"
+           [max]="maxDate" [matDatepickerFilter]="filterOdd ? dateFilter : null">
+    <mat-datepicker #datePicker4 [touchUi]="touch" [startAt]="startAt"
+                    [startView]="yearView ? 'year' : 'month'"></mat-datepicker>
+  </mat-form-field>
+</p>
+
+<h2>Datepicker with custom header</h2>
+<p>
+  <mat-form-field>
+    <mat-label>Custom calendar header</mat-label>
+    <input matInput [matDatepicker]="customHeaderPicker">
+    <mat-datepicker-toggle matSuffix [for]="customHeaderPicker"></mat-datepicker-toggle>
+    <mat-datepicker #customHeaderPicker [calendarHeaderComponent]="customHeader"></mat-datepicker>
+  </mat-form-field>
+</p>
+
+<h2>Datepicker with custom header extending the default header</h2>
+<p>
+  <mat-form-field>
+    <mat-label>Custom calendar header extending default</mat-label>
+    <input matInput [matDatepicker]="customHeaderNgContentPicker">
+    <mat-datepicker-toggle matSuffix [for]="customHeaderNgContentPicker"></mat-datepicker-toggle>
+    <mat-datepicker #customHeaderNgContentPicker [calendarHeaderComponent]="customHeaderNgContent"></mat-datepicker>
+  </mat-form-field>
+</p>

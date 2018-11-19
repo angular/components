@@ -87,6 +87,10 @@
     "selector-max-id": 0,
     "no-missing-end-of-source-newline": true,
     "no-eol-whitespace": true,
-    "max-line-length": 100
+    "max-line-length": 100,
+    "linebreaks": "unix",
+    "selector-class-pattern": ["^_?(mat-|cdk-|example-|demo-|ng-)", {
+      "resolveNestedSelectors": true
+    }]
   }
 }

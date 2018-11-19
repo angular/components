@@ -35,13 +35,20 @@ import {fromEvent, Subject} from 'rxjs';
 })
 export class CdkTextareaAutosize implements AfterViewInit, DoCheck, OnDestroy {
   /** Keep track of the previous textarea value to avoid resizing when the value hasn't changed. */
-  private _previousValue: string;
+  private _previousValue?: string;
   private _initialHeight: string | null;
   private readonly _destroyed = new Subject<void>();
 
   private _minRows: number;
   private _maxRows: number;
   private _enabled: boolean = true;
+
+  /**
+   * Value of minRows as of last resize. If the minRows has decreased, the
+   * height of the textarea needs to be recomputed to reflect the new minimum. The maxHeight
+   * does not have the same problem because it does not affect the textarea's scrollHeight.
+   */
+  private _previousMinRows: number = -1;
 
   private _textareaElement: HTMLTextAreaElement;
 
@@ -90,7 +97,7 @@ export class CdkTextareaAutosize implements AfterViewInit, DoCheck, OnDestroy {
         `${this.minRows * this._cachedLineHeight}px` : null;
 
     if (minHeight)  {
-      this._setTextareaStyle('minHeight', minHeight);
+      this._textareaElement.style.minHeight = minHeight;
     }
   }
 
@@ -100,7 +107,7 @@ export class CdkTextareaAutosize implements AfterViewInit, DoCheck, OnDestroy {
         `${this.maxRows * this._cachedLineHeight}px` : null;
 
     if (maxHeight) {
-      this._setTextareaStyle('maxHeight', maxHeight);
+      this._textareaElement.style.maxHeight = maxHeight;
     }
   }
 
@@ -122,11 +129,6 @@ export class CdkTextareaAutosize implements AfterViewInit, DoCheck, OnDestroy {
   ngOnDestroy() {
     this._destroyed.next();
     this._destroyed.complete();
-  }
-
-  /** Sets a style property on the textarea element. */
-  private _setTextareaStyle(property: string, value: string): void {
-    this._textareaElement.style[property] = value;
   }
 
   /**
@@ -200,8 +202,8 @@ export class CdkTextareaAutosize implements AfterViewInit, DoCheck, OnDestroy {
     const textarea = this._elementRef.nativeElement as HTMLTextAreaElement;
     const value = textarea.value;
 
-    // Only resize of the value changed since these calculations can be expensive.
-    if (value === this._previousValue && !force) {
+    // Only resize if the value or minRows have changed since these calculations can be expensive.
+    if (!force && this._minRows === this._previousMinRows && value === this._previousValue) {
       return;
     }
 
@@ -243,6 +245,7 @@ export class CdkTextareaAutosize implements AfterViewInit, DoCheck, OnDestroy {
     }
 
     this._previousValue = value;
+    this._previousMinRows = this._minRows;
   }
 
   /**

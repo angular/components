@@ -70,6 +70,7 @@ const MIN_VALUE_ACTIVE_THUMB_GAP = 10;
 /**
  * Provider Expression that allows mat-slider to register as a ControlValueAccessor.
  * This allows it to support [(ngModel)] and [formControl].
+ * @docs-private
  */
 export const MAT_SLIDER_VALUE_ACCESSOR: any = {
   provide: NG_VALUE_ACCESSOR,
@@ -111,7 +112,7 @@ export const _MatSliderMixinBase:
   host: {
     '(focus)': '_onFocus()',
     '(blur)': '_onBlur()',
-    '(click)': '_onClick($event)',
+    '(mousedown)': '_onMousedown($event)',
     '(keydown)': '_onKeydown($event)',
     '(keyup)': '_onKeyup()',
     '(mouseenter)': '_onMouseenter()',
@@ -463,7 +464,7 @@ export class MatSlider extends _MatSliderMixinBase
               private _changeDetectorRef: ChangeDetectorRef,
               @Optional() private _dir: Directionality,
               @Attribute('tabindex') tabIndex: string,
-              // @breaking-change 7.0.0 `_animationMode` parameter to be made required.
+              // @breaking-change 8.0.0 `_animationMode` parameter to be made required.
               @Optional() @Inject(ANIMATION_MODULE_TYPE) public _animationMode?: string) {
     super(elementRef);
 
@@ -500,12 +501,14 @@ export class MatSlider extends _MatSliderMixinBase
     this._updateTickIntervalPercent();
   }
 
-  _onClick(event: MouseEvent) {
-    if (this.disabled) {
+  _onMousedown(event: MouseEvent) {
+    // Don't do anything if the slider is disabled or the
+    // user is using anything other than the main mouse button.
+    if (this.disabled || event.button !== 0) {
       return;
     }
 
-    let oldValue = this.value;
+    const oldValue = this.value;
     this._isSliding = false;
     this._focusHostElement();
     this._updateValueFromPosition({x: event.clientX, y: event.clientY});

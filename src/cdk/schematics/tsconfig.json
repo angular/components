@@ -1,5 +1,7 @@
 {
   "compilerOptions": {
+    "composite": true,
+    "declaration": true,
     "lib": ["es2017"],
     "module": "commonjs",
     "moduleResolution": "node",
@@ -16,7 +18,10 @@
     ]
   },
   "exclude": [
-    "**/*.spec.ts"
+    "**/files/**/*",
+    "**/*.spec.ts",
+    "ng-update/test-cases/**/*",
+    "testing/**/*.ts"
   ],
   "bazelOptions": {
     "suppressTsconfigOverrideWarnings": true

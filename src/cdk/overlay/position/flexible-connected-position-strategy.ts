@@ -16,7 +16,7 @@ import {
   validateHorizontalPosition,
   validateVerticalPosition,
 } from './connected-position';
-import {Observable, Subscription, Subject} from 'rxjs';
+import {Observable, Subscription, Subject, Observer} from 'rxjs';
 import {OverlayReference} from '../overlay-reference';
 import {isElementScrolledOutsideView, isElementClippedByScrolling} from './scroll-clip';
 import {coerceCssPixelValue, coerceArray} from '@angular/cdk/coercion';
@@ -122,15 +122,16 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
   private _previousPushAmount: {x: number, y: number} | null;
 
   /** Observable sequence of position changes. */
-  positionChanges: Observable<ConnectedOverlayPositionChange> = Observable.create(observer => {
-    const subscription = this._positionChanges.subscribe(observer);
-    this._positionChangeSubscriptions++;
+  positionChanges: Observable<ConnectedOverlayPositionChange> =
+      Observable.create((observer: Observer<ConnectedOverlayPositionChange>) => {
+        const subscription = this._positionChanges.subscribe(observer);
+        this._positionChangeSubscriptions++;
 
-    return () => {
-      subscription.unsubscribe();
-      this._positionChangeSubscriptions--;
-    };
-  });
+        return () => {
+          subscription.unsubscribe();
+          this._positionChangeSubscriptions--;
+        };
+      });
 
   /** Ordered list of preferred positions, from most to least desirable. */
   get positions() {
@@ -141,7 +142,7 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
     connectedTo: ElementRef | HTMLElement,
     private _viewportRuler: ViewportRuler,
     private _document: Document,
-    // @breaking-change 7.0.0 `_platform` and `_overlayContainer` parameters to be made required.
+    // @breaking-change 8.0.0 `_platform` and `_overlayContainer` parameters to be made required.
     private _platform?: Platform,
     private _overlayContainer?: OverlayContainer) {
     this.setOrigin(connectedTo);
@@ -189,7 +190,7 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
    */
   apply(): void {
     // We shouldn't do anything if the strategy was disposed or we're on the server.
-    // @breaking-change 7.0.0 Remove `_platform` null check once it's guaranteed to be defined.
+    // @breaking-change 8.0.0 Remove `_platform` null check once it's guaranteed to be defined.
     if (this._isDisposed || (this._platform && !this._platform.isBrowser)) {
       return;
     }
@@ -705,7 +706,7 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
   private _calculateBoundingBoxRect(origin: Point, position: ConnectedPosition): BoundingBoxRect {
     const viewport = this._viewportRect;
     const isRtl = this._isRtl();
-    let height, top, bottom;
+    let height: number, top: number, bottom: number;
 
     if (position.overlayY === 'top') {
       // Overlay is opening "downward" and thus is bound by the bottom viewport edge.
@@ -718,10 +719,13 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
       bottom = viewport.height - origin.y + this._viewportMargin * 2;
       height = viewport.height - bottom + this._viewportMargin;
     } else {
-      // If neither top nor bottom, it means that the overlay
-      // is vertically centered on the origin point.
+      // If neither top nor bottom, it means that the overlay is vertically centered on the
+      // origin point. Note that we want the position relative to the viewport, rather than
+      // the page, which is why we don't use something like `viewport.bottom - origin.y` and
+      // `origin.y - viewport.top`.
       const smallestDistanceToViewportEdge =
-          Math.min(viewport.bottom - origin.y, origin.y - viewport.left);
+          Math.min(viewport.bottom - origin.y + viewport.top, origin.y);
+
       const previousHeight = this._lastBoundingBoxSize.height;
 
       height = smallestDistanceToViewportEdge * 2;
@@ -742,7 +746,7 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
         (position.overlayX === 'end' && !isRtl) ||
         (position.overlayX === 'start' && isRtl);
 
-    let width, left, right;
+    let width: number, left: number, right: number;
 
     if (isBoundedByLeftViewportEdge) {
       right = viewport.right - origin.x + this._viewportMargin;
@@ -751,10 +755,12 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
       left = origin.x;
       width = viewport.right - origin.x;
     } else {
-      // If neither start nor end, it means that the overlay
-      // is horizontally centered on the origin point.
+      // If neither start nor end, it means that the overlay is horizontally centered on the
+      // origin point. Note that we want the position relative to the viewport, rather than
+      // the page, which is why we don't use something like `viewport.right - origin.x` and
+      // `origin.x - viewport.left`.
       const smallestDistanceToViewportEdge =
-          Math.min(viewport.right - origin.x, origin.x - viewport.top);
+          Math.min(viewport.right - origin.x + viewport.left, origin.x);
       const previousWidth = this._lastBoundingBoxSize.width;
 
       width = smallestDistanceToViewportEdge * 2;
@@ -765,7 +771,7 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
       }
     }
 
-    return {top, left, bottom, right, width, height};
+    return {top: top!, left: left!, bottom: bottom!, right: right!, width, height};
   }
 
   /**
@@ -912,7 +918,7 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
       overlayPoint = this._pushOverlayOnScreen(overlayPoint, this._overlayRect, scrollPosition);
     }
 
-    // @breaking-change 7.0.0 Currently the `_overlayContainer` is optional in order to avoid a
+    // @breaking-change 8.0.0 Currently the `_overlayContainer` is optional in order to avoid a
     // breaking change. The null check here can be removed once the `_overlayContainer` becomes
     // a required parameter.
     let virtualKeyboardOffset = this._overlayContainer ?
@@ -929,7 +935,7 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
     if (position.overlayY === 'bottom') {
       // When using `bottom`, we adjust the y position such that it is the distance
       // from the bottom of the viewport rather than the top.
-      const documentHeight = this._document.documentElement.clientHeight;
+      const documentHeight = this._document.documentElement!.clientHeight;
       styles.bottom = `${documentHeight - (overlayPoint.y + this._overlayRect.height)}px`;
     } else {
       styles.top = coerceCssPixelValue(overlayPoint.y);
@@ -966,7 +972,7 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
     // When we're setting `right`, we adjust the x position such that it is the distance
     // from the right edge of the viewport rather than the left edge.
     if (horizontalStyleProperty === 'right') {
-      const documentWidth = this._document.documentElement.clientWidth;
+      const documentWidth = this._document.documentElement!.clientWidth;
       styles.right = `${documentWidth - (overlayPoint.x + this._overlayRect.width)}px`;
     } else {
       styles.left = coerceCssPixelValue(overlayPoint.x);
@@ -1013,8 +1019,8 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
     // being that the client properties don't include the scrollbar, as opposed to `innerWidth`
     // and `innerHeight` that do. This is necessary, because the overlay container uses
     // 100% `width` and `height` which don't include the scrollbar either.
-    const width = this._document.documentElement.clientWidth;
-    const height = this._document.documentElement.clientHeight;
+    const width = this._document.documentElement!.clientWidth;
+    const height = this._document.documentElement!.clientHeight;
     const scrollPosition = this._viewportRuler.getViewportScrollPosition();
 
     return {

@@ -12,9 +12,11 @@ import {
 import {
   CategorizedClassDoc,
   CategorizedClassLikeDoc,
+  CategorizedConstExportDoc,
   CategorizedFunctionExportDoc,
   CategorizedMethodMemberDoc,
   CategorizedPropertyMemberDoc,
+  CategorizedTypeAliasExportDoc,
 } from '../common/dgeni-definitions';
 import {getDirectiveMetadata} from '../common/directive-metadata';
 import {normalizeFunctionParameters} from '../common/normalize-function-parameters';
@@ -42,6 +44,14 @@ export class Categorizer implements Processor {
     docs
       .filter(doc => doc.docType === 'function')
       .forEach(doc => this.decorateFunctionExportDoc(doc));
+
+    docs
+      .filter(doc => doc.docType === 'const')
+      .forEach(doc => this.decorateConstExportDoc(doc));
+
+    docs
+      .filter(doc => doc.docType === 'type-alias')
+      .forEach(doc => this.decorateTypeAliasExportDoc(doc));
   }
 
   /**
@@ -115,6 +125,22 @@ export class Categorizer implements Processor {
   private decorateFunctionExportDoc(functionDoc: CategorizedFunctionExportDoc) {
     normalizeFunctionParameters(functionDoc);
     decorateDeprecatedDoc(functionDoc);
+  }
+
+  /**
+   * Method that will be called for each const export document. We decorate the const
+   * documents with a property that states whether the constant is deprecated or not.
+   */
+  private decorateConstExportDoc(doc: CategorizedConstExportDoc) {
+    decorateDeprecatedDoc(doc);
+  }
+
+  /**
+   * Method that will be called for each type-alias export document. We decorate the type-alias
+   * documents with a property that states whether the type-alias is deprecated or not.
+   */
+  private decorateTypeAliasExportDoc(doc: CategorizedTypeAliasExportDoc) {
+    decorateDeprecatedDoc(doc);
   }
 
   /**

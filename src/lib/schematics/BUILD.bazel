@@ -1,12 +1,12 @@
 package(default_visibility = ["//visibility:public"])
 
-load("@build_bazel_rules_typescript//:defs.bzl", "ts_library")
-load("@build_bazel_rules_nodejs//:defs.bzl", "npm_package", "jasmine_node_test")
+load("@build_bazel_rules_nodejs//:defs.bzl", "npm_package")
 load("//:packages.bzl", "VERSION_PLACEHOLDER_REPLACEMENTS")
+load("//tools:defaults.bzl", "jasmine_node_test", "ts_library")
 
 filegroup(
   name = "schematics_assets",
-  srcs = glob(["**/files/**/*", "**/*.json"]) + ["README.md"],
+  srcs = glob(["ng-generate/*/files/**/*", "**/*.json"]),
 )
 
 ts_library(
@@ -14,11 +14,19 @@ ts_library(
   module_name = "@angular/material/schematics",
   srcs = glob(["**/*.ts"], exclude=[
     "**/*.spec.ts",
-    "**/files/**/*",
-    "test-setup/**/*",
-    "ng-update/test-cases/**/*",
+    "ng-update/test-cases/**/*.ts",
+    "ng-generate/*/files/**/*.ts",
   ]),
-  deps = ["//src/cdk/schematics"],
+  deps = [
+    "//src/cdk/schematics",
+    "@matdeps//@angular-devkit/schematics",
+    "@matdeps//@schematics/angular",
+    # TODO(devversion): Only include jasmine for test sources (See: tsconfig types).
+    "@matdeps//@types/jasmine",
+    "@matdeps//@types/node",
+    "@matdeps//tslint",
+    "@matdeps//typescript",
+  ],
   tsconfig = ":tsconfig.json",
 )
 
@@ -35,13 +43,21 @@ npm_package(
 jasmine_node_test(
   name = "unit_tests",
   srcs = [":schematics_test_sources"],
-  data = [":schematics_assets", ":schematics_test_cases"],
+  data = [":node_loader_workaround", ":schematics_assets", ":schematics_test_cases"],
 )
 
 ts_library(
   name = "schematics_test_sources",
-  srcs = glob(["**/*.spec.ts", "test-setup/**/*.ts"], exclude=["**/files/**/*"]),
-  deps = ["//src/cdk/schematics", ":schematics"],
+  srcs = glob(["**/*.spec.ts"], exclude=["ng-generate/*/files/**/*.spec.ts"]),
+  deps = [
+    ":schematics",
+    "//src/cdk/schematics",
+    "//src/cdk/schematics/testing",
+    "@matdeps//@schematics/angular",
+    "@matdeps//@angular-devkit/schematics",
+    "@matdeps//@types/jasmine",
+    "@matdeps//@types/node",
+  ],
   tsconfig = ":tsconfig.json",
   testonly = True,
 )
@@ -52,5 +68,18 @@ filegroup(
     "ng-update/test-cases/**/*_input.ts",
     "ng-update/test-cases/**/*_expected_output.ts"
   ]),
+  testonly = True,
+)
+
+# Filegroup that references a text file which comes alphabetically before the
+# "cdk/schematics/index.js" file. This is necessary because on Windows in order to support absolute
+# paths, the NodeJS rules resolve the actual workspace root by looking for the first entry that
+# refers to the Bazel "USER_WORKSPACE" in the MANIFEST file. Since it's alphabetically ordered, and
+# the CDK comes always before the Material schematics, we need to make sure that it doesn't resolve
+# to the CDK bazel output which has been built as dependency.
+# See more: https://github.com/bazelbuild/rules_nodejs/issues/352
+filegroup(
+  name = "node_loader_workaround",
+  srcs = ["//src/cdk/schematics:#bazel_workaround.txt"],
   testonly = True,
 )

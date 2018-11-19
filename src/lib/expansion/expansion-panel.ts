@@ -35,13 +35,10 @@ import {
 import {DOCUMENT} from '@angular/common';
 import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 import {Subject} from 'rxjs';
-import {filter, startWith, take} from 'rxjs/operators';
+import {filter, startWith, take, distinctUntilChanged} from 'rxjs/operators';
 import {matExpansionAnimations} from './expansion-animations';
 import {MatExpansionPanelContent} from './expansion-panel-content';
 import {MAT_ACCORDION, MatAccordionBase} from './accordion-base';
-
-// TODO(devversion): workaround for https://github.com/angular/material2/issues/12760
-export const _CdkAccordionItem = CdkAccordionItem;
 
 /** MatExpansionPanel's states. */
 export type MatExpansionPanelState = 'expanded' | 'collapsed';
@@ -119,6 +116,9 @@ export class MatExpansionPanel extends CdkAccordionItem implements AfterContentI
   /** ID for the associated header element. Used for a11y labelling. */
   _headerId = `mat-expansion-panel-header-${uniqueId++}`;
 
+  /** Stream of body animation done events. */
+  _bodyAnimationDone = new Subject<AnimationEvent>();
+
   constructor(@Optional() @SkipSelf() @Inject(MAT_ACCORDION) accordion: MatAccordionBase,
               _changeDetectorRef: ChangeDetectorRef,
               _uniqueSelectionDispatcher: UniqueSelectionDispatcher,
@@ -129,6 +129,20 @@ export class MatExpansionPanel extends CdkAccordionItem implements AfterContentI
     super(accordion, _changeDetectorRef, _uniqueSelectionDispatcher);
     this.accordion = accordion;
     this._document = _document;
+
+    // We need a Subject with distinctUntilChanged, because the `done` event
+    // fires twice on some browsers. See https://github.com/angular/angular/issues/24084
+    this._bodyAnimationDone.pipe(distinctUntilChanged((x, y) => {
+      return x.fromState === y.fromState && x.toState === y.toState;
+    })).subscribe(event => {
+      if (event.fromState !== 'void') {
+        if (event.toState === 'expanded') {
+          this.afterExpand.emit();
+        } else if (event.toState === 'collapsed') {
+          this.afterCollapse.emit();
+        }
+      }
+    });
   }
 
   /** Determines whether the expansion panel should have spacing between it and its siblings. */
@@ -166,31 +180,8 @@ export class MatExpansionPanel extends CdkAccordionItem implements AfterContentI
 
   ngOnDestroy() {
     super.ngOnDestroy();
+    this._bodyAnimationDone.complete();
     this._inputChanges.complete();
-  }
-
-  _bodyAnimation(event: AnimationEvent) {
-    const classList = event.element.classList;
-    const cssClass = 'mat-expanded';
-    const {phaseName, toState, fromState} = event;
-
-    // Toggle the body's `overflow: hidden` class when closing starts or when expansion ends in
-    // order to prevent the cases where switching too early would cause the animation to jump.
-    // Note that we do it directly on the DOM element to avoid the slight delay that comes
-    // with doing it via change detection.
-    if (phaseName === 'done' && toState === 'expanded') {
-      classList.add(cssClass);
-    }
-    if (phaseName === 'start' && toState === 'collapsed') {
-      classList.remove(cssClass);
-    }
-
-    if (phaseName === 'done' && toState === 'expanded' && fromState !== 'void') {
-      this.afterExpand.emit();
-    }
-    if (phaseName === 'done' && toState === 'collapsed' && fromState !== 'void') {
-      this.afterCollapse.emit();
-    }
   }
 
   /** Checks whether the expansion panel's content contains the currently-focused element. */

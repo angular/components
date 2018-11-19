@@ -1,19 +1,38 @@
 package(default_visibility = ["//visibility:public"])
 
-load("@build_bazel_rules_typescript//:defs.bzl", "ts_library")
-load("@build_bazel_rules_nodejs//:defs.bzl", "npm_package", "jasmine_node_test")
+load("@build_bazel_rules_nodejs//:defs.bzl", "npm_package")
 load("//:packages.bzl", "VERSION_PLACEHOLDER_REPLACEMENTS")
+load("//tools:defaults.bzl", "jasmine_node_test", "ts_library")
+
+# TODO(devversion): remove when https://github.com/bazelbuild/rules_nodejs/issues/352 is fixed
+exports_files(["#bazel_workaround.txt"])
 
 filegroup(
   name = "schematics_assets",
-  srcs = ["README.md"],
+  srcs = glob(["**/files/**/*", "**/*.json"]),
 )
 
 ts_library(
   name = "schematics",
   module_name = "@angular/cdk/schematics",
-  srcs = glob(["**/*.ts"], exclude=["**/*.spec.ts"]),
+  srcs = glob(["**/*.ts"], exclude=[
+    "**/files/**/*.ts",
+    "**/*.spec.ts",
+    "ng-update/test-cases/**/*.ts",
+    "testing/**/*.ts"
+  ]),
   tsconfig = ":tsconfig.json",
+  deps = [
+    "@matdeps//@schematics/angular",
+    "@matdeps//@angular-devkit/schematics",
+    # TODO(devversion): Only include jasmine for test sources (See: tsconfig types).
+    "@matdeps//@types/jasmine",
+    "@matdeps//@types/node",
+    "@matdeps//glob",
+    "@matdeps//parse5",
+    "@matdeps//tslint",
+    "@matdeps//typescript"
+  ],
 )
 
 # This package is intended to be combined into the main @angular/cdk package as a dep.
@@ -29,13 +48,32 @@ npm_package(
 jasmine_node_test(
   name = "unit_tests",
   srcs = [":schematics_test_sources"],
-  data = [":schematics_assets"]
+  data = [":schematics_assets", ":schematics_test_cases"],
 )
 
 ts_library(
   name = "schematics_test_sources",
-  srcs = glob(["**/*.spec.ts"]),
-  deps = [":schematics"],
+  srcs = glob(["**/*.spec.ts"], exclude = ["**/files/**/*.spec.ts"]),
+  deps = [
+    "//src/cdk/schematics/testing",
+    "@matdeps//@schematics/angular",
+    "@matdeps//@angular-devkit/schematics",
+    "@matdeps//@types/jasmine",
+    "@matdeps//@types/node",
+    "@matdeps//mock-fs",
+    "@matdeps//tslint",
+    "@matdeps//typescript",
+    ":schematics",
+  ],
   tsconfig = ":tsconfig.json",
+  testonly = True,
+)
+
+filegroup(
+  name = "schematics_test_cases",
+  srcs = glob([
+    "ng-update/test-cases/**/*_input.ts",
+    "ng-update/test-cases/**/*_expected_output.ts"
+  ]),
   testonly = True,
 )

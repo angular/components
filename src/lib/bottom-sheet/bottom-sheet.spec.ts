@@ -25,7 +25,7 @@ import {
 import {Location} from '@angular/common';
 import {SpyLocation} from '@angular/common/testing';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
-import {MatBottomSheet} from './bottom-sheet';
+import {MatBottomSheet, MAT_BOTTOM_SHEET_DEFAULT_OPTIONS} from './bottom-sheet';
 import {MAT_BOTTOM_SHEET_DATA, MatBottomSheetConfig} from './bottom-sheet-config';
 import {MatBottomSheetModule} from './bottom-sheet-module';
 import {MatBottomSheetRef} from './bottom-sheet-ref';
@@ -274,6 +274,18 @@ describe('MatBottomSheet', () => {
     expect(overlayContainerElement.childElementCount).toBe(0);
   }));
 
+  it('should dismiss the bottom sheet when the service is destroyed', fakeAsync(() => {
+    bottomSheet.open(PizzaMsg);
+    viewContainerFixture.detectChanges();
+    expect(overlayContainerElement.childElementCount).toBeGreaterThan(0);
+
+    bottomSheet.ngOnDestroy();
+    viewContainerFixture.detectChanges();
+    flush();
+
+    expect(overlayContainerElement.childElementCount).toBe(0);
+  }));
+
   it('should open a new bottom sheet after dismissing a previous sheet', fakeAsync(() => {
     let config: MatBottomSheetConfig = {viewContainerRef: testViewContainerRef};
     let bottomSheetRef: MatBottomSheetRef<any> = bottomSheet.open(PizzaMsg, config);
@@ -417,7 +429,7 @@ describe('MatBottomSheet', () => {
   });
 
   describe('disableClose option', () => {
-    it('should prevent closing via clicks on the backdrop', () => {
+    it('should prevent closing via clicks on the backdrop', fakeAsync(() => {
       bottomSheet.open(PizzaMsg, {
         disableClose: true,
         viewContainerRef: testViewContainerRef
@@ -427,11 +439,13 @@ describe('MatBottomSheet', () => {
 
       let backdrop = overlayContainerElement.querySelector('.cdk-overlay-backdrop') as HTMLElement;
       backdrop.click();
+      viewContainerFixture.detectChanges();
+      flush();
 
       expect(overlayContainerElement.querySelector('mat-bottom-sheet-container')).toBeTruthy();
-    });
+    }));
 
-    it('should prevent closing via the escape key', () => {
+    it('should prevent closing via the escape key', fakeAsync(() => {
       bottomSheet.open(PizzaMsg, {
         disableClose: true,
         viewContainerRef: testViewContainerRef
@@ -439,9 +453,11 @@ describe('MatBottomSheet', () => {
 
       viewContainerFixture.detectChanges();
       dispatchKeyboardEvent(document.body, 'keydown', ESCAPE);
+      viewContainerFixture.detectChanges();
+      flush();
 
       expect(overlayContainerElement.querySelector('mat-bottom-sheet-container')).toBeTruthy();
-    });
+    }));
 
   });
 
@@ -506,7 +522,7 @@ describe('MatBottomSheet', () => {
       viewContainerFixture.detectChanges();
       flushMicrotasks();
 
-      expect(document.activeElement.tagName)
+      expect(document.activeElement!.tagName)
           .toBe('INPUT', 'Expected first tabbable element (input) in the sheet to be focused.');
     }));
 
@@ -519,7 +535,7 @@ describe('MatBottomSheet', () => {
       viewContainerFixture.detectChanges();
       flushMicrotasks();
 
-      expect(document.activeElement.tagName).not.toBe('INPUT');
+      expect(document.activeElement!.tagName).not.toBe('INPUT');
     }));
 
     it('should re-focus trigger element when bottom sheet closes', fakeAsync(() => {
@@ -534,19 +550,51 @@ describe('MatBottomSheet', () => {
       viewContainerFixture.detectChanges();
       flushMicrotasks();
 
-      expect(document.activeElement.id)
+      expect(document.activeElement!.id)
           .not.toBe('bottom-sheet-trigger', 'Expected the focus to change when sheet was opened.');
 
       bottomSheetRef.dismiss();
-      expect(document.activeElement.id).not.toBe('bottom-sheet-trigger',
+      expect(document.activeElement!.id).not.toBe('bottom-sheet-trigger',
           'Expcted the focus not to have changed before the animation finishes.');
 
       flushMicrotasks();
       viewContainerFixture.detectChanges();
       tick(500);
 
-      expect(document.activeElement.id).toBe('bottom-sheet-trigger',
+      expect(document.activeElement!.id).toBe('bottom-sheet-trigger',
           'Expected that the trigger was refocused after the sheet is closed.');
+
+      document.body.removeChild(button);
+    }));
+
+    it('should be able to disable focus restoration', fakeAsync(() => {
+      const button = document.createElement('button');
+      button.id = 'bottom-sheet-trigger';
+      document.body.appendChild(button);
+      button.focus();
+
+      const bottomSheetRef = bottomSheet.open(PizzaMsg, {
+        viewContainerRef: testViewContainerRef,
+        restoreFocus: false
+      });
+
+      flushMicrotasks();
+      viewContainerFixture.detectChanges();
+      flushMicrotasks();
+
+      expect(document.activeElement!.id)
+          .not.toBe('bottom-sheet-trigger', 'Expected the focus to change when sheet was opened.');
+
+      bottomSheetRef.dismiss();
+      expect(document.activeElement!.id).not.toBe('bottom-sheet-trigger',
+          'Expcted the focus not to have changed before the animation finishes.');
+
+      flushMicrotasks();
+      viewContainerFixture.detectChanges();
+      tick(500);
+
+      expect(document.activeElement!.id).not.toBe('bottom-sheet-trigger',
+          'Expected the trigger not to be refocused on close.');
 
       document.body.removeChild(button);
     }));
@@ -614,7 +662,100 @@ describe('MatBottomSheet with parent MatBottomSheet', () => {
     expect(overlayContainerElement.textContent)
         .toContain('Taco', 'Expected child bottom sheet to be dismissed by opening from parent');
   }));
+
+  it('should not close parent bottom sheet when child is destroyed', fakeAsync(() => {
+    parentBottomSheet.open(PizzaMsg);
+    fixture.detectChanges();
+    tick(1000);
+
+    expect(overlayContainerElement.textContent)
+        .toContain('Pizza', 'Expected a bottom sheet to be opened');
+
+    childBottomSheet.ngOnDestroy();
+    fixture.detectChanges();
+    tick(1000);
+
+    expect(overlayContainerElement.textContent)
+        .toContain('Pizza', 'Expected a bottom sheet to stay open');
+  }));
+
 });
+
+describe('MatBottomSheet with default options', () => {
+  let bottomSheet: MatBottomSheet;
+  let overlayContainer: OverlayContainer;
+  let overlayContainerElement: HTMLElement;
+
+  let testViewContainerRef: ViewContainerRef;
+  let viewContainerFixture: ComponentFixture<ComponentWithChildViewContainer>;
+
+  beforeEach(fakeAsync(() => {
+    const defaultConfig: MatBottomSheetConfig = {
+      hasBackdrop: false,
+      disableClose: true,
+      autoFocus: false
+    };
+
+    TestBed.configureTestingModule({
+      imports: [MatBottomSheetModule, BottomSheetTestModule],
+      providers: [
+        {provide: MAT_BOTTOM_SHEET_DEFAULT_OPTIONS, useValue: defaultConfig},
+      ],
+    });
+
+    TestBed.compileComponents();
+  }));
+
+  beforeEach(inject([MatBottomSheet, OverlayContainer],
+    (b: MatBottomSheet, oc: OverlayContainer) => {
+      bottomSheet = b;
+      overlayContainer = oc;
+      overlayContainerElement = oc.getContainerElement();
+    }));
+
+  afterEach(() => {
+    overlayContainer.ngOnDestroy();
+  });
+
+  beforeEach(() => {
+    viewContainerFixture = TestBed.createComponent(ComponentWithChildViewContainer);
+
+    viewContainerFixture.detectChanges();
+    testViewContainerRef = viewContainerFixture.componentInstance.childViewContainer;
+  });
+
+  it('should use the provided defaults', () => {
+    bottomSheet.open(PizzaMsg, {viewContainerRef: testViewContainerRef});
+
+    viewContainerFixture.detectChanges();
+
+    expect(overlayContainerElement.querySelector('.cdk-overlay-backdrop')).toBeFalsy();
+
+    dispatchKeyboardEvent(document.body, 'keydown', ESCAPE);
+
+    expect(overlayContainerElement.querySelector('mat-bottom-sheet-container')).toBeTruthy();
+    expect(document.activeElement!.tagName).not.toBe('INPUT');
+  });
+
+  it('should be overridable by open() options', fakeAsync(() => {
+    bottomSheet.open(PizzaMsg, {
+      hasBackdrop: true,
+      disableClose: false,
+      viewContainerRef: testViewContainerRef
+    });
+
+    viewContainerFixture.detectChanges();
+
+    expect(overlayContainerElement.querySelector('.cdk-overlay-backdrop')).toBeTruthy();
+
+    dispatchKeyboardEvent(document.body, 'keydown', ESCAPE);
+    viewContainerFixture.detectChanges();
+    flush();
+
+    expect(overlayContainerElement.querySelector('mat-bottom-sheet-container')).toBeFalsy();
+  }));
+});
+
 
 
 @Directive({selector: 'dir-with-view-container'})

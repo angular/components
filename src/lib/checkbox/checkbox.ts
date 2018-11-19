@@ -119,6 +119,7 @@ export const _MatCheckboxMixinBase:
   host: {
     'class': 'mat-checkbox',
     '[id]': 'id',
+    '[attr.tabindex]': 'null',
     '[class.mat-checkbox-indeterminate]': 'indeterminate',
     '[class.mat-checkbox-checked]': 'checked',
     '[class.mat-checkbox-disabled]': 'disabled',
@@ -244,8 +245,10 @@ export class MatCheckbox extends _MatCheckboxMixinBase implements ControlValueAc
   @Input()
   get disabled() { return this._disabled; }
   set disabled(value: any) {
-    if (value != this.disabled) {
-      this._disabled = value;
+    const newValue = coerceBooleanProperty(value);
+
+    if (newValue !== this.disabled) {
+      this._disabled = newValue;
       this._changeDetectorRef.markForCheck();
     }
   }

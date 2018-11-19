@@ -814,7 +814,7 @@ describe('MatDialog', () => {
   }));
 
   describe('disableClose option', () => {
-    it('should prevent closing via clicks on the backdrop', () => {
+    it('should prevent closing via clicks on the backdrop', fakeAsync(() => {
       dialog.open(PizzaMsg, {
         disableClose: true,
         viewContainerRef: testViewContainerRef
@@ -824,11 +824,13 @@ describe('MatDialog', () => {
 
       let backdrop = overlayContainerElement.querySelector('.cdk-overlay-backdrop') as HTMLElement;
       backdrop.click();
+      viewContainerFixture.detectChanges();
+      flush();
 
       expect(overlayContainerElement.querySelector('mat-dialog-container')).toBeTruthy();
-    });
+    }));
 
-    it('should prevent closing via the escape key', () => {
+    it('should prevent closing via the escape key', fakeAsync(() => {
       dialog.open(PizzaMsg, {
         disableClose: true,
         viewContainerRef: testViewContainerRef
@@ -836,9 +838,11 @@ describe('MatDialog', () => {
 
       viewContainerFixture.detectChanges();
       dispatchKeyboardEvent(document.body, 'keydown', ESCAPE);
+      viewContainerFixture.detectChanges();
+      flush();
 
       expect(overlayContainerElement.querySelector('mat-dialog-container')).toBeTruthy();
-    });
+    }));
 
     it('should allow for the disableClose option to be updated while open', fakeAsync(() => {
       let dialogRef = dialog.open(PizzaMsg, {
@@ -936,7 +940,7 @@ describe('MatDialog', () => {
       viewContainerFixture.detectChanges();
       flushMicrotasks();
 
-      expect(document.activeElement.tagName)
+      expect(document.activeElement!.tagName)
           .toBe('INPUT', 'Expected first tabbable element (input) in the dialog to be focused.');
     }));
 
@@ -949,7 +953,7 @@ describe('MatDialog', () => {
       viewContainerFixture.detectChanges();
       flushMicrotasks();
 
-      expect(document.activeElement.tagName).not.toBe('INPUT');
+      expect(document.activeElement!.tagName).not.toBe('INPUT');
     }));
 
     it('should re-focus trigger element when dialog closes', fakeAsync(() => {
@@ -965,18 +969,18 @@ describe('MatDialog', () => {
       viewContainerFixture.detectChanges();
       flushMicrotasks();
 
-      expect(document.activeElement.id)
+      expect(document.activeElement!.id)
           .not.toBe('dialog-trigger', 'Expected the focus to change when dialog was opened.');
 
       dialogRef.close();
-      expect(document.activeElement.id).not.toBe('dialog-trigger',
+      expect(document.activeElement!.id).not.toBe('dialog-trigger',
           'Expcted the focus not to have changed before the animation finishes.');
 
       flushMicrotasks();
       viewContainerFixture.detectChanges();
       tick(500);
 
-      expect(document.activeElement.id).toBe('dialog-trigger',
+      expect(document.activeElement!.id).toBe('dialog-trigger',
           'Expected that the trigger was refocused after the dialog is closed.');
 
       document.body.removeChild(button);
@@ -1006,7 +1010,7 @@ describe('MatDialog', () => {
       viewContainerFixture.detectChanges();
       flushMicrotasks();
 
-      expect(document.activeElement.id).toBe('input-to-be-focused',
+      expect(document.activeElement!.id).toBe('input-to-be-focused',
           'Expected that the trigger was refocused after the dialog is closed.');
 
       document.body.removeChild(button);
@@ -1020,7 +1024,7 @@ describe('MatDialog', () => {
         viewContainerFixture.detectChanges();
         flushMicrotasks();
 
-        expect(document.activeElement.tagName)
+        expect(document.activeElement!.tagName)
             .toBe('MAT-DIALOG-CONTAINER', 'Expected dialog container to be focused.');
       }));
 
@@ -1040,7 +1044,7 @@ describe('MatDialog', () => {
       viewContainerFixture.detectChanges();
       flushMicrotasks();
 
-      expect(document.activeElement.id)
+      expect(document.activeElement!.id)
           .not.toBe('dialog-trigger', 'Expected the focus to change when dialog was opened.');
 
       dialogRef.close();
@@ -1048,7 +1052,7 @@ describe('MatDialog', () => {
       viewContainerFixture.detectChanges();
       tick(500);
 
-      expect(document.activeElement.id).not.toBe('dialog-trigger',
+      expect(document.activeElement!.id).not.toBe('dialog-trigger',
           'Expected focus not to have been restored.');
 
       document.body.removeChild(button);
@@ -1323,7 +1327,7 @@ describe('MatDialog with default options', () => {
     dispatchKeyboardEvent(document.body, 'keydown', ESCAPE);
     expect(overlayContainerElement.querySelector('mat-dialog-container')).toBeTruthy();
 
-    expect(document.activeElement.tagName).not.toBe('INPUT');
+    expect(document.activeElement!.tagName).not.toBe('INPUT');
 
     let overlayPane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
     expect(overlayPane.style.width).toBe('100px');

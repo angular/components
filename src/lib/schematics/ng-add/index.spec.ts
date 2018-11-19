@@ -1,14 +1,16 @@
 import {normalize} from '@angular-devkit/core';
+import {WorkspaceProject} from '@angular-devkit/core/src/workspace';
 import {Tree} from '@angular-devkit/schematics';
 import {SchematicTestRunner} from '@angular-devkit/schematics/testing';
 import {
+  addModuleImportToRootModule,
   getProjectFromWorkspace,
   getProjectStyleFile,
   getProjectTargetOptions,
 } from '@angular/cdk/schematics';
-import {getWorkspace, WorkspaceProject} from '@schematics/angular/utility/config';
+import {createTestApp} from '@angular/cdk/schematics/testing';
+import {getWorkspace} from '@schematics/angular/utility/config';
 import {getFileContent} from '@schematics/angular/utility/test';
-import {collectionPath, createTestApp} from '../test-setup/test-app';
 import {getIndexHtmlPath} from './fonts/project-index-html';
 
 describe('ng-add schematic', () => {
@@ -16,8 +18,8 @@ describe('ng-add schematic', () => {
   let appTree: Tree;
 
   beforeEach(() => {
-    appTree = createTestApp();
-    runner = new SchematicTestRunner('schematics', collectionPath);
+    runner = new SchematicTestRunner('schematics', require.resolve('../collection.json'));
+    appTree = createTestApp(runner);
   });
 
   /** Expects the given file to be in the styles of the specified workspace project. */
@@ -26,7 +28,19 @@ describe('ng-add schematic', () => {
         `Expected "${filePath}" to be added to the project styles in the workspace.`);
   }
 
+  /** Removes the specified dependency from the /package.json in the given tree. */
+  function removePackageJsonDependency(tree: Tree, dependencyName: string) {
+    const packageContent = JSON.parse(getFileContent(tree, '/package.json'));
+    delete packageContent.dependencies[dependencyName];
+    tree.overwrite('/package.json', JSON.stringify(packageContent, null, 2));
+  }
+
   it('should update package.json', () => {
+    // By default, the Angular workspace schematic sets up "@angular/animations". In order
+    // to verify that we would set up the dependency properly if someone doesn't have the
+    // animations installed already, we remove the animations dependency explicitly.
+    removePackageJsonDependency(appTree, '@angular/animations');
+
     const tree = runner.runSchematic('ng-add', {}, appTree);
     const packageJson = JSON.parse(getFileContent(tree, '/package.json'));
     const dependencies = packageJson.dependencies;
@@ -63,7 +77,8 @@ describe('ng-add schematic', () => {
   });
 
   it('should support adding a custom theme', () => {
-    appTree = createTestApp({style: 'scss'});
+    // TODO(devversion): do not re-create test app here.
+    appTree = createTestApp(runner, {style: 'scss'});
 
     const tree = runner.runSchematic('ng-add-setup-project', {theme: 'custom'}, appTree);
 
@@ -79,7 +94,8 @@ describe('ng-add schematic', () => {
   });
 
   it('should create a custom theme file if no SCSS file could be found', () => {
-    appTree = createTestApp({style: 'css'});
+    // TODO(devversion): do not re-create test app here.
+    appTree = createTestApp(runner, {style: 'css'});
 
     const tree = runner.runSchematic('ng-add-setup-project', {theme: 'custom'}, appTree);
     const workspace = getWorkspace(tree);
@@ -137,6 +153,131 @@ describe('ng-add schematic', () => {
 
       expect(fileContent).not.toContain(`import 'hammerjs';`,
         'Expected the project main file to not contain a HammerJS import.');
+    });
+  });
+
+  describe('animations enabled', () => {
+    it('should add the BrowserAnimationsModule to the project module', () => {
+      const tree = runner.runSchematic('ng-add-setup-project', {}, appTree);
+      const fileContent = getFileContent(tree, '/projects/material/src/app/app.module.ts');
+
+      expect(fileContent).toContain('BrowserAnimationsModule',
+        'Expected the project app module to import the "BrowserAnimationsModule".');
+    });
+
+    it('should not add BrowserAnimationsModule if NoopAnimationsModule is set up', () => {
+      const workspace = getWorkspace(appTree);
+      const project = getProjectFromWorkspace(workspace);
+
+      // Simulate the case where a developer uses `ng-add` on an Angular CLI project which already
+      // explicitly uses the `NoopAnimationsModule`. It would be wrong to forcibly enable browser
+      // animations without knowing what other components would be affected. In this case, we
+      // just print a warning message.
+      addModuleImportToRootModule(appTree, 'NoopAnimationsModule',
+          '@angular/platform-browser/animations', project);
+
+      spyOn(console, 'warn');
+      runner.runSchematic('ng-add-setup-project', {}, appTree);
+
+      expect(console.warn).toHaveBeenCalledWith(
+        jasmine.stringMatching(/Could not set up "BrowserAnimationsModule"/));
+    });
+  });
+
+  describe('animations disabled', () => {
+    it('should add the NoopAnimationsModule to the project module', () => {
+      const tree = runner.runSchematic('ng-add-setup-project', {animations: false}, appTree);
+      const fileContent = getFileContent(tree, '/projects/material/src/app/app.module.ts');
+
+      expect(fileContent).toContain('NoopAnimationsModule',
+        'Expected the project app module to import the "NoopAnimationsModule".');
+    });
+
+    it('should not add NoopAnimationsModule if BrowserAnimationsModule is set up', () => {
+      const workspace = getWorkspace(appTree);
+      const project = getProjectFromWorkspace(workspace);
+
+      // Simulate the case where a developer uses `ng-add` on an Angular CLI project which already
+      // explicitly uses the `BrowserAnimationsModule`. It would be wrong to forcibly change
+      // to noop animations.
+      const fileContent = addModuleImportToRootModule(appTree, 'BrowserAnimationsModule',
+          '@angular/platform-browser/animations', project);
+
+      expect(fileContent).not.toContain('NoopAnimationsModule',
+          'Expected the project app module to not import the "NoopAnimationsModule".');
+    });
+  });
+
+  describe('theme files', () => {
+
+    /** Path to the default prebuilt theme file that will be added when running ng-add. */
+    const defaultPrebuiltThemePath =
+      './node_modules/@angular/material/prebuilt-themes/indigo-pink.css';
+
+    /** Writes a specific style file to the workspace in the given tree */
+    function writeStyleFileToWorkspace(tree: Tree, stylePath: string) {
+      const workspace = getWorkspace(tree);
+      const project = getProjectFromWorkspace(workspace);
+      const buildOptions = getProjectTargetOptions(project, 'build');
+
+      if (!buildOptions.styles) {
+        buildOptions.styles = [stylePath];
+      } else {
+        buildOptions.styles.push(stylePath);
+      }
+
+      tree.overwrite('/angular.json', JSON.stringify(workspace, null, 2));
+    }
+
+    it('should replace existing prebuilt theme files', () => {
+      const existingThemePath =
+          './node_modules/@angular/material/prebuilt-themes/purple-green.css';
+      writeStyleFileToWorkspace(appTree, existingThemePath);
+
+      const tree = runner.runSchematic('ng-add-setup-project', {}, appTree);
+      const workspace = getWorkspace(tree);
+      const project = getProjectFromWorkspace(workspace);
+      const styles = getProjectTargetOptions(project, 'build').styles;
+
+      expect(styles).not.toContain(existingThemePath,
+          'Expected the existing prebuilt theme file to be removed.');
+      expect(styles).toContain(defaultPrebuiltThemePath,
+          'Expected the default prebuilt theme to be added.');
+    });
+
+    it('should not replace existing custom theme files', () => {
+      spyOn(console, 'warn');
+      writeStyleFileToWorkspace(appTree, './projects/material/custom-theme.scss');
+
+      const tree = runner.runSchematic('ng-add-setup-project', {}, appTree);
+      const workspace = getWorkspace(tree);
+      const project = getProjectFromWorkspace(workspace);
+      const styles = getProjectTargetOptions(project, 'build').styles;
+
+      expect(styles).not.toContain(defaultPrebuiltThemePath,
+          'Expected the default prebuilt theme to be not configured.');
+      expect(console.warn).toHaveBeenCalledWith(
+        jasmine.stringMatching(/Could not add the selected theme/));
+    });
+
+    it('should not add a theme file multiple times', () => {
+      writeStyleFileToWorkspace(appTree, defaultPrebuiltThemePath);
+
+      const tree = runner.runSchematic('ng-add-setup-project', {}, appTree);
+      const workspace = getWorkspace(tree);
+      const project = getProjectFromWorkspace(workspace);
+      const styles = getProjectTargetOptions(project, 'build').styles;
+
+      expect(styles).toEqual(['projects/material/src/styles.css', defaultPrebuiltThemePath],
+          'Expected the "styles.css" file and default prebuilt theme to be the only styles');
+    });
+
+    it('should not overwrite existing custom theme files', () => {
+      appTree.create('/projects/material/custom-theme.scss', 'custom-theme');
+      const tree = runner.runSchematic('ng-add-setup-project', {theme: 'custom'}, appTree);
+
+      expect(tree.readContent('/projects/material/custom-theme.scss')).toBe('custom-theme',
+          'Expected the old custom theme content to be unchanged.');
     });
   });
 });

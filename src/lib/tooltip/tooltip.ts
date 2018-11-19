@@ -11,6 +11,7 @@ import {Directionality} from '@angular/cdk/bidi';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
 import {ESCAPE} from '@angular/cdk/keycodes';
 import {BreakpointObserver, Breakpoints, BreakpointState} from '@angular/cdk/layout';
+import {HammerLoader, HAMMER_LOADER} from '@angular/platform-browser';
 import {
   FlexibleConnectedPositionStrategy,
   HorizontalConnectionPos,
@@ -18,8 +19,8 @@ import {
   Overlay,
   OverlayConnectionPosition,
   OverlayRef,
-  ScrollStrategy,
   VerticalConnectionPos,
+  ScrollStrategy,
 } from '@angular/cdk/overlay';
 import {ScrollDispatcher} from '@angular/cdk/scrolling';
 import {Platform} from '@angular/cdk/platform';
@@ -122,6 +123,7 @@ export class MatTooltip implements OnDestroy {
   private _position: TooltipPosition = 'below';
   private _disabled: boolean = false;
   private _tooltipClass: string|string[]|Set<string>|{[key: string]: any};
+  private _scrollStrategy: () => ScrollStrategy;
 
   /** Allows the user to define the position of the tooltip relative to the parent element */
   @Input('matTooltipPosition')
@@ -200,24 +202,33 @@ export class MatTooltip implements OnDestroy {
     private _scrollDispatcher: ScrollDispatcher,
     private _viewContainerRef: ViewContainerRef,
     private _ngZone: NgZone,
-    private _platform: Platform,
+    platform: Platform,
     private _ariaDescriber: AriaDescriber,
     private _focusMonitor: FocusMonitor,
-    @Inject(MAT_TOOLTIP_SCROLL_STRATEGY) private _scrollStrategy,
+    @Inject(MAT_TOOLTIP_SCROLL_STRATEGY) scrollStrategy: any,
     @Optional() private _dir: Directionality,
     @Optional() @Inject(MAT_TOOLTIP_DEFAULT_OPTIONS)
-      private _defaultOptions: MatTooltipDefaultOptions) {
+      private _defaultOptions: MatTooltipDefaultOptions,
+    @Optional() @Inject(HAMMER_LOADER) hammerLoader?: HammerLoader) {
 
+    this._scrollStrategy = scrollStrategy;
     const element: HTMLElement = _elementRef.nativeElement;
+    const elementStyle = element.style as CSSStyleDeclaration & {webkitUserDrag: string};
+    const hasGestures = typeof window === 'undefined' || (window as any).Hammer || hammerLoader;
 
     // The mouse events shouldn't be bound on mobile devices, because they can prevent the
     // first tap from firing its click event or can cause the tooltip to open for clicks.
-    if (!_platform.IOS && !_platform.ANDROID) {
+    if (!platform.IOS && !platform.ANDROID) {
       this._manualListeners
         .set('mouseenter', () => this.show())
-        .set('mouseleave', () => this.hide())
-        .forEach((listener, event) => element.addEventListener(event, listener));
+        .set('mouseleave', () => this.hide());
+    } else if (!hasGestures) {
+      // If Hammerjs isn't loaded, fall back to showing on `touchstart`, otherwise
+      // there's no way for the user to trigger the tooltip on a touch device.
+      this._manualListeners.set('touchstart', () => this.show());
     }
+
+    this._manualListeners.forEach((listener, event) => element.addEventListener(event, listener));
 
     if (element.nodeName === 'INPUT' || element.nodeName === 'TEXTAREA') {
       // When we bind a gesture event on an element (in this case `longpress`), HammerJS
@@ -225,14 +236,14 @@ export class MatTooltip implements OnDestroy {
       // problematic on iOS and in Safari, because it will prevent users from typing in inputs.
       // Since `user-select: none` is not needed for the `longpress` event and can cause unexpected
       // behavior for text fields, we always clear the `user-select` to avoid such issues.
-      element.style.webkitUserSelect = element.style.userSelect = element.style.msUserSelect = '';
+      elementStyle.webkitUserSelect = elementStyle.userSelect = elementStyle.msUserSelect = '';
     }
 
     // Hammer applies `-webkit-user-drag: none` on all elements by default,
     // which breaks the native drag&drop. If the consumer explicitly made
     // the element draggable, clear the `-webkit-user-drag`.
-    if (element.draggable && element.style['webkitUserDrag'] === 'none') {
-      element.style['webkitUserDrag'] = '';
+    if (element.draggable && elementStyle.webkitUserDrag === 'none') {
+      elementStyle.webkitUserDrag = '';
     }
 
     _focusMonitor.monitor(_elementRef).pipe(takeUntil(this._destroyed)).subscribe(origin => {
@@ -255,12 +266,10 @@ export class MatTooltip implements OnDestroy {
     }
 
     // Clean up the event listeners set in the constructor
-    if (!this._platform.IOS) {
-      this._manualListeners.forEach((listener, event) =>
-        this._elementRef.nativeElement.removeEventListener(event, listener));
-
-      this._manualListeners.clear();
-    }
+    this._manualListeners.forEach((listener, event) => {
+      this._elementRef.nativeElement.removeEventListener(event, listener);
+    });
+    this._manualListeners.clear();
 
     this._destroyed.next();
     this._destroyed.complete();
@@ -271,7 +280,10 @@ export class MatTooltip implements OnDestroy {
 
   /** Shows the tooltip after the delay in ms, defaults to tooltip-delay-show or 0ms if no input */
   show(delay: number = this.showDelay): void {
-    if (this.disabled || !this.message) { return; }
+    if (this.disabled || !this.message || (this._isTooltipVisible() &&
+      !this._tooltipInstance!._showTimeoutId && !this._tooltipInstance!._hideTimeoutId)) {
+        return;
+    }
 
     const overlayRef = this._createOverlay();
 
@@ -524,10 +536,10 @@ export class TooltipComponent {
   tooltipClass: string|string[]|Set<string>|{[key: string]: any};
 
   /** The timeout ID of any current timer set to show the tooltip */
-  _showTimeoutId: number;
+  _showTimeoutId: number | null;
 
   /** The timeout ID of any current timer set to hide the tooltip */
-  _hideTimeoutId: number;
+  _hideTimeoutId: number | null;
 
   /** Property watched by the animation framework to show or hide the tooltip */
   _visibility: TooltipVisibility = 'initial';
@@ -553,12 +565,14 @@ export class TooltipComponent {
     // Cancel the delayed hide if it is scheduled
     if (this._hideTimeoutId) {
       clearTimeout(this._hideTimeoutId);
+      this._hideTimeoutId = null;
     }
 
     // Body interactions should cancel the tooltip if there is a delay in showing.
     this._closeOnInteraction = true;
     this._showTimeoutId = setTimeout(() => {
       this._visibility = 'visible';
+      this._showTimeoutId = null;
 
       // Mark for check so if any parent component has set the
       // ChangeDetectionStrategy to OnPush it will be checked anyways
@@ -574,10 +588,12 @@ export class TooltipComponent {
     // Cancel the delayed show if it is scheduled
     if (this._showTimeoutId) {
       clearTimeout(this._showTimeoutId);
+      this._showTimeoutId = null;
     }
 
     this._hideTimeoutId = setTimeout(() => {
       this._visibility = 'hidden';
+      this._hideTimeoutId = null;
 
       // Mark for check so if any parent component has set the
       // ChangeDetectionStrategy to OnPush it will be checked anyways

@@ -15,7 +15,7 @@ import {
   Optional,
   SkipSelf,
 } from '@angular/core';
-import {fromEvent, of as observableOf, Subject, Subscription, Observable} from 'rxjs';
+import {fromEvent, of as observableOf, Subject, Subscription, Observable, Observer} from 'rxjs';
 import {auditTime, filter} from 'rxjs/operators';
 import {CdkScrollable} from './scrollable';
 
@@ -52,10 +52,10 @@ export class ScrollDispatcher implements OnDestroy {
    * @param scrollable Scrollable instance to be registered.
    */
   register(scrollable: CdkScrollable): void {
-    const scrollSubscription = scrollable.elementScrolled()
-        .subscribe(() => this._scrolled.next(scrollable));
-
-    this.scrollContainers.set(scrollable, scrollSubscription);
+    if (!this.scrollContainers.has(scrollable)) {
+      this.scrollContainers.set(scrollable, scrollable.elementScrolled()
+          .subscribe(() => this._scrolled.next(scrollable)));
+    }
   }
 
   /**
@@ -82,7 +82,11 @@ export class ScrollDispatcher implements OnDestroy {
    * to run the callback using `NgZone.run`.
    */
   scrolled(auditTimeInMs: number = DEFAULT_SCROLL_TIME): Observable<CdkScrollable|void> {
-    return this._platform.isBrowser ? Observable.create(observer => {
+    if (!this._platform.isBrowser) {
+      return observableOf<void>();
+    }
+
+    return Observable.create((observer: Observer<CdkScrollable|void>) => {
       if (!this._globalSubscription) {
         this._addGlobalListener();
       }
@@ -103,7 +107,7 @@ export class ScrollDispatcher implements OnDestroy {
           this._removeGlobalListener();
         }
       };
-    }) : observableOf<void>();
+    });
   }
 
   ngOnDestroy() {
@@ -170,13 +174,13 @@ export class ScrollDispatcher implements OnDestroy {
 }
 
 
-/** @docs-private @deprecated @breaking-change 7.0.0 */
+/** @docs-private @deprecated @breaking-change 8.0.0 */
 export function SCROLL_DISPATCHER_PROVIDER_FACTORY(
     parentDispatcher: ScrollDispatcher, ngZone: NgZone, platform: Platform) {
   return parentDispatcher || new ScrollDispatcher(ngZone, platform);
 }
 
-/** @docs-private @deprecated @breaking-change 7.0.0 */
+/** @docs-private @deprecated @breaking-change 8.0.0 */
 export const SCROLL_DISPATCHER_PROVIDER = {
   // If there is already a ScrollDispatcher available, use that. Otherwise, provide a new one.
   provide: ScrollDispatcher,

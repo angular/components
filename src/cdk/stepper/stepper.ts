@@ -9,7 +9,7 @@
 import {FocusableOption, FocusKeyManager} from '@angular/cdk/a11y';
 import {Direction, Directionality} from '@angular/cdk/bidi';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
-import {END, ENTER, HOME, SPACE} from '@angular/cdk/keycodes';
+import {END, ENTER, HOME, SPACE, hasModifierKey} from '@angular/cdk/keycodes';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
@@ -38,6 +38,7 @@ import {AbstractControl} from '@angular/forms';
 import {CdkStepLabel} from './step-label';
 import {Observable, Subject, of as obaservableOf} from 'rxjs';
 import {startWith, takeUntil} from 'rxjs/operators';
+import {CdkStepHeader} from './step-header';
 
 /** Used to generate unique ID for each stepper component. */
 let nextId = 0;
@@ -242,8 +243,12 @@ export class CdkStepper implements AfterViewInit, OnDestroy {
   /** The list of step components that the stepper is holding. */
   @ContentChildren(CdkStep) _steps: QueryList<CdkStep>;
 
-  /** The list of step headers of the steps in the stepper. */
-  _stepHeader: QueryList<FocusableOption>;
+  /**
+   * The list of step headers of the steps in the stepper.
+   * @deprecated Type to be changed to `QueryList<CdkStepHeader>`.
+   * @breaking-change 8.0.0
+   */
+  @ContentChildren(CdkStepHeader) _stepHeader: QueryList<FocusableOption>;
 
   /** Whether the validity of previous steps should be checked or not. */
   @Input()
@@ -275,7 +280,7 @@ export class CdkStepper implements AfterViewInit, OnDestroy {
   /** The step that is selected. */
   @Input()
   get selected(): CdkStep {
-    // @breaking-change 7.0.0 Change return type to `CdkStep | undefined`.
+    // @breaking-change 8.0.0 Change return type to `CdkStep | undefined`.
     return this._steps ? this._steps.toArray()[this.selectedIndex] : undefined!;
   }
   set selected(step: CdkStep) {
@@ -302,7 +307,10 @@ export class CdkStepper implements AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit() {
-    this._keyManager = new FocusKeyManager(this._stepHeader)
+    // Note that while the step headers are content children by default, any components that
+    // extend this one might have them as view chidren. We initialize the keyboard handling in
+    // AfterViewInit so we're guaranteed for both view and content children to be defined.
+    this._keyManager = new FocusKeyManager<FocusableOption>(this._stepHeader)
       .withWrap()
       .withVerticalOrientation(this._orientation === 'vertical');
 
@@ -434,19 +442,22 @@ export class CdkStepper implements AfterViewInit, OnDestroy {
   }
 
   _onKeydown(event: KeyboardEvent) {
+    const hasModifier = hasModifierKey(event);
     const keyCode = event.keyCode;
+    const manager = this._keyManager;
 
-    if (this._keyManager.activeItemIndex != null && (keyCode === SPACE || keyCode === ENTER)) {
-      this.selectedIndex = this._keyManager.activeItemIndex;
+    if (manager.activeItemIndex != null && !hasModifier &&
+        (keyCode === SPACE || keyCode === ENTER)) {
+      this.selectedIndex = manager.activeItemIndex;
       event.preventDefault();
     } else if (keyCode === HOME) {
-      this._keyManager.setFirstItemActive();
+      manager.setFirstItemActive();
       event.preventDefault();
     } else if (keyCode === END) {
-      this._keyManager.setLastItemActive();
+      manager.setLastItemActive();
       event.preventDefault();
     } else {
-      this._keyManager.onKeydown(event);
+      manager.onKeydown(event);
     }
   }
 

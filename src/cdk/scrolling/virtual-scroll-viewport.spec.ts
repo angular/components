@@ -611,6 +611,24 @@ describe('CdkVirtualScrollViewport', () => {
       finishInit(fixture);
       expect(zoneTest).toHaveBeenCalledWith(true);
     }));
+
+    it('should not throw when disposing of a view that will not fit in the cache', fakeAsync(() => {
+      finishInit(fixture);
+      testComponent.items = new Array(200).fill(0);
+      testComponent.templateCacheSize = 1; // Reduce the cache size to something we can easily hit.
+      fixture.detectChanges();
+      flush();
+
+      expect(() => {
+        for (let i = 0; i < 50; i++) {
+          viewport.scrollToIndex(i);
+          triggerScroll(viewport);
+          fixture.detectChanges();
+          flush();
+        }
+      }).not.toThrow();
+    }));
+
   });
 
   describe('with RTL direction', () => {
@@ -715,6 +733,20 @@ describe('CdkVirtualScrollViewport', () => {
       fixture.detectChanges();
 
       expect(viewport.elementRef.nativeElement.scrollWidth).toBe(10000);
+    }));
+  });
+
+  describe('with no VirtualScrollStrategy', () => {
+    beforeEach(() => {
+      TestBed.configureTestingModule({
+        imports: [ScrollingModule],
+        declarations: [VirtualScrollWithNoStrategy],
+      }).compileComponents();
+    });
+
+    it('should fail on construction', fakeAsync(() => {
+      expect(() => TestBed.createComponent(VirtualScrollWithNoStrategy)).toThrowError(
+          'Error: cdk-virtual-scroll-viewport requires the "itemSize" property to be set.');
     }));
   });
 });
@@ -847,4 +879,15 @@ class FixedSizeVirtualScrollWithRtlDirection {
   get viewportHeight() {
     return this.orientation == 'horizontal' ? this.viewportCrossSize : this.viewportSize;
   }
+}
+
+@Component({
+  template: `
+    <cdk-virtual-scroll-viewport>
+      <div *cdkVirtualFor="let item of items">{{item}}</div>
+    </cdk-virtual-scroll-viewport>
+  `
+})
+class VirtualScrollWithNoStrategy {
+  items = [];
 }

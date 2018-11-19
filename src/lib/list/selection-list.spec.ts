@@ -214,6 +214,7 @@ describe('MatSelectionList without forms', () => {
     it('should restore focus if active option is destroyed', () => {
       const manager = selectionList.componentInstance._keyManager;
 
+      spyOn(listOptions[2].componentInstance, 'focus').and.callThrough();
       listOptions[3].componentInstance._handleFocus();
 
       expect(manager.activeItemIndex).toBe(3);
@@ -222,7 +223,27 @@ describe('MatSelectionList without forms', () => {
       fixture.detectChanges();
 
       expect(manager.activeItemIndex).toBe(2);
+      expect(listOptions[2].componentInstance.focus).toHaveBeenCalled();
     });
+
+    it('should not attempt to focus the next option when the destroyed option was not focused',
+      () => {
+        const manager = selectionList.componentInstance._keyManager;
+
+        // Focus and blur the option to move the active item index.
+        listOptions[3].componentInstance._handleFocus();
+        listOptions[3].componentInstance._handleBlur();
+
+        spyOn(listOptions[2].componentInstance, 'focus').and.callThrough();
+
+        expect(manager.activeItemIndex).toBe(3);
+
+        fixture.componentInstance.showLastOption = false;
+        fixture.detectChanges();
+
+        expect(manager.activeItemIndex).toBe(2);
+        expect(listOptions[2].componentInstance.focus).not.toHaveBeenCalled();
+      });
 
     it('should focus previous item when press UP ARROW', () => {
       let testListItem = listOptions[2].nativeElement as HTMLElement;
@@ -431,6 +452,11 @@ describe('MatSelectionList without forms', () => {
 
       expect(item.selected).toBe(true);
     });
+
+    it('should set aria-multiselectable to true on the selection list element', () => {
+      expect(selectionList.nativeElement.getAttribute('aria-multiselectable')).toBe('true');
+    });
+
   });
 
   describe('with list option selected', () => {
@@ -784,7 +810,7 @@ describe('MatSelectionList with forms', () => {
 
       expect(fixture.componentInstance.selectedOptions).toEqual(['opt2', 'opt3']);
 
-      fixture.componentInstance.renderLastOption = false;
+      fixture.componentInstance.options.pop();
       fixture.detectChanges();
       tick();
 
@@ -824,6 +850,20 @@ describe('MatSelectionList with forms', () => {
       expect(fixture.componentInstance.modelChangeSpy).not.toHaveBeenCalled();
     });
 
+    it('should be able to programmatically set an array with duplicate values', fakeAsync(() => {
+      fixture.componentInstance.options = ['one', 'two', 'two', 'two', 'three'];
+      fixture.detectChanges();
+      tick();
+
+      listOptions = fixture.debugElement.queryAll(By.directive(MatListOption))
+          .map(optionDebugEl => optionDebugEl.componentInstance);
+
+      fixture.componentInstance.selectedOptions = ['one', 'two', 'two'];
+      fixture.detectChanges();
+      tick();
+
+      expect(listOptions.map(option => option.selected)).toEqual([true, true, true, false, false]);
+    }));
 
   });
 
@@ -956,7 +996,7 @@ describe('MatSelectionList with forms', () => {
       const fixture = TestBed.createComponent(SelectionListWithCustomComparator);
       const testComponent = fixture.componentInstance;
 
-      testComponent.compareWith = jasmine.createSpy('comparator', (o1, o2) => {
+      testComponent.compareWith = jasmine.createSpy('comparator', (o1: any, o2: any) => {
         return o1 && o2 && o1.id === o2.id;
       }).and.callThrough();
 
@@ -1071,15 +1111,13 @@ class SelectionListWithTabindexBinding {
 @Component({
   template: `
     <mat-selection-list [(ngModel)]="selectedOptions" (ngModelChange)="modelChangeSpy()">
-      <mat-list-option value="opt1">Option 1</mat-list-option>
-      <mat-list-option value="opt2">Option 2</mat-list-option>
-      <mat-list-option value="opt3" *ngIf="renderLastOption">Option 3</mat-list-option>
+      <mat-list-option *ngFor="let option of options" [value]="option">{{option}}</mat-list-option>
     </mat-selection-list>`
 })
 class SelectionListWithModel {
   modelChangeSpy = jasmine.createSpy('model change spy');
   selectedOptions: string[] = [];
-  renderLastOption = true;
+  options = ['opt1', 'opt2', 'opt3'];
 }
 
 @Component({

@@ -20,13 +20,9 @@ import {
   RIGHT_ARROW,
   SPACE,
   UP_ARROW,
+  hasModifierKey,
 } from '@angular/cdk/keycodes';
-import {
-  CdkConnectedOverlay,
-  Overlay,
-  RepositionScrollStrategy,
-  ScrollStrategy,
-} from '@angular/cdk/overlay';
+import {CdkConnectedOverlay, Overlay, ScrollStrategy} from '@angular/cdk/overlay';
 import {ViewportRuler} from '@angular/cdk/scrolling';
 import {
   AfterContentInit,
@@ -141,7 +137,7 @@ export const MAT_SELECT_SCROLL_STRATEGY =
 
 /** @docs-private */
 export function MAT_SELECT_SCROLL_STRATEGY_PROVIDER_FACTORY(overlay: Overlay):
-    () => RepositionScrollStrategy {
+    () => ScrollStrategy {
   return () => overlay.scrollStrategies.reposition();
 }
 
@@ -231,6 +227,8 @@ export class MatSelectTrigger {}
 export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, OnChanges,
     OnDestroy, OnInit, DoCheck, ControlValueAccessor, CanDisable, HasTabIndex,
     MatFormFieldControl<any>, CanUpdateErrorState, CanDisableRipple {
+  private _scrollStrategyFactory: () => ScrollStrategy;
+
   /** Whether or not the overlay panel is open. */
   private _panelOpen = false;
 
@@ -286,7 +284,7 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
   _panelDoneAnimatingStream = new Subject<string>();
 
   /** Strategy that will be used to handle scrolling while the select panel is open. */
-  _scrollStrategy = this._scrollStrategyFactory();
+  _scrollStrategy: ScrollStrategy;
 
   /**
    * The y-offset of the overlay panel in relation to the trigger's top start corner.
@@ -488,7 +486,7 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
     @Optional() private _parentFormField: MatFormField,
     @Self() @Optional() public ngControl: NgControl,
     @Attribute('tabindex') tabIndex: string,
-    @Inject(MAT_SELECT_SCROLL_STRATEGY) private _scrollStrategyFactory) {
+    @Inject(MAT_SELECT_SCROLL_STRATEGY) scrollStrategyFactory: any) {
     super(elementRef, _defaultErrorStateMatcher, _parentForm,
           _parentFormGroup, ngControl);
 
@@ -498,6 +496,8 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
       this.ngControl.valueAccessor = this;
     }
 
+    this._scrollStrategyFactory = scrollStrategyFactory;
+    this._scrollStrategy = this._scrollStrategyFactory();
     this.tabIndex = parseInt(tabIndex) || 0;
 
     // Force setter to be called in case id was not specified.
@@ -528,7 +528,7 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
   ngAfterContentInit() {
     this._initKeyManager();
 
-    this._selectionModel.onChange!.pipe(takeUntil(this._destroy)).subscribe(event => {
+    this._selectionModel.onChange.pipe(takeUntil(this._destroy)).subscribe(event => {
       event.added.forEach(option => option.select());
       event.removed.forEach(option => option.deselect());
     });
@@ -573,7 +573,7 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
     this._triggerRect = this.trigger.nativeElement.getBoundingClientRect();
     // Note: The computed font-size will be a string pixel value (e.g. "16px").
     // `parseInt` ignores the trailing 'px' and converts this to a number.
-    this._triggerFontSize = parseInt(getComputedStyle(this.trigger.nativeElement)['font-size']);
+    this._triggerFontSize = parseInt(getComputedStyle(this.trigger.nativeElement).fontSize || '0');
 
     this._panelOpen = true;
     this._keyManager.withHorizontalOrientation(null);
@@ -692,15 +692,21 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
   private _handleClosedKeydown(event: KeyboardEvent): void {
     const keyCode = event.keyCode;
     const isArrowKey = keyCode === DOWN_ARROW || keyCode === UP_ARROW ||
-        keyCode === LEFT_ARROW || keyCode === RIGHT_ARROW;
+                       keyCode === LEFT_ARROW || keyCode === RIGHT_ARROW;
     const isOpenKey = keyCode === ENTER || keyCode === SPACE;
+    const manager = this._keyManager;
 
     // Open the select on ALT + arrow key to match the native <select>
-    if (isOpenKey || ((this.multiple || event.altKey) && isArrowKey)) {
+    if ((isOpenKey && !hasModifierKey(event)) || ((this.multiple || event.altKey) && isArrowKey)) {
       event.preventDefault(); // prevents the page from scrolling down when pressing space
       this.open();
     } else if (!this.multiple) {
-      this._keyManager.onKeydown(event);
+      if (keyCode === HOME || keyCode === END) {
+        keyCode === HOME ? manager.setFirstItemActive() : manager.setLastItemActive();
+        event.preventDefault();
+      } else {
+        manager.onKeydown(event);
+      }
     }
   }
 
@@ -717,7 +723,8 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
       // Close the select on ALT + arrow key to match the native <select>
       event.preventDefault();
       this.close();
-    } else if ((keyCode === ENTER || keyCode === SPACE) && manager.activeItem) {
+    } else if ((keyCode === ENTER || keyCode === SPACE) && manager.activeItem &&
+      !hasModifierKey(event)) {
       event.preventDefault();
       manager.activeItem._selectViaInteraction();
     } else if (this._multiple && keyCode === A && event.ctrlKey) {
@@ -860,7 +867,8 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
     this._keyManager = new ActiveDescendantKeyManager<MatOption>(this.options)
       .withTypeAhead()
       .withVerticalOrientation()
-      .withHorizontalOrientation(this._isRtl() ? 'rtl' : 'ltr');
+      .withHorizontalOrientation(this._isRtl() ? 'rtl' : 'ltr')
+      .withAllowedModifierKeys(['shiftKey']);
 
     this._keyManager.tabOut.pipe(takeUntil(this._destroy)).subscribe(() => {
       // Restore focus to the trigger before closing. Ensures that the focus

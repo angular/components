@@ -1,5 +1,6 @@
 import {join} from 'path';
-import {readFileContent, resolveBazelDataFile, runTestCases} from './index.spec';
+import {readFileContent, runTestCases} from '@angular/cdk/schematics/testing';
+import {migrationCollection} from './index.spec';
 
 describe('v6 upgrade test cases', () => {
 
@@ -10,7 +11,7 @@ describe('v6 upgrade test cases', () => {
   const testCases = [
     'v6/attribute-selectors',
     'v6/class-names',
-    'v6/css-names',
+    'v6/css-selectors',
     'v6/element-selectors',
     'v6/input-names',
     'v6/output-names',
@@ -21,19 +22,19 @@ describe('v6 upgrade test cases', () => {
 
   beforeAll(async () => {
     const testCaseInputs = testCases.reduce((inputs, testCaseName) => {
-      inputs[testCaseName] = resolveBazelDataFile(`${testCaseName}_input.ts`);
+      inputs[testCaseName] = require.resolve(`./${testCaseName}_input.ts`);
       return inputs;
-    }, {});
+    }, {} as {[name: string]: string});
 
-    const {tempPath} = await runTestCases('migration-01', testCaseInputs);
+    const {tempPath} = await runTestCases('migration-v6', migrationCollection, testCaseInputs);
 
-    testCasesOutputPath = join(tempPath, 'projects/material/src/test-cases/');
+    testCasesOutputPath = join(tempPath, 'projects/cdk-testing/src/test-cases/');
   });
 
   // Iterates through every test case directory and generates a jasmine test block that will
   // verify that the update schematics properly updated the test input to the expected output.
   testCases.forEach(testCaseName => {
-    const expectedOutputPath = resolveBazelDataFile(`${testCaseName}_expected_output.ts`);
+    const expectedOutputPath = require.resolve(`./${testCaseName}_expected_output.ts`);
 
     it(`should apply update schematics to test case: ${testCaseName}`, () => {
       expect(readFileContent(join(testCasesOutputPath, `${testCaseName}.ts`)))

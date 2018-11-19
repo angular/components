@@ -147,7 +147,7 @@ export class MatTabHeader extends _MatTabHeaderMixinBase
   ngAfterContentChecked(): void {
     // If the number of tab labels have changed, check if scrolling should be enabled
     if (this._tabLabelCount != this._labelWrappers.length) {
-      this._updatePagination();
+      this.updatePagination();
       this._tabLabelCount = this._labelWrappers.length;
       this._changeDetectorRef.markForCheck();
     }
@@ -198,7 +198,7 @@ export class MatTabHeader extends _MatTabHeaderMixinBase
     const dirChange = this._dir ? this._dir.change : observableOf(null);
     const resize = this._viewportRuler.change(150);
     const realign = () => {
-      this._updatePagination();
+      this.updatePagination();
       this._alignInkBarToSelectedTab();
     };
 
@@ -238,7 +238,7 @@ export class MatTabHeader extends _MatTabHeaderMixinBase
    */
   _onContentChanges() {
     const zoneCallback = () => {
-      this._updatePagination();
+      this.updatePagination();
       this._alignInkBarToSelectedTab();
       this._changeDetectorRef.markForCheck();
     };
@@ -250,9 +250,13 @@ export class MatTabHeader extends _MatTabHeaderMixinBase
   }
 
   /**
-   * Updating the view whether pagination should be enabled or not
+   * Updates the view whether pagination should be enabled or not.
+   *
+   * WARNING: Calling this method can be very costly in terms of performance.  It should be called
+   * as infrequently as possible from outside of the Tabs component as it causes a reflow of the
+   * page.
    */
-  _updatePagination() {
+  updatePagination() {
     this._checkPaginationEnabled();
     this._checkScrollingControls();
     this._updateTabScrollPosition();
@@ -324,6 +328,11 @@ export class MatTabHeader extends _MatTabHeaderMixinBase
     // and ripples will exceed the boundaries of the visible tab bar.
     // See: https://github.com/angular/material2/issues/10276
     this._tabList.nativeElement.style.transform = `translateX(${translateX}px)`;
+
+    // Setting the `transform` on IE will change the scroll offset of the parent, causing the
+    // position to be thrown off in some cases. We have to reset it ourselves to ensure that
+    // it doesn't get thrown off.
+    this._tabListContainer.nativeElement.scrollLeft = 0;
   }
 
   /** Sets the distance in pixels that the tab header should be transformed in the X-axis. */

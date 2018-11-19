@@ -69,7 +69,7 @@ export const _MatInputMixinBase: CanUpdateErrorStateCtor & typeof MatInputBase =
   exportAs: 'matInput',
   host: {
     /**
-     * @breaking-change 7.0.0 remove .mat-form-field-autofill-control in favor of AutofillMonitor.
+     * @breaking-change 8.0.0 remove .mat-form-field-autofill-control in favor of AutofillMonitor.
      */
     'class': 'mat-input-element mat-form-field-autofill-control',
     '[class.mat-input-server]': '_isServer',
@@ -332,7 +332,7 @@ export class MatInput extends _MatInputMixinBase implements MatFormFieldControl<
 
   /** Does some manual dirty checking on the native input `value` property. */
   protected _dirtyCheckNativeValue() {
-    const newValue = this.value;
+    const newValue = this._elementRef.nativeElement.value;
 
     if (this._previousNativeValue !== newValue) {
       this._previousNativeValue = newValue;

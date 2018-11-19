@@ -10,7 +10,7 @@ import {Direction, Directionality} from '@angular/cdk/bidi';
 import {ComponentPortal, Portal, PortalOutlet, TemplatePortal} from '@angular/cdk/portal';
 import {ComponentRef, EmbeddedViewRef, NgZone} from '@angular/core';
 import {Location} from '@angular/common';
-import {Observable, Subject, merge, SubscriptionLike, Subscription} from 'rxjs';
+import {Observable, Subject, merge, SubscriptionLike, Subscription, Observer} from 'rxjs';
 import {take, takeUntil} from 'rxjs/operators';
 import {OverlayKeyboardDispatcher} from './keyboard/overlay-keyboard-dispatcher';
 import {OverlayConfig} from './overlay-config';
@@ -42,15 +42,16 @@ export class OverlayRef implements PortalOutlet, OverlayReference {
    */
   private _previousHostParent: HTMLElement;
 
-  private _keydownEventsObservable: Observable<KeyboardEvent> = Observable.create(observer => {
-    const subscription = this._keydownEvents.subscribe(observer);
-    this._keydownEventSubscriptions++;
+  private _keydownEventsObservable: Observable<KeyboardEvent> =
+      Observable.create((observer: Observer<KeyboardEvent>) => {
+        const subscription = this._keydownEvents.subscribe(observer);
+        this._keydownEventSubscriptions++;
 
-    return () => {
-      subscription.unsubscribe();
-      this._keydownEventSubscriptions--;
-    };
-  });
+        return () => {
+          subscription.unsubscribe();
+          this._keydownEventSubscriptions--;
+        };
+      });
 
   /** Stream of keydown events dispatched to this overlay. */
   _keydownEvents = new Subject<KeyboardEvent>();
@@ -187,10 +188,6 @@ export class OverlayRef implements PortalOutlet, OverlayReference {
 
     if (this._config.scrollStrategy) {
       this._config.scrollStrategy.disable();
-    }
-
-    if (this._config.panelClass) {
-      this._toggleClasses(this._pane, this._config.panelClass, false);
     }
 
     const detachmentResult = this._portalOutlet.detach();
@@ -398,43 +395,45 @@ export class OverlayRef implements PortalOutlet, OverlayReference {
   detachBackdrop(): void {
     let backdropToDetach = this._backdropElement;
 
-    if (backdropToDetach) {
-      let timeoutId: number;
-      let finishDetach = () => {
-        // It may not be attached to anything in certain cases (e.g. unit tests).
-        if (backdropToDetach && backdropToDetach.parentNode) {
-          backdropToDetach.parentNode.removeChild(backdropToDetach);
-        }
+    if (!backdropToDetach) {
+      return;
+    }
 
-        // It is possible that a new portal has been attached to this overlay since we started
-        // removing the backdrop. If that is the case, only clear the backdrop reference if it
-        // is still the same instance that we started to remove.
-        if (this._backdropElement == backdropToDetach) {
-          this._backdropElement = null;
-        }
-
-        clearTimeout(timeoutId);
-      };
-
-      backdropToDetach.classList.remove('cdk-overlay-backdrop-showing');
-
-      if (this._config.backdropClass) {
-        this._toggleClasses(backdropToDetach, this._config.backdropClass, false);
+    let timeoutId: number;
+    let finishDetach = () => {
+      // It may not be attached to anything in certain cases (e.g. unit tests).
+      if (backdropToDetach && backdropToDetach.parentNode) {
+        backdropToDetach.parentNode.removeChild(backdropToDetach);
       }
 
-      this._ngZone.runOutsideAngular(() => {
-        backdropToDetach!.addEventListener('transitionend', finishDetach);
-      });
+      // It is possible that a new portal has been attached to this overlay since we started
+      // removing the backdrop. If that is the case, only clear the backdrop reference if it
+      // is still the same instance that we started to remove.
+      if (this._backdropElement == backdropToDetach) {
+        this._backdropElement = null;
+      }
 
-      // If the backdrop doesn't have a transition, the `transitionend` event won't fire.
-      // In this case we make it unclickable and we try to remove it after a delay.
-      backdropToDetach.style.pointerEvents = 'none';
+      if (this._config.backdropClass) {
+        this._toggleClasses(backdropToDetach!, this._config.backdropClass, false);
+      }
 
-      // Run this outside the Angular zone because there's nothing that Angular cares about.
-      // If it were to run inside the Angular zone, every test that used Overlay would have to be
-      // either async or fakeAsync.
-      timeoutId = this._ngZone.runOutsideAngular(() => setTimeout(finishDetach, 500));
-    }
+      clearTimeout(timeoutId);
+    };
+
+    backdropToDetach.classList.remove('cdk-overlay-backdrop-showing');
+
+    this._ngZone.runOutsideAngular(() => {
+      backdropToDetach!.addEventListener('transitionend', finishDetach);
+    });
+
+    // If the backdrop doesn't have a transition, the `transitionend` event won't fire.
+    // In this case we make it unclickable and we try to remove it after a delay.
+    backdropToDetach.style.pointerEvents = 'none';
+
+    // Run this outside the Angular zone because there's nothing that Angular cares about.
+    // If it were to run inside the Angular zone, every test that used Overlay would have to be
+    // either async or fakeAsync.
+    timeoutId = this._ngZone.runOutsideAngular(() => setTimeout(finishDetach, 500));
   }
 
   /** Toggles a single CSS class or an array of classes on an element. */
@@ -463,6 +462,10 @@ export class OverlayRef implements PortalOutlet, OverlayReference {
           // Needs a couple of checks for the pane and host, because
           // they may have been removed by the time the zone stabilizes.
           if (!this._pane || !this._host || this._pane.children.length === 0) {
+            if (this._pane && this._config.panelClass) {
+              this._toggleClasses(this._pane, this._config.panelClass, false);
+            }
+
             if (this._host && this._host.parentElement) {
               this._previousHostParent = this._host.parentElement;
               this._previousHostParent.removeChild(this._host);

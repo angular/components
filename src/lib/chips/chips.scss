@@ -29,6 +29,9 @@ $mat-chip-remove-size: 18px;
   overflow: hidden;
   box-sizing: border-box;
   -webkit-tap-highlight-color: transparent;
+
+  // Required for the ripple to clip properly in Safari.
+  transform: translateZ(0);
 }
 
 .mat-standard-chip {
@@ -39,6 +42,11 @@ $mat-chip-remove-size: 18px;
   align-items: center;
   cursor: default;
   min-height: $mat-chip-min-height;
+
+  // Centering the content using flexbox won't work on IE, if we have
+  // a `min-height` without setting a `height`. This height won't do
+  // anything since it's less than the minimum set above.
+  height: 1px;
 
   .mat-chip-remove.mat-icon {
     width: $mat-chip-remove-size;
@@ -68,16 +76,23 @@ $mat-chip-remove-size: 18px;
     }
   }
 
-  &:active {
-    @include mat-elevation(3);
-  }
-
   @include cdk-high-contrast {
     outline: solid 1px;
 
     &:focus {
       // Use 2px here since the dotted outline is a little thinner.
       outline: dotted 2px;
+    }
+  }
+
+  &.mat-chip-disabled {
+    &::after {
+      opacity: 0;
+    }
+
+    .mat-chip-remove,
+    .mat-chip-trailing-icon {
+      cursor: default;
     }
   }
 

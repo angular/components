@@ -1,6 +1,6 @@
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 import {Component} from '@angular/core';
-import {MatCalendarBody, MatCalendarCell} from './calendar-body';
+import {MatCalendarBody, MatCalendarCell, MatCalendarCellCssClasses} from './calendar-body';
 import {By} from '@angular/platform-browser';
 
 
@@ -12,7 +12,6 @@ describe('MatCalendarBody', () => {
 
         // Test components.
         StandardCalendarBody,
-        CalendarBodyWithDisabledCells,
       ],
     });
 
@@ -99,39 +98,16 @@ describe('MatCalendarBody', () => {
       expect((cellEls[10] as HTMLElement).innerText.trim()).toBe('11');
       expect(cellEls[10].classList).toContain('mat-calendar-body-active');
     });
-  });
 
-  describe('calendar body with disabled cells', () => {
-    let fixture: ComponentFixture<CalendarBodyWithDisabledCells>;
-    let testComponent: CalendarBodyWithDisabledCells;
-    let calendarBodyNativeElement: Element;
-    let cellEls: HTMLElement[];
-
-    beforeEach(() => {
-      fixture = TestBed.createComponent(CalendarBodyWithDisabledCells);
-      fixture.detectChanges();
-
-      const calendarBodyDebugElement = fixture.debugElement.query(By.directive(MatCalendarBody));
-      calendarBodyNativeElement = calendarBodyDebugElement.nativeElement;
-      testComponent = fixture.componentInstance;
-      cellEls = Array.from(calendarBodyNativeElement.querySelectorAll('.mat-calendar-body-cell'));
+    it('should set a class on even dates', () => {
+      expect((cellEls[0] as HTMLElement).innerText.trim()).toBe('1');
+      expect((cellEls[1] as HTMLElement).innerText.trim()).toBe('2');
+      expect(cellEls[0].classList).not.toContain('even');
+      expect(cellEls[1].classList).toContain('even');
     });
 
-    it('should only allow selection of disabled cells when allowDisabledSelection is true', () => {
-      cellEls[0].click();
-      fixture.detectChanges();
-
-      expect(testComponent.selected).toBeFalsy();
-
-      testComponent.allowDisabledSelection = true;
-      fixture.detectChanges();
-
-      cellEls[0].click();
-      fixture.detectChanges();
-
-      expect(testComponent.selected).toBe(1);
-    });
   });
+
 });
 
 
@@ -149,7 +125,9 @@ describe('MatCalendarBody', () => {
 })
 class StandardCalendarBody {
   label = 'Jan 2017';
-  rows = [[1, 2, 3, 4, 5, 6, 7], [8, 9, 10, 11, 12, 13, 14]].map(r => r.map(createCell));
+  rows = [[1, 2, 3, 4, 5, 6, 7], [8, 9, 10, 11, 12, 13, 14]].map(row => {
+    return row.map(cell => createCell(cell, cell % 2 === 0 ? 'even' : undefined));
+  });
   todayValue = 3;
   selectedValue = 4;
   labelMinRequiredCells = 3;
@@ -160,25 +138,6 @@ class StandardCalendarBody {
   }
 }
 
-
-@Component({
-  template: `<table mat-calendar-body
-                    [rows]="rows"
-                    [allowDisabledSelection]="allowDisabledSelection"
-                    (selectedValueChange)="selected = $event">
-             </table>`
-})
-class CalendarBodyWithDisabledCells {
-  rows = [[1, 2, 3, 4]].map(r => r.map(d => {
-    let cell = createCell(d);
-    cell.enabled = d % 2 == 0;
-    return cell;
-  }));
-  allowDisabledSelection = false;
-  selected: number;
-}
-
-
-function createCell(value: number) {
-  return new MatCalendarCell(value, `${value}`, `${value}-label`, true);
+function createCell(value: number, cellClasses?: MatCalendarCellCssClasses) {
+  return new MatCalendarCell(value, `${value}`, `${value}-label`, true, cellClasses);
 }

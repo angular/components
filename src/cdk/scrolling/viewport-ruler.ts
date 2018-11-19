@@ -36,11 +36,15 @@ export class ViewportRuler implements OnDestroy {
   private _invalidateCache: Subscription;
 
   constructor(private _platform: Platform, ngZone: NgZone) {
-    this._change = _platform.isBrowser ? ngZone.runOutsideAngular(() => {
-      return merge<Event>(fromEvent(window, 'resize'), fromEvent(window, 'orientationchange'));
-    }) : observableOf();
+    ngZone.runOutsideAngular(() => {
+      this._change = _platform.isBrowser ?
+          merge<Event>(fromEvent(window, 'resize'), fromEvent(window, 'orientationchange')) :
+          observableOf();
 
-    this._invalidateCache = this.change().subscribe(() => this._updateViewportSize());
+      // Note that we need to do the subscription inside `runOutsideAngular`
+      // since subscribing is what causes the event listener to be added.
+      this._invalidateCache = this.change().subscribe(() => this._updateViewportSize());
+    });
   }
 
   ngOnDestroy() {
@@ -101,13 +105,14 @@ export class ViewportRuler implements OnDestroy {
     // `scrollTop` and `scrollLeft` is inconsistent. However, using the bounding rect of
     // `document.documentElement` works consistently, where the `top` and `left` values will
     // equal negative the scroll position.
-    const documentRect = document.documentElement.getBoundingClientRect();
+    const documentElement = document.documentElement!;
+    const documentRect = documentElement.getBoundingClientRect();
 
     const top = -documentRect.top || document.body.scrollTop || window.scrollY ||
-                 document.documentElement.scrollTop || 0;
+                 documentElement.scrollTop || 0;
 
     const left = -documentRect.left || document.body.scrollLeft || window.scrollX ||
-                  document.documentElement.scrollLeft || 0;
+                  documentElement.scrollLeft || 0;
 
     return {top, left};
   }
@@ -129,14 +134,14 @@ export class ViewportRuler implements OnDestroy {
 }
 
 
-/** @docs-private @deprecated @breaking-change 7.0.0 */
+/** @docs-private @deprecated @breaking-change 8.0.0 */
 export function VIEWPORT_RULER_PROVIDER_FACTORY(parentRuler: ViewportRuler,
                                                 platform: Platform,
                                                 ngZone: NgZone) {
   return parentRuler || new ViewportRuler(platform, ngZone);
 }
 
-/** @docs-private @deprecated @breaking-change 7.0.0 */
+/** @docs-private @deprecated @breaking-change 8.0.0 */
 export const VIEWPORT_RULER_PROVIDER = {
   // If there is already a ViewportRuler available, use that. Otherwise, provide a new one.
   provide: ViewportRuler,
