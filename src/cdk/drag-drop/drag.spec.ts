@@ -578,6 +578,13 @@ describe('CdkDrag', () => {
       expect(dragElement.style.transform).toBe('translate3d(100px, 100px, 0px)');
     }));
 
+    it('should throw if attached to an ng-container', fakeAsync(() => {
+      expect(() => {
+        createComponent(DraggableOnNgContainer).detectChanges();
+        flush();
+      }).toThrowError(/^cdkDrag must be attached to an element node/);
+    }));
+
   });
 
   describe('draggable with a handle', () => {
@@ -2764,6 +2771,15 @@ class NestedDropListGroups {
   @ViewChild('listOne') listOne: CdkDropList;
   @ViewChild('listTwo') listTwo: CdkDropList;
 }
+
+
+@Component({
+  template: `
+    <ng-container cdkDrag></ng-container>
+  `
+})
+class DraggableOnNgContainer {}
+
 
 
 /**
