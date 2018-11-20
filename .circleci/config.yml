@@ -116,7 +116,7 @@ jobs:
     - *restore_cache
     - *yarn_install
 
-    - run: ./scripts/run-local-browser-tests.sh
+    - run: ./scripts/circleci/run-local-browser-tests.sh
 
   # ----------------------------------------------------------------------------
   # Job that runs the unit tests on Browserstack. The browsers that will be used
