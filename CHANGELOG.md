@@ -112,6 +112,7 @@
 * **tabs:** add the ability to customize the animation duration ([#13505](https://github.com/angular/material2/issues/13505)) ([0cd7536](https://github.com/angular/material2/commit/0cd7536)), closes [#13428](https://github.com/angular/material2/issues/13428)
 * **tabs:** make the updatePagination method public ([#13935](https://github.com/angular/material2/issues/13935)) ([1e4ee0c](https://github.com/angular/material2/commit/1e4ee0c))
 
+
 ### Performance Improvements
 
 * **focus-monitor:** mark event listeners as passive ([#13532](https://github.com/angular/material2/issues/13532)) ([bfc00a0](https://github.com/angular/material2/commit/bfc00a0))
