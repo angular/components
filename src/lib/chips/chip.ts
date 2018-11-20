@@ -180,7 +180,7 @@ export class MatChip extends _MatChipMixinBase implements FocusableOption, OnDes
 
   /**
    * Whether or not the chip is selectable. When a chip is not selectable,
-   * changes to it's selected state are always ignored. By default a chip is
+   * changes to its selected state are always ignored. By default a chip is
    * selectable, and it becomes non-selectable if it's parent chip list is
    * not selectable.
    */
