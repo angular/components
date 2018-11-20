@@ -136,6 +136,7 @@
 .mat-button, .mat-flat-button, .mat-stroked-button, .mat-raised-button, .mat-icon-button,
 .mat-fab, .mat-mini-fab {
   .mat-button-wrapper > * {
+    pointer-events: none;
     vertical-align: middle;
   }
 }
