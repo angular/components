@@ -2243,8 +2243,6 @@ class StandaloneDraggable {
   template: `
     <svg><g
       cdkDrag
-      (cdkDragStarted)="startedSpy($event)"
-      (cdkDragEnded)="endedSpy($event)"
       #dragElement>
       <circle fill="red" r="50" cx="50" cy="50"/>
     </g></svg>
@@ -2252,9 +2250,6 @@ class StandaloneDraggable {
 })
 class StandaloneDraggableSvg {
   @ViewChild('dragElement') dragElement: ElementRef<SVGElement>;
-  @ViewChild(CdkDrag) dragInstance: CdkDrag;
-  startedSpy = jasmine.createSpy('started spy');
-  endedSpy = jasmine.createSpy('ended spy');
 }
 
 @Component({
