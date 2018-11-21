@@ -66,14 +66,14 @@ describe('CdkDrag', () => {
         expect(dragElement.style.transform).toBe('translate3d(50px, 100px, 0px)');
       }));
 
-      it('should drag an svg element freely to a particular position', fakeAsync(() => {
+      it('should drag an SVG element freely to a particular position', fakeAsync(() => {
         const fixture = createComponent(StandaloneDraggableSvg);
         fixture.detectChanges();
         const dragElement = fixture.componentInstance.dragElement.nativeElement;
 
         expect(dragElement.getAttribute('transform')).toBeFalsy();
         dragElementViaMouse(fixture, dragElement, 50, 100);
-        expect(dragElement.getAttribute('transform')).toBe('matrix(1, 0, 0, 1, 50, 100)');
+        expect(dragElement.getAttribute('transform')).toBe('translate(50, 100)');
       }));
 
       it('should drag an element freely to a particular position when the page is scrolled',
