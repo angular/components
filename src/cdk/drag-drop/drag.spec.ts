@@ -73,7 +73,7 @@ describe('CdkDrag', () => {
 
         expect(dragElement.getAttribute('transform')).toBeFalsy();
         dragElementViaMouse(fixture, dragElement, 50, 100);
-        expect(dragElement.getAttribute('transform')).toBe('translate(50, 100)');
+        expect(dragElement.getAttribute('transform')).toBe('translate(50 100)');
       }));
 
       it('should drag an element freely to a particular position when the page is scrolled',

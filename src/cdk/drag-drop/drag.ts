@@ -494,7 +494,7 @@ export class CdkDrag<T = any> implements AfterViewInit, OnDestroy {
 
       // Apply transform as attribute if dragging and svg element to work for IE
       if (this._rootElement instanceof SVGElement) {
-        const appliedTransform = `translate(${activeTransform.x}, ${activeTransform.y})`;
+        const appliedTransform = `translate(${activeTransform.x} ${activeTransform.y})`;
         this._rootElement.setAttribute('transform', appliedTransform);
       }
     }
