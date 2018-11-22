@@ -113,7 +113,7 @@
     "karma-firefox-launcher": "^1.0.1",
     "karma-jasmine": "^2.0.1",
     "karma-parallel": "^0.3.0",
-    "karma-sauce-launcher": "^1.2.0",
+    "karma-sauce-launcher": "github:DevVersion/karma-sauce-launcher#7ee1f9c45955f65ec4a7b54cb2e06162dd99310d",
     "karma-sourcemap-loader": "^0.3.7",
     "magic-string": "^0.22.4",
     "marked": "^0.5.1",
