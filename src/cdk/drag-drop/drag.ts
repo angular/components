@@ -74,15 +74,15 @@ export interface CdkDragConfig {
   dropStrategy: CdkDropStrategy;
 }
 
-  /** 
-  * Enum to decide what to do when the user drop the item
-  * LastKnownContainer - Drop the item on the Last container the item was dragged hover,
-  *  no matter where the item is dropped.
-  * ExactLocation - Tries to drop the item in the current location,
-  *  if the current location 
-  * is not inside a valid drop zoom 
-  * the item will return to the initial container.
-  */
+  /**
+   * Enum to decide what to do when the user drop the item
+   * LastKnownContainer - Drop the item on the Last container the item was dragged hover,
+   *  no matter where the item is dropped.
+   * ExactLocation - Tries to drop the item in the current location,
+   *  if the current location
+   * is not inside a valid drop zoom
+   * the item will return to the initial container.
+   */
 export enum CdkDropStrategy {
   LastKnownContainer,
   ExactLocation
@@ -97,7 +97,8 @@ export const CDK_DRAG_CONFIG = new InjectionToken<CdkDragConfig>('CDK_DRAG_CONFI
 
 /** @docs-private */
 export function CDK_DRAG_CONFIG_FACTORY(): CdkDragConfig {
-  return {dragStartThreshold: 5, pointerDirectionChangeThreshold: 5, dropStrategy: CdkDropStrategy.LastKnownContainer};
+  return {dragStartThreshold: 5, pointerDirectionChangeThreshold: 5,
+     dropStrategy: CdkDropStrategy.LastKnownContainer};
 }
 
 /** Options that can be used to bind a passive event listener. */
