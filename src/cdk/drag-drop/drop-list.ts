@@ -392,7 +392,7 @@ export class CdkDropList<T = any> implements OnInit, OnDestroy {
     return isInsideClientRect(this._positionCache.self, x, y);
   }
 
- /**
+  /**
    * Checks whether an item that is currently over the container,
    * @param item Item that is being checked.
    * @param x Position of the item along the X axis.

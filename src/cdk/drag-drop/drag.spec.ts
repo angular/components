@@ -35,7 +35,7 @@ describe('CdkDrag', () => {
   function createComponent<T>(componentType: Type<T>, providers: Provider[] = [], dragDistance = 0):
     ComponentFixture<T> {
       // If none of the providers is CDK_DRAG_CONFIG, add the default testing config
-      if(providers.every((provider: any) => 
+      if (providers.every((provider: any) =>
       provider.provide && provider.provide !== CDK_DRAG_CONFIG)) {
         providers.push({
           provide: CDK_DRAG_CONFIG,
@@ -1830,7 +1830,7 @@ describe('CdkDrag', () => {
 
       expect(fixture.componentInstance.droppedSpy).not.toHaveBeenCalled();
     }));
-    
+
     it('should transfer the DOM element from one drop zone to another', fakeAsync(() => {
       const fixture = createComponent(ConnectedDropZones);
       fixture.detectChanges();
@@ -2190,7 +2190,6 @@ describe('CdkDrag', () => {
       const groups = fixture.componentInstance.groupedDragItems;
       const dropZones = fixture.componentInstance.dropInstances.map(d => d.element.nativeElement);
       const item = groups[0][1];
-      const initialRect = item.element.nativeElement.getBoundingClientRect();
       const targetRect = groups[1][2].element.nativeElement.getBoundingClientRect();
 
       startDraggingViaMouse(fixture, item.element.nativeElement);
