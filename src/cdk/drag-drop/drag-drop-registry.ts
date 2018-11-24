@@ -12,8 +12,11 @@ import {normalizePassiveListenerOptions} from '@angular/cdk/platform';
 import {Subject} from 'rxjs';
 import {toggleNativeDragInteractions} from './drag-styling';
 
-/** Event options that can be used to bind an active event. */
-const activeEventOptions = normalizePassiveListenerOptions({passive: false});
+/** Event options that can be used to bind an active, capturing event. */
+const activeCapturingEventOptions = normalizePassiveListenerOptions({
+  passive: false,
+  capture: true
+});
 
 /** Handler for a pointer event callback. */
 type PointerEventHandler = (event: TouchEvent | MouseEvent) => void;
@@ -40,9 +43,9 @@ export class DragDropRegistry<I, C extends {id: string}> implements OnDestroy {
   private _activeDragInstances = new Set<I>();
 
   /** Keeps track of the event listeners that we've bound to the `document`. */
-  private _globalListeners = new Map<'touchmove' | 'mousemove' | 'touchend' | 'mouseup', {
+  private _globalListeners = new Map<'touchmove' | 'mousemove' | 'touchend' | 'mouseup' | 'wheel', {
     handler: PointerEventHandler,
-    options?: any
+    options?: AddEventListenerOptions | boolean
   }>();
 
   /**
@@ -78,12 +81,15 @@ export class DragDropRegistry<I, C extends {id: string}> implements OnDestroy {
   registerDragItem(drag: I) {
     this._dragInstances.add(drag);
 
+    // The `touchmove` event gets bound once, ahead of time, because WebKit
+    // won't preventDefault on a dynamically-added `touchmove` listener.
+    // See https://bugs.webkit.org/show_bug.cgi?id=184250.
     if (this._dragInstances.size === 1) {
       this._ngZone.runOutsideAngular(() => {
-        // The event handler has to be explicitly active, because
-        // newer browsers make it passive by default.
+        // The event handler has to be explicitly active,
+        // because newer browsers make it passive by default.
         this._document.addEventListener('touchmove', this._preventScrollListener,
-            activeEventOptions);
+            activeCapturingEventOptions);
       });
     }
   }
@@ -100,7 +106,7 @@ export class DragDropRegistry<I, C extends {id: string}> implements OnDestroy {
 
     if (this._dragInstances.size === 0) {
       this._document.removeEventListener('touchmove', this._preventScrollListener,
-          activeEventOptions as any);
+          activeCapturingEventOptions);
     }
   }
 
@@ -125,13 +131,29 @@ export class DragDropRegistry<I, C extends {id: string}> implements OnDestroy {
       // passive ones for `mousemove` and `touchmove`. The events need to be active, because we
       // use `preventDefault` to prevent the page from scrolling while the user is dragging.
       this._globalListeners
-        .set(moveEvent, {handler: e => this.pointerMove.next(e), options: activeEventOptions})
-        .set(upEvent, {handler: e => this.pointerUp.next(e)})
-        .forEach((config, name) => {
-          this._ngZone.runOutsideAngular(() => {
-            this._document.addEventListener(name, config.handler, config.options);
-          });
+        .set(moveEvent, {
+          handler: e => this.pointerMove.next(e),
+          options: activeCapturingEventOptions
+        })
+        .set(upEvent, {
+          handler: e => this.pointerUp.next(e),
+          options: true
         });
+
+      // TODO(crisbeto): prevent mouse wheel scrolling while
+      // dragging until we've set up proper scroll handling.
+      if (!isTouchEvent) {
+        this._globalListeners.set('wheel', {
+          handler: this._preventScrollListener,
+          options: activeCapturingEventOptions
+        });
+      }
+
+      this._ngZone.runOutsideAngular(() => {
+        this._globalListeners.forEach((config, name) => {
+          this._document.addEventListener(name, config.handler, config.options);
+        });
+      });
     }
   }
 
@@ -164,11 +186,9 @@ export class DragDropRegistry<I, C extends {id: string}> implements OnDestroy {
   }
 
   /**
-   * Listener used to prevent `touchmove` events while the element is being dragged.
-   * This gets bound once, ahead of time, because WebKit won't preventDefault on a
-   * dynamically-added `touchmove` listener. See https://bugs.webkit.org/show_bug.cgi?id=184250.
+   * Listener used to prevent `touchmove` and `wheel` events while the element is being dragged.
    */
-  private _preventScrollListener = (event: TouchEvent) => {
+  private _preventScrollListener = (event: Event) => {
     if (this._activeDragInstances.size) {
       event.preventDefault();
     }

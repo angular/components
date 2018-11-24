@@ -60,6 +60,34 @@ describe('LiveAnnouncer', () => {
       expect(ariaLiveElement.getAttribute('aria-live')).toBe('polite');
     }));
 
+    it('should be able to clear out the aria-live element manually', fakeAsync(() => {
+      announcer.announce('Hey Google');
+      tick(100);
+      expect(ariaLiveElement.textContent).toBe('Hey Google');
+
+      announcer.clear();
+      expect(ariaLiveElement.textContent).toBeFalsy();
+    }));
+
+    it('should be able to clear out the aria-live element by setting a duration', fakeAsync(() => {
+      announcer.announce('Hey Google', 2000);
+      tick(100);
+      expect(ariaLiveElement.textContent).toBe('Hey Google');
+
+      tick(2000);
+      expect(ariaLiveElement.textContent).toBeFalsy();
+    }));
+
+    it('should clear the duration of previous messages when announcing a new one', fakeAsync(() => {
+      announcer.announce('Hey Google', 2000);
+      tick(100);
+      expect(ariaLiveElement.textContent).toBe('Hey Google');
+
+      announcer.announce('Hello there');
+      tick(2500);
+      expect(ariaLiveElement.textContent).toBe('Hello there');
+    }));
+
     it('should remove the aria-live element from the DOM on destroy', fakeAsync(() => {
       announcer.announce('Hey Google');
 
@@ -106,6 +134,30 @@ describe('LiveAnnouncer', () => {
 
       expect(document.body.querySelectorAll('.cdk-live-announcer-element').length)
           .toBe(1, 'Expected only one live announcer element in the DOM.');
+    }));
+
+    it('should clear any previous timers when a new one is started', fakeAsync(() => {
+      expect(ariaLiveElement.textContent).toBeFalsy();
+
+      announcer.announce('One');
+      tick(50);
+
+      announcer.announce('Two');
+      tick(75);
+
+      expect(ariaLiveElement.textContent).toBeFalsy();
+
+      tick(25);
+
+      expect(ariaLiveElement.textContent).toBe('Two');
+    }));
+
+    it('should clear pending timeouts on destroy', fakeAsync(() => {
+      announcer.announce('Hey Google');
+      announcer.ngOnDestroy();
+
+      // Since we're testing whether the timeouts were flushed, we don't need any
+      // assertions here. `fakeAsync` will fail the test if a timer was left over.
     }));
 
   });
@@ -207,6 +259,22 @@ describe('CdkAriaLive', () => {
 
     expect(announcer.announce).toHaveBeenCalledWith('Newest content', 'assertive');
   }));
+
+  it('should not announce the same text multiple times', fakeAsync(() => {
+    fixture.componentInstance.content = 'Content';
+    fixture.detectChanges();
+    invokeMutationCallbacks();
+    flush();
+
+    expect(announcer.announce).toHaveBeenCalledTimes(1);
+
+    fixture.detectChanges();
+    invokeMutationCallbacks();
+    flush();
+
+    expect(announcer.announce).toHaveBeenCalledTimes(1);
+  }));
+
 });
 
 

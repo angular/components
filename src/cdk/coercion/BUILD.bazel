@@ -6,14 +6,13 @@ ts_library(
   name = "coercion",
   srcs = glob(["**/*.ts"], exclude=["**/*.spec.ts"]),
   module_name = "@angular/cdk/coercion",
-  deps = ["@npm//tslib"],
 )
 
 ts_library(
   name = "coercion_test_sources",
   srcs = glob(["**/*.spec.ts"]),
   deps = [
-    "@npm//@types/jasmine",
+    "@matdeps//@types/jasmine",
     ":coercion"
   ],
   testonly = 1,

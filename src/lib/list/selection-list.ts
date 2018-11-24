@@ -267,7 +267,7 @@ export class MatListOption extends _MatListOptionMixinBase
   host: {
     'role': 'listbox',
     '[tabIndex]': 'tabIndex',
-    'class': 'mat-selection-list',
+    'class': 'mat-selection-list mat-list-base',
     '(focus)': 'focus()',
     '(blur)': '_onTouched()',
     '(keydown)': '_keydown($event)',
@@ -345,7 +345,8 @@ export class MatSelectionList extends _MatSelectionListMixinBase implements Focu
       .withTypeAhead()
       // Allow disabled items to be focusable. For accessibility reasons, there must be a way for
       // screenreader users, that allows reading the different options of the list.
-      .skipPredicate(() => false);
+      .skipPredicate(() => false)
+      .withAllowedModifierKeys(['shiftKey']);
 
     if (this._tempValues) {
       this._setOptionsFromValues(this._tempValues);

@@ -9,7 +9,7 @@
 import {FocusableOption, FocusKeyManager} from '@angular/cdk/a11y';
 import {Direction, Directionality} from '@angular/cdk/bidi';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
-import {END, ENTER, HOME, SPACE} from '@angular/cdk/keycodes';
+import {END, ENTER, HOME, SPACE, hasModifierKey} from '@angular/cdk/keycodes';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
@@ -442,19 +442,22 @@ export class CdkStepper implements AfterViewInit, OnDestroy {
   }
 
   _onKeydown(event: KeyboardEvent) {
+    const hasModifier = hasModifierKey(event);
     const keyCode = event.keyCode;
+    const manager = this._keyManager;
 
-    if (this._keyManager.activeItemIndex != null && (keyCode === SPACE || keyCode === ENTER)) {
-      this.selectedIndex = this._keyManager.activeItemIndex;
+    if (manager.activeItemIndex != null && !hasModifier &&
+        (keyCode === SPACE || keyCode === ENTER)) {
+      this.selectedIndex = manager.activeItemIndex;
       event.preventDefault();
     } else if (keyCode === HOME) {
-      this._keyManager.setFirstItemActive();
+      manager.setFirstItemActive();
       event.preventDefault();
     } else if (keyCode === END) {
-      this._keyManager.setLastItemActive();
+      manager.setLastItemActive();
       event.preventDefault();
     } else {
-      this._keyManager.onKeydown(event);
+      manager.onKeydown(event);
     }
   }
 

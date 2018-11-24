@@ -5,28 +5,28 @@ load("@build_bazel_rules_nodejs//:defs.bzl", _jasmine_node_test = "jasmine_node_
 load("@build_bazel_rules_typescript//:defs.bzl", _ts_library = "ts_library",
   _ts_web_test_suite = "ts_web_test_suite")
 
-DEFAULT_TSCONFIG_BUILD = "//src:bazel-tsconfig-build.json"
-DEFAULT_TSCONFIG_TEST = "//src:bazel-tsconfig-test.json"
-
-# By default, the Angular bazel rules assume that the `@angular/bazel` package has been
-# installed through NPM. Therefore it expects ngc-wrapped binaries to be available in the "@npm"
-# workspace. Since we build from source, the Bazel rules are not part of the NPM workspace.
-_SOURCE_NG_MODULE_COMPILER = "@angular//packages/bazel/src/ngc-wrapped"
-_SOURCE_NG_MODULE_XI18N = "@angular//packages/bazel/src/ngc-wrapped:xi18n"
+_DEFAULT_TSCONFIG_BUILD = "//src:bazel-tsconfig-build.json"
+_DEFAULT_TSCONFIG_TEST = "//src:bazel-tsconfig-test.json"
+_DEFAULT_TS_TYPINGS = "@matdeps//typescript:typescript__typings"
 
 def _getDefaultTsConfig(testonly):
   if testonly:
-    return DEFAULT_TSCONFIG_TEST
+    return _DEFAULT_TSCONFIG_TEST
   else:
-    return DEFAULT_TSCONFIG_BUILD
+    return _DEFAULT_TSCONFIG_BUILD
 
-def ts_library(tsconfig = None, testonly = False, **kwargs):
+def ts_library(tsconfig = None, deps = [], testonly = False, **kwargs):
+  # Add tslib because we use import helpers for all public packages.
+  local_deps = ["@matdeps//tslib"] + deps
+
   if not tsconfig:
     tsconfig = _getDefaultTsConfig(testonly)
 
   _ts_library(
     tsconfig = tsconfig,
     testonly = testonly,
+    deps = local_deps,
+    node_modules = _DEFAULT_TS_TYPINGS,
     **kwargs
   )
 
@@ -35,9 +35,8 @@ def ng_module(deps = [], tsconfig = None, testonly = False, **kwargs):
     tsconfig = _getDefaultTsConfig(testonly)
 
   local_deps = [
-    # Since we use the TypeScript import helpers (tslib) for each TypeScript configuration,
-    # we declare TSLib as default dependency
-    "@npm//tslib",
+    # Add tslib because we use import helpers for all public packages.
+    "@matdeps//tslib",
 
     # Depend on the module typings for each `ng_module`. Since all components within the project
     # need to use `module.id` when creating components, this is always a dependency.
@@ -48,16 +47,15 @@ def ng_module(deps = [], tsconfig = None, testonly = False, **kwargs):
     deps = local_deps,
     tsconfig = tsconfig,
     testonly = testonly,
-    compiler = _SOURCE_NG_MODULE_COMPILER,
-    ng_xi18n = _SOURCE_NG_MODULE_XI18N,
+    node_modules = _DEFAULT_TS_TYPINGS,
     **kwargs
   )
 
 def jasmine_node_test(deps = [], **kwargs):
   local_deps = [
     # Workaround for: https://github.com/bazelbuild/rules_nodejs/issues/344
-    "@npm//jasmine",
-    "@npm//source-map-support",
+    "@matdeps//jasmine",
+    "@matdeps//source-map-support",
   ] + deps
 
   _jasmine_node_test(
@@ -71,7 +69,7 @@ def ng_test_library(deps = [], tsconfig = None, **kwargs):
     # all Angular component unit tests use the `TestBed` and `Component` exports.
     "@angular//packages/core",
     "@angular//packages/core/testing",
-    "@npm//@types/jasmine",
+    "@matdeps//@types/jasmine",
   ] + deps;
 
   ts_library(
@@ -80,7 +78,14 @@ def ng_test_library(deps = [], tsconfig = None, **kwargs):
     **kwargs
   )
 
-def ng_web_test_suite(deps = [], srcs = [], static_css = [], bootstrap = [], **kwargs):
+def ts_web_test_suite(srcs = [], **kwargs):
+  _ts_web_test_suite(
+    # Required for running the compiled ng modules that use TypeScript import helpers.
+    srcs = ["@matdeps//node_modules/tslib:tslib.js"] + srcs,
+    **kwargs
+  )
+
+def ng_web_test_suite(deps = [], static_css = [], bootstrap = [], **kwargs):
   # Always include a prebuilt theme in the test suite because otherwise tests, which depend on CSS
   # that is needed for measuring, will unexpectedly fail. Also always adding a prebuilt theme
   # reduces the amount of setup that is needed to create a test suite Bazel target. Note that the
@@ -114,15 +119,13 @@ def ng_web_test_suite(deps = [], srcs = [], static_css = [], bootstrap = [], **k
       """ % css_label
     )
 
-  _ts_web_test_suite(
-    # Required for running the compiled ng modules that use TypeScript import helpers.
-    srcs = ["@npm//node_modules/tslib:tslib.js"] + srcs,
+  ts_web_test_suite(
     # Depend on our custom test initialization script. This needs to be the first dependency.
     deps = ["//test:angular_test_init"] + deps,
     bootstrap = [
-      "@npm//node_modules/zone.js:dist/zone-testing-bundle.js",
-      "@npm//node_modules/reflect-metadata:Reflect.js",
-      "@npm//node_modules/hammerjs:hammer.js",
+      "@matdeps//node_modules/zone.js:dist/zone-testing-bundle.js",
+      "@matdeps//node_modules/reflect-metadata:Reflect.js",
+      "@matdeps//node_modules/hammerjs:hammer.js",
     ] + bootstrap,
     **kwargs
   )

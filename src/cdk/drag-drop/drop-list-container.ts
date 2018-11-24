@@ -26,6 +26,9 @@ export interface CdkDropListContainer<T = any> {
   /** Locks the position of the draggable elements inside the container along the specified axis. */
   lockAxis: 'x' | 'y';
 
+  /** Whether starting a dragging sequence from this container is disabled. */
+  disabled: boolean;
+
   /** Starts dragging an item. */
   start(): void;
 
@@ -60,8 +63,8 @@ export interface CdkDropListContainer<T = any> {
   _draggables: QueryList<CdkDrag>;
   _getSiblingContainerFromPosition(item: CdkDrag, x: number, y: number):
       CdkDropListContainer | null;
-  _canReturnItem(item: CdkDrag, x: number, y: number): boolean;
   _isOverContainer(x: number, y: number): boolean;
+  _canReturnItem(x: number, y: number): boolean;
 }
 
 /**
