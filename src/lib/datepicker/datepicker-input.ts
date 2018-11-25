@@ -35,6 +35,7 @@ import {MAT_INPUT_VALUE_ACCESSOR} from '@angular/material/input';
 import {Subscription} from 'rxjs';
 import {MatDatepicker} from './datepicker';
 import {createMissingDateImplError} from './datepicker-errors';
+import {isMoment} from 'moment';
 
 /** @docs-private */
 export const MAT_DATEPICKER_VALUE_ACCESSOR: any = {
@@ -125,7 +126,11 @@ export class MatDatepickerInput<D> implements ControlValueAccessor, OnDestroy, V
   @Input()
   get value(): D | null { return this._value; }
   set value(value: D | null) {
-    value = this._dateAdapter.deserialize(value);
+    if (isMoment(value)) {
+      value = this._dateAdapter.deserialize(value.toDate());
+    } else {
+      value = this._dateAdapter.deserialize(value);
+    }
     this._lastValueValid = !value || this._dateAdapter.isValid(value);
     value = this._getValidDateOrNull(value);
     const oldDate = this.value;

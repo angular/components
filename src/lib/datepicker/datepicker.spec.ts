@@ -32,6 +32,7 @@ import {MatDatepickerToggle} from './datepicker-toggle';
 import {MAT_DATEPICKER_SCROLL_STRATEGY, MatDatepickerIntl, MatDatepickerModule} from './index';
 import {Directionality} from '@angular/cdk/bidi';
 import {BrowserDynamicTestingModule} from '@angular/platform-browser-dynamic/testing';
+import * as moment from 'moment';
 
 describe('MatDatepicker', () => {
   const SUPPORTS_INTL = typeof Intl != 'undefined';
@@ -531,6 +532,27 @@ describe('MatDatepicker', () => {
         expect(testComponent.datepickerInput.value).toEqual(toSelect);
         expect(testComponent.datepicker._selected).toEqual(toSelect);
       }));
+    });
+
+    describe('datepicker with formControl bindings', () => {
+      let fixture: ComponentFixture<FormControlBoundDatepicker>;
+      let testComponent: FormControlBoundDatepicker;
+
+      beforeEach(fakeAsync(() => {
+        fixture = createComponent(FormControlBoundDatepicker, [MatNativeDateModule]);
+        fixture.detectChanges();
+
+        testComponent = fixture.componentInstance;
+      }));
+
+      afterEach(fakeAsync(() => {
+        testComponent.datepicker.close();
+        fixture.detectChanges();
+      }));
+      it('should set the value to be the equivalent date to the formControl bindings' +
+        'moment object', () => {
+        expect(testComponent.datepickerInput.value).toEqual(moment([2017, 0, 1]).toDate());
+      });
     });
 
     describe('datepicker with no inputs', () => {
@@ -1672,6 +1694,21 @@ class StandardDatepicker {
   touch = false;
   disabled = false;
   date: Date | null = new Date(2020, JAN, 1);
+  @ViewChild('d') datepicker: MatDatepicker<Date>;
+  @ViewChild(MatDatepickerInput) datepickerInput: MatDatepickerInput<Date>;
+}
+
+@Component({
+  template: `
+    <input [matDatepicker]="d" [formControl]="dateFormControl">
+    <mat-datepicker #d [touchUi]="touch" [disabled]="disabled" [opened]="opened"></mat-datepicker>
+  `,
+})
+class FormControlBoundDatepicker {
+  opened = false;
+  touch = false;
+  disabled = false;
+  dateFormControl: FormControl = new FormControl(moment([2017, 0, 1]));
   @ViewChild('d') datepicker: MatDatepicker<Date>;
   @ViewChild(MatDatepickerInput) datepickerInput: MatDatepickerInput<Date>;
 }

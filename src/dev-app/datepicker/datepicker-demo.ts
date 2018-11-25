@@ -6,6 +6,12 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import * as _moment from 'moment';
+// tslint:disable-next-line:no-duplicate-imports
+import {default as _rollupMoment} from 'moment';
+
+const moment = _rollupMoment || _moment;
+
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -45,7 +51,7 @@ export class DatepickerDemo {
   lastDateChange: Date | null;
   color: ThemePalette;
 
-  dateCtrl = new FormControl();
+  dateCtrl = new FormControl(moment([2017, 0, 1]));
 
   dateFilter =
       (date: Date) => !(date.getFullYear() % 2) && (date.getMonth() % 2) && !(date.getDate() % 2)
