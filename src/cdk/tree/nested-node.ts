@@ -61,7 +61,8 @@ export class CdkNestedTreeNode<T> extends CdkTreeNode<T> implements AfterContent
   protected _children: T[];
 
   /** The children node placeholder. */
-  @ContentChildren(CdkTreeNodeOutlet) nodeOutlet: QueryList<CdkTreeNodeOutlet>;
+  @ContentChildren(
+    CdkTreeNodeOutlet, {descendants: true}) nodeOutlet: QueryList<CdkTreeNodeOutlet>;
 
   constructor(protected _elementRef: ElementRef<HTMLElement>,
               protected _tree: CdkTree<T>,

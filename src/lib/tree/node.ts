@@ -98,7 +98,9 @@ export class MatNestedTreeNode<T> extends _MatNestedTreeNodeMixinBase<T>
 
   @Input('matNestedTreeNode') node: T;
 
-  @ContentChildren(MatTreeNodeOutlet) nodeOutlet: QueryList<MatTreeNodeOutlet>;
+  /** The children node placeholder. */
+  @ContentChildren(
+    MatTreeNodeOutlet, {descendants: true}) nodeOutlet: QueryList<MatTreeNodeOutlet>;
 
   constructor(protected _elementRef: ElementRef<HTMLElement>,
               protected _tree: CdkTree<T>,
