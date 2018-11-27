@@ -186,9 +186,8 @@ export class MatCalendarBody<D = unknown> {
   }
 
   _isToday(item: MatCalendarCell<D>): boolean {
-    const today = this._dateAdapter.today();
-    return this._dateAdapter.compareDate(item.range.start, today) <= 0 &&
-        this._dateAdapter.compareDate(item.range.end, today) >= 0;
+    return this._dateAdapter.compareDate(item.range.start, this._today) <= 0 &&
+        this._dateAdapter.compareDate(item.range.end, this._today) >= 0;
   }
 
   /** Focuses the active cell after the microtask queue is empty. */
