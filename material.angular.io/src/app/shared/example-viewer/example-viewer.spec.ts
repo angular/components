@@ -97,8 +97,8 @@ describe('ExampleViewer', () => {
 
     it('should be able to render additional files', () => {
       EXAMPLE_COMPONENTS['additional-files'] = {
+        ...EXAMPLE_COMPONENTS[exampleKey],
         additionalFiles: ['some-additional-file.html'],
-        ...EXAMPLE_COMPONENTS[exampleKey]
       };
 
       component.example = 'additional-files';
