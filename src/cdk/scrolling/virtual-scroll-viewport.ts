@@ -46,10 +46,14 @@ function rangesEqual(r1: ListRange, r2: ListRange): boolean {
   host: {
     'class': 'cdk-virtual-scroll-viewport',
     '[class.cdk-virtual-scroll-orientation-horizontal]': 'orientation === "horizontal"',
-    '[class.cdk-virtual-scroll-orientation-vertical]': 'orientation === "vertical"',
+    '[class.cdk-virtual-scroll-orientation-vertical]': 'orientation !== "horizontal"',
   },
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [{
+    provide: CdkScrollable,
+    useExisting: CdkVirtualScrollViewport,
+  }]
 })
 export class CdkVirtualScrollViewport extends CdkScrollable implements OnInit, OnDestroy {
   /** Emits when the viewport is detached from a CdkVirtualForOf. */

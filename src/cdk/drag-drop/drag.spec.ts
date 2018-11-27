@@ -26,6 +26,7 @@ import {CdkDragDrop} from './drag-events';
 import {moveItemInArray} from './drag-utils';
 import {CdkDropList} from './drop-list';
 import {CdkDragHandle} from './drag-handle';
+import {CdkDropListGroup} from './drop-list-group';
 
 const ITEM_HEIGHT = 25;
 const ITEM_WIDTH = 75;
@@ -64,6 +65,16 @@ describe('CdkDrag', () => {
         expect(dragElement.style.transform).toBeFalsy();
         dragElementViaMouse(fixture, dragElement, 50, 100);
         expect(dragElement.style.transform).toBe('translate3d(50px, 100px, 0px)');
+      }));
+
+      it('should drag an SVG element freely to a particular position', fakeAsync(() => {
+        const fixture = createComponent(StandaloneDraggableSvg);
+        fixture.detectChanges();
+        const dragElement = fixture.componentInstance.dragElement.nativeElement;
+
+        expect(dragElement.getAttribute('transform')).toBeFalsy();
+        dragElementViaMouse(fixture, dragElement, 50, 100);
+        expect(dragElement.getAttribute('transform')).toBe('translate(50 100)');
       }));
 
       it('should drag an element freely to a particular position when the page is scrolled',
@@ -2208,6 +2219,14 @@ describe('CdkDrag', () => {
         expect(fixture.componentInstance.droppedSpy).not.toHaveBeenCalled();
     }));
 
+    it('should not add child drop lists to the same group as their parents', fakeAsync(() => {
+      const fixture = createComponent(NestedDropListGroups);
+      const component = fixture.componentInstance;
+      fixture.detectChanges();
+
+      expect(Array.from(component.group._items)).toEqual([component.listOne, component.listTwo]);
+    }));
+
   });
 
 });
@@ -2227,6 +2246,19 @@ class StandaloneDraggable {
   @ViewChild(CdkDrag) dragInstance: CdkDrag;
   startedSpy = jasmine.createSpy('started spy');
   endedSpy = jasmine.createSpy('ended spy');
+}
+
+@Component({
+  template: `
+    <svg><g
+      cdkDrag
+      #dragElement>
+      <circle fill="red" r="50" cx="50" cy="50"/>
+    </g></svg>
+  `
+})
+class StandaloneDraggableSvg {
+  @ViewChild('dragElement') dragElement: ElementRef<SVGElement>;
 }
 
 @Component({
@@ -2579,6 +2611,25 @@ class ConnectedDropZonesWithSingleItems {
 
   droppedSpy = jasmine.createSpy('dropped spy');
 }
+
+@Component({
+  template: `
+    <div cdkDropListGroup #group="cdkDropListGroup">
+      <div cdkDropList #listOne="cdkDropList">
+        <div cdkDropList #listThree="cdkDropList"></div>
+        <div cdkDropList #listFour="cdkDropList"></div>
+      </div>
+
+      <div cdkDropList #listTwo="cdkDropList"></div>
+    </div>
+  `
+})
+class NestedDropListGroups {
+  @ViewChild('group') group: CdkDropListGroup<CdkDropList>;
+  @ViewChild('listOne') listOne: CdkDropList;
+  @ViewChild('listTwo') listTwo: CdkDropList;
+}
+
 
 /**
  * Component that passes through whatever content is projected into it.
