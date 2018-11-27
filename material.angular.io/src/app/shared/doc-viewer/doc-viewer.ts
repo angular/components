@@ -1,5 +1,6 @@
 import {ComponentPortal, DomPortalHost} from '@angular/cdk/portal';
 import {HttpClient, HttpErrorResponse} from '@angular/common/http';
+import {DomSanitizer} from '@angular/platform-browser';
 import {
   ApplicationRef,
   Component,
@@ -12,6 +13,7 @@ import {
   OnDestroy,
   Output,
   ViewContainerRef,
+  SecurityContext,
 } from '@angular/core';
 import {Subscription} from 'rxjs';
 import {take} from 'rxjs/operators';
@@ -43,7 +45,8 @@ export class DocViewer implements OnDestroy {
               private _http: HttpClient,
               private _injector: Injector,
               private _viewContainerRef: ViewContainerRef,
-              private _ngZone: NgZone) {
+              private _ngZone: NgZone,
+              private _domSanitizer: DomSanitizer) {
   }
 
   /** Fetch a document by URL. */
@@ -60,11 +63,15 @@ export class DocViewer implements OnDestroy {
   }
 
   /**
-   * Updates the displayed document
-   * @param document The raw document content to show.
+   * Updates the displayed document.
+   * @param rawDocument The raw document content to show.
    */
-  private updateDocument(document: string) {
-    this._elementRef.nativeElement.innerHTML = document;
+  private updateDocument(rawDocument: string) {
+    // Replaces all hash base links with the current path
+    const correctedDocument = this._domSanitizer.sanitize(
+      SecurityContext.HTML,
+      rawDocument.replace(/(<a href="#)+/g, `<a href="${window.location.href}#`));
+    this._elementRef.nativeElement.innerHTML = correctedDocument;
     this.textContent = this._elementRef.nativeElement.textContent;
     this._loadComponents('material-docs-example', ExampleViewer);
     this._loadComponents('header-link', HeaderLink);

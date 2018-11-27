@@ -44,6 +44,20 @@ describe('DocViewer', () => {
     expect(docViewer.componentInstance.textContent).toBe('my docs page');
   });
 
+
+  it('should correct hash based links', () => {
+    let fixture = TestBed.createComponent(DocViewerTestComponent);
+    fixture.componentRef.instance.documentUrl = `http://material.angular.io/doc-with-links.html`;
+    fixture.detectChanges();
+
+    const url = fixture.componentInstance.documentUrl;
+    http.expectOne(url).flush(FAKE_DOCS[url]);
+
+    let docViewer = fixture.debugElement.query(By.directive(DocViewer));
+    // Our test runner runs at the page /context.html, so it will be the prepended value.
+    expect(docViewer.nativeElement.innerHTML).toContain(`/context.html#test"`);
+  });
+
   it('should show error message when doc not found', () => {
     spyOn(console, 'log');
 
@@ -84,4 +98,5 @@ const FAKE_DOCS = {
   'http://material.angular.io/doc-with-example.html': `
       <div>Check out this example:</div>
       <div material-docs-example="some-example"></div>`,
+  'http://material.angular.io/doc-with-links.html': `<a href="#test">Test link</a>`,
 };
