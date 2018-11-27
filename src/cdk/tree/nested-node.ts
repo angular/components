@@ -28,10 +28,10 @@ import {getTreeControlFunctionsMissingError} from './tree-errors';
  * be added in the `cdkTreeNodeOutlet` in tree node template.
  * For example:
  *   ```html
- *   <cdk-mested-tree-node>
+ *   <cdk-nested-tree-node>
  *     {{node.name}}
  *     <ng-template cdkTreeNodeOutlet></ng-template>
- *   </cdk-tree-node>
+ *   </cdk-nested-tree-node>
  *   ```
  * The children of node will be automatically added to `cdkTreeNodeOutlet`, the result dom will be
  * like this:
@@ -40,7 +40,7 @@ import {getTreeControlFunctionsMissingError} from './tree-errors';
  *     {{node.name}}
  *      <cdk-nested-tree-node>{{child1.name}}</cdk-tree-node>
  *      <cdk-nested-tree-node>{{child2.name}}</cdk-tree-node>
- *   </cdk-tree-node>
+ *   </cdk-nested-tree-node>
  *   ```
  */
 @Directive({
