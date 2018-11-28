@@ -23,7 +23,7 @@ export class DocsMarkdownRenderer extends Renderer {
    * want to create a header-link for each H3 and H4 heading. This allows users to jump to
    * specific parts of the docs.
    */
-  heading(label: string, level: number, raw: string) {
+  heading(label: string, level: number, _raw: string) {
     if (level === 3 || level === 4) {
       const headingId = label.toLowerCase().replace(whitespaceRegex, '-');
 
