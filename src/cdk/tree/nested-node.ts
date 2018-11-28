@@ -38,8 +38,8 @@ import {getTreeControlFunctionsMissingError} from './tree-errors';
  *   ```html
  *   <cdk-nested-tree-node>
  *     {{node.name}}
- *      <cdk-nested-tree-node>{{child1.name}}</cdk-tree-node>
- *      <cdk-nested-tree-node>{{child2.name}}</cdk-tree-node>
+ *      <cdk-nested-tree-node>{{child1.name}}</cdk-nested-tree-node>
+ *      <cdk-nested-tree-node>{{child2.name}}</cdk-nested-tree-node>
  *   </cdk-nested-tree-node>
  *   ```
  */
