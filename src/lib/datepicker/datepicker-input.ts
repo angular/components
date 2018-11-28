@@ -111,11 +111,11 @@ export class MatDatepickerInput<D> implements ControlValueAccessor, OnDestroy, V
     this._datepickerSubscription.unsubscribe();
     this._selectionModel = this._datepicker._dateSelection;
 
-    this._formatValue(this._selectionModel.getFirstSelectedDate());
+    this._formatValue(this._selectionModel.getSelection());
 
     this._datepickerSubscription = this._datepicker._dateSelection.selectionChange.subscribe(() => {
-      this._formatValue(this._selectionModel.getFirstSelectedDate());
-      this._cvaOnChange(this._selectionModel.getFirstSelectedDate());
+      this._formatValue(this._selectionModel.getSelection());
+      this._cvaOnChange(this._selectionModel.getSelection());
       this._onTouched();
       this.dateInput.emit(new MatDatepickerInputEvent(this, this._elementRef.nativeElement));
       this.dateChange.emit(new MatDatepickerInputEvent(this, this._elementRef.nativeElement));
@@ -150,7 +150,7 @@ export class MatDatepickerInput<D> implements ControlValueAccessor, OnDestroy, V
 
     this._lastValueValid = this._selectionModel.isValid();
 
-    this._formatValue(this._selectionModel.getFirstSelectedDate());
+    this._formatValue(this._selectionModel.getSelection());
 
     if (!this._dateAdapter.sameDate(value, oldDate)) {
       this._valueChange.emit(value);
@@ -341,7 +341,7 @@ export class MatDatepickerInput<D> implements ControlValueAccessor, OnDestroy, V
 
   _onInput(value: string) {
     let date = this._dateAdapter.parse(value, this._dateFormats.parse.dateInput);
-    const current = this._selectionModel.getFirstSelectedDate();
+    const current = this._selectionModel.getSelection();
     date = this._getValidDateOrNull(date);
 
     if (!this._dateAdapter.sameDate(current, date)) {
