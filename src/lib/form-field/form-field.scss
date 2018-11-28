@@ -45,6 +45,9 @@ $mat-form-field-default-infix-width: 180px !default;
   white-space: nowrap;
   flex: none;
   position: relative;
+
+  // Allow for projected block-level elements not stand next to each other, rather than stack.
+  display: flex;
 }
 
 .mat-form-field-infix {
