@@ -4,7 +4,7 @@
   label package is "guides/". The expected path would be "test/my-text.md".
 """
 def _relative_to_label(label, short_path):
-  # TODO(devversion): extract into generic utilty under tools/
+  # TODO(devversion): extract into generic utility under tools/
   return short_path[len(label.package) + 1:]
 
 """
