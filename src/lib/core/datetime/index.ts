@@ -17,11 +17,7 @@ export * from './date-adapter';
 export * from './date-formats';
 export * from './native-date-adapter';
 export * from './native-date-formats';
-<<<<<<< HEAD
-export * from './date-selection';
-=======
 export * from './date-selection-model';
->>>>>>> 5b70058a4a290493df9f10814c21bc913f28fb0f
 
 
 @NgModule({

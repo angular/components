@@ -3,7 +3,6 @@ import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {MatNativeDateModule} from '@angular/material/core';
 import {MatCalendarBody, MatCalendarCell} from './calendar-body';
-import { constructor } from 'chalk';
 
 
 describe('MatCalendarBody', () => {
@@ -23,7 +22,7 @@ describe('MatCalendarBody', () => {
     TestBed.compileComponents();
   }));
 
-  fdescribe('standard calendar body', () => {
+  describe('standard calendar body', () => {
     let fixture: ComponentFixture<StandardCalendarBody>;
     let testComponent: StandardCalendarBody;
     let calendarBodyNativeElement: Element;

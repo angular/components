@@ -15,6 +15,8 @@ import {
   NgZone,
   Output,
   ViewEncapsulation,
+  ChangeDetectorRef,
+  OnDestroy,
 } from '@angular/core';
 import {
   DateAdapter,
@@ -23,6 +25,7 @@ import {
   MatSingleDateSelectionModel
 } from '@angular/material/core';
 import {take} from 'rxjs/operators';
+import {Subscription} from 'rxjs';
 
 /**
  * An internal class that represents the data corresponding to a single calendar cell.
@@ -62,7 +65,7 @@ export class MatCalendarCell<D = unknown> {
   providers: [MAT_SINGLE_DATE_SELECTION_MODEL_PROVIDER],
 })
 // @breaking-change 9.0.0 remove generic default type
-export class MatCalendarBody<D = unknown> {
+export class MatCalendarBody<D = unknown> implements OnDestroy {
   /** The label for the table. (e.g. "Jan 2017"). */
   @Input() label: string;
 
@@ -136,9 +139,11 @@ export class MatCalendarBody<D = unknown> {
   @Output() readonly selectedValueChange: EventEmitter<number> = new EventEmitter<number>();
 
   private _today: D;
+  private selectionSubscription: Subscription;
 
   constructor(private _elementRef: ElementRef<HTMLElement>,
               private _ngZone: NgZone,
+              private _cdr: ChangeDetectorRef,
               private _dateAdapter: DateAdapter<D>,
               readonly _selectionModel: MatDateSelectionModel<D>) {
     this._today = this._dateAdapter.today();
@@ -148,6 +153,13 @@ export class MatCalendarBody<D = unknown> {
         this._dateAdapter.getYear(this._today),
         this._dateAdapter.getMonth(this._today),
         this._dateAdapter.getDate(this._today));
+
+    this.selectionSubscription =
+        this._selectionModel.selectionChange.subscribe(() => this._cdr.markForCheck());
+  }
+
+  ngOnDestroy() {
+    this.selectionSubscription.unsubscribe();
   }
 
   _cellClicked(cell: MatCalendarCell<D>): void {

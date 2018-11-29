@@ -44,8 +44,6 @@ import {
   MatSingleDateSelectionModel,
   mixinColor,
   ThemePalette,
-  MatDateSelection,
-  MatSingleDateSelection,
 } from '@angular/material/core';
 import {MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {merge, Subject, Subscription} from 'rxjs';
@@ -280,7 +278,7 @@ export class MatDatepicker<D> implements OnDestroy, CanColor {
   readonly _disabledChange = new Subject<boolean>();
 
   /** Emits new selected date when selected date changes. */
-  readonly _selectedChanged = new Subject<MatDateSelection<D>>();
+  readonly _selectedChanged = new Subject<D>();
 
   constructor(private _dialog: MatDialog,
               private _overlay: Overlay,
