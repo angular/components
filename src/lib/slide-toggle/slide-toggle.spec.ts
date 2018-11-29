@@ -16,7 +16,8 @@ import {By, HAMMER_GESTURE_CONFIG} from '@angular/platform-browser';
 import {MatSlideToggle, MatSlideToggleChange, MatSlideToggleModule} from './index';
 import {MAT_SLIDE_TOGGLE_DEFAULT_OPTIONS} from './slide-toggle-config';
 
-describe('MatSlideToggle without forms', () => {
+// Just testing because I don't want to waste 10mins waiting for Saucelabs to exit.
+fdescribe('MatSlideToggle without forms', () => {
   let gestureConfig: TestGestureConfig;
   let mutationObserverCallbacks: Function[];
   let flushMutationObserver = () => mutationObserverCallbacks.forEach(callback => callback());

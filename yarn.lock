@@ -990,6 +990,11 @@
   resolved "https://registry.yarnpkg.com/@types/selenium-webdriver/-/selenium-webdriver-3.0.12.tgz#6affe5aed1ba379175075a889adbe2bc3aa62159"
   integrity sha512-hYn+eoOehVUIdMwp5h34ZsGAO1ydja10GDup4BwyoFCdcH5MQ35nQq+AInSaBMEMopD5hEooFCyKo2Pajbe1ag==
 
+"@types/selenium-webdriver@^3.0.13":
+  version "3.0.13"
+  resolved "https://registry.yarnpkg.com/@types/selenium-webdriver/-/selenium-webdriver-3.0.13.tgz#deb799c641773c5e367abafc92d1e733d62cddd7"
+  integrity sha512-rI0LGoMiZGUM+tjDakQpwZOvcmQoubiJ7hxqrYU12VRxBuGGvOThxrBOU/QmJKlKg1WG6FMzuvcEyLffvVSsmw==
+
 "@types/serve-static@*":
   version "1.13.2"
   resolved "https://registry.yarnpkg.com/@types/serve-static/-/serve-static-1.13.2.tgz#f5ac4d7a6420a99a6a45af4719f4dcd8cd907a48"
@@ -6795,7 +6800,7 @@ karma-requirejs@1.1.0:
   resolved "https://registry.yarnpkg.com/karma-requirejs/-/karma-requirejs-1.1.0.tgz#fddae2cb87d7ebc16fb0222893564d7fee578798"
   integrity sha1-/driy4fX68FvsCIok1ZNf+5Xh5g=
 
-karma-sauce-launcher@1.2.0, karma-sauce-launcher@^1.2.0:
+karma-sauce-launcher@1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/karma-sauce-launcher/-/karma-sauce-launcher-1.2.0.tgz#6f2558ddef3cf56879fa27540c8ae9f8bfd16bca"
   integrity sha512-lEhtGRGS+3Yw6JSx/vJY9iQyHNtTjcojrSwNzqNUOaDceKDu9dPZqA/kr69bUO9G2T6GKbu8AZgXqy94qo31Jg==
@@ -6804,6 +6809,13 @@ karma-sauce-launcher@1.2.0, karma-sauce-launcher@^1.2.0:
     sauce-connect-launcher "^1.2.2"
     saucelabs "^1.4.0"
     wd "^1.4.0"
+
+"karma-sauce-launcher@https://github.com/DevVersion/karma-sauce-launcher-rewrite#f0fd02c87c903a92a105eb6f19bb5399fbbbb631":
+  version "0.0.1"
+  resolved "https://github.com/DevVersion/karma-sauce-launcher-rewrite#f0fd02c87c903a92a105eb6f19bb5399fbbbb631"
+  dependencies:
+    "@types/selenium-webdriver" "^3.0.13"
+    selenium-webdriver "^4.0.0-alpha.1"
 
 karma-sourcemap-loader@0.3.7, karma-sourcemap-loader@^0.3.7:
   version "0.3.7"
@@ -10261,6 +10273,16 @@ selenium-webdriver@3.6.0, "selenium-webdriver@>= 2.53.1", selenium-webdriver@^3.
   version "3.6.0"
   resolved "https://registry.yarnpkg.com/selenium-webdriver/-/selenium-webdriver-3.6.0.tgz#2ba87a1662c020b8988c981ae62cb2a01298eafc"
   integrity sha512-WH7Aldse+2P5bbFBO4Gle/nuQOdVwpHMTL6raL3uuBj/vPG07k6uzt3aiahu352ONBr5xXh0hDlM3LhtXPOC4Q==
+  dependencies:
+    jszip "^3.1.3"
+    rimraf "^2.5.4"
+    tmp "0.0.30"
+    xml2js "^0.4.17"
+
+selenium-webdriver@^4.0.0-alpha.1:
+  version "4.0.0-alpha.1"
+  resolved "https://registry.yarnpkg.com/selenium-webdriver/-/selenium-webdriver-4.0.0-alpha.1.tgz#cc93415e21d2dc1dfd85dfc5f6b55f3ac53933b1"
+  integrity sha512-z88rdjHAv3jmTZ7KSGUkTvo4rGzcDGMq0oXWHNIDK96Gs31JKVdu9+FMtT4KBrVoibg8dUicJDok6GnqqttO5Q==
   dependencies:
     jszip "^3.1.3"
     rimraf "^2.5.4"
