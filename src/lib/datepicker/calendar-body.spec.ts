@@ -1,7 +1,7 @@
 import {Component} from '@angular/core';
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import {async, ComponentFixture, TestBed, inject} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
-import {MatNativeDateModule} from '@angular/material/core';
+import {MatNativeDateModule, DateAdapter} from '@angular/material/core';
 import {MatCalendarBody, MatCalendarCell} from './calendar-body';
 
 
@@ -36,7 +36,10 @@ describe('MatCalendarBody', () => {
       cellEls = Array.from(calendarBodyNativeElement.querySelectorAll('.mat-calendar-body-cell'));
     }
 
-    beforeEach(() => {
+    beforeEach(inject([DateAdapter], (adapter: DateAdapter<Date>) => {
+      const fakeToday = new Date(2017, 0, 3);
+      spyOn(adapter, 'today').and.callFake(() => fakeToday);
+
       fixture = TestBed.createComponent(StandardCalendarBody);
       fixture.detectChanges();
 
@@ -45,18 +48,18 @@ describe('MatCalendarBody', () => {
       testComponent = fixture.componentInstance;
 
       refreshElementLists();
-    });
+    }));
 
     it('creates body', () => {
-      expect(rowEls.length).toBe(6);
+      expect(rowEls.length).toBe(3);
       expect(labelEls.length).toBe(1);
-      expect(cellEls.length).toBe(daysInCurrentMonth());
+      expect(cellEls.length).toBe(14);
     });
 
     it('highlights today', () => {
       const todayCell = calendarBodyNativeElement.querySelector('.mat-calendar-body-today')!;
       expect(todayCell).not.toBeNull();
-      expect(todayCell.innerHTML.trim()).toBe(`${new Date().getDate()}`);
+      expect(todayCell.innerHTML.trim()).toBe('3');
     });
 
     it('highlights selected', () => {
@@ -121,70 +124,22 @@ describe('MatCalendarBody', () => {
 })
 class StandardCalendarBody {
   label = 'Jan 2017';
-  rows: MatCalendarCell<Date>[][];
+  rows = [[1, 2, 3, 4, 5, 6, 7], [8, 9, 10, 11, 12, 13, 14]].map(r => r.map(createCell));
   todayValue = 3;
   selectedValue = 4;
   labelMinRequiredCells = 3;
   numCols = 7;
 
-  constructor() {
-    const daysInMonth = daysInCurrentMonth();
-    const rows = this.createStackedNumbers(daysInMonth);
-
-    // We create rows based on the current month. This ensures that today is included.
-    this.rows = rows.map(r => r.map(this.createCell));
-  }
-
   onSelect(value: number) {
     this.selectedValue = value;
   }
-
-  /**
-   * Creates an array of arrays. Each inner array holds up to 7 elements. Enough inner arrays
-   * are created until all numbers from 1 to the given number are covered.
-   */
-  private createStackedNumbers(days: number): number[][] {
-    const array: number[][] = [];
-    let day = 1;
-    let buffer: number[] = [];
-
-    while (day <= days) {
-      buffer.push(day);
-
-      if (buffer.length === 7) {
-        array.push(buffer);
-        buffer = [];
-      }
-
-      day++;
-    }
-
-    if (buffer.length > 0) {
-      array.push(buffer);
-    }
-
-    return array;
-  }
-
-  private createCell(value: number) {
-    const day = new Date();
-    day.setDate(value);
-    return new MatCalendarCell(
-        {start: day, end: new Date(day.getTime())},
-        `${value}`,
-        `${value}-label`,
-        true
-    );
-  }
 }
 
-/**
- * Returns the amount of days in the current month based on Date.
- */
-function daysInCurrentMonth() {
-  const today = new Date();
-  today.setMonth(today.getMonth() + 1);
-  today.setDate(0);
-  return today.getDate();
+function createCell(value: number) {
+  return new MatCalendarCell(
+    {start: new Date(2017, 0, value), end: new Date(2017, 0, value)},
+    `${value}`,
+    `${value}-label`,
+    true
+  );
 }
-
