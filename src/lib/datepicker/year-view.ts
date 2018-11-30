@@ -153,6 +153,7 @@ export class MatYearView<D> implements AfterContentInit, OnDestroy {
   }
 
   ngAfterContentInit() {
+    this._matCalendarBody._updateToday();
     this._init();
   }
 

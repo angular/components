@@ -185,6 +185,7 @@ export class MatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDes
   _calendarHeaderPortal: Portal<any>;
 
   private _intlChanges: Subscription;
+  private _selectionSubscription: Subscription;
 
   /**
    * Used for scheduling that focus should be moved to the active cell on the next tick.
@@ -236,7 +237,11 @@ export class MatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDes
   /** A function used to filter which dates are selectable. */
   @Input() dateFilter: (date: D) => boolean;
 
-  /** Emits when the currently selected date changes. */
+  /**
+   * Emits when the currently selected date changes.
+   * @deprecated Listen to selectionModel valueChange.
+   * @breaking-change: 9.0.0
+   */
   @Output() readonly selectedChange = new EventEmitter<D>();
 
   /**
@@ -305,6 +310,11 @@ export class MatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDes
       _changeDetectorRef.markForCheck();
       this.stateChanges.next();
     });
+
+    // This should no longer be needed after deprecation of selectedChange
+    this._selectionSubscription = selectionModel.selectionChange.subscribe(() => {
+      this.selectedChange.emit(selectionModel.getFirstSelectedDate() || undefined);
+    });
   }
 
   ngAfterContentInit() {
@@ -324,6 +334,7 @@ export class MatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDes
 
   ngOnDestroy() {
     this._intlChanges.unsubscribe();
+    this._selectionSubscription.unsubscribe();
     this.stateChanges.complete();
   }
 

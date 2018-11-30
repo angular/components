@@ -146,13 +146,7 @@ export class MatCalendarBody<D = unknown> implements OnDestroy {
               private _cdr: ChangeDetectorRef,
               private _dateAdapter: DateAdapter<D>,
               readonly _selectionModel: MatDateSelectionModel<D>) {
-    this._today = this._dateAdapter.today();
-    // Note(mmalerba): This is required to zero out the time portion of the date.
-    // Revisit this when we support time picking.
-    this._today = this._dateAdapter.createDate(
-        this._dateAdapter.getYear(this._today),
-        this._dateAdapter.getMonth(this._today),
-        this._dateAdapter.getDate(this._today));
+    this._updateToday();
 
     this.selectionSubscription =
         this._selectionModel.selectionChange.subscribe(() => this._cdr.markForCheck());
@@ -204,6 +198,7 @@ export class MatCalendarBody<D = unknown> implements OnDestroy {
 
   /** Focuses the active cell after the microtask queue is empty. */
   _focusActiveCell() {
+    this._updateToday();
     this._ngZone.runOutsideAngular(() => {
       this._ngZone.onStable.asObservable().pipe(take(1)).subscribe(() => {
         const activeCell: HTMLElement | null =
@@ -214,6 +209,18 @@ export class MatCalendarBody<D = unknown> implements OnDestroy {
         }
       });
     });
+  }
+
+  _updateToday() {
+    this._today = this._dateAdapter.today();
+    // Note(mmalerba): This is required to zero out the time portion of the date.
+    // Revisit this when we support time picking.
+    this._today = this._dateAdapter.createDate(
+        this._dateAdapter.getYear(this._today),
+        this._dateAdapter.getMonth(this._today),
+        this._dateAdapter.getDate(this._today));
+
+    this._cdr.markForCheck();
   }
 
   // @breaking-change 9.0.0 remove when deprecated properties relying on it are removed.
