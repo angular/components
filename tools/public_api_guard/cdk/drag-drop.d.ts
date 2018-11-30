@@ -36,6 +36,12 @@ export declare class CdkDrag<T = any> implements AfterViewInit, OnDestroy {
 export interface CdkDragConfig {
     dragStartThreshold: number;
     pointerDirectionChangeThreshold: number;
+    dropStrategy: CdkDropStrategy;
+}
+
+export enum CdkDropStrategy {
+    LastKnownContainer,
+    ExactLocation
 }
 
 export interface CdkDragDrop<T, O = T> {
