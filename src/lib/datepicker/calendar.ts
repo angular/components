@@ -240,7 +240,7 @@ export class MatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDes
   /**
    * Emits when the currently selected date changes.
    * @deprecated Listen to selectionModel valueChange.
-   * @breaking-change: 9.0.0
+   * @breaking-change 9.0.0
    */
   @Output() readonly selectedChange = new EventEmitter<D>();
 

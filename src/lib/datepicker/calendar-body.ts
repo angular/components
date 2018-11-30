@@ -139,7 +139,7 @@ export class MatCalendarBody<D = unknown> implements OnDestroy {
   @Output() readonly selectedValueChange: EventEmitter<number> = new EventEmitter<number>();
 
   private _today: D;
-  private selectionSubscription: Subscription;
+  private _selectionSubscription: Subscription;
 
   constructor(private _elementRef: ElementRef<HTMLElement>,
               private _ngZone: NgZone,
@@ -148,12 +148,12 @@ export class MatCalendarBody<D = unknown> implements OnDestroy {
               readonly _selectionModel: MatDateSelectionModel<D>) {
     this._updateToday();
 
-    this.selectionSubscription =
+    this._selectionSubscription =
         this._selectionModel.selectionChange.subscribe(() => this._cdr.markForCheck());
   }
 
   ngOnDestroy() {
-    this.selectionSubscription.unsubscribe();
+    this._selectionSubscription.unsubscribe();
   }
 
   _cellClicked(cell: MatCalendarCell<D>): void {
