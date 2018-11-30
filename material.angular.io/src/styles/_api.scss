@@ -69,6 +69,14 @@
   padding: 3px;
 }
 
+.docs-api-class-extends-type {
+  text-decoration: none;
+  border-bottom: 1px dotted;
+  color: inherit;
+  font-weight: 400;
+  font-size: 18px;
+}
+
 .docs-api-deprecated-marker,
 .docs-api-class-deprecated-marker,
 .docs-api-interface-deprecated-marker {
