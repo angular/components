@@ -12,8 +12,8 @@ import {
   NgZone,
   OnDestroy,
   Output,
-  ViewContainerRef,
   SecurityContext,
+  ViewContainerRef,
 } from '@angular/core';
 import {Subscription} from 'rxjs';
 import {take} from 'rxjs/operators';
@@ -67,12 +67,17 @@ export class DocViewer implements OnDestroy {
    * @param rawDocument The raw document content to show.
    */
   private updateDocument(rawDocument: string) {
-    // Replaces all hash base links with the current path
-    const correctedDocument = this._domSanitizer.sanitize(
-      SecurityContext.HTML,
-      rawDocument.replace(/(<a href="#)+/g, `<a href="${window.location.href}#`));
-    this._elementRef.nativeElement.innerHTML = correctedDocument;
+    // Replace all relative fragment URLs with absolute fragment URLs. e.g. "#my-section" becomes
+    // "/components/button/api#my-section". This is necessary because otherwise these fragment
+    // links would redirect to "/#my-section".
+    rawDocument = rawDocument.replace(/href="#([^"]*)"/g, (_m: string, fragmentUrl: string) => {
+      const absoluteUrl = `${location.pathname}#${fragmentUrl}`;
+      return `href="${this._domSanitizer.sanitize(SecurityContext.URL, absoluteUrl)}"`;
+    });
+
+    this._elementRef.nativeElement.innerHTML = rawDocument;
     this.textContent = this._elementRef.nativeElement.textContent;
+
     this._loadComponents('material-docs-example', ExampleViewer);
     this._loadComponents('header-link', HeaderLink);
 

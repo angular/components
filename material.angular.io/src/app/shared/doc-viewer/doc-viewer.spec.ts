@@ -47,7 +47,7 @@ describe('DocViewer', () => {
 
   it('should correct hash based links', () => {
     let fixture = TestBed.createComponent(DocViewerTestComponent);
-    fixture.componentRef.instance.documentUrl = `http://material.angular.io/doc-with-links.html`;
+    fixture.componentInstance.documentUrl = `http://material.angular.io/doc-with-links.html`;
     fixture.detectChanges();
 
     const url = fixture.componentInstance.documentUrl;
@@ -56,6 +56,19 @@ describe('DocViewer', () => {
     let docViewer = fixture.debugElement.query(By.directive(DocViewer));
     // Our test runner runs at the page /context.html, so it will be the prepended value.
     expect(docViewer.nativeElement.innerHTML).toContain(`/context.html#test"`);
+  });
+
+  it('should preserve document element ids', () => {
+    const fixture = TestBed.createComponent(DocViewerTestComponent);
+    const testUrl = 'http://material.angular.io/doc-with-element-ids.html';
+
+    fixture.componentInstance.documentUrl = testUrl;
+    fixture.detectChanges();
+
+    http.expectOne(testUrl).flush(FAKE_DOCS[testUrl]);
+
+    const docViewer = fixture.debugElement.query(By.directive(DocViewer));
+    expect(docViewer.nativeElement.innerHTML).toContain('id="my-header"');
   });
 
   it('should show error message when doc not found', () => {
@@ -99,4 +112,5 @@ const FAKE_DOCS = {
       <div>Check out this example:</div>
       <div material-docs-example="some-example"></div>`,
   'http://material.angular.io/doc-with-links.html': `<a href="#test">Test link</a>`,
+  'http://material.angular.io/doc-with-element-ids.html': `<h4 id="my-header">Header</h4>`,
 };
