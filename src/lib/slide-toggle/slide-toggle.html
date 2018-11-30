@@ -1,5 +1,4 @@
-<label class="mat-slide-toggle-label" #label>
-
+<label [attr.for]="inputId" class="mat-slide-toggle-label" #label>
   <div #toggleBar class="mat-slide-toggle-bar"
        [class.mat-slide-toggle-bar-no-side-margin]="!labelContent.textContent || !labelContent.textContent.trim()">
 
@@ -39,6 +38,8 @@
   </div>
 
   <span class="mat-slide-toggle-content" #labelContent (cdkObserveContent)="_onLabelTextChange()">
+    <!-- Add an invisible span so JAWS can read the label -->
+    <span style="display:none">&nbsp;</span>
     <ng-content></ng-content>
   </span>
 </label>

@@ -27,6 +27,7 @@ import {CdkDragDrop} from './drag-events';
 import {moveItemInArray} from './drag-utils';
 import {CdkDropList} from './drop-list';
 import {CdkDragHandle} from './drag-handle';
+import {CdkDropListGroup} from './drop-list-group';
 
 const ITEM_HEIGHT = 25;
 const ITEM_WIDTH = 75;
@@ -69,6 +70,16 @@ describe('CdkDrag', () => {
         expect(dragElement.style.transform).toBeFalsy();
         dragElementViaMouse(fixture, dragElement, 50, 100);
         expect(dragElement.style.transform).toBe('translate3d(50px, 100px, 0px)');
+      }));
+
+      it('should drag an SVG element freely to a particular position', fakeAsync(() => {
+        const fixture = createComponent(StandaloneDraggableSvg);
+        fixture.detectChanges();
+        const dragElement = fixture.componentInstance.dragElement.nativeElement;
+
+        expect(dragElement.getAttribute('transform')).toBeFalsy();
+        dragElementViaMouse(fixture, dragElement, 50, 100);
+        expect(dragElement.getAttribute('transform')).toBe('translate(50 100)');
       }));
 
       it('should drag an element freely to a particular position when the page is scrolled',
@@ -498,6 +509,7 @@ describe('CdkDrag', () => {
       expect(dragElement.style.touchAction)
         .not.toEqual('none', 'should not disable touchAction on when there is a drag handle');
     });
+
     it('should be able to reset a freely-dragged item to its initial position', fakeAsync(() => {
       const fixture = createComponent(StandaloneDraggable);
       fixture.detectChanges();
@@ -550,7 +562,17 @@ describe('CdkDrag', () => {
         expect(fixture.componentInstance.endedSpy).toHaveBeenCalledTimes(1);
       }));
 
-    });
+    it('should round the transform value', fakeAsync(() => {
+      const fixture = createComponent(StandaloneDraggable);
+      fixture.detectChanges();
+      const dragElement = fixture.componentInstance.dragElement.nativeElement;
+
+      expect(dragElement.style.transform).toBeFalsy();
+      dragElementViaMouse(fixture, dragElement, 13.37, 37);
+      expect(dragElement.style.transform).toBe('translate3d(13px, 37px, 0px)');
+    }));
+
+  });
 
   describe('draggable with a handle', () => {
     it('should not be able to drag the entire element if it has a handle', fakeAsync(() => {
@@ -759,11 +781,53 @@ describe('CdkDrag', () => {
         currentIndex: 2,
         item: firstItem,
         container: fixture.componentInstance.dropInstance,
-        previousContainer: fixture.componentInstance.dropInstance
+        previousContainer: fixture.componentInstance.dropInstance,
+        isPointerOverContainer: true
       });
 
       expect(dragItems.map(drag => drag.element.nativeElement.textContent!.trim()))
           .toEqual(['One', 'Two', 'Zero', 'Three']);
+    }));
+
+    it('should expose whether an item was dropped over a container', fakeAsync(() => {
+      const fixture = createComponent(DraggableInDropZone);
+      fixture.detectChanges();
+      const dragItems = fixture.componentInstance.dragItems;
+      const firstItem = dragItems.first;
+      const thirdItemRect = dragItems.toArray()[2].element.nativeElement.getBoundingClientRect();
+
+      dragElementViaMouse(fixture, firstItem.element.nativeElement,
+          thirdItemRect.left + 1, thirdItemRect.top + 1);
+      flush();
+      fixture.detectChanges();
+
+      expect(fixture.componentInstance.droppedSpy).toHaveBeenCalledTimes(1);
+
+      const event: CdkDragDrop<any> =
+          fixture.componentInstance.droppedSpy.calls.mostRecent().args[0];
+
+      expect(event.isPointerOverContainer).toBe(true);
+    }));
+
+    it('should expose whether an item was dropped outside of a container', fakeAsync(() => {
+      const fixture = createComponent(DraggableInDropZone);
+      fixture.detectChanges();
+      const dragItems = fixture.componentInstance.dragItems;
+      const firstItem = dragItems.first;
+      const containerRect = fixture.componentInstance.dropInstance.element
+          .nativeElement.getBoundingClientRect();
+
+      dragElementViaMouse(fixture, firstItem.element.nativeElement,
+          containerRect.right + 10, containerRect.bottom + 10);
+      flush();
+      fixture.detectChanges();
+
+      expect(fixture.componentInstance.droppedSpy).toHaveBeenCalledTimes(1);
+
+      const event: CdkDragDrop<any> =
+          fixture.componentInstance.droppedSpy.calls.mostRecent().args[0];
+
+      expect(event.isPointerOverContainer).toBe(false);
     }));
 
     it('should dispatch the `sorted` event as an item is being sorted', fakeAsync(() => {
@@ -824,7 +888,8 @@ describe('CdkDrag', () => {
         currentIndex: 0,
         item: firstItem,
         container: fixture.componentInstance.dropInstance,
-        previousContainer: fixture.componentInstance.dropInstance
+        previousContainer: fixture.componentInstance.dropInstance,
+        isPointerOverContainer: false
       });
 
       expect(dragItems.map(drag => drag.element.nativeElement.textContent!.trim()))
@@ -881,7 +946,8 @@ describe('CdkDrag', () => {
         currentIndex: 2,
         item: firstItem,
         container: fixture.componentInstance.dropInstance,
-        previousContainer: fixture.componentInstance.dropInstance
+        previousContainer: fixture.componentInstance.dropInstance,
+        isPointerOverContainer: true
       });
 
       expect(dragItems.map(drag => drag.element.nativeElement.textContent!.trim()))
@@ -920,7 +986,8 @@ describe('CdkDrag', () => {
         currentIndex: 2,
         item: firstItem,
         container: fixture.componentInstance.dropInstance,
-        previousContainer: fixture.componentInstance.dropInstance
+        previousContainer: fixture.componentInstance.dropInstance,
+        isPointerOverContainer: true
       });
 
       expect(dragItems.map(drag => drag.element.nativeElement.textContent!.trim()))
@@ -955,7 +1022,8 @@ describe('CdkDrag', () => {
         currentIndex: 0,
         item: firstItem,
         container: fixture.componentInstance.dropInstance,
-        previousContainer: fixture.componentInstance.dropInstance
+        previousContainer: fixture.componentInstance.dropInstance,
+        isPointerOverContainer: false
       });
 
       expect(dragItems.map(drag => drag.element.nativeElement.textContent!.trim()))
@@ -1791,7 +1859,8 @@ describe('CdkDrag', () => {
           currentIndex: 3,
           item,
           container: fixture.componentInstance.dropInstances.toArray()[1],
-          previousContainer: fixture.componentInstance.dropInstances.first
+          previousContainer: fixture.componentInstance.dropInstances.first,
+          isPointerOverContainer: true
         });
       }));
 
@@ -1852,7 +1921,8 @@ describe('CdkDrag', () => {
         currentIndex: 3,
         item: groups[0][1],
         container: dropInstances[1],
-        previousContainer: dropInstances[0]
+        previousContainer: dropInstances[0],
+        isPointerOverContainer: true
       });
     }));
 
@@ -1881,7 +1951,8 @@ describe('CdkDrag', () => {
           currentIndex: 1,
           item: groups[0][1],
           container: dropInstances[0],
-          previousContainer: dropInstances[0]
+          previousContainer: dropInstances[0],
+          isPointerOverContainer: false
         });
       }));
 
@@ -1910,7 +1981,8 @@ describe('CdkDrag', () => {
           currentIndex: 1,
           item: groups[0][1],
           container: dropInstances[0],
-          previousContainer: dropInstances[0]
+          previousContainer: dropInstances[0],
+          isPointerOverContainer: false
         });
       }));
 
@@ -2032,7 +2104,8 @@ describe('CdkDrag', () => {
         currentIndex: 3,
         item: groups[0][1],
         container: dropInstances[1],
-        previousContainer: dropInstances[0]
+        previousContainer: dropInstances[0],
+        isPointerOverContainer: true
       });
     }));
 
@@ -2057,7 +2130,8 @@ describe('CdkDrag', () => {
         currentIndex: 3,
         item: groups[0][1],
         container: dropInstances[1],
-        previousContainer: dropInstances[0]
+        previousContainer: dropInstances[0],
+        isPointerOverContainer: true
       });
     }));
 
@@ -2087,7 +2161,8 @@ describe('CdkDrag', () => {
         currentIndex: 3,
         item: groups[0][1],
         container: dropInstances[1],
-        previousContainer: dropInstances[0]
+        previousContainer: dropInstances[0],
+        isPointerOverContainer: true
       });
     }));
 
@@ -2121,7 +2196,8 @@ describe('CdkDrag', () => {
         currentIndex: 0,
         item,
         container: fixture.componentInstance.dropInstances.toArray()[1],
-        previousContainer: fixture.componentInstance.dropInstances.first
+        previousContainer: fixture.componentInstance.dropInstances.first,
+        isPointerOverContainer: true
       });
 
       expect(dropContainers[0].contains(item.element.nativeElement)).toBe(true,
@@ -2220,6 +2296,14 @@ describe('CdkDrag', () => {
     }));
 
 
+    it('should not add child drop lists to the same group as their parents', fakeAsync(() => {
+      const fixture = createComponent(NestedDropListGroups);
+      const component = fixture.componentInstance;
+      fixture.detectChanges();
+
+      expect(Array.from(component.group._items)).toEqual([component.listOne, component.listTwo]);
+    }));
+
   });
 
 });
@@ -2239,6 +2323,19 @@ class StandaloneDraggable {
   @ViewChild(CdkDrag) dragInstance: CdkDrag;
   startedSpy = jasmine.createSpy('started spy');
   endedSpy = jasmine.createSpy('ended spy');
+}
+
+@Component({
+  template: `
+    <svg><g
+      cdkDrag
+      #dragElement>
+      <circle fill="red" r="50" cx="50" cy="50"/>
+    </g></svg>
+  `
+})
+class StandaloneDraggableSvg {
+  @ViewChild('dragElement') dragElement: ElementRef<SVGElement>;
 }
 
 @Component({
@@ -2592,6 +2689,25 @@ class ConnectedDropZonesWithSingleItems {
   droppedSpy = jasmine.createSpy('dropped spy');
 }
 
+@Component({
+  template: `
+    <div cdkDropListGroup #group="cdkDropListGroup">
+      <div cdkDropList #listOne="cdkDropList">
+        <div cdkDropList #listThree="cdkDropList"></div>
+        <div cdkDropList #listFour="cdkDropList"></div>
+      </div>
+
+      <div cdkDropList #listTwo="cdkDropList"></div>
+    </div>
+  `
+})
+class NestedDropListGroups {
+  @ViewChild('group') group: CdkDropListGroup<CdkDropList>;
+  @ViewChild('listOne') listOne: CdkDropList;
+  @ViewChild('listTwo') listTwo: CdkDropList;
+}
+
+
 /**
  * Component that passes through whatever content is projected into it.
  * Used to test having drag elements being projected into a component.
@@ -2617,7 +2733,7 @@ function dragElementViaMouse(fixture: ComponentFixture<any>,
   dispatchMouseEvent(document, 'mousemove', x, y);
   fixture.detectChanges();
 
-  dispatchMouseEvent(document, 'mouseup');
+  dispatchMouseEvent(document, 'mouseup', x, y);
   fixture.detectChanges();
 }
 
@@ -2656,7 +2772,7 @@ function dragElementViaTouch(fixture: ComponentFixture<any>,
   dispatchTouchEvent(document, 'touchmove', x, y);
   fixture.detectChanges();
 
-  dispatchTouchEvent(document, 'touchend');
+  dispatchTouchEvent(document, 'touchend', x, y);
   fixture.detectChanges();
 }
 

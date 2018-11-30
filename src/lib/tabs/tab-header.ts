@@ -114,7 +114,8 @@ export class MatTabHeader extends _MatTabHeaderMixinBase
   /** Used to manage focus between the tabs. */
   private _keyManager: FocusKeyManager<MatTabLabelWrapper>;
 
-  private _selectedIndex: number = 0;
+  /** Cached text content of the header. */
+  private _currentTextContent: string;
 
   /** The index of the active tab. */
   @Input()
@@ -128,6 +129,7 @@ export class MatTabHeader extends _MatTabHeaderMixinBase
       this._keyManager.updateActiveItemIndex(value);
     }
   }
+  private _selectedIndex: number = 0;
 
   /** Event emitted when the option is selected. */
   @Output() readonly selectFocusedIndex = new EventEmitter();
@@ -237,16 +239,25 @@ export class MatTabHeader extends _MatTabHeaderMixinBase
    * Callback for when the MutationObserver detects that the content has changed.
    */
   _onContentChanges() {
-    const zoneCallback = () => {
-      this.updatePagination();
-      this._alignInkBarToSelectedTab();
-      this._changeDetectorRef.markForCheck();
-    };
+    const textContent = this._elementRef.nativeElement.textContent;
 
-    // The content observer runs outside the `NgZone` by default, which
-    // means that we need to bring the callback back in ourselves.
-    // @breaking-change 8.0.0 Remove null check for `_ngZone` once it's a required parameter.
-    this._ngZone ? this._ngZone.run(zoneCallback) : zoneCallback();
+    // We need to diff the text content of the header, because the MutationObserver callback
+    // will fire even if the text content didn't change which is inefficient and is prone
+    // to infinite loops if a poorly constructed expression is passed in (see #14249).
+    if (textContent !== this._currentTextContent) {
+      this._currentTextContent = textContent;
+
+      const zoneCallback = () => {
+        this.updatePagination();
+        this._alignInkBarToSelectedTab();
+        this._changeDetectorRef.markForCheck();
+      };
+
+      // The content observer runs outside the `NgZone` by default, which
+      // means that we need to bring the callback back in ourselves.
+      // @breaking-change 8.0.0 Remove null check for `_ngZone` once it's a required parameter.
+      this._ngZone ? this._ngZone.run(zoneCallback) : zoneCallback();
+    }
   }
 
   /**
@@ -327,7 +338,9 @@ export class MatTabHeader extends _MatTabHeaderMixinBase
     // seems to cause flickering and overflow in Internet Explorer. For example, the ink bar
     // and ripples will exceed the boundaries of the visible tab bar.
     // See: https://github.com/angular/material2/issues/10276
-    this._tabList.nativeElement.style.transform = `translateX(${translateX}px)`;
+    // We round the `transform` here, because transforms with sub-pixel precision cause some
+    // browsers to blur the content of the element.
+    this._tabList.nativeElement.style.transform = `translateX(${Math.round(translateX)}px)`;
 
     // Setting the `transform` on IE will change the scroll offset of the parent, causing the
     // position to be thrown off in some cases. We have to reset it ourselves to ensure that

@@ -20,6 +20,7 @@ import {
   Optional,
   Directive,
   ChangeDetectorRef,
+  SkipSelf,
 } from '@angular/core';
 import {Directionality} from '@angular/cdk/bidi';
 import {CdkDrag} from './drag';
@@ -81,6 +82,8 @@ interface ListPositionCacheEntry {
   selector: '[cdkDropList], cdk-drop-list',
   exportAs: 'cdkDropList',
   providers: [
+    // Prevent child drop lists from picking up the same group as their parent.
+    {provide: CdkDropListGroup, useValue: undefined},
     {provide: CDK_DROP_LIST_CONTAINER, useExisting: CdkDropList},
   ],
   host: {
@@ -157,7 +160,7 @@ export class CdkDropList<T = any> implements OnInit, OnDestroy {
     private _dragDropRegistry: DragDropRegistry<CdkDrag, CdkDropList<T>>,
     private _changeDetectorRef: ChangeDetectorRef,
     @Optional() private _dir?: Directionality,
-    @Optional() private _group?: CdkDropListGroup<CdkDropList>) {}
+    @Optional() @SkipSelf() private _group?: CdkDropListGroup<CdkDropList>) {}
 
   ngOnInit() {
     this._dragDropRegistry.registerDropContainer(this);
@@ -207,16 +210,19 @@ export class CdkDropList<T = any> implements OnInit, OnDestroy {
    * @param item Item being dropped into the container.
    * @param currentIndex Index at which the item should be inserted.
    * @param previousContainer Container from which the item got dragged in.
+   * @param isPointerOverContainer Whether the user's pointer was over the
+   *    container when the item was dropped.
    */
-  drop(item: CdkDrag, currentIndex: number, previousContainer: CdkDropList): void {
+  drop(item: CdkDrag, currentIndex: number, previousContainer: CdkDropList,
+    isPointerOverContainer: boolean): void {
     this._reset();
     this.dropped.emit({
       item,
       currentIndex,
       previousIndex: previousContainer.getItemIndex(item),
       container: this,
-      // TODO(crisbeto): reconsider whether to make this null if the containers are the same.
-      previousContainer
+      previousContainer,
+      isPointerOverContainer
     });
   }
 
@@ -359,10 +365,12 @@ export class CdkDropList<T = any> implements OnInit, OnDestroy {
       // Note that we shouldn't use `getBoundingClientRect` here to update the cache, because the
       // elements may be mid-animation which will give us a wrong result.
       if (isHorizontal) {
-        elementToOffset.style.transform = `translate3d(${sibling.offset}px, 0, 0)`;
+        // Round the transforms since some browsers will
+        // blur the elements, for sub-pixel transforms.
+        elementToOffset.style.transform = `translate3d(${Math.round(sibling.offset)}px, 0, 0)`;
         this._adjustClientRect(sibling.clientRect, 0, offset);
       } else {
-        elementToOffset.style.transform = `translate3d(0, ${sibling.offset}px, 0)`;
+        elementToOffset.style.transform = `translate3d(0, ${Math.round(sibling.offset)}px, 0)`;
         this._adjustClientRect(sibling.clientRect, offset, 0);
       }
     });
@@ -383,12 +391,11 @@ export class CdkDropList<T = any> implements OnInit, OnDestroy {
   }
 
   /**
-   * Checks whether an item that started in this container can be returned to it,
-   * after it was moved out into another container.
-   * @param x Position of the item along the X axis.
-   * @param y Position of the item along the Y axis.
+   * Checks whether the user's pointer is positioned over the container.
+   * @param x Pointer position along the X axis.
+   * @param y Pointer position along the Y axis.
    */
-  _canReturnItem(x: number, y: number): boolean {
+  _isOverContainer(x: number, y: number): boolean {
     return isInsideClientRect(this._positionCache.self, x, y);
   }
 

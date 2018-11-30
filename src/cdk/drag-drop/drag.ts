@@ -512,6 +512,12 @@ export class CdkDrag<T = any> implements AfterViewInit, OnDestroy {
       // Preserve the previous `transform` value, if there was one.
       this._rootElement.style.transform = this._initialTransform ?
           this._initialTransform + ' ' + transform : transform;
+
+      // Apply transform as attribute if dragging and svg element to work for IE
+      if (typeof SVGElement !== 'undefined' && this._rootElement instanceof SVGElement) {
+        const appliedTransform = `translate(${activeTransform.x} ${activeTransform.y})`;
+        this._rootElement.setAttribute('transform', appliedTransform);
+      }
     }
 
     // Since this event gets fired for every pixel while dragging, we only
@@ -530,7 +536,7 @@ export class CdkDrag<T = any> implements AfterViewInit, OnDestroy {
   }
 
   /** Handler that is invoked when the user lifts their pointer up, after initiating a drag. */
-  private _pointerUp = () => {
+  private _pointerUp = (event: MouseEvent | TouchEvent) => {
     if (!this._isDragging()) {
       return;
     }
@@ -554,13 +560,13 @@ export class CdkDrag<T = any> implements AfterViewInit, OnDestroy {
     }
 
     this._animatePreviewToPlaceholder().then(() => {
-      this._cleanupDragArtifacts();
+      this._cleanupDragArtifacts(event);
       this._dragDropRegistry.stopDragging(this);
     });
   }
 
   /** Cleans up the DOM artifacts that were added to facilitate the element being dragged. */
-  private _cleanupDragArtifacts() {
+  private _cleanupDragArtifacts(event: MouseEvent | TouchEvent) {
     // Restore the element's visibility and insert it at its old position in the DOM.
     // It's important that we maintain the position, because moving the element around in the DOM
     // can throw off `NgFor` which does smart diffing and re-creates elements only when necessary,
@@ -579,6 +585,8 @@ export class CdkDrag<T = any> implements AfterViewInit, OnDestroy {
     // Re-enter the NgZone since we bound `document` events on the outside.
     this._ngZone.run(() => {
       const currentIndex = this.dropContainer.getItemIndex(this);
+      const {x, y} = this._getPointerPositionOnPage(event);
+      const isPointerOverContainer = this.dropContainer._isOverContainer(x, y);
 
       this.ended.emit({source: this});
       this.dropped.emit({
@@ -586,9 +594,10 @@ export class CdkDrag<T = any> implements AfterViewInit, OnDestroy {
         currentIndex,
         previousIndex: this._initialContainer.getItemIndex(this),
         container: this.dropContainer,
-        previousContainer: this._initialContainer
+        previousContainer: this._initialContainer,
+        isPointerOverContainer
       });
-      this.dropContainer.drop(this, currentIndex, this._initialContainer);
+      this.dropContainer.drop(this, currentIndex, this._initialContainer, isPointerOverContainer);
       this.dropContainer = this._initialContainer;
     });
   }
@@ -602,9 +611,9 @@ export class CdkDrag<T = any> implements AfterViewInit, OnDestroy {
     let newContainer = this.dropContainer._getSiblingContainerFromPosition(this, x, y);
 
     // If we couldn't find a new container to move the item into, and the item has left it's
-    // initial container, check whether the it's allowed to return into its original container.
-    // This handles the case where two containers are connected one way and the user tries to
-    // undo dragging an item into a new container.
+    // initial container, check whether the it's over the initial container. This handles the
+    // case where two containers are connected one way and the user tries to undo dragging an
+    // item into a new container.
     if (!newContainer && this.dropContainer !== this._initialContainer &&
         (this._initialContainer._canReturnItem(x, y) ||
         (this._config.dropStrategy === CdkDropStrategy.ExactLocation &&
@@ -883,7 +892,9 @@ interface Point {
  * @param y Desired position of the element along the Y axis.
  */
 function getTransform(x: number, y: number): string {
-  return `translate3d(${x}px, ${y}px, 0)`;
+  // Round the transforms since some browsers will
+  // blur the elements, for sub-pixel transforms.
+  return `translate3d(${Math.round(x)}px, ${Math.round(y)}px, 0)`;
 }
 
 /** Creates a deep clone of an element. */

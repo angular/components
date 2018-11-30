@@ -1,7 +1,8 @@
 package(default_visibility=["//visibility:public"])
 
 load("@io_bazel_rules_sass//:defs.bzl", "sass_library", "sass_binary")
-load("//tools:defaults.bzl", "ng_module", "ng_test_library", "ng_web_test_suite")
+load("//tools:defaults.bzl", "ng_module", "ng_test_library", "ng_web_test_suite",
+  "markdown_to_html")
 
 ng_module(
   name = "sort",
@@ -18,21 +19,15 @@ ng_module(
   ],
 )
 
-# TODO(jelbourn): replace this w/ sass_library when it supports acting like a filegroup
-filegroup(
-  name = "sort_scss_partials",
+sass_library(
+  name = "sort_scss_lib",
   srcs = glob(["**/_*.scss"]),
 )
 
 sass_binary(
   name = "sort_header_scss",
   src = "sort-header.scss",
-  deps = ["//src/lib/core:core_scss_lib"],
-)
-
-sass_library(
-  name = "theme",
-  srcs = glob(["**/*-theme.scss"]),
+  deps = ["//src/cdk/a11y:a11y_scss_lib"],
 )
 
 ng_test_library(
@@ -54,4 +49,9 @@ ng_test_library(
 ng_web_test_suite(
   name = "unit_tests",
   deps = [":sort_test_sources"],
+)
+
+markdown_to_html(
+  name = "overview",
+  srcs = [":sort.md"],
 )
