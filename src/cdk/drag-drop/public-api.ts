@@ -17,3 +17,4 @@ export * from './drag-preview';
 export * from './drag-placeholder';
 export * from './drag-drop-module';
 export * from './drag-drop-registry';
+export * from './drag-parent';

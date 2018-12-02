@@ -2,6 +2,8 @@ export declare const CDK_DRAG_CONFIG: InjectionToken<CdkDragConfig>;
 
 export declare function CDK_DRAG_CONFIG_FACTORY(): CdkDragConfig;
 
+export declare const CDK_DRAG_PARENT: InjectionToken<{}>;
+
 export declare const CDK_DROP_LIST_CONTAINER: InjectionToken<CdkDropListContainer<any>>;
 
 export declare class CdkDrag<T = any> implements AfterViewInit, OnDestroy {
@@ -9,6 +11,8 @@ export declare class CdkDrag<T = any> implements AfterViewInit, OnDestroy {
     _hasStartedDragging: boolean;
     _placeholderTemplate: CdkDragPlaceholder;
     _pointerDown: (event: TouchEvent | MouseEvent) => void;
+    protected _pointerMove: (event: TouchEvent | MouseEvent) => void;
+    protected _pointerUp: (event: TouchEvent | MouseEvent) => void;
     _previewTemplate: CdkDragPreview;
     boundaryElementSelector: string;
     data: T;
@@ -26,7 +30,11 @@ export declare class CdkDrag<T = any> implements AfterViewInit, OnDestroy {
     constructor(
     element: ElementRef<HTMLElement>,
     dropContainer: CdkDropListContainer, document: any, _ngZone: NgZone, _viewContainerRef: ViewContainerRef, _viewportRuler: ViewportRuler, _dragDropRegistry: DragDropRegistry<CdkDrag<T>, CdkDropListContainer>, _config: CdkDragConfig, _dir: Directionality);
+    protected _getChildHandles(): CdkDragHandle[];
+    protected _getRootElement(): HTMLElement;
+    protected _initializeDragSequence(referenceElement: HTMLElement, event: MouseEvent | TouchEvent): void;
     _isDragging(): boolean;
+    protected _startDragSequence(event: MouseEvent | TouchEvent): void;
     getPlaceholderElement(): HTMLElement;
     getRootElement(): HTMLElement;
     ngAfterViewInit(): void;
@@ -106,8 +114,10 @@ export interface CdkDragStart<T = any> {
 }
 
 export declare class CdkDropList<T = any> implements OnInit, OnDestroy {
+    protected _activeDraggables: CdkDrag[];
     _draggables: QueryList<CdkDrag>;
     _dragging: boolean;
+    protected _positionCache: PositionCache;
     connectedTo: (CdkDropList | string)[] | CdkDropList | string;
     data: T;
     disabled: boolean;
@@ -121,8 +131,17 @@ export declare class CdkDropList<T = any> implements OnInit, OnDestroy {
     orientation: 'horizontal' | 'vertical';
     sorted: EventEmitter<CdkDragSortEvent<T>>;
     constructor(element: ElementRef<HTMLElement>, _dragDropRegistry: DragDropRegistry<CdkDrag, CdkDropList<T>>, _changeDetectorRef: ChangeDetectorRef, _dir?: Directionality | undefined, _group?: CdkDropListGroup<CdkDropList<any>> | undefined, _document?: any);
+    protected _getConnectedLists(): CdkDropList[];
+    protected _getItemIndexFromPointerPosition(item: CdkDrag, pointerX: number, pointerY: number, delta?: {
+        x: number;
+        y: number;
+    }): number;
+    protected _getItemOffsetPx(currentPosition: ClientRect, newPosition: ClientRect, delta: 1 | -1): number;
     _getSiblingContainerFromPosition(item: CdkDrag, x: number, y: number): CdkDropList | null;
+    protected _getSiblingOffsetPx(currentIndex: number, siblings: ItemPositionCacheEntry[], delta: 1 | -1): number;
     _isOverContainer(x: number, y: number): boolean;
+    protected _isPointerNearDropContainer(pointerX: number, pointerY: number): boolean;
+    protected _reset(): void;
     _sortItem(item: CdkDrag, pointerX: number, pointerY: number, pointerDelta: {
         x: number;
         y: number;

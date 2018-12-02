@@ -196,14 +196,14 @@ export class CdkDropList<T = any> implements OnInit, OnDestroy {
   _dragging = false;
 
   /** Cache of the dimensions of all the items and the sibling containers. */
-  private _positionCache: PositionCache = {items: [], siblings: [], self: {} as ClientRect};
+  protected _positionCache: PositionCache = {items: [], siblings: [], self: {} as ClientRect};
 
   /**
    * Draggable items that are currently active inside the container. Includes the items
    * from `_draggables`, as well as any items that have been dragged in, but haven't
    * been dropped yet.
    */
-  private _activeDraggables: CdkDrag[];
+  protected _activeDraggables: CdkDrag[];
 
   /**
    * Keeps track of the item that was last swapped with the dragged item, as
@@ -382,10 +382,10 @@ export class CdkDropList<T = any> implements OnInit, OnDestroy {
         // Round the transforms since some browsers will
         // blur the elements, for sub-pixel transforms.
         elementToOffset.style.transform = `translate3d(${Math.round(sibling.offset)}px, 0, 0)`;
-        this._adjustClientRect(sibling.clientRect, 0, offset);
+        adjustClientRect(sibling.clientRect, 0, offset);
       } else {
         elementToOffset.style.transform = `translate3d(0, ${Math.round(sibling.offset)}px, 0)`;
-        this._adjustClientRect(sibling.clientRect, offset, 0);
+        adjustClientRect(sibling.clientRect, offset, 0);
       }
     });
   }
@@ -487,7 +487,7 @@ export class CdkDropList<T = any> implements OnInit, OnDestroy {
   }
 
   /** Resets the container to its initial state. */
-  private _reset() {
+  protected _reset() {
     this._dragging = false;
 
     // TODO(crisbeto): may have to wait for the animations to finish.
@@ -500,27 +500,13 @@ export class CdkDropList<T = any> implements OnInit, OnDestroy {
   }
 
   /**
-   * Updates the top/left positions of a `ClientRect`, as well as their bottom/right counterparts.
-   * @param clientRect `ClientRect` that should be updated.
-   * @param top Amount to add to the `top` position.
-   * @param left Amount to add to the `left` position.
-   */
-  private _adjustClientRect(clientRect: ClientRect, top: number, left: number) {
-    clientRect.top += top;
-    clientRect.bottom = clientRect.top + clientRect.height;
-
-    clientRect.left += left;
-    clientRect.right = clientRect.left + clientRect.width;
-  }
-
-  /**
    * Gets the index of an item in the drop container, based on the position of the user's pointer.
    * @param item Item that is being sorted.
    * @param pointerX Position of the user's pointer along the X axis.
    * @param pointerY Position of the user's pointer along the Y axis.
    * @param delta Direction in which the user is moving their pointer.
    */
-  private _getItemIndexFromPointerPosition(item: CdkDrag, pointerX: number, pointerY: number,
+  protected _getItemIndexFromPointerPosition(item: CdkDrag, pointerX: number, pointerY: number,
                                            delta?: {x: number, y: number}) {
 
     const isHorizontal = this.orientation === 'horizontal';
@@ -555,7 +541,7 @@ export class CdkDropList<T = any> implements OnInit, OnDestroy {
    * @param pointerX Coordinates along the X axis.
    * @param pointerY Coordinates along the Y axis.
    */
-  private _isPointerNearDropContainer(pointerX: number, pointerY: number): boolean {
+  protected _isPointerNearDropContainer(pointerX: number, pointerY: number): boolean {
     const {top, right, bottom, left, width, height} = this._positionCache.self;
     const xThreshold = width * DROP_PROXIMITY_THRESHOLD;
     const yThreshold = height * DROP_PROXIMITY_THRESHOLD;
@@ -570,7 +556,7 @@ export class CdkDropList<T = any> implements OnInit, OnDestroy {
    * @param newPosition Position of the item where the current item should be moved.
    * @param delta Direction in which the user is moving.
    */
-  private _getItemOffsetPx(currentPosition: ClientRect, newPosition: ClientRect, delta: 1 | -1) {
+  protected _getItemOffsetPx(currentPosition: ClientRect, newPosition: ClientRect, delta: 1 | -1) {
     const isHorizontal = this.orientation === 'horizontal';
     let itemOffset = isHorizontal ? newPosition.left - currentPosition.left :
                                     newPosition.top - currentPosition.top;
@@ -590,7 +576,7 @@ export class CdkDropList<T = any> implements OnInit, OnDestroy {
    * @param siblings All of the items in the list.
    * @param delta Direction in which the user is moving.
    */
-  private _getSiblingOffsetPx(currentIndex: number,
+  protected _getSiblingOffsetPx(currentIndex: number,
                               siblings: ItemPositionCacheEntry[],
                               delta: 1 | -1) {
 
@@ -618,7 +604,7 @@ export class CdkDropList<T = any> implements OnInit, OnDestroy {
   }
 
   /** Gets an array of unique drop lists that the current list is connected to. */
-  private _getConnectedLists(): CdkDropList[] {
+  protected _getConnectedLists(): CdkDropList[] {
     const siblings = coerceArray(this.connectedTo).map(drop => {
       return typeof drop === 'string' ? this._dragDropRegistry.getDropContainer(drop)! : drop;
     });
@@ -664,4 +650,18 @@ function findIndex<T>(array: T[],
 function isInsideClientRect(clientRect: ClientRect, x: number, y: number) {
   const {top, bottom, left, right} = clientRect;
   return y >= top && y <= bottom && x >= left && x <= right;
+}
+
+/**
+ * Updates the top/left positions of a `ClientRect`, as well as their bottom/right counterparts.
+ * @param clientRect `ClientRect` that should be updated.
+ * @param top Amount to add to the `top` position.
+ * @param left Amount to add to the `left` position.
+ */
+function adjustClientRect(clientRect: ClientRect, top: number, left: number) {
+  clientRect.top += top;
+  clientRect.bottom = clientRect.top + clientRect.height;
+
+  clientRect.left += left;
+  clientRect.right = clientRect.left + clientRect.width;
 }
