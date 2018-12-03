@@ -35,13 +35,15 @@ $mat-form-field-default-infix-width: 180px !default;
 // The underline is outside of it so it can cover all of the elements under this flex container.
 .mat-form-field-flex {
   display: inline-flex;
-  align-items: baseline;
+  align-items: center;
   box-sizing: border-box;
   width: 100%;
 }
 
 .mat-form-field-prefix,
 .mat-form-field-suffix {
+  display: flex;
+  align-items: center;
   white-space: nowrap;
   flex: none;
   position: relative;

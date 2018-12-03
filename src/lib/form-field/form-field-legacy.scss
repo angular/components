@@ -15,8 +15,14 @@ $mat-form-field-legacy-underline-height: 1px !default;
     -ms-transform: none;
   }
 
+  .mat-form-field-flex {
+    align-items: baseline;
+  }
+
   .mat-form-field-prefix,
   .mat-form-field-suffix {
+    display: block;
+
     // Allow icons in a prefix or suffix to adapt to the correct size.
     .mat-icon {
       width: 1em;
