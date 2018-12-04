@@ -19,7 +19,6 @@ import {
   QueryList,
 } from '@angular/core';
 import {
-  _inheritCtorParametersMetadata,
   CanDisable, CanDisableCtor,
   HasTabIndex,
   HasTabIndexCtor,
@@ -76,9 +75,6 @@ export class MatTreeNode<T> extends _MatTreeNodeMixinBase<T>
 export class MatTreeNodeDef<T> extends CdkTreeNodeDef<T> {
   @Input('matTreeNode') data: T;
 }
-
-// TODO(devversion): workaround for https://github.com/angular/material2/issues/12760
-_inheritCtorParametersMetadata(MatTreeNodeDef, CdkTreeNodeDef);
 
 /**
  * Wrapper for the CdkTree nested node with Material design styles.

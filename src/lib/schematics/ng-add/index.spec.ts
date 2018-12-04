@@ -8,9 +8,8 @@ import {
   getProjectStyleFile,
   getProjectTargetOptions,
 } from '@angular/cdk/schematics';
-import {createTestApp} from '@angular/cdk/schematics/testing';
+import {createTestApp, getFileContent} from '@angular/cdk/schematics/testing';
 import {getWorkspace} from '@schematics/angular/utility/config';
-import {getFileContent} from '@schematics/angular/utility/test';
 import {getIndexHtmlPath} from './fonts/project-index-html';
 
 describe('ng-add schematic', () => {
@@ -208,6 +207,36 @@ describe('ng-add schematic', () => {
     });
   });
 
+  describe('custom project builders', () => {
+
+    /** Overwrites a target builder for the workspace in the given tree */
+    function overwriteTargetBuilder(tree: Tree, targetName: string, newBuilder: string) {
+      const workspace = getWorkspace(tree);
+      const project = getProjectFromWorkspace(workspace);
+      const targetConfig = project.architect && project.architect[targetName] ||
+                           project.targets && project.targets[targetName];
+      targetConfig['builder'] = newBuilder;
+      tree.overwrite('/angular.json', JSON.stringify(workspace, null, 2));
+    }
+
+    it('should throw an error if the "build" target has been changed', () => {
+      overwriteTargetBuilder(appTree, 'build', 'thirdparty-builder');
+
+      expect(() => runner.runSchematic('ng-add-setup-project', {}, appTree))
+        .toThrowError(/not using the default builders.*build/);
+    });
+
+    it('should warn if the "test" target has been changed', () => {
+      overwriteTargetBuilder(appTree, 'test', 'thirdparty-test-builder');
+
+      spyOn(console, 'warn');
+      runner.runSchematic('ng-add-setup-project', {}, appTree);
+
+      expect(console.warn).toHaveBeenCalledWith(
+        jasmine.stringMatching(/not using the default builders.*cannot add the configured theme/));
+    });
+  });
+
   describe('theme files', () => {
 
     /** Path to the default prebuilt theme file that will be added when running ng-add. */
@@ -257,7 +286,7 @@ describe('ng-add schematic', () => {
       expect(styles).not.toContain(defaultPrebuiltThemePath,
           'Expected the default prebuilt theme to be not configured.');
       expect(console.warn).toHaveBeenCalledWith(
-          jasmine.stringMatching(/Cannot add.*already a custom theme/));
+        jasmine.stringMatching(/Could not add the selected theme/));
     });
 
     it('should not add a theme file multiple times', () => {

@@ -133,6 +133,28 @@ describe('CdkVirtualScrollViewport', () => {
       expect(viewport.elementRef.nativeElement.scrollWidth).toBe(10000);
     }));
 
+    it('should set a class based on the orientation', fakeAsync(() => {
+      finishInit(fixture);
+      const viewportElement: HTMLElement =
+          fixture.nativeElement.querySelector('.cdk-virtual-scroll-viewport');
+
+      expect(viewportElement.classList).toContain('cdk-virtual-scroll-orientation-vertical');
+
+      testComponent.orientation = 'horizontal';
+      fixture.detectChanges();
+
+      expect(viewportElement.classList).toContain('cdk-virtual-scroll-orientation-horizontal');
+    }));
+
+    it('should set the vertical class if an invalid orientation is set', fakeAsync(() => {
+      testComponent.orientation = 'diagonal';
+      finishInit(fixture);
+      const viewportElement: HTMLElement =
+          fixture.nativeElement.querySelector('.cdk-virtual-scroll-viewport');
+
+      expect(viewportElement.classList).toContain('cdk-virtual-scroll-orientation-vertical');
+    }));
+
     it('should set rendered range', fakeAsync(() => {
       finishInit(fixture);
       viewport.setRenderedRange({start: 2, end: 3});
@@ -611,6 +633,24 @@ describe('CdkVirtualScrollViewport', () => {
       finishInit(fixture);
       expect(zoneTest).toHaveBeenCalledWith(true);
     }));
+
+    it('should not throw when disposing of a view that will not fit in the cache', fakeAsync(() => {
+      finishInit(fixture);
+      testComponent.items = new Array(200).fill(0);
+      testComponent.templateCacheSize = 1; // Reduce the cache size to something we can easily hit.
+      fixture.detectChanges();
+      flush();
+
+      expect(() => {
+        for (let i = 0; i < 50; i++) {
+          viewport.scrollToIndex(i);
+          triggerScroll(viewport);
+          fixture.detectChanges();
+          flush();
+        }
+      }).not.toThrow();
+    }));
+
   });
 
   describe('with RTL direction', () => {

@@ -5,7 +5,7 @@ import {fakeAsync, tick} from '@angular/core/testing';
 import {createKeyboardEvent} from '@angular/cdk/testing';
 import {ActiveDescendantKeyManager} from './activedescendant-key-manager';
 import {FocusKeyManager} from './focus-key-manager';
-import {ListKeyManager} from './list-key-manager';
+import {ListKeyManager, ListKeyManagerModifierKey} from './list-key-manager';
 import {FocusOrigin} from '../focus-monitor/focus-monitor';
 import {Subject} from 'rxjs';
 
@@ -98,6 +98,16 @@ describe('Key managers', () => {
       it('should emit tabOut when the tab key is pressed', () => {
         const spy = jasmine.createSpy('tabOut spy');
         keyManager.tabOut.pipe(take(1)).subscribe(spy);
+        keyManager.onKeydown(fakeKeyEvents.tab);
+
+        expect(spy).toHaveBeenCalled();
+      });
+
+      it('should emit tabOut when the tab key is pressed with a modifier', () => {
+        const spy = jasmine.createSpy('tabOut spy');
+        keyManager.tabOut.pipe(take(1)).subscribe(spy);
+
+        Object.defineProperty(fakeKeyEvents.tab, 'shiftKey', {get: () => true});
         keyManager.onKeydown(fakeKeyEvents.tab);
 
         expect(spy).toHaveBeenCalled();
@@ -338,6 +348,51 @@ describe('Key managers', () => {
           keyManager.onKeydown(this.prevKeyEvent);
           expect(this.prevKeyEvent.defaultPrevented).toBe(true);
         });
+
+        it('should not do anything for arrow keys if the alt key is held down', () => {
+          runModifierKeyTest(this, 'altKey');
+        });
+
+        it('should not do anything for arrow keys if the control key is held down', () => {
+          runModifierKeyTest(this, 'ctrlKey');
+        });
+
+        it('should not do anything for arrow keys if the meta key is held down', () => {
+          runModifierKeyTest(this, 'metaKey');
+        });
+
+        it('should not do anything for arrow keys if the shift key is held down', () => {
+          runModifierKeyTest(this, 'shiftKey');
+        });
+
+      }
+
+      /** Runs the test that asserts that we handle modifier keys correctly. */
+      function runModifierKeyTest(context: {
+        nextKeyEvent: KeyboardEvent,
+        prevKeyEvent: KeyboardEvent
+      }, modifier: ListKeyManagerModifierKey) {
+        const initialActiveIndex = keyManager.activeItemIndex;
+        const spy = jasmine.createSpy('change spy');
+        const subscription = keyManager.change.subscribe(spy);
+
+        expect(context.nextKeyEvent.defaultPrevented).toBe(false);
+        expect(context.prevKeyEvent.defaultPrevented).toBe(false);
+
+        Object.defineProperty(context.nextKeyEvent, modifier, {get: () => true});
+        Object.defineProperty(context.prevKeyEvent, modifier, {get: () => true});
+
+        keyManager.onKeydown(context.nextKeyEvent);
+        expect(context.nextKeyEvent.defaultPrevented).toBe(false);
+        expect(keyManager.activeItemIndex).toBe(initialActiveIndex);
+        expect(spy).not.toHaveBeenCalled();
+
+        keyManager.onKeydown(context.prevKeyEvent);
+        expect(context.prevKeyEvent.defaultPrevented).toBe(false);
+        expect(keyManager.activeItemIndex).toBe(initialActiveIndex);
+        expect(spy).not.toHaveBeenCalled();
+
+        subscription.unsubscribe();
       }
 
     });
@@ -607,6 +662,30 @@ describe('Key managers', () => {
         tick(debounceInterval);
 
         expect(keyManager.activeItem).toBe(itemList.items[1]);
+      }));
+
+      it('should not move focus if a modifier, that is not allowed, is pressed', fakeAsync(() => {
+        const tEvent = createKeyboardEvent('keydown', 84, undefined, 't');
+        Object.defineProperty(tEvent, 'ctrlKey', {get: () => true});
+
+        expect(keyManager.activeItem).toBeFalsy();
+
+        keyManager.onKeydown(tEvent); // types "t"
+        tick(debounceInterval);
+
+        expect(keyManager.activeItem).toBeFalsy();
+      }));
+
+      it('should always allow the shift key', fakeAsync(() => {
+        const tEvent = createKeyboardEvent('keydown', 84, undefined, 't');
+        Object.defineProperty(tEvent, 'shiftKey', {get: () => true});
+
+        expect(keyManager.activeItem).toBeFalsy();
+
+        keyManager.onKeydown(tEvent); // types "t"
+        tick(debounceInterval);
+
+        expect(keyManager.activeItem).toBeTruthy();
       }));
 
       it('should focus the first item that starts with sequence of letters', fakeAsync(() => {

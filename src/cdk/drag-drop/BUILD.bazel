@@ -1,7 +1,7 @@
 package(default_visibility=["//visibility:public"])
 
-load("@io_bazel_rules_sass//sass:sass.bzl", "sass_binary")
-load("//tools:defaults.bzl", "ng_module", "ng_test_library", "ng_web_test_suite")
+load("//tools:defaults.bzl", "ng_module", "ng_test_library", "ng_web_test_suite",
+  "markdown_to_html")
 
 ng_module(
   name = "drag-drop",
@@ -13,7 +13,7 @@ ng_module(
     "@rxjs",
     "@rxjs//operators",
     "//src/cdk/platform",
-    "//src/cdk/overlay",
+    "//src/cdk/scrolling",
     "//src/cdk/bidi",
     "//src/cdk/coercion",
   ],
@@ -32,4 +32,9 @@ ng_test_library(
 ng_web_test_suite(
   name = "unit_tests",
   deps = [":drag-drop_test_sources"],
+)
+
+markdown_to_html(
+  name = "overview",
+  srcs = [":drag-drop.md"],
 )

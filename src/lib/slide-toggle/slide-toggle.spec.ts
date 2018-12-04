@@ -1,3 +1,4 @@
+import {BidiModule, Direction} from '@angular/cdk/bidi';
 import {MutationObserverFactory} from '@angular/cdk/observers';
 import {dispatchFakeEvent} from '@angular/cdk/testing';
 import {Component} from '@angular/core';
@@ -10,11 +11,10 @@ import {
   tick,
 } from '@angular/core/testing';
 import {FormControl, FormsModule, NgModel, ReactiveFormsModule} from '@angular/forms';
+import {TestGestureConfig} from '@angular/material/testing';
 import {By, HAMMER_GESTURE_CONFIG} from '@angular/platform-browser';
-import {BidiModule, Direction} from '@angular/cdk/bidi';
-import {TestGestureConfig} from '../slider/test-gesture-config';
-import {MAT_SLIDE_TOGGLE_DEFAULT_OPTIONS} from './slide-toggle-config';
 import {MatSlideToggle, MatSlideToggleChange, MatSlideToggleModule} from './index';
+import {MAT_SLIDE_TOGGLE_DEFAULT_OPTIONS} from './slide-toggle-config';
 
 describe('MatSlideToggle without forms', () => {
   let gestureConfig: TestGestureConfig;
@@ -249,6 +249,12 @@ describe('MatSlideToggle without forms', () => {
       expect(inputElement.hasAttribute('aria-labelledby')).toBeFalsy();
     });
 
+    it('should set the `for` attribute to the id of the input element', () => {
+      expect(labelElement.getAttribute('for')).toBeTruthy();
+      expect(inputElement.getAttribute('id')).toBeTruthy();
+      expect(labelElement.getAttribute('for')).toBe(inputElement.getAttribute('id'));
+    });
+
     it('should emit the new values properly', fakeAsync(() => {
       labelElement.click();
       fixture.detectChanges();
@@ -288,6 +294,15 @@ describe('MatSlideToggle without forms', () => {
       expect(document.activeElement).not.toBe(inputElement);
 
       slideToggle.focus();
+      fixture.detectChanges();
+
+      expect(document.activeElement).toBe(inputElement);
+    });
+
+    it('should focus on underlying input element when the host is focused', () => {
+      expect(document.activeElement).not.toBe(inputElement);
+
+      slideToggleElement.focus();
       fixture.detectChanges();
 
       expect(document.activeElement).toBe(inputElement);
@@ -355,7 +370,7 @@ describe('MatSlideToggle without forms', () => {
       fixture.detectChanges();
 
       const slideToggle = fixture.debugElement.query(By.directive(MatSlideToggle)).nativeElement;
-      expect(slideToggle.getAttribute('tabindex')).toBeFalsy();
+      expect(slideToggle.getAttribute('tabindex')).toBe('-1');
     }));
   });
 

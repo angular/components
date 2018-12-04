@@ -385,6 +385,30 @@ describe('MatMenu', () => {
     expect(role).toBe('menu', 'Expected panel to have the "menu" role.');
   });
 
+  it('should set the "menuitem" role on the items by default', () => {
+    const fixture = createComponent(SimpleMenu, [], [FakeIcon]);
+    fixture.detectChanges();
+    fixture.componentInstance.trigger.openMenu();
+    fixture.detectChanges();
+
+    const items = Array.from(overlayContainerElement.querySelectorAll('.mat-menu-item'));
+
+    expect(items.length).toBeGreaterThan(0);
+    expect(items.every(item => item.getAttribute('role') === 'menuitem')).toBe(true);
+  });
+
+  it('should be able to set an alternate role on the menu items', () => {
+    const fixture = createComponent(MenuWithCheckboxItems);
+    fixture.detectChanges();
+    fixture.componentInstance.trigger.openMenu();
+    fixture.detectChanges();
+
+    const items = Array.from(overlayContainerElement.querySelectorAll('.mat-menu-item'));
+
+    expect(items.length).toBeGreaterThan(0);
+    expect(items.every(item => item.getAttribute('role') === 'menuitemcheckbox')).toBe(true);
+  });
+
   it('should not throw an error on destroy', () => {
     const fixture = createComponent(SimpleMenu, [], [FakeIcon]);
     expect(fixture.destroy.bind(fixture)).not.toThrow();
@@ -516,6 +540,39 @@ describe('MatMenu', () => {
       fixture.detectChanges();
     }).toThrowError(/must pass in an mat-menu instance/);
   });
+
+  it('should be able to swap out a menu after the first time it is opened', fakeAsync(() => {
+    const fixture = createComponent(DynamicPanelMenu);
+    fixture.detectChanges();
+    expect(overlayContainerElement.textContent).toBe('');
+
+    fixture.componentInstance.trigger.openMenu();
+    fixture.detectChanges();
+
+    expect(overlayContainerElement.textContent).toContain('One');
+    expect(overlayContainerElement.textContent).not.toContain('Two');
+
+    fixture.componentInstance.trigger.closeMenu();
+    fixture.detectChanges();
+    tick(500);
+    fixture.detectChanges();
+
+    expect(overlayContainerElement.textContent).toBe('');
+
+    fixture.componentInstance.trigger.menu = fixture.componentInstance.secondMenu;
+    fixture.componentInstance.trigger.openMenu();
+    fixture.detectChanges();
+
+    expect(overlayContainerElement.textContent).not.toContain('One');
+    expect(overlayContainerElement.textContent).toContain('Two');
+
+    fixture.componentInstance.trigger.closeMenu();
+    fixture.detectChanges();
+    tick(500);
+    fixture.detectChanges();
+
+    expect(overlayContainerElement.textContent).toBe('');
+  }));
 
   describe('lazy rendering', () => {
     it('should be able to render the menu content lazily', fakeAsync(() => {
@@ -2048,3 +2105,37 @@ class LazyMenuWithContext {
   @ViewChild('triggerTwo') triggerTwo: MatMenuTrigger;
 }
 
+
+
+@Component({
+  template: `
+    <button [matMenuTriggerFor]="one">Toggle menu</button>
+    <mat-menu #one="matMenu">
+      <button mat-menu-item>One</button>
+    </mat-menu>
+
+    <mat-menu #two="matMenu">
+      <button mat-menu-item>Two</button>
+    </mat-menu>
+  `
+})
+class DynamicPanelMenu {
+  @ViewChild(MatMenuTrigger) trigger: MatMenuTrigger;
+  @ViewChild('one') firstMenu: MatMenu;
+  @ViewChild('two') secondMenu: MatMenu;
+}
+
+
+@Component({
+  template: `
+    <button [matMenuTriggerFor]="menu">Toggle menu</button>
+
+    <mat-menu #menu="matMenu">
+      <button mat-menu-item role="menuitemcheckbox" aria-checked="true">Checked</button>
+      <button mat-menu-item role="menuitemcheckbox" aria-checked="false">Not checked</button>
+    </mat-menu>
+  `
+})
+class MenuWithCheckboxItems {
+  @ViewChild(MatMenuTrigger) trigger: MatMenuTrigger;
+}

@@ -7,7 +7,6 @@
  */
 import {CdkTreeNodePadding} from '@angular/cdk/tree';
 import {Directive, Input} from '@angular/core';
-import {_inheritCtorParametersMetadata} from '@angular/material/core';
 
 /**
  * Wrapper for the CdkTree padding with Material design styles.
@@ -24,6 +23,3 @@ export class MatTreeNodePadding<T> extends CdkTreeNodePadding<T> {
   /** The indent for each level. Default number 40px from material design menu sub-menu spec. */
   @Input('matTreeNodePaddingIndent') indent: number;
 }
-
-// TODO(devversion): workaround for https://github.com/angular/material2/issues/12760
-_inheritCtorParametersMetadata(MatTreeNodePadding, CdkTreeNodePadding);
