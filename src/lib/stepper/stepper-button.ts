@@ -9,7 +9,6 @@
 import {Directive} from '@angular/core';
 import {CdkStepper, CdkStepperNext, CdkStepperPrevious} from '@angular/cdk/stepper';
 import {MatStepper} from './stepper';
-import {_inheritCtorParametersMetadata} from '@angular/material/core';
 
 /** Button that moves to the next step in a stepper workflow. */
 @Directive({
@@ -34,7 +33,3 @@ export class MatStepperNext extends CdkStepperNext {}
   providers: [{provide: CdkStepper, useExisting: MatStepper}]
 })
 export class MatStepperPrevious extends CdkStepperPrevious {}
-
-// TODO(devversion): workaround for https://github.com/angular/material2/issues/12760
-_inheritCtorParametersMetadata(MatStepperNext, CdkStepperNext);
-_inheritCtorParametersMetadata(MatStepperPrevious, CdkStepperPrevious);

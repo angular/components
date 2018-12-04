@@ -18,6 +18,7 @@ import {
   Z,
   ZERO,
   NINE,
+  hasModifierKey,
 } from '@angular/cdk/keycodes';
 import {debounceTime, filter, map, tap} from 'rxjs/operators';
 
@@ -29,6 +30,9 @@ export interface ListKeyManagerOption {
   /** Gets the label for this option. */
   getLabel?(): string;
 }
+
+/** Modifier keys handled by the ListKeyManager. */
+export type ListKeyManagerModifierKey = 'altKey' | 'ctrlKey' | 'metaKey' | 'shiftKey';
 
 /**
  * This class manages keyboard events for selectable lists. If you pass it a query list
@@ -42,6 +46,7 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
   private _typeaheadSubscription = Subscription.EMPTY;
   private _vertical = true;
   private _horizontal: 'ltr' | 'rtl' | null;
+  private _allowedModifierKeys: ListKeyManagerModifierKey[] = [];
 
   /**
    * Predicate function that can be used to check whether an item should be skipped
@@ -119,6 +124,15 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
   }
 
   /**
+   * Modifier keys which are allowed to be held down and whose default actions will be prevented
+   * as the user is pressing the arrow keys. Defaults to not allowing any modifier keys.
+   */
+  withAllowedModifierKeys(keys: ListKeyManagerModifierKey[]): this {
+    this._allowedModifierKeys = keys;
+    return this;
+  }
+
+  /**
    * Turns on typeahead mode which allows users to set the active item by typing.
    * @param debounceInterval Time to wait after the last keystroke before setting the active item.
    */
@@ -188,6 +202,10 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
    */
   onKeydown(event: KeyboardEvent): void {
     const keyCode = event.keyCode;
+    const modifiers: ListKeyManagerModifierKey[] = ['altKey', 'ctrlKey', 'metaKey', 'shiftKey'];
+    const isModifierAllowed = modifiers.every(modifier => {
+      return !event[modifier] || this._allowedModifierKeys.indexOf(modifier) > -1;
+    });
 
     switch (keyCode) {
       case TAB:
@@ -195,7 +213,7 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
         return;
 
       case DOWN_ARROW:
-        if (this._vertical) {
+        if (this._vertical && isModifierAllowed) {
           this.setNextItemActive();
           break;
         } else {
@@ -203,7 +221,7 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
         }
 
       case UP_ARROW:
-        if (this._vertical) {
+        if (this._vertical && isModifierAllowed) {
           this.setPreviousItemActive();
           break;
         } else {
@@ -211,34 +229,30 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
         }
 
       case RIGHT_ARROW:
-        if (this._horizontal === 'ltr') {
-          this.setNextItemActive();
-          break;
-        } else if (this._horizontal === 'rtl') {
-          this.setPreviousItemActive();
+        if (this._horizontal && isModifierAllowed) {
+          this._horizontal === 'rtl' ? this.setPreviousItemActive() : this.setNextItemActive();
           break;
         } else {
           return;
         }
 
       case LEFT_ARROW:
-        if (this._horizontal === 'ltr') {
-          this.setPreviousItemActive();
-          break;
-        } else if (this._horizontal === 'rtl') {
-          this.setNextItemActive();
+        if (this._horizontal && isModifierAllowed) {
+          this._horizontal === 'rtl' ? this.setNextItemActive() : this.setPreviousItemActive();
           break;
         } else {
           return;
         }
 
       default:
-        // Attempt to use the `event.key` which also maps it to the user's keyboard language,
-        // otherwise fall back to resolving alphanumeric characters via the keyCode.
-        if (event.key && event.key.length === 1) {
-          this._letterKeyStream.next(event.key.toLocaleUpperCase());
-        } else if ((keyCode >= A && keyCode <= Z) || (keyCode >= ZERO && keyCode <= NINE)) {
-          this._letterKeyStream.next(String.fromCharCode(keyCode));
+      if (isModifierAllowed || hasModifierKey(event, 'shiftKey')) {
+          // Attempt to use the `event.key` which also maps it to the user's keyboard language,
+          // otherwise fall back to resolving alphanumeric characters via the keyCode.
+          if (event.key && event.key.length === 1) {
+            this._letterKeyStream.next(event.key.toLocaleUpperCase());
+          } else if ((keyCode >= A && keyCode <= Z) || (keyCode >= ZERO && keyCode <= NINE)) {
+            this._letterKeyStream.next(String.fromCharCode(keyCode));
+          }
         }
 
         // Note that we return here, in order to avoid preventing

@@ -8,7 +8,6 @@
 
 import {CdkTreeNodeToggle} from '@angular/cdk/tree';
 import {Directive, Input} from '@angular/core';
-import {_inheritCtorParametersMetadata} from '@angular/material/core';
 
 /**
  * Wrapper for the CdkTree's toggle with Material design styles.
@@ -23,6 +22,3 @@ import {_inheritCtorParametersMetadata} from '@angular/material/core';
 export class MatTreeNodeToggle<T> extends CdkTreeNodeToggle<T> {
   @Input('matTreeNodeToggleRecursive') recursive: boolean = false;
 }
-
-// TODO(devversion): workaround for https://github.com/angular/material2/issues/12760
-_inheritCtorParametersMetadata(MatTreeNodeToggle, CdkTreeNodeToggle);

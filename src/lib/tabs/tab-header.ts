@@ -114,7 +114,8 @@ export class MatTabHeader extends _MatTabHeaderMixinBase
   /** Used to manage focus between the tabs. */
   private _keyManager: FocusKeyManager<MatTabLabelWrapper>;
 
-  private _selectedIndex: number = 0;
+  /** Cached text content of the header. */
+  private _currentTextContent: string;
 
   /** The index of the active tab. */
   @Input()
@@ -128,6 +129,7 @@ export class MatTabHeader extends _MatTabHeaderMixinBase
       this._keyManager.updateActiveItemIndex(value);
     }
   }
+  private _selectedIndex: number = 0;
 
   /** Event emitted when the option is selected. */
   @Output() readonly selectFocusedIndex = new EventEmitter();
@@ -147,7 +149,7 @@ export class MatTabHeader extends _MatTabHeaderMixinBase
   ngAfterContentChecked(): void {
     // If the number of tab labels have changed, check if scrolling should be enabled
     if (this._tabLabelCount != this._labelWrappers.length) {
-      this._updatePagination();
+      this.updatePagination();
       this._tabLabelCount = this._labelWrappers.length;
       this._changeDetectorRef.markForCheck();
     }
@@ -198,7 +200,7 @@ export class MatTabHeader extends _MatTabHeaderMixinBase
     const dirChange = this._dir ? this._dir.change : observableOf(null);
     const resize = this._viewportRuler.change(150);
     const realign = () => {
-      this._updatePagination();
+      this.updatePagination();
       this._alignInkBarToSelectedTab();
     };
 
@@ -237,22 +239,35 @@ export class MatTabHeader extends _MatTabHeaderMixinBase
    * Callback for when the MutationObserver detects that the content has changed.
    */
   _onContentChanges() {
-    const zoneCallback = () => {
-      this._updatePagination();
-      this._alignInkBarToSelectedTab();
-      this._changeDetectorRef.markForCheck();
-    };
+    const textContent = this._elementRef.nativeElement.textContent;
 
-    // The content observer runs outside the `NgZone` by default, which
-    // means that we need to bring the callback back in ourselves.
-    // @breaking-change 8.0.0 Remove null check for `_ngZone` once it's a required parameter.
-    this._ngZone ? this._ngZone.run(zoneCallback) : zoneCallback();
+    // We need to diff the text content of the header, because the MutationObserver callback
+    // will fire even if the text content didn't change which is inefficient and is prone
+    // to infinite loops if a poorly constructed expression is passed in (see #14249).
+    if (textContent !== this._currentTextContent) {
+      this._currentTextContent = textContent;
+
+      const zoneCallback = () => {
+        this.updatePagination();
+        this._alignInkBarToSelectedTab();
+        this._changeDetectorRef.markForCheck();
+      };
+
+      // The content observer runs outside the `NgZone` by default, which
+      // means that we need to bring the callback back in ourselves.
+      // @breaking-change 8.0.0 Remove null check for `_ngZone` once it's a required parameter.
+      this._ngZone ? this._ngZone.run(zoneCallback) : zoneCallback();
+    }
   }
 
   /**
-   * Updating the view whether pagination should be enabled or not
+   * Updates the view whether pagination should be enabled or not.
+   *
+   * WARNING: Calling this method can be very costly in terms of performance.  It should be called
+   * as infrequently as possible from outside of the Tabs component as it causes a reflow of the
+   * page.
    */
-  _updatePagination() {
+  updatePagination() {
     this._checkPaginationEnabled();
     this._checkScrollingControls();
     this._updateTabScrollPosition();
@@ -323,7 +338,14 @@ export class MatTabHeader extends _MatTabHeaderMixinBase
     // seems to cause flickering and overflow in Internet Explorer. For example, the ink bar
     // and ripples will exceed the boundaries of the visible tab bar.
     // See: https://github.com/angular/material2/issues/10276
-    this._tabList.nativeElement.style.transform = `translateX(${translateX}px)`;
+    // We round the `transform` here, because transforms with sub-pixel precision cause some
+    // browsers to blur the content of the element.
+    this._tabList.nativeElement.style.transform = `translateX(${Math.round(translateX)}px)`;
+
+    // Setting the `transform` on IE will change the scroll offset of the parent, causing the
+    // position to be thrown off in some cases. We have to reset it ourselves to ensure that
+    // it doesn't get thrown off.
+    this._tabListContainer.nativeElement.scrollLeft = 0;
   }
 
   /** Sets the distance in pixels that the tab header should be transformed in the X-axis. */

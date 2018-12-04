@@ -7,7 +7,6 @@ import {
   copyFiles,
   inlineResourcesForDirectory,
   sequenceTask,
-  watchFiles,
 } from 'material2-build-tools';
 import {
   cdkPackage,
@@ -17,6 +16,7 @@ import {
   momentAdapterPackage,
   examplesPackage,
 } from '../packages';
+import {watchFilesAndReload} from '../util/watch-files-reload';
 
 // These imports don't have any typings provided.
 const firebaseTools = require('firebase-tools');
@@ -26,10 +26,10 @@ const {outputDir, packagesDir, projectDir} = buildConfig;
 /** Path to the directory where all bundles live. */
 const bundlesDir = join(outputDir, 'bundles');
 
-const appDir = join(packagesDir, 'demo-app');
-const outDir = join(outputDir, 'packages', 'demo-app');
+const appDir = join(packagesDir, 'dev-app');
+const outDir = join(outputDir, 'packages', 'dev-app');
 
-/** Array of vendors that are required to serve the demo-app. */
+/** Array of vendors that are required to serve the dev-app. */
 const appVendors = [
   '@angular',
   'systemjs',
@@ -42,13 +42,13 @@ const appVendors = [
   '@webcomponents',
 ];
 
-/** Glob that matches all required vendors for the demo-app. */
+/** Glob that matches all required vendors for the dev-app. */
 const vendorGlob = `+(${appVendors.join('|')})/**/*.+(html|css|js|map)`;
 
 /** Glob that matches all assets that need to be copied to the output. */
 const assetsGlob = join(appDir, `**/*.+(html|css|svg|ico)`);
 
-/** Path to the demo-app tsconfig file. */
+/** Path to the dev-app tsconfig file. */
 const tsconfigPath = join(appDir, 'tsconfig-build.json');
 
 task(':build:devapp:ts', tsBuildTask(tsconfigPath));
@@ -56,7 +56,7 @@ task(':build:devapp:assets', copyTask(assetsGlob, outDir));
 task(':build:devapp:scss', () => buildScssPipeline(appDir).pipe(dest(outDir)));
 task(':build:devapp:inline-resources', () => inlineResourcesForDirectory(outDir));
 
-task(':serve:devapp', serverTask(outDir, true));
+task(':serve:devapp', serverTask(outDir));
 
 task('build:devapp', sequenceTask(
   'cdk:build-no-bundles',
@@ -70,7 +70,7 @@ task('build:devapp', sequenceTask(
   'material-examples:build-no-bundles',
   [':build:devapp:assets', ':build:devapp:scss', ':build:devapp:ts'],
   // Inline all component resources because otherwise SystemJS tries to load HTML, CSS and
-  // JavaScript files which makes loading the demo-app extremely slow.
+  // JavaScript files which makes loading the dev-app extremely slow.
   ':build:devapp:inline-resources',
 ));
 
@@ -81,33 +81,37 @@ task('serve:devapp', ['build:devapp'], sequenceTask([':serve:devapp', ':watch:de
  * serve task with a middleware. e.g. on Firebase hosting.
  */
 
-/** Task that copies all vendors into the demo-app package. Allows hosting the app on firebase. */
+/** Task that copies all vendors into the dev-app package. Allows hosting the app on firebase. */
 task('stage-deploy:devapp', ['build:devapp'], () => {
-  copyFiles(join(projectDir, 'node_modules'), vendorGlob, join(outDir, 'node_modules'));
-  copyFiles(bundlesDir, '*.+(js|map)', join(outDir, 'dist/bundles'));
-  copyFiles(cdkPackage.outputDir, '**/*.+(js|map)', join(outDir, 'dist/packages/cdk'));
-  copyFiles(materialPackage.outputDir, '**/*.+(js|map)', join(outDir, 'dist/packages/material'));
+  const deployOutputDir = join(outputDir, 'devapp-deploy');
+
+  copyFiles(outDir, '**/*.+(css|js|map)', deployOutputDir);
+  copyFiles(join(projectDir, 'node_modules'), vendorGlob, join(deployOutputDir, 'node_modules'));
+  copyFiles(bundlesDir, '*.+(js|map)', join(deployOutputDir, 'dist/bundles'));
+  copyFiles(cdkPackage.outputDir, '**/*.+(js|map)', join(deployOutputDir, 'dist/packages/cdk'));
+  copyFiles(materialPackage.outputDir, '**/*.+(js|map)',
+    join(deployOutputDir, 'dist/packages/material'));
   copyFiles(materialExperimentalPackage.outputDir, '**/*.+(js|map)',
-      join(outDir, 'dist/packages/material-experimental'));
+    join(deployOutputDir, 'dist/packages/material-experimental'));
   copyFiles(cdkExperimentalPackage.outputDir, '**/*.+(js|map)',
-      join(outDir, 'dist/packages/cdk-experimental'));
+    join(deployOutputDir, 'dist/packages/cdk-experimental'));
   copyFiles(materialPackage.outputDir, '**/prebuilt/*.+(css|map)',
-      join(outDir, 'dist/packages/material'));
+    join(deployOutputDir, 'dist/packages/material'));
   copyFiles(examplesPackage.outputDir, '**/*.+(js|map)',
-      join(outDir, 'dist/packages/material-examples'));
+    join(deployOutputDir, 'dist/packages/material-examples'));
   copyFiles(momentAdapterPackage.outputDir, '**/*.+(js|map)',
-      join(outDir, 'dist/packages/material-moment-adapter'));
+    join(deployOutputDir, 'dist/packages/material-moment-adapter'));
 });
 
 /**
- * Task that deploys the demo-app to Firebase. Firebase project will be the one that is
+ * Task that deploys the dev-app to Firebase. Firebase project will be the one that is
  * set for project directory using the Firebase CLI.
  */
 task('deploy:devapp', ['stage-deploy:devapp'], () => {
   return firebaseTools.deploy({cwd: projectDir, only: 'hosting'})
     // Firebase tools opens a persistent websocket connection and the process will never exit.
     .then(() => {
-      console.log('Successfully deployed the demo-app to firebase');
+      console.log('Successfully deployed the dev-app to firebase');
       process.exit(0);
     })
     .catch((err: any) => {
@@ -123,40 +127,41 @@ task('deploy:devapp', ['stage-deploy:devapp'], () => {
  */
 
 task(':watch:devapp', () => {
-  watchFiles(join(appDir, '**/*.ts'), [':build:devapp:ts']);
-  watchFiles(join(appDir, '**/*.scss'), [':watch:devapp:rebuild-scss']);
-  watchFiles(join(appDir, '**/*.html'), [':watch:devapp:rebuild-html']);
+  watchFilesAndReload(join(appDir, '**/*.ts'), [':build:devapp:ts']);
+  watchFilesAndReload(join(appDir, '**/*.scss'), [':watch:devapp:rebuild-scss']);
+  watchFilesAndReload(join(appDir, '**/*.html'), [':watch:devapp:rebuild-html']);
 
-  // Custom watchers for all packages that are used inside of the demo-app. This is necessary
+  // Custom watchers for all packages that are used inside of the dev-app. This is necessary
   // because we only want to build the changed package (using the build-no-bundles task).
 
   // CDK package watchers.
-  watchFiles(join(cdkPackage.sourceDir, '**/*'), ['cdk:build-no-bundles']);
+  watchFilesAndReload(join(cdkPackage.sourceDir, '**/*'), ['cdk:build-no-bundles']);
 
   const materialCoreThemingGlob = join(materialPackage.sourceDir, '**/core/theming/**/*.scss');
 
   // Material package watchers.
-  watchFiles([
+  watchFilesAndReload([
     join(materialPackage.sourceDir, '**/!(*-theme.scss)'), `!${materialCoreThemingGlob}`
   ], ['material:build-no-bundles']);
-  watchFiles([
+  watchFilesAndReload([
     join(materialPackage.sourceDir, '**/*-theme.scss'), materialCoreThemingGlob
   ], [':build:devapp:scss']);
 
   // Moment adapter package watchers
-  watchFiles(join(momentAdapterPackage.sourceDir, '**/*'),
+  watchFilesAndReload(join(momentAdapterPackage.sourceDir, '**/*'),
     ['material-moment-adapter:build-no-bundles']);
 
   // Material experimental package watchers
-  watchFiles(join(materialExperimentalPackage.sourceDir, '**/*'),
+  watchFilesAndReload(join(materialExperimentalPackage.sourceDir, '**/*'),
     ['material-experimental:build-no-bundles']);
 
   // CDK experimental package watchers
-  watchFiles(join(cdkExperimentalPackage.sourceDir, '**/*'),
+  watchFilesAndReload(join(cdkExperimentalPackage.sourceDir, '**/*'),
     ['cdk-experimental:build-no-bundles']);
 
   // Example package watchers.
-  watchFiles(join(examplesPackage.sourceDir, '**/*'), ['material-examples:build-no-bundles']);
+  watchFilesAndReload(join(examplesPackage.sourceDir, '**/*'),
+    ['material-examples:build-no-bundles']);
 });
 
 // Note that we need to rebuild the TS here, because the resource inlining

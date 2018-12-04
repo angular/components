@@ -9,7 +9,16 @@
 import {FocusableOption, FocusKeyManager} from '@angular/cdk/a11y';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
 import {SelectionModel} from '@angular/cdk/collections';
-import {SPACE, ENTER, HOME, END, UP_ARROW, DOWN_ARROW, A} from '@angular/cdk/keycodes';
+import {
+  SPACE,
+  ENTER,
+  HOME,
+  END,
+  UP_ARROW,
+  DOWN_ARROW,
+  A,
+  hasModifierKey,
+} from '@angular/cdk/keycodes';
 import {
   AfterContentInit,
   Attribute,
@@ -267,7 +276,7 @@ export class MatListOption extends _MatListOptionMixinBase
   host: {
     'role': 'listbox',
     '[tabIndex]': 'tabIndex',
-    'class': 'mat-selection-list',
+    'class': 'mat-selection-list mat-list-base',
     '(focus)': 'focus()',
     '(blur)': '_onTouched()',
     '(keydown)': '_keydown($event)',
@@ -345,7 +354,8 @@ export class MatSelectionList extends _MatSelectionListMixinBase implements Focu
       .withTypeAhead()
       // Allow disabled items to be focusable. For accessibility reasons, there must be a way for
       // screenreader users, that allows reading the different options of the list.
-      .skipPredicate(() => false);
+      .skipPredicate(() => false)
+      .withAllowedModifierKeys(['shiftKey']);
 
     if (this._tempValues) {
       this._setOptionsFromValues(this._tempValues);
@@ -416,21 +426,26 @@ export class MatSelectionList extends _MatSelectionListMixinBase implements Focu
     const keyCode = event.keyCode;
     const manager = this._keyManager;
     const previousFocusIndex = manager.activeItemIndex;
+    const hasModifier = hasModifierKey(event);
 
     switch (keyCode) {
       case SPACE:
       case ENTER:
-        this._toggleFocusedOption();
-        // Always prevent space from scrolling the page since the list has focus
-        event.preventDefault();
+        if (!hasModifier) {
+          this._toggleFocusedOption();
+          // Always prevent space from scrolling the page since the list has focus
+          event.preventDefault();
+        }
         break;
       case HOME:
       case END:
-        keyCode === HOME ? manager.setFirstItemActive() : manager.setLastItemActive();
-        event.preventDefault();
+        if (!hasModifier) {
+          keyCode === HOME ? manager.setFirstItemActive() : manager.setLastItemActive();
+          event.preventDefault();
+        }
         break;
       case A:
-        if (event.ctrlKey) {
+        if (hasModifierKey(event, 'ctrlKey')) {
           this.options.find(option => !option.selected) ? this.selectAll() : this.deselectAll();
           event.preventDefault();
         }

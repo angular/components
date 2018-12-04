@@ -18,6 +18,5 @@ export * from './label/label-options';
 export * from './ripple/index';
 export * from './selection/index';
 
-// TODO: don't have this
-export * from './testing/month-constants';
-export * from './constructor-metadata-inherit';
+// TODO(devversion): remove this with v8
+export * from './month-constants';
