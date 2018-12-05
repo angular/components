@@ -1,7 +1,7 @@
 <cdk-tree [dataSource]="dataSource" [treeControl]="treeControl">
   <cdk-tree-node *cdkTreeNodeDef="let node" cdkTreeNodePadding class="example-tree-node">
     <button mat-icon-button disabled></button>
-    {{node.filename}}:  {{node.type}}
+    {{node.name}}
   </cdk-tree-node>
   <cdk-tree-node *cdkTreeNodeDef="let node; when: hasChild" cdkTreeNodePadding class="example-tree-node">
     <button mat-icon-button [attr.aria-label]="'toggle ' + node.filename" cdkTreeNodeToggle>
@@ -9,6 +9,6 @@
         {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
       </mat-icon>
     </button>
-    {{node.filename}}:  {{node.type}}
+    {{node.name}}
   </cdk-tree-node>
 </cdk-tree>
