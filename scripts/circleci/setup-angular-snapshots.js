@@ -1,9 +1,8 @@
 /**
  * Script that sets up the Angular snapshot github builds. We set up the snapshot builds by
  * overwriting the versions in the "package.json" and taking advantage of Yarn's resolutions
- * feature. Yarn resolutions will be used to flatten nested Angular packages because otherwise
- * Yarn to resolve multiple versions of Angular packages because dependencies are not always
- * flattened. See:
+ * feature. Yarn resolutions will be used to flatten nested Angular packages because by default
+ * Yarn does not flatten any dependency. See:
  *
  *  node_modules/compiler@snapshot
  *  node_modules/compiler-cli@snapshot
@@ -46,7 +45,7 @@ angularPackages.forEach(packageName => {
   // to explicitly set the version for the package listed in the project "package.json".
   packageJson.dependencies[packageName] = buildsUrl;
 
-  // In case this dependencies was previously a dev dependency, just remove it because we
+  // In case this dependency was previously a dev dependency, just remove it because we
   // re-added it as a normal dependency for simplicity.
   delete packageJson.devDependencies[packageName];
 });
