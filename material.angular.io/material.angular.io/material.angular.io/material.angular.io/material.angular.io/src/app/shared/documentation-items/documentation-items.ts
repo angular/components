@@ -92,6 +92,7 @@ const DOCS: {[key: string]: DocCategory[]} = {
           examples: [
             'form-field-overview',
             'form-field-label',
+            'form-field-appearance',
             'form-field-hint',
             'form-field-error',
             'form-field-prefix-suffix',
