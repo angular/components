@@ -1,7 +1,8 @@
 package(default_visibility=["//visibility:public"])
 
 load("@angular//:index.bzl", "ng_package")
-load("//:packages.bzl", "CDK_TARGETS", "MATERIAL_TARGETS", "ROLLUP_GLOBALS")
+load("//:packages.bzl", "CDK_TARGETS", "MATERIAL_TARGETS", "ROLLUP_GLOBALS", "MATERIAL_PACKAGES",
+  "CDK_PACKAGES")
 load("//tools:defaults.bzl", "ng_module")
 load("//tools/highlight-files:index.bzl", "highlight_files")
 load("//tools/package-docs-content:index.bzl", "package_docs_content")
@@ -28,6 +29,16 @@ filegroup(
   srcs = glob(["*/*.html", "*/*.css", "*/*.ts"])
 )
 
+filegroup(
+  name = "material-overviews",
+  srcs = ["//src/lib/%s:overview" % name for name in MATERIAL_PACKAGES]
+)
+
+filegroup(
+  name = "cdk-overviews",
+  srcs = ["//src/cdk/%s:overview" % name for name in CDK_PACKAGES]
+)
+
 highlight_files(
   name = "highlighted-source-files",
   srcs = [":example-source-files"]
@@ -47,6 +58,12 @@ package_docs_content(
     # In order to be able to run examples in StackBlitz, we also want to package the
     # plain source files into the docs-content.
     ":example-source-files": "examples-source",
+
+    # Package the overviews for "@angular/material" and "@angular/cdk" into the docs content
+    ":material-overviews": "overviews/material",
+    ":cdk-overviews": "overviews/cdk",
+
+    # TODO(devversion): we need to also package the API html files here
   }
 )
 
