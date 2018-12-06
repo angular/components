@@ -284,7 +284,7 @@ export class MatChipList extends _MatChipListMixinBase implements MatFormFieldCo
     this._selectable = coerceBooleanProperty(value);
 
     if (this.chips) {
-      this.chips.forEach(chip => chip.chipListSelectable = this._selectable);
+      this._syncSelectableState();
     }
   }
   protected _selectable: boolean = true;
@@ -365,13 +365,15 @@ export class MatChipList extends _MatChipListMixinBase implements MatFormFieldCo
 
     // When the list changes, re-subscribe
     this.chips.changes.pipe(startWith(null), takeUntil(this._destroyed)).subscribe(() => {
-      if (this.disabled) {
-        // Since this happens after the content has been
-        // checked, we need to defer it to the next tick.
-        Promise.resolve().then(() => {
+      // Since this happens after the content has been
+      // checked, we need to defer it to the next tick.
+      Promise.resolve().then(() => {
+        if (this.disabled) {
           this._syncChipsState();
-        });
-      }
+        }
+
+        this._syncSelectableState();
+      });
 
       this._resetChips();
 
@@ -812,6 +814,11 @@ export class MatChipList extends _MatChipListMixinBase implements MatFormFieldCo
         chip._chipListMultiple = this.multiple;
       });
     }
+  }
+
+  /** Syncs the chip list's `selected` state with the chips. */
+  private _syncSelectableState() {
+    this.chips.forEach(chip => chip.chipListSelectable = this._selectable);
   }
 
   static ngAcceptInputType_multiple: BooleanInput;

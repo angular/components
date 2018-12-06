@@ -701,6 +701,23 @@ describe('MatChipList', () => {
         .toBeUndefined('Expect no selected chips');
     });
 
+    it('should propagate the list `selectable` state to the individual chips on init',
+      fakeAsync(() => {
+        fixture.destroy();
+        TestBed.resetTestingModule();
+
+        const selectableFixture = createComponent(ChipListSelectableDisabled);
+        selectableFixture.detectChanges();
+        tick();
+
+        const selectableComponent = selectableFixture.componentInstance;
+
+        expect(selectableComponent.chipList.selectable)
+            .toBe(false, 'Expected chip list not to be selectable.');
+        expect(selectableComponent.chips.toArray().every(chip => !chip.selectable))
+            .toBe(true, 'Expected none of the chips to be selectable');
+      }));
+
   });
 
   describe('forms integration', () => {
@@ -1674,7 +1691,6 @@ class ChipListWithRemove {
   }
 }
 
-
 @Component({
   template: `
     <mat-form-field>
@@ -1716,4 +1732,23 @@ class ChipListInsideDynamicFormGroup {
       control: {value: [], disabled: isDisabled}
     });
   }
+}
+
+
+@Component({
+  template: `
+    <mat-form-field>
+      <mat-chip-list [selectable]="false">
+        <mat-chip *ngFor="let food of foods" [value]="food.value">{{ food.viewValue }}</mat-chip>
+      </mat-chip-list>
+    </mat-form-field>
+  `
+})
+class ChipListSelectableDisabled {
+  foods: any[] = [
+    {value: 'steak-0', viewValue: 'Steak'},
+    {value: 'pizza-1', viewValue: 'Pizza'},
+  ];
+  @ViewChild(MatChipList, {static: false}) chipList: MatChipList;
+  @ViewChildren(MatChip) chips: QueryList<MatChip>;
 }
