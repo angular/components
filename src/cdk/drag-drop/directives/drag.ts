@@ -56,7 +56,8 @@ export const CDK_DRAG_CONFIG = new InjectionToken<DragRefConfig>('CDK_DRAG_CONFI
 
 /** @docs-private */
 export function CDK_DRAG_CONFIG_FACTORY(): DragRefConfig {
-  return {dragStartThreshold: 5, pointerDirectionChangeThreshold: 5, dropStrategy: CdkDropStrategy.LastKnownContainer};
+  return {dragStartThreshold: 5, pointerDirectionChangeThreshold: 5,
+    dropStrategy: CdkDropStrategy.LastKnownContainer};
 }
 
 /** Element that can be moved inside a CdkDropList container. */

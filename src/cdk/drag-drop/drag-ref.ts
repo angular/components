@@ -685,7 +685,8 @@ export class DragRef<T = any> {
     // item into a new container.
     if (!newContainer && this.dropContainer !== this._initialContainer &&
       (this._initialContainer._isOverContainer(x, y) ||
-      !this.dropContainer!._isOverContainer(x, y))) {
+      (!this.dropContainer!._isOverContainer(x, y) &&
+      this._config.dropStrategy === CdkDropStrategy.ExactLocation))) {
     newContainer = this._initialContainer;
   }
 

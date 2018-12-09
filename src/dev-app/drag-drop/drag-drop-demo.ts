@@ -9,7 +9,8 @@
 import {Component, ViewEncapsulation} from '@angular/core';
 import {MatIconRegistry} from '@angular/material/icon';
 import {DomSanitizer} from '@angular/platform-browser';
-import { CDK_DRAG_CONFIG, CdkDragDrop, moveItemInArray, transferArrayItem, CdkDragConfig } from '@angular/cdk/drag-drop';
+import {CDK_DRAG_CONFIG, CdkDragDrop, moveItemInArray,
+   transferArrayItem, CdkDragConfig} from '@angular/cdk/drag-drop';
 
 @Component({
   moduleId: module.id,
@@ -20,7 +21,6 @@ import { CDK_DRAG_CONFIG, CdkDragDrop, moveItemInArray, transferArrayItem, CdkDr
   providers: [{
     provide: CDK_DRAG_CONFIG,
     useValue: { dragStartThreshold: 5, pointerDirectionChangeThreshold: 5,
-       dropStrategy: 1
     } as CdkDragConfig
   }]
 })

@@ -30,7 +30,6 @@ import {CdkDragHandle} from './drag-handle';
 import {CdkDropListGroup} from './drop-list-group';
 import {extendStyles} from '../drag-styling';
 import {DragRefConfig, CdkDropStrategy} from '../drag-ref';
-import { CdkDragConfig } from '../public-api';
 
 const ITEM_HEIGHT = 25;
 const ITEM_WIDTH = 75;
