@@ -9,15 +9,7 @@
 import {Component, ViewEncapsulation} from '@angular/core';
 import {MatIconRegistry} from '@angular/material/icon';
 import {DomSanitizer} from '@angular/platform-browser';
-import {
-  CdkDragDrop,
-  moveItemInArray,
-  transferArrayItem,
-  copyArrayItem,
-  CdkDragConfig,
-  CdkDropStrategy,
-  CDK_DRAG_CONFIG
-} from '@angular/cdk/drag-drop';
+import { CDK_DRAG_CONFIG, CdkDragDrop, moveItemInArray, transferArrayItem, CdkDragConfig } from '@angular/cdk/drag-drop';
 
 @Component({
   moduleId: module.id,
@@ -28,13 +20,11 @@ import {
   providers: [{
     provide: CDK_DRAG_CONFIG,
     useValue: { dragStartThreshold: 5, pointerDirectionChangeThreshold: 5,
-       dropStrategy: CdkDropStrategy.LastKnownContainer
+       dropStrategy: 1
     } as CdkDragConfig
   }]
 })
 export class DragAndDropDemo {
-
-  cloneMode = false;
   axisLock: 'x' | 'y';
   todo = [
     'Go out for Lunch',
@@ -72,19 +62,11 @@ export class DragAndDropDemo {
     if (event.previousContainer === event.container) {
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
     } else {
-      if (this.cloneMode) {
-        copyArrayItem(
-          event.previousContainer.data,
-          event.container.data,
-          event.previousIndex,
-          event.currentIndex);
-      } else {
-        transferArrayItem(
-          event.previousContainer.data,
-          event.container.data,
-          event.previousIndex,
-          event.currentIndex);
-      }
+      transferArrayItem(
+        event.previousContainer.data,
+        event.container.data,
+        event.previousIndex,
+        event.currentIndex);
     }
   }
 }

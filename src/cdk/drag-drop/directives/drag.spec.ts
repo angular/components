@@ -13,7 +13,7 @@ import {
   ChangeDetectionStrategy,
 } from '@angular/core';
 import {TestBed, ComponentFixture, fakeAsync, flush, tick} from '@angular/core/testing';
-import {DragDropModule} from './drag-drop-module';
+import {DragDropModule} from '../drag-drop-module';
 import {
   createMouseEvent,
   dispatchEvent,
@@ -22,12 +22,15 @@ import {
   createTouchEvent,
 } from '@angular/cdk/testing';
 import {Directionality} from '@angular/cdk/bidi';
-import {CdkDrag, CDK_DRAG_CONFIG, CdkDragConfig, CdkDropStrategy} from './drag';
-import {CdkDragDrop} from './drag-events';
-import {moveItemInArray} from './drag-utils';
+import {CdkDrag, CDK_DRAG_CONFIG} from './drag';
+import {CdkDragDrop} from '../drag-events';
+import {moveItemInArray} from '../drag-utils';
 import {CdkDropList} from './drop-list';
 import {CdkDragHandle} from './drag-handle';
 import {CdkDropListGroup} from './drop-list-group';
+import {extendStyles} from '../drag-styling';
+import {DragRefConfig, CdkDropStrategy} from '../drag-ref';
+import { CdkDragConfig } from '../public-api';
 
 const ITEM_HEIGHT = 25;
 const ITEM_WIDTH = 75;
@@ -35,7 +38,7 @@ const ITEM_WIDTH = 75;
 describe('CdkDrag', () => {
   function createComponent<T>(componentType: Type<T>, providers: Provider[] = [], dragDistance = 0):
     ComponentFixture<T> {
-      // If none of the providers is CDK_DRAG_CONFIG, add the default testing config
+
       if (providers.every((provider: any) =>
       provider.provide && provider.provide !== CDK_DRAG_CONFIG)) {
         providers.push({
@@ -46,15 +49,15 @@ describe('CdkDrag', () => {
             // have to deal with thresholds.
             dragStartThreshold: dragDistance,
             pointerDirectionChangeThreshold: 5
-          } as CdkDragConfig
-        });
-      }
+          } as DragRefConfig});
 
-    TestBed.configureTestingModule({
-      imports: [DragDropModule],
-      declarations: [componentType, PassthroughComponent],
-      providers: providers
-      ,
+        }
+      TestBed.configureTestingModule({
+        imports: [DragDropModule],
+        declarations: [componentType, PassthroughComponent],
+        providers: [
+          ...providers
+        ],
     }).compileComponents();
 
     return TestBed.createComponent<T>(componentType);
@@ -572,6 +575,24 @@ describe('CdkDrag', () => {
       expect(dragElement.style.transform).toBe('translate3d(13px, 37px, 0px)');
     }));
 
+    it('should allow for dragging to be constrained to an element', fakeAsync(() => {
+      const fixture = createComponent(StandaloneDraggable);
+      fixture.componentInstance.boundarySelector = '.wrapper';
+      fixture.detectChanges();
+      const dragElement = fixture.componentInstance.dragElement.nativeElement;
+
+      expect(dragElement.style.transform).toBeFalsy();
+      dragElementViaMouse(fixture, dragElement, 300, 300);
+      expect(dragElement.style.transform).toBe('translate3d(100px, 100px, 0px)');
+    }));
+
+    it('should throw if attached to an ng-container', fakeAsync(() => {
+      expect(() => {
+        createComponent(DraggableOnNgContainer).detectChanges();
+        flush();
+      }).toThrowError(/^cdkDrag must be attached to an element node/);
+    }));
+
   });
 
   describe('draggable with a handle', () => {
@@ -1051,6 +1072,8 @@ describe('CdkDrag', () => {
           .toBe('ltr', 'Expected preview element to inherit the directionality.');
       expect(previewRect.width).toBe(itemRect.width, 'Expected preview width to match element');
       expect(previewRect.height).toBe(itemRect.height, 'Expected preview height to match element');
+      expect(preview.style.pointerEvents)
+          .toBe('none', 'Expected pointer events to be disabled on the preview');
 
       dispatchMouseEvent(document, 'mouseup');
       fixture.detectChanges();
@@ -1060,6 +1083,29 @@ describe('CdkDrag', () => {
           .toBe(initialParent, 'Expected element to be moved back into its old parent');
       expect(item.style.display).toBeFalsy('Expected element to be visible');
       expect(preview.parentNode).toBeFalsy('Expected preview to be removed from the DOM');
+    }));
+
+    it('should be able to constrain the preview position', fakeAsync(() => {
+      const fixture = createComponent(DraggableInDropZone);
+      fixture.componentInstance.boundarySelector = '.cdk-drop-list';
+      fixture.detectChanges();
+      const item = fixture.componentInstance.dragItems.toArray()[1].element.nativeElement;
+      const listRect =
+          fixture.componentInstance.dropInstance.element.nativeElement.getBoundingClientRect();
+
+      startDraggingViaMouse(fixture, item);
+
+      const preview = document.querySelector('.cdk-drag-preview')! as HTMLElement;
+
+      startDraggingViaMouse(fixture, item, listRect.right + 50, listRect.bottom + 50);
+      flush();
+      dispatchMouseEvent(document, 'mousemove', listRect.right + 50, listRect.bottom + 50);
+      fixture.detectChanges();
+
+      const previewRect = preview.getBoundingClientRect();
+
+      expect(Math.floor(previewRect.bottom)).toBe(Math.floor(listRect.bottom));
+      expect(Math.floor(previewRect.right)).toBe(Math.floor(listRect.right));
     }));
 
     it('should clear the id from the preview', fakeAsync(() => {
@@ -1113,7 +1159,7 @@ describe('CdkDrag', () => {
       preview.style.transitionDuration = '500ms';
 
       // Move somewhere so the draggable doesn't exit immediately.
-      dispatchTouchEvent(document, 'mousemove', 50, 50);
+      dispatchMouseEvent(document, 'mousemove', 50, 50);
       fixture.detectChanges();
 
       dispatchMouseEvent(document, 'mouseup');
@@ -1171,7 +1217,7 @@ describe('CdkDrag', () => {
       const preview = document.querySelector('.cdk-drag-preview')! as HTMLElement;
       preview.style.transition = 'opacity 500ms ease';
 
-      dispatchTouchEvent(document, 'mousemove', 50, 50);
+      dispatchMouseEvent(document, 'mousemove', 50, 50);
       fixture.detectChanges();
 
       dispatchMouseEvent(document, 'mouseup');
@@ -1193,7 +1239,7 @@ describe('CdkDrag', () => {
         const preview = document.querySelector('.cdk-drag-preview')! as HTMLElement;
         preview.style.transition = 'opacity 500ms ease, transform 1000ms ease';
 
-        dispatchTouchEvent(document, 'mousemove', 50, 50);
+        dispatchMouseEvent(document, 'mousemove', 50, 50);
         fixture.detectChanges();
 
         dispatchMouseEvent(document, 'mouseup');
@@ -1684,6 +1730,29 @@ describe('CdkDrag', () => {
       expect(preview.textContent!.trim()).toContain('Custom preview');
     }));
 
+    it('should be able to constrain the position of a custom preview', fakeAsync(() => {
+      const fixture = createComponent(DraggableInDropZoneWithCustomPreview);
+      fixture.componentInstance.boundarySelector = '.cdk-drop-list';
+      fixture.detectChanges();
+      const item = fixture.componentInstance.dragItems.toArray()[1].element.nativeElement;
+      const listRect =
+          fixture.componentInstance.dropInstance.element.nativeElement.getBoundingClientRect();
+
+      startDraggingViaMouse(fixture, item);
+
+      const preview = document.querySelector('.cdk-drag-preview')! as HTMLElement;
+
+      startDraggingViaMouse(fixture, item, listRect.right + 50, listRect.bottom + 50);
+      flush();
+      dispatchMouseEvent(document, 'mousemove', listRect.right + 50, listRect.bottom + 50);
+      fixture.detectChanges();
+
+      const previewRect = preview.getBoundingClientRect();
+
+      expect(Math.floor(previewRect.bottom)).toBe(Math.floor(listRect.bottom));
+      expect(Math.floor(previewRect.right)).toBe(Math.floor(listRect.right));
+    }));
+
     it('should revert the element back to its parent after dragging with a custom ' +
       'preview has stopped', fakeAsync(() => {
         const fixture = createComponent(DraggableInDropZoneWithCustomPreview);
@@ -1831,6 +1900,30 @@ describe('CdkDrag', () => {
 
       expect(dragItems.map(drag => drag.element.nativeElement.textContent!.trim()))
           .toEqual(['Zero', 'One', 'Two', 'Three']);
+    }));
+
+    it('should not throw if the `touches` array is empty', fakeAsync(() => {
+      const fixture = createComponent(DraggableInDropZone);
+      fixture.detectChanges();
+      const item = fixture.componentInstance.dragItems.toArray()[1].element.nativeElement;
+
+      dispatchTouchEvent(item, 'touchstart');
+      fixture.detectChanges();
+
+      dispatchTouchEvent(document, 'touchmove');
+      fixture.detectChanges();
+
+      dispatchTouchEvent(document, 'touchmove', 50, 50);
+      fixture.detectChanges();
+
+      expect(() => {
+        const endEvent = createTouchEvent('touchend', 50, 50);
+        Object.defineProperty(endEvent, 'touches', {get: () => []});
+
+        dispatchEvent(document, endEvent);
+        fixture.detectChanges();
+      }).not.toThrow();
+
     }));
 
   });
@@ -2259,7 +2352,7 @@ describe('CdkDrag', () => {
             dragStartThreshold: 0,
             pointerDirectionChangeThreshold: 5,
             dropStrategy: CdkDropStrategy.ExactLocation
-          } as CdkDragConfig
+          } as DragRefConfig
         } as ValueProvider]);
       fixture.detectChanges();
 
@@ -2304,18 +2397,61 @@ describe('CdkDrag', () => {
       expect(Array.from(component.group._items)).toEqual([component.listOne, component.listTwo]);
     }));
 
+    it('should not be able to drop an element into a container that is under another element',
+      fakeAsync(() => {
+        const fixture = createComponent(ConnectedDropZones);
+        fixture.detectChanges();
+
+        const groups = fixture.componentInstance.groupedDragItems.slice();
+        const element = groups[0][1].element.nativeElement;
+        const dropInstances = fixture.componentInstance.dropInstances.toArray();
+        const targetRect = groups[1][2].element.nativeElement.getBoundingClientRect();
+        const coverElement = document.createElement('div');
+        const targetGroupRect = dropInstances[1].element.nativeElement.getBoundingClientRect();
+
+        // Add an extra element that covers the target container.
+        fixture.nativeElement.appendChild(coverElement);
+        extendStyles(coverElement.style, {
+          position: 'fixed',
+          top: targetGroupRect.top + 'px',
+          left: targetGroupRect.left + 'px',
+          bottom: targetGroupRect.bottom + 'px',
+          right: targetGroupRect.right + 'px',
+          background: 'orange'
+        });
+
+        dragElementViaMouse(fixture, element, targetRect.left + 1, targetRect.top + 1);
+        flush();
+        fixture.detectChanges();
+
+        const event = fixture.componentInstance.droppedSpy.calls.mostRecent().args[0];
+
+        expect(event).toBeTruthy();
+        expect(event).toEqual({
+          previousIndex: 1,
+          currentIndex: 1,
+          item: groups[0][1],
+          container: dropInstances[0],
+          previousContainer: dropInstances[0],
+          isPointerOverContainer: false
+        });
+      }));
+
   });
 
 });
 
 @Component({
   template: `
-    <div
-      cdkDrag
-      (cdkDragStarted)="startedSpy($event)"
-      (cdkDragEnded)="endedSpy($event)"
-      #dragElement
-      style="width: 100px; height: 100px; background: red;"></div>
+    <div class="wrapper" style="width: 200px; height: 200px; background: green;">
+      <div
+        cdkDrag
+        [cdkDragBoundary]="boundarySelector"
+        (cdkDragStarted)="startedSpy($event)"
+        (cdkDragEnded)="endedSpy($event)"
+        #dragElement
+        style="width: 100px; height: 100px; background: red;"></div>
+    </div>
   `
 })
 class StandaloneDraggable {
@@ -2323,6 +2459,7 @@ class StandaloneDraggable {
   @ViewChild(CdkDrag) dragInstance: CdkDrag;
   startedSpy = jasmine.createSpy('started spy');
   endedSpy = jasmine.createSpy('ended spy');
+  boundarySelector: string;
 }
 
 @Component({
@@ -2426,6 +2563,7 @@ const DROP_ZONE_FIXTURE_TEMPLATE = `
       *ngFor="let item of items"
       cdkDrag
       [cdkDragData]="item"
+      [cdkDragBoundary]="boundarySelector"
       [style.height.px]="item.height"
       [style.margin-bottom.px]="item.margin"
       style="width: 100%; background: red;">{{item.value}}</div>
@@ -2443,6 +2581,7 @@ class DraggableInDropZone {
     {value: 'Three', height: ITEM_HEIGHT, margin: 0}
   ];
   dropZoneId = 'items';
+  boundarySelector: string;
   sortedSpy = jasmine.createSpy('sorted spy');
   droppedSpy = jasmine.createSpy('dropped spy').and.callFake((event: CdkDragDrop<string[]>) => {
     moveItemInArray(this.items, event.previousIndex, event.currentIndex);
@@ -2505,10 +2644,16 @@ class DraggableInHorizontalDropZone {
 @Component({
   template: `
     <div cdkDropList style="width: 100px; background: pink;">
-      <div *ngFor="let item of items" cdkDrag
+      <div
+        *ngFor="let item of items"
+        cdkDrag
+        [cdkDragBoundary]="boundarySelector"
         style="width: 100%; height: ${ITEM_HEIGHT}px; background: red;">
           {{item}}
-          <div class="custom-preview" *cdkDragPreview>Custom preview</div>
+          <div
+            class="custom-preview"
+            style="width: 50px; height: 50px; background: purple;"
+            *cdkDragPreview>Custom preview</div>
       </div>
     </div>
   `
@@ -2517,6 +2662,7 @@ class DraggableInDropZoneWithCustomPreview {
   @ViewChild(CdkDropList) dropInstance: CdkDropList;
   @ViewChildren(CdkDrag) dragItems: QueryList<CdkDrag>;
   items = ['Zero', 'One', 'Two', 'Three'];
+  boundarySelector: string;
 }
 
 
@@ -2706,6 +2852,15 @@ class NestedDropListGroups {
   @ViewChild('listOne') listOne: CdkDropList;
   @ViewChild('listTwo') listTwo: CdkDropList;
 }
+
+
+@Component({
+  template: `
+    <ng-container cdkDrag></ng-container>
+  `
+})
+class DraggableOnNgContainer {}
+
 
 
 /**
