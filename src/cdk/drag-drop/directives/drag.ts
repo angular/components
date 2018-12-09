@@ -44,7 +44,7 @@ import {CdkDragPlaceholder} from './drag-placeholder';
 import {CdkDragPreview} from './drag-preview';
 import {CDK_DROP_LIST} from '../drop-list-container';
 import {CDK_DRAG_PARENT} from '../drag-parent';
-import {DragRef, DragRefConfig} from '../drag-ref';
+import {DragRef, DragRefConfig, CdkDropStrategy} from '../drag-ref';
 import {DropListRef} from '../drop-list-ref';
 import {CdkDropListInternal as CdkDropList} from './drop-list';
 
@@ -56,7 +56,7 @@ export const CDK_DRAG_CONFIG = new InjectionToken<DragRefConfig>('CDK_DRAG_CONFI
 
 /** @docs-private */
 export function CDK_DRAG_CONFIG_FACTORY(): DragRefConfig {
-  return {dragStartThreshold: 5, pointerDirectionChangeThreshold: 5};
+  return {dragStartThreshold: 5, pointerDirectionChangeThreshold: 5, dropStrategy: CdkDropStrategy.LastKnownContainer};
 }
 
 /** Element that can be moved inside a CdkDropList container. */
