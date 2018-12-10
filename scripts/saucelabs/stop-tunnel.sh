@@ -19,7 +19,7 @@ tunnelProcessId=$(cat ${tunnelPidFile})
 # we cannot use killall because CircleCI base container images don't have it installed.
 kill ${tunnelProcessId}
 
-while (ps -p ${tunnelProcessId} &> /dev/null); do
+while (ps -p ${tunnelProcessId}); do
   printf "."
   sleep .5
 done
