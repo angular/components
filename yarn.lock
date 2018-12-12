@@ -6361,10 +6361,10 @@ karma-sauce-launcher@1.2.0:
     saucelabs "^1.4.0"
     wd "^1.4.0"
 
-karma-sauce-launcher@^2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/karma-sauce-launcher/-/karma-sauce-launcher-2.0.0.tgz#f2d39013eb34e148bafb83172b744fa96ce90e5d"
-  integrity sha512-WIlCHnolf5R5Tye8v4LjUE+JAlO+uPZtw574gg+mfsXNjbZ4KO000A36Pm/iqzGYpgjZ59rHm5jlWwG43GNaYw==
+karma-sauce-launcher@^2.0.2:
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/karma-sauce-launcher/-/karma-sauce-launcher-2.0.2.tgz#dbf98e70d86bf287b03a537cf637eb7aefa975c3"
+  integrity sha512-jLUFaJhHMcKpxFWUesyWYihzM5FvQiJsDwGcCtKeOy2lsWhkVw0V0Byqb1d+wU6myU1mribBtsIcub23HS4kWA==
   dependencies:
     sauce-connect-launcher "^1.2.4"
     saucelabs "^1.5.0"
