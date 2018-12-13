@@ -8,6 +8,7 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "noUnusedParameters": true,
+    "noUnusedLocals": true,
     "strictNullChecks": true,
     "strictFunctionTypes": true,
     "noImplicitThis": true,
@@ -41,6 +42,7 @@
   "files": [
     "./typings.d.ts",
     "./dev-app-module.ts",
+    "./system-rxjs-operators.ts",
     "./system-config.ts",
     "./main.ts"
   ]

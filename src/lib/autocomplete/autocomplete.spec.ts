@@ -36,7 +36,7 @@ import {MatOption, MatOptionSelectionChange} from '@angular/material/core';
 import {MatFormField, MatFormFieldModule} from '@angular/material/form-field';
 import {By} from '@angular/platform-browser';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
-import {Observable, Subject, Subscription} from 'rxjs';
+import {Observable, Subject, Subscription, EMPTY} from 'rxjs';
 import {map, startWith} from 'rxjs/operators';
 import {MatInputModule} from '../input/index';
 import {
@@ -485,7 +485,7 @@ describe('MatAutocomplete', () => {
 
   it('should have the correct text direction in RTL', () => {
     const rtlFixture = createComponent(SimpleAutocomplete, [
-      {provide: Directionality, useFactory: () => ({value: 'rtl'})},
+      {provide: Directionality, useFactory: () => ({value: 'rtl', change: EMPTY})},
     ]);
 
     rtlFixture.detectChanges();
@@ -498,7 +498,7 @@ describe('MatAutocomplete', () => {
   });
 
   it('should update the panel direction if it changes for the trigger', () => {
-    const dirProvider = {value: 'rtl'};
+    const dirProvider = {value: 'rtl', change: EMPTY};
     const rtlFixture = createComponent(SimpleAutocomplete, [
       {provide: Directionality, useFactory: () => dirProvider},
     ]);
@@ -1643,6 +1643,22 @@ describe('MatAutocomplete', () => {
       expect(overlayContainerElement.querySelectorAll('mat-option')[0].classList)
           .toContain('mat-active', 'Expected first option to be highlighted.');
     }));
+
+    it('should be able to preselect the first option when the floating label is disabled',
+      fakeAsync(() => {
+        fixture.componentInstance.floatLabel = 'never';
+        fixture.componentInstance.trigger.autocomplete.autoActiveFirstOption = true;
+        fixture.detectChanges();
+
+        fixture.componentInstance.trigger.openPanel();
+        fixture.detectChanges();
+        zone.simulateZoneExit();
+        // Note: should not have a detectChanges call here
+        // in order for the test to fail when it's supposed to.
+
+        expect(overlayContainerElement.querySelectorAll('mat-option')[0].classList)
+            .toContain('mat-active', 'Expected first option to be highlighted.');
+      }));
 
     it('should be able to configure preselecting the first option globally', fakeAsync(() => {
       overlayContainer.ngOnDestroy();

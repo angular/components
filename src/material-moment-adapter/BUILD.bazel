@@ -1,8 +1,7 @@
 package(default_visibility=["//visibility:public"])
 
-load("@angular//:index.bzl", "ng_package")
-load("//tools:defaults.bzl", "ng_module")
-load("//:packages.bzl", "ROLLUP_GLOBALS", "VERSION_PLACEHOLDER_REPLACEMENTS")
+load("//tools:defaults.bzl", "ng_module", "ng_package")
+load("//:packages.bzl", "ROLLUP_GLOBALS")
 
 ng_module(
   name = "material-moment-adapter",
@@ -11,7 +10,8 @@ ng_module(
   deps = [
     "@angular//packages/core",
     "@matdeps//moment",
-    "//src/lib/core"
+    "//src/lib/core",
+    "//src/lib/testing",
   ],
   # Explicitly specify the tsconfig that is also used by Gulp. We need to explicitly use this
   # tsconfig because in order to import Moment with TypeScript, we need some special options
@@ -24,7 +24,6 @@ ng_package(
   srcs = ["package.json"],
   entry_point = "src/material-moment-adapter/public_api.js",
   globals = ROLLUP_GLOBALS,
-  replacements = VERSION_PLACEHOLDER_REPLACEMENTS,
   deps = [":material-moment-adapter"],
   # TODO(devversion): re-enable once we have set up the proper compiler for the ng_package
   tags = ["manual"],

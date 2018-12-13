@@ -18,6 +18,7 @@ import {
   Z,
   ZERO,
   NINE,
+  hasModifierKey,
 } from '@angular/cdk/keycodes';
 import {debounceTime, filter, map, tap} from 'rxjs/operators';
 
@@ -39,7 +40,7 @@ export type ListKeyManagerModifierKey = 'altKey' | 'ctrlKey' | 'metaKey' | 'shif
  */
 export class ListKeyManager<T extends ListKeyManagerOption> {
   private _activeItemIndex = -1;
-  private _activeItem: T;
+  private _activeItem: T | null = null;
   private _wrap = false;
   private _letterKeyStream = new Subject<string>();
   private _typeaheadSubscription = Subscription.EMPTY;
@@ -244,12 +245,14 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
         }
 
       default:
-        // Attempt to use the `event.key` which also maps it to the user's keyboard language,
-        // otherwise fall back to resolving alphanumeric characters via the keyCode.
-        if (event.key && event.key.length === 1) {
-          this._letterKeyStream.next(event.key.toLocaleUpperCase());
-        } else if ((keyCode >= A && keyCode <= Z) || (keyCode >= ZERO && keyCode <= NINE)) {
-          this._letterKeyStream.next(String.fromCharCode(keyCode));
+      if (isModifierAllowed || hasModifierKey(event, 'shiftKey')) {
+          // Attempt to use the `event.key` which also maps it to the user's keyboard language,
+          // otherwise fall back to resolving alphanumeric characters via the keyCode.
+          if (event.key && event.key.length === 1) {
+            this._letterKeyStream.next(event.key.toLocaleUpperCase());
+          } else if ((keyCode >= A && keyCode <= Z) || (keyCode >= ZERO && keyCode <= NINE)) {
+            this._letterKeyStream.next(String.fromCharCode(keyCode));
+          }
         }
 
         // Note that we return here, in order to avoid preventing
@@ -307,9 +310,11 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
   updateActiveItem(item: any): void {
     const itemArray = this._getItemsArray();
     const index = typeof item === 'number' ? item : itemArray.indexOf(item);
+    const activeItem = itemArray[index];
 
+    // Explicitly check for `null` and `undefined` because other falsy values are valid.
+    this._activeItem = activeItem == null ? null : activeItem;
     this._activeItemIndex = index;
-    this._activeItem = itemArray[index];
   }
 
   /**

@@ -11,7 +11,7 @@ import {Directionality} from '@angular/cdk/bidi';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
 import {ESCAPE} from '@angular/cdk/keycodes';
 import {Platform} from '@angular/cdk/platform';
-import {CdkScrollable, ScrollDispatcher} from '@angular/cdk/scrolling';
+import {CdkScrollable, ScrollDispatcher, ViewportRuler} from '@angular/cdk/scrolling';
 import {DOCUMENT} from '@angular/common';
 import {
   AfterContentChecked,
@@ -217,6 +217,9 @@ export class MatDrawer implements AfterContentInit, AfterContentChecked, OnDestr
     );
   }
 
+  /** Emits when the component is destroyed. */
+  private readonly _destroyed = new Subject<void>();
+
   /** Event emitted when the drawer's position changes. */
   // tslint:disable-next-line:no-output-on-prefix
   @Output('positionChanged') onPositionChanged: EventEmitter<void> = new EventEmitter<void>();
@@ -260,7 +263,8 @@ export class MatDrawer implements AfterContentInit, AfterContentChecked, OnDestr
      */
     this._ngZone.runOutsideAngular(() => {
         fromEvent<KeyboardEvent>(this._elementRef.nativeElement, 'keydown').pipe(
-            filter(event => event.keyCode === ESCAPE && !this.disableClose)
+            filter(event => event.keyCode === ESCAPE && !this.disableClose),
+            takeUntil(this._destroyed)
         ).subscribe(event => this._ngZone.run(() => {
             this.close();
             event.stopPropagation();
@@ -341,6 +345,8 @@ export class MatDrawer implements AfterContentInit, AfterContentChecked, OnDestr
 
     this._animationStarted.complete();
     this._animationEnd.complete();
+    this._destroyed.next();
+    this._destroyed.complete();
   }
 
   /**
@@ -502,7 +508,12 @@ export class MatDrawerContainer implements AfterContentInit, DoCheck, OnDestroy 
               private _ngZone: NgZone,
               private _changeDetectorRef: ChangeDetectorRef,
               @Inject(MAT_DRAWER_DEFAULT_AUTOSIZE) defaultAutosize = false,
-              @Optional() @Inject(ANIMATION_MODULE_TYPE) private _animationMode?: string) {
+              @Optional() @Inject(ANIMATION_MODULE_TYPE) private _animationMode?: string,
+              /**
+               * @deprecated viewportRuler to become a required parameter.
+               * @breaking-change 8.0.0
+               */
+              @Optional() viewportRuler?: ViewportRuler) {
 
     // If a `Dir` directive exists up the tree, listen direction changes
     // and update the left/right properties to point to the proper start/end.
@@ -511,6 +522,14 @@ export class MatDrawerContainer implements AfterContentInit, DoCheck, OnDestroy 
         this._validateDrawers();
         this._updateContentMargins();
       });
+    }
+
+    // Since the minimum width of the sidenav depends on the viewport width,
+    // we need to recompute the margins if the viewport changes.
+    if (viewportRuler) {
+      viewportRuler.change()
+        .pipe(takeUntil(this._destroyed))
+        .subscribe(() => this._updateContentMargins());
     }
 
     this._autosize = defaultAutosize;
@@ -572,8 +591,8 @@ export class MatDrawerContainer implements AfterContentInit, DoCheck, OnDestroy 
    */
   private _watchDrawerToggle(drawer: MatDrawer): void {
     drawer._animationStarted.pipe(
+      filter((event: AnimationEvent) => event.fromState !== event.toState),
       takeUntil(this._drawers.changes),
-      filter((event: AnimationEvent) => event.fromState !== event.toState)
     )
     .subscribe((event: AnimationEvent) => {
       // Set the transition class on the container so that the animations occur. This should not

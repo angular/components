@@ -1,7 +1,8 @@
 package(default_visibility=["//visibility:public"])
 
 load("@io_bazel_rules_sass//:defs.bzl", "sass_library", "sass_binary")
-load("//tools:defaults.bzl", "ng_module", "ng_test_library", "ng_web_test_suite")
+load("//tools:defaults.bzl", "ng_module", "ng_test_library", "ng_web_test_suite",
+  "markdown_to_html")
 
 ng_module(
   name = "input",
@@ -21,15 +22,10 @@ ng_module(
   ],
 )
 
-# TODO(jelbourn): replace this w/ sass_library when it supports acting like a filegroup
-filegroup(
-  name = "input_scss_partials",
-  srcs = glob(["**/_*.scss"]),
-)
-
 sass_library(
-  name = "theme",
-  srcs = glob(["**/*-theme.scss"]),
+  name = "input_scss_lib",
+  srcs = glob(["**/_*.scss"]),
+  deps = ["//src/lib/core:core_scss_lib"],
 )
 
 ng_test_library(
@@ -39,6 +35,7 @@ ng_test_library(
     "@angular//packages/forms",
     "@angular//packages/platform-browser",
     "@angular//packages/platform-browser/animations",
+    "//src/cdk/bidi",
     "//src/cdk/platform",
     "//src/cdk/testing",
     "//src/lib/core",
@@ -52,4 +49,9 @@ ng_test_library(
 ng_web_test_suite(
   name = "unit_tests",
   deps = [":input_test_sources"],
+)
+
+markdown_to_html(
+  name = "overview",
+  srcs = [":input.md"],
 )

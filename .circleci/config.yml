@@ -57,8 +57,9 @@ var_8: &copy_bazel_config
 var_9: &docker-firefox-image
   # TODO(devversion): Temporarily use a image that includes Firefox 62 because the
   # ngcontainer image does include an old Firefox version that does not support headless.
-  # See the PR that fixes this: https://github.com/angular/angular/pull/26435
-  - image: circleci/node:10.12-browsers
+  # TODO(devversion): Update to 11.4.0 once Nunjucks supports Node versions higher than v11.1.0
+  # See: https://github.com/mozilla/nunjucks/pull/1169
+  - image: circleci/node:11.1.0-browsers
 
 # Attaches the release output which has been stored in the workspace to the current job.
 # https://circleci.com/docs/2.0/workflows/#using-workspaces-to-share-data-among-jobs
@@ -89,25 +90,24 @@ jobs:
       - *copy_bazel_config
 
       - run: bazel build src/...
-      - run: bazel test src/... tools/public_api_guard/...
+      - run: bazel test src/...
 
-  # ------------------------------------------------------------------------------------------
-  # Job that runs the unit tests on locally installed browsers (Chrome and Firefox headless).
-  # The available browsers are installed through the angular/ngcontainer Docker image.
-  # ------------------------------------------------------------------------------------------
-  tests_local_browsers:
-    docker: *docker-firefox-image
+      # Note: We want to save the cache in this job because the workspace cache also
+      # includes the Bazel repository cache that will be updated in this job.
+      - *save_cache
+
+  # --------------------------------------------------------------------------------------------
+  # Job that runs ts-api-guardian against our API goldens in "tools/public_api_guard".
+  # This job fails whenever an API has been updated but not explicitly approved through goldens.
+  # --------------------------------------------------------------------------------------------
+  api_golden_checks:
     resource_class: xlarge
-    environment:
-      TEST_PLATFORM: local
+    <<: *job_defaults
     steps:
-      - *checkout_code
-      - *restore_cache
-      - *yarn_install
+    - *checkout_code
+    - *restore_cache
 
-      # Launches the unit tests. The platform is determined by the "TEST_PLATFORM" environment
-      # variable which has been configured above
-      - run: yarn gulp ci:test
+    - run: bazel test tools/public_api_guard/...
 
   # ----------------------------------------------------------------
   # Job that runs the e2e tests with Protractor and Chrome Headless
@@ -121,6 +121,20 @@ jobs:
       - *yarn_install
 
       - run: yarn gulp ci:e2e
+
+  # ------------------------------------------------------------------------------------------
+  # Job that runs the unit tests on locally installed browsers (Chrome and Firefox headless).
+  # The available browsers are installed through the angular/ngcontainer Docker image.
+  # ------------------------------------------------------------------------------------------
+  tests_local_browsers:
+    docker: *docker-firefox-image
+    resource_class: xlarge
+    steps:
+    - *checkout_code
+    - *restore_cache
+    - *yarn_install
+
+    - run: ./scripts/circleci/run-local-browser-tests.sh
 
   # ----------------------------------------------------------------------------
   # Job that runs the unit tests on Browserstack. The browsers that will be used
@@ -149,6 +163,9 @@ jobs:
     environment:
       SAUCE_USERNAME: "angular-ci"
       SAUCE_ACCESS_KEY: "9b988f434ff8-fbca-8aa4-4ae3-35442987"
+      # Note: This number should not be too high because otherwise we might run into
+      # a rate limit exception.
+      KARMA_PARALLEL_BROWSERS: 2
     steps:
     - *checkout_code
     - *restore_cache
@@ -222,8 +239,8 @@ jobs:
       - run:
           name: Prepare CDK artifacts for publish.
           command: |
-            mkdir -p  /tmp/cdk-umd-artifacts
-            cp dist/releases/cdk/bundles/*.umd.js /tmp/cdk-umd-artifacts
+            mkdir -p /tmp/cdk-umd-minified-bundles
+            cp dist/releases/cdk/bundles/*.umd.min.js /tmp/cdk-umd-minified-bundles
 
       # Publish bundle artifacts which will be used to calculate the size change.
       # Note: Make sure that the size plugin from the Angular robot fetches the artifacts
@@ -233,13 +250,11 @@ jobs:
       # artifacts from CircleCI. See:
       # https://github.com/angular/github-robot/blob/master/functions/src/plugins/size.ts#L392-L394
       - store_artifacts:
-          path: dist/releases/material/bundles/material.umd.js
-          destination: /angular_material/material_release_output/material.umd.js
+          path: dist/releases/material/bundles/material.umd.min.js
+          destination: /angular_material/material_release_output/material.umd.min.js
       - store_artifacts:
-          path: /tmp/cdk-umd-artifacts
+          path: /tmp/cdk-umd-minified-bundles
           destination: /angular_material/cdk_release_output/
-
-      - *save_cache
 
   # ----------------------------------------
   # Job that publishes the build snapshots
@@ -266,7 +281,20 @@ jobs:
 
       - run: ./scripts/circleci/publish-snapshots.sh
 
-      - *save_cache
+
+  # ----------------------------------------------------------------------------
+  # Job that runs the local browser tests against the Angular Github snapshots
+  # ----------------------------------------------------------------------------
+  snapshot_tests_local_browsers:
+    docker: *docker-firefox-image
+    resource_class: xlarge
+    steps:
+    - *checkout_code
+    - *restore_cache
+    - *yarn_install
+
+    - run: node ./scripts/circleci/setup-angular-snapshots.js
+    - run: ./scripts/circleci/run-local-browser-tests.sh
 
 # ----------------------------------------------------------------------------------------
 # Workflow definitions. A workflow usually groups multiple jobs together. This is useful if
@@ -283,6 +311,7 @@ workflows:
   build_and_test:
     jobs:
       - bazel_build_test
+      - api_golden_checks
 
   unit_tests:
     jobs:
@@ -309,6 +338,25 @@ workflows:
   lint:
     jobs:
       - lint
+
+  # Snapshot tests workflow that is scheduled to run all specified jobs at midnight everyday.
+  # This workflow runs various jobs against the Angular snapshot builds from Github.
+  snapshot_tests:
+    jobs:
+      # Note that we need additional jobs for the nightly snapshot tests because there is no
+      # easy way to detect whether a job runs inside of a cronjob or specific workflow.
+      # See: https://circleci.com/ideas/?idea=CCI-I-295
+      - snapshot_tests_local_browsers
+    triggers:
+      - schedule:
+          cron: "0 0 * * *"
+          filters:
+            branches:
+              only:
+                # We only want to run the "master" branch against the snapshot builds because
+                # it's not guaranteed that older versions of Angular Material always work
+                # with the latest Angular version.
+                - master
 
 # ---------------------------
 # General setup for CircleCI
