@@ -17,6 +17,8 @@ import {
   ViewEncapsulation,
   OnChanges,
   SimpleChanges,
+  ChangeDetectorRef,
+  OnDestroy,
 } from '@angular/core';
 import {
   DateAdapter,
@@ -25,6 +27,7 @@ import {
   MatSingleDateSelectionModel
 } from '@angular/material/core';
 import {take} from 'rxjs/operators';
+import {Subscription} from 'rxjs';
 
 /**
  * Extra CSS classes that can be associated with a calendar cell.
@@ -71,7 +74,7 @@ export class MatCalendarCell<D = unknown> {
   providers: [MAT_SINGLE_DATE_SELECTION_MODEL_PROVIDER],
 })
 // @breaking-change 9.0.0 remove generic default type
-export class MatCalendarBody<D = unknown> implements OnChanges {
+export class MatCalendarBody<D = unknown> implements OnChanges, OnDestroy {
   /** The label for the table. (e.g. "Jan 2017"). */
   @Input() label: string;
 
@@ -154,18 +157,21 @@ export class MatCalendarBody<D = unknown> implements OnChanges {
   _cellWidth: string;
 
   private _today: D;
+  private _selectionSubscription: Subscription;
 
   constructor(private _elementRef: ElementRef<HTMLElement>,
               private _ngZone: NgZone,
+              private _cdr: ChangeDetectorRef,
               private _dateAdapter: DateAdapter<D>,
               readonly _selectionModel: MatDateSelectionModel<D>) {
-    this._today = this._dateAdapter.today();
-    // Note(mmalerba): This is required to zero out the time portion of the date.
-    // Revisit this when we support time picking.
-    this._today = this._dateAdapter.createDate(
-        this._dateAdapter.getYear(this._today),
-        this._dateAdapter.getMonth(this._today),
-        this._dateAdapter.getDate(this._today));
+    this._updateToday();
+
+    this._selectionSubscription =
+        this._selectionModel.selectionChange.subscribe(() => this._cdr.markForCheck());
+  }
+
+  ngOnDestroy() {
+    this._selectionSubscription.unsubscribe();
   }
 
   _cellClicked(cell: MatCalendarCell<D>): void {
@@ -215,9 +221,8 @@ export class MatCalendarBody<D = unknown> implements OnChanges {
   }
 
   _isToday(item: MatCalendarCell<D>): boolean {
-    const today = this._dateAdapter.today();
-    return this._dateAdapter.compareDate(item.range.start, today) <= 0 &&
-        this._dateAdapter.compareDate(item.range.end, today) >= 0;
+    return this._dateAdapter.compareDate(item.range.start, this._today) <= 0 &&
+        this._dateAdapter.compareDate(item.range.end, this._today) >= 0;
   }
 
   /** Focuses the active cell after the microtask queue is empty. */
@@ -232,6 +237,16 @@ export class MatCalendarBody<D = unknown> implements OnChanges {
         }
       });
     });
+  }
+
+  _updateToday() {
+    this._today = this._dateAdapter.today();
+    // Note(mmalerba): This is required to zero out the time portion of the date.
+    // Revisit this when we support time picking.
+    this._today = this._dateAdapter.createDate(
+        this._dateAdapter.getYear(this._today),
+        this._dateAdapter.getMonth(this._today),
+        this._dateAdapter.getDate(this._today));
   }
 
   // @breaking-change 9.0.0 remove when deprecated properties relying on it are removed.
