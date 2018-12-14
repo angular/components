@@ -1,8 +1,8 @@
 import {Component} from '@angular/core';
-import {async, ComponentFixture, TestBed, inject} from '@angular/core/testing';
+import {async, ComponentFixture, inject, TestBed} from '@angular/core/testing';
+import {DateAdapter, MatNativeDateModule} from '@angular/material/core';
 import {By} from '@angular/platform-browser';
-import {MatNativeDateModule, DateAdapter} from '@angular/material/core';
-import {MatCalendarBody, MatCalendarCell} from './calendar-body';
+import {MatCalendarBody, MatCalendarCell, MatCalendarCellCssClasses} from './calendar-body';
 
 
 describe('MatCalendarBody', () => {
