@@ -1,12 +1,16 @@
 import {Component} from '@angular/core';
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import {async, ComponentFixture, TestBed, inject} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
+import {MatNativeDateModule, DateAdapter} from '@angular/material/core';
 import {MatCalendarBody, MatCalendarCell} from './calendar-body';
 
 
 describe('MatCalendarBody', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
+      imports: [
+        MatNativeDateModule,
+      ],
       declarations: [
         MatCalendarBody,
 
@@ -32,7 +36,10 @@ describe('MatCalendarBody', () => {
       cellEls = Array.from(calendarBodyNativeElement.querySelectorAll('.mat-calendar-body-cell'));
     }
 
-    beforeEach(() => {
+    beforeEach(inject([DateAdapter], (adapter: DateAdapter<Date>) => {
+      const fakeToday = new Date(2017, 0, 3);
+      spyOn(adapter, 'today').and.callFake(() => fakeToday);
+
       fixture = TestBed.createComponent(StandardCalendarBody);
       fixture.detectChanges();
 
@@ -41,7 +48,7 @@ describe('MatCalendarBody', () => {
       testComponent = fixture.componentInstance;
 
       refreshElementLists();
-    });
+    }));
 
     it('creates body', () => {
       expect(rowEls.length).toBe(3);
@@ -140,7 +147,7 @@ class StandardCalendarBody {
 
 function createCell(value: number, cellClasses?: MatCalendarCellCssClasses) {
   return new MatCalendarCell(
-      {start: new Date(value), end: new Date(value)},
+      {start: new Date(2017, 0, value), end: new Date(2017, 0, value)},
       `${value}`,
       `${value}-label`,
       true,

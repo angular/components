@@ -41,9 +41,9 @@ import {
   MatDateSelectionModel,
   MatSingleDateSelectionModel
 } from '@angular/material/core';
-import {Subscription} from 'rxjs';
 import {MatCalendarBody, MatCalendarCell} from './calendar-body';
 import {createMissingDateImplError} from './datepicker-errors';
+import {Subscription} from 'rxjs';
 
 /**
  * An internal component used to display a single year in the datepicker.
@@ -153,6 +153,7 @@ export class MatYearView<D> implements AfterContentInit, OnDestroy {
   }
 
   ngAfterContentInit() {
+    this._matCalendarBody._updateToday();
     this._init();
   }
 
