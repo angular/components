@@ -269,7 +269,7 @@ export class MatDatepicker<D> implements OnDestroy, CanColor {
   private _focusedElementBeforeOpen: HTMLElement | null = null;
 
   /** Subscription to value changes in the associated input element. */
-  private _inputSubscription = Subscription.EMPTY;
+  private _subscriptions = new Subscription();
 
   /** The input element this datepicker is associated with. */
   _datepickerInput: MatDatepickerInput<D>;
@@ -295,11 +295,15 @@ export class MatDatepicker<D> implements OnDestroy, CanColor {
     }
 
     this._scrollStrategy = scrollStrategy;
+
+    this._subscriptions.add(_dateSelection.selectionChange.subscribe(() => {
+      this._selectedChanged.next(_dateSelection.getSelection() || undefined);
+    }));
   }
 
   ngOnDestroy() {
     this.close();
-    this._inputSubscription.unsubscribe();
+    this._subscriptions.unsubscribe();
     this._disabledChange.complete();
 
     if (this._popupRef) {
@@ -313,7 +317,6 @@ export class MatDatepicker<D> implements OnDestroy, CanColor {
     let oldValue = this._dateSelection.getSelection();
     if (!this._dateAdapter.sameDate(oldValue, date)) {
       this._dateSelection.add(date);
-      this._selectedChanged.next(this._dateSelection.getSelection() || undefined);
     }
   }
 

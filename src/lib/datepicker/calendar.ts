@@ -321,7 +321,7 @@ export class MatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDes
     this._calendarHeaderPortal = new ComponentPortal(this.headerComponent || MatCalendarHeader);
     this.activeDate = this.startAt || this._dateAdapter.today();
 
-    // Assign to the private property since we don't want to move focus on init.
+    // Assign to the private property since we don't want to move on init.
     this._currentView = this.startView;
   }
 
