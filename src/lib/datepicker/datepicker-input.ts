@@ -110,8 +110,8 @@ export class MatDatepickerInput<D> implements ControlValueAccessor, OnDestroy, V
     this._datepicker._registerInput(this);
     this._datepickerSubscription.unsubscribe();
 
-    if (this._initialSelection) {
-      this._initialSelection = false;
+    if (this._isSelectionInitialized) {
+      this._isSelectionInitialized = false;
       this._selectionModel.ngOnDestroy();
     }
 
@@ -228,7 +228,7 @@ export class MatDatepickerInput<D> implements ControlValueAccessor, OnDestroy, V
 
   private _localeSubscription = Subscription.EMPTY;
 
-  private _initialSelection = true;
+  private _isSelectionInitialized = true;
 
   /** The form control validator for whether the input parses. */
   private _parseValidator: ValidatorFn = (): ValidationErrors | null => {
@@ -284,7 +284,8 @@ export class MatDatepickerInput<D> implements ControlValueAccessor, OnDestroy, V
       this.value = this.value;
     });
 
-    // Set a default model that gets overridden.
+    // Set a default model to prevent failure when reading value. Gets overridden when the
+    // datepicker is set.
     this._selectionModel = new MatSingleDateSelectionModel(_dateAdapter);
   }
 
