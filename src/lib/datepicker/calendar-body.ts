@@ -54,7 +54,7 @@ export class MatCalendarCell<D = unknown> {
 
 
 
-  /**
+/**
  * An internal component used to display calendar data in a table.
  * @docs-private
  */
