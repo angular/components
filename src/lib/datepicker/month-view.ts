@@ -88,7 +88,7 @@ export class MatMonthView<D> implements AfterContentInit, OnDestroy {
   get selected(): D | null { return this._selectionModel.getFirstSelectedDate(); }
   set selected(value: D | null) {
     if (this._selectionModel instanceof MatSingleDateSelectionModel) {
-      this._selectionModel.setSelection(value);
+      this._selectionModel.add(value);
       this.extractDate();
     }
   }
@@ -179,6 +179,7 @@ export class MatMonthView<D> implements AfterContentInit, OnDestroy {
   }
 
   ngAfterContentInit() {
+    this._matCalendarBody._updateToday();
     this._init();
   }
 

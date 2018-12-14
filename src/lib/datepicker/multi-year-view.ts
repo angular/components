@@ -85,7 +85,7 @@ export class MatMultiYearView<D> implements AfterContentInit, OnDestroy {
   get selected(): D | null { return this._selected.getFirstSelectedDate(); }
   set selected(value: D | null) {
     if (this._selected instanceof MatSingleDateSelectionModel) {
-      this._selected.setSelection(value);
+      this._selected.add(value);
     }
   }
 
@@ -145,6 +145,7 @@ export class MatMultiYearView<D> implements AfterContentInit, OnDestroy {
   }
 
   ngAfterContentInit() {
+    this._matCalendarBody._updateToday();
     this._init();
   }
 

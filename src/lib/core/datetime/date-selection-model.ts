@@ -83,8 +83,10 @@ export class MatSingleDateSelectionModel<D> extends MatDateSelectionModel<D> {
    * simply replacing the current selection with the given selection.
    */
   add(date: D) {
-    this.date = date;
-    this.selectionChange.next();
+    if (!this.adapter.sameDate(date, this.date)) {
+      this.date = date;
+      this.selectionChange.next();
+    }
   }
 
   clone(): MatDateSelectionModel<D> {
