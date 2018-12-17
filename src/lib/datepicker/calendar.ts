@@ -34,12 +34,12 @@ import {
   MatSingleDateSelectionModel
 } from '@angular/material/core';
 import {Subject, Subscription} from 'rxjs';
+import {MatCalendarCellCssClasses} from './calendar-body';
 import {createMissingDateImplError} from './datepicker-errors';
 import {MatDatepickerIntl} from './datepicker-intl';
 import {MatMonthView} from './month-view';
 import {MatMultiYearView, yearsPerPage} from './multi-year-view';
 import {MatYearView} from './year-view';
-import {MatCalendarCellCssClasses} from './calendar-body';
 
 /**
  * Possible views for the calendar.
@@ -185,8 +185,8 @@ export class MatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDes
   /** A portal containing the header component type for this calendar. */
   _calendarHeaderPortal: Portal<any>;
 
-  private _intlChanges: Subscription;
-  private _selectionSubscription: Subscription;
+  /** Subscriptions to be cleaned up in ngOnDestroy. */
+  private _subscriptions = new Subscription();
 
   /**
    * Used for scheduling that focus should be moved to the active cell on the next tick.
@@ -310,15 +310,15 @@ export class MatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDes
       throw createMissingDateImplError('MAT_DATE_FORMATS');
     }
 
-    this._intlChanges = _intl.changes.subscribe(() => {
+    this._subscriptions.add(_intl.changes.subscribe(() => {
       _changeDetectorRef.markForCheck();
       this.stateChanges.next();
-    });
+    }));
 
     // This should no longer be needed after deprecation of selectedChange
-    this._selectionSubscription = selectionModel.selectionChange.subscribe(() => {
+    this._subscriptions.add(selectionModel.selectionChange.subscribe(() => {
       this.selectedChange.emit(selectionModel.getFirstSelectedDate() || undefined);
-    });
+    }));
   }
 
   ngAfterContentInit() {
@@ -337,8 +337,7 @@ export class MatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDes
   }
 
   ngOnDestroy() {
-    this._intlChanges.unsubscribe();
-    this._selectionSubscription.unsubscribe();
+    this._subscriptions.unsubscribe();
     this.stateChanges.complete();
   }
 
