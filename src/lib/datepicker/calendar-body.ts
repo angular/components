@@ -8,17 +8,17 @@
 
 import {
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   ElementRef,
   EventEmitter,
   Input,
   NgZone,
-  Output,
-  ViewEncapsulation,
   OnChanges,
-  SimpleChanges,
-  ChangeDetectorRef,
   OnDestroy,
+  Output,
+  SimpleChanges,
+  ViewEncapsulation,
 } from '@angular/core';
 import {
   DateAdapter,
@@ -26,8 +26,8 @@ import {
   MatDateSelectionModel,
   MatSingleDateSelectionModel
 } from '@angular/material/core';
-import {take} from 'rxjs/operators';
 import {Subscription} from 'rxjs';
+import {take} from 'rxjs/operators';
 
 /**
  * Extra CSS classes that can be associated with a calendar cell.
@@ -49,6 +49,7 @@ export class MatCalendarCell<D = unknown> {
       public ariaLabel: string,
       /** Whether the cell is enabled. */
       public enabled: boolean,
+      /** Optional CSS classes to include on the DOM element for this cell. */
       public cssClasses?: MatCalendarCellCssClasses) {}
 }
 
@@ -163,7 +164,7 @@ export class MatCalendarBody<D = unknown> implements OnChanges, OnDestroy {
               private _ngZone: NgZone,
               private _cdr: ChangeDetectorRef,
               private _dateAdapter: DateAdapter<D>,
-              readonly _selectionModel: MatDateSelectionModel<D>) {
+              private readonly _selectionModel: MatDateSelectionModel<D>) {
     this._updateToday();
 
     this._selectionSubscription =
