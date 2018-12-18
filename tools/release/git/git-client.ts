@@ -52,5 +52,11 @@ export class GitClient {
   createNewCommit(message: string): boolean {
     return spawnSync('git', ['commit', '-m', message], {cwd: this.projectDir}).status === 0;
   }
+
+  /** Gets the title of a specified commit. */
+  getCommitTitle(commitSha: string): string {
+    return spawnSync('git', ['log', '-n1', '--format', '%s', commitSha], {cwd: this.projectDir})
+      .stdout.toString().trim();
+  }
 }
 
