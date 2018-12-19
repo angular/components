@@ -65,6 +65,20 @@ var_10: &attach_release_output
   attach_workspace:
     at: dist/releases
 
+
+# Branch filter that we can specify for jobs that should only run on publish branches. Since
+# there is no way to specify filters for all branches, we create a YAML anchor so that we don't
+# need to duplicate code. This filter is used to ensure that not all upstream branches will be
+# published as Github builds (e.g. revert branches, feature branches)
+var_11: &publish_branches_filter
+  branches:
+    only:
+      - master
+      # 6.0.x, 7.1.x, etc.
+      - /\d+\.\d+\.x/
+      # 6.x, 7.x, 8.x etc
+      - /\d+\.x/
+
 # -----------------------------
 # Container version of CircleCI
 # -----------------------------
@@ -329,6 +343,9 @@ workflows:
           requires:
             - build_release_packages
       - publish_snapshots:
+          # We don't want to publish snapshots for all upstream branches. e.g. there could
+          # be temporary branches for reverts.
+          filters: *publish_branches_filter
           requires:
             - build_release_packages
 
@@ -355,15 +372,3 @@ workflows:
                 # it's not guaranteed that older versions of Angular Material always work
                 # with the latest Angular version.
                 - master
-
-# ---------------------------
-# General setup for CircleCI
-# ---------------------------
-general:
-  branches:
-    only:
-      - master
-      # 5.2.x, 6.0.x, etc
-      - /\d+\.\d+\.x/
-      # 5.x, 6.x, etc
-      - /\d+\.x/
