@@ -32,7 +32,7 @@ export function checkReleaseBundle(bundlePath: string): string[] {
  * and the theming bundle are built properly.
  */
 export function checkMaterialPackage(packagePath: string): string[] {
-  const prebuiltThemesPath = join(packagePath, 'prebuilt-thdemes');
+  const prebuiltThemesPath = join(packagePath, 'prebuilt-themes');
   const themingFilePath = join(packagePath, '_theming.scss');
   const failures: string[] = [];
 

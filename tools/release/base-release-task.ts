@@ -1,9 +1,14 @@
 import {green, italic, red, yellow} from 'chalk';
+import {prompt} from 'inquirer';
 import {GitClient} from './git/git-client';
 import {Version} from './version-name/parse-version';
 import {getAllowedPublishBranches} from './version-name/publish-branches';
 
-export class GitReleaseTask {
+/**
+ * Base release task class that contains shared methods that are commonly used across
+ * the staging and publish script.
+ */
+export class BaseReleaseTask {
 
   constructor(public git: GitClient) {}
 
@@ -63,5 +68,14 @@ export class GitReleaseTask {
         `discarded.`));
       process.exit(1);
     }
+  }
+
+  /** Prompts the user with a confirmation question and a specified message. */
+  protected async promptConfirm(message: string): Promise<boolean> {
+    return (await prompt<{result: boolean}>({
+      type: 'confirm',
+      name: 'result',
+      message: message,
+    })).result;
   }
 }

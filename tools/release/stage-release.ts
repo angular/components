@@ -1,15 +1,13 @@
 import * as OctokitApi from '@octokit/rest';
 import {bold, cyan, green, italic, red, yellow} from 'chalk';
-import {existsSync, readFileSync, writeFileSync} from 'fs';
-import {prompt} from 'inquirer';
+import {readFileSync, writeFileSync} from 'fs';
 import {join} from 'path';
+import {BaseReleaseTask} from './base-release-task';
 import {promptAndGenerateChangelog} from './changelog';
-import {GitReleaseTask} from './git-release-task';
 import {GitClient} from './git/git-client';
 import {getGithubBranchCommitsUrl} from './git/github-urls';
 import {promptForNewVersion} from './prompt/new-version-prompt';
 import {parseVersionName, Version} from './version-name/parse-version';
-import {getAllowedPublishBranches} from './version-name/publish-branches';
 
 /** Default filename for the changelog. */
 const CHANGELOG_FILE_NAME = 'CHANGELOG.md';
@@ -33,7 +31,7 @@ const CHANGELOG_FILE_NAME = 'CHANGELOG.md';
  *  10) Wait for the user to continue (users can customize generated changelog)
  *  11) Create a commit that includes all changes in the staging branch.
  */
-class StageReleaseTask extends GitReleaseTask {
+class StageReleaseTask extends BaseReleaseTask {
 
   /** Path to the project package JSON. */
   packageJsonPath: string;
@@ -57,13 +55,6 @@ class StageReleaseTask extends GitReleaseTask {
       `https://github.com/${repositoryOwner}/${repositoryName}.git`));
 
     this.packageJsonPath = join(projectDir, 'package.json');
-
-    if (!existsSync(this.packageJsonPath)) {
-      console.error(red(`The specified directory is not referring to a project directory. ` +
-        `There must be a ${italic('package.json')} file in the project directory.`));
-      process.exit(1);
-    }
-
     this.packageJson = JSON.parse(readFileSync(this.packageJsonPath, 'utf-8'));
     this.currentVersion = parseVersionName(this.packageJson.version);
 
@@ -121,16 +112,10 @@ class StageReleaseTask extends GitReleaseTask {
       `changes that apply to the public library release. When done, proceed to the prompt below.`));
     console.log();
 
-    const {shouldContinue} = await prompt<{shouldContinue: boolean}>({
-      type: 'confirm',
-      name: 'shouldContinue',
-      message: 'Do you want to proceed and commit the changes?'
-    });
-
-    if (!shouldContinue) {
+    if (!await this.promptConfirm('Do you want to proceed and commit the changes?')) {
       console.log();
       console.log(yellow('Aborting release staging...'));
-      process.exit(1);
+      process.exit(0);
     }
 
     this.git.stageAllChanges();
