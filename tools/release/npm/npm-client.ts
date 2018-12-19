@@ -30,7 +30,7 @@ export function runInteractiveNpmLogin(): boolean {
 
 /** Runs NPM publish within a specified directory */
 export function runNpmPublish(packagePath: string, distTag: string): string | null {
-  const result = spawnSync('npm', ['publish', '--access', 'public', '--tag', distTag, '--dry-run'], {
+  const result = spawnSync('npm', ['publish', '--access', 'public', '--tag', distTag], {
     cwd: packagePath,
     shell: true,
     env: npmClientEnvironment,
