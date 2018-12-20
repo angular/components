@@ -95,7 +95,7 @@ class PublishReleaseTask extends BaseReleaseTask {
       join(this.projectDir, CHANGELOG_FILE_NAME), newVersionName);
 
     if (!releaseNotes) {
-      console.error(red(`  ✘   Could not find release notes in the changelog`));
+      console.error(red(`  ✘   Could not find release notes in the changelog.`));
       process.exit(1);
     }
 
