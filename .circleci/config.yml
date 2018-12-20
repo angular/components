@@ -322,29 +322,35 @@ workflows:
   # that build and test source code should be part of this workflow
   build_and_test:
     jobs:
-      - bazel_build_test
-      - api_golden_checks
+      - bazel_build_test:
+          filters: *publish_branches_filter
+      - api_golden_checks:
+          filters: *publish_branches_filter
 
   unit_tests:
     jobs:
-      - tests_local_browsers
-      - tests_browserstack
-      - tests_saucelabs
+      - tests_local_browsers:
+          filters: *publish_branches_filter
+      - tests_browserstack:
+          filters: *publish_branches_filter
+      - tests_saucelabs:
+          filters: *publish_branches_filter
 
   integration_tests:
     jobs:
-      - e2e_tests
-      - prerender_build
+      - e2e_tests:
+          filters: *publish_branches_filter
+      - prerender_build:
+          filters: *publish_branches_filter
 
   release_output:
     jobs:
       - build_release_packages
       - build_devapp_aot:
+          filters: *publish_branches_filter
           requires:
             - build_release_packages
       - publish_snapshots:
-          # We don't want to publish snapshots for all upstream branches. e.g. there could
-          # be temporary branches for reverts.
           filters: *publish_branches_filter
           requires:
             - build_release_packages
