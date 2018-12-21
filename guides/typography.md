@@ -55,6 +55,18 @@ descendant native elements.
 </section>
 ```
 
+When applying the `mat-typography` CSS class, the descendent element rule will by default have
+higher specificity than the rules based on the CSS classes above.  Therefore, if you would like to
+be able to override a `mat-typography` descendent element rule using one of the CSS classes, you'll
+need to generate rules for the CSS classes as descendents so they'll have higher specificity than
+the descendent element rules like so:
+
+```scss
+.mat-typography {
+  @include mat-base-typography($typography-config, ".mat-typography-tags-override-classes");
+}
+```
+
 ### Customization
 Typography customization is an extension of Angular Material's Sass-based theming. Similar to
 creating a custom theme, you can create a custom **typography configuration**.
