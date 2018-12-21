@@ -92,6 +92,7 @@ let progressbarId = 0;
     'aria-valuemax': '100',
     '[attr.aria-valuenow]': 'value',
     '[attr.mode]': 'mode',
+    '[attr.aria-busy]': 'mode === "indeterminate" || mode === "query"',
     'class': 'mat-progress-bar',
     '[class._mat-animation-noopable]': `_isNoopAnimation`,
   },

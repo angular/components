@@ -141,6 +141,35 @@ describe('MatProgressBar', () => {
 
         expect(rect.getAttribute('fill')).toMatch(/^url\(['"]?\/another-fake-path#.*['"]?\)$/);
       });
+
+      it('should set the correct `aria-busy` based on the mode', () => {
+        const fixture = createComponent(BasicProgressBar);
+        fixture.detectChanges();
+        const progressDebugElement = fixture.debugElement.query(By.css('mat-progress-bar'));
+        const progressInstance: MatProgressBar = progressDebugElement.componentInstance;
+        const progressElement: HTMLElement = progressDebugElement.nativeElement;
+
+        progressInstance.mode = 'determinate';
+        fixture.detectChanges();
+        expect(progressElement.getAttribute('aria-busy'))
+            .toBe('false', 'Expected not to be busy in determinate mode.');
+
+        progressInstance.mode = 'indeterminate';
+        fixture.detectChanges();
+        expect(progressElement.getAttribute('aria-busy'))
+            .toBe('true', 'Expected to be busy in indeterminate mode.');
+
+        progressInstance.mode = 'buffer';
+        fixture.detectChanges();
+        expect(progressElement.getAttribute('aria-busy'))
+            .toBe('false', 'Expected not to be busy in buffer mode.');
+
+        progressInstance.mode = 'query';
+        fixture.detectChanges();
+        expect(progressElement.getAttribute('aria-busy'))
+            .toBe('true', 'Expected to be busy in query mode.');
+      });
+
     });
 
     describe('animation trigger on determinate setting', () => {
