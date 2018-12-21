@@ -6,6 +6,7 @@
 $mat-menu-vertical-padding: 8px !default;
 $mat-menu-border-radius: 4px !default;
 $mat-menu-submenu-indicator-size: 10px !default;
+$mat-menu-item-vertical-padding: 8px !default;
 
 .mat-menu-panel {
   @include mat-menu-base();
@@ -41,8 +42,16 @@ $mat-menu-submenu-indicator-size: 10px !default;
 
 .mat-menu-item {
   @include mat-button-reset();
-  @include mat-menu-item-base();
+  @include mat-menu-item-base(flex, false, auto, normal);
   position: relative;
+
+  // TODO(crisbeto): most of these can be moved into the `mat-menu-item-base`
+  // once we start allowing text wrapping in mat-select and mat-autocomplete.
+  align-items: center;
+  white-space: normal;
+  min-height: $mat-menu-item-height;
+  padding-top: $mat-menu-item-vertical-padding;
+  padding-bottom: $mat-menu-item-vertical-padding;
 
   &[disabled] {
     // Usually every click inside the menu closes it, however some browsers will stop events
