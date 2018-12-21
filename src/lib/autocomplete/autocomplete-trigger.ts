@@ -477,7 +477,12 @@ export class MatAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
    * stream every time the option list changes.
    */
   private _subscribeToClosingActions(): Subscription {
-    const firstStable = this._zone.onStable.asObservable().pipe(take(1));
+    const firstStable = this._zone.onStable.asObservable().pipe(
+      // Defer emitting to the stream until the next tick. Without this,
+      // a propagating click event may close the panel immediately.
+      delay(0),
+      take(1)
+    );
     const optionChanges = this.autocomplete.options.changes.pipe(
       tap(() => this._positionStrategy.reapplyLastPosition()),
       // Defer emitting to the stream until the next tick, because changing

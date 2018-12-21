@@ -175,6 +175,7 @@ describe('MatAutocomplete', () => {
       dispatchFakeEvent(input, 'focusin');
       fixture.detectChanges();
       zone.simulateZoneExit();
+      tick();
       dispatchFakeEvent(document, 'click');
 
       expect(fixture.componentInstance.trigger.panelOpen)
@@ -199,6 +200,7 @@ describe('MatAutocomplete', () => {
       dispatchFakeEvent(input, 'focusin');
       fixture.detectChanges();
       zone.simulateZoneExit();
+      tick();
 
       const option = overlayContainerElement.querySelector('mat-option') as HTMLElement;
       option.click();
@@ -214,6 +216,7 @@ describe('MatAutocomplete', () => {
       dispatchFakeEvent(input, 'focusin');
       fixture.detectChanges();
       zone.simulateZoneExit();
+      tick();
 
       // Filter down the option list to a subset of original options ('Alabama', 'California')
       typeInElement('al', input);
@@ -289,6 +292,7 @@ describe('MatAutocomplete', () => {
           .toEqual('always', 'Expected label to float as soon as panel opens.');
 
       zone.simulateZoneExit();
+      tick();
       fixture.detectChanges();
 
       const options =
@@ -587,6 +591,7 @@ describe('MatAutocomplete', () => {
       fixture.componentInstance.trigger.openPanel();
       fixture.detectChanges();
       zone.simulateZoneExit();
+      tick();
 
       const options =
           overlayContainerElement.querySelectorAll('mat-option') as NodeListOf<HTMLElement>;
@@ -621,6 +626,7 @@ describe('MatAutocomplete', () => {
       fixture.componentInstance.trigger.openPanel();
       fixture.detectChanges();
       zone.simulateZoneExit();
+      tick();
 
       const options =
           overlayContainerElement.querySelectorAll('mat-option') as NodeListOf<HTMLElement>;
@@ -635,6 +641,7 @@ describe('MatAutocomplete', () => {
       fixture.componentInstance.trigger.openPanel();
       fixture.detectChanges();
       zone.simulateZoneExit();
+      tick();
 
       fixture.componentInstance.panel.displayWith = null;
       fixture.componentInstance.options.toArray()[1].value = 'test value';
@@ -710,6 +717,7 @@ describe('MatAutocomplete', () => {
       fixture.componentInstance.trigger.openPanel();
       fixture.detectChanges();
       zone.simulateZoneExit();
+      tick();
 
       const options =
           overlayContainerElement.querySelectorAll('mat-option') as NodeListOf<HTMLElement>;
@@ -782,6 +790,7 @@ describe('MatAutocomplete', () => {
       fixture.componentInstance.trigger.openPanel();
       fixture.detectChanges();
       zone.simulateZoneExit();
+      tick();
     }));
 
     it('should not focus the option when DOWN key is pressed', () => {
@@ -1355,6 +1364,7 @@ describe('MatAutocomplete', () => {
       fixture.componentInstance.trigger.openPanel();
       fixture.detectChanges();
       zone.simulateZoneExit();
+      tick();
 
       const option = overlayContainerElement.querySelector('mat-option') as HTMLElement;
 
@@ -1387,6 +1397,7 @@ describe('MatAutocomplete', () => {
       fixture.componentInstance.trigger.openPanel();
       fixture.detectChanges();
       zone.simulateZoneExit();
+      tick();
       fixture.detectChanges();
 
       const inputBottom = inputReference.getBoundingClientRect().bottom;
@@ -1442,6 +1453,7 @@ describe('MatAutocomplete', () => {
       fixture.componentInstance.trigger.openPanel();
       fixture.detectChanges();
       zone.simulateZoneExit();
+      tick();
       fixture.detectChanges();
 
       const inputTop = inputReference.getBoundingClientRect().top;
@@ -1473,6 +1485,7 @@ describe('MatAutocomplete', () => {
       fixture.componentInstance.trigger.openPanel();
       fixture.detectChanges();
       zone.simulateZoneExit();
+      tick();
 
       let panel = overlayContainerElement.querySelector('.cdk-overlay-pane')!;
       let initialPanelHeight = panel.getBoundingClientRect().height;
@@ -1488,6 +1501,7 @@ describe('MatAutocomplete', () => {
       fixture.componentInstance.trigger.openPanel();
       fixture.detectChanges();
       zone.simulateZoneExit();
+      tick();
 
       panel = overlayContainerElement.querySelector('.cdk-overlay-pane')!;
 
@@ -1590,6 +1604,7 @@ describe('MatAutocomplete', () => {
       options[0].click();
       fixture.detectChanges();
       zone.simulateZoneExit();
+      tick();
       fixture.detectChanges();
 
       let componentOptions = fixture.componentInstance.options.toArray();
@@ -1616,6 +1631,7 @@ describe('MatAutocomplete', () => {
       options[0].click();
       fixture.detectChanges();
       zone.simulateZoneExit();
+      tick();
       fixture.detectChanges();
 
       let componentOptions = fixture.componentInstance.options.toArray();
@@ -1638,6 +1654,7 @@ describe('MatAutocomplete', () => {
       fixture.componentInstance.trigger.openPanel();
       fixture.detectChanges();
       zone.simulateZoneExit();
+      tick();
       fixture.detectChanges();
 
       expect(overlayContainerElement.querySelectorAll('mat-option')[0].classList)
@@ -1679,6 +1696,7 @@ describe('MatAutocomplete', () => {
       fixture.componentInstance.trigger.openPanel();
       fixture.detectChanges();
       zone.simulateZoneExit();
+      tick();
       fixture.detectChanges();
 
       expect(overlayContainerElement.querySelectorAll('mat-option')[0].classList)
@@ -1702,6 +1720,7 @@ describe('MatAutocomplete', () => {
       fixture.componentInstance.trigger.openPanel();
       fixture.detectChanges();
       zone.simulateZoneExit();
+      tick();
 
       const option = overlayContainerElement.querySelector('mat-option') as HTMLElement;
 
@@ -1789,11 +1808,12 @@ describe('MatAutocomplete', () => {
       expect(closingActionSpy).toHaveBeenCalledWith(null);
     });
 
-    it('should not emit when tabbing away from a closed panel', () => {
+    it('should not emit when tabbing away from a closed panel', fakeAsync(() => {
       const tabEvent = createKeyboardEvent('keydown', TAB);
 
       input.focus();
       zone.simulateZoneExit();
+      tick();
 
       trigger._handleKeydown(tabEvent);
 
@@ -1804,7 +1824,7 @@ describe('MatAutocomplete', () => {
 
       // Ensure that it didn't emit again when tabbing out again.
       expect(closingActionSpy).toHaveBeenCalledTimes(1);
-    });
+    }));
 
     it('should emit panel close event when selecting an option', () => {
       const option = overlayContainerElement.querySelector('mat-option') as HTMLElement;
@@ -1976,6 +1996,7 @@ describe('MatAutocomplete', () => {
       trigger.openPanel();
       fixture.detectChanges();
       zone.simulateZoneExit();
+      tick();
 
       expect(trigger.panelOpen).toBe(true, 'Expected panel to be open.');
 
@@ -2169,6 +2190,7 @@ describe('MatAutocomplete', () => {
     fixture.detectChanges();
     fixture.componentInstance.trigger.openPanel();
     zone.simulateZoneExit();
+    tick();
     fixture.detectChanges();
 
     let options = overlayContainerElement.querySelectorAll('mat-option') as NodeListOf<HTMLElement>;
