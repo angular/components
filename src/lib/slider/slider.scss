@@ -29,6 +29,10 @@ $mat-slider-focus-ring-size: 30px !default;
 
 
 .mat-slider {
+  &.mat-slider-sliding {
+    @include cursor-grabbing;
+  }
+
   display: inline-block;
   position: relative;
   box-sizing: border-box;
