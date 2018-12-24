@@ -58,10 +58,12 @@
       &.mat-#{$name} {
         @include _mat-tab-label-focus($color);
         @include _mat-ink-bar($color);
+        @include _mat-tab-label-active($color);
 
         // Override ink bar when background color is the same
         &.mat-background-#{$name} {
           @include _mat-ink-bar($color, default-contrast);
+          @include _mat-tab-label-active($color, default-contrast);
         }
       }
     }
@@ -90,6 +92,16 @@
       &:not(.mat-tab-disabled) {
         background-color: mat-color($tab-focus-color, lighter, 0.3);
       }
+    }
+  }
+}
+
+@mixin _mat-tab-label-active($color, $hue: default) {
+  .mat-tab-label-active {
+    color: mat-color($color, $hue);
+
+    .mat-ripple-element {
+      background-color: mat-color($color, $hue, 0.1);
     }
   }
 }
