@@ -78,14 +78,11 @@ export class CdkVirtualScrollViewport extends CdkScrollable implements OnInit, O
   /** The element that wraps the rendered content. */
   @ViewChild('contentWrapper') _contentWrapper: ElementRef<HTMLElement>;
 
+  /** Spacer used to force the scrolling container to the correct size. */
+  @ViewChild('scrollSpacer') _scrollSpacer: ElementRef<HTMLElement>;
+
   /** A stream that emits whenever the rendered range changes. */
   renderedRangeStream: Observable<ListRange> = this._renderedRangeSubject.asObservable();
-
-  /**
-   * The transform used to scale the spacer to the same size as all content, including content that
-   * is not currently rendered.
-   */
-  _totalContentSizeTransform = '';
 
   /**
    * The total size of all content (in pixels), including content that is not currently rendered.
@@ -231,8 +228,7 @@ export class CdkVirtualScrollViewport extends CdkScrollable implements OnInit, O
     if (this._totalContentSize !== size) {
       this._totalContentSize = size;
       const axis = this.orientation == 'horizontal' ? 'X' : 'Y';
-      this._totalContentSizeTransform = `scale${axis}(${this._totalContentSize})`;
-      this._markChangeDetectionNeeded();
+      this._scrollSpacer.nativeElement.style.transform = `scale${axis}(${this._totalContentSize})`;
     }
   }
 
