@@ -43,7 +43,6 @@ import {
   mixinColor,
   ThemePalette,
 } from '@angular/material/core';
-import {MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {merge, Subject, Subscription} from 'rxjs';
 import {filter, take} from 'rxjs/operators';
 import {MatCalendar} from './calendar';
@@ -93,7 +92,7 @@ const _MatDatepickerContentMixinBase: CanColorCtor & typeof MatDatepickerContent
   styleUrls: ['datepicker-content.css'],
   host: {
     'class': 'mat-datepicker-content',
-    '[@transformPanel]': '"enter"',
+    '[@transformPanel]': 'datepicker.touchUi ? "enter-dialog" : "enter-popup"',
     '[class.mat-datepicker-content-touch]': 'datepicker.touchUi',
   },
   animations: [
@@ -113,9 +112,6 @@ export class MatDatepickerContent<D> extends _MatDatepickerContentMixinBase
 
   /** Reference to the datepicker that created the overlay. */
   datepicker: MatDatepicker<D>;
-
-  /** Whether the datepicker is above or below the input. */
-  _isAbove: boolean;
 
   constructor(elementRef: ElementRef) {
     super(elementRef);
@@ -255,13 +251,13 @@ export class MatDatepicker<D> implements OnDestroy, CanColor {
   _popupRef: OverlayRef;
 
   /** A reference to the dialog when the calendar is opened as a dialog. */
-  private _dialogRef: MatDialogRef<MatDatepickerContent<D>> | null;
+  private _dialogRef: OverlayRef;
 
   /** A portal containing the calendar for this datepicker. */
   private _calendarPortal: ComponentPortal<MatDatepickerContent<D>>;
 
-  /** Reference to the component instantiated in popup mode. */
-  private _popupComponentRef: ComponentRef<MatDatepickerContent<D>> | null;
+  /** Reference to the component instantiated inside the overlay */
+  private _componentRef: ComponentRef<MatDatepickerContent<D>> | null;
 
   /** The element that was focused before the datepicker was opened. */
   private _focusedElementBeforeOpen: HTMLElement | null = null;
@@ -278,14 +274,14 @@ export class MatDatepicker<D> implements OnDestroy, CanColor {
   /** Emits new selected date when selected date changes. */
   readonly _selectedChanged = new Subject<D>();
 
-  constructor(private _dialog: MatDialog,
-              private _overlay: Overlay,
+  constructor(private _overlay: Overlay,
               private _ngZone: NgZone,
               private _viewContainerRef: ViewContainerRef,
               @Inject(MAT_DATEPICKER_SCROLL_STRATEGY) scrollStrategy: any,
               @Optional() private _dateAdapter: DateAdapter<D>,
               @Optional() private _dir: Directionality,
               @Optional() @Inject(DOCUMENT) private _document: any) {
+
     if (!this._dateAdapter) {
       throw createMissingDateImplError('DateAdapter');
     }
@@ -300,8 +296,13 @@ export class MatDatepicker<D> implements OnDestroy, CanColor {
 
     if (this._popupRef) {
       this._popupRef.dispose();
-      this._popupComponentRef = null;
     }
+
+    if (this._dialogRef) {
+      this._dialogRef.dispose();
+    }
+
+    this._componentRef = null;
   }
 
   /** Selects the given date */
@@ -348,7 +349,7 @@ export class MatDatepicker<D> implements OnDestroy, CanColor {
       this._focusedElementBeforeOpen = this._document.activeElement;
     }
 
-    this.touchUi ? this._openAsDialog() : this._openAsPopup();
+    this._openOverlay();
     this._opened = true;
     this.openedStream.emit();
   }
@@ -361,9 +362,8 @@ export class MatDatepicker<D> implements OnDestroy, CanColor {
     if (this._popupRef && this._popupRef.hasAttached()) {
       this._popupRef.detach();
     }
-    if (this._dialogRef) {
-      this._dialogRef.close();
-      this._dialogRef = null;
+    if (this._dialogRef && this._dialogRef.hasAttached()) {
+      this._dialogRef.detach();
     }
     if (this._calendarPortal && this._calendarPortal.isAttached) {
       this._calendarPortal.detach();
@@ -393,79 +393,83 @@ export class MatDatepicker<D> implements OnDestroy, CanColor {
     }
   }
 
-  /** Open the calendar as a dialog. */
-  private _openAsDialog(): void {
-    // Usually this would be handled by `open` which ensures that we can only have one overlay
-    // open at a time, however since we reset the variables in async handlers some overlays
-    // may slip through if the user opens and closes multiple times in quick succession (e.g.
-    // by holding down the enter key).
-    if (this._dialogRef) {
-      this._dialogRef.close();
+  /** Opens the overlay with the calendar. */
+  private _openOverlay(): void {
+    const overlayRef = this.touchUi ? this._getDialogRef() : this._getPopupRef();
+
+    // Don't do anything if the relevant overlay is already attached.
+    if (overlayRef.hasAttached()) {
+      return;
     }
 
-    this._dialogRef = this._dialog.open<MatDatepickerContent<D>>(MatDatepickerContent, {
-      direction: this._dir ? this._dir.value : 'ltr',
-      viewContainerRef: this._viewContainerRef,
-      panelClass: 'mat-datepicker-dialog',
-    });
+    this._componentRef = overlayRef.attach(this._getCalendarPortal());
+    this._componentRef.instance.datepicker = this;
+    this._componentRef.instance.color = this.color;
 
-    this._dialogRef.afterClosed().subscribe(() => this.close());
-    this._dialogRef.componentInstance.datepicker = this;
-    this._setColor();
+    if (!this.touchUi) {
+      // Update the position once the calendar has rendered.
+      this._ngZone.onStable.asObservable()
+        .pipe(take(1))
+        .subscribe(() => overlayRef.updatePosition());
+    }
+
+    merge(
+      overlayRef.backdropClick(),
+      overlayRef.detachments(),
+      overlayRef.keydownEvents().pipe(filter(event => {
+        // Closing on alt + up is only valid when there's an input associated with the datepicker.
+        return event.keyCode === ESCAPE ||
+          (this._datepickerInput && event.altKey && event.keyCode === UP_ARROW);
+      }))
+    ).subscribe(() => this.close());
   }
 
-  /** Open the calendar as a popup. */
-  private _openAsPopup(): void {
+  /** Creates the portal that will be used to render the calendar. */
+  private _getCalendarPortal() {
     if (!this._calendarPortal) {
       this._calendarPortal = new ComponentPortal<MatDatepickerContent<D>>(MatDatepickerContent,
                                                                           this._viewContainerRef);
     }
 
-    if (!this._popupRef) {
-      this._createPopup();
-    }
-
-    if (!this._popupRef.hasAttached()) {
-      this._popupComponentRef = this._popupRef.attach(this._calendarPortal);
-      this._popupComponentRef.instance.datepicker = this;
-      this._setColor();
-
-      // Update the position once the calendar has rendered.
-      this._ngZone.onStable.asObservable().pipe(take(1)).subscribe(() => {
-        this._popupRef.updatePosition();
-      });
-    }
+    return this._calendarPortal;
   }
 
-  /** Create the popup. */
-  private _createPopup(): void {
-    const overlayConfig = new OverlayConfig({
-      positionStrategy: this._createPopupPositionStrategy(),
-      hasBackdrop: true,
-      backdropClass: 'mat-overlay-transparent-backdrop',
-      direction: this._dir,
-      scrollStrategy: this._scrollStrategy(),
-      panelClass: 'mat-datepicker-popup',
-    });
+  /** Gets a reference to the overlay that will be used in touch UI mode. */
+  private _getDialogRef(): OverlayRef {
+    if (!this._dialogRef) {
+      const overlayConfig = new OverlayConfig({
+        positionStrategy: this._overlay.position().global().centerHorizontally().centerVertically(),
+        hasBackdrop: true,
+        direction: this._dir,
+        scrollStrategy: this._overlay.scrollStrategies.block(),
+        panelClass: 'mat-datepicker-dialog',
+      });
 
-    this._popupRef = this._overlay.create(overlayConfig);
-    this._popupRef.overlayElement.setAttribute('role', 'dialog');
+      this._dialogRef = this._overlay.create(overlayConfig);
+      this._dialogRef.overlayElement.setAttribute('role', 'dialog');
+      this._dialogRef.overlayElement.setAttribute('aria-modal', 'true');
+    }
 
-    merge(
-      this._popupRef.backdropClick(),
-      this._popupRef.detachments(),
-      this._popupRef.keydownEvents().pipe(filter(event => {
-        // Closing on alt + up is only valid when there's an input associated with the datepicker.
-        return event.keyCode === ESCAPE ||
-               (this._datepickerInput && event.altKey && event.keyCode === UP_ARROW);
-      }))
-    ).subscribe(event => {
-      if (event) {
-        event.preventDefault();
-      }
+    return this._dialogRef;
+  }
 
-      this.close();
-    });
+  /** Gets a reference to the overlay that will be used in popup mode. */
+  private _getPopupRef(): OverlayRef {
+    if (!this._popupRef) {
+      const overlayConfig = new OverlayConfig({
+        positionStrategy: this._createPopupPositionStrategy(),
+        hasBackdrop: true,
+        backdropClass: 'mat-overlay-transparent-backdrop',
+        direction: this._dir,
+        scrollStrategy: this._scrollStrategy(),
+        panelClass: 'mat-datepicker-popup',
+      });
+
+      this._popupRef = this._overlay.create(overlayConfig);
+      this._popupRef.overlayElement.setAttribute('role', 'dialog');
+    }
+
+    return this._popupRef;
   }
 
   /** Create the popup PositionStrategy. */
@@ -510,16 +514,5 @@ export class MatDatepicker<D> implements OnDestroy, CanColor {
    */
   private _getValidDateOrNull(obj: any): D | null {
     return (this._dateAdapter.isDateInstance(obj) && this._dateAdapter.isValid(obj)) ? obj : null;
-  }
-
-  /** Passes the current theme color along to the calendar overlay. */
-  private _setColor(): void {
-    const color = this.color;
-    if (this._popupComponentRef) {
-      this._popupComponentRef.instance.color = color;
-    }
-    if (this._dialogRef) {
-      this._dialogRef.componentInstance.color = color;
-    }
   }
 }

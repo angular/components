@@ -31,7 +31,6 @@ ng_module(
         "//src/cdk/portal",
         "//src/material/button",
         "//src/material/core",
-        "//src/material/dialog",
         "//src/material/form-field",
         "//src/material/input",
         "@npm//@angular/animations",
