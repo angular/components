@@ -330,6 +330,7 @@ export class DragRef<T = any> {
 
       element.addEventListener('mousedown', this._pointerDown, activeEventListenerOptions);
       element.addEventListener('touchstart', this._pointerDown, passiveEventListenerOptions);
+      this._initialTransform = undefined;
       this._rootElement = element;
     }
 
