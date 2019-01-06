@@ -668,14 +668,14 @@ describe('MatChipList', () => {
     let nativeChips: HTMLElement[];
 
     describe('single selection', () => {
-      beforeEach(() => {
+      beforeEach(fakeAsync(() => {
         fixture = createComponent(BasicChipList);
         fixture.detectChanges();
 
         nativeChips = fixture.debugElement.queryAll(By.css('mat-chip'))
           .map((chip) => chip.nativeElement);
         chips = fixture.componentInstance.chips;
-      });
+      }));
 
       it('should take an initial view value with reactive forms', () => {
         fixture.componentInstance.control = new FormControl('pizza-1');
@@ -845,6 +845,21 @@ describe('MatChipList', () => {
 
         expect(formField.classList).not.toContain('mat-focused');
       }));
+
+      it('should update the model value when a chip is removed', fakeAsync(() => {
+        fixture.componentInstance.control = new FormControl('steak-0');
+        fixture.detectChanges();
+
+        expect(chips.first.selected).toBeTruthy('Expect steak-0 chip to be selected');
+
+        fixture.componentInstance.foods.shift();
+        fixture.detectChanges();
+        tick();
+        fixture.detectChanges();
+
+        expect(fixture.componentInstance.control.value).toBeFalsy();
+      }));
+
     });
 
     describe('multiple selection', () => {
