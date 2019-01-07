@@ -65,6 +65,12 @@ export class MatTab extends _MatTabMixinBase implements OnInit, CanDisable, OnCh
    * Will be cleared if `aria-label` is set at the same time.
    */
   @Input('aria-labelledby') ariaLabelledby: string;
+  
+  /**
+   * Unique identifier for each tab.
+   * Used to differenciated which tab is being changed or switched to.
+   */
+  @Input('unique-name') uniqueName: string;
 
   /** Portal that will be the hosted content of the tab */
   private _contentPortal: TemplatePortal | null = null;
