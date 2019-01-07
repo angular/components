@@ -21,6 +21,7 @@ import {DOCUMENT} from '@angular/common';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   ComponentRef,
   ElementRef,
@@ -51,6 +52,8 @@ import {matDatepickerAnimations} from './datepicker-animations';
 import {createMissingDateImplError} from './datepicker-errors';
 import {MatDatepickerInput} from './datepicker-input';
 import {MatCalendarCellCssClasses} from './calendar-body';
+import {MatDatepickerIntl} from './datepicker-intl';
+import {FocusOrigin} from '@angular/cdk/a11y';
 
 /** Used to generate a unique ID for each datepicker instance. */
 let datepickerUid = 0;
@@ -117,12 +120,30 @@ export class MatDatepickerContent<D> extends _MatDatepickerContentMixinBase
   /** Whether the datepicker is above or below the input. */
   _isAbove: boolean;
 
-  constructor(elementRef: ElementRef) {
+  /** For the focus monitor */
+  closeButtonElementOrigin: string = this.formatOrigin(null);
+
+  get closeButtonLabel(): string {
+    return this._intl.closeCalendarLabel;
+  }
+
+  constructor(private _intl: MatDatepickerIntl,
+              private _ngZone: NgZone,
+              private _changeDetectorRef: ChangeDetectorRef,
+              elementRef: ElementRef) {
     super(elementRef);
   }
 
   ngAfterViewInit() {
     this._calendar.focusActiveCell();
+  }
+
+  formatOrigin(origin: FocusOrigin): string {
+    return origin ? origin + ' focused' : 'blurred';
+  }
+
+  markForCheck() {
+    this._ngZone.run(() => this._changeDetectorRef.markForCheck());
   }
 }
 

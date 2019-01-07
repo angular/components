@@ -25,6 +25,9 @@ export class MatDatepickerIntl {
   /** A label for the button used to open the calendar popup (used by screen readers). */
   openCalendarLabel: string = 'Open calendar';
 
+  /** A label for the button used to close the calendar popup (used by screen readers). */
+  closeCalendarLabel: string = 'Close calendar';
+
   /** A label for the previous month button (used by screen readers). */
   prevMonthLabel: string = 'Previous month';
 

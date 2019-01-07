@@ -31,6 +31,17 @@ $mat-datepicker-touch-max-height: 788px;
   }
 }
 
+.mat-datepicker-close-button {
+  position: absolute;
+  margin-top: 10px;
+  &.cdk-keyboard-focused {
+    background: #2468cf;
+    color: #ffffff;
+    z-index: 999;
+    text-decoration: none;
+  }
+}
+
 .mat-datepicker-content-touch {
   display: block;
   // make sure the dialog scrolls rather than being cropped on ludicrously small screens

@@ -1,5 +1,5 @@
 import {Directionality} from '@angular/cdk/bidi';
-import {DOWN_ARROW, ENTER, ESCAPE, RIGHT_ARROW, UP_ARROW} from '@angular/cdk/keycodes';
+import {DOWN_ARROW, ENTER, ESCAPE, RIGHT_ARROW, UP_ARROW, TAB} from '@angular/cdk/keycodes';
 import {Overlay, OverlayContainer} from '@angular/cdk/overlay';
 import {ScrollDispatcher} from '@angular/cdk/scrolling';
 import {
@@ -199,6 +199,38 @@ describe('MatDatepicker', () => {
 
         expect(testComponent.datepicker.opened).toBe(false, 'Expected datepicker to be closed.');
       }));
+
+      it('should close the popup when the close button is clicked', fakeAsync(() => {
+        testComponent.datepicker.open();
+        fixture.detectChanges();
+
+        expect(testComponent.datepicker.opened).toBe(true, 'Expected datepicker to be open.');
+
+        const closeButton = document.querySelector('.mat-datepicker-close-button') as HTMLElement;
+
+        closeButton.click();
+        fixture.detectChanges();
+        flush();
+
+        expect(testComponent.datepicker.opened).toBe(false, 'Expected datepicker to be closed.');
+      }));
+
+      it('close button should appear when focused', () => {
+        testComponent.datepicker.open();
+        fixture.detectChanges();
+
+        expect(testComponent.datepicker.opened).toBe(true, 'Expected datepicker to be open.');
+
+        const closeButton: HTMLElement =
+          fixture.debugElement.query(By.css('.mat-datepicker-close-button')).nativeElement;
+
+        dispatchKeyboardEvent(closeButton, 'keydown', TAB);
+        closeButton.focus();
+        fixture.detectChanges();
+
+        expect(closeButton.classList.contains('cdk-keyboard-focused')).toEqual(true);
+        expect(closeButton.classList.contains('cdk-visually-hidden')).toEqual(false);
+      });
 
       it('should set the proper role on the popup', fakeAsync(() => {
         testComponent.datepicker.open();

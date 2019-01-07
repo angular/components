@@ -1,17 +1,33 @@
-<mat-calendar cdkTrapFocus
-    [id]="datepicker.id"
-    [ngClass]="datepicker.panelClass"
-    [startAt]="datepicker.startAt"
-    [startView]="datepicker.startView"
-    [minDate]="datepicker._minDate"
-    [maxDate]="datepicker._maxDate"
-    [dateFilter]="datepicker._dateFilter"
-    [headerComponent]="datepicker.calendarHeaderComponent"
-    [selected]="datepicker._selected"
-    [dateClass]="datepicker.dateClass"
-    [@fadeInCalendar]="'enter'"
-    (selectedChange)="datepicker.select($event)"
-    (yearSelected)="datepicker._selectYear($event)"
-    (monthSelected)="datepicker._selectMonth($event)"
-    (_userSelection)="datepicker.close()">
-</mat-calendar>
+<div cdkTrapFocus>
+  <mat-calendar
+      [id]="datepicker.id"
+      [ngClass]="datepicker.panelClass"
+      [startAt]="datepicker.startAt"
+      [startView]="datepicker.startView"
+      [minDate]="datepicker._minDate"
+      [maxDate]="datepicker._maxDate"
+      [dateFilter]="datepicker._dateFilter"
+      [headerComponent]="datepicker.calendarHeaderComponent"
+      [selected]="datepicker._selected"
+      [dateClass]="datepicker.dateClass"
+      [@fadeInCalendar]="'enter'"
+      (selectedChange)="datepicker.select($event)"
+      (yearSelected)="datepicker._selectYear($event)"
+      (monthSelected)="datepicker._selectMonth($event)"
+      (_userSelection)="datepicker.close()">
+  </mat-calendar>
+
+  <!-- An invisible close button so users with screen readers can easily close the datepicker -->
+  <div cdkMonitorSubtreeFocus
+       (cdkFocusChange)="closeButtonElementOrigin = formatOrigin($event); markForCheck()">
+    <button mat-button
+            disableRipple
+            type="button"
+            [class.cdk-visually-hidden]="closeButtonElementOrigin === 'blurred'"
+            class="mat-datepicker-close-button"
+            [attr.aria-label]="closeButtonLabel"
+            (click)="datepicker.close()">
+            {{closeButtonLabel}}
+    </button>
+  </div>
+</div>
