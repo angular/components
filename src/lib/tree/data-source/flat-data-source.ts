@@ -118,6 +118,36 @@ export class MatTreeFlattener<T, F> {
   }
 }
 
+export interface NodeData {
+  name: string;
+  children?: NodeData[];
+}
+
+export interface FlatNodeData {
+  expandable: boolean;
+  name: string;
+  level: number;
+}
+
+function getNodeLevel(node: FlatNodeData): number {
+  return node.level;
+}
+function getNodeChildren(node: NodeData): NodeData[] | undefined {
+  return node.children;
+}
+function isNodeExpandable(node: FlatNodeData): boolean {
+  return node.expandable;
+}
+
+function transform(node: NodeData, level: number): FlatNodeData {
+  return {
+    expandable: !!node.children && node.children.length > 0,
+    name: node.name,
+    level: level,
+  };
+}
+
+
 
 /**
  * Data source for flat tree.
@@ -149,7 +179,7 @@ export class MatTreeFlatDataSource<T, F> extends DataSource<F> {
   connect(collectionViewer: CollectionViewer): Observable<F[]> {
     const changes = [
       collectionViewer.viewChange,
-      this.treeControl.expansionModel.onChange,
+      this.treeControl.expansionModel.changed,
       this._flattenedData
     ];
     return merge(...changes).pipe(map(() => {
@@ -161,5 +191,30 @@ export class MatTreeFlatDataSource<T, F> extends DataSource<F> {
 
   disconnect() {
     // no op
+  }
+
+  isExpanded(node: any): boolean {
+    return this.treeControl.isExpanded(node);
+  }
+
+  getTreeControl() {
+    return this.treeControl;
+  }
+}
+
+/**
+ * Data source for flat tree with a default treeControl and treeFlattener.
+ * The data source need to handle expansion/collapsion of the tree node and change the data feed
+ * to `MatTree`.
+ * The nested tree nodes of type `T` are flattened through `MatTreeFlattener`, and converted
+ * to type `F` for `MatTree` to consume.
+ */
+export class MatTreeDefaultFlatDataSource
+    extends MatTreeFlatDataSource<NodeData, FlatNodeData> {
+  constructor(initialData: NodeData[] = []) {
+    super(new FlatTreeControl<FlatNodeData>(getNodeLevel, isNodeExpandable),
+          new MatTreeFlattener<NodeData, FlatNodeData>(
+              transform, getNodeLevel, isNodeExpandable, getNodeChildren),
+          initialData);
   }
 }
