@@ -81,8 +81,8 @@ sass_binary(
 )
 
 sass_binary(
-  name = "pink-bluegrey_prebuilt",
-  src = "theming/prebuilt/pink-bluegrey.scss",
+  name = "pink-lightgreen_prebuilt",
+  src = "theming/prebuilt/pink-lightgreen.scss",
   deps = [":all_themes"],
 )
 

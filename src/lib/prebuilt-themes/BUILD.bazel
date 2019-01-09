@@ -19,9 +19,9 @@ genrule(
 )
 
 genrule(
-  name = "pink-bluegrey",
-  srcs = ["//src/lib/core:theming/prebuilt/pink-bluegrey.css"],
-  outs = ["pink-bluegrey.css"],
+  name = "pink-lightgreen",
+  srcs = ["//src/lib/core:theming/prebuilt/pink-lightgreen.css"],
+  outs = ["pink-lightgreen.css"],
   cmd = "cp $< $@",
 )
 

@@ -29,7 +29,7 @@ You can include a theme file directly into your application from
 Available pre-built themes:
 * `deeppurple-amber.css`
 * `indigo-pink.css`
-* `pink-bluegrey.css`
+* `pink-lightgreen.css`
 * `purple-green.css`
 
 If you're using Angular CLI, this is as simple as including one line

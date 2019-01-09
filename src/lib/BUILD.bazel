@@ -40,7 +40,7 @@ ng_package(
     ":theming_bundle",
     "//src/lib/prebuilt-themes:indigo-pink",
     "//src/lib/prebuilt-themes:deeppurple-amber",
-    "//src/lib/prebuilt-themes:pink-bluegrey",
+    "//src/lib/prebuilt-themes:pink-lightgreen",
     "//src/lib/prebuilt-themes:purple-green",
   ],
   packages = ["//src/lib/schematics:npm_package"],
