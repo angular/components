@@ -98,6 +98,19 @@ export class MatTableDataSource<T> extends DataSource<T> {
   private _paginator: MatPaginator|null;
 
   /**
+   * This function can match the data not only value in properties. 
+   * Moreover, the value of objects in properties can aslo be used.
+   * (e.g. column Abc.Xyz represents data['Abc']['Xyz'])
+   * @param data Data object that is being accessed.
+   * @param path The property of the nestedObj.
+   */
+  getNestedObject: ((nestedObj: any, path: string) => string | number) =
+    (nestedObj: any, path: string): string | number => {
+      return path.split('.').reduce((obj, key) =>
+        (obj && obj[key] !== 'undefined') ? obj[key] : undefined, nestedObj);
+  }
+  
+  /**
    * Data accessor function that is used for accessing data properties for sorting through
    * the default sortData function.
    * This default function assumes that the sort header IDs (which defaults to the column name)
@@ -108,7 +121,7 @@ export class MatTableDataSource<T> extends DataSource<T> {
    */
   sortingDataAccessor: ((data: T, sortHeaderId: string) => string|number) =
       (data: T, sortHeaderId: string): string|number => {
-    const value = (data as {[key: string]: any})[sortHeaderId];
+    const value = this.getNestedObject(data as { [key: string]: any }, sortHeaderId);
 
     if (_isNumberValue(value)) {
       const numberValue = Number(value);
