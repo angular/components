@@ -98,7 +98,7 @@ export class MatTableDataSource<T> extends DataSource<T> {
   private _paginator: MatPaginator|null;
 
   /**
-   * This function can match the data not only value in properties. 
+   * This function can match the data not only value in properties.
    * Moreover, the value of objects in properties can aslo be used.
    * (e.g. column Abc.Xyz represents data['Abc']['Xyz'])
    * @param data Data object that is being accessed.
@@ -109,7 +109,7 @@ export class MatTableDataSource<T> extends DataSource<T> {
       return path.split('.').reduce((obj, key) =>
         (obj && obj[key] !== 'undefined') ? obj[key] : undefined, nestedObj);
   }
-  
+
   /**
    * Data accessor function that is used for accessing data properties for sorting through
    * the default sortData function.
