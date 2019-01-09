@@ -121,7 +121,7 @@ export class MatTableDataSource<T> extends DataSource<T> {
    */
   sortingDataAccessor: ((data: T, sortHeaderId: string) => string|number) =
       (data: T, sortHeaderId: string): string|number => {
-    const value = this.getNestedObject(data as { [key: string]: any }, sortHeaderId);
+    const value = this.getNestedObject(data as {[key: string]: any}, sortHeaderId);
 
     if (_isNumberValue(value)) {
       const numberValue = Number(value);
