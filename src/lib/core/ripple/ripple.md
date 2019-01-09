@@ -142,12 +142,12 @@ const globalRippleConfig: RippleGlobalOptions = {
 
 ### Updating global options at runtime
 
-Developers are able to update the global `ripple` options at runtime by just injecting the
-the `MAT_RIPPLE_GLOBAL_OPTIONS` provider and updating its options. Note that there are
-multiple ways to inject the global options.
+To change global ripple options at runtime, just inject the `MAT_RIPPLE_GLOBAL_OPTIONS`
+provider and update the desired options.
 
-For example, developers could create a class for the options and use it for the global
-options. This makes it more simple and clean to update options at runtime.
+There are various ways of injecting the global options. In order to make it easier to
+inject and update options at runtime, it's recommended to create a service that implements
+the `RippleGlobalOptions` interface.
 
 ```ts
 @Injectable({providedIn: 'root'})
@@ -166,8 +166,8 @@ export class AppGlobalRippleOptions implements RippleGlobalOptions {
 export class MyModule {...}
 ```
 
-Now that the global ripple options are set to an existing provider, we can inject the
-service in our component and update the desired ripple options at runtime.
+Now that the global ripple options are set to a service we can inject, the service can be
+used update any global ripple option at runtime.
 
 ```ts
 @Component(...)
