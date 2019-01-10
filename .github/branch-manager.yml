@@ -1,3 +1,5 @@
+test: true
+
 enabled: true
 
 branches:
