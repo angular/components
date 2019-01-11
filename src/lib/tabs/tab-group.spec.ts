@@ -688,7 +688,7 @@ describe('nested MatTabGroup with enabled animations', () => {
         <ng-template mat-tab-label>Tab Two</ng-template>
         <span>Tab </span><span>two</span><span>content</span>
       </mat-tab>
-      <mat-tab  unique-name="tb03">
+      <mat-tab unique-name="tb03">
         <ng-template mat-tab-label>Tab Three</ng-template>
         Tab three content
       </mat-tab>
