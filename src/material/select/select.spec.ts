@@ -1541,8 +1541,24 @@ describe('MatSelect', () => {
 
         fixture.componentInstance.foods[1].viewValue = 'Calzone';
         fixture.detectChanges();
+        tick();
+        fixture.detectChanges();
 
         expect(trigger.textContent!.trim()).toBe('Calzone');
+      }));
+
+      it('should update the trigger value if the text in the DOM changes', fakeAsync(() => {
+        fixture.componentInstance.control.setValue('pizza-1');
+        fixture.detectChanges();
+
+        expect(trigger.textContent!.trim()).toBe('Pizza');
+
+        fixture.componentInstance.options.toArray()[1]._getHostElement().textContent = 'changed';
+        fixture.checkNoChanges();
+        tick();
+        fixture.detectChanges();
+
+        expect(trigger.textContent!.trim()).toBe('changed');
       }));
 
       it('should not select disabled options', fakeAsync(() => {
@@ -4479,6 +4495,7 @@ describe('MatSelect', () => {
         [typeaheadDebounceInterval]="typeaheadDebounceInterval">
         <mat-option *ngFor="let food of foods" [value]="food.value" [disabled]="food.disabled">
           {{ food.viewValue }}
+          <span class="extra-content">{{extraOptionContent}}</span>
         </mat-option>
       </mat-select>
     </mat-form-field>
@@ -4506,6 +4523,7 @@ class BasicSelect {
   panelClass = ['custom-one', 'custom-two'];
   disableRipple: boolean;
   typeaheadDebounceInterval: number;
+  extraOptionContent: string;
 
   @ViewChild(MatSelect, {static: true}) select: MatSelect;
   @ViewChildren(MatOption) options: QueryList<MatOption>;
