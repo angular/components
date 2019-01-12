@@ -40,6 +40,7 @@
                *ngFor="let tab of _tabs; let i = index"
                [id]="_getTabContentId(i)"
                [attr.aria-labelledby]="_getTabLabelId(i)"
+               [attr.tabindex]="selectedIndex === i ? 0 : null"
                [class.mat-tab-body-active]="selectedIndex == i"
                [content]="tab.content!"
                [position]="tab.position!"

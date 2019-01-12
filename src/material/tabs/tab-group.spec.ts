@@ -298,6 +298,27 @@ describe('MatTabGroup', () => {
       expect(tabLabelNativeElements.every(el => el.classList.contains('mat-focus-indicator')))
         .toBe(true);
     });
+
+    it('should set the correct tabindex on the tab content elements', fakeAsync(() => {
+      fixture.detectChanges();
+      tick();
+
+      const contentElements: NodeListOf<HTMLElement> =
+          fixture.nativeElement.querySelectorAll('.mat-tab-body');
+
+      expect(contentElements[0].hasAttribute('tabindex')).toBe(false);
+      expect(contentElements[1].getAttribute('tabindex')).toBe('0');
+      expect(contentElements[2].hasAttribute('tabindex')).toBe(false);
+
+      fixture.componentInstance.selectedIndex = 2;
+      fixture.detectChanges();
+      tick();
+
+      expect(contentElements[0].hasAttribute('tabindex')).toBe(false);
+      expect(contentElements[1].hasAttribute('tabindex')).toBe(false);
+      expect(contentElements[2].getAttribute('tabindex')).toBe('0');
+    }));
+
   });
 
   describe('aria labelling', () => {
