@@ -11,3 +11,5 @@ export * from './step-label';
 export * from './stepper-button';
 export * from './stepper-module';
 export * from './step-header';
+
+export {BidiModule, Dir} from '@angular/cdk/bidi';

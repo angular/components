@@ -16,7 +16,7 @@ builder.config({
   },
   map: {
     'rxjs': 'node:rxjs',
-    'main': 'dist/packages/demo-app/main.js',
+    'main': 'dist/packages/dev-app/main.js',
     'tslib': 'node:tslib/tslib.js',
     'moment': 'node:moment/min/moment-with-locales.min.js',
 
@@ -109,7 +109,7 @@ builder.config({
     'rxjs': {main: 'index'},
     'rxjs/operators': {main: 'index'},
 
-    // Set the default extension for the root package, because otherwise the demo-app can't
+    // Set the default extension for the root package, because otherwise the dev-app can't
     // be built within the production mode. Due to missing file extensions.
     '.': {
       defaultExtension: 'js'
@@ -117,4 +117,4 @@ builder.config({
   }
 });
 
-builder.buildStatic('main', 'dist/packages/demo-app/bundle.js');
+builder.buildStatic('main', 'dist/packages/dev-app/bundle.js');

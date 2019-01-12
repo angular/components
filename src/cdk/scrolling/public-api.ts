@@ -14,3 +14,6 @@ export * from './viewport-ruler';
 export * from './virtual-for-of';
 export * from './virtual-scroll-strategy';
 export * from './virtual-scroll-viewport';
+
+export {BidiModule, Dir} from '@angular/cdk/bidi';
+export {PlatformModule} from '@angular/cdk/platform';
