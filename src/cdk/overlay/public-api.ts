@@ -6,6 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+export {BidiModule, Dir} from '@angular/cdk/bidi';
 export * from './overlay-config';
 export * from './position/connected-position';
 export * from './scroll/index';
@@ -16,7 +17,7 @@ export {CdkOverlayOrigin, CdkConnectedOverlay} from './overlay-directives';
 export {FullscreenOverlayContainer} from './fullscreen-overlay-container';
 export {OverlayRef, OverlaySizeConfig} from './overlay-ref';
 export {ViewportRuler} from '@angular/cdk/scrolling';
-export {ComponentType} from '@angular/cdk/portal';
+export {ComponentType, CdkPortal, PortalModule, CdkPortalOutlet} from '@angular/cdk/portal';
 export {OverlayKeyboardDispatcher} from './keyboard/overlay-keyboard-dispatcher';
 export {OverlayPositionBuilder} from './position/overlay-position-builder';
 
@@ -28,4 +29,9 @@ export {
   ConnectedPosition,
   FlexibleConnectedPositionStrategy,
 } from './position/flexible-connected-position-strategy';
-export {VIEWPORT_RULER_PROVIDER} from '@angular/cdk/scrolling';
+export {
+    VIEWPORT_RULER_PROVIDER, CdkFixedSizeVirtualScroll,
+    CdkVirtualScrollViewport, CdkVirtualForOf, ScrollingModule
+} from '@angular/cdk/scrolling';
+
+export {PlatformModule} from '@angular/cdk/platform';

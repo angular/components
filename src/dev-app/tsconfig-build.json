@@ -24,6 +24,10 @@
     "typeRoots": [
       "../../node_modules/@types/!(node)"
     ],
+    "rootDirs": [
+      ".",
+      "../../dist/packages/dev-app"
+    ],
     "baseUrl": ".",
     "paths": {
       "@angular/material/*": [

@@ -16,3 +16,5 @@ export * from './live-announcer/live-announcer-tokens';
 export * from './focus-monitor/focus-monitor';
 export * from './fake-mousedown';
 export * from './a11y-module';
+export {PlatformModule} from '@angular/cdk/platform';
+export {ObserversModule, CdkObserveContent} from '@angular/cdk/observers';

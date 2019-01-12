@@ -9,3 +9,5 @@
 export * from './autofill';
 export * from './autosize';
 export * from './text-field-module';
+
+export {PlatformModule} from '@angular/cdk/platform';

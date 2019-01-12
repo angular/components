@@ -16,3 +16,7 @@ export * from './datepicker-intl';
 export * from './datepicker-toggle';
 export * from './month-view';
 export * from './year-view';
+
+// TODO(ivy): this needs to be exported in a way that makes it clear that it's not a
+// public API that people should use.
+export * from './multi-year-view';

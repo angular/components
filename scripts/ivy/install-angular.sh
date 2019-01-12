@@ -13,8 +13,8 @@ function buildNgPackages() {
   ngDir=$1
   echo ">>> Building @angular packages (from $ngDir)"
   pushd $ngDir
-  bazel build --define=compile=local //packages/{animations,common,compiler,compiler-cli,core,elements,forms,platform-browser,platform-browser-dynamic,router,upgrade}:npm_package
-  outputPath=`bazel info 2>&1 | grep output_path | cut -d ':' -f 2 | cut -c 2-`/darwin-fastbuild/bin/packages
+  yarn bazel build --define=compile=aot //packages/{animations,common,compiler,compiler-cli,core,elements,forms,platform-browser,platform-browser-dynamic,router,upgrade}:npm_package
+  outputPath=`yarn bazel info 2>&1 | grep output_path | cut -d ':' -f 2 | cut -c 2-`/darwin-fastbuild/bin/packages
   popd
 }
 
