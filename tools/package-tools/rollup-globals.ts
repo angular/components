@@ -39,6 +39,7 @@ const rollupCdkExperimentalEntryPoints =
 /** Map of globals that are used inside of the different packages. */
 export const rollupGlobals = {
   'moment': 'moment',
+  'luxon': 'luxon',
   'tslib': 'tslib',
 
   '@angular/animations': 'ng.animations',
@@ -63,6 +64,7 @@ export const rollupGlobals = {
   '@angular/material-examples': 'ng.materialExamples',
   '@angular/material-experimental': 'ng.materialExperimental',
   '@angular/material-moment-adapter': 'ng.materialMomentAdapter',
+  '@angular/material-luxon-adapter': 'ng.materialLuxonAdapter',
 
   // Include secondary entry-points of the cdk and material packages
   ...rollupCdkEntryPoints,

@@ -82,6 +82,9 @@
 # Moment adapter package
 /src/material-moment-adapter/**                    @mmalerba
 
+# Luxon adapter package
+/src/material-luxon-adapter/**                     @mmalerba @crisbeto
+
 # Material experimental package
 /src/material-experimental/**                      @jelbourn
 

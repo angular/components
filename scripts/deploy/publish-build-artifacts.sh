@@ -16,7 +16,9 @@ if [ -z ${MATERIAL2_BUILDS_TOKEN} ]; then
 fi
 
 # Material packages that need to published.
-PACKAGES=(cdk material material-moment-adapter)
+PACKAGES=(cdk material material-moment-adapter material-luxon-adapter)
+
+## TODO(crisbeto): add luxon to this once we have a repo for `material-luxon-adapter` builds.
 REPOSITORIES=(cdk-builds material2-builds material2-moment-adapter-builds)
 
 # Command line arguments.

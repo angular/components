@@ -4,5 +4,6 @@ export const releasePackages = [
   'material',
   'cdk-experimental',
   'material-experimental',
-  'material-moment-adapter'
+  'material-moment-adapter',
+  'material-luxon-adapter'
 ];

@@ -1,0 +1,50 @@
+package(default_visibility=["//visibility:public"])
+
+load("//tools:defaults.bzl", "ng_module", "ng_package", "ng_web_test_suite", "ng_test_library")
+load("//:packages.bzl", "ROLLUP_GLOBALS")
+
+ng_module(
+  name = "material-luxon-adapter",
+  srcs = glob(["**/*.ts"], exclude=["**/*.spec.ts"]),
+  module_name = "@angular/material-luxon-adapter",
+  deps = [
+    "@angular//packages/core",
+    "@matdeps//@types/luxon",
+    "//src/lib/core",
+  ],
+)
+
+ng_test_library(
+  name = "luxon_adapter_test_sources",
+  srcs = glob(["**/*.spec.ts"]),
+  deps = [
+    "//src/lib/core",
+    "//src/lib/testing",
+    "//src/cdk/platform",
+    "@matdeps//@types/luxon",
+    ":material-luxon-adapter",
+  ],
+)
+
+ng_web_test_suite(
+  name = "unit_tests",
+  deps = [
+    ":require-config.js",
+    ":luxon_adapter_test_sources"
+  ],
+  # We need to load Luxon statically since it is not a named AMD module and needs to
+  # be manually configured through "require.js" which is used by "ts_web_test_suite".
+  static_files = [
+    "@matdeps//luxon",
+  ],
+)
+
+ng_package(
+  name = "npm_package",
+  srcs = ["package.json"],
+  entry_point = "src/material-luxon-adapter/public_api.js",
+  globals = ROLLUP_GLOBALS,
+  deps = [":material-luxon-adapter"],
+  # TODO(devversion): re-enable once we have set up the proper compiler for the ng_package
+  tags = ["manual"],
+)

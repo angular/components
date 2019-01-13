@@ -10,7 +10,8 @@
       "@angular/cdk/*": ["../cdk/*"],
       "@angular/material/*": ["../lib/*"],
       "@angular/material": ["../lib/public-api.ts"],
-      "@angular/material-moment-adapter": ["../material-moment-adapter/public-api.ts"]
+      "@angular/material-moment-adapter": ["../material-moment-adapter/public-api.ts"],
+      "@angular/material-luxon-adapter": ["../material-luxon-adapter/public-api.ts"]
     }
   },
   "include": ["./**/*.ts"]

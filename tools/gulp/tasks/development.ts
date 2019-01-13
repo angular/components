@@ -15,6 +15,7 @@ import {
   materialPackage,
   momentAdapterPackage,
   examplesPackage,
+  luxonAdapterPackage,
 } from '../packages';
 import {watchFilesAndReload} from '../util/watch-files-reload';
 
@@ -38,6 +39,7 @@ const appVendors = [
   'hammerjs',
   'core-js',
   'moment',
+  'luxon',
   'tslib',
   '@webcomponents',
 ];
@@ -64,6 +66,7 @@ task('build:devapp', sequenceTask(
   'cdk-experimental:build-no-bundles',
   'material-experimental:build-no-bundles',
   'material-moment-adapter:build-no-bundles',
+  'material-luxon-adapter:build-no-bundles',
   'build-examples-module',
   // The examples module needs to be manually built before building examples package because
   // when using the `no-bundles` task, the package-specific pre-build tasks won't be executed.
@@ -102,6 +105,8 @@ task('stage-deploy:devapp', ['build:devapp'], () => {
     join(deployOutputDir, 'dist/packages/material-examples'));
   copyFiles(momentAdapterPackage.outputDir, '**/*.+(js|map)',
     join(deployOutputDir, 'dist/packages/material-moment-adapter'));
+  copyFiles(luxonAdapterPackage.outputDir, '**/*.+(js|map)',
+    join(deployOutputDir, 'dist/packages/material-luxon-adapter'));
 });
 
 /**
@@ -154,6 +159,10 @@ task(':watch:devapp', () => {
   // Moment adapter package watchers
   watchFilesAndReload(join(momentAdapterPackage.sourceDir, '**/*'),
     ['material-moment-adapter:build-no-bundles']);
+
+  // Luxon adapter package watchers
+  watchFilesAndReload(join(luxonAdapterPackage.sourceDir, '**/*'),
+    ['material-luxon-adapter:build-no-bundles']);
 
   // Material experimental package watchers
   watchFilesAndReload(join(materialExperimentalPackage.sourceDir, '**/*'),

@@ -37,7 +37,8 @@
     "packageGroup": [
       "@angular/material",
       "@angular/cdk",
-      "@angular/material-moment-adapter"
+      "@angular/material-moment-adapter",
+      "@angular/material-luxon-adapter"
     ]
   },
   "sideEffects": false

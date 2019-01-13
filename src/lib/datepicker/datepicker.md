@@ -212,16 +212,15 @@ with a variety of different date implementations. However it also means that dev
 sure to provide the appropriate pieces for the datepicker to work with their chosen implementation.
 The easiest way to ensure this is just to import one of the pre-made modules:
 
-|Module               |Date type|Supported locales                                                      |Dependencies                      |Import from                       |
-|---------------------|---------|-----------------------------------------------------------------------|----------------------------------|----------------------------------|
-|`MatNativeDateModule`|`Date`   |en-US                                                                  |None                              |`@angular/material`               |
-|`MatMomentDateModule`|`Moment` |[See project](https://github.com/moment/moment/tree/develop/src/locale)|[Moment.js](https://momentjs.com/)|`@angular/material-moment-adapter`|
+|Module               |Date type  |Supported locales                                                      |Dependencies                            |Import from                       |
+|---------------------|-----------|-----------------------------------------------------------------------|----------------------------------------|----------------------------------|
+|`MatNativeDateModule`|`Date`     |en-US                                                                  |None                                    |`@angular/material`               |
+|`MatMomentDateModule`|`Moment`   |[See project](https://github.com/moment/moment/tree/develop/src/locale)|[Moment.js](https://momentjs.com/)      |`@angular/material-moment-adapter`|
+|`MatLuxonDateModule` |`DateTime` |[See project](https://moment.github.io/luxon/docs/manual/intl.html)    |[Luxon](https://moment.github.io/luxon/)|`@angular/material-luxon-adapter`|
 
 *Please note: `MatNativeDateModule` is based off of the functionality available in JavaScript's
-native `Date` object, and is thus not suitable for many locales. One of the biggest shortcomings of
-the native `Date` object is the inability to set the parse format. We highly recommend using the
-`MomentDateAdapter` or a custom `DateAdapter` that works with the formatting/parsing library of your
-choice.*
+native `Date` object, and is thus not suitable for many locales. It is highly recommended to use
+one of the alternative adapters or to create your own custom adapter*
 
 These modules include providers for `DateAdapter` and `MAT_DATE_FORMATS`
 

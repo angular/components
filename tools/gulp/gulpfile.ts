@@ -7,7 +7,8 @@ import {
   examplesPackage,
   materialExperimentalPackage,
   materialPackage,
-  momentAdapterPackage
+  momentAdapterPackage,
+  luxonAdapterPackage
 } from './packages';
 
 createPackageBuildTasks(cdkPackage);
@@ -16,6 +17,7 @@ createPackageBuildTasks(materialPackage);
 createPackageBuildTasks(materialExperimentalPackage);
 createPackageBuildTasks(examplesPackage, ['build-examples-module']);
 createPackageBuildTasks(momentAdapterPackage);
+createPackageBuildTasks(luxonAdapterPackage);
 
 import './tasks/aot';
 import './tasks/breaking-changes';

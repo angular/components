@@ -35,6 +35,7 @@ task('build-aot:release-packages', sequenceTask(
     'cdk-experimental:build-release',
     'material-experimental:build-release',
     'material-moment-adapter:build-release',
+    'material-luxon-adapter:build-release',
     'material-examples:build-release',
   ],
 ));

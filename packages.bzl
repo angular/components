@@ -90,6 +90,7 @@ VERSION_PLACEHOLDER_REPLACEMENTS = {
 ROLLUP_GLOBALS = {
   'tslib': 'tslib',
   'moment': 'moment',
+  'luxon': 'luxon',
   '@angular/cdk': 'ng.cdk',
   '@angular/cdk-experimental': 'ng.cdkExperimental',
   '@angular/material': 'ng.material',

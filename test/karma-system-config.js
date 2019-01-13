@@ -8,6 +8,7 @@ System.config({
     'rxjs': 'node:rxjs',
     'tslib': 'node:tslib/tslib.js',
     'moment': 'node:moment/min/moment-with-locales.min.js',
+    'luxon': 'node:luxon/build/amd/luxon.js',
 
     // Angular specific mappings.
     '@angular/core': 'node:@angular/core/bundles/core.umd.js',

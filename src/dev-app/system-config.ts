@@ -18,6 +18,7 @@ System.config({
     'main': 'main.js',
     'tslib': 'node:tslib/tslib.js',
     'moment': 'node:moment/min/moment-with-locales.min.js',
+    'luxon': 'node:luxon/build/amd/luxon.js',
 
     'rxjs': 'node_modules/rxjs/bundles/rxjs.umd.min.js',
     'rxjs/operators': 'system-rxjs-operators.js',
@@ -43,6 +44,7 @@ System.config({
     '@angular/material-experimental': 'dist/packages/material-experimental/index.js',
     '@angular/material-examples': 'dist/packages/material-examples/index.js',
     '@angular/material-moment-adapter': 'dist/packages/material-moment-adapter/index.js',
+    '@angular/material-luxon-adapter': 'dist/packages/material-luxon-adapter/index.js',
     '@angular/cdk': 'dist/packages/cdk/index.js',
     '@angular/cdk-experimental': 'dist/packages/cdk-experimental/index.js',
 
