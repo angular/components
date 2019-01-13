@@ -14,6 +14,7 @@ task(':test:build', sequenceTask(
   'material-experimental:build-no-bundles',
   'youtube-player:build-no-bundles',
   'material-moment-adapter:build-no-bundles',
+  'material-luxon-adapter:build-no-bundles',
   'google-maps:build-no-bundles',
   ':test:build-system-config'
 ));

@@ -1518,6 +1518,11 @@
   resolved "https://registry.yarnpkg.com/@types/long/-/long-4.0.0.tgz#719551d2352d301ac8b81db732acb6bdc28dbdef"
   integrity sha512-1w52Nyx4Gq47uuu0EVcsHBxZFJgurQ+rTKS3qMHxR1GY2T8c2AJYd6vZoZ9q1rupaDjU0yT+Jc2XTyXkjeMA+Q==
 
+"@types/luxon@^1.4.1":
+  version "1.4.1"
+  resolved "https://registry.yarnpkg.com/@types/luxon/-/luxon-1.4.1.tgz#ece499ada215fb253e07c7ac05d30731412ba6aa"
+  integrity sha512-mYv/gbkOJ40CDgR8st5sosfFNrJncdlkpdzQSNRdU86UQg3oWWmll4AO/7B8F5FlBC6YrIXqXDSnkoCBqo+uMA==
+
 "@types/marked@^0.7.4":
   version "0.7.4"
   resolved "https://registry.yarnpkg.com/@types/marked/-/marked-0.7.4.tgz#607685669bb1bbde2300bc58ba43486cbbee1f0a"
@@ -7855,6 +7860,11 @@ lru-queue@0.1:
   integrity sha1-Jzi9nw089PhEkMVzbEhpmsYyzaM=
   dependencies:
     es5-ext "~0.10.2"
+
+luxon@^1.8.3:
+  version "1.8.3"
+  resolved "https://registry.yarnpkg.com/luxon/-/luxon-1.8.3.tgz#6c76b50319b3a91a357002ca2e96576bb3bfe26d"
+  integrity sha512-hICQcGmUl5e9VUnf5PtHAma+tpiwL/wMBV9/6/M/6iSpzWFHdEElK2Rj4IZx8kbk2/baJvYftgb+n/I2wJ7RXQ==
 
 macos-release@^2.2.0:
   version "2.3.0"

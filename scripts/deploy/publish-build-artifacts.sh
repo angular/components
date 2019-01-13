@@ -22,6 +22,7 @@ PACKAGES=(
   material
   material-experimental
   material-moment-adapter
+  material-luxon-adapter
   google-maps
   youtube-player
 )

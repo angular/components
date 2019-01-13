@@ -44,6 +44,7 @@ module.exports = config => {
         included: false,
         watched: false
       },
+      {pattern: 'node_modules/luxon/build/amd/luxon.js', included: false, watched: false},
       {pattern: 'node_modules/@material/*/dist/*', included: false, watched: false},
       {pattern: 'node_modules/kagekiri/**', included: false, watched: false},
 
