@@ -23,6 +23,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   ComponentRef,
+  ContentChild,
   ElementRef,
   EventEmitter,
   Inject,
@@ -35,12 +36,14 @@ import {
   ViewChild,
   ViewContainerRef,
   ViewEncapsulation,
+  AfterContentInit,
 } from '@angular/core';
 import {
   CanColor,
   CanColorCtor,
   DateAdapter,
   MatDateSelectionModel,
+  MatRangeDateSelectionModel,
   MatSingleDateSelectionModel,
   mixinColor,
   ThemePalette,
@@ -51,7 +54,11 @@ import {filter, take} from 'rxjs/operators';
 import {MatCalendar} from './calendar';
 import {matDatepickerAnimations} from './datepicker-animations';
 import {createMissingDateImplError} from './datepicker-errors';
-import {MatDatepickerInput} from './datepicker-input';
+import {
+  MatDatepickerInput,
+  MatDatepickerInputEnd,
+  MatDatepickerInputStart,
+} from './datepicker-input';
 import {MatCalendarCellCssClasses} from './calendar-body';
 
 /** Used to generate a unique ID for each datepicker instance. */
@@ -129,23 +136,8 @@ export class MatDatepickerContent<D> extends _MatDatepickerContentMixinBase
 }
 
 
-// TODO(mmalerba): We use a component instead of a directive here so the user can use implicit
-// template reference variables (e.g. #d vs #d="matDatepicker"). We can change this to a directive
-// if angular adds support for `exportAs: '$implicit'` on directives.
-/**
- * Component responsible for managing the datepicker popup/dialog.
- */
-@Component({
-  moduleId: module.id,
-  selector: 'mat-datepicker',
-  template: '',
-  exportAs: 'matDatepicker',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  encapsulation: ViewEncapsulation.None,
-  providers: [{provide: MatDateSelectionModel, useClass: MatSingleDateSelectionModel}]
-})
-export class MatDatepicker<D> implements OnDestroy, CanColor {
-  private _scrollStrategy: () => ScrollStrategy;
+export class MatDatepickerBase<D> implements OnDestroy, CanColor {
+  protected _scrollStrategy: () => ScrollStrategy;
 
   /** An input indicating the type of the custom header component for the calendar, if set. */
   @Input() calendarHeaderComponent: ComponentType<any>;
@@ -160,7 +152,7 @@ export class MatDatepicker<D> implements OnDestroy, CanColor {
   set startAt(value: D | null) {
     this._startAt = this._getValidDateOrNull(this._dateAdapter.deserialize(value));
   }
-  private _startAt: D | null;
+  protected _startAt: D | null;
 
   /** The view that the calendar should start in. */
   @Input() startView: 'month' | 'year' | 'multi-year' = 'month';
@@ -185,7 +177,7 @@ export class MatDatepicker<D> implements OnDestroy, CanColor {
   set touchUi(value: boolean) {
     this._touchUi = coerceBooleanProperty(value);
   }
-  private _touchUi = false;
+  protected _touchUi = false;
 
   /** Whether the datepicker pop-up should be disabled. */
   @Input()
@@ -201,7 +193,7 @@ export class MatDatepicker<D> implements OnDestroy, CanColor {
       this._disabledChange.next(newValue);
     }
   }
-  private _disabled: boolean;
+  protected _disabled: boolean;
 
   /**
    * Emits selected year in multiyear view.
@@ -232,7 +224,7 @@ export class MatDatepicker<D> implements OnDestroy, CanColor {
   @Input()
   get opened(): boolean { return this._opened; }
   set opened(value: boolean) { value ? this.open() : this.close(); }
-  private _opened = false;
+  protected _opened = false;
 
   /** The id for the datepicker calendar. */
   id: string = `mat-datepicker-${datepickerUid++}`;
@@ -261,19 +253,19 @@ export class MatDatepicker<D> implements OnDestroy, CanColor {
   _popupRef: OverlayRef;
 
   /** A reference to the dialog when the calendar is opened as a dialog. */
-  private _dialogRef: MatDialogRef<MatDatepickerContent<D>> | null;
+  protected _dialogRef: MatDialogRef<MatDatepickerContent<D>> | null;
 
   /** A portal containing the calendar for this datepicker. */
-  private _calendarPortal: ComponentPortal<MatDatepickerContent<D>>;
+  protected _calendarPortal: ComponentPortal<MatDatepickerContent<D>>;
 
   /** Reference to the component instantiated in popup mode. */
-  private _popupComponentRef: ComponentRef<MatDatepickerContent<D>> | null;
+  protected _popupComponentRef: ComponentRef<MatDatepickerContent<D>> | null;
 
   /** The element that was focused before the datepicker was opened. */
-  private _focusedElementBeforeOpen: HTMLElement | null = null;
+  protected _focusedElementBeforeOpen: HTMLElement | null = null;
 
   /** Subscription to value changes in the associated input element. */
-  private _subscriptions = new Subscription();
+  protected _subscriptions = new Subscription();
 
   /** The input element this datepicker is associated with. */
   _datepickerInput: MatDatepickerInput<D>;
@@ -284,16 +276,16 @@ export class MatDatepicker<D> implements OnDestroy, CanColor {
   /** Emits new selected date when selected date changes. */
   readonly _selectedChanged = new Subject<D>();
 
-  constructor(private _dialog: MatDialog,
-              private _overlay: Overlay,
-              private _ngZone: NgZone,
-              private _viewContainerRef: ViewContainerRef,
+  constructor(protected _dialog: MatDialog,
+              protected _overlay: Overlay,
+              protected _ngZone: NgZone,
+              protected _viewContainerRef: ViewContainerRef,
               @Inject(MatDateSelectionModel) readonly _dateSelection:
                   MatSingleDateSelectionModel<D>,
               @Inject(MAT_DATEPICKER_SCROLL_STRATEGY) scrollStrategy: any,
-              @Optional() private _dateAdapter: DateAdapter<D>,
-              @Optional() private _dir: Directionality,
-              @Optional() @Inject(DOCUMENT) private _document: any) {
+              @Optional() protected _dateAdapter: DateAdapter<D>,
+              @Optional() protected _dir: Directionality,
+              @Optional() @Inject(DOCUMENT) protected _document: any) {
     if (!this._dateAdapter) {
       throw createMissingDateImplError('DateAdapter');
     }
@@ -403,7 +395,7 @@ export class MatDatepicker<D> implements OnDestroy, CanColor {
   }
 
   /** Open the calendar as a dialog. */
-  private _openAsDialog(): void {
+  protected _openAsDialog(): void {
     // Usually this would be handled by `open` which ensures that we can only have one overlay
     // open at a time, however since we reset the variables in async handlers some overlays
     // may slip through if the user opens and closes multiple times in quick succession (e.g.
@@ -424,7 +416,7 @@ export class MatDatepicker<D> implements OnDestroy, CanColor {
   }
 
   /** Open the calendar as a popup. */
-  private _openAsPopup(): void {
+  protected _openAsPopup(): void {
     if (!this._calendarPortal) {
       this._calendarPortal = new ComponentPortal<MatDatepickerContent<D>>(MatDatepickerContent,
                                                                           this._viewContainerRef);
@@ -447,7 +439,7 @@ export class MatDatepicker<D> implements OnDestroy, CanColor {
   }
 
   /** Create the popup. */
-  private _createPopup(): void {
+  protected _createPopup(): void {
     const overlayConfig = new OverlayConfig({
       positionStrategy: this._createPopupPositionStrategy(),
       hasBackdrop: true,
@@ -472,7 +464,7 @@ export class MatDatepicker<D> implements OnDestroy, CanColor {
   }
 
   /** Create the popup PositionStrategy. */
-  private _createPopupPositionStrategy(): PositionStrategy {
+  protected _createPopupPositionStrategy(): PositionStrategy {
     return this._overlay.position()
       .flexibleConnectedTo(this._datepickerInput.getConnectedOverlayOrigin())
       .withTransformOriginOn('.mat-datepicker-content')
@@ -511,12 +503,12 @@ export class MatDatepicker<D> implements OnDestroy, CanColor {
    * @param obj The object to check.
    * @returns The given object if it is both a date instance and valid, otherwise null.
    */
-  private _getValidDateOrNull(obj: any): D | null {
+  protected _getValidDateOrNull(obj: any): D | null {
     return (this._dateAdapter.isDateInstance(obj) && this._dateAdapter.isValid(obj)) ? obj : null;
   }
 
   /** Passes the current theme color along to the calendar overlay. */
-  private _setColor(): void {
+  protected _setColor(): void {
     const color = this.color;
     if (this._popupComponentRef) {
       this._popupComponentRef.instance.color = color;
@@ -524,5 +516,47 @@ export class MatDatepicker<D> implements OnDestroy, CanColor {
     if (this._dialogRef) {
       this._dialogRef.componentInstance.color = color;
     }
+  }
+}
+
+// TODO(mmalerba): We use a component instead of a directive here so the user can use implicit
+// template reference variables (e.g. #d vs #d="matDatepicker"). We can change this to a directive
+// if angular adds support for `exportAs: '$implicit'` on directives.
+/**
+ * Component responsible for managing the datepicker popup/dialog.
+ */
+@Component({
+  moduleId: module.id,
+  selector: 'mat-datepicker',
+  template: '',
+  exportAs: 'matDatepicker',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None,
+  providers: [{provide: MatDateSelectionModel, useClass: MatSingleDateSelectionModel}]
+})
+export class MatDatepicker<D> extends MatDatepickerBase<D> {}
+
+@Component({
+  moduleId: module.id,
+  selector: 'mat-datepicker-range',
+  template: '<ng-content></ng-content>',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None,
+  providers: [{provide: MatDateSelectionModel, useClass: MatRangeDateSelectionModel}]
+})
+export class MatDatepickerRange<D> extends MatDatepickerBase<D> implements AfterContentInit {
+  @ContentChild(MatDatepickerInputStart) start: MatDatepickerInputStart<D>;
+  @ContentChild(MatDatepickerInputEnd) end: MatDatepickerInputStart<D>;
+
+  ngAfterContentInit() {
+    if (!this.start || !this.end) {
+      // TODO(roboshoes): Improve the error message.
+      throw new Error('Missing input fields');
+    }
+
+    this.start.matDatepicker = this;
+    this.end.matDatepicker = this;
+
+    this._datepickerInput = this.start;
   }
 }

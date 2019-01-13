@@ -24,7 +24,7 @@ import {
   DateAdapter,
   MAT_SINGLE_DATE_SELECTION_MODEL_PROVIDER,
   MatDateSelectionModel,
-  MatSingleDateSelectionModel
+  MatSingleDateSelectionModel,
 } from '@angular/material/core';
 import {take} from 'rxjs/operators';
 import {Subscription} from 'rxjs';
@@ -175,16 +175,18 @@ export class MatCalendarBody<D = unknown> implements OnChanges, OnDestroy {
   }
 
   _cellClicked(cell: MatCalendarCell<D>): void {
-    if (cell.enabled && this._selectionModel instanceof MatSingleDateSelectionModel) {
-      const date = cell.range.start;
-      const granularity = this._getFirstCellGranularity();
-      if (granularity == 'year') {
-        this.selectedValueChange.emit(this._dateAdapter.getYear(date));
-      } else if (granularity == 'month') {
-        this.selectedValueChange.emit(this._dateAdapter.getMonth(date));
-      } else {
-        this.selectedValueChange.emit(this._dateAdapter.getDate(date));
-      }
+    if (!cell.enabled) {
+      return;
+    }
+
+    const date = cell.range.start;
+    const granularity = this._getFirstCellGranularity();
+    if (granularity == 'year') {
+      this.selectedValueChange.emit(this._dateAdapter.getYear(date));
+    } else if (granularity == 'month') {
+      this.selectedValueChange.emit(this._dateAdapter.getMonth(date));
+    } else {
+      this.selectedValueChange.emit(this._dateAdapter.getDate(date));
     }
   }
 
