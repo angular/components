@@ -247,6 +247,53 @@ describe('MatDialog', () => {
     expect(overlayContainerElement.querySelector('mat-dialog-container')).toBeNull();
   }));
 
+  it('should return the default result set in the dialog ref', fakeAsync(() => {
+    const dialogRef = dialog.open(PizzaMsg, {
+      viewContainerRef: testViewContainerRef
+    }).setDefaultResult('default');
+
+    const afterClosedHandler = jasmine.createSpy('afterClosed callback');
+    dialogRef.afterClosed().subscribe(afterClosedHandler);
+
+    dispatchKeyboardEvent(document.body, 'keydown', ESCAPE);
+    viewContainerFixture.detectChanges();
+    flush();
+
+    expect(afterClosedHandler).toHaveBeenCalledWith('default');
+  }));
+
+  it('should return the default result set in the dialog config', fakeAsync(() => {
+    const dialogRef = dialog.open(PizzaMsg, {
+      viewContainerRef: testViewContainerRef,
+      defaultResult: 'default'
+    });
+
+    const afterClosedHandler = jasmine.createSpy('afterClosed callback');
+    dialogRef.afterClosed().subscribe(afterClosedHandler);
+
+    dispatchKeyboardEvent(document.body, 'keydown', ESCAPE);
+    viewContainerFixture.detectChanges();
+    flush();
+
+    expect(afterClosedHandler).toHaveBeenCalledWith('default');
+  }));
+
+  it('should return the correct default result when both are set', fakeAsync(() => {
+    const dialogRef = dialog.open(PizzaMsg, {
+      viewContainerRef: testViewContainerRef,
+      defaultResult: 'defaultInConfig'
+    }).setDefaultResult('defaultInDialog');
+
+    const afterClosedHandler = jasmine.createSpy('afterClosed callback');
+    dialogRef.afterClosed().subscribe(afterClosedHandler);
+
+    dispatchKeyboardEvent(document.body, 'keydown', ESCAPE);
+    viewContainerFixture.detectChanges();
+    flush();
+
+    expect(afterClosedHandler).toHaveBeenCalledWith('defaultInConfig');
+  }));
+
   it('should close from a ViewContainerRef with OnPush change detection', fakeAsync(() => {
     const onPushFixture = TestBed.createComponent(ComponentWithOnPushViewContainer);
 

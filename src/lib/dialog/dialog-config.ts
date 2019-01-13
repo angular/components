@@ -31,7 +31,7 @@ export interface DialogPosition {
 /**
  * Configuration for opening a modal dialog with the MatDialog service.
  */
-export class MatDialogConfig<D = any> {
+export class MatDialogConfig<D = any, R = any> {
 
   /**
    * Where the attached component should live in Angular's *logical* component tree.
@@ -82,6 +82,9 @@ export class MatDialogConfig<D = any> {
 
   /** Data being injected into the child component. */
   data?: D | null = null;
+
+  /** A default result to be returned by the dialog if it gets closed without an explicit result. */
+  defaultResult?: R;
 
   /** Layout direction for the dialog's content. */
   direction?: Direction;

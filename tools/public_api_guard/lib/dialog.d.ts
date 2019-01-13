@@ -9,7 +9,7 @@ export declare type DialogRole = 'dialog' | 'alertdialog';
 
 export declare const MAT_DIALOG_DATA: InjectionToken<any>;
 
-export declare const MAT_DIALOG_DEFAULT_OPTIONS: InjectionToken<MatDialogConfig<any>>;
+export declare const MAT_DIALOG_DEFAULT_OPTIONS: InjectionToken<MatDialogConfig<any, any>>;
 
 export declare const MAT_DIALOG_SCROLL_STRATEGY: InjectionToken<() => ScrollStrategy>;
 
@@ -33,7 +33,7 @@ export declare class MatDialog implements OnDestroy {
     closeAll(): void;
     getDialogById(id: string): MatDialogRef<any> | undefined;
     ngOnDestroy(): void;
-    open<T, D = any, R = any>(componentOrTemplateRef: ComponentType<T> | TemplateRef<T>, config?: MatDialogConfig<D>): MatDialogRef<T, R>;
+    open<T, D = any, R = any>(componentOrTemplateRef: ComponentType<T> | TemplateRef<T>, config?: MatDialogConfig<D, R>): MatDialogRef<T, R>;
 }
 
 export declare class MatDialogActions {
@@ -54,13 +54,14 @@ export declare class MatDialogClose implements OnInit, OnChanges {
     ngOnInit(): void;
 }
 
-export declare class MatDialogConfig<D = any> {
+export declare class MatDialogConfig<D = any, R = any> {
     ariaDescribedBy?: string | null;
     ariaLabel?: string | null;
     autoFocus?: boolean;
     backdropClass?: string;
     closeOnNavigation?: boolean;
     data?: D | null;
+    defaultResult?: R;
     direction?: Direction;
     disableClose?: boolean;
     hasBackdrop?: boolean;
@@ -117,6 +118,7 @@ export declare class MatDialogRef<T, R = any> {
     close(dialogResult?: R): void;
     keydownEvents(): Observable<KeyboardEvent>;
     removePanelClass(classes: string | string[]): this;
+    setDefaultResult(defaultResult: R): this;
     updatePosition(position?: DialogPosition): this;
     updateSize(width?: string, height?: string): this;
 }

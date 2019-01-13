@@ -42,7 +42,8 @@ export class DialogDemo {
       right: ''
     },
     data: {
-      message: 'Jazzy jazz jazz'
+      message: 'Jazzy jazz jazz',
+      defaultResult: undefined
     }
   };
   numTemplateOpens = 0;
@@ -112,7 +113,9 @@ export class JazzDialog {
 
   constructor(
     public dialogRef: MatDialogRef<JazzDialog>,
-    @Inject(MAT_DIALOG_DATA) public data: any) { }
+    @Inject(MAT_DIALOG_DATA) public data: any) {
+    this.dialogRef.setDefaultResult(data.defaultResult);
+  }
 
   togglePosition(): void {
     this._dimesionToggle = !this._dimesionToggle;

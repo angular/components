@@ -42,6 +42,9 @@ export class MatDialogRef<T, R = any> {
   /** Result to be passed to afterClosed. */
   private _result: R | undefined;
 
+  /** Result to be used when there is no explicit result and no default is set in the config. */
+  private _defaultResult: R | undefined;
+
   constructor(
     private _overlayRef: OverlayRef,
     public _containerInstance: MatDialogContainer,
@@ -87,7 +90,8 @@ export class MatDialogRef<T, R = any> {
    * @param dialogResult Optional result to return to the dialog opener.
    */
   close(dialogResult?: R): void {
-    this._result = dialogResult;
+    let actualResult =  dialogResult === undefined ? this._getDefaultResult() : dialogResult;
+    this._result = actualResult;
 
     // Transition the backdrop in parallel to the dialog.
     this._containerInstance._animationStateChanged.pipe(
@@ -95,12 +99,22 @@ export class MatDialogRef<T, R = any> {
       take(1)
     )
     .subscribe(() => {
-      this._beforeClosed.next(dialogResult);
+      this._beforeClosed.next(actualResult);
       this._beforeClosed.complete();
       this._overlayRef.detachBackdrop();
     });
 
     this._containerInstance._startExitAnimation();
+  }
+
+  /**
+   * Set a result that will be used as the default if no other result is provided.
+   * @param defaultResult Result that will be used as the default.
+   */
+  setDefaultResult(defaultResult: R): this {
+    this._defaultResult = defaultResult;
+
+    return this;
   }
 
   /**
@@ -206,5 +220,11 @@ export class MatDialogRef<T, R = any> {
   /** Fetches the position strategy object from the overlay ref. */
   private _getPositionStrategy(): GlobalPositionStrategy {
     return this._overlayRef.getConfig().positionStrategy as GlobalPositionStrategy;
+  }
+
+  /** Returns the default result either from the config or the dialog ref. */
+  private _getDefaultResult(): R | undefined {
+    let defaultResultFromConfig = this._containerInstance._config.defaultResult;
+    return defaultResultFromConfig === undefined ? this._defaultResult : defaultResultFromConfig;
   }
 }

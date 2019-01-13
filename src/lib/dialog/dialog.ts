@@ -125,7 +125,7 @@ export class MatDialog implements OnDestroy {
    * @returns Reference to the newly-opened dialog.
    */
   open<T, D = any, R = any>(componentOrTemplateRef: ComponentType<T> | TemplateRef<T>,
-          config?: MatDialogConfig<D>): MatDialogRef<T, R> {
+          config?: MatDialogConfig<D, R>): MatDialogRef<T, R> {
 
     config = _applyConfigDefaults(config, this._defaultOptions || new MatDialogConfig());
 
