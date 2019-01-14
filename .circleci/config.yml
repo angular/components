@@ -8,7 +8,7 @@
 # http://yaml-online-parser.appspot.com/
 
 var_1: &docker_image angular/ngcontainer:0.7.0
-var_2: &cache_key v2-ng-mat-{{ .Branch }}-{{ checksum "yarn.lock" }}-0.7.0
+var_2: &cache_key v2-ng-mat-{{ checksum "WORKSPACE" }}-{{ checksum "yarn.lock" }}-0.7.0
 
 # Settings common to each job
 var_3: &job_defaults
@@ -110,7 +110,7 @@ jobs:
       - *restore_cache
       - *copy_bazel_config
 
-      - run: bazel build src/...
+      - run: bazel build src/... --build_tag_filters=-docs-package
       - run: bazel test src/...
 
       # Note: We want to save the cache in this job because the workspace cache also
@@ -130,18 +130,17 @@ jobs:
 
     - run: bazel test tools/public_api_guard/...
 
-  # ----------------------------------------------------------------
-  # Job that runs the e2e tests with Protractor and Chrome Headless
-  # ----------------------------------------------------------------
+  # -----------------------------------------------------------------
+  # Job that runs the e2e tests with Protractor and Chromium headless
+  # -----------------------------------------------------------------
   e2e_tests:
     <<: *job_defaults
     resource_class: xlarge
     steps:
       - *checkout_code
       - *restore_cache
-      - *yarn_install
 
-      - run: yarn gulp ci:e2e
+      - run: bazel test e2e/...
 
   # ------------------------------------------------------------------------------------------
   # Job that runs the unit tests on locally installed browsers (Chrome and Firefox headless).
@@ -246,6 +245,7 @@ jobs:
       - *yarn_install
 
       - run: yarn gulp ci:build-release-packages
+      - run: yarn check-release-output
 
       # Store the release output in the workspace storage. This means that other jobs
       # in the same workflow can attach the release output to their job.
