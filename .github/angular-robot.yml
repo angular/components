@@ -57,12 +57,11 @@ merge:
 
     # list of PR statuses that need to be successful
     requiredStatuses:
-      - "ci/circleci: lint"
-      - "ci/circleci: bazel_build_test"
-      - "ci/circleci: tests_local_browsers"
-      - "ci/circleci: tests_browserstack"
-      - "ci/circleci: tests_saucelabs"
-      - "ci/circleci: build_release_packages"
+      - "build_and_test"
+      - "integration_tests"
+      - "lint"
+      - "release_output"
+      - "unit_tests"
 
   # the comment that will be added when the merge label is added despite failing checks, leave empty or set to false to disable
   # {{MERGE_LABEL}} will be replaced by the value of the mergeLabel option
