@@ -10,11 +10,16 @@ function prep() {
 }
 
 function buildNgPackages() {
+  # Different operating systems have different bazel-bin paths; we want to grab that
+  # platform portion to read the packages from angular/angular. macOS is "darwin", Linux is "k8",
+  # and Windows is "x64_windows"
+  bazel_fastbuild_dir=$(bazel info bazel-bin | egrep -o "/\w+-fastbuild/")
+
   ngDir=$1
   echo ">>> Building @angular packages (from $ngDir)"
   pushd $ngDir
   yarn bazel build --define=compile=aot //packages/{animations,common,compiler,compiler-cli,core,elements,forms,platform-browser,platform-browser-dynamic,router,upgrade}:npm_package
-  outputPath=`yarn bazel info 2>&1 | grep output_path | cut -d ':' -f 2 | cut -c 2-`/darwin-fastbuild/bin/packages
+  outputPath=`yarn bazel info 2>&1 | grep output_path | cut -d ':' -f 2 | cut -c 2-`${bazel_fastbuild_dir}bin/packages
   popd
 }
 
