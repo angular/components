@@ -22,11 +22,9 @@ export interface LiveExample {
 
 export const EXAMPLE_COMPONENTS: {[key: string]: LiveExample} = ${exampleComponents};
 
-export const EXAMPLE_LIST = ${exampleList};
-
 @NgModule({
-  declarations: EXAMPLE_LIST,
-  entryComponents: EXAMPLE_LIST,
+  declarations: ${DECLARATIONS_LIST},
+  entryComponents: ${entryPointList},
   imports: [
     ExampleMaterialModule,
     FormsModule,

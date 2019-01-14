@@ -1,0 +1,26 @@
+<table custom-table [dataSource]="dataSource" [treeControl]="treeControl">
+  <!-- filename Column -->
+  <ng-container cdkColumnDef="filename">
+    <th cdk-header-cell *cdkHeaderCellDef> Filename </th>
+    <td custom-cell *cdkCellDef="let file">
+        <button mat-icon-button [attr.aria-label]="'toggle ' + file.filename" customTreeNodeToggle *ngIf="treeControl.isExpandable(file)">
+          <mat-icon class="mat-icon-rtl-mirror">
+            {{treeControl.isExpanded(file) ? 'expand_more' : 'chevron_right'}}
+          </mat-icon>
+        </button>
+        <button mat-icon-button disabled *ngIf="!treeControl.isExpandable(file)">
+            <mat-icon class="mat-icon-rtl-mirror">remove</mat-icon>
+        </button>
+        {{file.filename}}
+    </td>
+  </ng-container>
+
+  <!-- type Column -->
+  <ng-container cdkColumnDef="type">
+    <th cdk-header-cell *cdkHeaderCellDef> Type </th>
+    <td cdk-cell *cdkCellDef="let file"> {{file.type}} </td>
+  </ng-container>
+
+  <tr cdk-header-row *cdkHeaderRowDef="['filename', 'type']"></tr>
+  <tr custom-row *cdkRowDef="let row; columns: ['filename', 'type'];"></tr>
+</table>

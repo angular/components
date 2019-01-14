@@ -33,6 +33,7 @@ export class CdkTreeNodeToggle<T> {
               protected _treeNode: CdkTreeNode<T>) {}
 
   _toggle(event: Event): void {
+    console.log(event);
     this.recursive
       ? this._tree.treeControl.toggleDescendants(this._treeNode.data)
       : this._tree.treeControl.toggle(this._treeNode.data);

@@ -280,4 +280,25 @@ export class CdkFooterRow { }
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
-export class CdkRow { }
+export class CdkRow<T> implements OnDestroy {
+
+  /**
+   * The most recently created `CdkRow`. We save it in static variable so we can retrieve it
+   * in `CdkTable` and set the data to it.
+   */
+  static mostRecentRow: CdkRow<any> | null = null;
+
+  data: T;
+
+  constructor() {
+    CdkRow.mostRecentRow = this as CdkRow<T>;
+  }
+
+  ngOnDestroy() {
+  // If this is the last row being destroyed,
+  // clear out the reference to avoid leaking memory.
+  if (CdkRow.mostRecentRow === this) {
+    CdkRow.mostRecentRow = null;
+    }
+  }
+}

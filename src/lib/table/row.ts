@@ -100,4 +100,4 @@ export class MatFooterRow extends CdkFooterRow { }
   exportAs: 'matRow',
   providers: [{provide: CdkRow, useExisting: MatRow}],
 })
-export class MatRow extends CdkRow { }
+export class MatRow<T> extends CdkRow<T> { }

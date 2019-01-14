@@ -3,18 +3,22 @@ import * as path from 'path';
 import {parseExampleFile} from './parse-example-file';
 
 interface ExampleMetadata {
-  component: string;
+  className: string;
+  type: string;
   sourcePath: string;
   id: string;
   title: string;
   additionalComponents: string[];
+  additionalDirectives: string[];
   additionalFiles: string[];
   selectorName: string[];
 }
 
 /** Build ES module import statements for the given example metadata. */
 function buildImportsTemplate(data: ExampleMetadata): string {
-  const components = data.additionalComponents.concat(data.component);
+  const components = data.additionalComponents
+    .concat(data.className)
+    .concat(data.additionalDirectives);
   const relativeSrcPath = data.sourcePath.replace(/\\/g, '/').replace('.ts', '');
 
   return `import {${components.join(',')}} from './${relativeSrcPath}';`;
@@ -24,9 +28,18 @@ function buildImportsTemplate(data: ExampleMetadata): string {
 function inlineExampleModuleTemplate(parsedData: ExampleMetadata[]): string {
   const exampleImports = parsedData.map(m => buildImportsTemplate(m)).join('\n');
   const quotePlaceholder = '◬';
-  const exampleList = parsedData.reduce((result, data) => {
-    return result.concat(data.component).concat(data.additionalComponents);
-  }, [] as string[]);
+  const entryPointList = parsedData
+    .filter(data => data.type === 'component')
+    .reduce((result, data) => {
+      return result.concat(data.className).concat(data.additionalComponents);
+    }, [] as string[]);
+  const declarationsList = parsedData
+    .reduce((result, data) => {
+      return result
+        .concat(data.className)
+        .concat(data.additionalComponents)
+        .concat(data.additionalDirectives);
+    }, [] as string[]);
 
   const exampleComponents = parsedData.reduce((result, data) => {
     result[data.id] = {
@@ -34,7 +47,7 @@ function inlineExampleModuleTemplate(parsedData: ExampleMetadata[]): string {
       // Since we use JSON.stringify to output the data below, the `component` will be wrapped
       // in quotes, whereas we want a reference to the class. Add placeholder characters next to
       // where the quotes will be so that we can strip them away afterwards.
-      component: `${quotePlaceholder}${data.component}${quotePlaceholder}`,
+      component: `${quotePlaceholder}${data.className}${quotePlaceholder}`,
       additionalFiles: data.additionalFiles,
       selectorName: data.selectorName.join(', '),
     };
@@ -45,7 +58,8 @@ function inlineExampleModuleTemplate(parsedData: ExampleMetadata[]): string {
   return fs.readFileSync(require.resolve('./example-module.template'), 'utf8')
     .replace('${exampleImports}', exampleImports)
     .replace('${exampleComponents}', JSON.stringify(exampleComponents, null, 2))
-    .replace('${exampleList}', `[\n  ${exampleList.join(',\n  ')}\n]`)
+    .replace('${DECLARATIONS_LIST}', `[\n  ${declarationsList.join(',\n  ')}\n]`)
+    .replace('${entryPointList}', `[\n  ${entryPointList.join(',\n  ')}\n]`)
     .replace(new RegExp(`"${quotePlaceholder}|${quotePlaceholder}"`, 'g'), '');
 }
 
@@ -59,29 +73,36 @@ function convertToDashCase(name: string): string {
 /** Collects the metadata of the given source files by parsing the given TypeScript files. */
 function collectExampleMetadata(sourceFiles: string[], baseFile: string): ExampleMetadata[] {
   const exampleMetadata: ExampleMetadata[] = [];
-
   for (const sourceFile of sourceFiles) {
     const sourceContent = fs.readFileSync(sourceFile, 'utf-8');
     const {primaryComponent, secondaryComponents} = parseExampleFile(sourceFile, sourceContent);
 
     if (primaryComponent) {
       // Generate a unique id for the component by converting the class name to dash-case.
-      const exampleId = convertToDashCase(primaryComponent.component.replace('Example', ''));
+      const exampleId = convertToDashCase(primaryComponent.className.replace('Example', ''));
       const example: ExampleMetadata = {
         sourcePath: path.relative(baseFile, sourceFile),
         id: exampleId,
-        component: primaryComponent.component,
+        type: primaryComponent.type,
+        className: primaryComponent.className,
         title: primaryComponent.title.trim(),
         additionalComponents: [],
+        additionalDirectives: [],
         additionalFiles: [],
         selectorName: []
       };
 
       if (secondaryComponents.length) {
-        example.selectorName.push(example.component);
+        example.selectorName.push(example.className);
 
+        console.log(secondaryComponents);
         for (const meta of secondaryComponents) {
-          example.additionalComponents.push(meta.component);
+          if (meta.type === 'component') {
+            example.additionalComponents.push(meta.className);
+          } else {
+            example.additionalDirectives.push(meta.className);
+          }
+
 
           if (meta.templateUrl) {
             example.additionalFiles.push(meta.templateUrl);
@@ -91,7 +112,7 @@ function collectExampleMetadata(sourceFiles: string[], baseFile: string): Exampl
             example.additionalFiles.push(...meta.styleUrls);
           }
 
-          example.selectorName.push(meta.component);
+          example.selectorName.push(meta.className);
         }
       }
 

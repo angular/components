@@ -2,7 +2,8 @@ import * as ts from 'typescript';
 
 interface ParsedMetadata {
   primary: boolean;
-  component: string;
+  type: string;
+  className: string;
   title: string;
   templateUrl: string;
   styleUrls: string[];
@@ -21,7 +22,7 @@ export function parseExampleFile(fileName: string, content: string): ParsedMetad
   const visitNode = (node: any): void => {
     if (node.kind === ts.SyntaxKind.ClassDeclaration) {
       const meta: any = {
-        component: node.name.text
+        className: node.name.text
       };
 
       if (node.jsDoc && node.jsDoc.length) {
@@ -41,7 +42,11 @@ export function parseExampleFile(fileName: string, content: string): ParsedMetad
 
       if (node.decorators && node.decorators.length) {
         for (const decorator of node.decorators) {
-          if (decorator.expression.expression.text === 'Component') {
+          if (decorator.expression.expression.text === 'Component' ||
+            decorator.expression.expression.text === 'Directive') {
+
+            meta.type = decorator.expression.expression.text.toLowerCase();
+
             for (const arg of decorator.expression.arguments) {
               for (const prop of arg.properties) {
                 const propName = prop.name.text;
@@ -56,7 +61,6 @@ export function parseExampleFile(fileName: string, content: string): ParsedMetad
                 }
               }
             }
-
             metas.push(meta);
           }
         }
@@ -67,9 +71,8 @@ export function parseExampleFile(fileName: string, content: string): ParsedMetad
   };
 
   visitNode(sourceFile);
-
   return {
     primaryComponent: metas.find(m => m.primary),
-    secondaryComponents: metas.filter(m => !m.primary)
+    secondaryComponents: metas.filter((m: ParsedMetadata) => !m.primary)
   };
 }

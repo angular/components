@@ -44,7 +44,8 @@ import {
   CdkCellOutletRowContext,
   CdkFooterRowDef,
   CdkHeaderRowDef,
-  CdkRowDef
+  CdkRowDef,
+  CdkRow
 } from './row';
 import {
   getTableDuplicateColumnNameError,
@@ -904,6 +905,13 @@ export class CdkTable<T> implements AfterContentChecked, CollectionViewer, OnDes
     const rowDef = renderRow.rowDef;
     const context: RowContext<T> = {$implicit: renderRow.data};
     this._renderRow(this._rowOutlet, rowDef, renderIndex, context);
+
+    // Set the data to just created `CdkRow`.
+    // The `CdkRow` created from `createEmbeddedView` will be saved in static variable
+    //     `mostRecentRow`. We get it from static variable and pass the row data to it.
+    if (CdkRow.mostRecentRow) {
+      CdkRow.mostRecentRow.data = renderRow.data;
+    }
   }
 
   /**

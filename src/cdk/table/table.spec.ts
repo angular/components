@@ -14,7 +14,7 @@ import {BehaviorSubject, combineLatest, Observable, of as observableOf} from 'rx
 import {map} from 'rxjs/operators';
 import {CdkColumnDef} from './cell';
 import {CdkTableModule} from './index';
-import {CdkHeaderRowDef, CdkRowDef, CdkCellOutlet} from './row';
+import {CdkHeaderRowDef, CdkRowDef, CdkCellOutlet, CdkRow} from './row';
 import {CdkTable} from './table';
 import {
   getTableDuplicateColumnNameError,
@@ -48,6 +48,19 @@ describe('CdkTable', () => {
 
     tableElement = fixture.nativeElement.querySelector('.cdk-table');
   }
+
+  it('should clear out the `mostRecentRow` on destroy', () => {
+    setupTableTestApp(SimpleCdkTableApp);
+    fixture.detectChanges();
+
+    // Cast the assertions to a boolean to avoid Jasmine going into an
+    // infinite loop when stringifying the object, if the test starts failing.
+    expect(!!CdkRow.mostRecentRow).toBe(true);
+
+    fixture.destroy();
+
+    expect(!!CdkRow.mostRecentRow).toBe(false);
+  });
 
   describe('in a typical simple use case', () => {
     let dataSource: FakeDataSource;
