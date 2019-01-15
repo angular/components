@@ -6,6 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {coerceBooleanProperty} from '@angular/cdk/coercion';
 import {Platform} from '@angular/cdk/platform';
 import {
   Directive,
@@ -91,7 +92,7 @@ export class MatRipple implements OnInit, OnDestroy, RippleTarget {
   @Input('matRippleDisabled')
   get disabled() { return this._disabled; }
   set disabled(value: boolean) {
-    this._disabled = value;
+    this._disabled = coerceBooleanProperty(value);
     this._setupTriggerEventsIfEnabled();
   }
   private _disabled: boolean = false;
