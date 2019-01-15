@@ -146,7 +146,7 @@ export class MatDatepickerInput<D> implements ControlValueAccessor, OnDestroy, V
     value = this._dateAdapter.deserialize(value);
     const oldDate = this._selectionModel.getSelection();
 
-    if (!this._isSelectionModelInitialized) {
+    if (!this._isSelectionModelInitialized && value) {
       throw new Error('Input has no MatDatePicker associated with it.');
     }
 
