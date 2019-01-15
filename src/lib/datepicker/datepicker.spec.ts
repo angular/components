@@ -654,7 +654,6 @@ describe('MatDatepicker', () => {
         fakeAsync(() => {
           expect(testComponent.onMultiYearSelection).not.toHaveBeenCalled();
 
-
           testComponent.datepicker.open();
           fixture.detectChanges();
 
