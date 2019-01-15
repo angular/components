@@ -169,6 +169,30 @@
   dependencies:
     tslib "^1.9.0"
 
+"@bazel/bazel-darwin_x64@0.21.0":
+  version "0.21.0"
+  resolved "https://registry.yarnpkg.com/@bazel/bazel-darwin_x64/-/bazel-darwin_x64-0.21.0.tgz#db033b6880294ed274489d3bce4a36c77dbf5a7a"
+  integrity sha512-9lI9SFHUm50ufJHD/5gOdJeuaI/hdGji5d0ezYWJdJK55tj4VhcatkJumjYD6yp1nPNnU038AZ7JvkPcTgt7OA==
+
+"@bazel/bazel-linux_x64@0.21.0":
+  version "0.21.0"
+  resolved "https://registry.yarnpkg.com/@bazel/bazel-linux_x64/-/bazel-linux_x64-0.21.0.tgz#d9ba05ff405c52d09878ecfb89872bda2fda418e"
+  integrity sha512-CyOblC7pMIMaXwkQazo/jz2ipmIkxngmVCTzjNKGO9GiZK71L4X/B8Simy3tFhDHZFxso2HkvJTiY1UJozFyZw==
+
+"@bazel/bazel-win32_x64@0.21.0":
+  version "0.21.0"
+  resolved "https://registry.yarnpkg.com/@bazel/bazel-win32_x64/-/bazel-win32_x64-0.21.0.tgz#f2f40f40b862f368d8596b4f69152640bd15e2ed"
+  integrity sha512-ELNF4ddUCnd1Qx9359tJ5DenlVK0e5Yoe7PVv+qWNQKSCjguh8jtRy9IlzGZHjn8tFMSnTQjYYY0DgW1W1sbSA==
+
+"@bazel/bazel@~0.21.0":
+  version "0.21.0"
+  resolved "https://registry.yarnpkg.com/@bazel/bazel/-/bazel-0.21.0.tgz#8582f225a70d8edff26bd89efad5550c4fc17140"
+  integrity sha512-XeT0omRhtUMSzX0Gjme2ECnWtHRPD2Gak7/ewfpGs0pw1IaCvVy/ilaqr6u5g0Kr8SI8KevP7ezKrejXXpJwbQ==
+  optionalDependencies:
+    "@bazel/bazel-darwin_x64" "0.21.0"
+    "@bazel/bazel-linux_x64" "0.21.0"
+    "@bazel/bazel-win32_x64" "0.21.0"
+
 "@bazel/ibazel@^0.9.0":
   version "0.9.0"
   resolved "https://registry.yarnpkg.com/@bazel/ibazel/-/ibazel-0.9.0.tgz#fd60023acd36313d304cc2f8c2e181b88b5445cd"
