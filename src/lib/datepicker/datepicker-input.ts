@@ -110,8 +110,8 @@ export class MatDatepickerInput<D> implements ControlValueAccessor, OnDestroy, V
     this._datepicker._registerInput(this);
     this._datepickerSubscription.unsubscribe();
 
-    if (this._isSelectionInitialized) {
-      this._isSelectionInitialized = false;
+    if (!this._isSelectionModelInitialized) {
+      this._isSelectionModelInitialized = true;
       this._selectionModel.ngOnDestroy();
     }
 
@@ -140,13 +140,13 @@ export class MatDatepickerInput<D> implements ControlValueAccessor, OnDestroy, V
   /** The value of the input. */
   @Input()
   get value(): D | null {
-    return this._selectionModel ? this._selectionModel.getSelection() : null;
+    return this._selectionModel.getSelection();
   }
   set value(value: D | null) {
     value = this._dateAdapter.deserialize(value);
     const oldDate = this._selectionModel.getSelection();
 
-    if (!this._selectionModel) {
+    if (!this._isSelectionModelInitialized && value) {
       throw new Error('Input has no MatDatePicker associated with it.');
     }
 
@@ -162,7 +162,10 @@ export class MatDatepickerInput<D> implements ControlValueAccessor, OnDestroy, V
       this._valueChange.emit(value);
     }
   }
-  private _selectionModel: MatSingleDateSelectionModel<D>;
+  // Set a default model to prevent failure when reading value. Gets overridden when the
+  // datepicker is set.
+  private _selectionModel: MatSingleDateSelectionModel<D> =
+      new MatSingleDateSelectionModel(this._dateAdapter);
 
   /** The minimum valid date. */
   @Input()
@@ -228,7 +231,7 @@ export class MatDatepickerInput<D> implements ControlValueAccessor, OnDestroy, V
 
   private _localeSubscription = Subscription.EMPTY;
 
-  private _isSelectionInitialized = true;
+  private _isSelectionModelInitialized = false;
 
   /** The form control validator for whether the input parses. */
   private _parseValidator: ValidatorFn = (): ValidationErrors | null => {
@@ -283,10 +286,6 @@ export class MatDatepickerInput<D> implements ControlValueAccessor, OnDestroy, V
     this._localeSubscription = _dateAdapter.localeChanges.subscribe(() => {
       this.value = this.value;
     });
-
-    // Set a default model to prevent failure when reading value. Gets overridden when the
-    // datepicker is set.
-    this._selectionModel = new MatSingleDateSelectionModel(_dateAdapter);
   }
 
   ngOnDestroy() {

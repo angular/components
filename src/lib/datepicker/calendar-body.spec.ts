@@ -38,7 +38,7 @@ describe('MatCalendarBody', () => {
 
     beforeEach(inject([DateAdapter], (adapter: DateAdapter<Date>) => {
       const fakeToday = new Date(2017, 0, 3);
-      spyOn(adapter, 'today').and.callFake(() => fakeToday);
+      spyOn(adapter, 'today').and.returnValue(fakeToday);
 
       fixture = TestBed.createComponent(StandardCalendarBody);
       fixture.detectChanges();

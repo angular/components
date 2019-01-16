@@ -49,10 +49,10 @@ import {MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {merge, Subject, Subscription} from 'rxjs';
 import {filter, take} from 'rxjs/operators';
 import {MatCalendar} from './calendar';
+import {MatCalendarCellCssClasses} from './calendar-body';
 import {matDatepickerAnimations} from './datepicker-animations';
 import {createMissingDateImplError} from './datepicker-errors';
 import {MatDatepickerInput} from './datepicker-input';
-import {MatCalendarCellCssClasses} from './calendar-body';
 
 /** Used to generate a unique ID for each datepicker instance. */
 let datepickerUid = 0;
@@ -201,7 +201,7 @@ export class MatDatepicker<D> implements OnDestroy, CanColor {
       this._disabledChange.next(newValue);
     }
   }
-  private _disabled: boolean;
+  private _disabled: boolean | undefined;
 
   /**
    * Emits selected year in multiyear view.

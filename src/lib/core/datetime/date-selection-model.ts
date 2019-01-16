@@ -29,10 +29,10 @@ export abstract class MatDateSelectionModel<D> implements OnDestroy {
   abstract clone(): MatDateSelectionModel<D>;
 
   /** Gets the first date in the current selection. */
-  abstract getFirstSelectedDate(): D|null;
+  abstract getFirstSelectedDate(): D | null;
 
   /** Gets the last date in the current selection. */
-  abstract getLastSelectedDate(): D|null;
+  abstract getLastSelectedDate(): D | null;
 
   /** Whether the selection is complete for this selection model. */
   abstract isComplete(): boolean;
@@ -75,7 +75,7 @@ export class MatSingleDateSelectionModel<D> extends MatDateSelectionModel<D> {
 
   /** Gets the current selection. */
   getSelection(): D | null {
-    return this.isValid() ? this.adapter.deserialize(this.date) : null;
+    return this.isValid() ? this.date : null;
   }
 
   /**
@@ -219,8 +219,8 @@ export class MatRangeDateSelectionModel<D> extends MatDateSelectionModel<D> {
     }
 
     return (
-      this.isBetween(range.start, this.start, this.end) ||
-      this.isBetween(range.end, this.start, this.end) ||
+      this._isBetween(range.start, this.start, this.end) ||
+      this._isBetween(range.end, this.start, this.end) ||
       (
         this.adapter.compareDate(range.start, this.start) <= 0 &&
         this.adapter.compareDate(this.end, range.end) <= 0
@@ -228,16 +228,24 @@ export class MatRangeDateSelectionModel<D> extends MatDateSelectionModel<D> {
     );
   }
 
-  private isBetween(value: D, from: D, to: D): boolean {
+  private _isBetween(value: D, from: D, to: D): boolean {
     return this.adapter.compareDate(from, value) <= 0 && this.adapter.compareDate(value, to) <= 0;
   }
 }
 
+/**
+ * A factory used to create a `MatDateSelectionModel`. If one is provided by the parent it reuses
+ * that one, if not it creates a new `MatSingleDateSelectionModel`.
+ */
 export function MAT_SINGLE_DATE_SELECTION_MODEL_FACTORY<D>(parent: MatSingleDateSelectionModel<D>,
                                                            adapter: DateAdapter<D>) {
   return parent || new MatSingleDateSelectionModel(adapter);
 }
 
+/**
+ * A provider that re-provides the parent `MatDateSelectionModel` if available, otherwise provides a
+ * new `MatSingleDateSelectionModel`
+ */
 export const MAT_SINGLE_DATE_SELECTION_MODEL_PROVIDER: FactoryProvider = {
   provide: MatDateSelectionModel,
   deps: [[new Optional(), new SkipSelf(), MatDateSelectionModel], DateAdapter],
