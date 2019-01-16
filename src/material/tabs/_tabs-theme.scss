@@ -98,6 +98,12 @@
   // Set background color for the tab group
   .mat-tab-header, .mat-tab-links {
     background-color: mat-color($background-color);
+
+    // Set ripples color inside the header to be the contrast color of the new background.
+    // Otherwise the ripple color will be based on the app background color.
+    .mat-ripple-element {
+      background-color: mat-color($background-color, default-contrast, 0.12);
+    }
   }
 
   // Set labels to contrast against background
@@ -116,12 +122,6 @@
 
   .mat-tab-header-pagination-disabled .mat-tab-header-pagination-chevron {
     border-color: mat-color($background-color, default-contrast, 0.4);
-  }
-
-  // Set ripples color to be the contrast color of the new background. Otherwise the ripple
-  // color will be based on the app background color.
-  .mat-ripple-element {
-    background-color: mat-color($background-color, default-contrast, 0.12);
   }
 }
 
