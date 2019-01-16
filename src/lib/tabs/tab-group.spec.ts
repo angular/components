@@ -250,40 +250,30 @@ describe('MatTabGroup', () => {
 
       expect(fixture.componentInstance.handleFocus).toHaveBeenCalledTimes(1);
       expect(fixture.componentInstance.handleFocus)
-      .toHaveBeenCalledWith(jasmine.objectContaining({index: 1}));
+      .toHaveBeenCalledWith(jasmine.objectContaining({ index: 1 }));
     });
-    
-    it('should contain tab object with uniqueName in focusChange event', () => {      
-      spyOn(fixture.componentInstance, 'handleFocus').and.callThrough();
+
+    it('should contain tab object with uniqueName in focusChange event', () => {
       fixture.detectChanges();
-      
-      const tabLabels = fixture.debugElement.queryAll(By.css('.mat-tab-label'));
-      
-      tabLabels[1].nativeElement.click();
+
+      const tabTwoLabel = fixture.debugElement.query(By.css('.mat-tab-label:nth-child(2)'));
+
+      tabTwoLabel.nativeElement.click();
       fixture.detectChanges();
-      
-      expect(fixture.componentInstance.handleFocus).toHaveBeenCalledTimes(1);
-      expect(fixture.componentInstance.focusEvent.tab.uniqueName)
-        .toEqual('tb02');
+
+      expect(fixture.componentInstance.focusEvent.tab.uniqueName).toEqual('tab-two');
     });
 
     it('should contain tab object with uniqueName in selectedTabChange event', fakeAsync(() => {
-      let component = fixture.componentInstance;
+      fixture.detectChanges();
+
       let tabComponent = fixture.debugElement.query(By.css('mat-tab-group')).componentInstance;
 
-      spyOn(component, 'handleSelection').and.callThrough();
-
-      checkSelectedIndex(1, fixture);
-
       tabComponent.selectedIndex = 2;
-
       checkSelectedIndex(2, fixture);
       tick();
 
-      expect(component.handleSelection).toHaveBeenCalledTimes(1);
-
-      expect(component.selectEvent.tab.uniqueName)
-        .toEqual('tb03');
+      expect(fixture.componentInstance.selectEvent.tab.uniqueName).toEqual('tab-three');
     }));
 
     it('should emit focusChange on arrow key navigation', () => {
@@ -680,15 +670,15 @@ describe('nested MatTabGroup with enabled animations', () => {
         (animationDone)="animationDone()"
         (focusChange)="handleFocus($event)"
         (selectedTabChange)="handleSelection($event)">
-      <mat-tab unique-name="tb01">
+      <mat-tab unique-name="tab-one">
         <ng-template mat-tab-label>Tab One</ng-template>
         Tab one content
       </mat-tab>
-      <mat-tab unique-name="tb02">
+      <mat-tab unique-name="tab-two">
         <ng-template mat-tab-label>Tab Two</ng-template>
         <span>Tab </span><span>two</span><span>content</span>
       </mat-tab>
-      <mat-tab unique-name="tb03">
+      <mat-tab unique-name="tab-three">
         <ng-template mat-tab-label>Tab Three</ng-template>
         Tab three content
       </mat-tab>

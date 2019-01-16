@@ -67,8 +67,8 @@ export class MatTab extends _MatTabMixinBase implements OnInit, CanDisable, OnCh
   @Input('aria-labelledby') ariaLabelledby: string;
 
   /**
-   * Unique identifier for each tab.
-   * Used to differentiate which tab is being changed or switched to.
+   * Optional unique name that may be provided to the tab for easier identification.
+   * e.g. to determine the tab provided in `MatTabChangeEvent`
    */
   @Input('unique-name') uniqueName: string;
 
