@@ -101,7 +101,7 @@ export class MatTableDataSource<T> extends DataSource<T> {
    * Data accessor function that is used for accessing data properties for sorting through
    * the default sortData function.
    * This default function assumes that the sort header IDs (which defaults to the column name)
-   * matches the data's properties (e.g. column Xyz represents data['Xyz']. Furthermore , column 
+   * matches the data's properties (e.g. column Xyz represents data['Xyz']. Furthermore , column
    * Abc.Xyz represents data['Abc']['Xyz']). May be set to a custom function for different behavior.
    * @param data Data object that is being accessed.
    * @param sortHeaderId The name of the column that represents the data.
