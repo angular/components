@@ -1,5 +1,6 @@
 <h4>mat select</h4>
-<mat-form-field>
+<mat-form-field appearance="outline">
+  <mat-label>Favorite animal</mat-label>
   <mat-select placeholder="Favorite animal" [formControl]="animalControl" required>
     <mat-option>--</mat-option>
     <mat-option *ngFor="let animal of animals" [value]="animal">
@@ -11,7 +12,7 @@
 </mat-form-field>
 
 <h4>native html select</h4>
-<mat-form-field>
+<mat-form-field appearance="outline">
   <mat-label>Select your car (required)</mat-label>
   <select matNativeControl required [formControl]="selectFormControl">
     <option label="--select something --"></option>
@@ -24,4 +25,3 @@
   </mat-error>
   <mat-hint>You can pick up your favorite car here</mat-hint>
 </mat-form-field>
-

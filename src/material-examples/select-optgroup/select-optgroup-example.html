@@ -1,9 +1,9 @@
 <h4>mat-select</h4>
-<mat-form-field>
+<mat-form-field appearance="outline">
+  <mat-label>Pokemon</mat-label>
   <mat-select placeholder="Pokemon" [formControl]="pokemonControl">
     <mat-option>-- None --</mat-option>
-    <mat-optgroup *ngFor="let group of pokemonGroups" [label]="group.name"
-                  [disabled]="group.disabled">
+    <mat-optgroup *ngFor="let group of pokemonGroups" [label]="group.name" [disabled]="group.disabled">
       <mat-option *ngFor="let pokemon of group.pokemon" [value]="pokemon.value">
         {{pokemon.viewValue}}
       </mat-option>
@@ -12,7 +12,8 @@
 </mat-form-field>
 
 <h4>native html select</h4>
-<mat-form-field>
+<mat-form-field appearance="outline">
+  <mat-label>Cars</mat-label>
   <select matNativeControl>
     <optgroup label="Swedish Cars">
       <option value="volvo">volvo</option>
