@@ -1,14 +1,34 @@
 <div class="example-container">
-  <mat-form-field>
+  <mat-form-field appearance="outline">
+    <mat-label>Input with outline appearance</mat-label>
     <input matInput placeholder="Input">
   </mat-form-field>
 
-  <mat-form-field>
+  <mat-form-field appearance="fill">
+    <mat-label>Input with fill appearance</mat-label>
+    <input matInput placeholder="Input">
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Textarea with outline appearance</mat-label>
     <textarea matInput placeholder="Textarea"></textarea>
   </mat-form-field>
 
-  <mat-form-field>
+  <mat-form-field appearance="fill">
+    <mat-label>Textarea with fill appearance</mat-label>
+    <textarea matInput placeholder="Textarea"></textarea>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
     <mat-select placeholder="Select">
+      <mat-label>Select with outline appearance</mat-label>
+      <mat-option value="option">Option</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-select placeholder="Select">
+      <mat-label>Select with fill appearance</mat-label>
       <mat-option value="option">Option</mat-option>
     </mat-select>
   </mat-form-field>

@@ -1,10 +1,12 @@
 <div class="example-container">
   <mat-form-field>
+    <mat-label>Password</mat-label>
     <input matInput placeholder="Enter your password" [type]="hide ? 'password' : 'text'">
     <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
   </mat-form-field>
 
-  <mat-form-field>
+  <mat-form-field appearance="outline">
+    <mat-label>Amount</mat-label>
     <input matInput placeholder="Amount" type="number" class="example-right-align">
     <span matPrefix>$&nbsp;</span>
     <span matSuffix>.00</span>
