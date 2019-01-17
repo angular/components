@@ -52,7 +52,7 @@ let nextUniqueId = 0;
 // TODO(josephperrott): Revert to constants for ripple radius once 2018 Checkbox updates have
 // landed.
 // The radius for the checkbox's ripple, in pixels.
-let calculatedRippleRadius = 0;
+let calculatedRippleRadius;
 
 /**
  * Provider Expression that allows mat-checkbox to register as a ControlValueAccessor.
@@ -460,7 +460,7 @@ export class MatCheckbox extends _MatCheckboxMixinBase implements ControlValueAc
    * for the application.
    */
   private _calculateRippleRadius() {
-    if (!calculatedRippleRadius) {
+    if (calculatedRippleRadius === undefined) {
       const rippleWidth =
           this._elementRef.nativeElement.querySelector('.mat-checkbox-ripple').clientWidth || 0;
       calculatedRippleRadius = rippleWidth / 2;
