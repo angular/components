@@ -87,6 +87,7 @@ var_12: &ignore_presubmit_branch_filter
   branches:
     ignore:
       - "_presubmit"
+      - "ivy-2019"
 
 # -----------------------------
 # Container version of CircleCI
