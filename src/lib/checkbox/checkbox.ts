@@ -52,7 +52,7 @@ let nextUniqueId = 0;
 // TODO(josephperrott): Revert to constants for ripple radius once 2018 Checkbox updates have
 // landed.
 // The radius for the checkbox's ripple, in pixels.
-let calculatedRippleRadius;
+let calculatedRippleRadius: number;
 
 /**
  * Provider Expression that allows mat-checkbox to register as a ControlValueAccessor.
