@@ -13,6 +13,7 @@ module.exports = config => {
       require('karma-chrome-launcher'),
       require('karma-firefox-launcher'),
       require('karma-sourcemap-loader'),
+      require('karma-json-result-reporter'),
       {'middleware:fake-url': ['factory', function() {
         // Middleware that avoids triggering 404s during tests that need to reference
         // image paths. Assumes that the image path will start with `/$`.
@@ -60,8 +61,12 @@ module.exports = config => {
       'dist/packages/**/*.js': ['sourcemap']
     },
 
-    reporters: ['dots'],
+    reporters: ['dots', 'json-result'],
     autoWatch: false,
+
+    jsonResultReporter: {
+      outputFile: "/tmp/karma-result.json",
+    },
 
     sauceLabs: {
       testName: 'Angular Material Unit Tests',
