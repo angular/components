@@ -12,6 +12,7 @@ module.exports = config => {
       require('karma-chrome-launcher'),
       require('karma-firefox-launcher'),
       require('karma-sourcemap-loader'),
+      require('karma-json-result-reporter'),
     ],
     files: [
       {pattern: 'node_modules/core-js/client/core.min.js', included: true, watched: false},
@@ -47,8 +48,12 @@ module.exports = config => {
       'dist/packages/**/*.js': ['sourcemap']
     },
 
-    reporters: ['dots'],
+    reporters: ['dots', 'json-result'],
     autoWatch: false,
+
+    jsonResultReporter: {
+      outputFile: "/tmp/karma-result.json",
+    },
 
     sauceLabs: {
       testName: 'Angular Material Unit Tests',
