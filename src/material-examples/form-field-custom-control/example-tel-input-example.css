@@ -19,3 +19,7 @@
 :host.example-floating .example-tel-input-spacer {
   opacity: 1;
 }
+
+.example-full-width {
+  width: 100%;
+}
