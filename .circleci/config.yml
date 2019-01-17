@@ -349,7 +349,8 @@ workflows:
 
   release_output:
     jobs:
-      - build_release_packages
+      - build_release_packages:
+          filters: *ignore_presubmit_branch_filter
       - build_devapp_aot:
           filters: *ignore_presubmit_branch_filter
           requires:
