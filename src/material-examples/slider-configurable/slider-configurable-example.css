@@ -10,7 +10,8 @@
 }
 
 .example-margin {
-  margin: 10px;
+  margin: 3px;
+  width: 24%;
 }
 
 .mat-slider-horizontal {
