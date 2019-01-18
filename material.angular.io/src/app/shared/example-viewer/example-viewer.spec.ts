@@ -69,14 +69,14 @@ describe('ExampleViewer', () => {
     expect(console.error).toHaveBeenCalledWith('Could not find example: foobar');
   }));
 
-  it('should return assets path for example based on extension', async(() => {
+  it('should return docs-content path for example based on extension', async(() => {
     // set example
     component.example = exampleKey;
     fixture.detectChanges();
 
     // get example file path for each extension
     const extensions = ['ts', 'css', 'html'];
-    const basePath = '/assets/examples/';
+    const basePath = '/docs-content/examples-highlighted/';
 
     extensions.forEach(extension => {
       const expected = `${basePath}${exampleKey}-example-${extension}.html`;
@@ -178,10 +178,10 @@ class TestExampleModule { }
 
 
 const FAKE_DOCS = {
-  '/assets/examples/autocomplete-overview-example-html.html':
+  '/docs-content/examples-highlighted/autocomplete-overview-example-html.html':
       '<div>my docs page</div>',
-  '/assets/examples/autocomplete-overview-example-ts.html':
+  '/docs-content/examples-highlighted/autocomplete-overview-example-ts.html':
       '<span>const a = 1;</span>',
-  '/assets/examples/autocomplete-overview-example-css.html':
+  '/docs-content/examples-highlighted/autocomplete-overview-example-css.html':
       '<pre>.class { color: black; }</pre>',
 };

@@ -22,6 +22,11 @@
                 "output": "/assets"
               },
               {
+                "glob": "**/*",
+                "input": "./node_modules/@angular/material-examples/docs-content",
+                "output": "/docs-content"
+              },
+              {
                 "glob": "favicon.ico",
                 "input": "src",
                 "output": "/"
