@@ -6,7 +6,7 @@ export declare const MAT_CHECKBOX_CONTROL_VALUE_ACCESSOR: any;
 
 export declare const MAT_CHECKBOX_REQUIRED_VALIDATOR: Provider;
 
-export declare class MatCheckbox extends _MatCheckboxMixinBase implements ControlValueAccessor, AfterViewChecked, OnDestroy, CanColor, CanDisable, HasTabIndex, CanDisableRipple {
+export declare class MatCheckbox extends _MatCheckboxMixinBase implements ControlValueAccessor, OnDestroy, CanColor, CanDisable, HasTabIndex, CanDisableRipple {
     _animationMode?: string | undefined;
     _inputElement: ElementRef<HTMLInputElement>;
     _onTouched: () => any;
