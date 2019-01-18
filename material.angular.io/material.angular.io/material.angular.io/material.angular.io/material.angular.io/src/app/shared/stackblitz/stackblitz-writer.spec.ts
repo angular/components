@@ -26,7 +26,6 @@ describe('StackblitzWriter', () => {
   beforeEach(() => {
     stackblitzWriter = TestBed.get(StackblitzWriter);
     data = new ExampleData('');
-    data.examplePath = 'http://material.angular.io/';
     data.exampleFiles = ['test.ts', 'test.html', 'src/detail.ts'];
   });
 
@@ -104,10 +103,9 @@ describe('StackblitzWriter', () => {
 });
 
 const FAKE_DOCS = {
-  'http://material.angular.io/test.ts': 'ExampleComponent',
-  'http://material.angular.io/test.html': `
-      <example></example>`,
-  'http://material.angular.io/src/detail.ts': 'DetailComponent',
+  '/docs-content/examples-source/test.ts': 'ExampleComponent',
+  '/docs-content/examples-source/test.html': `<example></example>`,
+  '/docs-content/examples-source/src/detail.ts': 'DetailComponent',
 };
 
 const TEST_URLS = [
@@ -117,7 +115,7 @@ const TEST_URLS = [
   '/assets/stackblitz/.angular-cli.json',
   '/assets/stackblitz/main.ts',
   '/assets/stackblitz/material-module.ts',
-  'http://material.angular.io/test.ts',
-  'http://material.angular.io/test.html',
-  'http://material.angular.io/src/detail.ts',
+  '/docs-content/examples-source/test.ts',
+  '/docs-content/examples-source/test.html',
+  '/docs-content/examples-source/src/detail.ts',
 ];

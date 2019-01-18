@@ -10,25 +10,27 @@
   $is-dark-theme: map-get($theme, is-dark);
   $exportBackgroundOpacity: if($is-dark-theme, 0.06, 0.03);
 
-  .docs-markdown-a {
-    color: mat-color($primary);
-  }
-
-  .docs-markdown-pre {
-    background: rgba(mat-color($foreground, secondary-text), .01);
-    border: .5px solid rgba(mat-color($foreground, secondary-text), .03);
-
-    .docs-markdown-code {
-      background: transparent;
+  .docs-markdown {
+    a {
+      color: mat-color($primary);
     }
-  }
-  
-  .docs-markdown-h3 .material-icons,
-  .docs-markdown-h4 .material-icons {
-    color: mat-color($foreground, secondary-text);
-  }
 
-  .docs-markdown-code {
-    background: rgba(mat-color($foreground, secondary-text), $exportBackgroundOpacity);
+    pre {
+      background: rgba(mat-color($foreground, secondary-text), .01);
+      border: .5px solid rgba(mat-color($foreground, secondary-text), .03);
+
+      code {
+        background: transparent;
+      }
+    }
+
+    h3 .material-icons,
+    h4 .material-icons {
+      color: mat-color($foreground, secondary-text);
+    }
+
+    code {
+      background: rgba(mat-color($foreground, secondary-text), $exportBackgroundOpacity);
+    }
   }
 }

@@ -3,11 +3,7 @@
 # compiled output
 /dist
 /tmp
-/src/assets/documents
-/src/assets/examples
-/src/assets/stackblitz/examples
 /src/assets/*.css
-/src/assets/*.html
 
 # dependencies
 /node_modules

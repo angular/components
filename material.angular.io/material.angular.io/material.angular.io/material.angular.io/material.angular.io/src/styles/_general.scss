@@ -15,20 +15,11 @@ h1, h2 {
   padding-left: 20px;
 
   h1 {
-    font-size: 30px;
     font-weight: 300;
     margin: 0;
     padding: 28px 8px;
     font-size: 20px;
   }
-}
-
-code {
-  font-size: 90%;
-}
-
-.docs-markdown-pre code {
-  font-size: 100%;
 }
 
 // These styles are for controlling SVGs without using the /deep/ selector
@@ -53,3 +44,14 @@ code {
   vertical-align: middle;
 }
 
+code, pre {
+  font-family: 'Roboto Mono', monospace;
+}
+
+code {
+  font-size: 90%;
+}
+
+pre {
+  font-size: 14px;
+}

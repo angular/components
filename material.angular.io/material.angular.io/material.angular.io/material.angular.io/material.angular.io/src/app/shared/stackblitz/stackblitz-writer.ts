@@ -12,6 +12,13 @@ const COPYRIGHT =
     Use of this source code is governed by an MIT-style license that
     can be found in the LICENSE file at http://angular.io/license`;
 
+/**
+ * Path that refers to the docs-content from the "@angular/material-examples" package. The
+ * structure is defined in the Material repository, but we include the docs-content as assets in
+ * in the CLI configuration.
+ */
+const DOCS_CONTENT_PATH = '/docs-content/examples-source/';
+
 const TEMPLATE_PATH = '/assets/stackblitz/';
 const TEMPLATE_FILES = [
   'index.html',
@@ -88,7 +95,7 @@ export class StackblitzWriter {
           .map(file => this._readFile(form, data, file, TEMPLATE_PATH));
 
       let exampleContents = data.exampleFiles
-          .map(file => this._readFile(form, data, file, data.examplePath));
+          .map(file => this._readFile(form, data, file, DOCS_CONTENT_PATH));
 
       // TODO(josephperrott): Prevent including assets to be manually checked.
       if (data.selectorName === 'icon-svg-example') {
