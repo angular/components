@@ -31,7 +31,6 @@ export declare class MatCheckbox extends _MatCheckboxMixinBase implements Contro
     _onInteractionEvent(event: Event): void;
     _onLabelTextChange(): void;
     focus(): void;
-    ngAfterViewChecked(): void;
     ngOnDestroy(): void;
     registerOnChange(fn: (value: any) => void): void;
     registerOnTouched(fn: any): void;
