@@ -4351,6 +4351,11 @@ ftp@~0.3.10:
     readable-stream "1.1.x"
     xregexp "2.0.0"
 
+fun-map@^3.3.1:
+  version "3.3.1"
+  resolved "https://registry.yarnpkg.com/fun-map/-/fun-map-3.3.1.tgz#6415fde3b93ad58f9ee9566236cff3e3c64b94cb"
+  integrity sha1-ZBX947k61Y+e6VZiNs/z48ZLlMs=
+
 gauge@~2.7.3:
   version "2.7.4"
   resolved "https://registry.yarnpkg.com/gauge/-/gauge-2.7.4.tgz#2c03405c7538c39d7eb37b317022e325fb018bf7"
@@ -6419,6 +6424,13 @@ karma-jasmine@^2.0.1:
   integrity sha512-iuC0hmr9b+SNn1DaUD2QEYtUxkS1J+bSJSn7ejdEexs7P8EYvA1CWkEdrDQ+8jVH3AgWlCNwjYsT1chjcNW9lA==
   dependencies:
     jasmine-core "^3.3"
+
+karma-json-result-reporter@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/karma-json-result-reporter/-/karma-json-result-reporter-1.0.0.tgz#9bfaa17d610470d08556e48ccbaf64d7950c7255"
+  integrity sha1-m/qhfWEEcNCFVuSMy69k15UMclU=
+  dependencies:
+    fun-map "^3.3.1"
 
 karma-parallel@^0.3.0:
   version "0.3.1"
