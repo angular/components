@@ -24,7 +24,6 @@ import {
   Output,
   ViewChild,
   ViewEncapsulation,
-  AfterViewChecked,
 } from '@angular/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {
@@ -48,11 +47,6 @@ import {MAT_CHECKBOX_CLICK_ACTION, MatCheckboxClickAction} from './checkbox-conf
 
 // Increasing integer for generating unique ids for checkbox components.
 let nextUniqueId = 0;
-
-// TODO(josephperrott): Revert to constants for ripple radius once 2018 Checkbox updates have
-// landed.
-// The radius for the checkbox's ripple, in pixels.
-let calculatedRippleRadius: number;
 
 /**
  * Provider Expression that allows mat-checkbox to register as a ControlValueAccessor.
@@ -132,7 +126,7 @@ export const _MatCheckboxMixinBase:
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MatCheckbox extends _MatCheckboxMixinBase implements ControlValueAccessor,
-    AfterViewChecked, OnDestroy, CanColor, CanDisable, HasTabIndex, CanDisableRipple {
+    OnDestroy, CanColor, CanDisable, HasTabIndex, CanDisableRipple {
 
   /**
    * Attached to the aria-label attribute of the host element. In most cases, arial-labelledby will
@@ -215,10 +209,6 @@ export class MatCheckbox extends _MatCheckboxMixinBase implements ControlValueAc
         Promise.resolve().then(() => this._onTouched());
       }
     });
-  }
-
-  ngAfterViewChecked() {
-    this._calculateRippleRadius();
   }
 
   ngOnDestroy() {
@@ -451,20 +441,5 @@ export class MatCheckbox extends _MatCheckboxMixinBase implements ControlValueAc
     }
 
     return `mat-checkbox-anim-${animSuffix}`;
-  }
-
-  // TODO(josephperrott): Revert to constants for ripple radius once 2018 Checkbox updates have
-  // landed.
-  /**
-   * Calculate the radius for the ripple based on the ripple elements width.  Only calculated once
-   * for the application.
-   */
-  private _calculateRippleRadius() {
-    if (calculatedRippleRadius === undefined) {
-      const rippleWidth =
-          this._elementRef.nativeElement.querySelector('.mat-checkbox-ripple').clientWidth || 0;
-      calculatedRippleRadius = rippleWidth / 2;
-    }
-    this.ripple.radius = calculatedRippleRadius;
   }
 }
