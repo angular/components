@@ -24,6 +24,7 @@ import {
   Output,
   ViewChild,
   ViewEncapsulation,
+  AfterViewChecked,
 } from '@angular/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {
@@ -126,7 +127,7 @@ export const _MatCheckboxMixinBase:
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MatCheckbox extends _MatCheckboxMixinBase implements ControlValueAccessor,
-    OnDestroy, CanColor, CanDisable, HasTabIndex, CanDisableRipple {
+    AfterViewChecked, OnDestroy, CanColor, CanDisable, HasTabIndex, CanDisableRipple {
 
   /**
    * Attached to the aria-label attribute of the host element. In most cases, arial-labelledby will
@@ -210,6 +211,9 @@ export class MatCheckbox extends _MatCheckboxMixinBase implements ControlValueAc
       }
     });
   }
+
+  // TODO: Delete next major revision.
+  ngAfterViewChecked() {}
 
   ngOnDestroy() {
     this._focusMonitor.stopMonitoring(this._elementRef);
