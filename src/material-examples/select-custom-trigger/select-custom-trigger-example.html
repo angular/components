@@ -1,4 +1,5 @@
-<mat-form-field>
+<mat-form-field appearance="outline">
+  <mat-label>Toppings</mat-label>
   <mat-select placeholder="Toppings" [formControl]="toppings" multiple>
     <mat-select-trigger>
       {{toppings.value ? toppings.value[0] : ''}}

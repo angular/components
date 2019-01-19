@@ -1,5 +1,6 @@
 <h4>mat-select</h4>
-<mat-form-field>
+<mat-form-field appearance="outline">
+  <mat-label>Choose one</mat-label>
   <mat-select placeholder="Choose one" [formControl]="selected" [errorStateMatcher]="matcher">
     <mat-option>Clear</mat-option>
     <mat-option value="valid">Valid option</mat-option>
@@ -13,7 +14,8 @@
 </mat-form-field>
 
 <h4>native html select</h4>
-<mat-form-field class="demo-full-width">
+<mat-form-field appearance="outline">
+  <mat-label>Choose one</mat-label>
   <select matNativeControl placeholder="Choose one" [formControl]="nativeSelectFormControl" [errorStateMatcher]="matcher">
     <option value=""></option>
     <option value="valid" selected>Valid option</option>

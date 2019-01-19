@@ -1,4 +1,5 @@
-<mat-form-field>
+<mat-form-field appearance="outline">
+  <mat-label>Toppings</mat-label>
   <mat-select placeholder="Toppings" [formControl]="toppings" multiple>
     <mat-option *ngFor="let topping of toppingList" [value]="topping">{{topping}}</mat-option>
   </mat-select>
