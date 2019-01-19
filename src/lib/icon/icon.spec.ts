@@ -75,11 +75,10 @@ describe('MatIcon', () => {
       http = h;
       sanitizer = ds;
     }));
-  
+
   it('should include notranslate class by default', () => {
     let fixture = TestBed.createComponent(IconWithColor);
 
-    const testComponent = fixture.componentInstance;
     const matIconElement = fixture.debugElement.nativeElement.querySelector('mat-icon');
     expect(matIconElement.classList.contains('notranslate'))
       .toBeTruthy('Expected the mat-icon element to include the notranslate class');
