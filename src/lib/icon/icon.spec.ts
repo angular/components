@@ -84,7 +84,8 @@ describe('MatIcon', () => {
     testComponent.iconName = 'home';
     testComponent.iconColor = 'primary';
     fixture.detectChanges();
-    expect(sortedClassNames(matIconElement)).toEqual(['mat-icon', 'mat-primary', 'material-icons', 'notranslate']);
+    expect(sortedClassNames(matIconElement))
+        .toEqual(['mat-icon', 'mat-primary', 'material-icons', 'notranslate']);
   });
 
   it('should apply a class if there is no color', () => {
@@ -147,7 +148,8 @@ describe('MatIcon', () => {
       const matIconElement = fixture.debugElement.nativeElement.querySelector('mat-icon');
       testComponent.iconName = 'home';
       fixture.detectChanges();
-      expect(sortedClassNames(matIconElement)).toEqual(['mat-icon', 'mat-icon-no-color', 'myfont', 'notranslate']);
+      expect(sortedClassNames(matIconElement))
+          .toEqual(['mat-icon', 'mat-icon-no-color', 'myfont', 'notranslate']);
     });
   });
 
@@ -721,7 +723,8 @@ describe('MatIcon', () => {
         fixture.detectChanges();
       }).not.toThrow();
 
-      expect(sortedClassNames(matIconElement)).toEqual(['font', 'mat-icon', 'mat-icon-no-color', 'notranslate']);
+      expect(sortedClassNames(matIconElement))
+          .toEqual(['font', 'mat-icon', 'mat-icon-no-color', 'notranslate']);
 
       expect(() => {
         fixture.componentInstance.fontSet = ' changed';
@@ -742,7 +745,7 @@ describe('MatIcon', () => {
       }).not.toThrow();
 
       expect(sortedClassNames(matIconElement))
-          .toEqual(['font', 'mat-icon', 'mat-icon-no-color', 'material-icons', 'notranslate']);
+        .toEqual(['font', 'mat-icon', 'mat-icon-no-color', 'material-icons', 'notranslate']);
 
       expect(() => {
         fixture.componentInstance.fontIcon = ' changed';
@@ -750,7 +753,7 @@ describe('MatIcon', () => {
       }).not.toThrow();
 
       expect(sortedClassNames(matIconElement))
-          .toEqual(['changed', 'mat-icon', 'mat-icon-no-color', 'material-icons', 'notranslate']);
+        .toEqual(['changed', 'mat-icon', 'mat-icon-no-color', 'material-icons', 'notranslate']);
     });
 
   });
