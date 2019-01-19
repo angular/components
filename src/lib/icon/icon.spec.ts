@@ -97,7 +97,7 @@ describe('MatIcon', () => {
     fixture.detectChanges();
 
     expect(sortedClassNames(matIconElement))
-        .toEqual(['mat-icon', 'mat-icon-no-color', 'material-icons']);
+        .toEqual(['mat-icon', 'mat-icon-no-color', 'material-icons', 'notranslate']);
   });
 
   it('should mark mat-icon as aria-hidden by default', () => {
