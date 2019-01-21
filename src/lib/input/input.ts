@@ -170,7 +170,20 @@ export class MatInput extends _MatInputMixinBase implements MatFormFieldControl<
    * @docs-private
    */
   @Input()
-  get required(): boolean { return this._required; }
+  get required(): boolean {
+    if (this._required) {
+      return this._required;
+    }
+
+    // The required attribute is set
+    // when the control return an error from validation with an empty value
+    if (this.ngControl && this.ngControl.control && this.ngControl.control.validator) {
+      const emptyValueControl = Object.assign({}, this.ngControl.control);
+      (emptyValueControl as any).value = null;
+      return 'required' in (this.ngControl.control.validator(emptyValueControl) || {});
+    }
+    return false;
+  }
   set required(value: boolean) { this._required = coerceBooleanProperty(value); }
   protected _required = false;
 

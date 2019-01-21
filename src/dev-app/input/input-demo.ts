@@ -26,13 +26,16 @@ export class InputDemo {
   floatingLabel = 'auto';
   color: boolean;
   requiredField: boolean;
+  requiredField2: boolean;
   hideRequiredMarker: boolean;
   ctrlDisabled = false;
   textareaNgModelValue: string;
   textareaAutosizeEnabled = false;
-  placeholderTestControl = new FormControl('', Validators.required);
+  placeholderTestControl = new FormControl('', [Validators.required]);
+  placeholderTestControlNotRequired = new FormControl('');
 
-  name: string;
+
+    name: string;
   errorMessageExample1: string;
   errorMessageExample2: string;
   errorMessageExample3: string;
@@ -51,6 +54,9 @@ export class InputDemo {
   formControl = new FormControl('hello', Validators.required);
   emailFormControl = new FormControl('', [Validators.required, Validators.pattern(EMAIL_REGEX)]);
   delayedFormControl = new FormControl('');
+
+  formControlRequired = new FormControl('', (this.requiredField2 ? Validators.required : null));
+
   model = 'hello';
   isAutofilled = false;
   customAutofillStyle = true;
@@ -68,6 +74,10 @@ export class InputDemo {
     for (let x = 0; x < n; x++) {
       this.items.push({ value: ++max });
     }
+  }
+
+  requiredValueChange() {
+    this.formControlRequired.setValidators((this.requiredField2 ? Validators.required : null));
   }
 
   customErrorStateMatcher: ErrorStateMatcher = {

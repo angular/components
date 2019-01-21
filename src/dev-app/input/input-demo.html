@@ -309,11 +309,18 @@
       </mat-form-field>
     </p>
     <p>
-      <mat-checkbox [(ngModel)]="requiredField"> Check to make required:</mat-checkbox>
+      <mat-checkbox [(ngModel)]="requiredField"> Check to make required (Template version):</mat-checkbox>
       <mat-form-field>
         <input matInput
                [required]="requiredField"
                [placeholder]="requiredField ? 'Required field' : 'Not required field'">
+      </mat-form-field>
+    </p>
+    <p>
+      <mat-checkbox [(ngModel)]="requiredField2" (change)="requiredValueChange()"> Check to make required (Reactive form version):</mat-checkbox>
+      <mat-form-field>
+        <input matInput [formControl]="formControlRequired"
+               [placeholder]="requiredField2 ? 'Required field' : 'Not required field'">
       </mat-form-field>
     </p>
     <p>

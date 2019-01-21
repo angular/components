@@ -509,6 +509,19 @@ describe('MatInput without forms', () => {
     expect(selectEl.required).toBe(true);
   }));
 
+    it('supports the required attribute as Validators.required for input', fakeAsync(() => {
+        let fixture = createComponent(MatInputRequiredValidatorOnlyTestComponent);
+        fixture.detectChanges();
+
+        let inputEl = fixture.debugElement.query(By.css('input')).nativeElement;
+        let inputLabelEl = fixture.debugElement.query(By.css('label')).nativeElement;
+        fixture.detectChanges();
+
+        expect(inputEl.required).toBe(true);
+
+        expect(inputLabelEl.textContent).toMatch(/hello\s+\*/g);
+    }));
+
   it('supports the type attribute as binding', fakeAsync(() => {
     let fixture = createComponent(MatInputWithType);
     fixture.detectChanges();
@@ -1556,10 +1569,10 @@ class MatInputWithDisabled {
 }
 
 @Component({
-  template: `<mat-form-field><input matInput [required]="required"></mat-form-field>`
+    template: `<mat-form-field><input matInput [required]="required"></mat-form-field>`
 })
 class MatInputWithRequired {
-  required: boolean;
+    required: boolean;
 }
 
 @Component({
@@ -1577,6 +1590,15 @@ class MatInputWithType {
 class MatInputPlaceholderRequiredTestComponent {
   hideRequiredMarker: boolean = false;
   disabled: boolean = false;
+}
+
+@Component({
+    template: `<mat-form-field>
+                <input matInput [formControl]="requiredControl" placeholder="hello">
+             </mat-form-field>`
+})
+class MatInputRequiredValidatorOnlyTestComponent {
+    requiredControl = new FormControl('', Validators.required);
 }
 
 @Component({
