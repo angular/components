@@ -22,18 +22,6 @@ Now we are ready to create our custom stepper component. Therefore, we need to c
   providers: [{ provide: CdkStepper, useExisting: CustomStepperComponent }]
 })
 export class CustomStepperComponent extends CdkStepper {
-  /** Whether the validity of previous steps should be checked or not */
-  linear: boolean;
-
-  /** The index of the selected step. */
-  selectedIndex: number;
-  
-  /** The step that is selected. */
-  selected: CdkStep;
-
-  /** The list of step components that the stepper is holding. */
-  steps: QueryList<CdkStep>;
-
   onClick(index: number): void {
     this.selectedIndex = index;
   }
