@@ -74,6 +74,22 @@ export class GitClient {
     return this._spawnGitProcess(['tag', tagName, '-m', message]).status === 0;
   }
 
+  /** Checks whether the specified tag exists locally. */
+  hasLocalTag(tagName: string) {
+    return this._spawnGitProcess(['rev-parse', `refs/tags/${tagName}`]).status === 0;
+  }
+
+  /** Gets the Git SHA of the specified local tag. */
+  getShaOfLocalTag(tagName: string) {
+    return this._spawnGitProcess(['rev-parse', `refs/tags/${tagName}`]).stdout.trim();
+  }
+
+  /** Gets the Git SHA of the specified remote tag. */
+  getShaOfRemoteTag(tagName: string): string {
+    return this._spawnGitProcess(['ls-remote', this.remoteGitUrl, '-t', `refs/tags/${tagName}`])
+      .stdout.split('\t')[0].trim();
+  }
+
   /** Pushes the specified tag to the remote git repository. */
   pushTagToRemote(tagName: string): boolean {
     return this._spawnGitProcess(['push', this.remoteGitUrl, `refs/tags/${tagName}`]).status === 0;
