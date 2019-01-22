@@ -45,9 +45,9 @@ export class MyCustomPaginatorIntl extends MatPaginatorIntl {
  * @title Change labels at runtime with custom paginator
  */
 @Component({
-  selector: 'matpaginatorintl-custom-example',
-  styleUrls: ['matpaginatorintl-custom-example.css'],
-  templateUrl: 'matpaginatorintl-custom-example.html',
+  selector: 'paginatorintl-custom-example',
+  styleUrls: ['paginatorintl-custom-example.css'],
+  templateUrl: 'paginatorintl-custom-example.html',
   providers: [
     { provide: MatPaginatorIntl, useValue: new MyCustomPaginatorIntl() }
   ]
