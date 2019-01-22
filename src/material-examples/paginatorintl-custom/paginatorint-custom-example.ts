@@ -1,6 +1,7 @@
-import {Component} from '@angular/core';
+import {Injectable, Component} from '@angular/core';
 import {MatPaginatorIntl} from '@angular/material';
 
+@Injectable()
 export class MyCustomPaginatorIntl extends MatPaginatorIntl {
 
   /**
@@ -52,7 +53,7 @@ export class MyCustomPaginatorIntl extends MatPaginatorIntl {
     { provide: MatPaginatorIntl, useValue: new MyCustomPaginatorIntl() }
   ]
 })
-export class MatpaginatorintlCustomExample {
+export class PaginatorintlCustomExample {
   myCustomPaginatorIntl: MyCustomPaginatorIntl;
 
   constructor(matPaginatorIntl: MatPaginatorIntl) {
