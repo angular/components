@@ -37,7 +37,7 @@ export class MyCustomPaginatorIntl extends MatPaginatorIntl {
         Math.min(startIndex + pageSize, length) :
         startIndex + pageSize;
 
-    return `${startIndex + 1} à ${endIndex} de ${length}`;
+    return `${startIndex + 1} a ${endIndex} de ${length}`;
   }
 
 }
@@ -71,8 +71,8 @@ export class PaginatorintlCustomExample {
 
   changeToFr() {
     this.myCustomPaginatorIntl.getRangeLabel = this.myCustomPaginatorIntl.getRangeLabelFr;
-    this.myCustomPaginatorIntl.itemsPerPageLabel = 'Résultats par page:';
-    this.myCustomPaginatorIntl.previousPageLabel = 'Page précédente';
+    this.myCustomPaginatorIntl.itemsPerPageLabel = 'Resultats par page:';
+    this.myCustomPaginatorIntl.previousPageLabel = 'Page precedente';
     this.myCustomPaginatorIntl.nextPageLabel = 'Page suivante';
     this.myCustomPaginatorIntl.changes.next();
   }
