@@ -93,7 +93,7 @@ export class DialogDemo {
     <div cdkDrag cdkDragRootElement=".cdk-overlay-pane">
       <p>It's Jazz!</p>
 
-      <mat-form-field>
+      <mat-form-field appearance="outline">
         <mat-label>How much?</mat-label>
         <input matInput #howMuch>
       </mat-form-field>

@@ -2,39 +2,35 @@
 
 <h3>Uniform size</h3>
 <cdk-virtual-scroll-viewport class="demo-viewport" autosize>
-  <div *cdkVirtualFor="let size of fixedSizeData; let i = index" class="demo-item"
-       [style.height.px]="size">
+  <div *cdkVirtualFor="let size of fixedSizeData; let i = index" class="demo-item" [style.height.px]="size">
     Item #{{i}} - ({{size}}px)
   </div>
 </cdk-virtual-scroll-viewport>
 
 <h3>Increasing size</h3>
 <cdk-virtual-scroll-viewport class="demo-viewport" autosize>
-  <div *cdkVirtualFor="let size of increasingSizeData; let i = index" class="demo-item"
-       [style.height.px]="size">
+  <div *cdkVirtualFor="let size of increasingSizeData; let i = index" class="demo-item" [style.height.px]="size">
     Item #{{i}} - ({{size}}px)
   </div>
 </cdk-virtual-scroll-viewport>
 
 <h3>Decreasing size</h3>
 <cdk-virtual-scroll-viewport class="demo-viewport" autosize>
-  <div *cdkVirtualFor="let size of decreasingSizeData; let i = index" class="demo-item"
-       [style.height.px]="size">
+  <div *cdkVirtualFor="let size of decreasingSizeData; let i = index" class="demo-item" [style.height.px]="size">
     Item #{{i}} - ({{size}}px)
   </div>
 </cdk-virtual-scroll-viewport>
 
 <h3>Random size</h3>
 <cdk-virtual-scroll-viewport class="demo-viewport" autosize>
-  <div *cdkVirtualFor="let size of randomData; let i = index" class="demo-item"
-       [style.height.px]="size">
+  <div *cdkVirtualFor="let size of randomData; let i = index" class="demo-item" [style.height.px]="size">
     Item #{{i}} - ({{size}}px)
   </div>
 </cdk-virtual-scroll-viewport>
 
 <h2>Fixed size</h2>
 
-<mat-form-field>
+<mat-form-field appearance="outline">
   <mat-label>Behavior</mat-label>
   <mat-select [(ngModel)]="scrollToBehavior">
     <mat-option value="auto">Auto</mat-option>
@@ -42,7 +38,7 @@
     <mat-option value="smooth">Smooth</mat-option>
   </mat-select>
 </mat-form-field>
-<mat-form-field>
+<mat-form-field appearance="outline">
   <mat-label>Offset</mat-label>
   <input matInput type="number" [(ngModel)]="scrollToOffset">
 </mat-form-field>
@@ -50,7 +46,7 @@
                             viewport2.scrollToOffset(scrollToOffset, scrollToBehavior)">
   Go to offset
 </button>
-<mat-form-field>
+<mat-form-field appearance="outline">
   <mat-label>Index</mat-label>
   <input matInput type="number" [(ngModel)]="scrollToIndex">
 </mat-form-field>
@@ -62,10 +58,8 @@
   Currently scrolled to item: {{scrolledIndex.get(viewport1) || 0}}
 </p>
 
-<cdk-virtual-scroll-viewport class="demo-viewport" [itemSize]="50" #viewport1
-                             (scrolledIndexChange)="scrolled(viewport1, $event)">
-  <div *cdkVirtualFor="let size of fixedSizeData; let i = index" class="demo-item"
-       [style.height.px]="size">
+<cdk-virtual-scroll-viewport class="demo-viewport" [itemSize]="50" #viewport1 (scrolledIndexChange)="scrolled(viewport1, $event)">
+  <div *cdkVirtualFor="let size of fixedSizeData; let i = index" class="demo-item" [style.height.px]="size">
     Item #{{i}} - ({{size}}px)
   </div>
 </cdk-virtual-scroll-viewport>
@@ -74,11 +68,9 @@
   Currently scrolled to item: {{scrolledIndex.get(viewport2) || 0}}
 </p>
 
-<cdk-virtual-scroll-viewport class="demo-viewport demo-horizontal" [itemSize]="50" #viewport2
-                             (scrolledIndexChange)="scrolled(viewport2, $event)"
-                             orientation="horizontal">
-  <div *cdkVirtualFor="let size of fixedSizeData; let i = index" class="demo-item"
-       [style.width.px]="size">
+<cdk-virtual-scroll-viewport class="demo-viewport demo-horizontal" [itemSize]="50" #viewport2 (scrolledIndexChange)="scrolled(viewport2, $event)"
+  orientation="horizontal">
+  <div *cdkVirtualFor="let size of fixedSizeData; let i = index" class="demo-item" [style.width.px]="size">
     Item #{{i}} - ({{size}}px)
   </div>
 </cdk-virtual-scroll-viewport>
@@ -87,8 +79,7 @@
 
 <button (click)="emitData()">Add item</button>
 <cdk-virtual-scroll-viewport class="demo-viewport" [itemSize]="50">
-  <div *cdkVirtualFor="let size of observableData | async; let i = index" class="demo-item"
-       [style.height.px]="size">
+  <div *cdkVirtualFor="let size of observableData | async; let i = index" class="demo-item" [style.height.px]="size">
     Item #{{i}} - ({{size}}px)
   </div>
 </cdk-virtual-scroll-viewport>
@@ -98,8 +89,7 @@
 <button (click)="sortBy('name')">Sort by state name</button>
 <button (click)="sortBy('capital')">Sort by state capital</button>
 <cdk-virtual-scroll-viewport class="demo-viewport" [itemSize]="60">
-  <div *cdkVirtualFor="let state of statesObservable | async"
-       class="demo-state-item">
+  <div *cdkVirtualFor="let state of statesObservable | async" class="demo-state-item">
     <div class="demo-state">{{state.name}}</div>
     <div class="demo-capital">{{state.capital}}</div>
   </div>
@@ -110,8 +100,7 @@
 <button (click)="sortBy('name')">Sort by state name</button>
 <button (click)="sortBy('capital')">Sort by state capital</button>
 <cdk-virtual-scroll-viewport class="demo-viewport" [itemSize]="60">
-  <div *cdkVirtualFor="let state of statesObservable | async; trackBy: indexTrackFn"
-       class="demo-state-item">
+  <div *cdkVirtualFor="let state of statesObservable | async; trackBy: indexTrackFn" class="demo-state-item">
     <div class="demo-state">{{state.name}}</div>
     <div class="demo-capital">{{state.capital}}</div>
   </div>
@@ -122,8 +111,7 @@
 <button (click)="sortBy('name')">Sort by state name</button>
 <button (click)="sortBy('capital')">Sort by state capital</button>
 <cdk-virtual-scroll-viewport class="demo-viewport" [itemSize]="60">
-  <div *cdkVirtualFor="let state of statesObservable | async; trackBy: nameTrackFn"
-       class="demo-state-item">
+  <div *cdkVirtualFor="let state of statesObservable | async; trackBy: nameTrackFn" class="demo-state-item">
     <div class="demo-state">{{state.name}}</div>
     <div class="demo-capital">{{state.capital}}</div>
   </div>

@@ -1,8 +1,6 @@
 <h1>Single Expansion Panel</h1>
 
-<mat-expansion-panel class="demo-expansion-width" #myPanel
-                     (afterExpand)="addEvent('afterExpand')"
-                     (afterCollapse)="addEvent('afterCollapse')">
+<mat-expansion-panel class="demo-expansion-width" #myPanel (afterExpand)="addEvent('afterExpand')" (afterCollapse)="addEvent('afterCollapse')">
   <mat-expansion-panel-header [expandedHeight]="expandedHeight" [collapsedHeight]="collapsedHeight">
     <mat-panel-description>This is a panel description.</mat-panel-description>
     <mat-panel-title>Panel Title</mat-panel-title>
@@ -20,12 +18,12 @@
 </mat-expansion-panel>
 
 <br>
-<mat-form-field>
+<mat-form-field appearance="fill">
   <mat-label>Collapsed height</mat-label>
   <input matInput [(ngModel)]="collapsedHeight">
 </mat-form-field>
 
-<mat-form-field>
+<mat-form-field appearance="fill">
   <mat-label>Expanded height</mat-label>
   <input matInput [(ngModel)]="expandedHeight">
 </mat-form-field>
@@ -62,8 +60,7 @@
   </div>
 </div>
 <br>
-<mat-accordion [displayMode]="displayMode" [multi]="multi" [hideToggle]="hideToggle"
-               class="demo-expansion-width">
+<mat-accordion [displayMode]="displayMode" [multi]="multi" [hideToggle]="hideToggle" class="demo-expansion-width">
   <mat-expansion-panel #panel1>
     <mat-expansion-panel-header>Section 1</mat-expansion-panel-header>
     <p>This is the content text that makes sense here.</p>
@@ -115,4 +112,3 @@
     <p *ngIf="item3.expanded">I only show if item 3 is expanded</p>
   </cdk-accordion-item>
 </cdk-accordion>
-

@@ -1,60 +1,75 @@
 <mat-card class="demo-card demo-basic">
+  <mat-toolbar color="primary"> Form Field Appearance </mat-toolbar>
+  <mat-card-content>
+    <mat-form-field [appearance]="appearance">
+      <mat-label>Change Control Appearance</mat-label>
+      <mat-select name="appearance" [(ngModel)]="appearance">
+        <mat-option value="outline">Outline</mat-option>
+        <mat-option value="fill">Fill</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </mat-card-content>
   <mat-toolbar color="primary">Basic</mat-toolbar>
   <mat-card-content>
     <form>
-      <mat-form-field class="demo-full-width">
+
+      <mat-form-field [appearance]="appearance" class="demo-full-width">
         <mat-label>Company (disabled)</mat-label>
         <input matNativeControl disabled value="Google">
       </mat-form-field>
 
-      <table style="width: 100%" cellspacing="0"><tr>
-        <td>
-          <mat-form-field style="width: 100%" floatLabel="never">
-            <mat-label>First name</mat-label>
-            <input matInput>
-          </mat-form-field>
-        </td>
-        <td>
-          <mat-form-field style="width: 100%">
-            <mat-label>Long last name that will be truncated</mat-label>
-            <input matInput>
-          </mat-form-field>
-        </td>
-      </tr></table>
+      <table style="width: 100%" cellspacing="0">
+        <tr>
+          <td>
+            <mat-form-field [appearance]="appearance" style="width: 100%" floatLabel="never">
+              <mat-label>First name</mat-label>
+              <input matInput>
+            </mat-form-field>
+          </td>
+          <td>
+            <mat-form-field [appearance]="appearance" style="width: 100%">
+              <mat-label>Long last name that will be truncated</mat-label>
+              <input matInput>
+            </mat-form-field>
+          </td>
+        </tr>
+      </table>
       <p>
-        <mat-form-field class="demo-full-width">
+        <mat-form-field [appearance]="appearance" class="demo-full-width">
           <mat-label>Address</mat-label>
           <textarea matInput>1600 Amphitheatre Pkway</textarea>
         </mat-form-field>
-        <mat-form-field class="demo-full-width">
+        <mat-form-field [appearance]="appearance" class="demo-full-width">
           <mat-label>Address 2</mat-label>
           <textarea matNativeControl></textarea>
         </mat-form-field>
       </p>
-      <table style="width: 100%" cellspacing="0"><tr>
-        <td>
-          <mat-form-field class="demo-full-width">
-            <mat-label>City</mat-label>
-            <input matInput value="Mountain View">
-          </mat-form-field>
-        </td>
-        <td>
-          <mat-form-field class="demo-full-width">
-            <mat-label>State</mat-label>
-            <input matInput maxLength="2" value="CA">
-          </mat-form-field>
-        </td>
-        <td>
-          <mat-form-field class="demo-full-width">
-            <mat-label>Postal code</mat-label>
-            <input matInput #postalCode maxLength="5" value="94043" pattern="[0-9]{5}">
-            <mat-hint align="end">
-              <mat-icon>mode_edit</mat-icon>
-              <span aria-live="polite">{{postalCode.value.length}} / 5</span>
-            </mat-hint>
-          </mat-form-field>
-        </td>
-      </tr></table>
+      <table style="width: 100%" cellspacing="0">
+        <tr>
+          <td>
+            <mat-form-field [appearance]="appearance" class="demo-full-width">
+              <mat-label>City</mat-label>
+              <input matInput value="Mountain View">
+            </mat-form-field>
+          </td>
+          <td>
+            <mat-form-field [appearance]="appearance" class="demo-full-width">
+              <mat-label>State</mat-label>
+              <input matInput maxLength="2" value="CA">
+            </mat-form-field>
+          </td>
+          <td>
+            <mat-form-field [appearance]="appearance" class="demo-full-width">
+              <mat-label>Postal code</mat-label>
+              <input matInput #postalCode maxLength="5" value="94043" pattern="[0-9]{5}">
+              <mat-hint align="end">
+                <mat-icon>mode_edit</mat-icon>
+                <span aria-live="polite">{{postalCode.value.length}} / 5</span>
+              </mat-hint>
+            </mat-form-field>
+          </td>
+        </tr>
+      </table>
     </form>
   </mat-card-content>
 </mat-card>
@@ -65,13 +80,13 @@
     <h4>Regular</h4>
 
     <p>
-      <mat-form-field>
+      <mat-form-field [appearance]="appearance">
         <mat-label>Example</mat-label>
         <input matInput [(ngModel)]="errorMessageExample1" required>
         <mat-error>This field is required</mat-error>
       </mat-form-field>
 
-      <mat-form-field>
+      <mat-form-field [appearance]="appearance">
         <mat-label>Email</mat-label>
         <input matInput [formControl]="emailFormControl">
         <mat-error *ngIf="emailFormControl.hasError('required')">
@@ -85,7 +100,7 @@
 
     <h4>With hint</h4>
 
-    <mat-form-field>
+    <mat-form-field [appearance]="appearance">
       <mat-label>Example</mat-label>
       <input matInput [(ngModel)]="errorMessageExample2" required>
       <mat-error>This field is required</mat-error>
@@ -96,7 +111,7 @@
     <form novalidate>
       <h4>Inside a form</h4>
 
-      <mat-form-field>
+      <mat-form-field [appearance]="appearance">
         <mat-label>Example</mat-label>
         <input matInput name="example" [(ngModel)]="errorMessageExample3" required>
         <mat-error>This field is required</mat-error>
@@ -106,12 +121,9 @@
     </form>
 
     <h4>With a custom error function</h4>
-    <mat-form-field>
+    <mat-form-field [appearance]="appearance">
       <mat-label>Example</mat-label>
-      <input matInput
-        [(ngModel)]="errorMessageExample4"
-        [errorStateMatcher]="customErrorStateMatcher"
-        required>
+      <input matInput [(ngModel)]="errorMessageExample4" [errorStateMatcher]="customErrorStateMatcher" required>
       <mat-error>This field is required</mat-error>
     </mat-form-field>
 
@@ -122,7 +134,7 @@
   <mat-toolbar color="primary">Prefix + Suffix</mat-toolbar>
   <mat-card-content>
     <h4>Text</h4>
-    <mat-form-field class="demo-text-align-end">
+    <mat-form-field [appearance]="appearance" class="demo-text-align-end">
       <mat-label>Amount</mat-label>
       <input matInput>
       <span matPrefix>$&nbsp;</span>
@@ -130,7 +142,7 @@
     </mat-form-field>
 
     <h4>Icons</h4>
-    <mat-form-field>
+    <mat-form-field [appearance]="appearance">
       <mat-label>Amount</mat-label>
       <input matInput>
       <mat-icon matPrefix>attach_money</mat-icon>
@@ -138,11 +150,15 @@
     </mat-form-field>
 
     <h4>Icon buttons</h4>
-    <mat-form-field>
+    <mat-form-field [appearance]="appearance">
       <mat-label>Amount</mat-label>
       <input matInput>
-      <button mat-icon-button matPrefix><mat-icon>attach_money</mat-icon></button>
-      <button mat-icon-button matSuffix><mat-icon>mode_edit</mat-icon></button>
+      <button mat-icon-button matPrefix>
+        <mat-icon>attach_money</mat-icon>
+      </button>
+      <button mat-icon-button matSuffix>
+        <mat-icon>mode_edit</mat-icon>
+      </button>
     </mat-form-field>
   </mat-card-content>
 </mat-card>
@@ -151,45 +167,45 @@
   <mat-toolbar color="primary">Divider Colors</mat-toolbar>
   <mat-card-content>
     <h4>Input</h4>
-    <mat-form-field color="primary" >
+    <mat-form-field [appearance]="appearance" color="primary">
       <mat-label>Default color</mat-label>
       <input matInput value="example">
     </mat-form-field>
-    <mat-form-field color="accent">
+    <mat-form-field [appearance]="appearance" color="accent">
       <mat-label>Accent color</mat-label>
       <input matInput value="example">
     </mat-form-field>
-    <mat-form-field color="warn">
+    <mat-form-field [appearance]="appearance" color="warn">
       <mat-label>Warn color</mat-label>
       <input matInput value="example">
     </mat-form-field>
 
     <h4>Textarea</h4>
-    <mat-form-field color="primary">
+    <mat-form-field [appearance]="appearance" color="primary">
       <mat-label>Default color</mat-label>
       <textarea matInput>example</textarea>
     </mat-form-field>
-    <mat-form-field color="accent">
+    <mat-form-field [appearance]="appearance" color="accent">
       <mat-label>Accent color</mat-label>
       <textarea matInput>example</textarea>
     </mat-form-field>
-    <mat-form-field color="warn">
+    <mat-form-field [appearance]="appearance" color="warn">
       <mat-label>Warn color</mat-label>
       <textarea matInput>example</textarea>
     </mat-form-field>
 
     <h4>With error</h4>
-    <mat-form-field color="primary" >
+    <mat-form-field [appearance]="appearance" color="primary">
       <mat-label>Default color</mat-label>
       <input matInput [(ngModel)]="dividerColorExample1" required>
       <mat-error>This field is required</mat-error>
     </mat-form-field>
-    <mat-form-field color="accent">
+    <mat-form-field [appearance]="appearance" color="accent">
       <mat-label>Accent color</mat-label>
       <input matInput [(ngModel)]="dividerColorExample2" required>
       <mat-error>This field is required</mat-error>
     </mat-form-field>
-    <mat-form-field color="warn">
+    <mat-form-field [appearance]="appearance" color="warn">
       <mat-label>Warn color</mat-label>
       <input matInput [(ngModel)]="dividerColorExample3" required>
       <mat-error>This field is required</mat-error>
@@ -202,12 +218,9 @@
   <mat-card-content>
     <h4>Input</h4>
     <p>
-      <mat-form-field class="demo-full-width">
+      <mat-form-field [appearance]="appearance" class="demo-full-width">
         <mat-label>Character count (100 max)</mat-label>
-        <input matInput
-               #characterCountInputHintExample
-               maxLength="100"
-               value="Hello world. How are you?">
+        <input matInput #characterCountInputHintExample maxLength="100" value="Hello world. How are you?">
         <mat-hint align="end" aria-live="polite">
           {{characterCountInputHintExample.value.length}} / 100
         </mat-hint>
@@ -216,11 +229,9 @@
 
     <h4>Textarea</h4>
     <p>
-      <mat-form-field class="demo-full-width">
+      <mat-form-field [appearance]="appearance" class="demo-full-width">
         <mat-label>Character count (100 max)</mat-label>
-        <textarea matInput
-                  #characterCountTextareaHintExample
-                  maxLength="100">Hello world. How are you?</textarea>
+        <textarea matInput #characterCountTextareaHintExample maxLength="100">Hello world. How are you?</textarea>
         <mat-hint align="end" aria-live="polite">
           {{characterCountTextareaHintExample.value.length}} / 100
         </mat-hint>
@@ -233,7 +244,7 @@
   <mat-toolbar color="primary">
     <span>
       Hello&nbsp;
-      <mat-form-field color="accent">
+      <mat-form-field [appearance]="appearance" color="accent">
         <mat-label>First name</mat-label>
         <input matInput [(ngModel)]="name" type="text">
       </mat-form-field>,
@@ -242,37 +253,37 @@
   </mat-toolbar>
   <mat-card-content>
     <p>
-      <mat-form-field>
+      <mat-form-field [appearance]="appearance">
         <mat-label>Disabled field</mat-label>
         <input matInput disabled value="Value">
       </mat-form-field>
-      <mat-form-field>
+      <mat-form-field [appearance]="appearance">
         <mat-label>Required field</mat-label>
         <input matInput required>
       </mat-form-field>
     </p>
     <p>
-      <mat-form-field style="width: 100%">
+      <mat-form-field [appearance]="appearance" style="width: 100%">
         <mat-label>100% width label</mat-label>
         <input matInput>
       </mat-form-field>
     </p>
     <p>
-      <mat-form-field style="width: 100%">
+      <mat-form-field [appearance]="appearance" style="width: 100%">
         <mat-label>Character count (100 max)</mat-label>
         <input matInput #input maxLength="100">
         <mat-hint align="end" aria-live="polite">{{input.value.length}} / 100</mat-hint>
       </mat-form-field>
     </p>
     <p>
-      <mat-form-field hintLabel="Hint label" style="width: 100%">
+      <mat-form-field [appearance]="appearance" hintLabel="Hint label" style="width: 100%">
         <mat-label>Show hint label</mat-label>
         <input matInput>
       </mat-form-field>
     </p>
 
     <p>
-      <mat-form-field>
+      <mat-form-field [appearance]="appearance">
         <input matInput>
         <mat-label>
           I <mat-icon>favorite</mat-icon> <b>bold</b> label
@@ -283,14 +294,14 @@
       </mat-form-field>
     </p>
     <p>
-      <mat-form-field hintLabel="Hint label" style="width: 100%">
+      <mat-form-field [appearance]="appearance" hintLabel="Hint label" style="width: 100%">
         <mat-label>Show hint label with character count</mat-label>
         <input matInput #hintLabelWithCharCount>
         <mat-hint align="end" aria-live="polite">{{hintLabelWithCharCount.value.length}}</mat-hint>
       </mat-form-field>
     </p>
     <p>
-      <mat-form-field style="margin-bottom: 4em">
+      <mat-form-field [appearance]="appearance" style="margin-bottom: 4em">
         <mat-label>Enter text to count</mat-label>
         <textarea matInput #longHint></textarea>
         <mat-hint>
@@ -304,24 +315,20 @@
     </p>
     <p>
       <mat-checkbox [(ngModel)]="color">Check to change the color:</mat-checkbox>
-      <mat-form-field [color]="color ? 'primary' : 'accent'">
+      <mat-form-field [appearance]="appearance" [color]="color ? 'primary' : 'accent'">
         <input matInput [placeholder]="color ? 'Primary color' : 'Accent color'">
       </mat-form-field>
     </p>
     <p>
       <mat-checkbox [(ngModel)]="requiredField"> Check to make required:</mat-checkbox>
-      <mat-form-field>
-        <input matInput
-               [required]="requiredField"
-               [placeholder]="requiredField ? 'Required field' : 'Not required field'">
+      <mat-form-field [appearance]="appearance">
+        <input matInput [required]="requiredField" [placeholder]="requiredField ? 'Required field' : 'Not required field'">
       </mat-form-field>
     </p>
     <p>
       <mat-checkbox [(ngModel)]="hideRequiredMarker">Check to hide the required marker:</mat-checkbox>
-      <mat-form-field [hideRequiredMarker]="hideRequiredMarker" style="width: 300px">
-        <input matInput
-               required
-               [placeholder]="hideRequiredMarker ?
+      <mat-form-field [appearance]="appearance" [hideRequiredMarker]="hideRequiredMarker" style="width: 300px">
+        <input matInput required [placeholder]="hideRequiredMarker ?
                    'Required Without Marker' : 'Required With Marker'">
       </mat-form-field>
     </p>
@@ -334,43 +341,45 @@
     </p>
 
     <p>
-      <mat-form-field [floatLabel]="floatingLabel">
+      <mat-form-field [appearance]="appearance" [floatLabel]="floatingLabel">
         <mat-label>Label</mat-label>
         <input matInput>
       </mat-form-field>
     </p>
 
     <p>
-      <mat-form-field [floatLabel]="floatingLabel">
+      <mat-form-field [appearance]="appearance" [floatLabel]="floatingLabel">
         <mat-label>What is your favorite color?</mat-label>
         <input matInput type="color" value="#00ff00">
       </mat-form-field>
     </p>
 
     <p>
-      <mat-form-field>
+      <mat-form-field [appearance]="appearance">
         <mat-label>Prefixed</mat-label>
         <input matInput value="example">
         <div matPrefix>Example:&nbsp;</div>
       </mat-form-field>
-      <mat-form-field class="demo-text-align-end">
+      <mat-form-field [appearance]="appearance" class="demo-text-align-end">
         <mat-label>Suffixed</mat-label>
         <input matInput value="123">
         <span matSuffix>.00 €</span>
       </mat-form-field>
-      <br/>
+      <br />
       Both:
-      <mat-form-field class="demo-text-align-end">
+      <mat-form-field [appearance]="appearance" class="demo-text-align-end">
         <mat-label>Email address</mat-label>
         <input matInput #email value="angular-core">
-        <span matPrefix><mat-icon [class.primary]="email.focused">email</mat-icon>&nbsp;</span>
+        <span matPrefix>
+          <mat-icon [class.primary]="email.focused">email</mat-icon>&nbsp;
+        </span>
         <span matSuffix [class.primary]="email.focused">&nbsp;@gmail.com</span>
       </mat-form-field>
     </p>
 
     <p>
-      Empty: <mat-form-field><input matInput></mat-form-field>
-      <label>Label: <mat-form-field><input matInput></mat-form-field></label>
+      Empty: <mat-form-field [appearance]="appearance"><input matInput></mat-form-field>
+      <label>Label: <mat-form-field [appearance]="appearance"><input matInput></mat-form-field></label>
     </p>
   </mat-card-content>
 </mat-card>
@@ -380,22 +389,20 @@
   <mat-card-content>
     <table width="100%">
       <thead>
-      <td>Table</td>
-      <td colspan="3">
-        <button (click)="addABunch(5)">Add 5</button>
-        <button (click)="addABunch(10)">Add 10</button>
-        <button (click)="addABunch(100)">Add 100</button>
-        <button (click)="addABunch(1000)">Add 1000</button>
-      </td>
+        <td>Table</td>
+        <td colspan="3">
+          <button (click)="addABunch(5)">Add 5</button>
+          <button (click)="addABunch(10)">Add 10</button>
+          <button (click)="addABunch(100)">Add 100</button>
+          <button (click)="addABunch(1000)">Add 1000</button>
+        </td>
       </thead>
       <tr *ngFor="let item of items; let i = index">
         <td>{{i+1}}</td>
         <td>
-          <mat-form-field>
+          <mat-form-field [appearance]="appearance">
             <mat-label>Value</mat-label>
-            <input matInput
-                   type="number"
-                   [(ngModel)]="items[i].value">
+            <input matInput type="number" [(ngModel)]="items[i].value">
           </mat-form-field>
         </td>
         <td>
@@ -410,23 +417,22 @@
 <mat-card class="demo-card demo-basic">
   <mat-toolbar color="primary">Forms</mat-toolbar>
   <mat-card-content>
-    <mat-form-field>
+    <mat-form-field [appearance]="appearance">
       <mat-label>Reactive</mat-label>
       <input matInput [formControl]="formControl">
     </mat-form-field>
-    <mat-form-field>
+    <mat-form-field [appearance]="appearance">
       <mat-label>Template</mat-label>
       <input matInput [(ngModel)]="model" required [disabled]="ctrlDisabled">
     </mat-form-field>
-    <button mat-raised-button color="primary"
-            (click)="formControl.enabled ? formControl.disable() : formControl.enable()">
+    <button mat-raised-button color="primary" (click)="formControl.enabled ? formControl.disable() : formControl.enable()">
       DISABLE REACTIVE CTRL
     </button>
     <button mat-raised-button color="primary" (click)="ctrlDisabled = !ctrlDisabled">
       DISABLE TD CTRL
     </button>
     <div>
-      <mat-form-field>
+      <mat-form-field [appearance]="appearance">
         <mat-label>Delayed value</mat-label>
         <input matInput [formControl]="delayedFormControl">
       </mat-form-field>
@@ -440,35 +446,35 @@
 
   <mat-card-content>
     <div>
-      <mat-form-field>
+      <mat-form-field [appearance]="appearance">
         <input matInput [formControl]="placeholderTestControl">
       </mat-form-field>
 
-      <mat-form-field>
+      <mat-form-field [appearance]="appearance">
         <input matInput [formControl]="placeholderTestControl" placeholder="Only placeholder">
       </mat-form-field>
 
-      <mat-form-field>
+      <mat-form-field [appearance]="appearance">
         <mat-label>Only label</mat-label>
         <input matInput [formControl]="placeholderTestControl">
       </mat-form-field>
 
-      <mat-form-field>
+      <mat-form-field [appearance]="appearance">
         <mat-label>Label and placeholder</mat-label>
         <input matInput [formControl]="placeholderTestControl" placeholder="This is the placeholder">
       </mat-form-field>
 
-      <mat-form-field floatLabel="always">
+      <mat-form-field [appearance]="appearance" floatLabel="always">
         <mat-label>Always float</mat-label>
         <input matInput [formControl]="placeholderTestControl" placeholder="This is the placeholder">
       </mat-form-field>
 
-      <mat-form-field floatLabel="never">
+      <mat-form-field [appearance]="appearance" floatLabel="never">
         <mat-label>Never float</mat-label>
         <input matInput [formControl]="placeholderTestControl" placeholder="This is the placeholder">
       </mat-form-field>
 
-      <mat-form-field>
+      <mat-form-field [appearance]="appearance">
         <mat-label>Label and placeholder element</mat-label>
         <mat-placeholder>The placeholder element</mat-placeholder>
         <input matInput [formControl]="placeholderTestControl">
@@ -476,47 +482,47 @@
     </div>
 
     <div>
-      <mat-form-field>
+      <mat-form-field [appearance]="appearance">
         <mat-select [formControl]="placeholderTestControl">
           <mat-option value="Value">Value</mat-option>
         </mat-select>
       </mat-form-field>
 
-      <mat-form-field>
+      <mat-form-field [appearance]="appearance">
         <mat-select [formControl]="placeholderTestControl" placeholder="Only placeholder">
           <mat-option value="Value">Value</mat-option>
         </mat-select>
       </mat-form-field>
 
-      <mat-form-field>
+      <mat-form-field [appearance]="appearance">
         <mat-label>Only label</mat-label>
         <mat-select [formControl]="placeholderTestControl">
           <mat-option value="Value">Value</mat-option>
         </mat-select>
       </mat-form-field>
 
-      <mat-form-field>
+      <mat-form-field [appearance]="appearance">
         <mat-label>Label and placeholder</mat-label>
         <mat-select [formControl]="placeholderTestControl" placeholder="This is the placeholder">
           <mat-option value="Value">Value</mat-option>
         </mat-select>
       </mat-form-field>
 
-      <mat-form-field floatLabel="always">
+      <mat-form-field [appearance]="appearance" floatLabel="always">
         <mat-label>Always float</mat-label>
         <mat-select [formControl]="placeholderTestControl" placeholder="This is the placeholder">
           <mat-option value="Value">Value</mat-option>
         </mat-select>
       </mat-form-field>
 
-      <mat-form-field floatLabel="never">
+      <mat-form-field [appearance]="appearance" floatLabel="never">
         <mat-label>Never float</mat-label>
         <mat-select [formControl]="placeholderTestControl" placeholder="This is the placeholder">
           <mat-option value="Value">Value</mat-option>
         </mat-select>
       </mat-form-field>
 
-      <mat-form-field>
+      <mat-form-field [appearance]="appearance">
         <mat-label>Label and placeholder element</mat-label>
         <mat-placeholder>The placeholder element</mat-placeholder>
         <mat-select [formControl]="placeholderTestControl">
@@ -525,15 +531,9 @@
       </mat-form-field>
     </div>
 
-    <button
-      mat-raised-button
-      color="primary"
-      (click)="togglePlaceholderTestValue()">Toggle value</button>
+    <button mat-raised-button color="primary" (click)="togglePlaceholderTestValue()">Toggle value</button>
 
-    <button
-      mat-raised-button
-      color="primary"
-      (click)="togglePlaceholderTestTouched()">Toggle touched</button>
+    <button mat-raised-button color="primary" (click)="togglePlaceholderTestTouched()">Toggle touched</button>
   </mat-card-content>
 </mat-card>
 
@@ -548,15 +548,12 @@
       <label>minRows<input type="number" #minRows class="demo-rows" (input)="1+1"></label> &nbsp;
       <label>maxRows<input type="number" #maxRows class="demo-rows" (input)="1+1"></label>
     </div>
-    <textarea class="demo-textarea"
-        cdkTextareaAutosize
-        [cdkAutosizeMinRows]="minRows.value"
-        [cdkAutosizeMaxRows]="maxRows.value"></textarea>
+    <textarea class="demo-textarea" cdkTextareaAutosize [cdkAutosizeMinRows]="minRows.value" [cdkAutosizeMaxRows]="maxRows.value"></textarea>
     <button type="button" (click)="minRows.value = minRows.value - 1">Decrement minRows</button>
 
     <h3>&lt;textarea&gt; with mat-form-field</h3>
     <div>
-      <mat-form-field>
+      <mat-form-field [appearance]="appearance">
         <mat-label>Autosized textarea</mat-label>
         <textarea matInput cdkTextareaAutosize cdkAutosizeMaxRows="10"></textarea>
       </mat-form-field>
@@ -610,40 +607,42 @@
       <mat-hint>Please type something here</mat-hint>
     </mat-form-field>
 
-    <table style="width: 100%" cellspacing="0"><tr>
-      <td>
-        <mat-form-field appearance="legacy" style="width: 100%">
-          <mat-label>Legacy appearance</mat-label>
-          <input matInput [(ngModel)]="legacyAppearance" required>
-          <mat-error>This field is required</mat-error>
-          <mat-hint>Please type something here</mat-hint>
-        </mat-form-field>
-      </td>
-      <td>
-        <mat-form-field appearance="standard" style="width: 100%">
-          <mat-label>Standard appearance</mat-label>
-          <input matInput [(ngModel)]="standardAppearance" required>
-          <mat-error>This field is required</mat-error>
-          <mat-hint>Please type something here</mat-hint>
-        </mat-form-field>
-      </td>
-      <td>
-        <mat-form-field appearance="fill" style="width: 100%">
-          <mat-label>Fill appearance</mat-label>
-          <input matInput [(ngModel)]="fillAppearance" required>
-          <mat-error>This field is required</mat-error>
-          <mat-hint>Please type something here</mat-hint>
-        </mat-form-field>
-      </td>
-      <td>
-        <mat-form-field appearance="outline" style="width: 100%">
-          <mat-label>Outline appearance</mat-label>
-          <input matInput [(ngModel)]="outlineAppearance" required>
-          <mat-error>This field is required</mat-error>
-          <mat-hint>Please type something here</mat-hint>
-        </mat-form-field>
-      </td>
-    </tr></table>
+    <table style="width: 100%" cellspacing="0">
+      <tr>
+        <td>
+          <mat-form-field appearance="legacy" style="width: 100%">
+            <mat-label>Legacy appearance</mat-label>
+            <input matInput [(ngModel)]="legacyAppearance" required>
+            <mat-error>This field is required</mat-error>
+            <mat-hint>Please type something here</mat-hint>
+          </mat-form-field>
+        </td>
+        <td>
+          <mat-form-field appearance="standard" style="width: 100%">
+            <mat-label>Standard appearance</mat-label>
+            <input matInput [(ngModel)]="standardAppearance" required>
+            <mat-error>This field is required</mat-error>
+            <mat-hint>Please type something here</mat-hint>
+          </mat-form-field>
+        </td>
+        <td>
+          <mat-form-field appearance="fill" style="width: 100%">
+            <mat-label>Fill appearance</mat-label>
+            <input matInput [(ngModel)]="fillAppearance" required>
+            <mat-error>This field is required</mat-error>
+            <mat-hint>Please type something here</mat-hint>
+          </mat-form-field>
+        </td>
+        <td>
+          <mat-form-field appearance="outline" style="width: 100%">
+            <mat-label>Outline appearance</mat-label>
+            <input matInput [(ngModel)]="outlineAppearance" required>
+            <mat-error>This field is required</mat-error>
+            <mat-hint>Please type something here</mat-hint>
+          </mat-form-field>
+        </td>
+      </tr>
+    </table>
   </mat-card-content>
 </mat-card>
 
@@ -654,10 +653,10 @@
       <mat-checkbox [(ngModel)]="customAutofillStyle" name="custom">
         Use custom autofill style
       </mat-checkbox>
-      <mat-form-field>
+      <mat-form-field [appearance]="appearance">
         <mat-label>Autofill monitored</mat-label>
         <input matInput (cdkAutofill)="isAutofilled = $event.isAutofilled" name="autofill"
-               [class.demo-custom-autofill-style]="customAutofillStyle">
+          [class.demo-custom-autofill-style]="customAutofillStyle">
       </mat-form-field>
       <button color="primary" mat-raised-button>Submit</button>
       <span> is autofilled? {{isAutofilled ? 'yes' : 'no'}}</span>

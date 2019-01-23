@@ -2,11 +2,7 @@
   <div class="demo-list">
 
     <h2>To do</h2>
-    <div
-      cdkDropList
-      (cdkDropListDropped)="drop($event)"
-      [cdkDropListLockAxis]="axisLock"
-      [cdkDropListData]="todo">
+    <div cdkDropList (cdkDropListDropped)="drop($event)" [cdkDropListLockAxis]="axisLock" [cdkDropListData]="todo">
       <div *ngFor="let item of todo" cdkDrag>
         {{item}}
         <mat-icon cdkDragHandle svgIcon="dnd-move"></mat-icon>
@@ -16,11 +12,7 @@
 
   <div class="demo-list">
     <h2>Done</h2>
-    <div
-      cdkDropList
-      (cdkDropListDropped)="drop($event)"
-      [cdkDropListLockAxis]="axisLock"
-      [cdkDropListData]="done">
+    <div cdkDropList (cdkDropListDropped)="drop($event)" [cdkDropListLockAxis]="axisLock" [cdkDropListData]="done">
       <div *ngFor="let item of done" cdkDrag>
         {{item}}
         <mat-icon cdkDragHandle svgIcon="dnd-move"></mat-icon>
@@ -32,11 +24,7 @@
 <div>
   <div class="demo-list demo-list-horizontal">
     <h2>Horizontal list</h2>
-    <div
-      cdkDropList
-      cdkDropListOrientation="horizontal"
-      (cdkDropListDropped)="drop($event)"
-      [cdkDropListLockAxis]="axisLock"
+    <div cdkDropList cdkDropListOrientation="horizontal" (cdkDropListDropped)="drop($event)" [cdkDropListLockAxis]="axisLock"
       [cdkDropListData]="horizontalData">
       <div *ngFor="let item of horizontalData" cdkDrag>
         {{item}}
@@ -60,7 +48,7 @@
 
 <div>
   <h2>Axis locking</h2>
-  <mat-form-field>
+  <mat-form-field appearance="fill">
     <mat-label>Lock position along axis</mat-label>
     <mat-select [(ngModel)]="axisLock">
       <mat-option>None</mat-option>

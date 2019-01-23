@@ -6,7 +6,7 @@ Space above cards: <input type="number" [formControl]="topHeightCtrl">
     <div>Reactive value: {{ stateCtrl.value | json }}</div>
     <div>Reactive dirty: {{ stateCtrl.dirty }}</div>
 
-    <mat-form-field floatLabel="never">
+    <mat-form-field appearance="outline" floatLabel="never">
       <mat-label>State</mat-label>
       <input matInput [matAutocomplete]="reactiveAuto" [formControl]="stateCtrl">
       <mat-autocomplete #reactiveAuto="matAutocomplete" [displayWith]="displayFn">
@@ -33,10 +33,10 @@ Space above cards: <input type="number" [formControl]="topHeightCtrl">
     <div>Template-driven dirty: {{ modelDir ? modelDir.dirty : false }}</div>
 
     <!-- Added an ngIf below to test that autocomplete works with ngIf -->
-    <mat-form-field *ngIf="true">
+    <mat-form-field appearance="outline" *ngIf="true">
       <mat-label>State</mat-label>
-      <input matInput [matAutocomplete]="tdAuto" [(ngModel)]="currentState"
-        (ngModelChange)="tdStates = filterStates(currentState)" [disabled]="tdDisabled">
+      <input matInput [matAutocomplete]="tdAuto" [(ngModel)]="currentState" (ngModelChange)="tdStates = filterStates(currentState)"
+        [disabled]="tdDisabled">
       <mat-autocomplete #tdAuto="matAutocomplete">
         <mat-option *ngFor="let state of tdStates" [value]="state.name">
           <span>{{ state.name }}</span>
@@ -57,20 +57,15 @@ Space above cards: <input type="number" [formControl]="topHeightCtrl">
   <mat-card>
     <div>Option groups (currentGroupedState): {{ currentGroupedState }}</div>
 
-    <mat-form-field>
+    <mat-form-field appearance="outline">
       <mat-label>State</mat-label>
-      <input
-        matInput
-        [matAutocomplete]="groupedAuto"
-        [(ngModel)]="currentGroupedState"
-        (ngModelChange)="filteredGroupedStates = filterStateGroups(currentGroupedState)">
+      <input matInput [matAutocomplete]="groupedAuto" [(ngModel)]="currentGroupedState" (ngModelChange)="filteredGroupedStates = filterStateGroups(currentGroupedState)">
     </mat-form-field>
   </mat-card>
 </div>
 
 <mat-autocomplete #groupedAuto="matAutocomplete">
-  <mat-optgroup *ngFor="let group of filteredGroupedStates"
-    [label]="'States starting with ' + group.letter">
+  <mat-optgroup *ngFor="let group of filteredGroupedStates" [label]="'States starting with ' + group.letter">
     <mat-option *ngFor="let state of group.states" [value]="state.name">{{ state.name }}</mat-option>
   </mat-optgroup>
 </mat-autocomplete>

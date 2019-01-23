@@ -21,10 +21,10 @@ export class MyErrorStateMatcher implements ErrorStateMatcher {
 }
 
 @Component({
-    moduleId: module.id,
-    selector: 'select-demo',
-    templateUrl: 'select-demo.html',
-    styleUrls: ['select-demo.css'],
+  moduleId: module.id,
+  selector: 'select-demo',
+  templateUrl: 'select-demo.html',
+  styleUrls: ['select-demo.css']
 })
 export class SelectDemo {
   drinksRequired = false;
@@ -34,7 +34,7 @@ export class SelectDemo {
   pokemonDisabled = false;
   showSelect = false;
   currentDrink: string;
-  currentDrinkObject: {}|undefined = {value: 'tea-5', viewValue: 'Tea'};
+  currentDrinkObject: {} | undefined = {value: 'tea-5', viewValue: 'Tea'};
   currentPokemon: string[];
   currentPokemonFromGroup: string;
   currentDigimon: string;
@@ -48,6 +48,8 @@ export class SelectDemo {
   compareByValue = true;
   selectFormControl = new FormControl('', Validators.required);
 
+  appearance: 'outline' | 'fill' = 'outline';
+
   foods = [
     {value: null, viewValue: 'None'},
     {value: 'steak-0', viewValue: 'Steak'},
@@ -57,14 +59,17 @@ export class SelectDemo {
 
   drinks = [
     {value: 'coke-0', viewValue: 'Coke'},
-    {value: 'long-name-1', viewValue: 'Decaf Chocolate Brownie Vanilla Gingerbread Frappuccino'},
+    {
+      value: 'long-name-1',
+      viewValue: 'Decaf Chocolate Brownie Vanilla Gingerbread Frappuccino'
+    },
     {value: 'water-2', viewValue: 'Water'},
     {value: 'pepper-3', viewValue: 'Dr. Pepper'},
     {value: 'coffee-4', viewValue: 'Coffee'},
     {value: 'tea-5', viewValue: 'Tea'},
     {value: 'juice-6', viewValue: 'Orange juice'},
     {value: 'wine-7', viewValue: 'Wine'},
-    {value: 'milk-8', viewValue: 'Milk'},
+    {value: 'milk-8', viewValue: 'Milk'}
   ];
 
   pokemon = [
@@ -72,15 +77,18 @@ export class SelectDemo {
     {value: 'charizard-1', viewValue: 'Charizard'},
     {value: 'squirtle-2', viewValue: 'Squirtle'},
     {value: 'pikachu-3', viewValue: 'Pikachu'},
-    {value: 'jigglypuff-4', viewValue: 'Jigglypuff with a really long name that will truncate'},
+    {
+      value: 'jigglypuff-4',
+      viewValue: 'Jigglypuff with a really long name that will truncate'
+    },
     {value: 'ditto-5', viewValue: 'Ditto'},
-    {value: 'psyduck-6', viewValue: 'Psyduck'},
+    {value: 'psyduck-6', viewValue: 'Psyduck'}
   ];
 
   availableThemes = [
-    {value: 'primary', name: 'Primary' },
-    {value: 'accent', name: 'Accent' },
-    {value: 'warn', name: 'Warn' }
+    {value: 'primary', name: 'Primary'},
+    {value: 'accent', name: 'Accent'},
+    {value: 'warn', name: 'Warn'}
   ];
 
   pokemonGroups = [
@@ -113,7 +121,7 @@ export class SelectDemo {
       name: 'Psychic',
       pokemon: [
         {value: 'mew-9', viewValue: 'Mew'},
-        {value: 'mewtwo-10', viewValue: 'Mewtwo'},
+        {value: 'mewtwo-10', viewValue: 'Mewtwo'}
       ]
     }
   ];
@@ -128,7 +136,9 @@ export class SelectDemo {
   ];
 
   toggleDisabled() {
-    this.foodControl.enabled ? this.foodControl.disable() : this.foodControl.enable();
+    this.foodControl.enabled
+      ? this.foodControl.disable()
+      : this.foodControl.enable();
   }
 
   setPokemonValue() {
@@ -150,6 +160,8 @@ export class SelectDemo {
   matcher = new MyErrorStateMatcher();
 
   toggleSelected() {
-    this.currentAppearanceValue = this.currentAppearanceValue ? null : this.digimon[0].value;
+    this.currentAppearanceValue = this.currentAppearanceValue
+      ? null
+      : this.digimon[0].value;
   }
 }
