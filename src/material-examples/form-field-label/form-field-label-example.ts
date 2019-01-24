@@ -14,6 +14,7 @@ export class FormFieldLabelExample {
     this.options = fb.group({
       hideRequired: false,
       floatLabel: 'auto',
+      appearance: 'outline',
     });
   }
 }

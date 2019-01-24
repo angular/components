@@ -9,18 +9,28 @@
         <mat-radio-button value="never">Never</mat-radio-button>
       </mat-radio-group>
     </div>
+    <div>
+      <label>Appearance Style: </label>
+      <mat-radio-group formControlName="appearance">
+        <mat-radio-button value="outline">Outline</mat-radio-button>
+        <mat-radio-button value="fill">Fill</mat-radio-button>
+      </mat-radio-group>
+    </div>
   </form>
 
-  <mat-form-field [hideRequiredMarker]="options.value.hideRequired" [floatLabel]="options.value.floatLabel" appearance="outline">
-    <input matInput placeholder="Simple placeholder" required>
+  <mat-form-field [hideRequiredMarker]="options.value.hideRequired" [floatLabel]="options.value.floatLabel"
+    [appearance]="options.value.appearance">
+    <mat-label>Label only</mat-label>
+    <input matInput required>
   </mat-form-field>
 
-  <mat-form-field [floatLabel]="options.value.floatLabel" appearance="outline">
+  <mat-form-field [floatLabel]="options.value.floatLabel" [appearance]="options.value.appearance">
     <mat-label>Both a label and a placeholder</mat-label>
     <input matInput placeholder="Simple placeholder">
   </mat-form-field>
 
-  <mat-form-field [hideRequiredMarker]="options.value.hideRequired" [floatLabel]="options.value.floatLabel" appearance="outline">
+  <mat-form-field [hideRequiredMarker]="options.value.hideRequired" [floatLabel]="options.value.floatLabel"
+    [appearance]="options.value.appearance">
     <mat-select required>
       <mat-option>-- None --</mat-option>
       <mat-option value="option">Option</mat-option>
