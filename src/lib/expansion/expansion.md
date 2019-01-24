@@ -116,10 +116,22 @@ an `ng-template`:
 ```
 
 ### Accessibility
-The expansion-panel aims to mimic the experience of the native `<details>` and `<summary>` elements.
-The expansion panel header has `role="button"` and also the attribute `aria-controls` with the
-expansion panel's id as value.
+The expansion-panel aims to mimic the experience of the native `<details>` and `<summary>`
+elements. By default, the expansion panel header has `role="button"` and also the attribute
+`aria-controls` with the expansion panel's id as value. Therefore, the expansion panel headers
+are buttons. Users can use the keyboard to activate the expansion panel header to switch between
+expanded state and collapsed state.
 
-The expansion panel headers are buttons. Users can use the keyboard to activate the expansion panel
-header to switch between expanded state and collapsed state. Because the header acts as a button,
-additional interactive elements should not be put inside of the header.
+If you need to add additional interactive elements inside the header, you should pass the
+`headerRole` as well as `toggleAriaLabel` or `toggleAriaLabelledBy` inputs to the expansion panel
+header. `headerRole` should be a value other than `"button"`.
+```html
+<mat-expansion-panel>
+  <mat-expansion-panel-header
+      headerRole="presentation"
+      toggleAriaLabel="Aria label for toggle button">
+    This is the expansion title
+  </mat-expansion-panel-header>
+  This is the expansion content
+</mat-expansion-panel>
+```

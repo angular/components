@@ -5,6 +5,7 @@ import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {
   MatExpansionModule,
   MatExpansionPanel,
+  MatExpansionPanelDefaultOptions,
   MatExpansionPanelHeader,
   MAT_EXPANSION_PANEL_DEFAULT_OPTIONS,
 } from './index';
@@ -116,32 +117,144 @@ describe('MatExpansionPanel', () => {
     expect(contentEl.getAttribute('role')).toBe('region');
   });
 
-  it('should toggle the panel when pressing SPACE on the header', () => {
-    const fixture = TestBed.createComponent(PanelWithContent);
-    const headerEl = fixture.nativeElement.querySelector('.mat-expansion-panel-header');
+  describe('when header is a button', () => {
+    let fixture: ComponentFixture<PanelWithContent>;
+    let headerEl: HTMLElement;
+    let toggleEl: HTMLElement;
 
-    spyOn(fixture.componentInstance.panel, 'toggle');
+    beforeEach(() => {
+      fixture = TestBed.createComponent(PanelWithContent);
+      fixture.detectChanges();
 
-    const event = dispatchKeyboardEvent(headerEl, 'keydown', SPACE);
+      headerEl = fixture.nativeElement.querySelector('.mat-expansion-panel-header');
+      toggleEl = fixture.nativeElement.querySelector('.mat-expansion-indicator');
+    });
 
-    fixture.detectChanges();
+    it('should be able to focus on the header', () => {
+      expect(headerEl.getAttribute('tabindex')).toBe('0');
+    });
 
-    expect(fixture.componentInstance.panel.toggle).toHaveBeenCalled();
-    expect(event.defaultPrevented).toBe(true);
+    it('should set the button role on the header by default', () => {
+      expect(headerEl.getAttribute('role')).toBe('button');
+    });
+
+    it('should toggle the panel when pressing SPACE on the header', () => {
+      spyOn(fixture.componentInstance.panel, 'toggle');
+
+      const event = dispatchKeyboardEvent(headerEl, 'keydown', SPACE);
+      fixture.detectChanges();
+
+      expect(fixture.componentInstance.panel.toggle).toHaveBeenCalled();
+      expect(event.defaultPrevented).toBe(true);
+    });
+
+    it('should toggle the panel when pressing ENTER on the header', () => {
+      spyOn(fixture.componentInstance.panel, 'toggle');
+
+      const event = dispatchKeyboardEvent(headerEl, 'keydown', ENTER);
+      fixture.detectChanges();
+
+      expect(fixture.componentInstance.panel.toggle).toHaveBeenCalled();
+      expect(event.defaultPrevented).toBe(true);
+    });
+
+    it('should not set aria-controls and aria-expanded for the toggle button', () => {
+      expect(toggleEl.getAttribute('aria-controls')).toBeNull();
+      expect(toggleEl.getAttribute('aria-expanded')).toBeNull();
+    });
+
+    it('should not be able to focus on the toggle button', () => {
+      expect(toggleEl.getAttribute('tabindex')).toBe('-1');
+    });
   });
 
-  it('should toggle the panel when pressing ENTER on the header', () => {
+  describe('when header is not a button', () => {
+    let fixture: ComponentFixture<PanelWithContent>;
+    let headerEl: HTMLElement;
+    let toggleEl: HTMLElement;
+
+    beforeEach(() => {
+      fixture = TestBed.createComponent(PanelWithContent);
+      fixture.componentInstance.headerRole = 'presentation';
+
+      fixture.detectChanges();
+
+      headerEl = fixture.nativeElement.querySelector('.mat-expansion-panel-header');
+      toggleEl = fixture.nativeElement.querySelector('.mat-expansion-indicator');
+    });
+
+    it('should not be able to focus on the header', () => {
+      expect(headerEl.getAttribute('tabindex')).toBe('-1');
+    });
+
+    it('should set the proper role on the header', () => {
+      expect(headerEl.getAttribute('role')).toBe('presentation');
+    });
+
+    it('should be able to focus on the toggle button', () => {
+      expect(toggleEl.getAttribute('tabindex')).toBe('0');
+    });
+
+    it('should set the button role on the toggle button', () => {
+      expect(toggleEl.getAttribute('role')).toBe('button');
+    });
+
+    it('should toggle the panel when pressing ENTER on the toggle button', () => {
+      spyOn(fixture.componentInstance.panel, 'toggle');
+
+      dispatchKeyboardEvent(toggleEl, 'keydown', ENTER);
+      fixture.detectChanges();
+
+      expect(fixture.componentInstance.panel.toggle).toHaveBeenCalled();
+    });
+
+    it('should toggle the panel when pressing SPACE on the toggle button', () => {
+      spyOn(fixture.componentInstance.panel, 'toggle');
+
+      dispatchKeyboardEvent(toggleEl, 'keydown', SPACE);
+      fixture.detectChanges();
+
+      expect(fixture.componentInstance.panel.toggle).toHaveBeenCalled();
+    });
+
+    it('should not toggle the panel when pressing SPACE or ENTER on the header', () => {
+      spyOn(fixture.componentInstance.panel, 'toggle');
+
+      dispatchKeyboardEvent(headerEl, 'keydown', SPACE);
+      fixture.detectChanges();
+
+      dispatchKeyboardEvent(headerEl, 'keydown', ENTER);
+      fixture.detectChanges();
+
+      expect(fixture.componentInstance.panel.toggle).not.toHaveBeenCalled();
+    });
+
+    it('should set aria controls for toggle button', () => {
+      const panelEl = fixture.nativeElement.querySelector('.mat-expansion-panel-content');
+
+      expect(toggleEl.getAttribute('aria-controls')).toBe(panelEl.id);
+    });
+
+    it('should set aria-expanded for toggle button', () => {
+      expect(toggleEl.getAttribute('aria-expanded')).toBe('false');
+
+      fixture.componentInstance.expanded = true;
+      fixture.detectChanges();
+
+      expect(toggleEl.getAttribute('aria-expanded')).toBe('true');
+    });
+  });
+
+  it('should be able to set aria-label and aria-labelledby for toggle button', () => {
     const fixture = TestBed.createComponent(PanelWithContent);
-    const headerEl = fixture.nativeElement.querySelector('.mat-expansion-panel-header');
-
-    spyOn(fixture.componentInstance.panel, 'toggle');
-
-    const event = dispatchKeyboardEvent(headerEl, 'keydown', ENTER);
+    fixture.componentInstance.toggleAriaLabel = 'toggle-aria-label';
+    fixture.componentInstance.toggleAriaLabelledBy = 'toggle-aria-labelledby';
 
     fixture.detectChanges();
 
-    expect(fixture.componentInstance.panel.toggle).toHaveBeenCalled();
-    expect(event.defaultPrevented).toBe(true);
+    const toggleEl = fixture.nativeElement.querySelector('.mat-expansion-indicator');
+    expect(toggleEl.getAttribute('aria-label')).toBe('toggle-aria-label');
+    expect(toggleEl.getAttribute('aria-labelledby')).toBe('toggle-aria-labelledby');
   });
 
   it('should not toggle if a modifier key is pressed', () => {
@@ -287,8 +400,6 @@ describe('MatExpansionPanel', () => {
     expect(fixture.componentInstance.expanded).toBe(false);
   });
 
-
-
   it('should emit events for body expanding and collapsing animations', fakeAsync(() => {
     const fixture = TestBed.createComponent(PanelWithContent);
     fixture.detectChanges();
@@ -310,7 +421,44 @@ describe('MatExpansionPanel', () => {
     expect(afterCollapse).toBe(1);
   }));
 
-  it('should be able to set the default options through the injection token', () => {
+  it('should be able to set hideToggle through the injection token', () => {
+    const fixture = createComponentWithDefaultOptions({hideToggle: true});
+    const panel = fixture.debugElement.query(By.directive(MatExpansionPanel));
+
+    expect(panel.componentInstance.hideToggle).toBe(true);
+  });
+
+  it('should be able to set heights through the injection token', () => {
+    const fixture = createComponentWithDefaultOptions({
+      expandedHeight: '10px',
+      collapsedHeight: '16px',
+    });
+    const header = fixture.debugElement.query(By.directive(MatExpansionPanelHeader));
+
+    expect(header.componentInstance.expandedHeight).toBe('10px');
+    expect(header.componentInstance.collapsedHeight).toBe('16px');
+  });
+
+  it('should be able to set header role through the injection token', () => {
+    const fixture = createComponentWithDefaultOptions({headerRole: 'presentation'});
+    const headerEl = fixture.nativeElement.querySelector('.mat-expansion-panel-header');
+
+    expect(headerEl.getAttribute('role')).toBe('presentation');
+  });
+
+  it('should be able to set aria labels for toggle through the injection token', () => {
+    const fixture = createComponentWithDefaultOptions({
+      toggleAriaLabel: 'aria-label-for-toggle',
+      toggleAriaLabelledBy: 'aria-labelledby-for-toggle',
+    });
+
+    const toggleEl = fixture.nativeElement.querySelector('.mat-expansion-indicator');
+    expect(toggleEl.getAttribute('aria-label')).toBe('aria-label-for-toggle');
+    expect(toggleEl.getAttribute('aria-labelledby')).toBe('aria-labelledby-for-toggle');
+  });
+
+  function createComponentWithDefaultOptions(options: Partial<MatExpansionPanelDefaultOptions>)
+      : ComponentFixture<PanelWithTwoWayBinding> {
     TestBed
       .resetTestingModule()
       .configureTestingModule({
@@ -318,11 +466,7 @@ describe('MatExpansionPanel', () => {
         declarations: [PanelWithTwoWayBinding],
         providers: [{
           provide: MAT_EXPANSION_PANEL_DEFAULT_OPTIONS,
-          useValue: {
-            hideToggle: true,
-            expandedHeight: '10px',
-            collapsedHeight: '16px'
-          }
+          useValue: options,
         }]
       })
       .compileComponents();
@@ -330,13 +474,8 @@ describe('MatExpansionPanel', () => {
     const fixture = TestBed.createComponent(PanelWithTwoWayBinding);
     fixture.detectChanges();
 
-    const panel = fixture.debugElement.query(By.directive(MatExpansionPanel));
-    const header = fixture.debugElement.query(By.directive(MatExpansionPanelHeader));
-
-    expect(panel.componentInstance.hideToggle).toBe(true);
-    expect(header.componentInstance.expandedHeight).toBe('10px');
-    expect(header.componentInstance.collapsedHeight).toBe('16px');
-  });
+    return fixture;
+  }
 
   describe('disabled state', () => {
     let fixture: ComponentFixture<PanelWithContent>;
@@ -407,7 +546,11 @@ describe('MatExpansionPanel', () => {
                       [disabled]="disabled"
                       (opened)="openCallback()"
                       (closed)="closeCallback()">
-    <mat-expansion-panel-header>Panel Title</mat-expansion-panel-header>
+    <mat-expansion-panel-header [headerRole]="headerRole"
+                                [toggleAriaLabel]="toggleAriaLabel"
+                                [toggleAriaLabelledBy]="toggleAriaLabelledBy">
+      Panel Title
+    </mat-expansion-panel-header>
     <p>Some content</p>
     <button>I am a button</button>
   </mat-expansion-panel>`
@@ -416,6 +559,9 @@ class PanelWithContent {
   expanded = false;
   hideToggle = false;
   disabled = false;
+  headerRole = 'button';
+  toggleAriaLabel: string | null = null;
+  toggleAriaLabelledBy: string | null = null;
   openCallback = jasmine.createSpy('openCallback');
   closeCallback = jasmine.createSpy('closeCallback');
   @ViewChild(MatExpansionPanel) panel: MatExpansionPanel;

@@ -27,6 +27,7 @@ export class ExpansionDemo {
   expandedHeight: string;
   collapsedHeight: string;
   events: string[] = [];
+  headerRole: 'button' | 'presentation' = 'button';
 
   addEvent(eventName: string) {
     this.events.push(`${eventName} - ${new Date().toISOString()}`);

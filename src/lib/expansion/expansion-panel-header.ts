@@ -27,6 +27,7 @@ import {matExpansionAnimations} from './expansion-animations';
 import {
   MatExpansionPanel,
   MatExpansionPanelDefaultOptions,
+  MatExpansionPanelHeaderRole,
   MAT_EXPANSION_PANEL_DEFAULT_OPTIONS,
 } from './expansion-panel';
 
@@ -49,15 +50,15 @@ import {
   ],
   host: {
     'class': 'mat-expansion-panel-header',
-    'role': 'button',
+    '[attr.role]': 'headerRole',
     '[attr.id]': 'panel._headerId',
-    '[attr.tabindex]': 'disabled ? -1 : 0',
-    '[attr.aria-controls]': '_getPanelId()',
-    '[attr.aria-expanded]': '_isExpanded()',
+    '[attr.tabindex]': '_getHeaderTabIndex()',
+    '[attr.aria-controls]': '_getHeaderAriaControls()',
+    '[attr.aria-expanded]': '_getHeaderAriaExpanded()',
     '[attr.aria-disabled]': 'panel.disabled',
     '[class.mat-expanded]': '_isExpanded()',
     '(click)': '_toggle()',
-    '(keydown)': '_keydown($event)',
+    '(keydown)': '_keydownHeader($event)',
     '[@expansionHeight]': `{
         value: _getExpandedState(),
         params: {
@@ -105,6 +106,18 @@ export class MatExpansionPanelHeader implements OnDestroy, FocusableOption {
     if (defaultOptions) {
       this.expandedHeight = defaultOptions.expandedHeight;
       this.collapsedHeight = defaultOptions.collapsedHeight;
+
+      if (defaultOptions.headerRole) {
+        this.headerRole = defaultOptions.headerRole;
+      }
+
+      if (defaultOptions.toggleAriaLabel) {
+        this.toggleAriaLabel = defaultOptions.toggleAriaLabel;
+      }
+
+      if (defaultOptions.toggleAriaLabelledBy) {
+        this.toggleAriaLabelledBy = defaultOptions.toggleAriaLabelledBy;
+      }
     }
   }
 
@@ -113,6 +126,28 @@ export class MatExpansionPanelHeader implements OnDestroy, FocusableOption {
 
   /** Height of the header while the panel is collapsed. */
   @Input() collapsedHeight: string;
+
+  /**
+   * Role for the header. By default, the role is "button". If the header is not considered
+   * to be a button, e.g. when the header contains nested buttons, the role should not be
+   * set to "button". Notice that in this case the toggle button will have a role of "button".
+   */
+  @Input() headerRole: MatExpansionPanelHeaderRole = 'button';
+
+  /**
+   * Aria label for the toggle button. By default, there is no aria-label associated with
+   * the toggle button. If the header has a role other than button, and the toggle button
+   * is displayed, aria-label or aria-labelled-by should be set for the toggle button.
+   */
+  @Input() toggleAriaLabel: string | null = null;
+
+  /**
+   * Aria labelledBy attribute for the toggle button. By default, there is no aria-labelledby
+   * associated with the toggle button. If the header has a role other than button, and the
+   * toggle button is displayed, aria-label or aria-labelled-by should be set for the toggle
+   * button.
+   */
+  @Input() toggleAriaLabelledBy: string | null = null;
 
   /**
    * Whether the associated panel is disabled. Implemented as a part of `FocusableOption`.
@@ -132,19 +167,69 @@ export class MatExpansionPanelHeader implements OnDestroy, FocusableOption {
     return this.panel.expanded;
   }
 
+  /** Gets whether the role of the header is a button. */
+  _isHeaderButtonRole(): boolean {
+    return this.headerRole === 'button';
+  }
+
+  /**
+   * Gets whether the role of the toggle indicator is a button. The toggle indicator is a button
+   * if and only if the header is not a button.
+   */
+  _isToggleButtonRole(): boolean {
+    return !this._isHeaderButtonRole();
+  }
+
+  /** Gets the role for the toggle button. */
+  _getToggleRole(): 'button' | null {
+    return this._isToggleButtonRole() ? 'button' : null;
+  }
+
+  /** Gets aria-expanded value for the header. */
+  _getHeaderAriaExpanded(): boolean | null {
+    return this._isHeaderButtonRole() ? this._isExpanded() : null;
+  }
+
+  /** Gets aria-expanded value for the toggle button. */
+  _getToggleAriaExpanded(): boolean | null {
+    return this._isToggleButtonRole() ? this._isExpanded() : null;
+  }
+
+  /** Gets aria-controls value for the header. */
+  _getHeaderAriaControls(): string | null {
+    return this._isHeaderButtonRole() ? this.panel.id : null;
+  }
+
+  /** Gets aria-controls value for the toggle button. */
+  _getToggleAriaControls(): string | null {
+    return this._isToggleButtonRole() ? this.panel.id : null;
+  }
+
+  /** Gets tab index for the header. */
+  _getHeaderTabIndex(): number {
+    return this._isHeaderButtonRole() && !this.disabled ? 0 : -1;
+  }
+
+  /** Gets tab index for the toggle button. */
+  _getToggleTabIndex(): number {
+    return this._isToggleButtonRole() && !this.disabled ? 0 : -1;
+  }
+
   /** Gets the expanded state string of the panel. */
   _getExpandedState(): string {
     return this.panel._getExpandedState();
   }
 
-  /** Gets the panel id. */
-  _getPanelId(): string {
-    return this.panel.id;
-  }
-
   /** Gets whether the expand indicator should be shown. */
   _showToggle(): boolean {
     return !this.panel.hideToggle && !this.panel.disabled;
+  }
+
+  /** Handle keydown event on the header. Ignore the event if the header is not a button. */
+  _keydownHeader(event: KeyboardEvent) {
+    if (this._isHeaderButtonRole()) {
+      this._keydown(event);
+    }
   }
 
   /** Handle keydown event calling to toggle() if appropriate. */

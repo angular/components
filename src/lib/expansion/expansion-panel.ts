@@ -44,6 +44,9 @@ import {MAT_ACCORDION, MatAccordionBase} from './accordion-base';
 /** MatExpansionPanel's states. */
 export type MatExpansionPanelState = 'expanded' | 'collapsed';
 
+/** Role for MatExpansionPanelHeader. */
+export type MatExpansionPanelHeaderRole = 'button' | string | null;
+
 /** Counter for generating unique element ids. */
 let uniqueId = 0;
 
@@ -60,6 +63,15 @@ export interface MatExpansionPanelDefaultOptions {
 
   /** Whether the toggle indicator should be hidden. */
   hideToggle: boolean;
+
+  /** Role for the header. By default, the header role is button. */
+  headerRole?: MatExpansionPanelHeaderRole;
+
+  /** Aria label attribute for the toggle button. Used when the header is not a button. */
+  toggleAriaLabel?: string;
+
+  /** Aria labelled by attribute for the toggle button. Used when the header is not a button. */
+  toggleAriaLabelledBy?: string;
 }
 
 /**

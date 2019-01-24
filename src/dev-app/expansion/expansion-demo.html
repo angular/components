@@ -3,7 +3,11 @@
 <mat-expansion-panel class="demo-expansion-width" #myPanel
                      (afterExpand)="addEvent('afterExpand')"
                      (afterCollapse)="addEvent('afterCollapse')">
-  <mat-expansion-panel-header [expandedHeight]="expandedHeight" [collapsedHeight]="collapsedHeight">
+  <mat-expansion-panel-header
+      [expandedHeight]="expandedHeight"
+      [collapsedHeight]="collapsedHeight"
+      [headerRole]="headerRole"
+      toggle-aria-label="Toggle">
     <mat-panel-description>This is a panel description.</mat-panel-description>
     <mat-panel-title>Panel Title</mat-panel-title>
   </mat-expansion-panel-header>
@@ -29,6 +33,13 @@
   <mat-label>Expanded height</mat-label>
   <input matInput [(ngModel)]="expandedHeight">
 </mat-form-field>
+<br>
+
+<p>Role</p>
+<mat-radio-group [(ngModel)]="headerRole">
+  <mat-radio-button value="button">Button</mat-radio-button>
+  <mat-radio-button value="presentation">Presentation</mat-radio-button>
+</mat-radio-group>
 <br>
 
 <p>Expansion Panel Animation Events</p>
