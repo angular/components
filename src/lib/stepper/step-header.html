@@ -5,7 +5,10 @@
       *ngSwitchCase="true"
       [ngTemplateOutlet]="iconOverrides[state]"
       [ngTemplateOutletContext]="_getIconContext()"></ng-container>
-    <mat-icon *ngSwitchDefault>{{_getDefaultIconForState(state)}}</mat-icon>
+    <ng-container *ngSwitchDefault [ngSwitch]="state">
+      <span *ngSwitchCase="'number'">{{_getDefaultTextForState(state)}}</span>
+      <mat-icon *ngSwitchDefault>{{_getDefaultTextForState(state)}}</mat-icon>
+    </ng-container>
   </div>
 </div>
 <div class="mat-step-label"
