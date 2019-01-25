@@ -1,15 +1,11 @@
 <div class="mat-step-header-ripple" mat-ripple [matRippleTrigger]="_getHostElement()"></div>
-<div class="mat-step-icon-state-{{state}} mat-step-icon" [class.mat-step-icon-selected]="selected"
-     [ngSwitch]="state">
-
-  <div class="mat-step-icon-content">
-    <ng-container *ngSwitchDefault [ngSwitch]="!!(iconOverrides && iconOverrides[state])">
-      <ng-container
-        *ngSwitchCase="true"
-        [ngTemplateOutlet]="iconOverrides[state]"
-        [ngTemplateOutletContext]="_getIconContext()"></ng-container>
-      <mat-icon *ngSwitchDefault>{{_getDefaultIconForState(state)}}</mat-icon>
-    </ng-container>
+<div class="mat-step-icon-state-{{state}} mat-step-icon" [class.mat-step-icon-selected]="selected">
+  <div class="mat-step-icon-content" [ngSwitch]="!!(iconOverrides && iconOverrides[state])">
+    <ng-container
+      *ngSwitchCase="true"
+      [ngTemplateOutlet]="iconOverrides[state]"
+      [ngTemplateOutletContext]="_getIconContext()"></ng-container>
+    <mat-icon *ngSwitchDefault>{{_getDefaultIconForState(state)}}</mat-icon>
   </div>
 </div>
 <div class="mat-step-label"

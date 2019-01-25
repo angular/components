@@ -102,13 +102,16 @@ export class MatStepHeader extends CdkStepHeader implements OnDestroy {
     };
   }
 
-  _getDefaultIconForState(state: string): string {
+  _getDefaultIconForState(state: StepState): string {
     if (state == 'number') {
       return `${this.index + 1}`;
     }
-    return ({
-      'edit': 'create',
-      'error': 'warning',
-    } as {[key: string]: string})[state] || state;
+    if (state == 'edit') {
+      return 'create';
+    }
+    if (state == 'error') {
+      return 'warning';
+    }
+    return state;
   }
 }
