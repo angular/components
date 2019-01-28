@@ -107,9 +107,7 @@ export class MatSingleDateSelectionModel<D> extends MatDateSelectionModel<D> {
   }
 
   isValid(): boolean {
-    return !!(this.date &&
-      this.adapter.isDateInstance(this.date) &&
-      this.adapter.isValid(this.date));
+    return !this.date || this.adapter.isDateInstance(this.date) && this.adapter.isValid(this.date);
   }
 
   contains(value: D): boolean {
