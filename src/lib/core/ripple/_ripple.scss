@@ -20,7 +20,7 @@ $mat-ripple-color-opacity: 0.1;
   }
 
   .mat-ripple-element {
-    position: absolute;
+    position: absolute !important;
     border-radius: 50%;
     pointer-events: none;
 
