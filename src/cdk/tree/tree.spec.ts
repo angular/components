@@ -22,7 +22,7 @@ import {CdkTree, CdkTreeNode} from './tree';
 import {getTreeControlFunctionsMissingError} from './tree-errors';
 
 
-xdescribe('CdkTree', () => {
+describe('CdkTree', () => {
   /** Represents an indent for expectNestedTreeToMatch */
   const _ = {};
   let dataSource: FakeDataSource;
