@@ -47,6 +47,11 @@ const GUIDES = [
     name: 'Using elevation helpers',
     document: '/docs-content/guides/elevation.html'
   },
+  {
+    id: 'creating-a-custom-stepper-using-the-cdk-stepper',
+    name: 'Creating a custom stepper using the CdkStepper',
+    document: '/docs-content/guides/creating-a-custom-stepper-using-the-cdk-stepper.html'
+  }
 ];
 
 @Injectable()
