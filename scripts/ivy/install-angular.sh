@@ -3,66 +3,45 @@
 set -e
 
 
-function prep() {
-  echo ">>> Preparing node_modules"
+function clear_existing_angular_install() {
+  echo ">>> clearing existing @angular packages in node_modules"
   chmod -R u+w node_modules/@angular
   rm -rf node_modules/@angular/*
 }
 
-function buildNgPackages() {
-  # Different operating systems have different bazel-bin paths; we want to grab that
-  # platform portion to read the packages from angular/angular. macOS is "darwin", Linux is "k8",
-  # and Windows is "x64_windows"
-  bazel_fastbuild_dir=$(bazel info bazel-bin | egrep -o "/\w+-fastbuild/")
-
-  ngDir=$1
-  echo ">>> Building @angular packages (from $ngDir)"
-  pushd $ngDir
-  yarn bazel build --define=compile=aot //packages/{animations,common,compiler,compiler-cli,core,elements,forms,platform-browser,platform-browser-dynamic,router,upgrade}:npm_package
-  outputPath=`yarn bazel info 2>&1 | grep output_path | cut -d ':' -f 2 | cut -c 2-`${bazel_fastbuild_dir}bin/packages
+function build_angular_packages() {
+  angular_repo_dir=$1
+  echo ">>> Building @angular packages (from ${angular_repo_dir})"
+  pushd ${angular_repo_dir}
+  yarn bazel build --config=release --define=compile=aot //packages/{animations,common,compiler,compiler-cli,core,elements,forms,platform-browser,platform-browser-dynamic,router,upgrade}:npm_package
+  output_path=$(yarn --silent bazel info bazel-bin 2>/dev/null)/packages
   popd
 }
 
-function installNgPackage() {
+function install_angular_package() {
   name=$1
   echo "    @angular/$name"
-  cp -r $outputPath/$name/npm_package node_modules/@angular/$name
+  cp -r "${output_path}/${name}/npm_package" "node_modules/@angular/${name}"
 }
 
-function buildPackage() {
-  name=$1
-  echo "    $name"
-  
-  # First, fix the build definition.
-  # Update the tsconfig to compile from index.ts instead of public-api.ts, and turn on Ivy options.
-  node scripts/ivy/fix-tsconfig.js src/$name/tsconfig-build.json
 
-  # If no index.ts exists, rename public-api.ts.
-  if [ ! -f src/$name/index.ts -a -f src/$name/public-api.ts ]
-  then
-    mv src/$name/public-api.ts src/$name/index.ts
-  fi
-
-  node_modules/.bin/ngc -p src/$name/tsconfig-build.json
-}
-
-if [ "$1" != "" ]
+if [[ "$1" != "" ]]
 then
-  prep
-  buildNgPackages $1
+  clear_existing_angular_install
+  build_angular_packages $1
 
   echo ">>> Installing @angular packages"
-  installNgPackage "animations"
-  installNgPackage "common"
-  installNgPackage "compiler"
-  installNgPackage "compiler-cli"
-  installNgPackage "core"
-  installNgPackage "elements"
-  installNgPackage "forms"
-  installNgPackage "platform-browser"
-  installNgPackage "platform-browser-dynamic"
-  installNgPackage "router"
-  installNgPackage "upgrade"
+  install_angular_package "animations"
+  install_angular_package "common"
+  install_angular_package "compiler"
+  install_angular_package "compiler-cli"
+  install_angular_package "core"
+  install_angular_package "elements"
+  install_angular_package "forms"
+  install_angular_package "platform-browser"
+  install_angular_package "platform-browser-dynamic"
+  install_angular_package "router"
+  install_angular_package "upgrade"
 
   chmod -R u+w node_modules/@angular
 else
