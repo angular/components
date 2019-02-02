@@ -306,6 +306,7 @@ export class CdkDropList<T = any> implements CdkDropListContainer, AfterContentI
         });
       }
 
+      ref.disabled = this.disabled;
       ref.lockAxis = this.lockAxis;
       ref
         .connectedTo(siblings.filter(drop => drop && drop !== this).map(list => list._dropListRef))
