@@ -10,6 +10,7 @@
            [checked]="checked"
            [disabled]="disabled"
            [attr.name]="name"
+           [attr.aria-checked]="checked.toString()"
            [attr.aria-label]="ariaLabel"
            [attr.aria-labelledby]="ariaLabelledby"
            (change)="_onChangeEvent($event)"
