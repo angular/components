@@ -97,13 +97,13 @@ function patchTestBedToDestroyFixturesAfterEveryTest(testBed) {
 }
 
 
-// Filter out any tests explicitly given in the blacklist.
-// On the angular/material2 repo, this blacklist is always empty.
-// When these tests are run on angular/angular, the blacklist will be replaced
+// Filter out any tests explicitly given in the blocklist.
+// On the angular/material2 repo, this blocklist is always empty.
+// When these tests are run on angular/angular, the blocklist will be replaced
 // with all of the known failures when running the component tests with ivy.
-var testBlacklist = null;
+var testBlocklist = null;
 jasmine.getEnv().configure({
   specFilter: function(spec) {
-    return !testBlacklist || !testBlacklist[spec.getFullName()];
+    return !testBlocklist || !testBlocklist[spec.getFullName()];
   }
 });
