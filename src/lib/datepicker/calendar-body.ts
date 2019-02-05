@@ -25,6 +25,7 @@ import {
   MAT_SINGLE_DATE_SELECTION_MODEL_PROVIDER,
   MatDateSelectionModel,
   MatSingleDateSelectionModel,
+  MatRangeDateSelectionModel,
 } from '@angular/material/core';
 import {take} from 'rxjs/operators';
 import {Subscription} from 'rxjs';
@@ -158,6 +159,7 @@ export class MatCalendarBody<D = unknown> implements OnChanges, OnDestroy {
 
   private _today: D;
   private _selectionSubscription: Subscription;
+  private _preview = new MatRangeDateSelectionModel( this._dateAdapter );
 
   constructor(private _elementRef: ElementRef<HTMLElement>,
               private _ngZone: NgZone,
@@ -190,6 +192,14 @@ export class MatCalendarBody<D = unknown> implements OnChanges, OnDestroy {
     }
   }
 
+  _cellEnter(cell: MatCalendarCell<D>): void {
+    this._preview.setSelection(this._selectionModel.previewRange(cell.range));
+  }
+
+  _cellLeave(_: MatCalendarCell<D>): void {
+    // this._preview.setSelection( { start: null, end: null } );
+  }
+
   ngOnChanges(changes: SimpleChanges) {
     const columnChanges = changes.numCols;
     const {rows, numCols} = this;
@@ -220,6 +230,10 @@ export class MatCalendarBody<D = unknown> implements OnChanges, OnDestroy {
 
   _isSelected(item: MatCalendarCell<D>): boolean {
     return this._selectionModel.overlaps(item.range);
+  }
+
+  _isHighlighted(item: MatCalendarCell<D>): boolean {
+    return this._preview.overlaps(item.range);
   }
 
   _isToday(item: MatCalendarCell<D>): boolean {

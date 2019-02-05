@@ -35,6 +35,12 @@ $mat-calendar-body-cell-content-size: 100% - $mat-calendar-body-cell-content-mar
   cursor: pointer;
 }
 
+// TODO(roboshoes): This should be moved to main definition once we figure out what it is supposed
+// to look like. Same as .mat-calendar-body-selected.
+.mat-calendar-body-highlight {
+  background-color: "gray";
+}
+
 .mat-calendar-body-disabled {
   cursor: default;
 }

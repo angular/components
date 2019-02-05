@@ -48,6 +48,9 @@ export abstract class MatDateSelectionModel<D> implements OnDestroy {
 
   /** Whether the given date range overlaps the current selection in any way. */
   abstract overlaps(range: DateRange<D>): boolean;
+
+  /** Calculates a range to be highlighted based on the input. */
+  abstract previewRange(range: DateRange<D>): DateRange<D>;
 }
 
 /** Represents a date range. */
@@ -124,6 +127,13 @@ export class MatSingleDateSelectionModel<D> extends MatDateSelectionModel<D> {
     return !!(this.date && range.start && range.end &&
         this.adapter.compareDate(range.start, this.date) <= 0 &&
         this.adapter.compareDate(this.date, range.end) <= 0);
+  }
+
+  /**
+   * Returns the given range. A single date selection never includes a range.
+   */
+  previewRange(range: DateRange<D>): DateRange<D> {
+    return range;
   }
 }
 
@@ -214,6 +224,11 @@ export class MatRangeDateSelectionModel<D> extends MatDateSelectionModel<D> {
    * includes incomplete selections or ranges.
    */
   overlaps(range: DateRange<D>): boolean {
+    // For the special case of an incomplete range but identical start dates we return early.
+    if (this.adapter.sameDate(range.start, this.start)) {
+      return true;
+    }
+
     if (!(this.start && this.end && range.start && range.end)) {
       return false;
     }
@@ -228,8 +243,25 @@ export class MatRangeDateSelectionModel<D> extends MatDateSelectionModel<D> {
     );
   }
 
+  /**
+   * Returns a range that is the largest possible span between all four possible dates.
+   */
+  previewRange(range: DateRange<D>): DateRange<D> {
+    const start = this.sort( range.start, range.end, this.start, this.end )[0] || null;
+    const end = this.sort( range.start, range.end, this.start, this.end ).reverse()[0] || null;
+
+    return { start, end };
+  }
+
   private isBetween(value: D, from: D, to: D): boolean {
     return this.adapter.compareDate(from, value) <= 0 && this.adapter.compareDate(value, to) <= 0;
+  }
+
+  private sort( ...dates: Array<D | null> ): D[] {
+    const filtered: D[] = dates.filter( d => d != null ) as D[];
+    filtered.sort( this.adapter.compareDate.bind( this.adapter ) );
+
+    return filtered;
   }
 }
 
