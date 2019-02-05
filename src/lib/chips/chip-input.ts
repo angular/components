@@ -7,9 +7,11 @@
  */
 
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
-import {Directive, ElementRef, EventEmitter, Input, Output, Inject, OnChanges} from '@angular/core';
-import {MatChipList} from './chip-list';
+import {Directive, ElementRef, EventEmitter, Inject, Input, OnChanges, Output} from '@angular/core';
+import {hasModifierKey} from '@angular/cdk/keycodes';
 import {MAT_CHIPS_DEFAULT_OPTIONS, MatChipsDefaultOptions} from './chip-default-options';
+import {MatChipList} from './chip-list';
+import {MatChipTextControl} from './chip-text-control';
 
 
 /** Represents an input event on a `matChipInput`. */
@@ -43,7 +45,7 @@ let nextUniqueId = 0;
     '[attr.aria-invalid]': '_chipList && _chipList.ngControl ? _chipList.ngControl.invalid : null',
   }
 })
-export class MatChipInput implements OnChanges {
+export class MatChipInput implements MatChipTextControl, OnChanges {
   /** Whether the control is focused. */
   focused: boolean = false;
   _chipList: MatChipList;
@@ -133,7 +135,7 @@ export class MatChipInput implements OnChanges {
     if (!this._inputElement.value && !!event) {
       this._chipList._keydown(event);
     }
-    if (!event || this._isSeparatorKey(event.keyCode)) {
+    if (!event || this._isSeparatorKey(event)) {
       this.chipEnd.emit({ input: this._inputElement, value: this._inputElement.value });
 
       if (event) {
@@ -153,8 +155,13 @@ export class MatChipInput implements OnChanges {
   }
 
   /** Checks whether a keycode is one of the configured separators. */
-  private _isSeparatorKey(keyCode: number) {
+  private _isSeparatorKey(event: KeyboardEvent) {
+    if (hasModifierKey(event)) {
+      return false;
+    }
+
     const separators = this.separatorKeyCodes;
+    const keyCode = event.keyCode;
     return Array.isArray(separators) ? separators.indexOf(keyCode) > -1 : separators.has(keyCode);
   }
 }

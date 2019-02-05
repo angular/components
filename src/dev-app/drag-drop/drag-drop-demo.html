@@ -1,0 +1,71 @@
+<div cdkDropListGroup>
+  <div class="demo-list">
+
+    <h2>To do</h2>
+    <div
+      cdkDropList
+      (cdkDropListDropped)="drop($event)"
+      [cdkDropListLockAxis]="axisLock"
+      [cdkDropListData]="todo">
+      <div *ngFor="let item of todo" cdkDrag>
+        {{item}}
+        <mat-icon cdkDragHandle svgIcon="dnd-move"></mat-icon>
+      </div>
+    </div>
+  </div>
+
+  <div class="demo-list">
+    <h2>Done</h2>
+    <div
+      cdkDropList
+      (cdkDropListDropped)="drop($event)"
+      [cdkDropListLockAxis]="axisLock"
+      [cdkDropListData]="done">
+      <div *ngFor="let item of done" cdkDrag>
+        {{item}}
+        <mat-icon cdkDragHandle svgIcon="dnd-move"></mat-icon>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div>
+  <div class="demo-list demo-list-horizontal">
+    <h2>Horizontal list</h2>
+    <div
+      cdkDropList
+      cdkDropListOrientation="horizontal"
+      (cdkDropListDropped)="drop($event)"
+      [cdkDropListLockAxis]="axisLock"
+      [cdkDropListData]="horizontalData">
+      <div *ngFor="let item of horizontalData" cdkDrag>
+        {{item}}
+        <mat-icon cdkDragHandle svgIcon="dnd-move"></mat-icon>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="demo-list">
+  <h2>Free dragging</h2>
+  <div cdkDrag class="demo-free-draggable" [cdkDragLockAxis]="axisLock">Drag me around</div>
+</div>
+
+<div>
+  <h2>Data</h2>
+  <pre>{{todo.join(', ')}}</pre>
+  <pre>{{done.join(', ')}}</pre>
+  <pre>{{horizontalData.join(', ')}}</pre>
+</div>
+
+<div>
+  <h2>Axis locking</h2>
+  <mat-form-field>
+    <mat-label>Lock position along axis</mat-label>
+    <mat-select [(ngModel)]="axisLock">
+      <mat-option>None</mat-option>
+      <mat-option value="x">X axis</mat-option>
+      <mat-option value="y">Y axis</mat-option>
+    </mat-select>
+  </mat-form-field>
+</div>

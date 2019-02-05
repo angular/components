@@ -7,15 +7,17 @@
  */
 
 import {NgModule} from '@angular/core';
-import {CdkDropList} from './drop-list';
-import {CdkDrag} from './drag';
-import {CdkDragHandle} from './drag-handle';
-import {CdkDragPreview} from './drag-preview';
-import {CdkDragPlaceholder} from './drag-placeholder';
+import {CdkDropList} from './directives/drop-list';
+import {CdkDropListGroup} from './directives/drop-list-group';
+import {CdkDrag} from './directives/drag';
+import {CdkDragHandle} from './directives/drag-handle';
+import {CdkDragPreview} from './directives/drag-preview';
+import {CdkDragPlaceholder} from './directives/drag-placeholder';
 
 @NgModule({
   declarations: [
     CdkDropList,
+    CdkDropListGroup,
     CdkDrag,
     CdkDragHandle,
     CdkDragPreview,
@@ -23,6 +25,7 @@ import {CdkDragPlaceholder} from './drag-placeholder';
   ],
   exports: [
     CdkDropList,
+    CdkDropListGroup,
     CdkDrag,
     CdkDragHandle,
     CdkDragPreview,

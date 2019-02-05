@@ -15,6 +15,8 @@ import {
   NgZone,
   Output,
   ViewEncapsulation,
+  OnChanges,
+  SimpleChanges,
   ChangeDetectorRef,
   OnDestroy,
 } from '@angular/core';
@@ -22,10 +24,15 @@ import {
   DateAdapter,
   MAT_SINGLE_DATE_SELECTION_MODEL_PROVIDER,
   MatDateSelectionModel,
-  MatSingleDateSelectionModel
+  MatSingleDateSelectionModel,
 } from '@angular/material/core';
 import {take} from 'rxjs/operators';
 import {Subscription} from 'rxjs';
+
+/**
+ * Extra CSS classes that can be associated with a calendar cell.
+ */
+export type MatCalendarCellCssClasses = string | string[] | Set<string> | {[key: string]: any};
 
 /**
  * An internal class that represents the data corresponding to a single calendar cell.
@@ -35,14 +42,16 @@ import {Subscription} from 'rxjs';
 export class MatCalendarCell<D = unknown> {
   constructor(
       /** The range of dates represented by this cell (inclusive). */
-      public range: {start: D, end: D},
+      public range: { start: D, end: D },
       /** The text value to display in the cell. */
       public displayValue: string,
       /** The aria-label to use for the cell. */
       public ariaLabel: string,
       /** Whether the cell is enabled. */
-      public enabled: boolean) {}
+      public enabled: boolean,
+      public cssClasses?: MatCalendarCellCssClasses) {}
 }
+
 
 
 /**
@@ -65,7 +74,7 @@ export class MatCalendarCell<D = unknown> {
   providers: [MAT_SINGLE_DATE_SELECTION_MODEL_PROVIDER],
 })
 // @breaking-change 9.0.0 remove generic default type
-export class MatCalendarBody<D = unknown> implements OnDestroy {
+export class MatCalendarBody<D = unknown> implements OnChanges, OnDestroy {
   /** The label for the table. (e.g. "Jan 2017"). */
   @Input() label: string;
 
@@ -138,6 +147,15 @@ export class MatCalendarBody<D = unknown> implements OnDestroy {
    */
   @Output() readonly selectedValueChange: EventEmitter<number> = new EventEmitter<number>();
 
+  /** The number of blank cells to put at the beginning for the first row. */
+  _firstRowOffset: number;
+
+  /** Padding for the individual date cells. */
+  _cellPadding: string;
+
+  /** Width of an individual cell. */
+  _cellWidth: string;
+
   private _today: D;
   private _selectionSubscription: Subscription;
 
@@ -157,23 +175,36 @@ export class MatCalendarBody<D = unknown> implements OnDestroy {
   }
 
   _cellClicked(cell: MatCalendarCell<D>): void {
-    if (cell.enabled && this._selectionModel instanceof MatSingleDateSelectionModel) {
-      const date = cell.range.start;
-      const granularity = this._getFirstCellGranularity();
-      if (granularity == 'year') {
-        this.selectedValueChange.emit(this._dateAdapter.getYear(date));
-      } else if (granularity == 'month') {
-        this.selectedValueChange.emit(this._dateAdapter.getMonth(date));
-      } else {
-        this.selectedValueChange.emit(this._dateAdapter.getDate(date));
-      }
+    if (!cell.enabled) {
+      return;
+    }
+
+    const date = cell.range.start;
+    const granularity = this._getFirstCellGranularity();
+    if (granularity == 'year') {
+      this.selectedValueChange.emit(this._dateAdapter.getYear(date));
+    } else if (granularity == 'month') {
+      this.selectedValueChange.emit(this._dateAdapter.getMonth(date));
+    } else {
+      this.selectedValueChange.emit(this._dateAdapter.getDate(date));
     }
   }
 
-  /** The number of blank cells to put at the beginning for the first row. */
-  get _firstRowOffset(): number {
-    return this.rows && this.rows.length && this.rows[0].length ?
-        this.numCols - this.rows[0].length : 0;
+  ngOnChanges(changes: SimpleChanges) {
+    const columnChanges = changes.numCols;
+    const {rows, numCols} = this;
+
+    if (changes.rows || columnChanges) {
+      this._firstRowOffset = rows && rows.length && rows[0].length ? numCols - rows[0].length : 0;
+    }
+
+    if (changes.cellAspectRatio || columnChanges || !this._cellPadding) {
+      this._cellPadding = `${50 * this.cellAspectRatio / numCols}%`;
+    }
+
+    if (columnChanges || !this._cellWidth) {
+      this._cellWidth = `${100 / numCols}%`;
+    }
   }
 
   _isActiveCell(rowIndex: number, colIndex: number): boolean {

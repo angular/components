@@ -18,9 +18,14 @@ import {MatCalendarBody} from './calendar-body';
 import {
   MatDatepicker,
   MatDatepickerContent,
+  MatDatepickerRange,
   MAT_DATEPICKER_SCROLL_STRATEGY_FACTORY_PROVIDER,
 } from './datepicker';
-import {MatDatepickerInput} from './datepicker-input';
+import {
+  MatDatepickerInput,
+  MatDatepickerInputStart,
+  MatDatepickerInputEnd
+} from './datepicker-input';
 import {MatDatepickerIntl} from './datepicker-intl';
 import {MatDatepickerToggle, MatDatepickerToggleIcon} from './datepicker-toggle';
 import {MatMonthView} from './month-view';
@@ -40,28 +45,34 @@ import {MatYearView} from './year-view';
   exports: [
     MatCalendar,
     MatCalendarBody,
+    MatCalendarHeader,
     MatDatepicker,
     MatDatepickerContent,
     MatDatepickerInput,
+    MatDatepickerInputEnd,
+    MatDatepickerInputStart,
+    MatDatepickerRange,
     MatDatepickerToggle,
     MatDatepickerToggleIcon,
     MatMonthView,
-    MatYearView,
     MatMultiYearView,
-    MatCalendarHeader,
+    MatYearView,
   ],
   declarations: [
     MatCalendar,
     MatCalendarBody,
+    MatCalendarHeader,
     MatDatepicker,
     MatDatepickerContent,
     MatDatepickerInput,
+    MatDatepickerInputEnd,
+    MatDatepickerInputStart,
+    MatDatepickerRange,
     MatDatepickerToggle,
     MatDatepickerToggleIcon,
     MatMonthView,
-    MatYearView,
     MatMultiYearView,
-    MatCalendarHeader,
+    MatYearView,
   ],
   providers: [
     MatDatepickerIntl,

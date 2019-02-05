@@ -93,6 +93,7 @@ System.config({
     '@angular/material/stepper': 'dist/packages/material/stepper/index.js',
     '@angular/material/table': 'dist/packages/material/table/index.js',
     '@angular/material/tabs': 'dist/packages/material/tabs/index.js',
+    '@angular/material/testing': 'dist/packages/material/testing/index.js',
     '@angular/material/toolbar': 'dist/packages/material/toolbar/index.js',
     '@angular/material/tooltip': 'dist/packages/material/tooltip/index.js',
     '@angular/material/tree': 'dist/packages/material/tree/index.js',
@@ -102,7 +103,7 @@ System.config({
     'rxjs': {main: 'index'},
     'rxjs/operators': {main: 'index'},
 
-    // Set the default extension for the root package, because otherwise the demo-app can't
+    // Set the default extension for the root package, because otherwise the tests can't
     // be built within the production mode. Due to missing file extensions.
     '.': {
       defaultExtension: 'js'

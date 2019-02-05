@@ -6,37 +6,25 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Tree} from '@angular-devkit/schematics';
+import {SchematicsException, Tree} from '@angular-devkit/schematics';
 import * as ts from 'typescript';
 
 /**
- * Whether the Angular module in the given path imports the specifed module class name.
+ * Whether the Angular module in the given path imports the specified module class name.
  */
 export function hasNgModuleImport(tree: Tree, modulePath: string, className: string): boolean {
   const moduleFileContent = tree.read(modulePath);
 
   if (!moduleFileContent) {
-    throw new Error(`Could not read Angular module file: ${modulePath}`);
+    throw new SchematicsException(`Could not read Angular module file: ${modulePath}`);
   }
 
   const parsedFile = ts.createSourceFile(modulePath, moduleFileContent.toString(),
       ts.ScriptTarget.Latest, true);
-  let ngModuleMetadata: ts.ObjectLiteralExpression | null = null;
-
-  const findModuleDecorator = (node: ts.Node) => {
-    if (ts.isDecorator(node) && ts.isCallExpression(node.expression) &&
-        isNgModuleCallExpression(node.expression)) {
-      ngModuleMetadata = node.expression.arguments[0] as ts.ObjectLiteralExpression;
-      return;
-    }
-
-    ts.forEachChild(node, findModuleDecorator);
-  };
-
-  ts.forEachChild(parsedFile, findModuleDecorator);
+  const ngModuleMetadata = findNgModuleMetadata(parsedFile);
 
   if (!ngModuleMetadata) {
-    throw new Error(`Could not find NgModule declaration inside: "${modulePath}"`);
+    throw new SchematicsException(`Could not find NgModule declaration inside: "${modulePath}"`);
   }
 
   for (let property of ngModuleMetadata!.properties) {
@@ -63,6 +51,29 @@ function resolveIdentifierOfExpression(expression: ts.Expression): ts.Identifier
   } else if (ts.isPropertyAccessExpression(expression)) {
     return resolveIdentifierOfExpression(expression.expression);
   }
+  return null;
+}
+
+/**
+ * Finds a NgModule declaration within the specified TypeScript node and returns the
+ * corresponding metadata for it. This function searches breadth first because
+ * NgModule's are usually not nested within other expressions or declarations.
+ */
+function findNgModuleMetadata(rootNode: ts.Node): ts.ObjectLiteralExpression | null {
+  // Add immediate child nodes of the root node to the queue.
+  const nodeQueue: ts.Node[] = [...rootNode.getChildren()];
+
+  while (nodeQueue.length) {
+    const node = nodeQueue.shift()!;
+
+    if (ts.isDecorator(node) && ts.isCallExpression(node.expression) &&
+        isNgModuleCallExpression(node.expression)) {
+      return node.expression.arguments[0] as ts.ObjectLiteralExpression;
+    } else {
+      nodeQueue.push(...node.getChildren());
+    }
+  }
+
   return null;
 }
 

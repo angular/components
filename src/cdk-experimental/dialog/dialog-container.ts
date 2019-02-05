@@ -54,13 +54,20 @@ export function throwDialogContentAlreadyAttachedError() {
   changeDetection: ChangeDetectionStrategy.Default,
   animations: [
     trigger('dialog', [
-      state('enter', style({ opacity: 1 })),
-      state('exit, void', style({ opacity: 0 })),
-      transition('* => *', animate(225)),
+      state('enter', style({opacity: 1})),
+      state('exit, void', style({opacity: 0})),
+      transition('* => enter', animate('{{enterAnimationDuration}}')),
+      transition('* => exit, * => void', animate('{{exitAnimationDuration}}')),
     ])
   ],
   host: {
-    '[@dialog]': '_state',
+    '[@dialog]': `{
+      value: _state,
+      params: {
+        enterAnimationDuration: _config.enterAnimationDuration,
+        exitAnimationDuration: _config.exitAnimationDuration
+      }
+    }`,
     '(@dialog.start)': '_onAnimationStart($event)',
     '(@dialog.done)': '_animationDone.next($event)',
   },
@@ -126,11 +133,13 @@ export class CdkDialogContainer extends BasePortalOutlet implements OnDestroy {
       if (event.toState === 'enter') {
         this._autoFocusFirstTabbableElement();
         this._afterEnter.next();
+        this._afterEnter.complete();
       }
 
       if (event.fromState === 'enter' && (event.toState === 'void' || event.toState === 'exit')) {
         this._returnFocusAfterDialog();
         this._afterExit.next();
+        this._afterExit.complete();
       }
     });
   }
@@ -171,9 +180,11 @@ export class CdkDialogContainer extends BasePortalOutlet implements OnDestroy {
   _onAnimationStart(event: AnimationEvent) {
     if (event.toState === 'enter') {
       this._beforeEnter.next();
+      this._beforeEnter.complete();
     }
     if (event.fromState === 'enter' && (event.toState === 'void' || event.toState === 'exit')) {
       this._beforeExit.next();
+      this._beforeExit.complete();
     }
   }
 

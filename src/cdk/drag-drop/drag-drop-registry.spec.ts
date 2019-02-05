@@ -5,11 +5,12 @@ import {
   dispatchMouseEvent,
   createTouchEvent,
   dispatchTouchEvent,
+  dispatchFakeEvent,
 } from '@angular/cdk/testing';
 import {DragDropRegistry} from './drag-drop-registry';
 import {DragDropModule} from './drag-drop-module';
-import {CdkDrag} from './drag';
-import {CdkDropList} from './drop-list';
+import {CdkDrag} from './directives/drag';
+import {CdkDropList} from './directives/drop-list';
 
 describe('DragDropRegistry', () => {
   let fixture: ComponentFixture<SimpleDropZone>;
@@ -88,6 +89,19 @@ describe('DragDropRegistry', () => {
     subscription.unsubscribe();
   });
 
+  it('should dispatch pointer move events if event propagation is stopped', () => {
+    const spy = jasmine.createSpy('pointerMove spy');
+    const subscription = registry.pointerMove.subscribe(spy);
+
+    fixture.nativeElement.addEventListener('mousemove', (e: MouseEvent) => e.stopPropagation());
+    registry.startDragging(testComponent.dragItems.first, createMouseEvent('mousedown'));
+    dispatchMouseEvent(fixture.nativeElement.querySelector('div'), 'mousemove');
+
+    expect(spy).toHaveBeenCalled();
+
+    subscription.unsubscribe();
+  });
+
   it('should dispatch `mouseup` events after ending the drag via the mouse', () => {
     const spy = jasmine.createSpy('pointerUp spy');
     const subscription = registry.pointerUp.subscribe(spy);
@@ -107,6 +121,19 @@ describe('DragDropRegistry', () => {
     registry.startDragging(testComponent.dragItems.first,
         createTouchEvent('touchstart') as TouchEvent);
     dispatchTouchEvent(document, 'touchend');
+
+    expect(spy).toHaveBeenCalled();
+
+    subscription.unsubscribe();
+  });
+
+  it('should dispatch pointer up events if event propagation is stopped', () => {
+    const spy = jasmine.createSpy('pointerUp spy');
+    const subscription = registry.pointerUp.subscribe(spy);
+
+    fixture.nativeElement.addEventListener('mouseup', (e: MouseEvent) => e.stopPropagation());
+    registry.startDragging(testComponent.dragItems.first, createMouseEvent('mousedown'));
+    dispatchMouseEvent(fixture.nativeElement.querySelector('div'), 'mouseup');
 
     expect(spy).toHaveBeenCalled();
 
@@ -133,18 +160,6 @@ describe('DragDropRegistry', () => {
     expect(() => registry.registerDropContainer(testComponent.dropInstances.first)).not.toThrow();
   });
 
-  it('should throw when trying to register a different container with the same id', () => {
-    expect(() => {
-      testComponent.showDuplicateContainer = true;
-      fixture.detectChanges();
-    }).toThrowError(/Drop instance with id \"items\" has already been registered/);
-  });
-
-  it('should be able to get a drop container by its id', () => {
-    expect(registry.getDropContainer('items')).toBe(testComponent.dropInstances.first);
-    expect(registry.getDropContainer('does-not-exist')).toBeFalsy();
-  });
-
   it('should not prevent the default `touchmove` actions when nothing is being dragged', () => {
     expect(dispatchTouchEvent(document, 'touchmove').defaultPrevented).toBe(false);
   });
@@ -154,6 +169,36 @@ describe('DragDropRegistry', () => {
       createTouchEvent('touchstart') as TouchEvent);
     expect(dispatchTouchEvent(document, 'touchmove').defaultPrevented).toBe(true);
   });
+
+  it('should prevent the default `touchmove` if event propagation is stopped', () => {
+    registry.startDragging(testComponent.dragItems.first,
+      createTouchEvent('touchstart') as TouchEvent);
+
+    fixture.nativeElement.addEventListener('touchmove', (e: TouchEvent) => e.stopPropagation());
+
+    const event = dispatchTouchEvent(fixture.nativeElement.querySelector('div'), 'touchmove');
+
+    expect(event.defaultPrevented).toBe(true);
+  });
+
+  it('should not prevent the default `wheel` actions when nothing is being dragged', () => {
+    expect(dispatchFakeEvent(document, 'wheel').defaultPrevented).toBe(false);
+  });
+
+  it('should prevent the default `wheel` action when an item is being dragged', () => {
+    registry.startDragging(testComponent.dragItems.first, createMouseEvent('mousedown'));
+    expect(dispatchFakeEvent(document, 'wheel').defaultPrevented).toBe(true);
+  });
+
+  it('should not prevent the default `selectstart` actions when nothing is being dragged', () => {
+    expect(dispatchFakeEvent(document, 'selectstart').defaultPrevented).toBe(false);
+  });
+
+  it('should prevent the default `selectstart` action when an item is being dragged', () => {
+    registry.startDragging(testComponent.dragItems.first, createMouseEvent('mousedown'));
+    expect(dispatchFakeEvent(document, 'selectstart').defaultPrevented).toBe(true);
+  });
+
 
 });
 

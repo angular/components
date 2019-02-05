@@ -9,7 +9,7 @@
 import {FocusableOption, FocusKeyManager} from '@angular/cdk/a11y';
 import {Direction, Directionality} from '@angular/cdk/bidi';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
-import {END, ENTER, HOME, SPACE} from '@angular/cdk/keycodes';
+import {END, ENTER, HOME, SPACE, hasModifierKey} from '@angular/cdk/keycodes';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
@@ -79,8 +79,15 @@ export const STEP_STATE = {
 };
 
 /** InjectionToken that can be used to specify the global stepper options. */
-export const MAT_STEPPER_GLOBAL_OPTIONS =
-  new InjectionToken<StepperOptions>('mat-stepper-global-options');
+export const STEPPER_GLOBAL_OPTIONS =
+  new InjectionToken<StepperOptions>('STEPPER_GLOBAL_OPTIONS');
+
+/**
+ * InjectionToken that can be used to specify the global stepper options.
+ * @deprecated Use `STEPPER_GLOBAL_OPTIONS` instead.
+ * @breaking-change 8.0.0.
+ */
+export const MAT_STEPPER_GLOBAL_OPTIONS = STEPPER_GLOBAL_OPTIONS;
 
 /** Configurable options for stepper. */
 export interface StepperOptions {
@@ -174,7 +181,7 @@ export class CdkStep implements OnChanges {
   /** Whether step has an error. */
   @Input()
   get hasError(): boolean {
-    return this._customError || this._getDefaultError();
+    return this._customError == null ? this._getDefaultError() : this._customError;
   }
   set hasError(value: boolean) {
     this._customError = coerceBooleanProperty(value);
@@ -188,7 +195,7 @@ export class CdkStep implements OnChanges {
   /** @breaking-change 8.0.0 remove the `?` after `stepperOptions` */
   constructor(
     @Inject(forwardRef(() => CdkStepper)) private _stepper: CdkStepper,
-    @Optional() @Inject(MAT_STEPPER_GLOBAL_OPTIONS) stepperOptions?: StepperOptions) {
+    @Optional() @Inject(STEPPER_GLOBAL_OPTIONS) stepperOptions?: StepperOptions) {
     this._stepperOptions = stepperOptions ? stepperOptions : {};
     this._displayDefaultIndicatorType = this._stepperOptions.displayDefaultIndicatorType !== false;
     this._showError = !!this._stepperOptions.showError;
@@ -442,9 +449,7 @@ export class CdkStepper implements AfterViewInit, OnDestroy {
   }
 
   _onKeydown(event: KeyboardEvent) {
-    // TODO(crisbeto): move into a CDK utility once
-    // the similar PRs for other components are merged in.
-    const hasModifier = event.altKey || event.shiftKey || event.ctrlKey || event.metaKey;
+    const hasModifier = hasModifierKey(event);
     const keyCode = event.keyCode;
     const manager = this._keyManager;
 

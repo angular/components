@@ -12,17 +12,9 @@ import {
 import {Component, FactoryProvider, Type, ValueProvider, ViewChild} from '@angular/core';
 import {ComponentFixture, fakeAsync, flush, inject, TestBed, tick} from '@angular/core/testing';
 import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {
-  DEC,
-  JAN,
-  JUL,
-  JUN,
-  MAT_DATE_LOCALE,
-  MatNativeDateModule,
-  NativeDateModule,
-  SEP,
-} from '@angular/material/core';
+import {MAT_DATE_LOCALE, MatNativeDateModule, NativeDateModule} from '@angular/material/core';
 import {MatFormField, MatFormFieldModule} from '@angular/material/form-field';
+import {DEC, JAN, JUL, JUN, SEP} from '@angular/material/testing';
 import {By} from '@angular/platform-browser';
 import {BrowserDynamicTestingModule} from '@angular/platform-browser-dynamic/testing';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
@@ -1044,8 +1036,23 @@ describe('MatDatepicker', () => {
 
         const host = fixture.nativeElement.querySelector('.mat-datepicker-toggle');
 
-        expect(host.hasAttribute('tabindex')).toBe(false);
+        expect(host.getAttribute('tabindex')).toBe('-1');
       });
+
+      it('should forward focus to the underlying button when the host is focused', () => {
+        const fixture = createComponent(DatepickerWithTabindexOnToggle, [MatNativeDateModule]);
+        fixture.detectChanges();
+
+        const host = fixture.nativeElement.querySelector('.mat-datepicker-toggle');
+        const button = host.querySelector('button');
+
+        expect(document.activeElement).not.toBe(button);
+
+        host.focus();
+
+        expect(document.activeElement).toBe(button);
+      });
+
     });
 
     describe('datepicker inside mat-form-field', () => {

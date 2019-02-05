@@ -42,7 +42,7 @@ import {
   MatSingleDateSelectionModel
 } from '@angular/material/core';
 import {Subscription} from 'rxjs';
-import {MatCalendarBody, MatCalendarCell} from './calendar-body';
+import {MatCalendarBody, MatCalendarCell, MatCalendarCellCssClasses} from './calendar-body';
 import {createMissingDateImplError} from './datepicker-errors';
 
 
@@ -109,8 +109,11 @@ export class MatMonthView<D> implements AfterContentInit, OnDestroy {
   }
   private _maxDate: D | null;
 
-  /** A function used to filter which dates are selectable. */
+  /** Function used to filter which dates are selectable. */
   @Input() dateFilter: (date: D) => boolean;
+
+  /** Function that can be used to add custom CSS classes to dates. */
+  @Input() dateClass: (date: D) => MatCalendarCellCssClasses;
 
   /** Emits when a new date is selected. */
   @Output() readonly selectedChange: EventEmitter<D | null> = new EventEmitter<D | null>();
@@ -303,8 +306,10 @@ export class MatMonthView<D> implements AfterContentInit, OnDestroy {
       const enabled = this._shouldEnableDate(date);
       const range = {start: date, end: date};
       const ariaLabel = this._dateAdapter.format(date, this._dateFormats.display.dateA11yLabel);
+      const cellClasses = this.dateClass ? this.dateClass(date) : undefined;
+
       this._weeks[this._weeks.length - 1]
-          .push(new MatCalendarCell<D>(range, dateNames[i], ariaLabel, enabled));
+          .push(new MatCalendarCell<D>(range, dateNames[i], ariaLabel, enabled, cellClasses));
     }
   }
 

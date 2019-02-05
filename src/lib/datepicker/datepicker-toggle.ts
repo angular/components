@@ -20,7 +20,9 @@ import {
   OnDestroy,
   SimpleChanges,
   ViewEncapsulation,
+  ViewChild,
 } from '@angular/core';
+import {MatButton} from '@angular/material/button';
 import {merge, of as observableOf, Subscription} from 'rxjs';
 import {MatDatepicker} from './datepicker';
 import {MatDatepickerIntl} from './datepicker-intl';
@@ -40,11 +42,13 @@ export class MatDatepickerToggleIcon {}
   styleUrls: ['datepicker-toggle.css'],
   host: {
     'class': 'mat-datepicker-toggle',
-    // Clear out the native tabindex here since we forward it to the underlying button
-    '[attr.tabindex]': 'null',
+    // Always set the tabindex to -1 so that it doesn't overlap with any custom tabindex the
+    // consumer may have provided, while still being able to receive focus.
+    '[attr.tabindex]': '-1',
     '[class.mat-datepicker-toggle-active]': 'datepicker && datepicker.opened',
     '[class.mat-accent]': 'datepicker && datepicker.color === "accent"',
     '[class.mat-warn]': 'datepicker && datepicker.color === "warn"',
+    '(focus)': '_button.focus()',
   },
   exportAs: 'matDatepickerToggle',
   encapsulation: ViewEncapsulation.None,
@@ -69,8 +73,14 @@ export class MatDatepickerToggle<D> implements AfterContentInit, OnChanges, OnDe
   }
   private _disabled: boolean;
 
+  /** Whether ripples on the toggle should be disabled. */
+  @Input() disableRipple: boolean;
+
   /** Custom icon set by the consumer. */
   @ContentChild(MatDatepickerToggleIcon) _customIcon: MatDatepickerToggleIcon;
+
+  /** Underlying button element. */
+  @ViewChild('button') _button: MatButton;
 
   constructor(
     public _intl: MatDatepickerIntl,

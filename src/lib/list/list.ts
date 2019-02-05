@@ -44,7 +44,7 @@ export const _MatListItemMixinBase: CanDisableRippleCtor & typeof MatListItemBas
   exportAs: 'matNavList',
   host: {
     'role': 'navigation',
-    'class': 'mat-nav-list'
+    'class': 'mat-nav-list mat-list-base'
   },
   templateUrl: 'list.html',
   styleUrls: ['list.css'],
@@ -59,13 +59,42 @@ export class MatNavList extends _MatListMixinBase implements CanDisableRipple {}
   selector: 'mat-list, mat-action-list',
   exportAs: 'matList',
   templateUrl: 'list.html',
-  host: {'class': 'mat-list'},
+  host: {
+    'class': 'mat-list mat-list-base'
+  },
   styleUrls: ['list.css'],
   inputs: ['disableRipple'],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MatList extends _MatListMixinBase implements CanDisableRipple {}
+export class MatList extends _MatListMixinBase implements CanDisableRipple {
+  /**
+   * @deprecated _elementRef parameter to be made required.
+   * @breaking-change 8.0.0
+   */
+  constructor(private _elementRef?: ElementRef<HTMLElement>) {
+    super();
+  }
+
+  _getListType(): 'list' | 'action-list' | null {
+    const elementRef = this._elementRef;
+
+    // @breaking-change 8.0.0 Remove null check once _elementRef is a required param.
+    if (elementRef) {
+      const nodeName = elementRef.nativeElement.nodeName.toLowerCase();
+
+      if (nodeName === 'mat-list') {
+        return 'list';
+      }
+
+      if (nodeName === 'mat-action-list') {
+        return 'action-list';
+      }
+    }
+
+    return null;
+  }
+}
 
 /**
  * Directive whose purpose is to add the mat- CSS styling to this selector.
@@ -115,22 +144,25 @@ export class MatListSubheaderCssMatStyler {}
 })
 export class MatListItem extends _MatListItemMixinBase implements AfterContentInit,
     CanDisableRipple {
-  private _isNavList: boolean = false;
+  private _isInteractiveList: boolean = false;
+  private _list?: MatNavList | MatList;
 
   @ContentChildren(MatLine) _lines: QueryList<MatLine>;
   @ContentChild(MatListAvatarCssMatStyler) _avatar: MatListAvatarCssMatStyler;
   @ContentChild(MatListIconCssMatStyler) _icon: MatListIconCssMatStyler;
 
   constructor(private _element: ElementRef<HTMLElement>,
-              @Optional() private _navList: MatNavList) {
+              @Optional() navList?: MatNavList,
+              @Optional() list?: MatList) {
     super();
-    this._isNavList = !!_navList;
+    this._isInteractiveList = !!(navList || (list && list._getListType() === 'action-list'));
+    this._list = navList || list;
 
     // If no type attributed is specified for <button>, set it to "button".
     // If a type attribute is already specified, do nothing.
     const element = this._getHostElement();
-    if (element.nodeName && element.nodeName.toLowerCase() === 'button'
-        && !element.hasAttribute('type')) {
+
+    if (element.nodeName.toLowerCase() === 'button' && !element.hasAttribute('type')) {
       element.setAttribute('type', 'button');
     }
   }
@@ -141,7 +173,8 @@ export class MatListItem extends _MatListItemMixinBase implements AfterContentIn
 
   /** Whether this list item should show a ripple effect when clicked. */
   _isRippleDisabled() {
-    return !this._isNavList || this.disableRipple || this._navList.disableRipple;
+    return !this._isInteractiveList || this.disableRipple ||
+           !!(this._list && this._list.disableRipple);
   }
 
   /** Retrieves the DOM element of the component host. */

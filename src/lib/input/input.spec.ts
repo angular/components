@@ -43,6 +43,8 @@ import {By} from '@angular/platform-browser';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {MatStepperModule} from '@angular/material/stepper';
 import {MatTabsModule} from '@angular/material/tabs';
+import {Directionality, Direction} from '@angular/cdk/bidi';
+import {Subject} from 'rxjs';
 import {MatInputModule, MatInput, MAT_INPUT_VALUE_ACCESSOR} from './index';
 import {MatTextareaAutosize} from './autosize';
 
@@ -643,6 +645,21 @@ describe('MatInput without forms', () => {
     expect(formFieldEl.classList).toContain('mat-form-field-should-float');
   }));
 
+  it('should not float the label if the selectedIndex is negative', fakeAsync(() => {
+    const fixture = createComponent(MatInputSelect);
+    fixture.detectChanges();
+
+    const formFieldEl = fixture.debugElement.query(By.css('.mat-form-field')).nativeElement;
+    const selectEl: HTMLSelectElement = formFieldEl.querySelector('select');
+
+    expect(formFieldEl.classList).toContain('mat-form-field-should-float');
+
+    selectEl.selectedIndex = -1;
+    fixture.detectChanges();
+
+    expect(formFieldEl.classList).not.toContain('mat-form-field-should-float');
+  }));
+
   it('should not float labels when select has no value, no option label, ' +
       'no option innerHtml', fakeAsync(() => {
     const fixture = createComponent(MatInputSelectWithNoLabelNoValue);
@@ -669,6 +686,11 @@ describe('MatInput without forms', () => {
     const formFieldEl = fixture.debugElement.query(By.css('.mat-form-field'))
         .nativeElement;
     expect(formFieldEl.classList).toContain('mat-form-field-should-float');
+  }));
+
+  it('should not throw if a native select does not have options', fakeAsync(() => {
+    const fixture = createComponent(MatInputSelectWithoutOptions);
+    expect(() => fixture.detectChanges()).not.toThrow();
   }));
 
   it('should never float the label when floatLabel is set to false', fakeAsync(() => {
@@ -1341,6 +1363,63 @@ describe('MatInput with appearance', () => {
     expect(outlineFixture.componentInstance.formField.updateOutlineGap).toHaveBeenCalled();
   }));
 
+  it('should calculate the outline gaps if the element starts off invisible', fakeAsync(() => {
+    fixture.destroy();
+    TestBed.resetTestingModule();
+
+    let zone: MockNgZone;
+    const invisibleFixture = createComponent(MatInputWithOutlineInsideInvisibleElement, [{
+      provide: NgZone,
+      useFactory: () => zone = new MockNgZone()
+    }]);
+
+    invisibleFixture.detectChanges();
+    zone!.simulateZoneExit();
+    flush();
+    invisibleFixture.detectChanges();
+
+    const wrapperElement = invisibleFixture.nativeElement;
+    const formField = wrapperElement.querySelector('.mat-form-field');
+    const outlineStart = wrapperElement.querySelector('.mat-form-field-outline-start');
+    const outlineGap = wrapperElement.querySelector('.mat-form-field-outline-gap');
+
+    formField.style.display = '';
+    invisibleFixture.detectChanges();
+    zone!.simulateZoneExit();
+    flush();
+    invisibleFixture.detectChanges();
+
+    expect(parseInt(outlineStart.style.width)).toBeGreaterThan(0);
+    expect(parseInt(outlineGap.style.width)).toBeGreaterThan(0);
+  }));
+
+  it('should update the outline gap if the direction changes', fakeAsync(() => {
+    fixture.destroy();
+    TestBed.resetTestingModule();
+
+    const fakeDirectionality = {change: new Subject<Direction>(), value: 'ltr'};
+    const outlineFixture = createComponent(MatInputWithAppearanceAndLabel, [{
+      provide: Directionality,
+      useValue: fakeDirectionality
+    }]);
+
+    outlineFixture.componentInstance.appearance = 'outline';
+    outlineFixture.detectChanges();
+    flush();
+    outlineFixture.detectChanges();
+
+    spyOn(outlineFixture.componentInstance.formField, 'updateOutlineGap');
+
+    fakeDirectionality.value = 'rtl';
+    fakeDirectionality.change.next('rtl');
+    outlineFixture.detectChanges();
+    flush();
+    outlineFixture.detectChanges();
+
+    expect(outlineFixture.componentInstance.formField.updateOutlineGap).toHaveBeenCalled();
+  }));
+
+
 
 });
 
@@ -1820,6 +1899,17 @@ class MatInputWithAppearanceAndLabel {
 class MatInputWithoutPlaceholder {
 }
 
+@Component({
+  template: `
+    <mat-form-field appearance="outline" style="display: none;">
+      <mat-label>Label</mat-label>
+      <input matInput>
+    </mat-form-field>
+  `
+})
+class MatInputWithOutlineInsideInvisibleElement {}
+
+
 // Styles to reset padding and border to make measurement comparisons easier.
 const textareaStyleReset = `
     textarea {
@@ -1932,6 +2022,15 @@ class MatInputSelectWithInnerHtml {}
     </mat-form-field>`
 })
 class MatInputWithCustomAccessor {}
+
+@Component({
+  template: `
+    <mat-form-field>
+      <select matNativeControl>
+      </select>
+    </mat-form-field>`
+})
+class MatInputSelectWithoutOptions {}
 
 
 /** Custom component that never has a value. Used for testing the `MAT_INPUT_VALUE_ACCESSOR`. */
