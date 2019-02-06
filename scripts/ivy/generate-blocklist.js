@@ -8,6 +8,14 @@ const karmaOutput = JSON.parse(fs.readFileSync('/tmp/karma-result.json'));
 
 let generatedBlocklist = {};
 for (const desc of Object.keys(karmaOutput)) {
+  // If karma encounters global errors, it adds them to an array keyed __BROWSER_ERRORS__.
+  // We ignore this since it's not associated with any particular test. It generally shouldn't
+  // happen at all because we're using a forked version of karma-jasmine that does not report
+  // global errors per-suite.
+  if (desc === '__BROWSER_ERRORS__') {
+    continue;
+  }
+
   generatedBlocklist = {...generatedBlocklist, ...getFullFailure(karmaOutput[desc], desc)};
 }
 

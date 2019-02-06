@@ -6418,10 +6418,9 @@ karma-jasmine@1.1.1:
   resolved "https://registry.yarnpkg.com/karma-jasmine/-/karma-jasmine-1.1.1.tgz#6fe840e75a11600c9d91e84b33c458e1c46a3529"
   integrity sha1-b+hA51oRYAydkehLM8RY4cRqNSk=
 
-karma-jasmine@^2.0.1:
+"karma-jasmine@github:jelbourn/karma-jasmine":
   version "2.0.1"
-  resolved "https://registry.yarnpkg.com/karma-jasmine/-/karma-jasmine-2.0.1.tgz#26e3e31f2faf272dd80ebb0e1898914cc3a19763"
-  integrity sha512-iuC0hmr9b+SNn1DaUD2QEYtUxkS1J+bSJSn7ejdEexs7P8EYvA1CWkEdrDQ+8jVH3AgWlCNwjYsT1chjcNW9lA==
+  resolved "https://codeload.github.com/jelbourn/karma-jasmine/tar.gz/32cf88cc5fa70e2270eb984aaa56356cca639be8"
   dependencies:
     jasmine-core "^3.3"
 
