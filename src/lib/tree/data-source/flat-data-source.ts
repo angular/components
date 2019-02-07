@@ -163,3 +163,68 @@ export class MatTreeFlatDataSource<T, F> extends DataSource<F> {
     // no op
   }
 }
+
+/**
+ * Data source that can handle expansion/collapsion of an item.
+ * When an item is expanded, the data source will add its children while
+ * when collapsed, it will remove its children.
+ */
+export class MatExpandableDataSource<F> extends DataSource<F> {
+  _originalData: BehaviorSubject<F[]>;
+  _resultData = new BehaviorSubject<F[]>([]);
+  _treeControl: TreeControl<F>;
+
+  get data() { return this._originalData.value; }
+  set data(value: F[]) {
+    this._originalData.next(value);
+    this._treeControl.dataNodes = this._originalData.value;
+  }
+
+  constructor(private getLevel: (node: F) => number,
+              private isExpandable: (node: F) => boolean,
+              initialData: F[] = []) {
+    super();
+    this._treeControl = new FlatTreeControl(getLevel, isExpandable);
+    this._originalData = new BehaviorSubject<F[]>(initialData);
+  }
+
+  connect(collectionViewer: CollectionViewer): Observable<F[]> {
+    const changes = [
+      collectionViewer.viewChange,
+      this._treeControl.expansionModel.changed,
+    ];
+  return merge(...changes).pipe(map(() => {
+    this._resultData.next(
+        this.expandData(this._originalData.value, this._treeControl));
+    return this._resultData.value;
+    }));
+  }
+
+  disconnect() {
+    // no op
+  }
+
+  expandData(nodes: F[], treeControl: TreeControl<F>): F[] {
+    let results: F[] = [];
+    let currentExpand: boolean[] = [];
+    currentExpand[0] = true;
+
+    nodes.forEach(node => {
+      let expand = true;
+      for (let i = 0; i <= this.getLevel(node); i++) {
+        expand = expand && currentExpand[i];
+      }
+      if (expand) {
+        results.push(node);
+      }
+      if (this.isExpandable(node)) {
+        currentExpand[this.getLevel(node) + 1] = treeControl.isExpanded(node);
+      }
+    });
+    return results;
+  }
+
+  isExpanded(dataNode: F): boolean {
+    return this._treeControl.isExpanded(dataNode);
+  }
+}

@@ -6,8 +6,11 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+// import {DataSource} from '@angular/cdk/collections';
 import {CdkTree} from '@angular/cdk/tree';
 import {ChangeDetectionStrategy, Component, ViewChild, ViewEncapsulation} from '@angular/core';
+// import {MatExpandableDataSource} from './data-source/flat-data-source';
+// import {Observable} from 'rxjs';
 import {MatTreeNodeOutlet} from './outlet';
 
 /**
@@ -30,4 +33,12 @@ import {MatTreeNodeOutlet} from './outlet';
 export class MatTree<T> extends CdkTree<T> {
   // Outlets within the tree's template where the dataNodes will be inserted.
   @ViewChild(MatTreeNodeOutlet) _nodeOutlet: MatTreeNodeOutlet;
+  // set dataSource(dataSource: DataSource<T> | Observable<T[]> | T[]) {
+  //  if (this._dataSource !== dataSource) {
+  //    this._switchDataSource(dataSource);
+  //  }
+  //  if (this._dataSource instanceof MatExpandableDataSource) {
+  //    this._treeControl = ( dataSource as MatExpandableDataSource<T> )._treeControl;
+  //  }
+  // }
 }

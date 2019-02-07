@@ -85,10 +85,15 @@ export class CdkTree<T>
       this._switchDataSource(dataSource);
     }
   }
-  private _dataSource: DataSource<T> | Observable<T[]> | T[];
+  protected _dataSource: DataSource<T> | Observable<T[]> | T[];
+  protected _treeControl: TreeControl<T>;
 
   /** The tree controller */
-  @Input() treeControl: TreeControl<T>;
+  @Input()
+  get treeControl(): TreeControl<T> { return this._treeControl; }
+  set treeControl(inputTreeControl: TreeControl<T>) {
+    this._treeControl = inputTreeControl;
+  }
 
   /**
    * Tracking function that will be used to check the differences in data changes. Used similarly
@@ -160,7 +165,7 @@ export class CdkTree<T>
    * render change subscription if one exists. If the data source is null, interpret this by
    * clearing the node outlet. Otherwise start listening for new data.
    */
-  private _switchDataSource(dataSource: DataSource<T> | Observable<T[]> | T[]) {
+  protected _switchDataSource(dataSource: DataSource<T> | Observable<T[]> | T[]) {
     if (this._dataSource && typeof (this._dataSource as DataSource<T>).disconnect === 'function') {
       (this.dataSource as DataSource<T>).disconnect(this);
     }
