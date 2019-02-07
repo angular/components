@@ -1264,7 +1264,7 @@ describe('MatAutocomplete', () => {
       fixture.componentInstance.trigger.openPanel();
       fixture.detectChanges();
 
-      const panel = fixture.debugElement.query(By.css('.mat-autocomplete-panel')).nativeElement;
+      const panel = overlayContainerElement.querySelector('.mat-autocomplete-panel')!;
 
       expect(panel.getAttribute('role'))
           .toEqual('listbox', 'Expected role of the panel to be listbox.');
@@ -1337,7 +1337,7 @@ describe('MatAutocomplete', () => {
       fixture.componentInstance.trigger.openPanel();
       fixture.detectChanges();
 
-      const panel = fixture.debugElement.query(By.css('.mat-autocomplete-panel')).nativeElement;
+      const panel = overlayContainerElement.querySelector('.mat-autocomplete-panel')!;
 
       expect(input.getAttribute('aria-owns'))
           .toBe(panel.getAttribute('id'), 'Expected aria-owns to match attached autocomplete.');
@@ -1687,20 +1687,26 @@ describe('MatAutocomplete', () => {
     }));
 
     it('should handle `optionSelections` being accessed too early', fakeAsync(() => {
-      overlayContainer.ngOnDestroy();
-      fixture.destroy();
-      fixture = TestBed.createComponent(SimpleAutocomplete);
-
       let spy = jasmine.createSpy('option selection spy');
       let subscription: Subscription;
+      let trigger = fixture.componentInstance.trigger;
+      let autocomplete = trigger.autocomplete;
 
-      expect(fixture.componentInstance.trigger.autocomplete).toBeFalsy();
+      // Note that the assertion is testing primarily whether the trigger is able to handle
+      // `optionSelections` being accessed before the view init hook. This is possible via
+      // static queries in ViewEngine, but it's no longer possible in Ivy. We simulate the
+      // behavior by clearing the `autocomplete` ourselves.
+      // TODO(crisbeto): this test can be removed once Ivy is on by default.
+      trigger.autocomplete = undefined!;
+
+      expect(trigger.autocomplete).toBeFalsy();
       expect(() => {
-        subscription = fixture.componentInstance.trigger.optionSelections.subscribe(spy);
+        subscription = trigger.optionSelections.subscribe(spy);
       }).not.toThrow();
 
+      trigger.autocomplete = autocomplete;
       fixture.detectChanges();
-      fixture.componentInstance.trigger.openPanel();
+      trigger.openPanel();
       fixture.detectChanges();
       zone.simulateZoneExit();
 
