@@ -172,7 +172,7 @@ export declare class MatDatepickerInput<D> implements ControlValueAccessor, OnDe
     _getThemePalette(): ThemePalette;
     _onBlur(): void;
     _onChange(): void;
-    _onInput(value: string): void;
+    _onInput(target: HTMLInputElement): void;
     _onKeydown(event: KeyboardEvent): void;
     getConnectedOverlayOrigin(): ElementRef;
     getPopupConnectionElementRef(): ElementRef;
