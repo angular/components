@@ -1193,7 +1193,10 @@ describe('MatDatepicker', () => {
 
       it('should update validity when switching between null and invalid', fakeAsync(() => {
         const inputEl = fixture.debugElement.query(By.css('input')).nativeElement;
+
+        inputEl.focus();
         inputEl.value = '';
+
         dispatchFakeEvent(inputEl, 'input');
 
         fixture.detectChanges();
