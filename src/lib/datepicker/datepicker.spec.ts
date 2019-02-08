@@ -1535,7 +1535,7 @@ describe('MatDatepicker', () => {
           .toBe(Math.floor(inputRect.left), 'Expected popup to align to input left.');
     });
 
-    it('should be above and to the right when there is no space below', () => {
+    xit('should be above and to the right when there is no space below', () => {
       input.style.bottom = input.style.left = '20px';
       testComponent.datepicker.open();
       fixture.detectChanges();
@@ -1549,7 +1549,7 @@ describe('MatDatepicker', () => {
           .toBe(Math.floor(inputRect.left), 'Expected popup to align to input left.');
     });
 
-    it('should be below and to the left when there is no space on the right', () => {
+    xit('should be below and to the left when there is no space on the right', () => {
       input.style.top = input.style.right = '20px';
       testComponent.datepicker.open();
       fixture.detectChanges();
@@ -1563,7 +1563,7 @@ describe('MatDatepicker', () => {
           .toBe(Math.floor(inputRect.right), 'Expected popup to align to input right.');
     });
 
-    it('should be above and to the left when there is no space on the bottom', () => {
+    xit('should be above and to the left when there is no space on the bottom', () => {
       input.style.bottom = input.style.right = '20px';
       testComponent.datepicker.open();
       fixture.detectChanges();
