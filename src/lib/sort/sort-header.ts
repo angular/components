@@ -21,6 +21,7 @@ import {
 import {CanDisable, CanDisableCtor, mixinDisabled} from '@angular/material/core';
 import {merge, Subscription} from 'rxjs';
 import {MatSort, MatSortable} from './sort';
+import {MatMultiSort} from './multi-sort';
 import {matSortAnimations} from './sort-animations';
 import {SortDirection} from './sort-direction';
 import {getSortHeaderNotContainedWithinSortError} from './sort-errors';
@@ -56,6 +57,16 @@ export interface ArrowViewStateTransition {
 /** Column definition associated with a `MatSortHeader`. */
 interface MatSortHeaderColumnDef {
   name: string;
+}
+
+/**
+ * Header display strategy that is different based on type of sort being used.
+ */
+export interface SortHeaderStrategy {
+  isSorted(sortHeader: MatSort | MatMultiSort, id: string): boolean;
+  getDirection(sortHeader: MatSort | MatMultiSort, id: string): SortDirection;
+  getSortCounter(sortHeader: MatSort | MatMultiSort, id: string,
+    getSortCounter: ((position: number, count: number) => string)): string;
 }
 
 /**
@@ -135,10 +146,17 @@ export class MatSortHeader extends _MatSortHeaderMixinBase
   get disableClear(): boolean { return this._disableClear; }
   set disableClear(v) { this._disableClear = coerceBooleanProperty(v); }
   private _disableClear: boolean;
+  private _sort: MatSort|MatMultiSort;
+
+  private _sortHeaderStrategy: SortHeaderStrategy;
+
+  @Input()
+  getSortCounter: ((position: number, count: number) => string);
 
   constructor(public _intl: MatSortHeaderIntl,
               changeDetectorRef: ChangeDetectorRef,
-              @Optional() public _sort: MatSort,
+              @Optional() public _simpleSort: MatSort,
+              @Optional() public _multiSort: MatMultiSort,
               @Inject('MAT_SORT_HEADER_COLUMN_DEF') @Optional()
                   public _columnDef: MatSortHeaderColumnDef) {
     // Note that we use a string token for the `_columnDef`, because the value is provided both by
@@ -147,9 +165,17 @@ export class MatSortHeader extends _MatSortHeaderMixinBase
     // of this single reference.
     super();
 
-    if (!_sort) {
+    if (_simpleSort) {
+      this._sort = _simpleSort;
+      this._sortHeaderStrategy = new SimpleSortStrategy();
+    } else if (_multiSort) {
+      this._sort = _multiSort;
+      this._sortHeaderStrategy = new MultiSortStrategy();
+    } else {
       throw getSortHeaderNotContainedWithinSortError();
     }
+
+    let _sort = this._sort;
 
     this._rerenderSubscription = merge(_sort.sortChange, _sort._stateChanges, _intl.changes)
         .subscribe(() => {
@@ -243,8 +269,7 @@ export class MatSortHeader extends _MatSortHeaderMixinBase
 
   /** Whether this MatSortHeader is currently sorted in either ascending or descending order. */
   _isSorted() {
-    return this._sort.active == this.id &&
-        (this._sort.direction === 'asc' || this._sort.direction === 'desc');
+    return this._sortHeaderStrategy.isSorted(this._sort, this.id);
   }
 
   /** Returns the animation state for the arrow direction (indicator and pointers). */
@@ -269,9 +294,11 @@ export class MatSortHeader extends _MatSortHeaderMixinBase
    * only be changed once the arrow displays again (hint or activation).
    */
   _updateArrowDirection() {
-    this._arrowDirection = this._isSorted() ?
-        this._sort.direction :
-        (this.start || this._sort.start);
+    if (this._isSorted()) {
+      this._arrowDirection = this._sortHeaderStrategy.getDirection(this._sort, this.id);
+    } else {
+      this._arrowDirection = (this.start || this._sort.start);
+    }
   }
 
   _isDisabled() {
@@ -286,7 +313,60 @@ export class MatSortHeader extends _MatSortHeaderMixinBase
    */
   _getAriaSortAttribute() {
     if (!this._isSorted()) { return null; }
+    const direction = this._sortHeaderStrategy.getDirection(this._sort, this.id);
+    return direction == 'asc' ? 'ascending' : 'descending';
+  }
 
-    return this._sort.direction == 'asc' ? 'ascending' : 'descending';
+  /**
+   * Gets the sort counter that will display whenever multisort is enabled. It shows the order
+   * in which sort is applied, whenever there are multiple columns being used for sorting.
+   */
+  _getSortCounter(): string {
+    return this._sortHeaderStrategy.getSortCounter(this._sort, this.id, this.getSortCounter);
+  }
+}
+
+/**
+ * Strategy used when MatSort is used
+ */
+class SimpleSortStrategy implements SortHeaderStrategy {
+  isSorted(sortHeader: MatSort, id: string) {
+    return sortHeader.active == id &&
+          (sortHeader.direction === 'asc' || sortHeader.direction === 'desc');
+  }
+
+  getDirection(sortHeader: MatSort): SortDirection {
+    return sortHeader.direction;
+  }
+
+  getSortCounter(): string {
+    return '';
+  }
+}
+
+/**
+ * Strategy used when MatMultiSort is used
+ */
+class MultiSortStrategy implements SortHeaderStrategy {
+  isSorted(sortHeader: MatMultiSort, id: string) {
+    return sortHeader.active && sortHeader.active.indexOf(id) > -1 &&
+    (sortHeader.direction[id] === 'asc' || sortHeader.direction[id] === 'desc');
+  }
+
+  getDirection(sortHeader: MatMultiSort, id: string): SortDirection {
+    return sortHeader.direction[id];
+  }
+
+  getSortCounter(sortHeader: MatMultiSort, id: string,
+    getSortCounter: ((position: number, count: number) => string)): string {
+    if (!getSortCounter || !sortHeader.active) {
+      return '';
+    }
+    const index = sortHeader.active.indexOf(id);
+    if (index === -1) {
+      return '';
+    }
+
+    return getSortCounter(index, sortHeader.active.length);
   }
 }

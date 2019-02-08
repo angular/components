@@ -56,7 +56,33 @@ export interface Sort {
 
 // Boilerplate for applying mixins to MatSort.
 /** @docs-private */
-export class MatSortBase {}
+export class MatSortBase {
+  /** Collection of all registered sortables that this directive manages. */
+  sortables = new Map<string, MatSortable>();
+
+  /**
+   * Register function to be used by the contained MatSortables. Adds the MatSortable to the
+   * collection of MatSortables.
+   */
+  register(sortable: MatSortable): void {
+    if (!sortable.id) {
+      throw getSortHeaderMissingIdError();
+    }
+
+    if (this.sortables.has(sortable.id)) {
+      throw getSortDuplicateSortableIdError(sortable.id);
+    }
+    this.sortables.set(sortable.id, sortable);
+  }
+
+  /**
+   * Unregister function to be used by the contained MatSortables. Removes the MatSortable from the
+   * collection of contained MatSortables.
+   */
+  deregister(sortable: MatSortable): void {
+    this.sortables.delete(sortable.id);
+  }
+}
 export const _MatSortMixinBase: HasInitializedCtor & CanDisableCtor & typeof MatSortBase =
     mixinInitialized(mixinDisabled(MatSortBase));
 
@@ -68,8 +94,7 @@ export const _MatSortMixinBase: HasInitializedCtor & CanDisableCtor & typeof Mat
 })
 export class MatSort extends _MatSortMixinBase
     implements CanDisable, HasInitialized, OnChanges, OnDestroy, OnInit {
-  /** Collection of all registered sortables that this directive manages. */
-  sortables = new Map<string, MatSortable>();
+
 
   /** Used to notify any child components listening to state changes. */
   readonly _stateChanges = new Subject<void>();
@@ -106,37 +131,14 @@ export class MatSort extends _MatSortMixinBase
   /** Event emitted when the user changes either the active sort or sort direction. */
   @Output('matSortChange') readonly sortChange: EventEmitter<Sort> = new EventEmitter<Sort>();
 
-  /**
-   * Register function to be used by the contained MatSortables. Adds the MatSortable to the
-   * collection of MatSortables.
-   */
-  register(sortable: MatSortable): void {
-    if (!sortable.id) {
-      throw getSortHeaderMissingIdError();
-    }
-
-    if (this.sortables.has(sortable.id)) {
-      throw getSortDuplicateSortableIdError(sortable.id);
-    }
-    this.sortables.set(sortable.id, sortable);
-  }
-
-  /**
-   * Unregister function to be used by the contained MatSortables. Removes the MatSortable from the
-   * collection of contained MatSortables.
-   */
-  deregister(sortable: MatSortable): void {
-    this.sortables.delete(sortable.id);
-  }
-
   /** Sets the active sort id and determines the new sort direction. */
   sort(sortable: MatSortable): void {
-    if (this.active != sortable.id) {
-      this.active = sortable.id;
-      this.direction = sortable.start ? sortable.start : this.start;
-    } else {
-      this.direction = this.getNextSortDirection(sortable);
-    }
+      if (this.active != sortable.id) {
+        this.active = sortable.id;
+        this.direction = sortable.start ? sortable.start : this.start;
+      } else {
+        this.direction = this.getNextSortDirection(sortable);
+      }
 
     this.sortChange.emit({active: this.active, direction: this.direction});
   }

@@ -11,7 +11,7 @@ import {
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {MatPaginator, MatPaginatorModule} from '../paginator/index';
-import {MatSort, MatSortHeader, MatSortModule} from '../sort/index';
+import {MatSort, MatMultiSort, MatSortHeader, MatSortModule} from '../sort/index';
 import {MatTableModule} from './index';
 import {MatTable} from './table';
 import {MatTableDataSource} from './table-data-source';
@@ -27,6 +27,7 @@ describe('MatTable', () => {
         ArrayDataSourceMatTableApp,
         NativeHtmlTableApp,
         MatTableWithSortApp,
+        MatTableWithMultiSortApp,
         MatTableWithPaginatorApp,
         StickyTableApp,
         TableWithNgContainerRow,
@@ -110,6 +111,34 @@ describe('MatTable', () => {
       [data[0].a, data[0].b, data[0].c],
       [data[1].a, data[1].b, data[1].c],
       [data[2].a, data[2].b, data[2].c],
+    ]);
+  });
+
+  it('should sort by multiple columns', () => {
+    let fixture = TestBed.createComponent(MatTableWithMultiSortApp);
+    fixture.detectChanges();
+
+    const component = fixture.componentInstance;
+    const data = component.dataSource!.data;
+    const tableElement = fixture.nativeElement.querySelector('.mat-table')!;
+
+    data[0].a = 0;
+    data[1].a = -1;
+    data[2].a = 0;
+
+    data[0].b = 'f';
+    data[1].b = 'c';
+    data[2].b = 'b';
+
+    // Sort by column A and then by column B
+    component.sort.sort(component.sortHeader1);
+    component.sort.sort(component.sortHeader2);
+    fixture.detectChanges();
+    expectTableToMatchContent(tableElement, [
+      ['Column A', 'Column B', 'Column C'], // Sorting precedence is added to the header
+      ['-1', 'c', 'c_2'],
+      ['0', 'b', 'c_3'],
+      ['0', 'f', 'c_1']
     ]);
   });
 
@@ -737,6 +766,59 @@ class MatTableWithSortApp implements OnInit {
 
   @ViewChild(MatTable) table: MatTable<TestData>;
   @ViewChild(MatSort) sort: MatSort;
+
+  constructor() {
+    this.underlyingDataSource.data = [];
+
+    // Add three rows of data
+    this.underlyingDataSource.addData();
+    this.underlyingDataSource.addData();
+    this.underlyingDataSource.addData();
+
+    this.underlyingDataSource.connect().subscribe(data => {
+      this.dataSource.data = data;
+    });
+  }
+
+  ngOnInit() {
+    this.dataSource!.sort = this.sort;
+  }
+}
+
+@Component({
+  template: `
+    <mat-table [dataSource]="dataSource" matMultiSort>
+      <ng-container matColumnDef="column_a">
+        <mat-header-cell *matHeaderCellDef #aSort mat-sort-header="a"> Column A</mat-header-cell>
+        <mat-cell *matCellDef="let row"> {{row.a}}</mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="column_b">
+        <mat-header-cell *matHeaderCellDef #bSort mat-sort-header="b"> Column B</mat-header-cell>
+        <mat-cell *matCellDef="let row"> {{row.b}}</mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="column_c">
+        <mat-header-cell *matHeaderCellDef #cSort mat-sort-header="c"> Column C</mat-header-cell>
+        <mat-cell *matCellDef="let row"> {{row.c}}</mat-cell>
+      </ng-container>
+
+      <mat-header-row *matHeaderRowDef="columnsToRender"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: columnsToRender"></mat-row>
+    </mat-table>
+  `
+})
+class MatTableWithMultiSortApp implements OnInit {
+  underlyingDataSource = new FakeDataSource();
+  dataSource = new MatTableDataSource<TestData>();
+  columnsToRender = ['column_a', 'column_b', 'column_c'];
+
+  @ViewChild(MatTable) table: MatTable<TestData>;
+  @ViewChild(MatMultiSort) sort: MatMultiSort;
+
+  @ViewChild('aSort') sortHeader1: MatSortHeader;
+  @ViewChild('bSort') sortHeader2: MatSortHeader;
+  @ViewChild('cSort') sortHeader3: MatSortHeader;
 
   constructor() {
     this.underlyingDataSource.data = [];

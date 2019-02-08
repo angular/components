@@ -126,3 +126,9 @@ $mat-sort-header-arrow-hint-opacity: 0.38;
   transform-origin: left;
   right: 0;
 }
+
+.mat-sort-header-counter {
+  position: absolute;
+  margin-top: 0;
+  margin-left: 13px;
+}
