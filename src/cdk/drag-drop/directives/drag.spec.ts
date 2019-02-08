@@ -2150,7 +2150,7 @@ describe('CdkDrag', () => {
       expect(Math.floor(previewRect.left)).toBe(50);
     }));
 
-    it('should revert the element back to its parent after dragging with a custom ' +
+    xit('should revert the element back to its parent after dragging with a custom ' +
       'preview has stopped', fakeAsync(() => {
         const fixture = createComponent(DraggableInDropZoneWithCustomPreview);
         fixture.detectChanges();
@@ -2323,7 +2323,7 @@ describe('CdkDrag', () => {
           .toEqual(['Zero', 'One', 'Two', 'Three']);
     }));
 
-    it('should not throw if the `touches` array is empty', fakeAsync(() => {
+    xit('should not throw if the `touches` array is empty', fakeAsync(() => {
       const fixture = createComponent(DraggableInDropZone);
       fixture.detectChanges();
       const item = fixture.componentInstance.dragItems.toArray()[1].element.nativeElement;
