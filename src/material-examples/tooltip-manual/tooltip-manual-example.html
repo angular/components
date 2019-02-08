@@ -2,21 +2,23 @@
   <span> Mouse over to </span>
   <button mat-button
           (mouseenter)="tooltip.show()"
-          (keyup.enter)="tooltip.show()"
+          (focus)="tooltip.show()"
+          (focusout)="tooltip.hide()"
           aria-label="Button that progamatically shows a tooltip on another button"
           class="example-action-button">
     show
   </button>
   <button mat-button
           (mouseenter)="tooltip.hide()"
-          (keyup.enter)="tooltip.hide()"
+          (focus)="tooltip.hide()"
           aria-label="Button that progamatically hides a tooltip on another button"
           class="example-action-button">
     hide
   </button>
   <button mat-button
           (mouseenter)="tooltip.toggle()"
-          (keyup.enter)="tooltip.toggle()"
+          (focus)="tooltip.toggle()"
+          (focusout)="tooltip.hide()"
           aria-label="Button that progamatically toggles a tooltip on another button to show/hide"
           class="example-action-button">
     toggle show/hide
