@@ -705,7 +705,7 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
       event.preventDefault(); // prevents the page from scrolling down when pressing space
       this.open();
     } else if (!this.multiple) {
-      const selectedOption = this.selected;
+      const previouslySelectedOption = this.selected;
 
       if (keyCode === HOME || keyCode === END) {
         keyCode === HOME ? manager.setFirstItemActive() : manager.setLastItemActive();
@@ -714,10 +714,12 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
         manager.onKeydown(event);
       }
 
+      const selectedOption = this.selected;
+
       // Since the value has changed, we need to announce it ourselves.
       // @breaking-change 8.0.0 remove null check for _liveAnnouncer.
-      if (this._liveAnnouncer && selectedOption !== this.selected) {
-        this._liveAnnouncer.announce((this.selected as MatOption).viewValue);
+      if (this._liveAnnouncer && selectedOption && previouslySelectedOption !== selectedOption) {
+        this._liveAnnouncer.announce((selectedOption as MatOption).viewValue);
       }
     }
   }
