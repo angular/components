@@ -4,13 +4,12 @@ import {runTestCases} from '@angular/cdk/schematics/testing';
 describe('constructor checks', () => {
 
   it('should properly report invalid constructor expression signatures', async () => {
-    const {logOutput} = await runTestCases('migration-v6', migrationCollection, {
-      'constructor-checks': require.resolve('./constructor-checks_input.ts')
-    });
+    const {logOutput, removeTempDir} = await runTestCases('migration-v6', migrationCollection,
+      [require.resolve('./constructor-checks_input.ts')]);
 
-    expect(logOutput).toMatch(/\[22.*Found "NativeDateAdapter"/,
+    expect(logOutput).toMatch(/:22.*Found "NativeDateAdapter"/,
       'Expected the constructor checks to report if an argument is not assignable.');
-    expect(logOutput).not.toMatch(/\[26.*Found "NativeDateAdapter".*/,
+    expect(logOutput).not.toMatch(/:26.*Found "NativeDateAdapter".*/,
       'Expected the constructor to not report if an argument is assignable.');
 
     expect(logOutput).not.toMatch(/Found "NonMaterialClass".*: new NonMaterialClass\(\)/);
@@ -38,6 +37,8 @@ describe('constructor checks', () => {
 
     expect(logOutput).toMatch(/Found "ExtendedDateAdapter".*super.*: super\(string, Platform\)/);
     expect(logOutput).toMatch(/Found "ExtendedDateAdapter".*: new \w+\(string, Platform\)/);
+
+    removeTempDir();
   });
 });
 

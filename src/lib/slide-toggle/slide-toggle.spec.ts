@@ -1,3 +1,4 @@
+import {BidiModule, Direction} from '@angular/cdk/bidi';
 import {MutationObserverFactory} from '@angular/cdk/observers';
 import {dispatchFakeEvent} from '@angular/cdk/testing';
 import {Component} from '@angular/core';
@@ -10,11 +11,10 @@ import {
   tick,
 } from '@angular/core/testing';
 import {FormControl, FormsModule, NgModel, ReactiveFormsModule} from '@angular/forms';
+import {TestGestureConfig} from '@angular/material/testing';
 import {By, HAMMER_GESTURE_CONFIG} from '@angular/platform-browser';
-import {BidiModule, Direction} from '@angular/cdk/bidi';
-import {TestGestureConfig} from '../slider/test-gesture-config';
-import {MAT_SLIDE_TOGGLE_DEFAULT_OPTIONS} from './slide-toggle-config';
 import {MatSlideToggle, MatSlideToggleChange, MatSlideToggleModule} from './index';
+import {MAT_SLIDE_TOGGLE_DEFAULT_OPTIONS} from './slide-toggle-config';
 
 describe('MatSlideToggle without forms', () => {
   let gestureConfig: TestGestureConfig;
@@ -102,15 +102,18 @@ describe('MatSlideToggle without forms', () => {
 
     it('should correctly update the checked property', () => {
       expect(slideToggle.checked).toBeFalsy();
+      expect(inputElement.getAttribute('aria-checked')).toBe('false');
 
       testComponent.slideChecked = true;
       fixture.detectChanges();
 
       expect(inputElement.checked).toBeTruthy();
+      expect(inputElement.getAttribute('aria-checked')).toBe('true');
     });
 
     it('should set the toggle to checked on click', () => {
       expect(slideToggle.checked).toBe(false);
+      expect(inputElement.getAttribute('aria-checked')).toBe('false');
       expect(slideToggleElement.classList).not.toContain('mat-checked');
 
       labelElement.click();
@@ -118,6 +121,7 @@ describe('MatSlideToggle without forms', () => {
 
       expect(slideToggleElement.classList).toContain('mat-checked');
       expect(slideToggle.checked).toBe(true);
+      expect(inputElement.getAttribute('aria-checked')).toBe('true');
     });
 
     it('should not trigger the click event multiple times', () => {
@@ -247,6 +251,12 @@ describe('MatSlideToggle without forms', () => {
       fixture.detectChanges();
 
       expect(inputElement.hasAttribute('aria-labelledby')).toBeFalsy();
+    });
+
+    it('should set the `for` attribute to the id of the input element', () => {
+      expect(labelElement.getAttribute('for')).toBeTruthy();
+      expect(inputElement.getAttribute('id')).toBeTruthy();
+      expect(labelElement.getAttribute('for')).toBe(inputElement.getAttribute('id'));
     });
 
     it('should emit the new values properly', fakeAsync(() => {
@@ -591,7 +601,7 @@ describe('MatSlideToggle without forms', () => {
       expect(slideThumbContainer.classList).not.toContain('mat-dragging');
     }));
 
-    it('should should emit a change event after drag', fakeAsync(() => {
+    it('should emit a change event after drag', fakeAsync(() => {
       expect(slideToggle.checked).toBe(false);
 
       gestureConfig.emitEventForElement('slidestart', slideThumbContainer);

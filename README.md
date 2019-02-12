@@ -1,6 +1,6 @@
 # Material Design for Angular
 [![npm version](https://badge.fury.io/js/%40angular%2Fmaterial.svg)](https://www.npmjs.com/package/%40angular%2Fmaterial)
-[![Build Status](https://travis-ci.org/angular/material2.svg?branch=master)](https://travis-ci.org/angular/material2)
+[![Build status](https://circleci.com/gh/angular/material2.svg?style=svg)](https://circleci.com/gh/angular/material2)
 [![Gitter](https://badges.gitter.im/angular/material2.svg)](https://gitter.im/angular/material2?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
 This is the home for the Angular team's Material Design components built for and with Angular.
@@ -26,11 +26,15 @@ and which pieces are blocked) and make a comment.
 Also see our [`help wanted`](https://github.com/angular/material2/issues?q=is%3Aissue+is%3Aopen+label%3A%22help+wanted%22)
 label.
 
-High level stuff planned for Q4 2018 (October - Dec):
-* Improve our own build and automation tooling
-* Fix bugs and reduce some technical debt inside Google
-* Working on long-term plans on how to collaborate with the MDC Web team
-* Designs for advanced table improvements (column resize, selection directives, inline-edit)
+#### High level stuff planned for Q1 → Q2 2019 (January - June):
+* Most of the Angular Material team is on loan to the framework team
+  helping with [Ivy](https://blog.angular.io/a-plan-for-version-8-0-and-ivy-b3318dfc19f7).
+  We've been using the Angular CDK and Angular Material tests to validate code paths as well
+  as helping debug issues in switching Google applications to the new rendering pipeline.
+* We're also working with the Material Design team on a strategy to collaborate more deeply.
+  We'll have more to share on this once our plans are further along.
+* Assorted bugfixes and minor feature improvements.
+* Design for API enhancements to the tree component to improve ergonomics.
 
 
 #### Available features
@@ -49,7 +53,7 @@ High level stuff planned for Q4 2018 (October - Dec):
 | datepicker       |                                                        |   [Docs][25] |
 | dialog           |                                                        |   [Docs][22] |
 | divider          |                                                        |   [Docs][35] |
-| drag-drop        |                                          Landing in v7 |              |
+| drag-drop        |                                                        |   [Docs][39] |
 | expansion-panel  |                                                        |   [Docs][32] |
 | grid-list        |                                                        |   [Docs][9]  |
 | icon             |                                                        |   [Docs][10] |
@@ -73,7 +77,7 @@ High level stuff planned for Q4 2018 (October - Dec):
 | toolbar          |                                                        |   [Docs][7]  |
 | tooltip          |                                                        |   [Docs][18] |
 | tree             |                                                        |   [Docs][36] |
-| virtual-scroll   |                                          Landing in v7 |              |
+| virtual-scroll   |                                                        |   [Docs][40] |
 | ---------------- | ------------------------------------------------------ | ------------ |
 | theming          |                                                        |  [Guide][20] |
 | typography       |                                                        |  [Guide][27] |
@@ -128,6 +132,8 @@ High level stuff planned for Q4 2018 (October - Dec):
 [36]: https://material.angular.io/components/tree/overview
 [37]: https://material.angular.io/components/badge/overview
 [38]: https://material.angular.io/components/bottom-sheet/overview
+[39]: https://material.angular.io/cdk/drag-drop/overview
+[40]: https://material.angular.io/cdk/scrolling/overview#virtual-scrolling
 
 [0107]: https://github.com/angular/material2/issues/107
 [0119]: https://github.com/angular/material2/issues/119

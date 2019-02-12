@@ -158,7 +158,9 @@ describe('FlexibleConnectedPositionStrategy', () => {
           overlayX: 'start',
           overlayY: 'top',
           originX: 'start',
-          originY: 'bottom'
+          originY: 'bottom',
+          offsetX: 10,
+          offsetY: 20
         }]);
 
     // Needs to be in the DOM for IE not to throw an "Unspecified error".
@@ -185,6 +187,7 @@ describe('FlexibleConnectedPositionStrategy', () => {
     expect(pane.style.left).toBeFalsy();
     expect(pane.style.right).toBeFalsy();
     expect(pane.style.position).toBeFalsy();
+    expect(pane.style.transform).toBeFalsy();
 
     overlayRef.dispose();
     document.body.removeChild(origin);
@@ -700,6 +703,53 @@ describe('FlexibleConnectedPositionStrategy', () => {
 
     });
 
+    describe('with origin set to a point', () => {
+      it('should be able to render at the primary position', () => {
+        positionStrategy
+          .setOrigin({x: 50, y: 100})
+          .withPositions([{
+            originX: 'start',
+            originY: 'bottom',
+            overlayX: 'start',
+            overlayY: 'top'
+          }]);
+
+        attachOverlay({positionStrategy});
+
+        const overlayRect = overlayRef.overlayElement.getBoundingClientRect();
+        expect(Math.floor(overlayRect.top)).toBe(100);
+        expect(Math.floor(overlayRect.left)).toBe(50);
+      });
+
+      it('should be able to render at a fallback position', () => {
+        const viewportHeight = viewport.getViewportRect().height;
+
+        positionStrategy
+          .setOrigin({x: 50, y: viewportHeight})
+          .withPositions([
+              {
+                originX: 'start',
+                originY: 'bottom',
+                overlayX: 'start',
+                overlayY: 'top'
+              },
+              {
+                originX: 'start',
+                originY: 'top',
+                overlayX: 'start',
+                overlayY: 'bottom'
+              }
+          ]);
+
+        attachOverlay({positionStrategy});
+
+        const overlayRect = overlayRef.overlayElement.getBoundingClientRect();
+        expect(Math.floor(overlayRect.bottom)).toBe(viewportHeight);
+        expect(Math.floor(overlayRect.left)).toBe(50);
+      });
+
+    });
+
     it('should account for the `offsetX` pushing the overlay out of the screen', () => {
       // Position the element so it would have enough space to fit.
       originElement.style.top = '200px';
@@ -1211,6 +1261,9 @@ describe('FlexibleConnectedPositionStrategy', () => {
         ]);
 
         attachOverlay({
+          // Set a large max-width to override the one that comes from the
+          // overlay structural styles. Otherwise the `width` will stop at the viewport width.
+          maxWidth: '200vw',
           width: viewport.getViewportRect().width + 100,
           positionStrategy
         });
@@ -1242,6 +1295,9 @@ describe('FlexibleConnectedPositionStrategy', () => {
         ]);
 
         attachOverlay({
+          // Set a large max-width to override the one that comes from the
+          // overlay structural styles. Otherwise the `width` will stop at the viewport width.
+          maxWidth: '200vw',
           width: viewport.getViewportRect().width + 100,
           positionStrategy
         });
@@ -1777,6 +1833,99 @@ describe('FlexibleConnectedPositionStrategy', () => {
       document.body.removeChild(veryLargeElement);
     });
 
+    it('should size the bounding box correctly when opening downwards on a scrolled page', () => {
+      const viewportMargin = 10;
+      const veryLargeElement: HTMLElement = document.createElement('div');
+      veryLargeElement.style.width = '4000px';
+      veryLargeElement.style.height = '4000px';
+      document.body.appendChild(veryLargeElement);
+      window.scroll(2100, 2100);
+
+      originElement.style.position = 'fixed';
+      originElement.style.top = '100px';
+      originElement.style.left = '200px';
+
+      positionStrategy
+        .withFlexibleDimensions()
+        .withPush(false)
+        .withViewportMargin(viewportMargin)
+        .withPositions([{
+          overlayY: 'top',
+          overlayX: 'start',
+          originY: 'bottom',
+          originX: 'start'
+        }]);
+
+      attachOverlay({positionStrategy});
+
+      const boundingBox = overlayContainer
+        .getContainerElement()
+        .querySelector('.cdk-overlay-connected-position-bounding-box') as HTMLElement;
+
+      // Use the `documentElement` here to determine the viewport
+      // height since it's what is used by the overlay.
+      const viewportHeight = document.documentElement!.clientHeight - (2 * viewportMargin);
+      const originRect = originElement.getBoundingClientRect();
+      const boundingBoxRect = boundingBox.getBoundingClientRect();
+
+      expect(Math.floor(boundingBoxRect.height))
+          .toBe(Math.floor(viewportHeight - originRect.bottom + viewportMargin));
+
+      window.scroll(0, 0);
+      document.body.removeChild(veryLargeElement);
+    });
+
+    it('should not push the overlay if it is exactly as wide as the viewport', () => {
+      originElement.style.position = 'fixed';
+      originElement.style.top = '100px';
+      originElement.style.right = '0';
+
+      positionStrategy
+        .withFlexibleDimensions()
+        .withPush(true)
+        .withPositions([{
+          originX: 'center',
+          originY: 'bottom',
+          overlayX: 'center',
+          overlayY: 'top',
+        }]);
+
+      attachOverlay({
+        width: viewport.getViewportRect().width,
+        positionStrategy
+      });
+
+      const originRect = originElement.getBoundingClientRect();
+      const overlayRect = overlayRef.overlayElement.getBoundingClientRect();
+
+      expect(Math.floor(overlayRect.right)).toBe(Math.floor(originRect.right));
+    });
+
+    it('should not push the overlay if it is exactly as tall as the viewport', () => {
+      originElement.style.position = 'fixed';
+      originElement.style.left = '100px';
+      originElement.style.bottom = '0';
+
+      positionStrategy
+        .withFlexibleDimensions()
+        .withPush(true)
+        .withPositions([{
+          originX: 'start',
+          originY: 'bottom',
+          overlayX: 'start',
+          overlayY: 'bottom',
+        }]);
+
+      attachOverlay({
+        width: viewport.getViewportRect().height,
+        positionStrategy
+      });
+
+      const originRect = originElement.getBoundingClientRect();
+      const overlayRect = overlayRef.overlayElement.getBoundingClientRect();
+
+      expect(Math.floor(overlayRect.bottom)).toBe(Math.floor(originRect.bottom));
+    });
 
   });
 

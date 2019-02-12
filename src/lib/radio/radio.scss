@@ -1,5 +1,6 @@
 @import '../core/style/variables';
 @import '../core/ripple/ripple';
+@import '../core/style/vendor-prefixes';
 @import '../../cdk/a11y/a11y';
 
 
@@ -10,11 +11,16 @@ $mat-radio-ripple-radius: 20px;
 .mat-radio-button {
   display: inline-block;
   -webkit-tap-highlight-color: transparent;
+  outline: 0;
 }
 
 // Inner label container, wrapping entire element.
 // Enables focus by click.
 .mat-radio-label {
+  // Disable text selection on the label itself, because having text selected
+  // will prevent focus from reaching the label. Below we'll re-enable it only
+  // for the label's content so that people can still select the text.
+  @include user-select(none);
   cursor: pointer;
   display: inline-flex;
   align-items: center;
@@ -86,6 +92,9 @@ $mat-radio-ripple-radius: 20px;
 
 // Text label next to radio.
 .mat-radio-label-content {
+  // Re-enable text selection for the button's content since
+  // we disabled it above in the `.mat-radio-label`.
+  @include user-select(auto);
   display: inline-block;
   order: 0;
   line-height: inherit;
@@ -141,7 +150,7 @@ $mat-radio-ripple-radius: 20px;
     opacity: 0.04;
   }
 
-  .mat-radio-button.cdk-focused & {
+  .mat-radio-button:not(.mat-radio-disabled).cdk-focused & {
     opacity: 0.12;
   }
 

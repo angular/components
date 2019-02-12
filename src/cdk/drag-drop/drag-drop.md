@@ -22,12 +22,12 @@ update the data model once the user finishes dragging.
 ### Transferring items between lists
 The `cdkDropList` directive supports transferring dragged items between connected drop zones.
 You can connect one or more `cdkDropList` instances together by setting the `cdkDropListConnectedTo`
-property.
+property or by wrapping the elements in an element with the `cdkDropListGroup` attribute.
 
 <!-- example(cdk-drag-drop-connected-sorting) -->
 
-Note that `cdkDropListConnectedTo` works both with a direct reference to another `cdkDropList`, or by
-referencing the `id` of another drop container:
+Note that `cdkDropListConnectedTo` works both with a direct reference to another `cdkDropList`, or
+by referencing the `id` of another drop container:
 
 ```html
 <!-- This is valid -->
@@ -38,6 +38,19 @@ referencing the `id` of another drop container:
 <div cdkDropList id="list-one" [cdkDropListConnectedTo]="['list-two']"></div>
 <div cdkDropList id="list-two" [cdkDropListConnectedTo]="['list-one']"></div>
 ```
+
+If you have an unknown number of connected drop lists, you can use the `cdkDropListGroup` directive
+to set up the connection automatically. Note that any new `cdkDropList` that is added under a group
+will be connected to all other lists automatically.
+
+```html
+<div cdkDropListGroup>
+  <!-- All lists in here will be connected. -->
+  <div cdkDropList *ngFor="let list of lists"></div>
+</div>
+```
+
+<!-- example(cdk-drag-drop-connected-sorting-group) -->
 
 ### Attaching data
 You can associate some arbitrary data with both `cdkDrag` and `cdkDropList` by setting `cdkDragData`
@@ -57,11 +70,14 @@ by the directives:
 
 | Selector            | Description                                                              |
 |---------------------|--------------------------------------------------------------------------|
-| `.cdk-drop-list`    | Corresponds to the `cdkDropList` container.                                  |
+| `.cdk-drop-list`    | Corresponds to the `cdkDropList` container.                              |
 | `.cdk-drag`         | Corresponds to a `cdkDrag` instance.                                     |
+| `.cdk-drag-disabled`| Class that is added to a disabled `cdkDrag`.                             |
 | `.cdk-drag-preview` | This is the element that will be rendered next to the user's cursor as they're dragging an item in a sortable list. By default the element looks exactly like the element that is being dragged. |
 | `.cdk-drag-placeholder` | This is element that will be shown instead of the real element as it's being dragged inside a `cdkDropList`. By default this will look exactly like the element that is being sorted. |
 | `.cdk-drop-list-dragging` | A class that is added to `cdkDropList` while the user is dragging an item.  |
+| `.cdk-drop-list-disabled` | A class that is added to `cdkDropList` when it is disabled.  |
+| `.cdk-drop-list-receiving`| A class that is added to `cdkDropList` when it can receive an item that is being dragged inside a connected drop list.  |
 
 ### Animations
 The drag-and-drop module supports animations both while sorting an element inside a list, as well as
@@ -100,7 +116,10 @@ restrict the user to only be able to do so using a handle element, you can do it
 ### Customizing the drag preview
 When a `cdkDrag` element is picked up, it will create a preview element visible while dragging.
 By default, this will be a clone of the original element positioned next to the user's cursor.
-This preview can be customized, though, by providing a custom template via `*cdkDragPreview`:
+This preview can be customized, though, by providing a custom template via `*cdkDragPreview`.
+Note that the cloned element will remove its `id` attribute in order to avoid having multiple
+elements with the same `id` on the page. This will cause any CSS that targets that `id` not
+to be applied.
 
 <!-- example(cdk-drag-drop-custom-preview) -->
 
@@ -118,9 +137,19 @@ changed by setting the `orientation` property to `"horizontal".
 
 <!-- example(cdk-drag-drop-horizontal-sorting) -->
 
+### Restricting movement within an element
+
+If you want to stop the user from being able to drag a `cdkDrag` element outside of another element,
+you can pass a CSS selector to the `cdkDragBoundary` attribute. The attribute works by accepting a
+selector and looking up the DOM until it finds an element that matches it. If a match is found,
+it'll be used as the boundary outside of which the element can't be dragged. `cdkDragBoundary` can
+also be used when `cdkDrag` is placed inside a `cdkDropList`.
+
+<!-- example(cdk-drag-drop-boundary) -->
+
 ### Restricting movement along an axis
 By default, `cdkDrag` allows free movement in all directions. To restrict dragging to a
-specific axis, you can set `cdkDragLockAxis` on `cdkDrag` or `lockAxis` on `cdkDropList`
+specific axis, you can set `cdkDragLockAxis` on `cdkDrag` or `cdkDropListLockAxis` on `cdkDropList`
 to either `"x"` or `"y"`.
 
 <!-- example(cdk-drag-drop-axis-lock) -->
@@ -142,3 +171,11 @@ new container. Depending on whether the predicate returns `true` or `false`, the
 be allowed into the new container.
 
 <!-- example(cdk-drag-drop-enter-predicate) -->
+
+### Disable dragging
+If you want to disable dragging for a particular drag item, you can do so by setting the
+`cdkDragDisabled` input on a `cdkDrag` item. Furthermore, you can disable an entire list
+using the `cdkDropListDisabled` input on a `cdkDropList` or a particular handle via
+`cdkDragHandleDisabled` on `cdkDragHandle`.
+
+<!-- example(cdk-drag-drop-disabled) -->

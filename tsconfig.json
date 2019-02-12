@@ -7,6 +7,7 @@
     "module": "es2015",
     "moduleResolution": "node",
     "noUnusedParameters": true,
+    "noUnusedLocals": true,
     "strictNullChecks": true,
     "strictFunctionTypes": true,
     "noImplicitAny": true,
@@ -26,6 +27,9 @@
     // Exclude files that depend on Node APIs because those depend on the Node types and therefore
     // cause ambiguous imports. For example `setTimeout()` will return a Timer instead of a number.
     "./src/universal-app/prerender.ts",
+
+    // Exclude the API goldens in order to not slow-down IDE's using this tsconfig file
+    "tools/public_api_guard/**/*.d.ts",
 
     // IDEs should not type-check the different node_modules directories of the different packages.
     // This would cause the IDEs to be slower and also linters would check the node_modules.

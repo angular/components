@@ -459,6 +459,27 @@ describe('MatBottomSheet', () => {
       expect(overlayContainerElement.querySelector('mat-bottom-sheet-container')).toBeTruthy();
     }));
 
+    it('should allow for the disableClose option to be updated while open', fakeAsync(() => {
+      let bottomSheetRef = bottomSheet.open(PizzaMsg, {
+        disableClose: true,
+        viewContainerRef: testViewContainerRef
+      });
+
+      viewContainerFixture.detectChanges();
+
+      let backdrop = overlayContainerElement.querySelector('.cdk-overlay-backdrop') as HTMLElement;
+      backdrop.click();
+
+      expect(overlayContainerElement.querySelector('mat-bottom-sheet-container')).toBeTruthy();
+
+      bottomSheetRef.disableClose = false;
+      backdrop.click();
+      viewContainerFixture.detectChanges();
+      flush();
+
+      expect(overlayContainerElement.querySelector('mat-bottom-sheet-container')).toBeFalsy();
+    }));
+
   });
 
   describe('hasBackdrop option', () => {
@@ -514,17 +535,45 @@ describe('MatBottomSheet', () => {
     beforeEach(() => document.body.appendChild(overlayContainerElement));
     afterEach(() => document.body.removeChild(overlayContainerElement));
 
-    it('should focus the first tabbable element of the bottom sheet on open', fakeAsync(() => {
+    it('should focus the bottom sheet container by default', fakeAsync(() => {
       bottomSheet.open(PizzaMsg, {
-        viewContainerRef: testViewContainerRef
+        viewContainerRef: testViewContainerRef,
       });
 
       viewContainerFixture.detectChanges();
       flushMicrotasks();
 
-      expect(document.activeElement!.tagName)
-          .toBe('INPUT', 'Expected first tabbable element (input) in the sheet to be focused.');
+      expect(document.activeElement!.tagName).toBe('MAT-BOTTOM-SHEET-CONTAINER',
+          'Expected bottom sheet container to be focused.');
     }));
+
+    it('should create a focus trap if autoFocus is disabled', fakeAsync(() => {
+      bottomSheet.open(PizzaMsg, {
+        viewContainerRef: testViewContainerRef,
+        autoFocus: false
+      });
+
+      viewContainerFixture.detectChanges();
+      flushMicrotasks();
+
+      const focusTrapAnchors = overlayContainerElement.querySelectorAll('.cdk-focus-trap-anchor');
+
+      expect(focusTrapAnchors.length).toBeGreaterThan(0);
+    }));
+
+    it('should focus the first tabbable element of the bottom sheet on open when' +
+      'autoFocus is enabled', fakeAsync(() => {
+        bottomSheet.open(PizzaMsg, {
+          viewContainerRef: testViewContainerRef,
+          autoFocus: true
+        });
+
+        viewContainerFixture.detectChanges();
+        flushMicrotasks();
+
+        expect(document.activeElement!.tagName).toBe('INPUT',
+            'Expected first tabbable element (input) in the sheet to be focused.');
+      }));
 
     it('should allow disabling focus of the first tabbable element', fakeAsync(() => {
       bottomSheet.open(PizzaMsg, {

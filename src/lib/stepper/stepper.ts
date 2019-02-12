@@ -11,7 +11,7 @@ import {
   CdkStep,
   CdkStepper,
   StepContentPositionState,
-  MAT_STEPPER_GLOBAL_OPTIONS,
+  STEPPER_GLOBAL_OPTIONS,
   StepperOptions
 } from '@angular/cdk/stepper';
 import {AnimationEvent} from '@angular/animations';
@@ -63,7 +63,7 @@ export class MatStep extends CdkStep implements ErrorStateMatcher {
   /** @breaking-change 8.0.0 remove the `?` after `stepperOptions` */
   constructor(@Inject(forwardRef(() => MatStepper)) stepper: MatStepper,
               @SkipSelf() private _errorStateMatcher: ErrorStateMatcher,
-              @Optional() @Inject(MAT_STEPPER_GLOBAL_OPTIONS) stepperOptions?: StepperOptions) {
+              @Optional() @Inject(STEPPER_GLOBAL_OPTIONS) stepperOptions?: StepperOptions) {
     super(stepper, stepperOptions);
   }
 
@@ -97,6 +97,9 @@ export class MatStepper extends CdkStepper implements AfterContentInit {
   /** Event emitted when the current step is done transitioning in. */
   @Output() readonly animationDone: EventEmitter<void> = new EventEmitter<void>();
 
+  /** Whether ripples should be disabled for the step headers. */
+  @Input() disableRipple: boolean;
+
   /** Consumer-specified template-refs to be used to override the header icons. */
   _iconOverrides: {[key: string]: TemplateRef<MatStepperIconContext>} = {};
 
@@ -122,9 +125,6 @@ export class MatStepper extends CdkStepper implements AfterContentInit {
     });
   }
 }
-
-// TODO(devversion): workaround for https://github.com/angular/material2/issues/12760
-(MatStepper as any)['ctorParameters'] = () => (CdkStepper as any)['ctorParameters'];
 
 @Component({
   moduleId: module.id,

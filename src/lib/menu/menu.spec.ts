@@ -114,6 +114,33 @@ describe('MatMenu', () => {
     expect(overlayContainerElement.querySelector('.cdk-overlay-backdrop')).toBeFalsy();
   }));
 
+  it('should be able to remove the backdrop on repeat openings', fakeAsync(() => {
+    const fixture = createComponent(SimpleMenu, [], [FakeIcon]);
+    fixture.detectChanges();
+
+    fixture.componentInstance.trigger.openMenu();
+    fixture.detectChanges();
+    tick(500);
+
+    // Start off with a backdrop.
+    expect(overlayContainerElement.querySelector('.cdk-overlay-backdrop')).toBeTruthy();
+
+    fixture.componentInstance.trigger.closeMenu();
+    fixture.detectChanges();
+    tick(500);
+
+    // Change `hasBackdrop` after the first open.
+    fixture.componentInstance.menu.hasBackdrop = false;
+    fixture.detectChanges();
+
+    // Reopen the menu.
+    fixture.componentInstance.trigger.openMenu();
+    fixture.detectChanges();
+    tick(500);
+
+    expect(overlayContainerElement.querySelector('.cdk-overlay-backdrop')).toBeFalsy();
+  }));
+
   it('should restore focus to the trigger when the menu was opened by keyboard', fakeAsync(() => {
     const fixture = createComponent(SimpleMenu, [], [FakeIcon]);
     fixture.detectChanges();
@@ -357,6 +384,7 @@ describe('MatMenu', () => {
   it('should transfer any custom classes from the host to the overlay', () => {
     const fixture = createComponent(SimpleMenu, [], [FakeIcon]);
 
+    fixture.componentInstance.panelClass = 'custom-one custom-two';
     fixture.detectChanges();
     fixture.componentInstance.trigger.openMenu();
     fixture.detectChanges();
@@ -371,6 +399,28 @@ describe('MatMenu', () => {
     expect(panel.classList).toContain('custom-two');
   });
 
+  it('should not remove mat-elevation class from overlay when panelClass is changed', () => {
+    const fixture = createComponent(SimpleMenu, [], [FakeIcon]);
+
+    fixture.componentInstance.panelClass = 'custom-one';
+    fixture.detectChanges();
+    fixture.componentInstance.trigger.openMenu();
+    fixture.detectChanges();
+
+    const panel = overlayContainerElement.querySelector('.mat-menu-panel')!;
+
+    expect(panel.classList).toContain('custom-one');
+    expect(panel.classList).toContain('mat-elevation-z4');
+
+    fixture.componentInstance.panelClass = 'custom-two';
+    fixture.detectChanges();
+
+    expect(panel.classList).not.toContain('custom-one');
+    expect(panel.classList).toContain('custom-two');
+    expect(panel.classList)
+        .toContain('mat-elevation-z4', 'Expected mat-elevation-z4 not to be removed');
+  });
+
   it('should set the "menu" role on the overlay panel', () => {
     const fixture = createComponent(SimpleMenu, [], [FakeIcon]);
     fixture.detectChanges();
@@ -383,6 +433,30 @@ describe('MatMenu', () => {
 
     const role = menuPanel ? menuPanel.getAttribute('role') : '';
     expect(role).toBe('menu', 'Expected panel to have the "menu" role.');
+  });
+
+  it('should set the "menuitem" role on the items by default', () => {
+    const fixture = createComponent(SimpleMenu, [], [FakeIcon]);
+    fixture.detectChanges();
+    fixture.componentInstance.trigger.openMenu();
+    fixture.detectChanges();
+
+    const items = Array.from(overlayContainerElement.querySelectorAll('.mat-menu-item'));
+
+    expect(items.length).toBeGreaterThan(0);
+    expect(items.every(item => item.getAttribute('role') === 'menuitem')).toBe(true);
+  });
+
+  it('should be able to set an alternate role on the menu items', () => {
+    const fixture = createComponent(MenuWithCheckboxItems);
+    fixture.detectChanges();
+    fixture.componentInstance.trigger.openMenu();
+    fixture.detectChanges();
+
+    const items = Array.from(overlayContainerElement.querySelectorAll('.mat-menu-item'));
+
+    expect(items.length).toBeGreaterThan(0);
+    expect(items.every(item => item.getAttribute('role') === 'menuitemcheckbox')).toBe(true);
   });
 
   it('should not throw an error on destroy', () => {
@@ -1807,7 +1881,7 @@ describe('MatMenu default overrides', () => {
     <button [matMenuTriggerFor]="menu" #triggerEl>Toggle menu</button>
     <mat-menu
       #menu="matMenu"
-      class="custom-one custom-two"
+      [class]="panelClass"
       (closed)="closeCallback($event)"
       [backdropClass]="backdropClass">
 
@@ -1829,6 +1903,7 @@ class SimpleMenu {
   extraItems: string[] = [];
   closeCallback = jasmine.createSpy('menu closed callback');
   backdropClass: string;
+  panelClass: string;
 }
 
 @Component({
@@ -2099,4 +2174,19 @@ class DynamicPanelMenu {
   @ViewChild(MatMenuTrigger) trigger: MatMenuTrigger;
   @ViewChild('one') firstMenu: MatMenu;
   @ViewChild('two') secondMenu: MatMenu;
+}
+
+
+@Component({
+  template: `
+    <button [matMenuTriggerFor]="menu">Toggle menu</button>
+
+    <mat-menu #menu="matMenu">
+      <button mat-menu-item role="menuitemcheckbox" aria-checked="true">Checked</button>
+      <button mat-menu-item role="menuitemcheckbox" aria-checked="false">Not checked</button>
+    </mat-menu>
+  `
+})
+class MenuWithCheckboxItems {
+  @ViewChild(MatMenuTrigger) trigger: MatMenuTrigger;
 }

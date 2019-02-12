@@ -36,7 +36,7 @@ import {MatOption, MatOptionSelectionChange} from '@angular/material/core';
 import {MatFormField, MatFormFieldModule} from '@angular/material/form-field';
 import {By} from '@angular/platform-browser';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
-import {Observable, Subject, Subscription} from 'rxjs';
+import {Observable, Subject, Subscription, EMPTY} from 'rxjs';
 import {map, startWith} from 'rxjs/operators';
 import {MatInputModule} from '../input/index';
 import {
@@ -47,6 +47,7 @@ import {
   MatAutocompleteModule,
   MatAutocompleteSelectedEvent,
   MatAutocompleteTrigger,
+  MatAutocompleteOrigin,
 } from './index';
 
 
@@ -481,11 +482,20 @@ describe('MatAutocomplete', () => {
       expect(fixture.componentInstance.stateCtrl.value).toBe('hello');
     });
 
+    it('should set aria-haspopup depending on whether the autocomplete is disabled', () => {
+      expect(input.getAttribute('aria-haspopup')).toBe('true');
+
+      fixture.componentInstance.autocompleteDisabled = true;
+      fixture.detectChanges();
+
+      expect(input.getAttribute('aria-haspopup')).toBe('false');
+    });
+
   });
 
   it('should have the correct text direction in RTL', () => {
     const rtlFixture = createComponent(SimpleAutocomplete, [
-      {provide: Directionality, useFactory: () => ({value: 'rtl'})},
+      {provide: Directionality, useFactory: () => ({value: 'rtl', change: EMPTY})},
     ]);
 
     rtlFixture.detectChanges();
@@ -498,7 +508,7 @@ describe('MatAutocomplete', () => {
   });
 
   it('should update the panel direction if it changes for the trigger', () => {
-    const dirProvider = {value: 'rtl'};
+    const dirProvider = {value: 'rtl', change: EMPTY};
     const rtlFixture = createComponent(SimpleAutocomplete, [
       {provide: Directionality, useFactory: () => dirProvider},
     ]);
@@ -569,6 +579,18 @@ describe('MatAutocomplete', () => {
 
       expect(fixture.componentInstance.stateCtrl.value)
           .toEqual('al', 'Expected control value to be updated as user types.');
+    });
+
+    it('should update control value when autofilling', () => {
+      // Simulate the browser autofilling the input by setting a value and
+      // dispatching an `input` event while the input is out of focus.
+      expect(document.activeElement).not.toBe(input, 'Expected input not to have focus.');
+      input.value = 'Alabama';
+      dispatchFakeEvent(input, 'input');
+      fixture.detectChanges();
+
+      expect(fixture.componentInstance.stateCtrl.value)
+          .toBe('Alabama', 'Expected value to be propagated to the form control.');
     });
 
     it('should update control value when option is selected with option value', fakeAsync(() => {
@@ -1632,6 +1654,29 @@ describe('MatAutocomplete', () => {
           .toContain('mat-active', 'Expected first option to be highlighted.');
     }));
 
+    it('should remove aria-activedescendant when panel is closed with autoActiveFirstOption',
+      fakeAsync(() => {
+        const input: HTMLElement = fixture.nativeElement.querySelector('input');
+
+        expect(input.hasAttribute('aria-activedescendant'))
+            .toBe(false, 'Expected no active descendant on init.');
+
+        fixture.componentInstance.trigger.autocomplete.autoActiveFirstOption = true;
+        fixture.componentInstance.trigger.openPanel();
+        fixture.detectChanges();
+        zone.simulateZoneExit();
+        fixture.detectChanges();
+
+        expect(input.getAttribute('aria-activedescendant'))
+            .toBeTruthy('Expected active descendant while open.');
+
+        fixture.componentInstance.trigger.closePanel();
+        fixture.detectChanges();
+
+        expect(input.hasAttribute('aria-activedescendant'))
+            .toBe(false, 'Expected no active descendant when closed.');
+      }));
+
     it('should be able to configure preselecting the first option globally', fakeAsync(() => {
       overlayContainer.ngOnDestroy();
       fixture.destroy();
@@ -2183,6 +2228,34 @@ describe('MatAutocomplete', () => {
     const fixture = createComponent(AutocompleteWithDifferentOrigin);
 
     fixture.detectChanges();
+    fixture.componentInstance.connectedTo = fixture.componentInstance.alternateOrigin;
+    fixture.detectChanges();
+    fixture.componentInstance.trigger.openPanel();
+    fixture.detectChanges();
+    zone.simulateZoneExit();
+
+    const overlayRect =
+        overlayContainerElement.querySelector('.cdk-overlay-pane')!.getBoundingClientRect();
+    const originRect = fixture.nativeElement.querySelector('.origin').getBoundingClientRect();
+
+    expect(Math.floor(overlayRect.top)).toBe(Math.floor(originRect.bottom),
+        'Expected autocomplete panel to align with the bottom of the new origin.');
+  });
+
+  it('should be able to change the origin after the panel has been opened', () => {
+    const fixture = createComponent(AutocompleteWithDifferentOrigin);
+
+    fixture.detectChanges();
+    fixture.componentInstance.trigger.openPanel();
+    fixture.detectChanges();
+    zone.simulateZoneExit();
+
+    fixture.componentInstance.trigger.closePanel();
+    fixture.detectChanges();
+
+    fixture.componentInstance.connectedTo = fixture.componentInstance.alternateOrigin;
+    fixture.detectChanges();
+
     fixture.componentInstance.trigger.openPanel();
     fixture.detectChanges();
     zone.simulateZoneExit();
@@ -2568,7 +2641,7 @@ class AutocompleteWithNumberInputAndNgModel {
         <input
           matInput
           [matAutocomplete]="auto"
-          [matAutocompleteConnectedTo]="origin"
+          [matAutocompleteConnectedTo]="connectedTo"
           [(ngModel)]="selectedValue">
       </mat-form-field>
     </div>
@@ -2588,8 +2661,10 @@ class AutocompleteWithNumberInputAndNgModel {
 })
 class AutocompleteWithDifferentOrigin {
   @ViewChild(MatAutocompleteTrigger) trigger: MatAutocompleteTrigger;
+  @ViewChild(MatAutocompleteOrigin) alternateOrigin: MatAutocompleteOrigin;
   selectedValue: string;
   values = ['one', 'two', 'three'];
+  connectedTo?: MatAutocompleteOrigin;
 }
 
 @Component({

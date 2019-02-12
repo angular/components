@@ -310,11 +310,13 @@ export class MatInput extends _MatInputMixinBase implements MatFormFieldControl<
   }
 
   /** Focuses the input. */
-  focus(): void { this._elementRef.nativeElement.focus(); }
+  focus(): void {
+    this._elementRef.nativeElement.focus();
+  }
 
   /** Callback for the cases where the focused state of the input changes. */
   _focusChanged(isFocused: boolean) {
-    if (isFocused !== this.focused && !this.readonly) {
+    if (isFocused !== this.focused && (!this.readonly || !isFocused)) {
       this.focused = isFocused;
       this.stateChanges.next();
     }
@@ -383,9 +385,12 @@ export class MatInput extends _MatInputMixinBase implements MatFormFieldControl<
       // a non-empty display value. For a `<select multiple>`, the label *always* floats to avoid
       // overlapping the label with the options.
       const selectElement = this._elementRef.nativeElement as HTMLSelectElement;
+      const firstOption: HTMLOptionElement | undefined = selectElement.options[0];
 
-      return selectElement.multiple || !this.empty || !!selectElement.options[0].label ||
-          this.focused;
+      // On most browsers the `selectedIndex` will always be 0, however on IE and Edge it'll be
+      // -1 if the `value` is set to something, that isn't in the list of options, at a later point.
+      return this.focused || selectElement.multiple || !this.empty ||
+             !!(selectElement.selectedIndex > -1 && firstOption && firstOption.label);
     } else {
       return this.focused || !this.empty;
     }
@@ -395,7 +400,9 @@ export class MatInput extends _MatInputMixinBase implements MatFormFieldControl<
    * Implemented as part of MatFormFieldControl.
    * @docs-private
    */
-  setDescribedByIds(ids: string[]) { this._ariaDescribedby = ids.join(' '); }
+  setDescribedByIds(ids: string[]) {
+    this._ariaDescribedby = ids.join(' ');
+  }
 
   /**
    * Implemented as part of MatFormFieldControl.

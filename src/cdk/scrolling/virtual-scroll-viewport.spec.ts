@@ -15,7 +15,7 @@ import {
   ViewContainerRef,
   ViewEncapsulation
 } from '@angular/core';
-import {ComponentFixture, fakeAsync, flush, inject, TestBed} from '@angular/core/testing';
+import {async, ComponentFixture, fakeAsync, flush, inject, TestBed} from '@angular/core/testing';
 import {animationFrameScheduler, Subject} from 'rxjs';
 
 
@@ -25,12 +25,14 @@ describe('CdkVirtualScrollViewport', () => {
     let testComponent: FixedSizeVirtualScroll;
     let viewport: CdkVirtualScrollViewport;
 
-    beforeEach(() => {
+    beforeEach(async(() => {
       TestBed.configureTestingModule({
         imports: [ScrollingModule],
         declarations: [FixedSizeVirtualScroll],
       }).compileComponents();
+    }));
 
+    beforeEach(() => {
       fixture = TestBed.createComponent(FixedSizeVirtualScroll);
       testComponent = fixture.componentInstance;
       viewport = testComponent.viewport;
@@ -131,6 +133,28 @@ describe('CdkVirtualScrollViewport', () => {
       fixture.detectChanges();
 
       expect(viewport.elementRef.nativeElement.scrollWidth).toBe(10000);
+    }));
+
+    it('should set a class based on the orientation', fakeAsync(() => {
+      finishInit(fixture);
+      const viewportElement: HTMLElement =
+          fixture.nativeElement.querySelector('.cdk-virtual-scroll-viewport');
+
+      expect(viewportElement.classList).toContain('cdk-virtual-scroll-orientation-vertical');
+
+      testComponent.orientation = 'horizontal';
+      fixture.detectChanges();
+
+      expect(viewportElement.classList).toContain('cdk-virtual-scroll-orientation-horizontal');
+    }));
+
+    it('should set the vertical class if an invalid orientation is set', fakeAsync(() => {
+      testComponent.orientation = 'diagonal';
+      finishInit(fixture);
+      const viewportElement: HTMLElement =
+          fixture.nativeElement.querySelector('.cdk-virtual-scroll-viewport');
+
+      expect(viewportElement.classList).toContain('cdk-virtual-scroll-orientation-vertical');
     }));
 
     it('should set rendered range', fakeAsync(() => {

@@ -70,7 +70,7 @@ export class MatChipListChange {
 
 
 /**
- * A material design chips component (named ChipList for it's similarity to the List component).
+ * A material design chips component (named ChipList for its similarity to the List component).
  */
 @Component({
   moduleId: module.id,
@@ -267,10 +267,7 @@ export class MatChipList extends _MatChipListMixinBase implements MatFormFieldCo
   get disabled(): boolean { return this.ngControl ? !!this.ngControl.disabled : this._disabled; }
   set disabled(value: boolean) {
     this._disabled = coerceBooleanProperty(value);
-
-    if (this.chips) {
-      this.chips.forEach(chip => chip.disabled = this._disabled);
-    }
+    this._syncChipsDisabledState();
   }
   protected _disabled: boolean = false;
 
@@ -352,15 +349,32 @@ export class MatChipList extends _MatChipListMixinBase implements MatFormFieldCo
       .withVerticalOrientation()
       .withHorizontalOrientation(this._dir ? this._dir.value : 'ltr');
 
+    if (this._dir) {
+      this._dir.change
+        .pipe(takeUntil(this._destroyed))
+        .subscribe(dir => this._keyManager.withHorizontalOrientation(dir));
+    }
+
     // Prevents the chip list from capturing focus and redirecting
     // it back to the first chip when the user tabs out.
     this._keyManager.tabOut.pipe(takeUntil(this._destroyed)).subscribe(() => {
       this._tabIndex = -1;
-      setTimeout(() => this._tabIndex = this._userTabIndex || 0);
+      setTimeout(() => {
+        this._tabIndex = this._userTabIndex || 0;
+        this._changeDetectorRef.markForCheck();
+      });
     });
 
     // When the list changes, re-subscribe
     this.chips.changes.pipe(startWith(null), takeUntil(this._destroyed)).subscribe(() => {
+      if (this.disabled) {
+        // Since this happens after the content has been
+        // checked, we need to defer it to the next tick.
+        Promise.resolve().then(() => {
+          this._syncChipsDisabledState();
+        });
+      }
+
       this._resetChips();
 
       // Reset chips selected/deselected status
@@ -444,7 +458,7 @@ export class MatChipList extends _MatChipListMixinBase implements MatFormFieldCo
   }
 
   /**
-   * Focuses the the first non-disabled chip in this chip list, or the associated input when there
+   * Focuses the first non-disabled chip in this chip list, or the associated input when there
    * are no eligible chips.
    */
   focus(): void {
@@ -765,5 +779,14 @@ export class MatChipList extends _MatChipListMixinBase implements MatFormFieldCo
   /** Checks whether any of the chips is focused. */
   private _hasFocusedChip() {
     return this.chips.some(chip => chip._hasFocus);
+  }
+
+  /** Syncs the list's disabled state with the individual chips. */
+  private _syncChipsDisabledState() {
+    if (this.chips) {
+      this.chips.forEach(chip => {
+        chip.disabled = this._disabled;
+      });
+    }
   }
 }

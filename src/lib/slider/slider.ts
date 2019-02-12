@@ -18,6 +18,7 @@ import {
   PAGE_UP,
   RIGHT_ARROW,
   UP_ARROW,
+  hasModifierKey,
 } from '@angular/cdk/keycodes';
 import {
   Attribute,
@@ -502,7 +503,9 @@ export class MatSlider extends _MatSliderMixinBase
   }
 
   _onMousedown(event: MouseEvent) {
-    if (this.disabled) {
+    // Don't do anything if the slider is disabled or the
+    // user is using anything other than the main mouse button.
+    if (this.disabled || event.button !== 0) {
       return;
     }
 
@@ -580,9 +583,11 @@ export class MatSlider extends _MatSliderMixinBase
   }
 
   _onKeydown(event: KeyboardEvent) {
-    if (this.disabled) { return; }
+    if (this.disabled || hasModifierKey(event)) {
+      return;
+    }
 
-    let oldValue = this.value;
+    const oldValue = this.value;
 
     switch (event.keyCode) {
       case PAGE_UP:

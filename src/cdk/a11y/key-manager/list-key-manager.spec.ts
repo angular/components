@@ -93,6 +93,15 @@ describe('Key managers', () => {
       expect(keyManager.activeItem!.getLabel()).toBe('one');
     });
 
+    it('should start off the activeItem as null', () => {
+      expect(new ListKeyManager([]).activeItem).toBeNull();
+    });
+
+    it('should set the activeItem to null if an invalid index is passed in', () => {
+      keyManager.setActiveItem(1337);
+      expect(keyManager.activeItem).toBeNull();
+    });
+
     describe('Key events', () => {
 
       it('should emit tabOut when the tab key is pressed', () => {
@@ -662,6 +671,30 @@ describe('Key managers', () => {
         tick(debounceInterval);
 
         expect(keyManager.activeItem).toBe(itemList.items[1]);
+      }));
+
+      it('should not move focus if a modifier, that is not allowed, is pressed', fakeAsync(() => {
+        const tEvent = createKeyboardEvent('keydown', 84, undefined, 't');
+        Object.defineProperty(tEvent, 'ctrlKey', {get: () => true});
+
+        expect(keyManager.activeItem).toBeFalsy();
+
+        keyManager.onKeydown(tEvent); // types "t"
+        tick(debounceInterval);
+
+        expect(keyManager.activeItem).toBeFalsy();
+      }));
+
+      it('should always allow the shift key', fakeAsync(() => {
+        const tEvent = createKeyboardEvent('keydown', 84, undefined, 't');
+        Object.defineProperty(tEvent, 'shiftKey', {get: () => true});
+
+        expect(keyManager.activeItem).toBeFalsy();
+
+        keyManager.onKeydown(tEvent); // types "t"
+        tick(debounceInterval);
+
+        expect(keyManager.activeItem).toBeTruthy();
       }));
 
       it('should focus the first item that starts with sequence of letters', fakeAsync(() => {

@@ -7,7 +7,8 @@ import {
   Input,
   QueryList,
   Type,
-  ViewChild
+  ViewChild,
+  AfterViewInit
 } from '@angular/core';
 import {ComponentFixture, fakeAsync, flush, TestBed} from '@angular/core/testing';
 import {BehaviorSubject, combineLatest, Observable, of as observableOf} from 'rxjs';
@@ -327,6 +328,16 @@ describe('CdkTable', () => {
     ]);
   });
 
+  it('should be able to project a caption', fakeAsync(() => {
+    setupTableTestApp(NativeHtmlTableWithCaptionApp);
+    fixture.detectChanges();
+
+    const caption = tableElement.querySelector('caption');
+
+    expect(caption).toBeTruthy();
+    expect(tableElement.firstElementChild).toBe(caption);
+  }));
+
   describe('with different data inputs other than data source', () => {
     let baseData: TestData[] = [
       {a: 'a_1', b: 'b_1', c: 'c_1'},
@@ -527,6 +538,17 @@ describe('CdkTable', () => {
     expect(() => createComponent(MissingColumnDefCdkTableApp).detectChanges())
         .toThrowError(getTableUnknownColumnError('column_a').message);
   });
+
+  it('should throw an error if a column definition is requested but not defined after render',
+      fakeAsync(() => {
+        const columnDefinitionMissingAfterRenderFixture =
+            createComponent(MissingColumnDefAfterRenderCdkTableApp);
+        expect(() => {
+          columnDefinitionMissingAfterRenderFixture.detectChanges();
+          flush();
+          columnDefinitionMissingAfterRenderFixture.detectChanges();
+        }).toThrowError(getTableUnknownColumnError('column_a').message);
+  }));
 
   it('should throw an error if the row definitions are missing', () => {
     expect(() => createComponent(MissingAllRowDefsCdkTableApp).detectChanges())
@@ -1967,6 +1989,28 @@ class MissingColumnDefCdkTableApp {
 @Component({
   template: `
     <cdk-table [dataSource]="dataSource">
+      <ng-container cdkColumnDef="column_b">
+        <cdk-header-cell *cdkHeaderCellDef> Column A</cdk-header-cell>
+        <cdk-cell *cdkCellDef="let row"> {{row.a}}</cdk-cell>
+      </ng-container>
+
+      <cdk-header-row *cdkHeaderRowDef="displayedColumns"></cdk-header-row>
+      <cdk-row *cdkRowDef="let row; columns: displayedColumns"></cdk-row>
+    </cdk-table>
+  `
+})
+class MissingColumnDefAfterRenderCdkTableApp implements AfterViewInit {
+  dataSource: FakeDataSource|null = null;
+  displayedColumns: string[] = [];
+
+  ngAfterViewInit() {
+    setTimeout(() => { this.displayedColumns = ['column_a']; }, 0);
+  }
+}
+
+@Component({
+  template: `
+    <cdk-table [dataSource]="dataSource">
       <ng-container cdkColumnDef="column_a">
         <cdk-header-cell *cdkHeaderCellDef> Column A</cdk-header-cell>
         <cdk-cell *cdkCellDef="let row"> {{row.a}}</cdk-cell>
@@ -2178,6 +2222,27 @@ class OuterTableApp {
 class NativeHtmlTableApp {
   dataSource: FakeDataSource | undefined = new FakeDataSource();
   columnsToRender = ['column_a', 'column_b', 'column_c'];
+
+  @ViewChild(CdkTable) table: CdkTable<TestData>;
+}
+
+@Component({
+  template: `
+    <table cdk-table [dataSource]="dataSource">
+      <caption>Very important data</caption>
+      <ng-container cdkColumnDef="column_a">
+        <th cdk-header-cell *cdkHeaderCellDef> Column A</th>
+        <td cdk-cell *cdkCellDef="let row"> {{row.a}}</td>
+      </ng-container>
+
+      <tr cdk-header-row *cdkHeaderRowDef="columnsToRender"></tr>
+      <tr cdk-row *cdkRowDef="let row; columns: columnsToRender" class="customRowClass"></tr>
+    </table>
+  `
+})
+class NativeHtmlTableWithCaptionApp {
+  dataSource: FakeDataSource | undefined = new FakeDataSource();
+  columnsToRender = ['column_a'];
 
   @ViewChild(CdkTable) table: CdkTable<TestData>;
 }

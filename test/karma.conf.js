@@ -1,8 +1,7 @@
 const path = require('path');
 const {customLaunchers, platformMap} = require('./browser-providers');
 
-module.exports = (config) => {
-
+module.exports = config => {
   config.set({
     basePath: path.join(__dirname, '..'),
     frameworks: ['jasmine'],
@@ -16,7 +15,7 @@ module.exports = (config) => {
     ],
     files: [
       {pattern: 'node_modules/core-js/client/core.min.js', included: true, watched: false},
-      {pattern: 'node_modules/tslib/tslib.js', included: true, watched: false},
+      {pattern: 'node_modules/tslib/tslib.js', included: false, watched: false},
       {pattern: 'node_modules/systemjs/dist/system.js', included: true, watched: false},
       {pattern: 'node_modules/zone.js/dist/zone.min.js', included: true, watched: false},
       {pattern: 'node_modules/zone.js/dist/proxy.min.js', included: true, watched: false},
@@ -25,7 +24,7 @@ module.exports = (config) => {
       {pattern: 'node_modules/zone.js/dist/async-test.js', included: true, watched: false},
       {pattern: 'node_modules/zone.js/dist/fake-async-test.js', included: true, watched: false},
       {pattern: 'node_modules/hammerjs/hammer.min.js', included: true, watched: false},
-      {pattern: 'node_modules/moment/min/moment-with-locales.min.js', included: true, watched: false},
+      {pattern: 'node_modules/moment/min/moment-with-locales.min.js', included: false, watched: false},
 
       // Include all Angular dependencies
       {pattern: 'node_modules/@angular/**/*', included: false, watched: false},
@@ -94,53 +93,46 @@ module.exports = (config) => {
   });
 
   if (process.env['CIRCLECI']) {
-    const instanceIndex = Number(process.env['CIRCLE_NODE_INDEX']);
-    const maxParallelInstances = Number(process.env['CIRCLE_NODE_TOTAL']);
-    const tunnelIdentifier = `${process.env['CIRCLE_BUILD_NUM']}-${instanceIndex}`;
-    const buildIdentifier = `angular-material-${tunnelIdentifier}`;
+    const containerInstanceIndex = Number(process.env['CIRCLE_NODE_INDEX']);
+    const maxParallelContainerInstances = Number(process.env['CIRCLE_NODE_TOTAL']);
+    const tunnelIdentifier =
+        `angular-material-${process.env['CIRCLE_BUILD_NUM']}-${containerInstanceIndex}`;
+    const buildIdentifier = `circleci-${tunnelIdentifier}`;
     const testPlatform = process.env['TEST_PLATFORM'];
+
+    // This defines how often a given browser should be launched in the same CircleCI
+    // container. This is helpful if we want to shard tests across the same browser.
+    const parallelBrowserInstances = Number(process.env['KARMA_PARALLEL_BROWSERS']) || 1;
+
+    // In case there should be multiple instances of the browsers, we need to set up the
+    // the karma-parallel plugin.
+    if (parallelBrowserInstances > 1) {
+      config.frameworks.unshift('parallel');
+      config.plugins.push(require('karma-parallel'));
+      config.parallelOptions = {
+        executors: parallelBrowserInstances,
+        shardStrategy: 'round-robin',
+      }
+    }
 
     if (testPlatform === 'browserstack') {
       config.browserStack.build = buildIdentifier;
       config.browserStack.tunnelIdentifier = tunnelIdentifier;
+    } else if (testPlatform === 'saucelabs') {
+      config.sauceLabs.build = buildIdentifier;
+      config.sauceLabs.tunnelIdentifier = tunnelIdentifier;
+      // Setup the saucelabs reporter so that we report back to Saucelabs once
+      // our tests finished.
+      config.reporters.push('saucelabs');
     }
 
     const platformBrowsers = platformMap[testPlatform];
     const browserInstanceChunks = splitBrowsersIntoInstances(
-        platformBrowsers, maxParallelInstances);
+        platformBrowsers, maxParallelContainerInstances);
 
-    // Configure Karma to launch the browsers that belong to the given test platform
-    // and instance.
-    config.browsers = browserInstanceChunks[instanceIndex];
-  }
-
-  if (process.env['TRAVIS']) {
-    const buildId = `TRAVIS #${process.env.TRAVIS_BUILD_NUMBER} (${process.env.TRAVIS_BUILD_ID})`;
-
-    // The MODE variable is the indicator of what row in the test matrix we're running.
-    // It will look like <platform>_<target>, where platform is one of 'saucelabs', 'browserstack'
-    // or 'travis'. The target is a reference to different collections of browsers that can run
-    // in the previously specified platform.
-    // TODO(devversion): when moving Saucelabs and Browserstack to Circle, remove the target part.
-    const [platform] = process.env.MODE.split('_');
-
-    if (platform === 'saucelabs') {
-      config.sauceLabs.build = buildId;
-      config.sauceLabs.tunnelIdentifier = process.env.TRAVIS_JOB_ID;
-    } else if (platform === 'browserstack') {
-      config.browserStack.build = buildId;
-      config.browserStack.tunnelIdentifier = process.env.TRAVIS_JOB_ID;
-    } else if (platform !== 'travis') {
-      throw new Error(`Platform "${platform}" unknown, but Travis specified. Exiting.`);
-    }
-
-    if (platform !== 'travis') {
-      // To guarantee a better stability for tests running on external browsers, we disable
-      // concurrency. Stability is compared to speed more important.
-      config.concurrency = 1;
-    }
-
-    config.browsers = platformMap[platform];
+    // Configure Karma to launch the browsers that belong to the given test platform and
+    // container instance.
+    config.browsers = browserInstanceChunks[containerInstanceIndex];
   }
 };
 

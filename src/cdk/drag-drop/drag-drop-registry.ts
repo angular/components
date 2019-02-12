@@ -10,16 +10,12 @@ import {Injectable, NgZone, OnDestroy, Inject} from '@angular/core';
 import {DOCUMENT} from '@angular/common';
 import {normalizePassiveListenerOptions} from '@angular/cdk/platform';
 import {Subject} from 'rxjs';
-import {toggleNativeDragInteractions} from './drag-styling';
 
 /** Event options that can be used to bind an active, capturing event. */
 const activeCapturingEventOptions = normalizePassiveListenerOptions({
   passive: false,
   capture: true
 });
-
-/** Handler for a pointer event callback. */
-type PointerEventHandler = (event: TouchEvent | MouseEvent) => void;
 
 /**
  * Service that keeps track of all the drag item and drop container
@@ -43,8 +39,8 @@ export class DragDropRegistry<I, C extends {id: string}> implements OnDestroy {
   private _activeDragInstances = new Set<I>();
 
   /** Keeps track of the event listeners that we've bound to the `document`. */
-  private _globalListeners = new Map<'touchmove' | 'mousemove' | 'touchend' | 'mouseup' | 'wheel', {
-    handler: PointerEventHandler,
+  private _globalListeners = new Map<string, {
+    handler: (event: Event) => void,
     options?: AddEventListenerOptions | boolean
   }>();
 
@@ -88,7 +84,7 @@ export class DragDropRegistry<I, C extends {id: string}> implements OnDestroy {
       this._ngZone.runOutsideAngular(() => {
         // The event handler has to be explicitly active,
         // because newer browsers make it passive by default.
-        this._document.addEventListener('touchmove', this._preventScrollListener,
+        this._document.addEventListener('touchmove', this._preventDefaultWhileDragging,
             activeCapturingEventOptions);
       });
     }
@@ -105,7 +101,7 @@ export class DragDropRegistry<I, C extends {id: string}> implements OnDestroy {
     this.stopDragging(drag);
 
     if (this._dragInstances.size === 0) {
-      this._document.removeEventListener('touchmove', this._preventScrollListener,
+      this._document.removeEventListener('touchmove', this._preventDefaultWhileDragging,
           activeCapturingEventOptions);
     }
   }
@@ -123,28 +119,32 @@ export class DragDropRegistry<I, C extends {id: string}> implements OnDestroy {
       const moveEvent = isTouchEvent ? 'touchmove' : 'mousemove';
       const upEvent = isTouchEvent ? 'touchend' : 'mouseup';
 
-      // We need to disable the native interactions on the entire body, because
-      // the user can start marking text if they drag too far in Safari.
-      toggleNativeDragInteractions(this._document.body, false);
-
       // We explicitly bind __active__ listeners here, because newer browsers will default to
       // passive ones for `mousemove` and `touchmove`. The events need to be active, because we
       // use `preventDefault` to prevent the page from scrolling while the user is dragging.
       this._globalListeners
         .set(moveEvent, {
-          handler: e => this.pointerMove.next(e),
+          handler: (e: Event) => this.pointerMove.next(e as TouchEvent | MouseEvent),
           options: activeCapturingEventOptions
         })
         .set(upEvent, {
-          handler: e => this.pointerUp.next(e),
+          handler: (e: Event) => this.pointerUp.next(e as TouchEvent | MouseEvent),
           options: true
+        })
+        // Preventing the default action on `mousemove` isn't enough to disable text selection
+        // on Safari so we need to prevent the selection event as well. Alternatively this can
+        // be done by setting `user-select: none` on the `body`, however it has causes a style
+        // recalculation which can be expensive on pages with a lot of elements.
+        .set('selectstart', {
+          handler: this._preventDefaultWhileDragging,
+          options: activeCapturingEventOptions
         });
 
       // TODO(crisbeto): prevent mouse wheel scrolling while
       // dragging until we've set up proper scroll handling.
       if (!isTouchEvent) {
         this._globalListeners.set('wheel', {
-          handler: this._preventScrollListener,
+          handler: this._preventDefaultWhileDragging,
           options: activeCapturingEventOptions
         });
       }
@@ -163,7 +163,6 @@ export class DragDropRegistry<I, C extends {id: string}> implements OnDestroy {
 
     if (this._activeDragInstances.size === 0) {
       this._clearGlobalListeners();
-      toggleNativeDragInteractions(this._document.body, true);
     }
   }
 
@@ -172,7 +171,11 @@ export class DragDropRegistry<I, C extends {id: string}> implements OnDestroy {
     return this._activeDragInstances.has(drag);
   }
 
-  /** Gets a drop container by its id. */
+  /**
+   * Gets a drop container by its id.
+   * @deprecated No longer being used. To be removed.
+   * @breaking-change 8.0.0
+   */
   getDropContainer(id: string): C | undefined {
     return Array.from(this._dropInstances).find(instance => instance.id === id);
   }
@@ -186,9 +189,10 @@ export class DragDropRegistry<I, C extends {id: string}> implements OnDestroy {
   }
 
   /**
-   * Listener used to prevent `touchmove` and `wheel` events while the element is being dragged.
+   * Event listener that will prevent the default browser action while the user is dragging.
+   * @param event Event whose default action should be prevented.
    */
-  private _preventScrollListener = (event: Event) => {
+  private _preventDefaultWhileDragging = (event: Event) => {
     if (this._activeDragInstances.size) {
       event.preventDefault();
     }

@@ -5,7 +5,7 @@ load("@build_bazel_rules_nodejs//:defs.bzl", "nodejs_binary")
 
 ts_library(
   name = "sass_bundle_lib",
-  srcs = ["sass_bundle.ts"],
+  srcs = ["sass-bundle.ts"],
   deps = [
     "@matdeps//@types/node",
     "@matdeps//scss-bundle",
@@ -18,7 +18,8 @@ nodejs_binary(
   name = "sass_bundle",
   data = [
    "@matdeps//scss-bundle",
+   "@matdeps//source-map-support",
     ":sass_bundle_lib",
   ],
-  entry_point = "angular_material/tools/sass_bundle.js",
+  entry_point = "angular_material/tools/sass-bundle.js",
 )

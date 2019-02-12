@@ -36,7 +36,8 @@ describe('MatSelectionList without forms', () => {
           SelectionListWithListOptions,
           SelectionListWithCheckboxPositionAfter,
           SelectionListWithListDisabled,
-          SelectionListWithOnlyOneOption
+          SelectionListWithOnlyOneOption,
+          SelectionListWithIndirectChildOptions,
         ],
       });
 
@@ -196,6 +197,26 @@ describe('MatSelectionList without forms', () => {
       expect(ENTER_EVENT.defaultPrevented).toBe(true);
     });
 
+    it('should not be able to toggle an item when pressing a modifier key', () => {
+      const testListItem = listOptions[1].nativeElement as HTMLElement;
+      const selectList =
+          selectionList.injector.get<MatSelectionList>(MatSelectionList).selectedOptions;
+
+      expect(selectList.selected.length).toBe(0);
+
+      [ENTER, SPACE].forEach(key => {
+        const event = createKeyboardEvent('keydown', key, testListItem);
+        Object.defineProperty(event, 'ctrlKey', { get: () => true });
+
+        dispatchFakeEvent(testListItem, 'focus');
+        selectionList.componentInstance._keydown(event);
+        fixture.detectChanges();
+        expect(event.defaultPrevented).toBe(false);
+      });
+
+      expect(selectList.selected.length).toBe(0);
+    });
+
     it('should not be able to toggle a disabled option using SPACE', () => {
       const testListItem = listOptions[1].nativeElement as HTMLElement;
       const selectionModel = selectionList.componentInstance.selectedOptions;
@@ -332,6 +353,20 @@ describe('MatSelectionList without forms', () => {
       expect(event.defaultPrevented).toBe(true);
     });
 
+    it('should not change focus when pressing HOME with a modifier key', () => {
+      const manager = selectionList.componentInstance._keyManager;
+      expect(manager.activeItemIndex).toBe(-1);
+
+      const event = createKeyboardEvent('keydown', HOME);
+      Object.defineProperty(event, 'shiftKey', { get: () => true });
+
+      dispatchEvent(selectionList.nativeElement, event);
+      fixture.detectChanges();
+
+      expect(manager.activeItemIndex).toBe(-1);
+      expect(event.defaultPrevented).toBe(false);
+    });
+
     it('should focus the last item when pressing END', () => {
       const manager = selectionList.componentInstance._keyManager;
       expect(manager.activeItemIndex).toBe(-1);
@@ -341,6 +376,20 @@ describe('MatSelectionList without forms', () => {
 
       expect(manager.activeItemIndex).toBe(3);
       expect(event.defaultPrevented).toBe(true);
+    });
+
+    it('should not change focus when pressing END with a modifier key', () => {
+      const manager = selectionList.componentInstance._keyManager;
+      expect(manager.activeItemIndex).toBe(-1);
+
+      const event = createKeyboardEvent('keydown', END);
+      Object.defineProperty(event, 'shiftKey', { get: () => true });
+
+      dispatchEvent(selectionList.nativeElement, event);
+      fixture.detectChanges();
+
+      expect(manager.activeItemIndex).toBe(-1);
+      expect(event.defaultPrevented).toBe(false);
     });
 
     it('should select all items using ctrl + a', () => {
@@ -455,6 +504,21 @@ describe('MatSelectionList without forms', () => {
 
     it('should set aria-multiselectable to true on the selection list element', () => {
       expect(selectionList.nativeElement.getAttribute('aria-multiselectable')).toBe('true');
+    });
+
+    it('should be able to reach list options that are indirect descendants', () => {
+      const descendatsFixture = TestBed.createComponent(SelectionListWithIndirectChildOptions);
+      descendatsFixture.detectChanges();
+      listOptions = descendatsFixture.debugElement.queryAll(By.directive(MatListOption));
+      selectionList = descendatsFixture.debugElement.query(By.directive(MatSelectionList));
+      const list: MatSelectionList = selectionList.componentInstance;
+
+      expect(list.options.toArray().every(option => option.selected)).toBe(false);
+
+      list.selectAll();
+      descendatsFixture.detectChanges();
+
+      expect(list.options.toArray().every(option => option.selected)).toBe(true);
     });
 
   });
@@ -934,6 +998,21 @@ describe('MatSelectionList with forms', () => {
         .toBe(true, 'Expected every list option to be unselected.');
     });
 
+    it('should deselect option whose value no longer matches', () => {
+      const option = listOptions[1];
+
+      fixture.componentInstance.formControl.setValue(['opt2']);
+      fixture.detectChanges();
+
+      expect(option.selected).toBe(true, 'Expected option to be selected.');
+
+      option.value = 'something-different';
+      fixture.detectChanges();
+
+      expect(option.selected).toBe(false, 'Expected option not to be selected.');
+      expect(fixture.componentInstance.formControl.value).toEqual([]);
+    });
+
     it('should mark options as selected when the value is set before they are initialized', () => {
       fixture.destroy();
       fixture = TestBed.createComponent(SelectionListWithFormControl);
@@ -1216,4 +1295,19 @@ class SelectionListWithAvatar {
   `
 })
 class SelectionListWithIcon {
+}
+
+
+@Component({
+  // Note the blank `ngSwitch` which we need in order to hit the bug that we're testing.
+  template: `
+    <mat-selection-list>
+      <ng-container [ngSwitch]="true">
+        <mat-list-option [value]="1">One</mat-list-option>
+        <mat-list-option [value]="2">Two</mat-list-option>
+      </ng-container>
+    </mat-selection-list>`
+})
+class SelectionListWithIndirectChildOptions {
+  @ViewChildren(MatListOption) optionInstances: QueryList<MatListOption>;
 }

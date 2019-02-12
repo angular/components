@@ -46,10 +46,14 @@ function rangesEqual(r1: ListRange, r2: ListRange): boolean {
   host: {
     'class': 'cdk-virtual-scroll-viewport',
     '[class.cdk-virtual-scroll-orientation-horizontal]': 'orientation === "horizontal"',
-    '[class.cdk-virtual-scroll-orientation-vertical]': 'orientation === "vertical"',
+    '[class.cdk-virtual-scroll-orientation-vertical]': 'orientation !== "horizontal"',
   },
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [{
+    provide: CdkScrollable,
+    useExisting: CdkVirtualScrollViewport,
+  }]
 })
 export class CdkVirtualScrollViewport extends CdkScrollable implements OnInit, OnDestroy {
   /** Emits when the viewport is detached from a CdkVirtualForOf. */
@@ -67,7 +71,7 @@ export class CdkVirtualScrollViewport extends CdkScrollable implements OnInit, O
   // performance.
   /** Emits when the index of the first element visible in the viewport changes. */
   @Output() scrolledIndexChange: Observable<number> =
-      Observable.create((observer: Observer<number>) =>
+      new Observable((observer: Observer<number>) =>
         this._scrollStrategy.scrolledIndexChange.subscribe(index =>
             Promise.resolve().then(() => this.ngZone.run(() => observer.next(index)))));
 

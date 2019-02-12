@@ -94,8 +94,14 @@ export class MatBadge extends _MatBadgeMixinBase implements OnDestroy, CanDisabl
   get description(): string { return this._description; }
   set description(newDescription: string) {
     if (newDescription !== this._description) {
+      const badgeElement = this._badgeElement;
       this._updateHostAriaDescription(newDescription, this._description);
       this._description = newDescription;
+
+      if (badgeElement) {
+        newDescription ? badgeElement.setAttribute('aria-label', newDescription) :
+            badgeElement.removeAttribute('aria-label');
+      }
     }
   }
   private _description: string;
@@ -137,8 +143,19 @@ export class MatBadge extends _MatBadgeMixinBase implements OnDestroy, CanDisabl
   }
 
   ngOnDestroy() {
-    if (this.description && this._badgeElement) {
-      this._ariaDescriber.removeDescription(this._badgeElement, this.description);
+    const badgeElement = this._badgeElement;
+
+    if (badgeElement) {
+      if (this.description) {
+        this._ariaDescriber.removeDescription(badgeElement, this.description);
+      }
+
+      // When creating a badge through the Renderer, Angular will keep it in an index.
+      // We have to destroy it ourselves, otherwise it'll be retained in memory.
+      // @breaking-change 8.0.0 remove _renderer from null.
+      if (this._renderer && this._renderer.destroyNode) {
+        this._renderer.destroyNode(badgeElement);
+      }
     }
   }
 

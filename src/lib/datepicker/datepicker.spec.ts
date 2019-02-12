@@ -1,4 +1,5 @@
-import {ENTER, ESCAPE, RIGHT_ARROW, UP_ARROW, DOWN_ARROW} from '@angular/cdk/keycodes';
+import {Directionality} from '@angular/cdk/bidi';
+import {DOWN_ARROW, ENTER, ESCAPE, RIGHT_ARROW, UP_ARROW} from '@angular/cdk/keycodes';
 import {Overlay, OverlayContainer} from '@angular/cdk/overlay';
 import {ScrollDispatcher} from '@angular/cdk/scrolling';
 import {
@@ -10,19 +11,12 @@ import {
 } from '@angular/cdk/testing';
 import {Component, FactoryProvider, Type, ValueProvider, ViewChild} from '@angular/core';
 import {ComponentFixture, fakeAsync, flush, inject, TestBed, tick} from '@angular/core/testing';
-import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {
-  DEC,
-  JAN,
-  JUL,
-  JUN,
-  MAT_DATE_LOCALE,
-  MatNativeDateModule,
-  NativeDateModule,
-  SEP,
-} from '@angular/material/core';
+import {FormControl, FormsModule, NgModel, ReactiveFormsModule} from '@angular/forms';
+import {MAT_DATE_LOCALE, MatNativeDateModule, NativeDateModule} from '@angular/material/core';
 import {MatFormField, MatFormFieldModule} from '@angular/material/form-field';
+import {DEC, JAN, JUL, JUN, SEP} from '@angular/material/testing';
 import {By} from '@angular/platform-browser';
+import {BrowserDynamicTestingModule} from '@angular/platform-browser-dynamic/testing';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {Subject} from 'rxjs';
 import {MatInputModule} from '../input/index';
@@ -30,8 +24,6 @@ import {MatDatepicker} from './datepicker';
 import {MatDatepickerInput} from './datepicker-input';
 import {MatDatepickerToggle} from './datepicker-toggle';
 import {MAT_DATEPICKER_SCROLL_STRATEGY, MatDatepickerIntl, MatDatepickerModule} from './index';
-import {Directionality} from '@angular/cdk/bidi';
-import {BrowserDynamicTestingModule} from '@angular/platform-browser-dynamic/testing';
 
 describe('MatDatepicker', () => {
   const SUPPORTS_INTL = typeof Intl != 'undefined';
@@ -438,7 +430,7 @@ describe('MatDatepicker', () => {
         }))
       );
 
-      it('should close the datpeicker using ALT + UP_ARROW', fakeAsync(() => {
+      it('should close the datepicker using ALT + UP_ARROW', fakeAsync(() => {
         testComponent.datepicker.open();
         fixture.detectChanges();
         flush();
@@ -1043,8 +1035,23 @@ describe('MatDatepicker', () => {
 
         const host = fixture.nativeElement.querySelector('.mat-datepicker-toggle');
 
-        expect(host.hasAttribute('tabindex')).toBe(false);
+        expect(host.getAttribute('tabindex')).toBe('-1');
       });
+
+      it('should forward focus to the underlying button when the host is focused', () => {
+        const fixture = createComponent(DatepickerWithTabindexOnToggle, [MatNativeDateModule]);
+        fixture.detectChanges();
+
+        const host = fixture.nativeElement.querySelector('.mat-datepicker-toggle');
+        const button = host.querySelector('button');
+
+        expect(document.activeElement).not.toBe(button);
+
+        host.focus();
+
+        expect(document.activeElement).toBe(button);
+      });
+
     });
 
     describe('datepicker inside mat-form-field', () => {
@@ -1181,6 +1188,36 @@ describe('MatDatepicker', () => {
 
         expect(fixture.debugElement.query(By.css('input')).nativeElement.classList)
             .not.toContain('ng-invalid');
+      }));
+
+      it('should update validity when switching between null and invalid', fakeAsync(() => {
+        const inputEl = fixture.debugElement.query(By.css('input')).nativeElement;
+        inputEl.value = '';
+        dispatchFakeEvent(inputEl, 'input');
+
+        fixture.detectChanges();
+        flush();
+        fixture.detectChanges();
+
+        expect(testComponent.model.valid).toBe(true);
+
+        inputEl.value = 'abcdefg';
+        dispatchFakeEvent(inputEl, 'input');
+
+        fixture.detectChanges();
+        flush();
+        fixture.detectChanges();
+
+        expect(testComponent.model.valid).toBe(false);
+
+        inputEl.value = '';
+        dispatchFakeEvent(inputEl, 'input');
+
+        fixture.detectChanges();
+        flush();
+        fixture.detectChanges();
+
+        expect(testComponent.model.valid).toBe(true);
       }));
     });
 
@@ -1798,6 +1835,7 @@ class FormFieldDatepicker {
 })
 class DatepickerWithMinAndMaxValidation {
   @ViewChild('d') datepicker: MatDatepicker<Date>;
+  @ViewChild(NgModel) model: NgModel;
   date: Date | null;
   minDate = new Date(2010, JAN, 1);
   maxDate = new Date(2020, JAN, 1);

@@ -1,0 +1,99 @@
+.demo-list {
+  width: 500px;
+  max-width: 100%;
+  margin-bottom: 25px;
+  display: inline-block;
+  margin-right: 25px;
+  vertical-align: top;
+
+  [dir='rtl'] & {
+    margin-right: 0;
+    margin-left: 25px;
+  }
+}
+
+.demo-list-horizontal {
+  width: 1000px;
+  margin-right: 0;
+  margin-left: 0;
+}
+
+.cdk-drop-list {
+  border: solid 1px #ccc;
+  min-height: 60px;
+  display: block;
+
+  .demo-list-horizontal & {
+    display: flex;
+    flex-direction: row;
+  }
+}
+
+.cdk-drop-list-receiving {
+  border-style: dashed;
+}
+
+.cdk-drag {
+  padding: 20px 10px;
+  border-bottom: solid 1px #ccc;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  box-sizing: border-box;
+
+  .cdk-drop-list-dragging &:not(.cdk-drag-placeholder) {
+    transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+  }
+
+  .demo-list-horizontal & {
+    border: none;
+    border-right: solid 1px #ccc;
+    flex-grow: 1;
+    flex-basis: 0;
+
+    [dir='rtl'] & {
+      border-right: none;
+      border-left: solid 1px #ccc;
+    }
+  }
+
+  .cdk-drop-list &:last-child {
+    border: none;
+  }
+}
+
+.cdk-drag-preview {
+  box-sizing: border-box;
+  opacity: 0.5;
+}
+
+.cdk-drag-animating {
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.cdk-drag-placeholder {
+  opacity: 0;
+}
+
+.cdk-drag-handle {
+  cursor: move;
+
+  svg {
+    fill: rgba(0, 0, 0, 0.5);
+  }
+}
+
+pre {
+  white-space: normal;
+}
+
+.demo-free-draggable {
+  width: 200px;
+  height: 200px;
+  border: solid 1px #ccc;
+  cursor: move;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

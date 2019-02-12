@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {CollectionViewer, DataSource} from '@angular/cdk/collections';
+import {CollectionViewer, DataSource, isDataSource} from '@angular/cdk/collections';
 import {
   AfterContentChecked,
   Attribute,
@@ -106,10 +106,15 @@ export class FooterRowOutlet implements RowOutlet {
  * material library.
  * @docs-private
  */
-export const CDK_TABLE_TEMPLATE = `
+export const CDK_TABLE_TEMPLATE =
+// Note that according to MDN, the `caption` element has to be projected as the **first** element
+// in the table. See https://developer.mozilla.org/en-US/docs/Web/HTML/Element/caption
+`
+  <ng-content select="caption"></ng-content>
   <ng-container headerRowOutlet></ng-container>
   <ng-container rowOutlet></ng-container>
-  <ng-container footerRowOutlet></ng-container>`;
+  <ng-container footerRowOutlet></ng-container>
+`;
 
 /**
  * Interface used to conveniently type the possible context interfaces for the render row.
@@ -449,7 +454,7 @@ export class CdkTable<T> implements AfterContentChecked, CollectionViewer, OnDes
     this._onDestroy.next();
     this._onDestroy.complete();
 
-    if (this.dataSource instanceof DataSource) {
+    if (isDataSource(this.dataSource)) {
       this.dataSource.disconnect(this);
     }
   }
@@ -769,7 +774,7 @@ export class CdkTable<T> implements AfterContentChecked, CollectionViewer, OnDes
   private _switchDataSource(dataSource: CdkTableDataSourceInput<T>) {
     this._data = [];
 
-    if (this.dataSource instanceof DataSource) {
+    if (isDataSource(this.dataSource)) {
       this.dataSource.disconnect(this);
     }
 
@@ -796,12 +801,8 @@ export class CdkTable<T> implements AfterContentChecked, CollectionViewer, OnDes
 
     let dataStream: Observable<T[] | ReadonlyArray<T>> | undefined;
 
-    // Check if the datasource is a DataSource object by observing if it has a connect function.
-    // Cannot check this.dataSource['connect'] due to potential property renaming, nor can it
-    // checked as an instanceof DataSource<T> since the table should allow for data sources
-    // that did not explicitly extend DataSource<T>.
-    if ((this.dataSource as DataSource<T>).connect instanceof Function) {
-      dataStream = (this.dataSource as DataSource<T>).connect(this);
+    if (isDataSource(this.dataSource)) {
+      dataStream = this.dataSource.connect(this);
     } else if (this.dataSource instanceof Observable) {
       dataStream = this.dataSource;
     } else if (Array.isArray(this.dataSource)) {
@@ -851,7 +852,13 @@ export class CdkTable<T> implements AfterContentChecked, CollectionViewer, OnDes
 
   /** Adds the sticky column styles for the rows according to the columns' stick states. */
   private _addStickyColumnStyles(rows: HTMLElement[], rowDef: BaseRowDef) {
-    const columnDefs = Array.from(rowDef.columns || []).map(c => this._columnDefsByName.get(c)!);
+    const columnDefs = Array.from(rowDef.columns || []).map(columnName => {
+      const columnDef = this._columnDefsByName.get(columnName);
+      if (!columnDef) {
+        throw getTableUnknownColumnError(columnName);
+      }
+      return columnDef!;
+    });
     const stickyStartStates = columnDefs.map(columnDef => columnDef.sticky);
     const stickyEndStates = columnDefs.map(columnDef => columnDef.stickyEnd);
     this._stickyStyler.updateStickyColumns(rows, stickyStartStates, stickyEndStates);
@@ -965,6 +972,9 @@ export class CdkTable<T> implements AfterContentChecked, CollectionViewer, OnDes
 
   /** Adds native table sections (e.g. tbody) and moves the row outlets into them. */
   private _applyNativeTableSections() {
+    // @breaking-change 8.0.0 remove the `|| document` once the `_document` is a required param.
+    const documentRef = this._document || document;
+    const documentFragment = documentRef.createDocumentFragment();
     const sections = [
       {tag: 'thead', outlet: this._headerRowOutlet},
       {tag: 'tbody', outlet: this._rowOutlet},
@@ -972,12 +982,13 @@ export class CdkTable<T> implements AfterContentChecked, CollectionViewer, OnDes
     ];
 
     for (const section of sections) {
-      // @breaking-change 8.0.0 remove the `|| document` once the `_document` is a required param.
-      const documentRef = this._document || document;
       const element = documentRef.createElement(section.tag);
       element.appendChild(section.outlet.elementRef.nativeElement);
-      this._elementRef.nativeElement.appendChild(element);
+      documentFragment.appendChild(element);
     }
+
+    // Use a DocumentFragment so we don't hit the DOM on each iteration.
+    this._elementRef.nativeElement.appendChild(documentFragment);
   }
 
   /**

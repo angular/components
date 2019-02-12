@@ -11,7 +11,7 @@ tunnelReadyFile="${tunnelTmpDir}/readyfile"
 tunnelErrorFile="${tunnelTmpDir}/errorfile"
 
 # Cleanup and create the folder structure for the tunnel connector.
-rm -rf ${tunnelTmpDir} ${tunnelReadyFile} ${tunnelErrorFile}
+rm -rf ${tunnelTmpDir}
 mkdir -p ${tunnelTmpDir}
 touch ${tunnelLogFile}
 
@@ -31,7 +31,7 @@ rm ${tunnelFileName}
 ARGS=""
 
 if [ ! -z "${CIRCLE_BUILD_NUM}" ]; then
-  ARGS="${ARGS} --local-identifier ${CIRCLE_BUILD_NUM}-${CIRCLE_NODE_INDEX}"
+  ARGS="${ARGS} --local-identifier angular-material-${CIRCLE_BUILD_NUM}-${CIRCLE_NODE_INDEX}"
 fi
 
 echo "Starting Browserstack Local in the background, logging into: ${tunnelLogFile}"

@@ -9,7 +9,16 @@
 import {FocusableOption, FocusKeyManager} from '@angular/cdk/a11y';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
 import {SelectionModel} from '@angular/cdk/collections';
-import {SPACE, ENTER, HOME, END, UP_ARROW, DOWN_ARROW, A} from '@angular/cdk/keycodes';
+import {
+  SPACE,
+  ENTER,
+  HOME,
+  END,
+  UP_ARROW,
+  DOWN_ARROW,
+  A,
+  hasModifierKey,
+} from '@angular/cdk/keycodes';
 import {
   AfterContentInit,
   Attribute,
@@ -111,7 +120,16 @@ export class MatListOption extends _MatListOptionMixinBase
   @Input() checkboxPosition: 'before' | 'after' = 'after';
 
   /** Value of the option */
-  @Input() value: any;
+  @Input()
+  get value(): any { return this._value; }
+  set value(newValue: any) {
+    if (this.selected && newValue !== this.value) {
+      this.selected = false;
+    }
+
+    this._value = newValue;
+  }
+  private _value: any;
 
   /** Whether the option is disabled. */
   @Input()
@@ -263,11 +281,11 @@ export class MatListOption extends _MatListOptionMixinBase
   moduleId: module.id,
   selector: 'mat-selection-list',
   exportAs: 'matSelectionList',
-  inputs: ['disabled', 'disableRipple', 'tabIndex'],
+  inputs: ['disableRipple'],
   host: {
     'role': 'listbox',
     '[tabIndex]': 'tabIndex',
-    'class': 'mat-selection-list',
+    'class': 'mat-selection-list mat-list-base',
     '(focus)': 'focus()',
     '(blur)': '_onTouched()',
     '(keydown)': '_keydown($event)',
@@ -287,7 +305,7 @@ export class MatSelectionList extends _MatSelectionListMixinBase implements Focu
   _keyManager: FocusKeyManager<MatListOption>;
 
   /** The option components contained within this selection-list. */
-  @ContentChildren(MatListOption) options: QueryList<MatListOption>;
+  @ContentChildren(MatListOption, {descendants: true}) options: QueryList<MatListOption>;
 
   /** Emits a change event whenever the selected state of an option changes. */
   @Output() readonly selectionChange: EventEmitter<MatSelectionListChange> =
@@ -417,21 +435,26 @@ export class MatSelectionList extends _MatSelectionListMixinBase implements Focu
     const keyCode = event.keyCode;
     const manager = this._keyManager;
     const previousFocusIndex = manager.activeItemIndex;
+    const hasModifier = hasModifierKey(event);
 
     switch (keyCode) {
       case SPACE:
       case ENTER:
-        this._toggleFocusedOption();
-        // Always prevent space from scrolling the page since the list has focus
-        event.preventDefault();
+        if (!hasModifier) {
+          this._toggleFocusedOption();
+          // Always prevent space from scrolling the page since the list has focus
+          event.preventDefault();
+        }
         break;
       case HOME:
       case END:
-        keyCode === HOME ? manager.setFirstItemActive() : manager.setLastItemActive();
-        event.preventDefault();
+        if (!hasModifier) {
+          keyCode === HOME ? manager.setFirstItemActive() : manager.setLastItemActive();
+          event.preventDefault();
+        }
         break;
       case A:
-        if (event.ctrlKey) {
+        if (hasModifierKey(event, 'ctrlKey')) {
           this.options.find(option => !option.selected) ? this.selectAll() : this.deselectAll();
           event.preventDefault();
         }

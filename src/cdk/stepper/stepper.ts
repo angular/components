@@ -8,7 +8,7 @@
 
 import {FocusableOption, FocusKeyManager} from '@angular/cdk/a11y';
 import {Direction, Directionality} from '@angular/cdk/bidi';
-import {coerceBooleanProperty} from '@angular/cdk/coercion';
+import {coerceBooleanProperty, coerceNumberProperty} from '@angular/cdk/coercion';
 import {END, ENTER, HOME, SPACE, hasModifierKey} from '@angular/cdk/keycodes';
 import {
   AfterViewInit,
@@ -79,8 +79,15 @@ export const STEP_STATE = {
 };
 
 /** InjectionToken that can be used to specify the global stepper options. */
-export const MAT_STEPPER_GLOBAL_OPTIONS =
-  new InjectionToken<StepperOptions>('mat-stepper-global-options');
+export const STEPPER_GLOBAL_OPTIONS =
+  new InjectionToken<StepperOptions>('STEPPER_GLOBAL_OPTIONS');
+
+/**
+ * InjectionToken that can be used to specify the global stepper options.
+ * @deprecated Use `STEPPER_GLOBAL_OPTIONS` instead.
+ * @breaking-change 8.0.0.
+ */
+export const MAT_STEPPER_GLOBAL_OPTIONS = STEPPER_GLOBAL_OPTIONS;
 
 /** Configurable options for stepper. */
 export interface StepperOptions {
@@ -141,7 +148,7 @@ export class CdkStep implements OnChanges {
   /** State of the step. */
   @Input() state: StepState;
 
-  /** Whether the user can return to this step once it has been marked as complted. */
+  /** Whether the user can return to this step once it has been marked as completed. */
   @Input()
   get editable(): boolean { return this._editable; }
   set editable(value: boolean) {
@@ -174,7 +181,7 @@ export class CdkStep implements OnChanges {
   /** Whether step has an error. */
   @Input()
   get hasError(): boolean {
-    return this._customError || this._getDefaultError();
+    return this._customError == null ? this._getDefaultError() : this._customError;
   }
   set hasError(value: boolean) {
     this._customError = coerceBooleanProperty(value);
@@ -188,7 +195,7 @@ export class CdkStep implements OnChanges {
   /** @breaking-change 8.0.0 remove the `?` after `stepperOptions` */
   constructor(
     @Inject(forwardRef(() => CdkStepper)) private _stepper: CdkStepper,
-    @Optional() @Inject(MAT_STEPPER_GLOBAL_OPTIONS) stepperOptions?: StepperOptions) {
+    @Optional() @Inject(STEPPER_GLOBAL_OPTIONS) stepperOptions?: StepperOptions) {
     this._stepperOptions = stepperOptions ? stepperOptions : {};
     this._displayDefaultIndicatorType = this._stepperOptions.displayDefaultIndicatorType !== false;
     this._showError = !!this._stepperOptions.showError;
@@ -240,8 +247,17 @@ export class CdkStepper implements AfterViewInit, OnDestroy {
    */
   private _document: Document | undefined;
 
-  /** The list of step components that the stepper is holding. */
+  /**
+   * The list of step components that the stepper is holding.
+   * @deprecated use `steps` instead
+   * @breaking-change 9.0.0 remove this property
+   */
   @ContentChildren(CdkStep) _steps: QueryList<CdkStep>;
+
+  /** The list of step components that the stepper is holding. */
+  get steps():  QueryList<CdkStep> {
+    return this._steps;
+  }
 
   /**
    * The list of step headers of the steps in the stepper.
@@ -260,19 +276,21 @@ export class CdkStepper implements AfterViewInit, OnDestroy {
   @Input()
   get selectedIndex() { return this._selectedIndex; }
   set selectedIndex(index: number) {
-    if (this._steps) {
+    const newIndex = coerceNumberProperty(index);
+
+    if (this.steps) {
       // Ensure that the index can't be out of bounds.
-      if (index < 0 || index > this._steps.length - 1) {
+      if (newIndex < 0 || newIndex > this.steps.length - 1) {
         throw Error('cdkStepper: Cannot assign out-of-bounds value to `selectedIndex`.');
       }
 
-      if (this._selectedIndex != index &&
-          !this._anyControlsInvalidOrPending(index) &&
-          (index >= this._selectedIndex || this._steps.toArray()[index].editable)) {
+      if (this._selectedIndex != newIndex &&
+          !this._anyControlsInvalidOrPending(newIndex) &&
+          (newIndex >= this._selectedIndex || this.steps.toArray()[newIndex].editable)) {
         this._updateSelectedItemIndex(index);
       }
     } else {
-      this._selectedIndex = index;
+      this._selectedIndex = newIndex;
     }
   }
   private _selectedIndex = 0;
@@ -281,10 +299,10 @@ export class CdkStepper implements AfterViewInit, OnDestroy {
   @Input()
   get selected(): CdkStep {
     // @breaking-change 8.0.0 Change return type to `CdkStep | undefined`.
-    return this._steps ? this._steps.toArray()[this.selectedIndex] : undefined!;
+    return this.steps ? this.steps.toArray()[this.selectedIndex] : undefined!;
   }
   set selected(step: CdkStep) {
-    this.selectedIndex = this._steps ? this._steps.toArray().indexOf(step) : -1;
+    this.selectedIndex = this.steps ? this.steps.toArray().indexOf(step) : -1;
   }
 
   /** Event emitted when the selected step has changed. */
@@ -320,7 +338,7 @@ export class CdkStepper implements AfterViewInit, OnDestroy {
 
     this._keyManager.updateActiveItemIndex(this._selectedIndex);
 
-    this._steps.changes.pipe(takeUntil(this._destroyed)).subscribe(() => {
+    this.steps.changes.pipe(takeUntil(this._destroyed)).subscribe(() => {
       if (!this.selected) {
         this._selectedIndex = Math.max(this._selectedIndex - 1, 0);
       }
@@ -334,7 +352,7 @@ export class CdkStepper implements AfterViewInit, OnDestroy {
 
   /** Selects and focuses the next step in list. */
   next(): void {
-    this.selectedIndex = Math.min(this._selectedIndex + 1, this._steps.length - 1);
+    this.selectedIndex = Math.min(this._selectedIndex + 1, this.steps.length - 1);
   }
 
   /** Selects and focuses the previous step in list. */
@@ -345,7 +363,7 @@ export class CdkStepper implements AfterViewInit, OnDestroy {
   /** Resets the stepper to its initial state. Note that this includes clearing form data. */
   reset(): void {
     this._updateSelectedItemIndex(0);
-    this._steps.forEach(step => step.reset());
+    this.steps.forEach(step => step.reset());
     this._stateChanged();
   }
 
@@ -377,7 +395,7 @@ export class CdkStepper implements AfterViewInit, OnDestroy {
 
   /** Returns the type of icon to be displayed. */
   _getIndicatorType(index: number, state: StepState = STEP_STATE.NUMBER): StepState {
-    const step = this._steps.toArray()[index];
+    const step = this.steps.toArray()[index];
     const isCurrentStep = this._isCurrentStep(index);
 
     return step._displayDefaultIndicatorType
@@ -422,7 +440,7 @@ export class CdkStepper implements AfterViewInit, OnDestroy {
   }
 
   private _updateSelectedItemIndex(newIndex: number): void {
-    const stepsArray = this._steps.toArray();
+    const stepsArray = this.steps.toArray();
     this.selectionChange.emit({
       selectedIndex: newIndex,
       previouslySelectedIndex: this._selectedIndex,
@@ -462,7 +480,7 @@ export class CdkStepper implements AfterViewInit, OnDestroy {
   }
 
   private _anyControlsInvalidOrPending(index: number): boolean {
-    const steps = this._steps.toArray();
+    const steps = this.steps.toArray();
 
     steps[this._selectedIndex].interacted = true;
 

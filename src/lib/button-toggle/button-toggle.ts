@@ -143,7 +143,10 @@ export class MatButtonToggleGroup implements ControlValueAccessor, OnInit, After
     this._name = value;
 
     if (this._buttonToggles) {
-      this._buttonToggles.forEach(toggle => toggle.name = this._name);
+      this._buttonToggles.forEach(toggle => {
+        toggle.name = this._name;
+        toggle._markForCheck();
+      });
     }
   }
   private _name = `mat-button-toggle-group-${_uniqueIdCounter++}`;
@@ -487,7 +490,15 @@ export class MatButtonToggle extends _MatButtonToggleMixinBase implements OnInit
   }
 
   ngOnDestroy() {
+    const group = this.buttonToggleGroup;
+
     this._focusMonitor.stopMonitoring(this._elementRef);
+
+    // Remove the toggle from the selection once it's destroyed. Needs to happen
+    // on the next tick in order to avoid "changed after checked" errors.
+    if (group && group._isSelected(this)) {
+      Promise.resolve().then(() => group._syncButtonToggle(this, false));
+    }
   }
 
   /** Focuses the button. */

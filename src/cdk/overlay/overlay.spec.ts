@@ -398,6 +398,26 @@ describe('Overlay', () => {
     expect(overlayContainerElement.textContent).toBe('');
   });
 
+  it('should add and remove classes while open', () => {
+    let overlayRef = overlay.create();
+    overlayRef.attach(componentPortal);
+
+    const pane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
+    expect(pane.classList)
+      .not.toContain('custom-class-one', 'Expected class to be initially missing');
+
+    overlayRef.addPanelClass('custom-class-one');
+    expect(pane.classList).toContain('custom-class-one', 'Expected class to be added');
+
+    overlayRef.removePanelClass('custom-class-one');
+    expect(pane.classList).not.toContain('custom-class-one', 'Expected class to be removed');
+
+    // Destroy the overlay and make sure no errors are thrown when trying to alter
+    // panel classes
+    overlayRef.dispose();
+    expect(() => overlayRef.addPanelClass('custom-class-two')).not.toThrowError();
+  });
+
   describe('positioning', () => {
     let config: OverlayConfig;
 
@@ -796,27 +816,29 @@ describe('Overlay', () => {
   });
 
   describe('scroll strategy', () => {
-    let fakeScrollStrategy: FakeScrollStrategy;
-    let config: OverlayConfig;
-    let overlayRef: OverlayRef;
-
-    beforeEach(() => {
-      fakeScrollStrategy = new FakeScrollStrategy();
-      config = new OverlayConfig({scrollStrategy: fakeScrollStrategy});
-      overlayRef = overlay.create(config);
-    });
-
     it('should attach the overlay ref to the scroll strategy', () => {
+      const fakeScrollStrategy = new FakeScrollStrategy();
+      const config = new OverlayConfig({scrollStrategy: fakeScrollStrategy});
+      const overlayRef = overlay.create(config);
+
       expect(fakeScrollStrategy.overlayRef).toBe(overlayRef,
           'Expected scroll strategy to have been attached to the current overlay ref.');
     });
 
     it('should enable the scroll strategy when the overlay is attached', () => {
+      const fakeScrollStrategy = new FakeScrollStrategy();
+      const config = new OverlayConfig({scrollStrategy: fakeScrollStrategy});
+      const overlayRef = overlay.create(config);
+
       overlayRef.attach(componentPortal);
       expect(fakeScrollStrategy.isEnabled).toBe(true, 'Expected scroll strategy to be enabled.');
     });
 
     it('should disable the scroll strategy once the overlay is detached', () => {
+      const fakeScrollStrategy = new FakeScrollStrategy();
+      const config = new OverlayConfig({scrollStrategy: fakeScrollStrategy});
+      const overlayRef = overlay.create(config);
+
       overlayRef.attach(componentPortal);
       expect(fakeScrollStrategy.isEnabled).toBe(true, 'Expected scroll strategy to be enabled.');
 
@@ -825,9 +847,93 @@ describe('Overlay', () => {
     });
 
     it('should disable the scroll strategy when the overlay is destroyed', () => {
+      const fakeScrollStrategy = new FakeScrollStrategy();
+      const config = new OverlayConfig({scrollStrategy: fakeScrollStrategy});
+      const overlayRef = overlay.create(config);
+
       overlayRef.dispose();
       expect(fakeScrollStrategy.isEnabled).toBe(false, 'Expected scroll strategy to be disabled.');
     });
+
+    it('should detach the scroll strategy when the overlay is destroyed', () => {
+      const fakeScrollStrategy = new FakeScrollStrategy();
+      const config = new OverlayConfig({scrollStrategy: fakeScrollStrategy});
+      const overlayRef = overlay.create(config);
+
+      expect(fakeScrollStrategy.overlayRef).toBe(overlayRef);
+
+      overlayRef.dispose();
+
+      expect(fakeScrollStrategy.overlayRef).toBeNull();
+    });
+
+    it('should be able to swap scroll strategies', fakeAsync(() => {
+      const firstStrategy = new FakeScrollStrategy();
+      const secondStrategy = new FakeScrollStrategy();
+
+      [firstStrategy, secondStrategy].forEach(strategy => {
+        spyOn(strategy, 'attach');
+        spyOn(strategy, 'enable');
+        spyOn(strategy, 'disable');
+        spyOn(strategy, 'detach');
+      });
+
+      const overlayRef = overlay.create({scrollStrategy: firstStrategy});
+
+      overlayRef.attach(componentPortal);
+      viewContainerFixture.detectChanges();
+      zone.simulateZoneExit();
+      tick();
+
+      expect(firstStrategy.attach).toHaveBeenCalledTimes(1);
+      expect(firstStrategy.enable).toHaveBeenCalledTimes(1);
+
+      expect(secondStrategy.attach).not.toHaveBeenCalled();
+      expect(secondStrategy.enable).not.toHaveBeenCalled();
+
+      overlayRef.updateScrollStrategy(secondStrategy);
+      viewContainerFixture.detectChanges();
+      tick();
+
+      expect(firstStrategy.attach).toHaveBeenCalledTimes(1);
+      expect(firstStrategy.enable).toHaveBeenCalledTimes(1);
+      expect(firstStrategy.disable).toHaveBeenCalledTimes(1);
+      expect(firstStrategy.detach).toHaveBeenCalledTimes(1);
+
+      expect(secondStrategy.attach).toHaveBeenCalledTimes(1);
+      expect(secondStrategy.enable).toHaveBeenCalledTimes(1);
+    }));
+
+    it('should not do anything when trying to swap a strategy with itself', fakeAsync(() => {
+      const strategy = new FakeScrollStrategy();
+
+      spyOn(strategy, 'attach');
+      spyOn(strategy, 'enable');
+      spyOn(strategy, 'disable');
+      spyOn(strategy, 'detach');
+
+      const overlayRef = overlay.create({scrollStrategy: strategy});
+
+      overlayRef.attach(componentPortal);
+      viewContainerFixture.detectChanges();
+      zone.simulateZoneExit();
+      tick();
+
+      expect(strategy.attach).toHaveBeenCalledTimes(1);
+      expect(strategy.enable).toHaveBeenCalledTimes(1);
+      expect(strategy.disable).not.toHaveBeenCalled();
+      expect(strategy.detach).not.toHaveBeenCalled();
+
+      overlayRef.updateScrollStrategy(strategy);
+      viewContainerFixture.detectChanges();
+      tick();
+
+      expect(strategy.attach).toHaveBeenCalledTimes(1);
+      expect(strategy.enable).toHaveBeenCalledTimes(1);
+      expect(strategy.disable).not.toHaveBeenCalled();
+      expect(strategy.detach).not.toHaveBeenCalled();
+    }));
+
   });
 });
 
@@ -887,5 +993,9 @@ class FakeScrollStrategy implements ScrollStrategy {
 
   disable() {
     this.isEnabled = false;
+  }
+
+  detach() {
+    this.overlayRef = null!;
   }
 }

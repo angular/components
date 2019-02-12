@@ -363,7 +363,7 @@ describe('MatDialog', () => {
     expect(spy).toHaveBeenCalled();
   });
 
-  it('should should override the width of the overlay pane', () => {
+  it('should override the width of the overlay pane', () => {
     dialog.open(PizzaMsg, {
       width: '500px'
     });
@@ -375,7 +375,7 @@ describe('MatDialog', () => {
     expect(overlayPane.style.width).toBe('500px');
   });
 
-  it('should should override the height of the overlay pane', () => {
+  it('should override the height of the overlay pane', () => {
     dialog.open(PizzaMsg, {
       height: '100px'
     });
@@ -387,7 +387,7 @@ describe('MatDialog', () => {
     expect(overlayPane.style.height).toBe('100px');
   });
 
-  it('should should override the min-width of the overlay pane', () => {
+  it('should override the min-width of the overlay pane', () => {
     dialog.open(PizzaMsg, {
       minWidth: '500px'
     });
@@ -399,7 +399,7 @@ describe('MatDialog', () => {
     expect(overlayPane.style.minWidth).toBe('500px');
   });
 
-  it('should should override the max-width of the overlay pane', fakeAsync(() => {
+  it('should override the max-width of the overlay pane', fakeAsync(() => {
     let dialogRef = dialog.open(PizzaMsg);
 
     viewContainerFixture.detectChanges();
@@ -426,7 +426,7 @@ describe('MatDialog', () => {
     expect(overlayPane.style.maxWidth).toBe('100px');
   }));
 
-  it('should should override the min-height of the overlay pane', () => {
+  it('should override the min-height of the overlay pane', () => {
     dialog.open(PizzaMsg, {
       minHeight: '300px'
     });
@@ -438,7 +438,7 @@ describe('MatDialog', () => {
     expect(overlayPane.style.minHeight).toBe('300px');
   });
 
-  it('should should override the max-height of the overlay pane', () => {
+  it('should override the max-height of the overlay pane', () => {
     dialog.open(PizzaMsg, {
       maxHeight: '100px'
     });
@@ -450,7 +450,7 @@ describe('MatDialog', () => {
     expect(overlayPane.style.maxHeight).toBe('100px');
   });
 
-  it('should should override the top offset of the overlay pane', () => {
+  it('should override the top offset of the overlay pane', () => {
     dialog.open(PizzaMsg, {
       position: {
         top: '100px'
@@ -464,7 +464,7 @@ describe('MatDialog', () => {
     expect(overlayPane.style.marginTop).toBe('100px');
   });
 
-  it('should should override the bottom offset of the overlay pane', () => {
+  it('should override the bottom offset of the overlay pane', () => {
     dialog.open(PizzaMsg, {
       position: {
         bottom: '200px'
@@ -478,7 +478,7 @@ describe('MatDialog', () => {
     expect(overlayPane.style.marginBottom).toBe('200px');
   });
 
-  it('should should override the left offset of the overlay pane', () => {
+  it('should override the left offset of the overlay pane', () => {
     dialog.open(PizzaMsg, {
       position: {
         left: '250px'
@@ -492,7 +492,7 @@ describe('MatDialog', () => {
     expect(overlayPane.style.marginLeft).toBe('250px');
   });
 
-  it('should should override the right offset of the overlay pane', () => {
+  it('should override the right offset of the overlay pane', () => {
     dialog.open(PizzaMsg, {
       position: {
         right: '125px'
@@ -649,6 +649,23 @@ describe('MatDialog', () => {
     flush();
 
     expect(overlayContainerElement.querySelectorAll('mat-dialog-container').length).toBe(0);
+  }));
+
+  it('should complete open and close streams when the injectable is destroyed', fakeAsync(() => {
+    const afterOpenedSpy = jasmine.createSpy('after opened spy');
+    const afterAllClosedSpy = jasmine.createSpy('after all closed spy');
+    const afterOpenedSubscription = dialog.afterOpened.subscribe({complete: afterOpenedSpy});
+    const afterAllClosedSubscription = dialog.afterAllClosed.subscribe({
+      complete: afterAllClosedSpy
+    });
+
+    dialog.ngOnDestroy();
+
+    expect(afterOpenedSpy).toHaveBeenCalled();
+    expect(afterAllClosedSpy).toHaveBeenCalled();
+
+    afterOpenedSubscription.unsubscribe();
+    afterAllClosedSubscription.unsubscribe();
   }));
 
   it('should allow the consumer to disable closing a dialog on navigation', fakeAsync(() => {
@@ -812,6 +829,23 @@ describe('MatDialog', () => {
         .toBe(false, 'Expected live element not to be hidden.');
     sibling.parentNode!.removeChild(sibling);
   }));
+
+  it('should add and remove classes while open', () => {
+    let dialogRef = dialog.open(PizzaMsg, {
+      disableClose: true,
+      viewContainerRef: testViewContainerRef
+    });
+
+    const pane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
+    expect(pane.classList)
+      .not.toContain('custom-class-one', 'Expected class to be initially missing');
+
+    dialogRef.addPanelClass('custom-class-one');
+    expect(pane.classList).toContain('custom-class-one', 'Expected class to be added');
+
+    dialogRef.removePanelClass('custom-class-one');
+    expect(pane.classList).not.toContain('custom-class-one', 'Expected class to be removed');
+  });
 
   describe('disableClose option', () => {
     it('should prevent closing via clicks on the backdrop', fakeAsync(() => {
@@ -1144,6 +1178,51 @@ describe('MatDialog', () => {
             .toBe(title.id, 'Expected the aria-labelledby to match the title id.');
       }));
     }
+  });
+
+  describe('aria-labelledby', () => {
+    it('should be able to set a custom aria-labelledby', () => {
+      dialog.open(PizzaMsg, {
+        ariaLabelledBy: 'Labelled By',
+        viewContainerRef: testViewContainerRef
+      });
+      viewContainerFixture.detectChanges();
+
+      const container = overlayContainerElement.querySelector('mat-dialog-container')!;
+      expect(container.getAttribute('aria-labelledby')).toBe('Labelled By');
+    });
+
+    it('should not set the aria-labelledby automatically if it has an aria-label ' +
+      'and an aria-labelledby', fakeAsync(() => {
+        dialog.open(ContentElementDialog, {
+          ariaLabel: 'Hello there',
+          ariaLabelledBy: 'Labelled By',
+          viewContainerRef: testViewContainerRef
+        });
+        viewContainerFixture.detectChanges();
+        tick();
+        viewContainerFixture.detectChanges();
+
+        const container = overlayContainerElement.querySelector('mat-dialog-container')!;
+        expect(container.hasAttribute('aria-labelledby')).toBe(false);
+    }));
+
+    it('should set the aria-labelledby attribute to the config provided aria-labelledby ' +
+      'instead of the mat-dialog-title id', fakeAsync(() => {
+        dialog.open(ContentElementDialog, {
+          ariaLabelledBy: 'Labelled By',
+          viewContainerRef: testViewContainerRef
+        });
+        viewContainerFixture.detectChanges();
+        flush();
+        let title = overlayContainerElement.querySelector('[mat-dialog-title]')!;
+        let container = overlayContainerElement.querySelector('mat-dialog-container')!;
+        flush();
+        viewContainerFixture.detectChanges();
+
+        expect(title.id).toBeTruthy('Expected title element to have an id.');
+        expect(container.getAttribute('aria-labelledby')).toBe('Labelled By');
+    }));
   });
 
   describe('aria-label', () => {

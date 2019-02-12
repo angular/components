@@ -120,7 +120,7 @@ export class MatRipple implements OnInit, OnDestroy, RippleTarget {
   constructor(private _elementRef: ElementRef<HTMLElement>,
               ngZone: NgZone,
               platform: Platform,
-              @Optional() @Inject(MAT_RIPPLE_GLOBAL_OPTIONS) globalOptions: RippleGlobalOptions,
+              @Optional() @Inject(MAT_RIPPLE_GLOBAL_OPTIONS) globalOptions?: RippleGlobalOptions,
               @Optional() @Inject(ANIMATION_MODULE_TYPE) animationMode?: string) {
 
     this._globalOptions = globalOptions || {};
@@ -167,7 +167,7 @@ export class MatRipple implements OnInit, OnDestroy, RippleTarget {
     return this.disabled || !!this._globalOptions.disabled;
   }
 
-  /** Sets up the the trigger event listeners if ripples are enabled. */
+  /** Sets up the trigger event listeners if ripples are enabled. */
   private _setupTriggerEventsIfEnabled() {
     if (!this.disabled && this._isInitialized) {
       this._rippleRenderer.setupTriggerEvents(this.trigger);

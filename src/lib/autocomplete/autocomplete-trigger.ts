@@ -102,9 +102,10 @@ export function getMatAutocompleteMissingPanelError(): Error {
     '[attr.autocomplete]': 'autocompleteAttribute',
     '[attr.role]': 'autocompleteDisabled ? null : "combobox"',
     '[attr.aria-autocomplete]': 'autocompleteDisabled ? null : "list"',
-    '[attr.aria-activedescendant]': 'activeOption?.id',
+    '[attr.aria-activedescendant]': '(panelOpen && activeOption) ? activeOption.id : null',
     '[attr.aria-expanded]': 'autocompleteDisabled ? null : panelOpen.toString()',
     '[attr.aria-owns]': '(autocompleteDisabled || !panelOpen) ? null : autocomplete?.id',
+    '[attr.aria-haspopup]': '!autocompleteDisabled',
     // Note: we use `focusin`, as opposed to `focus`, in order to open the panel
     // a little earlier. This avoids issues where IE delays the focusing of the input.
     '(focusin)': '_handleFocus()',
@@ -402,11 +403,11 @@ export class MatAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
     // filter out all of the extra events, we save the value on focus and between
     // `input` events, and we check whether it changed.
     // See: https://connect.microsoft.com/IE/feedback/details/885747/
-    if (this._previousValue !== value && document.activeElement === event.target) {
+    if (this._previousValue !== value) {
       this._previousValue = value;
       this._onChange(value);
 
-      if (this._canOpen()) {
+      if (this._canOpen() && document.activeElement === event.target) {
         this.openPanel();
       }
     }
@@ -569,13 +570,16 @@ export class MatAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
       throw getMatAutocompleteMissingPanelError();
     }
 
-    if (!this._overlayRef) {
+    let overlayRef = this._overlayRef;
+
+    if (!overlayRef) {
       this._portal = new TemplatePortal(this.autocomplete.template, this._viewContainerRef);
-      this._overlayRef = this._overlay.create(this._getOverlayConfig());
+      overlayRef = this._overlay.create(this._getOverlayConfig());
+      this._overlayRef = overlayRef;
 
       // Use the `keydownEvents` in order to take advantage of
       // the overlay event targeting provided by the CDK overlay.
-      this._overlayRef.keydownEvents().subscribe(event => {
+      overlayRef.keydownEvents().subscribe(event => {
         // Close when pressing ESCAPE or ALT + UP_ARROW, based on the a11y guidelines.
         // See: https://www.w3.org/TR/wai-aria-practices-1.1/#textbox-keyboard-interaction
         if (event.keyCode === ESCAPE || (event.keyCode === UP_ARROW && event.altKey)) {
@@ -586,18 +590,21 @@ export class MatAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
 
       if (this._viewportRuler) {
         this._viewportSubscription = this._viewportRuler.change().subscribe(() => {
-          if (this.panelOpen && this._overlayRef) {
-            this._overlayRef.updateSize({width: this._getPanelWidth()});
+          if (this.panelOpen && overlayRef) {
+            overlayRef.updateSize({width: this._getPanelWidth()});
           }
         });
       }
     } else {
-      // Update the panel width and direction, in case anything has changed.
-      this._overlayRef.updateSize({width: this._getPanelWidth()});
+      const position = overlayRef.getConfig().positionStrategy as FlexibleConnectedPositionStrategy;
+
+      // Update the trigger, panel width and direction, in case anything has changed.
+      position.setOrigin(this._getConnectedElement());
+      overlayRef.updateSize({width: this._getPanelWidth()});
     }
 
-    if (this._overlayRef && !this._overlayRef.hasAttached()) {
-      this._overlayRef.attach(this._portal);
+    if (overlayRef && !overlayRef.hasAttached()) {
+      overlayRef.attach(this._portal);
       this._closingActionsSubscription = this._subscribeToClosingActions();
     }
 

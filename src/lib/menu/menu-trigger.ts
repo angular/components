@@ -33,6 +33,7 @@ import {
   Self,
   ViewContainerRef,
 } from '@angular/core';
+import {normalizePassiveListenerOptions} from '@angular/cdk/platform';
 import {asapScheduler, merge, of as observableOf, Subscription} from 'rxjs';
 import {delay, filter, take, takeUntil} from 'rxjs/operators';
 import {MatMenu} from './menu-directive';
@@ -60,6 +61,9 @@ export const MAT_MENU_SCROLL_STRATEGY_FACTORY_PROVIDER = {
 /** Default top padding of the menu panel. */
 export const MENU_PANEL_TOP_PADDING = 8;
 
+/** Options for binding a passive event listener. */
+const passiveEventListenerOptions = normalizePassiveListenerOptions({passive: true});
+
 // TODO(andrewseguin): Remove the kebab versions in favor of camelCased attribute selectors
 
 /**
@@ -72,7 +76,6 @@ export const MENU_PANEL_TOP_PADDING = 8;
     'aria-haspopup': 'true',
     '[attr.aria-expanded]': 'menuOpen || null',
     '(mousedown)': '_handleMousedown($event)',
-    '(touchstart)': '_openedBy = "touch"',
     '(keydown)': '_handleKeydown($event)',
     '(click)': '_handleClick($event)',
   },
@@ -82,10 +85,16 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
   private _portal: TemplatePortal;
   private _overlayRef: OverlayRef | null = null;
   private _menuOpen: boolean = false;
-  private _closeSubscription = Subscription.EMPTY;
+  private _closingActionsSubscription = Subscription.EMPTY;
   private _hoverSubscription = Subscription.EMPTY;
   private _menuCloseSubscription = Subscription.EMPTY;
   private _scrollStrategy: () => ScrollStrategy;
+
+  /**
+   * Handles touch start events on the trigger.
+   * Needs to be an arrow function so we can easily use addEventListener and removeEventListener.
+   */
+  private _handleTouchStart = () => this._openedBy = 'touch';
 
   // Tracking input type is necessary so it's possible to only auto-focus
   // the first item of the list when the menu is opened via the keyboard
@@ -161,6 +170,9 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
               // @breaking-change 8.0.0
               private _focusMonitor?: FocusMonitor) {
 
+    _element.nativeElement.addEventListener('touchstart', this._handleTouchStart,
+        passiveEventListenerOptions);
+
     if (_menuItemInstance) {
       _menuItemInstance._triggersSubmenu = this.triggersSubmenu();
     }
@@ -179,7 +191,11 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
       this._overlayRef = null;
     }
 
+    this._element.nativeElement.removeEventListener('touchstart', this._handleTouchStart,
+        passiveEventListenerOptions);
+
     this._cleanUpSubscriptions();
+    this._closingActionsSubscription.unsubscribe();
   }
 
   /** Whether the menu is open. */
@@ -211,14 +227,18 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
     this._checkMenu();
 
     const overlayRef = this._createOverlay();
-    this._setPosition(overlayRef.getConfig().positionStrategy as FlexibleConnectedPositionStrategy);
+    const overlayConfig = overlayRef.getConfig();
+
+    this._setPosition(overlayConfig.positionStrategy as FlexibleConnectedPositionStrategy);
+    overlayConfig.hasBackdrop = this.menu.hasBackdrop == null ? !this.triggersSubmenu() :
+        this.menu.hasBackdrop;
     overlayRef.attach(this._getPortal());
 
     if (this.menu.lazyContent) {
       this.menu.lazyContent.attach(this.menuData);
     }
 
-    this._closeSubscription = this._menuClosingActions().subscribe(() => this.closeMenu());
+    this._closingActionsSubscription = this._menuClosingActions().subscribe(() => this.closeMenu());
     this._initMenu();
 
     if (this.menu instanceof MatMenu) {
@@ -251,7 +271,7 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
 
     const menu = this.menu;
 
-    this._closeSubscription.unsubscribe();
+    this._closingActionsSubscription.unsubscribe();
     this._overlayRef.detach();
 
     if (menu instanceof MatMenu) {
@@ -379,7 +399,6 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
           .flexibleConnectedTo(this._element)
           .withLockedPosition()
           .withTransformOriginOn('.mat-menu-panel'),
-      hasBackdrop: this.menu.hasBackdrop == null ? !this.triggersSubmenu() : this.menu.hasBackdrop,
       backdropClass: this.menu.backdropClass || 'cdk-overlay-transparent-backdrop',
       scrollStrategy: this._scrollStrategy(),
       direction: this._dir
@@ -451,7 +470,7 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
 
   /** Cleans up the active subscriptions. */
   private _cleanUpSubscriptions(): void {
-    this._closeSubscription.unsubscribe();
+    this._closingActionsSubscription.unsubscribe();
     this._hoverSubscription.unsubscribe();
   }
 

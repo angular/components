@@ -63,6 +63,9 @@ export class MatStepHeader extends CdkStepHeader implements OnDestroy {
   /** Whether the given step is optional. */
   @Input() optional: boolean;
 
+  /** Whether the ripple should be disabled. */
+  @Input() disableRipple: boolean;
+
   constructor(
     public _intl: MatStepperIntl,
     private _focusMonitor: FocusMonitor,
@@ -100,5 +103,18 @@ export class MatStepHeader extends CdkStepHeader implements OnDestroy {
       active: this.active,
       optional: this.optional
     };
+  }
+
+  _getDefaultTextForState(state: StepState): string {
+    if (state == 'number') {
+      return `${this.index + 1}`;
+    }
+    if (state == 'edit') {
+      return 'create';
+    }
+    if (state == 'error') {
+      return 'warning';
+    }
+    return state;
   }
 }

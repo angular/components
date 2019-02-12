@@ -82,6 +82,7 @@ export interface MatTooltipDefaultOptions {
   showDelay: number;
   hideDelay: number;
   touchendHideDelay: number;
+  position?: TooltipPosition;
 }
 
 /** Injection token to be used to override the default options for `matTooltip`. */
@@ -254,6 +255,10 @@ export class MatTooltip implements OnDestroy {
         _ngZone.run(() => this.show());
       }
     });
+
+    if (_defaultOptions && _defaultOptions.position) {
+      this.position = _defaultOptions.position;
+    }
   }
 
   /**
@@ -528,7 +533,7 @@ export type TooltipVisibility = 'initial' | 'visible' | 'hidden';
     'aria-hidden': 'true',
   }
 })
-export class TooltipComponent {
+export class TooltipComponent implements OnDestroy {
   /** Message to display in the tooltip */
   message: string;
 
@@ -609,6 +614,10 @@ export class TooltipComponent {
   /** Whether the tooltip is being displayed. */
   isVisible(): boolean {
     return this._visibility === 'visible';
+  }
+
+  ngOnDestroy() {
+    this._onHide.complete();
   }
 
   _animationStart() {

@@ -17,6 +17,7 @@ import {OverlayConfig} from './overlay-config';
 import {coerceCssPixelValue, coerceArray} from '@angular/cdk/coercion';
 import {OverlayReference} from './overlay-reference';
 import {PositionStrategy} from './position/position-strategy';
+import {ScrollStrategy} from './scroll';
 
 
 /** An object where all of its properties cannot be written. */
@@ -34,6 +35,7 @@ export class OverlayRef implements PortalOutlet, OverlayReference {
   private _attachments = new Subject<void>();
   private _detachments = new Subject<void>();
   private _positionStrategy: PositionStrategy | undefined;
+  private _scrollStrategy: ScrollStrategy | undefined;
   private _locationChanges: SubscriptionLike = Subscription.EMPTY;
 
   /**
@@ -43,7 +45,7 @@ export class OverlayRef implements PortalOutlet, OverlayReference {
   private _previousHostParent: HTMLElement;
 
   private _keydownEventsObservable: Observable<KeyboardEvent> =
-      Observable.create((observer: Observer<KeyboardEvent>) => {
+      new Observable((observer: Observer<KeyboardEvent>) => {
         const subscription = this._keydownEvents.subscribe(observer);
         this._keydownEventSubscriptions++;
 
@@ -71,7 +73,8 @@ export class OverlayRef implements PortalOutlet, OverlayReference {
       private _location?: Location) {
 
     if (_config.scrollStrategy) {
-      _config.scrollStrategy.attach(this);
+      this._scrollStrategy = _config.scrollStrategy;
+      this._scrollStrategy.attach(this);
     }
 
     this._positionStrategy = _config.positionStrategy;
@@ -123,8 +126,8 @@ export class OverlayRef implements PortalOutlet, OverlayReference {
     this._updateElementSize();
     this._updateElementDirection();
 
-    if (this._config.scrollStrategy) {
-      this._config.scrollStrategy.enable();
+    if (this._scrollStrategy) {
+      this._scrollStrategy.enable();
     }
 
     // Update the position once the zone is stable so that the overlay will be fully rendered
@@ -186,8 +189,8 @@ export class OverlayRef implements PortalOutlet, OverlayReference {
       this._positionStrategy.detach();
     }
 
-    if (this._config.scrollStrategy) {
-      this._config.scrollStrategy.disable();
+    if (this._scrollStrategy) {
+      this._scrollStrategy.disable();
     }
 
     const detachmentResult = this._portalOutlet.detach();
@@ -216,10 +219,7 @@ export class OverlayRef implements PortalOutlet, OverlayReference {
       this._positionStrategy.dispose();
     }
 
-    if (this._config.scrollStrategy) {
-      this._config.scrollStrategy.disable();
-    }
-
+    this._disposeScrollStrategy();
     this.detachBackdrop();
     this._locationChanges.unsubscribe();
     this._keyboardDispatcher.remove(this);
@@ -267,20 +267,20 @@ export class OverlayRef implements PortalOutlet, OverlayReference {
     return this._keydownEventsObservable;
   }
 
-  /** Gets the the current overlay configuration, which is immutable. */
+  /** Gets the current overlay configuration, which is immutable. */
   getConfig(): OverlayConfig {
     return this._config;
   }
 
   /** Updates the position of the overlay based on the position strategy. */
-  updatePosition() {
+  updatePosition(): void {
     if (this._positionStrategy) {
       this._positionStrategy.apply();
     }
   }
 
   /** Switches to a new position strategy and updates the overlay position. */
-  updatePositionStrategy(strategy: PositionStrategy) {
+  updatePositionStrategy(strategy: PositionStrategy): void {
     if (strategy === this._positionStrategy) {
       return;
     }
@@ -298,15 +298,29 @@ export class OverlayRef implements PortalOutlet, OverlayReference {
   }
 
   /** Update the size properties of the overlay. */
-  updateSize(sizeConfig: OverlaySizeConfig) {
+  updateSize(sizeConfig: OverlaySizeConfig): void {
     this._config = {...this._config, ...sizeConfig};
     this._updateElementSize();
   }
 
   /** Sets the LTR/RTL direction for the overlay. */
-  setDirection(dir: Direction | Directionality) {
+  setDirection(dir: Direction | Directionality): void {
     this._config = {...this._config, direction: dir};
     this._updateElementDirection();
+  }
+
+  /** Add a CSS class or an array of classes to the overlay pane. */
+  addPanelClass(classes: string | string[]): void {
+    if (this._pane) {
+      this._toggleClasses(this._pane, classes, true);
+    }
+  }
+
+  /** Remove a CSS class or an array of classes from the overlay pane. */
+  removePanelClass(classes: string | string[]): void {
+    if (this._pane) {
+      this._toggleClasses(this._pane, classes, false);
+    }
   }
 
   /**
@@ -320,6 +334,21 @@ export class OverlayRef implements PortalOutlet, OverlayReference {
     }
 
     return typeof direction === 'string' ? direction : direction.value;
+  }
+
+  /** Switches to a new scroll strategy. */
+  updateScrollStrategy(strategy: ScrollStrategy): void {
+    if (strategy === this._scrollStrategy) {
+      return;
+    }
+
+    this._disposeScrollStrategy();
+    this._scrollStrategy = strategy;
+
+    if (this.hasAttached()) {
+      strategy.attach(this);
+      strategy.enable();
+    }
   }
 
   /** Updates the text direction of the overlay panel. */
@@ -395,43 +424,45 @@ export class OverlayRef implements PortalOutlet, OverlayReference {
   detachBackdrop(): void {
     let backdropToDetach = this._backdropElement;
 
-    if (backdropToDetach) {
-      let timeoutId: number;
-      let finishDetach = () => {
-        // It may not be attached to anything in certain cases (e.g. unit tests).
-        if (backdropToDetach && backdropToDetach.parentNode) {
-          backdropToDetach.parentNode.removeChild(backdropToDetach);
-        }
+    if (!backdropToDetach) {
+      return;
+    }
 
-        // It is possible that a new portal has been attached to this overlay since we started
-        // removing the backdrop. If that is the case, only clear the backdrop reference if it
-        // is still the same instance that we started to remove.
-        if (this._backdropElement == backdropToDetach) {
-          this._backdropElement = null;
-        }
-
-        clearTimeout(timeoutId);
-      };
-
-      backdropToDetach.classList.remove('cdk-overlay-backdrop-showing');
-
-      if (this._config.backdropClass) {
-        this._toggleClasses(backdropToDetach, this._config.backdropClass, false);
+    let timeoutId: number;
+    let finishDetach = () => {
+      // It may not be attached to anything in certain cases (e.g. unit tests).
+      if (backdropToDetach && backdropToDetach.parentNode) {
+        backdropToDetach.parentNode.removeChild(backdropToDetach);
       }
 
-      this._ngZone.runOutsideAngular(() => {
-        backdropToDetach!.addEventListener('transitionend', finishDetach);
-      });
+      // It is possible that a new portal has been attached to this overlay since we started
+      // removing the backdrop. If that is the case, only clear the backdrop reference if it
+      // is still the same instance that we started to remove.
+      if (this._backdropElement == backdropToDetach) {
+        this._backdropElement = null;
+      }
 
-      // If the backdrop doesn't have a transition, the `transitionend` event won't fire.
-      // In this case we make it unclickable and we try to remove it after a delay.
-      backdropToDetach.style.pointerEvents = 'none';
+      if (this._config.backdropClass) {
+        this._toggleClasses(backdropToDetach!, this._config.backdropClass, false);
+      }
 
-      // Run this outside the Angular zone because there's nothing that Angular cares about.
-      // If it were to run inside the Angular zone, every test that used Overlay would have to be
-      // either async or fakeAsync.
-      timeoutId = this._ngZone.runOutsideAngular(() => setTimeout(finishDetach, 500));
-    }
+      clearTimeout(timeoutId);
+    };
+
+    backdropToDetach.classList.remove('cdk-overlay-backdrop-showing');
+
+    this._ngZone.runOutsideAngular(() => {
+      backdropToDetach!.addEventListener('transitionend', finishDetach);
+    });
+
+    // If the backdrop doesn't have a transition, the `transitionend` event won't fire.
+    // In this case we make it unclickable and we try to remove it after a delay.
+    backdropToDetach.style.pointerEvents = 'none';
+
+    // Run this outside the Angular zone because there's nothing that Angular cares about.
+    // If it were to run inside the Angular zone, every test that used Overlay would have to be
+    // either async or fakeAsync.
+    timeoutId = this._ngZone.runOutsideAngular(() => setTimeout(finishDetach, 500));
   }
 
   /** Toggles a single CSS class or an array of classes on an element. */
@@ -473,6 +504,19 @@ export class OverlayRef implements PortalOutlet, OverlayReference {
           }
         });
     });
+  }
+
+  /** Disposes of a scroll strategy. */
+  private _disposeScrollStrategy() {
+    const scrollStrategy = this._scrollStrategy;
+
+    if (scrollStrategy) {
+      scrollStrategy.disable();
+
+      if (scrollStrategy.detach) {
+        scrollStrategy.detach();
+      }
+    }
   }
 }
 

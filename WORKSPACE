@@ -1,24 +1,28 @@
 workspace(name = "angular_material")
 
+load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+
 # Add NodeJS rules (explicitly used for sass bundle rules)
 http_archive(
   name = "build_bazel_rules_nodejs",
-  url = "https://github.com/bazelbuild/rules_nodejs/archive/0.15.3.zip",
-  strip_prefix = "rules_nodejs-0.15.3",
+  url = "https://github.com/bazelbuild/rules_nodejs/archive/0.16.5.zip",
+  strip_prefix = "rules_nodejs-0.16.5",
 )
 
 # Add TypeScript rules
 http_archive(
   name = "build_bazel_rules_typescript",
-  url = "https://github.com/bazelbuild/rules_typescript/archive/8ea1a55cf5cf8be84ddfeefc0940769b80da792f.zip",
-  strip_prefix = "rules_typescript-8ea1a55cf5cf8be84ddfeefc0940769b80da792f",
+  # Explicitly depend on https://github.com/bazelbuild/rules_typescript/pull/327 which fixes the devserver
+  # for windows. Once this has been reviewed and merged, we can switch back to a normal release.
+  url = "https://github.com/bazelbuild/rules_typescript/archive/2e761b53ca465a140c4a265cb80887e7bcf61eb9.zip",
+  strip_prefix = "rules_typescript-2e761b53ca465a140c4a265cb80887e7bcf61eb9",
 )
 
 # Add Angular source and Bazel rules.
 http_archive(
   name = "angular",
-  url = "https://github.com/angular/angular/archive/7.0.3.zip",
-  strip_prefix = "angular-7.0.3",
+  url = "https://github.com/angular/angular/archive/7.2.1.zip",
+  strip_prefix = "angular-7.2.1",
 )
 
 # Add RxJS as repository because those are needed in order to build Angular from source.
@@ -33,13 +37,24 @@ http_archive(
   sha256 = "72b0b4e517f43358f554c125e40e39f67688cd2738a8998b4a266981ed32f403",
 )
 
+# We need to create a local repository called "npm" because currently Angular Material
+# stores all of it's NPM dependencies in the "@matdeps" repository. This is necessary because
+# we don't want to reserve the "npm" repository that is commonly used by downstream projects.
+# Since we still need the "npm" repository in order to use the Angular or TypeScript Bazel
+# rules, we create a local repository that is just defined in **this** workspace and is not
+# being shipped to downstream projects. This can be removed once downstream projects can
+# consume Angular Material completely from NPM.
+# TODO(devversion): remove once Angular Material can be consumed from NPM with Bazel.
+local_repository(
+  name = "npm",
+  path = "tools/npm-workspace"
+)
+
 # Add sass rules
 http_archive(
   name = "io_bazel_rules_sass",
-  # Explicitly depend on SHA c93cadb20753f4e4d4eabe83f8ea882bfb8f2efe because this one includes
-  # the major API overhaul and fix for the NodeJS source map warnings.
-  url = "https://github.com/bazelbuild/rules_sass/archive/c93cadb20753f4e4d4eabe83f8ea882bfb8f2efe.zip",
-  strip_prefix = "rules_sass-c93cadb20753f4e4d4eabe83f8ea882bfb8f2efe",
+  url = "https://github.com/bazelbuild/rules_sass/archive/1.16.1.zip",
+  strip_prefix = "rules_sass-1.16.1",
 )
 
 # Since we are explitly fetching @build_bazel_rules_typescript, we should explicitly ask for
@@ -60,27 +75,16 @@ rules_angular_dependencies()
 load("@io_bazel_rules_sass//:package.bzl", "rules_sass_dependencies")
 rules_sass_dependencies()
 
-load("@build_bazel_rules_nodejs//:defs.bzl", "check_bazel_version", "node_repositories",
-    "yarn_install")
+load("@build_bazel_rules_nodejs//:defs.bzl", "check_bazel_version", "node_repositories")
 
 # The minimum bazel version to use with this repo is 0.18.0
 check_bazel_version("0.18.0")
 
 node_repositories(
-  # For deterministic builds, specify explicit NodeJS and Yarn versions. Keep the Yarn version
-  # in sync with the version of Travis.
-  node_version = "10.10.0",
-  yarn_version = "1.9.4",
-)
-
-# @npm is temporarily needed to build @rxjs from source since its ts_library
-# targets will depend on an @npm workspace by default.
-# TODO(gmagolan): remove this once rxjs ships with an named UMD bundle and we
-# are no longer building it from source.
-yarn_install(
-  name = "npm",
-  package_json = "//tools:npm/package.json",
-  yarn_lock = "//tools:npm/yarn.lock",
+  # For deterministic builds, specify explicit NodeJS and Yarn versions.
+  node_version = "10.13.0",
+  # Use latest yarn version to support integrity field (added in yarn 1.10)
+  yarn_version = "1.12.1",
 )
 
 # Setup TypeScript Bazel workspace

@@ -35,6 +35,7 @@ import {FormControl, FormsModule, NgForm, ReactiveFormsModule, Validators} from 
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {By} from '@angular/platform-browser';
 import {BrowserAnimationsModule, NoopAnimationsModule} from '@angular/platform-browser/animations';
+import {Subject} from 'rxjs';
 import {MatInputModule} from '../input/index';
 import {MatChip} from './chip';
 import {MatChipInputEvent} from './chip-input';
@@ -50,6 +51,7 @@ describe('MatChipList', () => {
   let chips: QueryList<MatChip>;
   let manager: FocusKeyManager<MatChip>;
   let zone: MockNgZone;
+  let dirChange: Subject<Direction>;
 
   describe('StandardChipList', () => {
     describe('basic behaviors', () => {
@@ -84,6 +86,23 @@ describe('MatChipList', () => {
 
         expect(chips.toArray().every(chip => chip.disabled)).toBe(false);
       });
+
+      it('should disable a chip that is added after the list became disabled', fakeAsync(() => {
+        expect(chips.toArray().every(chip => chip.disabled)).toBe(false);
+
+        chipListInstance.disabled = true;
+        fixture.detectChanges();
+
+        expect(chips.toArray().every(chip => chip.disabled)).toBe(true);
+
+        fixture.componentInstance.items.push(5, 6);
+        fixture.detectChanges();
+        tick();
+        fixture.detectChanges();
+
+        expect(chips.toArray().every(chip => chip.disabled)).toBe(true);
+      }));
+
     });
 
     describe('with selected chips', () => {
@@ -178,8 +197,8 @@ describe('MatChipList', () => {
           // Focus the middle item
           midItem.focus();
 
-          // Destroy the middle item
-          testComponent.remove = 2;
+          // Remove the middle item
+          testComponent.items.splice(2, 1);
           fixture.detectChanges();
 
           // It focuses the 4th item (now at index 2)
@@ -194,8 +213,8 @@ describe('MatChipList', () => {
           // Focus the last item
           lastItem.focus();
 
-          // Destroy the last item
-          testComponent.remove = lastIndex;
+          // Remove the last item
+          testComponent.items.splice(lastIndex, 1);
           fixture.detectChanges();
 
           // It focuses the next-to-last item
@@ -211,8 +230,8 @@ describe('MatChipList', () => {
           midItem._blur();
           zone.simulateZoneExit();
 
-          // Destroy the middle item
-          testComponent.remove = 2;
+          // Remove the middle item
+          testComponent.items.splice(2, 1);
           fixture.detectChanges();
 
           // Should not have focus
@@ -422,6 +441,38 @@ describe('MatChipList', () => {
           expect(chipListInstance._tabIndex).toBe(4, 'Expected tabIndex to be reset back to 4');
         }));
       });
+
+      it('should account for the direction changing', () => {
+        setupStandardList();
+        manager = chipListInstance._keyManager;
+
+        let nativeChips = chipListNativeElement.querySelectorAll('mat-chip');
+        let firstNativeChip = nativeChips[0] as HTMLElement;
+
+        let RIGHT_EVENT: KeyboardEvent =
+          createKeyboardEvent('keydown', RIGHT_ARROW, firstNativeChip);
+        let array = chips.toArray();
+        let firstItem = array[0];
+
+        firstItem.focus();
+        expect(manager.activeItemIndex).toBe(0);
+
+        chipListInstance._keydown(RIGHT_EVENT);
+        chipListInstance._blur();
+        fixture.detectChanges();
+
+        expect(manager.activeItemIndex).toBe(1);
+
+        dirChange.next('rtl');
+        fixture.detectChanges();
+
+        chipListInstance._keydown(RIGHT_EVENT);
+        chipListInstance._blur();
+        fixture.detectChanges();
+
+        expect(manager.activeItemIndex).toBe(0);
+      });
+
     });
   });
 
@@ -1239,8 +1290,12 @@ describe('MatChipList', () => {
   }
 
   function setupStandardList(direction: Direction = 'ltr') {
+    dirChange = new Subject();
     fixture = createComponent(StandardChipList, [{
-      provide: Directionality, useFactory: () => ({value: direction.toLowerCase()})
+      provide: Directionality, useFactory: () => ({
+        value: direction.toLowerCase(),
+        change: dirChange
+      })
     }]);
     fixture.detectChanges();
 
@@ -1267,19 +1322,17 @@ describe('MatChipList', () => {
 @Component({
   template: `
     <mat-chip-list [tabIndex]="tabIndex" [selectable]="selectable">
-      <div *ngFor="let i of [0,1,2,3,4]">
-       <div *ngIf="remove != i">
-          <mat-chip (select)="chipSelect(i)" (deselect)="chipDeselect(i)">
-            {{name}} {{i + 1}}
-          </mat-chip>
-        </div>
-      </div>
+      <mat-chip *ngFor="let i of items"
+                (select)="chipSelect(i)"
+                (deselect)="chipDeselect(i)">
+        {{name}} {{i + 1}}
+      </mat-chip>
     </mat-chip-list>`
 })
 class StandardChipList {
+  items = [0, 1, 2, 3, 4];
   name: string = 'Test';
   selectable: boolean = true;
-  remove: number;
   chipSelect: (index?: number) => void = () => {};
   chipDeselect: (index?: number) => void = () => {};
   tabIndex: number = 0;
@@ -1538,12 +1591,10 @@ class StandardChipListWithAnimations {
   template: `
     <mat-form-field>
       <mat-chip-list>
-        <div *ngFor="let i of chips">
-          <mat-chip [value]="i" (removed)="removeChip($event)">
-            Chip {{i + 1}}
-            <span matChipRemove>Remove</span>
-          </mat-chip>
-        </div>
+        <mat-chip *ngFor="let i of chips" [value]="i" (removed)="removeChip($event)">
+          Chip {{i + 1}}
+          <span matChipRemove>Remove</span>
+        </mat-chip>
       </mat-chip-list>
     </mat-form-field>
   `

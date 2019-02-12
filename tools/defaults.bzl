@@ -1,13 +1,18 @@
 # Re-export of Bazel rules with repository-wide defaults
 
-load("@angular//:index.bzl", _ng_module = "ng_module")
+load("@angular//:index.bzl", _ng_module = "ng_module", _ng_package = "ng_package")
 load("@build_bazel_rules_nodejs//:defs.bzl", _jasmine_node_test = "jasmine_node_test")
 load("@build_bazel_rules_typescript//:defs.bzl", _ts_library = "ts_library",
   _ts_web_test_suite = "ts_web_test_suite")
+load("//tools/markdown-to-html:index.bzl", _markdown_to_html = "markdown_to_html")
+load("//:packages.bzl", "VERSION_PLACEHOLDER_REPLACEMENTS")
 
 _DEFAULT_TSCONFIG_BUILD = "//src:bazel-tsconfig-build.json"
 _DEFAULT_TSCONFIG_TEST = "//src:bazel-tsconfig-test.json"
 _DEFAULT_TS_TYPINGS = "@matdeps//typescript:typescript__typings"
+
+# Re-exports to simplify build file load statements
+markdown_to_html = _markdown_to_html
 
 def _getDefaultTsConfig(testonly):
   if testonly:
@@ -15,13 +20,17 @@ def _getDefaultTsConfig(testonly):
   else:
     return _DEFAULT_TSCONFIG_BUILD
 
-def ts_library(tsconfig = None, testonly = False, **kwargs):
+def ts_library(tsconfig = None, deps = [], testonly = False, **kwargs):
+  # Add tslib because we use import helpers for all public packages.
+  local_deps = ["@matdeps//tslib"] + deps
+
   if not tsconfig:
     tsconfig = _getDefaultTsConfig(testonly)
 
   _ts_library(
     tsconfig = tsconfig,
     testonly = testonly,
+    deps = local_deps,
     node_modules = _DEFAULT_TS_TYPINGS,
     **kwargs
   )
@@ -31,8 +40,7 @@ def ng_module(deps = [], tsconfig = None, testonly = False, **kwargs):
     tsconfig = _getDefaultTsConfig(testonly)
 
   local_deps = [
-    # Since we use the TypeScript import helpers (tslib) for each TypeScript configuration,
-    # we declare TSLib as default dependency
+    # Add tslib because we use import helpers for all public packages.
     "@matdeps//tslib",
 
     # Depend on the module typings for each `ng_module`. Since all components within the project
@@ -45,6 +53,19 @@ def ng_module(deps = [], tsconfig = None, testonly = False, **kwargs):
     tsconfig = tsconfig,
     testonly = testonly,
     node_modules = _DEFAULT_TS_TYPINGS,
+    **kwargs
+  )
+
+def ng_package(name, readme_md = None, **kwargs):
+  # If no readme file has been specified explicitly, use the default readme for
+  # release packages from "src/README.md".
+  if not readme_md:
+      readme_md = "//src:README.md"
+
+  _ng_package(
+    name = name,
+    readme_md = readme_md,
+    replacements = VERSION_PLACEHOLDER_REPLACEMENTS,
     **kwargs
   )
 
