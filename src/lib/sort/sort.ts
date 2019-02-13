@@ -74,8 +74,8 @@ export class MatSort extends _MatSortMixinBase
   /** Used to notify any child components listening to state changes. */
   readonly _stateChanges = new Subject<void>();
 
-  /** The id of the most recently sorted MatSortable. */
-  @Input('matSortActive') active: string;
+  /** The id of the sorted MatSortable. */
+  @Input('matSortActive') active: string = '';
 
   /**
    * The direction to set when an MatSortable is initially sorted.
@@ -137,7 +137,9 @@ export class MatSort extends _MatSortMixinBase
     } else {
       this.direction = this.getNextSortDirection(sortable);
     }
-
+    if (!this.direction) {
+      this.active = '';
+    }
     this.sortChange.emit({active: this.active, direction: this.direction});
   }
 
