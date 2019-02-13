@@ -43,9 +43,11 @@ $mat-mini-fab-padding: 8px !default;
   // Make anchors render like buttons.
   display: inline-block;
   white-space: nowrap;
-  text-decoration: none;
   vertical-align: baseline;
   text-align: center;
+  &:hover {
+    text-decoration: none;
+  }
 
   // Sizing.
   margin: $mat-button-margin;
