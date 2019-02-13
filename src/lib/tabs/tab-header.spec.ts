@@ -610,14 +610,18 @@ describe('MatTabHeader', () => {
         fixture = TestBed.createComponent(SimpleTabHeaderApp);
         appComponent = fixture.componentInstance;
         appComponent.tabs = [
-            {label: 'tab one'}, {label: 'tab one'}, {label: 'tab one'}, {label: 'tab one'},
-            {label: 'tab one'}, {label: 'tab one'}, {label: 'tab one'}, {label: 'tab one'},
+          {label: 'tab one'},
+          {label: 'tab two'},
+          {label: 'tab three'},
+          {label: 'tab four'},
+          {label: 'tab five'},
+          {label: 'tab six'},
+          {label: 'tab seven'},
+          {label: 'tab eight'},
         ];
-        const lastTabIndex = appComponent.tabs.length - 1;
-        appComponent.selectedIndex = lastTabIndex;
+        appComponent.tabHeader.selectedIndex = 8;
 
-        fixture.detectChanges();
-        appComponent.tabHeader._scrollToLabel(lastTabIndex);
+        fixture.componentRef.changeDetectorRef.markForCheck();
 
         expect(appComponent.tabHeader.scrollDistance)
             .toBe(appComponent.tabHeader._getMaxScrollDistance());
