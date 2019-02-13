@@ -403,12 +403,14 @@ function testSingleColumnSortDirectionSequence(fixture: ComponentFixture<SimpleM
   component.matSort.direction = '';
 
   // Run through the sequence to confirm the order
-  let actualSequence = expectedSequence.map(() => {
+  let actualSequence = expectedSequence.map((currentSequence) => {
     component.sort(id);
 
+    // For empty sequence the expectedSortId should be empty
+    const expectedSortId = currentSequence ? id : '';
     // Check that the sort event's active sort is consistent with the MatSort
-    expect(component.matSort.active).toBe(id);
-    expect(component.latestSortEvent.active).toBe(id);
+    expect(component.matSort.active).toBe(expectedSortId);
+    expect(component.latestSortEvent.active).toBe(expectedSortId);
 
     // Check that the sort event's direction is consistent with the MatSort
     expect(component.matSort.direction).toBe(component.latestSortEvent.direction);
