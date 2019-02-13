@@ -137,7 +137,9 @@ export class MatSort extends _MatSortMixinBase
     } else {
       this.direction = this.getNextSortDirection(sortable);
     }
-
+    if (!this.direction) {
+      this.active = '';
+    }
     this.sortChange.emit({active: this.active, direction: this.direction});
   }
 
