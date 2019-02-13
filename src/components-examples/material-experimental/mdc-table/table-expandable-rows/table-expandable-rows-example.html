@@ -1,6 +1,23 @@
 <table mat-table
        [dataSource]="dataSource" multiTemplateDataRows
        class="mat-elevation-z8">
+  <!-- Define separate column for toggle indicator -->
+  <ng-container matColumnDef="toggle">
+    <th mat-header-cell *matHeaderCellDef></th>
+    <td mat-cell *matCellDef="let element" class="example-element-toggle">
+      <div role="button" 
+        [attr.aria-label]="'toggle row details for ' + element[rowLabelProperty]"
+        [attr.aria-controls]="'element-' + (element.position + 1) + '-description'"
+        (keydown.space)="toggleElement(element, $event)"
+        (keydown.enter)="toggleElement(element, $event)"
+        tabindex=0
+      >
+        <mat-icon>
+          expand_{{ element == expandedElement ? 'less' : 'more'}}
+        </mat-icon>
+      </div>
+    </td>
+  </ng-container>
   <ng-container matColumnDef="{{column}}" *ngFor="let column of columnsToDisplay">
     <th mat-header-cell *matHeaderCellDef> {{column}} </th>
     <td mat-cell *matCellDef="let element"> {{element[column]}} </td>
@@ -8,9 +25,11 @@
 
   <!-- Expanded Content Column - The detail row is made up of this one column that spans across all columns -->
   <ng-container matColumnDef="expandedDetail">
-    <td mat-cell *matCellDef="let element" [attr.colspan]="columnsToDisplay.length">
+    <td mat-cell *matCellDef="let element" [attr.colspan]="columnsWithToggle.length">
       <div class="example-element-detail"
-           [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
+          [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'"
+          [attr.id]="'element-' + element.position + '-description'"
+          tabindex=0>
         <div class="example-element-diagram">
           <div class="example-element-position"> {{element.position}} </div>
           <div class="example-element-symbol"> {{element.symbol}} </div>
@@ -25,11 +44,13 @@
     </td>
   </ng-container>
 
-  <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
-  <tr mat-row *matRowDef="let element; columns: columnsToDisplay;"
+  <tr mat-header-row *matHeaderRowDef="columnsWithToggle"></tr>
+  <tr mat-row *matRowDef="let element; columns: columnsWithToggle;"
       class="example-element-row"
+      [attr.aria-label]="element[rowLabelProperty]"
+      [attr.aria-expanded]="element === expandedElement ? true : false"
       [class.example-expanded-row]="expandedElement === element"
-      (click)="expandedElement = expandedElement === element ? null : element">
+      (click)="toggleElement(element, $event)">
   </tr>
   <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
 </table>

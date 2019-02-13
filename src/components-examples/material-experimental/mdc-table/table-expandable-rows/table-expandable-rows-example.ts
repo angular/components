@@ -19,7 +19,14 @@ import {animate, state, style, transition, trigger} from '@angular/animations';
 export class TableExpandableRowsExample {
   dataSource = ELEMENT_DATA;
   columnsToDisplay = ['name', 'weight', 'symbol', 'position'];
+  columnsWithToggle = ['toggle', ...this.columnsToDisplay];
+  rowLabelProperty = this.columnsToDisplay[0];
   expandedElement: PeriodicElement | null;
+  toggleElement(element: PeriodicElement, event: MouseEvent | KeyboardEvent) {
+    event.stopPropagation();
+    event.preventDefault();
+    this.expandedElement = this.expandedElement === element ? null : element;
+  }
 }
 
 export interface PeriodicElement {
