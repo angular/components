@@ -247,6 +247,7 @@ export class MatTabHeader extends _MatTabHeaderMixinBase
     const dirChange = this._dir ? this._dir.change : observableOf(null);
     const resize = this._viewportRuler.change(150);
     const realign = () => {
+      this._scrollToLabel(this._selectedIndex);
       this.updatePagination();
       this._alignInkBarToSelectedTab();
     };

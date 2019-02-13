@@ -604,6 +604,26 @@ describe('MatTabHeader', () => {
       expect(tabHeaderElement.classList).toContain(enabledClass);
     });
 
+    it('scroll to last tab', () => {
+      fixture = TestBed.createComponent(SimpleTabHeaderApp);
+      appComponent = fixture.componentInstance;
+      appComponent.tabs = [
+        {label: 'tab one'},
+        {label: 'tab two'},
+        {label: 'tab three'},
+        {label: 'tab four'},
+        {label: 'tab five'},
+        {label: 'tab six'},
+        {label: 'tab seven'},
+        {label: 'tab eight'},
+      ];
+      appComponent.tabHeader.selectedIndex = 8;
+
+      fixture.componentRef.changeDetectorRef.markForCheck();
+
+      expect(appComponent.tabHeader.scrollDistance)
+          .toBe(appComponent.tabHeader._getMaxScrollDistance());
+    });
   });
 });
 
