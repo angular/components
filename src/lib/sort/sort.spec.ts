@@ -408,7 +408,7 @@ function testSingleColumnSortDirectionSequence(fixture: ComponentFixture<SimpleM
 
 
     // Check that the sort event's active sort is consistent with the MatSort
-      if(currentSequence) {
+      if (currentSequence) {
         expect(component.matSort.active).toBe(id);
         expect(component.latestSortEvent.active).toBe(id);
       } else {
