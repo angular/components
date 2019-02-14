@@ -6,7 +6,7 @@
       <mat-checkbox (change)="$event ? masterToggle() : null"
                     [checked]="selection.hasValue() && isAllSelected()"
                     [indeterminate]="selection.hasValue() && !isAllSelected()"
-                    [aria-label]='checkboxLabel()'>
+                    [aria-label]="checkboxLabel()">
       </mat-checkbox>
     </th>
     <td mat-cell *matCellDef="let row">
