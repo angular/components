@@ -23,7 +23,9 @@ export declare class MatMenu implements AfterContentInit, MatMenuPanel<MatMenuIt
     panelClass: string;
     parentMenu: MatMenuPanel | undefined;
     templateRef: TemplateRef<any>;
+    xOffset: number;
     xPosition: MenuPositionX;
+    yOffset: number;
     yPosition: MenuPositionY;
     constructor(_elementRef: ElementRef<HTMLElement>, _ngZone: NgZone, _defaultOptions: MatMenuDefaultOptions);
     _handleKeydown(event: KeyboardEvent): void;
@@ -96,7 +98,9 @@ export interface MatMenuPanel<T = any> {
     resetActiveItem: () => void;
     setPositionClasses?: (x: MenuPositionX, y: MenuPositionY) => void;
     templateRef: TemplateRef<any>;
+    xOffset?: number;
     xPosition: MenuPositionX;
+    yOffset?: number;
     yPosition: MenuPositionY;
     setElevation?(depth: number): void;
 }

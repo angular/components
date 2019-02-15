@@ -39,4 +39,6 @@ export interface MatMenuPanel<T = any> {
   hasBackdrop?: boolean;
   addItem?: (item: T) => void;
   removeItem?: (item: T) => void;
+  xOffset?: number;
+  yOffset?: number;
 }
