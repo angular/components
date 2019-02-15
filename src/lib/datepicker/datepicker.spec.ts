@@ -479,6 +479,23 @@ describe('MatDatepicker', () => {
         expect(event.defaultPrevented).toBe(false);
       }));
 
+      it('Should close the calednar via close button', fakeAsync(() => {
+        testComponent.datepicker.touchUi = true;
+        testComponent.datepicker.open();
+        expect(testComponent.datepicker.opened).toBe(true, 'Datepicker should be opened.');
+        fixture.detectChanges();
+
+        const closeArea = fixture.debugElement.query(By.css('.mat-datepicker-close-area'));
+        expect(closeArea.nativeElement.getAttribute('aria-label')).toBe('Close calendar');
+
+        const closeButton = document.querySelector('.mat-datepicker-close-area') as HTMLElement;
+        closeButton.click();
+        fixture.detectChanges();
+        flush();
+
+        expect(testComponent.datepicker.opened).toBe(false, 'DatePicker should be closed.');
+      }));
+
     });
 
     describe('datepicker with too many inputs', () => {

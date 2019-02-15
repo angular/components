@@ -48,4 +48,7 @@ export class MatDatepickerIntl {
 
   /** A label for the 'switch to year view' button (used by screen readers). */
   switchToMultiYearViewLabel: string = 'Choose month and year';
+
+  /** Calendar close button text */
+  closeAreaLabel: string = 'Close calendar';
 }

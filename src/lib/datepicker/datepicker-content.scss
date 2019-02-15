@@ -49,6 +49,10 @@ $mat-datepicker-touch-max-height: 788px;
   }
 }
 
+.mat-datepicker-close-area {
+  margin-top: 10px;
+}
+
 @media all and (orientation: landscape) {
   .mat-datepicker-content-touch .mat-calendar {
     width: $mat-datepicker-touch-landscape-width;

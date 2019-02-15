@@ -51,6 +51,7 @@ import {matDatepickerAnimations} from './datepicker-animations';
 import {createMissingDateImplError} from './datepicker-errors';
 import {MatDatepickerInput} from './datepicker-input';
 import {MatCalendarCellCssClasses} from './calendar-body';
+import { MatDatepickerIntl } from './datepicker-intl';
 
 /** Used to generate a unique ID for each datepicker instance. */
 let datepickerUid = 0;
@@ -237,6 +238,9 @@ export class MatDatepicker<D> implements OnDestroy, CanColor {
   set _selected(value: D | null) { this._validSelected = value; }
   private _validSelected: D | null = null;
 
+  /** Close area text */
+  get closeAreaLabel(): string { return this._intl.closeAreaLabel; }
+
   /** The minimum selectable date. */
   get _minDate(): D | null {
     return this._datepickerInput && this._datepickerInput.min;
@@ -282,6 +286,7 @@ export class MatDatepicker<D> implements OnDestroy, CanColor {
               private _overlay: Overlay,
               private _ngZone: NgZone,
               private _viewContainerRef: ViewContainerRef,
+              private _intl: MatDatepickerIntl,
               @Inject(MAT_DATEPICKER_SCROLL_STRATEGY) scrollStrategy: any,
               @Optional() private _dateAdapter: DateAdapter<D>,
               @Optional() private _dir: Directionality,
