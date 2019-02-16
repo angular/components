@@ -1038,6 +1038,51 @@ describe('MatSelectionList without forms', () => {
       });
 
   });
+
+  describe('aria labelling', () => {
+    let fixture: ComponentFixture<SelectionListWithHeader>;
+    let selectionList: DebugElement;
+
+    beforeEach(async(() => {
+      TestBed.configureTestingModule({
+        imports: [MatListModule],
+        declarations: [SelectionListWithHeader]
+      }).compileComponents();
+
+      fixture = TestBed.createComponent(SelectionListWithHeader);
+      fixture.detectChanges();
+
+      selectionList = fixture.debugElement.query(By.directive(MatSelectionList));
+    }));
+
+    it('should default aria-labelledby to the id of the header', () => {
+      const header = fixture.nativeElement.querySelector('.mat-subheader');
+
+      expect(header).toBeTruthy();
+      expect(header.id).toBeTruthy();
+      expect(selectionList.nativeElement.getAttribute('aria-labelledby')).toBe(header.id);
+      expect(selectionList.nativeElement.hasAttribute('aria-label')).toBe(false);
+    });
+
+    it('should allow the consumer to set another aria-labelledby', () => {
+      fixture.componentInstance.ariaLabelledby = 'custom-labelled-by';
+      fixture.detectChanges();
+
+      expect(selectionList.nativeElement.getAttribute('aria-labelledby'))
+          .toBe('custom-labelled-by');
+    });
+
+    it('should clear aria-labelledby if the list has an aria-label', () => {
+      const listElement: HTMLElement = selectionList.nativeElement;
+
+      fixture.componentInstance.ariaLabel = 'Your email';
+      fixture.detectChanges();
+
+      expect(listElement.getAttribute('aria-label')).toBe('Your email');
+      expect(listElement.hasAttribute('aria-labelledby')).toBe(false);
+    });
+  });
+
 });
 
 describe('MatSelectionList with forms', () => {
@@ -1664,4 +1709,19 @@ class SelectionListWithIndirectChildOptions {
   </mat-selection-list>`
 })
 class SelectionListWithIndirectDescendantLines {
+}
+
+
+@Component({
+  template: `
+    <mat-selection-list [aria-label]="ariaLabel" [aria-labelledby]="ariaLabelledby">
+      <h3 mat-subheader>Email</h3>
+      <mat-list-option>Inbox</mat-list-option>
+      <mat-list-option>Spam</mat-list-option>
+    </mat-selection-list>
+  `
+})
+class SelectionListWithHeader {
+  ariaLabel?: string;
+  ariaLabelledby?: string;
 }

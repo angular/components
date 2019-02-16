@@ -82,7 +82,8 @@ export declare class MatListOption extends _MatListOptionMixinBase implements Af
 }
 
 export declare class MatListSubheaderCssMatStyler {
-    static ɵdir: i0.ɵɵDirectiveDefWithMeta<MatListSubheaderCssMatStyler, "[mat-subheader], [matSubheader]", never, {}, {}, never>;
+    id: string;
+    static ɵdir: i0.ɵɵDirectiveDefWithMeta<MatListSubheaderCssMatStyler, "[mat-subheader], [matSubheader]", never, { "id": "id"; }, {}, never>;
     static ɵfac: i0.ɵɵFactoryDef<MatListSubheaderCssMatStyler, never>;
 }
 
@@ -97,10 +98,13 @@ export declare class MatNavList extends _MatListMixinBase implements CanDisable,
 }
 
 export declare class MatSelectionList extends _MatSelectionListMixinBase implements CanDisableRipple, AfterContentInit, ControlValueAccessor, OnDestroy, OnChanges {
+    _header?: MatListSubheaderCssMatStyler;
     _keyManager: FocusKeyManager<MatListOption>;
     _onTouched: () => void;
     _tabIndex: number;
     _value: string[] | null;
+    ariaLabel: string;
+    ariaLabelledby: string;
     color: ThemePalette;
     compareWith: (o1: any, o2: any) => boolean;
     get disabled(): boolean;
@@ -113,6 +117,7 @@ export declare class MatSelectionList extends _MatSelectionListMixinBase impleme
     tabIndex: number;
     constructor(_element: ElementRef<HTMLElement>, tabIndex: string, _changeDetector: ChangeDetectorRef);
     _emitChangeEvent(option: MatListOption): void;
+    _getAriaLabelledby(): string | null;
     _keydown(event: KeyboardEvent): void;
     _onFocus(): void;
     _removeOptionFromList(option: MatListOption): MatListOption | null;
@@ -131,7 +136,7 @@ export declare class MatSelectionList extends _MatSelectionListMixinBase impleme
     static ngAcceptInputType_disableRipple: BooleanInput;
     static ngAcceptInputType_disabled: BooleanInput;
     static ngAcceptInputType_multiple: BooleanInput;
-    static ɵcmp: i0.ɵɵComponentDefWithMeta<MatSelectionList, "mat-selection-list", ["matSelectionList"], { "disableRipple": "disableRipple"; "tabIndex": "tabIndex"; "color": "color"; "compareWith": "compareWith"; "disabled": "disabled"; "multiple": "multiple"; }, { "selectionChange": "selectionChange"; }, ["options"], ["*"]>;
+    static ɵcmp: i0.ɵɵComponentDefWithMeta<MatSelectionList, "mat-selection-list", ["matSelectionList"], { "disableRipple": "disableRipple"; "tabIndex": "tabIndex"; "color": "color"; "compareWith": "compareWith"; "disabled": "disabled"; "multiple": "multiple"; "ariaLabel": "aria-label"; "ariaLabelledby": "aria-labelledby"; }, { "selectionChange": "selectionChange"; }, ["_header", "options"], ["*"]>;
     static ɵfac: i0.ɵɵFactoryDef<MatSelectionList, [null, { attribute: "tabindex"; }, null]>;
 }
 
