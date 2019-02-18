@@ -8,7 +8,14 @@
 
 import {DOCUMENT} from '@angular/common';
 import {Component, Inject, TemplateRef, ViewChild, ViewEncapsulation} from '@angular/core';
-import {MAT_DIALOG_DATA, MatDialog, MatDialogConfig, MatDialogRef} from '@angular/material';
+import {
+  MAT_DIALOG_DATA,
+  MatDialog, MatDialogConfig,
+  MatDialogRef,
+  MatDialogContainer,
+  MatDialogHostConfig
+} from '@angular/material';
+import { trigger, state, style, transition, animate } from '@angular/animations';
 
 
 const defaultDialogConfig = new MatDialogConfig();
@@ -83,6 +90,21 @@ export class DialogDemo {
   openTemplate() {
     this.numTemplateOpens++;
     this.dialog.open(this.template, this.config);
+  }
+
+  openCustomContainer() {
+    this.dialogRef = this.dialog.open(JazzDialog, {
+      ...this.config,
+      container: CustomDialogContainer
+    });
+
+    this.dialogRef.beforeClosed().subscribe((result: string) => {
+      this.lastBeforeCloseResult = result;
+    });
+    this.dialogRef.afterClosed().subscribe((result: string) => {
+      this.lastAfterClosedResult = result;
+      this.dialogRef = null;
+    });
   }
 }
 
@@ -214,3 +236,22 @@ export class ContentElementDialog {
   `
 })
 export class IFrameDialog {}
+
+
+const slideUpAnimation = trigger('dialogContainer', [
+  state('void, exit', style({transform: 'translateY(100vh)'})),
+  state('enter', style({transform: 'none'})),
+  transition('* => enter', animate('300ms cubic-bezier(0, 0, 0.2, 1)',
+      style({transform: 'none'}))),
+  transition('* => void, * => exit',
+      animate('300ms cubic-bezier(0, 0, 0.2, 1)', style({transform: 'translateY(100vh)'}))),
+]);
+
+@Component({
+  selector: 'custom-dialog-container',
+  template: `<ng-template cdkPortalOutlet></ng-template>`,
+  animations: [slideUpAnimation],
+  host: MatDialogHostConfig,
+  encapsulation: ViewEncapsulation.None
+})
+export class CustomDialogContainer extends MatDialogContainer {}

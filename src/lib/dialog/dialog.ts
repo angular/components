@@ -223,7 +223,8 @@ export class MatDialog implements OnDestroy {
       [MatDialogConfig, config]
     ]));
     const containerPortal =
-        new ComponentPortal(MatDialogContainer, config.viewContainerRef, injector);
+        new ComponentPortal(config.container || MatDialogContainer,
+          config.viewContainerRef, injector);
     const containerRef = overlay.attach<MatDialogContainer>(containerPortal);
 
     return containerRef.instance;

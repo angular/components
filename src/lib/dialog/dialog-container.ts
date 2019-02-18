@@ -41,6 +41,20 @@ export function throwMatDialogContentAlreadyAttachedError() {
   throw Error('Attempting to attach dialog content after content is already attached');
 }
 
+export const MatDialogHostConfig: { [key: string]: string } = {
+    'class': 'mat-dialog-container',
+    'tabindex': '-1',
+    'aria-modal': 'true',
+    '[attr.id]': '_id',
+    '[attr.role]': '_config.role',
+    '[attr.aria-labelledby]': '_config.ariaLabel ? null : _ariaLabelledBy',
+    '[attr.aria-label]': '_config.ariaLabel',
+    '[attr.aria-describedby]': '_config.ariaDescribedBy || null',
+    '[@dialogContainer]': '_state',
+    '(@dialogContainer.start)': '_onAnimationStart($event)',
+    '(@dialogContainer.done)': '_onAnimationDone($event)'
+};
+
 /**
  * Internal component that wraps user-provided dialog content.
  * Animation is based on https://material.io/guidelines/motion/choreography.html.
@@ -56,19 +70,7 @@ export function throwMatDialogContentAlreadyAttachedError() {
   // tslint:disable-next-line:validate-decorators
   changeDetection: ChangeDetectionStrategy.Default,
   animations: [matDialogAnimations.dialogContainer],
-  host: {
-    'class': 'mat-dialog-container',
-    'tabindex': '-1',
-    'aria-modal': 'true',
-    '[attr.id]': '_id',
-    '[attr.role]': '_config.role',
-    '[attr.aria-labelledby]': '_config.ariaLabel ? null : _ariaLabelledBy',
-    '[attr.aria-label]': '_config.ariaLabel',
-    '[attr.aria-describedby]': '_config.ariaDescribedBy || null',
-    '[@dialogContainer]': '_state',
-    '(@dialogContainer.start)': '_onAnimationStart($event)',
-    '(@dialogContainer.done)': '_onAnimationDone($event)',
-  },
+  host: MatDialogHostConfig
 })
 export class MatDialogContainer extends BasePortalOutlet {
   /** The portal outlet inside of this container into which the dialog content will be loaded. */

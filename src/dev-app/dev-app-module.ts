@@ -29,7 +29,7 @@ import {ChipsDemo} from './chips/chips-demo';
 import {ConnectedOverlayDemo} from './connected-overlay/connected-overlay-demo';
 import {CustomHeader, CustomHeaderNgContent, DatepickerDemo} from './datepicker/datepicker-demo';
 import {DevAppComponent, DevAppHome, DevApp404} from './dev-app';
-import {ContentElementDialog, DialogDemo, IFrameDialog, JazzDialog} from './dialog/dialog-demo';
+import {ContentElementDialog, DialogDemo, IFrameDialog, JazzDialog, CustomDialogContainer} from './dialog/dialog-demo';
 import {DragAndDropDemo} from './drag-drop/drag-drop-demo';
 import {DrawerDemo} from './drawer/drawer-demo';
 import {ExamplePageModule} from './example/example-module';
@@ -139,6 +139,7 @@ import {VirtualScrollDemo} from './virtual-scroll/virtual-scroll-demo';
     TooltipDemo,
     TypographyDemo,
     VirtualScrollDemo,
+    CustomDialogContainer
   ],
   providers: [
     {provide: OverlayContainer, useClass: FullscreenOverlayContainer},
@@ -152,6 +153,7 @@ import {VirtualScrollDemo} from './virtual-scroll/virtual-scroll-demo';
     IFrameDialog,
     JazzDialog,
     ScienceJoke,
+    CustomDialogContainer
   ],
   bootstrap: [DevAppComponent],
 })

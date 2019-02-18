@@ -8,7 +8,8 @@
 
 import {ViewContainerRef} from '@angular/core';
 import {Direction} from '@angular/cdk/bidi';
-import {ScrollStrategy} from '@angular/cdk/overlay';
+import {ScrollStrategy, ComponentType} from '@angular/cdk/overlay';
+import {MatDialogContainer} from './dialog-container';
 
 /** Valid ARIA roles for a dialog element. */
 export type DialogRole = 'dialog' | 'alertdialog';
@@ -113,6 +114,9 @@ export class MatDialogConfig<D = any> {
    * the `HashLocationStrategy`).
    */
   closeOnNavigation?: boolean = true;
+
+  /** Container for the dialog. */
+  container?: ComponentType<MatDialogContainer>;
 
   // TODO(jelbourn): add configuration for lifecycle hooks, ARIA labelling.
 }
