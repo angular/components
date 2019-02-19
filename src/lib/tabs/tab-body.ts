@@ -24,6 +24,8 @@ import {
   ViewContainerRef,
   forwardRef,
   ViewChild,
+  OnChanges,
+  SimpleChanges,
 } from '@angular/core';
 import {AnimationEvent} from '@angular/animations';
 import {TemplatePortal, CdkPortalOutlet, PortalHostDirective} from '@angular/cdk/portal';
@@ -82,6 +84,7 @@ export class MatTabBodyPortal extends CdkPortalOutlet implements OnInit, OnDestr
       .subscribe((isCentering: boolean) => {
         if (isCentering && !this.hasAttached()) {
           this.attach(this._host._content);
+          this._host._restoreScrollPosition();
         }
       });
 
@@ -112,9 +115,10 @@ export class MatTabBodyPortal extends CdkPortalOutlet implements OnInit, OnDestr
   animations: [matTabsAnimations.translateTab],
   host: {
     'class': 'mat-tab-body',
+    '[class.mat-tab-body-active]': 'active',
   },
 })
-export class MatTabBody implements OnInit, OnDestroy {
+export class MatTabBody implements OnInit, OnChanges, OnDestroy {
 
   /** Current position of the tab-body in the tab-group. Zero means that the tab is visible. */
   private _positionIndex: number;
@@ -122,11 +126,17 @@ export class MatTabBody implements OnInit, OnDestroy {
   /** Subscription to the directionality change observable. */
   private _dirChangeSubscription = Subscription.EMPTY;
 
+  /** Scroll position of the tab before the user switched away. */
+  private _lastScrollPosition = 0;
+
   /** Tab body position state. Used by the animation trigger for the current state. */
   _position: MatTabBodyPositionState;
 
   /** Emits when an animation on the tab is complete. */
   _translateTabComplete = new Subject<AnimationEvent>();
+
+  /** Element wrapping the tab's content. */
+  @ViewChild('content') _contentElement: ElementRef;
 
   /** Event emitted when the tab begins to animate towards the center as the active tab. */
   @Output() readonly _onCentering: EventEmitter<number> = new EventEmitter<number>();
@@ -153,6 +163,9 @@ export class MatTabBody implements OnInit, OnDestroy {
   // anyway to prevent the animations module from throwing an error if the body is used on its own.
   /** Duration for the tab's animation. */
   @Input() animationDuration: string = '500ms';
+
+  /** Whether the tab is currently active. */
+  @Input() active: boolean;
 
   /** The shifted index position of the tab body, where zero represents the active center tab. */
   @Input()
@@ -214,16 +227,36 @@ export class MatTabBody implements OnInit, OnDestroy {
     }
   }
 
+  ngOnChanges(changes: SimpleChanges) {
+    // Cache the scroll position before moving away from the tab. Note that this has to be done
+    // through change detection and as early as possible, because some browsers (namely Safari)
+    // will reset the scroll position when we switch from an absolute to a relative position.
+    if (changes.active && changes.active.previousValue) {
+      this._lastScrollPosition = this._elementRef.nativeElement.scrollTop ||
+                                 this._contentElement.nativeElement.scrollTop;
+    }
+  }
+
   /** The text direction of the containing app. */
   _getLayoutDirection(): Direction {
     return this._dir && this._dir.value === 'rtl' ? 'rtl' : 'ltr';
   }
 
   /** Whether the provided position state is considered center, regardless of origin. */
-  _isCenterPosition(position: MatTabBodyPositionState|string): boolean {
+  _isCenterPosition(position: MatTabBodyPositionState | string): boolean {
     return position == 'center' ||
-        position == 'left-origin-center' ||
-        position == 'right-origin-center';
+           position == 'left-origin-center' ||
+           position == 'right-origin-center';
+  }
+
+  _restoreScrollPosition() {
+    if (this._lastScrollPosition) {
+      // Depending on the browser, the scrollable element can end up being
+      // either the host element or the element with all the content.
+      this._contentElement.nativeElement.scrollTop =
+        this._elementRef.nativeElement.scrollTop =
+        this._lastScrollPosition;
+    }
   }
 
   /** Computes the position state that will be used for the tab-body animation trigger. */

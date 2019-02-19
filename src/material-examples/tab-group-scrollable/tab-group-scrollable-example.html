@@ -1,0 +1,7 @@
+<mat-tab-group>
+  <mat-tab [label]="tab" *ngFor="let tab of tabs">
+    <div class="example-content-box mat-elevation-z3" *ngFor="let box of boxes; let i = index">
+      {{ i }}
+    </div>
+  </mat-tab>
+</mat-tab-group>

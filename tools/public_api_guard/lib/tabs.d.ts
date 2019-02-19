@@ -36,15 +36,17 @@ export declare class MatTab extends _MatTabMixinBase implements OnInit, CanDisab
     ngOnInit(): void;
 }
 
-export declare class MatTabBody implements OnInit, OnDestroy {
+export declare class MatTabBody implements OnInit, OnChanges, OnDestroy {
     readonly _afterLeavingCenter: EventEmitter<boolean>;
     readonly _beforeCentering: EventEmitter<boolean>;
     _content: TemplatePortal;
+    _contentElement: ElementRef;
     readonly _onCentered: EventEmitter<void>;
     readonly _onCentering: EventEmitter<number>;
     _portalHost: PortalHostDirective;
     _position: MatTabBodyPositionState;
     _translateTabComplete: Subject<AnimationEvent>;
+    active: boolean;
     animationDuration: string;
     origin: number;
     position: number;
@@ -53,6 +55,8 @@ export declare class MatTabBody implements OnInit, OnDestroy {
     _getLayoutDirection(): Direction;
     _isCenterPosition(position: MatTabBodyPositionState | string): boolean;
     _onTranslateTabStarted(event: AnimationEvent): void;
+    _restoreScrollPosition(): void;
+    ngOnChanges(changes: SimpleChanges): void;
     ngOnDestroy(): void;
     ngOnInit(): void;
 }
