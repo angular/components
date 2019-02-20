@@ -80,9 +80,9 @@ export class MatTabHeader extends _MatTabHeaderMixinBase
     implements AfterContentChecked, AfterContentInit, OnDestroy, CanDisableRipple {
 
   @ContentChildren(MatTabLabelWrapper) _labelWrappers: QueryList<MatTabLabelWrapper>;
-  @ViewChild(MatInkBar) _inkBar: MatInkBar;
-  @ViewChild('tabListContainer') _tabListContainer: ElementRef;
-  @ViewChild('tabList') _tabList: ElementRef;
+  @ViewChild(MatInkBar, {static: true}) _inkBar: MatInkBar;
+  @ViewChild('tabListContainer', {static: true}) _tabListContainer: ElementRef;
+  @ViewChild('tabList', {static: true}) _tabList: ElementRef;
 
   /** The distance in pixels that the tab labels should be translated to the left. */
   private _scrollDistance = 0;
