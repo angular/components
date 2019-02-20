@@ -58,12 +58,12 @@ describe('CdkTree', () => {
         configureCdkTreeTestingModule([SimpleCdkTreeApp]);
         fixture = TestBed.createComponent(SimpleCdkTreeApp);
 
+        fixture.detectChanges();
+
         component = fixture.componentInstance;
         dataSource = component.dataSource as FakeDataSource;
         tree = component.tree;
         treeElement = fixture.nativeElement.querySelector('cdk-tree');
-
-        fixture.detectChanges();
       });
 
       it('with a connected data source', () => {
@@ -141,12 +141,12 @@ describe('CdkTree', () => {
         configureCdkTreeTestingModule([CdkTreeAppWithToggle]);
         fixture = TestBed.createComponent(CdkTreeAppWithToggle);
 
+        fixture.detectChanges();
+
         component = fixture.componentInstance;
         dataSource = component.dataSource as FakeDataSource;
         tree = component.tree;
         treeElement = fixture.nativeElement.querySelector('cdk-tree');
-
-        fixture.detectChanges();
       });
 
       it('should expand/collapse the node', () => {
@@ -227,12 +227,12 @@ describe('CdkTree', () => {
         configureCdkTreeTestingModule([WhenNodeCdkTreeApp]);
         fixture = TestBed.createComponent(WhenNodeCdkTreeApp);
 
+        fixture.detectChanges();
+
         component = fixture.componentInstance;
         dataSource = component.dataSource as FakeDataSource;
         tree = component.tree;
         treeElement = fixture.nativeElement.querySelector('cdk-tree');
-
-        fixture.detectChanges();
       });
 
       it('with the right data', () => {
@@ -265,13 +265,13 @@ describe('CdkTree', () => {
       beforeEach(() => {
         configureCdkTreeTestingModule([ArrayDataSourceCdkTreeApp]);
         fixture = TestBed.createComponent(ArrayDataSourceCdkTreeApp);
+        fixture.detectChanges();
+
 
         component = fixture.componentInstance;
         dataSource = component.dataSource as FakeDataSource;
         tree = component.tree;
         treeElement = fixture.nativeElement.querySelector('cdk-tree');
-
-        fixture.detectChanges();
       });
 
       it('with the right data', () => {
@@ -305,12 +305,12 @@ describe('CdkTree', () => {
         configureCdkTreeTestingModule([ObservableDataSourceCdkTreeApp]);
         fixture = TestBed.createComponent(ObservableDataSourceCdkTreeApp);
 
+        fixture.detectChanges();
+
         component = fixture.componentInstance;
         dataSource = component.dataSource as FakeDataSource;
         tree = component.tree;
         treeElement = fixture.nativeElement.querySelector('cdk-tree');
-
-        fixture.detectChanges();
       });
 
       it('with the right data', () => {
@@ -343,13 +343,14 @@ describe('CdkTree', () => {
       function createTrackByTestComponent(trackByStrategy: 'reference' | 'property' | 'index') {
         configureCdkTreeTestingModule([CdkTreeAppWithTrackBy]);
         fixture = TestBed.createComponent(CdkTreeAppWithTrackBy);
+        fixture.detectChanges();
+
         component = fixture.componentInstance;
         component.trackByStrategy = trackByStrategy;
         dataSource = component.dataSource as FakeDataSource;
         tree = component.tree;
         treeElement = fixture.nativeElement.querySelector('cdk-tree');
 
-        fixture.detectChanges();
 
         // Each node receives an attribute 'initialIndex' the element's original place
         getNodes(treeElement).forEach((node: Element, index: number) => {
@@ -436,13 +437,12 @@ describe('CdkTree', () => {
       beforeEach(() => {
         configureCdkTreeTestingModule([NestedCdkTreeApp]);
         fixture = TestBed.createComponent(NestedCdkTreeApp);
+        fixture.detectChanges();
 
         component = fixture.componentInstance;
         dataSource = component.dataSource as FakeDataSource;
         tree = component.tree;
         treeElement = fixture.nativeElement.querySelector('cdk-tree');
-
-        fixture.detectChanges();
       });
 
       it('with a connected data source', () => {
@@ -524,13 +524,12 @@ describe('CdkTree', () => {
       beforeEach(() => {
       configureCdkTreeTestingModule([StaticNestedCdkTreeApp]);
       fixture = TestBed.createComponent(StaticNestedCdkTreeApp);
+      fixture.detectChanges();
 
       component = fixture.componentInstance;
       dataSource = component.dataSource as FakeDataSource;
       tree = component.tree;
       treeElement = fixture.nativeElement.querySelector('cdk-tree');
-
-      fixture.detectChanges();
     });
 
     it('with the right data', () => {
@@ -551,13 +550,12 @@ describe('CdkTree', () => {
       beforeEach(() => {
         configureCdkTreeTestingModule([WhenNodeNestedCdkTreeApp]);
         fixture = TestBed.createComponent(WhenNodeNestedCdkTreeApp);
+        fixture.detectChanges();
 
         component = fixture.componentInstance;
         dataSource = component.dataSource as FakeDataSource;
         tree = component.tree;
         treeElement = fixture.nativeElement.querySelector('cdk-tree');
-
-        fixture.detectChanges();
       });
 
       it('with the right data', () => {
@@ -590,13 +588,12 @@ describe('CdkTree', () => {
       beforeEach(() => {
         configureCdkTreeTestingModule([NestedCdkTreeAppWithToggle]);
         fixture = TestBed.createComponent(NestedCdkTreeAppWithToggle);
+        fixture.detectChanges();
 
         component = fixture.componentInstance;
         dataSource = component.dataSource as FakeDataSource;
         tree = component.tree;
         treeElement = fixture.nativeElement.querySelector('cdk-tree');
-
-        fixture.detectChanges();
       });
 
       it('should expand/collapse the node multiple times', () => {
@@ -689,13 +686,12 @@ describe('CdkTree', () => {
       beforeEach(() => {
         configureCdkTreeTestingModule([ArrayDataSourceNestedCdkTreeApp]);
         fixture = TestBed.createComponent(ArrayDataSourceNestedCdkTreeApp);
+        fixture.detectChanges();
 
         component = fixture.componentInstance;
         dataSource = component.dataSource as FakeDataSource;
         tree = component.tree;
         treeElement = fixture.nativeElement.querySelector('cdk-tree');
-
-        fixture.detectChanges();
       });
 
       it('with the right data', () => {
@@ -726,13 +722,12 @@ describe('CdkTree', () => {
       beforeEach(() => {
         configureCdkTreeTestingModule([ObservableDataSourceNestedCdkTreeApp]);
         fixture = TestBed.createComponent(ObservableDataSourceNestedCdkTreeApp);
+        fixture.detectChanges();
 
         component = fixture.componentInstance;
         dataSource = component.dataSource as FakeDataSource;
         tree = component.tree;
         treeElement = fixture.nativeElement.querySelector('cdk-tree');
-
-        fixture.detectChanges();
       });
 
       it('with the right data', () => {
@@ -763,14 +758,14 @@ describe('CdkTree', () => {
       function createTrackByTestComponent(trackByStrategy: 'reference' | 'property' | 'index') {
         configureCdkTreeTestingModule([NestedCdkTreeAppWithTrackBy]);
         fixture = TestBed.createComponent(NestedCdkTreeAppWithTrackBy);
+        fixture.detectChanges();
+
         component = fixture.componentInstance;
         component.trackByStrategy = trackByStrategy;
         dataSource = component.dataSource as FakeDataSource;
 
         tree = component.tree;
         treeElement = fixture.nativeElement.querySelector('cdk-tree');
-
-        fixture.detectChanges();
 
         // Each node receives an attribute 'initialIndex' the element's original place
         getNodes(treeElement).forEach((node: Element, index: number) => {
@@ -912,13 +907,12 @@ describe('CdkTree', () => {
     beforeEach(() => {
       configureCdkTreeTestingModule([DepthNestedCdkTreeApp]);
       fixture = TestBed.createComponent(DepthNestedCdkTreeApp);
+      fixture.detectChanges();
 
       component = fixture.componentInstance;
       dataSource = component.dataSource as FakeDataSource;
       tree = component.tree;
       treeElement = fixture.nativeElement.querySelector('cdk-tree');
-
-      fixture.detectChanges();
     });
 
     it('should have correct depth for nested tree', () => {
