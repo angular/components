@@ -98,10 +98,17 @@ $mat-form-field-outline-dedupe: 0;
   $wrapper-padding-bottom: ($subscript-margin-top + $line-height) * $subscript-font-scale;
   // The amount we offset the label from the input text in the outline appearance.
   $outline-appearance-label-offset: -0.25em;
+  // Same as above but for when a prefix is present
+  $outline-appearance-label-offset-with-prefix: 0;
 
   .mat-form-field-appearance-outline {
     .mat-form-field-infix {
       padding: $infix-padding 0 $infix-padding 0;
+    }
+
+    .mat-form-field-prefix + .mat-form-field-infix .mat-form-field-label {
+      top: $infix-margin-top + $infix-padding;
+      margin-top: 0;
     }
 
     .mat-form-field-label {
@@ -115,6 +122,12 @@ $mat-form-field-outline-dedupe: 0;
         @include _mat-form-field-outline-label-floating(
                 $subscript-font-scale, $infix-padding + $outline-appearance-label-offset,
                 $infix-margin-top);
+      }
+      &.mat-form-field-should-float .mat-form-field-prefix + .mat-form-field-infix
+      .mat-form-field-label {
+        @include _mat-form-field-outline-label-floating(
+                $subscript-font-scale, $infix-padding +
+                $outline-appearance-label-offset-with-prefix, $infix-margin-top);
       }
 
       // Server-side rendered matInput with a label attribute but label not shown

@@ -9,6 +9,8 @@ $mat-form-field-outline-side-padding: 0.75em !default;
 $mat-form-field-outline-subscript-font-scale: 0.75 !default;
 // The amount of overlap between the label and the outline.
 $mat-form-field-outline-label-overlap: 0.25em;
+// Mirroring infix padding in _form-field-outline-theme.scss:87
+$mat-form-field-outline-infix-padding: 1em;
 // The border radius of the outline.
 $mat-form-field-outline-border-radius: 5px;
 // The width of the outline.
@@ -34,9 +36,10 @@ $mat-form-field-outline-subscript-padding:
     position: relative;
   }
 
+  /* bookmark */
   .mat-form-field-prefix,
   .mat-form-field-suffix {
-    top: $mat-form-field-outline-label-overlap;
+    padding-top: $mat-form-field-outline-infix-padding;
   }
 
   .mat-form-field-outline {
