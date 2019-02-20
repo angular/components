@@ -492,7 +492,14 @@ const DOCS: {[key: string]: DocCategory[]} = {
         {id: 'stepper',
           name: 'Stepper',
           summary: 'Presents content as steps through which to progress.',
-          examples: []
+          examples: [
+            'stepper-vertical',
+            'stepper-editable',
+            'stepper-optional',
+            'stepper-errors',
+            'stepper-label-position-bottom',
+            'stepper-states'
+          ]
         },
         {
           id: 'table',
