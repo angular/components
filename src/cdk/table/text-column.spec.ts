@@ -3,6 +3,7 @@ import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 import {CdkTableModule} from './table-module';
 import {expectTableToMatchContent} from './table.spec';
 import {TextColumnOptions, TEXT_COLUMN_OPTIONS} from './text-column';
+import {getTableTextColumnMissingParentTableError} from './table-errors';
 
 describe('CdkTextColumn', () => {
   let fixture: ComponentFixture<BasicTextColumnApp>;
@@ -14,6 +15,7 @@ describe('CdkTextColumn', () => {
       imports: [CdkTableModule],
       declarations: [
         BasicTextColumnApp,
+        MissingTableApp,
       ],
     }).compileComponents();
   }));
@@ -32,6 +34,12 @@ describe('CdkTextColumn', () => {
       ['a_1', 'b_1', 'c_1'],
       ['a_2', 'b_2', 'c_2'],
     ]);
+  });
+
+  it('should throw an error if the text column is not in the content of a table', () => {
+    expect(() => TestBed.createComponent(MissingTableApp).detectChanges())
+      .toThrowError(getTableTextColumnMissingParentTableError().message);
+
   });
 
   it('should allow for alternate header text', () => {
@@ -97,7 +105,7 @@ describe('CdkTextColumn', () => {
   });
 
   describe('with options', () => {
-    function createTestComponent(options: TextColumnOptions) {
+    function createTestComponent(options: TextColumnOptions<any>) {
       // Reset the previously configured testing module to be able set new providers.
       // The testing module has been initialized in the root describe group for the ripples.
       TestBed.resetTestingModule();
@@ -114,8 +122,8 @@ describe('CdkTextColumn', () => {
     }
 
     it('should be able to provide a header text transformation', () => {
-      const defaultHeaderTextTransformation = (name: string) => `${name}!`;
-      createTestComponent({ defaultHeaderTextTransformation });
+      const defaultHeaderTextTransform = (name: string) => `${name}!`;
+      createTestComponent({defaultHeaderTextTransform});
 
       expectTableToMatchContent(tableElement, [
         ['propertyA!', 'propertyB!', 'propertyC!'],
@@ -137,7 +145,7 @@ describe('CdkTextColumn', () => {
             return '';
         }
       };
-      createTestComponent({ defaultDataAccessor });
+      createTestComponent({defaultDataAccessor});
 
       expectTableToMatchContent(tableElement, [
         ['PropertyA', 'PropertyB', 'PropertyC'],
@@ -177,4 +185,12 @@ class BasicTextColumnApp {
   headerTextB: string;
   dataAccessorA: (data: TestData) => string;
   justifyC = 'start';
+}
+
+@Component({
+  template: `
+    <cdk-text-column name="column-a"></cdk-text-column>
+  `
+})
+class MissingTableApp {
 }

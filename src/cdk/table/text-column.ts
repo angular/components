@@ -20,21 +20,23 @@ import {
 } from '@angular/core';
 import {CdkColumnDef} from './cell';
 import {CdkTable} from './table';
+import {getTableTextColumnMissingParentTableError} from './table-errors';
 
 /** Configurable options for `CdkTextColumn`. */
-export interface TextColumnOptions {
+export interface TextColumnOptions<T> {
   /**
    * Default function that provides the header text based on the column name if a header
    * text is not provided.
    */
-  defaultHeaderTextTransformation?: (name: string) => string;
+  defaultHeaderTextTransform?: (name: string) => string;
 
   /** Default data accessor to use if one is not provided. */
-  defaultDataAccessor?: (data: any, name: string) => string;
+  defaultDataAccessor?: (data: T, name: string) => string;
 }
 
 /** Injection token that can be used to specify the text column options. */
-export const TEXT_COLUMN_OPTIONS = new InjectionToken<TextColumnOptions>('text-column-options');
+export const TEXT_COLUMN_OPTIONS =
+  new InjectionToken<TextColumnOptions<any>>('text-column-options');
 
 /**
  * Column that simply shows text content for the header and row cells. Assumes that the table
@@ -70,7 +72,7 @@ export const TEXT_COLUMN_OPTIONS = new InjectionToken<TextColumnOptions>('text-c
 export class CdkTextColumn<T> implements OnDestroy, OnInit {
   /** Column name that should be used to reference this column. */
   @Input()
-  get name(): string { return this._name; }
+  get name(): string {return this._name;}
   set name(name: string) {
     this._name = name;
     this.columnDef.name = name;
@@ -97,7 +99,7 @@ export class CdkTextColumn<T> implements OnDestroy, OnInit {
   @ViewChild(CdkColumnDef) columnDef: CdkColumnDef;
 
   constructor(@Optional() private table: CdkTable<T>,
-              @Optional() @Inject(TEXT_COLUMN_OPTIONS) private options: TextColumnOptions) {
+    @Optional() @Inject(TEXT_COLUMN_OPTIONS) private options: TextColumnOptions<T>) {
     this.options = options || {};
   }
 
@@ -108,11 +110,13 @@ export class CdkTextColumn<T> implements OnDestroy, OnInit {
 
     if (!this.dataAccessor) {
       this.dataAccessor = this.options.defaultDataAccessor ||
-          ((data: T, name: string) => (data as any)[name]);
+        ((data: T, name: string) => (data as any)[name]);
     }
 
     if (this.table) {
       this.table.addColumnDef(this.columnDef);
+    } else {
+      throw getTableTextColumnMissingParentTableError();
     }
   }
 
@@ -127,10 +131,10 @@ export class CdkTextColumn<T> implements OnDestroy, OnInit {
    * has been provided. Otherwise simply capitalize the column name.
    */
   _createDefaultHeaderText() {
-    if (this.options && this.options.defaultHeaderTextTransformation) {
-      return this.options.defaultHeaderTextTransformation(this.name);
+    if (this.options && this.options.defaultHeaderTextTransform) {
+      return this.options.defaultHeaderTextTransform(this.name);
     }
 
-    return this.name.charAt(0).toUpperCase() + this.name.slice(1);
+    return this.name[0].toUpperCase() + this.name.slice(1);
   }
 }
