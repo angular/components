@@ -390,6 +390,8 @@ describe('MatSlideToggle without forms', () => {
           ]
         });
       const fixture = TestBed.createComponent(SlideToggleBasic);
+      fixture.detectChanges();
+
       const testComponent = fixture.debugElement.componentInstance;
       const slideToggleDebug = fixture.debugElement.query(By.css('mat-slide-toggle'));
 
