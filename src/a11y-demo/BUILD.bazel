@@ -12,8 +12,8 @@ ng_module(
   srcs = glob(["**/*.ts"]),
   assets = glob(["**/*.html"]) + [":a11y_demo_scss"],
   deps = [
-    "@angular//packages/core",
-    "@angular//packages/router",
+    "@npm//@angular/core",
+    "@npm//@angular/router",
     "//src/cdk/table",
   ] + MATERIAL_TARGETS
 )

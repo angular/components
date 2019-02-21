@@ -7,7 +7,7 @@ ng_module(
   srcs = glob(["**/*.ts"], exclude=["**/*.spec.ts"]),
   module_name = "@angular/cdk/collections",
   deps = [
-    "@angular//packages/core",
+    "@npm//@angular/core",
     "@rxjs"
   ],
 )

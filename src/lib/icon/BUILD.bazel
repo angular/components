@@ -10,10 +10,10 @@ ng_module(
   module_name = "@angular/material/icon",
   assets = [":icon.css"] + glob(["**/*.html"]),
   deps = [
-    "@angular//packages/common",
-    "@angular//packages/common/http",
-    "@angular//packages/core",
-    "@angular//packages/platform-browser",
+    "@npm//@angular/common",
+    "@npm//@angular/common/http",
+    "@npm//@angular/core",
+    "@npm//@angular/platform-browser",
     "@rxjs",
     "@rxjs//operators",
     "//src/cdk/coercion",
@@ -37,8 +37,8 @@ ng_test_library(
   name = "icon_test_sources",
   srcs = glob(["**/*.spec.ts"]),
   deps = [
-    "@angular//packages/common/http/testing",
-    "@angular//packages/platform-browser",
+    "@npm//@angular/common/http/testing",
+    "@npm//@angular/platform-browser",
     "//src/cdk/testing",
     ":icon",
   ]

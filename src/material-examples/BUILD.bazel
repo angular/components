@@ -11,9 +11,9 @@ ng_module(
   module_name = "@angular/material-examples",
   assets = glob(["**/*.html", "**/*.css"]),
   deps = [
-    "@angular//packages/common",
-    "@angular//packages/core",
-    "@angular//packages/forms",
+    "@npm//@angular/common",
+    "@npm//@angular/core",
+    "@npm//@angular/forms",
     "@npm//moment",
     "//src/material-moment-adapter",
   ] + CDK_TARGETS + MATERIAL_TARGETS,

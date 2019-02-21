@@ -1,6 +1,6 @@
 package(default_visibility=["//visibility:public"])
 
-load("@angular//:index.bzl", "protractor_web_test_suite")
+load("@npm_angular_bazel//:index.bzl", "protractor_web_test_suite")
 load("//tools:defaults.bzl", "ts_library")
 
 ts_library(
@@ -39,7 +39,7 @@ ts_library(
     ":e2e_utils_lib",
   ],
   data = [
-    "@angular//packages/bazel/src/protractor/utils",
+    "@npm//@angular/bazel/src/protractor/utils",
     "//tools/axe-protractor",
   ],
 ) for spec_file in glob(["components/**/*.spec.ts"])]

@@ -13,9 +13,9 @@ ng_module(
     ":simple-snack-bar.css",
   ] + glob(["**/*.html"]),
   deps = [
-    "@angular//packages/animations",
-    "@angular//packages/common",
-    "@angular//packages/core",
+    "@npm//@angular/animations",
+    "@npm//@angular/common",
+    "@npm//@angular/core",
     "@rxjs",
     "@rxjs//operators",
     "//src/cdk/a11y",
@@ -50,8 +50,8 @@ ng_test_library(
   name = "snack_bar_test_sources",
   srcs = glob(["**/*.spec.ts"]),
   deps = [
-    "@angular//packages/common",
-    "@angular//packages/platform-browser/animations",
+    "@npm//@angular/common",
+    "@npm//@angular/platform-browser/animations",
     "//src/cdk/a11y",
     "//src/cdk/overlay",
     ":snack-bar",
