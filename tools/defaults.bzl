@@ -9,7 +9,7 @@ load("//:packages.bzl", "VERSION_PLACEHOLDER_REPLACEMENTS")
 
 _DEFAULT_TSCONFIG_BUILD = "//src:bazel-tsconfig-build.json"
 _DEFAULT_TSCONFIG_TEST = "//src:bazel-tsconfig-test.json"
-_DEFAULT_TS_TYPINGS = "@matdeps//typescript:typescript__typings"
+_DEFAULT_TS_TYPINGS = "@npm//typescript:typescript__typings"
 
 # Re-exports to simplify build file load statements
 markdown_to_html = _markdown_to_html
@@ -22,7 +22,7 @@ def _getDefaultTsConfig(testonly):
 
 def ts_library(tsconfig = None, deps = [], testonly = False, **kwargs):
   # Add tslib because we use import helpers for all public packages.
-  local_deps = ["@matdeps//tslib"] + deps
+  local_deps = ["@npm//tslib"] + deps
 
   if not tsconfig:
     tsconfig = _getDefaultTsConfig(testonly)
@@ -41,7 +41,7 @@ def ng_module(deps = [], tsconfig = None, testonly = False, **kwargs):
 
   local_deps = [
     # Add tslib because we use import helpers for all public packages.
-    "@matdeps//tslib",
+    "@npm//tslib",
 
     # Depend on the module typings for each `ng_module`. Since all components within the project
     # need to use `module.id` when creating components, this is always a dependency.
@@ -72,8 +72,8 @@ def ng_package(name, readme_md = None, **kwargs):
 def jasmine_node_test(deps = [], **kwargs):
   local_deps = [
     # Workaround for: https://github.com/bazelbuild/rules_nodejs/issues/344
-    "@matdeps//jasmine",
-    "@matdeps//source-map-support",
+    "@npm//jasmine",
+    "@npm//source-map-support",
   ] + deps
 
   _jasmine_node_test(
@@ -87,7 +87,7 @@ def ng_test_library(deps = [], tsconfig = None, **kwargs):
     # all Angular component unit tests use the `TestBed` and `Component` exports.
     "@angular//packages/core",
     "@angular//packages/core/testing",
-    "@matdeps//@types/jasmine",
+    "@npm//@types/jasmine",
   ] + deps;
 
   ts_library(
@@ -99,7 +99,7 @@ def ng_test_library(deps = [], tsconfig = None, **kwargs):
 def ts_web_test_suite(srcs = [], **kwargs):
   _ts_web_test_suite(
     # Required for running the compiled ng modules that use TypeScript import helpers.
-    srcs = ["@matdeps//node_modules/tslib:tslib.js"] + srcs,
+    srcs = ["@npm//node_modules/tslib:tslib.js"] + srcs,
     **kwargs
   )
 
@@ -141,9 +141,9 @@ def ng_web_test_suite(deps = [], static_css = [], bootstrap = [], **kwargs):
     # Depend on our custom test initialization script. This needs to be the first dependency.
     deps = ["//test:angular_test_init"] + deps,
     bootstrap = [
-      "@matdeps//node_modules/zone.js:dist/zone-testing-bundle.js",
-      "@matdeps//node_modules/reflect-metadata:Reflect.js",
-      "@matdeps//node_modules/hammerjs:hammer.js",
+      "@npm//node_modules/zone.js:dist/zone-testing-bundle.js",
+      "@npm//node_modules/reflect-metadata:Reflect.js",
+      "@npm//node_modules/hammerjs:hammer.js",
     ] + bootstrap,
     **kwargs
   )

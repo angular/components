@@ -14,7 +14,7 @@ ng_module(
     "@angular//packages/common",
     "@angular//packages/core",
     "@angular//packages/forms",
-    "@matdeps//moment",
+    "@npm//moment",
     "//src/material-moment-adapter",
   ] + CDK_TARGETS + MATERIAL_TARGETS,
   # Specify the tsconfig that is also used by Gulp. We need to explicitly use this tsconfig

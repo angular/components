@@ -16,7 +16,7 @@ ts_library(
   srcs = glob(["**/*.spec.ts"]),
   deps = [
     "@angular//packages/core",
-    "@matdeps//@types/jasmine",
+    "@npm//@types/jasmine",
     ":coercion"
   ],
   testonly = 1,

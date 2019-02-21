@@ -5,8 +5,8 @@ load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 # Add NodeJS rules (explicitly used for sass bundle rules)
 http_archive(
   name = "build_bazel_rules_nodejs",
-  url = "https://github.com/bazelbuild/rules_nodejs/archive/0.16.5.zip",
-  strip_prefix = "rules_nodejs-0.16.5",
+  sha256 = "1416d03823fed624b49a0abbd9979f7c63bbedfd37890ddecedd2fe25cccebc6",
+  urls = ["https://github.com/bazelbuild/rules_nodejs/releases/download/0.18.6/rules_nodejs-0.18.6.tar.gz"],
 )
 
 # Add TypeScript rules
@@ -35,19 +35,6 @@ http_archive(
   url = "https://registry.yarnpkg.com/rxjs/-/rxjs-6.3.3.tgz",
   strip_prefix = "package/src",
   sha256 = "72b0b4e517f43358f554c125e40e39f67688cd2738a8998b4a266981ed32f403",
-)
-
-# We need to create a local repository called "npm" because currently Angular Material
-# stores all of it's NPM dependencies in the "@matdeps" repository. This is necessary because
-# we don't want to reserve the "npm" repository that is commonly used by downstream projects.
-# Since we still need the "npm" repository in order to use the Angular or TypeScript Bazel
-# rules, we create a local repository that is just defined in **this** workspace and is not
-# being shipped to downstream projects. This can be removed once downstream projects can
-# consume Angular Material completely from NPM.
-# TODO(devversion): remove once Angular Material can be consumed from NPM with Bazel.
-local_repository(
-  name = "npm",
-  path = "tools/npm-workspace"
 )
 
 # Add sass rules
