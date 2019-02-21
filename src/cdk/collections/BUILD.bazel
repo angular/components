@@ -7,7 +7,7 @@ ng_module(
   srcs = glob(["**/*.ts"], exclude=["**/*.spec.ts"]),
   module_name = "@angular/cdk/collections",
   deps = [
-    "@angular//packages/core",
+    "@npm//@angular/core",
     "@rxjs"
   ],
 )
@@ -16,7 +16,7 @@ ts_library(
   name = "collections_test_sources",
   srcs = glob(["**/*.spec.ts"]),
   deps = [
-    "@matdeps//@types/jasmine",
+    "@npm//@types/jasmine",
     ":collections"
   ],
   testonly = 1,

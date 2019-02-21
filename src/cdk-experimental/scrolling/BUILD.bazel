@@ -7,7 +7,7 @@ ng_module(
   srcs = glob(["**/*.ts"], exclude=["**/*.spec.ts"]),
   module_name = "@angular/cdk-experimental/scrolling",
   deps = [
-    "@angular//packages/core",
+    "@npm//@angular/core",
     "@rxjs",
     "//src/cdk/coercion",
     "//src/cdk/collections",

@@ -13,16 +13,15 @@ def angular_material_setup_workspace():
     It creates some additional Bazel external repositories that are used internally
     to build Angular Material
   """
-  # Use Bazel managed node modules. See more below:
-  # https://github.com/bazelbuild/rules_nodejs#bazel-managed-vs-self-managed-dependencies
-  # Note: The repository_rule name is `@matdeps` so it does not conflict with the `@npm` repository
-  # name downstream when building Angular Material from source. In the future when Angular + Bazel
-  # users can build using the @angular/material npm bundles (depends on Ivy) this can be changed
-  # to `@npm`.
+  # Use Bazel managed node modules.
+  # TODO(jelbourn): move this directly to the WORKSPACE file
   yarn_install(
-    name = "matdeps",
+    name = "npm",
     package_json = "@angular_material//:package.json",
     # Ensure that the script is available when running `postinstall` in the Bazel sandbox.
-    data = ["@angular_material//:tools/npm/check-npm.js"],
+    data = [
+      "@angular_material//:tools/npm/check-npm.js",
+      "//:angular-tsconfig.json",
+    ],
     yarn_lock = "@angular_material//:yarn.lock",
   )

@@ -8,11 +8,10 @@ ng_module(
   srcs = glob(["**/*.ts"]),
   assets = glob(["**/*.html", "**/*.css"], exclude = ["index.html"]),
   deps = [
-    "@angular//packages/core",
-    "@angular//packages/forms",
-    "@angular//packages/platform-browser",
-    "@angular//packages/platform-browser/animations",
-    "@angular//packages/router",
+    "@npm//@angular/core",
+    "@npm//@angular/forms",
+    "@npm//@angular/platform-browser",
+    "@npm//@angular/router",
     "//src/cdk/drag-drop",
     "//src/cdk/overlay",
     "//src/cdk/scrolling",
@@ -32,16 +31,16 @@ ts_devserver(
     # Serving path of the bundle that serves all files specified in "deps" and "scripts".
     serving_path = "/bundle.js",
     # Root paths can be used simplify the loading of files from external Bazel repositories
-    # (such as the Bazel managed deps repository called "matdeps")
+    # (such as the Bazel managed deps repository called "npm")
     additional_root_paths = [
-      "matdeps/node_modules",
+      "npm/node_modules",
     ],
     # Files which should be provided by Bazel when running the devserver. These are not
     # automatically served, but can be loaded manually through HTTP requests.
     static_files = [
-      "@matdeps//zone.js",
-      "@matdeps//core-js",
-      "@matdeps//hammerjs",
+      "@npm//zone.js",
+      "@npm//core-js",
+      "@npm//hammerjs",
       "//src/lib/prebuilt-themes:indigo-pink",
       ":index.html",
     ],
@@ -49,7 +48,7 @@ ts_devserver(
     # loaded.
     scripts = [
       ":devserver-configure.js",
-      "@matdeps//node_modules/tslib:tslib.js",
+      "@npm//node_modules/tslib:tslib.js",
     ],
     # Dependencies that produce JavaScript output will be automatically included in the
     # serving_path bundle

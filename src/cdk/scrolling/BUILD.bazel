@@ -10,7 +10,8 @@ ng_module(
   module_name = "@angular/cdk/scrolling",
   assets = [":virtual-scroll-viewport.css"] + glob(["**/*.html"]),
   deps = [
-    "@angular//packages/core",
+    "@npm//@angular/core",
+    "@npm//@angular/common",
     "@rxjs",
     "@rxjs//operators",
     "//src/cdk/bidi",
