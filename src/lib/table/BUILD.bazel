@@ -37,7 +37,7 @@ ng_test_library(
   name = "table_test_sources",
   srcs = glob(["**/*.spec.ts"]),
   deps = [
-    "@npm//@angular/platform-browser/animations",
+    "@npm//@angular/platform-browser",
     "@rxjs",
     "//src/cdk/collections",
     "//src/lib/paginator",

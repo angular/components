@@ -38,7 +38,6 @@ ng_test_library(
   srcs = glob(["**/*.spec.ts"]),
   deps = [
     "@npm//@angular/common",
-    "@npm//@angular/common/testing",
     "@npm//@angular/platform-browser",
     "@rxjs",
     "@rxjs//operators",

@@ -13,7 +13,7 @@ ng_module(
     "@npm//@angular/common",
     "@npm//@angular/core",
     "@npm//@angular/forms",
-    "@npm//@angular/platform-browser/animations",
+    "@npm//@angular/platform-browser",
     "//src/cdk/a11y",
     "//src/cdk/coercion",
     "//src/cdk/collections",

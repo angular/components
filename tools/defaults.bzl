@@ -83,10 +83,9 @@ def jasmine_node_test(deps = [], **kwargs):
 
 def ng_test_library(deps = [], tsconfig = None, **kwargs):
   local_deps = [
-    # We declare "@angular/core" and "@angular/core/testing" as default dependencies because
+    # We declare "@angular/core" as default dependencies because
     # all Angular component unit tests use the `TestBed` and `Component` exports.
     "@npm//@angular/core",
-    "@npm//@angular/core/testing",
     "@npm//@types/jasmine",
   ] + deps;
 

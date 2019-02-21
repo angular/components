@@ -49,7 +49,6 @@ ng_test_library(
   deps = [
     "@npm//@angular/forms",
     "@npm//@angular/platform-browser",
-    "@npm//@angular/platform-browser/animations",
     "@rxjs",
     "@rxjs//operators",
     "//src/cdk/a11y",

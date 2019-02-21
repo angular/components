@@ -35,7 +35,6 @@ ng_test_library(
   srcs = glob(["**/*.spec.ts"]),
   deps = [
     "@npm//@angular/platform-browser",
-    "@npm//@angular/platform-browser/animations",
     "@rxjs",
     "@rxjs//operators",
     "//src/cdk/collections",

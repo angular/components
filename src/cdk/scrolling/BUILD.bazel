@@ -11,6 +11,7 @@ ng_module(
   assets = [":virtual-scroll-viewport.css"] + glob(["**/*.html"]),
   deps = [
     "@npm//@angular/core",
+    "@npm//@angular/common",
     "@rxjs",
     "@rxjs//operators",
     "//src/cdk/bidi",

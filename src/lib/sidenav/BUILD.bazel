@@ -13,7 +13,7 @@ ng_module(
     "@npm//@angular/animations",
     "@npm//@angular/common",
     "@npm//@angular/core",
-    "@npm//@angular/platform-browser/animations",
+    "@npm//@angular/platform-browser",
     "@rxjs",
     "@rxjs//operators",
     "//src/cdk/a11y",
@@ -46,7 +46,6 @@ ng_test_library(
   srcs = glob(["**/*.spec.ts"]),
   deps = [
     "@npm//@angular/platform-browser",
-    "@npm//@angular/platform-browser/animations",
     "//src/cdk/a11y",
     "//src/cdk/bidi",
     "//src/cdk/keycodes",

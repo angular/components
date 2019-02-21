@@ -44,8 +44,7 @@ ng_test_library(
   srcs = glob(["**/*.spec.ts"]),
   deps = [
     "@npm//@angular/common",
-    "@npm//@angular/common/testing",
-    "@npm//@angular/platform-browser/animations",
+    "@npm//@angular/platform-browser",
     "//src/cdk/bidi",
     "//src/cdk/keycodes",
     "//src/cdk/overlay",

@@ -80,7 +80,6 @@ ng_test_library(
   deps = [
     "@npm//@angular/common",
     "@npm//@angular/platform-browser",
-    "@npm//@angular/platform-browser/animations",
     "@rxjs",
     "//src/cdk/bidi",
     "//src/cdk/keycodes",

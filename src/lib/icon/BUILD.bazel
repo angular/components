@@ -11,7 +11,6 @@ ng_module(
   assets = [":icon.css"] + glob(["**/*.html"]),
   deps = [
     "@npm//@angular/common",
-    "@npm//@angular/common/http",
     "@npm//@angular/core",
     "@npm//@angular/platform-browser",
     "@rxjs",
@@ -37,7 +36,7 @@ ng_test_library(
   name = "icon_test_sources",
   srcs = glob(["**/*.spec.ts"]),
   deps = [
-    "@npm//@angular/common/http/testing",
+    "@npm//@angular/common",
     "@npm//@angular/platform-browser",
     "//src/cdk/testing",
     ":icon",

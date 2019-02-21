@@ -21,7 +21,6 @@ ng_module(
     "@npm//@angular/core",
     "@npm//@angular/forms",
     "@npm//@angular/platform-browser",
-    "@npm//@angular/platform-browser/animations",
     "@rxjs",
     "//src/cdk/a11y",
     "//src/cdk/bidi",
@@ -102,7 +101,6 @@ ng_test_library(
   srcs = glob(["**/*.spec.ts"]),
   deps = [
     "@npm//@angular/platform-browser",
-    "@npm//@angular/platform-browser/animations",
     "//src/cdk/keycodes",
     "//src/cdk/platform",
     "//src/cdk/testing",

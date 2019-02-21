@@ -12,7 +12,7 @@ ng_module(
   deps = [
     "@npm//@angular/common",
     "@npm//@angular/core",
-    "@npm//@angular/platform-browser/animations",
+    "@npm//@angular/platform-browser",
     "//src/cdk/platform",
     "//src/cdk/a11y",
     "//src/lib/core",
