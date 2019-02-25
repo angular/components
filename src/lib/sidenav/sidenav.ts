@@ -60,10 +60,8 @@ export class MatSidenavContent extends MatDrawerContent {
     'class': 'mat-drawer mat-sidenav',
     'tabIndex': '-1',
     '[@transform]': '_animationState',
-
-    // These are commented out until FW-943 can be resolved.
-    // '(@transform.start)': '_animationStarted.next($event)',
-    // '(@transform.done)': '_animationEnd.next($event)',
+    '(@transform.start)': '_animationStarted.next($event)',
+    '(@transform.done)': '_animationEnd.next($event)',
 
     // must prevent the browser from aligning text based on value
     '[attr.align]': 'null',
