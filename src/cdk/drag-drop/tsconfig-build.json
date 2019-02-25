@@ -2,7 +2,6 @@
   "extends": "../tsconfig-build",
   "files": [
     "index.ts",
-    "./typings.d.ts"
   ],
   "angularCompilerOptions": {
     "strictMetadataEmit": true,
