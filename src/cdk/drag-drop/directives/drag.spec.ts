@@ -12,6 +12,7 @@ import {
   ChangeDetectionStrategy,
 } from '@angular/core';
 import {TestBed, ComponentFixture, fakeAsync, flush, tick} from '@angular/core/testing';
+import {DOCUMENT} from '@angular/common';
 import {DragDropModule} from '../drag-drop-module';
 import {
   createMouseEvent,
@@ -703,6 +704,36 @@ describe('CdkDrag', () => {
       }).toThrowError(/^cdkDrag must be attached to an element node/);
     }));
 
+    it('should allow for the dragging sequence to be delayed', fakeAsync(() => {
+      // We can't use Jasmine's `clock` because Zone.js interferes with it.
+      spyOn(Date, 'now').and.callFake(() => currentTime);
+      let currentTime = 0;
+
+      const fixture = createComponent(StandaloneDraggable);
+      fixture.componentInstance.dragStartDelay = 1000;
+      fixture.detectChanges();
+      const dragElement = fixture.componentInstance.dragElement.nativeElement;
+
+      expect(dragElement.style.transform).toBeFalsy('Expected element not to be moved by default.');
+
+      startDraggingViaMouse(fixture, dragElement);
+      currentTime += 750;
+      dispatchMouseEvent(document, 'mousemove', 50, 100);
+      fixture.detectChanges();
+
+      expect(dragElement.style.transform)
+          .toBeFalsy('Expected element not to be moved if the drag timeout has not passed.');
+
+      // The first `mousemove` here starts the sequence and the second one moves the element.
+      currentTime += 500;
+      dispatchMouseEvent(document, 'mousemove', 50, 100);
+      dispatchMouseEvent(document, 'mousemove', 50, 100);
+      fixture.detectChanges();
+
+      expect(dragElement.style.transform).toBe('translate3d(50px, 100px, 0px)',
+          'Expected element to be dragged after all the time has passed.');
+    }));
+
   });
 
   describe('draggable with a handle', () => {
@@ -860,6 +891,25 @@ describe('CdkDrag', () => {
       fixture.detectChanges();
 
       expect(fixture.componentInstance.dropInstance.data).toBe(fixture.componentInstance.items);
+    });
+
+    it('should sync the drop list inputs with the drop list ref', () => {
+      const fixture = createComponent(DraggableInDropZone);
+      fixture.detectChanges();
+
+      const dropInstance = fixture.componentInstance.dropInstance;
+      const dropListRef = dropInstance._dropListRef;
+
+      expect(dropListRef.lockAxis).toBeFalsy();
+      expect(dropListRef.disabled).toBe(false);
+
+      dropInstance.lockAxis = 'x';
+      dropInstance.disabled = true;
+
+      dropListRef.beforeStarted.next();
+
+      expect(dropListRef.lockAxis).toBe('x');
+      expect(dropListRef.disabled).toBe(true);
     });
 
     it('should be able to attach data to a drag item', () => {
@@ -1271,6 +1321,41 @@ describe('CdkDrag', () => {
       expect(preview.parentNode).toBeFalsy('Expected preview to be removed from the DOM');
     }));
 
+    it('should create the preview inside the fullscreen element when in fullscreen mode',
+      fakeAsync(() => {
+        // Provide a limited stub of the document since we can't trigger fullscreen
+        // mode in unit tests and there are some issues with doing it in e2e tests.
+        const fakeDocument = {
+          body: document.body,
+          fullscreenElement: document.createElement('div'),
+          ELEMENT_NODE: Node.ELEMENT_NODE,
+          querySelectorAll: function() {
+            return document.querySelectorAll.apply(document, arguments);
+          },
+          addEventListener: function() {
+            document.addEventListener.apply(document, arguments);
+          },
+          removeEventListener: function() {
+            document.addEventListener.apply(document, arguments);
+          }
+        };
+        const fixture = createComponent(DraggableInDropZone, [{
+          provide: DOCUMENT,
+          useFactory: () => fakeDocument
+        }]);
+        fixture.detectChanges();
+        const item = fixture.componentInstance.dragItems.toArray()[1].element.nativeElement;
+
+        document.body.appendChild(fakeDocument.fullscreenElement);
+        startDraggingViaMouse(fixture, item);
+        flush();
+
+        const preview = document.querySelector('.cdk-drag-preview')! as HTMLElement;
+
+        expect(preview.parentNode).toBe(fakeDocument.fullscreenElement);
+        fakeDocument.fullscreenElement.parentNode!.removeChild(fakeDocument.fullscreenElement);
+      }));
+
     it('should be able to constrain the preview position', fakeAsync(() => {
       const fixture = createComponent(DraggableInDropZone);
       fixture.componentInstance.boundarySelector = '.cdk-drop-list';
@@ -1305,6 +1390,21 @@ describe('CdkDrag', () => {
       const preview = document.querySelector('.cdk-drag-preview')! as HTMLElement;
 
       expect(preview.getAttribute('id')).toBeFalsy();
+    }));
+
+    it('should clear the ids from descendants of the preview', fakeAsync(() => {
+      const fixture = createComponent(DraggableInDropZone);
+      fixture.detectChanges();
+      const item = fixture.componentInstance.dragItems.toArray()[1].element.nativeElement;
+      const extraChild = document.createElement('div');
+      extraChild.id = 'child-id';
+      extraChild.classList.add('preview-child');
+      item.appendChild(extraChild);
+
+      startDraggingViaMouse(fixture, item);
+
+      expect(document.querySelectorAll('.preview-child').length).toBeGreaterThan(1);
+      expect(document.querySelectorAll('[id="child-id"]').length).toBe(1);
     }));
 
     it('should not create a preview if the element was not dragged far enough', fakeAsync(() => {
@@ -1510,6 +1610,21 @@ describe('CdkDrag', () => {
       const placeholder = document.querySelector('.cdk-drag-placeholder')! as HTMLElement;
 
       expect(placeholder.getAttribute('id')).toBeFalsy();
+    }));
+
+    it('should clear the ids from descendants of the placeholder', fakeAsync(() => {
+      const fixture = createComponent(DraggableInDropZone);
+      fixture.detectChanges();
+      const item = fixture.componentInstance.dragItems.toArray()[1].element.nativeElement;
+      const extraChild = document.createElement('div');
+      extraChild.id = 'child-id';
+      extraChild.classList.add('placeholder-child');
+      item.appendChild(extraChild);
+
+      startDraggingViaMouse(fixture, item);
+
+      expect(document.querySelectorAll('.placeholder-child').length).toBeGreaterThan(1);
+      expect(document.querySelectorAll('[id="child-id"]').length).toBe(1);
     }));
 
     it('should not create placeholder if the element was not dragged far enough', fakeAsync(() => {
@@ -2211,6 +2326,59 @@ describe('CdkDrag', () => {
           .toEqual(['Zero', 'One', 'Two', 'Three']);
     }));
 
+    it('should not sort an item if sorting the list is disabled', fakeAsync(() => {
+      const fixture = createComponent(DraggableInDropZone);
+      fixture.detectChanges();
+
+      const dropInstance = fixture.componentInstance.dropInstance;
+      const dragItems = fixture.componentInstance.dragItems;
+
+      dropInstance.sortingDisabled = true;
+
+      expect(dragItems.map(drag => drag.element.nativeElement.textContent!.trim()))
+          .toEqual(['Zero', 'One', 'Two', 'Three']);
+
+      const firstItem = dragItems.first;
+      const thirdItemRect = dragItems.toArray()[2].element.nativeElement.getBoundingClientRect();
+      const targetX = thirdItemRect.left + 1;
+      const targetY = thirdItemRect.top + 1;
+
+      startDraggingViaMouse(fixture, firstItem.element.nativeElement);
+
+      const placeholder = document.querySelector('.cdk-drag-placeholder') as HTMLElement;
+
+      dispatchMouseEvent(document, 'mousemove', targetX, targetY);
+      fixture.detectChanges();
+
+      expect(getElementIndexByPosition(placeholder, 'top'))
+          .toBe(0, 'Expected placeholder to stay in place.');
+
+      dispatchMouseEvent(document, 'mouseup', targetX, targetY);
+      fixture.detectChanges();
+
+      flush();
+      fixture.detectChanges();
+
+      expect(fixture.componentInstance.droppedSpy).toHaveBeenCalledTimes(1);
+
+      const event = fixture.componentInstance.droppedSpy.calls.mostRecent().args[0];
+
+      // Assert the event like this, rather than `toHaveBeenCalledWith`, because Jasmine will
+      // go into an infinite loop trying to stringify the event, if the test fails.
+      expect(event).toEqual({
+        previousIndex: 0,
+        currentIndex: 0,
+        item: firstItem,
+        container: dropInstance,
+        previousContainer: dropInstance,
+        isPointerOverContainer: true
+      });
+
+      expect(dragItems.map(drag => drag.element.nativeElement.textContent!.trim()))
+          .toEqual(['Zero', 'One', 'Two', 'Three']);
+    }));
+
+
   });
 
   describe('in a connected drop container', () => {
@@ -2822,6 +2990,54 @@ describe('CdkDrag', () => {
 
       }));
 
+    it('should return the item to its initial position, if sorting in the source container ' +
+      'was disabled', fakeAsync(() => {
+        const fixture = createComponent(ConnectedDropZones);
+        fixture.detectChanges();
+
+        const groups = fixture.componentInstance.groupedDragItems;
+        const dropZones = fixture.componentInstance.dropInstances.map(d => d.element.nativeElement);
+        const item = groups[0][1];
+        const targetRect = groups[1][2].element.nativeElement.getBoundingClientRect();
+
+        fixture.componentInstance.dropInstances.first.sortingDisabled = true;
+        startDraggingViaMouse(fixture, item.element.nativeElement);
+
+        const placeholder = dropZones[0].querySelector('.cdk-drag-placeholder')!;
+
+        expect(placeholder).toBeTruthy();
+        expect(dropZones[0].contains(placeholder))
+            .toBe(true, 'Expected placeholder to be inside the first container.');
+        expect(getElementIndexByPosition(placeholder, 'top'))
+            .toBe(1, 'Expected placeholder to be at item index.');
+
+        dispatchMouseEvent(document, 'mousemove', targetRect.left + 1, targetRect.top + 1);
+        fixture.detectChanges();
+
+        expect(dropZones[1].contains(placeholder))
+            .toBe(true, 'Expected placeholder to be inside second container.');
+        expect(getElementIndexByPosition(placeholder, 'top'))
+            .toBe(3, 'Expected placeholder to be at the target index.');
+
+        const firstInitialSiblingRect = groups[0][0].element
+            .nativeElement.getBoundingClientRect();
+
+        // Return the item to an index that is different from the initial one.
+        dispatchMouseEvent(document, 'mousemove', firstInitialSiblingRect.left + 1,
+            firstInitialSiblingRect.top + 1);
+        fixture.detectChanges();
+
+        expect(dropZones[0].contains(placeholder))
+            .toBe(true, 'Expected placeholder to be back inside first container.');
+        expect(getElementIndexByPosition(placeholder, 'top'))
+            .toBe(1, 'Expected placeholder to be back at the initial index.');
+
+        dispatchMouseEvent(document, 'mouseup');
+        fixture.detectChanges();
+
+        expect(fixture.componentInstance.droppedSpy).not.toHaveBeenCalled();
+      }));
+
   });
 
 });
@@ -2832,6 +3048,7 @@ describe('CdkDrag', () => {
       <div
         cdkDrag
         [cdkDragBoundary]="boundarySelector"
+        [cdkDragStartDelay]="dragStartDelay"
         (cdkDragStarted)="startedSpy($event)"
         (cdkDragReleased)="releasedSpy($event)"
         (cdkDragEnded)="endedSpy($event)"
@@ -2847,6 +3064,7 @@ class StandaloneDraggable {
   endedSpy = jasmine.createSpy('ended spy');
   releasedSpy = jasmine.createSpy('released spy');
   boundarySelector: string;
+  dragStartDelay: number;
 }
 
 @Component({

@@ -17,7 +17,7 @@ import {
 } from '@angular/core';
 import {Direction, Directionality} from '@angular/cdk/bidi';
 import {OverlayContainer, Overlay} from '@angular/cdk/overlay';
-import {ESCAPE, LEFT_ARROW, RIGHT_ARROW, DOWN_ARROW, TAB} from '@angular/cdk/keycodes';
+import {ESCAPE, LEFT_ARROW, RIGHT_ARROW, DOWN_ARROW, TAB, HOME, END} from '@angular/cdk/keycodes';
 import {
   MAT_MENU_DEFAULT_OPTIONS,
   MatMenu,
@@ -157,6 +157,27 @@ describe('MatMenu', () => {
     tick(500);
 
     expect(document.activeElement).toBe(triggerEl);
+  }));
+
+  it('should not restore focus to the trigger if focus restoration is disabled', fakeAsync(() => {
+    const fixture = createComponent(SimpleMenu, [], [FakeIcon]);
+    fixture.detectChanges();
+    const triggerEl = fixture.componentInstance.triggerEl.nativeElement;
+
+    fixture.componentInstance.restoreFocus = false;
+    fixture.detectChanges();
+
+    // A click without a mousedown before it is considered a keyboard open.
+    triggerEl.click();
+    fixture.detectChanges();
+
+    expect(overlayContainerElement.querySelector('.mat-menu-panel')).toBeTruthy();
+
+    fixture.componentInstance.trigger.closeMenu();
+    fixture.detectChanges();
+    tick(500);
+
+    expect(document.activeElement).not.toBe(triggerEl);
   }));
 
   it('should be able to set a custom class on the backdrop', fakeAsync(() => {
@@ -622,6 +643,104 @@ describe('MatMenu', () => {
     fixture.detectChanges();
 
     expect(overlayContainerElement.textContent).toBe('');
+  }));
+
+  it('should focus the first item when pressing home', fakeAsync(() => {
+    const fixture = createComponent(SimpleMenu, [], [FakeIcon]);
+    fixture.detectChanges();
+
+    fixture.componentInstance.trigger.openMenu();
+    fixture.detectChanges();
+
+    const panel = overlayContainerElement.querySelector('.mat-menu-panel')!;
+    const items = Array.from(panel.querySelectorAll('.mat-menu-item')) as HTMLElement[];
+    items.forEach(patchElementFocus);
+
+    // Focus the last item since focus starts from the first one.
+    items[items.length - 1].focus();
+    fixture.detectChanges();
+
+    spyOn(items[0], 'focus').and.callThrough();
+
+    const event = dispatchKeyboardEvent(panel, 'keydown', HOME);
+    fixture.detectChanges();
+
+    expect(items[0].focus).toHaveBeenCalled();
+    expect(event.defaultPrevented).toBe(true);
+    flush();
+  }));
+
+  it('should not focus the first item when pressing home with a modifier key', fakeAsync(() => {
+    const fixture = createComponent(SimpleMenu, [], [FakeIcon]);
+    fixture.detectChanges();
+
+    fixture.componentInstance.trigger.openMenu();
+    fixture.detectChanges();
+
+    const panel = overlayContainerElement.querySelector('.mat-menu-panel')!;
+    const items = Array.from(panel.querySelectorAll('.mat-menu-item')) as HTMLElement[];
+    items.forEach(patchElementFocus);
+
+    // Focus the last item since focus starts from the first one.
+    items[items.length - 1].focus();
+    fixture.detectChanges();
+
+    spyOn(items[0], 'focus').and.callThrough();
+
+    const event = createKeyboardEvent('keydown', HOME);
+    Object.defineProperty(event, 'altKey', {get: () => true});
+
+    dispatchEvent(panel, event);
+    fixture.detectChanges();
+
+    expect(items[0].focus).not.toHaveBeenCalled();
+    expect(event.defaultPrevented).toBe(false);
+    flush();
+  }));
+
+  it('should focus the last item when pressing end', fakeAsync(() => {
+    const fixture = createComponent(SimpleMenu, [], [FakeIcon]);
+    fixture.detectChanges();
+
+    fixture.componentInstance.trigger.openMenu();
+    fixture.detectChanges();
+
+    const panel = overlayContainerElement.querySelector('.mat-menu-panel')!;
+    const items = Array.from(panel.querySelectorAll('.mat-menu-item')) as HTMLElement[];
+    items.forEach(patchElementFocus);
+
+    spyOn(items[items.length - 1], 'focus').and.callThrough();
+
+    const event = dispatchKeyboardEvent(panel, 'keydown', END);
+    fixture.detectChanges();
+
+    expect(items[items.length - 1].focus).toHaveBeenCalled();
+    expect(event.defaultPrevented).toBe(true);
+    flush();
+  }));
+
+  it('should not focus the last item when pressing end with a modifier key', fakeAsync(() => {
+    const fixture = createComponent(SimpleMenu, [], [FakeIcon]);
+    fixture.detectChanges();
+
+    fixture.componentInstance.trigger.openMenu();
+    fixture.detectChanges();
+
+    const panel = overlayContainerElement.querySelector('.mat-menu-panel')!;
+    const items = Array.from(panel.querySelectorAll('.mat-menu-item')) as HTMLElement[];
+    items.forEach(patchElementFocus);
+
+    spyOn(items[items.length - 1], 'focus').and.callThrough();
+
+    const event = createKeyboardEvent('keydown', END);
+    Object.defineProperty(event, 'altKey', {get: () => true});
+
+    dispatchEvent(panel, event);
+    fixture.detectChanges();
+
+    expect(items[items.length - 1].focus).not.toHaveBeenCalled();
+    expect(event.defaultPrevented).toBe(false);
+    flush();
   }));
 
   describe('lazy rendering', () => {
@@ -1878,7 +1997,10 @@ describe('MatMenu default overrides', () => {
 
 @Component({
   template: `
-    <button [matMenuTriggerFor]="menu" #triggerEl>Toggle menu</button>
+    <button
+      [matMenuTriggerFor]="menu"
+      [matMenuTriggerRestoreFocus]="restoreFocus"
+      #triggerEl>Toggle menu</button>
     <mat-menu
       #menu="matMenu"
       [class]="panelClass"
@@ -1904,6 +2026,7 @@ class SimpleMenu {
   closeCallback = jasmine.createSpy('menu closed callback');
   backdropClass: string;
   panelClass: string;
+  restoreFocus = true;
 }
 
 @Component({

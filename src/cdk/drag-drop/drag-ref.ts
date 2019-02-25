@@ -167,6 +167,9 @@ export class DragRef<T = any> {
    */
   private _lastTouchEventTime: number;
 
+  /** Time at which the last dragging sequence was started. */
+  private _dragStartTime: number;
+
   /** Cached reference to the boundary element. */
   private _boundaryElement: HTMLElement | null = null;
 
@@ -199,6 +202,12 @@ export class DragRef<T = any> {
 
   /** Axis along which dragging is locked. */
   lockAxis: 'x' | 'y';
+
+  /**
+   * Amount of milliseconds to wait after the user has put their
+   * pointer down before starting to drag the element.
+   */
+  dragStartDelay: number = 0;
 
   /** Whether starting to drag this element is disabled. */
   get disabled(): boolean {
@@ -474,12 +483,13 @@ export class DragRef<T = any> {
       const pointerPosition = this._getPointerPositionOnPage(event);
       const distanceX = Math.abs(pointerPosition.x - this._pickupPositionOnPage.x);
       const distanceY = Math.abs(pointerPosition.y - this._pickupPositionOnPage.y);
+      const isOverThreshold = distanceX + distanceY >= this._config.dragStartThreshold;
 
       // Only start dragging after the user has moved more than the minimum distance in either
       // direction. Note that this is preferrable over doing something like `skip(minimumDistance)`
       // in the `pointerMove` subscription, because we're not guaranteed to have one move event
       // per pixel of movement (e.g. if the user moves their pointer quickly).
-      if (distanceX + distanceY >= this._config.dragStartThreshold) {
+      if (isOverThreshold && (Date.now() >= this._dragStartTime + (this.dragStartDelay || 0))) {
         this._hasStartedDragging = true;
         this._ngZone.run(() => this._startDragSequence(event));
       }
@@ -603,7 +613,7 @@ export class DragRef<T = any> {
       // from the DOM completely, because iOS will stop firing all subsequent events in the chain.
       element.style.display = 'none';
       this._document.body.appendChild(element.parentNode!.replaceChild(placeholder, element));
-      this._document.body.appendChild(preview);
+      getPreviewInsertionPoint(this._document).appendChild(preview);
       this._dropContainer.start();
     }
   }
@@ -675,6 +685,7 @@ export class DragRef<T = any> {
     const pointerPosition = this._pickupPositionOnPage = this._getPointerPositionOnPage(event);
     this._pointerDirectionDelta = {x: 0, y: 0};
     this._pointerPositionAtLastDirectionChange = {x: pointerPosition.x, y: pointerPosition.y};
+    this._dragStartTime = Date.now();
     this._dragDropRegistry.startDragging(this, event);
   }
 
@@ -992,8 +1003,15 @@ function getTransform(x: number, y: number): string {
 /** Creates a deep clone of an element. */
 function deepCloneNode(node: HTMLElement): HTMLElement {
   const clone = node.cloneNode(true) as HTMLElement;
+  const descendantsWithId = clone.querySelectorAll('[id]');
+
   // Remove the `id` to avoid having multiple elements with the same id on the page.
   clone.removeAttribute('id');
+
+  for (let i = 0; i < descendantsWithId.length; i++) {
+    descendantsWithId[i].removeAttribute('id');
+  }
+
   return clone;
 }
 
@@ -1015,4 +1033,16 @@ function removeElement(element: HTMLElement | null) {
 /** Determines whether an event is a touch event. */
 function isTouchEvent(event: MouseEvent | TouchEvent): event is TouchEvent {
   return event.type.startsWith('touch');
+}
+
+/** Gets the element into which the drag preview should be inserted. */
+function getPreviewInsertionPoint(documentRef: any): HTMLElement {
+  // We can't use the body if the user is in fullscreen mode,
+  // because the preview will render under the fullscreen element.
+  // TODO(crisbeto): dedupe this with the `FullscreenOverlayContainer` eventually.
+  return documentRef.fullscreenElement ||
+         documentRef.webkitFullscreenElement ||
+         documentRef.mozFullScreenElement ||
+         documentRef.msFullscreenElement ||
+         documentRef.body;
 }
