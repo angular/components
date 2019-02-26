@@ -4,6 +4,7 @@
   cdkDropListOrientation="horizontal"
   (cdkDropListDropped)="drop($event)">
   <mat-chip
+    class="example-box"
     cdkDrag
     *ngFor="let vegetable of vegetables">
     {{vegetable.name}}
