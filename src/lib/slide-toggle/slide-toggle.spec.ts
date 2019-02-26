@@ -433,6 +433,8 @@ describe('MatSlideToggle without forms', () => {
           ]
         });
       const fixture = TestBed.createComponent(SlideToggleBasic);
+      fixture.detectChanges();
+
       const testComponent = fixture.debugElement.componentInstance;
       const slideToggleDebug = fixture.debugElement.query(By.css('mat-slide-toggle'));
       const thumbContainerDebug = slideToggleDebug
@@ -446,6 +448,7 @@ describe('MatSlideToggle without forms', () => {
       expect(slideToggle.checked).toBe(false);
 
       gestureConfig.emitEventForElement('slidestart', slideThumbContainer);
+      tick();
 
       expect(slideThumbContainer.classList).toContain('mat-dragging');
 
