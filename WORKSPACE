@@ -44,7 +44,7 @@ load("@npm//:install_bazel_dependencies.bzl", "install_bazel_dependencies")
 install_bazel_dependencies()
 
 # Setup TypeScript Bazel workspace
-load("@npm_bazel_typescript//:index.bzl", "ts_setup_workspace")
+load("@npm_bazel_typescript//:defs.bzl", "ts_setup_workspace")
 ts_setup_workspace()
 
 # Fetch transitive dependencies which are needed to use the karma rules.

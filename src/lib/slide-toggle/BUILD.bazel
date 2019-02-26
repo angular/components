@@ -13,6 +13,7 @@ ng_module(
     "@npm//@angular/core",
     "@npm//@angular/forms",
     "@npm//@angular/platform-browser",
+    "@npm//@angular/animations",
     "//src/cdk/a11y",
     "//src/cdk/bidi",
     "//src/cdk/coercion",

@@ -85,9 +85,9 @@
   dependencies:
     tslib "^1.9.0"
 
-"@angular/bazel@angular/bazel-builds#8.0.0-beta.5+1930e8a":
+"@angular/bazel@angular/bazel-builds#8.0.0-beta.5+8f8f9a6":
   version "8.0.0-beta.5"
-  resolved "https://codeload.github.com/angular/bazel-builds/tar.gz/501849f5b7e0ab12a3d1ce8003bf6acfc3123e7b"
+  resolved "https://codeload.github.com/angular/bazel-builds/tar.gz/5b6725e24eaf3468bd517c6db66c7a8bbb69579c"
   dependencies:
     "@angular-devkit/architect" "^0.10.6"
     "@angular-devkit/core" "^7.0.4"

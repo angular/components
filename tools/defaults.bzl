@@ -2,8 +2,8 @@
 
 load("@npm_angular_bazel//:index.bzl", _ng_module = "ng_module", _ng_package = "ng_package")
 load("@npm_bazel_jasmine//:index.bzl", _jasmine_node_test = "jasmine_node_test")
-load("@npm_bazel_typescript//:index.bzl", _ts_library = "ts_library")
-load("@npm_bazel_karma//:index.bzl", _ts_web_test_suite = "ts_web_test_suite")
+load("@npm_bazel_typescript//:defs.bzl", _ts_library = "ts_library")
+load("@npm_bazel_karma//:defs.bzl", _ts_web_test_suite = "ts_web_test_suite")
 load("//tools/markdown-to-html:index.bzl", _markdown_to_html = "markdown_to_html")
 load("//:packages.bzl", "VERSION_PLACEHOLDER_REPLACEMENTS")
 
@@ -42,11 +42,17 @@ def ng_module(deps = [], tsconfig = None, testonly = False, **kwargs):
   local_deps = [
     # Add tslib because we use import helpers for all public packages.
     "@npm//tslib",
+    "@npm//@angular/platform-browser",
 
     # Depend on the module typings for each `ng_module`. Since all components within the project
     # need to use `module.id` when creating components, this is always a dependency.
     "//src:module-typings"
-  ] + deps
+  ]
+
+  # Append given deps only if they're not in the default set of deps
+  for d in deps:
+    if d not in local_deps:
+      local_deps = local_deps + [d]
 
   _ng_module(
     deps = local_deps,

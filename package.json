@@ -49,7 +49,7 @@
   "devDependencies": {
     "@angular-devkit/core": "7.1.2",
     "@angular-devkit/schematics": "7.1.2",
-    "@angular/bazel": "angular/bazel-builds#8.0.0-beta.5+1930e8a",
+    "@angular/bazel": "angular/bazel-builds#8.0.0-beta.5+8f8f9a6",
     "@angular/compiler-cli": "8.0.0-beta.5",
     "@angular/http": "8.0.0-beta.5",
     "@angular/platform-browser-dynamic": "8.0.0-beta.5",
