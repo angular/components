@@ -1759,6 +1759,7 @@ describe('MatSelect', () => {
         fixture.componentInstance.select.open();
         fixture.detectChanges();
         flush();
+        fixture.detectChanges();
 
         host = fixture.debugElement.query(By.css('mat-select')).nativeElement;
         panel = overlayContainerElement.querySelector('.mat-select-panel')! as HTMLElement;
@@ -4172,7 +4173,7 @@ class BasicSelect {
   panelClass = ['custom-one', 'custom-two'];
   disableRipple: boolean;
 
-  @ViewChild(MatSelect) select: MatSelect;
+  @ViewChild(MatSelect, {static: true}) select: MatSelect;
   @ViewChildren(MatOption) options: QueryList<MatOption>;
 }
 
@@ -4326,7 +4327,7 @@ class CustomSelectAccessor implements ControlValueAccessor {
 })
 class CompWithCustomSelect {
   ctrl = new FormControl('initial value');
-  @ViewChild(CustomSelectAccessor) customAccessor: CustomSelectAccessor;
+  @ViewChild(CustomSelectAccessor, {static: true}) customAccessor: CustomSelectAccessor;
 }
 
 @Component({
