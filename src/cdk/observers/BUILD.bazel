@@ -9,8 +9,7 @@ ng_module(
   module_name = "@angular/cdk/observers",
   deps = [
     "@npm//@angular/core",
-    "@rxjs",
-    "@rxjs//operators",
+    "@npm//rxjs",
     "//src/cdk/coercion",
   ],
 )

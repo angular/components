@@ -14,7 +14,7 @@ ng_module(
     "@npm//@angular/core",
     "@npm//@angular/forms",
     "@npm//@angular/platform-browser",
-    "@rxjs",
+    "@npm//rxjs",
     "//src/cdk/a11y",
     "//src/cdk/bidi",
     "//src/cdk/coercion",

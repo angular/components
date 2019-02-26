@@ -19,8 +19,7 @@ ng_module(
     "@npm//@angular/common",
     "@npm//@angular/core",
     "@npm//@angular/forms",
-    "@rxjs",
-    "@rxjs//operators",
+    "@npm//rxjs",
     "//src/cdk/a11y",
     "//src/cdk/bidi",
     "//src/cdk/coercion",
@@ -69,7 +68,7 @@ ng_test_library(
   deps = [
     "@npm//@angular/forms",
     "@npm//@angular/platform-browser",
-    "@rxjs",
+    "@npm//rxjs",
     "//src/cdk/bidi",
     "//src/cdk/keycodes",
     "//src/cdk/overlay",

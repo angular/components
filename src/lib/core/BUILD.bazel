@@ -17,11 +17,12 @@ ng_module(
     ":option/optgroup.css",
   ] + glob(["**/*.html"]),
   deps = [
+    "@npm//@angular/animations",
     "@npm//@angular/common",
     "@npm//@angular/core",
     "@npm//@angular/forms",
     "@npm//@angular/platform-browser",
-    "@rxjs",
+    "@npm//rxjs",
     "//src/cdk/a11y",
     "//src/cdk/bidi",
     "//src/cdk/coercion",

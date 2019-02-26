@@ -1,9 +1,9 @@
 # Re-export of Bazel rules with repository-wide defaults
 
 load("@npm_angular_bazel//:index.bzl", _ng_module = "ng_module", _ng_package = "ng_package")
-load("@build_bazel_rules_nodejs//:defs.bzl", _jasmine_node_test = "jasmine_node_test")
-load("@build_bazel_rules_typescript//:defs.bzl", _ts_library = "ts_library")
-load("@build_bazel_rules_karma//:defs.bzl", _ts_web_test_suite = "ts_web_test_suite")
+load("@npm_bazel_jasmine//:index.bzl", _jasmine_node_test = "jasmine_node_test")
+load("@npm_bazel_typescript//:index.bzl", _ts_library = "ts_library")
+load("@npm_bazel_karma//:index.bzl", _ts_web_test_suite = "ts_web_test_suite")
 load("//tools/markdown-to-html:index.bzl", _markdown_to_html = "markdown_to_html")
 load("//:packages.bzl", "VERSION_PLACEHOLDER_REPLACEMENTS")
 
@@ -71,8 +71,6 @@ def ng_package(name, readme_md = None, **kwargs):
 
 def jasmine_node_test(deps = [], **kwargs):
   local_deps = [
-    # Workaround for: https://github.com/bazelbuild/rules_nodejs/issues/344
-    "@npm//jasmine",
     "@npm//source-map-support",
   ] + deps
 
@@ -95,8 +93,9 @@ def ng_test_library(deps = [], tsconfig = None, **kwargs):
     **kwargs
   )
 
-def ts_web_test_suite(srcs = [], **kwargs):
+def ts_web_test_suite(deps = [], srcs = [], **kwargs):
   _ts_web_test_suite(
+    deps = ["//tools/rxjs:rxjs_umd_modules"] + deps,
     # Required for running the compiled ng modules that use TypeScript import helpers.
     srcs = ["@npm//node_modules/tslib:tslib.js"] + srcs,
     **kwargs
@@ -138,7 +137,9 @@ def ng_web_test_suite(deps = [], static_css = [], bootstrap = [], **kwargs):
 
   ts_web_test_suite(
     # Depend on our custom test initialization script. This needs to be the first dependency.
-    deps = ["//test:angular_test_init"] + deps,
+    deps = [
+      "//test:angular_test_init",
+    ] + deps,
     bootstrap = [
       "@npm//node_modules/zone.js:dist/zone-testing-bundle.js",
       "@npm//node_modules/reflect-metadata:Reflect.js",

@@ -10,8 +10,7 @@ ng_module(
   module_name = "@angular/cdk/text-field",
   deps = [
     "@npm//@angular/core",
-    "@rxjs",
-    "@rxjs//operators",
+    "@npm//rxjs",
     "//src/cdk/coercion",
     "//src/cdk/platform",
   ],
@@ -34,7 +33,7 @@ ng_test_library(
   deps = [
     "@npm//@angular/forms",
     "@npm//@angular/platform-browser",
-    "@rxjs",
+    "@npm//rxjs",
     "//src/cdk/platform",
     "//src/cdk/testing",
     ":text-field"

@@ -13,8 +13,7 @@ ng_module(
     "@npm//@angular/animations",
     "@npm//@angular/common",
     "@npm//@angular/core",
-    "@rxjs",
-    "@rxjs//operators",
+    "@npm//rxjs",
     "//src/cdk/a11y",
     "//src/cdk/bidi",
     "//src/cdk/keycodes",
@@ -45,7 +44,7 @@ ng_test_library(
   deps = [
     "@npm//@angular/common",
     "@npm//@angular/platform-browser",
-    "@rxjs",
+    "@npm//rxjs",
     "//src/cdk/bidi",
     "//src/cdk/keycodes",
     "//src/cdk/overlay",

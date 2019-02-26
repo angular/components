@@ -23,8 +23,7 @@ ng_module(
     "@npm//@angular/platform-browser",
     "@npm//@angular/platform-browser-dynamic",
     "@npm//@angular/router",
-    "@rxjs",
-    "@rxjs//operators",
+    "@npm//rxjs",
     "//src/cdk-experimental",
     "//src/material-examples:examples",
   ] + CDK_TARGETS + MATERIAL_TARGETS

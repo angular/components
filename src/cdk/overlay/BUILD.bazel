@@ -11,8 +11,7 @@ ng_module(
   deps = [
     "@npm//@angular/common",
     "@npm//@angular/core",
-    "@rxjs",
-    "@rxjs//operators",
+    "@npm//rxjs",
     "//src/cdk/bidi",
     "//src/cdk/coercion",
     "//src/cdk/keycodes",
@@ -39,8 +38,7 @@ ng_test_library(
   deps = [
     "@npm//@angular/common",
     "@npm//@angular/platform-browser",
-    "@rxjs",
-    "@rxjs//operators",
+    "@npm//rxjs",
     "//src/cdk/bidi",
     "//src/cdk/keycodes",
     "//src/cdk/platform",

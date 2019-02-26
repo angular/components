@@ -12,7 +12,7 @@ ng_module(
   deps = [
     "@npm//@angular/common",
     "@npm//@angular/core",
-    "@rxjs",
+    "@npm//rxjs",
     "//src/cdk/coercion",
     "//src/lib/button",
     "//src/lib/core",

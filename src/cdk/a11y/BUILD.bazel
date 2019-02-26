@@ -11,8 +11,7 @@ ng_module(
   deps = [
     "@npm//@angular/common",
     "@npm//@angular/core",
-    "@rxjs",
-    "@rxjs//operators",
+    "@npm//rxjs",
     "//src/cdk/coercion",
     "//src/cdk/keycodes",
     "//src/cdk/observers",
@@ -36,8 +35,7 @@ ng_test_library(
   srcs = glob(["**/*.spec.ts"]),
   deps = [
     "@npm//@angular/platform-browser",
-    "@rxjs",
-    "@rxjs//operators",
+    "@npm//rxjs",
     "//src/cdk/keycodes",
     "//src/cdk/observers",
     "//src/cdk/platform",

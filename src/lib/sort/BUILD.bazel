@@ -13,7 +13,7 @@ ng_module(
     "@npm//@angular/animations",
     "@npm//@angular/common",
     "@npm//@angular/core",
-    "@rxjs",
+    "@npm//rxjs",
     "//src/cdk/coercion",
     "//src/lib/core",
   ],
@@ -35,8 +35,7 @@ ng_test_library(
   srcs = glob(["**/*.spec.ts"]),
   deps = [
     "@npm//@angular/platform-browser",
-    "@rxjs",
-    "@rxjs//operators",
+    "@npm//rxjs",
     "//src/cdk/collections",
     "//src/cdk/table",
     "//src/cdk/testing",

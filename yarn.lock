@@ -85,15 +85,14 @@
   dependencies:
     tslib "^1.9.0"
 
-"@angular/bazel@8.0.0-beta.5":
+"@angular/bazel@angular/bazel-builds#8.0.0-beta.5+1930e8a":
   version "8.0.0-beta.5"
-  resolved "https://registry.yarnpkg.com/@angular/bazel/-/bazel-8.0.0-beta.5.tgz#cee20d40e78d97306a11d79b8fb427f9d2e5fe91"
-  integrity sha512-/sX6LRwOGMk7zeEv0V9rBy27jl79VNyqL7NwjtgBlEhcSTr47ObdObei/eSsF3y0HgkIF7bkrXDjsq7RAYMQGA==
+  resolved "https://codeload.github.com/angular/bazel-builds/tar.gz/501849f5b7e0ab12a3d1ce8003bf6acfc3123e7b"
   dependencies:
     "@angular-devkit/architect" "^0.10.6"
     "@angular-devkit/core" "^7.0.4"
     "@angular-devkit/schematics" "^7.3.0-rc.0"
-    "@bazel/typescript" "^0.23.2"
+    "@bazel/typescript" "^0.26.0-beta.0"
     "@microsoft/api-extractor" "^7.0.17"
     "@schematics/angular" "^7.0.4"
     "@types/node" "6.0.84"
@@ -319,10 +318,17 @@
   resolved "https://registry.yarnpkg.com/@bazel/ibazel/-/ibazel-0.9.0.tgz#fd60023acd36313d304cc2f8c2e181b88b5445cd"
   integrity sha512-E31cefDcdJsx/oii6p/gqKZXSVw0kEg1O73DD2McFcSvnf/p1GYWcQtVgdRQmlviBEytJkJgdX8rtThitRvcow==
 
-"@bazel/karma@0.23.2":
-  version "0.23.2"
-  resolved "https://registry.yarnpkg.com/@bazel/karma/-/karma-0.23.2.tgz#17421a61cbcc6c917902beaaef88d61f22471f11"
-  integrity sha512-aNujXKusUjJIkc6CF03LS8AS7ULwNE0MKEL2TlYvnGCZviQ3nKrpRiEtWFmZlT+GrTOeu7AM4t3l4pSdQx/jnw==
+"@bazel/jasmine@0.26.0-beta.0":
+  version "0.26.0-beta.0"
+  resolved "https://registry.yarnpkg.com/@bazel/jasmine/-/jasmine-0.26.0-beta.0.tgz#77243fea16dd7b31c60e0aa78bb89b7dcf0a9443"
+  integrity sha512-6dTuxGitXP6VcmgNwB9D9KqatDGX+Xw9GXDTJNnAT7wNDaakggiRg1ocLe8/xDMB+EXVg1qKOKS5NhZYHq3jVQ==
+  dependencies:
+    jasmine "~3.3.1"
+
+"@bazel/karma@0.26.0-beta.0":
+  version "0.26.0-beta.0"
+  resolved "https://registry.yarnpkg.com/@bazel/karma/-/karma-0.26.0-beta.0.tgz#0a83bac1adaa0cfec8e3fb4acb49d02e05b141ed"
+  integrity sha512-N2doztMGN6TMT3Gi4R4dfB7ypZI4tF3U1HG09lP7MVmr46czVNp/lwTnjyfJgbababYBfhiGgrXD9VOC9QqKnA==
   dependencies:
     jasmine-core "2.8.0"
     karma "^4.0.0"
@@ -336,21 +342,10 @@
     semver "5.6.0"
     tmp "0.0.33"
 
-"@bazel/typescript@0.23.2":
-  version "0.23.2"
-  resolved "https://registry.yarnpkg.com/@bazel/typescript/-/typescript-0.23.2.tgz#a3ff199880855259d84216cb41644c1d9a0fad14"
-  integrity sha512-GrTyDW6Fvp/rgnxZGYampB5/QmDWvxtLEtUyMCPa/QXFR1OVxaMWeHxxuFEcES2UKJegqBDKAA8IzX21x4UbEw==
-  dependencies:
-    jasmine-core "2.8.0"
-    protobufjs "5.0.3"
-    semver "5.6.0"
-    source-map-support "0.5.9"
-    tsutils "2.27.2"
-
-"@bazel/typescript@^0.23.2":
-  version "0.23.3"
-  resolved "https://registry.yarnpkg.com/@bazel/typescript/-/typescript-0.23.3.tgz#d0bc1767ce33feb455c49cee9fd739005f2b218a"
-  integrity sha512-jTiT7p3SB34l1SHQeLs8ukZaiReST0JEJXALzMw0nc972aJT33Yq+zgPow5Nwu7haUXeDxlksqxuPBDy6uvIKA==
+"@bazel/typescript@0.26.0-beta.0", "@bazel/typescript@^0.26.0-beta.0":
+  version "0.26.0-beta.0"
+  resolved "https://registry.yarnpkg.com/@bazel/typescript/-/typescript-0.26.0-beta.0.tgz#aa025951563f47baca302c8ebcf24eb596724426"
+  integrity sha512-Ot7k3sfLQAdf14IDmsc6wSgfySctJdW6Uwg7YmD4Zv1sGWkjKaWEtQDFgjtf5kEgFpC0aeM5uK+heqz1CC+VcQ==
   dependencies:
     jasmine-core "2.8.0"
     protobufjs "5.0.3"
@@ -5845,7 +5840,7 @@ jasmine-core@2.8.0, jasmine-core@~2.8.0:
   resolved "https://registry.yarnpkg.com/jasmine-core/-/jasmine-core-2.8.0.tgz#bcc979ae1f9fd05701e45e52e65d3a5d63f1a24e"
   integrity sha1-vMl5rh+f0FcB5F5S5l06XWPxok4=
 
-jasmine-core@^3.3, jasmine-core@^3.3.0:
+jasmine-core@^3.3, jasmine-core@^3.3.0, jasmine-core@~3.3.0:
   version "3.3.0"
   resolved "https://registry.yarnpkg.com/jasmine-core/-/jasmine-core-3.3.0.tgz#dea1cdc634bc93c7e0d4ad27185df30fa971b10e"
   integrity sha512-3/xSmG/d35hf80BEN66Y6g9Ca5l/Isdeg/j6zvbTYlTzeKinzmaTM4p9am5kYqOmE05D7s1t8FGjzdSnbUbceA==
@@ -5858,6 +5853,14 @@ jasmine@2.8.0:
     exit "^0.1.2"
     glob "^7.0.6"
     jasmine-core "~2.8.0"
+
+jasmine@~3.3.1:
+  version "3.3.1"
+  resolved "https://registry.yarnpkg.com/jasmine/-/jasmine-3.3.1.tgz#d61bb1dd8888859bd11ea83074a78ee13d949905"
+  integrity sha512-/vU3/H7U56XsxIXHwgEuWpCgQ0bRi2iiZeUpx7Nqo8n1TpoDHfZhkPIc7CO8I4pnMzYsi3XaSZEiy8cnTfujng==
+  dependencies:
+    glob "^7.0.6"
+    jasmine-core "~3.3.0"
 
 jasminewd2@^2.1.0:
   version "2.2.0"
@@ -9035,7 +9038,7 @@ rx@4.1.0:
   resolved "https://registry.yarnpkg.com/rx/-/rx-4.1.0.tgz#a5f13ff79ef3b740fe30aa803fb09f98805d4782"
   integrity sha1-pfE/957zt0D+MKqAP7CfmIBdR4I=
 
-rxjs@6.3.3, rxjs@^6.1.0, rxjs@^6.3.3:
+rxjs@6.3.3, rxjs@^6.1.0:
   version "6.3.3"
   resolved "https://registry.yarnpkg.com/rxjs/-/rxjs-6.3.3.tgz#3c6a7fa420e844a81390fb1158a9ec614f4bad55"
   integrity sha512-JTWmoY9tWCs7zvIk/CvRjhjGaOd+OVBM987mxFo+OW66cGpdKjZcpmc74ES1sB//7Kl/PAe8+wEakuhG4pcgOw==
@@ -9048,6 +9051,13 @@ rxjs@^5.5.6:
   integrity sha512-xx2itnL5sBbqeeiVgNPVuQQ1nC8Jp2WfNJhXWHmElW9YmrpS9UVnNzhP3EH3HFqexO5Tlp8GhYY+WEcqcVMvGw==
   dependencies:
     symbol-observable "1.0.1"
+
+rxjs@^6.4.0:
+  version "6.4.0"
+  resolved "https://registry.yarnpkg.com/rxjs/-/rxjs-6.4.0.tgz#f3bb0fe7bda7fb69deac0c16f17b50b0b8790504"
+  integrity sha512-Z9Yfa11F6B9Sg/BK9MnqnQ+aQYicPLtilXBp2yUtDt2JRCE0h26d33EnfO3ZxoNxG0T92OUucP3Ct7cpfkdFfw==
+  dependencies:
+    tslib "^1.9.0"
 
 safe-buffer@5.1.2, safe-buffer@^5.0.1, safe-buffer@^5.1.1, safe-buffer@^5.1.2, safe-buffer@~5.1.0, safe-buffer@~5.1.1:
   version "5.1.2"

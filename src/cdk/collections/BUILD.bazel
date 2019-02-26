@@ -8,7 +8,7 @@ ng_module(
   module_name = "@angular/cdk/collections",
   deps = [
     "@npm//@angular/core",
-    "@rxjs"
+    "@npm//rxjs",
   ],
 )
 
