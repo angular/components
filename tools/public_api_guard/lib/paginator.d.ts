@@ -41,6 +41,7 @@ export declare class MatPaginatorIntl {
     readonly changes: Subject<void>;
     firstPageLabel: string;
     getRangeLabel: (page: number, pageSize: number, length: number) => string;
+    getReaderRangeLabel: (page: number, pageSize: number, length: number) => string;
     itemsPerPageLabel: string;
     lastPageLabel: string;
     nextPageLabel: string;

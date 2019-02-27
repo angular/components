@@ -27,3 +27,4 @@ This will allow you to change the following:
 
 ### Accessibility
 The `aria-label`s for next page, previous page, first page and last page buttons can be set in `MatPaginatorIntl`.
+Screenreader friendly text for the range label can be set in `MatPaginatorIntl` via the `getReaderRangeLabel` method.

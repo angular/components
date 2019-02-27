@@ -39,7 +39,7 @@ describe('MatPaginator', () => {
   });
 
   describe('with the default internationalization provider', () => {
-    it('should show the right range text', () => {
+    it('should populate the range label for display', () => {
       const rangeElement = fixture.nativeElement.querySelector('.mat-paginator-range-label');
 
       // View second page of list of 100, each page contains 10 items.
@@ -83,6 +83,53 @@ describe('MatPaginator', () => {
       component.pageIndex = 2;
       fixture.detectChanges();
       expect(rangeElement.innerText).toBe('11 - 15 of 0');
+    });
+
+    it('should populate a range label only for screen readers', () => {
+      const rangeElement =
+          fixture.nativeElement.querySelector('.mat-paginator-reader-only-range-label');
+
+      // View second page of list of 100, each page contains 10 items.
+      component.length = 100;
+      component.pageSize = 10;
+      component.pageIndex = 1;
+      fixture.detectChanges();
+      expect(rangeElement.innerText).toBe('11 through 20 of 100');
+
+      // View third page of list of 200, each page contains 20 items.
+      component.length = 200;
+      component.pageSize = 20;
+      component.pageIndex = 2;
+      fixture.detectChanges();
+      expect(rangeElement.innerText).toBe('41 through 60 of 200');
+
+      // View first page of list of 0, each page contains 5 items.
+      component.length = 0;
+      component.pageSize = 5;
+      component.pageIndex = 2;
+      fixture.detectChanges();
+      expect(rangeElement.innerText).toBe('0 of 0');
+
+      // View third page of list of 12, each page contains 5 items.
+      component.length = 12;
+      component.pageSize = 5;
+      component.pageIndex = 2;
+      fixture.detectChanges();
+      expect(rangeElement.innerText).toBe('11 through 12 of 12');
+
+      // View third page of list of 10, each page contains 5 items.
+      component.length = 10;
+      component.pageSize = 5;
+      component.pageIndex = 2;
+      fixture.detectChanges();
+      expect(rangeElement.innerText).toBe('11 through 15 of 10');
+
+      // View third page of list of -5, each page contains 5 items.
+      component.length = -5;
+      component.pageSize = 5;
+      component.pageIndex = 2;
+      fixture.detectChanges();
+      expect(rangeElement.innerText).toBe('11 through 15 of 0');
     });
 
     it('should show right aria-labels for select and buttons', () => {

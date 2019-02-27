@@ -23,9 +23,12 @@
       <div *ngIf="_displayedPageSizeOptions.length <= 1">{{pageSize}}</div>
     </div>
 
-    <div class="mat-paginator-range-actions">
-      <div class="mat-paginator-range-label">
+    <div class="mat-paginator-range-actions" aria-live="polite">
+      <div class="mat-paginator-range-label" aria-hidden="true">
         {{_intl.getRangeLabel(pageIndex, pageSize, length)}}
+      </div>
+	    <div class="mat-paginator-reader-only-range-label">
+        {{_intl.getReaderRangeLabel(pageIndex, pageSize, length)}}
       </div>
 
       <button mat-icon-button type="button"

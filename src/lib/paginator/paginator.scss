@@ -86,6 +86,18 @@ $mat-paginator-button-last-increment-icon-margin: 9px;
   margin: $mat-paginator-range-label-margin;
 }
 
+.mat-paginator-reader-only-range-label {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap; /* added line */
+  border: 0;
+}
+
 .mat-paginator-range-actions {
   display: flex;
   align-items: center;
