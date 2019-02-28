@@ -12,6 +12,7 @@ ng_module(
   deps = [
     "@npm//@angular/common",
     "@npm//@angular/core",
+    "@npm//@angular/forms", # TODO(jelbourn): transitive dep via generated code
     "@npm//rxjs",
     "//src/cdk/coercion",
     "//src/lib/button",
