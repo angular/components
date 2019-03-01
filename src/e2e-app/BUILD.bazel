@@ -12,6 +12,7 @@ ng_module(
     "@npm//@angular/forms",
     "@npm//@angular/platform-browser",
     "@npm//@angular/router",
+    "@npm//@angular/animations",
     "//src/cdk/drag-drop",
     "//src/cdk/overlay",
     "//src/cdk/scrolling",

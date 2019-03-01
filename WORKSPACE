@@ -62,9 +62,20 @@ sass_repositories()
 # Setup web testing. We need to setup a browser because the web testing rules for TypeScript need
 # a reference to a registered browser (ideally that's a hermetic version of a browser)
 load("@io_bazel_rules_webtesting//web:repositories.bzl", "web_test_repositories")
-
 web_test_repositories()
 
 load("@npm_bazel_karma//:browser_repositories.bzl", "browser_repositories")
-
 browser_repositories()
+
+# Temporarily add Angular sources and its dependencies to consume the ts_api_guardian,
+# remote-build-execution, and protractor stuff.
+# TODO(jelbourn): remove this once we can do all the same stuff via @npm//@angular
+http_archive(
+  name = "angular",
+  url = "https://github.com/angular/angular/archive/8.0.0-beta.6.zip",
+  strip_prefix = "angular-8.0.0-beta.6",
+)
+load("@angular//packages/bazel:package.bzl", "rules_angular_dependencies")
+rules_angular_dependencies()
+load("@angular//:index.bzl", "ng_setup_workspace")
+ng_setup_workspace()

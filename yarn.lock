@@ -3079,10 +3079,10 @@ dev-ip@^1.0.1:
   resolved "https://registry.yarnpkg.com/dev-ip/-/dev-ip-1.0.1.tgz#a76a3ed1855be7a012bb8ac16cb80f3c00dc28f0"
   integrity sha1-p2o+0YVb56ASu4rBbLgPPADcKPA=
 
-dgeni-packages@^0.27.0:
-  version "0.27.0"
-  resolved "https://registry.yarnpkg.com/dgeni-packages/-/dgeni-packages-0.27.0.tgz#99ddf4c97f75bb1f8deb5658ed7d60f6894e9b9d"
-  integrity sha512-BFWJGZTpLb1xAc/iHq7SOcbkyEoxD57NqVG84azfNu63wAVLxoez/9n8VISWNJkrOIT1ITQS7nacgcGxfl0MIw==
+dgeni-packages@^0.27.1:
+  version "0.27.1"
+  resolved "https://registry.yarnpkg.com/dgeni-packages/-/dgeni-packages-0.27.1.tgz#f23d78fd3e222910106e45186e1c2e64649464fc"
+  integrity sha512-zM2HgMni9FvfBFHv2uhWrWRUV0CpaWl4ggoajbGLMT+TEqxkSPKRkCkCQMHek7ZYSXbPdpVb8DuoEKEem74X4g==
   dependencies:
     canonical-path "^1.0.0"
     catharsis "^0.8.1"
@@ -3107,7 +3107,22 @@ dgeni-packages@^0.27.0:
     typescript "^3.2.2"
     urlencode "^1.1.0"
 
-dgeni@^0.4.10, dgeni@^0.4.9:
+dgeni@^0.4.11:
+  version "0.4.11"
+  resolved "https://registry.yarnpkg.com/dgeni/-/dgeni-0.4.11.tgz#5fe416801cef1f2ae759fda8330b2fbdd0459341"
+  integrity sha512-4QLCXdo/uaRDhej2VLvWPEX5ACyLBsxEQflOkTmvoGYnYhQperOc8gMiZ1IW5GDeYL+fTqZ/kKGCbMukTfCrEg==
+  dependencies:
+    canonical-path "~0.0.2"
+    dependency-graph "^0.7.0"
+    di "0.0.1"
+    lodash "^4.17.10"
+    objectdiff "^1.1.0"
+    optimist "~0.6.1"
+    q "^1.5.1"
+    validate.js "^0.12.0"
+    winston "^2.1.1"
+
+dgeni@^0.4.9:
   version "0.4.10"
   resolved "https://registry.yarnpkg.com/dgeni/-/dgeni-0.4.10.tgz#5f68ed1033192e672494de0d4e39954fd5cfe8f8"
   integrity sha512-In8huU+6W+Rd7MdfzhQoRbntF4AsJgtbwRUTyfPgvhaC3RGJX/YOEkMnn7vLLk3zaCrEkIQGW6eADoudpnBceg==

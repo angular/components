@@ -16,6 +16,7 @@ ng_module(
   srcs = glob(["**/*.ts"], exclude = ["system-config.ts", "system-rxjs-operators.ts"]),
   assets = glob(["**/*.html"]) + [":dev_app_scss", ":theme"],
   deps = [
+    "@npm//@angular/animations",
     "@npm//@angular/common",
     "@npm//@angular/core",
     "@npm//@angular/elements",

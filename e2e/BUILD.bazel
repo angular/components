@@ -39,7 +39,7 @@ ts_library(
     ":e2e_utils_lib",
   ],
   data = [
-    "@npm//@angular/bazel/src/protractor/utils",
+    "@angular//packages/bazel/src/protractor/utils",
     "//tools/axe-protractor",
   ],
 ) for spec_file in glob(["components/**/*.spec.ts"])]

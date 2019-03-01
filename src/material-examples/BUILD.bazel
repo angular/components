@@ -11,6 +11,7 @@ ng_module(
   module_name = "@angular/material-examples",
   assets = glob(["**/*.html", "**/*.css"]),
   deps = [
+    "@npm//@angular/animations",
     "@npm//@angular/common",
     "@npm//@angular/core",
     "@npm//@angular/forms",
