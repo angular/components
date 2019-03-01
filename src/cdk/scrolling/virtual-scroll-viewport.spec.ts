@@ -12,7 +12,6 @@ import {
   NgZone,
   TrackByFunction,
   ViewChild,
-  ViewContainerRef,
   ViewEncapsulation
 } from '@angular/core';
 import {ComponentFixture, fakeAsync, flush, inject, TestBed} from '@angular/core/testing';
@@ -486,49 +485,51 @@ describe('CdkVirtualScrollViewport', () => {
 
     it('should trackBy value by default', fakeAsync(() => {
       testComponent.items = [];
-      spyOn(testComponent.virtualForViewContainer, 'detach').and.callThrough();
+      spyOn(testComponent.virtualForOf, '_detachView').and.callThrough();
       finishInit(fixture);
 
       testComponent.items = [0];
       fixture.detectChanges();
       flush();
 
-      expect(testComponent.virtualForViewContainer.detach).not.toHaveBeenCalled();
+      expect(testComponent.virtualForOf._detachView).not.toHaveBeenCalled();
 
       testComponent.items = [1];
       fixture.detectChanges();
       flush();
 
-      expect(testComponent.virtualForViewContainer.detach).toHaveBeenCalled();
+      expect(testComponent.virtualForOf._detachView).toHaveBeenCalled();
     }));
 
     it('should trackBy index when specified', fakeAsync(() => {
       testComponent.trackBy = i => i;
       testComponent.items = [];
-      spyOn(testComponent.virtualForViewContainer, 'detach').and.callThrough();
+      spyOn(testComponent.virtualForOf, '_detachView').and.callThrough();
       finishInit(fixture);
 
       testComponent.items = [0];
       fixture.detectChanges();
       flush();
 
-      expect(testComponent.virtualForViewContainer.detach).not.toHaveBeenCalled();
+      expect(testComponent.virtualForOf._detachView).not.toHaveBeenCalled();
 
       testComponent.items = [1];
       fixture.detectChanges();
       flush();
 
-      expect(testComponent.virtualForViewContainer.detach).not.toHaveBeenCalled();
+      expect(testComponent.virtualForOf._detachView).not.toHaveBeenCalled();
     }));
 
     it('should recycle views when template cache is large enough to accommodate', fakeAsync(() => {
       testComponent.trackBy = i => i;
-      const spy =
-          spyOn(testComponent.virtualForViewContainer, 'createEmbeddedView').and.callThrough();
+      const spy = spyOn(testComponent.virtualForOf, '_createEmbeddedViewAt')
+          .and.callThrough();
+
       finishInit(fixture);
 
       // Should create views for the initial rendered items.
-      expect(testComponent.virtualForViewContainer.createEmbeddedView).toHaveBeenCalledTimes(4);
+      expect(testComponent.virtualForOf._createEmbeddedViewAt)
+          .toHaveBeenCalledTimes(4);
 
       spy.calls.reset();
       triggerScroll(viewport, 10);
@@ -538,7 +539,8 @@ describe('CdkVirtualScrollViewport', () => {
       // As we first start to scroll we need to create one more item. This is because the first item
       // is still partially on screen and therefore can't be removed yet. At the same time a new
       // item is now partially on the screen at the bottom and so a new view is needed.
-      expect(testComponent.virtualForViewContainer.createEmbeddedView).toHaveBeenCalledTimes(1);
+      expect(testComponent.virtualForOf._createEmbeddedViewAt)
+          .toHaveBeenCalledTimes(1);
 
       spy.calls.reset();
       const maxOffset =
@@ -551,18 +553,21 @@ describe('CdkVirtualScrollViewport', () => {
 
       // As we scroll through the rest of the items, no new views should be created, our existing 5
       // can just be recycled as appropriate.
-      expect(testComponent.virtualForViewContainer.createEmbeddedView).not.toHaveBeenCalled();
+      expect(testComponent.virtualForOf._createEmbeddedViewAt)
+          .not.toHaveBeenCalled();
     }));
 
     it('should not recycle views when template cache is full', fakeAsync(() => {
       testComponent.trackBy = i => i;
       testComponent.templateCacheSize = 0;
-      const spy =
-          spyOn(testComponent.virtualForViewContainer, 'createEmbeddedView').and.callThrough();
-      finishInit(fixture);
+      const spy = spyOn(testComponent.virtualForOf, '_createEmbeddedViewAt')
+          .and.callThrough();
+
+        finishInit(fixture);
 
       // Should create views for the initial rendered items.
-      expect(testComponent.virtualForViewContainer.createEmbeddedView).toHaveBeenCalledTimes(4);
+      expect(testComponent.virtualForOf._createEmbeddedViewAt)
+          .toHaveBeenCalledTimes(4);
 
       spy.calls.reset();
       triggerScroll(viewport, 10);
@@ -572,7 +577,8 @@ describe('CdkVirtualScrollViewport', () => {
       // As we first start to scroll we need to create one more item. This is because the first item
       // is still partially on screen and therefore can't be removed yet. At the same time a new
       // item is now partially on the screen at the bottom and so a new view is needed.
-      expect(testComponent.virtualForViewContainer.createEmbeddedView).toHaveBeenCalledTimes(1);
+      expect(testComponent.virtualForOf._createEmbeddedViewAt)
+          .toHaveBeenCalledTimes(1);
 
       spy.calls.reset();
       const maxOffset =
@@ -585,7 +591,8 @@ describe('CdkVirtualScrollViewport', () => {
 
       // Since our template cache size is 0, as we scroll through the rest of the items, we need to
       // create a new view for each one.
-      expect(testComponent.virtualForViewContainer.createEmbeddedView).toHaveBeenCalledTimes(5);
+      expect(testComponent.virtualForOf._createEmbeddedViewAt)
+          .toHaveBeenCalledTimes(5);
     }));
 
     it('should render up to maxBufferPx when buffer dips below minBufferPx', fakeAsync(() => {
@@ -828,8 +835,8 @@ function triggerScroll(viewport: CdkVirtualScrollViewport, offset?: number) {
 })
 class FixedSizeVirtualScroll {
   @ViewChild(CdkVirtualScrollViewport, {static: true}) viewport: CdkVirtualScrollViewport;
-  @ViewChild(CdkVirtualForOf, {static: true}) virtualForOf: CdkVirtualForOf<any>;
-  @ViewChild(CdkVirtualForOf, {read: ViewContainerRef}) virtualForViewContainer: ViewContainerRef;
+  // Casting virtualForOf as any so we can spy on private methods
+  @ViewChild(CdkVirtualForOf, {static: true}) virtualForOf: any;
 
   @Input() orientation = 'vertical';
   @Input() viewportSize = 200;
@@ -880,7 +887,6 @@ class FixedSizeVirtualScroll {
 })
 class FixedSizeVirtualScrollWithRtlDirection {
   @ViewChild(CdkVirtualScrollViewport, {static: true}) viewport: CdkVirtualScrollViewport;
-  @ViewChild(CdkVirtualForOf, {read: ViewContainerRef}) virtualForViewContainer: ViewContainerRef;
 
   @Input() orientation = 'vertical';
   @Input() viewportSize = 200;
