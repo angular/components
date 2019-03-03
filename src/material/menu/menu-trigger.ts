@@ -35,7 +35,7 @@ import {
   isDevMode,
 } from '@angular/core';
 import {normalizePassiveListenerOptions} from '@angular/cdk/platform';
-import {asapScheduler, merge, of as observableOf, Subscription} from 'rxjs';
+import {asapScheduler, merge, of as observableOf, Subscription, Subject} from 'rxjs';
 import {delay, filter, take, takeUntil} from 'rxjs/operators';
 import {MatMenu} from './menu';
 import {throwMatMenuMissingError, throwMatMenuRecursiveError} from './menu-errors';
@@ -87,7 +87,7 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
   private _menuOpen: boolean = false;
   private _closingActionsSubscription = Subscription.EMPTY;
   private _hoverSubscription = Subscription.EMPTY;
-  private _menuCloseSubscription = Subscription.EMPTY;
+  private _menuChanged = new Subject<void>();
   private _scrollStrategy: () => ScrollStrategy;
 
   /**
@@ -119,14 +119,22 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
     }
 
     this._menu = menu;
-    this._menuCloseSubscription.unsubscribe();
+    this._menuChanged.next();
 
     if (menu) {
       if (isDevMode() && menu === this._parentMenu) {
         throwMatMenuRecursiveError();
       }
 
-      this._menuCloseSubscription = menu.close.asObservable().subscribe(reason => {
+      if (menu.openedBy) {
+        menu.openedBy.pipe(takeUntil(this._menuChanged)).subscribe((reason?: MatMenuTrigger) => {
+          if (reason && reason !== this) {
+            this._destroyMenu();
+          }
+        });
+      }
+
+      menu.close.pipe(takeUntil(this._menuChanged)).subscribe(reason => {
         this._destroyMenu();
 
         // If a click closed the menu, we should close the entire chain of nested menus.
@@ -209,9 +217,9 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
     this._element.nativeElement.removeEventListener('touchstart', this._handleTouchStart,
         passiveEventListenerOptions);
 
-    this._menuCloseSubscription.unsubscribe();
     this._closingActionsSubscription.unsubscribe();
     this._hoverSubscription.unsubscribe();
+    this._menuChanged.complete();
   }
 
   /** Whether the menu is open. */
@@ -324,11 +332,16 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
    * the menu was opened via the keyboard.
    */
   private _initMenu(): void {
-    this.menu.parentMenu = this.triggersSubmenu() ? this._parentMenu : undefined;
-    this.menu.direction = this.dir;
+    const menu = this.menu;
+    menu.parentMenu = this.triggersSubmenu() ? this._parentMenu : undefined;
+    menu.direction = this.dir;
     this._setMenuElevation();
     this._setIsMenuOpen(true);
-    this.menu.focusFirstItem(this._openedBy || 'program');
+    menu.focusFirstItem(this._openedBy || 'program');
+
+    if (menu.openedBy) {
+      menu.openedBy.emit(this);
+    }
   }
 
   /** Updates the menu elevation based on the amount of parent menus that it has. */

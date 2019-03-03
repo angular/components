@@ -25,6 +25,7 @@ export declare class _MatMenuBase implements AfterContentInit, MatMenuPanel<MatM
     set hasBackdrop(value: boolean | undefined);
     items: QueryList<MatMenuItem>;
     lazyContent: MatMenuContent;
+    openedBy: EventEmitter<any>;
     get overlapTrigger(): boolean;
     set overlapTrigger(value: boolean);
     overlayPanelClass: string | string[];
@@ -54,7 +55,7 @@ export declare class _MatMenuBase implements AfterContentInit, MatMenuPanel<MatM
     setPositionClasses(posX?: MenuPositionX, posY?: MenuPositionY): void;
     static ngAcceptInputType_hasBackdrop: BooleanInput;
     static ngAcceptInputType_overlapTrigger: BooleanInput;
-    static ɵdir: i0.ɵɵDirectiveDefWithMeta<_MatMenuBase, never, never, { "backdropClass": "backdropClass"; "ariaLabel": "aria-label"; "ariaLabelledby": "aria-labelledby"; "ariaDescribedby": "aria-describedby"; "xPosition": "xPosition"; "yPosition": "yPosition"; "overlapTrigger": "overlapTrigger"; "hasBackdrop": "hasBackdrop"; "panelClass": "class"; "classList": "classList"; }, { "closed": "closed"; "close": "close"; }, ["lazyContent", "_allItems", "items"]>;
+    static ɵdir: i0.ɵɵDirectiveDefWithMeta<_MatMenuBase, never, never, { "backdropClass": "backdropClass"; "ariaLabel": "aria-label"; "ariaLabelledby": "aria-labelledby"; "ariaDescribedby": "aria-describedby"; "xPosition": "xPosition"; "yPosition": "yPosition"; "overlapTrigger": "overlapTrigger"; "hasBackdrop": "hasBackdrop"; "panelClass": "class"; "classList": "classList"; }, { "closed": "closed"; "openedBy": "openedBy"; "close": "close"; }, ["lazyContent", "_allItems", "items"]>;
     static ɵfac: i0.ɵɵFactoryDef<_MatMenuBase, never>;
 }
 
@@ -137,6 +138,7 @@ export interface MatMenuPanel<T = any> {
     focusFirstItem: (origin?: FocusOrigin) => void;
     hasBackdrop?: boolean;
     lazyContent?: MatMenuContent;
+    openedBy?: EventEmitter<any>;
     overlapTrigger: boolean;
     overlayPanelClass?: string | string[];
     readonly panelId?: string;
