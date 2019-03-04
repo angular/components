@@ -103,7 +103,27 @@ def ts_web_test_suite(deps = [], srcs = [], **kwargs):
   _ts_web_test_suite(
     deps = ["//tools/rxjs:rxjs_umd_modules"] + deps,
     # Required for running the compiled ng modules that use TypeScript import helpers.
-    srcs = ["@npm//node_modules/tslib:tslib.js"] + srcs,
+    srcs = [
+      # TODO(jelbourn): remove all these once we don't have to include all the transitive
+      # dependencies like chumps.
+      "@npm//node_modules/@angular/animations:bundles/animations-browser.umd.js",
+      "@npm//node_modules/@angular/animations:bundles/animations.umd.js",
+      "@npm//node_modules/@angular/common:bundles/common-http-testing.umd.js",
+      "@npm//node_modules/@angular/common:bundles/common-http.umd.js",
+      "@npm//node_modules/@angular/common:bundles/common-testing.umd.js",
+      "@npm//node_modules/@angular/common:bundles/common.umd.js",
+      "@npm//node_modules/@angular/compiler:bundles/compiler-testing.umd.js",
+      "@npm//node_modules/@angular/compiler:bundles/compiler.umd.js",
+      "@npm//node_modules/@angular/core:bundles/core-testing.umd.js",
+      "@npm//node_modules/@angular/core:bundles/core.umd.js",
+      "@npm//node_modules/@angular/forms:bundles/forms.umd.js",
+      "@npm//node_modules/@angular/platform-browser-dynamic:bundles/platform-browser-dynamic-testing.umd.js",
+      "@npm//node_modules/@angular/platform-browser-dynamic:bundles/platform-browser-dynamic.umd.js",
+      "@npm//node_modules/@angular/platform-browser:bundles/platform-browser-animations.umd.js",
+      "@npm//node_modules/@angular/platform-browser:bundles/platform-browser-testing.umd.js",
+      "@npm//node_modules/@angular/platform-browser:bundles/platform-browser.umd.js",
+      "@npm//node_modules/tslib:tslib.js",
+    ] + srcs,
     **kwargs
   )
 
