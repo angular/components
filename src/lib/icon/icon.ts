@@ -127,7 +127,7 @@ const funcIriPattern = /^url\(['"]?#(.*?)['"]?\)$/;
   inputs: ['color'],
   host: {
     'role': 'img',
-    'class': 'mat-icon',
+    'class': 'mat-icon notranslate',
     '[class.mat-icon-inline]': 'inline',
     '[class.mat-icon-no-color]': 'color !== "primary" && color !== "accent" && color !== "warn"',
   },
@@ -223,7 +223,7 @@ export class MatIcon extends _MatIconMixinBase implements OnChanges, OnInit, Aft
 
   ngOnChanges(changes: SimpleChanges) {
     // Only update the inline SVG icon if the inputs changed, to avoid unnecessary DOM operations.
-    if (changes.svgIcon) {
+    if (changes['svgIcon']) {
       if (this.svgIcon) {
         const [namespace, iconName] = this._splitIconName(this.svgIcon);
 

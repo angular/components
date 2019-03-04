@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {CollectionViewer, DataSource} from '@angular/cdk/collections';
+import {CollectionViewer, DataSource, isDataSource} from '@angular/cdk/collections';
 import {
   AfterContentChecked,
   Attribute,
@@ -106,10 +106,15 @@ export class FooterRowOutlet implements RowOutlet {
  * material library.
  * @docs-private
  */
-export const CDK_TABLE_TEMPLATE = `
+export const CDK_TABLE_TEMPLATE =
+// Note that according to MDN, the `caption` element has to be projected as the **first** element
+// in the table. See https://developer.mozilla.org/en-US/docs/Web/HTML/Element/caption
+`
+  <ng-content select="caption"></ng-content>
   <ng-container headerRowOutlet></ng-container>
   <ng-container rowOutlet></ng-container>
-  <ng-container footerRowOutlet></ng-container>`;
+  <ng-container footerRowOutlet></ng-container>
+`;
 
 /**
  * Interface used to conveniently type the possible context interfaces for the render row.
@@ -449,7 +454,7 @@ export class CdkTable<T> implements AfterContentChecked, CollectionViewer, OnDes
     this._onDestroy.next();
     this._onDestroy.complete();
 
-    if (this.dataSource instanceof DataSource) {
+    if (isDataSource(this.dataSource)) {
       this.dataSource.disconnect(this);
     }
   }
@@ -574,11 +579,20 @@ export class CdkTable<T> implements AfterContentChecked, CollectionViewer, OnDes
    * sticky input changes. May be called manually for cases where the cell content changes outside
    * of these events.
    */
-  updateStickyHeaderRowStyles() {
+  updateStickyHeaderRowStyles(): void {
     const headerRows = this._getRenderedRows(this._headerRowOutlet);
-    this._stickyStyler.clearStickyPositioning(headerRows, ['top']);
+    const tableElement = this._elementRef.nativeElement as HTMLElement;
+
+    // Hide the thead element if there are no header rows. This is necessary to satisfy
+    // overzealous a11y checkers that fail because the `rowgroup` element does not contain
+    // required child `row`.
+    const thead = tableElement.querySelector('thead');
+    if (thead) {
+      thead.style.display = headerRows.length ? '' : 'none';
+    }
 
     const stickyStates = this._headerRowDefs.map(def => def.sticky);
+    this._stickyStyler.clearStickyPositioning(headerRows, ['top']);
     this._stickyStyler.stickRows(headerRows, stickyStates, 'top');
 
     // Reset the dirty state of the sticky input change since it has been used.
@@ -592,11 +606,20 @@ export class CdkTable<T> implements AfterContentChecked, CollectionViewer, OnDes
    * sticky input changes. May be called manually for cases where the cell content changes outside
    * of these events.
    */
-  updateStickyFooterRowStyles() {
+  updateStickyFooterRowStyles(): void {
     const footerRows = this._getRenderedRows(this._footerRowOutlet);
-    this._stickyStyler.clearStickyPositioning(footerRows, ['bottom']);
+    const tableElement = this._elementRef.nativeElement as HTMLElement;
+
+    // Hide the tfoot element if there are no footer rows. This is necessary to satisfy
+    // overzealous a11y checkers that fail because the `rowgroup` element does not contain
+    // required child `row`.
+    const tfoot = tableElement.querySelector('tfoot');
+    if (tfoot) {
+      tfoot.style.display = footerRows.length ? '' : 'none';
+    }
 
     const stickyStates = this._footerRowDefs.map(def => def.sticky);
+    this._stickyStyler.clearStickyPositioning(footerRows, ['bottom']);
     this._stickyStyler.stickRows(footerRows, stickyStates, 'bottom');
     this._stickyStyler.updateStickyFooterContainer(this._elementRef.nativeElement, stickyStates);
 
@@ -769,7 +792,7 @@ export class CdkTable<T> implements AfterContentChecked, CollectionViewer, OnDes
   private _switchDataSource(dataSource: CdkTableDataSourceInput<T>) {
     this._data = [];
 
-    if (this.dataSource instanceof DataSource) {
+    if (isDataSource(this.dataSource)) {
       this.dataSource.disconnect(this);
     }
 
@@ -796,12 +819,8 @@ export class CdkTable<T> implements AfterContentChecked, CollectionViewer, OnDes
 
     let dataStream: Observable<T[] | ReadonlyArray<T>> | undefined;
 
-    // Check if the datasource is a DataSource object by observing if it has a connect function.
-    // Cannot check this.dataSource['connect'] due to potential property renaming, nor can it
-    // checked as an instanceof DataSource<T> since the table should allow for data sources
-    // that did not explicitly extend DataSource<T>.
-    if ((this.dataSource as DataSource<T>).connect instanceof Function) {
-      dataStream = (this.dataSource as DataSource<T>).connect(this);
+    if (isDataSource(this.dataSource)) {
+      dataStream = this.dataSource.connect(this);
     } else if (this.dataSource instanceof Observable) {
       dataStream = this.dataSource;
     } else if (Array.isArray(this.dataSource)) {
@@ -851,14 +870,20 @@ export class CdkTable<T> implements AfterContentChecked, CollectionViewer, OnDes
 
   /** Adds the sticky column styles for the rows according to the columns' stick states. */
   private _addStickyColumnStyles(rows: HTMLElement[], rowDef: BaseRowDef) {
-    const columnDefs = Array.from(rowDef.columns || []).map(c => this._columnDefsByName.get(c)!);
+    const columnDefs = Array.from(rowDef.columns || []).map(columnName => {
+      const columnDef = this._columnDefsByName.get(columnName);
+      if (!columnDef) {
+        throw getTableUnknownColumnError(columnName);
+      }
+      return columnDef!;
+    });
     const stickyStartStates = columnDefs.map(columnDef => columnDef.sticky);
     const stickyEndStates = columnDefs.map(columnDef => columnDef.stickyEnd);
     this._stickyStyler.updateStickyColumns(rows, stickyStartStates, stickyEndStates);
   }
 
   /** Gets the list of rows that have been rendered in the row outlet. */
-  _getRenderedRows(rowOutlet: RowOutlet) {
+  _getRenderedRows(rowOutlet: RowOutlet): HTMLElement[] {
     const renderedRows: HTMLElement[] = [];
 
     for (let i = 0; i < rowOutlet.viewContainer.length; i++) {
@@ -976,6 +1001,7 @@ export class CdkTable<T> implements AfterContentChecked, CollectionViewer, OnDes
 
     for (const section of sections) {
       const element = documentRef.createElement(section.tag);
+      element.setAttribute('role', 'rowgroup');
       element.appendChild(section.outlet.elementRef.nativeElement);
       documentFragment.appendChild(element);
     }

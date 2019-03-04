@@ -28,11 +28,12 @@ import {
   Validators,
   FormBuilder
 } from '@angular/forms';
+import {MatRipple} from '@angular/material/core';
 import {By} from '@angular/platform-browser';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {Observable, Subject} from 'rxjs';
 import {map, take} from 'rxjs/operators';
-import {MatStepperModule} from './index';
+import {MatStepHeader, MatStepperModule} from './index';
 import {MatHorizontalStepper, MatStep, MatStepper, MatVerticalStepper} from './stepper';
 import {MatStepperNext, MatStepperPrevious} from './stepper-button';
 import {MatStepperIntl} from './stepper-intl';
@@ -704,12 +705,25 @@ describe('MatStepper', () => {
 
   describe('linear stepper with a pre-defined selectedIndex', () => {
     let preselectedFixture: ComponentFixture<SimplePreselectedMatHorizontalStepperApp>;
+    let stepper: MatHorizontalStepper;
+
     beforeEach(() => {
       preselectedFixture = createComponent(SimplePreselectedMatHorizontalStepperApp);
+      preselectedFixture.detectChanges();
+      stepper = preselectedFixture.debugElement
+          .query(By.directive(MatHorizontalStepper)).componentInstance;
     });
 
     it('should not throw', () => {
       expect(() => preselectedFixture.detectChanges()).not.toThrow();
+    });
+
+    it('selectedIndex should be typeof number', () => {
+      expect(typeof stepper.selectedIndex).toBe('number');
+    });
+
+    it('value of selectedIndex should be the pre-defined value', () => {
+      expect(stepper.selectedIndex).toBe(0);
     });
   });
 
@@ -795,6 +809,22 @@ describe('MatStepper', () => {
       let stepHeaders = fixture.debugElement.queryAll(By.css('.mat-vertical-stepper-header'));
       assertArrowKeyInteractionInRtl(fixture, stepHeaders);
     });
+
+    it('should be able to disable ripples', () => {
+      const fixture = createComponent(SimpleMatVerticalStepperApp);
+      fixture.detectChanges();
+
+      const stepHeaders = fixture.debugElement.queryAll(By.directive(MatStepHeader));
+      const headerRipples = stepHeaders.map(headerDebugEl =>
+        headerDebugEl.query(By.directive(MatRipple)).injector.get(MatRipple));
+
+      expect(headerRipples.every(ripple => ripple.disabled)).toBe(false);
+
+      fixture.componentInstance.disableRipple = true;
+      fixture.detectChanges();
+
+      expect(headerRipples.every(ripple => ripple.disabled)).toBe(true);
+    });
   });
 
   describe('horizontal stepper', () => {
@@ -835,6 +865,22 @@ describe('MatStepper', () => {
       fixture.detectChanges();
 
       assertArrowKeyInteractionInRtl(fixture, stepHeaders);
+    });
+
+    it('should be able to disable ripples', () => {
+      const fixture = createComponent(SimpleMatHorizontalStepperApp);
+      fixture.detectChanges();
+
+      const stepHeaders = fixture.debugElement.queryAll(By.directive(MatStepHeader));
+      const headerRipples = stepHeaders.map(headerDebugEl =>
+          headerDebugEl.query(By.directive(MatRipple)).injector.get(MatRipple));
+
+      expect(headerRipples.every(ripple => ripple.disabled)).toBe(false);
+
+      fixture.componentInstance.disableRipple = true;
+      fixture.detectChanges();
+
+      expect(headerRipples.every(ripple => ripple.disabled)).toBe(true);
     });
   });
 
@@ -1200,7 +1246,7 @@ class MatHorizontalStepperWithErrorsApp implements OnInit {
 
 @Component({
   template: `
-    <mat-horizontal-stepper>
+    <mat-horizontal-stepper [disableRipple]="disableRipple">
       <mat-step>
         <ng-template matStepLabel>Step 1</ng-template>
         Content 1
@@ -1229,11 +1275,12 @@ class MatHorizontalStepperWithErrorsApp implements OnInit {
 })
 class SimpleMatHorizontalStepperApp {
   inputLabel = 'Step 3';
+  disableRipple = false;
 }
 
 @Component({
   template: `
-    <mat-vertical-stepper>
+    <mat-vertical-stepper [disableRipple]="disableRipple">
       <mat-step>
         <ng-template matStepLabel>Step 1</ng-template>
         Content 1
@@ -1263,6 +1310,7 @@ class SimpleMatHorizontalStepperApp {
 class SimpleMatVerticalStepperApp {
   inputLabel = 'Step 3';
   showStepTwo = true;
+  disableRipple = false;
 }
 
 @Component({

@@ -259,6 +259,7 @@ describe('MatExpansionPanel', () => {
 
   it('should not toggle if a modifier key is pressed', () => {
     const fixture = TestBed.createComponent(PanelWithContent);
+    fixture.detectChanges();
     const headerEl = fixture.nativeElement.querySelector('.mat-expansion-panel-header');
 
     spyOn(fixture.componentInstance.panel, 'toggle');

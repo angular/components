@@ -9,7 +9,16 @@
 import {FocusKeyManager, FocusOrigin} from '@angular/cdk/a11y';
 import {Direction} from '@angular/cdk/bidi';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
-import {ESCAPE, LEFT_ARROW, RIGHT_ARROW, DOWN_ARROW, UP_ARROW} from '@angular/cdk/keycodes';
+import {
+  ESCAPE,
+  LEFT_ARROW,
+  RIGHT_ARROW,
+  DOWN_ARROW,
+  UP_ARROW,
+  HOME,
+  END,
+  hasModifierKey,
+} from '@angular/cdk/keycodes';
 import {
   AfterContentInit,
   ChangeDetectionStrategy,
@@ -196,15 +205,25 @@ export class MatMenu implements AfterContentInit, MatMenuPanel<MatMenuItem>, OnI
    */
   @Input('class')
   set panelClass(classes: string) {
+    const previousPanelClass = this._previousPanelClass;
+
+    if (previousPanelClass && previousPanelClass.length) {
+      previousPanelClass.split(' ').forEach((className: string) => {
+        this._classList[className] = false;
+      });
+    }
+
+    this._previousPanelClass = classes;
+
     if (classes && classes.length) {
-      this._classList = classes.split(' ').reduce((obj: any, className: string) => {
-        obj[className] = true;
-        return obj;
-      }, {});
+      classes.split(' ').forEach((className: string) => {
+        this._classList[className] = true;
+      });
 
       this._elementRef.nativeElement.className = '';
     }
   }
+  private _previousPanelClass: string;
 
   /**
    * This method takes classes set on the host mat-menu element and applies them on the
@@ -258,6 +277,7 @@ export class MatMenu implements AfterContentInit, MatMenuPanel<MatMenuItem>, OnI
   /** Handle a keyboard event from the menu, delegating to the appropriate action. */
   _handleKeydown(event: KeyboardEvent) {
     const keyCode = event.keyCode;
+    const manager = this._keyManager;
 
     switch (keyCode) {
       case ESCAPE:
@@ -273,12 +293,19 @@ export class MatMenu implements AfterContentInit, MatMenuPanel<MatMenuItem>, OnI
           this.closed.emit('keydown');
         }
       break;
+      case HOME:
+      case END:
+        if (!hasModifierKey(event)) {
+          keyCode === HOME ? manager.setFirstItemActive() : manager.setLastItemActive();
+          event.preventDefault();
+        }
+      break;
       default:
         if (keyCode === UP_ARROW || keyCode === DOWN_ARROW) {
-          this._keyManager.setFocusOrigin('keyboard');
+          manager.setFocusOrigin('keyboard');
         }
 
-        this._keyManager.onKeydown(event);
+        manager.onKeydown(event);
     }
   }
 

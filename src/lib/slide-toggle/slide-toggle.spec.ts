@@ -102,15 +102,18 @@ describe('MatSlideToggle without forms', () => {
 
     it('should correctly update the checked property', () => {
       expect(slideToggle.checked).toBeFalsy();
+      expect(inputElement.getAttribute('aria-checked')).toBe('false');
 
       testComponent.slideChecked = true;
       fixture.detectChanges();
 
       expect(inputElement.checked).toBeTruthy();
+      expect(inputElement.getAttribute('aria-checked')).toBe('true');
     });
 
     it('should set the toggle to checked on click', () => {
       expect(slideToggle.checked).toBe(false);
+      expect(inputElement.getAttribute('aria-checked')).toBe('false');
       expect(slideToggleElement.classList).not.toContain('mat-checked');
 
       labelElement.click();
@@ -118,6 +121,7 @@ describe('MatSlideToggle without forms', () => {
 
       expect(slideToggleElement.classList).toContain('mat-checked');
       expect(slideToggle.checked).toBe(true);
+      expect(inputElement.getAttribute('aria-checked')).toBe('true');
     });
 
     it('should not trigger the click event multiple times', () => {
@@ -431,6 +435,8 @@ describe('MatSlideToggle without forms', () => {
           ]
         });
       const fixture = TestBed.createComponent(SlideToggleBasic);
+      fixture.detectChanges();
+
       const testComponent = fixture.debugElement.componentInstance;
       const slideToggleDebug = fixture.debugElement.query(By.css('mat-slide-toggle'));
       const thumbContainerDebug = slideToggleDebug
@@ -444,6 +450,7 @@ describe('MatSlideToggle without forms', () => {
       expect(slideToggle.checked).toBe(false);
 
       gestureConfig.emitEventForElement('slidestart', slideThumbContainer);
+      tick();
 
       expect(slideThumbContainer.classList).toContain('mat-dragging');
 

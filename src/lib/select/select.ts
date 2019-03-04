@@ -527,6 +527,15 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
           this._changeDetectorRef.markForCheck();
         }
       });
+
+    this._viewportRuler.change()
+      .pipe(takeUntil(this._destroy))
+      .subscribe(() => {
+        if (this._panelOpen) {
+          this._triggerRect = this.trigger.nativeElement.getBoundingClientRect();
+          this._changeDetectorRef.markForCheck();
+        }
+      });
   }
 
   ngAfterContentInit() {
@@ -552,7 +561,7 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
   ngOnChanges(changes: SimpleChanges) {
     // Updating the disabled state is handled by `mixinDisabled`, but we need to additionally let
     // the parent form field know to run change detection when the disabled state changes.
-    if (changes.disabled) {
+    if (changes['disabled']) {
       this.stateChanges.next();
     }
   }
@@ -705,7 +714,7 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
       event.preventDefault(); // prevents the page from scrolling down when pressing space
       this.open();
     } else if (!this.multiple) {
-      const selectedOption = this.selected;
+      const previouslySelectedOption = this.selected;
 
       if (keyCode === HOME || keyCode === END) {
         keyCode === HOME ? manager.setFirstItemActive() : manager.setLastItemActive();
@@ -714,10 +723,12 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
         manager.onKeydown(event);
       }
 
+      const selectedOption = this.selected;
+
       // Since the value has changed, we need to announce it ourselves.
       // @breaking-change 8.0.0 remove null check for _liveAnnouncer.
-      if (this._liveAnnouncer && selectedOption !== this.selected) {
-        this._liveAnnouncer.announce((this.selected as MatOption).viewValue);
+      if (this._liveAnnouncer && selectedOption && previouslySelectedOption !== selectedOption) {
+        this._liveAnnouncer.announce((selectedOption as MatOption).viewValue);
       }
     }
   }

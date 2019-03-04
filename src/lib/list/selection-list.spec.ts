@@ -4,6 +4,7 @@ import {
   dispatchFakeEvent,
   dispatchEvent,
   dispatchKeyboardEvent,
+  dispatchMouseEvent,
 } from '@angular/cdk/testing';
 import {
   Component,
@@ -13,7 +14,7 @@ import {
   ViewChildren,
 } from '@angular/core';
 import {async, ComponentFixture, fakeAsync, TestBed, tick, flush} from '@angular/core/testing';
-import {MatRipple} from '@angular/material/core';
+import {MatRipple, defaultRippleAnimationConfig, ThemePalette} from '@angular/material/core';
 import {By} from '@angular/platform-browser';
 import {
   MatListModule,
@@ -36,7 +37,8 @@ describe('MatSelectionList without forms', () => {
           SelectionListWithListOptions,
           SelectionListWithCheckboxPositionAfter,
           SelectionListWithListDisabled,
-          SelectionListWithOnlyOneOption
+          SelectionListWithOnlyOneOption,
+          SelectionListWithIndirectChildOptions,
         ],
       });
 
@@ -119,6 +121,33 @@ describe('MatSelectionList without forms', () => {
       expect(listOptions[1].nativeElement.getAttribute('aria-selected')).toBe('true');
       expect(listOptions[1].nativeElement.getAttribute('aria-disabled')).toBe('false');
       expect(listOptions[2].nativeElement.getAttribute('aria-disabled')).toBe('false');
+    });
+
+    it('should be able to specify a color for list options', () => {
+      const optionNativeElements = listOptions.map(option => option.nativeElement);
+
+      expect(optionNativeElements.every(option => !option.classList.contains('mat-primary')))
+        .toBe(true);
+      expect(optionNativeElements.every(option => !option.classList.contains('mat-warn')))
+        .toBe(true);
+
+      // All options will be set to the "warn" color.
+      fixture.componentInstance.selectionListColor = 'warn';
+      fixture.detectChanges();
+
+      expect(optionNativeElements.every(option => !option.classList.contains('mat-primary')))
+        .toBe(true);
+      expect(optionNativeElements.every(option => option.classList.contains('mat-warn')))
+        .toBe(true);
+
+      // Color will be set explicitly for an option and should take precedence.
+      fixture.componentInstance.firstOptionColor = 'primary';
+      fixture.detectChanges();
+
+      expect(optionNativeElements[0].classList).toContain('mat-primary');
+      expect(optionNativeElements[0].classList).not.toContain('mat-warn');
+      expect(optionNativeElements.slice(1).every(option => option.classList.contains('mat-warn')))
+        .toBe(true);
     });
 
     it('should be able to deselect an option', () => {
@@ -504,6 +533,48 @@ describe('MatSelectionList without forms', () => {
     it('should set aria-multiselectable to true on the selection list element', () => {
       expect(selectionList.nativeElement.getAttribute('aria-multiselectable')).toBe('true');
     });
+
+    it('should be able to reach list options that are indirect descendants', () => {
+      const descendatsFixture = TestBed.createComponent(SelectionListWithIndirectChildOptions);
+      descendatsFixture.detectChanges();
+      listOptions = descendatsFixture.debugElement.queryAll(By.directive(MatListOption));
+      selectionList = descendatsFixture.debugElement.query(By.directive(MatSelectionList));
+      const list: MatSelectionList = selectionList.componentInstance;
+
+      expect(list.options.toArray().every(option => option.selected)).toBe(false);
+
+      list.selectAll();
+      descendatsFixture.detectChanges();
+
+      expect(list.options.toArray().every(option => option.selected)).toBe(true);
+    });
+
+    it('should disable list item ripples when the ripples on the list have been disabled',
+      fakeAsync(() => {
+        const rippleTarget = fixture.nativeElement
+            .querySelector('.mat-list-option:not(.mat-list-item-disabled) .mat-list-item-content');
+        const {enterDuration, exitDuration} = defaultRippleAnimationConfig;
+
+        dispatchMouseEvent(rippleTarget, 'mousedown');
+        dispatchMouseEvent(rippleTarget, 'mouseup');
+
+        expect(rippleTarget.querySelectorAll('.mat-ripple-element').length)
+            .toBe(1, 'Expected ripples to be enabled by default.');
+
+        // Wait for the ripples to go away.
+        tick(enterDuration + exitDuration);
+        expect(rippleTarget.querySelectorAll('.mat-ripple-element').length)
+            .toBe(0, 'Expected ripples to go away.');
+
+        fixture.componentInstance.listRippleDisabled = true;
+        fixture.detectChanges();
+
+        dispatchMouseEvent(rippleTarget, 'mousedown');
+        dispatchMouseEvent(rippleTarget, 'mouseup');
+
+        expect(rippleTarget.querySelectorAll('.mat-ripple-element').length)
+            .toBe(0, 'Expected no ripples after list ripples are disabled.');
+      }));
 
   });
 
@@ -1075,8 +1146,13 @@ describe('MatSelectionList with forms', () => {
 
 
 @Component({template: `
-  <mat-selection-list id="selection-list-1" (selectionChange)="onValueChange($event)">
-    <mat-list-option checkboxPosition="before" disabled="true" value="inbox">
+  <mat-selection-list
+    id="selection-list-1"
+    (selectionChange)="onValueChange($event)"
+    [disableRipple]="listRippleDisabled"
+    [color]="selectionListColor">
+    <mat-list-option checkboxPosition="before" disabled="true" value="inbox"
+                     [color]="firstOptionColor">
       Inbox (disabled selection-option)
     </mat-list-option>
     <mat-list-option id="testSelect" checkboxPosition="before" class="test-native-focus"
@@ -1092,6 +1168,9 @@ describe('MatSelectionList with forms', () => {
   </mat-selection-list>`})
 class SelectionListWithListOptions {
   showLastOption: boolean = true;
+  listRippleDisabled = false;
+  selectionListColor: ThemePalette;
+  firstOptionColor: ThemePalette;
 
   onValueChange(_change: MatSelectionListChange) {}
 }
@@ -1279,4 +1358,19 @@ class SelectionListWithAvatar {
   `
 })
 class SelectionListWithIcon {
+}
+
+
+@Component({
+  // Note the blank `ngSwitch` which we need in order to hit the bug that we're testing.
+  template: `
+    <mat-selection-list>
+      <ng-container [ngSwitch]="true">
+        <mat-list-option [value]="1">One</mat-list-option>
+        <mat-list-option [value]="2">Two</mat-list-option>
+      </ng-container>
+    </mat-selection-list>`
+})
+class SelectionListWithIndirectChildOptions {
+  @ViewChildren(MatListOption) optionInstances: QueryList<MatListOption>;
 }

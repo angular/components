@@ -7,7 +7,8 @@ import {
   Input,
   QueryList,
   Type,
-  ViewChild
+  ViewChild,
+  AfterViewInit
 } from '@angular/core';
 import {ComponentFixture, fakeAsync, flush, TestBed} from '@angular/core/testing';
 import {BehaviorSubject, combineLatest, Observable, of as observableOf} from 'rxjs';
@@ -31,8 +32,8 @@ describe('CdkTable', () => {
   let component: any;
   let tableElement: HTMLElement;
 
-  function createComponent<T>(componentType: Type<T>, declarations: any[] = []):
-      ComponentFixture<T> {
+  function createComponent<T>(
+      componentType: Type<T>, declarations: any[] = []): ComponentFixture<T> {
     TestBed.configureTestingModule({
       imports: [CdkTableModule, BidiModule],
       declarations: [componentType, ...declarations],
@@ -305,27 +306,15 @@ describe('CdkTable', () => {
     ]);
   });
 
-  it('should be able to render and change multiple header and footer rows', () => {
-    setupTableTestApp(MultipleHeaderFooterRowsCdkTableApp);
+  it('should be able to project a caption', fakeAsync(() => {
+    setupTableTestApp(NativeHtmlTableWithCaptionApp);
     fixture.detectChanges();
 
-    expectTableToMatchContent(tableElement, [
-      ['first-header'],
-      ['second-header'],
-      ['first-footer'],
-      ['second-footer'],
-    ]);
+    const caption = tableElement.querySelector('caption');
 
-    component.showAlternativeHeadersAndFooters = true;
-    fixture.detectChanges();
-
-    expectTableToMatchContent(tableElement, [
-      ['first-header'],
-      ['second-header'],
-      ['first-footer'],
-      ['second-footer'],
-    ]);
-  });
+    expect(caption).toBeTruthy();
+    expect(tableElement.firstElementChild).toBe(caption);
+  }));
 
   describe('with different data inputs other than data source', () => {
     let baseData: TestData[] = [
@@ -436,8 +425,7 @@ describe('CdkTable', () => {
     it('should throw an error if the data source is not valid', () => {
       component.dataSource = {invalid: 'dataSource'};
 
-      expect(() => fixture.detectChanges())
-          .toThrowError(getTableUnknownDataSourceError().message);
+      expect(() => fixture.detectChanges()).toThrowError(getTableUnknownDataSourceError().message);
     });
 
     it('should throw an error if the data source is not valid', () => {
@@ -494,6 +482,31 @@ describe('CdkTable', () => {
     ]);
   });
 
+  it('should apply correct roles for native table elements', () => {
+    const thisFixture = createComponent(NativeHtmlTableApp);
+    const thisTableElement: HTMLTableElement = thisFixture.nativeElement.querySelector('table');
+    thisFixture.detectChanges();
+
+    const rowGroups = Array.from(thisTableElement.querySelectorAll('thead, tbody, tfoot'));
+    expect(rowGroups.length).toBe(3, 'Expected table to have a thead, tbody, and tfoot');
+    for (const group of rowGroups) {
+      expect(group.getAttribute('role'))
+          .toBe('rowgroup', 'Expected thead, tbody, and tfoot to have role="rowgroup"');
+    }
+  });
+
+  it('should hide thead/tfoot when there are no header/footer rows', () => {
+    const thisFixture = createComponent(NativeTableWithNoHeaderOrFooterRows);
+    const thisTableElement: HTMLTableElement = thisFixture.nativeElement.querySelector('table');
+    thisFixture.detectChanges();
+
+    const rowGroups: HTMLElement[] = Array.from(thisTableElement.querySelectorAll('thead, tfoot'));
+    expect(rowGroups.length).toBe(2, 'Expected table to have a thead and tfoot');
+    for (const group of rowGroups) {
+      expect(group.style.display).toBe('none', 'Expected thead and tfoot to be `display: none`');
+    }
+  });
+
   it('should render cells even if row data is falsy', () => {
     setupTableTestApp(BooleanRowCdkTableApp);
     expectTableToMatchContent(tableElement, [
@@ -527,6 +540,17 @@ describe('CdkTable', () => {
     expect(() => createComponent(MissingColumnDefCdkTableApp).detectChanges())
         .toThrowError(getTableUnknownColumnError('column_a').message);
   });
+
+  it('should throw an error if a column definition is requested but not defined after render',
+     fakeAsync(() => {
+       const columnDefinitionMissingAfterRenderFixture =
+           createComponent(MissingColumnDefAfterRenderCdkTableApp);
+       expect(() => {
+         columnDefinitionMissingAfterRenderFixture.detectChanges();
+         flush();
+         columnDefinitionMissingAfterRenderFixture.detectChanges();
+       }).toThrowError(getTableUnknownColumnError('column_a').message);
+     }));
 
   it('should throw an error if the row definitions are missing', () => {
     expect(() => createComponent(MissingAllRowDefsCdkTableApp).detectChanges())
@@ -612,18 +636,18 @@ describe('CdkTable', () => {
     });
 
     it('should error if there is row data that does not have a matching row template',
-        fakeAsync(() => {
-          const whenRowWithoutDefaultFixture = createComponent(WhenRowWithoutDefaultCdkTableApp);
-          const data = whenRowWithoutDefaultFixture.componentInstance.dataSource.data;
-          expect(() => {
-            try {
-              whenRowWithoutDefaultFixture.detectChanges();
-              flush();
-            } catch {
-              flush();
-            }
-          }).toThrowError(getTableMissingMatchingRowDefError(data[0]).message);
-        }));
+       fakeAsync(() => {
+         const whenRowWithoutDefaultFixture = createComponent(WhenRowWithoutDefaultCdkTableApp);
+         const data = whenRowWithoutDefaultFixture.componentInstance.dataSource.data;
+         expect(() => {
+           try {
+             whenRowWithoutDefaultFixture.detectChanges();
+             flush();
+           } catch {
+             flush();
+           }
+         }).toThrowError(getTableMissingMatchingRowDefError(data[0]).message);
+       }));
 
     it('should fail when multiple rows match data without multiTemplateDataRows', fakeAsync(() => {
       let whenFixture = createComponent(WhenRowMultipleDefaultsCdkTableApp);
@@ -669,40 +693,40 @@ describe('CdkTable', () => {
       });
 
       it('should have the correct data and row indicies when data contains multiple instances of ' +
-          'the same object instance', () => {
-        setupTableTestApp(WhenRowCdkTableApp);
-        component.multiTemplateDataRows = true;
-        component.showIndexColumns();
+             'the same object instance',
+         () => {
+           setupTableTestApp(WhenRowCdkTableApp);
+           component.multiTemplateDataRows = true;
+           component.showIndexColumns();
 
-        const obj = {value: true};
-        component.dataSource.data = [obj, obj, obj, obj];
-        fixture.detectChanges();
+           const obj = {value: true};
+           component.dataSource.data = [obj, obj, obj, obj];
+           fixture.detectChanges();
 
-        expectTableToMatchContent(tableElement, [
-          ['Index', 'Data Index', 'Render Index'],
-          ['', '0', '0'],
-          ['', '1', '1'],
-          ['', '1', '2'],
-          ['', '2', '3'],
-          ['', '3', '4'],
-        ]);
+           expectTableToMatchContent(tableElement, [
+             ['Index', 'Data Index', 'Render Index'],
+             ['', '0', '0'],
+             ['', '1', '1'],
+             ['', '1', '2'],
+             ['', '2', '3'],
+             ['', '3', '4'],
+           ]);
 
-        // Push unique data on the front and add another obj to the array
-        component.dataSource.data = [{value: false}, obj, obj, obj, obj, obj];
-        fixture.detectChanges();
+           // Push unique data on the front and add another obj to the array
+           component.dataSource.data = [{value: false}, obj, obj, obj, obj, obj];
+           fixture.detectChanges();
 
-        expectTableToMatchContent(tableElement, [
-          ['Index', 'Data Index', 'Render Index'],
-          ['', '0', '0'],
-          ['', '1', '1'],
-          ['', '1', '2'],
-          ['', '2', '3'],
-          ['', '3', '4'],
-          ['', '4', '5'],
-          ['', '5', '6'],
-        ]);
-
-      });
+           expectTableToMatchContent(tableElement, [
+             ['Index', 'Data Index', 'Render Index'],
+             ['', '0', '0'],
+             ['', '1', '1'],
+             ['', '1', '2'],
+             ['', '2', '3'],
+             ['', '3', '4'],
+             ['', '4', '5'],
+             ['', '5', '6'],
+           ]);
+         });
     });
   });
 
@@ -726,8 +750,7 @@ describe('CdkTable', () => {
       });
     }
 
-    function expectStickyStyles(
-        element: any, zIndex: string, directions: PositionDirections = {}) {
+    function expectStickyStyles(element: any, zIndex: string, directions: PositionDirections = {}) {
       expect(element.style.position).toContain('sticky');
       expect(element.style.zIndex).toBe(zIndex, `Expected zIndex to be ${zIndex}`);
 
@@ -772,8 +795,8 @@ describe('CdkTable', () => {
 
         expectStickyStyles(headerRows[0], '100', {top: '0px'});
         expectNoStickyStyles([headerRows[1]]);
-        expectStickyStyles(headerRows[2], '100',
-            {top: headerRows[0].getBoundingClientRect().height + 'px'});
+        expectStickyStyles(
+            headerRows[2], '100', {top: headerRows[0].getBoundingClientRect().height + 'px'});
 
         component.stickyHeaders = [];
         fixture.detectChanges();
@@ -784,8 +807,8 @@ describe('CdkTable', () => {
         component.stickyFooters = ['footer-1', 'footer-3'];
         fixture.detectChanges();
 
-        expectStickyStyles(footerRows[0], '10',
-            {bottom: footerRows[1].getBoundingClientRect().height + 'px'});
+        expectStickyStyles(
+            footerRows[0], '10', {bottom: footerRows[1].getBoundingClientRect().height + 'px'});
         expectNoStickyStyles([footerRows[1]]);
         expectStickyStyles(footerRows[2], '10', {bottom: '0px'});
 
@@ -1152,8 +1175,8 @@ describe('CdkTable', () => {
       mutateData();
 
       // Change each item reference to show that the trackby is not checking the item properties.
-      component.dataSource.data = component.dataSource.data
-          .map((item: TestData) => ({a: item.a, b: item.b, c: item.c}));
+      component.dataSource.data =
+          component.dataSource.data.map((item: TestData) => ({a: item.a, b: item.b, c: item.c}));
 
       // Expect that all the rows are considered new since their references are all different
       const changedRows = getRows(tableElement);
@@ -1169,8 +1192,8 @@ describe('CdkTable', () => {
 
       // Change each item reference to show that the trackby is checking the item properties.
       // Otherwise this would cause them all to be removed/added.
-      component.dataSource.data = component.dataSource.data
-          .map((item: TestData) => ({a: item.a, b: item.b, c: item.c}));
+      component.dataSource.data =
+          component.dataSource.data.map((item: TestData) => ({a: item.a, b: item.b, c: item.c}));
 
       // Expect that the first and second rows were swapped and that the last row is new
       const changedRows = getRows(tableElement);
@@ -1186,8 +1209,8 @@ describe('CdkTable', () => {
 
       // Change each item reference to show that the trackby is checking the index.
       // Otherwise this would cause them all to be removed/added.
-      component.dataSource.data = component.dataSource.data
-          .map((item: TestData) => ({a: item.a, b: item.b, c: item.c}));
+      component.dataSource.data =
+          component.dataSource.data.map((item: TestData) => ({a: item.a, b: item.b, c: item.c}));
 
       // Expect first two to be the same since they were swapped but indicies are consistent.
       // The third element was removed and caught by the table so it was removed before another
@@ -1208,8 +1231,8 @@ describe('CdkTable', () => {
 
       // Change each item reference to show that the trackby is checking the index.
       // Otherwise this would cause them all to be removed/added.
-      component.dataSource.data = component.dataSource.data
-          .map((item: TestData) => ({a: item.a, b: item.b, c: item.c}));
+      component.dataSource.data =
+          component.dataSource.data.map((item: TestData) => ({a: item.a, b: item.b, c: item.c}));
 
       // Expect the rows were given the right implicit data even though the rows were not moved.
       fixture.detectChanges();
@@ -1348,13 +1371,19 @@ interface TestData {
 class FakeDataSource extends DataSource<TestData> {
   isConnected = false;
 
-  get data() { return this._dataChange.getValue(); }
-  set data(data: TestData[]) { this._dataChange.next(data); }
+  get data() {
+    return this._dataChange.getValue();
+  }
+  set data(data: TestData[]) {
+    this._dataChange.next(data);
+  }
   _dataChange = new BehaviorSubject<TestData[]>([]);
 
   constructor() {
     super();
-    for (let i = 0; i < 3; i++) { this.addData(); }
+    for (let i = 0; i < 3; i++) {
+      this.addData();
+    }
   }
 
   connect(collectionViewer: CollectionViewer) {
@@ -1388,7 +1417,7 @@ class BooleanDataSource extends DataSource<boolean> {
     return this._dataChange;
   }
 
-  disconnect() { }
+  disconnect() {}
 }
 
 @Component({
@@ -1513,40 +1542,14 @@ class NullDataCdkTableApp {
         <td cdk-footer-cell *cdkFooterCellDef> second-footer </td>
       </ng-container>
 
-      <ng-container *ngIf="!showAlternativeHeadersAndFooters">
-        <tr cdk-header-row *cdkHeaderRowDef="['first-header']"></tr>
-        <tr cdk-header-row *cdkHeaderRowDef="['second-header']"></tr>
-        <tr cdk-footer-row *cdkFooterRowDef="['first-footer']"></tr>
-        <tr cdk-footer-row *cdkFooterRowDef="['second-footer']"></tr>
-      </ng-container>
-
-      <ng-container cdkColumnDef="alt-first-header">
-        <th cdk-header-cell *cdkHeaderCellDef> alt-first-header </th>
-      </ng-container>
-
-      <ng-container cdkColumnDef="alt-second-header">
-        <th cdk-header-cell *cdkHeaderCellDef> alt-second-header </th>
-      </ng-container>
-
-      <ng-container cdkColumnDef="alt-first-footer">
-        <td cdk-footer-cell *cdkFooterCellDef> alt-first-footer </td>
-      </ng-container>
-
-      <ng-container cdkColumnDef="alt-second-footer">
-        <td cdk-footer-cell *cdkFooterCellDef> alt-second-footer </td>
-      </ng-container>
-
-      <ng-container *ngIf="showAlternativeHeadersAndFooters">
-        <tr cdk-header-row *cdkHeaderRowDef="['alt-first-header']"></tr>
-        <tr cdk-header-row *cdkHeaderRowDef="['alt-second-header']"></tr>
-        <tr cdk-footer-row *cdkFooterRowDef="['alt-first-footer']"></tr>
-        <tr cdk-footer-row *cdkFooterRowDef="['alt-second-footer']"></tr>
-      </ng-container>
+      <tr cdk-header-row *cdkHeaderRowDef="['first-header']"></tr>
+      <tr cdk-header-row *cdkHeaderRowDef="['second-header']"></tr>
+      <tr cdk-footer-row *cdkFooterRowDef="['first-footer']"></tr>
+      <tr cdk-footer-row *cdkFooterRowDef="['second-footer']"></tr>
     </cdk-table>
   `
 })
 class MultipleHeaderFooterRowsCdkTableApp {
-  showAlternativeHeadersAndFooters = false;
 }
 
 @Component({
@@ -1569,27 +1572,27 @@ class MultipleHeaderFooterRowsCdkTableApp {
 
       <ng-container cdkColumnDef="index1Column">
         <cdk-header-cell *cdkHeaderCellDef> Column C</cdk-header-cell>
-        <cdk-cell *cdkCellDef="let row"> index_1_special_row</cdk-cell>
+        <cdk-cell *cdkCellDef> index_1_special_row</cdk-cell>
       </ng-container>
 
       <ng-container cdkColumnDef="c3Column">
         <cdk-header-cell *cdkHeaderCellDef> Column C</cdk-header-cell>
-        <cdk-cell *cdkCellDef="let row"> c3_special_row</cdk-cell>
+        <cdk-cell *cdkCellDef> c3_special_row</cdk-cell>
       </ng-container>
 
       <ng-container cdkColumnDef="index">
         <cdk-header-cell *cdkHeaderCellDef> Index</cdk-header-cell>
-        <cdk-cell *cdkCellDef="let row; let index = index"> {{index}}</cdk-cell>
+        <cdk-cell *cdkCellDef="let index = index"> {{index}}</cdk-cell>
       </ng-container>
 
       <ng-container cdkColumnDef="dataIndex">
         <cdk-header-cell *cdkHeaderCellDef> Data Index</cdk-header-cell>
-        <cdk-cell *cdkCellDef="let row; let dataIndex = dataIndex"> {{dataIndex}}</cdk-cell>
+        <cdk-cell *cdkCellDef="let dataIndex = dataIndex"> {{dataIndex}}</cdk-cell>
       </ng-container>
 
       <ng-container cdkColumnDef="renderIndex">
         <cdk-header-cell *cdkHeaderCellDef> Render Index</cdk-header-cell>
-        <cdk-cell *cdkCellDef="let row; let renderIndex = renderIndex"> {{renderIndex}}</cdk-cell>
+        <cdk-cell *cdkCellDef="let renderIndex = renderIndex"> {{renderIndex}}</cdk-cell>
       </ng-container>
 
       <cdk-header-row *cdkHeaderRowDef="columnsToRender"></cdk-header-row>
@@ -1608,7 +1611,9 @@ class WhenRowCdkTableApp {
   isIndex1 = (index: number, _rowData: TestData) => index == 1;
   hasC3 = (_index: number, rowData: TestData) => rowData.c == 'c_3';
 
-  constructor() { this.dataSource.addData(); }
+  constructor() {
+    this.dataSource.addData();
+  }
 
   @ViewChild(CdkTable) table: CdkTable<TestData>;
 
@@ -1640,12 +1645,12 @@ class WhenRowCdkTableApp {
 
       <ng-container cdkColumnDef="index1Column">
         <cdk-header-cell *cdkHeaderCellDef> Column C</cdk-header-cell>
-        <cdk-cell *cdkCellDef="let row"> index_1_special_row </cdk-cell>
+        <cdk-cell *cdkCellDef> index_1_special_row </cdk-cell>
       </ng-container>
 
       <ng-container cdkColumnDef="c3Column">
         <cdk-header-cell *cdkHeaderCellDef> Column C</cdk-header-cell>
-        <cdk-cell *cdkCellDef="let row"> c3_special_row </cdk-cell>
+        <cdk-cell *cdkCellDef> c3_special_row </cdk-cell>
       </ng-container>
 
       <cdk-header-row *cdkHeaderRowDef="columnsToRender"></cdk-header-row>
@@ -1683,12 +1688,12 @@ class WhenRowWithoutDefaultCdkTableApp {
 
       <ng-container cdkColumnDef="index1Column">
         <cdk-header-cell *cdkHeaderCellDef> Column C</cdk-header-cell>
-        <cdk-cell *cdkCellDef="let row"> index_1_special_row </cdk-cell>
+        <cdk-cell *cdkCellDef> index_1_special_row </cdk-cell>
       </ng-container>
 
       <ng-container cdkColumnDef="c3Column">
         <cdk-header-cell *cdkHeaderCellDef> Column C</cdk-header-cell>
-        <cdk-cell *cdkCellDef="let row"> c3_special_row </cdk-cell>
+        <cdk-cell *cdkCellDef> c3_special_row </cdk-cell>
       </ng-container>
 
       <cdk-header-row *cdkHeaderRowDef="columnsToRender"></cdk-header-row>
@@ -1768,7 +1773,7 @@ class TrackByCdkTableApp {
                     [sticky]="isStuck(stickyStartColumns, column)"
                     [stickyEnd]="isStuck(stickyEndColumns, column)">
         <cdk-header-cell *cdkHeaderCellDef> Header {{column}} </cdk-header-cell>
-        <cdk-cell *cdkCellDef="let row"> {{column}} </cdk-cell>
+        <cdk-cell *cdkCellDef>{{column}}</cdk-cell>
         <cdk-footer-cell *cdkFooterCellDef> Footer {{column}} </cdk-footer-cell>
       </ng-container>
 
@@ -1962,6 +1967,30 @@ class DuplicateColumnDefNameCdkTableApp {
 })
 class MissingColumnDefCdkTableApp {
   dataSource: FakeDataSource = new FakeDataSource();
+}
+
+@Component({
+  template: `
+    <cdk-table [dataSource]="dataSource">
+      <ng-container cdkColumnDef="column_b">
+        <cdk-header-cell *cdkHeaderCellDef> Column A</cdk-header-cell>
+        <cdk-cell *cdkCellDef="let row"> {{row.a}}</cdk-cell>
+      </ng-container>
+
+      <cdk-header-row *cdkHeaderRowDef="displayedColumns"></cdk-header-row>
+      <cdk-row *cdkRowDef="let row; columns: displayedColumns"></cdk-row>
+    </cdk-table>
+  `
+})
+class MissingColumnDefAfterRenderCdkTableApp implements AfterViewInit {
+  dataSource: FakeDataSource|null = null;
+  displayedColumns: string[] = [];
+
+  ngAfterViewInit() {
+    setTimeout(() => {
+      this.displayedColumns = ['column_a'];
+    }, 0);
+  }
 }
 
 @Component({
@@ -2178,6 +2207,56 @@ class OuterTableApp {
 class NativeHtmlTableApp {
   dataSource: FakeDataSource | undefined = new FakeDataSource();
   columnsToRender = ['column_a', 'column_b', 'column_c'];
+
+  @ViewChild(CdkTable) table: CdkTable<TestData>;
+}
+
+@Component({
+  template: `
+    <table cdk-table [dataSource]="dataSource">
+      <ng-container cdkColumnDef="column_a">
+        <th cdk-header-cell *cdkHeaderCellDef> Column A</th>
+        <td cdk-cell *cdkCellDef="let row"> {{row.a}}</td>
+      </ng-container>
+
+      <ng-container cdkColumnDef="column_b">
+        <th cdk-header-cell *cdkHeaderCellDef> Column B</th>
+        <td cdk-cell *cdkCellDef="let row"> {{row.b}}</td>
+      </ng-container>
+
+      <ng-container cdkColumnDef="column_c">
+        <th cdk-header-cell *cdkHeaderCellDef> Column C</th>
+        <td cdk-cell *cdkCellDef="let row"> {{row.c}}</td>
+      </ng-container>
+
+      <tr cdk-row *cdkRowDef="let row; columns: columnsToRender" class="customRowClass"></tr>
+    </table>
+  `
+})
+class NativeTableWithNoHeaderOrFooterRows {
+  dataSource: FakeDataSource | undefined = new FakeDataSource();
+  columnsToRender = ['column_a', 'column_b', 'column_c'];
+
+  @ViewChild(CdkTable) table: CdkTable<TestData>;
+}
+
+@Component({
+  template: `
+    <table cdk-table [dataSource]="dataSource">
+      <caption>Very important data</caption>
+      <ng-container cdkColumnDef="column_a">
+        <th cdk-header-cell *cdkHeaderCellDef> Column A</th>
+        <td cdk-cell *cdkCellDef="let row"> {{row.a}}</td>
+      </ng-container>
+
+      <tr cdk-header-row *cdkHeaderRowDef="columnsToRender"></tr>
+      <tr cdk-row *cdkRowDef="let row; columns: columnsToRender" class="customRowClass"></tr>
+    </table>
+  `
+})
+class NativeHtmlTableWithCaptionApp {
+  dataSource: FakeDataSource | undefined = new FakeDataSource();
+  columnsToRender = ['column_a'];
 
   @ViewChild(CdkTable) table: CdkTable<TestData>;
 }

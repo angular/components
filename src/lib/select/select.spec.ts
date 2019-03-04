@@ -383,6 +383,21 @@ describe('MatSelect', () => {
           flush();
         })));
 
+        it('should not throw when reaching a reset option using the arrow keys on a closed select',
+           fakeAsync(() => {
+             fixture.componentInstance.foods =
+                 [{value: 'steak-0', viewValue: 'Steak'}, {value: null, viewValue: 'None'}];
+             fixture.detectChanges();
+             fixture.componentInstance.control.setValue('steak-0');
+
+             expect(() => {
+               dispatchKeyboardEvent(select, 'keydown', DOWN_ARROW);
+               fixture.detectChanges();
+             }).not.toThrow();
+
+             flush();
+           }));
+
         it('should open a single-selection select using ALT + DOWN_ARROW', fakeAsync(() => {
           const {control: formControl, select: selectInstance} = fixture.componentInstance;
 
@@ -1004,6 +1019,27 @@ describe('MatSelect', () => {
 
         const pane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
         expect(pane.style.minWidth).toBe('200px');
+      }));
+
+      it('should update the width of the panel on resize', fakeAsync(() => {
+        trigger.style.width = '300px';
+
+        trigger.click();
+        fixture.detectChanges();
+        flush();
+
+        const pane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
+        const initialWidth = parseInt(pane.style.minWidth || '0');
+
+        expect(initialWidth).toBeGreaterThan(0);
+
+        trigger.style.width = '400px';
+        dispatchFakeEvent(window, 'resize');
+        fixture.detectChanges();
+        tick(1000);
+        fixture.detectChanges();
+
+        expect(parseInt(pane.style.minWidth || '0')).toBeGreaterThan(initialWidth);
       }));
 
       it('should not attempt to open a select that does not have any options', fakeAsync(() => {
@@ -1821,7 +1857,7 @@ describe('MatSelect', () => {
         expect(panel.scrollTop).toBe(320, 'Expected scroll to be at the 9th option.');
       }));
 
-      it('should scroll top the top when pressing HOME', fakeAsync(() => {
+      it('should scroll to the top when pressing HOME', fakeAsync(() => {
         for (let i = 0; i < 20; i++) {
           dispatchKeyboardEvent(host, 'keydown', DOWN_ARROW);
           fixture.detectChanges();

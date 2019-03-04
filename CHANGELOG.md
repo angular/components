@@ -1,3 +1,55 @@
+## 7.3.3 "cashmere-armor" (2019-02-20)
+
+
+### Bug Fixes
+
+* **theming**: fix errors when building theme using CSS variables ([#15140](https://github.com/angular/material2/issues/15140)) ([96f6e06](https://github.com/angular/material2/commit/96f6e06)), closes [#15107](https://github.com/angular/material2/issues/15107)
+* **bidi:** handle uppercase values correctly ([#14773](https://github.com/angular/material2/issues/14773)) ([0029cde](https://github.com/angular/material2/commit/0029cde))
+* **dialog:** don't assign aria-label to close button if button has text ([#11093](https://github.com/angular/material2/issues/11093)) ([9bf368d](https://github.com/angular/material2/commit/9bf368d)), closes [#11084](https://github.com/angular/material2/issues/11084)
+* **list:** disableRipple on selection list not affecting list options after init ([#14858](https://github.com/angular/material2/issues/14858)) ([edf4541](https://github.com/angular/material2/commit/edf4541))
+* **schematics:** do not generate invalid stylesheet files ([#15235](https://github.com/angular/material2/issues/15235)) ([e7422e4](https://github.com/angular/material2/commit/e7422e4)), closes [#15164](https://github.com/angular/material2/issues/15164)
+* **table:** add missing rowgroup roles ([#15131](https://github.com/angular/material2/issues/15131)) ([2c7bc1c](https://github.com/angular/material2/commit/2c7bc1c))
+
+
+
+## 7.3.2 "jute-box" (2019-02-11)
+
+
+### Bug Fixes
+
+* **autocomplete:** set aria-haspopup ([#15079](https://github.com/angular/material2/issues/15079)) ([45bd5d4](https://github.com/angular/material2/commit/45bd5d4))
+* **checkbox:** unable to click to select if text is marked ([#15062](https://github.com/angular/material2/issues/15062)) ([4819c5b](https://github.com/angular/material2/commit/4819c5b)), closes [#14967](https://github.com/angular/material2/issues/14967)
+* **drag-drop:** set class when item or list is disabled ([#14769](https://github.com/angular/material2/issues/14769)) ([c543cf6](https://github.com/angular/material2/commit/c543cf6)), closes [#14760](https://github.com/angular/material2/issues/14760)
+* **drag-drop:** standalone draggable drag class not being applied with OnPush change detection ([#14727](https://github.com/angular/material2/issues/14727)) ([2f63195](https://github.com/angular/material2/commit/2f63195))
+* **icon:** add notranslate class ([#14889](https://github.com/angular/material2/issues/14889)) ([39fa928](https://github.com/angular/material2/commit/39fa928))
+* **menu:** prevent removal of mat-elevation class ([#15035](https://github.com/angular/material2/issues/15035)) ([8069641](https://github.com/angular/material2/commit/8069641))
+* **slide-toggle:** input element should use switch role ([#15073](https://github.com/angular/material2/issues/15073)) ([3af7748](https://github.com/angular/material2/commit/3af7748)), closes [#14949](https://github.com/angular/material2/issues/14949)
+* **tree:** opposite direction padding not being reset on change ([#14816](https://github.com/angular/material2/issues/14816)) ([ae4a5ae](https://github.com/angular/material2/commit/ae4a5ae))
+
+
+
+## 7.3.1 "liquidcrystal-sandwich" (2019-02-04)
+
+
+### Bug Fixes
+
+* **button:** not updating DOM node name if group name changes ([#14963](https://github.com/angular/material2/issues/14963)) ([37732cb](https://github.com/angular/material2/commit/37732cb))
+* **cdk-stepper:** coercing selectedIndex value to a Number ([#14817](https://github.com/angular/material2/issues/14817)) ([b64c08d](https://github.com/angular/material2/commit/b64c08d))
+* **checkbox:** not marked as touched immediately on blur with OnPush change detection ([#15001](https://github.com/angular/material2/issues/15001)) ([916c532](https://github.com/angular/material2/commit/916c532)), closes [#14980](https://github.com/angular/material2/issues/14980)
+* **chips:** newly-added chips not being disabled when added to a disable list ([#14976](https://github.com/angular/material2/issues/14976)) ([c23512a](https://github.com/angular/material2/commit/c23512a))
+* **examples:** fix form-field custom control `disabled` input ([#14957](https://github.com/angular/material2/issues/14957)) ([ce3926d](https://github.com/angular/material2/commit/ce3926d)), closes [/github.com/angular/angular/blob/e2c98fbe11272295c3827b0e54f859d283cd32bf/packages/forms/src/directives/reactive_errors.ts#L64](https://github.com//github.com/angular/angular/blob/e2c98fbe11272295c3827b0e54f859d283cd32bf/packages/forms/src/directives/reactive_errors.ts/issues/L64)
+* **list:** selection list not picking up indirect descendants ([#15003](https://github.com/angular/material2/issues/15003)) ([6a07d0d](https://github.com/angular/material2/commit/6a07d0d)), closes [#15000](https://github.com/angular/material2/issues/15000)
+* **MatPseudoCheckbox:** fix checkmark pseudo-element box-sizing ([#14971](https://github.com/angular/material2/issues/14971)) ([ba6b405](https://github.com/angular/material2/commit/ba6b405))
+* **overlay:** unnecessarily pushing overlay if it is exactly as wide as the viewport ([#14975](https://github.com/angular/material2/issues/14975)) ([f4b4e61](https://github.com/angular/material2/commit/f4b4e61)), closes [#14968](https://github.com/angular/material2/issues/14968)
+* **radio:** not updating DOM node name if group name changes ([#14950](https://github.com/angular/material2/issues/14950)) ([4d5c5d5](https://github.com/angular/material2/commit/4d5c5d5))
+* **radio:** unable to click to select button if text is marked ([#14967](https://github.com/angular/material2/issues/14967)) ([81380d2](https://github.com/angular/material2/commit/81380d2)), closes [#14753](https://github.com/angular/material2/issues/14753)
+* **slider:** focus ring showing when ancestor has focus monitoring ([#14960](https://github.com/angular/material2/issues/14960)) ([2ec9dff](https://github.com/angular/material2/commit/2ec9dff)), closes [#14958](https://github.com/angular/material2/issues/14958)
+* **table:** allow for a caption to be projected ([#14965](https://github.com/angular/material2/issues/14965)) ([a8a6617](https://github.com/angular/material2/commit/a8a6617)), closes [#14948](https://github.com/angular/material2/issues/14948)
+* **table:** Clarify unknown table column error ([#14947](https://github.com/angular/material2/issues/14947)) ([2782273](https://github.com/angular/material2/commit/2782273))
+* **tree,scrolling:** don't require user DataSource to extend DataSource ([#14966](https://github.com/angular/material2/issues/14966)) ([0f9926a](https://github.com/angular/material2/commit/0f9926a))
+
+
+
 # 7.3.0 "pyrite-pixie" (2019-01-28)
 
 

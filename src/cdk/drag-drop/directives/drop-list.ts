@@ -62,6 +62,7 @@ export interface CdkDropListInternal extends CdkDropList {}
   host: {
     'class': 'cdk-drop-list',
     '[id]': 'id',
+    '[class.cdk-drop-list-disabled]': 'disabled',
     '[class.cdk-drop-list-dragging]': '_dropListRef.isDragging()',
     '[class.cdk-drop-list-receiving]': '_dropListRef.isReceiving()',
   }
@@ -115,6 +116,14 @@ export class CdkDropList<T = any> implements CdkDropListContainer, AfterContentI
     this._disabled = coerceBooleanProperty(value);
   }
   private _disabled = false;
+
+  /** Whether starting a dragging sequence from this container is disabled. */
+  @Input('cdkDropListSortingDisabled')
+  get sortingDisabled(): boolean { return this._sortingDisabled; }
+  set sortingDisabled(value: boolean) {
+    this._sortingDisabled = coerceBooleanProperty(value);
+  }
+  private _sortingDisabled = false;
 
   /**
    * Function that is used to determine whether an item
@@ -306,7 +315,9 @@ export class CdkDropList<T = any> implements CdkDropListContainer, AfterContentI
         });
       }
 
+      ref.disabled = this.disabled;
       ref.lockAxis = this.lockAxis;
+      ref.sortingDisabled = this.sortingDisabled;
       ref
         .connectedTo(siblings.filter(drop => drop && drop !== this).map(list => list._dropListRef))
         .withOrientation(this.orientation);

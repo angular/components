@@ -45,6 +45,7 @@ export declare const matDialogAnimations: {
 };
 
 export declare class MatDialogClose implements OnInit, OnChanges {
+    _hasAriaLabel?: boolean;
     _matDialogClose: any;
     ariaLabel: string;
     dialogRef: MatDialogRef<any>;
@@ -57,6 +58,7 @@ export declare class MatDialogClose implements OnInit, OnChanges {
 export declare class MatDialogConfig<D = any> {
     ariaDescribedBy?: string | null;
     ariaLabel?: string | null;
+    ariaLabelledBy?: string | null;
     autoFocus?: boolean;
     backdropClass?: string;
     closeOnNavigation?: boolean;

@@ -33,7 +33,7 @@ on `CdkStep` in a `linear` stepper.
 
 #### Editable step
 By default, steps are editable, which means users can return to previously completed steps and
-edit their responses. `editable="true"` can be set on `CdkStep` to change the default.
+edit their responses. `editable="false"` can be set on `CdkStep` to change the default.
 
 #### Completed step
 By default, the `completed` attribute of a step returns `true` if the step is valid (in case of
@@ -54,7 +54,7 @@ resetting it will call `reset` on the underlying form control which clears the v
 - <kbd>RIGHT_ARROW</kbd>: Focuses the next step header
 - <kbd>ENTER</kbd>, <kbd>SPACE</kbd>: Selects the step that the focus is currently on
 - <kbd>TAB</kbd>: Focuses the next tabbable element
-- <kbd>TAB</kbd>+<kbd>SHIFT</kbd>: Focuses the previous tabbable element
+- <kbd>SHIFT</kbd>+<kbd>TAB</kbd>: Focuses the previous tabbable element
 
 ### Accessibility
 The CDK stepper is treated as a tabbed view for accessibility purposes, so it is given

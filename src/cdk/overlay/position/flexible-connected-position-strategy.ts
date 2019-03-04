@@ -630,13 +630,13 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
     // If the overlay fits completely within the bounds of the viewport, push it from whichever
     // direction is goes off-screen. Otherwise, push the top-left corner such that its in the
     // viewport and allow for the trailing end of the overlay to go out of bounds.
-    if (overlay.width < viewport.width) {
+    if (overlay.width <= viewport.width) {
       pushX = overflowLeft || -overflowRight;
     } else {
       pushX = start.x < this._viewportMargin ? (viewport.left - scrollPosition.left) - start.x : 0;
     }
 
-    if (overlay.height < viewport.height) {
+    if (overlay.height <= viewport.height) {
       pushY = overflowTop || -overflowBottom;
     } else {
       pushY = start.y < this._viewportMargin ? (viewport.top - scrollPosition.top) - start.y : 0;
@@ -1081,7 +1081,7 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
   private _addPanelClasses(cssClasses: string | string[]) {
     if (this._pane) {
       coerceArray(cssClasses).forEach(cssClass => {
-        if (this._appliedPanelClasses.indexOf(cssClass) === -1) {
+        if (cssClass !== '' && this._appliedPanelClasses.indexOf(cssClass) === -1) {
           this._appliedPanelClasses.push(cssClass);
           this._pane.classList.add(cssClass);
         }
@@ -1092,7 +1092,9 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
   /** Clears the classes that the position strategy has applied from the overlay panel. */
   private _clearPanelClasses() {
     if (this._pane) {
-      this._appliedPanelClasses.forEach(cssClass => this._pane.classList.remove(cssClass));
+      this._appliedPanelClasses.forEach(cssClass => {
+        this._pane.classList.remove(cssClass);
+      });
       this._appliedPanelClasses = [];
     }
   }
