@@ -30,11 +30,11 @@ build:remote --jobs=50
 # bazelrc a standalone file that can be copied more easily.
 # These flags should only be used as is for the rbe-ubuntu16-04 container
 # and need to be adapted to work with other toolchain containers.
-build:remote --host_javabase=@bazel_toolchains//configs/ubuntu16_04_clang/1.2:jdk8
-build:remote --javabase=@bazel_toolchains//configs/ubuntu16_04_clang/1.2:jdk8
+build:remote --host_javabase=@bazel_toolchains//configs/ubuntu16_04_clang/1.1:jdk8
+build:remote --javabase=@bazel_toolchains//configs/ubuntu16_04_clang/1.1:jdk8
 build:remote --host_java_toolchain=@bazel_tools//tools/jdk:toolchain_hostjdk8
 build:remote --java_toolchain=@bazel_tools//tools/jdk:toolchain_hostjdk8
-build:remote --crosstool_top=@bazel_toolchains//configs/ubuntu16_04_clang/1.2/bazel_0.23.0/default:toolchain
+build:remote --crosstool_top=@bazel_toolchains//configs/ubuntu16_04_clang/1.1/bazel_0.22.0/default:toolchain
 build:remote --action_env=BAZEL_DO_NOT_DETECT_CPP_TOOLCHAIN=1
 # Platform flags:
 # The toolchain container used for execution is defined in the target indicated
@@ -44,10 +44,10 @@ build:remote --action_env=BAZEL_DO_NOT_DETECT_CPP_TOOLCHAIN=1
 # "extra_toolchains" to be selected (given constraints defined in
 # "exec_compatible_with").
 # More about platforms: https://docs.bazel.build/versions/master/platforms.html
-build:remote --extra_toolchains=@bazel_toolchains//configs/ubuntu16_04_clang/1.2/bazel_0.23.0/cpp:cc-toolchain-clang-x86_64-default
-build:remote --extra_execution_platforms=@bazel_toolchains//configs/ubuntu16_04_clang/1.2:rbe_ubuntu1604
-build:remote --host_platform=@bazel_toolchains//configs/ubuntu16_04_clang/1.2:rbe_ubuntu1604
-build:remote --platforms=@bazel_toolchains//configs/ubuntu16_04_clang/1.2:rbe_ubuntu1604
+build:remote --extra_toolchains=@bazel_toolchains//configs/ubuntu16_04_clang/1.1/bazel_0.22.0/cpp:cc-toolchain-clang-x86_64-default
+build:remote --extra_execution_platforms=@bazel_toolchains//configs/ubuntu16_04_clang/1.1:rbe_ubuntu1604
+build:remote --host_platform=@bazel_toolchains//configs/ubuntu16_04_clang/1.1:rbe_ubuntu1604
+build:remote --platforms=@bazel_toolchains//configs/ubuntu16_04_clang/1.1:rbe_ubuntu1604
 
 # Set various strategies so that all actions execute remotely. Mixing remote
 # and local execution will lead to errors unless the toolchain and remote
@@ -55,7 +55,7 @@ build:remote --platforms=@bazel_toolchains//configs/ubuntu16_04_clang/1.2:rbe_ub
 build:remote --spawn_strategy=remote
 build:remote --strategy=Javac=remote
 build:remote --strategy=Closure=remote
-build:remote --strategy=Genrule=remote
+build:remote --genrule_strategy=remote
 build:remote --define=EXECUTOR=remote
 
 # Enable the remote cache so action results can be shared across machines,
@@ -102,14 +102,14 @@ build:results-local --bes_results_url="https://source.cloud.google.com/results/i
 
 # The following flags are only necessary for local docker sandboxing
 # with the rbe-ubuntu16-04 container. Use of these flags is still experimental.
-build:docker-sandbox --host_javabase=@bazel_toolchains//configs/ubuntu16_04_clang/1.2:jdk8
-build:docker-sandbox --javabase=@bazel_toolchains//configs/ubuntu16_04_clang/1.2:jdk8
-build:docker-sandbox --crosstool_top=@bazel_toolchains//configs/ubuntu16_04_clang/1.2/bazel_0.23.0/default:toolchain
-build:docker-sandbox --experimental_docker_image=gcr.io/cloud-marketplace/google/rbe-ubuntu16-04@sha256:da0f21c71abce3bbb92c3a0c44c3737f007a82b60f8bd2930abc55fe64fc2729
+build:docker-sandbox --host_javabase=@bazel_toolchains//configs/ubuntu16_04_clang/1.1:jdk8
+build:docker-sandbox --javabase=@bazel_toolchains//configs/ubuntu16_04_clang/1.1:jdk8
+build:docker-sandbox --crosstool_top=@bazel_toolchains//configs/ubuntu16_04_clang/1.1/bazel_0.22.0/default:toolchain
+build:docker-sandbox --experimental_docker_image=gcr.io/cloud-marketplace/google/rbe-ubuntu16-04@sha256:9bd8ba020af33edb5f11eff0af2f63b3bcb168cd6566d7b27c6685e717787928
 build:docker-sandbox --spawn_strategy=docker
 build:docker-sandbox --strategy=Javac=docker
 build:docker-sandbox --strategy=Closure=docker
-build:docker-sandbox --strategy=Genrule=docker
+build:docker-sandbox --genrule_strategy=docker
 build:docker-sandbox --define=EXECUTOR=remote
 build:docker-sandbox --experimental_docker_verbose
 build:docker-sandbox --experimental_enable_docker_sandbox
@@ -123,4 +123,4 @@ build:remote-cache --auth_enabled=true
 build:remote-cache --spawn_strategy=standalone
 build:remote-cache --strategy=Javac=standalone
 build:remote-cache --strategy=Closure=standalone
-build:remote-cache --strategy=Genrule=standalone
+build:remote-cache --genrule_strategy=standalone
