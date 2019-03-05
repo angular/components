@@ -84,10 +84,9 @@ ng_setup_workspace()
 # Bring in bazel_toolchains for RBE stuff.
 http_archive(
   name = "bazel_toolchains",
-  sha256 = "ee854b5de299138c1f4a2edb5573d22b21d975acfc7aa938f36d30b49ef97498",
-  strip_prefix = "bazel-toolchains-37419a124bdb9af2fec5b99a973d359b6b899b61",
+  strip_prefix = "bazel-toolchains-42ffbe45f71203654a71ac2a2c805b59d251f76d",
   urls = [
-      "https://mirror.bazel.build/github.com/bazelbuild/bazel-toolchains/archive/37419a124bdb9af2fec5b99a973d359b6b899b61.tar.gz",
-      "https://github.com/bazelbuild/bazel-toolchains/archive/37419a124bdb9af2fec5b99a973d359b6b899b61.tar.gz",
+      "https://mirror.bazel.build/github.com/bazelbuild/bazel-toolchains/archive/42ffbe45f71203654a71ac2a2c805b59d251f76d.tar.gz",
+      "https://github.com/bazelbuild/bazel-toolchains/archive/42ffbe45f71203654a71ac2a2c805b59d251f76d.tar.gz",
   ]
 )
