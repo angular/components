@@ -109,12 +109,12 @@ export class MatCommonModule {
 
   /** Checks whether the material version matches the cdk version */
   private _checkCdkVersionMatch(): void {
-    if (VERSION !== CDK_VERSION) {
+    if (VERSION.major !== CDK_VERSION.major && VERSION.minor !== CDK_VERSION.minor) {
       console.warn(
-          'The Angular Material version ' + VERSION + ' does not match ' +
-          'the Angular CDK version ' + CDK_VERSION + '.\n' +
-          'Please install Angular CDK ' + VERSION + ': ' +
-          'npm install @angular/cdk@' + VERSION
+          'The Angular Material version ' + VERSION.full + ' does not match ' +
+          'the Angular CDK version ' + CDK_VERSION.full + '.\n' +
+          'Please install Angular CDK ' + VERSION.full + ': ' +
+          'npm install @angular/cdk@' + VERSION.full
       );
     }
   }
