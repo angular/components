@@ -9,6 +9,8 @@
 import {NgModule, InjectionToken, Optional, Inject, isDevMode} from '@angular/core';
 import {HammerLoader, HAMMER_LOADER} from '@angular/platform-browser';
 import {BidiModule} from '@angular/cdk/bidi';
+import {VERSION} from '../../version';
+import {VERSION as CDK_VERSION} from '@angular/cdk';
 
 
 /** Injection token that configures whether the Material sanity checks are enabled. */
@@ -52,6 +54,7 @@ export class MatCommonModule {
     if (this._areChecksEnabled() && !this._hasDoneGlobalChecks) {
       this._checkDoctypeIsDefined();
       this._checkThemeIsPresent();
+      this._checkCdkVersionMatch();
       this._hasDoneGlobalChecks = true;
     }
   }
@@ -102,6 +105,18 @@ export class MatCommonModule {
     }
 
     this._document.body.removeChild(testElement);
+  }
+
+  /** Checks whether the material version matches the cdk version */
+  private _checkCdkVersionMatch(): void {
+    if (VERSION !== CDK_VERSION) {
+      console.warn(
+          'The Angular Material version ' + VERSION + ' does not match ' +
+          'the Angular CDK version ' + CDK_VERSION + '.\n' +
+          'Please install Angular CDK ' + VERSION + ': ' +
+          'npm install @angular/cdk@' + VERSION
+      );
+    }
   }
 
   /** Checks whether HammerJS is available. */
