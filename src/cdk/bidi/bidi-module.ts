@@ -8,7 +8,7 @@
 
 import {NgModule} from '@angular/core';
 import {Dir} from './dir';
-
+export {VERSION as ɵVERSION} from '../version';
 
 @NgModule({
   exports: [Dir],
