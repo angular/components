@@ -9,7 +9,9 @@
 import {NgModule, InjectionToken, Optional, Inject, isDevMode} from '@angular/core';
 import {HammerLoader, HAMMER_LOADER} from '@angular/platform-browser';
 import {BidiModule, ɵVERSION as CDK_VERSION} from '@angular/cdk/bidi';
-import {VERSION as VERSION} from '../../version';
+
+// private version constant to circumvent test/build issues
+const VERSION = new Version('0.0.0-PLACEHOLDER');
 
 
 /** Injection token that configures whether the Material sanity checks are enabled. */
