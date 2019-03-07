@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {NgModule, InjectionToken, Optional, Inject, isDevMode} from '@angular/core';
+import {NgModule, InjectionToken, Optional, Inject, isDevMode, Version} from '@angular/core';
 import {HammerLoader, HAMMER_LOADER} from '@angular/platform-browser';
 import {BidiModule, ɵVERSION as CDK_VERSION} from '@angular/cdk/bidi';
 
