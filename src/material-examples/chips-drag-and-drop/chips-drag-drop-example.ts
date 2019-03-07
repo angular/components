@@ -1,10 +1,13 @@
-import {Component} from '@angular/core';
-import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
+import { Component } from '@angular/core';
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 
 export interface Vegetable {
   name: string;
 }
 
+/**
+ * @title Chips Drag and Drop
+ */
 @Component({
   selector: 'chips-drag-drop-example',
   templateUrl: 'chips-drag-drop-example.html',
