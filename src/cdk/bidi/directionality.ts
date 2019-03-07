@@ -19,24 +19,37 @@ export type Direction = 'ltr' | 'rtl';
  */
 @Injectable({providedIn: 'root'})
 export class Directionality implements OnDestroy {
+  private _document: Document;
   /** The current 'ltr' or 'rtl' value. */
-  readonly value: Direction = 'ltr';
+  value: Direction = 'ltr';
 
   /** Stream that emits whenever the 'ltr' / 'rtl' state changes. */
   readonly change = new EventEmitter<Direction>();
 
   constructor(@Optional() @Inject(DIR_DOCUMENT) _document?: any) {
     if (_document) {
+      this._document = _document;
+      this.setDirection();
+    }
+  }
+
+    /** Get the current direction. */
+    get currentDirection(): Direction {
+      this.setDirection();
+      return this.value;
+    }
+
+    /** Set the current direction. */
+    setDirection(): void {
       // TODO: handle 'auto' value -
       // We still need to account for dir="auto".
       // It looks like HTMLElemenet.dir is also "auto" when that's set to the attribute,
       // but getComputedStyle return either "ltr" or "rtl". avoiding getComputedStyle for now
-      const bodyDir = _document.body ? _document.body.dir : null;
-      const htmlDir = _document.documentElement ? _document.documentElement.dir : null;
+      const bodyDir = this._document.body ? this._document.body.dir : null;
+      const htmlDir = this._document.documentElement ? this._document.documentElement.dir : null;
       const value = bodyDir || htmlDir;
       this.value = (value === 'ltr' || value === 'rtl') ? value : 'ltr';
     }
-  }
 
   ngOnDestroy() {
     this.change.complete();
