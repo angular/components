@@ -13,7 +13,6 @@
       "../../dist/packages/material"
     ],
     "paths": {
-      "@angular/cdk": ["../../dist/packages/cdk"],
       "@angular/cdk/*": ["../../dist/packages/cdk/*"],
       "@angular/material/*": ["../../dist/packages/material/*"]
     }

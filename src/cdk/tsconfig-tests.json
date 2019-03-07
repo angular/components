@@ -15,7 +15,6 @@
   },
   "files": [
     "./testing/index.ts",
-    "./index.ts",
     "typings.d.ts"
   ],
   "angularCompilerOptions": {

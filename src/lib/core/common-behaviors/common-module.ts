@@ -8,9 +8,8 @@
 
 import {NgModule, InjectionToken, Optional, Inject, isDevMode} from '@angular/core';
 import {HammerLoader, HAMMER_LOADER} from '@angular/platform-browser';
-import {BidiModule} from '@angular/cdk/bidi';
-import {VERSION} from '../../version';
-import {VERSION as CDK_VERSION} from '@angular/cdk';
+import {BidiModule, ɵVERSION as CDK_VERSION} from '@angular/cdk/bidi';
+import {ɵVERSION as VERSION} from '@angular/material/core';
 
 
 /** Injection token that configures whether the Material sanity checks are enabled. */

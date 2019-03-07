@@ -5,7 +5,6 @@
     "rootDir": "..",
     "baseUrl": ".",
     "paths": {
-      "@angular/cdk": ["../cdk"],
       "@angular/cdk/*": ["../cdk/*"],
       "@angular/material/*": ["./*"]
     }
