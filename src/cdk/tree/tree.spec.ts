@@ -343,10 +343,10 @@ describe('CdkTree', () => {
       function createTrackByTestComponent(trackByStrategy: 'reference' | 'property' | 'index') {
         configureCdkTreeTestingModule([CdkTreeAppWithTrackBy]);
         fixture = TestBed.createComponent(CdkTreeAppWithTrackBy);
-        fixture.detectChanges();
-
         component = fixture.componentInstance;
         component.trackByStrategy = trackByStrategy;
+        fixture.detectChanges();
+
         dataSource = component.dataSource as FakeDataSource;
         tree = component.tree;
         treeElement = fixture.nativeElement.querySelector('cdk-tree');
@@ -758,10 +758,10 @@ describe('CdkTree', () => {
       function createTrackByTestComponent(trackByStrategy: 'reference' | 'property' | 'index') {
         configureCdkTreeTestingModule([NestedCdkTreeAppWithTrackBy]);
         fixture = TestBed.createComponent(NestedCdkTreeAppWithTrackBy);
-        fixture.detectChanges();
-
         component = fixture.componentInstance;
         component.trackByStrategy = trackByStrategy;
+        fixture.detectChanges();
+
         dataSource = component.dataSource as FakeDataSource;
 
         tree = component.tree;
