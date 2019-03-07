@@ -782,6 +782,8 @@ describe('CdkTree', () => {
         fixture = TestBed.createComponent(NestedCdkTreeAppWithTrackBy);
         component = fixture.componentInstance;
         component.trackByStrategy = trackByStrategy;
+        fixture.detectChanges();
+
         dataSource = component.dataSource as FakeDataSource;
         fixture.detectChanges();
 
