@@ -129,6 +129,8 @@ System.config({
     '@angular/material/tooltip': 'dist/packages/material/tooltip/index.js',
     '@angular/material/tree': 'dist/packages/material/tree/index.js',
 
+    '@angular/material-experimental/mdc-checkbox':
+        'dist/packages/material-experimental/mdc-checkbox/index.js',
     '@angular/material-experimental/mdc-helpers':
         'dist/packages/material-experimental/mdc-helpers/index.js',
   },
