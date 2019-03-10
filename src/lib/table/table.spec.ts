@@ -14,7 +14,7 @@ import {MatPaginator, MatPaginatorModule} from '../paginator/index';
 import {MatSort, MatSortHeader, MatSortModule} from '../sort/index';
 import {MatTableModule} from './index';
 import {MatTable} from './table';
-import {MatTableDataSource} from './table-data-source';
+import {ClientArrayTableDataSource} from './table-data-source';
 
 
 describe('MatTable', () => {
@@ -99,7 +99,7 @@ describe('MatTable', () => {
     ]);
   });
 
-  it('should render with MatTableDataSource and sort', () => {
+  it('should render with ClientArrayTableDataSource and sort', () => {
     let fixture = TestBed.createComponent(MatTableWithSortApp);
     fixture.detectChanges();
 
@@ -113,7 +113,7 @@ describe('MatTable', () => {
     ]);
   });
 
-  it('should render with MatTableDataSource and pagination', () => {
+  it('should render with ClientArrayTableDataSource and pagination', () => {
     let fixture = TestBed.createComponent(MatTableWithPaginatorApp);
     fixture.detectChanges();
 
@@ -145,10 +145,10 @@ describe('MatTable', () => {
     }).not.toThrow();
   }));
 
-  describe('with MatTableDataSource and sort/pagination/filter', () => {
+  describe('with ClientArrayTableDataSource and sort/pagination/filter', () => {
     let tableElement: HTMLElement;
     let fixture: ComponentFixture<ArrayDataSourceMatTableApp>;
-    let dataSource: MatTableDataSource<TestData>;
+    let dataSource: ClientArrayTableDataSource<TestData>;
     let component: ArrayDataSourceMatTableApp;
 
     beforeEach(fakeAsync(() => {
@@ -679,7 +679,7 @@ class MatTableWithWhenRowApp {
 })
 class ArrayDataSourceMatTableApp implements AfterViewInit {
   underlyingDataSource = new FakeDataSource();
-  dataSource = new MatTableDataSource<TestData>();
+  dataSource = new ClientArrayTableDataSource<TestData>();
   columnsToRender = ['column_a', 'column_b', 'column_c'];
 
   @ViewChild(MatTable, {static: true}) table: MatTable<TestData>;
@@ -732,7 +732,7 @@ class ArrayDataSourceMatTableApp implements AfterViewInit {
 })
 class MatTableWithSortApp implements OnInit {
   underlyingDataSource = new FakeDataSource();
-  dataSource = new MatTableDataSource<TestData>();
+  dataSource = new ClientArrayTableDataSource<TestData>();
   columnsToRender = ['column_a', 'column_b', 'column_c'];
 
   @ViewChild(MatTable, {static: true}) table: MatTable<TestData>;
@@ -783,7 +783,7 @@ class MatTableWithSortApp implements OnInit {
 })
 class MatTableWithPaginatorApp implements OnInit {
   underlyingDataSource = new FakeDataSource();
-  dataSource = new MatTableDataSource<TestData>();
+  dataSource = new ClientArrayTableDataSource<TestData>();
   columnsToRender = ['column_a', 'column_b', 'column_c'];
 
   @ViewChild(MatTable, {static: true}) table: MatTable<TestData>;

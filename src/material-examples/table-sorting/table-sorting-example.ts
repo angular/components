@@ -1,5 +1,5 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {MatSort, MatTableDataSource} from '@angular/material';
+import {MatSort, ClientArrayTableDataSource} from '@angular/material';
 
 export interface PeriodicElement {
   name: string;
@@ -31,7 +31,7 @@ const ELEMENT_DATA: PeriodicElement[] = [
 })
 export class TableSortingExample implements OnInit {
   displayedColumns: string[] = ['position', 'name', 'weight', 'symbol'];
-  dataSource = new MatTableDataSource(ELEMENT_DATA);
+  dataSource = new ClientArrayTableDataSource(ELEMENT_DATA);
 
   @ViewChild(MatSort, {static: true}) sort: MatSort;
 

@@ -1,3 +1,23 @@
+export declare class ClientArrayTableDataSource<T> extends DataSource<T> {
+    _renderChangesSubscription: Subscription;
+    data: T[];
+    filter: string;
+    filterPredicate: ((data: T, filter: string) => boolean);
+    filteredData: T[];
+    paginator: MatPaginator | null;
+    sort: MatSort | null;
+    sortData: ((data: T[], sort: MatSort) => T[]);
+    sortingDataAccessor: ((data: T, sortHeaderId: string) => string | number);
+    constructor(initialData?: T[]);
+    _filterData(data: T[]): T[];
+    _orderData(data: T[]): T[];
+    _pageData(data: T[]): T[];
+    _updateChangeSubscription(): void;
+    _updatePaginator(filteredDataLength: number): void;
+    connect(): BehaviorSubject<T[]>;
+    disconnect(): void;
+}
+
 export declare class MatCell extends CdkCell {
     constructor(columnDef: CdkColumnDef, elementRef: ElementRef<HTMLElement>);
 }
@@ -47,25 +67,7 @@ export declare class MatTable<T> extends CdkTable<T> {
     protected stickyCssClass: string;
 }
 
-export declare class MatTableDataSource<T> extends DataSource<T> {
-    _renderChangesSubscription: Subscription;
-    data: T[];
-    filter: string;
-    filterPredicate: ((data: T, filter: string) => boolean);
-    filteredData: T[];
-    paginator: MatPaginator | null;
-    sort: MatSort | null;
-    sortData: ((data: T[], sort: MatSort) => T[]);
-    sortingDataAccessor: ((data: T, sortHeaderId: string) => string | number);
-    constructor(initialData?: T[]);
-    _filterData(data: T[]): T[];
-    _orderData(data: T[]): T[];
-    _pageData(data: T[]): T[];
-    _updateChangeSubscription(): void;
-    _updatePaginator(filteredDataLength: number): void;
-    connect(): BehaviorSubject<T[]>;
-    disconnect(): void;
-}
+export declare const MatTableDataSource: typeof ClientArrayTableDataSource;
 
 export declare class MatTableModule {
 }

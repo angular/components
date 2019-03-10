@@ -35,7 +35,7 @@ const MAX_SAFE_INTEGER = 9007199254740991;
  * properties are accessed. Also allows for filter customization by overriding filterTermAccessor,
  * which defines how row data is converted to a string for filter matching.
  */
-export class MatTableDataSource<T> extends DataSource<T> {
+export class ClientArrayTableDataSource<T> extends DataSource<T> {
   /** Stream that emits when a new data array is set on the data source. */
   private readonly _data: BehaviorSubject<T[]>;
 

@@ -27,5 +27,16 @@ export const classNames: VersionChanges<ClassNameUpgradeData> = {
         }
       ]
     },
+  ],
+  [TargetVersion.V8]: [
+    {
+      pr: 'https://github.com/angular/material2/pull/15432',
+      changes: [
+        {
+          replace: 'MatTableDataSource',
+          replaceWith: 'ClientArrayTableDataSource'
+        }
+      ]
+    }
   ]
 };

@@ -5,7 +5,7 @@ import {
   MatSort,
   MatSortHeader,
   MatTable,
-  MatTableDataSource
+  ClientArrayTableDataSource
 } from '@angular/material';
 
 export interface PeriodicElement {
@@ -38,7 +38,7 @@ const ELEMENT_DATA: PeriodicElement[] = [
 })
 export class TableSimpleColumnExample implements OnInit {
   displayedColumns: string[] = ['position', 'name', 'weight', 'symbol'];
-  dataSource = new MatTableDataSource<PeriodicElement>(ELEMENT_DATA);
+  dataSource = new ClientArrayTableDataSource<PeriodicElement>(ELEMENT_DATA);
   getWeight = (data: PeriodicElement) => '~' + data.weight;
 
   @ViewChild('sort', {static: true}) sort: MatSort;

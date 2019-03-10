@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {MatTableDataSource} from '@angular/material';
+import {ClientArrayTableDataSource} from '@angular/material';
 
 export interface PeriodicElement {
   name: string;
@@ -31,7 +31,7 @@ const ELEMENT_DATA: PeriodicElement[] = [
 })
 export class TableFilteringExample {
   displayedColumns: string[] = ['position', 'name', 'weight', 'symbol'];
-  dataSource = new MatTableDataSource(ELEMENT_DATA);
+  dataSource = new ClientArrayTableDataSource(ELEMENT_DATA);
 
   applyFilter(filterValue: string) {
     this.dataSource.filter = filterValue.trim().toLowerCase();

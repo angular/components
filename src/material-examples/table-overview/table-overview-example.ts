@@ -1,5 +1,5 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {MatPaginator, MatSort, MatTableDataSource} from '@angular/material';
+import {MatPaginator, MatSort, ClientArrayTableDataSource} from '@angular/material';
 
 export interface UserData {
   id: string;
@@ -28,7 +28,7 @@ const NAMES: string[] = [
 })
 export class TableOverviewExample implements OnInit {
   displayedColumns: string[] = ['id', 'name', 'progress', 'color'];
-  dataSource: MatTableDataSource<UserData>;
+  dataSource: ClientArrayTableDataSource<UserData>;
 
   @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
   @ViewChild(MatSort, {static: true}) sort: MatSort;
@@ -38,7 +38,7 @@ export class TableOverviewExample implements OnInit {
     const users = Array.from({length: 100}, (_, k) => createNewUser(k + 1));
 
     // Assign the data to the data source for the table to render
-    this.dataSource = new MatTableDataSource(users);
+    this.dataSource = new ClientArrayTableDataSource(users);
   }
 
   ngOnInit() {
