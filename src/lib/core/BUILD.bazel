@@ -103,7 +103,6 @@ ng_test_library(
   srcs = glob(["**/*.spec.ts"]),
   deps = [
     "@npm//@angular/platform-browser",
-    "//src/cdk",
     "//src/cdk/keycodes",
     "//src/cdk/platform",
     "//src/cdk/testing",
