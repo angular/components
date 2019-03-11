@@ -8,9 +8,12 @@
 
 import {NgModule, InjectionToken, Optional, Inject, isDevMode, Version} from '@angular/core';
 import {HammerLoader, HAMMER_LOADER} from '@angular/platform-browser';
-import {BidiModule, ɵVERSION as CDK_VERSION} from '@angular/cdk/bidi';
+import {BidiModule} from '@angular/cdk/bidi';
+import {VERSION as CDK_VERSION} from '@angular/cdk';
 
-// private version constant to circumvent test/build issues
+// Private version constant to circumvent test/build issues,
+// i.e. avoid core to depend on the @angular/material primary entry-point
+// Can be removed once the Material primary entry-point no longer re-exports all secondary entry-points
 const VERSION = new Version('0.0.0-PLACEHOLDER');
 
 
