@@ -6,22 +6,9 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {
-  ChangeDetectionStrategy,
-  Component,
-  Directive,
-  IterableChanges,
-  IterableDiffer,
-  IterableDiffers,
-  OnChanges,
-  OnDestroy,
-  SimpleChanges,
-  TemplateRef,
-  ViewContainerRef,
-  ViewEncapsulation,
-} from '@angular/core';
-import {CanStick, CanStickCtor, mixinHasStickyInput} from './can-stick';
-import {CdkCellDef, CdkColumnDef} from './cell';
+import { Component, Directive, IterableChanges, IterableDiffer, IterableDiffers, OnChanges, OnDestroy, SimpleChanges, TemplateRef, ViewContainerRef, ViewEncapsulation } from '@angular/core';
+import { CanStick, CanStickCtor, mixinHasStickyInput } from './can-stick';
+import { CdkCellDef, CdkColumnDef } from './cell';
 
 /**
  * The row template that can be used by the mat-table. Should not be used outside of the
@@ -248,7 +235,6 @@ export class CdkCellOutlet implements OnDestroy {
     'class': 'cdk-header-row',
     'role': 'row',
   },
-  changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
 export class CdkHeaderRow { }
@@ -263,7 +249,6 @@ export class CdkHeaderRow { }
     'class': 'cdk-footer-row',
     'role': 'row',
   },
-  changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
 export class CdkFooterRow { }
@@ -277,7 +262,6 @@ export class CdkFooterRow { }
     'class': 'cdk-row',
     'role': 'row',
   },
-  changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
 export class CdkRow { }

@@ -10,7 +10,6 @@ import {CollectionViewer, DataSource} from '@angular/cdk/collections';
 import {
   AfterContentChecked,
   Attribute,
-  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   ContentChildren,
@@ -158,7 +157,6 @@ export interface RenderRow<T> {
     'class': 'cdk-table',
   },
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CdkTable<T> implements AfterContentChecked, CollectionViewer, OnDestroy, OnInit {
   private _document: Document;
