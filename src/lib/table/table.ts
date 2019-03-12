@@ -7,7 +7,7 @@
  */
 
 import {CDK_TABLE_TEMPLATE, CdkTable} from '@angular/cdk/table';
-import {ChangeDetectionStrategy, Component, ViewEncapsulation} from '@angular/core';
+import {Component, ViewEncapsulation} from '@angular/core';
 
 /**
  * Wrapper for the CdkTable with Material design styles.
@@ -22,7 +22,6 @@ import {ChangeDetectionStrategy, Component, ViewEncapsulation} from '@angular/co
     'class': 'mat-table',
   },
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MatTable<T> extends CdkTable<T> {
   /** Overrides the sticky CSS class set by the `CdkTable`. */

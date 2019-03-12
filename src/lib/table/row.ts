@@ -7,7 +7,6 @@
  */
 
 import {
-  ChangeDetectionStrategy,
   Component,
   Directive,
   ViewEncapsulation
@@ -63,7 +62,6 @@ export class MatRowDef<T> extends CdkRowDef<T> {}
     'class': 'mat-header-row',
     'role': 'row',
   },
-  changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   exportAs: 'matHeaderRow',
   providers: [{provide: CdkHeaderRow, useExisting: MatHeaderRow}],
@@ -79,7 +77,6 @@ export class MatHeaderRow extends CdkHeaderRow { }
     'class': 'mat-footer-row',
     'role': 'row',
   },
-  changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   exportAs: 'matFooterRow',
   providers: [{provide: CdkFooterRow, useExisting: MatFooterRow}],
@@ -95,7 +92,6 @@ export class MatFooterRow extends CdkFooterRow { }
     'class': 'mat-row',
     'role': 'row',
   },
-  changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   exportAs: 'matRow',
   providers: [{provide: CdkRow, useExisting: MatRow}],
