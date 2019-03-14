@@ -36,6 +36,7 @@ import {
   InjectionToken,
   Input,
   NgZone,
+  OnInit,
   OnDestroy,
   Optional,
   ViewContainerRef,
@@ -115,7 +116,7 @@ export function MAT_TOOLTIP_DEFAULT_OPTIONS_FACTORY(): MatTooltipDefaultOptions 
     '(touchend)': '_handleTouchend()',
   },
 })
-export class MatTooltip implements OnDestroy {
+export class MatTooltip implements OnDestroy, OnInit {
   _overlayRef: OverlayRef | null;
   _tooltipInstance: TooltipComponent | null;
 
@@ -254,6 +255,30 @@ export class MatTooltip implements OnDestroy {
         _ngZone.run(() => this.show());
       }
     });
+  }
+
+  /**
+   * Setup styling-specific things
+   */
+  ngOnInit() {
+    const element = this._elementRef.nativeElement;
+    const elementStyle = element.style as CSSStyleDeclaration & {webkitUserDrag: string};
+
+    if (element.nodeName === 'INPUT' || element.nodeName === 'TEXTAREA') {
+      // When we bind a gesture event on an element (in this case `longpress`), HammerJS
+      // will add some inline styles by default, including `user-select: none`. This is
+      // problematic on iOS and in Safari, because it will prevent users from typing in inputs.
+      // Since `user-select: none` is not needed for the `longpress` event and can cause unexpected
+      // behavior for text fields, we always clear the `user-select` to avoid such issues.
+      elementStyle.webkitUserSelect = elementStyle.userSelect = elementStyle.msUserSelect = '';
+    }
+
+    // Hammer applies `-webkit-user-drag: none` on all elements by default,
+    // which breaks the native drag&drop. If the consumer explicitly made
+    // the element draggable, clear the `-webkit-user-drag`.
+    if (element.draggable && elementStyle.webkitUserDrag === 'none') {
+      elementStyle.webkitUserDrag = '';
+    }
   }
 
   /**
