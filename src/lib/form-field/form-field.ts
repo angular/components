@@ -558,7 +558,7 @@ export class MatFormField extends _MatFormFieldMixinBase
 
   /** Gets the start end of the rect considering the current directionality. */
   private _getStartEnd(rect: ClientRect): number {
-    return this._dir && this._dir.currentDirection && this._dir.currentDirection === 'rtl' ? rect.right : rect.left;
+    return this._dir && this._dir.value === 'rtl' ? rect.right : rect.left;
   }
 
   /**
