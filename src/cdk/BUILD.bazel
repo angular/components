@@ -42,5 +42,5 @@ ng_package(
   globals = ROLLUP_GLOBALS,
   deps = CDK_TARGETS,
   data = ["%s_copied" % file for [file, _] in rootStyles],
-  tags = ["release-package"],
+  tags = ["build-package"],
 )

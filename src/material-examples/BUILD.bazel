@@ -66,7 +66,7 @@ ng_package(
   globals = ROLLUP_GLOBALS,
   deps = [":examples"],
   data = [":docs-content"],
-  tags = ["docs-package"],
+  tags = ["docs-package", "build-package"],
 )
 
 genrule(

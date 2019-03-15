@@ -40,7 +40,7 @@ bazelBinPath=$(bazel info bazel-bin 2> ${tmpErrorLog})
 
 # List of targets that need to be built, e.g. //src/lib, //src/cdk, etc. Note we need to remove all
 # carriage returns because Bazel prints these on Windows. This breaks the Bash array parsing.
-targets=$(bazel query --output=label 'attr("tags", "\[.*release-package.*\]", //src/...)' \
+targets=$(bazel query --output=label 'attr("tags", "\[.*build-package.*\]", //src/...)' \
   'intersect kind(".*_package", //src/...)' 2> ${tmpErrorLog} | tr -d "\r")
 
 # Use --config=release so that the packages can use the result from the stamping script.

@@ -17,5 +17,5 @@ ng_package(
   entry_point = "src/cdk-experimental/public_api.js",
   globals = ROLLUP_GLOBALS,
   deps = CDK_EXPERIMENTAL_TARGETS,
-  tags = ["release-package"],
+  tags = ["build-package"],
 )

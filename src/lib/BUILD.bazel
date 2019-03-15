@@ -54,5 +54,5 @@ ng_package(
   ],
   packages = ["//src/lib/schematics:npm_package"],
   deps = MATERIAL_TARGETS,
-  tags = ["release-package"],
+  tags = ["build-package"],
 )
