@@ -282,6 +282,8 @@ describe('MatDrawer', () => {
       let fixture = TestBed.createComponent(BasicTestApp);
       let drawer: MatDrawer = fixture.debugElement
           .query(By.directive(MatDrawer)).componentInstance;
+      fixture.detectChanges();
+
       let openButton = fixture.componentInstance.openButton.nativeElement;
       let closeButton = fixture.componentInstance.closeButton.nativeElement;
 
@@ -697,6 +699,7 @@ describe('MatDrawerContainer', () => {
     it('should be able to explicitly enable the backdrop in `side` mode', fakeAsync(() => {
       const fixture = TestBed.createComponent(BasicTestApp);
       const root = fixture.nativeElement;
+      fixture.detectChanges();
 
       fixture.componentInstance.drawer.mode = 'side';
       fixture.detectChanges();
