@@ -12,7 +12,7 @@ import {Component, ViewEncapsulation} from '@angular/core';
 @Component({
   moduleId: module.id,
   selector: 'dev-app',
-  template: '<dev-app-chrome><router-outlet></router-outlet></dev-app-chrome>',
+  template: '<dev-app-layout><router-outlet></router-outlet></dev-app-layout>',
   encapsulation: ViewEncapsulation.None,
 })
 export class DevAppComponent {

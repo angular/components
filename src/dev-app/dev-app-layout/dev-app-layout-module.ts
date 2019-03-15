@@ -8,7 +8,7 @@ import {
   MatToolbarModule
 } from '@angular/material';
 import {RouterModule} from '@angular/router';
-import {DevAppChrome} from './dev-app-chrome';
+import {DevAppLayout} from './dev-app-layout';
 
 @NgModule({
   imports: [
@@ -20,8 +20,8 @@ import {DevAppChrome} from './dev-app-chrome';
     MatToolbarModule,
     RouterModule,
   ],
-  declarations: [DevAppChrome],
-  exports: [DevAppChrome],
+  declarations: [DevAppLayout],
+  exports: [DevAppLayout],
 })
-export class DevAppChromeModule {
+export class DevAppLayoutModule {
 }

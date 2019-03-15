@@ -13,12 +13,12 @@ import {DevAppRippleOptions} from '../ripple/ripple-options';
 /** Root component for the dev-app demos. */
 @Component({
   moduleId: module.id,
-  selector: 'dev-app-chrome',
-  templateUrl: 'dev-app-chrome.html',
-  styleUrls: ['dev-app-chrome.css'],
+  selector: 'dev-app-layout',
+  templateUrl: 'dev-app-layout.html',
+  styleUrls: ['dev-app-layout.css'],
   encapsulation: ViewEncapsulation.None,
 })
-export class DevAppChrome {
+export class DevAppLayout {
   dark = false;
   navItems = [
     {name: 'Examples', route: '/examples'},

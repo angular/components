@@ -25,7 +25,7 @@ import {ChipsDemoModule} from './chips/chips-demo-module';
 import {ConnectedOverlayDemoModule} from './connected-overlay/connected-overlay-demo-module';
 import {DatepickerDemoModule} from './datepicker/datepicker-demo-module';
 import {DevApp404, DevAppComponent, DevAppHome} from './dev-app';
-import {DevAppChromeModule} from './dev-app-chrome/dev-app-chrome-module';
+import {DevAppLayoutModule} from './dev-app-layout/dev-app-layout-module';
 import {DialogDemoModule} from './dialog/dialog-demo-module';
 import {DragDropDemoModule} from './drag-drop/drag-drop-demo-module';
 import {DrawerDemoModule} from './drawer/drawer-demo-module';
@@ -67,7 +67,7 @@ import {VirtualScrollDemoModule} from './virtual-scroll/virtual-scroll-demo-modu
   imports: [
     BrowserAnimationsModule,
     BrowserModule,
-    DevAppChromeModule,
+    DevAppLayoutModule,
     HttpClientModule,
     RouterModule.forRoot(DEV_APP_ROUTES),
 
