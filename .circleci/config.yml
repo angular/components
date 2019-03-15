@@ -259,11 +259,15 @@ jobs:
   # -------------------------------------------------------------------------------------------
   build_release_packages:
     <<: *job_defaults
+    environment:
+      GCP_DECRYPT_TOKEN: *gcp_decrypt_token
     resource_class: xlarge
     steps:
       - *checkout_code
       - *restore_cache
       - *yarn_install
+      - *copy_bazel_config
+      - *setup_bazel_remote_execution
 
       - run: ./scripts/build-packages-dist.sh
       - run: yarn check-release-output
