@@ -3,9 +3,6 @@ import {sync as glob} from 'glob';
 import {dirname, isAbsolute, join} from 'path';
 import * as ts from 'typescript';
 
-/** RegExp that matches Angular component inline styles that contain a sourcemap reference. */
-const inlineStylesSourcemapRegex = /styles: ?\[["'].*sourceMappingURL=.*["']/;
-
 /** RegExp that matches Angular component metadata properties that refer to external resources. */
 const externalReferencesRegex = /(templateUrl|styleUrls): *["'[]/;
 
@@ -16,10 +13,6 @@ const externalReferencesRegex = /(templateUrl|styleUrls): *["'[]/;
 export function checkReleaseBundle(bundlePath: string): string[] {
   const bundleContent = readFileSync(bundlePath, 'utf8');
   const failures: string[] = [];
-
-  if (inlineStylesSourcemapRegex.exec(bundleContent) !== null) {
-    failures.push('Found sourcemap references in component styles.');
-  }
 
   if (externalReferencesRegex.exec(bundleContent) !== null) {
     failures.push('Found external component resource references');

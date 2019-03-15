@@ -9,7 +9,7 @@ import {
 } from './output-validations';
 
 /** Glob that matches all JavaScript bundle files within a release package. */
-const releaseBundlesGlob = '+(esm5|esm2015|bundles)/*.js';
+const releaseBundlesGlob = '+(fesm5|fesm2015|esm5|esm2015|bundles)/*.js';
 
 /** Glob that matches all TypeScript definition files within a release package. */
 const releaseTypeDefinitionsGlob = '**/*.d.ts';
@@ -49,8 +49,8 @@ export function checkReleasePackage(releasesPath: string, packageName: string): 
       .forEach(message => addFailure(message, filePath));
   });
 
-  // Special release validation checks for the "material" release package.
-  if (packageName === 'material') {
+  // Special release validation checks for the Material ("lib") release package.
+  if (packageName === 'lib') {
     checkMaterialPackage(join(releasesPath, packageName))
       .forEach(message => addFailure(message));
   }
