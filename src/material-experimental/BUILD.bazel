@@ -16,6 +16,5 @@ ng_package(
   entry_point = "src/material-experimental/public_api.js",
   globals = ROLLUP_GLOBALS,
   deps = [":material-experimental"],
-  # TODO(devversion): re-enable once we have set up the proper compiler for the ng_package
-  tags = ["manual"],
+  tags = ["release-package"],
 )
