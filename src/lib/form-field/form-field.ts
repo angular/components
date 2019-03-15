@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Directionality} from '@angular/cdk/bidi';
+import {Direction, Directionality} from '@angular/cdk/bidi';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
 import {
   AfterContentChecked,
@@ -231,6 +231,8 @@ export class MatFormField extends _MatFormFieldMixinBase
   /** Whether the Angular animations are enabled. */
   _animationsEnabled: boolean;
 
+  private _previousDirection: Direction = 'ltr';
+
   /**
    * @deprecated
    * @breaking-change 8.0.0
@@ -336,7 +338,10 @@ export class MatFormField extends _MatFormFieldMixinBase
     });
 
     if (this._dir) {
-      this._dir.change.pipe(takeUntil(this._destroyed)).subscribe(() => this.updateOutlineGap());
+      this._dir.change.pipe(takeUntil(this._destroyed)).subscribe(() => {
+        this.updateOutlineGap();
+        this._previousDirection = this._dir.value;
+      });
     }
   }
 
@@ -558,7 +563,7 @@ export class MatFormField extends _MatFormFieldMixinBase
 
   /** Gets the start end of the rect considering the current directionality. */
   private _getStartEnd(rect: ClientRect): number {
-    return this._dir && this._dir.value === 'rtl' ? rect.right : rect.left;
+    return this._previousDirection === 'rtl' ? rect.right : rect.left;
   }
 
   /**
