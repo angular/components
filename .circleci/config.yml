@@ -123,8 +123,8 @@ jobs:
       - *copy_bazel_config
       - *setup_bazel_remote_execution
 
-      - run: bazel build src/... --build_tag_filters=-docs-package
-      - run: bazel test src/... --build_tag_filters=-docs-package
+      - run: bazel build src/... --build_tag_filters=-docs-package,-release-package
+      - run: bazel test src/... --build_tag_filters=-docs-package,-release-package
 
       # Note: We want to save the cache in this job because the workspace cache also
       # includes the Bazel repository cache that will be updated in this job.
@@ -265,7 +265,7 @@ jobs:
       - *restore_cache
       - *yarn_install
 
-      - run: yarn gulp ci:build-release-packages
+      - run: ./scripts/build-packages-dist.sh
       - run: yarn check-release-output
 
       # Store the release output in the workspace storage. This means that other jobs
