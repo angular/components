@@ -59,6 +59,12 @@ for pkg in ${dirs}; do
   pkgDir="${bazelBinPath}/src/${pkg}/npm_package"
   targetDir="${destPath}/${pkg}"
 
+  # The target directory for the Material package ("lib") should not be called "lib".
+  # Until we rename the source directory to "material", we just rename it here.
+  if [[ "${pkg}" == "lib" ]]; then
+    targetDir="${destPath}/material"
+  fi
+
   if [[ -d ${pkgDir} ]]; then
     echo "> Copying package output to \"${targetDir}\".."
     rm -rf ${targetDir}

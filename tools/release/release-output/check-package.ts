@@ -49,8 +49,8 @@ export function checkReleasePackage(releasesPath: string, packageName: string): 
       .forEach(message => addFailure(message, filePath));
   });
 
-  // Special release validation checks for the Material ("lib") release package.
-  if (packageName === 'lib') {
+  // Special release validation checks for the "material" release package.
+  if (packageName === 'material') {
     checkMaterialPackage(join(releasesPath, packageName))
       .forEach(message => addFailure(message));
   }
