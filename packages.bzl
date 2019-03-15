@@ -22,6 +22,12 @@ CDK_PACKAGES = [
 
 CDK_TARGETS = ["//src/cdk"] + ["//src/cdk/%s" % p for p in CDK_PACKAGES]
 
+CDK_TARGETS_WITH_STYLES = [
+  "a11y",
+  "overlay",
+  "text-field",
+]
+
 CDK_EXPERIMENTAL_PACKAGES = [
   "dialog",
   "scrolling",
