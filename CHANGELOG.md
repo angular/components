@@ -3940,7 +3940,7 @@ property, you can instead inject that value using the `MD_DIALOG_DATA` of the op
 * **select:** allow custom aria-label ([#3765](https://github.com/angular/material2/issues/3765)) ([038a337](https://github.com/angular/material2/commit/038a337)), closes [#3762](https://github.com/angular/material2/issues/3762)
 * deprecate MaterialModule ([#3840](https://github.com/angular/material2/issues/3840)) ([3f5894e](https://github.com/angular/material2/commit/3f5894e))
 * **overlay:** ensure proper stacking order when attaching ([#3581](https://github.com/angular/material2/issues/3581)) ([aa5925b](https://github.com/angular/material2/commit/aa5925b)), closes [#3574](https://github.com/angular/material2/issues/3574)
-* **package.json:** Fix failing `npm run api` command ([#3462](https://github.com/angular/material2/issues/3462)) ([bf2b615](https://github.com/angular/material2/commit/bf2b615))
+* **package.json:** Fix failing `yarn run api` command ([#3462](https://github.com/angular/material2/issues/3462)) ([bf2b615](https://github.com/angular/material2/commit/bf2b615))
 * **portal-host:** unable to clear and portal reference not being set ([#3302](https://github.com/angular/material2/issues/3302)) ([7fcb93b](https://github.com/angular/material2/commit/7fcb93b))
 * **progress-spinner:** not redrawing when changing modes ([#3672](https://github.com/angular/material2/issues/3672)) ([1ae81a4](https://github.com/angular/material2/commit/1ae81a4)), closes [#3648](https://github.com/angular/material2/issues/3648)
 * **pseudo-checkbox:** alignment issue and border color ([#3144](https://github.com/angular/material2/issues/3144)) ([1f19ef0](https://github.com/angular/material2/commit/1f19ef0))
