@@ -746,13 +746,27 @@ describe('MatButtonToggle without forms', () => {
       expect(button.getAttribute('tabindex')).toBe('3');
     });
 
-    it('should clear the tabindex from the host element', () => {
+    it('should set the tabindex on the host element to -1', () => {
       const fixture = TestBed.createComponent(ButtonToggleWithTabindex);
       fixture.detectChanges();
 
       const host = fixture.nativeElement.querySelector('.mat-button-toggle');
 
       expect(host.getAttribute('tabindex')).toBe('-1');
+    });
+
+    it('should clear the tabindex from the host node when disabled', () => {
+      const fixture = TestBed.createComponent(ButtonToggleWithTabindex);
+      fixture.detectChanges();
+
+      const host = fixture.nativeElement.querySelector('.mat-button-toggle');
+
+      expect(host.getAttribute('tabindex')).toBeTruthy();
+
+      fixture.componentInstance.disabled = true;
+      fixture.detectChanges();
+
+      expect(host.hasAttribute('tabindex')).toBe(false);
     });
 
     it('should forward focus to the underlying button when the host is focused', () => {
@@ -947,7 +961,9 @@ class RepeatedButtonTogglesWithPreselectedValue {
 
 
 @Component({
-  template: `<mat-button-toggle tabindex="3"></mat-button-toggle>`
+  template: `<mat-button-toggle tabindex="3" [disabled]="disabled"></mat-button-toggle>`
 })
-class ButtonToggleWithTabindex {}
+class ButtonToggleWithTabindex {
+  disabled = false;
+}
 
