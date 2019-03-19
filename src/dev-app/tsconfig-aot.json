@@ -32,7 +32,7 @@
       "@angular/material-examples": ["../../dist/releases/material-examples"]
     }
   },
-  "files": [
+  "include": [
     "./typings.d.ts",
     "./main-aot.ts",
     "**/*-module.ts"
