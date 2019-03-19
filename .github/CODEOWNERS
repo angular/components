@@ -128,6 +128,7 @@
 /src/dev-app/input/**                              @mmalerba
 /src/dev-app/list/**                               @jelbourn @crisbeto @devversion
 /src/dev-app/live-announcer/**                     @jelbourn
+/src/dev-app/mdc-checkbox/**                       @mmalerba
 /src/dev-app/menu/**                               @crisbeto
 /src/dev-app/overlay/**                            @jelbourn @crisbeto
 /src/dev-app/paginator/**                          @andrewseguin
