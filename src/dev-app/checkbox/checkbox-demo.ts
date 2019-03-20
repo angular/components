@@ -6,13 +6,28 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Component} from '@angular/core';
+import {Component, Directive} from '@angular/core';
+import {MAT_CHECKBOX_CLICK_ACTION} from '@angular/material';
 
 
 export interface Task {
   name: string;
   completed: boolean;
   subtasks?: Task[];
+}
+
+@Directive({
+  selector: '[clickActionNoop]',
+  providers: [{provide: MAT_CHECKBOX_CLICK_ACTION, useValue: 'noop'}],
+})
+export class ClickActionNoop {
+}
+
+@Directive({
+  selector: '[clickActionCheck]',
+  providers: [{provide: MAT_CHECKBOX_CLICK_ACTION, useValue: 'check'}],
+})
+export class ClickActionCheck {
 }
 
 @Component({
@@ -75,6 +90,19 @@ export class CheckboxDemo {
   isDisabled: boolean = false;
   labelPosition: string = 'after';
   useAlternativeColor: boolean = false;
+
+  demoRequired = false;
+  demoLabelAfter = false;
+  demoChecked = false;
+  demoDisabled = false;
+  demoIndeterminate = false;
+  demoLabel = null;
+  demoLabelledBy = null;
+  demoId = null;
+  demoName = null;
+  demoValue = null;
+  demoColor = 'primary';
+  demoDisableRipple = false;
 
   printResult() {
     if (this.isIndeterminate) {
