@@ -21,6 +21,7 @@ function build_angular_packages() {
 function install_angular_package() {
   name=$1
   echo "    @angular/$name"
+  rm -Rf "node_modules/@angular/${name}"
   cp -r "${output_path}/${name}/npm_package" "node_modules/@angular/${name}"
 }
 
