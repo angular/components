@@ -1,7 +1,12 @@
 <div class="mdc-form-field">
-  <div class="mdc-checkbox">
-    <input type="checkbox"
-           class="mdc-checkbox__native-control"
+  <div #checkbox
+       class="mdc-checkbox">
+    <input #nativeCheckbox
+           type="checkbox"
+           [ngClass]="_classes"
+           [checked]="checked"
+           [disabled]="disabled"
+           [indeterminate]="indeterminate"
            id="checkbox-1"
            (change)="_checkboxFoundation.handleChange()"/>
     <div class="mdc-checkbox__background">
@@ -14,5 +19,8 @@
       <div class="mdc-checkbox__mixedmark"></div>
     </div>
   </div>
-  <label for="checkbox-1">Checkbox 1</label>
+  <label #label
+         for="checkbox-1">
+    Checkbox 1
+  </label>
 </div>
