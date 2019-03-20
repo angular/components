@@ -7,15 +7,11 @@
  */
 
 import {NgModule} from '@angular/core';
-import {RouterModule} from '@angular/router';
 import {ExampleModule} from '../example/example-module';
 import {TableDemo} from './table-demo';
 
 @NgModule({
-  imports: [
-    ExampleModule,
-    RouterModule.forChild([{path: '', component: TableDemo}]),
-  ],
+  imports: [ExampleModule],
   declarations: [TableDemo],
 })
 export class TableDemoModule {

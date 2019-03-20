@@ -10,7 +10,6 @@ import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {MatButtonModule, MatCheckboxModule, MatIconModule, MatListModule} from '@angular/material';
-import {RouterModule} from '@angular/router';
 import {ListDemo} from './list-demo';
 
 @NgModule({
@@ -21,7 +20,6 @@ import {ListDemo} from './list-demo';
     MatCheckboxModule,
     MatIconModule,
     MatListModule,
-    RouterModule.forChild([{path: '', component: ListDemo}]),
   ],
   declarations: [ListDemo],
 })

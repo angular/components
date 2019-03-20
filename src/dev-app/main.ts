@@ -6,8 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {ɵNgModuleFactory} from '@angular/core';
-import {platformBrowser} from '@angular/platform-browser';
-import {MainModule} from './main-module';
+import {platformBrowserDynamic} from '@angular/platform-browser-dynamic';
+import {DevAppModule} from './dev-app-module';
 
-platformBrowser().bootstrapModuleFactory(new ɵNgModuleFactory(MainModule));
+platformBrowserDynamic().bootstrapModule(DevAppModule);

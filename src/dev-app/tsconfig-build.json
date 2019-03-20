@@ -62,12 +62,12 @@
       ]
     }
   },
-  "include": [
+  "files": [
     "./typings.d.ts",
+    "./dev-app-module.ts",
     "./system-rxjs-operators.ts",
     "./system-config.ts",
-    "./main.ts",
-    "**/*-module.ts"
+    "./main.ts"
   ],
   "angularCompilerOptions": {
     "enableIvy": "ngtsc"

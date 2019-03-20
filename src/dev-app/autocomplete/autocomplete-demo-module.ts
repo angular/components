@@ -16,7 +16,6 @@ import {
   MatFormFieldModule,
   MatInputModule
 } from '@angular/material';
-import {RouterModule} from '@angular/router';
 import {AutocompleteDemo} from './autocomplete-demo';
 
 @NgModule({
@@ -29,7 +28,6 @@ import {AutocompleteDemo} from './autocomplete-demo';
     MatFormFieldModule,
     MatInputModule,
     ReactiveFormsModule,
-    RouterModule.forChild([{path: '', component: AutocompleteDemo}]),
   ],
   declarations: [AutocompleteDemo],
 })

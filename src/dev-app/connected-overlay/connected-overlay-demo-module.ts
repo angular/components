@@ -11,7 +11,6 @@ import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {MatButtonModule, MatCheckboxModule, MatRadioModule} from '@angular/material';
-import {RouterModule} from '@angular/router';
 import {ConnectedOverlayDemo} from './connected-overlay-demo';
 
 @NgModule({
@@ -22,7 +21,6 @@ import {ConnectedOverlayDemo} from './connected-overlay-demo';
     MatCheckboxModule,
     MatRadioModule,
     OverlayModule,
-    RouterModule.forChild([{path: '', component: ConnectedOverlayDemo}]),
   ],
   declarations: [ConnectedOverlayDemo],
 })

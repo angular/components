@@ -18,7 +18,6 @@ import {
   MatSelectModule,
   MatToolbarModule
 } from '@angular/material';
-import {RouterModule} from '@angular/router';
 import {SelectDemo} from './select-demo';
 
 @NgModule({
@@ -33,7 +32,6 @@ import {SelectDemo} from './select-demo';
     MatSelectModule,
     MatToolbarModule,
     ReactiveFormsModule,
-    RouterModule.forChild([{path: '', component: SelectDemo}]),
   ],
   declarations: [SelectDemo],
 })

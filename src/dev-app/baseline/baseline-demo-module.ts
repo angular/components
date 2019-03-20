@@ -17,7 +17,6 @@ import {
   MatSelectModule,
   MatToolbarModule
 } from '@angular/material';
-import {RouterModule} from '@angular/router';
 import {BaselineDemo} from './baseline-demo';
 
 @NgModule({
@@ -30,7 +29,6 @@ import {BaselineDemo} from './baseline-demo';
     MatRadioModule,
     MatSelectModule,
     MatToolbarModule,
-    RouterModule.forChild([{path: '', component: BaselineDemo}]),
   ],
   declarations: [BaselineDemo],
 })

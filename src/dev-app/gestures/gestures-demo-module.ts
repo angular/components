@@ -7,11 +7,9 @@
  */
 
 import {NgModule} from '@angular/core';
-import {RouterModule} from '@angular/router';
 import {GesturesDemo} from './gestures-demo';
 
 @NgModule({
-  imports: [RouterModule.forChild([{path: '', component: GesturesDemo}])],
   declarations: [GesturesDemo],
 })
 export class GesturesDemoModule {

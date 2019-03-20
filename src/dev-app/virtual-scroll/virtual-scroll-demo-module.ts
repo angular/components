@@ -17,7 +17,6 @@ import {
   MatInputModule,
   MatSelectModule
 } from '@angular/material';
-import {RouterModule} from '@angular/router';
 import {VirtualScrollDemo} from './virtual-scroll-demo';
 
 @NgModule({
@@ -30,7 +29,6 @@ import {VirtualScrollDemo} from './virtual-scroll-demo';
     MatInputModule,
     MatSelectModule,
     ScrollingModule,
-    RouterModule.forChild([{path: '', component: VirtualScrollDemo}]),
   ],
   declarations: [VirtualScrollDemo],
 })

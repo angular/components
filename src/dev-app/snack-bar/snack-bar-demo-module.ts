@@ -17,7 +17,6 @@ import {
   MatSelectModule,
   MatSnackBarModule
 } from '@angular/material';
-import {RouterModule} from '@angular/router';
 import {SnackBarDemo} from './snack-bar-demo';
 
 @NgModule({
@@ -30,7 +29,6 @@ import {SnackBarDemo} from './snack-bar-demo';
     MatInputModule,
     MatSelectModule,
     MatSnackBarModule,
-    RouterModule.forChild([{path: '', component: SnackBarDemo}]),
   ],
   declarations: [SnackBarDemo],
 })
