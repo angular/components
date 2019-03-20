@@ -26,4 +26,12 @@ sass_library(
 sass_binary(
   name = "checkbox_scss",
   src = "checkbox.scss",
+  include_paths = [
+    "external/npm/node_modules",
+  ],
+  deps = [
+    ":checkbox_scss_lib",
+    "//src/lib/core:all_themes",
+    "//src/material-experimental/mdc-helpers:mdc_scss_deps_lib",
+  ]
 )

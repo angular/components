@@ -1,5 +1,23 @@
+@import '@material/checkbox/mixins';
+@import '@material/form-field/mixins';
+@import '../mdc-helpers/mdc-helpers';
+
 @mixin mat-checkbox-theme-mdc($theme) {
+  @include mat-using-mdc-theme($theme) {
+    @include mdc-checkbox-without-ripple($query: $mat-theme-styles-query);
+    @include mdc-form-field-core-styles($query: $mat-theme-styles-query);
+  }
 }
 
-@mixin mat-checkbox-typography-mdc($config) {
+@mixin mat-checkbox-typography-mdc($config: null) {
+  @if $config {
+    @include mat-using-mdc-typography($config) {
+      @include mdc-checkbox-without-ripple($query: $mat-typography-styles-query);
+      @include mdc-form-field-core-styles($query: $mat-typography-styles-query);
+    }
+  }
+  @else {
+    @include mdc-checkbox-without-ripple($query: $mat-typography-styles-query);
+    @include mdc-form-field-core-styles($query: $mat-typography-styles-query);
+  }
 }
