@@ -1,0 +1,12 @@
+.position-area {
+  height: 500px;
+  position: relative;
+  width: 800px;
+}
+
+.origin {
+  background-color: lightsteelblue;
+  height: 50px;
+  position: absolute;
+  width: 100px;
+}

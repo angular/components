@@ -295,8 +295,6 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
     if (this._canPush) {
       // TODO(jelbourn): after pushing, the opening "direction" of the overlay might not make sense.
       this._isPushed = true;
-      this._applyPosition(fallback!.position, fallback!.originPoint);
-      return;
     }
 
     // All options for getting the overlay within the viewport have been exhausted, so go with the

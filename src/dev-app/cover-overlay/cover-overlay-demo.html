@@ -1,0 +1,72 @@
+<div class="position-area">
+  <div #topOrigin class="origin" [style.left.px]="top.x" [style.top.px]="top.y">Top origin</div>
+  <div #rightOrigin class="origin" [style.left.px]="left.x" [style.top.px]="left.y">Right origin</div>
+  <div #bottomOrigin class="origin" [style.left.px]="left.x" [style.top.px]="left.y">Bottom origin</div>
+  <div leftOrigin class="origin" [style.left.px]="left.x" [style.top.px]="left.y">Left origin</div>
+</div>
+
+<div class="demo-options mat-typography">
+  <div>
+    <h2>Left origin</h2>
+    <p>
+      <mat-checkbox [(ngModel)]="left.connected">connected</mat-checkbox>
+    </p>
+    <p>
+      <label>
+        x
+        <input type="number" [(ngModel)]="left.x">
+      </label>
+
+      <label>
+        y
+        <input type="number" [(ngModel)]="left.y">
+      </label>
+    </p>
+  </div>
+
+  <div>
+    <h2>Options</h2>
+
+    <p>
+      <label>
+        Number of items in the overlay
+        <input type="number" [(ngModel)]="itemCount">
+      </label>
+    </p>
+
+    <p>
+      <label>
+        Item text
+        <input [(ngModel)]="itemText">
+      </label>
+    </p>
+
+    <div>
+      <mat-checkbox [(ngModel)]="isFlexible">Allow flexible dimensions</mat-checkbox>
+    </div>
+
+    <div>
+      <mat-checkbox [(ngModel)]="canPush">Allow push</mat-checkbox>
+    </div>
+
+    <div>
+      <mat-checkbox [checked]="showBoundingBox" [disabled]="!overlayRef"
+          (click)="toggleShowBoundingBox()">
+        Show bounding box
+      </mat-checkbox>
+    </div>
+  </div>
+
+  <div>
+    <button mat-raised-button type="button" (click)="open()" [disabled]="overlayRef">Open</button>
+    <button mat-raised-button type="button" (click)="close()" [disabled]="!overlayRef">Close</button>
+  </div>
+</div>
+
+<ng-template #overlay>
+  <div class="demo-overlay">
+    <div style="overflow: auto;">
+      <ul><li *ngFor="let item of itemArray; index as i">{{itemText}} {{i}}</li></ul>
+    </div>
+  </div>
+</ng-template>

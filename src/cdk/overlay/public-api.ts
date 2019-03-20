@@ -28,4 +28,6 @@ export {
   ConnectedPosition,
   FlexibleConnectedPositionStrategy,
 } from './position/flexible-connected-position-strategy';
+export {CoverPositionStrategy} from './position/cover-position-strategy';
+export {CoverPositionStrategyFactory} from './position/cover-position-strategy-factory';
 export {VIEWPORT_RULER_PROVIDER} from '@angular/cdk/scrolling';
