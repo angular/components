@@ -13,10 +13,21 @@ import {MatCommonModule, MatRippleModule} from '@angular/material/core';
 import {MatCheckbox} from './checkbox';
 import {MatCheckboxRequiredValidator} from './checkbox-required-validator';
 
+@NgModule({
+  exports: [MatCheckboxRequiredValidator],
+  declarations: [MatCheckboxRequiredValidator],
+})
+// tslint:disable-next-line:class-name
+export class _MatCheckboxRequiredValidatorModule {
+}
 
 @NgModule({
-  imports: [CommonModule, MatRippleModule, MatCommonModule, ObserversModule],
-  exports: [MatCheckbox, MatCheckboxRequiredValidator, MatCommonModule],
-  declarations: [MatCheckbox, MatCheckboxRequiredValidator],
+  imports: [
+    CommonModule, MatRippleModule, MatCommonModule, ObserversModule,
+    _MatCheckboxRequiredValidatorModule
+  ],
+  exports: [MatCheckbox, MatCommonModule, _MatCheckboxRequiredValidatorModule],
+  declarations: [MatCheckbox],
 })
-export class MatCheckboxModule {}
+export class MatCheckboxModule {
+}

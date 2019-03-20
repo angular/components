@@ -10,6 +10,10 @@ ng_module(
   module_name = "@angular/material-experimental/mdc-checkbox",
   assets = [":checkbox_scss"] + glob(["**/*.html"]),
   deps = [
+    "@npm//@angular/animations",
+    "@npm//@angular/common",
+    "@npm//@angular/core",
+    "@npm//@angular/forms",
     "@npm//material-components-web",
   ] + CDK_TARGETS + MATERIAL_TARGETS,
 )
@@ -20,6 +24,7 @@ sass_library(
   deps = [
     "//src/lib/core:core_scss_lib",
     "//src/material-experimental/mdc-helpers:mdc_helpers_scss_lib",
+    "//src/material-experimental/mdc-helpers:mdc_scss_deps_lib",
   ],
 )
 

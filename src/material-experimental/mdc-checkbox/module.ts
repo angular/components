@@ -8,12 +8,13 @@
 
 import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
+import {_MatCheckboxRequiredValidatorModule} from '@angular/material/checkbox';
 import {MatCommonModule} from '@angular/material/core';
 import {MatCheckbox} from './checkbox';
 
 @NgModule({
-  imports: [MatCommonModule, CommonModule],
-  exports: [MatCheckbox, MatCommonModule],
+  imports: [MatCommonModule, CommonModule, _MatCheckboxRequiredValidatorModule],
+  exports: [MatCheckbox, MatCommonModule, _MatCheckboxRequiredValidatorModule],
   declarations: [MatCheckbox],
 })
 export class MatCheckboxModule {

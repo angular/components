@@ -8,6 +8,9 @@ ng_module(
   name = "material-experimental",
   srcs = glob(["*.ts"], exclude=["**/*.spec.ts"]),
   module_name = "@angular/material-experimental",
+  deps = [
+    "@npm//@angular/forms",
+  ],
 )
 
 ng_package(
