@@ -647,13 +647,11 @@ describe('Overlay', () => {
       const mockDiv = document.createElement('div');
       mockDiv.setAttribute('data-test', 'test');
 
-      const getContainer = jasmine.createSpy('getContainer spy');
       const overlayRef = overlay.create({container: mockDiv});
 
       expect(overlayContainer.getContainerElement).not.toHaveBeenCalled();
       expect(overlayRef.hostElement).toBe(mockDiv);
     });
-
   });
 
   describe('backdrop', () => {
