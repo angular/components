@@ -643,6 +643,17 @@ describe('Overlay', () => {
       expect(style.maxHeight).toBeFalsy();
     });
 
+    it('should not user the default container when a custom container element is provided', () => {
+      const mockDiv = document.createElement('div');
+      mockDiv.setAttribute('data-test', 'test');
+
+      const getContainer = jasmine.createSpy('getContainer spy');
+      const overlayRef = overlay.create({container: mockDiv});
+
+      expect(overlayContainer.getContainerElement).not.toHaveBeenCalled();
+      expect(overlayRef.hostElement).toBe(mockDiv);
+    });
+
   });
 
   describe('backdrop', () => {

@@ -59,6 +59,11 @@ export class OverlayConfig {
    */
   disposeOnNavigation?: boolean = false;
 
+  /**
+   * The element on which the overlay will be attached to. The default element is the document body.
+   */
+  container?: HTMLElement;
+
   constructor(config?: OverlayConfig) {
     if (config) {
       Object.keys(config).forEach(k => {
