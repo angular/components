@@ -10,6 +10,7 @@ import {OverlayModule} from '@angular/cdk/overlay';
 import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
 import {FormsModule} from '@angular/forms';
+import {RouterModule} from '@angular/router';
 import {MatButtonModule, MatCheckboxModule, MatRadioModule} from '@angular/material';
 import {ConnectedOverlayDemo} from './connected-overlay-demo';
 
@@ -21,6 +22,7 @@ import {ConnectedOverlayDemo} from './connected-overlay-demo';
     MatCheckboxModule,
     MatRadioModule,
     OverlayModule,
+    RouterModule.forChild([{path: '', component: CoverOverlayDemo}]),
   ],
   declarations: [CoverOverlayDemo],
 })

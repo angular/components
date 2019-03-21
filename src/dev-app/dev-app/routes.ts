@@ -85,6 +85,10 @@ export const DEV_APP_ROUTES: Routes = [
     loadChildren: 'connected-overlay/connected-overlay-demo-module#ConnectedOverlayDemoModule'
   },
   {
+    path: 'cover-overlay',
+    loadChildren: 'cover-overlay/cover-overlay-demo-module#CoverOverlayDemoModule'
+  },
+  {
     path: 'virtual-scroll',
     loadChildren: 'virtual-scroll/virtual-scroll-demo-module#VirtualScrollDemoModule'
   },
