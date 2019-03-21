@@ -648,9 +648,10 @@ describe('Overlay', () => {
       mockDiv.setAttribute('data-test', 'test');
 
       const overlayRef = overlay.create({container: mockDiv});
+      const spy = spyOn(overlayContainer, 'getContainerElement');
 
-      expect(overlayContainer.getContainerElement).not.toHaveBeenCalled();
-      expect(overlayRef.hostElement).toBe(mockDiv);
+      expect(spy).not.toHaveBeenCalled();
+      expect(overlayRef.hostElement.parentElement).toBe(mockDiv);
     });
   });
 
