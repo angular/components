@@ -60,7 +60,8 @@ export class OverlayConfig {
   disposeOnNavigation?: boolean = false;
 
   /**
-   * The element on which the overlay will be attached to. The default element is the document body.
+   * The element on which the overlay will be attached to. 
+   * The default containing element is the document body.
    */
   container?: HTMLElement;
 
