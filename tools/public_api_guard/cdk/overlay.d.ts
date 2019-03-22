@@ -186,7 +186,6 @@ export declare class OverlayConfig {
     positionStrategy?: PositionStrategy;
     scrollStrategy?: ScrollStrategy;
     width?: number | string;
-    container?: HTMLElement;
     constructor(config?: OverlayConfig);
 }
 
