@@ -174,7 +174,7 @@ export declare const OVERLAY_PROVIDERS: Provider[];
 
 export declare class OverlayConfig {
     backdropClass?: string | string[];
-    container: HTMLElement;
+    container?: HTMLElement;
     direction?: Direction | Directionality;
     disposeOnNavigation?: boolean;
     hasBackdrop?: boolean;
