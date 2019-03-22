@@ -18,6 +18,7 @@ import {
   forwardRef,
   Inject,
   Input,
+  NgZone,
   OnDestroy,
   Optional,
   Output,
@@ -25,9 +26,17 @@ import {
   ViewEncapsulation
 } from '@angular/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
-import {MAT_CHECKBOX_CLICK_ACTION, MatCheckboxClickAction, ThemePalette} from '@angular/material';
+import {
+  MAT_CHECKBOX_CLICK_ACTION,
+  MatCheckboxClickAction,
+  RippleRenderer,
+  RippleTarget,
+  ThemePalette
+} from '@angular/material';
+import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 import {MDCCheckboxAdapter, MDCCheckboxFoundation} from '@material/checkbox';
 import {MDCFormFieldAdapter, MDCFormFieldFoundation} from '@material/form-field';
+import {MDCRippleFoundation} from '@material/ripple';
 
 let nextUniqueId = 0;
 
@@ -51,9 +60,11 @@ export class MatCheckboxChange {
   templateUrl: 'checkbox.html',
   styleUrls: ['checkbox.css'],
   host: {
+    'class': 'mat-mdc-checkbox',
     '[class.mat-primary]': 'color == "primary"',
     '[class.mat-accent]': 'color == "accent"',
     '[class.mat-warn]': 'color == "warn"',
+    '[class._mat-animation-noopable]': `_animationMode === 'NoopAnimations'`,
     '(animationend)': '_checkboxFoundation.handleAnimationEnd()',
   },
   providers: [MAT_MDC_CHECKBOX_CONTROL_VALUE_ACCESSOR],
@@ -68,7 +79,6 @@ export class MatCheckbox implements AfterViewInit, OnDestroy, ControlValueAccess
 
   @Input() color: ThemePalette = 'accent';
 
-  // TODO: hook this up.
   @Input() disableRipple: boolean = false;
 
   @Input() labelPosition: 'before'|'after' = 'after';
@@ -131,9 +141,6 @@ export class MatCheckbox implements AfterViewInit, OnDestroy, ControlValueAccess
 
   readonly inputId: string = `${this.id || this._uniqueId}-input`;
 
-  // TODO: hook this up.
-  ripple: any;
-
   _checkboxFoundation: MDCCheckboxFoundation;
 
   _classes: {[key: string]: boolean} = {'mdc-checkbox__native-control': true};
@@ -143,6 +150,10 @@ export class MatCheckbox implements AfterViewInit, OnDestroy, ControlValueAccess
   private _cvaOnChange = (_: boolean) => {};
 
   private _cvaOnTouch = () => {};
+
+  private _rippleTarget: RippleTarget;
+
+  private _rippleRenderer: RippleRenderer;
 
   private _checkboxAdapter: MDCCheckboxAdapter = {
     addClass: (className) => this._setClass(className, true),
@@ -166,13 +177,28 @@ export class MatCheckbox implements AfterViewInit, OnDestroy, ControlValueAccess
   };
 
   constructor(
-      private _cdr: ChangeDetectorRef, private _platform: Platform,
-      @Optional() @Inject(MAT_CHECKBOX_CLICK_ACTION) private _clickAction: MatCheckboxClickAction) {
+      private _cdr: ChangeDetectorRef, private _platform: Platform, private _ngZone: NgZone,
+      @Optional() @Inject(MAT_CHECKBOX_CLICK_ACTION) private _clickAction: MatCheckboxClickAction,
+      @Optional() @Inject(ANIMATION_MODULE_TYPE) public _animationMode?: string) {
     this._checkboxFoundation = new MDCCheckboxFoundation(this._checkboxAdapter);
     this._formFieldFoundation = new MDCFormFieldFoundation(this._formFieldAdapter);
   }
 
   ngAfterViewInit() {
+    this._rippleTarget = {
+      rippleConfig: {
+        radius: 20,
+        centered: true,
+        animation: {
+          enterDuration: MDCRippleFoundation.numbers.DEACTIVATION_TIMEOUT_MS,
+          exitDuration: MDCRippleFoundation.numbers.FG_DEACTIVATION_MS,
+        },
+      },
+      rippleDisabled: true
+    };
+    this._rippleRenderer =
+        new RippleRenderer(this._rippleTarget, this._ngZone, this._checkbox, this._platform);
+
     this._checkboxFoundation.init();
     this._formFieldFoundation.init();
   }
@@ -205,6 +231,12 @@ export class MatCheckbox implements AfterViewInit, OnDestroy, ControlValueAccess
 
   toggle() {
     this.checked = !this.checked;
+  }
+
+  _activateRipple() {
+    if (!this.disableRipple && this._animationMode != 'NoopAnimations') {
+      this._rippleRenderer.fadeInRipple(0, 0, this._rippleTarget.rippleConfig);
+    }
   }
 
   _onBlur() {

@@ -8,6 +8,7 @@
 
 import {Component, Directive} from '@angular/core';
 import {MAT_CHECKBOX_CLICK_ACTION} from '@angular/material';
+import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 
 
 export interface Task {
@@ -28,6 +29,13 @@ export class ClickActionNoop {
   providers: [{provide: MAT_CHECKBOX_CLICK_ACTION, useValue: 'check'}],
 })
 export class ClickActionCheck {
+}
+
+@Directive({
+  selector: '[animationsNoop]',
+  providers: [{provide: ANIMATION_MODULE_TYPE, useValue: 'NoopAnimations'}],
+})
+export class AnimationsNoop {
 }
 
 @Component({

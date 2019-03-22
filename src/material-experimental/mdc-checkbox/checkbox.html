@@ -1,7 +1,8 @@
 <div class="mdc-form-field"
      [class.mdc-form-field--align-end]="labelPosition == 'before'">
   <div #checkbox
-       class="mdc-checkbox">
+       class="mdc-checkbox"
+       (click)="_activateRipple()">
     <input #nativeCheckbox
            type="checkbox"
            [ngClass]="_classes"

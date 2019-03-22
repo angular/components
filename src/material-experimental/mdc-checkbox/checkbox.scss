@@ -1,6 +1,38 @@
+@import '@material/checkbox/functions';
 @import '@material/checkbox/mixins';
 @import '@material/form-field/mixins';
+@import '@material/ripple/variables';
 @import '../mdc-helpers/mdc-helpers';
 
 @include mdc-checkbox-without-ripple($query: $mat-base-styles-query);
 @include mdc-form-field-core-styles($query: $mat-base-styles-query);
+
+.mat-mdc-checkbox {
+  // stylelint-disable selector-class-pattern
+
+  .mdc-checkbox:hover .mdc-checkbox__background::before {
+    opacity: map-get($mdc-ripple-dark-ink-opacities, hover);
+    transform: scale(2.75, 2.75);
+    transition: mdc-checkbox-transition-enter(opacity, 0ms, 80ms),
+                mdc-checkbox-transition-enter(transform, 0ms, 80ms);
+  }
+
+  .mdc-checkbox:hover .mdc-checkbox__native-control:focus ~ .mdc-checkbox__background::before {
+    opacity: map-get($mdc-ripple-dark-ink-opacities, hover) +
+                 map-get($mdc-ripple-dark-ink-opacities, focus);
+  }
+
+  .mat-ripple-element {
+    opacity: map-get($mdc-ripple-dark-ink-opacities, press);
+  }
+
+  &._mat-animation-noopable {
+    *,
+    *::before {
+      transition: none !important;
+      animation: none !important;
+    }
+  }
+
+  // stylelint-enable selector-class-pattern
+}

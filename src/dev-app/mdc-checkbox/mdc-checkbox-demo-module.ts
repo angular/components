@@ -19,6 +19,7 @@ import {MatCheckboxModule} from '@angular/material-experimental/mdc-checkbox';
 import {RouterModule} from '@angular/router';
 
 import {
+  AnimationsNoop,
   ClickActionCheck,
   ClickActionNoop,
   MatCheckboxDemoNestedChecklist,
@@ -37,8 +38,10 @@ import {
     ReactiveFormsModule,
     RouterModule.forChild([{path: '', component: MdcCheckboxDemo}]),
   ],
-  declarations:
-      [MdcCheckboxDemo, MatCheckboxDemoNestedChecklist, ClickActionCheck, ClickActionNoop],
+  declarations: [
+    MdcCheckboxDemo, MatCheckboxDemoNestedChecklist, ClickActionCheck, ClickActionNoop,
+    AnimationsNoop
+  ],
 })
 export class MdcCheckboxDemoModule {
 }

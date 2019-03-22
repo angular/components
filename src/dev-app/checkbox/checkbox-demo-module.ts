@@ -18,6 +18,7 @@ import {
 } from '@angular/material';
 import {RouterModule} from '@angular/router';
 import {
+  AnimationsNoop,
   CheckboxDemo,
   ClickActionCheck,
   ClickActionNoop,
@@ -36,7 +37,9 @@ import {
     ReactiveFormsModule,
     RouterModule.forChild([{path: '', component: CheckboxDemo}]),
   ],
-  declarations: [CheckboxDemo, MatCheckboxDemoNestedChecklist, ClickActionCheck, ClickActionNoop],
+  declarations: [
+    CheckboxDemo, MatCheckboxDemoNestedChecklist, ClickActionCheck, ClickActionNoop, AnimationsNoop
+  ],
 })
 export class CheckboxDemoModule {
 }
