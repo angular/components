@@ -14,7 +14,13 @@ import {
   Optional,
   SimpleChanges,
   ElementRef,
+  ChangeDetectorRef,
+  NgZone,
+  OnDestroy,
 } from '@angular/core';
+import {ContentObserver} from '@angular/cdk/observers';
+import {of as observableOf, Subscription} from 'rxjs';
+import {startWith} from 'rxjs/operators';
 import {MatDialog} from './dialog';
 import {MatDialogRef} from './dialog-ref';
 
@@ -33,7 +39,7 @@ let dialogElementUid = 0;
     'type': 'button', // Prevents accidental form submits.
   }
 })
-export class MatDialogClose implements OnInit, OnChanges {
+export class MatDialogClose implements OnInit, OnChanges, OnDestroy {
   /** Screenreader label for the button. */
   @Input('aria-label') ariaLabel: string = 'Close dialog';
 
@@ -48,10 +54,21 @@ export class MatDialogClose implements OnInit, OnChanges {
    */
   _hasAriaLabel?: boolean;
 
+  /** Subscription to changes in the button's content. */
+  private _contentChanges = Subscription.EMPTY;
+
   constructor(
     @Optional() public dialogRef: MatDialogRef<any>,
     private _elementRef: ElementRef<HTMLElement>,
-    private _dialog: MatDialog) {}
+    private _dialog: MatDialog,
+
+    /**
+     * @deprecated @breaking-change 9.0.0
+     * _contentObserver, _ngZone and _changeDetectorRef parameters to be made required.
+     */
+    private _contentObserver?: ContentObserver,
+    private _ngZone?: NgZone,
+    private _changeDetectorRef?: ChangeDetectorRef) {}
 
   ngOnInit() {
     if (!this.dialogRef) {
@@ -69,8 +86,23 @@ export class MatDialogClose implements OnInit, OnChanges {
       if (element.hasAttribute('mat-icon-button')) {
         this._hasAriaLabel = true;
       } else {
-        const buttonTextContent = element.textContent;
-        this._hasAriaLabel = !buttonTextContent || buttonTextContent.trim().length === 0;
+        // @breaking-change 9.0.0 Remove null checks for _contentObserver, _ngZone and
+        // _changeDetectorRef once they are made into required parameters.
+        const contentChangesStream = this._contentObserver ?
+          this._contentObserver.observe(this._elementRef) : observableOf<MutationRecord[]>();
+
+        // Toggle whether the button should have an aria-label, based on its content.
+        this._contentChanges = contentChangesStream.pipe(startWith(null)).subscribe(() => {
+          const buttonTextContent = element.textContent;
+          this._hasAriaLabel = !buttonTextContent || buttonTextContent.trim().length === 0;
+
+          // The content observer runs outside the `NgZone` so we need to bring it back in.
+          if (this._ngZone && this._changeDetectorRef) {
+            this._ngZone.run(() => {
+              this._changeDetectorRef!.markForCheck();
+            });
+          }
+        });
       }
     }
   }
@@ -86,6 +118,10 @@ export class MatDialogClose implements OnInit, OnChanges {
     if (changes['ariaLabel']) {
       this._hasAriaLabel = !!changes['ariaLabel'].currentValue;
     }
+  }
+
+  ngOnDestroy() {
+    this._contentChanges.unsubscribe();
   }
 }
 

@@ -44,14 +44,16 @@ export declare const matDialogAnimations: {
     readonly slideDialog: AnimationTriggerMetadata;
 };
 
-export declare class MatDialogClose implements OnInit, OnChanges {
+export declare class MatDialogClose implements OnInit, OnChanges, OnDestroy {
     _hasAriaLabel?: boolean;
     _matDialogClose: any;
     ariaLabel: string;
     dialogRef: MatDialogRef<any>;
     dialogResult: any;
-    constructor(dialogRef: MatDialogRef<any>, _elementRef: ElementRef<HTMLElement>, _dialog: MatDialog);
+    constructor(dialogRef: MatDialogRef<any>, _elementRef: ElementRef<HTMLElement>, _dialog: MatDialog,
+    _contentObserver?: ContentObserver | undefined, _ngZone?: NgZone | undefined, _changeDetectorRef?: ChangeDetectorRef | undefined);
     ngOnChanges(changes: SimpleChanges): void;
+    ngOnDestroy(): void;
     ngOnInit(): void;
 }
 

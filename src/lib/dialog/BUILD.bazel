@@ -19,6 +19,7 @@ ng_module(
     "//src/cdk/keycodes",
     "//src/cdk/overlay",
     "//src/cdk/portal",
+    "//src/cdk/observers",
     "//src/lib/core",
   ],
 )
@@ -50,6 +51,7 @@ ng_test_library(
     "//src/cdk/overlay",
     "//src/cdk/scrolling",
     "//src/cdk/testing",
+    "//src/cdk/observers",
     ":dialog",
   ]
 )

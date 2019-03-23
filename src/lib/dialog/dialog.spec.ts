@@ -36,6 +36,7 @@ import {
   MAT_DIALOG_DEFAULT_OPTIONS
 } from './index';
 import {Subject} from 'rxjs';
+import {MutationObserverFactory} from '@angular/cdk/observers';
 
 
 describe('MatDialog', () => {
@@ -47,8 +48,10 @@ describe('MatDialog', () => {
   let testViewContainerRef: ViewContainerRef;
   let viewContainerFixture: ComponentFixture<ComponentWithChildViewContainer>;
   let mockLocation: SpyLocation;
+  let mutationCallbacks: Function[];
 
   beforeEach(fakeAsync(() => {
+    mutationCallbacks = [];
     TestBed.configureTestingModule({
       imports: [MatDialogModule, DialogTestModule],
       providers: [
@@ -56,6 +59,19 @@ describe('MatDialog', () => {
         {provide: ScrollDispatcher, useFactory: () => ({
           scrolled: () => scrolledSubject.asObservable()
         })},
+        {
+          provide: MutationObserverFactory,
+          useValue: {
+            create: (callback: Function) => {
+              mutationCallbacks.push(callback);
+
+              return {
+                observe: () => {},
+                disconnect: () => {}
+              };
+            }
+          }
+        }
       ],
     });
 
@@ -1148,6 +1164,14 @@ describe('MatDialog', () => {
         expect(button.getAttribute('aria-label')).toBeTruthy();
       }));
 
+      it('should not have an aria-label if a button has bound text', fakeAsync(() => {
+        let button = overlayContainerElement.querySelector('.close-with-text-binding')!;
+        mutationCallbacks.forEach(callback => callback());
+        viewContainerFixture.detectChanges();
+
+        expect(button.getAttribute('aria-label')).toBeFalsy();
+      }));
+
       it('should not have an aria-label if a button has text', fakeAsync(() => {
         let button = overlayContainerElement.querySelector('[mat-dialog-close]')!;
         expect(button.getAttribute('aria-label')).toBeFalsy();
@@ -1511,6 +1535,7 @@ class PizzaMsg {
       <button class="close-without-text" mat-dialog-close></button>
       <button class="close-icon-button" mat-icon-button mat-dialog-close>exit</button>
       <button class="close-with-true" [mat-dialog-close]="true">Close and return true</button>
+      <button class="close-with-text-binding" mat-dialog-close>{{closeButtonText}}</button>
       <button
         class="close-with-aria-label"
         aria-label="Best close button ever"
@@ -1519,7 +1544,9 @@ class PizzaMsg {
     </mat-dialog-actions>
   `
 })
-class ContentElementDialog {}
+class ContentElementDialog {
+  closeButtonText = 'Close';
+}
 
 @Component({
   template: `
@@ -1531,6 +1558,7 @@ class ContentElementDialog {}
         <button class="close-without-text" mat-dialog-close></button>
         <button class="close-icon-button" mat-icon-button mat-dialog-close>exit</button>
         <button class="close-with-true" [mat-dialog-close]="true">Close and return true</button>
+        <button class="close-with-text-binding" mat-dialog-close>{{closeButtonText}}</button>
         <button
           class="close-with-aria-label"
           aria-label="Best close button ever"
@@ -1542,6 +1570,7 @@ class ContentElementDialog {}
 })
 class ComponentWithContentElementTemplateRef {
   @ViewChild(TemplateRef) templateRef: TemplateRef<any>;
+  closeButtonText = 'Close';
 }
 
 @Component({
