@@ -83,6 +83,9 @@
   border-radius: $mat-icon-button-border-radius;
 
   i, .mat-icon {
+    // We need to set `display: inline`, because the vertical text alignment breaks down in IE11
+    // in certain setups. See https://github.com/angular/material2/issues/15593
+    display: inline;
     line-height: $mat-icon-button-line-height;
   }
 }
