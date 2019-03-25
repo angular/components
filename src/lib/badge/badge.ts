@@ -119,7 +119,7 @@ export class MatBadge extends _MatBadgeMixinBase implements OnDestroy, CanDisabl
   private _hidden: boolean;
 
   /** Unique id for the badge */
-  _id: number = nextId++;
+  private _id: number = nextId++;
 
   private _badgeElement: HTMLElement;
 
