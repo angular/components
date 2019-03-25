@@ -112,6 +112,7 @@ export class MdcCheckboxDemo {
   demoValue = null;
   demoColor = 'primary';
   demoDisableRipple = false;
+  demoHideLabel = false;
 
   printResult() {
     if (this.isIndeterminate) {

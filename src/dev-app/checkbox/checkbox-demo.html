@@ -65,6 +65,7 @@
   <mat-checkbox [(ngModel)]="demoDisabled">disabled?</mat-checkbox><br>
   <mat-checkbox [(ngModel)]="demoIndeterminate">indeterminate?</mat-checkbox><br>
   <mat-checkbox [(ngModel)]="demoDisableRipple">disable ripple?</mat-checkbox><br>
+  <mat-checkbox [(ngModel)]="demoHideLabel">hide label?</mat-checkbox><br>
   <mat-form-field>
     <mat-label>aria-label</mat-label>
     <input matInput [(ngModel)]="demoLabel">
@@ -116,7 +117,7 @@
         [indeterminate]="demoIndeterminate"
         (change)="demoChecked = $event.checked"
         (indeterminateChange)="demoIndeterminate = $event">
-      Checkbox w/ [checked] & (change)
+      <ng-container *ngIf="!demoHideLabel">Checkbox w/ [checked] & (change)</ng-container>
     </mat-checkbox>
     <mat-checkbox
         [required]="demoRequired"
@@ -132,7 +133,7 @@
         [indeterminate]="demoIndeterminate"
         [(ngModel)]="demoChecked"
         (indeterminateChange)="demoIndeterminate = $event">
-      Checkbox w/ [(ngModel)]
+      <ng-container *ngIf="!demoHideLabel">Checkbox w/ [(ngModel)]</ng-container>
     </mat-checkbox>
   </div>
   <div clickActionCheck>
@@ -152,7 +153,7 @@
         [indeterminate]="demoIndeterminate"
         (change)="demoChecked = $event.checked"
         (indeterminateChange)="demoIndeterminate = $event">
-      Checkbox w/ [checked] & (change)
+      <ng-container *ngIf="!demoHideLabel">Checkbox w/ [checked] & (change)</ng-container>
     </mat-checkbox>
     <mat-checkbox
         [required]="demoRequired"
@@ -168,7 +169,7 @@
         [indeterminate]="demoIndeterminate"
         [(ngModel)]="demoChecked"
         (indeterminateChange)="demoIndeterminate = $event">
-      Checkbox w/ [(ngModel)]
+      <ng-container *ngIf="!demoHideLabel">Checkbox w/ [(ngModel)]</ng-container>
     </mat-checkbox>
   </div>
   <div clickActionNoop>
@@ -188,7 +189,7 @@
         [indeterminate]="demoIndeterminate"
         (change)="demoChecked = $event.checked"
         (indeterminateChange)="demoIndeterminate = $event">
-      Checkbox w/ [checked] & (change)
+      <ng-container *ngIf="!demoHideLabel">Checkbox w/ [checked] & (change)</ng-container>
     </mat-checkbox>
     <mat-checkbox
         [required]="demoRequired"
@@ -204,7 +205,7 @@
         [indeterminate]="demoIndeterminate"
         [(ngModel)]="demoChecked"
         (indeterminateChange)="demoIndeterminate = $event">
-      Checkbox w/ [(ngModel)]
+      <ng-container *ngIf="!demoHideLabel">Checkbox w/ [(ngModel)]</ng-container>
     </mat-checkbox>
   </div>
   <div animationsNoop>
@@ -224,7 +225,7 @@
         [indeterminate]="demoIndeterminate"
         (change)="demoChecked = $event.checked"
         (indeterminateChange)="demoIndeterminate = $event">
-      Checkbox w/ [checked] & (change)
+      <ng-container *ngIf="!demoHideLabel">Checkbox w/ [checked] & (change)</ng-container>
     </mat-checkbox>
     <mat-checkbox
         [required]="demoRequired"
@@ -240,7 +241,7 @@
         [indeterminate]="demoIndeterminate"
         [(ngModel)]="demoChecked"
         (indeterminateChange)="demoIndeterminate = $event">
-      Checkbox w/ [(ngModel)]
+      <ng-container *ngIf="!demoHideLabel">Checkbox w/ [(ngModel)]</ng-container>
     </mat-checkbox>
   </div>
 </div>

@@ -10,7 +10,8 @@
 .mat-mdc-checkbox {
   // stylelint-disable selector-class-pattern
 
-  .mdc-checkbox:hover .mdc-checkbox__background::before {
+  .mdc-checkbox:hover
+      .mdc-checkbox__native-control:not([disabled]) ~ .mdc-checkbox__background::before {
     opacity: map-get($mdc-ripple-dark-ink-opacities, hover);
     transform: scale(2.75, 2.75);
     transition: mdc-checkbox-transition-enter(opacity, 0ms, 80ms),
@@ -34,5 +35,8 @@
     }
   }
 
+  label:empty {
+    display: none;
+  }
   // stylelint-enable selector-class-pattern
 }

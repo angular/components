@@ -10,6 +10,7 @@ import {coerceBooleanProperty} from '@angular/cdk/coercion';
 import {Platform} from '@angular/cdk/platform';
 import {
   AfterViewInit,
+  Attribute,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
@@ -35,7 +36,6 @@ import {
 } from '@angular/material';
 import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 import {MDCCheckboxAdapter, MDCCheckboxFoundation} from '@material/checkbox';
-import {MDCFormFieldAdapter, MDCFormFieldFoundation} from '@material/form-field';
 import {MDCRippleFoundation} from '@material/ripple';
 
 let nextUniqueId = 0;
@@ -61,10 +61,12 @@ export class MatCheckboxChange {
   styleUrls: ['checkbox.css'],
   host: {
     'class': 'mat-mdc-checkbox',
+    '[attr.tabindex]': 'null',
     '[class.mat-primary]': 'color == "primary"',
     '[class.mat-accent]': 'color == "accent"',
     '[class.mat-warn]': 'color == "warn"',
     '[class._mat-animation-noopable]': `_animationMode === 'NoopAnimations'`,
+    '[id]': 'id',
     '(animationend)': '_checkboxFoundation.handleAnimationEnd()',
   },
   providers: [MAT_MDC_CHECKBOX_CONTROL_VALUE_ACCESSOR],
@@ -116,6 +118,7 @@ export class MatCheckbox implements AfterViewInit, OnDestroy, ControlValueAccess
   }
   set disabled(disabled) {
     this._disabled = coerceBooleanProperty(disabled);
+    this._cdr.markForCheck();
   }
   private _disabled = false;
 
@@ -139,13 +142,13 @@ export class MatCheckbox implements AfterViewInit, OnDestroy, ControlValueAccess
 
   @ViewChild('label') _label: ElementRef<HTMLElement>;
 
-  readonly inputId: string = `${this.id || this._uniqueId}-input`;
+  get inputId(): string {
+    return `${this.id || this._uniqueId}-input`;
+  }
 
   _checkboxFoundation: MDCCheckboxFoundation;
 
   _classes: {[key: string]: boolean} = {'mdc-checkbox__native-control': true};
-
-  private _formFieldFoundation: MDCFormFieldFoundation;
 
   private _cvaOnChange = (_: boolean) => {};
 
@@ -155,6 +158,10 @@ export class MatCheckbox implements AfterViewInit, OnDestroy, ControlValueAccess
 
   private _rippleRenderer: RippleRenderer;
 
+  // MDC uses animation events to determine when to update aria-checked which is unreliable.
+  // Therefore we handle it ourselves.
+  private _attrBlacklist = new Set(['aria-checked']);
+
   private _checkboxAdapter: MDCCheckboxAdapter = {
     addClass: (className) => this._setClass(className, true),
     removeClass: (className) => this._setClass(className, false),
@@ -163,25 +170,30 @@ export class MatCheckbox implements AfterViewInit, OnDestroy, ControlValueAccess
     isAttachedToDOM: () => !!this._checkbox.nativeElement.parentNode,
     isChecked: () => this.checked,
     isIndeterminate: () => this.indeterminate,
-    removeNativeControlAttr: (attr) => this._nativeCheckbox.nativeElement.removeAttribute(attr),
-    setNativeControlAttr: (attr, value) =>
-        this._nativeCheckbox.nativeElement.setAttribute(attr, value),
+    removeNativeControlAttr:
+        (attr) => {
+          if (!this._attrBlacklist.has(attr)) {
+            this._nativeCheckbox.nativeElement.removeAttribute(attr);
+          }
+        },
+    setNativeControlAttr:
+        (attr, value) => {
+          if (!this._attrBlacklist.has(attr)) {
+            this._nativeCheckbox.nativeElement.setAttribute(attr, value);
+          }
+        },
     setNativeControlDisabled: (disabled) => this.disabled = disabled,
-  };
-
-  private _formFieldAdapter: Partial<MDCFormFieldAdapter> = {
-    registerInteractionHandler: (type, handler) =>
-        this._label.nativeElement.addEventListener(type, handler),
-    deregisterInteractionHandler: (type, handler) =>
-        this._label.nativeElement.removeEventListener(type, handler),
   };
 
   constructor(
       private _cdr: ChangeDetectorRef, private _platform: Platform, private _ngZone: NgZone,
+      @Attribute('tabindex') tabIndex: string,
       @Optional() @Inject(MAT_CHECKBOX_CLICK_ACTION) private _clickAction: MatCheckboxClickAction,
       @Optional() @Inject(ANIMATION_MODULE_TYPE) public _animationMode?: string) {
+    this.tabIndex = parseInt(tabIndex) || 0;
     this._checkboxFoundation = new MDCCheckboxFoundation(this._checkboxAdapter);
-    this._formFieldFoundation = new MDCFormFieldFoundation(this._formFieldAdapter);
+    // Note: We don't need to set up the MDCCheckboxFoundation. Its only purpose is to manage the
+    // ripple, which we do ourselves instead.
   }
 
   ngAfterViewInit() {
@@ -200,12 +212,10 @@ export class MatCheckbox implements AfterViewInit, OnDestroy, ControlValueAccess
         new RippleRenderer(this._rippleTarget, this._ngZone, this._checkbox, this._platform);
 
     this._checkboxFoundation.init();
-    this._formFieldFoundation.init();
   }
 
   ngOnDestroy() {
     this._checkboxFoundation.destroy();
-    this._formFieldFoundation.destroy();
   }
 
   registerOnChange(fn: (checked: boolean) => void) {
@@ -234,13 +244,16 @@ export class MatCheckbox implements AfterViewInit, OnDestroy, ControlValueAccess
   }
 
   _activateRipple() {
-    if (!this.disableRipple && this._animationMode != 'NoopAnimations') {
+    if (!this.disabled && !this.disableRipple && this._animationMode != 'NoopAnimations') {
       this._rippleRenderer.fadeInRipple(0, 0, this._rippleTarget.rippleConfig);
     }
   }
 
   _onBlur() {
-    this._cvaOnTouch();
+    Promise.resolve().then(() => {
+      this._cvaOnTouch();
+      this._cdr.markForCheck();
+    });
   }
 
   _onChange(event: Event) {
@@ -269,6 +282,10 @@ export class MatCheckbox implements AfterViewInit, OnDestroy, ControlValueAccess
     newEvent.checked = this.checked;
     this._cvaOnChange(this.checked);
     this.change.next(newEvent);
+  }
+
+  _getAriaChecked(): 'true'|'false'|'mixed' {
+    return this.checked ? 'true' : (this.indeterminate ? 'mixed' : 'false');
   }
 
   private _setClass(cssClass: string, active: boolean) {

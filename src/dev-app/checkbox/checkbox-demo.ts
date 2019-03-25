@@ -111,6 +111,7 @@ export class CheckboxDemo {
   demoValue = null;
   demoColor = 'primary';
   demoDisableRipple = false;
+  demoHideLabel = false;
 
   printResult() {
     if (this.isIndeterminate) {
