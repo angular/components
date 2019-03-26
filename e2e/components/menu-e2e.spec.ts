@@ -11,7 +11,10 @@ const presenceOf = ExpectedConditions.presenceOf;
 const not = ExpectedConditions.not;
 
 
-describe('menu', () => {
+// TODO(mmalerba): These tests are disabled due to an issue with animations.
+// (See https://github.com/angular/material2/issues/15614)
+// Re-enable once the issue is resolved.
+xdescribe('menu', () => {
   const menuSelector = '.mat-menu-panel';
   const page = {
     menu: () => element(by.css('.mat-menu-panel')),
