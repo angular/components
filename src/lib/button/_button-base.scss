@@ -13,6 +13,9 @@ $mat-button-border-radius: 4px !default;
 $mat-button-focus-transition: opacity 200ms $swift-ease-in-out-timing-function,
                               background-color 200ms $swift-ease-in-out-timing-function !default;
 
+// Text button padding
+$mat-text-button-padding: 0 8px !default;
+
 // Stroked button padding is 1px less horizontally than default/flat/raised
 // button's padding.
 $mat-stroked-button-line-height: $mat-button-line-height - 2;
@@ -51,7 +54,6 @@ $mat-mini-fab-padding: 8px !default;
   margin: $mat-button-margin;
   min-width: $mat-button-min-width;
   line-height: $mat-button-line-height;
-  padding: $mat-button-padding;
   border-radius: $mat-button-border-radius;
 
   // Explicitly set the default overflow to `visible`. It is already set
