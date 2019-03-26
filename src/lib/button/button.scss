@@ -37,6 +37,14 @@
   @include mat-button-base;
 }
 
+.mat-button {
+  padding: $mat-text-button-padding;
+}
+
+.mat-raised-button, .mat-flat-button {
+  padding: $mat-button-padding;
+}
+
 .mat-raised-button {
   @include mat-raised-button;
 }
