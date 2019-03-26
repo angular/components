@@ -37,6 +37,7 @@ export declare class CdkStepper implements AfterViewInit, OnDestroy {
     protected _orientation: StepperOrientation;
     _stepHeader: QueryList<FocusableOption>;
     _steps: QueryList<CdkStep>;
+    beforeSelectionChange: EventEmitter<StepperBeforeSelectionEvent>;
     linear: boolean;
     selected: CdkStep;
     selectedIndex: number;
@@ -86,6 +87,10 @@ export declare const STEP_STATE: {
 export declare type StepContentPositionState = 'previous' | 'current' | 'next';
 
 export declare const STEPPER_GLOBAL_OPTIONS: InjectionToken<StepperOptions>;
+
+export declare class StepperBeforeSelectionEvent extends StepperSelectionEvent {
+    preventStepChange: boolean;
+}
 
 export interface StepperOptions {
     displayDefaultIndicatorType?: boolean;

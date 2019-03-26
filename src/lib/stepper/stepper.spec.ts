@@ -110,6 +110,30 @@ describe('MatStepper', () => {
       expect(stepperComponent.selected instanceof MatStep).toBe(true);
     });
 
+    it('should not move to next step if preventStepChange is set to true', () => {
+      let stepHeaders = fixture.debugElement.queryAll(By.css('.mat-vertical-stepper-header'));
+      let stepperComponent = fixture.debugElement.query(By.directive(MatStepper)).componentInstance;
+
+      expect(stepperComponent.selectedIndex).toBe(0);
+      expect(stepperComponent.selected instanceof MatStep).toBe(true);
+
+      // Attempt to select the second step when the consumer overrides preventStepChange to true.
+      let stepHeaderEl = stepHeaders[1].nativeElement;
+      let beforeSelectionChangeSubscription =
+        stepperComponent.beforeSelectionChange.subscribe((event: any) => {
+          event.preventStepChange = true;
+        });
+      stepHeaderEl.click();
+      fixture.detectChanges();
+
+      // Selected index should not have changed
+      expect(stepperComponent.selectedIndex).toBe(0);
+      expect(stepperComponent.selected instanceof MatStep).toBe(true);
+
+      beforeSelectionChangeSubscription.unsubscribe();
+    });
+
+
     it('should set the "tablist" role on stepper', () => {
       let stepperEl = fixture.debugElement.query(By.css('mat-vertical-stepper')).nativeElement;
       expect(stepperEl.getAttribute('role')).toBe('tablist');
@@ -307,22 +331,28 @@ describe('MatStepper', () => {
     it('should emit an event when the enter animation is done', fakeAsync(() => {
       let stepper = fixture.debugElement.query(By.directive(MatStepper)).componentInstance;
       let selectionChangeSpy = jasmine.createSpy('selectionChange spy');
+      let beforeSelectionChangeSpy = jasmine.createSpy('beforeSelectionChange spy');
       let animationDoneSpy = jasmine.createSpy('animationDone spy');
       let selectionChangeSubscription = stepper.selectionChange.subscribe(selectionChangeSpy);
+      let beforeSelectionChangeSubscription =
+        stepper.selectionChange.subscribe(beforeSelectionChangeSpy);
       let animationDoneSubscription = stepper.animationDone.subscribe(animationDoneSpy);
 
       stepper.selectedIndex = 1;
       fixture.detectChanges();
 
       expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
+      expect(beforeSelectionChangeSpy).toHaveBeenCalledTimes(1);
       expect(animationDoneSpy).not.toHaveBeenCalled();
 
       flush();
 
       expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
+      expect(beforeSelectionChangeSpy).toHaveBeenCalledTimes(1);
       expect(animationDoneSpy).toHaveBeenCalledTimes(1);
 
       selectionChangeSubscription.unsubscribe();
+      beforeSelectionChangeSubscription.unsubscribe();
       animationDoneSubscription.unsubscribe();
     }));
 
