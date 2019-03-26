@@ -23,7 +23,7 @@ describe('ComponentSidenav', () => {
     // Spy on window.mediaMatch and return stub
     spyOn(window, 'matchMedia').and.returnValue({
       matches: true
-    });
+    } as any);
 
     fixture.detectChanges();
     async(() => {
