@@ -3,6 +3,7 @@ import {browser, by, element} from 'protractor';
 // TODO(mmalerba): These tests are disabled due to an issue with animations.
 // (See https://github.com/angular/material2/issues/15614)
 // Re-enable once the issue is resolved.
+// tslint:disable-next-line:ban
 xdescribe('expansion', () => {
   beforeEach(async () => await browser.get('/expansion'));
 

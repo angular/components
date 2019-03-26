@@ -8,6 +8,7 @@ import {Key} from 'selenium-webdriver';
 // TODO(mmalerba): These tests are disabled due to an issue with animations.
 // (See https://github.com/angular/material2/issues/15614)
 // Re-enable once the issue is resolved.
+// tslint:disable-next-line:ban
 xdescribe('stepper', () => {
   beforeEach(async () => await browser.get('/stepper'));
 
