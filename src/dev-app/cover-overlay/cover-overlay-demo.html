@@ -104,8 +104,14 @@
     </div>
 
     <div>
-      <mat-checkbox [checked]="showBoundingBox" [disabled]="!overlayRef"
-          (click)="toggleShowBoundingBox()">
+      <label>
+        Viewport margin
+        <input type="number" [(ngModel)]="viewportMargin">
+      </label>
+    </div>
+
+    <div>
+      <mat-checkbox [checked]="highlightBoundingBox" (click)="toggleShowBoundingBox()">
         Show bounding box
       </mat-checkbox>
     </div>

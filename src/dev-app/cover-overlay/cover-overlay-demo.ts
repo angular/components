@@ -38,12 +38,13 @@ export class CoverOverlayDemo {
   readonly bottom: OriginConfig = {x: 300, y: 400};
   readonly left: OriginConfig = {x: 30, y: 200, connected: true};
   
+  viewportMargin = 5;
   isFlexible = true;
   canPush = true;
-  showBoundingBox = false;
+  highlightBoundingBox = true;
   itemCount = 25;
   itemArray: string[] = [];
-  itemText = 'Item with a long name';
+  itemText = 'Item with a very very very very very very super duper extremely long name';
   overlayRef: OverlayRef | null;
   
   constructor(
@@ -72,22 +73,31 @@ export class CoverOverlayDemo {
 
     this.itemArray = Array(this.itemCount);
     this.overlayRef.attach(new TemplatePortal(this.overlayTemplate, this.viewContainerRef));
+    
+    setTimeout(() => {
+      this.showBoundingBox();
+    }, 0);
   }
 
   close() {
     if (this.overlayRef) {
       this.overlayRef.dispose();
       this.overlayRef = null;
-      this.showBoundingBox = false;
+    }
+  }
+  
+  showBoundingBox() {
+    if (this.highlightBoundingBox) {
+      const box = document.querySelector<HTMLElement>('.cdk-overlay-connected-position-bounding-box');
+
+      if (box) {
+        box.style.background = this.highlightBoundingBox ? 'rgb(255, 69, 0, 0.2)' : '';
+      }
     }
   }
   
   toggleShowBoundingBox() {
-    const box = document.querySelector<HTMLElement>('.cdk-overlay-connected-position-bounding-box');
-
-    if (box) {
-      this.showBoundingBox = !this.showBoundingBox;
-      box.style.background = this.showBoundingBox ? 'rgb(255, 69, 0, 0.2)' : '';
-    }
+    this.highlightBoundingBox = !this.highlightBoundingBox;
+    this.showBoundingBox();
   }
 }

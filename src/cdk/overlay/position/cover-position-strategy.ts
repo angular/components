@@ -48,7 +48,7 @@ export class CoverPositionStrategy implements PositionStrategy {
 /*  private _lastBoundingBoxSize = {width: 0, height: 0};*/
 
   /** Whether the overlay was pushed in a previous positioning. */
-  private _isPushed = false;
+/*  private _isPushed = false;*/
 
   /** Whether the overlay can be pushed on-screen on the initial open. */
   private _canPush = true;
@@ -68,11 +68,11 @@ export class CoverPositionStrategy implements PositionStrategy {
   /** Cached overlay dimensions */
 /*  private _overlayRect: Rect;*/
 
-  /** Cached viewport dimensions */
-  private _viewportRect: Rect;
-
   /** Amount of space that must be maintained between the overlay and the edge of the viewport. */
   private _viewportMargin = 0;
+
+  /** Cached viewport dimensions. */
+  private _viewportRect: Rect;
 
   /** The Scrollable containers used to check scrollable view properties on position change. */
 /*  private scrollables: CdkScrollable[] = [];*/
@@ -199,7 +199,7 @@ export class CoverPositionStrategy implements PositionStrategy {
     // We need the bounding rects for the origins and the overlay to determine how to position
     // the overlay relative to the origin.
     // We use the viewport rect to determine whether a position would go off-screen.
-    this._viewportRect = this._getNarrowedViewportRect();
+
 /*    this._startOriginRect = getOriginRect(this._startOrigin);
     this._endOriginRect = getOriginRect(this._endOrigin);
     this._topOriginRect = getOriginRect(this._topOrigin);
@@ -207,8 +207,14 @@ export class CoverPositionStrategy implements PositionStrategy {
 */    /*this._overlayRect = this._pane.getBoundingClientRect();*/
 
     // Compute the preferred position based on the origins.
+    if (this._isInitialRender) {
+      this._viewportRect = this._getViewportRect();
+    }
+    
+    const scrollPosition = this._viewportRuler.getViewportScrollPosition();
+
     const boundingBox = this._calculateBoundingBoxRect();
-    const adjustments = this._getOverlayAdjustment(boundingBox);
+    const adjustments = this._getOverlayAdjustment(boundingBox, scrollPosition);
 
     this._applyPosition(boundingBox, adjustments);
   }
@@ -355,12 +361,15 @@ export class CoverPositionStrategy implements PositionStrategy {
   }
 
   /** Gets how well an overlay at the given point will fit within the viewport. */
-  private _getOverlayAdjustment(overlay: Partial<Rect>): Partial<Rect> {
+  private _getOverlayAdjustment(overlay: Partial<Rect>, scrollPosition: Pick<Rect, 'top'|'left'>): Partial<Rect> {
     const top = overlay.top == null ? overlay.bottom! - overlay.height! : overlay.top;
     const right = overlay.right == null ? overlay.left! + overlay.width! : overlay.right;
     const bottom = overlay.bottom == null ? overlay.top! + overlay.height! : overlay.bottom;
     const left = overlay.left == null ? overlay.right! - overlay.width! : overlay.left;
 
+    //todo - the way we compute right and bottom is probably wrong
+    //todo - need to apply scroll position
+    scrollPosition.top;
     return {
       top: 0 - top,
       right: right - this._viewportRect.width,
@@ -433,7 +442,7 @@ export class CoverPositionStrategy implements PositionStrategy {
       } else {
         overlay.bottom! += pushFromTop;
       }
-      this._isPushed = true;
+/*      this._isPushed = true;*/
     }
     if (pushFromRight) {
       if (overlay.right != null) {
@@ -441,7 +450,7 @@ export class CoverPositionStrategy implements PositionStrategy {
       } else {
         overlay.left! -= pushFromRight;
       }
-      this._isPushed = true;
+/*      this._isPushed = true;*/
     }
     if (pushFromBottom) {
       if (overlay.bottom != null) {
@@ -449,7 +458,7 @@ export class CoverPositionStrategy implements PositionStrategy {
       } else {
         overlay.top! -= pushFromBottom;
       }
-      this._isPushed = true;
+/*      this._isPushed = true;*/
     }
     if (pushFromLeft) {
       if (overlay.left != null) {
@@ -457,7 +466,7 @@ export class CoverPositionStrategy implements PositionStrategy {
       } else {
         overlay.right! += pushFromRight;
       }
-      this._isPushed = true;
+/*      this._isPushed = true;*/
     }
     if (shrinkHeight) {
       overlay.height = Math.max(overlayConfig.minHeight || 0, overlay.height! - shrinkHeight);
@@ -479,7 +488,8 @@ export class CoverPositionStrategy implements PositionStrategy {
   }
 
   /**
-   * Gets the position and size of the overlay's sizing container.
+   * Gets the position and size of the overlay's sizing container based on the origins
+   * and the viewport.
    *
    * This method does no measuring and applies no styles so that we can cheaply compute the
    * bounds for all positions and choose the best fit based on these results.
@@ -487,7 +497,7 @@ export class CoverPositionStrategy implements PositionStrategy {
   private _calculateBoundingBoxRect(): Partial<Rect> {
     const viewport = this._viewportRect;
     const isRtl = this._isRtl();
-
+    
     const boundingBox: Partial<Rect> = {};
 
     if (this._topOrigin) {
@@ -556,11 +566,11 @@ export class CoverPositionStrategy implements PositionStrategy {
 
     const styles = {} as CSSStyleDeclaration;
 
-    if (this._hasExactPosition()) {
+/*    if (this._hasExactPosition()) {
       styles.top = styles.left = '0';
       styles.bottom = styles.right = '';
       styles.width = styles.height = '100%';
-    } else {
+    } else {*/
       const maxHeight = this._overlayRef.getConfig().maxHeight;
       const maxWidth = this._overlayRef.getConfig().maxWidth;
 
@@ -574,8 +584,8 @@ export class CoverPositionStrategy implements PositionStrategy {
       styles.right = coerceCssPixelValue(boundingBoxRect.right);
 
       // Push the pane content towards the proper direction.
-      styles.alignItems = boundingBoxRect.top == null ? 'flex-end' : 'flex-start';
-      styles.justifyContent = boundingBoxRect.left == null ? 'flex-end' : 'flex-start';
+      styles.alignItems = boundingBoxRect.left == null ? 'flex-end' : 'flex-start';
+      styles.justifyContent = boundingBoxRect.top == null ? 'flex-end' : 'flex-start';
 
       if (maxHeight) {
         styles.maxHeight = coerceCssPixelValue(maxHeight);
@@ -584,7 +594,7 @@ export class CoverPositionStrategy implements PositionStrategy {
       if (maxWidth) {
         styles.maxWidth = coerceCssPixelValue(maxWidth);
       }
-    }
+/*    }*/
 
 /*    this._lastBoundingBoxSize = boundingBoxRect;*/
 
@@ -653,7 +663,7 @@ export class CoverPositionStrategy implements PositionStrategy {
   }
 
   /** Narrows the given viewport rect by the current _viewportMargin. */
-  private _getNarrowedViewportRect(): Rect {
+  private _getViewportRect(): Rect {
     // We recalculate the viewport rect here ourselves, rather than using the ViewportRuler,
     // because we want to use the `clientWidth` and `clientHeight` as the base. The difference
     // being that the client properties don't include the scrollbar, as opposed to `innerWidth`
@@ -661,13 +671,13 @@ export class CoverPositionStrategy implements PositionStrategy {
     // 100% `width` and `height` which don't include the scrollbar either.
     const width = this._document.documentElement!.clientWidth;
     const height = this._document.documentElement!.clientHeight;
-    const scrollPosition = this._viewportRuler.getViewportScrollPosition();
+/*    const scrollPosition = this._viewportRuler.getViewportScrollPosition();*/
 
     return {
-      top:    scrollPosition.top + this._viewportMargin,
-      left:   scrollPosition.left + this._viewportMargin,
-      right:  scrollPosition.left + width - this._viewportMargin,
-      bottom: scrollPosition.top + height - this._viewportMargin,
+      top:    /*scrollPosition.top +*/ this._viewportMargin,
+      left:   /*scrollPosition.left +*/ this._viewportMargin,
+      right:  /*scrollPosition.left +*/ width - this._viewportMargin,
+      bottom: /*scrollPosition.top +*/ height - this._viewportMargin,
       width:  width  - (2 * this._viewportMargin),
       height: height - (2 * this._viewportMargin),
     };
@@ -679,10 +689,10 @@ export class CoverPositionStrategy implements PositionStrategy {
   }
 
   /** Determines whether the overlay uses exact or flexible positioning. */
-  private _hasExactPosition() {
+/*  private _hasExactPosition() {
     return !this._hasFlexibleDimensions || this._isPushed;
   }
-
+*/
   /** Adds a single CSS class or an array of classes on the overlay panel. */
 /*  private _addPanelClasses(cssClasses: string | string[]) {
     if (this._pane) {
