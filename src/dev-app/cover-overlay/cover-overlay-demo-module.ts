@@ -12,7 +12,7 @@ import {NgModule} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {RouterModule} from '@angular/router';
 import {MatButtonModule, MatCheckboxModule, MatRadioModule} from '@angular/material';
-import {ConnectedOverlayDemo} from './connected-overlay-demo';
+import {CoverOverlayDemo} from './cover-overlay-demo';
 
 @NgModule({
   imports: [

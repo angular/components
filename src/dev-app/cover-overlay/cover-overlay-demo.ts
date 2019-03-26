@@ -6,14 +6,13 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Component, ViewContainerRef} from '@angular/core';
+import {Component, ElementRef, TemplateRef, ViewChild, ViewContainerRef} from '@angular/core';
 import {
   CoverPositionStrategyFactory,
   Overlay,
   OverlayRef,
 } from '@angular/cdk/overlay';
 import {TemplatePortal} from '@angular/cdk/portal';
-import {Component, TemplateRef, ViewChild, ViewContainerRef} from '@angular/core';
 
 export interface OriginConfig {
   x: number,
@@ -34,7 +33,11 @@ export class CoverOverlayDemo {
   @ViewChild('leftOrigin') leftOrigin: ElementRef;
   @ViewChild('overlay') overlayTemplate: TemplateRef<any>;
 
-  readonly left:  = {x: }
+  readonly top: OriginConfig = {x: 300, y: 20, connected: true};
+  readonly right: OriginConfig = {x: 500, y: 200, connected: true};
+  readonly bottom: OriginConfig = {x: 300, y: 400};
+  readonly left: OriginConfig = {x: 30, y: 200, connected: true};
+  
   isFlexible = true;
   canPush = true;
   showBoundingBox = false;
@@ -48,7 +51,7 @@ export class CoverOverlayDemo {
       readonly overlay: Overlay,
       readonly viewContainerRef: ViewContainerRef) { }
 
-  openWithConfig() {
+  open() {
     const positionStrategy = this.factory.createWithConnections({
       top: this.top.connected ? this.topOrigin : undefined,
       right: this.right.connected ? this.rightOrigin : undefined,

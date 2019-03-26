@@ -6,15 +6,35 @@ export interface Point {
   y: number;
 }
 
+export interface Rect {
+  top: number,
+  bottom: number,
+  left: number,
+  right: number,
+  height: number,
+  width: number,
+}
+
 export type FlexibleConnectedPositionStrategyOrigin = ElementRef | HTMLElement | Point;
 
-export function getOriginRect(origin: FlexibleConnectedPositionStrategyOrigin): ClientRect {
+export function cloneRect(rect: Readonly<Rect>) {
+  return {
+    top: rect.top,
+    bottom: rect.bottom,
+    left: rect.left,
+    right: rect.right,
+    height: rect.height,
+    width: rect.width,
+  };
+}
+
+export function getOriginRect(origin: FlexibleConnectedPositionStrategyOrigin): Rect {
   if (origin instanceof ElementRef) {
-    return origin.nativeElement.getBoundingClientRect();
+    return cloneRect(origin.nativeElement.getBoundingClientRect());
   }
 
   if (origin instanceof HTMLElement) {
-    return origin.getBoundingClientRect();
+    return cloneRect(origin.getBoundingClientRect());
   }
 
   // If the origin is a point, return a client rect as if it was a 0x0 element at the point.

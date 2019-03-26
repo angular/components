@@ -1,4 +1,9 @@
-.position-area {
+:host {
+  display: flex;
+}
+
+div.position-area {
+  display: inline-block;
   height: 500px;
   position: relative;
   width: 800px;

@@ -1,11 +1,65 @@
 <div class="position-area">
   <div #topOrigin class="origin" [style.left.px]="top.x" [style.top.px]="top.y">Top origin</div>
-  <div #rightOrigin class="origin" [style.left.px]="left.x" [style.top.px]="left.y">Right origin</div>
-  <div #bottomOrigin class="origin" [style.left.px]="left.x" [style.top.px]="left.y">Bottom origin</div>
-  <div leftOrigin class="origin" [style.left.px]="left.x" [style.top.px]="left.y">Left origin</div>
+  <div #rightOrigin class="origin" [style.left.px]="right.x" [style.top.px]="right.y">Right origin</div>
+  <div #bottomOrigin class="origin" [style.left.px]="bottom.x" [style.top.px]="bottom.y">Bottom origin</div>
+  <div #leftOrigin class="origin" [style.left.px]="left.x" [style.top.px]="left.y">Left origin</div>
 </div>
 
 <div class="demo-options mat-typography">
+  <div>
+    <h2>Top origin</h2>
+    <p>
+      <mat-checkbox [(ngModel)]="top.connected">connected</mat-checkbox>
+    </p>
+    <p>
+      <label>
+        x
+        <input type="number" [(ngModel)]="top.x">
+      </label>
+
+      <label>
+        y
+        <input type="number" [(ngModel)]="top.y">
+      </label>
+    </p>
+  </div>
+  
+  <div>
+    <h2>Right origin</h2>
+    <p>
+      <mat-checkbox [(ngModel)]="right.connected">connected</mat-checkbox>
+    </p>
+    <p>
+      <label>
+        x
+        <input type="number" [(ngModel)]="right.x">
+      </label>
+
+      <label>
+        y
+        <input type="number" [(ngModel)]="right.y">
+      </label>
+    </p>
+  </div>
+  
+  <div>
+    <h2>Bottom origin</h2>
+    <p>
+      <mat-checkbox [(ngModel)]="bottom.connected">connected</mat-checkbox>
+    </p>
+    <p>
+      <label>
+        x
+        <input type="number" [(ngModel)]="bottom.x">
+      </label>
+
+      <label>
+        y
+        <input type="number" [(ngModel)]="bottom.y">
+      </label>
+    </p>
+  </div>
+  
   <div>
     <h2>Left origin</h2>
     <p>
