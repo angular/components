@@ -66,6 +66,12 @@ export class StepperSelectionEvent {
   previouslySelectedStep: CdkStep;
 }
 
+/** Change event emitted on before selection changes. */
+export class StepperBeforeSelectionEvent extends StepperSelectionEvent {
+    /** Stops the step from being changed. Can be set by the consumer */
+    preventStepChange: boolean;
+}
+
 /** The state of each step. */
 export type StepState = 'number' | 'edit' | 'done' | 'error' | string;
 
@@ -301,12 +307,17 @@ export class CdkStepper implements AfterViewInit, OnDestroy {
     return this.steps ? this.steps.toArray()[this.selectedIndex] : undefined!;
   }
   set selected(step: CdkStep) {
-    this.selectedIndex = this.steps ? this.steps.toArray().indexOf(step) : -1;
+    const selectedIndex = this._steps ? this._steps.toArray().indexOf(step) : -1;
+    this._beforeSelectedItemIndex(selectedIndex);
   }
 
   /** Event emitted when the selected step has changed. */
   @Output() selectionChange: EventEmitter<StepperSelectionEvent>
       = new EventEmitter<StepperSelectionEvent>();
+
+  /** Event emitted when a step is selected but the underlying selected step has not been changed */
+  @Output() beforeSelectionChange: EventEmitter<StepperBeforeSelectionEvent>
+      = new EventEmitter<StepperBeforeSelectionEvent>();
 
   /** Used to track unique ID for each stepper component. */
   _groupId: number;
@@ -351,12 +362,14 @@ export class CdkStepper implements AfterViewInit, OnDestroy {
 
   /** Selects and focuses the next step in list. */
   next(): void {
-    this.selectedIndex = Math.min(this._selectedIndex + 1, this.steps.length - 1);
+    const selectedIndex = Math.min(this._selectedIndex + 1, this._steps.length - 1);
+    this._beforeSelectedItemIndex(selectedIndex);
   }
 
   /** Selects and focuses the previous step in list. */
   previous(): void {
-    this.selectedIndex = Math.max(this._selectedIndex - 1, 0);
+    const selectedIndex = Math.max(this._selectedIndex - 1, 0);
+    this._beforeSelectedItemIndex(selectedIndex);
   }
 
   /** Resets the stepper to its initial state. Note that this includes clearing form data. */
@@ -436,6 +449,29 @@ export class CdkStepper implements AfterViewInit, OnDestroy {
   /** Returns the index of the currently-focused step header. */
   _getFocusIndex() {
     return this._keyManager ? this._keyManager.activeItemIndex : this._selectedIndex;
+  }
+
+  private _beforeSelectedItemIndex(newIndex: number): void {
+    if (newIndex === -1) {
+        // Retain the original behavior
+        // selectedIndex is -1 if the stepper does not have any steps.
+        this.selectedIndex = newIndex;
+        return;
+    }
+    const stepsArray = this._steps.toArray();
+    const beforeSelectionEvent = {
+        selectedIndex: newIndex,
+        previouslySelectedIndex: this._selectedIndex,
+        selectedStep: stepsArray[newIndex],
+        previouslySelectedStep: stepsArray[this._selectedIndex],
+        preventStepChange: false
+    };
+    this.beforeSelectionChange.emit(beforeSelectionEvent);
+
+    // Stop the current selected index from being updated if the consumer decides to do so
+    if (!beforeSelectionEvent.preventStepChange) {
+      this.selectedIndex = newIndex;
+    }
   }
 
   private _updateSelectedItemIndex(newIndex: number): void {

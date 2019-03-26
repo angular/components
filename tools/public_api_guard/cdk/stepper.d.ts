@@ -101,4 +101,8 @@ export declare class StepperSelectionEvent {
     selectedStep: CdkStep;
 }
 
+export declare class StepperBeforeSelectionEvent extends StepperSelectionEvent {
+    preventStepChange: boolean;
+}
+
 export declare type StepState = 'number' | 'edit' | 'done' | 'error' | string;
