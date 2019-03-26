@@ -9,7 +9,9 @@
 @mixin mat-form-field-standard-theme($theme) {
   $foreground: map-get($theme, foreground);
   $is-dark-theme: map-get($theme, is-dark);
-
+  $ripple-hover-color: map-get($mat-grey, 700);
+  $ripple-dark-theme-hover-color: mat-color($foreground, divider, 1);
+  $ripple-hover-height: 1px !default;
   $underline-color: mat-color($foreground, divider, if($is-dark-theme, 0.7, 0.42));
 
   .mat-form-field-appearance-standard {
@@ -19,6 +21,13 @@
 
     &.mat-form-field-disabled .mat-form-field-underline {
       @include mat-control-disabled-underline($underline-color);
+    }
+
+    &:not(.mat-form-field-invalid):not(.mat-focused) {
+      .mat-form-field-ripple {
+        background-color: if($is-dark-theme, $ripple-dark-theme-hover-color, $ripple-hover-color);
+        height: $ripple-hover-height;
+      }
     }
   }
 }

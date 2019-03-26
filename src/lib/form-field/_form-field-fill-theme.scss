@@ -13,6 +13,9 @@
   $fill-background: mat-color($foreground, base, if($is-dark-theme, 0.1, 0.04));
   $fill-disabled-background: mat-color($foreground, base, if($is-dark-theme, 0.05, 0.02));
   $underline-color: mat-color($foreground, divider, if($is-dark-theme, 0.5, 0.42));
+  $ripple-hover-color: map-get($mat-grey, 700);
+  $ripple-dark-theme-hover-color: mat-color($foreground, divider, 1);
+  $ripple-hover-height: 1px !default;
   $label-disabled-color: mat-color($foreground, disabled-text);
 
   .mat-form-field-appearance-fill {
@@ -35,6 +38,13 @@
 
       .mat-form-field-underline::before {
         background-color: transparent;
+      }
+    }
+
+    &:not(.mat-form-field-invalid):not(.mat-focused) {
+      .mat-form-field-ripple {
+        background-color: if($is-dark-theme, $ripple-dark-theme-hover-color, $ripple-hover-color);
+        height: $ripple-hover-height;
       }
     }
   }

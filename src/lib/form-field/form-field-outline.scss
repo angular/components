@@ -13,7 +13,7 @@ $mat-form-field-outline-label-overlap: 0.25em;
 $mat-form-field-outline-border-radius: 5px;
 // The width of the outline.
 $mat-form-field-outline-width: 1px;
-// The width of the thick outline (used for focus, hover, and error state).
+// The width of the thick outline (used for focus and error state).
 $mat-form-field-outline-thick-width: 2px;
 // The horizontal padding between the edge of the subscript box and the start of the subscript text.
 $mat-form-field-outline-subscript-padding:
@@ -98,13 +98,6 @@ $mat-form-field-outline-subscript-padding:
 
   .mat-form-field-outline-thick {
     opacity: 0;
-
-    .mat-form-field-outline-start,
-    .mat-form-field-outline-end,
-    .mat-form-field-outline-gap {
-      border-width: $mat-form-field-outline-thick-width;
-      transition: border-color 300ms $swift-ease-out-timing-function;
-    }
   }
 
   &.mat-focused,
@@ -113,8 +106,16 @@ $mat-form-field-outline-subscript-padding:
       opacity: 0;
       transition: opacity 100ms $swift-ease-out-timing-function;
     }
+
     .mat-form-field-outline-thick {
       opacity: 1;
+    }
+
+    .mat-form-field-outline-start,
+    .mat-form-field-outline-end,
+    .mat-form-field-outline-gap {
+      border-width: $mat-form-field-outline-thick-width;
+      transition: border-color 300ms $swift-ease-out-timing-function;
     }
   }
 

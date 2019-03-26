@@ -15,7 +15,9 @@
 
   $label-disabled-color: mat-color($foreground, disabled-text);
   $outline-color: mat-color($foreground, divider, if($is-dark-theme, 0.3, 0.12));
-  $outline-color-hover: mat-color($foreground, divider, if($is-dark-theme, 1, 0.87));
+  $outline-color-hover: map-get($mat-grey, 300);
+  $outline-color-hover-dark-theme: mat-color($foreground, divider, 1);
+  $outline-hover-width: 1px !default;
   $outline-color-primary: mat-color($primary);
   $outline-color-accent: mat-color($accent);
   $outline-color-warn: mat-color($warn);
@@ -27,11 +29,12 @@
     }
 
     .mat-form-field-outline-thick {
-      color: $outline-color-hover;
+      color: if($is-dark-theme, $outline-color-hover-dark-theme, $outline-color-hover);
     }
 
     &.mat-focused {
       .mat-form-field-outline-thick {
+        border-width: $outline-hover-width;
         color: $outline-color-primary;
       }
 
