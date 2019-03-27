@@ -5,6 +5,7 @@
   <mat-checkbox [(ngModel)]="yearView">Start in year view</mat-checkbox>
   <mat-checkbox [(ngModel)]="datepickerDisabled">Disable datepicker</mat-checkbox>
   <mat-checkbox [(ngModel)]="inputDisabled">Disable input</mat-checkbox>
+  <mat-checkbox [(ngModel)]="datepickerCloseOnSelect">Prevent close on date select</mat-checkbox>
   <mat-form-field>
     <mat-select [(ngModel)]="color" placeholder="Color">
       <mat-option value="primary">Primary</mat-option>
@@ -19,14 +20,18 @@
     <input matInput [matDatepicker]="minDatePicker" [(ngModel)]="minDate"
         [disabled]="inputDisabled" [max]="maxDate">
     <mat-datepicker-toggle matSuffix [for]="minDatePicker"></mat-datepicker-toggle>
-    <mat-datepicker #minDatePicker [touchUi]="touch" [disabled]="datepickerDisabled"></mat-datepicker>
+    <mat-datepicker #minDatePicker
+        [touchUi]="touch" [disabled]="datepickerDisabled" [closeOnSelect]="!datepickerCloseOnSelect">
+    </mat-datepicker>
   </mat-form-field>
   <mat-form-field color="accent">
     <mat-label>Max date</mat-label>
     <input matInput [matDatepicker]="maxDatePicker" [(ngModel)]="maxDate"
         [disabled]="inputDisabled" [min]="minDate">
     <mat-datepicker-toggle matSuffix [for]="maxDatePicker"></mat-datepicker-toggle>
-    <mat-datepicker #maxDatePicker [touchUi]="touch" [disabled]="datepickerDisabled"></mat-datepicker>
+    <mat-datepicker #maxDatePicker 
+        [touchUi]="touch" [disabled]="datepickerDisabled" [closeOnSelect]="!datepickerCloseOnSelect">
+    </mat-datepicker>
   </mat-form-field>
 </p>
 <p>
@@ -35,7 +40,9 @@
     <input matInput [matDatepicker]="startAtPicker" [(ngModel)]="startAt"
         [disabled]="inputDisabled">
     <mat-datepicker-toggle matSuffix [for]="startAtPicker"></mat-datepicker-toggle>
-    <mat-datepicker #startAtPicker [touchUi]="touch" [disabled]="datepickerDisabled"></mat-datepicker>
+    <mat-datepicker #startAtPicker
+        [touchUi]="touch" [disabled]="datepickerDisabled" [closeOnSelect]="!datepickerCloseOnSelect">
+    </mat-datepicker>
   </mat-form-field>
 </p>
 
@@ -61,7 +68,8 @@
         [disabled]="datepickerDisabled"
         [startAt]="startAt"
         [startView]="yearView ? 'year' : 'month'"
-        [color]="color">
+        [color]="color"
+        [closeOnSelect]="!datepickerCloseOnSelect">
     </mat-datepicker>
     <mat-error *ngIf="resultPickerModel.hasError('matDatepickerParse')">
       "{{resultPickerModel.getError('matDatepickerParse').text}}" is not a valid date!
@@ -89,7 +97,8 @@
       [touchUi]="touch"
       [disabled]="datepickerDisabled"
       [startAt]="startAt"
-      [startView]="yearView ? 'year' : 'month'">
+      [startView]="yearView ? 'year' : 'month'"
+      [closeOnSelect]="!datepickerCloseOnSelect">
   </mat-datepicker>
 </p>
 

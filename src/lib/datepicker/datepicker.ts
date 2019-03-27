@@ -182,6 +182,21 @@ export class MatDatepicker<D> implements OnDestroy, CanColor {
   }
   private _touchUi = false;
 
+  /** Whether the datepicker should close on date select. */
+  @Input()
+  get closeOnSelect(): boolean {
+    return this._closeOnSelect;
+  }
+  set closeOnSelect(value: boolean) {
+    const newValue = coerceBooleanProperty(value);
+
+    if (newValue !== this._closeOnSelect) {
+      this._closeOnSelect = newValue;
+      this._closeOnSelectChange.next(newValue);
+    }
+  }
+  private _closeOnSelect = true;
+
   /** Whether the datepicker pop-up should be disabled. */
   @Input()
   get disabled(): boolean {
@@ -272,6 +287,9 @@ export class MatDatepicker<D> implements OnDestroy, CanColor {
   /** The input element this datepicker is associated with. */
   _datepickerInput: MatDatepickerInput<D>;
 
+  /** Emits when the datepicker closeOnSelect is changed. */
+  readonly _closeOnSelectChange = new Subject<boolean>();
+
   /** Emits when the datepicker is disabled. */
   readonly _disabledChange = new Subject<boolean>();
 
@@ -321,6 +339,13 @@ export class MatDatepicker<D> implements OnDestroy, CanColor {
   /** Emits selected month in year view */
   _selectMonth(normalizedMonth: D): void {
     this.monthSelected.emit(normalizedMonth);
+  }
+
+  /** Checks if closeOnSelect is true and closes the calendar */
+  _userSelection(): void {
+    if (this.closeOnSelect) {
+      this.close();
+    }
   }
 
   /**

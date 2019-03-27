@@ -36,6 +36,7 @@ export class DatepickerDemo {
   yearView: boolean;
   inputDisabled: boolean;
   datepickerDisabled: boolean;
+  datepickerCloseOnSelect: boolean;
   minDate: Date;
   maxDate: Date;
   startAt: Date;

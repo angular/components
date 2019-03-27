@@ -317,6 +317,19 @@ describe('MatDatepicker', () => {
         });
       });
 
+      it('should not close the calendar when selecting a date', fakeAsync(() => {
+          testComponent.datepicker.closeOnSelect = false;
+          testComponent.datepicker.open();
+          fixture.detectChanges();
+
+          let cells = document.querySelectorAll('.mat-calendar-body-cell');
+          dispatchMouseEvent(cells[1], 'click');
+          fixture.detectChanges();
+          flush();
+
+          expect(testComponent.datepicker.opened).toBe(true, 'Expected datepicker to be open.');
+      }));
+
       it('startAt should fallback to input value', () => {
         expect(testComponent.datepicker.startAt).toEqual(new Date(2020, JAN, 1));
       });
