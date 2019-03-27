@@ -45,7 +45,7 @@ export class CoverPositionStrategy implements PositionStrategy {
   private _isInitialRender: boolean;
 
   /** Last size used for the bounding box. Used to avoid resizing the overlay after open. */
-/*  private _lastBoundingBoxSize = {width: 0, height: 0};*/
+  private _lastBoundingBox: Partial<Rect> = {};
 
   /** Whether the overlay was pushed in a previous positioning. */
 /*  private _isPushed = false;*/
@@ -211,10 +211,8 @@ export class CoverPositionStrategy implements PositionStrategy {
       this._viewportRect = this._getViewportRect();
     }
     
-    const scrollPosition = this._viewportRuler.getViewportScrollPosition();
-
     const boundingBox = this._calculateBoundingBoxRect();
-    const adjustments = this._getOverlayAdjustment(boundingBox, scrollPosition);
+    const adjustments = this._getOverlayAdjustment(boundingBox);
 
     this._applyPosition(boundingBox, adjustments);
   }
@@ -361,7 +359,8 @@ export class CoverPositionStrategy implements PositionStrategy {
   }
 
   /** Gets how well an overlay at the given point will fit within the viewport. */
-  private _getOverlayAdjustment(overlay: Partial<Rect>, scrollPosition: Pick<Rect, 'top'|'left'>): Partial<Rect> {
+  private _getOverlayAdjustment(overlay: Partial<Rect>): Partial<Rect> {
+    const scrollPosition = this._viewportRuler.getViewportScrollPosition();
     const top = overlay.top == null ? overlay.bottom! - overlay.height! : overlay.top;
     const right = overlay.right == null ? overlay.left! + overlay.width! : overlay.right;
     const bottom = overlay.bottom == null ? overlay.top! + overlay.height! : overlay.bottom;
@@ -370,12 +369,15 @@ export class CoverPositionStrategy implements PositionStrategy {
     //todo - the way we compute right and bottom is probably wrong
     //todo - need to apply scroll position
     scrollPosition.top;
-    return {
-      top: 0 - top,
-      right: right - this._viewportRect.width,
-      bottom: bottom - this._viewportRect.height,
-      left: 0 - left,
+    console.log('bottom', bottom, 'viewport height', this._viewportRect.height, 'scroll top', scrollPosition.top);
+    const ret = {
+      top: this._viewportMargin - top,
+      right: right - this._viewportRect.width + scrollPosition.top/* + this._viewportMargin*/,
+      bottom: bottom - this._viewportRect.height + scrollPosition.left/* + this._viewportMargin*/,
+      left: this._viewportMargin - left,
     };
+    console.log('adjustments', ret);
+    return ret;
   }
 
   /**
@@ -428,7 +430,7 @@ export class CoverPositionStrategy implements PositionStrategy {
             Math.min(adjustments.left!, -adjustments.right!) : 0;
       }
     }
-    
+
     if (this._hasFlexibleDimensions) {
       shrinkHeight = overlay.height != null ?
           (adjustments.top! - pushFromTop) + (adjustments.bottom! - pushFromBottom) : 0;
@@ -553,50 +555,89 @@ export class CoverPositionStrategy implements PositionStrategy {
   private _setBoundingBoxStyles(overlay: Partial<Rect>): void {
     const boundingBoxRect = {...overlay};
     
+    /////////////
+    // todo - move these adjustments to adjustboundingbox
+    // trying to get rid of height/width and only set top/bottom/left/right
+    // for !_growAfterOpen to work, need to think of it in terms of shrinkage
+    // rather than explicity height/width apply the previous shrinkage to the
+    // computed top/bottom/etc
+    ////////////
+    
+    if (!this._hasFlexibleDimensions) {
+      if (!boundingBoxRect.top) {
+        boundingBoxRect.top = this._viewportMargin;
+      }
+      if (!boundingBoxRect.right) {
+        boundingBoxRect.right = this._viewportMargin;
+      }
+      if (!boundingBoxRect.bottom) {
+        boundingBoxRect.bottom = this._viewportMargin;
+      }
+      if (!boundingBoxRect.left) {
+        boundingBoxRect.left = this._viewportMargin;
+      }
+    }
+    
     // It's weird if the overlay *grows* while scrolling, so we take the last size into account
     // when applying a new size.
-    if (!this._isInitialRender && !this._growAfterOpen) {
+    if (!this._isInitialRender && this._hasFlexibleDimensions && !this._growAfterOpen) {
       // Todo: figure this out - need to handle that either value could be undefined
-      /*if (boundingBoxRect != null) {
 
+      const heightDelta = (boundingBoxRect.top! - this._lastBoundingBox.top!) +
+          (this._lastBoundingBox.bottom! - boundingBoxRect.bottom);
+
+      if (heightDelta.top) {
+        
       }
-      boundingBoxRect.height = Math.min(boundingBoxRect.height, this._lastBoundingBoxSize.height);
-      boundingBoxRect.width = Math.min(boundingBoxRect.width, this._lastBoundingBoxSize.width);*/
+
+/*      if (boundingBoxRect.height && this._lastBoundingBox.height) {
+        boundingBoxRect.height = Math.min(boundingBoxRect.height, this._lastBoundingBox.height)
+      }
+      if (boundingBoxRect.width && this._lastBoundingBox.width) {
+        boundingBoxRect.width = Math.min(boundingBoxRect.width, this._lastBoundingBox.width)
+      }*/
     }
+
+    ////// end stuff to move
 
     const styles = {} as CSSStyleDeclaration;
 
-/*    if (this._hasExactPosition()) {
-      styles.top = styles.left = '0';
-      styles.bottom = styles.right = '';
-      styles.width = styles.height = '100%';
-    } else {*/
-      const maxHeight = this._overlayRef.getConfig().maxHeight;
-      const maxWidth = this._overlayRef.getConfig().maxWidth;
+    const maxHeight = this._overlayRef.getConfig().maxHeight;
+    const maxWidth = this._overlayRef.getConfig().maxWidth;
 
-      // todo: do we need to transform empty values to hit screen edges?
+    // todo: do we need to transform empty values to hit screen edges?
 
-      styles.height = coerceCssPixelValue(boundingBoxRect.height);
-      styles.top = coerceCssPixelValue(boundingBoxRect.top);
-      styles.bottom = coerceCssPixelValue(boundingBoxRect.bottom);
-      styles.width = coerceCssPixelValue(boundingBoxRect.width);
-      styles.left = coerceCssPixelValue(boundingBoxRect.left);
-      styles.right = coerceCssPixelValue(boundingBoxRect.right);
+    
+    styles.top = coerceCssPixelValue(boundingBoxRect.top);
+    styles.right = coerceCssPixelValue(boundingBoxRect.right);
+    styles.bottom = coerceCssPixelValue(boundingBoxRect.bottom);
+    styles.left = coerceCssPixelValue(boundingBoxRect.left);
 
-      // Push the pane content towards the proper direction.
-      styles.alignItems = boundingBoxRect.left == null ? 'flex-end' : 'flex-start';
-      styles.justifyContent = boundingBoxRect.top == null ? 'flex-end' : 'flex-start';
-
-      if (maxHeight) {
-        styles.maxHeight = coerceCssPixelValue(maxHeight);
+    if (this._hasFlexibleDimensions /*&& !this._growAfterOpen*/) {
+/*      styles.height = coerceCssPixelValue(boundingBoxRect.height);
+      styles.width = coerceCssPixelValue(boundingBoxRect.width);*/
+    } else {
+      if (!styles.bottom) {
+        styles.bottom = coerceCssPixelValue(this._viewportMargin);
       }
-
-      if (maxWidth) {
-        styles.maxWidth = coerceCssPixelValue(maxWidth);
+      if (!styles.right) {
+        styles.right = coerceCssPixelValue(this._viewportMargin);
       }
-/*    }*/
+    }
 
-/*    this._lastBoundingBoxSize = boundingBoxRect;*/
+    // Push the pane content towards the proper direction.
+    styles.alignItems = boundingBoxRect.left == null ? 'flex-end' : 'flex-start';
+    styles.justifyContent = boundingBoxRect.top == null ? 'flex-end' : 'flex-start';
+
+    if (maxHeight) {
+      styles.maxHeight = coerceCssPixelValue(maxHeight);
+    }
+
+    if (maxWidth) {
+      styles.maxWidth = coerceCssPixelValue(maxWidth);
+    }
+
+    this._lastBoundingBox = boundingBoxRect;
 
     extendStyles(this._boundingBox!.style, styles);
   }
@@ -671,13 +712,12 @@ export class CoverPositionStrategy implements PositionStrategy {
     // 100% `width` and `height` which don't include the scrollbar either.
     const width = this._document.documentElement!.clientWidth;
     const height = this._document.documentElement!.clientHeight;
-/*    const scrollPosition = this._viewportRuler.getViewportScrollPosition();*/
 
     return {
-      top:    /*scrollPosition.top +*/ this._viewportMargin,
-      left:   /*scrollPosition.left +*/ this._viewportMargin,
-      right:  /*scrollPosition.left +*/ width - this._viewportMargin,
-      bottom: /*scrollPosition.top +*/ height - this._viewportMargin,
+      top:    this._viewportMargin,
+      left:   this._viewportMargin,
+      right:  width - this._viewportMargin,
+      bottom: height - this._viewportMargin,
       width:  width  - (2 * this._viewportMargin),
       height: height - (2 * this._viewportMargin),
     };
@@ -688,11 +728,6 @@ export class CoverPositionStrategy implements PositionStrategy {
     return this._overlayRef.getDirection() === 'rtl';
   }
 
-  /** Determines whether the overlay uses exact or flexible positioning. */
-/*  private _hasExactPosition() {
-    return !this._hasFlexibleDimensions || this._isPushed;
-  }
-*/
   /** Adds a single CSS class or an array of classes on the overlay panel. */
 /*  private _addPanelClasses(cssClasses: string | string[]) {
     if (this._pane) {
