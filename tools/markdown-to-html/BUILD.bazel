@@ -19,7 +19,6 @@ nodejs_binary(
   name = "markdown-to-html",
   entry_point = "angular_material/tools/markdown-to-html/transform-markdown.js",
   data = [
-    "@npm//source-map-support",
     ":transform-markdown",
   ],
 )
