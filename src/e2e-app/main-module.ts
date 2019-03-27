@@ -1,0 +1,58 @@
+import {NgModule} from '@angular/core';
+import {ExampleModule} from '@angular/material-examples';
+import {BrowserModule} from '@angular/platform-browser';
+import {NoopAnimationsModule} from '@angular/platform-browser/animations';
+import {RouterModule} from '@angular/router';
+import {
+  BlockScrollStrategyE2eModule
+} from './block-scroll-strategy/block-scroll-strategy-e2e-module';
+import {ButtonE2eModule} from './button/button-e2e-module';
+import {CheckboxE2eModule} from './checkbox/checkbox-e2e-module';
+import {DialogE2eModule} from './dialog/dialog-e2e-module';
+import {E2eApp} from './e2e-app';
+import {E2eAppModule} from './e2e-app/e2e-app-module';
+import {E2E_APP_ROUTES} from './e2e-app/routes';
+import {GridListE2eModule} from './grid-list/grid-list-e2e-module';
+import {IconE2eModule} from './icon/icon-e2e-module';
+import {InputE2eModule} from './input/input-e2e-module';
+import {MenuE2eModule} from './menu/menu-e2e-module';
+import {ProgressBarE2eModule} from './progress-bar/progress-bar-e2e-module';
+import {ProgressSpinnerE2eModule} from './progress-spinner/progress-spinner-e2e-module';
+import {RadioE2eModule} from './radio/radio-e2e-module';
+import {SidenavE2eModule} from './sidenav/sidenav-e2e-module';
+import {SlideToggleE2eModule} from './slide-toggle/slide-toggle-e2e-module';
+import {TabsE2eModule} from './tabs/tabs-e2e-module';
+import {VirtualScrollE2eModule} from './virtual-scroll/virtual-scroll-e2e-module';
+
+@NgModule({
+  imports: [
+    BrowserModule,
+    RouterModule.forRoot(E2E_APP_ROUTES),
+    NoopAnimationsModule,
+    E2eAppModule,
+
+    ExampleModule,
+
+    BlockScrollStrategyE2eModule,
+    ButtonE2eModule,
+    CheckboxE2eModule,
+    DialogE2eModule,
+    GridListE2eModule,
+    IconE2eModule,
+    InputE2eModule,
+    MenuE2eModule,
+    ProgressBarE2eModule,
+    ProgressSpinnerE2eModule,
+    RadioE2eModule,
+    SidenavE2eModule,
+    SlideToggleE2eModule,
+    TabsE2eModule,
+    VirtualScrollE2eModule,
+  ],
+  declarations: [
+    E2eApp,
+  ],
+  bootstrap: [E2eApp],
+})
+export class MainModule {
+}
