@@ -339,17 +339,16 @@ export class MatTooltip implements OnDestroy {
       return this._overlayRef;
     }
 
+    const scrollableAncestors =
+        this._scrollDispatcher.getAncestorScrollContainers(this._elementRef);
+
     // Create connected position strategy that listens for scroll events to reposition.
     const strategy = this._overlay.position()
-      .flexibleConnectedTo(this._elementRef)
-      .withTransformOriginOn('.mat-tooltip')
-      .withFlexibleDimensions(false)
-      .withViewportMargin(8);
-
-    const scrollableAncestors = this._scrollDispatcher
-      .getAncestorScrollContainers(this._elementRef);
-
-    strategy.withScrollableContainers(scrollableAncestors);
+                         .flexibleConnectedTo(this._elementRef)
+                         .withTransformOriginOn('.mat-tooltip')
+                         .withFlexibleDimensions(false)
+                         .withViewportMargin(8)
+                         .withScrollableContainers(scrollableAncestors);
 
     strategy.positionChanges.pipe(takeUntil(this._destroyed)).subscribe(change => {
       if (this._tooltipInstance) {
