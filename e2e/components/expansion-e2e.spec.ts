@@ -1,7 +1,6 @@
 import {browser, by, element} from 'protractor';
 
 describe('expansion', () => {
-
   beforeEach(async () => await browser.get('/expansion'));
 
   it('should show an accordion', async () => {
@@ -36,6 +35,4 @@ describe('expansion', () => {
 
     expect(await panelDescription.getText()).toContain('Currently I am closed');
   });
-
 });
-

@@ -123,10 +123,12 @@ ANGULAR_LIBRARY_UMDS = [
   "@npm//node_modules/@angular/compiler:bundles/compiler.umd.js",
   "@npm//node_modules/@angular/core:bundles/core-testing.umd.js",
   "@npm//node_modules/@angular/core:bundles/core.umd.js",
+  "@npm//node_modules/@angular/elements:bundles/elements.umd.js",
   "@npm//node_modules/@angular/forms:bundles/forms.umd.js",
   "@npm//node_modules/@angular/platform-browser-dynamic:bundles/platform-browser-dynamic-testing.umd.js",
   "@npm//node_modules/@angular/platform-browser-dynamic:bundles/platform-browser-dynamic.umd.js",
   "@npm//node_modules/@angular/platform-browser:bundles/platform-browser-animations.umd.js",
   "@npm//node_modules/@angular/platform-browser:bundles/platform-browser-testing.umd.js",
   "@npm//node_modules/@angular/platform-browser:bundles/platform-browser.umd.js",
+  "@npm//node_modules/@angular/router:bundles/router.umd.js",
 ]

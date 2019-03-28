@@ -10,7 +10,6 @@ import {
 const presenceOf = ExpectedConditions.presenceOf;
 const not = ExpectedConditions.not;
 
-
 describe('menu', () => {
   const menuSelector = '.mat-menu-panel';
   const page = {
