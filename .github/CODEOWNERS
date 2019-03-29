@@ -167,6 +167,7 @@
 /e2e/components/icon-e2e.spec.ts                   @jelbourn
 /e2e/components/input-e2e.spec.ts                  @mmalerba
 /e2e/components/list-e2e.spec.ts                   @jelbourn @crisbeto @devversion
+/e2e/components/mdc-checkbox-e2e.spec.ts           @mmalerba
 /e2e/components/menu-e2e.spec.ts                   @crisbeto
 /e2e/components/progress-bar-e2e.spec.ts           @jelbourn @crisbeto @josephperrott
 /e2e/components/progress-spinner-e2e.spec.ts       @jelbourn @crisbeto @josephperrott
@@ -192,6 +193,7 @@
 /src/e2e-app/icon/**                               @jelbourn
 /src/e2e-app/input/**                              @mmalerba
 /src/e2e-app/list/**                               @jelbourn
+/src/e2e-app/mdc-checkbox/**                       @mmalerba
 /src/e2e-app/menu/**                               @crisbeto
 /src/e2e-app/progress-bar/**                       @jelbourn @crisbeto @josephperrott
 /src/e2e-app/progress-spinner/**                   @jelbourn @crisbeto @josephperrott

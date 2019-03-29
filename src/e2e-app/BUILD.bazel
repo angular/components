@@ -25,14 +25,20 @@ ng_module(
     "//src/material-examples:examples",
     "//src/cdk-experimental/dialog",
     "//src/cdk-experimental/scrolling",
+    "//src/material-experimental/mdc-checkbox",
   ],
 )
 
 sass_binary(
   name = "theme",
   src = "theme.scss",
+  include_paths = [
+    "external/npm/node_modules",
+  ],
   deps = [
-    "//src/lib/core:all_themes"
+    "//src/lib/core:all_themes",
+    "//src/material-experimental/mdc-helpers:mdc_scss_deps_lib",
+    "//src/material-experimental/mdc-checkbox:checkbox_scss_lib",
   ]
 )
 
