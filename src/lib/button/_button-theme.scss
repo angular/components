@@ -108,7 +108,7 @@ $_mat-button-ripple-opacity: 0.1;
     border-color: mat-color($foreground, divider);
   }
 
-  .mat-flat-button, .mat-raised-button, .mat-fab, .mat-mini-fab, .mat-extended-fab  {
+  .mat-flat-button, .mat-raised-button, .mat-fab, .mat-mini-fab, .mat-extended-fab {
     // Default font and background color when not using any color palette.
     color: mat-color($foreground, text);
     background-color: mat-color($background, raised-button);
