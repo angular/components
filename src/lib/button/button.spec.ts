@@ -93,7 +93,7 @@ describe('MatButton', () => {
         .toContain('mat-accent', 'Expected mini-fab buttons to use accent palette by default');
     });
   });
-  
+
   describe('button[mat-extended-fab]', () => {
     it('should have accent palette by default', () => {
       const fixture = TestBed.createComponent(TestApp);
