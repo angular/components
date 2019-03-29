@@ -6,11 +6,14 @@ export interface Point {
   y: number;
 }
 
-export interface Rect {
+export interface BoundingBox {
   top: number,
   bottom: number,
   left: number,
   right: number,
+}
+
+export interface Rect extends BoundingBox {
   height: number,
   width: number,
 }
