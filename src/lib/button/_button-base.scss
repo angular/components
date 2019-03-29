@@ -142,12 +142,12 @@ $mat-extended-fab-padding: 12px !default;
   [dir='rtl'] & {
     text-align: right;
 
-    .mat-icon:first-child {
+    .mat-icon:first-child & {
       margin-left: 12px;
       margin-right: -8px;
     }
 
-    .mat-icon:last-child {
+    .mat-icon:last-child & {
       margin-left: -8px;
       margin-right: 12px;      
     }
