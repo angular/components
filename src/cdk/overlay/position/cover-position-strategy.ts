@@ -376,26 +376,6 @@ export class CoverPositionStrategy implements PositionStrategy {
     return ret;
   }
 
-  /**
-   * Whether the overlay can fit within the viewport when it may resize either its width or height.
-   * @param fit How well the overlay fits in the viewport at some position.
-   * @param point The (x, y) coordinates of the overlat at some position.
-   * @param viewport The geometry of the viewport.
-   */
-/*  private _canFitWithFlexibleDimensions(overlay: Partial<Rect>, adjustments: Rect) {
-    if (!this._hasFlexibleDimensions) return false;
-
-    const availableHeight = viewport.bottom - point.y;
-    const availableWidth = viewport.right - point.x;
-    const minHeight = this._overlayRef.getConfig().minHeight;
-    const minWidth = this._overlayRef.getConfig().minWidth;
-
-    const verticalFit = adjustments.top + adjustments.bottom <= minHeight || 0;
-    const horizontalFit = adjustments.left + adjustments.right <= minWidth || 0;
-
-    return verticalFit && horizontalFit;
-  }
-*/
   private _adjustBoundingBox(inputOverlay: Partial<Rect>, adjustments: BoundingBox) {
     const overlay = {...inputOverlay};
     let pushFromTop = 0;
@@ -410,7 +390,7 @@ export class CoverPositionStrategy implements PositionStrategy {
         // todo - worry about min-height and min-width?
         // doing it properly would require looking at the viewport to decide
         // what the overlay's actual height is.
-        /*const overlayConfig = this._overlayRef.getConfig();
+/*        const overlayConfig = this._overlayRef.getConfig();
         const minHeight = this._overlayRef.getConfig().minHeight;
         const minWidth = this._overlayRef.getConfig().minWidth;*/
         
@@ -419,6 +399,21 @@ export class CoverPositionStrategy implements PositionStrategy {
         pushFromRight = overlay.right != null && adjustments.right! > 0 ? adjustments.right! : 0;
         pushFromBottom = overlay.bottom != null && adjustments.bottom! > 0 ? adjustments.bottom! : 0;
         pushFromLeft = overlay.left != null && adjustments.left! > 0 ? adjustments.left! : 0;
+        
+/*        shrinkHeight = overlay.height != null ?
+            (adjustments.top! - pushFromTop) + (adjustments.bottom! - pushFromBottom) : 0;
+        shrinkWidth = overlay.width != null ?
+            (adjustments.left! - pushFromLeft) + (adjustments.right! - pushFromRight) : 0;
+
+        const overShrinkHeight = minHeight - (overlay.height - shrinkHeight);
+        if (overShrinkHeight > 0) {
+          if (overlay.top != null) {
+            pushFromTop -= overShrinkHeight;
+          } else {
+            pushFromBottom -= overShrinkHeight;
+          }
+        }*/
+        // todo - also width
       } else {
         // Push only if we can do so without shrinking the overlay.
         pushFromTop = adjustments.top! > 0 && adjustments.bottom! < 0 ?
@@ -431,13 +426,6 @@ export class CoverPositionStrategy implements PositionStrategy {
             Math.min(adjustments.left!, -adjustments.right!) : 0;
       }
     }
-
-/*    if (this._hasFlexibleDimensions) {
-      shrinkHeight = overlay.height != null ?
-          (adjustments.top! - pushFromTop) + (adjustments.bottom! - pushFromBottom) : 0;
-      shrinkWidth = overlay.width != null ?
-          (adjustments.left! - pushFromLeft) + (adjustments.right! - pushFromRight) : 0;
-    }*/
     
     if (pushFromTop) {
       if (overlay.top != null) {
@@ -538,6 +526,8 @@ export class CoverPositionStrategy implements PositionStrategy {
       boundingBox.height = viewport.height - boundingBox.bottom! - this._viewportMargin;
     } else if (boundingBox.bottom == null) {
       boundingBox.height = viewport.height - boundingBox.top + this._viewportMargin;
+    } else {
+      boundingBox.height = viewport.height - boundingBox.bottom - boundingBox.top;
     }
     // todo - we could compute height here based on top vs bottom
 
