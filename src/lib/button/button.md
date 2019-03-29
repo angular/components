@@ -19,6 +19,7 @@ There are several button variants, each applied as an attribute:
 | `mat-icon-button`    | Circular button with a transparent background, meant to contain an icon  |
 | `mat-fab`            | Circular button w/ elevation, defaults to theme's accent color           |
 | `mat-mini-fab`       | Same as `mat-fab` but smaller                                            |
+| `mat-extended-fab`   | Extended fab w/ elevation, defaults to theme's accent color              |
 
 
 ### Theming
