@@ -93,6 +93,18 @@ describe('MatButton', () => {
         .toContain('mat-accent', 'Expected mini-fab buttons to use accent palette by default');
     });
   });
+  
+  describe('button[mat-extended-fab]', () => {
+    it('should have accent palette by default', () => {
+      const fixture = TestBed.createComponent(TestApp);
+      const miniFabButtonDebugEl = fixture.debugElement.query(By.css('button[mat-extended-fab]'));
+
+      fixture.detectChanges();
+
+      expect(miniFabButtonDebugEl.nativeElement.classList)
+        .toContain('mat-accent', 'Expected extended-fab buttons to use accent palette by default');
+    });
+  });
 
   // Regular button tests
   describe('button[mat-button]', () => {
@@ -273,6 +285,7 @@ describe('MatButton', () => {
     </a>
     <button mat-fab>Fab Button</button>
     <button mat-mini-fab>Mini Fab Button</button>
+    <button mat-extended-fab>Extended Fab Button</button>
   `
 })
 class TestApp {
