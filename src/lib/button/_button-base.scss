@@ -32,6 +32,10 @@ $mat-fab-padding: 16px !default;
 $mat-mini-fab-size: 40px !default;
 $mat-mini-fab-padding: 8px !default;
 
+$mat-extended-fab-border-radius: 32px !default;
+$mat-extended-fab-height: 48px !default;
+$mat-extended-fab-padding: 12px !default;
+
 // Applies base styles to all button types.
 @mixin mat-button-base {
   box-sizing: border-box;
@@ -104,5 +108,48 @@ $mat-mini-fab-padding: 8px !default;
     padding: $padding 0;
     display: inline-block;
     line-height: $mat-icon-button-line-height;
+  }
+}
+
+@mixin mat-extended-fab {
+  @include mat-raised-button;
+
+  // Reset the min-width from the button base.
+  min-width: 0;
+
+  border-radius: $mat-extended-fab-border-radius;
+  height: $mat-extended-fab-height;
+  padding: 0 20px;
+
+  flex-shrink: 0;
+
+  .mat-button-wrapper {
+    padding: $mat-extended-fab-padding 0;
+    display: inline-block;
+    line-height: $mat-icon-button-line-height;
+  }
+
+  .mat-icon:first-child {
+    margin-left: -8px;
+    margin-right: 12px;
+  }
+
+  .mat-icon:last-child {
+    margin-left: 12px;
+    margin-right: -8px;
+  }
+
+  [dir='rtl'] & {
+    text-align: right;
+
+    .mat-icon:first-child {
+      margin-left: 12px;
+      margin-right: -8px;
+    }
+
+    .mat-icon:last-child {
+      margin-left: -8px;
+      margin-right: 12px;      
+    }
   }
 }
