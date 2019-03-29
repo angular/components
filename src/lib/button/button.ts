@@ -33,7 +33,7 @@ import {
 } from '@angular/material/core';
 import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 
-/** Default color palette for round buttons (mat-fab and mat-mini-fab) */
+/** Default color palette for round buttons (mat-fab, mat-mini-fab and mat-extended-fab) */
 const DEFAULT_ROUND_BUTTON_COLOR = 'accent';
 
 /**
@@ -48,6 +48,7 @@ const BUTTON_HOST_ATTRIBUTES = [
   'mat-stroked-button',
   'mat-mini-fab',
   'mat-fab',
+  'mat-extended-fab'
 ];
 
 // Boilerplate for applying mixins to MatButton.
@@ -66,8 +67,8 @@ export const _MatButtonMixinBase:
 @Component({
   moduleId: module.id,
   selector: `button[mat-button], button[mat-raised-button], button[mat-icon-button],
-             button[mat-fab], button[mat-mini-fab], button[mat-stroked-button],
-             button[mat-flat-button]`,
+             button[mat-fab], button[mat-mini-fab], button[mat-extended-fab],
+             button[mat-stroked-button], button[mat-flat-button]`,
   exportAs: 'matButton',
   host: {
     '[attr.disabled]': 'disabled || null',
@@ -83,7 +84,7 @@ export class MatButton extends _MatButtonMixinBase
     implements OnDestroy, CanDisable, CanColor, CanDisableRipple {
 
   /** Whether the button is round. */
-  readonly isRoundButton: boolean = this._hasHostAttributes('mat-fab', 'mat-mini-fab');
+  readonly isRoundButton: boolean = this._hasHostAttributes('mat-fab', 'mat-mini-fab', 'mat-extended-fab');
 
   /** Whether the button is icon button. */
   readonly isIconButton: boolean = this._hasHostAttributes('mat-icon-button');
@@ -146,7 +147,8 @@ export class MatButton extends _MatButtonMixinBase
 @Component({
   moduleId: module.id,
   selector: `a[mat-button], a[mat-raised-button], a[mat-icon-button], a[mat-fab],
-             a[mat-mini-fab], a[mat-stroked-button], a[mat-flat-button]`,
+             a[mat-mini-fab], a[mat-extended-fab], a[mat-stroked-button],
+             a[mat-flat-button]`,
   exportAs: 'matButton, matAnchor',
   host: {
     // Note that we ignore the user-specified tabindex when it's disabled for
