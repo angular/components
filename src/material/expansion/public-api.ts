@@ -12,4 +12,4 @@ export * from './accordion-base';
 export * from './expansion-panel';
 export * from './expansion-panel-header';
 export * from './expansion-panel-content';
-export * from './expansion-animations';
+export {EXPANSION_PANEL_ANIMATION_TIMING, matExpansionAnimations} from './expansion-animations';

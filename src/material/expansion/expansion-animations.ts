@@ -20,6 +20,12 @@ import {
 /** Time and timing curve for expansion panel animations. */
 export const EXPANSION_PANEL_ANIMATION_TIMING = '225ms cubic-bezier(0.4,0.0,0.2,1)';
 
+// We need to declare these as constants in order to prevent Closure compiler from renaming
+// the animation parameters below. They need to be exported so that TS doesn't throw an error
+// about them being unused.
+export declare const collapsedHeight: string;
+export declare const expandedHeight: string;
+
 /**
  * Animations used by the Material expansion panel.
  *
