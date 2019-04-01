@@ -3104,8 +3104,8 @@ describe('CdkDrag', () => {
   `
 })
 class StandaloneDraggable {
-  @ViewChild('dragElement') dragElement: ElementRef<HTMLElement>;
-  @ViewChild(CdkDrag) dragInstance: CdkDrag;
+  @ViewChild('dragElement', {static: false}) dragElement: ElementRef<HTMLElement>;
+  @ViewChild(CdkDrag, {static: false}) dragInstance: CdkDrag;
   startedSpy = jasmine.createSpy('started spy');
   endedSpy = jasmine.createSpy('ended spy');
   releasedSpy = jasmine.createSpy('released spy');
@@ -3121,8 +3121,8 @@ class StandaloneDraggable {
   `
 })
 class StandaloneDraggableWithOnPush {
-  @ViewChild('dragElement') dragElement: ElementRef<HTMLElement>;
-  @ViewChild(CdkDrag) dragInstance: CdkDrag;
+  @ViewChild('dragElement', {static: false}) dragElement: ElementRef<HTMLElement>;
+  @ViewChild(CdkDrag, {static: false}) dragInstance: CdkDrag;
 }
 
 @Component({
@@ -3135,7 +3135,7 @@ class StandaloneDraggableWithOnPush {
   `
 })
 class StandaloneDraggableSvg {
-  @ViewChild('dragElement') dragElement: ElementRef<SVGElement>;
+  @ViewChild('dragElement', {static: false}) dragElement: ElementRef<SVGElement>;
 }
 
 @Component({
@@ -3147,10 +3147,10 @@ class StandaloneDraggableSvg {
   `
 })
 class StandaloneDraggableWithHandle {
-  @ViewChild('dragElement') dragElement: ElementRef<HTMLElement>;
-  @ViewChild('handleElement') handleElement: ElementRef<HTMLElement>;
-  @ViewChild(CdkDrag) dragInstance: CdkDrag;
-  @ViewChild(CdkDragHandle) handleInstance: CdkDragHandle;
+  @ViewChild('dragElement', {static: false}) dragElement: ElementRef<HTMLElement>;
+  @ViewChild('handleElement', {static: false}) handleElement: ElementRef<HTMLElement>;
+  @ViewChild(CdkDrag, {static: false}) dragInstance: CdkDrag;
+  @ViewChild(CdkDragHandle, {static: false}) handleInstance: CdkDragHandle;
 }
 
 @Component({
@@ -3165,8 +3165,8 @@ class StandaloneDraggableWithHandle {
   `
 })
 class StandaloneDraggableWithDelayedHandle {
-  @ViewChild('dragElement') dragElement: ElementRef<HTMLElement>;
-  @ViewChild('handleElement') handleElement: ElementRef<HTMLElement>;
+  @ViewChild('dragElement', {static: false}) dragElement: ElementRef<HTMLElement>;
+  @ViewChild('handleElement', {static: false}) handleElement: ElementRef<HTMLElement>;
   showHandle = false;
 }
 
@@ -3185,8 +3185,8 @@ class StandaloneDraggableWithDelayedHandle {
   `
 })
 class StandaloneDraggableWithIndirectHandle {
-  @ViewChild('dragElement') dragElement: ElementRef<HTMLElement>;
-  @ViewChild('handleElement') handleElement: ElementRef<HTMLElement>;
+  @ViewChild('dragElement', {static: false}) dragElement: ElementRef<HTMLElement>;
+  @ViewChild('handleElement', {static: false}) handleElement: ElementRef<HTMLElement>;
 }
 
 
@@ -3210,7 +3210,7 @@ class StandaloneDraggableWithIndirectHandle {
   `
 })
 class StandaloneDraggableWithMultipleHandles {
-  @ViewChild('dragElement') dragElement: ElementRef<HTMLElement>;
+  @ViewChild('dragElement', {static: false}) dragElement: ElementRef<HTMLElement>;
   @ViewChildren(CdkDragHandle) handles: QueryList<CdkDragHandle>;
 }
 
@@ -3236,7 +3236,7 @@ const DROP_ZONE_FIXTURE_TEMPLATE = `
 @Component({template: DROP_ZONE_FIXTURE_TEMPLATE})
 class DraggableInDropZone {
   @ViewChildren(CdkDrag) dragItems: QueryList<CdkDrag>;
-  @ViewChild(CdkDropList) dropInstance: CdkDropList;
+  @ViewChild(CdkDropList, {static: false}) dropInstance: CdkDropList;
   items = [
     {value: 'Zero', height: ITEM_HEIGHT, margin: 0},
     {value: 'One', height: ITEM_HEIGHT, margin: 0},
@@ -3292,7 +3292,7 @@ class DraggableInOnPushDropZone extends DraggableInDropZone {}
 })
 class DraggableInHorizontalDropZone {
   @ViewChildren(CdkDrag) dragItems: QueryList<CdkDrag>;
-  @ViewChild(CdkDropList) dropInstance: CdkDropList;
+  @ViewChild(CdkDropList, {static: false}) dropInstance: CdkDropList;
   items = [
     {value: 'Zero', width: ITEM_WIDTH, margin: 0},
     {value: 'One', width: ITEM_WIDTH, margin: 0},
@@ -3326,7 +3326,7 @@ class DraggableInHorizontalDropZone {
   `
 })
 class DraggableInDropZoneWithCustomPreview {
-  @ViewChild(CdkDropList) dropInstance: CdkDropList;
+  @ViewChild(CdkDropList, {static: false}) dropInstance: CdkDropList;
   @ViewChildren(CdkDrag) dragItems: QueryList<CdkDrag>;
   items = ['Zero', 'One', 'Two', 'Three'];
   boundarySelector: string;
@@ -3471,9 +3471,9 @@ class ConnectedDropZonesViaGroupDirective extends ConnectedDropZones {
   `
 })
 class DraggableWithAlternateRoot {
-  @ViewChild('dragElement') dragElement: ElementRef<HTMLElement>;
-  @ViewChild('dragRoot') dragRoot: ElementRef<HTMLElement>;
-  @ViewChild(CdkDrag) dragInstance: CdkDrag;
+  @ViewChild('dragElement', {static: false}) dragElement: ElementRef<HTMLElement>;
+  @ViewChild('dragRoot', {static: false}) dragRoot: ElementRef<HTMLElement>;
+  @ViewChild(CdkDrag, {static: false}) dragInstance: CdkDrag;
   rootElementSelector: string;
 }
 
@@ -3532,9 +3532,9 @@ class ConnectedDropZonesWithSingleItems {
   `
 })
 class NestedDropListGroups {
-  @ViewChild('group') group: CdkDropListGroup<CdkDropList>;
-  @ViewChild('listOne') listOne: CdkDropList;
-  @ViewChild('listTwo') listTwo: CdkDropList;
+  @ViewChild('group', {static: false}) group: CdkDropListGroup<CdkDropList>;
+  @ViewChild('listOne', {static: false}) listOne: CdkDropList;
+  @ViewChild('listTwo', {static: false}) listTwo: CdkDropList;
 }
 
 
@@ -3559,7 +3559,7 @@ class DraggableOnNgContainer {}
 })
 class DraggableInDropZoneWithoutEvents {
   @ViewChildren(CdkDrag) dragItems: QueryList<CdkDrag>;
-  @ViewChild(CdkDropList) dropInstance: CdkDropList;
+  @ViewChild(CdkDropList, {static: false}) dropInstance: CdkDropList;
   items = [
     {value: 'Zero', height: ITEM_HEIGHT},
     {value: 'One', height: ITEM_HEIGHT},

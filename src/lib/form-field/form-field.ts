@@ -235,14 +235,14 @@ export class MatFormField extends _MatFormFieldMixinBase
    * @deprecated
    * @breaking-change 8.0.0
    */
-  @ViewChild('underline') underlineRef: ElementRef;
+  @ViewChild('underline', {static: false}) underlineRef: ElementRef;
 
-  @ViewChild('connectionContainer') _connectionContainerRef: ElementRef;
-  @ViewChild('inputContainer') _inputContainerRef: ElementRef;
-  @ViewChild('label') private _label: ElementRef;
-  @ContentChild(MatFormFieldControl) _control: MatFormFieldControl<any>;
-  @ContentChild(MatPlaceholder) _placeholderChild: MatPlaceholder;
-  @ContentChild(MatLabel) _labelChild: MatLabel;
+  @ViewChild('connectionContainer', {static: false}) _connectionContainerRef: ElementRef;
+  @ViewChild('inputContainer', {static: false}) _inputContainerRef: ElementRef;
+  @ViewChild('label', {static: false}) private _label: ElementRef;
+  @ContentChild(MatFormFieldControl, {static: false}) _control: MatFormFieldControl<any>;
+  @ContentChild(MatPlaceholder, {static: false}) _placeholderChild: MatPlaceholder;
+  @ContentChild(MatLabel, {static: false}) _labelChild: MatLabel;
   @ContentChildren(MatError) _errorChildren: QueryList<MatError>;
   @ContentChildren(MatHint) _hintChildren: QueryList<MatHint>;
   @ContentChildren(MatPrefix) _prefixChildren: QueryList<MatPrefix>;
