@@ -4257,7 +4257,7 @@ class NgModelSelect {
   ];
   isDisabled: boolean;
 
-  @ViewChild(MatSelect) select: MatSelect;
+  @ViewChild(MatSelect, {static: false}) select: MatSelect;
   @ViewChildren(MatOption) options: QueryList<MatOption>;
 }
 
@@ -4303,7 +4303,7 @@ class NgIfSelect {
   ];
   control = new FormControl('pizza-1');
 
-  @ViewChild(MatSelect) select: MatSelect;
+  @ViewChild(MatSelect, {static: false}) select: MatSelect;
 }
 
 @Component({
@@ -4347,7 +4347,7 @@ class SelectInitWithoutOptions {
   foods: any[];
   control = new FormControl('pizza-1');
 
-  @ViewChild(MatSelect) select: MatSelect;
+  @ViewChild(MatSelect, {static: false}) select: MatSelect;
   @ViewChildren(MatOption) options: QueryList<MatOption>;
 
   addOptions() {
@@ -4369,7 +4369,7 @@ class SelectInitWithoutOptions {
   }]
 })
 class CustomSelectAccessor implements ControlValueAccessor {
-  @ViewChild(MatSelect) select: MatSelect;
+  @ViewChild(MatSelect, {static: false}) select: MatSelect;
 
   writeValue: (value?: any) => void = () => {};
   registerOnChange: (changeFn?: (value: any) => void) => void = () => {};
@@ -4478,7 +4478,7 @@ class FloatLabelSelect {
     { value: 'tacos-2', viewValue: 'Tacos'}
   ];
 
-  @ViewChild(MatSelect) select: MatSelect;
+  @ViewChild(MatSelect, {static: false}) select: MatSelect;
 }
 
 @Component({
@@ -4507,7 +4507,7 @@ class MultiSelect {
   ];
   control = new FormControl();
 
-  @ViewChild(MatSelect) select: MatSelect;
+  @ViewChild(MatSelect, {static: false}) select: MatSelect;
   @ViewChildren(MatOption) options: QueryList<MatOption>;
   sortComparator: (a: MatOption, b: MatOption, options: MatOption[]) => number;
 }
@@ -4567,7 +4567,7 @@ class BasicSelectNoPlaceholder { }
   `
 })
 class BasicSelectWithTheming {
-  @ViewChild(MatSelect) select: MatSelect;
+  @ViewChild(MatSelect, {static: false}) select: MatSelect;
   theme: string;
 }
 
@@ -4595,7 +4595,7 @@ class ResetValuesSelect {
   ];
   control = new FormControl();
 
-  @ViewChild(MatSelect) select: MatSelect;
+  @ViewChild(MatSelect, {static: false}) select: MatSelect;
 }
 
 @Component({
@@ -4671,7 +4671,7 @@ class SelectWithGroups {
     }
   ];
 
-  @ViewChild(MatSelect) select: MatSelect;
+  @ViewChild(MatSelect, {static: false}) select: MatSelect;
   @ViewChildren(MatOption) options: QueryList<MatOption>;
 }
 
@@ -4728,8 +4728,8 @@ class InvalidSelectInForm {
   `
 })
 class SelectInsideFormGroup {
-  @ViewChild(FormGroupDirective) formGroupDirective: FormGroupDirective;
-  @ViewChild(MatSelect) select: MatSelect;
+  @ViewChild(FormGroupDirective, {static: false}) formGroupDirective: FormGroupDirective;
+  @ViewChild(MatSelect, {static: false}) select: MatSelect;
   options = [
     {value: 'steak-0', viewValue: 'Steak'},
     {value: 'pizza-1', viewValue: 'Pizza'},
@@ -4759,7 +4759,7 @@ class BasicSelectWithoutForms {
     { value: 'sandwich-2', viewValue: 'Sandwich' },
   ];
 
-  @ViewChild(MatSelect) select: MatSelect;
+  @ViewChild(MatSelect, {static: false}) select: MatSelect;
 }
 
 @Component({
@@ -4780,7 +4780,7 @@ class BasicSelectWithoutFormsPreselected {
     { value: 'pizza-1', viewValue: 'Pizza' },
   ];
 
-  @ViewChild(MatSelect) select: MatSelect;
+  @ViewChild(MatSelect, {static: false}) select: MatSelect;
 }
 
 @Component({
@@ -4802,7 +4802,7 @@ class BasicSelectWithoutFormsMultiple {
     { value: 'sandwich-2', viewValue: 'Sandwich' },
   ];
 
-  @ViewChild(MatSelect) select: MatSelect;
+  @ViewChild(MatSelect, {static: false}) select: MatSelect;
 }
 
 @Component({
@@ -4848,7 +4848,7 @@ class NgModelCompareWithSelect {
   selectedFood: {value: string, viewValue: string} = { value: 'pizza-1', viewValue: 'Pizza' };
   comparator: ((f1: any, f2: any) => boolean)|null = this.compareByValue;
 
-  @ViewChild(MatSelect) select: MatSelect;
+  @ViewChild(MatSelect, {static: false}) select: MatSelect;
   @ViewChildren(MatOption) options: QueryList<MatOption>;
 
   useCompareByValue() { this.comparator = this.compareByValue; }
@@ -4876,7 +4876,7 @@ class NgModelCompareWithSelect {
   `
 })
 class CustomErrorBehaviorSelect {
-  @ViewChild(MatSelect) select: MatSelect;
+  @ViewChild(MatSelect, {static: false}) select: MatSelect;
   control = new FormControl();
   foods: any[] = [
     { value: 'steak-0', viewValue: 'Steak' },
@@ -4905,7 +4905,7 @@ class SingleSelectWithPreselectedArrayValues {
 
   selectedFoods = this.foods[1].value;
 
-  @ViewChild(MatSelect) select: MatSelect;
+  @ViewChild(MatSelect, {static: false}) select: MatSelect;
   @ViewChildren(MatOption) options: QueryList<MatOption>;
 }
 
@@ -4934,7 +4934,7 @@ class SelectWithoutOptionCentering {
   ];
   control = new FormControl('pizza-1');
 
-  @ViewChild(MatSelect) select: MatSelect;
+  @ViewChild(MatSelect, {static: false}) select: MatSelect;
   @ViewChildren(MatOption) options: QueryList<MatOption>;
 }
 

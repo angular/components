@@ -35,8 +35,8 @@ const exampleData = [
   styleUrls: ['table-a11y.css'],
 })
 export class TableAccessibilityDemo implements OnInit {
-  @ViewChild(MatSort) sort: MatSort;
-  @ViewChild(MatPaginator) pager: MatPaginator;
+  @ViewChild(MatSort, {static: false}) sort: MatSort;
+  @ViewChild(MatPaginator, {static: false}) pager: MatPaginator;
 
   displayedColumns = ['name', 'color', 'age'];
   basicDataSource: BasicDataSource;
