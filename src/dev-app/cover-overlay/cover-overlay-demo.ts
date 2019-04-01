@@ -42,6 +42,7 @@ export class CoverOverlayDemo {
   isFlexible = true;
   canPush = true;
   highlightBoundingBox = true;
+  growAfterOpen = true;
   itemCount = 25;
   itemArray: string[] = [];
   itemText = 'Item with a very very very very very very super duper extremely long name';
@@ -62,13 +63,13 @@ export class CoverOverlayDemo {
         .withFlexibleDimensions(this.isFlexible)
         .withPush(this.canPush)
         .withViewportMargin(10)
-        .withGrowAfterOpen(true);
+        .withGrowAfterOpen(this.growAfterOpen);
 
     this.overlayRef = this.overlay.create({
       positionStrategy,
       scrollStrategy: this.overlay.scrollStrategies.reposition(),
       minWidth: 200,
-      minHeight: 50
+      minHeight: 200,
     });
 
     this.itemArray = Array(this.itemCount);
