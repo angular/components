@@ -19,6 +19,8 @@
   $label-disabled-color: mat-color($foreground, disabled-text);
 
   .mat-form-field-appearance-fill {
+    @include mat-form-field-ripple($theme);
+
     .mat-form-field-flex {
       background-color: $fill-background;
     }
@@ -38,13 +40,6 @@
 
       .mat-form-field-underline::before {
         background-color: transparent;
-      }
-    }
-
-    &:not(.mat-form-field-invalid):not(.mat-focused) {
-      .mat-form-field-ripple {
-        background-color: if($is-dark-theme, $ripple-dark-theme-hover-color, $ripple-hover-color);
-        height: $ripple-hover-height;
       }
     }
   }
