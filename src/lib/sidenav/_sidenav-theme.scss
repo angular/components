@@ -55,7 +55,7 @@
   }
 
   .mat-drawer-backdrop.mat-drawer-shown {
-    $opacity: 0.6;
+    $opacity: 0.32;
     $backdrop-color: mat-color($background, card, $opacity);
 
     @if (type-of($backdrop-color) == color) {
