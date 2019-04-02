@@ -62,7 +62,8 @@ equivalent to the one above.
 
 Check out the API docs and examples of the `mat-text-column` to see how you can customize the header
 text, text alignment, and cell data accessor.  Note that this is not compatible with the flex-layout
-table.
+table. Also, a data accessor should be provided if your data may have its properties minified
+since the string name will no longer match after minification.
 
 #### 3. Define the row templates
 
