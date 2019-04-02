@@ -12,7 +12,7 @@ This is the home for the Angular team's Material Design components built for and
 [Plunker Template](https://goo.gl/uDmqyY) |
 [StackBlitz Template](https://goo.gl/wwnhMV)
 
-### Getting started
+### Baslarken
 
 See our [Getting Started Guide][getting-started]
 if you're building your first project with Angular Material.
