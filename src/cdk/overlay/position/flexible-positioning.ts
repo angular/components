@@ -1,4 +1,15 @@
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+
 import {ElementRef} from '@angular/core';
+
+/** Class added to overlay bounding boxes. */
+export const boundingBoxClass = 'cdk-overlay-connected-position-bounding-box';
 
 /** A simple (x, y) coordinate. */
 export interface Point {
@@ -7,20 +18,20 @@ export interface Point {
 }
 
 export interface BoundingBox {
-  top: number,
-  bottom: number,
-  left: number,
-  right: number,
+  top: number;
+  bottom: number;
+  left: number;
+  right: number;
 }
 
-export interface Rect extends BoundingBox {
-  height: number,
-  width: number,
+export interface BoundingBoxRect extends BoundingBox {
+  height: number;
+  width: number;
 }
 
 export type FlexibleConnectedPositionStrategyOrigin = ElementRef | HTMLElement | Point;
 
-export function cloneRect(rect: Readonly<Rect>) {
+export function cloneRect(rect: Readonly<BoundingBoxRect>): BoundingBoxRect {
   return {
     top: rect.top,
     bottom: rect.bottom,
@@ -31,7 +42,7 @@ export function cloneRect(rect: Readonly<Rect>) {
   };
 }
 
-export function getOriginRect(origin: FlexibleConnectedPositionStrategyOrigin): Rect {
+export function getOriginRect(origin: FlexibleConnectedPositionStrategyOrigin): BoundingBoxRect {
   if (origin instanceof ElementRef) {
     return cloneRect(origin.nativeElement.getBoundingClientRect());
   }
@@ -62,15 +73,41 @@ export function extendStyles(dest: CSSStyleDeclaration, source: CSSStyleDeclarat
   return dest;
 }
 
-export function clearStyles(dest: CSSStyleDeclaration) {
+const CLEARED_POSITIONS: Readonly<Partial<CSSStyleDeclaration>> = {
+  top: '',
+  left: '',
+  right: '',
+  bottom: '',
+};
+
+const CLEARED_BOUNDING_BOX_PROPERTIES: Readonly<Partial<CSSStyleDeclaration>> = {
+  height: '',
+  width: '',
+  alignItems: '',
+  justifyContent: '',
+};
+
+export function clearBoundingBoxStyles(dest: CSSStyleDeclaration): CSSStyleDeclaration {
   return extendStyles(dest, {
-    top: '',
-    left: '',
-    right: '',
-    bottom: '',
-    height: '',
-    width: '',
-    alignItems: '',
-    justifyContent: '',
+    ...CLEARED_POSITIONS,
+    ...CLEARED_BOUNDING_BOX_PROPERTIES,
+  } as CSSStyleDeclaration);
+}
+
+export function resetBoundingBoxStyles(dest: CSSStyleDeclaration): CSSStyleDeclaration {
+  return extendStyles(dest, {
+    top: '0',
+    left: '0',
+    right: '0',
+    bottom: '0',
+    ...CLEARED_BOUNDING_BOX_PROPERTIES,
+  } as CSSStyleDeclaration);
+}
+
+export function resetOverlayElementStyles(dest: CSSStyleDeclaration): CSSStyleDeclaration {
+  return extendStyles(dest, {
+    ...CLEARED_POSITIONS,
+    position: '',
+    transform: '',
   } as CSSStyleDeclaration);
 }

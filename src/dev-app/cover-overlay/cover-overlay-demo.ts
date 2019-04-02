@@ -15,9 +15,9 @@ import {
 import {TemplatePortal} from '@angular/cdk/portal';
 
 export interface OriginConfig {
-  x: number,
-  y: number,
-  connected?: boolean,
+  x: number;
+  y: number;
+  connected?: boolean;
 }
 
 @Component({
@@ -37,33 +37,36 @@ export class CoverOverlayDemo {
   readonly right: OriginConfig = {x: 500, y: 200, connected: true};
   readonly bottom: OriginConfig = {x: 300, y: 400};
   readonly left: OriginConfig = {x: 30, y: 200, connected: true};
-  
-  viewportMargin = 5;
+
+  viewportMargin = 10;
   isFlexible = true;
   canPush = true;
   highlightBoundingBox = true;
   growAfterOpen = true;
+  lockedPosition = false;
   itemCount = 25;
   itemArray: string[] = [];
   itemText = 'Item with a very very very very very very super duper extremely long name';
   overlayRef: OverlayRef | null;
-  
+
   constructor(
       readonly factory: CoverPositionStrategyFactory,
       readonly overlay: Overlay,
       readonly viewContainerRef: ViewContainerRef) { }
 
   open() {
-    const positionStrategy = this.factory.createWithConnections({
-      top: this.top.connected ? this.topOrigin : undefined,
-      right: this.right.connected ? this.rightOrigin : undefined,
-      bottom: this.bottom.connected ? this.bottomOrigin : undefined,
-      left: this.left.connected ? this.leftOrigin : undefined,
-    })
-        .withFlexibleDimensions(this.isFlexible)
-        .withPush(this.canPush)
-        .withViewportMargin(10)
-        .withGrowAfterOpen(this.growAfterOpen);
+    const positionStrategy = this.factory
+                                 .createWithConnections({
+                                   top: this.top.connected ? this.topOrigin : undefined,
+                                   right: this.right.connected ? this.rightOrigin : undefined,
+                                   bottom: this.bottom.connected ? this.bottomOrigin : undefined,
+                                   left: this.left.connected ? this.leftOrigin : undefined,
+                                 })
+                                 .withFlexibleDimensions(this.isFlexible)
+                                 .withPush(this.canPush)
+                                 .withViewportMargin(this.viewportMargin)
+                                 .withGrowAfterOpen(this.growAfterOpen)
+                                 .withLockedPosition(this.lockedPosition);
 
     this.overlayRef = this.overlay.create({
       positionStrategy,
@@ -74,7 +77,7 @@ export class CoverOverlayDemo {
 
     this.itemArray = Array(this.itemCount);
     this.overlayRef.attach(new TemplatePortal(this.overlayTemplate, this.viewContainerRef));
-    
+
     setTimeout(() => {
       this.showBoundingBox();
     }, 0);
@@ -86,7 +89,7 @@ export class CoverOverlayDemo {
       this.overlayRef = null;
     }
   }
-  
+
   showBoundingBox() {
     if (this.highlightBoundingBox) {
       const box = document.querySelector<HTMLElement>('.cdk-overlay-connected-position-bounding-box');
@@ -96,7 +99,7 @@ export class CoverOverlayDemo {
       }
     }
   }
-  
+
   toggleShowBoundingBox() {
     this.highlightBoundingBox = !this.highlightBoundingBox;
     this.showBoundingBox();

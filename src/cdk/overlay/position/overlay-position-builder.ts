@@ -6,18 +6,18 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {Platform} from '@angular/cdk/platform';
 import {ViewportRuler} from '@angular/cdk/scrolling';
 import {DOCUMENT} from '@angular/common';
 import {ElementRef, Inject, Injectable, Optional} from '@angular/core';
+
+import {OverlayContainer} from '../overlay-container';
+
 import {OriginConnectionPosition, OverlayConnectionPosition} from './connected-position';
 import {ConnectedPositionStrategy} from './connected-position-strategy';
-import {
-  FlexibleConnectedPositionStrategy,
-  FlexibleConnectedPositionStrategyOrigin,
-} from './flexible-connected-position-strategy';
+import {FlexibleConnectedPositionStrategy} from './flexible-connected-position-strategy';
+import {FlexibleConnectedPositionStrategyOrigin} from './flexible-positioning';
 import {GlobalPositionStrategy} from './global-position-strategy';
-import {Platform} from '@angular/cdk/platform';
-import {OverlayContainer} from '../overlay-container';
 
 
 /** Builder for overlay position strategy. */

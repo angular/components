@@ -6,9 +6,14 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {PositionStrategy} from './position-strategy';
-import {ElementRef} from '@angular/core';
-import {ViewportRuler, CdkScrollable, ViewportScrollPosition} from '@angular/cdk/scrolling';
+import {coerceArray, coerceCssPixelValue} from '@angular/cdk/coercion';
+import {Platform} from '@angular/cdk/platform';
+import {CdkScrollable, ViewportRuler, ViewportScrollPosition} from '@angular/cdk/scrolling';
+import {Observable, Observer, Subject, Subscription} from 'rxjs';
+
+import {OverlayContainer} from '../overlay-container';
+import {OverlayReference} from '../overlay-reference';
+
 import {
   ConnectedOverlayPositionChange,
   ConnectionPositionPair,
@@ -16,21 +21,22 @@ import {
   validateHorizontalPosition,
   validateVerticalPosition,
 } from './connected-position';
-import {Observable, Subscription, Subject, Observer} from 'rxjs';
-import {OverlayReference} from '../overlay-reference';
-import {isElementScrolledOutsideView, isElementClippedByScrolling} from './scroll-clip';
-import {coerceCssPixelValue, coerceArray} from '@angular/cdk/coercion';
-import {Platform} from '@angular/cdk/platform';
-import {OverlayContainer} from '../overlay-container';
+import {
+  boundingBoxClass,
+  BoundingBoxRect,
+  clearBoundingBoxStyles,
+  extendStyles,
+  FlexibleConnectedPositionStrategyOrigin,
+  getOriginRect,
+  Point,
+  resetBoundingBoxStyles,
+  resetOverlayElementStyles,
+} from './flexible-positioning';
+import {PositionStrategy} from './position-strategy';
+import {isElementClippedByScrolling, isElementScrolledOutsideView} from './scroll-clip';
 
 // TODO: refactor clipping detection into a separate thing (part of scrolling module)
 // TODO: doesn't handle both flexible width and height when it has to scroll along both axis.
-
-/** Class to be added to the overlay bounding box. */
-const boundingBoxClass = 'cdk-overlay-connected-position-bounding-box';
-
-/** Possible values that can be set as the origin of a FlexibleConnectedPositionStrategy. */
-export type FlexibleConnectedPositionStrategyOrigin = ElementRef | HTMLElement | Point;
 
 /**
  * A strategy for positioning overlays. Using this strategy, an overlay is given an
@@ -65,13 +71,13 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
   private _positionLocked = false;
 
   /** Cached origin dimensions */
-  private _originRect: ClientRect;
+  private _originRect: BoundingBoxRect;
 
   /** Cached overlay dimensions */
-  private _overlayRect: ClientRect;
+  private _overlayRect: BoundingBoxRect;
 
   /** Cached viewport dimensions */
-  private _viewportRect: ClientRect;
+  private _viewportRect: BoundingBoxRect;
 
   /** Amount of space that must be maintained between the overlay and the edge of the viewport. */
   private _viewportMargin = 0;
@@ -318,16 +324,7 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
     // We can't use `_resetBoundingBoxStyles` here, because it resets
     // some properties to zero, rather than removing them.
     if (this._boundingBox) {
-      extendStyles(this._boundingBox.style, {
-        top: '',
-        left: '',
-        right: '',
-        bottom: '',
-        height: '',
-        width: '',
-        alignItems: '',
-        justifyContent: '',
-      } as CSSStyleDeclaration);
+      clearBoundingBoxStyles(this._boundingBox.style);
     }
 
     if (this._pane) {
@@ -840,29 +837,13 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
   }
 
   /** Resets the styles for the bounding box so that a new positioning can be computed. */
-  private _resetBoundingBoxStyles() {
-    extendStyles(this._boundingBox!.style, {
-      top: '0',
-      left: '0',
-      right: '0',
-      bottom: '0',
-      height: '',
-      width: '',
-      alignItems: '',
-      justifyContent: '',
-    } as CSSStyleDeclaration);
+  private _resetBoundingBoxStyles(): void {
+    resetBoundingBoxStyles(this._boundingBox!.style);
   }
 
   /** Resets the styles for the overlay pane so that a new positioning can be computed. */
-  private _resetOverlayElementStyles() {
-    extendStyles(this._pane.style, {
-      top: '',
-      left: '',
-      bottom: '',
-      right: '',
-      position: '',
-      transform: '',
-    } as CSSStyleDeclaration);
+  private _resetOverlayElementStyles(): void {
+    resetOverlayElementStyles(this._pane.style);
   }
 
   /** Sets positioning styles to the overlay element. */
@@ -1099,32 +1080,8 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
 
   /** Returns the ClientRect of the current origin. */
   private _getOriginRect(): ClientRect {
-    const origin = this._origin;
-
-    if (origin instanceof ElementRef) {
-      return origin.nativeElement.getBoundingClientRect();
-    }
-
-    if (origin instanceof HTMLElement) {
-      return origin.getBoundingClientRect();
-    }
-
-    // If the origin is a point, return a client rect as if it was a 0x0 element at the point.
-    return {
-      top: origin.y,
-      bottom: origin.y,
-      left: origin.x,
-      right: origin.x,
-      height: 0,
-      width: 0
-    };
+    return getOriginRect(this._origin);
   }
-}
-
-/** A simple (x, y) coordinate. */
-interface Point {
-  x: number;
-  y: number;
 }
 
 /** Record of measurements for how an overlay (at a given position) fits into the viewport. */
@@ -1151,16 +1108,6 @@ interface FallbackPosition {
   overlayRect: ClientRect;
 }
 
-/** Position and size of the overlay sizing wrapper for a specific position. */
-interface BoundingBoxRect {
-  top: number;
-  left: number;
-  bottom: number;
-  right: number;
-  height: number;
-  width: number;
-}
-
 /** Record of measures determining how well a given position will fit with flexible dimensions. */
 interface FlexibleFit {
   position: ConnectedPosition;
@@ -1181,15 +1128,4 @@ export interface ConnectedPosition {
   offsetX?: number;
   offsetY?: number;
   panelClass?: string | string[];
-}
-
-/** Shallow-extends a stylesheet object with another stylesheet object. */
-function extendStyles(dest: CSSStyleDeclaration, source: CSSStyleDeclaration): CSSStyleDeclaration {
-  for (let key in source) {
-    if (source.hasOwnProperty(key)) {
-      dest[key] = source[key];
-    }
-  }
-
-  return dest;
 }
