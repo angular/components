@@ -109,6 +109,7 @@
 /src/dev-app/checkbox/**                           @jelbourn @devversion
 /src/dev-app/chips/**                              @jelbourn
 /src/dev-app/connected-overlay/**                  @jelbourn @crisbeto
+/src/dev-app/cover-overlay/**                      @kkseamon @jelbourn
 /src/dev-app/dataset/**                            @andrewseguin
 /src/dev-app/datepicker/**                         @mmalerba
 /src/dev-app/dev-app/**                            @mmalerba

@@ -92,7 +92,8 @@ export class CoverOverlayDemo {
 
   showBoundingBox() {
     if (this.highlightBoundingBox) {
-      const box = document.querySelector<HTMLElement>('.cdk-overlay-connected-position-bounding-box');
+      const box =
+          document.querySelector<HTMLElement>('.cdk-overlay-connected-position-bounding-box');
 
       if (box) {
         box.style.background = this.highlightBoundingBox ? 'rgb(255, 69, 0, 0.2)' : '';

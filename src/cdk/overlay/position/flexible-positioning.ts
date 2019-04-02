@@ -63,7 +63,8 @@ export function getOriginRect(origin: FlexibleConnectedPositionStrategyOrigin): 
 }
 
 /** Shallow-extends a stylesheet object with another stylesheet object. */
-export function extendStyles(dest: CSSStyleDeclaration, source: CSSStyleDeclaration): CSSStyleDeclaration {
+export function extendStyles(
+    dest: CSSStyleDeclaration, source: CSSStyleDeclaration): CSSStyleDeclaration {
   for (let key in source) {
     if (source.hasOwnProperty(key)) {
       dest[key] = source[key];

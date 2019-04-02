@@ -2,14 +2,14 @@
   display: flex;
 }
 
-div.position-area {
+div.example-position-area {
   display: inline-block;
   height: 500px;
   position: relative;
   width: 800px;
 }
 
-.origin {
+.example-origin {
   background-color: lightsteelblue;
   height: 50px;
   position: absolute;
