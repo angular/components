@@ -31,13 +31,13 @@
 
   .mat-card-title {
     font: {
-      size: mat-font-size($config, headline);
-      weight: mat-font-weight($config, title);
+      size: mat-font-size($config, heading-6);
+      weight: mat-font-weight($config, heading-6);
     }
   }
 
   .mat-card-header .mat-card-title {
-    font-size: mat-font-size($config, title);
+    font-size: mat-font-size($config, heading-6);
   }
 
   .mat-card-subtitle,

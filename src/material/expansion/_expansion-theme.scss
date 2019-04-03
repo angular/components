@@ -58,9 +58,9 @@
 @mixin mat-expansion-panel-typography($config) {
   .mat-expansion-panel-header {
     font: {
-      family: mat-font-family($config, subheading-1);
-      size: mat-font-size($config, subheading-1);
-      weight: mat-font-weight($config, subheading-1);
+      family: mat-font-family($config, subtitle-1);
+      size: mat-font-size($config, subtitle-1);
+      weight: mat-font-weight($config, subtitle-1);
     }
   }
 

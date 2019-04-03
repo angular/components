@@ -17,6 +17,6 @@
 
 @mixin mat-dialog-typography($config) {
   .mat-dialog-title {
-    @include mat-typography-level-to-styles($config, title);
+    @include mat-typography-level-to-styles($config, heading-6);
   }
 }

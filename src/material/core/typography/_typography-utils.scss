@@ -23,6 +23,16 @@
   @return _mat-get-type-value($config, $level, letter-spacing);
 }
 
+// Gets the text transform for a level inside a typography config.
+@function mat-text-transform($config, $level) {
+  @return _mat-get-type-value($config, $level, text-transform);
+}
+
+// Calculates the letter spacing for a font size using the tracking in Sketch
+@function mat-calc-letter-spacing($tracking, $font-size) {
+  @return ($tracking / $font-size) * 1rem;
+}
+
 // Gets the font-family from a typography config and removes the quotes around it.
 @function mat-font-family($config, $level: null) {
   $font-family: map-get($config, font-family);
@@ -71,4 +81,5 @@
 
   @include mat-typography-font-shorthand($font-size, $font-weight, $line-height, $font-family);
   letter-spacing: mat-letter-spacing($config, $level);
+  text-transform: mat-text-transform($config, $level);
 }
