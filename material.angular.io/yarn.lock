@@ -109,10 +109,10 @@
   dependencies:
     tslib "^1.9.0"
 
-"@angular/cdk@^7.2.1":
-  version "7.2.1"
-  resolved "https://registry.yarnpkg.com/@angular/cdk/-/cdk-7.2.1.tgz#f3673d026a0a38f93629bbd67039bbbb50a36f1c"
-  integrity sha512-oU1Pjq3JkDtkXquLxWK84A2jOCeYRf352dVGbQCxWoSOQ5KBtMAd42huGidPiOSHN6/f7xZwL3n4fq3fVIut8A==
+"@angular/cdk@^7.3.7":
+  version "7.3.7"
+  resolved "https://registry.yarnpkg.com/@angular/cdk/-/cdk-7.3.7.tgz#ce1ad53ba04beb9c8e950acc5691ea0143753764"
+  integrity sha512-xbXxhHHKGkVuW6K7pzPmvpJXIwpl0ykBnvA2g+/7Sgy5Pd35wCC+UtHD9RYczDM/mkygNxMQtagyCErwFnDtQA==
   dependencies:
     tslib "^1.7.1"
   optionalDependencies:
@@ -185,23 +185,29 @@
   dependencies:
     tslib "^1.9.0"
 
+"@angular/material-examples@angular/material2-docs-content#7.3.x":
+  version "7.3.6-307889e"
+  resolved "https://codeload.github.com/angular/material2-docs-content/tar.gz/b73a3c177e10bee6ab0102669a295d5e6a720280"
+  dependencies:
+    tslib "^1.7.1"
+
 "@angular/material-examples@https://github.com/angular/material2-docs-content.git":
   version "7.2.1-a8072c9"
   resolved "https://github.com/angular/material2-docs-content.git#464ba0afbf924b975a6c033a088976f8a0b8f1e9"
   dependencies:
     tslib "^1.7.1"
 
-"@angular/material-moment-adapter@^7.2.1":
-  version "7.2.1"
-  resolved "https://registry.yarnpkg.com/@angular/material-moment-adapter/-/material-moment-adapter-7.2.1.tgz#a24488f43c150638385e180002ba20383fead4fb"
-  integrity sha512-oaF12PT4fUNp5v5Ls2y0ol2VNr2UDXodAKixfBNv1/kfo+vlWfqTBybChIJhvX72BrDqf2pbuWQIAK/6BuS8Rw==
+"@angular/material-moment-adapter@^7.3.7":
+  version "7.3.7"
+  resolved "https://registry.yarnpkg.com/@angular/material-moment-adapter/-/material-moment-adapter-7.3.7.tgz#8ad991a1035764fffc5a433dc4038e2ea8c93104"
+  integrity sha512-Nb8hZkF6zcni7Jb+FXcTKKmbp8PhhFAhJSkch9FnKcFs1Py+sCNTLIH/cI53nPrTglkJwlVLwMW7fxj4w9I1CQ==
   dependencies:
     tslib "^1.7.1"
 
-"@angular/material@^7.2.1":
-  version "7.2.1"
-  resolved "https://registry.yarnpkg.com/@angular/material/-/material-7.2.1.tgz#b2820ed32bcbfad4db9498689ee7afc523da2e59"
-  integrity sha512-d2O+7dDjIl7W1qlOdTfsAgMSrz9NNmPV6zJKqsRpZtkywAwKSwqzOs29XN3GjN2wYxZCnCpQi99l4GgmzPxRzg==
+"@angular/material@^7.3.7":
+  version "7.3.7"
+  resolved "https://registry.yarnpkg.com/@angular/material/-/material-7.3.7.tgz#dcd95e6618ba6254c5880efee1aad349cf5b9140"
+  integrity sha512-Eq+7frkeNGkLOfEtmkmJgR+AgoWajOipXZWWfCSamNfpCcPof82DwvGOpAmgGni9FuN2XFQdqP5MoaffQzIvUA==
   dependencies:
     tslib "^1.7.1"
 
