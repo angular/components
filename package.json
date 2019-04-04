@@ -27,7 +27,7 @@
     "preinstall": "node ./tools/npm/check-npm.js",
     "format": "git-clang-format HEAD $(git diff HEAD --name-only | grep -v \"\\.d\\.ts\")"
   },
-  "version": "7.3.6",
+  "version": "7.3.7",
   "requiredAngularVersion": ">=7.0.0",
   "dependencies": {
     "@angular/animations": "^7.2.1",
