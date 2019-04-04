@@ -141,6 +141,16 @@ export class MatSort extends _MatSortMixinBase
     this.sortChange.emit({active: this.active, direction: this.direction});
   }
 
+  /** Sets the active sort id and determines the sort direction. Sets exact value. */
+  exactSort(sortable: MatSortable): void {
+    if (this.active != sortable.id) {
+      this.active = sortable.id;
+    }
+    this.direction = sortable.start ? sortable.start : this.start;
+
+    this.sortChange.emit({active: this.active, direction: this.direction});
+  }
+
   /** Returns the next sort direction of the active sortable, checking for potential overrides. */
   getNextSortDirection(sortable: MatSortable): SortDirection {
     if (!sortable) { return ''; }
