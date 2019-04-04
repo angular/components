@@ -710,17 +710,18 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
     const viewport = this._viewportRect;
     const isRtl = this._isRtl();
     let height: number, top: number, bottom: number;
+    let offset = position.offsetY || 0;
 
     if (position.overlayY === 'top') {
       // Overlay is opening "downward" and thus is bound by the bottom viewport edge.
       top = origin.y;
-      height = viewport.height - top + this._viewportMargin;
+      height = viewport.height - top - offset + this._viewportMargin;
     } else if (position.overlayY === 'bottom') {
       // Overlay is opening "upward" and thus is bound by the top viewport edge. We need to add
       // the viewport margin back in, because the viewport rect is narrowed down to remove the
       // margin, whereas the `origin` position is calculated based on its `ClientRect`.
       bottom = viewport.height - origin.y + this._viewportMargin * 2;
-      height = viewport.height - bottom + this._viewportMargin;
+      height = viewport.height - bottom + offset + this._viewportMargin;
     } else {
       // If neither top nor bottom, it means that the overlay is vertically centered on the
       // origin point. Note that we want the position relative to the viewport, rather than
@@ -750,13 +751,14 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
         (position.overlayX === 'start' && isRtl);
 
     let width: number, left: number, right: number;
+    offset = position.offsetX || 0;
 
     if (isBoundedByLeftViewportEdge) {
       right = viewport.right - origin.x + this._viewportMargin;
-      width = origin.x - viewport.left;
+      width = origin.x - offset - viewport.left;
     } else if (isBoundedByRightViewportEdge) {
       left = origin.x;
-      width = viewport.right - origin.x;
+      width = viewport.right + offset - origin.x;
     } else {
       // If neither start nor end, it means that the overlay is horizontally centered on the
       // origin point. Note that we want the position relative to the viewport, rather than
