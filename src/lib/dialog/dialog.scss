@@ -4,8 +4,11 @@
 
 $mat-dialog-padding: 24px !default;
 $mat-dialog-border-radius: 4px !default;
-$mat-dialog-max-height: 65vh !default;
+$mat-dialog-title-padding: 24px !default;
 $mat-dialog-button-margin: 8px !default;
+
+// TODO(crisbeto): not used anywhere, to be removed next major release.
+$mat-dialog-max-height: 65vh !default;
 
 .mat-dialog-container {
   display: block;
@@ -29,29 +32,56 @@ $mat-dialog-button-margin: 8px !default;
   }
 }
 
-.mat-dialog-content {
-  display: block;
-  margin: 0 $mat-dialog-padding * -1;
-  padding: 0 $mat-dialog-padding;
-  max-height: $mat-dialog-max-height;
-  overflow: auto;
-  -webkit-overflow-scrolling: touch;
+.mat-dialog-container-scrollable {
+  padding: 0;
+
+  // Since there are 5-6 levels of elements down before we can reach
+  // the projected content, we have to use a class that lets us propagate
+  // the dimensions down to the relevant flexboxes, in order for IE to
+  // work correctly.
+  &, .mat-dialog-component-host {
+    width: inherit;
+    min-width: inherit;
+    max-width: inherit;
+    height: inherit;
+    min-height: inherit;
+    max-height: inherit;
+    display: flex;
+    flex-direction: column;
+    overflow: auto;
+  }
 }
 
 .mat-dialog-title {
-  margin: 0 0 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 100%;
+  flex-shrink: 0;
+  margin: 0;
+  padding: $mat-dialog-title-padding;
+  box-sizing: border-box;
+}
+
+.mat-dialog-content {
   display: block;
+  padding: $mat-dialog-padding $mat-dialog-padding 0;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+
+  // Avoid stacking the padding if there's a title.
+  .mat-dialog-title ~ & {
+    padding-top: 0;
+  }
 }
 
 .mat-dialog-actions {
-  padding: 8px 0;
+  padding: 8px $mat-dialog-padding;
   display: flex;
   flex-wrap: wrap;
   min-height: 52px;
   align-items: center;
-
-  // Pull the actions down to avoid their padding stacking with the dialog's padding.
-  margin-bottom: -$mat-dialog-padding;
+  flex-shrink: 0;
 
   &[align='end'] {
     justify-content: flex-end;

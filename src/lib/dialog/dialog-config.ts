@@ -75,7 +75,7 @@ export class MatDialogConfig<D = any> {
   maxWidth?: number | string = '80vw';
 
   /** Max-height of the dialog. If a number is provided, pixel units are assumed. */
-  maxHeight?: number | string;
+  maxHeight?: number | string = '80vh';
 
   /** Position overrides. */
   position?: DialogPosition;
