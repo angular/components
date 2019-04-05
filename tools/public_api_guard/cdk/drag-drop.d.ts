@@ -22,6 +22,10 @@ export declare class CdkDrag<T = any> implements AfterViewInit, OnChanges, OnDes
     ended: EventEmitter<CdkDragEnd>;
     entered: EventEmitter<CdkDragEnter<any>>;
     exited: EventEmitter<CdkDragExit<any>>;
+    freeDragPosition: {
+        x: number;
+        y: number;
+    };
     lockAxis: 'x' | 'y';
     moved: Observable<CdkDragMove<T>>;
     released: EventEmitter<CdkDragRelease>;
@@ -29,8 +33,11 @@ export declare class CdkDrag<T = any> implements AfterViewInit, OnChanges, OnDes
     started: EventEmitter<CdkDragStart>;
     constructor(
     element: ElementRef<HTMLElement>,
-    dropContainer: CdkDropList, _document: any, _ngZone: NgZone, _viewContainerRef: ViewContainerRef, viewportRuler: ViewportRuler, dragDropRegistry: DragDropRegistry<DragRef, DropListRef>, config: DragRefConfig, _dir: Directionality,
-    dragDrop?: DragDrop, _changeDetectorRef?: ChangeDetectorRef | undefined);
+    dropContainer: CdkDropList, _document: any, _ngZone: NgZone, _viewContainerRef: ViewContainerRef, config: DragRefConfig, _dir: Directionality, dragDrop: DragDrop, _changeDetectorRef: ChangeDetectorRef);
+    getFreeDragPosition(): {
+        readonly x: number;
+        readonly y: number;
+    };
     getPlaceholderElement(): HTMLElement;
     getRootElement(): HTMLElement;
     ngAfterViewInit(): void;
@@ -131,8 +138,7 @@ export declare class CdkDropList<T = any> implements CdkDropListContainer, After
     sorted: EventEmitter<CdkDragSortEvent<T>>;
     sortingDisabled: boolean;
     constructor(
-    element: ElementRef<HTMLElement>, dragDropRegistry: DragDropRegistry<DragRef, DropListRef>, _changeDetectorRef: ChangeDetectorRef, _dir?: Directionality | undefined, _group?: CdkDropListGroup<CdkDropList<any>> | undefined, _document?: any,
-    dragDrop?: DragDrop);
+    element: ElementRef<HTMLElement>, dragDrop: DragDrop, _changeDetectorRef: ChangeDetectorRef, _dir?: Directionality | undefined, _group?: CdkDropListGroup<CdkDropList<any>> | undefined);
     _getSiblingContainerFromPosition(item: CdkDrag, x: number, y: number): CdkDropListContainer | null;
     _isOverContainer(x: number, y: number): boolean;
     _sortItem(item: CdkDrag, pointerX: number, pointerY: number, pointerDelta: {
@@ -252,10 +258,12 @@ export declare class DragRef<T = any> {
     disableHandle(handle: HTMLElement): void;
     dispose(): void;
     enableHandle(handle: HTMLElement): void;
+    getFreeDragPosition(): Readonly<Point>;
     getPlaceholderElement(): HTMLElement;
     getRootElement(): HTMLElement;
     isDragging(): boolean;
     reset(): void;
+    setFreeDragPosition(value: Point): this;
     withBoundaryElement(boundaryElement: ElementRef<HTMLElement> | HTMLElement | null): this;
     withDirection(direction: Direction): this;
     withHandles(handles: (HTMLElement | ElementRef<HTMLElement>)[]): this;

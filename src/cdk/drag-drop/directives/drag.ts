@@ -7,7 +7,6 @@
  */
 
 import {Directionality} from '@angular/cdk/bidi';
-import {ViewportRuler} from '@angular/cdk/scrolling';
 import {DOCUMENT} from '@angular/common';
 import {
   AfterViewInit,
@@ -33,7 +32,6 @@ import {
 import {coerceBooleanProperty, coerceNumberProperty} from '@angular/cdk/coercion';
 import {Observable, Observer, Subject, merge} from 'rxjs';
 import {startWith, take, map, takeUntil, switchMap, tap} from 'rxjs/operators';
-import {DragDropRegistry} from '../drag-drop-registry';
 import {
   CdkDragDrop,
   CdkDragEnd,
@@ -49,7 +47,6 @@ import {CdkDragPreview} from './drag-preview';
 import {CDK_DROP_LIST} from '../drop-list-container';
 import {CDK_DRAG_PARENT} from '../drag-parent';
 import {DragRef, DragRefConfig, Point} from '../drag-ref';
-import {DropListRef} from '../drop-list-ref';
 import {CdkDropListInternal as CdkDropList} from './drop-list';
 import {DragDrop} from '../drag-drop';
 
@@ -116,6 +113,12 @@ export class CdkDrag<T = any> implements AfterViewInit, OnChanges, OnDestroy {
    */
   @Input('cdkDragStartDelay') dragStartDelay: number = 0;
 
+  /**
+   * Sets the position of a `CdkDrag` that is outside of a drop container.
+   * Can be used to restore the element's position for a returning user.
+   */
+  @Input('cdkDragFreeDragPosition') freeDragPosition: {x: number, y: number};
+
   /** Whether starting to drag this element is disabled. */
   @Input('cdkDragDisabled')
   get disabled(): boolean {
@@ -176,36 +179,15 @@ export class CdkDrag<T = any> implements AfterViewInit, OnChanges, OnDestroy {
       });
 
   constructor(
-    /** Element that the draggable is attached to. */
-    public element: ElementRef<HTMLElement>,
-    /** Droppable container that the draggable is a part of. */
-    @Inject(CDK_DROP_LIST) @Optional() @SkipSelf()
-    public dropContainer: CdkDropList,
-    @Inject(DOCUMENT) private _document: any,
-    private _ngZone: NgZone,
-    private _viewContainerRef: ViewContainerRef,
-    viewportRuler: ViewportRuler,
-    dragDropRegistry: DragDropRegistry<DragRef, DropListRef>,
-    @Inject(CDK_DRAG_CONFIG) config: DragRefConfig,
-    @Optional() private _dir: Directionality,
-
-    /**
-     * @deprecated `viewportRuler`, `dragDropRegistry` and `_changeDetectorRef` parameters
-     * to be removed. Also `dragDrop` parameter to be made required.
-     * @breaking-change 8.0.0.
-     */
-    dragDrop?: DragDrop,
-    private _changeDetectorRef?: ChangeDetectorRef) {
-
-
-    // @breaking-change 8.0.0 Remove null check once the paramter is made required.
-    if (dragDrop) {
-      this._dragRef = dragDrop.createDrag(element, config);
-    } else {
-      this._dragRef = new DragRef(element, config, _document, _ngZone, viewportRuler,
-          dragDropRegistry);
-    }
-
+      /** Element that the draggable is attached to. */
+      public element: ElementRef<HTMLElement>,
+      /** Droppable container that the draggable is a part of. */
+      @Inject(CDK_DROP_LIST) @Optional() @SkipSelf() public dropContainer: CdkDropList,
+      @Inject(DOCUMENT) private _document: any, private _ngZone: NgZone,
+      private _viewContainerRef: ViewContainerRef, @Inject(CDK_DRAG_CONFIG) config: DragRefConfig,
+      @Optional() private _dir: Directionality, dragDrop: DragDrop,
+      private _changeDetectorRef: ChangeDetectorRef) {
+    this._dragRef = dragDrop.createDrag(element, config);
     this._dragRef.data = this;
     this._syncInputs(this._dragRef);
     this._handleEvents(this._dragRef);
@@ -227,6 +209,13 @@ export class CdkDrag<T = any> implements AfterViewInit, OnChanges, OnDestroy {
   /** Resets a standalone drag item to its initial position. */
   reset(): void {
     this._dragRef.reset();
+  }
+
+  /**
+   * Gets the pixel coordinates of the draggable outside of a drop container.
+   */
+  getFreeDragPosition(): {readonly x: number, readonly y: number} {
+    return this._dragRef.getFreeDragPosition();
   }
 
   ngAfterViewInit() {
@@ -260,16 +249,26 @@ export class CdkDrag<T = any> implements AfterViewInit, OnChanges, OnDestroy {
           const handle = handleInstance.element.nativeElement;
           handleInstance.disabled ? dragRef.disableHandle(handle) : dragRef.enableHandle(handle);
         });
+
+        if (this.freeDragPosition) {
+          this._dragRef.setFreeDragPosition(this.freeDragPosition);
+        }
       });
   }
 
   ngOnChanges(changes: SimpleChanges) {
     const rootSelectorChange = changes['rootElementSelector'];
+    const positionChange = changes['positionChange'];
 
     // We don't have to react to the first change since it's being
     // handled in `ngAfterViewInit` where it needs to be deferred.
     if (rootSelectorChange && !rootSelectorChange.firstChange) {
       this._updateRootElement();
+    }
+
+    // Skip the first change since it's being handled in `ngAfterViewInit`.
+    if (positionChange && !positionChange.firstChange && this.freeDragPosition) {
+      this._dragRef.setFreeDragPosition(this.freeDragPosition);
     }
   }
 
@@ -338,10 +337,7 @@ export class CdkDrag<T = any> implements AfterViewInit, OnChanges, OnDestroy {
 
       // Since all of these events run outside of change detection,
       // we need to ensure that everything is marked correctly.
-      if (this._changeDetectorRef) {
-        // @breaking-change 8.0.0 Remove null check for _changeDetectorRef
-        this._changeDetectorRef.markForCheck();
-      }
+      this._changeDetectorRef.markForCheck();
     });
 
     ref.released.subscribe(() => {
@@ -353,10 +349,7 @@ export class CdkDrag<T = any> implements AfterViewInit, OnChanges, OnDestroy {
 
       // Since all of these events run outside of change detection,
       // we need to ensure that everything is marked correctly.
-      if (this._changeDetectorRef) {
-        // @breaking-change 8.0.0 Remove null check for _changeDetectorRef
-        this._changeDetectorRef.markForCheck();
-      }
+      this._changeDetectorRef.markForCheck();
     });
 
     ref.entered.subscribe(event => {
