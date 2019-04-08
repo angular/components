@@ -139,6 +139,26 @@ export class MatPaginator extends _MatPaginatorBase implements OnInit, OnDestroy
   }
   private _showFirstLastButtons = false;
 
+  /** Whether to show the page number UI to the user. */
+  @Input()
+  get showPageNumbers(): boolean { return this._showPageNumbers; }
+  set showPageNumbers(value: boolean) {
+    this._showPageNumbers = coerceBooleanProperty(value);
+  }
+  private _showPageNumbers = false;
+
+  /**
+   * Total count of page numbers to display, if shown.  Default to 3.
+   * Even numbers are incremented to allow for equal previous and next sections, plus current page
+   */
+  @Input()
+  get pageNumberCount(): number { return this._pageNumberCount; }
+  set pageNumberCount(value: number) {
+    this._pageNumberCount = Math.max(coerceNumberProperty(value), 0);
+    this._updateDisplayedPageSizeOptions();
+  }
+  private _pageNumberCount: number = 3;
+
   /** Event emitted when the paginator changes the page size or page index. */
   @Output() readonly page: EventEmitter<PageEvent> = new EventEmitter<PageEvent>();
 
@@ -208,6 +228,50 @@ export class MatPaginator extends _MatPaginatorBase implements OnInit, OnDestroy
   hasNextPage(): boolean {
     const maxPageIndex = this.getNumberOfPages() - 1;
     return this.pageIndex < maxPageIndex && this.pageSize != 0;
+  }
+
+  /** Determines currently selected page number to display */
+  currentPageNumber() {
+    return this.pageIndex + 1;
+  }
+
+  /** Navigate to selected page number, if it exists. */
+  clickPageNumber(nextPage: number) {
+    if (nextPage > (this.getNumberOfPages()) || nextPage < 1) {
+      return;
+    }
+    const previousPageIndex = this.pageIndex;
+    this.pageIndex = nextPage - 1;
+    this._emitPageEvent(previousPageIndex);
+  }
+
+  /** Determines list of 'previous' page numbers to display */
+  previousPageNumbers() {
+    const previousPageNumbers = [];
+    const previousPageCount = Math.floor(this._pageNumberCount / 2)
+                            + Math.floor(this._pageNumberCount / 2) - this.nextPageNumbers().length;
+    for (let i = 1; i <= previousPageCount; i++) {
+      const prev = this.currentPageNumber() - i;
+      if (prev > 0) {
+        previousPageNumbers.push(prev);
+      }
+    }
+    previousPageNumbers.reverse();
+    return previousPageNumbers;
+  }
+
+  /** Determines list of 'next' page numbers to display */
+  nextPageNumbers() {
+    const nextPageNumbers = [];
+    const nextPageCount = Math.floor(this._pageNumberCount / 2) <= this.pageIndex
+      ? Math.floor(this._pageNumberCount / 2) + 1 : this._pageNumberCount - this.pageIndex;
+    for (let i = 1; i < nextPageCount; i++) {
+      const next = this.currentPageNumber() + i;
+      if (next <= Math.ceil(this.length / this.pageSize)) {
+        nextPageNumbers.push(next);
+      }
+    }
+    return nextPageNumbers;
   }
 
   /** Calculate the number of pages */
