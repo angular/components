@@ -36,7 +36,6 @@ import {
 } from '@angular/material';
 import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 import {MDCCheckboxAdapter, MDCCheckboxFoundation} from '@material/checkbox';
-import {MDCRippleFoundation} from '@material/ripple';
 
 let nextUniqueId = 0;
 
@@ -202,8 +201,11 @@ export class MatCheckbox implements AfterViewInit, OnDestroy, ControlValueAccess
         radius: 20,
         centered: true,
         animation: {
-          enterDuration: MDCRippleFoundation.numbers.DEACTIVATION_TIMEOUT_MS,
-          exitDuration: MDCRippleFoundation.numbers.FG_DEACTIVATION_MS,
+          // TODO(mmalerba): Use the MDC constants once they are exported separately from the
+          // foundation. Grabbing them off the foundation prevents the foundation class from being
+          // tree-shaken.
+          enterDuration: 225 /* MDCRippleFoundation.numbers.DEACTIVATION_TIMEOUT_MS */,
+          exitDuration: 150 /* MDCRippleFoundation.numbers.FG_DEACTIVATION_MS */,
         },
       },
       rippleDisabled: true
