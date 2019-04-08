@@ -16,22 +16,28 @@ export declare class MatPaginator extends _MatPaginatorBase implements OnInit, O
     length: number;
     readonly page: EventEmitter<PageEvent>;
     pageIndex: number;
+    pageNumberCount: number;
     pageSize: number;
     pageSizeOptions: number[];
     showFirstLastButtons: boolean;
+    showPageNumbers: boolean;
     constructor(_intl: MatPaginatorIntl, _changeDetectorRef: ChangeDetectorRef);
     _changePageSize(pageSize: number): void;
     _nextButtonsDisabled(): boolean;
     _previousButtonsDisabled(): boolean;
+    clickPageNumber(nextPage: number): void;
+    currentPageNumber(): number;
     firstPage(): void;
     getNumberOfPages(): number;
     hasNextPage(): boolean;
     hasPreviousPage(): boolean;
     lastPage(): void;
     nextPage(): void;
+    nextPageNumbers(): number[];
     ngOnDestroy(): void;
     ngOnInit(): void;
     previousPage(): void;
+    previousPageNumbers(): number[];
 }
 
 export declare class MatPaginatorBase {
