@@ -27,6 +27,10 @@
     border-top: 2px solid mat-color($foreground, 'icon');
   }
 
+  .mat-paginator-current-page {
+    color: mat-color($foreground, 'text');
+  }
+
   .mat-icon-button[disabled] {
     .mat-paginator-decrement,
     .mat-paginator-increment,

@@ -413,6 +413,55 @@ describe('MatPaginator', () => {
     expect(getLastButton(fixture).hasAttribute('disabled')).toBe(true);
   });
 
+  it('should be able to go to the clicked page', () => {
+    fixture.componentInstance.showPageNumbers = true;
+    fixture.detectChanges();
+
+    expect(paginator.pageIndex).toBe(0);
+
+    dispatchMouseEvent(getPageNumberButton(fixture), 'click');
+
+    expect(paginator.pageIndex).toBe(2);
+    expect(component.pageEvent).toHaveBeenCalledWith(jasmine.objectContaining({
+      previousPageIndex: 0,
+      pageIndex: 2
+    }));
+  });
+
+  it('should be able to show page numbers', () => {
+    expect(getPageNumberButton(fixture, 2))
+        .toBeNull('Expected page number 2 button to not exist.');
+
+    fixture.componentInstance.showPageNumbers = true;
+    fixture.detectChanges();
+
+    expect(getPageNumberButton(fixture, 2))
+        .toBeTruthy('Expected page number 2 button to exist.');
+
+    expect(getPageNumberButton(fixture))
+        .toBeTruthy('Expected page number 3 button to exist.');
+  });
+
+  it('should know how many page numbers to show', () => {
+    expect(getPageNumberButton(fixture, 2))
+        .toBeNull('Expected page number 2 button to not exist.');
+
+    fixture.componentInstance.showPageNumbers = true;
+    fixture.detectChanges();
+
+    expect(getPageNumberButton(fixture, 5))
+        .toBeFalsy('Should not have 5 page numbers by default');
+
+    fixture.componentInstance.pageNumberCount = 5;
+    fixture.detectChanges();
+
+    expect(getPageNumberButton(fixture, 5))
+        .toBeTruthy('Should have 5 pages');
+
+    expect(getPageNumberButton(fixture, 6))
+        .toBeFalsy('Should not have 6 pages');
+  });
+
 });
 
 function getPreviousButton(fixture: ComponentFixture<any>) {
@@ -431,6 +480,10 @@ function getLastButton(fixture: ComponentFixture<any>) {
     return fixture.nativeElement.querySelector('.mat-paginator-navigation-last');
 }
 
+function getPageNumberButton(fixture: ComponentFixture<any>, pageNumber: number = 3) {
+    return fixture.nativeElement.querySelector(`.mat-paginator-page-button-${pageNumber}`);
+}
+
 @Component({
   template: `
     <mat-paginator [pageIndex]="pageIndex"
@@ -438,6 +491,8 @@ function getLastButton(fixture: ComponentFixture<any>) {
                    [pageSizeOptions]="pageSizeOptions"
                    [hidePageSize]="hidePageSize"
                    [showFirstLastButtons]="showFirstLastButtons"
+                   [showPageNumbers]="showPageNumbers"
+                   [pageNumberCount]="pageNumberCount"
                    [length]="length"
                    [color]="color"
                    [disabled]="disabled"
@@ -451,6 +506,8 @@ class MatPaginatorApp {
   pageSizeOptions = [5, 10, 25, 100];
   hidePageSize = false;
   showFirstLastButtons = false;
+  showPageNumbers = false;
+  pageNumberCount = 3;
   length = 100;
   disabled: boolean;
   pageEvent = jasmine.createSpy('page event');
