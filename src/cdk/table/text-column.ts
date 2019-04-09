@@ -18,10 +18,10 @@ import {
   ViewChild,
   ViewEncapsulation
 } from '@angular/core';
-
 import {CdkColumnDef} from './cell';
 import {CdkTable} from './table';
 import {getTableTextColumnMissingParentTableError} from './table-errors';
+
 
 /** Configurable options for `CdkTextColumn`. */
 export interface TextColumnOptions<T> {
@@ -99,7 +99,7 @@ export class CdkTextColumn<T> implements OnDestroy, OnInit {
   /** Alignment of the cell values. */
   @Input() justify: 'start'|'end' = 'start';
 
-  @ViewChild(CdkColumnDef) columnDef: CdkColumnDef;
+  @ViewChild(CdkColumnDef, {static: true}) columnDef: CdkColumnDef;
 
   constructor(
       @Optional() private table: CdkTable<T>,

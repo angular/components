@@ -40,4 +40,5 @@ import {ChangeDetectionStrategy, Component, ViewEncapsulation} from '@angular/co
   // tslint:disable-next-line:validate-decorators
   changeDetection: ChangeDetectionStrategy.Default,
 })
-export class MatTextColumn<T> extends CdkTextColumn<T> {}
+export class MatTextColumn<T> extends CdkTextColumn<T> {
+}
