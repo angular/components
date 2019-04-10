@@ -14,7 +14,7 @@ component by following these steps:
    ```
    
 2. In your `angular.json`, make sure `node_modules/` is listed as a Sass include path. This is
-  needed for the Sass compiler to be able to find the MDC Web Sass files.
+   needed for the Sass compiler to be able to find the MDC Web Sass files.
   
    ```json
    ...
@@ -74,7 +74,7 @@ differences:
 * The experimental `MatCheckbox` does not have a public `ripple` property.
 
 ## Replacing the standard checkbox in an existing app
-Because the experimental API mirrors the API for the standard checkbox, it cn easily be swapped in
+Because the experimental API mirrors the API for the standard checkbox, it can easily be swapped in
 by just changing the import paths. There is currently no schematic for this, but you can run the
 following string replace across your TypeScript files:
 

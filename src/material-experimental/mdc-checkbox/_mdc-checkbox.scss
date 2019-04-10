@@ -10,7 +10,8 @@
   $accent: mat-color(map-get($theme, accent));
   $warn: mat-color(map-get($theme, warn));
 
-  // Save original values of MDC global variables.
+  // Save original values of MDC global variables. We need to save these so we can restore the
+  // variables to their original values and prevent unintended side effects from using this mixin.
   $orig-mdc-checkbox-mark-color: $mdc-checkbox-mark-color;
   $orig-mdc-checkbox-baseline-theme-color: $mdc-checkbox-baseline-theme-color;
   $orig-mdc-checkbox-border-color: $mdc-checkbox-border-color;
@@ -25,6 +26,9 @@
     @include mdc-checkbox-without-ripple($query: $mat-theme-styles-query);
     @include mdc-form-field-core-styles($query: $mat-theme-styles-query);
 
+    // MDC's checkbox doesn't support a `color` property. We add support for it by adding a CSS
+    // class for accent and warn style, and applying the appropriate overrides below. Since we don't
+    // use MDC's ripple, we also need to set the color for our replacement ripple.
     .mat-mdc-checkbox {
       .mat-ripple-element {
         background: $primary;

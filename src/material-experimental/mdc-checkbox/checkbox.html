@@ -18,7 +18,8 @@
            [required]="required"
            [tabIndex]="tabIndex"
            (blur)="_onBlur()"
-           (change)="_onChange($event)"/>
+           (click)="_onClick()"
+           (change)="$event.stopPropagation()"/>
     <div class="mdc-checkbox__background">
       <svg class="mdc-checkbox__checkmark"
            focusable="false"
