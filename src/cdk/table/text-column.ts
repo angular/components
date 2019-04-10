@@ -18,7 +18,7 @@ import {
   ViewChild,
   ViewEncapsulation
 } from '@angular/core';
-import {CdkColumnDef} from './cell';
+import {CdkCellDef, CdkColumnDef, CdkHeaderCellDef} from './cell';
 import {CdkTable} from './table';
 import {getTableTextColumnMissingParentTableError} from './table-errors';
 
@@ -99,7 +99,26 @@ export class CdkTextColumn<T> implements OnDestroy, OnInit {
   /** Alignment of the cell values. */
   @Input() justify: 'start'|'end' = 'start';
 
+  /** @docs-private */
   @ViewChild(CdkColumnDef, {static: true}) columnDef: CdkColumnDef;
+
+  /**
+   * The column cell is provided to the column during `ngOnInit` with a static query.
+   * Normally, this will be retrieved by the column using `ContentChild`, but that assumes the
+   * column definition was provided in the same view as the table, which is not the case with this
+   * component.
+   * @docs-private
+   */
+  @ViewChild(CdkCellDef, {static: true}) cell: CdkCellDef;
+
+  /**
+   * The column headerCell is provided to the column during `ngOnInit` with a static query.
+   * Normally, this will be retrieved by the column using `ContentChild`, but that assumes the
+   * column definition was provided in the same view as the table, which is not the case with this
+   * component.
+   * @docs-private
+   */
+  @ViewChild(CdkHeaderCellDef, {static: true}) headerCell: CdkHeaderCellDef;
 
   constructor(
       @Optional() private table: CdkTable<T>,
@@ -118,6 +137,11 @@ export class CdkTextColumn<T> implements OnDestroy, OnInit {
     }
 
     if (this.table) {
+      // Provide the cell and headerCell directly to the table with the static `ViewChild` query,
+      // since the columnDef will not pick up its content by the time the table finishes checking
+      // its content and initializing the rows.
+      this.columnDef.cell = this.cell;
+      this.columnDef.headerCell = this.headerCell;
       this.table.addColumnDef(this.columnDef);
     } else {
       throw getTableTextColumnMissingParentTableError();
