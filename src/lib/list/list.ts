@@ -180,9 +180,9 @@ export class MatListItem extends _MatListItemMixinBase implements AfterContentIn
   private _list?: MatNavList | MatList;
   private _destroyed = new Subject<void>();
 
-  @ContentChildren(MatLine) _lines: QueryList<MatLine>;
-  @ContentChild(MatListAvatarCssMatStyler) _avatar: MatListAvatarCssMatStyler;
-  @ContentChild(MatListIconCssMatStyler) _icon: MatListIconCssMatStyler;
+  @ContentChildren(MatLine, {descendants: true}) _lines: QueryList<MatLine>;
+  @ContentChild(MatListAvatarCssMatStyler, {static: false}) _avatar: MatListAvatarCssMatStyler;
+  @ContentChild(MatListIconCssMatStyler, {static: false}) _icon: MatListIconCssMatStyler;
 
   constructor(private _element: ElementRef<HTMLElement>,
               @Optional() navList?: MatNavList,
