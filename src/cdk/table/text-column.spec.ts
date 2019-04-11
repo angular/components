@@ -1,9 +1,11 @@
 import {Component} from '@angular/core';
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+
+import {getTableTextColumnMissingParentTableError} from './table-errors';
 import {CdkTableModule} from './table-module';
 import {expectTableToMatchContent} from './table.spec';
-import {TextColumnOptions, TEXT_COLUMN_OPTIONS} from './text-column';
-import {getTableTextColumnMissingParentTableError} from './table-errors';
+import {TEXT_COLUMN_OPTIONS, TextColumnOptions} from './text-column';
+
 
 describe('CdkTextColumn', () => {
   let fixture: ComponentFixture<BasicTextColumnApp>;
@@ -11,13 +13,15 @@ describe('CdkTextColumn', () => {
   let tableElement: HTMLElement;
 
   beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      imports: [CdkTableModule],
-      declarations: [
-        BasicTextColumnApp,
-        MissingTableApp,
-      ],
-    }).compileComponents();
+    TestBed
+        .configureTestingModule({
+          imports: [CdkTableModule],
+          declarations: [
+            BasicTextColumnApp,
+            MissingTableApp,
+          ],
+        })
+        .compileComponents();
   }));
 
   beforeEach(() => {
@@ -38,8 +42,7 @@ describe('CdkTextColumn', () => {
 
   it('should throw an error if the text column is not in the content of a table', () => {
     expect(() => TestBed.createComponent(MissingTableApp).detectChanges())
-      .toThrowError(getTableTextColumnMissingParentTableError().message);
-
+        .toThrowError(getTableTextColumnMissingParentTableError().message);
   });
 
   it('should allow for alternate header text', () => {
@@ -87,21 +90,6 @@ describe('CdkTextColumn', () => {
       ['changed-a_1', 'b_1', 'c_1'],
       ['changed-a_2', 'b_2', 'c_2'],
     ]);
-  });
-
-  it('should be able to justify the text', () => {
-    component.justifyC = 'end';
-    fixture.detectChanges();
-
-    const headerB = tableElement.querySelector('th:nth-child(2')! as HTMLElement;
-    const headerC = tableElement.querySelector('th:nth-child(3')! as HTMLElement;
-    expect(headerB.style.textAlign).toBe('start');
-    expect(headerC.style.textAlign).toBe('end');
-
-    const cellB = tableElement.querySelector('td:nth-child(2')! as HTMLElement;
-    const cellC = tableElement.querySelector('td:nth-child(3')! as HTMLElement;
-    expect(cellB.style.textAlign).toBe('start');
-    expect(cellC.style.textAlign).toBe('end');
   });
 
   describe('with options', () => {
