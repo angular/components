@@ -47,6 +47,7 @@ export class SelectDemo {
   topHeightCtrl = new FormControl(0);
   drinksTheme = 'primary';
   pokemonTheme = 'primary';
+  pokemonPanelHeight = 256;
   compareByValue = true;
   selectFormControl = new FormControl('', Validators.required);
 
@@ -77,6 +78,19 @@ export class SelectDemo {
     {value: 'jigglypuff-4', viewValue: 'Jigglypuff with a really long name that will truncate'},
     {value: 'ditto-5', viewValue: 'Ditto'},
     {value: 'psyduck-6', viewValue: 'Psyduck'},
+    {value: 'caterpie-7', viewValue: 'Caterpie'},
+    {value: 'weedle-8', viewValue: 'Weedle'},
+    {value: 'pidgey-9', viewValue: 'Pidgey'},
+    {value: 'rattata-10', viewValue: 'Rattata'},
+    {value: 'spearow-11', viewValue: 'Spearow'},
+    {value: 'ekans-12', viewValue: 'Ekans'},
+    {value: 'sandshrew-13', viewValue: 'Sandshrew'},
+    {value: 'nidoran-14', viewValue: 'Nidoran'},
+    {value: 'clefairy-15', viewValue: 'Clefairy'},
+    {value: 'vulpix-16', viewValue: 'Vulpix'},
+    {value: 'zubat-17', viewValue: 'Zubat'},
+    {value: 'oddish-18', viewValue: 'Oddish'},
+    {value: 'paras-19', viewValue: 'Paras'},
   ];
 
   availableThemes = [

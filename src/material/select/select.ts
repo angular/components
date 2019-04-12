@@ -8,7 +8,7 @@
 
 import {ActiveDescendantKeyManager, LiveAnnouncer} from '@angular/cdk/a11y';
 import {Directionality} from '@angular/cdk/bidi';
-import {coerceBooleanProperty} from '@angular/cdk/coercion';
+import {coerceBooleanProperty, coerceNumberProperty} from '@angular/cdk/coercion';
 import {SelectionModel} from '@angular/cdk/collections';
 import {
   A,
@@ -100,9 +100,6 @@ let nextUniqueId = 0;
  * to properly calculate the alignment of the selected option over
  * the trigger element.
  */
-
-/** The max height of the select's overlay panel */
-export const SELECT_PANEL_MAX_HEIGHT = 256;
 
 /** The panel's padding on the x-axis */
 export const SELECT_PANEL_PADDING_X = 16;
@@ -237,6 +234,14 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
 
   /** The scroll position of the overlay panel, calculated to center the selected option. */
   private _scrollTop = 0;
+
+  /**
+   * The max height of the select's overlay panel
+   * 256 value is define has follow:
+   * - display 5 select options of 48 px (240px)
+   * - remaining 16px help the user to see if other options are available
+   */
+  private _panelMaxHeight = 256;
 
   /** The placeholder displayed in the trigger of the select. */
   private _placeholder: string;
@@ -386,6 +391,13 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
   get disableOptionCentering(): boolean { return this._disableOptionCentering; }
   set disableOptionCentering(value: boolean) {
     this._disableOptionCentering = coerceBooleanProperty(value);
+  }
+
+  /** Define select panel maximum height. */
+  @Input()
+  get panelMaxHeight(): number { return this._panelMaxHeight; }
+  set panelMaxHeight(value: number) {
+    this._panelMaxHeight = coerceNumberProperty(value) || this._panelMaxHeight;
   }
 
   /**
@@ -805,6 +817,9 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
    */
   _onAttached(): void {
     this.overlayDir.positionChange.pipe(take(1)).subscribe(() => {
+      // Set panel max-height dynamically after creation.
+      this.panel.nativeElement.style.maxHeight = `${this._panelMaxHeight}px`;
+
       this._setPseudoCheckboxPaddingSize();
       this._changeDetectorRef.detectChanges();
       this._calculateOverlayOffsetX();
@@ -1037,7 +1052,7 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
       activeOptionIndex + labelCount,
       this._getItemHeight(),
       this.panel.nativeElement.scrollTop,
-      SELECT_PANEL_MAX_HEIGHT
+      this._panelMaxHeight
     );
   }
 
@@ -1057,7 +1072,7 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
   private _calculateOverlayPosition(): void {
     const itemHeight = this._getItemHeight();
     const items = this._getItemCount();
-    const panelHeight = Math.min(items * itemHeight, SELECT_PANEL_MAX_HEIGHT);
+    const panelHeight = Math.min(items * itemHeight, this._panelMaxHeight);
     const scrollContainerHeight = items * itemHeight;
 
     // The farthest the panel can be scrolled before it hits the bottom
@@ -1188,7 +1203,7 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
                                   maxScroll: number): number {
     const itemHeight = this._getItemHeight();
     const optionHeightAdjustment = (itemHeight - this._triggerRect.height) / 2;
-    const maxOptionsDisplayed = Math.floor(SELECT_PANEL_MAX_HEIGHT / itemHeight);
+    const maxOptionsDisplayed = Math.floor(this._panelMaxHeight / itemHeight);
     let optionOffsetFromPanelTop: number;
 
     // Disable offset if requested by user by returning 0 as value to offset
@@ -1204,8 +1219,8 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
 
       // The first item is partially out of the viewport. Therefore we need to calculate what
       // portion of it is shown in the viewport and account for it in our offset.
-      let partialItemHeight =
-          itemHeight - (this._getItemCount() * itemHeight - SELECT_PANEL_MAX_HEIGHT) % itemHeight;
+      let partialItemHeight = itemHeight -
+          (this._getItemCount() * itemHeight - this._panelMaxHeight) % itemHeight;
 
       // Because the panel height is longer than the height of the options alone,
       // there is always extra padding at the top or bottom of the panel. When
@@ -1241,7 +1256,7 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
 
     const panelHeightTop = Math.abs(this._offsetY);
     const totalPanelHeight =
-        Math.min(this._getItemCount() * itemHeight, SELECT_PANEL_MAX_HEIGHT);
+        Math.min(this._getItemCount() * itemHeight, this._panelMaxHeight);
     const panelHeightBottom = totalPanelHeight - panelHeightTop - this._triggerRect.height;
 
     if (panelHeightBottom > bottomSpaceAvailable) {
