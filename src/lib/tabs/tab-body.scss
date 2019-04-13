@@ -1,6 +1,11 @@
 @import '../core/style/vendor-prefixes';
 
 .mat-tab-body-content {
+  // Avoids repainting while scrolling.
+  @include backface-visibility(hidden);
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
   height: 100%;
   overflow: auto;
 
