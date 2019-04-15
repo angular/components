@@ -1448,58 +1448,59 @@ describe('MatInput with appearance', () => {
     expect(outlineFixture.componentInstance.formField.updateOutlineGap).toHaveBeenCalled();
   }));
 
-  it('should outline gap is more than outline start even if the direction changes multiple times', fakeAsync(() => {
-    fixture.destroy();
-    TestBed.resetTestingModule();
+  it('should outline gap is more than outline start if the direction changes multiple times',
+      fakeAsync(() => {
+        fixture.destroy();
+        TestBed.resetTestingModule();
 
-    let zone: MockNgZone;
-    const fakeDirectionality = {change: new Subject<Direction>(), value: 'ltr'};
-    const outlineFixture = createComponent(MatInputWithAppearanceAndLabel, [
-      {
-        provide: Directionality,
-        useValue: fakeDirectionality
-      },
-      {
-        provide: NgZone,
-        useFactory: () => zone = new MockNgZone()
-      }
-    ]);
+        let zone: MockNgZone;
+        const fakeDirectionality = {change: new Subject<Direction>(), value: 'ltr'};
+        const outlineFixture = createComponent(MatInputWithAppearanceAndLabel, [
+          {
+            provide: Directionality,
+            useValue: fakeDirectionality
+          },
+          {
+            provide: NgZone,
+            useFactory: () => zone = new MockNgZone()
+          }
+        ]);
 
-    outlineFixture.componentInstance.appearance = 'outline';
-    outlineFixture.detectChanges();
-    zone!.simulateZoneExit();
-    flush();
-    outlineFixture.detectChanges();
+        outlineFixture.componentInstance.appearance = 'outline';
+        outlineFixture.detectChanges();
+        zone!.simulateZoneExit();
+        flush();
+        outlineFixture.detectChanges();
 
-    spyOn(outlineFixture.componentInstance.formField, 'updateOutlineGap');
+        spyOn(outlineFixture.componentInstance.formField, 'updateOutlineGap');
 
-    fakeDirectionality.value = 'rtl';
-    fakeDirectionality.change.next('rtl');
-    outlineFixture.detectChanges();
-    flush();
-    outlineFixture.detectChanges();
+        fakeDirectionality.value = 'rtl';
+        fakeDirectionality.change.next('rtl');
+        outlineFixture.detectChanges();
+        flush();
+        outlineFixture.detectChanges();
 
-    let wrapperElement = outlineFixture.nativeElement;
-    let outlineStart = wrapperElement.querySelector('.mat-form-field-outline-start');
-    let outlineGap = wrapperElement.querySelector('.mat-form-field-outline-gap');
+        let wrapperElement = outlineFixture.nativeElement;
+        let outlineStart = wrapperElement.querySelector('.mat-form-field-outline-start');
+        let outlineGap = wrapperElement.querySelector('.mat-form-field-outline-gap');
 
-    expect(outlineFixture.componentInstance.formField.updateOutlineGap).toHaveBeenCalled();
-    expect(parseInt(outlineGap.style.width)).toBeGreaterThan(outlineStart.style.width);
+        expect(outlineFixture.componentInstance.formField.updateOutlineGap).toHaveBeenCalled();
+        expect(parseInt(outlineGap.style.width)).toBeGreaterThan(parseInt(outlineStart.style.width));
 
-    fakeDirectionality.value = 'ltr';
-    fakeDirectionality.change.next('ltr');
-    outlineFixture.detectChanges();
-    flush();
-    outlineFixture.detectChanges();
+        fakeDirectionality.value = 'ltr';
+        fakeDirectionality.change.next('ltr');
+        outlineFixture.detectChanges();
+        flush();
+        outlineFixture.detectChanges();
 
-    wrapperElement = outlineFixture.nativeElement;
-    outlineStart = wrapperElement.querySelector('.mat-form-field-outline-start');
-    outlineGap = wrapperElement.querySelector('.mat-form-field-outline-gap');
+        wrapperElement = outlineFixture.nativeElement;
+        outlineStart = wrapperElement.querySelector('.mat-form-field-outline-start');
+        outlineGap = wrapperElement.querySelector('.mat-form-field-outline-gap');
 
-    expect(outlineFixture.componentInstance.formField.updateOutlineGap).toHaveBeenCalled();
-    expect(parseInt(outlineGap.style.width)).toBeGreaterThan(outlineStart.style.width);
+        expect(outlineFixture.componentInstance.formField.updateOutlineGap).toHaveBeenCalled();
+        expect(parseInt(outlineGap.style.width)).toBeGreaterThan(parseInt(outlineStart.style.width));
 
-    }));
+      }));
 
 
 
