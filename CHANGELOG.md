@@ -4,9 +4,11 @@
 
 Importing directly from the root `@angular/material` entry-point is deprecated. You should instead
 import from specific entry-points, e.g. `@angular/material/button`. This aligns with `@angular/cdk`,
-makes clear where symbols originate, and helps safeguard against including unused code.
+makes clear where symbols originate, and helps safeguard against including unused code. The
+deprecated style will be removed in Angular v9.
 
-Angular CLI users can use `ng update @angular/material` to automatically migrate imports to the new style.
+Angular CLI users can use `ng update @angular/material` to automatically migrate imports to the new
+style.
 
 ### Breaking Changes
 
