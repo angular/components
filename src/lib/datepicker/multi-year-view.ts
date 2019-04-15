@@ -20,7 +20,7 @@ import {
   UP_ARROW,
 } from '@angular/cdk/keycodes';
 import {
-  AfterContentInit,
+  AfterViewInit,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
@@ -60,7 +60,7 @@ export const yearsPerRow = 4;
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [MAT_SINGLE_DATE_SELECTION_MODEL_PROVIDER]
 })
-export class MatMultiYearView<D> implements AfterContentInit, OnDestroy {
+export class MatMultiYearView<D> implements AfterViewInit, OnDestroy {
   /** The date to display in this multi-year view (everything other than the year is ignored). */
   @Input()
   get activeDate(): D { return this._activeDate; }
@@ -144,13 +144,17 @@ export class MatMultiYearView<D> implements AfterContentInit, OnDestroy {
     this.dateSubscription = _selected.selectionChange.subscribe(() => this.extractYear());
   }
 
-  ngAfterContentInit() {
-    this._matCalendarBody._updateToday();
-    this._init();
+  ngAfterViewInit() {
+    this._initView();
   }
 
   ngOnDestroy() {
     this.dateSubscription.unsubscribe();
+  }
+
+  _initView() {
+    this._matCalendarBody._updateToday();
+    this._init();
   }
 
   /** Initializes this multi-year view. */
@@ -167,7 +171,7 @@ export class MatMultiYearView<D> implements AfterContentInit, OnDestroy {
         row = [];
       }
     }
-    this._changeDetectorRef.markForCheck();
+    Promise.resolve().then(() => this._changeDetectorRef.markForCheck());
   }
 
   /** Handles when a new year is selected. */

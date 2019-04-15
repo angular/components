@@ -20,7 +20,7 @@ import {
   UP_ARROW,
 } from '@angular/cdk/keycodes';
 import {
-  AfterContentInit,
+  AfterViewInit,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
@@ -58,7 +58,7 @@ import {createMissingDateImplError} from './datepicker-errors';
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [MAT_SINGLE_DATE_SELECTION_MODEL_PROVIDER]
 })
-export class MatYearView<D> implements AfterContentInit, OnDestroy {
+export class MatYearView<D> implements AfterViewInit, OnDestroy {
   /** The date to display in this year view (everything other than the year is ignored). */
   @Input()
   get activeDate(): D { return this._activeDate; }
@@ -152,13 +152,17 @@ export class MatYearView<D> implements AfterContentInit, OnDestroy {
     this.dateSubscription = _selected.selectionChange.subscribe(() => this.extractCurrentMonth());
   }
 
-  ngAfterContentInit() {
-    this._matCalendarBody._updateToday();
-    this._init();
+  ngAfterViewInit() {
+    this._initView();
   }
 
   ngOnDestroy() {
     this.dateSubscription.unsubscribe();
+  }
+
+  _initView() {
+    this._matCalendarBody._updateToday();
+    this._init();
   }
 
   /** Handles when a new month is selected. */
@@ -241,7 +245,7 @@ export class MatYearView<D> implements AfterContentInit, OnDestroy {
     // First row of months only contains 5 elements so we can fit the year label on the same row.
     this._months = [[0, 1, 2, 3], [4, 5, 6, 7], [8, 9, 10, 11]].map(row => row.map(
         month => this._createCellForMonth(month, monthNames[month])));
-    this._changeDetectorRef.markForCheck();
+    Promise.resolve().then(() => this._changeDetectorRef.markForCheck());
   }
 
   /** Focuses the active cell after the microtask queue is empty. */
