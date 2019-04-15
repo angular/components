@@ -1,8 +1,10 @@
 # 8.0.0-beta.2 "helium-blockade" (2019-04-15)
 
-**Important Import Deprecation**:
+**Imminent Important Import Deprecation**:
 
-Importing directly from `@angular/material` is deprecated and will not work in version 9. You should instead import from the specific entry point, e.g. `@angular/material/button`. This matches the import pattern of `@angular/cdk` and has the benefit of making sure you do not import unnecessary code.
+Importing directly from the root `@angular/material` entry-point is deprecated. You should instead
+import from specific entry-points, e.g. `@angular/material/button`. This aligns with `@angular/cdk`,
+makes clear where symbols originate, and helps safeguard against including unused code.
 
 Angular CLI users can use `ng update @angular/material` to automatically migrate imports to the new style.
 
