@@ -1482,7 +1482,7 @@ describe('MatInput with appearance', () => {
 
       let wrapperElement = outlineFixture.nativeElement;
       let outlineStart = wrapperElement.querySelector('.mat-form-field-outline-start');
-      //outlineGapPadding 5px + containerRect margin/padding in worst case 3px
+      // outlineGapPadding 5px + containerRect margin/padding in worst case 3px
       const maxOutlineStart = '8px';
 
       expect(outlineFixture.componentInstance.formField.updateOutlineGap).toHaveBeenCalled();
