@@ -1,3 +1,25 @@
+# 8.0.0-beta.2 "helium-blockade" (2019-04-15)
+
+**Important Import Deprecation**:
+
+Importing directly from `@angular/material` is deprecated and will not work in version 9. You should instead import from the specific entry point, e.g. `@angular/material/button`. This matches the import pattern of `@angular/cdk` and has the benefit of making sure you do not import unnecessary code.
+
+Angular CLI users can use `ng update @angular/material` to automatically migrate imports to the new style.
+
+### Breaking Changes
+
+* **tabs:** `_ngZone` and `_platform` parameters in `MatTabHeader` constructor are now required.
+* **tabs:** `changeDetectorRef` parameter in `MatTabBody` constructor is now required.
+* **expansion:** The `_document` and `_animationMode` parameters are now required.
+* **list:** `_elementRef` parameter in `MatList` constructor is now required.
+* **list:** `_changeDetectorRef` parameter in `MatListItem` constructor is now required. Also the order of constructor parameters has changed.
+* **progress-spinner:** The `animationMode` mode parameter is now required in the `MatProgressSpinner` and `MatSpinner` constructors.
+* **progress-spinner:** The `_elementRef` parameter has changed from `ElementRef<any>` to `ElementRef<HTMLElement>` in the `MatProgressSpinner` and `MatSpinner` constructors.
+* **button:** `_platform` parameter has been removed from the `MatButton` constructor and the `_animationMode` is now required.
+* **button:** `platform` parameter has been removed from the `MatAnchor` constructor and the `animationMode` is now required.
+* **badge:** `_document` parameter has been removed and the `_renderer` parameter is now required in the `MatBadge` constructor.
+
+
 # 8.0.0-beta.1 "suede-banana" (2019-04-08)
 
 
@@ -11,7 +33,7 @@
 
 ### Project setup
 * `@angular/material` now has an explicit peer dependency on `@angular/forms`.
-It was always required, but is now correctly listed in the `package.json`.   
+It was always required, but is now correctly listed in the `package.json`.
 
 
 ### Bug Fixes
