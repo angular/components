@@ -231,6 +231,13 @@ export class MatFormField extends _MatFormFieldMixinBase
   /** Whether the Angular animations are enabled. */
   _animationsEnabled: boolean;
 
+  /* Holds the previous direction emitted by directionality service change emitter.
+     This is used in updateOutlineGap() method to update the width and position of the gap in the
+     outline. Only relevant for the outline appearance. The direction is getting updated in the
+     UI after directionality service change emission. So the outlines gaps are getting
+     updated in updateOutlineGap() method before connectionContainer child direction change
+     in UI. We may get wrong calculations. So we are storing the previous direction to get the
+     correct outline calculations*/
   private _previousDirection: Direction = 'ltr';
 
   /**

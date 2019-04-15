@@ -1448,7 +1448,7 @@ describe('MatInput with appearance', () => {
     expect(outlineFixture.componentInstance.formField.updateOutlineGap).toHaveBeenCalled();
   }));
 
-  it('should outline gap end is more than outline start even the direction changes multiple times',
+  it('should update the outline gap correctly if the direction changes multiple times',
     fakeAsync(() => {
       fixture.destroy();
       TestBed.resetTestingModule();
@@ -1482,10 +1482,11 @@ describe('MatInput with appearance', () => {
 
       let wrapperElement = outlineFixture.nativeElement;
       let outlineStart = wrapperElement.querySelector('.mat-form-field-outline-start');
-      let outlineEnd = wrapperElement.querySelector('.mat-form-field-outline-end');
+      //outlineGapPadding 5px + containerRect margin/padding in worst case 3px
+      const maxOutlineStart = '8px';
 
       expect(outlineFixture.componentInstance.formField.updateOutlineGap).toHaveBeenCalled();
-      expect(parseInt(outlineEnd.style.width)).toBeGreaterThan(parseInt(outlineStart.style.width));
+      expect(parseInt(outlineStart.style.width)).toBeLessThan(parseInt(maxOutlineStart));
 
       fakeDirectionality.value = 'ltr';
       fakeDirectionality.change.next('ltr');
@@ -1495,10 +1496,9 @@ describe('MatInput with appearance', () => {
 
       wrapperElement = outlineFixture.nativeElement;
       outlineStart = wrapperElement.querySelector('.mat-form-field-outline-start');
-      outlineEnd = wrapperElement.querySelector('.mat-form-field-outline-end');
 
       expect(outlineFixture.componentInstance.formField.updateOutlineGap).toHaveBeenCalled();
-      expect(parseInt(outlineEnd.style.width)).toBeGreaterThan(parseInt(outlineStart.style.width));
+      expect(parseInt(outlineStart.style.width)).toBeLessThan(parseInt(maxOutlineStart));
 
     }));
 
