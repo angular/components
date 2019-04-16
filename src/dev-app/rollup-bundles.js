@@ -60,7 +60,7 @@ async function main() {
   await build.write({
     format: 'amd',
     name: 'dev-app',
-    dir: 'dist/demo/',
+    dir: 'dist/ivy-demo-app/',
     entryFileNames: '[name].js',
     exports: 'named',
   });

@@ -21,7 +21,7 @@ Once that step is complete, the demo application can be built.
 # Build the demo-app with Ivy
 $ ./scripts/ivy/build.sh
 # And serve it
-$ cd dist/demo && http-server
+$ yarn gulp ivy-serve
 ```
 
 ## Known issues

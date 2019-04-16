@@ -2,6 +2,8 @@
 
 set -e
 
+distPath="dist/ivy-demo-app"
+
 echo ">>> Build Material"
 rm -rf dist
 yarn gulp build:devapp
@@ -13,13 +15,14 @@ echo ">>> Bundling dev-app with Rollup"
 node ./src/dev-app/rollup-bundles.js
 
 echo ">>> Copying assets to output"
-cp src/dev-app/index.html dist/demo
-cp dist/packages/dev-app/theme.css dist/demo
-cp 'node_modules/@webcomponents/custom-elements/custom-elements.min.js' dist/demo
-cp node_modules/core-js/client/core.js dist/demo
-cp node_modules/requirejs/require.js dist/demo
-cp node_modules/zone.js/dist/zone.js dist/demo
-cp node_modules/hammerjs/hammer.min.js dist/demo
+cp src/dev-app/index.html ${distPath}
+cp dist/packages/dev-app/theme.css ${distPath}
+cp 'node_modules/@webcomponents/custom-elements/custom-elements.min.js' ${distPath}
+cp node_modules/core-js/client/core.js ${distPath}
+cp node_modules/requirejs/require.js ${distPath}
+cp node_modules/zone.js/dist/zone.js ${distPath}
+cp node_modules/hammerjs/hammer.min.js ${distPath}
 
 echo ">>> Done."
-echo "Output: $(pwd)/dist/demo"
+echo "Output: $(pwd)/${distPath}"
+echo "Serve the Ivy demo-app with: yarn gulp ivy-serve"
