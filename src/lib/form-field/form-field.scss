@@ -176,7 +176,9 @@ $mat-form-field-default-infix-width: 180px !default;
   transform-origin: 50%;
   transform: scaleX(0.5);
   opacity: 0;
-  transition: background-color $swift-ease-in-duration $swift-ease-in-timing-function;
+  transition: transform $swift-ease-in-duration $swift-ease-in-timing-function,
+              opacity $swift-ease-in-duration $swift-ease-in-timing-function,
+              background-color $swift-ease-in-duration $swift-ease-in-timing-function;
 }
 
 .mat-form-field.mat-focused,
