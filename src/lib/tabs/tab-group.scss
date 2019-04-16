@@ -40,6 +40,8 @@
   position: relative;
   overflow: hidden;
   display: flex;
+  height: 100%;
+  width: 100%;
   transition: height $mat-tab-animation-duration $ease-in-out-curve-function;
 }
 
