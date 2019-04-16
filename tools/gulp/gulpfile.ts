@@ -28,6 +28,7 @@ import './tasks/lint';
 import './tasks/material-release';
 import './tasks/unit-test';
 import './tasks/universal';
+import './tasks/ivy-serve';
 
 /** Task that builds all available release packages. */
 task('build-release-packages', sequenceTask(
