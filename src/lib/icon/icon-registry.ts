@@ -15,6 +15,7 @@ import {
   Optional,
   SecurityContext,
   SkipSelf,
+  OnDestroy,
 } from '@angular/core';
 import {DomSanitizer, SafeResourceUrl, SafeHtml} from '@angular/platform-browser';
 import {forkJoin, Observable, of as observableOf, throwError as observableThrow} from 'rxjs';
@@ -33,7 +34,7 @@ export function getMatIconNameNotFoundError(iconName: string): Error {
 
 /**
  * Returns an exception to be thrown when the consumer attempts to use
- * `<mat-icon>` without including @angular/http.
+ * `<mat-icon>` without including @angular/common/http.
  * @docs-private
  */
 export function getMatIconNoHttpProviderError(): Error {
@@ -93,7 +94,7 @@ class SvgIconConfig {
  * - Loads icons from URLs and extracts individual icons from icon sets.
  */
 @Injectable({providedIn: 'root'})
-export class MatIconRegistry {
+export class MatIconRegistry implements OnDestroy {
   private _document: Document;
 
   /**
@@ -308,6 +309,12 @@ export class MatIconRegistry {
     }
 
     return observableThrow(getMatIconNameNotFoundError(key));
+  }
+
+  ngOnDestroy() {
+   this._svgIconConfigs.clear();
+   this._iconSetConfigs.clear();
+   this._cachedIconsByUrl.clear();
   }
 
   /**

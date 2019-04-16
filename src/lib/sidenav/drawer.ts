@@ -262,7 +262,7 @@ export class MatDrawer implements AfterContentInit, AfterContentChecked, OnDestr
      * and we don't have close disabled.
      */
     this._ngZone.runOutsideAngular(() => {
-        fromEvent<KeyboardEvent>(this._elementRef.nativeElement, 'keydown').pipe(
+        (fromEvent(this._elementRef.nativeElement, 'keydown') as Observable<KeyboardEvent>).pipe(
             filter(event => event.keyCode === ESCAPE && !this.disableClose),
             takeUntil(this._destroyed)
         ).subscribe(event => this._ngZone.run(() => {
@@ -345,6 +345,7 @@ export class MatDrawer implements AfterContentInit, AfterContentChecked, OnDestr
 
     this._animationStarted.complete();
     this._animationEnd.complete();
+    this._modeChanged.complete();
     this._destroyed.next();
     this._destroyed.complete();
   }
@@ -427,8 +428,8 @@ export class MatDrawer implements AfterContentInit, AfterContentChecked, OnDestr
 })
 export class MatDrawerContainer implements AfterContentInit, DoCheck, OnDestroy {
   @ContentChildren(MatDrawer) _drawers: QueryList<MatDrawer>;
-  @ContentChild(MatDrawerContent) _content: MatDrawerContent;
-  @ViewChild(MatDrawerContent) _userContent: MatDrawerContent;
+  @ContentChild(MatDrawerContent, {static: false}) _content: MatDrawerContent;
+  @ViewChild(MatDrawerContent, {static: false}) _userContent: MatDrawerContent;
 
   /** The drawer child with the `start` position. */
   get start(): MatDrawer | null { return this._start; }
@@ -561,6 +562,7 @@ export class MatDrawerContainer implements AfterContentInit, DoCheck, OnDestroy 
   }
 
   ngOnDestroy() {
+    this._contentMarginChanges.complete();
     this._doCheckSubject.complete();
     this._destroyed.next();
     this._destroyed.complete();

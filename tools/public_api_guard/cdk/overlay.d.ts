@@ -45,6 +45,7 @@ export declare class CdkOverlayOrigin {
 export declare class CloseScrollStrategy implements ScrollStrategy {
     constructor(_scrollDispatcher: ScrollDispatcher, _ngZone: NgZone, _viewportRuler: ViewportRuler, _config?: CloseScrollStrategyConfig | undefined);
     attach(overlayRef: OverlayReference): void;
+    detach(): void;
     disable(): void;
     enable(): void;
 }
@@ -74,7 +75,7 @@ export declare class ConnectedPositionStrategy implements PositionStrategy {
     _preferredPositions: ConnectionPositionPair[];
     readonly onPositionChange: Observable<ConnectedOverlayPositionChange>;
     readonly positions: ConnectionPositionPair[];
-    constructor(originPos: OriginConnectionPosition, overlayPos: OverlayConnectionPosition, connectedTo: ElementRef<HTMLElement>, viewportRuler: ViewportRuler, document: Document, platform?: Platform);
+    constructor(originPos: OriginConnectionPosition, overlayPos: OverlayConnectionPosition, connectedTo: ElementRef<HTMLElement>, viewportRuler: ViewportRuler, document: Document, platform: Platform, overlayContainer: OverlayContainer);
     apply(): void;
     attach(overlayRef: OverlayReference): void;
     detach(): void;
@@ -108,13 +109,13 @@ export declare class FlexibleConnectedPositionStrategy implements PositionStrate
     _preferredPositions: ConnectionPositionPair[];
     positionChanges: Observable<ConnectedOverlayPositionChange>;
     readonly positions: ConnectionPositionPair[];
-    constructor(connectedTo: ElementRef | HTMLElement, _viewportRuler: ViewportRuler, _document: Document, _platform?: Platform | undefined, _overlayContainer?: OverlayContainer | undefined);
+    constructor(connectedTo: FlexibleConnectedPositionStrategyOrigin, _viewportRuler: ViewportRuler, _document: Document, _platform: Platform, _overlayContainer: OverlayContainer);
     apply(): void;
     attach(overlayRef: OverlayReference): void;
     detach(): void;
     dispose(): void;
     reapplyLastPosition(): void;
-    setOrigin(origin: ElementRef | HTMLElement): this;
+    setOrigin(origin: FlexibleConnectedPositionStrategyOrigin): this;
     withDefaultOffsetX(offset: number): this;
     withDefaultOffsetY(offset: number): this;
     withFlexibleDimensions(flexibleDimensions?: boolean): this;
@@ -122,7 +123,7 @@ export declare class FlexibleConnectedPositionStrategy implements PositionStrate
     withLockedPosition(isLocked?: boolean): this;
     withPositions(positions: ConnectedPosition[]): this;
     withPush(canPush?: boolean): this;
-    withScrollableContainers(scrollables: CdkScrollable[]): void;
+    withScrollableContainers(scrollables: CdkScrollable[]): this;
     withTransformOriginOn(selector: string): this;
     withViewportMargin(margin: number): this;
 }
@@ -214,9 +215,9 @@ export declare class OverlayModule {
 }
 
 export declare class OverlayPositionBuilder {
-    constructor(_viewportRuler: ViewportRuler, _document: any, _platform?: Platform | undefined, _overlayContainer?: OverlayContainer | undefined);
+    constructor(_viewportRuler: ViewportRuler, _document: any, _platform: Platform, _overlayContainer: OverlayContainer);
     connectedTo(elementRef: ElementRef, originPos: OriginConnectionPosition, overlayPos: OverlayConnectionPosition): ConnectedPositionStrategy;
-    flexibleConnectedTo(elementRef: ElementRef | HTMLElement): FlexibleConnectedPositionStrategy;
+    flexibleConnectedTo(origin: FlexibleConnectedPositionStrategyOrigin): FlexibleConnectedPositionStrategy;
     global(): GlobalPositionStrategy;
 }
 
@@ -227,9 +228,10 @@ export declare class OverlayRef implements PortalOutlet, OverlayReference {
     readonly hostElement: HTMLElement;
     readonly overlayElement: HTMLElement;
     constructor(_portalOutlet: PortalOutlet, _host: HTMLElement, _pane: HTMLElement, _config: ImmutableObject<OverlayConfig>, _ngZone: NgZone, _keyboardDispatcher: OverlayKeyboardDispatcher, _document: Document, _location?: Location | undefined);
+    addPanelClass(classes: string | string[]): void;
+    attach<T>(portal: ComponentPortal<T>): ComponentRef<T>;
     attach<T>(portal: TemplatePortal<T>): EmbeddedViewRef<T>;
     attach(portal: any): any;
-    attach<T>(portal: ComponentPortal<T>): ComponentRef<T>;
     attachments(): Observable<void>;
     backdropClick(): Observable<MouseEvent>;
     detach(): any;
@@ -240,9 +242,11 @@ export declare class OverlayRef implements PortalOutlet, OverlayReference {
     getDirection(): Direction;
     hasAttached(): boolean;
     keydownEvents(): Observable<KeyboardEvent>;
+    removePanelClass(classes: string | string[]): void;
     setDirection(dir: Direction | Directionality): void;
     updatePosition(): void;
     updatePositionStrategy(strategy: PositionStrategy): void;
+    updateScrollStrategy(strategy: ScrollStrategy): void;
     updateSize(sizeConfig: OverlaySizeConfig): void;
 }
 
@@ -265,6 +269,7 @@ export interface PositionStrategy {
 export declare class RepositionScrollStrategy implements ScrollStrategy {
     constructor(_scrollDispatcher: ScrollDispatcher, _viewportRuler: ViewportRuler, _ngZone: NgZone, _config?: RepositionScrollStrategyConfig | undefined);
     attach(overlayRef: OverlayReference): void;
+    detach(): void;
     disable(): void;
     enable(): void;
 }
@@ -283,6 +288,7 @@ export declare class ScrollingVisibility {
 
 export interface ScrollStrategy {
     attach: (overlayRef: OverlayReference) => void;
+    detach?: () => void;
     disable: () => void;
     enable: () => void;
 }

@@ -110,8 +110,8 @@ export class MatDatepickerInput<D> implements ControlValueAccessor, OnDestroy, V
     this._datepicker._registerInput(this);
     this._datepickerSubscription.unsubscribe();
 
-    if (this._isSelectionInitialized) {
-      this._isSelectionInitialized = false;
+    if (!this._isSelectionInitialized) {
+      this._isSelectionInitialized = true;
       this._selectionModel.ngOnDestroy();
     }
 
@@ -143,6 +143,10 @@ export class MatDatepickerInput<D> implements ControlValueAccessor, OnDestroy, V
     return this._selectionModel ? this._selectionModel.getSelection() : null;
   }
   set value(value: D | null) {
+    if (!this._isSelectionInitialized && value) {
+      throw new Error('Input has no MatDatePicker associated with it.');
+    }
+
     value = this._dateAdapter.deserialize(value);
     const oldDate = this._selectionModel.getSelection();
 
@@ -155,7 +159,6 @@ export class MatDatepickerInput<D> implements ControlValueAccessor, OnDestroy, V
     }
 
     this._lastValueValid = this._selectionModel.isValid();
-
     this._formatValue(this._selectionModel.getSelection());
 
     if (!this._dateAdapter.sameDate(value, oldDate)) {
@@ -229,6 +232,7 @@ export class MatDatepickerInput<D> implements ControlValueAccessor, OnDestroy, V
   protected _localeSubscription = Subscription.EMPTY;
 
   protected _isSelectionInitialized = true;
+
 
   /** The form control validator for whether the input parses. */
   protected _parseValidator: ValidatorFn = (): ValidationErrors | null => {
@@ -361,6 +365,8 @@ export class MatDatepickerInput<D> implements ControlValueAccessor, OnDestroy, V
       this._formatValue(date);
       this._cvaOnChange(date);
       this.dateInput.emit(new MatDatepickerInputEvent(this, this._elementRef.nativeElement));
+    } else {
+      this._validatorOnChange();
     }
   }
 

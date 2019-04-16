@@ -204,6 +204,33 @@ describe('MatTooltip', () => {
       expect(tooltipDirective._isTooltipVisible()).toBe(false);
     }));
 
+    it('should be able to override the default position', fakeAsync(() => {
+      TestBed
+        .resetTestingModule()
+        .configureTestingModule({
+          imports: [MatTooltipModule, OverlayModule, NoopAnimationsModule],
+          declarations: [TooltipDemoWithoutPositionBinding],
+          providers: [{
+            provide: MAT_TOOLTIP_DEFAULT_OPTIONS,
+            useValue: {position: 'right'}
+          }]
+        })
+        .compileComponents();
+
+      const newFixture = TestBed.createComponent(TooltipDemoWithoutPositionBinding);
+      newFixture.detectChanges();
+      tooltipDirective = newFixture.debugElement.query(By.css('button'))
+          .injector.get<MatTooltip>(MatTooltip);
+
+      tooltipDirective.show();
+      newFixture.detectChanges();
+      tick();
+
+      expect(tooltipDirective.position).toBe('right');
+      expect(tooltipDirective._getOverlayPosition().main.overlayX).toBe('start');
+      expect(tooltipDirective._getOverlayPosition().fallback.overlayX).toBe('end');
+    }));
+
     it('should set a css class on the overlay panel element', fakeAsync(() => {
       tooltipDirective.show();
       fixture.detectChanges();
@@ -451,6 +478,24 @@ describe('MatTooltip', () => {
         totalTime: 150,
         phaseName: 'done',
       } as AnimationEvent);
+    }));
+
+    it('should complete the afterHidden stream when tooltip is destroyed', fakeAsync(() => {
+      tooltipDirective.show();
+      fixture.detectChanges();
+      tick(150);
+
+      const spy = jasmine.createSpy('complete spy');
+      const subscription = tooltipDirective._tooltipInstance!.afterHidden()
+          .subscribe(undefined, undefined, spy);
+
+      tooltipDirective.hide(0);
+      tick(0);
+      fixture.detectChanges();
+      tick(500);
+
+      expect(spy).toHaveBeenCalled();
+      subscription.unsubscribe();
     }));
 
     it('should consistently position before and after overlay origin in ltr and rtl dir', () => {
@@ -879,8 +924,8 @@ class BasicTooltipDemo {
   message: any = initialTooltipMessage;
   showButton: boolean = true;
   showTooltipClass = false;
-  @ViewChild(MatTooltip) tooltip: MatTooltip;
-  @ViewChild('button') button: ElementRef<HTMLButtonElement>;
+  @ViewChild(MatTooltip, {static: false}) tooltip: MatTooltip;
+  @ViewChild('button', {static: false}) button: ElementRef<HTMLButtonElement>;
 }
 
 @Component({
@@ -900,7 +945,7 @@ class ScrollableTooltipDemo {
  message: string = initialTooltipMessage;
  showButton: boolean = true;
 
- @ViewChild(CdkScrollable) scrollingContainer: CdkScrollable;
+ @ViewChild(CdkScrollable, {static: false}) scrollingContainer: CdkScrollable;
 
  scrollDown() {
      const scrollingContainerEl = this.scrollingContainer.getElementRef().nativeElement;
@@ -960,8 +1005,8 @@ class DynamicTooltipsDemo {
   `,
 })
 class TooltipOnTextFields {
-  @ViewChild('input') input: ElementRef<HTMLInputElement>;
-  @ViewChild('textarea') textarea: ElementRef<HTMLTextAreaElement>;
+  @ViewChild('input', {static: false}) input: ElementRef<HTMLInputElement>;
+  @ViewChild('textarea', {static: false}) textarea: ElementRef<HTMLTextAreaElement>;
 }
 
 @Component({
@@ -974,9 +1019,18 @@ class TooltipOnTextFields {
   `,
 })
 class TooltipOnDraggableElement {
-  @ViewChild('button') button: ElementRef;
+  @ViewChild('button', {static: false}) button: ElementRef;
 }
 
+@Component({
+  selector: 'app',
+  template: `<button #button [matTooltip]="message">Button</button>`
+})
+class TooltipDemoWithoutPositionBinding {
+  message: any = initialTooltipMessage;
+  @ViewChild(MatTooltip, {static: false}) tooltip: MatTooltip;
+  @ViewChild('button', {static: false}) button: ElementRef<HTMLButtonElement>;
+}
 
 /** Asserts whether a tooltip directive has a tooltip instance. */
 function assertTooltipInstance(tooltip: MatTooltip, shouldExist: boolean): void {

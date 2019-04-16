@@ -47,6 +47,7 @@ import {
   MatAutocompleteModule,
   MatAutocompleteSelectedEvent,
   MatAutocompleteTrigger,
+  MatAutocompleteOrigin,
 } from './index';
 
 
@@ -479,6 +480,15 @@ describe('MatAutocomplete', () => {
       fixture.detectChanges();
 
       expect(fixture.componentInstance.stateCtrl.value).toBe('hello');
+    });
+
+    it('should set aria-haspopup depending on whether the autocomplete is disabled', () => {
+      expect(input.getAttribute('aria-haspopup')).toBe('true');
+
+      fixture.componentInstance.autocompleteDisabled = true;
+      fixture.detectChanges();
+
+      expect(input.getAttribute('aria-haspopup')).toBe('false');
     });
 
   });
@@ -1644,6 +1654,29 @@ describe('MatAutocomplete', () => {
           .toContain('mat-active', 'Expected first option to be highlighted.');
     }));
 
+    it('should remove aria-activedescendant when panel is closed with autoActiveFirstOption',
+      fakeAsync(() => {
+        const input: HTMLElement = fixture.nativeElement.querySelector('input');
+
+        expect(input.hasAttribute('aria-activedescendant'))
+            .toBe(false, 'Expected no active descendant on init.');
+
+        fixture.componentInstance.trigger.autocomplete.autoActiveFirstOption = true;
+        fixture.componentInstance.trigger.openPanel();
+        fixture.detectChanges();
+        zone.simulateZoneExit();
+        fixture.detectChanges();
+
+        expect(input.getAttribute('aria-activedescendant'))
+            .toBeTruthy('Expected active descendant while open.');
+
+        fixture.componentInstance.trigger.closePanel();
+        fixture.detectChanges();
+
+        expect(input.hasAttribute('aria-activedescendant'))
+            .toBe(false, 'Expected no active descendant when closed.');
+      }));
+
     it('should be able to configure preselecting the first option globally', fakeAsync(() => {
       overlayContainer.ngOnDestroy();
       fixture.destroy();
@@ -1933,6 +1966,31 @@ describe('MatAutocomplete', () => {
       expect(panel.classList).toContain('class-two');
     }));
 
+    it('should remove old classes when the panel class changes', fakeAsync(() => {
+         const fixture = createComponent(SimpleAutocomplete);
+         fixture.detectChanges();
+
+         fixture.componentInstance.trigger.openPanel();
+         tick();
+         fixture.detectChanges();
+
+         const classList =
+             overlayContainerElement.querySelector('.mat-autocomplete-panel')!.classList;
+
+         expect(classList).toContain('mat-autocomplete-visible');
+         expect(classList).toContain('class-one');
+         expect(classList).toContain('class-two');
+
+         fixture.componentInstance.panelClass = 'class-three class-four';
+         fixture.detectChanges();
+
+         expect(classList).not.toContain('class-one');
+         expect(classList).not.toContain('class-two');
+         expect(classList).toContain('mat-autocomplete-visible');
+         expect(classList).toContain('class-three');
+         expect(classList).toContain('class-four');
+       }));
+
     it('should reset correctly when closed programmatically', fakeAsync(() => {
       const scrolledSubject = new Subject();
       const fixture = createComponent(SimpleAutocomplete, [
@@ -2195,6 +2253,34 @@ describe('MatAutocomplete', () => {
     const fixture = createComponent(AutocompleteWithDifferentOrigin);
 
     fixture.detectChanges();
+    fixture.componentInstance.connectedTo = fixture.componentInstance.alternateOrigin;
+    fixture.detectChanges();
+    fixture.componentInstance.trigger.openPanel();
+    fixture.detectChanges();
+    zone.simulateZoneExit();
+
+    const overlayRect =
+        overlayContainerElement.querySelector('.cdk-overlay-pane')!.getBoundingClientRect();
+    const originRect = fixture.nativeElement.querySelector('.origin').getBoundingClientRect();
+
+    expect(Math.floor(overlayRect.top)).toBe(Math.floor(originRect.bottom),
+        'Expected autocomplete panel to align with the bottom of the new origin.');
+  });
+
+  it('should be able to change the origin after the panel has been opened', () => {
+    const fixture = createComponent(AutocompleteWithDifferentOrigin);
+
+    fixture.detectChanges();
+    fixture.componentInstance.trigger.openPanel();
+    fixture.detectChanges();
+    zone.simulateZoneExit();
+
+    fixture.componentInstance.trigger.closePanel();
+    fixture.detectChanges();
+
+    fixture.componentInstance.connectedTo = fixture.componentInstance.alternateOrigin;
+    fixture.detectChanges();
+
     fixture.componentInstance.trigger.openPanel();
     fixture.detectChanges();
     zone.simulateZoneExit();
@@ -2246,7 +2332,7 @@ describe('MatAutocomplete', () => {
         [formControl]="stateCtrl">
     </mat-form-field>
 
-    <mat-autocomplete class="class-one class-two" #auto="matAutocomplete" [displayWith]="displayFn"
+    <mat-autocomplete [class]="panelClass" #auto="matAutocomplete" [displayWith]="displayFn"
       [disableRipple]="disableRipple" (opened)="openedSpy()" (closed)="closedSpy()">
       <mat-option *ngFor="let state of filteredStates" [value]="state">
         <span>{{ state.code }}: {{ state.name }}</span>
@@ -2262,12 +2348,13 @@ class SimpleAutocomplete implements OnDestroy {
   width: number;
   disableRipple = false;
   autocompleteDisabled = false;
+  panelClass = 'class-one class-two';
   openedSpy = jasmine.createSpy('autocomplete opened spy');
   closedSpy = jasmine.createSpy('autocomplete closed spy');
 
-  @ViewChild(MatAutocompleteTrigger) trigger: MatAutocompleteTrigger;
-  @ViewChild(MatAutocomplete) panel: MatAutocomplete;
-  @ViewChild(MatFormField) formField: MatFormField;
+  @ViewChild(MatAutocompleteTrigger, {static: true}) trigger: MatAutocompleteTrigger;
+  @ViewChild(MatAutocomplete, {static: false}) panel: MatAutocomplete;
+  @ViewChild(MatFormField, {static: false}) formField: MatFormField;
   @ViewChildren(MatOption) options: QueryList<MatOption>;
 
   states = [
@@ -2300,7 +2387,6 @@ class SimpleAutocomplete implements OnDestroy {
   ngOnDestroy() {
     this.valueSub.unsubscribe();
   }
-
 }
 
 @Component({
@@ -2322,7 +2408,7 @@ class NgIfAutocomplete {
   isVisible = true;
   options = ['One', 'Two', 'Three'];
 
-  @ViewChild(MatAutocompleteTrigger) trigger: MatAutocompleteTrigger;
+  @ViewChild(MatAutocompleteTrigger, {static: false}) trigger: MatAutocompleteTrigger;
   @ViewChildren(MatOption) matOptions: QueryList<MatOption>;
 
   constructor() {
@@ -2423,7 +2509,7 @@ class AutocompleteWithNumbers {
   `
 })
 class AutocompleteWithOnPushDelay implements OnInit {
-  @ViewChild(MatAutocompleteTrigger) trigger: MatAutocompleteTrigger;
+  @ViewChild(MatAutocompleteTrigger, {static: false}) trigger: MatAutocompleteTrigger;
   options: string[];
 
   ngOnInit() {
@@ -2449,7 +2535,7 @@ class AutocompleteWithNativeInput {
   filteredOptions: Observable<any>;
   options = ['En', 'To', 'Tre', 'Fire', 'Fem'];
 
-  @ViewChild(MatAutocompleteTrigger) trigger: MatAutocompleteTrigger;
+  @ViewChild(MatAutocompleteTrigger, {static: false}) trigger: MatAutocompleteTrigger;
   @ViewChildren(MatOption) matOptions: QueryList<MatOption>;
 
   constructor() {
@@ -2467,7 +2553,7 @@ class AutocompleteWithNativeInput {
   template: `<input placeholder="Choose" [matAutocomplete]="auto" [formControl]="control">`
 })
 class AutocompleteWithoutPanel {
-  @ViewChild(MatAutocompleteTrigger) trigger: MatAutocompleteTrigger;
+  @ViewChild(MatAutocompleteTrigger, {static: false}) trigger: MatAutocompleteTrigger;
   control = new FormControl();
 }
 
@@ -2504,7 +2590,7 @@ class AutocompleteWithFormsAndNonfloatingLabel {
   `
 })
 class AutocompleteWithGroups {
-  @ViewChild(MatAutocompleteTrigger) trigger: MatAutocompleteTrigger;
+  @ViewChild(MatAutocompleteTrigger, {static: false}) trigger: MatAutocompleteTrigger;
   selectedState: string;
   stateGroups = [
     {
@@ -2540,8 +2626,8 @@ class AutocompleteWithSelectEvent {
   states = ['New York', 'Washington', 'Oregon'];
   optionSelected = jasmine.createSpy('optionSelected callback');
 
-  @ViewChild(MatAutocompleteTrigger) trigger: MatAutocompleteTrigger;
-  @ViewChild(MatAutocomplete) autocomplete: MatAutocomplete;
+  @ViewChild(MatAutocompleteTrigger, {static: false}) trigger: MatAutocompleteTrigger;
+  @ViewChild(MatAutocomplete, {static: false}) autocomplete: MatAutocomplete;
 }
 
 
@@ -2580,7 +2666,7 @@ class AutocompleteWithNumberInputAndNgModel {
         <input
           matInput
           [matAutocomplete]="auto"
-          [matAutocompleteConnectedTo]="origin"
+          [matAutocompleteConnectedTo]="connectedTo"
           [(ngModel)]="selectedValue">
       </mat-form-field>
     </div>
@@ -2599,9 +2685,11 @@ class AutocompleteWithNumberInputAndNgModel {
   `
 })
 class AutocompleteWithDifferentOrigin {
-  @ViewChild(MatAutocompleteTrigger) trigger: MatAutocompleteTrigger;
+  @ViewChild(MatAutocompleteTrigger, {static: false}) trigger: MatAutocompleteTrigger;
+  @ViewChild(MatAutocompleteOrigin, {static: false}) alternateOrigin: MatAutocompleteOrigin;
   selectedValue: string;
   values = ['one', 'two', 'three'];
+  connectedTo?: MatAutocompleteOrigin;
 }
 
 @Component({

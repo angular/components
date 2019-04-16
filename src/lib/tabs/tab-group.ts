@@ -96,9 +96,9 @@ export class MatTabGroup extends _MatTabGroupMixinBase implements AfterContentIn
 
   @ContentChildren(MatTab) _tabs: QueryList<MatTab>;
 
-  @ViewChild('tabBodyWrapper') _tabBodyWrapper: ElementRef;
+  @ViewChild('tabBodyWrapper', {static: false}) _tabBodyWrapper: ElementRef;
 
-  @ViewChild('tabHeader') _tabHeader: MatTabHeader;
+  @ViewChild('tabHeader', {static: false}) _tabHeader: MatTabHeader;
 
   /** The tab index that should be selected after the content has been checked. */
   private _indexToSelect: number | null = 0;
@@ -129,8 +129,13 @@ export class MatTabGroup extends _MatTabGroupMixinBase implements AfterContentIn
   /** Position of the tab header. */
   @Input() headerPosition: MatTabHeaderPosition = 'above';
 
-  /** Duration for the tab animation. Must be a valid CSS value (e.g. 600ms). */
-  @Input() animationDuration: string;
+  /** Duration for the tab animation. Will be normalized to milliseconds if no units are set. */
+  @Input()
+  get animationDuration(): string { return this._animationDuration; }
+  set animationDuration(value: string) {
+    this._animationDuration = /^\d+$/.test(value) ? value + 'ms' : value;
+  }
+  private _animationDuration: string;
 
   /** Background color of the tab group. */
   @Input()

@@ -11,7 +11,7 @@ import {
 } from '@angular/cdk/testing';
 import {Component, FactoryProvider, Type, ValueProvider, ViewChild} from '@angular/core';
 import {ComponentFixture, fakeAsync, flush, inject, TestBed, tick} from '@angular/core/testing';
-import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {FormControl, FormsModule, NgModel, ReactiveFormsModule} from '@angular/forms';
 import {MAT_DATE_LOCALE, MatNativeDateModule, NativeDateModule} from '@angular/material/core';
 import {MatFormField, MatFormFieldModule} from '@angular/material/form-field';
 import {DEC, JAN, JUL, JUN, SEP} from '@angular/material/testing';
@@ -430,7 +430,7 @@ describe('MatDatepicker', () => {
         }))
       );
 
-      it('should close the datpeicker using ALT + UP_ARROW', fakeAsync(() => {
+      it('should close the datepicker using ALT + UP_ARROW', fakeAsync(() => {
         testComponent.datepicker.open();
         fixture.detectChanges();
         flush();
@@ -1190,6 +1190,36 @@ describe('MatDatepicker', () => {
         expect(fixture.debugElement.query(By.css('input')).nativeElement.classList)
             .not.toContain('ng-invalid');
       }));
+
+      it('should update validity when switching between null and invalid', fakeAsync(() => {
+        const inputEl = fixture.debugElement.query(By.css('input')).nativeElement;
+        inputEl.value = '';
+        dispatchFakeEvent(inputEl, 'input');
+
+        fixture.detectChanges();
+        flush();
+        fixture.detectChanges();
+
+        expect(testComponent.model.valid).toBe(true);
+
+        inputEl.value = 'abcdefg';
+        dispatchFakeEvent(inputEl, 'input');
+
+        fixture.detectChanges();
+        flush();
+        fixture.detectChanges();
+
+        expect(testComponent.model.valid).toBe(false);
+
+        inputEl.value = '';
+        dispatchFakeEvent(inputEl, 'input');
+
+        fixture.detectChanges();
+        flush();
+        fixture.detectChanges();
+
+        expect(testComponent.model.valid).toBe(true);
+      }));
     });
 
     describe('datepicker with filter and validation', () => {
@@ -1509,6 +1539,15 @@ describe('MatDatepicker', () => {
     });
   });
 
+  describe('datepicker toggle without a datepicker', () => {
+    it('should not throw on init if toggle does not have a datepicker', () => {
+      expect(() => {
+        const fixture = createComponent(DatepickerToggleWithNoDatepicker, [MatNativeDateModule]);
+        fixture.detectChanges();
+      }).not.toThrow();
+    });
+  });
+
   describe('popup positioning', () => {
     let fixture: ComponentFixture<StandardDatepicker>;
     let testComponent: StandardDatepicker;
@@ -1665,8 +1704,8 @@ class StandardDatepicker {
   touch = false;
   disabled = false;
   date: Date | null = new Date(2020, JAN, 1);
-  @ViewChild('d') datepicker: MatDatepicker<Date>;
-  @ViewChild(MatDatepickerInput) datepickerInput: MatDatepickerInput<Date>;
+  @ViewChild('d', {static: false}) datepicker: MatDatepicker<Date>;
+  @ViewChild(MatDatepickerInput, {static: false}) datepickerInput: MatDatepickerInput<Date>;
 }
 
 
@@ -1682,7 +1721,7 @@ class MultiInputDatepicker {}
   template: `<mat-datepicker #d></mat-datepicker>`,
 })
 class NoInputDatepicker {
-  @ViewChild('d') datepicker: MatDatepicker<Date>;
+  @ViewChild('d', {static: false}) datepicker: MatDatepicker<Date>;
 }
 
 
@@ -1695,7 +1734,7 @@ class NoInputDatepicker {
 class DatepickerWithStartAt {
   date = new Date(2020, JAN, 1);
   startDate = new Date(2010, JAN, 1);
-  @ViewChild('d') datepicker: MatDatepicker<Date>;
+  @ViewChild('d', {static: false}) datepicker: MatDatepicker<Date>;
 }
 
 
@@ -1707,7 +1746,7 @@ class DatepickerWithStartAt {
 })
 class DatepickerWithStartViewYear {
   date = new Date(2020, JAN, 1);
-  @ViewChild('d') datepicker: MatDatepicker<Date>;
+  @ViewChild('d', {static: false}) datepicker: MatDatepicker<Date>;
 
   onYearSelection() {}
 }
@@ -1722,7 +1761,7 @@ class DatepickerWithStartViewYear {
 })
 class DatepickerWithStartViewMultiYear {
   date = new Date(2020, JAN, 1);
-  @ViewChild('d') datepicker: MatDatepicker<Date>;
+  @ViewChild('d', {static: false}) datepicker: MatDatepicker<Date>;
 
   onMultiYearSelection() {}
 }
@@ -1736,8 +1775,8 @@ class DatepickerWithStartViewMultiYear {
 })
 class DatepickerWithNgModel {
   selected: Date | null = null;
-  @ViewChild('d') datepicker: MatDatepicker<Date>;
-  @ViewChild(MatDatepickerInput) datepickerInput: MatDatepickerInput<Date>;
+  @ViewChild('d', {static: false}) datepicker: MatDatepicker<Date>;
+  @ViewChild(MatDatepickerInput, {static: false}) datepickerInput: MatDatepickerInput<Date>;
 }
 
 
@@ -1750,9 +1789,9 @@ class DatepickerWithNgModel {
 })
 class DatepickerWithFormControl {
   formControl = new FormControl();
-  @ViewChild('d') datepicker: MatDatepicker<Date>;
-  @ViewChild(MatDatepickerInput) datepickerInput: MatDatepickerInput<Date>;
-  @ViewChild(MatDatepickerToggle) datepickerToggle: MatDatepickerToggle<Date>;
+  @ViewChild('d', {static: false}) datepicker: MatDatepicker<Date>;
+  @ViewChild(MatDatepickerInput, {static: false}) datepickerInput: MatDatepickerInput<Date>;
+  @ViewChild(MatDatepickerToggle, {static: false}) datepickerToggle: MatDatepickerToggle<Date>;
 }
 
 
@@ -1764,8 +1803,8 @@ class DatepickerWithFormControl {
   `,
 })
 class DatepickerWithToggle {
-  @ViewChild('d') datepicker: MatDatepicker<Date>;
-  @ViewChild(MatDatepickerInput) input: MatDatepickerInput<Date>;
+  @ViewChild('d', {static: false}) datepicker: MatDatepicker<Date>;
+  @ViewChild(MatDatepickerInput, {static: false}) input: MatDatepickerInput<Date>;
   touchUI = true;
 }
 
@@ -1791,9 +1830,9 @@ class DatepickerWithCustomIcon {}
   `,
 })
 class FormFieldDatepicker {
-  @ViewChild('d') datepicker: MatDatepicker<Date>;
-  @ViewChild(MatDatepickerInput) datepickerInput: MatDatepickerInput<Date>;
-  @ViewChild(MatFormField) formField: MatFormField;
+  @ViewChild('d', {static: false}) datepicker: MatDatepicker<Date>;
+  @ViewChild(MatDatepickerInput, {static: false}) datepickerInput: MatDatepickerInput<Date>;
+  @ViewChild(MatFormField, {static: false}) formField: MatFormField;
 }
 
 
@@ -1805,7 +1844,8 @@ class FormFieldDatepicker {
   `,
 })
 class DatepickerWithMinAndMaxValidation {
-  @ViewChild('d') datepicker: MatDatepicker<Date>;
+  @ViewChild('d', {static: false}) datepicker: MatDatepicker<Date>;
+  @ViewChild(NgModel, {static: false}) model: NgModel;
   date: Date | null;
   minDate = new Date(2010, JAN, 1);
   maxDate = new Date(2020, JAN, 1);
@@ -1820,7 +1860,7 @@ class DatepickerWithMinAndMaxValidation {
   `,
 })
 class DatepickerWithFilterAndValidation {
-  @ViewChild('d') datepicker: MatDatepicker<Date>;
+  @ViewChild('d', {static: false}) datepicker: MatDatepicker<Date>;
   date: Date;
   filter = (date: Date) => date.getDate() != 1;
 }
@@ -1834,7 +1874,7 @@ class DatepickerWithFilterAndValidation {
   `
 })
 class DatepickerWithChangeAndInputEvents {
-  @ViewChild('d') datepicker: MatDatepicker<Date>;
+  @ViewChild('d', {static: false}) datepicker: MatDatepicker<Date>;
 
   onChange() {}
 
@@ -1854,8 +1894,8 @@ class DatepickerWithChangeAndInputEvents {
 })
 class DatepickerWithi18n {
   date: Date | null = new Date(2010, JAN, 1);
-  @ViewChild('d') datepicker: MatDatepicker<Date>;
-  @ViewChild(MatDatepickerInput) datepickerInput: MatDatepickerInput<Date>;
+  @ViewChild('d', {static: false}) datepicker: MatDatepicker<Date>;
+  @ViewChild(MatDatepickerInput, {static: false}) datepickerInput: MatDatepickerInput<Date>;
 }
 
 
@@ -1870,8 +1910,8 @@ class DatepickerWithISOStrings {
   min = new Date(2017, JAN, 1).toISOString();
   max = new Date (2017, DEC, 31).toISOString();
   startAt = new Date(2017, JUL, 1).toISOString();
-  @ViewChild('d') datepicker: MatDatepicker<Date>;
-  @ViewChild(MatDatepickerInput) datepickerInput: MatDatepickerInput<Date>;
+  @ViewChild('d', {static: false}) datepicker: MatDatepicker<Date>;
+  @ViewChild(MatDatepickerInput, {static: false}) datepickerInput: MatDatepickerInput<Date>;
 }
 
 
@@ -1885,7 +1925,7 @@ class DatepickerWithEvents {
   selected: Date | null = null;
   openedSpy = jasmine.createSpy('opened spy');
   closedSpy = jasmine.createSpy('closed spy');
-  @ViewChild('d') datepicker: MatDatepicker<Date>;
+  @ViewChild('d', {static: false}) datepicker: MatDatepicker<Date>;
 }
 
 
@@ -1896,7 +1936,7 @@ class DatepickerWithEvents {
   `,
 })
 class DatepickerOpeningOnFocus {
-  @ViewChild(MatDatepicker) datepicker: MatDatepicker<Date>;
+  @ViewChild(MatDatepicker, {static: false}) datepicker: MatDatepicker<Date>;
 }
 
 
@@ -1907,7 +1947,7 @@ class DatepickerOpeningOnFocus {
   `,
 })
 class DatepickerWithCustomHeader {
-  @ViewChild('ch') datepicker: MatDatepicker<Date>;
+  @ViewChild('ch', {static: false}) datepicker: MatDatepicker<Date>;
   customHeaderForDatePicker = CustomHeaderForDatepicker;
 }
 
@@ -1926,12 +1966,11 @@ class CustomHeaderForDatepicker {}
   `,
 })
 class DelayedDatepicker {
-  @ViewChild('d') datepicker: MatDatepicker<Date>;
-  @ViewChild(MatDatepickerInput) datepickerInput: MatDatepickerInput<Date>;
+  @ViewChild('d', {static: false}) datepicker: MatDatepicker<Date>;
+  @ViewChild(MatDatepickerInput, {static: false}) datepickerInput: MatDatepickerInput<Date>;
   date: Date | null;
   assignedDatepicker: MatDatepicker<Date>;
 }
-
 
 
 @Component({
@@ -1944,3 +1983,11 @@ class DelayedDatepicker {
   `,
 })
 class DatepickerWithTabindexOnToggle {}
+
+
+@Component({
+  template: `
+    <mat-datepicker-toggle></mat-datepicker-toggle>
+  `,
+})
+class DatepickerToggleWithNoDatepicker {}

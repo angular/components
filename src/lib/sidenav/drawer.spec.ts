@@ -282,6 +282,8 @@ describe('MatDrawer', () => {
       let fixture = TestBed.createComponent(BasicTestApp);
       let drawer: MatDrawer = fixture.debugElement
           .query(By.directive(MatDrawer)).componentInstance;
+      fixture.detectChanges();
+
       let openButton = fixture.componentInstance.openButton.nativeElement;
       let closeButton = fixture.componentInstance.closeButton.nativeElement;
 
@@ -697,6 +699,7 @@ describe('MatDrawerContainer', () => {
     it('should be able to explicitly enable the backdrop in `side` mode', fakeAsync(() => {
       const fixture = TestBed.createComponent(BasicTestApp);
       const root = fixture.nativeElement;
+      fixture.detectChanges();
 
       fixture.componentInstance.drawer.mode = 'side';
       fixture.detectChanges();
@@ -760,7 +763,7 @@ class DrawerContainerNoDrawerTestApp { }
     </mat-drawer-container>`,
 })
 class DrawerContainerTwoDrawerTestApp {
-  @ViewChild(MatDrawerContainer) drawerContainer: MatDrawerContainer;
+  @ViewChild(MatDrawerContainer, {static: false}) drawerContainer: MatDrawerContainer;
 }
 
 /** Test component that contains an MatDrawerContainer and one MatDrawer. */
@@ -786,10 +789,10 @@ class BasicTestApp {
   backdropClickedCount = 0;
   hasBackdrop: boolean | null = null;
 
-  @ViewChild('drawer') drawer: MatDrawer;
-  @ViewChild('drawerButton') drawerButton: ElementRef<HTMLButtonElement>;
-  @ViewChild('openButton') openButton: ElementRef<HTMLButtonElement>;
-  @ViewChild('closeButton') closeButton: ElementRef<HTMLButtonElement>;
+  @ViewChild('drawer', {static: false}) drawer: MatDrawer;
+  @ViewChild('drawerButton', {static: false}) drawerButton: ElementRef<HTMLButtonElement>;
+  @ViewChild('openButton', {static: false}) openButton: ElementRef<HTMLButtonElement>;
+  @ViewChild('closeButton', {static: false}) closeButton: ElementRef<HTMLButtonElement>;
 
   open() {
     this.openCount++;
@@ -892,7 +895,7 @@ class DrawerWithoutFocusableElements {}
   `,
 })
 class DrawerDelayed {
-  @ViewChild(MatDrawer) drawer: MatDrawer;
+  @ViewChild(MatDrawer, {static: false}) drawer: MatDrawer;
   showDrawer = false;
 }
 
@@ -904,8 +907,8 @@ class DrawerDelayed {
     </mat-drawer-container>`,
 })
 class DrawerContainerStateChangesTestApp {
-  @ViewChild(MatDrawer) drawer: MatDrawer;
-  @ViewChild(MatDrawerContainer) drawerContainer: MatDrawerContainer;
+  @ViewChild(MatDrawer, {static: false}) drawer: MatDrawer;
+  @ViewChild(MatDrawerContainer, {static: false}) drawerContainer: MatDrawerContainer;
 
   direction: Direction = 'ltr';
   mode = 'side';
@@ -923,7 +926,7 @@ class DrawerContainerStateChangesTestApp {
     </mat-drawer-container>`,
 })
 class AutosizeDrawer {
-  @ViewChild(MatDrawer) drawer: MatDrawer;
+  @ViewChild(MatDrawer, {static: false}) drawer: MatDrawer;
   fillerWidth = 0;
 }
 
@@ -937,5 +940,5 @@ class AutosizeDrawer {
   `,
 })
 class DrawerContainerWithContent {
-  @ViewChild(MatDrawerContainer) drawerContainer: MatDrawerContainer;
+  @ViewChild(MatDrawerContainer, {static: false}) drawerContainer: MatDrawerContainer;
 }

@@ -43,12 +43,13 @@ describe('MatButton', () => {
 
   it('should expose the ripple instance', () => {
     const fixture = TestBed.createComponent(TestApp);
-    const button = fixture.debugElement.query(By.css('button')).componentInstance as MatButton;
+    fixture.detectChanges();
 
+    const button = fixture.debugElement.query(By.directive(MatButton)).componentInstance;
     expect(button.ripple).toBeTruthy();
   });
 
-  it('should should not clear previous defined classes', () => {
+  it('should not clear previous defined classes', () => {
     let fixture = TestBed.createComponent(TestApp);
     let testComponent = fixture.debugElement.componentInstance;
     let buttonDebugElement = fixture.debugElement.query(By.css('button'));

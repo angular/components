@@ -11,9 +11,8 @@ export declare class BaseCdkCell {
 export declare abstract class BaseRowDef implements OnChanges {
     protected _columnsDiffer: IterableDiffer<any>;
     protected _differs: IterableDiffers;
-    columns: Iterable<string>;
-    template: TemplateRef<any>;
-    constructor(/** @docs-private */ template: TemplateRef<any>, _differs: IterableDiffers);
+    columns: Iterable<string>; template: TemplateRef<any>;
+    constructor( template: TemplateRef<any>, _differs: IterableDiffers);
     extractCellTemplate(column: CdkColumnDef): TemplateRef<any>;
     getColumnsDiff(): IterableChanges<any> | null;
     ngOnChanges(changes: SimpleChanges): void;
@@ -30,7 +29,7 @@ export declare type CanStickCtor = Constructor<CanStick>;
 
 export declare const CDK_ROW_TEMPLATE = "<ng-container cdkCellOutlet></ng-container>";
 
-export declare const CDK_TABLE_TEMPLATE = "\n  <ng-container headerRowOutlet></ng-container>\n  <ng-container rowOutlet></ng-container>\n  <ng-container footerRowOutlet></ng-container>";
+export declare const CDK_TABLE_TEMPLATE = "\n  <ng-content select=\"caption\"></ng-content>\n  <ng-container headerRowOutlet></ng-container>\n  <ng-container rowOutlet></ng-container>\n  <ng-container footerRowOutlet></ng-container>\n";
 
 export declare class CdkCell extends BaseCdkCell {
     constructor(columnDef: CdkColumnDef, elementRef: ElementRef);
@@ -155,8 +154,7 @@ export declare class CdkTable<T> implements AfterContentChecked, CollectionViewe
         start: number;
         end: number;
     }>;
-    constructor(_differs: IterableDiffers, _changeDetectorRef: ChangeDetectorRef, _elementRef: ElementRef, role: string, _dir: Directionality,
-    _document?: any, _platform?: Platform | undefined);
+    constructor(_differs: IterableDiffers, _changeDetectorRef: ChangeDetectorRef, _elementRef: ElementRef, role: string, _dir: Directionality, _document: any, _platform: Platform);
     _getRenderedRows(rowOutlet: RowOutlet): HTMLElement[];
     _getRowDefs(data: T, dataIndex: number): CdkRowDef<T>[];
     addColumnDef(columnDef: CdkColumnDef): void;

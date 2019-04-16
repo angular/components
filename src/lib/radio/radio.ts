@@ -34,14 +34,11 @@ import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {
   CanColor,
   CanColorCtor,
-  CanDisable,
-  CanDisableCtor,
   CanDisableRipple,
   CanDisableRippleCtor,
   HasTabIndex,
   HasTabIndexCtor,
   mixinColor,
-  mixinDisabled,
   mixinDisableRipple,
   mixinTabIndex,
 } from '@angular/material/core';
@@ -71,13 +68,6 @@ export class MatRadioChange {
     public value: any) {}
 }
 
-
-// Boilerplate for applying mixins to MatRadioGroup.
-/** @docs-private */
-export class MatRadioGroupBase { }
-export const _MatRadioGroupMixinBase: CanDisableCtor & typeof MatRadioGroupBase =
-    mixinDisabled(MatRadioGroupBase);
-
 /**
  * A group of radio buttons. May contain one or more `<mat-radio-button>` elements.
  */
@@ -89,11 +79,8 @@ export const _MatRadioGroupMixinBase: CanDisableCtor & typeof MatRadioGroupBase 
     'role': 'radiogroup',
     'class': 'mat-radio-group',
   },
-  inputs: ['disabled'],
 })
-export class MatRadioGroup extends _MatRadioGroupMixinBase
-    implements AfterContentInit, ControlValueAccessor, CanDisable {
-
+export class MatRadioGroup implements AfterContentInit, ControlValueAccessor {
   /** Selected value for the radio group. */
   private _value: any = null;
 
@@ -205,9 +192,7 @@ export class MatRadioGroup extends _MatRadioGroupMixinBase
     this._markRadiosForCheck();
   }
 
-  constructor(private _changeDetector: ChangeDetectorRef) {
-    super();
-  }
+  constructor(private _changeDetector: ChangeDetectorRef) { }
 
   /**
    * Initialize properties once content children are available.
@@ -234,6 +219,7 @@ export class MatRadioGroup extends _MatRadioGroupMixinBase
     if (this._radios) {
       this._radios.forEach(radio => {
         radio.name = this.name;
+        radio._markForCheck();
       });
     }
   }
@@ -336,7 +322,8 @@ export const _MatRadioButtonMixinBase:
     '[class.mat-radio-checked]': 'checked',
     '[class.mat-radio-disabled]': 'disabled',
     '[class._mat-animation-noopable]': '_animationMode === "NoopAnimations"',
-    '[attr.tabindex]': 'null',
+    // Needs to be -1 so the `focus` event still fires.
+    '[attr.tabindex]': '-1',
     '[attr.id]': 'id',
     // Note: under normal conditions focus shouldn't land on this element, however it may be
     // programmatically set, for example inside of a focus trap, in this case we want to forward
@@ -468,7 +455,7 @@ export class MatRadioButton extends _MatRadioButtonMixinBase
   private _removeUniqueSelectionListener: () => void = () => {};
 
   /** The native `<input type=radio>` element */
-  @ViewChild('input') _inputElement: ElementRef<HTMLInputElement>;
+  @ViewChild('input', {static: false}) _inputElement: ElementRef<HTMLInputElement>;
 
   constructor(@Optional() radioGroup: MatRadioGroup,
               elementRef: ElementRef,
@@ -566,7 +553,6 @@ export class MatRadioButton extends _MatRadioButtonMixinBase
 
     if (this.radioGroup) {
       this.radioGroup._controlValueAccessorChangeFn(this.value);
-      this.radioGroup._touch();
       if (groupValueChanged) {
         this.radioGroup._emitChangeEvent();
       }

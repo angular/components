@@ -102,15 +102,18 @@ describe('MatSlideToggle without forms', () => {
 
     it('should correctly update the checked property', () => {
       expect(slideToggle.checked).toBeFalsy();
+      expect(inputElement.getAttribute('aria-checked')).toBe('false');
 
       testComponent.slideChecked = true;
       fixture.detectChanges();
 
       expect(inputElement.checked).toBeTruthy();
+      expect(inputElement.getAttribute('aria-checked')).toBe('true');
     });
 
     it('should set the toggle to checked on click', () => {
       expect(slideToggle.checked).toBe(false);
+      expect(inputElement.getAttribute('aria-checked')).toBe('false');
       expect(slideToggleElement.classList).not.toContain('mat-checked');
 
       labelElement.click();
@@ -118,6 +121,7 @@ describe('MatSlideToggle without forms', () => {
 
       expect(slideToggleElement.classList).toContain('mat-checked');
       expect(slideToggle.checked).toBe(true);
+      expect(inputElement.getAttribute('aria-checked')).toBe('true');
     });
 
     it('should not trigger the click event multiple times', () => {
@@ -364,13 +368,23 @@ describe('MatSlideToggle without forms', () => {
         .toBe(5, 'Expected tabIndex property to have been set based on the native attribute');
     }));
 
-    it('should clear the tabindex from the host element', fakeAsync(() => {
+    it('should set the tabindex of the host element to -1', fakeAsync(() => {
       const fixture = TestBed.createComponent(SlideToggleWithTabindexAttr);
 
       fixture.detectChanges();
 
       const slideToggle = fixture.debugElement.query(By.directive(MatSlideToggle)).nativeElement;
       expect(slideToggle.getAttribute('tabindex')).toBe('-1');
+    }));
+
+    it('should remove the tabindex from the host element when disabled', fakeAsync(() => {
+      const fixture = TestBed.createComponent(SlideToggleWithTabindexAttr);
+
+      fixture.componentInstance.disabled = true;
+      fixture.detectChanges();
+
+      const slideToggle = fixture.debugElement.query(By.directive(MatSlideToggle)).nativeElement;
+      expect(slideToggle.hasAttribute('tabindex')).toBe(false);
     }));
   });
 
@@ -390,6 +404,8 @@ describe('MatSlideToggle without forms', () => {
           ]
         });
       const fixture = TestBed.createComponent(SlideToggleBasic);
+      fixture.detectChanges();
+
       const testComponent = fixture.debugElement.componentInstance;
       const slideToggleDebug = fixture.debugElement.query(By.css('mat-slide-toggle'));
 
@@ -431,6 +447,8 @@ describe('MatSlideToggle without forms', () => {
           ]
         });
       const fixture = TestBed.createComponent(SlideToggleBasic);
+      fixture.detectChanges();
+
       const testComponent = fixture.debugElement.componentInstance;
       const slideToggleDebug = fixture.debugElement.query(By.css('mat-slide-toggle'));
       const thumbContainerDebug = slideToggleDebug
@@ -444,6 +462,7 @@ describe('MatSlideToggle without forms', () => {
       expect(slideToggle.checked).toBe(false);
 
       gestureConfig.emitEventForElement('slidestart', slideThumbContainer);
+      tick();
 
       expect(slideThumbContainer.classList).toContain('mat-dragging');
 
@@ -597,7 +616,7 @@ describe('MatSlideToggle without forms', () => {
       expect(slideThumbContainer.classList).not.toContain('mat-dragging');
     }));
 
-    it('should should emit a change event after drag', fakeAsync(() => {
+    it('should emit a change event after drag', fakeAsync(() => {
       expect(slideToggle.checked).toBe(false);
 
       gestureConfig.emitEventForElement('slidestart', slideThumbContainer);
@@ -1115,10 +1134,10 @@ class SlideToggleWithFormControl {
   formControl = new FormControl();
 }
 
-@Component({
-  template: `<mat-slide-toggle tabindex="5"></mat-slide-toggle>`
-})
-class SlideToggleWithTabindexAttr {}
+@Component({template: `<mat-slide-toggle tabindex="5" [disabled]="disabled"></mat-slide-toggle>`})
+class SlideToggleWithTabindexAttr {
+  disabled = false;
+}
 
 @Component({
   template: `<mat-slide-toggle>{{label}}</mat-slide-toggle>`

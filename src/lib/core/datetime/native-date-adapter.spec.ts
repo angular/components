@@ -54,7 +54,7 @@ describe('NativeDateAdapter', () => {
     ]);
   });
 
-  it('should get long month names', () => {
+  it('should get short month names', () => {
     expect(adapter.getMonthNames('short')).toEqual([
       'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
     ]);
@@ -286,6 +286,12 @@ describe('NativeDateAdapter', () => {
 
   it('should clone', () => {
     let date = new Date(2017, JAN, 1);
+    expect(adapter.clone(date)).toEqual(date);
+    expect(adapter.clone(date)).not.toBe(date);
+  });
+
+  it('should preserve time when cloning', () => {
+    let date = new Date(2017, JAN, 1, 4, 5, 6);
     expect(adapter.clone(date)).toEqual(date);
     expect(adapter.clone(date)).not.toBe(date);
   });

@@ -1,6 +1,6 @@
 import {Component, ViewChild} from '@angular/core';
 import {By} from '@angular/platform-browser';
-import {ComponentFixture, TestBed, async, inject} from '@angular/core/testing';
+import {ComponentFixture, TestBed, async, inject, fakeAsync, tick} from '@angular/core/testing';
 import {Directionality} from '@angular/cdk/bidi';
 import {dispatchKeyboardEvent} from '@angular/cdk/testing';
 import {ESCAPE, A} from '@angular/cdk/keycodes';
@@ -210,17 +210,36 @@ describe('Overlay directives', () => {
       fixture.componentInstance.isOpen = true;
       fixture.detectChanges();
 
-      let backdrop = overlayContainerElement.querySelector('.cdk-overlay-backdrop');
-      expect(backdrop).toBeTruthy();
+      expect(overlayContainerElement.querySelector('.cdk-overlay-backdrop')).toBeTruthy();
     });
 
     it('should not create the backdrop by default', () => {
       fixture.componentInstance.isOpen = true;
       fixture.detectChanges();
 
-      let backdrop = overlayContainerElement.querySelector('.cdk-overlay-backdrop');
-      expect(backdrop).toBeNull();
+      expect(overlayContainerElement.querySelector('.cdk-overlay-backdrop')).toBeNull();
     });
+
+    it('should be able to change hasBackdrop after the overlay has been initialized',
+      fakeAsync(() => {
+        // Open once with a backdrop
+        fixture.componentInstance.hasBackdrop = true;
+        fixture.componentInstance.isOpen = true;
+        fixture.detectChanges();
+
+        expect(overlayContainerElement.querySelector('.cdk-overlay-backdrop')).toBeTruthy();
+
+        fixture.componentInstance.isOpen = false;
+        fixture.detectChanges();
+        tick(500);
+
+        // Open again without a backdrop.
+        fixture.componentInstance.hasBackdrop = false;
+        fixture.componentInstance.isOpen = true;
+        fixture.detectChanges();
+
+        expect(overlayContainerElement.querySelector('.cdk-overlay-backdrop')).toBeFalsy();
+      }));
 
     it('should set the custom backdrop class', () => {
       fixture.componentInstance.hasBackdrop = true;
@@ -408,6 +427,24 @@ describe('Overlay directives', () => {
       expect(fixture.componentInstance.connectedOverlayDirective.push).toBe(true);
     });
 
+    it('should update the element size if it changes while open', () => {
+      fixture.componentInstance.width = 250;
+      fixture.componentInstance.height = 250;
+      fixture.componentInstance.isOpen = true;
+      fixture.detectChanges();
+
+      const pane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
+      expect(pane.style.width).toBe('250px');
+      expect(pane.style.height).toBe('250px');
+
+      fixture.componentInstance.width = 100;
+      fixture.componentInstance.height = 100;
+      fixture.detectChanges();
+
+      expect(pane.style.width).toBe('100px');
+      expect(pane.style.height).toBe('100px');
+    });
+
   });
 
   describe('outputs', () => {
@@ -502,9 +539,9 @@ describe('Overlay directives', () => {
   </ng-template>`,
 })
 class ConnectedOverlayDirectiveTest {
-  @ViewChild(CdkConnectedOverlay) connectedOverlayDirective: CdkConnectedOverlay;
-  @ViewChild('trigger') trigger: CdkOverlayOrigin;
-  @ViewChild('otherTrigger') otherTrigger: CdkOverlayOrigin;
+  @ViewChild(CdkConnectedOverlay, {static: false}) connectedOverlayDirective: CdkConnectedOverlay;
+  @ViewChild('trigger', {static: false}) trigger: CdkOverlayOrigin;
+  @ViewChild('otherTrigger', {static: false}) otherTrigger: CdkOverlayOrigin;
 
   isOpen = false;
   width: number | string;
@@ -537,6 +574,6 @@ class ConnectedOverlayDirectiveTest {
   <ng-template cdk-connected-overlay>Menu content</ng-template>`,
 })
 class ConnectedOverlayPropertyInitOrder {
-  @ViewChild(CdkConnectedOverlay) connectedOverlayDirective: CdkConnectedOverlay;
-  @ViewChild('trigger') trigger: CdkOverlayOrigin;
+  @ViewChild(CdkConnectedOverlay, {static: false}) connectedOverlayDirective: CdkConnectedOverlay;
+  @ViewChild('trigger', {static: false}) trigger: CdkOverlayOrigin;
 }

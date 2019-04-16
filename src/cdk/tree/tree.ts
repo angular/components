@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 import {FocusableOption} from '@angular/cdk/a11y';
-import {CollectionViewer, DataSource} from '@angular/cdk/collections';
+import {CollectionViewer, DataSource, isDataSource} from '@angular/cdk/collections';
 import {
   AfterContentChecked,
   ChangeDetectionStrategy,
@@ -54,10 +54,14 @@ import {
     'role': 'tree',
   },
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush
+
+  // The "OnPush" status for the `CdkTree` component is effectively a noop, so we are removing it.
+  // The view for `CdkTree` consists entirely of templates declared in other views. As they are
+  // declared elsewhere, they are checked when their declaration points are checked.
+  // tslint:disable-next-line:validate-decorators
+  changeDetection: ChangeDetectionStrategy.Default
 })
-export class CdkTree<T>
-    implements AfterContentChecked, CollectionViewer, OnDestroy, OnInit {
+export class CdkTree<T> implements AfterContentChecked, CollectionViewer, OnDestroy, OnInit {
   /** Subject that emits when the component has been destroyed. */
   private _onDestroy = new Subject<void>();
 
@@ -99,7 +103,7 @@ export class CdkTree<T>
   @Input() trackBy: TrackByFunction<T>;
 
   // Outlets within the tree's template where the dataNodes will be inserted.
-  @ViewChild(CdkTreeNodeOutlet) _nodeOutlet: CdkTreeNodeOutlet;
+  @ViewChild(CdkTreeNodeOutlet, {static: true}) _nodeOutlet: CdkTreeNodeOutlet;
 
   /** The tree node template for the tree */
   @ContentChildren(CdkTreeNodeDef) _nodeDefs: QueryList<CdkTreeNodeDef<T>>;
@@ -185,10 +189,8 @@ export class CdkTree<T>
   private _observeRenderChanges() {
     let dataStream: Observable<T[] | ReadonlyArray<T>> | undefined;
 
-    // Cannot use `instanceof DataSource` since the data source could be a literal with
-    // `connect` function and may not extends DataSource.
-    if (typeof (this._dataSource as DataSource<T>).connect === 'function') {
-      dataStream = (this._dataSource as DataSource<T>).connect(this);
+    if (isDataSource(this._dataSource)) {
+      dataStream = this._dataSource.connect(this);
     } else if (this._dataSource instanceof Observable) {
       dataStream = this._dataSource;
     } else if (Array.isArray(this._dataSource)) {
@@ -301,11 +303,17 @@ export class CdkTreeNode<T> implements FocusableOption, OnDestroy {
   /** Subject that emits when the component has been destroyed. */
   protected _destroyed = new Subject<void>();
 
+  /** Emits when the node's data has changed. */
+  _dataChanges = new Subject<void>();
+
   /** The tree node's data. */
   get data(): T { return this._data; }
   set data(value: T) {
-    this._data = value;
-    this._setRoleFromData();
+    if (value !== this._data) {
+      this._data = value;
+      this._setRoleFromData();
+      this._dataChanges.next();
+    }
   }
   protected _data: T;
 
@@ -335,6 +343,7 @@ export class CdkTreeNode<T> implements FocusableOption, OnDestroy {
       CdkTreeNode.mostRecentTreeNode = null;
     }
 
+    this._dataChanges.complete();
     this._destroyed.next();
     this._destroyed.complete();
   }

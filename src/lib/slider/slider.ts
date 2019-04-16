@@ -18,6 +18,7 @@ import {
   PAGE_UP,
   RIGHT_ARROW,
   UP_ARROW,
+  hasModifierKey,
 } from '@angular/cdk/keycodes';
 import {
   Attribute,
@@ -444,7 +445,7 @@ export class MatSlider extends _MatSliderMixinBase
   private _valueOnSlideStart: number | null;
 
   /** Reference to the inner slider wrapper element. */
-  @ViewChild('sliderWrapper') private _sliderWrapper: ElementRef;
+  @ViewChild('sliderWrapper', {static: false}) private _sliderWrapper: ElementRef;
 
   /**
    * Whether mouse events should be converted to a slider position by calculating their distance
@@ -582,9 +583,11 @@ export class MatSlider extends _MatSliderMixinBase
   }
 
   _onKeydown(event: KeyboardEvent) {
-    if (this.disabled) { return; }
+    if (this.disabled || hasModifierKey(event)) {
+      return;
+    }
 
-    let oldValue = this.value;
+    const oldValue = this.value;
 
     switch (event.keyCode) {
       case PAGE_UP:

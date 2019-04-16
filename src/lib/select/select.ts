@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {ActiveDescendantKeyManager} from '@angular/cdk/a11y';
+import {ActiveDescendantKeyManager, LiveAnnouncer} from '@angular/cdk/a11y';
 import {Directionality} from '@angular/cdk/bidi';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
 import {SelectionModel} from '@angular/cdk/collections';
@@ -216,6 +216,7 @@ export class MatSelectTrigger {}
     '(blur)': '_onBlur()',
   },
   animations: [
+    matSelectAnimations.transformPanelWrap,
     matSelectAnimations.transformPanel
   ],
   providers: [
@@ -333,13 +334,13 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
   controlType = 'mat-select';
 
   /** Trigger that opens the select. */
-  @ViewChild('trigger') trigger: ElementRef;
+  @ViewChild('trigger', {static: false}) trigger: ElementRef;
 
   /** Panel containing the select options. */
-  @ViewChild('panel') panel: ElementRef;
+  @ViewChild('panel', {static: false}) panel: ElementRef;
 
   /** Overlay pane containing the options. */
-  @ViewChild(CdkConnectedOverlay) overlayDir: CdkConnectedOverlay;
+  @ViewChild(CdkConnectedOverlay, {static: false}) overlayDir: CdkConnectedOverlay;
 
   /** All of the defined select options. */
   @ContentChildren(MatOption, { descendants: true }) options: QueryList<MatOption>;
@@ -351,7 +352,7 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
   @Input() panelClass: string|string[]|Set<string>|{[key: string]: any};
 
   /** User-supplied override of the trigger element. */
-  @ContentChild(MatSelectTrigger) customTrigger: MatSelectTrigger;
+  @ContentChild(MatSelectTrigger, {static: false}) customTrigger: MatSelectTrigger;
 
   /** Placeholder to be shown if no value has been selected. */
   @Input()
@@ -449,7 +450,7 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
     return this._ngZone.onStable
       .asObservable()
       .pipe(take(1), switchMap(() => this.optionSelectionChanges));
-  });
+  }) as Observable<MatOptionSelectionChange>;
 
   /** Event emitted when the select panel has been toggled. */
   @Output() readonly openedChange: EventEmitter<boolean> = new EventEmitter<boolean>();
@@ -485,7 +486,12 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
     @Optional() private _parentFormField: MatFormField,
     @Self() @Optional() public ngControl: NgControl,
     @Attribute('tabindex') tabIndex: string,
-    @Inject(MAT_SELECT_SCROLL_STRATEGY) scrollStrategyFactory: any) {
+    @Inject(MAT_SELECT_SCROLL_STRATEGY) scrollStrategyFactory: any,
+    /**
+     * @deprecated _liveAnnouncer to be turned into a required parameter.
+     * @breaking-change 8.0.0
+     */
+    private _liveAnnouncer?: LiveAnnouncer) {
     super(elementRef, _defaultErrorStateMatcher, _parentForm,
           _parentFormGroup, ngControl);
 
@@ -522,6 +528,15 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
           this._changeDetectorRef.markForCheck();
         }
       });
+
+    this._viewportRuler.change()
+      .pipe(takeUntil(this._destroy))
+      .subscribe(() => {
+        if (this._panelOpen) {
+          this._triggerRect = this.trigger.nativeElement.getBoundingClientRect();
+          this._changeDetectorRef.markForCheck();
+        }
+      });
   }
 
   ngAfterContentInit() {
@@ -547,7 +562,7 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
   ngOnChanges(changes: SimpleChanges) {
     // Updating the disabled state is handled by `mixinDisabled`, but we need to additionally let
     // the parent form field know to run change detection when the disabled state changes.
-    if (changes.disabled) {
+    if (changes['disabled']) {
       this.stateChanges.next();
     }
   }
@@ -700,11 +715,21 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
       event.preventDefault(); // prevents the page from scrolling down when pressing space
       this.open();
     } else if (!this.multiple) {
+      const previouslySelectedOption = this.selected;
+
       if (keyCode === HOME || keyCode === END) {
         keyCode === HOME ? manager.setFirstItemActive() : manager.setLastItemActive();
         event.preventDefault();
       } else {
         manager.onKeydown(event);
+      }
+
+      const selectedOption = this.selected;
+
+      // Since the value has changed, we need to announce it ourselves.
+      // @breaking-change 8.0.0 remove null check for _liveAnnouncer.
+      if (this._liveAnnouncer && selectedOption && previouslySelectedOption !== selectedOption) {
+        this._liveAnnouncer.announce((selectedOption as MatOption).viewValue);
       }
     }
   }
@@ -806,6 +831,7 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
     // has changed after it was checked" errors from Angular.
     Promise.resolve().then(() => {
       this._setSelectionByValue(this.ngControl ? this.ngControl.value : this._value);
+      this.stateChanges.next();
     });
   }
 

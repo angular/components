@@ -8,17 +8,17 @@
 
 import {
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   ElementRef,
   EventEmitter,
   Input,
   NgZone,
-  Output,
-  ViewEncapsulation,
   OnChanges,
-  SimpleChanges,
-  ChangeDetectorRef,
   OnDestroy,
+  Output,
+  SimpleChanges,
+  ViewEncapsulation,
 } from '@angular/core';
 import {
   DateAdapter,
@@ -50,6 +50,7 @@ export class MatCalendarCell<D = unknown> {
       public ariaLabel: string,
       /** Whether the cell is enabled. */
       public enabled: boolean,
+      /** Optional CSS classes to include on the DOM element for this cell. */
       public cssClasses?: MatCalendarCellCssClasses) {}
 }
 
@@ -201,14 +202,14 @@ export class MatCalendarBody<D = unknown> implements OnChanges, OnDestroy {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    const columnChanges = changes.numCols;
+    const columnChanges = changes['numCols'];
     const {rows, numCols} = this;
 
-    if (changes.rows || columnChanges) {
+    if (changes['rows'] || columnChanges) {
       this._firstRowOffset = rows && rows.length && rows[0].length ? numCols - rows[0].length : 0;
     }
 
-    if (changes.cellAspectRatio || columnChanges || !this._cellPadding) {
+    if (changes['cellAspectRatio'] || columnChanges || !this._cellPadding) {
       this._cellPadding = `${50 * this.cellAspectRatio / numCols}%`;
     }
 

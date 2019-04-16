@@ -1,14 +1,10 @@
 import {task} from 'gulp';
-import {sequenceTask} from 'material2-build-tools';
-import {allBuildPackages} from '../packages';
 
 task('ci:lint', ['lint']);
 
 // Gulp sometimes does not exit properly on CI. This is to prevent that.
 // TODO(devversion): look if there is some blocking child process.
 task('ci:test', ['test:single-run'], () => process.exit(0));
-
-task('ci:e2e', ['e2e']);
 
 /**
  * Task to verify that all components work with AOT compilation. This task requires the
@@ -20,7 +16,4 @@ task('ci:aot', ['build-aot:no-release-build']);
 task('ci:prerender', ['prerender']);
 
 /** Task that builds all release packages. */
-task('ci:build-release-packages', sequenceTask(
-  'clean',
-  allBuildPackages.map(buildPackage => `${buildPackage.name}:build-release`)
-));
+task('ci:build-release-packages', ['build-release-packages']);

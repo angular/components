@@ -40,7 +40,11 @@ import {MatSnackBarConfig} from './snack-bar-config';
   selector: 'snack-bar-container',
   templateUrl: 'snack-bar-container.html',
   styleUrls: ['snack-bar-container.css'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  // In Ivy embedded views will be change detected from their declaration place, rather than
+  // where they were stamped out. This means that we can't have the snack bar container be OnPush,
+  // because it might cause snack bars that were opened from a template not to be out of date.
+  // tslint:disable-next-line:validate-decorators
+  changeDetection: ChangeDetectionStrategy.Default,
   encapsulation: ViewEncapsulation.None,
   animations: [matSnackBarAnimations.snackBarState],
   host: {
@@ -55,7 +59,7 @@ export class MatSnackBarContainer extends BasePortalOutlet implements OnDestroy 
   private _destroyed = false;
 
   /** The portal outlet inside of this container into which the snack bar content will be loaded. */
-  @ViewChild(CdkPortalOutlet) _portalOutlet: CdkPortalOutlet;
+  @ViewChild(CdkPortalOutlet, {static: true}) _portalOutlet: CdkPortalOutlet;
 
   /** Subject for notifying that the snack bar has exited from view. */
   readonly _onExit: Subject<any> = new Subject();

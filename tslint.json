@@ -86,12 +86,12 @@
     "no-duplicate-imports": true,
 
     // Codelyzer
-    "banana-in-box": true,
-    "contextual-life-cycle": true,
-    "decorator-not-allowed": true,
+    "template-banana-in-box": true,
+    "contextual-lifecycle": true,
+    "contextual-decorator": true,
     "no-output-on-prefix": true,
-    "templates-no-negated-async": true,
-    "use-life-cycle-interface": true,
+    "template-no-negated-async": true,
+    "use-lifecycle-interface": true,
 
     // Custom Rules
     "ts-loader": true,
@@ -99,6 +99,7 @@
     "no-import-spacing": true,
     "no-private-getters": true,
     "setters-after-getters": true,
+    "ng-on-changes-property-access": true,
     "rxjs-imports": true,
     "require-breaking-change-version": true,
     "no-host-decorator-in-concrete": [
@@ -129,6 +130,12 @@
       "./tools/package-tools/rollup-globals.ts",
       "src/+(lib|cdk|material-examples|material-experimental|cdk-experimental)/!(schematics)**/*.ts"
     ],
+    "file-name-casing": [true, {
+      // Exclude custom lint rule files since they have to always be camel-cased and end
+      // with "Rule".
+      ".*Rule.ts": "camel-case",
+      ".*": "kebab-case"
+    }],
     "no-unescaped-html-tag": true
   },
   "linterOptions": {

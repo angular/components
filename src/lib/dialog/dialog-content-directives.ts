@@ -29,13 +29,13 @@ let dialogElementUid = 0;
   exportAs: 'matDialogClose',
   host: {
     '(click)': 'dialogRef.close(dialogResult)',
-    '[attr.aria-label]': 'ariaLabel',
+    '[attr.aria-label]': 'ariaLabel || null',
     'type': 'button', // Prevents accidental form submits.
   }
 })
 export class MatDialogClose implements OnInit, OnChanges {
   /** Screenreader label for the button. */
-  @Input('aria-label') ariaLabel: string = 'Close dialog';
+  @Input('aria-label') ariaLabel: string;
 
   /** Dialog close input. */
   @Input('mat-dialog-close') dialogResult: any;
@@ -59,7 +59,7 @@ export class MatDialogClose implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    const proxiedChange = changes._matDialogClose || changes._matDialogCloseResult;
+    const proxiedChange = changes['_matDialogClose'] || changes['_matDialogCloseResult'];
 
     if (proxiedChange) {
       this.dialogResult = proxiedChange.currentValue;

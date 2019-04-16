@@ -15,17 +15,16 @@ import {getWorkspace} from '@schematics/angular/utility/config';
 import {findModuleFromOptions as internalFindModule} from '@schematics/angular/utility/find-module';
 import {getAppModulePath} from '@schematics/angular/utility/ng-ast-utils';
 import {getProjectMainFile} from './project-main-file';
-import {ts} from './version-agnostic-typescript';
+import {ts, typescript} from './version-agnostic-typescript';
 
 
 /** Reads file given path and returns TypeScript source file. */
-export function getSourceFile(host: Tree, path: string) {
+export function getSourceFile(host: Tree, path: string): typescript.SourceFile {
   const buffer = host.read(path);
   if (!buffer) {
     throw new SchematicsException(`Could not find file for path: ${path}`);
   }
-  const content = buffer.toString();
-  return ts.createSourceFile(path, content, ts.ScriptTarget.Latest, true);
+  return ts.createSourceFile(path, buffer.toString(), ts.ScriptTarget.Latest, true);
 }
 
 /** Import and add module to root app module. */
@@ -51,7 +50,9 @@ export function addModuleImportToModule(host: Tree, modulePath: string, moduleNa
     throw new SchematicsException(`Module not found: ${modulePath}`);
   }
 
-  const changes = addImportToModule(moduleSource, modulePath, moduleName, src);
+  // TODO: TypeScript version mismatch due to @schematics/angular using a different version
+  // than Material. Cast to any to avoid the type assignment failure.
+  const changes = addImportToModule(moduleSource as any, modulePath, moduleName, src);
   const recorder = host.beginUpdate(modulePath);
 
   changes.forEach((change) => {

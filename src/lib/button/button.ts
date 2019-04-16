@@ -7,7 +7,6 @@
  */
 
 import {FocusMonitor} from '@angular/cdk/a11y';
-import {Platform} from '@angular/cdk/platform';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -70,7 +69,7 @@ export const _MatButtonMixinBase:
              button[mat-flat-button]`,
   exportAs: 'matButton',
   host: {
-    '[disabled]': 'disabled || null',
+    '[attr.disabled]': 'disabled || null',
     '[class._mat-animation-noopable]': '_animationMode === "NoopAnimations"',
   },
   templateUrl: 'button.html',
@@ -89,17 +88,11 @@ export class MatButton extends _MatButtonMixinBase
   readonly isIconButton: boolean = this._hasHostAttributes('mat-icon-button');
 
   /** Reference to the MatRipple instance of the button. */
-  @ViewChild(MatRipple) ripple: MatRipple;
+  @ViewChild(MatRipple, {static: false}) ripple: MatRipple;
 
   constructor(elementRef: ElementRef,
-              /**
-               * @deprecated Platform checks for SSR are no longer needed
-               * @breaking-change 8.0.0
-               */
-              _platform: Platform,
               private _focusMonitor: FocusMonitor,
-              // @breaking-change 8.0.0 `_animationMode` parameter to be made required.
-              @Optional() @Inject(ANIMATION_MODULE_TYPE) public _animationMode?: string) {
+              @Optional() @Inject(ANIMATION_MODULE_TYPE) public _animationMode: string) {
     super(elementRef);
 
     // For each of the variant selectors that is prevent in the button's host
@@ -169,12 +162,10 @@ export class MatAnchor extends MatButton {
   @Input() tabIndex: number;
 
   constructor(
-    platform: Platform,
     focusMonitor: FocusMonitor,
     elementRef: ElementRef,
-    // @breaking-change 8.0.0 `animationMode` parameter to be made required.
-    @Optional() @Inject(ANIMATION_MODULE_TYPE) animationMode?: string) {
-    super(elementRef, platform, focusMonitor, animationMode);
+    @Optional() @Inject(ANIMATION_MODULE_TYPE) animationMode: string) {
+    super(elementRef, focusMonitor, animationMode);
   }
 
   _haltDisabledEvents(event: Event) {

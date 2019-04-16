@@ -1,17 +1,16 @@
 import * as OctokitApi from '@octokit/rest';
 import {bold, cyan, green, italic, red, yellow} from 'chalk';
-import {existsSync, readFileSync, writeFileSync} from 'fs';
-import {prompt} from 'inquirer';
+import {readFileSync, writeFileSync} from 'fs';
 import {join} from 'path';
+import {BaseReleaseTask} from './base-release-task';
 import {promptAndGenerateChangelog} from './changelog';
 import {GitClient} from './git/git-client';
 import {getGithubBranchCommitsUrl} from './git/github-urls';
 import {promptForNewVersion} from './prompt/new-version-prompt';
 import {parseVersionName, Version} from './version-name/parse-version';
-import {getExpectedPublishBranch} from './version-name/publish-branch';
 
 /** Default filename for the changelog. */
-const CHANGELOG_FILE_NAME = 'CHANGELOG.md';
+export const CHANGELOG_FILE_NAME = 'CHANGELOG.md';
 
 /**
  * Class that can be instantiated in order to stage a new release. The tasks requires user
@@ -32,7 +31,7 @@ const CHANGELOG_FILE_NAME = 'CHANGELOG.md';
  *  10) Wait for the user to continue (users can customize generated changelog)
  *  11) Create a commit that includes all changes in the staging branch.
  */
-class StageReleaseTask {
+class StageReleaseTask extends BaseReleaseTask {
 
   /** Path to the project package JSON. */
   packageJsonPath: string;
@@ -52,16 +51,10 @@ class StageReleaseTask {
   constructor(public projectDir: string,
               public repositoryOwner: string,
               public repositoryName: string) {
+    super(new GitClient(projectDir,
+      `https://github.com/${repositoryOwner}/${repositoryName}.git`));
+
     this.packageJsonPath = join(projectDir, 'package.json');
-
-    console.log(this.projectDir);
-
-    if (!existsSync(this.packageJsonPath)) {
-      console.error(red(`The specified directory is not referring to a project directory. ` +
-        `There must be a ${italic('package.json')} file in the project directory.`));
-      process.exit(1);
-    }
-
     this.packageJson = JSON.parse(readFileSync(this.packageJsonPath, 'utf-8'));
     this.currentVersion = parseVersionName(this.packageJson.version);
 
@@ -72,8 +65,6 @@ class StageReleaseTask {
     }
 
     this.githubApi = new OctokitApi();
-    this.git = new GitClient(projectDir,
-        `https://github.com/${repositoryOwner}/${repositoryName}.git`);
   }
 
   async run() {
@@ -84,20 +75,22 @@ class StageReleaseTask {
     console.log();
 
     const newVersion = await promptForNewVersion(this.currentVersion);
-    const expectedPublishBranch = getExpectedPublishBranch(newVersion);
+    const newVersionName = newVersion.format();
+    const stagingBranch = `release-stage/${newVersionName}`;
 
     // After the prompt for the new version, we print a new line because we want the
     // new log messages to be more in the foreground.
     console.log();
 
+    // Ensure there are no uncommitted changes. Checking this before switching to a
+    // publish branch is sufficient as unstaged changes are not specific to Git branches.
     this.verifyNoUncommittedChanges();
-    this.switchToPublishBranch(expectedPublishBranch);
 
-    this.verifyLocalCommitsMatchUpstream(expectedPublishBranch);
-    await this.verifyPassingGithubStatus(expectedPublishBranch);
+    // Branch that will be used to stage the release for the new selected version.
+    const publishBranch = this.switchToPublishBranch(newVersion);
 
-    const newVersionName = newVersion.format();
-    const stagingBranch = `release-stage/${newVersionName}`;
+    this.verifyLocalCommitsMatchUpstream(publishBranch);
+    await this.verifyPassingGithubStatus(publishBranch);
 
     if (!this.git.checkoutNewBranch(stagingBranch)) {
       console.error(red(`Could not create release staging branch: ${stagingBranch}. Aborting...`));
@@ -119,16 +112,10 @@ class StageReleaseTask {
       `changes that apply to the public library release. When done, proceed to the prompt below.`));
     console.log();
 
-    const {shouldContinue} = await prompt<{shouldContinue: boolean}>({
-      type: 'confirm',
-      name: 'shouldContinue',
-      message: 'Do you want to proceed and commit the changes?'
-    });
-
-    if (!shouldContinue) {
+    if (!await this.promptConfirm('Do you want to proceed and commit the changes?')) {
       console.log();
       console.log(yellow('Aborting release staging...'));
-      process.exit(1);
+      process.exit(0);
     }
 
     this.git.stageAllChanges();
@@ -140,53 +127,6 @@ class StageReleaseTask {
     console.info();
 
     // TODO(devversion): automatic push and PR open URL shortcut.
-  }
-
-  /**
-   * Checks if the user is on the expected publish branch. If the user is on a different branch,
-   * this function automatically tries to checkout the publish branch.
-   */
-  private switchToPublishBranch(expectedPublishBranch: string): boolean {
-    const currentBranchName = this.git.getCurrentBranch();
-
-    // If current branch already matches the expected publish branch, just continue
-    // by exiting this function.
-    if (expectedPublishBranch === currentBranchName) {
-      return;
-    }
-
-    if (!this.git.checkoutBranch(expectedPublishBranch)) {
-      console.error(red(`  ✘   Could not switch to the "${italic(expectedPublishBranch)}" ` +
-        `branch.`));
-      console.error(red(`      Please ensure that the branch exists or manually switch to the ` +
-        `branch.`));
-      process.exit(1);
-    }
-
-    console.log(green(`  ✓   Switched to the "${italic(expectedPublishBranch)}" branch.`));
-  }
-
-  /** Verifies that the local branch is up to date with the given publish branch. */
-  private verifyLocalCommitsMatchUpstream(publishBranch: string) {
-    const upstreamCommitSha = this.git.getRemoteCommitSha(publishBranch);
-    const localCommitSha = this.git.getLocalCommitSha('HEAD');
-
-    // Check if the current branch is in sync with the remote branch.
-    if (upstreamCommitSha !== localCommitSha) {
-      console.error(red(`  ✘ Cannot stage release. The current branch is not in sync with the ` +
-        `remote branch. Please make sure your local branch "${italic(publishBranch)}" is up ` +
-        `to date.`));
-      process.exit(1);
-    }
-  }
-
-  /** Verifies that there are no uncommitted changes in the project. */
-  private verifyNoUncommittedChanges() {
-    if (this.git.hasUncommittedChanges()) {
-      console.error(red(`  ✘   Cannot stage release. There are changes which are not committed ` +
-        `and should be discarded.`));
-      process.exit(1);
-    }
   }
 
   /** Updates the version of the project package.json and writes the changes to disk. */
@@ -212,8 +152,8 @@ class StageReleaseTask {
       console.error(red(`      Please have a look at: ${githubCommitsUrl}`));
       process.exit(1);
     } else if (state === 'pending') {
-      console.error(red(`  ✘   Cannot stage release yet. Commit "${commitRef}" still has ` +
-        `pending github statuses that need to succeed before staging a release.`));
+      console.error(red(`  ✘   Commit "${commitRef}" still has pending github statuses that ` +
+        `need to succeed before staging a release.`));
       console.error(red(`      Please have a look at: ${githubCommitsUrl}`));
       process.exit(0);
     }

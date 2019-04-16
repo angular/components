@@ -98,13 +98,14 @@ export class MatDialog implements OnDestroy {
     return parent ? parent._afterAllClosed : this._afterAllClosedAtThisLevel;
   }
 
+  // TODO (jelbourn): tighten the typing right-hand side of this expression.
   /**
    * Stream that emits when all open dialog have finished closing.
    * Will emit on subscribe if there are no open dialogs to begin with.
    */
-  readonly afterAllClosed: Observable<void> = defer<void>(() => this.openDialogs.length ?
+  readonly afterAllClosed: Observable<void> = defer(() => this.openDialogs.length ?
       this._afterAllClosed :
-      this._afterAllClosed.pipe(startWith(undefined)));
+      this._afterAllClosed.pipe(startWith(undefined))) as Observable<any>;
 
   constructor(
       private _overlay: Overlay,
@@ -171,6 +172,8 @@ export class MatDialog implements OnDestroy {
     // Only close the dialogs at this level on destroy
     // since the parent service may still be active.
     this._closeDialogs(this._openDialogsAtThisLevel);
+    this._afterAllClosedAtThisLevel.complete();
+    this._afterOpenedAtThisLevel.complete();
   }
 
   /**

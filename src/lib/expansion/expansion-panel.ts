@@ -31,6 +31,7 @@ import {
   ViewContainerRef,
   ViewEncapsulation,
   ViewChild,
+  InjectionToken,
 } from '@angular/core';
 import {DOCUMENT} from '@angular/common';
 import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
@@ -45,6 +46,28 @@ export type MatExpansionPanelState = 'expanded' | 'collapsed';
 
 /** Counter for generating unique element ids. */
 let uniqueId = 0;
+
+/**
+ * Object that can be used to override the default options
+ * for all of the expansion panels in a module.
+ */
+export interface MatExpansionPanelDefaultOptions {
+  /** Height of the header while the panel is expanded. */
+  expandedHeight: string;
+
+  /** Height of the header while the panel is collapsed. */
+  collapsedHeight: string;
+
+  /** Whether the toggle indicator should be hidden. */
+  hideToggle: boolean;
+}
+
+/**
+ * Injection token that can be used to configure the defalt
+ * options for the expansion panel component.
+ */
+export const MAT_EXPANSION_PANEL_DEFAULT_OPTIONS =
+    new InjectionToken<MatExpansionPanelDefaultOptions>('MAT_EXPANSION_PANEL_DEFAULT_OPTIONS');
 
 /**
  * `<mat-expansion-panel>`
@@ -78,9 +101,7 @@ let uniqueId = 0;
 export class MatExpansionPanel extends CdkAccordionItem implements AfterContentInit, OnChanges,
   OnDestroy {
 
-  // @breaking-change 8.0.0 Remove `| undefined` from here
-  // when the `_document` constructor param is required.
-  private _document: Document | undefined;
+  private _document: Document;
 
   /** Whether the toggle indicator should be hidden. */
   @Input()
@@ -105,10 +126,10 @@ export class MatExpansionPanel extends CdkAccordionItem implements AfterContentI
   accordion: MatAccordionBase;
 
   /** Content that will be rendered lazily. */
-  @ContentChild(MatExpansionPanelContent) _lazyContent: MatExpansionPanelContent;
+  @ContentChild(MatExpansionPanelContent, {static: false}) _lazyContent: MatExpansionPanelContent;
 
   /** Element containing the panel's user-provided content. */
-  @ViewChild('body') _body: ElementRef<HTMLElement>;
+  @ViewChild('body', {static: false}) _body: ElementRef<HTMLElement>;
 
   /** Portal holding the user's content. */
   _portal: TemplatePortal;
@@ -123,9 +144,10 @@ export class MatExpansionPanel extends CdkAccordionItem implements AfterContentI
               _changeDetectorRef: ChangeDetectorRef,
               _uniqueSelectionDispatcher: UniqueSelectionDispatcher,
               private _viewContainerRef: ViewContainerRef,
-              // @breaking-change 8.0.0 _document and _animationMode to be made required
-              @Inject(DOCUMENT) _document?: any,
-              @Optional() @Inject(ANIMATION_MODULE_TYPE) public _animationMode?: string) {
+              @Inject(DOCUMENT) _document: any,
+              @Optional() @Inject(ANIMATION_MODULE_TYPE) public _animationMode: string,
+              @Inject(MAT_EXPANSION_PANEL_DEFAULT_OPTIONS) @Optional()
+                  defaultOptions?: MatExpansionPanelDefaultOptions) {
     super(accordion, _changeDetectorRef, _uniqueSelectionDispatcher);
     this.accordion = accordion;
     this._document = _document;
@@ -143,6 +165,10 @@ export class MatExpansionPanel extends CdkAccordionItem implements AfterContentI
         }
       }
     });
+
+    if (defaultOptions) {
+      this.hideToggle = defaultOptions.hideToggle;
+    }
   }
 
   /** Determines whether the expansion panel should have spacing between it and its siblings. */
@@ -165,7 +191,7 @@ export class MatExpansionPanel extends CdkAccordionItem implements AfterContentI
     if (this._lazyContent) {
       // Render the content as soon as the panel becomes open.
       this.opened.pipe(
-        startWith<void>(null!),
+        startWith(null!),
         filter(() => this.expanded && !this._portal),
         take(1)
       ).subscribe(() => {
@@ -186,7 +212,7 @@ export class MatExpansionPanel extends CdkAccordionItem implements AfterContentI
 
   /** Checks whether the expansion panel's content contains the currently-focused element. */
   _containsFocus(): boolean {
-    if (this._body && this._document) {
+    if (this._body) {
       const focusedElement = this._document.activeElement;
       const bodyElement = this._body.nativeElement;
       return focusedElement === bodyElement || bodyElement.contains(focusedElement);

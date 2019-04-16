@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild<% if(!!viewEncapsulation) { %>, ViewEncapsulation<% }%><% if(changeDetection !== 'Default') { %>, ChangeDetectionStrategy<% }%> } from '@angular/core';
+import { AfterViewInit, Component, ViewChild<% if(!!viewEncapsulation) { %>, ViewEncapsulation<% }%><% if(changeDetection !== 'Default') { %>, ChangeDetectionStrategy<% }%> } from '@angular/core';
 import { MatPaginator, MatSort } from '@angular/material';
 import { <%= classify(name) %>DataSource } from './<%= dasherize(name) %>-datasource';
 
@@ -11,11 +11,11 @@ import { <%= classify(name) %>DataSource } from './<%= dasherize(name) %>-dataso
   styles: [`
     <%= indentTextContent(resolvedFiles.stylesheet, 4) %>
   `]<% } else { %>
-  styleUrls: ['./<%= dasherize(name) %>.component.<%= styleext %>']<% } %><% if(!!viewEncapsulation) { %>,
+  styleUrls: ['./<%= dasherize(name) %>.component.<%= style %>']<% } %><% if(!!viewEncapsulation) { %>,
   encapsulation: ViewEncapsulation.<%= viewEncapsulation %><% } if (changeDetection !== 'Default') { %>,
   changeDetection: ChangeDetectionStrategy.<%= changeDetection %><% } %>
 })
-export class <%= classify(name) %>Component implements OnInit {
+export class <%= classify(name) %>Component implements AfterViewInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   dataSource: <%= classify(name) %>DataSource;
@@ -23,7 +23,7 @@ export class <%= classify(name) %>Component implements OnInit {
   /** Columns displayed in the table. Columns IDs can be added, removed, or reordered. */
   displayedColumns = ['id', 'name'];
 
-  ngOnInit() {
+  ngAfterViewInit() {
     this.dataSource = new <%= classify(name) %>DataSource(this.paginator, this.sort);
   }
 }

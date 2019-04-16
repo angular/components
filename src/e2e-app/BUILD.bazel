@@ -1,0 +1,72 @@
+package(default_visibility=["//visibility:public"])
+
+load("@io_bazel_rules_sass//:defs.bzl", "sass_binary")
+load("@npm_bazel_typescript//:defs.bzl", "ts_devserver")
+load("//tools:defaults.bzl", "ng_module")
+load("//:packages.bzl", "ANGULAR_LIBRARY_UMDS")
+
+ng_module(
+  name = "e2e-app",
+  srcs = glob(["**/*.ts"]),
+  assets = glob(["**/*.html", "**/*.css"], exclude = ["index.html"]),
+  deps = [
+    "@npm//@angular/core",
+    "@npm//@angular/elements",
+    "@npm//@angular/forms",
+    "@npm//@angular/platform-browser",
+    "@npm//@angular/router",
+    "@npm//@angular/animations",
+    "//src/cdk/drag-drop",
+    "//src/cdk/overlay",
+    "//src/cdk/scrolling",
+    # TODO(devversion): be more explicit by using "@angular/material" with individual entry points.
+    "//src/lib:material",
+    "//src/material-examples:examples",
+    "//src/cdk-experimental/dialog",
+    "//src/cdk-experimental/scrolling",
+  ],
+)
+
+sass_binary(
+  name = "theme",
+  src = "theme.scss",
+  deps = [
+    "//src/lib/core:all_themes"
+  ]
+)
+
+ts_devserver(
+    name = "devserver",
+    port = 4200,
+    # Name of the AMD module that should be required on page load.
+    entry_module = "angular_material/src/e2e-app/main",
+    # Serving path of the bundle that serves all files specified in "deps" and "scripts".
+    serving_path = "/bundle.js",
+    # Root paths can be used simplify the loading of files from external Bazel repositories
+    # (such as the Bazel managed deps repository called "npm")
+    additional_root_paths = [
+      "npm/node_modules",
+    ],
+    # Files which should be provided by Bazel when running the devserver. These are not
+    # automatically served, but can be loaded manually through HTTP requests.
+    static_files = [
+      "@npm//zone.js",
+      "@npm//core-js",
+      "@npm//hammerjs",
+      "@npm//@webcomponents/custom-elements",
+      "//src/lib/prebuilt-themes:indigo-pink",
+      ":index.html",
+      ":theme",
+    ],
+    # Scripts which will be included in the serving_path bundle after "require.js" has been
+    # loaded.
+    # TODO(jelbourn): remove UMDs from here once we don't have to manually include them
+    scripts = [
+      ":devserver-configure.js",
+      "//tools/rxjs:rxjs_umd_modules",
+      "@npm//node_modules/tslib:tslib.js",
+    ] + ANGULAR_LIBRARY_UMDS,
+    # Dependencies that produce JavaScript output will be automatically included in the
+    # serving_path bundle
+    deps = [":e2e-app"],
+)

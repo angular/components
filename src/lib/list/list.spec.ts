@@ -1,27 +1,22 @@
-import {async, TestBed} from '@angular/core/testing';
+import {async, TestBed, fakeAsync, tick} from '@angular/core/testing';
 import {Component, QueryList, ViewChildren} from '@angular/core';
+import {defaultRippleAnimationConfig} from '@angular/material/core';
+import {dispatchMouseEvent} from '@angular/cdk/testing';
 import {By} from '@angular/platform-browser';
 import {MatListItem, MatListModule} from './index';
 
-
 describe('MatList', () => {
+  // Default ripple durations used for testing.
+  const {enterDuration, exitDuration} = defaultRippleAnimationConfig;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [MatListModule],
       declarations: [
-        ListWithOneAnchorItem,
-        ListWithOneItem,
-        ListWithTwoLineItem,
-        ListWithThreeLineItem,
-        ListWithAvatar,
-        ListWithItemWithCssClass,
-        ListWithDynamicNumberOfLines,
-        ListWithMultipleItems,
-        ListWithManyLines,
-        NavListWithOneAnchorItem,
-        ActionListWithoutType,
-        ActionListWithType
+        ListWithOneAnchorItem, ListWithOneItem, ListWithTwoLineItem, ListWithThreeLineItem,
+        ListWithAvatar, ListWithItemWithCssClass, ListWithDynamicNumberOfLines,
+        ListWithMultipleItems, ListWithManyLines, NavListWithOneAnchorItem, ActionListWithoutType,
+        ActionListWithType, ListWithIndirectDescendantLines
       ],
     });
 
@@ -137,6 +132,14 @@ describe('MatList', () => {
     expect(items.length).toBeGreaterThan(0);
   });
 
+  it('should set the proper class on the action list host', () => {
+    const fixture = TestBed.createComponent(ActionListWithoutType);
+    fixture.detectChanges();
+
+    const host = fixture.nativeElement.querySelector('mat-action-list');
+    expect(host.classList).toContain('mat-action-list');
+  });
+
   it('should enable ripples for action lists by default', () => {
     const fixture = TestBed.createComponent(ActionListWithoutType);
     fixture.detectChanges();
@@ -207,6 +210,71 @@ describe('MatList', () => {
     expect(items.every(item => item._isRippleDisabled())).toBe(true);
   });
 
+  it('should disable item ripples when list ripples are disabled via the input in nav list',
+    fakeAsync(() => {
+      const fixture = TestBed.createComponent(NavListWithOneAnchorItem);
+      fixture.detectChanges();
+
+      const rippleTarget = fixture.nativeElement.querySelector('.mat-list-item-content');
+
+      dispatchMouseEvent(rippleTarget, 'mousedown');
+      dispatchMouseEvent(rippleTarget, 'mouseup');
+
+      expect(rippleTarget.querySelectorAll('.mat-ripple-element').length)
+          .toBe(1, 'Expected ripples to be enabled by default.');
+
+      // Wait for the ripples to go away.
+      tick(enterDuration + exitDuration);
+      expect(rippleTarget.querySelectorAll('.mat-ripple-element').length)
+          .toBe(0, 'Expected ripples to go away.');
+
+      fixture.componentInstance.disableListRipple = true;
+      fixture.detectChanges();
+
+      dispatchMouseEvent(rippleTarget, 'mousedown');
+      dispatchMouseEvent(rippleTarget, 'mouseup');
+
+      expect(rippleTarget.querySelectorAll('.mat-ripple-element').length)
+          .toBe(0, 'Expected no ripples after list ripples are disabled.');
+    }));
+
+  it('should disable item ripples when list ripples are disabled via the input in an action list',
+    fakeAsync(() => {
+      const fixture = TestBed.createComponent(ActionListWithoutType);
+      fixture.detectChanges();
+
+      const rippleTarget = fixture.nativeElement.querySelector('.mat-list-item-content');
+
+      dispatchMouseEvent(rippleTarget, 'mousedown');
+      dispatchMouseEvent(rippleTarget, 'mouseup');
+
+      expect(rippleTarget.querySelectorAll('.mat-ripple-element').length)
+          .toBe(1, 'Expected ripples to be enabled by default.');
+
+      // Wait for the ripples to go away.
+      tick(enterDuration + exitDuration);
+      expect(rippleTarget.querySelectorAll('.mat-ripple-element').length)
+          .toBe(0, 'Expected ripples to go away.');
+
+      fixture.componentInstance.disableListRipple = true;
+      fixture.detectChanges();
+
+      dispatchMouseEvent(rippleTarget, 'mousedown');
+      dispatchMouseEvent(rippleTarget, 'mouseup');
+
+      expect(rippleTarget.querySelectorAll('.mat-ripple-element').length)
+          .toBe(0, 'Expected no ripples after list ripples are disabled.');
+    }));
+
+
+  it('should pick up indirect descendant lines', () => {
+    const fixture = TestBed.createComponent(ListWithIndirectDescendantLines);
+    fixture.detectChanges();
+
+    const listItems = fixture.debugElement.children[0].queryAll(By.css('mat-list-item'));
+    expect(listItems[0].nativeElement.className).toContain('mat-2-line');
+    expect(listItems[1].nativeElement.className).toContain('mat-2-line');
+  });
 });
 
 
@@ -342,3 +410,18 @@ class ListWithDynamicNumberOfLines extends BaseTestList { }
     </mat-list-item>
   </mat-list>`})
 class ListWithMultipleItems extends BaseTestList { }
+
+// Note the blank `ngSwitch` which we need in order to hit the bug that we're testing.
+@Component({
+  template: `
+  <mat-list>
+    <mat-list-item *ngFor="let item of items">
+      <ng-container [ngSwitch]="true">
+        <h3 mat-line>{{item.name}}</h3>
+        <p mat-line>{{item.description}}</p>
+      </ng-container>
+    </mat-list-item>
+  </mat-list>`
+})
+class ListWithIndirectDescendantLines extends BaseTestList {
+}

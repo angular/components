@@ -2,6 +2,7 @@
 @import '../core/style/list-common';
 @import '../core/style/layout-common';
 @import '../divider/divider-offset';
+@import '../../cdk/a11y/a11y';
 
 
 $mat-list-side-padding: 16px;
@@ -269,13 +270,23 @@ $mat-list-item-inset-divider-offset: 72px;
 }
 
 mat-action-list {
-  //remove the native button look and make it look like a list item
+  // Remove the native button look and make it look like a list item
   button {
     background: none;
     color: inherit;
     border: none;
     font: inherit;
     outline: inherit;
+    -webkit-tap-highlight-color: transparent;
+
+    text-align: left;
+    [dir='rtl'] & {
+      text-align: right;
+    }
+
+    &::-moz-focus-inner {
+      border: 0;
+    }
   }
 
   .mat-list-item {
@@ -289,13 +300,28 @@ mat-action-list {
   outline: none;
 }
 
+@include cdk-high-contrast {
+  .mat-selection-list:focus {
+    outline-style: dotted;
+  }
+
+  .mat-list-option,
+  .mat-nav-list .mat-list-item,
+  mat-action-list .mat-list-item {
+    &:hover, &:focus {
+      outline: dotted 1px;
+    }
+  }
+}
+
 
 // Disable the hover styles on non-hover devices. Since this is more of a progressive
 // enhancement and not all desktop browsers support this kind of media query, we can't
 // use something like `@media (hover)`.
 @media (hover: none) {
   .mat-list-option,
-  .mat-nav-list .mat-list-item {
+  .mat-nav-list .mat-list-item,
+  .mat-action-list .mat-list-item {
     &:not(.mat-list-item-disabled):hover {
       background: none;
     }

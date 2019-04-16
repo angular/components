@@ -31,7 +31,6 @@ import {
 
 describe('MatSort', () => {
   let fixture: ComponentFixture<SimpleMatSortApp>;
-
   let component: SimpleMatSortApp;
 
   beforeEach(async(() => {
@@ -384,6 +383,32 @@ describe('MatSort', () => {
       expect(button.getAttribute('aria-label')).toBe('Sort all of the things');
     })
   );
+
+  it('should not render the arrow if sorting is disabled for that column', fakeAsync(() => {
+    const sortHeaderElement = fixture.nativeElement.querySelector('#defaultA');
+
+    // Switch sorting to a different column before asserting.
+    component.sort('defaultB');
+    fixture.componentInstance.disabledColumnSort = true;
+    fixture.detectChanges();
+    tick();
+    fixture.detectChanges();
+
+    expect(sortHeaderElement.querySelector('.mat-sort-header-arrow')).toBeFalsy();
+  }));
+
+  it('should render the arrow if a disabled column is being sorted by', fakeAsync(() => {
+    const sortHeaderElement = fixture.nativeElement.querySelector('#defaultA');
+
+    component.sort('defaultA');
+    fixture.componentInstance.disabledColumnSort = true;
+    fixture.detectChanges();
+    tick();
+    fixture.detectChanges();
+
+    expect(sortHeaderElement.querySelector('.mat-sort-header-arrow')).toBeTruthy();
+  }));
+
 });
 
 /**
@@ -468,11 +493,11 @@ class SimpleMatSortApp {
   disabledColumnSort = false;
   disableAllSort = false;
 
-  @ViewChild(MatSort) matSort: MatSort;
-  @ViewChild('defaultA') defaultA: MatSortHeader;
-  @ViewChild('defaultB') defaultB: MatSortHeader;
-  @ViewChild('overrideStart') overrideStart: MatSortHeader;
-  @ViewChild('overrideDisableClear') overrideDisableClear: MatSortHeader;
+  @ViewChild(MatSort, {static: false}) matSort: MatSort;
+  @ViewChild('defaultA', {static: false}) defaultA: MatSortHeader;
+  @ViewChild('defaultB', {static: false}) defaultB: MatSortHeader;
+  @ViewChild('overrideStart', {static: false}) overrideStart: MatSortHeader;
+  @ViewChild('overrideDisableClear', {static: false}) overrideDisableClear: MatSortHeader;
 
   constructor (public elementRef: ElementRef<HTMLElement>) { }
 
@@ -538,7 +563,7 @@ class FakeDataSource extends DataSource<any> {
   `
 })
 class CdkTableMatSortApp {
-  @ViewChild(MatSort) matSort: MatSort;
+  @ViewChild(MatSort, {static: false}) matSort: MatSort;
 
   dataSource = new FakeDataSource();
   columnsToRender = ['column_a', 'column_b', 'column_c'];
@@ -568,7 +593,7 @@ class CdkTableMatSortApp {
   `
 })
 class MatTableMatSortApp {
-  @ViewChild(MatSort) matSort: MatSort;
+  @ViewChild(MatSort, {static: false}) matSort: MatSort;
 
   dataSource = new FakeDataSource();
   columnsToRender = ['column_a', 'column_b', 'column_c'];

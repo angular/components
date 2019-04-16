@@ -38,7 +38,7 @@ describe('MatCalendarBody', () => {
 
     beforeEach(inject([DateAdapter], (adapter: DateAdapter<Date>) => {
       const fakeToday = new Date(2017, 0, 3);
-      spyOn(adapter, 'today').and.callFake(() => fakeToday);
+      spyOn(adapter, 'today').and.returnValue(fakeToday);
 
       fixture = TestBed.createComponent(StandardCalendarBody);
       fixture.detectChanges();
@@ -150,7 +150,6 @@ function createCell(value: number, cellClasses?: MatCalendarCellCssClasses) {
       {start: new Date(2017, 0, value), end: new Date(2017, 0, value)},
       `${value}`,
       `${value}-label`,
-
       true,
       cellClasses
   );

@@ -7,7 +7,6 @@
  */
 
 import {Directionality} from '@angular/cdk/bidi';
-import {ViewportRuler} from '@angular/cdk/scrolling';
 import {DOCUMENT} from '@angular/common';
 import {
   AfterViewInit,
@@ -26,11 +25,13 @@ import {
   QueryList,
   SkipSelf,
   ViewContainerRef,
+  OnChanges,
+  SimpleChanges,
+  ChangeDetectorRef,
 } from '@angular/core';
-import {coerceBooleanProperty} from '@angular/cdk/coercion';
-import {Observable, Subscription, Observer} from 'rxjs';
-import {startWith, take, map} from 'rxjs/operators';
-import {DragDropRegistry} from '../drag-drop-registry';
+import {coerceBooleanProperty, coerceNumberProperty} from '@angular/cdk/coercion';
+import {Observable, Observer, Subject, merge} from 'rxjs';
+import {startWith, take, map, takeUntil, switchMap, tap} from 'rxjs/operators';
 import {
   CdkDragDrop,
   CdkDragEnd,
@@ -38,15 +39,16 @@ import {
   CdkDragExit,
   CdkDragMove,
   CdkDragStart,
+  CdkDragRelease,
 } from '../drag-events';
 import {CdkDragHandle} from './drag-handle';
 import {CdkDragPlaceholder} from './drag-placeholder';
 import {CdkDragPreview} from './drag-preview';
 import {CDK_DROP_LIST} from '../drop-list-container';
 import {CDK_DRAG_PARENT} from '../drag-parent';
-import {DragRef, DragRefConfig} from '../drag-ref';
-import {DropListRef} from '../drop-list-ref';
+import {DragRef, DragRefConfig, Point} from '../drag-ref';
 import {CdkDropListInternal as CdkDropList} from './drop-list';
+import {DragDrop} from '../drag-drop';
 
 /** Injection token that can be used to configure the behavior of `CdkDrag`. */
 export const CDK_DRAG_CONFIG = new InjectionToken<DragRefConfig>('CDK_DRAG_CONFIG', {
@@ -65,13 +67,13 @@ export function CDK_DRAG_CONFIG_FACTORY(): DragRefConfig {
   exportAs: 'cdkDrag',
   host: {
     'class': 'cdk-drag',
+    '[class.cdk-drag-disabled]': 'disabled',
     '[class.cdk-drag-dragging]': '_dragRef.isDragging()',
   },
   providers: [{provide: CDK_DRAG_PARENT, useExisting: CdkDrag}]
 })
-export class CdkDrag<T = any> implements AfterViewInit, OnDestroy {
-  /** Subscription to the stream that initializes the root element. */
-  private _rootElementInitSubscription = Subscription.EMPTY;
+export class CdkDrag<T = any> implements AfterViewInit, OnChanges, OnDestroy {
+  private _destroyed = new Subject<void>();
 
   /** Reference to the underlying drag instance. */
   _dragRef: DragRef<CdkDrag<T>>;
@@ -80,10 +82,10 @@ export class CdkDrag<T = any> implements AfterViewInit, OnDestroy {
   @ContentChildren(CdkDragHandle, {descendants: true}) _handles: QueryList<CdkDragHandle>;
 
   /** Element that will be used as a template to create the draggable item's preview. */
-  @ContentChild(CdkDragPreview) _previewTemplate: CdkDragPreview;
+  @ContentChild(CdkDragPreview, {static: false}) _previewTemplate: CdkDragPreview;
 
   /** Template for placeholder element rendered to show where a draggable would be dropped. */
-  @ContentChild(CdkDragPlaceholder) _placeholderTemplate: CdkDragPlaceholder;
+  @ContentChild(CdkDragPlaceholder, {static: false}) _placeholderTemplate: CdkDragPlaceholder;
 
   /** Arbitrary data to attach to this drag instance. */
   @Input('cdkDragData') data: T;
@@ -105,6 +107,18 @@ export class CdkDrag<T = any> implements AfterViewInit, OnDestroy {
    */
   @Input('cdkDragBoundary') boundaryElementSelector: string;
 
+  /**
+   * Amount of milliseconds to wait after the user has put their
+   * pointer down before starting to drag the element.
+   */
+  @Input('cdkDragStartDelay') dragStartDelay: number = 0;
+
+  /**
+   * Sets the position of a `CdkDrag` that is outside of a drop container.
+   * Can be used to restore the element's position for a returning user.
+   */
+  @Input('cdkDragFreeDragPosition') freeDragPosition: {x: number, y: number};
+
   /** Whether starting to drag this element is disabled. */
   @Input('cdkDragDisabled')
   get disabled(): boolean {
@@ -112,11 +126,24 @@ export class CdkDrag<T = any> implements AfterViewInit, OnDestroy {
   }
   set disabled(value: boolean) {
     this._disabled = coerceBooleanProperty(value);
+    this._dragRef.disabled = this._disabled;
   }
   private _disabled = false;
 
+  /**
+   * Function that can be used to customize the logic of how the position of the drag item
+   * is limited while it's being dragged. Gets called with a point containing the current position
+   * of the user's pointer on the page and should return a point describing where the item should
+   * be rendered.
+   */
+  @Input('cdkDragConstrainPosition') constrainPosition?: (point: Point) => Point;
+
   /** Emits when the user starts dragging the item. */
   @Output('cdkDragStarted') started: EventEmitter<CdkDragStart> = new EventEmitter<CdkDragStart>();
+
+  /** Emits when the user has released a drag item, before any animations have started. */
+  @Output('cdkDragReleased') released: EventEmitter<CdkDragRelease> =
+      new EventEmitter<CdkDragRelease>();
 
   /** Emits when the user stops dragging an item in the container. */
   @Output('cdkDragEnded') ended: EventEmitter<CdkDragEnd> = new EventEmitter<CdkDragEnd>();
@@ -138,7 +165,7 @@ export class CdkDrag<T = any> implements AfterViewInit, OnDestroy {
    * because this event will fire for every pixel that the user has dragged.
    */
   @Output('cdkDragMoved') moved: Observable<CdkDragMove<T>> =
-      Observable.create((observer: Observer<CdkDragMove<T>>) => {
+      new Observable((observer: Observer<CdkDragMove<T>>) => {
         const subscription = this._dragRef.moved.pipe(map(movedEvent => ({
           source: this,
           pointerPosition: movedEvent.pointerPosition,
@@ -152,32 +179,18 @@ export class CdkDrag<T = any> implements AfterViewInit, OnDestroy {
       });
 
   constructor(
-    /** Element that the draggable is attached to. */
-    public element: ElementRef<HTMLElement>,
-    /** Droppable container that the draggable is a part of. */
-    @Inject(CDK_DROP_LIST) @Optional() @SkipSelf()
-    public dropContainer: CdkDropList,
-    @Inject(DOCUMENT) private _document: any,
-    private _ngZone: NgZone,
-    private _viewContainerRef: ViewContainerRef,
-    private _viewportRuler: ViewportRuler,
-    private _dragDropRegistry: DragDropRegistry<DragRef, DropListRef>,
-    @Inject(CDK_DRAG_CONFIG) private _config: DragRefConfig,
-    @Optional() private _dir: Directionality) {
-
-    const ref = this._dragRef = new DragRef(element, this._document, this._ngZone,
-      this._viewContainerRef, this._viewportRuler, this._dragDropRegistry,
-      this._config, this.dropContainer ? this.dropContainer._dropListRef : undefined,
-      this._dir);
-    ref.data = this;
-    ref.beforeStarted.subscribe(() => {
-      if (!ref.isDragging()) {
-        ref.disabled = this.disabled;
-        ref.lockAxis = this.lockAxis;
-        ref.withBoundaryElement(this._getBoundaryElement());
-      }
-    });
-    this._proxyEvents(ref);
+      /** Element that the draggable is attached to. */
+      public element: ElementRef<HTMLElement>,
+      /** Droppable container that the draggable is a part of. */
+      @Inject(CDK_DROP_LIST) @Optional() @SkipSelf() public dropContainer: CdkDropList,
+      @Inject(DOCUMENT) private _document: any, private _ngZone: NgZone,
+      private _viewContainerRef: ViewContainerRef, @Inject(CDK_DRAG_CONFIG) config: DragRefConfig,
+      @Optional() private _dir: Directionality, dragDrop: DragDrop,
+      private _changeDetectorRef: ChangeDetectorRef) {
+    this._dragRef = dragDrop.createDrag(element, config);
+    this._dragRef.data = this;
+    this._syncInputs(this._dragRef);
+    this._handleEvents(this._dragRef);
   }
 
   /**
@@ -198,46 +211,85 @@ export class CdkDrag<T = any> implements AfterViewInit, OnDestroy {
     this._dragRef.reset();
   }
 
+  /**
+   * Gets the pixel coordinates of the draggable outside of a drop container.
+   */
+  getFreeDragPosition(): {readonly x: number, readonly y: number} {
+    return this._dragRef.getFreeDragPosition();
+  }
+
   ngAfterViewInit() {
     // We need to wait for the zone to stabilize, in order for the reference
     // element to be in the proper place in the DOM. This is mostly relevant
     // for draggable elements inside portals since they get stamped out in
     // their original DOM position and then they get transferred to the portal.
-    this._rootElementInitSubscription = this._ngZone.onStable.asObservable()
-      .pipe(take(1))
+    this._ngZone.onStable.asObservable()
+      .pipe(take(1), takeUntil(this._destroyed))
       .subscribe(() => {
-        const rootElement = this._getRootElement();
+        this._updateRootElement();
 
-        if (rootElement.nodeType !== this._document.ELEMENT_NODE) {
-          throw Error(`cdkDrag must be attached to an element node. ` +
-                      `Currently attached to "${rootElement.nodeName}".`);
+        // Listen for any newly-added handles.
+        this._handles.changes.pipe(
+          startWith(this._handles),
+          // Sync the new handles with the DragRef.
+          tap((handles: QueryList<CdkDragHandle>) => {
+            const childHandleElements = handles
+              .filter(handle => handle._parentDrag === this)
+              .map(handle => handle.element);
+            this._dragRef.withHandles(childHandleElements);
+          }),
+          // Listen if the state of any of the handles changes.
+          switchMap((handles: QueryList<CdkDragHandle>) => {
+            return merge(...handles.map(item => item._stateChanges));
+          }),
+          takeUntil(this._destroyed)
+        ).subscribe(handleInstance => {
+          // Enabled/disable the handle that changed in the DragRef.
+          const dragRef = this._dragRef;
+          const handle = handleInstance.element.nativeElement;
+          handleInstance.disabled ? dragRef.disableHandle(handle) : dragRef.enableHandle(handle);
+        });
+
+        if (this.freeDragPosition) {
+          this._dragRef.setFreeDragPosition(this.freeDragPosition);
         }
-
-        this._dragRef
-          .withRootElement(rootElement)
-          .withPlaceholderTemplate(this._placeholderTemplate)
-          .withPreviewTemplate(this._previewTemplate);
-
-        this._handles.changes
-          .pipe(startWith(this._handles))
-          .subscribe((handleList: QueryList<CdkDragHandle>) => {
-            this._dragRef.withHandles(handleList.filter(handle => handle._parentDrag === this));
-          });
       });
   }
 
+  ngOnChanges(changes: SimpleChanges) {
+    const rootSelectorChange = changes['rootElementSelector'];
+    const positionChange = changes['positionChange'];
+
+    // We don't have to react to the first change since it's being
+    // handled in `ngAfterViewInit` where it needs to be deferred.
+    if (rootSelectorChange && !rootSelectorChange.firstChange) {
+      this._updateRootElement();
+    }
+
+    // Skip the first change since it's being handled in `ngAfterViewInit`.
+    if (positionChange && !positionChange.firstChange && this.freeDragPosition) {
+      this._dragRef.setFreeDragPosition(this.freeDragPosition);
+    }
+  }
+
   ngOnDestroy() {
-    this._rootElementInitSubscription.unsubscribe();
+    this._destroyed.next();
+    this._destroyed.complete();
     this._dragRef.dispose();
   }
 
-  /** Gets the root draggable element, based on the `rootElementSelector`. */
-  private _getRootElement(): HTMLElement {
+  /** Syncs the root element with the `DragRef`. */
+  private _updateRootElement() {
     const element = this.element.nativeElement;
     const rootElement = this.rootElementSelector ?
-        getClosestMatchingAncestor(element, this.rootElementSelector) : null;
+        getClosestMatchingAncestor(element, this.rootElementSelector) : element;
 
-    return rootElement || element;
+    if (rootElement && rootElement.nodeType !== this._document.ELEMENT_NODE) {
+      throw Error(`cdkDrag must be attached to an element node. ` +
+                  `Currently attached to "${rootElement.nodeName}".`);
+    }
+
+    this._dragRef.withRootElement(rootElement || element);
   }
 
   /** Gets the boundary element, based on the `boundaryElementSelector`. */
@@ -246,17 +298,58 @@ export class CdkDrag<T = any> implements AfterViewInit, OnDestroy {
     return selector ? getClosestMatchingAncestor(this.element.nativeElement, selector) : null;
   }
 
-  /**
-   * Proxies the events from a DragRef to events that
-   * match the interfaces of the CdkDrag outputs.
-   */
-  private _proxyEvents(ref: DragRef<CdkDrag<T>>) {
+  /** Syncs the inputs of the CdkDrag with the options of the underlying DragRef. */
+  private _syncInputs(ref: DragRef<CdkDrag<T>>) {
+    ref.beforeStarted.subscribe(() => {
+      if (!ref.isDragging()) {
+        const dir = this._dir;
+        const placeholder = this._placeholderTemplate ? {
+          template: this._placeholderTemplate.templateRef,
+          context: this._placeholderTemplate.data,
+          viewContainer: this._viewContainerRef
+        } : null;
+        const preview = this._previewTemplate ? {
+          template: this._previewTemplate.templateRef,
+          context: this._previewTemplate.data,
+          viewContainer: this._viewContainerRef
+        } : null;
+
+        ref.disabled = this.disabled;
+        ref.lockAxis = this.lockAxis;
+        ref.dragStartDelay = coerceNumberProperty(this.dragStartDelay);
+        ref.constrainPosition = this.constrainPosition;
+        ref
+          .withBoundaryElement(this._getBoundaryElement())
+          .withPlaceholderTemplate(placeholder)
+          .withPreviewTemplate(preview);
+
+        if (dir) {
+          ref.withDirection(dir.value);
+        }
+      }
+    });
+  }
+
+  /** Handles the events from the underlying `DragRef`. */
+  private _handleEvents(ref: DragRef<CdkDrag<T>>) {
     ref.started.subscribe(() => {
       this.started.emit({source: this});
+
+      // Since all of these events run outside of change detection,
+      // we need to ensure that everything is marked correctly.
+      this._changeDetectorRef.markForCheck();
+    });
+
+    ref.released.subscribe(() => {
+      this.released.emit({source: this});
     });
 
     ref.ended.subscribe(() => {
       this.ended.emit({source: this});
+
+      // Since all of these events run outside of change detection,
+      // we need to ensure that everything is marked correctly.
+      this._changeDetectorRef.markForCheck();
     });
 
     ref.entered.subscribe(event => {

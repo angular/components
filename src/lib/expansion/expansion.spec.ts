@@ -2,7 +2,12 @@ import {async, TestBed, fakeAsync, tick, ComponentFixture, flush} from '@angular
 import {Component, ViewChild} from '@angular/core';
 import {By} from '@angular/platform-browser';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
-import {MatExpansionModule, MatExpansionPanel} from './index';
+import {
+  MatExpansionModule,
+  MatExpansionPanel,
+  MatExpansionPanelHeader,
+  MAT_EXPANSION_PANEL_DEFAULT_OPTIONS,
+} from './index';
 import {SPACE, ENTER} from '@angular/cdk/keycodes';
 import {dispatchKeyboardEvent, createKeyboardEvent, dispatchEvent} from '@angular/cdk/testing';
 
@@ -113,6 +118,7 @@ describe('MatExpansionPanel', () => {
 
   it('should toggle the panel when pressing SPACE on the header', () => {
     const fixture = TestBed.createComponent(PanelWithContent);
+    fixture.detectChanges();
     const headerEl = fixture.nativeElement.querySelector('.mat-expansion-panel-header');
 
     spyOn(fixture.componentInstance.panel, 'toggle');
@@ -127,6 +133,7 @@ describe('MatExpansionPanel', () => {
 
   it('should toggle the panel when pressing ENTER on the header', () => {
     const fixture = TestBed.createComponent(PanelWithContent);
+    fixture.detectChanges();
     const headerEl = fixture.nativeElement.querySelector('.mat-expansion-panel-header');
 
     spyOn(fixture.componentInstance.panel, 'toggle');
@@ -141,6 +148,7 @@ describe('MatExpansionPanel', () => {
 
   it('should not toggle if a modifier key is pressed', () => {
     const fixture = TestBed.createComponent(PanelWithContent);
+    fixture.detectChanges();
     const headerEl = fixture.nativeElement.querySelector('.mat-expansion-panel-header');
 
     spyOn(fixture.componentInstance.panel, 'toggle');
@@ -305,6 +313,34 @@ describe('MatExpansionPanel', () => {
     expect(afterCollapse).toBe(1);
   }));
 
+  it('should be able to set the default options through the injection token', () => {
+    TestBed
+      .resetTestingModule()
+      .configureTestingModule({
+        imports: [MatExpansionModule, NoopAnimationsModule],
+        declarations: [PanelWithTwoWayBinding],
+        providers: [{
+          provide: MAT_EXPANSION_PANEL_DEFAULT_OPTIONS,
+          useValue: {
+            hideToggle: true,
+            expandedHeight: '10px',
+            collapsedHeight: '16px'
+          }
+        }]
+      })
+      .compileComponents();
+
+    const fixture = TestBed.createComponent(PanelWithTwoWayBinding);
+    fixture.detectChanges();
+
+    const panel = fixture.debugElement.query(By.directive(MatExpansionPanel));
+    const header = fixture.debugElement.query(By.directive(MatExpansionPanelHeader));
+
+    expect(panel.componentInstance.hideToggle).toBe(true);
+    expect(header.componentInstance.expandedHeight).toBe('10px');
+    expect(header.componentInstance.collapsedHeight).toBe('16px');
+  });
+
   describe('disabled state', () => {
     let fixture: ComponentFixture<PanelWithContent>;
     let panel: HTMLElement;
@@ -385,7 +421,7 @@ class PanelWithContent {
   disabled = false;
   openCallback = jasmine.createSpy('openCallback');
   closeCallback = jasmine.createSpy('closeCallback');
-  @ViewChild(MatExpansionPanel) panel: MatExpansionPanel;
+  @ViewChild(MatExpansionPanel, {static: false}) panel: MatExpansionPanel;
 }
 
 @Component({
@@ -398,7 +434,7 @@ class PanelWithContent {
 })
 class PanelWithContentInNgIf {
   expansionShown = true;
-  @ViewChild(MatExpansionPanel) panel: MatExpansionPanel;
+  @ViewChild(MatExpansionPanel, {static: false}) panel: MatExpansionPanel;
 }
 
 @Component({

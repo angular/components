@@ -68,6 +68,8 @@ The position can be changed using the `xPosition` (`before | after`) and `yPosit
 </button>
 ```
 
+<!-- example(menu-position) -->
+
 ### Nested menu
 
 Material supports the ability for an `mat-menu-item` to open a sub-menu. To do so, you have to define
@@ -137,8 +139,9 @@ with a different set of data, depending on the trigger that opened it:
 - <kbd>DOWN_ARROW</kbd>: Focuses the next menu item
 - <kbd>UP_ARROW</kbd>: Focuses previous menu item
 - <kbd>RIGHT_ARROW</kbd>: Opens the menu item's sub-menu
-- <kbd>LEFT_ARROW</kbd>: Closes the current menu, if it is a sub-menu.
+- <kbd>LEFT_ARROW</kbd>: Closes the current menu, if it is a sub-menu
 - <kbd>ENTER</kbd>: Activates the focused menu item
+- <kbd>ESCAPE</kbd>: Closes the menu
 
 ### Accessibility
 Menu triggers or menu items without text or labels should be given a meaningful label via

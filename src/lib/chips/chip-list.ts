@@ -175,6 +175,7 @@ export class MatChipList extends _MatChipListMixinBase implements MatFormFieldCo
   get multiple(): boolean { return this._multiple; }
   set multiple(value: boolean) {
     this._multiple = coerceBooleanProperty(value);
+    this._syncChipsState();
   }
   private _multiple: boolean = false;
 
@@ -267,10 +268,7 @@ export class MatChipList extends _MatChipListMixinBase implements MatFormFieldCo
   get disabled(): boolean { return this.ngControl ? !!this.ngControl.disabled : this._disabled; }
   set disabled(value: boolean) {
     this._disabled = coerceBooleanProperty(value);
-
-    if (this.chips) {
-      this.chips.forEach(chip => chip.disabled = this._disabled);
-    }
+    this._syncChipsState();
   }
   protected _disabled: boolean = false;
 
@@ -362,11 +360,22 @@ export class MatChipList extends _MatChipListMixinBase implements MatFormFieldCo
     // it back to the first chip when the user tabs out.
     this._keyManager.tabOut.pipe(takeUntil(this._destroyed)).subscribe(() => {
       this._tabIndex = -1;
-      setTimeout(() => this._tabIndex = this._userTabIndex || 0);
+      setTimeout(() => {
+        this._tabIndex = this._userTabIndex || 0;
+        this._changeDetectorRef.markForCheck();
+      });
     });
 
     // When the list changes, re-subscribe
     this.chips.changes.pipe(startWith(null), takeUntil(this._destroyed)).subscribe(() => {
+      if (this.disabled) {
+        // Since this happens after the content has been
+        // checked, we need to defer it to the next tick.
+        Promise.resolve().then(() => {
+          this._syncChipsState();
+        });
+      }
+
       this._resetChips();
 
       // Reset chips selected/deselected status
@@ -450,7 +459,7 @@ export class MatChipList extends _MatChipListMixinBase implements MatFormFieldCo
   }
 
   /**
-   * Focuses the the first non-disabled chip in this chip list, or the associated input when there
+   * Focuses the first non-disabled chip in this chip list, or the associated input when there
    * are no eligible chips.
    */
   focus(): void {
@@ -771,5 +780,15 @@ export class MatChipList extends _MatChipListMixinBase implements MatFormFieldCo
   /** Checks whether any of the chips is focused. */
   private _hasFocusedChip() {
     return this.chips.some(chip => chip._hasFocus);
+  }
+
+  /** Syncs the list's state with the individual chips. */
+  private _syncChipsState() {
+    if (this.chips) {
+      this.chips.forEach(chip => {
+        chip.disabled = this._disabled;
+        chip._chipListMultiple = this.multiple;
+      });
+    }
   }
 }

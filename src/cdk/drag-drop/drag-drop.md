@@ -41,7 +41,7 @@ by referencing the `id` of another drop container:
 
 If you have an unknown number of connected drop lists, you can use the `cdkDropListGroup` directive
 to set up the connection automatically. Note that any new `cdkDropList` that is added under a group
-will be connected to all other automatically.
+will be connected to all other lists automatically.
 
 ```html
 <div cdkDropListGroup>
@@ -70,11 +70,14 @@ by the directives:
 
 | Selector            | Description                                                              |
 |---------------------|--------------------------------------------------------------------------|
-| `.cdk-drop-list`    | Corresponds to the `cdkDropList` container.                                  |
+| `.cdk-drop-list`    | Corresponds to the `cdkDropList` container.                              |
 | `.cdk-drag`         | Corresponds to a `cdkDrag` instance.                                     |
+| `.cdk-drag-disabled`| Class that is added to a disabled `cdkDrag`.                             |
 | `.cdk-drag-preview` | This is the element that will be rendered next to the user's cursor as they're dragging an item in a sortable list. By default the element looks exactly like the element that is being dragged. |
 | `.cdk-drag-placeholder` | This is element that will be shown instead of the real element as it's being dragged inside a `cdkDropList`. By default this will look exactly like the element that is being sorted. |
 | `.cdk-drop-list-dragging` | A class that is added to `cdkDropList` while the user is dragging an item.  |
+| `.cdk-drop-list-disabled` | A class that is added to `cdkDropList` when it is disabled.  |
+| `.cdk-drop-list-receiving`| A class that is added to `cdkDropList` when it can receive an item that is being dragged inside a connected drop list.  |
 
 ### Animations
 The drag-and-drop module supports animations both while sorting an element inside a list, as well as
@@ -146,7 +149,7 @@ also be used when `cdkDrag` is placed inside a `cdkDropList`.
 
 ### Restricting movement along an axis
 By default, `cdkDrag` allows free movement in all directions. To restrict dragging to a
-specific axis, you can set `cdkDragLockAxis` on `cdkDrag` or `lockAxis` on `cdkDropList`
+specific axis, you can set `cdkDragLockAxis` on `cdkDrag` or `cdkDropListLockAxis` on `cdkDropList`
 to either `"x"` or `"y"`.
 
 <!-- example(cdk-drag-drop-axis-lock) -->
@@ -169,10 +172,29 @@ be allowed into the new container.
 
 <!-- example(cdk-drag-drop-enter-predicate) -->
 
-### Disable dragging
+### Disabled dragging
 If you want to disable dragging for a particular drag item, you can do so by setting the
 `cdkDragDisabled` input on a `cdkDrag` item. Furthermore, you can disable an entire list
 using the `cdkDropListDisabled` input on a `cdkDropList` or a particular handle via
 `cdkDragHandleDisabled` on `cdkDragHandle`.
 
 <!-- example(cdk-drag-drop-disabled) -->
+
+### Disabled sorting
+There are cases where draggable items can be dragged out of one list into another, however
+the user shouldn't be able to sort them within the source list. For these cases you can set the
+`cdkDropListSortingDisabled` input which will prevent the items in a `cdkDropList` from sorting,
+in addition to preserving the dragged item's initial position in the source list, if the user
+decides to return the item.
+
+<!-- example(cdk-drag-drop-disabled-sorting) -->
+
+### Delayed dragging
+By default as soon as the user puts their pointer down on a `cdkDrag`, the dragging sequence will
+be started. This might not be desirable in cases like fullscreen draggable elements on touch
+devices where the user might accidentally trigger a drag as they're scrolling the page. For
+cases like these you can delay the dragging sequence using the `cdkDragStartDelay` input which
+will wait for the user to hold down their pointer for the specified number of milliseconds before
+moving the element.
+
+<!-- example(cdk-drag-drop-delay) -->

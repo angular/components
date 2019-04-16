@@ -19,7 +19,7 @@ For example, if building a custom carousel component:
   
   // Define any styles affected by the theme.
   .candy-carousel {
-    // Use mat-color to extract individual colors a palette.
+    // Use mat-color to extract individual colors from a palette.
     background-color: mat-color($primary);
     border-color: mat-color($accent, A400);
   }
@@ -93,7 +93,7 @@ For example:
   // Get a relative color for a hue ('lighter' or 'darker')
   outline-color: mat-color($accent, lighter);
 
-  // Get a constrast color for a hue by adding `-contrast` to any other key.
-  border-color: mat-color($primary, '100-constrast');
+  // Get a contrast color for a hue by adding `-contrast` to any other key.
+  border-color: mat-color($primary, '100-contrast');
 }
 ```

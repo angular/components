@@ -409,6 +409,20 @@ describe('MatRadio', () => {
       }
     });
 
+    it('should update the name of radio DOM elements if the name of the group changes', () => {
+      const nodes: HTMLInputElement[] = innerRadios.map(radio => radio.nativeElement);
+
+      expect(nodes.every(radio => radio.getAttribute('name') === groupInstance.name))
+          .toBe(true, 'Expected all radios to have the initial name.');
+
+      fixture.componentInstance.groupName = 'changed-name';
+      fixture.detectChanges();
+
+      expect(groupInstance.name).toBe('changed-name');
+      expect(nodes.every(radio => radio.getAttribute('name') === groupInstance.name))
+          .toBe(true, 'Expected all radios to have the new name.');
+    });
+
     it('should check the corresponding radio button on group value change', () => {
       expect(groupInstance.value).toBeFalsy();
       for (const radio of radioInstances) {
@@ -441,6 +455,14 @@ describe('MatRadio', () => {
       // now also be touched.
       radioLabelElements[2].click();
       fixture.detectChanges();
+
+      expect(groupNgModel.valid).toBe(true);
+      expect(groupNgModel.pristine).toBe(false);
+      expect(groupNgModel.touched).toBe(false);
+
+      // Blur the input element in order to verify that the ng-touched state has been set to true.
+      // The touched state should be only set to true after the form control has been blurred.
+      dispatchFakeEvent(innerRadios[2].nativeElement, 'blur');
 
       expect(groupNgModel.valid).toBe(true);
       expect(groupNgModel.pristine).toBe(false);
@@ -723,7 +745,7 @@ describe('MatRadio', () => {
       const radioButtonEl =
           predefinedFixture.debugElement.query(By.css('.mat-radio-button')).nativeElement;
 
-      expect(radioButtonEl.getAttribute('tabindex')).toBeFalsy();
+      expect(radioButtonEl.getAttribute('tabindex')).toBe('-1');
     });
 
   });
@@ -814,7 +836,7 @@ class StandaloneRadioButtons {
 
 @Component({
   template: `
-  <mat-radio-group [(ngModel)]="modelValue" (change)="lastEvent = $event">
+  <mat-radio-group [name]="groupName" [(ngModel)]="modelValue" (change)="lastEvent = $event">
     <mat-radio-button *ngFor="let option of options" [value]="option.value">
       {{option.label}}
     </mat-radio-button>
@@ -823,6 +845,7 @@ class StandaloneRadioButtons {
 })
 class RadioGroupWithNgModel {
   modelValue: string;
+  groupName = 'radio-group';
   options = [
     {label: 'Vanilla', value: 'vanilla'},
     {label: 'Chocolate', value: 'chocolate'},
@@ -835,7 +858,7 @@ class RadioGroupWithNgModel {
   template: `<mat-radio-button>One</mat-radio-button>`
 })
 class DisableableRadioButton {
-  @ViewChild(MatRadioButton) matRadioButton: MatRadioButton;
+  @ViewChild(MatRadioButton, {static: false}) matRadioButton: MatRadioButton;
 
   set disabled(value: boolean) {
     this.matRadioButton.disabled = value;

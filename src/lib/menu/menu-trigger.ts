@@ -85,7 +85,7 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
   private _portal: TemplatePortal;
   private _overlayRef: OverlayRef | null = null;
   private _menuOpen: boolean = false;
-  private _closeSubscription = Subscription.EMPTY;
+  private _closingActionsSubscription = Subscription.EMPTY;
   private _hoverSubscription = Subscription.EMPTY;
   private _menuCloseSubscription = Subscription.EMPTY;
   private _scrollStrategy: () => ScrollStrategy;
@@ -136,6 +136,13 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
 
   /** Data to be passed along to any lazily-rendered content. */
   @Input('matMenuTriggerData') menuData: any;
+
+  /**
+   * Whether focus should be restored when the menu is closed.
+   * Note that disabling this option can have accessibility implications
+   * and it's up to you to manage focus, if you decide to turn it off.
+   */
+  @Input('matMenuTriggerRestoreFocus') restoreFocus: boolean = true;
 
   /** Event emitted when the associated menu is opened. */
   @Output() readonly menuOpened: EventEmitter<void> = new EventEmitter<void>();
@@ -195,6 +202,7 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
         passiveEventListenerOptions);
 
     this._cleanUpSubscriptions();
+    this._closingActionsSubscription.unsubscribe();
   }
 
   /** Whether the menu is open. */
@@ -226,14 +234,18 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
     this._checkMenu();
 
     const overlayRef = this._createOverlay();
-    this._setPosition(overlayRef.getConfig().positionStrategy as FlexibleConnectedPositionStrategy);
+    const overlayConfig = overlayRef.getConfig();
+
+    this._setPosition(overlayConfig.positionStrategy as FlexibleConnectedPositionStrategy);
+    overlayConfig.hasBackdrop = this.menu.hasBackdrop == null ? !this.triggersSubmenu() :
+        this.menu.hasBackdrop;
     overlayRef.attach(this._getPortal());
 
     if (this.menu.lazyContent) {
       this.menu.lazyContent.attach(this.menuData);
     }
 
-    this._closeSubscription = this._menuClosingActions().subscribe(() => this.closeMenu());
+    this._closingActionsSubscription = this._menuClosingActions().subscribe(() => this.closeMenu());
     this._initMenu();
 
     if (this.menu instanceof MatMenu) {
@@ -266,7 +278,7 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
 
     const menu = this.menu;
 
-    this._closeSubscription.unsubscribe();
+    this._closingActionsSubscription.unsubscribe();
     this._overlayRef.detach();
 
     if (menu instanceof MatMenu) {
@@ -334,12 +346,14 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
     // We should reset focus if the user is navigating using a keyboard or
     // if we have a top-level trigger which might cause focus to be lost
     // when clicking on the backdrop.
-    if (!this._openedBy) {
-      // Note that the focus style will show up both for `program` and
-      // `keyboard` so we don't have to specify which one it is.
-      this.focus();
-    } else if (!this.triggersSubmenu()) {
-      this.focus(this._openedBy);
+    if (this.restoreFocus) {
+      if (!this._openedBy) {
+        // Note that the focus style will show up both for `program` and
+        // `keyboard` so we don't have to specify which one it is.
+        this.focus();
+      } else if (!this.triggersSubmenu()) {
+        this.focus(this._openedBy);
+      }
     }
 
     this._openedBy = null;
@@ -394,7 +408,6 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
           .flexibleConnectedTo(this._element)
           .withLockedPosition()
           .withTransformOriginOn('.mat-menu-panel'),
-      hasBackdrop: this.menu.hasBackdrop == null ? !this.triggersSubmenu() : this.menu.hasBackdrop,
       backdropClass: this.menu.backdropClass || 'cdk-overlay-transparent-backdrop',
       scrollStrategy: this._scrollStrategy(),
       direction: this._dir
@@ -466,7 +479,7 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
 
   /** Cleans up the active subscriptions. */
   private _cleanUpSubscriptions(): void {
-    this._closeSubscription.unsubscribe();
+    this._closingActionsSubscription.unsubscribe();
     this._hoverSubscription.unsubscribe();
   }
 

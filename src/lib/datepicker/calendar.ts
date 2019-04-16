@@ -34,12 +34,12 @@ import {
   MatSingleDateSelectionModel
 } from '@angular/material/core';
 import {Subject, Subscription} from 'rxjs';
+import {MatCalendarCellCssClasses} from './calendar-body';
 import {createMissingDateImplError} from './datepicker-errors';
 import {MatDatepickerIntl} from './datepicker-intl';
 import {MatMonthView} from './month-view';
 import {MatMultiYearView, yearsPerPage} from './multi-year-view';
 import {MatYearView} from './year-view';
-import {MatCalendarCellCssClasses} from './calendar-body';
 
 /**
  * Possible views for the calendar.
@@ -89,7 +89,7 @@ export class MatCalendarHeader<D> {
         this._intl.switchToMultiYearViewLabel : this._intl.switchToMonthViewLabel;
   }
 
-  /** The label for the the previous button. */
+  /** The label for the previous button. */
   get prevButtonLabel(): string {
     return {
       'month': this._intl.prevMonthLabel,
@@ -98,7 +98,7 @@ export class MatCalendarHeader<D> {
     }[this.calendar.currentView];
   }
 
-  /** The label for the the next button. */
+  /** The label for the next button. */
   get nextButtonLabel(): string {
     return {
       'month': this._intl.nextMonthLabel,
@@ -185,8 +185,8 @@ export class MatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDes
   /** A portal containing the header component type for this calendar. */
   _calendarHeaderPortal: Portal<any>;
 
-  private _intlChanges: Subscription;
-  private _selectionSubscription: Subscription;
+  /** Subscriptions to be cleaned up in ngOnDestroy. */
+  private _subscriptions = new Subscription();
 
   /**
    * Used for scheduling that focus should be moved to the active cell on the next tick.
@@ -264,13 +264,13 @@ export class MatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDes
   @Output() readonly _userSelection: EventEmitter<void> = new EventEmitter<void>();
 
   /** Reference to the current month view component. */
-  @ViewChild(MatMonthView) monthView: MatMonthView<D>;
+  @ViewChild(MatMonthView, {static: false}) monthView: MatMonthView<D>;
 
   /** Reference to the current year view component. */
-  @ViewChild(MatYearView) yearView: MatYearView<D>;
+  @ViewChild(MatYearView, {static: false}) yearView: MatYearView<D>;
 
   /** Reference to the current multi-year view component. */
-  @ViewChild(MatMultiYearView) multiYearView: MatMultiYearView<D>;
+  @ViewChild(MatMultiYearView, {static: false}) multiYearView: MatMultiYearView<D>;
 
   /**
    * The current active date. This determines which time period is shown and which date is
@@ -280,6 +280,7 @@ export class MatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDes
   set activeDate(value: D) {
     this._clampedActiveDate = this._dateAdapter.clampDate(value, this.minDate, this.maxDate);
     this.stateChanges.next();
+    this._changeDetectorRef.markForCheck();
   }
   private _clampedActiveDate: D;
 
@@ -288,6 +289,7 @@ export class MatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDes
   set currentView(value: MatCalendarView) {
     this._currentView = value;
     this._moveFocusOnNextTick = true;
+    this._changeDetectorRef.markForCheck();
   }
   private _currentView: MatCalendarView;
 
@@ -310,15 +312,15 @@ export class MatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDes
       throw createMissingDateImplError('MAT_DATE_FORMATS');
     }
 
-    this._intlChanges = _intl.changes.subscribe(() => {
+    this._subscriptions.add(_intl.changes.subscribe(() => {
       _changeDetectorRef.markForCheck();
       this.stateChanges.next();
-    });
+    }));
 
     // This should no longer be needed after deprecation of selectedChange
-    this._selectionSubscription = selectionModel.selectionChange.subscribe(() => {
+    this._subscriptions.add(selectionModel.selectionChange.subscribe(() => {
       this.selectedChange.emit(selectionModel.getFirstSelectedDate() || undefined);
-    });
+    }));
   }
 
   ngAfterContentInit() {
@@ -337,13 +339,13 @@ export class MatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDes
   }
 
   ngOnDestroy() {
-    this._intlChanges.unsubscribe();
-    this._selectionSubscription.unsubscribe();
+    this._subscriptions.unsubscribe();
     this.stateChanges.complete();
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    const change = changes.minDate || changes.maxDate || changes.dateFilter;
+    const change =
+        changes['minDate'] || changes['maxDate'] || changes['dateFilter'];
 
     if (change && !change.firstChange) {
       const view = this._getCurrentViewComponent();
@@ -368,7 +370,7 @@ export class MatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDes
     let view = this.currentView == 'month' ? this.monthView :
             (this.currentView == 'year' ? this.yearView : this.multiYearView);
 
-    view.ngAfterContentInit();
+    view._initView();
   }
 
   /**

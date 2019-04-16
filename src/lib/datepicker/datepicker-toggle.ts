@@ -66,7 +66,11 @@ export class MatDatepickerToggle<D> implements AfterContentInit, OnChanges, OnDe
   /** Whether the toggle button is disabled. */
   @Input()
   get disabled(): boolean {
-    return this._disabled === undefined ? this.datepicker.disabled : !!this._disabled;
+    if (this._disabled === undefined && this.datepicker) {
+      return this.datepicker.disabled;
+    }
+
+    return !!this._disabled;
   }
   set disabled(value: boolean) {
     this._disabled = coerceBooleanProperty(value);
@@ -77,10 +81,10 @@ export class MatDatepickerToggle<D> implements AfterContentInit, OnChanges, OnDe
   @Input() disableRipple: boolean;
 
   /** Custom icon set by the consumer. */
-  @ContentChild(MatDatepickerToggleIcon) _customIcon: MatDatepickerToggleIcon;
+  @ContentChild(MatDatepickerToggleIcon, {static: false}) _customIcon: MatDatepickerToggleIcon;
 
   /** Underlying button element. */
-  @ViewChild('button') _button: MatButton;
+  @ViewChild('button', {static: false}) _button: MatButton;
 
   constructor(
     public _intl: MatDatepickerIntl,
@@ -92,7 +96,7 @@ export class MatDatepickerToggle<D> implements AfterContentInit, OnChanges, OnDe
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes.datepicker) {
+    if (changes['datepicker']) {
       this._watchStateChanges();
     }
   }

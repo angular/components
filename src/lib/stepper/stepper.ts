@@ -58,7 +58,7 @@ import {MatStepperIcon, MatStepperIconContext} from './stepper-icon';
 })
 export class MatStep extends CdkStep implements ErrorStateMatcher {
   /** Content for step label given by `<ng-template matStepLabel>`. */
-  @ContentChild(MatStepLabel) stepLabel: MatStepLabel;
+  @ContentChild(MatStepLabel, {static: false}) stepLabel: MatStepLabel;
 
   /** @breaking-change 8.0.0 remove the `?` after `stepperOptions` */
   constructor(@Inject(forwardRef(() => MatStepper)) stepper: MatStepper,
@@ -81,9 +81,7 @@ export class MatStep extends CdkStep implements ErrorStateMatcher {
 }
 
 
-@Directive({
-  selector: '[matStepper]'
-})
+@Directive({selector: '[matStepper]', providers: [{provide: CdkStepper, useExisting: MatStepper}]})
 export class MatStepper extends CdkStepper implements AfterContentInit {
   /** The list of step headers of the steps in the stepper. */
   @ViewChildren(MatStepHeader) _stepHeader: QueryList<MatStepHeader>;
@@ -96,6 +94,9 @@ export class MatStepper extends CdkStepper implements AfterContentInit {
 
   /** Event emitted when the current step is done transitioning in. */
   @Output() readonly animationDone: EventEmitter<void> = new EventEmitter<void>();
+
+  /** Whether ripples should be disabled for the step headers. */
+  @Input() disableRipple: boolean;
 
   /** Consumer-specified template-refs to be used to override the header icons. */
   _iconOverrides: {[key: string]: TemplateRef<MatStepperIconContext>} = {};
@@ -138,7 +139,10 @@ export class MatStepper extends CdkStepper implements AfterContentInit {
     'role': 'tablist',
   },
   animations: [matStepperAnimations.horizontalStepTransition],
-  providers: [{provide: MatStepper, useExisting: MatHorizontalStepper}],
+  providers: [
+    {provide: MatStepper, useExisting: MatHorizontalStepper},
+    {provide: CdkStepper, useExisting: MatHorizontalStepper}
+  ],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -161,7 +165,10 @@ export class MatHorizontalStepper extends MatStepper {
     'role': 'tablist',
   },
   animations: [matStepperAnimations.verticalStepTransition],
-  providers: [{provide: MatStepper, useExisting: MatVerticalStepper}],
+  providers: [
+    {provide: MatStepper, useExisting: MatVerticalStepper},
+    {provide: CdkStepper, useExisting: MatVerticalStepper}
+  ],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

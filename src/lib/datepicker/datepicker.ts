@@ -52,6 +52,7 @@ import {MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {merge, Subject, Subscription} from 'rxjs';
 import {filter, take} from 'rxjs/operators';
 import {MatCalendar} from './calendar';
+import {MatCalendarCellCssClasses} from './calendar-body';
 import {matDatepickerAnimations} from './datepicker-animations';
 import {createMissingDateImplError} from './datepicker-errors';
 import {
@@ -59,7 +60,6 @@ import {
   MatDatepickerInputEnd,
   MatDatepickerInputStart,
 } from './datepicker-input';
-import {MatCalendarCellCssClasses} from './calendar-body';
 
 /** Used to generate a unique ID for each datepicker instance. */
 let datepickerUid = 0;
@@ -118,7 +118,7 @@ export class MatDatepickerContent<D> extends _MatDatepickerContentMixinBase
   implements AfterViewInit, CanColor {
 
   /** Reference to the internal calendar component. */
-  @ViewChild(MatCalendar) _calendar: MatCalendar<D>;
+  @ViewChild(MatCalendar, {static: false}) _calendar: MatCalendar<D>;
 
   /** Reference to the datepicker that created the overlay. */
   datepicker: MatDatepicker<D>;
@@ -193,7 +193,7 @@ export class MatDatepickerBase<D> implements OnDestroy, CanColor {
       this._disabledChange.next(newValue);
     }
   }
-  protected _disabled: boolean;
+  protected _disabled: boolean | undefined;
 
   /**
    * Emits selected year in multiyear view.

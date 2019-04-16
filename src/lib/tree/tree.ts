@@ -24,10 +24,12 @@ import {MatTreeNodeOutlet} from './outlet';
   },
   styleUrls: ['tree.css'],
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  // See note on CdkTree for explanation on why this uses the default change detection strategy.
+  // tslint:disable-next-line:validate-decorators
+  changeDetection: ChangeDetectionStrategy.Default,
   providers: [{provide: CdkTree, useExisting: MatTree}]
 })
 export class MatTree<T> extends CdkTree<T> {
   // Outlets within the tree's template where the dataNodes will be inserted.
-  @ViewChild(MatTreeNodeOutlet) _nodeOutlet: MatTreeNodeOutlet;
+  @ViewChild(MatTreeNodeOutlet, {static: true}) _nodeOutlet: MatTreeNodeOutlet;
 }

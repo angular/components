@@ -32,10 +32,10 @@ describe('MatPaginator', () => {
 
   beforeEach(() => {
     fixture = TestBed.createComponent(MatPaginatorApp);
+    fixture.detectChanges();
+
     component = fixture.componentInstance;
     paginator = component.paginator;
-
-    fixture.detectChanges();
   });
 
   describe('with the default internationalization provider', () => {
@@ -368,10 +368,9 @@ describe('MatPaginator', () => {
 
   it('should handle the number inputs being passed in as strings', () => {
     const withStringFixture = TestBed.createComponent(MatPaginatorWithStringValues);
-    const withStringPaginator = withStringFixture.componentInstance.paginator;
-
     withStringFixture.detectChanges();
 
+    const withStringPaginator = withStringFixture.componentInstance.paginator;
     expect(withStringPaginator.pageIndex).toEqual(0);
     expect(withStringPaginator.length).toEqual(100);
     expect(withStringPaginator.pageSize).toEqual(10);
@@ -457,7 +456,7 @@ class MatPaginatorApp {
   pageEvent = jasmine.createSpy('page event');
   color: ThemePalette;
 
-  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatPaginator, {static: false}) paginator: MatPaginator;
 
   goToLastPage() {
     this.pageIndex = Math.ceil(this.length / this.pageSize) - 1;
@@ -470,7 +469,7 @@ class MatPaginatorApp {
   `,
 })
 class MatPaginatorWithoutInputsApp {
-  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatPaginator, {static: false}) paginator: MatPaginator;
 }
 
 @Component({
@@ -479,7 +478,7 @@ class MatPaginatorWithoutInputsApp {
   `,
 })
 class MatPaginatorWithoutPageSizeApp {
-  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatPaginator, {static: false}) paginator: MatPaginator;
 }
 
 @Component({
@@ -488,7 +487,7 @@ class MatPaginatorWithoutPageSizeApp {
   `,
 })
 class MatPaginatorWithoutOptionsApp {
-  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatPaginator, {static: false}) paginator: MatPaginator;
 }
 
 @Component({
@@ -501,5 +500,5 @@ class MatPaginatorWithoutOptionsApp {
   `
   })
 class MatPaginatorWithStringValues {
-  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatPaginator, {static: false}) paginator: MatPaginator;
 }

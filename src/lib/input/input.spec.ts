@@ -394,7 +394,7 @@ describe('MatInput without forms', () => {
 
     let el = fixture.debugElement.query(By.css('label'));
     expect(el).not.toBeNull();
-    expect(el.nativeElement.textContent).toMatch(/hello\s+\*/g);
+    expect(el.nativeElement.textContent).toMatch(/hello +\*/g);
   }));
 
   it('should hide the required star if input is disabled', () => {
@@ -407,6 +407,7 @@ describe('MatInput without forms', () => {
 
     expect(el).not.toBeNull();
     expect(el.nativeElement.textContent!.trim()).toMatch(/^hello$/);
+    expect(el.nativeElement.textContent).not.toMatch(/\*/g);
   });
 
   it('should hide the required star from screen readers', fakeAsync(() => {
@@ -424,12 +425,13 @@ describe('MatInput without forms', () => {
 
     let el = fixture.debugElement.query(By.css('label'));
     expect(el).not.toBeNull();
-    expect(el.nativeElement.textContent).toMatch(/hello\s+\*/g);
+    expect(el.nativeElement.textContent).toMatch(/hello +\*/g);
 
     fixture.componentInstance.hideRequiredMarker = true;
     fixture.detectChanges();
 
     expect(el.nativeElement.textContent).toMatch(/hello/g);
+    expect(el.nativeElement.textContent).not.toMatch(/\*/g);
   }));
 
   it('supports the disabled attribute as binding', fakeAsync(() => {
@@ -847,6 +849,35 @@ describe('MatInput without forms', () => {
     // Call the focus handler directly to avoid flakyness where
     // browsers don't focus elements if the window is minimized.
     input._focusChanged(true);
+    fixture.detectChanges();
+
+    expect(input.focused).toBe(false);
+    expect(container.classList).not.toContain('mat-focused');
+  }));
+
+  it('should reset the highlight when a readonly input is blurred', fakeAsync(() => {
+    const fixture = createComponent(MatInputWithReadonlyInput);
+    fixture.detectChanges();
+
+    const inputDebugElement = fixture.debugElement.query(By.directive(MatInput));
+    const input = inputDebugElement.injector.get<MatInput>(MatInput);
+    const container = fixture.debugElement.query(By.css('mat-form-field')).nativeElement;
+
+    fixture.componentInstance.isReadonly = false;
+    fixture.detectChanges();
+
+    // Call the focus handler directly to avoid flakyness where
+    // browsers don't focus elements if the window is minimized.
+    input._focusChanged(true);
+    fixture.detectChanges();
+
+    expect(input.focused).toBe(true);
+    expect(container.classList).toContain('mat-focused');
+
+    fixture.componentInstance.isReadonly = true;
+    fixture.detectChanges();
+
+    input._focusChanged(false);
     fixture.detectChanges();
 
     expect(input.focused).toBe(false);
@@ -1592,10 +1623,10 @@ class MatInputHintLabelTestController {
   label: string = '';
 }
 
-@Component({
-  template: `<mat-form-field><input matInput type="file"></mat-form-field>`
-})
-class MatInputInvalidTypeTestController {}
+@Component({template: `<mat-form-field><input matInput [type]="t"></mat-form-field>`})
+class MatInputInvalidTypeTestController {
+  t = 'file';
+}
 
 @Component({
   template: `
@@ -1748,7 +1779,7 @@ class MatInputMissingMatInputTestController {}
   `
 })
 class MatInputWithFormErrorMessages {
-  @ViewChild('form') form: NgForm;
+  @ViewChild('form', {static: false}) form: NgForm;
   formControl = new FormControl('', Validators.required);
   renderError = true;
 }
@@ -1790,7 +1821,7 @@ class MatInputWithCustomErrorStateMatcher {
   `
 })
 class MatInputWithFormGroupErrorMessages {
-  @ViewChild(FormGroupDirective) formGroupDirective: FormGroupDirective;
+  @ViewChild(FormGroupDirective, {static: false}) formGroupDirective: FormGroupDirective;
   formGroup = new FormGroup({
     name: new FormControl('', Validators.required)
   });
@@ -1833,11 +1864,13 @@ class MatInputOnPush {
 @Component({
   template: `
     <mat-form-field>
-      <input matInput readonly value="Only for reading">
+      <input matInput [readonly]="isReadonly" value="Only for reading">
     </mat-form-field>
   `
 })
-class MatInputWithReadonlyInput {}
+class MatInputWithReadonlyInput {
+  isReadonly = true;
+}
 
 @Component({
   template: `
@@ -1869,7 +1902,7 @@ class MatInputWithLabelAndPlaceholder {
   `
 })
 class MatInputWithAppearance {
-  @ViewChild(MatFormField) formField: MatFormField;
+  @ViewChild(MatFormField, {static: false}) formField: MatFormField;
   appearance: MatFormFieldAppearance;
 }
 
@@ -1883,7 +1916,7 @@ class MatInputWithAppearance {
   `
 })
 class MatInputWithAppearanceAndLabel {
-  @ViewChild(MatFormField) formField: MatFormField;
+  @ViewChild(MatFormField, {static: false}) formField: MatFormField;
   appearance: MatFormFieldAppearance;
   showPrefix: boolean;
   labelContent = 'Label';
@@ -1927,7 +1960,7 @@ const textareaStyleReset = `
 })
 class AutosizeTextareaWithLongPlaceholder {
   placeholder = 'Long Long Long Long Long Long Long Long Placeholder';
-  @ViewChild(MatTextareaAutosize) autosize: MatTextareaAutosize;
+  @ViewChild(MatTextareaAutosize, {static: false}) autosize: MatTextareaAutosize;
 }
 
 @Component({

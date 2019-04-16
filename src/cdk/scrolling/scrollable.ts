@@ -47,7 +47,7 @@ export type ExtendedScrollToOptions = _XAxis & _YAxis & ScrollOptions;
 export class CdkScrollable implements OnInit, OnDestroy {
   private _destroyed = new Subject();
 
-  private _elementScrolled: Observable<Event> = Observable.create((observer: Observer<Event>) =>
+  private _elementScrolled: Observable<Event> = new Observable((observer: Observer<Event>) =>
       this.ngZone.runOutsideAngular(() =>
           fromEvent(this.elementRef.nativeElement, 'scroll').pipe(takeUntil(this._destroyed))
               .subscribe(observer)));
@@ -95,13 +95,15 @@ export class CdkScrollable implements OnInit, OnDestroy {
 
     // Rewrite the bottom offset as a top offset.
     if (options.bottom != null) {
-      options.top = el.scrollHeight - el.clientHeight - options.bottom;
+      (options as _Without<_Bottom> & _Top).top =
+          el.scrollHeight - el.clientHeight - options.bottom;
     }
 
     // Rewrite the right offset as a left offset.
     if (isRtl && getRtlScrollAxisType() != RtlScrollAxisType.NORMAL) {
       if (options.left != null) {
-        options.right = el.scrollWidth - el.clientWidth - options.left;
+        (options as _Without<_Left> & _Right).right =
+            el.scrollWidth - el.clientWidth - options.left;
       }
 
       if (getRtlScrollAxisType() == RtlScrollAxisType.INVERTED) {
@@ -111,7 +113,8 @@ export class CdkScrollable implements OnInit, OnDestroy {
       }
     } else {
       if (options.right != null) {
-        options.left = el.scrollWidth - el.clientWidth - options.right;
+        (options as _Without<_Right> & _Left).left =
+            el.scrollWidth - el.clientWidth - options.right;
       }
     }
 

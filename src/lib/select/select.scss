@@ -57,10 +57,11 @@ $mat-select-placeholder-arrow-space: 2 * ($mat-select-arrow-size + $mat-select-a
   }
 
   // When used in a standard appearance form-field the arrow should be shifted up 50%,
-  // but only if it's not empty
-  .mat-form-field-appearance-standard .mat-select:not(.mat-select-empty) & {
-    transform: translateY(-50%);
-  }
+  // but only if it's not empty and it has a label.
+  .mat-form-field-appearance-standard.mat-form-field-has-label
+    .mat-select:not(.mat-select-empty) & {
+      transform: translateY(-50%);
+    }
 
   // Animate the arrow position, but only when the transitioning to empty (animate the arrow down)
   // This is in line with the mat-form-field label animation
@@ -80,6 +81,12 @@ $mat-select-placeholder-arrow-space: 2 * ($mat-select-arrow-size + $mat-select-a
   border-right: $mat-select-arrow-size solid transparent;
   border-top: $mat-select-arrow-size solid;
   margin: 0 $mat-select-arrow-margin;
+}
+
+.mat-select-panel-wrap {
+  // Prevents width-issues of mat-select-panel with width: calc(100% + 32px)
+  // in IE11 due to the parents display: flex;
+  flex-basis: 100%;
 }
 
 .mat-select-panel {

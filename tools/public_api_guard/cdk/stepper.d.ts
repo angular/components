@@ -12,7 +12,7 @@ export declare class CdkStep implements OnChanges {
     label: string;
     optional: boolean;
     state: StepState;
-    stepControl: AbstractControl;
+    stepControl: FormControlLike;
     stepLabel: CdkStepLabel;
     constructor(_stepper: CdkStepper, stepperOptions?: StepperOptions);
     ngOnChanges(): void;
@@ -41,6 +41,7 @@ export declare class CdkStepper implements AfterViewInit, OnDestroy {
     selected: CdkStep;
     selectedIndex: number;
     selectionChange: EventEmitter<StepperSelectionEvent>;
+    readonly steps: QueryList<CdkStep>;
     constructor(_dir: Directionality, _changeDetectorRef: ChangeDetectorRef, _elementRef?: ElementRef<HTMLElement> | undefined, _document?: any);
     _getAnimationDirection(index: number): StepContentPositionState;
     _getFocusIndex(): number | null;
@@ -63,12 +64,14 @@ export declare class CdkStepperNext {
     _stepper: CdkStepper;
     type: string;
     constructor(_stepper: CdkStepper);
+    _handleClick(): void;
 }
 
 export declare class CdkStepperPrevious {
     _stepper: CdkStepper;
     type: string;
     constructor(_stepper: CdkStepper);
+    _handleClick(): void;
 }
 
 export declare const MAT_STEPPER_GLOBAL_OPTIONS: InjectionToken<StepperOptions>;

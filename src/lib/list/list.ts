@@ -17,6 +17,9 @@ import {
   Optional,
   QueryList,
   ViewEncapsulation,
+  OnChanges,
+  OnDestroy,
+  ChangeDetectorRef,
 } from '@angular/core';
 import {
   CanDisableRipple,
@@ -25,6 +28,8 @@ import {
   setLines,
   mixinDisableRipple,
 } from '@angular/material/core';
+import {Subject} from 'rxjs';
+import {takeUntil} from 'rxjs/operators';
 
 // Boilerplate for applying mixins to MatList.
 /** @docs-private */
@@ -52,7 +57,19 @@ export const _MatListItemMixinBase: CanDisableRippleCtor & typeof MatListItemBas
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MatNavList extends _MatListMixinBase implements CanDisableRipple {}
+export class MatNavList extends _MatListMixinBase implements CanDisableRipple, OnChanges,
+  OnDestroy {
+  /** Emits when the state of the list changes. */
+  _stateChanges = new Subject<void>();
+
+  ngOnChanges() {
+    this._stateChanges.next();
+  }
+
+  ngOnDestroy() {
+    this._stateChanges.complete();
+  }
+}
 
 @Component({
   moduleId: module.id,
@@ -67,32 +84,38 @@ export class MatNavList extends _MatListMixinBase implements CanDisableRipple {}
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MatList extends _MatListMixinBase implements CanDisableRipple {
-  /**
-   * @deprecated _elementRef parameter to be made required.
-   * @breaking-change 8.0.0
-   */
-  constructor(private _elementRef?: ElementRef<HTMLElement>) {
+export class MatList extends _MatListMixinBase implements CanDisableRipple, OnChanges, OnDestroy {
+  /** Emits when the state of the list changes. */
+  _stateChanges = new Subject<void>();
+
+  constructor(private _elementRef: ElementRef<HTMLElement>) {
     super();
+
+    if (this._getListType() === 'action-list') {
+      _elementRef.nativeElement.classList.add('mat-action-list');
+    }
   }
 
   _getListType(): 'list' | 'action-list' | null {
-    const elementRef = this._elementRef;
+    const nodeName = this._elementRef.nativeElement.nodeName.toLowerCase();
 
-    // @breaking-change 8.0.0 Remove null check once _elementRef is a required param.
-    if (elementRef) {
-      const nodeName = elementRef.nativeElement.nodeName.toLowerCase();
+    if (nodeName === 'mat-list') {
+      return 'list';
+    }
 
-      if (nodeName === 'mat-list') {
-        return 'list';
-      }
-
-      if (nodeName === 'mat-action-list') {
-        return 'action-list';
-      }
+    if (nodeName === 'mat-action-list') {
+      return 'action-list';
     }
 
     return null;
+  }
+
+  ngOnChanges() {
+    this._stateChanges.next();
+  }
+
+  ngOnDestroy() {
+    this._stateChanges.complete();
   }
 }
 
@@ -143,15 +166,17 @@ export class MatListSubheaderCssMatStyler {}
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MatListItem extends _MatListItemMixinBase implements AfterContentInit,
-    CanDisableRipple {
+    CanDisableRipple, OnDestroy {
   private _isInteractiveList: boolean = false;
   private _list?: MatNavList | MatList;
+  private _destroyed = new Subject<void>();
 
-  @ContentChildren(MatLine) _lines: QueryList<MatLine>;
-  @ContentChild(MatListAvatarCssMatStyler) _avatar: MatListAvatarCssMatStyler;
-  @ContentChild(MatListIconCssMatStyler) _icon: MatListIconCssMatStyler;
+  @ContentChildren(MatLine, {descendants: true}) _lines: QueryList<MatLine>;
+  @ContentChild(MatListAvatarCssMatStyler, {static: false}) _avatar: MatListAvatarCssMatStyler;
+  @ContentChild(MatListIconCssMatStyler, {static: false}) _icon: MatListIconCssMatStyler;
 
   constructor(private _element: ElementRef<HTMLElement>,
+              _changeDetectorRef: ChangeDetectorRef,
               @Optional() navList?: MatNavList,
               @Optional() list?: MatList) {
     super();
@@ -165,10 +190,23 @@ export class MatListItem extends _MatListItemMixinBase implements AfterContentIn
     if (element.nodeName.toLowerCase() === 'button' && !element.hasAttribute('type')) {
       element.setAttribute('type', 'button');
     }
+
+    if (this._list) {
+      // React to changes in the state of the parent list since
+      // some of the item's properties depend on it (e.g. `disableRipple`).
+      this._list._stateChanges.pipe(takeUntil(this._destroyed)).subscribe(() => {
+        _changeDetectorRef.markForCheck();
+      });
+    }
   }
 
   ngAfterContentInit() {
     setLines(this._lines, this._element);
+  }
+
+  ngOnDestroy() {
+    this._destroyed.next();
+    this._destroyed.complete();
   }
 
   /** Whether this list item should show a ripple effect when clicked. */

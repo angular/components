@@ -17,7 +17,7 @@ import {
 } from '@angular/core';
 import {Direction, Directionality} from '@angular/cdk/bidi';
 import {OverlayContainer, Overlay} from '@angular/cdk/overlay';
-import {ESCAPE, LEFT_ARROW, RIGHT_ARROW, DOWN_ARROW, TAB} from '@angular/cdk/keycodes';
+import {ESCAPE, LEFT_ARROW, RIGHT_ARROW, DOWN_ARROW, TAB, HOME, END} from '@angular/cdk/keycodes';
 import {
   MAT_MENU_DEFAULT_OPTIONS,
   MatMenu,
@@ -114,6 +114,33 @@ describe('MatMenu', () => {
     expect(overlayContainerElement.querySelector('.cdk-overlay-backdrop')).toBeFalsy();
   }));
 
+  it('should be able to remove the backdrop on repeat openings', fakeAsync(() => {
+    const fixture = createComponent(SimpleMenu, [], [FakeIcon]);
+    fixture.detectChanges();
+
+    fixture.componentInstance.trigger.openMenu();
+    fixture.detectChanges();
+    tick(500);
+
+    // Start off with a backdrop.
+    expect(overlayContainerElement.querySelector('.cdk-overlay-backdrop')).toBeTruthy();
+
+    fixture.componentInstance.trigger.closeMenu();
+    fixture.detectChanges();
+    tick(500);
+
+    // Change `hasBackdrop` after the first open.
+    fixture.componentInstance.menu.hasBackdrop = false;
+    fixture.detectChanges();
+
+    // Reopen the menu.
+    fixture.componentInstance.trigger.openMenu();
+    fixture.detectChanges();
+    tick(500);
+
+    expect(overlayContainerElement.querySelector('.cdk-overlay-backdrop')).toBeFalsy();
+  }));
+
   it('should restore focus to the trigger when the menu was opened by keyboard', fakeAsync(() => {
     const fixture = createComponent(SimpleMenu, [], [FakeIcon]);
     fixture.detectChanges();
@@ -130,6 +157,27 @@ describe('MatMenu', () => {
     tick(500);
 
     expect(document.activeElement).toBe(triggerEl);
+  }));
+
+  it('should not restore focus to the trigger if focus restoration is disabled', fakeAsync(() => {
+    const fixture = createComponent(SimpleMenu, [], [FakeIcon]);
+    fixture.detectChanges();
+    const triggerEl = fixture.componentInstance.triggerEl.nativeElement;
+
+    fixture.componentInstance.restoreFocus = false;
+    fixture.detectChanges();
+
+    // A click without a mousedown before it is considered a keyboard open.
+    triggerEl.click();
+    fixture.detectChanges();
+
+    expect(overlayContainerElement.querySelector('.mat-menu-panel')).toBeTruthy();
+
+    fixture.componentInstance.trigger.closeMenu();
+    fixture.detectChanges();
+    tick(500);
+
+    expect(document.activeElement).not.toBe(triggerEl);
   }));
 
   it('should be able to set a custom class on the backdrop', fakeAsync(() => {
@@ -357,6 +405,7 @@ describe('MatMenu', () => {
   it('should transfer any custom classes from the host to the overlay', () => {
     const fixture = createComponent(SimpleMenu, [], [FakeIcon]);
 
+    fixture.componentInstance.panelClass = 'custom-one custom-two';
     fixture.detectChanges();
     fixture.componentInstance.trigger.openMenu();
     fixture.detectChanges();
@@ -369,6 +418,28 @@ describe('MatMenu', () => {
 
     expect(panel.classList).toContain('custom-one');
     expect(panel.classList).toContain('custom-two');
+  });
+
+  it('should not remove mat-elevation class from overlay when panelClass is changed', () => {
+    const fixture = createComponent(SimpleMenu, [], [FakeIcon]);
+
+    fixture.componentInstance.panelClass = 'custom-one';
+    fixture.detectChanges();
+    fixture.componentInstance.trigger.openMenu();
+    fixture.detectChanges();
+
+    const panel = overlayContainerElement.querySelector('.mat-menu-panel')!;
+
+    expect(panel.classList).toContain('custom-one');
+    expect(panel.classList).toContain('mat-elevation-z4');
+
+    fixture.componentInstance.panelClass = 'custom-two';
+    fixture.detectChanges();
+
+    expect(panel.classList).not.toContain('custom-one');
+    expect(panel.classList).toContain('custom-two');
+    expect(panel.classList)
+        .toContain('mat-elevation-z4', 'Expected mat-elevation-z4 not to be removed');
   });
 
   it('should set the "menu" role on the overlay panel', () => {
@@ -466,9 +537,9 @@ describe('MatMenu', () => {
         useFactory: (overlay: Overlay) => () => overlay.scrollStrategies.close()
       }
     ], [FakeIcon]);
+    fixture.detectChanges();
     const trigger = fixture.componentInstance.trigger;
 
-    fixture.detectChanges();
     trigger.openMenu();
     fixture.detectChanges();
 
@@ -572,6 +643,104 @@ describe('MatMenu', () => {
     fixture.detectChanges();
 
     expect(overlayContainerElement.textContent).toBe('');
+  }));
+
+  it('should focus the first item when pressing home', fakeAsync(() => {
+    const fixture = createComponent(SimpleMenu, [], [FakeIcon]);
+    fixture.detectChanges();
+
+    fixture.componentInstance.trigger.openMenu();
+    fixture.detectChanges();
+
+    const panel = overlayContainerElement.querySelector('.mat-menu-panel')!;
+    const items = Array.from(panel.querySelectorAll('.mat-menu-item')) as HTMLElement[];
+    items.forEach(patchElementFocus);
+
+    // Focus the last item since focus starts from the first one.
+    items[items.length - 1].focus();
+    fixture.detectChanges();
+
+    spyOn(items[0], 'focus').and.callThrough();
+
+    const event = dispatchKeyboardEvent(panel, 'keydown', HOME);
+    fixture.detectChanges();
+
+    expect(items[0].focus).toHaveBeenCalled();
+    expect(event.defaultPrevented).toBe(true);
+    flush();
+  }));
+
+  it('should not focus the first item when pressing home with a modifier key', fakeAsync(() => {
+    const fixture = createComponent(SimpleMenu, [], [FakeIcon]);
+    fixture.detectChanges();
+
+    fixture.componentInstance.trigger.openMenu();
+    fixture.detectChanges();
+
+    const panel = overlayContainerElement.querySelector('.mat-menu-panel')!;
+    const items = Array.from(panel.querySelectorAll('.mat-menu-item')) as HTMLElement[];
+    items.forEach(patchElementFocus);
+
+    // Focus the last item since focus starts from the first one.
+    items[items.length - 1].focus();
+    fixture.detectChanges();
+
+    spyOn(items[0], 'focus').and.callThrough();
+
+    const event = createKeyboardEvent('keydown', HOME);
+    Object.defineProperty(event, 'altKey', {get: () => true});
+
+    dispatchEvent(panel, event);
+    fixture.detectChanges();
+
+    expect(items[0].focus).not.toHaveBeenCalled();
+    expect(event.defaultPrevented).toBe(false);
+    flush();
+  }));
+
+  it('should focus the last item when pressing end', fakeAsync(() => {
+    const fixture = createComponent(SimpleMenu, [], [FakeIcon]);
+    fixture.detectChanges();
+
+    fixture.componentInstance.trigger.openMenu();
+    fixture.detectChanges();
+
+    const panel = overlayContainerElement.querySelector('.mat-menu-panel')!;
+    const items = Array.from(panel.querySelectorAll('.mat-menu-item')) as HTMLElement[];
+    items.forEach(patchElementFocus);
+
+    spyOn(items[items.length - 1], 'focus').and.callThrough();
+
+    const event = dispatchKeyboardEvent(panel, 'keydown', END);
+    fixture.detectChanges();
+
+    expect(items[items.length - 1].focus).toHaveBeenCalled();
+    expect(event.defaultPrevented).toBe(true);
+    flush();
+  }));
+
+  it('should not focus the last item when pressing end with a modifier key', fakeAsync(() => {
+    const fixture = createComponent(SimpleMenu, [], [FakeIcon]);
+    fixture.detectChanges();
+
+    fixture.componentInstance.trigger.openMenu();
+    fixture.detectChanges();
+
+    const panel = overlayContainerElement.querySelector('.mat-menu-panel')!;
+    const items = Array.from(panel.querySelectorAll('.mat-menu-item')) as HTMLElement[];
+    items.forEach(patchElementFocus);
+
+    spyOn(items[items.length - 1], 'focus').and.callThrough();
+
+    const event = createKeyboardEvent('keydown', END);
+    Object.defineProperty(event, 'altKey', {get: () => true});
+
+    dispatchEvent(panel, event);
+    fixture.detectChanges();
+
+    expect(items[items.length - 1].focus).not.toHaveBeenCalled();
+    expect(event.defaultPrevented).toBe(false);
+    flush();
   }));
 
   describe('lazy rendering', () => {
@@ -1828,10 +1997,13 @@ describe('MatMenu default overrides', () => {
 
 @Component({
   template: `
-    <button [matMenuTriggerFor]="menu" #triggerEl>Toggle menu</button>
+    <button
+      [matMenuTriggerFor]="menu"
+      [matMenuTriggerRestoreFocus]="restoreFocus"
+      #triggerEl>Toggle menu</button>
     <mat-menu
       #menu="matMenu"
-      class="custom-one custom-two"
+      [class]="panelClass"
       (closed)="closeCallback($event)"
       [backdropClass]="backdropClass">
 
@@ -1846,13 +2018,15 @@ describe('MatMenu default overrides', () => {
   `
 })
 class SimpleMenu {
-  @ViewChild(MatMenuTrigger) trigger: MatMenuTrigger;
-  @ViewChild('triggerEl') triggerEl: ElementRef<HTMLElement>;
-  @ViewChild(MatMenu) menu: MatMenu;
+  @ViewChild(MatMenuTrigger, {static: false}) trigger: MatMenuTrigger;
+  @ViewChild('triggerEl', {static: false}) triggerEl: ElementRef<HTMLElement>;
+  @ViewChild(MatMenu, {static: false}) menu: MatMenu;
   @ViewChildren(MatMenuItem) items: QueryList<MatMenuItem>;
   extraItems: string[] = [];
   closeCallback = jasmine.createSpy('menu closed callback');
   backdropClass: string;
+  panelClass: string;
+  restoreFocus = true;
 }
 
 @Component({
@@ -1864,8 +2038,8 @@ class SimpleMenu {
   `
 })
 class PositionedMenu {
-  @ViewChild(MatMenuTrigger) trigger: MatMenuTrigger;
-  @ViewChild('triggerEl') triggerEl: ElementRef<HTMLElement>;
+  @ViewChild(MatMenuTrigger, {static: false}) trigger: MatMenuTrigger;
+  @ViewChild('triggerEl', {static: false}) triggerEl: ElementRef<HTMLElement>;
   xPosition: MenuPositionX = 'before';
   yPosition: MenuPositionY = 'above';
 }
@@ -1884,8 +2058,8 @@ interface TestableMenu {
 })
 class OverlapMenu implements TestableMenu {
   @Input() overlapTrigger: boolean;
-  @ViewChild(MatMenuTrigger) trigger: MatMenuTrigger;
-  @ViewChild('triggerEl') triggerEl: ElementRef<HTMLElement>;
+  @ViewChild(MatMenuTrigger, {static: false}) trigger: MatMenuTrigger;
+  @ViewChild('triggerEl', {static: false}) triggerEl: ElementRef<HTMLElement>;
 }
 
 @Component({
@@ -1905,7 +2079,7 @@ class CustomMenuPanel implements MatMenuPanel {
   overlapTrigger = true;
   parentMenu: MatMenuPanel;
 
-  @ViewChild(TemplateRef) templateRef: TemplateRef<any>;
+  @ViewChild(TemplateRef, {static: false}) templateRef: TemplateRef<any>;
   @Output() close = new EventEmitter<void | 'click' | 'keydown' | 'tab'>();
   focusFirstItem = () => {};
   resetActiveItem = () => {};
@@ -1921,7 +2095,7 @@ class CustomMenuPanel implements MatMenuPanel {
   `
 })
 class CustomMenu {
-  @ViewChild(MatMenuTrigger) trigger: MatMenuTrigger;
+  @ViewChild(MatMenuTrigger, {static: false}) trigger: MatMenuTrigger;
 }
 
 
@@ -1972,22 +2146,22 @@ class CustomMenu {
   `
 })
 class NestedMenu {
-  @ViewChild('root') rootMenu: MatMenu;
-  @ViewChild('rootTrigger') rootTrigger: MatMenuTrigger;
-  @ViewChild('rootTriggerEl') rootTriggerEl: ElementRef<HTMLElement>;
-  @ViewChild('alternateTrigger') alternateTrigger: MatMenuTrigger;
+  @ViewChild('root', {static: false}) rootMenu: MatMenu;
+  @ViewChild('rootTrigger', {static: false}) rootTrigger: MatMenuTrigger;
+  @ViewChild('rootTriggerEl', {static: false}) rootTriggerEl: ElementRef<HTMLElement>;
+  @ViewChild('alternateTrigger', {static: false}) alternateTrigger: MatMenuTrigger;
   readonly rootCloseCallback = jasmine.createSpy('root menu closed callback');
 
-  @ViewChild('levelOne') levelOneMenu: MatMenu;
-  @ViewChild('levelOneTrigger') levelOneTrigger: MatMenuTrigger;
+  @ViewChild('levelOne', {static: false}) levelOneMenu: MatMenu;
+  @ViewChild('levelOneTrigger', {static: false}) levelOneTrigger: MatMenuTrigger;
   readonly levelOneCloseCallback = jasmine.createSpy('level one menu closed callback');
 
-  @ViewChild('levelTwo') levelTwoMenu: MatMenu;
-  @ViewChild('levelTwoTrigger') levelTwoTrigger: MatMenuTrigger;
+  @ViewChild('levelTwo', {static: false}) levelTwoMenu: MatMenu;
+  @ViewChild('levelTwoTrigger', {static: false}) levelTwoTrigger: MatMenuTrigger;
   readonly levelTwoCloseCallback = jasmine.createSpy('level one menu closed callback');
 
-  @ViewChild('lazy') lazyMenu: MatMenu;
-  @ViewChild('lazyTrigger') lazyTrigger: MatMenuTrigger;
+  @ViewChild('lazy', {static: false}) lazyMenu: MatMenu;
+  @ViewChild('lazyTrigger', {static: false}) lazyTrigger: MatMenuTrigger;
   showLazy = false;
 }
 
@@ -2007,8 +2181,8 @@ class NestedMenu {
   `
 })
 class NestedMenuCustomElevation {
-  @ViewChild('rootTrigger') rootTrigger: MatMenuTrigger;
-  @ViewChild('levelOneTrigger') levelOneTrigger: MatMenuTrigger;
+  @ViewChild('rootTrigger', {static: false}) rootTrigger: MatMenuTrigger;
+  @ViewChild('levelOneTrigger', {static: false}) levelOneTrigger: MatMenuTrigger;
 }
 
 
@@ -2030,8 +2204,8 @@ class NestedMenuCustomElevation {
   `
 })
 class NestedMenuRepeater {
-  @ViewChild('rootTriggerEl') rootTriggerEl: ElementRef<HTMLElement>;
-  @ViewChild('levelOneTrigger') levelOneTrigger: MatMenuTrigger;
+  @ViewChild('rootTriggerEl', {static: false}) rootTriggerEl: ElementRef<HTMLElement>;
+  @ViewChild('levelOneTrigger', {static: false}) levelOneTrigger: MatMenuTrigger;
 
   items = ['one', 'two', 'three'];
 }
@@ -2051,7 +2225,7 @@ class NestedMenuRepeater {
   `
 })
 class SubmenuDeclaredInsideParentMenu {
-  @ViewChild('rootTriggerEl') rootTriggerEl: ElementRef;
+  @ViewChild('rootTriggerEl', {static: false}) rootTriggerEl: ElementRef;
 }
 
 
@@ -2075,8 +2249,8 @@ class FakeIcon {}
   `
 })
 class SimpleLazyMenu {
-  @ViewChild(MatMenuTrigger) trigger: MatMenuTrigger;
-  @ViewChild('triggerEl') triggerEl: ElementRef<HTMLElement>;
+  @ViewChild(MatMenuTrigger, {static: false}) trigger: MatMenuTrigger;
+  @ViewChild('triggerEl', {static: false}) triggerEl: ElementRef<HTMLElement>;
   @ViewChildren(MatMenuItem) items: QueryList<MatMenuItem>;
 }
 
@@ -2101,8 +2275,8 @@ class SimpleLazyMenu {
   `
 })
 class LazyMenuWithContext {
-  @ViewChild('triggerOne') triggerOne: MatMenuTrigger;
-  @ViewChild('triggerTwo') triggerTwo: MatMenuTrigger;
+  @ViewChild('triggerOne', {static: false}) triggerOne: MatMenuTrigger;
+  @ViewChild('triggerTwo', {static: false}) triggerTwo: MatMenuTrigger;
 }
 
 
@@ -2120,9 +2294,9 @@ class LazyMenuWithContext {
   `
 })
 class DynamicPanelMenu {
-  @ViewChild(MatMenuTrigger) trigger: MatMenuTrigger;
-  @ViewChild('one') firstMenu: MatMenu;
-  @ViewChild('two') secondMenu: MatMenu;
+  @ViewChild(MatMenuTrigger, {static: false}) trigger: MatMenuTrigger;
+  @ViewChild('one', {static: false}) firstMenu: MatMenu;
+  @ViewChild('two', {static: false}) secondMenu: MatMenu;
 }
 
 
@@ -2137,5 +2311,5 @@ class DynamicPanelMenu {
   `
 })
 class MenuWithCheckboxItems {
-  @ViewChild(MatMenuTrigger) trigger: MatMenuTrigger;
+  @ViewChild(MatMenuTrigger, {static: false}) trigger: MatMenuTrigger;
 }

@@ -20,7 +20,7 @@ import {
   UP_ARROW,
 } from '@angular/cdk/keycodes';
 import {
-  AfterContentInit,
+  AfterViewInit,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
@@ -62,7 +62,7 @@ const DAYS_PER_WEEK = 7;
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [MAT_SINGLE_DATE_SELECTION_MODEL_PROVIDER]
 })
-export class MatMonthView<D> implements AfterContentInit, OnDestroy {
+export class MatMonthView<D> implements AfterViewInit, OnDestroy {
   /**
    * The date to display in this month view (everything other than the month and year is ignored).
    */
@@ -125,7 +125,7 @@ export class MatMonthView<D> implements AfterContentInit, OnDestroy {
   @Output() readonly activeDateChange: EventEmitter<D> = new EventEmitter<D>();
 
   /** The body of calendar table */
-  @ViewChild(MatCalendarBody) _matCalendarBody: MatCalendarBody<D>;
+  @ViewChild(MatCalendarBody, {static: false}) _matCalendarBody: MatCalendarBody<D>;
 
   /** The label for this month (e.g. "January 2017"). */
   _monthLabel: string;
@@ -178,13 +178,17 @@ export class MatMonthView<D> implements AfterContentInit, OnDestroy {
     this.dateSubscription = _selectionModel.selectionChange.subscribe(() => this.extractDate());
   }
 
-  ngAfterContentInit() {
-    this._matCalendarBody._updateToday();
-    this._init();
+  ngAfterViewInit() {
+    this._initView();
   }
 
   ngOnDestroy() {
     this.dateSubscription.unsubscribe();
+  }
+
+  _initView() {
+    this._matCalendarBody._updateToday();
+    this._init();
   }
 
   /** Handles when a new date is selected. */
@@ -282,7 +286,7 @@ export class MatMonthView<D> implements AfterContentInit, OnDestroy {
          this._dateAdapter.getFirstDayOfWeek()) % DAYS_PER_WEEK;
 
     this._createWeekCells();
-    this._changeDetectorRef.markForCheck();
+    Promise.resolve().then(() => this._changeDetectorRef.markForCheck());
   }
 
   /** Focuses the active cell after the microtask queue is empty. */

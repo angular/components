@@ -29,10 +29,10 @@ export abstract class MatDateSelectionModel<D> implements OnDestroy {
   abstract clone(): MatDateSelectionModel<D>;
 
   /** Gets the first date in the current selection. */
-  abstract getFirstSelectedDate(): D|null;
+  abstract getFirstSelectedDate(): D | null;
 
   /** Gets the last date in the current selection. */
-  abstract getLastSelectedDate(): D|null;
+  abstract getLastSelectedDate(): D | null;
 
   /** Whether the selection is complete for this selection model. */
   abstract isComplete(): boolean;
@@ -257,7 +257,7 @@ export class MatRangeDateSelectionModel<D> extends MatDateSelectionModel<D> {
     return this.adapter.compareDate(from, value) <= 0 && this.adapter.compareDate(value, to) <= 0;
   }
 
-  private sort( ...dates: Array<D | null> ): D[] {
+  private sort(...dates: Array<D | null>): D[] {
     const filtered: D[] = dates.filter( d => d != null ) as D[];
     filtered.sort( this.adapter.compareDate.bind( this.adapter ) );
 

@@ -9,7 +9,7 @@ ng_module(
   module_name = "@angular/material/card",
   assets = [":card.css"] + glob(["**/*.html"]),
   deps = [
-    "@angular//packages/core",
+    "@npm//@angular/core",
     "//src/lib/core",
   ],
 )
@@ -32,4 +32,9 @@ sass_binary(
 markdown_to_html(
   name = "overview",
   srcs = [":card.md"],
+)
+
+filegroup(
+  name = "source-files",
+  srcs = glob(["**/*.ts"]),
 )

@@ -27,10 +27,12 @@ describe('CdkScrollable', () => {
       imports: [ScrollingModule],
       declarations: [ScrollableViewport],
     }).compileComponents();
+  }));
 
+  beforeEach(() => {
     fixture = TestBed.createComponent(ScrollableViewport);
     testComponent = fixture.componentInstance;
-  }));
+  });
 
   describe('in LTR context', () => {
     beforeEach(() => {
@@ -239,10 +241,10 @@ describe('CdkScrollable', () => {
 })
 class ScrollableViewport {
   @Input() dir: Direction;
-  @ViewChild(CdkScrollable) scrollable: CdkScrollable;
-  @ViewChild('scrollContainer') scrollContainer: ElementRef<Element>;
-  @ViewChild('firstRowStart') firstRowStart: ElementRef<Element>;
-  @ViewChild('firstRowEnd') firstRowEnd: ElementRef<Element>;
-  @ViewChild('lastRowStart') lastRowStart: ElementRef<Element>;
-  @ViewChild('lastRowEnd') lastRowEnd: ElementRef<Element>;
+  @ViewChild(CdkScrollable, {static: false}) scrollable: CdkScrollable;
+  @ViewChild('scrollContainer', {static: false}) scrollContainer: ElementRef<Element>;
+  @ViewChild('firstRowStart', {static: false}) firstRowStart: ElementRef<Element>;
+  @ViewChild('firstRowEnd', {static: false}) firstRowEnd: ElementRef<Element>;
+  @ViewChild('lastRowStart', {static: false}) lastRowStart: ElementRef<Element>;
+  @ViewChild('lastRowEnd', {static: false}) lastRowEnd: ElementRef<Element>;
 }

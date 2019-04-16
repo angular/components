@@ -1,7 +1,7 @@
 export declare abstract class BaseTreeControl<T> implements TreeControl<T> {
     dataNodes: T[];
     expansionModel: SelectionModel<T>;
-    getChildren: (dataNode: T) => (Observable<T[]> | T[]);
+    getChildren: (dataNode: T) => (Observable<T[]> | T[] | undefined | null);
     getLevel: (dataNode: T) => number;
     isExpandable: (dataNode: T) => boolean;
     collapse(dataNode: T): void;
@@ -15,6 +15,8 @@ export declare abstract class BaseTreeControl<T> implements TreeControl<T> {
     toggle(dataNode: T): void;
     toggleDescendants(dataNode: T): void;
 }
+
+export declare const CDK_TREE_NODE_OUTLET_NODE: InjectionToken<{}>;
 
 export declare class CdkNestedTreeNode<T> extends CdkTreeNode<T> implements AfterContentInit, OnDestroy {
     protected _children: T[];
@@ -53,6 +55,7 @@ export declare class CdkTreeModule {
 
 export declare class CdkTreeNode<T> implements FocusableOption, OnDestroy {
     protected _data: T;
+    _dataChanges: Subject<void>;
     protected _destroyed: Subject<void>;
     protected _elementRef: ElementRef<HTMLElement>;
     protected _tree: CdkTree<T>;
@@ -75,8 +78,9 @@ export declare class CdkTreeNodeDef<T> {
 }
 
 export declare class CdkTreeNodeOutlet {
+    _node?: any;
     viewContainer: ViewContainerRef;
-    constructor(viewContainer: ViewContainerRef);
+    constructor(viewContainer: ViewContainerRef, _node?: any);
 }
 
 export declare class CdkTreeNodeOutletContext<T> {
@@ -95,7 +99,7 @@ export declare class CdkTreeNodePadding<T> implements OnDestroy {
     level: number;
     constructor(_treeNode: CdkTreeNode<T>, _tree: CdkTree<T>, _renderer: Renderer2, _element: ElementRef<HTMLElement>, _dir: Directionality);
     _paddingIndent(): string | null;
-    _setPadding(): void;
+    _setPadding(forceChange?: boolean): void;
     ngOnDestroy(): void;
 }
 
@@ -127,8 +131,8 @@ export declare function getTreeMultipleDefaultNodeDefsError(): Error;
 export declare function getTreeNoValidDataSourceError(): Error;
 
 export declare class NestedTreeControl<T> extends BaseTreeControl<T> {
-    getChildren: (dataNode: T) => (Observable<T[]> | T[]);
-    constructor(getChildren: (dataNode: T) => (Observable<T[]> | T[]));
+    getChildren: (dataNode: T) => (Observable<T[]> | T[] | undefined | null);
+    constructor(getChildren: (dataNode: T) => (Observable<T[]> | T[] | undefined | null));
     protected _getDescendants(descendants: T[], dataNode: T): void;
     expandAll(): void;
     getDescendants(dataNode: T): T[];
@@ -137,7 +141,7 @@ export declare class NestedTreeControl<T> extends BaseTreeControl<T> {
 export interface TreeControl<T> {
     dataNodes: T[];
     expansionModel: SelectionModel<T>;
-    readonly getChildren: (dataNode: T) => Observable<T[]> | T[];
+    readonly getChildren: (dataNode: T) => Observable<T[]> | T[] | undefined | null;
     readonly getLevel: (dataNode: T) => number;
     readonly isExpandable: (dataNode: T) => boolean;
     collapse(dataNode: T): void;

@@ -5,6 +5,7 @@ module.exports = config => {
   config.set({
     basePath: path.join(__dirname, '..'),
     frameworks: ['jasmine'],
+    middleware: ['fake-url'],
     plugins: [
       require('karma-jasmine'),
       require('karma-browserstack-launcher'),
@@ -12,10 +13,22 @@ module.exports = config => {
       require('karma-chrome-launcher'),
       require('karma-firefox-launcher'),
       require('karma-sourcemap-loader'),
+      {'middleware:fake-url': ['factory', function() {
+        // Middleware that avoids triggering 404s during tests that need to reference
+        // image paths. Assumes that the image path will start with `/$`.
+        return function(request, response, next) {
+          if (request.url.indexOf('/$') === 0) {
+            response.writeHead(200);
+            return response.end();
+          }
+
+          next();
+        }
+      }]}
     ],
     files: [
       {pattern: 'node_modules/core-js/client/core.min.js', included: true, watched: false},
-      {pattern: 'node_modules/tslib/tslib.js', included: true, watched: false},
+      {pattern: 'node_modules/tslib/tslib.js', included: false, watched: false},
       {pattern: 'node_modules/systemjs/dist/system.js', included: true, watched: false},
       {pattern: 'node_modules/zone.js/dist/zone.min.js', included: true, watched: false},
       {pattern: 'node_modules/zone.js/dist/proxy.min.js', included: true, watched: false},
@@ -24,7 +37,7 @@ module.exports = config => {
       {pattern: 'node_modules/zone.js/dist/async-test.js', included: true, watched: false},
       {pattern: 'node_modules/zone.js/dist/fake-async-test.js', included: true, watched: false},
       {pattern: 'node_modules/hammerjs/hammer.min.js', included: true, watched: false},
-      {pattern: 'node_modules/moment/min/moment-with-locales.min.js', included: true, watched: false},
+      {pattern: 'node_modules/moment/min/moment-with-locales.min.js', included: false, watched: false},
 
       // Include all Angular dependencies
       {pattern: 'node_modules/@angular/**/*', included: false, watched: false},
@@ -68,10 +81,8 @@ module.exports = config => {
       video: false,
     },
 
-    browserDisconnectTimeout: 180000,
-    browserDisconnectTolerance: 3,
+    browserDisconnectTolerance: 1,
     browserNoActivityTimeout: 300000,
-    captureTimeout: 180000,
 
     browsers: ['ChromeHeadlessLocal'],
     singleRun: false,
@@ -124,6 +135,15 @@ module.exports = config => {
       // Setup the saucelabs reporter so that we report back to Saucelabs once
       // our tests finished.
       config.reporters.push('saucelabs');
+    }
+
+    // If the test platform is not "local", browsers are launched externally and can take
+    // up more time to capture. Also the connection can be flaky and therefore needs a
+    // higher disconnect timeout.
+    if (testPlatform !== 'local') {
+      config.browserDisconnectTimeout = 180000;
+      config.browserDisconnectTolerance = 3;
+      config.captureTimeout = 180000;
     }
 
     const platformBrowsers = platformMap[testPlatform];

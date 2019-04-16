@@ -123,21 +123,20 @@ export class MatChip extends _MatChipMixinBase implements FocusableOption, OnDes
   /** Reference to the RippleRenderer for the chip. */
   private _chipRipple: RippleRenderer;
 
-  /** Whether the ripples are globally disabled through the RippleGlobalOptions */
-  private _ripplesGloballyDisabled = false;
-
   /**
-   * Ripple configuration for ripples that are launched on pointer down.
+   * Ripple configuration for ripples that are launched on pointer down. The ripple config
+   * is set to the global ripple options since we don't have any configurable options for
+   * the chip ripples.
    * @docs-private
    */
-  rippleConfig: RippleConfig = {};
+  rippleConfig: RippleConfig & RippleGlobalOptions;
 
   /**
    * Whether ripples are disabled on interaction
    * @docs-private
    */
   get rippleDisabled(): boolean {
-    return this.disabled || this.disableRipple || this._ripplesGloballyDisabled;
+    return this.disabled || this.disableRipple || !!this.rippleConfig.disabled;
   }
 
   /** Whether the chip has focus. */
@@ -146,14 +145,17 @@ export class MatChip extends _MatChipMixinBase implements FocusableOption, OnDes
   /** Whether the chip list is selectable */
   chipListSelectable: boolean = true;
 
+  /** Whether the chip list is in multi-selection mode. */
+  _chipListMultiple: boolean = false;
+
   /** The chip avatar */
-  @ContentChild(MatChipAvatar) avatar: MatChipAvatar;
+  @ContentChild(MatChipAvatar, {static: false}) avatar: MatChipAvatar;
 
   /** The chip's trailing icon. */
-  @ContentChild(MatChipTrailingIcon) trailingIcon: MatChipTrailingIcon;
+  @ContentChild(MatChipTrailingIcon, {static: false}) trailingIcon: MatChipTrailingIcon;
 
   /** The chip's remove toggler. */
-  @ContentChild(forwardRef(() => MatChipRemove)) removeIcon: MatChipRemove;
+  @ContentChild(forwardRef(() => MatChipRemove), {static: false}) removeIcon: MatChipRemove;
 
   /** Whether the chip is selected. */
   @Input()
@@ -219,28 +221,24 @@ export class MatChip extends _MatChipMixinBase implements FocusableOption, OnDes
 
   /** The ARIA selected applied to the chip. */
   get ariaSelected(): string | null {
-    return this.selectable ? this.selected.toString() : null;
+    // Remove the `aria-selected` when the chip is deselected in single-selection mode, because
+    // it adds noise to NVDA users where "not selected" will be read out for each chip.
+    return this.selectable && (this._chipListMultiple || this.selected) ?
+        this.selected.toString() : null;
   }
 
   constructor(public _elementRef: ElementRef,
               private _ngZone: NgZone,
               platform: Platform,
-              @Optional() @Inject(MAT_RIPPLE_GLOBAL_OPTIONS) globalOptions: RippleGlobalOptions) {
+              @Optional() @Inject(MAT_RIPPLE_GLOBAL_OPTIONS)
+              globalRippleOptions: RippleGlobalOptions | null) {
     super(_elementRef);
 
     this._addHostClassName();
 
     this._chipRipple = new RippleRenderer(this, _ngZone, _elementRef, platform);
     this._chipRipple.setupTriggerEvents(_elementRef.nativeElement);
-
-    if (globalOptions) {
-      // TODO(paul): Do not copy each option manually. Allow dynamic global option changes: #9729
-      this._ripplesGloballyDisabled = !!globalOptions.disabled;
-      this.rippleConfig = {
-        animation: globalOptions.animation,
-        terminateOnPointerUp: globalOptions.terminateOnPointerUp,
-      };
-    }
+    this.rippleConfig = globalRippleOptions || {};
   }
 
   _addHostClassName() {

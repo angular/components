@@ -101,6 +101,7 @@ describe('FocusTrap', () => {
       ) as HTMLElement[];
 
       expect(anchors.every(current => current.getAttribute('tabindex') === '0')).toBe(true);
+      expect(anchors.every(current => current.getAttribute('aria-hidden') === 'true')).toBe(true);
 
       fixture.componentInstance._isFocusTrapEnabled = false;
       fixture.detectChanges();
@@ -198,7 +199,7 @@ describe('FocusTrap', () => {
     `
 })
 class SimpleFocusTrap {
-  @ViewChild(CdkTrapFocus) focusTrapDirective: CdkTrapFocus;
+  @ViewChild(CdkTrapFocus, {static: false}) focusTrapDirective: CdkTrapFocus;
 }
 
 @Component({
@@ -211,7 +212,7 @@ class SimpleFocusTrap {
     `
 })
 class FocusTrapWithAutoCapture {
-  @ViewChild(CdkTrapFocus) focusTrapDirective: CdkTrapFocus;
+  @ViewChild(CdkTrapFocus, {static: false}) focusTrapDirective: CdkTrapFocus;
   showTrappedRegion = false;
 }
 
@@ -225,7 +226,7 @@ class FocusTrapWithAutoCapture {
     `
 })
 class FocusTrapWithBindings {
-  @ViewChild(CdkTrapFocus) focusTrapDirective: CdkTrapFocus;
+  @ViewChild(CdkTrapFocus, {static: false}) focusTrapDirective: CdkTrapFocus;
   renderFocusTrap = true;
   _isFocusTrapEnabled = true;
 }
@@ -245,7 +246,7 @@ class FocusTrapWithBindings {
     `
 })
 class FocusTrapTargets {
-  @ViewChild(CdkTrapFocus) focusTrapDirective: CdkTrapFocus;
+  @ViewChild(CdkTrapFocus, {static: false}) focusTrapDirective: CdkTrapFocus;
 }
 
 @Component({
@@ -256,7 +257,7 @@ class FocusTrapTargets {
     `
 })
 class FocusTrapUnfocusableTarget {
-  @ViewChild(CdkTrapFocus) focusTrapDirective: CdkTrapFocus;
+  @ViewChild(CdkTrapFocus, {static: false}) focusTrapDirective: CdkTrapFocus;
 }
 
 @Component({
@@ -269,7 +270,7 @@ class FocusTrapUnfocusableTarget {
     `
 })
 class FocusTrapWithSvg {
-  @ViewChild(CdkTrapFocus) focusTrapDirective: CdkTrapFocus;
+  @ViewChild(CdkTrapFocus, {static: false}) focusTrapDirective: CdkTrapFocus;
 }
 
 @Component({
@@ -280,5 +281,5 @@ class FocusTrapWithSvg {
     `
 })
 class FocusTrapWithoutFocusableElements {
-  @ViewChild(CdkTrapFocus) focusTrapDirective: CdkTrapFocus;
+  @ViewChild(CdkTrapFocus, {static: false}) focusTrapDirective: CdkTrapFocus;
 }

@@ -86,6 +86,23 @@ describe('MatChipList', () => {
 
         expect(chips.toArray().every(chip => chip.disabled)).toBe(false);
       });
+
+      it('should disable a chip that is added after the list became disabled', fakeAsync(() => {
+        expect(chips.toArray().every(chip => chip.disabled)).toBe(false);
+
+        chipListInstance.disabled = true;
+        fixture.detectChanges();
+
+        expect(chips.toArray().every(chip => chip.disabled)).toBe(true);
+
+        fixture.componentInstance.chips.push(5, 6);
+        fixture.detectChanges();
+        tick();
+        fixture.detectChanges();
+
+        expect(chips.toArray().every(chip => chip.disabled)).toBe(true);
+      }));
+
     });
 
     describe('with selected chips', () => {
@@ -181,7 +198,7 @@ describe('MatChipList', () => {
           midItem.focus();
 
           // Destroy the middle item
-          testComponent.remove = 2;
+          testComponent.chips.splice(2, 1);
           fixture.detectChanges();
 
           // It focuses the 4th item (now at index 2)
@@ -197,7 +214,7 @@ describe('MatChipList', () => {
           lastItem.focus();
 
           // Destroy the last item
-          testComponent.remove = lastIndex;
+          testComponent.chips.pop();
           fixture.detectChanges();
 
           // It focuses the next-to-last item
@@ -214,7 +231,7 @@ describe('MatChipList', () => {
           zone.simulateZoneExit();
 
           // Destroy the middle item
-          testComponent.remove = 2;
+          testComponent.chips.splice(2, 1);
           fixture.detectChanges();
 
           // Should not have focus
@@ -1305,22 +1322,18 @@ describe('MatChipList', () => {
 @Component({
   template: `
     <mat-chip-list [tabIndex]="tabIndex" [selectable]="selectable">
-      <div *ngFor="let i of [0,1,2,3,4]">
-       <div *ngIf="remove != i">
-          <mat-chip (select)="chipSelect(i)" (deselect)="chipDeselect(i)">
-            {{name}} {{i + 1}}
-          </mat-chip>
-        </div>
-      </div>
+      <mat-chip *ngFor="let i of chips" (select)="chipSelect(i)" (deselect)="chipDeselect(i)">
+        {{name}} {{i + 1}}
+      </mat-chip>
     </mat-chip-list>`
 })
 class StandardChipList {
   name: string = 'Test';
   selectable: boolean = true;
-  remove: number;
   chipSelect: (index?: number) => void = () => {};
   chipDeselect: (index?: number) => void = () => {};
   tabIndex: number = 0;
+  chips = [0, 1, 2, 3, 4];
 }
 
 @Component({
@@ -1376,7 +1389,7 @@ class BasicChipList {
   tabIndexOverride: number;
   selectable: boolean;
 
-  @ViewChild(MatChipList) chipList: MatChipList;
+  @ViewChild(MatChipList, {static: false}) chipList: MatChipList;
   @ViewChildren(MatChip) chips: QueryList<MatChip>;
 }
 
@@ -1411,7 +1424,7 @@ class MultiSelectionChipList {
   tabIndexOverride: number;
   selectable: boolean;
 
-  @ViewChild(MatChipList) chipList: MatChipList;
+  @ViewChild(MatChipList, {static: false}) chipList: MatChipList;
   @ViewChildren(MatChip) chips: QueryList<MatChip>;
 }
 
@@ -1476,7 +1489,7 @@ class InputChipList {
     }
   }
 
-  @ViewChild(MatChipList) chipList: MatChipList;
+  @ViewChild(MatChipList, {static: false}) chipList: MatChipList;
   @ViewChildren(MatChip) chips: QueryList<MatChip>;
 }
 
@@ -1539,7 +1552,7 @@ class ChipListWithFormErrorMessages {
   ];
   @ViewChildren(MatChip) chips: QueryList<MatChip>;
 
-  @ViewChild('form') form: NgForm;
+  @ViewChild('form', {static: false}) form: NgForm;
   formControl = new FormControl('', Validators.required);
 }
 
@@ -1576,12 +1589,10 @@ class StandardChipListWithAnimations {
   template: `
     <mat-form-field>
       <mat-chip-list>
-        <div *ngFor="let i of chips">
-          <mat-chip [value]="i" (removed)="removeChip($event)">
-            Chip {{i + 1}}
-            <span matChipRemove>Remove</span>
-          </mat-chip>
-        </div>
+        <mat-chip [value]="i" (removed)="removeChip($event)" *ngFor="let i of chips">
+          Chip {{i + 1}}
+          <span matChipRemove>Remove</span>
+        </mat-chip>
       </mat-chip-list>
     </mat-form-field>
   `

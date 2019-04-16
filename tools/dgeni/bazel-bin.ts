@@ -3,7 +3,7 @@ import {ReadTypeScriptModules} from 'dgeni-packages/typescript/processors/readTy
 import {TsParser} from 'dgeni-packages/typescript/services/TsParser';
 import {readFileSync} from 'fs';
 import {join, relative} from 'path';
-import {apiDocsPackage} from './index';
+import {apiDocsPackage} from './docs-package';
 
 /**
  * Determines the command line arguments for the current Bazel action. Since this action can
@@ -37,11 +37,11 @@ if (require.main === module) {
   const packagePath = join(execRootPath, bazelLabelPackagePath);
 
   // Configure the Dgeni docs package to respect our passed options from the Bazel rule.
-  apiDocsPackage.config((readTypeScriptModules: ReadTypeScriptModules,
-                         tsParser: TsParser,
-                         templateFinder: any,
-                         writeFilesProcessor: any,
-                         readFilesProcessor: any) => {
+  apiDocsPackage.config(function(readTypeScriptModules: ReadTypeScriptModules,
+                                 tsParser: TsParser,
+                                 templateFinder: any,
+                                 writeFilesProcessor: any,
+                                 readFilesProcessor: any) {
 
     // Set the base path for the "readFilesProcessor" to the execroot. This is necessary because
     // otherwise the "writeFilesProcessor" is not able to write to the specified output path.
@@ -51,6 +51,10 @@ if (require.main === module) {
     // all sources (also known as the path to the current Bazel target). This makes it easier for
     // custom processors (such as the `entry-point-grouper) to compute entry-point paths.
     readTypeScriptModules.basePath = packagePath;
+
+    // Initialize the "tsParser" path mappings. These will be passed to the TypeScript program
+    // and therefore use the same syntax as the "paths" option in a tsconfig.
+    tsParser.options.paths = {};
 
     // For each package we want to setup all entry points in Dgeni so that their API
     // will be generated. Packages and their associated entry points are passed in pairs.
@@ -67,7 +71,9 @@ if (require.main === module) {
       // inherited class members across entry points or packages.
       entryPoints.forEach(entryPointName => {
         const entryPointPath = `${packageName}/${entryPointName}`;
-        const entryPointIndexPath = `${entryPointPath}/index.ts`;
+        // For the entry point path we temporarily want to replace "material" with "lib", as
+        // our package source folder does not align with the entry-point name.
+        const entryPointIndexPath = `${entryPointPath.replace('material', 'lib')}/index.ts`;
 
         tsParser.options.paths![`@angular/${entryPointPath}`] = [entryPointIndexPath];
         readTypeScriptModules.sourceFiles.push(entryPointIndexPath);
@@ -82,7 +88,7 @@ if (require.main === module) {
     // as the Angular packages which might be needed for doc items. e.g. if a class implements
     // the "AfterViewInit" interface from "@angular/core". This needs to be relative to the
     // "baseUrl" that has been specified for the "tsParser" compiler options.
-    tsParser.options.paths!['*'] = [relative(packagePath, 'external/matdeps/node_modules/*')];
+    tsParser.options.paths!['*'] = [relative(packagePath, 'external/npm/node_modules/*')];
 
     // Since our base directory is the Bazel execroot, we need to make sure that Dgeni can
     // find all templates needed to output the API docs.
