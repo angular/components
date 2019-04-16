@@ -32,7 +32,6 @@ $mat-form-field-standard-padding-top: 0.75em !default;
     $height: $mat-form-field-standard-underline-height * 2;
     bottom: 0;
     height: $height;
-    transition: opacity 600ms $swift-ease-out-timing-function, transform 600ms $swift-ease-out-timing-function;
 
     @include cdk-high-contrast {
       height: 0;
