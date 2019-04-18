@@ -6,8 +6,8 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import { AriaDescriber } from '@angular/cdk/a11y';
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
+import {AriaDescriber} from '@angular/cdk/a11y';
+import {coerceBooleanProperty} from '@angular/cdk/coercion';
 import {
   Directive,
   ElementRef,
@@ -20,8 +20,8 @@ import {
   Renderer2,
   SimpleChanges,
 } from '@angular/core';
-import { CanDisable, CanDisableCtor, mixinDisabled, ThemePalette } from '@angular/material/core';
-import { ANIMATION_MODULE_TYPE } from '@angular/platform-browser/animations';
+import {CanDisable, CanDisableCtor, mixinDisabled, ThemePalette} from '@angular/material/core';
+import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 
 
 let nextId = 0;
