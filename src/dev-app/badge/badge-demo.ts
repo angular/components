@@ -17,4 +17,5 @@ import {Component} from '@angular/core';
 export class BadgeDemo {
   visible = true;
   badgeContent = '0';
+  badgeMax = 99;
 }

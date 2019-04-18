@@ -6,8 +6,8 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {AriaDescriber} from '@angular/cdk/a11y';
-import {coerceBooleanProperty} from '@angular/cdk/coercion';
+import { AriaDescriber } from '@angular/cdk/a11y';
+import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import {
   Directive,
   ElementRef,
@@ -20,18 +20,18 @@ import {
   Renderer2,
   SimpleChanges,
 } from '@angular/core';
-import {CanDisable, CanDisableCtor, mixinDisabled, ThemePalette} from '@angular/material/core';
-import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
+import { CanDisable, CanDisableCtor, mixinDisabled, ThemePalette } from '@angular/material/core';
+import { ANIMATION_MODULE_TYPE } from '@angular/platform-browser/animations';
 
 
 let nextId = 0;
 
 // Boilerplate for applying mixins to MatBadge.
 /** @docs-private */
-export class MatBadgeBase {}
+export class MatBadgeBase { }
 
 export const _MatBadgeMixinBase:
-    CanDisableCtor & typeof MatBadgeBase = mixinDisabled(MatBadgeBase);
+  CanDisableCtor & typeof MatBadgeBase = mixinDisabled(MatBadgeBase);
 
 export type MatBadgePosition = 'above after' | 'above before' | 'below before' | 'below after';
 export type MatBadgeSize = 'small' | 'medium' | 'large';
@@ -95,7 +95,7 @@ export class MatBadge extends _MatBadgeMixinBase implements OnDestroy, OnChanges
 
       if (badgeElement) {
         newDescription ? badgeElement.setAttribute('aria-label', newDescription) :
-            badgeElement.removeAttribute('aria-label');
+          badgeElement.removeAttribute('aria-label');
       }
     }
   }
@@ -112,19 +112,22 @@ export class MatBadge extends _MatBadgeMixinBase implements OnDestroy, OnChanges
   }
   private _hidden: boolean;
 
+  /** Max value to show in the badge */
+  @Input('matBadgeMax') max: number;
+
   /** Unique id for the badge */
   _id: number = nextId++;
 
   private _badgeElement: HTMLElement;
 
   constructor(
-      private _ngZone: NgZone,
-      private _elementRef: ElementRef<HTMLElement>,
-      private _ariaDescriber: AriaDescriber,
-      private _renderer: Renderer2,
-      @Optional() @Inject(ANIMATION_MODULE_TYPE) private _animationMode?: string) {
-      super();
-    }
+    private _ngZone: NgZone,
+    private _elementRef: ElementRef<HTMLElement>,
+    private _ariaDescriber: AriaDescriber,
+    private _renderer: Renderer2,
+    @Optional() @Inject(ANIMATION_MODULE_TYPE) private _animationMode?: string) {
+    super();
+  }
 
   /** Whether the badge is above the host or not */
   isAbove(): boolean {
@@ -167,7 +170,7 @@ export class MatBadge extends _MatBadgeMixinBase implements OnDestroy, OnChanges
     if (!this._badgeElement) {
       this._badgeElement = this._createBadgeElement();
     } else {
-      this._badgeElement.textContent = this.content;
+      this._badgeElement.textContent = this._applyMax();
     }
     return this._badgeElement;
   }
@@ -182,7 +185,7 @@ export class MatBadge extends _MatBadgeMixinBase implements OnDestroy, OnChanges
     this._clearExistingBadges(contentClass);
     badgeElement.setAttribute('id', `mat-badge-content-${this._id}`);
     badgeElement.classList.add(contentClass);
-    badgeElement.textContent = this.content;
+    badgeElement.textContent = this._applyMax();
 
     if (this._animationMode === 'NoopAnimations') {
       badgeElement.classList.add('_mat-animation-noopable');
@@ -247,5 +250,18 @@ export class MatBadge extends _MatBadgeMixinBase implements OnDestroy, OnChanges
         element.removeChild(currentChild);
       }
     }
+  }
+
+  /** Creates string according to max value if one is set */
+  private _applyMax(): string {
+    let numericContent: number = Number(this.content);
+    let result = this.content;
+    if (this.max && this.content.length > 0 && !isNaN(numericContent)) {
+      if (this.max < numericContent) {
+        result = `${this.max}+`;
+      }
+    }
+
+    return result;
   }
 }

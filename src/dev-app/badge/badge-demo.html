@@ -30,6 +30,10 @@
       Hidden
     </span>
 
+    <span [matBadge]="badgeContent" [matBadgeMax]="badgeMax">
+      Max value
+    </span>
+
     <input type="text" [(ngModel)]="badgeContent" />
     <button (click)="visible = !visible">Toggle</button>
   </div>

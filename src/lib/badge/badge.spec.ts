@@ -4,7 +4,7 @@ import {By} from '@angular/platform-browser';
 import {MatBadge, MatBadgeModule} from './index';
 import {ThemePalette} from '@angular/material/core';
 
-describe('MatBadge', () => {
+fdescribe('MatBadge', () => {
   let fixture: ComponentFixture<any>;
   let testComponent: BadgeTestApp;
   let badgeNativeElement: HTMLElement;
@@ -200,6 +200,44 @@ describe('MatBadge', () => {
     expect(preExistingFixture.nativeElement.querySelectorAll('.mat-badge-content').length).toBe(2);
   });
 
+  it('should update badge based on max value', () => {
+    let badgeContentDebugElement = badgeNativeElement.querySelector('.mat-badge-content')!;
+
+    expect(badgeContentDebugElement.textContent).toContain('1');
+
+    testComponent.badgeMax = 99;
+    testComponent.badgeContent = '90';
+    fixture.detectChanges();
+
+    badgeContentDebugElement = badgeNativeElement.querySelector('.mat-badge-content')!;
+    expect(badgeContentDebugElement.textContent).toContain('90');
+
+    testComponent.badgeContent = '100';
+    fixture.detectChanges();
+
+    badgeContentDebugElement = badgeNativeElement.querySelector('.mat-badge-content')!;
+    expect(badgeContentDebugElement.textContent).toContain('99+');
+  });
+
+  it('should not update badge based on max value when content in not numeric', () => {
+    let badgeContentDebugElement = badgeNativeElement.querySelector('.mat-badge-content')!;
+
+    expect(badgeContentDebugElement.textContent).toContain('1');
+
+    testComponent.badgeMax = 99;
+    testComponent.badgeContent = 'MVP';
+    fixture.detectChanges();
+
+    badgeContentDebugElement = badgeNativeElement.querySelector('.mat-badge-content')!;
+    expect(badgeContentDebugElement.textContent).toContain('MVP');
+
+    testComponent.badgeContent = '100A';
+    fixture.detectChanges();
+
+    badgeContentDebugElement = badgeNativeElement.querySelector('.mat-badge-content')!;
+    expect(badgeContentDebugElement.textContent).toContain('100A');
+  });
+
 });
 
 /** Test component that contains a MatBadge. */
@@ -215,7 +253,8 @@ describe('MatBadge', () => {
           [matBadgeSize]="badgeSize"
           [matBadgeOverlap]="badgeOverlap"
           [matBadgeDescription]="badgeDescription"
-          [matBadgeDisabled]="badgeDisabled">
+          [matBadgeDisabled]="badgeDisabled"
+          [matBadgeMax]="badgeMax">
       home
     </span>
   `
@@ -229,6 +268,7 @@ class BadgeTestApp {
   badgeOverlap = false;
   badgeDescription: string;
   badgeDisabled = false;
+  badgeMax: number;
 }
 
 
