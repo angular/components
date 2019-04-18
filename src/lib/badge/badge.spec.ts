@@ -4,7 +4,7 @@ import {By} from '@angular/platform-browser';
 import {MatBadge, MatBadgeModule} from './index';
 import {ThemePalette} from '@angular/material/core';
 
-fdescribe('MatBadge', () => {
+describe('MatBadge', () => {
   let fixture: ComponentFixture<any>;
   let testComponent: BadgeTestApp;
   let badgeNativeElement: HTMLElement;
