@@ -547,9 +547,9 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
       event.removed.forEach(option => option.deselect());
     });
 
-    this.options.changes.pipe(startWith(null), takeUntil(this._destroy)).subscribe(() => {
+    this.options.changes.pipe(startWith(null), takeUntil(this._destroy)).subscribe(options => {
       this._resetOptions();
-      this._initializeSelection();
+      options ? this._handleSelectionChange() : this._initializeSelection();
     });
   }
 
@@ -832,6 +832,29 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
     Promise.resolve().then(() => {
       this._setSelectionByValue(this.ngControl ? this.ngControl.value : this._value);
       this.stateChanges.next();
+    });
+  }
+
+  /**
+   * Handles changes in the amount of options. Sets the `selected` status of any newly-added
+   * options and propagates the changes back up, if any of the selected options were removed
+   * or any selected options were added.
+   */
+  private _handleSelectionChange(): void {
+    Promise.resolve().then(() => {
+      // Save the currently-selected options for reference.
+      const previousSelection = this._selectionModel.selected;
+
+      // Update the selected options.
+      this._setSelectionByValue(this.ngControl ? this.ngControl.value : this._value);
+
+      const currentSelection = this._selectionModel.selected;
+
+      // Check if the selection has changed and propagate the changes to the model.
+      if (previousSelection.length !== currentSelection.length ||
+          currentSelection.find(option => previousSelection.indexOf(option) === -1)) {
+        this._propagateChanges();
+      }
     });
   }
 
