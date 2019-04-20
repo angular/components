@@ -2,6 +2,7 @@
 @import '../../cdk/a11y/a11y';
 
 $mat-tab-bar-height: 48px !default;
+$mat-min-width-height: 90px !default;
 $mat-tab-animation-duration: 500ms !default;
 
 // Mixin styles for labels that are contained within the tab header.
@@ -11,7 +12,7 @@ $mat-tab-animation-duration: 500ms !default;
   cursor: pointer;
   box-sizing: border-box;
   opacity: 0.6;
-  min-width: 160px;
+  min-width: $mat-min-width-height;
   text-align: center;
   display: inline-flex;
   justify-content: center;
