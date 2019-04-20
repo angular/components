@@ -14,12 +14,6 @@
   position: relative;
 }
 
-@media ($mat-xsmall) {
-  .mat-tab-label {
-    min-width: 72px;
-  }
-}
-
 // The ink bar that displays under the active tab label
 .mat-ink-bar {
   @include ink-bar;
