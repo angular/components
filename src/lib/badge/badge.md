@@ -52,9 +52,9 @@ background color to `primary`, `accent`, or `warn`.
 ```
 
 ### Badge max value
-The max value badge can display can be set via `matBadgeMax` tag. Max property will be applied only
-when the badge's content is numeric. If `matBadgeMax` tag is applied and contend exceed the max value
-badge will show max value and plus symbol
+The `max` value badge can display can be set via `matBadgeMax` tag. `max` property will be applied only
+when the badge's content is numeric. If `matBadgeMax` tag is applied and contend exceed the `max` value
+badge will show `max` value and plus symbol
 ```html
 <mat-icon matBadge="22" matBadgeMax=99>
   home
