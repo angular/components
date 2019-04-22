@@ -18,6 +18,30 @@ export const constructorChecks: VersionChanges<ConstructorChecksUpgradeData> = {
     {
       pr: 'https://github.com/angular/material2/pull/15647',
       changes: ['MatFormField', 'MatTabLink', 'MatVerticalStepper']
+    },
+    {
+      pr: 'https://github.com/angular/material2/pull/15757',
+      changes: ['MatBadge']
+    },
+    {
+      pr: 'https://github.com/angular/material2/issues/15734',
+      changes: ['MatButton', 'MatAnchor']
+    },
+    {
+      pr: 'https://github.com/angular/material2/pull/15761',
+      changes: ['MatSpinner', 'MatProgressSpinner']
+    },
+    {
+      pr: 'https://github.com/angular/material2/pull/15723',
+      changes: ['MatList', 'MatListItem']
+    },
+    {
+      pr: 'https://github.com/angular/material2/pull/15722',
+      changes: ['MatExpansionPanel']
+    },
+    {
+      pr: 'https://github.com/angular/material2/pull/15737',
+      changes: ['MatTabHeader', 'MatTabBody']
     }
   ],
 

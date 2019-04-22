@@ -104,14 +104,18 @@ export class MatAutocomplete extends _MatAutocompleteMixinBase implements AfterC
   get isOpen(): boolean { return this._isOpen && this.showPanel; }
   _isOpen: boolean = false;
 
+  // The @ViewChild query for TemplateRef here needs to be static because some code paths
+  // lead to the overlay being created before change detection has finished for this component.
+  // Notably, another component may trigger `focus` on the autocomplete-trigger.
+
   /** @docs-private */
-  @ViewChild(TemplateRef) template: TemplateRef<any>;
+  @ViewChild(TemplateRef, {static: true}) template: TemplateRef<any>;
 
   /** Element for the panel containing the autocomplete options. */
-  @ViewChild('panel') panel: ElementRef;
+  @ViewChild('panel', {static: false}) panel: ElementRef;
 
   /** @docs-private */
-  @ContentChildren(MatOption, { descendants: true }) options: QueryList<MatOption>;
+  @ContentChildren(MatOption, {descendants: true}) options: QueryList<MatOption>;
 
   /** @docs-private */
   @ContentChildren(MatOptgroup) optionGroups: QueryList<MatOptgroup>;
