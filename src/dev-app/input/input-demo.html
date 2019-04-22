@@ -362,7 +362,7 @@
       Both:
       <mat-form-field class="demo-text-align-end">
         <mat-label>Email address</mat-label>
-        <input matInput #email value="angular-core">
+        <input matInput #email="matInput" value="angular-core">
         <span matPrefix><mat-icon [class.primary]="email.focused">email</mat-icon>&nbsp;</span>
         <span matSuffix [class.primary]="email.focused">&nbsp;@gmail.com</span>
       </mat-form-field>
