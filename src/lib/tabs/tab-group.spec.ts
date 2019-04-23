@@ -478,6 +478,45 @@ describe('MatTabGroup', () => {
       expect(fixture.componentInstance.handleSelection).not.toHaveBeenCalled();
     }));
 
+    it('should preserve the scroll position when switching between tabs', fakeAsync(() => {
+      const testComponent = fixture.componentInstance;
+
+      // Add a lot of content to make one of the tabs scrollable.
+      testComponent.tabs[1].content = new Array(500).fill('content!').join('\n\n');
+      fixture.detectChanges();
+      tick(500);
+
+      // Cap the tab group height.
+      fixture.debugElement.query(By.css('mat-tab-group')).nativeElement.style.height = `300px`;
+
+      const tabElements = fixture.debugElement.queryAll(By.css('.mat-tab-body-content'))
+        .map(debugElement => debugElement.nativeElement as HTMLElement);
+
+      // Focus the tab with the extra content.
+      testComponent.selectedIndex = 1;
+      fixture.detectChanges();
+      tick(500);
+
+      // Ensure that there is content and scroll down 100px.
+      expect(tabElements[1].offsetHeight).toBeGreaterThan(0, 'Expected tab to have some content.');
+
+      // Handle some differences in the way browsers determine what element is scrollable.
+      tabElements[1].scrollTop = tabElements[1].parentElement!.scrollTop = 100;
+
+      // Move to another tab.
+      testComponent.selectedIndex = 0;
+      fixture.detectChanges();
+      tick(500);
+
+      // Switch back to the tab with the extra content.
+      testComponent.selectedIndex = 1;
+      fixture.detectChanges();
+      tick(500);
+
+      expect(tabElements[1].scrollTop || tabElements[1].parentElement!.scrollTop)
+          .toBe(100, 'Expected scroll position to be restored.');
+    }));
+
   });
 
   describe('async tabs', () => {
