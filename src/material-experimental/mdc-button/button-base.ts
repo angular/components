@@ -108,6 +108,11 @@ export class MatButtonBase extends _MatButtonBaseMixin implements CanDisable, Ca
     }
   }
 
+  /** Focuses the button. */
+  focus(): void {
+    this._elementRef.nativeElement.focus();
+  }
+
   /** Gets whether the button has one of the given attributes. */
   private _hasHostAttributes(...attributes: string[]) {
     return attributes.some(attribute => this._elementRef.nativeElement.hasAttribute(attribute));
@@ -115,7 +120,7 @@ export class MatButtonBase extends _MatButtonBaseMixin implements CanDisable, Ca
 }
 
 /** Shared inputs by buttons using the `<a>` tag */
-export const MAT_ANCHOR_INPUTS = MAT_BUTTON_INPUTS.concat(['tabIndex]']);
+export const MAT_ANCHOR_INPUTS = ['disabled', 'disableRipple', 'color', 'tabIndex'];
 
 /** Shared host configuration for buttons using the `<a>` tag. */
 export const MAT_ANCHOR_HOST = {
