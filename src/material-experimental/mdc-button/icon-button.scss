@@ -1,0 +1,8 @@
+@import '@material/icon-button/mixins';
+@import '../mdc-helpers/mdc-helpers';
+
+@include mdc-icon-button-without-ripple($query: $mat-base-styles-query);
+
+.mat-mdc-button {
+  position: relative;
+}

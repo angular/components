@@ -1,13 +1,32 @@
+@import '@material/button/mixins';
 @import '../mdc-helpers/mdc-helpers';
 
+$_mat-button-ripple-opacity: 0.1;
+
 @mixin mat-button-theme-mdc($theme) {
+  $primary: mat-color(map-get($theme, primary));
+  $accent: mat-color(map-get($theme, accent));
+  $warn: mat-color(map-get($theme, warn));
+
   @include mat-using-mdc-theme($theme) {
-    // TODO: MDC theme styles here.
+    @include mdc-button-without-ripple($query: $mat-theme-styles-query);
+  }
+
+  .mat-mdc-button {
+    .mat-ripple-element {
+      opacity: $_mat-button-ripple-opacity;
+      background-color: currentColor;
+    }
   }
 }
 
 @mixin mat-button-typography-mdc($config) {
-  @include mat-using-mdc-typography($config) {
-    // TODO: MDC typography styles here.
+  @if config {
+    @include mat-using-mdc-typography($config) {
+      @include mdc-button-without-ripple($query: $mat-typography-styles-query);
+    }
+  }
+  @else {
+    @include mdc-button-without-ripple($query: $mat-typography-styles-query);
   }
 }

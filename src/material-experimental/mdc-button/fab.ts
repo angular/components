@@ -18,32 +18,29 @@ import {
 } from '@angular/core';
 import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 
+import {MatAnchor} from './button';
 import {
   MAT_ANCHOR_HOST,
   MAT_ANCHOR_INPUTS,
   MAT_BUTTON_HOST,
   MAT_BUTTON_INPUTS,
   MAT_BUTTON_TEMPLATE,
-  MatAnchorBase,
   MatButtonBase
 } from './button-base';
 
 
 @Component({
   moduleId: module.id,
-  selector: `
-    button[mat-button], button[mat-raised-button], button[mat-flat-button],
-    button[mat-stroked-button]
-  `,
+  selector: `button[mat-fab], button[mat-mini-fab]`,
   template: MAT_BUTTON_TEMPLATE,
-  styleUrls: ['button.css'],
+  styleUrls: ['fab.css'],
   inputs: MAT_BUTTON_INPUTS,
   host: MAT_BUTTON_HOST,
   exportAs: 'matButton',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MatButton extends MatButtonBase {
+export class MatFabButton extends MatButtonBase {
   constructor(
       elementRef: ElementRef, platform: Platform, ngZone: NgZone,
       @Optional() @Inject(ANIMATION_MODULE_TYPE) animationMode?: string) {
@@ -53,16 +50,16 @@ export class MatButton extends MatButtonBase {
 
 @Component({
   moduleId: module.id,
-  selector: `a[mat-button], a[mat-raised-button], a[mat-flat-button], a[mat-stroked-button]`,
-  exportAs: 'matButton, matAnchor',
-  host: MAT_ANCHOR_HOST,
-  inputs: MAT_ANCHOR_INPUTS,
+  selector: `a[mat-fab], a[mat-mini-fab]`,
   template: MAT_BUTTON_TEMPLATE,
-  styleUrls: ['button.css'],
+  styleUrls: ['fab.css'],
+  inputs: MAT_ANCHOR_INPUTS,
+  host: MAT_ANCHOR_HOST,
+  exportAs: 'matButton, matAnchor',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MatAnchor extends MatAnchorBase {
+export class MatFabAnchor extends MatAnchor {
   constructor(
       elementRef: ElementRef, platform: Platform, ngZone: NgZone,
       @Optional() @Inject(ANIMATION_MODULE_TYPE) animationMode?: string) {

@@ -1,0 +1,28 @@
+@import '@material/icon-button/mixins';
+@import '../mdc-helpers/mdc-helpers';
+
+$_mat-button-ripple-opacity: 0.1;
+
+@mixin mat-icon-button-theme-mdc($theme) {
+  @include mat-using-mdc-theme($theme) {
+    @include mdc-icon-button-without-ripple($query: $mat-theme-styles-query);
+  }
+
+  .mat-mdc-button {
+    .mat-ripple-element {
+      opacity: $_mat-button-ripple-opacity;
+      background-color: currentColor;
+    }
+  }
+}
+
+@mixin mat-icon-button-typography-mdc($config) {
+  @if config {
+    @include mat-using-mdc-typography($config) {
+      @include mdc-icon-button-without-ripple($query: $mat-typography-styles-query);
+    }
+  }
+  @else {
+    @include mdc-icon-button-without-ripple($query: $mat-typography-styles-query);
+  }
+}
