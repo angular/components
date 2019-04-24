@@ -1,6 +1,11 @@
+export declare class _MatMenuDirectivesModule {
+}
+
 export declare const fadeInItems: AnimationTriggerMetadata;
 
 export declare const MAT_MENU_DEFAULT_OPTIONS: InjectionToken<MatMenuDefaultOptions>;
+
+export declare const MAT_MENU_PANEL: InjectionToken<MatMenuPanel<any>>;
 
 export declare const MAT_MENU_SCROLL_STRATEGY: InjectionToken<() => ScrollStrategy>;
 
