@@ -179,6 +179,10 @@ export class MatDrawer implements AfterContentInit, AfterContentChecked, OnDestr
   _animationEnd = new Subject<AnimationEvent>();
 
   /** Current state of the sidenav animation. */
+  // @HostBinding is used in the class as it is expected to be extended.  Since @Component decorator
+  // metadata is not inherited by child classes, instead the host binding data is defined in a way
+  // that can be inherited.
+  // tslint:disable:no-host-decorator-in-concrete
   @HostBinding('@transform')
   _animationState: 'open-instant' | 'open' | 'void' = 'void';
 
