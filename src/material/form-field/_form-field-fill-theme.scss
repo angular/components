@@ -7,8 +7,9 @@
 
 @mixin mat-form-field-fill-theme($theme) {
   $foreground: map-get($theme, foreground);
-  $background: map-get($theme, background);
   $is-dark-theme: map-get($theme, is-dark);
+  $fill-background: mat-color($foreground, base);
+  $fill-disabled-background: mat-color($foreground, base, if($is-dark-theme, 0.05, 0.02));
   $ripple-hover-height: 1px !default;
   $underline-color: mat-color($foreground, divider, if($is-dark-theme, 0.5, 0.42));
   $label-disabled-color: mat-color($foreground, disabled-text);
@@ -16,27 +17,23 @@
   $mat-form-field-fill-border-radius: 4px !default;
 
   .mat-form-field-appearance-fill {
-    .mat-form-field-flex {
-      background-color: mat-color($background, background);
-    }
-
     .mat-form-field-flex::before {
-      background: mat-color($foreground, base);
+      background: $fill-background;
       content: '';
       border-radius: $mat-form-field-fill-border-radius $mat-form-field-fill-border-radius 0 0;
-      opacity: 0;
+      opacity: 0.1;
       transition: opacity 600ms $swift-ease-out-timing-function;
     }
 
     &:hover .mat-form-field-flex::before {
-      opacity: 0.04;
+      opacity: 0.14;
     }
 
     &.mat-focused .mat-form-field-flex::before {
-      opacity: 0.12;
+      opacity: 0.16;
     }
 
-    &.mat-form-field-disabled .mat-form-field-flex {
+    &.mat-form-field-disabled .mat-form-field-flex::before {
       opacity: if($is-dark-theme, 0.05, 0.02);
     }
 
@@ -104,7 +101,7 @@ $mat-form-field-fill-dedupe: 0;
       top: 0;
       bottom: $wrapper-padding-bottom;
       left: 0;
-      right: 0;    
+      right: 0;
     }
 
     .mat-form-field-infix {
