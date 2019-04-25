@@ -11,7 +11,7 @@ import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
 import {MatCommonModule, MatRippleModule} from '@angular/material/core';
 import {MatMenuContent} from './menu-content';
-import {MatMenu} from './menu';
+import {_MatMenu} from './menu';
 import {MatMenuItem} from './menu-item';
 import {
   MatMenuTrigger,
@@ -38,8 +38,8 @@ export class _MatMenuDirectivesModule {}
     OverlayModule,
     _MatMenuDirectivesModule,
   ],
-  exports: [MatMenu, MatMenuItem, _MatMenuDirectivesModule],
-  declarations: [MatMenu, MatMenuItem],
+  exports: [_MatMenu, MatMenuItem, _MatMenuDirectivesModule],
+  declarations: [_MatMenu, MatMenuItem],
   providers: [MAT_MENU_SCROLL_STRATEGY_FACTORY_PROVIDER]
 })
 export class MatMenuModule {}
