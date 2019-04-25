@@ -17,9 +17,12 @@ Not yet implemented.
 <mat-checkbox>with a label</mat-checkbox>
 
 <h2>MDC menu</h2>
-
-<!-- TODO: Copy kitchen sink examples for mat-menu here -->
-Not yet implemented.
+<button mat-button [matMenuTriggerFor]="menu">Open</button>
+<mat-menu #menu="matMenu">
+  <button mat-menu-item>Mercy</button>
+  <button mat-menu-item>Lucio</button>
+  <button mat-menu-item disabled>Sombra</button>
+</mat-menu>
 
 <h2>MDC radio</h2>
 
@@ -28,5 +31,7 @@ Not yet implemented.
 
 <h2>MDC slide-toggle</h2>
 
-<!-- TODO: Copy kitchen sink examples for mat-slide-toggle here -->
-Not yet implemented.
+<mat-slide-toggle></mat-slide-toggle>
+<mat-slide-toggle checked></mat-slide-toggle>
+<mat-slide-toggle checked disabled></mat-slide-toggle>
+<mat-slide-toggle>with a label</mat-slide-toggle>
