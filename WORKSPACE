@@ -68,23 +68,6 @@ rules_sass_dependencies()
 load("@io_bazel_rules_sass//:defs.bzl", "sass_repositories")
 sass_repositories()
 
-# Temporarily add the Angular repository so that we can set up "ts_api_guardian".
-# TODO(jelbourn): remove this once we can do all the same stuff via @npm//@angular
-http_archive(
-  name = "angular",
-  sha256 = "a542f00adf5cafbcad24268d69da8e4746c22619699f29c3b3b0259d0ce52974",
-  url = "https://github.com/angular/angular/archive/8.0.0-beta.6.zip",
-  strip_prefix = "angular-8.0.0-beta.6",
-)
-
-# Only install the "ts-api-guardian" dependencies as we don't want to install the
-# Angular dev dependencies which are not needed.
-yarn_install(
-    name = "ts-api-guardian_deps",
-    package_json = "@angular//tools/ts-api-guardian:package.json",
-    yarn_lock = "@angular//tools/ts-api-guardian:yarn.lock",
-)
-
 # Bring in bazel_toolchains for RBE setup configuration.
 http_archive(
   name = "bazel_toolchains",
