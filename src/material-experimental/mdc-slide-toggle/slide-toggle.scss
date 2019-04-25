@@ -40,4 +40,11 @@
   .mat-ripple-element {
     opacity: map-get($mdc-ripple-dark-ink-opacities, press);
   }
+
+  &._mat-animation-noopable {
+    .mdc-switch__thumb-underlay,
+    .mdc-switch__thumb-underlay::before {
+      transition: none;
+    }
+  }
 }
