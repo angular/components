@@ -19,7 +19,7 @@ export const MATERIAL_DOCS_ROUTES: Routes = [
   {path: '', component: Homepage, pathMatch: 'full', data: {}},
   {path: 'categories', redirectTo: '/components/categories'},
   {path: 'guides', component: GuideList, data: {}},
-  // Since https://github.com/angular/material2/pull/9574, the cdk-table guide became the overview
+  // Since https://github.com/angular/components/pull/9574, the cdk-table guide became the overview
   // document for the cdk table. To avoid any dead / broken links, we redirect to the new location.
   {path: 'guide/cdk-table', redirectTo: '/cdk/table/overview'},
   {path: 'guide/:id', component: GuideViewer, data: {}},
