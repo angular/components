@@ -1,11 +1,9 @@
 @import '@material/button/mixins';
+@import '@material/fab/mixins';
+@import '@material/icon-button/mixins';
 @import '../mdc-helpers/mdc-helpers';
 
 @mixin mat-button-theme-mdc($theme) {
-  $primary: mat-color(map-get($theme, primary));
-  $accent: mat-color(map-get($theme, accent));
-  $warn: mat-color(map-get($theme, warn));
-
   @include mat-using-mdc-theme($theme) {
     @include mdc-button-without-ripple($query: $mat-theme-styles-query);
   }
@@ -37,6 +35,6 @@
 
 @mixin mat-icon-button-typography-mdc($config) {
   @include mat-using-mdc-typography($config) {
-    @include mdc-icon-without-ripple($query: $mat-typography-styles-query);
+    @include mdc-icon-button-without-ripple($query: $mat-typography-styles-query);
   }
 }
