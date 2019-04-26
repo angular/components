@@ -24,7 +24,6 @@ import {
   MAT_ANCHOR_INPUTS,
   MAT_BUTTON_HOST,
   MAT_BUTTON_INPUTS,
-  MAT_BUTTON_TEMPLATE,
   MatButtonBase
 } from './button-base';
 
@@ -32,7 +31,7 @@ import {
 @Component({
   moduleId: module.id,
   selector: `button[mat-fab], button[mat-mini-fab]`,
-  template: MAT_BUTTON_TEMPLATE,
+  templateUrl: 'button.html',
   styleUrls: ['fab.css'],
   inputs: MAT_BUTTON_INPUTS,
   host: MAT_BUTTON_HOST,
@@ -51,7 +50,7 @@ export class MatFabButton extends MatButtonBase {
 @Component({
   moduleId: module.id,
   selector: `a[mat-fab], a[mat-mini-fab]`,
-  template: MAT_BUTTON_TEMPLATE,
+  templateUrl: 'button.html',
   styleUrls: ['fab.css'],
   inputs: MAT_ANCHOR_INPUTS,
   host: MAT_ANCHOR_HOST,

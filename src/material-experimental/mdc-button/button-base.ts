@@ -22,17 +22,6 @@ import {
   RippleTarget
 } from '@angular/material/core';
 
-/** Shared template to be used by the standard button, FAB, and icon button. */
-export const MAT_BUTTON_TEMPLATE = `
-  <ng-content select=".material-icons:not([iconPositionEnd]), mat-icon:not([iconPositionEnd])">
-  </ng-content>
-
-  <span class="mdc-button__label"><ng-content></ng-content></span>
-
-  <ng-content select=".material-icons[iconPositionEnd], mat-icon[iconPositionEnd]">
-  </ng-content>
-`;
-
 /** Inputs common to all buttons. */
 export const MAT_BUTTON_INPUTS = ['disabled', 'disableRipple', 'color'];
 

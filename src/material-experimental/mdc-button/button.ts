@@ -23,7 +23,6 @@ import {
   MAT_ANCHOR_INPUTS,
   MAT_BUTTON_HOST,
   MAT_BUTTON_INPUTS,
-  MAT_BUTTON_TEMPLATE,
   MatAnchorBase,
   MatButtonBase
 } from './button-base';
@@ -35,7 +34,7 @@ import {
     button[mat-button], button[mat-raised-button], button[mat-flat-button],
     button[mat-stroked-button]
   `,
-  template: MAT_BUTTON_TEMPLATE,
+  templateUrl: 'button.html',
   styleUrls: ['button.css'],
   inputs: MAT_BUTTON_INPUTS,
   host: MAT_BUTTON_HOST,
@@ -57,7 +56,7 @@ export class MatButton extends MatButtonBase {
   exportAs: 'matButton, matAnchor',
   host: MAT_ANCHOR_HOST,
   inputs: MAT_ANCHOR_INPUTS,
-  template: MAT_BUTTON_TEMPLATE,
+  templateUrl: 'button.html',
   styleUrls: ['button.css'],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
