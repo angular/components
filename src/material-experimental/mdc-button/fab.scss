@@ -3,10 +3,6 @@
 
 @include mdc-fab-without-ripple($query: $mat-base-styles-query);
 
-.mat-mdc-button {
-  position: relative;
-}
-
 // MDC expects the fab icon to contain this HTML content:
 // ```html
 //   <span class="mdc-fab__icon material-icons">favorite</span>

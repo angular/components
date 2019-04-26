@@ -2,7 +2,3 @@
 @import '../mdc-helpers/mdc-helpers';
 
 @include mdc-button-without-ripple($query: $mat-base-styles-query);
-
-.mat-mdc-button {
-  position: relative;
-}
