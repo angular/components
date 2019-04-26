@@ -1,5 +1,5 @@
 import {normalize} from '@angular-devkit/core';
-import {WorkspaceProject} from '@angular-devkit/core/src/workspace';
+import {WorkspaceProject} from '@angular-devkit/core/src/experimental/workspace';
 import {Tree} from '@angular-devkit/schematics';
 import {SchematicTestRunner} from '@angular-devkit/schematics/testing';
 import {
