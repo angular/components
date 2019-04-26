@@ -11145,10 +11145,10 @@ tryit@^1.0.1:
   resolved "https://registry.yarnpkg.com/tryit/-/tryit-1.0.3.tgz#393be730a9446fd1ead6da59a014308f36c289cb"
   integrity sha1-OTvnMKlEb9Hq1tpZoBQwjzbCics=
 
-ts-api-guardian@^0.4.3:
-  version "0.4.3"
-  resolved "https://registry.yarnpkg.com/ts-api-guardian/-/ts-api-guardian-0.4.3.tgz#d4aef4985e58f804147e68518b2102427392ad0d"
-  integrity sha512-UuT0VI+3jlKb+EjVontsw2h4Xn+e90sifGRpLduMjLo0sZE9lrI/cimMEcY0IMKXhloV6OeHNfJHuXvBGnIJfw==
+ts-api-guardian@^0.4.4:
+  version "0.4.4"
+  resolved "https://registry.yarnpkg.com/ts-api-guardian/-/ts-api-guardian-0.4.4.tgz#12dfcfa5c5d6c5a8cb2f1b7cc322b9510a81814c"
+  integrity sha512-nWJQRNSeV+er9/deUo/tdYD7Rm7tKOwbcexI8UbqrzC3uAGm2UWncZ9USK0i6kTvT5hCvhW5VNw76JQ8L7Aq8A==
   dependencies:
     chalk "^2.3.1"
     diff "^3.5.0"
