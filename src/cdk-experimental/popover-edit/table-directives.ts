@@ -19,6 +19,7 @@ import {
   ViewContainerRef,
   HostListener,
 } from '@angular/core';
+import {ENTER} from '@angular/cdk/keycodes';
 import {fromEvent, fromEventPattern, merge, ReplaySubject} from 'rxjs';
 import {
   filter,
@@ -85,7 +86,7 @@ export class CdkEditable implements AfterViewInit, OnDestroy {
     const element = this.elementRef.nativeElement!;
 
     const toClosest = (selector: string) =>
-        map((event: UIEvent) => closest(event.target, selector));
+        map((event: Event) => closest(event.target, selector));
 
     this.ngZone.runOutsideAngular(() => {
       // Track mouse movement over the table to hide/show hover content.
@@ -136,7 +137,7 @@ export class CdkEditable implements AfterViewInit, OnDestroy {
 
       fromEvent<KeyboardEvent>(element, 'keyup').pipe(
           takeUntil(this.destroyed),
-          filter(event => event.key === 'Enter'),
+          filter(event => event.keyCode === ENTER),
           toClosest(CELL_SELECTOR),
           ).subscribe(this.editEventDispatcher.editing);
 

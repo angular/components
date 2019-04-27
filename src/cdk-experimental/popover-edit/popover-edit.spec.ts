@@ -1,5 +1,5 @@
 import {DataSource} from '@angular/cdk/collections';
-import {LEFT_ARROW, UP_ARROW, RIGHT_ARROW, DOWN_ARROW, TAB} from '@angular/cdk/keycodes';
+import {LEFT_ARROW, UP_ARROW, RIGHT_ARROW, DOWN_ARROW, TAB, ENTER} from '@angular/cdk/keycodes';
 import {CdkTableModule} from '@angular/cdk/table';
 import {dispatchKeyboardEvent} from '@angular/cdk/testing';
 import {CommonModule} from '@angular/common';
@@ -118,8 +118,11 @@ abstract class BaseTestComponent {
 
   openLens(rowIndex = 0, cellIndex = 1) {
     this.focusEditCell(rowIndex, cellIndex);
-    this.getEditCell(rowIndex, cellIndex)
-        .dispatchEvent(new KeyboardEvent('keyup', {bubbles: true, key: 'Enter'}));
+    this.getEditCell(rowIndex, cellIndex).dispatchEvent(new KeyboardEvent('keyup', {
+      // Cast to `any`, because `keyCode` is a valid parameter that isn't in the TS typings.
+      bubbles: true,
+      keyCode: ENTER
+    } as any));
     flush();
   }
 
@@ -465,7 +468,7 @@ describe('CDK Popover Edit', () => {
           clearLeftoverTimers();
         }));
 
-        it('opens edit from Enter on focued cell', fakeAsync(() => {
+        it('opens edit from Enter on focused cell', fakeAsync(() => {
           // Uses Enter to open the lens.
           component.openLens();
 
