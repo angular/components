@@ -9,28 +9,13 @@
   $foreground: map-get($theme, foreground);
   $is-dark-theme: map-get($theme, is-dark);
   $fill-background: mat-color($foreground, base);
-  $fill-disabled-background: mat-color($foreground, base, if($is-dark-theme, 0.05, 0.02));
   $ripple-hover-height: 1px !default;
   $underline-color: mat-color($foreground, divider, if($is-dark-theme, 0.5, 0.42));
   $label-disabled-color: mat-color($foreground, disabled-text);
-  // The border radius for the form field fill box.
-  $mat-form-field-fill-border-radius: 4px !default;
 
   .mat-form-field-appearance-fill {
     .mat-form-field-flex::before {
       background: $fill-background;
-      content: '';
-      border-radius: $mat-form-field-fill-border-radius $mat-form-field-fill-border-radius 0 0;
-      opacity: 0.1;
-      transition: opacity 600ms $swift-ease-out-timing-function;
-    }
-
-    &:hover .mat-form-field-flex::before {
-      opacity: 0.14;
-    }
-
-    &.mat-focused .mat-form-field-flex::before {
-      opacity: 0.16;
     }
 
     &.mat-form-field-disabled .mat-form-field-flex::before {

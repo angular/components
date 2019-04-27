@@ -33,6 +33,21 @@ $mat-form-field-fill-subscript-padding:
     }
   }
 
+  .mat-form-field-flex::before {
+    content: '';
+    border-radius: $mat-form-field-fill-border-radius $mat-form-field-fill-border-radius 0 0;
+    opacity: 0.1;
+    transition: opacity 400ms $swift-ease-out-timing-function;
+  }
+
+  &:hover .mat-form-field-flex::before {
+    opacity: 0.14;
+  }
+
+  &.mat-focused .mat-form-field-flex::before {
+    opacity: 0.16;
+  }
+
   .mat-form-field-underline::before {
     content: '';
     display: block;
