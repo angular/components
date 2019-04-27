@@ -135,6 +135,7 @@
     "selenium-webdriver": "^3.6.0",
     "sorcery": "^0.10.0",
     "stylelint": "^9.10.1",
+    "ts-api-guardian": "^0.4.4",
     "ts-node": "^3.0.4",
     "tsconfig-paths": "^2.3.0",
     "tslint": "^5.13.1",
