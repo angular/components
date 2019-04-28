@@ -112,6 +112,10 @@ export class DragDropRegistry<I, C extends {id: string}> implements OnDestroy {
    * @param event Event that initiated the dragging.
    */
   startDragging(drag: I, event: TouchEvent | MouseEvent) {
+    if (this._activeDragInstances.has(drag)) {
+      return;
+    }
+
     this._activeDragInstances.add(drag);
 
     if (this._activeDragInstances.size === 1) {
