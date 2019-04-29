@@ -1,5 +1,5 @@
 import {Component, ElementRef, Inject, Input, OnInit} from '@angular/core';
-import {DOCUMENT} from '@angular/platform-browser';
+import {DOCUMENT} from '@angular/common';
 import {ActivatedRoute, NavigationEnd, Router} from '@angular/router';
 import {Subject, fromEvent} from 'rxjs';
 import {debounceTime, takeUntil} from 'rxjs/operators';
