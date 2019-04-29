@@ -5,16 +5,16 @@ load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 # Add NodeJS rules (explicitly used for sass bundle rules)
 http_archive(
   name = "build_bazel_rules_nodejs",
-  sha256 = "5c86b055c57e15bf32d9009a15bcd6d8e190c41b1ff2fb18037b75e0012e4e7c",
-  urls = ["https://github.com/bazelbuild/rules_nodejs/releases/download/0.26.0/rules_nodejs-0.26.0.tar.gz"],
+  sha256 = "4c702ffeeab2d24dd4101601b6d27cf582d2e0d4cdc3abefddd4834664669b6b",
+  urls = ["https://github.com/bazelbuild/rules_nodejs/releases/download/0.28.0/rules_nodejs-0.28.0.tar.gz"],
 )
 
 # Add sass rules
 http_archive(
   name = "io_bazel_rules_sass",
-  sha256 = "f71709f4c2d39e81c9b452e00f22e554b26d7beacaedc5b85d61f771fd01268d",
-  url = "https://github.com/bazelbuild/rules_sass/archive/1.16.1.zip",
-  strip_prefix = "rules_sass-1.16.1",
+  sha256 = "ea79647e5cd36867568d80811a951c7b3170791058f50a5cbd3d542627e78881",
+  url = "https://github.com/bazelbuild/rules_sass/archive/1.17.3.zip",
+  strip_prefix = "rules_sass-1.17.3",
 )
 
 load("@build_bazel_rules_nodejs//:defs.bzl", "check_bazel_version", "node_repositories", "yarn_install")
@@ -52,14 +52,6 @@ ts_setup_workspace()
 load("@npm_bazel_karma//:package.bzl", "rules_karma_dependencies")
 rules_karma_dependencies()
 
-# Fetch transitive dependencies which are needed to use the Sass rules.
-load("@io_bazel_rules_sass//:package.bzl", "rules_sass_dependencies")
-rules_sass_dependencies()
-
-# Setup the Sass rule repositories.
-load("@io_bazel_rules_sass//:defs.bzl", "sass_repositories")
-sass_repositories()
-
 # Setup web testing. We need to setup a browser because the web testing rules for TypeScript need
 # a reference to a registered browser (ideally that's a hermetic version of a browser)
 load("@io_bazel_rules_webtesting//web:repositories.bzl", "web_test_repositories")
@@ -68,28 +60,36 @@ web_test_repositories()
 load("@npm_bazel_karma//:browser_repositories.bzl", "browser_repositories")
 browser_repositories()
 
-# Temporarily add Angular sources and its dependencies to consume the ts_api_guardian,
-# remote-build-execution, and protractor stuff.
-# TODO(jelbourn): remove this once we can do all the same stuff via @npm//@angular
-http_archive(
-  name = "angular",
-  sha256 = "a542f00adf5cafbcad24268d69da8e4746c22619699f29c3b3b0259d0ce52974",
-  url = "https://github.com/angular/angular/archive/8.0.0-beta.6.zip",
-  strip_prefix = "angular-8.0.0-beta.6",
-)
-load("@angular//packages/bazel:package.bzl", "rules_angular_dependencies")
-rules_angular_dependencies()
-load("@angular//:index.bzl", "ng_setup_workspace")
-ng_setup_workspace()
+# Fetch transitive dependencies which are needed to use the Sass rules.
+load("@io_bazel_rules_sass//:package.bzl", "rules_sass_dependencies")
+rules_sass_dependencies()
 
+# Setup the Sass rule repositories.
+load("@io_bazel_rules_sass//:defs.bzl", "sass_repositories")
+sass_repositories()
 
-# Bring in bazel_toolchains for RBE stuff.
+# Bring in bazel_toolchains for RBE setup configuration.
 http_archive(
   name = "bazel_toolchains",
-  sha256 = "109a99384f9d08f9e75136d218ebaebc68cc810c56897aea2224c57932052d30",
-  strip_prefix = "bazel-toolchains-94d31935a2c94fe7e7c7379a0f3393e181928ff7",
-  urls = [
-      "https://mirror.bazel.build/github.com/bazelbuild/bazel-toolchains/archive/94d31935a2c94fe7e7c7379a0f3393e181928ff7.tar.gz",
-      "https://github.com/bazelbuild/bazel-toolchains/archive/94d31935a2c94fe7e7c7379a0f3393e181928ff7.tar.gz",
-  ]
+  sha256 = "67335b3563d9b67dc2550b8f27cc689b64fadac491e69ce78763d9ba894cc5cc",
+  strip_prefix = "bazel-toolchains-cddc376d428ada2927ad359211c3e356bd9c9fbb",
+  url = "https://github.com/bazelbuild/bazel-toolchains/archive/cddc376d428ada2927ad359211c3e356bd9c9fbb.tar.gz",
+)
+
+load("@bazel_toolchains//repositories:repositories.bzl", bazel_toolchains_repositories = "repositories")
+bazel_toolchains_repositories()
+
+load("@bazel_toolchains//rules:rbe_repo.bzl", "rbe_autoconfig")
+rbe_autoconfig(
+  name = "rbe_default",
+  # We can't use the default "ubuntu16_04" RBE image provided by the autoconfig because we need
+  # a specific Linux kernel that comes with "libx11" in order to run headless browser tests.
+  repository = "asci-toolchain/nosla-ubuntu16_04-webtest",
+  registry = "gcr.io",
+  digest = "sha256:e874885f5e3d9ac0c0d3176e5369cb5969467dbf9ad8d42b862829cec8d84b9b",
+  # Need to specify a base container digest in order to ensure that we can use the checked-in
+  # platform configurations for the "ubuntu16_04" image. Otherwise the autoconfig rule would
+  # need to pull the image and run it in order determine the toolchain configuration.
+  # See: https://github.com/bazelbuild/bazel-toolchains/blob/master/rules/rbe_repo.bzl#L229
+  base_container_digest = "sha256:da0f21c71abce3bbb92c3a0c44c3737f007a82b60f8bd2930abc55fe64fc2729",
 )

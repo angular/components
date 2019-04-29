@@ -9,10 +9,10 @@
 import {getSystemPath, normalize} from '@angular-devkit/core';
 import {TempScopedNodeJsSyncHost} from '@angular-devkit/core/node/testing';
 import * as virtualFs from '@angular-devkit/core/src/virtual-fs/host';
-import {SchematicTestRunner} from '@angular-devkit/schematics/testing';
-import {mkdirpSync, readFileSync, writeFileSync, removeSync} from 'fs-extra';
+import {SchematicTestRunner, UnitTestTree} from '@angular-devkit/schematics/testing';
+import {mkdirpSync, readFileSync, removeSync, writeFileSync} from 'fs-extra';
 import {sync as globSync} from 'glob';
-import {dirname, join, basename, relative, sep} from 'path';
+import {dirname, join, extname, basename, relative, sep} from 'path';
 import {createTestApp, runPostScheduledTasks} from '../testing';
 
 /** Suffix that indicates whether a given file is a test case input. */
@@ -30,9 +30,9 @@ export function readFileContent(filePath: string): string {
  * Creates a test app schematic tree that will be copied over to a real filesystem location.
  * This is necessary because TSLint is not able to read from the virtual filesystem tree.
  */
-export function createFileSystemTestApp(runner: SchematicTestRunner) {
+export async function createFileSystemTestApp(runner: SchematicTestRunner) {
   const tempFileSystemHost = new TempScopedNodeJsSyncHost();
-  const appTree = createTestApp(runner, {name: 'cdk-testing'});
+  const appTree: UnitTestTree = await createTestApp(runner, {name: 'cdk-testing'});
   const tempPath = getSystemPath(tempFileSystemHost.root);
 
   // Since the TSLint fix task expects all files to be present on the real file system, we
@@ -44,7 +44,7 @@ export function createFileSystemTestApp(runner: SchematicTestRunner) {
   return {appTree, tempPath, removeTempDir: () => removeSync(tempPath)};
 }
 
-export async function runTestCases(migrationName: string, collectionPath: string,
+export async function createTestCaseSetup(migrationName: string, collectionPath: string,
                                    inputFiles: string[]) {
 
   const runner = new SchematicTestRunner('schematics', collectionPath);
@@ -53,32 +53,36 @@ export async function runTestCases(migrationName: string, collectionPath: string
   let logOutput = '';
   runner.logger.subscribe(entry => logOutput += entry.message);
 
-  const {appTree, tempPath, removeTempDir} = createFileSystemTestApp(runner);
+  const {appTree, tempPath, removeTempDir} = await createFileSystemTestApp(runner);
 
   // Write each test-case input to the file-system. This is necessary because otherwise
   // TSLint won't be able to pick up the test cases.
   inputFiles.forEach(inputFilePath => {
-    const inputTestName = basename(inputFilePath);
+    const inputTestName = basename(inputFilePath, extname(inputFilePath));
     const tempInputPath = join(tempPath, `projects/cdk-testing/src/test-cases/${inputTestName}.ts`);
 
     mkdirpSync(dirname(tempInputPath));
     writeFileSync(tempInputPath, readFileContent(inputFilePath));
   });
 
-  runner.runSchematic(migrationName, {}, appTree);
+  const runFixers = async function() {
+    await runner.runSchematicAsync(migrationName, {}, appTree).toPromise();
 
-  // Switch to the new temporary directory because otherwise TSLint cannot read the files.
-  process.chdir(tempPath);
+    // Switch to the new temporary directory because otherwise TSLint cannot read the files.
+    process.chdir(tempPath);
 
-  // Run the scheduled TSLint fix task from the update schematic. This task is responsible for
-  // identifying outdated code parts and performs the fixes. Since tasks won't run automatically
-  // within a `SchematicTestRunner`, we manually need to run the scheduled task.
-  await runPostScheduledTasks(runner, 'tslint-fix').toPromise();
+    // Run the scheduled TSLint fix task from the update schematic. This task is responsible for
+    // identifying outdated code parts and performs the fixes. Since tasks won't run automatically
+    // within a `SchematicTestRunner`, we manually need to run the scheduled task.
+    await runPostScheduledTasks(runner, 'tslint-fix').toPromise();
 
-  // Switch back to the initial working directory.
-  process.chdir(initialWorkingDir);
+    // Switch back to the initial working directory.
+    process.chdir(initialWorkingDir);
 
-  return {tempPath, logOutput, removeTempDir};
+    return {logOutput};
+  };
+
+  return {tempPath, removeTempDir, runFixers};
 }
 
 /**
@@ -144,8 +148,10 @@ export function defineJasmineTestCases(versionName: string, collectionFile: stri
   let cleanupTestApp: () => void;
 
   beforeAll(async () => {
-    const {tempPath, removeTempDir} =
-      await runTestCases(`migration-${versionName}`, collectionFile, inputFiles);
+    const {tempPath, runFixers, removeTempDir} =
+      await createTestCaseSetup(`migration-${versionName}`, collectionFile, inputFiles);
+
+    await runFixers();
 
     testCasesOutputPath = join(tempPath, 'projects/cdk-testing/src/test-cases/');
     cleanupTestApp = removeTempDir;
@@ -156,7 +162,7 @@ export function defineJasmineTestCases(versionName: string, collectionFile: stri
   // Iterates through every test case directory and generates a jasmine test block that will
   // verify that the update schematics properly updated the test input to the expected output.
   inputFiles.forEach(inputFile => {
-    const inputTestName = basename(inputFile);
+    const inputTestName = basename(inputFile, extname(inputFile));
 
     it(`should apply update schematics to test case: ${inputTestName}`, () => {
       expect(readFileContent(join(testCasesOutputPath, `${inputTestName}.ts`)))

@@ -1,0 +1,15 @@
+@import '@material/icon-button/mixins';
+@import '../mdc-helpers/mdc-helpers';
+
+@include mdc-icon-button-without-ripple($query: $mat-base-styles-query);
+
+$_mat-button-ripple-opacity: 0.1;
+
+.mat-mdc-button {
+  // The ripple element is created from the RippleRenderer rather than the MDC ripple, so it is
+  // necessary to provide the color and opacity styling manually.
+  .mat-ripple-element {
+    opacity: $_mat-button-ripple-opacity;
+    background-color: currentColor;
+  }
+}

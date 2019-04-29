@@ -75,16 +75,8 @@ def ng_package(name, readme_md = None, **kwargs):
     **kwargs
   )
 
-def jasmine_node_test(deps = [], **kwargs):
-  local_deps = [
-    "@npm//source-map-support",
-  ] + deps
-
-  _jasmine_node_test(
-    deps = local_deps,
-    jasmine = "@npm//jasmine",
-    **kwargs
-  )
+def jasmine_node_test(**kwargs):
+  _jasmine_node_test(**kwargs)
 
 def ng_test_library(deps = [], tsconfig = None, **kwargs):
   local_deps = [
@@ -116,7 +108,7 @@ def ng_web_test_suite(deps = [], static_css = [], bootstrap = [], **kwargs):
   # that is needed for measuring, will unexpectedly fail. Also always adding a prebuilt theme
   # reduces the amount of setup that is needed to create a test suite Bazel target. Note that the
   # prebuilt theme will be also added to CDK test suites but shouldn't affect anything.
-  static_css = static_css + ["//src/lib/prebuilt-themes:indigo-pink"]
+  static_css = static_css + ["//src/material/prebuilt-themes:indigo-pink"]
 
   # Workaround for https://github.com/bazelbuild/rules_typescript/issues/301
   # Since some of our tests depend on CSS files which are not part of the `ng_module` rule,

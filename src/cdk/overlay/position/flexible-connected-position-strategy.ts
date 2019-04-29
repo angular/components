@@ -142,12 +142,9 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
   }
 
   constructor(
-    connectedTo: FlexibleConnectedPositionStrategyOrigin,
-    private _viewportRuler: ViewportRuler,
-    private _document: Document,
-    // @breaking-change 8.0.0 `_platform` and `_overlayContainer` parameters to be made required.
-    private _platform?: Platform,
-    private _overlayContainer?: OverlayContainer) {
+      connectedTo: FlexibleConnectedPositionStrategyOrigin, private _viewportRuler: ViewportRuler,
+      private _document: Document, private _platform: Platform,
+      private _overlayContainer: OverlayContainer) {
     this.setOrigin(connectedTo);
   }
 
@@ -193,8 +190,7 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
    */
   apply(): void {
     // We shouldn't do anything if the strategy was disposed or we're on the server.
-    // @breaking-change 8.0.0 Remove `_platform` null check once it's guaranteed to be defined.
-    if (this._isDisposed || (this._platform && !this._platform.isBrowser)) {
+    if (this._isDisposed || !this._platform.isBrowser) {
       return;
     }
 
@@ -304,7 +300,7 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
     this._applyPosition(fallback!.position, fallback!.originPoint);
   }
 
-  detach() {
+  detach(): void {
     this._clearPanelClasses();
     this._lastPosition = null;
     this._previousPushAmount = null;
@@ -312,7 +308,7 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
   }
 
   /** Cleanup after the element gets destroyed. */
-  dispose() {
+  dispose(): void {
     if (this._isDisposed) {
       return;
     }
@@ -369,8 +365,9 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
    * on reposition we can evaluate if it or the overlay has been clipped or outside view. Every
    * Scrollable must be an ancestor element of the strategy's origin element.
    */
-  withScrollableContainers(scrollables: CdkScrollable[]) {
+  withScrollableContainers(scrollables: CdkScrollable[]): this {
     this.scrollables = scrollables;
+    return this;
   }
 
   /**
@@ -925,11 +922,8 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
       overlayPoint = this._pushOverlayOnScreen(overlayPoint, this._overlayRect, scrollPosition);
     }
 
-    // @breaking-change 8.0.0 Currently the `_overlayContainer` is optional in order to avoid a
-    // breaking change. The null check here can be removed once the `_overlayContainer` becomes
-    // a required parameter.
-    let virtualKeyboardOffset = this._overlayContainer ?
-        this._overlayContainer.getContainerElement().getBoundingClientRect().top : 0;
+    let virtualKeyboardOffset =
+        this._overlayContainer.getContainerElement().getBoundingClientRect().top;
 
     // Normally this would be zero, however when the overlay is attached to an input (e.g. in an
     // autocomplete), mobile browsers will shift everything in order to put the input in the middle
