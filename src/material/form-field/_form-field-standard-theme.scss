@@ -18,7 +18,6 @@
     &:not(.mat-form-field-invalid):not(.mat-focused) {
       .mat-form-field-ripple {
         background-color: if($is-dark-theme, $ripple-dark-theme-hover-color, $ripple-hover-color);
-        height: $ripple-hover-height;
       }
     }
 

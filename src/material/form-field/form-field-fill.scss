@@ -21,6 +21,7 @@ $mat-form-field-fill-subscript-font-scale: 0.75 !default;
 $mat-form-field-fill-subscript-padding:
     $mat-form-field-fill-side-padding / $mat-form-field-fill-subscript-font-scale;
 
+$mat-form-field-fill-ripple-hover-height: 1px !default;
 
 .mat-form-field-appearance-fill {
   .mat-form-field-flex {
@@ -36,7 +37,11 @@ $mat-form-field-fill-subscript-padding:
   .mat-form-field-flex::before {
     content: '';
     border-radius: $mat-form-field-fill-border-radius $mat-form-field-fill-border-radius 0 0;
+    left: 0;
     opacity: 0.1;
+    position: absolute;
+    right: 0;
+    top: 0;
     transition: opacity 400ms $swift-ease-out-timing-function;
   }
 
@@ -65,6 +70,10 @@ $mat-form-field-fill-subscript-padding:
       height: 0;
       border-top: solid $mat-form-field-fill-underline-ripple-height;
     }
+  }
+
+  &:not(.mat-form-field-invalid):not(.mat-focused) .mat-form-field-ripple {
+    height: $mat-form-field-fill-ripple-hover-height;
   }
 
   // Note that we need this specific of a selector because we don't want

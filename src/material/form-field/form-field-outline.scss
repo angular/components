@@ -100,6 +100,10 @@ $mat-form-field-outline-subscript-padding:
     opacity: 0;
   }
 
+  &.mat-focused .mat-form-field-outline-thick {
+    border-width: $mat-form-field-outline-width;
+  }
+
   &.mat-focused,
   &.mat-form-field-invalid {
     .mat-form-field-outline {

@@ -17,7 +17,6 @@
   $outline-color: mat-color($foreground, divider, if($is-dark-theme, 0.3, 0.12));
   $outline-color-hover-dark: mat-color($foreground, divider, 0.7);
   $outline-color-hover: map-get($mat-grey, 900);
-  $outline-hover-width: 1px !default;
   $outline-color-primary: mat-color($primary);
   $outline-color-accent: mat-color($accent);
   $outline-color-warn: mat-color($warn);
@@ -34,7 +33,6 @@
 
     &.mat-focused {
       .mat-form-field-outline-thick {
-        border-width: $outline-hover-width;
         color: $outline-color-primary;
       }
 

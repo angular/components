@@ -49,6 +49,11 @@ $mat-form-field-standard-padding-top: 0.75em !default;
     }
   }
 
+  &:not(.mat-form-field-invalid):not(.mat-focused) {
+    .mat-form-field-ripple {
+      height: $mat-form-field-standard-underline-height;
+    }
+  }
   // Note that we need this specific of a selector because we don't want
   // the hover effect to show when the user hovers over the hints.
   &:not(.mat-form-field-disabled) .mat-form-field-flex:hover ~ .mat-form-field-underline {
