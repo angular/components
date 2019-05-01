@@ -25,7 +25,7 @@ import {DOCUMENT} from '@angular/common';
 import {of as observableOf} from 'rxjs';
 
 import {DragDropModule} from '../drag-drop-module';
-import {CdkDragDrop} from '../drag-events';
+import {CdkDragDrop, CdkDragEnter} from '../drag-events';
 import {DragRefConfig, Point} from '../drag-ref';
 import {extendStyles} from '../drag-styling';
 import {moveItemInArray} from '../drag-utils';
@@ -3232,6 +3232,32 @@ describe('CdkDrag', () => {
                  'cdk-drop-list-dragging',
                  'Expected target to have dragging class once item has been moved over.');
        }));
+
+    it('should dispatch an event when an item enters a new container', fakeAsync(() => {
+      const fixture = createComponent(ConnectedDropZones);
+      fixture.detectChanges();
+
+      const groups = fixture.componentInstance.groupedDragItems;
+      const item = groups[0][1];
+      const targetRect = groups[1][2].element.nativeElement.getBoundingClientRect();
+
+      startDraggingViaMouse(fixture, item.element.nativeElement);
+
+      dispatchMouseEvent(document, 'mousemove', targetRect.left + 1, targetRect.top + 1);
+      fixture.detectChanges();
+
+      const containerEnterEvent = fixture.componentInstance.enteredSpy.calls.mostRecent().args[0];
+      const itemEnterEvent = fixture.componentInstance.itemEnteredSpy.calls.mostRecent().args[0];
+      const expectedEvent: CdkDragEnter = {
+        container: fixture.componentInstance.dropInstances.toArray()[1],
+        item: item,
+        currentIndex: 2
+      };
+
+      expect(containerEnterEvent).toEqual(expectedEvent);
+      expect(itemEnterEvent).toEqual(expectedEvent);
+    }));
+
   });
 });
 
@@ -3527,8 +3553,13 @@ class DraggableInDropZoneWithCustomPlaceholder {
       #todoZone="cdkDropList"
       [cdkDropListData]="todo"
       [cdkDropListConnectedTo]="[doneZone]"
-      (cdkDropListDropped)="droppedSpy($event)">
-      <div [cdkDragData]="item" *ngFor="let item of todo" cdkDrag>{{item}}</div>
+      (cdkDropListDropped)="droppedSpy($event)"
+      (cdkDropListEntered)="enteredSpy($event)">
+      <div
+        [cdkDragData]="item"
+        (cdkDragEntered)="itemEnteredSpy($event)"
+        *ngFor="let item of todo"
+        cdkDrag>{{item}}</div>
     </div>
 
     <div
@@ -3536,16 +3567,26 @@ class DraggableInDropZoneWithCustomPlaceholder {
       #doneZone="cdkDropList"
       [cdkDropListData]="done"
       [cdkDropListConnectedTo]="[todoZone]"
-      (cdkDropListDropped)="droppedSpy($event)">
-      <div [cdkDragData]="item" *ngFor="let item of done" cdkDrag>{{item}}</div>
+      (cdkDropListDropped)="droppedSpy($event)"
+      (cdkDropListEntered)="enteredSpy($event)">
+      <div
+        [cdkDragData]="item"
+        (cdkDragEntered)="itemEnteredSpy($event)"
+        *ngFor="let item of done"
+        cdkDrag>{{item}}</div>
     </div>
 
     <div
       cdkDropList
       #extraZone="cdkDropList"
       [cdkDropListData]="extra"
-      (cdkDropListDropped)="droppedSpy($event)">
-      <div [cdkDragData]="item" *ngFor="let item of extra" cdkDrag>{{item}}</div>
+      (cdkDropListDropped)="droppedSpy($event)"
+      (cdkDropListEntered)="enteredSpy($event)">
+      <div
+        [cdkDragData]="item"
+        (cdkDragEntered)="itemEnteredSpy($event)"
+        *ngFor="let item of extra"
+        cdkDrag>{{item}}</div>
     </div>
   `
 })
@@ -3558,6 +3599,8 @@ class ConnectedDropZones implements AfterViewInit {
   done = ['Four', 'Five', 'Six'];
   extra = [];
   droppedSpy = jasmine.createSpy('dropped spy');
+  enteredSpy = jasmine.createSpy('entered spy');
+  itemEnteredSpy = jasmine.createSpy('item entered spy');
 
   ngAfterViewInit() {
     this.dropInstances.forEach((dropZone, index) => {
