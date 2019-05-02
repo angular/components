@@ -11,7 +11,6 @@
   $is-dark-theme: map-get($theme, is-dark);
   $ripple-hover-color: map-get($mat-grey, 700);
   $ripple-dark-theme-hover-color: mat-color($foreground, divider, 0.7);
-  $ripple-hover-height: 1px !default;
   $underline-color: mat-color($foreground, divider, if($is-dark-theme, 0.7, 0.42));
 
   .mat-form-field-appearance-standard {
