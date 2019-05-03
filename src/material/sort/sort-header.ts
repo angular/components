@@ -17,6 +17,7 @@ import {
   Optional,
   ViewEncapsulation,
   Inject,
+  Attribute,
 } from '@angular/core';
 import {CanDisable, CanDisableCtor, mixinDisabled} from '@angular/material/core';
 import {merge, Subscription} from 'rxjs';
@@ -53,6 +54,7 @@ export interface ArrowViewStateTransition {
   toState: ArrowViewState;
 }
 
+
 /** Column definition associated with a `MatSortHeader`. */
 interface MatSortHeaderColumnDef {
   name: string;
@@ -75,6 +77,7 @@ interface MatSortHeaderColumnDef {
   styleUrls: ['sort-header.css'],
   host: {
     '(click)': '_handleClick()',
+    '[attr.tabindex]': 'null',
     '(mouseenter)': '_setIndicatorHintVisible(true)',
     '(longpress)': '_setIndicatorHintVisible(true)',
     '(mouseleave)': '_setIndicatorHintVisible(false)',
@@ -83,7 +86,7 @@ interface MatSortHeaderColumnDef {
   },
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  inputs: ['disabled'],
+  inputs: ['disabled', 'tabIndex'],
   animations: [
     matSortAnimations.indicator,
     matSortAnimations.leftPointer,
@@ -130,6 +133,9 @@ export class MatSortHeader extends _MatSortHeaderMixinBase
   /** Overrides the sort start value of the containing MatSort for this MatSortable. */
   @Input() start: 'asc' | 'desc';
 
+  /** The `tabindex` attribute to use for the input element. */
+  @Input() tabIndex: number;
+
   /** Overrides the disable clear value of the containing MatSort for this MatSortable. */
   @Input()
   get disableClear(): boolean { return this._disableClear; }
@@ -139,14 +145,16 @@ export class MatSortHeader extends _MatSortHeaderMixinBase
   constructor(public _intl: MatSortHeaderIntl,
               changeDetectorRef: ChangeDetectorRef,
               @Optional() public _sort: MatSort,
+              @Attribute('tabindex') tabIndex: string,
               @Inject('MAT_SORT_HEADER_COLUMN_DEF') @Optional()
                   public _columnDef: MatSortHeaderColumnDef) {
+                    
     // Note that we use a string token for the `_columnDef`, because the value is provided both by
     // `material/table` and `cdk/table` and we can't have the CDK depending on Material,
     // and we want to avoid having the sort header depending on the CDK table because
     // of this single reference.
     super();
-
+    this.tabIndex = parseInt(tabIndex) || 0;
     if (!_sort) {
       throw getSortHeaderNotContainedWithinSortError();
     }
