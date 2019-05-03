@@ -1,6 +1,6 @@
 import {Component, NgModule, OnInit} from '@angular/core';
 import {GuideItems} from '../../shared/guide-items/guide-items';
-import {MatListModule} from '@angular/material';
+import {MatListModule} from '@angular/material/list';
 import {RouterModule} from '@angular/router';
 import {FooterModule} from '../../shared/footer/footer';
 import {CommonModule} from '@angular/common';

@@ -9,7 +9,7 @@ import {
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
-import {MatTabsModule} from '@angular/material';
+import {MatTabsModule} from '@angular/material/tabs';
 import {ActivatedRoute, Params, Router, RouterModule} from '@angular/router';
 import {combineLatest, Observable, Subject} from 'rxjs';
 import {map, takeUntil} from 'rxjs/operators';

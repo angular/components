@@ -5,7 +5,8 @@ import {ComponentViewer, ComponentViewerModule} from './component-viewer';
 import {DocsAppTestingModule} from '../../testing/testing-module';
 
 import {EXAMPLE_COMPONENTS} from '@angular/material-examples';
-import {MatButtonModule, MatIconModule} from '@angular/material';
+import {MatButtonModule} from '@angular/material/button';
+import {MatIconModule} from '@angular/material/icon';
 import {NgModule} from '@angular/core';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 

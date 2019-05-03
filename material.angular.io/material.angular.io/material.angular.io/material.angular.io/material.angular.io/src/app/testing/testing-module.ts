@@ -1,6 +1,6 @@
 import {HttpClientTestingModule} from '@angular/common/http/testing';
 import {NgModule} from '@angular/core';
-import {MATERIAL_SANITY_CHECKS} from '@angular/material';
+import {MATERIAL_SANITY_CHECKS} from '@angular/material/core';
 import {RouterTestingModule} from '@angular/router/testing';
 
 

@@ -3,12 +3,10 @@ import {HttpTestingController} from '@angular/common/http/testing';
 import {NgModule} from '@angular/core';
 import {async, ComponentFixture, inject, TestBed} from '@angular/core/testing';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {
-  MatAutocompleteModule,
-  MatInputModule,
-  MatSlideToggleModule,
-  MatSnackBar,
-} from '@angular/material';
+import {MatAutocompleteModule} from '@angular/material/autocomplete';
+import {MatInputModule} from '@angular/material/input';
+import {MatSlideToggleModule} from '@angular/material/slide-toggle';
+import {MatSnackBar} from '@angular/material/snack-bar';
 
 import {EXAMPLE_COMPONENTS} from '@angular/material-examples';
 import {By} from '@angular/platform-browser';

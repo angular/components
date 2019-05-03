@@ -4,7 +4,7 @@ import {NgModule} from '@angular/core';
 import {LocationStrategy, PathLocationStrategy} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 import {RouterModule} from '@angular/router';
-import {MatNativeDateModule} from '@angular/material';
+import {MatNativeDateModule} from '@angular/material/core';
 import {ExampleModule} from '@angular/material-examples';
 
 import {MaterialDocsApp} from './material-docs-app';

@@ -2,7 +2,8 @@ import {
   Component, Input, NgZone, ViewEncapsulation, ViewChild, OnInit, NgModule, OnDestroy
 } from '@angular/core';
 import {DocumentationItems} from '../../shared/documentation-items/documentation-items';
-import {MatSidenav, MatSidenavModule, MatIconModule} from '@angular/material';
+import {MatIconModule} from '@angular/material/icon';
+import {MatSidenav, MatSidenavModule} from '@angular/material/sidenav';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {ActivatedRoute, Params, Router, RouterModule} from '@angular/router';
 import {CommonModule} from '@angular/common';
