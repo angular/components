@@ -30,7 +30,7 @@ export type ProgressSpinnerMode = 'determinate' | 'indeterminate';
  * Base reference size of the spinner.
  * @docs-private
  */
-const BASE_SIZE = 100;
+const BASE_SIZE = 48;
 
 /**
  * Base reference stroke width of the spinner.
