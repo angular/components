@@ -65,8 +65,8 @@ export class ComponentViewer implements OnDestroy {
   encapsulation: ViewEncapsulation.None,
 })
 export class ComponentOverview implements OnInit {
-  @ViewChild('initialFocusTarget') focusTarget: ElementRef;
-  @ViewChild('toc') tableOfContents: TableOfContents;
+  @ViewChild('initialFocusTarget', {static: false}) focusTarget: ElementRef;
+  @ViewChild('toc', {static: false}) tableOfContents: TableOfContents;
   showToc: Observable<boolean>;
 
   constructor(public componentViewer: ComponentViewer, breakpointObserver: BreakpointObserver) {
