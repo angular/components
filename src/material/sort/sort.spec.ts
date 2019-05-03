@@ -399,15 +399,34 @@ describe('MatSort', () => {
 
   it('should render the arrow if a disabled column is being sorted by', fakeAsync(() => {
     const sortHeaderElement = fixture.nativeElement.querySelector('#defaultA');
-
+    
     component.sort('defaultA');
     fixture.componentInstance.disabledColumnSort = true;
     fixture.detectChanges();
     tick();
     fixture.detectChanges();
-
     expect(sortHeaderElement.querySelector('.mat-sort-header-arrow')).toBeTruthy();
   }));
+
+  it('should have a default tabIndex applied to sort-header-button and sort-header-arrow', () => {
+      const header = fixture.debugElement.query(By.directive(MatSortHeader)).nativeElement;
+      const button = header.querySelector('.mat-sort-header-button');
+      const arrow = header.querySelector('.mat-sort-header-arrow');
+      fixture.detectChanges();
+      expect(button.tabIndex).toBe(0);
+      expect(arrow.tabIndex).toBe(0);
+  });
+
+  it('should apply custom tabIndex to sort-header-button and sort-header-arrow', () => {
+    const header = fixture.debugElement.query(By.directive(MatSortHeader)).nativeElement;
+    fixture.componentInstance.tabIndex = 1;
+    fixture.detectChanges();
+    const button = header.querySelector('.mat-sort-header-button');
+    const arrow = header.querySelector('.mat-sort-header-arrow');
+    fixture.detectChanges();
+    expect(button.tabIndex).toBe(1);
+    expect(arrow.tabIndex).toBe(1);
+  })
 
 });
 
@@ -460,6 +479,7 @@ type SimpleMatSortAppColumnIds = 'defaultA' | 'defaultB' | 'overrideStart' | 'ov
          (matSortChange)="latestSortEvent = $event">
       <div id="defaultA"
            #defaultA
+           [tabIndex]="tabIndex"
            mat-sort-header="defaultA"
            [disabled]="disabledColumnSort">
         A
@@ -490,6 +510,7 @@ class SimpleMatSortApp {
   start: SortDirection = 'asc';
   direction: SortDirection = '';
   disableClear: boolean;
+  tabIndex: number;
   disabledColumnSort = false;
   disableAllSort = false;
 
