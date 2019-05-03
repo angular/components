@@ -5,6 +5,7 @@
           [attr.disabled]="_isDisabled() || null"
           [attr.aria-label]="_intl.sortButtonLabel(id)"
           (focus)="_setIndicatorHintVisible(true)"
+          [tabIndex]="tabIndex"
           (blur)="_setIndicatorHintVisible(false)">
     <ng-content></ng-content>
   </button>
@@ -12,6 +13,7 @@
   <!-- Disable animations while a current animation is running -->
   <div class="mat-sort-header-arrow"
        *ngIf="_renderArrow()"
+       [tabIndex]="tabIndex"
        [@arrowOpacity]="_getArrowViewState()"
        [@arrowPosition]="_getArrowViewState()"
        [@allowChildren]="_getArrowDirectionState()"
