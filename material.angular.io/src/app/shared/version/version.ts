@@ -1,4 +1,4 @@
-import {VERSION} from '@angular/material';
+import {VERSION} from '@angular/material/core';
 
 /** This material version will be used in footer and stackblitz. */
 export const materialVersion = VERSION.full;

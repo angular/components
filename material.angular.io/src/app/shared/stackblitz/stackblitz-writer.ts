@@ -1,6 +1,6 @@
 import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
-import {VERSION} from '@angular/material';
+import {VERSION} from '@angular/material/core';
 import {ExampleData} from '@angular/material-examples';
 
 import {materialVersion} from '../version/version';

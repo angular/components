@@ -7,7 +7,7 @@ import {ActivatedRoute, Router, RouterModule} from '@angular/router';
 import {ComponentPageTitle} from '../page-title/page-title';
 import {SvgViewerModule} from '../../shared/svg-viewer/svg-viewer';
 import {CommonModule} from '@angular/common';
-import {MatCardModule} from '@angular/material';
+import {MatCardModule } from '@angular/material/card';
 import {combineLatest} from 'rxjs';
 
 @Component({

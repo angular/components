@@ -1,5 +1,5 @@
 import {Component, NgModule, OnDestroy, OnInit} from '@angular/core';
-import {MatCardModule} from '@angular/material';
+import {MatCardModule} from '@angular/material/card';
 import {CommonModule} from '@angular/common';
 import {ActivatedRoute, Params, RouterModule} from '@angular/router';
 import {DocumentationItems, SECTIONS} from '../../shared/documentation-items/documentation-items';
