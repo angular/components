@@ -399,7 +399,6 @@ describe('MatSort', () => {
 
   it('should render the arrow if a disabled column is being sorted by', fakeAsync(() => {
     const sortHeaderElement = fixture.nativeElement.querySelector('#defaultA');
-    
     component.sort('defaultA');
     fixture.componentInstance.disabledColumnSort = true;
     fixture.detectChanges();
@@ -426,7 +425,7 @@ describe('MatSort', () => {
     fixture.detectChanges();
     expect(button.tabIndex).toBe(1);
     expect(arrow.tabIndex).toBe(1);
-  })
+  });
 
 });
 
