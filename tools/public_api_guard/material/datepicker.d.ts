@@ -13,12 +13,14 @@ export declare const MAT_DATEPICKER_VALIDATORS: any;
 export declare const MAT_DATEPICKER_VALUE_ACCESSOR: any;
 
 export declare class MatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDestroy, OnChanges {
+    _calendarFooterPortal: Portal<any>;
     _calendarHeaderPortal: Portal<any>;
     readonly _userSelection: EventEmitter<void>;
     activeDate: D;
     currentView: MatCalendarView;
     dateClass: (date: D) => MatCalendarCellCssClasses;
     dateFilter: (date: D) => boolean;
+    footerComponent: ComponentType<any>;
     headerComponent: ComponentType<any>;
     maxDate: D | null;
     minDate: D | null;
@@ -109,6 +111,7 @@ export declare class MatDatepicker<D> implements OnDestroy, CanColor {
     _popupRef: OverlayRef;
     _selected: D | null;
     readonly _selectedChanged: Subject<D>;
+    calendarFooterComponent: ComponentType<any>;
     calendarHeaderComponent: ComponentType<any>;
     closedStream: EventEmitter<void>;
     color: ThemePalette;
