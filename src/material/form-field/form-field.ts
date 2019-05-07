@@ -427,10 +427,23 @@ export class MatFormField extends _MatFormFieldMixinBase
     return this._hasLabel() || this.appearance === 'legacy' && this._hasPlaceholder();
   }
 
-  /** Determines whether to display hints or errors. */
-  _getDisplayedMessages(): 'error' | 'hint' {
-    return (this._errorChildren && this._errorChildren.length > 0 &&
-        this._control.errorState) ? 'error' : 'hint';
+  /** Determines whether to display hints, errors or null. */
+  _getDisplayedMessages(): 'error' | 'hint' | null {
+    return this._areErrorMessagesVisible() ? 'error' : this._areHintsVisible() ? 'hint' : null;
+  }
+
+  /**
+   * Makes sure the control element is in an error state and that is has `<mat-error>` child elements.
+   */
+  private _areErrorMessagesVisible(): boolean {
+    return this._control.errorState && this._errorChildren && this._errorChildren.length > 0;
+  }
+
+  /**
+   * Makes sure the control element is not in an error state and that is has `<mat-hint>` child elements.
+   */
+  private _areHintsVisible(): boolean {
+    return !this._control.errorState && this._hintChildren && this._hintChildren.length > 0;
   }
 
   /** Animates the placeholder up and locks it in position. */
