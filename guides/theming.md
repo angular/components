@@ -185,7 +185,7 @@ export class UnicornCandyAppModule {
 ```
 
 #### Theming only certain components
-The `angular-material-theme` mixin will output styles for [all components in the library](https://github.com/angular/material2/blob/master/src/lib/core/theming/_all-theme.scss).
+The `angular-material-theme` mixin will output styles for [all components in the library](https://github.com/angular/components/blob/master/src/material/core/theming/_all-theme.scss).
 If you are only using a subset of the components (or if you want to change the theme for specific
 components), you can include component-specific theme mixins. You also will need to include
 the `mat-core-theme` mixin as well, which contains theme-specific styles for common behaviors
@@ -209,6 +209,43 @@ $candy-app-theme:   mat-light-theme($candy-app-primary, $candy-app-accent);
 @include mat-core-theme($candy-app-theme);
 @include mat-button-theme($candy-app-theme);
 @include mat-checkbox-theme($candy-app-theme);
+```
+
+#### Changing styles at run-time
+
+##### Toggling classes
+You can use the mixins described above to define styles to customize any part of your application
+with standard CSS selectors. For example, let's say you want to toggle alternate colors on a button.
+You would first define a CSS class with the alternate colors.
+```scss
+.alternate-button {
+  @include mat-button-theme($alternate-theme);
+}
+```
+
+Then you can use normal Angular class bindings to toggle the alternate styles.
+```html
+<div [class.alternate-button]="isAlternateMode">
+  <button mat-button>Save changes</button>
+</div>
+```
+
+You can use this approach to style any component inside of the region marked with the custom
+CSS class.
+
+##### Swapping CSS files
+
+If you want to completely swap a theme without including all of the styles at once, you
+can swap the loaded theme file. The details will depend on your application, but the general
+idea looks like this:
+
+```html
+<link id="themeAsset" rel="stylesheet" href="/path/to/my/theme-name.css">
+```
+```ts
+function changeTheme(themeName) {
+  document.getElementById('themeAsset').href = `/path/to/my/${themeName}.css`;
+}
 ```
 
 ### Theming your own components

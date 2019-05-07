@@ -1,0 +1,86 @@
+@import '../core/theming/palette';
+@import '../core/theming/theming';
+@import '../core/typography/typography-utils';
+@import '../core/style/list-common';
+
+
+@mixin mat-list-theme($theme) {
+  $background: map-get($theme, background);
+  $foreground: map-get($theme, foreground);
+
+  .mat-list-base {
+    .mat-list-item {
+      color: mat-color($foreground, text);
+    }
+
+    .mat-list-option {
+      color: mat-color($foreground, text);
+    }
+
+    .mat-subheader {
+      color: mat-color($foreground, secondary-text);
+    }
+  }
+
+  .mat-list-item-disabled {
+    background-color: mat-color($background, disabled-list-option);
+  }
+
+  .mat-list-option,
+  .mat-nav-list .mat-list-item,
+  .mat-action-list .mat-list-item {
+    &:hover, &:focus {
+      background: mat-color($background, 'hover');
+    }
+  }
+}
+
+@mixin mat-list-typography($config) {
+  $font-family: mat-font-family($config);
+
+  .mat-list-item {
+    font-family: $font-family;
+  }
+
+  .mat-list-option {
+    font-family: $font-family;
+  }
+
+  // Default list
+  .mat-list-base {
+    .mat-list-item {
+      font-size: mat-font-size($config, subheading-2);
+      @include mat-line-base(mat-font-size($config, body-1));
+    }
+
+    .mat-list-option {
+      font-size: mat-font-size($config, subheading-2);
+      @include mat-line-base(mat-font-size($config, body-1));
+    }
+
+    .mat-subheader {
+      font-family: mat-font-family($config, body-2);
+      font-size: mat-font-size($config, body-2);
+      font-weight: mat-font-weight($config, body-2);
+    }
+  }
+
+  // Dense list
+  .mat-list-base[dense] {
+    .mat-list-item {
+      font-size: mat-font-size($config, caption);
+      @include mat-line-base(mat-font-size($config, caption));
+    }
+
+    .mat-list-option {
+      font-size: mat-font-size($config, caption);
+      @include mat-line-base(mat-font-size($config, caption));
+    }
+
+    .mat-subheader {
+      font-family: $font-family;
+      font-size: mat-font-size($config, caption);
+      font-weight: mat-font-weight($config, body-2);
+    }
+  }
+}

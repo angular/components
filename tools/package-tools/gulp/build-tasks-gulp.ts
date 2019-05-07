@@ -50,7 +50,7 @@ export function createPackageBuildTasks(buildPackage: BuildPackage, preBuildTask
 
   // Pattern matching schematics files to be copied into the output directory.
   const schematicsGlobs = [
-    join(schematicsDir, '**/+(data|files)/**/*'),
+    join(schematicsDir, '**/files/**/*'),
     join(schematicsDir, '**/+(schema|collection|migration).json'),
   ];
 
@@ -118,7 +118,7 @@ export function createPackageBuildTasks(buildPackage: BuildPackage, preBuildTask
   task(`${taskName}:assets`, assetTasks);
 
   task(`${taskName}:assets:scss`, () => {
-    buildScssPipeline(buildPackage.sourceDir, true)
+    return buildScssPipeline(buildPackage.sourceDir, true)
       .pipe(dest(buildPackage.outputDir))
       .pipe(dest(buildPackage.esm5OutputDir));
     }
@@ -136,7 +136,9 @@ export function createPackageBuildTasks(buildPackage: BuildPackage, preBuildTask
         .pipe(dest(buildPackage.esm5OutputDir));
   });
 
-  task(`${taskName}:assets:inline`, () => inlineResourcesForDirectory(buildPackage.outputDir));
+  task(`${taskName}:assets:inline`, () => {
+    return inlineResourcesForDirectory(buildPackage.outputDir);
+  });
 
   task(`${taskName}:assets:schematics-ts`, () => {
     return tsCompile('tsc', ['-p', join(schematicsDir, 'tsconfig.json')]);

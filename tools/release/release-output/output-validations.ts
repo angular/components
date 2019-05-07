@@ -1,6 +1,6 @@
 import {existsSync, readFileSync} from 'fs';
 import {sync as glob} from 'glob';
-import {dirname, isAbsolute, join} from 'path';
+import {dirname, isAbsolute, join, basename} from 'path';
 import * as ts from 'typescript';
 
 /** RegExp that matches Angular component inline styles that contain a sourcemap reference. */
@@ -32,7 +32,7 @@ export function checkReleaseBundle(bundlePath: string): string[] {
  * Checks the specified TypeScript definition file by ensuring it does not contain invalid
  * dynamic import statements. There can be invalid type imports paths because we compose the
  * release package by moving things in a desired output structure. See Angular package format
- * specification and https://github.com/angular/material2/pull/12876
+ * specification and https://github.com/angular/components/pull/12876
  */
 export function checkTypeDefinitionFile(filePath: string): string[] {
   const baseDir = dirname(filePath);
@@ -86,4 +86,15 @@ export function checkMaterialPackage(packagePath: string): string[] {
   }
 
   return failures;
+}
+
+/**
+ * Checks whether the prebuilt CDK files are part of the release output.
+ */
+export function checkCdkPackage(packagePath: string): string[] {
+  const prebuiltFiles = glob('*-prebuilt.css', {cwd: packagePath}).map(path => basename(path));
+
+  return ['overlay', 'a11y', 'text-field']
+      .filter(name => !prebuiltFiles.includes(`${name}-prebuilt.css`))
+      .map(name => `Could not find the prebuilt ${name} styles.`);
 }

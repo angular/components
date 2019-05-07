@@ -34,7 +34,6 @@ import {
   InjectionToken,
 } from '@angular/core';
 import {DOCUMENT} from '@angular/common';
-import {AbstractControl} from '@angular/forms';
 import {CdkStepLabel} from './step-label';
 import {Observable, Subject, of as obaservableOf} from 'rxjs';
 import {startWith, takeUntil} from 'rxjs/operators';
@@ -119,13 +118,13 @@ export class CdkStep implements OnChanges {
   _displayDefaultIndicatorType: boolean;
 
   /** Template for step label if it exists. */
-  @ContentChild(CdkStepLabel) stepLabel: CdkStepLabel;
+  @ContentChild(CdkStepLabel, {static: false}) stepLabel: CdkStepLabel;
 
   /** Template for step content. */
-  @ViewChild(TemplateRef) content: TemplateRef<any>;
+  @ViewChild(TemplateRef, {static: true}) content: TemplateRef<any>;
 
   /** The top level abstract control of the step. */
-  @Input() stepControl: AbstractControl;
+  @Input() stepControl: FormControlLike;
 
   /** Whether user has seen the expanded step content or not. */
   interacted = false;
@@ -511,4 +510,58 @@ export class CdkStepper implements AfterViewInit, OnDestroy {
     const focusedElement = this._document.activeElement;
     return stepperElement === focusedElement || stepperElement.contains(focusedElement);
   }
+}
+
+
+/**
+ * Simplified representation of a FormControl from @angular/forms.
+ * Used to avoid having to bring in @angular/forms for a single optional interface.
+ * @docs-private
+ */
+interface FormControlLike {
+  asyncValidator: () => any | null;
+  dirty: boolean;
+  disabled: boolean;
+  enabled: boolean;
+  errors: {[key: string]: any} | null;
+  invalid: boolean;
+  parent: any;
+  pending: boolean;
+  pristine: boolean;
+  root: FormControlLike;
+  status: string;
+  statusChanges: Observable<any>;
+  touched: boolean;
+  untouched: boolean;
+  updateOn: any;
+  valid: boolean;
+  validator: () => any | null;
+  value: any;
+  valueChanges: Observable<any>;
+  clearAsyncValidators(): void;
+  clearValidators(): void;
+  disable(opts?: any): void;
+  enable(opts?: any): void;
+  get(path: (string | number)[] | string): FormControlLike | null;
+  getError(errorCode: string, path?: (string | number)[] | string): any;
+  hasError(errorCode: string, path?: (string | number)[] | string): boolean;
+  markAllAsTouched(): void;
+  markAsDirty(opts?: any): void;
+  markAsPending(opts?: any): void;
+  markAsPristine(opts?: any): void;
+  markAsTouched(opts?: any): void;
+  markAsUntouched(opts?: any): void;
+  patchValue(value: any, options?: Object): void;
+  reset(value?: any, options?: Object): void;
+  setAsyncValidators(newValidator: () => any | (() => any)[] | null): void;
+  setErrors(errors: {[key: string]: any} | null, opts?: any): void;
+  setParent(parent: any): void;
+  setValidators(newValidator: () => any | (() => any)[] | null): void;
+  setValue(value: any, options?: Object): void;
+  updateValueAndValidity(opts?: any): void;
+  patchValue(value: any, options?: any): void;
+  registerOnChange(fn: Function): void;
+  registerOnDisabledChange(fn: (isDisabled: boolean) => void): void;
+  reset(formState?: any, options?: any): void;
+  setValue(value: any, options?: any): void;
 }

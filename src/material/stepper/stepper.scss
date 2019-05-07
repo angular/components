@@ -1,0 +1,180 @@
+@import '../core/style/variables';
+
+$mat-horizontal-stepper-header-height: 72px !default;
+$mat-stepper-label-header-height: 24px !default;
+$mat-stepper-label-position-bottom-top-gap: 16px !default;
+$mat-stepper-side-gap: 24px !default;
+$mat-vertical-stepper-content-margin: 36px !default;
+$mat-stepper-line-width: 1px !default;
+$mat-stepper-line-gap: 8px !default;
+
+.mat-stepper-vertical,
+.mat-stepper-horizontal {
+  display: block;
+}
+
+.mat-horizontal-stepper-header-container {
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+
+  .mat-stepper-label-position-bottom & {
+    align-items: flex-start;
+  }
+}
+
+.mat-stepper-horizontal-line {
+  border-top-width: $mat-stepper-line-width;
+  border-top-style: solid;
+  flex: auto;
+  height: 0;
+  margin: 0 $mat-stepper-line-gap - $mat-stepper-side-gap;
+  min-width: $mat-stepper-line-gap + $mat-stepper-side-gap;
+
+  .mat-stepper-label-position-bottom & {
+    margin: 0;
+    min-width: 0;
+    position: relative;
+    top: $mat-stepper-side-gap + $mat-stepper-label-header-height / 2;
+  }
+}
+
+%mat-header-horizontal-line-label-position-bottom {
+  border-top-width: $mat-stepper-line-width;
+  border-top-style: solid;
+  content: '';
+  display: inline-block;
+  height: 0;
+  position: absolute;
+  top: $mat-stepper-side-gap + $mat-stepper-label-header-height / 2;
+  width: calc(50% - #{$mat-stepper-label-header-height / 2 + $mat-stepper-line-gap});
+}
+
+.mat-horizontal-stepper-header {
+  display: flex;
+  height: $mat-horizontal-stepper-header-height;
+  overflow: hidden;
+  align-items: center;
+  padding: 0 $mat-stepper-side-gap;
+
+  .mat-step-icon {
+    margin-right: $mat-stepper-line-gap;
+    flex: none;
+
+    [dir='rtl'] & {
+      margin-right: 0;
+      margin-left: $mat-stepper-line-gap;
+    }
+  }
+
+  .mat-stepper-label-position-bottom & {
+    box-sizing: border-box;
+    flex-direction: column;
+    // We use auto instead of fixed 104px (by spec) because when there is an optional step
+    //  the height is greater than that
+    height: auto;
+    padding: $mat-stepper-side-gap;
+
+    &:not(:last-child)::after,
+    [dir='rtl'] &:not(:first-child)::after {
+      @extend %mat-header-horizontal-line-label-position-bottom;
+      right: 0;
+    }
+
+    &:not(:first-child)::before,
+    [dir='rtl'] &:not(:last-child)::before {
+      @extend %mat-header-horizontal-line-label-position-bottom;
+      left: 0;
+    }
+
+    [dir='rtl'] &:last-child::before,
+    [dir='rtl'] &:first-child::after {
+      display: none;
+    }
+
+    & .mat-step-icon {
+      // Cleans margin both for ltr and rtl direction
+      margin-right: 0;
+      margin-left: 0;
+    }
+
+    & .mat-step-label {
+      padding: $mat-stepper-label-position-bottom-top-gap 0 0 0;
+      text-align: center;
+      width: 100%;
+    }
+  }
+}
+
+.mat-vertical-stepper-header {
+  display: flex;
+  align-items: center;
+  padding: $mat-stepper-side-gap;
+
+  // We can't use `max-height` here, because it breaks the flexbox centering in IE.
+  height: $mat-stepper-label-header-height;
+
+  .mat-step-icon {
+    margin-right: $mat-vertical-stepper-content-margin - $mat-stepper-side-gap;
+
+    [dir='rtl'] & {
+      margin-right: 0;
+      margin-left: $mat-vertical-stepper-content-margin - $mat-stepper-side-gap;
+    }
+  }
+}
+
+.mat-horizontal-stepper-content {
+  outline: 0;
+
+  &[aria-expanded='false'] {
+    height: 0;
+    overflow: hidden;
+  }
+}
+
+.mat-horizontal-content-container {
+  overflow: hidden;
+  padding: 0 $mat-stepper-side-gap $mat-stepper-side-gap $mat-stepper-side-gap;
+}
+
+.mat-vertical-content-container {
+  margin-left: $mat-vertical-stepper-content-margin;
+  border: 0;
+  position: relative;
+
+  [dir='rtl'] & {
+    margin-left: 0;
+    margin-right: $mat-vertical-stepper-content-margin;
+  }
+}
+
+.mat-stepper-vertical-line::before {
+  content: '';
+  position: absolute;
+  top: $mat-stepper-line-gap - $mat-stepper-side-gap;
+  bottom: $mat-stepper-line-gap - $mat-stepper-side-gap;
+  left: 0;
+  border-left-width: $mat-stepper-line-width;
+  border-left-style: solid;
+
+  [dir='rtl'] & {
+    left: auto;
+    right: 0;
+  }
+}
+
+.mat-vertical-stepper-content {
+  overflow: hidden;
+  outline: 0;
+}
+
+.mat-vertical-content {
+  padding: 0 $mat-stepper-side-gap $mat-stepper-side-gap $mat-stepper-side-gap;
+}
+
+.mat-step:last-child {
+  .mat-vertical-content-container {
+    border: none;
+  }
+}

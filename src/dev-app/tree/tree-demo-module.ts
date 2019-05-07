@@ -11,20 +11,23 @@ import {NgModule} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {
   MatButtonModule,
-  MatExpansionModule,
   MatCheckboxModule,
+  MatExpansionModule,
   MatFormFieldModule,
   MatIconModule,
   MatInputModule,
   MatProgressBarModule,
   MatTreeModule
 } from '@angular/material';
-import {TreeDemo} from './tree-demo';
-import {ChecklistTreeDemo} from './checklist-tree-demo/checklist-tree-demo';
+import {RouterModule} from '@angular/router';
+
+import {ExampleModule} from '../example/example-module';
+
 import {ChecklistNestedTreeDemo} from './checklist-tree-demo/checklist-nested-tree-demo';
+import {ChecklistTreeDemo} from './checklist-tree-demo/checklist-tree-demo';
 import {DynamicTreeDemo} from './dynamic-tree-demo/dynamic-tree-demo';
 import {LoadmoreTreeDemo} from './loadmore-tree-demo/loadmore-tree-demo';
-import {ExamplePageModule} from '../example/example-module';
+import {TreeDemo} from './tree-demo';
 
 @NgModule({
   imports: [
@@ -39,14 +42,11 @@ import {ExamplePageModule} from '../example/example-module';
     MatInputModule,
     MatTreeModule,
     MatProgressBarModule,
-    ExamplePageModule,
+    ExampleModule,
+    RouterModule.forChild([{path: '', component: TreeDemo}]),
   ],
-  declarations: [
-    ChecklistNestedTreeDemo,
-    ChecklistTreeDemo,
-    TreeDemo,
-    DynamicTreeDemo,
-    LoadmoreTreeDemo
-  ],
+  declarations:
+      [ChecklistNestedTreeDemo, ChecklistTreeDemo, TreeDemo, DynamicTreeDemo, LoadmoreTreeDemo],
 })
-export class TreeDemoModule {}
+export class TreeDemoModule {
+}

@@ -21,8 +21,8 @@ export class TableHttpExample implements AfterViewInit {
   isLoadingResults = true;
   isRateLimitReached = false;
 
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(MatSort) sort: MatSort;
+  @ViewChild(MatPaginator, {static: false}) paginator: MatPaginator;
+  @ViewChild(MatSort, {static: false}) sort: MatSort;
 
   constructor(private http: HttpClient) {}
 
@@ -77,7 +77,7 @@ export class ExampleHttpDatabase {
   getRepoIssues(sort: string, order: string, page: number): Observable<GithubApi> {
     const href = 'https://api.github.com/search/issues';
     const requestUrl =
-        `${href}?q=repo:angular/material2&sort=${sort}&order=${order}&page=${page + 1}`;
+        `${href}?q=repo:angular/components&sort=${sort}&order=${order}&page=${page + 1}`;
 
     return this.http.get<GithubApi>(requestUrl);
   }
