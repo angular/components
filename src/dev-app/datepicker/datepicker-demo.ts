@@ -55,6 +55,7 @@ export class DatepickerDemo {
   // pass custom header component type as input
   customHeader = CustomHeader;
   customHeaderNgContent = CustomHeaderNgContent;
+  footer = Footer;
 }
 
 // Custom header component for datepicker
@@ -121,5 +122,19 @@ export class CustomHeaderNgContent<D> {
 
     calendar.activeDate = this._dateAdapter.today();
     calendar.currentView = 'month';
+  }
+}
+
+@Component({
+  moduleId: module.id,
+  selector: 'footer',
+  styleUrls: ['custom-footer.css'],
+  templateUrl: 'custom-footer.html'
+})
+export class Footer<D> {
+  constructor(private _calendar: MatCalendar<D>) {}
+
+  close() {
+    this._calendar._userSelected();
   }
 }

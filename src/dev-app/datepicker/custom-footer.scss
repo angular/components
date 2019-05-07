@@ -1,0 +1,12 @@
+$mat-footer-x-padding: 8px !default;
+$mat-footer-y-padding: 15px !default;
+
+.demo-footer-divider {
+  margin-bottom: $mat-footer-y-padding;
+}
+
+.demo-footer-content {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 $mat-footer-x-padding $mat-footer-y-padding $mat-footer-x-padding;
+}

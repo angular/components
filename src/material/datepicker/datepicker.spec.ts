@@ -1689,6 +1689,31 @@ describe('MatDatepicker', () => {
     }));
   });
 
+  describe('datepicker with footer', () => {
+    let fixture: ComponentFixture<DatepickerWithFooter>;
+    let testComponent: DatepickerWithFooter;
+
+    beforeEach(fakeAsync(() => {
+      fixture =
+          createComponent(DatepickerWithFooter, [MatNativeDateModule], [], [FooterForDatepicker]);
+      fixture.detectChanges();
+      testComponent = fixture.componentInstance;
+    }));
+
+    it('should instantiate a datepicker with a footer', fakeAsync(() => {
+         expect(testComponent).toBeTruthy();
+       }));
+
+    it('should find the custom element', fakeAsync(() => {
+         testComponent.datepicker.open();
+         fixture.detectChanges();
+         flush();
+         fixture.detectChanges();
+
+         expect(document.querySelector('.custom-element')).toBeTruthy();
+       }));
+  });
+
 });
 
 
@@ -1990,3 +2015,23 @@ class DatepickerWithTabindexOnToggle {}
   `,
 })
 class DatepickerToggleWithNoDatepicker {}
+
+
+@Component({
+  template: `
+    <input [matDatepicker]="ch">
+    <mat-datepicker #ch [calendarFooterComponent]="footerForDatepicker"></mat-datepicker>
+  `,
+})
+class DatepickerWithFooter {
+  @ViewChild('ch', {static: false}) datepicker: MatDatepicker<Date>;
+  footerForDatepicker = FooterForDatepicker;
+}
+
+@Component({
+  template: `
+    <div class="custom-element">Custom element</div>
+  `,
+})
+class FooterForDatepicker {
+}

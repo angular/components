@@ -26,6 +26,7 @@ $mat-datepicker-touch-max-height: 788px;
   border-radius: 4px;
 
   .mat-calendar {
+    overflow: auto;
     width: $mat-datepicker-non-touch-calendar-width;
     height: $mat-datepicker-non-touch-calendar-height;
   }
