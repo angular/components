@@ -1,12 +1,15 @@
 import * as Lint from 'tslint';
 import * as ts from 'typescript';
 
-const RULE_FAILURE = `Class inherits constructor from base class which is undecorated. ` +
-    `This breaks dependency injection with Ivy.`;
+const RULE_FAILURE = `Class inherits constructor using dependency injection from ` +
+    `undecorated base class. This breaks dependency injection with Ivy and can be fixed ` +
+    `by creating an explicit pass-through constructor.`;
 
 /**
- * Rule that doesn't allow undecorated base classes. Undecorated base classes that
- * use dependency injection no longer work with Ivy.
+ * Rule that doesn't allow inheriting a constructor using dependency injection from an
+ * undecorated base class. With Ivy, undecorated base classes cannot use dependency
+ * injection. Classes that inherit the constructor from the base class can specify
+ * an explicit pass-through constructor to make DI work.
  */
 export class Rule extends Lint.Rules.TypedRule {
   applyWithProgram(sourceFile: ts.SourceFile, program: ts.Program): Lint.RuleFailure[] {
