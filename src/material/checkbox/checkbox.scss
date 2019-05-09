@@ -18,7 +18,7 @@ $_mat-checkbox-ripple-radius: 20px;
 $_mat-checkbox-item-spacing: $mat-toggle-padding;
 
 // The width of the line used to draw the checkmark / mixedmark.
-$_mat-checkbox-mark-stroke-size: 2 / 15 * $mat-checkbox-size !default;
+$_mat-checkbox-mark-stroke-size: 2 / 10 * $mat-checkbox-size !default;
 
 
 // Fades in the background of the checkbox when it goes from unchecked -> {checked,indeterminate}.
