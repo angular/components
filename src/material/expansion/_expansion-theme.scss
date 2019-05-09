@@ -18,13 +18,11 @@
   }
 
   .mat-expansion-panel:not(.mat-expanded) .mat-expansion-panel-header {
-    &:not([aria-disabled='true']) {
       &.cdk-keyboard-focused,
       &.cdk-program-focused,
       &:hover {
         background: mat-color($background, hover);
       }
-    }
   }
 
   // Disable the hover on touch devices since it can appear like it is stuck. We can't use
