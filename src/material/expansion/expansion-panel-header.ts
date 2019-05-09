@@ -9,25 +9,25 @@
 import {FocusableOption, FocusMonitor, FocusOrigin} from '@angular/cdk/a11y';
 import {ENTER, hasModifierKey, SPACE} from '@angular/cdk/keycodes';
 import {
-    ChangeDetectionStrategy,
-    ChangeDetectorRef,
-    Component,
-    Directive,
-    ElementRef,
-    Host,
-    Inject,
-    Input,
-    OnDestroy,
-    Optional,
-    ViewEncapsulation,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  Directive,
+  ElementRef,
+  Host,
+  Inject,
+  Input,
+  OnDestroy,
+  Optional,
+  ViewEncapsulation,
 } from '@angular/core';
 import {EMPTY, merge, Subscription} from 'rxjs';
 import {filter} from 'rxjs/operators';
 import {matExpansionAnimations} from './expansion-animations';
 import {
-    MAT_EXPANSION_PANEL_DEFAULT_OPTIONS,
-    MatExpansionPanel,
-    MatExpansionPanelDefaultOptions,
+  MAT_EXPANSION_PANEL_DEFAULT_OPTIONS,
+  MatExpansionPanel,
+  MatExpansionPanelDefaultOptions,
 } from './expansion-panel';
 
 
@@ -51,7 +51,7 @@ import {
     'class': 'mat-expansion-panel-header',
     'role': 'button',
     '[attr.id]': 'panel._headerId',
-      '[attr.tabindex]': '0',
+    '[attr.tabindex]': '0',
     '[attr.aria-controls]': '_getPanelId()',
     '[attr.aria-expanded]': '_isExpanded()',
     '[attr.aria-disabled]': 'panel.disabled',
