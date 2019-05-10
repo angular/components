@@ -17,7 +17,6 @@
     border-top-color: mat-color($foreground, divider);
   }
 
-  // TODO(jrinciari): Determine better styling for focused && disabled panel
   .mat-expansion-panel:not(.mat-expanded) .mat-expansion-panel-header {
       &.cdk-keyboard-focused,
       &.cdk-program-focused,
