@@ -213,7 +213,7 @@ export class MatRadioGroup implements AfterContentInit, ControlValueAccessor {
     if (this.onTouched) {
       this.onTouched();
       // marks for check to update control touched status
-      this._changeDetector.markForCheck(); 
+      this._changeDetector.markForCheck();
     }
   }
 
