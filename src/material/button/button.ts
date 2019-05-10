@@ -11,19 +11,20 @@ import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
+  Inject,
+  InjectionToken,
+  Input,
   OnDestroy,
+  Optional,
   ViewChild,
   ViewEncapsulation,
-  Optional,
-  Inject,
-  Input,
 } from '@angular/core';
 import {
   CanColor,
-  CanDisable,
-  CanDisableRipple,
   CanColorCtor,
+  CanDisable,
   CanDisableCtor,
+  CanDisableRipple,
   CanDisableRippleCtor,
   MatRipple,
   mixinColor,
@@ -34,6 +35,27 @@ import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 
 /** Default color palette for round buttons (mat-fab and mat-mini-fab) */
 const DEFAULT_ROUND_BUTTON_COLOR = 'accent';
+
+/* Default Button Type that can be overridden*/
+export interface MatButtonDefaultOptions {
+  /** Default Button Type */
+  type: 'submit' | 'reset' | 'button';
+
+  [key: string]: string;
+}
+
+/** Injection token to be used to override the default options for `mat-button`. */
+export const MAT_BUTTON_DEFAULT_OPTIONS =
+    new InjectionToken<MatButtonDefaultOptions>('mat-autocomplete-default-options', {
+      providedIn: 'root',
+      factory: MAT_BUTTON_DEFAULT_OPTIONS_FACTORY,
+    });
+
+/** @docs-private */
+export function MAT_BUTTON_DEFAULT_OPTIONS_FACTORY(): MatButtonDefaultOptions {
+  return {type: 'submit'};
+}
+
 
 /**
  * List of classes to add to MatButton instances based on host attributes to
@@ -91,9 +113,13 @@ export class MatButton extends _MatButtonMixinBase
 
   constructor(elementRef: ElementRef,
               private _focusMonitor: FocusMonitor,
+              @Inject(MAT_BUTTON_DEFAULT_OPTIONS) defaults: MatButtonDefaultOptions,
               @Optional() @Inject(ANIMATION_MODULE_TYPE) public _animationMode: string) {
     super(elementRef);
 
+    for (const key in defaults) {
+      (elementRef.nativeElement as HTMLElement).setAttribute(key, defaults[key]);
+    }
     // For each of the variant selectors that is prevent in the button's host
     // attributes, add the correct corresponding class.
     for (const attr of BUTTON_HOST_ATTRIBUTES) {
@@ -161,10 +187,11 @@ export class MatAnchor extends MatButton {
   @Input() tabIndex: number;
 
   constructor(
-    focusMonitor: FocusMonitor,
-    elementRef: ElementRef,
-    @Optional() @Inject(ANIMATION_MODULE_TYPE) animationMode: string) {
-    super(elementRef, focusMonitor, animationMode);
+      focusMonitor: FocusMonitor,
+      elementRef: ElementRef,
+      @Inject(MAT_BUTTON_DEFAULT_OPTIONS) defaults: MatButtonDefaultOptions,
+      @Optional() @Inject(ANIMATION_MODULE_TYPE) animationMode: string) {
+    super(elementRef, focusMonitor, defaults, animationMode);
   }
 
   _haltDisabledEvents(event: Event) {
