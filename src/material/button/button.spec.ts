@@ -1,7 +1,7 @@
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 import {Component, DebugElement} from '@angular/core';
 import {By} from '@angular/platform-browser';
-import {MatButtonModule, MatButton} from './index';
+import {MAT_BUTTON_DEFAULT_OPTIONS, MatButton, MatButtonModule} from './index';
 import {MatRipple, ThemePalette} from '@angular/material/core';
 
 
@@ -47,6 +47,26 @@ describe('MatButton', () => {
 
     const button = fixture.debugElement.query(By.directive(MatButton)).componentInstance;
     expect(button.ripple).toBeTruthy();
+  });
+
+  it('should have a button default type of submit', () => {
+    const fixture = TestBed.createComponent(TestApp);
+    const button = fixture.debugElement.query(By.css('button'));
+
+    expect(button.nativeElement.getAttribute('type')).toEqual('submit');
+  });
+
+  it('should override default button type', async () => {
+    TestBed.resetTestingModule();
+    await TestBed.configureTestingModule({
+      imports: [MatButtonModule],
+      declarations: [TestApp],
+      providers: [{provide: MAT_BUTTON_DEFAULT_OPTIONS, useValue: {type: 'reset'}}]
+    }).compileComponents();
+    const fixture = TestBed.createComponent(TestApp);
+    fixture.detectChanges();
+    const button = fixture.debugElement.query(By.css('button'));
+    expect(button.nativeElement.getAttribute('type')).toEqual('reset');
   });
 
   it('should not clear previous defined classes', () => {
@@ -263,8 +283,8 @@ describe('MatButton', () => {
 @Component({
   selector: 'test-app',
   template: `
-    <button [tabIndex]="tabIndex" mat-button type="button" (click)="increment()"
-      [disabled]="isDisabled" [color]="buttonColor" [disableRipple]="rippleDisabled">
+    <button [tabIndex]="tabIndex" mat-button (click)="increment()"
+            [disabled]="isDisabled" [color]="buttonColor" [disableRipple]="rippleDisabled">
       Go
     </button>
     <a [tabIndex]="tabIndex" href="http://www.google.com" mat-button [disabled]="isDisabled"
