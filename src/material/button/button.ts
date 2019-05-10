@@ -118,7 +118,10 @@ export class MatButton extends _MatButtonMixinBase
     super(elementRef);
 
     for (const key in defaults) {
-      (elementRef.nativeElement as HTMLElement).setAttribute(key, defaults[key]);
+      // Allow user to override default options
+      if (!this._hasHostAttributes('type')) {
+        (elementRef.nativeElement as HTMLElement).setAttribute(key, defaults[key]);
+      }
     }
     // For each of the variant selectors that is prevent in the button's host
     // attributes, add the correct corresponding class.
