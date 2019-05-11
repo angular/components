@@ -5,7 +5,7 @@ $mat-snack-bar-min-height: 48px !default;
 $mat-snack-bar-min-width: 344px !default;
 $mat-snack-bar-max-width: 33vw !default;
 $mat-snack-bar-spacing-margin: 24px !default;
-$mat-snack-bar-spacing-margin-handset: 8px !default;
+$mat-snack-bar-spacing-margin-xsmall: 8px !default;
 
 
 .mat-snack-bar-container {
@@ -25,14 +25,14 @@ $mat-snack-bar-spacing-margin-handset: 8px !default;
 }
 
 /**
- * The mat-snack-bar-handset class will be applied to the overlay
+ * The mat-snack-bar-xsmall class will be applied to the overlay
  * element causing styling to both it and the snack bar container.
  */
-.mat-snack-bar-handset {
+.mat-snack-bar-xsmall {
   width: 100%;
 
   .mat-snack-bar-container {
-    margin: $mat-snack-bar-spacing-margin-handset;
+    margin: $mat-snack-bar-spacing-margin-xsmall;
     max-width: 100%;
     min-width: 0;
     width: 100%;
