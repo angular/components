@@ -17,10 +17,10 @@ import {
   Injectable,
   InjectionToken,
   Injector,
+  OnDestroy,
   Optional,
   SkipSelf,
   TemplateRef,
-  OnDestroy,
 } from '@angular/core';
 import {take, takeUntil} from 'rxjs/operators';
 import {SimpleSnackBar} from './simple-snack-bar';
@@ -182,16 +182,16 @@ export class MatSnackBar implements OnDestroy {
       snackBarRef.instance = contentRef.instance;
     }
 
-    // Subscribe to the breakpoint observer and attach the mat-snack-bar-handset class as
+    // Subscribe to the breakpoint observer and attach the mat-snack-bar-xsmall class as
     // appropriate. This class is applied to the overlay element because the overlay must expand to
     // fill the width of the screen for full width snackbars.
-    this._breakpointObserver.observe(Breakpoints.Handset).pipe(
+    this._breakpointObserver.observe(Breakpoints.XSmall).pipe(
       takeUntil(overlayRef.detachments().pipe(take(1)))
     ).subscribe(state => {
       if (state.matches) {
-        overlayRef.overlayElement.classList.add('mat-snack-bar-handset');
+        overlayRef.overlayElement.classList.add('mat-snack-bar-xsmall');
       } else {
-        overlayRef.overlayElement.classList.remove('mat-snack-bar-handset');
+        overlayRef.overlayElement.classList.remove('mat-snack-bar-xsmall');
       }
     });
 
