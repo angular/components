@@ -1,11 +1,11 @@
 import {
   ComponentFixture,
   fakeAsync,
+  flush,
   flushMicrotasks,
   inject,
   TestBed,
   tick,
-  flush,
 } from '@angular/core/testing';
 import {
   ChangeDetectionStrategy,
@@ -24,16 +24,16 @@ import {Location} from '@angular/common';
 import {SpyLocation} from '@angular/common/testing';
 import {Directionality} from '@angular/cdk/bidi';
 import {MatDialogContainer} from './dialog-container';
-import {OverlayContainer, ScrollStrategy, Overlay} from '@angular/cdk/overlay';
+import {Overlay, OverlayContainer, ScrollStrategy} from '@angular/cdk/overlay';
 import {ScrollDispatcher} from '@angular/cdk/scrolling';
 import {A, ESCAPE} from '@angular/cdk/keycodes';
 import {dispatchKeyboardEvent} from '@angular/cdk/testing';
 import {
   MAT_DIALOG_DATA,
+  MAT_DIALOG_DEFAULT_OPTIONS,
   MatDialog,
   MatDialogModule,
-  MatDialogRef,
-  MAT_DIALOG_DEFAULT_OPTIONS
+  MatDialogRef
 } from './index';
 import {Subject} from 'rxjs';
 
@@ -95,6 +95,17 @@ describe('MatDialog', () => {
     viewContainerFixture.detectChanges();
     let dialogContainerElement = overlayContainerElement.querySelector('mat-dialog-container')!;
     expect(dialogContainerElement.getAttribute('role')).toBe('dialog');
+  });
+
+  it('should be able to access the backgroundElement', () => {
+    let dialogRef = dialog.open(PizzaMsg, {
+      viewContainerRef: testViewContainerRef
+    });
+    const backgroundEl: HTMLElement = dialogRef.backgroundElement as HTMLElement;
+    expect(backgroundEl).toBeDefined();
+    expect(backgroundEl.style.backgroundColor).toEqual('');
+    backgroundEl.style.backgroundColor = 'rgba(10,10,10,0.4)';
+    expect(backgroundEl.style.backgroundColor).toEqual('rgba(10, 10, 10, 0.4)');
   });
 
   it('should open a dialog with a template', () => {
