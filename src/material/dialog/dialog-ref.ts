@@ -83,6 +83,13 @@ export class MatDialogRef<T, R = any> {
   }
 
   /**
+   * Get the _overlay background element
+   */
+  get backgroundElement() {
+    return this._overlayRef.backdropElement;
+  }
+
+  /**
    * Close the dialog.
    * @param dialogResult Optional result to return to the dialog opener.
    */
