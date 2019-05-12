@@ -104,6 +104,7 @@ export declare class MatDialogModule {
 
 export declare class MatDialogRef<T, R = any> {
     _containerInstance: MatDialogContainer;
+    readonly backgroundElement: HTMLElement | null;
     componentInstance: T;
     disableClose: boolean | undefined;
     readonly id: string;
