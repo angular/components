@@ -61,8 +61,16 @@ export class MatMultiYearView<D> implements AfterContentInit {
     const validDate =
         this._getValidDateOrNull(this._dateAdapter.deserialize(value)) || this._dateAdapter.today();
     this._activeDate = this._dateAdapter.clampDate(validDate, this.minDate, this.maxDate);
-    if (Math.floor(this._dateAdapter.getYear(oldActiveDate) / yearsPerPage) !=
-        Math.floor(this._dateAdapter.getYear(this._activeDate) / yearsPerPage)) {
+    let minYear = 0;
+    if (this.minDate) {
+      minYear = this._dateAdapter.getYear(this.minDate);
+    }
+    if (this.maxDate) {
+      let maxYear = this._dateAdapter.getYear(this.maxDate);
+      minYear = maxYear - yearsPerPage + 1;
+    }
+    if (Math.floor( (this._dateAdapter.getYear(oldActiveDate) - minYear) / yearsPerPage) !=
+        Math.floor( (this._dateAdapter.getYear(this._activeDate) - minYear) / yearsPerPage)) {
       this._init();
     }
   }
@@ -135,10 +143,22 @@ export class MatMultiYearView<D> implements AfterContentInit {
   _init() {
     this._todayYear = this._dateAdapter.getYear(this._dateAdapter.today());
     let activeYear = this._dateAdapter.getYear(this._activeDate);
-    let activeOffset = activeYear % yearsPerPage;
+    let minYear = 0;
+    if (this.minDate) {
+      minYear = this._dateAdapter.getYear(this.minDate);
+    }
+    // If maxDate is set, aligning maxYear as last cell of the page takes precedence over
+    // starting with minDate
+    if (this.maxDate) {
+      let maxYear = this._dateAdapter.getYear(this.maxDate);
+      minYear = maxYear - yearsPerPage + 1;
+    }
+    let activeOffset = this._mod((activeYear - minYear), yearsPerPage);
+    let minYearOfPage = activeYear - activeOffset;
+
     this._years = [];
     for (let i = 0, row: number[] = []; i < yearsPerPage; i++) {
-      row.push(activeYear - activeOffset + i);
+      row.push( minYearOfPage + i);
       if (row.length == yearsPerRow) {
         this._years.push(row.map(year => this._createCellForYear(year)));
         row = [];
@@ -166,6 +186,15 @@ export class MatMultiYearView<D> implements AfterContentInit {
     const oldActiveDate = this._activeDate;
     const isRtl = this._isRtl();
 
+    let minYear = 0;
+    if (this.minDate) {
+      minYear = this._dateAdapter.getYear(this.minDate);
+    }
+    if (this.maxDate) {
+      let maxYear = this._dateAdapter.getYear(this.maxDate);
+      minYear = maxYear - yearsPerPage + 1;
+    }
+
     switch (event.keyCode) {
       case LEFT_ARROW:
         this.activeDate = this._dateAdapter.addCalendarYears(this._activeDate, isRtl ? 1 : -1);
@@ -181,11 +210,11 @@ export class MatMultiYearView<D> implements AfterContentInit {
         break;
       case HOME:
         this.activeDate = this._dateAdapter.addCalendarYears(this._activeDate,
-            -this._dateAdapter.getYear(this._activeDate) % yearsPerPage);
+          -this._mod((this._dateAdapter.getYear(this._activeDate) - minYear), yearsPerPage));
         break;
       case END:
-        this.activeDate = this._dateAdapter.addCalendarYears(this._activeDate,
-            yearsPerPage - this._dateAdapter.getYear(this._activeDate) % yearsPerPage - 1);
+        this.activeDate = this._dateAdapter.addCalendarYears(this._activeDate, yearsPerPage -
+          this._mod((this._dateAdapter.getYear(this._activeDate) - minYear), yearsPerPage) - 1);
         break;
       case PAGE_UP:
         this.activeDate =
@@ -216,12 +245,25 @@ export class MatMultiYearView<D> implements AfterContentInit {
   }
 
   _getActiveCell(): number {
-    return this._dateAdapter.getYear(this.activeDate) % yearsPerPage;
+    let minYear = 0;
+    if (this.minDate) {
+      minYear = this._dateAdapter.getYear(this.minDate);
+    }
+    if (this.maxDate) {
+      let maxYear = this._dateAdapter.getYear(this.maxDate);
+      minYear = maxYear - yearsPerPage + 1;
+    }
+    return this._mod((this._dateAdapter.getYear(this.activeDate) - minYear), yearsPerPage);
   }
 
   /** Focuses the active cell after the microtask queue is empty. */
   _focusActiveCell() {
     this._matCalendarBody._focusActiveCell();
+  }
+
+  /** mod that handles case where first number is negative */
+  private _mod(a: number, b: number) {
+    return (a % b + b) % b;
   }
 
   /** Creates an MatCalendarCell for the given year. */

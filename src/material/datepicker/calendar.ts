@@ -69,11 +69,24 @@ export class MatCalendarHeader<D> {
     if (this.calendar.currentView == 'year') {
       return this._dateAdapter.getYearName(this.calendar.activeDate);
     }
+
     const activeYear = this._dateAdapter.getYear(this.calendar.activeDate);
+    let minYear = 0;
+    if (this.calendar.minDate) {
+      minYear = this._dateAdapter.getYear(this.calendar.minDate);
+    }
+    if (this.calendar.maxDate) {
+      let maxYear = this._dateAdapter.getYear(this.calendar.maxDate);
+      minYear = maxYear - yearsPerPage + 1;
+    }
+    let activeOffset = this._mod((activeYear - minYear), yearsPerPage);
+    let minYearOfPage = activeYear - activeOffset;
+    let maxYearOfPage = minYearOfPage + yearsPerPage - 1;
+
     const firstYearInView = this._dateAdapter.getYearName(
-        this._dateAdapter.createDate(activeYear - activeYear % 24, 0, 1));
+      this._dateAdapter.createDate(minYearOfPage, 0, 1));
     const lastYearInView = this._dateAdapter.getYearName(
-        this._dateAdapter.createDate(activeYear + yearsPerPage - 1 - activeYear % 24, 0, 1));
+      this._dateAdapter.createDate(maxYearOfPage, 0, 1));
     return `${firstYearInView} \u2013 ${lastYearInView}`;
   }
 
@@ -149,8 +162,21 @@ export class MatCalendarHeader<D> {
       return this._dateAdapter.getYear(date1) == this._dateAdapter.getYear(date2);
     }
     // Otherwise we are in 'multi-year' view.
-    return Math.floor(this._dateAdapter.getYear(date1) / yearsPerPage) ==
-        Math.floor(this._dateAdapter.getYear(date2) / yearsPerPage);
+    let minYear = 0;
+    if (this.calendar.minDate) {
+      minYear = this._dateAdapter.getYear(this.calendar.minDate);
+    }
+    if (this.calendar.maxDate) {
+      let maxYear = this._dateAdapter.getYear(this.calendar.maxDate);
+      minYear = maxYear - yearsPerPage + 1;
+    }
+    return Math.floor( (this._dateAdapter.getYear(date1) -  minYear) / yearsPerPage) ==
+        Math.floor( (this._dateAdapter.getYear(date2) - minYear) / yearsPerPage);
+  }
+
+  /** mod that handles case where first number is negative */
+  private _mod(a: number, b: number) {
+    return (a % b + b) % b;
   }
 }
 
