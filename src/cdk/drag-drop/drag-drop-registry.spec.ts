@@ -156,7 +156,7 @@ describe('DragDropRegistry', () => {
     pointerMoveSubscription.unsubscribe();
   });
 
-  it('should not emit pointer events on item when drag is over (mutli touch)', () => {
+  it('should not emit pointer events when dragging is over (mutli touch)', () => {
     const firstItem = testComponent.dragItems.first;
 
     // First finger down
@@ -166,7 +166,7 @@ describe('DragDropRegistry', () => {
     // First finger up
     registry.stopDragging(firstItem);
 
-    // Ensure drag is over - registry is empty
+    // Ensure dragging is over - registry is empty
     expect(registry.isDragging(firstItem)).toBe(false);
 
     const pointerUpSpy = jasmine.createSpy('pointerUp spy');
@@ -185,8 +185,6 @@ describe('DragDropRegistry', () => {
 
     pointerUpSubscription.unsubscribe();
     pointerMoveSubscription.unsubscribe();
-
-    registry.ngOnDestroy();
   });
 
   it('should not throw when trying to register the same container again', () => {

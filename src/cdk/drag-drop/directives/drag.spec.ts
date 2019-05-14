@@ -3250,9 +3250,9 @@ describe('CdkDrag', () => {
       continueDraggingViaTouch(fixture, 0, 20);
 
       // First finger releases
-      endDraggingViaTouch(fixture, 0, 20);
+      stopDraggingViaTouch(fixture, 0, 20);
       // Second finger releases
-      endDraggingViaTouch(fixture, 0, 10);
+      stopDraggingViaTouch(fixture, 0, 10);
 
       // Container spies worked
       const containerDragStartedCount =
@@ -3270,7 +3270,7 @@ describe('CdkDrag', () => {
       startDraggingViaTouch(fixture, fixture.componentInstance.item.nativeElement);
       continueDraggingViaTouch(fixture, 20, 20);
       continueDraggingViaTouch(fixture, 40, 40);
-      endDraggingViaTouch(fixture, 60, 60);
+      stopDraggingViaTouch(fixture, 60, 60);
 
       // Spies on item worked
       expect(fixture.componentInstance.itemDragStartedSpy).toHaveBeenCalledTimes(1);
@@ -3826,27 +3826,40 @@ class WrappedDropContainerComponent {
 }
 
 @Component({
+  styles: [`
+    :host {
+      height: 400px;
+      width: 400px;
+      position: absolute;
+    }
+    .container {
+      height: 200px;
+      width: 200px;
+      position: absolute;
+    }
+    .item {
+      height: 50px;
+      width: 50px;
+      position: absolute;
+    }
+  `],
   template: `
-    <div style="position: absolute; width: 400px; height: 400px; overflow: hidden;">
+    <div
+      cdkDrag
+      #container
+      class="container"
+      (cdkDragStarted)="containerDragStartedSpy($event)"
+      (cdkDragMoved)="containerDragMovedSpy($event)"
+      (cdkDragReleased)="containerDragReleasedSpy($event)"
+    >
       <div
         cdkDrag
-        #container
-        class="container"
-        style="position: absolute; width: 200px; height: 200px; overflow: hidden;"
-        (cdkDragStarted)="containerDragStartedSpy($event)"
-        (cdkDragMoved)="containerDragMovedSpy($event)"
-        (cdkDragReleased)="containerDragReleasedSpy($event)"
+        class="item"
+        #item
+        (cdkDragStarted)="itemDragStartedSpy($event)"
+        (cdkDragMoved)="itemDragMovedSpy($event)"
+        (cdkDragReleased)="itemDragReleasedSpy($event)"
       >
-        <div
-          cdkDrag
-          class="item"
-          #item
-          style="position: absolute; width: 50px; height: 50px; overflow: hidden;"
-          (cdkDragStarted)="itemDragStartedSpy($event)"
-          (cdkDragMoved)="itemDragMovedSpy($event)"
-          (cdkDragReleased)="itemDragReleasedSpy($event)"
-        >
-        </div>
       </div>
     </div>`
 })
@@ -3908,7 +3921,7 @@ function dragElementViaTouch(fixture: ComponentFixture<any>,
     element: Element, x: number, y: number) {
   startDraggingViaTouch(fixture, element);
   continueDraggingViaTouch(fixture, x, y);
-  endDraggingViaTouch(fixture, x, y);
+  stopDraggingViaTouch(fixture, x, y);
 }
 
 /**
@@ -3939,7 +3952,7 @@ function continueDraggingViaTouch(fixture: ComponentFixture<any>, x: number, y: 
  * @param x Position along the x axis to which to drag the element.
  * @param y Position along the y axis to which to drag the element.
  */
-function endDraggingViaTouch(fixture: ComponentFixture<any>, x: number, y: number) {
+function stopDraggingViaTouch(fixture: ComponentFixture<any>, x: number, y: number) {
   dispatchTouchEvent(document, 'touchend', x, y);
   fixture.detectChanges();
 }
