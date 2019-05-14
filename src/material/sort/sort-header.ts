@@ -11,26 +11,27 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  Inject,
   Input,
   OnDestroy,
   OnInit,
   Optional,
-  ViewEncapsulation,
-  Inject,
+  ViewEncapsulation
 } from '@angular/core';
 import {CanDisable, CanDisableCtor, mixinDisabled} from '@angular/material/core';
 import {merge, Subscription} from 'rxjs';
-import {MatSort, MatSortable} from './sort';
 import {matSortAnimations} from './sort-animations';
+import {MAT_SORT_CONTAINER, MatSortContainer} from './sort-container';
 import {SortDirection} from './sort-direction';
 import {getSortHeaderNotContainedWithinSortError} from './sort-errors';
 import {MatSortHeaderIntl} from './sort-header-intl';
+import {MatSortable, SortableState} from './sortable';
 
 
 // Boilerplate for applying mixins to the sort header.
 /** @docs-private */
 class MatSortHeaderBase {}
-const _MatSortHeaderMixinBase: CanDisableCtor & typeof MatSortHeaderBase =
+const _MatSortHeaderMixinBase: CanDisableCtor&typeof MatSortHeaderBase =
     mixinDisabled(MatSortHeaderBase);
 
 /**
@@ -41,7 +42,7 @@ const _MatSortHeaderMixinBase: CanDisableCtor & typeof MatSortHeaderBase =
  *
  * @docs-private
  */
-export type ArrowViewState = SortDirection | 'hint' | 'active';
+export type ArrowViewState = SortDirection|'hint'|'active';
 
 /**
  * States describing the arrow's animated position (animating fromState to toState).
@@ -93,8 +94,8 @@ interface MatSortHeaderColumnDef {
     matSortAnimations.allowChildren,
   ]
 })
-export class MatSortHeader extends _MatSortHeaderMixinBase
-    implements CanDisable, MatSortable, OnDestroy, OnInit {
+export class MatSortHeader extends _MatSortHeaderMixinBase implements CanDisable, MatSortable,
+                                                                      OnDestroy, OnInit {
   private _rerenderSubscription: Subscription;
 
   /**
@@ -125,34 +126,38 @@ export class MatSortHeader extends _MatSortHeaderMixinBase
   @Input('mat-sort-header') id: string;
 
   /** Sets the position of the arrow that displays when sorted. */
-  @Input() arrowPosition: 'before' | 'after' = 'after';
+  @Input() arrowPosition: 'before'|'after' = 'after';
 
   /** Overrides the sort start value of the containing MatSort for this MatSortable. */
-  @Input() start: 'asc' | 'desc';
+  @Input() start: 'asc'|'desc';
 
   /** Overrides the disable clear value of the containing MatSort for this MatSortable. */
   @Input()
-  get disableClear(): boolean { return this._disableClear; }
-  set disableClear(v) { this._disableClear = coerceBooleanProperty(v); }
+  get disableClear(): boolean {
+    return this._disableClear;
+  }
+  set disableClear(v) {
+    this._disableClear = coerceBooleanProperty(v);
+  }
   private _disableClear: boolean;
 
-  constructor(public _intl: MatSortHeaderIntl,
-              changeDetectorRef: ChangeDetectorRef,
-              @Optional() public _sort: MatSort,
-              @Inject('MAT_SORT_HEADER_COLUMN_DEF') @Optional()
-                  public _columnDef: MatSortHeaderColumnDef) {
+  constructor(
+      public _intl: MatSortHeaderIntl, changeDetectorRef: ChangeDetectorRef,
+      @Inject('MAT_SORT_HEADER_COLUMN_DEF') @Optional() public _columnDef: MatSortHeaderColumnDef,
+      @Inject(MAT_SORT_CONTAINER) @Optional() protected sortContainer:
+          MatSortContainer<SortableState>) {
     // Note that we use a string token for the `_columnDef`, because the value is provided both by
     // `material/table` and `cdk/table` and we can't have the CDK depending on Material,
     // and we want to avoid having the sort header depending on the CDK table because
     // of this single reference.
     super();
 
-    if (!_sort) {
+    if (!this.sortContainer) {
       throw getSortHeaderNotContainedWithinSortError();
     }
 
-    this._rerenderSubscription = merge(_sort.sortChange, _sort._stateChanges, _intl.changes)
-        .subscribe(() => {
+    this._rerenderSubscription =
+        merge(this.sortContainer.stateChanges, _intl.changes).subscribe(() => {
           if (this._isSorted()) {
             this._updateArrowDirection();
           }
@@ -177,11 +182,11 @@ export class MatSortHeader extends _MatSortHeaderMixinBase
     this._setAnimationTransitionState(
         {toState: this._isSorted() ? 'active' : this._arrowDirection});
 
-    this._sort.register(this);
+    this.sortContainer.register(this);
   }
 
   ngOnDestroy() {
-    this._sort.deregister(this);
+    this.sortContainer.deregister(this);
     this._rerenderSubscription.unsubscribe();
   }
 
@@ -191,7 +196,9 @@ export class MatSortHeader extends _MatSortHeaderMixinBase
    */
   _setIndicatorHintVisible(visible: boolean) {
     // No-op if the sort header is disabled - should not make the hint visible.
-    if (this._isDisabled() && visible) { return; }
+    if (this._isDisabled() && visible) {
+      return;
+    }
 
     this._showIndicatorHint = visible;
 
@@ -222,9 +229,11 @@ export class MatSortHeader extends _MatSortHeaderMixinBase
 
   /** Triggers the sort on this sort header and removes the indicator hint. */
   _handleClick() {
-    if (this._isDisabled()) { return; }
+    if (this._isDisabled()) {
+      return;
+    }
 
-    this._sort.sort(this);
+    this.sortContainer.sort(this);
 
     // Do not show the animation if the header was already shown in the right position.
     if (this._viewState.toState === 'hint' || this._viewState.toState === 'active') {
@@ -243,8 +252,7 @@ export class MatSortHeader extends _MatSortHeaderMixinBase
 
   /** Whether this MatSortHeader is currently sorted in either ascending or descending order. */
   _isSorted() {
-    return this._sort.active == this.id &&
-        (this._sort.direction === 'asc' || this._sort.direction === 'desc');
+    return this.sortContainer.getSortableState(this).isSorted;
   }
 
   /** Returns the animation state for the arrow direction (indicator and pointers). */
@@ -269,13 +277,12 @@ export class MatSortHeader extends _MatSortHeaderMixinBase
    * only be changed once the arrow displays again (hint or activation).
    */
   _updateArrowDirection() {
-    this._arrowDirection = this._isSorted() ?
-        this._sort.direction :
-        (this.start || this._sort.start);
+    const state = this.sortContainer.getSortableState(this);
+    this._arrowDirection = state.isSorted ? state.direction : state.nextDirection;
   }
 
   _isDisabled() {
-    return this._sort.disabled || this.disabled;
+    return this.sortContainer.getSortableState(this).isDisabled;
   }
 
   /**
@@ -285,9 +292,11 @@ export class MatSortHeader extends _MatSortHeaderMixinBase
    * ensures this is true.
    */
   _getAriaSortAttribute() {
-    if (!this._isSorted()) { return null; }
-
-    return this._sort.direction == 'asc' ? 'ascending' : 'descending';
+    if (!this._isSorted()) {
+      return null;
+    }
+    const direction = this.sortContainer.getSortableState(this).direction;
+    return direction == 'asc' ? 'ascending' : 'descending';
   }
 
   /** Whether the arrow inside the sort header should be rendered. */

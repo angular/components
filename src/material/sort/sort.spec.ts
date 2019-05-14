@@ -354,6 +354,65 @@ describe('MatSort', () => {
     expect(header._showIndicatorHint).toBeFalsy();
   });
 
+  describe('sortable state', () => {
+    it('should represent the right active and directions when cycling sort', () => {
+      const matSort = fixture.componentInstance.matSort;
+      const sortable = matSort.sortables.get('defaultA')!;
+
+      expect(matSort.getSortableState(sortable)).toEqual({
+        active: '',
+        isSorted: false,
+        isDisabled: false,
+        direction: '',
+        nextDirection: 'asc'
+      });
+
+      // Should expect it to be sorted with 'asc' direction
+      matSort.sort(sortable);
+      expect(matSort.getSortableState(sortable)).toEqual({
+        active: sortable.id,
+        isSorted: true,
+        isDisabled: false,
+        direction: 'asc',
+        nextDirection: 'desc'
+      });
+
+      // Should expect it to be sorted with 'desc' direction
+      matSort.sort(sortable);
+      expect(matSort.getSortableState(sortable)).toEqual({
+        active: sortable.id,
+        isSorted: true,
+        isDisabled: false,
+        direction: 'desc',
+        nextDirection: ''
+      });
+
+      // Should expect it to no longer be sorted
+      matSort.sort(sortable);
+      expect(matSort.getSortableState(sortable)).toEqual({
+        active: sortable.id,
+        isSorted: false,
+        isDisabled: false,
+        direction: '',
+        nextDirection: 'asc'
+      });
+    });
+
+    it('should be disabled if sort container or sortable is disabled', () => {
+      const matSort = fixture.componentInstance.matSort;
+      const sortable = matSort.sortables.get('defaultA')!;
+
+      sortable.disabled = true;
+      expect(matSort.getSortableState(sortable).isDisabled).toBe(true);
+
+      sortable.disabled = false;
+      expect(matSort.getSortableState(sortable).isDisabled).toBe(false);
+
+      matSort.disabled = true;
+      expect(matSort.getSortableState(sortable).isDisabled).toBe(true);
+    });
+  });
+
   it('should apply the aria-sort label to the header when sorted', () => {
     const sortHeaderElement = fixture.nativeElement.querySelector('#defaultA');
     expect(sortHeaderElement.getAttribute('aria-sort')).toBe(null);
