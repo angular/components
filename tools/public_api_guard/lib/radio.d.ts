@@ -1,8 +1,12 @@
 export declare const _MatRadioButtonMixinBase: CanColorCtor & CanDisableRippleCtor & HasTabIndexCtor & typeof MatRadioButtonBase;
 
+export declare const MAT_RADIO_DEFAULT_OPTIONS: InjectionToken<MatRadioDefaultOptions>;
+
+export declare function MAT_RADIO_DEFAULT_OPTIONS_FACTORY(): MatRadioDefaultOptions;
+
 export declare const MAT_RADIO_GROUP_CONTROL_VALUE_ACCESSOR: any;
 
-export declare class MatRadioButton extends _MatRadioButtonMixinBase implements OnInit, AfterViewInit, OnDestroy, CanColor, CanDisableRipple, HasTabIndex {
+export declare class MatRadioButton extends _MatRadioButtonMixinBase implements OnInit, AfterViewInit, OnChanges, OnDestroy, CanColor, CanDisableRipple, HasTabIndex {
     _animationMode?: string | undefined;
     _inputElement: ElementRef<HTMLInputElement>;
     ariaDescribedby: string;
@@ -18,13 +22,14 @@ export declare class MatRadioButton extends _MatRadioButtonMixinBase implements 
     radioGroup: MatRadioGroup;
     required: boolean;
     value: any;
-    constructor(radioGroup: MatRadioGroup, elementRef: ElementRef, _changeDetector: ChangeDetectorRef, _focusMonitor: FocusMonitor, _radioDispatcher: UniqueSelectionDispatcher, _animationMode?: string | undefined);
+    constructor(radioGroup: MatRadioGroup, elementRef: ElementRef, _changeDetector: ChangeDetectorRef, _focusMonitor: FocusMonitor, _radioDispatcher: UniqueSelectionDispatcher, _providerOverride?: MatRadioDefaultOptions | undefined, _animationMode?: string | undefined);
     _isRippleDisabled(): boolean;
     _markForCheck(): void;
     _onInputChange(event: Event): void;
     _onInputClick(event: Event): void;
     focus(): void;
     ngAfterViewInit(): void;
+    ngOnChanges(): void;
     ngOnDestroy(): void;
     ngOnInit(): void;
 }
@@ -41,6 +46,10 @@ export declare class MatRadioChange {
     constructor(
     source: MatRadioButton,
     value: any);
+}
+
+export interface MatRadioDefaultOptions {
+    color: ThemePalette;
 }
 
 export declare class MatRadioGroup implements AfterContentInit, ControlValueAccessor {

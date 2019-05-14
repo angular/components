@@ -21,7 +21,9 @@ import {
   EventEmitter,
   forwardRef,
   Inject,
+  InjectionToken,
   Input,
+  OnChanges,
   OnDestroy,
   OnInit,
   Optional,
@@ -41,9 +43,26 @@ import {
   mixinColor,
   mixinDisableRipple,
   mixinTabIndex,
+  ThemePalette,
 } from '@angular/material/core';
 import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 
+
+export interface MatRadioDefaultOptions {
+  color: ThemePalette;
+}
+
+export const MAT_RADIO_DEFAULT_OPTIONS =
+  new InjectionToken<MatRadioDefaultOptions>('mat-radio-default-options', {
+  providedIn: 'root',
+  factory: MAT_RADIO_DEFAULT_OPTIONS_FACTORY
+});
+
+export function MAT_RADIO_DEFAULT_OPTIONS_FACTORY(): MatRadioDefaultOptions {
+  return {
+    color: 'accent'
+  };
+}
 
 // Increasing integer for generating unique ids for radio components.
 let nextUniqueId = 0;
@@ -304,7 +323,7 @@ export class MatRadioButtonBase {
 // palette by default. https://material.io/guidelines/components/selection-controls.html
 export const _MatRadioButtonMixinBase:
     CanColorCtor & CanDisableRippleCtor & HasTabIndexCtor & typeof MatRadioButtonBase =
-        mixinColor(mixinDisableRipple(mixinTabIndex(MatRadioButtonBase)), 'accent');
+        mixinColor(mixinDisableRipple(mixinTabIndex(MatRadioButtonBase)));
 
 /**
  * A Material design radio-button. Typically placed inside of `<mat-radio-group>` elements.
@@ -332,8 +351,8 @@ export const _MatRadioButtonMixinBase:
   },
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MatRadioButton extends _MatRadioButtonMixinBase
-    implements OnInit, AfterViewInit, OnDestroy, CanColor, CanDisableRipple, HasTabIndex {
+export class MatRadioButton extends _MatRadioButtonMixinBase implements
+  OnInit, AfterViewInit, OnChanges, OnDestroy, CanColor, CanDisableRipple, HasTabIndex {
 
   private _uniqueId: string = `mat-radio-${++nextUniqueId}`;
 
@@ -462,12 +481,18 @@ export class MatRadioButton extends _MatRadioButtonMixinBase
               private _changeDetector: ChangeDetectorRef,
               private _focusMonitor: FocusMonitor,
               private _radioDispatcher: UniqueSelectionDispatcher,
-              @Optional() @Inject(ANIMATION_MODULE_TYPE) public _animationMode?: string) {
+              @Optional() @Inject(ANIMATION_MODULE_TYPE) public _animationMode?: string,
+                @Optional() @Inject(MAT_RADIO_DEFAULT_OPTIONS)
+                private _providerOverride?: MatRadioDefaultOptions) {
     super(elementRef);
 
     // Assertions. Ideally these should be stripped out by the compiler.
     // TODO(jelbourn): Assert that there's no name binding AND a parent radio group.
     this.radioGroup = radioGroup;
+
+    if (!this.color && this._providerOverride && this._providerOverride.color) {
+      this.color = this._providerOverride.color;
+    }
 
     this._removeUniqueSelectionListener =
       _radioDispatcher.listen((id: string, name: string) => {
@@ -491,6 +516,10 @@ export class MatRadioButton extends _MatRadioButtonMixinBase
     // When group value changes, the button will not be notified. Use `markForCheck` to explicit
     // update radio button's status
     this._changeDetector.markForCheck();
+  }
+
+  ngOnChanges(): void {
+    this.color = !this.color ? 'accent' : this.color;
   }
 
   ngOnInit() {
