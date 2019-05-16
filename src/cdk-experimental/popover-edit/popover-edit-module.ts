@@ -10,10 +10,10 @@ import {NgModule} from '@angular/core';
 import {OverlayModule} from '@angular/cdk/overlay';
 import {
   CdkPopoverEdit,
+  CdkPopoverEditTabOut,
   CdkRowHoverContent,
   CdkEditable,
-  CdkEditOpen,
-  CdkEditOpenButton
+  CdkEditOpen
 } from './table-directives';
 import {CdkEditControl,
   CdkEditRevert,
@@ -26,13 +26,13 @@ import {
 
 const EXPORTED_DECLARATIONS = [
   CdkPopoverEdit,
+  CdkPopoverEditTabOut,
   CdkRowHoverContent,
   CdkEditControl,
   CdkEditRevert,
   CdkEditClose,
   CdkEditable,
   CdkEditOpen,
-  CdkEditOpenButton,
 ];
 
 @NgModule({

@@ -1,3 +1,79 @@
+# 8.0.0-rc.1 "rust-rhubarb" (2019-05-13)
+
+
+### Bug Fixes
+
+* **checkbox:** don't show hover ripples on touch devices ([#13700](https://github.com/angular/components/issues/13700)) ([43b4fec](https://github.com/angular/components/commit/43b4fec)), closes [#13675](https://github.com/angular/components/issues/13675)
+* **drag-drop:** allow for element in DropListRef to be changed ([#15091](https://github.com/angular/components/issues/15091)) ([e630bd6](https://github.com/angular/components/commit/e630bd6)), closes [#15086](https://github.com/angular/components/issues/15086)
+* **drag-drop:** don't allow user to move item into container that isn't connected to current one by passing it over an intermediate one that is ([#15660](https://github.com/angular/components/issues/15660)) ([1ac9386](https://github.com/angular/components/commit/1ac9386)), closes [#15191](https://github.com/angular/components/issues/15191)
+* **drag-drop:** error if item is removed while dragging ([#15950](https://github.com/angular/components/issues/15950)) ([a632067](https://github.com/angular/components/commit/a632067)), closes [#15827](https://github.com/angular/components/issues/15827)
+* **drag-drop:** preview element not maintaining canvas data ([#15808](https://github.com/angular/components/issues/15808)) ([31e72a7](https://github.com/angular/components/commit/31e72a7)), closes [#15685](https://github.com/angular/components/issues/15685)
+* **list:** form control cleared when list is destroyed ([#16005](https://github.com/angular/components/issues/16005)) ([40b335c](https://github.com/angular/components/commit/40b335c)), closes [#15994](https://github.com/angular/components/issues/15994)
+* **menu:** prevent menu from collapsing to less than one item ([#15454](https://github.com/angular/components/issues/15454)) ([941a0d9](https://github.com/angular/components/commit/941a0d9))
+* **overlay:** add panelClass from position to the overlay ([#15853](https://github.com/angular/components/issues/15853)) ([00226f0](https://github.com/angular/components/commit/00226f0))
+* **overlay:** allow overlay sass variables to be overwritten ([#15507](https://github.com/angular/components/issues/15507)) ([b1c10d1](https://github.com/angular/components/commit/b1c10d1)), closes [#15467](https://github.com/angular/components/issues/15467)
+* **popover-edit:** direction not being passed to overlay ([#15951](https://github.com/angular/components/issues/15951)) ([7774ae1](https://github.com/angular/components/commit/7774ae1))
+* **portal:** correct return type of TemplatePortal.attach ([#14602](https://github.com/angular/components/issues/14602)) ([70bc4d5](https://github.com/angular/components/commit/70bc4d5)), closes [#14584](https://github.com/angular/components/issues/14584)
+* **scrolling:** virtual scroll not disconnecting from data source on destroy ([#15856](https://github.com/angular/components/issues/15856)) ([8494f03](https://github.com/angular/components/commit/8494f03)), closes [#15855](https://github.com/angular/components/issues/15855)
+* **select:** optionSelectionChanges not emitting when the list of options changes ([#14814](https://github.com/angular/components/issues/14814)) ([f6cd86e](https://github.com/angular/components/commit/f6cd86e))
+
+
+### Features
+
+* **autocomplete:** add input to control position ([#15834](https://github.com/angular/components/issues/15834)) ([5aaca54](https://github.com/angular/components/commit/5aaca54)), closes [#15640](https://github.com/angular/components/issues/15640)
+* **drag-drop:** allow element to be passed in as the boundary ([#15810](https://github.com/angular/components/issues/15810)) ([399f25e](https://github.com/angular/components/commit/399f25e)), closes [#15766](https://github.com/angular/components/issues/15766)
+* **radio:** support theme color on mat-radio-group ([#15741](https://github.com/angular/components/issues/15741)) ([6c03e2f](https://github.com/angular/components/commit/6c03e2f)), closes [#15701](https://github.com/angular/components/issues/15701)
+
+
+
+# 8.0.0-rc.0 "plastic-portal" (2019-04-29)
+
+
+### Project Organization
+
+* The repo name has changed from `angular/material2` to `angular/components`
+* All files under `src/lib` have been moved under `src/material`
+
+
+### Bug Fixes
+
+* **autocomplete:** make template ViewChild query `static: true` ([#15877](https://github.com/angular/components/issues/15877)) ([388baa2](https://github.com/angular/components/commit/388baa2))
+* **drag-drop:** not reacting to changes in the cdkDragFreeDragPosition ([#15805](https://github.com/angular/components/issues/15805)) ([021b85a](https://github.com/angular/components/commit/021b85a)), closes [#15765](https://github.com/angular/components/issues/15765)
+* **stepper:** Fix visual flake in focusing stepper header ([#15870](https://github.com/angular/components/issues/15870)) ([8b5c0f1](https://github.com/angular/components/commit/8b5c0f1))
+
+
+### Features
+
+* **table:** add text column for simple columns ([#14841](https://github.com/angular/components/issues/14841)) ([cf76707](https://github.com/angular/components/commit/cf76707))
+
+
+
+# 8.0.0-beta.2 "helium-blockade" (2019-04-15)
+
+**Imminent Important Import Deprecation**:
+
+Importing directly from the root `@angular/material` entry-point is deprecated. You should instead
+import from specific entry-points, e.g. `@angular/material/button`. This aligns with `@angular/cdk`,
+makes clear where symbols originate, and helps safeguard against including unused code. The
+deprecated style will be removed in Angular v9.
+
+Angular CLI users can use `ng update @angular/material` to automatically migrate imports to the new
+style.
+
+### Breaking Changes
+
+* **tabs:** `_ngZone` and `_platform` parameters in `MatTabHeader` constructor are now required.
+* **tabs:** `changeDetectorRef` parameter in `MatTabBody` constructor is now required.
+* **expansion:** The `_document` and `_animationMode` parameters are now required.
+* **list:** `_elementRef` parameter in `MatList` constructor is now required.
+* **list:** `_changeDetectorRef` parameter in `MatListItem` constructor is now required. Also the order of constructor parameters has changed.
+* **progress-spinner:** The `animationMode` mode parameter is now required in the `MatProgressSpinner` and `MatSpinner` constructors.
+* **progress-spinner:** The `_elementRef` parameter has changed from `ElementRef<any>` to `ElementRef<HTMLElement>` in the `MatProgressSpinner` and `MatSpinner` constructors.
+* **button:** `_platform` parameter has been removed from the `MatButton` constructor and the `_animationMode` is now required.
+* **button:** `platform` parameter has been removed from the `MatAnchor` constructor and the `animationMode` is now required.
+* **badge:** `_document` parameter has been removed and the `_renderer` parameter is now required in the `MatBadge` constructor.
+
+
 # 8.0.0-beta.1 "suede-banana" (2019-04-08)
 
 
@@ -11,7 +87,7 @@
 
 ### Project setup
 * `@angular/material` now has an explicit peer dependency on `@angular/forms`.
-It was always required, but is now correctly listed in the `package.json`.   
+It was always required, but is now correctly listed in the `package.json`.
 
 
 ### Bug Fixes
@@ -2748,7 +2824,7 @@ We expect to have the tool ready when we release version 6.0.0.
 * **menu:** not closing when overlay is detached externally ([#8868](https://github.com/angular/material2/issues/8868)) ([534c797](https://github.com/angular/material2/commit/534c797))
 * **overlay:** export OverlaySizeConfig ([#8932](https://github.com/angular/material2/issues/8932)) ([adfa31e](https://github.com/angular/material2/commit/adfa31e))
 * **paginator:** set default display value ([#8455](https://github.com/angular/material2/issues/8455)) ([ccb325e](https://github.com/angular/material2/commit/ccb325e)), closes [#8454](https://github.com/angular/material2/issues/8454)
-* **portal:** inaccurate hasAttahed result and portal being cleared if attached too early ([#8642](https://github.com/angular/material2/issues/8642)) ([93e6c53](https://github.com/angular/material2/commit/93e6c53)), closes [/github.com/angular/material2/blob/master/src/lib/dialog/dialog-container.ts#L118](https://github.com//github.com/angular/material2/blob/master/src/lib/dialog/dialog-container.ts/issues/L118) [#8628](https://github.com/angular/material2/issues/8628)
+* **portal:** inaccurate hasAttahed result and portal being cleared if attached too early ([#8642](https://github.com/angular/material2/issues/8642)) ([93e6c53](https://github.com/angular/material2/commit/93e6c53)), closes [/github.com/angular/material2/blob/master/src/material/dialog/dialog-container.ts#L118](https://github.com//github.com/angular/material2/blob/master/src/material/dialog/dialog-container.ts/issues/L118) [#8628](https://github.com/angular/material2/issues/8628)
 * **select:** alt + arrow key not opening in single-selection mode ([#8910](https://github.com/angular/material2/issues/8910)) ([85f83f9](https://github.com/angular/material2/commit/85f83f9))
 * **select:** change event emitted before data binding is updated ([#8740](https://github.com/angular/material2/issues/8740)) ([2493797](https://github.com/angular/material2/commit/2493797)), closes [#8739](https://github.com/angular/material2/issues/8739)
 * **select:** complete state change event ([#8777](https://github.com/angular/material2/issues/8777)) ([46411e3](https://github.com/angular/material2/commit/46411e3))
@@ -3133,7 +3209,7 @@ information](https://github.com/angular/material2/blob/master/CHANGELOG.md#break
 available from @angular/material and instead must be imported from @angular/cdk/collections
 * `isFocusTrapEnabled` is now properly marked internal.
 * The `OverlayRef.getState` method has been renamed to `OverlayRef.getConfig`.
-* `defaultErrorStateMatcher` has been replaced by `ErrorStateMatcher`. For more info, see the [input docs](https://github.com/angular/material2/blob/master/src/lib/input/input.md#custom-error-matcher).
+* `defaultErrorStateMatcher` has been replaced by `ErrorStateMatcher`. For more info, see the [input docs](https://github.com/angular/material2/blob/master/src/material/input/input.md#custom-error-matcher).
 
 ### Features
 

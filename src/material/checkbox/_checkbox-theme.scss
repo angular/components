@@ -1,0 +1,126 @@
+@import '../core/theming/theming';
+@import '../core/typography/typography-utils';
+@import '../../cdk/a11y/a11y';
+
+
+@mixin mat-checkbox-theme($theme) {
+  $is-dark-theme: map-get($theme, is-dark);
+  $primary: map-get($theme, primary);
+  $accent: map-get($theme, accent);
+  $warn: map-get($theme, warn);
+  $background: map-get($theme, background);
+  $foreground: map-get($theme, foreground);
+
+
+  // The color of the checkbox's checkmark / mixedmark.
+  $checkbox-mark-color: mat-color($background, background);
+
+  // NOTE(traviskaufman): While the spec calls for translucent blacks/whites for disabled colors,
+  // this does not work well with elements layered on top of one another. To get around this we
+  // blend the colors together based on the base color and the theme background.
+  $white-30pct-opacity-on-dark: #686868;
+  $black-26pct-opacity-on-light: #b0b0b0;
+  $disabled-color: if($is-dark-theme, $white-30pct-opacity-on-dark, $black-26pct-opacity-on-light);
+
+  .mat-checkbox-frame {
+    border-color: mat-color($foreground, secondary-text);
+  }
+
+  .mat-checkbox-checkmark {
+    fill: $checkbox-mark-color;
+  }
+
+  .mat-checkbox-checkmark-path {
+    // !important is needed here because a stroke must be set as an
+    // attribute on the SVG in order for line animation to work properly.
+    stroke: $checkbox-mark-color !important;
+
+    @include cdk-high-contrast(black-on-white) {
+      // Having the one above be !important ends up overriding the browser's automatic
+      // color inversion so we need to re-invert it ourselves for black-on-white.
+      stroke: #000 !important;
+    }
+  }
+
+  .mat-checkbox-mixedmark {
+    background-color: $checkbox-mark-color;
+  }
+
+  .mat-checkbox-indeterminate, .mat-checkbox-checked {
+    &.mat-primary .mat-checkbox-background {
+      background-color: mat-color($primary);
+    }
+
+    &.mat-accent .mat-checkbox-background {
+      background-color: mat-color($accent);
+    }
+
+    &.mat-warn .mat-checkbox-background {
+      background-color: mat-color($warn);
+    }
+  }
+
+  .mat-checkbox-disabled {
+    &.mat-checkbox-checked,
+    &.mat-checkbox-indeterminate {
+      .mat-checkbox-background {
+        background-color: $disabled-color;
+      }
+    }
+
+    &:not(.mat-checkbox-checked) {
+      .mat-checkbox-frame {
+        border-color: $disabled-color;
+      }
+    }
+
+    .mat-checkbox-label {
+      color: mat-color($foreground, secondary-text);
+    }
+
+    @include cdk-high-contrast {
+      opacity: 0.5;
+    }
+  }
+
+  // This one is moved down here so it can target both
+  // the theme colors and the disabled state.
+  @include cdk-high-contrast {
+    .mat-checkbox-background {
+      // Needs to be removed because it hides the checkbox outline.
+      background: none;
+    }
+  }
+
+  // Switch this to a solid color since we're using `opacity`
+  // to control how opaque the ripple should be.
+  .mat-checkbox .mat-ripple-element {
+    background-color: map_get(map-get($theme, foreground), base);
+  }
+
+  .mat-checkbox-checked:not(.mat-checkbox-disabled),
+  .mat-checkbox:active:not(.mat-checkbox-disabled) {
+    &.mat-primary .mat-ripple-element {
+      background: mat-color($primary);
+    }
+
+    &.mat-accent .mat-ripple-element {
+      background: mat-color($accent);
+    }
+
+    &.mat-warn .mat-ripple-element {
+      background: mat-color($warn);
+    }
+  }
+}
+
+@mixin mat-checkbox-typography($config) {
+  .mat-checkbox {
+    font-family: mat-font-family($config);
+  }
+
+  // TODO(kara): Remove this style when fixing vertical baseline
+  .mat-checkbox-layout .mat-checkbox-label {
+    line-height: mat-line-height($config, body-2);
+  }
+}

@@ -1,4 +1,12 @@
-@import '../lib/core/theming/all-theme';
+@import '../material/core/theming/all-theme';
+@import '../material-experimental/mdc-button/mdc-button';
+@import '../material-experimental/mdc-card/mdc-card';
+@import '../material-experimental/mdc-checkbox/mdc-checkbox';
+@import '../material-experimental/mdc-chips/mdc-chips';
+@import '../material-experimental/mdc-helpers/mdc-helpers';
+@import '../material-experimental/mdc-menu/mdc-menu';
+@import '../material-experimental/mdc-radio/mdc-radio';
+@import '../material-experimental/mdc-slide-toggle/mdc-slide-toggle';
 
 // Plus imports for other components in your app.
 
@@ -6,11 +14,29 @@
 // have to load a single css file for Angular Material in your app.
 // **Be sure that you only ever include this mixin once!**
 @include mat-core();
+@include mat-button-typography-mdc(mat-typography-config());
+@include mat-icon-button-typography-mdc(mat-typography-config());
+@include mat-fab-typography-mdc(mat-typography-config());
+@include mat-card-typography-mdc(mat-typography-config());
+@include mat-checkbox-typography-mdc(mat-typography-config());
+@include mat-chips-typography-mdc(mat-typography-config());
+@include mat-menu-typography-mdc(mat-typography-config());
+@include mat-radio-typography-mdc(mat-typography-config());
+@include mat-slide-toggle-typography-mdc(mat-typography-config());
 
 // Define the default theme (same as the example above).
 $candy-app-primary: mat-palette($mat-indigo);
-$candy-app-accent:  mat-palette($mat-pink, A200, A100, A400);
-$candy-app-theme:   mat-light-theme($candy-app-primary, $candy-app-accent);
+$candy-app-accent: mat-palette($mat-pink, A200, A100, A400);
+$candy-app-theme: mat-light-theme($candy-app-primary, $candy-app-accent);
 
 // Include the default theme styles.
 @include angular-material-theme($candy-app-theme);
+@include mat-button-theme-mdc($candy-app-theme);
+@include mat-icon-button-theme-mdc($candy-app-theme);
+@include mat-fab-theme-mdc($candy-app-theme);
+@include mat-card-theme-mdc($candy-app-theme);
+@include mat-checkbox-theme-mdc($candy-app-theme);
+@include mat-chips-theme-mdc($candy-app-theme);
+@include mat-menu-theme-mdc($candy-app-theme);
+@include mat-radio-theme-mdc($candy-app-theme);
+@include mat-slide-toggle-theme-mdc($candy-app-theme);

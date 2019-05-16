@@ -1,6 +1,6 @@
 package(default_visibility=["//visibility:public"])
 
-load("//:packages.bzl", "CDK_TARGETS", "CDK_EXPERIMENTAL_TARGETS", "MATERIAL_TARGETS", "ROLLUP_GLOBALS")
+load("//:packages.bzl", "CDK_TARGETS", "CDK_EXPERIMENTAL_TARGETS", "MATERIAL_PACKAGES", "MATERIAL_EXPERIMENTAL_TARGETS", "ROLLUP_GLOBALS")
 load("//tools:defaults.bzl", "ng_module", "ng_package")
 load("//tools/highlight-files:index.bzl", "highlight_files")
 load("//tools/package-docs-content:index.bzl", "package_docs_content")
@@ -17,7 +17,7 @@ ng_module(
     "@npm//@angular/forms",
     "@npm//moment",
     "//src/material-moment-adapter",
-  ] + CDK_TARGETS + CDK_EXPERIMENTAL_TARGETS + MATERIAL_TARGETS,
+  ] + CDK_TARGETS + CDK_EXPERIMENTAL_TARGETS + MATERIAL_EXPERIMENTAL_TARGETS + ["//src/material/%s" % p for p in MATERIAL_PACKAGES],
   # Specify the tsconfig that is also used by Gulp. We need to explicitly use this tsconfig
   # because in order to import Moment with TypeScript, some specific options need to be set.
   tsconfig = ":tsconfig-build.json",
@@ -50,7 +50,7 @@ package_docs_content(
     ":example-source-files": "examples-source",
 
     # Package the overviews for "@angular/material" and "@angular/cdk" into the docs content
-    "//src/lib:overviews": "overviews/material",
+    "//src/material:overviews": "overviews/material",
     "//src/cdk:overviews": "overviews/cdk",
 
     # Package the API docs for the Material and CDK package into the docs-content

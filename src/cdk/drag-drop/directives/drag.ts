@@ -28,8 +28,9 @@ import {
   OnChanges,
   SimpleChanges,
   ChangeDetectorRef,
+  isDevMode,
 } from '@angular/core';
-import {coerceBooleanProperty, coerceNumberProperty} from '@angular/cdk/coercion';
+import {coerceBooleanProperty, coerceNumberProperty, coerceElement} from '@angular/cdk/coercion';
 import {Observable, Observer, Subject, merge} from 'rxjs';
 import {startWith, take, map, takeUntil, switchMap, tap} from 'rxjs/operators';
 import {
@@ -101,11 +102,26 @@ export class CdkDrag<T = any> implements AfterViewInit, OnChanges, OnDestroy {
   @Input('cdkDragRootElement') rootElementSelector: string;
 
   /**
+   * Node or selector that will be used to determine the element to which the draggable's
+   * position will be constrained. If a string is passed in, it'll be used as a selector that
+   * will be matched starting from the element's parent and going up the DOM until a match
+   * has been found.
+   */
+  @Input('cdkDragBoundary') boundaryElement: string | ElementRef<HTMLElement> | HTMLElement;
+
+  /**
    * Selector that will be used to determine the element to which the draggable's position will
    * be constrained. Matching starts from the element's parent and goes up the DOM until a matching
-   * element has been found.
+   * element has been found
+   * @deprecated Use `boundaryElement` instead.
+   * @breaking-change 9.0.0
    */
-  @Input('cdkDragBoundary') boundaryElementSelector: string;
+  get boundaryElementSelector(): string {
+    return typeof this.boundaryElement === 'string' ? this.boundaryElement : undefined!;
+  }
+  set boundaryElementSelector(selector: string) {
+    this.boundaryElement = selector;
+  }
 
   /**
    * Amount of milliseconds to wait after the user has put their
@@ -170,7 +186,8 @@ export class CdkDrag<T = any> implements AfterViewInit, OnChanges, OnDestroy {
           source: this,
           pointerPosition: movedEvent.pointerPosition,
           event: movedEvent.event,
-          delta: movedEvent.delta
+          delta: movedEvent.delta,
+          distance: movedEvent.distance
         }))).subscribe(observer);
 
         return () => {
@@ -258,7 +275,7 @@ export class CdkDrag<T = any> implements AfterViewInit, OnChanges, OnDestroy {
 
   ngOnChanges(changes: SimpleChanges) {
     const rootSelectorChange = changes['rootElementSelector'];
-    const positionChange = changes['positionChange'];
+    const positionChange = changes['freeDragPosition'];
 
     // We don't have to react to the first change since it's being
     // handled in `ngAfterViewInit` where it needs to be deferred.
@@ -292,10 +309,25 @@ export class CdkDrag<T = any> implements AfterViewInit, OnChanges, OnDestroy {
     this._dragRef.withRootElement(rootElement || element);
   }
 
-  /** Gets the boundary element, based on the `boundaryElementSelector`. */
+  /** Gets the boundary element, based on the `boundaryElement` value. */
   private _getBoundaryElement() {
-    const selector = this.boundaryElementSelector;
-    return selector ? getClosestMatchingAncestor(this.element.nativeElement, selector) : null;
+    const boundary = this.boundaryElement;
+
+    if (!boundary) {
+      return null;
+    }
+
+    if (typeof boundary === 'string') {
+      return getClosestMatchingAncestor(this.element.nativeElement, boundary);
+    }
+
+    const element = coerceElement(boundary);
+
+    if (isDevMode() && !element.contains(this.element.nativeElement)) {
+      throw Error('Draggable element is not inside of the node passed into cdkDragBoundary.');
+    }
+
+    return element;
   }
 
   /** Syncs the inputs of the CdkDrag with the options of the underlying DragRef. */
@@ -344,8 +376,8 @@ export class CdkDrag<T = any> implements AfterViewInit, OnChanges, OnDestroy {
       this.released.emit({source: this});
     });
 
-    ref.ended.subscribe(() => {
-      this.ended.emit({source: this});
+    ref.ended.subscribe(event => {
+      this.ended.emit({source: this, distance: event.distance});
 
       // Since all of these events run outside of change detection,
       // we need to ensure that everything is marked correctly.
@@ -355,7 +387,8 @@ export class CdkDrag<T = any> implements AfterViewInit, OnChanges, OnDestroy {
     ref.entered.subscribe(event => {
       this.entered.emit({
         container: event.container.data,
-        item: this
+        item: this,
+        currentIndex: event.currentIndex
       });
     });
 
@@ -373,7 +406,8 @@ export class CdkDrag<T = any> implements AfterViewInit, OnChanges, OnDestroy {
         previousContainer: event.previousContainer.data,
         container: event.container.data,
         isPointerOverContainer: event.isPointerOverContainer,
-        item: this
+        item: this,
+        distance: event.distance
       });
     });
   }

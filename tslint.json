@@ -98,15 +98,20 @@
     "no-exposed-todo": true,
     "no-import-spacing": true,
     "no-private-getters": true,
+    "no-undecorated-base-class-di": true,
     "setters-after-getters": true,
     "ng-on-changes-property-access": true,
     "rxjs-imports": true,
     "require-breaking-change-version": true,
+    "static-query": true,
     "no-host-decorator-in-concrete": [
       true,
       "HostBinding",
       "HostListener"
     ],
+    "member-naming": [true, {
+      "private": "^_"
+    }],
     "validate-decorators": [true, {
       "Component": {
         "!host": "\\[class\\]",
@@ -120,15 +125,15 @@
         "!host": "\\[class\\]"
       },
       "NgModule": "^(?!\\s*$).+"
-    }, "src/+(lib|cdk|material-experimental|cdk-experimental)/**/!(*.spec).ts"],
+    }, "src/+(material|cdk|material-experimental|cdk-experimental)/**/!(*.spec).ts"],
     "require-license-banner": [
       true,
-      "src/+(lib|cdk|material-experimental|cdk-experimental|dev-app)/**/!(*.spec).ts"
+      "src/+(material|cdk|material-experimental|cdk-experimental|dev-app)/**/!(*.spec).ts"
     ],
     "missing-rollup-globals": [
       true,
       "./tools/package-tools/rollup-globals.ts",
-      "src/+(lib|cdk|material-examples|material-experimental|cdk-experimental)/!(schematics)**/*.ts"
+      "src/+(material|cdk|material-examples|material-experimental|cdk-experimental)/!(schematics)**/*.ts"
     ],
     "file-name-casing": [true, {
       // Exclude custom lint rule files since they have to always be camel-cased and end
@@ -143,10 +148,10 @@
       // Exclude the API golden files
       "tools/public_api_guard/**/*.d.ts",
       // Exclude schematic template files and test cases that can't be linted.
-      "src/lib/schematics/ng-generate/*/files/**/*",
+      "src/material/schematics/ng-generate/*/files/**/*",
       "src/cdk/schematics/ng-generate/*/files/**/*",
       "src/cdk/schematics/ng-update/test-cases/**/*",
-      "src/lib/schematics/ng-update/test-cases/**/*"
+      "src/material/schematics/ng-update/test-cases/**/*"
     ]
   }
 }
