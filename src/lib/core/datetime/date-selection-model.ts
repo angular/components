@@ -22,7 +22,7 @@ export abstract class MatDateSelectionModel<D> implements OnDestroy {
     this.selectionChange.complete();
   }
 
-  /** Adds a date to the current selection. If silent is set to true, now events are emitted */
+  /** Adds a date to the current selection. If silent is set to true, no events are emitted */
   abstract add(date: D | null, silent?: boolean): void;
 
   /** Clones this selection model. */
