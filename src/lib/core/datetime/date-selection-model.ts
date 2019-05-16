@@ -164,6 +164,15 @@ export class MatRangeDateSelectionModel<D> extends MatDateSelectionModel<D> {
     };
   }
 
+  setPartialSelection(start?: D | undefined, end?: D | undefined ) {
+    if (start) {
+      this.start = start;
+    }
+    if (end) {
+      this.end = end;
+    }
+  }
+
   /**
    * Adds the given date to the selection model. For a `MatRangeDateSelectionModel` this means:
    * - Setting the start date if nothing is already selected.

@@ -35,7 +35,8 @@ import {
   MatDateFormats,
   MatDateSelectionModel,
   MatSingleDateSelectionModel,
-  ThemePalette
+  ThemePalette,
+  MatRangeDateSelectionModel
 } from '@angular/material/core';
 import {MatFormField} from '@angular/material/form-field';
 import {MAT_INPUT_VALUE_ACCESSOR} from '@angular/material/input';
@@ -455,8 +456,26 @@ export class MatDatepickerInputStart<D> extends MatDatepickerInput<D> {
       this.dateChange.emit(new MatDatepickerInputEvent(this, this._elementRef.nativeElement));
     });
   }
-}
 
+  _onInput(value: string) {
+    if ( this._selectionModel instanceof MatRangeDateSelectionModel ) {
+      let date = this._dateAdapter.parse(value, this._dateFormats.parse.dateInput);
+      const current = this._selectionModel.getFirstSelectedDate();
+      date = this._getValidDateOrNull(date);
+
+      if (!this._dateAdapter.sameDate(current, date)) {
+        this._selectionModel.setPartialSelection(date);
+        this._formatValue(date);
+        this._cvaOnChange(date);
+        this.dateInput.emit(new MatDatepickerInputEvent(this, this._elementRef.nativeElement));
+      } else {
+        this._validatorOnChange();
+      }
+    }
+  }
+
+  _onChange() {}
+}
 
 @Directive({
   selector: 'input[matDatepickerEnd]',
@@ -504,4 +523,23 @@ export class MatDatepickerInputEnd<D> extends MatDatepickerInput<D> {
       this.dateChange.emit(new MatDatepickerInputEvent(this, this._elementRef.nativeElement));
     });
   }
+
+  _onInput(value: string) {
+    if ( this._selectionModel instanceof MatRangeDateSelectionModel ) {
+      let date = this._dateAdapter.parse(value, this._dateFormats.parse.dateInput);
+      const current = this._selectionModel.getLastSelectedDate();
+      date = this._getValidDateOrNull(date);
+
+      if (!this._dateAdapter.sameDate(current, date)) {
+        this._selectionModel.setPartialSelection(undefined, date);
+        this._formatValue(date);
+        this._cvaOnChange(date);
+        this.dateInput.emit(new MatDatepickerInputEvent(this, this._elementRef.nativeElement));
+      } else {
+        this._validatorOnChange();
+      }
+    }
+  }
+
+  _onChange() {}
 }
