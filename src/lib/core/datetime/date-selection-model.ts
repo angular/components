@@ -22,8 +22,8 @@ export abstract class MatDateSelectionModel<D> implements OnDestroy {
     this.selectionChange.complete();
   }
 
-  /** Adds a date to the current selection. */
-  abstract add(date: D): void;
+  /** Adds a date to the current selection. If silent is set to true, now events are emitted */
+  abstract add(date: D | null, silent?: boolean): void;
 
   /** Clones this selection model. */
   abstract clone(): MatDateSelectionModel<D>;
@@ -85,10 +85,12 @@ export class MatSingleDateSelectionModel<D> extends MatDateSelectionModel<D> {
    * Adds the given date to the selection model. For a `MatSingleDateSelectionModel` this means
    * simply replacing the current selection with the given selection.
    */
-  add(date: D) {
+  add(date: D | null, silent = false) {
     if (!this.adapter.sameDate(date, this.date)) {
       this.date = date;
-      this.selectionChange.next();
+      if (!silent) {
+        this.selectionChange.next();
+      }
     }
   }
 
@@ -179,7 +181,7 @@ export class MatRangeDateSelectionModel<D> extends MatDateSelectionModel<D> {
    * - Setting the end date if the start date is already set but the end is not.
    * - Clearing the selection and setting the start date if both the start and end are already set.
    */
-  add(date: D): void {
+  add(date: D | null, silent = false): void {
     if (!this.start) {
       this.start = date;
     } else if (!this.end) {
@@ -189,7 +191,9 @@ export class MatRangeDateSelectionModel<D> extends MatDateSelectionModel<D> {
       this.end = null;
     }
 
-    this.selectionChange.next();
+    if (!silent) {
+      this.selectionChange.next();
+    }
   }
 
   clone(): MatDateSelectionModel<D> {

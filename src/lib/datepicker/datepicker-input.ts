@@ -41,7 +41,7 @@ import {
 import {MatFormField} from '@angular/material/form-field';
 import {MAT_INPUT_VALUE_ACCESSOR} from '@angular/material/input';
 import {Subscription} from 'rxjs';
-import {MatDatepicker} from './datepicker';
+import {MatDatepickerBase, MatDatepickerRange} from './datepicker';
 import {createMissingDateImplError} from './datepicker-errors';
 
 /** @docs-private */
@@ -102,7 +102,7 @@ export class MatDatepickerInputEvent<D> {
 export class MatDatepickerInput<D> implements ControlValueAccessor, OnDestroy, Validator {
   /** The datepicker that this input is associated with. */
   @Input()
-  set matDatepicker(value: MatDatepicker<D>) {
+  set matDatepicker(value: MatDatepickerBase<D>) {
     if (!value) {
       return;
     }
@@ -118,17 +118,17 @@ export class MatDatepickerInput<D> implements ControlValueAccessor, OnDestroy, V
 
     this._selectionModel = this._datepicker._dateSelection;
 
-    this._formatValue(this._selectionModel.getSelection());
+    this._formatValue(this._selectionModel.getFirstSelectedDate());
 
     this._datepickerSubscription = this._datepicker._dateSelection.selectionChange.subscribe(() => {
-      this._formatValue(this._selectionModel.getSelection());
-      this._cvaOnChange(this._selectionModel.getSelection());
+      this._formatValue(this._selectionModel.getFirstSelectedDate());
+      this._cvaOnChange(this._selectionModel.getFirstSelectedDate());
       this._onTouched();
       this.dateInput.emit(new MatDatepickerInputEvent(this, this._elementRef.nativeElement));
       this.dateChange.emit(new MatDatepickerInputEvent(this, this._elementRef.nativeElement));
     });
   }
-  _datepicker: MatDatepicker<D>;
+  _datepicker: MatDatepickerBase<D>;
 
   /** Function that can be used to filter out dates within the datepicker. */
   @Input()
@@ -141,7 +141,7 @@ export class MatDatepickerInput<D> implements ControlValueAccessor, OnDestroy, V
   /** The value of the input. */
   @Input()
   get value(): D | null {
-    return this._selectionModel ? this._selectionModel.getSelection() : null;
+    return this._selectionModel ? this._selectionModel.getFirstSelectedDate() : null;
   }
   set value(value: D | null) {
     if (!this._isSelectionInitialized && value) {
@@ -149,24 +149,24 @@ export class MatDatepickerInput<D> implements ControlValueAccessor, OnDestroy, V
     }
 
     value = this._dateAdapter.deserialize(value);
-    const oldDate = this._selectionModel.getSelection();
+    const oldDate = this._selectionModel.getFirstSelectedDate();
 
     if (!this._selectionModel) {
       throw new Error('Input has no MatDatePicker associated with it.');
     }
 
     if (!this._dateAdapter.sameDate(value, oldDate)) {
-      this._selectionModel.setSelection(value);
+      this._selectionModel.add(value!, true);
     }
 
     this._lastValueValid = this._selectionModel.isValid();
-    this._formatValue(this._selectionModel.getSelection());
+    this._formatValue(this._selectionModel.getFirstSelectedDate());
 
     if (!this._dateAdapter.sameDate(value, oldDate)) {
       this._valueChange.emit(value);
     }
   }
-  protected _selectionModel: MatSingleDateSelectionModel<D>;
+  protected _selectionModel: MatDateSelectionModel<D>;
 
   /** The minimum valid date. */
   @Input()
@@ -358,11 +358,11 @@ export class MatDatepickerInput<D> implements ControlValueAccessor, OnDestroy, V
 
   _onInput(value: string) {
     let date = this._dateAdapter.parse(value, this._dateFormats.parse.dateInput);
-    const current = this._selectionModel.getSelection();
+    const current = this._selectionModel.getFirstSelectedDate();
     date = this._getValidDateOrNull(date);
 
-    if (!this._dateAdapter.sameDate(current, date)) {
-      this._selectionModel.setSelection(date);
+    if (!this._dateAdapter.sameDate(current, date) && date) {
+      this._selectionModel.add(date, true);
       this._cvaOnChange(date);
       this.dateInput.emit(new MatDatepickerInputEvent(this, this._elementRef.nativeElement));
     } else {
@@ -429,9 +429,12 @@ export class MatDatepickerInput<D> implements ControlValueAccessor, OnDestroy, V
   },
 })
 export class MatDatepickerInputStart<D> extends MatDatepickerInput<D> {
+  _datepicker: MatDatepickerRange<D>;
+  _selectionModel: MatRangeDateSelectionModel<D>;
+
   @Input()
-  set matDatepicker(value: MatDatepicker<D>) {
-    if (!value) {
+  set matDatepicker(value: MatDatepickerRange<D>) {
+    if (!value || !(value instanceof MatDatepickerRange)) {
       return;
     }
 
@@ -457,23 +460,18 @@ export class MatDatepickerInputStart<D> extends MatDatepickerInput<D> {
   }
 
   _onInput(value: string) {
-    if ( this._selectionModel instanceof MatRangeDateSelectionModel ) {
-      let date = this._dateAdapter.parse(value, this._dateFormats.parse.dateInput);
-      const current = this._selectionModel.getFirstSelectedDate();
-      date = this._getValidDateOrNull(date);
+    let date = this._dateAdapter.parse(value, this._dateFormats.parse.dateInput);
+    const current = this._selectionModel.getFirstSelectedDate();
+    date = this._getValidDateOrNull(date);
 
-      if (!this._dateAdapter.sameDate(current, date)) {
-        this._selectionModel.setPartialSelection(date);
-        this._formatValue(date);
-        this._cvaOnChange(date);
-        this.dateInput.emit(new MatDatepickerInputEvent(this, this._elementRef.nativeElement));
-      } else {
-        this._validatorOnChange();
-      }
+    if (!this._dateAdapter.sameDate(current, date) && date) {
+      this._selectionModel.setPartialSelection(date);
+      this._cvaOnChange(date);
+      this.dateInput.emit(new MatDatepickerInputEvent(this, this._elementRef.nativeElement));
+    } else {
+      this._validatorOnChange();
     }
   }
-
-  _onChange() {}
 }
 
 @Directive({
@@ -496,9 +494,12 @@ export class MatDatepickerInputStart<D> extends MatDatepickerInput<D> {
   },
 })
 export class MatDatepickerInputEnd<D> extends MatDatepickerInput<D> {
+  _datepicker: MatDatepickerRange<D>;
+  _selectionModel: MatRangeDateSelectionModel<D>;
+
   @Input()
-  set matDatepicker(value: MatDatepicker<D>) {
-    if (!value) {
+  set matDatepicker(value: MatDatepickerRange<D>) {
+    if (!value || !(value instanceof MatDatepickerRange)) {
       return;
     }
 
@@ -524,21 +525,27 @@ export class MatDatepickerInputEnd<D> extends MatDatepickerInput<D> {
   }
 
   _onInput(value: string) {
-    if ( this._selectionModel instanceof MatRangeDateSelectionModel ) {
-      let date = this._dateAdapter.parse(value, this._dateFormats.parse.dateInput);
-      const current = this._selectionModel.getLastSelectedDate();
-      date = this._getValidDateOrNull(date);
+    let date = this._dateAdapter.parse(value, this._dateFormats.parse.dateInput);
+    const current = this._selectionModel.getLastSelectedDate();
+    date = this._getValidDateOrNull(date);
 
-      if (!this._dateAdapter.sameDate(current, date)) {
-        this._selectionModel.setPartialSelection(undefined, date);
-        this._formatValue(date);
-        this._cvaOnChange(date);
-        this.dateInput.emit(new MatDatepickerInputEvent(this, this._elementRef.nativeElement));
-      } else {
-        this._validatorOnChange();
-      }
+    if (!this._dateAdapter.sameDate(current, date) && date) {
+      this._selectionModel.setPartialSelection(undefined, date);
+      this._cvaOnChange(date);
+      this.dateInput.emit(new MatDatepickerInputEvent(this, this._elementRef.nativeElement));
+    } else {
+      this._validatorOnChange();
     }
   }
 
-  _onChange() {}
+    /** Formats a value and sets it on the input element. */
+    protected _formatValue(value: D | MatDateSelectionModel<D> | null) {
+      if (value instanceof MatDateSelectionModel) {
+        value = value.getLastSelectedDate();
+      }
+
+      this._elementRef.nativeElement.value =
+          value && this._getValidDateOrNull(value) ?
+              this._dateAdapter.format(value, this._dateFormats.display.dateInput) : '';
+    }
 }

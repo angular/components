@@ -230,9 +230,9 @@ export class MatDatepickerBase<D> implements OnDestroy, CanColor {
   id: string = `mat-datepicker-${datepickerUid++}`;
 
   /** The currently selected date. */
-  get _selected(): D | null { return this._dateSelection.getSelection(); }
+  get _selected(): D | null { return this._dateSelection.getFirstSelectedDate(); }
   set _selected(value: D | null) {
-    this._dateSelection.setSelection(value);
+    this._dateSelection.add(value);
   }
 
   /** The minimum selectable date. */
@@ -281,7 +281,7 @@ export class MatDatepickerBase<D> implements OnDestroy, CanColor {
               protected _ngZone: NgZone,
               protected _viewContainerRef: ViewContainerRef,
               @Inject(MatDateSelectionModel) readonly _dateSelection:
-                  MatSingleDateSelectionModel<D>,
+                  MatDateSelectionModel<D>,
               @Inject(MAT_DATEPICKER_SCROLL_STRATEGY) scrollStrategy: any,
               @Optional() protected _dateAdapter: DateAdapter<D>,
               @Optional() protected _dir: Directionality,
@@ -293,7 +293,7 @@ export class MatDatepickerBase<D> implements OnDestroy, CanColor {
     this._scrollStrategy = scrollStrategy;
 
     this._subscriptions.add(_dateSelection.selectionChange.subscribe(() => {
-      this._selectedChanged.next(_dateSelection.getSelection() || undefined);
+      this._selectedChanged.next(_dateSelection.getFirstSelectedDate() || undefined);
     }));
   }
 
@@ -310,7 +310,7 @@ export class MatDatepickerBase<D> implements OnDestroy, CanColor {
 
   /** Selects the given date */
   select(date: D): void {
-    let oldValue = this._dateSelection.getSelection();
+    let oldValue = this._dateSelection.getFirstSelectedDate();
     if (!this._dateAdapter.sameDate(oldValue, date)) {
       this._dateSelection.add(date);
     }
@@ -545,6 +545,8 @@ export class MatDatepicker<D> extends MatDatepickerBase<D> {}
   providers: [{provide: MatDateSelectionModel, useClass: MatRangeDateSelectionModel}]
 })
 export class MatDatepickerRange<D> extends MatDatepickerBase<D> implements AfterContentInit {
+  readonly _dateSelection: MatRangeDateSelectionModel<D>;
+
   @ContentChild(MatDatepickerInputStart) start: MatDatepickerInputStart<D>;
   @ContentChild(MatDatepickerInputEnd) end: MatDatepickerInputStart<D>;
 
