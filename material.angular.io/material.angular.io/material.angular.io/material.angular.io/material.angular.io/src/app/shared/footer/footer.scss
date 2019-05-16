@@ -42,12 +42,15 @@
   a {
     font-size: 16px;
     padding: 0;
-    text-decoration: none;
-    color: inherit;
+  }
+}
 
-    &:hover {
-      text-decoration: underline;
-    }
+a {
+  text-decoration: none;
+  color: inherit;
+
+  &:hover {
+    text-decoration: underline;
   }
 }
 
