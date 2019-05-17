@@ -70,7 +70,9 @@ export class LoadMoreTreeDemo {
 
   hasChild = (_: number, _nodeData: LoadMoreFlatNode) => { return _nodeData.expandable; };
 
-  isLoadMore = (_: number, _nodeData: LoadMoreFlatNode) => { return _nodeData.item.startsWith(LOAD_MORE); };
+  isLoadMore = (_: number, _nodeData: LoadMoreFlatNode) => {
+    return _nodeData.item.startsWith(LOAD_MORE);
+  }
 
   /** Load more nodes from data source */
   loadMore(item: string) {

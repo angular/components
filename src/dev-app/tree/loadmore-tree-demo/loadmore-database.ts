@@ -66,7 +66,8 @@ export class LoadMoreDatabase {
     if (onlyFirstTime && parent.children!.length > 0) {
       return;
     }
-    const newChildrenNumber = (parent.children!.length && parent.children!.length - 1) + this.batchNumber;
+    const newChildrenNumber = (parent.children!.length && parent.children!.length - 1)
+        + this.batchNumber;
     const nodes = children.slice(0, newChildrenNumber)
         .map(name => this._generateNode(name));
     if (newChildrenNumber < children.length) {
