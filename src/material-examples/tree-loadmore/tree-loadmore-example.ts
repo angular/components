@@ -13,10 +13,10 @@ import {BehaviorSubject, Observable} from 'rxjs';
 const LOAD_MORE = 'LOAD_MORE';
 
 /** Nested node */
-export class LoadmoreNode {
-  childrenChange = new BehaviorSubject<LoadmoreNode[]>([]);
+export class LoadMoreNode {
+  childrenChange = new BehaviorSubject<LoadMoreNode[]>([]);
 
-  get children(): LoadmoreNode[] {
+  get children(): LoadMoreNode[] {
     return this.childrenChange.value;
   }
 
@@ -26,7 +26,7 @@ export class LoadmoreNode {
 }
 
 /** Flat node with expandable and level information */
-export class LoadmoreFlatNode {
+export class LoadMoreFlatNode {
   constructor(public item: string,
               public level = 1,
               public expandable = false,
@@ -38,10 +38,10 @@ export class LoadmoreFlatNode {
  * button, more data will be loaded.
  */
 @Injectable()
-export class LoadmoreDatabase {
+export class LoadMoreDatabase {
   batchNumber = 5;
-  dataChange = new BehaviorSubject<LoadmoreNode[]>([]);
-  nodeMap = new Map<string, LoadmoreNode>();
+  dataChange = new BehaviorSubject<LoadMoreNode[]>([]);
+  nodeMap = new Map<string, LoadMoreNode>();
 
   /** The data */
   rootLevelNodes: string[] = ['Vegetables', 'Fruits'];
@@ -72,18 +72,18 @@ export class LoadmoreDatabase {
       .map(name => this._generateNode(name));
     if (newChildrenNumber < children.length) {
       // Need a new load more node
-      nodes.push(new LoadmoreNode(LOAD_MORE, false, item));
+      nodes.push(new LoadMoreNode(LOAD_MORE, false, item));
     }
 
     parent.childrenChange.next(nodes);
     this.dataChange.next(this.dataChange.value);
   }
 
-  private _generateNode(item: string): LoadmoreNode {
+  private _generateNode(item: string): LoadMoreNode {
     if (this.nodeMap.has(item)) {
       return this.nodeMap.get(item)!;
     }
-    const result = new LoadmoreNode(item, this.dataMap.has(item));
+    const result = new LoadMoreNode(item, this.dataMap.has(item));
     this.nodeMap.set(item, result);
     return result;
   }
@@ -96,20 +96,20 @@ export class LoadmoreDatabase {
   selector: 'tree-loadmore-example',
   templateUrl: 'tree-loadmore-example.html',
   styleUrls: ['tree-loadmore-example.css'],
-  providers: [LoadmoreDatabase]
+  providers: [LoadMoreDatabase]
 })
-export class TreeLoadmoreExample {
-  nodeMap = new Map<string, LoadmoreFlatNode>();
-  treeControl: FlatTreeControl<LoadmoreFlatNode>;
-  treeFlattener: MatTreeFlattener<LoadmoreNode, LoadmoreFlatNode>;
+export class TreeLoadMoreExample {
+  nodeMap = new Map<string, LoadMoreFlatNode>();
+  treeControl: FlatTreeControl<LoadMoreFlatNode>;
+  treeFlattener: MatTreeFlattener<LoadMoreNode, LoadMoreFlatNode>;
   // Flat tree data source
-  dataSource: MatTreeFlatDataSource<LoadmoreNode, LoadmoreFlatNode>;
+  dataSource: MatTreeFlatDataSource<LoadMoreNode, LoadMoreFlatNode>;
 
-  constructor(private _database: LoadmoreDatabase) {
+  constructor(private _database: LoadMoreDatabase) {
     this.treeFlattener = new MatTreeFlattener(this.transformer, this.getLevel,
       this.isExpandable, this.getChildren);
 
-    this.treeControl = new FlatTreeControl<LoadmoreFlatNode>(this.getLevel, this.isExpandable);
+    this.treeControl = new FlatTreeControl<LoadMoreFlatNode>(this.getLevel, this.isExpandable);
 
     this.dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
 
@@ -120,9 +120,9 @@ export class TreeLoadmoreExample {
     _database.initialize();
   }
 
-  getChildren = (node: LoadmoreNode): Observable<LoadmoreNode[]> => node.childrenChange;
+  getChildren = (node: LoadMoreNode): Observable<LoadMoreNode[]> => node.childrenChange;
 
-  transformer = (node: LoadmoreNode, level: number) => {
+  transformer = (node: LoadMoreNode, level: number) => {
     const existingNode = this.nodeMap.get(node.item);
 
     if (existingNode) {
@@ -130,25 +130,25 @@ export class TreeLoadmoreExample {
     }
 
     const newNode =
-        new LoadmoreFlatNode(node.item, level, node.hasChildren, node.loadMoreParentItem);
+        new LoadMoreFlatNode(node.item, level, node.hasChildren, node.loadMoreParentItem);
     this.nodeMap.set(node.item, newNode);
     return newNode;
   }
 
-  getLevel = (node: LoadmoreFlatNode) => node.level;
+  getLevel = (node: LoadMoreFlatNode) => node.level;
 
-  isExpandable = (node: LoadmoreFlatNode) => node.expandable;
+  isExpandable = (node: LoadMoreFlatNode) => node.expandable;
 
-  hasChild = (_: number, _nodeData: LoadmoreFlatNode) => _nodeData.expandable;
+  hasChild = (_: number, _nodeData: LoadMoreFlatNode) => _nodeData.expandable;
 
-  isLoadMore = (_: number, _nodeData: LoadmoreFlatNode) => _nodeData.item === LOAD_MORE;
+  isLoadMore = (_: number, _nodeData: LoadMoreFlatNode) => _nodeData.item === LOAD_MORE;
 
   /** Load more nodes from data source */
   loadMore(item: string) {
     this._database.loadMore(item);
   }
 
-  loadChildren(node: LoadmoreFlatNode) {
+  loadChildren(node: LoadMoreFlatNode) {
     this._database.loadMore(node.item, true);
   }
 }
