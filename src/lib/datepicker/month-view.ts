@@ -286,7 +286,7 @@ export class MatMonthView<D> implements AfterViewInit, OnDestroy {
          this._dateAdapter.getFirstDayOfWeek()) % DAYS_PER_WEEK;
 
     this._createWeekCells();
-    Promise.resolve().then(() => this._changeDetectorRef.markForCheck());
+    this._changeDetectorRef.detectChanges();
   }
 
   /** Focuses the active cell after the microtask queue is empty. */
