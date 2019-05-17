@@ -20,7 +20,7 @@
   <!-- load-more node -->
   <mat-tree-node *matTreeNodeDef="let node; when: isLoadMore" class="load-more-node" matTreeNodePadding>
     <button mat-button (click)="loadMore(node.loadMoreParentItem)">
-      Load more...
+      Load more {{node.loadMoreParentItem}}...
     </button>
   </mat-tree-node>
 </mat-tree>

@@ -71,7 +71,7 @@ export class LoadmoreDatabase {
         .map(name => this._generateNode(name));
     if (newChildrenNumber < children.length) {
       // Need a new load more node
-      nodes.push(new LoadmoreNode(LOAD_MORE, false, item));
+      nodes.push(new LoadmoreNode(LOAD_MORE + '_' + item, false, item));
     }
 
     parent.childrenChange.next(nodes);
