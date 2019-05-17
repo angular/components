@@ -1,11 +1,11 @@
 <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
   <!-- Leaf node -->
-  <mat-tree-node *matTreeNodeDef="let node" class="leaf-node" matTreeNodePadding>
+  <mat-tree-node *matTreeNodeDef="let node" class="example-leaf-node" matTreeNodePadding>
     {{node.item}}
   </mat-tree-node>
 
   <!-- expandable node -->
-  <mat-tree-node *matTreeNodeDef="let node; when: hasChild" class="expandable-node" matTreeNodePadding>
+  <mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding>
     <button mat-icon-button
             [attr.aria-label]="'toggle ' + node.filename"
             (click)="loadChildren(node)"
@@ -18,7 +18,7 @@
   </mat-tree-node>
 
   <!-- load-more node -->
-  <mat-tree-node *matTreeNodeDef="let node; when: isLoadMore" class="load-more-node" matTreeNodePadding>
+  <mat-tree-node *matTreeNodeDef="let node; when: isLoadMore" class="example-load-more-node" matTreeNodePadding>
     <button mat-button (click)="loadMore(node.loadMoreParentItem)">
       Load more {{node.loadMoreParentItem}}...
     </button>
