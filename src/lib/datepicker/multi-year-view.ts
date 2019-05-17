@@ -171,7 +171,7 @@ export class MatMultiYearView<D> implements AfterViewInit, OnDestroy {
         row = [];
       }
     }
-    Promise.resolve().then(() => this._changeDetectorRef.markForCheck());
+    this._changeDetectorRef.detectChanges();
   }
 
   /** Handles when a new year is selected. */

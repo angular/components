@@ -245,7 +245,7 @@ export class MatYearView<D> implements AfterViewInit, OnDestroy {
     // First row of months only contains 5 elements so we can fit the year label on the same row.
     this._months = [[0, 1, 2, 3], [4, 5, 6, 7], [8, 9, 10, 11]].map(row => row.map(
         month => this._createCellForMonth(month, monthNames[month])));
-    Promise.resolve().then(() => this._changeDetectorRef.markForCheck());
+    this._changeDetectorRef.detectChanges();
   }
 
   /** Focuses the active cell after the microtask queue is empty. */
