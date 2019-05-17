@@ -38,7 +38,7 @@ export class LoadmoreFlatNode {
  */
 @Injectable()
 export class LoadmoreDatabase {
-  batchNumber = 5;
+  batchNumber = 2;
   dataChange: BehaviorSubject<LoadmoreNode[]> = new BehaviorSubject<LoadmoreNode[]>([]);
   nodeMap: Map<string, LoadmoreNode> = new Map<string, LoadmoreNode>();
 
@@ -66,7 +66,7 @@ export class LoadmoreDatabase {
     if (onlyFirstTime && parent.children!.length > 0) {
       return;
     }
-    const newChildrenNumber = parent.children!.length + this.batchNumber;
+    const newChildrenNumber = (parent.children!.length && parent.children!.length - 1) + this.batchNumber;
     const nodes = children.slice(0, newChildrenNumber)
         .map(name => this._generateNode(name));
     if (newChildrenNumber < children.length) {
