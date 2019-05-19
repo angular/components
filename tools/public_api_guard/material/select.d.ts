@@ -62,6 +62,7 @@ export declare class MatSelect extends _MatSelectMixinBase implements AfterConte
     trigger: ElementRef;
     readonly triggerValue: string;
     value: any;
+    separator: string;
     readonly valueChange: EventEmitter<any>;
     constructor(_viewportRuler: ViewportRuler, _changeDetectorRef: ChangeDetectorRef, _ngZone: NgZone, _defaultErrorStateMatcher: ErrorStateMatcher, elementRef: ElementRef, _dir: Directionality, _parentForm: NgForm, _parentFormGroup: FormGroupDirective, _parentFormField: MatFormField, ngControl: NgControl, tabIndex: string, scrollStrategyFactory: any,
     _liveAnnouncer?: LiveAnnouncer | undefined);
