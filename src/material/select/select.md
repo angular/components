@@ -85,6 +85,13 @@ Material Design components.
 
 <!-- example(select-multiple) -->
 
+### Customizing the trigger label separator
+
+If you want to use another delimiter for trigger label, you can use the
+`separator` attribute. It is `, ` by default.
+
+<!-- example(select-custom-trigger-label-separator) -->
+
 ### Customizing the trigger label
 
 If you want to display a custom trigger label inside a `<mat-select>`, you can use the

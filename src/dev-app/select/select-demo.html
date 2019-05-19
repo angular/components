@@ -223,7 +223,8 @@ Space above cards: <input type="number" [formControl]="topHeightCtrl">
       <mat-form-field [color]="pokemonTheme">
         <mat-label>Pokemon</mat-label>
         <mat-select multiple [(ngModel)]="currentPokemon"
-          [required]="pokemonRequired" [disabled]="pokemonDisabled" #pokemonControl="ngModel">
+          [required]="pokemonRequired" [disabled]="pokemonDisabled" [separator]='pokemonSeparator'
+          #pokemonControl="ngModel">
           <mat-option *ngFor="let creature of pokemon" [value]="creature.value">
             {{ creature.viewValue }}
           </mat-option>
@@ -240,6 +241,7 @@ Space above cards: <input type="number" [formControl]="topHeightCtrl">
         </select>
       </p>
       <button mat-button (click)="setPokemonValue()">SET VALUE</button>
+      <button mat-button (click)="pokemonSeparator = '; '">SET SEPARATOR</button>
       <button mat-button (click)="pokemonRequired=!pokemonRequired">TOGGLE REQUIRED</button>
       <button mat-button (click)="pokemonDisabled=!pokemonDisabled">TOGGLE DISABLED</button>
       <button mat-button (click)="pokemonControl.reset()">RESET</button>

@@ -33,6 +33,7 @@ export class SelectDemo {
   pokemonRequired = false;
   drinksDisabled = false;
   pokemonDisabled = false;
+  pokemonSeparator: string;
   showSelect = false;
   currentDrink: string;
   currentDrinkObject: {}|undefined = {value: 'tea-5', viewValue: 'Tea'};

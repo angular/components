@@ -4037,6 +4037,27 @@ describe('MatSelect', () => {
       expect(fixture.componentInstance.control.value).toEqual(['steak-0', 'pizza-1', 'tacos-2']);
     }));
 
+    it('should be able to customize the custom trigger label separator', fakeAsync(() => {
+      fixture.componentInstance.separator = '; ';
+      fixture.detectChanges();
+
+      trigger.click();
+      fixture.detectChanges();
+      flush();
+
+      const options = overlayContainerElement.querySelectorAll('mat-option') as
+          NodeListOf<HTMLElement>;
+
+      for (let i = 0; i < 3; i++) {
+        options[i].click();
+      }
+      fixture.detectChanges();
+
+      // Expect the items to be in reverse order.
+      expect(trigger.textContent).toContain('Steak; Pizza; Tacos');
+      expect(fixture.componentInstance.control.value).toEqual(['steak-0', 'pizza-1', 'tacos-2']);
+    }));
+
     it('should be able to customize the value sorting logic', fakeAsync(() => {
       fixture.componentInstance.sortComparator = (a, b, optionsArray) => {
         return optionsArray.indexOf(b) - optionsArray.indexOf(a);
@@ -4557,7 +4578,7 @@ class FloatLabelSelect {
   selector: 'multi-select',
   template: `
     <mat-form-field>
-      <mat-select multiple placeholder="Food" [formControl]="control"
+      <mat-select multiple placeholder="Food" [formControl]="control" [separator]="separator"
         [sortComparator]="sortComparator">
         <mat-option *ngFor="let food of foods"
                     [value]="food.value">{{ food.viewValue }}
@@ -4578,6 +4599,7 @@ class MultiSelect {
     { value: 'sushi-7', viewValue: 'Sushi' },
   ];
   control = new FormControl();
+  separator: string;
 
   @ViewChild(MatSelect, {static: false}) select: MatSelect;
   @ViewChildren(MatOption) options: QueryList<MatOption>;

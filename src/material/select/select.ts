@@ -417,6 +417,16 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
   }
   private _value: any;
 
+  /** Separator used in the trigger label for multiple select. */
+  @Input()
+  get separator(): string { return this._separator; }
+  set separator(value: string) {
+    if (value) {
+      this._separator = value;
+    }
+  }
+  private _separator: string = ', ';
+
   /** Aria label of the select. If not specified, the placeholder will be used as label. */
   @Input('aria-label') ariaLabel: string = '';
 
@@ -688,8 +698,7 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
         selectedOptions.reverse();
       }
 
-      // TODO(crisbeto): delimiter should be configurable for proper localization.
-      return selectedOptions.join(', ');
+      return selectedOptions.join(this.separator);
     }
 
     return this._selectionModel.selected[0].viewValue;
