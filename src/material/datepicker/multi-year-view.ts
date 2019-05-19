@@ -39,6 +39,43 @@ export const yearsPerPage = 24;
 
 export const yearsPerRow = 4;
 
+/** Gets remainder that is non-negative, even if first number is negative */
+function euclideanModulo (a: number, b: number): number {
+  return (a % b + b) % b;
+}
+
+/**
+ * We pick a "starting" year such that either the maximum year would be at the end
+ * or the minimum year would be at the beginning of a page.
+ */
+function getStartingYear(minDate: any, maxDate: any): number {
+  let startingYear = 0;
+  if (maxDate) {
+    const maxYear = maxDate.getFullYear();
+    startingYear = maxYear - yearsPerPage + 1;
+  } else if (minDate) {
+    startingYear = minDate.getFullYear();
+  }
+  return startingYear;
+}
+
+/**
+ * When the multi-year view is first opened, the active year will be in view.
+ * So we compute how many years are between the active year and the *slot* where our
+ * "startingYear" will render when paged into view.
+ */
+export function getActiveOffset(activeDate: any, minDate: any, maxDate: any): number {
+  const activeYear = activeDate.getFullYear();
+  return euclideanModulo((activeYear - getStartingYear(minDate, maxDate)), yearsPerPage);
+}
+
+export function isSameMultiYearView(date1: any, date2: any, minDate: any, maxDate: any): boolean {
+  const year1 = date1.getFullYear();
+  const year2 = date2.getFullYear();
+  const startingYear = getStartingYear(minDate, maxDate);
+  return Math.floor( (year1 - startingYear) / yearsPerPage) ===
+          Math.floor( (year2 - startingYear) / yearsPerPage);
+}
 
 /**
  * An internal component used to display a year selector in the datepicker.
@@ -61,16 +98,8 @@ export class MatMultiYearView<D> implements AfterContentInit {
     const validDate =
         this._getValidDateOrNull(this._dateAdapter.deserialize(value)) || this._dateAdapter.today();
     this._activeDate = this._dateAdapter.clampDate(validDate, this.minDate, this.maxDate);
-    let minYear = 0;
-    if (this.minDate) {
-      minYear = this._dateAdapter.getYear(this.minDate);
-    }
-    if (this.maxDate) {
-      let maxYear = this._dateAdapter.getYear(this.maxDate);
-      minYear = maxYear - yearsPerPage + 1;
-    }
-    if (Math.floor( (this._dateAdapter.getYear(oldActiveDate) - minYear) / yearsPerPage) !=
-        Math.floor( (this._dateAdapter.getYear(this._activeDate) - minYear) / yearsPerPage)) {
+
+    if (!isSameMultiYearView(oldActiveDate, this._activeDate, this.minDate, this.maxDate)) {
       this._init();
     }
   }
@@ -142,19 +171,16 @@ export class MatMultiYearView<D> implements AfterContentInit {
   /** Initializes this multi-year view. */
   _init() {
     this._todayYear = this._dateAdapter.getYear(this._dateAdapter.today());
-    let activeYear = this._dateAdapter.getYear(this._activeDate);
-    let minYear = 0;
-    if (this.minDate) {
-      minYear = this._dateAdapter.getYear(this.minDate);
-    }
-    // If maxDate is set, aligning maxYear as last cell of the page takes precedence over
-    // starting with minDate
-    if (this.maxDate) {
-      let maxYear = this._dateAdapter.getYear(this.maxDate);
-      minYear = maxYear - yearsPerPage + 1;
-    }
-    let activeOffset = this._mod((activeYear - minYear), yearsPerPage);
-    let minYearOfPage = activeYear - activeOffset;
+
+    // We want a range years such that we maximize the number of
+    // enabled dates visible at once. This prevents issues where the minimum year
+    // is the last item of a page OR the maximum year is the first item of a page.
+
+    // The offset from the active year to the "slot" for the starting year is the
+    // *actual* first rendered year in the multi-year view.
+    const activeYear = this._dateAdapter.getYear(this._activeDate);
+    const minYearOfPage =
+      activeYear - getActiveOffset(this._activeDate, this.minDate, this.maxDate);
 
     this._years = [];
     for (let i = 0, row: number[] = []; i < yearsPerPage; i++) {
@@ -179,21 +205,8 @@ export class MatMultiYearView<D> implements AfterContentInit {
 
   /** Handles keydown events on the calendar body when calendar is in multi-year view. */
   _handleCalendarBodyKeydown(event: KeyboardEvent): void {
-    // TODO(mmalerba): We currently allow keyboard navigation to disabled dates, but just prevent
-    // disabled ones from being selected. This may not be ideal, we should look into whether
-    // navigation should skip over disabled dates, and if so, how to implement that efficiently.
-
     const oldActiveDate = this._activeDate;
     const isRtl = this._isRtl();
-
-    let minYear = 0;
-    if (this.minDate) {
-      minYear = this._dateAdapter.getYear(this.minDate);
-    }
-    if (this.maxDate) {
-      let maxYear = this._dateAdapter.getYear(this.maxDate);
-      minYear = maxYear - yearsPerPage + 1;
-    }
 
     switch (event.keyCode) {
       case LEFT_ARROW:
@@ -210,11 +223,11 @@ export class MatMultiYearView<D> implements AfterContentInit {
         break;
       case HOME:
         this.activeDate = this._dateAdapter.addCalendarYears(this._activeDate,
-          -this._mod((this._dateAdapter.getYear(this._activeDate) - minYear), yearsPerPage));
+          -getActiveOffset(this._activeDate, this.minDate, this.maxDate));
         break;
       case END:
         this.activeDate = this._dateAdapter.addCalendarYears(this._activeDate, yearsPerPage -
-          this._mod((this._dateAdapter.getYear(this._activeDate) - minYear), yearsPerPage) - 1);
+          getActiveOffset(this._activeDate, this.minDate, this.maxDate) - 1);
         break;
       case PAGE_UP:
         this.activeDate =
@@ -234,7 +247,6 @@ export class MatMultiYearView<D> implements AfterContentInit {
         // Don't prevent default or focus active cell on keys that we don't explicitly handle.
         return;
     }
-
     if (this._dateAdapter.compareDate(oldActiveDate, this.activeDate)) {
       this.activeDateChange.emit(this.activeDate);
     }
@@ -245,25 +257,12 @@ export class MatMultiYearView<D> implements AfterContentInit {
   }
 
   _getActiveCell(): number {
-    let minYear = 0;
-    if (this.minDate) {
-      minYear = this._dateAdapter.getYear(this.minDate);
-    }
-    if (this.maxDate) {
-      let maxYear = this._dateAdapter.getYear(this.maxDate);
-      minYear = maxYear - yearsPerPage + 1;
-    }
-    return this._mod((this._dateAdapter.getYear(this.activeDate) - minYear), yearsPerPage);
+    return getActiveOffset(this.activeDate, this.minDate, this.maxDate);
   }
 
   /** Focuses the active cell after the microtask queue is empty. */
   _focusActiveCell() {
     this._matCalendarBody._focusActiveCell();
-  }
-
-  /** mod that handles case where first number is negative */
-  private _mod(a: number, b: number) {
-    return (a % b + b) % b;
   }
 
   /** Creates an MatCalendarCell for the given year. */

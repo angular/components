@@ -30,7 +30,8 @@ import {Subject, Subscription} from 'rxjs';
 import {createMissingDateImplError} from './datepicker-errors';
 import {MatDatepickerIntl} from './datepicker-intl';
 import {MatMonthView} from './month-view';
-import {MatMultiYearView, yearsPerPage} from './multi-year-view';
+import {MatMultiYearView, yearsPerPage,
+  getActiveOffset, isSameMultiYearView} from './multi-year-view';
 import {MatYearView} from './year-view';
 import {MatCalendarCellCssClasses} from './calendar-body';
 
@@ -70,24 +71,14 @@ export class MatCalendarHeader<D> {
       return this._dateAdapter.getYearName(this.calendar.activeDate);
     }
 
+    // The offset from the active year to the "slot" for the starting year is the
+    // *actual* first rendered year in the multi-year view, and the last year is
+    // just yearsPerPage - 1 away.
     const activeYear = this._dateAdapter.getYear(this.calendar.activeDate);
-    let minYear = 0;
-    if (this.calendar.minDate) {
-      minYear = this._dateAdapter.getYear(this.calendar.minDate);
-    }
-    if (this.calendar.maxDate) {
-      let maxYear = this._dateAdapter.getYear(this.calendar.maxDate);
-      minYear = maxYear - yearsPerPage + 1;
-    }
-    let activeOffset = this._mod((activeYear - minYear), yearsPerPage);
-    let minYearOfPage = activeYear - activeOffset;
-    let maxYearOfPage = minYearOfPage + yearsPerPage - 1;
-
-    const firstYearInView = this._dateAdapter.getYearName(
-      this._dateAdapter.createDate(minYearOfPage, 0, 1));
-    const lastYearInView = this._dateAdapter.getYearName(
-      this._dateAdapter.createDate(maxYearOfPage, 0, 1));
-    return `${firstYearInView} \u2013 ${lastYearInView}`;
+    const minYearOfPage = activeYear - getActiveOffset(this.calendar.activeDate,
+      this.calendar.minDate, this.calendar.maxDate);
+    const maxYearOfPage = minYearOfPage + yearsPerPage - 1;
+    return `${minYearOfPage} \u2013 ${maxYearOfPage}`;
   }
 
   get periodButtonLabel(): string {
@@ -162,21 +153,7 @@ export class MatCalendarHeader<D> {
       return this._dateAdapter.getYear(date1) == this._dateAdapter.getYear(date2);
     }
     // Otherwise we are in 'multi-year' view.
-    let minYear = 0;
-    if (this.calendar.minDate) {
-      minYear = this._dateAdapter.getYear(this.calendar.minDate);
-    }
-    if (this.calendar.maxDate) {
-      let maxYear = this._dateAdapter.getYear(this.calendar.maxDate);
-      minYear = maxYear - yearsPerPage + 1;
-    }
-    return Math.floor( (this._dateAdapter.getYear(date1) -  minYear) / yearsPerPage) ==
-        Math.floor( (this._dateAdapter.getYear(date2) - minYear) / yearsPerPage);
-  }
-
-  /** mod that handles case where first number is negative */
-  private _mod(a: number, b: number) {
-    return (a % b + b) % b;
+    return isSameMultiYearView(date1, date2, this.calendar.minDate, this.calendar.maxDate);
   }
 }
 
