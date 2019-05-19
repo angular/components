@@ -57,12 +57,12 @@ export declare class MatSelect extends _MatSelectMixinBase implements AfterConte
     required: boolean;
     readonly selected: MatOption | MatOption[];
     readonly selectionChange: EventEmitter<MatSelectChange>;
+    separator: string;
     readonly shouldLabelFloat: boolean;
     sortComparator: (a: MatOption, b: MatOption, options: MatOption[]) => number;
     trigger: ElementRef;
     readonly triggerValue: string;
     value: any;
-    separator: string;
     readonly valueChange: EventEmitter<any>;
     constructor(_viewportRuler: ViewportRuler, _changeDetectorRef: ChangeDetectorRef, _ngZone: NgZone, _defaultErrorStateMatcher: ErrorStateMatcher, elementRef: ElementRef, _dir: Directionality, _parentForm: NgForm, _parentFormGroup: FormGroupDirective, _parentFormField: MatFormField, ngControl: NgControl, tabIndex: string, scrollStrategyFactory: any,
     _liveAnnouncer?: LiveAnnouncer | undefined);
