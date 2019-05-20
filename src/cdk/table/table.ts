@@ -167,92 +167,92 @@ export interface RenderRow<T> {
   changeDetection: ChangeDetectionStrategy.Default,
 })
 export class CdkTable<T> implements AfterContentChecked, CollectionViewer, OnDestroy, OnInit {
-  private _document: Document;
+  protected _document: Document;
 
   /** Latest data provided by the data source. */
   protected _data: T[]|ReadonlyArray<T>;
 
   /** Subject that emits when the component has been destroyed. */
-  private _onDestroy = new Subject<void>();
+  protected _onDestroy = new Subject<void>();
 
   /** List of the rendered rows as identified by their `RenderRow` object. */
-  private _renderRows: RenderRow<T>[];
+  protected _renderRows: RenderRow<T>[];
 
   /** Subscription that listens for the data provided by the data source. */
-  private _renderChangeSubscription: Subscription|null;
+  protected _renderChangeSubscription: Subscription|null;
 
   /**
    * Map of all the user's defined columns (header, data, and footer cell template) identified by
    * name. Collection populated by the column definitions gathered by `ContentChildren` as well as
    * any custom column definitions added to `_customColumnDefs`.
    */
-  private _columnDefsByName = new Map<string, CdkColumnDef>();
+  protected _columnDefsByName = new Map<string, CdkColumnDef>();
 
   /**
    * Set of all row definitions that can be used by this table. Populated by the rows gathered by
    * using `ContentChildren` as well as any custom row definitions added to `_customRowDefs`.
    */
-  private _rowDefs: CdkRowDef<T>[];
+  protected _rowDefs: CdkRowDef<T>[];
 
   /**
    * Set of all header row definitions that can be used by this table. Populated by the rows
    * gathered by using `ContentChildren` as well as any custom row definitions added to
    * `_customHeaderRowDefs`.
    */
-  private _headerRowDefs: CdkHeaderRowDef[];
+  protected _headerRowDefs: CdkHeaderRowDef[];
 
   /**
    * Set of all row definitions that can be used by this table. Populated by the rows gathered by
    * using `ContentChildren` as well as any custom row definitions added to
    * `_customFooterRowDefs`.
    */
-  private _footerRowDefs: CdkFooterRowDef[];
+  protected _footerRowDefs: CdkFooterRowDef[];
 
   /** Differ used to find the changes in the data provided by the data source. */
-  private _dataDiffer: IterableDiffer<RenderRow<T>>;
+  protected _dataDiffer: IterableDiffer<RenderRow<T>>;
 
   /** Stores the row definition that does not have a when predicate. */
-  private _defaultRowDef: CdkRowDef<T>|null;
+  protected _defaultRowDef: CdkRowDef<T>|null;
 
   /**
    * Column definitions that were defined outside of the direct content children of the table.
    * These will be defined when, e.g., creating a wrapper around the cdkTable that has
    * column definitions as *it's* content child.
    */
-  private _customColumnDefs = new Set<CdkColumnDef>();
+  protected _customColumnDefs = new Set<CdkColumnDef>();
 
   /**
    * Data row definitions that were defined outside of the direct content children of the table.
    * These will be defined when, e.g., creating a wrapper around the cdkTable that has
    * built-in data rows as *it's* content child.
    */
-  private _customRowDefs = new Set<CdkRowDef<T>>();
+  protected _customRowDefs = new Set<CdkRowDef<T>>();
 
   /**
    * Header row definitions that were defined outside of the direct content children of the table.
    * These will be defined when, e.g., creating a wrapper around the cdkTable that has
    * built-in header rows as *it's* content child.
    */
-  private _customHeaderRowDefs = new Set<CdkHeaderRowDef>();
+  protected _customHeaderRowDefs = new Set<CdkHeaderRowDef>();
 
   /**
    * Footer row definitions that were defined outside of the direct content children of the table.
    * These will be defined when, e.g., creating a wrapper around the cdkTable that has a
    * built-in footer row as *it's* content child.
    */
-  private _customFooterRowDefs = new Set<CdkFooterRowDef>();
+  protected _customFooterRowDefs = new Set<CdkFooterRowDef>();
 
   /**
    * Whether the header row definition has been changed. Triggers an update to the header row after
    * content is checked. Initialized as true so that the table renders the initial set of rows.
    */
-  private _headerRowDefChanged = true;
+  protected _headerRowDefChanged = true;
 
   /**
    * Whether the footer row definition has been changed. Triggers an update to the footer row after
    * content is checked. Initialized as true so that the table renders the initial set of rows.
    */
-  private _footerRowDefChanged = true;
+  protected _footerRowDefChanged = true;
 
   /**
    * Cache of the latest rendered `RenderRow` objects as a map for easy retrieval when constructing
@@ -267,16 +267,16 @@ export class CdkTable<T> implements AfterContentChecked, CollectionViewer, OnDes
    * array contains multiple duplicate data objects and each instantiated `RenderRow` must be
    * stored.
    */
-  private _cachedRenderRowsMap = new Map<T, WeakMap<CdkRowDef<T>, RenderRow<T>[]>>();
+  protected _cachedRenderRowsMap = new Map<T, WeakMap<CdkRowDef<T>, RenderRow<T>[]>>();
 
   /** Whether the table is applied to a native `<table>`. */
-  private _isNativeHtmlTable: boolean;
+  protected _isNativeHtmlTable: boolean;
 
   /**
    * Utility class that is responsible for applying the appropriate sticky positioning styles to
    * the table's rows and cells.
    */
-  private _stickyStyler: StickyStyler;
+  protected _stickyStyler: StickyStyler;
 
   /**
    * CSS class added to any row or cell that has sticky positioning applied. May be overriden by
@@ -332,7 +332,7 @@ export class CdkTable<T> implements AfterContentChecked, CollectionViewer, OnDes
       this._switchDataSource(dataSource);
     }
   }
-  private _dataSource: CdkTableDataSourceInput<T>;
+  protected _dataSource: CdkTableDataSourceInput<T>;
 
   /**
    * Whether to allow multiple rows per data object by evaluating which rows evaluate their 'when'
@@ -388,7 +388,7 @@ export class CdkTable<T> implements AfterContentChecked, CollectionViewer, OnDes
       protected readonly _changeDetectorRef: ChangeDetectorRef,
       protected readonly _elementRef: ElementRef, @Attribute('role') role: string,
       @Optional() protected readonly _dir: Directionality, @Inject(DOCUMENT) _document: any,
-      private _platform: Platform) {
+      protected _platform: Platform) {
     if (!role) {
       this._elementRef.nativeElement.setAttribute('role', 'grid');
     }
@@ -680,7 +680,7 @@ export class CdkTable<T> implements AfterContentChecked, CollectionViewer, OnDes
    * row definitions. If the previous list already contained a particular pair, it should be reused
    * so that the differ equates their references.
    */
-  private _getAllRenderRows(): RenderRow<T>[] {
+  protected _getAllRenderRows(): RenderRow<T>[] {
     const renderRows: RenderRow<T>[] = [];
 
     // Store the cache and create a new one. Any re-used RenderRow objects will be moved into the
@@ -719,7 +719,7 @@ export class CdkTable<T> implements AfterContentChecked, CollectionViewer, OnDes
    * should be rendered for this data. Reuses the cached RenderRow objects if they match the same
    * `(T, CdkRowDef)` pair.
    */
-  private _getRenderRowsForData(
+  protected _getRenderRowsForData(
       data: T, dataIndex: number, cache?: WeakMap<CdkRowDef<T>, RenderRow<T>[]>): RenderRow<T>[] {
     const rowDefs = this._getRowDefs(data, dataIndex);
 
@@ -736,7 +736,7 @@ export class CdkTable<T> implements AfterContentChecked, CollectionViewer, OnDes
   }
 
   /** Update the map containing the content's column definitions. */
-  private _cacheColumnDefs() {
+  protected _cacheColumnDefs() {
     this._columnDefsByName.clear();
 
     const columnDefs = mergeQueryListAndSet(this._contentColumnDefs, this._customColumnDefs);
@@ -749,7 +749,7 @@ export class CdkTable<T> implements AfterContentChecked, CollectionViewer, OnDes
   }
 
   /** Update the list of all available row definitions that can be used. */
-  private _cacheRowDefs() {
+  protected _cacheRowDefs() {
     this._headerRowDefs =
         mergeQueryListAndSet(this._contentHeaderRowDefs, this._customHeaderRowDefs);
     this._footerRowDefs =
@@ -769,7 +769,7 @@ export class CdkTable<T> implements AfterContentChecked, CollectionViewer, OnDes
    * whether the sticky states have changed for the header or footer. If there is a diff, then
    * re-render that section.
    */
-  private _renderUpdatedColumns() {
+  protected _renderUpdatedColumns() {
     const columnsDiffReducer = (acc: boolean, def: BaseRowDef) => acc || !!def.getColumnsDiff();
 
     // Force re-render data rows if the list of column definitions have changed.
@@ -792,7 +792,7 @@ export class CdkTable<T> implements AfterContentChecked, CollectionViewer, OnDes
    * render change subscription if one exists. If the data source is null, interpret this by
    * clearing the row outlet. Otherwise start listening for new data.
    */
-  private _switchDataSource(dataSource: CdkTableDataSourceInput<T>) {
+  protected _switchDataSource(dataSource: CdkTableDataSourceInput<T>) {
     this._data = [];
 
     if (isDataSource(this.dataSource)) {
@@ -816,7 +816,7 @@ export class CdkTable<T> implements AfterContentChecked, CollectionViewer, OnDes
   }
 
   /** Set up a subscription for the data provided by the data source. */
-  private _observeRenderChanges() {
+  protected _observeRenderChanges() {
     // If no data source has been set, there is nothing to observe for changes.
     if (!this.dataSource) {
       return;
@@ -846,7 +846,7 @@ export class CdkTable<T> implements AfterContentChecked, CollectionViewer, OnDes
    * Clears any existing content in the header row outlet and creates a new embedded view
    * in the outlet using the header row definition.
    */
-  private _forceRenderHeaderRows() {
+  protected _forceRenderHeaderRows() {
     // Clear the header row outlet if any content exists.
     if (this._headerRowOutlet.viewContainer.length > 0) {
       this._headerRowOutlet.viewContainer.clear();
@@ -860,7 +860,7 @@ export class CdkTable<T> implements AfterContentChecked, CollectionViewer, OnDes
    * Clears any existing content in the footer row outlet and creates a new embedded view
    * in the outlet using the footer row definition.
    */
-  private _forceRenderFooterRows() {
+  protected _forceRenderFooterRows() {
     // Clear the footer row outlet if any content exists.
     if (this._footerRowOutlet.viewContainer.length > 0) {
       this._footerRowOutlet.viewContainer.clear();
@@ -872,7 +872,7 @@ export class CdkTable<T> implements AfterContentChecked, CollectionViewer, OnDes
   }
 
   /** Adds the sticky column styles for the rows according to the columns' stick states. */
-  private _addStickyColumnStyles(rows: HTMLElement[], rowDef: BaseRowDef) {
+  protected _addStickyColumnStyles(rows: HTMLElement[], rowDef: BaseRowDef) {
     const columnDefs = Array.from(rowDef.columns || []).map(columnName => {
       const columnDef = this._columnDefsByName.get(columnName);
       if (!columnDef) {
@@ -930,7 +930,7 @@ export class CdkTable<T> implements AfterContentChecked, CollectionViewer, OnDes
    * Create the embedded view for the data row template and place it in the correct index location
    * within the data row view container.
    */
-  private _insertRow(renderRow: RenderRow<T>, renderIndex: number) {
+  protected _insertRow(renderRow: RenderRow<T>, renderIndex: number) {
     const rowDef = renderRow.rowDef;
     const context: RowContext<T> = {$implicit: renderRow.data};
     this._renderRow(this._rowOutlet, rowDef, renderIndex, context);
@@ -941,7 +941,7 @@ export class CdkTable<T> implements AfterContentChecked, CollectionViewer, OnDes
    * Optionally takes a context to provide to the row and cells, as well as an optional index
    * of where to place the new row template in the outlet.
    */
-  private _renderRow(
+  protected _renderRow(
       outlet: RowOutlet, rowDef: BaseRowDef, index: number, context: RowContext<T> = {}) {
     // TODO(andrewseguin): enforce that one outlet was instantiated from createEmbeddedView
     outlet.viewContainer.createEmbeddedView(rowDef.template, context, index);
@@ -959,7 +959,7 @@ export class CdkTable<T> implements AfterContentChecked, CollectionViewer, OnDes
    * Updates the index-related context for each row to reflect any changes in the index of the rows,
    * e.g. first/last/even/odd.
    */
-  private _updateRowIndexContext() {
+  protected _updateRowIndexContext() {
     const viewContainer = this._rowOutlet.viewContainer;
     for (let renderIndex = 0, count = viewContainer.length; renderIndex < count; renderIndex++) {
       const viewRef = viewContainer.get(renderIndex) as RowViewRef<T>;
@@ -980,7 +980,7 @@ export class CdkTable<T> implements AfterContentChecked, CollectionViewer, OnDes
   }
 
   /** Gets the column definitions for the provided row def. */
-  private _getCellTemplates(rowDef: BaseRowDef): TemplateRef<any>[] {
+  protected _getCellTemplates(rowDef: BaseRowDef): TemplateRef<any>[] {
     if (!rowDef || !rowDef.columns) {
       return [];
     }
@@ -996,7 +996,7 @@ export class CdkTable<T> implements AfterContentChecked, CollectionViewer, OnDes
   }
 
   /** Adds native table sections (e.g. tbody) and moves the row outlets into them. */
-  private _applyNativeTableSections() {
+  protected _applyNativeTableSections() {
     const documentFragment = this._document.createDocumentFragment();
     const sections = [
       {tag: 'thead', outlet: this._headerRowOutlet},
@@ -1020,7 +1020,7 @@ export class CdkTable<T> implements AfterContentChecked, CollectionViewer, OnDes
    * change that affects the evaluation of which rows should be rendered, e.g. toggling
    * `multiTemplateDataRows` or adding/removing row definitions.
    */
-  private _forceRenderDataRows() {
+  protected _forceRenderDataRows() {
     this._dataDiffer.diff([]);
     this._rowOutlet.viewContainer.clear();
     this.renderRows();
@@ -1032,7 +1032,7 @@ export class CdkTable<T> implements AfterContentChecked, CollectionViewer, OnDes
    * sticky styles. Since checking resets the "dirty" state, this should only be performed once
    * during a change detection and after the inputs are settled (after content check).
    */
-  private _checkStickyStates() {
+  protected _checkStickyStates() {
     const stickyCheckReducer = (acc: boolean, d: CdkHeaderRowDef|CdkFooterRowDef|CdkColumnDef) => {
       return acc || d.hasStickyChanged();
     };
@@ -1059,7 +1059,7 @@ export class CdkTable<T> implements AfterContentChecked, CollectionViewer, OnDes
    * for directionality changes and provides the latest direction to the styler. Re-applies column
    * stickiness when directionality changes.
    */
-  private _setupStickyStyler() {
+  protected _setupStickyStyler() {
     const direction: Direction = this._dir ? this._dir.value : 'ltr';
     this._stickyStyler = new StickyStyler(
         this._isNativeHtmlTable, this.stickyCssClass, direction, this._platform.isBrowser);
@@ -1073,6 +1073,6 @@ export class CdkTable<T> implements AfterContentChecked, CollectionViewer, OnDes
 }
 
 /** Utility function that gets a merged list of the entries in a QueryList and values of a Set. */
-function mergeQueryListAndSet<T>(queryList: QueryList<T>, set: Set<T>): T[] {
+export function mergeQueryListAndSet<T>(queryList: QueryList<T>, set: Set<T>): T[] {
   return queryList.toArray().concat(Array.from(set));
 }
