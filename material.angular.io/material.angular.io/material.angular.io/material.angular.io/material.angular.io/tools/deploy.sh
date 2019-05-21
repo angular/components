@@ -8,10 +8,15 @@ declare -A PROJECT_ID
 PROJECT_ID["stable", "dev"]="material2-docs-dev"
 PROJECT_ID["stable", "prod"]="material-angular-io"
 PROJECT_ID["stable", "beta"]="beta-angular-material-io"
-PROJECT_ID["v5", "dev"]="material2-docs-5"
+
+PROJECT_ID["v5", "dev"]="material-docs-dev-v5"
 PROJECT_ID["v5", "prod"]="v5-material-angular-io"
-PROJECT_ID["v6", "dev"]="material2-docs-6"
+
+PROJECT_ID["v6", "dev"]="material-docs-dev-v6"
 PROJECT_ID["v6", "prod"]="v6-material-angular-io"
+
+PROJECT_ID["v7", "dev"]="material-docs-dev-v7"
+PROJECT_ID["v7", "prod"]="v7-material-angular-io"
 
 version=${1:-stable}
 mode=${2:-dev}
