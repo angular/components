@@ -27,4 +27,4 @@ What behavior did you actually see?
 - Angular:
 - CDK/Material:
 - Browser(s):
-- Operating System (e.g. Windows, OSX, Ubuntu): 
+- Operating System (e.g. Windows, macOS, Ubuntu): 
