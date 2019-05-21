@@ -1,0 +1,213 @@
+/**
+ * Test Element interface
+ * This is a wrapper of native element
+ */
+export interface TestElement {
+  blur(): Promise<void>;
+  clear(): Promise<void>;
+  click(): Promise<void>;
+  focus(): Promise<void>;
+  getCssValue(property: string): Promise<string>;
+  hover(): Promise<void>;
+  sendKeys(keys: string): Promise<void>;
+  text(): Promise<string>;
+  getAttribute(name: string): Promise<string|null>;
+}
+
+/**
+ * Extra searching options used by searching functions
+ *
+ * @param allowNull Optional, whether the found element can be null. If
+ * allowNull is set, the searching function will always try to fetch the element
+ * at once. When the element cannot be found, the searching function should
+ * return null if allowNull is set to true, throw an error if allowNull is set
+ * to false. If allowNull is not set, the framework will choose the behaviors
+ * that make more sense for each test type (e.g. for unit test, the framework
+ * will make sure the element is not null; otherwise throw an error); however,
+ * the internal behavior is not guaranteed and user should not rely on it. Note
+ * that in most cases, you don't need to care about whether an element is
+ * present when loading the element and don't need to set this parameter unless
+ * you do want to check whether the element is present when calling the
+ * searching function. e.g. you want to make sure some element is not there when
+ * loading the element in order to check whether a "ngif" works well.
+ *
+ * @param global Optional. If global is set to true, the selector will match any
+ *     element on the page and is not limited to the root of the harness. If
+ * global is unset or set to false, the selector will only find elements under
+ * the current root.
+ */
+export interface Options {
+  allowNull?: boolean;
+  global?: boolean;
+}
+
+/**
+ * Type narrowing of Options to allow the overloads of ComponentHarness.find to
+ * return null only if allowNull is set to true.
+ */
+interface OptionsWithAllowNullSet extends Options {
+  allowNull: true;
+}
+
+/**
+ * Locator interface
+ */
+export interface Locator {
+  /**
+   * Get the host element of locator.
+   */
+  host(): TestElement;
+
+  /**
+   * Search the first matched test element.
+   * @param css Selector of the test elements.
+   * @param options Optional, extra searching options
+   */
+  find(css: string, options?: Options): Promise<TestElement|null>;
+
+  /**
+   * Search all matched test elements under current root by css selector.
+   * @param css Selector of the test elements.
+   */
+  findAll(css: string): Promise<TestElement[]>;
+
+  /**
+   * Load the first matched Component Harness.
+   * @param componentHarness Type of user customized harness.
+   * @param root Css root selector of the new component harness.
+   * @param options Optional, extra searching options
+   */
+  load<T extends ComponentHarness>(
+    componentHarness: ComponentHarnessType<T>, root: string,
+    options?: Options): Promise<T|null>;
+
+  /**
+   * Load all Component Harnesses under current root.
+   * @param componentHarness Type of user customized harness.
+   * @param root Css root selector of the new component harnesses.
+   */
+  loadAll<T extends ComponentHarness>(
+    componentHarness: ComponentHarnessType<T>, root: string): Promise<T[]>;
+}
+
+/**
+ * Base Component Harness
+ * This base component harness provides the basic ability to locate element and
+ * sub-component harness. It should be inherited when defining user's own
+ * harness.
+ */
+export class ComponentHarness {
+  constructor(private readonly locator: Locator) {}
+
+  /**
+   * Get the host element of component harness.
+   */
+  host(): TestElement {
+    return this.locator.host();
+  }
+
+  /**
+   * Generate a function to find the first matched test element by css
+   * selector.
+   * @param css Css selector of the test element.
+   */
+  protected find(css: string): () => Promise<TestElement>;
+
+  /**
+   * Generate a function to find the first matched test element by css
+   * selector.
+   * @param css Css selector of the test element.
+   * @param options Extra searching options
+   */
+  protected find(css: string, options: OptionsWithAllowNullSet):
+    () => Promise<TestElement|null>;
+
+  /**
+   * Generate a function to find the first matched test element by css
+   * selector.
+   * @param css Css selector of the test element.
+   * @param options Extra searching options
+   */
+  protected find(css: string, options: Options): () => Promise<TestElement>;
+
+  /**
+   * Generate a function to find the first matched Component Harness.
+   * @param componentHarness Type of user customized harness.
+   * @param root Css root selector of the new component harness.
+   */
+  protected find<T extends ComponentHarness>(
+    componentHarness: ComponentHarnessType<T>,
+    root: string): () => Promise<T>;
+
+  /**
+   * Generate a function to find the first matched Component Harness.
+   * @param componentHarness Type of user customized harness.
+   * @param root Css root selector of the new component harness.
+   * @param options Extra searching options
+   */
+  protected find<T extends ComponentHarness>(
+    componentHarness: ComponentHarnessType<T>, root: string,
+    options: OptionsWithAllowNullSet): () => Promise<T|null>;
+
+  /**
+   * Generate a function to find the first matched Component Harness.
+   * @param componentHarness Type of user customized harness.
+   * @param root Css root selector of the new component harness.
+   * @param options Extra searching options
+   */
+  protected find<T extends ComponentHarness>(
+    componentHarness: ComponentHarnessType<T>, root: string,
+    options: Options): () => Promise<T>;
+
+  protected find<T extends ComponentHarness>(
+    cssOrComponentHarness: string|ComponentHarnessType<T>,
+    cssOrOptions?: string|Options,
+    options?: Options): () => Promise<TestElement|T|null> {
+    if (typeof cssOrComponentHarness === 'string') {
+      const css = cssOrComponentHarness;
+      const options = cssOrOptions as Options;
+      return () => this.locator.find(css, options);
+    } else {
+      const componentHarness = cssOrComponentHarness;
+      const css = cssOrOptions as string;
+      return () => this.locator.load(componentHarness, css, options);
+    }
+  }
+
+  /**
+   * Generate a function to find all matched test elements by css selector.
+   * @param css Css root selector of elements. It will locate
+   * elements under the current root.
+   */
+  protected findAll(css: string): () => Promise<TestElement[]>;
+
+  /**
+   * Generate a function to find all Component Harnesses under current
+   * component harness.
+   * @param componentHarness Type of user customized harness.
+   * @param root Css root selector of the new component harnesses. It will
+   * locate harnesses under the current root.
+   */
+  protected findAll<T extends ComponentHarness>(
+    componentHarness: ComponentHarnessType<T>,
+    root: string): () => Promise<T[]>;
+
+  protected findAll<T extends ComponentHarness>(
+    cssOrComponentHarness: string|ComponentHarnessType<T>,
+    root?: string): () => Promise<TestElement[]|T[]> {
+    if (typeof cssOrComponentHarness === 'string') {
+      const css = cssOrComponentHarness;
+      return () => this.locator.findAll(css);
+    } else {
+      const componentHarness = cssOrComponentHarness;
+      return () => this.locator.loadAll(componentHarness, root as string);
+    }
+  }
+}
+
+/**
+ * Type of ComponentHarness.
+ */
+export interface ComponentHarnessType<T extends ComponentHarness> {
+  new(locator: Locator): T;
+}
