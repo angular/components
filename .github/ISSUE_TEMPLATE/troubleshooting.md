@@ -6,29 +6,27 @@ labels: troubleshooting
 
 <!--------
 
-We have an amazing community of users that would love to help you troubleshoot issues. 
+The Angular team can't provide general troubleshooting help. However, the extended community of
+users can provide more help: 
 
-You can reach out to them here:
 StackOverflow: https://stackoverflow.com/questions/tagged/angular-material2
 Gitter: https://gitter.im/angular/material2
 Google Groups: https://groups.google.com/forum/#!forum/angular-material2
 
-We want to keep issues open only for bug reports and feature requests. However, we understand that 
+Issues should capture only bug reports and feature requests. However, we understand that 
 it is not always clear whether an issue is caused by a bug or incorrect usage of a feature/component.
 
-You are welcome to ask for our help, but please be aware that we have very limited bandwidth. 
-
-We can only assist if we can understand the problem and quickly reproduce the issue. Otherwise, we 
-may close the issue and request that you ask for help from the community instead.
+Most support requests will be automatically closed. If the answer is quickly obvious, though, we 
+might be able to provide a brief answer.
 
 -------->
 
 
-#### Expected Outcome
+#### What are you trying to do?
 
 What are you trying to do?
 
-#### Actual Outcome
+#### What troubleshooting steps have you tried?
 
 What are you seeing that does not match your expectations? 
 
