@@ -1,7 +1,6 @@
 ---
 name: Bug Report
 about: Report a bug found in Angular Material or the CDK
-
 ---
 
 #### Reproduction

@@ -1,7 +1,7 @@
 ---
 name: Feature
 about: Propose a new feature for Angular Material or the CDK
-
+labels: feature
 ---
  
 #### Feature Description

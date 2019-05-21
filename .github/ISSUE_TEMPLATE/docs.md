@@ -1,7 +1,7 @@
 ---
 name: Documentation
 about: Suggest an improvement to our documentation at material.angular.io
-
+labels: docs
 ---
 
 #### Documentation Feedback
