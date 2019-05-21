@@ -1,12 +1,20 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="en">
 <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Test App</title>
   <base href="/">
-  <title>angular2 page</title>
 </head>
 <body>
-<main></main>
+<main>Loading...</main>
 <span class="sibling">I am a sibling!</span>
+
+<!-- Static scripts which are not imported through AMD nor part of the ConcatJS bundle. -->
+<script src="core-js/client/core.min.js"></script>
+<script src="zone.js/dist/zone.min.js"></script>
+
+<!-- ConcatJS bundle from the Bazel TypeScript devserver. -->
+<script src="bundle.js"></script>
 </body>
-<script src="/app_bundle.js"></script>
 </html>

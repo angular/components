@@ -1,3 +1,11 @@
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+
 import {ComponentHarness, TestElement} from '../../component-harness';
 import {SubComponentHarness} from './sub-component-harness';
 
@@ -23,23 +31,23 @@ export class MainComponentHarness extends ComponentHarness {
   readonly nullGlobalEl =
     this.find('wrong locator', {global: true, allowNull: true});
 
-  private button = this.find('button');
-  private testTools = this.find(SubComponentHarness, 'sub');
+  private _button = this.find('button');
+  private _testTools = this.find(SubComponentHarness, 'sub');
 
   async increaseCounter(times: number) {
-    const button = await this.button();
+    const button = await this._button();
     for (let i = 0; i < times; i++) {
       await button.click();
     }
   }
 
   async getTestTool(index: number): Promise<TestElement> {
-    const subComponent = await this.testTools();
+    const subComponent = await this._testTools();
     return subComponent.getItem(index);
   }
 
   async getTestTools(): Promise<TestElement[]> {
-    const subComponent = await this.testTools();
+    const subComponent = await this._testTools();
     return subComponent.getItems();
   }
 }

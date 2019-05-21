@@ -1,13 +1,13 @@
-import {getElementFinder, load} from '../protractor';
 import {browser, by, element} from 'protractor';
 
-import {MainComponentHarness} from 'harnesses/main-component-harness';
+import {getElementFinder, load} from '../protractor';
+import {MainComponentHarness} from './harnesses/main-component-harness';
 
 describe('Protractor Helper Test:', () => {
   let harness: MainComponentHarness;
 
   beforeEach(async () => {
-    await browser.get(browser.params.testUrl);
+    await browser.get('/');
     harness = await load(MainComponentHarness, 'main');
   });
 

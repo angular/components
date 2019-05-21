@@ -1,7 +1,24 @@
-import {browser, by, element, ElementFinder} from 'protractor';
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+
+// TODO(mmalerba): Should this file be part of `@angular/cdk-experimental/testing` or a separate
+//  package? It depends on protractor which we don't want to put in the deps for cdk-experimental.
+
+import {browser, by, element as protractorElement, ElementFinder} from 'protractor';
 import {promise as wdpromise} from 'selenium-webdriver';
 
-import {ComponentHarness, ComponentHarnessType, Locator, Options, TestElement} from './component-harness';
+import {
+  ComponentHarness,
+  ComponentHarnessType,
+  Locator,
+  Options,
+  TestElement
+} from './component-harness';
 
 /**
  * Component harness factory for protractor.
@@ -52,23 +69,26 @@ export function getElementFinder(testElement: TestElement): ElementFinder {
 }
 
 class ProtractorLocator implements Locator {
-  private root: ProtractorElement;
-  constructor(private rootFinder: ElementFinder) {
-    this.root = new ProtractorElement(this.rootFinder);
+  private _root: ProtractorElement;
+
+  constructor(private _rootFinder: ElementFinder) {
+    this._root = new ProtractorElement(this._rootFinder);
   }
 
   host(): TestElement {
-    return this.root;
+    return this._root;
   }
 
   async find(css: string, options?: Options): Promise<TestElement|null> {
-    const finder = await getElement(css, this.rootFinder, options);
-    if (finder === null) return null;
+    const finder = await getElement(css, this._rootFinder, options);
+    if (finder === null) {
+      return null;
+    }
     return new ProtractorElement(finder);
   }
 
   async findAll(css: string): Promise<TestElement[]> {
-    const elementFinders = this.rootFinder.all(by.css(css));
+    const elementFinders = this._rootFinder.all(by.css(css));
     const res: TestElement[] = [];
     await elementFinders.each(el => {
       if (el) {
@@ -81,8 +101,10 @@ class ProtractorLocator implements Locator {
   async load<T extends ComponentHarness>(
     componentHarness: ComponentHarnessType<T>, css: string,
     options?: Options): Promise<T|null> {
-    const root = await getElement(css, this.rootFinder, options);
-    if (root === null) return null;
+    const root = await getElement(css, this._rootFinder, options);
+    if (root === null) {
+      return null;
+    }
     const locator = new ProtractorLocator(root);
     return new componentHarness(locator);
   }
@@ -91,7 +113,7 @@ class ProtractorLocator implements Locator {
     componentHarness: ComponentHarnessType<T>,
     rootSelector: string,
   ): Promise<T[]> {
-    const roots = this.rootFinder.all(by.css(rootSelector));
+    const roots = this._rootFinder.all(by.css(rootSelector));
     const res: T[] = [];
     await roots.each(el => {
       if (el) {
@@ -163,7 +185,7 @@ function toPromise<T>(p: wdpromise.Promise<T>): Promise<T> {
 async function getElement(css: string, root?: ElementFinder, options?: Options):
   Promise<ElementFinder|null> {
   const useGlobalRoot = options && !!options.global;
-  const elem = root === undefined || useGlobalRoot ? element(by.css(css)) :
+  const elem = root === undefined || useGlobalRoot ? protractorElement(by.css(css)) :
     root.element(by.css(css));
   const allowNull = options !== undefined && options.allowNull !== undefined ?
     options.allowNull :

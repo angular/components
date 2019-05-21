@@ -1,4 +1,12 @@
 /**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+
+/**
  * Test Element interface
  * This is a wrapper of native element
  */
@@ -165,8 +173,7 @@ export class ComponentHarness {
     options?: Options): () => Promise<TestElement|T|null> {
     if (typeof cssOrComponentHarness === 'string') {
       const css = cssOrComponentHarness;
-      const options = cssOrOptions as Options;
-      return () => this.locator.find(css, options);
+      return () => this.locator.find(css, cssOrOptions as Options);
     } else {
       const componentHarness = cssOrComponentHarness;
       const css = cssOrOptions as string;

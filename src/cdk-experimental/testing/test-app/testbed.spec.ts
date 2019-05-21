@@ -2,7 +2,6 @@ import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 import {getNativeElement, load} from '../testbed';
 
 import {TestAppModule} from './test-app';
-import {TestAppModuleNgSummary} from './test-app.ngsummary';
 import {MainComponent} from './main-component';
 import {MainComponentHarness} from './harnesses/main-component-harness';
 
@@ -13,7 +12,6 @@ describe('Testbed Helper Test:', () => {
     TestBed
       .configureTestingModule({
         imports: [TestAppModule],
-        aotSummaries: TestAppModuleNgSummary,
       })
       .compileComponents()
       .then(() => {
