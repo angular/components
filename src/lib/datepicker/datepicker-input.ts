@@ -369,7 +369,7 @@ export class MatDatepickerInput<D> implements ControlValueAccessor, OnDestroy, V
       this._cvaOnChange(date);
       this.dateInput.emit(new MatDatepickerInputEvent(this, this._elementRef.nativeElement));
     } else {
-      this._cvaOnChange(date);
+      this._validatorOnChange();
     }
   }
 
