@@ -328,7 +328,11 @@ export class MatChipList extends _MatChipListMixinBase implements MatFormFieldCo
   @Output() readonly valueChange: EventEmitter<any> = new EventEmitter<any>();
 
   /** The chip components contained within this chip list. */
-  @ContentChildren(MatChip) chips: QueryList<MatChip>;
+  @ContentChildren(MatChip, {
+    // We need to use `descendants: true`, because Ivy will no longer match
+    // indirect descendants if it's left as false.
+    descendants: true
+  }) chips: QueryList<MatChip>;
 
   constructor(protected _elementRef: ElementRef<HTMLElement>,
               private _changeDetectorRef: ChangeDetectorRef,
@@ -356,14 +360,8 @@ export class MatChipList extends _MatChipListMixinBase implements MatFormFieldCo
         .subscribe(dir => this._keyManager.withHorizontalOrientation(dir));
     }
 
-    // Prevents the chip list from capturing focus and redirecting
-    // it back to the first chip when the user tabs out.
     this._keyManager.tabOut.pipe(takeUntil(this._destroyed)).subscribe(() => {
-      this._tabIndex = -1;
-      setTimeout(() => {
-        this._tabIndex = this._userTabIndex || 0;
-        this._changeDetectorRef.markForCheck();
-      });
+      this._allowFocusEscape();
     });
 
     // When the list changes, re-subscribe
@@ -526,9 +524,14 @@ export class MatChipList extends _MatChipListMixinBase implements MatFormFieldCo
    * key manager state and focus the next closest chip.
    */
   protected _updateFocusForDestroyedChips() {
-    if (this._lastDestroyedChipIndex != null && this.chips.length) {
-      const newChipIndex = Math.min(this._lastDestroyedChipIndex, this.chips.length - 1);
-      this._keyManager.setActiveItem(newChipIndex);
+    // Move focus to the closest chip. If no other chips remain, focus the chip-list itself.
+    if (this._lastDestroyedChipIndex != null) {
+      if (this.chips.length) {
+        const newChipIndex = Math.min(this._lastDestroyedChipIndex, this.chips.length - 1);
+        this._keyManager.setActiveItem(newChipIndex);
+      } else {
+        this.focus();
+      }
     }
 
     this._lastDestroyedChipIndex = null;
@@ -678,6 +681,22 @@ export class MatChipList extends _MatChipListMixinBase implements MatFormFieldCo
     this._onTouched();
     this._changeDetectorRef.markForCheck();
     this.stateChanges.next();
+  }
+
+  /**
+   * Removes the `tabindex` from the chip list and resets it back afterwards, allowing the
+   * user to tab out of it. This prevents the list from capturing focus and redirecting
+   * it back to the first chip, creating a focus trap, if it user tries to tab away.
+   */
+  _allowFocusEscape() {
+    if (this._tabIndex !== -1) {
+      this._tabIndex = -1;
+
+      setTimeout(() => {
+        this._tabIndex = this._userTabIndex || 0;
+        this._changeDetectorRef.markForCheck();
+      });
+    }
   }
 
   private _resetChips() {

@@ -19,6 +19,7 @@ import {
   Optional,
   Renderer2,
   SimpleChanges,
+  isDevMode,
 } from '@angular/core';
 import {CanDisable, CanDisableCtor, mixinDisabled, ThemePalette} from '@angular/material/core';
 import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
@@ -115,7 +116,7 @@ export class MatBadge extends _MatBadgeMixinBase implements OnDestroy, OnChanges
   /** Unique id for the badge */
   _id: number = nextId++;
 
-  private _badgeElement: HTMLElement;
+  private _badgeElement: HTMLElement | undefined;
 
   constructor(
       private _ngZone: NgZone,
@@ -124,6 +125,13 @@ export class MatBadge extends _MatBadgeMixinBase implements OnDestroy, OnChanges
       private _renderer: Renderer2,
       @Optional() @Inject(ANIMATION_MODULE_TYPE) private _animationMode?: string) {
       super();
+
+      if (isDevMode()) {
+        const nativeElement = _elementRef.nativeElement;
+        if (nativeElement.nodeType !== nativeElement.ELEMENT_NODE) {
+          throw Error('matBadge must be attached to an element node.');
+        }
+      }
     }
 
   /** Whether the badge is above the host or not */
@@ -160,6 +168,14 @@ export class MatBadge extends _MatBadgeMixinBase implements OnDestroy, OnChanges
         this._renderer.destroyNode(badgeElement);
       }
     }
+  }
+
+  /**
+   * Gets the element into which the badge's content is being rendered.
+   * Undefined if the element hasn't been created (e.g. if the badge doesn't have content).
+   */
+  getBadgeElement(): HTMLElement | undefined {
+    return this._badgeElement;
   }
 
   /** Injects a span element into the DOM with the content. */

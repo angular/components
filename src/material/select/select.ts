@@ -443,8 +443,13 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
 
   /** Combined stream of all of the child options' change events. */
   readonly optionSelectionChanges: Observable<MatOptionSelectionChange> = defer(() => {
-    if (this.options) {
-      return merge(...this.options.map(option => option.onSelectionChange));
+    const options = this.options;
+
+    if (options) {
+      return options.changes.pipe(
+        startWith(options),
+        switchMap(() => merge(...options.map(option => option.onSelectionChange)))
+      );
     }
 
     return this._ngZone.onStable
@@ -729,7 +734,9 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
       // Since the value has changed, we need to announce it ourselves.
       // @breaking-change 8.0.0 remove null check for _liveAnnouncer.
       if (this._liveAnnouncer && selectedOption && previouslySelectedOption !== selectedOption) {
-        this._liveAnnouncer.announce((selectedOption as MatOption).viewValue);
+        // We set a duration on the live announcement, because we want the live element to be
+        // cleared after a while so that users can't navigate to it using the arrow keys.
+        this._liveAnnouncer.announce((selectedOption as MatOption).viewValue, 10000);
       }
     }
   }

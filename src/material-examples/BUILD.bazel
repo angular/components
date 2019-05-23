@@ -1,13 +1,14 @@
 package(default_visibility=["//visibility:public"])
 
-load("//:packages.bzl", "CDK_TARGETS", "CDK_EXPERIMENTAL_TARGETS", "MATERIAL_TARGETS", "MATERIAL_EXPERIMENTAL_TARGETS", "ROLLUP_GLOBALS")
+load("//:packages.bzl", "CDK_TARGETS", "CDK_EXPERIMENTAL_TARGETS", "MATERIAL_PACKAGES", "MATERIAL_EXPERIMENTAL_TARGETS", "ROLLUP_GLOBALS")
 load("//tools:defaults.bzl", "ng_module", "ng_package")
 load("//tools/highlight-files:index.bzl", "highlight_files")
 load("//tools/package-docs-content:index.bzl", "package_docs_content")
 
 ng_module(
   name = "examples",
-  srcs = glob(["**/*.ts"]) + [":example-module"],
+  # TODO(paul): re-add the example-module genfile once angular/angular#30259 is resolved.
+  srcs = glob(["**/*.ts"]),
   module_name = "@angular/material-examples",
   assets = glob(["**/*.html", "**/*.css"]),
   deps = [
@@ -17,7 +18,7 @@ ng_module(
     "@npm//@angular/forms",
     "@npm//moment",
     "//src/material-moment-adapter",
-  ] + CDK_TARGETS + CDK_EXPERIMENTAL_TARGETS + MATERIAL_TARGETS + MATERIAL_EXPERIMENTAL_TARGETS,
+  ] + CDK_TARGETS + CDK_EXPERIMENTAL_TARGETS + MATERIAL_EXPERIMENTAL_TARGETS + ["//src/material/%s" % p for p in MATERIAL_PACKAGES],
   # Specify the tsconfig that is also used by Gulp. We need to explicitly use this tsconfig
   # because in order to import Moment with TypeScript, some specific options need to be set.
   tsconfig = ":tsconfig-build.json",
@@ -75,7 +76,9 @@ genrule(
   # through Gulp), we need to exclude it because otherwise the genrule would fail.
   # TODO(devversion): remove this once gulp has been replaced with bazel.
   srcs = glob(["**/*.ts"], exclude = ["example-module.ts"]),
-  outs = ["example-module.ts"],
+  # TODO(devversion): we can't name the genrule output "example-module.ts" as it would
+  # get accidentally picked up when building the example module. See: angular/angular#30259 
+  outs = ["example-module_generated.ts"],
   cmd = """
     # As a workaround for https://github.com/bazelbuild/rules_nodejs/issues/404, we pass the
     # data to the Bazel entry-point through environment variables.

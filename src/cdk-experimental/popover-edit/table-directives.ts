@@ -16,7 +16,8 @@ import {
   NgZone,
   OnDestroy,
   TemplateRef,
-  ViewContainerRef
+  ViewContainerRef,
+  HostListener,
 } from '@angular/core';
 import {fromEvent, merge, ReplaySubject} from 'rxjs';
 import {debounceTime, filter, map, mapTo, startWith, takeUntil} from 'rxjs/operators';
@@ -221,6 +222,7 @@ export class CdkPopoverEdit<C> implements AfterViewInit, OnDestroy {
       panelClass: this.panelClass(),
       positionStrategy: this._getPositionStrategy(),
       scrollStrategy: this.services.overlay.scrollStrategies.reposition(),
+      direction: this.services.directionality,
     });
 
     this.initFocusTrap();
@@ -373,11 +375,11 @@ export class CdkRowHoverContent implements AfterViewInit, OnDestroy {
                 // Not doing any positioning in CDK version. Material version
                 // will absolutely position on right edge of cell.
                 this.viewRef = this.viewContainerRef.createEmbeddedView(this.templateRef, {});
-                this.initElement(this.elementRef.nativeElement!.nextSibling as HTMLElement);
+                this.initElement(this.viewRef.rootNodes[0] as HTMLElement);
               } else {
                 this.viewContainerRef.insert(this.viewRef);
               }
-              this.prepareElement(this.elementRef.nativeElement!.nextSibling as HTMLElement);
+              this.prepareElement(this.viewRef.rootNodes[0] as HTMLElement);
             } else if (this.viewRef) {
               this.viewContainerRef.detach(this.viewContainerRef.indexOf(this.viewRef));
             }
@@ -391,33 +393,28 @@ export class CdkRowHoverContent implements AfterViewInit, OnDestroy {
  * element or an ancestor element.
  */
 @Directive({
-  // Specify :not(button) as we only need to add type: button on actual buttons.
-  selector: '[cdkEditOpen]:not(button)',
-  host: {
-    '(click)': 'openEdit($event)',
-  }
+  selector: '[cdkEditOpen]',
 })
 export class CdkEditOpen {
   constructor(
-      protected readonly elementRef: ElementRef,
-      protected readonly editEventDispatcher: EditEventDispatcher) {}
+      protected readonly elementRef: ElementRef<HTMLElement>,
+      protected readonly editEventDispatcher: EditEventDispatcher) {
 
+    const nativeElement = elementRef.nativeElement;
+
+    // Prevent accidental form submits.
+    if (nativeElement.nodeName === 'BUTTON' && !nativeElement.getAttribute('type')) {
+      nativeElement.setAttribute('type', 'button');
+    }
+  }
+
+  // In Ivy the `host` metadata will be merged, whereas in ViewEngine it is overridden. In order
+  // to avoid double event listeners, we need to use `HostListener`. Once Ivy is the default, we
+  // can move this back into `host`.
+  // tslint:disable:no-host-decorator-in-concrete
+  @HostListener('click', ['$event'])
   openEdit(evt: Event): void {
     this.editEventDispatcher.editing.next(closest(this.elementRef.nativeElement!, CELL_SELECTOR));
     evt.stopPropagation();
   }
 }
-
-/**
- * Opens the closest edit popover to this element, whether it's associated with this exact
- * element or an ancestor element.
- */
-@Directive({
-  // Specify button as we only need to add type: button on actual buttons.
-  selector: 'button[cdkEditOpen]',
-  host: {
-    '(click)': 'openEdit($event)',
-    'type': 'button', // Prevents accidental form submits.
-  }
-})
-export class CdkEditOpenButton extends CdkEditOpen {}
