@@ -5,7 +5,7 @@ import {
   pressKeys,
   clickElementAtPoint,
   waitForElement,
-} from '../util/index';
+} from '../../src/e2e-app/test-util/index';
 
 describe('dialog', () => {
   beforeEach(async () => await browser.get('/dialog'));

@@ -5,7 +5,7 @@ import {
   expectLocation,
   expectToExist,
   pressKeys,
-} from '../util/index';
+} from '../../src/e2e-app/test-util/index';
 
 const presenceOf = ExpectedConditions.presenceOf;
 const not = ExpectedConditions.not;

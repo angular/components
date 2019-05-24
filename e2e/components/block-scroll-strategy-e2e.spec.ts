@@ -1,5 +1,5 @@
 import {browser, Key, element, by} from 'protractor';
-import {getScrollPosition} from '../util/index';
+import {getScrollPosition} from '../../src/e2e-app/test-util/index';
 
 
 describe('scroll blocking', () => {

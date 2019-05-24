@@ -6,7 +6,7 @@ import {
   Key,
   ExpectedConditions
 } from 'protractor';
-import {pressKeys} from '../util/index';
+import {pressKeys} from '../../src/e2e-app/test-util/index';
 
 describe('tabs', () => {
   describe('basic behavior', () => {
