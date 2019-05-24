@@ -44,4 +44,3 @@ ts_library(
     "//tools/axe-protractor",
   ],
 ) for spec_file in glob(["components/**/*.spec.ts"])]
-
