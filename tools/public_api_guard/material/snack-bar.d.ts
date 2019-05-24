@@ -40,6 +40,7 @@ export declare class MatSnackBarContainer extends BasePortalOutlet implements On
     constructor(_ngZone: NgZone, _elementRef: ElementRef<HTMLElement>, _changeDetectorRef: ChangeDetectorRef,
     snackBarConfig: MatSnackBarConfig);
     attachComponentPortal<T>(portal: ComponentPortal<T>): ComponentRef<T>;
+    attachDomPortal(portal: DomPortal): void;
     attachTemplatePortal<C>(portal: TemplatePortal<C>): EmbeddedViewRef<C>;
     enter(): void;
     exit(): Observable<void>;

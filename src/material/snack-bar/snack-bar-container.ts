@@ -12,6 +12,7 @@ import {
   CdkPortalOutlet,
   ComponentPortal,
   TemplatePortal,
+  DomPortal,
 } from '@angular/cdk/portal';
 import {
   ChangeDetectionStrategy,
@@ -105,6 +106,13 @@ export class MatSnackBarContainer extends BasePortalOutlet implements OnDestroy 
     this._assertNotAttached();
     this._applySnackBarClasses();
     return this._portalOutlet.attachTemplatePortal(portal);
+  }
+
+  /** Attaches a DOM portal to the snack bar container. */
+  attachDomPortal(portal: DomPortal) {
+    this._assertNotAttached();
+    this._applySnackBarClasses();
+    return this._portalOutlet.attachDomPortal(portal);
   }
 
   /** Handle end of animations, updating the state of the snackbar. */

@@ -51,6 +51,7 @@ import {
   SimpleChanges,
   ViewChild,
   ViewEncapsulation,
+  AfterViewInit,
 } from '@angular/core';
 import {ControlValueAccessor, FormGroupDirective, NgControl, NgForm} from '@angular/forms';
 import {
@@ -75,6 +76,7 @@ import {
   mixinTabIndex,
 } from '@angular/material/core';
 import {MatFormField, MatFormFieldControl} from '@angular/material/form-field';
+import {DomPortal} from '@angular/cdk/portal';
 import {defer, merge, Observable, Subject} from 'rxjs';
 import {
   distinctUntilChanged,
@@ -175,6 +177,26 @@ const _MatSelectMixinBase:
         mixinDisableRipple(mixinTabIndex(mixinDisabled(mixinErrorState(MatSelectBase))));
 
 
+/** Options used to configure the way `MatSelect` renders its content. */
+export enum MatSelectOptionsRenderOptions {
+  /**
+   * With this option, the content of a `MatSelect` will only be rendered in the DOM while
+   * the select is open. This strategy has better performance, however its accessibility is worse.
+   */
+  ONLY_WHEN_OPEN,
+
+  /**
+   * With this option, the select's content will always be inside the DOM, no matter whether
+   * the `MatSelect` is open. This offers better accessibility, however it has some
+   * performance drawbacks on selects with a lot of content.
+   */
+  ALWAYS,
+}
+
+/** Injection token that can be used to configured the rendering strategy for `MatSelect`. */
+export const MAT_SELECT_RENDERING_STRATEGY =
+    new InjectionToken<MatSelectOptionsRenderOptions>('MAT_SELECT_RENDERING_STRATEGY');
+
 /**
  * Allows the user to customize the trigger that is displayed when the select has a value.
  */
@@ -202,7 +224,7 @@ export class MatSelectTrigger {}
     '[attr.aria-required]': 'required.toString()',
     '[attr.aria-disabled]': 'disabled.toString()',
     '[attr.aria-invalid]': 'errorState',
-    '[attr.aria-owns]': 'panelOpen ? _optionIds : null',
+    '[attr.aria-owns]': '(panelOpen || _inlineRendering) ? _optionIds : null',
     '[attr.aria-multiselectable]': 'multiple',
     '[attr.aria-describedby]': '_ariaDescribedby || null',
     '[attr.aria-activedescendant]': '_getAriaActiveDescendant()',
@@ -224,8 +246,8 @@ export class MatSelectTrigger {}
     {provide: MAT_OPTION_PARENT_COMPONENT, useExisting: MatSelect}
   ],
 })
-export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, OnChanges,
-    OnDestroy, OnInit, DoCheck, ControlValueAccessor, CanDisable, HasTabIndex,
+export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, AfterViewInit,
+    OnChanges, OnDestroy, OnInit, DoCheck, ControlValueAccessor, CanDisable, HasTabIndex,
     MatFormFieldControl<any>, CanUpdateErrorState, CanDisableRipple {
   private _scrollStrategyFactory: () => ScrollStrategy;
 
@@ -314,6 +336,15 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
     },
   ];
 
+  /**
+   * Portal that'll be used to render the content
+   * when the `INLINE` rendering strategy is enabled.
+   */
+  _domPortal: DomPortal;
+
+  /** Whether the inline rendering strategy is enabled */
+  _inlineRendering = true;
+
   /** Whether the component is disabling centering of the active option over the trigger. */
   private _disableOptionCentering: boolean = false;
 
@@ -339,11 +370,14 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
   /** Panel containing the select options. */
   @ViewChild('panel', {static: false}) panel: ElementRef;
 
+  /** Content rendered inside of the `DomPortal` when using the inline rendering strategy. */
+  @ViewChild('domPortalContent') _domPortalContent: ElementRef<HTMLElement>;
+
   /** Overlay pane containing the options. */
   @ViewChild(CdkConnectedOverlay, {static: false}) overlayDir: CdkConnectedOverlay;
 
   /** All of the defined select options. */
-  @ContentChildren(MatOption, { descendants: true }) options: QueryList<MatOption>;
+  @ContentChildren(MatOption, {descendants: true}) options: QueryList<MatOption>;
 
   /** All of the defined groups of options. */
   @ContentChildren(MatOptgroup) optionGroups: QueryList<MatOptgroup>;
@@ -496,7 +530,8 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
      * @deprecated _liveAnnouncer to be turned into a required parameter.
      * @breaking-change 8.0.0
      */
-    private _liveAnnouncer?: LiveAnnouncer) {
+    private _liveAnnouncer?: LiveAnnouncer,
+    @Inject(MAT_SELECT_RENDERING_STRATEGY) @Optional() renderingStrategy?: any) {
     super(elementRef, _defaultErrorStateMatcher, _parentForm,
           _parentFormGroup, ngControl);
 
@@ -509,6 +544,12 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
     this._scrollStrategyFactory = scrollStrategyFactory;
     this._scrollStrategy = this._scrollStrategyFactory();
     this.tabIndex = parseInt(tabIndex) || 0;
+
+    // Note: the Angular compiler fails to generate metadata when we have the type on the
+    // function argument. Set the argument to `any` and cast it to the proper type down here
+    // as a workaround.
+    this._inlineRendering =
+      (renderingStrategy as MatSelectOptionsRenderOptions) === MatSelectOptionsRenderOptions.ALWAYS;
 
     // Force setter to be called in case id was not specified.
     this.id = this.id;
@@ -556,6 +597,12 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
       this._resetOptions();
       this._initializeSelection();
     });
+  }
+
+  ngAfterViewInit() {
+    if (this._inlineRendering) {
+      this._domPortal = new DomPortal(this._domPortalContent);
+    }
   }
 
   ngDoCheck() {
@@ -705,6 +752,15 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
     if (!this.disabled) {
       this.panelOpen ? this._handleOpenKeydown(event) : this._handleClosedKeydown(event);
     }
+  }
+
+  /** Gets the current animation state of the panel. */
+  _getPanelAnimationState() {
+    if (this.panelOpen) {
+      return this.multiple ? 'showing-multiple' : 'showing';
+    }
+
+    return 'void';
   }
 
   /** Handles keyboard events while the select is closed. */

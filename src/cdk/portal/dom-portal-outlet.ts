@@ -13,7 +13,7 @@ import {
   ApplicationRef,
   Injector,
 } from '@angular/core';
-import {BasePortalOutlet, ComponentPortal, TemplatePortal} from './portal';
+import {BasePortalOutlet, ComponentPortal, TemplatePortal, DomPortal} from './portal';
 
 
 /**
@@ -91,6 +91,28 @@ export class DomPortalOutlet extends BasePortalOutlet {
 
     // TODO(jelbourn): Return locals from view.
     return viewRef;
+  }
+
+  /**
+   * Attaches a DOM portal by transferring its content into the outlet.
+   * @param portal Portal to be attached.
+   */
+  attachDomPortal(portal: DomPortal) {
+    // Note that we need to convert this into an array, because `childNodes`
+    // is a live collection which will be updated as we add/remove nodes.
+    let transferredNodes = Array.from(portal.element.childNodes);
+
+    for (let i = 0; i < transferredNodes.length; i++) {
+      this.outletElement.appendChild(transferredNodes[i]);
+    }
+
+    super.setDisposeFn(() => {
+      for (let i = 0; i < transferredNodes.length; i++) {
+        portal.element.appendChild(transferredNodes[i]);
+      }
+
+      transferredNodes = null!;
+    });
   }
 
   /**

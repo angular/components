@@ -15,20 +15,7 @@
   <div class="mat-select-arrow-wrapper"><div class="mat-select-arrow"></div></div>
 </div>
 
-<ng-template
-  cdk-connected-overlay
-  cdkConnectedOverlayLockPosition
-  cdkConnectedOverlayHasBackdrop
-  cdkConnectedOverlayBackdropClass="cdk-overlay-transparent-backdrop"
-  [cdkConnectedOverlayScrollStrategy]="_scrollStrategy"
-  [cdkConnectedOverlayOrigin]="origin"
-  [cdkConnectedOverlayOpen]="panelOpen"
-  [cdkConnectedOverlayPositions]="_positions"
-  [cdkConnectedOverlayMinWidth]="_triggerRect?.width"
-  [cdkConnectedOverlayOffsetY]="_offsetY"
-  (backdropClick)="close()"
-  (attach)="_onAttached()"
-  (detach)="close()">
+<ng-template #panelTemplate>
   <div class="mat-select-panel-wrap" [@transformPanelWrap]>
     <div
       #panel
@@ -43,3 +30,25 @@
     </div>
   </div>
 </ng-template>
+
+<ng-template
+  cdk-connected-overlay
+  cdkConnectedOverlayLockPosition
+  cdkConnectedOverlayHasBackdrop
+  cdkConnectedOverlayBackdropClass="cdk-overlay-transparent-backdrop"
+  [cdkConnectedOverlayPortal]="_domPortal"
+  [cdkConnectedOverlayScrollStrategy]="_scrollStrategy"
+  [cdkConnectedOverlayOrigin]="origin"
+  [cdkConnectedOverlayOpen]="panelOpen"
+  [cdkConnectedOverlayPositions]="_positions"
+  [cdkConnectedOverlayMinWidth]="_triggerRect?.width"
+  [cdkConnectedOverlayOffsetY]="_offsetY"
+  (backdropClick)="close()"
+  (attach)="_onAttached()"
+  (detach)="close()">
+  <ng-container *ngIf="!_inlineRendering" [ngTemplateOutlet]="panelTemplate"></ng-container>
+</ng-template>
+
+<div *ngIf="_inlineRendering" class="cdk-visually-hidden" #domPortalContent>
+  <ng-container [ngTemplateOutlet]="panelTemplate"></ng-container>
+</div>

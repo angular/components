@@ -25,13 +25,14 @@ export declare class CdkConnectedOverlay implements OnDestroy, OnChanges {
     overlayKeydown: EventEmitter<KeyboardEvent>;
     readonly overlayRef: OverlayRef;
     panelClass: string | string[];
+    portal: Portal<any>;
     positionChange: EventEmitter<ConnectedOverlayPositionChange>;
     positions: ConnectedPosition[];
     push: boolean;
     scrollStrategy: ScrollStrategy;
     viewportMargin: number;
     width: number | string;
-    constructor(_overlay: Overlay, templateRef: TemplateRef<any>, viewContainerRef: ViewContainerRef, scrollStrategyFactory: any, _dir: Directionality);
+    constructor(_overlay: Overlay, _templateRef: TemplateRef<any>, _viewContainerRef: ViewContainerRef, scrollStrategyFactory: any, _dir: Directionality);
     ngOnChanges(changes: SimpleChanges): void;
     ngOnDestroy(): void;
 }

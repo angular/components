@@ -1,5 +1,7 @@
 export declare const fadeInContent: AnimationTriggerMetadata;
 
+export declare const MAT_SELECT_RENDERING_STRATEGY: InjectionToken<MatSelectOptionsRenderOptions>;
+
 export declare const MAT_SELECT_SCROLL_STRATEGY: InjectionToken<() => ScrollStrategy>;
 
 export declare const MAT_SELECT_SCROLL_STRATEGY_PROVIDER: {
@@ -10,9 +12,12 @@ export declare const MAT_SELECT_SCROLL_STRATEGY_PROVIDER: {
 
 export declare function MAT_SELECT_SCROLL_STRATEGY_PROVIDER_FACTORY(overlay: Overlay): () => ScrollStrategy;
 
-export declare class MatSelect extends _MatSelectMixinBase implements AfterContentInit, OnChanges, OnDestroy, OnInit, DoCheck, ControlValueAccessor, CanDisable, HasTabIndex, MatFormFieldControl<any>, CanUpdateErrorState, CanDisableRipple {
+export declare class MatSelect extends _MatSelectMixinBase implements AfterContentInit, AfterViewInit, OnChanges, OnDestroy, OnInit, DoCheck, ControlValueAccessor, CanDisable, HasTabIndex, MatFormFieldControl<any>, CanUpdateErrorState, CanDisableRipple {
     _ariaDescribedby: string;
     readonly _closedStream: Observable<void>;
+    _domPortal: DomPortal;
+    _domPortalContent: ElementRef<HTMLElement>;
+    _inlineRendering: boolean;
     _keyManager: ActiveDescendantKeyManager<MatOption>;
     _offsetY: number;
     _onChange: (value: any) => void;
@@ -64,11 +69,12 @@ export declare class MatSelect extends _MatSelectMixinBase implements AfterConte
     value: any;
     readonly valueChange: EventEmitter<any>;
     constructor(_viewportRuler: ViewportRuler, _changeDetectorRef: ChangeDetectorRef, _ngZone: NgZone, _defaultErrorStateMatcher: ErrorStateMatcher, elementRef: ElementRef, _dir: Directionality, _parentForm: NgForm, _parentFormGroup: FormGroupDirective, _parentFormField: MatFormField, ngControl: NgControl, tabIndex: string, scrollStrategyFactory: any,
-    _liveAnnouncer?: LiveAnnouncer | undefined);
+    _liveAnnouncer?: LiveAnnouncer | undefined, renderingStrategy?: any);
     _calculateOverlayScroll(selectedIndex: number, scrollBuffer: number, maxScroll: number): number;
     _getAriaActiveDescendant(): string | null;
     _getAriaLabel(): string | null;
     _getAriaLabelledby(): string | null;
+    _getPanelAnimationState(): "void" | "showing" | "showing-multiple";
     _getPanelTheme(): string;
     _handleKeydown(event: KeyboardEvent): void;
     _isRtl(): boolean;
@@ -78,6 +84,7 @@ export declare class MatSelect extends _MatSelectMixinBase implements AfterConte
     close(): void;
     focus(): void;
     ngAfterContentInit(): void;
+    ngAfterViewInit(): void;
     ngDoCheck(): void;
     ngOnChanges(changes: SimpleChanges): void;
     ngOnDestroy(): void;
@@ -107,6 +114,11 @@ export declare class MatSelectChange {
 }
 
 export declare class MatSelectModule {
+}
+
+export declare enum MatSelectOptionsRenderOptions {
+    ONLY_WHEN_OPEN = 0,
+    ALWAYS = 1
 }
 
 export declare class MatSelectTrigger {

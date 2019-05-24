@@ -19,7 +19,7 @@ import {
   TemplateRef,
   ViewContainerRef,
 } from '@angular/core';
-import {BasePortalOutlet, ComponentPortal, Portal, TemplatePortal} from './portal';
+import {BasePortalOutlet, ComponentPortal, Portal, TemplatePortal, DomPortal} from './portal';
 
 
 /**
@@ -141,7 +141,7 @@ export class CdkPortalOutlet extends BasePortalOutlet implements OnInit, OnDestr
   }
 
   /**
-   * Attach the given TemplatePortal to this PortlHost as an embedded View.
+   * Attach the given TemplatePortal to this PortalHost as an embedded View.
    * @param portal Portal to be attached.
    * @returns Reference to the created embedded view.
    */
@@ -155,6 +155,29 @@ export class CdkPortalOutlet extends BasePortalOutlet implements OnInit, OnDestr
     this.attached.emit(viewRef);
 
     return viewRef;
+  }
+
+  /**
+   * Attaches the given DomPortal to this PortalHost by moving all of the portal content into it.
+   * @param portal Portal to be attached.
+   */
+  attachDomPortal(portal: DomPortal) {
+    portal.setAttachedHost(this);
+
+    const origin = portal.element;
+    const transferredNodes: Node[] = [];
+    const nativeElement: Node = this._viewContainerRef.element.nativeElement;
+    const rootNode = nativeElement.nodeType === nativeElement.ELEMENT_NODE ?
+        nativeElement : nativeElement.parentNode!;
+
+    while (origin.firstChild) {
+      transferredNodes.push(rootNode.appendChild(origin.firstChild));
+    }
+
+    super.setDisposeFn(() => {
+      transferredNodes.forEach(node => portal.element.appendChild(node));
+      transferredNodes.length = 0;
+    });
   }
 }
 

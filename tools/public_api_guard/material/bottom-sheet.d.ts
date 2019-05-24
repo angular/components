@@ -39,6 +39,7 @@ export declare class MatBottomSheetContainer extends BasePortalOutlet implements
     _onAnimationDone(event: AnimationEvent): void;
     _onAnimationStart(event: AnimationEvent): void;
     attachComponentPortal<T>(portal: ComponentPortal<T>): ComponentRef<T>;
+    attachDomPortal(portal: DomPortal): void;
     attachTemplatePortal<C>(portal: TemplatePortal<C>): EmbeddedViewRef<C>;
     enter(): void;
     exit(): void;

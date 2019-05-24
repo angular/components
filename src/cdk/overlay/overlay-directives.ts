@@ -9,7 +9,7 @@
 import {Direction, Directionality} from '@angular/cdk/bidi';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
 import {ESCAPE} from '@angular/cdk/keycodes';
-import {TemplatePortal} from '@angular/cdk/portal';
+import {TemplatePortal, Portal} from '@angular/cdk/portal';
 import {
   Directive,
   ElementRef,
@@ -104,7 +104,6 @@ export class CdkOverlayOrigin {
 })
 export class CdkConnectedOverlay implements OnDestroy, OnChanges {
   private _overlayRef: OverlayRef;
-  private _templatePortal: TemplatePortal;
   private _hasBackdrop = false;
   private _lockPosition = false;
   private _growAfterOpen = false;
@@ -198,6 +197,12 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
   get push() { return this._push; }
   set push(value: boolean) { this._push = coerceBooleanProperty(value); }
 
+  /**
+   * Portal that should be projected into the overlay. If none is provided, one will be
+   * created automatically from the overlay element's content.
+   */
+  @Input('cdkConnectedOverlayPortal') portal: Portal<any>;
+
   /** Event emitted when the backdrop is clicked. */
   @Output() backdropClick = new EventEmitter<MouseEvent>();
 
@@ -217,11 +222,10 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
 
   constructor(
       private _overlay: Overlay,
-      templateRef: TemplateRef<any>,
-      viewContainerRef: ViewContainerRef,
+      private _templateRef: TemplateRef<any>,
+      private _viewContainerRef: ViewContainerRef,
       @Inject(CDK_CONNECTED_OVERLAY_SCROLL_STRATEGY) scrollStrategyFactory: any,
       @Optional() private _dir: Directionality) {
-    this._templatePortal = new TemplatePortal(templateRef, viewContainerRef);
     this._scrollStrategyFactory = scrollStrategyFactory;
     this.scrollStrategy = this._scrollStrategyFactory();
   }
@@ -359,8 +363,12 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
       this._overlayRef.getConfig().hasBackdrop = this.hasBackdrop;
     }
 
+    if (!this.portal) {
+      this.portal = new TemplatePortal(this._templateRef, this._viewContainerRef);
+    }
+
     if (!this._overlayRef.hasAttached()) {
-      this._overlayRef.attach(this._templatePortal);
+      this._overlayRef.attach(this.portal);
       this.attach.emit();
     }
 

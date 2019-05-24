@@ -29,6 +29,7 @@ import {
   QueryList,
   ViewChild,
   ViewChildren,
+  Provider,
 } from '@angular/core';
 import {
   async,
@@ -63,7 +64,7 @@ import {LiveAnnouncer} from '@angular/cdk/a11y';
 import {Subject, Subscription, EMPTY, Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {MatSelectModule} from './index';
-import {MatSelect} from './select';
+import {MatSelect, MAT_SELECT_RENDERING_STRATEGY, MatSelectOptionsRenderOptions} from './select';
 import {
   getMatSelectDynamicMultipleError,
   getMatSelectNonArrayValueError,
@@ -88,7 +89,7 @@ describe('MatSelect', () => {
    * overall test time.
    * @param declarations Components to declare for this block
    */
-  function configureMatSelectTestingModule(declarations: any[]) {
+  function configureMatSelectTestingModule(declarations: any[], providers: Provider[] = []) {
     TestBed.configureTestingModule({
       imports: [
         MatFormFieldModule,
@@ -105,6 +106,7 @@ describe('MatSelect', () => {
             scrolled: () => scrolledSubject.asObservable(),
           }),
         },
+        ...providers
       ],
     }).compileComponents();
 
@@ -4263,6 +4265,56 @@ describe('MatSelect', () => {
       expect(options.some(option => option.selected)).toBe(false);
       expect(testInstance.control.value).toEqual([]);
     });
+
+  });
+
+  describe('with inline rendering strategy', () => {
+    beforeEach(async(() => {
+      configureMatSelectTestingModule([BasicSelect], [{
+        provide: MAT_SELECT_RENDERING_STRATEGY,
+        useValue: MatSelectOptionsRenderOptions.ALWAYS
+      }]);
+    }));
+
+    let fixture: ComponentFixture<BasicSelect>;
+
+    beforeEach(fakeAsync(() => {
+      fixture = TestBed.createComponent(BasicSelect);
+      fixture.detectChanges();
+    }));
+
+    it('should have aria-owns while the panel is closed', fakeAsync(() => {
+      const selectElement: HTMLElement = fixture.nativeElement.querySelector('.mat-select');
+
+      expect(selectElement.getAttribute('aria-owns')).toBeTruthy();
+
+      fixture.componentInstance.select.open();
+      fixture.detectChanges();
+      flush();
+
+      expect(selectElement.getAttribute('aria-owns')).toBeTruthy();
+    }));
+
+    it('should always keep the options inside the DOM', fakeAsync(() => {
+      const selectElement: HTMLElement = fixture.nativeElement.querySelector('.mat-select');
+      const options = Array.from(selectElement.querySelectorAll('.mat-option'));
+
+      expect(options.length).toBeGreaterThan(0, 'Expected more than zero options.');
+
+      fixture.componentInstance.select.open();
+      fixture.detectChanges();
+      flush();
+
+      expect(options.every(option => overlayContainerElement.contains(option)))
+          .toBe(true, 'Expected all options to be moved to the overlay container.');
+
+      fixture.componentInstance.select.close();
+      fixture.detectChanges();
+      flush();
+
+      expect(options.every(option => selectElement.contains(option)))
+          .toBe(true, 'Expected all options to be moved back into select.');
+    }));
 
   });
 });
