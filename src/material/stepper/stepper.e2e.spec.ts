@@ -1,7 +1,6 @@
 import {browser, by, element, ElementFinder, ExpectedConditions} from 'protractor';
 import {Key} from 'selenium-webdriver';
-import {pressKeys} from '../../src/e2e-app/test-util/actions';
-import {expectFocusOn, expectToExist} from '../../src/e2e-app/test-util/asserts';
+import {expectFocusOn, expectToExist, pressKeys} from '../../e2e-app/test-util';
 
 describe('stepper', () => {
   beforeEach(async () => await browser.get('/stepper'));

@@ -1,12 +1,12 @@
 import {browser, element, by, Key} from 'protractor';
-import {expectToExist} from '../../src/e2e-app/test-util/index';
+import {expectToExist} from '../../e2e-app/test-util';
 
 
 describe('slide-toggle', () => {
   const getInput = () => element(by.css('#normal-slide-toggle input'));
   const getNormalToggle = () => element(by.css('#normal-slide-toggle'));
 
-  beforeEach(async () => await browser.get('mdc-slide-toggle'));
+  beforeEach(async () => await browser.get('slide-toggle'));
 
   it('should render a slide-toggle', async () => {
     await expectToExist('mat-slide-toggle');
@@ -50,7 +50,7 @@ describe('slide-toggle', () => {
 
   it('should move the thumb on state change', async () => {
     const slideToggleEl = getNormalToggle();
-    const thumbEl = element(by.css('#normal-slide-toggle .mdc-switch__thumb-underlay'));
+    const thumbEl = element(by.css('#normal-slide-toggle .mat-slide-toggle-thumb-container'));
     const previousPosition = await thumbEl.getLocation();
 
     await slideToggleEl.click();
