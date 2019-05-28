@@ -294,14 +294,6 @@ export class MatSlideToggle implements ControlValueAccessor, AfterViewInit, OnDe
     this._onChange(this.checked);
   }
 
-  /**
-   * Marks the component for check. This can be called after inputs have been updated
-   * programmatically and the component should be updated to reflect the changes.
-   */
-  markForCheck() {
-    this._changeDetectorRef.markForCheck();
-  }
-
   /** Handles blur events on the native input. */
   _onBlur() {
     // When a focused element becomes disabled, the browser *immediately* fires a blur event.

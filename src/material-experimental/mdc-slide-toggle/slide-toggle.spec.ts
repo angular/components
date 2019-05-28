@@ -487,8 +487,7 @@ describe('MatSlideToggle with forms', () => {
       // The control should start off with being untouched.
       expect(slideToggleModel.touched).toBe(false);
 
-      slideToggle.checked = true;
-      slideToggle.markForCheck();
+      testComponent.isChecked = true;
       fixture.detectChanges();
 
       expect(slideToggleModel.touched).toBe(false);
@@ -728,10 +727,12 @@ class SlideToggleWithForm {
 }
 
 @Component({
-  template: `<mat-slide-toggle [(ngModel)]="modelValue" [disabled]="isDisabled"></mat-slide-toggle>`
+  template: `<mat-slide-toggle [(ngModel)]="modelValue" [disabled]="isDisabled"
+                               [checked]="isChecked"></mat-slide-toggle>`
 })
 class SlideToggleWithModel {
   modelValue = false;
+  isChecked = false;
   isDisabled = false;
 }
 

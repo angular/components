@@ -302,14 +302,6 @@ export class MatCheckbox implements AfterViewInit, OnDestroy, ControlValueAccess
     this.checked = !this.checked;
   }
 
-  /**
-   * Marks the component for check. This can be called after inputs have been updated
-   * programmatically and the component should be updated to reflect the changes.
-   */
-  markForCheck() {
-    this._changeDetectorRef.markForCheck();
-  }
-
   /** Triggers the checkbox ripple. */
   _activateRipple() {
     if (!this.disabled && !this.disableRipple && this._animationMode != 'NoopAnimations') {
