@@ -120,7 +120,6 @@ export class MatCheckbox implements AfterViewInit, OnDestroy, ControlValueAccess
   }
   set checked(checked) {
     this._checked = coerceBooleanProperty(checked);
-    this._changeDetectorRef.markForCheck();
   }
   private _checked = false;
 
@@ -136,7 +135,6 @@ export class MatCheckbox implements AfterViewInit, OnDestroy, ControlValueAccess
   }
   set indeterminate(indeterminate) {
     this._indeterminate = coerceBooleanProperty(indeterminate);
-    this._changeDetectorRef.markForCheck();
   }
   private _indeterminate = false;
 
@@ -147,7 +145,6 @@ export class MatCheckbox implements AfterViewInit, OnDestroy, ControlValueAccess
   }
   set disabled(disabled) {
     this._disabled = coerceBooleanProperty(disabled);
-    this._changeDetectorRef.markForCheck();
   }
   private _disabled = false;
 
@@ -158,7 +155,6 @@ export class MatCheckbox implements AfterViewInit, OnDestroy, ControlValueAccess
   }
   set required(required) {
     this._required = coerceBooleanProperty(required);
-    this._changeDetectorRef.markForCheck();
   }
   private _required = false;
 
@@ -284,6 +280,7 @@ export class MatCheckbox implements AfterViewInit, OnDestroy, ControlValueAccess
    */
   setDisabledState(isDisabled: boolean) {
     this.disabled = isDisabled;
+    this._changeDetectorRef.markForCheck();
   }
 
   /**
@@ -303,6 +300,14 @@ export class MatCheckbox implements AfterViewInit, OnDestroy, ControlValueAccess
   /** Toggles the `checked` state of the checkbox. */
   toggle() {
     this.checked = !this.checked;
+  }
+
+  /**
+   * Marks the component for check. This can be called after inputs have been updated
+   * programmatically and the component should be updated to reflect the changes.
+   */
+  markForCheck() {
+    this._changeDetectorRef.markForCheck();
   }
 
   /** Triggers the checkbox ripple. */

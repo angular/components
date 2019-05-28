@@ -154,8 +154,6 @@ export class MatSlideToggle implements ControlValueAccessor, AfterViewInit, OnDe
     if (this._foundation) {
       this._foundation.setChecked(this._checked);
     }
-
-    this._changeDetectorRef.markForCheck();
   }
 
   /** Whether to disable the ripple on this checkbox. */
@@ -179,8 +177,6 @@ export class MatSlideToggle implements ControlValueAccessor, AfterViewInit, OnDe
     if (this._foundation) {
       this._foundation.setDisabled(this._disabled);
     }
-
-    this._changeDetectorRef.markForCheck();
   }
   private _disabled = false;
 
@@ -268,6 +264,7 @@ export class MatSlideToggle implements ControlValueAccessor, AfterViewInit, OnDe
   /** Implemented as part of ControlValueAccessor. */
   writeValue(value: any): void {
     this.checked = !!value;
+    this._changeDetectorRef.markForCheck();
   }
 
   /** Implemented as part of ControlValueAccessor. */
@@ -295,6 +292,14 @@ export class MatSlideToggle implements ControlValueAccessor, AfterViewInit, OnDe
   toggle(): void {
     this.checked = !this.checked;
     this._onChange(this.checked);
+  }
+
+  /**
+   * Marks the component for check. This can be called after inputs have been updated
+   * programmatically and the component should be updated to reflect the changes.
+   */
+  markForCheck() {
+    this._changeDetectorRef.markForCheck();
   }
 
   /** Handles blur events on the native input. */

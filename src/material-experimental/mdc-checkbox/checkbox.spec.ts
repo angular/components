@@ -164,15 +164,6 @@ describe('MatCheckbox', () => {
          expect(testComponent.isIndeterminate).toBe(true);
        }));
 
-    it('should change native element checked when check programmatically', fakeAsync(() => {
-         expect(inputElement.checked).toBe(false);
-
-         checkboxInstance.checked = true;
-         fixture.detectChanges();
-
-         expect(inputElement.checked).toBe(true);
-       }));
-
     it('should toggle checked state on click', fakeAsync(() => {
          expect(checkboxInstance.checked).toBe(false);
 
@@ -855,11 +846,9 @@ describe('MatCheckbox', () => {
            // fire and not result in a changed after checked exception. Related: #12323
            inputElement.focus();
 
-           // Flush the two nested timeouts from the FocusMonitor that are being created on `focus`.
-           flush();
-
-           checkboxInstance.disabled = true;
+           fixture.componentInstance.isDisabled = true;
            fixture.detectChanges();
+
            flushMicrotasks();
          }).not.toThrow();
        }));
@@ -1005,11 +994,13 @@ class SingleCheckbox {
 
 /** Simple component for testing an MatCheckbox with required ngModel. */
 @Component({
-  template: `<mat-checkbox [required]="isRequired" [(ngModel)]="isGood">Be good</mat-checkbox>`,
+  template: `<mat-checkbox [required]="isRequired" [(ngModel)]="isGood"
+                           [disabled]="isDisabled">Be good</mat-checkbox>`,
 })
 class CheckboxWithNgModel {
   isGood: boolean = false;
   isRequired: boolean = true;
+  isDisabled: boolean = false;
 }
 
 @Component({
@@ -1054,6 +1045,7 @@ class CheckboxUsingViewChild {
 
   set isDisabled(value: boolean) {
     this.checkbox.disabled = value;
+    this.checkbox.markForCheck();
   }
 }
 
