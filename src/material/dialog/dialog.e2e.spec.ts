@@ -5,7 +5,7 @@ import {
   pressKeys,
   clickElementAtPoint,
   waitForElement,
-} from '../../e2e-app/test-util';
+} from '@angular/cdk/testing/e2e';
 
 describe('dialog', () => {
   beforeEach(async () => await browser.get('/dialog'));

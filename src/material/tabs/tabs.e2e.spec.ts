@@ -6,7 +6,7 @@ import {
   Key,
   ExpectedConditions
 } from 'protractor';
-import {pressKeys} from '../../e2e-app/test-util';
+import {pressKeys} from '@angular/cdk/testing/e2e';
 
 describe('tabs', () => {
   describe('basic behavior', () => {

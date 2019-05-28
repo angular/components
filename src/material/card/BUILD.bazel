@@ -2,7 +2,7 @@ package(default_visibility=["//visibility:public"])
 
 load("@io_bazel_rules_sass//:defs.bzl", "sass_library", "sass_binary")
 load("@npm_angular_bazel//:index.bzl", "protractor_web_test_suite")
-load("//tools:defaults.bzl", "ng_module", "markdown_to_html", "ts_library")
+load("//tools:defaults.bzl", "ng_module", "markdown_to_html", "ng_e2e_test_library")
 
 ng_module(
   name = "card",
@@ -30,15 +30,11 @@ sass_binary(
   ],
 )
 
-ts_library(
+ng_e2e_test_library(
   name = "e2e_test_sources",
   srcs = glob(["**/*.e2e.spec.ts"]),
-  tsconfig = "//src/e2e-app:tsconfig-e2e.json",
   deps = [
-    "@npm//@types/jasmine",
-    "@npm//@types/selenium-webdriver",
-    "@npm//protractor",
-    "//src/e2e-app:e2e_utils_lib",
+    "//src/cdk/testing/e2e",
   ]
 )
 
@@ -49,9 +45,8 @@ protractor_web_test_suite(
   on_prepare = "//src/e2e-app:start-devserver.js",
   server = "//src/e2e-app:devserver",
   deps = [
-    "@npm//protractor",
     ":e2e_test_sources",
-    "//src/e2e-app:e2e_utils_lib",
+    "//src/cdk/testing/e2e",
   ],
   data = [
     "@npm//@angular/bazel",

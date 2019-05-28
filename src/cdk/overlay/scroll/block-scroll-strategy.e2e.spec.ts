@@ -1,5 +1,5 @@
 import {browser, Key, element, by} from 'protractor';
-import {getScrollPosition} from '../../../e2e-app/test-util';
+import {getScrollPosition} from '@angular/cdk/testing/e2e';
 
 
 describe('scroll blocking', () => {
