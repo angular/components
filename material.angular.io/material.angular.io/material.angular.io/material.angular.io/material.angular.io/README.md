@@ -9,7 +9,7 @@ Versions of this site are also available for
 
 ## Contributing
 Please open bugs against the Angular Material components, directives, documentation contents, API docs,
-and demos in the [Angular Material repo](https://github.com/angular/material2/issues).
+and demos in the [Angular Material repo](https://github.com/angular/components/issues).
 
 Please only open issues with the documentation site itself (not the content) in
 [this repo](https://github.com/angular/material.angular.io/issues). This includes issues like the navigation
@@ -18,15 +18,15 @@ rendering or layout of the documentation pages, etc.
 
 ### Where does the content come from?
 The documentation is generated from the following resources
-- [Guides](https://github.com/angular/material2/tree/master/guides)
-- [Examples](https://github.com/angular/material2/tree/master/src/material-examples)
-- [Material components, services, and directives](https://github.com/angular/material2/tree/master/src/lib)
-- [CDK components, services, and directives](https://github.com/angular/material2/tree/master/src/cdk)
+- [Guides](https://github.com/angular/components/tree/master/guides)
+- [Examples](https://github.com/angular/components/tree/master/src/material-examples)
+- [Material components, services, and directives](https://github.com/angular/components/tree/master/src/lib)
+- [CDK components, services, and directives](https://github.com/angular/components/tree/master/src/cdk)
 
 ## Development Setup
 1. Clone Angular Material in the parent directory of this repo
     1. `cd ..`
-    1. `git clone git@github.com:angular/material2.git`
+    1. `git clone git@github.com:angular/components.git`
 1. Install Gulp globally: `npm i -g gulp`
 1. Build and copy docs and examples from Angular Material: `npm run fetch-local`
     - Note that you may need to run this after each time that you run `npm i` as some of the examples are
