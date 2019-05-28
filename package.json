@@ -15,7 +15,6 @@
     "postinstall": "ngc -p angular-tsconfig.json",
     "build": "gulp build-release-packages",
     "bazel:buildifier": "find . -type f \\( -name \"*.bzl\" -or -name WORKSPACE -or -name BUILD -or -name BUILD.bazel \\) ! -path \"*/node_modules/*\" | xargs buildifier -v --warnings=attr-cfg,attr-license,attr-non-empty,attr-output-default,attr-single-file,constant-glob,ctx-args,depset-iteration,depset-union,dict-concatenation,duplicated-name,filetype,git-repository,http-archive,integer-division,load,load-on-top,native-build,native-package,output-group,package-name,package-on-top,redefined-variable,repository-name,same-origin-load,string-iteration,unused-variable",
-    "bazel:format": "yarn -s bazel:buildifier --lint=fix --mode=fix",
     "bazel:format-lint": "yarn -s bazel:buildifier --lint=warn --mode=check",
     "dev-app": "gulp serve:devapp",
     "test": "bazel test //src/... --test_tag_filters=-e2e",
@@ -29,7 +28,9 @@
     "publish-release": "ts-node --project tools/release/ tools/release/publish-release.ts",
     "check-release-output": "ts-node --project tools/release tools/release/check-release-output.ts",
     "preinstall": "node ./tools/npm/check-npm.js",
-    "format": "git-clang-format HEAD $(git diff HEAD --name-only | grep -v \"\\.d\\.ts\")"
+    "format:ts": "git-clang-format HEAD $(git diff HEAD --name-only | grep -v \"\\.d\\.ts\")",
+    "format:bazel": "yarn -s bazel:buildifier --lint=fix --mode=fix",
+    "format": "yarn -s format:ts && yarn -s format:bazel"
   },
   "version": "8.0.0",
   "requiredAngularVersion": "^8.0.0 || ^9.0.0-0",
