@@ -78,7 +78,7 @@ export class MatSingleDateSelectionModel<D> extends MatDateSelectionModel<D> {
 
   /** Gets the current selection. */
   getSelection(): D | null {
-    return this.isValid() ? this.adapter.deserialize(this.date) : null;
+    return this.isValid() ? this.date : null;
   }
 
   /**
@@ -153,9 +153,18 @@ export class MatRangeDateSelectionModel<D> extends MatDateSelectionModel<D> {
   }
 
   /** Sets the current selection. */
-  setSelection(range: DateRange<D>) {
-    this.start = range.start;
-    this.end = range.end;
+  setSelection(range: Partial<DateRange<D>> | null) {
+    if (range) {
+      if (range.start) {
+        this.start = range.start;
+      }
+      if (range.end) {
+        this.end = range.end;
+      }
+    } else {
+      this.start = null;
+      this.end = null;
+    }
   }
 
   /** Gets the current selection. */
@@ -164,15 +173,6 @@ export class MatRangeDateSelectionModel<D> extends MatDateSelectionModel<D> {
       start: this.start,
       end: this.end,
     };
-  }
-
-  setPartialSelection(start?: D | undefined, end?: D | undefined ) {
-    if (start) {
-      this.start = start;
-    }
-    if (end) {
-      this.end = end;
-    }
   }
 
   /**
@@ -247,8 +247,8 @@ export class MatRangeDateSelectionModel<D> extends MatDateSelectionModel<D> {
     }
 
     return (
-      this.isBetween(range.start, this.start, this.end) ||
-      this.isBetween(range.end, this.start, this.end) ||
+      this._isBetween(range.start, this.start, this.end) ||
+      this._isBetween(range.end, this.start, this.end) ||
       (
         this.adapter.compareDate(range.start, this.start) <= 0 &&
         this.adapter.compareDate(this.end, range.end) <= 0
@@ -260,17 +260,17 @@ export class MatRangeDateSelectionModel<D> extends MatDateSelectionModel<D> {
    * Returns a range that is the largest possible span between all four possible dates.
    */
   previewRange(range: DateRange<D>): DateRange<D> {
-    const start = this.sort( range.start, range.end, this.start, this.end )[0] || null;
-    const end = this.sort( range.start, range.end, this.start, this.end ).reverse()[0] || null;
+    const start = this._sort( range.start, range.end, this.start, this.end )[0] || null;
+    const end = this._sort( range.start, range.end, this.start, this.end ).reverse()[0] || null;
 
     return { start, end };
   }
 
-  private isBetween(value: D, from: D, to: D): boolean {
+  private _isBetween(value: D, from: D, to: D): boolean {
     return this.adapter.compareDate(from, value) <= 0 && this.adapter.compareDate(value, to) <= 0;
   }
 
-  private sort(...dates: Array<D | null>): D[] {
+  private _sort(...dates: Array<D | null>): D[] {
     const filtered: D[] = dates.filter( d => d != null ) as D[];
     filtered.sort( this.adapter.compareDate.bind( this.adapter ) );
 

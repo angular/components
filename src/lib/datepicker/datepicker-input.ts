@@ -468,7 +468,7 @@ export class MatDatepickerInputStart<D> extends MatDatepickerInput<D> {
     date = this._getValidDateOrNull(date);
 
     if (!this._dateAdapter.sameDate(current, date) && date) {
-      this._selectionModel.setPartialSelection(date);
+      this._selectionModel.setSelection({start: date});
       this._cvaOnChange(date);
       this.dateInput.emit(new MatDatepickerInputEvent(this, this._elementRef.nativeElement));
     } else {
@@ -533,7 +533,7 @@ export class MatDatepickerInputEnd<D> extends MatDatepickerInput<D> {
     date = this._getValidDateOrNull(date);
 
     if (!this._dateAdapter.sameDate(current, date) && date) {
-      this._selectionModel.setPartialSelection(undefined, date);
+      this._selectionModel.setSelection({end: date});
       this._cvaOnChange(date);
       this.dateInput.emit(new MatDatepickerInputEvent(this, this._elementRef.nativeElement));
     } else {
