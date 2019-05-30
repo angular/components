@@ -140,6 +140,29 @@ describe('MatDatepicker', () => {
         testComponent.opened = false;
         fixture.detectChanges();
         flush();
+        fixture.detectChanges();
+        flush();
+        fixture.detectChanges();
+
+        expect(document.querySelector('.mat-datepicker-content')).toBeNull();
+      }));
+
+      it('should wait for the animation to finish before removing the content', fakeAsync(() => {
+        testComponent.datepicker.open();
+        fixture.detectChanges();
+        flush();
+
+        expect(document.querySelector('.mat-datepicker-content')).not.toBeNull();
+
+        testComponent.datepicker.close();
+        fixture.detectChanges();
+        flush();
+
+        expect(document.querySelector('.mat-datepicker-content')).not.toBeNull();
+
+        fixture.detectChanges();
+        flush();
+        fixture.detectChanges();
 
         expect(document.querySelector('.mat-datepicker-content')).toBeNull();
       }));
@@ -178,13 +201,16 @@ describe('MatDatepicker', () => {
 
         const popup = document.querySelector('.cdk-overlay-pane')!;
         expect(popup).not.toBeNull();
-        expect(parseInt(getComputedStyle(popup).height as string)).not.toBe(0);
+        expect(parseInt(getComputedStyle(popup).height || '0')).not.toBe(0);
 
         testComponent.datepicker.close();
         fixture.detectChanges();
         flush();
+        fixture.detectChanges();
+        flush();
+        fixture.detectChanges();
 
-        expect(parseInt(getComputedStyle(popup).height as string)).toBe(0);
+        expect(parseInt(getComputedStyle(popup).height || '0')).toBeFalsy();
       }));
 
       it('should close the popup when pressing ESCAPE', fakeAsync(() => {
@@ -1092,9 +1118,13 @@ describe('MatDatepicker', () => {
         testComponent.datepicker.close();
         fixture.detectChanges();
         flush();
+        fixture.detectChanges();
+        flush();
+        fixture.detectChanges();
 
         testComponent.formField.color = 'warn';
         testComponent.datepicker.open();
+        fixture.detectChanges();
 
         contentEl = document.querySelector('.mat-datepicker-content')!;
         fixture.detectChanges();

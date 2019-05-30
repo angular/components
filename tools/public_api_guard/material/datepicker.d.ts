@@ -139,11 +139,15 @@ export declare const matDatepickerAnimations: {
 };
 
 export declare class MatDatepickerContent<D> extends _MatDatepickerContentMixinBase implements AfterViewInit, CanColor {
+    _animationDone: Subject<AnimationEvent>;
+    _animationState: 'enter' | 'void';
     _calendar: MatCalendar<D>;
     _isAbove: boolean;
     datepicker: MatDatepicker<D>;
-    constructor(elementRef: ElementRef);
+    constructor(elementRef: ElementRef, _changeDetectorRef: ChangeDetectorRef);
+    _startExitAnimation(): Subject<AnimationEvent>;
     ngAfterViewInit(): void;
+    ngOnDestroy(): void;
 }
 
 export declare class MatDatepickerInput<D> implements ControlValueAccessor, OnDestroy, Validator {
