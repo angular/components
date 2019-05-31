@@ -50,8 +50,6 @@ export const rollupGlobals = {
   'protractor': 'protractor',
   'selenium-webdriver': 'selenium-webdriver',
   'tslib': 'tslib',
-  'protractor': 'protractor',
-  'selenium-webdriver': 'selenium-webdriver',
 
   // MDC Web
   '@material/animation': 'mdc.animation',

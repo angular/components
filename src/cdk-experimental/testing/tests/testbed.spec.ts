@@ -1,9 +1,9 @@
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 import {getNativeElement, load} from '../testbed';
-
-import {TestAppModule} from './test-app';
-import {MainComponent} from './main-component';
 import {MainComponentHarness} from './harnesses/main-component-harness';
+
+import {TestComponentsModule} from './test-components-module';
+import {TestMainComponent} from './test-main-component';
 
 describe('Testbed Helper Test:', () => {
   let harness: MainComponentHarness;
@@ -11,11 +11,11 @@ describe('Testbed Helper Test:', () => {
   beforeEach(async(() => {
     TestBed
       .configureTestingModule({
-        imports: [TestAppModule],
+        imports: [TestComponentsModule],
       })
       .compileComponents()
       .then(() => {
-        fixture = TestBed.createComponent(MainComponent);
+        fixture = TestBed.createComponent(TestMainComponent);
         harness = load(MainComponentHarness, fixture);
       });
   }));

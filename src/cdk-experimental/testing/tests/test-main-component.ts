@@ -15,7 +15,7 @@ import {
 
 @Component({
   moduleId: module.id,
-  selector: 'main',
+  selector: 'test-main',
   template: `
       <h1 style="height:50px">Main Component</h1>
       <div id = 'username'>Hello {{username}} from Angular 2!</div>
@@ -24,11 +24,11 @@ import {
       <div id = 'counter'>{{counter}}</div>
       <label>AsyncCounter:</label>
       <div id = 'asyncCounter'>{{asyncCounter}}</div>
-      <input [(ngModel)]='input' placeholder='' id = 'input'>
+      <input [(ngModel)]='input' placeholder='' id = 'input' aria-label="input">
       <div id = 'value'>Input:{{input}}</div>
-      <textarea id = 'memo'>{{memo}}</textarea>
-      <sub title = 'test tools' [items] = testTools></sub>
-      <sub title = 'test methods' [items] = testMethods></sub>
+      <textarea id = 'memo' aria-label="memo">{{memo}}</textarea>
+      <test-sub title = 'test tools' [items] = testTools></test-sub>
+      <test-sub title = 'test methods' [items] = testMethods></test-sub>
       `,
   host: {
     '[class.hovering]': '_isHovering',
@@ -39,7 +39,7 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 
-export class MainComponent {
+export class TestMainComponent {
   username: string;
   counter: number;
   asyncCounter: number;

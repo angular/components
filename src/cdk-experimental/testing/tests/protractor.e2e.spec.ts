@@ -7,8 +7,8 @@ describe('Protractor Helper Test:', () => {
   let harness: MainComponentHarness;
 
   beforeEach(async () => {
-    await browser.get('/');
-    harness = await load(MainComponentHarness, 'main');
+    await browser.get('/component-harness');
+    harness = await load(MainComponentHarness, 'test-main');
   });
 
   describe('Locator ', () => {
@@ -174,7 +174,7 @@ describe('Protractor Helper Test:', () => {
 
   describe('getElementFinder', () => {
     it('should return the element finder', async () => {
-      const mainElement = await element(by.css('main'));
+      const mainElement = await element(by.css('test-main'));
       const elementFromHarness = getElementFinder(harness.host());
       expect(await elementFromHarness.getId())
         .toEqual(await mainElement.getId());

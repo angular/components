@@ -16,7 +16,7 @@ export class MainComponentHarness extends ComponentHarness {
   readonly input = this.find('#input');
   readonly value = this.find('#value');
   readonly allLabels = this.findAll('label');
-  readonly allLists = this.findAll(SubComponentHarness, 'sub');
+  readonly allLists = this.findAll(SubComponentHarness, 'test-sub');
   readonly memo = this.find('textarea');
   // Allow null for element
   readonly nullItem = this.find('wrong locator', {allowNull: true});
@@ -32,7 +32,7 @@ export class MainComponentHarness extends ComponentHarness {
     this.find('wrong locator', {global: true, allowNull: true});
 
   private _button = this.find('button');
-  private _testTools = this.find(SubComponentHarness, 'sub');
+  private _testTools = this.find(SubComponentHarness, 'test-sub');
 
   async increaseCounter(times: number) {
     const button = await this._button();

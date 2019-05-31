@@ -6,4 +6,6 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-declare var module: { id: string };
+export * from './test-components-module';
+export * from './test-main-component';
+export * from './test-sub-component';

@@ -6,7 +6,7 @@ load("@npm_angular_bazel//:index.bzl", "protractor_web_test_suite")
 
 ng_module(
   name = "testing",
-  srcs = glob(["**/*.ts"], exclude=["**/*.spec.ts", "test-app/**"]),
+  srcs = glob(["**/*.ts"], exclude=["**/*.spec.ts", "tests/**"]),
   module_name = "@angular/cdk-experimental/testing",
   deps = [
     "@npm//@angular/core",
@@ -16,19 +16,21 @@ ng_module(
 
 ng_web_test_suite(
   name = "unit_tests",
-  deps = ["//src/cdk-experimental/testing/test-app:test_app_test_sources"],
+  deps = ["//src/cdk-experimental/testing/tests:unit_test_sources"],
 )
 
 protractor_web_test_suite(
   name = "e2e_tests",
-  configuration = ":protractor.conf.js",
-  on_prepare = ":start-devserver.js",
-  server = "//src/cdk-experimental/testing/test-app:devserver",
+  tags = ["e2e"],
+  configuration = "//src/e2e-app:protractor.conf.js",
+  on_prepare = "//src/e2e-app:start-devserver.js",
+  server = "//src/e2e-app:devserver",
   deps = [
     "@npm//protractor",
-    "//src/cdk-experimental/testing/test-app:test_app_e2e_test_sources",
+    "//src/cdk-experimental/testing/tests:e2e_test_sources",
   ],
   data = [
     "@npm//@angular/bazel",
+    "//tools/axe-protractor",
   ],
 )

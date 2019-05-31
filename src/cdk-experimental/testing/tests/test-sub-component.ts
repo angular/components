@@ -10,7 +10,7 @@ import {ChangeDetectionStrategy, Component, Input, ViewEncapsulation} from '@ang
 
 @Component({
   moduleId: module.id,
-  selector: 'sub',
+  selector: 'test-sub',
   template: `
       <h2>List of {{title}}</h2>
       <ul>
@@ -19,7 +19,7 @@ import {ChangeDetectionStrategy, Component, Input, ViewEncapsulation} from '@ang
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SubComponent {
+export class TestSubComponent {
   // TODO: remove '!'.
   @Input() title!: string;
   // TODO: remove '!'.
