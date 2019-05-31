@@ -11,6 +11,7 @@ ng_module(
   deps = [
     "@npm//@angular/core",
     "@npm//protractor",
+    "//src/cdk/testing",
   ],
 )
 

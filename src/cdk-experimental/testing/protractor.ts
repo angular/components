@@ -10,7 +10,6 @@
 //  package? It depends on protractor which we don't want to put in the deps for cdk-experimental.
 
 import {browser, by, element as protractorElement, ElementFinder} from 'protractor';
-import {promise as wdpromise} from 'selenium-webdriver';
 
 import {
   ComponentHarness,
@@ -28,33 +27,29 @@ import {
  * loading harness, using the load function that accepts extra searching
  * options.
  * @param componentHarness: Type of user defined harness.
- * @param rootSelector: Optional. Css selector to specify the root of component.
+ * @param rootSelector: Optional. CSS selector to specify the root of component.
  * Set to 'body' by default
  */
 export async function load<T extends ComponentHarness>(
-  componentHarness: ComponentHarnessType<T>,
-  rootSelector: string): Promise<T>;
+    componentHarness: ComponentHarnessType<T>,
+    rootSelector: string): Promise<T>;
 
 /**
  * Component harness factory for protractor.
  * @param componentHarness: Type of user defined harness.
- * @param rootSelector: Optional. Css selector to specify the root of component.
+ * @param rootSelector: Optional. CSS selector to specify the root of component.
  * Set to 'body' by default.
  * @param options Optional. Extra searching options
  */
 export async function load<T extends ComponentHarness>(
-  componentHarness: ComponentHarnessType<T>, rootSelector?: string,
-  options?: Options): Promise<T|null>;
+    componentHarness: ComponentHarnessType<T>, rootSelector?: string,
+    options?: Options): Promise<T|null>;
 
 export async function load<T extends ComponentHarness>(
-  componentHarness: ComponentHarnessType<T>, rootSelector = 'body',
-  options?: Options): Promise<T|null> {
+    componentHarness: ComponentHarnessType<T>, rootSelector = 'body',
+    options?: Options): Promise<T|null> {
   const root = await getElement(rootSelector, undefined, options);
-  if (root === null) {
-    return null;
-  }
-  const locator = new ProtractorLocator(root);
-  return new componentHarness(locator);
+  return root && new componentHarness(new ProtractorLocator(root));
 }
 
 /**
@@ -69,7 +64,7 @@ export function getElementFinder(testElement: TestElement): ElementFinder {
 }
 
 class ProtractorLocator implements Locator {
-  private _root: ProtractorElement;
+  private readonly _root: ProtractorElement;
 
   constructor(private _rootFinder: ElementFinder) {
     this._root = new ProtractorElement(this._rootFinder);
@@ -79,16 +74,13 @@ class ProtractorLocator implements Locator {
     return this._root;
   }
 
-  async find(css: string, options?: Options): Promise<TestElement|null> {
-    const finder = await getElement(css, this._rootFinder, options);
-    if (finder === null) {
-      return null;
-    }
-    return new ProtractorElement(finder);
+  async querySelector(selector: string, options?: Options): Promise<TestElement|null> {
+    const finder = await getElement(selector, this._rootFinder, options);
+    return finder && new ProtractorElement(finder);
   }
 
-  async findAll(css: string): Promise<TestElement[]> {
-    const elementFinders = this._rootFinder.all(by.css(css));
+  async querySelectorAll(selector: string): Promise<TestElement[]> {
+    const elementFinders = this._rootFinder.all(by.css(selector));
     const res: TestElement[] = [];
     await elementFinders.each(el => {
       if (el) {
@@ -99,20 +91,15 @@ class ProtractorLocator implements Locator {
   }
 
   async load<T extends ComponentHarness>(
-    componentHarness: ComponentHarnessType<T>, css: string,
-    options?: Options): Promise<T|null> {
-    const root = await getElement(css, this._rootFinder, options);
-    if (root === null) {
-      return null;
-    }
-    const locator = new ProtractorLocator(root);
-    return new componentHarness(locator);
+      componentHarness: ComponentHarnessType<T>, selector: string,
+      options?: Options): Promise<T|null> {
+    const root = await getElement(selector, this._rootFinder, options);
+    return root && new componentHarness(new ProtractorLocator(root));
   }
 
   async loadAll<T extends ComponentHarness>(
-    componentHarness: ComponentHarnessType<T>,
-    rootSelector: string,
-  ): Promise<T[]> {
+      componentHarness: ComponentHarnessType<T>,
+      rootSelector: string): Promise<T[]> {
     const roots = this._rootFinder.all(by.css(rootSelector));
     const res: T[] = [];
     await roots.each(el => {
@@ -128,77 +115,66 @@ class ProtractorLocator implements Locator {
 class ProtractorElement implements TestElement {
   constructor(readonly element: ElementFinder) {}
 
-  blur(): Promise<void> {
-    return toPromise<void>(this.element['blur']());
+  async blur(): Promise<void> {
+    return this.element['blur']();
   }
 
-  clear(): Promise<void> {
-    return toPromise<void>(this.element.clear());
+  async clear(): Promise<void> {
+    return this.element.clear();
   }
 
-  click(): Promise<void> {
-    return toPromise<void>(this.element.click());
+  async click(): Promise<void> {
+    return this.element.click();
   }
 
-  focus(): Promise<void> {
-    return toPromise<void>(this.element['focus']());
+  async focus(): Promise<void> {
+    return this.element['focus']();
   }
 
-  getCssValue(property: string): Promise<string> {
-    return toPromise<string>(this.element.getCssValue(property));
+  async getCssValue(property: string): Promise<string> {
+    return this.element.getCssValue(property);
   }
 
   async hover(): Promise<void> {
-    return toPromise<void>(browser.actions()
-      .mouseMove(await this.element.getWebElement())
-      .perform());
+    return browser.actions()
+        .mouseMove(await this.element.getWebElement())
+        .perform();
   }
 
-  sendKeys(keys: string): Promise<void> {
-    return toPromise<void>(this.element.sendKeys(keys));
+  async sendKeys(keys: string): Promise<void> {
+    return this.element.sendKeys(keys);
   }
 
-  text(): Promise<string> {
-    return toPromise(this.element.getText());
+  async text(): Promise<string> {
+    return this.element.getText();
   }
 
-  getAttribute(name: string): Promise<string|null> {
-    return toPromise(this.element.getAttribute(name));
+  async getAttribute(name: string): Promise<string|null> {
+    return this.element.getAttribute(name);
   }
-}
-
-function toPromise<T>(p: wdpromise.Promise<T>): Promise<T> {
-  return new Promise<T>((resolve, reject) => {
-    p.then(resolve, reject);
-  });
 }
 
 /**
- * Get an element finder based on the css selector and root element.
+ * Get an element finder based on the CSS selector and root element.
  * Note that it will check whether the element is present only when
  * Options.allowNull is set. This is for performance purpose.
- * @param css the css selector
+ * @param selector The CSS selector
  * @param root Optional Search element under the root element. If not set,
  * search element globally. If options.global is set, root is ignored.
  * @param options Optional, extra searching options
  */
-async function getElement(css: string, root?: ElementFinder, options?: Options):
+async function getElement(selector: string, root?: ElementFinder, options?: Options):
   Promise<ElementFinder|null> {
   const useGlobalRoot = options && !!options.global;
-  const elem = root === undefined || useGlobalRoot ? protractorElement(by.css(css)) :
-    root.element(by.css(css));
+  const elem = root === undefined || useGlobalRoot ?
+      protractorElement(by.css(selector)) : root.element(by.css(selector));
   const allowNull = options !== undefined && options.allowNull !== undefined ?
-    options.allowNull :
-    undefined;
-  if (allowNull !== undefined) {
-    // Only check isPresent when allowNull is set
-    if (!(await elem.isPresent())) {
-      if (allowNull) {
-        return null;
-      }
-      throw new Error('Cannot find element based on the css selector: ' + css);
+      options.allowNull : undefined;
+  if (allowNull !== undefined && !(await elem.isPresent())) {
+    if (allowNull) {
+      return null;
     }
-    return elem;
+    throw new Error('Cannot find element based on the CSS selector: ' + selector);
   }
   return elem;
 }

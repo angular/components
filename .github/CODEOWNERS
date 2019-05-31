@@ -178,6 +178,7 @@
 /src/e2e-app/button-toggle/**                      @jelbourn
 /src/e2e-app/card/**                               @jelbourn
 /src/e2e-app/checkbox/**                           @jelbourn @devversion
+/src/e2e-app/component-harness/**                  @mmalerba
 /src/e2e-app/dialog/**                             @jelbourn @crisbeto
 /src/e2e-app/e2e-app/**                            @jelbourn
 /src/e2e-app/example-viewer/**                     @andrewseguin

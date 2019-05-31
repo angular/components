@@ -16,20 +16,7 @@ import {
 @Component({
   moduleId: module.id,
   selector: 'test-main',
-  template: `
-      <h1 style="height:50px">Main Component</h1>
-      <div id = 'username'>Hello {{username}} from Angular 2!</div>
-      <button (click)='click()'>Up</button><br>
-      <label>Count:</label>
-      <div id = 'counter'>{{counter}}</div>
-      <label>AsyncCounter:</label>
-      <div id = 'asyncCounter'>{{asyncCounter}}</div>
-      <input [(ngModel)]='input' placeholder='' id = 'input' aria-label="input">
-      <div id = 'value'>Input:{{input}}</div>
-      <textarea id = 'memo' aria-label="memo">{{memo}}</textarea>
-      <test-sub title = 'test tools' [items] = testTools></test-sub>
-      <test-sub title = 'test methods' [items] = testMethods></test-sub>
-      `,
+  templateUrl: 'test-main-component.html',
   host: {
     '[class.hovering]': '_isHovering',
     '(mouseenter)': 'onMouseOver()',
@@ -60,7 +47,6 @@ export class TestMainComponent {
   }
 
   constructor(private _cdr: ChangeDetectorRef) {
-    console.log('Ng2Component instantiated.');
     this.username = 'Yi';
     this.counter = 0;
     this.asyncCounter = 0;

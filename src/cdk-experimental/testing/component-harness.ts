@@ -68,21 +68,21 @@ export interface Locator {
 
   /**
    * Search the first matched test element.
-   * @param css Selector of the test elements.
+   * @param selector The CSS selector of the test elements.
    * @param options Optional, extra searching options
    */
-  find(css: string, options?: Options): Promise<TestElement|null>;
+  querySelector(selector: string, options?: Options): Promise<TestElement|null>;
 
   /**
-   * Search all matched test elements under current root by css selector.
-   * @param css Selector of the test elements.
+   * Search all matched test elements under current root by CSS selector.
+   * @param selector The CSS selector of the test elements.
    */
-  findAll(css: string): Promise<TestElement[]>;
+  querySelectorAll(selector: string): Promise<TestElement[]>;
 
   /**
    * Load the first matched Component Harness.
    * @param componentHarness Type of user customized harness.
-   * @param root Css root selector of the new component harness.
+   * @param root CSS root selector of the new component harness.
    * @param options Optional, extra searching options
    */
   load<T extends ComponentHarness>(
@@ -92,7 +92,7 @@ export interface Locator {
   /**
    * Load all Component Harnesses under current root.
    * @param componentHarness Type of user customized harness.
-   * @param root Css root selector of the new component harnesses.
+   * @param root CSS root selector of the new component harnesses.
    */
   loadAll<T extends ComponentHarness>(
     componentHarness: ComponentHarnessType<T>, root: string): Promise<T[]>;
@@ -115,33 +115,33 @@ export class ComponentHarness {
   }
 
   /**
-   * Generate a function to find the first matched test element by css
+   * Generate a function to find the first matched test element by CSS
    * selector.
-   * @param css Css selector of the test element.
+   * @param selector The CSS selector of the test element.
    */
-  protected find(css: string): () => Promise<TestElement>;
+  protected find(selector: string): () => Promise<TestElement>;
 
   /**
-   * Generate a function to find the first matched test element by css
+   * Generate a function to find the first matched test element by CSS
    * selector.
-   * @param css Css selector of the test element.
+   * @param selector The CSS selector of the test element.
    * @param options Extra searching options
    */
-  protected find(css: string, options: OptionsWithAllowNullSet):
+  protected find(selector: string, options: OptionsWithAllowNullSet):
     () => Promise<TestElement|null>;
 
   /**
-   * Generate a function to find the first matched test element by css
+   * Generate a function to find the first matched test element by CSS
    * selector.
-   * @param css Css selector of the test element.
+   * @param selector The CSS selector of the test element.
    * @param options Extra searching options
    */
-  protected find(css: string, options: Options): () => Promise<TestElement>;
+  protected find(selector: string, options: Options): () => Promise<TestElement>;
 
   /**
    * Generate a function to find the first matched Component Harness.
    * @param componentHarness Type of user customized harness.
-   * @param root Css root selector of the new component harness.
+   * @param root CSS root selector of the new component harness.
    */
   protected find<T extends ComponentHarness>(
     componentHarness: ComponentHarnessType<T>,
@@ -150,7 +150,7 @@ export class ComponentHarness {
   /**
    * Generate a function to find the first matched Component Harness.
    * @param componentHarness Type of user customized harness.
-   * @param root Css root selector of the new component harness.
+   * @param root CSS root selector of the new component harness.
    * @param options Extra searching options
    */
   protected find<T extends ComponentHarness>(
@@ -160,7 +160,7 @@ export class ComponentHarness {
   /**
    * Generate a function to find the first matched Component Harness.
    * @param componentHarness Type of user customized harness.
-   * @param root Css root selector of the new component harness.
+   * @param root CSS root selector of the new component harness.
    * @param options Extra searching options
    */
   protected find<T extends ComponentHarness>(
@@ -168,31 +168,31 @@ export class ComponentHarness {
     options: Options): () => Promise<T>;
 
   protected find<T extends ComponentHarness>(
-    cssOrComponentHarness: string|ComponentHarnessType<T>,
-    cssOrOptions?: string|Options,
+    selectorOrComponentHarness: string|ComponentHarnessType<T>,
+    selectorOrOptions?: string|Options,
     options?: Options): () => Promise<TestElement|T|null> {
-    if (typeof cssOrComponentHarness === 'string') {
-      const css = cssOrComponentHarness;
-      return () => this.locator.find(css, cssOrOptions as Options);
+    if (typeof selectorOrComponentHarness === 'string') {
+      const selector = selectorOrComponentHarness;
+      return () => this.locator.querySelector(selector, selectorOrOptions as Options);
     } else {
-      const componentHarness = cssOrComponentHarness;
-      const css = cssOrOptions as string;
-      return () => this.locator.load(componentHarness, css, options);
+      const componentHarness = selectorOrComponentHarness;
+      const selector = selectorOrOptions as string;
+      return () => this.locator.load(componentHarness, selector, options);
     }
   }
 
   /**
-   * Generate a function to find all matched test elements by css selector.
-   * @param css Css root selector of elements. It will locate
+   * Generate a function to find all matched test elements by CSS selector.
+   * @param selector The CSS root selector of elements. It will locate
    * elements under the current root.
    */
-  protected findAll(css: string): () => Promise<TestElement[]>;
+  protected findAll(selector: string): () => Promise<TestElement[]>;
 
   /**
    * Generate a function to find all Component Harnesses under current
    * component harness.
    * @param componentHarness Type of user customized harness.
-   * @param root Css root selector of the new component harnesses. It will
+   * @param root CSS root selector of the new component harnesses. It will
    * locate harnesses under the current root.
    */
   protected findAll<T extends ComponentHarness>(
@@ -200,13 +200,13 @@ export class ComponentHarness {
     root: string): () => Promise<T[]>;
 
   protected findAll<T extends ComponentHarness>(
-    cssOrComponentHarness: string|ComponentHarnessType<T>,
+    selectorOrComponentHarness: string|ComponentHarnessType<T>,
     root?: string): () => Promise<TestElement[]|T[]> {
-    if (typeof cssOrComponentHarness === 'string') {
-      const css = cssOrComponentHarness;
-      return () => this.locator.findAll(css);
+    if (typeof selectorOrComponentHarness === 'string') {
+      const selector = selectorOrComponentHarness;
+      return () => this.locator.querySelectorAll(selector);
     } else {
-      const componentHarness = cssOrComponentHarness;
+      const componentHarness = selectorOrComponentHarness;
       return () => this.locator.loadAll(componentHarness, root as string);
     }
   }

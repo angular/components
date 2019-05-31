@@ -10,6 +10,13 @@
 //  package? It depends on `@angular/core/testing` which we don't want to put in the deps for
 //  cdk-experimental.
 
+import {
+  dispatchFakeEvent,
+  dispatchKeyboardEvent,
+  dispatchMouseEvent,
+  triggerBlur,
+  triggerFocus
+} from '@angular/cdk/testing';
 import {ComponentFixture} from '@angular/core/testing';
 
 import {
@@ -26,15 +33,13 @@ import {
  * @param fixture: Component Fixture of the component to be tested.
  */
 export function load<T extends ComponentHarness>(
-  componentHarness: ComponentHarnessType<T>,
-  fixture: ComponentFixture<{}>): T {
-  const root = fixture.nativeElement;
+    componentHarness: ComponentHarnessType<T>,
+    fixture: ComponentFixture<{}>): T {
   const stabilize = async () => {
     fixture.detectChanges();
     await fixture.whenStable();
   };
-  const locator = new UnitTestLocator(root, stabilize);
-  return new componentHarness(locator);
+  return new componentHarness(new UnitTestLocator(fixture.nativeElement, stabilize));
 }
 
 /**
@@ -53,7 +58,7 @@ export function getNativeElement(testElement: TestElement): Element {
  * Note that, this locator is exposed for internal usage, please do not use it.
  */
 export class UnitTestLocator implements Locator {
-  private _rootElement: TestElement;
+  private readonly _rootElement: TestElement;
 
   constructor(private _root: Element, private _stabilize: () => Promise<void>) {
     this._rootElement = new UnitTestElement(_root, this._stabilize);
@@ -63,127 +68,109 @@ export class UnitTestLocator implements Locator {
     return this._rootElement;
   }
 
-  async find(css: string, options?: Options): Promise<TestElement|null> {
+  async querySelector(selector: string, options?: Options): Promise<TestElement|null> {
     await this._stabilize();
-    const e = getElement(css, this._root, options);
-    if (e === null) {
-      return null;
-    }
-    return new UnitTestElement(e, this._stabilize);
+    const e = getElement(selector, this._root, options);
+    return e && new UnitTestElement(e, this._stabilize);
   }
 
-  async findAll(css: string): Promise<TestElement[]> {
+  async querySelectorAll(selector: string): Promise<TestElement[]> {
     await this._stabilize();
-    const elements = this._root.querySelectorAll(css);
-    const res: TestElement[] = [];
-    for (let i = 0; i < elements.length; i++) {
-      res.push(new UnitTestElement(elements[i], this._stabilize));
-    }
-    return res;
+    return Array.prototype.map.call(
+        this._root.querySelectorAll(selector),
+        (e: Element) => new UnitTestElement(e, this._stabilize));
   }
 
   async load<T extends ComponentHarness>(
-    componentHarness: ComponentHarnessType<T>, css: string,
-    options?: Options): Promise<T|null> {
-    const root = getElement(css, this._root, options);
-    if (root === null) {
-      return null;
-    }
-    const locator = new UnitTestLocator(root, this._stabilize);
-    return new componentHarness(locator);
+      componentHarness: ComponentHarnessType<T>, selector: string,
+      options?: Options): Promise<T|null> {
+    await this._stabilize();
+    const root = getElement(selector, this._root, options);
+    return root && new componentHarness(new UnitTestLocator(root, this._stabilize));
   }
 
   async loadAll<T extends ComponentHarness>(
-    componentHarness: ComponentHarnessType<T>,
-    rootSelector: string): Promise<T[]> {
+      componentHarness: ComponentHarnessType<T>,
+      rootSelector: string): Promise<T[]> {
     await this._stabilize();
-    const roots = this._root.querySelectorAll(rootSelector);
-    const res: T[] = [];
-    for (let i = 0; i < roots.length; i++) {
-      const root = roots[i];
-      const locator = new UnitTestLocator(root, this._stabilize);
-      res.push(new componentHarness(locator));
-    }
-    return res;
+    return Array.prototype.map.call(
+        this._root.querySelectorAll(rootSelector),
+        (e: Element) => new componentHarness(new UnitTestLocator(e, this._stabilize)));
   }
 }
 
 class UnitTestElement implements TestElement {
-  constructor(
-    readonly element: Element, private _stabilize: () => Promise<void>) {}
+  constructor(readonly element: Element, private _stabilize: () => Promise<void>) {}
 
   async blur(): Promise<void> {
     await this._stabilize();
-    (this.element as HTMLElement).blur();
+    triggerBlur(this.element as HTMLElement);
     await this._stabilize();
   }
 
   async clear(): Promise<void> {
     await this._stabilize();
     if (!(this.element instanceof HTMLInputElement ||
-      this.element instanceof HTMLTextAreaElement)) {
+        this.element instanceof HTMLTextAreaElement)) {
       throw new Error('Attempting to clear an invalid element');
     }
-    this.element.focus();
+    triggerFocus(this.element);
     this.element.value = '';
-    this.element.dispatchEvent(new Event('input'));
+    dispatchFakeEvent(this.element, 'input');
     await this._stabilize();
   }
 
   async click(): Promise<void> {
     await this._stabilize();
-    (this.element as HTMLElement).click();
+    dispatchMouseEvent(this.element, 'click');
     await this._stabilize();
   }
 
   async focus(): Promise<void> {
     await this._stabilize();
-    (this.element as HTMLElement).focus();
+    triggerFocus(this.element as HTMLElement);
     await this._stabilize();
   }
 
   async getCssValue(property: string): Promise<string> {
     await this._stabilize();
-    return Promise.resolve(
-      getComputedStyle(this.element).getPropertyValue(property));
+    // TODO(mmalerba): Consider adding value normalization if we run into common cases where its
+    //  needed.
+    return getComputedStyle(this.element).getPropertyValue(property);
   }
 
   async hover(): Promise<void> {
     await this._stabilize();
-    this.element.dispatchEvent(new Event('mouseenter'));
+    dispatchMouseEvent(this.element, 'mouseenter');
     await this._stabilize();
   }
 
   async sendKeys(keys: string): Promise<void> {
     await this._stabilize();
-    (this.element as HTMLElement).focus();
-    const e = this.element as HTMLInputElement;
+    triggerFocus(this.element as HTMLElement);
     for (const key of keys) {
-      const eventParams = {key, char: key, keyCode: key.charCodeAt(0)};
-      e.dispatchEvent(new KeyboardEvent('keydown', eventParams));
-      e.dispatchEvent(new KeyboardEvent('keypress', eventParams));
-      e.value += key;
-      e.dispatchEvent(new KeyboardEvent('keyup', eventParams));
-      e.dispatchEvent(new Event('input'));
+      const keyCode = key.charCodeAt(0);
+      dispatchKeyboardEvent(this.element, 'keydown', keyCode);
+      dispatchKeyboardEvent(this.element, 'keypress', keyCode);
+      (this.element as HTMLInputElement).value += key;
+      dispatchKeyboardEvent(this.element, 'keyup', keyCode);
+      dispatchFakeEvent(this.element, 'input');
     }
     await this._stabilize();
   }
 
   async text(): Promise<string> {
     await this._stabilize();
-    return Promise.resolve(this.element.textContent || '');
+    return this.element.textContent || '';
   }
 
   async getAttribute(name: string): Promise<string|null> {
     await this._stabilize();
     let value = this.element.getAttribute(name);
-    // If cannot find attribute in the element, also try to find it in
-    // property, this is useful for input/textarea tags
-    if (value === null) {
-      if (name in this.element) {
-        // tslint:disable-next-line:no-any handle unnecessary compile error
-        value = (this.element as any)[name];
-      }
+    // If cannot find attribute in the element, also try to find it in property,
+    // this is useful for input/textarea tags.
+    if (value === null && name in this.element) {
+      return (this.element as unknown as {[key: string]: string|null})[name];
     }
     return value;
   }
@@ -191,8 +178,8 @@ class UnitTestElement implements TestElement {
 
 
 /**
- * Get an element based on the css selector and root element.
- * @param css the css selector
+ * Get an element based on the CSS selector and root element.
+ * @param selector The CSS selector
  * @param root Search element under the root element. If options.global is set,
  *     root is ignored.
  * @param options Optional, extra searching options
@@ -200,18 +187,16 @@ class UnitTestElement implements TestElement {
  * to true, throw an error if Options.allowNull is set to false; otherwise,
  * return the element
  */
-function getElement(css: string, root: Element, options?: Options): Element|
-  null {
+function getElement(selector: string, root: Element, options?: Options): Element|null {
   const useGlobalRoot = options && !!options.global;
-  const elem = (useGlobalRoot ? document : root).querySelector(css);
+  const elem = (useGlobalRoot ? document : root).querySelector(selector);
   const allowNull = options !== undefined && options.allowNull !== undefined ?
-    options.allowNull :
-    undefined;
+      options.allowNull : undefined;
   if (elem === null) {
     if (allowNull) {
       return null;
     }
-    throw new Error('Cannot find element based on the css selector: ' + css);
+    throw new Error('Cannot find element based on the CSS selector: ' + selector);
   }
   return elem;
 }

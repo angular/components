@@ -6,6 +6,7 @@ ng_module(
   name = "test_components",
   module_name = "@angular/cdk-experimental/testing/tests",
   srcs = glob(["**/*.ts"], exclude=["**/*.spec.ts", "harnesses/**"]),
+  assets = glob(["**/*.html"]),
   deps = [
     "@npm//@angular/forms",
   ],
