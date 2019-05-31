@@ -6,7 +6,8 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {ComponentHarness, TestElement} from '../../component-harness';
+import {ComponentHarness} from '../../component-harness';
+import {TestElement} from '../../test-element';
 
 export class SubComponentHarness extends ComponentHarness {
   readonly title = this.find('h2');

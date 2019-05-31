@@ -10,4 +10,5 @@ import * as protractor from './protractor';
 import * as testbed from './testbed';
 
 export * from './component-harness';
+export * from './test-element';
 export {protractor, testbed};

@@ -13,11 +13,11 @@ import {browser, by, element as protractorElement, ElementFinder} from 'protract
 
 import {
   ComponentHarness,
-  ComponentHarnessType,
-  Locator,
-  Options,
-  TestElement
+  ComponentHarnessConstructor,
+  HarnessLocator,
+  QueryOptions
 } from './component-harness';
+import {TestElement} from './test-element';
 
 /**
  * Component harness factory for protractor.
@@ -31,7 +31,7 @@ import {
  * Set to 'body' by default
  */
 export async function load<T extends ComponentHarness>(
-    componentHarness: ComponentHarnessType<T>,
+    componentHarness: ComponentHarnessConstructor<T>,
     rootSelector: string): Promise<T>;
 
 /**
@@ -42,12 +42,12 @@ export async function load<T extends ComponentHarness>(
  * @param options Optional. Extra searching options
  */
 export async function load<T extends ComponentHarness>(
-    componentHarness: ComponentHarnessType<T>, rootSelector?: string,
-    options?: Options): Promise<T|null>;
+  componentHarness: ComponentHarnessConstructor<T>, rootSelector?: string,
+  options?: QueryOptions): Promise<T|null>;
 
 export async function load<T extends ComponentHarness>(
-    componentHarness: ComponentHarnessType<T>, rootSelector = 'body',
-    options?: Options): Promise<T|null> {
+  componentHarness: ComponentHarnessConstructor<T>, rootSelector = 'body',
+  options?: QueryOptions): Promise<T|null> {
   const root = await getElement(rootSelector, undefined, options);
   return root && new componentHarness(new ProtractorLocator(root));
 }
@@ -60,10 +60,10 @@ export function getElementFinder(testElement: TestElement): ElementFinder {
     return testElement.element;
   }
 
-  throw new Error('Invalid element provided');
+  throw Error(`Expected an instance of ProtractorElement, got ${testElement}`);
 }
 
-class ProtractorLocator implements Locator {
+class ProtractorLocator implements HarnessLocator {
   private readonly _root: ProtractorElement;
 
   constructor(private _rootFinder: ElementFinder) {
@@ -74,41 +74,34 @@ class ProtractorLocator implements Locator {
     return this._root;
   }
 
-  async querySelector(selector: string, options?: Options): Promise<TestElement|null> {
+  async querySelector(selector: string, options?: QueryOptions): Promise<TestElement|null> {
     const finder = await getElement(selector, this._rootFinder, options);
     return finder && new ProtractorElement(finder);
   }
 
   async querySelectorAll(selector: string): Promise<TestElement[]> {
     const elementFinders = this._rootFinder.all(by.css(selector));
-    const res: TestElement[] = [];
-    await elementFinders.each(el => {
-      if (el) {
-        res.push(new ProtractorElement(el));
-      }
-    });
-    return res;
+    return elementFinders.reduce(
+      (result: TestElement[], el: ElementFinder) =>
+          el ? result.concat([new ProtractorElement(el)]) : result,
+      []);
   }
 
   async load<T extends ComponentHarness>(
-      componentHarness: ComponentHarnessType<T>, selector: string,
-      options?: Options): Promise<T|null> {
+    componentHarness: ComponentHarnessConstructor<T>, selector: string,
+    options?: QueryOptions): Promise<T|null> {
     const root = await getElement(selector, this._rootFinder, options);
     return root && new componentHarness(new ProtractorLocator(root));
   }
 
   async loadAll<T extends ComponentHarness>(
-      componentHarness: ComponentHarnessType<T>,
+      componentHarness: ComponentHarnessConstructor<T>,
       rootSelector: string): Promise<T[]> {
     const roots = this._rootFinder.all(by.css(rootSelector));
-    const res: T[] = [];
-    await roots.each(el => {
-      if (el) {
-        const locator = new ProtractorLocator(el);
-        res.push(new componentHarness(locator));
-      }
-    });
-    return res;
+    return roots.reduce(
+        (result: T[], el: ElementFinder) =>
+            el ? result.concat(new componentHarness(new ProtractorLocator(el))) : result,
+        []);
   }
 }
 
@@ -163,7 +156,7 @@ class ProtractorElement implements TestElement {
  * search element globally. If options.global is set, root is ignored.
  * @param options Optional, extra searching options
  */
-async function getElement(selector: string, root?: ElementFinder, options?: Options):
+async function getElement(selector: string, root?: ElementFinder, options?: QueryOptions):
   Promise<ElementFinder|null> {
   const useGlobalRoot = options && !!options.global;
   const elem = root === undefined || useGlobalRoot ?
@@ -174,7 +167,7 @@ async function getElement(selector: string, root?: ElementFinder, options?: Opti
     if (allowNull) {
       return null;
     }
-    throw new Error('Cannot find element based on the CSS selector: ' + selector);
+    throw Error('Cannot find element based on the CSS selector: ' + selector);
   }
   return elem;
 }

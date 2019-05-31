@@ -21,11 +21,11 @@ import {ComponentFixture} from '@angular/core/testing';
 
 import {
   ComponentHarness,
-  ComponentHarnessType,
-  Locator,
-  Options,
-  TestElement
+  ComponentHarnessConstructor,
+  HarnessLocator,
+  QueryOptions
 } from './component-harness';
+import {TestElement} from './test-element';
 
 /**
  * Component harness factory for testbed.
@@ -33,7 +33,7 @@ import {
  * @param fixture: Component Fixture of the component to be tested.
  */
 export function load<T extends ComponentHarness>(
-    componentHarness: ComponentHarnessType<T>,
+    componentHarness: ComponentHarnessConstructor<T>,
     fixture: ComponentFixture<{}>): T {
   const stabilize = async () => {
     fixture.detectChanges();
@@ -50,14 +50,14 @@ export function getNativeElement(testElement: TestElement): Element {
     return testElement.element;
   }
 
-  throw new Error('Invalid element provided');
+  throw Error(`Expected an instance of UnitTestElement, got ${testElement}`);
 }
 
 /**
  * Locator implementation for testbed.
  * Note that, this locator is exposed for internal usage, please do not use it.
  */
-export class UnitTestLocator implements Locator {
+export class UnitTestLocator implements HarnessLocator {
   private readonly _rootElement: TestElement;
 
   constructor(private _root: Element, private _stabilize: () => Promise<void>) {
@@ -68,7 +68,7 @@ export class UnitTestLocator implements Locator {
     return this._rootElement;
   }
 
-  async querySelector(selector: string, options?: Options): Promise<TestElement|null> {
+  async querySelector(selector: string, options?: QueryOptions): Promise<TestElement|null> {
     await this._stabilize();
     const e = getElement(selector, this._root, options);
     return e && new UnitTestElement(e, this._stabilize);
@@ -82,15 +82,15 @@ export class UnitTestLocator implements Locator {
   }
 
   async load<T extends ComponentHarness>(
-      componentHarness: ComponentHarnessType<T>, selector: string,
-      options?: Options): Promise<T|null> {
+    componentHarness: ComponentHarnessConstructor<T>, selector: string,
+    options?: QueryOptions): Promise<T|null> {
     await this._stabilize();
     const root = getElement(selector, this._root, options);
     return root && new componentHarness(new UnitTestLocator(root, this._stabilize));
   }
 
   async loadAll<T extends ComponentHarness>(
-      componentHarness: ComponentHarnessType<T>,
+      componentHarness: ComponentHarnessConstructor<T>,
       rootSelector: string): Promise<T[]> {
     await this._stabilize();
     return Array.prototype.map.call(
@@ -112,7 +112,7 @@ class UnitTestElement implements TestElement {
     await this._stabilize();
     if (!(this.element instanceof HTMLInputElement ||
         this.element instanceof HTMLTextAreaElement)) {
-      throw new Error('Attempting to clear an invalid element');
+      throw Error('Attempting to clear an invalid element');
     }
     triggerFocus(this.element);
     this.element.value = '';
@@ -170,6 +170,7 @@ class UnitTestElement implements TestElement {
     // If cannot find attribute in the element, also try to find it in property,
     // this is useful for input/textarea tags.
     if (value === null && name in this.element) {
+      // We need to cast the element so we can access its properties via string indexing.
       return (this.element as unknown as {[key: string]: string|null})[name];
     }
     return value;
@@ -187,8 +188,8 @@ class UnitTestElement implements TestElement {
  * to true, throw an error if Options.allowNull is set to false; otherwise,
  * return the element
  */
-function getElement(selector: string, root: Element, options?: Options): Element|null {
-  const useGlobalRoot = options && !!options.global;
+function getElement(selector: string, root: Element, options?: QueryOptions): Element|null {
+  const useGlobalRoot = options && options.global;
   const elem = (useGlobalRoot ? document : root).querySelector(selector);
   const allowNull = options !== undefined && options.allowNull !== undefined ?
       options.allowNull : undefined;
@@ -196,7 +197,7 @@ function getElement(selector: string, root: Element, options?: Options): Element
     if (allowNull) {
       return null;
     }
-    throw new Error('Cannot find element based on the CSS selector: ' + selector);
+    throw Error('Cannot find element based on the CSS selector: ' + selector);
   }
   return elem;
 }
