@@ -14,6 +14,7 @@ export {Overlay} from './overlay';
 export {OverlayContainer} from './overlay-container';
 export {CdkOverlayOrigin, CdkConnectedOverlay} from './overlay-directives';
 export {FullscreenOverlayContainer} from './fullscreen-overlay-container';
+export {NAVIGATION_SIGNAL, NavigationSignal} from './navigation-signal';
 export {OverlayRef, OverlaySizeConfig} from './overlay-ref';
 export {ViewportRuler} from '@angular/cdk/scrolling';
 export {ComponentType} from '@angular/cdk/portal';

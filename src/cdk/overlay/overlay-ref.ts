@@ -9,10 +9,10 @@
 import {Direction, Directionality} from '@angular/cdk/bidi';
 import {ComponentPortal, Portal, PortalOutlet, TemplatePortal} from '@angular/cdk/portal';
 import {ComponentRef, EmbeddedViewRef, NgZone} from '@angular/core';
-import {Location} from '@angular/common';
 import {Observable, Subject, merge, SubscriptionLike, Subscription, Observer} from 'rxjs';
 import {take, takeUntil} from 'rxjs/operators';
 import {OverlayKeyboardDispatcher} from './keyboard/overlay-keyboard-dispatcher';
+import {NavigationSignal} from './navigation-signal';
 import {OverlayConfig} from './overlay-config';
 import {coerceCssPixelValue, coerceArray} from '@angular/cdk/coercion';
 import {OverlayReference} from './overlay-reference';
@@ -36,7 +36,7 @@ export class OverlayRef implements PortalOutlet, OverlayReference {
   private _detachments = new Subject<void>();
   private _positionStrategy: PositionStrategy | undefined;
   private _scrollStrategy: ScrollStrategy | undefined;
-  private _locationChanges: SubscriptionLike = Subscription.EMPTY;
+  private _navigationSignalSubscription: SubscriptionLike = Subscription.EMPTY;
 
   /**
    * Reference to the parent of the `_host` at the time it was detached. Used to restore
@@ -69,8 +69,8 @@ export class OverlayRef implements PortalOutlet, OverlayReference {
       private _ngZone: NgZone,
       private _keyboardDispatcher: OverlayKeyboardDispatcher,
       private _document: Document,
-      // @breaking-change 8.0.0 `_location` parameter to be made required.
-      private _location?: Location) {
+      // @breaking-change 8.0.0 `_navigationSignal` parameter to be made required.
+      private _navigationSignal?: NavigationSignal) {
 
     if (_config.scrollStrategy) {
       this._scrollStrategy = _config.scrollStrategy;
@@ -162,8 +162,8 @@ export class OverlayRef implements PortalOutlet, OverlayReference {
 
     // @breaking-change 8.0.0 remove the null check for `_location`
     // once the constructor parameter is made required.
-    if (this._config.disposeOnNavigation && this._location) {
-      this._locationChanges = this._location.subscribe(() => this.dispose());
+    if (this._config.disposeOnNavigation && this._navigationSignal) {
+      this._navigationSignalSubscription = this._navigationSignal.subscribe(() => this.dispose());
     }
 
     return attachResult;
@@ -206,7 +206,7 @@ export class OverlayRef implements PortalOutlet, OverlayReference {
     this._detachContentWhenStable();
 
     // Stop listening for location changes.
-    this._locationChanges.unsubscribe();
+    this._navigationSignalSubscription.unsubscribe();
 
     return detachmentResult;
   }
@@ -221,7 +221,7 @@ export class OverlayRef implements PortalOutlet, OverlayReference {
 
     this._disposeScrollStrategy();
     this.detachBackdrop();
-    this._locationChanges.unsubscribe();
+    this._navigationSignalSubscription.unsubscribe();
     this._keyboardDispatcher.remove(this);
     this._portalOutlet.dispose();
     this._attachments.complete();

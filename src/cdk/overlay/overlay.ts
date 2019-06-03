@@ -8,7 +8,7 @@
 
 import {Directionality} from '@angular/cdk/bidi';
 import {DomPortalOutlet} from '@angular/cdk/portal';
-import {DOCUMENT, Location} from '@angular/common';
+import {DOCUMENT} from '@angular/common';
 import {
   ApplicationRef,
   ComponentFactoryResolver,
@@ -19,6 +19,7 @@ import {
   Optional,
 } from '@angular/core';
 import {OverlayKeyboardDispatcher} from './keyboard/overlay-keyboard-dispatcher';
+import {NAVIGATION_SIGNAL, NavigationSignal} from './navigation-signal';
 import {OverlayConfig} from './overlay-config';
 import {OverlayContainer} from './overlay-container';
 import {OverlayRef} from './overlay-ref';
@@ -55,8 +56,9 @@ export class Overlay {
               private _ngZone: NgZone,
               @Inject(DOCUMENT) private _document: any,
               private _directionality: Directionality,
-              // @breaking-change 8.0.0 `_location` parameter to be made required.
-              @Optional() private _location?: Location) { }
+              // @breaking-change 8.0.0 `_navigationSignal` parameter to be made required.
+              @Inject(NAVIGATION_SIGNAL) @Optional()
+              private _navigationSignal?: NavigationSignal) { }
 
   /**
    * Creates an overlay.
@@ -72,7 +74,7 @@ export class Overlay {
     overlayConfig.direction = overlayConfig.direction || this._directionality.value;
 
     return new OverlayRef(portalOutlet, host, pane, overlayConfig, this._ngZone,
-      this._keyboardDispatcher, this._document, this._location);
+      this._keyboardDispatcher, this._document, this._navigationSignal);
   }
 
   /**
