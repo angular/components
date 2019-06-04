@@ -30,13 +30,11 @@ export class TestMainComponent {
   username: string;
   counter: number;
   asyncCounter: number;
-  // TODO: remove '!'.
-  input!: string;
+  input: string;
   memo: string;
   testTools: string[];
   testMethods: string[];
-  // TODO: remove '!'.
-  _isHovering!: boolean;
+  _isHovering: boolean;
 
   onMouseOver() {
     this._isHovering = true;

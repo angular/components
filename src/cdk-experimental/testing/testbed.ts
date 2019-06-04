@@ -6,10 +6,6 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-// TODO(mmalerba): Should this file be part of `@angular/cdk-experimental/testing` or a separate
-//  package? It depends on `@angular/core/testing` which we don't want to put in the deps for
-//  cdk-experimental.
-
 import {
   dispatchFakeEvent,
   dispatchKeyboardEvent,

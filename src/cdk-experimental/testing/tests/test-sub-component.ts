@@ -20,8 +20,6 @@ import {ChangeDetectionStrategy, Component, Input, ViewEncapsulation} from '@ang
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TestSubComponent {
-  // TODO: remove '!'.
-  @Input() title!: string;
-  // TODO: remove '!'.
-  @Input() items!: string[];
+  @Input() title: string;
+  @Input() items: string[];
 }

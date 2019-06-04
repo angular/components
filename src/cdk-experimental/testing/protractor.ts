@@ -6,9 +6,6 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-// TODO(mmalerba): Should this file be part of `@angular/cdk-experimental/testing` or a separate
-//  package? It depends on protractor which we don't want to put in the deps for cdk-experimental.
-
 import {browser, by, element as protractorElement, ElementFinder} from 'protractor';
 
 import {
