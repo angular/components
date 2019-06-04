@@ -43,6 +43,7 @@ import {MAT_INPUT_VALUE_ACCESSOR} from '@angular/material/input';
 import {Subscription} from 'rxjs';
 import {MatDatepickerBase, MatDatepickerRange} from './datepicker';
 import {createMissingDateImplError} from './datepicker-errors';
+import {MatDatepickerInputBase} from './datepicker-input-base';
 
 /** @docs-private */
 export const MAT_DATEPICKER_VALUE_ACCESSOR: any = {
@@ -99,7 +100,8 @@ export class MatDatepickerInputEvent<D> {
   },
   exportAs: 'matDatepickerInput',
 })
-export class MatDatepickerInput<D> implements ControlValueAccessor, OnDestroy, Validator {
+export class MatDatepickerInput<D> extends MatDatepickerInputBase<D>
+                                   implements ControlValueAccessor, OnDestroy, Validator {
   /** The datepicker that this input is associated with. */
   @Input()
   set matDatepicker(value: MatDatepickerBase<D>) {
@@ -279,6 +281,7 @@ export class MatDatepickerInput<D> implements ControlValueAccessor, OnDestroy, V
       @Optional() public _dateAdapter: DateAdapter<D>,
       @Optional() @Inject(MAT_DATE_FORMATS) protected _dateFormats: MatDateFormats,
       @Optional() protected _formField: MatFormField) {
+    super();
     if (!this._dateAdapter) {
       throw createMissingDateImplError('DateAdapter');
     }
@@ -436,12 +439,13 @@ export class MatDatepickerInputStart<D> extends MatDatepickerInput<D> {
   _selectionModel: MatRangeDateSelectionModel<D>;
 
   @Input()
-  set matDatepicker(value: MatDatepickerRange<D>) {
+  set matRangePicker(value: MatDatepickerRange<D>) {
     if (!value || !(value instanceof MatDatepickerRange)) {
       return;
     }
 
     this._datepicker = value;
+    this._datepicker._registerInput(this);
     this._datepickerSubscription.unsubscribe();
 
     if (this._isSelectionInitialized) {
@@ -501,7 +505,7 @@ export class MatDatepickerInputEnd<D> extends MatDatepickerInput<D> {
   _selectionModel: MatRangeDateSelectionModel<D>;
 
   @Input()
-  set matDatepicker(value: MatDatepickerRange<D>) {
+  set matRangePicker(value: MatDatepickerRange<D>) {
     if (!value || !(value instanceof MatDatepickerRange)) {
       return;
     }

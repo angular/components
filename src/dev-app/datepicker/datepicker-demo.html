@@ -168,6 +168,6 @@
 <h2>Daterangepicker</h2>
 <mat-datepicker-toggle [for]="dateRangePicker"></mat-datepicker-toggle>
 <mat-datepicker-range #dateRangePicker>
-  <input matDatepickerStart />
-  <input matDatepickerEnd />
+  <input matDatepickerStart [matRangePicker]="dateRangePicker"/>
+  <input matDatepickerEnd [matRangePicker]="dateRangePicker" />
 </mat-datepicker-range>

@@ -55,11 +55,7 @@ import {MatCalendar} from './calendar';
 import {MatCalendarCellCssClasses} from './calendar-body';
 import {matDatepickerAnimations} from './datepicker-animations';
 import {createMissingDateImplError} from './datepicker-errors';
-import {
-  MatDatepickerInput,
-  MatDatepickerInputEnd,
-  MatDatepickerInputStart,
-} from './datepicker-input';
+import {MatDatepickerInputBase} from './datepicker-input-base';
 
 /** Used to generate a unique ID for each datepicker instance. */
 let datepickerUid = 0;
@@ -268,7 +264,7 @@ export class MatDatepickerBase<D> implements OnDestroy, CanColor {
   protected _subscriptions = new Subscription();
 
   /** The input element this datepicker is associated with. */
-  _datepickerInput: MatDatepickerInput<D>;
+  _datepickerInput: MatDatepickerInputBase<D>;
 
   /** Emits when the datepicker is disabled. */
   readonly _disabledChange = new Subject<boolean>();
@@ -330,7 +326,7 @@ export class MatDatepickerBase<D> implements OnDestroy, CanColor {
    * Register an input with this datepicker.
    * @param input The datepicker input to register with this datepicker.
    */
-  _registerInput(input: MatDatepickerInput<D>): void {
+  _registerInput(input: MatDatepickerInputBase<D>): void {
     if (this._datepickerInput) {
       throw Error('A MatDatepicker can only be associated with a single input.');
     }
@@ -536,6 +532,9 @@ export class MatDatepickerBase<D> implements OnDestroy, CanColor {
 })
 export class MatDatepicker<D> extends MatDatepickerBase<D> {}
 
+/**
+ * Component reliable for handling multi date range selection.
+ */
 @Component({
   moduleId: module.id,
   selector: 'mat-datepicker-range',
@@ -546,19 +545,4 @@ export class MatDatepicker<D> extends MatDatepickerBase<D> {}
 })
 export class MatDatepickerRange<D> extends MatDatepickerBase<D> implements AfterContentInit {
   readonly _dateSelection: MatRangeDateSelectionModel<D>;
-
-  @ContentChild(MatDatepickerInputStart) start: MatDatepickerInputStart<D>;
-  @ContentChild(MatDatepickerInputEnd) end: MatDatepickerInputStart<D>;
-
-  ngAfterContentInit() {
-    if (!this.start || !this.end) {
-      // TODO(roboshoes): Improve the error message.
-      throw new Error('Missing input fields');
-    }
-
-    this.start.matDatepicker = this;
-    this.end.matDatepicker = this;
-
-    this._datepickerInput = this.start;
-  }
 }
