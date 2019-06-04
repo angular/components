@@ -124,7 +124,8 @@ const INDETERMINATE_ANIMATION_TEMPLATE = `
   encapsulation: ViewEncapsulation.None,
 })
 export class MatProgressSpinner extends _MatProgressSpinnerMixinBase implements CanColor {
-
+  
+  private _diameter = BASE_SIZE;
   private _value = 0;
   private _strokeWidth: number;
   private _fallbackAnimation = false;
@@ -151,8 +152,7 @@ export class MatProgressSpinner extends _MatProgressSpinnerMixinBase implements 
       this._attachStyleNode();
     }
   }
-  private _diameter = BASE_SIZE;
-
+  
   /** Stroke width of the progress spinner. */
   @Input()
   get strokeWidth(): number {
