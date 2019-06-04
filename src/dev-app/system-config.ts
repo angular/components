@@ -69,7 +69,6 @@ System.config({
     '@angular/platform-browser-dynamic':
         'node:@angular/platform-browser-dynamic/bundles/platform-browser-dynamic.umd.js',
 
-    '@angular/material': 'dist/packages/material/index.js',
     '@angular/material-experimental': 'dist/packages/material-experimental/index.js',
     '@angular/material-examples': 'dist/packages/material-examples/index.js',
     '@angular/material-moment-adapter': 'dist/packages/material-moment-adapter/index.js',
@@ -141,6 +140,8 @@ System.config({
         'dist/packages/material-experimental/mdc-card/index.js',
     '@angular/material-experimental/mdc-checkbox':
         'dist/packages/material-experimental/mdc-checkbox/index.js',
+    '@angular/material-experimental/mdc-chips':
+        'dist/packages/material-experimental/mdc-chips/index.js',
     '@angular/material-experimental/mdc-menu':
         'dist/packages/material-experimental/mdc-menu/index.js',
     '@angular/material-experimental/mdc-radio':

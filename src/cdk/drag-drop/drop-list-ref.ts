@@ -9,9 +9,10 @@
 import {ElementRef} from '@angular/core';
 import {DragDropRegistry} from './drag-drop-registry';
 import {Direction} from '@angular/cdk/bidi';
+import {coerceElement} from '@angular/cdk/coercion';
 import {Subject} from 'rxjs';
 import {moveItemInArray} from './drag-utils';
-import {DragRefInternal as DragRef} from './drag-ref';
+import {DragRefInternal as DragRef, Point} from './drag-ref';
 
 
 /** Counter used to generate unique ids for drop refs. */
@@ -51,7 +52,7 @@ export class DropListRef<T = any> {
   private _document: Document;
 
   /** Element that the drop list is attached to. */
-  readonly element: HTMLElement;
+  element: HTMLElement | ElementRef<HTMLElement>;
 
   /**
    * Unique ID for the drop list.
@@ -81,7 +82,7 @@ export class DropListRef<T = any> {
   /**
    * Emits when the user has moved a new drag item into this container.
    */
-  entered = new Subject<{item: DragRef, container: DropListRef}>();
+  entered = new Subject<{item: DragRef, container: DropListRef, currentIndex: number}>();
 
   /**
    * Emits when the user removes an item from the container
@@ -96,7 +97,8 @@ export class DropListRef<T = any> {
     previousIndex: number,
     container: DropListRef,
     previousContainer: DropListRef,
-    isPointerOverContainer: boolean
+    isPointerOverContainer: boolean,
+    distance: Point;
   }>();
 
   /** Emits as the user is swapping items while actively dragging. */
@@ -176,9 +178,7 @@ export class DropListRef<T = any> {
   start(): void {
     this.beforeStarted.next();
     this._isDragging = true;
-    this._activeDraggables = this._draggables.slice();
-    this._cacheOwnPosition();
-    this._cacheItemPositions();
+    this._cacheItems();
     this._siblings.forEach(sibling => sibling._startReceiving(this));
   }
 
@@ -189,7 +189,6 @@ export class DropListRef<T = any> {
    * @param pointerY Position of the item along the Y axis.
    */
   enter(item: DragRef, pointerX: number, pointerY: number): void {
-    this.entered.next({item, container: this});
     this.start();
 
     // If sorting is disabled, we want the item to return to its starting
@@ -227,7 +226,7 @@ export class DropListRef<T = any> {
       element.parentElement!.insertBefore(placeholder, element);
       activeDraggables.splice(newIndex, 0, item);
     } else {
-      this.element.appendChild(placeholder);
+      coerceElement(this.element).appendChild(placeholder);
       activeDraggables.push(item);
     }
 
@@ -237,6 +236,7 @@ export class DropListRef<T = any> {
     // Note that the positions were already cached when we called `start` above,
     // but we need to refresh them since the amount of items has changed.
     this._cacheItemPositions();
+    this.entered.next({item, container: this, currentIndex: this.getItemIndex(item)});
   }
 
   /**
@@ -255,9 +255,11 @@ export class DropListRef<T = any> {
    * @param previousContainer Container from which the item got dragged in.
    * @param isPointerOverContainer Whether the user's pointer was over the
    *    container when the item was dropped.
+   * @param distance Distance the user has dragged since the start of the dragging sequence.
+   * @breaking-change 9.0.0 `distance` parameter to become required.
    */
   drop(item: DragRef, currentIndex: number, previousContainer: DropListRef,
-    isPointerOverContainer: boolean): void {
+    isPointerOverContainer: boolean, distance: Point = {x: 0, y: 0}): void {
     this._reset();
     this.dropped.next({
       item,
@@ -265,7 +267,8 @@ export class DropListRef<T = any> {
       previousIndex: previousContainer.getItemIndex(item),
       container: this,
       previousContainer,
-      isPointerOverContainer
+      isPointerOverContainer,
+      distance
     });
   }
 
@@ -276,6 +279,11 @@ export class DropListRef<T = any> {
   withItems(items: DragRef[]): this {
     this._draggables = items;
     items.forEach(item => item._withDropContainer(this));
+
+    if (this.isDragging()) {
+      this._cacheItems();
+    }
+
     return this;
   }
 
@@ -413,7 +421,7 @@ export class DropListRef<T = any> {
 
   /** Caches the position of the drop list. */
   private _cacheOwnPosition() {
-    this._clientRect = this.element.getBoundingClientRect();
+    this._clientRect = coerceElement(this.element).getBoundingClientRect();
   }
 
   /** Refreshes the position cache of the items and sibling containers. */
@@ -566,6 +574,13 @@ export class DropListRef<T = any> {
     });
   }
 
+  /** Caches the current items in the list and their positions. */
+  private _cacheItems(): void {
+    this._activeDraggables = this._draggables.slice();
+    this._cacheItemPositions();
+    this._cacheOwnPosition();
+  }
+
   /**
    * Checks whether the user's pointer is positioned over the container.
    * @param x Pointer position along the X axis.
@@ -597,7 +612,7 @@ export class DropListRef<T = any> {
       return false;
     }
 
-    const elementFromPoint = this._document.elementFromPoint(x, y);
+    const elementFromPoint = this._document.elementFromPoint(x, y) as HTMLElement | null;
 
     // If there's no element at the pointer position, then
     // the client rect is probably scrolled out of the view.
@@ -605,13 +620,15 @@ export class DropListRef<T = any> {
       return false;
     }
 
+    const nativeElement = coerceElement(this.element);
+
     // The `ClientRect`, that we're using to find the container over which the user is
     // hovering, doesn't give us any information on whether the element has been scrolled
     // out of the view or whether it's overlapping with other containers. This means that
     // we could end up transferring the item into a container that's invisible or is positioned
     // below another one. We use the result from `elementFromPoint` to get the top-most element
     // at the pointer position and to find whether it's one of the intersecting drop containers.
-    return elementFromPoint === this.element || this.element.contains(elementFromPoint);
+    return elementFromPoint === nativeElement || nativeElement.contains(elementFromPoint);
   }
 
   /**

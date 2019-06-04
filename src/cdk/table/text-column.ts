@@ -16,11 +16,15 @@ import {
   OnInit,
   Optional,
   ViewChild,
-  ViewEncapsulation
+  ViewEncapsulation,
+  isDevMode,
 } from '@angular/core';
 import {CdkCellDef, CdkColumnDef, CdkHeaderCellDef} from './cell';
 import {CdkTable} from './table';
-import {getTableTextColumnMissingParentTableError} from './table-errors';
+import {
+  getTableTextColumnMissingParentTableError,
+  getTableTextColumnMissingNameError,
+} from './table-errors';
 
 
 /** Configurable options for `CdkTextColumn`. */
@@ -78,7 +82,10 @@ export class CdkTextColumn<T> implements OnDestroy, OnInit {
   }
   set name(name: string) {
     this._name = name;
-    this.columnDef.name = name;
+
+    // With Ivy, inputs can be initialized before static query results are
+    // available. In that case, we defer the synchronization until "ngOnInit" fires.
+    this._syncColumnDefName();
   }
   _name: string;
 
@@ -121,36 +128,38 @@ export class CdkTextColumn<T> implements OnDestroy, OnInit {
   @ViewChild(CdkHeaderCellDef, {static: true}) headerCell: CdkHeaderCellDef;
 
   constructor(
-      @Optional() private table: CdkTable<T>,
-      @Optional() @Inject(TEXT_COLUMN_OPTIONS) private options: TextColumnOptions<T>) {
-    this.options = options || {};
+      @Optional() private _table: CdkTable<T>,
+      @Optional() @Inject(TEXT_COLUMN_OPTIONS) private _options: TextColumnOptions<T>) {
+    this._options = _options || {};
   }
 
   ngOnInit() {
+    this._syncColumnDefName();
+
     if (this.headerText === undefined) {
       this.headerText = this._createDefaultHeaderText();
     }
 
     if (!this.dataAccessor) {
       this.dataAccessor =
-          this.options.defaultDataAccessor || ((data: T, name: string) => (data as any)[name]);
+          this._options.defaultDataAccessor || ((data: T, name: string) => (data as any)[name]);
     }
 
-    if (this.table) {
+    if (this._table) {
       // Provide the cell and headerCell directly to the table with the static `ViewChild` query,
       // since the columnDef will not pick up its content by the time the table finishes checking
       // its content and initializing the rows.
       this.columnDef.cell = this.cell;
       this.columnDef.headerCell = this.headerCell;
-      this.table.addColumnDef(this.columnDef);
+      this._table.addColumnDef(this.columnDef);
     } else {
       throw getTableTextColumnMissingParentTableError();
     }
   }
 
   ngOnDestroy() {
-    if (this.table) {
-      this.table.removeColumnDef(this.columnDef);
+    if (this._table) {
+      this._table.removeColumnDef(this.columnDef);
     }
   }
 
@@ -159,10 +168,23 @@ export class CdkTextColumn<T> implements OnDestroy, OnInit {
    * has been provided. Otherwise simply capitalize the column name.
    */
   _createDefaultHeaderText() {
-    if (this.options && this.options.defaultHeaderTextTransform) {
-      return this.options.defaultHeaderTextTransform(this.name);
+    const name = this.name;
+
+    if (isDevMode() && !name) {
+      throw getTableTextColumnMissingNameError();
     }
 
-    return this.name[0].toUpperCase() + this.name.slice(1);
+    if (this._options && this._options.defaultHeaderTextTransform) {
+      return this._options.defaultHeaderTextTransform(name);
+    }
+
+    return name[0].toUpperCase() + name.slice(1);
+  }
+
+  /** Synchronizes the column definition name with the text column name. */
+  private _syncColumnDefName() {
+    if (this.columnDef) {
+      this.columnDef.name = this.name;
+    }
   }
 }

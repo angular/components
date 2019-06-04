@@ -1,5 +1,5 @@
 import {ComponentFixture, TestBed, fakeAsync} from '@angular/core/testing';
-import {Component, DebugElement, ViewEncapsulation} from '@angular/core';
+import {Component, DebugElement, ViewEncapsulation, ViewChild} from '@angular/core';
 import {By} from '@angular/platform-browser';
 import {MatBadge, MatBadgeModule} from './index';
 import {ThemePalette} from '@angular/material/core';
@@ -14,7 +14,7 @@ describe('MatBadge', () => {
     TestBed
         .configureTestingModule({
           imports: [MatBadgeModule],
-          declarations: [BadgeTestApp, PreExistingBadge, NestedBadge],
+          declarations: [BadgeTestApp, PreExistingBadge, NestedBadge, BadgeOnTemplate],
         })
         .compileComponents();
 
@@ -200,6 +200,17 @@ describe('MatBadge', () => {
     expect(preExistingFixture.nativeElement.querySelectorAll('.mat-badge-content').length).toBe(2);
   });
 
+  it('should expose the badge element', () => {
+    const badgeElement = badgeNativeElement.querySelector('.mat-badge-content')!;
+    expect(fixture.componentInstance.badgeInstance.getBadgeElement()).toBe(badgeElement);
+  });
+
+  it('should throw if badge is not attached to an element node', () => {
+    expect(() => {
+      TestBed.createComponent(BadgeOnTemplate);
+    }).toThrowError(/matBadge must be attached to an element node/);
+  });
+
 });
 
 /** Test component that contains a MatBadge. */
@@ -221,6 +232,7 @@ describe('MatBadge', () => {
   `
 })
 class BadgeTestApp {
+  @ViewChild(MatBadge, {static: false}) badgeInstance: MatBadge;
   badgeColor: ThemePalette;
   badgeContent: string | number = '1';
   badgeDirection = 'above after';
@@ -253,4 +265,13 @@ class PreExistingBadge {
   `
 })
 class NestedBadge {
+}
+
+
+@Component({
+  template: `
+    <ng-template matBadge="1">Notifications</ng-template>
+  `
+})
+class BadgeOnTemplate {
 }
