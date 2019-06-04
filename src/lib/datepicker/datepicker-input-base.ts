@@ -9,13 +9,14 @@
 import {ElementRef, EventEmitter} from '@angular/core';
 import {ThemePalette} from '@angular/material/core';
 
-export abstract class MatDatepickerInputBase<D> {
+/** @docs-private */
+export interface MatDatepickerInputBase<D> {
   value: D | null;
   min: D | null;
   max: D | null;
   disabled: boolean;
   _disabledChange: EventEmitter<boolean>;
-  abstract getConnectedOverlayOrigin(): ElementRef;
-  abstract _dateFilter: (date: D | null) => boolean;
-  abstract _getThemePalette(): ThemePalette;
+  getConnectedOverlayOrigin(): ElementRef;
+  _dateFilter: (date: D | null) => boolean;
+  _getThemePalette(): ThemePalette;
 }

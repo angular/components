@@ -100,8 +100,10 @@ export class MatDatepickerInputEvent<D> {
   },
   exportAs: 'matDatepickerInput',
 })
-export class MatDatepickerInput<D> extends MatDatepickerInputBase<D>
-                                   implements ControlValueAccessor, OnDestroy, Validator {
+export class MatDatepickerInput<D> implements MatDatepickerInputBase<D>,
+                                              ControlValueAccessor,
+                                              OnDestroy,
+                                              Validator {
   /** The datepicker that this input is associated with. */
   @Input()
   set matDatepicker(value: MatDatepickerBase<D>) {
@@ -281,7 +283,6 @@ export class MatDatepickerInput<D> extends MatDatepickerInputBase<D>
       @Optional() public _dateAdapter: DateAdapter<D>,
       @Optional() @Inject(MAT_DATE_FORMATS) protected _dateFormats: MatDateFormats,
       @Optional() protected _formField: MatFormField) {
-    super();
     if (!this._dateAdapter) {
       throw createMissingDateImplError('DateAdapter');
     }

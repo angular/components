@@ -23,7 +23,6 @@ import {
   ChangeDetectionStrategy,
   Component,
   ComponentRef,
-  ContentChild,
   ElementRef,
   EventEmitter,
   Inject,
@@ -36,7 +35,6 @@ import {
   ViewChild,
   ViewContainerRef,
   ViewEncapsulation,
-  AfterContentInit,
 } from '@angular/core';
 import {
   CanColor,
@@ -543,6 +541,6 @@ export class MatDatepicker<D> extends MatDatepickerBase<D> {}
   encapsulation: ViewEncapsulation.None,
   providers: [{provide: MatDateSelectionModel, useClass: MatRangeDateSelectionModel}]
 })
-export class MatDatepickerRange<D> extends MatDatepickerBase<D> implements AfterContentInit {
+export class MatDatepickerRange<D> extends MatDatepickerBase<D> {
   readonly _dateSelection: MatRangeDateSelectionModel<D>;
 }
