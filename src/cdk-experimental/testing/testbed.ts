@@ -16,82 +16,47 @@ import {
 import {ComponentFixture} from '@angular/core/testing';
 
 import {
+  AbstractHarnessEnvironment,
   ComponentHarness,
   ComponentHarnessConstructor,
-  HarnessLocator,
-  QueryOptions
+  HarnessEnvironment
 } from './component-harness';
 import {TestElement} from './test-element';
-
-/**
- * Component harness factory for testbed.
- * @param componentHarness: Type of user defined harness.
- * @param fixture: Component Fixture of the component to be tested.
- */
-export function load<T extends ComponentHarness>(
-    componentHarness: ComponentHarnessConstructor<T>,
-    fixture: ComponentFixture<{}>): T {
-  const stabilize = async () => {
-    fixture.detectChanges();
-    await fixture.whenStable();
-  };
-  return new componentHarness(new UnitTestLocator(fixture.nativeElement, stabilize));
-}
-
-/**
- * Gets the corresponding Element for the root of a TestElement.
- */
-export function getNativeElement(testElement: TestElement): Element {
-  if (testElement instanceof UnitTestElement) {
-    return testElement.element;
-  }
-
-  throw Error(`Expected an instance of UnitTestElement, got ${testElement}`);
-}
 
 /**
  * Locator implementation for testbed.
  * Note that, this locator is exposed for internal usage, please do not use it.
  */
-export class UnitTestLocator implements HarnessLocator {
-  private readonly _rootElement: TestElement;
-
-  constructor(private _root: Element, private _stabilize: () => Promise<void>) {
-    this._rootElement = new UnitTestElement(_root, this._stabilize);
+export class TestbedHarnessEnvironment extends AbstractHarnessEnvironment<Element> {
+  constructor(rawRootElement: Element, private _stabilize: () => Promise<void>) {
+    super(rawRootElement);
   }
 
-  host(): TestElement {
-    return this._rootElement;
+  static root(fixture: ComponentFixture<unknown>): TestbedHarnessEnvironment {
+    const stabilize = async () => {
+      fixture.detectChanges();
+      await fixture.whenStable();
+    };
+    return new TestbedHarnessEnvironment(fixture.nativeElement, stabilize);
   }
 
-  async querySelector(selector: string, options?: QueryOptions): Promise<TestElement|null> {
+  async findAll(selector: string): Promise<HarnessEnvironment[]> {
+    return (await this.getAllRawElements(selector))
+        .map(e => new TestbedHarnessEnvironment(e, this._stabilize));
+  }
+
+  protected createTestElement(element: Element): TestElement {
+    return new UnitTestElement(element, this._stabilize);
+  }
+
+  protected createHarness<T extends ComponentHarness>(
+      harnessType: ComponentHarnessConstructor<T>, element: Element): T {
+    return new harnessType(new TestbedHarnessEnvironment(element, this._stabilize));
+  }
+
+  protected async getAllRawElements(selector: string): Promise<Element[]> {
     await this._stabilize();
-    const e = getElement(selector, this._root, options);
-    return e && new UnitTestElement(e, this._stabilize);
-  }
-
-  async querySelectorAll(selector: string): Promise<TestElement[]> {
-    await this._stabilize();
-    return Array.prototype.map.call(
-        this._root.querySelectorAll(selector),
-        (e: Element) => new UnitTestElement(e, this._stabilize));
-  }
-
-  async load<T extends ComponentHarness>(
-    componentHarness: ComponentHarnessConstructor<T>, selector: string,
-    options?: QueryOptions): Promise<T|null> {
-    await this._stabilize();
-    const root = getElement(selector, this._root, options);
-    return root && new componentHarness(new UnitTestLocator(root, this._stabilize));
-  }
-
-  async loadAll<T extends ComponentHarness>(
-      componentHarness: ComponentHarnessConstructor<T>,
-      rootSelector: string): Promise<T[]> {
-    await this._stabilize();
-    return Array.prototype.map.call(
-        this._root.querySelectorAll(rootSelector),
-        (e: Element) => new componentHarness(new UnitTestLocator(e, this._stabilize)));
+    return Array.prototype.slice.call(this.rawRootElement.querySelectorAll(selector));
   }
 }
 
@@ -179,29 +144,4 @@ class UnitTestElement implements TestElement {
     return element.nodeName.toLowerCase() === 'input' ||
       element.nodeName.toLowerCase() === 'textarea' ;
   }
-}
-
-
-/**
- * Get an element based on the CSS selector and root element.
- * @param selector The CSS selector
- * @param root Search element under the root element. If options.global is set,
- *     root is ignored.
- * @param options Optional, extra searching options
- * @return When element is not present, return null if Options.allowNull is set
- * to true, throw an error if Options.allowNull is set to false; otherwise,
- * return the element
- */
-function getElement(selector: string, root: Element, options?: QueryOptions): Element|null {
-  const useGlobalRoot = options && options.global;
-  const elem = (useGlobalRoot ? document : root).querySelector(selector);
-  const allowNull = options !== undefined && options.allowNull !== undefined ?
-      options.allowNull : undefined;
-  if (elem === null) {
-    if (allowNull) {
-      return null;
-    }
-    throw Error('Cannot find element based on the CSS selector: ' + selector);
-  }
-  return elem;
 }

@@ -8,66 +8,120 @@
 
 import {TestElement} from './test-element';
 
-/** Options that can be specified when querying for an Element. */
-export interface QueryOptions {
-  /**
-   * Whether the found element can be null. If allowNull is set, the searching function will always
-   * try to fetch the element at once. When the element cannot be found, the searching function
-   * should return null if allowNull is set to true, throw an error if allowNull is set to false.
-   * If allowNull is not set, the framework will choose the behaviors that make more sense for each
-   * test type (e.g. for unit test, the framework will make sure the element is not null; otherwise
-   * throw an error); however, the internal behavior is not guaranteed and user should not rely on
-   * it. Note that in most cases, you don't need to care about whether an element is present when
-   * loading the element and don't need to set this parameter unless you do want to check whether
-   * the element is present when calling the searching function. e.g. you want to make sure some
-   * element is not there when loading the element in order to check whether a "ngif" works well.
-   */
-  allowNull?: boolean;
-  /**
-   * If global is set to true, the selector will match any element on the page and is not limited to
-   * the root of the harness. If global is unset or set to false, the selector will only find
-   * elements under the current root.
-   */
-  global?: boolean;
+/** An async function that returns a promise of the given type when called. */
+export type AsyncFn<T> = () => Promise<T>;
+
+export interface HarnessEnvironment {
+  findRequired(selector: string): Promise<HarnessEnvironment>;
+  findOptional(selector: string): Promise<HarnessEnvironment | null>;
+  findAll(selector: string): Promise<HarnessEnvironment[]>;
+  requiredHarness<T extends ComponentHarness>(harness: ComponentHarnessConstructor<T>): Promise<T>;
+  optionalHarness<T extends ComponentHarness>(harness: ComponentHarnessConstructor<T>):
+      Promise<T | null>;
+  allHarnesses<T extends ComponentHarness>(harness: ComponentHarnessConstructor<T>): Promise<T[]>;
+}
+
+export interface LocatorFactory {
+  rootElement(): TestElement;
+  requiredLocator(selector: string): AsyncFn<TestElement>;
+  requiredLocator<T extends ComponentHarness>(harness: ComponentHarnessConstructor<T>): AsyncFn<T>;
+  optionalLocator(selector: string): AsyncFn<TestElement | null>;
+  optionalLocator<T extends ComponentHarness>(harness: ComponentHarnessConstructor<T>):
+      AsyncFn<T | null>;
+  allLocator(selector: string): AsyncFn<TestElement[]>;
+  allLocator<T extends ComponentHarness>(harness: ComponentHarnessConstructor<T>): AsyncFn<T[]>;
 }
 
 /** Interface that is used to find elements in the DOM and create harnesses for them. */
-export interface HarnessLocator {
-  /**
-   * Get the host element of locator.
-   */
-  host(): TestElement;
+export abstract class AbstractHarnessEnvironment<E> implements HarnessEnvironment, LocatorFactory {
+  protected constructor(protected rawRootElement: E) {}
 
-  /**
-   * Search the first matched test element.
-   * @param selector The CSS selector of the test elements.
-   * @param options Optional, extra searching options
-   */
-  querySelector(selector: string, options?: QueryOptions): Promise<TestElement|null>;
+  abstract findAll(selector: string): Promise<HarnessEnvironment[]>;
 
-  /**
-   * Search all matched test elements under current root by CSS selector.
-   * @param selector The CSS selector of the test elements.
-   */
-  querySelectorAll(selector: string): Promise<TestElement[]>;
+  protected abstract createTestElement(element: E): TestElement;
 
-  /**
-   * Load the first matched Component Harness.
-   * @param componentHarness Type of user customized harness.
-   * @param root CSS root selector of the new component harness.
-   * @param options Optional, extra searching options
-   */
-  load<T extends ComponentHarness>(
-    componentHarness: ComponentHarnessConstructor<T>, root: string,
-    options?: QueryOptions): Promise<T|null>;
+  protected abstract createHarness<T extends ComponentHarness>(
+      harnessType: ComponentHarnessConstructor<T>, element: E): T;
 
-  /**
-   * Load all Component Harnesses under current root.
-   * @param componentHarness Type of user customized harness.
-   * @param root CSS root selector of the new component harnesses.
-   */
-  loadAll<T extends ComponentHarness>(
-    componentHarness: ComponentHarnessConstructor<T>, root: string): Promise<T[]>;
+  protected abstract getAllRawElements(selector: string): Promise<E[]>;
+
+  rootElement(): TestElement {
+    return this.createTestElement(this.rawRootElement);
+  }
+
+  requiredLocator(selector: string): AsyncFn<TestElement>;
+  requiredLocator<T extends ComponentHarness>(harness: ComponentHarnessConstructor<T>): AsyncFn<T>;
+  requiredLocator<T extends ComponentHarness>(
+      arg: string | ComponentHarnessConstructor<T>): AsyncFn<TestElement | T> {
+    return async () => {
+      const result = await this._createTestElementOrHarness(arg);
+      if (result) {
+        return result;
+      }
+      const selector = typeof arg === 'string' ? arg : arg.hostSelector;
+      throw Error(`Expected to find element matching selector: "${selector}", but none was found`);
+    };
+  }
+
+  optionalLocator(selector: string): AsyncFn<TestElement | null>;
+  optionalLocator<T extends ComponentHarness>(harness: ComponentHarnessConstructor<T>):
+      AsyncFn<T | null>;
+  optionalLocator<T extends ComponentHarness>(
+      arg: string | ComponentHarnessConstructor<T>): AsyncFn<TestElement | T | null> {
+    return async () => {
+      return this._createTestElementOrHarness(arg);
+    };
+  }
+
+  allLocator(selector: string): AsyncFn<TestElement[]>;
+  allLocator<T extends ComponentHarness>(harness: ComponentHarnessConstructor<T>): AsyncFn<T[]>;
+  allLocator<T extends ComponentHarness>(
+      arg: string | ComponentHarnessConstructor<T>): AsyncFn<TestElement[] | T[]> {
+    return async () => {
+      if (typeof arg === 'string') {
+        return (await this.getAllRawElements(arg)).map(e => this.createTestElement(e));
+      } else {
+        return (await this.getAllRawElements(arg.hostSelector))
+            .map(e => this.createHarness(arg, e));
+      }
+    };
+  }
+
+  requiredHarness<T extends ComponentHarness>(harness: ComponentHarnessConstructor<T>): Promise<T> {
+    return this.requiredLocator(harness)();
+  }
+
+  optionalHarness<T extends ComponentHarness>(harness: ComponentHarnessConstructor<T>):
+    Promise<T | null> {
+    return this.optionalLocator(harness)();
+  }
+
+  allHarnesses<T extends ComponentHarness>(harness: ComponentHarnessConstructor<T>): Promise<T[]> {
+    return this.allLocator(harness)();
+  }
+
+  async findRequired(selector: string): Promise<HarnessEnvironment> {
+    const environment = (await this.findAll(selector))[0];
+    if (!environment) {
+      throw Error(`Expected to find element matching selector: "${selector}", but none was found`);
+    }
+    return environment;
+  }
+
+  async findOptional(selector: string): Promise<HarnessEnvironment | null> {
+    return (await this.findAll(selector))[0] || null;
+  }
+
+  private async _createTestElementOrHarness<T extends ComponentHarness>(
+      arg: string | ComponentHarnessConstructor<T>): Promise<TestElement | T | null> {
+    if (typeof arg === 'string') {
+      const element = (await this.getAllRawElements(arg))[0];
+      return this.createTestElement(element) || null;
+    } else {
+      const element = (await this.getAllRawElements(arg.hostSelector))[0];
+      return this.createHarness(arg, element) || null;
+    }
+  }
 }
 
 /**
@@ -77,114 +131,37 @@ export interface HarnessLocator {
  * harness.
  */
 export abstract class ComponentHarness {
-  constructor(private readonly locator: HarnessLocator) {}
+  constructor(private readonly locatorFacotry: LocatorFactory) {}
 
-  /**
-   * Get the host element of component harness.
-   */
-  host(): TestElement {
-    return this.locator.host();
+  async host() {
+    return this.locatorFacotry.rootElement();
   }
 
-  /**
-   * Generate a function to find the first matched test element by CSS
-   * selector.
-   * @param selector The CSS selector of the test element.
-   */
-  protected find(selector: string): () => Promise<TestElement>;
-
-  /**
-   * Generate a function to find the first matched test element by CSS
-   * selector.
-   * @param selector The CSS selector of the test element.
-   * @param options Extra searching options
-   */
-  protected find(selector: string, options: QueryOptions & {allowNull: true}):
-    () => Promise<TestElement|null>;
-
-  /**
-   * Generate a function to find the first matched test element by CSS
-   * selector.
-   * @param selector The CSS selector of the test element.
-   * @param options Extra searching options
-   */
-  protected find(selector: string, options: QueryOptions): () => Promise<TestElement>;
-
-  /**
-   * Generate a function to find the first matched Component Harness.
-   * @param componentHarness Type of user customized harness.
-   * @param root CSS root selector of the new component harness.
-   */
-  protected find<T extends ComponentHarness>(
-    componentHarness: ComponentHarnessConstructor<T>,
-    root: string): () => Promise<T>;
-
-  /**
-   * Generate a function to find the first matched Component Harness.
-   * @param componentHarness Type of user customized harness.
-   * @param root CSS root selector of the new component harness.
-   * @param options Extra searching options
-   */
-  protected find<T extends ComponentHarness>(
-    componentHarness: ComponentHarnessConstructor<T>, root: string,
-    options: QueryOptions & {allowNull: true}): () => Promise<T|null>;
-
-  /**
-   * Generate a function to find the first matched Component Harness.
-   * @param componentHarness Type of user customized harness.
-   * @param root CSS root selector of the new component harness.
-   * @param options Extra searching options
-   */
-  protected find<T extends ComponentHarness>(
-    componentHarness: ComponentHarnessConstructor<T>, root: string,
-    options: QueryOptions): () => Promise<T>;
-
-  protected find<T extends ComponentHarness>(
-    selectorOrComponentHarness: string|ComponentHarnessConstructor<T>,
-    selectorOrOptions?: string|QueryOptions,
-    options?: QueryOptions): () => Promise<TestElement|T|null> {
-    if (typeof selectorOrComponentHarness === 'string') {
-      const selector = selectorOrComponentHarness;
-      return () => this.locator.querySelector(selector, selectorOrOptions as QueryOptions);
-    } else {
-      const componentHarness = selectorOrComponentHarness;
-      const selector = selectorOrOptions as string;
-      return () => this.locator.load(componentHarness, selector, options);
-    }
+  protected requiredLocator(selector: string): AsyncFn<TestElement>;
+  protected requiredLocator<T extends ComponentHarness>(harness: ComponentHarnessConstructor<T>):
+      AsyncFn<T>;
+  protected requiredLocator(arg: any): any {
+    return this.locatorFacotry.requiredLocator(arg);
   }
 
-  /**
-   * Generate a function to find all matched test elements by CSS selector.
-   * @param selector The CSS root selector of elements. It will locate
-   * elements under the current root.
-   */
-  protected findAll(selector: string): () => Promise<TestElement[]>;
+  protected optionalLocator(selector: string): AsyncFn<TestElement | null>;
+  protected optionalLocator<T extends ComponentHarness>(harness: ComponentHarnessConstructor<T>):
+      AsyncFn<T | null>;
+  protected optionalLocator(arg: any): any {
+    return this.locatorFacotry.optionalLocator(arg);
+  }
 
-  /**
-   * Generate a function to find all Component Harnesses under current
-   * component harness.
-   * @param componentHarness Type of user customized harness.
-   * @param root CSS root selector of the new component harnesses. It will
-   * locate harnesses under the current root.
-   */
-  protected findAll<T extends ComponentHarness>(
-    componentHarness: ComponentHarnessConstructor<T>,
-    root: string): () => Promise<T[]>;
-
-  protected findAll<T extends ComponentHarness>(
-    selectorOrComponentHarness: string|ComponentHarnessConstructor<T>,
-    root?: string): () => Promise<TestElement[]|T[]> {
-    if (typeof selectorOrComponentHarness === 'string') {
-      const selector = selectorOrComponentHarness;
-      return () => this.locator.querySelectorAll(selector);
-    } else {
-      const componentHarness = selectorOrComponentHarness;
-      return () => this.locator.loadAll(componentHarness, root as string);
-    }
+  protected allLocator(selector: string): AsyncFn<TestElement[]>;
+  protected allLocator<T extends ComponentHarness>(harness: ComponentHarnessConstructor<T>):
+      AsyncFn<T[]>;
+  protected allLocator(arg: any): any {
+    return this.locatorFacotry.allLocator(arg);
   }
 }
 
 /** Constructor for a ComponentHarness subclass. */
 export interface ComponentHarnessConstructor<T extends ComponentHarness> {
-  new(locator: HarnessLocator): T;
+  new(environment: HarnessEnvironment): T;
+
+  hostSelector: string;
 }
