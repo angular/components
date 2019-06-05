@@ -220,6 +220,7 @@
 /src/e2e-app/test-util/**                          @jelbourn
 /src/e2e-app/toolbar/**                            @devversion
 /src/e2e-app/virtual-scroll/**                     @mmalerba
+/src/e2e-app/youtube-player/**                     @nathantate
 
 # Universal app
 /src/universal-app/**                              @jelbourn

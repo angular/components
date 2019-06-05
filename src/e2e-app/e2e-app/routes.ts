@@ -29,6 +29,7 @@ import {StepperE2e} from '../stepper/stepper-e2e';
 import {BasicTabs} from '../tabs/tabs-e2e';
 import {ToolbarE2e} from '../toolbar/toolbar-e2e';
 import {VirtualScrollE2E} from '../virtual-scroll/virtual-scroll-e2e';
+import {YouTubePlayerE2E} from '../youtube-player/youtube-player-e2e';
 import {Home} from './e2e-app-layout';
 
 export const E2E_APP_ROUTES: Routes = [
@@ -63,4 +64,5 @@ export const E2E_APP_ROUTES: Routes = [
   {path: 'tabs', component: BasicTabs},
   {path: 'toolbar', component: ToolbarE2e},
   {path: 'virtual-scroll', component: VirtualScrollE2E},
+  {path: 'youtube-player', component: YouTubePlayerE2E},
 ];

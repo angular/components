@@ -37,6 +37,7 @@ import {StepperE2eModule} from './stepper/stepper-e2e-module';
 import {TabsE2eModule} from './tabs/tabs-e2e-module';
 import {ToolbarE2eModule} from './toolbar/toolbar-e2e-module';
 import {VirtualScrollE2eModule} from './virtual-scroll/virtual-scroll-e2e-module';
+import {YouTubePlayerE2eModule} from './youtube-player/youtube-player-e2e-module';
 
 @NgModule({
   imports: [
@@ -76,6 +77,7 @@ import {VirtualScrollE2eModule} from './virtual-scroll/virtual-scroll-e2e-module
     TabsE2eModule,
     ToolbarE2eModule,
     VirtualScrollE2eModule,
+    YouTubePlayerE2eModule,
   ],
   declarations: [
     E2eApp,

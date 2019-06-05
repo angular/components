@@ -1,0 +1,17 @@
+<div>
+  <div *ngIf="!apiLoaded" id="youtube-loading">Loading youtube api...</div>
+  <div>Video ID: {{video && video.id}}</div>
+  <div>Video Name: {{video && video.name}}</div>
+  <div>
+    <label>Pick the video</label>
+    <mat-radio-group aria-label="Select a video" [(ngModel)]="video">
+      <mat-radio-button *ngFor="let video of videos" [value]="video">
+        {{video.name}}
+      </mat-radio-button>
+      <mat-radio-button [value]="undefined">Unset</mat-radio-button>
+    </mat-radio-group>
+  </div>
+  <youtube-player *ngIf="apiLoaded && video"
+                  [videoId]="video && video.id">
+  </youtube-player>
+</div>

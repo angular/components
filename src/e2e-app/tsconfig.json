@@ -13,7 +13,8 @@
       "@angular/cdk-experimental": ["../cdk-experimental/"],
       "@angular/material-moment-adapter": ["../material-moment-adapter/"],
       "@angular/material-examples": ["../material-examples/"]
-    }
+    },
+    "types": ["youtube"]
   },
   "include": ["./**/*.ts"]
 }
