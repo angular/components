@@ -26,6 +26,7 @@ $mat-form-field-outline-subscript-padding:
   // appearances when center-aligned, we also need to add the same amount of margin to the bottom.
   .mat-form-field-wrapper {
     margin: $mat-form-field-outline-label-overlap 0;
+    width: 100%;
   }
 
   .mat-form-field-flex {
