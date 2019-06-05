@@ -106,11 +106,10 @@ class UnitTestElement implements TestElement {
 
   async clear(): Promise<void> {
     await this._stabilize();
-    if (!(this.element instanceof HTMLInputElement ||
-        this.element instanceof HTMLTextAreaElement)) {
+    if (!this._isTextInput(this.element)) {
       throw Error('Attempting to clear an invalid element');
     }
-    triggerFocus(this.element);
+    triggerFocus(this.element as HTMLElement);
     this.element.value = '';
     dispatchFakeEvent(this.element, 'input');
     await this._stabilize();
@@ -148,9 +147,13 @@ class UnitTestElement implements TestElement {
       const keyCode = key.charCodeAt(0);
       dispatchKeyboardEvent(this.element, 'keydown', keyCode);
       dispatchKeyboardEvent(this.element, 'keypress', keyCode);
-      (this.element as HTMLInputElement).value += key;
+      if (this._isTextInput(this.element)) {
+        this.element.value += key;
+      }
       dispatchKeyboardEvent(this.element, 'keyup', keyCode);
-      dispatchFakeEvent(this.element, 'input');
+      if (this._isTextInput(this.element)) {
+        dispatchFakeEvent(this.element, 'input');
+      }
     }
     await this._stabilize();
   }
@@ -170,6 +173,11 @@ class UnitTestElement implements TestElement {
       return (this.element as unknown as {[key: string]: string|null})[name];
     }
     return value;
+  }
+
+  private _isTextInput(element: Element): element is HTMLInputElement | HTMLTextAreaElement {
+    return element.nodeName.toLowerCase() === 'input' ||
+      element.nodeName.toLowerCase() === 'textarea' ;
   }
 }
 
