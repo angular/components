@@ -1,14 +1,14 @@
-import {browser, by, element} from 'protractor';
+import {browser} from 'protractor';
 
-import {getElementFinder, load} from '../protractor';
-import {MainComponentHarness} from './harnesses/main-component-harness';
+import {ProtractorHarnessEnvironment} from '../protractor';
+import {MainComponentHarness, WrongComponentHarness} from './harnesses/main-component-harness';
 
 describe('Protractor Helper Test', () => {
   let harness: MainComponentHarness;
 
   beforeEach(async () => {
     await browser.get('/component-harness');
-    harness = await load(MainComponentHarness, 'test-main');
+    harness = await ProtractorHarnessEnvironment.create().requiredHarness(MainComponentHarness);
   });
 
   describe('Locator', () => {
@@ -122,10 +122,10 @@ describe('Protractor Helper Test', () => {
       expect(await harness.nullItem()).toBe(null);
     });
 
-    it('should allow main harness to be null when setting allowNull',
+    it('should allow main harness to be null when setting using optionalHarness',
       async () => {
-        const nullMainHarness = await load(
-          MainComponentHarness, 'harness not present', {allowNull: true});
+        const nullMainHarness =
+            await ProtractorHarnessEnvironment.create().optionalHarness(WrongComponentHarness);
         expect(nullMainHarness).toBe(null);
       });
 
@@ -154,7 +154,7 @@ describe('Protractor Helper Test', () => {
         } catch (err) {
           expect(err.message)
             .toBe(
-              'Cannot find element based on the CSS selector: wrong locator');
+              'Expected to find element matching selector: "wrong locator", but none was found');
         }
       });
   });
@@ -167,17 +167,8 @@ describe('Protractor Helper Test', () => {
       } catch (err) {
         expect(err.message)
           .toBe(
-            'Cannot find element based on the CSS selector: wrong locator');
+            'Expected to find element matching selector: "wrong locator", but none was found');
       }
-    });
-  });
-
-  describe('getElementFinder', () => {
-    it('should return the element finder', async () => {
-      const mainElement = await element(by.css('test-main'));
-      const elementFromHarness = getElementFinder(harness.host());
-      expect(await elementFromHarness.getId())
-        .toBe(await mainElement.getId());
     });
   });
 });

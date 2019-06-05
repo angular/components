@@ -19,7 +19,8 @@ import {
   AbstractHarnessEnvironment,
   ComponentHarness,
   ComponentHarnessConstructor,
-  HarnessEnvironment
+  HarnessEnvironment,
+  LocatorFactory
 } from './component-harness';
 import {TestElement} from './test-element';
 
@@ -28,11 +29,11 @@ import {TestElement} from './test-element';
  * Note that, this locator is exposed for internal usage, please do not use it.
  */
 export class TestbedHarnessEnvironment extends AbstractHarnessEnvironment<Element> {
-  constructor(rawRootElement: Element, private _stabilize: () => Promise<void>) {
+  protected constructor(rawRootElement: Element, private _stabilize: () => Promise<void>) {
     super(rawRootElement);
   }
 
-  static root(fixture: ComponentFixture<unknown>): TestbedHarnessEnvironment {
+  static create(fixture: ComponentFixture<unknown>): TestbedHarnessEnvironment {
     const stabilize = async () => {
       fixture.detectChanges();
       await fixture.whenStable();
@@ -40,9 +41,12 @@ export class TestbedHarnessEnvironment extends AbstractHarnessEnvironment<Elemen
     return new TestbedHarnessEnvironment(fixture.nativeElement, stabilize);
   }
 
-  async findAll(selector: string): Promise<HarnessEnvironment[]> {
-    return (await this.getAllRawElements(selector))
-        .map(e => new TestbedHarnessEnvironment(e, this._stabilize));
+  documentRootLocatorFactory(): LocatorFactory {
+    let element = this.rawRootElement;
+    while (element.parentElement) {
+      element = element.parentElement;
+    }
+    return new TestbedHarnessEnvironment(element, this._stabilize);
   }
 
   protected createTestElement(element: Element): TestElement {
@@ -52,6 +56,15 @@ export class TestbedHarnessEnvironment extends AbstractHarnessEnvironment<Elemen
   protected createHarness<T extends ComponentHarness>(
       harnessType: ComponentHarnessConstructor<T>, element: Element): T {
     return new harnessType(new TestbedHarnessEnvironment(element, this._stabilize));
+  }
+
+  protected createEnvironment(element: Element): HarnessEnvironment {
+    return new TestbedHarnessEnvironment(element, this._stabilize);
+  }
+
+  protected async getRawElement(selector: string): Promise<Element | null> {
+    await this._stabilize();
+    return this.rawRootElement.querySelector(selector) || null;
   }
 
   protected async getAllRawElements(selector: string): Promise<Element[]> {

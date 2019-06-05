@@ -10,30 +10,33 @@ import {ComponentHarness} from '../../component-harness';
 import {TestElement} from '../../test-element';
 import {SubComponentHarness} from './sub-component-harness';
 
+export class WrongComponentHarness extends ComponentHarness {
+  static readonly hostSelector = 'wrong-selector';
+}
+
 export class MainComponentHarness extends ComponentHarness {
-  readonly title = this.find('h1');
-  readonly asyncCounter = this.find('#asyncCounter');
-  readonly counter = this.find('#counter');
-  readonly input = this.find('#input');
-  readonly value = this.find('#value');
-  readonly allLabels = this.findAll('label');
-  readonly allLists = this.findAll(SubComponentHarness, 'test-sub');
-  readonly memo = this.find('textarea');
+  static readonly hostSelector = 'test-main';
+
+  readonly title = this.requiredLocator('h1');
+  readonly asyncCounter = this.requiredLocator('#asyncCounter');
+  readonly counter = this.requiredLocator('#counter');
+  readonly input = this.requiredLocator('#input');
+  readonly value = this.requiredLocator('#value');
+  readonly allLabels = this.allLocator('label');
+  readonly allLists = this.allLocator(SubComponentHarness);
+  readonly memo = this.requiredLocator('textarea');
   // Allow null for element
-  readonly nullItem = this.find('wrong locator', {allowNull: true});
+  readonly nullItem = this.optionalLocator('wrong locator');
   // Allow null for component harness
-  readonly nullComponentHarness =
-    this.find(SubComponentHarness, 'wrong locator', {allowNull: true});
-  readonly errorItem = this.find('wrong locator', {allowNull: false});
+  readonly nullComponentHarness = this.optionalLocator(WrongComponentHarness);
+  readonly errorItem = this.requiredLocator('wrong locator');
 
-  readonly globalEl = this.find('.sibling', {global: true});
-  readonly errorGlobalEl =
-    this.find('wrong locator', {global: true, allowNull: false});
-  readonly nullGlobalEl =
-    this.find('wrong locator', {global: true, allowNull: true});
+  readonly globalEl = this.documentRootLocatorFactory().requiredLocator('.sibling');
+  readonly errorGlobalEl = this.documentRootLocatorFactory().requiredLocator('wrong locator');
+  readonly nullGlobalEl = this.documentRootLocatorFactory().optionalLocator('wrong locator');
 
-  private _button = this.find('button');
-  private _testTools = this.find(SubComponentHarness, 'test-sub');
+  private _button = this.requiredLocator('button');
+  private _testTools = this.requiredLocator(SubComponentHarness);
 
   async increaseCounter(times: number) {
     const button = await this._button();

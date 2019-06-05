@@ -13,16 +13,21 @@ import {
   ComponentHarness,
   ComponentHarnessConstructor,
   HarnessEnvironment,
+  LocatorFactory,
 } from './component-harness';
 import {TestElement} from './test-element';
 
 export class ProtractorHarnessEnvironment extends AbstractHarnessEnvironment<ElementFinder> {
-  static root(): ProtractorHarnessEnvironment {
+  protected constructor(rawRootElement: ElementFinder) {
+    super(rawRootElement);
+  }
+
+  static create(): HarnessEnvironment {
     return new ProtractorHarnessEnvironment(protractorElement(by.css('body')));
   }
 
-  async findAll(selector: string): Promise<HarnessEnvironment[]> {
-    return (await this.getAllRawElements(selector)).map(e => new ProtractorHarnessEnvironment(e));
+  documentRootLocatorFactory(): LocatorFactory {
+    return new ProtractorHarnessEnvironment(protractorElement(by.css('body')));
   }
 
   protected createTestElement(element: ElementFinder): TestElement {
@@ -34,9 +39,18 @@ export class ProtractorHarnessEnvironment extends AbstractHarnessEnvironment<Ele
     return new harnessType(new ProtractorHarnessEnvironment(element));
   }
 
+  protected createEnvironment(element: ElementFinder): HarnessEnvironment {
+    return new ProtractorHarnessEnvironment(element);
+  }
+
+  protected async getRawElement(selector: string): Promise<ElementFinder | null> {
+    const element = this.rawRootElement.element(by.css(selector));
+    return await element.isPresent() ? element : null;
+  }
+
   protected async getAllRawElements(selector: string): Promise<ElementFinder[]> {
-    const elementFinders = this.rawRootElement.all(by.css(selector));
-    return elementFinders.reduce(
+    const elements = this.rawRootElement.all(by.css(selector));
+    return elements.reduce(
         (result: ElementFinder[], el: ElementFinder) => el ? result.concat([el]) : result, []);
   }
 }

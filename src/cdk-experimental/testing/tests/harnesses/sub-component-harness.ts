@@ -10,8 +10,10 @@ import {ComponentHarness} from '../../component-harness';
 import {TestElement} from '../../test-element';
 
 export class SubComponentHarness extends ComponentHarness {
-  readonly title = this.find('h2');
-  readonly getItems = this.findAll('li');
+  static readonly hostSelector = 'test-sub';
+
+  readonly title = this.requiredLocator('h2');
+  readonly getItems = this.allLocator('li');
 
   async getItem(index: number): Promise<TestElement> {
     const items = await this.getItems();
