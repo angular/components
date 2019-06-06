@@ -19,7 +19,7 @@ import {
   AbstractHarnessEnvironment,
   ComponentHarness,
   ComponentHarnessConstructor,
-  HarnessEnvironment,
+  HarnessLoader,
   LocatorFactory
 } from './component-harness';
 import {TestElement} from './test-element';
@@ -33,7 +33,7 @@ export class TestbedHarnessEnvironment extends AbstractHarnessEnvironment<Elemen
     super(rawRootElement);
   }
 
-  static create(fixture: ComponentFixture<unknown>): HarnessEnvironment {
+  static create(fixture: ComponentFixture<unknown>): HarnessLoader {
     const stabilize = async () => {
       fixture.detectChanges();
       await fixture.whenStable();
@@ -49,7 +49,7 @@ export class TestbedHarnessEnvironment extends AbstractHarnessEnvironment<Elemen
     };
     const environment = new TestbedHarnessEnvironment(fixture.nativeElement, stabilize);
     await environment._stabilize();
-    return environment.createHarness(harnessType, fixture.nativeElement);
+    return environment.createComponentHarness(harnessType, fixture.nativeElement);
   }
 
   documentRootLocatorFactory(): LocatorFactory {
@@ -64,12 +64,12 @@ export class TestbedHarnessEnvironment extends AbstractHarnessEnvironment<Elemen
     return new UnitTestElement(element, this._stabilize);
   }
 
-  protected createHarness<T extends ComponentHarness>(
+  protected createComponentHarness<T extends ComponentHarness>(
       harnessType: ComponentHarnessConstructor<T>, element: Element): T {
     return new harnessType(new TestbedHarnessEnvironment(element, this._stabilize));
   }
 
-  protected createEnvironment(element: Element): HarnessEnvironment {
+  protected createHarnessLoader(element: Element): HarnessLoader {
     return new TestbedHarnessEnvironment(element, this._stabilize);
   }
 

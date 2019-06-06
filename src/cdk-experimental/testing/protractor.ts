@@ -12,7 +12,7 @@ import {
   AbstractHarnessEnvironment,
   ComponentHarness,
   ComponentHarnessConstructor,
-  HarnessEnvironment,
+  HarnessLoader,
   LocatorFactory,
 } from './component-harness';
 import {TestElement} from './test-element';
@@ -22,7 +22,7 @@ export class ProtractorHarnessEnvironment extends AbstractHarnessEnvironment<Ele
     super(rawRootElement);
   }
 
-  static create(): HarnessEnvironment {
+  static create(): HarnessLoader {
     return new ProtractorHarnessEnvironment(protractorElement(by.css('body')));
   }
 
@@ -34,12 +34,12 @@ export class ProtractorHarnessEnvironment extends AbstractHarnessEnvironment<Ele
     return new ProtractorElement(element);
   }
 
-  protected createHarness<T extends ComponentHarness>(
+  protected createComponentHarness<T extends ComponentHarness>(
       harnessType: ComponentHarnessConstructor<T>, element: ElementFinder): T {
     return new harnessType(new ProtractorHarnessEnvironment(element));
   }
 
-  protected createEnvironment(element: ElementFinder): HarnessEnvironment {
+  protected createHarnessLoader(element: ElementFinder): HarnessLoader {
     return new ProtractorHarnessEnvironment(element);
   }
 

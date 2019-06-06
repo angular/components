@@ -11,10 +11,10 @@ import {TestElement} from './test-element';
 /** An async function that returns a promise of the given type when called. */
 export type AsyncFn<T> = () => Promise<T>;
 
-export interface HarnessEnvironment {
-  findRequired(selector: string): Promise<HarnessEnvironment>;
-  findOptional(selector: string): Promise<HarnessEnvironment | null>;
-  findAll(selector: string): Promise<HarnessEnvironment[]>;
+export interface HarnessLoader {
+  findRequired(selector: string): Promise<HarnessLoader>;
+  findOptional(selector: string): Promise<HarnessLoader | null>;
+  findAll(selector: string): Promise<HarnessLoader[]>;
   requiredHarness<T extends ComponentHarness>(harness: ComponentHarnessConstructor<T>): Promise<T>;
   optionalHarness<T extends ComponentHarness>(harness: ComponentHarnessConstructor<T>):
       Promise<T | null>;
@@ -34,17 +34,17 @@ export interface LocatorFactory {
 }
 
 /** Interface that is used to find elements in the DOM and create harnesses for them. */
-export abstract class AbstractHarnessEnvironment<E> implements HarnessEnvironment, LocatorFactory {
+export abstract class AbstractHarnessEnvironment<E> implements HarnessLoader, LocatorFactory {
   protected constructor(protected rawRootElement: E) {}
 
   abstract documentRootLocatorFactory(): LocatorFactory;
 
   protected abstract createTestElement(element: E): TestElement;
 
-  protected abstract createHarness<T extends ComponentHarness>(
+  protected abstract createComponentHarness<T extends ComponentHarness>(
       harnessType: ComponentHarnessConstructor<T>, element: E): T;
 
-  protected abstract createEnvironment(element: E): HarnessEnvironment;
+  protected abstract createHarnessLoader(element: E): HarnessLoader;
 
   protected abstract getRawElement(selector: string): Promise<E | null>;
 
@@ -67,7 +67,7 @@ export abstract class AbstractHarnessEnvironment<E> implements HarnessEnvironmen
       } else {
         const element = await this.getRawElement(arg.hostSelector);
         if (element) {
-          return this.createHarness(arg, element);
+          return this.createComponentHarness(arg, element);
         }
       }
       const selector = typeof arg === 'string' ? arg : arg.hostSelector;
@@ -86,7 +86,7 @@ export abstract class AbstractHarnessEnvironment<E> implements HarnessEnvironmen
         return element ? this.createTestElement(element) : null;
       } else {
         const element = await this.getRawElement(arg.hostSelector);
-        return element ? this.createHarness(arg, element) : null;
+        return element ? this.createComponentHarness(arg, element) : null;
       }
     };
   }
@@ -100,7 +100,7 @@ export abstract class AbstractHarnessEnvironment<E> implements HarnessEnvironmen
         return (await this.getAllRawElements(arg)).map(e => this.createTestElement(e));
       } else {
         return (await this.getAllRawElements(arg.hostSelector))
-            .map(e => this.createHarness(arg, e));
+            .map(e => this.createComponentHarness(arg, e));
       }
     };
   }
@@ -118,21 +118,21 @@ export abstract class AbstractHarnessEnvironment<E> implements HarnessEnvironmen
     return this.allLocator(harness)();
   }
 
-  async findRequired(selector: string): Promise<HarnessEnvironment> {
+  async findRequired(selector: string): Promise<HarnessLoader> {
     const element = await this.getRawElement(selector);
     if (element) {
-      return this.createEnvironment(element);
+      return this.createHarnessLoader(element);
     }
     throw Error(`Expected to find element matching selector: "${selector}", but none was found`);
   }
 
-  async findOptional(selector: string): Promise<HarnessEnvironment | null> {
+  async findOptional(selector: string): Promise<HarnessLoader | null> {
     const element = await this.getRawElement(selector);
-    return element ? this.createEnvironment(element) : null;
+    return element ? this.createHarnessLoader(element) : null;
   }
 
-  async findAll(selector: string): Promise<HarnessEnvironment[]> {
-    return (await this.getAllRawElements(selector)).map(e => this.createEnvironment(e));
+  async findAll(selector: string): Promise<HarnessLoader[]> {
+    return (await this.getAllRawElements(selector)).map(e => this.createHarnessLoader(e));
   }
 }
 
