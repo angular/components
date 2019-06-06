@@ -35,6 +35,10 @@ export class MainComponentHarness extends ComponentHarness {
   readonly errorGlobalEl = this.documentRootLocatorFactory().requiredLocator('wrong locator');
   readonly nullGlobalEl = this.documentRootLocatorFactory().optionalLocator('wrong locator');
 
+  readonly optionalDiv = this.optionalLocator('div');
+  readonly optionalSubComponent = this.optionalLocator(SubComponentHarness);
+  readonly errorSubComponent = this.requiredLocator(WrongComponentHarness);
+
   private _button = this.requiredLocator('button');
   private _testTools = this.requiredLocator(SubComponentHarness);
 

@@ -1,33 +1,134 @@
+import {HarnessLoader} from '@angular/cdk-experimental/testing';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {TestbedHarnessEnvironment} from '../testbed';
 import {MainComponentHarness} from './harnesses/main-component-harness';
+import {SubComponentHarness} from './harnesses/sub-component-harness';
 import {TestComponentsModule} from './test-components-module';
 import {TestMainComponent} from './test-main-component';
 
-describe('Testbed Helper Test', () => {
-  let harness: MainComponentHarness;
+describe('TestbedHarnessEnvironment', () => {
   let fixture: ComponentFixture<{}>;
+
   beforeEach(async () => {
     await TestBed.configureTestingModule({imports: [TestComponentsModule]}).compileComponents();
     fixture = TestBed.createComponent(TestMainComponent);
-    harness = await TestbedHarnessEnvironment.harnessForFixtureRoot(fixture, MainComponentHarness);
   });
 
-  describe('Locator', () => {
-    it('should be able to locate a element based on CSS selector', async () => {
+  describe('HarnessLoader', () => {
+    let loader: HarnessLoader;
+
+    beforeEach(async () => {
+      loader = TestbedHarnessEnvironment.create(fixture);
+    });
+
+    it('should create HarnessLoader from fixture', async () => {
+      expect(loader).not.toBeNull();
+    });
+
+    it('should create ComponentHarness for fixture', async () => {
+      const harness =
+        await TestbedHarnessEnvironment.harnessForFixtureRoot(fixture, MainComponentHarness);
+      expect(harness).not.toBeNull();
+    });
+
+    it('should find required HarnessLoader for child element', async () => {
+      const subcomponentsLoader = await loader.findRequired('.subcomponents');
+      expect(subcomponentsLoader).not.toBeNull();
+    });
+
+    it('should error after failing to find required HarnessLoader for child element', async () => {
+      try {
+        await loader.findRequired('error');
+        fail('Expected to throw');
+      } catch (e) {
+        expect(e.message)
+          .toBe('Expected to find element matching selector: "error", but none was found');
+      }
+    });
+
+    it('should find optional HarnessLoader for child element', async () => {
+      const subcomponentsLoader = await loader.findOptional('.subcomponents');
+      const nullLoader = await loader.findOptional('wrong-selector');
+      expect(subcomponentsLoader).not.toBeNull();
+      expect(nullLoader).toBeNull();
+    });
+
+    it('should find all HarnessLoaders for child elements', async () => {
+      const loaders = await loader.findAll('.subcomponents,.counters');
+      expect(loaders.length).toBe(2);
+    });
+
+    it('should get first matching component for required harness', async () => {
+      const harness = await loader.requiredHarness(SubComponentHarness);
+      expect(harness).not.toBeNull();
+      expect(await (await harness.title()).text()).toBe('List of test tools');
+    });
+
+    it('should throw if no matching component found for required harness', async () => {
+      const countersLoader = await loader.findRequired('.counters');
+      try {
+        await countersLoader.requiredHarness(SubComponentHarness);
+        fail('Expected to throw');
+      } catch (e) {
+        expect(e.message)
+          .toBe('Expected to find element matching selector: "test-sub", but none was found');
+      }
+    });
+
+    it('should get first matching component for optional harness', async () => {
+      const countersLoader = await loader.findRequired('.counters');
+      const harness1 = await loader.optionalHarness(SubComponentHarness);
+      const harness2 = await countersLoader.optionalHarness(SubComponentHarness);
+      expect(harness1).not.toBeNull();
+      expect(await (await harness1!.title()).text()).toBe('List of test tools');
+      expect(harness2).toBeNull();
+    });
+
+    it('should get all matching components for all harnesses', async () => {
+      const harnesses = await loader.allHarnesses(SubComponentHarness);
+      expect(harnesses.length).toBe(2);
+    });
+  });
+
+  describe('ComponentHarness', () => {
+    let harness: MainComponentHarness;
+
+    beforeEach(async () => {
+      harness =
+        await TestbedHarnessEnvironment.harnessForFixtureRoot(fixture, MainComponentHarness);
+    });
+
+    it('should locate a required element based on CSS selector', async () => {
       const title = await harness.title();
       expect(await title.text()).toBe('Main Component');
     });
 
-    it('should be able to locate all elements based on CSS selector',
-      async () => {
-        const labels = await harness.allLabels();
-        expect(labels.length).toBe(2);
-        expect(await labels[0].text()).toBe('Count:');
-        expect(await labels[1].text()).toBe('AsyncCounter:');
-      });
+    it('should throw when failing to locate a required element based on CSS selector', async () => {
+      try {
+        await harness.errorItem();
+        fail('Expected to throw');
+      } catch (e) {
+        expect(e.message).toBe(
+          'Expected to find element matching selector: "wrong locator", but none was found');
+      }
+    });
 
-    it('should be able to locate the sub harnesses', async () => {
+    it('should locate an optional element based on CSS selector', async () => {
+      const present = await harness.optionalDiv();
+      const missing = await harness.nullItem();
+      expect(present).not.toBeNull();
+      expect(await present!.text()).toBe('Hello Yi from Angular 2!');
+      expect(missing).toBeNull();
+    });
+
+    it('should locate all elements based on CSS selector', async () => {
+      const labels = await harness.allLabels();
+      expect(labels.length).toBe(2);
+      expect(await labels[0].text()).toBe('Count:');
+      expect(await labels[1].text()).toBe('AsyncCounter:');
+    });
+
+    it('should locate required sub harnesses', async () => {
       const items = await harness.getTestTools();
       expect(items.length).toBe(3);
       expect(await items[0].text()).toBe('Protractor');
@@ -35,7 +136,25 @@ describe('Testbed Helper Test', () => {
       expect(await items[2].text()).toBe('Other');
     });
 
-    it('should be able to locate all sub harnesses', async () => {
+    it('should throw when failing to locate required sub harnesses', async () => {
+      try {
+        await harness.errorSubComponent();
+        fail('Expected to throw');
+      } catch (e) {
+        expect(e.message).toBe(
+          'Expected to find element matching selector: "wrong-selector", but none was found');
+      }
+    });
+
+    it('should locate optional sub harnesses', async () => {
+      const present = await harness.optionalSubComponent();
+      const missing = await harness.nullComponentHarness();
+      expect(present).not.toBeNull();
+      expect(await (await present!.title()).text()).toBe('List of test tools');
+      expect(missing).toBeNull();
+    });
+
+    it('should locate all sub harnesses', async () => {
       const alllists = await harness.allLists();
       const items1 = await alllists[0].getItems();
       const items2 = await alllists[1].getItems();
@@ -49,9 +168,31 @@ describe('Testbed Helper Test', () => {
       expect(await items2[1].text()).toBe('Integration Test');
       expect(await items2[2].text()).toBe('Performance Test');
     });
+
+    it('should wait for async opeartion to complete', async () => {
+      const asyncCounter = await harness.asyncCounter();
+      expect(await asyncCounter.text()).toBe('5');
+      await harness.increaseCounter(3);
+      expect(await asyncCounter.text()).toBe('8');
+    });
+
+    it('can get elements outside of host', async () => {
+      const subcomponents = await harness.allLists();
+      expect(subcomponents[0]).not.toBeNull();
+      const globalEl = await subcomponents[0]!.globalElement();
+      expect(globalEl).not.toBeNull();
+      expect(await globalEl.text()).toBe('Hello Yi from Angular 2!');
+    });
   });
 
-  describe('Test element', () => {
+  describe('TestElement', () => {
+    let harness: MainComponentHarness;
+
+    beforeEach(async () => {
+      harness =
+          await TestbedHarnessEnvironment.harnessForFixtureRoot(fixture, MainComponentHarness);
+    });
+
     it('should be able to clear', async () => {
       const input = await harness.input();
       await input.sendKeys('Yi');
@@ -80,8 +221,7 @@ describe('Testbed Helper Test', () => {
     it('focuses the element before sending key', async () => {
       const input = await harness.input();
       await input.sendKeys('Yi');
-      expect(await input.getAttribute('id'))
-        .toBe(document.activeElement!.id);
+      expect(await input.getAttribute('id')).toBe(document.activeElement!.id);
     });
 
     it('should be able to hover', async () => {
@@ -106,38 +246,6 @@ describe('Testbed Helper Test', () => {
     it('should be able to getCssValue', async () => {
       const title = await harness.title();
       expect(await title.getCssValue('height')).toBe('50px');
-    });
-  });
-
-  describe('Async operation', () => {
-    it('should wait for async opeartion to complete', async () => {
-      const asyncCounter = await harness.asyncCounter();
-      expect(await asyncCounter.text()).toBe('5');
-      await harness.increaseCounter(3);
-      expect(await asyncCounter.text()).toBe('8');
-    });
-  });
-
-  describe('Allow null', () => {
-    it('should allow element to be null when setting allowNull', async () => {
-      expect(await harness.nullItem()).toBe(null);
-    });
-
-    it('should allow harness to be null when setting allowNull', async () => {
-      expect(await harness.nullComponentHarness()).toBe(null);
-    });
-  });
-
-  describe('Throw error', () => {
-    it('should show the correct error', async () => {
-      try {
-        await harness.errorItem();
-        fail('Should throw error');
-      } catch (err) {
-        expect(err.message)
-          .toBe(
-            'Expected to find element matching selector: "wrong locator", but none was found');
-      }
     });
   });
 });

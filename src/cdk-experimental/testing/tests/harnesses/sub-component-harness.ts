@@ -14,6 +14,7 @@ export class SubComponentHarness extends ComponentHarness {
 
   readonly title = this.requiredLocator('h2');
   readonly getItems = this.allLocator('li');
+  readonly globalElement = this.documentRootLocatorFactory().requiredLocator('#username');
 
   async getItem(index: number): Promise<TestElement> {
     const items = await this.getItems();
