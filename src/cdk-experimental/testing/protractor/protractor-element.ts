@@ -9,6 +9,7 @@
 import {browser, ElementFinder} from 'protractor';
 import {TestElement} from '../test-element';
 
+/** A `TestElement` implementation for Protractor. */
 export class ProtractorElement implements TestElement {
   constructor(readonly element: ElementFinder) {}
 

@@ -13,15 +13,17 @@ import {
   HarnessLoader,
   LocatorFactory,
 } from '../component-harness';
-import {AbstractHarnessEnvironment} from '../harness-environment';
+import {HarnessEnvironment} from '../harness-environment';
 import {TestElement} from '../test-element';
 import {ProtractorElement} from './protractor-element';
 
-export class ProtractorHarnessEnvironment extends AbstractHarnessEnvironment<ElementFinder> {
+/** A `HarnessEnvironment` implementation for Protractor. */
+export class ProtractorHarnessEnvironment extends HarnessEnvironment<ElementFinder> {
   protected constructor(rawRootElement: ElementFinder) {
     super(rawRootElement);
   }
 
+  /** Creates a `HarnessLoader` rooted at the document root. */
   static create(): HarnessLoader {
     return new ProtractorHarnessEnvironment(protractorElement(by.css('body')));
   }

@@ -20,6 +20,7 @@ function isTextInput(element: Element): element is HTMLInputElement | HTMLTextAr
     element.nodeName.toLowerCase() === 'textarea' ;
 }
 
+/** A `TestElement` implementation for unit tests. */
 export class UnitTestElement implements TestElement {
   constructor(readonly element: Element, private _stabilize: () => Promise<void>) {}
 

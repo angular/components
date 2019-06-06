@@ -13,19 +13,17 @@ import {
   HarnessLoader,
   LocatorFactory
 } from '../component-harness';
-import {AbstractHarnessEnvironment} from '../harness-environment';
+import {HarnessEnvironment} from '../harness-environment';
 import {TestElement} from '../test-element';
 import {UnitTestElement} from './unit-test-element';
 
-/**
- * Locator implementation for testbed.
- * Note that, this locator is exposed for internal usage, please do not use it.
- */
-export class TestbedHarnessEnvironment extends AbstractHarnessEnvironment<Element> {
+/** A `HarnessEnvironment` implementation for Angular's Testbed. */
+export class TestbedHarnessEnvironment extends HarnessEnvironment<Element> {
   protected constructor(rawRootElement: Element, private _stabilize: () => Promise<void>) {
     super(rawRootElement);
   }
 
+  /** Creates a `HarnessLoader` rooted at the given fixture's root element. */
   static create(fixture: ComponentFixture<unknown>): HarnessLoader {
     const stabilize = async () => {
       fixture.detectChanges();
@@ -34,6 +32,12 @@ export class TestbedHarnessEnvironment extends AbstractHarnessEnvironment<Elemen
     return new TestbedHarnessEnvironment(fixture.nativeElement, stabilize);
   }
 
+  /**
+   * Creates an instance of the given harness type, using the fixture's root element as the
+   * harness's host element. This method should be used when creating a harness for the root element
+   * of a fixture, as components do not have the correct selector when they are created as the root
+   * of the fixture.
+   */
   static async harnessForFixtureRoot<T extends ComponentHarness>(
       fixture: ComponentFixture<unknown>, harnessType: ComponentHarnessConstructor<T>): Promise<T> {
     const stabilize = async () => {
