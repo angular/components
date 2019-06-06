@@ -1,7 +1,6 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {TestbedHarnessEnvironment} from '../testbed';
 import {MainComponentHarness} from './harnesses/main-component-harness';
-
 import {TestComponentsModule} from './test-components-module';
 import {TestMainComponent} from './test-main-component';
 

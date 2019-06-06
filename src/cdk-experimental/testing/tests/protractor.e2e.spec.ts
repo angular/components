@@ -1,5 +1,4 @@
 import {browser} from 'protractor';
-
 import {ProtractorHarnessEnvironment} from '../protractor';
 import {MainComponentHarness, WrongComponentHarness} from './harnesses/main-component-harness';
 

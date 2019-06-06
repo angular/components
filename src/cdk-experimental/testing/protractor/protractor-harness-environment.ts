@@ -6,16 +6,16 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {browser, by, element as protractorElement, ElementFinder} from 'protractor';
-
+import {by, element as protractorElement, ElementFinder} from 'protractor';
 import {
-  AbstractHarnessEnvironment,
   ComponentHarness,
   ComponentHarnessConstructor,
   HarnessLoader,
   LocatorFactory,
-} from './component-harness';
-import {TestElement} from './test-element';
+} from '../component-harness';
+import {AbstractHarnessEnvironment} from '../harness-environment';
+import {TestElement} from '../test-element';
+import {ProtractorElement} from './protractor-element';
 
 export class ProtractorHarnessEnvironment extends AbstractHarnessEnvironment<ElementFinder> {
   protected constructor(rawRootElement: ElementFinder) {
@@ -52,47 +52,5 @@ export class ProtractorHarnessEnvironment extends AbstractHarnessEnvironment<Ele
     const elements = this.rawRootElement.all(by.css(selector));
     return elements.reduce(
         (result: ElementFinder[], el: ElementFinder) => el ? result.concat([el]) : result, []);
-  }
-}
-
-class ProtractorElement implements TestElement {
-  constructor(readonly element: ElementFinder) {}
-
-  async blur(): Promise<void> {
-    return this.element['blur']();
-  }
-
-  async clear(): Promise<void> {
-    return this.element.clear();
-  }
-
-  async click(): Promise<void> {
-    return this.element.click();
-  }
-
-  async focus(): Promise<void> {
-    return this.element['focus']();
-  }
-
-  async getCssValue(property: string): Promise<string> {
-    return this.element.getCssValue(property);
-  }
-
-  async hover(): Promise<void> {
-    return browser.actions()
-        .mouseMove(await this.element.getWebElement())
-        .perform();
-  }
-
-  async sendKeys(keys: string): Promise<void> {
-    return this.element.sendKeys(keys);
-  }
-
-  async text(): Promise<string> {
-    return this.element.getText();
-  }
-
-  async getAttribute(name: string): Promise<string|null> {
-    return this.element.getAttribute(name);
   }
 }
