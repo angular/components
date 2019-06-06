@@ -33,12 +33,23 @@ export class TestbedHarnessEnvironment extends AbstractHarnessEnvironment<Elemen
     super(rawRootElement);
   }
 
-  static create(fixture: ComponentFixture<unknown>): TestbedHarnessEnvironment {
+  static create(fixture: ComponentFixture<unknown>): HarnessEnvironment {
     const stabilize = async () => {
       fixture.detectChanges();
       await fixture.whenStable();
     };
     return new TestbedHarnessEnvironment(fixture.nativeElement, stabilize);
+  }
+
+  static async harnessForFixtureRoot<T extends ComponentHarness>(
+      fixture: ComponentFixture<unknown>, harnessType: ComponentHarnessConstructor<T>): Promise<T> {
+    const stabilize = async () => {
+      fixture.detectChanges();
+      await fixture.whenStable();
+    };
+    const environment = new TestbedHarnessEnvironment(fixture.nativeElement, stabilize);
+    await environment._stabilize();
+    return environment.createHarness(harnessType, fixture.nativeElement);
   }
 
   documentRootLocatorFactory(): LocatorFactory {

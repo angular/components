@@ -1,5 +1,5 @@
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
-import {getNativeElement, load} from '../testbed';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
+import {TestbedHarnessEnvironment} from '../testbed';
 import {MainComponentHarness} from './harnesses/main-component-harness';
 
 import {TestComponentsModule} from './test-components-module';
@@ -8,17 +8,11 @@ import {TestMainComponent} from './test-main-component';
 describe('Testbed Helper Test', () => {
   let harness: MainComponentHarness;
   let fixture: ComponentFixture<{}>;
-  beforeEach(async(() => {
-    TestBed
-      .configureTestingModule({
-        imports: [TestComponentsModule],
-      })
-      .compileComponents()
-      .then(() => {
-        fixture = TestBed.createComponent(TestMainComponent);
-        harness = load(MainComponentHarness, fixture);
-      });
-  }));
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({imports: [TestComponentsModule]}).compileComponents();
+    fixture = TestBed.createComponent(TestMainComponent);
+    harness = await TestbedHarnessEnvironment.harnessForFixtureRoot(fixture, MainComponentHarness);
+  });
 
   describe('Locator', () => {
     it('should be able to locate a element based on CSS selector', async () => {
@@ -143,14 +137,8 @@ describe('Testbed Helper Test', () => {
       } catch (err) {
         expect(err.message)
           .toBe(
-            'Cannot find element based on the CSS selector: wrong locator');
+            'Expected to find element matching selector: "wrong locator", but none was found');
       }
-    });
-  });
-
-  describe('getNativeElement', () => {
-    it('should return the native element', async () => {
-      expect(getNativeElement(harness.host())).toBe(fixture.nativeElement);
     });
   });
 });
