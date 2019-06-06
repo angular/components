@@ -300,6 +300,13 @@ mat-action-list {
   outline: none;
 }
 
+// Ensures that things like ripples are clipped correctly inside items that can have ripples.
+.mat-nav-list .mat-list-item,
+.mat-action-list .mat-list-item,
+.mat-list-option {
+  overflow: hidden;
+}
+
 @include cdk-high-contrast {
   .mat-selection-list:focus {
     outline-style: dotted;
