@@ -1,5 +1,5 @@
-import {HarnessLoader} from '@angular/cdk-experimental/testing';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
+import {HarnessLoader} from '../component-harness';
 import {TestbedHarnessEnvironment} from '../testbed';
 import {MainComponentHarness} from './harnesses/main-component-harness';
 import {SubComponentHarness} from './harnesses/sub-component-harness';
@@ -169,7 +169,7 @@ describe('TestbedHarnessEnvironment', () => {
       expect(await items2[2].text()).toBe('Performance Test');
     });
 
-    it('should wait for async opeartion to complete', async () => {
+    it('should wait for async operation to complete', async () => {
       const asyncCounter = await harness.asyncCounter();
       expect(await asyncCounter.text()).toBe('5');
       await harness.increaseCounter(3);
