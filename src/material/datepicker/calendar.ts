@@ -30,7 +30,10 @@ import {Subject, Subscription} from 'rxjs';
 import {createMissingDateImplError} from './datepicker-errors';
 import {MatDatepickerIntl} from './datepicker-intl';
 import {MatMonthView} from './month-view';
-import {MatMultiYearView, yearsPerPage, euclideanModulo} from './multi-year-view';
+import {MatMultiYearView,
+        yearsPerPage,
+        getActiveOffset,
+        isSameMultiYearView} from './multi-year-view';
 import {MatYearView} from './year-view';
 import {MatCalendarCellCssClasses} from './calendar-body';
 
@@ -74,7 +77,8 @@ export class MatCalendarHeader<D> {
     // *actual* first rendered year in the multi-year view, and the last year is
     // just yearsPerPage - 1 away.
     const activeYear = this._dateAdapter.getYear(this.calendar.activeDate);
-    const minYearOfPage = activeYear - this._getActiveOffset();
+    const minYearOfPage = activeYear - getActiveOffset(
+      this._dateAdapter, this.calendar.activeDate, this.calendar.minDate, this.calendar.maxDate);
     const maxYearOfPage = minYearOfPage + yearsPerPage - 1;
     return `${minYearOfPage} \u2013 ${maxYearOfPage}`;
   }
@@ -151,40 +155,8 @@ export class MatCalendarHeader<D> {
       return this._dateAdapter.getYear(date1) == this._dateAdapter.getYear(date2);
     }
     // Otherwise we are in 'multi-year' view.
-    return this._isSameMultiYearView(date1, date2);
-  }
-
-  private _isSameMultiYearView(date1: D, date2: D): boolean {
-    const year1 = this._dateAdapter.getYear(date1);
-    const year2 = this._dateAdapter.getYear(date2);
-    const startingYear = this._getStartingYear();
-    return Math.floor((year1 - startingYear) / yearsPerPage) ===
-            Math.floor((year2 - startingYear) / yearsPerPage);
-  }
-
-  /**
-   * When the multi-year view is first opened, the active year will be in view.
-   * So we compute how many years are between the active year and the *slot* where our
-   * "startingYear" will render when paged into view.
-   */
-  private _getActiveOffset(): number {
-    const activeYear = this._dateAdapter.getYear(this.calendar.activeDate);
-    return euclideanModulo((activeYear - this._getStartingYear()), yearsPerPage);
-  }
-
-  /**
-   * We pick a "starting" year such that either the maximum year would be at the end
-   * or the minimum year would be at the beginning of a page.
-   */
-  private _getStartingYear(): number {
-    let startingYear = 0;
-    if (this.calendar.maxDate) {
-      const maxYear = this._dateAdapter.getYear(this.calendar.maxDate);
-      startingYear = maxYear - yearsPerPage + 1;
-    } else if (this.calendar.minDate) {
-      startingYear = this._dateAdapter.getYear(this.calendar.minDate);
-    }
-    return startingYear;
+    return isSameMultiYearView(
+      this._dateAdapter, date1, date2, this.calendar.minDate, this.calendar.maxDate);
   }
 }
 
