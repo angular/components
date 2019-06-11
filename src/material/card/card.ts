@@ -165,7 +165,7 @@ export class MatCardAvatar {}
   }
 })
 export class MatCard {
-  // @deletion-target 7.0.0 `_animationMode` parameter to be made required.
+  // @breaking-change 9.0.0 `_animationMode` parameter to be made required.
   constructor(@Optional() @Inject(ANIMATION_MODULE_TYPE) public _animationMode?: string) {}
 }
 
