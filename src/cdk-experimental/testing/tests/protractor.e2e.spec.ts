@@ -232,5 +232,16 @@ describe('ProtractorHarnessEnvironment', () => {
       const title = await harness.title();
       expect(await title.getCssValue('height')).toBe('50px');
     });
+
+    it('should focus and blur element', async () => {
+      let button = await harness.button();
+      expect(await (await browser.switchTo().activeElement()).getText())
+          .not.toBe(await button.text());
+      await button.focus();
+      expect(await (await browser.switchTo().activeElement()).getText()).toBe(await button.text());
+      await button.blur();
+      expect(await (await browser.switchTo().activeElement()).getText())
+          .not.toBe(await button.text());
+    });
   });
 });

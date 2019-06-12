@@ -14,7 +14,7 @@ export class ProtractorElement implements TestElement {
   constructor(readonly element: ElementFinder) {}
 
   async blur(): Promise<void> {
-    return this.element['blur']();
+    return browser.executeScript('arguments[0].blur()', this.element);
   }
 
   async clear(): Promise<void> {
@@ -26,7 +26,7 @@ export class ProtractorElement implements TestElement {
   }
 
   async focus(): Promise<void> {
-    return this.element['focus']();
+    return browser.executeScript('arguments[0].focus()', this.element);
   }
 
   async getCssValue(property: string): Promise<string> {

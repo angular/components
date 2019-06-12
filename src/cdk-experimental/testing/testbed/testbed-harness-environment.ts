@@ -77,6 +77,6 @@ export class TestbedHarnessEnvironment extends HarnessEnvironment<Element> {
 
   protected async getAllRawElements(selector: string): Promise<Element[]> {
     await this._stabilize();
-    return Array.prototype.slice.call(this.rawRootElement.querySelectorAll(selector));
+    return Array.from(this.rawRootElement.querySelectorAll(selector));
   }
 }

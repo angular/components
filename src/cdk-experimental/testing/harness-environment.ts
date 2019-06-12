@@ -33,9 +33,10 @@ export abstract class HarnessEnvironment<E> implements HarnessLoader, LocatorFac
   }
 
   // Implemented as part of the `LocatorFactory` interface.
-  requiredLocator(selector: string): AsyncFn<TestElement>;
-  requiredLocator<T extends ComponentHarness>(harness: ComponentHarnessConstructor<T>): AsyncFn<T>;
-  requiredLocator<T extends ComponentHarness>(
+  locatorForRequired(selector: string): AsyncFn<TestElement>;
+  locatorForRequired<T extends ComponentHarness>(harness: ComponentHarnessConstructor<T>):
+      AsyncFn<T>;
+  locatorForRequired<T extends ComponentHarness>(
       arg: string | ComponentHarnessConstructor<T>): AsyncFn<TestElement | T> {
     return async () => {
       if (typeof arg === 'string') {
@@ -55,10 +56,10 @@ export abstract class HarnessEnvironment<E> implements HarnessLoader, LocatorFac
   }
 
   // Implemented as part of the `LocatorFactory` interface.
-  optionalLocator(selector: string): AsyncFn<TestElement | null>;
-  optionalLocator<T extends ComponentHarness>(harness: ComponentHarnessConstructor<T>):
+  locatorForOptional(selector: string): AsyncFn<TestElement | null>;
+  locatorForOptional<T extends ComponentHarness>(harness: ComponentHarnessConstructor<T>):
       AsyncFn<T | null>;
-  optionalLocator<T extends ComponentHarness>(
+  locatorForOptional<T extends ComponentHarness>(
       arg: string | ComponentHarnessConstructor<T>): AsyncFn<TestElement | T | null> {
     return async () => {
       if (typeof arg === 'string') {
@@ -72,9 +73,9 @@ export abstract class HarnessEnvironment<E> implements HarnessLoader, LocatorFac
   }
 
   // Implemented as part of the `LocatorFactory` interface.
-  allLocator(selector: string): AsyncFn<TestElement[]>;
-  allLocator<T extends ComponentHarness>(harness: ComponentHarnessConstructor<T>): AsyncFn<T[]>;
-  allLocator<T extends ComponentHarness>(
+  locatorForAll(selector: string): AsyncFn<TestElement[]>;
+  locatorForAll<T extends ComponentHarness>(harness: ComponentHarnessConstructor<T>): AsyncFn<T[]>;
+  locatorForAll<T extends ComponentHarness>(
       arg: string | ComponentHarnessConstructor<T>): AsyncFn<TestElement[] | T[]> {
     return async () => {
       if (typeof arg === 'string') {
@@ -88,18 +89,18 @@ export abstract class HarnessEnvironment<E> implements HarnessLoader, LocatorFac
 
   // Implemented as part of the `HarnessLoader` interface.
   requiredHarness<T extends ComponentHarness>(harness: ComponentHarnessConstructor<T>): Promise<T> {
-    return this.requiredLocator(harness)();
+    return this.locatorForRequired(harness)();
   }
 
   // Implemented as part of the `HarnessLoader` interface.
   optionalHarness<T extends ComponentHarness>(harness: ComponentHarnessConstructor<T>):
     Promise<T | null> {
-    return this.optionalLocator(harness)();
+    return this.locatorForOptional(harness)();
   }
 
   // Implemented as part of the `HarnessLoader` interface.
   allHarnesses<T extends ComponentHarness>(harness: ComponentHarnessConstructor<T>): Promise<T[]> {
-    return this.allLocator(harness)();
+    return this.locatorForAll(harness)();
   }
 
   // Implemented as part of the `HarnessLoader` interface.

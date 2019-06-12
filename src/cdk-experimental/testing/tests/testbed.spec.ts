@@ -6,6 +6,10 @@ import {SubComponentHarness} from './harnesses/sub-component-harness';
 import {TestComponentsModule} from './test-components-module';
 import {TestMainComponent} from './test-main-component';
 
+function activeElementText() {
+  return document.activeElement && (document.activeElement as HTMLElement).innerText || '';
+}
+
 describe('TestbedHarnessEnvironment', () => {
   let fixture: ComponentFixture<{}>;
 
@@ -246,6 +250,15 @@ describe('TestbedHarnessEnvironment', () => {
     it('should be able to getCssValue', async () => {
       const title = await harness.title();
       expect(await title.getCssValue('height')).toBe('50px');
+    });
+
+    it('should focus and blur element', async () => {
+      let button = await harness.button();
+      expect(activeElementText()).not.toBe(await button.text());
+      await button.focus();
+      expect(activeElementText()).toBe(await button.text());
+      await button.blur();
+      expect(activeElementText()).not.toBe(await button.text());
     });
   });
 });

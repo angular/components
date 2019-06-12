@@ -99,7 +99,7 @@ export interface LocatorFactory {
    * @return An asynchronous locator function that searches for elements with the given selector,
    *     and either finds one or throws an error
    */
-  requiredLocator(selector: string): AsyncFn<TestElement>;
+  locatorForRequired(selector: string): AsyncFn<TestElement>;
 
   /**
    * Creates an asynchronous locator function that can be used to find a `ComponentHarness` for a
@@ -110,7 +110,7 @@ export interface LocatorFactory {
    * @return An asynchronous locator function that searches components matching the given harness
    *     type, and either returns a `ComponentHarness` for the component, or throws an error.
    */
-  requiredLocator<T extends ComponentHarness>(harnessType: ComponentHarnessConstructor<T>):
+  locatorForRequired<T extends ComponentHarness>(harnessType: ComponentHarnessConstructor<T>):
       AsyncFn<T>;
 
   /**
@@ -122,7 +122,7 @@ export interface LocatorFactory {
    * @return An asynchronous locator function that searches for elements with the given selector,
    *     and either finds one or returns null.
    */
-  optionalLocator(selector: string): AsyncFn<TestElement | null>;
+  locatorForOptional(selector: string): AsyncFn<TestElement | null>;
 
   /**
    * Creates an asynchronous locator function that can be used to find a `ComponentHarness` for a
@@ -133,7 +133,7 @@ export interface LocatorFactory {
    * @return An asynchronous locator function that searches components matching the given harness
    *     type, and either returns a `ComponentHarness` for the component, or null if none is found.
    */
-  optionalLocator<T extends ComponentHarness>(harnessType: ComponentHarnessConstructor<T>):
+  locatorForOptional<T extends ComponentHarness>(harnessType: ComponentHarnessConstructor<T>):
       AsyncFn<T | null>;
 
   /**
@@ -144,7 +144,7 @@ export interface LocatorFactory {
    * @return An asynchronous locator function that searches for elements with the given selector,
    *     and either finds one or throws an error
    */
-  allLocator(selector: string): AsyncFn<TestElement[]>;
+  locatorForAll(selector: string): AsyncFn<TestElement[]>;
 
   /**
    * Creates an asynchronous locator function that can be used to find a list of
@@ -155,7 +155,8 @@ export interface LocatorFactory {
    * @return An asynchronous locator function that searches components matching the given harness
    *     type, and returns a list of `ComponentHarness`es.
    */
-  allLocator<T extends ComponentHarness>(harnessType: ComponentHarnessConstructor<T>): AsyncFn<T[]>;
+  locatorForAll<T extends ComponentHarness>(harnessType: ComponentHarnessConstructor<T>):
+      AsyncFn<T[]>;
 }
 
 /**
@@ -189,7 +190,7 @@ export abstract class ComponentHarness {
    * @return An asynchronous locator function that searches for elements with the given selector,
    *     and either finds one or throws an error
    */
-  protected requiredLocator(selector: string): AsyncFn<TestElement>;
+  protected locatorForRequired(selector: string): AsyncFn<TestElement>;
 
   /**
    * Creates an asynchronous locator function that can be used to find a `ComponentHarness` for a
@@ -200,11 +201,11 @@ export abstract class ComponentHarness {
    * @return An asynchronous locator function that searches components matching the given harness
    *     type, and either returns a `ComponentHarness` for the component, or throws an error.
    */
-  protected requiredLocator<T extends ComponentHarness>(
+  protected locatorForRequired<T extends ComponentHarness>(
       harnessType: ComponentHarnessConstructor<T>): AsyncFn<T>;
 
-  protected requiredLocator(arg: any): any {
-    return this.locatorFacotry.requiredLocator(arg);
+  protected locatorForRequired(arg: any): any {
+    return this.locatorFacotry.locatorForRequired(arg);
   }
 
   /**
@@ -216,7 +217,7 @@ export abstract class ComponentHarness {
    * @return An asynchronous locator function that searches for elements with the given selector,
    *     and either finds one or returns null.
    */
-  protected optionalLocator(selector: string): AsyncFn<TestElement | null>;
+  protected locatorForOptional(selector: string): AsyncFn<TestElement | null>;
 
   /**
    * Creates an asynchronous locator function that can be used to find a `ComponentHarness` for a
@@ -227,11 +228,11 @@ export abstract class ComponentHarness {
    * @return An asynchronous locator function that searches components matching the given harness
    *     type, and either returns a `ComponentHarness` for the component, or null if none is found.
    */
-  protected optionalLocator<T extends ComponentHarness>(
+  protected locatorForOptional<T extends ComponentHarness>(
       harnessType: ComponentHarnessConstructor<T>): AsyncFn<T | null>;
 
-  protected optionalLocator(arg: any): any {
-    return this.locatorFacotry.optionalLocator(arg);
+  protected locatorForOptional(arg: any): any {
+    return this.locatorFacotry.locatorForOptional(arg);
   }
 
   /**
@@ -242,7 +243,7 @@ export abstract class ComponentHarness {
    * @return An asynchronous locator function that searches for elements with the given selector,
    *     and either finds one or throws an error
    */
-  protected allLocator(selector: string): AsyncFn<TestElement[]>;
+  protected locatorForAll(selector: string): AsyncFn<TestElement[]>;
 
   /**
    * Creates an asynchronous locator function that can be used to find a list of
@@ -253,11 +254,11 @@ export abstract class ComponentHarness {
    * @return An asynchronous locator function that searches components matching the given harness
    *     type, and returns a list of `ComponentHarness`es.
    */
-  protected allLocator<T extends ComponentHarness>(harnessType: ComponentHarnessConstructor<T>):
+  protected locatorForAll<T extends ComponentHarness>(harnessType: ComponentHarnessConstructor<T>):
       AsyncFn<T[]>;
 
-  protected allLocator(arg: any): any {
-    return this.locatorFacotry.allLocator(arg);
+  protected locatorForAll(arg: any): any {
+    return this.locatorFacotry.locatorForAll(arg);
   }
 }
 

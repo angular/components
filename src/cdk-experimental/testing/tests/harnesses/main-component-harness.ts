@@ -17,33 +17,33 @@ export class WrongComponentHarness extends ComponentHarness {
 export class MainComponentHarness extends ComponentHarness {
   static readonly hostSelector = 'test-main';
 
-  readonly title = this.requiredLocator('h1');
-  readonly asyncCounter = this.requiredLocator('#asyncCounter');
-  readonly counter = this.requiredLocator('#counter');
-  readonly input = this.requiredLocator('#input');
-  readonly value = this.requiredLocator('#value');
-  readonly allLabels = this.allLocator('label');
-  readonly allLists = this.allLocator(SubComponentHarness);
-  readonly memo = this.requiredLocator('textarea');
+  readonly title = this.locatorForRequired('h1');
+  readonly button = this.locatorForRequired('button');
+  readonly asyncCounter = this.locatorForRequired('#asyncCounter');
+  readonly counter = this.locatorForRequired('#counter');
+  readonly input = this.locatorForRequired('#input');
+  readonly value = this.locatorForRequired('#value');
+  readonly allLabels = this.locatorForAll('label');
+  readonly allLists = this.locatorForAll(SubComponentHarness);
+  readonly memo = this.locatorForRequired('textarea');
   // Allow null for element
-  readonly nullItem = this.optionalLocator('wrong locator');
+  readonly nullItem = this.locatorForOptional('wrong locator');
   // Allow null for component harness
-  readonly nullComponentHarness = this.optionalLocator(WrongComponentHarness);
-  readonly errorItem = this.requiredLocator('wrong locator');
+  readonly nullComponentHarness = this.locatorForOptional(WrongComponentHarness);
+  readonly errorItem = this.locatorForRequired('wrong locator');
 
-  readonly globalEl = this.documentRootLocatorFactory().requiredLocator('.sibling');
-  readonly errorGlobalEl = this.documentRootLocatorFactory().requiredLocator('wrong locator');
-  readonly nullGlobalEl = this.documentRootLocatorFactory().optionalLocator('wrong locator');
+  readonly globalEl = this.documentRootLocatorFactory().locatorForRequired('.sibling');
+  readonly errorGlobalEl = this.documentRootLocatorFactory().locatorForRequired('wrong locator');
+  readonly nullGlobalEl = this.documentRootLocatorFactory().locatorForOptional('wrong locator');
 
-  readonly optionalDiv = this.optionalLocator('div');
-  readonly optionalSubComponent = this.optionalLocator(SubComponentHarness);
-  readonly errorSubComponent = this.requiredLocator(WrongComponentHarness);
+  readonly optionalDiv = this.locatorForOptional('div');
+  readonly optionalSubComponent = this.locatorForOptional(SubComponentHarness);
+  readonly errorSubComponent = this.locatorForRequired(WrongComponentHarness);
 
-  private _button = this.requiredLocator('button');
-  private _testTools = this.requiredLocator(SubComponentHarness);
+  private _testTools = this.locatorForRequired(SubComponentHarness);
 
   async increaseCounter(times: number) {
-    const button = await this._button();
+    const button = await this.button();
     for (let i = 0; i < times; i++) {
       await button.click();
     }
