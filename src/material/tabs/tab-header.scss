@@ -95,3 +95,13 @@
     justify-content: flex-end;
   }
 }
+
+.mat-tab-label-group {
+  display: flex;
+  position: relative;
+
+  [mat-stretch-tabs] & {
+    flex-basis: 0;
+    flex-grow: 1;
+  }
+}
