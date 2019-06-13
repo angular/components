@@ -89,6 +89,6 @@ export class CdkTreeFlatExample {
 
   shouldRender(node: ExampleFlatNode) {
     const parent = this.getParentNode(node);
-    return !parent || parent.isExpanded;
+    return !parent || (parent.isExpanded && this.shouldRender(parent));
   }
 }
