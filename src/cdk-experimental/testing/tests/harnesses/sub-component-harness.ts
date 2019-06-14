@@ -12,9 +12,9 @@ import {TestElement} from '../../test-element';
 export class SubComponentHarness extends ComponentHarness {
   static readonly hostSelector = 'test-sub';
 
-  readonly title = this.locatorForRequired('h2');
+  readonly title = this.locatorFor('h2');
   readonly getItems = this.locatorForAll('li');
-  readonly globalElement = this.documentRootLocatorFactory().locatorForRequired('#username');
+  readonly globalElement = this.documentRootLocatorFactory().locatorFor('#username');
 
   async getItem(index: number): Promise<TestElement> {
     const items = await this.getItems();

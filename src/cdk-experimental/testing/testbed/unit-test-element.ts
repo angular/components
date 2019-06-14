@@ -17,7 +17,7 @@ import {TestElement} from '../test-element';
 
 function isTextInput(element: Element): element is HTMLInputElement | HTMLTextAreaElement {
   return element.nodeName.toLowerCase() === 'input' ||
-    element.nodeName.toLowerCase() === 'textarea' ;
+      element.nodeName.toLowerCase() === 'textarea' ;
 }
 
 /** A `TestElement` implementation for unit tests. */

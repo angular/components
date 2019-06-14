@@ -22,21 +22,23 @@ import {TestElement} from './test-element';
  * element type, `E`, used by the particular test environment.
  */
 export abstract class HarnessEnvironment<E> implements HarnessLoader, LocatorFactory {
-  protected constructor(protected rawRootElement: E) {}
-
-  // Part of the `HarnessLoader` interface, delegated to concrete implementation.
-  abstract documentRootLocatorFactory(): LocatorFactory;
-
   // Implemented as part of the `LocatorFactory` interface.
-  rootElement(): TestElement {
-    return this.createTestElement(this.rawRootElement);
+  rootElement: TestElement;
+
+  protected constructor(protected rawRootElement: E) {
+    this.rootElement = this.createTestElement(rawRootElement);
   }
 
   // Implemented as part of the `LocatorFactory` interface.
-  locatorForRequired(selector: string): AsyncFn<TestElement>;
-  locatorForRequired<T extends ComponentHarness>(harness: ComponentHarnessConstructor<T>):
+  documentRootLocatorFactory(): LocatorFactory {
+    return this.createEnvironment(this.getDocumentRoot());
+  }
+
+  // Implemented as part of the `LocatorFactory` interface.
+  locatorFor(selector: string): AsyncFn<TestElement>;
+  locatorFor<T extends ComponentHarness>(harnessType: ComponentHarnessConstructor<T>):
       AsyncFn<T>;
-  locatorForRequired<T extends ComponentHarness>(
+  locatorFor<T extends ComponentHarness>(
       arg: string | ComponentHarnessConstructor<T>): AsyncFn<TestElement | T> {
     return async () => {
       if (typeof arg === 'string') {
@@ -57,7 +59,7 @@ export abstract class HarnessEnvironment<E> implements HarnessLoader, LocatorFac
 
   // Implemented as part of the `LocatorFactory` interface.
   locatorForOptional(selector: string): AsyncFn<TestElement | null>;
-  locatorForOptional<T extends ComponentHarness>(harness: ComponentHarnessConstructor<T>):
+  locatorForOptional<T extends ComponentHarness>(harnessType: ComponentHarnessConstructor<T>):
       AsyncFn<T | null>;
   locatorForOptional<T extends ComponentHarness>(
       arg: string | ComponentHarnessConstructor<T>): AsyncFn<TestElement | T | null> {
@@ -74,7 +76,8 @@ export abstract class HarnessEnvironment<E> implements HarnessLoader, LocatorFac
 
   // Implemented as part of the `LocatorFactory` interface.
   locatorForAll(selector: string): AsyncFn<TestElement[]>;
-  locatorForAll<T extends ComponentHarness>(harness: ComponentHarnessConstructor<T>): AsyncFn<T[]>;
+  locatorForAll<T extends ComponentHarness>(harnessType: ComponentHarnessConstructor<T>):
+      AsyncFn<T[]>;
   locatorForAll<T extends ComponentHarness>(
       arg: string | ComponentHarnessConstructor<T>): AsyncFn<TestElement[] | T[]> {
     return async () => {
@@ -88,50 +91,45 @@ export abstract class HarnessEnvironment<E> implements HarnessLoader, LocatorFac
   }
 
   // Implemented as part of the `HarnessLoader` interface.
-  requiredHarness<T extends ComponentHarness>(harness: ComponentHarnessConstructor<T>): Promise<T> {
-    return this.locatorForRequired(harness)();
+  getHarness<T extends ComponentHarness>(harnessType: ComponentHarnessConstructor<T>):
+      Promise<T> {
+    return this.locatorFor(harnessType)();
   }
 
   // Implemented as part of the `HarnessLoader` interface.
-  optionalHarness<T extends ComponentHarness>(harness: ComponentHarnessConstructor<T>):
-    Promise<T | null> {
-    return this.locatorForOptional(harness)();
+  getAllHarnesses<T extends ComponentHarness>(harnessType: ComponentHarnessConstructor<T>):
+      Promise<T[]> {
+    return this.locatorForAll(harnessType)();
   }
 
   // Implemented as part of the `HarnessLoader` interface.
-  allHarnesses<T extends ComponentHarness>(harness: ComponentHarnessConstructor<T>): Promise<T[]> {
-    return this.locatorForAll(harness)();
-  }
-
-  // Implemented as part of the `HarnessLoader` interface.
-  async findRequired(selector: string): Promise<HarnessLoader> {
+  async getChildLoader(selector: string): Promise<HarnessLoader> {
     const element = await this.getRawElement(selector);
     if (element) {
-      return this.createHarnessLoader(element);
+      return this.createEnvironment(element);
     }
     throw Error(`Expected to find element matching selector: "${selector}", but none was found`);
   }
 
   // Implemented as part of the `HarnessLoader` interface.
-  async findOptional(selector: string): Promise<HarnessLoader | null> {
-    const element = await this.getRawElement(selector);
-    return element ? this.createHarnessLoader(element) : null;
+  async getAllChildLoaders(selector: string): Promise<HarnessLoader[]> {
+    return (await this.getAllRawElements(selector)).map(e => this.createEnvironment(e));
   }
 
-  // Implemented as part of the `HarnessLoader` interface.
-  async findAll(selector: string): Promise<HarnessLoader[]> {
-    return (await this.getAllRawElements(selector)).map(e => this.createHarnessLoader(e));
+  /** Creates a `ComponentHarness` for the given harness type with the given raw host element. */
+  protected createComponentHarness<T extends ComponentHarness>(
+      harnessType: ComponentHarnessConstructor<T>, element: E): T {
+    return new harnessType(this.createEnvironment(element));
   }
+
+  /** Gets the root element for the document. */
+  protected abstract getDocumentRoot(): E;
 
   /** Creates a `TestElement` from a raw element. */
   protected abstract createTestElement(element: E): TestElement;
 
-  /** Creates a `ComponentHarness` for the given harness type with the given raw host element. */
-  protected abstract createComponentHarness<T extends ComponentHarness>(
-    harnessType: ComponentHarnessConstructor<T>, element: E): T;
-
   /** Creates a `HarnessLoader` rooted at the given raw element. */
-  protected abstract createHarnessLoader(element: E): HarnessLoader;
+  protected abstract createEnvironment(element: E): HarnessEnvironment<E>;
 
   /**
    * Gets the first element matching the given selector under this environment's root element, or

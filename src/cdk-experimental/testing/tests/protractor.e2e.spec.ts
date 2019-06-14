@@ -13,7 +13,7 @@ describe('ProtractorHarnessEnvironment', () => {
     let loader: HarnessLoader;
 
     beforeEach(async () => {
-      loader = ProtractorHarnessEnvironment.create();
+      loader = ProtractorHarnessEnvironment.loader();
     });
 
     it('should create HarnessLoader', async () => {
@@ -21,13 +21,13 @@ describe('ProtractorHarnessEnvironment', () => {
     });
 
     it('should find required HarnessLoader for child element', async () => {
-      const subcomponentsLoader = await loader.findRequired('.subcomponents');
+      const subcomponentsLoader = await loader.getChildLoader('.subcomponents');
       expect(subcomponentsLoader).not.toBeNull();
     });
 
     it('should error after failing to find required HarnessLoader for child element', async () => {
       try {
-        await loader.findRequired('error');
+        await loader.getChildLoader('error');
         fail('Expected to throw');
       } catch (e) {
         expect(e.message)
@@ -35,28 +35,21 @@ describe('ProtractorHarnessEnvironment', () => {
       }
     });
 
-    it('should find optional HarnessLoader for child element', async () => {
-      const subcomponentsLoader = await loader.findOptional('.subcomponents');
-      const nullLoader = await loader.findOptional('wrong-selector');
-      expect(subcomponentsLoader).not.toBeNull();
-      expect(nullLoader).toBeNull();
-    });
-
     it('should find all HarnessLoaders for child elements', async () => {
-      const loaders = await loader.findAll('.subcomponents,.counters');
+      const loaders = await loader.getAllChildLoaders('.subcomponents,.counters');
       expect(loaders.length).toBe(2);
     });
 
     it('should get first matching component for required harness', async () => {
-      const harness = await loader.requiredHarness(SubComponentHarness);
+      const harness = await loader.getHarness(SubComponentHarness);
       expect(harness).not.toBeNull();
       expect(await (await harness.title()).text()).toBe('List of test tools');
     });
 
     it('should throw if no matching component found for required harness', async () => {
-      const countersLoader = await loader.findRequired('.counters');
+      const countersLoader = await loader.getChildLoader('.counters');
       try {
-        await countersLoader.requiredHarness(SubComponentHarness);
+        await countersLoader.getHarness(SubComponentHarness);
         fail('Expected to throw');
       } catch (e) {
         expect(e.message)
@@ -64,17 +57,8 @@ describe('ProtractorHarnessEnvironment', () => {
       }
     });
 
-    it('should get first matching component for optional harness', async () => {
-      const countersLoader = await loader.findRequired('.counters');
-      const harness1 = await loader.optionalHarness(SubComponentHarness);
-      const harness2 = await countersLoader.optionalHarness(SubComponentHarness);
-      expect(harness1).not.toBeNull();
-      expect(await (await harness1!.title()).text()).toBe('List of test tools');
-      expect(harness2).toBeNull();
-    });
-
     it('should get all matching components for all harnesses', async () => {
-      const harnesses = await loader.allHarnesses(SubComponentHarness);
+      const harnesses = await loader.getAllHarnesses(SubComponentHarness);
       expect(harnesses.length).toBe(2);
     });
   });
@@ -83,7 +67,7 @@ describe('ProtractorHarnessEnvironment', () => {
     let harness: MainComponentHarness;
 
     beforeEach(async () => {
-      harness = await ProtractorHarnessEnvironment.create().requiredHarness(MainComponentHarness);
+      harness = await ProtractorHarnessEnvironment.loader().getHarness(MainComponentHarness);
     });
 
     it('should locate a required element based on CSS selector', async () => {
@@ -174,7 +158,7 @@ describe('ProtractorHarnessEnvironment', () => {
     let harness: MainComponentHarness;
 
     beforeEach(async () => {
-      harness = await ProtractorHarnessEnvironment.create().requiredHarness(MainComponentHarness);
+      harness = await ProtractorHarnessEnvironment.loader().getHarness(MainComponentHarness);
     });
 
     it('should be able to clear', async () => {

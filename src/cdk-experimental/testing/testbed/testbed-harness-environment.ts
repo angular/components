@@ -7,29 +7,20 @@
  */
 
 import {ComponentFixture} from '@angular/core/testing';
-import {
-  ComponentHarness,
-  ComponentHarnessConstructor,
-  HarnessLoader,
-  LocatorFactory
-} from '../component-harness';
+import {ComponentHarness, ComponentHarnessConstructor, HarnessLoader} from '../component-harness';
 import {HarnessEnvironment} from '../harness-environment';
 import {TestElement} from '../test-element';
 import {UnitTestElement} from './unit-test-element';
 
 /** A `HarnessEnvironment` implementation for Angular's Testbed. */
 export class TestbedHarnessEnvironment extends HarnessEnvironment<Element> {
-  protected constructor(rawRootElement: Element, private _stabilize: () => Promise<void>) {
+  protected constructor(rawRootElement: Element, private _fixture: ComponentFixture<unknown>) {
     super(rawRootElement);
   }
 
   /** Creates a `HarnessLoader` rooted at the given fixture's root element. */
-  static create(fixture: ComponentFixture<unknown>): HarnessLoader {
-    const stabilize = async () => {
-      fixture.detectChanges();
-      await fixture.whenStable();
-    };
-    return new TestbedHarnessEnvironment(fixture.nativeElement, stabilize);
+  static loader(fixture: ComponentFixture<unknown>): HarnessLoader {
+    return new TestbedHarnessEnvironment(fixture.nativeElement, fixture);
   }
 
   /**
@@ -38,36 +29,23 @@ export class TestbedHarnessEnvironment extends HarnessEnvironment<Element> {
    * of a fixture, as components do not have the correct selector when they are created as the root
    * of the fixture.
    */
-  static async harnessForFixtureRoot<T extends ComponentHarness>(
+  static async harnessForFixture<T extends ComponentHarness>(
       fixture: ComponentFixture<unknown>, harnessType: ComponentHarnessConstructor<T>): Promise<T> {
-    const stabilize = async () => {
-      fixture.detectChanges();
-      await fixture.whenStable();
-    };
-    const environment = new TestbedHarnessEnvironment(fixture.nativeElement, stabilize);
+    const environment = new TestbedHarnessEnvironment(fixture.nativeElement, fixture);
     await environment._stabilize();
     return environment.createComponentHarness(harnessType, fixture.nativeElement);
   }
 
-  documentRootLocatorFactory(): LocatorFactory {
-    let element = this.rawRootElement;
-    while (element.parentElement) {
-      element = element.parentElement;
-    }
-    return new TestbedHarnessEnvironment(element, this._stabilize);
+  protected getDocumentRoot(): Element {
+    return this._fixture.nativeElement;
   }
 
   protected createTestElement(element: Element): TestElement {
-    return new UnitTestElement(element, this._stabilize);
+    return new UnitTestElement(element, this._stabilize.bind(this));
   }
 
-  protected createComponentHarness<T extends ComponentHarness>(
-      harnessType: ComponentHarnessConstructor<T>, element: Element): T {
-    return new harnessType(new TestbedHarnessEnvironment(element, this._stabilize));
-  }
-
-  protected createHarnessLoader(element: Element): HarnessLoader {
-    return new TestbedHarnessEnvironment(element, this._stabilize);
+  protected createEnvironment(element: Element): HarnessEnvironment<Element> {
+    return new TestbedHarnessEnvironment(element, this._fixture);
   }
 
   protected async getRawElement(selector: string): Promise<Element | null> {
@@ -78,5 +56,10 @@ export class TestbedHarnessEnvironment extends HarnessEnvironment<Element> {
   protected async getAllRawElements(selector: string): Promise<Element[]> {
     await this._stabilize();
     return Array.from(this.rawRootElement.querySelectorAll(selector));
+  }
+
+  private async _stabilize(): Promise<void> {
+    this._fixture.detectChanges();
+    await this._fixture.whenStable();
   }
 }

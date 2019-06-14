@@ -7,12 +7,7 @@
  */
 
 import {by, element as protractorElement, ElementFinder} from 'protractor';
-import {
-  ComponentHarness,
-  ComponentHarnessConstructor,
-  HarnessLoader,
-  LocatorFactory,
-} from '../component-harness';
+import {HarnessLoader} from '../component-harness';
 import {HarnessEnvironment} from '../harness-environment';
 import {TestElement} from '../test-element';
 import {ProtractorElement} from './protractor-element';
@@ -24,24 +19,19 @@ export class ProtractorHarnessEnvironment extends HarnessEnvironment<ElementFind
   }
 
   /** Creates a `HarnessLoader` rooted at the document root. */
-  static create(): HarnessLoader {
+  static loader(): HarnessLoader {
     return new ProtractorHarnessEnvironment(protractorElement(by.css('body')));
   }
 
-  documentRootLocatorFactory(): LocatorFactory {
-    return new ProtractorHarnessEnvironment(protractorElement(by.css('body')));
+  protected getDocumentRoot(): ElementFinder {
+    return protractorElement(by.css('body'));
   }
 
   protected createTestElement(element: ElementFinder): TestElement {
     return new ProtractorElement(element);
   }
 
-  protected createComponentHarness<T extends ComponentHarness>(
-      harnessType: ComponentHarnessConstructor<T>, element: ElementFinder): T {
-    return new harnessType(new ProtractorHarnessEnvironment(element));
-  }
-
-  protected createHarnessLoader(element: ElementFinder): HarnessLoader {
+  protected createEnvironment(element: ElementFinder): HarnessEnvironment<ElementFinder> {
     return new ProtractorHarnessEnvironment(element);
   }
 
