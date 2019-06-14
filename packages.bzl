@@ -20,7 +20,7 @@ CDK_PACKAGES = [
     "tree",
 ]
 
-CDK_TARGETS = ["//src/cdk"] + ["//src/cdk/%s" % p for p in CDK_PACKAGES]
+CDK_TARGETS = ["//src/cdk", "//src/cdk/version"] + ["//src/cdk/%s" % p for p in CDK_PACKAGES]
 
 CDK_EXPERIMENTAL_PACKAGES = [
     "dialog",
@@ -28,7 +28,7 @@ CDK_EXPERIMENTAL_PACKAGES = [
     "scrolling",
 ]
 
-CDK_EXPERIMENTAL_TARGETS = ["//src/cdk-experimental"] + [
+CDK_EXPERIMENTAL_TARGETS = ["//src/cdk-experimental", "//src/cdk-experimental/version"] + [
     "//src/cdk-experimental/%s" % p
     for p in CDK_EXPERIMENTAL_PACKAGES
 ]
@@ -71,7 +71,7 @@ MATERIAL_PACKAGES = [
     "tree",
 ]
 
-MATERIAL_TARGETS = ["//src/material:material"] + ["//src/material/%s" % p for p in MATERIAL_PACKAGES]
+MATERIAL_TARGETS = ["//src/material:material", "//src/material/version"] + ["//src/material/%s" % p for p in MATERIAL_PACKAGES]
 
 # List that references the sass libraries for each Material package. This can be used to create
 # the theming scss-bundle or to specify dependencies for the all-theme.scss file.
@@ -93,7 +93,7 @@ MATERIAL_EXPERIMENTAL_PACKAGES = [
     "popover-edit",
 ]
 
-MATERIAL_EXPERIMENTAL_TARGETS = ["//src/material-experimental"] + [
+MATERIAL_EXPERIMENTAL_TARGETS = ["//src/material-experimental", "//src/material-experimental/version"] + [
     "//src/material-experimental/%s" % p
     for p in MATERIAL_EXPERIMENTAL_PACKAGES
 ]

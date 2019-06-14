@@ -421,5 +421,3 @@ export declare class ShowOnDirtyErrorStateMatcher implements ErrorStateMatcher {
 }
 
 export declare type ThemePalette = 'primary' | 'accent' | 'warn' | undefined;
-
-export declare const VERSION: Version;

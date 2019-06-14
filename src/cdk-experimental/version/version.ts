@@ -8,8 +8,5 @@
 
 import {Version} from '@angular/core';
 
-/**
- * Current version of the Angular Component Development Kit.
- * @deprecated @breaking-change 9.0.0 Import VERSION from @angular/cdk/version instead.
- */
+/** Current version of Angular CDK Experimental. */
 export const VERSION = new Version('0.0.0-PLACEHOLDER');

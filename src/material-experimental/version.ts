@@ -8,5 +8,9 @@
 
 import {Version} from '@angular/core';
 
-/** Current version of the Material experimental package. */
+/**
+ * Current version of the Material experimental package.
+ * @deprecated @breaking-change 9.0.0 Import VERSION from @angular/material-experimental/version
+ *   instead.
+ */
 export const VERSION = new Version('0.0.0-PLACEHOLDER');

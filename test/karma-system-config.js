@@ -88,11 +88,13 @@ System.config({
     '@angular/cdk/testing': 'dist/packages/cdk/testing/index.js',
     '@angular/cdk/text-field': 'dist/packages/cdk/text-field/index.js',
     '@angular/cdk/tree': 'dist/packages/cdk/tree/index.js',
+    '@angular/cdk/version': 'dist/packages/cdk/version/index.js',
 
     '@angular/cdk-experimental/dialog': 'dist/packages/cdk-experimental/dialog/index.js',
     '@angular/cdk-experimental/popover-edit': 'dist/packages/cdk-experimental/popover-edit/index.js',
     '@angular/cdk-experimental/scrolling': 'dist/packages/cdk-experimental/scrolling/index.js',
     '@angular/cdk-experimental/testing': 'dist/packages/cdk-experimental/testing/index.js',
+    '@angular/cdk-experimental/version': 'dist/packages/cdk-experimental/version/index.js',
 
     '@angular/material/autocomplete': 'dist/packages/material/autocomplete/index.js',
     '@angular/material/badge': 'dist/packages/material/badge/index.js',
@@ -130,6 +132,7 @@ System.config({
     '@angular/material/toolbar': 'dist/packages/material/toolbar/index.js',
     '@angular/material/tooltip': 'dist/packages/material/tooltip/index.js',
     '@angular/material/tree': 'dist/packages/material/tree/index.js',
+    '@angular/material/version': 'dist/packages/material/version/index.js',
 
     '@angular/material-experimental/mdc-button':
         'dist/packages/material-experimental/mdc-button/index.js',
@@ -151,6 +154,8 @@ System.config({
         'dist/packages/material-experimental/mdc-tabs/index.js',
     '@angular/material-experimental/popover-edit':
         'dist/packages/material-experimental/popover-edit/index.js',
+    '@angular/material-experimental/version':
+        'dist/packages/material-experimental/version/index.js',
   },
   packages: {
     // Thirdparty barrels.
