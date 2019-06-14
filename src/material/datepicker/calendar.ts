@@ -27,15 +27,17 @@ import {
 } from '@angular/core';
 import {DateAdapter, MAT_DATE_FORMATS, MatDateFormats} from '@angular/material/core';
 import {Subject, Subscription} from 'rxjs';
+import {MatCalendarCellCssClasses} from './calendar-body';
 import {createMissingDateImplError} from './datepicker-errors';
 import {MatDatepickerIntl} from './datepicker-intl';
 import {MatMonthView} from './month-view';
-import {MatMultiYearView,
-        yearsPerPage,
-        getActiveOffset,
-        isSameMultiYearView} from './multi-year-view';
+import {
+  getActiveOffset,
+  isSameMultiYearView,
+  MatMultiYearView,
+  yearsPerPage
+} from './multi-year-view';
 import {MatYearView} from './year-view';
-import {MatCalendarCellCssClasses} from './calendar-body';
 
 /**
  * Possible views for the calendar.
