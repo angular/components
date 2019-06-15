@@ -11,6 +11,7 @@ import {
   ComponentHarness,
   ComponentHarnessConstructor,
   HarnessLoader,
+  HarnessPredicate,
   LocatorFactory
 } from './component-harness';
 import {TestElement} from './test-element';
@@ -36,75 +37,84 @@ export abstract class HarnessEnvironment<E> implements HarnessLoader, LocatorFac
 
   // Implemented as part of the `LocatorFactory` interface.
   locatorFor(selector: string): AsyncFn<TestElement>;
-  locatorFor<T extends ComponentHarness>(harnessType: ComponentHarnessConstructor<T>):
-      AsyncFn<T>;
   locatorFor<T extends ComponentHarness>(
-      arg: string | ComponentHarnessConstructor<T>): AsyncFn<TestElement | T> {
+      harnessType: ComponentHarnessConstructor<T> | HarnessPredicate<T>): AsyncFn<T>;
+  locatorFor<T extends ComponentHarness>(
+      arg: string | ComponentHarnessConstructor<T> | HarnessPredicate<T>):
+      AsyncFn<TestElement | T> {
     return async () => {
+      let selector: string;
       if (typeof arg === 'string') {
-        const element = await this.getRawElement(arg);
+        selector = arg;
+        const element = (await this.getAllRawElements(selector))[0];
         if (element) {
           return this.createTestElement(element);
         }
       } else {
-        const element = await this.getRawElement(arg.hostSelector);
+        const harnessPredicate = arg instanceof HarnessPredicate ? arg : new HarnessPredicate(arg);
+        selector = harnessPredicate.harnessType.hostSelector;
+        const element = (await this.getAllRawElements(selector))[0];
         if (element) {
-          return this.createComponentHarness(arg, element);
+          return this.createComponentHarness(harnessPredicate.harnessType, element);
         }
       }
-      const selector = typeof arg === 'string' ? arg : arg.hostSelector;
       throw Error(`Expected to find element matching selector: "${selector}", but none was found`);
     };
   }
 
   // Implemented as part of the `LocatorFactory` interface.
   locatorForOptional(selector: string): AsyncFn<TestElement | null>;
-  locatorForOptional<T extends ComponentHarness>(harnessType: ComponentHarnessConstructor<T>):
-      AsyncFn<T | null>;
   locatorForOptional<T extends ComponentHarness>(
-      arg: string | ComponentHarnessConstructor<T>): AsyncFn<TestElement | T | null> {
+      harnessType: ComponentHarnessConstructor<T> | HarnessPredicate<T>): AsyncFn<T | null>;
+  locatorForOptional<T extends ComponentHarness>(
+      arg: string | ComponentHarnessConstructor<T> | HarnessPredicate<T>):
+      AsyncFn<TestElement | T | null> {
     return async () => {
       if (typeof arg === 'string') {
-        const element = await this.getRawElement(arg);
+        const element = (await this.getAllRawElements(arg))[0];
         return element ? this.createTestElement(element) : null;
       } else {
-        const element = await this.getRawElement(arg.hostSelector);
-        return element ? this.createComponentHarness(arg, element) : null;
+        const harnessPredicate = arg instanceof HarnessPredicate ? arg : new HarnessPredicate(arg);
+        const element =
+            (await this.getAllRawElements(harnessPredicate.harnessType.hostSelector))[0];
+        return element ? this.createComponentHarness(harnessPredicate.harnessType, element) : null;
       }
     };
   }
 
   // Implemented as part of the `LocatorFactory` interface.
   locatorForAll(selector: string): AsyncFn<TestElement[]>;
-  locatorForAll<T extends ComponentHarness>(harnessType: ComponentHarnessConstructor<T>):
-      AsyncFn<T[]>;
   locatorForAll<T extends ComponentHarness>(
-      arg: string | ComponentHarnessConstructor<T>): AsyncFn<TestElement[] | T[]> {
+      harnessType: ComponentHarnessConstructor<T> | HarnessPredicate<T>): AsyncFn<T[]>;
+  locatorForAll<T extends ComponentHarness>(
+      arg: string | ComponentHarnessConstructor<T> | HarnessPredicate<T>):
+      AsyncFn<TestElement[] | T[]> {
     return async () => {
       if (typeof arg === 'string') {
         return (await this.getAllRawElements(arg)).map(e => this.createTestElement(e));
       } else {
-        return (await this.getAllRawElements(arg.hostSelector))
-            .map(e => this.createComponentHarness(arg, e));
+        const harnessPredicate = arg instanceof HarnessPredicate ? arg : new HarnessPredicate(arg);
+        return (await this.getAllRawElements(harnessPredicate.harnessType.hostSelector))
+            .map(element => this.createComponentHarness(harnessPredicate.harnessType, element));
       }
     };
   }
 
   // Implemented as part of the `HarnessLoader` interface.
-  getHarness<T extends ComponentHarness>(harnessType: ComponentHarnessConstructor<T>):
-      Promise<T> {
+  getHarness<T extends ComponentHarness>(
+      harnessType: ComponentHarnessConstructor<T> | HarnessPredicate<T>): Promise<T> {
     return this.locatorFor(harnessType)();
   }
 
   // Implemented as part of the `HarnessLoader` interface.
-  getAllHarnesses<T extends ComponentHarness>(harnessType: ComponentHarnessConstructor<T>):
-      Promise<T[]> {
+  getAllHarnesses<T extends ComponentHarness>(
+      harnessType: ComponentHarnessConstructor<T> | HarnessPredicate<T>): Promise<T[]> {
     return this.locatorForAll(harnessType)();
   }
 
   // Implemented as part of the `HarnessLoader` interface.
   async getChildLoader(selector: string): Promise<HarnessLoader> {
-    const element = await this.getRawElement(selector);
+    const element = (await this.getAllRawElements(selector))[0];
     if (element) {
       return this.createEnvironment(element);
     }
@@ -130,12 +140,6 @@ export abstract class HarnessEnvironment<E> implements HarnessLoader, LocatorFac
 
   /** Creates a `HarnessLoader` rooted at the given raw element. */
   protected abstract createEnvironment(element: E): HarnessEnvironment<E>;
-
-  /**
-   * Gets the first element matching the given selector under this environment's root element, or
-   * null if no elements match.
-   */
-  protected abstract getRawElement(selector: string): Promise<E | null>;
 
   /**
    * Gets a list of all elements matching the given selector under this environment's root element.

@@ -11,6 +11,10 @@ import {TestElement} from './test-element';
 /** An async function that returns a promise when called. */
 export type AsyncFn<T> = () => Promise<T>;
 
+export type AsyncPredicate<T> = (item: T) => Promise<boolean>;
+
+export type AsyncOptionPredicate<T, O> = (item: T, option: O) => Promise<boolean>;
+
 /**
  * Interface used to load ComponentHarness objects. This interface is used by test authors to
  * instantiate `ComponentHarness`es.
@@ -44,8 +48,8 @@ export interface HarnessLoader {
    * @return An instance of the given harness type
    * @throws If a matching component instance can't be found.
    */
-  getHarness<T extends ComponentHarness>(harnessType: ComponentHarnessConstructor<T>):
-      Promise<T>;
+  getHarness<T extends ComponentHarness>(
+      harnessType: ComponentHarnessConstructor<T> | HarnessPredicate<T>): Promise<T>;
 
   /**
    * Searches for all instances of the component corresponding to the given harness type under the
@@ -53,8 +57,8 @@ export interface HarnessLoader {
    * @param harnessType The type of harness to create
    * @return A list instances of the given harness type.
    */
-  getAllHarnesses<T extends ComponentHarness>(harnessType: ComponentHarnessConstructor<T>):
-      Promise<T[]>;
+  getAllHarnesses<T extends ComponentHarness>(
+      harnessType: ComponentHarnessConstructor<T> | HarnessPredicate<T>): Promise<T[]>;
 }
 
 /**
@@ -89,8 +93,8 @@ export interface LocatorFactory {
    * @return An asynchronous locator function that searches components matching the given harness
    *     type, and either returns a `ComponentHarness` for the component, or throws an error.
    */
-  locatorFor<T extends ComponentHarness>(harnessType: ComponentHarnessConstructor<T>):
-      AsyncFn<T>;
+  locatorFor<T extends ComponentHarness>(
+      harnessType: ComponentHarnessConstructor<T> | HarnessPredicate<T>): AsyncFn<T>;
 
   /**
    * Creates an asynchronous locator function that can be used to search for elements with the given
@@ -112,8 +116,8 @@ export interface LocatorFactory {
    * @return An asynchronous locator function that searches components matching the given harness
    *     type, and either returns a `ComponentHarness` for the component, or null if none is found.
    */
-  locatorForOptional<T extends ComponentHarness>(harnessType: ComponentHarnessConstructor<T>):
-      AsyncFn<T | null>;
+  locatorForOptional<T extends ComponentHarness>(
+      harnessType: ComponentHarnessConstructor<T> | HarnessPredicate<T>): AsyncFn<T | null>;
 
   /**
    * Creates an asynchronous locator function that can be used to search for a list of elements with
@@ -134,8 +138,8 @@ export interface LocatorFactory {
    * @return An asynchronous locator function that searches components matching the given harness
    *     type, and returns a list of `ComponentHarness`es.
    */
-  locatorForAll<T extends ComponentHarness>(harnessType: ComponentHarnessConstructor<T>):
-      AsyncFn<T[]>;
+  locatorForAll<T extends ComponentHarness>(
+      harnessType: ComponentHarnessConstructor<T> | HarnessPredicate<T>): AsyncFn<T[]>;
 }
 
 /**
@@ -181,7 +185,7 @@ export abstract class ComponentHarness {
    *     type, and either returns a `ComponentHarness` for the component, or throws an error.
    */
   protected locatorFor<T extends ComponentHarness>(
-      harnessType: ComponentHarnessConstructor<T>): AsyncFn<T>;
+      harnessType: ComponentHarnessConstructor<T> | HarnessPredicate<T>): AsyncFn<T>;
 
   protected locatorFor(arg: any): any {
     return this.locatorFactory.locatorFor(arg);
@@ -208,7 +212,7 @@ export abstract class ComponentHarness {
    *     type, and either returns a `ComponentHarness` for the component, or null if none is found.
    */
   protected locatorForOptional<T extends ComponentHarness>(
-      harnessType: ComponentHarnessConstructor<T>): AsyncFn<T | null>;
+      harnessType: ComponentHarnessConstructor<T> | HarnessPredicate<T>): AsyncFn<T | null>;
 
   protected locatorForOptional(arg: any): any {
     return this.locatorFactory.locatorForOptional(arg);
@@ -233,8 +237,8 @@ export abstract class ComponentHarness {
    * @return An asynchronous locator function that searches components matching the given harness
    *     type, and returns a list of `ComponentHarness`es.
    */
-  protected locatorForAll<T extends ComponentHarness>(harnessType: ComponentHarnessConstructor<T>):
-      AsyncFn<T[]>;
+  protected locatorForAll<T extends ComponentHarness>(
+      harnessType: ComponentHarnessConstructor<T> | HarnessPredicate<T>): AsyncFn<T[]>;
 
   protected locatorForAll(arg: any): any {
     return this.locatorFactory.locatorForAll(arg);
@@ -251,4 +255,32 @@ export interface ComponentHarnessConstructor<T extends ComponentHarness> {
    * for the Angular component.
    */
   hostSelector: string;
+}
+
+export class HarnessPredicate<T extends ComponentHarness> {
+  predicates: AsyncPredicate<T>[] = [];
+
+  constructor(public harnessType: ComponentHarnessConstructor<T>) {}
+
+  add(predicate: AsyncPredicate<T>) {
+    this.predicates.push(predicate);
+    return this;
+  }
+
+  addOption<O>(option: O | undefined, predicate: AsyncOptionPredicate<T, O>) {
+    if (option !== undefined) {
+      this.add(item => predicate(item, option));
+    }
+    return this;
+  }
+
+  async filter(harnesses: T[]): Promise<T[]> {
+    const results = await Promise.all(harnesses.map(h => this.evaluate(h)));
+    return harnesses.filter((_, i) => results[i]);
+  }
+
+  async evaluate(harness: T): Promise<boolean> {
+    const results = await Promise.all(this.predicates.map(async p => await p(harness)));
+    return results.reduce((combined, current) => combined && current, true);
+  }
 }
