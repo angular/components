@@ -280,7 +280,7 @@ export class HarnessPredicate<T extends ComponentHarness> {
   }
 
   async evaluate(harness: T): Promise<boolean> {
-    const results = await Promise.all(this.predicates.map(async p => await p(harness)));
+    const results = await Promise.all(this.predicates.map(p => p(harness)));
     return results.reduce((combined, current) => combined && current, true);
   }
 }

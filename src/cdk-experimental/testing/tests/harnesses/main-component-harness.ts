@@ -40,6 +40,12 @@ export class MainComponentHarness extends ComponentHarness {
   readonly optionalSubComponent = this.locatorForOptional(SubComponentHarness);
   readonly errorSubComponent = this.locatorFor(WrongComponentHarness);
 
+  readonly fourItemLists = this.locatorForAll(SubComponentHarness.with({itemCount: 4}));
+  readonly toolsLists = this.locatorForAll(SubComponentHarness.with({title: 'List of test tools'}));
+  readonly fourItemToolsLists =
+      this.locatorForAll(SubComponentHarness.with({title: 'List of test tools', itemCount: 4}));
+  readonly testLists = this.locatorForAll(SubComponentHarness.with({title: /test/}));
+
   private _testTools = this.locatorFor(SubComponentHarness);
 
   async increaseCounter(times: number) {

@@ -53,9 +53,13 @@ export abstract class HarnessEnvironment<E> implements HarnessLoader, LocatorFac
       } else {
         const harnessPredicate = arg instanceof HarnessPredicate ? arg : new HarnessPredicate(arg);
         selector = harnessPredicate.harnessType.hostSelector;
-        const element = (await this.getAllRawElements(selector))[0];
-        if (element) {
-          return this.createComponentHarness(harnessPredicate.harnessType, element);
+        const elements = await this.getAllRawElements(harnessPredicate.harnessType.hostSelector);
+        const candidates =
+            await harnessPredicate.filter(elements.map(
+                element => this.createComponentHarness(harnessPredicate.harnessType, element)));
+        const harness = candidates[0];
+        if (harness) {
+          return harness;
         }
       }
       throw Error(`Expected to find element matching selector: "${selector}", but none was found`);
@@ -75,9 +79,11 @@ export abstract class HarnessEnvironment<E> implements HarnessLoader, LocatorFac
         return element ? this.createTestElement(element) : null;
       } else {
         const harnessPredicate = arg instanceof HarnessPredicate ? arg : new HarnessPredicate(arg);
-        const element =
-            (await this.getAllRawElements(harnessPredicate.harnessType.hostSelector))[0];
-        return element ? this.createComponentHarness(harnessPredicate.harnessType, element) : null;
+        const elements = await this.getAllRawElements(harnessPredicate.harnessType.hostSelector);
+        const candidates =
+            await harnessPredicate.filter(elements.map(
+                element => this.createComponentHarness(harnessPredicate.harnessType, element)));
+        return candidates[0] || null;
       }
     };
   }
@@ -94,8 +100,9 @@ export abstract class HarnessEnvironment<E> implements HarnessLoader, LocatorFac
         return (await this.getAllRawElements(arg)).map(e => this.createTestElement(e));
       } else {
         const harnessPredicate = arg instanceof HarnessPredicate ? arg : new HarnessPredicate(arg);
-        return (await this.getAllRawElements(harnessPredicate.harnessType.hostSelector))
-            .map(element => this.createComponentHarness(harnessPredicate.harnessType, element));
+        const elements = await this.getAllRawElements(harnessPredicate.harnessType.hostSelector);
+        return harnessPredicate.filter(elements.map(
+                element => this.createComponentHarness(harnessPredicate.harnessType, element)));
       }
     };
   }

@@ -135,10 +135,11 @@ describe('ProtractorHarnessEnvironment', () => {
       expect(await items1[0].text()).toBe('Protractor');
       expect(await items1[1].text()).toBe('TestBed');
       expect(await items1[2].text()).toBe('Other');
-      expect(items2.length).toBe(3);
+      expect(items2.length).toBe(4);
       expect(await items2[0].text()).toBe('Unit Test');
       expect(await items2[1].text()).toBe('Integration Test');
       expect(await items2[2].text()).toBe('Performance Test');
+      expect(await items2[3].text()).toBe('Mutation Test');
     });
 
     it('should wait for async operation to complete', async () => {
@@ -226,6 +227,39 @@ describe('ProtractorHarnessEnvironment', () => {
       await button.blur();
       expect(await (await browser.switchTo().activeElement()).getText())
           .not.toBe(await button.text());
+    });
+  });
+
+  describe('HarnessPredicate', () => {
+    let harness: MainComponentHarness;
+
+    beforeEach(async () => {
+      harness = await ProtractorHarnessEnvironment.create().requiredHarness(MainComponentHarness);
+    });
+
+    it('should find subcomponents with specific item count', async () => {
+      const fourItemLists = await harness.fourItemLists();
+      expect(fourItemLists.length).toBe(1);
+      expect(await (await fourItemLists[0].title()).text()).toBe('List of test methods');
+    });
+
+    it('should find subcomponents with specific title', async () => {
+      const toolsLists = await harness.toolsLists();
+      expect(toolsLists.length).toBe(1);
+      expect(await (await toolsLists[0].title()).text()).toBe('List of test tools');
+    });
+
+    it('should find no subcomponents if predicate does not match', async () => {
+      const fourItemToolsLists = await harness.fourItemToolsLists();
+      // TODO(mmalerba): Also test error message when using `locatorFor`.
+      expect(fourItemToolsLists.length).toBe(0);
+    });
+
+    it('should find subcomponents with title regex', async () => {
+      const testLists = await harness.testLists();
+      expect(testLists.length).toBe(2);
+      expect(await (await testLists[0].title()).text()).toBe('List of test tools');
+      expect(await (await testLists[1].title()).text()).toBe('List of test methods');
     });
   });
 });

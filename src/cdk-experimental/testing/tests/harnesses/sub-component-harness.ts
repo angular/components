@@ -12,10 +12,13 @@ import {TestElement} from '../../test-element';
 export class SubComponentHarness extends ComponentHarness {
   static readonly hostSelector = 'test-sub';
 
-  static with(options: {title?: string, itemCount?: number} = {}) {
+  static with(options: {title?: string | RegExp, itemCount?: number} = {}) {
     return new HarnessPredicate(SubComponentHarness)
         .addOption(options.title,
-            async (harness, title) => await (await harness.title()).text() === title)
+            async (harness, title) => {
+              const titleText = await (await harness.title()).text();
+              return typeof title === 'string' ? titleText === title : !!titleText.match(title);
+            })
         .addOption(options.itemCount,
             async (harness, count) => (await harness.getItems()).length === count);
   }

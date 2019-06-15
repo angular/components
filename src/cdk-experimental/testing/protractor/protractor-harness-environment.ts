@@ -40,7 +40,7 @@ export class ProtractorHarnessEnvironment extends HarnessEnvironment<ElementFind
     const length = await elementFinderArray.count();
     const elements: ElementFinder[] = [];
     for (let i = 0; i < length; i++) {
-      try { elements.push(elementFinderArray.get(i)); } catch (e) {}
+      elements.push(elementFinderArray.get(i));
     }
     return elements;
   }
