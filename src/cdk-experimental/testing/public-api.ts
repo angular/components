@@ -8,6 +8,4 @@
 
 export * from './component-harness';
 export * from './harness-environment';
-export * from './protractor';
 export * from './test-element';
-export * from './testbed';

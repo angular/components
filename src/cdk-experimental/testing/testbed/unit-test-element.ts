@@ -86,7 +86,7 @@ export class UnitTestElement implements TestElement {
 
   async text(): Promise<string> {
     await this._stabilize();
-    return this.element.textContent || '';
+    return (this.element.textContent || '').trim();
   }
 
   async getAttribute(name: string): Promise<string|null> {

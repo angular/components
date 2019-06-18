@@ -9,6 +9,10 @@
 import {ComponentHarness, HarnessPredicate} from '@angular/cdk-experimental/testing';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
 
+/**
+ * Harness for interacting with a standard mat-checkbox in tests.
+ * @dynamic
+ */
 export class MatCheckboxHarness extends ComponentHarness {
   static hostSelector = 'mat-checkbox';
 
