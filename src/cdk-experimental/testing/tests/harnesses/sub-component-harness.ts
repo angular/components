@@ -17,7 +17,7 @@ export class SubComponentHarness extends ComponentHarness {
     return new HarnessPredicate(SubComponentHarness)
         .addOption('title', options.title,
             async (harness, title) =>
-                HarnessPredicate.stringMatches(await (await harness.title()).text(), title))
+                HarnessPredicate.stringMatches((await harness.title()).text(), title))
         .addOption('item count', options.itemCount,
             async (harness, count) => (await harness.getItems()).length === count);
   }

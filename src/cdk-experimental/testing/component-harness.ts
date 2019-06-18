@@ -268,12 +268,15 @@ export class HarnessPredicate<T extends ComponentHarness> {
 
   /**
    * Checks if a string matches the given pattern.
-   * @param s The string to check.
+   * @param s The string to check, or a Promise for the string to check.
    * @param pattern The pattern the string is expected to match. If `pattern` is a string, `s` is
    *   expected to match exactly. If `pattern` is a regex, a partial match is allowed.
+   * @return A Promise that resolves to whether the string matches the pattern.
    */
-  static stringMatches(s: string, pattern: string | RegExp): boolean {
-    return typeof pattern === 'string' ? s === pattern : !!s.match(pattern);
+  static async stringMatches(s: string | Promise<string>, pattern: string | RegExp):
+      Promise<boolean> {
+    s = await s;
+    return typeof pattern === 'string' ? s === pattern : pattern.test(s);
   }
 
   /**

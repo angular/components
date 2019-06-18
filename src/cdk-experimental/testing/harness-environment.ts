@@ -24,10 +24,9 @@ function _getErrorForMissingHarness<T extends ComponentHarness>(
     harnessType: ComponentHarnessConstructor<T> | HarnessPredicate<T>): Error {
   const harnessPredicate =
       harnessType instanceof HarnessPredicate ? harnessType : new HarnessPredicate(harnessType);
-  const name = harnessPredicate.harnessType.name;
-  const selector = harnessPredicate.harnessType.hostSelector;
+  const {name, hostSelector} = harnessPredicate.harnessType;
   const restrictions = harnessPredicate.getDescription();
-  let message = `Expected to find element for ${name} matching selector: "${selector}"`;
+  let message = `Expected to find element for ${name} matching selector: "${hostSelector}"`;
   if (restrictions) {
     message += ` (with restrictions: ${restrictions})`;
   }
