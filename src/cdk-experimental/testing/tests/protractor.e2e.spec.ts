@@ -234,7 +234,7 @@ describe('ProtractorHarnessEnvironment', () => {
     let harness: MainComponentHarness;
 
     beforeEach(async () => {
-      harness = await ProtractorHarnessEnvironment.create().requiredHarness(MainComponentHarness);
+      harness = await ProtractorHarnessEnvironment.loader().getHarness(MainComponentHarness);
     });
 
     it('should find subcomponents with specific item count', async () => {

@@ -252,7 +252,7 @@ describe('TestbedHarnessEnvironment', () => {
 
     beforeEach(async () => {
       harness =
-          await TestbedHarnessEnvironment.harnessForFixtureRoot(fixture, MainComponentHarness);
+          await TestbedHarnessEnvironment.harnessForFixture(fixture, MainComponentHarness);
     });
 
     it('should find subcomponents with specific item count', async () => {
