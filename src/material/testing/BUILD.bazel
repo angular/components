@@ -1,0 +1,13 @@
+package(default_visibility = ["//visibility:public"])
+
+load("//tools:defaults.bzl", "ng_module")
+
+ng_module(
+    name = "testing",
+    srcs = glob(["**/*.ts"]),
+    module_name = "@angular/material/testing",
+    deps = [
+        "//src/material/core",
+        "@npm//@angular/core",
+    ],
+)

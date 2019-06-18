@@ -1,11 +1,11 @@
 import {FocusMonitor, FocusOrigin} from '@angular/cdk/a11y';
 import {
+  AfterViewInit,
   ChangeDetectorRef,
   Component,
   ElementRef,
   NgZone,
   OnDestroy,
-  OnInit,
   ViewChild
 } from '@angular/core';
 
@@ -15,33 +15,33 @@ import {
   templateUrl: 'focus-monitor-overview-example.html',
   styleUrls: ['focus-monitor-overview-example.css']
 })
-export class FocusMonitorOverviewExample implements OnDestroy, OnInit {
-  @ViewChild('element') element: ElementRef<HTMLElement>;
-  @ViewChild('subtree') subtree: ElementRef<HTMLElement>;
+export class FocusMonitorOverviewExample implements OnDestroy, AfterViewInit {
+  @ViewChild('element', {static: false}) element: ElementRef<HTMLElement>;
+  @ViewChild('subtree', {static: false}) subtree: ElementRef<HTMLElement>;
 
   elementOrigin = this.formatOrigin(null);
   subtreeOrigin = this.formatOrigin(null);
 
-  constructor(private focusMonitor: FocusMonitor,
-              private cdr: ChangeDetectorRef,
-              private ngZone: NgZone) {}
+  constructor(private _focusMonitor: FocusMonitor,
+              private _cdr: ChangeDetectorRef,
+              private _ngZone: NgZone) {}
 
-  ngOnInit() {
-    this.focusMonitor.monitor(this.element)
-        .subscribe(origin => this.ngZone.run(() => {
+  ngAfterViewInit() {
+    this._focusMonitor.monitor(this.element)
+        .subscribe(origin => this._ngZone.run(() => {
           this.elementOrigin = this.formatOrigin(origin);
-          this.cdr.markForCheck();
+          this._cdr.markForCheck();
         }));
-    this.focusMonitor.monitor(this.subtree, true)
-        .subscribe(origin => this.ngZone.run(() => {
+    this._focusMonitor.monitor(this.subtree, true)
+        .subscribe(origin => this._ngZone.run(() => {
           this.subtreeOrigin = this.formatOrigin(origin);
-          this.cdr.markForCheck();
+          this._cdr.markForCheck();
         }));
   }
 
   ngOnDestroy() {
-    this.focusMonitor.stopMonitoring(this.element);
-    this.focusMonitor.stopMonitoring(this.subtree);
+    this._focusMonitor.stopMonitoring(this.element);
+    this._focusMonitor.stopMonitoring(this.subtree);
   }
 
   formatOrigin(origin: FocusOrigin): string {

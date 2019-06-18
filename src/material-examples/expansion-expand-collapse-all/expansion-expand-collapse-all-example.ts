@@ -1,5 +1,5 @@
 import {Component, ViewChild} from '@angular/core';
-import {MatAccordion} from '@angular/material';
+import {MatAccordion} from '@angular/material/expansion';
 
 /**
  * @title Accordion with expand/collapse all toggles
@@ -10,5 +10,5 @@ import {MatAccordion} from '@angular/material';
   styleUrls: ['expansion-expand-collapse-all-example.css'],
 })
 export class ExpansionExpandCollapseAllExample {
-  @ViewChild(MatAccordion) accordion: MatAccordion;
+  @ViewChild(MatAccordion, {static: false}) accordion: MatAccordion;
 }

@@ -143,14 +143,44 @@ describe('DragDropRegistry', () => {
   it('should complete the pointer event streams on destroy', () => {
     const pointerUpSpy = jasmine.createSpy('pointerUp complete spy');
     const pointerMoveSpy = jasmine.createSpy('pointerMove complete spy');
-    const pointerUpSubscription = registry.pointerUp.subscribe(undefined, undefined, pointerUpSpy);
-    const pointerMoveSubscription =
-        registry.pointerMove.subscribe(undefined, undefined, pointerMoveSpy);
+    const pointerUpSubscription = registry.pointerUp.subscribe({complete: pointerUpSpy});
+    const pointerMoveSubscription = registry.pointerMove.subscribe({complete: pointerMoveSpy});
 
     registry.ngOnDestroy();
 
     expect(pointerUpSpy).toHaveBeenCalled();
     expect(pointerMoveSpy).toHaveBeenCalled();
+
+    pointerUpSubscription.unsubscribe();
+    pointerMoveSubscription.unsubscribe();
+  });
+
+  it('should not emit pointer events when dragging is over (mutli touch)', () => {
+    const firstItem = testComponent.dragItems.first;
+
+    // First finger down
+    registry.startDragging(firstItem, createTouchEvent('touchstart') as TouchEvent);
+    // Second finger down
+    registry.startDragging(firstItem, createTouchEvent('touchstart') as TouchEvent);
+    // First finger up
+    registry.stopDragging(firstItem);
+
+    // Ensure dragging is over - registry is empty
+    expect(registry.isDragging(firstItem)).toBe(false);
+
+    const pointerUpSpy = jasmine.createSpy('pointerUp spy');
+    const pointerMoveSpy = jasmine.createSpy('pointerMove spy');
+
+    const pointerUpSubscription = registry.pointerUp.subscribe(pointerUpSpy);
+    const pointerMoveSubscription = registry.pointerMove.subscribe(pointerMoveSpy);
+
+    // Second finger keeps moving
+    dispatchTouchEvent(document, 'touchmove');
+    expect(pointerMoveSpy).not.toHaveBeenCalled();
+
+    // Second finger up
+    dispatchTouchEvent(document, 'touchend');
+    expect(pointerUpSpy).not.toHaveBeenCalled();
 
     pointerUpSubscription.unsubscribe();
     pointerMoveSubscription.unsubscribe();

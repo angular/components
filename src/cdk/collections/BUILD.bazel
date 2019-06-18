@@ -1,38 +1,48 @@
-package(default_visibility=["//visibility:public"])
+package(default_visibility = ["//visibility:public"])
 
-load("//tools:defaults.bzl", "ng_module", "ts_library", "jasmine_node_test", "markdown_to_html")
+load(
+    "//tools:defaults.bzl",
+    "markdown_to_html",
+    "ng_module",
+    "ng_test_library",
+    "ng_web_test_suite",
+)
 
 ng_module(
-  name = "collections",
-  srcs = glob(["**/*.ts"], exclude=["**/*.spec.ts"]),
-  module_name = "@angular/cdk/collections",
-  deps = [
-    "@angular//packages/core",
-    "@rxjs"
-  ],
+    name = "collections",
+    srcs = glob(
+        ["**/*.ts"],
+        exclude = ["**/*.spec.ts"],
+    ),
+    module_name = "@angular/cdk/collections",
+    deps = [
+        "@npm//@angular/core",
+        "@npm//rxjs",
+    ],
 )
 
-ts_library(
-  name = "collections_test_sources",
-  srcs = glob(["**/*.spec.ts"]),
-  deps = [
-    "@matdeps//@types/jasmine",
-    ":collections"
-  ],
-  testonly = 1,
+ng_test_library(
+    name = "unit_test_sources",
+    srcs = glob(
+        ["**/*.spec.ts"],
+        exclude = ["**/*.e2e.spec.ts"],
+    ),
+    deps = [
+        ":collections",
+    ],
 )
 
-jasmine_node_test(
-  name = "unit_tests",
-  deps = [":collections_test_sources"],
+ng_web_test_suite(
+    name = "unit_tests",
+    deps = [":unit_test_sources"],
 )
 
 markdown_to_html(
-  name = "overview",
-  srcs = [":collections.md"],
+    name = "overview",
+    srcs = [":collections.md"],
 )
 
 filegroup(
-  name = "source-files",
-  srcs = glob(["**/*.ts"]),
+    name = "source-files",
+    srcs = glob(["**/*.ts"]),
 )

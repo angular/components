@@ -8,7 +8,8 @@
 
 import {Component} from '@angular/core';
 import {FormControl, Validators} from '@angular/forms';
-import {ErrorStateMatcher, MatSelectChange} from '@angular/material';
+import {ErrorStateMatcher} from '@angular/material/core';
+import {MatSelectChange} from '@angular/material/select';
 
 /** Error any time control is invalid */
 export class MyErrorStateMatcher implements ErrorStateMatcher {
@@ -41,6 +42,7 @@ export class SelectDemo {
   currentAppearanceValue: string | null;
   latestChangeEvent: MatSelectChange;
   floatLabel = 'auto';
+  drinksWidth = 'default';
   foodControl = new FormControl('pizza-1');
   topHeightCtrl = new FormControl(0);
   drinksTheme = 'primary';

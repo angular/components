@@ -71,9 +71,9 @@ describe('BreakpointObserver', () => {
 
   it('completes all events when the breakpoint manager is destroyed', fakeAsync(() => {
     const firstTest = jasmine.createSpy('test1');
-    breakpointObserver.observe('test1').subscribe(undefined, undefined, firstTest);
+    breakpointObserver.observe('test1').subscribe({complete: firstTest});
     const secondTest = jasmine.createSpy('test2');
-    breakpointObserver.observe('test2').subscribe(undefined, undefined, secondTest);
+    breakpointObserver.observe('test2').subscribe({complete: secondTest});
 
     flush();
     expect(firstTest).not.toHaveBeenCalled();
@@ -193,29 +193,29 @@ export class FakeMediaQueryList {
 @Injectable()
 export class FakeMediaMatcher {
   /** A map of match media queries. */
-  private queries = new Map<string, FakeMediaQueryList>();
+  private _queries = new Map<string, FakeMediaQueryList>();
 
   /** The number of distinct queries created in the media matcher during a test. */
   get queryCount(): number {
-    return this.queries.size;
+    return this._queries.size;
   }
 
   /** Fakes the match media response to be controlled in tests. */
   matchMedia(query: string): FakeMediaQueryList {
     const mql = new FakeMediaQueryList(true, query);
-    this.queries.set(query, mql);
+    this._queries.set(query, mql);
     return mql;
   }
 
   /** Clears all queries from the map of queries. */
   clear() {
-    this.queries.clear();
+    this._queries.clear();
   }
 
   /** Toggles the matching state of the provided query. */
   setMatchesQuery(query: string, matches: boolean) {
-    if (this.queries.has(query)) {
-      this.queries.get(query)!.setMatches(matches);
+    if (this._queries.has(query)) {
+      this._queries.get(query)!.setMatches(matches);
     } else {
       throw Error('This query is not being observed.');
     }

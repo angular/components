@@ -6,14 +6,14 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Dir} from '@angular/cdk/bidi';
+import {Directionality} from '@angular/cdk/bidi';
 import {Component, TemplateRef, ViewChild} from '@angular/core';
 import {
   MatSnackBar,
   MatSnackBarConfig,
   MatSnackBarHorizontalPosition,
   MatSnackBarVerticalPosition,
-} from '@angular/material';
+} from '@angular/material/snack-bar';
 
 
 @Component({
@@ -23,7 +23,7 @@ import {
   templateUrl: 'snack-bar-demo.html',
 })
 export class SnackBarDemo {
-  @ViewChild('template') template: TemplateRef<any>;
+  @ViewChild('template', {static: false}) template: TemplateRef<any>;
   message = 'Snack Bar opened.';
   actionButtonLabel = 'Retry';
   action = false;
@@ -33,8 +33,7 @@ export class SnackBarDemo {
   horizontalPosition: MatSnackBarHorizontalPosition = 'center';
   verticalPosition: MatSnackBarVerticalPosition = 'bottom';
 
-  constructor(public snackBar: MatSnackBar, private dir: Dir) {
-  }
+  constructor(public snackBar: MatSnackBar, private _dir: Directionality) {}
 
   open() {
     const config = this._createConfig();
@@ -52,7 +51,7 @@ export class SnackBarDemo {
     config.horizontalPosition = this.horizontalPosition;
     config.duration = this.setAutoHide ? this.autoHide : 0;
     config.panelClass = this.addExtraClass ? ['demo-party'] : undefined;
-    config.direction = this.dir.value;
+    config.direction = this._dir.value;
     return config;
   }
 }

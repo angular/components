@@ -1,5 +1,5 @@
 import {AutofillMonitor} from '@angular/cdk/text-field';
-import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, OnDestroy, ViewChild} from '@angular/core';
 
 /** @title Monitoring autofill state with AutofillMonitor */
 @Component({
@@ -7,23 +7,23 @@ import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core
   templateUrl: './text-field-autofill-monitor-example.html',
   styleUrls: ['./text-field-autofill-monitor-example.css'],
 })
-export class TextFieldAutofillMonitorExample implements OnDestroy, OnInit {
-  @ViewChild('first', {read: ElementRef}) firstName: ElementRef<HTMLElement>;
-  @ViewChild('last', {read: ElementRef}) lastName: ElementRef<HTMLElement>;
+export class TextFieldAutofillMonitorExample implements AfterViewInit, OnDestroy {
+  @ViewChild('first', { read: ElementRef, static: false }) firstName: ElementRef<HTMLElement>;
+  @ViewChild('last', { read: ElementRef, static: false }) lastName: ElementRef<HTMLElement>;
   firstNameAutofilled: boolean;
   lastNameAutofilled: boolean;
 
-  constructor(private autofill: AutofillMonitor) {}
+  constructor(private _autofill: AutofillMonitor) {}
 
-  ngOnInit() {
-    this.autofill.monitor(this.firstName)
+  ngAfterViewInit() {
+    this._autofill.monitor(this.firstName)
         .subscribe(e => this.firstNameAutofilled = e.isAutofilled);
-    this.autofill.monitor(this.lastName)
+    this._autofill.monitor(this.lastName)
         .subscribe(e => this.lastNameAutofilled = e.isAutofilled);
   }
 
   ngOnDestroy() {
-    this.autofill.stopMonitoring(this.firstName);
-    this.autofill.stopMonitoring(this.lastName);
+    this._autofill.stopMonitoring(this.firstName);
+    this._autofill.stopMonitoring(this.lastName);
   }
 }

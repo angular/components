@@ -1,0 +1,73 @@
+@import '../core/theming/palette';
+@import '../core/theming/theming';
+@import '../core/style/form-common';
+@import '../core/typography/typography-utils';
+@import '../core/style/vendor-prefixes';
+
+
+@mixin mat-input-theme($theme) {
+  $primary: map-get($theme, primary);
+  $accent: map-get($theme, accent);
+  $warn: map-get($theme, warn);
+  $foreground: map-get($theme, foreground);
+
+  .mat-form-field-type-mat-native-select .mat-form-field-infix::after {
+    color: mat-color($foreground, secondary-text);
+  }
+
+  .mat-input-element:disabled,
+  .mat-form-field-type-mat-native-select.mat-form-field-disabled .mat-form-field-infix::after {
+    color: mat-color($foreground, disabled-text);
+  }
+
+  .mat-input-element {
+    caret-color: mat-color($primary, text);
+
+    @include input-placeholder {
+      color: _mat-control-placeholder-color($theme);
+    }
+
+    // On dark themes we set the native `select` color to some shade of white,
+    // however the color propagates to all of the `option` elements, which are
+    // always on a white background inside the dropdown, causing them to blend in.
+    // Since we can't change background of the dropdown, we need to explicitly
+    // reset the color of the options to something dark.
+    @if (map-get($theme, is-dark)) {
+      option {
+        color: $dark-primary-text;
+      }
+
+      option:disabled {
+        color: $dark-disabled-text;
+      }
+    }
+  }
+
+  .mat-accent .mat-input-element {
+    caret-color: mat-color($accent, text);
+  }
+
+  .mat-warn .mat-input-element,
+  .mat-form-field-invalid .mat-input-element {
+    caret-color: mat-color($warn, text);
+  }
+
+  .mat-form-field-type-mat-native-select.mat-form-field-invalid .mat-form-field-infix::after {
+    color: mat-color($warn, text);
+  }
+}
+
+@mixin mat-input-typography($config) {
+  // The unit-less line-height from the font config.
+  $line-height: mat-line-height($config, input);
+
+  // The amount of space between the top of the line and the top of the actual text
+  // (as a fraction of the font-size).
+  $line-spacing: ($line-height - 1) / 2;
+
+  // <input> elements seem to have their height set slightly too large on Safari causing the text to
+  // be misaligned w.r.t. the placeholder. Adding this margin corrects it.
+  input.mat-input-element {
+    margin-top: -$line-spacing * 1em;
+  }
+}

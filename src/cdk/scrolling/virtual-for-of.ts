@@ -30,7 +30,7 @@ import {
   TrackByFunction,
   ViewContainerRef,
 } from '@angular/core';
-import {Observable, Subject} from 'rxjs';
+import {Observable, Subject, of as observableOf} from 'rxjs';
 import {pairwise, shareReplay, startWith, switchMap, takeUntil} from 'rxjs/operators';
 import {CdkVirtualScrollViewport} from './virtual-scroll-viewport';
 
@@ -131,7 +131,7 @@ export class CdkVirtualForOf<T> implements CollectionViewer, DoCheck, OnDestroy 
   dataStream: Observable<T[] | ReadonlyArray<T>> = this._dataSourceChanges
       .pipe(
           // Start off with null `DataSource`.
-          startWith<DataSource<T>>(null!),
+          startWith(null!),
           // Bundle up the previous and current data sources so we can work with both.
           pairwise(),
           // Use `_changeDataSource` to disconnect from the previous data source and connect to the
@@ -238,6 +238,7 @@ export class CdkVirtualForOf<T> implements CollectionViewer, DoCheck, OnDestroy 
   ngOnDestroy() {
     this._viewport.detach();
 
+    this._dataSourceChanges.next();
     this._dataSourceChanges.complete();
     this.viewChange.complete();
 
@@ -262,7 +263,7 @@ export class CdkVirtualForOf<T> implements CollectionViewer, DoCheck, OnDestroy 
   }
 
   /** Swap out one `DataSource` for another. */
-  private _changeDataSource(oldDs: DataSource<T> | null, newDs: DataSource<T>):
+  private _changeDataSource(oldDs: DataSource<T> | null, newDs: DataSource<T> | null):
     Observable<T[] | ReadonlyArray<T>> {
 
     if (oldDs) {
@@ -270,7 +271,7 @@ export class CdkVirtualForOf<T> implements CollectionViewer, DoCheck, OnDestroy 
     }
 
     this._needsUpdate = true;
-    return newDs.connect(this);
+    return newDs ? newDs.connect(this) : observableOf();
   }
 
   /** Update the `CdkVirtualForOfContext` for all views. */
@@ -356,20 +357,20 @@ export class CdkVirtualForOf<T> implements CollectionViewer, DoCheck, OnDestroy 
 
   /** Creates a new embedded view and moves it to the given index */
   private _createEmbeddedViewAt(index: number): EmbeddedViewRef<CdkVirtualForOfContext<T>> {
-    const view = this._viewContainerRef.createEmbeddedView(this._template, {
-        $implicit: null!,
-        cdkVirtualForOf: this._cdkVirtualForOf,
-        index: -1,
-        count: -1,
-        first: false,
-        last: false,
-        odd: false,
-        even: false
-    });
-    if (index < this._viewContainerRef.length) {
-      this._viewContainerRef.move(view, index);
-    }
-    return view;
+    // Note that it's important that we insert the item directly at the proper index,
+    // rather than inserting it and the moving it in place, because if there's a directive
+    // on the same node that injects the `ViewContainerRef`, Angular will insert another
+    // comment node which can throw off the move when it's being repeated for all items.
+    return this._viewContainerRef.createEmbeddedView(this._template, {
+      $implicit: null!,
+      cdkVirtualForOf: this._cdkVirtualForOf,
+      index: -1,
+      count: -1,
+      first: false,
+      last: false,
+      odd: false,
+      even: false
+    }, index);
   }
 
   /** Inserts a recycled view from the cache at the given index. */

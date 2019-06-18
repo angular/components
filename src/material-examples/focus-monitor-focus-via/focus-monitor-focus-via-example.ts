@@ -1,11 +1,11 @@
 import {FocusMonitor, FocusOrigin} from '@angular/cdk/a11y';
 import {
+  AfterViewInit,
   ChangeDetectorRef,
   Component,
   ElementRef,
   NgZone,
   OnDestroy,
-  OnInit,
   ViewChild
 } from '@angular/core';
 
@@ -15,20 +15,20 @@ import {
   templateUrl: 'focus-monitor-focus-via-example.html',
   styleUrls: ['focus-monitor-focus-via-example.css']
 })
-export class FocusMonitorFocusViaExample implements OnDestroy, OnInit {
-  @ViewChild('monitored') monitoredEl: ElementRef<HTMLElement>;
+export class FocusMonitorFocusViaExample implements OnDestroy, AfterViewInit {
+  @ViewChild('monitored', {static: false}) monitoredEl: ElementRef<HTMLElement>;
 
   origin = this.formatOrigin(null);
 
   constructor(public focusMonitor: FocusMonitor,
-              private cdr: ChangeDetectorRef,
-              private ngZone: NgZone) {}
+              private _cdr: ChangeDetectorRef,
+              private _ngZone: NgZone) {}
 
-  ngOnInit() {
+  ngAfterViewInit() {
     this.focusMonitor.monitor(this.monitoredEl)
-        .subscribe(origin => this.ngZone.run(() => {
+        .subscribe(origin => this._ngZone.run(() => {
           this.origin = this.formatOrigin(origin);
-          this.cdr.markForCheck();
+          this._cdr.markForCheck();
         }));
   }
 

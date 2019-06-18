@@ -23,7 +23,7 @@ import {
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
-import {animationFrameScheduler, Observable, Subject, Observer} from 'rxjs';
+import {animationFrameScheduler, asapScheduler, Observable, Subject, Observer} from 'rxjs';
 import {auditTime, startWith, takeUntil} from 'rxjs/operators';
 import {ScrollDispatcher} from './scroll-dispatcher';
 import {CdkScrollable, ExtendedScrollToOptions} from './scrollable';
@@ -35,6 +35,14 @@ import {VIRTUAL_SCROLL_STRATEGY, VirtualScrollStrategy} from './virtual-scroll-s
 function rangesEqual(r1: ListRange, r2: ListRange): boolean {
   return r1.start == r2.start && r1.end == r2.end;
 }
+
+/**
+ * Scheduler to be used for scroll events. Needs to fall back to
+ * something that doesn't rely on requestAnimationFrame on environments
+ * that don't support it (e.g. server-side rendering).
+ */
+const SCROLL_SCHEDULER =
+    typeof requestAnimationFrame !== 'undefined' ? animationFrameScheduler : asapScheduler;
 
 
 /** A viewport that virtualizes it's scrolling with the help of `CdkVirtualForOf`. */
@@ -76,7 +84,7 @@ export class CdkVirtualScrollViewport extends CdkScrollable implements OnInit, O
             Promise.resolve().then(() => this.ngZone.run(() => observer.next(index)))));
 
   /** The element that wraps the rendered content. */
-  @ViewChild('contentWrapper') _contentWrapper: ElementRef<HTMLElement>;
+  @ViewChild('contentWrapper', {static: true}) _contentWrapper: ElementRef<HTMLElement>;
 
   /** A stream that emits whenever the rendered range changes. */
   renderedRangeStream: Observable<ListRange> = this._renderedRangeSubject.asObservable();
@@ -153,11 +161,11 @@ export class CdkVirtualScrollViewport extends CdkScrollable implements OnInit, O
       this.elementScrolled()
           .pipe(
               // Start off with a fake scroll event so we properly detect our initial position.
-              startWith<Event | null>(null!),
+              startWith(null!),
               // Collect multiple events into one until the next animation frame. This way if
               // there are multiple scroll events in the same frame we only need to recheck
               // our layout once.
-              auditTime(0, animationFrameScheduler))
+              auditTime(0, SCROLL_SCHEDULER))
           .subscribe(() => this._scrollStrategy.onContentScrolled());
 
       this._markChangeDetectionNeeded();

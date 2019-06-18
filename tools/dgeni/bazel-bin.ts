@@ -37,11 +37,11 @@ if (require.main === module) {
   const packagePath = join(execRootPath, bazelLabelPackagePath);
 
   // Configure the Dgeni docs package to respect our passed options from the Bazel rule.
-  apiDocsPackage.config((readTypeScriptModules: ReadTypeScriptModules,
-                         tsParser: TsParser,
-                         templateFinder: any,
-                         writeFilesProcessor: any,
-                         readFilesProcessor: any) => {
+  apiDocsPackage.config(function(readTypeScriptModules: ReadTypeScriptModules,
+                                 tsParser: TsParser,
+                                 templateFinder: any,
+                                 writeFilesProcessor: any,
+                                 readFilesProcessor: any) {
 
     // Set the base path for the "readFilesProcessor" to the execroot. This is necessary because
     // otherwise the "writeFilesProcessor" is not able to write to the specified output path.
@@ -71,9 +71,7 @@ if (require.main === module) {
       // inherited class members across entry points or packages.
       entryPoints.forEach(entryPointName => {
         const entryPointPath = `${packageName}/${entryPointName}`;
-        // For the entry point path we temporarily want to replace "material" with "lib", as
-        // our package source folder does not align with the entry-point name.
-        const entryPointIndexPath = `${entryPointPath.replace('material', 'lib')}/index.ts`;
+        const entryPointIndexPath = `${entryPointPath}/index.ts`;
 
         tsParser.options.paths![`@angular/${entryPointPath}`] = [entryPointIndexPath];
         readTypeScriptModules.sourceFiles.push(entryPointIndexPath);
@@ -88,7 +86,7 @@ if (require.main === module) {
     // as the Angular packages which might be needed for doc items. e.g. if a class implements
     // the "AfterViewInit" interface from "@angular/core". This needs to be relative to the
     // "baseUrl" that has been specified for the "tsParser" compiler options.
-    tsParser.options.paths!['*'] = [relative(packagePath, 'external/matdeps/node_modules/*')];
+    tsParser.options.paths!['*'] = [relative(packagePath, 'external/npm/node_modules/*')];
 
     // Since our base directory is the Bazel execroot, we need to make sure that Dgeni can
     // find all templates needed to output the API docs.
@@ -103,9 +101,11 @@ if (require.main === module) {
   // Run the docs generation. The process will be automatically kept alive until Dgeni
   // completed. In case the returned promise has been rejected, we need to manually exit the
   // process with the proper exit code because Dgeni doesn't use native promises which would
-  // automatically cause the error to propagate. The error message will be automatically
-  // printed internally by Dgeni (so we don't want to repeat here)
-  new Dgeni([apiDocsPackage]).generate().catch(() => process.exit(1));
+  // automatically cause the error to propagate.
+  new Dgeni([apiDocsPackage]).generate().catch((e: any) => {
+    console.error(e);
+    process.exit(1);
+  });
 }
 
 

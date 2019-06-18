@@ -1,0 +1,45 @@
+<div cdk-overlay-origin
+     class="mat-select-trigger"
+     aria-hidden="true"
+     (click)="toggle()"
+     #origin="cdkOverlayOrigin"
+     #trigger>
+  <div class="mat-select-value" [ngSwitch]="empty">
+    <span class="mat-select-placeholder" *ngSwitchCase="true">{{placeholder || '\u00A0'}}</span>
+    <span class="mat-select-value-text" *ngSwitchCase="false" [ngSwitch]="!!customTrigger">
+      <span *ngSwitchDefault>{{triggerValue || '\u00A0'}}</span>
+      <ng-content select="mat-select-trigger" *ngSwitchCase="true"></ng-content>
+    </span>
+  </div>
+
+  <div class="mat-select-arrow-wrapper"><div class="mat-select-arrow"></div></div>
+</div>
+
+<ng-template
+  cdk-connected-overlay
+  cdkConnectedOverlayLockPosition
+  cdkConnectedOverlayHasBackdrop
+  cdkConnectedOverlayBackdropClass="cdk-overlay-transparent-backdrop"
+  [cdkConnectedOverlayScrollStrategy]="_scrollStrategy"
+  [cdkConnectedOverlayOrigin]="origin"
+  [cdkConnectedOverlayOpen]="panelOpen"
+  [cdkConnectedOverlayPositions]="_positions"
+  [cdkConnectedOverlayMinWidth]="_triggerRect?.width"
+  [cdkConnectedOverlayOffsetY]="_offsetY"
+  (backdropClick)="close()"
+  (attach)="_onAttached()"
+  (detach)="close()">
+  <div class="mat-select-panel-wrap" [@transformPanelWrap]>
+    <div
+      #panel
+      class="mat-select-panel {{ _getPanelTheme() }}"
+      [ngClass]="panelClass"
+      [@transformPanel]="multiple ? 'showing-multiple' : 'showing'"
+      (@transformPanel.done)="_panelDoneAnimatingStream.next($event.toState)"
+      [style.transformOrigin]="_transformOrigin"
+      [style.font-size.px]="_triggerFontSize"
+      (keydown)="_handleKeydown($event)">
+      <ng-content></ng-content>
+    </div>
+  </div>
+</ng-template>

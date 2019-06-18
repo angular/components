@@ -1,0 +1,56 @@
+@import '../../theming/theming';
+
+@mixin mat-pseudo-checkbox-theme($theme) {
+  $is-dark-theme: map-get($theme, is-dark);
+  $primary: map-get($theme, primary);
+  $accent: map-get($theme, accent);
+  $warn: map-get($theme, warn);
+  $background: map-get($theme, background);
+
+  // NOTE(traviskaufman): While the spec calls for translucent blacks/whites for disabled colors,
+  // this does not work well with elements layered on top of one another. To get around this we
+  // blend the colors together based on the base color and the theme background.
+  $white-30pct-opacity-on-dark: #686868;
+  $black-26pct-opacity-on-light: #b0b0b0;
+  $disabled-color: if($is-dark-theme, $white-30pct-opacity-on-dark, $black-26pct-opacity-on-light);
+  $colored-box-selector: '.mat-pseudo-checkbox-checked, .mat-pseudo-checkbox-indeterminate';
+
+  .mat-pseudo-checkbox {
+    color: mat-color(map-get($theme, foreground), secondary-text);
+
+    &::after {
+      color: mat-color($background, background);
+    }
+  }
+
+  .mat-pseudo-checkbox-disabled {
+    color: $disabled-color;
+  }
+
+  // Default to the accent color. Note that the pseudo checkboxes are meant to inherit the
+  // theme from their parent, rather than implementing their own theming, which is why we
+  // don't attach to the `mat-*` classes.
+  .mat-pseudo-checkbox-checked,
+  .mat-pseudo-checkbox-indeterminate,
+  .mat-accent .mat-pseudo-checkbox-checked,
+  .mat-accent .mat-pseudo-checkbox-indeterminate {
+    background: mat-color(map-get($theme, accent));
+  }
+
+  .mat-primary .mat-pseudo-checkbox-checked,
+  .mat-primary .mat-pseudo-checkbox-indeterminate {
+    background: mat-color(map-get($theme, primary));
+  }
+
+  .mat-warn .mat-pseudo-checkbox-checked,
+  .mat-warn .mat-pseudo-checkbox-indeterminate {
+    background: mat-color(map-get($theme, warn));
+  }
+
+  .mat-pseudo-checkbox-checked,
+  .mat-pseudo-checkbox-indeterminate {
+    &.mat-pseudo-checkbox-disabled {
+      background: $disabled-color;
+    }
+  }
+}

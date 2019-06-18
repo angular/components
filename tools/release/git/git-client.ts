@@ -7,7 +7,6 @@ import {spawnSync, SpawnSyncReturns} from 'child_process';
  * guaranteed that the working directory is always the target project directory.
  */
 export class GitClient {
-
   constructor(public projectDir: string, public remoteGitUrl: string) {}
 
   /**
@@ -29,9 +28,9 @@ export class GitClient {
 
   /** Gets the commit SHA for the specified remote repository branch. */
   getRemoteCommitSha(branchName: string): string {
-    return this._spawnGitProcess(['ls-remote', this.remoteGitUrl, '-h',
-        `refs/heads/${branchName}`])
-      .stdout.split('\t')[0].trim();
+    return this._spawnGitProcess(['ls-remote', this.remoteGitUrl, '-h', `refs/heads/${branchName}`])
+        .stdout.split('\t')[0]
+        .trim();
   }
 
   /** Gets the latest commit SHA for the specified git reference. */
@@ -61,7 +60,9 @@ export class GitClient {
 
   /** Creates a new commit within the current branch with the given commit message. */
   createNewCommit(message: string): boolean {
-    return this._spawnGitProcess(['commit', '-m', message]).status === 0;
+    // Disable pre-commit hooks when creating a commit. Developers might not have set up
+    // their Git configuration for the "git-clang-format" pre-commit hook.
+    return this._spawnGitProcess(['commit', '--no-verify', '-m', message]).status === 0;
   }
 
   /** Gets the title of a specified commit reference. */
@@ -81,13 +82,18 @@ export class GitClient {
 
   /** Gets the Git SHA of the specified local tag. */
   getShaOfLocalTag(tagName: string) {
-    return this._spawnGitProcess(['rev-parse', `refs/tags/${tagName}`]).stdout.trim();
+    // We need to use the "^{}" suffix to instruct Git to deference the tag to
+    // the actual commit. See: https://www.git-scm.com/docs/git-rev-parse
+    return this._spawnGitProcess(['rev-parse', `refs/tags/${tagName}^{}`]).stdout.trim();
   }
 
   /** Gets the Git SHA of the specified remote tag. */
   getShaOfRemoteTag(tagName: string): string {
-    return this._spawnGitProcess(['ls-remote', this.remoteGitUrl, '-t', `refs/tags/${tagName}`])
-      .stdout.split('\t')[0].trim();
+    // We need to use the "^{}" suffix to instruct Git to deference the tag to
+    // the actual commit. See: https://www.git-scm.com/docs/git-rev-parse
+    return this._spawnGitProcess(['ls-remote', this.remoteGitUrl, '-t', `refs/tags/${tagName}^{}`])
+        .stdout.split('\t')[0]
+        .trim();
   }
 
   /** Pushes the specified tag to the remote git repository. */
@@ -106,4 +112,3 @@ export class GitClient {
     return this._spawnGitProcess(['remote']).stdout.trim().split('\n');
   }
 }
-

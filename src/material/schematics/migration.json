@@ -1,0 +1,25 @@
+{
+  "$schema": "./node_modules/@angular-devkit/schematics/collection-schema.json",
+  "schematics": {
+    "migration-v6": {
+      "version": "6",
+      "description": "Updates Angular Material to v6",
+      "factory": "./ng-update/index#updateToV6"
+    },
+    "migration-v7": {
+      "version": "7",
+      "description": "Updates Angular Material to v7",
+      "factory": "./ng-update/index#updateToV7"
+    },
+    "migration-v8": {
+      "version": "8-beta",
+      "description": "Updates Angular Material to v8",
+      "factory": "./ng-update/index#updateToV8"
+    },
+    "ng-post-update": {
+      "description": "Prints out results after ng-update.",
+      "factory": "./ng-update/index#postUpdate",
+      "private": true
+    }
+  }
+}
