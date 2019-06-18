@@ -9,6 +9,7 @@
 import {ComponentHarness, HarnessPredicate} from '../../component-harness';
 import {TestElement} from '../../test-element';
 
+/** @dynamic */
 export class SubComponentHarness extends ComponentHarness {
   static readonly hostSelector = 'test-sub';
 
