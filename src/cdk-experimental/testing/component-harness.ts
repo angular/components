@@ -260,16 +260,24 @@ export interface ComponentHarnessConstructor<T extends ComponentHarness> {
 export class HarnessPredicate<T extends ComponentHarness> {
   predicates: AsyncPredicate<T>[] = [];
 
+  private _descriptions: string[] = [];
+
   constructor(public harnessType: ComponentHarnessConstructor<T>) {}
 
-  add(predicate: AsyncPredicate<T>) {
+  static stringMatches(s: string, pattern: string | RegExp): boolean {
+    return typeof pattern === 'string' ? s === pattern : !!s.match(pattern);
+  }
+
+  add(description: string, predicate: AsyncPredicate<T>) {
+    this._descriptions.push(description);
     this.predicates.push(predicate);
     return this;
   }
 
-  addOption<O>(option: O | undefined, predicate: AsyncOptionPredicate<T, O>) {
+  addOption<O>(name: string, option: O | undefined, predicate: AsyncOptionPredicate<T, O>) {
+    const value = typeof option === 'string' ? `"${option}"` : `${option}`;
     if (option !== undefined) {
-      this.add(item => predicate(item, option));
+      this.add(`${name} = ${value}`, item => predicate(item, option));
     }
     return this;
   }
@@ -282,5 +290,9 @@ export class HarnessPredicate<T extends ComponentHarness> {
   async evaluate(harness: T): Promise<boolean> {
     const results = await Promise.all(this.predicates.map(p => p(harness)));
     return results.reduce((combined, current) => combined && current, true);
+  }
+
+  getDescription() {
+    return this._descriptions.join(', ');
   }
 }

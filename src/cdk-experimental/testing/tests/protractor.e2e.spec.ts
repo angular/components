@@ -52,8 +52,9 @@ describe('ProtractorHarnessEnvironment', () => {
         await countersLoader.getHarness(SubComponentHarness);
         fail('Expected to throw');
       } catch (e) {
-        expect(e.message)
-          .toBe('Expected to find element matching selector: "test-sub", but none was found');
+        expect(e.message).toBe(
+            'Expected to find element for SubComponentHarness matching selector:' +
+            ' "test-sub", but none was found');
       }
     });
 
@@ -114,7 +115,8 @@ describe('ProtractorHarnessEnvironment', () => {
         fail('Expected to throw');
       } catch (e) {
         expect(e.message).toBe(
-          'Expected to find element matching selector: "wrong-selector", but none was found');
+            'Expected to find element for WrongComponentHarness matching selector:' +
+            ' "wrong-selector", but none was found');
       }
     });
 
@@ -251,7 +253,6 @@ describe('ProtractorHarnessEnvironment', () => {
 
     it('should find no subcomponents if predicate does not match', async () => {
       const fourItemToolsLists = await harness.fourItemToolsLists();
-      // TODO(mmalerba): Also test error message when using `locatorFor`.
       expect(fourItemToolsLists.length).toBe(0);
     });
 
@@ -260,6 +261,18 @@ describe('ProtractorHarnessEnvironment', () => {
       expect(testLists.length).toBe(2);
       expect(await (await testLists[0].title()).text()).toBe('List of test tools');
       expect(await (await testLists[1].title()).text()).toBe('List of test methods');
+    });
+
+    it('should error if predicate does not match but a harness is required', async () => {
+      try {
+        await harness.requiredFourIteamToolsLists();
+        fail('Expected to throw');
+      } catch (e) {
+        expect(e.message).toBe(
+            'Expected to find element for SubComponentHarness matching selector: "test-sub"' +
+            ' (with restrictions: title = "List of test tools", item count = 4),' +
+            ' but none was found');
+      }
     });
   });
 });

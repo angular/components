@@ -16,6 +16,25 @@ import {
 } from './component-harness';
 import {TestElement} from './test-element';
 
+function _getErrorForMissingSelector(selector: string): Error {
+  return Error(`Expected to find element matching selector: "${selector}", but none was found`);
+}
+
+function _getErrorForMissingHarness<T extends ComponentHarness>(
+    harnessType: ComponentHarnessConstructor<T> | HarnessPredicate<T>): Error {
+  const harnessPredicate =
+      harnessType instanceof HarnessPredicate ? harnessType : new HarnessPredicate(harnessType);
+  const name = harnessPredicate.harnessType.name;
+  const selector = harnessPredicate.harnessType.hostSelector;
+  const restrictions = harnessPredicate.getDescription();
+  let message = `Expected to find element for ${name} matching selector: "${selector}"`;
+  if (restrictions) {
+    message += ` (with restrictions: ${restrictions})`;
+  }
+  message += ', but none was found';
+  return Error(message);
+}
+
 /**
  * Base harness environment class that can be extended to allow `ComponentHarness`es to be used in
  * different test environments (e.g. testbed, protractor, etc.). This class implements the
@@ -43,26 +62,19 @@ export abstract class HarnessEnvironment<E> implements HarnessLoader, LocatorFac
       arg: string | ComponentHarnessConstructor<T> | HarnessPredicate<T>):
       AsyncFn<TestElement | T> {
     return async () => {
-      let selector: string;
       if (typeof arg === 'string') {
-        selector = arg;
-        const element = (await this.getAllRawElements(selector))[0];
+        const element = (await this.getAllRawElements(arg))[0];
         if (element) {
           return this.createTestElement(element);
         }
+        throw _getErrorForMissingSelector(arg);
       } else {
-        const harnessPredicate = arg instanceof HarnessPredicate ? arg : new HarnessPredicate(arg);
-        selector = harnessPredicate.harnessType.hostSelector;
-        const elements = await this.getAllRawElements(harnessPredicate.harnessType.hostSelector);
-        const candidates =
-            await harnessPredicate.filter(elements.map(
-                element => this.createComponentHarness(harnessPredicate.harnessType, element)));
-        const harness = candidates[0];
+        const harness = (await this._getAllHarnesses(arg))[0];
         if (harness) {
           return harness;
         }
+        throw _getErrorForMissingHarness(arg);
       }
-      throw Error(`Expected to find element matching selector: "${selector}", but none was found`);
     };
   }
 
@@ -78,11 +90,7 @@ export abstract class HarnessEnvironment<E> implements HarnessLoader, LocatorFac
         const element = (await this.getAllRawElements(arg))[0];
         return element ? this.createTestElement(element) : null;
       } else {
-        const harnessPredicate = arg instanceof HarnessPredicate ? arg : new HarnessPredicate(arg);
-        const elements = await this.getAllRawElements(harnessPredicate.harnessType.hostSelector);
-        const candidates =
-            await harnessPredicate.filter(elements.map(
-                element => this.createComponentHarness(harnessPredicate.harnessType, element)));
+        const candidates = await this._getAllHarnesses(arg);
         return candidates[0] || null;
       }
     };
@@ -99,10 +107,7 @@ export abstract class HarnessEnvironment<E> implements HarnessLoader, LocatorFac
       if (typeof arg === 'string') {
         return (await this.getAllRawElements(arg)).map(e => this.createTestElement(e));
       } else {
-        const harnessPredicate = arg instanceof HarnessPredicate ? arg : new HarnessPredicate(arg);
-        const elements = await this.getAllRawElements(harnessPredicate.harnessType.hostSelector);
-        return harnessPredicate.filter(elements.map(
-                element => this.createComponentHarness(harnessPredicate.harnessType, element)));
+        return this._getAllHarnesses(arg);
       }
     };
   }
@@ -125,7 +130,7 @@ export abstract class HarnessEnvironment<E> implements HarnessLoader, LocatorFac
     if (element) {
       return this.createEnvironment(element);
     }
-    throw Error(`Expected to find element matching selector: "${selector}", but none was found`);
+    throw _getErrorForMissingSelector(selector);
   }
 
   // Implemented as part of the `HarnessLoader` interface.
@@ -152,4 +157,13 @@ export abstract class HarnessEnvironment<E> implements HarnessLoader, LocatorFac
    * Gets a list of all elements matching the given selector under this environment's root element.
    */
   protected abstract getAllRawElements(selector: string): Promise<E[]>;
+
+  private async _getAllHarnesses<T extends ComponentHarness>(
+      harnessType: ComponentHarnessConstructor<T> | HarnessPredicate<T>): Promise<T[]> {
+    const harnessPredicate =
+        harnessType instanceof HarnessPredicate ? harnessType : new HarnessPredicate(harnessType);
+    const elements = await this.getAllRawElements(harnessPredicate.harnessType.hostSelector);
+    return harnessPredicate.filter(elements.map(
+        element => this.createComponentHarness(harnessPredicate.harnessType, element)));
+  }
 }

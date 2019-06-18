@@ -14,12 +14,10 @@ export class SubComponentHarness extends ComponentHarness {
 
   static with(options: {title?: string | RegExp, itemCount?: number} = {}) {
     return new HarnessPredicate(SubComponentHarness)
-        .addOption(options.title,
-            async (harness, title) => {
-              const titleText = await (await harness.title()).text();
-              return typeof title === 'string' ? titleText === title : !!titleText.match(title);
-            })
-        .addOption(options.itemCount,
+        .addOption('title', options.title,
+            async (harness, title) =>
+                HarnessPredicate.stringMatches(await (await harness.title()).text(), title))
+        .addOption('item count', options.itemCount,
             async (harness, count) => (await harness.getItems()).length === count);
   }
 
