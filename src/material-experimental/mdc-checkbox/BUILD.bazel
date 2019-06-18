@@ -8,7 +8,7 @@ ng_module(
     name = "mdc-checkbox",
     srcs = glob(
         ["**/*.ts"],
-        exclude = ["**/*.spec.ts"],
+        exclude = ["**/*.spec.ts", "harnesses/**"],
     ),
     assets = [":checkbox_scss"] + glob(["**/*.html"]),
     module_name = "@angular/material-experimental/mdc-checkbox",

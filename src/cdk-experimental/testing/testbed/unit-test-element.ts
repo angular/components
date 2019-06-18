@@ -100,4 +100,9 @@ export class UnitTestElement implements TestElement {
     }
     return value;
   }
+
+  async hasClass(name: string): Promise<boolean> {
+    await this._stabilize();
+    return this.element.classList.contains(name);
+  }
 }
