@@ -7,7 +7,7 @@
  */
 
 import {
-  AsyncFn,
+  AsyncFactoryFn,
   ComponentHarness,
   ComponentHarnessConstructor,
   HarnessLoader,
@@ -55,12 +55,12 @@ export abstract class HarnessEnvironment<E> implements HarnessLoader, LocatorFac
   }
 
   // Implemented as part of the `LocatorFactory` interface.
-  locatorFor(selector: string): AsyncFn<TestElement>;
+  locatorFor(selector: string): AsyncFactoryFn<TestElement>;
   locatorFor<T extends ComponentHarness>(
-      harnessType: ComponentHarnessConstructor<T> | HarnessPredicate<T>): AsyncFn<T>;
+      harnessType: ComponentHarnessConstructor<T> | HarnessPredicate<T>): AsyncFactoryFn<T>;
   locatorFor<T extends ComponentHarness>(
       arg: string | ComponentHarnessConstructor<T> | HarnessPredicate<T>):
-      AsyncFn<TestElement | T> {
+      AsyncFactoryFn<TestElement | T> {
     return async () => {
       if (typeof arg === 'string') {
         const element = (await this.getAllRawElements(arg))[0];
@@ -79,12 +79,12 @@ export abstract class HarnessEnvironment<E> implements HarnessLoader, LocatorFac
   }
 
   // Implemented as part of the `LocatorFactory` interface.
-  locatorForOptional(selector: string): AsyncFn<TestElement | null>;
+  locatorForOptional(selector: string): AsyncFactoryFn<TestElement | null>;
   locatorForOptional<T extends ComponentHarness>(
-      harnessType: ComponentHarnessConstructor<T> | HarnessPredicate<T>): AsyncFn<T | null>;
+      harnessType: ComponentHarnessConstructor<T> | HarnessPredicate<T>): AsyncFactoryFn<T | null>;
   locatorForOptional<T extends ComponentHarness>(
       arg: string | ComponentHarnessConstructor<T> | HarnessPredicate<T>):
-      AsyncFn<TestElement | T | null> {
+      AsyncFactoryFn<TestElement | T | null> {
     return async () => {
       if (typeof arg === 'string') {
         const element = (await this.getAllRawElements(arg))[0];
@@ -97,12 +97,12 @@ export abstract class HarnessEnvironment<E> implements HarnessLoader, LocatorFac
   }
 
   // Implemented as part of the `LocatorFactory` interface.
-  locatorForAll(selector: string): AsyncFn<TestElement[]>;
+  locatorForAll(selector: string): AsyncFactoryFn<TestElement[]>;
   locatorForAll<T extends ComponentHarness>(
-      harnessType: ComponentHarnessConstructor<T> | HarnessPredicate<T>): AsyncFn<T[]>;
+      harnessType: ComponentHarnessConstructor<T> | HarnessPredicate<T>): AsyncFactoryFn<T[]>;
   locatorForAll<T extends ComponentHarness>(
       arg: string | ComponentHarnessConstructor<T> | HarnessPredicate<T>):
-      AsyncFn<TestElement[] | T[]> {
+      AsyncFactoryFn<TestElement[] | T[]> {
     return async () => {
       if (typeof arg === 'string') {
         return (await this.getAllRawElements(arg)).map(e => this.createTestElement(e));
