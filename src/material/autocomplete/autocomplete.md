@@ -96,7 +96,7 @@ While `mat-autocomplete` supports attaching itself to a `mat-form-field`, you ca
 any other `input` element using the `matAutocomplete` attribute. This allows you to customize what
 the input looks like without having to bring in the extra functionality from `mat-form-field`.
 
-<!-- example(autocomplete-plain-input) -->
+<!-- example(plain-input-autocomplete) -->
 
 ### Attaching the autocomplete panel to a different element
 
