@@ -259,7 +259,10 @@ export interface ComponentHarnessConstructor<T extends ComponentHarness> {
   hostSelector: string;
 }
 
-/** A class used to represent a ComponentHarness class with additional predicates applied. */
+/**
+ * A class used to associate a ComponentHarness class with predicates functions that can be used to
+ * filter instances of the class.
+ */
 export class HarnessPredicate<T extends ComponentHarness> {
   private _predicates: AsyncPredicate<T>[] = [];
   private _descriptions: string[] = [];
@@ -300,6 +303,7 @@ export class HarnessPredicate<T extends ComponentHarness> {
    * @return this (for method chaining).
    */
   addOption<O>(name: string, option: O | undefined, predicate: AsyncOptionPredicate<T, O>) {
+    // Add quotes around strings to differentiate them from other values
     const value = typeof option === 'string' ? `"${option}"` : `${option}`;
     if (option !== undefined) {
       this.add(`${name} = ${value}`, item => predicate(item, option));
