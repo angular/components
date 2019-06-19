@@ -17,3 +17,4 @@ export * from './datepicker-toggle';
 export * from './month-view';
 export * from './year-view';
 export {MatMultiYearView, yearsPerPage, yearsPerRow} from './multi-year-view';
+export * from './date-validators';

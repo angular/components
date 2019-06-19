@@ -222,6 +222,13 @@ export declare class MatDatepickerToggle<D> implements AfterContentInit, OnChang
 export declare class MatDatepickerToggleIcon {
 }
 
+export declare class MatDateValidators {
+    static filter<D>(dateAdapter: DateAdapter<D>, dateFilter: (date: D | null) => boolean): ValidatorFn;
+    static max<D>(dateAdapter: DateAdapter<D>, max: D): ValidatorFn;
+    static min<D>(dateAdapter: DateAdapter<D>, min: D): ValidatorFn;
+    static parse<D>(dateAdapter: DateAdapter<D>, dateFormats: MatDateFormats, input: HTMLInputElement): ValidatorFn;
+}
+
 export declare class MatMonthView<D> implements AfterContentInit {
     _dateAdapter: DateAdapter<D>;
     _firstWeekOffset: number;
