@@ -30,6 +30,7 @@ export class MatCheckboxHarness extends ComponentHarness {
 
   private _label = this.locatorFor('label');
   private _input = this.locatorFor('input');
+  private _inputContainer = this.locatorFor('.mdc-checkbox');
 
   /** Gets a boolean promise indicating if the checkbox is checked. */
   async isChecked(): Promise<boolean> {
@@ -101,7 +102,8 @@ export class MatCheckboxHarness extends ComponentHarness {
    * action is complete.
    */
   async toggle(): Promise<void> {
-    return (await this._input()).click();
+    const elToClick = await this.isDisabled() ? this._inputContainer() : this._input();
+    return (await elToClick).click();
   }
 
   /**

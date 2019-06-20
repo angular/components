@@ -8,7 +8,7 @@ import {MatCheckboxModule as MatMdcCheckboxModule} from '../index';
 import {MatCheckboxHarness} from './checkbox-harness';
 import {MatCheckboxHarness as MatMdcCheckboxHarness} from './mdc-checkbox-harness';
 
-let fixture: ComponentFixture<unknown>;
+let fixture: ComponentFixture<CheckboxHarnessTest>;
 let loader: HarnessLoader;
 let checkboxHarness: typeof MatCheckboxHarness;
 
@@ -141,6 +141,7 @@ function runTests() {
   });
 
   it('should toggle checkbox', async () => {
+    fixture.componentInstance.disabled = false;
     const checkboxes = await loader.getAllHarnesses(checkboxHarness);
     await checkboxes[0].toggle();
     await checkboxes[1].toggle();
@@ -149,6 +150,7 @@ function runTests() {
   });
 
   it('should check checkbox', async () => {
+    fixture.componentInstance.disabled = false;
     const checkboxes = await loader.getAllHarnesses(checkboxHarness);
     await checkboxes[0].check();
     await checkboxes[1].check();
@@ -157,11 +159,19 @@ function runTests() {
   });
 
   it('should uncheck checkbox', async () => {
+    fixture.componentInstance.disabled = false;
     const checkboxes = await loader.getAllHarnesses(checkboxHarness);
     await checkboxes[0].uncheck();
     await checkboxes[1].uncheck();
     expect(await checkboxes[0].isChecked()).toBe(false);
     expect(await checkboxes[1].isChecked()).toBe(false);
+  });
+
+  it('should not toggle disabled checkbox', async () => {
+    const checkbox = await loader.getHarness(checkboxHarness.with({label: 'Second'}));
+    expect(await checkbox.isChecked()).toBe(false);
+    await checkbox.toggle();
+    expect(await checkbox.isChecked()).toBe(false);
   });
 }
 
@@ -179,7 +189,7 @@ function getActiveElementTagName() {
           aria-label="First checkbox">
         First
       </mat-checkbox>
-      <mat-checkbox indeterminate="true" disabled="true" aria-labelledby="second-label">
+      <mat-checkbox indeterminate="true" [disabled]="disabled" aria-labelledby="second-label">
         Second
       </mat-checkbox>
       <span id="second-label">Second checkbox</span>
@@ -187,5 +197,6 @@ function getActiveElementTagName() {
 })
 class CheckboxHarnessTest {
   ctrl = new FormControl(true);
+  disabled = true;
 }
 
