@@ -8,7 +8,10 @@ ng_module(
     name = "mdc-checkbox",
     srcs = glob(
         ["**/*.ts"],
-        exclude = ["**/*.spec.ts", "harness/**"],
+        exclude = [
+            "**/*.spec.ts",
+            "harness/**",
+        ],
     ),
     assets = [":checkbox_scss"] + glob(["**/*.html"]),
     module_name = "@angular/material-experimental/mdc-checkbox",
@@ -27,11 +30,14 @@ ng_module(
 
 ts_library(
     name = "harness",
-    srcs = glob(["harness/**/*.ts"], exclude = ["**/*.spec.ts"]),
+    srcs = glob(
+        ["harness/**/*.ts"],
+        exclude = ["**/*.spec.ts"],
+    ),
     deps = [
-        "//src/cdk/coercion",
         "//src/cdk-experimental/testing",
-    ]
+        "//src/cdk/coercion",
+    ],
 )
 
 sass_library(
@@ -66,8 +72,9 @@ ng_test_library(
     deps = [
         ":harness",
         ":mdc-checkbox",
-        "//src/cdk/testing",
         "//src/cdk-experimental/testing",
+        "//src/cdk-experimental/testing/testbed",
+        "//src/cdk/testing",
         "//src/material/checkbox",
         "@npm//@angular/forms",
         "@npm//@angular/platform-browser",
