@@ -68,35 +68,35 @@ function runTests() {
   });
 
   it('should get checked state', async () => {
-    const checkboxes = await loader.getAllHarnesses(checkboxHarness);
-    expect(await checkboxes[0].isChecked()).toBe(true);
-    expect(await checkboxes[1].isChecked()).toBe(false);
+    const [checkedCheckbox, uncheckedCheckbox] = await loader.getAllHarnesses(checkboxHarness);
+    expect(await checkedCheckbox.isChecked()).toBe(true);
+    expect(await uncheckedCheckbox.isChecked()).toBe(false);
   });
 
   it('should get indeterminate state', async () => {
-    const checkboxes = await loader.getAllHarnesses(checkboxHarness);
-    expect(await checkboxes[0].isIndeterminate()).toBe(false);
-    expect(await checkboxes[1].isIndeterminate()).toBe(true);
+    const [checkedCheckbox, indeterminateCheckbox] = await loader.getAllHarnesses(checkboxHarness);
+    expect(await checkedCheckbox.isIndeterminate()).toBe(false);
+    expect(await indeterminateCheckbox.isIndeterminate()).toBe(true);
   });
 
   it('should get disabled state', async () => {
-    const checkboxes = await loader.getAllHarnesses(checkboxHarness);
-    expect(await checkboxes[0].isDisabled()).toBe(false);
-    expect(await checkboxes[1].isDisabled()).toBe(true);
+    const [enabledCheckbox, disabledCheckbox] = await loader.getAllHarnesses(checkboxHarness);
+    expect(await enabledCheckbox.isDisabled()).toBe(false);
+    expect(await disabledCheckbox.isDisabled()).toBe(true);
   });
 
   it('should get required state', async () => {
-    const checkboxes = await loader.getAllHarnesses(checkboxHarness);
-    expect(await checkboxes[0].isRequired()).toBe(true);
-    expect(await checkboxes[1].isRequired()).toBe(false);
+    const [requiredCheckbox, optionalCheckbox] = await loader.getAllHarnesses(checkboxHarness);
+    expect(await requiredCheckbox.isRequired()).toBe(true);
+    expect(await optionalCheckbox.isRequired()).toBe(false);
   });
 
   it('should get valid state', async () => {
-    const checkboxes = await loader.getAllHarnesses(checkboxHarness);
-    expect(await checkboxes[0].isValid()).toBe(true);
-    expect(await checkboxes[1].isValid()).toBe(true);
-    await checkboxes[0].uncheck();
-    expect(await checkboxes[0].isValid()).toBe(false);
+    const [requiredCheckbox, optionalCheckbox] = await loader.getAllHarnesses(checkboxHarness);
+    expect(await optionalCheckbox.isValid()).toBe(true);
+    expect(await requiredCheckbox.isValid()).toBe(true);
+    await requiredCheckbox.uncheck();
+    expect(await requiredCheckbox.isValid()).toBe(false);
   });
 
   it('should get name', async () => {
@@ -120,9 +120,9 @@ function runTests() {
   });
 
   it('should get label text', async () => {
-    const checkboxes = await loader.getAllHarnesses(checkboxHarness);
-    expect(await checkboxes[0].getLabelText()).toBe('First');
-    expect(await checkboxes[1].getLabelText()).toBe('Second');
+    const [firstCheckbox, secondCheckbox] = await loader.getAllHarnesses(checkboxHarness);
+    expect(await firstCheckbox.getLabelText()).toBe('First');
+    expect(await secondCheckbox.getLabelText()).toBe('Second');
   });
 
   it('should focus checkbox', async () => {
@@ -142,36 +142,36 @@ function runTests() {
 
   it('should toggle checkbox', async () => {
     fixture.componentInstance.disabled = false;
-    const checkboxes = await loader.getAllHarnesses(checkboxHarness);
-    await checkboxes[0].toggle();
-    await checkboxes[1].toggle();
-    expect(await checkboxes[0].isChecked()).toBe(false);
-    expect(await checkboxes[1].isChecked()).toBe(true);
+    const [checkedCheckbox, uncheckedCheckbox] = await loader.getAllHarnesses(checkboxHarness);
+    await checkedCheckbox.toggle();
+    await uncheckedCheckbox.toggle();
+    expect(await checkedCheckbox.isChecked()).toBe(false);
+    expect(await uncheckedCheckbox.isChecked()).toBe(true);
   });
 
   it('should check checkbox', async () => {
     fixture.componentInstance.disabled = false;
-    const checkboxes = await loader.getAllHarnesses(checkboxHarness);
-    await checkboxes[0].check();
-    await checkboxes[1].check();
-    expect(await checkboxes[0].isChecked()).toBe(true);
-    expect(await checkboxes[1].isChecked()).toBe(true);
+    const [checkedCheckbox, uncheckedCheckbox] = await loader.getAllHarnesses(checkboxHarness);
+    await checkedCheckbox.check();
+    await uncheckedCheckbox.check();
+    expect(await checkedCheckbox.isChecked()).toBe(true);
+    expect(await uncheckedCheckbox.isChecked()).toBe(true);
   });
 
   it('should uncheck checkbox', async () => {
     fixture.componentInstance.disabled = false;
-    const checkboxes = await loader.getAllHarnesses(checkboxHarness);
-    await checkboxes[0].uncheck();
-    await checkboxes[1].uncheck();
-    expect(await checkboxes[0].isChecked()).toBe(false);
-    expect(await checkboxes[1].isChecked()).toBe(false);
+    const [checkedCheckbox, uncheckedCheckbox] = await loader.getAllHarnesses(checkboxHarness);
+    await checkedCheckbox.uncheck();
+    await uncheckedCheckbox.uncheck();
+    expect(await checkedCheckbox.isChecked()).toBe(false);
+    expect(await uncheckedCheckbox.isChecked()).toBe(false);
   });
 
   it('should not toggle disabled checkbox', async () => {
-    const checkbox = await loader.getHarness(checkboxHarness.with({label: 'Second'}));
-    expect(await checkbox.isChecked()).toBe(false);
-    await checkbox.toggle();
-    expect(await checkbox.isChecked()).toBe(false);
+    const disabledCheckbox = await loader.getHarness(checkboxHarness.with({label: 'Second'}));
+    expect(await disabledCheckbox.isChecked()).toBe(false);
+    await disabledCheckbox.toggle();
+    expect(await disabledCheckbox.isChecked()).toBe(false);
   });
 }
 
