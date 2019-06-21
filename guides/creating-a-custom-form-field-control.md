@@ -325,8 +325,16 @@ using an `NgControl` in this example, we don't need to do anything other than ju
 errorState = false;
 ```
 
-If you do chose to use this field as a reactive field and want the error state to be dynamic
-add `@Optional() @Self() public ngControl: NgControl` to your constructor and create an input that the `NgControl` can interface with.
+To achieve a reactive errorState, add the `NgControl` as seen above to your constructor. Then set your errorState as an `Input()`. You will also want to inject `FormGroupDirective` so you can check if the form has been submitted:
+
+```ts
+constructor(
+  ...,
+  @Optional() private _parentFormGroup: FormGroupDirective,
+  @Optional() @Self() public ngControl: NgControl,
+  ...,
+) { }
+```
 
 ```ts
 /** This property indicates whether the associated NgControl is in an error state. */
@@ -334,8 +342,6 @@ add `@Optional() @Self() public ngControl: NgControl` to your constructor and cr
   return this.ngControl.errors !== null && this.ngControl.invalid && this.ngControl.dirty;
 }
 ```
-
-instead of setting the erorrState to false 
 
 #### `controlType`
 
