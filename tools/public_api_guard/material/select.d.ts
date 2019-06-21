@@ -52,6 +52,7 @@ export declare class MatSelect extends _MatSelectMixinBase implements AfterConte
     panelClass: string | string[] | Set<string> | {
         [key: string]: any;
     };
+    panelMaxHeight: number;
     readonly panelOpen: boolean;
     placeholder: string;
     required: boolean;
