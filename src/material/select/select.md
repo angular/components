@@ -106,6 +106,13 @@ which can be used to apply additional CSS classes to the dropdown panel.
 
 <!-- example(select-panel-class) -->
 
+### Customizing the dropdown panel height
+
+By default a constant value is used to limit the height of the dropdown panel.
+You can customize the maximum displayed height to your need by using `panelMaxHeight` property.
+
+<!-- example(select-panel-height) -->
+
 ### Changing when error messages are shown
 
 The `<mat-form-field>` allows you to

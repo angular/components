@@ -1,0 +1,18 @@
+<mat-form-field>
+  <mat-label>Pokemon</mat-label>
+  <mat-select multiple [panelMaxHeight]="pokemonPanelHeight">
+    <mat-option *ngFor="let creature of pokemon" [value]="creature.value">
+      {{ creature.viewValue }}
+    </mat-option>
+  </mat-select>
+</mat-form-field>
+
+<div>
+  Panel height:
+  <mat-slider
+          [(ngModel)]="pokemonPanelHeight"
+          thumbLabel
+          min="48"
+          step="47"
+          max="480"></mat-slider>
+</div>
