@@ -2382,6 +2382,41 @@ describe('MatSelect', () => {
     }));
   });
 
+  describe('with custom panel max height', () => {
+    beforeEach(async(() => configureMatSelectTestingModule([
+      BasicSelect,
+      BasicSelectWithCustomHeight,
+    ])));
+
+    it('should use default constant SELECT_PANEL_MAX_HEIGHT value', fakeAsync(() => {
+      const fixture = TestBed.createComponent(BasicSelect);
+
+      fixture.detectChanges();
+      const trigger = fixture.debugElement.query(By.css('.mat-select-trigger')).nativeElement;
+
+      trigger.click();
+      fixture.detectChanges();
+      flush();
+
+      const panel = overlayContainerElement.querySelector('.mat-select-panel') as HTMLElement;
+      expect(parseInt(panel.style.maxHeight as string)).toBe(256);
+    }));
+
+    it('should set the max-height of select panel', fakeAsync(() => {
+      const fixture = TestBed.createComponent(BasicSelectWithCustomHeight);
+
+      fixture.detectChanges();
+      const trigger = fixture.debugElement.query(By.css('.mat-select-trigger')).nativeElement;
+
+      trigger.click();
+      fixture.detectChanges();
+      flush();
+
+      const panel = overlayContainerElement.querySelector('.mat-select-panel') as HTMLElement;
+      expect(parseInt(panel.style.maxHeight as string)).toBe(400);
+    }));
+  });
+
   describe('when invalid inside a form', () => {
     beforeEach(async(() => configureMatSelectTestingModule([InvalidSelectInForm])));
 
@@ -4641,6 +4676,33 @@ class BasicSelectNoPlaceholder { }
 class BasicSelectWithTheming {
   @ViewChild(MatSelect, {static: false}) select: MatSelect;
   theme: string;
+}
+
+@Component({
+  selector: 'basic-select-with-custom-height',
+  template: `
+    <mat-form-field>
+      <mat-select [panelMaxHeight]="maxHeight">
+        <mat-option *ngFor="let food of foods"
+                    [value]="food.value">{{ food.viewValue }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  `
+})
+class BasicSelectWithCustomHeight {
+  @ViewChild(MatSelect, {static: false}) select: MatSelect;
+  foods: any[] = [
+    { value: 'steak-0', viewValue: 'Steak' },
+    { value: 'pizza-1', viewValue: 'Pizza' },
+    { value: 'tacos-2', viewValue: 'Tacos' },
+    { value: 'sandwich-3', viewValue: 'Sandwich' },
+    { value: 'chips-4', viewValue: 'Chips' },
+    { value: 'eggs-5', viewValue: 'Eggs' },
+    { value: 'pasta-6', viewValue: 'Pasta' },
+    { value: 'sushi-7', viewValue: 'Sushi' },
+  ];
+  maxHeight: number = 400;
 }
 
 @Component({

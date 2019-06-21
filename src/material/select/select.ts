@@ -389,7 +389,6 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
   }
 
   /** Define select panel maximum height. */
-  /** The max height of the select's overlay panel */
   @Input() panelMaxHeight: number = SELECT_PANEL_MAX_HEIGHT;
 
   /**
