@@ -325,6 +325,18 @@ using an `NgControl` in this example, we don't need to do anything other than ju
 errorState = false;
 ```
 
+If you do chose to use this field as a reactive field and want the error state to be dynamic
+add `@Optional() @Self() public ngControl: NgControl` to your constructor and create an input that the `NgControl` can interface with.
+
+```ts
+/** This property indicates whether the associated NgControl is in an error state. */
+@Input() get errorState() {
+  return this.ngControl.errors !== null && this.ngControl.invalid && this.ngControl.dirty;
+}
+```
+
+instead of setting the erorrState to false 
+
 #### `controlType`
 
 This property allows us to specify a unique string for the type of control in form field. The
