@@ -38,6 +38,7 @@
       (@transformPanel.done)="_panelDoneAnimatingStream.next($event.toState)"
       [style.transformOrigin]="_transformOrigin"
       [style.font-size.px]="_triggerFontSize"
+      [style.maxHeight.px]="panelMaxHeight"
       (keydown)="_handleKeydown($event)">
       <ng-content></ng-content>
     </div>

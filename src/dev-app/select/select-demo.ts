@@ -47,7 +47,7 @@ export class SelectDemo {
   topHeightCtrl = new FormControl(0);
   drinksTheme = 'primary';
   pokemonTheme = 'primary';
-  pokemonPanelHeight = 256;
+  pokemonPanelHeight = 100;
   compareByValue = true;
   selectFormControl = new FormControl('', Validators.required);
 

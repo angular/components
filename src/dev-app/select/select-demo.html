@@ -229,6 +229,17 @@ Space above cards: <input type="number" [formControl]="topHeightCtrl">
           </mat-option>
         </mat-select>
       </mat-form-field>
+
+      <div>
+        Panel height:
+        <mat-slider
+                [color]="pokemonTheme"
+                [(ngModel)]="pokemonPanelHeight"
+                thumbLabel
+                min="48"
+                step="47"
+                max="480"></mat-slider>
+      </div>
       <p> Value: {{ currentPokemon }} </p>
       <p> Touched: {{ pokemonControl.touched }} </p>
       <p> Dirty: {{ pokemonControl.dirty }} </p>
