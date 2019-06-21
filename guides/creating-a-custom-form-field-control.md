@@ -339,7 +339,11 @@ constructor(
 ```ts
 /** This property indicates whether the associated NgControl is in an error state. */
 @Input() get errorState() {
-  return this.ngControl.errors !== null && this.ngControl.invalid && this.ngControl.dirty;
+  return !!(
+    this.ngControl &&
+    this.ngControl.invalid &&
+    (this.ngControl.touched || (this._parentFormGroup && this._parentFormGroup.submitted))
+  );
 }
 ```
 
