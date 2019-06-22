@@ -486,7 +486,6 @@ workflows:
   # Lint workflow. As we want to lint in one job, this is a workflow with just one job.
   lint:
     jobs:
-      - snapshot_tests_local_browsers
       - lint:
           filters: *ignore_presubmit_branch_filter
 
