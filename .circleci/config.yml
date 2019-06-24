@@ -404,10 +404,6 @@ jobs:
       # UMD format which is used by Bazel when running tests. UMD processing is in
       # progress and tracked with FW-85.
       - run: node ./scripts/circleci/setup-angular-snapshots.js --tag 8.1.0-next.1-ivy-aot+82e0b4a
-      # Disable type checking when building with Ivy. This is necessary because
-      # type checking is not complete yet and can incorrectly break compilation.
-      # Issue is tracked with FW-1004.
-      - run: sed -i "s/\(_ENABLE_NG_TYPE_CHECKING = \)True/\1False/g" tools/defaults.bzl
       # Run project tests with ngtsc and the Ivy Angular packages.
       - run: yarn bazel build src/... --build_tag_filters=-docs-package --define=compile=aot
       - run: yarn bazel test src/... --build_tag_filters=-docs-package --define=compile=aot --test_tag_filters=-e2e
@@ -430,10 +426,6 @@ jobs:
 
       # Setup Angular ivy snapshots built with ngtsc.
       - run: node ./scripts/circleci/setup-angular-snapshots.js --tag master-ivy-aot
-      # Disable type checking when building with Ivy. This is necessary because
-      # type checking is not complete yet and can incorrectly break compilation.
-      # Issue is tracked with FW-1004.
-      - run: sed -i "s/\(_ENABLE_NG_TYPE_CHECKING = \)True/\1False/g" tools/defaults.bzl
       # Run project tests with ngtsc and the Ivy Angular packages.
       - run: yarn bazel build src/... --build_tag_filters=-docs-package --define=compile=aot
       - run: yarn bazel test src/... --build_tag_filters=-docs-package --define=compile=aot --test_tag_filters=-e2e
