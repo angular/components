@@ -8,6 +8,7 @@
 
 import {Component} from '@angular/core';
 import {MatChipInputEvent, MatSnackBar} from '@angular/material';
+import {ThemePalette} from '@angular/material/core';
 
 
 export interface Person {
@@ -22,7 +23,7 @@ export interface Person {
 })
 export class ChipsAccessibilityDemo {
   visible: boolean = true;
-  color: string = '';
+  color: ThemePalette = undefined;
   selectable: boolean = true;
   removable: boolean = true;
   addOnBlur: boolean = true;
