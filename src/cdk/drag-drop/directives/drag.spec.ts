@@ -596,6 +596,20 @@ describe('CdkDrag', () => {
       expect(dragElement.style.transform).toBeFalsy();
     }));
 
+    it('should enable native drag interactions if dragging is disabled', fakeAsync(() => {
+      const fixture = createComponent(StandaloneDraggable);
+      fixture.detectChanges();
+      const dragElement = fixture.componentInstance.dragElement.nativeElement;
+      const styles = dragElement.style;
+
+      expect(styles.touchAction || (styles as any).webkitUserDrag).toBeFalsy();
+
+      fixture.componentInstance.dragInstance.disabled = true;
+      fixture.detectChanges();
+
+      expect(styles.touchAction || (styles as any).webkitUserDrag).toBeFalsy();
+    }));
+
     it('should enable native drag interactions if not dragging', fakeAsync(() => {
       const fixture = createComponent(StandaloneDraggable);
       fixture.detectChanges();

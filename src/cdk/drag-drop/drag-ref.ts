@@ -504,7 +504,7 @@ export class DragRef<T = any> {
       const distanceX = Math.abs(pointerPosition.x - this._pickupPositionOnPage.x);
       const distanceY = Math.abs(pointerPosition.y - this._pickupPositionOnPage.y);
       const isOverThreshold = distanceX + distanceY >= this._config.dragStartThreshold;
-      const isDelayElapsed = (Date.now() >= this._dragStartTime + (this.dragStartDelay || 0));
+      const isDelayElapsed = (Date.now() >= this._dragStartTime + this.dragStartDelay || 0);
 
       // Only start dragging after the user has moved more than the minimum distance in either
       // direction. Note that this is preferrable over doing something like `skip(minimumDistance)`
