@@ -1,4 +1,5 @@
 import {Component} from '@angular/core';
+import {ThemePalette} from '@angular/material/core';
 
 /**
  * @title Configurable progress-bar
@@ -9,8 +10,8 @@ import {Component} from '@angular/core';
   styleUrls: ['progress-bar-configurable-example.css'],
 })
 export class ProgressBarConfigurableExample {
-  color = 'primary';
-  mode = 'determinate';
+  color: ThemePalette = 'primary';
+  mode: 'determinate' | 'indeterminate' | 'buffer' | 'query' = 'determinate';
   value = 50;
   bufferValue = 75;
 }

@@ -3,7 +3,18 @@
 </ng-container>
 
 <mat-tab-group>
-  <mat-tab *ngFor="let tab of asyncTabs | async">
+    <!--
+
+        TODO for review: In that case it's quite weird because with the async pipe
+        the expression can evaluate to "null". The "[ngForOf]" input type does not accept
+        "null" so it fails the strict Ivy template check... At runtime it works because
+        there is a simple "truthy" check in the NgForOf directive... but the current
+        type is incompatible and seems like it can become a general impacting issue with Ivy.
+
+        For reference: there are issues for the async pipe which could also return "undefined".
+        See: https://github.com/angular/angular/issues/16982
+     -->
+  <mat-tab *ngFor="let tab of (asyncTabs | async)!">
     <ng-template mat-tab-label>{{tab.label}}</ng-template>
     {{tab.content}}
   </mat-tab>
