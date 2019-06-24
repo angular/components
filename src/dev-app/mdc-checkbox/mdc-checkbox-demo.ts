@@ -8,6 +8,7 @@
 
 import {Component, Directive} from '@angular/core';
 import {MAT_CHECKBOX_CLICK_ACTION} from '@angular/material/checkbox';
+import {ThemePalette} from '@angular/material/core';
 import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 
 
@@ -97,7 +98,7 @@ export class MdcCheckboxDemo {
   isIndeterminate: boolean = false;
   isChecked: boolean = false;
   isDisabled: boolean = false;
-  labelPosition: string = 'after';
+  labelPosition: 'before'|'after' = 'after';
   useAlternativeColor: boolean = false;
 
   demoRequired = false;
@@ -105,12 +106,12 @@ export class MdcCheckboxDemo {
   demoChecked = false;
   demoDisabled = false;
   demoIndeterminate = false;
-  demoLabel = null;
-  demoLabelledBy = null;
-  demoId = null;
-  demoName = null;
-  demoValue = null;
-  demoColor = 'primary';
+  demoLabel: string;
+  demoLabelledBy: string;
+  demoId: string;
+  demoName: string;
+  demoValue: string;
+  demoColor: ThemePalette = 'primary';
   demoDisableRipple = false;
   demoHideLabel = false;
 

@@ -31,6 +31,9 @@ ng_module(
         ":dev_app_scss",
         ":theme",
     ],
+    # TODO(devversion): Temporarily disabled due to an Ivy template type checking bug
+    # that is surfaced in the "MdcMenu" demo. The issue is tracked with: COMP-173
+    type_check = False,
     deps = [
         "@npm//@angular/animations",
         "@npm//@angular/common",

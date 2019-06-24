@@ -87,7 +87,7 @@
 
 <button (click)="emitData()">Add item</button>
 <cdk-virtual-scroll-viewport class="demo-viewport" [itemSize]="50">
-  <div *cdkVirtualFor="let size of observableData | async; let i = index" class="demo-item"
+  <div *cdkVirtualFor="let size of (observableData | async)!; let i = index" class="demo-item"
        [style.height.px]="size">
     Item #{{i}} - ({{size}}px)
   </div>
@@ -98,7 +98,7 @@
 <button (click)="sortBy('name')">Sort by state name</button>
 <button (click)="sortBy('capital')">Sort by state capital</button>
 <cdk-virtual-scroll-viewport class="demo-viewport" [itemSize]="60">
-  <div *cdkVirtualFor="let state of statesObservable | async"
+  <div *cdkVirtualFor="let state of (statesObservable | async)!"
        class="demo-state-item">
     <div class="demo-state">{{state.name}}</div>
     <div class="demo-capital">{{state.capital}}</div>
@@ -110,7 +110,7 @@
 <button (click)="sortBy('name')">Sort by state name</button>
 <button (click)="sortBy('capital')">Sort by state capital</button>
 <cdk-virtual-scroll-viewport class="demo-viewport" [itemSize]="60">
-  <div *cdkVirtualFor="let state of statesObservable | async; trackBy: indexTrackFn"
+  <div *cdkVirtualFor="let state of (statesObservable | async)!; trackBy: indexTrackFn"
        class="demo-state-item">
     <div class="demo-state">{{state.name}}</div>
     <div class="demo-capital">{{state.capital}}</div>
@@ -122,7 +122,7 @@
 <button (click)="sortBy('name')">Sort by state name</button>
 <button (click)="sortBy('capital')">Sort by state capital</button>
 <cdk-virtual-scroll-viewport class="demo-viewport" [itemSize]="60">
-  <div *cdkVirtualFor="let state of statesObservable | async; trackBy: nameTrackFn"
+  <div *cdkVirtualFor="let state of (statesObservable | async)!; trackBy: nameTrackFn"
        class="demo-state-item">
     <div class="demo-state">{{state.name}}</div>
     <div class="demo-capital">{{state.capital}}</div>
@@ -133,7 +133,7 @@
 
 <cdk-virtual-scroll-viewport class="demo-viewport" autosize #viewport3>
   <ol class="demo-ol" [start]="viewport3.getRenderedRange().start + 1">
-    <li *cdkVirtualFor="let state of statesObservable | async" class="demo-li">
+    <li *cdkVirtualFor="let state of (statesObservable | async)!" class="demo-li">
       {{state.name}} - {{state.capital}}
     </li>
   </ol>
@@ -143,7 +143,7 @@
 
 <cdk-virtual-scroll-viewport class="demo-viewport" autosize>
   <ul class="demo-ul">
-    <li *cdkVirtualFor="let state of statesObservable | async" class="demo-li">
+    <li *cdkVirtualFor="let state of (statesObservable | async)!" class="demo-li">
       {{state.name}} - {{state.capital}}
     </li>
   </ul>
@@ -153,7 +153,7 @@
 
 <cdk-virtual-scroll-viewport class="demo-viewport" autosize>
   <dl class="demo-dl">
-    <ng-container *cdkVirtualFor="let state of statesObservable | async">
+    <ng-container *cdkVirtualFor="let state of (statesObservable | async)!">
       <dt class="demo-dt">{{state.name}}</dt>
       <dd class="demo-dd">{{state.capital}}</dd>
     </ng-container>
@@ -164,7 +164,7 @@
 
 <cdk-virtual-scroll-viewport class="demo-viewport" autosize>
   <table class="demo-ol">
-    <tr *cdkVirtualFor="let state of statesObservable | async" class="demo-tr">
+    <tr *cdkVirtualFor="let state of (statesObservable | async)!" class="demo-tr">
       <td class="demo-td">{{state.name}}</td>
       <td class="demo-td">{{state.capital}}</td>
     </tr>

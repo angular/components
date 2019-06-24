@@ -97,7 +97,7 @@
   <button mat-raised-button
       cdkOverlayOrigin
       type="button"
-      [disabled]="overlayRef"
+      [disabled]="!!overlayRef"
       (click)="openWithConfig()">Open</button>
 </div>
 

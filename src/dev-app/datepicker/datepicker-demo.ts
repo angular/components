@@ -49,15 +49,16 @@ export class DatepickerDemo {
 
   dateCtrl = new FormControl();
 
-  dateFilter =
-      (date: Date) => !(date.getFullYear() % 2) && (date.getMonth() % 2) && !(date.getDate() % 2)
-
   onDateInput = (e: MatDatepickerInputEvent<Date>) => this.lastDateInput = e.value;
   onDateChange = (e: MatDatepickerInputEvent<Date>) => this.lastDateChange = e.value;
 
   // pass custom header component type as input
   customHeader = CustomHeader;
   customHeaderNgContent = CustomHeaderNgContent;
+
+  dateFilter(date: Date|null) {
+    return !!(date && !(date.getFullYear() % 2) && date.getMonth() % 2 && !(date.getDate() % 2));
+  }
 }
 
 // Custom header component for datepicker
