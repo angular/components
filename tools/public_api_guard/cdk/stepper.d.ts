@@ -12,7 +12,7 @@ export declare class CdkStep implements OnChanges {
     label: string;
     optional: boolean;
     state: StepState;
-    stepControl: FormControlLike;
+    stepControl: AbstractControlLike;
     stepLabel: CdkStepLabel;
     constructor(_stepper: CdkStepper, stepperOptions?: StepperOptions);
     ngOnChanges(): void;

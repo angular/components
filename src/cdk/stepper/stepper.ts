@@ -34,7 +34,7 @@ import {
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
-import {Observable, of as obaservableOf, Subject} from 'rxjs';
+import {Observable, of as observableOf, Subject} from 'rxjs';
 import {startWith, takeUntil} from 'rxjs/operators';
 import {CdkStepHeader} from './step-header';
 import {CdkStepLabel} from './step-label';
@@ -254,7 +254,11 @@ export class CdkStepper implements AfterViewInit, OnDestroy {
   @ContentChildren(CdkStep) _steps: QueryList<CdkStep>;
 
   /** The list of step components that the stepper is holding. */
-  get steps():  QueryList<CdkStep> {
+  get steps(): QueryList<CdkStep> {
+    // Note that the query list cannot be used in the template as iterable
+    // because it breaks Ivy's strict template type checking. Therefore the
+    // template currently uses "steps.toArray()". Read more about this:
+    // https://github.com/angular/angular/issues/29842
     return this._steps;
   }
 
@@ -331,7 +335,7 @@ export class CdkStepper implements AfterViewInit, OnDestroy {
       .withWrap()
       .withVerticalOrientation(this._orientation === 'vertical');
 
-    (this._dir ? this._dir.change as Observable<Direction> : obaservableOf<Direction>())
+    (this._dir ? this._dir.change as Observable<Direction> : observableOf<Direction>())
       .pipe(startWith(this._layoutDirection()), takeUntil(this._destroyed))
       .subscribe(direction => this._keyManager.withHorizontalOrientation(direction));
 

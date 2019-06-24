@@ -56,9 +56,9 @@ export declare class MatCalendarBody implements OnChanges {
     labelMinRequiredCells: number;
     numCols: number;
     rows: MatCalendarCell[][];
-    selectedValue: number;
+    selectedValue: number | null;
     readonly selectedValueChange: EventEmitter<number>;
-    todayValue: number;
+    todayValue: number | null;
     constructor(_elementRef: ElementRef<HTMLElement>, _ngZone: NgZone);
     _cellClicked(cell: MatCalendarCell): void;
     _focusActiveCell(): void;
@@ -68,20 +68,16 @@ export declare class MatCalendarBody implements OnChanges {
 
 export declare class MatCalendarCell {
     ariaLabel: string;
-    cssClasses?: string | Set<string> | {
-        [key: string]: any;
-    } | string[] | undefined;
+    cssClasses?: MatCalendarCellCssClasses;
     displayValue: string;
     enabled: boolean;
     value: number;
-    constructor(value: number, displayValue: string, ariaLabel: string, enabled: boolean, cssClasses?: string | Set<string> | {
-        [key: string]: any;
-    } | string[] | undefined);
+    constructor(value: number, displayValue: string, ariaLabel: string, enabled: boolean, cssClasses?: MatCalendarCellCssClasses);
 }
 
 export declare type MatCalendarCellCssClasses = string | string[] | Set<string> | {
     [key: string]: any;
-};
+} | undefined;
 
 export declare class MatCalendarHeader<D> {
     calendar: MatCalendar<D>;

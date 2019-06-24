@@ -23,7 +23,8 @@ import {take} from 'rxjs/operators';
 /**
  * Extra CSS classes that can be associated with a calendar cell.
  */
-export type MatCalendarCellCssClasses = string | string[] | Set<string> | {[key: string]: any};
+export type MatCalendarCellCssClasses = string | string[] | Set<string> | {[key: string]: any}
+  | undefined;
 
 /**
  * An internal class that represents the data corresponding to a single calendar cell.
@@ -63,11 +64,17 @@ export class MatCalendarBody implements OnChanges {
   /** The cells to display in the table. */
   @Input() rows: MatCalendarCell[][];
 
-  /** The value in the table that corresponds to today. */
-  @Input() todayValue: number;
+  /**
+   * The value in the table that corresponds to today. Can be set to null if no
+   * cell in the table corresponds to today.
+   */
+  @Input() todayValue: number|null;
 
-  /** The value in the table that is currently selected. */
-  @Input() selectedValue: number;
+  /**
+   * The value in the table that is currently selected. Null if no cell in the
+   * table is selected.
+   */
+  @Input() selectedValue: number|null;
 
   /** The minimum number of free cells needed to fit the label in the first row. */
   @Input() labelMinRequiredCells: number;

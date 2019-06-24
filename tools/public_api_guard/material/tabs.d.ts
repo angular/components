@@ -45,7 +45,7 @@ export declare class MatTabBody implements OnInit, OnDestroy {
     _position: MatTabBodyPositionState;
     _translateTabComplete: Subject<AnimationEvent>;
     animationDuration: string;
-    origin: number;
+    origin: number | null;
     position: number;
     constructor(_elementRef: ElementRef<HTMLElement>, _dir: Directionality, changeDetectorRef: ChangeDetectorRef);
     _getLayoutDirection(): Direction;
