@@ -9,7 +9,8 @@
 import {FocusableOption, FocusKeyManager} from '@angular/cdk/a11y';
 import {Direction, Directionality} from '@angular/cdk/bidi';
 import {coerceBooleanProperty, coerceNumberProperty} from '@angular/cdk/coercion';
-import {END, ENTER, HOME, SPACE, hasModifierKey} from '@angular/cdk/keycodes';
+import {END, ENTER, hasModifierKey, HOME, SPACE} from '@angular/cdk/keycodes';
+import {DOCUMENT} from '@angular/common';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
@@ -18,10 +19,11 @@ import {
   ContentChild,
   ContentChildren,
   Directive,
-  EventEmitter,
   ElementRef,
+  EventEmitter,
   forwardRef,
   Inject,
+  InjectionToken,
   Input,
   OnChanges,
   OnDestroy,
@@ -31,13 +33,11 @@ import {
   TemplateRef,
   ViewChild,
   ViewEncapsulation,
-  InjectionToken,
 } from '@angular/core';
-import {DOCUMENT} from '@angular/common';
-import {CdkStepLabel} from './step-label';
-import {Observable, Subject, of as obaservableOf} from 'rxjs';
+import {Observable, of as obaservableOf, Subject} from 'rxjs';
 import {startWith, takeUntil} from 'rxjs/operators';
 import {CdkStepHeader} from './step-header';
+import {CdkStepLabel} from './step-label';
 
 /** Used to generate unique ID for each stepper component. */
 let nextId = 0;
@@ -124,7 +124,7 @@ export class CdkStep implements OnChanges {
   @ViewChild(TemplateRef, {static: true}) content: TemplateRef<any>;
 
   /** The top level abstract control of the step. */
-  @Input() stepControl: FormControlLike;
+  @Input() stepControl: AbstractControlLike;
 
   /** Whether user has seen the expanded step content or not. */
   interacted = false;
@@ -512,14 +512,13 @@ export class CdkStepper implements AfterViewInit, OnDestroy {
   }
 }
 
-
 /**
- * Simplified representation of a FormControl from @angular/forms.
+ * Simplified representation of an "AbstractControl" from @angular/forms.
  * Used to avoid having to bring in @angular/forms for a single optional interface.
  * @docs-private
  */
-interface FormControlLike {
-  asyncValidator: () => any | null;
+interface AbstractControlLike {
+  asyncValidator: ((control: any) => any) | null;
   dirty: boolean;
   disabled: boolean;
   enabled: boolean;
@@ -528,21 +527,21 @@ interface FormControlLike {
   parent: any;
   pending: boolean;
   pristine: boolean;
-  root: FormControlLike;
+  root: AbstractControlLike;
   status: string;
   statusChanges: Observable<any>;
   touched: boolean;
   untouched: boolean;
   updateOn: any;
   valid: boolean;
-  validator: () => any | null;
+  validator: ((control: any) => any) | null;
   value: any;
   valueChanges: Observable<any>;
   clearAsyncValidators(): void;
   clearValidators(): void;
   disable(opts?: any): void;
   enable(opts?: any): void;
-  get(path: (string | number)[] | string): FormControlLike | null;
+  get(path: (string | number)[] | string): AbstractControlLike | null;
   getError(errorCode: string, path?: (string | number)[] | string): any;
   hasError(errorCode: string, path?: (string | number)[] | string): boolean;
   markAllAsTouched(): void;
@@ -553,15 +552,15 @@ interface FormControlLike {
   markAsUntouched(opts?: any): void;
   patchValue(value: any, options?: Object): void;
   reset(value?: any, options?: Object): void;
-  setAsyncValidators(newValidator: () => any | (() => any)[] | null): void;
+  setAsyncValidators(newValidator: (control: any) => any |
+      ((control: any) => any)[] | null): void;
   setErrors(errors: {[key: string]: any} | null, opts?: any): void;
   setParent(parent: any): void;
-  setValidators(newValidator: () => any | (() => any)[] | null): void;
+  setValidators(newValidator: (control: any) => any |
+      ((control: any) => any)[] | null): void;
   setValue(value: any, options?: Object): void;
   updateValueAndValidity(opts?: any): void;
   patchValue(value: any, options?: any): void;
-  registerOnChange(fn: Function): void;
-  registerOnDisabledChange(fn: (isDisabled: boolean) => void): void;
   reset(formState?: any, options?: any): void;
   setValue(value: any, options?: any): void;
 }
