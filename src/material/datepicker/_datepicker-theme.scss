@@ -1,0 +1,160 @@
+@import '../core/style/elevation';
+@import '../core/theming/palette';
+@import '../core/theming/theming';
+@import '../core/typography/typography-utils';
+
+
+$mat-datepicker-selected-today-box-shadow-width: 1px;
+$mat-datepicker-selected-fade-amount: 0.6;
+$mat-datepicker-today-fade-amount: 0.2;
+$mat-calendar-body-font-size: 13px !default;
+$mat-calendar-weekday-table-font-size: 11px !default;
+
+@mixin _mat-datepicker-color($palette) {
+  .mat-calendar-body-selected {
+    background-color: mat-color($palette);
+    color: mat-color($palette, default-contrast);
+  }
+
+  .mat-calendar-body-disabled > .mat-calendar-body-selected {
+    $background: mat-color($palette);
+
+    @if (type-of($background) == color) {
+      background-color: fade-out($background, $mat-datepicker-selected-fade-amount);
+    }
+    @else {
+      // If we couldn't resolve to background to a color (e.g. it's a CSS variable),
+      // fall back to fading the content out via `opacity`.
+      opacity: $mat-datepicker-today-fade-amount;
+    }
+  }
+
+  .mat-calendar-body-today.mat-calendar-body-selected {
+    box-shadow: inset 0 0 0 $mat-datepicker-selected-today-box-shadow-width
+                mat-color($palette, default-contrast);
+  }
+}
+
+@mixin mat-datepicker-theme($theme) {
+  $foreground: map-get($theme, foreground);
+  $background: map-get($theme, background);
+
+  .mat-calendar-arrow {
+    border-top-color: mat-color($foreground, icon);
+  }
+
+  // The prev/next buttons need a bit more specificity to
+  // avoid being overwritten by the .mat-icon-button.
+  .mat-datepicker-toggle,
+  .mat-datepicker-content .mat-calendar-next-button,
+  .mat-datepicker-content .mat-calendar-previous-button {
+    color: mat-color($foreground, icon);
+  }
+
+  .mat-calendar-table-header {
+    color: mat-color($foreground, hint-text);
+  }
+
+  .mat-calendar-table-header-divider::after {
+    background: mat-color($foreground, divider);
+  }
+
+  .mat-calendar-body-label {
+    color: mat-color($foreground, secondary-text);
+  }
+
+  .mat-calendar-body-cell-content {
+    color: mat-color($foreground, text);
+    border-color: transparent;
+  }
+
+  .mat-calendar-body-disabled > .mat-calendar-body-cell-content:not(.mat-calendar-body-selected) {
+    color: mat-color($foreground, disabled-text);
+  }
+
+  .mat-calendar-body-cell:not(.mat-calendar-body-disabled):hover,
+  .cdk-keyboard-focused .mat-calendar-body-active,
+  .cdk-program-focused .mat-calendar-body-active {
+    & > .mat-calendar-body-cell-content:not(.mat-calendar-body-selected) {
+      background-color: mat-color($background, hover);
+    }
+  }
+
+  .mat-calendar-body-today:not(.mat-calendar-body-selected) {
+    // Note: though it's not text, the border is a hint about the fact that this is today's date,
+    // so we use the hint color.
+    border-color: mat-color($foreground, hint-text);
+  }
+
+  .mat-calendar-body-disabled > .mat-calendar-body-today:not(.mat-calendar-body-selected) {
+    $color: mat-color($foreground, hint-text);
+
+    @if (type-of($color) == color) {
+      border-color: fade-out($color, $mat-datepicker-today-fade-amount);
+    }
+    @else {
+      // If the color didn't resolve to a color value, but something like a CSS variable, we can't
+      // fade it out so we fall back to reducing the element opacity. Note that we don't use the
+      // $mat-datepicker-today-fade-amount, because hint text usually has some opacity applied
+      // to it already and we don't want them to stack on top of each other.
+      opacity: 0.5;
+    }
+  }
+
+  @include _mat-datepicker-color(map-get($theme, primary));
+
+  .mat-datepicker-content {
+    @include _mat-theme-elevation(4, $theme);
+    background-color: mat-color($background, card);
+    color: mat-color($foreground, text);
+
+    &.mat-accent {
+      @include _mat-datepicker-color(map-get($theme, accent));
+    }
+
+    &.mat-warn {
+      @include _mat-datepicker-color(map-get($theme, warn));
+    }
+  }
+
+  .mat-datepicker-content-touch {
+    @include _mat-theme-elevation(0, $theme);
+  }
+
+  .mat-datepicker-toggle-active {
+    color: mat-color(map-get($theme, primary), text);
+
+    &.mat-accent {
+      color: mat-color(map-get($theme, accent), text);
+    }
+
+    &.mat-warn {
+      color: mat-color(map-get($theme, warn), text);
+    }
+  }
+}
+
+@mixin mat-datepicker-typography($config) {
+  .mat-calendar {
+    font-family: mat-font-family($config);
+  }
+
+  .mat-calendar-body {
+    font-size: $mat-calendar-body-font-size;
+  }
+
+  .mat-calendar-body-label,
+  .mat-calendar-period-button {
+    font: {
+      size: mat-font-size($config, button);
+      weight: mat-font-weight($config, button);
+    }
+  }
+
+  .mat-calendar-table-header th {
+    font: {
+      size: $mat-calendar-weekday-table-font-size;
+      weight: mat-font-weight($config, body-1);
+    }
+  }
+}

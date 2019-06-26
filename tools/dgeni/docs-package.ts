@@ -51,7 +51,7 @@ apiDocsPackage.processor(new EntryPointGrouper());
 
 // Configure the log level of the API docs dgeni package.
 apiDocsPackage.config(function(log: any) {
-  return log.level = 'info';
+  return log.level = 'warning';
 });
 
 // Configure the processor for reading files from the file system.
@@ -78,6 +78,7 @@ apiDocsPackage.config(function(computePathsProcessor: any) {
 apiDocsPackage.config(function(parseTagsProcessor: any) {
   parseTagsProcessor.tagDefinitions = parseTagsProcessor.tagDefinitions.concat([
     {name: 'docs-private'},
+    {name: 'docs-public'},
     {name: 'breaking-change'},
   ]);
 });
@@ -89,7 +90,6 @@ apiDocsPackage.config(function(checkAnchorLinksProcessor: any) {
 
 // Configure the processor for understanding TypeScript.
 apiDocsPackage.config(function(readTypeScriptModules: ReadTypeScriptModules) {
-  readTypeScriptModules.ignoreExportsMatching = [/^_/];
   readTypeScriptModules.hidePrivateMembers = true;
 });
 

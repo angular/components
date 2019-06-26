@@ -11,14 +11,17 @@ import {
   ChangeDetectorRef,
   Component,
   Inject,
-  ViewChild,
+  OnDestroy,
   Optional,
-  OnDestroy
+  ViewChild
 } from '@angular/core';
 import {FormControl} from '@angular/forms';
-import {MatCalendar, MatCalendarHeader} from '@angular/material';
 import {DateAdapter, MAT_DATE_FORMATS, MatDateFormats, ThemePalette} from '@angular/material/core';
-import {MatDatepickerInputEvent} from '@angular/material/datepicker';
+import {
+  MatCalendar,
+  MatCalendarHeader,
+  MatDatepickerInputEvent
+} from '@angular/material/datepicker';
 import {Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 
@@ -111,7 +114,7 @@ export class CustomHeader<D> implements OnDestroy {
 })
 export class CustomHeaderNgContent<D> {
 
-  @ViewChild(MatCalendarHeader)
+  @ViewChild(MatCalendarHeader, {static: false})
   header: MatCalendarHeader<D>;
 
   constructor(@Optional() private _dateAdapter: DateAdapter<D>) {}

@@ -727,6 +727,14 @@ describe('CdkTable', () => {
              ['', '5', '6'],
            ]);
          });
+
+      it('should not throw when multiTemplateDataRows is coerced from a static value', () => {
+        expect(() => {
+          setupTableTestApp(CoercedMultiTemplateDataRows);
+          fixture.detectChanges();
+        }).not.toThrow();
+      });
+
     });
   });
 
@@ -1454,7 +1462,7 @@ class SimpleCdkTableApp {
   dataSource: FakeDataSource | undefined = new FakeDataSource();
   columnsToRender = ['column_a', 'column_b', 'column_c'];
 
-  @ViewChild(CdkTable) table: CdkTable<TestData>;
+  @ViewChild(CdkTable, {static: false}) table: CdkTable<TestData>;
 }
 
 @Component({
@@ -1484,7 +1492,7 @@ class CdkTableWithDifferentDataInputsApp {
   dataSource: DataSource<TestData> | Observable<TestData[]> | TestData[] | any = null;
   columnsToRender = ['column_a', 'column_b', 'column_c'];
 
-  @ViewChild(CdkTable) table: CdkTable<TestData>;
+  @ViewChild(CdkTable, {static: false}) table: CdkTable<TestData>;
 }
 
 @Component({
@@ -1615,7 +1623,7 @@ class WhenRowCdkTableApp {
     this.dataSource.addData();
   }
 
-  @ViewChild(CdkTable) table: CdkTable<TestData>;
+  @ViewChild(CdkTable, {static: false}) table: CdkTable<TestData>;
 
   showIndexColumns() {
     const indexColumns = ['index', 'dataIndex', 'renderIndex'];
@@ -1623,6 +1631,59 @@ class WhenRowCdkTableApp {
     this.columnsForIsIndex1Row = indexColumns;
     this.columnsForHasC3Row = indexColumns;
   }
+}
+
+@Component({
+  template: `
+    <cdk-table [dataSource]="dataSource" multiTemplateDataRows>
+      <ng-container cdkColumnDef="column_a">
+        <cdk-header-cell *cdkHeaderCellDef> Column A</cdk-header-cell>
+        <cdk-cell *cdkCellDef="let row"> {{row.a}}</cdk-cell>
+      </ng-container>
+
+      <ng-container cdkColumnDef="column_b">
+        <cdk-header-cell *cdkHeaderCellDef> Column B</cdk-header-cell>
+        <cdk-cell *cdkCellDef="let row"> {{row.b}}</cdk-cell>
+      </ng-container>
+
+      <ng-container cdkColumnDef="column_c">
+        <cdk-header-cell *cdkHeaderCellDef> Column C</cdk-header-cell>
+        <cdk-cell *cdkCellDef="let row"> {{row.c}}</cdk-cell>
+      </ng-container>
+
+      <ng-container cdkColumnDef="index1Column">
+        <cdk-header-cell *cdkHeaderCellDef> Column C</cdk-header-cell>
+        <cdk-cell *cdkCellDef> index_1_special_row</cdk-cell>
+      </ng-container>
+
+      <ng-container cdkColumnDef="c3Column">
+        <cdk-header-cell *cdkHeaderCellDef> Column C</cdk-header-cell>
+        <cdk-cell *cdkCellDef> c3_special_row</cdk-cell>
+      </ng-container>
+
+      <ng-container cdkColumnDef="index">
+        <cdk-header-cell *cdkHeaderCellDef> Index</cdk-header-cell>
+        <cdk-cell *cdkCellDef="let index = index"> {{index}}</cdk-cell>
+      </ng-container>
+
+      <ng-container cdkColumnDef="dataIndex">
+        <cdk-header-cell *cdkHeaderCellDef> Data Index</cdk-header-cell>
+        <cdk-cell *cdkCellDef="let dataIndex = dataIndex"> {{dataIndex}}</cdk-cell>
+      </ng-container>
+
+      <ng-container cdkColumnDef="renderIndex">
+        <cdk-header-cell *cdkHeaderCellDef> Render Index</cdk-header-cell>
+        <cdk-cell *cdkCellDef="let renderIndex = renderIndex"> {{renderIndex}}</cdk-cell>
+      </ng-container>
+
+      <cdk-header-row *cdkHeaderRowDef="columnsToRender"></cdk-header-row>
+      <cdk-row *cdkRowDef="let row; columns: columnsToRender"></cdk-row>
+      <cdk-row *cdkRowDef="let row; columns: columnsForIsIndex1Row; when: isIndex1"></cdk-row>
+      <cdk-row *cdkRowDef="let row; columns: columnsForHasC3Row; when: hasC3"></cdk-row>
+    </cdk-table>
+  `
+})
+class CoercedMultiTemplateDataRows extends WhenRowCdkTableApp {
 }
 
 @Component({
@@ -1665,7 +1726,7 @@ class WhenRowWithoutDefaultCdkTableApp {
   isIndex1 = (index: number, _rowData: TestData) => index == 1;
   hasC3 = (_index: number, rowData: TestData) => rowData.c == 'c_3';
 
-  @ViewChild(CdkTable) table: CdkTable<TestData>;
+  @ViewChild(CdkTable, {static: false}) table: CdkTable<TestData>;
 }
 
 @Component({
@@ -1708,7 +1769,7 @@ class WhenRowMultipleDefaultsCdkTableApp {
   columnsToRender = ['column_a', 'column_b', 'column_c'];
   hasC3 = (_index: number, rowData: TestData) => rowData.c == 'c_3';
 
-  @ViewChild(CdkTable) table: CdkTable<TestData>;
+  @ViewChild(CdkTable, {static: false}) table: CdkTable<TestData>;
 }
 
 @Component({
@@ -1728,7 +1789,7 @@ class DynamicDataSourceCdkTableApp {
   dataSource: FakeDataSource | undefined;
   columnsToRender = ['column_a'];
 
-  @ViewChild(CdkTable) table: CdkTable<TestData>;
+  @ViewChild(CdkTable, {static: false}) table: CdkTable<TestData>;
 }
 
 @Component({
@@ -1755,7 +1816,7 @@ class TrackByCdkTableApp {
   dataSource: FakeDataSource = new FakeDataSource();
   columnsToRender = ['column_a', 'column_b'];
 
-  @ViewChild(CdkTable) table: CdkTable<TestData>;
+  @ViewChild(CdkTable, {static: false}) table: CdkTable<TestData>;
 
   trackBy = (index: number, item: TestData) => {
     switch (this.trackByStrategy) {
@@ -1805,7 +1866,7 @@ class StickyFlexLayoutCdkTableApp {
   dataSource: FakeDataSource = new FakeDataSource();
   columns = ['column-1', 'column-2', 'column-3', 'column-4', 'column-5', 'column-6'];
 
-  @ViewChild(CdkTable) table: CdkTable<TestData>;
+  @ViewChild(CdkTable, {static: false}) table: CdkTable<TestData>;
 
   dir = 'ltr';
   stickyHeaders: string[] = [];
@@ -1858,7 +1919,7 @@ class StickyNativeLayoutCdkTableApp {
   dataSource: FakeDataSource = new FakeDataSource();
   columns = ['column-1', 'column-2', 'column-3', 'column-4', 'column-5', 'column-6'];
 
-  @ViewChild(CdkTable) table: CdkTable<TestData>;
+  @ViewChild(CdkTable, {static: false}) table: CdkTable<TestData>;
 
   stickyHeaders: string[] = [];
   stickyFooters: string[] = [];
@@ -1887,7 +1948,7 @@ class DynamicColumnDefinitionsCdkTableApp {
   dynamicColumns: any[] = [];
   dataSource: FakeDataSource = new FakeDataSource();
 
-  @ViewChild(CdkTable) table: CdkTable<TestData>;
+  @ViewChild(CdkTable, {static: false}) table: CdkTable<TestData>;
 }
 
 @Component({
@@ -1907,7 +1968,7 @@ class CustomRoleCdkTableApp {
   dataSource: FakeDataSource = new FakeDataSource();
   columnsToRender = ['column_a'];
 
-  @ViewChild(CdkTable) table: CdkTable<TestData>;
+  @ViewChild(CdkTable, {static: false}) table: CdkTable<TestData>;
 }
 
 @Component({
@@ -1927,7 +1988,7 @@ class CrazyColumnNameCdkTableApp {
   dataSource: FakeDataSource = new FakeDataSource();
   columnsToRender = ['crazy-column-NAME-1!@#$%^-_&*()2'];
 
-  @ViewChild(CdkTable) table: CdkTable<TestData>;
+  @ViewChild(CdkTable, {static: false}) table: CdkTable<TestData>;
 }
 
 @Component({
@@ -2134,7 +2195,7 @@ class RowContextCdkTableApp {
 })
 class WrapperCdkTableApp<T> implements AfterContentInit {
   @ContentChildren(CdkColumnDef) columnDefs: QueryList<CdkColumnDef>;
-  @ContentChild(CdkHeaderRowDef) headerRowDef: CdkHeaderRowDef;
+  @ContentChild(CdkHeaderRowDef, {static: false}) headerRowDef: CdkHeaderRowDef;
   @ContentChildren(CdkRowDef) rowDefs: QueryList<CdkRowDef<T>>;
 
   @ViewChild(CdkTable, {static: true}) table: CdkTable<T>;
@@ -2208,7 +2269,7 @@ class NativeHtmlTableApp {
   dataSource: FakeDataSource | undefined = new FakeDataSource();
   columnsToRender = ['column_a', 'column_b', 'column_c'];
 
-  @ViewChild(CdkTable) table: CdkTable<TestData>;
+  @ViewChild(CdkTable, {static: false}) table: CdkTable<TestData>;
 }
 
 @Component({
@@ -2237,7 +2298,7 @@ class NativeTableWithNoHeaderOrFooterRows {
   dataSource: FakeDataSource | undefined = new FakeDataSource();
   columnsToRender = ['column_a', 'column_b', 'column_c'];
 
-  @ViewChild(CdkTable) table: CdkTable<TestData>;
+  @ViewChild(CdkTable, {static: false}) table: CdkTable<TestData>;
 }
 
 @Component({
@@ -2258,7 +2319,7 @@ class NativeHtmlTableWithCaptionApp {
   dataSource: FakeDataSource | undefined = new FakeDataSource();
   columnsToRender = ['column_a'];
 
-  @ViewChild(CdkTable) table: CdkTable<TestData>;
+  @ViewChild(CdkTable, {static: false}) table: CdkTable<TestData>;
 }
 
 function getElements(element: Element, query: string): Element[] {
@@ -2326,7 +2387,7 @@ function getActualTableContent(tableElement: Element): string[][] {
   return actualTableContent.map(row => row.map(cell => cell.textContent!.trim()));
 }
 
-function expectTableToMatchContent(tableElement: Element, expected: any[]) {
+export function expectTableToMatchContent(tableElement: Element, expected: any[]) {
   const missedExpectations: string[] = [];
   function checkCellContent(actualCell: string, expectedCell: string) {
     if (actualCell !== expectedCell) {

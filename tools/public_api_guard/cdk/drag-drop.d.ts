@@ -11,6 +11,7 @@ export declare class CdkDrag<T = any> implements AfterViewInit, OnChanges, OnDes
     _handles: QueryList<CdkDragHandle>;
     _placeholderTemplate: CdkDragPlaceholder;
     _previewTemplate: CdkDragPreview;
+    boundaryElement: string | ElementRef<HTMLElement> | HTMLElement;
     boundaryElementSelector: string;
     constrainPosition?: (point: Point) => Point;
     data: T;
@@ -22,6 +23,10 @@ export declare class CdkDrag<T = any> implements AfterViewInit, OnChanges, OnDes
     ended: EventEmitter<CdkDragEnd>;
     entered: EventEmitter<CdkDragEnter<any>>;
     exited: EventEmitter<CdkDragExit<any>>;
+    freeDragPosition: {
+        x: number;
+        y: number;
+    };
     lockAxis: 'x' | 'y';
     moved: Observable<CdkDragMove<T>>;
     released: EventEmitter<CdkDragRelease>;
@@ -29,8 +34,11 @@ export declare class CdkDrag<T = any> implements AfterViewInit, OnChanges, OnDes
     started: EventEmitter<CdkDragStart>;
     constructor(
     element: ElementRef<HTMLElement>,
-    dropContainer: CdkDropList, _document: any, _ngZone: NgZone, _viewContainerRef: ViewContainerRef, viewportRuler: ViewportRuler, dragDropRegistry: DragDropRegistry<DragRef, DropListRef>, config: DragRefConfig, _dir: Directionality,
-    dragDrop?: DragDrop, _changeDetectorRef?: ChangeDetectorRef | undefined);
+    dropContainer: CdkDropList, _document: any, _ngZone: NgZone, _viewContainerRef: ViewContainerRef, config: DragRefConfig, _dir: Directionality, dragDrop: DragDrop, _changeDetectorRef: ChangeDetectorRef);
+    getFreeDragPosition(): {
+        readonly x: number;
+        readonly y: number;
+    };
     getPlaceholderElement(): HTMLElement;
     getRootElement(): HTMLElement;
     ngAfterViewInit(): void;
@@ -45,6 +53,10 @@ export interface CdkDragConfig extends DragRefConfig {
 export interface CdkDragDrop<T, O = T> {
     container: CdkDropList<T>;
     currentIndex: number;
+    distance: {
+        x: number;
+        y: number;
+    };
     isPointerOverContainer: boolean;
     item: CdkDrag;
     previousContainer: CdkDropList<O>;
@@ -52,11 +64,16 @@ export interface CdkDragDrop<T, O = T> {
 }
 
 export interface CdkDragEnd<T = any> {
+    distance: {
+        x: number;
+        y: number;
+    };
     source: CdkDrag<T>;
 }
 
 export interface CdkDragEnter<T = any, I = T> {
     container: CdkDropList<T>;
+    currentIndex: number;
     item: CdkDrag<I>;
 }
 
@@ -78,6 +95,10 @@ export interface CdkDragMove<T = any> {
     delta: {
         x: -1 | 0 | 1;
         y: -1 | 0 | 1;
+    };
+    distance: {
+        x: number;
+        y: number;
     };
     event: MouseEvent | TouchEvent;
     pointerPosition: {
@@ -131,8 +152,7 @@ export declare class CdkDropList<T = any> implements CdkDropListContainer, After
     sorted: EventEmitter<CdkDragSortEvent<T>>;
     sortingDisabled: boolean;
     constructor(
-    element: ElementRef<HTMLElement>, dragDropRegistry: DragDropRegistry<DragRef, DropListRef>, _changeDetectorRef: ChangeDetectorRef, _dir?: Directionality | undefined, _group?: CdkDropListGroup<CdkDropList<any>> | undefined, _document?: any,
-    dragDrop?: DragDrop);
+    element: ElementRef<HTMLElement>, dragDrop: DragDrop, _changeDetectorRef: ChangeDetectorRef, _dir?: Directionality | undefined, _group?: CdkDropListGroup<CdkDropList<any>> | undefined);
     _getSiblingContainerFromPosition(item: CdkDrag, x: number, y: number): CdkDropListContainer | null;
     _isOverContainer(x: number, y: number): boolean;
     _sortItem(item: CdkDrag, pointerX: number, pointerY: number, pointerDelta: {
@@ -215,14 +235,17 @@ export declare class DragRef<T = any> {
         item: DragRef<any>;
         container: DropListRef;
         previousContainer: DropListRef;
+        distance: Point;
         isPointerOverContainer: boolean;
     }>;
     ended: Subject<{
         source: DragRef<any>;
+        distance: Point;
     }>;
     entered: Subject<{
         container: DropListRef;
         item: DragRef<any>;
+        currentIndex: number;
     }>;
     exited: Subject<{
         container: DropListRef;
@@ -236,6 +259,7 @@ export declare class DragRef<T = any> {
             y: number;
         };
         event: MouseEvent | TouchEvent;
+        distance: Point;
         delta: {
             x: -1 | 0 | 1;
             y: -1 | 0 | 1;
@@ -252,10 +276,12 @@ export declare class DragRef<T = any> {
     disableHandle(handle: HTMLElement): void;
     dispose(): void;
     enableHandle(handle: HTMLElement): void;
+    getFreeDragPosition(): Readonly<Point>;
     getPlaceholderElement(): HTMLElement;
     getRootElement(): HTMLElement;
     isDragging(): boolean;
     reset(): void;
+    setFreeDragPosition(value: Point): this;
     withBoundaryElement(boundaryElement: ElementRef<HTMLElement> | HTMLElement | null): this;
     withDirection(direction: Direction): this;
     withHandles(handles: (HTMLElement | ElementRef<HTMLElement>)[]): this;
@@ -280,12 +306,14 @@ export declare class DropListRef<T = any> {
         container: DropListRef<any>;
         previousContainer: DropListRef<any>;
         isPointerOverContainer: boolean;
+        distance: Point;
     }>;
-    readonly element: HTMLElement;
+    element: HTMLElement | ElementRef<HTMLElement>;
     enterPredicate: (drag: DragRef, drop: DropListRef) => boolean;
     entered: Subject<{
         item: DragRef;
         container: DropListRef<any>;
+        currentIndex: number;
     }>;
     exited: Subject<{
         item: DragRef;
@@ -312,7 +340,7 @@ export declare class DropListRef<T = any> {
     _stopReceiving(sibling: DropListRef): void;
     connectedTo(connectedTo: DropListRef[]): this;
     dispose(): void;
-    drop(item: DragRef, currentIndex: number, previousContainer: DropListRef, isPointerOverContainer: boolean): void;
+    drop(item: DragRef, currentIndex: number, previousContainer: DropListRef, isPointerOverContainer: boolean, distance?: Point): void;
     enter(item: DragRef, pointerX: number, pointerY: number): void;
     exit(item: DragRef): void;
     getItemIndex(item: DragRef): number;

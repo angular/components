@@ -7,7 +7,6 @@
  */
 
 import {Directionality} from '@angular/cdk/bidi';
-import {ViewportRuler} from '@angular/cdk/scrolling';
 import {DOCUMENT} from '@angular/common';
 import {
   AfterViewInit,
@@ -29,11 +28,11 @@ import {
   OnChanges,
   SimpleChanges,
   ChangeDetectorRef,
+  isDevMode,
 } from '@angular/core';
-import {coerceBooleanProperty} from '@angular/cdk/coercion';
+import {coerceBooleanProperty, coerceNumberProperty, coerceElement} from '@angular/cdk/coercion';
 import {Observable, Observer, Subject, merge} from 'rxjs';
 import {startWith, take, map, takeUntil, switchMap, tap} from 'rxjs/operators';
-import {DragDropRegistry} from '../drag-drop-registry';
 import {
   CdkDragDrop,
   CdkDragEnd,
@@ -49,7 +48,6 @@ import {CdkDragPreview} from './drag-preview';
 import {CDK_DROP_LIST} from '../drop-list-container';
 import {CDK_DRAG_PARENT} from '../drag-parent';
 import {DragRef, DragRefConfig, Point} from '../drag-ref';
-import {DropListRef} from '../drop-list-ref';
 import {CdkDropListInternal as CdkDropList} from './drop-list';
 import {DragDrop} from '../drag-drop';
 
@@ -85,10 +83,10 @@ export class CdkDrag<T = any> implements AfterViewInit, OnChanges, OnDestroy {
   @ContentChildren(CdkDragHandle, {descendants: true}) _handles: QueryList<CdkDragHandle>;
 
   /** Element that will be used as a template to create the draggable item's preview. */
-  @ContentChild(CdkDragPreview) _previewTemplate: CdkDragPreview;
+  @ContentChild(CdkDragPreview, {static: false}) _previewTemplate: CdkDragPreview;
 
   /** Template for placeholder element rendered to show where a draggable would be dropped. */
-  @ContentChild(CdkDragPlaceholder) _placeholderTemplate: CdkDragPlaceholder;
+  @ContentChild(CdkDragPlaceholder, {static: false}) _placeholderTemplate: CdkDragPlaceholder;
 
   /** Arbitrary data to attach to this drag instance. */
   @Input('cdkDragData') data: T;
@@ -104,17 +102,38 @@ export class CdkDrag<T = any> implements AfterViewInit, OnChanges, OnDestroy {
   @Input('cdkDragRootElement') rootElementSelector: string;
 
   /**
+   * Node or selector that will be used to determine the element to which the draggable's
+   * position will be constrained. If a string is passed in, it'll be used as a selector that
+   * will be matched starting from the element's parent and going up the DOM until a match
+   * has been found.
+   */
+  @Input('cdkDragBoundary') boundaryElement: string | ElementRef<HTMLElement> | HTMLElement;
+
+  /**
    * Selector that will be used to determine the element to which the draggable's position will
    * be constrained. Matching starts from the element's parent and goes up the DOM until a matching
-   * element has been found.
+   * element has been found
+   * @deprecated Use `boundaryElement` instead.
+   * @breaking-change 9.0.0
    */
-  @Input('cdkDragBoundary') boundaryElementSelector: string;
+  get boundaryElementSelector(): string {
+    return typeof this.boundaryElement === 'string' ? this.boundaryElement : undefined!;
+  }
+  set boundaryElementSelector(selector: string) {
+    this.boundaryElement = selector;
+  }
 
   /**
    * Amount of milliseconds to wait after the user has put their
    * pointer down before starting to drag the element.
    */
   @Input('cdkDragStartDelay') dragStartDelay: number = 0;
+
+  /**
+   * Sets the position of a `CdkDrag` that is outside of a drop container.
+   * Can be used to restore the element's position for a returning user.
+   */
+  @Input('cdkDragFreeDragPosition') freeDragPosition: {x: number, y: number};
 
   /** Whether starting to drag this element is disabled. */
   @Input('cdkDragDisabled')
@@ -167,7 +186,8 @@ export class CdkDrag<T = any> implements AfterViewInit, OnChanges, OnDestroy {
           source: this,
           pointerPosition: movedEvent.pointerPosition,
           event: movedEvent.event,
-          delta: movedEvent.delta
+          delta: movedEvent.delta,
+          distance: movedEvent.distance
         }))).subscribe(observer);
 
         return () => {
@@ -176,36 +196,15 @@ export class CdkDrag<T = any> implements AfterViewInit, OnChanges, OnDestroy {
       });
 
   constructor(
-    /** Element that the draggable is attached to. */
-    public element: ElementRef<HTMLElement>,
-    /** Droppable container that the draggable is a part of. */
-    @Inject(CDK_DROP_LIST) @Optional() @SkipSelf()
-    public dropContainer: CdkDropList,
-    @Inject(DOCUMENT) private _document: any,
-    private _ngZone: NgZone,
-    private _viewContainerRef: ViewContainerRef,
-    viewportRuler: ViewportRuler,
-    dragDropRegistry: DragDropRegistry<DragRef, DropListRef>,
-    @Inject(CDK_DRAG_CONFIG) config: DragRefConfig,
-    @Optional() private _dir: Directionality,
-
-    /**
-     * @deprecated `viewportRuler`, `dragDropRegistry` and `_changeDetectorRef` parameters
-     * to be removed. Also `dragDrop` parameter to be made required.
-     * @breaking-change 8.0.0.
-     */
-    dragDrop?: DragDrop,
-    private _changeDetectorRef?: ChangeDetectorRef) {
-
-
-    // @breaking-change 8.0.0 Remove null check once the paramter is made required.
-    if (dragDrop) {
-      this._dragRef = dragDrop.createDrag(element, config);
-    } else {
-      this._dragRef = new DragRef(element, config, _document, _ngZone, viewportRuler,
-          dragDropRegistry);
-    }
-
+      /** Element that the draggable is attached to. */
+      public element: ElementRef<HTMLElement>,
+      /** Droppable container that the draggable is a part of. */
+      @Inject(CDK_DROP_LIST) @Optional() @SkipSelf() public dropContainer: CdkDropList,
+      @Inject(DOCUMENT) private _document: any, private _ngZone: NgZone,
+      private _viewContainerRef: ViewContainerRef, @Inject(CDK_DRAG_CONFIG) config: DragRefConfig,
+      @Optional() private _dir: Directionality, dragDrop: DragDrop,
+      private _changeDetectorRef: ChangeDetectorRef) {
+    this._dragRef = dragDrop.createDrag(element, config);
     this._dragRef.data = this;
     this._syncInputs(this._dragRef);
     this._handleEvents(this._dragRef);
@@ -227,6 +226,13 @@ export class CdkDrag<T = any> implements AfterViewInit, OnChanges, OnDestroy {
   /** Resets a standalone drag item to its initial position. */
   reset(): void {
     this._dragRef.reset();
+  }
+
+  /**
+   * Gets the pixel coordinates of the draggable outside of a drop container.
+   */
+  getFreeDragPosition(): {readonly x: number, readonly y: number} {
+    return this._dragRef.getFreeDragPosition();
   }
 
   ngAfterViewInit() {
@@ -260,16 +266,26 @@ export class CdkDrag<T = any> implements AfterViewInit, OnChanges, OnDestroy {
           const handle = handleInstance.element.nativeElement;
           handleInstance.disabled ? dragRef.disableHandle(handle) : dragRef.enableHandle(handle);
         });
+
+        if (this.freeDragPosition) {
+          this._dragRef.setFreeDragPosition(this.freeDragPosition);
+        }
       });
   }
 
   ngOnChanges(changes: SimpleChanges) {
     const rootSelectorChange = changes['rootElementSelector'];
+    const positionChange = changes['freeDragPosition'];
 
     // We don't have to react to the first change since it's being
     // handled in `ngAfterViewInit` where it needs to be deferred.
     if (rootSelectorChange && !rootSelectorChange.firstChange) {
       this._updateRootElement();
+    }
+
+    // Skip the first change since it's being handled in `ngAfterViewInit`.
+    if (positionChange && !positionChange.firstChange && this.freeDragPosition) {
+      this._dragRef.setFreeDragPosition(this.freeDragPosition);
     }
   }
 
@@ -293,10 +309,25 @@ export class CdkDrag<T = any> implements AfterViewInit, OnChanges, OnDestroy {
     this._dragRef.withRootElement(rootElement || element);
   }
 
-  /** Gets the boundary element, based on the `boundaryElementSelector`. */
+  /** Gets the boundary element, based on the `boundaryElement` value. */
   private _getBoundaryElement() {
-    const selector = this.boundaryElementSelector;
-    return selector ? getClosestMatchingAncestor(this.element.nativeElement, selector) : null;
+    const boundary = this.boundaryElement;
+
+    if (!boundary) {
+      return null;
+    }
+
+    if (typeof boundary === 'string') {
+      return getClosestMatchingAncestor(this.element.nativeElement, boundary);
+    }
+
+    const element = coerceElement(boundary);
+
+    if (isDevMode() && !element.contains(this.element.nativeElement)) {
+      throw Error('Draggable element is not inside of the node passed into cdkDragBoundary.');
+    }
+
+    return element;
   }
 
   /** Syncs the inputs of the CdkDrag with the options of the underlying DragRef. */
@@ -317,7 +348,7 @@ export class CdkDrag<T = any> implements AfterViewInit, OnChanges, OnDestroy {
 
         ref.disabled = this.disabled;
         ref.lockAxis = this.lockAxis;
-        ref.dragStartDelay = this.dragStartDelay;
+        ref.dragStartDelay = coerceNumberProperty(this.dragStartDelay);
         ref.constrainPosition = this.constrainPosition;
         ref
           .withBoundaryElement(this._getBoundaryElement())
@@ -338,31 +369,26 @@ export class CdkDrag<T = any> implements AfterViewInit, OnChanges, OnDestroy {
 
       // Since all of these events run outside of change detection,
       // we need to ensure that everything is marked correctly.
-      if (this._changeDetectorRef) {
-        // @breaking-change 8.0.0 Remove null check for _changeDetectorRef
-        this._changeDetectorRef.markForCheck();
-      }
+      this._changeDetectorRef.markForCheck();
     });
 
     ref.released.subscribe(() => {
       this.released.emit({source: this});
     });
 
-    ref.ended.subscribe(() => {
-      this.ended.emit({source: this});
+    ref.ended.subscribe(event => {
+      this.ended.emit({source: this, distance: event.distance});
 
       // Since all of these events run outside of change detection,
       // we need to ensure that everything is marked correctly.
-      if (this._changeDetectorRef) {
-        // @breaking-change 8.0.0 Remove null check for _changeDetectorRef
-        this._changeDetectorRef.markForCheck();
-      }
+      this._changeDetectorRef.markForCheck();
     });
 
     ref.entered.subscribe(event => {
       this.entered.emit({
         container: event.container.data,
-        item: this
+        item: this,
+        currentIndex: event.currentIndex
       });
     });
 
@@ -380,7 +406,8 @@ export class CdkDrag<T = any> implements AfterViewInit, OnChanges, OnDestroy {
         previousContainer: event.previousContainer.data,
         container: event.container.data,
         isPointerOverContainer: event.isPointerOverContainer,
-        item: this
+        item: this,
+        distance: event.distance
       });
     });
   }

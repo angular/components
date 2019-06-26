@@ -7,7 +7,7 @@
  */
 
 import {Component, ViewChild} from '@angular/core';
-import {MatAccordion} from '@angular/material';
+import {MatAccordion} from '@angular/material/expansion';
 
 
 @Component({
@@ -17,13 +17,14 @@ import {MatAccordion} from '@angular/material';
   templateUrl: 'expansion-demo.html',
 })
 export class ExpansionDemo {
-  @ViewChild(MatAccordion) accordion: MatAccordion;
+  @ViewChild(MatAccordion, {static: false}) accordion: MatAccordion;
 
   displayMode = 'default';
   multi = false;
   hideToggle = false;
   disabled = false;
   showPanel3 = true;
+  togglePosition = 'after';
   expandedHeight: string;
   collapsedHeight: string;
   events: string[] = [];

@@ -73,6 +73,7 @@ by the directives:
 | `.cdk-drop-list`    | Corresponds to the `cdkDropList` container.                              |
 | `.cdk-drag`         | Corresponds to a `cdkDrag` instance.                                     |
 | `.cdk-drag-disabled`| Class that is added to a disabled `cdkDrag`.                             |
+| `.cdk-drag-handle`  | Class that is added to the host element of the cdkDragHandle directive.  |
 | `.cdk-drag-preview` | This is the element that will be rendered next to the user's cursor as they're dragging an item in a sortable list. By default the element looks exactly like the element that is being dragged. |
 | `.cdk-drag-placeholder` | This is element that will be shown instead of the real element as it's being dragged inside a `cdkDropList`. By default this will look exactly like the element that is being sorted. |
 | `.cdk-drop-list-dragging` | A class that is added to `cdkDropList` while the user is dragging an item.  |
@@ -172,7 +173,7 @@ be allowed into the new container.
 
 <!-- example(cdk-drag-drop-enter-predicate) -->
 
-### Disable dragging
+### Disabled dragging
 If you want to disable dragging for a particular drag item, you can do so by setting the
 `cdkDragDisabled` input on a `cdkDrag` item. Furthermore, you can disable an entire list
 using the `cdkDropListDisabled` input on a `cdkDropList` or a particular handle via
@@ -188,3 +189,21 @@ in addition to preserving the dragged item's initial position in the source list
 decides to return the item.
 
 <!-- example(cdk-drag-drop-disabled-sorting) -->
+
+### Delayed dragging
+By default as soon as the user puts their pointer down on a `cdkDrag`, the dragging sequence will
+be started. This might not be desirable in cases like fullscreen draggable elements on touch
+devices where the user might accidentally trigger a drag as they're scrolling the page. For
+cases like these you can delay the dragging sequence using the `cdkDragStartDelay` input which
+will wait for the user to hold down their pointer for the specified number of milliseconds before
+moving the element.
+
+<!-- example(cdk-drag-drop-delay) -->
+
+### Changing the standalone drag position
+By default, standalone `cdkDrag` elements move from their normal DOM position only when manually
+moved by a user. The element's position can be explicitly set, however, via the
+`cdkDragFreeDragPosition` input. Applications commonly use this, for example, to restore a
+draggable's position after a user has navigated away and then returned.
+
+<!-- example(cdk-drag-drop-free-drag-position) -->

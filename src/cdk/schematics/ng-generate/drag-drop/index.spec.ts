@@ -1,4 +1,6 @@
 import {SchematicTestRunner} from '@angular-devkit/schematics/testing';
+import {getProjectFromWorkspace} from '@angular/cdk/schematics';
+import {getWorkspace} from '@schematics/angular/utility/config';
 import {createTestApp, getFileContent} from '../../testing';
 import {Schema} from './schema';
 
@@ -17,8 +19,9 @@ describe('CDK drag-drop schematic', () => {
     runner = new SchematicTestRunner('schematics', require.resolve('../../collection.json'));
   });
 
-  it('should create drag-drop files and add them to module', () => {
-    const tree = runner.runSchematic('drag-drop', baseOptions, createTestApp(runner));
+  it('should create drag-drop files and add them to module', async () => {
+    const app = await createTestApp(runner);
+    const tree = await runner.runSchematicAsync('drag-drop', baseOptions, app).toPromise();
     const moduleContent = getFileContent(tree, '/projects/material/src/app/app.module.ts');
     const files = tree.files;
 
@@ -31,85 +34,144 @@ describe('CDK drag-drop schematic', () => {
     expect(moduleContent).toMatch(/declarations:\s*\[[^\]]+?,\r?\n\s+FooComponent\r?\n/m);
   });
 
-  it('should add drag-drop module', () => {
-    const tree = runner.runSchematic('drag-drop', baseOptions, createTestApp(runner));
+  it('should add drag-drop module', async () => {
+    const app = await createTestApp(runner);
+    const tree = await runner.runSchematicAsync('drag-drop', baseOptions, app).toPromise();
     const moduleContent = getFileContent(tree, '/projects/material/src/app/app.module.ts');
 
     expect(moduleContent).toContain('DragDropModule');
   });
 
-  describe('styleext option', () => {
-    it('should respect the option value', () => {
-      const tree = runner.runSchematic(
-          'drag-drop', {styleext: 'scss', ...baseOptions}, createTestApp(runner));
+  describe('style option', () => {
+    it('should respect the option value', async () => {
+      const tree =
+          await runner
+              .runSchematicAsync(
+                  'drag-drop', {style: 'scss', ...baseOptions}, await createTestApp(runner))
+              .toPromise();
 
       expect(tree.files).toContain('/projects/material/src/app/foo/foo.component.scss');
     });
 
-    it('should not generate invalid stylesheets', () => {
-      const tree = runner.runSchematic(
-          'drag-drop', {styleext: 'styl', ...baseOptions}, createTestApp(runner));
+    it('should respect the deprecated "styleext" option value', async () => {
+      let tree = await createTestApp(runner);
+      const workspace = getWorkspace(tree);
+      const project = getProjectFromWorkspace(workspace);
+
+      // We need to specify the default component options by overwriting
+      // the existing workspace configuration because passing the "styleext"
+      // option is no longer supported. Though we want to verify that we
+      // properly handle old CLI projects which still use the "styleext" option.
+      project.schematics!['@schematics/angular:component'] = {styleext: 'scss'};
+
+      tree.overwrite('angular.json', JSON.stringify(workspace));
+      tree = await runner.runSchematicAsync('drag-drop', baseOptions, tree).toPromise();
+
+      expect(tree.files).toContain('/projects/material/src/app/foo/foo.component.scss');
+    });
+
+    it('should not generate invalid stylesheets', async () => {
+      const tree =
+          await runner
+              .runSchematicAsync(
+                  'drag-drop', {style: 'styl', ...baseOptions}, await createTestApp(runner))
+              .toPromise();
 
       // In this case we expect the schematic to generate a plain "css" file because
       // the component schematics are using CSS style templates which are not compatible
       // with all CLI supported styles (e.g. Stylus or Sass)
-      expect(tree.files).toContain('/projects/material/src/app/foo/foo.component.css',
-          'Expected the schematic to generate a plain "css" file.');
-      expect(tree.files).not.toContain('/projects/material/src/app/foo/foo.component.styl',
-        'Expected the schematic to not generate a "stylus" file');
+      expect(tree.files)
+          .toContain(
+              '/projects/material/src/app/foo/foo.component.css',
+              'Expected the schematic to generate a plain "css" file.');
+      expect(tree.files)
+          .not.toContain(
+              '/projects/material/src/app/foo/foo.component.styl',
+              'Expected the schematic to not generate a "stylus" file');
     });
 
-    it('should fall back to the @schematics/angular:component option value', () => {
-      const tree = runner.runSchematic(
-          'drag-drop', baseOptions, createTestApp(runner, {style: 'less'}));
+    it('should fall back to the @schematics/angular:component option value', async () => {
+      const tree = await runner
+                       .runSchematicAsync(
+                           'drag-drop', baseOptions, await createTestApp(runner, {style: 'less'}))
+                       .toPromise();
 
       expect(tree.files).toContain('/projects/material/src/app/foo/foo.component.less');
     });
   });
 
   describe('inlineStyle option', () => {
-    it('should respect the option value', () => {
-      const tree = runner.runSchematic(
-          'drag-drop', {inlineStyle: true, ...baseOptions}, createTestApp(runner));
+    it('should respect the option value', async () => {
+      const app = await createTestApp(runner);
+      const tree =
+          await runner.runSchematicAsync('drag-drop', {inlineStyle: true, ...baseOptions}, app)
+              .toPromise();
 
       expect(tree.files).not.toContain('/projects/material/src/app/foo/foo.component.css');
     });
 
-    it('should fall back to the @schematics/angular:component option value', () => {
-      const tree = runner.runSchematic(
-          'drag-drop', baseOptions, createTestApp(runner, {inlineStyle: true}));
+    it('should fall back to the @schematics/angular:component option value', async () => {
+      const tree =
+          await runner
+              .runSchematicAsync(
+                  'drag-drop', baseOptions, await createTestApp(runner, {inlineStyle: true}))
+              .toPromise();
 
       expect(tree.files).not.toContain('/projects/material/src/app/foo/foo.component.css');
     });
   });
 
   describe('inlineTemplate option', () => {
-    it('should respect the option value', () => {
-      const tree = runner.runSchematic(
-          'drag-drop', {inlineTemplate: true, ...baseOptions}, createTestApp(runner));
+    it('should respect the option value', async () => {
+      const app = await createTestApp(runner);
+      const tree =
+          await runner.runSchematicAsync('drag-drop', {inlineTemplate: true, ...baseOptions}, app)
+              .toPromise();
 
       expect(tree.files).not.toContain('/projects/material/src/app/foo/foo.component.html');
     });
 
-    it('should fall back to the @schematics/angular:component option value', () => {
-      const tree = runner.runSchematic(
-          'drag-drop', baseOptions, createTestApp(runner, {inlineTemplate: true}));
+    it('should fall back to the @schematics/angular:component option value', async () => {
+      const app = await createTestApp(runner, {inlineTemplate: true});
+      const tree = await runner.runSchematicAsync('drag-drop', baseOptions, app).toPromise();
 
       expect(tree.files).not.toContain('/projects/material/src/app/foo/foo.component.html');
     });
   });
 
-  describe('spec option', () => {
-    it('should respect the option value', () => {
-      const tree = runner.runSchematic(
-          'drag-drop', {spec: false, ...baseOptions}, createTestApp(runner));
+  describe('skipTests option', () => {
+    it('should respect the option value', async () => {
+      const tree =
+          await runner
+              .runSchematicAsync(
+                  'drag-drop', {skipTests: true, ...baseOptions}, await createTestApp(runner))
+              .toPromise();
 
       expect(tree.files).not.toContain('/projects/material/src/app/foo/foo.component.spec.ts');
     });
 
-    it('should fall back to the @schematics/angular:component option value', () => {
-      const tree = runner.runSchematic(
-          'drag-drop', baseOptions, createTestApp(runner, {skipTests: true}));
+    it('should respect the deprecated global "spec" option value', async () => {
+      let tree = await createTestApp(runner);
+      const workspace = getWorkspace(tree);
+      const project = getProjectFromWorkspace(workspace);
+
+      // We need to specify the default component options by overwriting
+      // the existing workspace configuration because passing the "spec"
+      // option is no longer supported. Though we want to verify that we
+      // properly handle old CLI projects which still use the "spec" option.
+      project.schematics!['@schematics/angular:component'] = {spec: false};
+
+      tree.overwrite('angular.json', JSON.stringify(workspace));
+      tree = await runner.runSchematicAsync('drag-drop', baseOptions, tree).toPromise();
+
+      expect(tree.files).not.toContain('/projects/material/src/app/foo/foo.component.spec.ts');
+    });
+
+    it('should fall back to the @schematics/angular:component option value', async () => {
+      const tree = await runner
+                       .runSchematicAsync(
+                           'drag-drop', baseOptions, await createTestApp(runner, {skipTests: true}))
+                       .toPromise();
 
       expect(tree.files).not.toContain('/projects/material/src/app/foo/foo.component.spec.ts');
     });

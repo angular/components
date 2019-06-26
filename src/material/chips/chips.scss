@@ -1,0 +1,207 @@
+@import '../core/style/variables';
+@import '../core/style/elevation';
+@import '../core/style/layout-common';
+@import '../core/style/noop-animation';
+@import '../../cdk/a11y/a11y';
+
+$mat-chip-min-height: 32px;
+$mat-chip-vertical-padding: 7px;
+$mat-chip-horizontal-padding: 12px;
+
+$mat-chip-remove-vertical-padding: 7px;
+$mat-chip-remove-before-margin: 8px;
+$mat-chip-remove-after-padding: 8px;
+
+$mat-chip-avatar-vertical-padding: 0;
+$mat-chip-avatar-before-padding: 0;
+$mat-chip-avatar-before-margin: 4px;
+$mat-chip-avatar-after-margin: 8px;
+
+$mat-chips-chip-margin: 4px;
+
+$mat-chip-input-width: 150px;
+$mat-chip-input-margin: 4px;
+
+$mat-chip-avatar-size: 24px;
+$mat-chip-remove-size: 18px;
+
+.mat-chip {
+  position: relative;
+  overflow: hidden;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+
+  // Required for the ripple to clip properly in Safari.
+  transform: translateZ(0);
+}
+
+.mat-standard-chip {
+  @include mat-elevation-transition;
+  @include _noop-animation;
+  display: inline-flex;
+  padding: $mat-chip-vertical-padding $mat-chip-horizontal-padding;
+  border-radius: 16px;
+  align-items: center;
+  cursor: default;
+  min-height: $mat-chip-min-height;
+
+  // Centering the content using flexbox won't work on IE, if we have
+  // a `min-height` without setting a `height`. This height won't do
+  // anything since it's less than the minimum set above.
+  height: 1px;
+
+  .mat-chip-remove.mat-icon {
+    width: $mat-chip-remove-size;
+    height: $mat-chip-remove-size;
+  }
+
+  // Overlay used to darken the chip on hover and focus.
+  &::after {
+    @include mat-fill;
+    border-radius: inherit;
+    opacity: 0;
+    content: '';
+    pointer-events: none;
+    transition: opacity 200ms $swift-ease-in-out-timing-function;
+  }
+
+  &:hover::after {
+    opacity: 0.12;
+  }
+
+  &:focus {
+    outline: none;
+
+    &::after {
+      opacity: 0.16;
+    }
+  }
+
+  @include cdk-high-contrast {
+    outline: solid 1px;
+
+    &:focus {
+      // Use 2px here since the dotted outline is a little thinner.
+      outline: dotted 2px;
+    }
+  }
+
+  &.mat-chip-disabled {
+    &::after {
+      opacity: 0;
+    }
+
+    .mat-chip-remove,
+    .mat-chip-trailing-icon {
+      cursor: default;
+    }
+  }
+
+  &.mat-chip-with-trailing-icon.mat-chip-with-avatar,
+  &.mat-chip-with-avatar {
+    padding-top: $mat-chip-avatar-vertical-padding;
+    padding-bottom: $mat-chip-avatar-vertical-padding;
+  }
+
+  &.mat-chip-with-trailing-icon.mat-chip-with-avatar {
+    padding-right: $mat-chip-remove-after-padding;
+    padding-left: $mat-chip-avatar-before-padding;
+
+    [dir='rtl'] & {
+      padding-left: $mat-chip-remove-after-padding;
+      padding-right: $mat-chip-avatar-before-padding;
+    }
+  }
+
+  &.mat-chip-with-trailing-icon {
+    padding-top: $mat-chip-remove-vertical-padding;
+    padding-bottom: $mat-chip-remove-vertical-padding;
+    padding-right: $mat-chip-remove-after-padding;
+    padding-left: $mat-chip-horizontal-padding;
+
+    [dir='rtl'] & {
+      padding-left: $mat-chip-remove-after-padding;
+      padding-right: $mat-chip-horizontal-padding;
+    }
+  }
+
+  &.mat-chip-with-avatar {
+    padding-left: $mat-chip-avatar-before-padding;
+    padding-right: $mat-chip-horizontal-padding;
+
+    [dir='rtl'] & {
+      padding-right: $mat-chip-avatar-before-padding;
+      padding-left: $mat-chip-horizontal-padding;
+    }
+  }
+
+  .mat-chip-avatar {
+    width: $mat-chip-avatar-size;
+    height: $mat-chip-avatar-size;
+    margin-right: $mat-chip-avatar-after-margin;
+    margin-left: $mat-chip-avatar-before-margin;
+
+    [dir='rtl'] & {
+      margin-left: $mat-chip-avatar-after-margin;
+      margin-right: $mat-chip-avatar-before-margin;
+    }
+  }
+
+  .mat-chip-remove,
+  .mat-chip-trailing-icon {
+    width: $mat-chip-remove-size;
+    height: $mat-chip-remove-size;
+    cursor: pointer;
+  }
+
+  .mat-chip-remove,
+  .mat-chip-trailing-icon {
+    margin-left: $mat-chip-remove-before-margin;
+    margin-right: 0;
+
+    [dir='rtl'] & {
+      margin-right: $mat-chip-remove-before-margin;
+      margin-left: 0;
+    }
+  }
+}
+
+.mat-chip-list-wrapper {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  margin: -$mat-chips-chip-margin;
+
+  input.mat-input-element,
+  .mat-standard-chip {
+    margin: $mat-chips-chip-margin;
+  }
+}
+
+.mat-chip-list-stacked .mat-chip-list-wrapper {
+  flex-direction: column;
+  align-items: flex-start;
+
+  .mat-standard-chip {
+    width: 100%;
+  }
+}
+
+.mat-chip-avatar {
+  border-radius: 50%;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  overflow: hidden;
+
+  // Makes `<img>` tags behave like `background-size: cover`. Not supported
+  // in IE, but we're using it as a progressive enhancement.
+  object-fit: cover;
+}
+
+input.mat-chip-input {
+  width: $mat-chip-input-width;
+  margin: $mat-chip-input-margin;
+  flex: 1 0 $mat-chip-input-width;
+}

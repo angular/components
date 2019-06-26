@@ -30,7 +30,7 @@ export class BottomSheetDemo {
     direction: 'ltr'
   };
 
-  @ViewChild(TemplateRef) template: TemplateRef<any>;
+  @ViewChild(TemplateRef, {static: false}) template: TemplateRef<any>;
 
   constructor(private _bottomSheet: MatBottomSheet) {}
 
@@ -55,10 +55,10 @@ export class BottomSheetDemo {
   `
 })
 export class ExampleBottomSheet {
-  constructor(private sheet: MatBottomSheetRef) {}
+  constructor(private _bottomSheet: MatBottomSheetRef) {}
 
   handleClick(event: MouseEvent) {
     event.preventDefault();
-    this.sheet.dismiss();
+    this._bottomSheet.dismiss();
   }
 }

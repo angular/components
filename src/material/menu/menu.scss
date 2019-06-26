@@ -1,0 +1,68 @@
+// TODO(kara): update vars for desktop when MD team responds
+@import '../core/style/button-common';
+@import '../core/style/menu-common';
+@import '../../cdk/a11y/a11y';
+
+$mat-menu-vertical-padding: 8px !default;
+$mat-menu-border-radius: 4px !default;
+$mat-menu-submenu-indicator-size: 10px !default;
+
+.mat-menu-panel {
+  @include mat-menu-base();
+  max-height: calc(100vh - #{$mat-menu-item-height});
+  border-radius: $mat-menu-border-radius;
+  outline: 0;
+
+  // Give the menu a minimum height so that the user can't
+  // collapse it to zero when they scroll away.
+  min-height: $mat-menu-item-height + $mat-menu-vertical-padding * 2;
+
+  // Prevent users from interacting with the panel while it's animating. Note that
+  // people won't be able to click through it, because the overlay pane will catch the click.
+  // This fixes the following issues:
+  //  * Users accidentally opening sub-menus when the `overlapTrigger` option is enabled.
+  //  * Users accidentally tapping on content inside the sub-menu on touch devices, if the
+  //    sub-menu overlaps the trigger. The issue is due to touch devices emulating the
+  //    `mouseenter` event by dispatching it on tap.
+  &.ng-animating {
+    pointer-events: none;
+  }
+
+  @include cdk-high-contrast {
+    outline: solid 1px;
+  }
+}
+
+// `:not(:empty)` allows for the menu to collapse to 0x0 when it doesn't have content.
+.mat-menu-content:not(:empty) {
+  padding-top: $mat-menu-vertical-padding;
+  padding-bottom: $mat-menu-vertical-padding;
+}
+
+.mat-menu-item {
+  @include mat-button-reset();
+  @include mat-menu-item-base();
+  position: relative;
+
+  @include cdk-high-contrast {
+    &.cdk-program-focused,
+    &.cdk-keyboard-focused,
+    &-highlighted {
+      outline: dotted 1px;
+    }
+  }
+}
+
+.mat-menu-item-submenu-trigger {
+  @include mat-menu-item-submenu-trigger($mat-menu-side-padding);
+}
+
+button.mat-menu-item {
+  width: 100%;
+}
+
+// Increase specificity because ripple styles are part of the `mat-core` mixin and can
+// potentially overwrite the absolute position of the container.
+.mat-menu-item .mat-menu-ripple {
+  @include mat-menu-item-ripple;
+}

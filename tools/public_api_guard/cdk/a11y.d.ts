@@ -16,9 +16,9 @@ export declare function ARIA_DESCRIBER_PROVIDER_FACTORY(parentDispatcher: AriaDe
 
 export declare class AriaDescriber implements OnDestroy {
     constructor(_document: any);
-    describe(hostElement: Element, message: string): void;
+    describe(hostElement: Element, message: string | HTMLElement): void;
     ngOnDestroy(): void;
-    removeDescription(hostElement: Element, message: string): void;
+    removeDescription(hostElement: Element, message: string | HTMLElement): void;
 }
 
 export declare type AriaLivePoliteness = 'off' | 'polite' | 'assertive';
@@ -87,6 +87,8 @@ export declare type FocusOrigin = 'touch' | 'mouse' | 'keyboard' | 'program' | n
 
 export declare class FocusTrap {
     enabled: boolean;
+    protected endAnchorListener: () => boolean;
+    protected startAnchorListener: () => boolean;
     constructor(_element: HTMLElement, _checker: InteractivityChecker, _ngZone: NgZone, _document: Document, deferAnchors?: boolean);
     attachAnchors(): boolean;
     destroy(): void;

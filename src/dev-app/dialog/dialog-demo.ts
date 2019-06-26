@@ -8,7 +8,7 @@
 
 import {DOCUMENT} from '@angular/common';
 import {Component, Inject, TemplateRef, ViewChild, ViewEncapsulation} from '@angular/core';
-import {MAT_DIALOG_DATA, MatDialog, MatDialogConfig, MatDialogRef} from '@angular/material';
+import {MAT_DIALOG_DATA, MatDialog, MatDialogConfig, MatDialogRef} from '@angular/material/dialog';
 
 
 const defaultDialogConfig = new MatDialogConfig();
@@ -47,7 +47,7 @@ export class DialogDemo {
   };
   numTemplateOpens = 0;
 
-  @ViewChild(TemplateRef) template: TemplateRef<any>;
+  @ViewChild(TemplateRef, {static: false}) template: TemplateRef<any>;
 
   constructor(public dialog: MatDialog, @Inject(DOCUMENT) doc: any) {
     // Possible useful example for the open and closeAll events.
