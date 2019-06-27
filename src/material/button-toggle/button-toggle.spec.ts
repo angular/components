@@ -256,6 +256,17 @@ describe('MatButtonToggle without forms', () => {
     TestBed.compileComponents();
   }));
 
+  describe('inside of component single instance', () => {
+    let fixture: ComponentFixture<StandaloneButtonToggle>;
+    it('should wrap content in <span>', () => {
+      fixture = TestBed.createComponent(StandaloneButtonToggle);
+      fixture.detectChanges();
+
+      const content = fixture.nativeElement.querySelector('span.mat-button-toggle-label-content');
+      expect(content).not.toBe(null);
+    });
+  });
+
   describe('inside of an exclusive selection group', () => {
 
     let fixture: ComponentFixture<ButtonTogglesInsideButtonToggleGroup>;
@@ -846,6 +857,7 @@ describe('MatButtonToggle without forms', () => {
     expect(fixture.componentInstance.toggles.toArray()[2].checked).toBe(true);
   });
 });
+
 
 @Component({
   template: `
