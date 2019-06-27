@@ -1,0 +1,1 @@
+curl "https://circleci.com/api/v1.1/project/gh/angular/components/${CIRCLE_PREVIOUS_BUILD_NUM}"
