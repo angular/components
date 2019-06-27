@@ -65,7 +65,7 @@ describe('MatMonthView', () => {
     });
 
     it('has 31 days', () => {
-      let cellEls = monthViewNativeElement.querySelectorAll('.mat-calendar-body-cell')!;
+      let cellEls = monthViewNativeElement.querySelectorAll('.mat-calendar-body-cell');
       expect(cellEls.length).toBe(31);
     });
 
@@ -113,6 +113,16 @@ describe('MatMonthView', () => {
           return header.getAttribute('scope') === 'col';
         })).toBe(true);
         expect(dividerHeader.hasAttribute('scope')).toBe(false);
+      });
+
+      it('should wrap the week day abbreviations in an abbr tag with a title', () => {
+        const abbreviations =
+          Array.from(monthViewNativeElement.querySelectorAll('.mat-calendar-table-header th abbr'));
+
+        expect(abbreviations.length).toBe(7);
+        expect(abbreviations.every(abbreviation => {
+          return !!abbreviation.getAttribute('title');
+        })).toBe(true);
       });
 
       describe('calendar body', () => {

@@ -103,6 +103,11 @@ $mat-calendar-next-icon-transform: translateX(-2px) rotate(45deg);
   padding: 0 0 $mat-calendar-padding 0;
 }
 
+// The browser automatically adds an underline to `abbr` nodes that have a `title`.
+.mat-calendar-table-header abbr {
+  text-decoration: none;
+}
+
 .mat-calendar-table-header-divider {
   position: relative;
   height: $mat-calendar-header-divider-width;
