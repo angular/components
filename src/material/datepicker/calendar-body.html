@@ -42,7 +42,8 @@
       [style.paddingTop]="_cellPadding"
       [style.paddingBottom]="_cellPadding">
       <button class="mat-calendar-body-cell-content"
-        mat-button
+        mat-button type="button"
+        [attr.aria-label]="item.displayValue"
         [class.mat-calendar-body-selected]="selectedValue === item.value"
         [class.mat-calendar-body-today]="todayValue === item.value">
         {{item.displayValue}}
