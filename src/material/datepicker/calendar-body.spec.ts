@@ -1,5 +1,5 @@
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
-import {Component} from '@angular/core';
+import {Component, DebugElement} from '@angular/core';
 import {MatCalendarBody, MatCalendarCell, MatCalendarCellCssClasses} from './calendar-body';
 import {By} from '@angular/platform-browser';
 
@@ -21,6 +21,7 @@ describe('MatCalendarBody', () => {
   describe('standard calendar body', () => {
     let fixture: ComponentFixture<StandardCalendarBody>;
     let testComponent: StandardCalendarBody;
+    let calendarBodyDebugElement: DebugElement;
     let calendarBodyNativeElement: Element;
     let rowEls: Element[];
     let labelEls: Element[];
@@ -36,7 +37,7 @@ describe('MatCalendarBody', () => {
       fixture = TestBed.createComponent(StandardCalendarBody);
       fixture.detectChanges();
 
-      const calendarBodyDebugElement = fixture.debugElement.query(By.directive(MatCalendarBody));
+      calendarBodyDebugElement = fixture.debugElement.query(By.directive(MatCalendarBody));
       calendarBodyNativeElement = calendarBodyDebugElement.nativeElement;
       testComponent = fixture.componentInstance;
 
@@ -47,6 +48,14 @@ describe('MatCalendarBody', () => {
       expect(rowEls.length).toBe(3);
       expect(labelEls.length).toBe(1);
       expect(cellEls.length).toBe(14);
+    });
+
+    it('sets all mat-calendar-body-cell-content role attribute to button', () => {
+      const contentCells = calendarBodyDebugElement
+        .queryAll(By.css('.mat-calendar-body-cell-content'))
+        .map(button => button.nativeElement);
+      expect(contentCells.every((button: any) => button.getAttribute('role') === 'button'))
+        .toBe(true, 'to see role="button" on every element');
     });
 
     it('highlights today', () => {
