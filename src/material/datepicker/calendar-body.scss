@@ -62,7 +62,7 @@ $mat-calendar-body-cell-content-size: 100% - $mat-calendar-body-cell-content-mar
   border-radius: 999px;
 
   // Override mat-button defaults
-  min-width: initial;
+  min-width: 0;
   border-color: transparent;
 
   @include cdk-high-contrast {
