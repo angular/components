@@ -161,6 +161,23 @@ describe('MatSort', () => {
       component.expectViewAndDirectionStates(expectedStates);
     });
 
+    it('should be correct when sorting using MatSort sort method', () => {
+      // Sort the header to set it to the active start state
+      component.matSort.sort(component.defaultA);
+      expectedStates.set('defaultA', {viewState: 'asc-to-active', arrowDirection: 'active-asc'});
+      component.expectViewAndDirectionStates(expectedStates);
+
+      // Sorting again will reverse its direction
+      component.matSort.sort(component.defaultA);
+      expectedStates.set('defaultA', {viewState: 'active', arrowDirection: 'active-desc'});
+      component.expectViewAndDirectionStates(expectedStates);
+
+      // Sorting again will remove the sort and animate away the view
+      component.matSort.sort(component.defaultA);
+      expectedStates.set('defaultA', {viewState: 'active-to-desc', arrowDirection: 'desc'});
+      component.expectViewAndDirectionStates(expectedStates);
+    });
+
     it('should not enter sort with animations if an animations is disabled', () => {
       // Sort the header to set it to the active start state
       component.defaultA._disableViewStateAnimation = true;
