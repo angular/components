@@ -6,6 +6,8 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-export * from './utils';
-export * from './ng-update/public-api';
-export * from './update-tool/public-api';
+export * from './index';
+export * from './target-version';
+export * from './version-changes';
+export * from './migration-rule';
+export * from './component-resource-collector';
