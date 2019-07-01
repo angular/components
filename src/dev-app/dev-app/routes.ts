@@ -27,6 +27,9 @@ export const DEV_APP_ROUTES: Routes = [
     path: 'button-toggle',
     loadChildren: 'button-toggle/button-toggle-demo-module#ButtonToggleDemoModule'
   },
+  {
+    path: 'breadcrumbs', loadChildren: 'breadcrumbs/breadcrumbs-demo-module#BreadCrumbsDemoModule'
+  },
   {path: 'card', loadChildren: 'card/card-demo-module#CardDemoModule'},
   {path: 'checkbox', loadChildren: 'checkbox/checkbox-demo-module#CheckboxDemoModule'},
   {path: 'chips', loadChildren: 'chips/chips-demo-module#ChipsDemoModule'},

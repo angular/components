@@ -26,6 +26,7 @@ export class DevAppLayout {
     {name: 'Examples', route: '/examples'},
     {name: 'Autocomplete', route: '/autocomplete'},
     {name: 'Badge', route: '/badge'},
+    {name: 'Breadcrumbs', route: 'breadcrumbs'},
     {name: 'Bottom sheet', route: '/bottom-sheet'},
     {name: 'Button Toggle', route: '/button-toggle'},
     {name: 'Button', route: '/button'},

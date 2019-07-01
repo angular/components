@@ -36,6 +36,7 @@ import {
   MatTabsModule,
   MatToolbarModule,
   MatTooltipModule,
+  MatBreadcrumbsModule
 } from '@angular/material';
 
 /**
@@ -47,6 +48,7 @@ import {
     MatAutocompleteModule,
     MatButtonModule,
     MatButtonToggleModule,
+    MatBreadcrumbsModule,
     MatCardModule,
     MatCheckboxModule,
     MatChipsModule,

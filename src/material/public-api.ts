@@ -11,6 +11,7 @@ export * from '@angular/material/badge';
 export * from '@angular/material/bottom-sheet';
 export * from '@angular/material/button';
 export * from '@angular/material/button-toggle';
+export * from '@angular/material//breadcrumbs';
 export * from '@angular/material/card';
 export * from '@angular/material/checkbox';
 export * from '@angular/material/chips';

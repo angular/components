@@ -102,6 +102,7 @@ System.config({
     '@angular/material/bottom-sheet': 'dist/packages/material/bottom-sheet/index.js',
     '@angular/material/button': 'dist/packages/material/button/index.js',
     '@angular/material/button-toggle': 'dist/packages/material/button-toggle/index.js',
+    '@angular/material/breadcrumbs': 'dist/packages/material/breadcrumbs/index.js',
     '@angular/material/card': 'dist/packages/material/card/index.js',
     '@angular/material/checkbox': 'dist/packages/material/checkbox/index.js',
     '@angular/material/chips': 'dist/packages/material/chips/index.js',

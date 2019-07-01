@@ -44,6 +44,7 @@ import {
   MatTooltipModule,
 } from '@angular/material';
 import {Observable, of as observableOf} from 'rxjs';
+import {MatBreadcrumbs, MatBreadcrumbsModule} from '@angular/material/breadcrumbs';
 
 export class TableDataSource extends DataSource<any> {
   connect(): Observable<any> {
@@ -104,6 +105,7 @@ export class KitchenSink {
   imports: [
     MatAutocompleteModule,
     MatBadgeModule,
+    MatBreadcrumbsModule,
     MatBottomSheetModule,
     MatButtonModule,
     MatButtonToggleModule,
