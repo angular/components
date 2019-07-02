@@ -17,7 +17,6 @@ import {getVersionUpgradeData, RuleUpgradeData} from '../upgrade-data';
  * argument count is invalid and needs to be *manually* updated.
  */
 export class MethodCallArgumentsRule extends MigrationRule<RuleUpgradeData> {
-
   /** Change data that upgrades to the specified target version. */
   data: MethodCallUpgradeData[] = getVersionUpgradeData(this, 'methodCallChecks');
 
@@ -59,7 +58,9 @@ export class MethodCallArgumentsRule extends MigrationRule<RuleUpgradeData> {
       return;
     }
 
-    this.createFailureAtNode(node, `Found call to "${hostTypeName + '.' + methodName}" ` +
-        `with ${failure.count} arguments. Message: ${failure.message}`);
+    this.createFailureAtNode(
+        node,
+        `Found call to "${hostTypeName + '.' + methodName}" ` +
+            `with ${failure.count} arguments. Message: ${failure.message}`);
   }
 }

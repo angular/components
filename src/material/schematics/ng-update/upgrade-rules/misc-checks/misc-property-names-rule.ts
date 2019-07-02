@@ -14,7 +14,6 @@ import * as ts from 'typescript';
  * a given property name no longer exists but cannot be automatically migrated.
  */
 export class MiscPropertyNamesRule extends MigrationRule<null> {
-
   visitNode(node: ts.Node): void {
     if (ts.isPropertyAccessExpression(node)) {
       this._visitPropertyAccessExpression(node);
@@ -26,15 +25,19 @@ export class MiscPropertyNamesRule extends MigrationRule<null> {
     const typeName = hostType && hostType.symbol && hostType.symbol.getName();
 
     if (typeName === 'MatListOption' && node.name.text === 'selectionChange') {
-      this.createFailureAtNode(node, `Found deprecated property "selectionChange" of ` +
-        `class "MatListOption". Use the "selectionChange" property on the ` +
-        `parent "MatSelectionList" instead.`);
+      this.createFailureAtNode(
+          node,
+          `Found deprecated property "selectionChange" of ` +
+              `class "MatListOption". Use the "selectionChange" property on the ` +
+              `parent "MatSelectionList" instead.`);
     }
 
     if (typeName === 'MatDatepicker' && node.name.text === 'selectedChanged') {
-      this.createFailureAtNode(node, `Found deprecated property "selectedChanged" of ` +
-        `class "MatDatepicker". Use the "dateChange" or "dateInput" methods ` +
-        `on "MatDatepickerInput" instead.`);
+      this.createFailureAtNode(
+          node,
+          `Found deprecated property "selectedChanged" of ` +
+              `class "MatDatepicker". Use the "dateChange" or "dateInput" methods ` +
+              `on "MatDatepickerInput" instead.`);
     }
   }
 }

@@ -18,7 +18,6 @@ import {getVersionUpgradeData, RuleUpgradeData} from '../upgrade-data';
  * to migrate outdated element selectors to the new one.
  */
 export class ElementSelectorsRule extends MigrationRule<RuleUpgradeData> {
-
   /** Change data that upgrades to the specified target version. */
   data = getVersionUpgradeData(this, 'elementSelectors');
 
@@ -31,16 +30,16 @@ export class ElementSelectorsRule extends MigrationRule<RuleUpgradeData> {
   visitTemplate(template: ResolvedResource): void {
     this.data.forEach(selector => {
       findAllSubstringIndices(template.content, selector.replace)
-        .map(offset => template.start + offset)
-        .forEach(start => this._replaceSelector(template.filePath, start, selector));
+          .map(offset => template.start + offset)
+          .forEach(start => this._replaceSelector(template.filePath, start, selector));
     });
   }
 
   visitStylesheet(stylesheet: ResolvedResource): void {
     this.data.forEach(selector => {
       findAllSubstringIndices(stylesheet.content, selector.replace)
-        .map(offset => stylesheet.start + offset)
-        .forEach(start => this._replaceSelector(stylesheet.filePath, start, selector));
+          .map(offset => stylesheet.start + offset)
+          .forEach(start => this._replaceSelector(stylesheet.filePath, start, selector));
     });
   }
 
@@ -54,8 +53,8 @@ export class ElementSelectorsRule extends MigrationRule<RuleUpgradeData> {
 
     this.data.forEach(selector => {
       findAllSubstringIndices(textContent, selector.replace)
-        .map(offset => node.getStart() + offset)
-        .forEach(start => this._replaceSelector(filePath, start, selector));
+          .map(offset => node.getStart() + offset)
+          .forEach(start => this._replaceSelector(filePath, start, selector));
     });
   }
 

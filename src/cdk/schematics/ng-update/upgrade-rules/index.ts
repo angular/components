@@ -7,11 +7,13 @@
  */
 
 import {Rule, SchematicContext, SchematicsException, Tree} from '@angular-devkit/schematics';
+
 import {Constructor, runMigrationRules} from '../../update-tool';
 import {MigrationRule} from '../../update-tool/migration-rule';
 import {TargetVersion} from '../../update-tool/target-version';
-import {cdkUpgradeData, RuleUpgradeData} from '../upgrade-data';
 import {getProjectTsConfigPaths} from '../../utils/project-tsconfig-paths';
+import {cdkUpgradeData, RuleUpgradeData} from '../upgrade-data';
+
 import {AttributeSelectorsRule} from './attribute-selectors-rule';
 import {ClassInheritanceRule} from './class-inheritance-rule';
 import {ClassNamesRule} from './class-names-rule';
@@ -50,7 +52,6 @@ export function createUpgradeRule(
     targetVersion: TargetVersion, extraRules: NullableMigrationRule[], upgradeData: RuleUpgradeData,
     onMigrationCompleteFn?: () => void): Rule {
   return (tree: Tree, context: SchematicContext) => {
-
     const projectTsConfigPaths = getProjectTsConfigPaths(tree);
 
     if (!projectTsConfigPaths.length) {

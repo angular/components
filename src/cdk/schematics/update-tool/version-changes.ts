@@ -14,12 +14,11 @@ export type VersionChanges<T> = {
 };
 
 export type ReadableChange<T> = {
-  pr: string;
-  changes: T[]
+  pr: string; changes: T[]
 };
 
 /** Conditional type that unwraps the value of a version changes type. */
-export type ValueOfChanges<T> = T extends VersionChanges<infer X> ? X : null;
+export type ValueOfChanges<T> = T extends VersionChanges<infer X>? X : null;
 
 /**
  * Gets the changes for a given target version from the specified version changes object.
@@ -32,7 +31,7 @@ export type ValueOfChanges<T> = T extends VersionChanges<infer X> ? X : null;
 export function getChangesForTarget<T>(target: TargetVersion, data: VersionChanges<T>): T[] {
   if (!data) {
     throw new SchematicsException(
-      `No data could be found for target version: ${TargetVersion[target]}`);
+        `No data could be found for target version: ${TargetVersion[target]}`);
   }
 
   if (!data[target]) {
@@ -49,6 +48,6 @@ export function getChangesForTarget<T>(target: TargetVersion, data: VersionChang
  */
 export function getAllChanges<T>(data: VersionChanges<T>): T[] {
   return Object.keys(data)
-    .map(targetVersion => getChangesForTarget(parseInt(targetVersion), data))
-    .reduce((result, versionData) => result.concat(versionData), []);
+      .map(targetVersion => getChangesForTarget(parseInt(targetVersion), data))
+      .reduce((result, versionData) => result.concat(versionData), []);
 }

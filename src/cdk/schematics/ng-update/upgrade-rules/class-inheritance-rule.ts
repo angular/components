@@ -18,7 +18,6 @@ import {getVersionUpgradeData, RuleUpgradeData} from '../upgrade-data';
  * which had a public property change.
  */
 export class ClassInheritanceRule extends MigrationRule<RuleUpgradeData> {
-
   /**
    * Map of classes that have been updated. Each class name maps to the according property
    * change data.
@@ -27,8 +26,9 @@ export class ClassInheritanceRule extends MigrationRule<RuleUpgradeData> {
 
   init(): void {
     getVersionUpgradeData(this, 'propertyNames')
-      .filter(data => data.whitelist && data.whitelist.classes)
-      .forEach(data => data.whitelist.classes.forEach(name => this.propertyNames.set(name, data)));
+        .filter(data => data.whitelist && data.whitelist.classes)
+        .forEach(
+            data => data.whitelist.classes.forEach(name => this.propertyNames.set(name, data)));
   }
 
   visitNode(node: ts.Node): void {
@@ -49,10 +49,12 @@ export class ClassInheritanceRule extends MigrationRule<RuleUpgradeData> {
       const data = this.propertyNames.get(typeName);
 
       if (data) {
-        this.createFailureAtNode(node, `Found class "${bold(className)}" which extends class ` +
-          `"${bold(typeName)}". Please note that the base class property ` +
-          `"${red(data.replace)}" has changed to "${green(data.replaceWith)}". ` +
-          `You may need to update your class as well.`);
+        this.createFailureAtNode(
+            node,
+            `Found class "${bold(className)}" which extends class ` +
+                `"${bold(typeName)}". Please note that the base class property ` +
+                `"${red(data.replace)}" has changed to "${green(data.replaceWith)}". ` +
+                `You may need to update your class as well.`);
       }
     });
   }

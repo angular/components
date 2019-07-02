@@ -105,8 +105,8 @@ export class ComponentResourceCollector {
               content: el.text,
               inline: true,
               start: templateStartIdx,
-              getCharacterAndLineOfPosition:
-                  pos => ts.getLineAndCharacterOfPosition(sourceFile, pos + templateStartIdx),
+              getCharacterAndLineOfPosition: pos =>
+                  ts.getLineAndCharacterOfPosition(sourceFile, pos + templateStartIdx),
             });
           }
         });
@@ -124,8 +124,8 @@ export class ComponentResourceCollector {
           content: property.initializer.text,
           inline: true,
           start: templateStartIdx,
-          getCharacterAndLineOfPosition:
-            pos => ts.getLineAndCharacterOfPosition(sourceFile, pos + templateStartIdx)
+          getCharacterAndLineOfPosition: pos =>
+              ts.getLineAndCharacterOfPosition(sourceFile, pos + templateStartIdx)
         });
       }
 
@@ -169,8 +169,8 @@ export class ComponentResourceCollector {
   }
 
   /** Resolves an external stylesheet by reading its content and computing line mappings. */
-  resolveExternalStylesheet(filePath: string, container: ts.ClassDeclaration|null)
-      : ResolvedResource {
+  resolveExternalStylesheet(filePath: string, container: ts.ClassDeclaration|null):
+      ResolvedResource {
     const fileContent = readFileSync(filePath, 'utf8');
     const lineStartsMap = computeLineStartsMap(fileContent);
 
@@ -180,8 +180,7 @@ export class ComponentResourceCollector {
       content: fileContent,
       inline: false,
       start: 0,
-      getCharacterAndLineOfPosition:
-        pos => getLineAndCharacterFromPosition(lineStartsMap, pos),
+      getCharacterAndLineOfPosition: pos => getLineAndCharacterFromPosition(lineStartsMap, pos),
     };
   }
 }

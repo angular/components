@@ -17,7 +17,6 @@ import {getVersionUpgradeData, RuleUpgradeData} from '../upgrade-data';
  * accessed properties that have been updated to a new name.
  */
 export class PropertyNamesRule extends MigrationRule<RuleUpgradeData> {
-
   /** Change data that upgrades to the specified target version. */
   data: PropertyNameUpgradeData[] = getVersionUpgradeData(this, 'propertyNames');
 

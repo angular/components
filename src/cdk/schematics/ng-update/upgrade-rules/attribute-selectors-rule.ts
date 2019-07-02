@@ -18,7 +18,6 @@ import {getVersionUpgradeData, RuleUpgradeData} from '../upgrade-data';
  * in order to switch deprecated attribute selectors to the updated selector.
  */
 export class AttributeSelectorsRule extends MigrationRule<RuleUpgradeData> {
-
   /** Required upgrade changes for specified target version. */
   data = getVersionUpgradeData(this, 'attributeSelectors');
 
@@ -31,8 +30,8 @@ export class AttributeSelectorsRule extends MigrationRule<RuleUpgradeData> {
   visitTemplate(template: ResolvedResource) {
     this.data.forEach(selector => {
       findAllSubstringIndices(template.content, selector.replace)
-        .map(offset => template.start + offset)
-        .forEach(start => this._replaceSelector(template.filePath, start, selector));
+          .map(offset => template.start + offset)
+          .forEach(start => this._replaceSelector(template.filePath, start, selector));
     });
   }
 
@@ -42,9 +41,11 @@ export class AttributeSelectorsRule extends MigrationRule<RuleUpgradeData> {
       const updatedSelector = `[${selector.replaceWith}]`;
 
       findAllSubstringIndices(stylesheet.content, currentSelector)
-        .map(offset => stylesheet.start + offset)
-        .forEach(start => this._replaceSelector(stylesheet.filePath, start,
-            {replace: currentSelector, replaceWith: updatedSelector}));
+          .map(offset => stylesheet.start + offset)
+          .forEach(
+              start => this._replaceSelector(
+                  stylesheet.filePath, start,
+                  {replace: currentSelector, replaceWith: updatedSelector}));
     });
   }
 
@@ -58,8 +59,8 @@ export class AttributeSelectorsRule extends MigrationRule<RuleUpgradeData> {
 
     this.data.forEach(selector => {
       findAllSubstringIndices(literalText, selector.replace)
-        .map(offset => literal.getStart() + offset)
-        .forEach(start => this._replaceSelector(filePath, start, selector));
+          .map(offset => literal.getStart() + offset)
+          .forEach(start => this._replaceSelector(filePath, start, selector));
     });
   }
 

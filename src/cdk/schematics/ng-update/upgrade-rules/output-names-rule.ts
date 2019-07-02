@@ -21,7 +21,6 @@ import {getVersionUpgradeData, RuleUpgradeData} from '../upgrade-data';
  * changed output binding names to the proper new output name.
  */
 export class OutputNamesRule extends MigrationRule<RuleUpgradeData> {
-
   /** Change data that upgrades to the specified target version. */
   data: OutputNameUpgradeData[] = getVersionUpgradeData(this, 'outputNames');
 
@@ -32,18 +31,18 @@ export class OutputNamesRule extends MigrationRule<RuleUpgradeData> {
 
       if (whitelist.attributes) {
         relativeOffsets.push(
-          ...findOutputsOnElementWithAttr(template.content, name.replace, whitelist.attributes));
+            ...findOutputsOnElementWithAttr(template.content, name.replace, whitelist.attributes));
       }
 
       if (whitelist.elements) {
         relativeOffsets.push(
-          ...findOutputsOnElementWithTag(template.content, name.replace, whitelist.elements));
+            ...findOutputsOnElementWithTag(template.content, name.replace, whitelist.elements));
       }
 
-      relativeOffsets
-        .map(offset => template.start + offset)
-        .forEach(start => this._replaceOutputName(template.filePath, start,
-            name.replace.length, name.replaceWith));
+      relativeOffsets.map(offset => template.start + offset)
+          .forEach(
+              start => this._replaceOutputName(
+                  template.filePath, start, name.replace.length, name.replaceWith));
     });
   }
 

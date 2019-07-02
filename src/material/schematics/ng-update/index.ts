@@ -17,7 +17,9 @@ import {MiscImportsRule} from './upgrade-rules/misc-checks/misc-imports-rule';
 import {MiscPropertyNamesRule} from './upgrade-rules/misc-checks/misc-property-names-rule';
 import {MiscTemplateRule} from './upgrade-rules/misc-checks/misc-template-rule';
 import {RippleSpeedFactorRule} from './upgrade-rules/misc-ripples-v7/ripple-speed-factor-rule';
-import {SecondaryEntryPointsRule} from './upgrade-rules/package-imports-v8/secondary-entry-points-rule';
+import {
+  SecondaryEntryPointsRule
+} from './upgrade-rules/package-imports-v8/secondary-entry-points-rule';
 
 const materialMigrationRules = [
   MiscClassInheritanceRule,

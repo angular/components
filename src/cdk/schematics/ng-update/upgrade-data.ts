@@ -65,7 +65,8 @@ export interface RuleUpgradeData {
  * The function reads out the target version and upgrade data object from the rule options and
  * resolves the specified data portion that is specifically tied to the target version.
  */
-export function getVersionUpgradeData<T extends keyof RuleUpgradeData,
-  U = ValueOfChanges<RuleUpgradeData[T]>> (r: MigrationRule<RuleUpgradeData>, dataName: T): U[] {
+export function
+getVersionUpgradeData<T extends keyof RuleUpgradeData, U = ValueOfChanges<RuleUpgradeData[T]>>(
+    r: MigrationRule<RuleUpgradeData>, dataName: T): U[] {
   return getChangesForTarget<U>(r.targetVersion, r.upgradeData[dataName] as VersionChanges<U>);
 }

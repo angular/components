@@ -16,14 +16,13 @@ import {RuleUpgradeData} from '../upgrade-data';
  * instances of outdated Angular CDK API that can't be migrated automatically.
  */
 export class MiscTemplateRule extends MigrationRule<RuleUpgradeData> {
-
   visitTemplate(template: ResolvedResource): void {
     findAllSubstringIndices(template.content, 'cdk-focus-trap').forEach(offset => {
       this.failures.push({
         filePath: template.filePath,
         position: template.getCharacterAndLineOfPosition(template.start + offset),
         message: `Found deprecated element selector "cdk-focus-trap" which has been ` +
-          `changed to an attribute selector "[cdkTrapFocus]".`
+            `changed to an attribute selector "[cdkTrapFocus]".`
       });
     });
   }

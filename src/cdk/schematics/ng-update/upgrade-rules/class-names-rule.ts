@@ -26,7 +26,6 @@ import {getVersionUpgradeData, RuleUpgradeData} from '../upgrade-data';
  * and replaces the outdated name with the new one if specified in the upgrade data.
  */
 export class ClassNamesRule extends MigrationRule<RuleUpgradeData> {
-
   /** Change data that upgrades to the specified target version. */
   data: ClassNameUpgradeData[] = getVersionUpgradeData(this, 'classNames');
 

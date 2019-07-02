@@ -6,15 +6,14 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import * as ts from 'typescript';
 import {determineBaseTypes, MigrationRule} from '@angular/cdk/schematics';
+import * as ts from 'typescript';
 
 /**
  * Rule that checks for classes that extend Angular Material classes which
  * have changed their API.
  */
 export class MiscClassInheritanceRule extends MigrationRule<null> {
-
   visitNode(node: ts.Node): void {
     if (ts.isClassDeclaration(node)) {
       this._visitClassDeclaration(node);
@@ -30,14 +29,16 @@ export class MiscClassInheritanceRule extends MigrationRule<null> {
     }
 
     if (baseTypes.includes('MatFormFieldControl')) {
-      const hasFloatLabelMember = node.members
-          .filter(member => member.name)
-          .find(member => member.name!.getText() === 'shouldLabelFloat');
+      const hasFloatLabelMember =
+          node.members.filter(member => member.name)
+              .find(member => member.name!.getText() === 'shouldLabelFloat');
 
       if (!hasFloatLabelMember) {
-        this.createFailureAtNode(node, `Found class "${className}" which extends ` +
-            `"${'MatFormFieldControl'}". This class must define ` +
-            `"${'shouldLabelFloat'}" which is now a required property.`);
+        this.createFailureAtNode(
+            node,
+            `Found class "${className}" which extends ` +
+                `"${'MatFormFieldControl'}". This class must define ` +
+                `"${'shouldLabelFloat'}" which is now a required property.`);
       }
     }
   }

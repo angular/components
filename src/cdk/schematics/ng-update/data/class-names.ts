@@ -21,35 +21,19 @@ export const classNames: VersionChanges<ClassNameUpgradeData> = {
     {
       pr: 'https://github.com/angular/components/pull/10161',
       changes: [
-        {
-          replace: 'ConnectedOverlayDirective',
-          replaceWith: 'CdkConnectedOverlay'
-        },
-        {
-          replace: 'OverlayOrigin',
-          replaceWith: 'CdkOverlayOrigin'
-        }
+        {replace: 'ConnectedOverlayDirective', replaceWith: 'CdkConnectedOverlay'},
+        {replace: 'OverlayOrigin', replaceWith: 'CdkOverlayOrigin'}
       ]
     },
 
     {
       pr: 'https://github.com/angular/components/pull/10267',
-      changes: [
-        {
-          replace: 'ObserveContent',
-          replaceWith: 'CdkObserveContent'
-        }
-      ]
+      changes: [{replace: 'ObserveContent', replaceWith: 'CdkObserveContent'}]
     },
 
     {
       pr: 'https://github.com/angular/components/pull/10325',
-      changes: [
-        {
-          replace: 'FocusTrapDirective',
-          replaceWith: 'CdkTrapFocus'
-        }
-      ]
+      changes: [{replace: 'FocusTrapDirective', replaceWith: 'CdkTrapFocus'}]
     }
   ]
 };

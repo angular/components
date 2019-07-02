@@ -6,17 +6,18 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Tree, UpdateRecorder} from '@angular-devkit/schematics';
 import {logging, normalize} from '@angular-devkit/core';
+import {Tree, UpdateRecorder} from '@angular-devkit/schematics';
 import {sync as globSync} from 'glob';
+import {dirname, relative} from 'path';
+import * as ts from 'typescript';
+
 import {ComponentResourceCollector} from './component-resource-collector';
 import {MigrationFailure, MigrationRule} from './migration-rule';
 import {TargetVersion} from './target-version';
 import {parseTsconfigFile} from './utils/parse-tsconfig';
-import {dirname, relative} from 'path';
-import * as ts from 'typescript';
 
-export type Constructor<T> = new(...args: any[]) => T;
+export type Constructor<T> = new (...args: any[]) => T;
 
 export function runMigrationRules<T>(
     tree: Tree, logger: logging.LoggerApi, tsconfigPath: string, targetVersion: TargetVersion,
@@ -49,7 +50,7 @@ export function runMigrationRules<T>(
   }
 
   const sourceFiles = program.getSourceFiles().filter(
-    f => !f.isDeclarationFile && !program.isSourceFileFromExternalLibrary(f));
+      f => !f.isDeclarationFile && !program.isSourceFileFromExternalLibrary(f));
   const resourceCollector = new ComponentResourceCollector(typeChecker);
   const updateRecorderCache = new Map<string, UpdateRecorder>();
 
@@ -88,11 +89,11 @@ export function runMigrationRules<T>(
   // dist. The files will be read by the individual stylesheet rules and checked.
   // TODO(devversion): double-check if we can solve this in a more elegant way.
   globSync('!(node_modules|dist)/**/*.+(css|scss)', {absolute: true, cwd: basePath})
-    .filter(filePath => !resourceCollector.resolvedStylesheets.some(s => s.filePath === filePath))
-    .forEach(filePath => {
-      const stylesheet = resourceCollector.resolveExternalStylesheet(filePath, null);
-      rules.forEach(r => r.visitStylesheet(stylesheet));
-    });
+      .filter(filePath => !resourceCollector.resolvedStylesheets.some(s => s.filePath === filePath))
+      .forEach(filePath => {
+        const stylesheet = resourceCollector.resolveExternalStylesheet(filePath, null);
+        rules.forEach(r => r.visitStylesheet(stylesheet));
+      });
 
   // Commit all recorded updates in the update recorder. We need to perform the
   // replacements per source file in order to ensure that offsets in the TypeScript
@@ -100,8 +101,8 @@ export function runMigrationRules<T>(
   updateRecorderCache.forEach(recorder => tree.commitUpdate(recorder));
 
   // Collect all failures reported by individual migration rules.
-  const ruleFailures = rules
-    .reduce((res, rule) => res.concat(rule.failures), [] as MigrationFailure[]);
+  const ruleFailures =
+      rules.reduce((res, rule) => res.concat(rule.failures), [] as MigrationFailure[]);
 
   // In case there are rule failures, print these to the CLI logger as warnings.
   if (ruleFailures.length) {
@@ -115,7 +116,7 @@ export function runMigrationRules<T>(
   function getUpdateRecorder(filePath: string): UpdateRecorder {
     const treeFilePath = relative(basePath, filePath);
     if (updateRecorderCache.has(treeFilePath)) {
-      return updateRecorderCache.get(treeFilePath) !;
+      return updateRecorderCache.get(treeFilePath)!;
     }
     const treeRecorder = tree.beginUpdate(treeFilePath);
     updateRecorderCache.set(treeFilePath, treeRecorder);

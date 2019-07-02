@@ -21,10 +21,9 @@ export interface MigrationFailure {
 export class MigrationRule<T> {
   failures: MigrationFailure[] = [];
 
-  constructor(public program: ts.Program,
-              public typeChecker: ts.TypeChecker,
-              public targetVersion: TargetVersion,
-              public upgradeData: T) {}
+  constructor(
+      public program: ts.Program, public typeChecker: ts.TypeChecker,
+      public targetVersion: TargetVersion, public upgradeData: T) {}
 
   /** Method can be used to perform global analysis of the program. */
   init(): void {}

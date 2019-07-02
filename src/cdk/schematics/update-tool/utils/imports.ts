@@ -16,7 +16,7 @@ export type Import = {
 
 /** Gets import information about the specified identifier by using the type checker. */
 export function getImportOfIdentifier(typeChecker: ts.TypeChecker, node: ts.Identifier): Import|
-  null {
+    null {
   const symbol = typeChecker.getSymbolAtLocation(node);
 
   if (!symbol || !symbol.declarations.length) {

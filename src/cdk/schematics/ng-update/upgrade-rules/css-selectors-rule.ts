@@ -18,7 +18,6 @@ import {getVersionUpgradeData, RuleUpgradeData} from '../upgrade-data';
  * order to migrate outdated CSS selectors to the new selector.
  */
 export class CssSelectorsRule extends MigrationRule<RuleUpgradeData> {
-
   /** Change data that upgrades to the specified target version. */
   data = getVersionUpgradeData(this, 'cssSelectors');
 
@@ -35,8 +34,8 @@ export class CssSelectorsRule extends MigrationRule<RuleUpgradeData> {
       }
 
       findAllSubstringIndices(template.content, data.replace)
-        .map(offset => template.start + offset)
-        .forEach(start => this._replaceSelector(template.filePath, start, data));
+          .map(offset => template.start + offset)
+          .forEach(start => this._replaceSelector(template.filePath, start, data));
     });
   }
 
@@ -47,8 +46,8 @@ export class CssSelectorsRule extends MigrationRule<RuleUpgradeData> {
       }
 
       findAllSubstringIndices(stylesheet.content, data.replace)
-        .map(offset => stylesheet.start + offset)
-        .forEach(start => this._replaceSelector(stylesheet.filePath, start, data));
+          .map(offset => stylesheet.start + offset)
+          .forEach(start => this._replaceSelector(stylesheet.filePath, start, data));
     });
   }
 
@@ -66,8 +65,8 @@ export class CssSelectorsRule extends MigrationRule<RuleUpgradeData> {
       }
 
       findAllSubstringIndices(textContent, data.replace)
-        .map(offset => node.getStart() + offset)
-        .forEach(start => this._replaceSelector(filePath, start, data));
+          .map(offset => node.getStart() + offset)
+          .forEach(start => this._replaceSelector(filePath, start, data));
     });
   }
 
@@ -76,6 +75,4 @@ export class CssSelectorsRule extends MigrationRule<RuleUpgradeData> {
     updateRecorder.remove(start, data.replace.length);
     updateRecorder.insertRight(start, data.replaceWith);
   }
-
-
 }

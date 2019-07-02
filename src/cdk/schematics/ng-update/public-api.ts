@@ -15,4 +15,3 @@ export * from './typescript/base-types';
 export * from './typescript/imports';
 export * from './typescript/literal';
 export * from './typescript/module-specifiers';
-

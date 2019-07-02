@@ -14,7 +14,6 @@ import * as ts from 'typescript';
  * Angular Material which cannot be updated automatically.
  */
 export class MiscImportsRule extends MigrationRule<null> {
-
   visitNode(node: ts.Node): void {
     if (ts.isImportDeclaration(node)) {
       this._visitImportDeclaration(node);
@@ -22,8 +21,7 @@ export class MiscImportsRule extends MigrationRule<null> {
   }
 
   private _visitImportDeclaration(node: ts.ImportDeclaration) {
-    if (!isMaterialImportDeclaration(node) ||
-        !node.importClause ||
+    if (!isMaterialImportDeclaration(node) || !node.importClause ||
         !node.importClause.namedBindings) {
       return;
     }
@@ -44,7 +42,8 @@ export class MiscImportsRule extends MigrationRule<null> {
       const importName = element.name.text;
 
       if (importName === 'SHOW_ANIMATION' || importName === 'HIDE_ANIMATION') {
-        this.createFailureAtNode(element, `Found deprecated symbol "${importName}" which has been removed`);
+        this.createFailureAtNode(
+            element, `Found deprecated symbol "${importName}" which has been removed`);
       }
     });
   }
