@@ -1,16 +1,16 @@
-<div class="sitemap">
+<div class="mat-sitemap">
   <span>SITEMAP</span>
   <hr />
-  <div class="menuItems-container">
-    <div *ngFor="let menuItem of menuItems" class="menu-item">
-      <div class="section">{{ menuItem.sectionName }}</div>
-      <div *ngFor="let item of menuItem.items" class="level1">
+  <div class="mat-sitemap-menuItems-container">
+    <div *ngFor="let menuItem of menuItems" class="mat-sitemap-menu-item">
+      <div class="mat-sitemap-section">{{ menuItem.sectionName }}</div>
+      <div *ngFor="let item of menuItem.items" class="mat-sitemap-level1">
         {{ item.title }}
         <div *ngIf="item.children">
-          <div *ngFor="let child of item.children" class="level2">
+          <div *ngFor="let child of item.children" class="mat-sitemap-level2">
             {{ child.title }}
             <div *ngIf="child.children">
-              <div *ngFor="let child of child.children" class="level3">
+              <div *ngFor="let child of child.children" class="mat-sitemap-level3">
                 {{ child.title }}
               </div>
             </div>
