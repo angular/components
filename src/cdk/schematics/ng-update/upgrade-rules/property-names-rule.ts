@@ -20,6 +20,9 @@ export class PropertyNamesRule extends MigrationRule<RuleUpgradeData> {
   /** Change data that upgrades to the specified target version. */
   data: PropertyNameUpgradeData[] = getVersionUpgradeData(this, 'propertyNames');
 
+  // Only enable the migration rule if there is upgrade data.
+  ruleEnabled = this.data.length !== 0;
+
   visitNode(node: ts.Node): void {
     if (ts.isPropertyAccessExpression(node)) {
       this._visitPropertyAccessExpression(node);

@@ -20,6 +20,9 @@ export class MethodCallArgumentsRule extends MigrationRule<RuleUpgradeData> {
   /** Change data that upgrades to the specified target version. */
   data: MethodCallUpgradeData[] = getVersionUpgradeData(this, 'methodCallChecks');
 
+  // Only enable the migration rule if there is upgrade data.
+  ruleEnabled = this.data.length !== 0;
+
   visitNode(node: ts.Node): void {
     if (ts.isCallExpression(node) && ts.isPropertyAccessExpression(node.expression)) {
       this._checkPropertyAccessMethodCall(node);

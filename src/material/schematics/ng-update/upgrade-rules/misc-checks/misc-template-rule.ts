@@ -11,6 +11,7 @@ import {
   findOutputsOnElementWithTag,
   MigrationRule,
   ResolvedResource,
+  TargetVersion,
 } from '@angular/cdk/schematics';
 
 /**
@@ -18,7 +19,14 @@ import {
  * are outdated usages of the Angular Material API that needs to be updated manually.
  */
 export class MiscTemplateRule extends MigrationRule<null> {
+
+  // Only enable this rule if the migration targets version 6. The rule
+  // currently only includes migrations for V6 deprecations.
+  ruleEnabled = this.targetVersion === TargetVersion.V6;
+
   visitTemplate(template: ResolvedResource): void {
+
+    // Migration for: https://github.com/angular/components/pull/10398 (v6)
     findOutputsOnElementWithTag(template.content, 'selectionChange', [
       'mat-list-option'
     ]).forEach(offset => {
@@ -30,6 +38,7 @@ export class MiscTemplateRule extends MigrationRule<null> {
       });
     });
 
+    // Migration for: https://github.com/angular/components/pull/10413 (v6)
     findOutputsOnElementWithTag(template.content, 'selectedChanged', [
       'mat-datepicker'
     ]).forEach(offset => {
@@ -41,6 +50,7 @@ export class MiscTemplateRule extends MigrationRule<null> {
       });
     });
 
+    // Migration for: https://github.com/angular/components/commit/f0bf6e7 (v6)
     findInputsOnElementWithTag(template.content, 'selected', [
       'mat-button-toggle-group'
     ]).forEach(offset => {

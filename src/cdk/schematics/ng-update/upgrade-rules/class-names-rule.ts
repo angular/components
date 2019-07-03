@@ -38,6 +38,9 @@ export class ClassNamesRule extends MigrationRule<RuleUpgradeData> {
   /** List of namespaces that have been imported from `@angular/material` or `@angular/cdk`. */
   trustedNamespaces: Set<string> = new Set();
 
+  // Only enable the migration rule if there is upgrade data.
+  ruleEnabled = this.data.length !== 0;
+
   visitNode(node: ts.Node): void {
     if (ts.isIdentifier(node)) {
       this._visitIdentifier(node);

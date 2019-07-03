@@ -46,7 +46,9 @@ export function runMigrationRules<T>(
     const rule = new ruleCtor(program, typeChecker, targetVersion, upgradeData);
     rule.getUpdateRecorder = getUpdateRecorder;
     rule.init();
-    rules.push(rule);
+    if (rule.ruleEnabled) {
+      rules.push(rule);
+    }
   }
 
   const sourceFiles = program.getSourceFiles().filter(

@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {MigrationRule} from '@angular/cdk/schematics';
+import {MigrationRule, TargetVersion} from '@angular/cdk/schematics';
 import * as ts from 'typescript';
 
 /**
@@ -14,6 +14,11 @@ import * as ts from 'typescript';
  * cannot be automatically migrated.
  */
 export class MiscClassNamesRule extends MigrationRule<null> {
+
+  // Only enable this rule if the migration targets version 6. The rule
+  // currently only includes migrations for V6 deprecations.
+  ruleEnabled = this.targetVersion === TargetVersion.V6;
+
   visitNode(node: ts.Node): void {
     if (ts.isIdentifier(node)) {
       this._visitIdentifier(node);
@@ -21,6 +26,7 @@ export class MiscClassNamesRule extends MigrationRule<null> {
   }
 
   private _visitIdentifier(identifier: ts.Identifier) {
+    // Migration for: https://github.com/angular/components/pull/10279 (v6)
     if (identifier.getText() === 'MatDrawerToggleResult') {
       this.createFailureAtNode(
           identifier,
@@ -28,6 +34,7 @@ export class MiscClassNamesRule extends MigrationRule<null> {
               `literal type. Your code may need to be updated.`);
     }
 
+    // Migration for: https://github.com/angular/components/pull/10398 (v6)
     if (identifier.getText() === 'MatListOptionChange') {
       this.createFailureAtNode(
           identifier,

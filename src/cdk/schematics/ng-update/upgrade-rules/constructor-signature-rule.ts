@@ -37,6 +37,9 @@ export class ConstructorSignatureRule extends MigrationRule<RuleUpgradeData> {
   // See: https://github.com/angular/components/pull/12970#issuecomment-418337566
   data = getAllChanges(this.upgradeData.constructorChecks);
 
+  // Only enable the migration rule if there is upgrade data.
+  ruleEnabled = this.data.length !== 0;
+
   visitNode(node: ts.Node): void {
     if (ts.isSourceFile(node)) {
       this._visitSourceFile(node);

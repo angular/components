@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {determineBaseTypes, MigrationRule} from '@angular/cdk/schematics';
+import {determineBaseTypes, MigrationRule, TargetVersion} from '@angular/cdk/schematics';
 import * as ts from 'typescript';
 
 /**
@@ -14,6 +14,11 @@ import * as ts from 'typescript';
  * have changed their API.
  */
 export class MiscClassInheritanceRule extends MigrationRule<null> {
+
+  // Only enable this rule if the migration targets version 6. The rule
+  // currently only includes migrations for V6 deprecations.
+  ruleEnabled = this.targetVersion === TargetVersion.V6;
+
   visitNode(node: ts.Node): void {
     if (ts.isClassDeclaration(node)) {
       this._visitClassDeclaration(node);
@@ -28,6 +33,7 @@ export class MiscClassInheritanceRule extends MigrationRule<null> {
       return;
     }
 
+    // Migration for: https://github.com/angular/components/pull/10293 (v6)
     if (baseTypes.includes('MatFormFieldControl')) {
       const hasFloatLabelMember =
           node.members.filter(member => member.name)

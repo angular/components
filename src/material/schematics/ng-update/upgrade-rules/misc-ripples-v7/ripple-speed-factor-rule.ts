@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {MigrationRule, ResolvedResource} from '@angular/cdk/schematics';
+import {MigrationRule, ResolvedResource, TargetVersion} from '@angular/cdk/schematics';
 import * as ts from 'typescript';
 import {
   convertSpeedFactorToDuration,
@@ -32,6 +32,11 @@ const removeNote = `TODO: Cleanup duration calculation.`;
  * that refers to MatRipple#speedFactor.
  */
 export class RippleSpeedFactorRule extends MigrationRule<null> {
+
+  // Only enable this rule if the migration targets version 7 as the ripple
+  // speed factor has been removed in that version.
+  ruleEnabled = this.targetVersion === TargetVersion.V7;
+
   visitNode(node: ts.Node): void {
     if (ts.isBinaryExpression(node)) {
       this._visitBinaryExpression(node);

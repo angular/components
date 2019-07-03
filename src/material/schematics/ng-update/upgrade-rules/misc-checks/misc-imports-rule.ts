@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {isMaterialImportDeclaration, MigrationRule} from '@angular/cdk/schematics';
+import {isMaterialImportDeclaration, MigrationRule, TargetVersion} from '@angular/cdk/schematics';
 import * as ts from 'typescript';
 
 /**
@@ -14,6 +14,11 @@ import * as ts from 'typescript';
  * Angular Material which cannot be updated automatically.
  */
 export class MiscImportsRule extends MigrationRule<null> {
+
+  // Only enable this rule if the migration targets version 6. The rule
+  // currently only includes migrations for V6 deprecations.
+  ruleEnabled = this.targetVersion === TargetVersion.V6;
+
   visitNode(node: ts.Node): void {
     if (ts.isImportDeclaration(node)) {
       this._visitImportDeclaration(node);
@@ -29,6 +34,7 @@ export class MiscImportsRule extends MigrationRule<null> {
     const namedBindings = node.importClause.namedBindings;
 
     if (ts.isNamedImports(namedBindings)) {
+      // Migration for: https://github.com/angular/components/pull/10405 (v6)
       this._checkAnimationConstants(namedBindings);
     }
   }

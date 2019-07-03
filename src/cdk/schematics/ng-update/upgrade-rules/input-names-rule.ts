@@ -25,6 +25,9 @@ export class InputNamesRule extends MigrationRule<RuleUpgradeData> {
   /** Change data that upgrades to the specified target version. */
   data: InputNameUpgradeData[] = getVersionUpgradeData(this, 'inputNames');
 
+  // Only enable the migration rule if there is upgrade data.
+  ruleEnabled = this.data.length !== 0;
+
   visitStylesheet(stylesheet: ResolvedResource): void {
     this.data.forEach(name => {
       const currentSelector = `[${name.replace}]`;

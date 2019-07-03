@@ -24,6 +24,9 @@ export class OutputNamesRule extends MigrationRule<RuleUpgradeData> {
   /** Change data that upgrades to the specified target version. */
   data: OutputNameUpgradeData[] = getVersionUpgradeData(this, 'outputNames');
 
+  // Only enable the migration rule if there is upgrade data.
+  ruleEnabled = this.data.length !== 0;
+
   visitTemplate(template: ResolvedResource): void {
     this.data.forEach(name => {
       const whitelist = name.whitelist;

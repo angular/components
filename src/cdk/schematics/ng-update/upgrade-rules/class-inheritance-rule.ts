@@ -24,6 +24,9 @@ export class ClassInheritanceRule extends MigrationRule<RuleUpgradeData> {
    */
   propertyNames = new Map<string, PropertyNameUpgradeData>();
 
+  // Only enable the migration rule if there is upgrade data.
+  ruleEnabled = this.propertyNames.size !== 0;
+
   init(): void {
     getVersionUpgradeData(this, 'propertyNames')
         .filter(data => data.whitelist && data.whitelist.classes)

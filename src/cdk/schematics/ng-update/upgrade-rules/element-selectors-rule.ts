@@ -21,6 +21,9 @@ export class ElementSelectorsRule extends MigrationRule<RuleUpgradeData> {
   /** Change data that upgrades to the specified target version. */
   data = getVersionUpgradeData(this, 'elementSelectors');
 
+  // Only enable the migration rule if there is upgrade data.
+  ruleEnabled = this.data.length !== 0;
+
   visitNode(node: ts.Node): void {
     if (ts.isStringLiteralLike(node)) {
       this._visitStringLiteralLike(node);

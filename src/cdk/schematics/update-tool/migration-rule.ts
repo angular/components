@@ -19,7 +19,11 @@ export interface MigrationFailure {
 }
 
 export class MigrationRule<T> {
+  /** List of migration failures that need to be reported. */
   failures: MigrationFailure[] = [];
+
+  /** Whether the migration rule is enabled or not. */
+  ruleEnabled = true;
 
   constructor(
       public program: ts.Program, public typeChecker: ts.TypeChecker,

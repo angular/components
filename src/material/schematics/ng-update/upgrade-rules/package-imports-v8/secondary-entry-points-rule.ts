@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {MigrationRule} from '@angular/cdk/schematics';
+import {MigrationRule, TargetVersion} from '@angular/cdk/schematics';
 import * as ts from 'typescript';
 import {materialModuleSpecifier} from '../../../ng-update/typescript/module-specifiers';
 
@@ -28,6 +28,10 @@ const ANGULAR_MATERIAL_FILEPATH_REGEX = new RegExp(`${materialModuleSpecifier}/(
  */
 export class SecondaryEntryPointsRule extends MigrationRule<null> {
   printer = ts.createPrinter();
+
+  // Only enable this rule if the migration targets version 8. The primary
+  // entry-point of Material has been marked as deprecated in version 8.
+  ruleEnabled = this.targetVersion === TargetVersion.V8;
 
   visitNode(declaration: ts.Node): void {
     // Only look at import declarations.

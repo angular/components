@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {MigrationRule} from '@angular/cdk/schematics';
+import {MigrationRule, TargetVersion} from '@angular/cdk/schematics';
 import * as ts from 'typescript';
 
 /**
@@ -14,6 +14,11 @@ import * as ts from 'typescript';
  * a given property name no longer exists but cannot be automatically migrated.
  */
 export class MiscPropertyNamesRule extends MigrationRule<null> {
+
+  // Only enable this rule if the migration targets version 6. The rule
+  // currently only includes migrations for V6 deprecations.
+  ruleEnabled = this.targetVersion === TargetVersion.V6;
+
   visitNode(node: ts.Node): void {
     if (ts.isPropertyAccessExpression(node)) {
       this._visitPropertyAccessExpression(node);
@@ -24,6 +29,7 @@ export class MiscPropertyNamesRule extends MigrationRule<null> {
     const hostType = this.typeChecker.getTypeAtLocation(node.expression);
     const typeName = hostType && hostType.symbol && hostType.symbol.getName();
 
+    // Migration for: https://github.com/angular/components/pull/10398 (v6)
     if (typeName === 'MatListOption' && node.name.text === 'selectionChange') {
       this.createFailureAtNode(
           node,
@@ -32,6 +38,7 @@ export class MiscPropertyNamesRule extends MigrationRule<null> {
               `parent "MatSelectionList" instead.`);
     }
 
+    // Migration for: https://github.com/angular/components/pull/10413 (v6)
     if (typeName === 'MatDatepicker' && node.name.text === 'selectedChanged') {
       this.createFailureAtNode(
           node,

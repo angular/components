@@ -21,6 +21,9 @@ export class AttributeSelectorsRule extends MigrationRule<RuleUpgradeData> {
   /** Required upgrade changes for specified target version. */
   data = getVersionUpgradeData(this, 'attributeSelectors');
 
+  // Only enable the migration rule if there is upgrade data.
+  ruleEnabled = this.data.length !== 0;
+
   visitNode(node: ts.Node) {
     if (ts.isStringLiteralLike(node)) {
       this._visitStringLiteralLike(node);
