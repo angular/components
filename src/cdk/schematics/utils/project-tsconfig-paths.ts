@@ -8,6 +8,7 @@
 
 import {JsonParseMode, normalize, parseJson} from '@angular-devkit/core';
 import {Tree} from '@angular-devkit/schematics';
+import {WorkspaceProject} from '@schematics/angular/utility/workspace-models';
 
 /** Name of the default Angular CLI workspace configuration files. */
 const defaultWorkspaceConfigPaths = ['/angular.json', '/.angular.json'];
@@ -16,36 +17,50 @@ const defaultWorkspaceConfigPaths = ['/angular.json', '/.angular.json'];
  * Gets all tsconfig paths from a CLI project by reading the workspace configuration
  * and looking for common tsconfig locations.
  */
-export function getProjectTsConfigPaths(tree: Tree): string[] {
-  // Start with some tsconfig paths that are generally used within CLI projects.
-  const tsconfigPaths = new Set<string>([
-    'tsconfig.json',
-    'src/tsconfig.json',
-    'src/tsconfig.app.json',
-  ]);
+export function getProjectTsConfigPaths(tree: Tree): {buildPaths: string[], testPaths: string[]} {
+  // Start with some tsconfig paths that are generally used within CLI projects. Note
+  // that we are not interested in IDE-specific tsconfig files (e.g. /tsconfig.json)
+  const buildPaths = new Set<string>([]);
+  const testPaths = new Set<string>([]);
 
   // Add any tsconfig directly referenced in a build or test task of the angular.json workspace.
   const workspace = getWorkspaceConfigGracefully(tree);
 
   if (workspace) {
-    for (const project of Object.values<any>(workspace.projects)) {
-      ['build', 'test'].forEach(targetName => {
-        if (project.targets && project.targets[targetName] && project.targets[targetName].options &&
-            project.targets[targetName].options.tsConfig) {
-          tsconfigPaths.add(normalize(project.targets[targetName].options.tsConfig));
-        }
+    const projects = Object.keys(workspace.projects).map(name => workspace.projects[name]);
+    for (const project of projects) {
+      const buildPath = getTargetTsconfigPath(project, 'build');
+      const testPath = getTargetTsconfigPath(project, 'test');
 
-        if (project.architect && project.architect[targetName] &&
-            project.architect[targetName].options &&
-            project.architect[targetName].options.tsConfig) {
-          tsconfigPaths.add(normalize(project.architect[targetName].options.tsConfig));
-        }
-      });
+      if (buildPath) {
+        buildPaths.add(buildPath);
+      }
+
+      if (testPath) {
+        testPaths.add(testPath);
+      }
     }
   }
 
   // Filter out tsconfig files that don't exist in the CLI project.
-  return Array.from(tsconfigPaths).filter(p => tree.exists(p));
+  return {
+    buildPaths: Array.from(buildPaths).filter(p => tree.exists(p)),
+    testPaths: Array.from(testPaths).filter(p => tree.exists(p)),
+  };
+}
+
+/** Gets the tsconfig path from the given target within the specified project. */
+function getTargetTsconfigPath(project: WorkspaceProject, targetName: string): string|null {
+  if (project.targets && project.targets[targetName] && project.targets[targetName].options &&
+      project.targets[targetName].options.tsConfig) {
+    return normalize(project.targets[targetName].options.tsConfig);
+  }
+
+  if (project.architect && project.architect[targetName] && project.architect[targetName].options &&
+      project.architect[targetName].options.tsConfig) {
+    return normalize(project.architect[targetName].options.tsConfig);
+  }
+  return null;
 }
 
 /**
@@ -66,7 +81,7 @@ function getWorkspaceConfigGracefully(tree: Tree): any {
     // Parse the workspace file as JSON5 which is also supported for CLI
     // workspace configurations.
     return parseJson(configBuffer.toString(), JsonParseMode.Json5);
-  } catch {
+  } catch (e) {
     return null;
   }
 }

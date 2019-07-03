@@ -6,13 +6,13 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Rule, SchematicContext, SchematicsException, Tree} from '@angular-devkit/schematics';
+import {Rule, SchematicContext, Tree} from '@angular-devkit/schematics';
 
 import {Constructor, runMigrationRules} from '../../update-tool';
 import {MigrationRule} from '../../update-tool/migration-rule';
 import {TargetVersion} from '../../update-tool/target-version';
 import {getProjectTsConfigPaths} from '../../utils/project-tsconfig-paths';
-import {cdkUpgradeData, RuleUpgradeData} from '../upgrade-data';
+import {RuleUpgradeData} from '../upgrade-data';
 
 import {AttributeSelectorsRule} from './attribute-selectors-rule';
 import {ClassInheritanceRule} from './class-inheritance-rule';
@@ -52,10 +52,14 @@ export function createUpgradeRule(
     targetVersion: TargetVersion, extraRules: NullableMigrationRule[], upgradeData: RuleUpgradeData,
     onMigrationCompleteFn?: () => void): Rule {
   return (tree: Tree, context: SchematicContext) => {
-    const projectTsConfigPaths = getProjectTsConfigPaths(tree);
+    const logger = context.logger;
+    const {buildPaths, testPaths} = getProjectTsConfigPaths(tree);
 
-    if (!projectTsConfigPaths.length) {
-      throw new SchematicsException('Could not find any tsconfig file.');
+    if (!buildPaths.length && !testPaths.length) {
+      // We don't want to throw here because it would mean that other migrations in the
+      // pipeline don't run either. Rather print an error message.
+      logger.error('Could not find any TypeScript project in the CLI workspace configuration.');
+      return;
     }
 
     // Keep track of all project source files which have been checked/migrated. This is
@@ -63,7 +67,7 @@ export function createUpgradeRule(
     // we don't want to check these again, as this would result in duplicated failure messages.
     const analyzedFiles = new Set<string>();
 
-    for (const tsconfigPath of projectTsConfigPaths) {
+    for (const tsconfigPath of [...buildPaths, ...testPaths]) {
       runMigrationRules(
           tree, context.logger, tsconfigPath, targetVersion, [...cdkMigrationRules, ...extraRules],
           upgradeData, analyzedFiles);
