@@ -49,12 +49,15 @@ export function updateToV8(): Rule {
       TargetVersion.V8, materialMigrationRules, materialUpgradeData, onMigrationComplete);
 }
 
-/** Function that will be called when migration completed. */
-export function onMigrationComplete() {
+/** Function that will be called when the migration completed. */
+function onMigrationComplete(targetVersion: TargetVersion, hasFailures: boolean) {
   console.log();
-  console.log(green('  ✓  Angular Material update complete'));
+  console.log(green(`  ✓  Updated Angular Material to ${targetVersion}`));
   console.log();
-  console.log(yellow(
-      '  ⚠  Please check the output above for any issues that were detected ' +
-      'but could not be automatically fixed.'));
+
+  if (hasFailures) {
+    console.log(yellow(
+      '  ⚠  Some issues were detected but could not be fixed automatically. Please check the ' +
+      'output above and fix these issues manually.'));
+  }
 }

@@ -48,6 +48,6 @@ export function getChangesForTarget<T>(target: TargetVersion, data: VersionChang
  */
 export function getAllChanges<T>(data: VersionChanges<T>): T[] {
   return Object.keys(data)
-      .map(targetVersion => getChangesForTarget(parseInt(targetVersion), data))
+      .map(targetVersion => getChangesForTarget(targetVersion as TargetVersion, data))
       .reduce((result, versionData) => result.concat(versionData), []);
 }

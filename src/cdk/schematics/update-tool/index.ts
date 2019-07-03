@@ -21,7 +21,8 @@ export type Constructor<T> = new (...args: any[]) => T;
 
 export function runMigrationRules<T>(
     tree: Tree, logger: logging.LoggerApi, tsconfigPath: string, targetVersion: TargetVersion,
-    ruleTypes: Constructor<MigrationRule<T>>[], upgradeData: T, analyzedFiles: Set<string>) {
+    ruleTypes: Constructor<MigrationRule<T>>[], upgradeData: T,
+    analyzedFiles: Set<string>): boolean {
   // The CLI uses the working directory as the base directory for the
   // virtual file system tree.
   const basePath = process.cwd();
@@ -114,6 +115,8 @@ export function runMigrationRules<T>(
       logger.warn(`${normalizedFilePath}@${lineAndCharacter} - ${message}`);
     });
   }
+
+  return !!ruleFailures.length;
 
   function getUpdateRecorder(filePath: string): UpdateRecorder {
     const treeFilePath = relative(basePath, filePath);

@@ -8,9 +8,9 @@
 
 /** Possible versions that can be automatically migrated by `ng update`. */
 export enum TargetVersion {
-  V6,
-  V7,
-  V8,
+  V6 = 'version 6',
+  V7 = 'version 7',
+  V8 = 'version 8',
 }
 
 /**

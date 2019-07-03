@@ -50,7 +50,7 @@ type NullableMigrationRule = Constructor<MigrationRule<RuleUpgradeData|null>>;
  */
 export function createUpgradeRule(
     targetVersion: TargetVersion, extraRules: NullableMigrationRule[], upgradeData: RuleUpgradeData,
-    onMigrationCompleteFn?: () => void): Rule {
+    onMigrationCompleteFn?: (targetVersion: TargetVersion, hasFailures: boolean) => void): Rule {
   return (tree: Tree, context: SchematicContext) => {
     const logger = context.logger;
     const {buildPaths, testPaths} = getProjectTsConfigPaths(tree);
@@ -66,15 +66,16 @@ export function createUpgradeRule(
     // necessary because multiple TypeScript projects can contain the same source file and
     // we don't want to check these again, as this would result in duplicated failure messages.
     const analyzedFiles = new Set<string>();
+    let hasRuleFailures = false;
 
     for (const tsconfigPath of [...buildPaths, ...testPaths]) {
-      runMigrationRules(
+      hasRuleFailures = hasRuleFailures || runMigrationRules(
           tree, context.logger, tsconfigPath, targetVersion, [...cdkMigrationRules, ...extraRules],
           upgradeData, analyzedFiles);
     }
 
     if (onMigrationCompleteFn) {
-      onMigrationCompleteFn();
+      onMigrationCompleteFn(targetVersion, hasRuleFailures);
     }
   };
 }

@@ -27,12 +27,15 @@ export function updateToV8(): Rule {
   return createUpgradeRule(TargetVersion.V8, [], cdkUpgradeData, onMigrationComplete);
 }
 
-/** Function that will be called when migration completed. */
-function onMigrationComplete() {
+/** Function that will be called when the migration completed. */
+function onMigrationComplete(targetVersion: TargetVersion, hasFailures: boolean) {
   console.log();
-  console.log(green('  ✓  Angular CDK update complete'));
+  console.log(green(`  ✓  Updated Angular CDK to ${targetVersion}`));
   console.log();
-  console.log(yellow(
-      '  ⚠  Please check the output above for any issues that were detected ' +
-      'but could not be automatically fixed.'));
+
+  if (hasFailures) {
+    console.log(yellow(
+      '  ⚠  Some issues were detected but could not be fixed automatically. Please check the ' +
+      'output above and fix these issues manually.'));
+  }
 }
