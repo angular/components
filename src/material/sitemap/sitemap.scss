@@ -1,0 +1,42 @@
+.sitemap {
+  background-color: #37424a;
+  font-family: mat-font-family($config);
+  font-style: normal;
+  font-stretch: normal;
+  color: #f4f4f4;
+  padding: 24px;
+
+  span {
+    font-size: 24px;
+  }
+
+  .menu-item {
+    width: 306px;
+    min-width: 300px;
+  }
+
+  .menuItems-container {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .section {
+    margin-bottom: 10px;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 20px;
+  }
+  .level1 {
+    margin-top: 30px;
+    padding-left: 10px;
+  }
+  .level2 {
+    margin-top: 20px;
+    padding-left: 20px;
+  }
+  .level3 {
+    margin-top: 10px;
+
+    padding-left: 30px;
+  }
+}

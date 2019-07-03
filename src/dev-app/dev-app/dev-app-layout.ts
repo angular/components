@@ -58,6 +58,7 @@ export class DevAppLayout {
     {name: 'Screen Type', route: '/screen-type'},
     {name: 'Select', route: '/select'},
     {name: 'Sidenav', route: '/sidenav'},
+    {name: 'Sitemap', route: '/sitemap'},
     {name: 'Slide Toggle', route: '/slide-toggle'},
     {name: 'Slider', route: '/slider'},
     {name: 'Snack Bar', route: '/snack-bar'},

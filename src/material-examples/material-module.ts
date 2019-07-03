@@ -35,6 +35,7 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {MatRadioModule} from '@angular/material/radio';
 import {MatSelectModule} from '@angular/material/select';
 import {MatSidenavModule} from '@angular/material/sidenav';
+import {MatSitemapModule} from '@angular/material/sitemap';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import {MatSliderModule} from '@angular/material/slider';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
@@ -80,6 +81,7 @@ import {MatTreeModule} from '@angular/material/tree';
     MatRippleModule,
     MatSelectModule,
     MatSidenavModule,
+    MatSitemapModule,
     MatSlideToggleModule,
     MatSliderModule,
     MatSnackBarModule,
@@ -127,6 +129,7 @@ import {MatTreeModule} from '@angular/material/tree';
     MatRippleModule,
     MatSelectModule,
     MatSidenavModule,
+    MatSitemapModule,
     MatSlideToggleModule,
     MatSliderModule,
     MatSnackBarModule,

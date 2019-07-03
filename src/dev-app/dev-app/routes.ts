@@ -82,6 +82,7 @@ export const DEV_APP_ROUTES: Routes = [
   {path: 'ripple', loadChildren: 'ripple/ripple-demo-module#RippleDemoModule'},
   {path: 'select', loadChildren: 'select/select-demo-module#SelectDemoModule'},
   {path: 'sidenav', loadChildren: 'sidenav/sidenav-demo-module#SidenavDemoModule'},
+  {path: 'sitemap', loadChildren: 'sitemap/sitemap-demo-module#SitemapDemoModule'},
   {
     path: 'slide-toggle',
     loadChildren: 'slide-toggle/slide-toggle-demo-module#SlideToggleDemoModule'

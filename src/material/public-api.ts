@@ -31,6 +31,7 @@ export * from '@angular/material/progress-spinner';
 export * from '@angular/material/radio';
 export * from '@angular/material/select';
 export * from '@angular/material/sidenav';
+export * from '@angular/material/sitemap';
 export * from '@angular/material/slide-toggle';
 export * from '@angular/material/slider';
 export * from '@angular/material/snack-bar';
