@@ -1,0 +1,19 @@
+#!/usr/bin/env node
+'use strict';
+
+
+const fs = require('fs');
+const args = process.argv.slice([2]);
+const jsonFileLocation = args[0];
+const requestedLabel = args[1];
+
+let rawdata = fs.readFileSync(jsonFileLocation);  
+const json = JSON.parse(rawdata)
+
+const prLabels = new Set(json.pull_request.labels.map(label => label.name));
+// console.debug('Labels currently on PR:', Array.from(prLabels));
+// console.debug('Label requested:', requestedLabel);
+const containsLabel = prLabels.has(requestedLabel)
+// console.debug('Request label found:', containsLabel);
+console.log(containsLabel)
+process.exit(containsLabel ? 0 : 1);
