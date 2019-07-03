@@ -504,13 +504,13 @@ export class DragRef<T = any> {
       const distanceX = Math.abs(pointerPosition.x - this._pickupPositionOnPage.x);
       const distanceY = Math.abs(pointerPosition.y - this._pickupPositionOnPage.y);
       const isOverThreshold = distanceX + distanceY >= this._config.dragStartThreshold;
-      const isDelayElapsed = (Date.now() >= this._dragStartTime + this.dragStartDelay || 0);
 
       // Only start dragging after the user has moved more than the minimum distance in either
       // direction. Note that this is preferrable over doing something like `skip(minimumDistance)`
       // in the `pointerMove` subscription, because we're not guaranteed to have one move event
       // per pixel of movement (e.g. if the user moves their pointer quickly).
       if (isOverThreshold) {
+        const isDelayElapsed = Date.now() >= this._dragStartTime + (this.dragStartDelay || 0);
         if (!isDelayElapsed) {
           this._endDragSequence(event);
           return;
@@ -585,7 +585,7 @@ export class DragRef<T = any> {
    * Clears subscriptions and stops the dragging sequence.
    * @param event Browser event object that ended the sequence.
    */
-  private _endDragSequence = (event: MouseEvent | TouchEvent) => {
+  private _endDragSequence(event: MouseEvent | TouchEvent) {
     // Note that here we use `isDragging` from the service, rather than from `this`.
     // The difference is that the one from the service reflects whether a dragging sequence
     // has been initiated, whereas the one on `this` includes whether the user has passed

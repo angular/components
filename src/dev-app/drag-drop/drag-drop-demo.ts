@@ -21,7 +21,7 @@ import {CdkDragDrop, moveItemInArray, transferArrayItem} from '@angular/cdk/drag
 })
 export class DragAndDropDemo {
   axisLock: 'x' | 'y';
-  dragStartDelay: number = 0;
+  dragStartDelay = 0;
   todo = [
     'Go out for Lunch',
     'Make a cool app',
