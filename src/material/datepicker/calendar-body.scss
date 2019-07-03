@@ -61,10 +61,6 @@ $mat-calendar-body-cell-content-size: 100% - $mat-calendar-body-cell-content-mar
   // Choosing a value clearly larger than the height ensures we get the correct capsule shape.
   border-radius: 999px;
 
-  // Override mat-button defaults
-  min-width: 0;
-  border-color: transparent;
-
   @include cdk-high-contrast {
     border: none;
   }

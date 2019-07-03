@@ -70,9 +70,7 @@ describe('MatCalendar', () => {
 
       let todayCell = calendarElement.querySelector('.mat-calendar-body-today')!;
       expect(todayCell).not.toBeNull();
-      let todayCellSpan = todayCell.querySelector('span')!;
-      expect(todayCellSpan).not.toBeNull();
-      expect(todayCellSpan.innerHTML.trim()).toBe('1');
+      expect(todayCell.innerHTML.trim()).toBe('1');
 
       fakeToday = new Date(2018, 0, 10);
       calendarInstance.updateTodaysDate();
@@ -80,9 +78,7 @@ describe('MatCalendar', () => {
 
       todayCell = calendarElement.querySelector('.mat-calendar-body-today')!;
       expect(todayCell).not.toBeNull();
-      todayCellSpan = todayCell.querySelector('span')!;
-      expect(todayCellSpan).not.toBeNull();
-      expect(todayCellSpan.innerHTML.trim()).toBe('10');
+      expect(todayCell.innerHTML.trim()).toBe('10');
     }));
 
     it('should be in month view with specified month active', () => {
