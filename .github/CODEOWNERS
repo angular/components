@@ -26,6 +26,7 @@
 /src/material/schematics/**                        @devversion @jelbourn
 /src/material/select/**                            @crisbeto
 /src/material/sidenav/**                           @mmalerba
+/src/material/sitemap/**                           @kyrylo.seliukov
 /src/material/slide-toggle/**                      @devversion
 /src/material/slider/**                            @mmalerba
 /src/material/snack-bar/**                         @jelbourn @crisbeto @josephperrott
@@ -163,6 +164,7 @@
 /src/dev-app/screen-type/**                        @josephperrott
 /src/dev-app/select/**                             @crisbeto
 /src/dev-app/sidenav/**                            @mmalerba
+/src/dev-app/sitemap/**                            @kyrylo.seliukov
 /src/dev-app/slide-toggle/**                       @devversion
 /src/dev-app/slider/**                             @mmalerba
 /src/dev-app/snack-bar/**                          @jelbourn @crisbeto @josephperrott
