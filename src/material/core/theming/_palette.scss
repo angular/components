@@ -36,6 +36,12 @@ $light-disabled-text: rgba(white, 0.5);
 $light-dividers: rgba(white, 0.12);
 $light-focused: rgba(white, 0.12);
 
+//GC colors
+$wild-sand-color: #f4f4f4;
+$limed-spruce-color: #37424a;
+$nevada-color: #5f6365;
+$silver-sand-color: #c4c5c5;
+
 $mat-red: (
   50: #ffebee,
   100: #ffcdd2,
@@ -686,6 +692,11 @@ $mat-light-theme-background: (
   disabled-button-toggle: map_get($mat-grey, 200),
   unselected-chip: map_get($mat-grey, 300),
   disabled-list-option: map_get($mat-grey, 200),
+  footer-background: $wild-sand-color,
+  logo: url('./dist/packages/material/core/assets/foundations-logos-marsh-mc-lennan-primary-on-light.svg'),
+  facebook-icon: url('./dist/packages/material/core/assets/facebook-icon-light.svg'),
+  linkedin-icon: url('./dist/packages/material/core/assets/linkedin-icon-light.svg'),
+  twitter-icon: url('./dist/packages/material/core/assets/twitter-icon-light.svg'),
 );
 
 // Background palette for dark themes.
@@ -704,6 +715,11 @@ $mat-dark-theme-background: (
   disabled-button-toggle: black,
   unselected-chip: map_get($mat-grey, 700),
   disabled-list-option: black,
+  footer-background: $limed-spruce-color,
+  logo: url('./dist/packages/material/core/assets/foundations-logos-marsh-mc-lennan-primary-on-dark.svg'),
+  facebook-icon: url('./dist/packages/material/core/assets/facebook-icon-dark.svg'),
+  linkedin-icon: url('./dist/packages/material/core/assets/linkedin-icon-dark.svg'),
+  twitter-icon: url('./dist/packages/material/core/assets/twitter-icon-dark.svg'),
 );
 
 // Foreground palette for light themes.
@@ -723,6 +739,8 @@ $mat-light-theme-foreground: (
   slider-min:        rgba(black, 0.87),
   slider-off:        rgba(black, 0.26),
   slider-off-active: rgba(black, 0.38),
+  footer-main: $limed-spruce-color,
+  footer-secondary: $nevada-color,
 );
 
 // Foreground palette for dark themes.
@@ -742,4 +760,6 @@ $mat-dark-theme-foreground: (
   slider-min:        white,
   slider-off:        rgba(white, 0.3),
   slider-off-active: rgba(white, 0.3),
+  footer-main: $wild-sand-color,
+  footer-secondary: $silver-sand-color,
 );

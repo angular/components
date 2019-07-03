@@ -45,6 +45,7 @@ import {MatTabsModule} from '@angular/material/tabs';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatTreeModule} from '@angular/material/tree';
+import {MatFooterModule} from '@angular/material/footer';
 
 @NgModule({
   imports: [
@@ -67,6 +68,7 @@ import {MatTreeModule} from '@angular/material/tree';
     MatDividerModule,
     MatExpansionModule,
     MatFormFieldModule,
+    MatFooterModule,
     MatGridListModule,
     MatIconModule,
     MatInputModule,
@@ -114,6 +116,7 @@ import {MatTreeModule} from '@angular/material/tree';
     MatDividerModule,
     MatExpansionModule,
     MatFormFieldModule,
+    MatFooterModule,
     MatGridListModule,
     MatIconModule,
     MatInputModule,

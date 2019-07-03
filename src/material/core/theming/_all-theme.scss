@@ -34,6 +34,7 @@
 @import '../../tree/tree-theme';
 @import '../../snack-bar/snack-bar-theme';
 @import '../../form-field/form-field-theme';
+@import '../../footer/footer-theme';
 
 
 // Create a theme.
@@ -73,4 +74,5 @@
   @include mat-tooltip-theme($theme);
   @include mat-tree-theme($theme);
   @include mat-snack-bar-theme($theme);
+  @include mat-footer-theme($theme);
 }

@@ -39,6 +39,11 @@ export function createPackageBuildTasks(buildPackage: BuildPackage, preBuildTask
     join(buildPackage.sourceDir, '**/_*.scss'),
   ];
 
+  const imagesGlobs = [
+    join(buildPackage.sourceDir, '**/*.svg'),
+    join(buildPackage.sourceDir, '**/*.png'),
+  ];
+
   // Glob that matches every HTML file in the current package.
   const htmlGlob = join(buildPackage.sourceDir, '**/*.html');
 
@@ -106,7 +111,8 @@ export function createPackageBuildTasks(buildPackage: BuildPackage, preBuildTask
   const assetTasks = [
     `${taskName}:assets:scss`,
     `${taskName}:assets:copy-styles`,
-    `${taskName}:assets:html`
+    `${taskName}:assets:html`,
+    `${taskName}:assets:copy-images`
   ];
 
   // In case the build package has schematics, we need to build them like assets because
@@ -123,6 +129,12 @@ export function createPackageBuildTasks(buildPackage: BuildPackage, preBuildTask
       .pipe(dest(buildPackage.esm5OutputDir));
     }
   );
+
+  task(`${taskName}:assets:copy-images`, () => {
+    return src(imagesGlobs)
+        .pipe(dest(buildPackage.outputDir))
+        .pipe(dest(buildPackage.esm5OutputDir));
+  });
 
   task(`${taskName}:assets:copy-styles`, () => {
     return src(styleGlobs)

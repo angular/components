@@ -36,6 +36,7 @@ import {
   MatTabsModule,
   MatToolbarModule,
   MatTooltipModule,
+  MatFooterModule
 } from '@angular/material';
 
 /**
@@ -72,6 +73,7 @@ import {
     MatTabsModule,
     MatToolbarModule,
     MatTooltipModule,
+    MatFooterModule
   ]
 })
 export class DemoMaterialModule {}

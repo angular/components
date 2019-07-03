@@ -6,6 +6,7 @@ import {sync as glob} from 'glob';
 
 /** Finds all JavaScript files in a directory and inlines all resources of Angular components. */
 export function inlineResourcesForDirectory(folderPath: string) {
+    console.log('folderPath', folderPath);
   glob(join(folderPath, '**/*.js')).forEach(filePath => inlineResources(filePath));
 }
 

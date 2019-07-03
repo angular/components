@@ -1,0 +1,46 @@
+@import '../core/theming/palette';
+@import '../core/theming/theming';
+@import '../core/typography/typography-utils';
+
+@mixin mat-footer-theme($theme) {
+    $background: map-get($theme, background);
+    $foreground: map-get($theme, foreground);
+    mat-footer {
+        background-color: map-get($background, footer-background);
+        .mat-footer-first-row {
+            a {
+                color: mat-color($foreground, footer-main);
+            }
+            .mat-footer-logo {
+                background-image: map-get($background, logo);
+            }
+            .mat-footer-legal-links {
+                a {
+                    color: mat-color($foreground, footer-secondary);
+                }
+            }
+        }
+        .mat-footer-second-row {
+            .mat-footer-copyright {
+                color: mat-color($foreground, footer-secondary);
+            }
+            .mat-footer-facebook-icon {
+                background-image: map-get($background, facebook-icon);
+            }
+            .mat-footer-twitter-icon {
+                background-image: map-get($background, twitter-icon);
+            }
+            .mat-footer-linkedin-icon {
+                background-image: map-get($background, linkedin-icon);
+            }
+        }
+    }
+}
+
+@mixin mat-list-typography($config) {
+    $font-family: mat-font-family($config);
+
+    mat-footer {
+        font-family: $font-family;
+    }
+}

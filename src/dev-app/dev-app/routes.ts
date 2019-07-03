@@ -39,6 +39,7 @@ export const DEV_APP_ROUTES: Routes = [
     path: 'focus-origin',
     loadChildren: 'focus-origin/focus-origin-demo-module#FocusOriginDemoModule'
   },
+  {path: 'footer', loadChildren: 'footer/footer-demo-module#FooterDemoModule'},
   {path: 'gestures', loadChildren: 'gestures/gestures-demo-module#GesturesDemoModule'},
   {path: 'grid-list', loadChildren: 'grid-list/grid-list-demo-module#GridListDemoModule'},
   {path: 'icon', loadChildren: 'icon/icon-demo-module#IconDemoModule'},

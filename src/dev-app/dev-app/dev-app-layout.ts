@@ -40,6 +40,7 @@ export class DevAppLayout {
     {name: 'Drag and Drop', route: '/drag-drop'},
     {name: 'Expansion Panel', route: '/expansion'},
     {name: 'Focus Origin', route: '/focus-origin'},
+    {name: 'Footer', route: '/footer'},
     {name: 'Gestures', route: '/gestures'},
     {name: 'Grid List', route: '/grid-list'},
     {name: 'Icon', route: '/icon'},
@@ -76,7 +77,7 @@ export class DevAppLayout {
     {name: 'MDC Menu', route: '/mdc-menu'},
     {name: 'MDC Radio', route: '/mdc-radio'},
     {name: 'MDC Tabs', route: '/mdc-tabs'},
-    {name: 'MDC Slide Toggle', route: '/mdc-slide-toggle'},
+    {name: 'MDC Slide Toggle', route: '/mdc-slide-toggle'}
 
   ];
 

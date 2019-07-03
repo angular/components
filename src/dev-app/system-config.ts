@@ -111,6 +111,7 @@ System.config({
     '@angular/material/divider': 'dist/packages/material/divider/index.js',
     '@angular/material/expansion': 'dist/packages/material/expansion/index.js',
     '@angular/material/form-field': 'dist/packages/material/form-field/index.js',
+    '@angular/material/footer': 'dist/packages/material/footer/index.js',
     '@angular/material/grid-list': 'dist/packages/material/grid-list/index.js',
     '@angular/material/icon': 'dist/packages/material/icon/index.js',
     '@angular/material/input': 'dist/packages/material/input/index.js',

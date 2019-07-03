@@ -13,6 +13,7 @@
 /src/material/divider/**                           @jelbourn @crisbeto
 /src/material/expansion/**                         @josephperrott @jelbourn
 /src/material/form-field/**                        @mmalerba
+/src/material/footer/**                            @d3-vasyl-dorozhynskiy 
 /src/material/grid-list/**                         @jelbourn
 /src/material/icon/**                              @jelbourn
 /src/material/input/**                             @mmalerba
@@ -41,6 +42,7 @@
 # Angular Material core
 /src/material/core/*                               @jelbourn
 /src/material/core/animation/**                    @jelbourn
+/src/material/core/assets/**                       @d3-vasyl-dorozhynskiy 
 /src/material/core/common-behaviors/**             @jelbourn @devversion
 /src/material/core/datetime/**                     @mmalerba
 /src/material/core/error/**                        @crisbeto @mmalerba
@@ -134,6 +136,7 @@
 /src/dev-app/examples-page/**                      @andrewseguin
 /src/dev-app/expansion/**                          @josephperrott
 /src/dev-app/focus-origin/**                       @mmalerba
+/src/dev-app/footer/**                             @d3-vasyl-dorozhynskiy  
 /src/dev-app/gestures/**                           @jelbourn
 /src/dev-app/grid-list/**                          @jelbourn
 /src/dev-app/icon/**                               @jelbourn

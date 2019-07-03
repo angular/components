@@ -1,0 +1,103 @@
+$divider: 12px;
+mat-footer {
+    min-height: 54px;
+    display: flex;
+    flex-direction: column;
+    padding: 23px 23px 21px;
+    box-shadow:
+            0 1px 3px 0 rgba(0, 0, 0, 0.2),
+            0 2px 1px -1px rgba(0, 0, 0, 0.12),
+            0 1px 1px 0 rgba(0, 0, 0, 0.14);
+    .mat-footer-first-row {
+        display: flex;
+        justify-content: space-between;
+        .mat-footer-logo {
+            margin-right: 32px;
+            width: 227px;
+            height: 32px;
+            object-fit: contain;
+        }
+        .mat-footer-links {
+            display: flex;
+            justify-content: space-between;
+            flex-grow: 1;
+            ul {
+                display: flex;
+                list-style: none;
+                padding: 0;
+                margin: 0;
+                &.mat-footer-legal-links {
+                    a {
+                        margin-left: $divider;
+                        margin-right: 0;
+                    }
+                }
+                a {
+                    font-size: 16px;
+                    line-height: 1.5;
+                    letter-spacing: 0.4px;
+                    text-decoration: none;
+                    margin-right: $divider;
+                    text-transform: uppercase;
+                }
+            }
+        }
+    }
+    .mat-footer-second-row {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        .mat-footer-copyright {
+            font-size: 14px;
+            line-height: 1.43;
+            text-align: right;
+            margin-right: 14px;
+        }
+        .mat-footer-social-icons {
+            display: flex;
+            .mat-footer-facebook-icon, .mat-footer-twitter-icon, .mat-footer-linkedin-icon {
+                display: flex;
+                width: 24px;
+                height: 24px;
+                margin-left: $divider;
+            }
+        }
+    }
+    &.mat-footer-xsmall {
+        min-height: auto;
+        .mat-footer-first-row {
+            flex-direction: column;
+            .mat-footer-links {
+                margin-top: calc(#{$divider} * 2);
+                ul {
+                    flex-direction: column;
+                    &.mat-footer-legal-links {
+                        a {
+                            text-align: right;
+                            justify-content: flex-end;
+                            margin-left: 0;
+                        }
+                    }
+                    a {
+                        display: flex;
+                        margin-bottom: $divider;
+                        margin-right: 0;
+                    }
+                }
+            }
+        }
+        .mat-footer-second-row {
+            flex-direction: column;
+            margin-top: $divider;
+            .mat-footer-copyright {
+                margin-right: 0;
+                width: 100%;
+            }
+            .mat-footer-social-icons {
+                margin-top: 14px;
+                justify-content: flex-end;
+                width: 100%;
+            }
+        }
+    }
+}

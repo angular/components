@@ -1,0 +1,23 @@
+    <div class="mat-footer-first-row">
+            <div class="mat-footer-logo"></div>
+            <div class="mat-footer-links">
+            <ul>
+                <li *ngFor="let item of siteLinks;">
+                    <a routerLink="{{item.routerLink}}"> {{item.text}}</a>
+                </li>
+            </ul>
+            <ul class="mat-footer-legal-links">
+                <li *ngFor="let item of legalLinks;">
+                    <a routerLink="{{item.routerLink}}"> {{item.text}}</a>
+                </li>
+            </ul>
+            </div>
+    </div>
+    <div class="mat-footer-second-row">
+        <div class="mat-footer-copyright">&copy; <span *ngIf="copyrightDate">{{copyrightDate}}</span> Guy Carpenter & Company, LLC</div>
+        <div class="mat-footer-social-icons">
+            <a class="mat-footer-facebook-icon" *ngIf="facebookLink" [href]="facebookLink" target="_blank"></a>
+            <a class="mat-footer-linkedin-icon" *ngIf="linkedinLink" [href]="linkedinLink" target="_blank"></a>
+            <a class="mat-footer-twitter-icon" *ngIf="twitterLink" [href]="twitterLink" target="_blank"></a>
+        </div>
+    </div>
