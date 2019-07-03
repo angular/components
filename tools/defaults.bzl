@@ -1,6 +1,6 @@
 # Re-export of Bazel rules with repository-wide defaults
 
-load("@npm_angular_bazel//:index.bzl", _ng_module = "ng_module", _ng_package = "ng_package")
+load("@npm_angular_bazel//:index.bzl", _ng_module = "ng_module", _ng_package = "ng_package", _protractor_web_test_suite = "protractor_web_test_suite")
 load("@npm_bazel_jasmine//:index.bzl", _jasmine_node_test = "jasmine_node_test")
 load("@npm_bazel_typescript//:defs.bzl", _ts_library = "ts_library")
 load("@npm_bazel_karma//:defs.bzl", _ts_web_test_suite = "ts_web_test_suite")
@@ -122,12 +122,24 @@ def ts_web_test_suite(deps = [], srcs = [], **kwargs):
         **kwargs
     )
 
+# Protractor web test targets are flaky by default as the browser can sometimes
+# crash (e.g. due to too much concurrency). Passing the "flaky" flag ensures that
+# Bazel detects flaky tests and re-runs these a second time in case of a flake.
+def protractor_web_test_suite(flaky = True, **kwargs):
+    _protractor_web_test_suite(
+        flaky = flaky,
+        **kwargs
+    )
+
 def ng_web_test_suite(deps = [], static_css = [], bootstrap = [], **kwargs):
     # Always include a prebuilt theme in the test suite because otherwise tests, which depend on CSS
     # that is needed for measuring, will unexpectedly fail. Also always adding a prebuilt theme
     # reduces the amount of setup that is needed to create a test suite Bazel target. Note that the
     # prebuilt theme will be also added to CDK test suites but shouldn't affect anything.
-    static_css = static_css + ["//src/material/prebuilt-themes:indigo-pink"]
+    static_css = static_css + [
+        "//src/material/prebuilt-themes:indigo-pink",
+        "//src/material-experimental/mdc-theming:indigo_pink_prebuilt",
+    ]
 
     # Workaround for https://github.com/bazelbuild/rules_typescript/issues/301
     # Since some of our tests depend on CSS files which are not part of the `ng_module` rule,
@@ -161,6 +173,10 @@ def ng_web_test_suite(deps = [], static_css = [], bootstrap = [], **kwargs):
         deps = [
             "//test:angular_test_init",
         ] + deps,
+        browsers = [
+            "@io_bazel_rules_webtesting//browsers:chromium-local",
+            "@io_bazel_rules_webtesting//browsers:firefox-local",
+        ],
         bootstrap = [
             "@npm//node_modules/zone.js:dist/zone-testing-bundle.js",
             "@npm//node_modules/reflect-metadata:Reflect.js",

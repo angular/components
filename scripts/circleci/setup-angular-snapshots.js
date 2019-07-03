@@ -17,7 +17,6 @@
 const {yellow, green} = require('chalk');
 const {writeFileSync} = require('fs');
 const {join} = require('path');
-const {execSync} = require('child_process');
 
 const {tag} = require('minimist')(process.argv.slice(2), {string: ['tag']});
 const projectDir = join(__dirname, '../../');
@@ -57,7 +56,3 @@ angularPackages.forEach(packageName => {
 writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2));
 
 console.log(green('Successfully added the "resolutions" to the "package.json".'));
-
-// Run "yarn" in the directory that contains the "package.json". Also pipe all output to the
-// current process so that everything can be debugged within CircleCI.
-execSync('yarn', {cwd: projectDir, stdio: 'inherit', shell: true});
