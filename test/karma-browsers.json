@@ -243,7 +243,7 @@
   "BROWSERSTACK_EDGE": {
     "base": "BrowserStack",
     "browser": "Edge",
-    "browser_version": "17.0",
+    "browser_version": "18.0",
     "os": "Windows",
     "os_version": "10"
   },
