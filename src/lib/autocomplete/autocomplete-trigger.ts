@@ -35,8 +35,6 @@ import {
 import {ViewportRuler} from '@angular/cdk/scrolling';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {
-  _countGroupLabelsBeforeOption,
-  _getOptionScrollPosition,
   MatOption,
   MatOptionSelectionChange,
 } from '@angular/material/core';
@@ -46,18 +44,6 @@ import {MatAutocomplete} from './autocomplete';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
 import {MatAutocompleteOrigin} from './autocomplete-origin';
 
-
-/**
- * The following style constants are necessary to save here in order
- * to properly calculate the scrollTop of the panel. Because we are not
- * actually focusing the active item, scroll must be handled manually.
- */
-
-/** The height of each autocomplete option. */
-export const AUTOCOMPLETE_OPTION_HEIGHT = 48;
-
-/** The total height of the autocomplete panel. */
-export const AUTOCOMPLETE_PANEL_HEIGHT = 256;
 
 /** Injection token that determines the scroll handling while the autocomplete panel is open. */
 export const MAT_AUTOCOMPLETE_SCROLL_STRATEGY =
@@ -459,18 +445,17 @@ export class MatAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
    * not adjusted.
    */
   private _scrollToOption(): void {
-    const index = this.autocomplete._keyManager.activeItemIndex || 0;
-    const labelCount = _countGroupLabelsBeforeOption(index,
-        this.autocomplete.options, this.autocomplete.optionGroups);
-
-    const newScrollPosition = _getOptionScrollPosition(
-      index + labelCount,
-      AUTOCOMPLETE_OPTION_HEIGHT,
-      this.autocomplete._getScrollTop(),
-      AUTOCOMPLETE_PANEL_HEIGHT
-    );
-
-    this.autocomplete._setScrollTop(newScrollPosition);
+    const activeItem = this.autocomplete._keyManager.activeItem;
+    if(activeItem && this.autocomplete.panel instanceof ElementRef){
+      const optionElement = activeItem._getHostElement();
+      const optionBox = optionElement.getBoundingClientRect();
+      const panelBox = this.autocomplete.panel.nativeElement.getBoundingClientRect();
+      if (optionBox.top < panelBox.top) {
+        optionElement.scrollIntoView({ block: 'start' });
+      } else if (optionBox.bottom > panelBox.bottom) {
+        optionElement.scrollIntoView({ block: 'end' });
+      }
+    }
   }
 
   /**
