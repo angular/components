@@ -26,7 +26,7 @@ import {of as observableOf} from 'rxjs';
 
 import {DragDropModule} from '../drag-drop-module';
 import {CdkDragDrop, CdkDragEnter} from '../drag-events';
-import {DragRefConfig, Point} from '../drag-ref';
+import {DragRefConfig, Point, DragRef} from '../drag-ref';
 import {extendStyles} from '../drag-styling';
 import {moveItemInArray} from '../drag-utils';
 
@@ -751,7 +751,8 @@ describe('CdkDrag', () => {
       expect(dragElement.style.transform).toBeFalsy();
       dragElementViaMouse(fixture, dragElement, 300, 300);
 
-      expect(spy).toHaveBeenCalledWith(jasmine.objectContaining({x: 300, y: 300}));
+      expect(spy)
+        .toHaveBeenCalledWith(jasmine.objectContaining({x: 300, y: 300}), jasmine.any(DragRef));
       expect(dragElement.style.transform).toBe('translate3d(50px, 50px, 0px)');
     }));
 
@@ -2338,7 +2339,8 @@ describe('CdkDrag', () => {
 
       const previewRect = preview.getBoundingClientRect();
 
-      expect(spy).toHaveBeenCalledWith(jasmine.objectContaining({x: 200, y: 200}));
+      expect(spy)
+        .toHaveBeenCalledWith(jasmine.objectContaining({x: 200, y: 200}), jasmine.any(DragRef));
       expect(Math.floor(previewRect.top)).toBe(50);
       expect(Math.floor(previewRect.left)).toBe(50);
     }));
