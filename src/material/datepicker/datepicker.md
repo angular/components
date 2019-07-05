@@ -257,6 +257,19 @@ By default the `MomentDateAdapter` will creates dates in your time zone specific
 })
 ```
 
+By default the `MomentDateAdapter` will parse dates in a forgiving way. This may result in dates
+being parsed incorrectly. You can change the default behaviour to parse dates strictly by providing
+the `MAT_MOMENT_DATE_ADAPTER_OPTIONS` and setting it to `strict: true`.
+
+```ts
+@NgModule({
+  imports: [MatDatepickerModule, MatMomentDateModule],
+  providers: [
+    { provide: MAT_MOMENT_DATE_ADAPTER_OPTIONS, useValue: { strict: true } }
+  ]
+})
+```
+
 It is also possible to create your own `DateAdapter` that works with any date format your app
 requires. This is accomplished by subclassing `DateAdapter` and providing your subclass as the
 `DateAdapter` implementation. You will also want to make sure that the `MAT_DATE_FORMATS` provided
