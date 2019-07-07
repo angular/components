@@ -252,7 +252,7 @@ By default the `MomentDateAdapter` will creates dates in your time zone specific
 @NgModule({
   imports: [MatDatepickerModule, MatMomentDateModule],
   providers: [
-    { provide: MAT_MOMENT_DATE_ADAPTER_OPTIONS, useValue: { useUtc: true } }
+    {provide: MAT_MOMENT_DATE_ADAPTER_OPTIONS, useValue: {useUtc: true}}
   ]
 })
 ```
