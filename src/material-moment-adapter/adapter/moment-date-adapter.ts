@@ -33,7 +33,7 @@ export interface MatMomentDateAdapterOptions {
    * Changing this will change how Angular Material components like DatePicker output dates.
    * {@default false}
    */
-  useUtc: boolean;
+  useUtc?: boolean;
 }
 
 /** InjectionToken for moment date adapter to configure options. */
@@ -253,8 +253,9 @@ export class MomentDateAdapter extends DateAdapter<Moment> {
     format?: MomentFormatSpecification,
     locale?: string,
   ): Moment {
-    const strict = this._options ? this._options.strict : undefined;
-    return (this._options && this._options.useUtc)
+    const {strict, useUtc}: MatMomentDateAdapterOptions = this._options || {};
+
+    return useUtc
       ? moment.utc(date, format, locale, strict)
       : moment(date, format, locale, strict);
   }
