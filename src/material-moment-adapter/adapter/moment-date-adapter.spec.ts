@@ -492,9 +492,9 @@ describe('MomentDateAdapter with MAT_MOMENT_DATE_ADAPTER_OPTIONS override', () =
     });
 
     it('should detect invalid strings according to given format', () => {
-      expect(adapter.parse('2017-01-01', 'MM/DD/YYYY')!.isValid()).toEqual(false);
-      expect(adapter.parse('1/2/2017', 'MM/DD/YYYY')!.isValid()).toEqual(false);
-      expect(adapter.parse('Jan 5, 2017', 'MMMM D, YYYY')!.isValid()).toEqual(false);
+      expect(adapter.parse('2017-01-01', 'MM/DD/YYYY')!.isValid()).toBe(false);
+      expect(adapter.parse('1/2/2017', 'MM/DD/YYYY')!.isValid()).toBe(false);
+      expect(adapter.parse('Jan 5, 2017', 'MMMM D, YYYY')!.isValid()).toBe(false);
     });
 
   });
