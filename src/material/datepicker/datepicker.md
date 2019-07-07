@@ -265,7 +265,7 @@ the `MAT_MOMENT_DATE_ADAPTER_OPTIONS` and setting it to `strict: true`.
 @NgModule({
   imports: [MatDatepickerModule, MatMomentDateModule],
   providers: [
-    { provide: MAT_MOMENT_DATE_ADAPTER_OPTIONS, useValue: { strict: true } }
+    {provide: MAT_MOMENT_DATE_ADAPTER_OPTIONS, useValue: {strict: true}}
   ]
 })
 ```
