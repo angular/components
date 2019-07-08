@@ -1,22 +1,22 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-tunnelTmpDir="/tmp/material-saucelabs"
-tunnelReadyFile="${tunnelTmpDir}/readyfile"
+# Disable printing of any executed command because this would cause a lot
+# of spam due to the loop.
+set +x -u -e -o pipefail
 
-WAIT_DELAY=120
+# Waits for Saucelabs Connect to be ready before executing any tests.
+counter=0
 
-# Wait for Saucelabs Connect to be ready before exiting
-# Time out if we wait for more than 2 minutes, so the process won't run forever.
-let "counter=0"
-
-while [ ! -f ${tunnelReadyFile} ]; do
-  let "counter++"
+while [[ ! -f ${SAUCE_READY_FILE} ]]; do
+  counter=$((counter + 1))
 
   # Counter needs to be multiplied by two because the while loop only sleeps a half second.
   # This has been made in favor of better progress logging (printing dots every half second)
-  if [ $counter -gt $[${WAIT_DELAY} * 2] ]; then
+  if [ $counter -gt $[${SAUCE_READY_FILE_TIMEOUT} * 2] ]; then
+    echo "Timed out after ${SAUCE_READY_FILE_TIMEOUT} seconds waiting for tunnel ready file."
+    echo "Printing logfile output:"
     echo ""
-    echo "Timed out after 2 minutes waiting for tunnel ready file"
+    cat ${SAUCE_LOG_FILE}
     exit 5
   fi
 

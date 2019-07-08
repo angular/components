@@ -114,3 +114,14 @@ try-import .bazelrc.user
 build --incompatible_new_actions_api=false
 build --incompatible_depset_is_not_iterable=false
 build --incompatible_no_support_tools_in_action_inputs=false
+
+
+################################
+# --config=saucelabs           #
+################################
+test:saucelabs --action_env=SAUCE_USERNAME
+test:saucelabs --action_env=SAUCE_ACCESS_KEY
+test:saucelabs --action_env=SAUCE_READY_FILE
+test:saucelabs --action_env=SAUCE_PID_FILE
+test:saucelabs --action_env=SAUCE_TUNNEL_IDENTIFIER
+test:saucelabs --define=KARMA_WEB_TEST_MODE=SL_REQUIRED

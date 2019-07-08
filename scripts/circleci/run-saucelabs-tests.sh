@@ -19,7 +19,7 @@ export SAUCE_ACCESS_KEY=`echo ${SAUCE_ACCESS_KEY} | rev`
 export TEST_PLATFORM="saucelabs"
 
 # Run the unit tests on Saucelabs with Karma.
-yarn gulp ci:test
+yarn bazel test src/... --build_tag_filters=-e2e,unit --test_tag_filters=-e2e,unit
 
 # Kill the Saucelabs tunnel. This is necessary in order to avoid rate-limit
 # errors that cause the unit tests to be flaky.

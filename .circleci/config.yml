@@ -123,6 +123,13 @@ var_17: &setup_bazel_binary
     name: "Setting up global Bazel binary"
     command: ./scripts/circleci/setup_bazel_binary.sh
 
+var_18: &init_environment
+  run:
+    name: Initializing environment (setting up variables, overwriting Yarn)
+    # Overwrite the yarn installed in the docker container with our own version.
+    command: |
+      ./.circleci/env.sh
+
 # -----------------------------
 # Container version of CircleCI
 # -----------------------------
@@ -238,18 +245,35 @@ jobs:
     <<: *job_defaults
     resource_class: xlarge
     environment:
-      SAUCE_USERNAME: "angular-ci"
+      GCP_DECRYPT_TOKEN: *gcp_decrypt_token
       SAUCE_ACCESS_KEY: "9b988f434ff8-fbca-8aa4-4ae3-35442987"
-      # Note: This number should not be too high because otherwise we might run into
-      # a rate limit exception.
-      KARMA_PARALLEL_BROWSERS: 2
     steps:
-    - *checkout_code
-    - *restore_cache
-    - *yarn_download
-    - *yarn_install
+      - *checkout_code
+      - *restore_cache
+      - *init_environment
+      - *yarn_download
+      - *yarn_install
+      - *setup_bazel_binary
+      - *setup_bazel_ci_config
+      - *setup_bazel_remote_execution
 
-    - run: ./scripts/circleci/run-saucelabs-tests.sh
+      - run:
+          name: Preparing environment for running tests on Saucelabs.
+          command: setSecretVar SAUCE_ACCESS_KEY $(echo $SAUCE_ACCESS_KEY | rev)
+      - run:
+          name: Starting Saucelabs tunnel
+          command: ./scripts/saucelabs/start-tunnel.sh
+          background: true
+      - run:
+          name: Waiting for Saucelabs tunnel to start up
+          command: ./scripts/saucelabs/wait-tunnel.sh
+      - run: 
+          name: Running tests on Saucelabs
+          command: yarn bazel test src/... --build_tag_filters=-e2e,unit --test_tag_filters=-e2e,unit --config=saucelabs
+      - run:
+          name: Stop Saucelabs tunnel
+          command: ./scripts/saucelabs/stop-tunnel.sh
+
 
   # -----------------------------------------------------------------------------------------
   # Job that builds the dev-app with AOT. In order to speed up this job, the release output
@@ -465,67 +489,72 @@ jobs:
 # ----------------------------------------------------------------------------------------
 workflows:
   version: 2
-
-  bazel_targets:
+  
+  test_target:
     jobs:
-      - bazel_build:
-          filters: *ignore_presubmit_branch_filter
-      - ivy_test:
-          filters: *ignore_presubmit_branch_filter
-      - api_golden_checks:
-          filters: *ignore_presubmit_branch_filter
-      - tests_local_browsers:
-          filters: *ignore_presubmit_branch_filter
-
-  unit_tests:
-    jobs:
-      - tests_browserstack:
-          filters: *ignore_presubmit_branch_filter
       - tests_saucelabs:
           filters: *ignore_presubmit_branch_filter
 
-  integration_tests:
-    jobs:
-      - e2e_tests:
-          filters: *ignore_presubmit_branch_filter
-      - prerender_build:
-          filters: *ignore_presubmit_branch_filter
-
-  release_output:
-    jobs:
-      - build_release_packages:
-          filters: *ignore_presubmit_branch_filter
-      - build_devapp_aot:
-          filters: *ignore_presubmit_branch_filter
-          requires:
-            - build_release_packages
-      - publish_snapshots:
-          filters: *publish_branches_filter
-          requires:
-            - build_release_packages
-
-  # Lint workflow. As we want to lint in one job, this is a workflow with just one job.
-  lint:
-    jobs:
-      - lint:
-          filters: *ignore_presubmit_branch_filter
-
-  # Snapshot tests workflow that is scheduled to run all specified jobs every hour.
-  # This workflow runs various jobs against the Angular snapshot builds from Github.
-  snapshot_tests:
-    jobs:
-      # Note that we need additional jobs for the cronjob snapshot tests because there
-      # is no easy way to detect whether a job runs inside of a cronjob or specific
-      # workflow. See: https://circleci.com/ideas/?idea=CCI-I-295
-      - snapshot_tests_local_browsers
-      - ivy_snapshot_test_cronjob
-    triggers:
-      - schedule:
-          cron: "0 * * * *"
-          filters:
-            branches:
-              only:
-                # We only want to run the "master" branch against the snapshot builds because
-                # it's not guaranteed that older versions of Angular Material always work
-                # with the latest Angular version.
-                - master
+  # bazel_targets:
+  #   jobs:
+  #     - bazel_build:
+  #         filters: *ignore_presubmit_branch_filter
+  #     - ivy_test:
+  #         filters: *ignore_presubmit_branch_filter
+  #     - api_golden_checks:
+  #         filters: *ignore_presubmit_branch_filter
+  #     - tests_local_browsers:
+  #         filters: *ignore_presubmit_branch_filter
+# 
+  # unit_tests:
+  #   jobs:
+  #     - tests_browserstack:
+  #         filters: *ignore_presubmit_branch_filter
+  #     - tests_saucelabs:
+  #         filters: *ignore_presubmit_branch_filter
+# 
+  # integration_tests:
+  #   jobs:
+  #     - e2e_tests:
+  #         filters: *ignore_presubmit_branch_filter
+  #     - prerender_build:
+  #         filters: *ignore_presubmit_branch_filter
+# 
+  # release_output:
+  #   jobs:
+  #     - build_release_packages:
+  #         filters: *ignore_presubmit_branch_filter
+  #     - build_devapp_aot:
+  #         filters: *ignore_presubmit_branch_filter
+  #         requires:
+  #           - build_release_packages
+  #     - publish_snapshots:
+  #         filters: *publish_branches_filter
+  #         requires:
+  #           - build_release_packages
+# 
+  # # Lint workflow. As we want to lint in one job, this is a workflow with just one job.
+  # lint:
+  #   jobs:
+  #     - lint:
+  #         filters: *ignore_presubmit_branch_filter
+# 
+  # # Snapshot tests workflow that is scheduled to run all specified jobs every hour.
+  # # This workflow runs various jobs against the Angular snapshot builds from Github.
+  # snapshot_tests:
+  #   jobs:
+  #     # Note that we need additional jobs for the cronjob snapshot tests because there
+  #     # is no easy way to detect whether a job runs inside of a cronjob or specific
+  #     # workflow. See: https://circleci.com/ideas/?idea=CCI-I-295
+  #     - snapshot_tests_local_browsers
+  #     - ivy_snapshot_test_cronjob
+  #   triggers:
+  #     - schedule:
+  #         cron: "0 * * * *"
+  #         filters:
+  #           branches:
+  #             only:
+  #               # We only want to run the "master" branch against the snapshot builds because
+  #               # it's not guaranteed that older versions of Angular Material always work
+  #               # with the latest Angular version.
+  #               - master

@@ -140,6 +140,7 @@
     "rollup-plugin-alias": "^1.4.0",
     "rollup-plugin-node-resolve": "^3.0.3",
     "run-sequence": "^1.2.2",
+    "sauce-connect": "https://saucelabs.com/downloads/sc-4.5.1-linux.tar.gz",
     "scss-bundle": "^2.0.1-beta.7",
     "selenium-webdriver": "^3.6.0",
     "sorcery": "^0.10.0",
