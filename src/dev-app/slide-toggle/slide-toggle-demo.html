@@ -3,6 +3,7 @@
   <mat-slide-toggle color="primary" [(ngModel)]="firstToggle">
     Default Slide Toggle
   </mat-slide-toggle>
+  <p>Default Slide Toggle: <em>{{firstToggle}}</em></p>
 
   <mat-slide-toggle [(ngModel)]="firstToggle" disabled>
     Disabled Slide Toggle
@@ -11,6 +12,11 @@
   <mat-slide-toggle [disabled]="firstToggle">
     Disable Bound
   </mat-slide-toggle>
+  
+  <mat-slide-toggle color="primary" [(ngModel)]="secondToggle" [trueValue]="customTrueValue" [falseValue]="customFalseValue">
+    Slide Toggle with Value
+  </mat-slide-toggle>
+  <p>Slide Toggle with Value: <em>{{secondToggle}}</em></p>
 
   <p>Example where the slide toggle is required inside of a form.</p>
 

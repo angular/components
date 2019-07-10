@@ -61,7 +61,10 @@ export class MatSlideToggleChange {
     /** The source MatSlideToggle of the event. */
     public source: MatSlideToggle,
     /** The new `checked` value of the MatSlideToggle. */
-    public checked: boolean) { }
+    public checked: boolean,
+    /** The new alias `value` of the MatSlideToggle. */
+    public value: any
+  ) { }
 }
 
 // Boilerplate for applying mixins to MatSlideToggle.
@@ -157,6 +160,11 @@ export class MatSlideToggle extends _MatSlideToggleMixinBase implements OnDestro
     this._checked = coerceBooleanProperty(value);
     this._changeDetectorRef.markForCheck();
   }
+
+  /** Values to override default true/false outputs */
+  @Input() trueValue: any = true;
+  @Input() falseValue: any = false;
+
   /** An event will be dispatched each time the slide-toggle changes its value. */
   @Output() readonly change: EventEmitter<MatSlideToggleChange> =
       new EventEmitter<MatSlideToggleChange>();
@@ -257,7 +265,13 @@ export class MatSlideToggle extends _MatSlideToggleMixinBase implements OnDestro
 
   /** Implemented as part of ControlValueAccessor. */
   writeValue(value: any): void {
-    this.checked = !!value;
+    if (value === this.trueValue) {
+      this.checked = true;
+    } else if (value === this.falseValue) {
+      this.checked = false;
+    } else {
+      this.checked = !!value;
+    }
   }
 
   /** Implemented as part of ControlValueAccessor. */
@@ -281,18 +295,24 @@ export class MatSlideToggle extends _MatSlideToggleMixinBase implements OnDestro
     this._focusMonitor.focusVia(this._inputElement, 'keyboard');
   }
 
+  /** Computes checked value based on selection. Defaults to true/false */
+  private getCheckedValue(): any {
+    return this.checked ? this.trueValue : this.falseValue;
+  }
+
   /** Toggles the checked state of the slide-toggle. */
   toggle(): void {
     this.checked = !this.checked;
-    this._onChange(this.checked);
+    this._onChange(this.getCheckedValue());
   }
 
   /**
    * Emits a change event on the `change` output. Also notifies the FormControl about the change.
    */
   private _emitChangeEvent() {
-    this._onChange(this.checked);
-    this.change.emit(new MatSlideToggleChange(this, this.checked));
+    const outputValue = this.getCheckedValue();
+    this._onChange(outputValue);
+    this.change.emit(new MatSlideToggleChange(this, this.checked, outputValue));
   }
 
   /** Retrieves the percentage of thumb from the moved distance. Percentage as fraction of 100. */
