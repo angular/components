@@ -5,7 +5,7 @@
 @import '../../cdk/a11y/a11y';
 
 .mat-button, .mat-icon-button {
-  .mat-button-focus-overlay {
+  &::before {
     opacity: 0;
   }
 }
@@ -14,7 +14,7 @@
 // Use the same visual treatment for hover as for focus.
 .mat-button:hover,
 .mat-stroked-button:hover {
-  .mat-button-focus-overlay {
+  &::before {
     opacity: 0.04;
   }
 }
@@ -25,7 +25,7 @@
 @media (hover: none) {
   .mat-button:hover,
   .mat-stroked-button:hover {
-    .mat-button-focus-overlay {
+    &::before {
       opacity: 0;
     }
   }
@@ -39,26 +39,6 @@
 
 .mat-raised-button {
   @include mat-raised-button;
-}
-
-.mat-stroked-button {
-  border: $mat-stroked-button-border-width solid currentColor;
-  padding: $mat-stroked-button-padding;
-  line-height: $mat-stroked-button-line-height;
-
-  // Since the stroked button has has an actual border that reduces the available space for
-  // child elements such as the ripple container or focus overlay, an inherited border radius
-  // for the absolute-positioned child elements does not work properly. This is because the
-  // child element cannot expand to the same boundaries as the parent element with a border.
-  // In order to work around this issue by *not* hiding overflow, we adjust the child elements
-  // to fully cover the actual button element. This means that the border-radius would be correct
-  // then. See: https://github.com/angular/components/issues/13738
-  .mat-button-ripple.mat-ripple, .mat-button-focus-overlay {
-    top: -$mat-stroked-button-border-width;
-    left: -$mat-stroked-button-border-width;
-    right: -$mat-stroked-button-border-width;
-    bottom: -$mat-stroked-button-border-width;
-  }
 }
 
 .mat-fab {
@@ -91,7 +71,7 @@
 // Increase specificity for the ripple container because ripple styles are part of
 // the `mat-core` mixin and can potentially overwrite the absolute position of the container.
 .mat-button-ripple.mat-ripple,
-.mat-button-focus-overlay {
+.mat-button-base::before {
   @include mat-fill;
 
   // Disable pointer events for the ripple container and focus overlay because the container
@@ -112,10 +92,17 @@
   transform: translateZ(0);
 }
 
+.mat-button-wrapper {
+  // Bump the `z-index` so the focus overlay and ripples go behind the content.
+  z-index: 1;
+  position: relative;
+}
+
 // Element that overlays the button to show focus and hover effects.
-.mat-button-focus-overlay {
+.mat-button-base::before {
   opacity: 0;
   transition: $mat-button-focus-transition;
+  content: '';
 
   ._mat-animation-noopable & {
     transition: none;
@@ -142,6 +129,29 @@
   // z-index needed to make clipping to border-radius work correctly.
   // http://stackoverflow.com/questions/20001515/
   z-index: 1;
+}
+
+// Note that this needs to be after initial declarations for `.mat-button-ripple` and
+// `.mat-button-base::before` so that we can override the top/left/right/bottom without
+// having to bump the specificity.
+.mat-stroked-button {
+  border: $mat-stroked-button-border-width solid currentColor;
+  padding: $mat-stroked-button-padding;
+  line-height: $mat-stroked-button-line-height;
+
+  // Since the stroked button has has an actual border that reduces the available space for
+  // child elements such as the ripple container or focus overlay, an inherited border radius
+  // for the absolute-positioned child elements does not work properly. This is because the
+  // child element cannot expand to the same boundaries as the parent element with a border.
+  // In order to work around this issue by *not* hiding overflow, we adjust the child elements
+  // to fully cover the actual button element. This means that the border-radius would be correct
+  // then. See: https://github.com/angular/components/issues/13738
+  .mat-button-ripple.mat-ripple, &::before {
+    top: -$mat-stroked-button-border-width;
+    left: -$mat-stroked-button-border-width;
+    right: -$mat-stroked-button-border-width;
+    bottom: -$mat-stroked-button-border-width;
+  }
 }
 
 // Elements inside of all type of buttons should be vertical aligned in the middle.

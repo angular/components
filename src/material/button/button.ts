@@ -94,6 +94,11 @@ export class MatButton extends _MatButtonMixinBase
               @Optional() @Inject(ANIMATION_MODULE_TYPE) public _animationMode: string) {
     super(elementRef);
 
+    // Add a class that applies to all buttons. This makes it easier to target if somebody
+    // wants to target all Material buttons. We do it here rather than `host` to ensure that
+    // the class is applied to derived classes.
+    elementRef.nativeElement.classList.add('mat-button-base');
+
     // For each of the variant selectors that is prevent in the button's host
     // attributes, add the correct corresponding class.
     for (const attr of BUTTON_HOST_ATTRIBUTES) {

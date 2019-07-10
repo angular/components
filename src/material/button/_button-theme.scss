@@ -10,19 +10,19 @@ $_mat-button-ripple-opacity: 0.1;
   $accent: map-get($theme, accent);
   $warn: map-get($theme, warn);
 
-  &.mat-primary .mat-button-focus-overlay {
+  &.mat-primary::before {
     background-color: mat-color($primary);
   }
 
-  &.mat-accent .mat-button-focus-overlay {
+  &.mat-accent::before {
     background-color: mat-color($accent);
   }
 
-  &.mat-warn .mat-button-focus-overlay {
+  &.mat-warn::before {
     background-color: mat-color($warn);
   }
 
-  &[disabled] .mat-button-focus-overlay {
+  &[disabled]::before {
     background-color: transparent;
   }
 }
@@ -98,7 +98,7 @@ $_mat-button-ripple-opacity: 0.1;
     }
   }
 
-  .mat-button-focus-overlay {
+  .mat-button-base::before {
     background: map_get($foreground, base);
   }
 
