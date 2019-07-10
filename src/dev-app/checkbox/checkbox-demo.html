@@ -7,7 +7,9 @@
                 (change)="isIndeterminate = false"
                 [indeterminate]="isIndeterminate"
                 [disabled]="isDisabled"
-                [labelPosition]="labelPosition">
+                [labelPosition]="labelPosition"
+                [trueValue]="customTrueValue"
+                [falseValue]="customFalseValue">
     Do you want to <em>foobar</em> the <em>bazquux</em>?
 
   </mat-checkbox> - <strong>{{printResult()}}</strong>

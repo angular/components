@@ -93,8 +93,11 @@ export class MatCheckboxDemoNestedChecklist {
   styleUrls: ['checkbox-demo.css'],
 })
 export class CheckboxDemo {
+
+  customTrueValue: string = 'Yes!!';
+  customFalseValue: string = 'No!!';
   isIndeterminate: boolean = false;
-  isChecked: boolean = false;
+  isChecked: string = this.customTrueValue;
   isDisabled: boolean = false;
   labelPosition: string = 'after';
   useAlternativeColor: boolean = false;
@@ -117,7 +120,7 @@ export class CheckboxDemo {
     if (this.isIndeterminate) {
       return 'Maybe!';
     }
-    return this.isChecked ? 'Yes!' : 'No!';
+    return this.isChecked;
   }
 
   checkboxColor() {

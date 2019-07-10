@@ -77,10 +77,14 @@ export enum TransitionCheckState {
 
 /** Change event object emitted by MatCheckbox. */
 export class MatCheckboxChange {
-  /** The source MatCheckbox of the event. */
-  source: MatCheckbox;
-  /** The new `checked` value of the checkbox. */
-  checked: boolean;
+  constructor(
+    /** The source MatCheckbox of the event. */
+    public source: MatCheckbox,
+    /** The new `checked` value of the checkbox. */
+    public checked: boolean,
+    /** The new alias `value` of the MatSlideToggle. */
+    public value: any
+  ) { }
 }
 
 // Boilerplate for applying mixins to MatCheckbox.
@@ -169,6 +173,10 @@ export class MatCheckbox extends _MatCheckboxMixinBase implements ControlValueAc
 
   /** The value attribute of the native input element */
   @Input() value: string;
+
+  /** Values to override default true/false outputs */
+  @Input() trueValue: any = true;
+  @Input() falseValue: any = false;
 
   /** The native `<input type="checkbox">` element */
   @ViewChild('input', {static: false}) _inputElement: ElementRef<HTMLInputElement>;
@@ -291,7 +299,13 @@ export class MatCheckbox extends _MatCheckboxMixinBase implements ControlValueAc
 
   // Implemented as part of ControlValueAccessor.
   writeValue(value: any) {
-    this.checked = !!value;
+    if (value === this.trueValue) {
+      this.checked = true;
+    } else if (value === this.falseValue) {
+      this.checked = false;
+    } else {
+      this.checked = !!value;
+    }
   }
 
   // Implemented as part of ControlValueAccessor.
@@ -342,13 +356,15 @@ export class MatCheckbox extends _MatCheckboxMixinBase implements ControlValueAc
     }
   }
 
-  private _emitChangeEvent() {
-    const event = new MatCheckboxChange();
-    event.source = this;
-    event.checked = this.checked;
+  /** Computes checked value based on selection. Defaults to true/false */
+  private getCheckedValue(): any {
+    return this.checked ? this.trueValue : this.falseValue;
+  }
 
-    this._controlValueAccessorChangeFn(this.checked);
-    this.change.emit(event);
+  private _emitChangeEvent() {
+    const outputValue = this.getCheckedValue();
+    this._controlValueAccessorChangeFn(outputValue);
+    this.change.emit(new MatCheckboxChange(this, this.checked, outputValue));
   }
 
   /** Toggles the `checked` state of the checkbox. */
