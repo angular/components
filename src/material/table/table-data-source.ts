@@ -150,14 +150,14 @@ export class MatTableDataSource<T> extends DataSource<T> {
       let comparatorResult = 0;
       if (valueA != null && valueB != null) {
         // if both values are numbers
-        if (typeof valueA === "number" && typeof valueB === "number") {
+        if (typeof valueA === 'number' && typeof valueB === 'number') {
           comparatorResult = valueA - valueB;
           // if both values are string
-        } else if (typeof valueA === "string" && typeof valueB === "string") {
+        } else if (typeof valueA === 'string' && typeof valueB === 'string') {
           comparatorResult = valueA > valueB ? 1 : -1;
         } else {
           // if we compare string with number than number must go first
-          comparatorResult = typeof valueA === "string" ? 1 : -1;
+          comparatorResult = typeof valueA === 'string' ? 1 : -1;
         }
       } else if (valueA != null) {
         comparatorResult = 1;
@@ -186,7 +186,7 @@ export class MatTableDataSource<T> extends DataSource<T> {
       // This avoids matches where the values of two columns combined will match the user's query
       // (e.g. `Flute` and `Stop` will match `Test`). The character is intended to be something
       // that has a very low chance of being typed in by somebody in a text field. This one in
-      // particular is "White up-pointing triangle with dot" from
+      // particular is 'White up-pointing triangle with dot' from
       // https://en.wikipedia.org/wiki/List_of_Unicode_characters
       return currentTerm + (data as {[key: string]: any})[key] + '◬';
     }, '').toLowerCase();
