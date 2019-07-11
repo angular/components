@@ -149,11 +149,15 @@ export class MatTableDataSource<T> extends DataSource<T> {
       // If neither value exists, return 0 (equal).
       let comparatorResult = 0;
       if (valueA != null && valueB != null) {
-        // Check if one value is greater than the other; if equal, comparatorResult should remain 0.
-        if (valueA > valueB) {
-          comparatorResult = 1;
-        } else if (valueA < valueB) {
-          comparatorResult = -1;
+        // if both values are numbers
+        if (typeof valueA === "number" && typeof valueB === "number") {
+          comparatorResult = valueA - valueB;
+          // if both values are string
+        } else if (typeof valueA === "string" && typeof valueB === "string") {
+          comparatorResult = valueA > valueB ? 1 : -1;
+        } else {
+          // if we compare string with number than number must go first
+          comparatorResult = typeof valueA === "string" ? 1 : -1;
         }
       } else if (valueA != null) {
         comparatorResult = 1;
