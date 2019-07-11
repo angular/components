@@ -48,17 +48,17 @@
     "@angular-devkit/core" "8.0.3"
     rxjs "6.4.0"
 
-"@angular/animations@^8.1.0":
-  version "8.1.0"
-  resolved "https://registry.yarnpkg.com/@angular/animations/-/animations-8.1.0.tgz#acc6716df47599e48c715c7ec24dfc1e340256e2"
-  integrity sha512-v1paXrWQGsD+E4QBpwNUZ8dPj8hEn0b2kDVzYX6l/e9flUX6W2BWYx+BRuC4QBnNtTV9jiGsHT8FmQq/WztgWw==
+"@angular/animations@^8.0.1":
+  version "8.1.1"
+  resolved "https://registry.yarnpkg.com/@angular/animations/-/animations-8.1.1.tgz#ee8222d700db5d56e78dfd2b9d26efc70102964d"
+  integrity sha512-9P9Yyf2/IUMs0MR4CfthBaMdizbTh8dDSLJHhMw1PjxPQ3c6mn74uY46NyxcJnCxII9oA2pnnV/O+10JFUFKMw==
   dependencies:
     tslib "^1.9.0"
 
-"@angular/bazel@^8.1.0":
-  version "8.1.0"
-  resolved "https://registry.yarnpkg.com/@angular/bazel/-/bazel-8.1.0.tgz#d55dee70b01321056c0edb68526cda11f9437794"
-  integrity sha512-beDgRtyUBFqbWGHjQZwLA2rB0y+7RxKaHi1rKYk543OA+zM3iEnEpSH8/vKoX4zE94wmZBzXXUTmKjIiNcg7YQ==
+"@angular/bazel@^8.0.1":
+  version "8.1.1"
+  resolved "https://registry.yarnpkg.com/@angular/bazel/-/bazel-8.1.1.tgz#d4bbd4f312626953daf3262681cad5417dfa2b89"
+  integrity sha512-16sDRUuKMWR1HfOZy5nPQegUv34uk6aee7yCQ184BwZNOcWJYBGxhIX/mLS1qd9m9MeM9Bb6SR+jQBfjqz/ssQ==
   dependencies:
     "@angular-devkit/architect" "^0.800.0-beta.15"
     "@angular-devkit/core" "^8.0.0-beta.15"
@@ -70,17 +70,17 @@
     shelljs "0.8.2"
     tsickle "^0.35.0"
 
-"@angular/common@^8.1.0":
-  version "8.1.0"
-  resolved "https://registry.yarnpkg.com/@angular/common/-/common-8.1.0.tgz#aeb34e52e7f808e49d045eee36b97c802152c8fb"
-  integrity sha512-m5oEBPSy5nE+4SZTu3XchJhKT/u73NnJIS3+41xRsF5aX/1p8uNHkhJR7kcJmlVa7BZNr4byl8bGsYjX0CCpVg==
+"@angular/common@^8.0.1":
+  version "8.1.1"
+  resolved "https://registry.yarnpkg.com/@angular/common/-/common-8.1.1.tgz#8094ed2cd4f2cdeb5d074ab7e67fb2411138251b"
+  integrity sha512-kgLtexfPhAyNFlwJHKBkpwKyt/19pfULIJWJpUahFqXdYE3LkRNMJQqgfz7DCNpAQxG7B6u4ocq1j2Hx206kxw==
   dependencies:
     tslib "^1.9.0"
 
-"@angular/compiler-cli@^8.1.0":
-  version "8.1.0"
-  resolved "https://registry.yarnpkg.com/@angular/compiler-cli/-/compiler-cli-8.1.0.tgz#a42376cc42d34d04a9d7f1238b5d7ef535a218f6"
-  integrity sha512-WqEWjUTkvkp4rYDwYKo9XVXK1sbUHihwiZDOZrBEiGdw08TvZ+3qZs/mnYwRUYCzoN99RVG5rxJDg8Sf2VTY+w==
+"@angular/compiler-cli@^8.0.1":
+  version "8.1.1"
+  resolved "https://registry.yarnpkg.com/@angular/compiler-cli/-/compiler-cli-8.1.1.tgz#46fc72a0e62632ba56626ca8e093fb29dc796c4f"
+  integrity sha512-nGN+AqNgi4qsh+4c2Tmtg7/v/mG62sDkjPttra1pUPI6cJS9Y4bA+PBEIW1UsR5OcD85qvNK4vliw2YdLtaeuw==
   dependencies:
     canonical-path "1.0.0"
     chokidar "^2.1.1"
@@ -94,68 +94,68 @@
     tslib "^1.9.0"
     yargs "13.1.0"
 
-"@angular/compiler@^8.1.0":
-  version "8.1.0"
-  resolved "https://registry.yarnpkg.com/@angular/compiler/-/compiler-8.1.0.tgz#8d94ad49d5388b2f2f0e369233a224f649619be9"
-  integrity sha512-+o4jR7WfqR39zgGk7gwpxZfd2hS3X2qgr17mUCeqQkKj0gh+GYWj7OlSuYXG63OS9S4iLsKQiVUYYgqdNSK5mg==
+"@angular/compiler@^8.0.1":
+  version "8.1.1"
+  resolved "https://registry.yarnpkg.com/@angular/compiler/-/compiler-8.1.1.tgz#0006ff26f69246b811418ed08a71ff6d5b9c6fbc"
+  integrity sha512-wz8Mc45EGax5RKRYYqgXI8lr1d0w+f9BDbHui7b3hQtKM5Mj1QxLXiSOYX0dt3lG4VzrxpO0Xku5tS3D4T1xxQ==
   dependencies:
     tslib "^1.9.0"
 
-"@angular/core@^8.1.0":
-  version "8.1.0"
-  resolved "https://registry.yarnpkg.com/@angular/core/-/core-8.1.0.tgz#68bc170b4c041e3c19b9a17c0fff74b88fb37aae"
-  integrity sha512-GviWJjOu6LJMYNbukdSK35VaXvSrp5LTNd0FbXoBQF+mhVVV/8cG4hTKKjxG1xwWXI5E1t5U4aUKXrKUNJ1sQg==
+"@angular/core@^8.0.1":
+  version "8.1.1"
+  resolved "https://registry.yarnpkg.com/@angular/core/-/core-8.1.1.tgz#888fb879906a46429ddac7163fe25915ce5a7f8f"
+  integrity sha512-B6x8IZeu0Qm2H13leEcNzsx0pGKHMvowziurvDnm7W97MaVrYrgbelNsnly4wNX91FzdBtSVXqbe3jijAD9kjA==
   dependencies:
     tslib "^1.9.0"
 
-"@angular/elements@^8.1.0":
-  version "8.1.0"
-  resolved "https://registry.yarnpkg.com/@angular/elements/-/elements-8.1.0.tgz#cc25c23f7da05eff26639e5116437cbc96347fe1"
-  integrity sha512-aR22xtnmlybL9FCKdiEyuko8AfCFvM7EXa35btjoJqZMsQqOEzi65J7aP6mBA7r9/JIw8854DYJWDtQbiMtY4g==
+"@angular/elements@^8.0.1":
+  version "8.1.1"
+  resolved "https://registry.yarnpkg.com/@angular/elements/-/elements-8.1.1.tgz#8565ac5fb3b58ad8c2141c37ec568763c2a7d2c8"
+  integrity sha512-aWm/WOtrQSSX7gHYQi+T/cmu3UqUWn/GofUt/sxZurCrxsRWLbrw90f+Z5c+AL2ahUqYWndbSRn+DDHE/58OBg==
   dependencies:
     tslib "^1.9.0"
 
-"@angular/forms@^8.1.0":
-  version "8.1.0"
-  resolved "https://registry.yarnpkg.com/@angular/forms/-/forms-8.1.0.tgz#730d5a7b053de8961ea974cb51f72077cc5349b9"
-  integrity sha512-T9BOveIHZp2/jNB1BnyIZiu+a5Vmn+Z3k95mveP5K3hhMO7dNAKI7X0WaSwe9CW+xxME9Zpc4CpsfnPEhDuY3A==
+"@angular/forms@^8.0.1":
+  version "8.1.1"
+  resolved "https://registry.yarnpkg.com/@angular/forms/-/forms-8.1.1.tgz#e71d8967b4b9bf0e67a21bcf953bf1bf4eecd1e5"
+  integrity sha512-jz05UIiIY2Zz/nEveL4Pm9mVCAd5O6JwVDWTHKQ64nKYIN9Nepzgb0ASeOBEZA4qP82KTGJtUm2AN4L7fXN6Pw==
   dependencies:
     tslib "^1.9.0"
 
-"@angular/platform-browser-dynamic@^8.1.0":
-  version "8.1.0"
-  resolved "https://registry.yarnpkg.com/@angular/platform-browser-dynamic/-/platform-browser-dynamic-8.1.0.tgz#407fae89fc7294783b8d27c19c1f96e36a3fdabd"
-  integrity sha512-By9I9hXqg538UzhlYDrF1dW7cDaF2JPjoFCE9jZZQxVRhOdjVoYVuIxIa5qPuGWfmMITO2G9rfMMrDiRHMyEDg==
+"@angular/platform-browser-dynamic@^8.0.1":
+  version "8.1.1"
+  resolved "https://registry.yarnpkg.com/@angular/platform-browser-dynamic/-/platform-browser-dynamic-8.1.1.tgz#f3a932e7f0cd0cdce1522ede5651d57ba324c78a"
+  integrity sha512-yUazvP4IBNgXjbzo+NKmu7lVYrrplAN3HSkgYszXwd9uvWLtk1CtXER5hSJE5ZE3Lawoh7PU5hOfMYbqtdAbwg==
   dependencies:
     tslib "^1.9.0"
 
-"@angular/platform-browser@^8.1.0":
-  version "8.1.0"
-  resolved "https://registry.yarnpkg.com/@angular/platform-browser/-/platform-browser-8.1.0.tgz#186ce714304d2f72c4a3bf50a1607e03c8de6abd"
-  integrity sha512-qH6bH6DSRGvgx5iD7BbufsdeMxhh7lL1zN47LkrLGa8hojF+yxwtdE+go+WJ160ArACyX/FrPmPDSWT20YilUQ==
+"@angular/platform-browser@^8.0.1":
+  version "8.1.1"
+  resolved "https://registry.yarnpkg.com/@angular/platform-browser/-/platform-browser-8.1.1.tgz#36526e524ba3d125c0508beef3a3290d85f7d515"
+  integrity sha512-uP9UIhi9NYTEbfvNj4misBspXkItFopA2pRk083AhHEhOKs79WvMI15w5H5ziIFeH+4UiCvyKrSnPfcjP+Yrvg==
   dependencies:
     tslib "^1.9.0"
 
-"@angular/platform-server@^8.1.0":
-  version "8.1.0"
-  resolved "https://registry.yarnpkg.com/@angular/platform-server/-/platform-server-8.1.0.tgz#e0f9e69cbe87ab8538c5256be748e0718a480718"
-  integrity sha512-bFsbYnbsXl178pOYxppfpTAxGcOaAz1kjTWQr/zVcMOthtu/M08oGXMke2l7Fx4Bt3MM7DXd93Qjebv7N4ECRQ==
+"@angular/platform-server@^8.0.1":
+  version "8.1.1"
+  resolved "https://registry.yarnpkg.com/@angular/platform-server/-/platform-server-8.1.1.tgz#f7b0ca7cf58cb2e9ac97f0a93e12f245fde718f9"
+  integrity sha512-GBadqWCLy1wjl31mWi+H8iR+akZlR3JlSKF1e6CUvL5DQaYLFK0eeXHIQzzAwt7M6o0ZoXxgK8PviFd26xoKWw==
   dependencies:
     domino "^2.1.2"
     tslib "^1.9.0"
     xhr2 "^0.1.4"
 
-"@angular/router@^8.1.0":
-  version "8.1.0"
-  resolved "https://registry.yarnpkg.com/@angular/router/-/router-8.1.0.tgz#e8e0d146a489abcc7b8aed0f9efe10922e467db6"
-  integrity sha512-LeJOmiFdsXVf0KlN/jzA5NgWY1V4Ty5TDcfNd01s/ckZlzZd+p5hFhRFc75qwENTb8UwClTLsYQLmvmphnB4dA==
+"@angular/router@^8.0.1":
+  version "8.1.1"
+  resolved "https://registry.yarnpkg.com/@angular/router/-/router-8.1.1.tgz#05edb0f49dab0bbf896a823cc52fd35de9ea8b85"
+  integrity sha512-UTL/TjokRUd3hdePBrj1ITmBGq+EcVNz3D18lFi96461ZLQeXSbbf3vjQfL6SE53E4+hfKKR7/tOqQOgb5br7A==
   dependencies:
     tslib "^1.9.0"
 
-"@angular/upgrade@^8.1.0":
-  version "8.1.0"
-  resolved "https://registry.yarnpkg.com/@angular/upgrade/-/upgrade-8.1.0.tgz#c27fd7feabc4ec2212927a685251dd1066bf1ab4"
-  integrity sha512-JEdJQDq0kw/5cfewxywW3Yj4P9bkxrjNmKh1uLDtZzrlIjW+r6LRNitdxFJENJN27R35Po2BAVoRlUntNHuQ+Q==
+"@angular/upgrade@^8.0.1":
+  version "8.1.1"
+  resolved "https://registry.yarnpkg.com/@angular/upgrade/-/upgrade-8.1.1.tgz#96335c045e6c4b06ee987049d25fb7cc054ba082"
+  integrity sha512-j+GWIY7DZCxw60lz8frfpuLBCFA7JkLgoDjIwlq52AAcNxmGB3Sev6NWgjHpaqQxEgwJ9XUUjMxv/PMITsipGQ==
   dependencies:
     tslib "^1.9.0"
 
@@ -276,29 +276,29 @@
     lodash "^4.17.11"
     to-fast-properties "^2.0.0"
 
-"@bazel/bazel-darwin_x64@0.26.1":
-  version "0.26.1"
-  resolved "https://registry.yarnpkg.com/@bazel/bazel-darwin_x64/-/bazel-darwin_x64-0.26.1.tgz#1b5c69b635e5c2a8c3090fa5f6bcb45735f06045"
-  integrity sha512-9VjrR+ce+iS9xS1lgeAo1RAPXlxCvez/r3smN1lP4s4YNF0s5LAT0cevIl6Zz2nwyEha/6JvY3v6Euemy36F0w==
+"@bazel/bazel-darwin_x64@0.27.0":
+  version "0.27.0"
+  resolved "https://registry.yarnpkg.com/@bazel/bazel-darwin_x64/-/bazel-darwin_x64-0.27.0.tgz#83a03c92d52ae60e48e86a1ee697e69e12ddbdf6"
+  integrity sha512-CyavIbRKRa/55aMyfEM9hjbt4TVISfv7HLeymHTGTLWzS8uQokQ8W9tR/pgc7YJn8F0x64dd7nQKxhbYHM1Qfg==
 
-"@bazel/bazel-linux_x64@0.26.1":
-  version "0.26.1"
-  resolved "https://registry.yarnpkg.com/@bazel/bazel-linux_x64/-/bazel-linux_x64-0.26.1.tgz#04dd194bdcd6b9d45bd865a9a60c280d0d600251"
-  integrity sha512-oZooDxI1C4p7o18zx2Uns2cK/NN2hgF2YSBKH0aVDPAAxQA85h+g124CWDEbsghOdRMSBM0Hd0SSeIqwZcqLSw==
+"@bazel/bazel-linux_x64@0.27.0":
+  version "0.27.0"
+  resolved "https://registry.yarnpkg.com/@bazel/bazel-linux_x64/-/bazel-linux_x64-0.27.0.tgz#2358292aa4901f526ba9b90874256f63d6d6608c"
+  integrity sha512-hO04v7C6M3Jf+qNlLE+IticZZKkkS7Nv6+pXDnENgFWrqLV2H93un6kNQnk83B0hP2cEqRQ8rw5yrIcqXNNuSQ==
 
-"@bazel/bazel-win32_x64@0.26.1":
-  version "0.26.1"
-  resolved "https://registry.yarnpkg.com/@bazel/bazel-win32_x64/-/bazel-win32_x64-0.26.1.tgz#9351f07313173b1f98006da8131c94db7aa7c506"
-  integrity sha512-0FkOo8+bxw13X2m6ALhXX2241gG9ZXgcLu0E/IbCWy/TmOB5bR0Z73CslszWbXIldVYnANuhFmnkxIa745Du5Q==
+"@bazel/bazel-win32_x64@0.27.0":
+  version "0.27.0"
+  resolved "https://registry.yarnpkg.com/@bazel/bazel-win32_x64/-/bazel-win32_x64-0.27.0.tgz#0e5e498de5ccccc9a6cf481cd46904ee938ab6c2"
+  integrity sha512-7hIGNhdgaxRt9ceSOCs3eSTtCNi4GXz3nu6OjfgSp+QiqLbW/iAVWa8M8vD5aemZ1BSHek4/LISdWUTncLJk+w==
 
-"@bazel/bazel@0.26.1":
-  version "0.26.1"
-  resolved "https://registry.yarnpkg.com/@bazel/bazel/-/bazel-0.26.1.tgz#de5febbd1f4b457aa870fb69492f474850283e5d"
-  integrity sha512-x0IR0KEML4JGG6QpAOpHQHWpMqM1YQjOi8zY1jjLwiRHhC3Y8Tc/Mcspnd6zUnjfs7MerPfppkyx2jaEnZwUuQ==
+"@bazel/bazel@^0.27.0":
+  version "0.27.0"
+  resolved "https://registry.yarnpkg.com/@bazel/bazel/-/bazel-0.27.0.tgz#4e72c8e1cbb4da41022b6de1afe28731f5f58e09"
+  integrity sha512-yIj64IkesNzjHsoeehQUMBOgrCK/JMSuon5CvBqo6+izPXAmt+OW05uqaLL/FPAYAFQ2mHxsYtDsPxsM8DUbqA==
   optionalDependencies:
-    "@bazel/bazel-darwin_x64" "0.26.1"
-    "@bazel/bazel-linux_x64" "0.26.1"
-    "@bazel/bazel-win32_x64" "0.26.1"
+    "@bazel/bazel-darwin_x64" "0.27.0"
+    "@bazel/bazel-linux_x64" "0.27.0"
+    "@bazel/bazel-win32_x64" "0.27.0"
 
 "@bazel/buildifier-darwin_x64@0.25.1":
   version "0.25.1"
@@ -323,6 +323,11 @@
     "@bazel/buildifier-darwin_x64" "0.25.1"
     "@bazel/buildifier-linux_x64" "0.25.1"
     "@bazel/buildifier-win32_x64" "0.25.1"
+
+"@bazel/hide-bazel-files@0.32.2":
+  version "0.32.2"
+  resolved "https://registry.yarnpkg.com/@bazel/hide-bazel-files/-/hide-bazel-files-0.32.2.tgz#a482855eafbccb56b1fce0d92ff922c2c6e0a90c"
+  integrity sha512-585XY53mhMZaCjEQJ+aDqkmydWZbuXsKrZsSpoW9YeAVEH0poQY3YhdyCPmMVBo7/l1mkrqpFuOK5BpECfwdtA==
 
 "@bazel/ibazel@^0.10.3":
   version "0.10.3"
