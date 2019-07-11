@@ -403,7 +403,7 @@ jobs:
       # we use ngcc to apply the ivy switches because ngcc currently does not handle the
       # UMD format which is used by Bazel when running tests. UMD processing is in
       # progress and tracked with FW-85.
-      - run: node ./scripts/circleci/setup-angular-snapshots.js --tag 8.1.0-next.3-ivy-aot+1e7e06542
+      - run: node ./scripts/circleci/setup-angular-snapshots.js --tag 8.1.0-next.3-ivy-aot+3788ebb71
       # Disable type checking when building with Ivy. This is necessary because
       # type checking is not complete yet and can incorrectly break compilation.
       # Issue is tracked with FW-1004.
