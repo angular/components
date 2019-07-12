@@ -357,12 +357,12 @@ export class MatCheckbox extends _MatCheckboxMixinBase implements ControlValueAc
   }
 
   /** Computes checked value based on selection. Defaults to true/false */
-  private getCheckedValue(): any {
+  private _getCheckedValue(): any {
     return this.checked ? this.trueValue : this.falseValue;
   }
 
   private _emitChangeEvent() {
-    const outputValue = this.getCheckedValue();
+    const outputValue = this._getCheckedValue();
     this._controlValueAccessorChangeFn(outputValue);
     this.change.emit(new MatCheckboxChange(this, this.checked, outputValue));
   }

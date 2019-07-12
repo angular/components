@@ -296,21 +296,21 @@ export class MatSlideToggle extends _MatSlideToggleMixinBase implements OnDestro
   }
 
   /** Computes checked value based on selection. Defaults to true/false */
-  private getCheckedValue(): any {
+  private _getCheckedValue(): any {
     return this.checked ? this.trueValue : this.falseValue;
   }
 
   /** Toggles the checked state of the slide-toggle. */
   toggle(): void {
     this.checked = !this.checked;
-    this._onChange(this.getCheckedValue());
+    this._onChange(this._getCheckedValue());
   }
 
   /**
    * Emits a change event on the `change` output. Also notifies the FormControl about the change.
    */
   private _emitChangeEvent() {
-    const outputValue = this.getCheckedValue();
+    const outputValue = this._getCheckedValue();
     this._onChange(outputValue);
     this.change.emit(new MatSlideToggleChange(this, this.checked, outputValue));
   }
