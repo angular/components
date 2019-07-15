@@ -260,6 +260,15 @@ export class MatChip extends _MatChipMixinBase implements AfterContentInit, Afte
     // so they will never be called
     getRootBoundingClientRect: () => this._elementRef.nativeElement.getBoundingClientRect(),
     getCheckmarkBoundingClientRect: () => { return null; },
+    setAttr: (attr, value) => {
+        // MDC is currently using this method to set aria-checked on choice and filter chips,
+        // which in the MDC templates have role="checkbox" and role="radio" respectively.
+        // We have role="option" on those chips instead; as such, we do not want aria-checked.
+        if (attr === 'aria-checked') {
+          return;
+        }
+        this._elementRef.nativeElement.setAttribute(attr, value);
+    },
  };
 
  constructor(
