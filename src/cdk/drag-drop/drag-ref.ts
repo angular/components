@@ -530,6 +530,11 @@ export class DragRef<T = any> {
           return;
         }
 
+        // We need to prevent default here in case the pointer move starts a scroll sequence.
+        // If we do not prevent the scroll from starting, then we won't be able to prevent future
+        // touchemove events.
+        event.preventDefault();
+
         // Prevent other drag sequences from starting while something in the container is still
         // being dragged. This can happen while we're waiting for the drop animation to finish
         // and can cause errors, because some elements might still be moving around.
@@ -600,6 +605,8 @@ export class DragRef<T = any> {
    * @param event Browser event object that ended the sequence.
    */
   private _endDragSequence(event: MouseEvent | TouchEvent) {
+    toggleNativeDragInteractions(this._rootElement, true);
+
     // Note that here we use `isDragging` from the service, rather than from `this`.
     // The difference is that the one from the service reflects whether a dragging sequence
     // has been initiated, whereas the one on `this` includes whether the user has passed
@@ -646,6 +653,8 @@ export class DragRef<T = any> {
 
   /** Starts the dragging sequence. */
   private _startDragSequence(event: MouseEvent | TouchEvent) {
+    this._dragDropRegistry.startDragging(this);
+
     // Emit the event on the item before the one on the container.
     this.started.next({source: this});
 
@@ -742,7 +751,7 @@ export class DragRef<T = any> {
     this._pointerDirectionDelta = {x: 0, y: 0};
     this._pointerPositionAtLastDirectionChange = {x: pointerPosition.x, y: pointerPosition.y};
     this._dragStartTime = Date.now();
-    this._dragDropRegistry.startDragging(this, event);
+    this._dragDropRegistry.initializeDragging(this, event);
   }
 
   /** Cleans up the DOM artifacts that were added to facilitate the element being dragged. */

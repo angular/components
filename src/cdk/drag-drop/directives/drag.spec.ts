@@ -636,6 +636,24 @@ describe('CdkDrag', () => {
       expect(styles.touchAction || (styles as any).webkitUserDrag).toBe('none');
     }));
 
+    it('should reenable native drag interactions after dragging', fakeAsync(() => {
+      const fixture = createComponent(StandaloneDraggable);
+      fixture.detectChanges();
+      const dragElement = fixture.componentInstance.dragElement.nativeElement;
+      const styles = dragElement.style;
+
+      expect(styles.touchAction || (styles as any).webkitUserDrag).toBeFalsy();
+
+      startDraggingViaMouse(fixture, dragElement);
+      dispatchMouseEvent(document, 'mousemove', 50, 100);
+      fixture.detectChanges();
+      expect(styles.touchAction || (styles as any).webkitUserDrag).toBe('none');
+
+      dispatchMouseEvent(document, 'mouseup', 50, 100);
+      fixture.detectChanges();
+      expect(styles.touchAction || (styles as any).webkitUserDrag).toBeFalsy();
+    }));
+
     it('should stop propagation for the drag sequence start event', fakeAsync(() => {
       const fixture = createComponent(StandaloneDraggable);
       fixture.detectChanges();

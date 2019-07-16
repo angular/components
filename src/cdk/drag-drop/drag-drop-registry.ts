@@ -35,8 +35,11 @@ export class DragDropRegistry<I, C extends {id: string}> implements OnDestroy {
   /** Registered drag item instances. */
   private _dragInstances = new Set<I>();
 
+  /** Drag item instances for which a drag sequence has been initialized. */
+  private _initializedDragSequences = new Set<I>();
+
   /** Drag item instances that are currently being dragged. */
-  private _activeDragInstances = new Set<I>();
+  private _startedDragSequences = new Set<I>();
 
   /** Keeps track of the event listeners that we've bound to the `document`. */
   private _globalListeners = new Map<string, {
@@ -114,15 +117,15 @@ export class DragDropRegistry<I, C extends {id: string}> implements OnDestroy {
    * @param drag Drag instance which is being dragged.
    * @param event Event that initiated the dragging.
    */
-  startDragging(drag: I, event: TouchEvent | MouseEvent) {
+  initializeDragging(drag: I, event: TouchEvent | MouseEvent) {
     // Do not process the same drag twice to avoid memory leaks and redundant listeners
-    if (this._activeDragInstances.has(drag)) {
+    if (this._initializedDragSequences.has(drag)) {
       return;
     }
 
-    this._activeDragInstances.add(drag);
+    this._initializedDragSequences.add(drag);
 
-    if (this._activeDragInstances.size === 1) {
+    if (this._initializedDragSequences.size === 1) {
       const isTouchEvent = event.type.startsWith('touch');
       const moveEvent = isTouchEvent ? 'touchmove' : 'mousemove';
       const upEvent = isTouchEvent ? 'touchend' : 'mouseup';
@@ -159,18 +162,28 @@ export class DragDropRegistry<I, C extends {id: string}> implements OnDestroy {
     }
   }
 
+  startDragging(drag: I) {
+    if (this._startedDragSequences.has(drag)) {
+      return;
+    }
+
+    this._startedDragSequences.add(drag);
+  }
+
   /** Stops dragging a drag item instance. */
   stopDragging(drag: I) {
-    this._activeDragInstances.delete(drag);
 
-    if (this._activeDragInstances.size === 0) {
+    this._startedDragSequences.delete(drag);
+    this._initializedDragSequences.delete(drag);
+
+    if (this._initializedDragSequences.size === 0) {
       this._clearGlobalListeners();
     }
   }
 
   /** Gets whether a drag item instance is currently being dragged. */
   isDragging(drag: I) {
-    return this._activeDragInstances.has(drag);
+    return this._initializedDragSequences.has(drag);
   }
 
   /**
@@ -195,7 +208,7 @@ export class DragDropRegistry<I, C extends {id: string}> implements OnDestroy {
    * @param event Event whose default action should be prevented.
    */
   private _preventDefaultWhileDragging = (event: Event) => {
-    if (this._activeDragInstances.size) {
+    if (this._startedDragSequences.size) {
       event.preventDefault();
     }
   }
