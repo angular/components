@@ -16,13 +16,11 @@ import {
 import {
   AfterContentInit,
   Attribute,
-  ContentChildren,
   Directive,
   ElementRef,
   Input,
   IterableDiffers,
   OnDestroy,
-  QueryList,
 } from '@angular/core';
 import {
   CanDisable,
@@ -33,9 +31,7 @@ import {
   mixinTabIndex,
 } from '@angular/material/core';
 
-import {MatTreeNodeOutlet} from './outlet';
-
-export const _MatTreeNodeMixinBase: HasTabIndexCtor & CanDisableCtor & typeof CdkTreeNode =
+const _MatTreeNodeMixinBase: HasTabIndexCtor & CanDisableCtor & typeof CdkTreeNode =
     mixinTabIndex(mixinDisabled(CdkTreeNode));
 
 export const _MatNestedTreeNodeMixinBase:
@@ -105,14 +101,6 @@ export class MatTreeNodeDef<T> extends CdkTreeNodeDef<T> {
 export class MatNestedTreeNode<T> extends _MatNestedTreeNodeMixinBase<T> implements
     AfterContentInit, CanDisable, HasTabIndex, OnDestroy {
   @Input('matNestedTreeNode') node: T;
-
-  /** The children node placeholder. */
-  @ContentChildren(MatTreeNodeOutlet, {
-    // We need to use `descendants: true`, because Ivy will no longer match
-    // indirect descendants if it's left as false.
-    descendants: true
-  })
-  nodeOutlet: QueryList<MatTreeNodeOutlet>;
 
   constructor(protected _elementRef: ElementRef<HTMLElement>,
               protected _tree: CdkTree<T>,
