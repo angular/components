@@ -112,7 +112,7 @@
     "base": "SauceLabs",
     "browserName": "microsoftedge",
     "platform": "Windows 10",
-    "version": "17"
+    "version": "16"
   },
   "SAUCELABS_ANDROID4.1": {
     "base": "SauceLabs",
@@ -243,7 +243,7 @@
   "BROWSERSTACK_EDGE": {
     "base": "BrowserStack",
     "browser": "Edge",
-    "browser_version": "17.0",
+    "browser_version": "16.0",
     "os": "Windows",
     "os_version": "10"
   },
