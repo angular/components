@@ -323,8 +323,8 @@ export class MatDatepickerInput<D> implements ControlValueAccessor, OnDestroy, V
     let date = this._dateAdapter.parse(value, this._dateFormats.parse.dateInput);
     this._lastValueValid = !date || this._dateAdapter.isValid(date);
     date = this._getValidDateOrNull(date);
-
-    if (!this._dateAdapter.sameDate(date, this._value) || document.activeElement === this._elementRef.nativeElement) {
+    let isFocused = document.activeElement === this._elementRef.nativeElement;
+    if (!this._dateAdapter.sameDate(date, this._value) || isFocused) {
       this._value = date;
       this._cvaOnChange(date);
       this._valueChange.emit(date);
