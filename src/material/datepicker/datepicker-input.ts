@@ -324,7 +324,7 @@ export class MatDatepickerInput<D> implements ControlValueAccessor, OnDestroy, V
     this._lastValueValid = !date || this._dateAdapter.isValid(date);
     date = this._getValidDateOrNull(date);
 
-    if (!this._dateAdapter.sameDate(date, this._value)) {
+    if (!this._dateAdapter.sameDate(date, this._value) || document.activeElement === this._elementRef.nativeElement) {
       this._value = date;
       this._cvaOnChange(date);
       this._valueChange.emit(date);
