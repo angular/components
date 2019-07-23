@@ -111,17 +111,17 @@
   dependencies:
     tslib "^1.9.0"
 
-"@angular/cdk-experimental@^8.0.0":
-  version "8.0.0"
-  resolved "https://registry.yarnpkg.com/@angular/cdk-experimental/-/cdk-experimental-8.0.0.tgz#51b2077dbe9a24a9822b16913ddc031e5926beaa"
-  integrity sha512-omrSszoeBGoqN6/wugS/lom0Yn8CXZpF8RzeaAgAdSErc2dav26Ae2m0sbLkD3+3G7QjBc0Iidas81Fk7Fs+UA==
+"@angular/cdk-experimental@^8.1.1":
+  version "8.1.1"
+  resolved "https://registry.yarnpkg.com/@angular/cdk-experimental/-/cdk-experimental-8.1.1.tgz#b446bc2facfdabb779f7db81950fa06ed4bee163"
+  integrity sha512-nCfQAh6Kwviru+yELlz/43mZjw6ShRc19jRTBOAAQL9iiXs8LHCoQr8SWiURessWgyqICyev30tWExDe8jg0pw==
   dependencies:
     tslib "^1.7.1"
 
-"@angular/cdk@^8.0.0":
-  version "8.0.0"
-  resolved "https://registry.yarnpkg.com/@angular/cdk/-/cdk-8.0.0.tgz#34ca95e71d71780b29b5ba07318c88c4577bdc25"
-  integrity sha512-2vsRWEHNARe0iRmqgzvM67gwfRy+aKvdef4Qu9L+ndSsTrrZT3tSgG8SMn1v9SfBHnx5G8mo4d1AMquXG69AuQ==
+"@angular/cdk@^8.1.1":
+  version "8.1.1"
+  resolved "https://registry.yarnpkg.com/@angular/cdk/-/cdk-8.1.1.tgz#11b11bbab7316b3fa1f9eb380211bfde0a335cc7"
+  integrity sha512-5hBmhrHf9+WjGVIT8gbhT0Nh37BAjgI2TGRkt1o4qX8cG+1B6gU2MxM+CDJ7PhxSJi9lW93lq2AMuWwnRSllyg==
   dependencies:
     tslib "^1.7.1"
   optionalDependencies:
@@ -201,24 +201,24 @@
   dependencies:
     tslib "^1.7.1"
 
-"@angular/material-experimental@^8.0.0":
-  version "8.0.0"
-  resolved "https://registry.yarnpkg.com/@angular/material-experimental/-/material-experimental-8.0.0.tgz#955f2bebdb8a961ee50aa1244a5b7bad14a028f6"
-  integrity sha512-XOBokWa/BRIpcRWmz4O99/RLmwsHxqV7FYOODv/czUx1xjMCGDwWKyzVy2yTzAFKzFEq8EwA5gJ8dX41fWwDUQ==
+"@angular/material-experimental@^8.1.1":
+  version "8.1.1"
+  resolved "https://registry.yarnpkg.com/@angular/material-experimental/-/material-experimental-8.1.1.tgz#8a4ae42d1d5ceffa3962f4f4ab6b3b476133ce27"
+  integrity sha512-UP06btrbAlPvBfpQzjDZlSECNYI7kgi0lgjYMPvs6OQNQuGzrCFQ6Y4DWDPBcLEUuMT8TPsFGpE3YvCGjiDvmw==
   dependencies:
     tslib "^1.7.1"
 
-"@angular/material-moment-adapter@^8.0.0":
-  version "8.0.0"
-  resolved "https://registry.yarnpkg.com/@angular/material-moment-adapter/-/material-moment-adapter-8.0.0.tgz#f1304d7475ee69aa171a1544599fbf5248cf0a4c"
-  integrity sha512-OXVqXOfEyhuZK9FegTIg6umkh0bZmHk4wdKTc9h4siyz8eTEm8OJUzQPW7xZjL0e8fhf0h9XPMcFcD71ue8itw==
+"@angular/material-moment-adapter@^8.1.1":
+  version "8.1.1"
+  resolved "https://registry.yarnpkg.com/@angular/material-moment-adapter/-/material-moment-adapter-8.1.1.tgz#1bb42191781ec20f2907f7e3ec2d785af833ea7e"
+  integrity sha512-tptfSOypLX39C2bXNdhrM9L2V5F8swG2dUQrh6Jb0HZUs0qDsXE5Kq+TB31IzG0XLobvViuImQj8TXbcoKyQmw==
   dependencies:
     tslib "^1.7.1"
 
-"@angular/material@^8.0.0":
-  version "8.0.0"
-  resolved "https://registry.yarnpkg.com/@angular/material/-/material-8.0.0.tgz#21dd15c318d1e29eb4d1a2dd888ddb027897eb49"
-  integrity sha512-c7O7GhZd46xF2WB6T/YPam5lJkTgQLdIS53IqwZIFhL427+SEfPvejVzRnVfZCI3NdrKiWt/5VsvtQZwWzlGvw==
+"@angular/material@^8.1.1":
+  version "8.1.1"
+  resolved "https://registry.yarnpkg.com/@angular/material/-/material-8.1.1.tgz#87e105fb657fa6e139ddcbd6b9c373936604f6d7"
+  integrity sha512-45aaxKuLTrthzhAhG2+OY86wafuRBteZcRjDG7rKZ3Cc3KteUp5QwAi+QbhHzs4O3WXLWTAmuLYJelRqRqqw7g==
   dependencies:
     tslib "^1.7.1"
 
