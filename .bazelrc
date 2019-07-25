@@ -27,12 +27,6 @@ query --output=label_kind
 # By default, failing tests don't print any output, it goes to the log file
 test --test_output=errors
 
-# Show which actions are run under workers,
-# and print all the actions running in parallel.
-# Helps to demonstrate that bazel uses all the cores on the machine.
-build --experimental_ui
-test --experimental_ui
-
 #################################
 # Release configuration.        #
 # Run with "--config=release"   #
@@ -58,3 +52,65 @@ build --strategy=AngularTemplateCompile=worker
 # Use the legacy AOT compiler strategy. We don't want to compile with Ivy nor with "ngtsc" which
 # does not generate factory files which are needed for AOT.
 build --define=compile=legacy
+
+################################
+# Remote Execution Setup       #
+################################
+
+# Use the Angular team internal GCP instance for remote execution.
+build:remote --remote_instance_name=projects/internal-200822/instances/default_instance
+build:remote --project_id=internal-200822
+
+# Setup the build strategy for various types of actions. Mixing "local" and "remote"
+# can cause unexpected results and we want to run everything remotely if possible.
+build:remote --spawn_strategy=remote,local
+build:remote --strategy=Javac=remote
+build:remote --strategy=Closure=remote
+build:remote --strategy=Genrule=remote
+build:remote --define=EXECUTOR=remote
+
+# Setup the remote build execution servers.
+build:remote --remote_cache=remotebuildexecution.googleapis.com
+build:remote --remote_executor=remotebuildexecution.googleapis.com
+build:remote --tls_enabled=true
+build:remote --auth_enabled=true
+
+# Setup the toolchain and platform for the remote build execution. The platform
+# is automatically configured by the "rbe_autoconfig" rule in the project workpsace.
+build:remote --crosstool_top=@rbe_default//cc:toolchain
+build:remote --host_javabase=@rbe_default//java:jdk
+build:remote --javabase=@rbe_default//java:jdk
+build:remote --host_java_toolchain=@bazel_tools//tools/jdk:toolchain_hostjdk8
+build:remote --java_toolchain=@bazel_tools//tools/jdk:toolchain_hostjdk8
+build:remote --extra_execution_platforms=//tools:rbe_platform
+build:remote --host_platform=//tools:rbe_platform
+build:remote --platforms=//tools:rbe_platform
+build:remote --extra_toolchains=@rbe_default//config:cc-toolchain
+
+# Setup Build Event Service
+build:remote --bes_backend=buildeventservice.googleapis.com
+build:remote --bes_timeout=30s
+build:remote --bes_results_url="https://source.cloud.google.com/results/invocations/"
+
+# Set remote caching settings
+build:remote --remote_accept_cached=true
+
+################################
+# --config=debug               #
+################################
+
+# Enable debugging tests with --config=debug
+test:debug --test_arg=--node_options=--inspect-brk --test_output=streamed --test_strategy=exclusive --test_timeout=9999 --nocache_test_results
+
+################################
+# Local Environment Setup      #
+#  Needs to be last statement  #
+################################
+# Load any settings which are specific to the current user. Needs to be *last* statement
+# in this config, as the user configuration should be able to overwrite flags from this file.
+try-import .bazelrc.user
+
+# TODO: check if we can enable these deprecations.
+build --incompatible_new_actions_api=false
+build --incompatible_depset_is_not_iterable=false
+build --incompatible_no_support_tools_in_action_inputs=false

@@ -1,14 +1,7 @@
 import {BidiModule, Direction} from '@angular/cdk/bidi';
 import {dispatchFakeEvent} from '@angular/cdk/testing';
 import {Component} from '@angular/core';
-import {
-  ComponentFixture,
-  fakeAsync,
-  flush,
-  flushMicrotasks,
-  TestBed,
-  tick,
-} from '@angular/core/testing';
+import {ComponentFixture, fakeAsync, flushMicrotasks, TestBed, tick} from '@angular/core/testing';
 import {FormControl, FormsModule, NgModel, ReactiveFormsModule} from '@angular/forms';
 import {By} from '@angular/platform-browser';
 import {MatSlideToggle, MatSlideToggleChange, MatSlideToggleModule} from './index';
@@ -481,11 +474,9 @@ describe('MatSlideToggle with forms', () => {
         // fire and not result in a changed after checked exception. Related: #12323
         inputElement.focus();
 
-        // Flush the two nested timeouts from the FocusMonitor that are being created on `focus`.
-        flush();
-
-        slideToggle.disabled = true;
+        fixture.componentInstance.isDisabled = true;
         fixture.detectChanges();
+
         flushMicrotasks();
       }).not.toThrow();
     }));
@@ -496,7 +487,7 @@ describe('MatSlideToggle with forms', () => {
       // The control should start off with being untouched.
       expect(slideToggleModel.touched).toBe(false);
 
-      slideToggle.checked = true;
+      testComponent.isChecked = true;
       fixture.detectChanges();
 
       expect(slideToggleModel.touched).toBe(false);
@@ -659,6 +650,32 @@ describe('MatSlideToggle with forms', () => {
 
       expect(testComponent.isSubmitted).toBe(true);
     });
+
+    it('should have proper invalid state if unchecked', () => {
+      testComponent.isRequired = true;
+      fixture.detectChanges();
+
+      const slideToggleEl = fixture.nativeElement.querySelector('.mat-mdc-slide-toggle');
+
+      expect(slideToggleEl.classList).toContain('ng-invalid');
+      expect(slideToggleEl.classList).not.toContain('ng-valid');
+
+      // The required slide-toggle will be checked and the form control
+      // should become valid.
+      inputElement.click();
+      fixture.detectChanges();
+
+      expect(slideToggleEl.classList).not.toContain('ng-invalid');
+      expect(slideToggleEl.classList).toContain('ng-valid');
+
+      // The required slide-toggle will be unchecked and the form control
+      // should become invalid.
+      inputElement.click();
+      fixture.detectChanges();
+
+      expect(slideToggleEl.classList).toContain('ng-invalid');
+      expect(slideToggleEl.classList).not.toContain('ng-valid');
+    });
   });
 
   describe('with model and change event', () => {
@@ -736,10 +753,13 @@ class SlideToggleWithForm {
 }
 
 @Component({
-  template: `<mat-slide-toggle [(ngModel)]="modelValue"></mat-slide-toggle>`
+  template: `<mat-slide-toggle [(ngModel)]="modelValue" [disabled]="isDisabled"
+                               [checked]="isChecked"></mat-slide-toggle>`
 })
 class SlideToggleWithModel {
   modelValue = false;
+  isChecked = false;
+  isDisabled = false;
 }
 
 @Component({

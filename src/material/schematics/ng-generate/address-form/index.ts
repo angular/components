@@ -21,8 +21,9 @@ import {Schema} from './schema';
 export default function(options: Schema): Rule {
   return chain([
     buildComponent({...options}, {
-      template: './__path__/__name@dasherize@if-flat__/__name@dasherize__.component.html',
-      stylesheet: './__path__/__name@dasherize@if-flat__/__name@dasherize__.component.__style__',
+      template: './__path__/__name@dasherize@if-flat__/__name@dasherize__.component.html.template',
+      stylesheet:
+          './__path__/__name@dasherize@if-flat__/__name@dasherize__.component.__style__.template',
     }),
     options.skipImport ? noop() : addFormModulesToModule(options)
   ]);
@@ -34,11 +35,11 @@ export default function(options: Schema): Rule {
 function addFormModulesToModule(options: Schema) {
   return (host: Tree) => {
     const modulePath = findModuleFromOptions(host, options)!;
-    addModuleImportToModule(host, modulePath, 'MatInputModule', '@angular/material');
-    addModuleImportToModule(host, modulePath, 'MatButtonModule', '@angular/material');
-    addModuleImportToModule(host, modulePath, 'MatSelectModule', '@angular/material');
-    addModuleImportToModule(host, modulePath, 'MatRadioModule', '@angular/material');
-    addModuleImportToModule(host, modulePath, 'MatCardModule', '@angular/material');
+    addModuleImportToModule(host, modulePath, 'MatInputModule', '@angular/material/input');
+    addModuleImportToModule(host, modulePath, 'MatButtonModule', '@angular/material/button');
+    addModuleImportToModule(host, modulePath, 'MatSelectModule', '@angular/material/select');
+    addModuleImportToModule(host, modulePath, 'MatRadioModule', '@angular/material/radio');
+    addModuleImportToModule(host, modulePath, 'MatCardModule', '@angular/material/card');
     addModuleImportToModule(host, modulePath, 'ReactiveFormsModule', '@angular/forms');
     return host;
   };

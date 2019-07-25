@@ -426,6 +426,9 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
   /** Object used to control when error messages are shown. */
   @Input() errorStateMatcher: ErrorStateMatcher;
 
+  /** Time to wait in milliseconds after the last keystroke before moving focus to an item. */
+  @Input() typeaheadDebounceInterval: number;
+
   /**
    * Function used to sort the values in a select in multiple mode.
    * Follows the same logic as `Array.prototype.sort`.
@@ -443,8 +446,13 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
 
   /** Combined stream of all of the child options' change events. */
   readonly optionSelectionChanges: Observable<MatOptionSelectionChange> = defer(() => {
-    if (this.options) {
-      return merge(...this.options.map(option => option.onSelectionChange));
+    const options = this.options;
+
+    if (options) {
+      return options.changes.pipe(
+        startWith(options),
+        switchMap(() => merge(...options.map(option => option.onSelectionChange)))
+      );
     }
 
     return this._ngZone.onStable
@@ -564,6 +572,10 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
     // the parent form field know to run change detection when the disabled state changes.
     if (changes['disabled']) {
       this.stateChanges.next();
+    }
+
+    if (changes['typeaheadDebounceInterval'] && this._keyManager) {
+      this._keyManager.withTypeAhead(this.typeaheadDebounceInterval);
     }
   }
 
@@ -729,7 +741,9 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
       // Since the value has changed, we need to announce it ourselves.
       // @breaking-change 8.0.0 remove null check for _liveAnnouncer.
       if (this._liveAnnouncer && selectedOption && previouslySelectedOption !== selectedOption) {
-        this._liveAnnouncer.announce((selectedOption as MatOption).viewValue);
+        // We set a duration on the live announcement, because we want the live element to be
+        // cleared after a while so that users can't navigate to it using the arrow keys.
+        this._liveAnnouncer.announce((selectedOption as MatOption).viewValue, 10000);
       }
     }
   }
@@ -890,7 +904,7 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
   /** Sets up a key manager to listen to keyboard events on the overlay panel. */
   private _initKeyManager() {
     this._keyManager = new ActiveDescendantKeyManager<MatOption>(this.options)
-      .withTypeAhead()
+      .withTypeAhead(this.typeaheadDebounceInterval)
       .withVerticalOrientation()
       .withHorizontalOrientation(this._isRtl() ? 'rtl' : 'ltr')
       .withAllowedModifierKeys(['shiftKey']);

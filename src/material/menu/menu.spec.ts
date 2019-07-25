@@ -1,48 +1,49 @@
-import {ComponentFixture, fakeAsync, flush, inject, TestBed, tick} from '@angular/core/testing';
-import {By} from '@angular/platform-browser';
-import {NoopAnimationsModule} from '@angular/platform-browser/animations';
+import {FocusMonitor} from '@angular/cdk/a11y';
+import {Direction, Directionality} from '@angular/cdk/bidi';
+import {DOWN_ARROW, END, ESCAPE, HOME, LEFT_ARROW, RIGHT_ARROW, TAB} from '@angular/cdk/keycodes';
+import {Overlay, OverlayContainer} from '@angular/cdk/overlay';
+import {ScrollDispatcher} from '@angular/cdk/scrolling';
 import {
+  createKeyboardEvent,
+  createMouseEvent,
+  dispatchEvent,
+  dispatchFakeEvent,
+  dispatchKeyboardEvent,
+  dispatchMouseEvent,
+  MockNgZone,
+  patchElementFocus,
+} from '@angular/cdk/testing';
+import {
+  ChangeDetectionStrategy,
   Component,
   ElementRef,
   EventEmitter,
   Input,
-  Output,
   NgZone,
+  Output,
+  Provider,
+  QueryList,
   TemplateRef,
+  Type,
   ViewChild,
   ViewChildren,
-  QueryList,
-  Type,
-  Provider,
 } from '@angular/core';
-import {Direction, Directionality} from '@angular/cdk/bidi';
-import {OverlayContainer, Overlay} from '@angular/cdk/overlay';
-import {ESCAPE, LEFT_ARROW, RIGHT_ARROW, DOWN_ARROW, TAB, HOME, END} from '@angular/cdk/keycodes';
+import {ComponentFixture, fakeAsync, flush, inject, TestBed, tick} from '@angular/core/testing';
+import {MatRipple} from '@angular/material/core';
+import {By} from '@angular/platform-browser';
+import {NoopAnimationsModule} from '@angular/platform-browser/animations';
+import {Subject} from 'rxjs';
 import {
   MAT_MENU_DEFAULT_OPTIONS,
   MatMenu,
+  MatMenuItem,
   MatMenuModule,
   MatMenuPanel,
   MatMenuTrigger,
   MenuPositionX,
   MenuPositionY,
-  MatMenuItem,
 } from './index';
-import {MENU_PANEL_TOP_PADDING, MAT_MENU_SCROLL_STRATEGY} from './menu-trigger';
-import {MatRipple} from '@angular/material/core';
-import {
-  dispatchKeyboardEvent,
-  dispatchMouseEvent,
-  dispatchEvent,
-  createKeyboardEvent,
-  createMouseEvent,
-  dispatchFakeEvent,
-  patchElementFocus,
-  MockNgZone,
-} from '@angular/cdk/testing';
-import {Subject} from 'rxjs';
-import {ScrollDispatcher} from '@angular/cdk/scrolling';
-import {FocusMonitor} from '@angular/cdk/a11y';
+import {MAT_MENU_SCROLL_STRATEGY, MENU_PANEL_TOP_PADDING} from './menu-trigger';
 
 
 describe('MatMenu', () => {
@@ -347,6 +348,24 @@ describe('MatMenu', () => {
     tick(500);
 
     expect(overlayContainerElement.textContent).toBe('');
+    expect(event.defaultPrevented).toBe(true);
+  }));
+
+  it('should not close the menu when pressing ESCAPE with a modifier', fakeAsync(() => {
+    const fixture = createComponent(SimpleMenu, [], [FakeIcon]);
+    fixture.detectChanges();
+    fixture.componentInstance.trigger.openMenu();
+
+    const panel = overlayContainerElement.querySelector('.mat-menu-panel')!;
+    const event = createKeyboardEvent('keydown', ESCAPE);
+
+    Object.defineProperty(event, 'altKey', {get: () => true});
+    dispatchEvent(panel, event);
+    fixture.detectChanges();
+    tick(500);
+
+    expect(overlayContainerElement.textContent).toBeTruthy();
+    expect(event.defaultPrevented).toBe(false);
   }));
 
   it('should open a custom menu', () => {
@@ -847,6 +866,52 @@ describe('MatMenu', () => {
 
       expect(item.textContent!.trim()).toBe('two');
     }));
+
+    it('should respect the DOM order, rather than insertion order, when moving focus using ' +
+      'the arrow keys', fakeAsync(() => {
+        let fixture = createComponent(SimpleMenuWithRepeater);
+
+        fixture.detectChanges();
+        fixture.componentInstance.trigger.openMenu();
+        fixture.detectChanges();
+        tick(500);
+
+        let menuPanel = document.querySelector('.mat-menu-panel')!;
+        let items = menuPanel.querySelectorAll('.mat-menu-panel [mat-menu-item]');
+
+        expect(document.activeElement).toBe(items[0], 'Expected first item to be focused on open');
+
+        // Add a new item after the first one.
+        fixture.componentInstance.items.splice(1, 0, 'Calzone');
+        fixture.detectChanges();
+
+        items = menuPanel.querySelectorAll('.mat-menu-panel [mat-menu-item]');
+        dispatchKeyboardEvent(menuPanel, 'keydown', DOWN_ARROW);
+        fixture.detectChanges();
+        tick();
+
+        expect(document.activeElement).toBe(items[1], 'Expected second item to be focused');
+        flush();
+      }));
+
+    it('should open submenus when the menu is inside an OnPush component', fakeAsync(() => {
+      const fixture = createComponent(LazyMenuWithOnPush);
+      fixture.detectChanges();
+
+      // Open the top-level menu
+      fixture.componentInstance.rootTrigger.nativeElement.click();
+      fixture.detectChanges();
+      flush();
+
+      // Dispatch a `mouseenter` on the menu item to open the submenu.
+      // This will only work if the top-level menu is aware the this menu item exists.
+      dispatchMouseEvent(fixture.componentInstance.menuItemWithSubmenu.nativeElement, 'mouseenter');
+      fixture.detectChanges();
+      flush();
+
+      expect(overlayContainerElement.querySelectorAll('.mat-menu-item').length)
+          .toBe(2, 'Expected two open menus');
+    }));
   });
 
   describe('positions', () => {
@@ -1090,7 +1155,7 @@ describe('MatMenu', () => {
       }
 
       get overlayRect() {
-        return this.getOverlayPane().getBoundingClientRect();
+        return this._getOverlayPane().getBoundingClientRect();
       }
 
       get triggerRect() {
@@ -1101,7 +1166,7 @@ describe('MatMenu', () => {
         return overlayContainerElement.querySelector('.mat-menu-panel');
       }
 
-      private getOverlayPane() {
+      private _getOverlayPane() {
         return overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
       }
     }
@@ -2280,7 +2345,6 @@ class LazyMenuWithContext {
 }
 
 
-
 @Component({
   template: `
     <button [matMenuTriggerFor]="one">Toggle menu</button>
@@ -2312,4 +2376,42 @@ class DynamicPanelMenu {
 })
 class MenuWithCheckboxItems {
   @ViewChild(MatMenuTrigger, {static: false}) trigger: MatMenuTrigger;
+}
+
+
+@Component({
+  template: `
+    <button [matMenuTriggerFor]="menu">Toggle menu</button>
+    <mat-menu #menu="matMenu">
+      <button *ngFor="let item of items" mat-menu-item>{{item}}</button>
+    </mat-menu>
+  `
+})
+class SimpleMenuWithRepeater {
+  @ViewChild(MatMenuTrigger, {static: false}) trigger: MatMenuTrigger;
+  @ViewChild(MatMenu, {static: false}) menu: MatMenu;
+  items = ['Pizza', 'Pasta'];
+}
+
+@Component({
+  template: `
+    <button [matMenuTriggerFor]="menu" #triggerEl>Toggle menu</button>
+
+    <mat-menu #menu="matMenu">
+      <ng-template matMenuContent>
+        <button [matMenuTriggerFor]="menu2" mat-menu-item #menuItem>Item</button>
+      </ng-template>
+    </mat-menu>
+
+    <mat-menu #menu2="matMenu">
+      <ng-template matMenuContent>
+        <button mat-menu-item #subMenuItem>Sub item</button>
+      </ng-template>
+    </mat-menu>
+  `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class LazyMenuWithOnPush {
+  @ViewChild('triggerEl', {static: false, read: ElementRef}) rootTrigger: ElementRef;
+  @ViewChild('menuItem', {static: false, read: ElementRef}) menuItemWithSubmenu: ElementRef;
 }

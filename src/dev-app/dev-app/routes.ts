@@ -54,12 +54,14 @@ export const DEV_APP_ROUTES: Routes = [
     path: 'mdc-checkbox',
     loadChildren: 'mdc-checkbox/mdc-checkbox-demo-module#MdcCheckboxDemoModule'
   },
+  {path: 'mdc-chips', loadChildren: 'mdc-chips/mdc-chips-demo-module#MdcChipsDemoModule'},
   {path: 'mdc-menu', loadChildren: 'mdc-menu/mdc-menu-demo-module#MdcMenuDemoModule'},
   {path: 'mdc-radio', loadChildren: 'mdc-radio/mdc-radio-demo-module#MdcRadioDemoModule'},
   {
     path: 'mdc-slide-toggle',
     loadChildren: 'mdc-slide-toggle/mdc-slide-toggle-demo-module#MdcSlideToggleDemoModule'
   },
+  {path: 'mdc-tabs', loadChildren: 'mdc-tabs/mdc-tabs-demo-module#MdcTabsDemoModule'},
   {path: 'menu', loadChildren: 'menu/menu-demo-module#MenuDemoModule'},
   {path: 'paginator', loadChildren: 'paginator/paginator-demo-module#PaginatorDemoModule'},
   {path: 'platform', loadChildren: 'platform/platform-demo-module#PlatformDemoModule'},

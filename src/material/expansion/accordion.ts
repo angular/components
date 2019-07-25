@@ -10,8 +10,13 @@ import {Directive, Input, ContentChildren, QueryList, AfterContentInit} from '@a
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
 import {CdkAccordion} from '@angular/cdk/accordion';
 import {FocusKeyManager} from '@angular/cdk/a11y';
-import {HOME, END} from '@angular/cdk/keycodes';
-import {MAT_ACCORDION, MatAccordionBase, MatAccordionDisplayMode} from './accordion-base';
+import {HOME, END, hasModifierKey} from '@angular/cdk/keycodes';
+import {
+  MAT_ACCORDION,
+  MatAccordionBase,
+  MatAccordionDisplayMode,
+  MatAccordionTogglePosition
+} from './accordion-base';
 import {MatExpansionPanelHeader} from './expansion-panel-header';
 
 /**
@@ -51,6 +56,9 @@ export class MatAccordion extends CdkAccordion implements MatAccordionBase, Afte
    */
   @Input() displayMode: MatAccordionDisplayMode = 'default';
 
+  /** The position of the expansion indicator. */
+  @Input() togglePosition: MatAccordionTogglePosition = 'after';
+
   ngAfterContentInit() {
     this._keyManager = new FocusKeyManager(this._headers).withWrap();
   }
@@ -61,11 +69,15 @@ export class MatAccordion extends CdkAccordion implements MatAccordionBase, Afte
     const manager = this._keyManager;
 
     if (keyCode === HOME) {
-      manager.setFirstItemActive();
-      event.preventDefault();
+      if (!hasModifierKey(event)) {
+        manager.setFirstItemActive();
+        event.preventDefault();
+      }
     } else if (keyCode === END) {
-      manager.setLastItemActive();
-      event.preventDefault();
+      if (!hasModifierKey(event)) {
+        manager.setLastItemActive();
+        event.preventDefault();
+      }
     } else {
       this._keyManager.onKeydown(event);
     }

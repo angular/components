@@ -7,13 +7,13 @@
 # To validate changes, use an online parser, eg.
 # http://yaml-online-parser.appspot.com/
 
-var_1: &docker_image angular/ngcontainer:0.10.0
+var_1: &docker_image circleci/node:10.16
 
 # **Note**: When updating the beginning of the cache key, also update the cache key to match
 # the new cache key prefix. This allows us to take advantage of CircleCI's fallback caching.
 # Read more here: https://circleci.com/docs/2.0/caching/#restoring-cache.
-var_2: &cache_key v2-ng-mat-{{ checksum "WORKSPACE" }}-{{ checksum "yarn.lock" }}
-var_3: &cache_fallback_key v2-ng-mat-
+var_2: &cache_key v4-ng-mat-{{ checksum "WORKSPACE" }}-{{ checksum "yarn.lock" }}
+var_3: &cache_fallback_key v4-ng-mat-
 
 # Settings common to each job
 var_4: &job_defaults
@@ -54,31 +54,42 @@ var_8: &gcp_decrypt_token "angular"
 # in sync. Unlike in Travis, we don't need to manually purge the node modules if stale because
 # CircleCI automatically discards the cache if the checksum of the lock file has changed.
 var_9: &yarn_install
-  run: yarn install --frozen-lockfile --non-interactive
+  run:
+    name: "Installing project dependencies"
+    command: yarn install --frozen-lockfile --non-interactive
 
-# Copies the Bazel config which is specifically for CircleCI to a location where Bazel picks it
-# up and merges it with the project-wide bazel configuration (tools/bazel.rc)
-var_10: &copy_bazel_config
-  # Set up the CircleCI specific bazel configuration.
-  run: sudo cp ./.circleci/bazel.rc /etc/bazel.bazelrc
+# Anchor that can be used to download and install Yarn globally in the bash environment.
+var_10: &yarn_download
+  run:
+    name: "Downloading and installing Yarn"
+    command: |
+      touch $BASH_ENV
+      curl -o- -L https://yarnpkg.com/install.sh | PROFILE=$BASH_ENV bash -s -- --version "1.16.0"
+
+# Sets up the Bazel config which is specific for CircleCI builds.
+var_11: &setup_bazel_ci_config
+  run:
+    name: "Setting up Bazel configuration for CI"
+    command: |
+      echo "import %workspace%/.circleci/bazel.rc" >> ./.bazelrc
 
 # Sets up a different Docker image that includes a moe recent Firefox version which
 # is needed for headless testing.
-var_11: &docker-firefox-image
+var_12: &docker-firefox-image
   # TODO(devversion): Temporarily use a image that includes Firefox 62 because the
   # ngcontainer image does include an old Firefox version that does not support headless.
   - image: circleci/node:11.4.0-browsers
 
 # Attaches the release output which has been stored in the workspace to the current job.
 # https://circleci.com/docs/2.0/workflows/#using-workspaces-to-share-data-among-jobs
-var_12: &attach_release_output
+var_13: &attach_release_output
   attach_workspace:
     at: dist/
 
 # Branch filter that we can specify for jobs that should only run on publish branches. This filter
 # is used to ensure that not all upstream branches will be published as Github builds
 # (e.g. revert branches, feature branches)
-var_13: &publish_branches_filter
+var_14: &publish_branches_filter
   branches:
     only:
       - master
@@ -92,7 +103,7 @@ var_13: &publish_branches_filter
 # In order to reduce duplication we use a YAML anchor that just always excludes the "_presubmit"
 # branch. We don't want to run Circle for the temporary "_presubmit" branch which is reserved
 # for the caretaker.
-var_14: &ignore_presubmit_branch_filter
+var_15: &ignore_presubmit_branch_filter
   branches:
     ignore:
       - "_presubmit"
@@ -100,10 +111,17 @@ var_14: &ignore_presubmit_branch_filter
 
 # Runs a script that sets up the Bazel remote execution. This will be used by jobs that run
 # Bazel primarily and should benefit from remote caching and execution.
-var_15: &setup_bazel_remote_execution
+var_16: &setup_bazel_remote_execution
   run:
     name: "Setup bazel RBE remote execution"
     command: ./scripts/circleci/bazel/setup-remote-execution.sh
+
+# Sets up the bazel binary globally. We don't want to access bazel through Yarn and NodeJS
+# because it could mean that the Bazel child process only has access to limited memory.
+var_17: &setup_bazel_binary
+  run:
+    name: "Setting up global Bazel binary"
+    command: ./scripts/circleci/setup_bazel_binary.sh
 
 # -----------------------------
 # Container version of CircleCI
@@ -117,9 +135,9 @@ version: 2
 jobs:
 
   # -----------------------------------
-  # Build and test job that uses Bazel.
+  # Job to test that everything builds with Bazel
   # -----------------------------------
-  bazel_build_test:
+  bazel_build:
     <<: *job_defaults
     resource_class: xlarge
     environment:
@@ -127,15 +145,13 @@ jobs:
     steps:
       - *checkout_code
       - *restore_cache
-      - *copy_bazel_config
+      - *setup_bazel_binary
+      - *setup_bazel_ci_config
       - *setup_bazel_remote_execution
+      - *yarn_download
+      - *yarn_install
 
       - run: bazel build src/... --build_tag_filters=-docs-package
-      - run: bazel test src/... --build_tag_filters=-docs-package
-
-      # Note: We want to save the cache in this job because the workspace cache also
-      # includes the Bazel repository cache that will be updated in this job.
-      - *save_cache
 
   # --------------------------------------------------------------------------------------------
   # Job that runs ts-api-guardian against our API goldens in "tools/public_api_guard".
@@ -149,8 +165,11 @@ jobs:
     steps:
     - *checkout_code
     - *restore_cache
-    - *copy_bazel_config
+    - *setup_bazel_binary
+    - *setup_bazel_ci_config
     - *setup_bazel_remote_execution
+    - *yarn_download
+    - *yarn_install
 
     - run: bazel test tools/public_api_guard/...
 
@@ -165,24 +184,33 @@ jobs:
     steps:
       - *checkout_code
       - *restore_cache
-      - *copy_bazel_config
+      - *setup_bazel_binary
+      - *setup_bazel_ci_config
       - *setup_bazel_remote_execution
+      - *yarn_download
+      - *yarn_install
 
-      - run: bazel test e2e/...
+      - run: bazel test src/... --build_tag_filters=e2e --test_tag_filters=e2e
 
   # ------------------------------------------------------------------------------------------
   # Job that runs the unit tests on locally installed browsers (Chrome and Firefox headless).
-  # The available browsers are installed through the angular/ngcontainer Docker image.
+  # The available browsers are chromium and firefox
   # ------------------------------------------------------------------------------------------
   tests_local_browsers:
-    docker: *docker-firefox-image
+    <<: *job_defaults
     resource_class: xlarge
+    environment:
+      GCP_DECRYPT_TOKEN: *gcp_decrypt_token
     steps:
-    - *checkout_code
-    - *restore_cache
-    - *yarn_install
+      - *checkout_code
+      - *restore_cache
+      - *setup_bazel_binary
+      - *setup_bazel_ci_config
+      - *setup_bazel_remote_execution
+      - *yarn_download
+      - *yarn_install
 
-    - run: ./scripts/circleci/run-local-browser-tests.sh
+      - run: bazel test src/... --build_tag_filters=-e2e --test_tag_filters=-e2e
 
   # ----------------------------------------------------------------------------
   # Job that runs the unit tests on Browserstack. The browsers that will be used
@@ -197,6 +225,7 @@ jobs:
     steps:
       - *checkout_code
       - *restore_cache
+      - *yarn_download
       - *yarn_install
 
       - run: ./scripts/circleci/run-browserstack-tests.sh
@@ -217,6 +246,7 @@ jobs:
     steps:
     - *checkout_code
     - *restore_cache
+    - *yarn_download
     - *yarn_install
 
     - run: ./scripts/circleci/run-saucelabs-tests.sh
@@ -230,6 +260,7 @@ jobs:
     steps:
       - *checkout_code
       - *restore_cache
+      - *yarn_download
       - *yarn_install
       - *attach_release_output
 
@@ -244,6 +275,7 @@ jobs:
     steps:
     - *checkout_code
     - *restore_cache
+    - *yarn_download
     - *yarn_install
 
     - run: yarn gulp ci:prerender
@@ -256,9 +288,13 @@ jobs:
     steps:
       - *checkout_code
       - *restore_cache
+      - *yarn_download
       - *yarn_install
 
+      - run: ./scripts/circleci/lint-bazel-files.sh
       - run: yarn gulp ci:lint
+
+      - *save_cache
 
   # -------------------------------------------------------------------------------------------
   # Job that builds all release packages with Gulp. The built packages can be then used in the
@@ -270,10 +306,15 @@ jobs:
     steps:
       - *checkout_code
       - *restore_cache
+      - *yarn_download
       - *yarn_install
 
       - run: yarn gulp ci:build-release-packages
       - run: yarn check-release-output
+
+      # TODO(devversion): replace this with bazel tests that run Madge. This is
+      # cumbersome and doesn't guarantee no circular deps for other entry-points.
+      - run: yarn madge --circular dist/releases/cdk/schematics/index.js
 
       # Store the release output in the workspace storage. This means that other jobs
       # in the same workflow can attach the release output to their job.
@@ -317,8 +358,11 @@ jobs:
       - *checkout_code
       - *restore_cache
       - *attach_release_output
-      - *copy_bazel_config
+      - *setup_bazel_binary
+      - *setup_bazel_ci_config
       - *setup_bazel_remote_execution
+      - *yarn_download
+      - *yarn_install
 
       # CircleCI has a config setting to enforce SSH for all github connections.
       # This is not compatible with our mechanism of using a Personal Access Token
@@ -341,10 +385,76 @@ jobs:
     steps:
     - *checkout_code
     - *restore_cache
+    - *yarn_download
     - *yarn_install
 
-    - run: node ./scripts/circleci/setup-angular-snapshots.js
+    - run: node ./scripts/circleci/setup-angular-snapshots.js --tag master
+      # We need to re-run yarn install in order to pull the Angular snapshot builds. Note
+      # that we can't use the "--frozen-lockfile" option since the setup snapshots script does
+      # not update the lock file.
+    - run: yarn install --non-interactive
     - run: ./scripts/circleci/run-local-browser-tests.sh
+
+
+  # ----------------------------------------------------------------------------
+  # Job that runs all Bazel tests against Ivy with the current Angular version
+  # specified in the project dev dependencies.
+  # ----------------------------------------------------------------------------
+  ivy_test:
+    <<: *job_defaults
+    resource_class: xlarge
+    environment:
+      GCP_DECRYPT_TOKEN: *gcp_decrypt_token
+    steps:
+      - *checkout_code
+      - *restore_cache
+      - *setup_bazel_binary
+      - *setup_bazel_ci_config
+      - *setup_bazel_remote_execution
+      - *yarn_download
+      - *yarn_install
+
+      # Setup Angular ivy snapshots built with ngtsc but locked to a specific tag. We
+      # cannot determine the tag automatically based on the Angular version specified in
+      # the "package.json" because the SHA is not known for the given release. Nor can
+      # we use ngcc to apply the ivy switches because ngcc currently does not handle the
+      # UMD format which is used by Bazel when running tests. UMD processing is in
+      # progress and tracked with FW-85.
+      - run: node ./scripts/circleci/setup-angular-snapshots.js --tag 8.2.0-next.0-ivy-aot+c69e552a8
+      # Disable type checking when building with Ivy. This is necessary because
+      # type checking is not complete yet and can incorrectly break compilation.
+      # Issue is tracked with FW-1004.
+      - run: sed -i "s/\(_ENABLE_NG_TYPE_CHECKING = \)True/\1False/g" tools/defaults.bzl
+      # Run project tests with ngtsc and the Ivy Angular packages.
+      - run: bazel build src/... --build_tag_filters=-docs-package,-e2e --define=compile=aot
+      - run: bazel test src/... --build_tag_filters=-docs-package,-e2e --test_tag_filters=-e2e --define=compile=aot
+
+  # ----------------------------------------------------------------------------
+  # Job that runs all Bazel tests against Ivy from angular/angular#master.
+  # ----------------------------------------------------------------------------
+  ivy_snapshot_test_cronjob:
+    <<: *job_defaults
+    resource_class: xlarge
+    environment:
+      GCP_DECRYPT_TOKEN: *gcp_decrypt_token
+    steps:
+      - *checkout_code
+      - *restore_cache
+      - *setup_bazel_binary
+      - *setup_bazel_ci_config
+      - *setup_bazel_remote_execution
+      - *yarn_download
+      - *yarn_install
+
+      # Setup Angular ivy snapshots built with ngtsc.
+      - run: node ./scripts/circleci/setup-angular-snapshots.js --tag master-ivy-aot
+      # Disable type checking when building with Ivy. This is necessary because
+      # type checking is not complete yet and can incorrectly break compilation.
+      # Issue is tracked with FW-1004.
+      - run: sed -i "s/\(_ENABLE_NG_TYPE_CHECKING = \)True/\1False/g" tools/defaults.bzl
+      # Run project tests with ngtsc and the Ivy Angular packages.
+      - run: bazel build src/... --build_tag_filters=-docs-package,-e2e --define=compile=aot
+      - run: bazel test src/... --build_tag_filters=-docs-package,-e2e --test_tag_filters=-e2e --define=compile=aot
 
 # ----------------------------------------------------------------------------------------
 # Workflow definitions. A workflow usually groups multiple jobs together. This is useful if
@@ -358,15 +468,17 @@ workflows:
 
   bazel_targets:
     jobs:
-      - bazel_build_test:
+      - bazel_build:
+          filters: *ignore_presubmit_branch_filter
+      - ivy_test:
           filters: *ignore_presubmit_branch_filter
       - api_golden_checks:
+          filters: *ignore_presubmit_branch_filter
+      - tests_local_browsers:
           filters: *ignore_presubmit_branch_filter
 
   unit_tests:
     jobs:
-      - tests_local_browsers:
-          filters: *ignore_presubmit_branch_filter
       - tests_browserstack:
           filters: *ignore_presubmit_branch_filter
       - tests_saucelabs:
@@ -398,17 +510,18 @@ workflows:
       - lint:
           filters: *ignore_presubmit_branch_filter
 
-  # Snapshot tests workflow that is scheduled to run all specified jobs at midnight everyday.
+  # Snapshot tests workflow that is scheduled to run all specified jobs every hour.
   # This workflow runs various jobs against the Angular snapshot builds from Github.
   snapshot_tests:
     jobs:
-      # Note that we need additional jobs for the nightly snapshot tests because there is no
-      # easy way to detect whether a job runs inside of a cronjob or specific workflow.
-      # See: https://circleci.com/ideas/?idea=CCI-I-295
+      # Note that we need additional jobs for the cronjob snapshot tests because there
+      # is no easy way to detect whether a job runs inside of a cronjob or specific
+      # workflow. See: https://circleci.com/ideas/?idea=CCI-I-295
       - snapshot_tests_local_browsers
+      - ivy_snapshot_test_cronjob
     triggers:
       - schedule:
-          cron: "0 0 * * *"
+          cron: "0 * * * *"
           filters:
             branches:
               only:

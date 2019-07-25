@@ -14,6 +14,7 @@ import {
   OverlayRef,
   PositionStrategy,
   ScrollStrategy,
+  ConnectedPosition,
 } from '@angular/cdk/overlay';
 import {TemplatePortal} from '@angular/cdk/portal';
 import {DOCUMENT} from '@angular/common';
@@ -31,6 +32,8 @@ import {
   OnDestroy,
   Optional,
   ViewContainerRef,
+  OnChanges,
+  SimpleChanges,
 } from '@angular/core';
 import {ViewportRuler} from '@angular/cdk/scrolling';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
@@ -116,7 +119,7 @@ export function getMatAutocompleteMissingPanelError(): Error {
   exportAs: 'matAutocompleteTrigger',
   providers: [MAT_AUTOCOMPLETE_VALUE_ACCESSOR]
 })
-export class MatAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
+export class MatAutocompleteTrigger implements ControlValueAccessor, OnChanges, OnDestroy {
   private _overlayRef: OverlayRef | null;
   private _portal: TemplatePortal;
   private _componentDestroyed = false;
@@ -157,7 +160,7 @@ export class MatAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
     // refocused when they come back. In this case we want to skip the first focus event, if the
     // pane was closed, in order to avoid reopening it unintentionally.
     this._canOpenOnNextFocus =
-        document.activeElement !== this._element.nativeElement || this.panelOpen;
+        this._document.activeElement !== this._element.nativeElement || this.panelOpen;
   }
 
   /** `View -> model callback called when value changes` */
@@ -168,6 +171,15 @@ export class MatAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
 
   /** The autocomplete panel to be attached to this trigger. */
   @Input('matAutocomplete') autocomplete: MatAutocomplete;
+
+  /**
+   * Position of the autocomplete panel relative to the trigger element. A position of `auto`
+   * will render the panel underneath the trigger if there is enough space for it to fit in
+   * the viewport, otherwise the panel will be shown above it. If the position is set to
+   * `above` or `below`, the panel will always be shown above or below the trigger. no matter
+   * whether it fits completely in the viewport.
+   */
+  @Input('matAutocompletePosition') position: 'auto' | 'above' | 'below' = 'auto';
 
   /**
    * Reference relative to which to position the autocomplete panel.
@@ -209,6 +221,16 @@ export class MatAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
     }
 
     this._scrollStrategy = scrollStrategy;
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['position'] && this._positionStrategy) {
+      this._setStrategyPositions(this._positionStrategy);
+
+      if (this.panelOpen) {
+        this._overlayRef!.updatePosition();
+      }
+    }
   }
 
   ngOnDestroy() {
@@ -318,10 +340,6 @@ export class MatAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
 
   /** Stream of clicks outside of the autocomplete panel. */
   private _getOutsideClickStream(): Observable<any> {
-    if (!this._document) {
-      return observableOf(null);
-    }
-
     return merge(
       fromEvent(this._document, 'click') as Observable<MouseEvent>,
       fromEvent(this._document, 'touchend') as Observable<TouchEvent>
@@ -407,7 +425,7 @@ export class MatAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
       this._previousValue = value;
       this._onChange(value);
 
-      if (this._canOpen() && document.activeElement === event.target) {
+      if (this._canOpen() && this._document.activeElement === event.target) {
         this.openPanel();
       }
     }
@@ -488,24 +506,32 @@ export class MatAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
 
     // When the zone is stable initially, and when the option list changes...
     return merge(firstStable, optionChanges)
-      .pipe(
-        // create a new stream of panelClosingActions, replacing any previous streams
-        // that were created, and flatten it so our stream only emits closing events...
-        switchMap(() => {
-          this._resetActiveItem();
-          this.autocomplete._setVisibility();
+        .pipe(
+            // create a new stream of panelClosingActions, replacing any previous streams
+            // that were created, and flatten it so our stream only emits closing events...
+            switchMap(() => {
+              const wasOpen = this.panelOpen;
+              this._resetActiveItem();
+              this.autocomplete._setVisibility();
 
-          if (this.panelOpen) {
-            this._overlayRef!.updatePosition();
-          }
+              if (this.panelOpen) {
+                this._overlayRef!.updatePosition();
 
-          return this.panelClosingActions;
-        }),
-        // when the first closing event occurs...
-        take(1)
-      )
-      // set the value, close the panel, and complete.
-      .subscribe(event => this._setValueAndClose(event));
+                // If the `panelOpen` state changed, we need to make sure to emit the `opened`
+                // event, because we may not have emitted it when the panel was attached. This
+                // can happen if the users opens the panel and there are no options, but the
+                // options come in slightly later or as a result of the value changing.
+                if (wasOpen !== this.panelOpen) {
+                  this.autocomplete.opened.emit();
+                }
+              }
+
+              return this.panelClosingActions;
+            }),
+            // when the first closing event occurs...
+            take(1))
+        // set the value, close the panel, and complete.
+        .subscribe(event => this._setValueAndClose(event));
   }
 
   /** Destroys the autocomplete suggestion panel. */
@@ -585,6 +611,11 @@ export class MatAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
         if (event.keyCode === ESCAPE || (event.keyCode === UP_ARROW && event.altKey)) {
           this._resetActiveItem();
           this._closeKeyEventStream.next();
+
+          // We need to stop propagation, otherwise the event will eventually
+          // reach the input itself and cause the overlay to be reopened.
+          event.stopPropagation();
+          event.preventDefault();
         }
       });
 
@@ -596,10 +627,8 @@ export class MatAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
         });
       }
     } else {
-      const position = overlayRef.getConfig().positionStrategy as FlexibleConnectedPositionStrategy;
-
       // Update the trigger, panel width and direction, in case anything has changed.
-      position.setOrigin(this._getConnectedElement());
+      this._positionStrategy.setOrigin(this._getConnectedElement());
       overlayRef.updateSize({width: this._getPanelWidth()});
     }
 
@@ -630,31 +659,47 @@ export class MatAutocompleteTrigger implements ControlValueAccessor, OnDestroy {
   }
 
   private _getOverlayPosition(): PositionStrategy {
-    this._positionStrategy = this._overlay.position()
+    const strategy = this._overlay.position()
       .flexibleConnectedTo(this._getConnectedElement())
       .withFlexibleDimensions(false)
-      .withPush(false)
-      .withPositions([
-        {
-          originX: 'start',
-          originY: 'bottom',
-          overlayX: 'start',
-          overlayY: 'top'
-        },
-        {
-          originX: 'start',
-          originY: 'top',
-          overlayX: 'start',
-          overlayY: 'bottom',
+      .withPush(false);
 
-          // The overlay edge connected to the trigger should have squared corners, while
-          // the opposite end has rounded corners. We apply a CSS class to swap the
-          // border-radius based on the overlay position.
-          panelClass: 'mat-autocomplete-panel-above'
-        }
-      ]);
+    this._setStrategyPositions(strategy);
+    this._positionStrategy = strategy;
+    return strategy;
+  }
 
-    return this._positionStrategy;
+  /** Sets the positions on a position strategy based on the directive's input state. */
+  private _setStrategyPositions(positionStrategy: FlexibleConnectedPositionStrategy) {
+    const belowPosition: ConnectedPosition = {
+      originX: 'start',
+      originY: 'bottom',
+      overlayX: 'start',
+      overlayY: 'top'
+    };
+    const abovePosition: ConnectedPosition = {
+      originX: 'start',
+      originY: 'top',
+      overlayX: 'start',
+      overlayY: 'bottom',
+
+      // The overlay edge connected to the trigger should have squared corners, while
+      // the opposite end has rounded corners. We apply a CSS class to swap the
+      // border-radius based on the overlay position.
+      panelClass: 'mat-autocomplete-panel-above'
+    };
+
+    let positions: ConnectedPosition[];
+
+    if (this.position === 'above') {
+      positions = [abovePosition];
+    } else if (this.position === 'below') {
+      positions = [belowPosition];
+    } else {
+      positions = [belowPosition, abovePosition];
+    }
+
+    positionStrategy.withPositions(positions);
   }
 
   private _getConnectedElement(): ElementRef {

@@ -76,8 +76,8 @@ export class MatSlideToggleChange {
 
 })
 export class MatSlideToggle implements ControlValueAccessor, AfterViewInit, OnDestroy {
-  private onChange = (_: any) => {};
-  private onTouched = () => {};
+  private _onChange = (_: any) => {};
+  private _onTouched = () => {};
 
   private _uniqueId: string = `mat-slide-toggle-${++nextUniqueId}`;
   private _required: boolean = false;
@@ -154,8 +154,6 @@ export class MatSlideToggle implements ControlValueAccessor, AfterViewInit, OnDe
     if (this._foundation) {
       this._foundation.setChecked(this._checked);
     }
-
-    this._changeDetectorRef.markForCheck();
   }
 
   /** Whether to disable the ripple on this checkbox. */
@@ -179,8 +177,6 @@ export class MatSlideToggle implements ControlValueAccessor, AfterViewInit, OnDe
     if (this._foundation) {
       this._foundation.setDisabled(this._disabled);
     }
-
-    this._changeDetectorRef.markForCheck();
   }
   private _disabled = false;
 
@@ -249,7 +245,7 @@ export class MatSlideToggle implements ControlValueAccessor, AfterViewInit, OnDe
 
     // Emit our custom change event only if the underlying input emitted one. This ensures that
     // there is no change event, when the checked state changes programmatically.
-    this.onChange(this.checked);
+    this._onChange(this.checked);
     this.change.emit(new MatSlideToggleChange(this, this.checked));
   }
 
@@ -268,16 +264,17 @@ export class MatSlideToggle implements ControlValueAccessor, AfterViewInit, OnDe
   /** Implemented as part of ControlValueAccessor. */
   writeValue(value: any): void {
     this.checked = !!value;
+    this._changeDetectorRef.markForCheck();
   }
 
   /** Implemented as part of ControlValueAccessor. */
   registerOnChange(fn: any): void {
-    this.onChange = fn;
+    this._onChange = fn;
   }
 
   /** Implemented as part of ControlValueAccessor. */
   registerOnTouched(fn: any): void {
-    this.onTouched = fn;
+    this._onTouched = fn;
   }
 
   /** Implemented as a part of ControlValueAccessor. */
@@ -294,7 +291,7 @@ export class MatSlideToggle implements ControlValueAccessor, AfterViewInit, OnDe
   /** Toggles the checked state of the slide-toggle. */
   toggle(): void {
     this.checked = !this.checked;
-    this.onChange(this.checked);
+    this._onChange(this.checked);
   }
 
   /** Handles blur events on the native input. */
@@ -306,7 +303,7 @@ export class MatSlideToggle implements ControlValueAccessor, AfterViewInit, OnDe
     // telling the form control it has been touched until the next tick.
     Promise.resolve().then(() => {
       this._focused = false;
-      this.onTouched();
+      this._onTouched();
       this._changeDetectorRef.markForCheck();
     });
   }

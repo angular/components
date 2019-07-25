@@ -1,6 +1,10 @@
+export declare const MAT_RADIO_DEFAULT_OPTIONS: InjectionToken<MatRadioDefaultOptions>;
+
+export declare function MAT_RADIO_DEFAULT_OPTIONS_FACTORY(): MatRadioDefaultOptions;
+
 export declare const MAT_RADIO_GROUP_CONTROL_VALUE_ACCESSOR: any;
 
-export declare class MatRadioButton extends _MatRadioButtonMixinBase implements OnInit, AfterViewInit, OnDestroy, CanColor, CanDisableRipple, HasTabIndex {
+export declare class MatRadioButton extends _MatRadioButtonMixinBase implements OnInit, AfterViewInit, OnDestroy, CanDisableRipple, HasTabIndex {
     _animationMode?: string | undefined;
     _inputElement: ElementRef<HTMLInputElement>;
     ariaDescribedby: string;
@@ -8,6 +12,7 @@ export declare class MatRadioButton extends _MatRadioButtonMixinBase implements 
     ariaLabelledby: string;
     readonly change: EventEmitter<MatRadioChange>;
     checked: boolean;
+    color: ThemePalette;
     disabled: boolean;
     id: string;
     readonly inputId: string;
@@ -16,7 +21,7 @@ export declare class MatRadioButton extends _MatRadioButtonMixinBase implements 
     radioGroup: MatRadioGroup;
     required: boolean;
     value: any;
-    constructor(radioGroup: MatRadioGroup, elementRef: ElementRef, _changeDetector: ChangeDetectorRef, _focusMonitor: FocusMonitor, _radioDispatcher: UniqueSelectionDispatcher, _animationMode?: string | undefined);
+    constructor(radioGroup: MatRadioGroup, elementRef: ElementRef, _changeDetector: ChangeDetectorRef, _focusMonitor: FocusMonitor, _radioDispatcher: UniqueSelectionDispatcher, _animationMode?: string | undefined, _providerOverride?: MatRadioDefaultOptions | undefined);
     _isRippleDisabled(): boolean;
     _markForCheck(): void;
     _onInputChange(event: Event): void;
@@ -35,10 +40,15 @@ export declare class MatRadioChange {
     value: any);
 }
 
+export interface MatRadioDefaultOptions {
+    color: ThemePalette;
+}
+
 export declare class MatRadioGroup implements AfterContentInit, ControlValueAccessor {
     _controlValueAccessorChangeFn: (value: any) => void;
     _radios: QueryList<MatRadioButton>;
     readonly change: EventEmitter<MatRadioChange>;
+    color: ThemePalette;
     disabled: boolean;
     labelPosition: 'before' | 'after';
     name: string;

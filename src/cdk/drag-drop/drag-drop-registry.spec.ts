@@ -143,14 +143,44 @@ describe('DragDropRegistry', () => {
   it('should complete the pointer event streams on destroy', () => {
     const pointerUpSpy = jasmine.createSpy('pointerUp complete spy');
     const pointerMoveSpy = jasmine.createSpy('pointerMove complete spy');
-    const pointerUpSubscription = registry.pointerUp.subscribe(undefined, undefined, pointerUpSpy);
-    const pointerMoveSubscription =
-        registry.pointerMove.subscribe(undefined, undefined, pointerMoveSpy);
+    const pointerUpSubscription = registry.pointerUp.subscribe({complete: pointerUpSpy});
+    const pointerMoveSubscription = registry.pointerMove.subscribe({complete: pointerMoveSpy});
 
     registry.ngOnDestroy();
 
     expect(pointerUpSpy).toHaveBeenCalled();
     expect(pointerMoveSpy).toHaveBeenCalled();
+
+    pointerUpSubscription.unsubscribe();
+    pointerMoveSubscription.unsubscribe();
+  });
+
+  it('should not emit pointer events when dragging is over (multi touch)', () => {
+    const firstItem = testComponent.dragItems.first;
+
+    // First finger down
+    registry.startDragging(firstItem, createTouchEvent('touchstart') as TouchEvent);
+    // Second finger down
+    registry.startDragging(firstItem, createTouchEvent('touchstart') as TouchEvent);
+    // First finger up
+    registry.stopDragging(firstItem);
+
+    // Ensure dragging is over - registry is empty
+    expect(registry.isDragging(firstItem)).toBe(false);
+
+    const pointerUpSpy = jasmine.createSpy('pointerUp spy');
+    const pointerMoveSpy = jasmine.createSpy('pointerMove spy');
+
+    const pointerUpSubscription = registry.pointerUp.subscribe(pointerUpSpy);
+    const pointerMoveSubscription = registry.pointerMove.subscribe(pointerMoveSpy);
+
+    // Second finger keeps moving
+    dispatchTouchEvent(document, 'touchmove');
+    expect(pointerMoveSpy).not.toHaveBeenCalled();
+
+    // Second finger up
+    dispatchTouchEvent(document, 'touchend');
+    expect(pointerUpSpy).not.toHaveBeenCalled();
 
     pointerUpSubscription.unsubscribe();
     pointerMoveSubscription.unsubscribe();
@@ -181,15 +211,6 @@ describe('DragDropRegistry', () => {
     expect(event.defaultPrevented).toBe(true);
   });
 
-  it('should not prevent the default `wheel` actions when nothing is being dragged', () => {
-    expect(dispatchFakeEvent(document, 'wheel').defaultPrevented).toBe(false);
-  });
-
-  it('should prevent the default `wheel` action when an item is being dragged', () => {
-    registry.startDragging(testComponent.dragItems.first, createMouseEvent('mousedown'));
-    expect(dispatchFakeEvent(document, 'wheel').defaultPrevented).toBe(true);
-  });
-
   it('should not prevent the default `selectstart` actions when nothing is being dragged', () => {
     expect(dispatchFakeEvent(document, 'selectstart').defaultPrevented).toBe(false);
   });
@@ -199,6 +220,26 @@ describe('DragDropRegistry', () => {
     expect(dispatchFakeEvent(document, 'selectstart').defaultPrevented).toBe(true);
   });
 
+  it('should dispatch `scroll` events if the viewport is scrolled while dragging', () => {
+    const spy = jasmine.createSpy('scroll spy');
+    const subscription = registry.scroll.subscribe(spy);
+
+    registry.startDragging(testComponent.dragItems.first, createMouseEvent('mousedown'));
+    dispatchFakeEvent(document, 'scroll');
+
+    expect(spy).toHaveBeenCalled();
+    subscription.unsubscribe();
+  });
+
+  it('should not dispatch `scroll` events when not dragging', () => {
+    const spy = jasmine.createSpy('scroll spy');
+    const subscription = registry.scroll.subscribe(spy);
+
+    dispatchFakeEvent(document, 'scroll');
+
+    expect(spy).not.toHaveBeenCalled();
+    subscription.unsubscribe();
+  });
 
 });
 

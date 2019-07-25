@@ -8,8 +8,8 @@
 
 import {Injectable, NgZone, OnDestroy} from '@angular/core';
 import {MediaMatcher} from './media-matcher';
-import {asapScheduler, combineLatest, Observable, Subject, Observer} from 'rxjs';
-import {debounceTime, map, startWith, takeUntil} from 'rxjs/operators';
+import {combineLatest, concat, Observable, Subject, Observer} from 'rxjs';
+import {debounceTime, map, skip, startWith, take, takeUntil} from 'rxjs/operators';
 import {coerceArray} from '@angular/cdk/coercion';
 
 
@@ -47,7 +47,7 @@ export class BreakpointObserver implements OnDestroy {
   /** A subject for all other observables to takeUntil based on. */
   private _destroySubject = new Subject<void>();
 
-  constructor(private mediaMatcher: MediaMatcher, private zone: NgZone) {}
+  constructor(private _mediaMatcher: MediaMatcher, private _zone: NgZone) {}
 
   /** Completes the active subject, signalling to all other observables to complete. */
   ngOnDestroy() {
@@ -75,19 +75,22 @@ export class BreakpointObserver implements OnDestroy {
     const queries = splitQueries(coerceArray(value));
     const observables = queries.map(query => this._registerQuery(query).observable);
 
-    return combineLatest(observables).pipe(
-      debounceTime(0, asapScheduler),
-      map((breakpointStates: InternalBreakpointState[]) => {
-        const response: BreakpointState = {
-          matches: false,
-          breakpoints: {},
-        };
-        breakpointStates.forEach((state: InternalBreakpointState) => {
-          response.matches = response.matches || state.matches;
-          response.breakpoints[state.query] = state.matches;
-        });
-        return response;
-      }));
+    let stateObservable = combineLatest(observables);
+    // Emit the first state immediately, and then debounce the subsequent emissions.
+    stateObservable = concat(
+      stateObservable.pipe(take(1)),
+      stateObservable.pipe(skip(1), debounceTime(0)));
+    return stateObservable.pipe(map((breakpointStates: InternalBreakpointState[]) => {
+      const response: BreakpointState = {
+        matches: false,
+        breakpoints: {},
+      };
+      breakpointStates.forEach((state: InternalBreakpointState) => {
+        response.matches = response.matches || state.matches;
+        response.breakpoints[state.query] = state.matches;
+      });
+      return response;
+    }));
   }
 
   /** Registers a specific query to be listened for. */
@@ -97,7 +100,7 @@ export class BreakpointObserver implements OnDestroy {
       return this._queries.get(query)!;
     }
 
-    const mql: MediaQueryList = this.mediaMatcher.matchMedia(query);
+    const mql: MediaQueryList = this._mediaMatcher.matchMedia(query);
 
     // Create callback for match changes and add it is as a listener.
     const queryObservable = new Observable<MediaQueryList>((observer: Observer<MediaQueryList>) => {
@@ -106,7 +109,7 @@ export class BreakpointObserver implements OnDestroy {
       // webapis-media-query.js file alongside the zone.js file.  Additionally, some browsers do not
       // have MediaQueryList inherit from EventTarget, which causes inconsistencies in how Zone.js
       // patches it.
-      const handler = (e: any) => this.zone.run(() => observer.next(e));
+      const handler = (e: any) => this._zone.run(() => observer.next(e));
       mql.addListener(handler);
 
       return () => {

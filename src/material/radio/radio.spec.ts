@@ -3,6 +3,8 @@ import {FormControl, FormsModule, NgModel, ReactiveFormsModule} from '@angular/f
 import {Component, DebugElement, ViewChild} from '@angular/core';
 import {By} from '@angular/platform-browser';
 import {dispatchFakeEvent} from '@angular/cdk/testing';
+
+import {MAT_RADIO_DEFAULT_OPTIONS} from './radio';
 import {MatRadioButton, MatRadioChange, MatRadioGroup, MatRadioModule} from './index';
 
 describe('MatRadio', () => {
@@ -365,6 +367,25 @@ describe('MatRadio', () => {
       expect(radioNativeElements.every(radioEl => radioEl.classList.contains('mat-accent')))
         .toBe(true, 'Expected every radio element to fallback to accent color if value is falsy.');
     });
+
+    it('should be able to inherit the color from the radio group', () => {
+      groupInstance.color = 'warn';
+      fixture.detectChanges();
+
+      expect(radioNativeElements.every(radioEl => radioEl.classList.contains('mat-warn')))
+        .toBe(true, 'Expected every radio element to have the warn color.');
+    });
+
+    it('should have the individual button color take precedence over the group color', () => {
+      radioInstances[1].color = 'primary';
+      groupInstance.color = 'warn';
+      fixture.detectChanges();
+
+      expect(radioNativeElements[0].classList).toContain('mat-warn');
+      expect(radioNativeElements[1].classList).toContain('mat-primary');
+      expect(radioNativeElements[2].classList).toContain('mat-warn');
+    });
+
   });
 
   describe('group with ngModel', () => {
@@ -702,6 +723,10 @@ describe('MatRadio', () => {
       expect(radio.hasAttribute('name')).toBe(false);
     });
 
+    it('should default the radio color to `accent`', () => {
+      expect(seasonRadioInstances.every(radio => radio.color === 'accent')).toBe(true);
+    });
+
   });
 
   describe('with tabindex', () => {
@@ -773,6 +798,43 @@ describe('MatRadio', () => {
   });
 });
 
+describe('MatRadioDefaultOverrides', () => {
+  describe('when MAT_RADIO_DEFAULT_OPTIONS overridden', () => {
+    beforeEach(async(() => {
+      TestBed.configureTestingModule({
+        imports: [MatRadioModule, FormsModule],
+        declarations: [DefaultRadioButton, RadioButtonWithColorBinding],
+        providers: [{
+          provide: MAT_RADIO_DEFAULT_OPTIONS,
+          useValue: {color: 'primary'},
+        }],
+      });
+
+      TestBed.compileComponents();
+    }));
+    it('should override default color in Component', () => {
+      const fixture: ComponentFixture<DefaultRadioButton> =
+        TestBed.createComponent(DefaultRadioButton);
+      fixture.detectChanges();
+      const radioDebugElement: DebugElement =
+        fixture.debugElement.query(By.directive(MatRadioButton));
+      expect(
+        radioDebugElement.nativeElement.classList
+      ).toContain('mat-primary');
+    });
+    it('should not override explicit input bindings', () => {
+      const fixture: ComponentFixture<RadioButtonWithColorBinding> =
+        TestBed.createComponent(RadioButtonWithColorBinding);
+      fixture.detectChanges();
+      const radioDebugElement: DebugElement =
+        fixture.debugElement.query(By.directive(MatRadioButton));
+      expect(
+        radioDebugElement.nativeElement.classList
+      ).not.toContain('mat-primary');
+      expect(radioDebugElement.nativeElement.classList).toContain('mat-warn');
+    });
+  });
+});
 
 @Component({
   template: `
@@ -914,3 +976,13 @@ class TranscludingWrapper {}
   template: `<mat-radio-button tabindex="0"></mat-radio-button>`
 })
 class RadioButtonWithPredefinedTabindex {}
+
+@Component({
+  template: `<mat-radio-button></mat-radio-button>`
+})
+class DefaultRadioButton {}
+
+@Component({
+  template: `<mat-radio-button color="warn"></mat-radio-button>`
+})
+class RadioButtonWithColorBinding {}

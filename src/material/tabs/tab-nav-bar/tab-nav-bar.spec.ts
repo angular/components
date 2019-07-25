@@ -23,6 +23,7 @@ describe('MatTabNavBar', () => {
         TabLinkWithNgIf,
         TabLinkWithTabIndexBinding,
         TabLinkWithNativeTabindexAttr,
+        TabBarWithInactiveTabsOnInit,
       ],
       providers: [
         {provide: MAT_RIPPLE_GLOBAL_OPTIONS, useFactory: () => globalRippleOptions},
@@ -79,13 +80,13 @@ describe('MatTabNavBar', () => {
 
       tabLink1.nativeElement.click();
       fixture.detectChanges();
-      expect(tabLinkElements[0].getAttribute('aria-current')).toEqual('true');
-      expect(tabLinkElements[1].getAttribute('aria-current')).toEqual('false');
+      expect(tabLinkElements[0].getAttribute('aria-current')).toEqual('page');
+      expect(tabLinkElements[1].hasAttribute('aria-current')).toEqual(false);
 
       tabLink2.nativeElement.click();
       fixture.detectChanges();
-      expect(tabLinkElements[0].getAttribute('aria-current')).toEqual('false');
-      expect(tabLinkElements[1].getAttribute('aria-current')).toEqual('true');
+      expect(tabLinkElements[0].hasAttribute('aria-current')).toEqual(false);
+      expect(tabLinkElements[1].getAttribute('aria-current')).toEqual('page');
     });
 
     it('should add the disabled class if disabled', () => {
@@ -130,15 +131,15 @@ describe('MatTabNavBar', () => {
         .toBe(true, 'Expected element to no longer be keyboard focusable if disabled.');
     });
 
-    it('should make disabled links unclickable', () => {
+    it('should mark disabled links', () => {
       const tabLinkElement = fixture.debugElement.query(By.css('a')).nativeElement;
 
-      expect(getComputedStyle(tabLinkElement).pointerEvents).not.toBe('none');
+      expect(tabLinkElement.classList).not.toContain('mat-tab-disabled');
 
       fixture.componentInstance.disabled = true;
       fixture.detectChanges();
 
-      expect(getComputedStyle(tabLinkElement).pointerEvents).toBe('none');
+      expect(tabLinkElement.classList).toContain('mat-tab-disabled');
     });
 
     it('should re-align the ink bar when the direction changes', () => {
@@ -199,7 +200,17 @@ describe('MatTabNavBar', () => {
 
       expect(inkBar.hide).toHaveBeenCalled();
     });
+
   });
+
+  it('should hide the ink bar if no tabs are active on init', fakeAsync(() => {
+    const fixture = TestBed.createComponent(TabBarWithInactiveTabsOnInit);
+    fixture.detectChanges();
+    tick(20); // Angular turns rAF calls into 16.6ms timeouts in tests.
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.querySelector('.mat-ink-bar').style.visibility).toBe('hidden');
+  }));
 
   it('should clean up the ripple event handlers on destroy', () => {
     let fixture: ComponentFixture<TabLinkWithNgIf> = TestBed.createComponent(TabLinkWithNgIf);
@@ -365,3 +376,15 @@ class TabLinkWithTabIndexBinding {
   `
 })
 class TabLinkWithNativeTabindexAttr {}
+
+
+@Component({
+  template: `
+    <nav mat-tab-nav-bar>
+      <a mat-tab-link *ngFor="let tab of tabs" [active]="false">Tab link {{label}}</a>
+    </nav>
+  `
+})
+class TabBarWithInactiveTabsOnInit {
+  tabs = [0, 1, 2];
+}

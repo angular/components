@@ -80,9 +80,9 @@ export class CdkDialogContainer extends BasePortalOutlet implements OnDestroy {
   private _elementFocusedBeforeDialogWasOpened: HTMLElement | null = null;
 
    /** The class that traps and manages focus within the dialog. */
-  private _focusTrap = this._focusTrapFactory.create(this._elementRef.nativeElement, false);
+  private _focusTrap = this._focusTrapFactory.create(this._elementRef.nativeElement);
 
-  // @HostBinding is used in the class as it is expected to be extended.  Since @Component decorator
+  // @HostBinding is used in the class as it is expected to be extended. Since @Component decorator
   // metadata is not inherited by child classes, instead the host binding data is defined in a way
   // that can be inherited.
   // tslint:disable:no-host-decorator-in-concrete
@@ -92,6 +92,8 @@ export class CdkDialogContainer extends BasePortalOutlet implements OnDestroy {
   get _ariaDescribedBy() { return this._config.ariaDescribedBy; }
 
   @HostBinding('attr.role') get _role() { return this._config.role; }
+
+  @HostBinding('attr.aria-modal') _ariaModal = true;
 
   @HostBinding('attr.tabindex') get _tabindex() { return -1; }
   // tslint:disable:no-host-decorator-in-concrete
@@ -214,6 +216,8 @@ export class CdkDialogContainer extends BasePortalOutlet implements OnDestroy {
    * focus the dialog instead.
    */
   private _autoFocusFirstTabbableElement() {
+    const element = this._elementRef.nativeElement;
+
     // If were to attempt to focus immediately, then the content of the dialog would not yet be
     // ready in instances where change detection has to run first. To deal with this, we simply
     // wait for the microtask queue to be empty.
@@ -222,9 +226,20 @@ export class CdkDialogContainer extends BasePortalOutlet implements OnDestroy {
         // If we didn't find any focusable elements inside the dialog, focus the
         // container so the user can't tab into other elements behind it.
         if (!hasMovedFocus) {
-          this._elementRef.nativeElement.focus();
+          element.focus();
         }
       });
+    } else {
+      const activeElement = this._document.activeElement;
+
+      // Otherwise ensure that focus is on the dialog container. It's possible that a different
+      // component tried to move focus while the open animation was running. See:
+      // https://github.com/angular/components/issues/16215. Note that we only want to do this
+      // if the focus isn't inside the dialog already, because it's possible that the consumer
+      // turned off `autoFocus` in order to move focus themselves.
+      if (activeElement !== element && !element.contains(activeElement)) {
+        element.focus();
+      }
     }
   }
 

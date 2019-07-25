@@ -1,8 +1,9 @@
 export declare const MAT_CHIPS_DEFAULT_OPTIONS: InjectionToken<MatChipsDefaultOptions>;
 
 export declare class MatChip extends _MatChipMixinBase implements FocusableOption, OnDestroy, CanColor, CanDisable, CanDisableRipple, RippleTarget {
+    _animationsDisabled: boolean;
     _chipListMultiple: boolean;
-    _elementRef: ElementRef;
+    _elementRef: ElementRef<HTMLElement>;
     _hasFocus: boolean;
     readonly _onBlur: Subject<MatChipEvent>;
     readonly _onFocus: Subject<MatChipEvent>;
@@ -24,7 +25,7 @@ export declare class MatChip extends _MatChipMixinBase implements FocusableOptio
     readonly selectionChange: EventEmitter<MatChipSelectionChange>;
     trailingIcon: MatChipTrailingIcon;
     value: any;
-    constructor(_elementRef: ElementRef, _ngZone: NgZone, platform: Platform, globalRippleOptions: RippleGlobalOptions | null);
+    constructor(_elementRef: ElementRef<HTMLElement>, _ngZone: NgZone, platform: Platform, globalRippleOptions: RippleGlobalOptions | null, animationMode?: string);
     _addHostClassName(): void;
     _blur(): void;
     _handleClick(event: Event): void;
@@ -117,6 +118,7 @@ export declare class MatChipList extends _MatChipListMixinBase implements MatFor
     readonly valueChange: EventEmitter<any>;
     constructor(_elementRef: ElementRef<HTMLElement>, _changeDetectorRef: ChangeDetectorRef, _dir: Directionality, _parentForm: NgForm, _parentFormGroup: FormGroupDirective, _defaultErrorStateMatcher: ErrorStateMatcher,
     ngControl: NgControl);
+    _allowFocusEscape(): void;
     _blur(): void;
     _focusInput(): void;
     _keydown(event: KeyboardEvent): void;

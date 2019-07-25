@@ -2,7 +2,7 @@ import {Component, ViewChild} from '@angular/core';
 import {By} from '@angular/platform-browser';
 import {ComponentFixture, TestBed, async, inject, fakeAsync, tick} from '@angular/core/testing';
 import {Directionality} from '@angular/cdk/bidi';
-import {dispatchKeyboardEvent} from '@angular/cdk/testing';
+import {dispatchKeyboardEvent, createKeyboardEvent, dispatchEvent} from '@angular/cdk/testing';
 import {ESCAPE, A} from '@angular/cdk/keycodes';
 import {CdkConnectedOverlay, OverlayModule, CdkOverlayOrigin} from './index';
 import {OverlayContainer} from './overlay-container';
@@ -109,11 +109,25 @@ describe('Overlay directives', () => {
     fixture.componentInstance.isOpen = true;
     fixture.detectChanges();
 
-    dispatchKeyboardEvent(document.body, 'keydown', ESCAPE);
+    const event = dispatchKeyboardEvent(document.body, 'keydown', ESCAPE);
     fixture.detectChanges();
 
     expect(overlayContainerElement.textContent!.trim()).toBe('',
         'Expected overlay to have been detached.');
+    expect(event.defaultPrevented).toBe(true);
+  });
+
+  it('should not close when pressing escape with a modifier', () => {
+    fixture.componentInstance.isOpen = true;
+    fixture.detectChanges();
+
+    const event = createKeyboardEvent('keydown', ESCAPE);
+    Object.defineProperty(event, 'altKey', {get: () => true});
+    dispatchEvent(document.body, event);
+    fixture.detectChanges();
+
+    expect(overlayContainerElement.textContent!.trim()).toBeTruthy();
+    expect(event.defaultPrevented).toBe(false);
   });
 
   it('should not depend on the order in which the `origin` and `open` are set', async(() => {
@@ -389,6 +403,23 @@ describe('Overlay directives', () => {
 
       expect(Math.floor(overlayRect.top)).toBe(Math.floor(triggerRect.top) + 10);
       expect(Math.floor(overlayRect.left)).toBe(Math.floor(triggerRect.left) + 20);
+    });
+
+    it('should take the offset from the position', () => {
+      fixture.componentInstance.positionOverrides = [{
+        originX: 'start',
+        originY: 'top',
+        overlayX: 'start',
+        overlayY: 'top',
+        panelClass: 'custom-class'
+      }];
+
+      fixture.componentInstance.isOpen = true;
+      fixture.detectChanges();
+
+      const panel = getPaneElement();
+      expect(panel.classList).toContain('custom-class');
+      expect(panel.classList).toContain('cdk-test-panel-class');
     });
 
     it('should be able to set the viewport margin', () => {

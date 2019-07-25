@@ -1,7 +1,9 @@
 export declare class _MatMenu extends MatMenu {
+    constructor(elementRef: ElementRef<HTMLElement>, ngZone: NgZone, defaultOptions: MatMenuDefaultOptions);
 }
 
 export declare class _MatMenuBase implements AfterContentInit, MatMenuPanel<MatMenuItem>, OnInit, OnDestroy {
+    _allItems: QueryList<MatMenuItem>;
     _animationDone: Subject<AnimationEvent>;
     _classList: {
         [key: string]: boolean;
@@ -29,12 +31,12 @@ export declare class _MatMenuBase implements AfterContentInit, MatMenuPanel<MatM
     _onAnimationStart(event: AnimationEvent): void;
     _resetAnimation(): void;
     _startAnimation(): void;
-    addItem(item: MatMenuItem): void;
+    addItem(_item: MatMenuItem): void;
     focusFirstItem(origin?: FocusOrigin): void;
     ngAfterContentInit(): void;
     ngOnDestroy(): void;
     ngOnInit(): void;
-    removeItem(item: MatMenuItem): void;
+    removeItem(_item: MatMenuItem): void;
     resetActiveItem(): void;
     setElevation(depth: number): void;
     setPositionClasses(posX?: MenuPositionX, posY?: MenuPositionY): void;
@@ -61,7 +63,7 @@ export declare const matMenuAnimations: {
 
 export declare class MatMenuContent implements OnDestroy {
     _attached: Subject<void>;
-    constructor(_template: TemplateRef<any>, _componentFactoryResolver: ComponentFactoryResolver, _appRef: ApplicationRef, _injector: Injector, _viewContainerRef: ViewContainerRef, _document: any);
+    constructor(_template: TemplateRef<any>, _componentFactoryResolver: ComponentFactoryResolver, _appRef: ApplicationRef, _injector: Injector, _viewContainerRef: ViewContainerRef, _document: any, _changeDetectorRef?: ChangeDetectorRef | undefined);
     attach(context?: any): void;
     detach(): void;
     ngOnDestroy(): void;
@@ -78,6 +80,7 @@ export interface MatMenuDefaultOptions {
 export declare class MatMenuItem extends _MatMenuItemMixinBase implements FocusableOption, CanDisable, CanDisableRipple, OnDestroy {
     _highlighted: boolean;
     readonly _hovered: Subject<MatMenuItem>;
+    _parentMenu?: MatMenuPanel<MatMenuItem> | undefined;
     _triggersSubmenu: boolean;
     role: 'menuitem' | 'menuitemradio' | 'menuitemcheckbox';
     constructor(_elementRef: ElementRef<HTMLElement>, document?: any, _focusMonitor?: FocusMonitor | undefined, _parentMenu?: MatMenuPanel<MatMenuItem> | undefined);

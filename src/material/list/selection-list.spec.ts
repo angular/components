@@ -1081,6 +1081,37 @@ describe('MatSelectionList with forms', () => {
       expect(listOptions[1].selected).toBe(true, 'Expected second option to be selected.');
       expect(listOptions[2].selected).toBe(true, 'Expected third option to be selected.');
     });
+
+    it('should not clear the form control when the list is destroyed', fakeAsync(() => {
+      const option = listOptions[1];
+
+      option.selected = true;
+      fixture.detectChanges();
+
+      expect(fixture.componentInstance.formControl.value).toEqual(['opt2']);
+
+      fixture.componentInstance.renderList = false;
+      fixture.detectChanges();
+      tick();
+      fixture.detectChanges();
+
+      expect(fixture.componentInstance.formControl.value).toEqual(['opt2']);
+    }));
+
+    it('should mark options added at a later point as selected', () => {
+      fixture.componentInstance.formControl.setValue(['opt4']);
+      fixture.detectChanges();
+
+      fixture.componentInstance.renderExtraOption = true;
+      fixture.detectChanges();
+
+      listOptions = fixture.debugElement.queryAll(By.directive(MatListOption))
+        .map(optionDebugEl => optionDebugEl.componentInstance);
+
+      expect(listOptions.length).toBe(4);
+      expect(listOptions[3].selected).toBe(true);
+    });
+
   });
 
   describe('preselected values', () => {
@@ -1264,15 +1295,18 @@ class SelectionListWithModel {
 
 @Component({
   template: `
-    <mat-selection-list [formControl]="formControl">
+    <mat-selection-list [formControl]="formControl" *ngIf="renderList">
       <mat-list-option value="opt1">Option 1</mat-list-option>
       <mat-list-option value="opt2">Option 2</mat-list-option>
       <mat-list-option value="opt3">Option 3</mat-list-option>
+      <mat-list-option value="opt4" *ngIf="renderExtraOption">Option 4</mat-list-option>
     </mat-selection-list>
   `
 })
 class SelectionListWithFormControl {
   formControl = new FormControl();
+  renderList = true;
+  renderExtraOption = false;
 }
 
 

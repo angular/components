@@ -21,8 +21,9 @@ import {Schema} from './schema';
 export default function(options: Schema): Rule {
   return chain([
     buildComponent({...options}, {
-      template: './__path__/__name@dasherize@if-flat__/__name@dasherize__.component.html',
-      stylesheet: './__path__/__name@dasherize@if-flat__/__name@dasherize__.component.__style__'
+      template: './__path__/__name@dasherize@if-flat__/__name@dasherize__.component.html.template',
+      stylesheet:
+          './__path__/__name@dasherize@if-flat__/__name@dasherize__.component.__style__.template'
     }),
     options.skipImport ? noop() : addTableModulesToModule(options)
   ]);
@@ -34,9 +35,9 @@ export default function(options: Schema): Rule {
 function addTableModulesToModule(options: Schema) {
   return (host: Tree) => {
     const modulePath = findModuleFromOptions(host, options)!;
-    addModuleImportToModule(host, modulePath, 'MatTableModule', '@angular/material');
-    addModuleImportToModule(host, modulePath, 'MatPaginatorModule', '@angular/material');
-    addModuleImportToModule(host, modulePath, 'MatSortModule', '@angular/material');
+    addModuleImportToModule(host, modulePath, 'MatTableModule', '@angular/material/table');
+    addModuleImportToModule(host, modulePath, 'MatPaginatorModule', '@angular/material/paginator');
+    addModuleImportToModule(host, modulePath, 'MatSortModule', '@angular/material/sort');
     return host;
   };
 }

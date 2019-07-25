@@ -21,8 +21,9 @@ import {Schema} from './schema';
 export default function(options: Schema): Rule {
   return chain([
     buildComponent({...options}, {
-      template: './__path__/__name@dasherize@if-flat__/__name@dasherize__.component.html',
-      stylesheet: './__path__/__name@dasherize@if-flat__/__name@dasherize__.component.__style__',
+      template: './__path__/__name@dasherize@if-flat__/__name@dasherize__.component.html.template',
+      stylesheet:
+          './__path__/__name@dasherize@if-flat__/__name@dasherize__.component.__style__.template',
     }),
     options.skipImport ? noop() : addNavModulesToModule(options)
   ]);
@@ -34,11 +35,11 @@ export default function(options: Schema): Rule {
 function addNavModulesToModule(options: Schema) {
   return (host: Tree) => {
     const modulePath = findModuleFromOptions(host, options)!;
-    addModuleImportToModule(host, modulePath, 'MatGridListModule', '@angular/material');
-    addModuleImportToModule(host, modulePath, 'MatCardModule', '@angular/material');
-    addModuleImportToModule(host, modulePath, 'MatMenuModule', '@angular/material');
-    addModuleImportToModule(host, modulePath, 'MatIconModule', '@angular/material');
-    addModuleImportToModule(host, modulePath, 'MatButtonModule', '@angular/material');
+    addModuleImportToModule(host, modulePath, 'MatGridListModule', '@angular/material/grid-list');
+    addModuleImportToModule(host, modulePath, 'MatCardModule', '@angular/material/card');
+    addModuleImportToModule(host, modulePath, 'MatMenuModule', '@angular/material/menu');
+    addModuleImportToModule(host, modulePath, 'MatIconModule', '@angular/material/icon');
+    addModuleImportToModule(host, modulePath, 'MatButtonModule', '@angular/material/button');
     addModuleImportToModule(host, modulePath, 'LayoutModule', '@angular/cdk/layout');
     return host;
   };

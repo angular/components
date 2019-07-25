@@ -15,6 +15,7 @@
   },
   "files": [
     "./testing/index.ts",
+    "./index.ts",
     "typings.d.ts"
   ],
   "angularCompilerOptions": {
@@ -34,6 +35,9 @@
     "**/*.spec.ts"
   ],
   "exclude": [
-    "**/schematics/**/*.ts"
+    "**/schematics/**/*.ts",
+    // Exclude end-to-end tests and utilities
+    "**/*.e2e.spec.ts",
+    "./testing/e2e/**"
   ]
 }

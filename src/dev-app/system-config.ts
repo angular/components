@@ -50,7 +50,6 @@ System.config({
     '@material/tab-indicator': 'node:@material/tab-indicator/dist/mdc.tabIndicator.js',
     '@material/tab-scroller': 'node:@material/tab-scroller/dist/mdc.tabScroller.js',
     '@material/text-field': 'node:@material/textfield/dist/mdc.textField.js',
-    '@material/toolbar': 'node:@material/toolbar/dist/mdc.toolbar.js',
     '@material/top-app-bar': 'node:@material/top-app-bar/dist/mdc.topAppBar.js',
 
     // Angular specific mappings.
@@ -69,7 +68,6 @@ System.config({
     '@angular/platform-browser-dynamic':
         'node:@angular/platform-browser-dynamic/bundles/platform-browser-dynamic.umd.js',
 
-    '@angular/material': 'dist/packages/material/index.js',
     '@angular/material-experimental': 'dist/packages/material-experimental/index.js',
     '@angular/material-examples': 'dist/packages/material-examples/index.js',
     '@angular/material-moment-adapter': 'dist/packages/material-moment-adapter/index.js',
@@ -141,12 +139,16 @@ System.config({
         'dist/packages/material-experimental/mdc-card/index.js',
     '@angular/material-experimental/mdc-checkbox':
         'dist/packages/material-experimental/mdc-checkbox/index.js',
+    '@angular/material-experimental/mdc-chips':
+        'dist/packages/material-experimental/mdc-chips/index.js',
     '@angular/material-experimental/mdc-menu':
         'dist/packages/material-experimental/mdc-menu/index.js',
     '@angular/material-experimental/mdc-radio':
         'dist/packages/material-experimental/mdc-radio/index.js',
     '@angular/material-experimental/mdc-slide-toggle':
         'dist/packages/material-experimental/mdc-slide-toggle/index.js',
+    '@angular/material-experimental/mdc-tabs':
+        'dist/packages/material-experimental/mdc-tabs/index.js',
     '@angular/material-experimental/mdc-helpers':
         'dist/packages/material-experimental/mdc-helpers/index.js',
     '@angular/material-experimental/popover-edit':

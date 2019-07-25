@@ -47,6 +47,8 @@ const rollupCdkExperimentalEntryPoints =
 /** Map of globals that are used inside of the different packages. */
 export const rollupGlobals = {
   'moment': 'moment',
+  'protractor': 'protractor',
+  'selenium-webdriver': 'selenium-webdriver',
   'tslib': 'tslib',
 
   // MDC Web
@@ -79,7 +81,6 @@ export const rollupGlobals = {
   '@material/tab-indicator': 'mdc.tabIndicator',
   '@material/tab-scroller': 'mdc.tabScroller',
   '@material/text-field': 'mdc.textField',
-  '@material/toolbar': 'mdc.toolbar',
   '@material/top-app-bar': 'mdc.topAppBar',
 
   '@angular/animations': 'ng.animations',
@@ -110,6 +111,8 @@ export const rollupGlobals = {
   ...rollupMatEntryPoints,
   ...rollupCdkExperimentalEntryPoints,
   ...rollupMaterialExperimentalEntryPoints,
+
+  '@angular/cdk/testing/e2e': 'ng.cdk.testing.e2e',
 
   'rxjs': 'rxjs',
   'rxjs/operators': 'rxjs.operators',

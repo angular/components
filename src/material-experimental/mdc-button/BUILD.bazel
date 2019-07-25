@@ -1,27 +1,34 @@
 package(default_visibility = ["//visibility:public"])
 
 load("@io_bazel_rules_sass//:defs.bzl", "sass_binary", "sass_library")
-load("//tools:defaults.bzl", "ng_module")
-load("//:packages.bzl", "CDK_TARGETS", "MATERIAL_TARGETS")
+load("//tools:defaults.bzl", "ng_e2e_test_library", "ng_module")
+load("//src/e2e-app:test_suite.bzl", "e2e_test_suite")
 
 ng_module(
     name = "mdc-button",
-    srcs = glob(["**/*.ts"], exclude = ["**/*.spec.ts"]),
+    srcs = glob(
+        ["**/*.ts"],
+        exclude = ["**/*.spec.ts"],
+    ),
+    assets = [
+        ":button_scss",
+        ":fab_scss",
+        ":icon-button_scss",
+    ] + glob(["**/*.html"]),
     module_name = "@angular/material-experimental/mdc-button",
-    assets = [":button_scss", ":fab_scss", ":icon-button_scss"] + glob(["**/*.html"]),
     deps = [
-        "@npm//@angular/animations",
-        "@npm//material-components-web",
-    ] + CDK_TARGETS + MATERIAL_TARGETS,
+        "//src/cdk/platform",
+        "//src/material/core",
+    ],
 )
 
 sass_library(
-    name = "button_scss_lib",
+    name = "mdc_button_scss_lib",
     srcs = glob(["**/_*.scss"]),
     deps = [
-        "//src/material/core:core_scss_lib",
         "//src/material-experimental/mdc-helpers:mdc_helpers_scss_lib",
         "//src/material-experimental/mdc-helpers:mdc_scss_deps_lib",
+        "//src/material/core:core_scss_lib",
     ],
 )
 
@@ -32,9 +39,9 @@ sass_binary(
         "external/npm/node_modules",
     ],
     deps = [
-        "//src/material/core:all_themes",
         "//src/material-experimental/mdc-helpers:mdc_helpers_scss_lib",
         "//src/material-experimental/mdc-helpers:mdc_scss_deps_lib",
+        "//src/material/core:all_themes",
     ],
 )
 
@@ -45,9 +52,9 @@ sass_binary(
         "external/npm/node_modules",
     ],
     deps = [
-        "//src/material/core:all_themes",
         "//src/material-experimental/mdc-helpers:mdc_helpers_scss_lib",
         "//src/material-experimental/mdc-helpers:mdc_scss_deps_lib",
+        "//src/material/core:all_themes",
     ],
 )
 
@@ -58,8 +65,24 @@ sass_binary(
         "external/npm/node_modules",
     ],
     deps = [
-        "//src/material/core:all_themes",
         "//src/material-experimental/mdc-helpers:mdc_helpers_scss_lib",
         "//src/material-experimental/mdc-helpers:mdc_scss_deps_lib",
+        "//src/material/core:all_themes",
+    ],
+)
+
+ng_e2e_test_library(
+    name = "e2e_test_sources",
+    srcs = glob(["**/*.e2e.spec.ts"]),
+    deps = [
+        "//src/cdk/testing/e2e",
+    ],
+)
+
+e2e_test_suite(
+    name = "e2e_tests",
+    deps = [
+        ":e2e_test_sources",
+        "//src/cdk/testing/e2e",
     ],
 )

@@ -206,6 +206,31 @@ describe('MatButtonToggle with forms', () => {
 
       expect(groupElement.querySelectorAll('.mat-ripple-element').length).toBe(0);
     });
+
+    it('should maintain the selected value when swapping out the list of toggles with one ' +
+      'that still contains the value', fakeAsync(() => {
+        expect(buttonToggleInstances[0].checked).toBe(false);
+        expect(fixture.componentInstance.modelValue).toBeFalsy();
+        expect(groupInstance.value).toBeFalsy();
+
+        groupInstance.value = 'red';
+        fixture.detectChanges();
+
+        expect(buttonToggleInstances[0].checked).toBe(true);
+        expect(groupInstance.value).toBe('red');
+
+        fixture.componentInstance.options = [...fixture.componentInstance.options];
+        fixture.detectChanges();
+        tick();
+        fixture.detectChanges();
+
+        buttonToggleDebugElements = fixture.debugElement.queryAll(By.directive(MatButtonToggle));
+        buttonToggleInstances = buttonToggleDebugElements.map(debugEl => debugEl.componentInstance);
+
+        expect(buttonToggleInstances[0].checked).toBe(true);
+        expect(groupInstance.value).toBe('red');
+      }));
+
   });
 });
 
@@ -224,6 +249,7 @@ describe('MatButtonToggle without forms', () => {
         ButtonToggleWithAriaLabelledby,
         RepeatedButtonTogglesWithPreselectedValue,
         ButtonToggleWithTabindex,
+        ButtonToggleWithStaticName,
       ],
     });
 
@@ -736,7 +762,7 @@ describe('MatButtonToggle without forms', () => {
     });
   });
 
-  describe('with tabindex ', () => {
+  describe('with tabindex', () => {
     it('should forward the tabindex to the underlying button', () => {
       const fixture = TestBed.createComponent(ButtonToggleWithTabindex);
       fixture.detectChanges();
@@ -778,6 +804,16 @@ describe('MatButtonToggle without forms', () => {
     expect(fixture.componentInstance.toggles.toArray()[1].checked).toBe(true);
   });
 
+  it('should not throw on init when toggles are repeated and there is an initial value', () => {
+    const fixture = TestBed.createComponent(ButtonToggleWithStaticName);
+    fixture.detectChanges();
+
+    const hostNode: HTMLElement = fixture.nativeElement.querySelector('.mat-button-toggle');
+
+    expect(hostNode.hasAttribute('name')).toBe(false);
+    expect(hostNode.querySelector('button')!.getAttribute('name')).toBe('custom-name');
+  });
+
   it('should maintain the selected state when the value and toggles are swapped out at ' +
     'the same time', () => {
       const fixture = TestBed.createComponent(RepeatedButtonTogglesWithPreselectedValue);
@@ -809,6 +845,20 @@ describe('MatButtonToggle without forms', () => {
     expect(fixture.componentInstance.toggles.toArray()[1].checked).toBe(false);
     expect(fixture.componentInstance.toggles.toArray()[2].checked).toBe(true);
   });
+
+  it('should not throw if initial value is set during creation', () => {
+    const fixture = TestBed.createComponent(ButtonTogglesInsideButtonToggleGroupMultiple);
+
+    // In Ivy static inputs are set during creation. We simulate this by not calling
+    // `fixture.detectChanges` immediately, but getting a hold of the instance via the
+    // DebugElement and setting the value ourselves.
+    expect(() => {
+      const toggle = fixture.debugElement.query(By.css('mat-button-toggle')).componentInstance;
+      toggle.checked = true;
+      fixture.detectChanges();
+    }).not.toThrow();
+  });
+
 });
 
 @Component({
@@ -951,3 +1001,7 @@ class RepeatedButtonTogglesWithPreselectedValue {
 })
 class ButtonToggleWithTabindex {}
 
+@Component({
+  template: `<mat-button-toggle name="custom-name"></mat-button-toggle>`
+})
+class ButtonToggleWithStaticName {}

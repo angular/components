@@ -11,7 +11,8 @@ import {ViewportRuler} from '@angular/cdk/scrolling';
 import {Direction} from '@angular/cdk/bidi';
 import {normalizePassiveListenerOptions} from '@angular/cdk/platform';
 import {coerceBooleanProperty, coerceElement} from '@angular/cdk/coercion';
-import {Subscription, Subject, Observable, Observer} from 'rxjs';
+import {Subscription, Subject, Observable} from 'rxjs';
+import {startWith} from 'rxjs/operators';
 import {DropListRefInternal as DropListRef} from './drop-list-ref';
 import {DragDropRegistry} from './drag-drop-registry';
 import {extendStyles, toggleNativeDragInteractions} from './drag-styling';
@@ -46,7 +47,6 @@ const activeEventListenerOptions = normalizePassiveListenerOptions({passive: fal
  */
 const MOUSE_EVENT_IGNORE_TIME = 800;
 
-// TODO(crisbeto): add auto-scrolling functionality.
 // TODO(crisbeto): add an API for moving a draggable up/down the
 // list programmatically. Useful for keyboard controls.
 
@@ -127,14 +127,9 @@ export class DragRef<T = any> {
     source: DragRef;
     pointerPosition: {x: number, y: number};
     event: MouseEvent | TouchEvent;
+    distance: Point;
     delta: {x: -1 | 0 | 1, y: -1 | 0 | 1};
   }>();
-
-  /**
-   * Amount of subscriptions to the move event. Used to avoid
-   * hitting the zone if the consumer didn't subscribe to it.
-   */
-  private _moveEventSubscriptions = 0;
 
   /** Keeps track of the direction in which the user is dragging along each axis. */
   private _pointerDirectionDelta: {x: -1 | 0 | 1, y: -1 | 0 | 1};
@@ -159,6 +154,9 @@ export class DragRef<T = any> {
 
   /** Subscription to the event that is dispatched when the user lifts their pointer. */
   private _pointerUpSubscription = Subscription.EMPTY;
+
+  /** Subscription to the viewport being scrolled. */
+  private _scrollSubscription = Subscription.EMPTY;
 
   /**
    * Time at which the last touch event occurred. Used to avoid firing the same
@@ -233,10 +231,10 @@ export class DragRef<T = any> {
   released = new Subject<{source: DragRef}>();
 
   /** Emits when the user stops dragging an item in the container. */
-  ended = new Subject<{source: DragRef}>();
+  ended = new Subject<{source: DragRef, distance: Point}>();
 
   /** Emits when the user has moved the item into a new container. */
-  entered = new Subject<{container: DropListRef, item: DragRef}>();
+  entered = new Subject<{container: DropListRef, item: DragRef, currentIndex: number}>();
 
   /** Emits when the user removes the item its container by dragging it into another container. */
   exited = new Subject<{container: DropListRef, item: DragRef}>();
@@ -248,6 +246,7 @@ export class DragRef<T = any> {
     item: DragRef;
     container: DropListRef;
     previousContainer: DropListRef;
+    distance: Point;
     isPointerOverContainer: boolean;
   }>();
 
@@ -259,16 +258,9 @@ export class DragRef<T = any> {
     source: DragRef;
     pointerPosition: {x: number, y: number};
     event: MouseEvent | TouchEvent;
+    distance: Point;
     delta: {x: -1 | 0 | 1, y: -1 | 0 | 1};
-  }> = new Observable((observer: Observer<any>) => {
-    const subscription = this._moveEvents.subscribe(observer);
-    this._moveEventSubscriptions++;
-
-    return () => {
-      subscription.unsubscribe();
-      this._moveEventSubscriptions--;
-    };
-  });
+  }> = this._moveEvents.asObservable();
 
   /** Arbitrary data that can be attached to the drag item. */
   data: T;
@@ -279,7 +271,7 @@ export class DragRef<T = any> {
    * of the user's pointer on the page and should return a point describing where the item should
    * be rendered.
    */
-  constrainPosition?: (point: Point) => Point;
+  constrainPosition?: (point: Point, dragRef: DragRef) => Point;
 
   constructor(
     element: ElementRef<HTMLElement> | HTMLElement,
@@ -438,7 +430,8 @@ export class DragRef<T = any> {
    * Gets the current position in pixels the draggable outside of a drop container.
    */
   getFreeDragPosition(): Readonly<Point> {
-    return {x: this._passiveTransform.x, y: this._passiveTransform.y};
+    const position = this.isDragging() ? this._activeTransform : this._passiveTransform;
+    return {x: position.x, y: position.y};
   }
 
   /**
@@ -457,10 +450,20 @@ export class DragRef<T = any> {
     return this;
   }
 
+  /** Updates the item's sort order based on the last-known pointer position. */
+  _sortFromLastPointerPosition() {
+    const position = this._pointerPositionAtLastDirectionChange;
+
+    if (position && this._dropContainer) {
+      this._updateActiveDropContainer(position);
+    }
+  }
+
   /** Unsubscribes from the global subscriptions. */
   private _removeSubscriptions() {
     this._pointerMoveSubscription.unsubscribe();
     this._pointerUpSubscription.unsubscribe();
+    this._scrollSubscription.unsubscribe();
   }
 
   /** Destroys the preview element and its ViewRef. */
@@ -520,9 +523,20 @@ export class DragRef<T = any> {
       // direction. Note that this is preferrable over doing something like `skip(minimumDistance)`
       // in the `pointerMove` subscription, because we're not guaranteed to have one move event
       // per pixel of movement (e.g. if the user moves their pointer quickly).
-      if (isOverThreshold && (Date.now() >= this._dragStartTime + (this.dragStartDelay || 0))) {
-        this._hasStartedDragging = true;
-        this._ngZone.run(() => this._startDragSequence(event));
+      if (isOverThreshold) {
+        const isDelayElapsed = Date.now() >= this._dragStartTime + (this.dragStartDelay || 0);
+        if (!isDelayElapsed) {
+          this._endDragSequence(event);
+          return;
+        }
+
+        // Prevent other drag sequences from starting while something in the container is still
+        // being dragged. This can happen while we're waiting for the drop animation to finish
+        // and can cause errors, because some elements might still be moving around.
+        if (!this._dropContainer || !this._dropContainer.isDragging()) {
+          this._hasStartedDragging = true;
+          this._ngZone.run(() => this._startDragSequence(event));
+        }
       }
 
       return;
@@ -563,12 +577,13 @@ export class DragRef<T = any> {
     // Since this event gets fired for every pixel while dragging, we only
     // want to fire it if the consumer opted into it. Also we have to
     // re-enter the zone because we run all of the events on the outside.
-    if (this._moveEventSubscriptions > 0) {
+    if (this._moveEvents.observers.length) {
       this._ngZone.run(() => {
         this._moveEvents.next({
           source: this,
           pointerPosition: constrainedPointerPosition,
           event,
+          distance: this._getDragDistance(constrainedPointerPosition),
           delta: this._pointerDirectionDelta
         });
       });
@@ -577,6 +592,14 @@ export class DragRef<T = any> {
 
   /** Handler that is invoked when the user lifts their pointer up, after initiating a drag. */
   private _pointerUp = (event: MouseEvent | TouchEvent) => {
+    this._endDragSequence(event);
+  }
+
+  /**
+   * Clears subscriptions and stops the dragging sequence.
+   * @param event Browser event object that ended the sequence.
+   */
+  private _endDragSequence(event: MouseEvent | TouchEvent) {
     // Note that here we use `isDragging` from the service, rather than from `this`.
     // The difference is that the one from the service reflects whether a dragging sequence
     // has been initiated, whereas the one on `this` includes whether the user has passed
@@ -598,21 +621,27 @@ export class DragRef<T = any> {
 
     this.released.next({source: this});
 
-    if (!this._dropContainer) {
+    if (this._dropContainer) {
+      // Stop scrolling immediately, instead of waiting for the animation to finish.
+      this._dropContainer._stopScrolling();
+      this._animatePreviewToPlaceholder().then(() => {
+        this._cleanupDragArtifacts(event);
+        this._dragDropRegistry.stopDragging(this);
+      });
+    } else {
       // Convert the active transform into a passive one. This means that next time
       // the user starts dragging the item, its position will be calculated relatively
       // to the new passive transform.
       this._passiveTransform.x = this._activeTransform.x;
       this._passiveTransform.y = this._activeTransform.y;
-      this._ngZone.run(() => this.ended.next({source: this}));
+      this._ngZone.run(() => {
+        this.ended.next({
+          source: this,
+          distance: this._getDragDistance(this._getPointerPositionOnPage(event))
+        });
+      });
       this._dragDropRegistry.stopDragging(this);
-      return;
     }
-
-    this._animatePreviewToPlaceholder().then(() => {
-      this._cleanupDragArtifacts(event);
-      this._dragDropRegistry.stopDragging(this);
-    });
   }
 
   /** Starts the dragging sequence. */
@@ -623,6 +652,8 @@ export class DragRef<T = any> {
     if (isTouchEvent(event)) {
       this._lastTouchEventTime = Date.now();
     }
+
+    this._toggleNativeDragInteractions();
 
     if (this._dropContainer) {
       const element = this._rootElement;
@@ -686,12 +717,17 @@ export class DragRef<T = any> {
       rootElement.style.webkitTapHighlightColor = 'transparent';
     }
 
-    this._toggleNativeDragInteractions();
     this._hasStartedDragging = this._hasMoved = false;
     this._initialContainer = this._dropContainer!;
+
+    // Avoid multiple subscriptions and memory leaks when multi touch
+    // (isDragging check above isn't enough because of possible temporal and/or dimensional delays)
+    this._removeSubscriptions();
     this._pointerMoveSubscription = this._dragDropRegistry.pointerMove.subscribe(this._pointerMove);
     this._pointerUpSubscription = this._dragDropRegistry.pointerUp.subscribe(this._pointerUp);
-    this._scrollPosition = this._viewportRuler.getViewportScrollPosition();
+    this._scrollSubscription = this._dragDropRegistry.scroll.pipe(startWith(null)).subscribe(() => {
+      this._scrollPosition = this._viewportRuler.getViewportScrollPosition();
+    });
 
     if (this._boundaryElement) {
       this._boundaryRect = this._boundaryElement.getBoundingClientRect();
@@ -720,7 +756,7 @@ export class DragRef<T = any> {
     if (this._nextSibling) {
       this._nextSibling.parentNode!.insertBefore(this._rootElement, this._nextSibling);
     } else {
-      this._initialContainer.element.appendChild(this._rootElement);
+      coerceElement(this._initialContainer.element).appendChild(this._rootElement);
     }
 
     this._destroyPreview();
@@ -731,19 +767,22 @@ export class DragRef<T = any> {
     this._ngZone.run(() => {
       const container = this._dropContainer!;
       const currentIndex = container.getItemIndex(this);
-      const {x, y} = this._getPointerPositionOnPage(event);
-      const isPointerOverContainer = container._isOverContainer(x, y);
+      const pointerPosition = this._getPointerPositionOnPage(event);
+      const distance = this._getDragDistance(this._getPointerPositionOnPage(event));
+      const isPointerOverContainer = container._isOverContainer(
+        pointerPosition.x, pointerPosition.y);
 
-      this.ended.next({source: this});
+      this.ended.next({source: this, distance});
       this.dropped.next({
         item: this,
         currentIndex,
         previousIndex: this._initialContainer.getItemIndex(this),
         container: container,
         previousContainer: this._initialContainer,
-        isPointerOverContainer
+        isPointerOverContainer,
+        distance
       });
-      container.drop(this, currentIndex, this._initialContainer, isPointerOverContainer);
+      container.drop(this, currentIndex, this._initialContainer, isPointerOverContainer, distance);
       this._dropContainer = this._initialContainer;
     });
   }
@@ -754,8 +793,7 @@ export class DragRef<T = any> {
    */
   private _updateActiveDropContainer({x, y}: Point) {
     // Drop container that draggable has been moved into.
-    let newContainer = this._dropContainer!._getSiblingContainerFromPosition(this, x, y) ||
-        this._initialContainer._getSiblingContainerFromPosition(this, x, y);
+    let newContainer = this._initialContainer._getSiblingContainerFromPosition(this, x, y);
 
     // If we couldn't find a new container to move the item into, and the item has left it's
     // initial container, check whether the it's over the initial container. This handles the
@@ -772,12 +810,17 @@ export class DragRef<T = any> {
         this.exited.next({item: this, container: this._dropContainer!});
         this._dropContainer!.exit(this);
         // Notify the new container that the item has entered.
-        this.entered.next({item: this, container: newContainer!});
         this._dropContainer = newContainer!;
         this._dropContainer.enter(this, x, y);
+        this.entered.next({
+          item: this,
+          container: newContainer!,
+          currentIndex: newContainer!.getItemIndex(this)
+        });
       });
     }
 
+    this._dropContainer!._startScrollingIfNecessary(x, y);
     this._dropContainer!._sortItem(this, x, y, this._pointerDirectionDelta);
     this._preview.style.transform =
         getTransform(x - this._pickupPositionInElement.x, y - this._pickupPositionInElement.y);
@@ -929,7 +972,7 @@ export class DragRef<T = any> {
   /** Gets the pointer position on the page, accounting for any position constraints. */
   private _getConstrainedPointerPosition(event: MouseEvent | TouchEvent): Point {
     const point = this._getPointerPositionOnPage(event);
-    const constrainedPoint = this.constrainPosition ? this.constrainPosition(point) : point;
+    const constrainedPoint = this.constrainPosition ? this.constrainPosition(point, this) : point;
     const dropContainerLock = this._dropContainer ? this._dropContainer.lockAxis : null;
 
     if (this.lockAxis === 'x' || dropContainerLock === 'x') {
@@ -988,7 +1031,7 @@ export class DragRef<T = any> {
       return;
     }
 
-    const shouldEnable = this.disabled || this._handles.length > 0;
+    const shouldEnable = this._handles.length > 0 || !this.isDragging();
 
     if (shouldEnable !== this._nativeInteractionsEnabled) {
       this._nativeInteractionsEnabled = shouldEnable;
@@ -1022,6 +1065,20 @@ export class DragRef<T = any> {
     this._rootElement.style.transform = this._initialTransform ?
       transform + ' ' + this._initialTransform  : transform;
   }
+
+  /**
+   * Gets the distance that the user has dragged during the current drag sequence.
+   * @param currentPosition Current position of the user's pointer.
+   */
+  private _getDragDistance(currentPosition: Point): Point {
+    const pickupPosition = this._pickupPositionOnPage;
+
+    if (pickupPosition) {
+      return {x: currentPosition.x - pickupPosition.x, y: currentPosition.y - pickupPosition.y};
+    }
+
+    return {x: 0, y: 0};
+  }
 }
 
 /** Point on the page or within an element. */
@@ -1045,12 +1102,27 @@ function getTransform(x: number, y: number): string {
 function deepCloneNode(node: HTMLElement): HTMLElement {
   const clone = node.cloneNode(true) as HTMLElement;
   const descendantsWithId = clone.querySelectorAll('[id]');
+  const descendantCanvases = node.querySelectorAll('canvas');
 
   // Remove the `id` to avoid having multiple elements with the same id on the page.
   clone.removeAttribute('id');
 
   for (let i = 0; i < descendantsWithId.length; i++) {
     descendantsWithId[i].removeAttribute('id');
+  }
+
+  // `cloneNode` won't transfer the content of `canvas` elements so we have to do it ourselves.
+  // We match up the cloned canvas to their sources using their index in the DOM.
+  if (descendantCanvases.length) {
+    const cloneCanvases = clone.querySelectorAll('canvas');
+
+    for (let i = 0; i < descendantCanvases.length; i++) {
+      const correspondingCloneContext = cloneCanvases[i].getContext('2d');
+
+      if (correspondingCloneContext) {
+        correspondingCloneContext.drawImage(descendantCanvases[i], 0, 0);
+      }
+    }
   }
 
   return clone;
@@ -1073,7 +1145,10 @@ function removeElement(element: HTMLElement | null) {
 
 /** Determines whether an event is a touch event. */
 function isTouchEvent(event: MouseEvent | TouchEvent): event is TouchEvent {
-  return event.type.startsWith('touch');
+  // This function is called for every pixel that the user has dragged so we need it to be
+  // as fast as possible. Since we only bind mouse events and touch events, we can assume
+  // that if the event's name starts with `t`, it's a touch event.
+  return event.type[0] === 't';
 }
 
 /** Gets the element into which the drag preview should be inserted. */

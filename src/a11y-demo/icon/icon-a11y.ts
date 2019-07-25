@@ -7,7 +7,7 @@
  */
 
 import {Component} from '@angular/core';
-import {MatSnackBar} from '@angular/material';
+import {MatSnackBar} from '@angular/material/snack-bar';
 
 
 @Component({
@@ -16,9 +16,9 @@ import {MatSnackBar} from '@angular/material';
   templateUrl: 'icon-a11y.html',
 })
 export class IconAccessibilityDemo {
-  constructor(private snackBar: MatSnackBar) {}
+  constructor(private _snackBar: MatSnackBar) {}
 
   deleteIcon() {
-    this.snackBar.open('Item deleted', '', {duration: 2000});
+    this._snackBar.open('Item deleted', '', {duration: 2000});
   }
 }
