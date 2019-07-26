@@ -58,6 +58,7 @@
 /src/material/core/util/**                         @jelbourn
 
 # Miscellaneous components
+/src/google-maps/**                                @mbehrlich
 /src/youtube-player/**                             @nathantate
 
 # CDK
