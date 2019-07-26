@@ -112,7 +112,7 @@ export const rollupGlobals = {
   ...rollupCdkExperimentalEntryPoints,
   ...rollupMaterialExperimentalEntryPoints,
 
-  '@angular/cdk/testing/e2e': 'ng.cdk.testing.e2e',
+  '@angular/cdk/internal-testing/e2e': 'ng.cdk.internalTesting.e2e',
 
   'rxjs': 'rxjs',
   'rxjs/operators': 'rxjs.operators',
