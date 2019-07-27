@@ -3,11 +3,11 @@ package(default_visibility = ["//visibility:public"])
 load("//tools:defaults.bzl", "ts_library")
 
 ts_library(
-  name = "testing",
-  testonly = 1,
-  srcs = glob(["**/*.ts"]),
-  deps = [
-    "@npm//@types/jasmine",
-    "@npm//@types/googlemaps",
-  ],
+    name = "testing",
+    testonly = 1,
+    srcs = glob(["**/*.ts"]),
+    deps = [
+        "@npm//@types/googlemaps",
+        "@npm//@types/jasmine",
+    ],
 )

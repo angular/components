@@ -1,9 +1,9 @@
 import {Component} from '@angular/core';
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import {async, TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 
 import {createMapConstructorSpy, createMapSpy} from './testing/fake-google-map-utils';
-import {GoogleMap, GoogleMapModule} from './index';
+import {GoogleMapModule} from './index';
 
 const DEFAULT_OPTIONS: google.maps.MapOptions = {
   center: {lat: 50, lng: 50},

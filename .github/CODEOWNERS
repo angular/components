@@ -140,6 +140,7 @@
 /src/dev-app/expansion/**                          @josephperrott
 /src/dev-app/focus-origin/**                       @mmalerba
 /src/dev-app/gestures/**                           @jelbourn
+/src/dev-app/google-map/**                         @mbehrlich
 /src/dev-app/grid-list/**                          @jelbourn
 /src/dev-app/icon/**                               @jelbourn
 /src/dev-app/input/**                              @mmalerba

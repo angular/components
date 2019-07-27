@@ -1,6 +1,10 @@
 declare global {
   interface Window {
-    google?: {maps: {Map: jasmine.Spy;}};
+    google?: {
+      maps: {
+        Map: jasmine.Spy;
+      };
+    };
   }
 }
 

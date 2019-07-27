@@ -23,7 +23,8 @@ const cdkSecondaryEntryPoints = getSubdirectoryNames(join(buildConfig.packagesDi
 const matSecondaryEntryPoints = getSubdirectoryNames(join(buildConfig.packagesDir, 'material'));
 
 /** List of potential secondary entry-points for the google-maps package. */
-const googleMapsSecondaryEntryPoints = getSubdirectoryNames(join(buildConfig.packagesDir, 'google-maps'));
+const googleMapsSecondaryEntryPoints =
+    getSubdirectoryNames(join(buildConfig.packagesDir, 'google-maps'));
 
 /** List of potential secondary entry-points for the cdk-experimental package. */
 const cdkExperimentalSecondaryEntryPoints =
@@ -44,7 +45,8 @@ const rollupCdkEntryPoints = generateRollupEntryPoints('cdk', cdkSecondaryEntryP
 const rollupMatEntryPoints = generateRollupEntryPoints('material', matSecondaryEntryPoints);
 
 /** Object with all google-maps entry points in the format of Rollup globals. */
-const rollupGoogleMapsEntryPoints = generateRollupEntryPoints('google-maps', googleMapsSecondaryEntryPoints);
+const rollupGoogleMapsEntryPoints =
+    generateRollupEntryPoints('google-maps', googleMapsSecondaryEntryPoints);
 
 /** Object with all material-experimental entry points in the format of Rollup globals. */
 const rollupMaterialExperimentalEntryPoints =
