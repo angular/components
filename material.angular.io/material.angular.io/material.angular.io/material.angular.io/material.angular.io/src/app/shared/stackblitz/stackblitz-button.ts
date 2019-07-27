@@ -18,7 +18,7 @@ export class StackblitzButton {
    * The button becomes disabled if the user hovers over the button before the stackblitz form
    * is created. After the form is created, the button becomes enabled again.
    * The form creation usually happens extremely quickly, but we handle the case of the
-   * stackblitz not yet being ready for people will poor network connections or slow devices.
+   * stackblitz not yet being ready for people with poor network connections or slow devices.
    */
   isDisabled = false;
   stackblitzForm: HTMLFormElement;
