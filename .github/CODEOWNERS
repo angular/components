@@ -108,6 +108,7 @@
 /src/material-experimental/mdc-slider/**           @devversion
 /src/material-experimental/mdc-tabs/**             @crisbeto
 /src/material-experimental/mdc-sidenav/**          @crisbeto
+/src/material-experimental/mdc-button-toggle/**    @crisbeto
 /src/material-experimental/mdc-theming/**          @mmalerba
 /src/material-experimental/mdc-typography/**       @mmalerba
 /src/material-experimental/popover-edit/**         @kseamon @andrewseguin

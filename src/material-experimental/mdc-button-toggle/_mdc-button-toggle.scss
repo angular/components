@@ -1,0 +1,13 @@
+@import '../mdc-helpers/mdc-helpers';
+
+@mixin mat-button-toggle-theme-mdc($theme) {
+  @include mat-using-mdc-theme($theme) {
+    // TODO: implement MDC-based button toggle.
+  }
+}
+
+@mixin mat-buttont-toggle-typography-mdc($config) {
+  @include mat-using-mdc-typography($config) {
+    // TODO: implement MDC-based button toggle.
+  }
+}
