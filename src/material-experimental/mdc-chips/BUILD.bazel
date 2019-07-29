@@ -55,7 +55,7 @@ ng_test_library(
         ":mdc-chips",
         "//src/cdk/a11y",
         "//src/cdk/bidi",
-        "//src/cdk/internal-testing",
+        "//src/cdk/private/testing",
         "//src/cdk/keycodes",
         "//src/cdk/platform",
         "//src/cdk/testing",

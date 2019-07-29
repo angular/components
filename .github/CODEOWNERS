@@ -65,7 +65,7 @@
 /src/cdk/coercion/**                               @jelbourn
 /src/cdk/collections/**                            @jelbourn @crisbeto @andrewseguin
 /src/cdk/drag-drop/**                              @crisbeto
-/src/cdk/internal-testing/**                       @devversion
+/src/cdk/private/testing/**                       @devversion
 /src/cdk/keycodes/**                               @jelbourn
 /src/cdk/layout/**                                 @josephperrott
 /src/cdk/observers/**                              @jelbourn @crisbeto

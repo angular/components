@@ -1,6 +1,6 @@
 import {Directionality} from '@angular/cdk/bidi';
 import {ENTER, RIGHT_ARROW, SPACE} from '@angular/cdk/keycodes';
-import {MockNgZone} from '@angular/cdk/internal-testing';
+import {MockNgZone} from '@angular/cdk/private/testing';
 import {
   dispatchFakeEvent,
   dispatchKeyboardEvent,

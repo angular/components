@@ -3,12 +3,12 @@ package(default_visibility = ["//visibility:public"])
 load("//tools:defaults.bzl", "ng_module")
 
 ng_module(
-    name = "internal-testing",
+    name = "testing",
     srcs = glob(
         ["**/*.ts"],
         exclude = ["**/*.spec.ts"],
     ),
-    module_name = "@angular/cdk/internal-testing",
+    module_name = "@angular/cdk/private/testing",
     deps = [
         "@npm//@angular/core",
     ],

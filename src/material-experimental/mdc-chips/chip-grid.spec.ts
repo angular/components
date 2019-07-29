@@ -9,7 +9,7 @@ import {
   SPACE,
   TAB
 } from '@angular/cdk/keycodes';
-import {MockNgZone} from '@angular/cdk/internal-testing';
+import {MockNgZone} from '@angular/cdk/private/testing';
 import {
   createFakeEvent,
   createKeyboardEvent,

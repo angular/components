@@ -20,7 +20,7 @@ import {OverlayContainer, Overlay} from '@angular/cdk/overlay';
 import {ESCAPE, LEFT_ARROW, RIGHT_ARROW, DOWN_ARROW, TAB, HOME, END} from '@angular/cdk/keycodes';
 import {MatMenu, MatMenuModule, MatMenuItem} from './index';
 import {MatRipple} from '@angular/material/core';
-import {MockNgZone} from '@angular/cdk/internal-testing';
+import {MockNgZone} from '@angular/cdk/private/testing';
 import {
   dispatchKeyboardEvent,
   dispatchMouseEvent,

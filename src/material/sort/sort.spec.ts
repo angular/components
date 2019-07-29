@@ -1,6 +1,6 @@
 import {CollectionViewer, DataSource} from '@angular/cdk/collections';
 import {CdkTableModule} from '@angular/cdk/table';
-import {wrappedErrorMessage} from '@angular/cdk/internal-testing';
+import {wrappedErrorMessage} from '@angular/cdk/private/testing';
 import {
   createFakeEvent,
   createMouseEvent,
