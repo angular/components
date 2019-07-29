@@ -10,6 +10,7 @@ ts_library(
     ),
     deps = [
         "//src/cdk-experimental/testing",
+        "//src/cdk/coercion",
         "//src/material/progress-spinner",
     ],
 )
