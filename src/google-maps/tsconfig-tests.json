@@ -12,7 +12,7 @@
       "googlemaps"
     ],
     "paths": {
-      "@angular/google-maps/*": ["./*"],
+      "@angular/google-maps/*": ["./*"]
     }
   },
   "angularCompilerOptions": {
