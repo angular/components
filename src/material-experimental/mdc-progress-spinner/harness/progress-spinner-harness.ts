@@ -8,6 +8,7 @@
 
 import {ComponentHarness} from '@angular/cdk-experimental/testing';
 import {ProgressSpinnerMode} from '@angular/material/progress-spinner';
+import {coerceNumberProperty} from '@angular/cdk/coercion';
 
 /**
  * Harness for interacting with a standard mat-progress-spinner in tests.
@@ -20,12 +21,7 @@ export class MatProgressSpinnerHarness extends ComponentHarness {
   async getValue(): Promise<number|null> {
     const host = await this.host();
     const ariaValue = await host.getAttribute('aria-valuenow');
-
-    if (ariaValue) {
-      return Number(ariaValue);
-    }
-
-    return null;
+    return ariaValue ? coerceNumberProperty(ariaValue) : null;
   }
 
   /** Gets a promise for the progress spinner's mode. */
