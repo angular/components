@@ -12,6 +12,9 @@
       ".",
       "../../dist/packages/google-maps"
     ],
+    "paths": {
+      "@angular/google-maps/*": ["../../dist/packages/google-maps/*"]
+    },
     "types": [
       "googlemaps"
     ]
