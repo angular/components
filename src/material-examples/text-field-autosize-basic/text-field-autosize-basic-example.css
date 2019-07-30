@@ -1,0 +1,15 @@
+.demo-align {
+  margin-right: 12px;
+}
+
+.demo-title {
+  color: rgba(0, 0, 0, 0.54);
+  display: block;
+  margin: 0.8em 0 0.4em;
+}
+
+.demo-textarea {
+  width: 100%;
+  margin-bottom: 1.25em;
+}
+
