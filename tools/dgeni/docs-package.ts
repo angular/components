@@ -8,7 +8,7 @@ import {FilterDuplicateExports} from './processors/filter-duplicate-exports';
 import {MergeInheritedProperties} from './processors/merge-inherited-properties';
 import {EntryPointGrouper} from './processors/entry-point-grouper';
 import {ReadTypeScriptModules} from 'dgeni-packages/typescript/processors/readTypeScriptModules';
-import {TypeFormatFlags} from 'dgeni-packages/node_modules/typescript';
+import {TypeFormatFlags} from 'typescript';
 
 // Dgeni packages that the Material docs package depends on.
 const jsdocPackage = require('dgeni-packages/jsdoc');
@@ -78,6 +78,8 @@ apiDocsPackage.config(function(computePathsProcessor: any) {
 apiDocsPackage.config(function(parseTagsProcessor: any) {
   parseTagsProcessor.tagDefinitions = parseTagsProcessor.tagDefinitions.concat([
     {name: 'docs-private'},
+    {name: 'docs-public'},
+    {name: 'docs-primary-module'},
     {name: 'breaking-change'},
   ]);
 });
@@ -89,7 +91,6 @@ apiDocsPackage.config(function(checkAnchorLinksProcessor: any) {
 
 // Configure the processor for understanding TypeScript.
 apiDocsPackage.config(function(readTypeScriptModules: ReadTypeScriptModules) {
-  readTypeScriptModules.ignoreExportsMatching = [/^_/];
   readTypeScriptModules.hidePrivateMembers = true;
 });
 

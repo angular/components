@@ -37,7 +37,6 @@ System.config({
     '@material/tab-indicator': 'node:@material/tab-indicator/dist/mdc.tabIndicator.js',
     '@material/tab-scroller': 'node:@material/tab-scroller/dist/mdc.tabScroller.js',
     '@material/text-field': 'node:@material/textfield/dist/mdc.textField.js',
-    '@material/toolbar': 'node:@material/toolbar/dist/mdc.toolbar.js',
     '@material/top-app-bar': 'node:@material/top-app-bar/dist/mdc.topAppBar.js',
 
     // Angular specific mappings.
@@ -76,6 +75,7 @@ System.config({
     '@angular/cdk/coercion': 'dist/packages/cdk/coercion/index.js',
     '@angular/cdk/collections': 'dist/packages/cdk/collections/index.js',
     '@angular/cdk/drag-drop': 'dist/packages/cdk/drag-drop/index.js',
+    '@angular/cdk/private/testing': 'dist/packages/cdk/private/testing/index.js',
     '@angular/cdk/keycodes': 'dist/packages/cdk/keycodes/index.js',
     '@angular/cdk/layout': 'dist/packages/cdk/layout/index.js',
     '@angular/cdk/observers': 'dist/packages/cdk/observers/index.js',
@@ -89,9 +89,12 @@ System.config({
     '@angular/cdk/text-field': 'dist/packages/cdk/text-field/index.js',
     '@angular/cdk/tree': 'dist/packages/cdk/tree/index.js',
 
-    '@angular/cdk-experimental/scrolling': 'dist/packages/cdk-experimental/scrolling/index.js',
     '@angular/cdk-experimental/dialog': 'dist/packages/cdk-experimental/dialog/index.js',
     '@angular/cdk-experimental/popover-edit': 'dist/packages/cdk-experimental/popover-edit/index.js',
+    '@angular/cdk-experimental/scrolling': 'dist/packages/cdk-experimental/scrolling/index.js',
+    '@angular/cdk-experimental/testing': 'dist/packages/cdk-experimental/testing/index.js',
+    '@angular/cdk-experimental/testing/testbed': 'dist/packages/cdk-experimental/testing/testbed/index.js',
+    '@angular/cdk-experimental/testing/protractor': 'dist/packages/cdk-experimental/testing/protractor/index.js',
 
     '@angular/material/autocomplete': 'dist/packages/material/autocomplete/index.js',
     '@angular/material/badge': 'dist/packages/material/badge/index.js',
@@ -146,6 +149,8 @@ System.config({
         'dist/packages/material-experimental/mdc-radio/index.js',
     '@angular/material-experimental/mdc-slide-toggle':
         'dist/packages/material-experimental/mdc-slide-toggle/index.js',
+    '@angular/material-experimental/mdc-tabs':
+        'dist/packages/material-experimental/mdc-tabs/index.js',
     '@angular/material-experimental/popover-edit':
         'dist/packages/material-experimental/popover-edit/index.js',
   },

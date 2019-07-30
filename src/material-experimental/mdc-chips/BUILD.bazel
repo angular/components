@@ -1,39 +1,81 @@
-package(default_visibility=["//visibility:public"])
+package(default_visibility = ["//visibility:public"])
 
-load("@io_bazel_rules_sass//:defs.bzl", "sass_library", "sass_binary")
-load("//tools:defaults.bzl", "ng_module")
-load("//:packages.bzl", "CDK_TARGETS", "MATERIAL_TARGETS")
+load("@io_bazel_rules_sass//:defs.bzl", "sass_binary", "sass_library")
+load("//tools:defaults.bzl", "ng_module", "ng_test_library", "ng_web_test_suite")
 
 ng_module(
-  name = "mdc-chips",
-  srcs = glob(["**/*.ts"], exclude=["**/*.spec.ts"]),
-  module_name = "@angular/material-experimental/mdc-chips",
-  assets = [":chips_scss"] + glob(["**/*.html"]),
-  deps = [
-    "@npm//@angular/common",
-    "@npm//@angular/core",
-    "@npm//material-components-web",
-  ] + CDK_TARGETS + MATERIAL_TARGETS,
+    name = "mdc-chips",
+    srcs = glob(
+        ["**/*.ts"],
+        exclude = ["**/*.spec.ts"],
+    ),
+    assets = [":chips_scss"] + glob(["**/*.html"]),
+    module_name = "@angular/material-experimental/mdc-chips",
+    deps = [
+        "//src/material/core",
+        "//src/material/form-field",
+        "@npm//@angular/animations",
+        "@npm//@angular/common",
+        "@npm//@angular/core",
+        "@npm//@angular/forms",
+        "@npm//@material/chips",
+    ],
 )
 
 sass_library(
-  name = "chips_scss_lib",
-  srcs = glob(["**/_*.scss"]),
-  deps = [
-    "//src/material/core:core_scss_lib",
-    "//src/material-experimental/mdc-helpers:mdc_helpers_scss_lib",
-    "//src/material-experimental/mdc-helpers:mdc_scss_deps_lib",
-  ],
+    name = "mdc_chips_scss_lib",
+    srcs = glob(["**/_*.scss"]),
+    deps = [
+        "//src/material-experimental/mdc-helpers:mdc_helpers_scss_lib",
+        "//src/material-experimental/mdc-helpers:mdc_scss_deps_lib",
+        "//src/material/core:core_scss_lib",
+    ],
 )
 
 sass_binary(
-  name = "chips_scss",
-  src = "chips.scss",
-  include_paths = [
-    "external/npm/node_modules",
-  ],
-  deps = [
-    "//src/material/core:all_themes",
-    "//src/material-experimental/mdc-helpers:mdc_scss_deps_lib",
-  ]
+    name = "chips_scss",
+    src = "chips.scss",
+    include_paths = [
+        "external/npm/node_modules",
+    ],
+    deps = [
+        "//src/material-experimental/mdc-helpers:mdc_helpers_scss_lib",
+        "//src/material-experimental/mdc-helpers:mdc_scss_deps_lib",
+        "//src/material/core:all_themes",
+    ],
+)
+
+ng_test_library(
+    name = "chips_tests_lib",
+    srcs = glob(
+        ["**/*.spec.ts"],
+        exclude = ["**/*.e2e.spec.ts"],
+    ),
+    deps = [
+        ":mdc-chips",
+        "//src/cdk/a11y",
+        "//src/cdk/bidi",
+        "//src/cdk/keycodes",
+        "//src/cdk/platform",
+        "//src/cdk/private/testing",
+        "//src/cdk/testing",
+        "//src/material/core",
+        "//src/material/form-field",
+        "//src/material/input",
+        "@npm//@angular/animations",
+        "@npm//@angular/common",
+        "@npm//@angular/forms",
+        "@npm//@angular/platform-browser",
+        "@npm//material-components-web",
+        "@npm//rxjs",
+    ],
+)
+
+ng_web_test_suite(
+    name = "unit_tests",
+    static_files = ["@npm//:node_modules/@material/chips/dist/mdc.chips.js"],
+    deps = [
+        ":chips_tests_lib",
+        "//src/material-experimental:mdc_require_config.js",
+    ],
 )

@@ -2,11 +2,11 @@ import {Directionality} from '@angular/cdk/bidi';
 import {DOWN_ARROW, ENTER, ESCAPE, SPACE, TAB, UP_ARROW} from '@angular/cdk/keycodes';
 import {Overlay, OverlayContainer} from '@angular/cdk/overlay';
 import {ScrollDispatcher} from '@angular/cdk/scrolling';
+import {MockNgZone} from '@angular/cdk/private/testing';
 import {
   createKeyboardEvent,
   dispatchFakeEvent,
   dispatchKeyboardEvent,
-  MockNgZone,
   typeInElement,
   dispatchEvent,
 } from '@angular/cdk/testing';
@@ -1111,6 +1111,7 @@ describe('MatAutocomplete', () => {
       const trigger = fixture.componentInstance.trigger;
       const upArrowEvent = createKeyboardEvent('keydown', UP_ARROW);
       Object.defineProperty(upArrowEvent, 'altKey', {get: () => true});
+      spyOn(upArrowEvent, 'stopPropagation').and.callThrough();
 
       input.focus();
       flush();
@@ -1124,6 +1125,7 @@ describe('MatAutocomplete', () => {
 
       expect(document.activeElement).toBe(input, 'Expected input to continue to be focused.');
       expect(trigger.panelOpen).toBe(false, 'Expected panel to be closed.');
+      expect(upArrowEvent.stopPropagation).toHaveBeenCalled();
     }));
 
     it('should close the panel when tabbing away from a trigger without results', fakeAsync(() => {

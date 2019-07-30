@@ -12,13 +12,13 @@ import {
   HOME,
   END,
 } from '@angular/cdk/keycodes';
+import {MockNgZone} from '@angular/cdk/private/testing';
 import {
   createKeyboardEvent,
   dispatchFakeEvent,
   dispatchKeyboardEvent,
   dispatchMouseEvent,
   typeInElement,
-  MockNgZone,
 } from '@angular/cdk/testing';
 import {
   Component,
@@ -544,7 +544,7 @@ describe('MatChipList', () => {
 
     it('should complete the stateChanges stream on destroy', () => {
       const spy = jasmine.createSpy('stateChanges complete');
-      const subscription = chipListInstance.stateChanges.subscribe(undefined, undefined, spy);
+      const subscription = chipListInstance.stateChanges.subscribe({complete: spy});
 
       fixture.destroy();
       expect(spy).toHaveBeenCalled();

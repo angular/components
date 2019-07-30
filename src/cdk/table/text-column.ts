@@ -16,11 +16,15 @@ import {
   OnInit,
   Optional,
   ViewChild,
-  ViewEncapsulation
+  ViewEncapsulation,
+  isDevMode,
 } from '@angular/core';
 import {CdkCellDef, CdkColumnDef, CdkHeaderCellDef} from './cell';
 import {CdkTable} from './table';
-import {getTableTextColumnMissingParentTableError} from './table-errors';
+import {
+  getTableTextColumnMissingParentTableError,
+  getTableTextColumnMissingNameError,
+} from './table-errors';
 
 
 /** Configurable options for `CdkTextColumn`. */
@@ -78,7 +82,10 @@ export class CdkTextColumn<T> implements OnDestroy, OnInit {
   }
   set name(name: string) {
     this._name = name;
-    this.columnDef.name = name;
+
+    // With Ivy, inputs can be initialized before static query results are
+    // available. In that case, we defer the synchronization until "ngOnInit" fires.
+    this._syncColumnDefName();
   }
   _name: string;
 
@@ -127,6 +134,8 @@ export class CdkTextColumn<T> implements OnDestroy, OnInit {
   }
 
   ngOnInit() {
+    this._syncColumnDefName();
+
     if (this.headerText === undefined) {
       this.headerText = this._createDefaultHeaderText();
     }
@@ -159,10 +168,23 @@ export class CdkTextColumn<T> implements OnDestroy, OnInit {
    * has been provided. Otherwise simply capitalize the column name.
    */
   _createDefaultHeaderText() {
-    if (this._options && this._options.defaultHeaderTextTransform) {
-      return this._options.defaultHeaderTextTransform(this.name);
+    const name = this.name;
+
+    if (isDevMode() && !name) {
+      throw getTableTextColumnMissingNameError();
     }
 
-    return this.name[0].toUpperCase() + this.name.slice(1);
+    if (this._options && this._options.defaultHeaderTextTransform) {
+      return this._options.defaultHeaderTextTransform(name);
+    }
+
+    return name[0].toUpperCase() + name.slice(1);
+  }
+
+  /** Synchronizes the column definition name with the text column name. */
+  private _syncColumnDefName() {
+    if (this.columnDef) {
+      this.columnDef.name = this.name;
+    }
   }
 }

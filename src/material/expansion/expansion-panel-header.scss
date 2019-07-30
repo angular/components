@@ -18,6 +18,18 @@
   &:not([aria-disabled='true']) {
     cursor: pointer;
   }
+
+  &.mat-expansion-toggle-indicator-before {
+    flex-direction: row-reverse;
+
+    .mat-expansion-indicator {
+      margin: 0 16px 0 0;
+
+      [dir='rtl'] & {
+        margin: 0 0 0 16px;
+      }
+    }
+  }
 }
 
 .mat-content {

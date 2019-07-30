@@ -29,6 +29,7 @@ import {
   MatExpansionPanelDefaultOptions,
   MAT_EXPANSION_PANEL_DEFAULT_OPTIONS,
 } from './expansion-panel';
+import {MatAccordionTogglePosition} from './accordion-base';
 
 
 /**
@@ -56,8 +57,12 @@ import {
     '[attr.aria-expanded]': '_isExpanded()',
     '[attr.aria-disabled]': 'panel.disabled',
     '[class.mat-expanded]': '_isExpanded()',
+    '[class.mat-expansion-toggle-indicator-after]': `_getTogglePosition() === 'after'`,
+    '[class.mat-expansion-toggle-indicator-before]': `_getTogglePosition() === 'before'`,
     '(click)': '_toggle()',
     '(keydown)': '_keydown($event)',
+    '[@.disabled]': '_animationsDisabled',
+    '(@expansionHeight.start)': '_animationStarted()',
     '[@expansionHeight]': `{
         value: _getExpandedState(),
         params: {
@@ -70,6 +75,9 @@ import {
 export class MatExpansionPanelHeader implements OnDestroy, FocusableOption {
   private _parentChangeSubscription = Subscription.EMPTY;
 
+  /** Whether Angular animations in the panel header should be disabled. */
+  _animationsDisabled = true;
+
   constructor(
       @Host() public panel: MatExpansionPanel,
       private _element: ElementRef,
@@ -79,7 +87,7 @@ export class MatExpansionPanelHeader implements OnDestroy, FocusableOption {
           defaultOptions?: MatExpansionPanelDefaultOptions) {
     const accordionHideToggleChange = panel.accordion ?
         panel.accordion._stateChanges.pipe(
-            filter(changes => !!changes['hideToggle'])) :
+            filter(changes => !!(changes['hideToggle'] || changes['togglePosition']))) :
         EMPTY;
 
     // Since the toggle state depends on an @Input on the panel, we
@@ -88,7 +96,12 @@ export class MatExpansionPanelHeader implements OnDestroy, FocusableOption {
         merge(
             panel.opened, panel.closed, accordionHideToggleChange,
             panel._inputChanges.pipe(filter(
-                changes => !!(changes['hideToggle'] || changes['disabled']))))
+                changes => {
+                  return !!(
+                    changes['hideToggle'] ||
+                    changes['disabled'] ||
+                    changes['togglePosition']);
+                  })))
     .subscribe(() => this._changeDetectorRef.markForCheck());
 
     // Avoids focus being lost if the panel contained the focused element and was closed.
@@ -106,6 +119,18 @@ export class MatExpansionPanelHeader implements OnDestroy, FocusableOption {
       this.expandedHeight = defaultOptions.expandedHeight;
       this.collapsedHeight = defaultOptions.collapsedHeight;
     }
+  }
+
+  _animationStarted() {
+    // Currently the `expansionHeight` animation has a `void => collapsed` transition which is
+    // there to work around a bug in Angular (see #13088), however this introduces a different
+    // issue. The new transition will cause the header to animate in on init (see #16067), if the
+    // consumer has set a header height that is different from the default one. We work around it
+    // by disabling animations on the header and re-enabling them after the first animation has run.
+    // Note that Angular dispatches animation events even if animations are disabled. Ideally this
+    // wouldn't be necessary if we remove the `void => collapsed` transition, but we have to wait
+    // for https://github.com/angular/angular/issues/18847 to be resolved.
+    this._animationsDisabled = false;
   }
 
   /** Height of the header while the panel is expanded. */
@@ -140,6 +165,11 @@ export class MatExpansionPanelHeader implements OnDestroy, FocusableOption {
   /** Gets the panel id. */
   _getPanelId(): string {
     return this.panel.id;
+  }
+
+  /** Gets the toggle position for the header. */
+  _getTogglePosition(): MatAccordionTogglePosition {
+    return this.panel.togglePosition;
   }
 
   /** Gets whether the expand indicator should be shown. */

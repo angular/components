@@ -1,6 +1,6 @@
 import {ComponentPortal, PortalModule} from '@angular/cdk/portal';
 import {CdkScrollable, ScrollingModule} from '@angular/cdk/scrolling';
-import {MockNgZone} from '@angular/cdk/testing';
+import {MockNgZone} from '@angular/cdk/private/testing';
 import {Component, ElementRef, NgModule, NgZone} from '@angular/core';
 import {inject, TestBed} from '@angular/core/testing';
 import {Subscription} from 'rxjs';
@@ -413,7 +413,7 @@ describe('ConnectedPositionStrategy', () => {
 
       const completeHandler = jasmine.createSpy('complete handler');
 
-      positionStrategy.onPositionChange.subscribe(undefined, undefined, completeHandler);
+      positionStrategy.onPositionChange.subscribe({complete: completeHandler});
       attachOverlay(positionStrategy);
       positionStrategy.dispose();
 

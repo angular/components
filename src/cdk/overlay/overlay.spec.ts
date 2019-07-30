@@ -10,7 +10,8 @@ import {
   NgZone,
 } from '@angular/core';
 import {Direction, Directionality} from '@angular/cdk/bidi';
-import {dispatchFakeEvent, MockNgZone} from '@angular/cdk/testing';
+import {MockNgZone} from '@angular/cdk/private/testing';
+import {dispatchFakeEvent} from '@angular/cdk/testing';
 import {
   ComponentPortal,
   PortalModule,
@@ -261,8 +262,8 @@ describe('Overlay', () => {
     let attachCompleteSpy = jasmine.createSpy('attachCompleteSpy spy');
     let detachCompleteSpy = jasmine.createSpy('detachCompleteSpy spy');
 
-    overlayRef.attachments().subscribe(undefined, undefined, attachCompleteSpy);
-    overlayRef.detachments().subscribe(disposeSpy, undefined, detachCompleteSpy);
+    overlayRef.attachments().subscribe({complete: attachCompleteSpy});
+    overlayRef.detachments().subscribe({next: disposeSpy, complete: detachCompleteSpy});
 
     overlayRef.attach(componentPortal);
     overlayRef.dispose();
@@ -276,8 +277,8 @@ describe('Overlay', () => {
     let overlayRef = overlay.create();
     let callbackOrder: string[] = [];
 
-    overlayRef.attachments().subscribe(undefined, undefined, () => callbackOrder.push('attach'));
-    overlayRef.detachments().subscribe(undefined, undefined, () => callbackOrder.push('detach'));
+    overlayRef.attachments().subscribe({complete: () => callbackOrder.push('attach')});
+    overlayRef.detachments().subscribe({complete: () => callbackOrder.push('detach')});
 
     overlayRef.attach(componentPortal);
     overlayRef.dispose();
@@ -677,7 +678,7 @@ describe('Overlay', () => {
 
       let completeHandler = jasmine.createSpy('backdrop complete handler');
 
-      overlayRef.backdropClick().subscribe(undefined, undefined, completeHandler);
+      overlayRef.backdropClick().subscribe({complete: completeHandler});
       overlayRef.dispose();
 
       expect(completeHandler).toHaveBeenCalled();
@@ -743,6 +744,30 @@ describe('Overlay', () => {
       expect(children.indexOf(host)).toBeGreaterThan(-1);
       expect(children.indexOf(backdrop))
         .toBeLessThan(children.indexOf(host), 'Expected backdrop to be before the host in the DOM');
+    });
+
+    it('should remove the event listener from the backdrop', () => {
+      let overlayRef = overlay.create(config);
+      overlayRef.attach(componentPortal);
+
+      viewContainerFixture.detectChanges();
+      let backdrop = overlayContainerElement.querySelector('.cdk-overlay-backdrop') as HTMLElement;
+      expect(backdrop).toBeTruthy();
+      expect(backdrop.classList).not.toContain('cdk-overlay-backdrop-showing');
+
+      let backdropClickHandler = jasmine.createSpy('backdropClickHander');
+      overlayRef.backdropClick().subscribe(backdropClickHandler);
+
+      backdrop.click();
+      expect(backdropClickHandler).toHaveBeenCalledTimes(1);
+
+      overlayRef.detach();
+      dispatchFakeEvent(backdrop, 'transitionend');
+      zone.simulateZoneExit();
+      viewContainerFixture.detectChanges();
+
+      backdrop.click();
+      expect(backdropClickHandler).toHaveBeenCalledTimes(1);
     });
 
   });

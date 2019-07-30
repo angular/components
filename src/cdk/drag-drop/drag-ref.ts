@@ -12,6 +12,7 @@ import {Direction} from '@angular/cdk/bidi';
 import {normalizePassiveListenerOptions} from '@angular/cdk/platform';
 import {coerceBooleanProperty, coerceElement} from '@angular/cdk/coercion';
 import {Subscription, Subject, Observable} from 'rxjs';
+import {startWith} from 'rxjs/operators';
 import {DropListRefInternal as DropListRef} from './drop-list-ref';
 import {DragDropRegistry} from './drag-drop-registry';
 import {extendStyles, toggleNativeDragInteractions} from './drag-styling';
@@ -46,7 +47,6 @@ const activeEventListenerOptions = normalizePassiveListenerOptions({passive: fal
  */
 const MOUSE_EVENT_IGNORE_TIME = 800;
 
-// TODO(crisbeto): add auto-scrolling functionality.
 // TODO(crisbeto): add an API for moving a draggable up/down the
 // list programmatically. Useful for keyboard controls.
 
@@ -154,6 +154,9 @@ export class DragRef<T = any> {
 
   /** Subscription to the event that is dispatched when the user lifts their pointer. */
   private _pointerUpSubscription = Subscription.EMPTY;
+
+  /** Subscription to the viewport being scrolled. */
+  private _scrollSubscription = Subscription.EMPTY;
 
   /**
    * Time at which the last touch event occurred. Used to avoid firing the same
@@ -268,7 +271,7 @@ export class DragRef<T = any> {
    * of the user's pointer on the page and should return a point describing where the item should
    * be rendered.
    */
-  constrainPosition?: (point: Point) => Point;
+  constrainPosition?: (point: Point, dragRef: DragRef) => Point;
 
   constructor(
     element: ElementRef<HTMLElement> | HTMLElement,
@@ -427,7 +430,8 @@ export class DragRef<T = any> {
    * Gets the current position in pixels the draggable outside of a drop container.
    */
   getFreeDragPosition(): Readonly<Point> {
-    return {x: this._passiveTransform.x, y: this._passiveTransform.y};
+    const position = this.isDragging() ? this._activeTransform : this._passiveTransform;
+    return {x: position.x, y: position.y};
   }
 
   /**
@@ -446,10 +450,20 @@ export class DragRef<T = any> {
     return this;
   }
 
+  /** Updates the item's sort order based on the last-known pointer position. */
+  _sortFromLastPointerPosition() {
+    const position = this._pointerPositionAtLastDirectionChange;
+
+    if (position && this._dropContainer) {
+      this._updateActiveDropContainer(position);
+    }
+  }
+
   /** Unsubscribes from the global subscriptions. */
   private _removeSubscriptions() {
     this._pointerMoveSubscription.unsubscribe();
     this._pointerUpSubscription.unsubscribe();
+    this._scrollSubscription.unsubscribe();
   }
 
   /** Destroys the preview element and its ViewRef. */
@@ -509,9 +523,20 @@ export class DragRef<T = any> {
       // direction. Note that this is preferrable over doing something like `skip(minimumDistance)`
       // in the `pointerMove` subscription, because we're not guaranteed to have one move event
       // per pixel of movement (e.g. if the user moves their pointer quickly).
-      if (isOverThreshold && (Date.now() >= this._dragStartTime + (this.dragStartDelay || 0))) {
-        this._hasStartedDragging = true;
-        this._ngZone.run(() => this._startDragSequence(event));
+      if (isOverThreshold) {
+        const isDelayElapsed = Date.now() >= this._dragStartTime + (this.dragStartDelay || 0);
+        if (!isDelayElapsed) {
+          this._endDragSequence(event);
+          return;
+        }
+
+        // Prevent other drag sequences from starting while something in the container is still
+        // being dragged. This can happen while we're waiting for the drop animation to finish
+        // and can cause errors, because some elements might still be moving around.
+        if (!this._dropContainer || !this._dropContainer.isDragging()) {
+          this._hasStartedDragging = true;
+          this._ngZone.run(() => this._startDragSequence(event));
+        }
       }
 
       return;
@@ -567,6 +592,14 @@ export class DragRef<T = any> {
 
   /** Handler that is invoked when the user lifts their pointer up, after initiating a drag. */
   private _pointerUp = (event: MouseEvent | TouchEvent) => {
+    this._endDragSequence(event);
+  }
+
+  /**
+   * Clears subscriptions and stops the dragging sequence.
+   * @param event Browser event object that ended the sequence.
+   */
+  private _endDragSequence(event: MouseEvent | TouchEvent) {
     // Note that here we use `isDragging` from the service, rather than from `this`.
     // The difference is that the one from the service reflects whether a dragging sequence
     // has been initiated, whereas the one on `this` includes whether the user has passed
@@ -588,7 +621,14 @@ export class DragRef<T = any> {
 
     this.released.next({source: this});
 
-    if (!this._dropContainer) {
+    if (this._dropContainer) {
+      // Stop scrolling immediately, instead of waiting for the animation to finish.
+      this._dropContainer._stopScrolling();
+      this._animatePreviewToPlaceholder().then(() => {
+        this._cleanupDragArtifacts(event);
+        this._dragDropRegistry.stopDragging(this);
+      });
+    } else {
       // Convert the active transform into a passive one. This means that next time
       // the user starts dragging the item, its position will be calculated relatively
       // to the new passive transform.
@@ -601,13 +641,7 @@ export class DragRef<T = any> {
         });
       });
       this._dragDropRegistry.stopDragging(this);
-      return;
     }
-
-    this._animatePreviewToPlaceholder().then(() => {
-      this._cleanupDragArtifacts(event);
-      this._dragDropRegistry.stopDragging(this);
-    });
   }
 
   /** Starts the dragging sequence. */
@@ -618,6 +652,8 @@ export class DragRef<T = any> {
     if (isTouchEvent(event)) {
       this._lastTouchEventTime = Date.now();
     }
+
+    this._toggleNativeDragInteractions();
 
     if (this._dropContainer) {
       const element = this._rootElement;
@@ -681,12 +717,17 @@ export class DragRef<T = any> {
       rootElement.style.webkitTapHighlightColor = 'transparent';
     }
 
-    this._toggleNativeDragInteractions();
     this._hasStartedDragging = this._hasMoved = false;
     this._initialContainer = this._dropContainer!;
+
+    // Avoid multiple subscriptions and memory leaks when multi touch
+    // (isDragging check above isn't enough because of possible temporal and/or dimensional delays)
+    this._removeSubscriptions();
     this._pointerMoveSubscription = this._dragDropRegistry.pointerMove.subscribe(this._pointerMove);
     this._pointerUpSubscription = this._dragDropRegistry.pointerUp.subscribe(this._pointerUp);
-    this._scrollPosition = this._viewportRuler.getViewportScrollPosition();
+    this._scrollSubscription = this._dragDropRegistry.scroll.pipe(startWith(null)).subscribe(() => {
+      this._scrollPosition = this._viewportRuler.getViewportScrollPosition();
+    });
 
     if (this._boundaryElement) {
       this._boundaryRect = this._boundaryElement.getBoundingClientRect();
@@ -779,6 +820,7 @@ export class DragRef<T = any> {
       });
     }
 
+    this._dropContainer!._startScrollingIfNecessary(x, y);
     this._dropContainer!._sortItem(this, x, y, this._pointerDirectionDelta);
     this._preview.style.transform =
         getTransform(x - this._pickupPositionInElement.x, y - this._pickupPositionInElement.y);
@@ -930,7 +972,7 @@ export class DragRef<T = any> {
   /** Gets the pointer position on the page, accounting for any position constraints. */
   private _getConstrainedPointerPosition(event: MouseEvent | TouchEvent): Point {
     const point = this._getPointerPositionOnPage(event);
-    const constrainedPoint = this.constrainPosition ? this.constrainPosition(point) : point;
+    const constrainedPoint = this.constrainPosition ? this.constrainPosition(point, this) : point;
     const dropContainerLock = this._dropContainer ? this._dropContainer.lockAxis : null;
 
     if (this.lockAxis === 'x' || dropContainerLock === 'x') {
@@ -989,7 +1031,7 @@ export class DragRef<T = any> {
       return;
     }
 
-    const shouldEnable = this.disabled || this._handles.length > 0;
+    const shouldEnable = this._handles.length > 0 || !this.isDragging();
 
     if (shouldEnable !== this._nativeInteractionsEnabled) {
       this._nativeInteractionsEnabled = shouldEnable;
@@ -1103,7 +1145,10 @@ function removeElement(element: HTMLElement | null) {
 
 /** Determines whether an event is a touch event. */
 function isTouchEvent(event: MouseEvent | TouchEvent): event is TouchEvent {
-  return event.type.startsWith('touch');
+  // This function is called for every pixel that the user has dragged so we need it to be
+  // as fast as possible. Since we only bind mouse events and touch events, we can assume
+  // that if the event's name starts with `t`, it's a touch event.
+  return event.type[0] === 't';
 }
 
 /** Gets the element into which the drag preview should be inserted. */

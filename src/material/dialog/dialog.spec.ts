@@ -16,7 +16,8 @@ import {
   NgModule,
   TemplateRef,
   ViewChild,
-  ViewContainerRef
+  ViewContainerRef,
+  ComponentFactoryResolver
 } from '@angular/core';
 import {By} from '@angular/platform-browser';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
@@ -27,7 +28,7 @@ import {MatDialogContainer} from './dialog-container';
 import {OverlayContainer, ScrollStrategy, Overlay} from '@angular/cdk/overlay';
 import {ScrollDispatcher} from '@angular/cdk/scrolling';
 import {A, ESCAPE} from '@angular/cdk/keycodes';
-import {dispatchKeyboardEvent} from '@angular/cdk/testing';
+import {dispatchKeyboardEvent, createKeyboardEvent} from '@angular/cdk/testing';
 import {
   MAT_DIALOG_DATA,
   MatDialog,
@@ -194,6 +195,17 @@ describe('MatDialog', () => {
     expect(overlayContainerElement.querySelector('mat-dialog-container')).toBeNull();
   }));
 
+  it('should dispose of dialog if view container is destroyed while animating', fakeAsync(() => {
+    const dialogRef = dialog.open(PizzaMsg, {viewContainerRef: testViewContainerRef});
+
+    dialogRef.close();
+    viewContainerFixture.detectChanges();
+    viewContainerFixture.destroy();
+    flush();
+
+    expect(overlayContainerElement.querySelector('mat-dialog-container')).toBeNull();
+  }));
+
   it('should dispatch the beforeClose and afterClose events when the ' +
     'overlay is detached externally', fakeAsync(inject([Overlay], (overlay: Overlay) => {
       const dialogRef = dialog.open(PizzaMsg, {
@@ -240,11 +252,26 @@ describe('MatDialog', () => {
       viewContainerRef: testViewContainerRef
     });
 
-    dispatchKeyboardEvent(document.body, 'keydown', ESCAPE);
+    const event = dispatchKeyboardEvent(document.body, 'keydown', ESCAPE);
     viewContainerFixture.detectChanges();
     flush();
 
     expect(overlayContainerElement.querySelector('mat-dialog-container')).toBeNull();
+    expect(event.defaultPrevented).toBe(true);
+  }));
+
+  it('should not close a dialog via the escape key with a modifier', fakeAsync(() => {
+    dialog.open(PizzaMsg, {
+      viewContainerRef: testViewContainerRef
+    });
+
+    const event = createKeyboardEvent('keydown', ESCAPE);
+    Object.defineProperty(event, 'altKey', {get: () => true});
+    viewContainerFixture.detectChanges();
+    flush();
+
+    expect(overlayContainerElement.querySelector('mat-dialog-container')).toBeTruthy();
+    expect(event.defaultPrevented).toBe(false);
   }));
 
   it('should close from a ViewContainerRef with OnPush change detection', fakeAsync(() => {
@@ -715,6 +742,19 @@ describe('MatDialog', () => {
     expect(scrollStrategy.enable).toHaveBeenCalled();
   }));
 
+  it('should be able to pass in an alternate ComponentFactoryResolver',
+    inject([ComponentFactoryResolver], (resolver: ComponentFactoryResolver) => {
+      spyOn(resolver, 'resolveComponentFactory').and.callThrough();
+
+      dialog.open(PizzaMsg, {
+        viewContainerRef: testViewContainerRef,
+        componentFactoryResolver: resolver
+      });
+      viewContainerFixture.detectChanges();
+
+      expect(resolver.resolveComponentFactory).toHaveBeenCalled();
+    }));
+
   describe('passing in data', () => {
     it('should be able to pass in data', () => {
       let config = {
@@ -1049,6 +1089,7 @@ describe('MatDialog', () => {
 
       document.body.removeChild(button);
       document.body.removeChild(input);
+      flush();
     }));
 
     it('should move focus to the container if there are no focusable elements in the dialog',

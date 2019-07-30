@@ -1,44 +1,35 @@
 import {createTestCaseSetup, readFileContent} from '@angular/cdk/schematics/testing';
 import {migrationCollection} from '../index.spec';
-import {writeFileSync, mkdirpSync} from 'fs-extra';
-import {join} from 'path';
 
 describe('v8 material imports', () => {
-
-  function writeSecondaryEntryPoint(materialPath: string, name: string, exportName = name) {
-    const entryPointPath = join(materialPath, name);
-    mkdirpSync(entryPointPath);
-    writeFileSync(join(entryPointPath, 'index.d.ts'), `export const ${exportName} = '';`);
-  }
-
   it('should report imports for deleted animation constants', async () => {
-    const {runFixers, removeTempDir, tempPath} = await createTestCaseSetup(
-      'migration-v8', migrationCollection, [require.resolve('./material-imports_input.ts')]);
-    const materialPath = join(tempPath, 'node_modules/@angular/material');
+    const {runFixers, appTree, writeFile, removeTempDir} = await createTestCaseSetup(
+        'migration-v8', migrationCollection, [require.resolve('./material-imports_input.ts')]);
+    const materialPath = '/node_modules/@angular/material';
 
-    mkdirpSync(materialPath);
-    writeFileSync(join(materialPath, 'index.d.ts'), `
+    writeFile(`${materialPath}/index.d.ts`, `
       export * from './a';
       export * from './b';
       export * from './c';
       export * from './core';
+      export * from './types';
     `);
 
-    writeSecondaryEntryPoint(materialPath, 'a');
-    writeSecondaryEntryPoint(materialPath, 'b');
-    writeSecondaryEntryPoint(materialPath, 'c');
-    writeSecondaryEntryPoint(materialPath, 'core', 'VERSION');
+    writeFile(`${materialPath}/a/index.d.ts`, `export const a = '';`);
+    writeFile(`${materialPath}/b/index.d.ts`, `export const b = '';`);
+    writeFile(`${materialPath}/c/index.d.ts`, `export const c = '';`);
+    writeFile(`${materialPath}/core/index.d.ts`, `export const VERSION = '';`);
+    writeFile(`${materialPath}/types/index.d.ts`, `
+      export declare interface SomeInterface {
+        event: any;
+      }
+    `);
 
     await runFixers();
 
-    const outputPath = join(tempPath,
-      'projects/cdk-testing/src/test-cases/material-imports_input.ts');
-
-    expect(readFileContent(outputPath)).toBe(
-      readFileContent(require.resolve('./material-imports_expected_output.ts')));
+    expect(appTree.readContent('/projects/cdk-testing/src/test-cases/material-imports_input.ts'))
+        .toBe(readFileContent(require.resolve('./material-imports_expected_output.ts')));
 
     removeTempDir();
   });
 });
-
-

@@ -53,13 +53,15 @@ class PublishReleaseTask extends BaseReleaseTask {
     this.releaseOutputPath = join(projectDir, 'dist/releases');
 
     this.packageJson = JSON.parse(readFileSync(this.packageJsonPath, 'utf-8'));
-    this.currentVersion = parseVersionName(this.packageJson.version);
 
-    if (!this.currentVersion) {
+    const parsedVersion = parseVersionName(this.packageJson.version);
+    if (!parsedVersion) {
       console.error(red(`Cannot parse current version in ${italic('package.json')}. Please ` +
         `make sure "${this.packageJson.version}" is a valid Semver version.`));
       process.exit(1);
+      return;
     }
+    this.currentVersion = parsedVersion;
   }
 
   async run() {
@@ -79,7 +81,7 @@ class PublishReleaseTask extends BaseReleaseTask {
     // Branch that will be used to build the output for the release of the current version.
     const publishBranch = this.switchToPublishBranch(newVersion);
 
-    this._verifyLastCommitVersionBump();
+    this._verifyLastCommitFromStagingScript();
     this.verifyLocalCommitsMatchUpstream(publishBranch);
 
     const upstreamRemote = await this._getProjectUpstreamRemote();
@@ -91,6 +93,10 @@ class PublishReleaseTask extends BaseReleaseTask {
       await this._promptStableVersionForNextTag();
     }
 
+    // Ensure that we are authenticated, so that we can run "npm publish" for
+    // each package once the release output is built.
+    this._checkNpmAuthentication();
+
     this._buildReleasePackages();
     console.info(green(`  ✓   Built the release output.`));
 
@@ -98,20 +104,20 @@ class PublishReleaseTask extends BaseReleaseTask {
     checkReleaseOutput(this.releaseOutputPath);
 
     // Extract the release notes for the new version from the changelog file.
-    const {releaseNotes, releaseTitle} = extractReleaseNotes(
+    const extractedReleaseNotes = extractReleaseNotes(
       join(this.projectDir, CHANGELOG_FILE_NAME), newVersionName);
 
-    if (!releaseNotes) {
+    if (!extractedReleaseNotes) {
       console.error(red(`  ✘   Could not find release notes in the changelog.`));
       process.exit(1);
+      return;
     }
+
+    const {releaseNotes, releaseTitle} = extractedReleaseNotes;
 
     // Create and push the release tag before publishing to NPM.
     this._createReleaseTag(newVersionName, releaseNotes);
     this._pushReleaseTag(newVersionName, upstreamRemote);
-
-    // Ensure that we are authenticated before running "npm publish" for each package.
-    this._checkNpmAuthentication();
 
     // Just in order to double-check that the user is sure to publish to NPM, we want
     // the user to interactively confirm that the script should continue.
@@ -147,13 +153,13 @@ class PublishReleaseTask extends BaseReleaseTask {
   }
 
   /**
-   * Verifies that the latest commit on the current branch is a version bump from the
-   * staging script.
+   * Verifies that the latest commit on the current branch has been created
+   * through the release staging script.
    */
-  private _verifyLastCommitVersionBump() {
-    if (!/chore: bump version/.test(this.git.getCommitTitle('HEAD'))) {
-      console.error(red(`  ✘   The latest commit of the current branch does not seem to be a ` +
-        `version bump.`));
+  private _verifyLastCommitFromStagingScript() {
+    if (!/chore: (bump version|update changelog for)/.test(this.git.getCommitTitle('HEAD'))) {
+      console.error(red(`  ✘   The latest commit of the current branch does not seem to be ` +
+        ` created by the release staging script.`));
       console.error(red(`      Please stage the release using the staging script.`));
       process.exit(1);
     }

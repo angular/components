@@ -1,30 +1,53 @@
-package(default_visibility=["//visibility:public"])
+package(default_visibility = ["//visibility:public"])
 
-load("//tools:defaults.bzl", "ng_module", "ng_test_library", "ng_web_test_suite")
+load("//tools:defaults.bzl", "ng_e2e_test_library", "ng_module", "ng_test_library", "ng_web_test_suite")
+load("//src/e2e-app:test_suite.bzl", "e2e_test_suite")
 
 ng_module(
-  name = "scrolling",
-  srcs = glob(["**/*.ts"], exclude=["**/*.spec.ts"]),
-  module_name = "@angular/cdk-experimental/scrolling",
-  deps = [
-    "@npm//@angular/core",
-    "@npm//rxjs",
-    "//src/cdk/coercion",
-    "//src/cdk/collections",
-    "//src/cdk/scrolling",
-  ],
+    name = "scrolling",
+    srcs = glob(
+        ["**/*.ts"],
+        exclude = ["**/*.spec.ts"],
+    ),
+    module_name = "@angular/cdk-experimental/scrolling",
+    deps = [
+        "//src/cdk/coercion",
+        "//src/cdk/collections",
+        "//src/cdk/scrolling",
+        "@npm//@angular/core",
+        "@npm//rxjs",
+    ],
 )
 
 ng_test_library(
-  name = "scrolling_test_sources",
-  srcs = glob(["**/*.spec.ts"]),
-  deps = [
-    "//src/cdk/scrolling",
-    ":scrolling",
-  ],
+    name = "unit_test_sources",
+    srcs = glob(
+        ["**/*.spec.ts"],
+        exclude = ["**/*.e2e.spec.ts"],
+    ),
+    deps = [
+        ":scrolling",
+        "//src/cdk/scrolling",
+    ],
 )
 
 ng_web_test_suite(
-  name = "unit_tests",
-  deps = [":scrolling_test_sources"]
+    name = "unit_tests",
+    deps = [":unit_test_sources"],
+)
+
+ng_e2e_test_library(
+    name = "e2e_test_sources",
+    srcs = glob(["**/*.e2e.spec.ts"]),
+    deps = [
+        "//src/cdk/private/testing/e2e",
+    ],
+)
+
+e2e_test_suite(
+    name = "e2e_tests",
+    deps = [
+        ":e2e_test_sources",
+        "//src/cdk/private/testing/e2e",
+    ],
 )

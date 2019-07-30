@@ -4,6 +4,7 @@ import {ButtonToggleE2e} from '../button-toggle/button-toggle-e2e';
 import {ButtonE2E} from '../button/button-e2e';
 import {CardE2e} from '../card/card-e2e';
 import {SimpleCheckboxes} from '../checkbox/checkbox-e2e';
+import {ComponentHarnessE2e} from '../component-harness/component-harness-e2e';
 import {DialogE2E} from '../dialog/dialog-e2e';
 import {ExpansionE2e} from '../expansion/expansion-e2e';
 import {GridListE2E} from '../grid-list/grid-list-e2e';
@@ -17,6 +18,7 @@ import {MdcChipsE2e} from '../mdc-chips/mdc-chips-e2e';
 import {MdcMenuE2e} from '../mdc-menu/mdc-menu-e2e';
 import {MdcRadioE2e} from '../mdc-radio/mdc-radio-e2e';
 import {MdcSlideToggleE2e} from '../mdc-slide-toggle/mdc-slide-toggle-e2e';
+import {MdcTabsE2e} from '../mdc-tabs/mdc-tabs-e2e';
 import {MenuE2E} from '../menu/menu-e2e';
 import {ProgressBarE2E} from '../progress-bar/progress-bar-e2e';
 import {ProgressSpinnerE2E} from '../progress-spinner/progress-spinner-e2e';
@@ -34,7 +36,9 @@ export const E2E_APP_ROUTES: Routes = [
   {path: 'block-scroll-strategy', component: BlockScrollStrategyE2E},
   {path: 'button', component: ButtonE2E},
   {path: 'button-toggle', component: ButtonToggleE2e},
+  {path: 'cards', component: CardE2e},
   {path: 'checkbox', component: SimpleCheckboxes},
+  {path: 'component-harness', component: ComponentHarnessE2e},
   {path: 'dialog', component: DialogE2E},
   {path: 'expansion', component: ExpansionE2e},
   {path: 'grid-list', component: GridListE2E},
@@ -48,6 +52,7 @@ export const E2E_APP_ROUTES: Routes = [
   {path: 'mdc-menu', component: MdcMenuE2e},
   {path: 'mdc-radio', component: MdcRadioE2e},
   {path: 'mdc-slide-toggle', component: MdcSlideToggleE2e},
+  {path: 'mdc-tabs', component: MdcTabsE2e},
   {path: 'menu', component: MenuE2E},
   {path: 'progress-bar', component: ProgressBarE2E},
   {path: 'progress-spinner', component: ProgressSpinnerE2E},
@@ -56,7 +61,6 @@ export const E2E_APP_ROUTES: Routes = [
   {path: 'slide-toggle', component: SlideToggleE2E},
   {path: 'stepper', component: StepperE2e},
   {path: 'tabs', component: BasicTabs},
-  {path: 'cards', component: CardE2e},
   {path: 'toolbar', component: ToolbarE2e},
   {path: 'virtual-scroll', component: VirtualScrollE2E},
 ];
