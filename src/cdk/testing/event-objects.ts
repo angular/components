@@ -63,7 +63,7 @@ export function createTouchEvent(type: string, pageX = 0, pageY = 0) {
  * Dispatches a keydown event from an element.
  * @docs-private
  */
-export function createKeyboardEvent(type: string, keyCode: number, target?: Element, key?: string) {
+export function createKeyboardEvent(type: string, keyCode: number, key?: string, target?: Element) {
   let event = document.createEvent('KeyboardEvent') as any;
   let originalPreventDefault = event.preventDefault;
 

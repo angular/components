@@ -7,18 +7,14 @@
  */
 
 import {
-  dispatchFakeEvent,
-  dispatchKeyboardEvent,
+  clearElement,
   dispatchMouseEvent,
+  isTextInput,
   triggerBlur,
-  triggerFocus
+  triggerFocus,
+  typeInElement
 } from '@angular/cdk/testing';
 import {TestElement} from '../test-element';
-
-function isTextInput(element: Element): element is HTMLInputElement | HTMLTextAreaElement {
-  return element.nodeName.toLowerCase() === 'input' ||
-      element.nodeName.toLowerCase() === 'textarea' ;
-}
 
 /** A `TestElement` implementation for unit tests. */
 export class UnitTestElement implements TestElement {
@@ -35,9 +31,7 @@ export class UnitTestElement implements TestElement {
     if (!isTextInput(this.element)) {
       throw Error('Attempting to clear an invalid element');
     }
-    triggerFocus(this.element as HTMLElement);
-    this.element.value = '';
-    dispatchFakeEvent(this.element, 'input');
+    clearElement(this.element);
     await this._stabilize();
   }
 
@@ -68,19 +62,7 @@ export class UnitTestElement implements TestElement {
 
   async sendKeys(keys: string): Promise<void> {
     await this._stabilize();
-    triggerFocus(this.element as HTMLElement);
-    for (const key of keys) {
-      const keyCode = key.charCodeAt(0);
-      dispatchKeyboardEvent(this.element, 'keydown', keyCode);
-      dispatchKeyboardEvent(this.element, 'keypress', keyCode);
-      if (isTextInput(this.element)) {
-        this.element.value += key;
-      }
-      dispatchKeyboardEvent(this.element, 'keyup', keyCode);
-      if (isTextInput(this.element)) {
-        dispatchFakeEvent(this.element, 'input');
-      }
-    }
+    typeInElement(this.element as HTMLElement, keys);
     await this._stabilize();
   }
 

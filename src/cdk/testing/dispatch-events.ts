@@ -34,9 +34,9 @@ export function dispatchFakeEvent(node: Node | Window, type: string, canBubble?:
  * Shorthand to dispatch a keyboard event with a specified key code.
  * @docs-private
  */
-export function dispatchKeyboardEvent(node: Node, type: string, keyCode: number, target?: Element):
-    KeyboardEvent {
-  return dispatchEvent(node, createKeyboardEvent(type, keyCode, target)) as KeyboardEvent;
+export function dispatchKeyboardEvent(node: Node, type: string, keyCode: number, key?: string,
+                                      target?: Element): KeyboardEvent {
+  return dispatchEvent(node, createKeyboardEvent(type, keyCode, key, target)) as KeyboardEvent;
 }
 
 /**
