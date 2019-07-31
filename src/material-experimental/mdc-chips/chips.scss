@@ -1,9 +1,15 @@
 @import '@material/chips/mixins';
+@import '../../material/core/style/noop-animation';
 @import '../mdc-helpers/mdc-helpers';
 
 @include mdc-chip-without-ripple($query: $mat-base-styles-query);
 @include mdc-chip-set-core-styles($query: $mat-base-styles-query);
+@include _noop-animation;
 
+.mat-mdc-chip {
+  // MDC uses a pointer cursor
+  cursor: default;
+}
 
 // The MDC chip styles related to hover and focus states are intertwined with the MDC ripple styles.
 // We currently don't use the MDC ripple due to size concerns, therefore we need to add some
@@ -46,6 +52,6 @@
 // Add styles for the matChipInputFor input element.
 $mat-chip-input-width: 150px;
 
-input.mat-chip-input {
+input.mat-mdc-chip-input {
   flex: 1 0 $mat-chip-input-width;
 }

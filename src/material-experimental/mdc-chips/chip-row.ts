@@ -40,7 +40,7 @@ import {GridKeyManagerRow, NAVIGATION_KEYS} from './grid-key-manager';
     '[attr.disabled]': 'disabled || null',
     '[attr.aria-disabled]': 'disabled.toString()',
     '[tabIndex]': 'tabIndex',
-    '(click)': '_click($event)',
+    '(mousedown)': '_mousedown($event)',
     '(keydown)': '_keydown($event)',
     '(transitionend)': '_chipFoundation.handleTransitionEnd($event)',
     '(focusin)': '_focusin()',
@@ -70,9 +70,13 @@ export class MatChipRow extends MatChip implements AfterContentInit, AfterViewIn
     super.ngAfterContentInit();
 
     if (this.removeIcon) {
-      // removeIcon has tabIndex 0 for regular chips, but should only be focusable by
-      // the GridFocusKeyManager for row chips.
-      this.removeIcon.tabIndex = -1;
+      // Defer setting the value in order to avoid the "Expression
+      // has changed after it was checked" errors from Angular.
+      setTimeout(() => {
+        // removeIcon has tabIndex 0 for regular chips, but should only be focusable by
+        // the GridFocusKeyManager for row chips.
+        this.removeIcon.tabIndex = -1;
+      });
     }
   }
 
@@ -93,9 +97,11 @@ export class MatChipRow extends MatChip implements AfterContentInit, AfterViewIn
       return;
     }
 
+    if (!this._hasFocusInternal) {
+      this._onFocus.next({chip: this});
+    }
+
     this.chipContent.nativeElement.focus();
-    this._hasFocusInternal = true;
-    this._onFocus.next({chip: this});
   }
 
   /**
@@ -119,13 +125,12 @@ export class MatChipRow extends MatChip implements AfterContentInit, AfterViewIn
   }
 
   /** Sends focus to the first gridcell when the user clicks anywhere inside the chip. */
-  _click(event: MouseEvent) {
-    if (this.disabled) {
-      event.preventDefault();
-    } else {
+  _mousedown(event: MouseEvent) {
+    if (!this.disabled) {
       this.focus();
-      event.stopPropagation();
     }
+
+    event.preventDefault();
   }
 
   /** Handles custom key presses. */

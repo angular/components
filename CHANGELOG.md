@@ -1,3 +1,61 @@
+## 8.1.2 "bologna-bayou" (2019-07-29)
+
+
+### Bug Fixes
+
+* **bottom-sheet:** not moving focus to container if autoFocus is disabled and focus was moved while animating ([#16418](https://github.com/angular/components/issues/16418)) ([0720a41](https://github.com/angular/components/commit/0720a41)), closes [#16297](https://github.com/angular/components/issues/16297) [#16221](https://github.com/angular/components/issues/16221)
+* **button-toggle:** error when check value is set via static attribute in Ivy ([#16587](https://github.com/angular/components/issues/16587)) ([3c92c08](https://github.com/angular/components/commit/3c92c08)), closes [#16471](https://github.com/angular/components/issues/16471)
+* **overlay:** clear duplicate overlay container coming in from the server ([#11940](https://github.com/angular/components/issues/11940)) ([ba508a6](https://github.com/angular/components/commit/ba508a6)), closes [#11817](https://github.com/angular/components/issues/11817)
+* **slide-toggle:** invalid required validator in template-driven forms ([#16547](https://github.com/angular/components/issues/16547)) ([dc0c271](https://github.com/angular/components/commit/dc0c271))
+* **tabs:** only use aria-current on active links ([#16562](https://github.com/angular/components/issues/16562)) ([b0937dc](https://github.com/angular/components/commit/b0937dc)), closes [#16557](https://github.com/angular/components/issues/16557)
+* **tree:** unable to set zero as the padding of a tree node ([#16345](https://github.com/angular/components/issues/16345)) ([bf66d81](https://github.com/angular/components/commit/bf66d81)), closes [#16338](https://github.com/angular/components/issues/16338)
+* **typography:** use `calc` to allow css variables ([#16475](https://github.com/angular/components/issues/16475)) ([6013036](https://github.com/angular/components/commit/6013036))
+
+
+
+## 8.1.1 "vantablack-glowstick" (2019-07-16)
+
+
+### Bug Fixes
+
+* **form-field:** superfluous whitespace when compiled with bazel ([#13911](https://github.com/angular/components/issues/13911)) ([fdad49d](https://github.com/angular/components/commit/fdad49d))
+* **ng-update:** material update fails due to circular dependency ([#16538](https://github.com/angular/components/issues/16538)) ([5d731d3](https://github.com/angular/components/commit/5d731d3))
+
+
+
+# 8.1.0 "denim-antipode" (2019-07-15)
+
+### Highlights
+* The `MatNavTabBar` now support tab pagination, a long-requested feature.
+* `CdkDrag` now supports scrolling the viewport when an item is dragged near the edge. 
+
+
+### Bug Fixes
+
+* **card:** disable all animations when using NoopAnimationsModule ([#11538](https://github.com/angular/components/issues/11538)) ([11a4ff0](https://github.com/angular/components/commit/11a4ff0)), closes [#10590](https://github.com/angular/components/issues/10590)
+* **drag-drop:** fix drag start delay behavior to allow scrolling ([#16228](https://github.com/angular/components/issues/16228)) ([738f10c](https://github.com/angular/components/commit/738f10c)), closes [#16224](https://github.com/angular/components/issues/16224)
+* **drag-drop:** return up-to-date position if getFreeDragPosition is called while dragging ([#16464](https://github.com/angular/components/issues/16464)) ([1540391](https://github.com/angular/components/commit/1540391))
+* **expansion:** incorrect margin for "before" indicator when expanded ([#16420](https://github.com/angular/components/issues/16420)) ([98a231d](https://github.com/angular/components/commit/98a231d))
+* **menu:** keyboard controls not respecting DOM order when items are added at a later point ([#11720](https://github.com/angular/components/issues/11720)) ([49e8c59](https://github.com/angular/components/commit/49e8c59)), closes [#11652](https://github.com/angular/components/issues/11652)
+* **overlay:** incorrectly calculating position when page is scrolled horizontally and overlay is anchored to the right ([#16235](https://github.com/angular/components/issues/16235)) ([f61730a](https://github.com/angular/components/commit/f61730a)), closes [#16009](https://github.com/angular/components/issues/16009)
+* **overlay:** OverlayKeyboardDispatcher (used in dialog and overlay
+    and available in the CDK) now listens on bubbling/propagation phase
+    instead of capture phase. This means that overlay keydown handlers
+    are now called after any applicable handlers inside of an overlay,
+    and it respects any stopPropagation() calls from inside the overlay.
+
+### Features
+
+* **a11y:** allow for element to be used as message in AriaDescriber ([#16118](https://github.com/angular/components/issues/16118)) ([8c4f25f](https://github.com/angular/components/commit/8c4f25f)), closes [#16099](https://github.com/angular/components/issues/16099)
+* **common:** Add dev-mode sanity check for mismatched versions of cdk and material ([#15395](https://github.com/angular/components/issues/15395)) ([ffad004](https://github.com/angular/components/commit/ffad004))
+* **drag-drop:** add support for automatic scrolling ([#16382](https://github.com/angular/components/issues/16382)) ([207dba6](https://github.com/angular/components/commit/207dba6)), closes [#13588](https://github.com/angular/components/issues/13588)
+* **expansion:** allow expansion toggle indicator positioning ([#16257](https://github.com/angular/components/issues/16257)) ([c3eac17](https://github.com/angular/components/commit/c3eac17))
+* **radio:** add provider for default color input ([#15811](https://github.com/angular/components/issues/15811)) ([5c51301](https://github.com/angular/components/commit/5c51301))
+* **schematics:** add font-display query ([#16363](https://github.com/angular/components/issues/16363)) ([43a01e9](https://github.com/angular/components/commit/43a01e9))
+* **style:** allow palettes to specify a separate hue for colored text ([#15149](https://github.com/angular/components/issues/15149)) ([15038e3](https://github.com/angular/components/commit/15038e3)), closes [#15148](https://github.com/angular/components/issues/15148)
+* **tabs:** support pagination in nav bar ([#16055](https://github.com/angular/components/issues/16055)) ([aa22368](https://github.com/angular/components/commit/aa22368)), closes [#2177](https://github.com/angular/components/issues/2177)
+
+
 ## 8.0.2 "metal-mushroom" (2019-07-02)
 
 

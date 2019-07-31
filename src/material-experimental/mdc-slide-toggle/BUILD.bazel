@@ -1,24 +1,41 @@
 package(default_visibility = ["//visibility:public"])
 
 load("@io_bazel_rules_sass//:defs.bzl", "sass_binary", "sass_library")
-load("//tools:defaults.bzl", "ng_e2e_test_library", "ng_module", "ng_test_library", "ng_web_test_suite", "protractor_web_test_suite")
+load("//tools:defaults.bzl", "ng_e2e_test_library", "ng_module", "ng_test_library", "ng_web_test_suite", "ts_library")
+load("//src/e2e-app:test_suite.bzl", "e2e_test_suite")
 
 ng_module(
     name = "mdc-slide-toggle",
     srcs = glob(
         ["**/*.ts"],
-        exclude = ["**/*.spec.ts"],
+        exclude = [
+            "**/*.spec.ts",
+            "harness/**",
+        ],
     ),
     assets = [":slide_toggle_scss"] + glob(["**/*.html"]),
     module_name = "@angular/material-experimental/mdc-slide-toggle",
     deps = [
         "//src/cdk/coercion",
         "//src/material/core",
+        "//src/material/slide-toggle",
         "@npm//@angular/animations",
         "@npm//@angular/common",
         "@npm//@angular/core",
         "@npm//@angular/forms",
-        "@npm//material-components-web",
+        "@npm//@material/switch",
+    ],
+)
+
+ts_library(
+    name = "harness",
+    srcs = glob(
+        ["harness/**/*.ts"],
+        exclude = ["**/*.spec.ts"],
+    ),
+    deps = [
+        "//src/cdk-experimental/testing",
+        "//src/cdk/coercion",
     ],
 )
 
@@ -51,9 +68,13 @@ ng_test_library(
         exclude = ["**/*.e2e.spec.ts"],
     ),
     deps = [
+        ":harness",
         ":mdc-slide-toggle",
+        "//src/cdk-experimental/testing",
+        "//src/cdk-experimental/testing/testbed",
         "//src/cdk/bidi",
         "//src/cdk/testing",
+        "//src/material/slide-toggle",
         "@npm//@angular/forms",
         "@npm//@angular/platform-browser",
     ],
@@ -61,7 +82,7 @@ ng_test_library(
 
 ng_web_test_suite(
     name = "unit_tests",
-    static_files = ["@npm//node_modules/@material/switch:dist/mdc.switch.js"],
+    static_files = ["@npm//:node_modules/@material/switch/dist/mdc.switch.js"],
     deps = [
         ":slide_toggle_tests_lib",
         "//src/material-experimental:mdc_require_config.js",
@@ -72,22 +93,14 @@ ng_e2e_test_library(
     name = "e2e_test_sources",
     srcs = glob(["**/*.e2e.spec.ts"]),
     deps = [
-        "//src/cdk/testing/e2e",
+        "//src/cdk/private/testing/e2e",
     ],
 )
 
-protractor_web_test_suite(
+e2e_test_suite(
     name = "e2e_tests",
-    configuration = "//src/e2e-app:protractor.conf.js",
-    data = [
-        "//tools/axe-protractor",
-        "@npm//@angular/bazel",
-    ],
-    on_prepare = "//src/e2e-app:start-devserver.js",
-    server = "//src/e2e-app:devserver",
-    tags = ["e2e"],
     deps = [
         ":e2e_test_sources",
-        "//src/cdk/testing/e2e",
+        "//src/cdk/private/testing/e2e",
     ],
 )

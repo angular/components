@@ -82,25 +82,24 @@ export class CdkEditable implements AfterViewInit, OnDestroy {
   }
 
   private _listenForTableEvents(): void {
-    const element = this.elementRef.nativeElement!;
-
+    const element = this.elementRef.nativeElement;
     const toClosest = (selector: string) =>
         map((event: UIEvent) => closest(event.target, selector));
 
     this.ngZone.runOutsideAngular(() => {
       // Track mouse movement over the table to hide/show hover content.
       fromEvent<MouseEvent>(element, 'mouseover').pipe(
-          takeUntil(this.destroyed),
           toClosest(ROW_SELECTOR),
+          takeUntil(this.destroyed),
           ).subscribe(this.editEventDispatcher.hovering);
       fromEvent<MouseEvent>(element, 'mouseleave').pipe(
-          takeUntil(this.destroyed),
           mapTo(null),
+          takeUntil(this.destroyed),
           ).subscribe(this.editEventDispatcher.hovering);
       fromEvent<MouseEvent>(element, 'mousemove').pipe(
-          takeUntil(this.destroyed),
           throttleTime(MOUSE_MOVE_THROTTLE_TIME_MS),
           toClosest(ROW_SELECTOR),
+          takeUntil(this.destroyed),
           ).subscribe(this.editEventDispatcher.mouseMove);
 
       // Track focus within the table to hide/show/make focusable hover content.
@@ -134,10 +133,10 @@ export class CdkEditable implements AfterViewInit, OnDestroy {
           share(),
           ).subscribe(this.editEventDispatcher.allRows);
 
-      fromEvent<KeyboardEvent>(element, 'keyup').pipe(
-          takeUntil(this.destroyed),
+      fromEvent<KeyboardEvent>(element, 'keydown').pipe(
           filter(event => event.key === 'Enter'),
           toClosest(CELL_SELECTOR),
+          takeUntil(this.destroyed),
           ).subscribe(this.editEventDispatcher.editing);
 
       // Keydown must be used here or else key autorepeat does not work properly on some platforms.
@@ -217,6 +216,11 @@ export class CdkPopoverEdit<C> implements AfterViewInit, OnDestroy {
     this.destroyed.next();
     this.destroyed.complete();
 
+    if (this.focusTrap) {
+      this.focusTrap.destroy();
+      this.focusTrap = undefined;
+    }
+
     if (this.overlayRef) {
       this.overlayRef.dispose();
     }
@@ -272,7 +276,14 @@ export class CdkPopoverEdit<C> implements AfterViewInit, OnDestroy {
         this.template!,
         this.viewContainerRef,
         {$implicit: this.context}));
-    this.focusTrap!.focusInitialElement();
+
+    // We have to defer trapping focus, because doing so too early can cause the form inside
+    // the overlay to be submitted immediately if it was opened on an Enter keydown event.
+    this.services.ngZone.runOutsideAngular(() => {
+      setTimeout(() => {
+        this.focusTrap!.focusInitialElement();
+      });
+    });
 
     // Update the size of the popup initially and on subsequent changes to
     // scroll position and viewport size.

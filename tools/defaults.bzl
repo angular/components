@@ -9,7 +9,6 @@ load("//:packages.bzl", "ANGULAR_LIBRARY_UMDS", "VERSION_PLACEHOLDER_REPLACEMENT
 
 _DEFAULT_TSCONFIG_BUILD = "//src:bazel-tsconfig-build.json"
 _DEFAULT_TSCONFIG_TEST = "//src:bazel-tsconfig-test.json"
-_DEFAULT_TS_TYPINGS = "@npm//typescript:typescript__typings"
 
 # Whether Angular type checking should be enabled or not. Enabled by
 # default but will be overwritten when running snapshots tests with Ivy
@@ -36,7 +35,6 @@ def ts_library(tsconfig = None, deps = [], testonly = False, **kwargs):
         tsconfig = tsconfig,
         testonly = testonly,
         deps = local_deps,
-        node_modules = _DEFAULT_TS_TYPINGS,
         **kwargs
     )
 
@@ -64,7 +62,6 @@ def ng_module(deps = [], tsconfig = None, testonly = False, **kwargs):
         deps = local_deps,
         tsconfig = tsconfig,
         testonly = testonly,
-        node_modules = _DEFAULT_TS_TYPINGS,
         **kwargs
     )
 
@@ -117,7 +114,7 @@ def ts_web_test_suite(deps = [], srcs = [], **kwargs):
         # Required for running the compiled ng modules that use TypeScript import helpers.
         # TODO(jelbourn): remove UMDs from here once we don't have to manually include them
         srcs = [
-            "@npm//node_modules/tslib:tslib.js",
+            "@npm//:node_modules/tslib/tslib.js",
         ] + ANGULAR_LIBRARY_UMDS + srcs,
         **kwargs
     )
@@ -178,9 +175,9 @@ def ng_web_test_suite(deps = [], static_css = [], bootstrap = [], **kwargs):
             "@io_bazel_rules_webtesting//browsers:firefox-local",
         ],
         bootstrap = [
-            "@npm//node_modules/zone.js:dist/zone-testing-bundle.js",
-            "@npm//node_modules/reflect-metadata:Reflect.js",
-            "@npm//node_modules/hammerjs:hammer.js",
+            "@npm//:node_modules/zone.js/dist/zone-testing-bundle.js",
+            "@npm//:node_modules/reflect-metadata/Reflect.js",
+            "@npm//:node_modules/hammerjs/hammer.js",
         ] + bootstrap,
         **kwargs
     )

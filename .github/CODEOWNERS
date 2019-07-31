@@ -57,6 +57,9 @@
 /src/material/core/typography/**                   @crisbeto
 /src/material/core/util/**                         @jelbourn
 
+# Miscellaneous components
+/src/youtube-player/**                             @nathantate
+
 # CDK
 /src/cdk/*                                         @jelbourn
 /src/cdk/a11y/**                                   @jelbourn @devversion
@@ -65,6 +68,7 @@
 /src/cdk/coercion/**                               @jelbourn
 /src/cdk/collections/**                            @jelbourn @crisbeto @andrewseguin
 /src/cdk/drag-drop/**                              @crisbeto
+/src/cdk/private/testing/**                        @devversion
 /src/cdk/keycodes/**                               @jelbourn
 /src/cdk/layout/**                                 @josephperrott
 /src/cdk/observers/**                              @jelbourn @crisbeto
@@ -75,7 +79,7 @@
 /src/cdk/scrolling/**                              @andrewseguin @crisbeto
 /src/cdk/stepper/**                                @mmalerba
 /src/cdk/table/**                                  @andrewseguin
-/src/cdk/testing/**                                @devversion
+/src/cdk/testing/**                                @mmalerba @devversion
 /src/cdk/text-field/**                             @mmalerba
 /src/cdk/tree/**                                   @jelbourn @andrewseguin
 
