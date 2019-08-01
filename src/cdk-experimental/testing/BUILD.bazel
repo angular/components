@@ -11,6 +11,9 @@ ng_module(
             "**/*.spec.ts",
         ],
     ),
+    deps = [
+        "//src/cdk/testing",
+    ],
     module_name = "@angular/cdk-experimental/testing",
 )
 

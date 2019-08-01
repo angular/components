@@ -12,5 +12,6 @@ ts_library(
     deps = [
         "//src/cdk-experimental/testing",
         "@npm//protractor",
+        "//src/cdk/testing"
     ],
 )
