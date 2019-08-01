@@ -51,12 +51,6 @@ import {
   MatAutocompleteTrigger,
 } from './index';
 
-function old__typeInElement(value: string, element: HTMLInputElement) {
-  element.focus();
-  element.value = value;
-  dispatchFakeEvent(element, 'input');
-}
-
 describe('MatAutocomplete', () => {
   let overlayContainer: OverlayContainer;
   let overlayContainerElement: HTMLElement;
