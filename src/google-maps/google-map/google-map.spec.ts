@@ -6,8 +6,8 @@ import {createMapConstructorSpy, createMapSpy} from './testing/fake-google-map-u
 import {GoogleMapModule} from './index';
 
 const DEFAULT_OPTIONS: google.maps.MapOptions = {
-  center: {lat: 41.890150, lng: 12.492231},
-  zoom: 16,
+  center: {lat: 37.421995, lng: -122.084092},
+  zoom: 17,
 };
 
 describe('GoogleMap', () => {

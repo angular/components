@@ -4,7 +4,6 @@ import {
   ElementRef,
   Input,
   OnInit,
-  ViewChild,
 } from '@angular/core';
 import {ReplaySubject} from 'rxjs';
 
@@ -16,7 +15,7 @@ import {ReplaySubject} from 'rxjs';
 @Component({
   selector: 'google-map',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  template: '<div #map></div>',
+  template: '<div class="map-container"></div>',
 })
 export class GoogleMap implements OnInit {
   // Arbitrarily chosen default size
@@ -25,19 +24,18 @@ export class GoogleMap implements OnInit {
 
   // TODO(mbehrlich): add options, handlers, properties, and methods.
 
-  @ViewChild('map', {static: true}) mapElRef: ElementRef;
-
   private readonly _map$ = new ReplaySubject<google.maps.Map>(1);
 
+  constructor(private readonly _elementRef: ElementRef) {}
+
   ngOnInit() {
-    // default options for now
+    // default options set to the Googleplex
     const options: google.maps.MapOptions = {
-      center: {lat: 41.890150, lng: 12.492231},
-      zoom: 16,
+      center: {lat: 37.421995, lng: -122.084092},
+      zoom: 17,
     };
 
-
-    const mapEl = this.mapElRef.nativeElement;
+    const mapEl = this._elementRef.nativeElement.querySelector('.map-container');
     mapEl.style.height = this.height;
     mapEl.style.width = this.width;
     const map = new google.maps.Map(mapEl, options);
