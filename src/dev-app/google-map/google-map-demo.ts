@@ -8,7 +8,6 @@
 
 import {Component} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {take} from 'rxjs/operators';
 
 /** Demo Component for @angular/google-maps/map */
 @Component({
@@ -17,13 +16,12 @@ import {take} from 'rxjs/operators';
   templateUrl: 'google-map-demo.html',
 })
 export class GoogleMapDemo {
-  ready = false;
+  isReady = false;
 
   constructor(httpClient: HttpClient) {
     httpClient.jsonp('https://maps.googleapis.com/maps/api/js?', 'callback')
-      .pipe(take(1))
       .subscribe(() => {
-        this.ready = true;
+        this.isReady = true;
       });
   }
 }
