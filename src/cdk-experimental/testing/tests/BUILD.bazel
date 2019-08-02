@@ -14,8 +14,8 @@ ng_module(
     assets = glob(["**/*.html"]),
     module_name = "@angular/cdk-experimental/testing/tests",
     deps = [
-        "@npm//@angular/forms",
         "//src/cdk/keycodes",
+        "@npm//@angular/forms",
     ],
 )
 

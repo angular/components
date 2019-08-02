@@ -11,10 +11,10 @@ ng_module(
             "**/*.spec.ts",
         ],
     ),
+    module_name = "@angular/cdk-experimental/testing",
     deps = [
         "//src/cdk/testing",
     ],
-    module_name = "@angular/cdk-experimental/testing",
 )
 
 ng_web_test_suite(
