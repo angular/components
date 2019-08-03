@@ -113,6 +113,7 @@ export function MAT_TOOLTIP_DEFAULT_OPTIONS_FACTORY(): MatTooltipDefaultOptions 
   selector: '[matTooltip]',
   exportAs: 'matTooltip',
   host: {
+    'class': 'mat-tooltip-trigger',
     '(longpress)': 'show()',
     '(keydown)': '_handleKeydown($event)',
     '(touchend)': '_handleTouchend()',

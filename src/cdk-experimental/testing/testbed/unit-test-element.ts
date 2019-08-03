@@ -66,6 +66,12 @@ export class UnitTestElement implements TestElement {
     await this._stabilize();
   }
 
+  async movePointerAway(): Promise<void> {
+    await this._stabilize();
+    dispatchMouseEvent(this.element, 'mouseleave');
+    await this._stabilize();
+  }
+
   async sendKeys(keys: string): Promise<void> {
     await this._stabilize();
     triggerFocus(this.element as HTMLElement);

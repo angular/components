@@ -1,0 +1,13 @@
+@import '../mdc-helpers/mdc-helpers';
+
+@mixin mat-tooltip-theme-mdc($theme) {
+  @include mat-using-mdc-theme($theme) {
+    // TODO: implement MDC-based tooltip.
+  }
+}
+
+@mixin mat-tooltip-typography-mdc($config) {
+  @include mat-using-mdc-typography($config) {
+    // TODO: implement MDC-based tooltip.
+  }
+}

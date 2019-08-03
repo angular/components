@@ -39,6 +39,12 @@ export class ProtractorElement implements TestElement {
         .perform();
   }
 
+  async movePointerAway(): Promise<void> {
+    return browser.actions()
+        .mouseMove(await this.element.getWebElement(), {x: -1, y: -1})
+        .perform();
+  }
+
   async sendKeys(keys: string): Promise<void> {
     return this.element.sendKeys(keys);
   }
