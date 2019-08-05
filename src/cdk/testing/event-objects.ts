@@ -81,7 +81,9 @@ export function createKeyboardEvent(type: string, keyCode: number = 0, key: stri
     event.initKeyEvent(type, true, true, window, modifiers.control, modifiers.alt, modifiers.shift,
         modifiers.meta, keyCode);
   } else {
-    let modifiersStr = (modifiers.control ? 'Control ' : '' + modifiers.alt ? 'Alt ' : '' +
+    // `initKeyboardEvent` expects to receive modifiers as a whitespace-delimited string
+    // See https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/initKeyboardEvent
+    const modifiersStr = (modifiers.control ? 'Control ' : '' + modifiers.alt ? 'Alt ' : '' +
         modifiers.shift ? 'Shift ' : '' + modifiers.meta ? 'Meta' : '').trim();
     event.initKeyboardEvent(type, true, true, window, 0, key, 0, modifiersStr, false);
   }

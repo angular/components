@@ -10,6 +10,7 @@ import {ModifierKeys} from '@angular/cdk/testing';
 import {browser, ElementFinder, Key} from 'protractor';
 import {TestElement, TestKey} from '../test-element';
 
+/** Maps the `TestKey` constants to Protractor's `Key` constants. */
 const keyMap = {
   [TestKey.BACKSPACE]: Key.BACK_SPACE,
   [TestKey.TAB]: Key.TAB,
@@ -42,6 +43,24 @@ const keyMap = {
   [TestKey.F12]: Key.F12,
   [TestKey.META]: Key.META
 };
+
+/** Converts a `ModifierKeys` object to a list of Protractor `Key`s. */
+function toProtractorModifierKeys(modifiers: ModifierKeys): string[] {
+  const result: string[] = [];
+  if (modifiers.control) {
+    result.push(Key.CONTROL);
+  }
+  if (modifiers.alt) {
+    result.push(Key.ALT);
+  }
+  if (modifiers.shift) {
+    result.push(Key.SHIFT);
+  }
+  if (modifiers.meta) {
+    result.push(Key.META);
+  }
+  return result;
+}
 
 /** A `TestElement` implementation for Protractor. */
 export class ProtractorElement implements TestElement {
@@ -87,12 +106,7 @@ export class ProtractorElement implements TestElement {
       rest = modifiersAndKeys;
     }
 
-    const modifierKeys = [
-        modifiers.control ? Key.CONTROL : '',
-        modifiers.alt ? Key.ALT : '',
-        modifiers.shift ? Key.SHIFT : '',
-        modifiers.meta ? Key.META : ''
-    ].filter(k => k);
+    const modifierKeys = toProtractorModifierKeys(modifiers);
     const keys = rest.map(k => typeof k === 'string' ? k.split('') : [keyMap[k]])
         .reduce((arr, k) => arr.concat(k), [])
         .map(k => Key.chord(...modifierKeys, k));

@@ -6,17 +6,19 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import * as keyCodes from '@angular/cdk/keycodes';
 import {
   clearElement,
   dispatchMouseEvent,
-  isTextInput, ModifierKeys,
+  isTextInput,
+  ModifierKeys,
   triggerBlur,
   triggerFocus,
   typeInElement
 } from '@angular/cdk/testing';
 import {TestElement, TestKey} from '../test-element';
-import * as keyCodes from '@angular/cdk/keycodes';
 
+/** Maps `TestKey` constants to the `keyCode` and `key` values used by native browser events. */
 const keyMap = {
   [TestKey.BACKSPACE]: {keyCode: keyCodes.BACKSPACE, key: 'Backspace'},
   [TestKey.TAB]: {keyCode: keyCodes.TAB, key: 'Tab'},
