@@ -144,6 +144,15 @@ export class MatMonthView<D> implements AfterContentInit {
       throw createMissingDateImplError('MAT_DATE_FORMATS');
     }
 
+    this._activeDate = this._dateAdapter.today();
+  }
+
+  ngAfterContentInit() {
+    this._init();
+  }
+
+  /** Initializes the weekdays. */
+  _initWeekdays() {
     const firstDayOfWeek = this._dateAdapter.getFirstDayOfWeek();
     const narrowWeekdays = this._dateAdapter.getDayOfWeekNames('narrow');
     const longWeekdays = this._dateAdapter.getDayOfWeekNames('long');
@@ -153,12 +162,6 @@ export class MatMonthView<D> implements AfterContentInit {
       return {long, narrow: narrowWeekdays[i]};
     });
     this._weekdays = weekdays.slice(firstDayOfWeek).concat(weekdays.slice(0, firstDayOfWeek));
-
-    this._activeDate = this._dateAdapter.today();
-  }
-
-  ngAfterContentInit() {
-    this._init();
   }
 
   /** Handles when a new date is selected. */
@@ -251,6 +254,8 @@ export class MatMonthView<D> implements AfterContentInit {
     this._firstWeekOffset =
         (DAYS_PER_WEEK + this._dateAdapter.getDayOfWeek(firstOfMonth) -
          this._dateAdapter.getFirstDayOfWeek()) % DAYS_PER_WEEK;
+
+    this._initWeekdays();
 
     this._createWeekCells();
     this._changeDetectorRef.markForCheck();
