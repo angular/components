@@ -25,7 +25,7 @@ class CherryPickPatchTask {
   }
 
   /** Returns the commit SHA of the last cherry-picked commit on master. */
-  async getLatestCherryPickedCommitSha(branch): Promise<string> {
+  async getLatestCherryPickedCommitSha(branch: any): Promise<string> {
     const commits = await this.github.listCommits(branch);
 
     /** Gets the SHA from the string: "(cherry picked from commit 4c6eeb9aba73d3)" */

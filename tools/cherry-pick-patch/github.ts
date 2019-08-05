@@ -1,5 +1,4 @@
 import * as OctokitApi from '@octokit/rest';
-import {PullsGetResponse} from '@octokit/rest';
 
 // TODO: Consider using local git information for the data to avoid worrying about rate limits. */
 /** Class to act as an interface to the GitHub API. */
@@ -26,7 +25,7 @@ export class GitHub {
     // Load information for each pull request. Waits for each pull request response until loading
     // the next pull request to avoid GitHub's abuse detection (too many calls in a short amount
     // of time).
-    const pullRequests: PullsGetResponse[] = [];
+    const pullRequests: OctokitApi.PullsGetResponse[] = [];
     for (let i = 0; i < result.items.length; i++) {
       pullRequests.push(await this.loadPullRequest(result.items[i].number));
     }
