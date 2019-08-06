@@ -29,6 +29,4 @@ export class MatProgressSpinnerHarness extends ComponentHarness {
     const modeAttr = (await this.host()).getAttribute('mode');
     return await modeAttr as ProgressSpinnerMode;
   }
-
-  // TODO: Add getters for width, height, value min, value max
 }
