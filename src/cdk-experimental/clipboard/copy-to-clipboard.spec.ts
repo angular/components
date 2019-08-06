@@ -2,7 +2,7 @@ import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/testing';
 
 import {Clipboard} from './clipboard';
-import {ClipboardModule} from './clipboard_module';
+import {ClipboardModule} from './clipboard-module';
 
 const COPY_CONTENT = 'copy content';
 
@@ -47,18 +47,18 @@ describe('CopyToClipboard', () => {
     expect(mockCopy).toHaveBeenCalledWith(COPY_CONTENT);
   });
 
-  it('emits copied event true when copy succeeds', () => {
-    mockCopy.and.returnValue(true);
-    fixture.nativeElement.querySelector('button')!.click();
+  it('emits copied event true when copy succeeds', fakeAsync(() => {
+       mockCopy.and.returnValue(true);
+       fixture.nativeElement.querySelector('button')!.click();
 
-    expect(copiedOutput).toHaveBeenCalledWith(true);
-  });
+       expect(copiedOutput).toHaveBeenCalledWith(true);
+     }));
 
-  it('emits copied event false when copy fails', () => {
-    mockCopy.and.returnValue(false);
-    fixture.nativeElement.querySelector('button')!.click();
-    tick();
+  it('emits copied event false when copy fails', fakeAsync(() => {
+       mockCopy.and.returnValue(false);
+       fixture.nativeElement.querySelector('button')!.click();
+       tick();
 
-    expect(copiedOutput).toHaveBeenCalledWith(false);
-  });
+       expect(copiedOutput).toHaveBeenCalledWith(false);
+     }));
 });

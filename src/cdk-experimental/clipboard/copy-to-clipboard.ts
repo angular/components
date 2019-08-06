@@ -1,3 +1,11 @@
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+
 import {Directive, EventEmitter, Input, Output} from '@angular/core';
 
 import {Clipboard} from './clipboard';
@@ -8,7 +16,7 @@ import {Clipboard} from './clipboard';
  *
  * Example usage:
  *
- * <button copyToClipboard="Content to be copied">Copy me!</button>
+ * `<button copyToClipboard="Content to be copied">Copy me!</button>`
  */
 @Directive({
   selector: '[copyToClipboard]',

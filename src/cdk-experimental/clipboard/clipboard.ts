@@ -1,3 +1,11 @@
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+
 import {DOCUMENT} from '@angular/common';
 import {Inject, Injectable} from '@angular/core';
 
@@ -10,7 +18,11 @@ import {Inject, Injectable} from '@angular/core';
  */
 @Injectable({providedIn: 'root'})
 export class Clipboard {
-  constructor(@Inject(DOCUMENT) private readonly document: Document) {}
+  private _document: Document;
+
+  constructor(@Inject(DOCUMENT) document: any) {
+    this._document = document;
+  }
 
   /**
    * Copies the provided text into the user's clipboard.
@@ -33,7 +45,7 @@ export class Clipboard {
    * The caller must call `destroy` on the returned `PendingCopy`.
    */
   beginCopy(text: string): PendingCopy {
-    return new PendingCopy(text, this.document);
+    return new PendingCopy(text, this._document);
   }
 }
 
@@ -51,22 +63,22 @@ export class Clipboard {
  * called.
  */
 export class PendingCopy {
-  private textarea: HTMLTextAreaElement|undefined;
+  private _textarea: HTMLTextAreaElement|undefined;
 
-  constructor(text: string, private readonly document: Document) {
-    const textarea = this.textarea = this.document.createElement('textarea');
+  constructor(text: string, private readonly _document: Document) {
+    const textarea = this._textarea = this._document.createElement('textarea');
 
     // Hide the element for display and accessibility.
     textarea.setAttribute('class', 'cdk-visually-hidden');
     textarea.setAttribute('aria-hidden', 'true');
 
     textarea.value = text;
-    this.document.body.appendChild(textarea);
+    this._document.body.appendChild(textarea);
   }
 
   /** Finishes copying the text. */
   copy(): boolean {
-    const textarea = this.textarea;
+    const textarea = this._textarea;
     let successful = false;
 
     try {  // Older browsers could throw if copy is not supported.
@@ -74,7 +86,7 @@ export class PendingCopy {
         const currentFocus = document.activeElement;
 
         textarea.select();
-        successful = this.document.execCommand('copy');
+        successful = this._document.execCommand('copy');
 
         if (currentFocus instanceof HTMLElement) {
           currentFocus.focus();
@@ -90,9 +102,9 @@ export class PendingCopy {
 
   /** Cleans up DOM changes used to perform the copy operation. */
   destroy() {
-    if (this.textarea) {
-      this.document.body.removeChild(this.textarea);
-      this.textarea = undefined;
+    if (this._textarea) {
+      this._document.body.removeChild(this._textarea);
+      this._textarea = undefined;
     }
   }
 }
