@@ -76,7 +76,7 @@ describe('CdkDrag', () => {
 
         expect(dragElement.style.transform).toBeFalsy();
         dragElementViaMouse(fixture, dragElement, 50, 100);
-        expect(dragElement.style.transform).toBe('translate3d(50px, 100px, 0px)');
+        expect(dragElement.style.transform).toBe('translate(50px, 100px)');
       }));
 
       it('should drag an SVG element freely to a particular position', fakeAsync(() => {
@@ -100,7 +100,7 @@ describe('CdkDrag', () => {
           scrollTo(0, 500);
           expect(dragElement.style.transform).toBeFalsy();
           dragElementViaMouse(fixture, dragElement, 50, 100);
-          expect(dragElement.style.transform).toBe('translate3d(50px, 100px, 0px)');
+          expect(dragElement.style.transform).toBe('translate(50px, 100px)');
           cleanup();
         }));
 
@@ -112,10 +112,10 @@ describe('CdkDrag', () => {
         expect(dragElement.style.transform).toBeFalsy();
 
         dragElementViaMouse(fixture, dragElement, 50, 100);
-        expect(dragElement.style.transform).toBe('translate3d(50px, 100px, 0px)');
+        expect(dragElement.style.transform).toBe('translate(50px, 100px)');
 
         dragElementViaMouse(fixture, dragElement, 100, 200);
-        expect(dragElement.style.transform).toBe('translate3d(150px, 300px, 0px)');
+        expect(dragElement.style.transform).toBe('translate(150px, 300px)');
       }));
 
       it('should continue dragging from where it was left off when the page is scrolled',
@@ -130,10 +130,10 @@ describe('CdkDrag', () => {
           expect(dragElement.style.transform).toBeFalsy();
 
           dragElementViaMouse(fixture, dragElement, 50, 100);
-          expect(dragElement.style.transform).toBe('translate3d(50px, 100px, 0px)');
+          expect(dragElement.style.transform).toBe('translate(50px, 100px)');
 
           dragElementViaMouse(fixture, dragElement, 100, 200);
-          expect(dragElement.style.transform).toBe('translate3d(150px, 300px, 0px)');
+          expect(dragElement.style.transform).toBe('translate(150px, 300px)');
 
           cleanup();
         }));
@@ -199,10 +199,10 @@ describe('CdkDrag', () => {
 
         dragElement.style.transform = 'translateX(-50%)';
         dragElementViaMouse(fixture, dragElement, 50, 100);
-        expect(dragElement.style.transform).toBe('translate3d(50px, 100px, 0px) translateX(-50%)');
+        expect(dragElement.style.transform).toBe('translate(50px, 100px) translateX(-50%)');
       }));
 
-      it('should not generate multiple own `translate3d` values', fakeAsync(() => {
+      it('should not generate multiple own `translate` values', fakeAsync(() => {
         const fixture = createComponent(StandaloneDraggable);
         fixture.detectChanges();
         const dragElement = fixture.componentInstance.dragElement.nativeElement;
@@ -210,10 +210,10 @@ describe('CdkDrag', () => {
         dragElement.style.transform = 'translateY(-50%)';
 
         dragElementViaMouse(fixture, dragElement, 50, 100);
-        expect(dragElement.style.transform).toBe('translate3d(50px, 100px, 0px) translateY(-50%)');
+        expect(dragElement.style.transform).toBe('translate(50px, 100px) translateY(-50%)');
 
         dragElementViaMouse(fixture, dragElement, 100, 200);
-        expect(dragElement.style.transform).toBe('translate3d(150px, 300px, 0px) translateY(-50%)');
+        expect(dragElement.style.transform).toBe('translate(150px, 300px) translateY(-50%)');
       }));
 
       it('should prevent the `mousedown` action for native draggable elements', fakeAsync(() => {
@@ -245,7 +245,7 @@ describe('CdkDrag', () => {
 
         expect(dragElement.style.transform).toBeFalsy();
         dragElementViaTouch(fixture, dragElement, 50, 100);
-        expect(dragElement.style.transform).toBe('translate3d(50px, 100px, 0px)');
+        expect(dragElement.style.transform).toBe('translate(50px, 100px)');
       }));
 
       it('should drag an element freely to a particular position when the page is scrolled',
@@ -259,7 +259,7 @@ describe('CdkDrag', () => {
           scrollTo(0, 500);
           expect(dragElement.style.transform).toBeFalsy();
           dragElementViaTouch(fixture, dragElement, 50, 100);
-          expect(dragElement.style.transform).toBe('translate3d(50px, 100px, 0px)');
+          expect(dragElement.style.transform).toBe('translate(50px, 100px)');
           cleanup();
         }));
 
@@ -271,10 +271,10 @@ describe('CdkDrag', () => {
         expect(dragElement.style.transform).toBeFalsy();
 
         dragElementViaTouch(fixture, dragElement, 50, 100);
-        expect(dragElement.style.transform).toBe('translate3d(50px, 100px, 0px)');
+        expect(dragElement.style.transform).toBe('translate(50px, 100px)');
 
         dragElementViaTouch(fixture, dragElement, 100, 200);
-        expect(dragElement.style.transform).toBe('translate3d(150px, 300px, 0px)');
+        expect(dragElement.style.transform).toBe('translate(150px, 300px)');
       }));
 
       it('should continue dragging from where it was left off when the page is scrolled',
@@ -289,10 +289,10 @@ describe('CdkDrag', () => {
           expect(dragElement.style.transform).toBeFalsy();
 
           dragElementViaTouch(fixture, dragElement, 50, 100);
-          expect(dragElement.style.transform).toBe('translate3d(50px, 100px, 0px)');
+          expect(dragElement.style.transform).toBe('translate(50px, 100px)');
 
           dragElementViaTouch(fixture, dragElement, 100, 200);
-          expect(dragElement.style.transform).toBe('translate3d(150px, 300px, 0px)');
+          expect(dragElement.style.transform).toBe('translate(150px, 300px)');
 
           cleanup();
         }));
@@ -453,10 +453,10 @@ describe('CdkDrag', () => {
       expect(dragElement.style.transform).toBeFalsy();
 
       dragElementViaMouse(fixture, dragElement, 50, 100);
-      expect(dragElement.style.transform).toBe('translate3d(50px, 0px, 0px)');
+      expect(dragElement.style.transform).toBe('translate(50px, 0px)');
 
       dragElementViaMouse(fixture, dragElement, 100, 200);
-      expect(dragElement.style.transform).toBe('translate3d(150px, 0px, 0px)');
+      expect(dragElement.style.transform).toBe('translate(150px, 0px)');
     }));
 
     it('should be able to lock dragging along the y axis', fakeAsync(() => {
@@ -469,10 +469,10 @@ describe('CdkDrag', () => {
       expect(dragElement.style.transform).toBeFalsy();
 
       dragElementViaMouse(fixture, dragElement, 50, 100);
-      expect(dragElement.style.transform).toBe('translate3d(0px, 100px, 0px)');
+      expect(dragElement.style.transform).toBe('translate(0px, 100px)');
 
       dragElementViaMouse(fixture, dragElement, 100, 200);
-      expect(dragElement.style.transform).toBe('translate3d(0px, 300px, 0px)');
+      expect(dragElement.style.transform).toBe('translate(0px, 300px)');
     }));
 
     it('should add a class while an element is being dragged', fakeAsync(() => {
@@ -538,7 +538,7 @@ describe('CdkDrag', () => {
 
       dragElementViaMouse(fixture, dragRoot, 50, 100);
 
-      expect(dragRoot.style.transform).toBe('translate3d(50px, 100px, 0px)');
+      expect(dragRoot.style.transform).toBe('translate(50px, 100px)');
       expect(dragElement.style.transform).toBeFalsy();
     }));
 
@@ -578,7 +578,7 @@ describe('CdkDrag', () => {
 
       dragElementViaMouse(fixture, dragRoot, 50, 100);
 
-      expect(dragRoot.style.transform).toBe('translate3d(50px, 100px, 0px)');
+      expect(dragRoot.style.transform).toBe('translate(50px, 100px)');
       expect(dragElement.style.transform).toBeFalsy();
     }));
 
@@ -672,7 +672,7 @@ describe('CdkDrag', () => {
 
       expect(dragElement.style.transform).toBeFalsy();
       dragElementViaMouse(fixture, dragElement, 50, 100);
-      expect(dragElement.style.transform).toBe('translate3d(50px, 100px, 0px)');
+      expect(dragElement.style.transform).toBe('translate(50px, 100px)');
 
       fixture.componentInstance.dragInstance.reset();
       expect(dragElement.style.transform).toBeFalsy();
@@ -686,7 +686,7 @@ describe('CdkDrag', () => {
       dragElement.style.transform = 'scale(2)';
 
       dragElementViaMouse(fixture, dragElement, 50, 100);
-      expect(dragElement.style.transform).toBe('translate3d(50px, 100px, 0px) scale(2)');
+      expect(dragElement.style.transform).toBe('translate(50px, 100px) scale(2)');
 
       fixture.componentInstance.dragInstance.reset();
       expect(dragElement.style.transform).toBe('scale(2)');
@@ -699,11 +699,11 @@ describe('CdkDrag', () => {
 
       expect(dragElement.style.transform).toBeFalsy();
       dragElementViaMouse(fixture, dragElement, 50, 100);
-      expect(dragElement.style.transform).toBe('translate3d(50px, 100px, 0px)');
+      expect(dragElement.style.transform).toBe('translate(50px, 100px)');
       fixture.componentInstance.dragInstance.reset();
 
       dragElementViaMouse(fixture, dragElement, 25, 50);
-      expect(dragElement.style.transform).toBe('translate3d(25px, 50px, 0px)');
+      expect(dragElement.style.transform).toBe('translate(25px, 50px)');
     }));
 
     it('should not dispatch multiple events for a mouse event right after a touch event',
@@ -738,7 +738,7 @@ describe('CdkDrag', () => {
 
       expect(dragElement.style.transform).toBeFalsy();
       dragElementViaMouse(fixture, dragElement, 13.37, 37);
-      expect(dragElement.style.transform).toBe('translate3d(13px, 37px, 0px)');
+      expect(dragElement.style.transform).toBe('translate(13px, 37px)');
     }));
 
     it('should allow for dragging to be constrained to an element', fakeAsync(() => {
@@ -749,7 +749,7 @@ describe('CdkDrag', () => {
 
       expect(dragElement.style.transform).toBeFalsy();
       dragElementViaMouse(fixture, dragElement, 300, 300);
-      expect(dragElement.style.transform).toBe('translate3d(100px, 100px, 0px)');
+      expect(dragElement.style.transform).toBe('translate(100px, 100px)');
     }));
 
     it('should be able to pass in a DOM node as the boundary', fakeAsync(() => {
@@ -760,7 +760,7 @@ describe('CdkDrag', () => {
 
       expect(dragElement.style.transform).toBeFalsy();
       dragElementViaMouse(fixture, dragElement, 300, 300);
-      expect(dragElement.style.transform).toBe('translate3d(100px, 100px, 0px)');
+      expect(dragElement.style.transform).toBe('translate(100px, 100px)');
     }));
 
     it('should allow for the position constrain logic to be customized', fakeAsync(() => {
@@ -779,7 +779,7 @@ describe('CdkDrag', () => {
 
       expect(spy)
         .toHaveBeenCalledWith(jasmine.objectContaining({x: 300, y: 300}), jasmine.any(DragRef));
-      expect(dragElement.style.transform).toBe('translate3d(50px, 50px, 0px)');
+      expect(dragElement.style.transform).toBe('translate(50px, 50px)');
     }));
 
     it('should throw if attached to an ng-container', fakeAsync(() => {
@@ -854,7 +854,7 @@ describe('CdkDrag', () => {
       dispatchMouseEvent(document, 'mousemove', 50, 100);
       fixture.detectChanges();
 
-      expect(dragElement.style.transform).toBe('translate3d(50px, 100px, 0px)',
+      expect(dragElement.style.transform).toBe('translate(50px, 100px)',
           'Expected element to be dragged after all the time has passed.');
     }));
 
@@ -879,7 +879,7 @@ describe('CdkDrag', () => {
       dispatchMouseEvent(document, 'mousemove', 50, 100);
       fixture.detectChanges();
 
-      expect(dragElement.style.transform).toBe('translate3d(50px, 100px, 0px)',
+      expect(dragElement.style.transform).toBe('translate(50px, 100px)',
           'Expected element to be dragged after all the time has passed.');
     }));
 
@@ -907,7 +907,7 @@ describe('CdkDrag', () => {
       const dragElement = fixture.componentInstance.dragElement.nativeElement;
       const dragInstance = fixture.componentInstance.dragInstance;
 
-      expect(dragElement.style.transform).toBe('translate3d(50px, 100px, 0px)');
+      expect(dragElement.style.transform).toBe('translate(50px, 100px)');
       expect(dragInstance.getFreeDragPosition()).toEqual({x: 50, y: 100});
     }));
 
@@ -939,12 +939,12 @@ describe('CdkDrag', () => {
 
       const dragElement = fixture.componentInstance.dragElement.nativeElement;
 
-      expect(dragElement.style.transform).toBe('translate3d(50px, 100px, 0px)');
+      expect(dragElement.style.transform).toBe('translate(50px, 100px)');
 
       fixture.componentInstance.freeDragPosition = {x: 100, y: 200};
       fixture.detectChanges();
 
-      expect(dragElement.style.transform).toBe('translate3d(100px, 200px, 0px)');
+      expect(dragElement.style.transform).toBe('translate(100px, 200px)');
     }));
 
     it('should be able to continue dragging after the current position was set', fakeAsync(() => {
@@ -953,11 +953,11 @@ describe('CdkDrag', () => {
       fixture.detectChanges();
       const dragElement = fixture.componentInstance.dragElement.nativeElement;
 
-      expect(dragElement.style.transform).toBe('translate3d(50px, 100px, 0px)');
+      expect(dragElement.style.transform).toBe('translate(50px, 100px)');
 
       dragElementViaMouse(fixture, dragElement, 100, 200);
 
-      expect(dragElement.style.transform).toBe('translate3d(150px, 300px, 0px)');
+      expect(dragElement.style.transform).toBe('translate(150px, 300px)');
     }));
 
     it('should include the dragged distance as the user is dragging', fakeAsync(() => {
@@ -1005,7 +1005,7 @@ describe('CdkDrag', () => {
 
       expect(dragElement.style.transform).toBeFalsy();
       dragElementViaMouse(fixture, handle, 50, 100);
-      expect(dragElement.style.transform).toBe('translate3d(50px, 100px, 0px)');
+      expect(dragElement.style.transform).toBe('translate(50px, 100px)');
     }));
 
     it('should not be able to drag the element if the handle is disabled', fakeAsync(() => {
@@ -1046,7 +1046,7 @@ describe('CdkDrag', () => {
 
       expect(dragElement.style.transform).toBeFalsy();
       dragElementViaMouse(fixture, handle, 50, 100);
-      expect(dragElement.style.transform).toBe('translate3d(50px, 100px, 0px)');
+      expect(dragElement.style.transform).toBe('translate(50px, 100px)');
     }));
 
     it('should be able to use more than one handle to drag the element', fakeAsync(() => {
@@ -1058,10 +1058,10 @@ describe('CdkDrag', () => {
 
       expect(dragElement.style.transform).toBeFalsy();
       dragElementViaMouse(fixture, handles[1], 50, 100);
-      expect(dragElement.style.transform).toBe('translate3d(50px, 100px, 0px)');
+      expect(dragElement.style.transform).toBe('translate(50px, 100px)');
 
       dragElementViaMouse(fixture, handles[0], 100, 200);
-      expect(dragElement.style.transform).toBe('translate3d(150px, 300px, 0px)');
+      expect(dragElement.style.transform).toBe('translate(150px, 300px)');
     }));
 
     it('should be able to drag with a handle that is not a direct descendant', fakeAsync(() => {
@@ -1078,7 +1078,7 @@ describe('CdkDrag', () => {
 
       dragElementViaMouse(fixture, handle, 50, 100);
       expect(dragElement.style.transform)
-          .toBe('translate3d(50px, 100px, 0px)', 'Expected to drag the element by its handle.');
+          .toBe('translate(50px, 100px)', 'Expected to drag the element by its handle.');
     }));
 
     it('should disable the tap highlight while dragging via the handle', fakeAsync(() => {
@@ -2163,8 +2163,8 @@ describe('CdkDrag', () => {
         dispatchMouseEvent(document, 'mousemove', targetRect.left, targetRect.top + 5);
         fixture.detectChanges();
 
-        expect(placeholder.style.transform).toBe(`translate3d(0px, ${ITEM_HEIGHT}px, 0px)`);
-        expect(target.style.transform).toBe(`translate3d(0px, ${-ITEM_HEIGHT * 2}px, 0px)`);
+        expect(placeholder.style.transform).toBe(`translate(0px, ${ITEM_HEIGHT}px)`);
+        expect(target.style.transform).toBe(`translate(0px, ${-ITEM_HEIGHT * 2}px)`);
 
         dispatchMouseEvent(document, 'mouseup');
         fixture.detectChanges();
@@ -2192,8 +2192,8 @@ describe('CdkDrag', () => {
         dispatchMouseEvent(document, 'mousemove', targetRect.left, targetRect.bottom - 5);
         fixture.detectChanges();
 
-        expect(placeholder.style.transform).toBe(`translate3d(0px, ${-ITEM_HEIGHT}px, 0px)`);
-        expect(target.style.transform).toBe(`translate3d(0px, ${ITEM_HEIGHT * 2}px, 0px)`);
+        expect(placeholder.style.transform).toBe(`translate(0px, ${-ITEM_HEIGHT}px)`);
+        expect(target.style.transform).toBe(`translate(0px, ${ITEM_HEIGHT * 2}px)`);
 
         dispatchMouseEvent(document, 'mouseup');
         fixture.detectChanges();
@@ -2220,8 +2220,8 @@ describe('CdkDrag', () => {
       dispatchMouseEvent(document, 'mousemove', targetRect.left, targetRect.top + 5);
       fixture.detectChanges();
 
-      expect(placeholder.style.transform).toBe(`translate3d(0px, ${ITEM_HEIGHT + 12}px, 0px)`);
-      expect(target.style.transform).toBe(`translate3d(0px, ${-ITEM_HEIGHT - 12}px, 0px)`);
+      expect(placeholder.style.transform).toBe(`translate(0px, ${ITEM_HEIGHT + 12}px)`);
+      expect(target.style.transform).toBe(`translate(0px, ${-ITEM_HEIGHT - 12}px)`);
 
       dispatchMouseEvent(document, 'mouseup');
       fixture.detectChanges();
@@ -2274,8 +2274,8 @@ describe('CdkDrag', () => {
         dispatchMouseEvent(document, 'mousemove', targetRect.right - 5, targetRect.top);
         fixture.detectChanges();
 
-        expect(placeholder.style.transform).toBe(`translate3d(${ITEM_WIDTH}px, 0px, 0px)`);
-        expect(target.style.transform).toBe(`translate3d(${-ITEM_WIDTH * 2}px, 0px, 0px)`);
+        expect(placeholder.style.transform).toBe(`translate(${ITEM_WIDTH}px, 0px)`);
+        expect(target.style.transform).toBe(`translate(${-ITEM_WIDTH * 2}px, 0px)`);
 
         dispatchMouseEvent(document, 'mouseup');
         fixture.detectChanges();
@@ -2302,8 +2302,8 @@ describe('CdkDrag', () => {
         dispatchMouseEvent(document, 'mousemove', targetRect.right - 5, targetRect.top);
         fixture.detectChanges();
 
-        expect(placeholder.style.transform).toBe(`translate3d(${-ITEM_WIDTH}px, 0px, 0px)`);
-        expect(target.style.transform).toBe(`translate3d(${ITEM_WIDTH * 2}px, 0px, 0px)`);
+        expect(placeholder.style.transform).toBe(`translate(${-ITEM_WIDTH}px, 0px)`);
+        expect(target.style.transform).toBe(`translate(${ITEM_WIDTH * 2}px, 0px)`);
 
         dispatchMouseEvent(document, 'mouseup');
         fixture.detectChanges();
@@ -2330,8 +2330,8 @@ describe('CdkDrag', () => {
         dispatchMouseEvent(document, 'mousemove', targetRect.right - 5, targetRect.top);
         fixture.detectChanges();
 
-        expect(placeholder.style.transform).toBe(`translate3d(${ITEM_WIDTH + 12}px, 0px, 0px)`);
-        expect(target.style.transform).toBe(`translate3d(${-ITEM_WIDTH - 12}px, 0px, 0px)`);
+        expect(placeholder.style.transform).toBe(`translate(${ITEM_WIDTH + 12}px, 0px)`);
+        expect(target.style.transform).toBe(`translate(${-ITEM_WIDTH - 12}px, 0px)`);
 
         dispatchMouseEvent(document, 'mouseup');
         fixture.detectChanges();
@@ -2544,7 +2544,7 @@ describe('CdkDrag', () => {
 
       const preview = document.querySelector('.cdk-drag-preview')! as HTMLElement;
 
-      expect(preview.style.transform).toBe('translate3d(50px, 50px, 0px)');
+      expect(preview.style.transform).toBe('translate(50px, 50px)');
     }));
 
     it('should keep the preview next to the trigger if the page was scrolled', fakeAsync(() => {
@@ -2556,7 +2556,7 @@ describe('CdkDrag', () => {
       startDraggingViaMouse(fixture, item, 50, 50);
 
       const preview = document.querySelector('.cdk-drag-preview')! as HTMLElement;
-      expect(preview.style.transform).toBe('translate3d(50px, 50px, 0px)');
+      expect(preview.style.transform).toBe('translate(50px, 50px)');
 
       scrollTo(0, 500);
       fixture.detectChanges();
@@ -2565,7 +2565,7 @@ describe('CdkDrag', () => {
       dispatchMouseEvent(document, 'mousemove', 55, 55);
       fixture.detectChanges();
 
-      expect(preview.style.transform).toBe('translate3d(55px, 555px, 0px)');
+      expect(preview.style.transform).toBe('translate(55px, 555px)');
 
       cleanup();
     }));
@@ -2586,7 +2586,7 @@ describe('CdkDrag', () => {
 
       const preview = document.querySelector('.cdk-drag-preview')! as HTMLElement;
 
-      expect(preview.style.transform).toBe('translate3d(100px, 50px, 0px)');
+      expect(preview.style.transform).toBe('translate(100px, 50px)');
     }));
 
     it('should lock position inside a drop container along the y axis', fakeAsync(() => {
@@ -2605,7 +2605,7 @@ describe('CdkDrag', () => {
 
       const preview = document.querySelector('.cdk-drag-preview')! as HTMLElement;
 
-      expect(preview.style.transform).toBe('translate3d(50px, 100px, 0px)');
+      expect(preview.style.transform).toBe('translate(50px, 100px)');
     }));
 
     it('should inherit the position locking from the drop container', fakeAsync(() => {
@@ -2623,7 +2623,7 @@ describe('CdkDrag', () => {
 
       const preview = document.querySelector('.cdk-drag-preview')! as HTMLElement;
 
-      expect(preview.style.transform).toBe('translate3d(100px, 50px, 0px)');
+      expect(preview.style.transform).toBe('translate(100px, 50px)');
     }));
 
     it('should be able to customize the placeholder', fakeAsync(() => {

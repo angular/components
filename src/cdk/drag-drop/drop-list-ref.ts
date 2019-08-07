@@ -493,10 +493,10 @@ export class DropListRef<T = any> {
       if (isHorizontal) {
         // Round the transforms since some browsers will
         // blur the elements, for sub-pixel transforms.
-        elementToOffset.style.transform = `translate3d(${Math.round(sibling.offset)}px, 0, 0)`;
+        elementToOffset.style.transform = `translate(${Math.round(sibling.offset)}px, 0)`;
         adjustClientRect(sibling.clientRect, 0, offset);
       } else {
-        elementToOffset.style.transform = `translate3d(0, ${Math.round(sibling.offset)}px, 0)`;
+        elementToOffset.style.transform = `translate(0, ${Math.round(sibling.offset)}px)`;
         adjustClientRect(sibling.clientRect, offset, 0);
       }
     });

@@ -1095,7 +1095,7 @@ export interface Point {
 function getTransform(x: number, y: number): string {
   // Round the transforms since some browsers will
   // blur the elements for sub-pixel transforms.
-  return `translate3d(${Math.round(x)}px, ${Math.round(y)}px, 0)`;
+  return `translate(${Math.round(x)}px, ${Math.round(y)}px)`;
 }
 
 /** Creates a deep clone of an element. */
