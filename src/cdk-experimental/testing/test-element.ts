@@ -9,6 +9,12 @@
 /** Keyboard keys that do not result in input characters. */
 import {ModifierKeys} from '@angular/cdk/testing';
 
+/** An enum of non-text keys that can be used with the `sendKeys` method. */
+// NOTE: This is a separate enum from `@angular/cdk/keycodes` because we don't necessarily want to
+// support every possible keyCode. We also can't rely on Protractor's `Key` because we don't want a
+// dependency on any particular testing framework here. Instead we'll just maintain this supported
+// list of keys and let individual concrete `HarnessEnvironment` classes map them to whatever key
+// representation is used in its respective testing framework.
 export enum TestKey {
   BACKSPACE,
   TAB,
