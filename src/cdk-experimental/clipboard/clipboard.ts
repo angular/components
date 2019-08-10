@@ -28,7 +28,7 @@ export class Clipboard {
    * Copies the provided text into the user's clipboard.
    *
    * @param text The string to copy.
-   * @return Whether the operation was successful.
+   * @returns Whether the operation was successful.
    */
   copy(text: string): boolean {
     const pendingCopy = this.beginCopy(text);
@@ -43,6 +43,9 @@ export class Clipboard {
    * which take too long to successfully render and be copied in the same tick.
    *
    * The caller must call `destroy` on the returned `PendingCopy`.
+   *
+   * @param text The string to copy.
+   * @returns the pending copy operation.
    */
   beginCopy(text: string): PendingCopy {
     return new PendingCopy(text, this._document);
@@ -69,7 +72,7 @@ export class PendingCopy {
     const textarea = this._textarea = this._document.createElement('textarea');
 
     // Hide the element for display and accessibility.
-    textarea.setAttribute('class', 'cdk-visually-hidden');
+    textarea.setAttribute('style', 'opacity: 0;');
     textarea.setAttribute('aria-hidden', 'true');
 
     textarea.value = text;
@@ -92,7 +95,7 @@ export class PendingCopy {
           currentFocus.focus();
         }
       }
-    } catch (error) {
+    } catch {
       // Discard error.
       // Initial setting of {@code successful} will represent failure here.
     }
