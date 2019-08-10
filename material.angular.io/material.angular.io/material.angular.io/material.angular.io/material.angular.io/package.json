@@ -12,7 +12,7 @@
     "e2e": "protractor",
     "build-themes": "bash ./tools/build-themes.sh",
     "prod-build": "npm run build-themes && ng build --aot --prod",
-    "postinstall": "webdriver-manager update --gecko false && bash ./tools/build-themes.sh",
+    "postinstall": "webdriver-manager update --gecko false && npm run build-themes",
     "publish-prod": "bash ./tools/deploy.sh stable prod",
     "publish-dev": "bash ./tools/deploy.sh",
     "publish-beta": "bash ./tools/deploy.sh stable beta"
