@@ -8,14 +8,14 @@ const COPY_CONTENT = 'copy content';
 
 @Component({
   selector: 'copy-to-clipboard-host',
-  template: `<button [copyToClipboard]="content" (copied)="copied.emit($event)"></button>`,
+  template: `<button [cdkCopyToClipboard]="content" (copied)="copied.emit($event)"></button>`,
 })
 class CopyToClipboardHost {
   @Input() content = '';
   @Output() copied = new EventEmitter<boolean>();
 }
 
-describe('CopyToClipboard', () => {
+describe('CdkCopyToClipboard', () => {
   let fixture: ComponentFixture<CopyToClipboardHost>;
   let mockCopy: jasmine.Spy;
   let copiedOutput: jasmine.Spy;

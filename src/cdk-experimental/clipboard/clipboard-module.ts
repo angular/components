@@ -9,12 +9,12 @@
 import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
 
-import {CopyToClipboard} from './copy-to-clipboard';
+import {CdkCopyToClipboard} from './copy-to-clipboard';
 
 @NgModule({
-  declarations: [CopyToClipboard],
+  declarations: [CdkCopyToClipboard],
   imports: [CommonModule],
-  exports: [CopyToClipboard],
+  exports: [CdkCopyToClipboard],
 })
 export class ClipboardModule {
 }

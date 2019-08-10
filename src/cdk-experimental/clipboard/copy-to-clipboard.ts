@@ -19,14 +19,14 @@ import {Clipboard} from './clipboard';
  * `<button copyToClipboard="Content to be copied">Copy me!</button>`
  */
 @Directive({
-  selector: '[copyToClipboard]',
+  selector: '[cdkCopyToClipboard]',
   host: {
     '(click)': 'doCopy()',
   }
 })
-export class CopyToClipboard {
+export class CdkCopyToClipboard {
   /** Content to be copied. */
-  @Input('copyToClipboard') text = '';
+  @Input('cdkCopyToClipboard') text = '';
 
   @Output() copied = new EventEmitter<boolean>();
 
