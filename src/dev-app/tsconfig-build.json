@@ -10,6 +10,7 @@
     "noUnusedParameters": true,
     "noUnusedLocals": true,
     "strictNullChecks": true,
+    "noImplicitReturns": true,
     "strictFunctionTypes": true,
     "noImplicitThis": true,
     "lib": ["es6", "es2015", "dom"],
