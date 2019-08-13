@@ -7,7 +7,7 @@
  */
 
 import {Platform} from '@angular/cdk/platform';
-import {ElementRef, NgZone, OnChanges, SimpleChanges} from '@angular/core';
+import {ElementRef, NgZone} from '@angular/core';
 import {
   CanColor,
   CanColorCtor,
@@ -17,9 +17,8 @@ import {
   CanDisableRippleCtor,
   mixinColor,
   mixinDisabled,
-  mixinDisableRipple, RippleAnimationConfig,
-  RippleRenderer,
-  RippleTarget
+  mixinDisableRipple,
+  RippleAnimationConfig
 } from '@angular/material/core';
 
 /** Inputs common to all buttons. */
