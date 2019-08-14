@@ -101,6 +101,7 @@ ng_test_library(
         "//src/cdk/testing",
         "//src/material/button",
         "@npm//@angular/platform-browser",
+        "@npm//@material/ripple",
     ],
 )
 
