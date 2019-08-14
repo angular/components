@@ -15,10 +15,10 @@ export class PaginatorConfigurablePageSizeOptionExample {
   length = 100;
   pageSize = 10;
   pageSizeOptions: PageSizeOption[] = [
-    { value: 5, text: '5' },
-    { value: 10, text: '10' },
-    { value: 25, text: '25' },
-    { value: 100, text: '100' },
+    { value: 5, text: 'Five' },
+    { value: 10, text: 'Ten' },
+    { value: 25, text: 'Twenty five' },
+    { value: 100, text: 'Hundred' },
     { value: -1, text: 'All' }
   ];
 
