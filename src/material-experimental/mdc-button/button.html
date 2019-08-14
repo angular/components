@@ -7,7 +7,7 @@
 </ng-content>
 
 <div matRipple class="mat-button-ripple"
-     [matRippleAnimation]="rippleAnimation"
+     [matRippleAnimation]="_rippleAnimation"
      [matRippleDisabled]="_isRippleDisabled()"
      [matRippleCentered]="isRippleCentered"
-     [matRippleTrigger]="_getHostElement()"></div>
+     [matRippleTrigger]="_elementRef.nativeElement"></div>

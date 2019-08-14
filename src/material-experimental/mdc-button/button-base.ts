@@ -20,6 +20,7 @@ import {
   mixinDisableRipple,
   RippleAnimationConfig
 } from '@angular/material/core';
+import {MDCRippleFoundation} from '@material/ripple';
 
 /** Inputs common to all buttons. */
 export const MAT_BUTTON_INPUTS = ['disabled', 'disableRipple', 'color'];
@@ -74,13 +75,10 @@ export const _MatButtonBaseMixin: CanDisableRippleCtor&CanDisableCtor&CanColorCt
 /** Base class for all buttons.  */
 export class MatButtonBase extends _MatButtonBaseMixin implements CanDisable, CanColor,
                                                                   CanDisableRipple {
-  rippleAnimation: RippleAnimationConfig = {
-    // TODO(mmalerba): Use the MDC constants once they are exported separately from the
-    // foundation. Grabbing them off the foundation prevents the foundation class from being
-    // tree-shaken. There is an open PR for this:
-    // https://github.com/material-components/material-components-web/pull/4593
-    enterDuration: 225 /* MDCRippleFoundation.numbers.DEACTIVATION_TIMEOUT_MS */,
-    exitDuration: 150 /* MDCRippleFoundation.numbers.FG_DEACTIVATION_MS */,
+  /** The ripple animation configuration to use for the buttons. */
+  _rippleAnimation: RippleAnimationConfig = {
+    enterDuration: MDCRippleFoundation.numbers.DEACTIVATION_TIMEOUT_MS,
+    exitDuration: MDCRippleFoundation.numbers.FG_DEACTIVATION_MS
   };
 
   /** Whether the ripple is centered on the button. */
@@ -108,10 +106,6 @@ export class MatButtonBase extends _MatButtonBaseMixin implements CanDisable, Ca
   /** Gets whether the button has one of the given attributes. */
   private _hasHostAttributes(...attributes: string[]) {
     return attributes.some(attribute => this._elementRef.nativeElement.hasAttribute(attribute));
-  }
-
-  _getHostElement() {
-    return this._elementRef.nativeElement;
   }
 
   _isRippleDisabled() {
