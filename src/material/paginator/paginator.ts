@@ -125,7 +125,7 @@ export class MatPaginator extends _MatPaginatorBase implements OnInit, OnDestroy
   @Input()
   get pageSizeOptions(): PageSizeOption[] { return this._pageSizeOptions; }
   set pageSizeOptions(value: PageSizeOption[]) {
-    this._pageSizeOptions = (value || []).map(p => this.coercePageSizeOption(p));
+    this._pageSizeOptions = (value || []).map(p => this._coercePageSizeOption(p));
 
     this._updateDisplayedPageSizeOptions();
   }
@@ -287,7 +287,7 @@ export class MatPaginator extends _MatPaginatorBase implements OnInit, OnDestroy
     this._changeDetectorRef.markForCheck();
   }
 
-  private coercePageSizeOption(value: any): PageSizeOption {
+  private _coercePageSizeOption(value: any): PageSizeOption {
     let pageSizeOption = new PageSizeOption();
 
     if (typeof (value) === 'object') {
