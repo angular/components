@@ -19,9 +19,9 @@ export const DEFAULT_OPTIONS: google.maps.MapOptions = {
   zoom: 17,
 };
 
-/** Arbitrarily chose default height for the map element */
+/** Arbitrary default height for the map element */
 export const DEFAULT_HEIGHT = '500px';
-/** Arbitrarily chose default width for the map element */
+/** Arbitrary default width for the map element */
 export const DEFAULT_WIDTH = '500px';
 
 /**
@@ -37,41 +37,41 @@ export const DEFAULT_WIDTH = '500px';
 export class GoogleMap implements OnInit, OnDestroy {
   @Input()
   set height(height: string) {
-    this._height$.next(height || DEFAULT_HEIGHT);
+    this._height.next(height || DEFAULT_HEIGHT);
   }
 
   @Input()
   set width(width: string) {
-    this._width$.next(width || DEFAULT_WIDTH);
+    this._width.next(width || DEFAULT_WIDTH);
   }
 
   @Input()
   set center(center: google.maps.LatLngLiteral) {
-    this._center$.next(center);
+    this._center.next(center);
   }
   @Input()
   set zoom(zoom: number) {
-    this._zoom$.next(zoom);
+    this._zoom.next(zoom);
   }
   @Input()
   set options(options: google.maps.MapOptions) {
-    this._options$.next(options || DEFAULT_OPTIONS);
+    this._options.next(options || DEFAULT_OPTIONS);
   }
 
   // TODO(mbehrlich): Add event handlers, properties, and methods.
 
-  private readonly _height$ = new BehaviorSubject<string>(DEFAULT_HEIGHT);
-  private readonly _width$ = new BehaviorSubject<string>(DEFAULT_WIDTH);
-  private readonly _options$ = new BehaviorSubject<google.maps.MapOptions>(DEFAULT_OPTIONS);
-  private readonly _center$ = new BehaviorSubject<google.maps.LatLngLiteral|undefined>(undefined);
-  private readonly _zoom$ = new BehaviorSubject<number|undefined>(undefined);
+  private readonly _height = new BehaviorSubject<string>(DEFAULT_HEIGHT);
+  private readonly _width = new BehaviorSubject<string>(DEFAULT_WIDTH);
+  private readonly _options = new BehaviorSubject<google.maps.MapOptions>(DEFAULT_OPTIONS);
+  private readonly _center = new BehaviorSubject<google.maps.LatLngLiteral|undefined>(undefined);
+  private readonly _zoom = new BehaviorSubject<number|undefined>(undefined);
 
-  private readonly _destroy$ = new Subject<void>();
+  private readonly _destroy = new Subject<void>();
 
   constructor(private readonly _elementRef: ElementRef) {
     const googleMapsWindow: GoogleMapsWindow = window;
     if (!googleMapsWindow.google) {
-      throw new Error(
+      throw Error(
           'Namespace google not found, cannot construct embedded google ' +
           'map. Please install the Google Maps JavaScript API: ' +
           'https://developers.google.com/maps/documentation/javascript/' +
@@ -82,37 +82,34 @@ export class GoogleMap implements OnInit, OnDestroy {
   ngOnInit() {
     const mapEl = this._elementRef.nativeElement.querySelector('.map-container');
 
-    const combinedOptions$: Observable<google.maps.MapOptions> =
-        combineLatest(this._options$, this._center$, this._zoom$)
+    // Combines the center and zoom and the other map options into a single
+    // object
+    const combinedOptionsChanges: Observable<google.maps.MapOptions> =
+        combineLatest(this._options, this._center, this._zoom)
             .pipe(map(([options, center, zoom]) => {
               const combinedOptions: google.maps.MapOptions = {
                 ...options,
                 center: center || options.center,
                 zoom: zoom !== undefined ? zoom : options.zoom,
               };
-              if (!combinedOptions.center || !combinedOptions.center.lat ||
-                  !combinedOptions.center.lng || !combinedOptions.zoom) {
-                throw new Error(
-                    'The MapOptions object is not configured correctly. ' +
-                    'See the Google Maps JavaScript API: ' +
-                    'https://developers.google.com/maps/documentation/javascript/' +
-                    'reference/map#MapOptions');
-              }
               return combinedOptions;
             }));
-    const googleMap$ =
-        combinedOptions$.pipe(take(1), map(options => new google.maps.Map(mapEl, options)));
 
-    googleMap$.subscribe();
+    // Initializes the Google Map
+    const googleMapChanges =
+        combinedOptionsChanges.pipe(take(1), map(options => new google.maps.Map(mapEl, options)));
+    googleMapChanges.subscribe();
 
-    combineLatest(googleMap$, combinedOptions$)
-        .pipe(takeUntil(this._destroy$))
+    // Watches for updates to any options
+    combineLatest(googleMapChanges, combinedOptionsChanges)
+        .pipe(takeUntil(this._destroy))
         .subscribe(([googleMap, options]) => {
           googleMap.setOptions(options);
         });
 
-    combineLatest(this._height$, this._width$)
-        .pipe(takeUntil(this._destroy$))
+    // Watches for updates to the size of the container element
+    combineLatest(this._height, this._width)
+        .pipe(takeUntil(this._destroy))
         .subscribe(([height, width]) => {
           mapEl.style.height = height;
           mapEl.style.width = width;
@@ -120,7 +117,7 @@ export class GoogleMap implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this._destroy$.next();
-    this._destroy$.complete();
+    this._destroy.next();
+    this._destroy.complete();
   }
 }

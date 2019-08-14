@@ -129,18 +129,6 @@ describe('GoogleMap', () => {
     const container = fixture.debugElement.query(By.css('div'));
     expect(mapConstructorSpy).toHaveBeenCalledWith(container.nativeElement, correctedOptions);
   });
-
-  it('does not initialize the map if inputs are not configure correctly', () => {
-    const options = {};
-    mapSpy = createMapSpy(options);
-    mapConstructorSpy = createMapConstructorSpy(mapSpy);
-
-    const fixture = TestBed.createComponent(TestApp);
-    fixture.componentInstance.options = options;
-    fixture.detectChanges();
-
-    expect(mapConstructorSpy).not.toHaveBeenCalled();
-  });
 });
 
 @Component({
