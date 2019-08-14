@@ -40,7 +40,7 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MatIconButton extends MatButtonBase {
-  isRippleCentered = true;
+  _isRippleCentered = true;
 
   constructor(
       elementRef: ElementRef, platform: Platform, ngZone: NgZone,
@@ -61,7 +61,7 @@ export class MatIconButton extends MatButtonBase {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MatIconAnchor extends MatAnchorBase {
-  isRippleCentered = true;
+  _isRippleCentered = true;
 
   constructor(
       elementRef: ElementRef, platform: Platform, ngZone: NgZone,

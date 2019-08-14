@@ -82,7 +82,7 @@ export class MatButtonBase extends _MatButtonBaseMixin implements CanDisable, Ca
   };
 
   /** Whether the ripple is centered on the button. */
-  isRippleCentered = false;
+  _isRippleCentered = false;
 
   constructor(
       elementRef: ElementRef, public _platform: Platform, public _ngZone: NgZone,
