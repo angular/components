@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {coerceNumberProperty, coerceBooleanProperty} from '@angular/cdk/coercion';
+import { coerceNumberProperty, coerceBooleanProperty } from '@angular/cdk/coercion';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -18,8 +18,8 @@ import {
   Output,
   ViewEncapsulation,
 } from '@angular/core';
-import {Subscription} from 'rxjs';
-import {MatPaginatorIntl} from './paginator-intl';
+import { Subscription } from 'rxjs';
+import { MatPaginatorIntl } from './paginator-intl';
 import {
   HasInitialized,
   HasInitializedCtor,
@@ -54,11 +54,19 @@ export class PageEvent {
   length: number;
 }
 
+export class PageSizeOption {
+  /** Value of PegeSizeOption. */
+  value: number;
+
+  /** Text of value displayed on view. */
+  text: string;
+}
+
 // Boilerplate for applying mixins to MatPaginator.
 /** @docs-private */
-class MatPaginatorBase {}
+class MatPaginatorBase { }
 const _MatPaginatorBase: CanDisableCtor & HasInitializedCtor & typeof MatPaginatorBase =
-    mixinDisabled(mixinInitialized(MatPaginatorBase));
+  mixinDisabled(mixinInitialized(MatPaginatorBase));
 
 /**
  * Component to provide navigation between paged information. Displays the size of the current
@@ -115,12 +123,13 @@ export class MatPaginator extends _MatPaginatorBase implements OnInit, OnDestroy
 
   /** The set of provided page size options to display to the user. */
   @Input()
-  get pageSizeOptions(): number[] { return this._pageSizeOptions; }
-  set pageSizeOptions(value: number[]) {
-    this._pageSizeOptions = (value || []).map(p => coerceNumberProperty(p));
+  get pageSizeOptions(): PageSizeOption[] { return this._pageSizeOptions; }
+  set pageSizeOptions(value: PageSizeOption[]) {
+    this._pageSizeOptions = (value || []).map(p => this.coercePageSizeOption(p));
+
     this._updateDisplayedPageSizeOptions();
   }
-  private _pageSizeOptions: number[] = [];
+  private _pageSizeOptions: PageSizeOption[] = [];
 
   /** Whether to hide the page size selection UI from the user. */
   @Input()
@@ -143,10 +152,10 @@ export class MatPaginator extends _MatPaginatorBase implements OnInit, OnDestroy
   @Output() readonly page: EventEmitter<PageEvent> = new EventEmitter<PageEvent>();
 
   /** Displayed set of page size options. Will be sorted and include current page size. */
-  _displayedPageSizeOptions: number[];
+  _displayedPageSizeOptions: PageSizeOption[];
 
   constructor(public _intl: MatPaginatorIntl,
-              private _changeDetectorRef: ChangeDetectorRef) {
+    private _changeDetectorRef: ChangeDetectorRef) {
     super();
     this._intlChanges = _intl.changes.subscribe(() => this._changeDetectorRef.markForCheck());
   }
@@ -259,19 +268,41 @@ export class MatPaginator extends _MatPaginatorBase implements OnInit, OnDestroy
     // If no page size is provided, use the first page size option or the default page size.
     if (!this.pageSize) {
       this._pageSize = this.pageSizeOptions.length != 0 ?
-          this.pageSizeOptions[0] :
-          DEFAULT_PAGE_SIZE;
+        this.pageSizeOptions[0].value :
+        DEFAULT_PAGE_SIZE;
     }
 
     this._displayedPageSizeOptions = this.pageSizeOptions.slice();
 
-    if (this._displayedPageSizeOptions.indexOf(this.pageSize) === -1) {
-      this._displayedPageSizeOptions.push(this.pageSize);
+    let currentPageSize = this._displayedPageSizeOptions.find(p => p.value == this.pageSize);
+    if (currentPageSize == null) {
+      currentPageSize = new PageSizeOption();
+      currentPageSize.value = this.pageSize;
+      currentPageSize.text = this.pageSize.toString();
+      this._displayedPageSizeOptions.push(currentPageSize);
     }
 
     // Sort the numbers using a number-specific sort function.
-    this._displayedPageSizeOptions.sort((a, b) => a - b);
+    this._displayedPageSizeOptions.sort((a, b) => a.value - b.value);
     this._changeDetectorRef.markForCheck();
+  }
+
+  private coercePageSizeOption(value: any): PageSizeOption {
+    let pageSizeOption = new PageSizeOption();
+
+    if (typeof (value) === 'object') {
+      pageSizeOption.value = coerceNumberProperty(value.value);
+
+      if (!value.text || value.text.trim() === '') {
+        pageSizeOption.text = pageSizeOption.value.toString();
+      }
+    }
+    else {
+      pageSizeOption.value = coerceNumberProperty(value);
+      pageSizeOption.text = pageSizeOption.value.toString();
+    }
+    
+    return pageSizeOption;
   }
 
   /** Emits an event notifying that a change of the paginator's properties has been triggered. */
