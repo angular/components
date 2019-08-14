@@ -20,7 +20,7 @@ import {
   mixinDisableRipple,
   RippleAnimationConfig
 } from '@angular/material/core';
-import {MDCRippleFoundation} from '@material/ripple';
+import {numbers} from '@material/ripple';
 
 /** Inputs common to all buttons. */
 export const MAT_BUTTON_INPUTS = ['disabled', 'disableRipple', 'color'];
@@ -77,8 +77,8 @@ export class MatButtonBase extends _MatButtonBaseMixin implements CanDisable, Ca
                                                                   CanDisableRipple {
   /** The ripple animation configuration to use for the buttons. */
   _rippleAnimation: RippleAnimationConfig = {
-    enterDuration: MDCRippleFoundation.numbers.DEACTIVATION_TIMEOUT_MS,
-    exitDuration: MDCRippleFoundation.numbers.FG_DEACTIVATION_MS
+    enterDuration: numbers.DEACTIVATION_TIMEOUT_MS,
+    exitDuration: numbers.FG_DEACTIVATION_MS
   };
 
   /** Whether the ripple is centered on the button. */
