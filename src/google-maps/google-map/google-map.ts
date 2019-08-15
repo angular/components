@@ -3,6 +3,7 @@ import {
   Component,
   ElementRef,
   Input,
+  OnChanges,
   OnDestroy,
   OnInit,
 } from '@angular/core';
@@ -34,16 +35,10 @@ export const DEFAULT_WIDTH = '500px';
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<div class="map-container"></div>',
 })
-export class GoogleMap implements OnInit, OnDestroy {
-  @Input()
-  set height(height: string) {
-    this._height.next(height || DEFAULT_HEIGHT);
-  }
+export class GoogleMap implements OnChanges, OnInit, OnDestroy {
+  @Input() height = DEFAULT_HEIGHT;
 
-  @Input()
-  set width(width: string) {
-    this._width.next(width || DEFAULT_WIDTH);
-  }
+  @Input() width = DEFAULT_WIDTH;
 
   @Input()
   set center(center: google.maps.LatLngLiteral) {
@@ -60,8 +55,8 @@ export class GoogleMap implements OnInit, OnDestroy {
 
   // TODO(mbehrlich): Add event handlers, properties, and methods.
 
-  private readonly _height = new BehaviorSubject<string>(DEFAULT_HEIGHT);
-  private readonly _width = new BehaviorSubject<string>(DEFAULT_WIDTH);
+  private _mapEl?: HTMLElement;
+
   private readonly _options = new BehaviorSubject<google.maps.MapOptions>(DEFAULT_OPTIONS);
   private readonly _center = new BehaviorSubject<google.maps.LatLngLiteral|undefined>(undefined);
   private readonly _zoom = new BehaviorSubject<number|undefined>(undefined);
@@ -79,40 +74,54 @@ export class GoogleMap implements OnInit, OnDestroy {
     }
   }
 
+  ngOnChanges() {
+    this._setSize();
+  }
+
   ngOnInit() {
-    const mapEl = this._elementRef.nativeElement.querySelector('.map-container');
+    this._mapEl = this._elementRef.nativeElement.querySelector('.map-container')!;
+    this._setSize();
 
-    // Combines the center and zoom and the other map options into a single
-    // object
-    const combinedOptionsChanges: Observable<google.maps.MapOptions> =
-        combineLatest(this._options, this._center, this._zoom)
-            .pipe(map(([options, center, zoom]) => {
-              const combinedOptions: google.maps.MapOptions = {
-                ...options,
-                center: center || options.center,
-                zoom: zoom !== undefined ? zoom : options.zoom,
-              };
-              return combinedOptions;
-            }));
+    const combinedOptionsChanges = this._combineOptions();
 
-    // Initializes the Google Map
-    const googleMapChanges =
-        combinedOptionsChanges.pipe(take(1), map(options => new google.maps.Map(mapEl, options)));
+    const googleMapChanges = this._initializeMap(combinedOptionsChanges);
     googleMapChanges.subscribe();
 
-    // Watches for updates to any options
-    combineLatest(googleMapChanges, combinedOptionsChanges)
+    this._watchForOptionsChanges(googleMapChanges, combinedOptionsChanges);
+  }
+
+  private _setSize() {
+    if (this._mapEl) {
+      this._mapEl.style.height = this.height || DEFAULT_HEIGHT;
+      this._mapEl.style.width = this.width || DEFAULT_WIDTH;
+    }
+  }
+
+  /** Combines the center and zoom and the other map options into a single object */
+  private _combineOptions(): Observable<google.maps.MapOptions> {
+    return combineLatest(this._options, this._center, this._zoom)
+        .pipe(map(([options, center, zoom]) => {
+          const combinedOptions: google.maps.MapOptions = {
+            ...options,
+            center: center || options.center,
+            zoom: zoom !== undefined ? zoom : options.zoom,
+          };
+          return combinedOptions;
+        }));
+  }
+
+  private _initializeMap(optionsChanges: Observable<google.maps.MapOptions>):
+      Observable<google.maps.Map> {
+    return optionsChanges.pipe(take(1), map(options => new google.maps.Map(this._mapEl!, options)));
+  }
+
+  private _watchForOptionsChanges(
+      googleMapChanges: Observable<google.maps.Map>,
+      optionsChanges: Observable<google.maps.MapOptions>) {
+    combineLatest(googleMapChanges, optionsChanges)
         .pipe(takeUntil(this._destroy))
         .subscribe(([googleMap, options]) => {
           googleMap.setOptions(options);
-        });
-
-    // Watches for updates to the size of the container element
-    combineLatest(this._height, this._width)
-        .pipe(takeUntil(this._destroy))
-        .subscribe(([height, width]) => {
-          mapEl.style.height = height;
-          mapEl.style.width = width;
         });
   }
 
