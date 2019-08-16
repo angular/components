@@ -249,8 +249,8 @@ export class MatChip extends _MatChipMixinBase implements AfterContentInit, Afte
       // specify whether selection occurred via user input.
     },
     notifyNavigation: () => {
-      // TODO: This is a new feature added by MDC, consider exposing this event to users in the
-      //  future.
+      // TODO: This is a new feature added by MDC; consider exposing this event to users in the
+      // future.
     },
     notifyTrailingIconInteraction: () => this.removeIconInteraction.emit(this.id),
     notifyRemoval: () => this.removed.emit({chip: this}),
@@ -262,8 +262,11 @@ export class MatChip extends _MatChipMixinBase implements AfterContentInit, Afte
     hasLeadingIcon: () => !!this.leadingIcon,
     hasTrailingAction: () => !!this.trailingIcon,
     isRTL: () => !!this._dir && this._dir.value === 'rtl',
-    focusPrimaryAction: () => this._elementRef.nativeElement.focus(),
-    focusTrailingAction: () => this.trailingIcon && this.trailingIcon.focus(),
+    focusPrimaryAction: () => {
+      // Angular Material MDC chips fully manage focus. TODO: Managing focus and handling keyboard
+      // events was added by MDC after our implementation; consider consolidating.
+    },
+    focusTrailingAction: () => {},
     setTrailingActionAttr: (attr, value) =>
         this.trailingIcon && this.trailingIcon.setAttribute(attr, value),
     setPrimaryActionAttr: (name: string, value: string) => {
