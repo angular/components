@@ -14,6 +14,7 @@ ng_module(
         ["**/*.ts"],
         exclude = ["**/*.spec.ts"],
     ),
+    assets = glob(["**/*.html"]),
     module_name = "@angular/google-maps/google-map",
     deps = [
         "@npm//@angular/core",

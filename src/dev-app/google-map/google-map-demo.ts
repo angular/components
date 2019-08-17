@@ -27,4 +27,8 @@ export class GoogleMapDemo {
         this.isReady = true;
       });
   }
+
+  handleClick(event: google.maps.MouseEvent) {
+    this.center = event.latLng.toJSON();
+  }
 }
