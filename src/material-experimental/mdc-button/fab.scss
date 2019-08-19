@@ -3,6 +3,20 @@
 
 @include mdc-fab-without-ripple($query: $mat-base-styles-query);
 
+.mat-mdc-fab, .mat-mdc-mini-fab {
+  // ::before content is used for the interaction highlight (focus, press, active, hover)
+  &::before {
+    content: '';
+    position: absolute;
+    pointer-events: none;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    opacity: 0;
+  }
+}
+
 // MDC expects the fab icon to contain this HTML content:
 // ```html
 //   <span class="mdc-fab__icon material-icons">favorite</span>
