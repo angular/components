@@ -151,7 +151,10 @@ jobs:
       - *yarn_install
       - *setup_bazel_binary
 
-      - run: bazel build src/... --build_tag_filters=-docs-package
+      # Build all targets in the project (not only tests). Disable runfile tree creation
+      # as these are only needed for execution of targets and this job just verifies that
+      # targets can be built.
+      - run: bazel build src/... --build_tag_filters=-docs-package --nobuild_runfile_links
 
   # --------------------------------------------------------------------------------------------
   # Job that runs ts-api-guardian against our API goldens in "tools/public_api_guard".
