@@ -43,7 +43,7 @@ export const DEFAULT_WIDTH = '500px';
 @Component({
   selector: 'google-map',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  templateUrl: 'google-map.html',
+  template: '<div class="map-container"></div>',
 })
 export class GoogleMap implements OnChanges, OnInit, OnDestroy {
   @Input() height = DEFAULT_HEIGHT;
@@ -65,19 +65,19 @@ export class GoogleMap implements OnChanges, OnInit, OnDestroy {
 
   @Output() boundsChanged = new EventEmitter<void>();
   @Output() centerChanged = new EventEmitter<void>();
-  @Output() click = new EventEmitter<google.maps.MouseEvent|google.maps.IconMouseEvent>();
-  @Output() dblclick = new EventEmitter<google.maps.MouseEvent>();
-  @Output() drag = new EventEmitter<void>();
-  @Output() dragend = new EventEmitter<void>();
-  @Output() dragstart = new EventEmitter<void>();
+  @Output() mapClick = new EventEmitter<google.maps.MouseEvent|google.maps.IconMouseEvent>();
+  @Output() mapDblclick = new EventEmitter<google.maps.MouseEvent>();
+  @Output() mapDrag = new EventEmitter<void>();
+  @Output() mapDragend = new EventEmitter<void>();
+  @Output() mapDragstart = new EventEmitter<void>();
   @Output() headingChanged = new EventEmitter<void>();
   @Output() idle = new EventEmitter<void>();
   @Output() maptypeidChanged = new EventEmitter<void>();
-  @Output() mousemove = new EventEmitter<google.maps.MouseEvent>();
-  @Output() mouseout = new EventEmitter<google.maps.MouseEvent>();
-  @Output() mouseover = new EventEmitter<google.maps.MouseEvent>();
+  @Output() mapMousemove = new EventEmitter<google.maps.MouseEvent>();
+  @Output() mapMouseout = new EventEmitter<google.maps.MouseEvent>();
+  @Output() mapMouseover = new EventEmitter<google.maps.MouseEvent>();
   @Output() projectionChanged = new EventEmitter<void>();
-  @Output() rightclick = new EventEmitter<google.maps.MouseEvent>();
+  @Output() mapRightclick = new EventEmitter<google.maps.MouseEvent>();
   @Output() tilesloaded = new EventEmitter<void>();
   @Output() tiltChanged = new EventEmitter<void>();
   @Output() zoomChanged = new EventEmitter<void>();
@@ -244,19 +244,25 @@ export class GoogleMap implements OnChanges, OnInit, OnDestroy {
 
   private _initializeEventHandlers() {
     const eventHandlers = new Map<string, EventEmitter<void>>([
-      ['bounds_changed', this.boundsChanged], ['center_changed', this.centerChanged],
-      ['drag', this.drag], ['dragend', this.dragend], ['dragstart', this.dragstart],
-      ['heading_changed', this.headingChanged], ['idle', this.idle],
-      ['maptypeid_changed', this.maptypeidChanged], ['projection_changed', this.projectionChanged],
-      ['tilesloaded', this.tilesloaded], ['tilt_changed', this.tiltChanged],
-      ['zoomChanged', this.zoomChanged]
+      ['bounds_changed', this.boundsChanged],
+      ['center_changed', this.centerChanged],
+      ['drag', this.mapDrag],
+      ['dragend', this.mapDragend],
+      ['dragstart', this.mapDragstart],
+      ['heading_changed', this.headingChanged],
+      ['idle', this.idle],
+      ['maptypeid_changed', this.maptypeidChanged],
+      ['projection_changed', this.projectionChanged],
+      ['tilesloaded', this.tilesloaded],
+      ['tilt_changed', this.tiltChanged],
+      ['zoomChanged', this.zoomChanged],
     ]);
     const mouseEventHandlers = new Map<string, EventEmitter<google.maps.MouseEvent>>([
-      ['dblclick', this.dblclick],
-      ['mousemove', this.mousemove],
-      ['mouseout', this.mouseout],
-      ['mouseover', this.mouseover],
-      ['rightclick', this.rightclick],
+      ['dblclick', this.mapDblclick],
+      ['mousemove', this.mapMousemove],
+      ['mouseout', this.mapMouseout],
+      ['mouseover', this.mapMouseover],
+      ['rightclick', this.mapRightclick],
     ]);
     eventHandlers.forEach((eventHandler: EventEmitter<void>, name: string) => {
       if (eventHandler.observers.length > 0) {
@@ -274,10 +280,10 @@ export class GoogleMap implements OnChanges, OnInit, OnDestroy {
                 }));
           }
         });
-    if (this.click.observers.length > 0) {
+    if (this.mapClick.observers.length > 0) {
       this._listeners.push(this._googleMap.addListener(
           'click', (event: google.maps.MouseEvent|google.maps.IconMouseEvent) => {
-            this.click.emit(event);
+            this.mapClick.emit(event);
           }));
     }
   }

@@ -244,9 +244,9 @@ describe('GoogleMap', () => {
                          [center]="center"
                          [zoom]="zoom"
                          [options]="options"
-                         (click)="handleClick"
+                         (mapClick)="handleClick"
                          (centerChanged)="handleCenterChanged"
-                         (rightclick)="handleRightclick"></google-map>`,
+                         (mapRightclick)="handleRightclick"></google-map>`,
 })
 class TestApp {
   height?: string;
