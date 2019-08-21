@@ -1,41 +1,41 @@
 **Warning: this component is still experimental. It may have bugs and the API may change at any
 time**
 
-The scrolling package provides helpers for working with the system clipboard.
+The clipboard package provides helpers for working with the system clipboard.
 
 ## The `Clipboard` service
 
 The `Clipboard` service copies text to the
-user's clipboard. It has two methods, `copy` and `beginCopy`. For cases where
-you are copying a relatively small amount of text, you can just call `copy` to
-place it on the clipboard.
+user's clipboard. It has two methods: `copy` and `beginCopy`. For cases where
+you are copying a relatively small amount of text, you can call `copy` directly
+to place it on the clipboard.
 
 ```typescript
-class MyCopier {
+class HeroProfile {
   constructor(private clipboard: Clipboard) {}
 
-  copy() {
-    this.clipboard.copy('Hello clipboard!');
+  copyHeroName() {
+    this.clipboard.copy('Alphonso');
   }
 }
 ```
 
-However, for a large amount of text the browser needs time to load it into a
-hidden textarea where it can be copied. Just calling `copy` directly may fail in
-this case, so you can pre-load the text by calling `beginCopy`. This method
+However, for longer text the browser needs time to ill an intermediate
+textarea element and copy the content. Directly calling `copy` directly may fail
+in this case, so you can pre-load the text by calling `beginCopy`. This method
 returns a `PendingCopy` object that has a `copy` method to finish copying the
-text that was buffered. Please note, if you call `beginCopy` it is up to you to
+text that was buffered. Please note, if you call `beginCopy`, you must
 clean up the `PendingCopy` object by calling `destroy` on it after you are
 finished.
 
 ```typescript
-class MyCopier {
-  hugeText: string;
+class HeroProfile {
+  lifetimeAchievements: string;
 
   constructor(private clipboard: Clipboard) {}
 
-  copy() {
-    const pending = this.clipboard.beginCopy(this.hugeText);
+  copyAchievements() {
+    const pending = this.clipboard.beginCopy(this.lifetimeAchievements);
     let remainingAttempts = 3;
     const attempt = () => {
       const result = pending.copy();
@@ -58,5 +58,5 @@ functionality to an existing element. The directive selector doubles as an
 `@Input()` for the text to be copied.
 
 ```html
-<img src="doge.jpg" alt="Doge" [xapCopyToClipboard]="getDogeSpeakText()">
+<img src="avatar.jpg" alt="Hero avatar" [xapCopyToClipboard]="getShortBio()">
 ```
