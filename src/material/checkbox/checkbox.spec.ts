@@ -948,6 +948,7 @@ describe('MatCheckbox', () => {
       // If the input element loses focus, the control should remain dirty but should
       // also turn touched.
       dispatchFakeEvent(inputElement, 'blur');
+      dispatchFakeEvent(inputElement, 'focusout');
       fixture.detectChanges();
       flushMicrotasks();
 
@@ -972,6 +973,7 @@ describe('MatCheckbox', () => {
       expect(checkboxNativeElement.classList).not.toContain('ng-touched');
 
       dispatchFakeEvent(inputElement, 'blur');
+      dispatchFakeEvent(inputElement, 'focusout');
       fixture.detectChanges();
       flushMicrotasks();
       fixture.detectChanges();

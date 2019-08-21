@@ -485,6 +485,7 @@ describe('MatRadio', () => {
       // Blur the input element in order to verify that the ng-touched state has been set to true.
       // The touched state should be only set to true after the form control has been blurred.
       dispatchFakeEvent(innerRadios[2].nativeElement, 'blur');
+      dispatchFakeEvent(innerRadios[2].nativeElement, 'focusout');
 
       expect(groupNgModel.valid).toBe(true);
       expect(groupNgModel.pristine).toBe(false);

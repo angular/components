@@ -179,18 +179,20 @@ export class FocusMonitor implements OnDestroy {
     this._elementInfo.set(nativeElement, info);
     this._incrementMonitoredElementCount();
 
-    // Start listening. We need to listen in capture phase since focus events don't bubble.
-    let focusListener = (event: FocusEvent) => this._onFocus(event, nativeElement);
-    let blurListener = (event: FocusEvent) => this._onBlur(event, nativeElement);
+    // Start listening. We need to listen in capture phase since focus events don't bubble
+    // Casting from `Event` to `FocusEvent` to work around bug with typescript dom typings
+    // TODO correct typing after typescript upgrade
+    let focusListener = (event: Event) => this._onFocus(event as FocusEvent, nativeElement);
+    let blurListener = (event: Event) => this._onBlur(event as FocusEvent, nativeElement);
     this._ngZone.runOutsideAngular(() => {
-      nativeElement.addEventListener('focus', focusListener, true);
-      nativeElement.addEventListener('blur', blurListener, true);
+      nativeElement.addEventListener('focusin', focusListener, true);
+      nativeElement.addEventListener('focusout', blurListener, true);
     });
 
     // Create an unlisten function for later.
     info.unlisten = () => {
-      nativeElement.removeEventListener('focus', focusListener, true);
-      nativeElement.removeEventListener('blur', blurListener, true);
+      nativeElement.removeEventListener('focusin', focusListener, true);
+      nativeElement.removeEventListener('focusout', blurListener, true);
     };
 
     return info.subject.asObservable();

@@ -143,6 +143,7 @@ describe('MatSlider', () => {
       sliderInstance._isActive = true;
 
       dispatchFakeEvent(sliderNativeElement, 'blur');
+      dispatchFakeEvent(sliderNativeElement, 'focusout');
       fixture.detectChanges();
 
       expect(sliderInstance._isActive).toBe(false);
@@ -156,6 +157,7 @@ describe('MatSlider', () => {
       expect(sliderInstance._thumbGap).toBe(10);
 
       dispatchFakeEvent(sliderNativeElement, 'blur');
+      dispatchFakeEvent(sliderNativeElement, 'focusout');
       fixture.detectChanges();
 
       expect(sliderInstance._thumbGap).toBe(7);

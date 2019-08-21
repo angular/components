@@ -24,3 +24,12 @@
   <p>Parent div should get same focus origin as button when button is focused:</p>
   <button class="demo-focusable" cdkMonitorElementFocus>focus me</button>
 </div>
+
+<div #c class="demo-monitor">
+  <p>Monitored, including children, via `monitor`; each value is listed below</p>
+  <button>1</button>
+  <button>2</button>
+  <ol>
+    <li *ngFor="let event of containerEvents">{{event}}</li>
+  </ol>
+</div>

@@ -10,9 +10,11 @@ import {A11yModule} from '@angular/cdk/a11y';
 import {NgModule} from '@angular/core';
 import {RouterModule} from '@angular/router';
 import {FocusOriginDemo} from './focus-origin-demo';
+import {CommonModule} from '@angular/common';
 
 @NgModule({
   imports: [
+    CommonModule,
     A11yModule,
     RouterModule.forChild([{path: '', component: FocusOriginDemo}]),
   ],

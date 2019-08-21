@@ -6,8 +6,8 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Component} from '@angular/core';
-import {FocusMonitor} from '@angular/cdk/a11y';
+import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {FocusMonitor, FocusOrigin} from '@angular/cdk/a11y';
 
 
 @Component({
@@ -15,6 +15,22 @@ import {FocusMonitor} from '@angular/cdk/a11y';
   templateUrl: 'focus-origin-demo.html',
   styleUrls: ['focus-origin-demo.css'],
 })
-export class FocusOriginDemo {
-  constructor(public fom: FocusMonitor) {}
+export class FocusOriginDemo implements OnInit, OnDestroy  {
+  containerEvents: FocusOrigin[] = [];
+
+  @ViewChild('c', {static: true}) container: ElementRef<HTMLElement>;
+
+  constructor(public fom: FocusMonitor) {
+  }
+
+  ngOnInit(): void {
+    this.fom.monitor(this.container, true)
+      .subscribe((value: FocusOrigin) => {
+        this.containerEvents.push(value);
+      });
+  }
+
+  ngOnDestroy(): void {
+    this.fom.stopMonitoring(this.container);
+  }
 }

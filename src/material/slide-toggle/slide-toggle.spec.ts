@@ -587,6 +587,7 @@ describe('MatSlideToggle with forms', () => {
       // Once the input element loses focus, the control should remain dirty but should
       // also turn touched.
       dispatchFakeEvent(inputElement, 'blur');
+      dispatchFakeEvent(inputElement, 'focusout');
       fixture.detectChanges();
       flushMicrotasks();
 
@@ -625,6 +626,7 @@ describe('MatSlideToggle with forms', () => {
       // Once the input element loses focus, the control should remain dirty but should
       // also turn touched.
       dispatchFakeEvent(inputElement, 'blur');
+      dispatchFakeEvent(inputElement, 'focusout');
       fixture.detectChanges();
       flushMicrotasks();
 
