@@ -27,25 +27,7 @@ The `ng add` command will install Angular Material, the [Component Dev Kit (CDK)
 
    [HammerJS](http://hammerjs.github.io/) provides gesture recognition capabilities required by some components (`mat-slide-toggle`, `mat-slider`, `matToolTip`).
 
-   Please note, if you choose not to install HammerJS it can be installed later via npm using the following command:
-
-   #### NPM
-
-   ```bash
-   npm install --save hammerjs
-   ```
-
-   #### Yarn
-
-   ```bash
-   yarn add hammerjs
-   ```
-
-   After installing, import it on your app's entry point (e.g. `src/main.ts`).
-
-   ```ts
-   import 'hammer.js';
-   ```
+   Please note, if you choose not to install HammerJS it can be installed later (see Appendix).
 
 3. Set up browser animations for Angular Material:
 
@@ -97,3 +79,18 @@ and point your browser to [http://localhost:4200](http://localhost:4200)
 You should see the material slider component on the page.
 
 In addition to the install schematic, Angular Material comes with [several schematics](https://material.angular.io/guide/schematics) (like nav, table, address-form, etc.) that can be used to easily generate pre-built components in your application.
+
+
+Appendix: Installing [HammerJS](http://hammerjs.github.io/)
+
+HammerJS can be installed using the following npm command:
+
+   ```bash
+   npm install --save hammerjs
+   ```
+
+   After installing, import it on your app's entry point (e.g. `src/main.ts`).
+
+   ```ts
+   import 'hammer.js';
+   ```
