@@ -107,5 +107,5 @@ export interface TestElement {
    * In most cases it should not be necessary to call this. However, there may be some edge cases
    * where it is needed to fully flush animation events.
    */
-  stabilize(): Promise<void>;
+  forceStabilize(): Promise<void>;
 }

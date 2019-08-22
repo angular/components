@@ -138,7 +138,7 @@ export class UnitTestElement implements TestElement {
     return (this.element as any)[name];
   }
 
-  async stabilize(): Promise<void> {
+  async forceStabilize(): Promise<void> {
     return this._stabilize();
   }
 }
