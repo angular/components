@@ -81,7 +81,7 @@ You should see the material slider component on the page.
 In addition to the install schematic, Angular Material comes with [several schematics](https://material.angular.io/guide/schematics) (like nav, table, address-form, etc.) that can be used to easily generate pre-built components in your application.
 
 
-###Appendix: Installing [HammerJS](http://hammerjs.github.io/)
+### Appendix: Installing [HammerJS](http://hammerjs.github.io/)
 
 HammerJS can be installed using the following npm command:
 
