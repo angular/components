@@ -80,6 +80,12 @@ MATERIAL_SCSS_LIBS = [
     for p in MATERIAL_PACKAGES
 ]
 
+GOOGLE_MAPS_PACKAGES = [
+    "google-map",
+]
+
+GOOGLE_MAPS_TARGETS = ["//src/google-maps"] + ["//src/google-maps/%s" % p for p in GOOGLE_MAPS_PACKAGES]
+
 MATERIAL_EXPERIMENTAL_PACKAGES = [
     "mdc-button",
     "mdc-card",
@@ -109,18 +115,18 @@ MATERIAL_EXPERIMENTAL_SCSS_LIBS = [
 ANGULAR_PACKAGE_VERSION = "^8.0.0 || ^9.0.0-0"
 MDC_PACKAGE_VERSION = "^1.1.0"
 VERSION_PLACEHOLDER_REPLACEMENTS = {
-    "0.0.0-NG": ANGULAR_PACKAGE_VERSION,
     "0.0.0-MDC": MDC_PACKAGE_VERSION,
+    "0.0.0-NG": ANGULAR_PACKAGE_VERSION,
 }
 
 # Base rollup globals for everything in the repo.
 ROLLUP_GLOBALS = {
-    "tslib": "tslib",
-    "moment": "moment",
     "@angular/cdk": "ng.cdk",
     "@angular/cdk-experimental": "ng.cdkExperimental",
     "@angular/material": "ng.material",
     "@angular/material-experimental": "ng.materialExperimental",
+    "moment": "moment",
+    "tslib": "tslib",
 }
 
 # Rollup globals for cdk subpackages in the form of, e.g., {"@angular/cdk/table": "ng.cdk.table"}
