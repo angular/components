@@ -1,7 +1,6 @@
 package(default_visibility = ["//visibility:public"])
 
 load("@io_bazel_rules_sass//:defs.bzl", "sass_binary")
-load("//:packages.bzl", "CDK_EXPERIMENTAL_TARGETS", "CDK_TARGETS", "MATERIAL_EXPERIMENTAL_SCSS_LIBS", "MATERIAL_EXPERIMENTAL_TARGETS", "MATERIAL_TARGETS")
 load("@npm_bazel_typescript//:defs.bzl", "ts_devserver")
 load("//:packages.bzl", "MATERIAL_EXPERIMENTAL_SCSS_LIBS")
 load("//tools:defaults.bzl", "ng_module")
