@@ -1,9 +1,9 @@
-**Warning: this component is still experimental. It may have bugs and the API may change at any
+**Warning: this service is still experimental. It may have bugs and the API may change at any
 time**
 
 The clipboard package provides helpers for working with the system clipboard.
 
-## The `Clipboard` service
+## `Clipboard` service
 
 The `Clipboard` service copies text to the
 user's clipboard. It has two methods: `copy` and `beginCopy`. For cases where
@@ -20,8 +20,8 @@ class HeroProfile {
 }
 ```
 
-However, for longer text the browser needs time to ill an intermediate
-textarea element and copy the content. Directly calling `copy` directly may fail
+However, for longer text the browser needs time to fill an intermediate
+textarea element and copy the content. Directly calling `copy` may fail
 in this case, so you can pre-load the text by calling `beginCopy`. This method
 returns a `PendingCopy` object that has a `copy` method to finish copying the
 text that was buffered. Please note, if you call `beginCopy`, you must
@@ -51,12 +51,12 @@ class HeroProfile {
 }
 ```
 
-## The `cdkCopyToClipboard` directive
+## `cdkCopyToClipboard` directive
 
 The `cdkCopyToClipboard` directive can be used to easily add copy-on-click
 functionality to an existing element. The directive selector doubles as an
 `@Input()` for the text to be copied.
 
 ```html
-<img src="avatar.jpg" alt="Hero avatar" [xapCopyToClipboard]="getShortBio()">
+<img src="avatar.jpg" alt="Hero avatar" [cdkCopyToClipboard]="getShortBio()">
 ```
