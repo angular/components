@@ -284,7 +284,8 @@ describe('ProtractorHarnessEnvironment', () => {
           } catch (e) {
             expect(e.message).toBe(
                 'Expected to find element for SubComponentHarness matching selector: "test-sub"' +
-                ' (with restrictions: under sub-element ".not-found"), but none was found');
+                ' (with restrictions: has ancestor matching selector ".not-found"),' +
+                ' but none was found');
           }
         });
 

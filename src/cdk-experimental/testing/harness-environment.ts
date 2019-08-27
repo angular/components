@@ -40,14 +40,12 @@ export abstract class HarnessEnvironment<E> implements HarnessLoader, LocatorFac
   locatorFor<T extends ComponentHarness>(
       harnessType: ComponentHarnessConstructor<T> | HarnessPredicate<T>): AsyncFactoryFn<T>;
   locatorFor<T extends ComponentHarness>(
-      parentSelector: string,
-      harnessType: ComponentHarnessConstructor<T> | HarnessPredicate<T>): AsyncFactoryFn<T>;
-  locatorFor(...args: any[]) {
+      arg: string | ComponentHarnessConstructor<T> | HarnessPredicate<T>) {
     return async () => {
-      if (args.length === 1 && typeof args[0] === 'string') {
-        return this.createTestElement(await this._assertElementFound(args[0]));
+      if (typeof arg === 'string') {
+        return this.createTestElement(await this._assertElementFound(arg));
       } else {
-        return this._assertHarnessFound(...args as [any]);
+        return this._assertHarnessFound(arg);
       }
     };
   }
@@ -57,15 +55,13 @@ export abstract class HarnessEnvironment<E> implements HarnessLoader, LocatorFac
   locatorForOptional<T extends ComponentHarness>(
       harnessType: ComponentHarnessConstructor<T> | HarnessPredicate<T>): AsyncFactoryFn<T | null>;
   locatorForOptional<T extends ComponentHarness>(
-      parentSelector: string,
-      harnessType: ComponentHarnessConstructor<T> | HarnessPredicate<T>): AsyncFactoryFn<T | null>;
-  locatorForOptional(...args: any[]) {
+      arg: string | ComponentHarnessConstructor<T> | HarnessPredicate<T>) {
     return async () => {
-      if (args.length === 1 && typeof args[0] === 'string') {
-        const element = (await this.getAllRawElements(args[0]))[0];
+      if (typeof arg === 'string') {
+        const element = (await this.getAllRawElements(arg))[0];
         return element ? this.createTestElement(element) : null;
       } else {
-        const candidates = await this._getAllHarnesses(...args as [any]);
+        const candidates = await this._getAllHarnesses(arg);
         return candidates[0] || null;
       }
     };
@@ -76,14 +72,12 @@ export abstract class HarnessEnvironment<E> implements HarnessLoader, LocatorFac
   locatorForAll<T extends ComponentHarness>(
       harnessType: ComponentHarnessConstructor<T> | HarnessPredicate<T>): AsyncFactoryFn<T[]>;
   locatorForAll<T extends ComponentHarness>(
-      parentSelector: string,
-      harnessType: ComponentHarnessConstructor<T> | HarnessPredicate<T>): AsyncFactoryFn<T[]>;
-  locatorForAll(...args: any[]) {
+      arg: string | ComponentHarnessConstructor<T> | HarnessPredicate<T>) {
     return async () => {
-      if (args.length === 1 && typeof args[0] === 'string') {
-        return (await this.getAllRawElements(args[0])).map(e => this.createTestElement(e));
+      if (typeof arg === 'string') {
+        return (await this.getAllRawElements(arg)).map(e => this.createTestElement(e));
       } else {
-        return this._getAllHarnesses(...args as [any]);
+        return this._getAllHarnesses(arg);
       }
     };
   }
@@ -130,25 +124,11 @@ export abstract class HarnessEnvironment<E> implements HarnessLoader, LocatorFac
    */
   protected abstract getAllRawElements(selector: string): Promise<E[]>;
 
-  private _getAllHarnesses<T extends ComponentHarness>(
-      harnessType: ComponentHarnessConstructor<T> | HarnessPredicate<T>): Promise<T[]>;
-  private _getAllHarnesses<T extends ComponentHarness>(parentSelector: string,
-      harnessType: ComponentHarnessConstructor<T> | HarnessPredicate<T>): Promise<T[]>;
-  private async _getAllHarnesses(...args: any[]) {
-    let parentSelector = '';
-    let harnessType: ComponentHarnessConstructor<any> | HarnessPredicate<any>;
-    if (typeof args[0] === 'string') {
-      parentSelector = `${args[0]} `;
-      harnessType = args[1];
-    } else {
-      harnessType = args[0];
-    }
-
-    const harnessPredicate =
-        harnessType instanceof HarnessPredicate ?
-            harnessType : new HarnessPredicate(harnessType!, {});
-    const elements = await this.getAllRawElements(
-        parentSelector + harnessPredicate.harnessType.hostSelector);
+  private async _getAllHarnesses<T extends ComponentHarness>(
+      harnessType: ComponentHarnessConstructor<T> | HarnessPredicate<T>): Promise<T[]> {
+    const harnessPredicate = harnessType instanceof HarnessPredicate ?
+        harnessType : new HarnessPredicate(harnessType, {});
+    const elements = await this.getAllRawElements(harnessPredicate.getSelector());
     return harnessPredicate.filter(elements.map(
         element => this.createComponentHarness(harnessPredicate.harnessType, element)));
   }
@@ -161,39 +141,22 @@ export abstract class HarnessEnvironment<E> implements HarnessLoader, LocatorFac
     return element;
   }
 
-  private _assertHarnessFound<T extends ComponentHarness>(
-      harnessType: ComponentHarnessConstructor<T> | HarnessPredicate<T>): Promise<T>;
-  private _assertHarnessFound<T extends ComponentHarness>(parentSelector: string,
-      harnessType: ComponentHarnessConstructor<T> | HarnessPredicate<T>): Promise<T>;
-  private async _assertHarnessFound(...args: any[]) {
-    const harness = (await this._getAllHarnesses(...args as [any]))[0];
+  private async _assertHarnessFound<T extends ComponentHarness>(
+      harnessType: ComponentHarnessConstructor<T> | HarnessPredicate<T>): Promise<T> {
+    const harness = (await this._getAllHarnesses(harnessType))[0];
     if (!harness) {
-      throw _getErrorForMissingHarness(...args as [any]);
+      throw _getErrorForMissingHarness(harnessType);
     }
     return harness;
   }
 }
 
 function _getErrorForMissingHarness<T extends ComponentHarness>(
-    harnessType: ComponentHarnessConstructor<T> | HarnessPredicate<T>): Error;
-function _getErrorForMissingHarness<T extends ComponentHarness>(
-    parentSelector: string,
-    harnessType: ComponentHarnessConstructor<T> | HarnessPredicate<T>): Error;
-function _getErrorForMissingHarness(...args: any[]) {
-  let parentSelector = '';
-  let harnessType: ComponentHarnessConstructor<any> | HarnessPredicate<any>;
-  if (typeof args[0] === 'string') {
-    parentSelector = args[0];
-    harnessType = args[1];
-  } else {
-    harnessType = args[0];
-  }
-
+    harnessType: ComponentHarnessConstructor<T> | HarnessPredicate<T>): Error {
   const harnessPredicate =
       harnessType instanceof HarnessPredicate ? harnessType : new HarnessPredicate(harnessType, {});
   const {name, hostSelector} = harnessPredicate.harnessType;
-  let restrictions = (parentSelector ? `under sub-element "${parentSelector}"` : '') +
-      harnessPredicate.getDescription();
+  let restrictions = harnessPredicate.getDescription();
   let message = `Expected to find element for ${name} matching selector: "${hostSelector}"`;
   if (restrictions) {
     message += ` (with restrictions: ${restrictions})`;

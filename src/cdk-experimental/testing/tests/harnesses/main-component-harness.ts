@@ -53,17 +53,17 @@ export class MainComponentHarness extends ComponentHarness {
   readonly specaialKey = this.locatorFor('.special-key');
 
   readonly requiredParentRestrictedSubcomponent =
-      this.locatorFor('.other', SubComponentHarness);
+      this.locatorFor(SubComponentHarness.with({ancestor: '.other'}));
   readonly optionalParentRestrictedSubcomponent =
-      this.locatorForOptional('.other', SubComponentHarness);
+      this.locatorForOptional(SubComponentHarness.with({ancestor: '.other'}));
   readonly allParentRestrictedSubcomponent =
-      this.locatorForAll('.other', SubComponentHarness);
+      this.locatorForAll(SubComponentHarness.with({ancestor: '.other'}));
   readonly requiredParentRestrictedMissingSubcomponent =
-      this.locatorFor('.not-found', SubComponentHarness);
+      this.locatorFor(SubComponentHarness.with({ancestor: '.not-found'}));
   readonly optionalParentRestrictedMissingSubcomponent =
-      this.locatorForOptional('.not-found', SubComponentHarness);
+      this.locatorForOptional(SubComponentHarness.with({ancestor: '.not-found'}));
   readonly allParentRestrictedMissingSubcomponent =
-      this.locatorForAll('.not-found', SubComponentHarness);
+      this.locatorForAll(SubComponentHarness.with({ancestor: '.not-found'}));
 
   private _testTools = this.locatorFor(SubComponentHarness);
 
