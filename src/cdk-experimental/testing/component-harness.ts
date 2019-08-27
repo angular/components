@@ -99,6 +99,20 @@ export interface LocatorFactory {
       harnessType: ComponentHarnessConstructor<T> | HarnessPredicate<T>): AsyncFactoryFn<T>;
 
   /**
+   * Creates an asynchronous locator function that can be used to find a `ComponentHarness` for a
+   * component matching the given harness type under the root element of this `LocatorFactory`.
+   * When the resulting locator function is invoked, if multiple matching components are found, a
+   * harness for the first one is returned. If no components are found, an error is thrown.
+   * @param parentSelector The selector for the element under which to search for the harness.
+   * @param harnessType The type of harness to search for.
+   * @return An asynchronous locator function that searches components matching the given harness
+   *     type, and either returns a `ComponentHarness` for the component, or throws an error.
+   */
+  locatorFor<T extends ComponentHarness>(
+      parentSelector: string,
+      harnessType: ComponentHarnessConstructor<T> | HarnessPredicate<T>): AsyncFactoryFn<T>;
+
+  /**
    * Creates an asynchronous locator function that can be used to search for elements with the given
    * selector under the root element of this `LocatorFactory`. When the resulting locator function
    * is invoked, if multiple matching elements are found, the first element is returned. If no
@@ -122,6 +136,20 @@ export interface LocatorFactory {
       harnessType: ComponentHarnessConstructor<T> | HarnessPredicate<T>): AsyncFactoryFn<T | null>;
 
   /**
+   * Creates an asynchronous locator function that can be used to find a `ComponentHarness` for a
+   * component matching the given harness type under the root element of this `LocatorFactory`.
+   * When the resulting locator function is invoked, if multiple matching components are found, a
+   * harness for the first one is returned. If no components are found, null is returned.
+   * @param parentSelector The selector for the element under which to search for the harness.
+   * @param harnessType The type of harness to search for.
+   * @return An asynchronous locator function that searches components matching the given harness
+   *     type, and either returns a `ComponentHarness` for the component, or null if none is found.
+   */
+  locatorForOptional<T extends ComponentHarness>(
+      parentSelector: string,
+      harnessType: ComponentHarnessConstructor<T> | HarnessPredicate<T>): AsyncFactoryFn<T | null>;
+
+  /**
    * Creates an asynchronous locator function that can be used to search for a list of elements with
    * the given selector under the root element of this `LocatorFactory`. When the resulting locator
    * function is invoked, a list of matching elements is returned.
@@ -141,6 +169,20 @@ export interface LocatorFactory {
    *     type, and returns a list of `ComponentHarness`es.
    */
   locatorForAll<T extends ComponentHarness>(
+      harnessType: ComponentHarnessConstructor<T> | HarnessPredicate<T>): AsyncFactoryFn<T[]>;
+
+  /**
+   * Creates an asynchronous locator function that can be used to find a list of
+   * `ComponentHarness`es for all components matching the given harness type under the root element
+   * of this `LocatorFactory`. When the resulting locator function is invoked, a list of
+   * `ComponentHarness`es for the matching components is returned.
+   * @param parentSelector The selector for the element under which to search for the harness.
+   * @param harnessType The type of harness to search for.
+   * @return An asynchronous locator function that searches components matching the given harness
+   *     type, and returns a list of `ComponentHarness`es.
+   */
+  locatorForAll<T extends ComponentHarness>(
+      parentSelector: string,
       harnessType: ComponentHarnessConstructor<T> | HarnessPredicate<T>): AsyncFactoryFn<T[]>;
 }
 
@@ -189,8 +231,22 @@ export abstract class ComponentHarness {
   protected locatorFor<T extends ComponentHarness>(
       harnessType: ComponentHarnessConstructor<T> | HarnessPredicate<T>): AsyncFactoryFn<T>;
 
-  protected locatorFor(arg: any): any {
-    return this.locatorFactory.locatorFor(arg);
+  /**
+   * Creates an asynchronous locator function that can be used to find a `ComponentHarness` for a
+   * component matching the given harness type under the host element of this `ComponentHarness`.
+   * When the resulting locator function is invoked, if multiple matching components are found, a
+   * harness for the first one is returned. If no components are found, an error is thrown.
+   * @param parentSelector The selector for the element under which to search for the harness.
+   * @param harnessType The type of harness to search for.
+   * @return An asynchronous locator function that searches components matching the given harness
+   *     type, and either returns a `ComponentHarness` for the component, or throws an error.
+   */
+  protected locatorFor<T extends ComponentHarness>(
+      parentSelector: string,
+      harnessType: ComponentHarnessConstructor<T> | HarnessPredicate<T>): AsyncFactoryFn<T>;
+
+  protected locatorFor(...args: any[]) {
+    return this.locatorFactory.locatorFor(...args as [any]);
   }
 
   /**
@@ -216,8 +272,22 @@ export abstract class ComponentHarness {
   protected locatorForOptional<T extends ComponentHarness>(
       harnessType: ComponentHarnessConstructor<T> | HarnessPredicate<T>): AsyncFactoryFn<T | null>;
 
-  protected locatorForOptional(arg: any): any {
-    return this.locatorFactory.locatorForOptional(arg);
+  /**
+   * Creates an asynchronous locator function that can be used to find a `ComponentHarness` for a
+   * component matching the given harness type under the host element of this `ComponentHarness`.
+   * When the resulting locator function is invoked, if multiple matching components are found, a
+   * harness for the first one is returned. If no components are found, null is returned.
+   * @param parentSelector The selector for the element under which to search for the harness.
+   * @param harnessType The type of harness to search for.
+   * @return An asynchronous locator function that searches components matching the given harness
+   *     type, and either returns a `ComponentHarness` for the component, or null if none is found.
+   */
+  protected locatorForOptional<T extends ComponentHarness>(
+      parentSelector: string,
+      harnessType: ComponentHarnessConstructor<T> | HarnessPredicate<T>): AsyncFactoryFn<T | null>;
+
+  protected locatorForOptional(...args: any[]) {
+    return this.locatorFactory.locatorForOptional(...args as [any]);
   }
 
   /**
@@ -242,8 +312,22 @@ export abstract class ComponentHarness {
   protected locatorForAll<T extends ComponentHarness>(
       harnessType: ComponentHarnessConstructor<T> | HarnessPredicate<T>): AsyncFactoryFn<T[]>;
 
-  protected locatorForAll(arg: any): any {
-    return this.locatorFactory.locatorForAll(arg);
+  /**
+   * Creates an asynchronous locator function that can be used to find a list of
+   * `ComponentHarness`es for all components matching the given harness type under the host element
+   * of this `ComponentHarness`. When the resulting locator function is invoked, a list of
+   * `ComponentHarness`es for the matching components is returned.
+   * @param parentSelector The selector for the element under which to search for the harness.
+   * @param harnessType The type of harness to search for.
+   * @return An asynchronous locator function that searches components matching the given harness
+   *     type, and returns a list of `ComponentHarness`es.
+   */
+  protected locatorForAll<T extends ComponentHarness>(
+      parentSelector: string,
+      harnessType: ComponentHarnessConstructor<T> | HarnessPredicate<T>): AsyncFactoryFn<T[]>;
+
+  protected locatorForAll(...args: any[]) {
+    return this.locatorFactory.locatorForAll(...args as [any]);
   }
 }
 
