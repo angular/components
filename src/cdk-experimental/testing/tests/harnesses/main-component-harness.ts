@@ -52,18 +52,23 @@ export class MainComponentHarness extends ComponentHarness {
   readonly lastList = this.locatorFor(SubComponentHarness.with({selector: ':last-child'}));
   readonly specaialKey = this.locatorFor('.special-key');
 
-  readonly requiredParentRestrictedSubcomponent =
+  readonly requiredAncestorRestrictedSubcomponent =
       this.locatorFor(SubComponentHarness.with({ancestor: '.other'}));
-  readonly optionalParentRestrictedSubcomponent =
+  readonly optionalAncestorRestrictedSubcomponent =
       this.locatorForOptional(SubComponentHarness.with({ancestor: '.other'}));
-  readonly allParentRestrictedSubcomponent =
+  readonly allAncestorRestrictedSubcomponent =
       this.locatorForAll(SubComponentHarness.with({ancestor: '.other'}));
-  readonly requiredParentRestrictedMissingSubcomponent =
+  readonly requiredAncestorRestrictedMissingSubcomponent =
       this.locatorFor(SubComponentHarness.with({ancestor: '.not-found'}));
-  readonly optionalParentRestrictedMissingSubcomponent =
+  readonly optionalAncestorRestrictedMissingSubcomponent =
       this.locatorForOptional(SubComponentHarness.with({ancestor: '.not-found'}));
-  readonly allParentRestrictedMissingSubcomponent =
+  readonly allAncestorRestrictedMissingSubcomponent =
       this.locatorForAll(SubComponentHarness.with({ancestor: '.not-found'}));
+  readonly multipleAncestorSelectorsSubcomponent =
+      this.locatorForAll(SubComponentHarness.with({ancestor: '.other, .subcomponents'}));
+  readonly directAncestorSelectorSubcomponent =
+      this.locatorForAll(SubComponentHarness.with({ancestor: '.other >'}));
+
 
   private _testTools = this.locatorFor(SubComponentHarness);
 

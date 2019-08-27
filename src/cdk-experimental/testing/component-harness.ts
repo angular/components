@@ -349,7 +349,9 @@ export class HarnessPredicate<T extends ComponentHarness> {
 
   /** Gets the selector used to find candidate elements. */
   getSelector() {
-    return (this._ancestor ? `${this._ancestor} ` : '') + this.harnessType.hostSelector;
+    return this._ancestor.split(',')
+        .map(part => `${part.trim()} ${this.harnessType.hostSelector}`.trim())
+        .join(',');
   }
 
   /** Adds base options common to all harness types. */
