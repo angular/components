@@ -207,3 +207,11 @@ moved by a user. The element's position can be explicitly set, however, via the
 draggable's position after a user has navigated away and then returned.
 
 <!-- example(cdk-drag-drop-free-drag-position) -->
+
+### Setting scrolling container
+If you have a different container that should scroll when draging elements, you can define the container
+by using the `cdkDropListAutoScrollContainer` input. This will override the default behaviour of scrolling
+the `cdk-drop-list` container itself and the window element.
+Requires the `cdkDropListAutoScrollDisabled` input to be set to false (default value).
+
+<!-- example(cdk-drop-list-auto-scroll-container) -->
