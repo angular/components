@@ -183,7 +183,7 @@ function _getErrorForMissingHarness(...args: any[]) {
   let parentSelector = '';
   let harnessType: ComponentHarnessConstructor<any> | HarnessPredicate<any>;
   if (typeof args[0] === 'string') {
-    parentSelector = `${args[0]} `;
+    parentSelector = args[0];
     harnessType = args[1];
   } else {
     harnessType = args[0];

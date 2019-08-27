@@ -52,6 +52,19 @@ export class MainComponentHarness extends ComponentHarness {
   readonly lastList = this.locatorFor(SubComponentHarness.with({selector: ':last-child'}));
   readonly specaialKey = this.locatorFor('.special-key');
 
+  readonly requiredParentRestrictedSubcomponent =
+      this.locatorFor('.other', SubComponentHarness);
+  readonly optionalParentRestrictedSubcomponent =
+      this.locatorForOptional('.other', SubComponentHarness);
+  readonly allParentRestrictedSubcomponent =
+      this.locatorForAll('.other', SubComponentHarness);
+  readonly requiredParentRestrictedMissingSubcomponent =
+      this.locatorFor('.not-found', SubComponentHarness);
+  readonly optionalParentRestrictedMissingSubcomponent =
+      this.locatorForOptional('.not-found', SubComponentHarness);
+  readonly allParentRestrictedMissingSubcomponent =
+      this.locatorForAll('.not-found', SubComponentHarness);
+
   private _testTools = this.locatorFor(SubComponentHarness);
 
   async increaseCounter(times: number) {
