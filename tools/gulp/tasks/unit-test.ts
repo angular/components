@@ -40,14 +40,6 @@ task('test:single-run', [':test:build'], (done: () => void) => {
 });
 
 /**
- * [Watch task] Runs the unit tests, rebuilding and re-testing when sources change.
- * Does not inline resources.
- *
- * This task should be used when running unit tests locally.
- */
-task('test', [':test:build'], karmaWatchTask());
-
-/**
  * Runs a Karma server which will run the unit tests against any browser that connects to it.
  * This is identical to `gulp test`, however it won't launch and manage Chrome automatically,
  * which makes it convenient debugging unit tests against multiple different browsers.
@@ -61,7 +53,7 @@ task('test:static', [':test:build'], karmaWatchTask({browsers: []}));
  * written to disk, which causes it to run tests multiple time and makes it hard to follow
  * the console output. This approach runs the Karma server and then depends on the Gulp API
  * to tell Karma when to run the tests.
- * @param overrides Karma options to use on top of the defaults.
+ * @param options Karma options to use on top of the defaults.
  */
 function karmaWatchTask(options?: any) {
   return () => {
