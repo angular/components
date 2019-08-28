@@ -1,22 +1,15 @@
 @import '@material/icon-button/mixins';
 @import '../mdc-helpers/mdc-helpers';
+@import '_button-base';
 
 @include mdc-icon-button-without-ripple($query: $mat-base-styles-query);
 
 .mat-mdc-icon-button {
+  @include _mat-button-interactive() {
+    border-radius: 50%;
+  }
+
   // Border radius is inherited by ripple to know its shape. Set to 50% so the ripple is round.
   border-radius: 50%;
 
-  &::before {
-    // ::before content is used for the interaction highlight (focus, press, active, hover)
-    content: '';
-    position: absolute;
-    pointer-events: none;
-    border-radius: 50%;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    opacity: 0;
-  }
 }

@@ -1,20 +1,11 @@
 @import '@material/fab/mixins';
 @import '../mdc-helpers/mdc-helpers';
+@import '_button-base';
 
 @include mdc-fab-without-ripple($query: $mat-base-styles-query);
 
 .mat-mdc-fab, .mat-mdc-mini-fab {
-  // ::before content is used for the interaction highlight (focus, press, active, hover)
-  &::before {
-    content: '';
-    position: absolute;
-    pointer-events: none;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    opacity: 0;
-  }
+  @include _mat-button-interactive();
 }
 
 // MDC expects the fab icon to contain this HTML content:
