@@ -19,9 +19,4 @@ export class MatChipHarness extends ComponentHarness {
   async getText(): Promise<string> {
     return (await this.host()).text();
   }
-
-  /** Gets a promise for the disabled state. */
-  async isDisabled(): Promise<boolean> {
-    return await ((await this.host()).getAttribute('aria-disabled')) === 'true';
-  }
 }

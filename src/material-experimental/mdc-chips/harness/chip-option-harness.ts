@@ -15,8 +15,13 @@ import {MatChipHarness} from './chip-harness';
 export class MatChipOptionHarness extends MatChipHarness {
   static hostSelector = 'mat-basic-chip-option, mat-chip-option';
 
+  /** Gets a promise for the selected state. */
   async isSelected(): Promise<boolean> {
-    const ariaSelected = (await this.host()).getAttribute('aria-selected');
-    return await ariaSelected === 'true';
+    return await ((await this.host()).getAttribute('aria-selected')) === 'true';
+  }
+
+  /** Gets a promise for the disabled state. */
+  async isDisabled(): Promise<boolean> {
+    return await ((await this.host()).getAttribute('aria-disabled')) === 'true';
   }
 }

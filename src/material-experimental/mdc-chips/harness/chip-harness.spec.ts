@@ -31,12 +31,6 @@ describe('MatChipHarness', () => {
     expect(await harnesses[1].getText()).toBe('Chip');
     expect(await harnesses[2].getText()).toBe('Disabled Chip');
   });
-
-  it('should get the disabled state', async () => {
-    const harnesses = await loader.getAllHarnesses(MatChipHarness);
-    expect(await harnesses[0].isDisabled()).toBe(false);
-    expect(await harnesses[2].isDisabled()).toBe(true);
-  });
 });
 
 @Component({
