@@ -1,8 +1,6 @@
 ### Open Issues
 
 - Anchor button does not support disabled - see MDC issue #1339
-- No focused state
-- Icon buttons are not colored by theme
 
 ### TODO
 - Determine coloring for non-primary buttons (MDC does not support this)
