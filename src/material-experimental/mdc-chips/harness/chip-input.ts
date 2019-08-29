@@ -13,12 +13,11 @@ import {ComponentHarness} from '@angular/cdk-experimental/testing';
  * @dynamic
  */
 export class MatChipInputHarness extends ComponentHarness {
-  static hostSelector = 'input.mat-mdc-chip-input';
+  static hostSelector = '.mat-mdc-chip-input';
 
   /** Gets a promise for the disabled state. */
   async isDisabled(): Promise<boolean> {
-    const ariaSelected = (await this.host()).getAttribute('disabled');
-    return await ariaSelected === 'true';
+    return await ((await this.host()).getAttribute('disabled')) === 'true';
   }
 
   /** Gets a promise for the placeholder text. */

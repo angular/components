@@ -44,7 +44,7 @@ describe('MatChipListboxHarness', () => {
       const harnesses = await loader.getAllHarnesses(MatChipListboxHarness);
       const selectedOption = await harnesses[0].getSelected();
       expect(await selectedOption.length).toBe(1);
-      expect(await selectedOption[0].getTextContent()).toContain('Blue');
+      expect(await selectedOption[0].getText()).toContain('Blue');
     });
 
     it('with multiple selected options', async () => {
@@ -56,8 +56,8 @@ describe('MatChipListboxHarness', () => {
       const harnesses = (await loader.getAllHarnesses(MatChipListboxHarness));
       const selectedOption = await harnesses[0].getSelected();
       expect(await selectedOption.length).toBe(2);
-      expect(await selectedOption[0].getTextContent()).toContain('Blue');
-      expect(await selectedOption[1].getTextContent()).toContain('Green');
+      expect(await selectedOption[0].getText()).toContain('Blue');
+      expect(await selectedOption[1].getText()).toContain('Green');
     });
   });
 });

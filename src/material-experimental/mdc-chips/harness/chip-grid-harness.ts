@@ -25,8 +25,8 @@ export class MatChipGridHarness extends ComponentHarness {
     return await this._rows();
   }
 
-  /** Gets promise of the chip input harness. */
-  async getInput(): Promise<MatChipInputHarness|null> {
+  /** Gets promise of the chip text input harness. */
+  async getTextInput(): Promise<MatChipInputHarness|null> {
     return await this._input();
   }
 }
