@@ -8,6 +8,7 @@ load("//:packages.bzl", "ANGULAR_LIBRARY_UMDS")
 exports_files([
     "protractor.conf.js",
     "start-devserver.js",
+    "devserver-configure.js",
 ])
 
 ng_module(
