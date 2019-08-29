@@ -16,14 +16,16 @@ import {
   TestingWindow
 } from './testing/fake-google-map-utils';
 
-const TEST_BOUNDS: google.maps.LatLngBoundsLiteral = {
+/** Represents boundaries of a map to be used in tests. */
+const testBounds: google.maps.LatLngBoundsLiteral = {
   east: 12,
   north: 13,
   south: 14,
   west: 15,
 };
 
-const TEST_POSITION: google.maps.LatLngLiteral = {
+/** Represents a latitude/longitude position to be used in tests. */
+const testPosition: google.maps.LatLngLiteral = {
   lat: 30,
   lng: 35,
 };
@@ -158,17 +160,17 @@ describe('GoogleMap', () => {
 
     const component = fixture.debugElement.query(By.directive(GoogleMap)).componentInstance;
 
-    component.fitBounds(TEST_BOUNDS, 10);
-    expect(mapSpy.fitBounds).toHaveBeenCalledWith(TEST_BOUNDS, 10);
+    component.fitBounds(testBounds, 10);
+    expect(mapSpy.fitBounds).toHaveBeenCalledWith(testBounds, 10);
 
     component.panBy(12, 13);
     expect(mapSpy.panBy).toHaveBeenCalledWith(12, 13);
 
-    component.panTo(TEST_POSITION);
-    expect(mapSpy.panTo).toHaveBeenCalledWith(TEST_POSITION);
+    component.panTo(testPosition);
+    expect(mapSpy.panTo).toHaveBeenCalledWith(testPosition);
 
-    component.panToBounds(TEST_BOUNDS, 10);
-    expect(mapSpy.panToBounds).toHaveBeenCalledWith(TEST_BOUNDS, 10);
+    component.panToBounds(testBounds, 10);
+    expect(mapSpy.panToBounds).toHaveBeenCalledWith(testBounds, 10);
   });
 
   it('exposes methods that get information about the Google Map', () => {

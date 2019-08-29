@@ -20,6 +20,7 @@ export class GoogleMapDemo {
 
   center = {lat: 24, lng: 12};
   zoom = 4;
+  display?: google.maps.LatLngLiteral;
 
   constructor(httpClient: HttpClient) {
     httpClient.jsonp('https://maps.googleapis.com/maps/api/js?', 'callback')
@@ -30,5 +31,9 @@ export class GoogleMapDemo {
 
   handleClick(event: google.maps.MouseEvent) {
     this.center = event.latLng.toJSON();
+  }
+
+  handleMove(event: google.maps.MouseEvent) {
+    this.display = event.latLng.toJSON();
   }
 }

@@ -3,4 +3,8 @@
             width="750px"
             [center]="center"
             [zoom]="zoom"
-            (mapClick)="handleClick($event)"></google-map>
+            (mapClick)="handleClick($event)"
+            (mapMousemove)="handleMove($event)"></google-map>
+
+<div>Latitude: {{display?.lat}}</div>
+<div>Longitude: {{display?.lng}}</div>

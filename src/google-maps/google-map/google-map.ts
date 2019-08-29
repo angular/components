@@ -16,6 +16,7 @@ interface GoogleMapsWindow extends Window {
   google?: typeof google;
 }
 
+// TODO(mbehrlich): Update this to use original map after updating DefinitelyTyped
 /**
  * Extends the Google Map interface due to the Definitely Typed implementation
  * missing "getClickableIcons".
@@ -63,23 +64,112 @@ export class GoogleMap implements OnChanges, OnInit, OnDestroy {
     this._options.next(options || DEFAULT_OPTIONS);
   }
 
+  /**
+   * See
+   * https://developers.google.com/maps/documentation/javascript/reference/map#Map.bounds_changed
+   */
   @Output() boundsChanged = new EventEmitter<void>();
+
+  /**
+   * See
+   * https://developers.google.com/maps/documentation/javascript/reference/map#Map.center_changed
+   */
   @Output() centerChanged = new EventEmitter<void>();
+
+  /**
+   * See
+   * https://developers.google.com/maps/documentation/javascript/reference/map#Map.click
+   */
   @Output() mapClick = new EventEmitter<google.maps.MouseEvent|google.maps.IconMouseEvent>();
+
+  /**
+   * See
+   * https://developers.google.com/maps/documentation/javascript/reference/map#Map.dblclick
+   */
   @Output() mapDblclick = new EventEmitter<google.maps.MouseEvent>();
+
+  /**
+   * See
+   * https://developers.google.com/maps/documentation/javascript/reference/map#Map.drag
+   */
   @Output() mapDrag = new EventEmitter<void>();
+
+  /**
+   * See
+   * https://developers.google.com/maps/documentation/javascript/reference/map#Map.dragend
+   */
   @Output() mapDragend = new EventEmitter<void>();
+
+  /**
+   * See
+   * https://developers.google.com/maps/documentation/javascript/reference/map#Map.dragstart
+   */
   @Output() mapDragstart = new EventEmitter<void>();
+
+  /**
+   * See
+   * https://developers.google.com/maps/documentation/javascript/reference/map#Map.heading_changed
+   */
   @Output() headingChanged = new EventEmitter<void>();
+
+  /**
+   * See
+   * https://developers.google.com/maps/documentation/javascript/reference/map#Map.idle
+   */
   @Output() idle = new EventEmitter<void>();
+
+  /**
+   * See
+   * https://developers.google.com/maps/documentation/javascript/reference/map#Map.maptypeid_changed
+   */
   @Output() maptypeidChanged = new EventEmitter<void>();
+
+  /**
+   * See
+   * https://developers.google.com/maps/documentation/javascript/reference/map#Map.mousemove
+   */
   @Output() mapMousemove = new EventEmitter<google.maps.MouseEvent>();
+
+  /**
+   * See
+   * https://developers.google.com/maps/documentation/javascript/reference/map#Map.mouseout
+   */
   @Output() mapMouseout = new EventEmitter<google.maps.MouseEvent>();
+
+  /**
+   * See
+   * https://developers.google.com/maps/documentation/javascript/reference/map#Map.mouseover
+   */
   @Output() mapMouseover = new EventEmitter<google.maps.MouseEvent>();
+
+  /**
+   * See
+   * developers.google.com/maps/documentation/javascript/reference/map#Map.projection_changed
+   */
   @Output() projectionChanged = new EventEmitter<void>();
+
+  /**
+   * See
+   * https://developers.google.com/maps/documentation/javascript/reference/map#Map.rightclick
+   */
   @Output() mapRightclick = new EventEmitter<google.maps.MouseEvent>();
+
+  /**
+   * See
+   * https://developers.google.com/maps/documentation/javascript/reference/map#Map.tilesloaded
+   */
   @Output() tilesloaded = new EventEmitter<void>();
+
+  /**
+   * See
+   * https://developers.google.com/maps/documentation/javascript/reference/map#Map.tilt_changed
+   */
   @Output() tiltChanged = new EventEmitter<void>();
+
+  /**
+   * See
+   * https://developers.google.com/maps/documentation/javascript/reference/map#Map.zoom_changed
+   */
   @Output() zoomChanged = new EventEmitter<void>();
 
   private _mapEl: HTMLElement;
@@ -131,74 +221,142 @@ export class GoogleMap implements OnChanges, OnInit, OnDestroy {
     }
   }
 
+  /**
+   * See
+   * https://developers.google.com/maps/documentation/javascript/reference/map#Map.fitBounds
+   */
   fitBounds(
       bounds: google.maps.LatLngBounds|google.maps.LatLngBoundsLiteral,
       padding?: number|google.maps.Padding) {
     this._googleMap.fitBounds(bounds, padding);
   }
 
+  /**
+   * See
+   * https://developers.google.com/maps/documentation/javascript/reference/map#Map.panBy
+   */
   panBy(x: number, y: number) {
     this._googleMap.panBy(x, y);
   }
 
+  /**
+   * See
+   * https://developers.google.com/maps/documentation/javascript/reference/map#Map.panTo
+   */
   panTo(latLng: google.maps.LatLng|google.maps.LatLngLiteral) {
     this._googleMap.panTo(latLng);
   }
 
+  /**
+   * See
+   * https://developers.google.com/maps/documentation/javascript/reference/map#Map.panToBounds
+   */
   panToBounds(
       latLngBounds: google.maps.LatLngBounds|google.maps.LatLngBoundsLiteral,
       padding?: number|google.maps.Padding) {
     this._googleMap.panToBounds(latLngBounds, padding);
   }
 
+  /**
+   * See
+   * https://developers.google.com/maps/documentation/javascript/reference/map#Map.getBounds
+   */
   getBounds(): google.maps.LatLngBounds|null {
     return this._googleMap.getBounds() || null;
   }
 
+  /**
+   * See
+   * https://developers.google.com/maps/documentation/javascript/reference/map#Map.getCenter
+   */
   getCenter(): google.maps.LatLng {
     return this._googleMap.getCenter();
   }
 
+  /**
+   * See
+   * https://developers.google.com/maps/documentation/javascript/reference/map#Map.getClickableIcons
+   */
   getClickableIcons(): boolean {
     return this._googleMap.getClickableIcons();
   }
 
+  /**
+   * See
+   * https://developers.google.com/maps/documentation/javascript/reference/map#Map.getHeading
+   */
   getHeading(): number {
     return this._googleMap.getHeading();
   }
 
+  /**
+   * See
+   * https://developers.google.com/maps/documentation/javascript/reference/map#Map.getMapTypeId
+   */
   getMapTypeId(): google.maps.MapTypeId|string {
     return this._googleMap.getMapTypeId();
   }
 
+  /**
+   * See
+   * https://developers.google.com/maps/documentation/javascript/reference/map#Map.getProjection
+   */
   getProjection(): google.maps.Projection|null {
     return this._googleMap.getProjection();
   }
 
+  /**
+   * See
+   * https://developers.google.com/maps/documentation/javascript/reference/map#Map.getStreetView
+   */
   getStreetView(): google.maps.StreetViewPanorama {
     return this._googleMap.getStreetView();
   }
 
+  /**
+   * See
+   * https://developers.google.com/maps/documentation/javascript/reference/map#Map.getTilt
+   */
   getTilt(): number {
     return this._googleMap.getTilt();
   }
 
+  /**
+   * See
+   * https://developers.google.com/maps/documentation/javascript/reference/map#Map.getZoom
+   */
   getZoom(): number {
     return this._googleMap.getZoom();
   }
 
+  /**
+   * See
+   * https://developers.google.com/maps/documentation/javascript/reference/map#Map.controls
+   */
   get controls(): Array<google.maps.MVCArray<Node>> {
     return this._googleMap.controls;
   }
 
+  /**
+   * See
+   * https://developers.google.com/maps/documentation/javascript/reference/map#Map.data
+   */
   get data(): google.maps.Data {
     return this._googleMap.data;
   }
 
+  /**
+   * See
+   * https://developers.google.com/maps/documentation/javascript/reference/map#Map.mapTypes
+   */
   get mapTypes(): google.maps.MapTypeRegistry {
     return this._googleMap.mapTypes;
   }
 
+  /**
+   * See
+   * https://developers.google.com/maps/documentation/javascript/reference/map#Map.overlayMapTypes
+   */
   get overlayMapTypes(): google.maps.MVCArray<google.maps.MapType> {
     return this._googleMap.overlayMapTypes;
   }
