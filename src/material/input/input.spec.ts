@@ -578,7 +578,8 @@ describe('MatInput without forms', () => {
 
       fixture.detectChanges();
 
-      let hintLabel = fixture.debugElement.query(By.css('.mat-hint:not(.mat-right)'))!.nativeElement;
+      let hintLabel =
+          fixture.debugElement.query(By.css('.mat-hint:not(.mat-right)'))!.nativeElement;
       let endLabel = fixture.debugElement.query(By.css('.mat-hint.mat-right'))!.nativeElement;
       let input = fixture.debugElement.query(By.css('input'))!.nativeElement;
       let ariaValue = input.getAttribute('aria-describedby');
@@ -838,7 +839,8 @@ describe('MatInput without forms', () => {
     let fixture = createComponent(MatInputWithReadonlyInput);
     fixture.detectChanges();
 
-    let input = fixture.debugElement.query(By.directive(MatInput))!.injector.get<MatInput>(MatInput);
+    let input =
+        fixture.debugElement.query(By.directive(MatInput))!.injector.get<MatInput>(MatInput);
     let container = fixture.debugElement.query(By.css('mat-form-field'))!.nativeElement;
 
     // Call the focus handler directly to avoid flakyness where
@@ -1097,7 +1099,8 @@ describe('MatInput with forms', () => {
     }));
 
     it('sets the aria-describedby to reference errors when in error state', fakeAsync(() => {
-      let hintId = fixture.debugElement.query(By.css('.mat-hint'))!.nativeElement.getAttribute('id');
+      let hintId =
+          fixture.debugElement.query(By.css('.mat-hint'))!.nativeElement.getAttribute('id');
       let describedBy = inputEl.getAttribute('aria-describedby');
 
       expect(hintId).toBeTruthy('hint should be shown');

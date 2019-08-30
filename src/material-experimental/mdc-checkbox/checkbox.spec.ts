@@ -698,7 +698,8 @@ describe('MatCheckbox', () => {
          fixture.detectChanges();
 
          const checkbox =
-             fixture.debugElement.query(By.directive(MatCheckbox))!.componentInstance as MatCheckbox;
+             fixture.debugElement.query(By.directive(MatCheckbox))!
+             .componentInstance as MatCheckbox;
 
          expect(checkbox.tabIndex)
              .toBe(5, 'Expected tabIndex property to have been set based on the native attribute');

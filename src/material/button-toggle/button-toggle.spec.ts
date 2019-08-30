@@ -562,7 +562,8 @@ describe('MatButtonToggle without forms', () => {
     });
 
     it('should check a button toggle upon interaction with underlying native checkbox', () => {
-      let nativeCheckboxButton = buttonToggleDebugElements[0].query(By.css('button'))!.nativeElement;
+      let nativeCheckboxButton =
+          buttonToggleDebugElements[0].query(By.css('button'))!.nativeElement;
 
       nativeCheckboxButton.click();
       fixture.detectChanges();

@@ -1251,7 +1251,8 @@ describe('MatChipList', () => {
     });
 
     it('sets the aria-describedby to reference errors when in error state', () => {
-      let hintId = fixture.debugElement.query(By.css('.mat-hint'))!.nativeElement.getAttribute('id');
+      let hintId =
+          fixture.debugElement.query(By.css('.mat-hint'))!.nativeElement.getAttribute('id');
       let describedBy = chipListEl.getAttribute('aria-describedby');
 
       expect(hintId).toBeTruthy('hint should be shown');

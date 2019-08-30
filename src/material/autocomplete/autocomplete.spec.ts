@@ -1464,7 +1464,8 @@ describe('MatAutocomplete', () => {
     it('should use below positioning by default', fakeAsync(() => {
       let fixture = createComponent(SimpleAutocomplete);
       fixture.detectChanges();
-      let inputReference = fixture.debugElement.query(By.css('.mat-form-field-flex'))!.nativeElement;
+      let inputReference =
+          fixture.debugElement.query(By.css('.mat-form-field-flex'))!.nativeElement;
 
       fixture.componentInstance.trigger.openPanel();
       fixture.detectChanges();
@@ -1490,7 +1491,8 @@ describe('MatAutocomplete', () => {
 
       fixture.detectChanges();
 
-      let inputReference = fixture.debugElement.query(By.css('.mat-form-field-flex'))!.nativeElement;
+      let inputReference =
+          fixture.debugElement.query(By.css('.mat-form-field-flex'))!.nativeElement;
       spacer.style.height = '1000px';
       document.body.appendChild(spacer);
 
@@ -1515,7 +1517,8 @@ describe('MatAutocomplete', () => {
     it('should fall back to above position if panel cannot fit below', fakeAsync(() => {
       let fixture = createComponent(SimpleAutocomplete);
       fixture.detectChanges();
-      let inputReference = fixture.debugElement.query(By.css('.mat-form-field-flex'))!.nativeElement;
+      let inputReference =
+          fixture.debugElement.query(By.css('.mat-form-field-flex'))!.nativeElement;
 
       // Push the autocomplete trigger down so it won't have room to open "below"
       inputReference.style.bottom = '0';
@@ -1541,7 +1544,8 @@ describe('MatAutocomplete', () => {
       fixture.detectChanges();
 
       let inputEl = fixture.debugElement.query(By.css('input'))!.nativeElement;
-      let inputReference = fixture.debugElement.query(By.css('.mat-form-field-flex'))!.nativeElement;
+      let inputReference =
+          fixture.debugElement.query(By.css('.mat-form-field-flex'))!.nativeElement;
 
       // Push the element down so it has a little bit of space, but not enough to render.
       inputReference.style.bottom = '10px';
@@ -1582,7 +1586,8 @@ describe('MatAutocomplete', () => {
       fixture.detectChanges();
 
       let input = fixture.debugElement.query(By.css('input'))!.nativeElement;
-      let inputReference = fixture.debugElement.query(By.css('.mat-form-field-flex'))!.nativeElement;
+      let inputReference =
+          fixture.debugElement.query(By.css('.mat-form-field-flex'))!.nativeElement;
 
       // Push the autocomplete trigger down so it won't have room to open "below"
       inputReference.style.bottom = '0';
@@ -1612,7 +1617,8 @@ describe('MatAutocomplete', () => {
       fixture.detectChanges();
 
       let inputEl = fixture.debugElement.query(By.css('input'))!.nativeElement;
-      let inputReference = fixture.debugElement.query(By.css('.mat-form-field-flex'))!.nativeElement;
+      let inputReference =
+          fixture.debugElement.query(By.css('.mat-form-field-flex'))!.nativeElement;
 
       // Push the element down so it has a little bit of space, but not enough to render.
       inputReference.style.bottom = '75px';
@@ -1659,7 +1665,8 @@ describe('MatAutocomplete', () => {
       let fixture = createComponent(SimpleAutocomplete);
       fixture.componentInstance.position = 'below';
       fixture.detectChanges();
-      let inputReference = fixture.debugElement.query(By.css('.mat-form-field-flex'))!.nativeElement;
+      let inputReference =
+          fixture.debugElement.query(By.css('.mat-form-field-flex'))!.nativeElement;
 
       // Push the autocomplete trigger down so it won't have room to open below.
       inputReference.style.bottom = '0';
@@ -1684,7 +1691,8 @@ describe('MatAutocomplete', () => {
       let fixture = createComponent(SimpleAutocomplete);
       fixture.componentInstance.position = 'above';
       fixture.detectChanges();
-      let inputReference = fixture.debugElement.query(By.css('.mat-form-field-flex'))!.nativeElement;
+      let inputReference =
+          fixture.debugElement.query(By.css('.mat-form-field-flex'))!.nativeElement;
 
       // Push the autocomplete trigger up so it won't have room to open above.
       inputReference.style.top = '0';
@@ -1708,7 +1716,8 @@ describe('MatAutocomplete', () => {
     it('should handle the position being changed after the first open', fakeAsync(() => {
       let fixture = createComponent(SimpleAutocomplete);
       fixture.detectChanges();
-      let inputReference = fixture.debugElement.query(By.css('.mat-form-field-flex'))!.nativeElement;
+      let inputReference =
+          fixture.debugElement.query(By.css('.mat-form-field-flex'))!.nativeElement;
       let openPanel = () => {
         fixture.componentInstance.trigger.openPanel();
         fixture.detectChanges();
