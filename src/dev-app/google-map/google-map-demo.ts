@@ -19,6 +19,8 @@ export class GoogleMapDemo {
   isReady = false;
 
   center = {lat: 24, lng: 12};
+  markerOptions = {draggable: false};
+  gettysburg = {lat: 39.830205, lng:-77.232949};
   zoom = 4;
   display?: google.maps.LatLngLiteral;
 
@@ -35,5 +37,10 @@ export class GoogleMapDemo {
 
   handleMove(event: google.maps.MouseEvent) {
     this.display = event.latLng.toJSON();
+  }
+
+  clickMarker(event: google.maps.MouseEvent) {
+    console.log(this.markerOptions);
+    this.markerOptions = {draggable: true};
   }
 }

@@ -14,7 +14,7 @@ import {
   createMapConstructorSpy,
   createMapSpy,
   TestingWindow
-} from './testing/fake-google-map-utils';
+} from '../testing/fake-google-map-utils';
 
 /** Represents boundaries of a map to be used in tests. */
 const testBounds: google.maps.LatLngBoundsLiteral = {
@@ -236,6 +236,10 @@ describe('GoogleMap', () => {
     expect(mapSpy.addListener).not.toHaveBeenCalledWith('tilesloaded', jasmine.any(Function));
     expect(mapSpy.addListener).not.toHaveBeenCalledWith('tilt_changed', jasmine.any(Function));
     expect(mapSpy.addListener).not.toHaveBeenCalledWith('zoom_changed', jasmine.any(Function));
+  });
+
+  it('calls setMap on all child marker components', () => {
+
   });
 });
 

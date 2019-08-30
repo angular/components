@@ -10,6 +10,7 @@ import {CommonModule} from '@angular/common';
 import {HttpClientJsonpModule, HttpClientModule} from '@angular/common/http';
 import {NgModule} from '@angular/core';
 import {GoogleMapModule} from '@angular/google-maps/google-map';
+import {GoogleMapMarkerModule} from '@angular/google-maps/google-map-marker';
 import {RouterModule} from '@angular/router';
 
 import {GoogleMapDemo} from './google-map-demo';
@@ -18,6 +19,7 @@ import {GoogleMapDemo} from './google-map-demo';
   imports: [
     CommonModule,
     GoogleMapModule,
+    GoogleMapMarkerModule,
     HttpClientJsonpModule,
     HttpClientModule,
     RouterModule.forChild([{path: '', component: GoogleMapDemo}]),

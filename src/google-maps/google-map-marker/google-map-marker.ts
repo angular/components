@@ -36,67 +36,130 @@ export class GoogleMapMarker implements OnInit, OnDestroy {
     this._clickable.next(clickable);
   }
 
-  /** */
+  /**
+   * See
+   * https://developers.google.com/maps/documentation/javascript/reference/marker#Marker.animation_changed
+   */
   @Output() animationChanged = new EventEmitter<void>();
 
-  /** */
+  /**
+   * See
+   * https://developers.google.com/maps/documentation/javascript/reference/marker#Marker.click
+   */
   @Output() mapClick = new EventEmitter<google.maps.MouseEvent>();
 
-  /** */
+  /**
+   * See
+   * https://developers.google.com/maps/documentation/javascript/reference/marker#Marker.clickable_changed
+   */
   @Output() clickableChanged = new EventEmitter<void>();
 
-  /** */
+  /**
+   * See
+   * https://developers.google.com/maps/documentation/javascript/reference/marker#Marker.cursor_changed
+   */
   @Output() cursorChanged = new EventEmitter<void>();
 
-  /** */
+  /**
+   * See
+   * https://developers.google.com/maps/documentation/javascript/reference/marker#Marker.dblclick
+   */
   @Output() mapDblclick = new EventEmitter<google.maps.MouseEvent>();
 
-  /** */
+  /**
+   * See
+   * https://developers.google.com/maps/documentation/javascript/reference/marker#Marker.drag
+   */
   @Output() mapDrag = new EventEmitter<google.maps.MouseEvent>();
 
-  /** */
+  /**
+   * See
+   * https://developers.google.com/maps/documentation/javascript/reference/marker#Marker.dragend
+   */
   @Output() mapDragend = new EventEmitter<google.maps.MouseEvent>();
 
-  /** */
+  /**
+   * See
+   * https://developers.google.com/maps/documentation/javascript/reference/marker#Marker.draggable_changed
+   */
   @Output() draggableChanged = new EventEmitter<void>();
 
-  /** */
+  /**
+   * See
+   * https://developers.google.com/maps/documentation/javascript/reference/marker#Marker.dragstart
+   */
   @Output() mapDragstart = new EventEmitter<google.maps.MouseEvent>();
 
-  /** */
+  /**
+   * See
+   * https://developers.google.com/maps/documentation/javascript/reference/marker#Marker.flat_changed
+   */
   @Output() flatChanged = new EventEmitter<void>();
 
-  /** */
+  /**
+   * See
+   * https://developers.google.com/maps/documentation/javascript/reference/marker#Marker.icon_changed
+   */
   @Output() iconChanged = new EventEmitter<void>();
 
-  /** */
+  /**
+   * See
+   * https://developers.google.com/maps/documentation/javascript/reference/marker#Marker.mousedown
+   */
   @Output() mapMousedown = new EventEmitter<google.maps.MouseEvent>();
 
-  /** */
+  /**
+   * See
+   * https://developers.google.com/maps/documentation/javascript/reference/marker#Marker.mouseout
+   */
   @Output() mapMouseout = new EventEmitter<google.maps.MouseEvent>();
 
-  /** */
+  /**
+   * See
+   * https://developers.google.com/maps/documentation/javascript/reference/marker#Marker.mouseover
+   */
   @Output() mapMouseover = new EventEmitter<google.maps.MouseEvent>();
 
-  /** */
+  /**
+   * See
+   * https://developers.google.com/maps/documentation/javascript/reference/marker#Marker.mouseup
+   */
   @Output() mapMouseup = new EventEmitter<google.maps.MouseEvent>();
 
-  /** */
+  /**
+   * See
+   * https://developers.google.com/maps/documentation/javascript/reference/marker#Marker.position_changed
+   */
   @Output() positionChanged = new EventEmitter<void>();
 
-  /** */
+  /**
+   * See
+   * https://developers.google.com/maps/documentation/javascript/reference/marker#Marker.rightclick
+   */
   @Output() mapRightclick = new EventEmitter<google.maps.MouseEvent>();
 
-  /** */
+  /**
+   * See
+   * https://developers.google.com/maps/documentation/javascript/reference/marker#Marker.shape_changed
+   */
   @Output() shapeChanged = new EventEmitter<void>();
 
-  /** */
+  /**
+   * See
+   * https://developers.google.com/maps/documentation/javascript/reference/marker#Marker.title_changed
+   */
   @Output() titleChanged = new EventEmitter<void>();
 
-  /** */
+  /**
+   * See
+   * https://developers.google.com/maps/documentation/javascript/reference/marker#Marker.visible_changed
+   */
   @Output() visibleChanged = new EventEmitter<void>();
 
-  /** */
+  /**
+   * See
+   * https://developers.google.com/maps/documentation/javascript/reference/marker#Marker.zindex_changed
+   */
   @Output() zindexChanged = new EventEmitter<void>();
 
   private readonly _options = new BehaviorSubject<google.maps.MarkerOptions>(DEFAULT_OPTIONS);
@@ -146,50 +209,98 @@ export class GoogleMapMarker implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * See
+   * https://developers.google.com/maps/documentation/javascript/reference/marker#Marker.getAnimation
+   */
   getAnimation(): google.maps.Animation|null {
     return this._marker!.getAnimation() || null;
   }
 
+  /**
+   * See
+   * https://developers.google.com/maps/documentation/javascript/reference/marker#Marker.getClickable
+   */
   getClickable(): boolean {
     return this._marker!.getClickable();
   }
 
+  /**
+   * See
+   * https://developers.google.com/maps/documentation/javascript/reference/marker#Marker.getCursor
+   */
   getCursor(): string|null {
     return this._marker!.getCursor() || null;
   }
 
+  /**
+   * See
+   * https://developers.google.com/maps/documentation/javascript/reference/marker#Marker.getDraggable
+   */
   getDraggable(): boolean {
     return !!this._marker!.getDraggable();
   }
 
+  /**
+   * See
+   * https://developers.google.com/maps/documentation/javascript/reference/marker#Marker.getIcon
+   */
   getIcon(): string|google.maps.Icon|google.maps.Symbol|null {
     return this._marker!.getIcon() || null;
   }
 
+  /**
+   * See
+   * https://developers.google.com/maps/documentation/javascript/reference/marker#Marker.getLabel
+   */
   getLabel(): google.maps.MarkerLabel|null {
     return this._marker!.getLabel() || null;
   }
 
+  /**
+   * See
+   * https://developers.google.com/maps/documentation/javascript/reference/marker#Marker.getOpacity
+   */
   getOpacity(): number|null {
     return this._marker!.getOpacity() || null;
   }
 
+  /**
+   * See
+   * https://developers.google.com/maps/documentation/javascript/reference/marker#Marker.getPosition
+   */
   getPosition(): google.maps.LatLng|null {
     return this._marker!.getPosition() || null;
   }
 
+  /**
+   * See
+   * https://developers.google.com/maps/documentation/javascript/reference/marker#Marker.getShape
+   */
   getShape(): google.maps.MarkerShape|null {
     return this._marker!.getShape() || null;
   }
 
+  /**
+   * See
+   * https://developers.google.com/maps/documentation/javascript/reference/marker#Marker.getTitle
+   */
   getTitle(): string|null {
     return this._marker!.getTitle() || null;
   }
 
+  /**
+   * See
+   * https://developers.google.com/maps/documentation/javascript/reference/marker#Marker.getVisible
+   */
   getVisible(): boolean {
     return this._marker!.getVisible();
   }
 
+  /**
+   * See
+   * https://developers.google.com/maps/documentation/javascript/reference/marker#Marker.getZIndex
+   */
   getZIndex(): number|null {
     return this._marker!.getZIndex() || null;
   }
@@ -210,8 +321,31 @@ export class GoogleMapMarker implements OnInit, OnDestroy {
   }
 
   private _initializeEventHandlers() {
-    const eventHandlers = new Map<string, EventEmitter<void>>([]);
-    const mouseEventHandlers = new Map<string, EventEmitter<google.maps.MouseEvent>>([]);
+    const eventHandlers = new Map<string, EventEmitter<void>>([
+      ['animation_changed', this.animationChanged],
+      ['clickable_changed', this.clickableChanged],
+      ['cursor_changed', this.cursorChanged],
+      ['draggable_changed', this.draggableChanged],
+      ['flat_changed', this.flatChanged],
+      ['icon_changed', this.iconChanged],
+      ['position_changed', this.positionChanged],
+      ['shape_changed', this.shapeChanged],
+      ['title_changed', this.titleChanged],
+      ['visible_changed', this.visibleChanged],
+      ['zindex_changed', this.zindexChanged],
+    ]);
+    const mouseEventHandlers = new Map<string, EventEmitter<google.maps.MouseEvent>>([
+      ['click', this.mapClick],
+      ['dblclick', this.mapDblclick],
+      ['drag', this.mapDrag],
+      ['dragend', this.mapDragend],
+      ['dragstart', this.mapDragstart],
+      ['mousedown', this.mapMousedown],
+      ['mouseout', this.mapMouseout],
+      ['mouseover', this.mapMouseover],
+      ['mouseup', this.mapMouseup],
+      ['rightclick', this.mapRightclick],
+    ]);
 
     eventHandlers.forEach((eventHandler: EventEmitter<void>, name: string) => {
       if (eventHandler.observers.length > 0) {

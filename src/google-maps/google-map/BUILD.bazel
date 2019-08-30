@@ -31,7 +31,7 @@ ng_test_library(
     ),
     deps = [
         ":google-map",
-        "//src/google-maps/google-map/testing",
+        "//src/google-maps/testing",
         "@npm//@angular/platform-browser",
     ],
 )

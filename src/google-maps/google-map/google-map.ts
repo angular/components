@@ -47,7 +47,7 @@ export const DEFAULT_WIDTH = '500px';
 @Component({
   selector: 'google-map',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  template: '<div class="map-container"></div>',
+  template: '<div class="map-container"></div><ng-content></ng-content>',
 })
 export class GoogleMap implements OnChanges, OnInit, OnDestroy {
   @Input() height = DEFAULT_HEIGHT;

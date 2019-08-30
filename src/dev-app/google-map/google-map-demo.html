@@ -4,7 +4,11 @@
             [center]="center"
             [zoom]="zoom"
             (mapClick)="handleClick($event)"
-            (mapMousemove)="handleMove($event)"></google-map>
+            (mapMousemove)="handleMove($event)">
+  <google-map-marker [position]="gettysburg"
+                     [options]="markerOptions"
+                     (mapClick)="clickMarker($event)"></google-map-marker>
+</google-map>
 
 <div>Latitude: {{display?.lat}}</div>
 <div>Longitude: {{display?.lng}}</div>

@@ -30,6 +30,7 @@ ng_test_library(
     ),
     deps = [
         ":google-map-marker",
+        "//src/google-maps/testing",
         "@npm//@angular/platform-browser",
     ],
 )
