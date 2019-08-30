@@ -1,0 +1,1 @@
+descript('GoogleMapMarker', () => {});

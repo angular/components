@@ -82,6 +82,7 @@ MATERIAL_SCSS_LIBS = [
 
 GOOGLE_MAPS_PACKAGES = [
     "google-map",
+    "google-map-marker",
 ]
 
 GOOGLE_MAPS_TARGETS = ["//src/google-maps"] + ["//src/google-maps/%s" % p for p in GOOGLE_MAPS_PACKAGES]

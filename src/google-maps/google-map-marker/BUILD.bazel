@@ -9,17 +9,16 @@ load(
 )
 
 ng_module(
-    name = "google-map",
+    name = "google-map-marker",
     srcs = glob(
         ["**/*.ts"],
         exclude = ["**/*.spec.ts"],
     ),
-    module_name = "@angular/google-maps/google-map",
+    module_name = "@angular/google-maps/google-map-marker",
     deps = [
         "@npm//@angular/core",
         "@npm//@types/googlemaps",
         "@npm//rxjs",
-        "//src/google-maps/google-map-marker",
     ],
 )
 
@@ -30,8 +29,7 @@ ng_test_library(
         exclude = ["**/*.e2e.spec.ts"],
     ),
     deps = [
-        ":google-map",
-        "//src/google-maps/google-map/testing",
+        ":google-map-marker",
         "@npm//@angular/platform-browser",
     ],
 )
@@ -43,7 +41,7 @@ ng_web_test_suite(
 
 markdown_to_html(
     name = "overview",
-    srcs = [":google-map.md"],
+    srcs = [":google-map-marker.md"],
 )
 
 filegroup(

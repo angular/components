@@ -57,6 +57,7 @@ var MATERIAL_PACKAGES = [
 
 var GOOGLE_MAPS_PACKAGES = [
   'google-map',
+  'google-map-marker',
 ];
 
 var MATERIAL_EXPERIMENTAL_PACKAGES = [

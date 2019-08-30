@@ -6,5 +6,5 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-export * from '@angular/google-maps/google-map';
-export * from '@angular/google-maps/google-map-marker';
+export * from './google-map-marker-module';
+export * from './google-map-marker';

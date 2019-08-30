@@ -1,6 +1,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  ContentChildren,
   ElementRef,
   EventEmitter,
   Input,
@@ -8,9 +9,11 @@ import {
   OnDestroy,
   OnInit,
   Output,
+  QueryList,
 } from '@angular/core';
-import {BehaviorSubject, combineLatest, Observable, Subject} from 'rxjs';
 import {map, shareReplay, take, takeUntil} from 'rxjs/operators';
+import {BehaviorSubject, combineLatest, Observable, ReplaySubject, Subject} from 'rxjs';
+import {GoogleMapMarker} from '@angular/google-maps/google-map-marker';
 
 interface GoogleMapsWindow extends Window {
   google?: typeof google;
@@ -172,6 +175,10 @@ export class GoogleMap implements OnChanges, OnInit, OnDestroy {
    */
   @Output() zoomChanged = new EventEmitter<void>();
 
+  @ContentChildren(GoogleMapMarker) set markers(markers: QueryList<GoogleMapMarker>) {
+    this._markers.next(markers.toArray());
+  }
+
   private _mapEl: HTMLElement;
   private _googleMap!: UpdatedGoogleMap;
 
@@ -180,6 +187,8 @@ export class GoogleMap implements OnChanges, OnInit, OnDestroy {
   private readonly _options = new BehaviorSubject<google.maps.MapOptions>(DEFAULT_OPTIONS);
   private readonly _center = new BehaviorSubject<google.maps.LatLngLiteral|undefined>(undefined);
   private readonly _zoom = new BehaviorSubject<number|undefined>(undefined);
+
+  private readonly _markers = new ReplaySubject<GoogleMapMarker[]>(1);
 
   private readonly _destroy = new Subject<void>();
 
@@ -211,6 +220,8 @@ export class GoogleMap implements OnChanges, OnInit, OnDestroy {
     });
 
     this._watchForOptionsChanges(googleMapChanges, combinedOptionsChanges);
+
+    this._watchForMarkerChanges(googleMapChanges);
   }
 
   ngOnDestroy() {
@@ -444,5 +455,13 @@ export class GoogleMap implements OnChanges, OnInit, OnDestroy {
             this.mapClick.emit(event);
           }));
     }
+  }
+
+  private _watchForMarkerChanges(googleMapChanges: Observable<google.maps.Map>) {
+    combineLatest(googleMapChanges, this._markers).pipe(takeUntil(this._destroy)).subscribe(([googleMap, markers]) => {
+      for (let marker of markers) {
+        marker.setMap(googleMap);
+      }
+    });
   }
 }
