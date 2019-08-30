@@ -1004,7 +1004,7 @@ describe('MatInput with forms', () => {
       expect(testComponent.formControl.invalid).toBe(true, 'Expected form control to be invalid');
       expect(containerEl.querySelectorAll('mat-error').length).toBe(0, 'Expected no error message');
 
-      dispatchFakeEvent(fixture.debugElement.query(By.css('form'))!.nativeElement, 'submit')!;
+      dispatchFakeEvent(fixture.debugElement.query(By.css('form'))!.nativeElement, 'submit');
       fixture.detectChanges();
       flush();
 
