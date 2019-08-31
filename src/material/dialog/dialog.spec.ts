@@ -1582,6 +1582,7 @@ class ContentElementDialog {}
           aria-label="Best close button ever"
           [mat-dialog-close]="true"></button>
         <div mat-dialog-close>Should not close</div>
+        <button class="with-submit" type="submit" mat-dialog-close>Should have submit</button>
       </mat-dialog-actions>
     </ng-template>
   `

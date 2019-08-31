@@ -30,7 +30,7 @@ let dialogElementUid = 0;
   host: {
     '(click)': 'dialogRef.close(dialogResult)',
     '[attr.aria-label]': 'ariaLabel || null',
-    '[attr.type]': 'buttonType',
+    '[attr.type]': 'type',
   }
 })
 export class MatDialogClose implements OnInit, OnChanges {
@@ -38,7 +38,7 @@ export class MatDialogClose implements OnInit, OnChanges {
   @Input('aria-label') ariaLabel: string;
 
   /** Default to "button" to prevents accidental form submits. */
-  @Input('type') buttonType: 'submit' | 'button' = 'button';
+  @Input() type: 'submit' | 'button' | 'reset' = 'button';
 
   /** Dialog close input. */
   @Input('mat-dialog-close') dialogResult: any;
