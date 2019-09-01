@@ -127,8 +127,6 @@ export const MAT_FORM_FIELD_DEFAULT_OPTIONS =
     '[class.mat-form-field-disabled]': '_control.disabled',
     '[class.mat-form-field-autofilled]': '_control.autofilled',
     '[class.mat-focused]': '_control.focused',
-    '[class.mat-accent]': 'color == "accent"',
-    '[class.mat-warn]': 'color == "warn"',
     '[class.ng-untouched]': '_shouldForward("untouched")',
     '[class.ng-touched]': '_shouldForward("touched")',
     '[class.ng-pristine]': '_shouldForward("pristine")',
@@ -303,7 +301,7 @@ export class MatFormField extends _MatFormFieldMixinBase
     }
 
     // Subscribe to changes in the child control state in order to update the form field UI.
-    control.stateChanges.pipe(startWith(null!)).subscribe(() => {
+    control.stateChanges.pipe(startWith(null)).subscribe(() => {
       this._validatePlaceholders();
       this._syncDescribedByIds();
       this._changeDetectorRef.markForCheck();
