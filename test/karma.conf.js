@@ -89,7 +89,7 @@ module.exports = config => {
       startTunnel: false,
       retryLimit: 3,
       timeout: 1800,
-      video: false,
+      video: true,
     },
 
     browserDisconnectTolerance: 1,
