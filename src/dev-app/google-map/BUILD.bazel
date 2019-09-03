@@ -8,6 +8,7 @@ ng_module(
     assets = ["google-map-demo.html"],
     deps = [
         "//src/google-maps/google-map",
+        "//src/google-maps/google-map-marker",
         "@npm//@angular/router",
     ],
 )

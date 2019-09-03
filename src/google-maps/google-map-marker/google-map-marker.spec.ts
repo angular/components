@@ -177,8 +177,8 @@ describe('GoogleMapMarker', () => {
     markerSpy.getIcon.and.returnValue('icon');
     expect(markerComponent.getIcon()).toBe('icon');
 
-    markerSpy.getLabel.and.returnValue('label');
-    expect(markerComponent.getLabel()).toBe('label');
+    markerSpy.getLabel.and.returnValue(null);
+    expect(markerComponent.getLabel()).toBe(null);
 
     markerSpy.getOpacity.and.returnValue(5);
     expect(markerComponent.getOpacity()).toBe(5);
