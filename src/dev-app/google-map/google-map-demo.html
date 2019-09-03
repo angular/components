@@ -5,7 +5,7 @@
             [zoom]="zoom"
             (mapClick)="handleClick($event)"
             (mapMousemove)="handleMove($event)">
-  <google-map-marker [position]="gettysburg"
+  <google-map-marker [position]="markerPosition"
                      [options]="markerOptions"
                      (mapClick)="clickMarker($event)"></google-map-marker>
 </google-map>

@@ -458,10 +458,12 @@ export class GoogleMap implements OnChanges, OnInit, OnDestroy {
   }
 
   private _watchForMarkerChanges(googleMapChanges: Observable<google.maps.Map>) {
-    combineLatest(googleMapChanges, this._markers).pipe(takeUntil(this._destroy)).subscribe(([googleMap, markers]) => {
-      for (let marker of markers) {
-        marker.setMap(googleMap);
-      }
-    });
+    combineLatest(googleMapChanges, this._markers)
+        .pipe(takeUntil(this._destroy))
+        .subscribe(([googleMap, markers]) => {
+          for (let marker of markers) {
+            marker.setMap(googleMap);
+          }
+        });
   }
 }

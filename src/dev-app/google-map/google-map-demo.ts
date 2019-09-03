@@ -20,7 +20,7 @@ export class GoogleMapDemo {
 
   center = {lat: 24, lng: 12};
   markerOptions = {draggable: false};
-  gettysburg = {lat: 39.830205, lng:-77.232949};
+  markerPosition = {lat: 39.830205, lng: -77.232949};
   zoom = 4;
   display?: google.maps.LatLngLiteral;
 

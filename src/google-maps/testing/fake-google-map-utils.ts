@@ -4,8 +4,8 @@ import {UpdatedGoogleMap} from '../google-map/index';
 export interface TestingWindow extends Window {
   google?: {
     maps: {
-      Map: jasmine.Spy;
-      Marker: jasmine.Spy;
+      Map?: jasmine.Spy;
+      Marker?: jasmine.Spy;
     };
   };
 }
@@ -13,8 +13,8 @@ export interface TestingWindow extends Window {
 /** Creates a jasmine.SpyObj for a google.maps.Map. */
 export function createMapSpy(options: google.maps.MapOptions): jasmine.SpyObj<UpdatedGoogleMap> {
   const mapSpy = jasmine.createSpyObj('google.maps.Map', [
-    'setOptions', 'addListener', 'fitBounds', 'panBy', 'panTo', 'panToBounds', 'getBounds',
-    'getCenter', 'getClickableIcons', 'getHeading', 'getMapTypeId', 'getProjection',
+    'setOptions', 'setMap', 'addListener', 'fitBounds', 'panBy', 'panTo', 'panToBounds',
+    'getBounds', 'getCenter', 'getClickableIcons', 'getHeading', 'getMapTypeId', 'getProjection',
     'getStreetView', 'getTilt', 'getZoom'
   ]);
   mapSpy.addListener.and.returnValue({remove: () => {}});
@@ -40,18 +40,25 @@ export function createMapConstructorSpy(
 }
 
 /** Creates a jasmine.SpyObj for a google.maps.Marker */
-export function createMarkerSpy(options: google.maps.MarkerOptions): jasmine.SpyObj<google.maps.Marker> {
-  const markerSpy = jasmine.createSpyObj('google.maps.Marker', ['setMap', 'addListener', 'getAnimation', 'getClickable', 'getCursor',
-'getDraggable', 'getIcon', 'getLabel', 'getOpacity', 'getPosition', 'getShape', 'getTitle', 'getVisible',
-'getZIndex']);
-markerSpy.addListener.and.returnValue({remove: () => {}});
+export function createMarkerSpy(options: google.maps.MarkerOptions):
+    jasmine.SpyObj<google.maps.Marker> {
+  const markerSpy = jasmine.createSpyObj('google.maps.Marker', [
+    'setOptions', 'setMap', 'addListener', 'getAnimation', 'getClickable', 'getCursor',
+    'getDraggable', 'getIcon', 'getLabel', 'getOpacity', 'getPosition', 'getShape', 'getTitle',
+    'getVisible', 'getZIndex'
+  ]);
+  markerSpy.addListener.and.returnValue({remove: () => {}});
+  return markerSpy;
 }
 
 /** Creates a jasmine.Spy to watch for the constructor of a google.maps.Marker */
-export function createMarkerConstructorSpy(markerSpy: jasmine.SpyObj<google.maps.Marker>): jasmine.Spy {
-  const markerConstructorSpy = jasmine.createSpy('Marker constructor', (_options: google.maps.MarkerOptions) => {
-    return markerSpy;
-  });
+export function createMarkerConstructorSpy(markerSpy: jasmine.SpyObj<google.maps.Marker>):
+    jasmine.Spy {
+  const markerConstructorSpy =
+      jasmine.createSpy('Marker constructor', (_options: google.maps.MarkerOptions) => {
+        return markerSpy;
+      });
+  const testingWindow: TestingWindow = window;
   testingWindow.google = {
     maps: {
       'Marker': markerConstructorSpy,
