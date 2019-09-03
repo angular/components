@@ -1229,7 +1229,11 @@ function flushRequestAnimationFrame() {
 // Disable animations and make the slider an even 100px, so that we get nice
 // round values in tests.
 const styles = `
-  .mat-mdc-slider { min-width: 100px !important; }
+  .mat-mdc-slider {
+    min-width: 100px !important;
+    width: 100px !important;
+    margin: 0px !important;
+  }
 `;
 
 @Component({
