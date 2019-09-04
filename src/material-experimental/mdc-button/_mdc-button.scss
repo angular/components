@@ -15,6 +15,8 @@
 // MDC adds theme color by using :not(:disabled), so just using [disabled] once will not
 // override this, neither will it apply to anchor tags. This needs to override the
 // previously set theme color, so it must be ordered after the theme styles.
+// TODO(andrewseguin): Discuss with the MDC team to see if we can avoid the :not(:disabled) by
+// manually styling disabled buttons with a [disabled] selector.
 @mixin _mat-button-apply-disabled-style() {
   &[disabled][disabled] {
     @content;
@@ -22,7 +24,9 @@
 }
 
 // Applies the disabled theme background color for raised buttons. Value is taken from
-// mixin `mdc-button--filled`
+// mixin `mdc-button--filled`.
+// TODO(andrewseguin): Discuss with the MDC team about providing a variable for the 0.12 value
+// or otherwise have a mixin we can call to apply this style for both button and anchors.
 @mixin _mat-button-disabled-background() {
   @include mdc-theme-prop(background-color, rgba(mdc-theme-prop-value(on-surface), 0.12));
 }
