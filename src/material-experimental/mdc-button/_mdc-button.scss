@@ -11,6 +11,16 @@
       mdc-theme-ink-color-for-fill_(disabled, $mdc-theme-background));
 }
 
+// Wraps the content style in a selector for the disabled state.
+// MDC adds theme color by using :not(:disabled), so just using [disabled] once will not
+// override this, neither will it apply to anchor tags. This needs to override the
+// previously set theme color, so it must be ordered after the theme styles.
+@mixin _mat-button-apply-disabled-style() {
+  &[disabled][disabled] {
+    @content;
+  }
+}
+
 // Applies the disabled theme background color for raised buttons. Value is taken from
 // mixin `mdc-button--filled`
 @mixin _mat-button-disabled-background() {
@@ -54,7 +64,7 @@
         @include mdc-states-base-color(on-error, $query: $mat-theme-styles-query);
       }
 
-      &[disabled][disabled] {
+      @include _mat-button-apply-disabled-style() {
         @include _mat-button-disabled-background();
       }
     }
@@ -68,23 +78,20 @@
         @include mdc-button-outline-color(error, $query: $mat-theme-styles-query);
       }
 
-      &[disabled][disabled] {
+      @include _mat-button-apply-disabled-style() {
         @include mdc-theme-prop(border-color,
             mdc-theme-ink-color-for-fill_(disabled, $mdc-theme-background));
       }
     }
 
     .mat-mdc-raised-button {
-      &[disabled][disabled] {
+      @include _mat-button-apply-disabled-style() {
         @include mdc-elevation(0, $query: $mat-theme-styles-query);
       }
     }
 
-    // MDC adds theme color by using :not(:disabled), so just using [disabled] once will not
-    // override this and also will not apply to anchor tags. This needs to override the
-    // previously set theme color, so it must be ordered after the theme styles.
     .mat-mdc-button, .mat-mdc-raised-button, .mat-mdc-unelevated-button, .mat-mdc-outlined-button {
-      &[disabled][disabled] {
+      @include _mat-button-apply-disabled-style() {
         @include _mat-button-disabled-color();
       }
     }
@@ -117,7 +124,7 @@
         @include mdc-fab-ink-color(on-error, $query: $mat-theme-styles-query);
       }
 
-      &[disabled][disabled] {
+      @include _mat-button-apply-disabled-style() {
         @include _mat-button-disabled-color();
         @include _mat-button-disabled-background();
         @include mdc-elevation(0, $query: $mat-theme-styles-query);
@@ -151,7 +158,7 @@
         @include mdc-icon-button-ink-color(error, $query: $mat-theme-styles-query);
       }
 
-      &[disabled][disabled] {
+      @include _mat-button-apply-disabled-style() {
         @include _mat-button-disabled-color();
       }
     }
