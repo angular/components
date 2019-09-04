@@ -22,7 +22,7 @@ describe('MatDialogHarness', () => {
 
       fixture = TestBed.createComponent(DialogHarnessTest);
       fixture.detectChanges();
-      loader = new TestbedHarnessEnvironment(document.body, fixture);
+      loader = TestbedHarnessEnvironment.loaderForDocumentRoot(fixture);
       dialogHarness = MatDialogHarness;
     });
 
