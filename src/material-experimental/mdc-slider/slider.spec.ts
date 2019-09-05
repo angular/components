@@ -538,10 +538,11 @@ describe('MatMdcSlider', () => {
       flushRequestAnimationFrame();
     }));
 
-    it('should initialize based on bound value', () => {
+    it('should initialize based on bound value', async () => {
+      await new Promise(res => setTimeout(res, 1000000));
       expect(sliderInstance.value).toBe(50);
       expect(thumbContainerEl.style.transform).toContain('translateX(50px)');
-    });
+    }, 1000000);
 
     it('should update when bound value changes', fakeAsync(() => {
       testComponent.val = 75;
