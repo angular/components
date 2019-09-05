@@ -19,7 +19,7 @@ const browserConfig = {
   'IE9':               { unitTest: {target: null, }},
   'IE10':              { unitTest: {target: null, }},
   'IE11':              { unitTest: {target: null, }},
-  'Edge':              { unitTest: {target: 'browserstack', }},
+  'Edge':              { unitTest: {target: 'saucelabs', }},
   'Android4.1':        { unitTest: {target: null, }},
   'Android4.2':        { unitTest: {target: null, }},
   'Android4.3':        { unitTest: {target: null, }},
@@ -33,7 +33,7 @@ const browserConfig = {
   'iOS8':              { unitTest: {target: null, }},
   'iOS9':              { unitTest: {target: null, }},
   'iOS10':             { unitTest: {target: null, }},
-  'iOS11':             { unitTest: {target: 'saucelabs', }},
+  'iOS11':             { unitTest: {target: null, }},
   'WindowsPhone':      { unitTest: {target: null, }}
 };
 

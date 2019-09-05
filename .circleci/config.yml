@@ -503,7 +503,7 @@ workflows:
 
   unit_tests:
     jobs:
-      - tests_browserstack:
+      - tests_saucelabs:
           filters: *ignore_presubmit_branch_filter
 
   # Snapshot tests workflow that is scheduled to run all specified jobs every hour.

@@ -83,9 +83,9 @@ module.exports = config => {
     sauceLabs: {
       testName: 'Angular Material Unit Tests',
       startConnect: false,
-      recordVideo: false,
+      recordVideo: true,
       recordScreenshots: false,
-      idleTimeout: 600,
+      idleTimeout: 6000,
       commandTimeout: 600,
       maxDuration: 5400,
     },
