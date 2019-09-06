@@ -177,8 +177,8 @@ describe('MapMarker', () => {
     markerSpy.getOpacity.and.returnValue(5);
     expect(markerComponent.getOpacity()).toBe(5);
 
-    markerSpy.getPosition.and.returnValue({lat: 1, lng: 2});
-    expect(markerComponent.getPosition()).toEqual({lat: 1, lng: 2});
+    markerSpy.getPosition.and.returnValue(null);
+    expect(markerComponent.getPosition()).toEqual(null);
 
     markerSpy.getShape.and.returnValue(null);
     expect(markerComponent.getShape()).toBe(null);
