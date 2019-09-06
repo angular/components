@@ -3,7 +3,6 @@ package(default_visibility = ["//visibility:public"])
 load("//:packages.bzl", "ROLLUP_GLOBALS")
 load("//tools:defaults.bzl", "ng_module", "ng_package")
 
-# Root "@angular/google-maps" entry-point that does not re-export individual entry-points.
 ng_module(
     name = "google-maps",
     srcs = glob(
