@@ -6,11 +6,16 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
- import {NgModule} from '@angular/core';
- import {GoogleMap} from './google-map';
+import {NgModule} from '@angular/core';
 
- @NgModule({
-   exports: [GoogleMap],
-   declarations: [GoogleMap],
- })
- export class GoogleMapModule {}
+import {MapMarker, MapMarkerModule} from '../map-marker/index';
+
+import {GoogleMap} from './google-map';
+
+@NgModule({
+  imports: [MapMarkerModule],
+  exports: [GoogleMap, MapMarker],
+  declarations: [GoogleMap],
+})
+export class GoogleMapModule {
+}

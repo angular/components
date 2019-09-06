@@ -2,7 +2,7 @@ import {Component} from '@angular/core';
 import {async, TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 
-import {GoogleMapMarker, GoogleMapMarkerModule} from '../google-map-marker/index';
+import {MapMarker, MapMarkerModule} from '../map-marker/index';
 import {
   createMapConstructorSpy,
   createMapSpy,
@@ -40,7 +40,7 @@ describe('GoogleMap', () => {
     TestBed.configureTestingModule({
       imports: [
         GoogleMapModule,
-        GoogleMapMarkerModule,
+        MapMarkerModule,
       ],
       declarations: [TestApp],
     });
@@ -248,12 +248,11 @@ describe('GoogleMap', () => {
     createMapConstructorSpy(mapSpy).and.callThrough();
 
     const fixture = TestBed.createComponent(TestApp);
-    const markerComponent =
-        fixture.debugElement.query(By.directive(GoogleMapMarker)).componentInstance;
-    spyOn(markerComponent, 'setMap').and.callThrough();
+    const markerComponent = fixture.debugElement.query(By.directive(MapMarker)).componentInstance;
+    spyOn(markerComponent, '_setMap').and.callThrough();
     fixture.detectChanges();
 
-    expect(markerComponent.setMap).toHaveBeenCalledWith(mapSpy);
+    expect(markerComponent._setMap).toHaveBeenCalledWith(mapSpy);
   });
 });
 
@@ -267,7 +266,7 @@ describe('GoogleMap', () => {
                          (mapClick)="handleClick($event)"
                          (centerChanged)="handleCenterChanged()"
                          (mapRightclick)="handleRightclick($event)">
-              <google-map-marker></google-map-marker>
+              <map-marker></map-marker>
             </google-map>`,
 })
 class TestApp {

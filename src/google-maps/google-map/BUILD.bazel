@@ -16,7 +16,7 @@ ng_module(
     ),
     module_name = "@angular/google-maps/google-map",
     deps = [
-        "//src/google-maps/google-map-marker",
+        "//src/google-maps/map-marker",
         "@npm//@angular/core",
         "@npm//@types/googlemaps",
         "@npm//rxjs",
@@ -31,7 +31,7 @@ ng_test_library(
     ),
     deps = [
         ":google-map",
-        "//src/google-maps/google-map-marker",
+        "//src/google-maps/map-marker",
         "//src/google-maps/testing",
         "@npm//@angular/platform-browser",
     ],

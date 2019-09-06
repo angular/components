@@ -7,4 +7,4 @@
  */
 
 export * from '@angular/google-maps/google-map';
-export * from '@angular/google-maps/google-map-marker';
+export {MapMarker} from './map-marker/map-marker';

@@ -7,10 +7,11 @@
  */
 
 import {NgModule} from '@angular/core';
-import {GoogleMapMarker} from './google-map-marker';
+import {MapMarker} from './map-marker';
 
 @NgModule({
-  exports: [GoogleMapMarker],
-  declarations: [GoogleMapMarker],
+  exports: [MapMarker],
+  declarations: [MapMarker],
 })
-export class GoogleMapMarkerModule { }
+export class MapMarkerModule {
+}

@@ -1,4 +1,5 @@
 import {
+  AfterContentInit,
   ChangeDetectionStrategy,
   Component,
   ContentChildren,
@@ -11,9 +12,10 @@ import {
   Output,
   QueryList,
 } from '@angular/core';
+import {BehaviorSubject, combineLatest, Observable, Subject} from 'rxjs';
 import {map, shareReplay, take, takeUntil} from 'rxjs/operators';
-import {BehaviorSubject, combineLatest, Observable, ReplaySubject, Subject} from 'rxjs';
-import {GoogleMapMarker} from '@angular/google-maps/google-map-marker';
+
+import {MapMarker} from '../map-marker/index';
 
 interface GoogleMapsWindow extends Window {
   google?: typeof google;
@@ -49,7 +51,7 @@ export const DEFAULT_WIDTH = '500px';
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<div class="map-container"></div><ng-content></ng-content>',
 })
-export class GoogleMap implements OnChanges, OnInit, OnDestroy {
+export class GoogleMap implements OnChanges, OnInit, AfterContentInit, OnDestroy {
   @Input() height = DEFAULT_HEIGHT;
 
   @Input() width = DEFAULT_WIDTH;
@@ -175,20 +177,18 @@ export class GoogleMap implements OnChanges, OnInit, OnDestroy {
    */
   @Output() zoomChanged = new EventEmitter<void>();
 
-  @ContentChildren(GoogleMapMarker) set markers(markers: QueryList<GoogleMapMarker>) {
-    this._markers.next(markers.toArray());
-  }
+  @ContentChildren(MapMarker) _markers: QueryList<MapMarker>;
 
   private _mapEl: HTMLElement;
   private _googleMap!: UpdatedGoogleMap;
+
+  private _googleMapChanges!: Observable<google.maps.Map>;
 
   private readonly _listeners: google.maps.MapsEventListener[] = [];
 
   private readonly _options = new BehaviorSubject<google.maps.MapOptions>(DEFAULT_OPTIONS);
   private readonly _center = new BehaviorSubject<google.maps.LatLngLiteral|undefined>(undefined);
   private readonly _zoom = new BehaviorSubject<number|undefined>(undefined);
-
-  private readonly _markers = new ReplaySubject<GoogleMapMarker[]>(1);
 
   private readonly _destroy = new Subject<void>();
 
@@ -213,15 +213,21 @@ export class GoogleMap implements OnChanges, OnInit, OnDestroy {
 
     const combinedOptionsChanges = this._combineOptions();
 
-    const googleMapChanges = this._initializeMap(combinedOptionsChanges);
-    googleMapChanges.subscribe((googleMap: google.maps.Map) => {
+    this._googleMapChanges = this._initializeMap(combinedOptionsChanges);
+    this._googleMapChanges.subscribe((googleMap: google.maps.Map) => {
       this._googleMap = googleMap as UpdatedGoogleMap;
+
       this._initializeEventHandlers();
     });
 
-    this._watchForOptionsChanges(googleMapChanges, combinedOptionsChanges);
+    this._watchForOptionsChanges(combinedOptionsChanges);
+  }
 
-    this._watchForMarkerChanges(googleMapChanges);
+  ngAfterContentInit() {
+    for (const marker of this._markers.toArray()) {
+      marker._setMap(this._googleMap);
+    }
+    this._watchForMarkerChanges();
   }
 
   ngOnDestroy() {
@@ -402,9 +408,8 @@ export class GoogleMap implements OnChanges, OnInit, OnDestroy {
   }
 
   private _watchForOptionsChanges(
-      googleMapChanges: Observable<google.maps.Map>,
       optionsChanges: Observable<google.maps.MapOptions>) {
-    combineLatest(googleMapChanges, optionsChanges)
+    combineLatest(this._googleMapChanges, optionsChanges)
         .pipe(takeUntil(this._destroy))
         .subscribe(([googleMap, options]) => {
           googleMap.setOptions(options);
@@ -457,12 +462,12 @@ export class GoogleMap implements OnChanges, OnInit, OnDestroy {
     }
   }
 
-  private _watchForMarkerChanges(googleMapChanges: Observable<google.maps.Map>) {
-    combineLatest(googleMapChanges, this._markers)
+  private _watchForMarkerChanges() {
+    combineLatest(this._googleMapChanges, this._markers.changes)
         .pipe(takeUntil(this._destroy))
         .subscribe(([googleMap, markers]) => {
           for (let marker of markers) {
-            marker.setMap(googleMap);
+            marker._setMap(googleMap);
           }
         });
   }

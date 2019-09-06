@@ -12,6 +12,7 @@ ng_module(
     ),
     module_name = "@angular/google-maps",
     deps = ["//src/google-maps/%s" % p for p in GOOGLE_MAPS_PACKAGES] + [
+        "//src/google-maps/map-marker",
         "@npm//@angular/core",
         "@npm//@types/googlemaps",
     ],

@@ -8,12 +8,12 @@ import {
   TestingWindow
 } from '../testing/fake-google-map-utils';
 
-import {DEFAULT_MARKER_OPTIONS, GoogleMapMarker, GoogleMapMarkerModule} from './index';
+import {DEFAULT_MARKER_OPTIONS, MapMarker, MapMarkerModule} from './index';
 
-describe('GoogleMapMarker', () => {
+describe('MapMarker', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [GoogleMapMarkerModule],
+      imports: [MapMarkerModule],
       declarations: [TestApp],
     });
   }));
@@ -28,14 +28,13 @@ describe('GoogleMapMarker', () => {
   });
 
   it('initializes a Google Map marker', () => {
-    let markerSpy = createMarkerSpy(DEFAULT_MARKER_OPTIONS);
-    let markerConstructorSpy = createMarkerConstructorSpy(markerSpy).and.callThrough();
+    const markerSpy = createMarkerSpy(DEFAULT_MARKER_OPTIONS);
+    const markerConstructorSpy = createMarkerConstructorSpy(markerSpy).and.callThrough();
 
     const fixture = TestBed.createComponent(TestApp);
     const fakeMap = {} as unknown as google.maps.Map;
-    const markerComponent =
-        fixture.debugElement.query(By.directive(GoogleMapMarker)).componentInstance;
-    markerComponent.setMap(fakeMap);
+    const markerComponent = fixture.debugElement.query(By.directive(MapMarker)).componentInstance;
+    markerComponent._setMap(fakeMap);
     fixture.detectChanges();
 
     expect(markerConstructorSpy).toHaveBeenCalledWith({
@@ -56,17 +55,16 @@ describe('GoogleMapMarker', () => {
       clickable: false,
       map: fakeMap,
     };
-    let markerSpy = createMarkerSpy(options);
-    let markerConstructorSpy = createMarkerConstructorSpy(markerSpy).and.callThrough();
+    const markerSpy = createMarkerSpy(options);
+    const markerConstructorSpy = createMarkerConstructorSpy(markerSpy).and.callThrough();
 
     const fixture = TestBed.createComponent(TestApp);
     fixture.componentInstance.position = options.position;
     fixture.componentInstance.title = options.title;
     fixture.componentInstance.label = options.label;
     fixture.componentInstance.clickable = options.clickable;
-    const markerComponent =
-        fixture.debugElement.query(By.directive(GoogleMapMarker)).componentInstance;
-    markerComponent.setMap(fakeMap);
+    const markerComponent = fixture.debugElement.query(By.directive(MapMarker)).componentInstance;
+    markerComponent._setMap(fakeMap);
     fixture.detectChanges();
 
     expect(markerConstructorSpy).toHaveBeenCalledWith(options);
@@ -81,14 +79,13 @@ describe('GoogleMapMarker', () => {
       clickable: false,
       icon: 'icon name',
     };
-    let markerSpy = createMarkerSpy(options);
-    let markerConstructorSpy = createMarkerConstructorSpy(markerSpy).and.callThrough();
+    const markerSpy = createMarkerSpy(options);
+    const markerConstructorSpy = createMarkerConstructorSpy(markerSpy).and.callThrough();
 
     const fixture = TestBed.createComponent(TestApp);
     fixture.componentInstance.options = options;
-    const markerComponent =
-        fixture.debugElement.query(By.directive(GoogleMapMarker)).componentInstance;
-    markerComponent.setMap(fakeMap);
+    const markerComponent = fixture.debugElement.query(By.directive(MapMarker)).componentInstance;
+    markerComponent._setMap(fakeMap);
     fixture.detectChanges();
 
     expect(markerConstructorSpy).toHaveBeenCalledWith({...options, map: fakeMap});
@@ -111,8 +108,8 @@ describe('GoogleMapMarker', () => {
       icon: 'icon name',
       map: fakeMap,
     };
-    let markerSpy = createMarkerSpy(options);
-    let markerConstructorSpy = createMarkerConstructorSpy(markerSpy).and.callThrough();
+    const markerSpy = createMarkerSpy(options);
+    const markerConstructorSpy = createMarkerConstructorSpy(markerSpy).and.callThrough();
 
     const fixture = TestBed.createComponent(TestApp);
     fixture.componentInstance.position = expectedOptions.position;
@@ -120,25 +117,23 @@ describe('GoogleMapMarker', () => {
     fixture.componentInstance.label = expectedOptions.label;
     fixture.componentInstance.clickable = expectedOptions.clickable;
     fixture.componentInstance.options = options;
-    const markerComponent =
-        fixture.debugElement.query(By.directive(GoogleMapMarker)).componentInstance;
-    markerComponent.setMap(fakeMap);
+    const markerComponent = fixture.debugElement.query(By.directive(MapMarker)).componentInstance;
+    markerComponent._setMap(fakeMap);
     fixture.detectChanges();
 
     expect(markerConstructorSpy).toHaveBeenCalledWith(expectedOptions);
   });
 
   it('sets the map on the marker only once', () => {
-    let markerSpy = createMarkerSpy(DEFAULT_MARKER_OPTIONS);
-    let markerConstructorSpy = createMarkerConstructorSpy(markerSpy).and.callThrough();
+    const markerSpy = createMarkerSpy(DEFAULT_MARKER_OPTIONS);
+    const markerConstructorSpy = createMarkerConstructorSpy(markerSpy).and.callThrough();
 
     const fixture = TestBed.createComponent(TestApp);
     const fakeMap = {} as unknown as google.maps.Map;
     const fakeMap2 = {testValue: 'test'} as unknown as google.maps.Map;
-    const markerComponent =
-        fixture.debugElement.query(By.directive(GoogleMapMarker)).componentInstance;
-    markerComponent.setMap(fakeMap);
-    markerComponent.setMap(fakeMap2);
+    const markerComponent = fixture.debugElement.query(By.directive(MapMarker)).componentInstance;
+    markerComponent._setMap(fakeMap);
+    markerComponent._setMap(fakeMap2);
     fixture.detectChanges();
 
     expect(markerConstructorSpy).toHaveBeenCalledWith({
@@ -152,14 +147,13 @@ describe('GoogleMapMarker', () => {
   });
 
   it('exposes methods that provide information about the marker', () => {
-    let markerSpy = createMarkerSpy(DEFAULT_MARKER_OPTIONS);
+    const markerSpy = createMarkerSpy(DEFAULT_MARKER_OPTIONS);
     createMarkerConstructorSpy(markerSpy).and.callThrough();
 
     const fixture = TestBed.createComponent(TestApp);
     const fakeMap = {} as unknown as google.maps.Map;
-    const markerComponent =
-        fixture.debugElement.query(By.directive(GoogleMapMarker)).componentInstance;
-    markerComponent.setMap(fakeMap);
+    const markerComponent = fixture.debugElement.query(By.directive(MapMarker)).componentInstance;
+    markerComponent._setMap(fakeMap);
     fixture.detectChanges();
 
     markerSpy.getAnimation.and.returnValue(null);
@@ -200,14 +194,13 @@ describe('GoogleMapMarker', () => {
   });
 
   it('initializes marker event handlers', () => {
-    let markerSpy = createMarkerSpy(DEFAULT_MARKER_OPTIONS);
+    const markerSpy = createMarkerSpy(DEFAULT_MARKER_OPTIONS);
     createMarkerConstructorSpy(markerSpy).and.callThrough();
 
     const fixture = TestBed.createComponent(TestApp);
     const fakeMap = {} as unknown as google.maps.Map;
-    const markerComponent =
-        fixture.debugElement.query(By.directive(GoogleMapMarker)).componentInstance;
-    markerComponent.setMap(fakeMap);
+    const markerComponent = fixture.debugElement.query(By.directive(MapMarker)).componentInstance;
+    markerComponent._setMap(fakeMap);
     fixture.detectChanges();
 
     expect(markerSpy.addListener)
@@ -240,13 +233,13 @@ describe('GoogleMapMarker', () => {
 
 @Component({
   selector: 'test-app',
-  template: `<google-map-marker [title]="title"
-                                [position]="position"
-                                [label]="label"
-                                [clickable]="clickable"
-                                [options]="options"
-                                (mapClick)="handleClick()"
-                                (positionChanged)="handlePositionChanged()"></google-map-marker>`,
+  template: `<map-marker [title]="title"
+                         [position]="position"
+                         [label]="label"
+                         [clickable]="clickable"
+                         [options]="options"
+                         (mapClick)="handleClick()"
+                         (positionChanged)="handlePositionChanged()"></map-marker>`,
 })
 class TestApp {
   title?: string;

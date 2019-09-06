@@ -2,19 +2,17 @@ package(default_visibility = ["//visibility:public"])
 
 load(
     "//tools:defaults.bzl",
-    "markdown_to_html",
     "ng_module",
     "ng_test_library",
     "ng_web_test_suite",
 )
 
 ng_module(
-    name = "google-map-marker",
+    name = "map-marker",
     srcs = glob(
         ["**/*.ts"],
         exclude = ["**/*.spec.ts"],
     ),
-    module_name = "@angular/google-maps/google-map-marker",
     deps = [
         "@npm//@angular/core",
         "@npm//@types/googlemaps",
@@ -29,7 +27,7 @@ ng_test_library(
         exclude = ["**/*.e2e.spec.ts"],
     ),
     deps = [
-        ":google-map-marker",
+        ":map-marker",
         "//src/google-maps/testing",
         "@npm//@angular/platform-browser",
     ],
@@ -38,11 +36,6 @@ ng_test_library(
 ng_web_test_suite(
     name = "unit_tests",
     deps = [":unit_test_sources"],
-)
-
-markdown_to_html(
-    name = "overview",
-    srcs = [":google-map-marker.md"],
 )
 
 filegroup(

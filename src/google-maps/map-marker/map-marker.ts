@@ -23,28 +23,33 @@ export const DEFAULT_MARKER_OPTIONS = {
  * @see developers.google.com/maps/documentation/javascript/reference/marker
  */
 @Component({
-  selector: 'google-map-marker',
+  selector: 'map-marker',
   template: '<ng-content></ng-content>',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class GoogleMapMarker implements OnInit, OnDestroy {
-  @Input() set options(options: google.maps.MarkerOptions) {
+export class MapMarker implements OnInit, OnDestroy {
+  @Input()
+  set options(options: google.maps.MarkerOptions) {
     this._options.next(options || DEFAULT_MARKER_OPTIONS);
   }
 
-  @Input() set title(title: string) {
+  @Input()
+  set title(title: string) {
     this._title.next(title);
   }
 
-  @Input() set position(position: google.maps.LatLngLiteral) {
+  @Input()
+  set position(position: google.maps.LatLngLiteral) {
     this._position.next(position);
   }
 
-  @Input() set label(label: string|google.maps.MarkerLabel) {
+  @Input()
+  set label(label: string|google.maps.MarkerLabel) {
     this._label.next(label);
   }
 
-  @Input() set clickable(clickable: boolean) {
+  @Input()
+  set clickable(clickable: boolean) {
     this._clickable.next(clickable);
   }
 
@@ -218,7 +223,7 @@ export class GoogleMapMarker implements OnInit, OnDestroy {
     }
   }
 
-  setMap(googleMap: google.maps.Map) {
+  _setMap(googleMap: google.maps.Map) {
     if (!this._hasMap) {
       this._map.next(googleMap);
       this._hasMap = true;
