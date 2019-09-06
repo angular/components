@@ -9,12 +9,17 @@
 import {NgModule} from '@angular/core';
 
 import {MapMarker, MapMarkerModule} from './map-marker/index';
-
 import {GoogleMap, GoogleMapModule} from './google-map/index';
 
 @NgModule({
-  imports: [GoogleMapModule, MapMarkerModule,],
-  exports: [GoogleMap, MapMarker,],
+  imports: [
+    GoogleMapModule,
+    MapMarkerModule,
+  ],
+  exports: [
+    GoogleMap,
+    MapMarker,
+  ],
 })
 export class GoogleMapsModule {
 }
