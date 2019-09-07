@@ -3,6 +3,7 @@ import {Component, DebugElement} from '@angular/core';
 import {By} from '@angular/platform-browser';
 import {MatButtonModule, MatButton} from './index';
 import {MatRipple, ThemePalette} from '@angular/material/core';
+import {MAT_BUTTON_DEFAULT_OPTIONS} from './button';
 
 
 describe('MatButton', () => {
@@ -11,6 +12,9 @@ describe('MatButton', () => {
     TestBed.configureTestingModule({
       imports: [MatButtonModule],
       declarations: [TestApp],
+      providers: [
+        {provide: MAT_BUTTON_DEFAULT_OPTIONS, useValue: {type: 'submit'}}
+      ]
     });
 
     TestBed.compileComponents();
@@ -39,6 +43,20 @@ describe('MatButton', () => {
 
     expect(buttonDebugElement.nativeElement.classList).not.toContain('mat-accent');
     expect(aDebugElement.nativeElement.classList).not.toContain('mat-accent');
+  });
+
+  it('should be able to globally set a default type', () => {
+    const fixture = TestBed.createComponent(TestApp);
+    const buttonElement =
+        fixture.debugElement.query(By.css('button')).nativeElement as HTMLButtonElement;
+    const fabElement =
+        fixture.debugElement.query(By.css('[mat-fab]')).nativeElement as HTMLButtonElement;
+    fixture.detectChanges();
+
+    expect(buttonElement.getAttribute('type'))
+        .toBe('button', 'Expected type not to be set via default options if already specified');
+    expect(fabElement.getAttribute('type'))
+        .toBe('submit', 'Expected type to be set via default options');
   });
 
   it('should expose the ripple instance', () => {

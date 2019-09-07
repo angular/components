@@ -32,6 +32,24 @@ certain locales. It is also worth noting that using ALL CAPS in the text itself 
 screen-readers, which will read the text character-by-character. We leave the decision of how to
 approach this to the consuming app.
 
+### Automatically setting the `type` attribute
+
+In most browsers, the `type` attribute of a `<button>` is set to `submit` if not specified.
+Use the `MAT_BUTTON_DEFAULT_OPTIONS` injection token to automatically set `type`, e.g. to `button`.
+
+```ts
+@NgModule({
+  providers: [
+    {
+      provide: MAT_BUTTON_DEFAULT_OPTIONS,
+      useValue: {
+        type: 'button'
+      }
+    }
+  ]
+})
+```
+
 ### Accessibility
 Angular Material uses native `<button>` and `<a>` elements to ensure an accessible experience by
 default. The `<button>` element should be used for any interaction that _performs an action on the

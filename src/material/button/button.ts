@@ -17,6 +17,7 @@ import {
   Optional,
   Inject,
   Input,
+  InjectionToken,
 } from '@angular/core';
 import {
   CanColor,
@@ -58,6 +59,24 @@ class MatButtonBase {
 const _MatButtonMixinBase: CanDisableRippleCtor & CanDisableCtor & CanColorCtor &
     typeof MatButtonBase = mixinColor(mixinDisabled(mixinDisableRipple(MatButtonBase)));
 
+/** Object that can be used to configure the default options for `mat-button`. */
+export interface MatButtonDefaultOptions {
+  /** Default value for the type attribute of the HTMLButtonElement */
+  type?: 'button' | 'reset' | 'submit';
+}
+
+/** Injection token to be used to override the default options for `mat-button`. */
+export const MAT_BUTTON_DEFAULT_OPTIONS =
+    new InjectionToken<MatButtonDefaultOptions>('mat-button-default-options', {
+      providedIn: 'root',
+      factory: MAT_BUTTON_DEFAULT_OPTIONS_FACTORY
+    });
+
+/** @docs-private */
+export function MAT_BUTTON_DEFAULT_OPTIONS_FACTORY(): MatButtonDefaultOptions {
+  return {};
+}
+
 /**
  * Material design button.
  */
@@ -91,21 +110,30 @@ export class MatButton extends _MatButtonMixinBase
 
   constructor(elementRef: ElementRef,
               private _focusMonitor: FocusMonitor,
-              @Optional() @Inject(ANIMATION_MODULE_TYPE) public _animationMode: string) {
+              @Optional() @Inject(ANIMATION_MODULE_TYPE) public _animationMode: string,
+              @Inject(MAT_BUTTON_DEFAULT_OPTIONS) defaults: MatButtonDefaultOptions) {
     super(elementRef);
+    const element: HTMLElement = elementRef.nativeElement;
+
+    // Set the default button type if not already specified.
+    if (defaults.type &&
+        element.nodeName.toLowerCase() === 'button' &&
+        !element.hasAttribute('type')) {
+      element.setAttribute('type', defaults.type);
+    }
 
     // For each of the variant selectors that is present in the button's host
     // attributes, add the correct corresponding class.
     for (const attr of BUTTON_HOST_ATTRIBUTES) {
       if (this._hasHostAttributes(attr)) {
-        (this._getHostElement() as HTMLElement).classList.add(attr);
+        element.classList.add(attr);
       }
     }
 
     // Add a class that applies to all buttons. This makes it easier to target if somebody
     // wants to target all Material buttons. We do it here rather than `host` to ensure that
     // the class is applied to derived classes.
-    elementRef.nativeElement.classList.add('mat-button-base');
+    element.classList.add('mat-button-base');
 
     this._focusMonitor.monitor(this._elementRef, true);
 
@@ -170,8 +198,9 @@ export class MatAnchor extends MatButton {
   constructor(
     focusMonitor: FocusMonitor,
     elementRef: ElementRef,
-    @Optional() @Inject(ANIMATION_MODULE_TYPE) animationMode: string) {
-    super(elementRef, focusMonitor, animationMode);
+    @Optional() @Inject(ANIMATION_MODULE_TYPE) animationMode: string,
+    @Inject(MAT_BUTTON_DEFAULT_OPTIONS) defaults: MatButtonDefaultOptions) {
+    super(elementRef, focusMonitor, animationMode, defaults);
   }
 
   _haltDisabledEvents(event: Event) {

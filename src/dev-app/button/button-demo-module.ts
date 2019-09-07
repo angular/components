@@ -7,7 +7,7 @@
  */
 
 import {NgModule} from '@angular/core';
-import {MatButtonModule} from '@angular/material/button';
+import {MatButtonModule, MAT_BUTTON_DEFAULT_OPTIONS} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import {RouterModule} from '@angular/router';
 import {ButtonDemo} from './button-demo';
@@ -19,6 +19,9 @@ import {ButtonDemo} from './button-demo';
     RouterModule.forChild([{path: '', component: ButtonDemo}]),
   ],
   declarations: [ButtonDemo],
+  providers: [
+    {provide: MAT_BUTTON_DEFAULT_OPTIONS, useValue: {type: 'button'}}
+  ]
 })
 export class ButtonDemoModule {
 }
