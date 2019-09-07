@@ -232,7 +232,7 @@ export class MatTooltip implements OnDestroy, OnInit {
 
     this._manualListeners.forEach((listener, event) => element.addEventListener(event, listener));
 
-    _focusMonitor.monitor(_elementRef).pipe(takeUntil(this._destroyed)).subscribe(origin => {
+    _focusMonitor.monitor(_elementRef, true).pipe(takeUntil(this._destroyed)).subscribe(origin => {
       // Note that the focus monitor runs outside the Angular zone.
       if (!origin) {
         _ngZone.run(() => this.hide(0));
