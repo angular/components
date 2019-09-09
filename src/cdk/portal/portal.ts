@@ -14,6 +14,8 @@ import {
     EmbeddedViewRef,
     Injector,
     ComponentFactoryResolver,
+    Directive,
+    NgModule,
 } from '@angular/core';
 import {
     throwNullPortalOutletError,
@@ -179,6 +181,13 @@ export type PortalHost = PortalOutlet;
  * Partial implementation of PortalOutlet that handles attaching
  * ComponentPortal and TemplatePortal.
  */
+@Directive({
+  // The @Directive with selector is required here because the CDK is still based on Angular 8.x.
+  // In Angular 9.x, `@Directive()` without any selector is legal (and `BasePortalModule` is not
+  // necessary either).
+  // TODO(alxhub): convert to a selectorless Directive when the CDK upgrades to Angular 9.
+  selector: 'abstract-base-portal-outlet',
+})
 export abstract class BasePortalOutlet implements PortalOutlet {
   /** The portal currently attached to the host. */
   protected _attachedPortal: Portal<any> | null;
@@ -258,6 +267,13 @@ export abstract class BasePortalOutlet implements PortalOutlet {
       this._disposeFn = null;
     }
   }
+}
+
+// TODO(alxhub): remove when `BasePortalOutlet` becomes a selectorless Directive.
+@NgModule({
+  declarations: [BasePortalOutlet as any],
+})
+export class BasePortalOutletModule {
 }
 
 /**

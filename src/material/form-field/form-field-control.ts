@@ -7,10 +7,18 @@
  */
 
 import {Observable} from 'rxjs';
+import {Directive, NgModule} from '@angular/core';
 import {NgControl} from '@angular/forms';
 
 
 /** An interface which allows a control to work inside of a `MatFormField`. */
+@Directive({
+  // The @Directive with selector is required here because Material is still based on Angular 8.x.
+  // In Angular 9.x, `@Directive()` without any selector is legal (and `MatFormFieldControlModule`
+  // is not necessary either).
+  // TODO(alxhub): convert to a selectorless Directive when Material upgrades to Angular 9.
+  selector: 'abstract-mat-form-field-control',
+})
 export abstract class MatFormFieldControl<T> {
   /** The value of the control. */
   value: T | null;
@@ -66,4 +74,11 @@ export abstract class MatFormFieldControl<T> {
 
   /** Handles a click on the control's container. */
   abstract onContainerClick(event: MouseEvent): void;
+}
+
+// TODO(alxhub): remove when `MatFormFieldControl` becomes a selectorless Directive.
+@NgModule({
+  declarations: [MatFormFieldControl as any],
+})
+export class MatFormFieldControlModule {
 }
