@@ -57,13 +57,17 @@ function patchTestBedToDestroyFixturesAfterEveryTest(testBedInstance: TestBed) {
 }
 
 
-// Filter out any tests explicitly given in the blocklist. The blocklist is empty in the
-// components repository, but the file will be overwritten if the framework repository runs
-// the Angular component test suites against the latest snapshots. This is helpful because
-// sometimes breaking changes that break individual tests land in the framework repository.
-// It should be possible to disable these tests until the component repository migrated the
-// broken tests once the breaking change is released.
 (jasmine.getEnv() as any).configure({
+  // Disable test randomization so that we get consistent
+  // output between the local environment and the CI.
+  random: false,
+
+  // Filter out any tests explicitly given in the blocklist. The blocklist is empty in the
+  // components repository, but the file will be overwritten if the framework repository runs
+  // the Angular component test suites against the latest snapshots. This is helpful because
+  // sometimes breaking changes that break individual tests land in the framework repository.
+  // It should be possible to disable these tests until the component repository migrated the
+  // broken tests once the breaking change is released.
   specFilter: function(spec: jasmine.Spec) {
     return !testBlocklist || !testBlocklist[spec.getFullName()];
   }
