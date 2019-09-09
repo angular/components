@@ -1,0 +1,15 @@
+{{> header}}
+
+{{#each packageGroups}}
+### {{title}}
+
+|            |                       |
+| ---------- | --------------------- |
+{{#each commits}}
+| <img src="{{typeImageUrl}}" alt="{{typeDescription}}"> | {{> commit root=@root}} |
+{{/each}}
+
+{{/each}}
+
+{{> footer}}
+
