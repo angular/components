@@ -6,13 +6,13 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {ComponentHarness} from '@angular/cdk/testing';
+import {MatDrawerHarness} from './mdc-drawer-harness';
 
 
 /**
  * Harness for interacting with a MDC-based mat-sidenav in tests.
  * @dynamic
  */
-export class MatSidenavHarness extends ComponentHarness {
+export class MatSidenavHarness extends MatDrawerHarness {
   // TODO: implement once MDC sidenav is done.
 }
