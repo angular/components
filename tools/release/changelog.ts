@@ -10,6 +10,23 @@ const conventionalChangelog = require('conventional-changelog');
 const changelogCompare = require('conventional-changelog-writer/lib/util');
 const merge2 = require('merge2');
 
+/** Interface that describes a package in the changelog. */
+interface ChangelogPackage {
+  commits: any[];
+  breakingChanges: any[];
+}
+
+/** Hardcoded order of packages shown in the changelog. */
+const changelogPackageOrder = [
+  'cdk',
+  'material',
+  'google-maps',
+  'youtube-player',
+  'material-moment-adapter',
+  'cdk-experimental',
+  'material-experimental',
+];
+
 /** Prompts for a changelog release name and prepends the new changelog. */
 export async function promptAndGenerateChangelog(changelogPath: string) {
   const releaseName = await promptChangelogReleaseName();
@@ -80,14 +97,15 @@ function createChangelogWriterOptions(changelogPath: string) {
 
   return {
     // Overwrite the changelog templates so that we can render the commits grouped
-    // by package names.
+    // by package names. Templates are based on the original templates of the
+    // angular preset: "conventional-changelog-angular/templates".
     mainTemplate: readFileSync(join(__dirname, 'changelog-root-template.hbs'), 'utf8'),
     commitPartial: readFileSync(join(__dirname, 'changelog-commit-template.hbs'), 'utf8'),
 
     // Specify a writer option that can be used to modify the content of a new changelog section.
     // See: conventional-changelog/tree/master/packages/conventional-changelog-writer
     finalizeContext: (context: any) => {
-      const packageGroups: {[packageName: string]: any[]} = {};
+      const packageGroups: {[packageName: string]: ChangelogPackage} = {};
 
       context.commitGroups.forEach((group: any) => {
         group.commits.forEach((commit: any) => {
@@ -115,48 +133,67 @@ function createChangelogWriterOptions(changelogPath: string) {
           // require specifying the "material" package explicitly, we can remove
           // the fallback to the "material" package.
           const packageName = commit.package || 'material';
-          const {color, title} = getTitleAndColorOfTypeLabel(commit.type);
+          const type = getTypeOfCommitGroupDescription(group.title);
 
           if (!packageGroups[packageName]) {
-            packageGroups[packageName] = [];
+            packageGroups[packageName] = {commits: [], breakingChanges: []};
           }
+          const packageGroup = packageGroups[packageName];
 
-          packageGroups[packageName].push({
-            typeDescription: title,
-            typeImageUrl: `https://img.shields.io/badge/-${title}-${color}`,
-            ...commit
-          });
+          packageGroup.breakingChanges.push(...commit.notes);
+          packageGroup.commits.push({...commit, type});
         });
       });
 
-      context.packageGroups = Object.keys(packageGroups).sort().map(pkgName => {
-        return {
-          title: pkgName,
-          commits: packageGroups[pkgName].sort(commitSortFunction),
-        };
-      });
+      context.packageGroups =
+          Object.keys(packageGroups).sort(preferredOrderComparator).map(pkgName => {
+            const packageGroup = packageGroups[pkgName];
+            return {
+              title: pkgName,
+              commits: packageGroup.commits.sort(commitSortFunction),
+              breakingChanges: packageGroup.breakingChanges,
+            };
+          });
 
       return context;
     }
   };
 }
 
-/** Gets the title and color from a commit type label. */
-function getTitleAndColorOfTypeLabel(typeLabel: string): {title: string, color: string} {
-  if (typeLabel === `Features`) {
-    return {title: 'feature', color: 'green'};
-  } else if (typeLabel === `Bug Fixes`) {
-    return {title: 'bug fix', color: 'orange'};
-  } else if (typeLabel === `Performance Improvements`) {
-    return {title: 'performance', color: 'blue'};
-  } else if (typeLabel === `Reverts`) {
-    return {title: 'revert', color: 'grey'};
-  } else if (typeLabel === `Documentation`) {
-    return {title: 'docs', color: 'darkgreen'};
-  } else if (typeLabel === `refactor`) {
-    return {title: 'refactor', color: 'lightgrey'};
+/**
+ * Comparator function that sorts a given array of strings based on the
+ * hardcoded changelog package order. Entries which are not hardcoded are
+ * sorted in alphabetical order after the hardcoded entries.
+ */
+function preferredOrderComparator(a: string, b: string): number {
+  const aIndex = changelogPackageOrder.indexOf(a);
+  const bIndex = changelogPackageOrder.indexOf(b);
+  // If a package name could not be found in the hardcoded order, it should be
+  // sorted after the hardcoded entries in alphabetical order.
+  if (aIndex === -1) {
+    return bIndex === -1 ? a.localeCompare(b) : 1;
+  } else if (bIndex === -1) {
+    return -1;
   }
-  return {title: typeLabel, color: 'yellow'};
+  return aIndex - bIndex;
+}
+
+/** Gets the type of a commit group description. */
+function getTypeOfCommitGroupDescription(description: string): string {
+  if (description === 'Features') {
+    return 'feature';
+  } else if (description === 'Bug Fixes') {
+    return 'bug fix';
+  } else if (description === 'Performance Improvements') {
+    return 'performance';
+  } else if (description === 'Reverts') {
+    return 'revert';
+  } else if (description === 'Documentation') {
+    return 'docs';
+  } else if (description === 'Code Refactoring') {
+    return 'refactor';
+  }
+  return description.toLowerCase();
 }
 
 /** Entry-point for generating the changelog when called through the CLI. */

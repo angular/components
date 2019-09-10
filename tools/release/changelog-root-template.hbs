@@ -3,13 +3,19 @@
 {{#each packageGroups}}
 ### {{title}}
 
+{{#if breakingChanges.length}}
+_Breaking changes:_
+
+{{#each breakingChanges}}
+* {{#if commit.scope}}**{{commit.scope}}:** {{/if}}{{text}}
+{{/each}}
+
+{{/if}}
 |            |                       |
 | ---------- | --------------------- |
 {{#each commits}}
-| <img src="{{typeImageUrl}}" alt="{{typeDescription}}"> | {{> commit root=@root}} |
+| {{type}} | {{> commit root=@root}} |
 {{/each}}
 
 {{/each}}
-
-{{> footer}}
 
