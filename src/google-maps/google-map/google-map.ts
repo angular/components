@@ -24,6 +24,7 @@ import {
 import {BehaviorSubject, combineLatest, Observable, Subject} from 'rxjs';
 import {map, shareReplay, take, takeUntil} from 'rxjs/operators';
 
+import {MapInfoWindow} from '../map-info-window';
 import {MapMarker} from '../map-marker/index';
 
 interface GoogleMapsWindow extends Window {
@@ -190,6 +191,8 @@ export class GoogleMap implements OnChanges, OnInit, AfterContentInit, OnDestroy
 
   @ContentChildren(MapMarker) _markers: QueryList<MapMarker>;
 
+  @ContentChildren(MapInfoWindow) _infoWindows: QueryList<MapInfoWindow>;
+
   private _mapEl: HTMLElement;
   private _googleMap!: UpdatedGoogleMap;
 
@@ -238,7 +241,11 @@ export class GoogleMap implements OnChanges, OnInit, AfterContentInit, OnDestroy
     for (const marker of this._markers.toArray()) {
       marker._setMap(this._googleMap);
     }
+    for (const infoWindow of this._infoWindows.toArray()) {
+      infoWindow._setMap(this._googleMap);
+    }
     this._watchForMarkerChanges();
+    this._watchForInfoWindowChanges();
   }
 
   ngOnDestroy() {
@@ -479,6 +486,16 @@ export class GoogleMap implements OnChanges, OnInit, AfterContentInit, OnDestroy
         .subscribe(([googleMap, markers]) => {
           for (let marker of markers) {
             marker._setMap(googleMap);
+          }
+        });
+  }
+
+  private _watchForInfoWindowChanges() {
+    combineLatest(this._googleMapChanges, this._infoWindows.changes)
+        .pipe(takeUntil(this._destroy))
+        .subscribe(([googleMap, infoWindows]) => {
+          for (let infoWindow of infoWindows) {
+            infoWindow._setMap(googleMap);
           }
         });
   }

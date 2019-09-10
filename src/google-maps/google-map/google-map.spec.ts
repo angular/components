@@ -2,6 +2,7 @@ import {Component} from '@angular/core';
 import {async, TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 
+import {MapInfoWindow, MapInfoWindowModule} from '../map-info-window/index';
 import {MapMarker, MapMarkerModule} from '../map-marker/index';
 import {
   createMapConstructorSpy,
@@ -40,6 +41,7 @@ describe('GoogleMap', () => {
     TestBed.configureTestingModule({
       imports: [
         GoogleMapModule,
+        MapInfoWindowModule,
         MapMarkerModule,
       ],
       declarations: [TestApp],
@@ -254,6 +256,19 @@ describe('GoogleMap', () => {
 
     expect(markerComponent._setMap).toHaveBeenCalledWith(mapSpy);
   });
+
+  it('calls setMap on child info window components', () => {
+    mapSpy = createMapSpy(DEFAULT_OPTIONS);
+    createMapConstructorSpy(mapSpy).and.callThrough();
+
+    const fixture = TestBed.createComponent(TestApp);
+    const infoWindowComponent =
+        fixture.debugElement.query(By.directive(MapInfoWindow)).componentInstance;
+    spyOn(infoWindowComponent, '_setMap').and.callThrough();
+    fixture.detectChanges();
+
+    expect(infoWindowComponent._setMap).toHaveBeenCalledWith(mapSpy);
+  });
 });
 
 @Component({
@@ -267,6 +282,7 @@ describe('GoogleMap', () => {
                          (centerChanged)="handleCenterChanged()"
                          (mapRightclick)="handleRightclick($event)">
               <map-marker></map-marker>
+              <map-info-window>test content</map-info-window>
             </google-map>`,
 })
 class TestApp {
