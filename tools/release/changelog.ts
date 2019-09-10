@@ -27,6 +27,9 @@ const changelogPackageOrder = [
   'material-experimental',
 ];
 
+/** List of packages which are excluded in the changelog. */
+const excludedChangelogPackages = ['google-maps'];
+
 /** Prompts for a changelog release name and prepends the new changelog. */
 export async function promptAndGenerateChangelog(changelogPath: string) {
   const releaseName = await promptChangelogReleaseName();
@@ -145,15 +148,19 @@ function createChangelogWriterOptions(changelogPath: string) {
         });
       });
 
-      context.packageGroups =
-          Object.keys(packageGroups).sort(preferredOrderComparator).map(pkgName => {
-            const packageGroup = packageGroups[pkgName];
-            return {
-              title: pkgName,
-              commits: packageGroup.commits.sort(commitSortFunction),
-              breakingChanges: packageGroup.breakingChanges,
-            };
-          });
+      const sortedPackageGroupNames =
+          Object.keys(packageGroups)
+              .filter(pkgName => !excludedChangelogPackages.includes(pkgName))
+              .sort(preferredOrderComparator);
+
+      context.packageGroups = sortedPackageGroupNames.map(pkgName => {
+        const packageGroup = packageGroups[pkgName];
+        return {
+          title: pkgName,
+          commits: packageGroup.commits.sort(commitSortFunction),
+          breakingChanges: packageGroup.breakingChanges,
+        };
+      });
 
       return context;
     }
