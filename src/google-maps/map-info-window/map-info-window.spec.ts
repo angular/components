@@ -151,8 +151,8 @@ describe('MapInfoWindow', () => {
     infoWindowSpy.getContent.and.returnValue('test content');
     expect(infoWindowComponent.getContent()).toBe('test content');
 
-    infoWindowSpy.getPosition.and.returnValue(null);
-    expect(infoWindowComponent.getPosition()).toBe(null);
+    infoWindowComponent.getPosition();
+    expect(infoWindowSpy.getPosition).toHaveBeenCalled();
 
     infoWindowSpy.getZIndex.and.returnValue(5);
     expect(infoWindowComponent.getZIndex()).toBe(5);
