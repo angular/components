@@ -81,3 +81,9 @@ shelljs.sed('-i',
 shelljs.sed('-i', /("metadata": outs.metadata),/,
   `$1 + [m for dep in ctx.attr.deps if hasattr(dep, "angular") for m in dep.angular.metadata],`,
   'node_modules/@angular/bazel/src/ng_module.bzl');
+
+// Workaround for https://github.com/angular/angular/issues/32603. Note that we don't
+// want to apply the patch if it has been applied already.
+if (!shelljs.test('-f', 'node_modules/@angular/bazel/src/ng_package/rollup_bin.js')) {
+  shelljs.cat(path.join(__dirname, './rollup_windows_arguments.patch')).exec('patch -p0');
+}
