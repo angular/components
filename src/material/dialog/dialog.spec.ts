@@ -207,6 +207,22 @@ describe('MatDialog', () => {
     expect(overlayContainerElement.querySelector('mat-dialog-container')).toBeNull();
   }));
 
+  it('should close a dialog and get back a result even if no subscription is made until' +
+       'after the dialog closes', fakeAsync(() => {
+    const dialogRef = dialog.open(PizzaMsg, { viewContainerRef: testViewContainerRef });
+    const afterCloseCallback = jasmine.createSpy('afterClose callback');
+    const afterClosedObservable = dialogRef.afterClosed();
+
+    dialogRef.close('Charmander');
+    viewContainerFixture.detectChanges();
+    flush();
+
+    afterClosedObservable.subscribe(afterCloseCallback);
+
+    expect(afterCloseCallback).toHaveBeenCalledWith('Charmander');
+    expect(overlayContainerElement.querySelector('mat-dialog-container')).toBeNull();
+  }));
+
   it('should dispatch the beforeClose and afterClose events when the ' +
     'overlay is detached externally', fakeAsync(inject([Overlay], (overlay: Overlay) => {
       const dialogRef = dialog.open(PizzaMsg, {

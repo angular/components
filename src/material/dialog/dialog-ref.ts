@@ -9,7 +9,7 @@
 import {ESCAPE, hasModifierKey} from '@angular/cdk/keycodes';
 import {GlobalPositionStrategy, OverlayRef} from '@angular/cdk/overlay';
 import {Location} from '@angular/common';
-import {Observable, Subject} from 'rxjs';
+import {AsyncSubject, Observable} from 'rxjs';
 import {filter, take} from 'rxjs/operators';
 import {DialogPosition} from './dialog-config';
 import {MatDialogContainer} from './dialog-container';
@@ -34,13 +34,13 @@ export class MatDialogRef<T, R = any> {
   disableClose: boolean | undefined = this._containerInstance._config.disableClose;
 
   /** Subject for notifying the user that the dialog has finished opening. */
-  private readonly _afterOpened = new Subject<void>();
+  private readonly _afterOpened = new AsyncSubject<void>();
 
   /** Subject for notifying the user that the dialog has finished closing. */
-  private readonly _afterClosed = new Subject<R | undefined>();
+  private readonly _afterClosed = new AsyncSubject<R | undefined>();
 
   /** Subject for notifying the user that the dialog has started closing. */
-  private readonly _beforeClosed = new Subject<R | undefined>();
+  private readonly _beforeClosed = new AsyncSubject<R | undefined>();
 
   /** Result to be passed to afterClosed. */
   private _result: R | undefined;
