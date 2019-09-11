@@ -83,7 +83,7 @@ export class MatPaginator extends _MatPaginatorBase implements OnInit, OnDestroy
   private _initialized: boolean;
   private _intlChanges: Subscription;
   
-  /**to allow overwrite the enable/disable tooltip for previous/next buttons*/
+  /** Overrides the ability for the tooltip to be disabled for previous/next buttons */
   @Input() previousNextButtonsTooltipDisabled: boolean;
 
   /** Theme color to be used for the underlying form controls. */
