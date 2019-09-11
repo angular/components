@@ -24,7 +24,7 @@ import {
 import {BehaviorSubject, combineLatest, Observable, Subject} from 'rxjs';
 import {map, shareReplay, take, takeUntil} from 'rxjs/operators';
 
-import {MapInfoWindow} from '../map-info-window';
+import {MapInfoWindow} from '../map-info-window/index';
 import {MapMarker} from '../map-marker/index';
 
 interface GoogleMapsWindow extends Window {
