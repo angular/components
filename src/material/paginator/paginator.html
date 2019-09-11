@@ -33,7 +33,7 @@
               (click)="firstPage()"
               [attr.aria-label]="_intl.firstPageLabel"
               [matTooltip]="_intl.firstPageLabel"
-              [matTooltipDisabled]="_previousButtonsDisabled()"
+              [matTooltipDisabled]="previousNextButtonsTooltipDisabled"
               [matTooltipPosition]="'above'"
               [disabled]="_previousButtonsDisabled()"
               *ngIf="showFirstLastButtons">
@@ -46,7 +46,7 @@
               (click)="previousPage()"
               [attr.aria-label]="_intl.previousPageLabel"
               [matTooltip]="_intl.previousPageLabel"
-              [matTooltipDisabled]="_previousButtonsDisabled()"
+              [matTooltipDisabled]="previousNextButtonsTooltipDisabled"
               [matTooltipPosition]="'above'"
               [disabled]="_previousButtonsDisabled()">
         <svg class="mat-paginator-icon" viewBox="0 0 24 24" focusable="false">
