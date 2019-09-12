@@ -16,8 +16,8 @@ ng_module(
 )
 
 ng_test_library(
-    name = "unit_tests_lib",
-    srcs = glob(["**/*.spec.ts"]),
+    name = "shared_unit_tests",
+    srcs = ["shared.spec.ts"],
     deps = [
         ":testing",
         "//src/cdk/testing",
@@ -25,6 +25,16 @@ ng_test_library(
         "//src/material/checkbox",
         "@npm//@angular/forms",
         "@npm//@angular/platform-browser",
+    ]
+)
+
+ng_test_library(
+    name = "unit_tests_lib",
+    srcs = glob(["**/*.spec.ts"], exclude = ["shared.spec.ts"]),
+    deps = [
+        ":testing",
+        ":shared_unit_tests",
+        "//src/material/checkbox",
     ],
 )
 
