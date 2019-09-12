@@ -1,18 +1,18 @@
 package(default_visibility = ["//visibility:public"])
 
-load("//tools:defaults.bzl", "ng_test_library", "ng_web_test_suite", "ng_module")
+load("//tools:defaults.bzl", "ng_module", "ng_test_library", "ng_web_test_suite")
 
 ng_module(
     name = "testing",
-    module_name = "@angular/material-experimental/mdc-checkbox/testing",
     srcs = glob(
         ["**/*.ts"],
         exclude = ["**/*.spec.ts"],
     ),
+    module_name = "@angular/material-experimental/mdc-checkbox/testing",
     deps = [
-        "//src/material/checkbox/testing",
         "//src/cdk/coercion",
         "//src/cdk/testing",
+        "//src/material/checkbox/testing",
     ],
 )
 
