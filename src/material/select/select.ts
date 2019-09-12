@@ -847,16 +847,40 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
         throw getMatSelectNonArrayValueError();
       }
 
-      this._selectionModel.clear();
-      value.forEach((currentValue: any) => this._selectValue(currentValue));
+      const optionsToSelect: MatOption[] = [];
+      const optionsToStay: MatOption[] = [];
+
+      value.forEach(currentValue => {
+        const correspondingOption = this._findOption(currentValue);
+
+        if (correspondingOption) {
+          this._selectionModel.isSelected(correspondingOption)
+            ? optionsToStay.push(correspondingOption)
+            : optionsToSelect.push(correspondingOption);
+        }
+      });
+
+      const optionsToDeselect = this._selectionModel.selected.filter(opt =>
+        optionsToStay.indexOf(opt) === -1);
+
+      if (optionsToSelect.length > 0) {
+        this._selectionModel.select(...optionsToSelect);
+      }
+
+      if (optionsToDeselect.length > 0) {
+        this._selectionModel.deselect(...optionsToDeselect);
+      }
+
       this._sortValues();
     } else {
       this._selectionModel.clear();
-      const correspondingOption = this._selectValue(value);
+      const correspondingOption = this._findOption(value);
 
-      // Shift focus to the active item. Note that we shouldn't do this in multiple
-      // mode, because we don't know what option the user interacted with last.
       if (correspondingOption) {
+        this._selectionModel.select(correspondingOption);
+
+        // Shift focus to the active item. Note that we shouldn't do this in multiple
+        // mode, because we don't know what option the user interacted with last.
         this._keyManager.setActiveItem(correspondingOption);
       }
     }
@@ -865,11 +889,11 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
   }
 
   /**
-   * Finds and selects and option based on its value.
+   * Finds an option based on its value.
    * @returns Option that has the corresponding value.
    */
-  private _selectValue(value: any): MatOption | undefined {
-    const correspondingOption = this.options.find((option: MatOption) => {
+  private _findOption(value: any): MatOption | undefined {
+    return this.options.find((option: MatOption) => {
       try {
         // Treat null as a special reset value.
         return option.value != null && this._compareWith(option.value,  value);
@@ -881,12 +905,6 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
         return false;
       }
     });
-
-    if (correspondingOption) {
-      this._selectionModel.select(correspondingOption);
-    }
-
-    return correspondingOption;
   }
 
   /** Sets up a key manager to listen to keyboard events on the overlay panel. */
