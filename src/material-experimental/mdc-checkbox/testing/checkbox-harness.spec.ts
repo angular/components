@@ -1,5 +1,5 @@
-import {MatCheckboxModule} from '@angular/material-experimental/mdc-checkbox';
-import {MatCheckboxHarness} from '@angular/material-experimental/mdc-checkbox/testing';
+import {MatCheckboxModule} from '../index';
+import {MatCheckboxHarness} from './checkbox-harness';
 import {runTests} from '@angular/material/checkbox/testing/shared.spec';
 
 describe('MDC-based MatCheckboxHarness', () => {
