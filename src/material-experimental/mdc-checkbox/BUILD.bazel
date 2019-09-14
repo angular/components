@@ -10,7 +10,6 @@ ng_module(
         ["**/*.ts"],
         exclude = [
             "**/*.spec.ts",
-            "harness/**",
         ],
     ),
     assets = [":checkbox_scss"] + glob(["**/*.html"]),
@@ -26,18 +25,6 @@ ng_module(
         "@npm//@angular/forms",
         "@npm//@material/checkbox",
         "@npm//@material/ripple",
-    ],
-)
-
-ts_library(
-    name = "harness",
-    srcs = glob(
-        ["harness/**/*.ts"],
-        exclude = ["**/*.spec.ts"],
-    ),
-    deps = [
-        "//src/cdk/coercion",
-        "//src/cdk/testing",
     ],
 )
 
@@ -69,7 +56,6 @@ ng_test_library(
         exclude = ["**/*.e2e.spec.ts"],
     ),
     deps = [
-        ":harness",
         ":mdc-checkbox",
         "//src/cdk/testing",
         "//src/cdk/testing/testbed",
