@@ -16,7 +16,7 @@ ng_module(
 )
 
 ng_test_library(
-    name = "shared_unit_tests",
+    name = "harness_tests_lib",
     srcs = ["shared.spec.ts"],
     deps = [
         ":testing",
@@ -36,7 +36,7 @@ ng_test_library(
         exclude = ["shared.spec.ts"],
     ),
     deps = [
-        ":shared_unit_tests",
+        ":harness_tests_lib",
         ":testing",
         "//src/material/autocomplete",
     ],
