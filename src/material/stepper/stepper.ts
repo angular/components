@@ -150,6 +150,17 @@ export class MatHorizontalStepper extends MatStepper {
   /** Whether the label should display in bottom or end position. */
   @Input()
   labelPosition: 'bottom' | 'end' = 'end';
+
+  constructor(
+    @Optional() dir: Directionality,
+    changeDetectorRef: ChangeDetectorRef,
+    // @breaking-change 8.0.0 `elementRef` and `_document` parameters to become required.
+    elementRef?: ElementRef<HTMLElement>,
+    @Inject(DOCUMENT) _document?: any) {
+    // Note that this needs an explicit constructor in order to avoid DI issues when transpiling
+    // to es2015. See https://github.com/angular/components/issues/17075
+    super(dir, changeDetectorRef, elementRef, _document);
+  }
 }
 
 @Component({
@@ -179,6 +190,8 @@ export class MatVerticalStepper extends MatStepper {
     // @breaking-change 8.0.0 `elementRef` and `_document` parameters to become required.
     elementRef?: ElementRef<HTMLElement>,
     @Inject(DOCUMENT) _document?: any) {
+    // Note that this needs an explicit constructor in order to avoid DI issues when transpiling
+    // to es2015. See https://github.com/angular/components/issues/17075
     super(dir, changeDetectorRef, elementRef, _document);
     this._orientation = 'vertical';
   }

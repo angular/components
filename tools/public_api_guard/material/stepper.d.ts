@@ -8,6 +8,7 @@ export declare function MAT_STEPPER_INTL_PROVIDER_FACTORY(parentIntl: MatStepper
 
 export declare class MatHorizontalStepper extends MatStepper {
     labelPosition: 'bottom' | 'end';
+    constructor(dir: Directionality, changeDetectorRef: ChangeDetectorRef, elementRef?: ElementRef<HTMLElement>, _document?: any);
 }
 
 export declare class MatStep extends CdkStep implements ErrorStateMatcher {
