@@ -128,6 +128,8 @@ System.config({
     '@angular/material/progress-bar': 'dist/packages/material/progress-bar/index.js',
     '@angular/material/progress-spinner': 'dist/packages/material/progress-spinner/index.js',
     '@angular/material/radio': 'dist/packages/material/radio/index.js',
+    '@angular/material/radio/testing': 'dist/packages/material/radio/testing/index.js',
+    '@angular/material/radio/testing/shared.spec': 'dist/packages/material/radio/testing/shared.spec.js',
     '@angular/material/select': 'dist/packages/material/select/index.js',
     '@angular/material/sidenav': 'dist/packages/material/sidenav/index.js',
     '@angular/material/slide-toggle': 'dist/packages/material/slide-toggle/index.js',
