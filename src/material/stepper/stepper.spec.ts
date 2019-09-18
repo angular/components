@@ -925,7 +925,8 @@ describe('MatStepper', () => {
       const fixture = createComponent(SimpleMatHorizontalStepperApp);
       fixture.detectChanges();
 
-      const stepper = fixture.debugElement.query(By.css('mat-horizontal-stepper'))!.componentInstance;
+      const stepper = fixture.debugElement.query(By.css('mat-horizontal-stepper'))!
+          .componentInstance;
       expect(stepper.animationDuration).toBe('500ms');
     });
   });
