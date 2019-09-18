@@ -1,4 +1,5 @@
 import {NgModule} from '@angular/core';
+import {MatButtonModule} from '@angular/material/button';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import {MatExpansionModule} from '@angular/material/expansion';
 import {MatIconModule} from '@angular/material/icon';
@@ -17,6 +18,7 @@ const EXAMPLES = [
 
 @NgModule({
   imports: [
+    MatButtonModule,
     MatDatepickerModule,
     MatExpansionModule,
     MatIconModule,

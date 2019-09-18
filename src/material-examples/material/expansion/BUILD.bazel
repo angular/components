@@ -10,6 +10,7 @@ ng_module(
         "**/*.css",
     ]),
     deps = [
+        "//src/material/button",
         "//src/material/datepicker",
         "//src/material/expansion",
         "//src/material/icon",
