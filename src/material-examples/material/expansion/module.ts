@@ -1,4 +1,5 @@
 import {NgModule} from '@angular/core';
+import {MatButtonModule} from '@angular/material/button';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import {MatExpansionModule} from '@angular/material/expansion';
 import {MatIconModule} from '@angular/material/icon';
@@ -9,6 +10,12 @@ import {
 import {ExpansionOverviewExample} from './expansion-overview/expansion-overview-example';
 import {ExpansionStepsExample} from './expansion-steps/expansion-steps-example';
 
+export {
+  ExpansionExpandCollapseAllExample,
+  ExpansionOverviewExample,
+  ExpansionStepsExample,
+};
+
 const EXAMPLES = [
   ExpansionExpandCollapseAllExample,
   ExpansionOverviewExample,
@@ -17,6 +24,7 @@ const EXAMPLES = [
 
 @NgModule({
   imports: [
+    MatButtonModule,
     MatDatepickerModule,
     MatExpansionModule,
     MatIconModule,
