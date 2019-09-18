@@ -16,7 +16,7 @@ import {combineLatest} from 'rxjs';
   styleUrls: ['./component-list.scss']
 })
 export class ComponentList {
-  category: DocCategory;
+  category: DocCategory | undefined;
   section: string;
 
   constructor(public docItems: DocumentationItems,
@@ -24,9 +24,9 @@ export class ComponentList {
               private _route: ActivatedRoute,
               public router: Router) {
     combineLatest(_route.pathFromRoot.map(route => route.params), Object.assign)
-      .subscribe(p => {
-        this.category = docItems.getCategoryById(p['id']);
-        this.section = p['section'];
+      .subscribe((routeData: {[key: string]: string}) => {
+        this.category = docItems.getCategoryById(routeData['id']);
+        this.section = routeData['section'];
 
         if (this.category) {
           this._componentPageTitle.title = this.category.name;

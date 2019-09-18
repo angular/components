@@ -35,17 +35,21 @@ export class ComponentViewer implements OnDestroy {
               public _componentPageTitle: ComponentPageTitle,
               public docItems: DocumentationItems,
               ) {
+    let params = [_route.params];
+    if (_route.parent) {
+      params.push(_route.parent.params);
+    }
     // Listen to changes on the current route for the doc id (e.g. button/checkbox) and the
     // parent route for the section (material/cdk).
-    combineLatest(_route.params, _route.parent.params).pipe(
+    combineLatest(params).pipe(
         map((p: [Params, Params]) => ({id: p[0]['id'], section: p[1]['section']})),
         map(p => ({doc: docItems.getItemById(p.id, p.section), section: p.section}),
         takeUntil(this._destroyed))
         ).subscribe(d => {
-          this.componentDocItem = d.doc;
-          if (this.componentDocItem) {
+          if (d.doc !== undefined) {
+            this.componentDocItem = d.doc;
             this._componentPageTitle.title = `${this.componentDocItem.name}`;
-            this.componentDocItem.examples.length ?
+            this.componentDocItem.examples && this.componentDocItem.examples.length ?
                 this.sections.add('examples') :
                 this.sections.delete('examples');
           } else {

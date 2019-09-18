@@ -64,45 +64,47 @@ describe('StackblitzWriter', () => {
   });
 
   it('should open a new window with stackblitz url', fakeAsync(() => {
-    let form;
-    stackblitzWriter.constructStackblitzForm(data).then(result => form = result);
-    flushMicrotasks();
+    let form: HTMLFormElement;
+    stackblitzWriter.constructStackblitzForm(data).then((result: HTMLFormElement) => {
+      form = result;
+      flushMicrotasks();
 
-    for (const url of TEST_URLS) {
-      http.expectOne(url).flush(FAKE_DOCS[url] || '');
-    }
-    flushMicrotasks();
+      for (const url of TEST_URLS) {
+        http.expectOne(url).flush(FAKE_DOCS[url] || '');
+      }
+      flushMicrotasks();
 
-    expect(form.elements.length).toBe(15);
+      expect(form.elements.length).toBe(15);
 
-    // Should have correct tags
-    expect(form.elements[0].getAttribute('name')).toBe('tags[0]');
-    expect(form.elements[0].getAttribute('value')).toBe('angular');
-    expect(form.elements[1].getAttribute('name')).toBe('tags[1]');
-    expect(form.elements[1].getAttribute('value')).toBe('material');
-    expect(form.elements[2].getAttribute('name')).toBe('tags[2]');
-    expect(form.elements[2].getAttribute('value')).toBe('example');
+      // Should have correct tags
+      expect(form.elements[0].getAttribute('name')).toBe('tags[0]');
+      expect(form.elements[0].getAttribute('value')).toBe('angular');
+      expect(form.elements[1].getAttribute('name')).toBe('tags[1]');
+      expect(form.elements[1].getAttribute('value')).toBe('material');
+      expect(form.elements[2].getAttribute('name')).toBe('tags[2]');
+      expect(form.elements[2].getAttribute('value')).toBe('example');
 
-    // Should bet set as private and have description and dependencies.
-    expect(form.elements[3].getAttribute('name')).toBe('private');
-    expect(form.elements[3].getAttribute('value')).toBe('true');
-    expect(form.elements[4].getAttribute('name')).toBe('description');
-    expect(form.elements[5].getAttribute('name')).toBe('dependencies');
+      // Should bet set as private and have description and dependencies.
+      expect(form.elements[3].getAttribute('name')).toBe('private');
+      expect(form.elements[3].getAttribute('value')).toBe('true');
+      expect(form.elements[4].getAttribute('name')).toBe('description');
+      expect(form.elements[5].getAttribute('name')).toBe('dependencies');
 
-    // Should have files needed for example.
-    expect(form.elements[6].getAttribute('name')).toBe('files[index.html]');
-    expect(form.elements[7].getAttribute('name')).toBe('files[styles.css]');
-    expect(form.elements[8].getAttribute('name')).toBe('files[polyfills.ts]');
-    expect(form.elements[9].getAttribute('name')).toBe('files[.angular-cli.json]');
-    expect(form.elements[10].getAttribute('name')).toBe('files[main.ts]');
-    expect(form.elements[11].getAttribute('name')).toBe('files[material-module.ts]');
-    expect(form.elements[12].getAttribute('name')).toBe('files[app/test.ts]');
-    expect(form.elements[13].getAttribute('name')).toBe('files[app/test.html]');
-    expect(form.elements[14].getAttribute('name')).toBe('files[app/src/detail.ts]');
+      // Should have files needed for example.
+      expect(form.elements[6].getAttribute('name')).toBe('files[index.html]');
+      expect(form.elements[7].getAttribute('name')).toBe('files[styles.css]');
+      expect(form.elements[8].getAttribute('name')).toBe('files[polyfills.ts]');
+      expect(form.elements[9].getAttribute('name')).toBe('files[.angular-cli.json]');
+      expect(form.elements[10].getAttribute('name')).toBe('files[main.ts]');
+      expect(form.elements[11].getAttribute('name')).toBe('files[material-module.ts]');
+      expect(form.elements[12].getAttribute('name')).toBe('files[app/test.ts]');
+      expect(form.elements[13].getAttribute('name')).toBe('files[app/test.html]');
+      expect(form.elements[14].getAttribute('name')).toBe('files[app/src/detail.ts]');
+    });
   }));
 });
 
-const FAKE_DOCS = {
+const FAKE_DOCS: {[key: string]: string} = {
   '/docs-content/examples-source/test.ts': 'ExampleComponent',
   '/docs-content/examples-source/test.html': `<example></example>`,
   '/docs-content/examples-source/src/detail.ts': 'DetailComponent',

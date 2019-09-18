@@ -8,6 +8,11 @@
     "module": "es6",
     "moduleResolution": "node",
     "outDir": "../dist/out-tsc",
+    "noImplicitAny": true,
+    "noImplicitReturns": true,
+    "noImplicitThis": true,
+    "noFallthroughCasesInSwitch": true,
+    "strictNullChecks": true,
     "sourceMap": true,
     "target": "es5",
     "types": ["q", "selenium-webdriver", "jasmine"]
