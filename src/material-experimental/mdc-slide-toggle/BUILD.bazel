@@ -28,18 +28,6 @@ ng_module(
     ],
 )
 
-ts_library(
-    name = "harness",
-    srcs = glob(
-        ["harness/**/*.ts"],
-        exclude = ["**/*.spec.ts"],
-    ),
-    deps = [
-        "//src/cdk/coercion",
-        "//src/cdk/testing",
-    ],
-)
-
 sass_library(
     name = "mdc_slide_toggle_scss_lib",
     srcs = glob(["**/_*.scss"]),
@@ -68,11 +56,9 @@ ng_test_library(
         exclude = ["**/*.e2e.spec.ts"],
     ),
     deps = [
-        ":harness",
         ":mdc-slide-toggle",
         "//src/cdk/bidi",
         "//src/cdk/testing",
-        "//src/cdk/testing/testbed",
         "//src/material/slide-toggle",
         "@npm//@angular/forms",
         "@npm//@angular/platform-browser",
