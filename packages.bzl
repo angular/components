@@ -145,9 +145,10 @@ ROLLUP_GLOBALS.update({
     for p in MATERIAL_PACKAGES
 })
 
-# Rollup globals for material experiemental subpackages, e.g., {"@angular/material-experimental/list": "ng.materialExperimental.list"}
+# Rollup globals for material experimental subpackages, e.g.,
+# {"@angular/material-experimental/list": "ng.materialExperimental.list"}
 ROLLUP_GLOBALS.update({
-    "@angular/material-experiemntal/%s" % p: "ng.materialExperimental.%s" % p
+    "@angular/material-experimental/%s" % p: "ng.materialExperimental.%s" % p
     for p in MATERIAL_EXPERIMENTAL_PACKAGES
 })
 
