@@ -60,7 +60,7 @@ export class ComponentSidenav implements OnInit {
 export class ComponentNav implements OnInit, OnDestroy {
 
   @Input() params: Observable<Params>;
-  expansions = {};
+  expansions: {[key: string]: boolean} = {};
   private _onDestroy = new Subject<void>();
 
   constructor(public docItems: DocumentationItems,
@@ -83,7 +83,7 @@ export class ComponentNav implements OnInit, OnDestroy {
   setExpansions(params: Params) {
     const categories = this.docItems.getCategories(params.section);
     for (const category of (categories || [])) {
-      if (this.expansions[category.id] === true) {
+      if (this.expansions[category.id]) {
         continue;
       }
 
@@ -95,7 +95,7 @@ export class ComponentNav implements OnInit, OnDestroy {
         }
       }
 
-      if (this.expansions[category.id] === false) {
+      if (!this.expansions[category.id]) {
         this.expansions[category.id] = match;
       }
     }

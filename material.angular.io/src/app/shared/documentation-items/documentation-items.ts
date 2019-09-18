@@ -543,8 +543,9 @@ for (let category of DOCS[CDK]) {
 }
 
 const ALL_COMPONENTS = DOCS[COMPONENTS].reduce(
-  (result, category) => result.concat(category.items), []);
-const ALL_CDK = DOCS[CDK].reduce((result, cdk) => result.concat(cdk.items), []);
+  (result: DocItem[], category: DocCategory) => result.concat(category.items), []);
+const ALL_CDK = DOCS[CDK].reduce(
+  (result: DocItem[], cdk: DocCategory) => result.concat(cdk.items), []);
 const ALL_DOCS = ALL_COMPONENTS.concat(ALL_CDK);
 const ALL_CATEGORIES = DOCS[COMPONENTS].concat(DOCS[CDK]);
 
@@ -564,12 +565,12 @@ export class DocumentationItems {
     return [];
   }
 
-  getItemById(id: string, section: string): DocItem {
+  getItemById(id: string, section: string): DocItem | undefined {
     const sectionLookup = section == 'cdk' ? 'cdk' : 'material';
     return ALL_DOCS.find(doc => doc.id === id && doc.packageName == sectionLookup);
   }
 
-  getCategoryById(id: string): DocCategory {
+  getCategoryById(id: string): DocCategory | undefined {
     return ALL_CATEGORIES.find(c => c.id == id);
   }
 }

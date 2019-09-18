@@ -6,7 +6,7 @@ import {
   OnInit,
   OnDestroy,
 } from '@angular/core';
-import {StyleManager} from '../style-manager/style-manager';
+import {StyleManager} from '../style-manager';
 import {ThemeStorage, DocsSiteTheme} from './theme-storage/theme-storage';
 import {MatButtonModule} from '@angular/material/button';
 import {MatGridListModule} from '@angular/material/grid-list';
@@ -63,7 +63,10 @@ export class ThemePicker implements OnInit, OnDestroy {
     public styleManager: StyleManager,
     private _themeStorage: ThemeStorage,
     private _activatedRoute: ActivatedRoute) {
-    this.installTheme(this._themeStorage.getStoredThemeName());
+    const themeName = this._themeStorage.getStoredThemeName();
+    if (themeName) {
+      this.installTheme(themeName);
+    }
   }
 
   ngOnInit() {

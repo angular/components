@@ -61,7 +61,7 @@ export class GuideItems {
     return GUIDES;
   }
 
-  getItemById(id: string): GuideItem {
+  getItemById(id: string): GuideItem | undefined {
     return GUIDES.find(i => i.id === id);
   }
 }

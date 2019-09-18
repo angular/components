@@ -6,7 +6,7 @@ import {TableOfContentsModule} from './table-of-contents.module';
 import {DocsAppTestingModule} from '../../testing/testing-module';
 
 const mockActivatedRoute = {
-  fragment: Observable.create(observer => {
+  fragment: new Observable(observer => {
     observer.complete();
   })
 };

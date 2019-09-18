@@ -41,7 +41,11 @@ describe('ComponentViewer', () => {
   it('should set page title correctly', () => {
     const component = fixture.componentInstance;
     fixture.detectChanges();
-    const expected = `${component.docItems.getItemById(docItemsId, 'material').name}`;
+    const docItem = component.docItems.getItemById(docItemsId, 'material');
+    if (docItem === undefined) {
+      throw Error(`Unable to find DocItem: '${docItemsId}' in section: 'material'.`);
+    }
+    const expected = `${docItem.name}`;
     expect(component._componentPageTitle.title).toEqual(expected);
   });
 });

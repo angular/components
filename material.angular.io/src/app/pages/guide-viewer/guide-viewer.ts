@@ -12,14 +12,17 @@ import {ComponentPageTitle} from '../page-title/page-title';
   styleUrls: ['./guide-viewer.scss'],
 })
 export class GuideViewer implements OnInit {
-  guide: GuideItem;
+  guide: GuideItem | undefined;
 
   constructor(_route: ActivatedRoute,
               private _componentPageTitle: ComponentPageTitle,
               private router: Router,
               public guideItems: GuideItems) {
     _route.params.subscribe(p => {
-      this.guide = guideItems.getItemById(p['id']);
+      const guideItem = guideItems.getItemById(p['id']);
+      if (guideItem) {
+        this.guide = guideItem;
+      }
 
       if (!this.guide) {
         this.router.navigate(['/guides']);
@@ -28,7 +31,9 @@ export class GuideViewer implements OnInit {
   }
 
   ngOnInit(): void {
-    this._componentPageTitle.title = this.guide.name;
+    if (this.guide !== undefined) {
+      this._componentPageTitle.title = this.guide.name;
+    }
   }
 }
 

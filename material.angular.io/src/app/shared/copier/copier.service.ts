@@ -54,7 +54,7 @@ export class CopierService {
   private removeFake() {
     if (this.textarea) {
       document.body.removeChild(this.textarea);
-      this.textarea = null;
+      delete this.textarea;
     }
   }
 }

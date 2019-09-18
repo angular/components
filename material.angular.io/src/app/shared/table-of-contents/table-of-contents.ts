@@ -1,4 +1,6 @@
-import {Component, ElementRef, Inject, Input, OnInit} from '@angular/core';
+import {
+  AfterViewInit, Component, ElementRef, Inject, Input, OnDestroy, OnInit
+} from '@angular/core';
 import {DOCUMENT} from '@angular/common';
 import {ActivatedRoute, NavigationEnd, Router} from '@angular/router';
 import {Subject, fromEvent} from 'rxjs';
@@ -27,7 +29,7 @@ interface Link {
   styleUrls: ['./table-of-contents.scss'],
   templateUrl: './table-of-contents.html'
 })
-export class TableOfContents implements OnInit {
+export class TableOfContents implements OnInit, AfterViewInit, OnDestroy {
 
   @Input() links: Link[] = [];
   @Input() container: string;
@@ -97,7 +99,7 @@ export class TableOfContents implements OnInit {
   }
 
   /** Gets the scroll offset of the scroll container */
-  private getScrollOffset(): number {
+  private getScrollOffset(): number | void {
     const {top} = this._element.nativeElement.getBoundingClientRect();
     if (typeof this._scrollContainer.scrollTop !== 'undefined') {
       return this._scrollContainer.scrollTop + top;
@@ -107,7 +109,7 @@ export class TableOfContents implements OnInit {
   }
 
   private createLinks(): Link[] {
-    const links = [];
+    const links: Array<Link> = [];
     const headers =
         Array.from(this._document.querySelectorAll(this.headerSelectors)) as HTMLElement[];
 

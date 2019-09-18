@@ -175,7 +175,7 @@ describe('ExampleViewer', () => {
 class TestExampleModule { }
 
 
-const FAKE_DOCS = {
+const FAKE_DOCS: {[key: string]: string} = {
   '/docs-content/examples-highlighted/autocomplete-overview-example-html.html':
       '<div>my docs page</div>',
   '/docs-content/examples-highlighted/autocomplete-overview-example-ts.html':
