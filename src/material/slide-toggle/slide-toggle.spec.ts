@@ -32,6 +32,7 @@ describe('MatSlideToggle without forms', () => {
         SlideToggleWithoutLabel,
         SlideToggleProjectedLabel,
         TextBindingComponent,
+        SlideToggleWithStaticAriaAttributes,
       ],
       providers: [
         {provide: HAMMER_GESTURE_CONFIG, useFactory: () => gestureConfig = new TestGestureConfig()},
@@ -767,6 +768,15 @@ describe('MatSlideToggle without forms', () => {
         .toContain('mat-slide-toggle-bar-no-side-margin');
     });
   });
+
+  it('should clear static aria attributes from the host node', () => {
+    const fixture = TestBed.createComponent(SlideToggleWithStaticAriaAttributes);
+    fixture.detectChanges();
+
+    const host: HTMLElement = fixture.nativeElement.querySelector('mat-slide-toggle');
+    expect(host.hasAttribute('aria-label')).toBe(false);
+    expect(host.hasAttribute('aria-labelledby')).toBe(false);
+  });
 });
 
 describe('MatSlideToggle with forms', () => {
@@ -1192,3 +1202,10 @@ class SlideToggleProjectedLabel {}
 class TextBindingComponent {
   text: string = 'Some text';
 }
+
+@Component({
+  template: `
+    <mat-slide-toggle aria-label="Slide toggle" aria-labelledby="something"></mat-slide-toggle>
+  `
+})
+class SlideToggleWithStaticAriaAttributes {}
