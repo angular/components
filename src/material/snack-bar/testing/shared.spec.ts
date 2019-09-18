@@ -1,4 +1,5 @@
 import {OverlayContainer} from '@angular/cdk/overlay';
+import {expectAsyncError} from '@angular/cdk/private/testing';
 import {HarnessLoader} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {Component, TemplateRef, ViewChild} from '@angular/core';
@@ -58,6 +59,14 @@ export function runHarnessTests(
     snackBarRef.dismiss();
     snackBars = await loader.getAllHarnesses(snackBarHarness);
     expect(snackBars.length).toBe(0);
+  });
+
+  it('should load snack-bar harness by selector', async () => {
+    fixture.componentInstance.openSimple('Hello!', '', {panelClass: 'my-snack-bar'});
+    const snackBars = await loader.getAllHarnesses(snackBarHarness.with({
+      selector: '.my-snack-bar'
+    }));
+    expect(snackBars.length).toBe(1);
   });
 
   it('should be able to get role of snack-bar', async () => {
@@ -127,21 +136,6 @@ export function runHarnessTests(
     snackBar = await loader.getHarness(snackBarHarness);
     await expectAsyncError(() => snackBar.dismissWithAction(), /without action/);
   });
-}
-
-/**
- * Expects the asynchronous function to throw an error that matches
- * the specified expectation.
- */
-async function expectAsyncError(fn: () => Promise<any>, expectation: RegExp) {
-  let error: string|null = null;
-  try {
-    await fn();
-  } catch (e) {
-    error = e.toString();
-  }
-  expect(error).not.toBe(null);
-  expect(error!).toMatch(expectation);
 }
 
 @Component({

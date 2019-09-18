@@ -6,7 +6,8 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {ComponentHarness} from '@angular/cdk/testing';
+import {ComponentHarness, HarnessPredicate} from '@angular/cdk/testing';
+import {SnackBarHarnessFilters} from './snack-bar-harness-filters';
 
 /**
  * Harness for interacting with a standard mat-snack-bar in tests.
@@ -21,6 +22,18 @@ export class MatSnackBarHarness extends ComponentHarness {
   private _simpleSnackBarMessage = this.locatorFor('.mat-simple-snackbar > span');
   private _simpleSnackBarActionButton =
       this.locatorForOptional('.mat-simple-snackbar-action > button');
+
+  /**
+   * Gets a `HarnessPredicate` that can be used to search for a snack-bar with
+   * specific attributes.
+   * @param options Options for narrowing the search.
+   *   - `selector` finds a snack-bar that matches the given selector. Note that the
+   *                selector must match the snack-bar container element.
+   * @return `HarnessPredicate` configured with the given options.
+   */
+  static with(options: SnackBarHarnessFilters = {}): HarnessPredicate<MatSnackBarHarness> {
+    return new HarnessPredicate(MatSnackBarHarness, options);
+  }
 
   /**
    * Gets the role of the snack-bar. The role of a snack-bar is determined based
