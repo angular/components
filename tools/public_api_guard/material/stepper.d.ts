@@ -51,6 +51,7 @@ export declare class MatStepper extends CdkStepper implements AfterContentInit {
     _stepHeader: QueryList<MatStepHeader>;
     _steps: QueryList<MatStep>;
     readonly animationDone: EventEmitter<void>;
+    animationDuration: string;
     disableRipple: boolean;
     ngAfterContentInit(): void;
 }
