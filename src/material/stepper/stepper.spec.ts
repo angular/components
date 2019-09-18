@@ -855,6 +855,14 @@ describe('MatStepper', () => {
 
       expect(headerRipples.every(ripple => ripple.disabled)).toBe(true);
     });
+
+    it('should set default animation duration for vertical stepper to 225ms', () => {
+      const fixture = createComponent(SimpleMatVerticalStepperApp);
+      fixture.detectChanges();
+
+      const stepper = fixture.debugElement.query(By.css('mat-vertical-stepper'))!.componentInstance;
+      expect(stepper.animationDuration).toBe('225ms');
+    });
   });
 
   describe('horizontal stepper', () => {
@@ -911,6 +919,14 @@ describe('MatStepper', () => {
       fixture.detectChanges();
 
       expect(headerRipples.every(ripple => ripple.disabled)).toBe(true);
+    });
+
+    it('should set default animation duration for horizontal stepper to 500ms', () => {
+      const fixture = createComponent(SimpleMatHorizontalStepperApp);
+      fixture.detectChanges();
+
+      const stepper = fixture.debugElement.query(By.css('mat-horizontal-stepper'))!.componentInstance;
+      expect(stepper.animationDuration).toBe('500ms');
     });
   });
 

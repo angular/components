@@ -27,7 +27,7 @@ export const matStepperAnimations: {
     state('previous', style({transform: 'translate3d(-100%, 0, 0)', visibility: 'hidden'})),
     state('current', style({transform: 'none', visibility: 'visible'})),
     state('next', style({transform: 'translate3d(100%, 0, 0)', visibility: 'hidden'})),
-    transition('* => *', animate('500ms cubic-bezier(0.35, 0, 0.25, 1)'))
+    transition('* => *', animate('{{animationDuration}} cubic-bezier(0.35, 0, 0.25, 1)'))
   ]),
 
   /** Animation that transitions the step along the Y axis in a vertical stepper. */
@@ -35,6 +35,6 @@ export const matStepperAnimations: {
     state('previous', style({height: '0px', visibility: 'hidden'})),
     state('next', style({height: '0px', visibility: 'hidden'})),
     state('current', style({height: '*', visibility: 'visible'})),
-    transition('* <=> current', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)'))
+    transition('* <=> current', animate('{{animationDuration}} cubic-bezier(0.4, 0.0, 0.2, 1)'))
   ])
 };

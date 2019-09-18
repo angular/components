@@ -24,7 +24,10 @@
   <div class="mat-vertical-content-container" [class.mat-stepper-vertical-line]="!isLast">
     <div class="mat-vertical-stepper-content" role="tabpanel"
          [attr.tabindex]="selectedIndex === i ? 0 : null"
-         [@stepTransition]="_getAnimationDirection(i)"
+         [@stepTransition]="{
+            value: _getAnimationDirection(i),
+            params: {animationDuration: animationDuration}
+          }"
          (@stepTransition.done)="_animationDone.next($event)"
          [id]="_getStepContentId(i)"
          [attr.aria-labelledby]="_getStepLabelId(i)"

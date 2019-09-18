@@ -29,7 +29,10 @@
   <div *ngFor="let step of steps; let i = index"
        [attr.tabindex]="selectedIndex === i ? 0 : null"
        class="mat-horizontal-stepper-content" role="tabpanel"
-       [@stepTransition]="_getAnimationDirection(i)"
+       [@stepTransition]="{
+          value: _getAnimationDirection(i),
+          params: {animationDuration: animationDuration}
+        }"
        (@stepTransition.done)="_animationDone.next($event)"
        [id]="_getStepContentId(i)"
        [attr.aria-labelledby]="_getStepLabelId(i)"
