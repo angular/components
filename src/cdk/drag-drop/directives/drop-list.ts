@@ -133,6 +133,13 @@ export class CdkDropList<T = any> implements CdkDropListContainer, AfterContentI
   @Input('cdkDropListAutoScrollDisabled')
   autoScrollDisabled: boolean = false;
 
+  /**
+   * Container that should be scrolled if auto-scroll is enabled.
+   * Default behaviour if not defined
+   */
+  @Input('cdkDropListAutoScrollContainer')
+  autoScrollContainer: HTMLElement;
+
   /** Emits when the user drops an item inside the container. */
   @Output('cdkDropListDropped')
   dropped: EventEmitter<CdkDragDrop<T, any>> = new EventEmitter<CdkDragDrop<T, any>>();
@@ -303,6 +310,7 @@ export class CdkDropList<T = any> implements CdkDropListContainer, AfterContentI
       ref.lockAxis = this.lockAxis;
       ref.sortingDisabled = this.sortingDisabled;
       ref.autoScrollDisabled = this.autoScrollDisabled;
+      ref.autoScrollContainer = this.autoScrollContainer;
       ref
         .connectedTo(siblings.filter(drop => drop && drop !== this).map(list => list._dropListRef))
         .withOrientation(this.orientation);

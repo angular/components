@@ -46,6 +46,27 @@
   </div>
 </div>
 
+<div>
+  <div class="demo-list">
+    <h2>Autoscroll defined container</h2>
+    <div 
+      class="demo-auto-scroll-container"
+      #autoScrollContainer>
+      <div
+        cdkDropList
+        (cdkDropListDropped)="drop($event)"
+        [cdkDropListLockAxis]="axisLock"
+        [cdkDropListData]="autoScrollContainerData"
+        [cdkDropListAutoScrollContainer]="autoScrollContainer">
+        <div *ngFor="let item of autoScrollContainerData" cdkDrag>
+          {{item}}
+          <mat-icon cdkDragHandle svgIcon="dnd-move"></mat-icon>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div class="demo-list">
   <h2>Free dragging</h2>
   <div cdkDrag class="demo-free-draggable" [cdkDragLockAxis]="axisLock" [cdkDragStartDelay]="dragStartDelay">Drag me around</div>

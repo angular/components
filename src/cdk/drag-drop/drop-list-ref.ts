@@ -101,6 +101,13 @@ export class DropListRef<T = any> {
   autoScrollDisabled: boolean = false;
 
   /**
+   * Container that should be scrolled if auto-scroll is enabled.
+   * This will override the default fallback to Window
+   * or the container which the directive is attached to.
+   */
+  autoScrollContainer: HTMLElement;
+
+  /**
    * Function that is used to determine whether an item
    * is allowed to be moved into a drop container.
    */
@@ -153,6 +160,9 @@ export class DropListRef<T = any> {
 
   /** Keeps track of the scroll position of the viewport. */
   private _viewportScrollPosition: ScrollPosition = {top: 0, left: 0};
+
+  /** Keeps track of the scroll position of the node defined in autoScrollContainer. */
+  private _autoScrollContainerScrollPosition: ScrollPosition = {top: 0, left: 0};
 
   /** Cached `ClientRect` of the drop list. */
   private _clientRect: ClientRect;
@@ -246,6 +256,17 @@ export class DropListRef<T = any> {
     this._cacheItems();
     this._siblings.forEach(sibling => sibling._startReceiving(this));
     this._removeListeners();
+
+
+    if (this.autoScrollContainer) {
+      if (this._ngZone) {
+        this._ngZone.runOutsideAngular(() =>
+          this.autoScrollContainer.addEventListener('scroll', this._handleAutoScrollContainerScroll)
+        );
+      } else {
+        this.autoScrollContainer.addEventListener('scroll', this._handleAutoScrollContainerScroll);
+      }
+    }
 
     // @breaking-change 9.0.0 Remove check for _ngZone once it's marked as a required param.
     if (this._ngZone) {
@@ -425,6 +446,7 @@ export class DropListRef<T = any> {
    */
   _sortItem(item: DragRef, pointerX: number, pointerY: number,
             pointerDelta: {x: number, y: number}): void {
+
     // Don't sort the item if sorting is disabled or it's out of range.
     if (this.sortingDisabled || !this._isPointerNearDropContainer(pointerX, pointerY)) {
       return;
@@ -512,8 +534,17 @@ export class DropListRef<T = any> {
     let verticalScrollDirection = AutoScrollVerticalDirection.NONE;
     let horizontalScrollDirection = AutoScrollHorizontalDirection.NONE;
 
+    // Check if autoScrollContainer is set and start scrolling if necessary.
+    if (this.autoScrollContainer) {
+      const clientRect = this.autoScrollContainer.getBoundingClientRect();
+      verticalScrollDirection = getVerticalScrollDirection(clientRect, pointerY);
+      horizontalScrollDirection = getHorizontalScrollDirection(clientRect, pointerX);
+      scrollNode = this.autoScrollContainer;
+    }
+
     // Check whether we should start scrolling the container.
-    if (this._isPointerNearDropContainer(pointerX, pointerY)) {
+    if (!verticalScrollDirection && !horizontalScrollDirection &&
+        this._isPointerNearDropContainer(pointerX, pointerY)) {
       const element = coerceElement(this.element);
 
       [verticalScrollDirection, horizontalScrollDirection] =
@@ -564,6 +595,13 @@ export class DropListRef<T = any> {
     const element = coerceElement(this.element);
     this._clientRect = getMutableClientRect(element);
     this._scrollPosition = {top: element.scrollTop, left: element.scrollLeft};
+
+    if (this.autoScrollContainer) {
+      this._autoScrollContainerScrollPosition = {
+        top: this.autoScrollContainer.scrollTop,
+        left: this.autoScrollContainer.scrollLeft
+      };
+    }
   }
 
   /** Refreshes the position cache of the items and sibling containers. */
@@ -757,9 +795,28 @@ export class DropListRef<T = any> {
     this._updateAfterScroll(this._scrollPosition, element.scrollTop, element.scrollLeft);
   }
 
+  /**
+   * Handles the autScrollContainer being scrolled.
+   * Has to be an arrow function to preserve the context.
+   */
+  private _handleAutoScrollContainerScroll = () => {
+    if (!this.isDragging()) {
+      return;
+    }
+
+    this._updateAfterScroll(
+      this._autoScrollContainerScrollPosition,
+      this.autoScrollContainer.scrollTop,
+      this.autoScrollContainer.scrollLeft
+    );
+  }
+
   /** Removes the event listeners associated with this drop list. */
   private _removeListeners() {
     coerceElement(this.element).removeEventListener('scroll', this._handleScroll);
+    if (this.autoScrollContainer) {
+      this.autoScrollContainer.removeEventListener('scroll', this._handleAutoScrollContainerScroll);
+    }
     this._viewportScrollSubscription.unsubscribe();
   }
 

@@ -138,6 +138,7 @@ export interface CdkDragStart<T = any> {
 export declare class CdkDropList<T = any> implements CdkDropListContainer, AfterContentInit, OnDestroy {
     _draggables: QueryList<CdkDrag>;
     _dropListRef: DropListRef<CdkDropList<T>>;
+    autoScrollContainer: HTMLElement;
     autoScrollDisabled: boolean;
     connectedTo: (CdkDropList | string)[] | CdkDropList | string;
     data: T;
@@ -299,6 +300,7 @@ export interface DragRefConfig {
 }
 
 export declare class DropListRef<T = any> {
+    autoScrollContainer: HTMLElement;
     autoScrollDisabled: boolean;
     beforeStarted: Subject<void>;
     data: T;
