@@ -11,6 +11,7 @@ import {
 import {BehaviorSubject, combineLatest, Observable, ReplaySubject, Subject} from 'rxjs';
 import {map, takeUntil} from 'rxjs/operators';
 
+import {GoogleMap} from '../google-map/index';
 import {MapMarker} from '../map-marker/index';
 
 /**
@@ -19,8 +20,10 @@ import {MapMarker} from '../map-marker/index';
  */
 @Component({
   selector: 'map-info-window',
-  template: `<div #infoWindowContent class="map-info-window-content">
-               <ng-content></ng-content>
+  template: `<div class="map-info-window-container">
+               <div #infoWindowContent class="map-info-window-content">
+                 <ng-content></ng-content>
+               </div>
              </div>`,
   styleUrls: ['map-info-window.css'],
 })
@@ -81,8 +84,9 @@ export class MapInfoWindow implements OnInit, OnDestroy {
 
   private readonly _destroy = new Subject<void>();
 
-  private _map?: google.maps.Map;
   private _infoWindow?: google.maps.InfoWindow;
+
+  constructor(private readonly googleMap: GoogleMap) {}
 
   ngOnInit() {
     this._combineOptions().pipe(takeUntil(this._destroy)).subscribe(options => {
@@ -144,14 +148,8 @@ export class MapInfoWindow implements OnInit, OnDestroy {
    */
   open(anchor?: MapMarker) {
     const marker = anchor ? anchor._marker : undefined;
-    if (this._map) {
-      this._infoWindow!.open(this._map, marker);
-    }
-  }
-
-  _setMap(googleMap: google.maps.Map) {
-    if (!this._map) {
-      this._map = googleMap;
+    if (this.googleMap._googleMap) {
+      this._infoWindow!.open(this.googleMap._googleMap, marker);
     }
   }
 

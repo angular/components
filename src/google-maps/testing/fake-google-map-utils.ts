@@ -94,10 +94,14 @@ export function createInfoWindowConstructorSpy(
         return infoWindowSpy;
       });
   const testingWindow: TestingWindow = window;
-  testingWindow.google = {
-    maps: {
-      'InfoWindow': infoWindowConstructorSpy,
-    },
-  };
+  if (testingWindow.google && testingWindow.google.maps) {
+    testingWindow.google.maps['InfoWindow'] = infoWindowConstructorSpy;
+  } else {
+    testingWindow.google = {
+      maps: {
+        'InfoWindow': infoWindowConstructorSpy,
+      },
+    };
+  }
   return infoWindowConstructorSpy;
 }

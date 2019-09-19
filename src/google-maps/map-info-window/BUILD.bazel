@@ -16,6 +16,7 @@ ng_module(
     ),
     assets = [":map-info-window.css"],
     deps = [
+        "//src/google-maps/google-map",
         "//src/google-maps/map-marker",
         "@npm//@angular/core",
         "@npm//@types/googlemaps",
@@ -36,6 +37,7 @@ ng_test_library(
     ),
     deps = [
         ":map-info-window",
+        "//src/google-maps/google-map",
         "//src/google-maps/map-marker",
         "//src/google-maps/testing",
         "@npm//@angular/platform-browser",
