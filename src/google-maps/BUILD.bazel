@@ -9,10 +9,12 @@ ng_module(
         ["**/*.ts"],
         exclude = ["**/*.spec.ts"],
     ),
+    assets = ["//src/google-maps/map-info-window/assets:map-info-window.css"],
     module_name = "@angular/google-maps",
     deps = [
         "@npm//@angular/core",
         "@npm//@types/googlemaps",
+        "@npm//rxjs",
     ],
 )
 

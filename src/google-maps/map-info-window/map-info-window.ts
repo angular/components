@@ -25,7 +25,7 @@ import {MapMarker} from '../map-marker/index';
                  <ng-content></ng-content>
                </div>
              </div>`,
-  styleUrls: ['map-info-window.css'],
+  styleUrls: ['./assets/map-info-window.css'],
 })
 export class MapInfoWindow implements OnInit, OnDestroy {
   @Input()
