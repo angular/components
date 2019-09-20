@@ -12,7 +12,7 @@
 
   .docs-markdown {
     a {
-      color: mat-color($primary);
+      color: mat-color($primary, if($is-dark-theme, 200, default));
     }
 
     pre {

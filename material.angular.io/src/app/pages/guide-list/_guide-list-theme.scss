@@ -6,8 +6,9 @@
   $warn: map-get($theme, warn);
   $background: map-get($theme, background);
   $foreground: map-get($theme, foreground);
+  $is-dark-theme: map-get($theme, is-dark);
 
   .docs-guide-list .docs-guide-item {
-    color: mat-color($primary);
+    color: mat-color($primary, if($is-dark-theme, 200, default));
   }
 }

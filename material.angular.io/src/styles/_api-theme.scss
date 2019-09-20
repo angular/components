@@ -9,9 +9,24 @@
   $foreground: map-get($theme, foreground);
   $is-dark-theme: map-get($theme, is-dark);
 
-  .docs-api-method-returns-type,
-  .docs-api-method-parameter-type {
-    color: mat-color($primary, darker);
+  @if $is-dark-theme {
+    .docs-api-method-name-cell {
+      color: mat-color($primary, 200);
+    }
+
+    .docs-api-method-returns-type,
+    .docs-api-method-parameter-type {
+      color: mat-color($primary, 200);
+    }
+  } @else {
+    .docs-api-method-name-cell {
+      color: mat-color($primary, 800);
+    }
+
+    .docs-api-method-returns-type,
+    .docs-api-method-parameter-type {
+      color: mat-color($primary, darker);
+    }
   }
 
   // Force the top-level API docs header to be hidden, since this is already

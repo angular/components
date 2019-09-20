@@ -4,6 +4,7 @@
   $warn: map-get($theme, warn);
   $background: map-get($theme, background);
   $foreground: map-get($theme, foreground);
+  $is-dark-theme: map-get($theme, is-dark);
 
   .docs-toc-container {
     border-left: solid 4px mat-color($primary);
@@ -14,7 +15,7 @@
 
       &:hover,
       &.docs-active {
-        color: mat-color($primary);
+        color: mat-color($primary, if($is-dark-theme, 200, default));
       }
     }
   }
