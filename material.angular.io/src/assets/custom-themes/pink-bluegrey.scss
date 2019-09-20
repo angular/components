@@ -3,7 +3,7 @@
 
 // Define the dark theme.
 $primary: mat-palette($mat-pink);
-$accent:  mat-palette($mat-blue-grey, A200, A100, A400);
+$accent:  mat-palette($mat-blue-grey);
 
 $theme: mat-dark-theme($primary, $accent);
 @include angular-material-theme($theme);
