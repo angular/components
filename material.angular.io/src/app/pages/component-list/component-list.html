@@ -1,5 +1,5 @@
 <div class="docs-component-list-category">
-  <a *ngFor="let component of category.items"
+  <a *ngFor="let component of category?.items"
     class="docs-component-list-item"
     [routerLink]="'/' + section + '/' + component.id">
     <mat-card>
@@ -19,5 +19,3 @@
     </mat-card>
   </a>
 </div>
-
-
