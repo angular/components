@@ -1,4 +1,13 @@
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+
 import {
+  ChangeDetectionStrategy,
   Component,
   ElementRef,
   EventEmitter,
@@ -6,7 +15,8 @@ import {
   OnDestroy,
   OnInit,
   Output,
-  ViewChild
+  ViewChild,
+  ViewEncapsulation,
 } from '@angular/core';
 import {BehaviorSubject, combineLatest, Observable, ReplaySubject, Subject} from 'rxjs';
 import {map, takeUntil} from 'rxjs/operators';
@@ -19,6 +29,7 @@ import {MapMarker} from '../map-marker/index';
  * @see developers.google.com/maps/documentation/javascript/reference/info-window
  */
 @Component({
+  moduleId: module.id,
   selector: 'map-info-window',
   template: `<div class="map-info-window-container">
                <div #infoWindowContent class="map-info-window-content">
@@ -26,6 +37,8 @@ import {MapMarker} from '../map-marker/index';
                </div>
              </div>`,
   styleUrls: ['./assets/map-info-window.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None,
 })
 export class MapInfoWindow implements OnInit, OnDestroy {
   @Input()
