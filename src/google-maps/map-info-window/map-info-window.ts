@@ -7,18 +7,15 @@
  */
 
 import {
-  ChangeDetectionStrategy,
-  Component,
+  Directive,
   ElementRef,
   EventEmitter,
   Input,
   OnDestroy,
   OnInit,
   Output,
-  ViewChild,
-  ViewEncapsulation,
 } from '@angular/core';
-import {BehaviorSubject, combineLatest, Observable, ReplaySubject, Subject} from 'rxjs';
+import {BehaviorSubject, combineLatest, Observable, Subject} from 'rxjs';
 import {map, takeUntil} from 'rxjs/operators';
 
 import {GoogleMap} from '../google-map/index';
@@ -28,17 +25,9 @@ import {MapMarker} from '../map-marker/index';
  * Angular component that renders a Google Maps info window via the Google Maps JavaScript API.
  * @see developers.google.com/maps/documentation/javascript/reference/info-window
  */
-@Component({
-  moduleId: module.id,
+@Directive({
   selector: 'map-info-window',
-  template: `<div class="map-info-window-container">
-               <div #infoWindowContent class="map-info-window-content">
-                 <ng-content></ng-content>
-               </div>
-             </div>`,
-  styleUrls: ['./assets/map-info-window.css'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  encapsulation: ViewEncapsulation.None,
+  host: {'style': 'display: none'},
 })
 export class MapInfoWindow implements OnInit, OnDestroy {
   @Input()
@@ -84,14 +73,8 @@ export class MapInfoWindow implements OnInit, OnDestroy {
    */
   @Output() zindexChanged = new EventEmitter<void>();
 
-  @ViewChild('infoWindowContent', {static: false})
-  set content(content: ElementRef) {
-    this._content.next(content.nativeElement);
-  }
-
   private readonly _options = new BehaviorSubject<google.maps.InfoWindowOptions>({});
   private readonly _position = new BehaviorSubject<google.maps.LatLngLiteral|undefined>(undefined);
-  private readonly _content = new ReplaySubject<Node>(1);
 
   private readonly _listeners: google.maps.MapsEventListener[] = [];
 
@@ -99,7 +82,8 @@ export class MapInfoWindow implements OnInit, OnDestroy {
 
   private _infoWindow?: google.maps.InfoWindow;
 
-  constructor(private readonly googleMap: GoogleMap) {}
+  constructor(private readonly googleMap: GoogleMap, private _elementRef: ElementRef<HTMLElement>) {
+  }
 
   ngOnInit() {
     this._combineOptions().pipe(takeUntil(this._destroy)).subscribe(options => {
@@ -162,20 +146,20 @@ export class MapInfoWindow implements OnInit, OnDestroy {
   open(anchor?: MapMarker) {
     const marker = anchor ? anchor._marker : undefined;
     if (this.googleMap._googleMap) {
+      this._elementRef.nativeElement.style.display = '';
       this._infoWindow!.open(this.googleMap._googleMap, marker);
     }
   }
 
   private _combineOptions(): Observable<google.maps.InfoWindowOptions> {
-    return combineLatest(this._options, this._position, this._content)
-        .pipe(map(([options, position, content]) => {
-          const combinedOptions: google.maps.InfoWindowOptions = {
-            ...options,
-            position: position || options.position,
-            content,
-          };
-          return combinedOptions;
-        }));
+    return combineLatest(this._options, this._position).pipe(map(([options, position]) => {
+      const combinedOptions: google.maps.InfoWindowOptions = {
+        ...options,
+        position: position || options.position,
+        content: this._elementRef.nativeElement,
+      };
+      return combinedOptions;
+    }));
   }
 
   private _initializeEventHandlers() {

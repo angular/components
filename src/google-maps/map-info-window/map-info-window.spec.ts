@@ -119,8 +119,8 @@ describe('MapInfoWindow', () => {
     createInfoWindowConstructorSpy(infoWindowSpy).and.callThrough();
 
     const fixture = TestBed.createComponent(TestApp);
-    const infoWindowComponent =
-        fixture.debugElement.query(By.directive(MapInfoWindow)).componentInstance;
+    const infoWindowComponent = fixture.debugElement.query(By.directive(
+        MapInfoWindow))!.injector.get<MapInfoWindow>(MapInfoWindow);
     fixture.detectChanges();
 
     infoWindowComponent.close();
@@ -135,8 +135,8 @@ describe('MapInfoWindow', () => {
     createInfoWindowConstructorSpy(infoWindowSpy).and.callThrough();
 
     const fixture = TestBed.createComponent(TestApp);
-    const infoWindowComponent =
-        fixture.debugElement.query(By.directive(MapInfoWindow)).componentInstance;
+    const infoWindowComponent = fixture.debugElement.query(By.directive(
+        MapInfoWindow))!.injector.get<MapInfoWindow>(MapInfoWindow);
     fixture.detectChanges();
 
     infoWindowSpy.getContent.and.returnValue('test content');
