@@ -133,6 +133,16 @@ System.config({
     '@angular/material/tooltip': 'dist/packages/material/tooltip/index.js',
     '@angular/material/tree': 'dist/packages/material/tree/index.js',
 
+    '@angular/material-experimental/form-field/testing':
+      'dist/packages/material-experimental/form-field/testing/index.js',
+    '@angular/material-experimental/form-field/testing/control':
+      'dist/packages/material-experimental/form-field/testing/control/index.js',
+    '@angular/material-experimental/form-field/testing/shared.spec':
+      'dist/packages/material-experimental/form-field/testing/shared.spec.js',
+    '@angular/material-experimental/input/testing':
+        'dist/packages/material-experimental/input/testing/index.js',
+    '@angular/material-experimental/mdc-autocomplete':
+        'dist/packages/material-experimental/mdc-autocomplete/index.js',
     '@angular/material-experimental/mdc-button':
         'dist/packages/material-experimental/mdc-button/index.js',
     '@angular/material-experimental/mdc-card':
@@ -155,6 +165,10 @@ System.config({
         'dist/packages/material-experimental/mdc-tabs/index.js',
     '@angular/material-experimental/popover-edit':
         'dist/packages/material-experimental/popover-edit/index.js',
+    '@angular/material-experimental/select/testing':
+      'dist/packages/material-experimental/select/testing/index.js',
+    '@angular/material-experimental/select/testing/shared.spec':
+      'dist/packages/material-experimental/select/testing/shared.spec.js',
   },
   packages: {
     // Thirdparty barrels.
