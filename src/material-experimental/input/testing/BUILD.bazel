@@ -12,6 +12,7 @@ ng_module(
     deps = [
         "//src/cdk/coercion",
         "//src/cdk/testing",
+        "//src/material-experimental/form-field/testing/control",
     ],
 )
 
