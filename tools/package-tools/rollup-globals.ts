@@ -134,6 +134,12 @@ export const rollupGlobals = {
   ...rollupYouTubePlayerEntryPoints,
   ...rollupGoogleMapsEntryPoints,
 
+  // For each Angular Material secondary entry-point, we include a testing
+  // tertiary entry-point.
+  ...matSecondaryEntryPoints.reduce((res, entryPoint) => {
+    return {...res, ...generateRollupEntryPoints(`material/${entryPoint}`, ['testing'])};
+  }, []),
+
   '@angular/cdk/private/testing': 'ng.cdk.private.testing',
   '@angular/cdk/private/testing/e2e': 'ng.cdk.private.testing.e2e',
 
