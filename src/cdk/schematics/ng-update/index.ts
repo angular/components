@@ -7,7 +7,7 @@
  */
 
 import {Rule} from '@angular-devkit/schematics';
-import {green, yellow} from 'chalk';
+import chalk from 'chalk';
 import {TargetVersion} from '../update-tool/target-version';
 import {cdkUpgradeData} from './upgrade-data';
 import {createUpgradeRule} from './upgrade-rules';
@@ -30,11 +30,11 @@ export function updateToV8(): Rule {
 /** Function that will be called when the migration completed. */
 function onMigrationComplete(targetVersion: TargetVersion, hasFailures: boolean) {
   console.log();
-  console.log(green(`  ✓  Updated Angular CDK to ${targetVersion}`));
+  console.log(chalk.green(`  ✓  Updated Angular CDK to ${targetVersion}`));
   console.log();
 
   if (hasFailures) {
-    console.log(yellow(
+    console.log(chalk.yellow(
       '  ⚠  Some issues were detected but could not be fixed automatically. Please check the ' +
       'output above and fix these issues manually.'));
   }
