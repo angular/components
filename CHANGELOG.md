@@ -1,3 +1,43 @@
+## 8.2.1 "cashmere-ore" (2019-09-24)
+
+### cdk
+
+|            |                       |
+| ---------- | --------------------- |
+| bug fix |  **a11y:** remove aria-describedby attribute when no descriptions are left ([#17074](https://github.com/angular/components/issues/17074)) ([0e5c82c](https://github.com/angular/components/commit/0e5c82c)), closes [#17070](https://github.com/angular/components/issues/17070) |
+
+### material
+
+|            |                       |
+| ---------- | --------------------- |
+| bug fix |  **icon:** use ErrorHandler to log MatIcon errors ([#16999](https://github.com/angular/components/issues/16999)) ([8f54f5c](https://github.com/angular/components/commit/8f54f5c)), closes [#16967](https://github.com/angular/components/issues/16967) |
+| bug fix |  **select:** fix recursive call to SelectionModel.select() ([#17071](https://github.com/angular/components/issues/17071)) ([ed96878](https://github.com/angular/components/commit/ed96878)) |
+| bug fix |  **slide-toggle:** clear static aria attributes from host nodes ([#17085](https://github.com/angular/components/issues/17085)) ([8d73869](https://github.com/angular/components/commit/8d73869)), closes [#16938](https://github.com/angular/components/issues/16938) |
+
+### youtube-player
+
+|            |                       |
+| ---------- | --------------------- |
+| bug fix |  errors during server-side rendering ([#17091](https://github.com/angular/components/issues/17091)) ([9b547b9](https://github.com/angular/components/commit/9b547b9)) |
+
+### cdk-experimental
+
+|            |                       |
+| ---------- | --------------------- |
+| feature |  expose root loader instance in testbed harness environment ([#16903](https://github.com/angular/components/issues/16903)) ([69f7693](https://github.com/angular/components/commit/69f7693)), closes [#16697](https://github.com/angular/components/issues/16697) [#16709](https://github.com/angular/components/issues/16709) |
+
+### material-experimental
+
+|            |                       |
+| ---------- | --------------------- |
+| bug fix |  **button:** ripple color should match state color ([#17066](https://github.com/angular/components/issues/17066)) ([7e98a7e](https://github.com/angular/components/commit/7e98a7e)) |
+| bug fix |  **button:** ripples were using mat-button styles ([#17069](https://github.com/angular/components/issues/17069)) ([6d48c4f](https://github.com/angular/components/commit/6d48c4f)) |
+| bug fix |  **mdc-tabs:** error during server-side rendering ([#17169](https://github.com/angular/components/issues/17169)) ([57fa880](https://github.com/angular/components/commit/57fa880)) |
+| feature |  **drawer:** add harness for mat-drawer ([#17010](https://github.com/angular/components/issues/17010)) ([7ad30eb](https://github.com/angular/components/commit/7ad30eb)), closes [#16695](https://github.com/angular/components/issues/16695) |
+| feature |  **form-field:** add test harness ([#17138](https://github.com/angular/components/issues/17138)) ([eebf589](https://github.com/angular/components/commit/eebf589)) |
+| bug fix |  **testing:** throw better error when trying to use fixture after it has been destroyed ([#17058](https://github.com/angular/components/issues/17058)) ([5e2296f](https://github.com/angular/components/commit/5e2296f)) |
+
+
 # 8.2.0 "silicon-neuron" (2019-09-09)
 
 ### Highlights
