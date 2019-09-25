@@ -8,6 +8,7 @@
 
 import {ComponentHarness, HarnessPredicate, TestElement} from '@angular/cdk/testing';
 import {SelectHarnessFilters} from './select-harness-filters';
+import {MatSelectOptionHarness, MatSelectOptionGroupHarness} from './option-harness';
 
 /** Selector for the select panel. */
 const PANEL_SELECTOR = '.mat-select-panel';
@@ -21,8 +22,8 @@ export class MatSelectHarness extends ComponentHarness {
   private _panel = this._documentRootLocator.locatorFor(PANEL_SELECTOR);
   private _backdrop = this._documentRootLocator.locatorFor('.cdk-overlay-backdrop');
   private _optionalPanel = this._documentRootLocator.locatorForOptional(PANEL_SELECTOR);
-  private _options = this._documentRootLocator.locatorForAll(`${PANEL_SELECTOR} .mat-option`);
-  private _groups = this._documentRootLocator.locatorForAll(`${PANEL_SELECTOR} .mat-optgroup`);
+  private _options = this._documentRootLocator.locatorForAll(MatSelectOptionHarness);
+  private _groups = this._documentRootLocator.locatorForAll(MatSelectOptionGroupHarness);
   private _trigger = this.locatorFor('.mat-select-trigger');
   private _value = this.locatorFor('.mat-select-value');
 
@@ -85,12 +86,12 @@ export class MatSelectHarness extends ComponentHarness {
   }
 
   /** Gets the options inside the select panel. */
-  async getOptions(): Promise<TestElement[]> {
+  async getOptions(): Promise<MatSelectOptionHarness[]> {
     return this._options();
   }
 
   /** Gets the groups of options inside the panel. */
-  async getOptionGroups(): Promise<TestElement[]> {
+  async getOptionGroups(): Promise<MatSelectOptionGroupHarness[]> {
     return this._groups();
   }
 
