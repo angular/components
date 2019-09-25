@@ -1,7 +1,7 @@
 package(default_visibility = ["//visibility:public"])
 
 load("//src/cdk:config.bzl", "CDK_TARGETS")
-load("//src/material:config.bzl", "MATERIAL_NO_TEST_TARGETS")
+load("//src/material:config.bzl", "MATERIAL_TARGETS")
 load("//tools:defaults.bzl", "ng_module")
 load("//tools:sass_generate_binaries.bzl", "sass_generate_binaries")
 
@@ -22,5 +22,5 @@ ng_module(
         "@npm//@angular/animations",
         "@npm//@angular/forms",
         "@npm//@angular/router",
-    ] + CDK_TARGETS + MATERIAL_NO_TEST_TARGETS,
+    ] + CDK_TARGETS + MATERIAL_TARGETS,
 )

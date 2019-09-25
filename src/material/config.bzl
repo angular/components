@@ -50,29 +50,29 @@ entryPoints = [
 ]
 
 # List of all non-testing entry-points of the Angular Material package.
-MATERIAL_NO_TEST_ENTRYPOINTS = [
+MATERIAL_ENTRYPOINTS = [
     ep
     for ep in entryPoints
     if not ep.endswith("/testing")
 ]
 
 # List of all testing entry-points of the Angular Material package.
-MATERIAL_TEST_ENTRYPOINTS = [
+MATERIAL_TESTING_ENTRYPOINTS = [
     ep
     for ep in entryPoints
-    if not ep in MATERIAL_NO_TEST_ENTRYPOINTS
+    if not ep in MATERIAL_ENTRYPOINTS
 ]
 
 # List of all non-testing entry-point targets of the Angular Material package.
-MATERIAL_NO_TEST_TARGETS = ["//src/material"] + \
-                           ["//src/material/%s" % ep for ep in MATERIAL_NO_TEST_ENTRYPOINTS]
+MATERIAL_TARGETS = ["//src/material"] + \
+                   ["//src/material/%s" % ep for ep in MATERIAL_ENTRYPOINTS]
 
 # List of all testing entry-point targets of the Angular Material package.
-MATERIAL_TEST_TARGETS = ["//src/material/%s" % ep for ep in MATERIAL_TEST_ENTRYPOINTS]
+MATERIAL_TESTING_TARGETS = ["//src/material/%s" % ep for ep in MATERIAL_TESTING_ENTRYPOINTS]
 
 # List that references the sass libraries for each Material non-testing entry-point. This
 # can be used to specify dependencies for the "all-theme.scss" file in core.
 MATERIAL_SCSS_LIBS = [
     "//src/material/%s:%s_scss_lib" % (ep, ep.replace("-", "_"))
-    for ep in MATERIAL_NO_TEST_ENTRYPOINTS
+    for ep in MATERIAL_ENTRYPOINTS
 ]

@@ -2,14 +2,14 @@ package(default_visibility = ["//visibility:public"])
 
 load("@npm_bazel_typescript//:index.bzl", "ts_config")
 load("//src/cdk:config.bzl", "CDK_ENTRYPOINTS")
-load("//src/material:config.bzl", "MATERIAL_NO_TEST_ENTRYPOINTS")
+load("//src/material:config.bzl", "MATERIAL_ENTRYPOINTS")
 load("//tools:defaults.bzl", "ts_library")
 load("//tools/dgeni:index.bzl", "dgeni_api_docs")
 
 # List that contains all source files that need to be processed by Dgeni.
 apiSourceFiles = ["//src/cdk/%s:source-files" % name for name in CDK_ENTRYPOINTS] + [
     "//src/material/%s:source-files" % name
-    for name in MATERIAL_NO_TEST_ENTRYPOINTS
+    for name in MATERIAL_ENTRYPOINTS
 ]
 
 exports_files([
@@ -43,7 +43,7 @@ dgeni_api_docs(
     ],
     entry_points = {
         "cdk": CDK_ENTRYPOINTS,
-        "material": MATERIAL_NO_TEST_ENTRYPOINTS,
+        "material": MATERIAL_ENTRYPOINTS,
     },
     tags = ["docs-package"],
 )

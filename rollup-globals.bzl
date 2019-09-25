@@ -1,10 +1,10 @@
 load("//src/cdk:config.bzl", "CDK_ENTRYPOINTS")
 load("//src/cdk-experimental:config.bzl", "CDK_EXPERIMENTAL_ENTRYPOINTS")
-load("//src/material:config.bzl", "MATERIAL_NO_TEST_ENTRYPOINTS", "MATERIAL_TEST_ENTRYPOINTS")
+load("//src/material:config.bzl", "MATERIAL_ENTRYPOINTS", "MATERIAL_TESTING_ENTRYPOINTS")
 load(
     "//src/material-experimental:config.bzl",
-    "MATERIAL_EXPERIMENTAL_NO_TEST_ENTRYPOINTS",
-    "MATERIAL_EXPERIMENTAL_TEST_ENTRYPOINTS",
+    "MATERIAL_EXPERIMENTAL_ENTRYPOINTS",
+    "MATERIAL_EXPERIMENTAL_TESTING_ENTRYPOINTS",
 )
 
 # Base rollup globals for everything in the repo.
@@ -71,10 +71,10 @@ def create_globals(packageName, entryPoints):
 
 create_globals("cdk", CDK_ENTRYPOINTS)
 create_globals("cdk-experimental", CDK_EXPERIMENTAL_ENTRYPOINTS)
-create_globals("material", MATERIAL_NO_TEST_ENTRYPOINTS + MATERIAL_TEST_ENTRYPOINTS)
+create_globals("material", MATERIAL_ENTRYPOINTS + MATERIAL_TESTING_ENTRYPOINTS)
 create_globals(
     "material-experimental",
-    MATERIAL_EXPERIMENTAL_NO_TEST_ENTRYPOINTS + MATERIAL_EXPERIMENTAL_TEST_ENTRYPOINTS,
+    MATERIAL_EXPERIMENTAL_ENTRYPOINTS + MATERIAL_EXPERIMENTAL_TESTING_ENTRYPOINTS,
 )
 
 # Rollup globals the examples package. Since individual examples are
@@ -84,9 +84,9 @@ create_globals("material-examples/cdk", CDK_ENTRYPOINTS)
 create_globals("material-examples/cdk-experimental", CDK_EXPERIMENTAL_ENTRYPOINTS)
 create_globals(
     "material-examples/material",
-    MATERIAL_NO_TEST_ENTRYPOINTS + MATERIAL_TEST_ENTRYPOINTS,
+    MATERIAL_ENTRYPOINTS + MATERIAL_TESTING_ENTRYPOINTS,
 )
 create_globals(
     "material-examples/material-experimental",
-    MATERIAL_EXPERIMENTAL_NO_TEST_ENTRYPOINTS + MATERIAL_EXPERIMENTAL_TEST_ENTRYPOINTS,
+    MATERIAL_EXPERIMENTAL_ENTRYPOINTS + MATERIAL_EXPERIMENTAL_TESTING_ENTRYPOINTS,
 )
