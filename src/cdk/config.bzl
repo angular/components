@@ -1,28 +1,26 @@
-entryPointGroups = [
-    ["a11y"],
-    ["accordion"],
-    ["bidi"],
-    ["coercion"],
-    ["collections"],
-    ["drag-drop"],
-    ["keycodes"],
-    ["layout"],
-    ["observers"],
-    ["overlay"],
-    ["platform"],
-    ["portal"],
-    ["scrolling"],
-    ["stepper"],
-    ["table"],
-    ["text-field"],
-    ["tree"],
+# List of all entry-points of the Angular CDK package.
+CDK_ENTRYPOINTS = [
+    "a11y",
+    "accordion",
+    "bidi",
+    "coercion",
+    "collections",
+    "drag-drop",
+    "keycodes",
+    "layout",
+    "observers",
+    "overlay",
+    "platform",
+    "portal",
+    "scrolling",
+    "stepper",
+    "table",
+    "text-field",
+    "tree",
 
     # NOTE: "testing" should not be listed here as it will be treated as its own
     # package that will be included manually in the "ng_package".
 ]
-
-# List of all entry-points of the Angular CDK package.
-CDK_ENTRYPOINTS = [ep for group in entryPointGroups for ep in group]
 
 # List of all entry-point targets of the Angular Material package.
 CDK_TARGETS = ["//src/cdk"] + ["//src/cdk/%s" % ep for ep in CDK_ENTRYPOINTS]

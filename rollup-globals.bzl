@@ -1,7 +1,11 @@
 load("//src/cdk:config.bzl", "CDK_ENTRYPOINTS")
 load("//src/cdk-experimental:config.bzl", "CDK_EXPERIMENTAL_ENTRYPOINTS")
-load("//src/material:config.bzl", "MATERIAL_ENTRYPOINTS")
-load("//src/material-experimental:config.bzl", "MATERIAL_EXPERIMENTAL_ENTRYPOINTS")
+load("//src/material:config.bzl", "MATERIAL_NO_TEST_ENTRYPOINTS", "MATERIAL_TEST_ENTRYPOINTS")
+load(
+    "//src/material-experimental:config.bzl",
+    "MATERIAL_EXPERIMENTAL_NO_TEST_ENTRYPOINTS",
+    "MATERIAL_EXPERIMENTAL_TEST_ENTRYPOINTS",
+)
 
 # Base rollup globals for everything in the repo.
 ROLLUP_GLOBALS = {
@@ -67,13 +71,22 @@ def create_globals(packageName, entryPoints):
 
 create_globals("cdk", CDK_ENTRYPOINTS)
 create_globals("cdk-experimental", CDK_EXPERIMENTAL_ENTRYPOINTS)
-create_globals("material", MATERIAL_ENTRYPOINTS)
-create_globals("material-experimental", MATERIAL_EXPERIMENTAL_ENTRYPOINTS)
+create_globals("material", MATERIAL_NO_TEST_ENTRYPOINTS + MATERIAL_TEST_ENTRYPOINTS)
+create_globals(
+    "material-experimental",
+    MATERIAL_EXPERIMENTAL_NO_TEST_ENTRYPOINTS + MATERIAL_EXPERIMENTAL_TEST_ENTRYPOINTS,
+)
 
 # Rollup globals the examples package. Since individual examples are
 # grouped by package and component, the primary entry-point imports
 # from entry-points which should be treated as external imports.
 create_globals("material-examples/cdk", CDK_ENTRYPOINTS)
 create_globals("material-examples/cdk-experimental", CDK_EXPERIMENTAL_ENTRYPOINTS)
-create_globals("material-examples/material", MATERIAL_ENTRYPOINTS)
-create_globals("material-examples/material-experimental", MATERIAL_EXPERIMENTAL_ENTRYPOINTS)
+create_globals(
+    "material-examples/material",
+    MATERIAL_NO_TEST_ENTRYPOINTS + MATERIAL_TEST_ENTRYPOINTS,
+)
+create_globals(
+    "material-examples/material-experimental",
+    MATERIAL_EXPERIMENTAL_NO_TEST_ENTRYPOINTS + MATERIAL_EXPERIMENTAL_TEST_ENTRYPOINTS,
+)

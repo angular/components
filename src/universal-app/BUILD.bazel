@@ -5,7 +5,7 @@ load("@io_bazel_rules_sass//:defs.bzl", "sass_binary")
 load("//src/cdk:config.bzl", "CDK_TARGETS")
 load("//src/cdk-experimental:config.bzl", "CDK_EXPERIMENTAL_TARGETS")
 load("//src/material:config.bzl", "MATERIAL_NO_TEST_TARGETS")
-load("//src/material-experimental:config.bzl", "MATERIAL_EXPERIMENTAL_TARGETS")
+load("//src/material-experimental:config.bzl", "MATERIAL_EXPERIMENTAL_NO_TEST_TARGETS")
 load("//tools:defaults.bzl", "ng_module", "ts_library")
 
 ng_module(
@@ -22,7 +22,7 @@ ng_module(
     deps = [
         "@npm//@angular/platform-server",
         "//src/youtube-player",
-    ] + CDK_TARGETS + CDK_EXPERIMENTAL_TARGETS + MATERIAL_NO_TEST_TARGETS + MATERIAL_EXPERIMENTAL_TARGETS,
+    ] + CDK_TARGETS + CDK_EXPERIMENTAL_TARGETS + MATERIAL_NO_TEST_TARGETS + MATERIAL_EXPERIMENTAL_NO_TEST_TARGETS,
 )
 
 ts_library(

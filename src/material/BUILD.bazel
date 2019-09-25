@@ -1,6 +1,12 @@
 package(default_visibility = ["//visibility:public"])
 
-load("//src/material:config.bzl", "MATERIAL_NO_TEST_ENTRYPOINTS", "MATERIAL_SCSS_LIBS", "MATERIAL_TARGETS")
+load(
+    "//src/material:config.bzl",
+    "MATERIAL_NO_TEST_ENTRYPOINTS",
+    "MATERIAL_NO_TEST_TARGETS",
+    "MATERIAL_SCSS_LIBS",
+    "MATERIAL_TEST_TARGETS",
+)
 load("//tools:defaults.bzl", "ng_package", "ts_library")
 
 ts_library(
@@ -31,5 +37,5 @@ ng_package(
     entry_point_name = "material",
     packages = ["//src/material/schematics:npm_package"],
     tags = ["release-package"],
-    deps = MATERIAL_TARGETS,
+    deps = MATERIAL_NO_TEST_TARGETS + MATERIAL_TEST_TARGETS,
 )

@@ -1,6 +1,11 @@
 package(default_visibility = ["//visibility:public"])
 
-load("//src/material-experimental:config.bzl", "MATERIAL_EXPERIMENTAL_SCSS_LIBS", "MATERIAL_EXPERIMENTAL_TARGETS")
+load(
+    "//src/material-experimental:config.bzl",
+    "MATERIAL_EXPERIMENTAL_NO_TEST_TARGETS",
+    "MATERIAL_EXPERIMENTAL_SCSS_LIBS",
+    "MATERIAL_EXPERIMENTAL_TEST_TARGETS",
+)
 load("//tools:defaults.bzl", "ng_package", "ts_library")
 
 exports_files(["mdc_require_config.js"])
@@ -21,5 +26,5 @@ ng_package(
     data = MATERIAL_EXPERIMENTAL_SCSS_LIBS,
     entry_point = ":public-api.ts",
     tags = ["release-package"],
-    deps = MATERIAL_EXPERIMENTAL_TARGETS,
+    deps = MATERIAL_EXPERIMENTAL_NO_TEST_TARGETS + MATERIAL_EXPERIMENTAL_TEST_TARGETS,
 )
