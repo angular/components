@@ -21,6 +21,8 @@ export abstract class MatDateSelectionModel<D> {
 
   abstract add(date: D | null): void;
   abstract isComplete(): boolean;
+  abstract getFirstSelectedDate(): D|null;
+  abstract getLastSelectedDate(): D|null;
   abstract isSame(other: MatDateSelectionModel<D>): boolean;
   abstract isValid(): boolean;
 }
@@ -52,13 +54,15 @@ export class MatSingleDateSelectionModel<D> extends MatDateSelectionModel<D> {
     const date = this.asDate();
     const otherDate = other.asDate();
     if (date && otherDate) {
-      return this.adapter.compareDate(date, otherDate);
+      return date === otherDate;
     } 
-    throw Error
-
   }
 
   isComplete() { return !!this.date; }
+
+  getFirstSelectedDate() { return this.date; }
+
+  getLastSelectedDate() { return this.date; }
 
   isSame(other: MatDateSelectionModel<D>): boolean {
     return other instanceof MatSingleDateSelectionModel &&
@@ -120,6 +124,10 @@ export class MatRangeDateSelectionModel<D> extends MatDateSelectionModel<D> {
   isComplete(): boolean {
     return !!(this.start && this.end);
   }
+
+  getFirstSelectedDate() { return this.start; }
+
+  getLastSelectedDate() { return this.end; }
 
   isSame(other: MatDateSelectionModel<D>): boolean {
     return other instanceof MatRangeDateSelectionModel &&
