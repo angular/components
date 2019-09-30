@@ -17,7 +17,7 @@ import {NgControl} from '@angular/forms';
   // In Angular 9.x, `@Directive()` without any selector is legal (and `MatFormFieldControlModule`
   // is not necessary either).
   // TODO(alxhub): convert to a selectorless Directive when Material upgrades to Angular 9.
-  selector: 'abstract-mat-form-field-control',
+  selector: 'do-not-use-abstract-mat-form-field-control',
 })
 export abstract class MatFormFieldControl<T> {
   /** The value of the control. */
@@ -80,5 +80,5 @@ export abstract class MatFormFieldControl<T> {
 @NgModule({
   declarations: [MatFormFieldControl as any],
 })
-export class MatFormFieldControlModule {
+export class DoNotUseMatFormFieldControlModule {
 }

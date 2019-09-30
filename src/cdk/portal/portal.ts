@@ -186,7 +186,7 @@ export type PortalHost = PortalOutlet;
   // In Angular 9.x, `@Directive()` without any selector is legal (and `BasePortalModule` is not
   // necessary either).
   // TODO(alxhub): convert to a selectorless Directive when the CDK upgrades to Angular 9.
-  selector: 'abstract-base-portal-outlet',
+  selector: 'do-not-use-abstract-base-portal-outlet',
 })
 export abstract class BasePortalOutlet implements PortalOutlet {
   /** The portal currently attached to the host. */
@@ -273,7 +273,7 @@ export abstract class BasePortalOutlet implements PortalOutlet {
 @NgModule({
   declarations: [BasePortalOutlet as any],
 })
-export class BasePortalOutletModule {
+export class DoNotUseBasePortalOutletModule {
 }
 
 /**
