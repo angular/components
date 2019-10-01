@@ -1,16 +1,16 @@
 # Using Angular Material's component harnesses in your tests
 
-Angular CDK provides code for creating component test harnesses. A component harness is
+The Angular CDK provides code for creating component test harnesses. A component harness is
 a class that lets a test interact with a component via a supported API. Each harness's API
 interacts with a component the same way a user would. By using the harness API, a test insulates
 itself against updates to the internals of a component, such as changing its DOM structure. The
 idea for component harnesses comes from the
-[page object](https://martinfowler.com/bliki/PageObject.html) pattern commonly used for integration
+[PageObject](https://martinfowler.com/bliki/PageObject.html) pattern commonly used for integration
 testing.
 
 Angular Material offers test harnesses for many of its components. The Angular team strongly
-encourages developers to use these harnesses for testing to avoid brittle tests that rely on
-a component's internals.
+encourages developers to use these harnesses for testing to avoid creating brittle tests that rely
+on a component's internals.
 
 <!-- TODO(mmalerba): add list of components that are ready -->
 
@@ -18,19 +18,19 @@ This guide discusses the advantages of using component test harnesses and shows 
 
 ## Benefits of component test harnesses
 
+There are two primary benefits to using the Angular Material component harnesses in your tests:
+ 
 1. Harnesses make tests easier to read and understand with straightforward APIs.
-2. Harnesses make tests that more robust and less likely to break when updating Angular Material.
-3. Harnesses helps you avoid testing implementation details of Angular Material components and
-   instead focus on testing your own application code.
+2. Harnesses make tests more robust and less likely to break when updating Angular Material.
 
 The following sections will illustrate these benefits in more detail.
 
 ## Which kinds of tests can use harnesses?
 
-Angular CDK's component harnesses are designed to work in multiple different test environments.
-Support currently includes Angular's Testbed environment in Karma unit tests and
-Protractor end-to-end (e2e) tests. You can also support additional environments by creating custom
-extensions of the CDK's `HarnessEnvironment` and `TestElement` classes.
+The Angular CDK's component harnesses are designed to work in multiple different test environments.
+Support currently includes Angular's Testbed environment in Karma unit tests and Protractor
+end-to-end (e2e) tests. You can also support additional environments by creating custom extensions
+of the CDK's `HarnessEnvironment` and `TestElement` classes.
 
 ## Getting started
 
@@ -57,14 +57,15 @@ describe('my-component', () => {
 ```
 
 This code creates a fixture for `UserProfile` and then creates a `HarnessLoader` for that fixture.
-The `HarnessLoader` can then locate Angular Material components inside `UserProfile` and harnesses
-for them. Not that `HarnessLoader` and `TestbedHarnessEnvironment` are loaded from different paths. 
+The `HarnessLoader` can then locate Angular Material components inside `UserProfile` and create
+harnesses for them. Note that `HarnessLoader` and `TestbedHarnessEnvironment` are loaded from
+different paths. 
 
 - `@angular/cdk/testing` contains symbols that are shared regardless of the environment your tests
   are in. 
 - `@angular/cdk/testing/testbed` contains symbols that are used only in Karma tests.
 - `@angular/cdk/testing/protractor` (not shown above) contains symbols that are used only in
-  protractor tests.
+  Protractor tests.
 
 ## Loading an Angular Material harness
 
@@ -107,11 +108,11 @@ it('should work', async () => {
 ```
 
 You can also use the static `with` method implemented on all Angular Material component harnesses.
-This method accepts a `HarnessPredicate`, an object that filters loaded harnesses based on the
+This method creates a `HarnessPredicate`, an object that filters loaded harnesses based on the
 provided constraints. The particular constraint options vary depending on the harness class, but all
 harnesses support at least:
  
-- `selector` - CSS selector that the component must match (in addition to its base selector, such
+- `selector` - CSS selector that the component must match (in addition to its host selector, such
                as `[mat-button]`)
 - `ancestor` - CSS selector for a some ancestor element above the component in the DOM
  
@@ -245,19 +246,19 @@ concise.
 Notice that the test without harnesses directly uses CSS selectors to query elements within
 `<mat-select>`, such as `.mat-select-trigger`. If the internal DOM of `<mat-select>` changes, these
 queries may stop working. While the Angular team tries to minimize this type of change, some
-features and bug fixes ultimately require restructing the DOM. By using the Angular Material
-harnesses, you avoid depending on internal structure directly. 
+features and bug fixes ultimately require restructuring the DOM. By using the Angular Material
+harnesses, you avoid depending on internal DOM structure directly. 
 
 In addition to DOM structure, component asynchronicity often offers a challenge when updating
 components. If a component changes between synchronous and asynchronous, downstream unit tests may
 break do to expectations around timing. Tests then require the addition or removal of some
-arcane combination of `whenStable()`, `flushMicroTasks`, `tick`, or `detectChanges`. Component
+arcane combination of `whenStable`, `flushMicroTasks`, `tick`, or `detectChanges`. Component
 harnesses, however, avoid this problem by normalizing the asynchronicity of all component behaviors 
 with all asynchronous APIs. When a test uses these harnesses, changes to asynchronicity become
 far more manageable.
 
 Both DOM structure and asynchronicity are _implementation details_ of Angular Material's components.
 When tests depend on the implementation details, they become a common source of failures due to
-library changes. Angular CDK's test harnesses makes component library updates
-easier for both application authors and the Angular team, as the Angular team only has to update
-the harness once for everyone.
+library changes. Angular CDK's test harnesses makes component library updates easier for both
+application authors and the Angular team, as the Angular team only has to update the harness once
+for everyone.
