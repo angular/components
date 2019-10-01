@@ -390,6 +390,7 @@ export class DragRef<T = any> {
     this._handles = [];
     this._disabledHandles.clear();
     this._dropContainer = undefined;
+    this._resizeSubscription.unsubscribe();
     this._boundaryElement = this._rootElement = this._placeholderTemplate =
         this._previewTemplate = this._nextSibling = null!;
   }
