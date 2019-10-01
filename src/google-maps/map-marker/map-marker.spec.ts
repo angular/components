@@ -171,7 +171,6 @@ describe('MapMarker', () => {
     createMarkerConstructorSpy(markerSpy).and.callThrough();
 
     const fixture = TestBed.createComponent(TestApp);
-    const markerComponent = fixture.debugElement.query(By.directive(MapMarker)).componentInstance;
     fixture.detectChanges();
 
     expect(markerSpy.addListener)
