@@ -36,7 +36,7 @@
     "format": "yarn -s format:ts && yarn -s format:bazel",
     "cherry-pick-patch": "ts-node --project tools/cherry-pick-patch/ tools/cherry-pick-patch/cherry-pick-patch.ts"
   },
-  "version": "8.2.0",
+  "version": "8.2.2",
   "requiredAngularVersion": "^8.0.0 || ^9.0.0-0",
   "requiredMDCVersion": "^4.0.0-alpha.0",
   "dependencies": {
