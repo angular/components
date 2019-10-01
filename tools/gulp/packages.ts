@@ -40,5 +40,4 @@ export const allBuildPackages = [
   materialExperimentalPackage,
   momentAdapterPackage,
   googleMapsPackage,
-  examplesPackage
 ];
