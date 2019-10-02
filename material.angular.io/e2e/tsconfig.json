@@ -1,16 +1,13 @@
 {
-  "compileOnSave": false,
+  "extends": "../tsconfig.json",
   "compilerOptions": {
-    "declaration": false,
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
+    "outDir": "../out-tsc/e2e",
     "module": "commonjs",
-    "moduleResolution": "node",
-    "outDir": "../dist/out-tsc-e2e",
-    "sourceMap": true,
     "target": "es5",
-    "typeRoots": [
-      "../node_modules/@types"
+    "types": [
+      "jasmine",
+      "jasminewd2",
+      "node"
     ]
   }
 }

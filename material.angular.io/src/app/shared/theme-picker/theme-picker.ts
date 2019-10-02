@@ -14,7 +14,7 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatMenuModule} from '@angular/material/menu';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {CommonModule} from '@angular/common';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, ParamMap} from '@angular/router';
 import {Subscription} from 'rxjs';
 import {map, filter} from 'rxjs/operators';
 
@@ -71,8 +71,8 @@ export class ThemePicker implements OnInit, OnDestroy {
 
   ngOnInit() {
     this._queryParamSubscription = this._activatedRoute.queryParamMap
-      .pipe(map(params => params.get('theme')), filter(Boolean))
-      .subscribe(themeName => this.installTheme(themeName));
+      .pipe(map((params: ParamMap) => params.get('theme')), filter(Boolean))
+      .subscribe((themeName: string) => this.installTheme(themeName));
   }
 
   ngOnDestroy() {

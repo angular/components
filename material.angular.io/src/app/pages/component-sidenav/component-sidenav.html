@@ -4,7 +4,7 @@
               *ngIf="(isScreenSmall | async)"
               [opened]="!(isScreenSmall | async)"
               [mode]="(isScreenSmall | async) ? 'over' : 'side'"
-              [fixedInViewport]="(isScreenSmall | async)"
+              [fixedInViewport]="(isScreenSmall | async) ? true : false"
               fixedTopGap="92">
     <app-component-nav [params]="params"></app-component-nav>
   </mat-sidenav>
@@ -13,7 +13,7 @@
     <div class="docs-component-sidenav-inner-content">
       <div class="docs-component-sidenav-body-content">
         <!-- If on large screen, menu resides to left of content -->
-        <app-component-nav 
+        <app-component-nav
           *ngIf="!(isScreenSmall | async)"
           [params]="params">
         </app-component-nav>

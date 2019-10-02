@@ -13,10 +13,10 @@ const versionUrl = 'https://material.angular.io/assets/versions.json';
   templateUrl: './version-picker.html'
 })
 export class VersionPicker {
-  /** The currently running versin of Material. */
+  /** The currently running version of Material. */
   materialVersion = materialVersion;
   /** The possible versions of the doc site. */
-  docVersions = this.http.get(versionUrl);
+  docVersions = this.http.get<VersionInfo[]>(versionUrl);
 
   constructor(private http: HttpClient) {}
 

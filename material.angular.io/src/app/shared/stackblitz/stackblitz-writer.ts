@@ -8,7 +8,7 @@ import {materialVersion} from '../version/version';
 const STACKBLITZ_URL = 'https://run.stackblitz.com/api/angular/v1';
 
 const COPYRIGHT =
-  `Copyright 2019 Google Inc. All Rights Reserved.
+  `Copyright 2019 Google LLC. All Rights Reserved.
     Use of this source code is governed by an MIT-style license that
     can be found in the LICENSE file at http://angular.io/license`;
 
@@ -30,7 +30,7 @@ const TEMPLATE_FILES = [
 ];
 
 const TAGS: string[] = ['angular', 'material', 'example'];
-const angularVersion = '>=7.0.0';
+const angularVersion = '>=8.0.0';
 
 const dependencies = {
   '@angular/cdk': materialVersion,
@@ -45,13 +45,13 @@ const dependencies = {
   '@angular/platform-browser': angularVersion,
   '@angular/platform-browser-dynamic': angularVersion,
   '@angular/router': angularVersion,
-  'angular-in-memory-web-api': '~0.5.0',
-  'core-js': '^2.4.1',
-  'rxjs': '>=6.0.0-beta.0 <7.0.0',
-  'web-animations-js': '^2.3.1',
-  'zone.js': '^0.8.14',
+  'angular-in-memory-web-api': '~0.5.4',
+  'core-js': '^2.6.9',
+  'rxjs': '>=6.5.3 <7.0.0',
+  'web-animations-js': '^2.3.2',
+  'zone.js': '^0.9.1',
   'hammerjs': '^2.0.8',
-  'moment': '^2.18.1',
+  'moment': '^2.24.0',
 };
 
 /**

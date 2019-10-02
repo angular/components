@@ -42,7 +42,11 @@ import {GaService} from './shared/ga/ga';
     FormsModule,
     HttpClientModule,
     MatNativeDateModule,
-    RouterModule.forRoot(MATERIAL_DOCS_ROUTES),
+    RouterModule.forRoot(MATERIAL_DOCS_ROUTES, {
+      scrollPositionRestoration: 'enabled',
+      anchorScrolling: 'enabled',
+      relativeLinkResolution: 'corrected'
+    }),
     ComponentCategoryListModule,
     ComponentHeaderModule,
     ComponentListModule,

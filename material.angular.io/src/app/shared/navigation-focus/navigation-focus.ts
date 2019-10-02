@@ -13,7 +13,8 @@ export class NavigationFocus implements OnInit {
   ngOnInit() {
     clearTimeout(lastTimeoutId);
     // 100ms timeout is used to allow the page to settle before moving focus for screen readers.
-    lastTimeoutId = setTimeout(() => this.el.nativeElement.focus({preventScroll: true}), 100);
+    lastTimeoutId = window.setTimeout(() => this.el.nativeElement.focus({preventScroll: true}),
+      100);
   }
 }
 
