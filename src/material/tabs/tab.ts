@@ -38,7 +38,8 @@ const _MatTabMixinBase: CanDisableCtor & typeof MatTabBase =
   selector: 'mat-tab',
   templateUrl: 'tab.html',
   inputs: ['disabled'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  // tslint:disable-next-line:validate-decorators
+  changeDetection: ChangeDetectionStrategy.Default,
   encapsulation: ViewEncapsulation.None,
   exportAs: 'matTab',
 })
