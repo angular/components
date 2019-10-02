@@ -13,7 +13,7 @@ import {ComponentSidenav} from './pages/component-sidenav/component-sidenav';
 import {
   CanActivateComponentSidenav
 } from './pages/component-sidenav/component-sidenav-can-load-guard';
-import {GuideViewer} from './pages/guide-viewer/guide-viewer';
+import {GuideViewer} from './pages/guide-viewer';
 
 export const MATERIAL_DOCS_ROUTES: Routes = [
   {path: '', component: Homepage, pathMatch: 'full', data: {}},
