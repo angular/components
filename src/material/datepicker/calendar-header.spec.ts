@@ -1,7 +1,7 @@
 import {Directionality} from '@angular/cdk/bidi';
 import {Component} from '@angular/core';
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
-import {MatNativeDateModule} from '@angular/material/core';
+import {MatNativeDateModule, DateAdapter} from '@angular/material/core';
 import {DEC, FEB, JAN} from '@angular/material/testing';
 import {By} from '@angular/platform-browser';
 import {MatCalendar} from './calendar';
@@ -43,7 +43,7 @@ describe('MatCalendarHeader', () => {
       fixture = TestBed.createComponent(StandardCalendar);
       fixture.detectChanges();
 
-      let calendarDebugElement = fixture.debugElement.query(By.directive(MatCalendar));
+      let calendarDebugElement = fixture.debugElement.query(By.directive(MatCalendar))!;
       calendarElement = calendarDebugElement.nativeElement;
       periodButton = calendarElement.querySelector('.mat-calendar-period-button') as HTMLElement;
       prevButton = calendarElement.querySelector('.mat-calendar-previous-button') as HTMLElement;
@@ -149,6 +149,18 @@ describe('MatCalendarHeader', () => {
       expect(calendarInstance.activeDate).toEqual(new Date(2016, DEC, 31));
       expect(testComponent.selected).toBeFalsy('no date should be selected yet');
     });
+
+    it('should format the year in the period button using the date adapter', () => {
+      const adapter = fixture.debugElement.injector.get(DateAdapter);
+
+      spyOn(adapter, 'getYearName').and.returnValue('FAKE_YEAR');
+
+      periodButton.click();
+      fixture.detectChanges();
+
+      expect(calendarInstance.currentView).toBe('multi-year');
+      expect(periodButton.textContent).toContain('FAKE_YEAR');
+    });
   });
 
   describe('calendar with minDate only', () => {
@@ -164,7 +176,7 @@ describe('MatCalendarHeader', () => {
       fixture = TestBed.createComponent(CalendarWithMinMaxDate);
       fixture.detectChanges();
 
-      let calendarDebugElement = fixture.debugElement.query(By.directive(MatCalendar));
+      let calendarDebugElement = fixture.debugElement.query(By.directive(MatCalendar))!;
       calendarElement = calendarDebugElement.nativeElement;
       periodButton =
         calendarElement.querySelector('.mat-calendar-period-button') as HTMLButtonElement;
@@ -218,7 +230,7 @@ describe('MatCalendarHeader', () => {
       fixture = TestBed.createComponent(CalendarWithMinMaxDate);
       fixture.detectChanges();
 
-      let calendarDebugElement = fixture.debugElement.query(By.directive(MatCalendar));
+      let calendarDebugElement = fixture.debugElement.query(By.directive(MatCalendar))!;
       calendarElement = calendarDebugElement.nativeElement;
       periodButton =
         calendarElement.querySelector('.mat-calendar-period-button') as HTMLButtonElement;
@@ -271,7 +283,7 @@ describe('MatCalendarHeader', () => {
       fixture = TestBed.createComponent(CalendarWithMinMaxDate);
       fixture.detectChanges();
 
-      let calendarDebugElement = fixture.debugElement.query(By.directive(MatCalendar));
+      let calendarDebugElement = fixture.debugElement.query(By.directive(MatCalendar))!;
       calendarElement = calendarDebugElement.nativeElement;
       periodButton =
         calendarElement.querySelector('.mat-calendar-period-button') as HTMLButtonElement;

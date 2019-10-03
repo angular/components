@@ -51,7 +51,7 @@ describe('MatYearView', () => {
       fixture = TestBed.createComponent(StandardYearView);
       fixture.detectChanges();
 
-      let yearViewDebugElement = fixture.debugElement.query(By.directive(MatYearView));
+      let yearViewDebugElement = fixture.debugElement.query(By.directive(MatYearView))!;
       yearViewNativeElement = yearViewDebugElement.nativeElement;
       testComponent = fixture.componentInstance;
     });
@@ -108,7 +108,7 @@ describe('MatYearView', () => {
       testComponent.date = new Date(2017, JUL, 31);
       fixture.detectChanges();
 
-      expect(testComponent.yearView._monthSelected(JUN));
+      testComponent.yearView._monthSelected(JUN);
       fixture.detectChanges();
 
       expect(testComponent.selected).toEqual(new Date(2017, JUN, 30));
@@ -304,7 +304,7 @@ describe('MatYearView', () => {
       fixture = TestBed.createComponent(YearViewWithDateFilter);
       fixture.detectChanges();
 
-      const yearViewDebugElement = fixture.debugElement.query(By.directive(MatYearView));
+      const yearViewDebugElement = fixture.debugElement.query(By.directive(MatYearView))!;
       yearViewNativeElement = yearViewDebugElement.nativeElement;
     });
 

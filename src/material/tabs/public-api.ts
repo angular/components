@@ -6,20 +6,21 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-export * from './tabs-module';
+export {MatTabsModule} from './tabs-module';
 export * from './tab-group';
 export {MatInkBar, _MatInkBarPositioner, _MAT_INK_BAR_POSITIONER} from './ink-bar';
 export {
   MatTabBody,
+  _MatTabBodyBase,
   MatTabBodyOriginState,
   MatTabBodyPositionState,
   MatTabBodyPortal
 } from './tab-body';
-export {MatTabHeader} from './tab-header';
+export {MatTabHeader, _MatTabHeaderBase} from './tab-header';
 export {MatTabLabelWrapper} from './tab-label-wrapper';
 export {MatTab} from './tab';
 export {MatTabLabel} from './tab-label';
-export {MatTabNav, MatTabLink} from './tab-nav-bar/index';
+export {MatTabNav, MatTabLink, _MatTabNavBase, _MatTabLinkBase} from './tab-nav-bar/index';
 export {MatTabContent} from './tab-content';
 export {ScrollDirection} from './paginated-tab-header';
 export * from './tabs-animations';

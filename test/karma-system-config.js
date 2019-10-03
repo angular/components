@@ -86,27 +86,34 @@ System.config({
     '@angular/cdk/stepper': 'dist/packages/cdk/stepper/index.js',
     '@angular/cdk/table': 'dist/packages/cdk/table/index.js',
     '@angular/cdk/testing': 'dist/packages/cdk/testing/index.js',
+    '@angular/cdk/testing/testbed': 'dist/packages/cdk/testing/testbed/index.js',
+    '@angular/cdk/testing/protractor': 'dist/packages/cdk/testing/protractor/index.js',
     '@angular/cdk/text-field': 'dist/packages/cdk/text-field/index.js',
     '@angular/cdk/tree': 'dist/packages/cdk/tree/index.js',
 
     '@angular/cdk-experimental/dialog': 'dist/packages/cdk-experimental/dialog/index.js',
     '@angular/cdk-experimental/popover-edit': 'dist/packages/cdk-experimental/popover-edit/index.js',
     '@angular/cdk-experimental/scrolling': 'dist/packages/cdk-experimental/scrolling/index.js',
-    '@angular/cdk-experimental/testing': 'dist/packages/cdk-experimental/testing/index.js',
-    '@angular/cdk-experimental/testing/testbed': 'dist/packages/cdk-experimental/testing/testbed/index.js',
-    '@angular/cdk-experimental/testing/protractor': 'dist/packages/cdk-experimental/testing/protractor/index.js',
 
     '@angular/material/autocomplete': 'dist/packages/material/autocomplete/index.js',
+    '@angular/material/autocomplete/testing': 'dist/packages/material/autocomplete/testing/index.js',
+    '@angular/material/autocomplete/testing/shared.spec': 'dist/packages/material/autocomplete/testing/shared.spec.js',
     '@angular/material/badge': 'dist/packages/material/badge/index.js',
     '@angular/material/bottom-sheet': 'dist/packages/material/bottom-sheet/index.js',
     '@angular/material/button': 'dist/packages/material/button/index.js',
+    '@angular/material/button/testing': 'dist/packages/material/button/testing/index.js',
+    '@angular/material/button/testing/shared.spec': 'dist/packages/material/button/testing/shared.spec.js',
     '@angular/material/button-toggle': 'dist/packages/material/button-toggle/index.js',
     '@angular/material/card': 'dist/packages/material/card/index.js',
     '@angular/material/checkbox': 'dist/packages/material/checkbox/index.js',
+    '@angular/material/checkbox/testing': 'dist/packages/material/checkbox/testing/index.js',
+    '@angular/material/checkbox/testing/shared.spec': 'dist/packages/material/checkbox/testing/shared.spec.js',
     '@angular/material/chips': 'dist/packages/material/chips/index.js',
     '@angular/material/core': 'dist/packages/material/core/index.js',
     '@angular/material/datepicker': 'dist/packages/material/datepicker/index.js',
     '@angular/material/dialog': 'dist/packages/material/dialog/index.js',
+    '@angular/material/dialog/testing': 'dist/packages/material/dialog/testing/index.js',
+    '@angular/material/dialog/testing/shared.spec': 'dist/packages/material/dialog/testing/shared.spec.js',
     '@angular/material/divider': 'dist/packages/material/divider/index.js',
     '@angular/material/expansion': 'dist/packages/material/expansion/index.js',
     '@angular/material/form-field': 'dist/packages/material/form-field/index.js',
@@ -115,24 +122,52 @@ System.config({
     '@angular/material/input': 'dist/packages/material/input/index.js',
     '@angular/material/list': 'dist/packages/material/list/index.js',
     '@angular/material/menu': 'dist/packages/material/menu/index.js',
+    '@angular/material/menu/testing': 'dist/packages/material/menu/testing/index.js',
+    '@angular/material/menu/testing/shared.spec': 'dist/packages/material/menu/testing/shared.spec.js',
     '@angular/material/paginator': 'dist/packages/material/paginator/index.js',
     '@angular/material/progress-bar': 'dist/packages/material/progress-bar/index.js',
+    '@angular/material/progress-bar/testing': 'dist/packages/material/progress-bar/testing/index.js',
+    '@angular/material/progress-bar/testing/shared.spec': 'dist/packages/material/progress-bar/testing/shared.spec.js',
     '@angular/material/progress-spinner': 'dist/packages/material/progress-spinner/index.js',
+    '@angular/material/progress-spinner/testing': 'dist/packages/material/progress-spinner/testing/index.js',
+    '@angular/material/progress-spinner/testing/shared.spec': 'dist/packages/material/progress-spinner/testing/shared.spec.js',
     '@angular/material/radio': 'dist/packages/material/radio/index.js',
+    '@angular/material/radio/testing': 'dist/packages/material/radio/testing/index.js',
+    '@angular/material/radio/testing/shared.spec': 'dist/packages/material/radio/testing/shared.spec.js',
     '@angular/material/select': 'dist/packages/material/select/index.js',
     '@angular/material/sidenav': 'dist/packages/material/sidenav/index.js',
+    '@angular/material/sidenav/testing': 'dist/packages/material/sidenav/testing/index.js',
+    '@angular/material/sidenav/testing/shared.spec': 'dist/packages/material/sidenav/testing/shared.spec.js',
     '@angular/material/slide-toggle': 'dist/packages/material/slide-toggle/index.js',
+    '@angular/material/slide-toggle/testing': 'dist/packages/material/slide-toggle/testing/index.js',
+    '@angular/material/slide-toggle/testing/shared.spec': 'dist/packages/material/slide-toggle/testing/shared.spec.js',
     '@angular/material/slider': 'dist/packages/material/slider/index.js',
+    '@angular/material/slider/testing': 'dist/packages/material/slider/testing/index.js',
+    '@angular/material/slider/testing/shared.spec': 'dist/packages/material/slider/testing/shared.spec.js',
     '@angular/material/snack-bar': 'dist/packages/material/snack-bar/index.js',
+    '@angular/material/snack-bar/testing': 'dist/packages/material/snack-bar/testing/index.js',
+    '@angular/material/snack-bar/testing/shared.spec': 'dist/packages/material/snack-bar/testing/shared.spec.js',
     '@angular/material/sort': 'dist/packages/material/sort/index.js',
     '@angular/material/stepper': 'dist/packages/material/stepper/index.js',
     '@angular/material/table': 'dist/packages/material/table/index.js',
     '@angular/material/tabs': 'dist/packages/material/tabs/index.js',
+    '@angular/material/tabs/testing': 'dist/packages/material/tabs/testing/index.js',
+    '@angular/material/tabs/testing/shared.spec': 'dist/packages/material/tabs/testing/shared.spec.js',
     '@angular/material/testing': 'dist/packages/material/testing/index.js',
     '@angular/material/toolbar': 'dist/packages/material/toolbar/index.js',
     '@angular/material/tooltip': 'dist/packages/material/tooltip/index.js',
     '@angular/material/tree': 'dist/packages/material/tree/index.js',
 
+    '@angular/material-experimental/form-field/testing':
+      'dist/packages/material-experimental/form-field/testing/index.js',
+    '@angular/material-experimental/form-field/testing/control':
+      'dist/packages/material-experimental/form-field/testing/control/index.js',
+    '@angular/material-experimental/form-field/testing/shared.spec':
+      'dist/packages/material-experimental/form-field/testing/shared.spec.js',
+    '@angular/material-experimental/input/testing':
+        'dist/packages/material-experimental/input/testing/index.js',
+    '@angular/material-experimental/mdc-autocomplete':
+        'dist/packages/material-experimental/mdc-autocomplete/index.js',
     '@angular/material-experimental/mdc-button':
         'dist/packages/material-experimental/mdc-button/index.js',
     '@angular/material-experimental/mdc-card':
@@ -149,10 +184,18 @@ System.config({
         'dist/packages/material-experimental/mdc-radio/index.js',
     '@angular/material-experimental/mdc-slide-toggle':
         'dist/packages/material-experimental/mdc-slide-toggle/index.js',
+    '@angular/material-experimental/mdc-slider':
+      'dist/packages/material-experimental/mdc-slider/index.js',
     '@angular/material-experimental/mdc-tabs':
         'dist/packages/material-experimental/mdc-tabs/index.js',
+    '@angular/material-experimental/mdc-progress-bar':
+        'dist/packages/material-experimental/mdc-progress-bar/index.js',
     '@angular/material-experimental/popover-edit':
         'dist/packages/material-experimental/popover-edit/index.js',
+    '@angular/material-experimental/select/testing':
+      'dist/packages/material-experimental/select/testing/index.js',
+    '@angular/material-experimental/select/testing/shared.spec':
+      'dist/packages/material-experimental/select/testing/shared.spec.js',
   },
   packages: {
     // Thirdparty barrels.

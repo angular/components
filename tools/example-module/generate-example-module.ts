@@ -1,6 +1,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import {parseExampleFile} from './parse-example-file';
+import {parseExampleModuleFile} from './parse-example-module-file';
 
 interface ExampleMetadata {
   component: string;
@@ -10,28 +11,43 @@ interface ExampleMetadata {
   additionalComponents: string[];
   additionalFiles: string[];
   selectorName: string[];
+  importPath: string|null;
 }
 
-/** Build ES module import statements for the given example metadata. */
-function buildImportsTemplate(data: ExampleMetadata): string {
-  const components = data.additionalComponents.concat(data.component);
-  const relativeSrcPath = data.sourcePath.replace(/\\/g, '/').replace('.ts', '');
+interface ExampleModule {
+  packagePath: string;
+  name: string;
+}
 
-  return `import {${components.join(',')}} from './${relativeSrcPath}';`;
+interface AnalyzedExamples {
+  exampleMetadata: ExampleMetadata[];
+  exampleModules: ExampleModule[];
+}
+
+/** Creates an import declaration for the given symbols from the specified file. */
+function createImportDeclaration(relativePath: string, symbols: string[]): string {
+  const posixRelativePath = relativePath.replace(/\\/g, '/').replace('.ts', '');
+  return `import {${symbols.join(',')}} from '@angular/material-examples/${posixRelativePath}';`;
 }
 
 /** Inlines the example module template with the specified parsed data. */
-function inlineExampleModuleTemplate(parsedData: ExampleMetadata[]): string {
+function inlineExampleModuleTemplate(parsedData: AnalyzedExamples): string {
+  const {exampleMetadata, exampleModules} = parsedData;
   // TODO(devversion): re-add line-breaks for debugging once the example module has
   // been re-added to the repository gitignore.
   // Blocked on https://github.com/angular/angular/issues/30259
-  const exampleImports = parsedData.map(m => buildImportsTemplate(m)).join('');
+  const exampleImports = [
+    ...exampleMetadata
+      .map(({additionalComponents, component, importPath}) =>
+        createImportDeclaration(importPath!, additionalComponents.concat(component))),
+    ...exampleModules.map(({name, packagePath}) => createImportDeclaration(packagePath, [name])),
+  ].join('');
   const quotePlaceholder = '◬';
-  const exampleList = parsedData.reduce((result, data) => {
+  const exampleList = exampleMetadata.reduce((result, data) => {
     return result.concat(data.component).concat(data.additionalComponents);
   }, [] as string[]);
 
-  const exampleComponents = parsedData.reduce((result, data) => {
+  const exampleComponents = exampleMetadata.reduce((result, data) => {
     result[data.id] = {
       title: data.title,
       // Since we use JSON.stringify to output the data below, the `component` will be wrapped
@@ -46,9 +62,10 @@ function inlineExampleModuleTemplate(parsedData: ExampleMetadata[]): string {
   }, {} as any);
 
   return fs.readFileSync(require.resolve('./example-module.template'), 'utf8')
-    .replace('${exampleImports}', exampleImports)
-    .replace('${exampleComponents}', JSON.stringify(exampleComponents))
-    .replace('${exampleList}', `[${exampleList.join(', ')}]`)
+    .replace(/\${exampleImports}/g, exampleImports)
+    .replace(/\${exampleComponents}/g, JSON.stringify(exampleComponents))
+    .replace(/\${exampleList}/g, exampleList.join(', '))
+    .replace(/\${exampleModules}/g, `[${exampleModules.map(m => m.name).join(', ')}]`)
     .replace(new RegExp(`"${quotePlaceholder}|${quotePlaceholder}"`, 'g'), '');
 }
 
@@ -59,11 +76,26 @@ function convertToDashCase(name: string): string {
   return name.split(' ').join('-');
 }
 
-/** Collects the metadata of the given source files by parsing the given TypeScript files. */
-function collectExampleMetadata(sourceFiles: string[], baseFile: string): ExampleMetadata[] {
+/**
+ * Analyzes the examples by parsing the given TypeScript files in order to find
+ * individual example modules and example metadata.
+ */
+function analyzeExamples(sourceFiles: string[], baseFile: string): AnalyzedExamples {
   const exampleMetadata: ExampleMetadata[] = [];
+  const exampleModules: ExampleModule[] = [];
 
   for (const sourceFile of sourceFiles) {
+    const relativePath = path.relative(baseFile, sourceFile);
+
+    // Collect all individual example modules.
+    if (path.basename(sourceFile) === 'module.ts') {
+      exampleModules.push(...parseExampleModuleFile(sourceFile).map(name => ({
+        name: name,
+        packagePath: path.dirname(relativePath),
+      })));
+      continue;
+    }
+
     // Avoid parsing non-example files.
     if (!path.basename(sourceFile, path.extname(sourceFile)).endsWith('-example')) {
       continue;
@@ -82,7 +114,10 @@ function collectExampleMetadata(sourceFiles: string[], baseFile: string): Exampl
         title: primaryComponent.title.trim(),
         additionalComponents: [],
         additionalFiles: [],
-        selectorName: []
+        selectorName: [],
+        // Import path will be determined later once all example modules have
+        // been analyzed.
+        importPath: null,
       };
 
       if (secondaryComponents.length) {
@@ -110,7 +145,22 @@ function collectExampleMetadata(sourceFiles: string[], baseFile: string): Exampl
     }
   }
 
-  return exampleMetadata;
+  // Walk through all collected examples and find their parent example module. This is
+  // necessary as we want to import the examples through the package entry-point. Directly
+  // importing files of secondary entry-points from the primary entry-point is not supported
+  // by the Angular package format.
+  exampleMetadata.forEach(example => {
+    const parentModule = exampleModules
+      .find(module => example.sourcePath.startsWith(module.packagePath));
+
+    if (!parentModule) {
+      throw Error(`Could not determine example module for: ${example.id}`);
+    }
+
+    example.importPath = parentModule.packagePath;
+  });
+
+  return {exampleMetadata, exampleModules};
 }
 
 /**
@@ -119,8 +169,8 @@ function collectExampleMetadata(sourceFiles: string[], baseFile: string): Exampl
  */
 export function generateExampleModule(sourceFiles: string[], outputFile: string,
                                       baseDir: string = path.dirname(outputFile)) {
-  const results = collectExampleMetadata(sourceFiles, baseDir);
-  const generatedModuleFile = inlineExampleModuleTemplate(results);
+  const analysisData = analyzeExamples(sourceFiles, baseDir);
+  const generatedModuleFile = inlineExampleModuleTemplate(analysisData);
 
   fs.writeFileSync(outputFile, generatedModuleFile);
 }

@@ -1,0 +1,50 @@
+@import '../../material/core/style/layout-common';
+
+// Adds a `before` pseudo element that acts as an overlay indicator for interaction states
+// such as focus, hover, and active.
+@mixin _mat-button-interactive() {
+  &::before {
+    content: '';
+    pointer-events: none;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    opacity: 0;
+    border-radius: inherit;
+    @content;
+  }
+}
+
+// The ripple container should match the bounds of the entire button.
+// Increase specificity for the ripple container because ripple styles are part of
+// the `mat-core` mixin and can potentially overwrite the absolute position of the container.
+@mixin _mat-button-ripple-position() {
+  .mat-mdc-button-ripple {
+    @include mat-fill;
+
+    // Disable pointer events for the ripple container and focus overlay because the container
+    // will overlay the user content and we don't want to disable mouse events on the user content.
+    // Pointer events can be safely disabled because the ripple trigger element is the host element.
+    pointer-events: none;
+
+    // Inherit the border radius from the parent so that focus overlay and ripples don't exceed the
+    // parent button boundaries. Note that an inherited border radius does not work properly if
+    // the actual button element does have a border because it causes the inner content to be
+    // smaller. We have special logic for stroked buttons to handle this scenario.
+    border-radius: inherit;
+  }
+}
+
+// MDC's disabled buttons define a default cursor with pointer-events none. However, they select
+// :disabled for this, which does not affect anchor tags.
+// TODO(andrewseguin): Discuss with the MDC team about a mixin we can call for applying this style,
+// and note that having pointer-events may have unintended side-effects, e.g. allowing the user
+// to click the target underneath the button.
+@mixin _mat-button-disabled() {
+  &[disabled] {
+    cursor: default;
+    pointer-events: none;
+  }
+}

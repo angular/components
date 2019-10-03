@@ -1,0 +1,17 @@
+package(default_visibility = ["//visibility:public"])
+
+load("//tools:defaults.bzl", "ts_library")
+
+ts_library(
+    name = "testbed",
+    srcs = glob(
+        ["**/*.ts"],
+        exclude = ["**/*.spec.ts"],
+    ),
+    module_name = "@angular/cdk/testing/testbed",
+    deps = [
+        "//src/cdk/keycodes",
+        "//src/cdk/testing",
+        "@npm//@angular/core",
+    ],
+)

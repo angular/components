@@ -5,9 +5,11 @@ import {
   cdkExperimentalPackage,
   cdkPackage,
   examplesPackage,
+  googleMapsPackage,
   materialExperimentalPackage,
   materialPackage,
-  momentAdapterPackage
+  momentAdapterPackage,
+  youTubePlayerPackage
 } from './packages';
 
 createPackageBuildTasks(cdkPackage);
@@ -16,18 +18,16 @@ createPackageBuildTasks(materialPackage);
 createPackageBuildTasks(materialExperimentalPackage);
 createPackageBuildTasks(examplesPackage, ['build-examples-module']);
 createPackageBuildTasks(momentAdapterPackage);
+createPackageBuildTasks(youTubePlayerPackage);
+createPackageBuildTasks(googleMapsPackage);
 
-import './tasks/aot';
-import './tasks/breaking-changes';
 import './tasks/ci';
 import './tasks/clean';
 import './tasks/default';
-import './tasks/development';
 import './tasks/example-module';
 import './tasks/lint';
 import './tasks/material-release';
 import './tasks/unit-test';
-import './tasks/universal';
 
 /** Task that builds all available release packages. */
 task('build-release-packages', sequenceTask(

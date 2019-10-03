@@ -26,8 +26,15 @@ import {
   MAT_BUTTON_INPUTS,
   MatButtonBase
 } from './button-base';
+import {ThemePalette} from '@angular/material/core';
 
-
+/**
+ * Material Design floating action button (FAB) component. These buttons represent the primary
+ * or most common action for users to interact with.
+ * See https://material.io/components/buttons-floating-action-button/
+ *
+ * The `MatFabButton` class has two appearances: normal and mini.
+ */
 @Component({
   moduleId: module.id,
   selector: `button[mat-fab], button[mat-mini-fab]`,
@@ -40,6 +47,9 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MatFabButton extends MatButtonBase {
+  // The FAB by default has its color set to accent.
+  color = 'accent' as ThemePalette;
+
   constructor(
       elementRef: ElementRef, platform: Platform, ngZone: NgZone,
       @Optional() @Inject(ANIMATION_MODULE_TYPE) animationMode?: string) {
@@ -47,6 +57,14 @@ export class MatFabButton extends MatButtonBase {
   }
 }
 
+
+/**
+ * Material Design floating action button (FAB) component for anchor elements. Anchor elements
+ * are used to provide links for the user to navigate across different routes or pages.
+ * See https://material.io/components/buttons-floating-action-button/
+ *
+ * The `MatFabAnchor` class has two appearances: normal and mini.
+ */
 @Component({
   moduleId: module.id,
   selector: `a[mat-fab], a[mat-mini-fab]`,
@@ -59,6 +77,9 @@ export class MatFabButton extends MatButtonBase {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MatFabAnchor extends MatAnchor {
+  // The FAB by default has its color set to accent.
+  color = 'accent' as ThemePalette;
+
   constructor(
       elementRef: ElementRef, platform: Platform, ngZone: NgZone,
       @Optional() @Inject(ANIMATION_MODULE_TYPE) animationMode?: string) {

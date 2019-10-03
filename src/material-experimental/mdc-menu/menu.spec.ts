@@ -179,6 +179,25 @@ describe('MatMenu', () => {
     expect(document.activeElement).not.toBe(triggerEl);
   }));
 
+  it('should restore focus to the trigger immediately once the menu is closed', () => {
+    const fixture = createComponent(SimpleMenu, [], [FakeIcon]);
+    fixture.detectChanges();
+    const triggerEl = fixture.componentInstance.triggerEl.nativeElement;
+
+    // A click without a mousedown before it is considered a keyboard open.
+    triggerEl.click();
+    fixture.detectChanges();
+
+    expect(overlayContainerElement.querySelector('.mat-mdc-menu-panel')).toBeTruthy();
+
+    fixture.componentInstance.trigger.closeMenu();
+    fixture.detectChanges();
+    // Note: don't add a `tick` here since we're testing
+    // that focus is restored before the animation is done.
+
+    expect(document.activeElement).toBe(triggerEl);
+  });
+
   it('should be able to set a custom class on the backdrop', fakeAsync(() => {
     const fixture = createComponent(SimpleMenu, [], [FakeIcon]);
 
@@ -427,7 +446,7 @@ describe('MatMenu', () => {
     fixture.componentInstance.trigger.openMenu();
     fixture.detectChanges();
 
-    const menuEl = fixture.debugElement.query(By.css('mat-menu')).nativeElement;
+    const menuEl = fixture.debugElement.query(By.css('mat-menu'))!.nativeElement;
     const panel = overlayContainerElement.querySelector('.mat-mdc-menu-panel')!;
 
     expect(menuEl.classList).not.toContain('custom-one');
@@ -760,6 +779,44 @@ describe('MatMenu', () => {
     expect(items[items.length - 1].focus).not.toHaveBeenCalled();
     expect(event.defaultPrevented).toBe(false);
     flush();
+  }));
+
+  it('should respect the DOM order, rather than insertion order, when moving focus using ' +
+    'the arrow keys', fakeAsync(() => {
+      let fixture = createComponent(SimpleMenuWithRepeater);
+
+      fixture.detectChanges();
+      fixture.componentInstance.trigger.openMenu();
+      fixture.detectChanges();
+      tick(500);
+
+      let menuPanel = document.querySelector('.mat-mdc-menu-panel')!;
+      let items = menuPanel.querySelectorAll('.mat-mdc-menu-panel [mat-menu-item]');
+
+      expect(document.activeElement).toBe(items[0], 'Expected first item to be focused on open');
+
+      // Add a new item after the first one.
+      fixture.componentInstance.items.splice(1, 0, {label: 'Calzone', disabled: false});
+      fixture.detectChanges();
+
+      items = menuPanel.querySelectorAll('.mat-mdc-menu-panel [mat-menu-item]');
+      dispatchKeyboardEvent(menuPanel, 'keydown', DOWN_ARROW);
+      fixture.detectChanges();
+      tick();
+
+      expect(document.activeElement).toBe(items[1], 'Expected second item to be focused');
+      flush();
+    }));
+
+  it('should focus the menu panel if all items are disabled', fakeAsync(() => {
+    const fixture = createComponent(SimpleMenuWithRepeater, [], [FakeIcon]);
+    fixture.componentInstance.items.forEach(item => item.disabled = true);
+    fixture.detectChanges();
+    fixture.componentInstance.trigger.openMenu();
+    fixture.detectChanges();
+
+    expect(document.activeElement)
+        .toBe(overlayContainerElement.querySelector('.mat-mdc-menu-panel'));
   }));
 
   describe('lazy rendering', () => {
@@ -1186,8 +1243,8 @@ describe('MatMenu', () => {
       fixture.componentInstance.trigger.openMenu();
       fixture.detectChanges();
 
-      const item = fixture.debugElement.query(By.css('.mat-mdc-menu-item'));
-      const ripple = item.query(By.css('.mat-ripple')).injector.get<MatRipple>(MatRipple);
+      const item = fixture.debugElement.query(By.css('.mat-mdc-menu-item'))!;
+      const ripple = item.query(By.css('.mat-ripple'))!.injector.get<MatRipple>(MatRipple);
 
       expect(ripple.disabled).toBe(false);
     });
@@ -1200,7 +1257,7 @@ describe('MatMenu', () => {
       fixture.detectChanges();
 
       const items = fixture.debugElement.queryAll(By.css('.mat-mdc-menu-item'));
-      const ripple = items[1].query(By.css('.mat-ripple')).injector.get<MatRipple>(MatRipple);
+      const ripple = items[1].query(By.css('.mat-ripple'))!.injector.get<MatRipple>(MatRipple);
 
       expect(ripple.disabled).toBe(true);
     });
@@ -1214,7 +1271,7 @@ describe('MatMenu', () => {
 
       // The third menu item in the `SimpleMenu` component has ripples disabled.
       const items = fixture.debugElement.queryAll(By.css('.mat-mdc-menu-item'));
-      const ripple = items[2].query(By.css('.mat-ripple')).injector.get<MatRipple>(MatRipple);
+      const ripple = items[2].query(By.css('.mat-ripple'))!.injector.get<MatRipple>(MatRipple);
 
       expect(ripple.disabled).toBe(true);
     });
@@ -1445,7 +1502,7 @@ describe('MatMenu', () => {
       expect(overlay.querySelectorAll('.mat-mdc-menu-panel').length)
           .toBe(1, 'Expected one open menu');
 
-      const item = fixture.debugElement.query(By.directive(MatMenuItem));
+      const item = fixture.debugElement.query(By.directive(MatMenuItem))!;
 
       item.componentInstance.disabled = true;
       fixture.detectChanges();
@@ -2360,4 +2417,22 @@ class DynamicPanelMenu {
 })
 class MenuWithCheckboxItems {
   @ViewChild(MatMenuTrigger, {static: false}) trigger: MatMenuTrigger;
+}
+
+
+@Component({
+  template: `
+    <button [matMenuTriggerFor]="menu">Toggle menu</button>
+    <mat-menu #menu="matMenu">
+      <button
+        *ngFor="let item of items"
+        [disabled]="item.disabled"
+        mat-menu-item>{{item.label}}</button>
+    </mat-menu>
+  `
+})
+class SimpleMenuWithRepeater {
+  @ViewChild(MatMenuTrigger, {static: false}) trigger: MatMenuTrigger;
+  @ViewChild(MatMenu, {static: false}) menu: MatMenu;
+  items = [{label: 'Pizza', disabled: false}, {label: 'Pasta', disabled: false}];
 }

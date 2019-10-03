@@ -17,6 +17,8 @@ import {
   AfterContentInit,
   AfterViewInit,
   OnDestroy,
+  Directive,
+  Inject,
 } from '@angular/core';
 import {Direction, Directionality} from '@angular/cdk/bidi';
 import {coerceNumberProperty} from '@angular/cdk/coercion';
@@ -25,8 +27,8 @@ import {FocusKeyManager, FocusableOption} from '@angular/cdk/a11y';
 import {END, ENTER, HOME, SPACE, hasModifierKey} from '@angular/cdk/keycodes';
 import {merge, of as observableOf, Subject, timer, fromEvent} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
-import {MatInkBar} from './ink-bar';
 import {Platform, normalizePassiveListenerOptions} from '@angular/cdk/platform';
+import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 
 
 /** Config used to bind passive event listeners */
@@ -59,15 +61,20 @@ const HEADER_SCROLL_DELAY = 650;
 const HEADER_SCROLL_INTERVAL = 100;
 
 /** Item inside a paginated tab header. */
-type MatPaginatedTabHeaderItem = FocusableOption & {elementRef: ElementRef};
+export type MatPaginatedTabHeaderItem = FocusableOption & {elementRef: ElementRef};
 
 /**
  * Base class for a tab header that supported pagination.
+ * @docs-private
  */
+@Directive({
+  // TODO(crisbeto): this selector can be removed when we update to Angular 9.0.
+  selector: 'do-not-use-abstract-mat-paginated-tab-header'
+})
 export abstract class MatPaginatedTabHeader implements AfterContentChecked, AfterContentInit,
   AfterViewInit, OnDestroy {
   abstract _items: QueryList<MatPaginatedTabHeaderItem>;
-  abstract _inkBar: MatInkBar;
+  abstract _inkBar: {hide: () => void, alignToElement: (element: HTMLElement) => void};
   abstract _tabListContainer: ElementRef<HTMLElement>;
   abstract _tabList: ElementRef<HTMLElement>;
   abstract _nextPaginator: ElementRef<HTMLElement>;
@@ -80,7 +87,7 @@ export abstract class MatPaginatedTabHeader implements AfterContentChecked, Afte
   private _selectedIndexChanged = false;
 
   /** Emits when the component is destroyed. */
-  private readonly _destroyed = new Subject<void>();
+  protected readonly _destroyed = new Subject<void>();
 
   /** Whether the controls for pagination should be displayed */
   _showPaginationControls = false;
@@ -141,7 +148,7 @@ export abstract class MatPaginatedTabHeader implements AfterContentChecked, Afte
                * parameters to become required.
                */
               private _platform?: Platform,
-              public _animationMode?: string) {
+              @Optional() @Inject(ANIMATION_MODULE_TYPE) public _animationMode?: string) {
 
     // Bind the `mouseleave` event on the outside since it doesn't change anything in the view.
     _ngZone.runOutsideAngular(() => {

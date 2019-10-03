@@ -101,8 +101,11 @@ export class MatSelectionListChange {
     '[class.mat-list-item-with-avatar]': '_avatar || _icon',
     // Manually set the "primary" or "warn" class if the color has been explicitly
     // set to "primary" or "warn". The pseudo checkbox picks up these classes for
-    // its theme. The accent theme palette is the default and doesn't need to be set.
+    // its theme.
     '[class.mat-primary]': 'color === "primary"',
+    // Even though accent is the default, we need to set this class anyway, because the  list might
+    // be placed inside a parent that has one of the other colors with a higher specificity.
+    '[class.mat-accent]': 'color !== "primary" && color !== "warn"',
     '[class.mat-warn]': 'color === "warn"',
     '[attr.aria-selected]': 'selected',
     '[attr.aria-disabled]': 'disabled',
@@ -320,8 +323,8 @@ export class MatListOption extends _MatListOptionMixinBase
   providers: [MAT_SELECTION_LIST_VALUE_ACCESSOR],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MatSelectionList extends _MatSelectionListMixinBase implements FocusableOption,
-    CanDisableRipple, AfterContentInit, ControlValueAccessor, OnDestroy, OnChanges {
+export class MatSelectionList extends _MatSelectionListMixinBase implements CanDisableRipple,
+  AfterContentInit, ControlValueAccessor, OnDestroy, OnChanges {
 
   /** The FocusKeyManager which handles focus. */
   _keyManager: FocusKeyManager<MatListOption>;
@@ -429,8 +432,8 @@ export class MatSelectionList extends _MatSelectionListMixinBase implements Focu
   }
 
   /** Focuses the selection list. */
-  focus() {
-    this._element.nativeElement.focus();
+  focus(options?: FocusOptions) {
+    this._element.nativeElement.focus(options);
   }
 
   /** Selects all of the options. */

@@ -1,0 +1,55 @@
+package(default_visibility = ["//visibility:public"])
+
+load("@io_bazel_rules_sass//:defs.bzl", "sass_binary", "sass_library")
+load("//src/e2e-app:test_suite.bzl", "e2e_test_suite")
+load("//tools:defaults.bzl", "ng_e2e_test_library", "ng_module")
+
+ng_module(
+    name = "mdc-autocomplete",
+    srcs = glob(
+        ["**/*.ts"],
+        exclude = [
+            "**/*.spec.ts",
+        ],
+    ),
+    assets = [
+        ":autocomplete_scss",
+    ] + glob(["**/*.html"]),
+    module_name = "@angular/material-experimental/mdc-autocomplete",
+    deps = [
+        "//src/material/core",
+    ],
+)
+
+sass_library(
+    name = "mdc_autocomplete_scss_lib",
+    srcs = glob(["**/_*.scss"]),
+    deps = [
+        "//src/material-experimental/mdc-helpers:mdc_helpers_scss_lib",
+    ],
+)
+
+sass_binary(
+    name = "autocomplete_scss",
+    src = "autocomplete.scss",
+    include_paths = [
+        "external/npm/node_modules",
+    ],
+    deps = [],
+)
+
+ng_e2e_test_library(
+    name = "e2e_test_sources",
+    srcs = glob(["**/*.e2e.spec.ts"]),
+    deps = [
+        "//src/cdk/private/testing/e2e",
+    ],
+)
+
+e2e_test_suite(
+    name = "e2e_tests",
+    deps = [
+        ":e2e_test_sources",
+        "//src/cdk/private/testing/e2e",
+    ],
+)

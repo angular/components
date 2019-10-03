@@ -42,7 +42,7 @@ describe('Row Chips', () => {
       fixture = TestBed.createComponent(SingleChip);
       fixture.detectChanges();
 
-      chipDebugElement = fixture.debugElement.query(By.directive(MatChipRow));
+      chipDebugElement = fixture.debugElement.query(By.directive(MatChipRow))!;
       chipNativeElement = chipDebugElement.nativeElement;
       chipInstance = chipDebugElement.injector.get<MatChipRow>(MatChipRow);
       testComponent = fixture.debugElement.componentInstance;
@@ -190,11 +190,12 @@ describe('Row Chips', () => {
       });
 
       describe('focus management', () => {
-        it('sends focus to first grid cell on click', () => {
-          dispatchFakeEvent(chipNativeElement, 'click');
+        it('sends focus to first grid cell on mousedown', () => {
+          dispatchFakeEvent(chipNativeElement, 'mousedown');
           fixture.detectChanges();
 
-          expect(document.activeElement!.classList.contains('mat-chip-row-focusable-text-content'));
+          expect(document.activeElement!.classList.contains('mat-chip-row-focusable-text-content'))
+              .toBe(true);
         });
 
         it('emits focus only once for multiple focus() calls', () => {

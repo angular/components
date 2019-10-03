@@ -77,7 +77,7 @@ export declare class MatSelect extends _MatSelectMixinBase implements AfterConte
     _onBlur(): void;
     _onFocus(): void;
     close(): void;
-    focus(): void;
+    focus(options?: FocusOptions): void;
     ngAfterContentInit(): void;
     ngDoCheck(): void;
     ngOnChanges(changes: SimpleChanges): void;
@@ -115,7 +115,7 @@ export declare class MatSelectTrigger {
 
 export declare const SELECT_ITEM_HEIGHT_EM = 3;
 
-export declare let SELECT_MULTIPLE_PANEL_PADDING_X: number;
+export declare const SELECT_MULTIPLE_PANEL_PADDING_X: number;
 
 export declare const SELECT_PANEL_INDENT_PADDING_X: number;
 

@@ -1,7 +1,7 @@
 import {inject, async, fakeAsync, tick, TestBed} from '@angular/core/testing';
 import {SafeResourceUrl, DomSanitizer, SafeHtml} from '@angular/platform-browser';
 import {HttpClientTestingModule, HttpTestingController} from '@angular/common/http/testing';
-import {Component} from '@angular/core';
+import {Component, ErrorHandler} from '@angular/core';
 import {MatIconModule, MAT_ICON_LOCATION} from './index';
 import {MatIconRegistry, getMatIconNoHttpProviderError} from './icon-registry';
 import {FAKE_SVGS} from './fake-svgs';
@@ -40,11 +40,13 @@ function verifyPathChildElement(element: Element, attributeValue: string): void 
 
 describe('MatIcon', () => {
   let fakePath: string;
+  let errorHandler: jasmine.SpyObj<ErrorHandler>;
 
   beforeEach(async(() => {
     // The $ prefix tells Karma not to try to process the
     // request so that we don't get warnings in our logs.
     fakePath = '/$fake-path';
+    errorHandler = jasmine.createSpyObj('errorHandler', ['handleError']);
 
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule, MatIconModule],
@@ -59,10 +61,16 @@ describe('MatIcon', () => {
         SvgIconWithUserContent,
         IconWithLigatureAndSvgBinding,
       ],
-      providers: [{
-        provide: MAT_ICON_LOCATION,
-        useValue: {getPathname: () => fakePath}
-      }]
+      providers: [
+        {
+          provide: MAT_ICON_LOCATION,
+          useValue: {getPathname: () => fakePath}
+        },
+        {
+          provide: ErrorHandler,
+          useValue: errorHandler,
+        },
+      ]
     });
 
     TestBed.compileComponents();
@@ -80,7 +88,7 @@ describe('MatIcon', () => {
     }));
 
   it('should include notranslate class by default', () => {
-    let fixture = TestBed.createComponent(IconWithColor);
+    const fixture = TestBed.createComponent(IconWithColor);
 
     const matIconElement = fixture.debugElement.nativeElement.querySelector('mat-icon');
     expect(matIconElement.classList.contains('notranslate'))
@@ -88,7 +96,7 @@ describe('MatIcon', () => {
   });
 
   it('should apply class based on color attribute', () => {
-    let fixture = TestBed.createComponent(IconWithColor);
+    const fixture = TestBed.createComponent(IconWithColor);
 
     const testComponent = fixture.componentInstance;
     const matIconElement = fixture.debugElement.nativeElement.querySelector('mat-icon');
@@ -100,7 +108,7 @@ describe('MatIcon', () => {
   });
 
   it('should apply a class if there is no color', () => {
-    let fixture = TestBed.createComponent(IconWithColor);
+    const fixture = TestBed.createComponent(IconWithColor);
 
     const testComponent = fixture.componentInstance;
     const matIconElement = fixture.debugElement.nativeElement.querySelector('mat-icon');
@@ -140,7 +148,7 @@ describe('MatIcon', () => {
 
   describe('Ligature icons', () => {
     it('should add material-icons class by default', () => {
-      let fixture = TestBed.createComponent(IconWithLigature);
+      const fixture = TestBed.createComponent(IconWithLigature);
 
       const testComponent = fixture.componentInstance;
       const matIconElement = fixture.debugElement.nativeElement.querySelector('mat-icon');
@@ -153,7 +161,7 @@ describe('MatIcon', () => {
     it('should use alternate icon font if set', () => {
       iconRegistry.setDefaultFontSetClass('myfont');
 
-      let fixture = TestBed.createComponent(IconWithLigature);
+      const fixture = TestBed.createComponent(IconWithLigature);
 
       const testComponent = fixture.componentInstance;
       const matIconElement = fixture.debugElement.nativeElement.querySelector('mat-icon');
@@ -165,7 +173,7 @@ describe('MatIcon', () => {
 
     it('should not clear the text of a ligature icon if the svgIcon is bound to something falsy',
       () => {
-        let fixture = TestBed.createComponent(IconWithLigatureAndSvgBinding);
+        const fixture = TestBed.createComponent(IconWithLigatureAndSvgBinding);
 
         const testComponent = fixture.componentInstance;
         const matIconElement = fixture.debugElement.nativeElement.querySelector('mat-icon');
@@ -182,7 +190,7 @@ describe('MatIcon', () => {
       iconRegistry.addSvgIcon('fluffy', trustUrl('cat.svg'));
       iconRegistry.addSvgIcon('fido', trustUrl('dog.svg'));
 
-      let fixture = TestBed.createComponent(IconFromSvgName);
+      const fixture = TestBed.createComponent(IconFromSvgName);
       let svgElement: SVGElement;
       const testComponent = fixture.componentInstance;
       const iconElement = fixture.debugElement.nativeElement.querySelector('mat-icon');
@@ -219,7 +227,7 @@ describe('MatIcon', () => {
       iconRegistry.addSvgIcon('fluffy', trustUrl('cat.svg'), {viewBox: '0 0 27 27'});
       iconRegistry.addSvgIcon('fido', trustUrl('dog.svg'), {viewBox: '0 0 43 43'});
 
-      let fixture = TestBed.createComponent(IconFromSvgName);
+      const fixture = TestBed.createComponent(IconFromSvgName);
       let svgElement: SVGElement;
       const testComponent = fixture.componentInstance;
       const iconElement = fixture.debugElement.nativeElement.querySelector('mat-icon');
@@ -242,7 +250,7 @@ describe('MatIcon', () => {
       iconRegistry.addSvgIcon('fluffy', 'farm-set-1.svg');
 
       expect(() => {
-        let fixture = TestBed.createComponent(IconFromSvgName);
+        const fixture = TestBed.createComponent(IconFromSvgName);
         fixture.componentInstance.iconName = 'fluffy';
         fixture.detectChanges();
       }).toThrowError(/unsafe value used in a resource URL context/);
@@ -252,10 +260,53 @@ describe('MatIcon', () => {
       iconRegistry.addSvgIconSetInNamespace('farm', 'farm-set-1.svg');
 
       expect(() => {
-        let fixture = TestBed.createComponent(IconFromSvgName);
+        const fixture = TestBed.createComponent(IconFromSvgName);
         fixture.componentInstance.iconName = 'farm:pig';
         fixture.detectChanges();
       }).toThrowError(/unsafe value used in a resource URL context/);
+    });
+
+
+    it('should delegate http error logging to the ErrorHandler', () => {
+      iconRegistry.addSvgIconSetInNamespace('farm', trustUrl('farm-set-1.svg'));
+
+      const fixture = TestBed.createComponent(IconFromSvgName);
+      const testComponent = fixture.componentInstance;
+
+      testComponent.iconName = 'farm:pig';
+      fixture.detectChanges();
+      http.expectOne('farm-set-1.svg').error(new ErrorEvent('Network error'));
+      fixture.detectChanges();
+
+      // Called twice once for the HTTP request failing and once for the icon
+      // then not being able to be found.
+      expect(errorHandler.handleError).toHaveBeenCalledTimes(2);
+      expect(errorHandler.handleError.calls.argsFor(0)[0].message).toEqual(
+        'Loading icon set URL: farm-set-1.svg failed: Http failure response ' +
+        'for farm-set-1.svg: 0 ');
+      expect(errorHandler.handleError.calls.argsFor(1)[0].message)
+          .toEqual(
+              `Error retrieving icon ${testComponent.iconName}! ` +
+              'Unable to find icon with the name "pig"');
+    });
+
+    it('should delegate an error getting an SVG icon to the ErrorHandler', () => {
+      iconRegistry.addSvgIconSetInNamespace('farm', trustUrl('farm-set-1.svg'));
+
+      const fixture = TestBed.createComponent(IconFromSvgName);
+      const testComponent = fixture.componentInstance;
+
+      testComponent.iconName = 'farm:DNE';
+      fixture.detectChanges();
+      http.expectOne('farm-set-1.svg').flush(FAKE_SVGS.farmSet1);
+      fixture.detectChanges();
+
+      // The HTTP request succeeded but the icon was not found so we logged.
+      expect(errorHandler.handleError).toHaveBeenCalledTimes(1);
+      expect(errorHandler.handleError.calls.argsFor(0)[0].message)
+          .toEqual(
+              `Error retrieving icon ${testComponent.iconName}! ` +
+              'Unable to find icon with the name "DNE"');
     });
 
     it('should extract icon from SVG icon set', () => {
@@ -407,6 +458,23 @@ describe('MatIcon', () => {
       expect((firstChild as HTMLElement).getAttribute('name')).toBe('quack');
     });
 
+    it('should copy over the attributes when unwrapping <symbol> nodes', () => {
+      iconRegistry.addSvgIconSetInNamespace('farm', trustUrl('farm-set-5.svg'));
+
+      const fixture = TestBed.createComponent(IconFromSvgName);
+      const testComponent = fixture.componentInstance;
+      const matIconElement = fixture.debugElement.nativeElement.querySelector('mat-icon');
+
+      testComponent.iconName = 'farm:duck';
+      fixture.detectChanges();
+      http.expectOne('farm-set-5.svg').flush(FAKE_SVGS.farmSet5);
+
+      const svgElement = verifyAndGetSingleSvgChild(matIconElement);
+      expect(svgElement.getAttribute('viewBox')).toBe('0 0 13 37');
+      expect(svgElement.getAttribute('id')).toBeFalsy();
+      expect(svgElement.querySelector('symbol')).toBeFalsy();
+    });
+
     it('should not wrap <svg> elements in icon sets in another svg tag', () => {
       iconRegistry.addSvgIconSet(trustUrl('arrow-set.svg'));
 
@@ -491,7 +559,7 @@ describe('MatIcon', () => {
     it('should remove the SVG element from the DOM when the binding is cleared', () => {
       iconRegistry.addSvgIconSet(trustUrl('arrow-set.svg'));
 
-      let fixture = TestBed.createComponent(IconFromSvgName);
+      const fixture = TestBed.createComponent(IconFromSvgName);
 
       const testComponent = fixture.componentInstance;
       const icon = fixture.debugElement.nativeElement.querySelector('mat-icon');
@@ -534,7 +602,7 @@ describe('MatIcon', () => {
       iconRegistry.addSvgIconLiteral('fluffy', trustHtml(FAKE_SVGS.cat));
       iconRegistry.addSvgIconLiteral('fido', trustHtml(FAKE_SVGS.dog));
 
-      let fixture = TestBed.createComponent(IconFromSvgName);
+      const fixture = TestBed.createComponent(IconFromSvgName);
       let svgElement: SVGElement;
       const testComponent = fixture.componentInstance;
       const iconElement = fixture.debugElement.nativeElement.querySelector('mat-icon');
@@ -561,7 +629,7 @@ describe('MatIcon', () => {
       iconRegistry.addSvgIconLiteral('fluffy', trustHtml(FAKE_SVGS.cat), {viewBox: '0 0 43 43'});
       iconRegistry.addSvgIconLiteral('fido', trustHtml(FAKE_SVGS.dog), {viewBox: '0 0 27 27'});
 
-      let fixture = TestBed.createComponent(IconFromSvgName);
+      const fixture = TestBed.createComponent(IconFromSvgName);
       let svgElement: SVGElement;
       const testComponent = fixture.componentInstance;
       const iconElement = fixture.debugElement.nativeElement.querySelector('mat-icon');
@@ -910,13 +978,13 @@ describe('MatIcon without HttpClientModule', () => {
     sanitizer = ds;
   }));
 
-  it('should throw an error when trying to load a remote icon', async() => {
+  it('should throw an error when trying to load a remote icon', () => {
     const expectedError = wrappedErrorMessage(getMatIconNoHttpProviderError());
 
     expect(() => {
       iconRegistry.addSvgIcon('fido', sanitizer.bypassSecurityTrustResourceUrl('dog.svg'));
 
-      let fixture = TestBed.createComponent(IconFromSvgName);
+      const fixture = TestBed.createComponent(IconFromSvgName);
 
       fixture.componentInstance.iconName = 'fido';
       fixture.detectChanges();

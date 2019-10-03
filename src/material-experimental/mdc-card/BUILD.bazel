@@ -1,8 +1,8 @@
 package(default_visibility = ["//visibility:public"])
 
 load("@io_bazel_rules_sass//:defs.bzl", "sass_binary", "sass_library")
-load("//tools:defaults.bzl", "ng_e2e_test_library", "ng_module")
 load("//src/e2e-app:test_suite.bzl", "e2e_test_suite")
+load("//tools:defaults.bzl", "ng_e2e_test_library", "ng_module")
 
 ng_module(
     name = "mdc-card",
@@ -22,6 +22,7 @@ sass_library(
     srcs = glob(["**/_*.scss"]),
     deps = [
         "//src/material-experimental/mdc-helpers:mdc_helpers_scss_lib",
+        "//src/material-experimental/mdc-helpers:mdc_scss_deps_lib",
         "//src/material/core:core_scss_lib",
     ],
 )
@@ -29,6 +30,13 @@ sass_library(
 sass_binary(
     name = "card_scss",
     src = "card.scss",
+    include_paths = [
+        "external/npm/node_modules",
+    ],
+    deps = [
+        "//src/material-experimental/mdc-helpers:mdc_helpers_scss_lib",
+        "//src/material-experimental/mdc-helpers:mdc_scss_deps_lib",
+    ],
 )
 
 ng_e2e_test_library(

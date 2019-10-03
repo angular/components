@@ -5,3 +5,9 @@
 
 <ng-content select=".material-icons[iconPositionEnd], mat-icon[iconPositionEnd]">
 </ng-content>
+
+<span matRipple class="mat-mdc-button-ripple"
+     [matRippleAnimation]="_rippleAnimation"
+     [matRippleDisabled]="_isRippleDisabled()"
+     [matRippleCentered]="_isRippleCentered"
+     [matRippleTrigger]="_elementRef.nativeElement"></span>

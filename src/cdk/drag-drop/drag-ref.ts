@@ -158,6 +158,9 @@ export class DragRef<T = any> {
   /** Subscription to the viewport being scrolled. */
   private _scrollSubscription = Subscription.EMPTY;
 
+  /** Subscription to the viewport being resized. */
+  private _resizeSubscription = Subscription.EMPTY;
+
   /**
    * Time at which the last touch event occurred. Used to avoid firing the same
    * events multiple times on touch devices where the browser will fire a fake
@@ -351,6 +354,12 @@ export class DragRef<T = any> {
    */
   withBoundaryElement(boundaryElement: ElementRef<HTMLElement> | HTMLElement | null): this {
     this._boundaryElement = boundaryElement ? coerceElement(boundaryElement) : null;
+    this._resizeSubscription.unsubscribe();
+    if (boundaryElement) {
+      this._resizeSubscription = this._viewportRuler
+        .change(10)
+        .subscribe(() => this._containInsideBoundaryOnResize());
+    }
     return this;
   }
 
@@ -610,6 +619,7 @@ export class DragRef<T = any> {
 
     this._removeSubscriptions();
     this._dragDropRegistry.stopDragging(this);
+    this._toggleNativeDragInteractions();
 
     if (this._handles) {
       this._rootElement.style.webkitTapHighlightColor = this._rootElementTapHighlight;
@@ -626,6 +636,7 @@ export class DragRef<T = any> {
       this._dropContainer._stopScrolling();
       this._animatePreviewToPlaceholder().then(() => {
         this._cleanupDragArtifacts(event);
+        this._cleanupCachedDimensions();
         this._dragDropRegistry.stopDragging(this);
       });
     } else {
@@ -640,6 +651,7 @@ export class DragRef<T = any> {
           distance: this._getDragDistance(this._getPointerPositionOnPage(event))
         });
       });
+      this._cleanupCachedDimensions();
       this._dragDropRegistry.stopDragging(this);
     }
   }
@@ -795,7 +807,7 @@ export class DragRef<T = any> {
     // Drop container that draggable has been moved into.
     let newContainer = this._initialContainer._getSiblingContainerFromPosition(this, x, y);
 
-    // If we couldn't find a new container to move the item into, and the item has left it's
+    // If we couldn't find a new container to move the item into, and the item has left its
     // initial container, check whether the it's over the initial container. This handles the
     // case where two containers are connected one way and the user tries to undo dragging an
     // item into a new container.
@@ -838,7 +850,7 @@ export class DragRef<T = any> {
     if (previewTemplate) {
       const viewRef = previewConfig!.viewContainer.createEmbeddedView(previewTemplate,
                                                                       previewConfig!.context);
-      preview = viewRef.rootNodes[0];
+      preview = getRootNode(viewRef, this._document);
       this._previewRef = viewRef;
       preview.style.transform =
           getTransform(this._pickupPositionOnPage.x, this._pickupPositionOnPage.y);
@@ -856,6 +868,8 @@ export class DragRef<T = any> {
       // It's important that we disable the pointer events on the preview, because
       // it can throw off the `document.elementFromPoint` calls in the `CdkDropList`.
       pointerEvents: 'none',
+      // We have to reset the margin, because can throw off positioning relative to the viewport.
+      margin: '0',
       position: 'fixed',
       top: '0',
       left: '0',
@@ -928,7 +942,7 @@ export class DragRef<T = any> {
         placeholderTemplate,
         placeholderConfig!.context
       );
-      placeholder = this._placeholderRef.rootNodes[0];
+      placeholder = getRootNode(this._placeholderRef, this._document);
     } else {
       placeholder = deepCloneNode(this._rootElement);
     }
@@ -1079,6 +1093,62 @@ export class DragRef<T = any> {
 
     return {x: 0, y: 0};
   }
+
+  /** Cleans up any cached element dimensions that we don't need after dragging has stopped. */
+  private _cleanupCachedDimensions() {
+    this._boundaryRect = this._previewRect = undefined;
+  }
+
+  /**
+   * Checks whether the element is still inside its boundary after the viewport has been resized.
+   * If not, the position is adjusted so that the element fits again.
+   */
+  private _containInsideBoundaryOnResize() {
+    let {x, y} = this._passiveTransform;
+
+    if ((x === 0 && y === 0) || this.isDragging() || !this._boundaryElement) {
+      return;
+    }
+
+    const boundaryRect = this._boundaryElement.getBoundingClientRect();
+    const elementRect = this._rootElement.getBoundingClientRect();
+    const leftOverflow = boundaryRect.left - elementRect.left;
+    const rightOverflow = elementRect.right - boundaryRect.right;
+    const topOverflow = boundaryRect.top - elementRect.top;
+    const bottomOverflow = elementRect.bottom - boundaryRect.bottom;
+
+    // If the element has become wider than the boundary, we can't
+    // do much to make it fit so we just anchor it to the left.
+    if (boundaryRect.width > elementRect.width) {
+      if (leftOverflow > 0) {
+        x += leftOverflow;
+      }
+
+      if (rightOverflow > 0) {
+        x -= rightOverflow;
+      }
+    } else {
+      x = 0;
+    }
+
+    // If the element has become taller than the boundary, we can't
+    // do much to make it fit so we just anchor it to the top.
+    if (boundaryRect.height > elementRect.height) {
+      if (topOverflow > 0) {
+        y += topOverflow;
+      }
+
+      if (bottomOverflow > 0) {
+        y -= bottomOverflow;
+      }
+    } else {
+      y = 0;
+    }
+
+    if (x !== this._passiveTransform.x || y !== this._passiveTransform.y) {
+      this.setFreeDragPosition({y, x});
+    }
+  }
 }
 
 /** Point on the page or within an element. */
@@ -1161,4 +1231,20 @@ function getPreviewInsertionPoint(documentRef: any): HTMLElement {
          documentRef.mozFullScreenElement ||
          documentRef.msFullscreenElement ||
          documentRef.body;
+}
+
+/**
+ * Gets the root HTML element of an embedded view.
+ * If the root is not an HTML element it gets wrapped in one.
+ */
+function getRootNode(viewRef: EmbeddedViewRef<any>, _document: Document): HTMLElement {
+  const rootNode: Node = viewRef.rootNodes[0];
+
+  if (rootNode.nodeType !== _document.ELEMENT_NODE) {
+    const wrapper = _document.createElement('div');
+    wrapper.appendChild(rootNode);
+    return wrapper;
+  }
+
+  return rootNode as HTMLElement;
 }

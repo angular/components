@@ -123,6 +123,7 @@ export class MatDrawerContent extends CdkScrollable implements AfterContentInit 
     '[class.mat-drawer-over]': 'mode === "over"',
     '[class.mat-drawer-push]': 'mode === "push"',
     '[class.mat-drawer-side]': 'mode === "side"',
+    '[class.mat-drawer-opened]': 'opened',
     'tabIndex': '-1',
   },
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -153,6 +154,7 @@ export class MatDrawer implements AfterContentInit, AfterContentChecked, OnDestr
   get mode(): 'over' | 'push' | 'side' { return this._mode; }
   set mode(value: 'over' | 'push' | 'side') {
     this._mode = value;
+    this._updateFocusTrapState();
     this._modeChanged.next();
   }
   private _mode: 'over' | 'push' | 'side' = 'over';
@@ -232,7 +234,7 @@ export class MatDrawer implements AfterContentInit, AfterContentChecked, OnDestr
    * An observable that emits when the drawer mode changes. This is used by the drawer container to
    * to know when to when the mode changes so it can adapt the margins on the content.
    */
-  readonly _modeChanged = new Subject();
+  readonly _modeChanged = new Subject<void>();
 
   get _isFocusTrapEnabled(): boolean {
     // The focus trap is only enabled when the drawer is open in any mode other than side.
@@ -332,7 +334,7 @@ export class MatDrawer implements AfterContentInit, AfterContentChecked, OnDestr
 
   ngAfterContentInit() {
     this._focusTrap = this._focusTrapFactory.create(this._elementRef.nativeElement);
-    this._focusTrap.enabled = this._isFocusTrapEnabled;
+    this._updateFocusTrapState();
   }
 
   ngAfterContentChecked() {
@@ -399,9 +401,7 @@ export class MatDrawer implements AfterContentInit, AfterContentChecked, OnDestr
       this._restoreFocus();
     }
 
-    if (this._focusTrap) {
-      this._focusTrap.enabled = this._isFocusTrapEnabled;
-    }
+    this._updateFocusTrapState();
 
     return new Promise<MatDrawerToggleResult>(resolve => {
       this.openedChange.pipe(take(1)).subscribe(open => resolve(open ? 'open' : 'close'));
@@ -412,9 +412,16 @@ export class MatDrawer implements AfterContentInit, AfterContentChecked, OnDestr
     return this._elementRef.nativeElement ? (this._elementRef.nativeElement.offsetWidth || 0) : 0;
   }
 
+  /** Updates the enabled state of the focus trap. */
+  private _updateFocusTrapState() {
+    if (this._focusTrap) {
+      this._focusTrap.enabled = this._isFocusTrapEnabled;
+    }
+  }
+
   // We have to use a `HostListener` here in order to support both Ivy and ViewEngine.
   // In Ivy the `host` bindings will be merged when this class is extended, whereas in
-  // ViewEngine they're overwritte.
+  // ViewEngine they're overwritten.
   // TODO(crisbeto): we move this back into `host` once Ivy is turned on by default.
   // tslint:disable-next-line:no-host-decorator-in-concrete
   @HostListener('@transform.start', ['$event'])
@@ -424,7 +431,7 @@ export class MatDrawer implements AfterContentInit, AfterContentChecked, OnDestr
 
   // We have to use a `HostListener` here in order to support both Ivy and ViewEngine.
   // In Ivy the `host` bindings will be merged when this class is extended, whereas in
-  // ViewEngine they're overwritte.
+  // ViewEngine they're overwritten.
   // TODO(crisbeto): we move this back into `host` once Ivy is turned on by default.
   // tslint:disable-next-line:no-host-decorator-in-concrete
   @HostListener('@transform.done', ['$event'])
@@ -714,10 +721,13 @@ export class MatDrawerContainer implements AfterContentInit, DoCheck, OnDestroy 
 
   /** Toggles the 'mat-drawer-opened' class on the main 'mat-drawer-container' element. */
   private _setContainerClass(isAdd: boolean): void {
+    const classList = this._element.nativeElement.classList;
+    const className = 'mat-drawer-container-has-open';
+
     if (isAdd) {
-      this._element.nativeElement.classList.add('mat-drawer-opened');
+      classList.add(className);
     } else {
-      this._element.nativeElement.classList.remove('mat-drawer-opened');
+      classList.remove(className);
     }
   }
 

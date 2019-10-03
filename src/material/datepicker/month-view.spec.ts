@@ -54,7 +54,7 @@ describe('MatMonthView', () => {
       fixture = TestBed.createComponent(StandardMonthView);
       fixture.detectChanges();
 
-      let monthViewDebugElement = fixture.debugElement.query(By.directive(MatMonthView));
+      let monthViewDebugElement = fixture.debugElement.query(By.directive(MatMonthView))!;
       monthViewNativeElement = monthViewDebugElement.nativeElement;
       testComponent = fixture.componentInstance;
     });
@@ -101,6 +101,18 @@ describe('MatMonthView', () => {
       it('should set the correct role on the internal table node', () => {
         const table = monthViewNativeElement.querySelector('table')!;
         expect(table.getAttribute('role')).toBe('presentation');
+      });
+
+      it('should set the correct scope on the table headers', () => {
+        const nonDividerHeaders = monthViewNativeElement.querySelectorAll(
+            '.mat-calendar-table-header th:not(.mat-calendar-table-header-divider)');
+        const dividerHeader =
+            monthViewNativeElement.querySelector('.mat-calendar-table-header-divider')!;
+
+        expect(Array.from(nonDividerHeaders).every(header => {
+          return header.getAttribute('scope') === 'col';
+        })).toBe(true);
+        expect(dividerHeader.hasAttribute('scope')).toBe(false);
       });
 
       describe('calendar body', () => {
@@ -287,7 +299,7 @@ describe('MatMonthView', () => {
       fixture = TestBed.createComponent(MonthViewWithDateFilter);
       fixture.detectChanges();
 
-      let monthViewDebugElement = fixture.debugElement.query(By.directive(MatMonthView));
+      let monthViewDebugElement = fixture.debugElement.query(By.directive(MatMonthView))!;
       monthViewNativeElement = monthViewDebugElement.nativeElement;
     });
 
@@ -306,7 +318,7 @@ describe('MatMonthView', () => {
       fixture = TestBed.createComponent(MonthViewWithDateClass);
       fixture.detectChanges();
 
-      let monthViewDebugElement = fixture.debugElement.query(By.directive(MatMonthView));
+      let monthViewDebugElement = fixture.debugElement.query(By.directive(MatMonthView))!;
       monthViewNativeElement = monthViewDebugElement.nativeElement;
     });
 

@@ -73,6 +73,7 @@ const passiveEventListenerOptions = normalizePassiveListenerOptions({passive: tr
 @Directive({
   selector: `[mat-menu-trigger-for], [matMenuTriggerFor]`,
   host: {
+    'class': 'mat-menu-trigger',
     'aria-haspopup': 'true',
     '[attr.aria-expanded]': 'menuOpen || null',
     '(mousedown)': '_handleMousedown($event)',
@@ -263,11 +264,11 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
    * Focuses the menu trigger.
    * @param origin Source of the menu trigger's focus.
    */
-  focus(origin: FocusOrigin = 'program') {
+  focus(origin: FocusOrigin = 'program', options?: FocusOptions) {
     if (this._focusMonitor) {
-      this._focusMonitor.focusVia(this._element, origin);
+      this._focusMonitor.focusVia(this._element, origin, options);
     } else {
-      this._element.nativeElement.focus();
+      this._element.nativeElement.focus(options);
     }
   }
 
@@ -297,18 +298,20 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
           .subscribe({
             next: () => menu.lazyContent!.detach(),
             // No matter whether the content got re-attached, reset the menu.
-            complete: () => this._resetMenu()
+            complete: () => this._setIsMenuOpen(false)
           });
       } else {
-        this._resetMenu();
+        this._setIsMenuOpen(false);
       }
     } else {
-      this._resetMenu();
+      this._setIsMenuOpen(false);
 
       if (menu.lazyContent) {
         menu.lazyContent.detach();
       }
     }
+
+    this._restoreFocus();
   }
 
   /**
@@ -338,13 +341,8 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
     }
   }
 
-  /**
-   * This method resets the menu when it's closed, most importantly restoring
-   * focus to the menu trigger if the menu was opened via the keyboard.
-   */
-  private _resetMenu(): void {
-    this._setIsMenuOpen(false);
-
+  /** Restores focus to the element that was focused before the menu was open. */
+  private _restoreFocus() {
     // We should reset focus if the user is navigating using a keyboard or
     // if we have a top-level trigger which might cause focus to be lost
     // when clicking on the backdrop.

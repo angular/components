@@ -21,23 +21,14 @@ import {
 import {Component, DebugElement, Type, ViewChild} from '@angular/core';
 import {ComponentFixture, fakeAsync, flush, TestBed} from '@angular/core/testing';
 import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {TestGestureConfig} from '@angular/material/testing';
-import {By, HAMMER_GESTURE_CONFIG} from '@angular/platform-browser';
+import {By} from '@angular/platform-browser';
 import {MatSlider, MatSliderModule} from './index';
 
 describe('MatSlider', () => {
-  let gestureConfig: TestGestureConfig;
-
   function createComponent<T>(component: Type<T>): ComponentFixture<T> {
     TestBed.configureTestingModule({
       imports: [MatSliderModule, ReactiveFormsModule, FormsModule, BidiModule],
       declarations: [component],
-      providers: [
-        {provide: HAMMER_GESTURE_CONFIG, useFactory: () => {
-          gestureConfig = new TestGestureConfig();
-          return gestureConfig;
-        }}
-      ]
     }).compileComponents();
 
     return TestBed.createComponent<T>(component);
@@ -54,7 +45,7 @@ describe('MatSlider', () => {
       fixture = createComponent(StandardSlider);
       fixture.detectChanges();
 
-      sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider));
+      sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider))!;
       sliderNativeElement = sliderDebugElement.nativeElement;
       sliderInstance = sliderDebugElement.componentInstance;
 
@@ -86,7 +77,7 @@ describe('MatSlider', () => {
     it('should update the value on a slide', () => {
       expect(sliderInstance.value).toBe(0);
 
-      dispatchSlideEventSequence(sliderNativeElement, 0, 0.89, gestureConfig);
+      dispatchSlideEventSequence(sliderNativeElement, 0, 0.89);
 
       expect(sliderInstance.value).toBe(89);
     });
@@ -94,7 +85,7 @@ describe('MatSlider', () => {
     it('should set the value as min when sliding before the track', () => {
       expect(sliderInstance.value).toBe(0);
 
-      dispatchSlideEventSequence(sliderNativeElement, 0, -1.33, gestureConfig);
+      dispatchSlideEventSequence(sliderNativeElement, 0, -1.33);
 
       expect(sliderInstance.value).toBe(0);
     });
@@ -102,7 +93,7 @@ describe('MatSlider', () => {
     it('should set the value as max when sliding past the track', () => {
       expect(sliderInstance.value).toBe(0);
 
-      dispatchSlideEventSequence(sliderNativeElement, 0, 1.75, gestureConfig);
+      dispatchSlideEventSequence(sliderNativeElement, 0, 1.75);
 
       expect(sliderInstance.value).toBe(100);
     });
@@ -119,7 +110,7 @@ describe('MatSlider', () => {
     it('should update the track fill on slide', () => {
       expect(trackFillElement.style.transform).toContain('scale3d(0, 1, 1)');
 
-      dispatchSlideEventSequence(sliderNativeElement, 0, 0.86, gestureConfig);
+      dispatchSlideEventSequence(sliderNativeElement, 0, 0.86);
       fixture.detectChanges();
 
       expect(trackFillElement.style.transform).toContain('scale3d(0.86, 1, 1)');
@@ -128,42 +119,15 @@ describe('MatSlider', () => {
     it('should add and remove the mat-slider-sliding class when sliding', () => {
       expect(sliderNativeElement.classList).not.toContain('mat-slider-sliding');
 
-      dispatchSlideStartEvent(sliderNativeElement, 0, gestureConfig);
+      dispatchSlideStartEvent(sliderNativeElement, 0);
       fixture.detectChanges();
 
       expect(sliderNativeElement.classList).toContain('mat-slider-sliding');
 
-      dispatchSlideEndEvent(sliderNativeElement, 0.34, gestureConfig);
+      dispatchSlideEndEvent(sliderNativeElement, 0.34);
       fixture.detectChanges();
 
       expect(sliderNativeElement.classList).not.toContain('mat-slider-sliding');
-    });
-
-    it('should not change value without emitting a change event', () => {
-      const onChangeSpy = jasmine.createSpy('slider onChange');
-
-      sliderInstance.change.subscribe(onChangeSpy);
-      sliderInstance.value = 50;
-      fixture.detectChanges();
-
-      dispatchSlideStartEvent(sliderNativeElement, 0, gestureConfig);
-      fixture.detectChanges();
-
-      dispatchSlideEvent(sliderNativeElement, 10, gestureConfig);
-      fixture.detectChanges();
-
-      // In some situations, HammerJS will fire a second "slidestart" event because the user
-      // holds the thumb and drags it around. This would mean that the `_valueOnSlideStart`
-      // value will be updated to the actual end value. Causing the slider to think that the value
-      // didn't change at all.
-      dispatchSlideStartEvent(sliderNativeElement, 10, gestureConfig);
-      fixture.detectChanges();
-
-      dispatchSlideEndEvent(sliderNativeElement, 10, gestureConfig);
-      fixture.detectChanges();
-
-      expect(sliderNativeElement.classList).not.toContain('mat-slider-sliding');
-      expect(onChangeSpy).toHaveBeenCalledTimes(1);
     });
 
     it('should reset active state upon blur', () => {
@@ -209,10 +173,17 @@ describe('MatSlider', () => {
       sliderInstance.max = 100;
       sliderInstance.step = 15;
 
-      dispatchSlideEventSequence(sliderNativeElement, 0, 1, gestureConfig);
+      dispatchSlideEventSequence(sliderNativeElement, 0, 1);
       fixture.detectChanges();
 
       expect(sliderInstance.value).toBe(100);
+    });
+
+    it('should prevent the default action of the `selectstart` event', () => {
+      const event = dispatchFakeEvent(sliderNativeElement, 'selectstart');
+      fixture.detectChanges();
+
+      expect(event.defaultPrevented).toBe(true);
     });
 
   });
@@ -228,7 +199,7 @@ describe('MatSlider', () => {
       fixture = createComponent(DisabledSlider);
       fixture.detectChanges();
 
-      sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider));
+      sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider))!;
       sliderNativeElement = sliderDebugElement.nativeElement;
       sliderInstance = sliderDebugElement.componentInstance;
       trackFillElement = <HTMLElement>sliderNativeElement.querySelector('.mat-slider-track-fill');
@@ -249,7 +220,7 @@ describe('MatSlider', () => {
     it('should not change the value on slide when disabled', () => {
       expect(sliderInstance.value).toBe(0);
 
-      dispatchSlideEventSequence(sliderNativeElement, 0, 0.5, gestureConfig);
+      dispatchSlideEventSequence(sliderNativeElement, 0, 0.5);
 
       expect(sliderInstance.value).toBe(0);
     });
@@ -258,7 +229,7 @@ describe('MatSlider', () => {
       const onChangeSpy = jasmine.createSpy('slider onChange');
       sliderInstance.change.subscribe(onChangeSpy);
 
-      dispatchSlideEventSequence(sliderNativeElement, 0, 0.5, gestureConfig);
+      dispatchSlideEventSequence(sliderNativeElement, 0, 0.5);
 
       expect(onChangeSpy).toHaveBeenCalledTimes(0);
     });
@@ -275,7 +246,7 @@ describe('MatSlider', () => {
     it('should not add the mat-slider-sliding class on slide when disabled', () => {
       expect(sliderNativeElement.classList).not.toContain('mat-slider-sliding');
 
-      dispatchSlideStartEvent(sliderNativeElement, 0.46, gestureConfig);
+      dispatchSlideStartEvent(sliderNativeElement, 0.46);
       fixture.detectChanges();
 
       expect(sliderNativeElement.classList).not.toContain('mat-slider-sliding');
@@ -304,7 +275,7 @@ describe('MatSlider', () => {
       fixture = createComponent(SliderWithMinAndMax);
       fixture.detectChanges();
 
-      sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider));
+      sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider))!;
       testComponent = fixture.debugElement.componentInstance;
       sliderNativeElement = sliderDebugElement.nativeElement;
       sliderInstance = sliderDebugElement.injector.get<MatSlider>(MatSlider);
@@ -331,7 +302,7 @@ describe('MatSlider', () => {
     });
 
     it('should set the correct value on slide', () => {
-      dispatchSlideEventSequence(sliderNativeElement, 0, 0.62, gestureConfig);
+      dispatchSlideEventSequence(sliderNativeElement, 0, 0.62);
       fixture.detectChanges();
 
       // Computed by multiplying the difference between the min and the max by the percentage from
@@ -349,7 +320,7 @@ describe('MatSlider', () => {
     });
 
     it('should snap the fill to the nearest value on slide', () => {
-      dispatchSlideEventSequence(sliderNativeElement, 0, 0.74, gestureConfig);
+      dispatchSlideEventSequence(sliderNativeElement, 0, 0.74);
       fixture.detectChanges();
 
       // The closest snap is at the halfway point on the slider.
@@ -398,7 +369,7 @@ describe('MatSlider', () => {
       fixture = createComponent(SliderWithValue);
       fixture.detectChanges();
 
-      sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider));
+      sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider))!;
       sliderNativeElement = sliderDebugElement.nativeElement;
       sliderInstance = sliderDebugElement.injector.get<MatSlider>(MatSlider);
     });
@@ -417,7 +388,7 @@ describe('MatSlider', () => {
     });
 
     it('should set the correct value on slide', () => {
-      dispatchSlideEventSequence(sliderNativeElement, 0, 0.32, gestureConfig);
+      dispatchSlideEventSequence(sliderNativeElement, 0, 0.32);
       fixture.detectChanges();
 
       expect(sliderInstance.value).toBe(32);
@@ -435,7 +406,7 @@ describe('MatSlider', () => {
       fixture = createComponent(SliderWithStep);
       fixture.detectChanges();
 
-      sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider));
+      sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider))!;
       sliderNativeElement = sliderDebugElement.nativeElement;
       sliderInstance = sliderDebugElement.injector.get<MatSlider>(MatSlider);
       trackFillElement = <HTMLElement>sliderNativeElement.querySelector('.mat-slider-track-fill');
@@ -459,39 +430,25 @@ describe('MatSlider', () => {
     });
 
     it('should set the correct step value on slide', () => {
-      dispatchSlideEventSequence(sliderNativeElement, 0, 0.07, gestureConfig);
+      dispatchSlideEventSequence(sliderNativeElement, 0, 0.07);
       fixture.detectChanges();
 
       expect(sliderInstance.value).toBe(0);
     });
 
     it('should snap the thumb and fill to a step on slide', () => {
-      dispatchSlideEventSequence(sliderNativeElement, 0, 0.88, gestureConfig);
+      dispatchSlideEventSequence(sliderNativeElement, 0, 0.88);
       fixture.detectChanges();
 
       // The closest snap is at the end of the slider.
       expect(trackFillElement.style.transform).toContain('scale3d(1, 1, 1)');
     });
 
-    it('should round the value inside the label based on the provided step', () => {
-      let testStep = (step: number, expected: string) => {
-        fixture.componentInstance.step = step;
-        fixture.detectChanges();
-        dispatchSlideEventSequence(sliderNativeElement, 0, 0.333333, gestureConfig);
-        expect(sliderDebugElement.componentInstance.displayValue.toString()).toBe(expected);
-      };
-
-      testStep(1, '33');
-      testStep(0.1, '33.3');
-      testStep(0.01, '33.33');
-      testStep(0.001, '33.333');
-    });
-
     it('should not add decimals to the value if it is a whole number', () => {
       fixture.componentInstance.step = 0.1;
       fixture.detectChanges();
 
-      dispatchSlideEventSequence(sliderNativeElement, 0, 1, gestureConfig);
+      dispatchSlideEventSequence(sliderNativeElement, 0, 1);
 
       expect(sliderDebugElement.componentInstance.displayValue).toBe(100);
     });
@@ -500,9 +457,9 @@ describe('MatSlider', () => {
       fixture.componentInstance.step = 0.1;
       fixture.detectChanges();
 
-      dispatchSlideEventSequence(sliderNativeElement, 0, 0.333333, gestureConfig);
+      dispatchSlideEventSequence(sliderNativeElement, 0, 0.333333);
 
-      expect(sliderInstance.value).toBe(33.3);
+      expect(sliderInstance.value).toBe(33);
     });
 
     it('should truncate long decimal values when using a decimal step and the arrow keys', () => {
@@ -529,7 +486,7 @@ describe('MatSlider', () => {
       fixture = createComponent(SliderWithAutoTickInterval);
       fixture.detectChanges();
 
-      sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider));
+      sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider))!;
       sliderNativeElement = sliderDebugElement.nativeElement;
       ticksContainerElement =
           <HTMLElement>sliderNativeElement.querySelector('.mat-slider-ticks-container');
@@ -559,7 +516,7 @@ describe('MatSlider', () => {
       fixture = createComponent(SliderWithSetTickInterval);
       fixture.detectChanges();
 
-      sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider));
+      sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider))!;
       sliderNativeElement = sliderDebugElement.nativeElement;
       ticksContainerElement =
           <HTMLElement>sliderNativeElement.querySelector('.mat-slider-ticks-container');
@@ -601,7 +558,7 @@ describe('MatSlider', () => {
       fixture = createComponent(SliderWithThumbLabel);
       fixture.detectChanges();
 
-      sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider));
+      sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider))!;
       sliderNativeElement = sliderDebugElement.nativeElement;
       sliderInstance = sliderDebugElement.componentInstance;
       thumbLabelTextElement = sliderNativeElement.querySelector('.mat-slider-thumb-label-text')!;
@@ -624,7 +581,7 @@ describe('MatSlider', () => {
     it('should update the thumb label text on slide', () => {
       expect(thumbLabelTextElement.textContent).toBe('0');
 
-      dispatchSlideEventSequence(sliderNativeElement, 0, 0.56, gestureConfig);
+      dispatchSlideEventSequence(sliderNativeElement, 0, 0.56);
       fixture.detectChanges();
 
       // The thumb label text is set to the slider's value. These should always be the same.
@@ -641,7 +598,7 @@ describe('MatSlider', () => {
       fixture = createComponent(SliderWithCustomThumbLabelFormatting);
       fixture.detectChanges();
 
-      const sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider));
+      const sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider))!;
       const sliderNativeElement = sliderDebugElement.nativeElement;
       sliderInstance = sliderDebugElement.componentInstance;
       thumbLabelTextElement = sliderNativeElement.querySelector('.mat-slider-thumb-label-text')!;
@@ -678,7 +635,7 @@ describe('MatSlider', () => {
 
       testComponent = fixture.debugElement.componentInstance;
 
-      sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider));
+      sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider))!;
       sliderNativeElement = sliderDebugElement.nativeElement;
       sliderInstance = sliderDebugElement.injector.get<MatSlider>(MatSlider);
       trackFillElement = <HTMLElement>sliderNativeElement.querySelector('.mat-slider-track-fill');
@@ -709,7 +666,7 @@ describe('MatSlider', () => {
       fixture = createComponent(SliderWithValueSmallerThanMin);
       fixture.detectChanges();
 
-      sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider));
+      sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider))!;
       sliderNativeElement = sliderDebugElement.nativeElement;
       sliderInstance = sliderDebugElement.componentInstance;
       trackFillElement = <HTMLElement>sliderNativeElement.querySelector('.mat-slider-track-fill');
@@ -737,7 +694,7 @@ describe('MatSlider', () => {
       fixture = createComponent(SliderWithValueGreaterThanMax);
       fixture.detectChanges();
 
-      sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider));
+      sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider))!;
       sliderNativeElement = sliderDebugElement.nativeElement;
       sliderInstance = sliderDebugElement.componentInstance;
       trackFillElement = <HTMLElement>sliderNativeElement.querySelector('.mat-slider-track-fill');
@@ -768,7 +725,7 @@ describe('MatSlider', () => {
       spyOn(testComponent, 'onChange');
       spyOn(testComponent, 'onInput');
 
-      sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider));
+      sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider))!;
       sliderNativeElement = sliderDebugElement.nativeElement;
     });
 
@@ -784,17 +741,17 @@ describe('MatSlider', () => {
     it('should emit change on slide', () => {
       expect(testComponent.onChange).not.toHaveBeenCalled();
 
-      dispatchSlideEventSequence(sliderNativeElement, 0, 0.4, gestureConfig);
+      dispatchSlideEventSequence(sliderNativeElement, 0, 0.4);
       fixture.detectChanges();
 
       expect(testComponent.onChange).toHaveBeenCalledTimes(1);
     });
 
-    it('should not emit multiple changes for same value', () => {
+    it('should not emit multiple changes for the same value', () => {
       expect(testComponent.onChange).not.toHaveBeenCalled();
 
       dispatchMousedownEventSequence(sliderNativeElement, 0.6);
-      dispatchSlideEventSequence(sliderNativeElement, 0.6, 0.6, gestureConfig);
+      dispatchSlideEventSequence(sliderNativeElement, 0.6, 0.6);
       fixture.detectChanges();
 
       expect(testComponent.onChange).toHaveBeenCalledTimes(1);
@@ -810,6 +767,9 @@ describe('MatSlider', () => {
 
       expect(testComponent.onChange).toHaveBeenCalledTimes(1);
       expect(testComponent.onInput).toHaveBeenCalledTimes(1);
+
+      dispatchSlideEndEvent(sliderNativeElement, 0.2);
+      fixture.detectChanges();
 
       testComponent.slider.value = 0;
       fixture.detectChanges();
@@ -839,7 +799,7 @@ describe('MatSlider', () => {
       spyOn(testComponent, 'onInput');
       spyOn(testComponent, 'onChange');
 
-      sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider));
+      sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider))!;
       sliderNativeElement = sliderDebugElement.nativeElement;
     });
 
@@ -847,9 +807,10 @@ describe('MatSlider', () => {
       expect(testComponent.onChange).not.toHaveBeenCalled();
 
       dispatchMouseenterEvent(sliderNativeElement);
-      dispatchSlideEvent(sliderNativeElement, 0.5, gestureConfig);
-      dispatchSlideEvent(sliderNativeElement, 1, gestureConfig);
-      dispatchSlideEndEvent(sliderNativeElement, 1, gestureConfig);
+      dispatchSlideStartEvent(sliderNativeElement, 0);
+      dispatchSlideEvent(sliderNativeElement, 0.5);
+      dispatchSlideEvent(sliderNativeElement, 1);
+      dispatchSlideEndEvent(sliderNativeElement, 1);
 
       fixture.detectChanges();
 
@@ -887,7 +848,7 @@ describe('MatSlider', () => {
       spyOn(testComponent, 'onInput');
       spyOn(testComponent, 'onChange');
 
-      sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider));
+      sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider))!;
       sliderNativeElement = sliderDebugElement.nativeElement;
       sliderInstance = sliderDebugElement.injector.get<MatSlider>(MatSlider);
     });
@@ -1043,7 +1004,7 @@ describe('MatSlider', () => {
       fixture.detectChanges();
 
       testComponent = fixture.debugElement.componentInstance;
-      sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider));
+      sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider))!;
       sliderInstance = sliderDebugElement.injector.get<MatSlider>(MatSlider);
       sliderNativeElement = sliderDebugElement.nativeElement;
     });
@@ -1184,7 +1145,7 @@ describe('MatSlider', () => {
       fixture.detectChanges();
 
       testComponent = fixture.debugElement.componentInstance;
-      sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider));
+      sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider))!;
       sliderInstance = sliderDebugElement.injector.get<MatSlider>(MatSlider);
       sliderNativeElement = sliderDebugElement.nativeElement;
       trackFillElement = <HTMLElement>sliderNativeElement.querySelector('.mat-slider-track-fill');
@@ -1239,7 +1200,7 @@ describe('MatSlider', () => {
       const fixture = createComponent(SliderWithTabIndexBinding);
       fixture.detectChanges();
 
-      const slider = fixture.debugElement.query(By.directive(MatSlider)).componentInstance;
+      const slider = fixture.debugElement.query(By.directive(MatSlider))!.componentInstance;
 
       expect(slider.tabIndex).toBe(0, 'Expected the tabIndex to be set to 0 by default.');
 
@@ -1253,7 +1214,7 @@ describe('MatSlider', () => {
       const fixture = createComponent(SliderWithNativeTabindexAttr);
       fixture.detectChanges();
 
-      const slider = fixture.debugElement.query(By.directive(MatSlider)).componentInstance;
+      const slider = fixture.debugElement.query(By.directive(MatSlider))!.componentInstance;
 
       expect(slider.tabIndex)
         .toBe(5, 'Expected the tabIndex to be set to the value of the native attribute.');
@@ -1272,7 +1233,7 @@ describe('MatSlider', () => {
 
       testComponent = fixture.debugElement.componentInstance;
 
-      sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider));
+      sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider))!;
       sliderNativeElement = sliderDebugElement.nativeElement;
     });
 
@@ -1288,7 +1249,7 @@ describe('MatSlider', () => {
     it('should update the model on slide', () => {
       expect(testComponent.val).toBe(0);
 
-      dispatchSlideEventSequence(sliderNativeElement, 0, 0.19, gestureConfig);
+      dispatchSlideEventSequence(sliderNativeElement, 0, 0.19);
       fixture.detectChanges();
 
       expect(testComponent.val).toBe(19);
@@ -1334,7 +1295,7 @@ describe('MatSlider', () => {
 
       testComponent = fixture.debugElement.componentInstance;
 
-      sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider));
+      sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider))!;
       sliderNativeElement = sliderDebugElement.nativeElement;
       sliderInstance = sliderDebugElement.injector.get<MatSlider>(MatSlider);
     });
@@ -1360,7 +1321,7 @@ describe('MatSlider', () => {
     it('should update the control on slide', () => {
       expect(testComponent.control.value).toBe(0);
 
-      dispatchSlideEventSequence(sliderNativeElement, 0, 0.19, gestureConfig);
+      dispatchSlideEventSequence(sliderNativeElement, 0, 0.19);
       fixture.detectChanges();
 
       expect(testComponent.control.value).toBe(19);
@@ -1431,7 +1392,7 @@ describe('MatSlider', () => {
       fixture.detectChanges();
 
       testComponent = fixture.componentInstance;
-      let sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider));
+      let sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider))!;
       sliderNativeElement = sliderDebugElement.nativeElement;
     });
 
@@ -1524,11 +1485,7 @@ class SliderWithThumbLabel { }
   styles: [styles],
 })
 class SliderWithCustomThumbLabelFormatting {
-  displayWith(value: number | null) {
-    if (!value) {
-      return 0;
-    }
-
+  displayWith(value: number) {
     if (value >= 1000) {
       return (value / 1000) + 'k';
     }
@@ -1655,12 +1612,12 @@ function dispatchMousedownEventSequence(sliderElement: HTMLElement, percentage: 
  * @param gestureConfig The gesture config for the test to handle emitting the slide events.
  */
 function dispatchSlideEventSequence(sliderElement: HTMLElement, startPercent: number,
-                                    endPercent: number, gestureConfig: TestGestureConfig): void {
+                                    endPercent: number): void {
   dispatchMouseenterEvent(sliderElement);
-  dispatchSlideStartEvent(sliderElement, startPercent, gestureConfig);
-  dispatchSlideEvent(sliderElement, startPercent, gestureConfig);
-  dispatchSlideEvent(sliderElement, endPercent, gestureConfig);
-  dispatchSlideEndEvent(sliderElement, endPercent, gestureConfig);
+  dispatchSlideStartEvent(sliderElement, startPercent);
+  dispatchSlideEvent(sliderElement, startPercent);
+  dispatchSlideEvent(sliderElement, endPercent);
+  dispatchSlideEndEvent(sliderElement, endPercent);
 }
 
 /**
@@ -1669,17 +1626,12 @@ function dispatchSlideEventSequence(sliderElement: HTMLElement, startPercent: nu
  * @param percent The percentage of the slider where the slide will happen.
  * @param gestureConfig The gesture config for the test to handle emitting the slide events.
  */
-function dispatchSlideEvent(sliderElement: HTMLElement, percent: number,
-                            gestureConfig: TestGestureConfig): void {
-  let trackElement = sliderElement.querySelector('.mat-slider-wrapper')!;
-  let dimensions = trackElement.getBoundingClientRect();
-  let x = dimensions.left + (dimensions.width * percent);
-  let y = dimensions.top + (dimensions.height * percent);
-
-  gestureConfig.emitEventForElement('slide', sliderElement, {
-    center: { x: x, y: y },
-    srcEvent: { preventDefault: jasmine.createSpy('preventDefault') }
-  });
+function dispatchSlideEvent(sliderElement: HTMLElement, percent: number): void {
+  const trackElement = sliderElement.querySelector('.mat-slider-wrapper')!;
+  const dimensions = trackElement.getBoundingClientRect();
+  const x = dimensions.left + (dimensions.width * percent);
+  const y = dimensions.top + (dimensions.height * percent);
+  dispatchMouseEvent(document.body, 'mousemove', x, y);
 }
 
 /**
@@ -1688,19 +1640,13 @@ function dispatchSlideEvent(sliderElement: HTMLElement, percent: number,
  * @param percent The percentage of the slider where the slide will begin.
  * @param gestureConfig The gesture config for the test to handle emitting the slide events.
  */
-function dispatchSlideStartEvent(sliderElement: HTMLElement, percent: number,
-                                 gestureConfig: TestGestureConfig): void {
-  let trackElement = sliderElement.querySelector('.mat-slider-wrapper')!;
-  let dimensions = trackElement.getBoundingClientRect();
-  let x = dimensions.left + (dimensions.width * percent);
-  let y = dimensions.top + (dimensions.height * percent);
-
+function dispatchSlideStartEvent(sliderElement: HTMLElement, percent: number): void {
+  const trackElement = sliderElement.querySelector('.mat-slider-wrapper')!;
+  const dimensions = trackElement.getBoundingClientRect();
+  const x = dimensions.left + (dimensions.width * percent);
+  const y = dimensions.top + (dimensions.height * percent);
   dispatchMouseenterEvent(sliderElement);
-
-  gestureConfig.emitEventForElement('slidestart', sliderElement, {
-    center: { x: x, y: y },
-    srcEvent: { preventDefault: jasmine.createSpy('preventDefault') }
-  });
+  dispatchMouseEvent(sliderElement, 'mousedown', x, y);
 }
 
 /**
@@ -1709,17 +1655,12 @@ function dispatchSlideStartEvent(sliderElement: HTMLElement, percent: number,
  * @param percent The percentage of the slider where the slide will end.
  * @param gestureConfig The gesture config for the test to handle emitting the slide events.
  */
-function dispatchSlideEndEvent(sliderElement: HTMLElement, percent: number,
-                               gestureConfig: TestGestureConfig): void {
-  let trackElement = sliderElement.querySelector('.mat-slider-wrapper')!;
-  let dimensions = trackElement.getBoundingClientRect();
-  let x = dimensions.left + (dimensions.width * percent);
-  let y = dimensions.top + (dimensions.height * percent);
-
-  gestureConfig.emitEventForElement('slideend', sliderElement, {
-    center: { x: x, y: y },
-    srcEvent: { preventDefault: jasmine.createSpy('preventDefault') }
-  });
+function dispatchSlideEndEvent(sliderElement: HTMLElement, percent: number): void {
+  const trackElement = sliderElement.querySelector('.mat-slider-wrapper')!;
+  const dimensions = trackElement.getBoundingClientRect();
+  const x = dimensions.left + (dimensions.width * percent);
+  const y = dimensions.top + (dimensions.height * percent);
+  dispatchMouseEvent(document.body, 'mouseup', x, y);
 }
 
 /**
@@ -1728,9 +1669,8 @@ function dispatchSlideEndEvent(sliderElement: HTMLElement, percent: number,
  * @param element The element from which the event will be dispatched.
  */
 function dispatchMouseenterEvent(element: HTMLElement): void {
-  let dimensions = element.getBoundingClientRect();
-  let y = dimensions.top;
-  let x = dimensions.left;
-
+  const dimensions = element.getBoundingClientRect();
+  const y = dimensions.top;
+  const x = dimensions.left;
   dispatchMouseEvent(element, 'mouseenter', x, y);
 }

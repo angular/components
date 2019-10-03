@@ -99,7 +99,7 @@ describe('MatChipListbox', () => {
       beforeEach(() => {
         fixture = createComponent(SelectedChipListbox);
         fixture.detectChanges();
-        chipListboxDebugElement = fixture.debugElement.query(By.directive(MatChipListbox));
+        chipListboxDebugElement = fixture.debugElement.query(By.directive(MatChipListbox))!;
         chipListboxNativeElement = chipListboxDebugElement.nativeElement;
       });
 
@@ -245,7 +245,7 @@ describe('MatChipListbox', () => {
           let nativeChips = chipListboxNativeElement.querySelectorAll('mat-chip-option');
           let lastNativeChip = nativeChips[nativeChips.length - 1] as HTMLElement;
 
-          let LEFT_EVENT = createKeyboardEvent('keydown', LEFT_ARROW, lastNativeChip);
+          let LEFT_EVENT = createKeyboardEvent('keydown', LEFT_ARROW, undefined, lastNativeChip);
           let array = chips.toArray();
           let lastIndex = array.length - 1;
           let lastItem = array[lastIndex];
@@ -268,7 +268,7 @@ describe('MatChipListbox', () => {
           let firstNativeChip = nativeChips[0] as HTMLElement;
 
           let RIGHT_EVENT: KeyboardEvent =
-            createKeyboardEvent('keydown', RIGHT_ARROW, firstNativeChip);
+            createKeyboardEvent('keydown', RIGHT_ARROW, undefined, firstNativeChip);
           let array = chips.toArray();
           let firstItem = array[0];
 
@@ -287,7 +287,7 @@ describe('MatChipListbox', () => {
 
         it('should not handle arrow key events from non-chip elements', () => {
           const event: KeyboardEvent =
-              createKeyboardEvent('keydown', RIGHT_ARROW, chipListboxNativeElement);
+              createKeyboardEvent('keydown', RIGHT_ARROW, undefined, chipListboxNativeElement);
           const initialActiveIndex = manager.activeItemIndex;
 
           chipListboxInstance._keydown(event);
@@ -300,7 +300,7 @@ describe('MatChipListbox', () => {
         it('should focus the first item when pressing HOME', () => {
           const nativeChips = chipListboxNativeElement.querySelectorAll('mat-chip-option');
           const lastNativeChip = nativeChips[nativeChips.length - 1] as HTMLElement;
-          const HOME_EVENT = createKeyboardEvent('keydown', HOME, lastNativeChip);
+          const HOME_EVENT = createKeyboardEvent('keydown', HOME, undefined, lastNativeChip);
           const array = chips.toArray();
           const lastItem = array[array.length - 1];
 
@@ -316,7 +316,7 @@ describe('MatChipListbox', () => {
 
         it('should focus the last item when pressing END', () => {
           const nativeChips = chipListboxNativeElement.querySelectorAll('mat-chip-option');
-          const END_EVENT = createKeyboardEvent('keydown', END, nativeChips[0]);
+          const END_EVENT = createKeyboardEvent('keydown', END, undefined, nativeChips[0]);
 
           expect(manager.activeItemIndex).toBe(-1);
 
@@ -339,7 +339,7 @@ describe('MatChipListbox', () => {
           let lastNativeChip = nativeChips[nativeChips.length - 1] as HTMLElement;
 
           let RIGHT_EVENT: KeyboardEvent =
-              createKeyboardEvent('keydown', RIGHT_ARROW, lastNativeChip);
+              createKeyboardEvent('keydown', RIGHT_ARROW, undefined, lastNativeChip);
           let array = chips.toArray();
           let lastIndex = array.length - 1;
           let lastItem = array[lastIndex];
@@ -362,7 +362,7 @@ describe('MatChipListbox', () => {
           let firstNativeChip = nativeChips[0] as HTMLElement;
 
           let LEFT_EVENT: KeyboardEvent =
-              createKeyboardEvent('keydown', LEFT_ARROW, firstNativeChip);
+              createKeyboardEvent('keydown', LEFT_ARROW, undefined, firstNativeChip);
           let array = chips.toArray();
           let firstItem = array[0];
 
@@ -417,7 +417,7 @@ describe('MatChipListbox', () => {
         let firstNativeChip = nativeChips[0] as HTMLElement;
 
         let RIGHT_EVENT: KeyboardEvent =
-          createKeyboardEvent('keydown', RIGHT_ARROW, firstNativeChip);
+          createKeyboardEvent('keydown', RIGHT_ARROW, undefined, firstNativeChip);
         let array = chips.toArray();
         let firstItem = array[0];
 
@@ -451,7 +451,7 @@ describe('MatChipListbox', () => {
         nativeChips = fixture.debugElement.queryAll(By.css('mat-chip-option'))
             .map((chip) => chip.nativeElement);
 
-        chipListboxDebugElement = fixture.debugElement.query(By.directive(MatChipListbox));
+        chipListboxDebugElement = fixture.debugElement.query(By.directive(MatChipListbox))!;
         chipListboxInstance = chipListboxDebugElement.componentInstance;
         chips = chipListboxInstance._chips;
 
@@ -595,7 +595,7 @@ describe('MatChipListbox', () => {
             .toBe(false, 'Expected the control to start off as untouched.');
 
           const nativeChipListbox = fixture.debugElement.query(
-            By.css('mat-chip-listbox')).nativeElement;
+            By.css('mat-chip-listbox'))!.nativeElement;
           dispatchFakeEvent(nativeChipListbox, 'blur');
           tick();
 
@@ -609,7 +609,7 @@ describe('MatChipListbox', () => {
 
           fixture.componentInstance.control.disable();
           const nativeChipListbox = fixture.debugElement.query(
-            By.css('mat-chip-listbox')).nativeElement;
+            By.css('mat-chip-listbox'))!.nativeElement;
           dispatchFakeEvent(nativeChipListbox, 'blur');
           tick();
 
@@ -776,7 +776,7 @@ describe('MatChipListbox', () => {
     }]);
     fixture.detectChanges();
 
-    chipListboxDebugElement = fixture.debugElement.query(By.directive(MatChipListbox));
+    chipListboxDebugElement = fixture.debugElement.query(By.directive(MatChipListbox))!;
     chipListboxNativeElement = chipListboxDebugElement.nativeElement;
     chipListboxInstance = chipListboxDebugElement.componentInstance;
     testComponent = fixture.debugElement.componentInstance;

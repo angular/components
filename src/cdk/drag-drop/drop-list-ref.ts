@@ -10,14 +10,12 @@ import {ElementRef, NgZone} from '@angular/core';
 import {Direction} from '@angular/cdk/bidi';
 import {coerceElement} from '@angular/cdk/coercion';
 import {ViewportRuler} from '@angular/cdk/scrolling';
+import {_supportsShadowDom} from '@angular/cdk/platform';
 import {Subject, Subscription, interval, animationFrameScheduler} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 import {moveItemInArray} from './drag-utils';
 import {DragDropRegistry} from './drag-drop-registry';
 import {DragRefInternal as DragRef, Point} from './drag-ref';
-
-/** Counter used to generate unique ids for drop refs. */
-let _uniqueIdCounter = 0;
 
 /**
  * Proximity, as a ratio to width/height, at which a
@@ -74,23 +72,14 @@ export interface DropListRefInternal extends DropListRef {}
  * @docs-private
  */
 export class DropListRef<T = any> {
-  private _document: Document;
-
   /** Element that the drop list is attached to. */
   element: HTMLElement | ElementRef<HTMLElement>;
-
-  /**
-   * Unique ID for the drop list.
-   * @deprecated No longer being used. To be removed.
-   * @breaking-change 8.0.0
-   */
-  id = `cdk-drop-list-ref-${_uniqueIdCounter++}`;
 
   /** Whether starting a dragging sequence from this container is disabled. */
   disabled: boolean = false;
 
   /** Whether sorting items within the list is disabled. */
-  sortingDisabled: boolean = true;
+  sortingDisabled: boolean = false;
 
   /** Locks the position of the draggable elements inside the container along the specified axis. */
   lockAxis: 'x' | 'y';
@@ -201,19 +190,18 @@ export class DropListRef<T = any> {
   /** Used to signal to the current auto-scroll sequence when to stop. */
   private _stopScrollTimers = new Subject<void>();
 
+  /** Shadow root of the current element. Necessary for `elementFromPoint` to resolve correctly. */
+  private _shadowRoot: DocumentOrShadowRoot;
+
   constructor(
     element: ElementRef<HTMLElement> | HTMLElement,
     private _dragDropRegistry: DragDropRegistry<DragRef, DropListRef>,
     _document: any,
-    /**
-     * @deprecated _ngZone and _viewportRuler parameters to be made required.
-     * @breaking-change 9.0.0
-     */
-    private _ngZone?: NgZone,
-    private _viewportRuler?: ViewportRuler) {
+    private _ngZone: NgZone,
+    private _viewportRuler: ViewportRuler) {
+    const nativeNode = this.element = coerceElement(element);
+    this._shadowRoot = getShadowRoot(nativeNode) || _document;
     _dragDropRegistry.registerDropContainer(this);
-    this._document = _document;
-    this.element = element instanceof ElementRef ? element.nativeElement : element;
   }
 
   /** Removes the drop list functionality from the DOM element. */
@@ -244,25 +232,8 @@ export class DropListRef<T = any> {
     this._cacheItems();
     this._siblings.forEach(sibling => sibling._startReceiving(this));
     this._removeListeners();
-
-    // @breaking-change 9.0.0 Remove check for _ngZone once it's marked as a required param.
-    if (this._ngZone) {
-      this._ngZone.runOutsideAngular(() => element.addEventListener('scroll', this._handleScroll));
-    } else {
-      element.addEventListener('scroll', this._handleScroll);
-    }
-
-    // @breaking-change 9.0.0 Remove check for _viewportRuler once it's marked as a required param.
-    if (this._viewportRuler) {
-      this._viewportScrollPosition = this._viewportRuler.getViewportScrollPosition();
-      this._viewportScrollSubscription = this._dragDropRegistry.scroll.subscribe(() => {
-        if (this.isDragging()) {
-          const newPosition = this._viewportRuler!.getViewportScrollPosition();
-          this._updateAfterScroll(this._viewportScrollPosition, newPosition.top, newPosition.left,
-                                  this._clientRect);
-        }
-      });
-    }
+    this._ngZone.runOutsideAngular(() => element.addEventListener('scroll', this._handleScroll));
+    this._listenToScrollEvents();
   }
 
   /**
@@ -339,10 +310,9 @@ export class DropListRef<T = any> {
    * @param isPointerOverContainer Whether the user's pointer was over the
    *    container when the item was dropped.
    * @param distance Distance the user has dragged since the start of the dragging sequence.
-   * @breaking-change 9.0.0 `distance` parameter to become required.
    */
   drop(item: DragRef, currentIndex: number, previousContainer: DropListRef,
-    isPointerOverContainer: boolean, distance: Point = {x: 0, y: 0}): void {
+    isPointerOverContainer: boolean, distance: Point): void {
     this._reset();
     this.dropped.next({
       item,
@@ -517,30 +487,26 @@ export class DropListRef<T = any> {
     let verticalScrollDirection = AutoScrollVerticalDirection.NONE;
     let horizontalScrollDirection = AutoScrollHorizontalDirection.NONE;
 
-    // @breaking-change 9.0.0 Remove null check for _viewportRuler once it's a required parameter.
-    // Check whether we're in range to scroll the viewport.
-    if (this._viewportRuler) {
+    // Check whether we should start scrolling the container.
+    if (this._isPointerNearDropContainer(pointerX, pointerY)) {
+      const element = coerceElement(this.element);
+
+      [verticalScrollDirection, horizontalScrollDirection] =
+          getElementScrollDirections(element, this._clientRect, pointerX, pointerY);
+
+      if (verticalScrollDirection || horizontalScrollDirection) {
+        scrollNode = element;
+      }
+    }
+
+    // Otherwise check if we can start scrolling the viewport.
+    if (!verticalScrollDirection && !horizontalScrollDirection) {
       const {width, height} = this._viewportRuler.getViewportSize();
       const clientRect = {width, height, top: 0, right: width, bottom: height, left: 0};
       verticalScrollDirection = getVerticalScrollDirection(clientRect, pointerY);
       horizontalScrollDirection = getHorizontalScrollDirection(clientRect, pointerX);
       scrollNode = window;
     }
-
-    // If we couldn't find a scroll direction based on the
-    // window, try with the container, if the pointer is close by.
-    if (!verticalScrollDirection && !horizontalScrollDirection &&
-        this._isPointerNearDropContainer(pointerX, pointerY)) {
-      verticalScrollDirection = getVerticalScrollDirection(this._clientRect, pointerY);
-      horizontalScrollDirection = getHorizontalScrollDirection(this._clientRect, pointerX);
-      scrollNode = coerceElement(this.element);
-    }
-
-    // TODO(crisbeto): we also need to account for whether the view or element are scrollable in
-    // the first place. With the current approach we'll still try to scroll them, but it just
-    // won't do anything. The only case where this is relevant is that if we have a scrollable
-    // list close to the viewport edge where the viewport isn't scrollable. In this case the
-    // we'll be trying to scroll the viewport rather than the list.
 
     if (scrollNode && (verticalScrollDirection !== this._verticalScrollDirection ||
         horizontalScrollDirection !== this._horizontalScrollDirection ||
@@ -550,12 +516,7 @@ export class DropListRef<T = any> {
       this._scrollNode = scrollNode;
 
       if ((verticalScrollDirection || horizontalScrollDirection) && scrollNode) {
-        // @breaking-change 9.0.0 Remove null check for `_ngZone` once it is made required.
-        if (this._ngZone) {
-          this._ngZone.runOutsideAngular(this._startScrollInterval);
-        } else {
-          this._startScrollInterval();
-        }
+        this._ngZone.runOutsideAngular(this._startScrollInterval);
       } else {
         this._stopScrolling();
       }
@@ -825,7 +786,7 @@ export class DropListRef<T = any> {
       return false;
     }
 
-    const elementFromPoint = this._document.elementFromPoint(x, y) as HTMLElement | null;
+    const elementFromPoint = this._shadowRoot.elementFromPoint(x, y) as HTMLElement | null;
 
     // If there's no element at the pointer position, then
     // the client rect is probably scrolled out of the view.
@@ -854,6 +815,7 @@ export class DropListRef<T = any> {
     if (!activeSiblings.has(sibling)) {
       activeSiblings.add(sibling);
       this._cacheOwnPosition();
+      this._listenToScrollEvents();
     }
   }
 
@@ -863,6 +825,24 @@ export class DropListRef<T = any> {
    */
   _stopReceiving(sibling: DropListRef) {
     this._activeSiblings.delete(sibling);
+    this._viewportScrollSubscription.unsubscribe();
+  }
+
+  /**
+   * Starts listening to scroll events on the viewport.
+   * Used for updating the internal state of the list.
+   */
+  private _listenToScrollEvents() {
+    this._viewportScrollPosition = this._viewportRuler!.getViewportScrollPosition();
+    this._viewportScrollSubscription = this._dragDropRegistry.scroll.subscribe(() => {
+      if (this.isDragging()) {
+        const newPosition = this._viewportRuler!.getViewportScrollPosition();
+        this._updateAfterScroll(this._viewportScrollPosition, newPosition.top, newPosition.left,
+                                this._clientRect);
+      } else if (this.isReceiving()) {
+        this._cacheOwnPosition();
+      }
+    });
   }
 }
 
@@ -993,4 +973,63 @@ function getHorizontalScrollDirection(clientRect: ClientRect, pointerX: number) 
   }
 
   return AutoScrollHorizontalDirection.NONE;
+}
+
+/**
+ * Gets the directions in which an element node should be scrolled,
+ * assuming that the user's pointer is already within it scrollable region.
+ * @param element Element for which we should calculate the scroll direction.
+ * @param clientRect Bounding client rectangle of the element.
+ * @param pointerX Position of the user's pointer along the x axis.
+ * @param pointerY Position of the user's pointer along the y axis.
+ */
+function getElementScrollDirections(element: HTMLElement, clientRect: ClientRect, pointerX: number,
+  pointerY: number): [AutoScrollVerticalDirection, AutoScrollHorizontalDirection] {
+  const computedVertical = getVerticalScrollDirection(clientRect, pointerY);
+  const computedHorizontal = getHorizontalScrollDirection(clientRect, pointerX);
+  let verticalScrollDirection = AutoScrollVerticalDirection.NONE;
+  let horizontalScrollDirection = AutoScrollHorizontalDirection.NONE;
+
+  // Note that we here we do some extra checks for whether the element is actually scrollable in
+  // a certain direction and we only assign the scroll direction if it is. We do this so that we
+  // can allow other elements to be scrolled, if the current element can't be scrolled anymore.
+  // This allows us to handle cases where the scroll regions of two scrollable elements overlap.
+  if (computedVertical) {
+    const scrollTop = element.scrollTop;
+
+    if (computedVertical === AutoScrollVerticalDirection.UP) {
+      if (scrollTop > 0) {
+        verticalScrollDirection = AutoScrollVerticalDirection.UP;
+      }
+    } else if (element.scrollHeight - scrollTop > element.clientHeight) {
+      verticalScrollDirection = AutoScrollVerticalDirection.DOWN;
+    }
+  }
+
+  if (computedHorizontal) {
+    const scrollLeft = element.scrollLeft;
+
+    if (computedHorizontal === AutoScrollHorizontalDirection.LEFT) {
+      if (scrollLeft > 0) {
+        horizontalScrollDirection = AutoScrollHorizontalDirection.LEFT;
+      }
+    } else if (element.scrollWidth - scrollLeft > element.clientWidth) {
+      horizontalScrollDirection = AutoScrollHorizontalDirection.RIGHT;
+    }
+  }
+
+  return [verticalScrollDirection, horizontalScrollDirection];
+}
+
+/** Gets the shadow root of an element, if any. */
+function getShadowRoot(element: HTMLElement): DocumentOrShadowRoot | null {
+  if (_supportsShadowDom()) {
+    const rootNode = element.getRootNode ? element.getRootNode() : null;
+
+    if (rootNode instanceof ShadowRoot) {
+      return rootNode;
+    }
+  }
+
+  return null;
 }

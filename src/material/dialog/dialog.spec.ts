@@ -34,7 +34,8 @@ import {
   MatDialog,
   MatDialogModule,
   MatDialogRef,
-  MAT_DIALOG_DEFAULT_OPTIONS
+  MAT_DIALOG_DEFAULT_OPTIONS,
+  MatDialogState
 } from './index';
 import {Subject} from 'rxjs';
 
@@ -349,8 +350,8 @@ describe('MatDialog', () => {
     let backdrop = overlayContainerElement.querySelector('.cdk-overlay-backdrop') as HTMLElement;
     let container = overlayContainerElement.querySelector('mat-dialog-container') as HTMLElement;
     dispatchKeyboardEvent(document.body, 'keydown', A);
-    dispatchKeyboardEvent(document.body, 'keydown', A, backdrop);
-    dispatchKeyboardEvent(document.body, 'keydown', A, container);
+    dispatchKeyboardEvent(document.body, 'keydown', A, undefined, backdrop);
+    dispatchKeyboardEvent(document.body, 'keydown', A, undefined, container);
 
     expect(spy).toHaveBeenCalledTimes(3);
   }));
@@ -629,7 +630,8 @@ describe('MatDialog', () => {
   it('should set the proper animation states', () => {
     let dialogRef = dialog.open(PizzaMsg, { viewContainerRef: testViewContainerRef });
     let dialogContainer: MatDialogContainer =
-        viewContainerFixture.debugElement.query(By.directive(MatDialogContainer)).componentInstance;
+        viewContainerFixture.debugElement.query(By.directive(MatDialogContainer))!
+        .componentInstance;
 
     expect(dialogContainer._state).toBe('enter');
 
@@ -754,6 +756,19 @@ describe('MatDialog', () => {
 
       expect(resolver.resolveComponentFactory).toHaveBeenCalled();
     }));
+
+  it('should return the current state of the dialog', fakeAsync(() => {
+    const dialogRef = dialog.open(PizzaMsg, {viewContainerRef: testViewContainerRef});
+
+    expect(dialogRef.getState()).toBe(MatDialogState.OPEN);
+    dialogRef.close();
+    viewContainerFixture.detectChanges();
+
+    expect(dialogRef.getState()).toBe(MatDialogState.CLOSING);
+    flush();
+
+    expect(dialogRef.getState()).toBe(MatDialogState.CLOSED);
+  }));
 
   describe('passing in data', () => {
     it('should be able to pass in data', () => {
@@ -1189,10 +1204,16 @@ describe('MatDialog', () => {
         expect(button.getAttribute('aria-label')).toBe('Best close button ever');
       }));
 
-      it('should override the "type" attribute of the close button', () => {
+      it('should set the "type" attribute of the close button if not set manually', () => {
         let button = overlayContainerElement.querySelector('button[mat-dialog-close]')!;
 
         expect(button.getAttribute('type')).toBe('button');
+      });
+
+      it('should not override type attribute of the close button if set manually', () => {
+        let button = overlayContainerElement.querySelector('button.with-submit')!;
+
+        expect(button.getAttribute('type')).toBe('submit');
       });
 
       it('should return the [mat-dialog-close] result when clicking the close button',
@@ -1542,6 +1563,7 @@ class PizzaMsg {
         aria-label="Best close button ever"
         [mat-dialog-close]="true"></button>
       <div mat-dialog-close>Should not close</div>
+      <button class="with-submit" type="submit" mat-dialog-close>Should have submit</button>
     </mat-dialog-actions>
   `
 })
@@ -1560,6 +1582,7 @@ class ContentElementDialog {}
           aria-label="Best close button ever"
           [mat-dialog-close]="true"></button>
         <div mat-dialog-close>Should not close</div>
+        <button class="with-submit" type="submit" mat-dialog-close>Should have submit</button>
       </mat-dialog-actions>
     </ng-template>
   `

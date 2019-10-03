@@ -26,7 +26,7 @@ export interface StateGroup {
   moduleId: module.id,
   selector: 'autocomplete-demo',
   templateUrl: 'autocomplete-demo.html',
-  styleUrls: ['autocomplete-demo.css'],
+  styleUrls: ['autocomplete-demo.css']
 })
 export class AutocompleteDemo {
   stateCtrl: FormControl;

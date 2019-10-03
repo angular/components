@@ -8,7 +8,7 @@
 
 import {Rule} from '@angular-devkit/schematics';
 import {createUpgradeRule, TargetVersion} from '@angular/cdk/schematics';
-import {green, yellow} from 'chalk';
+import chalk from 'chalk';
 
 import {materialUpgradeData} from './upgrade-data';
 import {MiscClassInheritanceRule} from './upgrade-rules/misc-checks/misc-class-inheritance-rule';
@@ -49,14 +49,20 @@ export function updateToV8(): Rule {
       TargetVersion.V8, materialMigrationRules, materialUpgradeData, onMigrationComplete);
 }
 
+/** Entry point for the migration schematics with target of Angular Material v9 */
+export function updateToV9(): Rule {
+  return createUpgradeRule(
+      TargetVersion.V9, materialMigrationRules, materialUpgradeData, onMigrationComplete);
+}
+
 /** Function that will be called when the migration completed. */
 function onMigrationComplete(targetVersion: TargetVersion, hasFailures: boolean) {
   console.log();
-  console.log(green(`  ✓  Updated Angular Material to ${targetVersion}`));
+  console.log(chalk.green(`  ✓  Updated Angular Material to ${targetVersion}`));
   console.log();
 
   if (hasFailures) {
-    console.log(yellow(
+    console.log(chalk.yellow(
       '  ⚠  Some issues were detected but could not be fixed automatically. Please check the ' +
       'output above and fix these issues manually.'));
   }

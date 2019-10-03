@@ -51,7 +51,7 @@ describe('MatSelectionList without forms', () => {
       fixture.detectChanges();
 
       listOptions = fixture.debugElement.queryAll(By.directive(MatListOption));
-      selectionList = fixture.debugElement.query(By.directive(MatSelectionList));
+      selectionList = fixture.debugElement.query(By.directive(MatSelectionList))!;
     }));
 
     it('should be able to set a value on a list option', () => {
@@ -150,6 +150,24 @@ describe('MatSelectionList without forms', () => {
         .toBe(true);
     });
 
+    it('should explicitly set the `accent` color', () => {
+      const classList = listOptions[0].nativeElement.classList;
+
+      fixture.componentInstance.firstOptionColor = 'primary';
+      fixture.detectChanges();
+
+      expect(classList).toContain('mat-primary');
+      expect(classList).not.toContain('mat-accent');
+      expect(classList).not.toContain('mat-warn');
+
+      fixture.componentInstance.firstOptionColor = 'accent';
+      fixture.detectChanges();
+
+      expect(classList).not.toContain('mat-primary');
+      expect(classList).toContain('mat-accent');
+      expect(classList).not.toContain('mat-warn');
+    });
+
     it('should be able to deselect an option', () => {
       let testListItem = listOptions[2].injector.get<MatListOption>(MatListOption);
       let selectList =
@@ -195,7 +213,7 @@ describe('MatSelectionList without forms', () => {
 
     it('should be able to use keyboard select with SPACE', () => {
       const testListItem = listOptions[1].nativeElement as HTMLElement;
-      const SPACE_EVENT: KeyboardEvent = createKeyboardEvent('keydown', SPACE, testListItem);
+      const SPACE_EVENT = createKeyboardEvent('keydown', SPACE, undefined, testListItem);
       const selectList =
           selectionList.injector.get<MatSelectionList>(MatSelectionList).selectedOptions;
       expect(selectList.selected.length).toBe(0);
@@ -211,7 +229,7 @@ describe('MatSelectionList without forms', () => {
 
     it('should be able to select an item using ENTER', () => {
       const testListItem = listOptions[1].nativeElement as HTMLElement;
-      const ENTER_EVENT: KeyboardEvent = createKeyboardEvent('keydown', ENTER, testListItem);
+      const ENTER_EVENT = createKeyboardEvent('keydown', ENTER, undefined, testListItem);
       const selectList =
           selectionList.injector.get<MatSelectionList>(MatSelectionList).selectedOptions;
       expect(selectList.selected.length).toBe(0);
@@ -233,7 +251,7 @@ describe('MatSelectionList without forms', () => {
       expect(selectList.selected.length).toBe(0);
 
       [ENTER, SPACE].forEach(key => {
-        const event = createKeyboardEvent('keydown', key, testListItem);
+        const event = createKeyboardEvent('keydown', key, undefined, testListItem);
         Object.defineProperty(event, 'ctrlKey', { get: () => true });
 
         dispatchFakeEvent(testListItem, 'focus');
@@ -254,7 +272,8 @@ describe('MatSelectionList without forms', () => {
       listOptions[1].componentInstance.disabled = true;
 
       dispatchFakeEvent(testListItem, 'focus');
-      selectionList.componentInstance._keydown(createKeyboardEvent('keydown', SPACE, testListItem));
+      selectionList.componentInstance._keydown(
+          createKeyboardEvent('keydown', SPACE, undefined, testListItem));
       fixture.detectChanges();
 
       expect(selectionModel.selected.length).toBe(0);
@@ -296,8 +315,7 @@ describe('MatSelectionList without forms', () => {
 
     it('should focus previous item when press UP ARROW', () => {
       let testListItem = listOptions[2].nativeElement as HTMLElement;
-      let UP_EVENT: KeyboardEvent =
-        createKeyboardEvent('keydown', UP_ARROW, testListItem);
+      let UP_EVENT = createKeyboardEvent('keydown', UP_ARROW, undefined, testListItem);
       let manager = selectionList.componentInstance._keyManager;
 
       dispatchFakeEvent(listOptions[2].nativeElement, 'focus');
@@ -468,13 +486,13 @@ describe('MatSelectionList without forms', () => {
 
       expect(manager.activeItemIndex).toBe(-1);
 
-      dispatchEvent(listEl, createKeyboardEvent('keydown', 83, undefined, 's'));
+      dispatchEvent(listEl, createKeyboardEvent('keydown', 83, 's'));
       fixture.detectChanges();
       tick(200);
 
       expect(manager.activeItemIndex).toBe(1);
 
-      dispatchEvent(listEl, createKeyboardEvent('keydown', 68, undefined, 'd'));
+      dispatchEvent(listEl, createKeyboardEvent('keydown', 68, 'd'));
       fixture.detectChanges();
       tick(200);
 
@@ -538,7 +556,7 @@ describe('MatSelectionList without forms', () => {
       const descendatsFixture = TestBed.createComponent(SelectionListWithIndirectChildOptions);
       descendatsFixture.detectChanges();
       listOptions = descendatsFixture.debugElement.queryAll(By.directive(MatListOption));
-      selectionList = descendatsFixture.debugElement.query(By.directive(MatSelectionList));
+      selectionList = descendatsFixture.debugElement.query(By.directive(MatSelectionList))!;
       const list: MatSelectionList = selectionList.componentInstance;
 
       expect(list.options.toArray().every(option => option.selected)).toBe(false);
@@ -594,8 +612,8 @@ describe('MatSelectionList without forms', () => {
 
     beforeEach(async(() => {
       fixture = TestBed.createComponent(SelectionListWithSelectedOption);
-      listItemEl = fixture.debugElement.query(By.directive(MatListOption));
-      selectionList = fixture.debugElement.query(By.directive(MatSelectionList));
+      listItemEl = fixture.debugElement.query(By.directive(MatListOption))!;
+      selectionList = fixture.debugElement.query(By.directive(MatSelectionList))!;
       fixture.detectChanges();
     }));
 
@@ -622,7 +640,7 @@ describe('MatSelectionList without forms', () => {
 
     it('should properly handle native tabindex attribute', () => {
       const fixture = TestBed.createComponent(SelectionListWithTabindexAttr);
-      const selectionList = fixture.debugElement.query(By.directive(MatSelectionList));
+      const selectionList = fixture.debugElement.query(By.directive(MatSelectionList))!;
 
       expect(selectionList.componentInstance.tabIndex)
         .toBe(5, 'Expected the selection-list tabindex to be set to the attribute value.');
@@ -630,7 +648,7 @@ describe('MatSelectionList without forms', () => {
 
     it('should support changing the tabIndex through binding', () => {
       const fixture = TestBed.createComponent(SelectionListWithTabindexBinding);
-      const selectionList = fixture.debugElement.query(By.directive(MatSelectionList));
+      const selectionList = fixture.debugElement.query(By.directive(MatSelectionList))!;
 
       expect(selectionList.componentInstance.tabIndex)
         .toBe(0, 'Expected the tabIndex to be set to "0" by default.');
@@ -666,7 +684,7 @@ describe('MatSelectionList without forms', () => {
     beforeEach(async(() => {
       fixture = TestBed.createComponent(SelectionListWithDisabledOption);
 
-      const listOptionDebug = fixture.debugElement.query(By.directive(MatListOption));
+      const listOptionDebug = fixture.debugElement.query(By.directive(MatListOption))!;
 
       listOption = listOptionDebug.componentInstance;
       listOptionEl = listOptionDebug.nativeElement;
@@ -717,7 +735,7 @@ describe('MatSelectionList without forms', () => {
     beforeEach(async(() => {
       fixture = TestBed.createComponent(SelectionListWithListDisabled);
       listOption = fixture.debugElement.queryAll(By.directive(MatListOption));
-      selectionList = fixture.debugElement.query(By.directive(MatSelectionList));
+      selectionList = fixture.debugElement.query(By.directive(MatSelectionList))!;
       fixture.detectChanges();
     }));
 
@@ -739,7 +757,7 @@ describe('MatSelectionList without forms', () => {
       // property of the selection list has been updated, the ripple directive can be used.
       // Inspecting the host classes of the options doesn't work because those update as part
       // of the parent template (of the selection-list).
-      const listOptionRipple = listOption[2].query(By.directive(MatRipple))
+      const listOptionRipple = listOption[2].query(By.directive(MatRipple))!
           .injector.get<MatRipple>(MatRipple);
 
       expect(listOptionRipple.disabled)
@@ -776,7 +794,7 @@ describe('MatSelectionList without forms', () => {
     }));
 
     it('should be able to customize checkbox position', () => {
-      let listItemContent = fixture.debugElement.query(By.css('.mat-list-item-content'));
+      let listItemContent = fixture.debugElement.query(By.css('.mat-list-item-content'))!;
       expect(listItemContent.nativeElement.classList).toContain('mat-list-item-content-reverse');
     });
   });
@@ -838,7 +856,7 @@ describe('MatSelectionList with forms', () => {
       fixture = TestBed.createComponent(SelectionListWithModel);
       fixture.detectChanges();
 
-      selectionListDebug = fixture.debugElement.query(By.directive(MatSelectionList));
+      selectionListDebug = fixture.debugElement.query(By.directive(MatSelectionList))!;
       ngModel = selectionListDebug.injector.get<NgModel>(NgModel);
       listOptions = fixture.debugElement.queryAll(By.directive(MatListOption))
         .map(optionDebugEl => optionDebugEl.componentInstance);
@@ -901,7 +919,7 @@ describe('MatSelectionList with forms', () => {
       fixture.detectChanges();
 
       ngModel =
-        fixture.debugElement.query(By.directive(MatSelectionList)).injector.get<NgModel>(NgModel);
+        fixture.debugElement.query(By.directive(MatSelectionList))!.injector.get<NgModel>(NgModel);
       listOptions = fixture.debugElement.queryAll(By.directive(MatListOption))
         .map(optionDebugEl => optionDebugEl.componentInstance);
 
@@ -995,7 +1013,7 @@ describe('MatSelectionList with forms', () => {
       fixture = TestBed.createComponent(SelectionListWithFormControl);
       fixture.detectChanges();
 
-      selectionList = fixture.debugElement.query(By.directive(MatSelectionList)).componentInstance;
+      selectionList = fixture.debugElement.query(By.directive(MatSelectionList))!.componentInstance;
       listOptions = fixture.debugElement.queryAll(By.directive(MatListOption))
         .map(optionDebugEl => optionDebugEl.componentInstance);
     });

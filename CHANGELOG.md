@@ -1,3 +1,171 @@
+## 8.2.2 "vantablack-rainbow" (2019-09-30)
+
+### cdk
+
+|            |                       |
+| ---------- | --------------------- |
+| bug fix |  **drag-drop:** unable to drop into connected sibling after scrolling into view via the parent ([#17162](https://github.com/angular/components/issues/17162)) ([357d1c3](https://github.com/angular/components/commit/357d1c3)), closes [#17144](https://github.com/angular/components/issues/17144) |
+
+### material
+
+|            |                       |
+| ---------- | --------------------- |
+| bug fix |  **autocomplete:** top option group not scrolled into view when going up ([#16343](https://github.com/angular/components/issues/16343)) ([c0034d3](https://github.com/angular/components/commit/c0034d3)) |
+| bug fix |  **button:** focus method does not respect specified origin ([#17183](https://github.com/angular/components/issues/17183)) ([7355389](https://github.com/angular/components/commit/7355389)), closes [#17174](https://github.com/angular/components/issues/17174) |
+| bug fix |  **datepicker:** add scope to calendar headers ([#17163](https://github.com/angular/components/issues/17163)) ([cf244ff](https://github.com/angular/components/commit/cf244ff)), closes [#17038](https://github.com/angular/components/issues/17038) |
+| bug fix |  **form-field:** FormField with outline doesn't work well with dir="r… ([#15415](https://github.com/angular/components/issues/15415)) ([8158754](https://github.com/angular/components/commit/8158754)), closes [#14944](https://github.com/angular/components/issues/14944)
+| bug fix |  **list:** selection list checkbox theme overwritten by parent theme ([#16939](https://github.com/angular/components/issues/16939)) ([57b2c3f](https://github.com/angular/components/commit/57b2c3f)), closes [#16891](https://github.com/angular/components/issues/16891) |
+
+### cdk-experimental
+
+|            |                       |
+| ---------- | --------------------- |
+| bug fix |  **clipboard:** avoid changing layout with temporary textarea ([#17227](https://github.com/angular/components/issues/17227)) ([d4d958e](https://github.com/angular/components/commit/d4d958e)) |
+
+### material-experimental
+
+|            |                       |
+| ---------- | --------------------- |
+| bug fix |  **mdc-slider:** not usable in high contrast mode ([#17164](https://github.com/angular/components/issues/17164)) ([73a233d](https://github.com/angular/components/commit/73a233d)) |
+
+## 8.2.1 "cashmere-ore" (2019-09-24)
+
+### cdk
+
+|            |                       |
+| ---------- | --------------------- |
+| bug fix |  **a11y:** remove aria-describedby attribute when no descriptions are left ([#17074](https://github.com/angular/components/issues/17074)) ([0e5c82c](https://github.com/angular/components/commit/0e5c82c)), closes [#17070](https://github.com/angular/components/issues/17070) |
+
+### material
+
+|            |                       |
+| ---------- | --------------------- |
+| bug fix |  **icon:** use ErrorHandler to log MatIcon errors ([#16999](https://github.com/angular/components/issues/16999)) ([8f54f5c](https://github.com/angular/components/commit/8f54f5c)), closes [#16967](https://github.com/angular/components/issues/16967) |
+| bug fix |  **select:** fix recursive call to SelectionModel.select() ([#17071](https://github.com/angular/components/issues/17071)) ([ed96878](https://github.com/angular/components/commit/ed96878)) |
+| bug fix |  **slide-toggle:** clear static aria attributes from host nodes ([#17085](https://github.com/angular/components/issues/17085)) ([8d73869](https://github.com/angular/components/commit/8d73869)), closes [#16938](https://github.com/angular/components/issues/16938) |
+
+### youtube-player
+
+|            |                       |
+| ---------- | --------------------- |
+| bug fix |  errors during server-side rendering ([#17091](https://github.com/angular/components/issues/17091)) ([9b547b9](https://github.com/angular/components/commit/9b547b9)) |
+
+### cdk-experimental
+
+|            |                       |
+| ---------- | --------------------- |
+| feature |  expose root loader instance in testbed harness environment ([#16903](https://github.com/angular/components/issues/16903)) ([69f7693](https://github.com/angular/components/commit/69f7693)), closes [#16697](https://github.com/angular/components/issues/16697) [#16709](https://github.com/angular/components/issues/16709) |
+
+### material-experimental
+
+|            |                       |
+| ---------- | --------------------- |
+| bug fix |  **button:** ripple color should match state color ([#17066](https://github.com/angular/components/issues/17066)) ([7e98a7e](https://github.com/angular/components/commit/7e98a7e)) |
+| bug fix |  **button:** ripples were using mat-button styles ([#17069](https://github.com/angular/components/issues/17069)) ([6d48c4f](https://github.com/angular/components/commit/6d48c4f)) |
+| bug fix |  **mdc-tabs:** error during server-side rendering ([#17169](https://github.com/angular/components/issues/17169)) ([57fa880](https://github.com/angular/components/commit/57fa880)) |
+| feature |  **drawer:** add harness for mat-drawer ([#17010](https://github.com/angular/components/issues/17010)) ([7ad30eb](https://github.com/angular/components/commit/7ad30eb)), closes [#16695](https://github.com/angular/components/issues/16695) |
+| feature |  **form-field:** add test harness ([#17138](https://github.com/angular/components/issues/17138)) ([eebf589](https://github.com/angular/components/commit/eebf589)) |
+| bug fix |  **testing:** throw better error when trying to use fixture after it has been destroyed ([#17058](https://github.com/angular/components/issues/17058)) ([5e2296f](https://github.com/angular/components/commit/5e2296f)) |
+
+
+# 8.2.0 "silicon-neuron" (2019-09-09)
+
+### Highlights
+
+#### New `@angular/youtube-player` package!
+Earlier this year, we changed the name of this repo to "angular/components" to emphasisze our goal
+to provide more than only Material Design components. The 8.2.0 release includes one of the next new
+features in that regard- a new package that wraps the
+[YouTube Player API for iframe Embeds](https://developers.google.com/youtube/iframe_api_reference)
+in an easy-to-use Angular component.
+
+You can see the
+[documentation on GitHub](https://github.com/angular/components/blob/master/src/youtube-player)
+for the time being.
+
+Big thanks to @YourDeveloperFriend for contributing this!
+
+### Bug Fixes
+
+* **autocomplete:** unable to open panel via click inside shadow DOM ([#15616](https://github.com/angular/components/issues/15616)) ([6e1fe2c](https://github.com/angular/components/commit/6e1fe2c)), closes [#15606](https://github.com/angular/components/issues/15606)
+* **button:** fix typo in comment ([#17001](https://github.com/angular/components/issues/17001)) ([5fb0d57](https://github.com/angular/components/commit/5fb0d57))
+* **card:** stroked buttons missing margin ([#16576](https://github.com/angular/components/issues/16576)) ([399ed29](https://github.com/angular/components/commit/399ed29)), closes [#16546](https://github.com/angular/components/issues/16546)
+* **chips:** allow null to be set as chip value ([#16950](https://github.com/angular/components/issues/16950)) ([57998a2](https://github.com/angular/components/commit/57998a2)), closes [#16844](https://github.com/angular/components/issues/16844)
+* **chips:** preselected chip not highlighted on init inside OnPush component ([#16868](https://github.com/angular/components/issues/16868)) ([aad7ff7](https://github.com/angular/components/commit/aad7ff7)), closes [#16841](https://github.com/angular/components/issues/16841)
+* **drag-drop:** connected drop zones not working inside shadow root ([#16899](https://github.com/angular/components/issues/16899)) ([6009211](https://github.com/angular/components/commit/6009211)), closes [#16898](https://github.com/angular/components/issues/16898)
+* **drag-drop:** drop list ref sorting disabled by default ([#16963](https://github.com/angular/components/issues/16963)) ([306e07c](https://github.com/angular/components/commit/306e07c)), closes [#16961](https://github.com/angular/components/issues/16961)
+* **drag-drop:** error if custom preview or placeholder node is not an element ([#16409](https://github.com/angular/components/issues/16409)) ([8a4bed5](https://github.com/angular/components/commit/8a4bed5))
+* **drag-drop:** handle list and viewport auto scroll regions overlapping ([#16675](https://github.com/angular/components/issues/16675)) ([792e886](https://github.com/angular/components/commit/792e886)), closes [#16647](https://github.com/angular/components/issues/16647)
+* **drag-drop:** handle the element going out of the boundary after a viewport resize ([#16874](https://github.com/angular/components/issues/16874)) ([44b8a47](https://github.com/angular/components/commit/44b8a47)), closes [#16536](https://github.com/angular/components/issues/16536)
+* **drag-drop:** incorrectly constraining element position if size changes between drag sequences ([#16876](https://github.com/angular/components/issues/16876)) ([cad0102](https://github.com/angular/components/commit/cad0102)), closes [#15749](https://github.com/angular/components/issues/15749)
+* **drag-drop:** preview position relative to cursor thrown off if item has margin ([#16180](https://github.com/angular/components/issues/16180)) ([46cf45f](https://github.com/angular/components/commit/46cf45f)), closes [#16171](https://github.com/angular/components/issues/16171)
+* **drag-drop:** unable to drop into connected sibling that was scrolled into view ([#16681](https://github.com/angular/components/issues/16681)) ([dd59044](https://github.com/angular/components/commit/dd59044))
+* **expansion:** show header focus state when expanded ([#16486](https://github.com/angular/components/issues/16486)) ([7bf5e4e](https://github.com/angular/components/commit/7bf5e4e))
+* **icon:** not copying attributes from symbol nodes ([#16896](https://github.com/angular/components/issues/16896)) ([425eb7e](https://github.com/angular/components/commit/425eb7e)), closes [#16892](https://github.com/angular/components/issues/16892)
+* **icon:** use ErrorHandler to log MatIcon errors ([#16967](https://github.com/angular/components/issues/16967)) ([dccddd9](https://github.com/angular/components/commit/dccddd9))
+* **icon:** use ErrorLogger to log http errors ([#16855](https://github.com/angular/components/issues/16855)) ([75686e8](https://github.com/angular/components/commit/75686e8))
+* **menu:** keyboard controls not working if all items are disabled ([#16572](https://github.com/angular/components/issues/16572)) ([d3f63a3](https://github.com/angular/components/commit/d3f63a3)), closes [#16565](https://github.com/angular/components/issues/16565)
+* **menu:** restore focus immediately when menu is closed ([#16960](https://github.com/angular/components/issues/16960)) ([bfa1853](https://github.com/angular/components/commit/bfa1853)), closes [#16954](https://github.com/angular/components/issues/16954)
+* **paginator:** MatPaginatorIntl will now cause MatPaginator to display an 'EN DASH' (U+2013) rather than a 'HYPHEN-MINUS' (U+002D) by default
+* **progress-spinner:** animation node inserted into wrong style root when using ngIf with ShadowDom encapsulation ([#16982](https://github.com/angular/components/issues/16982)) ([dadb3e1](https://github.com/angular/components/commit/dadb3e1))
+* **radio:** clear aria attributes from host node ([#16938](https://github.com/angular/components/issues/16938)) ([237e030](https://github.com/angular/components/commit/237e030)), closes [#16913](https://github.com/angular/components/issues/16913)
+* **slider:** displayWith function never called with "null" ([#16707](https://github.com/angular/components/issues/16707)) ([17c8983](https://github.com/angular/components/commit/17c8983))
+* **snack-bar:** don't stretch to fullscreen in landscape orientation ([#16940](https://github.com/angular/components/issues/16940)) ([8d12902](https://github.com/angular/components/commit/8d12902)), closes [#16911](https://github.com/angular/components/issues/16911)
+* **snack-bar:** too tall under some circumstances in Safari ([#16679](https://github.com/angular/components/issues/16679)) ([e9baa09](https://github.com/angular/components/commit/e9baa09)), closes [#16605](https://github.com/angular/components/issues/16605)
+* **tabs:** tab nav bar not highlighting active tab if rendered after init ([#16624](https://github.com/angular/components/issues/16624)) ([93e9415](https://github.com/angular/components/commit/93e9415)), closes [#16607](https://github.com/angular/components/issues/16607)
+* **tooltip:** avoid adding same aria description as trigger's aria-label ([#16870](https://github.com/angular/components/issues/16870)) ([1006cc2](https://github.com/angular/components/commit/1006cc2)), closes [#16719](https://github.com/angular/components/issues/16719)
+
+
+### Features
+
+* **dialog:** allow for custom ComponentFactoryResolver to be passed in ([#16437](https://github.com/angular/components/issues/16437)) ([565bd7d](https://github.com/angular/components/commit/565bd7d)), closes [#16431](https://github.com/angular/components/issues/16431)
+* **dialog:** expose current dialog state ([#16691](https://github.com/angular/components/issues/16691)) ([3f0268f](https://github.com/angular/components/commit/3f0268f)), closes [#16636](https://github.com/angular/components/issues/16636)
+* **dialog:** don't override type attribute if set on mat-dialog-close ([#16927](https://github.com/angular/components/issues/16927)) ([3ee3ecb](https://github.com/angular/components/commit/3ee3ecb)), closes [#16909](https://github.com/angular/components/issues/16909) [#16909](https://github.com/angular/components/issues/16909)
+* **form-field:** allow hideRequiredMarker default value to be configured through the `MAT_FORM_FIELD_DEFAULT_OPTIONS` ([#16244](https://github.com/angular/components/issues/16244)) ([94c3fed](https://github.com/angular/components/commit/94c3fed)), closes [#16243](https://github.com/angular/components/issues/16243)
+* **icon:** allow viewBox to be configured when registering icons ([#16320](https://github.com/angular/components/issues/16320)) ([3638886](https://github.com/angular/components/commit/3638886)), closes [#2981](https://github.com/angular/components/issues/2981) [#16293](https://github.com/angular/components/issues/16293)
+* **moment-date-adapter:** implement strict mode ([#16462](https://github.com/angular/components/issues/16462)) ([dd42956](https://github.com/angular/components/commit/dd42956))
+* **overlay:** allow width/height when using point as flexible origin ([#16739](https://github.com/angular/components/issues/16739)) ([b98a3bd](https://github.com/angular/components/commit/b98a3bd)), closes [#16160](https://github.com/angular/components/issues/16160)
+* **select:** allow for typeahead debounce interval to be customized ([#16579](https://github.com/angular/components/issues/16579)) ([f23a56a](https://github.com/angular/components/commit/f23a56a)), closes [#16472](https://github.com/angular/components/issues/16472)
+* **sort:** remove hammer dependency ([#16951](https://github.com/angular/components/issues/16951)) ([7594ca1](https://github.com/angular/components/commit/7594ca1))
+
+
+## 8.1.4 "orichalcum-ocarina" (2019-08-26)
+
+
+### Bug Fixes
+
+* **button:** fix opacity is not added to ripple when using CSS variables to define custom theme ([c62330b](https://github.com/angular/components/commit/c62330b))
+* **datepicker:** don't set aria-haspopup if no datepicker is set ([#15554](https://github.com/angular/components/issues/15554)) ([f590dc6](https://github.com/angular/components/commit/f590dc6))
+* **dialog:** not applying margins to new button variants ([#11961](https://github.com/angular/components/issues/11961)) ([0ad0d7a](https://github.com/angular/components/commit/0ad0d7a))
+* **expansion:** not adding margin for all button types ([#16806](https://github.com/angular/components/issues/16806)) ([1d545a6](https://github.com/angular/components/commit/1d545a6))
+* **menu:** inconsistent behavior when clicking on a disabled item ([#16696](https://github.com/angular/components/issues/16696)) ([e441a75](https://github.com/angular/components/commit/e441a75)), closes [#16694](https://github.com/angular/components/issues/16694)
+* **menu:** mark lazy menu content as dirty before attach ([#16506](https://github.com/angular/components/issues/16506)) ([1b54011](https://github.com/angular/components/commit/1b54011))
+* **overlay:** _updateElementSize should not fail if pane is disposed. ([#16600](https://github.com/angular/components/issues/16600)) ([febcaff](https://github.com/angular/components/commit/febcaff))
+* **radio:** show ripple on programmatic focus ([#16512](https://github.com/angular/components/issues/16512)) ([a243ef9](https://github.com/angular/components/commit/a243ef9))
+* **radio-button:** underlying input not respecting value binding ([e1760b6](https://github.com/angular/components/commit/e1760b6))
+* **schematics:** module imports not generated for schematics ([#16787](https://github.com/angular/components/issues/16787)) ([2cfcd36](https://github.com/angular/components/commit/2cfcd36))
+* **schematics:** navigation schematic not respecting breakpoints on initial render ([#16788](https://github.com/angular/components/issues/16788)) ([621ddf7](https://github.com/angular/components/commit/621ddf7))
+* **sidenav:** avoid CSS class name conflict ([#16798](https://github.com/angular/components/issues/16798)) ([636cb9f](https://github.com/angular/components/commit/636cb9f))
+* **sidenav:** focus trap enabled state not updated if mode changes while open ([#16602](https://github.com/angular/components/issues/16602)) ([666e9b3](https://github.com/angular/components/commit/666e9b3)), closes [#16601](https://github.com/angular/components/issues/16601)
+* **slider:** inconsistent cursor behavior if user's pointer moves around while dragging ([d62b19e](https://github.com/angular/components/commit/d62b19e)), closes [#14613](https://github.com/angular/components/issues/14613)
+
+
+
+## 8.1.3 "gelatin-key" (2019-08-14)
+
+
+### Bug Fixes
+
+* **cdk/virtual-scroll:** fix subpixel rounding errors on hdpi… ([#16269](https://github.com/angular/components/issues/16269)) ([5bbf9ba](https://github.com/angular/components/commit/5bbf9ba))
+* **cdk-experimental/popover-edit:** prevent default escape action ([#16747](https://github.com/angular/components/issues/16747)) ([073b98c](https://github.com/angular/components/commit/073b98c)), closes [#16202](https://github.com/angular/components/issues/16202)
+
+
+### Features
+
+* **cdk-experimental/clipboard:** add cdk-experimental clipboard service + directive ([#16704](https://github.com/angular/components/issues/16704)) ([6c51995](https://github.com/angular/components/commit/6c51995))
+
+
+
 ## 8.1.2 "bologna-bayou" (2019-07-29)
 
 

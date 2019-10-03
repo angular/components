@@ -19,10 +19,11 @@
     }
   },
   "files": [
-    "public-api.ts",
+    "index.ts",
     "typings.d.ts"
   ],
   "angularCompilerOptions": {
+    "enableIvy": false,
     "annotateForClosureCompiler": true,
     "strictMetadataEmit": true,
     "flatModuleOutFile": "index.js",

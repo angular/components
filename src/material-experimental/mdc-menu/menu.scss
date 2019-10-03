@@ -3,6 +3,7 @@
 @import '@material/list/variables';
 @import '../../material/core/style/menu-common';
 @import '../../material/core/style/button-common';
+@import '../../cdk/a11y/a11y';
 
 @include mdc-menu-surface-core-styles($query: structure);
 
@@ -20,6 +21,10 @@
 
   // The CDK positioning uses flexbox to anchor the element, whereas MDC uses `position: absolute`.
   position: static;
+
+  @include cdk-high-contrast {
+    outline: solid 1px;
+  }
 }
 
 .mat-mdc-menu-item {
@@ -40,6 +45,12 @@
   text-decoration: none;
 
   &[disabled] {
+    // Usually every click inside the menu closes it, however some browsers will stop events
+    // when the user clicks on a disabled item, **except** when the user clicks on a non-disabled
+    // child node of the disabled button. This is inconsistent because some regions of a disabled
+    // button will still cause the menu to close and some won't (see #16694). We make the behavior
+    // more consistent by disabling pointer events and allowing the user to click through.
+    pointer-events: none;
     cursor: default;
   }
 
@@ -53,6 +64,14 @@
     .mat-icon {
       margin-right: 0;
       margin-left: $mdc-list-side-padding;
+    }
+  }
+
+  @include cdk-high-contrast {
+    &.cdk-program-focused,
+    &.cdk-keyboard-focused,
+    &-highlighted {
+      outline: dotted 1px;
     }
   }
 }

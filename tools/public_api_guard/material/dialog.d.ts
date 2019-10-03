@@ -49,6 +49,7 @@ export declare class MatDialogClose implements OnInit, OnChanges {
     ariaLabel: string;
     dialogRef: MatDialogRef<any>;
     dialogResult: any;
+    type: 'submit' | 'button' | 'reset';
     constructor(dialogRef: MatDialogRef<any>, _elementRef: ElementRef<HTMLElement>, _dialog: MatDialog);
     ngOnChanges(changes: SimpleChanges): void;
     ngOnInit(): void;
@@ -117,10 +118,17 @@ export declare class MatDialogRef<T, R = any> {
     beforeClose(): Observable<R | undefined>;
     beforeClosed(): Observable<R | undefined>;
     close(dialogResult?: R): void;
+    getState(): MatDialogState;
     keydownEvents(): Observable<KeyboardEvent>;
     removePanelClass(classes: string | string[]): this;
     updatePosition(position?: DialogPosition): this;
     updateSize(width?: string, height?: string): this;
+}
+
+export declare const enum MatDialogState {
+    OPEN = 0,
+    CLOSING = 1,
+    CLOSED = 2
 }
 
 export declare class MatDialogTitle implements OnInit {

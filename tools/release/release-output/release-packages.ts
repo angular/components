@@ -2,7 +2,8 @@
 export const releasePackages = [
   'cdk',
   'material',
+  'youtube-player',
   'cdk-experimental',
   'material-experimental',
-  'material-moment-adapter'
+  'material-moment-adapter',
 ];

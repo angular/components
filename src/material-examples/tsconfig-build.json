@@ -10,6 +10,7 @@
     "noUnusedParameters": false,
     "noUnusedLocals": false,
     "strictNullChecks": true,
+    "noImplicitReturns": true,
     "strictFunctionTypes": true,
     "noImplicitAny": true,
     "noImplicitThis": true,
@@ -37,6 +38,7 @@
     "public-api.ts"
   ],
   "angularCompilerOptions": {
+    "enableIvy": false,
     "annotateForClosureCompiler": true,
     "strictMetadataEmit": true,
     "flatModuleOutFile": "index.js",

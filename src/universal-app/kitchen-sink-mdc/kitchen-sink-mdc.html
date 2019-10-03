@@ -1,7 +1,16 @@
-<h2>MDC button</h2>
+<h2>Button</h2>
 
-<!-- TODO: Copy kitchen sink examples for mat-button here -->
-Not yet implemented.
+<button mat-button>go</button>
+<button mat-icon-button><mat-icon>search</mat-icon></button>
+<button mat-raised-button>go</button>
+<button mat-fab><mat-icon>home</mat-icon></button>
+<button mat-mini-fab><mat-icon>favorite</mat-icon></button>
+
+<a mat-button href="https://google.com">Google</a>
+<a mat-icon-button href="https://google.com"><mat-icon>search</mat-icon></a>
+<a mat-raised-button href="https://google.com">Google</a>
+<a mat-fab href="https://google.com"><mat-icon>home</mat-icon></a>
+<a mat-mini-fab href="https://google.com"><mat-icon>favorite</mat-icon></a>
 
 <h2>MDC card</h2>
 
@@ -40,3 +49,38 @@ Not yet implemented.
 <mat-slide-toggle checked></mat-slide-toggle>
 <mat-slide-toggle checked disabled></mat-slide-toggle>
 <mat-slide-toggle>with a label</mat-slide-toggle>
+
+<h2>Slider</h2>
+<mat-slider></mat-slider>
+<mat-slider value="50"></mat-slider>
+<mat-slider tickInterval="1" min="1" max="10" value="5" thumbLabel></mat-slider>
+<mat-slider disabled></mat-slider>
+
+<h2>Tabs</h2>
+
+<!--
+  Note that we set the `selectedIndex` here to hit the code path
+  where we might need to do some measurements.
+-->
+<mat-tab-group [selectedIndex]="1">
+  <mat-tab label="Overview">
+    The overview
+  </mat-tab>
+  <mat-tab>
+    <ng-template mat-tab-label>
+      API docs
+    </ng-template>
+    The API docs
+  </mat-tab>
+</mat-tab-group>
+
+<nav mat-tab-nav-bar>
+ <a mat-tab-link href="https://google.com">Google</a>
+ <a mat-tab-link href="https://google.com" active>Also Google</a>
+</nav>
+
+<h2>Progress bar</h2>
+<mat-progress-bar value="25"></mat-progress-bar>
+<mat-progress-bar mode="buffer" value="25" bufferValue="60"></mat-progress-bar>
+<mat-progress-bar mode="indeterminate"></mat-progress-bar>
+<mat-progress-bar mode="query"></mat-progress-bar>

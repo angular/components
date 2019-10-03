@@ -9,7 +9,7 @@ import {Subject} from 'rxjs';
 import {MatChip, MatChipEvent, MatChipSelectionChange, MatChipsModule, MatChipList} from './index';
 
 
-describe('Chips', () => {
+describe('MatChip', () => {
   let fixture: ComponentFixture<any>;
   let chipDebugElement: DebugElement;
   let chipNativeElement: HTMLElement;
@@ -41,7 +41,7 @@ describe('Chips', () => {
       fixture = TestBed.createComponent(BasicChip);
       fixture.detectChanges();
 
-      chipDebugElement = fixture.debugElement.query(By.directive(MatChip));
+      chipDebugElement = fixture.debugElement.query(By.directive(MatChip))!;
       chipNativeElement = chipDebugElement.nativeElement;
       chipInstance = chipDebugElement.injector.get<MatChip>(MatChip);
 
@@ -65,7 +65,7 @@ describe('Chips', () => {
       fixture = TestBed.createComponent(SingleChip);
       fixture.detectChanges();
 
-      chipDebugElement = fixture.debugElement.query(By.directive(MatChip));
+      chipDebugElement = fixture.debugElement.query(By.directive(MatChip))!;
       chipNativeElement = chipDebugElement.nativeElement;
       chipInstance = chipDebugElement.injector.get<MatChip>(MatChip);
       testComponent = fixture.debugElement.componentInstance;
@@ -213,6 +213,24 @@ describe('Chips', () => {
         globalRippleOptions.disabled = true;
 
         expect(chipInstance.rippleDisabled).toBe(true, 'Expected chip ripples to be disabled.');
+      });
+
+      it('should return the chip text if value is undefined', () => {
+        expect(chipInstance.value.trim()).toBe(fixture.componentInstance.name);
+      });
+
+      it('should return the chip value if defined', () => {
+        fixture.componentInstance.value = 123;
+        fixture.detectChanges();
+
+        expect(chipInstance.value).toBe(123);
+      });
+
+      it('should return the chip value if set to null', () => {
+        fixture.componentInstance.value = null;
+        fixture.detectChanges();
+
+        expect(chipInstance.value).toBeNull();
       });
     });
 
@@ -396,7 +414,7 @@ describe('Chips', () => {
                  [color]="color" [selected]="selected" [disabled]="disabled"
                  (focus)="chipFocus($event)" (destroyed)="chipDestroy($event)"
                  (selectionChange)="chipSelectionChange($event)"
-                 (removed)="chipRemove($event)">
+                 (removed)="chipRemove($event)" [value]="value">
           {{name}}
         </mat-chip>
       </div>
@@ -411,6 +429,7 @@ class SingleChip {
   selectable: boolean = true;
   removable: boolean = true;
   shouldShow: boolean = true;
+  value: any;
 
   chipFocus: (event?: MatChipEvent) => void = () => {};
   chipDestroy: (event?: MatChipEvent) => void = () => {};

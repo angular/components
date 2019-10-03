@@ -132,7 +132,7 @@ describe('MatTabNavBar', () => {
     });
 
     it('should mark disabled links', () => {
-      const tabLinkElement = fixture.debugElement.query(By.css('a')).nativeElement;
+      const tabLinkElement = fixture.debugElement.query(By.css('a'))!.nativeElement;
 
       expect(tabLinkElement.classList).not.toContain('mat-tab-disabled');
 
@@ -231,7 +231,7 @@ describe('MatTabNavBar', () => {
       const fixture = TestBed.createComponent(TabLinkWithNativeTabindexAttr);
     fixture.detectChanges();
 
-    const tabLink = fixture.debugElement.query(By.directive(MatTabLink))
+    const tabLink = fixture.debugElement.query(By.directive(MatTabLink))!
         .injector.get<MatTabLink>(MatTabLink);
 
     expect(tabLink.tabIndex)
@@ -242,7 +242,7 @@ describe('MatTabNavBar', () => {
     const fixture = TestBed.createComponent(TabLinkWithTabIndexBinding);
     fixture.detectChanges();
 
-    const tabLink = fixture.debugElement.query(By.directive(MatTabLink))
+    const tabLink = fixture.debugElement.query(By.directive(MatTabLink))!
         .injector.get<MatTabLink>(MatTabLink);
 
     expect(tabLink.tabIndex).toBe(0, 'Expected the tabIndex to be set to 0 by default.');
@@ -251,6 +251,22 @@ describe('MatTabNavBar', () => {
     fixture.detectChanges();
 
     expect(tabLink.tabIndex).toBe(3, 'Expected the tabIndex to be have been set to 3.');
+  });
+
+  it('should select the proper tab, if the tabs come in after init', () => {
+    const fixture = TestBed.createComponent(SimpleTabNavBarTestApp);
+    const instance = fixture.componentInstance;
+
+    instance.tabs = [];
+    instance.activeIndex = 1;
+    fixture.detectChanges();
+
+    expect(instance.tabNavBar.selectedIndex).toBe(-1);
+
+    instance.tabs = [0, 1, 2];
+    fixture.detectChanges();
+
+    expect(instance.tabNavBar.selectedIndex).toBe(1);
   });
 
   describe('ripples', () => {
@@ -295,7 +311,7 @@ describe('MatTabNavBar', () => {
     });
 
     it('should be able to disable ripples on an individual tab link', () => {
-      const tabLinkDebug = fixture.debugElement.query(By.css('a'));
+      const tabLinkDebug = fixture.debugElement.query(By.css('a'))!;
       const tabLinkElement = tabLinkDebug.nativeElement;
       const tabLinkInstance = tabLinkDebug.injector.get<MatTabLink>(MatTabLink);
 
