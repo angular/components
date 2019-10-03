@@ -74,7 +74,7 @@ describe('StackblitzWriter', () => {
       }
       flushMicrotasks();
 
-      expect(form.elements.length).toBe(15);
+      expect(form.elements.length).toBe(14);
 
       // Should have correct tags
       expect(form.elements[0].getAttribute('name')).toBe('tags[0]');
@@ -94,12 +94,11 @@ describe('StackblitzWriter', () => {
       expect(form.elements[6].getAttribute('name')).toBe('files[index.html]');
       expect(form.elements[7].getAttribute('name')).toBe('files[styles.css]');
       expect(form.elements[8].getAttribute('name')).toBe('files[polyfills.ts]');
-      expect(form.elements[9].getAttribute('name')).toBe('files[.angular-cli.json]');
-      expect(form.elements[10].getAttribute('name')).toBe('files[main.ts]');
-      expect(form.elements[11].getAttribute('name')).toBe('files[material-module.ts]');
-      expect(form.elements[12].getAttribute('name')).toBe('files[app/test.ts]');
-      expect(form.elements[13].getAttribute('name')).toBe('files[app/test.html]');
-      expect(form.elements[14].getAttribute('name')).toBe('files[app/src/detail.ts]');
+      expect(form.elements[9].getAttribute('name')).toBe('files[main.ts]');
+      expect(form.elements[10].getAttribute('name')).toBe('files[material-module.ts]');
+      expect(form.elements[11].getAttribute('name')).toBe('files[app/test.ts]');
+      expect(form.elements[12].getAttribute('name')).toBe('files[app/test.html]');
+      expect(form.elements[13].getAttribute('name')).toBe('files[app/src/detail.ts]');
     });
   }));
 });
@@ -114,7 +113,6 @@ const TEST_URLS = [
   '/assets/stackblitz/index.html',
   '/assets/stackblitz/styles.css',
   '/assets/stackblitz/polyfills.ts',
-  '/assets/stackblitz/.angular-cli.json',
   '/assets/stackblitz/main.ts',
   '/assets/stackblitz/material-module.ts',
   '/docs-content/examples-source/test.ts',
