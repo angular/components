@@ -338,8 +338,9 @@ export class MapMarker implements OnInit, OnDestroy {
   }
 
   private _combineOptions(): Observable<google.maps.MarkerOptions> {
-    return combineLatest(
-               this._options, this._title, this._position, this._label, this._clickable, this._map)
+    return combineLatest([
+          this._options, this._title, this._position, this._label, this._clickable, this._map
+        ])
         .pipe(map(([options, title, position, label, clickable, googleMap]) => {
           const combinedOptions: google.maps.MarkerOptions = {
             ...options,

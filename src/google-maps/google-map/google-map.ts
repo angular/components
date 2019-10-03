@@ -398,7 +398,7 @@ export class GoogleMap implements OnChanges, OnInit, AfterContentInit, OnDestroy
 
   /** Combines the center and zoom and the other map options into a single object */
   private _combineOptions(): Observable<google.maps.MapOptions> {
-    return combineLatest(this._options, this._center, this._zoom)
+    return combineLatest([this._options, this._center, this._zoom])
         .pipe(map(([options, center, zoom]) => {
           const combinedOptions: google.maps.MapOptions = {
             ...options,
@@ -420,7 +420,7 @@ export class GoogleMap implements OnChanges, OnInit, AfterContentInit, OnDestroy
 
   private _watchForOptionsChanges(
       optionsChanges: Observable<google.maps.MapOptions>) {
-    combineLatest(this._googleMapChanges, optionsChanges)
+    combineLatest([this._googleMapChanges, optionsChanges])
         .pipe(takeUntil(this._destroy))
         .subscribe(([googleMap, options]) => {
           googleMap.setOptions(options);
