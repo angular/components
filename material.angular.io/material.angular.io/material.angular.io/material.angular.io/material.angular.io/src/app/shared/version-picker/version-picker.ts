@@ -16,11 +16,17 @@ export class VersionPicker {
   /** The currently running version of Material. */
   materialVersion = materialVersion;
   /** The possible versions of the doc site. */
-  docVersions = this.http.get<VersionInfo[]>(versionUrl);
+  docVersions: VersionInfo[];
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {
+    this.http.get<VersionInfo[]>(versionUrl)
+      .subscribe((versions: VersionInfo[]) => this.docVersions = versions);
+  }
 
-  /** Updates the window location if the selected version is a different version. */
+  /**
+   * Updates the window location if the selected version is a different version.
+   * @param version data for use in navigating to the version's path
+   */
   onVersionChanged(version: VersionInfo) {
     if (!version.url.startsWith(window.location.href)) {
       window.location.assign(version.url);
