@@ -51,7 +51,7 @@ export class MatRadioButton implements AfterViewInit, OnDestroy {
   _classes: {[key: string]: boolean} = {};
 
   /** The unique ID for the radio button. */
-  @Input() id: string = this._uniqueId;
+  @Input() id: string | null = this._uniqueId;
 
   /** Whether the radio button is disabled. */
   @Input()

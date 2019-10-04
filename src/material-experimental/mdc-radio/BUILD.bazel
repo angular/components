@@ -5,6 +5,8 @@ load(
     "//tools:defaults.bzl",
     "ng_e2e_test_library",
     "ng_module",
+    "ng_test_library",
+    "ng_web_test_suite",
     "sass_binary",
     "sass_library",
 )
@@ -41,6 +43,30 @@ sass_binary(
         "//src/material-experimental/mdc-helpers:mdc_helpers_scss_lib",
         "//src/material-experimental/mdc-helpers:mdc_scss_deps_lib",
         "//src/material/core:core_scss_lib",
+    ],
+)
+
+ng_test_library(
+    name = "radio_tests_lib",
+    srcs = glob(
+        ["**/*.spec.ts"],
+        exclude = ["**/*.e2e.spec.ts"],
+    ),
+    deps = [
+        ":mdc-radio",
+        "//src/cdk/testing",
+        "//src/cdk/testing/testbed",
+        "@npm//@angular/forms",
+        "@npm//@angular/platform-browser",
+    ],
+)
+
+ng_web_test_suite(
+    name = "unit_tests",
+    static_files = ["@npm//:node_modules/@material/radio/dist/mdc.radio.js"],
+    deps = [
+        ":radio_tests_lib",
+        "//src/material-experimental:mdc_require_config.js",
     ],
 )
 
