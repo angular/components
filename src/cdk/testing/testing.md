@@ -92,7 +92,7 @@ it('loads harnesses', async () => {
 
   // The dialog is appended to `document.body`, outside of the fixture's root element,
   // so we use `documentRootLoader()` in this case.
-  const dialogHanress
+  const dialogHarness =
       await TestbedHarnessEnvironment.documentRootLoader().getHarness(MyDialogHarness);
 
   // ... make some assertions
