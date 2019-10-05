@@ -84,7 +84,7 @@ it('loads harnesses', async () => {
   const dialogButtonHarness =
       await TestbedHarnessEnvironment.harnessForFixture(fixture, MyDialogButtonHarness);
 
-  // The button element is inside the fixture's root element so we use `loader()`.
+  // The button element is inside the fixture's root element, so we use `loader()`.
   const buttonHarness =
       await TestbedHarnessEnvironment.loader().getHarness(MyButtonHarness);
   // Click the button to open the dialog
