@@ -7,16 +7,16 @@
  */
 
 import {DateAdapter} from '@angular/material/core';
-import {Subject} from 'rxjs';
+import {Subject, Observable} from 'rxjs';
 
 export abstract class MatDateSelectionModel<D> {
-  private _valueChangesSubject = new Subject<void>();
-  valueChanges = this._valueChangesSubject.asObservable();
+  protected _valueChangesSubject = new Subject<void>();
+  valueChanges: Observable<void> = this._valueChangesSubject.asObservable();
 
   constructor(protected readonly adapter: DateAdapter<D>) {}
 
   destroy() {
-    this.valueChanges.complete();
+    this._valueChangesSubject.complete();
   }
 
   abstract add(date: D | null): void;
@@ -43,7 +43,7 @@ export class MatSingleDateSelectionModel<D> extends MatDateSelectionModel<D> {
 
   add(date: D | null) {
     this._date = date;
-    this.valueChanges.next();
+    this._valueChangesSubject.next();
   }
 
   compareDate(other: MatSingleDateSelectionModel<D>) {
@@ -68,7 +68,7 @@ export class MatSingleDateSelectionModel<D> extends MatDateSelectionModel<D> {
   }
 
   asDate(): D | null {
-    return (this.isValid()) ? this._date : null;
+    return this.isValid() ? this._date : null;
   }
 }
 
@@ -82,9 +82,7 @@ export class MatRangeDateSelectionModel<D> extends MatDateSelectionModel<D> {
 
   constructor(adapter: DateAdapter<D>, start?: D | null, end?: D | null) {
     super(adapter);
-
     this._start = start === undefined ? null : start;
-
     this._end = end === undefined ? null : end;
   }
 
@@ -103,7 +101,7 @@ export class MatRangeDateSelectionModel<D> extends MatDateSelectionModel<D> {
       this._end = null;
     }
 
-    this.valueChanges.next();
+    this._valueChangesSubject.next();
   }
 
   setRange(start: D | null, end: D | null) {
@@ -117,7 +115,7 @@ export class MatRangeDateSelectionModel<D> extends MatDateSelectionModel<D> {
 
   isSame(other: MatDateSelectionModel<D>): boolean {
     if (other instanceof MatRangeDateSelectionModel) {
-      otherRange = other.asRange();
+      const otherRange = other.asRange();
       return this.adapter.sameDate(this._start, otherRange.start) &&
              this.adapter.sameDate(this._end, otherRange.end);
     }
