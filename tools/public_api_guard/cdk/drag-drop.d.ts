@@ -26,6 +26,7 @@ export declare class CdkDrag<T = any> implements AfterViewInit, OnChanges, OnDes
     };
     lockAxis: 'x' | 'y';
     moved: Observable<CdkDragMove<T>>;
+    previewClass: string | string[];
     released: EventEmitter<CdkDragRelease>;
     rootElementSelector: string;
     started: EventEmitter<CdkDragStart>;
@@ -231,6 +232,7 @@ export declare class DragRef<T = any> {
             y: -1 | 0 | 1;
         };
     }>;
+    previewClass: string | string[] | undefined;
     released: Subject<{
         source: DragRef<any>;
     }>;
