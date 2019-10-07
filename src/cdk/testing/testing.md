@@ -18,7 +18,7 @@ implementation in both unit and end-to-end tests. This means that users only nee
 and component authors don't have to maintain separate unit and end-to-end test implementations.
 
 Common component libraries, in particular, benefit from this infrastructure due to the wide use of
-their components. Providing a test harness allows the consumers of a component can write tests that
+their components. Providing a test harness allows the consumers of a component to write tests that
 avoid dependencies on any private implementation details. By capturing these implementation details
 in a single place, consumers can more easily update to new library versions.
 
@@ -78,22 +78,30 @@ components, each with a corresponding harness:
 The following code loads harnesses for each of these components:
 
 ```ts
+let fixture: ComponentFixture<MyDialogButton>;
+let loader: HarnessLoader;
+let rootLoader: HarnessLoader;
+
+beforeEach(() => {
+  fixture = TestBed.createComponent(MyDialogButton);
+  loader = TestbedHarnessEnvironment.loader(fixture;);
+  rootLoader = TestbedHarnessEnvironment.documentRootLoader(fixture);
+});
+
 it('loads harnesses', async () => {
-  const fixture = TestBed.createComponent(MyDialogButton);
   // Load a harness for the bootstrapped component with `harnessForFixture`
-  const dialogButtonHarness =
+  dialogButtonHarness =
       await TestbedHarnessEnvironment.harnessForFixture(fixture, MyDialogButtonHarness);
 
-  // The button element is inside the fixture's root element, so we use `loader()`.
-  const buttonHarness =
-      await TestbedHarnessEnvironment.loader().getHarness(MyButtonHarness);
+  // The button element is inside the fixture's root element, so we use `loader`.
+  const buttonHarness = loader.getHarness(MyButtonHarness);
+
   // Click the button to open the dialog
   await buttonHarness.click();
 
   // The dialog is appended to `document.body`, outside of the fixture's root element,
-  // so we use `documentRootLoader()` in this case.
-  const dialogHarness =
-      await TestbedHarnessEnvironment.documentRootLoader().getHarness(MyDialogHarness);
+  // so we use `rootLoader` in this case.
+  const dialogHarness = rootLoader.getHarness(MyDialogHarness);
 
   // ... make some assertions
 });
