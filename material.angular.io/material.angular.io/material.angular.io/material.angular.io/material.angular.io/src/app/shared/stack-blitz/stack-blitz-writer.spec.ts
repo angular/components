@@ -1,11 +1,11 @@
 import {HttpClientTestingModule, HttpTestingController} from '@angular/common/http/testing';
 import {async, fakeAsync, flushMicrotasks, inject, TestBed} from '@angular/core/testing';
 import {ExampleData} from '@angular/material-examples';
-import {StackblitzWriter} from './stackblitz-writer';
+import {StackBlitzWriter} from './stack-blitz-writer';
 
 
-describe('StackblitzWriter', () => {
-  let stackblitzWriter: StackblitzWriter;
+describe('StackBlitzWriter', () => {
+  let stackBlitzWriter: StackBlitzWriter;
   let data: ExampleData;
   let http: HttpTestingController;
 
@@ -14,7 +14,7 @@ describe('StackblitzWriter', () => {
       imports: [HttpClientTestingModule],
       declarations: [],
       providers: [
-        StackblitzWriter,
+        StackBlitzWriter,
       ]
     }).compileComponents();
   }));
@@ -24,19 +24,19 @@ describe('StackblitzWriter', () => {
   }));
 
   beforeEach(() => {
-    stackblitzWriter = TestBed.get(StackblitzWriter);
+    stackBlitzWriter = TestBed.get(StackBlitzWriter);
     data = new ExampleData('');
     data.exampleFiles = ['test.ts', 'test.html', 'src/detail.ts'];
   });
 
   it('should append correct copyright', () => {
-    expect(stackblitzWriter._appendCopyright('test.ts', 'NoContent')).toBe(`NoContent
+    expect(stackBlitzWriter._appendCopyright('test.ts', 'NoContent')).toBe(`NoContent
 
 /**  Copyright 2019 Google LLC. All Rights Reserved.
     Use of this source code is governed by an MIT-style license that
     can be found in the LICENSE file at http://angular.io/license */`);
 
-    expect(stackblitzWriter._appendCopyright('test.html', 'NoContent')).toBe(`NoContent
+    expect(stackBlitzWriter._appendCopyright('test.html', 'NoContent')).toBe(`NoContent
 
 <!-- Copyright 2019 Google LLC. All Rights Reserved.
     Use of this source code is governed by an MIT-style license that
@@ -45,27 +45,27 @@ describe('StackblitzWriter', () => {
   });
 
   it('should create form element', () => {
-    expect(stackblitzWriter._createFormElement('index.ts').outerHTML).toBe(
+    expect(stackBlitzWriter._createFormElement('index.ts').outerHTML).toBe(
       `<form action="https://run.stackblitz.com/api/angular/v1?file=index.ts" ` +
       `method="post" target="_blank"></form>`);
   });
 
   it('should add files to form input', () => {
-    let form = stackblitzWriter._createFormElement('index.ts');
+    let form = stackBlitzWriter._createFormElement('index.ts');
 
-    stackblitzWriter._addFileToForm(form, data, 'NoContent', 'test.ts', 'path/to/file');
-    stackblitzWriter._addFileToForm(form, data, 'Test', 'test.html', 'path/to/file');
-    stackblitzWriter._addFileToForm(form, data, 'Detail', 'src/detail.ts', 'path/to/file');
+    stackBlitzWriter._addFileToForm(form, data, 'NoContent', 'test.ts', 'path/to/file');
+    stackBlitzWriter._addFileToForm(form, data, 'Test', 'test.html', 'path/to/file');
+    stackBlitzWriter._addFileToForm(form, data, 'Detail', 'src/detail.ts', 'path/to/file');
 
     expect(form.elements.length).toBe(3);
-    expect(form.elements[0].getAttribute('name')).toBe('files[app/test.ts]');
-    expect(form.elements[1].getAttribute('name')).toBe('files[app/test.html]');
-    expect(form.elements[2].getAttribute('name')).toBe('files[app/src/detail.ts]');
+    expect(form.elements[0].getAttribute('name')).toBe('files[src/app/test.ts]');
+    expect(form.elements[1].getAttribute('name')).toBe('files[src/app/test.html]');
+    expect(form.elements[2].getAttribute('name')).toBe('files[src/app/src/detail.ts]');
   });
 
   it('should open a new window with stackblitz url', fakeAsync(() => {
     let form: HTMLFormElement;
-    stackblitzWriter.constructStackblitzForm(data).then((result: HTMLFormElement) => {
+    stackBlitzWriter.constructStackBlitzForm(data).then((result: HTMLFormElement) => {
       form = result;
       flushMicrotasks();
 
@@ -91,14 +91,14 @@ describe('StackblitzWriter', () => {
       expect(form.elements[5].getAttribute('name')).toBe('dependencies');
 
       // Should have files needed for example.
-      expect(form.elements[6].getAttribute('name')).toBe('files[index.html]');
-      expect(form.elements[7].getAttribute('name')).toBe('files[styles.css]');
-      expect(form.elements[8].getAttribute('name')).toBe('files[polyfills.ts]');
-      expect(form.elements[9].getAttribute('name')).toBe('files[main.ts]');
-      expect(form.elements[10].getAttribute('name')).toBe('files[material-module.ts]');
-      expect(form.elements[11].getAttribute('name')).toBe('files[app/test.ts]');
-      expect(form.elements[12].getAttribute('name')).toBe('files[app/test.html]');
-      expect(form.elements[13].getAttribute('name')).toBe('files[app/src/detail.ts]');
+      expect(form.elements[6].getAttribute('name')).toBe('files[src/index.html]');
+      expect(form.elements[7].getAttribute('name')).toBe('files[src/styles.scss]');
+      expect(form.elements[8].getAttribute('name')).toBe('files[src/polyfills.ts]');
+      expect(form.elements[9].getAttribute('name')).toBe('files[src/main.ts]');
+      expect(form.elements[10].getAttribute('name')).toBe('files[src/app/material-module.ts]');
+      expect(form.elements[11].getAttribute('name')).toBe('files[src/app/test.ts]');
+      expect(form.elements[12].getAttribute('name')).toBe('files[src/app/test.html]');
+      expect(form.elements[13].getAttribute('name')).toBe('files[src/app/src/detail.ts]');
     });
   }));
 });
@@ -110,11 +110,11 @@ const FAKE_DOCS: {[key: string]: string} = {
 };
 
 const TEST_URLS = [
-  '/assets/stackblitz/index.html',
-  '/assets/stackblitz/styles.css',
-  '/assets/stackblitz/polyfills.ts',
-  '/assets/stackblitz/main.ts',
-  '/assets/stackblitz/material-module.ts',
+  '/assets/stack-blitz/src/index.html',
+  '/assets/stack-blitz/src/styles.scss',
+  '/assets/stack-blitz/src/polyfills.ts',
+  '/assets/stack-blitz/src/main.ts',
+  '/assets/stack-blitz/src/app/material-module.ts',
   '/docs-content/examples-source/test.ts',
   '/docs-content/examples-source/test.html',
   '/docs-content/examples-source/src/detail.ts',

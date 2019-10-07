@@ -4,7 +4,6 @@
 /dist
 /tmp
 /out-tsc
-/src/assets/*.css
 # Only exists if Bazel was run
 /bazel-out
 
@@ -35,15 +34,13 @@ speed-measure-plugin*.json
 # misc
 /.sass-cache
 /connect.lock
-/coverage/*
+/coverage
 /libpeerconnection.log
 npm-debug.log
 yarn-error.log
 testem.log
-firebase-debug.log
-.firebase/
 /typings
 
-#System Files
+# System Files
 .DS_Store
 Thumbs.db

@@ -28,11 +28,8 @@ echo "      You can pull the docs-content for the new version by updating the"
 echo "      \"@angular/material-examples\" in the 'package.json' file."
 echo ""
 
-read -p "Press <ENTER> to continue.."
+read -rp "Press <ENTER> to continue.."
 
-npm run build-themes
-
-$(npm bin)/ng build --aot --prod --build-optimizer=false
-$(npm bin)/firebase use $projectId
-$(npm bin)/firebase deploy
-
+yarn prod-build
+yarn firebase use $projectId
+yarn firebase deploy

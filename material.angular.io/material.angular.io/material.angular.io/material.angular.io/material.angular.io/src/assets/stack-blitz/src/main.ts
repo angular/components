@@ -7,7 +7,7 @@ import {MatNativeDateModule} from '@angular/material/core';
 import {BrowserModule} from '@angular/platform-browser';
 import {platformBrowserDynamic} from '@angular/platform-browser-dynamic';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {DemoMaterialModule} from './material-module';
+import {DemoMaterialModule} from './app/material-module';
 
 import {MaterialDocsExample} from './app/material-docs-example';
 
@@ -28,4 +28,5 @@ import {MaterialDocsExample} from './app/material-docs-example';
 })
 export class AppModule {}
 
-platformBrowserDynamic().bootstrapModule(AppModule);
+platformBrowserDynamic().bootstrapModule(AppModule)
+  .catch(err => console.error(err));
