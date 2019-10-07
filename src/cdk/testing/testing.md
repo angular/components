@@ -84,7 +84,7 @@ let rootLoader: HarnessLoader;
 
 beforeEach(() => {
   fixture = TestBed.createComponent(MyDialogButton);
-  loader = TestbedHarnessEnvironment.loader(fixture;);
+  loader = TestbedHarnessEnvironment.loader(fixture);
   rootLoader = TestbedHarnessEnvironment.documentRootLoader(fixture);
 });
 
@@ -94,14 +94,14 @@ it('loads harnesses', async () => {
       await TestbedHarnessEnvironment.harnessForFixture(fixture, MyDialogButtonHarness);
 
   // The button element is inside the fixture's root element, so we use `loader`.
-  const buttonHarness = loader.getHarness(MyButtonHarness);
+  const buttonHarness = await loader.getHarness(MyButtonHarness);
 
   // Click the button to open the dialog
   await buttonHarness.click();
 
   // The dialog is appended to `document.body`, outside of the fixture's root element,
   // so we use `rootLoader` in this case.
-  const dialogHarness = rootLoader.getHarness(MyDialogHarness);
+  const dialogHarness = await rootLoader.getHarness(MyDialogHarness);
 
   // ... make some assertions
 });
