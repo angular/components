@@ -82,6 +82,7 @@ export declare class MatAutocompleteTrigger implements ControlValueAccessor, Aft
     readonly panelOpen: boolean;
     position: 'auto' | 'above' | 'below';
     constructor(_element: ElementRef<HTMLInputElement>, _overlay: Overlay, _viewContainerRef: ViewContainerRef, _zone: NgZone, _changeDetectorRef: ChangeDetectorRef, scrollStrategy: any, _dir: Directionality, _formField: MatFormField, _document: any, _viewportRuler?: ViewportRuler | undefined);
+    _handleBlur(): void;
     _handleFocus(): void;
     _handleInput(event: KeyboardEvent): void;
     _handleKeydown(event: KeyboardEvent): void;

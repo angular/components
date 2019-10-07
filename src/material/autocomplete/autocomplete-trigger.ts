@@ -47,7 +47,7 @@ import {
 } from '@angular/material/core';
 import {MatFormField} from '@angular/material/form-field';
 import {defer, fromEvent, merge, Observable, of as observableOf, Subject, Subscription} from 'rxjs';
-import {delay, filter, map, switchMap, take, tap} from 'rxjs/operators';
+import {delay, filter, map, switchMap, take, tap, takeUntil} from 'rxjs/operators';
 
 import {MatAutocomplete} from './autocomplete';
 import {MatAutocompleteOrigin} from './autocomplete-origin';
@@ -116,7 +116,7 @@ export function getMatAutocompleteMissingPanelError(): Error {
     // Note: we use `focusin`, as opposed to `focus`, in order to open the panel
     // a little earlier. This avoids issues where IE delays the focusing of the input.
     '(focusin)': '_handleFocus()',
-    '(blur)': '_onTouched()',
+    '(blur)': '_handleBlur()',
     '(input)': '_handleInput($event)',
     '(keydown)': '_handleKeydown($event)',
   },
@@ -457,6 +457,16 @@ export class MatAutocompleteTrigger implements ControlValueAccessor, AfterViewIn
       this._previousValue = this._element.nativeElement.value;
       this._attachOverlay();
       this._floatLabel(true);
+    }
+  }
+
+  _handleBlur(): void {
+    if (this.panelOpen) {
+      this.autocomplete.closed
+          .pipe(take(1), takeUntil(this.autocomplete.opened.asObservable()))
+          .subscribe(() => this._onTouched());
+    } else {
+      this._onTouched();
     }
   }
 
