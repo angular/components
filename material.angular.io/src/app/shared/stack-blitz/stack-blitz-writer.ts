@@ -19,13 +19,22 @@ const COPYRIGHT =
  */
 const DOCS_CONTENT_PATH = '/docs-content/examples-source/';
 
-const TEMPLATE_PATH = '/assets/stackblitz/';
+const TEMPLATE_PATH = '/assets/stack-blitz/';
 const TEMPLATE_FILES = [
-  'index.html',
-  'styles.css',
-  'polyfills.ts',
-  'main.ts',
-  'material-module.ts',
+  '.editorconfig',
+  '.gitignore',
+  'angular.json',
+  'browserslist',
+  'package.json',
+  'tsconfig.json',
+  'tsconfig.app.json',
+  'tsconfig.spec.json',
+  'tslint.json',
+  'src/index.html',
+  'src/styles.scss',
+  'src/polyfills.ts',
+  'src/main.ts',
+  'src/app/material-module.ts'
 ];
 
 const TAGS: string[] = ['angular', 'material', 'example'];
@@ -33,26 +42,27 @@ const angularVersion = '>=8.0.0';
 
 const dependencies = {
   '@angular/cdk': materialVersion,
-  '@angular/material': materialVersion,
-  '@angular/material-moment-adapter': materialVersion,
   '@angular/animations': angularVersion,
   '@angular/common': angularVersion,
   '@angular/compiler': angularVersion,
   '@angular/core': angularVersion,
   '@angular/forms': angularVersion,
+  '@angular/material': materialVersion,
+  '@angular/material-moment-adapter': materialVersion,
   '@angular/platform-browser': angularVersion,
   '@angular/platform-browser-dynamic': angularVersion,
   '@angular/router': angularVersion,
-  'angular-in-memory-web-api': '~0.5.4',
+  'angular-in-memory-web-api': '~0.9.0',
   'core-js': '^2.6.9',
-  'rxjs': '>=6.5.3 <7.0.0',
-  'zone.js': '^0.9.1',
   'hammerjs': '^2.0.8',
   'moment': '^2.24.0',
+  'rxjs': '>=6.5.3 <7.0.0',
+  'tslib': '^1.10.0',
+  'zone.js': '^0.9.1',
 };
 
 /**
- * Stackblitz writer, write example files to stackblitz
+ * StackBlitz writer, write example files to StackBlitz.
  *
  * StackBlitz API
  * URL: https://run.stackblitz.com/api/aio/v1/
@@ -62,7 +72,7 @@ const dependencies = {
  *   files[directory-name/file-name2]: file-content2,
  *   // Can add multiple tags
  *   tags[0]: tag-0,
- *   // Description of stackblitz
+ *   // Description of StackBlitz
  *   description: description,
  *   // Private or not
  *   private: true
@@ -71,15 +81,15 @@ const dependencies = {
  * }
  */
 @Injectable()
-export class StackblitzWriter {
+export class StackBlitzWriter {
   constructor(private _http: HttpClient) {}
 
   /**
-   * Returns an HTMLFormElement that will open a new stackblitz template with the example data when
+   * Returns an HTMLFormElement that will open a new StackBlitz template with the example data when
    * called with submit().
    */
-  constructStackblitzForm(data: ExampleData): Promise<HTMLFormElement> {
-    const indexFile = `app%2F${data.indexFilename}.ts`;
+  constructStackBlitzForm(data: ExampleData): Promise<HTMLFormElement> {
+    const indexFile = `src%2Fapp%2F${data.indexFilename}.ts`;
     const form = this._createFormElement(indexFile);
 
     TAGS.forEach((tag, i) => this._appendFormInput(form, `tags[${i}]`, tag));
@@ -105,7 +115,7 @@ export class StackblitzWriter {
     });
   }
 
-  /** Constructs a new form element that will navigate to the stackblitz url. */
+  /** Constructs a new form element that will navigate to the StackBlitz url. */
   _createFormElement(indexFile: string): HTMLFormElement {
     const form = document.createElement('form');
     form.action = `${STACKBLITZ_URL}?file=${indexFile}`;
@@ -160,13 +170,13 @@ export class StackblitzWriter {
     if (path == TEMPLATE_PATH) {
       content = this._replaceExamplePlaceholderNames(data, filename, content);
     } else if (prependApp) {
-      filename = 'app/' + filename;
+      filename = 'src/app/' + filename;
     }
     this._appendFormInput(form, `files[${filename}]`, this._appendCopyright(filename, content));
   }
 
   /**
-   * The stackblitz template assets contain placeholder names for the examples:
+   * The StackBlitz template assets contain placeholder names for the examples:
    * "<material-docs-example>" and "MaterialDocsExample".
    * This will replace those placeholders with the names from the example metadata,
    * e.g. "<basic-button-example>" and "BasicButtonExample"
@@ -174,13 +184,13 @@ export class StackblitzWriter {
   _replaceExamplePlaceholderNames(data: ExampleData,
                                   fileName: string,
                                   fileContent: string): string {
-    if (fileName == 'index.html') {
+    if (fileName == 'src/index.html') {
       // Replace the component selector in `index,html`.
       // For example, <material-docs-example></material-docs-example> will be replaced as
       // <button-demo></button-demo>
       fileContent = fileContent.replace(/material-docs-example/g, data.selectorName);
       fileContent = fileContent.replace(/{{version}}/g, VERSION.full);
-    } else if (fileName == 'main.ts') {
+    } else if (fileName == 'src/main.ts') {
       // Replace the component name in `main.ts`.
       // Replace `import {MaterialDocsExample} from 'material-docs-example'`
       // will be replaced as `import {ButtonDemo} from './button-demo'`
@@ -189,13 +199,13 @@ export class StackblitzWriter {
       // Replace `declarations: [MaterialDocsExample]`
       // will be replaced as `declarations: [ButtonDemo]`
       fileContent = fileContent.
-        replace(/declarations: \[MaterialDocsExample\]/g,
+        replace(/declarations: \[MaterialDocsExample]/g,
           `declarations: [${data.componentName}]`);
 
       // Replace `entryComponents: [MaterialDocsExample]`
       // will be replaced as `entryComponents: [DialogContent]`
       fileContent = fileContent.
-        replace(/entryComponents: \[MaterialDocsExample\]/g,
+        replace(/entryComponents: \[MaterialDocsExample]/g,
           `entryComponents: [${data.componentName}]`);
 
       // Replace `bootstrap: [MaterialDocsExample]`
@@ -203,7 +213,7 @@ export class StackblitzWriter {
       // This assumes the first component listed in the main component
       const componentList = (data.componentName || '').split(',')[0];
       fileContent = fileContent.
-        replace(/bootstrap: \[MaterialDocsExample\]/g,
+        replace(/bootstrap: \[MaterialDocsExample]/g,
           `bootstrap: [${componentList}]`);
 
       fileContent = fileContent.replace(/material-docs-example/g, data.indexFilename);

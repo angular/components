@@ -6,7 +6,7 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatMenuModule} from '@angular/material/menu';
 import {materialVersion, VersionInfo} from '../version/version';
 
-const versionUrl = 'https://material.angular.io/assets/versions.json';
+const versionUrl = 'assets/versions.json';
 
 @Component({
   selector: 'version-picker',
@@ -16,12 +16,9 @@ export class VersionPicker {
   /** The currently running version of Material. */
   materialVersion = materialVersion;
   /** The possible versions of the doc site. */
-  docVersions: VersionInfo[];
+  docVersions = this.http.get<VersionInfo[]>(versionUrl);
 
-  constructor(private http: HttpClient) {
-    this.http.get<VersionInfo[]>(versionUrl)
-      .subscribe((versions: VersionInfo[]) => this.docVersions = versions);
-  }
+  constructor(private http: HttpClient) {}
 
   /**
    * Updates the window location if the selected version is a different version.

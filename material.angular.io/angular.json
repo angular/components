@@ -46,23 +46,23 @@
                 "input": "src/highlightjs/material-light.scss"
               },
               {
+                "inject": false,
                 "input": "src/assets/pink-bluegrey.css",
-                "lazy": true,
                 "bundleName": "pink-bluegrey"
               },
               {
+                "inject": false,
                 "input": "src/assets/deeppurple-amber.css",
-                "lazy": true,
                 "bundleName": "deeppurple-amber"
               },
               {
+                "inject": false,
                 "input": "src/assets/indigo-pink.css",
-                "lazy": true,
                 "bundleName": "indigo-pink"
               },
               {
+                "inject": false,
                 "input": "src/assets/purple-green.css",
-                "lazy": true,
                 "bundleName": "purple-green"
               }
             ],
@@ -70,6 +70,12 @@
           },
           "configurations": {
             "production": {
+              "budgets": [
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
+                }
+              ],
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,
@@ -121,23 +127,23 @@
                 "input": "src/highlightjs/material-light.scss"
               },
               {
+                "inject": false,
                 "input": "src/assets/pink-bluegrey.css",
-                "lazy": true,
                 "bundleName": "pink-bluegrey"
               },
               {
+                "inject": false,
                 "input": "src/assets/deeppurple-amber.css",
-                "lazy": true,
                 "bundleName": "deeppurple-amber"
               },
               {
+                "inject": false,
                 "input": "src/assets/indigo-pink.css",
-                "lazy": true,
                 "bundleName": "indigo-pink"
               },
               {
+                "inject": false,
                 "input": "src/assets/purple-green.css",
-                "lazy": true,
                 "bundleName": "purple-green"
               }
             ],
@@ -182,5 +188,8 @@
         }
       }
     }
+  },
+  "cli": {
+    "analytics": "cf155f04-1636-4df9-9ce2-870ba25ad38d"
   }
 }

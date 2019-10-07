@@ -1,6 +1,6 @@
 import {DocViewer} from './doc-viewer';
 import {ExampleViewer} from '../example-viewer/example-viewer';
-import {StackblitzButtonModule} from '../stackblitz/stackblitz-button';
+import {StackBlitzButtonModule} from '../stack-blitz/stack-blitz-button';
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
@@ -23,7 +23,7 @@ import {CopierService} from '../copier/copier.service';
     MatTabsModule,
     CommonModule,
     PortalModule,
-    StackblitzButtonModule
+    StackBlitzButtonModule
   ],
   providers: [CopierService],
   declarations: [DocViewer, ExampleViewer, HeaderLink],

@@ -1,0 +1,20 @@
+<div [matTooltip]="isDisabled ? 'Building StackBlitz example...' : 'Edit in StackBlitz'">
+  <button mat-icon-button type="button"
+          (click)="openStackBlitz()"
+          [disabled]="isDisabled">
+    <mat-icon>
+      <svg width='24px' height='24px' viewBox='0 -3 23 40' version='1.1'
+           xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>
+        <title>StackBlitz Logo</title>
+        <desc>Created with Sketch.</desc>
+        <g id='Symbols' stroke='none' stroke-width='1' fill='none' fill-rule='evenodd'>
+          <g fill='#1389FD' fill-rule='nonzero'>
+            <polygon id='Path'
+                     points='0 19.9187087 9.87007874 19.9187087 4.12007874 34 23 13.9612393 13.0846457 13.9612393 18.7893701 0'>
+            </polygon>
+          </g>
+        </g>
+      </svg>
+    </mat-icon>
+  </button>
+</div>
