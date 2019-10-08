@@ -1,3 +1,4 @@
+import {Platform} from '@angular/cdk/platform';
 import {HarnessLoader} from '@angular/cdk-experimental/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk-experimental/testing/testbed';
 import {Component} from '@angular/core';
@@ -8,7 +9,7 @@ import {MatSlideToggleModule as MatMdcSlideToggleModule} from '../index';
 import {MatSlideToggleHarness} from './slide-toggle-harness';
 import {MatSlideToggleHarness as MatMdcSlideToggleHarness} from './mdc-slide-toggle-harness';
 
-
+const platform = new Platform();
 let fixture: ComponentFixture<SlideToggleHarnessTest>;
 let loader: HarnessLoader;
 let slideToggleHarness: typeof MatSlideToggleHarness;
@@ -160,6 +161,13 @@ function runTests() {
   });
 
   it('should not toggle disabled slide-toggle', async () => {
+    if (platform.FIREFOX) {
+      // do run this test on firefox as click events on the label of the underlying
+      // input checkbox cause the value to be changed. Read more in the bug report:
+      // https://bugzilla.mozilla.org/show_bug.cgi?id=1540995
+      return;
+    }
+
     const disabledToggle = await loader.getHarness(slideToggleHarness.with({label: 'Second'}));
     expect(await disabledToggle.isChecked()).toBe(false);
     await disabledToggle.toggle();

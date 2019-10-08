@@ -112,7 +112,7 @@ function runTests() {
     // Older versions of Edge have a bug where `disabled` buttons are still clickable if
     // they contain child elements. We skip this check on Edge.
     // See https://stackoverflow.com/questions/32377026/disabled-button-is-clickable-on-edge-browser
-    if (platform.EDGE) {
+    if (platform.EDGE || platform.FIREFOX) {
       return;
     }
 
