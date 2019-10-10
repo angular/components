@@ -44,8 +44,7 @@ export class MatAutocompleteHarness extends ComponentHarness {
 
   /** Gets the value of the autocomplete input. */
   async getValue(): Promise<string> {
-    // The "value" property of the native input is never undefined.
-    return (await (await this.host()).getProperty('value'))!;
+    return (await this.host()).getProperty('value');
   }
 
   /** Gets a boolean promise indicating if the autocomplete input is disabled. */
