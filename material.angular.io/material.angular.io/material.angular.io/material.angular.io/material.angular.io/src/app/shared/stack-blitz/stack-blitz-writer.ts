@@ -38,7 +38,7 @@ const TEMPLATE_FILES = [
 ];
 
 const TAGS: string[] = ['angular', 'material', 'example'];
-const angularVersion = '>=8.0.0';
+const angularVersion = '^9.0.0-next.10';
 
 const dependencies = {
   '@angular/cdk': materialVersion,
@@ -58,7 +58,7 @@ const dependencies = {
   'moment': '^2.24.0',
   'rxjs': '>=6.5.3 <7.0.0',
   'tslib': '^1.10.0',
-  'zone.js': '^0.9.1',
+  'zone.js': '~0.10.2',
 };
 
 /**
