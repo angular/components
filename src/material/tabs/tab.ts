@@ -45,7 +45,18 @@ const _MatTabMixinBase: CanDisableCtor & typeof MatTabBase =
 })
 export class MatTab extends _MatTabMixinBase implements OnInit, CanDisable, OnChanges, OnDestroy {
   /** Content for the tab label given by `<ng-template mat-tab-label>`. */
-  @ContentChild(MatTabLabel, {static: false}) templateLabel: MatTabLabel;
+  @ContentChild(MatTabLabel, {static: false})
+  get templateLabel(): MatTabLabel { return this._templateLabel; }
+  set templateLabel(value: MatTabLabel) {
+    // Only update the templateLabel via query if there is actually
+    // a MatTabLabel found. This works around an issue where a user may have
+    // manually set `templateLabel` during creation mode, which would then get clobbered
+    // by `undefined` when this query resolves.
+    if (value) {
+      this._templateLabel = value;
+    }
+  }
+  private _templateLabel: MatTabLabel;
 
   /**
    * Template provided in the tab content that will be used if present, used to enable lazy-loading
