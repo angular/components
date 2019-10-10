@@ -12,11 +12,11 @@ import {ComponentHarness, HarnessPredicate, BaseHarnessFilters} from '@angular/c
 // and expand to cover all states once we have experimental/core.
 
 export interface OptionHarnessFilters extends BaseHarnessFilters {
-  text?: string;
+  text?: string | RegExp;
 }
 
 export interface OptionGroupHarnessFilters extends BaseHarnessFilters {
-  labelText?: string;
+  text?: string | RegExp;
 }
 
 /**
@@ -29,8 +29,7 @@ export class MatAutocompleteOptionHarness extends ComponentHarness {
   static with(options: OptionHarnessFilters = {}) {
     return new HarnessPredicate(MatAutocompleteOptionHarness, options)
         .addOption('text', options.text,
-            async (harness, title) =>
-                HarnessPredicate.stringMatches(await harness.getText(), title));
+            (harness, text) => HarnessPredicate.stringMatches(harness.getText(), text));
   }
 
   /** Clicks the option. */
@@ -54,13 +53,12 @@ export class MatAutocompleteOptionGroupHarness extends ComponentHarness {
 
   static with(options: OptionGroupHarnessFilters = {}) {
     return new HarnessPredicate(MatAutocompleteOptionGroupHarness, options)
-        .addOption('labelText', options.labelText,
-            async (harness, title) =>
-                HarnessPredicate.stringMatches(await harness.getLabelText(), title));
+        .addOption('text', options.text,
+            (harness, title) => HarnessPredicate.stringMatches(harness.getText(), title));
   }
 
   /** Gets a promise for the option group's label text. */
-  async getLabelText(): Promise<string> {
+  async getText(): Promise<string> {
     return (await this._label()).text();
   }
 }
