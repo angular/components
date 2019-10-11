@@ -82,9 +82,7 @@ export class MatAutocompleteHarness extends ComponentHarness {
 
   /** Selects the first options matching the given filters. */
   async selectOption(filters: OptionHarnessFilters = {}): Promise<void> {
-    if (!await this.isOpen()) {
-      throw Error('mat-autocomplete dropdown must be open to select an option');
-    }
+    await this.focus(); // Focus the input to make sure the autocomplete panel is shown.
     const options = await this.getOptions(filters);
     if (!options.length) {
       throw Error(`Could not find a mat-option matching ${JSON.stringify(filters)}`);

@@ -124,15 +124,8 @@ export function runHarnessTests(
 
   it('should be able to select option', async () => {
     const input = await loader.getHarness(autocompleteHarness.with({selector: '#plain'}));
-    await input.enterText('New');
     await input.selectOption({text: 'New York'});
     expect(await input.getValue()).toBe('NY');
-  });
-
-  it('should throw when selecting an option if autocomplete is not open', async () => {
-    const input = await loader.getHarness(autocompleteHarness.with({selector: '#plain'}));
-    await expectAsyncError(() => input.selectOption({text: 'New York'}),
-        /mat-autocomplete dropdown must be open to select an option/);
   });
 
   it('should throw when selecting an option that is not available', async () => {
