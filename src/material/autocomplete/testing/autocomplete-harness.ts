@@ -80,8 +80,8 @@ export class MatAutocompleteHarness extends ComponentHarness {
         MatAutocompleteOptionGroupHarness.with(filters))();
   }
 
-  /** Selects the first options matching the given filters. */
-  async selectOption(filters: OptionHarnessFilters = {}): Promise<void> {
+  /** Selects the first option matching the given filters. */
+  async selectOption(filters: OptionHarnessFilters): Promise<void> {
     await this.focus(); // Focus the input to make sure the autocomplete panel is shown.
     const options = await this.getOptions(filters);
     if (!options.length) {

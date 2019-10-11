@@ -16,7 +16,7 @@ export interface OptionHarnessFilters extends BaseHarnessFilters {
 }
 
 export interface OptionGroupHarnessFilters extends BaseHarnessFilters {
-  text?: string | RegExp;
+  labelText?: string | RegExp;
 }
 
 /**
@@ -53,13 +53,12 @@ export class MatAutocompleteOptionGroupHarness extends ComponentHarness {
 
   static with(options: OptionGroupHarnessFilters = {}) {
     return new HarnessPredicate(MatAutocompleteOptionGroupHarness, options)
-        .addOption('text', options.text,
-            (harness, title) => HarnessPredicate.stringMatches(harness.getText(), title));
+        .addOption('labelText', options.labelText,
+            (harness, label) => HarnessPredicate.stringMatches(harness.getLabelText(), label));
   }
 
   /** Gets a promise for the option group's label text. */
-  async getText(): Promise<string> {
+  async getLabelText(): Promise<string> {
     return (await this._label()).text();
   }
 }
-

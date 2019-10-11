@@ -108,10 +108,10 @@ export function runHarnessTests(
   it('should be able to get filtered panel groups', async () => {
     const input = await loader.getHarness(autocompleteHarness.with({selector: '#grouped'}));
     await input.focus();
-    const groups = await input.getOptionGroups({text: 'Two'});
+    const groups = await input.getOptionGroups({labelText: 'Two'});
 
     expect(groups.length).toBe(1);
-    expect(await groups[0].getText()).toBe('Two');
+    expect(await groups[0].getLabelText()).toBe('Two');
   });
 
   it('should be able to get whether the autocomplete is open', async () => {
