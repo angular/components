@@ -375,6 +375,16 @@ export declare class MatSingleDateSelectionModel<D> extends MatDateSelectionMode
     setDate(date: D | null): void;
 }
 
+export declare class MatSingleDateSelectionModel<D> extends MatDateSelectionModel<D> {
+    constructor(adapter: DateAdapter<D>, date?: D | null);
+    add(date: D | null): void;
+    asDate(): D | null;
+    compareDate(other: MatSingleDateSelectionModel<D>): number | boolean;
+    isComplete(): boolean;
+    isSame(other: MatDateSelectionModel<D>): boolean;
+    isValid(): boolean;
+}
+
 export declare const JAN = 0, FEB = 1, MAR = 2, APR = 3, MAY = 4, JUN = 5, JUL = 6, AUG = 7, SEP = 8, OCT = 9, NOV = 10, DEC = 11;
 
 export declare function mixinColor<T extends Constructor<HasElementRef>>(base: T, defaultColor?: ThemePalette): CanColorCtor & T;
