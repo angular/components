@@ -79,6 +79,11 @@ export declare abstract class DateAdapter<D> {
     abstract today(): D;
 }
 
+export interface DateRange<D> {
+    end: D | null;
+    start: D | null;
+}
+
 export declare const JAN = 0, FEB = 1, MAR = 2, APR = 3, MAY = 4, JUN = 5, JUL = 6, AUG = 7, SEP = 8, OCT = 9, NOV = 10, DEC = 11;
 
 export declare const defaultRippleAnimationConfig: {
@@ -213,6 +218,18 @@ export declare type MatDateFormats = {
     };
 };
 
+export declare abstract class MatDateSelectionModel<D> {
+    protected _valueChangesSubject: Subject<void>;
+    protected readonly adapter: DateAdapter<D>;
+    valueChanges: Observable<void>;
+    constructor(adapter: DateAdapter<D>);
+    abstract add(date: D | null): void;
+    destroy(): void;
+    abstract isComplete(): boolean;
+    abstract isSame(other: MatDateSelectionModel<D>): boolean;
+    abstract isValid(): boolean;
+}
+
 export declare const MATERIAL_SANITY_CHECKS: InjectionToken<SanityChecks>;
 
 export declare class MatLine {
@@ -289,6 +306,16 @@ export declare class MatPseudoCheckboxModule {
 
 export declare type MatPseudoCheckboxState = 'unchecked' | 'checked' | 'indeterminate';
 
+export declare class MatRangeDateSelectionModel<D> extends MatDateSelectionModel<D> {
+    constructor(adapter: DateAdapter<D>, start?: D | null, end?: D | null);
+    add(date: D | null): void;
+    asRange(): DateRange<D>;
+    isComplete(): boolean;
+    isSame(other: MatDateSelectionModel<D>): boolean;
+    isValid(): boolean;
+    setRange(start: D | null, end: D | null): void;
+}
+
 export declare class MatRipple implements OnInit, OnDestroy, RippleTarget {
     animation: RippleAnimationConfig;
     centered: boolean;
@@ -308,6 +335,16 @@ export declare class MatRipple implements OnInit, OnDestroy, RippleTarget {
 }
 
 export declare class MatRippleModule {
+}
+
+export declare class MatSingleDateSelectionModel<D> extends MatDateSelectionModel<D> {
+    constructor(adapter: DateAdapter<D>, date?: D | null);
+    add(date: D | null): void;
+    asDate(): D | null;
+    compareDate(other: MatSingleDateSelectionModel<D>): number | boolean;
+    isComplete(): boolean;
+    isSame(other: MatDateSelectionModel<D>): boolean;
+    isValid(): boolean;
 }
 
 export declare const JAN = 0, FEB = 1, MAR = 2, APR = 3, MAY = 4, JUN = 5, JUL = 6, AUG = 7, SEP = 8, OCT = 9, NOV = 10, DEC = 11;
