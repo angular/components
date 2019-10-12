@@ -87,7 +87,7 @@ export class MatAutocompleteHarness extends ComponentHarness {
     if (!options.length) {
       throw Error(`Could not find a mat-option matching ${JSON.stringify(filters)}`);
     }
-    await options[0].click();
+    await options[0].select();
   }
 
   /** Gets whether the autocomplete is open. */

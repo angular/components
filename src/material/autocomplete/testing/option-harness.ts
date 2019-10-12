@@ -33,7 +33,7 @@ export class MatAutocompleteOptionHarness extends ComponentHarness {
   }
 
   /** Clicks the option. */
-  async click(): Promise<void> {
+  async select(): Promise<void> {
     return (await this.host()).click();
   }
 
