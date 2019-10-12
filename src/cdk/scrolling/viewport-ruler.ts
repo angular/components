@@ -8,9 +8,9 @@
 
 import {Platform} from '@angular/cdk/platform';
 import {Injectable, NgZone, OnDestroy, Optional, Inject} from '@angular/core';
-import {merge, of as observableOf, fromEvent, Observable, Subscription} from 'rxjs';
-import {auditTime} from 'rxjs/operators';
 import {DOCUMENT} from '@angular/common';
+import {merge, of as observableOf, fromEvent, Observable, Subscription} from 'rxjs';
+import {auditTime, share} from 'rxjs/operators';
 
 /** Time in ms to throttle the resize events by default. */
 export const DEFAULT_RESIZE_TIME = 20;
@@ -49,7 +49,8 @@ export class ViewportRuler implements OnDestroy {
       const window = this._getWindow();
 
       this._change = _platform.isBrowser ?
-          merge(fromEvent(window, 'resize'), fromEvent(window, 'orientationchange')) :
+          // Add `share` here to ensure that we only have one listener per page.
+          merge(fromEvent(window, 'resize'), fromEvent(window, 'orientationchange')).pipe(share()) :
           observableOf();
 
       // Note that we need to do the subscription inside `runOutsideAngular`
