@@ -114,6 +114,7 @@ app-component-sidenav {
 .docs-component-sidenav-body-content {
   display: flex;
   flex: 1 1 auto;
+  flex-direction: column;
 }
 
 @media (max-width: $small-breakpoint-width) {
