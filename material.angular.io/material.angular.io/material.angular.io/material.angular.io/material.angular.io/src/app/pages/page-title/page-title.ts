@@ -7,17 +7,19 @@ import {Title} from '@angular/platform-browser';
 @Injectable()
 export class ComponentPageTitle {
   _title = '';
+  _originalTitle = 'Angular Material UI component library';
 
   get title(): string { return this._title; }
 
   set title(title: string) {
     this._title = title;
     if (title !== '') {
-      title = `${title} | `;
+      title = `${title} | Angular Material`;
+    } else {
+      title = this._originalTitle;
     }
-    this.bodyTitle.setTitle(`${title}Angular Material`);
+    this.bodyTitle.setTitle(title);
   }
 
-  constructor(private bodyTitle: Title) { }
-
+  constructor(private bodyTitle: Title) {}
 }

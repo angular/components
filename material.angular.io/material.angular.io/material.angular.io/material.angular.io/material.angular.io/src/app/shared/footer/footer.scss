@@ -20,8 +20,18 @@
 }
 
 .docs-footer-version {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   flex: 1;
-  text-align: center;
+
+  .angular-material-logo {
+    height: 40px;
+    margin: 10px 0 10px 16px;
+  }
+  .version {
+    margin: 0 40px;
+  }
 }
 
 .docs-footer-copyright {
@@ -30,7 +40,18 @@
   justify-content: flex-end;
   flex-direction: column;
   min-width: 225px;
-  text-align: center;
+  margin-top: 16px;
+
+  > div {
+    display: flex;
+    flex-direction: column;
+    align-self: flex-end;
+    text-align: center;
+  }
+
+  @media (min-width: 885px) {
+    margin-top: 0;
+  }
 }
 
 .docs-footer-logo span {
@@ -49,7 +70,8 @@ a {
   text-decoration: none;
   color: inherit;
 
-  &:hover {
+  &:hover,
+  &:focus {
     text-decoration: underline;
   }
 }
