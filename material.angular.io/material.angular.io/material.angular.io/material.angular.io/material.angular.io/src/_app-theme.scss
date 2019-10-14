@@ -15,7 +15,6 @@
 @import './styles/svg-theme';
 @import './styles/tables-theme';
 
-
 // Styles for the docs app that are based on the current theme.
 @mixin material-docs-app-theme($theme) {
   $primary: map-get($theme, primary);
@@ -61,3 +60,9 @@
   @include nav-bar-theme($theme);
   @include table-of-contents-theme($theme);
 }
+
+// Define the light theme.
+$primary: mat-palette($mat-indigo);
+$accent:  mat-palette($mat-pink, A200, A100, A400);
+
+$theme: mat-light-theme($primary, $accent);
