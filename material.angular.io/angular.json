@@ -40,7 +40,7 @@
             ],
             "styles": [
               {
-                "input": "src/main.scss"
+                "input": "src/styles.scss"
               },
               {
                 "input": "src/highlightjs/material-light.scss"
@@ -76,6 +76,7 @@
                   "maximumWarning": "6kb"
                 }
               ],
+              "commonChunk": false,
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,
@@ -121,7 +122,7 @@
             "scripts": [],
             "styles": [
               {
-                "input": "src/main.scss"
+                "input": "src/styles.scss"
               },
               {
                 "input": "src/highlightjs/material-light.scss"
