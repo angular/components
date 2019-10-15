@@ -1,3 +1,4 @@
+import {expectAsyncError} from '@angular/cdk/private/testing';
 import {HarnessLoader} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {Component} from '@angular/core';
@@ -51,6 +52,26 @@ export function runHarnessTests(
     expect(tabs.length).toBe(3);
   });
 
+  it('should be able to get filtered tabs', async () => {
+    const tabGroup = await loader.getHarness(tabGroupHarness);
+    const tabs = await tabGroup.getTabs({label: 'Third'});
+    expect(tabs.length).toBe(1);
+    expect(await tabs[0].getLabel()).toBe('Third');
+  });
+
+  it('should be able to select tab from tab-group', async () => {
+    const tabGroup = await loader.getHarness(tabGroupHarness);
+    expect(await (await tabGroup.getSelectedTab()).getLabel()).toBe('First');
+    await tabGroup.selectTab({label: 'Second'});
+    expect(await (await tabGroup.getSelectedTab()).getLabel()).toBe('Second');
+  });
+
+  it('should throw error when attempting to select invalid tab', async () => {
+    const tabGroup = await loader.getHarness(tabGroupHarness);
+    await expectAsyncError(() => tabGroup.selectTab({label: 'Fake'}),
+        /Error: Cannot find mat-tab matching {"label":"Fake"}/);
+  });
+
   it('should be able to get label of tabs', async () => {
     const tabGroup = await loader.getHarness(tabGroupHarness);
     const tabs = await tabGroup.getTabs();
@@ -78,13 +99,9 @@ export function runHarnessTests(
   it('should be able to get content element of active tab', async () => {
     const tabGroup = await loader.getHarness(tabGroupHarness);
     const tabs = await tabGroup.getTabs();
-    expect(await (await tabs[0].getContentElement()).text()).toBe('Content 1');
-  });
-
-  it('should be able to get content element of active tab', async () => {
-    const tabGroup = await loader.getHarness(tabGroupHarness);
-    const tabs = await tabGroup.getTabs();
-    expect(await (await tabs[0].getContentElement()).text()).toBe('Content 1');
+    const contentSelector = await tabs[0].getSelectorForContent();
+    const contentEl = document.querySelector(contentSelector) as HTMLElement;
+    expect(contentEl.innerText.trim()).toBe('Content 1');
   });
 
   it('should be able to get disabled state of tab', async () => {
