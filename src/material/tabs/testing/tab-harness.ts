@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {ComponentHarness, HarnessPredicate, TestElement} from '@angular/cdk/testing';
+import {ComponentHarness, HarnessLoader, HarnessPredicate} from '@angular/cdk/testing';
 import {TabHarnessFilters} from './tab-harness-filters';
 
 /**
@@ -24,8 +24,6 @@ export class MatTabHarness extends ComponentHarness {
         .addOption('label', options.label,
             (harness, label) => HarnessPredicate.stringMatches(harness.getLabel(), label));
   }
-
-  private _rootLocatorFactory = this.documentRootLocatorFactory();
 
   /** Gets the label of the tab. */
   async getLabel(): Promise<string> {
@@ -62,10 +60,15 @@ export class MatTabHarness extends ComponentHarness {
     await (await this.host()).click();
   }
 
-  /** Gets a selector that can be used to locate the tab's content element. */
-  async getSelectorForContent(): Promise<string> {
+  async getHarnessLoaderForContent(): Promise<HarnessLoader> {
+    const contentId = await this._getContentId();
+    return this.documentRootLocatorFactory().harnessLoaderFor(`#${contentId}`);
+  }
+
+  /** Gets the element id for the content of the current tab. */
+  private async _getContentId(): Promise<string> {
     const hostEl = await this.host();
     // Tabs never have an empty "aria-controls" attribute.
-    return '#' + await hostEl.getAttribute('aria-controls');
+    return (await hostEl.getAttribute('aria-controls'))!;
   }
 }
