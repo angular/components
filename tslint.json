@@ -92,7 +92,8 @@
     // Codelyzer
     "template-banana-in-box": true,
     "contextual-lifecycle": true,
-    "contextual-decorator": true,
+    // TODO(jelbourn): re-enable this when it works with TS 3.6
+    // "contextual-decorator": true,
     "no-output-on-prefix": true,
     "template-no-negated-async": true,
     "use-lifecycle-interface": true,
