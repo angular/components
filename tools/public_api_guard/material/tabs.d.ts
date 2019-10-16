@@ -35,6 +35,7 @@ export declare abstract class _MatTabGroupBase extends _MatTabGroupMixinBase imp
     readonly animationDone: EventEmitter<void>;
     animationDuration: string;
     backgroundColor: ThemePalette;
+    disablePagination: boolean;
     dynamicHeight: boolean;
     readonly focusChange: EventEmitter<MatTabChangeEvent>;
     headerPosition: MatTabHeaderPosition;
@@ -191,6 +192,7 @@ export declare const matTabsAnimations: {
 
 export interface MatTabsConfig {
     animationDuration?: string;
+    disablePagination?: boolean;
 }
 
 export declare class MatTabsModule {
