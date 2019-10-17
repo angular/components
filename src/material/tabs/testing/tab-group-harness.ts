@@ -55,7 +55,7 @@ export class MatTabGroupHarness extends ComponentHarness {
   async selectTab(filter: TabHarnessFilters = {}): Promise<void> {
     const tabs = await this.getTabs(filter);
     if (!tabs.length) {
-      throw Error(`Cannot find mat-tab matching ${JSON.stringify(filter)}`);
+      throw Error(`Cannot find mat-tab matching filter ${JSON.stringify(filter)}`);
     }
     await tabs[0].select();
   }

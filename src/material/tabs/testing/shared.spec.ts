@@ -69,7 +69,7 @@ export function runHarnessTests(
   it('should throw error when attempting to select invalid tab', async () => {
     const tabGroup = await loader.getHarness(tabGroupHarness);
     await expectAsyncError(() => tabGroup.selectTab({label: 'Fake'}),
-        /Error: Cannot find mat-tab matching {"label":"Fake"}/);
+        /Error: Cannot find mat-tab matching filter {"label":"Fake"}/);
   });
 
   it('should be able to get label of tabs', async () => {

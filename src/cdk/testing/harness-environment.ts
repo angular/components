@@ -90,7 +90,7 @@ export abstract class HarnessEnvironment<E> implements HarnessLoader, LocatorFac
   // Implemented as part of the `LocatorFactory` interface.
   async harnessLoaderForOptional(selector: string): Promise<HarnessLoader | null> {
     const elements = await this.getAllRawElements(selector);
-    return elements[0] && this.createEnvironment(elements[0]);
+    return elements[0] ? this.createEnvironment(elements[0]) : null;
   }
 
   // Implemented as part of the `LocatorFactory` interface.

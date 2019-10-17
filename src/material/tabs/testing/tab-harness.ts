@@ -60,6 +60,10 @@ export class MatTabHarness extends ComponentHarness {
     await (await this.host()).click();
   }
 
+  /**
+   * Gets a `HarnessLoader` that can be used to load harnesses for components within the tab's
+   * content area.
+   */
   async getHarnessLoaderForContent(): Promise<HarnessLoader> {
     const contentId = await this._getContentId();
     return this.documentRootLocatorFactory().harnessLoaderFor(`#${contentId}`);
