@@ -99,6 +99,7 @@ export function runHarnessTests(
   it('should be able to get harness loader for content element of active tab', async () => {
     const tabGroup = await loader.getHarness(tabGroupHarness);
     const tabs = await tabGroup.getTabs();
+    expect(await tabs[0].getTextContent()).toBe('Content 1');
     const tabContentLoader = await tabs[0].getHarnessLoaderForContent();
     const tabContentHarness = await tabContentLoader.getHarness(TestTabContentHarness);
     expect(await (await tabContentHarness.host()).text()).toBe('Content 1');
