@@ -1196,7 +1196,7 @@ describe('MatSelect', () => {
 
         expect(fixture.componentInstance.select.panelOpen).toBe(true);
 
-        const panel = overlayContainerElement.querySelector('.mat-select-panel')!;
+        const panel = overlayContainerElement.querySelector('.mat-select-panel-content')!;
         dispatchKeyboardEvent(panel, 'keydown', TAB);
         fixture.detectChanges();
         flush();
@@ -1932,7 +1932,7 @@ describe('MatSelect', () => {
         fixture.detectChanges();
 
         host = fixture.debugElement.query(By.css('mat-select'))!.nativeElement;
-        panel = overlayContainerElement.querySelector('.mat-select-panel')! as HTMLElement;
+        panel = overlayContainerElement.querySelector('.mat-select-panel-content')! as HTMLElement;
       }));
 
       it('should not scroll to options that are completely in the view', fakeAsync(() => {
@@ -1980,7 +1980,7 @@ describe('MatSelect', () => {
         flush();
 
         host = groupFixture.debugElement.query(By.css('mat-select'))!.nativeElement;
-        panel = overlayContainerElement.querySelector('.mat-select-panel')! as HTMLElement;
+        panel = overlayContainerElement.querySelector('.mat-select-panel-content')! as HTMLElement;
 
         for (let i = 0; i < 5; i++) {
           dispatchKeyboardEvent(host, 'keydown', DOWN_ARROW);
@@ -3097,7 +3097,7 @@ describe('MatSelect', () => {
           fixture.detectChanges();
           flush();
 
-          const scrollContainer = document.querySelector('.cdk-overlay-pane .mat-select-panel')!;
+          const scrollContainer = document.querySelector('.cdk-overlay-pane .mat-select-panel-content')!;
 
           // The panel should be scrolled to 0 because centering the option disabled.
           expect(scrollContainer.scrollTop).toEqual(0, `Expected panel not to be scrolled.`);
@@ -3188,7 +3188,7 @@ describe('MatSelect', () => {
             fixture.detectChanges();
             flush();
 
-            const scrollContainer = document.querySelector('.cdk-overlay-pane .mat-select-panel')!;
+            const scrollContainer = document.querySelector('.cdk-overlay-pane .mat-select-panel-content')!;
 
             // The panel should be scrolled to 0 because centering the option is not possible.
             expect(scrollContainer.scrollTop).toEqual(0, `Expected panel not to be scrolled.`);
@@ -3205,7 +3205,7 @@ describe('MatSelect', () => {
             fixture.detectChanges();
             flush();
 
-            const scrollContainer = document.querySelector('.cdk-overlay-pane .mat-select-panel')!;
+            const scrollContainer = document.querySelector('.cdk-overlay-pane .mat-select-panel-content')!;
 
             // The panel should be scrolled to 0 because centering the option is not possible.
             expect(scrollContainer.scrollTop).toEqual(0, `Expected panel not to be scrolled.`);
@@ -3222,7 +3222,8 @@ describe('MatSelect', () => {
         fixture.detectChanges();
         flush();
 
-        const scrollContainer = document.querySelector('.cdk-overlay-pane .mat-select-panel')!;
+        const scrollContainer = document
+            .querySelector('.cdk-overlay-pane .mat-select-panel-content')!;
 
         // The selected option should be scrolled to the center of the panel.
         // This will be its original offset from the scrollTop - half the panel height + half
@@ -3244,7 +3245,8 @@ describe('MatSelect', () => {
         fixture.detectChanges();
         flush();
 
-        const scrollContainer = document.querySelector('.cdk-overlay-pane .mat-select-panel')!;
+        const scrollContainer = document
+            .querySelector('.cdk-overlay-pane .mat-select-panel-content')!;
 
         // The selected option should be scrolled to the max scroll position.
         // This will be the height of the scrollContainer - the panel height.
@@ -3281,7 +3283,8 @@ describe('MatSelect', () => {
         groupFixture.detectChanges();
         flush();
 
-        const scrollContainer = document.querySelector('.cdk-overlay-pane .mat-select-panel')!;
+        const scrollContainer = document
+            .querySelector('.cdk-overlay-pane .mat-select-panel-content')!;
 
         // The selected option should be scrolled to the center of the panel.
         // This will be its original offset from the scrollTop - half the panel height + half the
@@ -3346,7 +3349,7 @@ describe('MatSelect', () => {
             fixture.detectChanges();
             flush();
 
-            const scrollContainer = document.querySelector('.cdk-overlay-pane .mat-select-panel')!;
+            const scrollContainer = document.querySelector('.cdk-overlay-pane .mat-select-panel-content')!;
 
             expect(Math.ceil(scrollContainer.scrollTop))
                 .toEqual(Math.ceil(idealScrollTop + 5),
@@ -3404,7 +3407,7 @@ describe('MatSelect', () => {
             fixture.detectChanges();
             flush();
 
-            const scrollContainer = document.querySelector('.cdk-overlay-pane .mat-select-panel')!;
+            const scrollContainer = document.querySelector('.cdk-overlay-pane .mat-select-panel-content')!;
 
             // Scroll should adjust by the difference between the bottom space available
             // (56px from the bottom of the screen - 8px padding = 48px)
@@ -3439,7 +3442,7 @@ describe('MatSelect', () => {
             const overlayPane = document.querySelector('.cdk-overlay-pane')!;
             const triggerBottom = trigger.getBoundingClientRect().bottom;
             const overlayBottom = overlayPane.getBoundingClientRect().bottom;
-            const scrollContainer = overlayPane.querySelector('.mat-select-panel')!;
+            const scrollContainer = overlayPane.querySelector('.mat-select-panel-content')!;
 
             // Expect no scroll to be attempted
             expect(scrollContainer.scrollTop).toEqual(0, `Expected panel not to be scrolled.`);
@@ -3472,7 +3475,7 @@ describe('MatSelect', () => {
             const overlayPane = document.querySelector('.cdk-overlay-pane')!;
             const triggerTop = trigger.getBoundingClientRect().top;
             const overlayTop = overlayPane.getBoundingClientRect().top;
-            const scrollContainer = overlayPane.querySelector('.mat-select-panel')!;
+            const scrollContainer = overlayPane.querySelector('.mat-select-panel-content')!;
 
             // Expect scroll to remain at the max scroll position
             expect(scrollContainer.scrollTop).toEqual(128, `Expected panel to be at max scroll.`);

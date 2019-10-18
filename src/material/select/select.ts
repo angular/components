@@ -183,6 +183,16 @@ const _MatSelectMixinBase:
 })
 export class MatSelectTrigger {}
 
+@Directive({
+  selector: 'mat-select-header'
+})
+export class MatSelectHeader {}
+
+@Directive({
+  selector: 'mat-select-footer'
+})
+export class MatSelectFooter {}
+
 
 @Component({
   moduleId: module.id,
@@ -353,6 +363,12 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
 
   /** User-supplied override of the trigger element. */
   @ContentChild(MatSelectTrigger, {static: false}) customTrigger: MatSelectTrigger;
+
+  /** User-supplied override of the header element. */
+  @ContentChild(MatSelectHeader, {static: false}) customHeader: MatSelectHeader;
+
+  /** User-supplied override of the footer element. */
+  @ContentChild(MatSelectFooter, {static: false}) customFooter: MatSelectFooter;
 
   /** Placeholder to be shown if no value has been selected. */
   @Input()

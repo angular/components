@@ -31,15 +31,20 @@
   (detach)="close()">
   <div class="mat-select-panel-wrap" [@transformPanelWrap]>
     <div
-      #panel
       class="mat-select-panel {{ _getPanelTheme() }}"
       [ngClass]="panelClass"
       [@transformPanel]="multiple ? 'showing-multiple' : 'showing'"
       (@transformPanel.done)="_panelDoneAnimatingStream.next($event.toState)"
       [style.transformOrigin]="_transformOrigin"
-      [style.font-size.px]="_triggerFontSize"
-      (keydown)="_handleKeydown($event)">
-      <ng-content></ng-content>
+      [style.font-size.px]="_triggerFontSize">
+      <ng-content select="mat-select-header"></ng-content>
+      <div
+        #panel
+        class="mat-select-panel-content"
+        (keydown)="_handleKeydown($event)">
+        <ng-content></ng-content>
+      </div>
+      <ng-content select="mat-select-footer"></ng-content>
     </div>
   </div>
 </ng-template>

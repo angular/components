@@ -35,6 +35,8 @@ export declare class MatSelect extends _MatSelectMixinBase implements AfterConte
     ariaLabelledby: string;
     compareWith: (o1: any, o2: any) => boolean;
     controlType: string;
+    customFooter: MatSelectFooter;
+    customHeader: MatSelectHeader;
     customTrigger: MatSelectTrigger;
     disableOptionCentering: boolean;
     readonly empty: boolean;
@@ -105,6 +107,12 @@ export declare class MatSelectChange {
     constructor(
     source: MatSelect,
     value: any);
+}
+
+export declare class MatSelectFooter {
+}
+
+export declare class MatSelectHeader {
 }
 
 export declare class MatSelectModule {
