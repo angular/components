@@ -23,6 +23,7 @@ export class SelectOptgroupExample {
   pokemonGroups: PokemonGroup[] = [
     {
       name: 'Grass',
+      disabled: false,
       pokemon: [
         {value: 'bulbasaur-0', viewValue: 'Bulbasaur'},
         {value: 'oddish-1', viewValue: 'Oddish'},
@@ -31,6 +32,7 @@ export class SelectOptgroupExample {
     },
     {
       name: 'Water',
+      disabled: false,
       pokemon: [
         {value: 'squirtle-3', viewValue: 'Squirtle'},
         {value: 'psyduck-4', viewValue: 'Psyduck'},
@@ -48,6 +50,7 @@ export class SelectOptgroupExample {
     },
     {
       name: 'Psychic',
+      disabled: false,
       pokemon: [
         {value: 'mew-9', viewValue: 'Mew'},
         {value: 'mewtwo-10', viewValue: 'Mewtwo'},

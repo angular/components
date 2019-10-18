@@ -13,14 +13,14 @@
     </button>
   </section>
   <section>
-    <button mat-button disabled>normal</button>
-    <button mat-raised-button disabled>raised</button>
-    <button mat-stroked-button disabled>stroked</button>
-    <button mat-flat-button disabled>flat</button>
-    <button mat-fab disabled>
+    <button mat-button [disabled]="true">normal</button>
+    <button mat-raised-button [disabled]="true">raised</button>
+    <button mat-stroked-button [disabled]="true">stroked</button>
+    <button mat-flat-button [disabled]="true">flat</button>
+    <button mat-fab [disabled]="true">
       <mat-icon>check</mat-icon>
     </button>
-    <button mat-mini-fab disabled>
+    <button mat-mini-fab [disabled]="true">
       <mat-icon>check</mat-icon>
     </button>
   </section>
@@ -39,14 +39,14 @@
     </a>
   </section>
   <section>
-    <a href="//www.google.com" disabled mat-button color="primary">SEARCH</a>
-    <a href="//www.google.com" disabled mat-raised-button>SEARCH</a>
-    <a href="//www.google.com" disabled mat-stroked-button color="primary">SEARCH</a>
-    <a href="//www.google.com" disabled mat-flat-button>SEARCH</a>
-    <a href="//www.google.com" disabled mat-fab>
+    <a href="//www.google.com" [disabled]="true" mat-button color="primary">SEARCH</a>
+    <a href="//www.google.com" [disabled]="true" mat-raised-button>SEARCH</a>
+    <a href="//www.google.com" [disabled]="true" mat-stroked-button color="primary">SEARCH</a>
+    <a href="//www.google.com" [disabled]="true" mat-flat-button>SEARCH</a>
+    <a href="//www.google.com" [disabled]="true" mat-fab>
       <mat-icon>check</mat-icon>
     </a>
-    <a href="//www.google.com" disabled mat-mini-fab>
+    <a href="//www.google.com" [disabled]="true" mat-mini-fab>
       <mat-icon>check</mat-icon>
     </a>
   </section>
@@ -57,7 +57,7 @@
     <button mat-button color="primary">primary</button>
     <button mat-button color="accent">accent</button>
     <button mat-button color="warn">warn</button>
-    <button mat-button disabled>disabled</button>
+    <button mat-button [disabled]="true">disabled</button>
   </section>
 
   <h4 class="demo-section-header">Raised Buttons [mat-raised-button]</h4>
@@ -66,7 +66,7 @@
     <button mat-raised-button color="primary">primary</button>
     <button mat-raised-button color="accent">accent</button>
     <button mat-raised-button color="warn">warn</button>
-    <button mat-raised-button disabled>disabled</button>
+    <button mat-raised-button [disabled]="true">disabled</button>
   </section>
 
   <h4 class="demo-section-header">Stroked Buttons [mat-stroked-button]</h4>
@@ -75,7 +75,7 @@
     <button mat-stroked-button color="primary">primary</button>
     <button mat-stroked-button color="accent">accent</button>
     <button mat-stroked-button color="warn">warn</button>
-    <button mat-stroked-button disabled>disabled</button>
+    <button mat-stroked-button [disabled]="true">disabled</button>
   </section>
 
   <h4 class="demo-section-header">Flat Buttons [mat-flat-button]</h4>
@@ -84,7 +84,7 @@
     <button mat-flat-button color="primary">primary</button>
     <button mat-flat-button color="accent">accent</button>
     <button mat-flat-button color="warn">warn</button>
-    <button mat-flat-button disabled>disabled</button>
+    <button mat-flat-button [disabled]="true">disabled</button>
   </section>
 
   <h4 class="demo-section-header"> Icon Buttons [mat-icon-button]</h4>
@@ -101,7 +101,7 @@
     <button mat-icon-button color="warn">
       <mat-icon>trending_up</mat-icon>
     </button>
-    <button mat-icon-button disabled>
+    <button mat-icon-button [disabled]="true">
       <mat-icon>visibility</mat-icon>
     </button>
   </section>
@@ -120,7 +120,7 @@
     <button mat-fab color="warn">
       <mat-icon>home</mat-icon>
     </button>
-    <button mat-fab disabled>
+    <button mat-fab [disabled]="true">
       <mat-icon>favorite</mat-icon>
     </button>
   </section>
@@ -139,7 +139,7 @@
     <button mat-mini-fab color="warn">
       <mat-icon>filter_list</mat-icon>
     </button>
-    <button mat-mini-fab disabled>
+    <button mat-mini-fab [disabled]="true">
       <mat-icon>home</mat-icon>
     </button>
   </section>

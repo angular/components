@@ -7,7 +7,7 @@
 <form class="example-form" #form="ngForm" (ngSubmit)="onFormSubmit()" ngNativeValidate>
 
   <mat-slide-toggle ngModel name="enableWifi">Enable Wifi</mat-slide-toggle>
-  <mat-slide-toggle ngModel name="acceptTerms" required>Accept Terms of Service</mat-slide-toggle>
+  <mat-slide-toggle ngModel name="acceptTerms" [required]="true">Accept Terms of Service</mat-slide-toggle>
 
   <button mat-raised-button type="submit">Save Settings</button>
 </form>

@@ -13,8 +13,8 @@
 <mat-form-field [style.fontSize]="fontSize.value">
   <mat-label>Autosize textarea</mat-label>
   <textarea matInput
-            cdkTextareaAutosize
+            [cdkTextareaAutosize]="true"
             #autosize="cdkTextareaAutosize"
-            cdkAutosizeMinRows="1"
-            cdkAutosizeMaxRows="5"></textarea>
+            [cdkAutosizeMinRows]="1"
+            [cdkAutosizeMaxRows]="5"></textarea>
 </mat-form-field>

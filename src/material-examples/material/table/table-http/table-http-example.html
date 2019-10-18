@@ -10,7 +10,7 @@
   <div class="example-table-container">
 
     <table mat-table [dataSource]="data" class="example-table"
-           matSort matSortActive="created" matSortDisableClear matSortDirection="desc">
+           matSort matSortActive="created" [matSortDisableClear]="true" matSortDirection="desc">
       <!-- Number Column -->
       <ng-container matColumnDef="number">
         <th mat-header-cell *matHeaderCellDef>#</th>
@@ -31,7 +31,7 @@
 
       <!-- Created Column -->
       <ng-container matColumnDef="created">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header [disableClear]="true">
           Created
         </th>
         <td mat-cell *matCellDef="let row">{{row.created_at | date}}</td>

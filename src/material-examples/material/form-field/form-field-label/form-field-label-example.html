@@ -14,7 +14,7 @@
   <mat-form-field
       [hideRequiredMarker]="options.value.hideRequired"
       [floatLabel]="options.value.floatLabel">
-    <input matInput placeholder="Simple placeholder" required>
+    <input matInput placeholder="Simple placeholder" [required]="true">
   </mat-form-field>
 
   <mat-form-field [floatLabel]="options.value.floatLabel">
@@ -25,7 +25,7 @@
   <mat-form-field
       [hideRequiredMarker]="options.value.hideRequired"
       [floatLabel]="options.value.floatLabel">
-    <mat-select required>
+    <mat-select [required]="true">
       <mat-option>-- None --</mat-option>
       <mat-option value="option">Option</mat-option>
     </mat-select>

@@ -1,12 +1,12 @@
 <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
   <!-- Leaf node -->
-  <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding>
-    <button mat-icon-button disabled></button>
+  <mat-tree-node *matTreeNodeDef="let node">
+    <button mat-icon-button [disabled]="true"></button>
     {{node.item}}
   </mat-tree-node>
 
   <!-- expandable node -->
-  <mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding>
+  <mat-tree-node *matTreeNodeDef="let node; when: hasChild">
     <button mat-icon-button
             [attr.aria-label]="'toggle ' + node.filename"
             (click)="loadChildren(node)"

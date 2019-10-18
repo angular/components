@@ -2,7 +2,7 @@
   <button mat-button (click)="accordion.openAll()">Expand All</button>
   <button mat-button (click)="accordion.closeAll()">Collapse All</button>
 </div>
-<mat-accordion class="example-headers-align" multi>
+<mat-accordion class="example-headers-align" [multi]="true">
   <mat-expansion-panel>
     <mat-expansion-panel-header>
       <mat-panel-title>
@@ -52,7 +52,7 @@
     </mat-expansion-panel-header>
 
     <mat-form-field>
-      <input matInput placeholder="Date" [matDatepicker]="picker" (focus)="picker.open()" readonly>
+      <input matInput placeholder="Date" [matDatepicker]="picker" (focus)="picker.open()" [readonly]="true">
     </mat-form-field>
     <mat-datepicker #picker></mat-datepicker>
   </mat-expansion-panel>

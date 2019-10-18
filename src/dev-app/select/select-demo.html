@@ -8,9 +8,9 @@
       <mat-form-field class="demo-full-width">
         <mat-label>Select your car</mat-label>
         <select matNativeControl id="mySelectId">
-          <option value="" disabled selected></option>
+          <option value="" [disabled]="true" [selected]="true"></option>
           <option value="volvo">Volvo</option>
-          <option value="saab" disabled>Saab</option>
+          <option value="saab" [disabled]="true">Saab</option>
           <option value="mercedes">Mercedes</option>
           <option value="audi">Audi</option>
         </select>
@@ -18,7 +18,7 @@
       <h4>Disabled and required</h4>
       <mat-form-field class="demo-full-width">
         <mat-label>Select your car (disabled)</mat-label>
-        <select matNativeControl disabled required>
+        <select matNativeControl [disabled]="true" [required]="true">
           <option value="volvo">Volvo</option>
           <option value="saab">Saab</option>
           <option value="mercedes">Mercedes</option>
@@ -38,7 +38,7 @@
       <mat-form-field>
         <mat-label>Not float when empty</mat-label>
         <select matNativeControl>
-          <option value="" selected></option>
+          <option value="" [selected]="true"></option>
           <option value="saab">Saab</option>
           <option value="mercedes">Mercedes</option>
           <option value="audi">Audi</option>
@@ -47,7 +47,7 @@
       <mat-form-field>
         <mat-label>Float with no value, but with label</mat-label>
         <select matNativeControl>
-          <option value="" selected label="--select one--"></option>
+          <option value="" [selected]="true" label="--select one--"></option>
           <option value="saab">Saab</option>
           <option value="mercedes">Mercedes</option>
           <option value="audi">Audi</option>
@@ -56,7 +56,7 @@
       <mat-form-field>
         <mat-label>Float with no value, but with html</mat-label>
         <select matNativeControl>
-          <option value="" selected>--select one--</option>
+          <option value="" [selected]="true">--select one--</option>
           <option value="saab">Saab</option>
           <option value="mercedes">Mercedes</option>
           <option value="audi">Audi</option>
@@ -65,7 +65,7 @@
       <h4>Looks</h4>
       <mat-form-field appearance="legacy">
         <mat-label>Legacy</mat-label>
-        <select matNativeControl required>
+        <select matNativeControl [required]="true">
           <option value="volvo">Volvo</option>
           <option value="saab">Saab</option>
           <option value="mercedes">Mercedes</option>
@@ -74,7 +74,7 @@
       </mat-form-field>
       <mat-form-field appearance="standard">
         <mat-label>Standard</mat-label>
-        <select matNativeControl required>
+        <select matNativeControl [required]="true">
           <option value="volvo">Volvo</option>
           <option value="saab">Saab</option>
           <option value="mercedes">Mercedes</option>
@@ -83,8 +83,8 @@
       </mat-form-field>
       <mat-form-field appearance="fill">
         <mat-label>Fill</mat-label>
-        <select matNativeControl required>
-          <option value="" selected></option>
+        <select matNativeControl [required]="true">
+          <option value="" [selected]="true"></option>
           <option value="volvo">Volvo</option>
           <option value="saab">Saab</option>
           <option value="mercedes">Mercedes</option>
@@ -94,7 +94,7 @@
       <mat-form-field appearance="outline">
         <mat-label>Outline</mat-label>
         <select matNativeControl>
-          <option value="" selected></option>
+          <option value="" [selected]="true"></option>
           <option value="volvo">volvo</option>
           <option value="saab">Saab</option>
           <option value="mercedes">Mercedes</option>
@@ -117,9 +117,9 @@
       <h4>Place holder</h4>
       <mat-form-field class="demo-full-width">
         <select matNativeControl placeholder="place holder">
-          <option value="" disabled selected></option>
+          <option value="" [disabled]="true" [selected]="true"></option>
           <option value="volvo">Volvo</option>
-          <option value="saab" disabled>Saab</option>
+          <option value="saab" [disabled]="true">Saab</option>
           <option value="mercedes">Mercedes</option>
           <option value="audi">Audi</option>
         </select>
@@ -127,7 +127,7 @@
       <h4>Error message, hint, form sumbit</h4>
       <mat-form-field class="demo-full-width">
         <mat-label>Select your car (required)</mat-label>
-        <select matNativeControl required [formControl]="selectFormControl">
+        <select matNativeControl [required]="true" [formControl]="selectFormControl">
           <option label="--select something --"></option>
           <option value="saab">Saab</option>
           <option value="mercedes">Mercedes</option>
@@ -142,7 +142,7 @@
       <h4>Error message with errorStateMatcher</h4>
       <mat-form-field class="demo-full-width">
         <mat-label>Select your car</mat-label>
-        <select matNativeControl required [formControl]="selectFormControl" [errorStateMatcher]="matcher">
+        <select matNativeControl [required]="true" [formControl]="selectFormControl" [errorStateMatcher]="matcher">
           <option label="--select something --"></option>
           <option value="saab">Saab</option>
           <option value="mercedes">Mercedes</option>

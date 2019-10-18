@@ -1,5 +1,5 @@
 <table mat-table
-       [dataSource]="dataSource" multiTemplateDataRows
+       [dataSource]="dataSource" [multiTemplateDataRows]="true"
        class="mat-elevation-z8">
   <ng-container matColumnDef="{{column}}" *ngFor="let column of columnsToDisplay">
     <th mat-header-cell *matHeaderCellDef> {{column}} </th>

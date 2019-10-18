@@ -5,7 +5,7 @@
 
 <div>
   Sticky Headers:
-  <mat-button-toggle-group multiple [value]="['header-1']"
+  <mat-button-toggle-group [multiple]="true" [value]="['header-1']"
                            #stickyHeaders="matButtonToggleGroup"
                            class="example-sticky-toggle-group">
     <mat-button-toggle value="header-1"> Row 1 </mat-button-toggle>
@@ -15,7 +15,7 @@
 
 <div>
   Sticky Footers:
-  <mat-button-toggle-group multiple [value]="['footer-1']"
+  <mat-button-toggle-group [multiple]="true" [value]="['footer-1']"
                            #stickyFooters="matButtonToggleGroup"
                            class="example-sticky-toggle-group">
     <mat-button-toggle value="footer-1"> Row 1 </mat-button-toggle>
@@ -25,7 +25,7 @@
 
 <div>
   Sticky Columns:
-  <mat-button-toggle-group multiple [value]="['position', 'symbol']"
+  <mat-button-toggle-group [multiple]="true" [value]="['position', 'symbol']"
                            #stickyColumns="matButtonToggleGroup"
                            class="example-sticky-toggle-group">
     <mat-button-toggle value="position"> Position </mat-button-toggle>

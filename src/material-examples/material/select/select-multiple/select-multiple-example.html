@@ -1,6 +1,6 @@
 <mat-form-field>
   <mat-label>Toppings</mat-label>
-  <mat-select [formControl]="toppings" multiple>
+  <mat-select [formControl]="toppings" [multiple]="true">
     <mat-option *ngFor="let topping of toppingList" [value]="topping">{{topping}}</mat-option>
   </mat-select>
 </mat-form-field>

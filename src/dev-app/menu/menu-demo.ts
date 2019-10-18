@@ -18,16 +18,16 @@ import {Component} from '@angular/core';
 export class MenuDemo {
   selected = '';
   items = [
-    {text: 'Refresh'},
-    {text: 'Settings'},
+    {text: 'Refresh', disabled: false},
+    {text: 'Settings', disabled: false},
     {text: 'Help', disabled: true},
-    {text: 'Sign Out'}
+    {text: 'Sign Out', disabled: false}
   ];
 
   iconItems = [
-    {text: 'Redial', icon: 'dialpad'},
+    {text: 'Redial', icon: 'dialpad', disabled: false},
     {text: 'Check voicemail', icon: 'voicemail', disabled: true},
-    {text: 'Disable alerts', icon: 'notifications_off'}
+    {text: 'Disable alerts', icon: 'notifications_off', disabled: false}
   ];
 
   select(text: string) { this.selected = text; }

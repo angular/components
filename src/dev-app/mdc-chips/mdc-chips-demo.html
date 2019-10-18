@@ -8,7 +8,7 @@
       <mat-chip-set>
         <mat-chip>Chip 1</mat-chip>
         <mat-chip>Chip 2</mat-chip>
-        <mat-chip disabled>Chip 3</mat-chip>
+        <mat-chip [disabled]="true">Chip 3</mat-chip>
       </mat-chip-set>
 
       <h4>Unstyled</h4>
@@ -22,13 +22,13 @@
       <h4>With avatar, icons, and color</h4>
 
       <mat-chip-set>
-        <mat-chip disabled>
+        <mat-chip [disabled]="true">
           <mat-icon matChipAvatar>home</mat-icon>
           Home
           <mat-icon matChipRemove>cancel</mat-icon>
         </mat-chip>
 
-        <mat-chip highlighted="true" color="accent">
+        <mat-chip [highlighted]="true" color="accent">
           <mat-chip-avatar>P</mat-chip-avatar>
           Portel
           <mat-icon matChipRemove>cancel</mat-icon>
@@ -53,7 +53,7 @@
           Mal
         </mat-chip>
 
-        <mat-chip highlighted="true" color="warn">
+        <mat-chip [highlighted]="true" color="warn">
           <img src="https://material.angularjs.org/material2_assets/ngconf/Husi.png" matChipAvatar>
           Husi
           <mat-icon matChipRemove>cancel</mat-icon>
@@ -74,7 +74,7 @@
       <h4>With Events</h4>
 
       <mat-chip-set>
-        <mat-chip highlighted="true" color="warn" *ngIf="visible"
+        <mat-chip [highlighted]="true" color="warn" *ngIf="visible"
                  (destroyed)="displayMessage('chip destroyed')" (removed)="toggleVisible()">
           With Events
           <mat-icon matChipRemove>cancel</mat-icon>
@@ -95,7 +95,7 @@
 
       <h4>Single selection</h4>
 
-      <mat-chip-listbox multiple="false" [disabled]="disabledListboxes">
+      <mat-chip-listbox [multiple]="false" [disabled]="disabledListboxes">
         <mat-chip-option>Extra Small</mat-chip-option>
         <mat-chip-option>Small</mat-chip-option>
         <mat-chip-option>Medium</mat-chip-option>
@@ -104,10 +104,10 @@
 
       <h4>Multi selection</h4>
 
-      <mat-chip-listbox multiple="true" [disabled]="disabledListboxes">
-        <mat-chip-option selected="true">Open Now</mat-chip-option>
+      <mat-chip-listbox [multiple]="true" [disabled]="disabledListboxes">
+        <mat-chip-option [selected]="true">Open Now</mat-chip-option>
         <mat-chip-option>Takes Reservations</mat-chip-option>
-        <mat-chip-option selected="true">Pet Friendly</mat-chip-option>
+        <mat-chip-option [selected]="true">Pet Friendly</mat-chip-option>
         <mat-chip-option>Good for Brunch</mat-chip-option>
       </mat-chip-listbox>
 
@@ -131,7 +131,7 @@
       <h4>Input is last child of chip grid</h4>
 
       <mat-form-field class="demo-has-chip-list">
-        <mat-chip-grid #chipGrid1 [(ngModel)]="selectedPeople" required [disabled]="disableInputs">
+        <mat-chip-grid #chipGrid1 [(ngModel)]="selectedPeople" [required]="true" [disabled]="disableInputs">
           <mat-chip-row *ngFor="let person of people"
                    (removed)="remove(person)">
             {{person.name}}
@@ -149,7 +149,7 @@
       <h4>Input is next sibling child of chip grid</h4>
 
       <mat-form-field>
-        <mat-chip-grid #chipGrid2 [(ngModel)]="selectedPeople" required [disabled]="disableInputs">
+        <mat-chip-grid #chipGrid2 [(ngModel)]="selectedPeople" [required]="true" [disabled]="disableInputs">
           <mat-chip-row *ngFor="let person of people" (removed)="remove(person)">
             {{person.name}}
             <mat-icon matChipRemove>cancel</mat-icon>
@@ -185,7 +185,7 @@
       </p>
 
       <mat-chip-set class="mat-mdc-chip-set-stacked" aria-orientation="vertical">
-        <mat-chip *ngFor="let aColor of availableColors" highlighted="true"
+        <mat-chip *ngFor="let aColor of availableColors" [highlighted]="true"
                   [color]="aColor.color">
           {{aColor.name}}
         </mat-chip>

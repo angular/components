@@ -3,18 +3,18 @@
         <form [formGroup]="firstFormGroup">
             <ng-template matStepLabel>Fill out your name</ng-template>
             <mat-form-field>
-                <input matInput placeholder="Last name, First name" formControlName="firstCtrl" required>
+                <input matInput placeholder="Last name, First name" formControlName="firstCtrl" [required]="true">
             </mat-form-field>
             <div>
                 <button mat-button matStepperNext>Next</button>
             </div>
         </form>
     </mat-step>
-    <mat-step [stepControl]="secondFormGroup" optional>
+    <mat-step [stepControl]="secondFormGroup" [optional]="true">
         <form [formGroup]="secondFormGroup">
             <ng-template matStepLabel>Fill out your address</ng-template>
             <mat-form-field>
-                <input matInput placeholder="Address" formControlName="secondCtrl" required>
+                <input matInput placeholder="Address" formControlName="secondCtrl" [required]="true">
             </mat-form-field>
             <div>
                 <button mat-button matStepperPrevious>Back</button>

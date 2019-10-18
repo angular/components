@@ -2,23 +2,23 @@
 
   <div class="demo-badge">
     <h3>Text</h3>
-    <span [matBadge]="badgeContent" matBadgeOverlap="false" *ngIf="visible">
+    <span [matBadge]="badgeContent" [matBadgeOverlap]="false" *ngIf="visible">
       Hello
     </span>
 
-    <span matBadge="11111" matBadgeOverlap="false">
+    <span matBadge="11111" [matBadgeOverlap]="false">
       Hello
     </span>
 
-    <span matBadge="22" matBadgeOverlap="false" matBadgePosition="below after" matBadgeColor="accent">
+    <span matBadge="22" [matBadgeOverlap]="false" matBadgePosition="below after" matBadgeColor="accent">
       Hello
     </span>
 
-    <span matBadge="22" matBadgeOverlap="false" matBadgePosition="above before" matBadgeColor="warn">
+    <span matBadge="22" [matBadgeOverlap]="false" matBadgePosition="above before" matBadgeColor="warn">
       Hello
     </span>
 
-    <span matBadge="⚡️" matBadgeOverlap="false" matBadgePosition="below before">
+    <span matBadge="⚡️" [matBadgeOverlap]="false" matBadgePosition="below before">
       Hello
     </span>
 
@@ -26,7 +26,7 @@
       Aria
     </span>
 
-    <span [matBadge]="badgeContent" matBadgeHidden="true">
+    <span [matBadge]="badgeContent" [matBadgeHidden]="true">
       Hidden
     </span>
 
@@ -48,7 +48,7 @@
       <mat-icon color="primary">home</mat-icon>
     </button>
 
-    <button mat-raised-button [matBadge]="badgeContent" matBadgeDisabled>
+    <button mat-raised-button [matBadge]="badgeContent" [matBadgeDisabled]="true">
       <mat-icon color="primary">home</mat-icon>
     </button>
 
@@ -56,7 +56,7 @@
       <mat-icon color="primary">home</mat-icon>
     </button>
 
-    <button disabled mat-raised-button [matBadge]="badgeContent" matBadgeDisabled>
+    <button [disabled]="true" mat-raised-button [matBadge]="badgeContent" [matBadgeDisabled]="true">
       <mat-icon color="primary">home</mat-icon>
     </button>
 
@@ -65,7 +65,7 @@
     </button>
 
     <button mat-raised-button>
-      <mat-icon color="primary" matBadge="22" color="accent">home</mat-icon>
+      <mat-icon color="primary" matBadge="22">home</mat-icon>
     </button>
   </div>
 

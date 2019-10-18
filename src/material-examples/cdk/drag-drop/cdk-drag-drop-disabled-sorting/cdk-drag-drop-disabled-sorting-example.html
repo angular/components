@@ -6,7 +6,7 @@
       cdkDropList
       [cdkDropListData]="items"
       class="example-list"
-      cdkDropListSortingDisabled
+      [cdkDropListSortingDisabled]="true"
       (cdkDropListDropped)="drop($event)">
       <div class="example-box" *ngFor="let item of items" cdkDrag>{{item}}</div>
     </div>

@@ -60,7 +60,7 @@
 
 <h1>Multiple Selection</h1>
 <section>
-  <mat-button-toggle-group multiple [vertical]="isVertical">
+  <mat-button-toggle-group [multiple]="true" [vertical]="isVertical">
     <mat-button-toggle>Flour</mat-button-toggle>
     <mat-button-toggle>Eggs</mat-button-toggle>
     <mat-button-toggle>Sugar</mat-button-toggle>
@@ -68,7 +68,7 @@
   </mat-button-toggle-group>
 </section>
 <section>
-  <mat-button-toggle-group appearance="legacy" multiple [vertical]="isVertical">
+  <mat-button-toggle-group appearance="legacy" [multiple]="true" [vertical]="isVertical">
     <mat-button-toggle>Flour</mat-button-toggle>
     <mat-button-toggle>Eggs</mat-button-toggle>
     <mat-button-toggle>Sugar</mat-button-toggle>

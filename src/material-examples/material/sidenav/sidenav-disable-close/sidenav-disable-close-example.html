@@ -1,6 +1,6 @@
 <mat-sidenav-container
     class="example-container" (backdropClick)="close('backdrop')" *ngIf="shouldRun">
-  <mat-sidenav #sidenav (keydown.escape)="close('escape')" disableClose>
+  <mat-sidenav #sidenav (keydown.escape)="close('escape')" [disableClose]="true">
     <p><button mat-button (click)="close('toggle button')">Toggle</button></p>
   </mat-sidenav>
 
@@ -10,4 +10,4 @@
   </mat-sidenav-content>
 </mat-sidenav-container>
 
-<div *ngIf="!shouldRun">Please open on Stackblitz to see result</div>
+<div *ngIf="!shouldRun">Please open on StackBlitz to see result</div>

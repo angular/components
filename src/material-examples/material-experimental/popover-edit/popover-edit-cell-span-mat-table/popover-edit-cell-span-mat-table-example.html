@@ -8,7 +8,7 @@
           (matEditLensPreservedFormValueChange)="preservedValues.set(ctx.person, $event)">
         <div mat-edit-content class="example-input-container">
           <mat-form-field>
-            <input matInput [ngModel]="ctx.person.firstName" name="firstName" required
+            <input matInput [ngModel]="ctx.person.firstName" name="firstName" [required]="true"
                 [attr.cdkFocusInitial]="ctx.focus === 'firstName' || null">
           </mat-form-field>
           <mat-form-field>
@@ -16,7 +16,7 @@
                 [attr.cdkFocusInitial]="ctx.focus === 'middleName' || null">
           </mat-form-field>
           <mat-form-field>
-            <input matInput [ngModel]="ctx.person.lastName" name="lastName" required
+            <input matInput [ngModel]="ctx.person.lastName" name="lastName" [required]="true"
                 [attr.cdkFocusInitial]="ctx.focus === 'lastName' || null">
           </mat-form-field>
         </div>

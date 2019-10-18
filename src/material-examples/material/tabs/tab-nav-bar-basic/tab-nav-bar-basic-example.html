@@ -2,7 +2,7 @@
   <a mat-tab-link *ngFor="let link of links"
      (click)="activeLink = link"
      [active]="activeLink == link"> {{link}} </a>
-  <a mat-tab-link disabled>Disabled Link</a>
+  <a mat-tab-link [disabled]="true">Disabled Link</a>
 </nav>
 
 <button mat-raised-button class="example-action-button" (click)="toggleBackground()">

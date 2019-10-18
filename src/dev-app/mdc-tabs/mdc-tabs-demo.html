@@ -9,21 +9,21 @@
     <mat-tab label="First">Content 1</mat-tab>
     <mat-tab label="Second">Content 2</mat-tab>
     <mat-tab label="Third">Content 3</mat-tab>
-    <mat-tab label="Fourth" disabled>Content 4</mat-tab>
+    <mat-tab label="Fourth" [disabled]="true">Content 4</mat-tab>
   </mat-tab-group>
 
   <mat-tab-group [color]="'accent'">
     <mat-tab label="First">Content 1</mat-tab>
     <mat-tab label="Second">Content 2</mat-tab>
     <mat-tab label="Third">Content 3</mat-tab>
-    <mat-tab label="Fourth" disabled>Content 4</mat-tab>
+    <mat-tab label="Fourth" [disabled]="true">Content 4</mat-tab>
   </mat-tab-group>
 
   <mat-tab-group [color]="'warn'">
     <mat-tab label="First">Content 1</mat-tab>
     <mat-tab label="Second">Content 2</mat-tab>
     <mat-tab label="Third">Content 3</mat-tab>
-    <mat-tab label="Fourth" disabled>Content 4</mat-tab>
+    <mat-tab label="Fourth" [disabled]="true">Content 4</mat-tab>
   </mat-tab-group>
 
   <h2>Stretched tabs</h2>
@@ -108,6 +108,6 @@
     <a mat-tab-link *ngFor="let link of links"
       (click)="activeLink = link"
       [active]="activeLink == link">{{link}}</a>
-    <a mat-tab-link disabled>Disabled Link</a>
+    <a mat-tab-link [disabled]="true">Disabled Link</a>
   </nav>
 </div>

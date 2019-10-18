@@ -5,17 +5,17 @@
 <form [formGroup]="formGroup">
   <mat-vertical-stepper #linearVerticalStepper="matVerticalStepper" formArrayName="formArray"
                         [linear]="!isNonLinear" [disableRipple]="disableRipple">
-    <mat-step formGroupName="0" [stepControl]="formArray?.get([0]) === null ? undefined : formArray?.get([0])!">
+    <mat-step formGroupName="0" [stepControl]="formArray!.get([0])!">
       <ng-template matStepLabel>Fill out your name</ng-template>
       <mat-form-field>
         <mat-label>First name</mat-label>
-        <input matInput formControlName="firstNameFormCtrl" required>
+        <input matInput formControlName="firstNameFormCtrl" [required]="true">
         <mat-error>This field is required</mat-error>
       </mat-form-field>
 
       <mat-form-field>
         <mat-label>Last name</mat-label>
-        <input matInput formControlName="lastNameFormCtrl" required>
+        <input matInput formControlName="lastNameFormCtrl" [required]="true">
         <mat-error>This field is required</mat-error>
       </mat-form-field>
       <div>
@@ -23,8 +23,8 @@
       </div>
     </mat-step>
 
-    <mat-step formGroupName="1" [stepControl]="formArray?.get([1]) === null ? undefined : formArray?.get([1])!"
-              optional>
+    <mat-step formGroupName="1" [stepControl]="formArray!.get([1])!"
+              [optional]="true">
       <ng-template matStepLabel>
         <div>Fill out your email address</div>
       </ng-template>
@@ -58,12 +58,12 @@
       <ng-template matStepLabel>Fill out your name</ng-template>
       <mat-form-field>
         <mat-label>First name</mat-label>
-        <input matInput formControlName="firstNameCtrl" required>
+        <input matInput formControlName="firstNameCtrl" [required]="true">
         <mat-error>This field is required</mat-error>
       </mat-form-field>
       <mat-form-field>
         <mat-label>Last name</mat-label>
-        <input matInput formControlName="lastNameCtrl" required>
+        <input matInput formControlName="lastNameCtrl" [required]="true">
         <mat-error>This field is required</mat-error>
       </mat-form-field>
       <div>
@@ -72,7 +72,7 @@
     </form>
   </mat-step>
 
-  <mat-step [stepControl]="emailFormGroup" optional>
+  <mat-step [stepControl]="emailFormGroup" [optional]="true">
     <form [formGroup]="emailFormGroup">
       <ng-template matStepLabel>Fill out your email address</ng-template>
       <mat-form-field>
@@ -222,8 +222,7 @@
   <mat-step label="Step 1">
     <mat-form-field>
       <mat-label>Autosize textarea</mat-label>
-      <textarea matInput cdkTextareaAutosize>This is an autosize textarea, it should adjust to the size of its content.</textarea>
+      <textarea matInput [cdkTextareaAutosize]="true">This is an autosize textarea, it should adjust to the size of its content.</textarea>
     </mat-form-field>
   </mat-step>
 </mat-horizontal-stepper>
-
