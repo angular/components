@@ -5,7 +5,7 @@
               [opened]="!(isScreenSmall | async)"
               [mode]="(isScreenSmall | async) ? 'over' : 'side'"
               [fixedInViewport]="(isScreenSmall | async) ? true : false"
-              fixedTopGap="92">
+              [fixedTopGap]="92">
     <app-component-nav [params]="params"></app-component-nav>
   </mat-sidenav>
   <div class="docs-component-sidenav-content">

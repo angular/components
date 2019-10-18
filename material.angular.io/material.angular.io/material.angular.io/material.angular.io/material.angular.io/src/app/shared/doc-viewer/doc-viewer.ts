@@ -30,8 +30,10 @@ export class DocViewer implements OnDestroy {
 
   /** The URL of the document to display. */
   @Input()
-  set documentUrl(url: string) {
-    this._fetchDocument(url);
+  set documentUrl(url: string | undefined) {
+    if (url !== undefined) {
+      this._fetchDocument(url);
+    }
   }
 
   @Output() contentRendered = new EventEmitter<void>();

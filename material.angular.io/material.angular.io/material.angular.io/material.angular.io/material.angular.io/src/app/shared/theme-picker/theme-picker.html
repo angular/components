@@ -5,7 +5,7 @@
 
 <!-- TODO: replace use of `mat-menu` here with a custom overlay -->
 <mat-menu class="docs-theme-picker-menu" #themeMenu="matMenu" x-position="before">
-  <mat-grid-list cols="2">
+  <mat-grid-list [cols]="2">
     <mat-grid-tile *ngFor="let theme of themes">
       <div mat-menu-item (click)="installTheme(theme.name)">
         <div class="docs-theme-picker-swatch">
