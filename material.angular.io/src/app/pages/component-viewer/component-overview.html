@@ -1,9 +1,11 @@
-<span class="cdk-visually-hidden" tabindex="-1" #initialFocusTarget>
-  Overview for {{componentViewer.componentDocItem.id}}
-</span>
-<doc-viewer
-    documentUrl="/docs-content/overviews/{{componentViewer.componentDocItem.packageName}}/{{componentViewer.componentDocItem.id}}.html"
-    class="docs-component-view-text-content docs-component-overview"
-    (contentRendered)="scrollToSelectedContentSection()">
-</doc-viewer>
-<table-of-contents #toc container=".mat-drawer-content" *ngIf="showToc | async"></table-of-contents>
+<ng-container *ngIf="componentViewer.componentDocItem | async; let docItem">
+  <span class="cdk-visually-hidden" tabindex="-1" #initialFocusTarget>
+    Overview for {{docItem.id}}
+  </span>
+  <doc-viewer
+      documentUrl="/docs-content/overviews/{{docItem.packageName}}/{{docItem.id}}.html"
+      class="docs-component-view-text-content docs-component-overview"
+      (contentRendered)="updateTableOfContents('Overview Content', $event)">
+  </doc-viewer>
+  <table-of-contents #toc container=".mat-drawer-content" *ngIf="showToc | async"></table-of-contents>
+</ng-container>

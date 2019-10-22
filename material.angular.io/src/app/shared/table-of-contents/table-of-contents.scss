@@ -7,11 +7,16 @@
   padding-left: 25px;
   box-sizing: border-box;
   display: inline-flex;
+  flex-direction: column;
 }
 
 .docs-toc-container {
   width: 100%;
   padding: 5px 0 10px 10px;
+
+  & + .docs-toc-container {
+    padding-top: 8px;
+  }
 }
 
 .docs-toc-heading {
@@ -19,6 +24,7 @@
   padding: 0;
   font-size: 13px;
   font-weight: bold;
+  text-transform: capitalize;
 }
 
 a {

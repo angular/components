@@ -1,8 +1,8 @@
-<div *ngIf="links?.length" class="docs-toc-container">
-  <div class="docs-toc-heading">Contents</div>
+<div *ngFor="let linkSection of _linkSections" class="docs-toc-container">
+  <div class="docs-toc-heading">{{linkSection.name}}</div>
   <nav>
     <a [href]="_rootUrl + '#' + link.id"
-      *ngFor="let link of links; let i = index"
+      *ngFor="let link of linkSection.links; let i = index"
       class="docs-level-{{link.type}} docs-link"
       [class.docs-active]="link.active">
       {{link.name}}

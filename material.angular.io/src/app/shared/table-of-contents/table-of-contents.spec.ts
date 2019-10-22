@@ -39,7 +39,7 @@ describe('TableOfContents', () => {
   });
 
   it('should have header and links', () => {
-    component.links = [
+    component._links = [
       {
         type: 'h2',
         id: 'test',
