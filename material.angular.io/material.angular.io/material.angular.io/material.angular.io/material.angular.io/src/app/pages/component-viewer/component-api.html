@@ -1,14 +1,23 @@
-<span class="cdk-visually-hidden" tabindex="-1" #initialFocusTarget>
-  API for {{componentViewer.componentDocItem.id}}
-</span>
+<ng-container *ngIf="componentViewer.componentDocItem | async; let docItem">
+  <span class="cdk-visually-hidden" tabindex="-1" #initialFocusTarget>
+    API for {{docItem.id}}
+  </span>
 
-<doc-viewer
-    documentUrl="/docs-content/api-docs/{{componentViewer.componentDocItem.packageName}}-{{componentViewer.componentDocItem.id}}.html"
-    class="docs-component-view-text-content docs-component-api"
-    (contentRendered)="scrollToSelectedContentSection()">
-</doc-viewer>
+  <span>
+    <doc-viewer
+      documentUrl="/docs-content/api-docs/{{docItem.packageName}}-{{docItem.id}}.html"
+      class="docs-component-view-text-content docs-component-api"
+      (contentRendered)="updateTableOfContents(docItem.name, $event)">
+    </doc-viewer>
 
-<table-of-contents #toc
-    *ngIf="showToc | async"
-    headerSelectors=".docs-api-h3,.docs-api-h4"
-    container=".mat-drawer-content"></table-of-contents>
+    <doc-viewer *ngFor="let additionalApiDoc of docItem.additionalApiDocs"
+      documentUrl="/docs-content/api-docs/{{additionalApiDoc.path}}"
+      class="docs-component-view-text-content docs-component-api"
+      (contentRendered)="updateTableOfContents(additionalApiDoc.name, $event)">
+    </doc-viewer>
+  </span>
+
+  <table-of-contents #toc
+      *ngIf="showToc | async"
+      container=".mat-drawer-content"></table-of-contents>
+</ng-container>
