@@ -78,6 +78,11 @@ export class MatStep extends CdkStep implements ErrorStateMatcher {
 
     return originalErrorState || customErrorState;
   }
+
+  static ngAcceptInputType_editable: boolean | string;
+  static ngAcceptInputType_hasError: boolean | string;
+  static ngAcceptInputType_optional: boolean | string;
+  static ngAcceptInputType_completed: boolean | string;
 }
 
 
@@ -154,6 +159,9 @@ export class MatHorizontalStepper extends MatStepper {
   /** Whether the label should display in bottom or end position. */
   @Input()
   labelPosition: 'bottom' | 'end' = 'end';
+
+  static ngAcceptInputType_linear: boolean | string;
+  static ngAcceptInputType_selectedIndex: number | string;
 }
 
 @Component({
@@ -186,4 +194,7 @@ export class MatVerticalStepper extends MatStepper {
     super(dir, changeDetectorRef, elementRef, _document);
     this._orientation = 'vertical';
   }
+
+  static ngAcceptInputType_linear: boolean | string;
+  static ngAcceptInputType_selectedIndex: number | string;
 }

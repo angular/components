@@ -206,7 +206,7 @@ export class MatDatepickerInput<D> implements ControlValueAccessor, OnDestroy, V
   private _parseValidator: ValidatorFn = (): ValidationErrors | null => {
     return this._lastValueValid ?
         null : {'matDatepickerParse': {'text': this._elementRef.nativeElement.value}};
-  }
+  };
 
   /** The form control validator for the min date. */
   private _minValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
@@ -214,7 +214,7 @@ export class MatDatepickerInput<D> implements ControlValueAccessor, OnDestroy, V
     return (!this.min || !controlValue ||
         this._dateAdapter.compareDate(this.min, controlValue) <= 0) ?
         null : {'matDatepickerMin': {'min': this.min, 'actual': controlValue}};
-  }
+  };
 
   /** The form control validator for the max date. */
   private _maxValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
@@ -222,14 +222,14 @@ export class MatDatepickerInput<D> implements ControlValueAccessor, OnDestroy, V
     return (!this.max || !controlValue ||
         this._dateAdapter.compareDate(this.max, controlValue) >= 0) ?
         null : {'matDatepickerMax': {'max': this.max, 'actual': controlValue}};
-  }
+  };
 
   /** The form control validator for the date filter. */
   private _filterValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
     const controlValue = this._getValidDateOrNull(this._dateAdapter.deserialize(control.value));
     return !this._dateFilter || !controlValue || this._dateFilter(controlValue) ?
         null : {'matDatepickerFilter': true};
-  }
+  };
 
   /** The combined form control validator for this input. */
   private _validator: ValidatorFn | null =
@@ -366,4 +366,6 @@ export class MatDatepickerInput<D> implements ControlValueAccessor, OnDestroy, V
   private _getValidDateOrNull(obj: any): D | null {
     return (this._dateAdapter.isDateInstance(obj) && this._dateAdapter.isValid(obj)) ? obj : null;
   }
+  
+  static ngAcceptInputType_disabled: boolean | string;
 }

@@ -272,4 +272,8 @@ export class CdkTextareaAutosize implements AfterViewInit, DoCheck, OnDestroy {
       textarea.setSelectionRange(selectionStart, selectionEnd);
     }
   }
+
+  static ngAcceptInputType_enabled: boolean | string;
+  static ngAcceptInputType_minRows: number | string;
+  static ngAcceptInputType_maxRows: number | string;
 }

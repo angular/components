@@ -394,6 +394,12 @@ export abstract class _MatTabGroupBase extends _MatTabGroupMixinBase implements 
     }
     return this.selectedIndex === idx ? 0 : -1;
   }
+
+  static ngAcceptInputType_disablePagination: boolean | string;
+  static ngAcceptInputType_disableRipple: boolean | string;
+  static ngAcceptInputType_dynamicHeight: boolean | string;
+  static ngAcceptInputType_animationDuration: number | string;
+  static ngAcceptInputType_selectedIndex: number | string;
 }
 
 /**
@@ -432,4 +438,10 @@ export class MatTabGroup extends _MatTabGroupBase {
               @Optional() @Inject(ANIMATION_MODULE_TYPE) animationMode?: string) {
     super(elementRef, changeDetectorRef, defaultConfig, animationMode);
   }
+
+  static ngAcceptInputType_disablePagination: boolean | string;
+  static ngAcceptInputType_disableRipple: boolean | string;
+  static ngAcceptInputType_dynamicHeight: boolean | string;
+  static ngAcceptInputType_animationDuration: number | string;
+  static ngAcceptInputType_selectedIndex: number | string;
 }

@@ -61,10 +61,13 @@ export class MatColumnDef extends CdkColumnDef {
   @Input('matColumnDef') name: string;
 
   /** Whether this column should be sticky positioned at the start of the row */
-  @Input() sticky: boolean;
+  @Input() private _sticky: boolean;
 
   /** Whether this column should be sticky positioned on the end of the row */
   @Input() stickyEnd: boolean;
+
+  static ngAcceptInputType_sticky: boolean | string;
+  static ngAcceptInputType_stickyEnd: boolean | string;
 }
 
 /** Header cell template container that adds the right classes and role. */

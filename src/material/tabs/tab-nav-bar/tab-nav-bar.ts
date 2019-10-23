@@ -292,4 +292,7 @@ export class MatTabLink extends _MatTabLinkBase implements OnDestroy {
     super.ngOnDestroy();
     this._tabLinkRipple._removeTriggerEvents();
   }
+
+  static ngAcceptInputType_disabled: boolean | string;
+  static ngAcceptInputType_disableRipple: boolean | string;
 }

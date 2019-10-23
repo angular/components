@@ -97,6 +97,12 @@ export class MatSidenav extends MatDrawer {
   get fixedBottomGap(): number { return this._fixedBottomGap; }
   set fixedBottomGap(value) { this._fixedBottomGap = coerceNumberProperty(value); }
   private _fixedBottomGap = 0;
+
+  static ngAcceptInputType_autoFocus: boolean | string;
+  static ngAcceptInputType_disableClose: boolean | string;
+  static ngAcceptInputType_fixedInViewport: boolean | string;
+  static ngAcceptInputType_opened: boolean | string;
+  static ngAcceptInputType_fixedTopGap: number | string;
 }
 
 
@@ -127,4 +133,7 @@ export class MatSidenavContainer extends MatDrawerContainer {
   _allDrawers: QueryList<MatSidenav>;
 
   @ContentChild(MatSidenavContent, {static: false}) _content: MatSidenavContent;
+
+  static ngAcceptInputType_autosize: boolean | string;
+  static ngAcceptInputType_hasBackdrop: boolean | string;
 }

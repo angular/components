@@ -117,11 +117,15 @@ export class CdkDropList<T = any> implements AfterContentInit, OnDestroy {
    * is allowed to be moved into a drop container.
    */
   @Input('cdkDropListEnterPredicate')
-  enterPredicate: (drag: CdkDrag, drop: CdkDropList) => boolean = () => true
+  enterPredicate: (drag: CdkDrag, drop: CdkDropList) => boolean = () => true;
 
   /** Whether to auto-scroll the view when the user moves their pointer close to the edges. */
   @Input('cdkDropListAutoScrollDisabled')
-  autoScrollDisabled: boolean = false;
+  get autoScrollDisabled(): boolean { return this._autoScrollDisabled; }
+  set autoScrollDisabled(value: boolean) {
+    this._autoScrollDisabled = coerceBooleanProperty(value);
+  }
+  private _autoScrollDisabled: boolean = false;
 
   /** Emits when the user drops an item inside the container. */
   @Output('cdkDropListDropped')
@@ -277,7 +281,7 @@ export class CdkDropList<T = any> implements AfterContentInit, OnDestroy {
       ref.disabled = this.disabled;
       ref.lockAxis = this.lockAxis;
       ref.sortingDisabled = this.sortingDisabled;
-      ref.autoScrollDisabled = this.autoScrollDisabled;
+      ref.autoScrollDisabled = this._autoScrollDisabled;
       ref
         .connectedTo(siblings.filter(drop => drop && drop !== this).map(list => list._dropListRef))
         .withOrientation(this.orientation);
@@ -332,4 +336,7 @@ export class CdkDropList<T = any> implements AfterContentInit, OnDestroy {
     });
   }
 
+  static ngAcceptInputType_autoScrollDisabled: boolean | string;
+  static ngAcceptInputType_disabled: boolean | string;
+  static ngAcceptInputType_sortingDisabled: boolean | string;
 }

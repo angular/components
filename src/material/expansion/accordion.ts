@@ -86,4 +86,6 @@ export class MatAccordion extends CdkAccordion implements MatAccordionBase, Afte
   _handleHeaderFocus(header: MatExpansionPanelHeader) {
     this._keyManager.updateActiveItem(header);
   }
+
+  static ngAcceptInputType_multi: boolean | string;
 }

@@ -21,29 +21,25 @@
     "@angular-devkit/core" "9.0.0-next.12"
     rxjs "6.5.3"
 
-"@angular/animations@^9.0.0-next.12":
+"@angular/animations@file:../../../../../../angular/dist/packages-dist-ivy-aot/angular-animations-9.0.0-next.12.tgz":
   version "9.0.0-next.12"
-  resolved "https://registry.yarnpkg.com/@angular/animations/-/animations-9.0.0-next.12.tgz#80319c1cd8ff0a4c8980daa64ff480440da0624a"
-  integrity sha512-XMQVf5BSD26I+gEOswUIVpFf7hAJthAnLPG/j3gNKFUm3eoDlXOkQg8I+bCAW/1Dr8oXDTmiSXbMQPOinfdP+w==
+  resolved "file:../../../../../../angular/dist/packages-dist-ivy-aot/angular-animations-9.0.0-next.12.tgz#971c28d79585f75280e76721a5ffb0b29eb45294"
 
-"@angular/bazel@^9.0.0-next.12":
+"@angular/bazel@file:../../../../../../angular/dist/packages-dist-ivy-aot/angular-bazel-9.0.0-next.12.tgz":
   version "9.0.0-next.12"
-  resolved "https://registry.yarnpkg.com/@angular/bazel/-/bazel-9.0.0-next.12.tgz#de988164bd9a291d2f065c3735b4a2e45ef174d2"
-  integrity sha512-zjqYU3mXKJK9JVhR6OAhnBlToKhxV8ju0ZKg0g4VufW48ynIV9A7D0mvLkrawiYD/1tTWdWhLw5Fdqn6s6Lw4g==
+  resolved "file:../../../../../../angular/dist/packages-dist-ivy-aot/angular-bazel-9.0.0-next.12.tgz#b507c20e9524e634c06dfa1361ee092bfc19ddae"
   dependencies:
     "@microsoft/api-extractor" "^7.3.9"
     shelljs "0.8.2"
     tsickle "^0.37.0"
 
-"@angular/common@^9.0.0-next.12":
+"@angular/common@file:../../../../../../angular/dist/packages-dist-ivy-aot/angular-common-9.0.0-next.12.tgz":
   version "9.0.0-next.12"
-  resolved "https://registry.yarnpkg.com/@angular/common/-/common-9.0.0-next.12.tgz#1bc0f1e90918ab9094388d06608b78d6e8b7c648"
-  integrity sha512-jDvnd+cN58GyGw2Kr2Rc++iPP9NIgIfPR7nb2XWlURwP22z+jGbLjIhtvA+TVpBRV/uya7xH9qti8ttc7a5rqg==
+  resolved "file:../../../../../../angular/dist/packages-dist-ivy-aot/angular-common-9.0.0-next.12.tgz#de0bca0832679782d7677dd08284ddf15daa7197"
 
-"@angular/compiler-cli@^9.0.0-next.12":
+"@angular/compiler-cli@file:../../../../../../angular/dist/packages-dist-ivy-aot/angular-compiler-cli-9.0.0-next.12.tgz":
   version "9.0.0-next.12"
-  resolved "https://registry.yarnpkg.com/@angular/compiler-cli/-/compiler-cli-9.0.0-next.12.tgz#e0e647f9cb736db640ef957bced1d3175bd52a74"
-  integrity sha512-XY43SFkb5f+WrSlFetNmqObtILSVC5st2JORanVc//1LWp8Mdfqe3s57sUEVsJWfhnFk2VKNnHVP+efwl6jA5g==
+  resolved "file:../../../../../../angular/dist/packages-dist-ivy-aot/angular-compiler-cli-9.0.0-next.12.tgz#0b452dbaae7bf0cf6ce0272897373c80e07f0160"
   dependencies:
     canonical-path "1.0.0"
     chokidar "^2.1.1"
@@ -56,48 +52,44 @@
     source-map "^0.6.1"
     yargs "13.1.0"
 
-"@angular/compiler@^9.0.0-next.12":
+"@angular/compiler@file:../../../../../../angular/dist/packages-dist-ivy-aot/angular-compiler-9.0.0-next.12.tgz":
   version "9.0.0-next.12"
-  resolved "https://registry.yarnpkg.com/@angular/compiler/-/compiler-9.0.0-next.12.tgz#e4e56fc5a45816da832f8df3cfc0e24e019086a5"
-  integrity sha512-mMpsuq8jD50kKZixYRqhoIl9hNRlkrsUeGWLW0NJlVCErH89B4jhF1w2tGG4WbRvFPyaw+NfuvcGFViGXwjpMw==
+  resolved "file:../../../../../../angular/dist/packages-dist-ivy-aot/angular-compiler-9.0.0-next.12.tgz#8069cd758994c63c2fa6ff85c682b53554990274"
 
-"@angular/core@^9.0.0-next.12":
+"@angular/core@file:../../../../../../angular/dist/packages-dist-ivy-aot/angular-core-9.0.0-next.12.tgz":
   version "9.0.0-next.12"
-  resolved "https://registry.yarnpkg.com/@angular/core/-/core-9.0.0-next.12.tgz#4eb12f50feda8ea3cb342ee456403a547afb5c2f"
-  integrity sha512-+QZqp7uVVLKoTgZ4yM8haX56D2Zo3Za4mSFhFtci3CacfGxzf3lxS57IcjWJUOplbA2DaCv5nPYbQTBh5zKKFQ==
+  resolved "file:../../../../../../angular/dist/packages-dist-ivy-aot/angular-core-9.0.0-next.12.tgz#1a110d50308e07c4faaef3a58725259cfa7bc741"
 
-"@angular/elements@^9.0.0-next.12":
+"@angular/elements@file:../../../../../../angular/dist/packages-dist-ivy-aot/angular-elements-9.0.0-next.12.tgz":
   version "9.0.0-next.12"
-  resolved "https://registry.yarnpkg.com/@angular/elements/-/elements-9.0.0-next.12.tgz#4477f4af06fcddabd7d14d135bad25fdbf9d5c41"
-  integrity sha512-/67S9dfE1Km+mX6V95K5pvHBa3m778Re8l6mEyHBebwY+RFfAaa+aZn2EyXrwK/UAZY8YwUf0tsxZsigEfwrfw==
+  resolved "file:../../../../../../angular/dist/packages-dist-ivy-aot/angular-elements-9.0.0-next.12.tgz#aaed664024896501f927579036078c8a85c244a7"
 
-"@angular/forms@^9.0.0-next.12":
+"@angular/forms@file:../../../../../../angular/dist/packages-dist-ivy-aot/angular-forms-9.0.0-next.12.tgz":
   version "9.0.0-next.12"
-  resolved "https://registry.yarnpkg.com/@angular/forms/-/forms-9.0.0-next.12.tgz#3cd7dc2cb79ac19a59e644340746094bd752815a"
-  integrity sha512-sVKIXAJZWckANltsVEeW0YXwl4LPu6MQlZqLyOq0HVCZiWuCBmHB4Y56uFXWFCO7lwqTu5cJPvdA3vuRhobnTQ==
+  resolved "file:../../../../../../angular/dist/packages-dist-ivy-aot/angular-forms-9.0.0-next.12.tgz#47105f1bb2faa337aa652e2a85fa0a636618307a"
 
-"@angular/platform-browser-dynamic@^9.0.0-next.12":
+"@angular/language-service@file:../../../../../../angular/dist/packages-dist-ivy-aot/angular-language-service-9.0.0-next.12.tgz":
   version "9.0.0-next.12"
-  resolved "https://registry.yarnpkg.com/@angular/platform-browser-dynamic/-/platform-browser-dynamic-9.0.0-next.12.tgz#8ba9555be9afcb884cb0767e48793f75e3b2cb39"
-  integrity sha512-BcGd8ooMQ+mS/UZmQUDHc5jxDiZs3U/YveK+auVtyOBLkaiRUVv5SAifKRN1N0SKNecFoIg+qXwbO1TKDRgZmA==
+  resolved "file:../../../../../../angular/dist/packages-dist-ivy-aot/angular-language-service-9.0.0-next.12.tgz#007d41b6cb100bb64dcdf4f1fd9701c810510a2a"
 
-"@angular/platform-browser@^9.0.0-next.12":
+"@angular/platform-browser-dynamic@file:../../../../../../angular/dist/packages-dist-ivy-aot/angular-platform-browser-dynamic-9.0.0-next.12.tgz":
   version "9.0.0-next.12"
-  resolved "https://registry.yarnpkg.com/@angular/platform-browser/-/platform-browser-9.0.0-next.12.tgz#244fdb3063624ecc760999fe4e4a5b8f96d83a33"
-  integrity sha512-Ad1SQ1OHUp+8MD2XOQ3iKb0BF8KTj55Bg73hgDcMz7zRx2E2lTdCUYhcLV8acLfGEe7jwaqExD3wPOBFdT4AeA==
+  resolved "file:../../../../../../angular/dist/packages-dist-ivy-aot/angular-platform-browser-dynamic-9.0.0-next.12.tgz#dc4bb2a6728e3dd54a7dc55f0a16a668b53f8557"
 
-"@angular/platform-server@^9.0.0-next.12":
+"@angular/platform-browser@file:../../../../../../angular/dist/packages-dist-ivy-aot/angular-platform-browser-9.0.0-next.12.tgz":
   version "9.0.0-next.12"
-  resolved "https://registry.yarnpkg.com/@angular/platform-server/-/platform-server-9.0.0-next.12.tgz#83204fddaeba89faf1c2ffdbdc4b23679af72cba"
-  integrity sha512-mWu+CKlFQxz3crUfbk9bbUCeQMen2DEMyBUJZ/0CnVVdfbCbc6yF9rzD6zD8m+cKFIMwRkGGYXfiABDOHSwnsA==
+  resolved "file:../../../../../../angular/dist/packages-dist-ivy-aot/angular-platform-browser-9.0.0-next.12.tgz#ac8fbf8bc41ab5415ab00c3a0b2f8ecdea68f3d4"
+
+"@angular/platform-server@file:../../../../../../angular/dist/packages-dist-ivy-aot/angular-platform-server-9.0.0-next.12.tgz":
+  version "9.0.0-next.12"
+  resolved "file:../../../../../../angular/dist/packages-dist-ivy-aot/angular-platform-server-9.0.0-next.12.tgz#25f5a4b0253b90ab7db140e2cca6b3161a55fa7b"
   dependencies:
     domino "^2.1.2"
     xhr2 "^0.1.4"
 
-"@angular/router@^9.0.0-next.12":
+"@angular/router@file:../../../../../../angular/dist/packages-dist-ivy-aot/angular-router-9.0.0-next.12.tgz":
   version "9.0.0-next.12"
-  resolved "https://registry.yarnpkg.com/@angular/router/-/router-9.0.0-next.12.tgz#f3cfe7995a31817086ad014b720f8b8255584039"
-  integrity sha512-0ko2VuSMjgY023SXLBhPUqfVqluTpOiBGU81nljcifUbduIvSAWyyBvX7wcNILQ50WtHqT67xXZEnaNUbxBAog==
+  resolved "file:../../../../../../angular/dist/packages-dist-ivy-aot/angular-router-9.0.0-next.12.tgz#01e49677f8d13994264066d0015c9787ca88a8b5"
 
 "@angular/upgrade@^9.0.0-next.12":
   version "9.0.0-next.12"

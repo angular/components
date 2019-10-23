@@ -122,4 +122,7 @@ export class MatTabLink extends _MatTabLinkBase implements MatInkBarItem, OnDest
     super.ngOnDestroy();
     this._foundation.destroy();
   }
+  
+  static ngAcceptInputType_disabled: boolean | string;
+  static ngAcceptInputType_disableRipple: boolean | string;
 }
