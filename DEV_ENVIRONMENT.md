@@ -2,10 +2,10 @@
 
 1. Make sure you have `node` installed with a version at _least_ 10.0.0 and `yarn` with a version
    of at least 1.10.0. We recommend using `nvm` to manage your node versions.
-2. Make sure the `patch` command is available
-   - On Windows: Install [`MSYS2`](https://www.msys2.org/) by following the described setup.
-     Afterwards you can install the `patch` package by running `pacman -S patch`.
-     Add `C:\msys64\usr\bin` to the `PATH` environment variable.
+2. Material uses Bazel which requires certain Bash and UNIX tools.
+   - On Windows: Follow the [instructions](https://docs.bazel.build/versions/master/install-windows.html#5-optional-install-compilers-and-language-runtimes)
+   to install [`MSYS2`](https://www.msys2.org/) and the listed "Common MSYS2 packages".
+   Afterwards add `C:\msys64\usr\bin` to the `PATH` environment variable.
 3. Run `yarn global add gulp` to install gulp.
 4. Fork the `angular/components` repo on GitHub.
 5. Clone your fork to your machine with `git clone`.
