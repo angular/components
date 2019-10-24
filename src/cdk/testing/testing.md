@@ -180,8 +180,7 @@ The abstract `ComponentHarness` class is the base class for all component harnes
 custom component harness, extend `ComponentHarness` and implement the static property
 `hostSelector`. The `hostSelector` property identifies elements in the DOM that match this harness
 subclass. In most cases the `hostSelector` should be the same as the `selector` of the corresponding
-`Component` or `Directive`. For example, consider a simple popup component with a helper directive
-to manage some accessibility attributes:
+`Component` or `Directive`. For example, consider a simple popup component:
 
 ```ts
 @Component({
@@ -212,8 +211,8 @@ class MyPopupHarness extends ComponentHarness {
 
 While `ComponentHarness` subclasses require only the `hostSelector` property, most harnesses should
 also implement a static `with` method to generate `HarnessPredicate` instances. The
-[`HarnessPredicate`](#filtering-harness-instances-with-harnesspredicate) section
-below covers this in more detail.
+[`HarnessPredicate`](#filtering-harness-instances-with-harnesspredicate) section below covers this
+in more detail.
 
 #### Finding elements in the component's DOM
 
@@ -252,7 +251,7 @@ class MyPopupHarness extends ComponentHarness {
 
 #### Working with `TestElement` instances
 
-The locator methods described above all return a `TestElement` instance.
+The functions created with the locator methods described above all return `TestElement` instances.
 `TestElement` offers a number of methods to interact with the underlying DOM:
 
 | Method | Description |
@@ -276,7 +275,7 @@ Protractor, etc). When using harnesses, you should perform all DOM interaction v
 Other means of accessing DOM elements (e.g. `document.querySelector`) will not work in all test
 environments.
 
-As a best practice, you should not `TestElement` instances to users of a harness
+As a best practice, you should not expose `TestElement` instances to users of a harness
 unless its an element the component consumer defines directly (e.g. the host element). Exposing
 `TestElement` instances for internal elements leads users to depend on a component's internal DOM
 structure.
