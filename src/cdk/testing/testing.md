@@ -176,12 +176,12 @@ common components for a large Angular application.
 
 #### Extending `ComponentHarness`
 
-The abstract `ComponentHarness` class is the base class for all component harnesses. To work with
-the CDK's component harness infrastructure, a class must extend `ComponentHarness` and implement a
-static property `hostSelector`.  The `hostSelector` property is used to identify elements in the DOM
-that match this harness subclass. In most cases the `hostSelector` should be the same as the
-`selector` of the `Component` or `Directive` that the harness corresponds to. For example, consider
-a simple popup component with a helper directive to manage some accessibility attributes:
+The abstract `ComponentHarness` class is the base class for all component harnesses. To create a
+custom component harness, extend `ComponentHarness` and implement the static property
+`hostSelector`. The `hostSelector` property identifies elements in the DOM that match this harness
+subclass. In most cases the `hostSelector` should be the same as the `selector` of the corresponding
+`Component` or `Directive`. For example, consider a simple popup component with a helper directive
+to manage some accessibility attributes:
 
 ```ts
 @Component({
@@ -210,24 +210,23 @@ class MyPopupHarness extends ComponentHarness {
 }
 ```
 
-Other than the `hostSelector` property, there are no other properties or methods that are required
-to implement on a `ComponentHarness` subclass, though it is highly recommended to add a static
-`with` method that can be used to generate `HarnessPredicate` instances. This is discussed in more
-detail in the [`HarnessPredicate`](#filtering-harness-instances-with-harnesspredicate) section
-below.
+While `ComponentHarness` subclasses require only the `hostSelector` property, most harnesses should
+also implement a static `with` method to generate `HarnessPredicate` instances. The
+[`HarnessPredicate`](#filtering-harness-instances-with-harnesspredicate) section
+below covers this in more detail.
 
 #### Finding elements in the component's DOM
 
-Each instance of the `ComponentHarness` subclass represents a particular instance of the
-corresponding component. The corresponding component instance's host element can be accessed via the
-`host` method on the `ComponentHarness` base class.
+Each instance of a `ComponentHarness` subclass represents a particular instance of the
+corresponding component. You can access the component's host element via the `host` method from
+the `ComponentHarness` base class.
 
-In addition to being able to access the component's host element, `ComponentHarness` has several
-methods that can be used to locate elements under the host element; that is, elements that are part
-of the component's template or content. These methods are `locatorFor`, `locatorForOptional`, and
-`locatorForAll`. One important caveat to understand about these methods is that they do not find
-elements, they _create functions_ that can be used to find elements. This avoids caching references
-to elements that later turn stale (for example when an `ngIf` binding updates).
+`ComponentHarness` additionally offers several methods for locating elements within the component's
+DOM. These methods are `locatorFor`, `locatorForOptional`, and `locatorForAll`. 
+Note, though, that these methods do not directly find elements. Instead, they _create functions_
+that find elements. This approach safeguards against caching references to out-of-date elements. For
+example, when an `ngIf` hides and then shows an element, the result is a new DOM element; using
+functions ensures that tests always reference the current state of the DOM.
 
 | Method | Description |
 | ------ | ----------- |
@@ -253,7 +252,7 @@ class MyPopupHarness extends ComponentHarness {
 
 #### Working with `TestElement` instances
 
-The various methods described above for finding elements all return a `TestElement` class.
+The locator methods described above all return a `TestElement` instance.
 `TestElement` offers a number of methods to interact with the underlying DOM:
 
 | Method | Description |
@@ -273,18 +272,18 @@ The various methods described above for finding elements all return a `TestEleme
 | `matchesSelector(selector: string): Promise<boolean>` | Checks whether the element matches the given CSS selector. |
 
 `TestElement` is an abstraction designed to work across different test environments (Karma,
-Protractor, etc); therefore, it is important that all DOM interaction inside harness classes happens
-via this interface. `ComponentHarness` subclasses must _not_ use other means of accessing DOM
-elements (e.g. `document.querySelector`), otherwise it will not work in all test environments.
+Protractor, etc). When using harnesses, you should perform all DOM interaction via this interface.
+Other means of accessing DOM elements (e.g. `document.querySelector`) will not work in all test
+environments.
 
-As a best practice, it is recommended not to expose `TestElement` instances to users of a harness,
-unless its an element the user has some control over (e.g. the host element). Exposing `TestElement`
-instances for internal elements may lead users to depend on implementation details (e.g. assertions
-against particular attributes or classes in your component's template that may change later).
+As a best practice, you should not `TestElement` instances to users of a harness
+unless its an element the component consumer defines directly (e.g. the host element). Exposing
+`TestElement` instances for internal elements leads users to depend on a component's internal DOM
+structure.
 
-Instead, consider providing more narrow-focused methods for particular actions the user may want to
+Instead, provide more narrow-focused methods for particular actions the end user will
 take or particular state they may want to check. For example, `MyPopupHarness` could provide methods
-like:
+like `toggle` and `isOpen`:
 
 ```ts
 class MyPopupHarness extends ComponentHarness {
@@ -309,10 +308,9 @@ class MyPopupHarness extends ComponentHarness {
 
 #### Loading harnesses for subcomponents
 
-Often times larger components are made up of a composition of smaller components, and it can be
-useful to have this structure reflected in a component's harness as well. Each of the `locatorFor`
-methods on `ComponentHarness` discussed earlier has an alternate signature that can be used for
-locating sub-harnesses rather than elements.
+Larger components often compose smaller components. You can reflect this structure in a
+component's harness as well. Each of the `locatorFor` methods on `ComponentHarness` discussed
+earlier has an alternate signature that can be used for locating sub-harnesses rather than elements.
 
 | Method | Description |
 | ------ | ----------- |
@@ -368,13 +366,12 @@ class MyMenuItemHarness extends ComponentHarness {
 
 #### Filtering harness instances with `HarnessPredicate`
 
-When there are multiple instances of a particular component on a page, it is often necessary to
-filter based on some property of the component to determine the correct one to instantiate a harness
-for (e.g. a button with some specific text, a menu with a specific ID, etc). The `HarnessPredicate`
-class can be used to attach certain criteria like this to a `ComponentHarness` subclass. While the
-test author is able to construct `HarnessPredicate` instances manually, its much nicer if the
-`ComponentHarness` subclass provides a helper method to construct predicates for things that will
-need to be commonly filtered on.
+When a page contains multiple instances of a particular component, you may want to filter based on
+some property of the component to get a particular component instance. For example, you may want
+a button with some specific text, or a menu with a specific ID. The `HarnessPredicate`
+class can capture criteria like this for a `ComponentHarness` subclass. While the
+test author is able to construct `HarnessPredicate` instances manually, its easier when the
+`ComponentHarness` subclass provides a helper method to construct predicates for common filters.
 
 The recommended approach to providing this helper is to create a static `with` method on each
 `ComponentHarness` subclass that returns a `HarnessPredicate` for that class. This allows test
@@ -446,11 +443,11 @@ class MyMenuItemHarness extends ComponentHarness {
 }
 ```
 
-A `HarnessPredicate` can be passed in place of a `ComponentHarness` class to any of the APIs on
+You can pass a `HarnessPredicate` in place of a `ComponentHarness` class to any of the APIs on
 `HarnessLoader`, `LocatorFactory`, or `ComponentHarness`. This allows test authors to easily target
-the particular component instance they're interested in when creating a harness instance. It also
-allows the harness author to leverage the same `HarnessPredicate` to enable more powerful APIs on
-their harness class. For example, consider the `getItems` method on the `MyMenuHarness` shown above.
+a particular component instance when creating a harness instance. It also allows the harness author
+to leverage the same `HarnessPredicate` to enable more powerful APIs on their harness class. For
+example, consider the `getItems` method on the `MyMenuHarness` shown above.
 This can now easily be expanded to allow users of the harness to search for particular menu items:
 
 ```ts
@@ -469,13 +466,11 @@ class MyMenuHarness extends ComponentHarness {
 
 #### Creating a `HarnessLoader` for an element
 
-Some components use `<ng-content>` allow the user of the component to pass in whatever content they
-like, and have that content inserted in a particular place in the component's template. When
-creating a harness for a component like this, it is nice to be able to give the harness user a
-`HarnessLoader` instance scoped to the element containing the `<ng-content>`. This allows the user
-of the harness to load additional harnesses for whatever components were passed in as content.
-`ComponentHarness` has several APIs that can be used to create `HarnessLoader` instances for cases
-like this.
+Some components use `<ng-content>` to project additional content into the component's template. When
+creating a harness for such a component, you can give the harness user a `HarnessLoader` instance
+scoped to the element containing the `<ng-content>`. This allows the user of the harness to load
+additional harnesses for whatever components were passed in as content. `ComponentHarness` has
+several APIs that can be used to create `HarnessLoader` instances for cases like this.
 
 | Method | Description |
 | ------ | ----------- |
@@ -533,7 +528,7 @@ The methods on `TestElement` automatically trigger Angular's change detection an
 inside the `NgZone`, so in most cases no special effort is required for harness authors to wait on
 asynchronous tasks. However, there are some edge cases where this may not be sufficient.
 
-Under some circumstances Angular animations may require a second cycle of change detection and
+Under some circumstances, Angular animations may require a second cycle of change detection and
 subsequent `NgZone` stabilization before animation events are fully flushed. In cases where this is
 needed, the `ComponentHarness` offers a `forceStabilize()` method that can be called to do the
 second round.
