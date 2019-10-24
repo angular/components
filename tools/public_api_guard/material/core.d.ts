@@ -345,6 +345,7 @@ export declare class MatSingleDateSelectionModel<D> extends MatDateSelectionMode
     isComplete(): boolean;
     isSame(other: MatDateSelectionModel<D>): boolean;
     isValid(): boolean;
+    setDate(date: D | null): void;
 }
 
 export declare const JAN = 0, FEB = 1, MAR = 2, APR = 3, MAY = 4, JUN = 5, JUL = 6, AUG = 7, SEP = 8, OCT = 9, NOV = 10, DEC = 11;

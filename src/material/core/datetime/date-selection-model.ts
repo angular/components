@@ -70,6 +70,11 @@ export class MatSingleDateSelectionModel<D> extends MatDateSelectionModel<D> {
   asDate(): D | null {
     return this.isValid() ? this._date : null;
   }
+
+  setDate(date: D | null) {
+    this._date = date;
+    this._valueChangesSubject.next();
+  }
 }
 
 /**
