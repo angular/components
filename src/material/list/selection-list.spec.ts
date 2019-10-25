@@ -1191,6 +1191,18 @@ describe('MatSelectionList with forms', () => {
       expect(testComponent.optionInstances.toArray()[1].selected).toBe(true);
     }));
   });
+
+  it('can bind both selected and value at the same time', () => {
+    const fixture =
+        TestBed
+            .configureTestingModule(
+                {imports: [MatListModule], declarations: [SelectionListWithSelectedOptionAndValue]})
+            .createComponent(SelectionListWithSelectedOptionAndValue);
+    fixture.detectChanges();
+    const listItemEl = fixture.debugElement.query(By.directive(MatListOption))!;
+    expect(listItemEl.componentInstance.selected).toBe(true);
+    expect(listItemEl.componentInstance.value).toBe(fixture.componentInstance.itemValue);
+  });
 });
 
 
@@ -1275,6 +1287,16 @@ class SelectionListWithDisabledOption {
     <mat-list-option [selected]="true">Item</mat-list-option>
   </mat-selection-list>`})
 class SelectionListWithSelectedOption {
+}
+
+@Component({
+  template: `
+  <mat-selection-list>
+    <mat-list-option [selected]="true" [value]="itemValue">Item</mat-list-option>
+  </mat-selection-list>`
+})
+class SelectionListWithSelectedOptionAndValue {
+  itemValue = 'item1';
 }
 
 @Component({template: `
