@@ -2,7 +2,7 @@
 
 1. Make sure you have `node` installed with a version at _least_ 10.0.0 and `yarn` with a version
    of at least 1.10.0. We recommend using `nvm` to manage your node versions.
-2. Material uses Bazel which requires certain Bash and UNIX tools.
+2. angular/components uses Bazel which requires certain Bash and UNIX tools.
    - On Windows: Follow the [instructions](https://docs.bazel.build/versions/master/install-windows.html#5-optional-install-compilers-and-language-runtimes)
    to install [`MSYS2`](https://www.msys2.org/) and the listed "Common MSYS2 packages".
    Afterwards add `C:\msys64\usr\bin` to the `PATH` environment variable.
@@ -14,8 +14,8 @@
 6. From the root of the project, run `yarn`.
 
 
-To build Material in dev mode, run `gulp material:build`.
-To build Material in release mode, run `gulp material:build-release`
+To build angular/components in dev mode, run `gulp material:build`.
+To build angular/components in release mode, run `gulp material:build-release`
 
 To bring up a local server, run `yarn dev-app`. This will automatically watch for changes
 and rebuild. The browser should refresh automatically when changes are made.
