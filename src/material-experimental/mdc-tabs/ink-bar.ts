@@ -8,9 +8,9 @@
 
 import {ElementRef, QueryList} from '@angular/core';
 import {
-  MDCTabIndicatorFoundation,
   MDCSlidingTabIndicatorFoundation,
-  MDCTabIndicatorAdapter
+  MDCTabIndicatorAdapter,
+  MDCTabIndicatorFoundation
 } from '@material/tab-indicator';
 
 /**
@@ -64,7 +64,6 @@ export class MatInkBar {
 export class MatInkBarFoundation {
   private _destroyed: boolean;
   private _foundation: MDCTabIndicatorFoundation;
-  private _element: HTMLElement;
   private _indicator: HTMLElement;
   private _indicatorContent: HTMLElement;
   private _adapter: MDCTabIndicatorAdapter = {
@@ -89,10 +88,23 @@ export class MatInkBarFoundation {
     }
   };
 
-  constructor(elementRef: ElementRef<HTMLElement>, document: Document) {
-    this._element = elementRef.nativeElement;
+  /**
+   * Whether the indicator should be appended to the content, which will cause the ink bar
+   * to match the width of the content rather than the tab host element.
+   */
+  get fitToContent(): boolean { return this._fitToContent; }
+  set fitToContent(fitToContent: boolean) {
+    if (this._fitToContent !== fitToContent) {
+      this._fitToContent = fitToContent;
+      if (this._indicator) {
+        this._appendIndicator();
+      }
+    }
+  }
+  private _fitToContent = false;
+
+  constructor(private _element: HTMLElement, private _document: Document) {
     this._foundation = new MDCSlidingTabIndicatorFoundation(this._adapter);
-    this._createIndicator(document);
   }
 
   /** Aligns the ink bar to the current item. */
@@ -112,6 +124,7 @@ export class MatInkBarFoundation {
 
   /** Initializes the foundation. */
   init() {
+    this._createIndicator(this._document);
     this._foundation.init();
   }
 
@@ -128,16 +141,36 @@ export class MatInkBarFoundation {
     this._destroyed = true;
   }
 
+  /** Creates and appends the indicator element. */
   private _createIndicator(document: Document) {
+    this._indicator = document.createElement('span');
+    this._indicatorContent = document.createElement('span');
+
+    this._indicator.className = 'mdc-tab-indicator';
+    this._indicatorContent.className = 'mdc-tab-indicator__content' +
+        ' mdc-tab-indicator__content--underline';
+
+    this._indicator.appendChild(this._indicatorContent);
+    this._appendIndicator();
+  }
+
+  /**
+   * Appends the indicator to the tab host element or content, depending on whether
+   * the indicator should fit to content.
+   */
+  private _appendIndicator() {
     if (!this._indicator) {
-      const indicator = this._indicator = document.createElement('span');
-      const content = this._indicatorContent = document.createElement('span');
-
-      indicator.className = 'mdc-tab-indicator';
-      content.className = 'mdc-tab-indicator__content mdc-tab-indicator__content--underline';
-
-      indicator.appendChild(content);
-      this._element.appendChild(indicator);
+      throw Error('Ink bar indicator has not been created and cannot be appended');
     }
+
+    const parentElement = this._fitToContent ?
+        this._element.querySelector('.mdc-tab__content') :
+        this._element;
+
+    if (!parentElement) {
+      throw Error('Missing element to append the ink bar indicator');
+    }
+
+    parentElement.appendChild(this._indicator);
   }
 }
