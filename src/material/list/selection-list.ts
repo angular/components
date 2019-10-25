@@ -116,9 +116,8 @@ export class MatSelectionListChange {
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MatListOption extends _MatListOptionMixinBase implements AfterContentInit, OnChanges,
-                                                                      OnDestroy, OnInit,
-                                                                      FocusableOption,
+export class MatListOption extends _MatListOptionMixinBase implements AfterContentInit, OnDestroy,
+                                                                      OnInit, FocusableOption,
                                                                       CanDisableRipple {
   private _selected = false;
   private _disabled = false;
@@ -208,9 +207,6 @@ export class MatListOption extends _MatListOptionMixinBase implements AfterConte
         this._changeDetector.markForCheck();
       }
     });
-  }
-
-  ngOnChanges() {
     this._inputsInitialized = true;
   }
 

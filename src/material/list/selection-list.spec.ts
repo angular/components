@@ -39,6 +39,7 @@ describe('MatSelectionList without forms', () => {
           SelectionListWithListDisabled,
           SelectionListWithOnlyOneOption,
           SelectionListWithIndirectChildOptions,
+          SelectionListWithSelectedOptionAndValue,
         ],
       });
 
@@ -593,6 +594,14 @@ describe('MatSelectionList without forms', () => {
         expect(rippleTarget.querySelectorAll('.mat-ripple-element').length)
             .toBe(0, 'Expected no ripples after list ripples are disabled.');
       }));
+
+    it('can bind both selected and value at the same time', () => {
+      const componentFixture = TestBed.createComponent(SelectionListWithSelectedOptionAndValue);
+      componentFixture.detectChanges();
+      const listItemEl = componentFixture.debugElement.query(By.directive(MatListOption))!;
+      expect(listItemEl.componentInstance.selected).toBe(true);
+      expect(listItemEl.componentInstance.value).toBe(componentFixture.componentInstance.itemValue);
+    });
 
   });
 
@@ -1190,18 +1199,6 @@ describe('MatSelectionList with forms', () => {
       expect(testComponent.compareWith).toHaveBeenCalled();
       expect(testComponent.optionInstances.toArray()[1].selected).toBe(true);
     }));
-  });
-
-  it('can bind both selected and value at the same time', () => {
-    const fixture =
-        TestBed
-            .configureTestingModule(
-                {imports: [MatListModule], declarations: [SelectionListWithSelectedOptionAndValue]})
-            .createComponent(SelectionListWithSelectedOptionAndValue);
-    fixture.detectChanges();
-    const listItemEl = fixture.debugElement.query(By.directive(MatListOption))!;
-    expect(listItemEl.componentInstance.selected).toBe(true);
-    expect(listItemEl.componentInstance.value).toBe(fixture.componentInstance.itemValue);
   });
 });
 
