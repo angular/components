@@ -13,8 +13,12 @@
                 [options]="markerOptions"
                 (mapClick)="clickMarker(marker)"></map-marker>
     <map-info-window>Testing 1 2 3</map-info-window>
+    <map-polyline *ngIf="isPolylineDisplayed" [options]="polylineOptions"></map-polyline>
   </google-map>
 
   <p><label>Latitude:</label> {{display?.lat}}</p>
   <p><label>Longitude:</label> {{display?.lng}}</p>
+
+  <button (click)="displayPolyline()">Polyline</button>
+  <button (click)="editablePolyline()">Editable Polyline</button>
 </div>
