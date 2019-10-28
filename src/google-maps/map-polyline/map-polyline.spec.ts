@@ -14,18 +14,18 @@ import {
 
 import {MapPolyline} from './map-polyline';
 
-const POLYLINE_PATH: google.maps.LatLngLiteral[] =
-    [{lat: 25, lng: 26}, {lat: 26, lng: 27}, {lat: 30, lng: 34}];
-const POLYLINE_OPTIONS: google.maps.PolylineOptions = {
-  path: POLYLINE_PATH,
-  strokeColor: 'grey',
-  strokeOpacity: 0.8
-};
-
 describe('MapPolyline', () => {
   let mapSpy: jasmine.SpyObj<UpdatedGoogleMap>;
+  let polylinePath: google.maps.LatLngLiteral[];
+  let polylineOptions: google.maps.PolylineOptions;
 
   beforeEach(async(() => {
+    polylinePath = [{ lat: 25, lng: 26 }, { lat: 26, lng: 27 }, { lat: 30, lng: 34 }];
+    polylineOptions = {
+      path: polylinePath,
+      strokeColor: 'grey',
+      strokeOpacity: 0.8
+    };
     TestBed.configureTestingModule({
       imports: [GoogleMapsModule],
       declarations: [TestApp],
@@ -70,12 +70,12 @@ describe('MapPolyline', () => {
 
   it('gives precedence to path input over options', () => {
     const path: google.maps.LatLngLiteral[] = [{lat: 3, lng: 5}];
-    const expectedOptions: google.maps.PolylineOptions = {...POLYLINE_OPTIONS, path};
+    const expectedOptions: google.maps.PolylineOptions = {...polylineOptions, path};
     const polylineSpy = createPolylineSpy(expectedOptions);
     const polylineConstructorSpy = createPolylineConstructorSpy(polylineSpy).and.callThrough();
 
     const fixture = TestBed.createComponent(TestApp);
-    fixture.componentInstance.options = POLYLINE_OPTIONS;
+    fixture.componentInstance.options = polylineOptions;
     fixture.componentInstance.path = path;
     fixture.detectChanges();
 
@@ -83,7 +83,7 @@ describe('MapPolyline', () => {
   });
 
   it('exposes methods that provide information about the Polyline', () => {
-    const polylineSpy = createPolylineSpy(POLYLINE_OPTIONS);
+    const polylineSpy = createPolylineSpy(polylineOptions);
     createPolylineConstructorSpy(polylineSpy).and.callThrough();
 
     const fixture = TestBed.createComponent(TestApp);
@@ -105,7 +105,7 @@ describe('MapPolyline', () => {
   });
 
   it('initializes Polyline event handlers', () => {
-    const polylineSpy = createPolylineSpy(POLYLINE_OPTIONS);
+    const polylineSpy = createPolylineSpy(polylineOptions);
     createPolylineConstructorSpy(polylineSpy).and.callThrough();
 
     const fixture = TestBed.createComponent(TestApp);

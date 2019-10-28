@@ -111,16 +111,16 @@ export class MapPolyline implements OnInit, OnDestroy {
 
   private readonly _listeners: google.maps.MapsEventListener[] = [];
 
-  _polyline?: google.maps.Polyline;
+  _polyline!: google.maps.Polyline; // initialized in ngOnInit
 
-  constructor(private readonly googleMap: GoogleMap) {}
+  constructor(private readonly _map: GoogleMap) {}
 
   ngOnInit() {
     const combinedOptionsChanges = this._combineOptions();
 
     combinedOptionsChanges.pipe(take(1)).subscribe(options => {
       this._polyline = new google.maps.Polyline(options);
-      this._polyline.setMap(this.googleMap._googleMap);
+      this._polyline.setMap(this._map._googleMap);
       this._initializeEventHandlers();
     });
 
@@ -134,9 +134,7 @@ export class MapPolyline implements OnInit, OnDestroy {
     for (let listener of this._listeners) {
       listener.remove();
     }
-    if (this._polyline) {
-      this._polyline.setMap(null);
-    }
+    this._polyline.setMap(null);
   }
 
   /**
@@ -144,28 +142,28 @@ export class MapPolyline implements OnInit, OnDestroy {
    * developers.google.com/maps/documentation/javascript/reference/polygon#Polyline.getDraggable
    */
   getDraggable(): boolean {
-    return this._polyline!.getDraggable();
+    return this._polyline.getDraggable();
   }
 
   /**
    * @see developers.google.com/maps/documentation/javascript/reference/polygon#Polyline.getEditable
    */
   getEditable(): boolean {
-    return this._polyline!.getEditable();
+    return this._polyline.getEditable();
   }
 
   /**
    * @see developers.google.com/maps/documentation/javascript/reference/polygon#Polyline.getPath
    */
   getPath(): google.maps.MVCArray<google.maps.LatLng> {
-    return this._polyline!.getPath();
+    return this._polyline.getPath();
   }
 
   /**
    * @see developers.google.com/maps/documentation/javascript/reference/polygon#Polyline.getVisible
    */
   getVisible(): boolean {
-    return this._polyline!.getVisible();
+    return this._polyline.getVisible();
   }
 
   private _combineOptions(): Observable<google.maps.PolylineOptions> {
@@ -180,15 +178,13 @@ export class MapPolyline implements OnInit, OnDestroy {
 
   private _watchForOptionsChanges() {
     this._options.pipe(takeUntil(this._destroy)).subscribe(options => {
-      if (this._polyline) {
-        this._polyline.setOptions(options);
-      }
+      this._polyline.setOptions(options);
     });
   }
 
   private _watchForPathChanges() {
     this._path.pipe(takeUntil(this._destroy)).subscribe(path => {
-      if (this._polyline && path) {
+      if (path) {
         this._polyline.setPath(path);
       }
     });
@@ -215,7 +211,7 @@ export class MapPolyline implements OnInit, OnDestroy {
         (eventHandler: EventEmitter<google.maps.MouseEvent>, name: string) => {
           if (eventHandler.observers.length > 0) {
             this._listeners.push(
-                this._polyline!.addListener(name, (event: google.maps.MouseEvent) => {
+                this._polyline.addListener(name, (event: google.maps.MouseEvent) => {
                   eventHandler.emit(event);
                 }));
           }
@@ -225,7 +221,7 @@ export class MapPolyline implements OnInit, OnDestroy {
         (eventHandler: EventEmitter<google.maps.PolyMouseEvent>, name: string) => {
           if (eventHandler.observers.length > 0) {
             this._listeners.push(
-                this._polyline!.addListener(name, (event: google.maps.PolyMouseEvent) => {
+                this._polyline.addListener(name, (event: google.maps.PolyMouseEvent) => {
                   eventHandler.emit(event);
                 }));
           }
