@@ -23,7 +23,7 @@ export interface MatInkBarItem {
 }
 
 /**
- * Abstraction around the MDC tab indicator that manages the ink bar of a tab header.
+ * Abstraction around the MDC tab indicator that acts as the tab header's ink bar.
  * @docs-private
  */
 export class MatInkBar {
@@ -50,7 +50,7 @@ export class MatInkBar {
       const clientRect = currentItem ?
           currentItem._foundation.computeContentClientRect() : undefined;
 
-      // The MDC indicator won't animate unless we give it the `ClientRect` of the previous item.
+      // The ink bar won't animate unless we give it the `ClientRect` of the previous item.
       correspondingItem._foundation.activate(clientRect);
       this._currentItem = correspondingItem;
     }
@@ -58,52 +58,52 @@ export class MatInkBar {
 }
 
 /**
- * Implementation of MDC's sliding tab indicator foundation.
+ * Implementation of MDC's sliding tab indicator (ink bar) foundation.
  * @docs-private
  */
 export class MatInkBarFoundation {
   private _destroyed: boolean;
   private _foundation: MDCTabIndicatorFoundation;
-  private _indicator: HTMLElement;
-  private _indicatorContent: HTMLElement;
+  private _inkBarElement: HTMLElement;
+  private _inkBarContentElement: HTMLElement;
   private _adapter: MDCTabIndicatorAdapter = {
     addClass: className => {
       if (!this._destroyed) {
-        this._element.classList.add(className);
+        this._hostElement.classList.add(className);
       }
     },
     removeClass: className => {
       if (!this._destroyed) {
-        this._element.classList.remove(className);
+        this._hostElement.classList.remove(className);
       }
     },
     setContentStyleProperty: (propName, value) => {
-      this._indicatorContent.style.setProperty(propName, value);
+      this._inkBarContentElement.style.setProperty(propName, value);
     },
     computeContentClientRect: () => {
       // `getBoundingClientRect` isn't available on the server.
-      return this._destroyed || !this._indicatorContent.getBoundingClientRect ? {
+      return this._destroyed || !this._inkBarContentElement.getBoundingClientRect ? {
         width: 0, height: 0, top: 0, left: 0, right: 0, bottom: 0
-      } : this._indicatorContent.getBoundingClientRect();
+      } : this._inkBarContentElement.getBoundingClientRect();
     }
   };
 
   /**
-   * Whether the indicator should be appended to the content, which will cause the ink bar
+   * Whether the ink bar should be appended to the content, which will cause the ink bar
    * to match the width of the content rather than the tab host element.
    */
   get fitToContent(): boolean { return this._fitToContent; }
   set fitToContent(fitToContent: boolean) {
     if (this._fitToContent !== fitToContent) {
       this._fitToContent = fitToContent;
-      if (this._indicator) {
-        this._appendIndicator();
+      if (this._inkBarElement) {
+        this._appendInkBarElement();
       }
     }
   }
   private _fitToContent = false;
 
-  constructor(private _element: HTMLElement, private _document: Document) {
+  constructor(private _hostElement: HTMLElement, private _document: Document) {
     this._foundation = new MDCSlidingTabIndicatorFoundation(this._adapter);
   }
 
@@ -117,60 +117,58 @@ export class MatInkBarFoundation {
     this._foundation.deactivate();
   }
 
-  /** Gets the ClientRect of the indicator. */
+  /** Gets the ClientRect of the ink bar. */
   computeContentClientRect() {
     return this._foundation.computeContentClientRect();
   }
 
   /** Initializes the foundation. */
   init() {
-    this._createIndicator(this._document);
+    this._createInkBarElement(this._document);
     this._foundation.init();
   }
 
   /** Destroys the foundation. */
   destroy() {
-    const indicator = this._indicator;
-
-    if (indicator.parentNode) {
-      indicator.parentNode.removeChild(indicator);
+    if (this._inkBarElement.parentNode) {
+      this._inkBarElement.parentNode.removeChild(this._inkBarElement);
     }
 
-    this._element = this._indicator = this._indicatorContent = null!;
+    this._hostElement = this._inkBarElement = this._inkBarContentElement = null!;
     this._foundation.destroy();
     this._destroyed = true;
   }
 
-  /** Creates and appends the indicator element. */
-  private _createIndicator(document: Document) {
-    this._indicator = document.createElement('span');
-    this._indicatorContent = document.createElement('span');
+  /** Creates and appends the ink bar element. */
+  private _createInkBarElement(document: Document) {
+    this._inkBarElement = document.createElement('span');
+    this._inkBarContentElement = document.createElement('span');
 
-    this._indicator.className = 'mdc-tab-indicator';
-    this._indicatorContent.className = 'mdc-tab-indicator__content' +
+    this._inkBarElement.className = 'mdc-tab-indicator';
+    this._inkBarContentElement.className = 'mdc-tab-indicator__content' +
         ' mdc-tab-indicator__content--underline';
 
-    this._indicator.appendChild(this._indicatorContent);
-    this._appendIndicator();
+    this._inkBarElement.appendChild(this._inkBarContentElement);
+    this._appendInkBarElement();
   }
 
   /**
-   * Appends the indicator to the tab host element or content, depending on whether
-   * the indicator should fit to content.
+   * Appends the ink bar to the tab host element or content, depending on whether
+   * the ink bar should fit to content.
    */
-  private _appendIndicator() {
-    if (!this._indicator) {
-      throw Error('Ink bar indicator has not been created and cannot be appended');
+  private _appendInkBarElement() {
+    if (!this._inkBarElement) {
+      throw Error('Ink bar element has not been created and cannot be appended');
     }
 
     const parentElement = this._fitToContent ?
-        this._element.querySelector('.mdc-tab__content') :
-        this._element;
+        this._hostElement.querySelector('.mdc-tab__content') :
+        this._hostElement;
 
     if (!parentElement) {
-      throw Error('Missing element to append the ink bar indicator');
+      throw Error('Missing element to host the ink bar');
     }
 
-    parentElement.appendChild(this._indicator);
+    parentElement.appendChild(this._inkBarElement);
   }
 }

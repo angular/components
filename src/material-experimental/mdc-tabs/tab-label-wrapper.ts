@@ -26,6 +26,8 @@ import {coerceBooleanProperty} from '@angular/cdk/coercion';
 })
 export class MatTabLabelWrapper extends BaseMatTabLabelWrapper
     implements MatInkBarItem, OnInit, OnDestroy {
+  private _document: Document;
+
   _foundation = new MatInkBarFoundation(this.elementRef.nativeElement, this._document);
 
   /** Whether the ink bar should fit its width to the size of the tab label content. */
@@ -33,7 +35,7 @@ export class MatTabLabelWrapper extends BaseMatTabLabelWrapper
   get fitInkBarToContent(): boolean { return this._foundation.fitToContent; }
   set fitInkBarToContent(v: boolean) { this._foundation.fitToContent = coerceBooleanProperty(v); }
 
-  constructor(public elementRef: ElementRef, @Inject(DOCUMENT) private _document: any) {
+  constructor(public elementRef: ElementRef, @Inject(DOCUMENT) _document: any) {
     super(elementRef);
   }
 
