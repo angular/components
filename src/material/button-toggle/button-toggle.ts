@@ -91,6 +91,7 @@ export class MatButtonToggleChange {
     public value: any) {}
 }
 
+/** @dynamic Needed for "ngAcceptInputType" members. */
 /** Exclusive selection button toggle group that behaves like a radio-button group. */
 @Directive({
   selector: 'mat-button-toggle-group',
@@ -380,6 +381,7 @@ class MatButtonToggleBase {}
 const _MatButtonToggleMixinBase: CanDisableRippleCtor & typeof MatButtonToggleBase =
     mixinDisableRipple(MatButtonToggleBase);
 
+/** @dynamic Needed for "ngAcceptInputType" members. */
 /** Single button inside of a toggle group. */
 @Component({
   moduleId: module.id,

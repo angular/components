@@ -72,6 +72,7 @@ class MatChipGridBase extends MatChipSet {
 const _MatChipGridMixinBase: CanUpdateErrorStateCtor & typeof MatChipGridBase =
     mixinErrorState(MatChipGridBase);
 
+/** @dynamic Needed for "ngAcceptInputType" members. */
 /**
  * An extension of the MatChipSet component used with MatChipRow chips and
  * the matChipInputFor directive.

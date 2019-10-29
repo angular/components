@@ -139,7 +139,7 @@ export abstract class _MatTabNavBase extends MatPaginatedTabHeader implements Af
   }
 }
 
-
+/** @dynamic Needed for "ngAcceptInputType" members. */
 /**
  * Navigation component matching the styles of the tab group header.
  * Provides anchored navigation with animated ink bar.
@@ -259,7 +259,7 @@ export class _MatTabLinkBase extends _MatTabLinkMixinBase implements OnDestroy, 
   }
 }
 
-
+/** @dynamic Needed for "ngAcceptInputType" members. */
 /**
  * Link inside of a `mat-tab-nav-bar`.
  */

@@ -396,6 +396,7 @@ export abstract class _MatTabGroupBase extends _MatTabGroupMixinBase implements 
   }
 }
 
+/** @dynamic Needed for "ngAcceptInputType" members. */
 /**
  * Material design tab-group component. Supports basic tab pairs (label + content) and includes
  * animated ink-bar, keyboard navigation, and screen reader.

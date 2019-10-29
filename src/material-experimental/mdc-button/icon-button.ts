@@ -27,6 +27,7 @@ import {
   MatButtonBase
 } from './button-base';
 
+/** @dynamic Needed for "ngAcceptInputType" members. */
 /**
  * Material Design icon button component. This type of button displays a single interactive icon for
  * users to perform an action.
@@ -57,6 +58,7 @@ export class MatIconButton extends MatButtonBase {
   static ngAcceptInputType_disableRipple: boolean | string;
 }
 
+/** @dynamic Needed for "ngAcceptInputType" members. */
 /**
  * Material Design icon button component for anchor elements. This button displays a single
  * interaction icon that allows users to navigate across different routes or pages.

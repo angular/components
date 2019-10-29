@@ -28,6 +28,7 @@ import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 import {MatTabLabelWrapper} from './tab-label-wrapper';
 import {MatInkBar} from './ink-bar';
 
+/** @dynamic Needed for "ngAcceptInputType" members. */
 /**
  * The header of the tab group which displays a list of all the tabs in the tab group. Includes
  * an ink bar that follows the currently selected tab. When the tabs list's width exceeds the

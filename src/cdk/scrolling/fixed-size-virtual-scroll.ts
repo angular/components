@@ -162,7 +162,7 @@ export function _fixedSizeVirtualScrollStrategyFactory(fixedSizeDir: CdkFixedSiz
   return fixedSizeDir._scrollStrategy;
 }
 
-
+/** @dynamic Needed for "ngAcceptInputType" members. */
 /** A virtual scroll strategy that supports fixed-size items. */
 @Directive({
   selector: 'cdk-virtual-scroll-viewport[itemSize]',

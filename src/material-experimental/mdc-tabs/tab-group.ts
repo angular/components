@@ -30,6 +30,7 @@ import {MatTab} from './tab';
 import {MatTabHeader} from './tab-header';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
 
+/** @dynamic Needed for "ngAcceptInputType" members. */
 /**
  * Material design tab-group component. Supports basic tab pairs (label + content) and includes
  * animated ink-bar, keyboard navigation, and screen reader.

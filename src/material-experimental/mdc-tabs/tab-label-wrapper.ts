@@ -12,6 +12,7 @@ import {MatTabLabelWrapper as BaseMatTabLabelWrapper} from '@angular/material/ta
 import {MatInkBarFoundation, MatInkBarItem} from './ink-bar';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
 
+/** @dynamic Needed for "ngAcceptInputType" members. */
 /**
  * Used in the `mat-tab-group` view to display tab labels.
  * @docs-private

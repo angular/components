@@ -28,6 +28,7 @@ import {
 } from './button-base';
 import {ThemePalette} from '@angular/material/core';
 
+/** @dynamic Needed for "ngAcceptInputType" members. */
 /**
  * Material Design floating action button (FAB) component. These buttons represent the primary
  * or most common action for users to interact with.
@@ -60,7 +61,7 @@ export class MatFabButton extends MatButtonBase {
   static ngAcceptInputType_disableRipple: boolean | string;
 }
 
-
+/** @dynamic Needed for "ngAcceptInputType" members. */
 /**
  * Material Design floating action button (FAB) component for anchor elements. Anchor elements
  * are used to provide links for the user to navigate across different routes or pages.

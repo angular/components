@@ -49,7 +49,7 @@ export class MatSidenavContent extends MatDrawerContent {
   }
 }
 
-
+/** @dynamic Needed for "ngAcceptInputType" members. */
 @Component({
   moduleId: module.id,
   selector: 'mat-sidenav',
@@ -106,7 +106,7 @@ export class MatSidenav extends MatDrawer {
   static ngAcceptInputType_opened: boolean | string;
 }
 
-
+/** @dynamic Needed for "ngAcceptInputType" members. */
 @Component({
   moduleId: module.id,
   selector: 'mat-sidenav-container',

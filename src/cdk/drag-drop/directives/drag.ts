@@ -67,6 +67,7 @@ export function CDK_DRAG_CONFIG_FACTORY(): DragRefConfig {
   return {dragStartThreshold: 5, pointerDirectionChangeThreshold: 5};
 }
 
+/** @dynamic Needed for "ngAcceptInputType" members. */
 /** Element that can be moved inside a CdkDropList container. */
 @Directive({
   selector: '[cdkDrag]',

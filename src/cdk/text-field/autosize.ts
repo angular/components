@@ -20,7 +20,7 @@ import {Platform} from '@angular/cdk/platform';
 import {auditTime, takeUntil} from 'rxjs/operators';
 import {fromEvent, Subject} from 'rxjs';
 
-
+/** @dynamic Needed for "ngAcceptInputType" members. */
 /** Directive to automatically resize a textarea to fit its content. */
 @Directive({
   selector: 'textarea[cdkTextareaAutosize]',

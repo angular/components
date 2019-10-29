@@ -82,6 +82,7 @@ export class MatSelectionListChange {
     public option: MatListOption) {}
 }
 
+/** @dynamic Needed for "ngAcceptInputType" members. */
 /**
  * Component for list-options of selection-list. Each list-option can automatically
  * generate a checkbox and can put current item into the selectionModel of selection-list
@@ -312,6 +313,7 @@ export class MatListOption extends _MatListOptionMixinBase implements AfterConte
 }
 
 
+/** @dynamic Needed for "ngAcceptInputType" members. */
 /**
  * Material Design list component where each item is a selectable option. Behaves as a listbox.
  */

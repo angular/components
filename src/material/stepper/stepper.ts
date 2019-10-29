@@ -47,6 +47,7 @@ import {MatStepLabel} from './step-label';
 import {matStepperAnimations} from './stepper-animations';
 import {MatStepperIcon, MatStepperIconContext} from './stepper-icon';
 
+/** @dynamic Needed for "ngAcceptInputType" members. */
 @Component({
   moduleId: module.id,
   selector: 'mat-step',
@@ -85,7 +86,7 @@ export class MatStep extends CdkStep implements ErrorStateMatcher {
   static ngAcceptInputType_completed: boolean | string;
 }
 
-
+/** @dynamic Needed for "ngAcceptInputType" members. */
 @Directive({selector: '[matStepper]', providers: [{provide: CdkStepper, useExisting: MatStepper}]})
 export class MatStepper extends CdkStepper implements AfterContentInit {
   /** The list of step headers of the steps in the stepper. */
@@ -140,6 +141,7 @@ export class MatStepper extends CdkStepper implements AfterContentInit {
   static ngAcceptInputType_selectedIndex: number | string;
 }
 
+/** @dynamic Needed for "ngAcceptInputType" members. */
 @Component({
   moduleId: module.id,
   selector: 'mat-horizontal-stepper',
@@ -175,6 +177,7 @@ export class MatHorizontalStepper extends MatStepper {
   static ngAcceptInputType_selectedIndex: number | string;
 }
 
+/** @dynamic Needed for "ngAcceptInputType" members. */
 @Component({
   moduleId: module.id,
   selector: 'mat-vertical-stepper',

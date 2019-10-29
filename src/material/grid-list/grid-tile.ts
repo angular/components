@@ -23,6 +23,7 @@ import {MatLine, setLines} from '@angular/material/core';
 import {coerceNumberProperty} from '@angular/cdk/coercion';
 import {MAT_GRID_LIST, MatGridListBase} from './grid-list-base';
 
+/** @dynamic Needed for "ngAcceptInputType" members. */
 @Component({
   moduleId: module.id,
   selector: 'mat-grid-tile',

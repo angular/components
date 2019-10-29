@@ -86,6 +86,7 @@ const _MatChipMixinBase:
   typeof MatChipBase =
     mixinTabIndex(mixinColor(mixinDisableRipple(MatChipBase), 'primary'), -1);
 
+/** @dynamic Needed for "ngAcceptInputType" members. */
 /**
  * Material design styled Chip base component. Used inside the MatChipSet component.
  *

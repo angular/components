@@ -103,6 +103,7 @@ const _MatSliderMixinBase:
     typeof MatSliderBase =
         mixinTabIndex(mixinColor(mixinDisabled(MatSliderBase), 'accent'));
 
+/** @dynamic Needed for "ngAcceptInputType" members. */
 /**
  * Allows users to select from a range of values by moving the slider thumb. It is similar in
  * behavior to the native `<input type="range">` element.

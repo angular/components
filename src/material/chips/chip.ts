@@ -92,6 +92,7 @@ export class MatChipAvatar {}
 })
 export class MatChipTrailingIcon {}
 
+/** @dynamic Needed for "ngAcceptInputType" members. */
 /**
  * Material design styled Chip component. Used inside the MatChipList component.
  */

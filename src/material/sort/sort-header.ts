@@ -58,6 +58,7 @@ interface MatSortHeaderColumnDef {
   name: string;
 }
 
+/** @dynamic Needed for "ngAcceptInputType" members. */
 /**
  * Applies sorting behavior (click to change sort) and styles to an element, including an
  * arrow to display the current sort direction.

@@ -53,6 +53,7 @@ export class MatSlideToggleChange {
     public checked: boolean) { }
 }
 
+/** @dynamic Needed for "ngAcceptInputType" members. */
 @Component({
   moduleId: module.id,
   selector: 'mat-slide-toggle',

@@ -83,6 +83,7 @@ export class MatRadioChange {
     public value: any) {}
 }
 
+/** @dynamic Needed for "ngAcceptInputType" members. */
 /**
  * A group of radio buttons. May contain one or more `<mat-radio-button>` elements.
  */
@@ -327,6 +328,7 @@ const _MatRadioButtonMixinBase:
     CanDisableRippleCtor & HasTabIndexCtor & typeof MatRadioButtonBase =
         mixinDisableRipple(mixinTabIndex(MatRadioButtonBase));
 
+/** @dynamic Needed for "ngAcceptInputType" members. */
 /**
  * A Material design radio-button. Typically placed inside of `<mat-radio-group>` elements.
  */

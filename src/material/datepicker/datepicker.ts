@@ -130,6 +130,7 @@ export class MatDatepickerContent<D> extends _MatDatepickerContentMixinBase
 // TODO(mmalerba): We use a component instead of a directive here so the user can use implicit
 // template reference variables (e.g. #d vs #d="matDatepicker"). We can change this to a directive
 // if angular adds support for `exportAs: '$implicit'` on directives.
+/** @dynamic Needed for "ngAcceptInputType" members. */
 /** Component responsible for managing the datepicker popup/dialog. */
 @Component({
   moduleId: module.id,

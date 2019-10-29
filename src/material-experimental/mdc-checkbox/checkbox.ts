@@ -48,6 +48,7 @@ export class MatCheckboxChange {
   checked: boolean;
 }
 
+/** @dynamic Needed for "ngAcceptInputType" members. */
 @Component({
   moduleId: module.id,
   selector: 'mat-checkbox',

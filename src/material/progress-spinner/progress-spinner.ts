@@ -100,6 +100,7 @@ const INDETERMINATE_ANIMATION_TEMPLATE = `
   }
 `;
 
+/** @dynamic Needed for "ngAcceptInputType" members. */
 /**
  * `<mat-progress-spinner>` component.
  */
@@ -301,7 +302,7 @@ export class MatProgressSpinner extends _MatProgressSpinnerMixinBase implements 
   static ngAcceptInputType_value: number | string;
 }
 
-
+/** @dynamic Needed for "ngAcceptInputType" members. */
 /**
  * `<mat-spinner>` component.
  *

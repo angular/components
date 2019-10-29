@@ -55,7 +55,7 @@ export class TemplatePortalDirective extends CdkPortal {}
  */
 export type CdkPortalOutletAttachedRef = ComponentRef<any> | EmbeddedViewRef<any> | null;
 
-
+/** @dynamic Needed for "ngAcceptInputType" members. */
 /**
  * Directive version of a PortalOutlet. Because the directive *is* a PortalOutlet, portals can be
  * directly attached to it, enabling declarative use.

@@ -69,7 +69,7 @@ export class MatDatepickerInputEvent<D> {
   }
 }
 
-
+/** @dynamic Needed for "ngAcceptInputType" members. */
 /** Directive used to connect an input to a MatDatepicker. */
 @Directive({
   selector: 'input[matDatepicker]',

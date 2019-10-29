@@ -49,6 +49,7 @@ class CdkColumnDefBase {}
 const _CdkColumnDefBase: CanStickCtor&typeof CdkColumnDefBase =
     mixinHasStickyInput(CdkColumnDefBase);
 
+/** @dynamic Needed for "ngAcceptInputType" members. */
 /**
  * Column definition for the CDK table.
  * Defines a set of cells available for a table column.

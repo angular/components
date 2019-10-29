@@ -9,6 +9,7 @@
 import {CdkTreeNodeToggle} from '@angular/cdk/tree';
 import {Directive, Input} from '@angular/core';
 
+/** @dynamic Needed for "ngAcceptInputType" members. */
 /**
  * Wrapper for the CdkTree's toggle with Material design styles.
  */

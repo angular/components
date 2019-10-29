@@ -32,6 +32,7 @@ import {MAT_GRID_LIST, MatGridListBase} from './grid-list-base';
 
 const MAT_FIT_MODE = 'fit';
 
+/** @dynamic Needed for "ngAcceptInputType" members. */
 @Component({
   moduleId: module.id,
   selector: 'mat-grid-list',

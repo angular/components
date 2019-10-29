@@ -19,7 +19,7 @@ import {
 import {MatChip} from './chip';
 import {GridKeyManagerRow, NAVIGATION_KEYS} from './grid-key-manager';
 
-
+/** @dynamic Needed for "ngAcceptInputType" members. */
 /**
  * An extension of the MatChip component used with MatChipGrid and
  * the matChipInputFor directive.

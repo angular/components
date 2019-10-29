@@ -24,6 +24,7 @@ import {Subscription} from 'rxjs';
 /** Used to generate unique ID for each accordion item. */
 let nextId = 0;
 
+/** @dynamic Needed for "ngAcceptInputType" members. */
 /**
  * An basic directive expected to be extended and decorated as a component.  Sets up all
  * events and attributes needed to be managed by a CdkAccordion parent.

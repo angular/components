@@ -21,6 +21,7 @@ import {MDCRadioAdapter, MDCRadioFoundation} from '@material/radio';
 // Increasing integer for generating unique ids for radio components.
 let nextUniqueId = 0;
 
+/** @dynamic Needed for "ngAcceptInputType" members. */
 @Component({
   moduleId: module.id,
   selector: 'mat-radio-button',

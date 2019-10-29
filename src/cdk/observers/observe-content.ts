@@ -124,7 +124,7 @@ export class ContentObserver implements OnDestroy {
   }
 }
 
-
+/** @dynamic Needed for "ngAcceptInputType" members. */
 /**
  * Directive that triggers a callback whenever the content of
  * its associated element has changed.

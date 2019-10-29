@@ -82,6 +82,7 @@ export type ProgressBarMode = 'determinate' | 'indeterminate' | 'buffer' | 'quer
 /** Counter used to generate unique IDs for progress bars. */
 let progressbarId = 0;
 
+/** @dynamic Needed for "ngAcceptInputType" members. */
 /**
  * `<mat-progress-bar>` component.
  */

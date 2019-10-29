@@ -54,6 +54,7 @@ export const MAT_CHIP_LISTBOX_CONTROL_VALUE_ACCESSOR: any = {
   multi: true
 };
 
+/** @dynamic Needed for "ngAcceptInputType" members. */
 /**
  * An extension of the MatChipSet component that supports chip selection.
  * Used with MatChipOption chips.

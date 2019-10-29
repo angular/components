@@ -16,6 +16,7 @@ class MatTabLabelWrapperBase {}
 const _MatTabLabelWrapperMixinBase: CanDisableCtor & typeof MatTabLabelWrapperBase =
     mixinDisabled(MatTabLabelWrapperBase);
 
+/** @dynamic Needed for "ngAcceptInputType" members. */
 /**
  * Used in the `mat-tab-group` view to display tab labels.
  * @docs-private

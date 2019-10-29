@@ -37,6 +37,7 @@ export const MAT_MENU_SCROLL_STRATEGY_FACTORY_PROVIDER: Provider = {
   useFactory: MAT_MENU_SCROLL_STRATEGY_FACTORY,
 };
 
+/** @dynamic Needed for "ngAcceptInputType" members. */
 @Component({
   moduleId: module.id,
   selector: 'mat-menu',

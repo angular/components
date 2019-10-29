@@ -93,7 +93,7 @@ export class CdkOverlayOrigin {
       public elementRef: ElementRef) { }
 }
 
-
+/** @dynamic Needed for "ngAcceptInputType" members. */
 /**
  * Directive to facilitate declarative creation of an
  * Overlay using a FlexibleConnectedPositionStrategy.
