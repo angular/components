@@ -28,15 +28,17 @@ export class MatTabLabelWrapper extends BaseMatTabLabelWrapper
     implements MatInkBarItem, OnInit, OnDestroy {
   private _document: Document;
 
-  _foundation = new MatInkBarFoundation(this.elementRef.nativeElement, this._document);
+  _foundation: MatInkBarFoundation;
 
   /** Whether the ink bar should fit its width to the size of the tab label content. */
   @Input()
-  get fitInkBarToContent(): boolean { return this._foundation.fitToContent; }
-  set fitInkBarToContent(v: boolean) { this._foundation.fitToContent = coerceBooleanProperty(v); }
+  get fitInkBarToContent(): boolean { return this._foundation.getFitToContent(); }
+  set fitInkBarToContent(v: boolean) { this._foundation.setFitToContent(coerceBooleanProperty(v)); }
 
   constructor(public elementRef: ElementRef, @Inject(DOCUMENT) _document: any) {
     super(elementRef);
+    this._document = _document;
+    this._foundation = new MatInkBarFoundation(this.elementRef.nativeElement, this._document);
   }
 
   ngOnInit() {

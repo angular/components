@@ -127,7 +127,7 @@ export class MatTabLink extends _MatTabLinkBase implements MatInkBarItem, OnInit
     super(tabNavBar, elementRef, globalRippleOptions, tabIndex, focusMonitor, animationMode);
 
     tabNavBar._fitInkBarToContent.pipe(takeUntil(this._destroyed)).subscribe(fitInkBarToContent => {
-      this._foundation.fitToContent = fitInkBarToContent;
+      this._foundation.setFitToContent(fitInkBarToContent);
     });
   }
 

@@ -66,6 +66,7 @@ export class MatInkBarFoundation {
   private _foundation: MDCTabIndicatorFoundation;
   private _inkBarElement: HTMLElement;
   private _inkBarContentElement: HTMLElement;
+  private _fitToContent = false;
   private _adapter: MDCTabIndicatorAdapter = {
     addClass: className => {
       if (!this._destroyed) {
@@ -88,21 +89,6 @@ export class MatInkBarFoundation {
     }
   };
 
-  /**
-   * Whether the ink bar should be appended to the content, which will cause the ink bar
-   * to match the width of the content rather than the tab host element.
-   */
-  get fitToContent(): boolean { return this._fitToContent; }
-  set fitToContent(fitToContent: boolean) {
-    if (this._fitToContent !== fitToContent) {
-      this._fitToContent = fitToContent;
-      if (this._inkBarElement) {
-        this._appendInkBarElement();
-      }
-    }
-  }
-  private _fitToContent = false;
-
   constructor(private _hostElement: HTMLElement, private _document: Document) {
     this._foundation = new MDCSlidingTabIndicatorFoundation(this._adapter);
   }
@@ -124,7 +110,7 @@ export class MatInkBarFoundation {
 
   /** Initializes the foundation. */
   init() {
-    this._createInkBarElement(this._document);
+    this._createInkBarElement();
     this._foundation.init();
   }
 
@@ -139,10 +125,30 @@ export class MatInkBarFoundation {
     this._destroyed = true;
   }
 
+  /**
+   * Sets whether the ink bar should be appended to the content, which will cause the ink bar
+   * to match the width of the content rather than the tab host element.
+   */
+  setFitToContent(fitToContent: boolean) {
+    if (this._fitToContent !== fitToContent) {
+      this._fitToContent = fitToContent;
+      if (this._inkBarElement) {
+        this._appendInkBarElement();
+      }
+    }
+  }
+
+
+  /**
+   * Gets whether the ink bar should be appended to the content, which will cause the ink bar
+   * to match the width of the content rather than the tab host element.
+   */
+  getFitToContent(): boolean { return this._fitToContent; }
+
   /** Creates and appends the ink bar element. */
-  private _createInkBarElement(document: Document) {
-    this._inkBarElement = document.createElement('span');
-    this._inkBarContentElement = document.createElement('span');
+  private _createInkBarElement() {
+    this._inkBarElement = this._document.createElement('span');
+    this._inkBarContentElement = this._document.createElement('span');
 
     this._inkBarElement.className = 'mdc-tab-indicator';
     this._inkBarContentElement.className = 'mdc-tab-indicator__content' +
