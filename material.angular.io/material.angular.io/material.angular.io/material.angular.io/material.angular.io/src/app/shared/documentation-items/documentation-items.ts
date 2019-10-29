@@ -445,6 +445,14 @@ const DOCS: {[key: string]: DocCategory[]} = {
           examples: []
         },
         {
+          id: 'clipboard',
+          name: 'Clipboard',
+          summary: 'Helpers for working with the system clipboard.',
+          examples: [
+            'cdk-clipboard-overview'
+          ]
+        },
+        {
           id: 'drag-drop',
           name: 'Drag and Drop',
           summary: 'Directives enabling drag-and-drop interactions',
