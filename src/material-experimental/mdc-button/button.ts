@@ -27,7 +27,6 @@ import {
   MatButtonBase
 } from './button-base';
 
-/** @dynamic Needed for "ngAcceptInputType" members. */
 /**
  * Material Design button component. Users interact with a button to perform an action.
  * See https://material.io/components/buttons
@@ -62,7 +61,6 @@ export class MatButton extends MatButtonBase {
   static ngAcceptInputType_disableRipple: boolean | string;
 }
 
-/** @dynamic Needed for "ngAcceptInputType" members. */
 /**
  * Material Design button component for anchor elements. Anchor elements are used to provide
  * links for the user to navigate across different routes or pages.

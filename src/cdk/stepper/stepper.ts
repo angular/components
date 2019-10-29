@@ -104,7 +104,6 @@ export interface StepperOptions {
   displayDefaultIndicatorType?: boolean;
 }
 
-/** @dynamic Needed for "ngAcceptInputType" members. */
 @Component({
   moduleId: module.id,
   selector: 'cdk-step',
@@ -239,7 +238,6 @@ export class CdkStep implements OnChanges {
   static ngAcceptInputType_completed: boolean | string;
 }
 
-/** @dynamic Needed for "ngAcceptInputType" members. */
 @Directive({
   selector: '[cdkStepper]',
   exportAs: 'cdkStepper',

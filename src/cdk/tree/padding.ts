@@ -16,7 +16,6 @@ import {CdkTree, CdkTreeNode} from './tree';
 /** Regex used to split a string on its CSS units. */
 const cssUnitPattern = /([A-Za-z%]+)$/;
 
-/** @dynamic Needed for "ngAcceptInputType" members. */
 /**
  * Indent for the children tree dataNodes.
  * This directive will add left-padding to the node to show hierarchy.

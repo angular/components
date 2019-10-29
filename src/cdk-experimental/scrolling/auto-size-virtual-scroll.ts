@@ -427,7 +427,6 @@ export function _autoSizeVirtualScrollStrategyFactory(autoSizeDir: CdkAutoSizeVi
 }
 
 
-/** @dynamic Needed for "ngAcceptInputType" members. */
 /** A virtual scroll strategy that supports unknown or dynamic size items. */
 @Directive({
   selector: 'cdk-virtual-scroll-viewport[autosize]',

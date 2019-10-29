@@ -17,7 +17,6 @@ import {
 } from '@angular/cdk/table';
 import {ChangeDetectionStrategy, Component, Directive, ViewEncapsulation} from '@angular/core';
 
-/** @dynamic Needed for "ngAcceptInputType" members. */
 /**
  * Header row definition for the mat-table.
  * Captures the header row's template and other header properties such as the columns to display.
@@ -31,7 +30,6 @@ export class MatHeaderRowDef extends CdkHeaderRowDef {
   static ngAcceptInputType_sticky: boolean | string;
 }
 
-/** @dynamic Needed for "ngAcceptInputType" members. */
 /**
  * Footer row definition for the mat-table.
  * Captures the footer row's template and other footer properties such as the columns to display.

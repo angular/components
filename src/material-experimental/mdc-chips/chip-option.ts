@@ -31,7 +31,6 @@ export class MatChipSelectionChange {
     public isUserInput = false) { }
 }
 
-/** @dynamic Needed for "ngAcceptInputType" members. */
 /**
  * An extension of the MatChip component that supports chip selection.
  * Used with MatChipListbox.

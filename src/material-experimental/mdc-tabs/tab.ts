@@ -17,7 +17,6 @@ import {MatTab as BaseMatTab} from '@angular/material/tabs';
 import {MatTabContent} from './tab-content';
 import {MatTabLabel} from './tab-label';
 
-/** @dynamic Needed for "ngAcceptInputType" members. */
 @Component({
   moduleId: module.id,
   selector: 'mat-tab',

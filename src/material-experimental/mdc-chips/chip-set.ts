@@ -43,7 +43,6 @@ class MatChipSetBase {
 const _MatChipSetMixinBase: HasTabIndexCtor & typeof MatChipSetBase =
     mixinTabIndex(MatChipSetBase);
 
-/** @dynamic Needed for "ngAcceptInputType" members. */
 /**
  * Basic container component for the MatChip component.
  *

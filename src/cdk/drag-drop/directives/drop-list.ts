@@ -41,7 +41,6 @@ let _uniqueIdCounter = 0;
  */
 export interface CdkDropListInternal extends CdkDropList {}
 
-/** @dynamic Needed for "ngAcceptInputType" members. */
 /** Container that wraps a set of draggable items. */
 @Directive({
   selector: '[cdkDropList], cdk-drop-list',

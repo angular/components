@@ -85,7 +85,6 @@ const _MatChipRemoveMixinBase:
   typeof MatChipRemoveBase =
     mixinTabIndex(mixinDisabled(MatChipRemoveBase));
 
-/** @dynamic Needed for "ngAcceptInputType" members. */
 /**
  * Directive to remove the parent chip when the trailing icon is clicked or
  * when the ENTER key is pressed on it.

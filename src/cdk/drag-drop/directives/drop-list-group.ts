@@ -9,7 +9,6 @@
 import {Directive, OnDestroy, Input} from '@angular/core';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
 
-/** @dynamic Needed for "ngAcceptInputType" members. */
 /**
  * Declaratively connects sibling `cdkDropList` instances together. All of the `cdkDropList`
  * elements that are placed inside a `cdkDropListGroup` will be connected to each other

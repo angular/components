@@ -62,7 +62,6 @@ class MatInputBase {
 const _MatInputMixinBase: CanUpdateErrorStateCtor & typeof MatInputBase =
     mixinErrorState(MatInputBase);
 
-/** @dynamic Needed for "ngAcceptInputType" members. */
 /** Directive that allows a native input to work inside a `MatFormField`. */
 @Directive({
   selector: `input[matInput], textarea[matInput], select[matNativeControl],

@@ -35,7 +35,6 @@ import {coerceBooleanProperty} from '@angular/cdk/coercion';
 const _MatTreeNodeMixinBase: HasTabIndexCtor & CanDisableCtor & typeof CdkTreeNode =
     mixinTabIndex(mixinDisabled(CdkTreeNode));
 
-/** @dynamic Needed for "ngAcceptInputType" members. */
 /**
  * Wrapper for the CdkTree node with Material design styles.
  */
@@ -80,7 +79,6 @@ export class MatTreeNodeDef<T> extends CdkTreeNodeDef<T> {
   @Input('matTreeNode') data: T;
 }
 
-/** @dynamic Needed for "ngAcceptInputType" members. */
 /**
  * Wrapper for the CdkTree nested node with Material design styles.
  */

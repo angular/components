@@ -42,7 +42,6 @@ export type MatBadgePosition =
 /** Allowed size options for matBadgeSize */
 export type MatBadgeSize = 'small' | 'medium' | 'large';
 
-/** @dynamic Needed for "ngAcceptInputType" members. */
 /** Directive to display a text badge. */
 @Directive({
   selector: '[matBadge]',

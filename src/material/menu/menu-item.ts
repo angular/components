@@ -34,7 +34,6 @@ class MatMenuItemBase {}
 const _MatMenuItemMixinBase: CanDisableRippleCtor & CanDisableCtor & typeof MatMenuItemBase =
     mixinDisableRipple(mixinDisabled(MatMenuItemBase));
 
-/** @dynamic Needed for "ngAcceptInputType" members. */
 /**
  * This directive is intended to be used inside an mat-menu tag.
  * It exists mostly to set the role attribute.

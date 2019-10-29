@@ -81,7 +81,6 @@ class CdkHeaderRowDefBase extends BaseRowDef {}
 const _CdkHeaderRowDefBase: CanStickCtor&typeof CdkHeaderRowDefBase =
     mixinHasStickyInput(CdkHeaderRowDefBase);
 
-/** @dynamic Needed for "ngAcceptInputType" members. */
 /**
  * Header row definition for the CDK table.
  * Captures the header row's template and other header properties such as the columns to display.
@@ -110,7 +109,6 @@ class CdkFooterRowDefBase extends BaseRowDef {}
 const _CdkFooterRowDefBase: CanStickCtor&typeof CdkFooterRowDefBase =
     mixinHasStickyInput(CdkFooterRowDefBase);
 
-/** @dynamic Needed for "ngAcceptInputType" members. */
 /**
  * Footer row definition for the CDK table.
  * Captures the footer row's template and other footer properties such as the columns to display.

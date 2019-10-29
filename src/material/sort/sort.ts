@@ -60,7 +60,6 @@ class MatSortBase {}
 const _MatSortMixinBase: HasInitializedCtor & CanDisableCtor & typeof MatSortBase =
     mixinInitialized(mixinDisabled(MatSortBase));
 
-/** @dynamic Needed for "ngAcceptInputType" members. */
 /** Container for MatSortables to manage the sort state and provide default sort parameters. */
 @Directive({
   selector: '[matSort]',

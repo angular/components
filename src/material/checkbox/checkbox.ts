@@ -101,7 +101,7 @@ const _MatCheckboxMixinBase:
     typeof MatCheckboxBase =
         mixinTabIndex(mixinColor(mixinDisableRipple(mixinDisabled(MatCheckboxBase))));
 
-/** @dynamic Needed for "ngAcceptInputType" members. */
+
 /**
  * A material design checkbox component. Supports all of the functionality of an HTML5 checkbox,
  * and exposes a similar API. A MatCheckbox can be either checked, unchecked, indeterminate, or

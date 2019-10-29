@@ -115,7 +115,7 @@ export class MatDrawerContent extends CdkScrollable implements AfterContentInit 
   }
 }
 
-/** @dynamic Needed for "ngAcceptInputType" members. */
+
 /**
  * This component corresponds to a drawer that can be opened on the drawer container.
  */
@@ -459,7 +459,7 @@ export class MatDrawer implements AfterContentInit, AfterContentChecked, OnDestr
   static ngAcceptInputType_opened: boolean | string;
 }
 
-/** @dynamic Needed for "ngAcceptInputType" members. */
+
 /**
  * `<mat-drawer-container>` component.
  *

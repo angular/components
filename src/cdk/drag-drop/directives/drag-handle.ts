@@ -12,7 +12,6 @@ import {Subject} from 'rxjs';
 import {CDK_DRAG_PARENT} from '../drag-parent';
 import {toggleNativeDragInteractions} from '../drag-styling';
 
-/** @dynamic Needed for "ngAcceptInputType" members. */
 /** Handle that can be used to drag and CdkDrag instance. */
 @Directive({
   selector: '[cdkDragHandle]',

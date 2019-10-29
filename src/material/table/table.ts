@@ -9,7 +9,6 @@
 import {CDK_TABLE_TEMPLATE, CdkTable} from '@angular/cdk/table';
 import {ChangeDetectionStrategy, Component, ViewEncapsulation} from '@angular/core';
 
-/** @dynamic Needed for "ngAcceptInputType" members. */
 /**
  * Wrapper for the CdkTable with Material design styles.
  */

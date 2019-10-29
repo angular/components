@@ -59,7 +59,6 @@ export interface MatOptionParentComponent {
 export const MAT_OPTION_PARENT_COMPONENT =
     new InjectionToken<MatOptionParentComponent>('MAT_OPTION_PARENT_COMPONENT');
 
-/** @dynamic Needed for "ngAcceptInputType" members. */
 /**
  * Single option inside of a `<mat-select>` element.
  */

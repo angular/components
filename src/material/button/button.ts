@@ -58,7 +58,6 @@ class MatButtonBase {
 const _MatButtonMixinBase: CanDisableRippleCtor & CanDisableCtor & CanColorCtor &
     typeof MatButtonBase = mixinColor(mixinDisabled(mixinDisableRipple(MatButtonBase)));
 
-/** @dynamic Needed for "ngAcceptInputType" members. */
 /**
  * Material design button.
  */
@@ -141,7 +140,6 @@ export class MatButton extends _MatButtonMixinBase
   static ngAcceptInputType_disableRipple: boolean | string;
 }
 
-/** @dynamic Needed for "ngAcceptInputType" members. */
 /**
  * Material design anchor button.
  */

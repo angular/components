@@ -60,7 +60,6 @@ class MatPaginatorBase {}
 const _MatPaginatorBase: CanDisableCtor & HasInitializedCtor & typeof MatPaginatorBase =
     mixinDisabled(mixinInitialized(MatPaginatorBase));
 
-/** @dynamic Needed for "ngAcceptInputType" members. */
 /**
  * Component to provide navigation between paged information. Displays the size of the current
  * page, user-selectable options to change that size, what items are being shown, and

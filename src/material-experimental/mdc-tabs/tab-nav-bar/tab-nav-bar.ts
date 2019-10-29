@@ -35,7 +35,7 @@ import {coerceBooleanProperty} from '@angular/cdk/coercion';
 import {BehaviorSubject, Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 
-/** @dynamic Needed for "ngAcceptInputType" members. */
+
 /**
  * Navigation component matching the styles of the tab group header.
  * Provides anchored navigation with animated ink bar.
@@ -95,7 +95,6 @@ export class MatTabNav extends _MatTabNavBase implements AfterContentInit {
   static ngAcceptInputType_selectedIndex: number | string;
 }
 
-/** @dynamic Needed for "ngAcceptInputType" members. */
 /**
  * Link inside of a `mat-tab-nav-bar`.
  */

@@ -68,7 +68,6 @@ export abstract class _MatTabHeaderBase extends MatPaginatedTabHeader implements
   }
 }
 
-/** @dynamic Needed for "ngAcceptInputType" members. */
 /**
  * The header of the tab group which displays a list of all the tabs in the tab group. Includes
  * an ink bar that follows the currently selected tab. When the tabs list's width exceeds the

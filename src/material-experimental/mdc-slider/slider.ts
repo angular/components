@@ -71,7 +71,6 @@ export class MatSliderChange {
   value: number;
 }
 
-/** @dynamic Needed for "ngAcceptInputType" members. */
 @Component({
   moduleId: module.id,
   selector: 'mat-slider',

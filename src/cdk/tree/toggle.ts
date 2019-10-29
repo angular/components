@@ -11,7 +11,6 @@ import {Directive, HostListener, Input} from '@angular/core';
 
 import {CdkTree, CdkTreeNode} from './tree';
 
-/** @dynamic Needed for "ngAcceptInputType" members. */
 /**
  * Node toggle to expand/collapse the node.
  */

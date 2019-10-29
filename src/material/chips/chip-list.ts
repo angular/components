@@ -68,7 +68,7 @@ export class MatChipListChange {
     public value: any) { }
 }
 
-/** @dynamic Needed for "ngAcceptInputType" members. */
+
 /**
  * A material design chips component (named ChipList for its similarity to the List component).
  */

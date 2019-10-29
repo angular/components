@@ -471,7 +471,6 @@ export class MatMenu extends _MatMenuBase {}
 // * _MatMenu - the actual menu component implementation with the Angular metadata that should
 // be tree shaken away for MDC.
 
-/** @dynamic Needed for "ngAcceptInputType" members. */
 /** @docs-public MatMenu */
 @Component({
   moduleId: module.id,

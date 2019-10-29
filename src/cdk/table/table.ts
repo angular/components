@@ -145,7 +145,6 @@ export interface RenderRow<T> {
   rowDef: CdkRowDef<T>;
 }
 
-/** @dynamic Needed for "ngAcceptInputType" members. */
 /**
  * A data table that can render a header row, data rows, and a footer row.
  * Uses the dataSource input to determine the data to be rendered. The data can be provided either

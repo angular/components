@@ -34,7 +34,7 @@ import {MatDatepickerIntl} from './datepicker-intl';
 })
 export class MatDatepickerToggleIcon {}
 
-/** @dynamic Needed for "ngAcceptInputType" members. */
+
 @Component({
   moduleId: module.id,
   selector: 'mat-datepicker-toggle',

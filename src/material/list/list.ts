@@ -43,7 +43,6 @@ class MatListItemBase {}
 const _MatListItemMixinBase: CanDisableRippleCtor & typeof MatListItemBase =
     mixinDisableRipple(MatListItemBase);
 
-/** @dynamic Needed for "ngAcceptInputType" members. */
 @Component({
   moduleId: module.id,
   selector: 'mat-nav-list',
@@ -74,7 +73,6 @@ export class MatNavList extends _MatListMixinBase implements CanDisableRipple, O
   static ngAcceptInputType_disableRipple: boolean | string;
 }
 
-/** @dynamic Needed for "ngAcceptInputType" members. */
 @Component({
   moduleId: module.id,
   selector: 'mat-list, mat-action-list',
@@ -155,7 +153,6 @@ export class MatListIconCssMatStyler {}
 })
 export class MatListSubheaderCssMatStyler {}
 
-/** @dynamic Needed for "ngAcceptInputType" members. */
 /** An item within a Material Design list. */
 @Component({
   moduleId: module.id,

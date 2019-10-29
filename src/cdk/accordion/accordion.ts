@@ -13,7 +13,6 @@ import {Subject} from 'rxjs';
 /** Used to generate unique ID for each accordion. */
 let nextId = 0;
 
-/** @dynamic Needed for "ngAcceptInputType" members. */
 /**
  * Directive whose purpose is to manage the expanded state of CdkAccordionItem children.
  */

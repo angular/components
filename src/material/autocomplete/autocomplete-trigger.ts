@@ -101,7 +101,7 @@ export function getMatAutocompleteMissingPanelError(): Error {
                'you\'re attempting to open it after the ngAfterContentInit hook.');
 }
 
-/** @dynamic Needed for "ngAcceptInputType" members. */
+
 @Directive({
   selector: `input[matAutocomplete], textarea[matAutocomplete]`,
   host: {

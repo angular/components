@@ -19,7 +19,6 @@ const _MatOptgroupMixinBase: CanDisableCtor & typeof MatOptgroupBase =
 // Counter for unique group ids.
 let _uniqueOptgroupIdCounter = 0;
 
-/** @dynamic Needed for "ngAcceptInputType" members. */
 /**
  * Component that is used to group instances of `mat-option`.
  */

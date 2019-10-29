@@ -42,7 +42,6 @@ const _MatTabMixinBase: CanDisableCtor & typeof MatTabBase =
  */
 export const MAT_TAB_GROUP = new InjectionToken<any>('MAT_TAB_GROUP');
 
-/** @dynamic Needed for "ngAcceptInputType" members. */
 @Component({
   moduleId: module.id,
   selector: 'mat-tab',

@@ -8,7 +8,6 @@
 import {CdkTreeNodePadding} from '@angular/cdk/tree';
 import {Directive, Input} from '@angular/core';
 
-/** @dynamic Needed for "ngAcceptInputType" members. */
 /**
  * Wrapper for the CdkTree padding with Material design styles.
  */

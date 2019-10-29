@@ -356,7 +356,6 @@ export class FocusTrapFactory {
   }
 }
 
-/** @dynamic Needed for "ngAcceptInputType" members. */
 /** Directive for trapping focus within a region. */
 @Directive({
   selector: '[cdkTrapFocus]',

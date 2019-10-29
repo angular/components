@@ -9,7 +9,6 @@
 import {Component, ChangeDetectionStrategy, ViewEncapsulation} from '@angular/core';
 import {MatMenuItem as BaseMatMenuItem} from '@angular/material/menu';
 
-/** @dynamic Needed for "ngAcceptInputType" members. */
 /**
  * This directive is intended to be used inside an mat-menu tag.
  * It exists mostly to set the role attribute.

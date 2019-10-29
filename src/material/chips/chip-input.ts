@@ -26,7 +26,6 @@ export interface MatChipInputEvent {
 // Increasing integer for generating unique ids.
 let nextUniqueId = 0;
 
-/** @dynamic Needed for "ngAcceptInputType" members. */
 /**
  * Directive that adds chip-specific behaviors to an input element inside `<mat-form-field>`.
  * May be placed inside or outside of an `<mat-chip-list>`.

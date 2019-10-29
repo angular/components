@@ -76,7 +76,6 @@ const _MatSlideToggleMixinBase:
     typeof MatSlideToggleBase =
         mixinTabIndex(mixinColor(mixinDisableRipple(mixinDisabled(MatSlideToggleBase)), 'accent'));
 
-/** @dynamic Needed for "ngAcceptInputType" members. */
 /** Represents a slidable "switch" toggle that can be moved between on and off. */
 @Component({
   moduleId: module.id,

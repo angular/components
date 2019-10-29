@@ -92,7 +92,6 @@ const funcIriAttributeSelector = funcIriAttributes.map(attr => `[${attr}]`).join
 /** Regex that can be used to extract the id out of a FuncIRI. */
 const funcIriPattern = /^url\(['"]?#(.*?)['"]?\)$/;
 
-/** @dynamic Needed for "ngAcceptInputType" members. */
 /**
  * Component to display an icon. It can be used in the following ways:
  *

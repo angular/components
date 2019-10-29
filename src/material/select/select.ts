@@ -188,7 +188,7 @@ const _MatSelectMixinBase:
 })
 export class MatSelectTrigger {}
 
-/** @dynamic Needed for "ngAcceptInputType" members. */
+
 @Component({
   moduleId: module.id,
   selector: 'mat-select',

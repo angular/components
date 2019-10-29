@@ -19,7 +19,6 @@ import {
 } from './accordion-base';
 import {MatExpansionPanelHeader} from './expansion-panel-header';
 
-/** @dynamic Needed for "ngAcceptInputType" members. */
 /**
  * Directive for a Material Design Accordion.
  */

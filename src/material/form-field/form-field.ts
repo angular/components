@@ -94,7 +94,7 @@ export interface MatFormFieldDefaultOptions {
 export const MAT_FORM_FIELD_DEFAULT_OPTIONS =
     new InjectionToken<MatFormFieldDefaultOptions>('MAT_FORM_FIELD_DEFAULT_OPTIONS');
 
-/** @dynamic Needed for "ngAcceptInputType" members. */
+
 /** Container for form controls that applies Material Design styling and behavior. */
 @Component({
   moduleId: module.id,

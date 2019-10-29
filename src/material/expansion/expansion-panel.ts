@@ -69,7 +69,6 @@ export interface MatExpansionPanelDefaultOptions {
 export const MAT_EXPANSION_PANEL_DEFAULT_OPTIONS =
     new InjectionToken<MatExpansionPanelDefaultOptions>('MAT_EXPANSION_PANEL_DEFAULT_OPTIONS');
 
-/** @dynamic Needed for "ngAcceptInputType" members. */
 /**
  * `<mat-expansion-panel>`
  *
