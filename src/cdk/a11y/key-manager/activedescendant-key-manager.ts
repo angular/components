@@ -40,12 +40,17 @@ export class ActiveDescendantKeyManager<T> extends ListKeyManager<Highlightable 
   setActiveItem(item: T): void;
 
   setActiveItem(index: any): void {
+    const previousIndex = this.activeItemIndex;
+
     if (this.activeItem) {
       this.activeItem.setInactiveStyles();
     }
-    super.setActiveItem(index);
+    super.updateActiveItem(index);
     if (this.activeItem) {
       this.activeItem.setActiveStyles();
+    }
+    if (previousIndex !== this.activeItemIndex) {
+      this.change.next(this.activeItemIndex);
     }
   }
 
