@@ -109,6 +109,7 @@ searchAndReplace(`[formatProperty + "_ivy_ngcc"]`, '[formatProperty]',
 searchAndReplace(/angular_compiler_options = {/, `$&
         "strictTemplates": True,
         "strictDomLocalRefTypes ": False,
+        "strictAttributeTypes": False,
         "strictDomEventTypes": False,`, 'node_modules/@angular/bazel/src/ng_module.bzl');
 
 /**
