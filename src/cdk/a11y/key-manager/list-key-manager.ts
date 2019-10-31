@@ -265,7 +265,7 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
   }
 
   /** Index of the currently active item. */
-  get activeItemIndex(): number | null {
+  get activeItemIndex(): number {
     return this._activeItemIndex;
   }
 
