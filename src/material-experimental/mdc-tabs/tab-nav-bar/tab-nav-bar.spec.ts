@@ -358,32 +358,32 @@ describe('MatTabNavBar', () => {
 });
 
 describe('MatTabNavBar with a default config', () => {
-      let fixture: ComponentFixture<TabLinkWithTabIndexBinding>;
+  let fixture: ComponentFixture<TabLinkWithTabIndexBinding>;
 
-      beforeEach(fakeAsync(() => {
-        TestBed.configureTestingModule({
-          imports: [MatTabsModule, BrowserAnimationsModule],
-          declarations: [TabLinkWithTabIndexBinding],
-          providers: [
-            {provide: MAT_TABS_CONFIG, useValue: {fitInkBarToContent: true}}
-          ]
-        });
+  beforeEach(fakeAsync(() => {
+    TestBed.configureTestingModule({
+      imports: [MatTabsModule, BrowserAnimationsModule],
+      declarations: [TabLinkWithTabIndexBinding],
+      providers: [
+        {provide: MAT_TABS_CONFIG, useValue: {fitInkBarToContent: true}}
+      ]
+    });
 
-        TestBed.compileComponents();
-      }));
+    TestBed.compileComponents();
+  }));
 
-      beforeEach(() => {
-        fixture = TestBed.createComponent(TabLinkWithTabIndexBinding);
-        fixture.detectChanges();
-      });
-
-      it('should set whether the ink bar fits to content', () => {
-        const tabElement = fixture.nativeElement.querySelector('.mdc-tab');
-        const contentElement = tabElement.querySelector('.mdc-tab__content');
-        const indicatorElement = tabElement.querySelector('.mdc-tab-indicator');
-        expect(indicatorElement.parentElement).toBe(contentElement);
-      });
+  beforeEach(() => {
+    fixture = TestBed.createComponent(TabLinkWithTabIndexBinding);
+    fixture.detectChanges();
   });
+
+  it('should set whether the ink bar fits to content', () => {
+    const tabElement = fixture.nativeElement.querySelector('.mdc-tab');
+    const contentElement = tabElement.querySelector('.mdc-tab__content');
+    const indicatorElement = tabElement.querySelector('.mdc-tab-indicator');
+    expect(indicatorElement.parentElement).toBe(contentElement);
+  });
+});
 
 
 @Component({
