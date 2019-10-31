@@ -70,5 +70,7 @@ export class MatTabGroup extends _MatTabGroupBase {
               @Inject(MAT_TABS_CONFIG) @Optional() defaultConfig?: MatTabsConfig,
               @Optional() @Inject(ANIMATION_MODULE_TYPE) animationMode?: string) {
     super(elementRef, changeDetectorRef, defaultConfig, animationMode);
+    this.fitInkBarToContent = defaultConfig && defaultConfig.fitInkBarToContent != null ?
+        defaultConfig.fitInkBarToContent : false;
   }
 }
