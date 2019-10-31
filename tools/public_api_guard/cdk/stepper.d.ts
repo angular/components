@@ -46,7 +46,7 @@ export declare class CdkStepper implements AfterViewInit, OnDestroy {
     readonly steps: QueryList<CdkStep>;
     constructor(_dir: Directionality, _changeDetectorRef: ChangeDetectorRef, _elementRef?: ElementRef<HTMLElement> | undefined, _document?: any);
     _getAnimationDirection(index: number): StepContentPositionState;
-    _getFocusIndex(): number | null;
+    _getFocusIndex(): number;
     _getIndicatorType(index: number, state?: StepState): StepState;
     _getStepContentId(i: number): string;
     _getStepLabelId(i: number): string;

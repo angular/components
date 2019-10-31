@@ -107,7 +107,7 @@ export declare function isFakeMousedownFromScreenReader(event: MouseEvent): bool
 
 export declare class ListKeyManager<T extends ListKeyManagerOption> {
     readonly activeItem: T | null;
-    readonly activeItemIndex: number | null;
+    readonly activeItemIndex: number;
     change: Subject<number>;
     tabOut: Subject<void>;
     constructor(_items: QueryList<T> | T[]);
