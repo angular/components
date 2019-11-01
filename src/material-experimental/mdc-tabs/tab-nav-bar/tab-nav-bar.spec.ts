@@ -337,6 +337,7 @@ describe('MatTabNavBar', () => {
       const tabElement = fixture.nativeElement.querySelector('.mdc-tab');
       const contentElement = tabElement.querySelector('.mdc-tab__content');
       const indicatorElement = tabElement.querySelector('.mdc-tab-indicator');
+      expect(indicatorElement.parentElement).toBeTruthy();
       expect(indicatorElement.parentElement).toBe(contentElement);
     });
 
@@ -346,12 +347,14 @@ describe('MatTabNavBar', () => {
 
       const tabElement = fixture.nativeElement.querySelector('.mdc-tab');
       const indicatorElement = tabElement.querySelector('.mdc-tab-indicator');
+      expect(indicatorElement.parentElement).toBeTruthy();
       expect(indicatorElement.parentElement).toBe(tabElement);
 
       fixture.componentInstance.fitInkBarToContent = true;
       fixture.detectChanges();
 
       const contentElement = tabElement.querySelector('.mdc-tab__content');
+      expect(indicatorElement.parentElement).toBeTruthy();
       expect(indicatorElement.parentElement).toBe(contentElement);
     });
   });
@@ -381,6 +384,7 @@ describe('MatTabNavBar with a default config', () => {
     const tabElement = fixture.nativeElement.querySelector('.mdc-tab');
     const contentElement = tabElement.querySelector('.mdc-tab__content');
     const indicatorElement = tabElement.querySelector('.mdc-tab-indicator');
+    expect(indicatorElement.parentElement).toBeTruthy();
     expect(indicatorElement.parentElement).toBe(contentElement);
   });
 });
