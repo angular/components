@@ -17,8 +17,8 @@ $mat-chip-remove-font-size: 18px;
 
 
 // Applies the background color for a ripple element.
-// If the color value provided is not a Sass color, 
-// we assume that we've been given a CSS variable. 
+// If the color value provided is not a Sass color,
+// we assume that we've been given a CSS variable.
 // Since we can't perform alpha-blending on a CSS variable,
 // we instead add the opacity directly to the ripple element.
 @mixin _mat-chips-ripple-background($palette, $default-contrast, $opacity) {
