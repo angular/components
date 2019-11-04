@@ -252,7 +252,8 @@ export class MatCheckbox implements AfterViewInit, OnDestroy, ControlValueAccess
       this.color = this._options.color;
     }
 
-    // TODO: Remove this after the `_clickAction` parameter is removed as an injection parameter.
+    // @breaking-change 10.0.0: Remove this after the `_clickAction` parameter is removed as an
+    // injection parameter.
     this._clickAction = this._clickAction || this._options.clickAction;
   }
 
