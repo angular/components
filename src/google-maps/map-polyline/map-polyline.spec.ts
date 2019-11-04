@@ -87,8 +87,8 @@ describe('MapPolyline', () => {
     createPolylineConstructorSpy(polylineSpy).and.callThrough();
 
     const fixture = TestBed.createComponent(TestApp);
-    const polylineComponent =
-        fixture.debugElement.query(By.directive(MapPolyline))!.injector.get<MapPolyline>(MapPolyline);
+    const polylineComponent = fixture.debugElement.query(By.directive(
+        MapPolyline))!.injector.get<MapPolyline>(MapPolyline);
     fixture.detectChanges();
 
     polylineSpy.getDraggable.and.returnValue(true);
