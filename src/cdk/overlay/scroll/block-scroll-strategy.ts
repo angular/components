@@ -9,6 +9,7 @@
 import {ScrollStrategy} from './scroll-strategy';
 import {ViewportRuler} from '@angular/cdk/scrolling';
 import {coerceCssPixelValue} from '@angular/cdk/coercion';
+import {supportsScrollBehavior} from '@angular/cdk/platform';
 
 /**
  * Extended `CSSStyleDeclaration` that includes `scrollBehavior` which isn't part of the
@@ -60,8 +61,8 @@ export class BlockScrollStrategy implements ScrollStrategy {
       const body = this._document.body!;
       const htmlStyle = html.style as ScrollBehaviorCSSStyleDeclaration;
       const bodyStyle = body.style as ScrollBehaviorCSSStyleDeclaration;
-      const previousHtmlScrollBehavior = htmlStyle.scrollBehavior || '';
-      const previousBodyScrollBehavior = bodyStyle.scrollBehavior || '';
+      const previousHtmlScrollBehavior = htmlStyle.scrollBehavior;
+      const previousBodyScrollBehavior = bodyStyle.scrollBehavior;
 
       this._isEnabled = false;
 
@@ -71,7 +72,9 @@ export class BlockScrollStrategy implements ScrollStrategy {
 
       // Disable user-defined smooth scrolling temporarily while we restore the scroll position.
       // See https://developer.mozilla.org/en-US/docs/Web/CSS/scroll-behavior
-      htmlStyle.scrollBehavior = bodyStyle.scrollBehavior = 'auto';
+      if (supportsScrollBehavior()) {
+        htmlStyle.scrollBehavior = bodyStyle.scrollBehavior = 'auto';
+      }
 
       window.scroll(this._previousScrollPosition.left, this._previousScrollPosition.top);
 
