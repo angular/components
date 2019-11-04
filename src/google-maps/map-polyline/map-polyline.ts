@@ -10,14 +10,12 @@
 /// <reference types="googlemaps" />
 
 import {
-  ChangeDetectionStrategy,
-  Component,
+  Directive,
   EventEmitter,
   Input,
   OnDestroy,
   OnInit,
   Output,
-  ViewEncapsulation
 } from '@angular/core';
 import {BehaviorSubject, combineLatest, Observable, Subject} from 'rxjs';
 import {map, take, takeUntil} from 'rxjs/operators';
@@ -28,12 +26,8 @@ import {GoogleMap} from '../google-map/google-map';
  * Angular component that renders a Google Maps Polyline via the Google Maps JavaScript API.
  * @see developers.google.com/maps/documentation/javascript/reference/polygon#Polyline
  */
-@Component({
-  moduleId: module.id,
+@Directive({
   selector: 'map-polyline',
-  template: '<ng-content></ng-content>',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  encapsulation: ViewEncapsulation.None,
 })
 export class MapPolyline implements OnInit, OnDestroy {
   @Input()
@@ -107,7 +101,7 @@ export class MapPolyline implements OnInit, OnDestroy {
       new BehaviorSubject<google.maps.MVCArray<google.maps.LatLng>|google.maps.LatLng[]|
                           google.maps.LatLngLiteral[]|undefined>(undefined);
 
-  private readonly _destroy = new Subject<void>();
+  private readonly _destroyed = new Subject<void>();
 
   private readonly _listeners: google.maps.MapsEventListener[] = [];
 
@@ -129,8 +123,8 @@ export class MapPolyline implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this._destroy.next();
-    this._destroy.complete();
+    this._destroyed.next();
+    this._destroyed.complete();
     for (let listener of this._listeners) {
       listener.remove();
     }
@@ -177,13 +171,13 @@ export class MapPolyline implements OnInit, OnDestroy {
   }
 
   private _watchForOptionsChanges() {
-    this._options.pipe(takeUntil(this._destroy)).subscribe(options => {
+    this._options.pipe(takeUntil(this._destroyed)).subscribe(options => {
       this._polyline.setOptions(options);
     });
   }
 
   private _watchForPathChanges() {
-    this._path.pipe(takeUntil(this._destroy)).subscribe(path => {
+    this._path.pipe(takeUntil(this._destroyed)).subscribe(path => {
       if (path) {
         this._polyline.setPath(path);
       }
