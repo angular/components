@@ -7,20 +7,22 @@
 // we assume that we've been given a CSS variable.
 // Since we can't perform alpha-blending, nor use any Sass color functions on a CSS variable,
 // we instead remove background color from mat-slide-toggle element itself
-// and utilize the ::before pseudo element by adding background color and opacity to it instead.
+// and utilize the ::before pseudo-element by adding background color and opacity to it instead.
+// We are using pseudo-element because setting opacity directly to mat-slide-toggle-bar
+// Would affect mat-slide-toggle-thumb.
 @mixin _mat-slide-toggle-background-opacity($palette, $thumb-checked-hue, $opacity) {
   $background-color: mat-color($palette, $thumb-checked-hue, $opacity);
   @if (type-of($background-color) != color) {
     background-color: unset;
 
     &::before {
-      position: absolute;
       content: '';
-      width: 100%;
-      height: 100%;
+      position: absolute;
       top: 0;
+      bottom: 0;
       left: 0;
-      border-radius: 8px;
+      right: 0;
+      border-radius: inherit;
       background-color: $background-color;
       opacity: $opacity;
     }
