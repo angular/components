@@ -3,6 +3,7 @@ entryPoints = [
     "autocomplete/testing",
     "badge",
     "bottom-sheet",
+    "bottom-sheet/testing",
     "button",
     "button/testing",
     "button-toggle",
