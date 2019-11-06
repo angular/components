@@ -59,7 +59,7 @@ EXAMPLE_PACKAGES = [
 
 ng_module(
     name = "components-examples",
-    srcs = glob(["**/*.ts"]) + [":example-module.ts"],
+    srcs = glob(["*.ts"]) + [":example-module.ts"],
     module_name = "@angular/components-examples",
     deps = EXAMPLE_PACKAGES,
 )
