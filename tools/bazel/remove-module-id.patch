@@ -1,0 +1,24 @@
+diff --git node_modules/@angular/compiler-cli/src/transformers/inline_resources.js node_modules/@angular/compiler-cli/src/transformers/inline_resources.js
+index 993aedc..e877a94 100644
+--- node_modules/@angular/compiler-cli/src/transformers/inline_resources.js
++++ node_modules/@angular/compiler-cli/src/transformers/inline_resources.js
+@@ -78,6 +78,9 @@
+                 arg['styles'] = styles;
+                 delete arg['styleUrls'];
+             }
++            if (arg['moduleId']) {
++                delete arg['moduleId'];
++            }
+             return arg;
+         };
+         return InlineResourcesMetadataTransformer;
+@@ -271,6 +274,9 @@
+                     var template = loader.get(prop.initializer.text);
+                     newProperties.push(ts.updatePropertyAssignment(prop, ts.createIdentifier('template'), ts.createLiteral(template)));
+                     break;
++                case 'moduleId':
++                    // we don't want to add "moduleId" to the new object.
++                    break;
+                 default:
+                     newProperties.push(prop);
+             }

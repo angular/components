@@ -49,6 +49,7 @@ yarn_install(
         "//:tools/bazel/flat_module_factory_resolution.patch",
         "//:tools/bazel/manifest_externs_hermeticity.patch",
         "//:tools/bazel/postinstall-patches.js",
+        "//:tools/bazel/remove-module-id.patch",
         "//:tools/bazel/rollup_windows_arguments.patch",
         "//:tools/npm/check-npm.js",
     ],

@@ -112,6 +112,9 @@ searchAndReplace(/angular_compiler_options = {/, `$&
         "strictAttributeTypes": False,
         "strictDomEventTypes": False,`, 'node_modules/@angular/bazel/src/ng_module.bzl');
 
+// Workaround until https://github.com/angular/angular/pull/33621 has been fixed.
+shelljs.cat(path.join(__dirname, './remove-module-id.patch')).exec('patch -p0');
+
 /**
  * Reads the specified file and replaces matches of the search expression
  * with the given replacement. Throws if no changes were made.
