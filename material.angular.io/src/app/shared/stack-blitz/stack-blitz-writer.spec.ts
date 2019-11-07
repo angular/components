@@ -1,6 +1,6 @@
 import {HttpClientTestingModule, HttpTestingController} from '@angular/common/http/testing';
 import {async, fakeAsync, flushMicrotasks, inject, TestBed} from '@angular/core/testing';
-import {ExampleData} from '@angular/material-examples';
+import {ExampleData} from '@angular/components-examples';
 import {StackBlitzWriter} from './stack-blitz-writer';
 
 

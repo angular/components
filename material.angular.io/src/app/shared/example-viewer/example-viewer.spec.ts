@@ -8,7 +8,7 @@ import {MatInputModule} from '@angular/material/input';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import {MatSnackBar} from '@angular/material/snack-bar';
 
-import {EXAMPLE_COMPONENTS} from '@angular/material-examples';
+import {EXAMPLE_COMPONENTS} from '@angular/components-examples';
 import {By} from '@angular/platform-browser';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {DocsAppTestingModule} from '../../testing/testing-module';
