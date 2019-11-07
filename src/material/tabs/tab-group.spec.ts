@@ -65,6 +65,21 @@ describe('MatTabGroup', () => {
       checkSelectedIndex(2, fixture);
     });
 
+    it('should not change selected index when canActivate return false', fakeAsync(() => {
+      let component = fixture.componentInstance;
+      component.selectedIndex = 0;
+      component.canActivate = () => false;
+
+      fixture.detectChanges();
+
+      let tabLabel = fixture.debugElement.queryAll(By.css('.mat-tab-label'))[1];
+      tabLabel.nativeElement.click();
+      fixture.detectChanges();
+      tick();
+
+      expect(component.selectedIndex).toBe(0);
+    }));
+
     it('should support two-way binding for selectedIndex', fakeAsync(() => {
       let component = fixture.componentInstance;
       component.selectedIndex = 0;
@@ -680,6 +695,7 @@ describe('nested MatTabGroup with enabled animations', () => {
     <mat-tab-group class="tab-group"
         [(selectedIndex)]="selectedIndex"
         [headerPosition]="headerPosition"
+        [canActivate]="canActivate"
         [disableRipple]="disableRipple"
         (animationDone)="animationDone()"
         (focusChange)="handleFocus($event)"
@@ -702,6 +718,7 @@ describe('nested MatTabGroup with enabled animations', () => {
 class SimpleTabsTestApp {
   @ViewChildren(MatTab) tabs: QueryList<MatTab>;
   selectedIndex: number = 1;
+  canActivate: Function = () => true;
   focusEvent: any;
   selectEvent: any;
   disableRipple: boolean = false;

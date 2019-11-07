@@ -142,6 +142,11 @@ export abstract class _MatTabGroupBase extends _MatTabGroupMixinBase implements 
   @Input()
   disablePagination: boolean;
 
+  /**
+   * a pass down function that determine if tab can be switch, by default it will return true.
+   */
+  @Input() canActivate: Function = () => true;
+
   /** Background color of the tab group. */
   @Input()
   get backgroundColor(): ThemePalette { return this._backgroundColor; }
@@ -367,7 +372,7 @@ export abstract class _MatTabGroupBase extends _MatTabGroupMixinBase implements 
 
   /** Handle click events, setting new selected index if appropriate. */
   _handleClick(tab: MatTab, tabHeader: MatTabGroupBaseHeader, index: number) {
-    if (!tab.disabled) {
+    if (!tab.disabled && this.canActivate()) {
       this.selectedIndex = tabHeader.focusIndex = index;
     }
   }
