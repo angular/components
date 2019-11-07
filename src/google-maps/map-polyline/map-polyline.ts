@@ -44,57 +44,57 @@ export class MapPolyline implements OnInit, OnDestroy {
   /**
    * @see developers.google.com/maps/documentation/javascript/reference/polygon#Polyline.click
    */
-  @Output() mapClick = new EventEmitter<google.maps.PolyMouseEvent>();
+  @Output() polylineClick = new EventEmitter<google.maps.PolyMouseEvent>();
 
   /**
    * @see developers.google.com/maps/documentation/javascript/reference/polygon#Polyline.dblclick
    */
-  @Output() mapDblclick = new EventEmitter<google.maps.PolyMouseEvent>();
+  @Output() polylineDblclick = new EventEmitter<google.maps.PolyMouseEvent>();
 
   /**
    * @see developers.google.com/maps/documentation/javascript/reference/polygon#Polyline.drag
    */
-  @Output() mapDrag = new EventEmitter<google.maps.MouseEvent>();
+  @Output() polylineDrag = new EventEmitter<google.maps.MouseEvent>();
 
   /**
    * @see developers.google.com/maps/documentation/javascript/reference/polygon#Polyline.dragend
    */
-  @Output() mapDragend = new EventEmitter<google.maps.MouseEvent>();
+  @Output() polylineDragend = new EventEmitter<google.maps.MouseEvent>();
 
   /**
    * @see developers.google.com/maps/documentation/javascript/reference/polygon#Polyline.dragstart
    */
-  @Output() mapDragstart = new EventEmitter<google.maps.MouseEvent>();
+  @Output() polylineDragstart = new EventEmitter<google.maps.MouseEvent>();
 
   /**
    * @see developers.google.com/maps/documentation/javascript/reference/polygon#Polyline.mousedown
    */
-  @Output() mapMousedown = new EventEmitter<google.maps.PolyMouseEvent>();
+  @Output() polylineMousedown = new EventEmitter<google.maps.PolyMouseEvent>();
 
   /**
    * @see developers.google.com/maps/documentation/javascript/reference/polygon#Polyline.mousemove
    */
-  @Output() mapMousemove = new EventEmitter<google.maps.PolyMouseEvent>();
+  @Output() polylineMousemove = new EventEmitter<google.maps.PolyMouseEvent>();
 
   /**
    * @see developers.google.com/maps/documentation/javascript/reference/polygon#Polyline.mouseout
    */
-  @Output() mapMouseout = new EventEmitter<google.maps.PolyMouseEvent>();
+  @Output() polylineMouseout = new EventEmitter<google.maps.PolyMouseEvent>();
 
   /**
    * @see developers.google.com/maps/documentation/javascript/reference/polygon#Polyline.mouseover
    */
-  @Output() mapMouseover = new EventEmitter<google.maps.PolyMouseEvent>();
+  @Output() polylineMouseover = new EventEmitter<google.maps.PolyMouseEvent>();
 
   /**
    * @see developers.google.com/maps/documentation/javascript/reference/polygon#Polyline.mouseup
    */
-  @Output() mapMouseup = new EventEmitter<google.maps.PolyMouseEvent>();
+  @Output() polylineMouseup = new EventEmitter<google.maps.PolyMouseEvent>();
 
   /**
    * @see developers.google.com/maps/documentation/javascript/reference/polygon#Polyline.rightclick
    */
-  @Output() mapRightclick = new EventEmitter<google.maps.PolyMouseEvent>();
+  @Output() polylineRightclick = new EventEmitter<google.maps.PolyMouseEvent>();
 
   private readonly _options = new BehaviorSubject<google.maps.PolylineOptions>({});
   private readonly _path =
@@ -186,19 +186,19 @@ export class MapPolyline implements OnInit, OnDestroy {
 
   private _initializeEventHandlers() {
     const mouseEventHandlers = new Map<string, EventEmitter<google.maps.MouseEvent>>([
-      ['drag', this.mapDrag],
-      ['dragend', this.mapDragend],
-      ['dragstart', this.mapDragstart],
+      ['drag', this.polylineDrag],
+      ['dragend', this.polylineDragend],
+      ['dragstart', this.polylineDragstart],
     ]);
     const polyMouseEventHandlers = new Map<string, EventEmitter<google.maps.PolyMouseEvent>>([
-      ['click', this.mapClick],
-      ['dblclick', this.mapDblclick],
-      ['mousedown', this.mapMousedown],
-      ['mousemove', this.mapMousemove],
-      ['mouseout', this.mapMouseout],
-      ['mouseover', this.mapMouseover],
-      ['mouseup', this.mapMouseup],
-      ['rightclick', this.mapRightclick],
+      ['click', this.polylineClick],
+      ['dblclick', this.polylineDblclick],
+      ['mousedown', this.polylineMousedown],
+      ['mousemove', this.polylineMousemove],
+      ['mouseout', this.polylineMouseout],
+      ['mouseover', this.polylineMouseover],
+      ['mouseup', this.polylineMouseup],
+      ['rightclick', this.polylineRightclick],
     ]);
 
     mouseEventHandlers.forEach(

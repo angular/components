@@ -130,8 +130,8 @@ describe('MapPolyline', () => {
   template: `<google-map>
                 <map-polyline [options]="options"
                               [path]="path"
-                              (mapClick)="handleClick()"
-                              (mapRightclick)="handleRightclick()">
+                              (polylineClick)="handleClick()"
+                              (polylineRightclick)="handleRightclick()">
                 </map-polyline>
             </google-map>`,
 })
