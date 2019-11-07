@@ -5,7 +5,7 @@ import {LocationStrategy, PathLocationStrategy} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 import {RouterModule} from '@angular/router';
 import {MatNativeDateModule} from '@angular/material/core';
-import {ExampleModule} from '@angular/material-examples';
+import {ExampleModule} from '@angular/components-examples';
 
 import {MaterialDocsApp} from './material-docs-app';
 import {HomepageModule} from './pages/homepage';

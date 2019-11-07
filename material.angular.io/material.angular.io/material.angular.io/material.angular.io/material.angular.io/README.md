@@ -33,7 +33,7 @@ documentation content and examples. They are generated from:
 1. Install the project's dependencies
   - `yarn install`
 1. Update to the latest version of the docs-content and examples
-  - `yarn upgrade @angular/material-examples`
+  - `yarn upgrade @angular/components-examples`
 
 ## Development Server
 1. Run `yarn start` for a dev server. Navigate to `http://localhost:4200/`
@@ -51,7 +51,7 @@ Before running the tests make sure you are serving the app via `yarn start`.
 ## Deployment instructions
 ```
 > yarn install
-> yarn upgrade @angular/material-examples
+> yarn upgrade @angular/components-examples
 
 # Development
 > yarn publish-dev

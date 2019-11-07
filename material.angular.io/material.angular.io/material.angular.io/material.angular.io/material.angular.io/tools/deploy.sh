@@ -25,7 +25,7 @@ projectId=${PROJECT_ID[$version, $mode]}
 echo ""
 echo "NOTE: Make sure to refresh the docs-content to match the new version of docs."
 echo "      You can pull the docs-content for the new version by updating the"
-echo "      \"@angular/material-examples\" in the 'package.json' file."
+echo "      \"@angular/components-examples\" in the 'package.json' file."
 echo ""
 
 read -rp "Press <ENTER> to continue.."
