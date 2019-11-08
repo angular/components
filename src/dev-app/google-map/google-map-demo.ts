@@ -46,11 +46,11 @@ export class GoogleMapDemo {
     this.markerPositions.pop();
   }
 
-  displayPolyline() {
+  togglePolylineDisplay() {
     this.isPolylineDisplayed = !this.isPolylineDisplayed;
   }
 
-  editablePolyline() {
-    this.polylineOptions = {...this.polylineOptions, editable: true};
+  toggleEditablePolyline() {
+    this.polylineOptions = {...this.polylineOptions, editable: !this.polylineOptions.editable};
   }
 }

@@ -19,6 +19,13 @@
   <p><label>Latitude:</label> {{display?.lat}}</p>
   <p><label>Longitude:</label> {{display?.lng}}</p>
 
-  <button (click)="displayPolyline()">Polyline</button>
-  <button (click)="editablePolyline()">Editable Polyline</button>
+  <div>
+    <label for="polyline-checkbox">Toggle Polyline</label>
+    <input id="polyline-checkbox" type="checkbox" (click)="togglePolylineDisplay()">
+  </div>
+  <div>
+    <label for="editable-polyline-checkbox">Toggle Editable Polyline</label>
+    <input id="editable-polyline-checkbox" type="checkbox" (click)="toggleEditablePolyline()">
+  </div>
+
 </div>
