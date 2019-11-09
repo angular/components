@@ -44,6 +44,7 @@ export declare abstract class _MatTabGroupBase extends _MatTabGroupMixinBase imp
     readonly focusChange: EventEmitter<MatTabChangeEvent>;
     headerPosition: MatTabHeaderPosition;
     selectedIndex: number | null;
+    canActivate: Function;
     readonly selectedIndexChange: EventEmitter<number>;
     readonly selectedTabChange: EventEmitter<MatTabChangeEvent>;
     constructor(elementRef: ElementRef, _changeDetectorRef: ChangeDetectorRef, defaultConfig?: MatTabsConfig, _animationMode?: string | undefined);
