@@ -10,11 +10,10 @@ import {
   ComponentHarness,
   ComponentHarnessConstructor,
   HarnessPredicate,
+  HarnessQuery,
   TestElement
 } from '@angular/cdk/testing';
-import {
-  MatFormFieldControlHarness
-} from '@angular/material-experimental/form-field/testing/control';
+import {MatFormFieldControlHarness} from '@angular/material-experimental/form-field/testing/control';
 import {MatInputHarness} from '@angular/material-experimental/input/testing';
 import {MatSelectHarness} from '@angular/material-experimental/select/testing';
 import {FormFieldHarnessFilters} from './form-field-harness-filters';
@@ -85,8 +84,7 @@ export class MatFormFieldHarness extends ComponentHarness {
       Promise<X|null>;
 
   // Implementation of the "getControl" method overload signatures.
-  async getControl<X extends MatFormFieldControlHarness>(type?: ComponentHarnessConstructor<X>|
-                                                         HarnessPredicate<X>) {
+  async getControl<X extends MatFormFieldControlHarness>(type?: HarnessQuery<X>) {
     if (type) {
       return this.locatorForOptional(type)();
     }

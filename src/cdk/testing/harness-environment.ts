@@ -12,9 +12,19 @@ import {
   ComponentHarnessConstructor,
   HarnessLoader,
   HarnessPredicate,
-  LocatorFactory
+  HarnessQuery,
+  LocatorFactory,
+  LocatorFnResult,
 } from './component-harness';
 import {TestElement} from './test-element';
+
+/** Parsed form of the queries passed to the `locatorFor*` methods. */
+type ParsedQueries<T extends ComponentHarness> = {
+  allQueries: (string | HarnessPredicate<T>)[],
+  harnessQueries: HarnessPredicate<T>[],
+  elementQueries: string[],
+  harnessTypes: Set<ComponentHarnessConstructor<T>>,
+};
 
 /**
  * Base harness environment class that can be extended to allow `ComponentHarness`es to be used in
@@ -36,55 +46,29 @@ export abstract class HarnessEnvironment<E> implements HarnessLoader, LocatorFac
   }
 
   // Implemented as part of the `LocatorFactory` interface.
-  locatorFor(selector: string): AsyncFactoryFn<TestElement>;
-  locatorFor<T extends ComponentHarness>(
-      harnessType: ComponentHarnessConstructor<T> | HarnessPredicate<T>): AsyncFactoryFn<T>;
-  locatorFor<T extends ComponentHarness>(
-      arg: string | ComponentHarnessConstructor<T> | HarnessPredicate<T>) {
-    return async () => {
-      if (typeof arg === 'string') {
-        return this.createTestElement(await this._assertElementFound(arg));
-      } else {
-        return this._assertHarnessFound(arg);
-      }
-    };
+  locatorFor<T extends (HarnessQuery<any> | string)[]>(...queries: T):
+      AsyncFactoryFn<LocatorFnResult<T>> {
+    return () => _assertResultFound(
+        this._getAllHarnessesAndTestElements(queries),
+        _getDescriptionForLocatorForQueries(queries));
   }
 
   // Implemented as part of the `LocatorFactory` interface.
-  locatorForOptional(selector: string): AsyncFactoryFn<TestElement | null>;
-  locatorForOptional<T extends ComponentHarness>(
-      harnessType: ComponentHarnessConstructor<T> | HarnessPredicate<T>): AsyncFactoryFn<T | null>;
-  locatorForOptional<T extends ComponentHarness>(
-      arg: string | ComponentHarnessConstructor<T> | HarnessPredicate<T>) {
-    return async () => {
-      if (typeof arg === 'string') {
-        const element = (await this.getAllRawElements(arg))[0];
-        return element ? this.createTestElement(element) : null;
-      } else {
-        const candidates = await this._getAllHarnesses(arg);
-        return candidates[0] || null;
-      }
-    };
+  locatorForOptional<T extends (HarnessQuery<any> | string)[]>(...queries: T):
+      AsyncFactoryFn<LocatorFnResult<T> | null> {
+    return async () => (await this._getAllHarnessesAndTestElements(queries))[0] || null;
   }
 
   // Implemented as part of the `LocatorFactory` interface.
-  locatorForAll(selector: string): AsyncFactoryFn<TestElement[]>;
-  locatorForAll<T extends ComponentHarness>(
-      harnessType: ComponentHarnessConstructor<T> | HarnessPredicate<T>): AsyncFactoryFn<T[]>;
-  locatorForAll<T extends ComponentHarness>(
-      arg: string | ComponentHarnessConstructor<T> | HarnessPredicate<T>) {
-    return async () => {
-      if (typeof arg === 'string') {
-        return (await this.getAllRawElements(arg)).map(e => this.createTestElement(e));
-      } else {
-        return this._getAllHarnesses(arg);
-      }
-    };
+  locatorForAll<T extends (HarnessQuery<any> | string)[]>(...queries: T):
+      AsyncFactoryFn<LocatorFnResult<T>[]> {
+    return () => this._getAllHarnessesAndTestElements(queries);
   }
 
   // Implemented as part of the `LocatorFactory` interface.
   async harnessLoaderFor(selector: string): Promise<HarnessLoader> {
-    return this.createEnvironment(await this._assertElementFound(selector));
+    return this.createEnvironment(await _assertResultFound(this.getAllRawElements(selector),
+        [_getDescriptionForHarnessLoaderQuery(selector)]));
   }
 
   // Implemented as part of the `LocatorFactory` interface.
@@ -100,20 +84,19 @@ export abstract class HarnessEnvironment<E> implements HarnessLoader, LocatorFac
   }
 
   // Implemented as part of the `HarnessLoader` interface.
-  getHarness<T extends ComponentHarness>(
-      harnessType: ComponentHarnessConstructor<T> | HarnessPredicate<T>): Promise<T> {
-    return this.locatorFor(harnessType)();
+  getHarness<T extends ComponentHarness>(query: HarnessQuery<T>): Promise<T> {
+    return this.locatorFor(query)();
   }
 
   // Implemented as part of the `HarnessLoader` interface.
-  getAllHarnesses<T extends ComponentHarness>(
-      harnessType: ComponentHarnessConstructor<T> | HarnessPredicate<T>): Promise<T[]> {
-    return this.locatorForAll(harnessType)();
+  getAllHarnesses<T extends ComponentHarness>(query: HarnessQuery<T>): Promise<T[]> {
+    return this.locatorForAll(query)();
   }
 
   // Implemented as part of the `HarnessLoader` interface.
   async getChildLoader(selector: string): Promise<HarnessLoader> {
-    return this.createEnvironment(await this._assertElementFound(selector));
+    return this.createEnvironment(await _assertResultFound(this.getAllRawElements(selector),
+        [_getDescriptionForHarnessLoaderQuery(selector)]));
   }
 
   // Implemented as part of the `HarnessLoader` interface.
@@ -147,43 +130,179 @@ export abstract class HarnessEnvironment<E> implements HarnessLoader, LocatorFac
    */
   protected abstract getAllRawElements(selector: string): Promise<E[]>;
 
-  private async _getAllHarnesses<T extends ComponentHarness>(
-      harnessType: ComponentHarnessConstructor<T> | HarnessPredicate<T>): Promise<T[]> {
-    const harnessPredicate = harnessType instanceof HarnessPredicate ?
-        harnessType : new HarnessPredicate(harnessType, {});
-    const elements = await this.getAllRawElements(harnessPredicate.getSelector());
-    return harnessPredicate.filter(elements.map(
-        element => this.createComponentHarness(harnessPredicate.harnessType, element)));
+  /** Gets a list of matching harnesses and test elements for a given query list. */
+  private async _getAllHarnessesAndTestElements<T extends (HarnessQuery<any> | string)[]>(
+      queries: T): Promise<LocatorFnResult<T>[]> {
+    const {allQueries, harnessQueries, elementQueries, harnessTypes} = _parseQueries(queries);
+    // Combine all of the queries into one large comma-delimited selector and use it to get all raw
+    // elements matching any of the individual queries.
+    const rawElements = await this.getAllRawElements(
+        [...elementQueries, ...harnessQueries.map(pred => pred.getSelector())].join(','));
+    // If there are only element queries, we can just return a `TestElement` for each raw element
+    // that was matched.
+    if (harnessQueries.length === 0) {
+      return this._matchRawElementsToTestElements(rawElements) as LocatorFnResult<T>[];
+    }
+    // If the queries contain only searches for a single harness type, we can just create instances
+    // of that class for all raw elements and filter out the ones that don't match any query.
+    if (elementQueries.length === 0 && harnessTypes.size === 1) {
+      return this._matchRawElementsToHarnessType(
+          rawElements, harnessQueries[0].harnessType, harnessQueries);
+    }
+    // Otherwise the queries are come combination of different ComponentHarness classes and string
+    // selectors. In this case we need to do extra matching ahead of time to determine which
+    // selectors were responsible for finding which raw elements.
+    return this._matchRawElementsToHarnessesAndTestElements(rawElements, allQueries);
   }
 
-  private async _assertElementFound(selector: string): Promise<E> {
-    const element = (await this.getAllRawElements(selector))[0];
-    if (!element) {
-      throw Error(`Expected to find element matching selector: "${selector}", but none was found`);
-    }
-    return element;
+  /** Matches the given raw elements with test elements. */
+  private _matchRawElementsToTestElements(rawElements: E[]): TestElement[] {
+    return rawElements.map(rawElement => this.createTestElement(rawElement));
   }
 
-  private async _assertHarnessFound<T extends ComponentHarness>(
-      harnessType: ComponentHarnessConstructor<T> | HarnessPredicate<T>): Promise<T> {
-    const harness = (await this._getAllHarnesses(harnessType))[0];
-    if (!harness) {
-      throw _getErrorForMissingHarness(harnessType);
+  /**
+   * Matches the given raw elements with a list of harness predicates that all produce the same type
+   * of harness to produce a list of matched harnesses.
+   */
+  private async _matchRawElementsToHarnessType<T extends ComponentHarness>(
+      rawElements: E[], harnessType: ComponentHarnessConstructor<T>,
+      harnessPredicates: HarnessPredicate<T>[]): Promise<T[]> {
+    return (
+        await Promise.all(rawElements.map(rawElement => {
+          const harness = this.createComponentHarness(harnessType, rawElement);
+          // Get a list of boolean results by comparing the harness against each predicate, then
+          // check if the harness matched any of them.
+          return Promise.all(harnessPredicates.map(pred => pred.evaluate(harness)))
+              .then(matches => matches.some(isMatch => isMatch) ? harness : null);
+        }))
+    ).filter((harness): harness is T => !!harness);
+  }
+
+  /**
+   * Matches the given raw elements with the given list of element and harness queries to produce a
+   * list of matched harnesses and test elements.
+   */
+  private async _matchRawElementsToHarnessesAndTestElements<T extends
+      (string | HarnessPredicate<any>)[]>(rawElements: E[], allQueries: T):
+      Promise<(LocatorFnResult<T>)[]> {
+    return Promise.all(rawElements.map(rawElement => {
+      const testElement = this.createTestElement(rawElement);
+      return Promise.all(
+          // For each query, get `null` if it doesn't match, or a `TestElement` or
+          // `ComponentHarness` as appropriate if it does match. This gives us everything that
+          // matches the current raw element, but it may contain duplicate entries (e.g. multiple
+          // `TestElement` or multiple `ComponentHarness` of the same type.
+          allQueries.map(query => this._getQueryResultForElement(query, rawElement, testElement))
+      ).then(allResultsForElement => _removeDuplicateQueryResults(allResultsForElement));
+    })).then(perElementMatches => ([] as any).concat(...perElementMatches));
+  }
+
+  /**
+   * Check whether the given query matches the given element, if it does return the matched
+   * `TestElement` or `ComponentHarness`, if it does not, return null.
+   */
+  private async _getQueryResultForElement<T extends ComponentHarness>(
+      query: string | HarnessPredicate<T>, rawElement: E, testElement: TestElement):
+      Promise<T | TestElement | null> {
+    if (typeof query === 'string') {
+      return testElement.matchesSelector(query)
+          .then(selectorMatches => selectorMatches ? testElement : null);
     }
-    return harness;
+    return testElement.matchesSelector(query.getSelector()).then(selectorMatches => {
+      if (selectorMatches) {
+        const harness = this.createComponentHarness(query.harnessType, rawElement);
+        return query.evaluate(harness).then(predMatches => predMatches ? harness : null);
+      }
+      return null;
+    });
   }
 }
 
-function _getErrorForMissingHarness<T extends ComponentHarness>(
-    harnessType: ComponentHarnessConstructor<T> | HarnessPredicate<T>): Error {
-  const harnessPredicate =
-      harnessType instanceof HarnessPredicate ? harnessType : new HarnessPredicate(harnessType, {});
-  const {name, hostSelector} = harnessPredicate.harnessType;
-  let restrictions = harnessPredicate.getDescription();
-  let message = `Expected to find element for ${name} matching selector: "${hostSelector}"`;
-  if (restrictions) {
-    message += ` (with restrictions: ${restrictions})`;
+/**
+ * Parses a list of queries in the format accepted by the `locatorFor*` methods into an easier to
+ * work with format.
+ */
+function _parseQueries<T extends (HarnessQuery<any> | string)[]>(queries: T):
+    ParsedQueries<LocatorFnResult<T> & ComponentHarness> {
+  const allQueries = [];
+  const harnessQueries = [];
+  const elementQueries = [];
+  const harnessTypes =
+      new Set<ComponentHarnessConstructor<LocatorFnResult<T> & ComponentHarness>>();
+
+  for (const query of queries) {
+    if (typeof query === 'string') {
+      allQueries.push(query);
+      elementQueries.push(query);
+    } else {
+      const pred =  query instanceof HarnessPredicate ? query : new HarnessPredicate(query, {});
+      allQueries.push(pred);
+      harnessQueries.push(pred);
+      harnessTypes.add(pred.harnessType);
+    }
   }
-  message += ', but none was found';
-  return Error(message);
+
+  return {allQueries, harnessQueries, elementQueries, harnessTypes};
+}
+
+/**
+ * Removes duplicate query results for a particular element. (e.g. multiple `TestElement`
+ * instances or multiple instances of the same `ComponentHarness` class.
+ */
+async function _removeDuplicateQueryResults<T extends (ComponentHarness | TestElement | null)[]>(
+    results: T): Promise<T> {
+  let testElementMatched = false;
+  let matchedHarnessTypes = new Set();
+  const dedupedMatches = [];
+  for (const result of results) {
+    if (!result) {
+      continue;
+    }
+    if (result instanceof ComponentHarness) {
+      if (!matchedHarnessTypes.has(result.constructor)) {
+        matchedHarnessTypes.add(result.constructor);
+        dedupedMatches.push(result);
+      }
+    } else {
+      if (!testElementMatched) {
+        testElementMatched = true;
+        dedupedMatches.push(result);
+      }
+    }
+  }
+  return dedupedMatches as T;
+}
+
+/** Verifies that there is at least one result in an array. */
+async function _assertResultFound<T>(results: Promise<T[]>, queryDescriptions: string[]):
+    Promise<T> {
+  const result = (await results)[0];
+  if (result == undefined) {
+    throw Error(`Failed to find element matching one of the following queries:\n` +
+        queryDescriptions.map(desc => `(${desc})`).join(',\n'));
+  }
+  return result;
+}
+
+function _getDescriptionForLocatorForQueries(queries: (string | HarnessQuery<any>)[]) {
+  return queries.map(query => typeof query === 'string' ?
+      _getDescriptionForTestElementQuery(query) : _getDescriptionForComponentHarnessQuery(query));
+}
+
+function _getDescriptionForComponentHarnessQuery(query: HarnessQuery<any>) {
+  const harnessPredicate =
+      query instanceof HarnessPredicate ? query : new HarnessPredicate(query, {});
+  const {name, hostSelector} = harnessPredicate.harnessType;
+  const description = `${name} with host element matching selector: "${hostSelector}"`;
+  const constraints = harnessPredicate.getDescription();
+  return description + (constraints ?
+      ` satisfying the constraints: ${harnessPredicate.getDescription()}` : '');
+}
+
+function _getDescriptionForTestElementQuery(selector: string) {
+  return `TestElement for element matching selector: "${selector}"`;
+}
+
+function _getDescriptionForHarnessLoaderQuery(selector: string) {
+  return `HarnessLoader for element matching selector: "${selector}"`;
 }
