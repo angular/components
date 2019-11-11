@@ -47,6 +47,7 @@ describe('YoutubePlayer', () => {
           videoId: VIDEO_ID,
           width: DEFAULT_PLAYER_WIDTH,
           height: DEFAULT_PLAYER_HEIGHT,
+          playerVars: {autoplay: 1},
         }));
     });
 
@@ -304,6 +305,7 @@ describe('YoutubePlayer', () => {
           videoId: VIDEO_ID,
           width: DEFAULT_PLAYER_WIDTH,
           height: DEFAULT_PLAYER_HEIGHT,
+          playerVars: {autoplay: 1},
         }));
     });
   });
@@ -316,6 +318,7 @@ describe('YoutubePlayer', () => {
   template: `
     <youtube-player #player [videoId]="videoId" *ngIf="visible" [width]="width" [height]="height"
       [startSeconds]="startSeconds" [endSeconds]="endSeconds" [suggestedQuality]="suggestedQuality"
+      [playerVars]="playerVars"
       (ready)="onReady($event)"
       (stateChange)="onStateChange($event)"
       (playbackQualityChange)="onPlaybackQualityChange($event)"
@@ -333,6 +336,7 @@ class TestApp {
   startSeconds: number | undefined;
   endSeconds: number | undefined;
   suggestedQuality: YT.SuggestedVideoQuality | undefined;
+  playerVars: YT.PlayerVars = {autoplay: 1};
   onReady = jasmine.createSpy('onReady');
   onStateChange = jasmine.createSpy('onStateChange');
   onPlaybackQualityChange = jasmine.createSpy('onPlaybackQualityChange');

@@ -119,6 +119,18 @@ export class YouTubePlayer implements AfterViewInit, OnDestroy, OnInit {
   private _width = DEFAULT_PLAYER_WIDTH;
   private _widthObs = new EventEmitter<number>();
 
+  /** PlayerVars for the YouTube player */
+  @Input()
+  get playerVars(): YT.PlayerVars | undefined {
+    return this._playerVars;
+  }
+  set playerVars(playerVars: YT.PlayerVars | undefined) {
+    this._playerVars = playerVars;
+    this._playerVarsObs.emit(this._playerVars);
+  }
+  private _playerVars: YT.PlayerVars | undefined = undefined;
+  private _playerVarsObs = new EventEmitter<YT.PlayerVars | undefined>();
+
   /** The moment when the player is supposed to start playing */
   @Input() set startSeconds(startSeconds: number | undefined) {
     this._startSeconds.emit(startSeconds);
@@ -153,8 +165,7 @@ export class YouTubePlayer implements AfterViewInit, OnDestroy, OnInit {
   @Output() playbackRateChange = new EventEmitter<YT.OnPlaybackRateChangeEvent>();
 
   /** The element that will be replaced by the iframe. */
-  @ViewChild('youtubeContainer')
-  youtubeContainer: ElementRef<HTMLElement>;
+  @ViewChild('youtubeContainer', {static: true}) youtubeContainer: ElementRef<HTMLElement>;
 
   /** Whether we're currently rendering inside a browser. */
   private _isBrowser: boolean;
@@ -200,21 +211,23 @@ export class YouTubePlayer implements AfterViewInit, OnDestroy, OnInit {
     const videoIdObs = this._videoIdObs.pipe(startWith(this._videoId));
     const widthObs = this._widthObs.pipe(startWith(this._width));
     const heightObs = this._heightObs.pipe(startWith(this._height));
+    const playerVarsObs = this._playerVarsObs.pipe(startWith(this._playerVars));
 
     const startSecondsObs = this._startSeconds.pipe(startWith(undefined));
     const endSecondsObs = this._endSeconds.pipe(startWith(undefined));
     const suggestedQualityObs = this._suggestedQuality.pipe(startWith(undefined));
 
     /** An observable of the currently loaded player. */
-    const playerObs =
-      createPlayerObservable(
-        this._youtubeContainer,
-        videoIdObs,
-        iframeApiAvailableObs,
-        widthObs,
-        heightObs,
-        this.createEventsBoundInZone(),
-      ).pipe(waitUntilReady(), takeUntil(this._destroyed), publish());
+    const playerObs = createPlayerObservable(
+                          this._youtubeContainer,
+                          videoIdObs,
+                          iframeApiAvailableObs,
+                          widthObs,
+                          heightObs,
+                          playerVarsObs,
+                          this.createEventsBoundInZone(),
+                          )
+                          .pipe(waitUntilReady(), takeUntil(this._destroyed), publish());
 
     /** Set up side effects to bind inputs to the player. */
     playerObs.subscribe(player => this._player = player);
@@ -454,20 +467,19 @@ function fromPlayerOnReady(player: UninitializedPlayer): Observable<Player> {
 
 /** Create an observable for the player based on the given options. */
 function createPlayerObservable(
-  youtubeContainer: Observable<HTMLElement>,
-  videoIdObs: Observable<string | undefined>,
-  iframeApiAvailableObs: Observable<boolean>,
-  widthObs: Observable<number>,
-  heightObs: Observable<number>,
-  events: YT.Events,
-): Observable<UninitializedPlayer | undefined> {
-
-  const playerOptions =
-    videoIdObs
-    .pipe(
-      withLatestFrom(combineLatest([widthObs, heightObs])),
-      map(([videoId, [width, height]]) => videoId ? ({videoId, width, height, events}) : undefined),
-    );
+    youtubeContainer: Observable<HTMLElement>,
+    videoIdObs: Observable<string|undefined>,
+    iframeApiAvailableObs: Observable<boolean>,
+    widthObs: Observable<number>,
+    heightObs: Observable<number>,
+    playerVarsObs: Observable<YT.PlayerVars | undefined>,
+    events: YT.Events,
+    ): Observable<UninitializedPlayer|undefined> {
+  const playerOptions = videoIdObs.pipe(
+      withLatestFrom(combineLatest([widthObs, heightObs, playerVarsObs])),
+      map(([videoId, [width, height, playerVars]]) =>
+              videoId ? ({videoId, width, height, playerVars, events}) : undefined),
+  );
 
   return combineLatest([youtubeContainer, playerOptions])
       .pipe(
