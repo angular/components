@@ -8,12 +8,13 @@
 import {ComponentFixture, TestBed, fakeAsync, flush} from '@angular/core/testing';
 import {
   Component,
+  ErrorHandler,
   ViewChild,
   TrackByFunction,
   Type,
   EventEmitter,
   ViewChildren,
-  QueryList, ErrorHandler,
+  QueryList,
 } from '@angular/core';
 
 import {CollectionViewer, DataSource} from '@angular/cdk/collections';
