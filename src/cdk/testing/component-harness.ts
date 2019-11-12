@@ -503,7 +503,9 @@ function _valueAsString(value: unknown) {
         v instanceof RegExp ? `/${v.toString()}/` :
             typeof v === 'string' ? v.replace('/\//g', '\\/') : v
     ).replace(/"\/\//g, '\\/').replace(/\/\/"/g, '\\/').replace(/\\\//g, '/');
-  } catch (e) {
+  } catch {
+    // `JSON.stringify` will throw if the object is cyclical,
+    // in this case the best we can do is report the value as `{...}`.
     return '{...}';
   }
 }
