@@ -302,8 +302,12 @@ describe('MatAutocomplete', () => {
       options[1].click();
       fixture.detectChanges();
 
+      const val = fixture.componentInstance.formField._control
+        && fixture.componentInstance.formField._control.value;
+
       expect(fixture.componentInstance.formField.floatLabel)
-          .toEqual('auto', 'Expected label to return to auto state after panel closes.');
+          .toEqual(val != '' && val != null ? 'always' : 'auto',
+        'Expected label to return to auto state after panel closes.');
     }));
 
     it('should not open the panel when the `input` event is invoked on a non-focused input', () => {
