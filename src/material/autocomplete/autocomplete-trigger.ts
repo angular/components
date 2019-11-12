@@ -480,6 +480,14 @@ export class MatAutocompleteTrigger implements ControlValueAccessor, AfterViewIn
 
   /** If the label has been manually elevated, return it to its normal state. */
   private _resetLabel(): void  {
+    const value: any = this._formField
+      && this._formField._control.value
+      || this._element.nativeElement.value;
+
+    if (value != '' && value != null) {
+      return;
+    }
+
     if (this._manuallyFloatingLabel) {
       this._formField.floatLabel = 'auto';
       this._manuallyFloatingLabel = false;
@@ -587,6 +595,8 @@ export class MatAutocompleteTrigger implements ControlValueAccessor, AfterViewIn
     }
 
     this._previousValue = inputValue;
+
+    this._resetLabel();
   }
 
   /**
