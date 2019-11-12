@@ -176,11 +176,13 @@ export abstract class HarnessEnvironment<E> implements HarnessLoader, LocatorFac
 
   /**
    * Check whether the given query matches the given element, if it does return the matched
-   * `TestElement` or `ComponentHarness`, if it does not, return null.
+   * `TestElement` or `ComponentHarness`, if it does not, return null. In cases where the caller
+   * knows for sure that the query matches the element's selector, `skipSelectorCheck` can be used
+   * to skip verification and optimize performance.
    */
   private async _getQueryResultForElement<T extends ComponentHarness>(
       query: string | HarnessPredicate<T>, rawElement: E, testElement: TestElement,
-      skipSelectorCheck: boolean): Promise<T | TestElement | null> {
+      skipSelectorCheck: boolean = false): Promise<T | TestElement | null> {
     if (typeof query === 'string') {
       return ((skipSelectorCheck || await testElement.matchesSelector(query)) ? testElement : null);
     }
