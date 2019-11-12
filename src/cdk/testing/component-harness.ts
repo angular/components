@@ -25,11 +25,16 @@ export type HarnessQuery<T extends ComponentHarness> =
     ComponentHarnessConstructor<T> | HarnessPredicate<T>;
 
 /**
- * The type returned by the functions that the `locatorFor*` methods create.
- * Maps the input type array and creates a type union from the mapped array:
- * - `ComponentHarnessConstructor&lt;T&gt;` maps to `T`
- * - `HarnessPredicate&lt;T&gt;` maps to `T`
- * - `string` maps to `TestElement`
+ * The result type obtained when searching using a particular list of queries. This type depends on
+ * the particular items being queried.
+ * - If one of the queries is for a `ComponentHarnessConstructor<C1>`, it means that the result
+ *   might be a harness of type `C1`
+ * - If one of the queries is for a `HarnessPredicate<C2>`, it means that the result might be a
+ *   harness of type `C2`
+ * - If one of the queries is for a `string`, it means that the result might be a `TestElement`.
+ *
+ * Since we don't know for sure which query will match, the result type if the union of the types
+ * for all possible results.
  *
  * e.g.
  * The type:
@@ -113,8 +118,8 @@ export interface LocatorFactory {
   /**
    * Creates an asynchronous locator function that can be used to find a `ComponentHarness` instance
    * or element under the root element of this `LocatorFactory`.
-   * @param {...*} queries A list of queries specifying which harnesses and elements to search for:
-   *   - A `string` searches for elements matching the selector specified by the string.
+   * @param queries A list of queries specifying which harnesses and elements to search for:
+   *   - A `string` searches for elements matching the CSS selector specified by the string.
    *   - A `ComponentHarness` constructor searches for `ComponentHarness` instances matching the
    *     given class.
    *   - A `HarnessPredicate` searches for `ComponentHarness` instances matching the given
@@ -122,7 +127,8 @@ export interface LocatorFactory {
    * @return An asynchronous locator function that searches for and returns a `Promise` for the
    *   first element or harness matching the given search criteria. Matches are ordered first by
    *   order in the DOM, and second by order in the queries list. If no matches are found, the
-   *   `Promise` rejects.
+   *   `Promise` rejects. The type that the `Promise` resolves to is a union of all result types for
+   *   each query.
    *
    * e.g. Given the following DOM: `<div id="d1" /><div id="d2" />`, and assuming
    * `DivHarness.hostSelector === 'div'`:
@@ -136,8 +142,8 @@ export interface LocatorFactory {
   /**
    * Creates an asynchronous locator function that can be used to find a `ComponentHarness` instance
    * or element under the root element of this `LocatorFactory`.
-   * @param {...*} queries A list of queries specifying which harnesses and elements to search for:
-   *   - A `string` searches for elements matching the selector specified by the string.
+   * @param queries A list of queries specifying which harnesses and elements to search for:
+   *   - A `string` searches for elements matching the CSS selector specified by the string.
    *   - A `ComponentHarness` constructor searches for `ComponentHarness` instances matching the
    *     given class.
    *   - A `HarnessPredicate` searches for `ComponentHarness` instances matching the given
@@ -145,7 +151,8 @@ export interface LocatorFactory {
    * @return An asynchronous locator function that searches for and returns a `Promise` for the
    *   first element or harness matching the given search criteria. Matches are ordered first by
    *   order in the DOM, and second by order in the queries list. If no matches are found, the
-   *   `Promise` is resolved with `null`.
+   *   `Promise` is resolved with `null`. The type that the `Promise` resolves to is a union of all
+   *   result types for each query or null.
    *
    * e.g. Given the following DOM: `<div id="d1" /><div id="d2" />`, and assuming
    * `DivHarness.hostSelector === 'div'`:
@@ -159,8 +166,8 @@ export interface LocatorFactory {
   /**
    * Creates an asynchronous locator function that can be used to find `ComponentHarness` instances
    * or elements under the root element of this `LocatorFactory`.
-   * @param {...*} queries A list of queries specifying which harnesses and elements to search for:
-   *   - A `string` searches for elements matching the selector specified by the string.
+   * @param queries A list of queries specifying which harnesses and elements to search for:
+   *   - A `string` searches for elements matching the CSS selector specified by the string.
    *   - A `ComponentHarness` constructor searches for `ComponentHarness` instances matching the
    *     given class.
    *   - A `HarnessPredicate` searches for `ComponentHarness` instances matching the given
@@ -170,7 +177,8 @@ export interface LocatorFactory {
    *   order in the DOM, and second by order in the queries list. If an element matches more than
    *   one `ComponentHarness` class, the locator gets an instance of each for the same element. If
    *   an element matches multiple `string` selectors, only one `TestElement` instance is returned
-   *   for that element.
+   *   for that element. The type that the `Promise` resolves to is an array where each element is
+   *   the union of all result types for each query.
    *
    * e.g. Given the following DOM: `<div id="d1" /><div id="d2" />`, and assuming
    * `DivHarness.hostSelector === 'div'` and `IdIsD1Harness.hostSelector === '#d1'`:
@@ -256,8 +264,8 @@ export abstract class ComponentHarness {
   /**
    * Creates an asynchronous locator function that can be used to find a `ComponentHarness` instance
    * or element under the host element of this `ComponentHarness`.
-   * @param {...*} queries A list of queries specifying which harnesses and elements to search for:
-   *   - A `string` searches for elements matching the selector specified by the string.
+   * @param queries A list of queries specifying which harnesses and elements to search for:
+   *   - A `string` searches for elements matching the CSS selector specified by the string.
    *   - A `ComponentHarness` constructor searches for `ComponentHarness` instances matching the
    *     given class.
    *   - A `HarnessPredicate` searches for `ComponentHarness` instances matching the given
@@ -265,7 +273,8 @@ export abstract class ComponentHarness {
    * @return An asynchronous locator function that searches for and returns a `Promise` for the
    *   first element or harness matching the given search criteria. Matches are ordered first by
    *   order in the DOM, and second by order in the queries list. If no matches are found, the
-   *   `Promise` rejects.
+   *   `Promise` rejects. The type that the `Promise` resolves to is a union of all result types for
+   *   each query.
    *
    * e.g. Given the following DOM: `<div id="d1" /><div id="d2" />`, and assuming
    * `DivHarness.hostSelector === 'div'`:
@@ -281,8 +290,8 @@ export abstract class ComponentHarness {
   /**
    * Creates an asynchronous locator function that can be used to find a `ComponentHarness` instance
    * or element under the host element of this `ComponentHarness`.
-   * @param {...*} queries A list of queries specifying which harnesses and elements to search for:
-   *   - A `string` searches for elements matching the selector specified by the string.
+   * @param queries A list of queries specifying which harnesses and elements to search for:
+   *   - A `string` searches for elements matching the CSS selector specified by the string.
    *   - A `ComponentHarness` constructor searches for `ComponentHarness` instances matching the
    *     given class.
    *   - A `HarnessPredicate` searches for `ComponentHarness` instances matching the given
@@ -290,7 +299,8 @@ export abstract class ComponentHarness {
    * @return An asynchronous locator function that searches for and returns a `Promise` for the
    *   first element or harness matching the given search criteria. Matches are ordered first by
    *   order in the DOM, and second by order in the queries list. If no matches are found, the
-   *   `Promise` is resolved with `null`.
+   *   `Promise` is resolved with `null`. The type that the `Promise` resolves to is a union of all
+   *   result types for each query or null.
    *
    * e.g. Given the following DOM: `<div id="d1" /><div id="d2" />`, and assuming
    * `DivHarness.hostSelector === 'div'`:
@@ -306,8 +316,8 @@ export abstract class ComponentHarness {
   /**
    * Creates an asynchronous locator function that can be used to find `ComponentHarness` instances
    * or elements under the host element of this `ComponentHarness`.
-   * @param {...*} queries A list of queries specifying which harnesses and elements to search for:
-   *   - A `string` searches for elements matching the selector specified by the string.
+   * @param queries A list of queries specifying which harnesses and elements to search for:
+   *   - A `string` searches for elements matching the CSS selector specified by the string.
    *   - A `ComponentHarness` constructor searches for `ComponentHarness` instances matching the
    *     given class.
    *   - A `HarnessPredicate` searches for `ComponentHarness` instances matching the given
@@ -317,7 +327,8 @@ export abstract class ComponentHarness {
    *   order in the DOM, and second by order in the queries list. If an element matches more than
    *   one `ComponentHarness` class, the locator gets an instance of each for the same element. If
    *   an element matches multiple `string` selectors, only one `TestElement` instance is returned
-   *   for that element.
+   *   for that element. The type that the `Promise` resolves to is an array where each element is
+   *   the union of all result types for each query.
    *
    * e.g. Given the following DOM: `<div id="d1" /><div id="d2" />`, and assuming
    * `DivHarness.hostSelector === 'div'` and `IdIsD1Harness.hostSelector === '#d1'`:
@@ -487,8 +498,12 @@ function _valueAsString(value: unknown) {
     return 'undefined';
   }
   // `JSON.stringify` doesn't handle RegExp properly, so we need a custom replacer.
-  return JSON.stringify(value, (_, v) =>
-      v instanceof RegExp ? `/${v.toString()}/` :
-          typeof v === 'string' ? v.replace('/\//g', '\\/') : v
-  ).replace(/"\/\//g, '\\/').replace(/\/\/"/g, '\\/').replace(/\\\//g, '/');
+  try {
+    return JSON.stringify(value, (_, v) =>
+        v instanceof RegExp ? `/${v.toString()}/` :
+            typeof v === 'string' ? v.replace('/\//g', '\\/') : v
+    ).replace(/"\/\//g, '\\/').replace(/\/\/"/g, '\\/').replace(/\\\//g, '/');
+  } catch (e) {
+    return '{...}';
+  }
 }

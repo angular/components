@@ -137,7 +137,7 @@ export abstract class HarnessEnvironment<E> implements HarnessLoader, LocatorFac
     // Combine all of the queries into one large comma-delimited selector and use it to get all raw
     // elements matching any of the individual queries.
     const rawElements = await this.getAllRawElements(
-        [...elementQueries, ...harnessQueries.map(pred => pred.getSelector())].join(','));
+        [...elementQueries, ...harnessQueries.map(predicate => predicate.getSelector())].join(','));
     // If there are only element queries, we can just return a `TestElement` for each raw element
     // that was matched.
     if (harnessQueries.length === 0) {
@@ -168,12 +168,13 @@ export abstract class HarnessEnvironment<E> implements HarnessLoader, LocatorFac
       rawElements: E[], harnessType: ComponentHarnessConstructor<T>,
       harnessPredicates: HarnessPredicate<T>[]): Promise<T[]> {
     return (
-        await Promise.all(rawElements.map(rawElement => {
+        await Promise.all(rawElements.map(async rawElement => {
           const harness = this.createComponentHarness(harnessType, rawElement);
-          // Get a list of boolean results by comparing the harness against each predicate, then
-          // check if the harness matched any of them.
-          return Promise.all(harnessPredicates.map(pred => pred.evaluate(harness)))
-              .then(matches => matches.some(isMatch => isMatch) ? harness : null);
+          // Get a list of boolean results by comparing the harness against each predicate.
+          const predicateResults =
+              await Promise.all(harnessPredicates.map(predicate => predicate.evaluate(harness)));
+          // Check if the harness matched any of the predicates.
+          return predicateResults.some(isMatch => isMatch) ? harness : null;
         }))
     ).filter((harness): harness is T => !!harness);
   }
@@ -185,16 +186,17 @@ export abstract class HarnessEnvironment<E> implements HarnessLoader, LocatorFac
   private async _matchRawElementsToHarnessesAndTestElements<T extends
       (string | HarnessPredicate<any>)[]>(rawElements: E[], allQueries: T):
       Promise<(LocatorFnResult<T>)[]> {
-    return Promise.all(rawElements.map(rawElement => {
+    const perElementMatches = await Promise.all(rawElements.map(async rawElement => {
       const testElement = this.createTestElement(rawElement);
-      return Promise.all(
+      const allResultsForElement = await Promise.all(
           // For each query, get `null` if it doesn't match, or a `TestElement` or
           // `ComponentHarness` as appropriate if it does match. This gives us everything that
           // matches the current raw element, but it may contain duplicate entries (e.g. multiple
           // `TestElement` or multiple `ComponentHarness` of the same type.
-          allQueries.map(query => this._getQueryResultForElement(query, rawElement, testElement))
-      ).then(allResultsForElement => _removeDuplicateQueryResults(allResultsForElement));
-    })).then(perElementMatches => ([] as any).concat(...perElementMatches));
+          allQueries.map(query => this._getQueryResultForElement(query, rawElement, testElement)));
+      return _removeDuplicateQueryResults(allResultsForElement);
+    }));
+    return ([] as any).concat(...perElementMatches);
   }
 
   /**
@@ -205,16 +207,13 @@ export abstract class HarnessEnvironment<E> implements HarnessLoader, LocatorFac
       query: string | HarnessPredicate<T>, rawElement: E, testElement: TestElement):
       Promise<T | TestElement | null> {
     if (typeof query === 'string') {
-      return testElement.matchesSelector(query)
-          .then(selectorMatches => selectorMatches ? testElement : null);
+      return (await testElement.matchesSelector(query) ? testElement : null);
     }
-    return testElement.matchesSelector(query.getSelector()).then(selectorMatches => {
-      if (selectorMatches) {
-        const harness = this.createComponentHarness(query.harnessType, rawElement);
-        return query.evaluate(harness).then(predMatches => predMatches ? harness : null);
-      }
-      return null;
-    });
+    if (await testElement.matchesSelector(query.getSelector())) {
+      const harness = this.createComponentHarness(query.harnessType, rawElement);
+      return (await query.evaluate(harness)) ? harness : null;
+    }
+    return null;
   }
 }
 
@@ -235,10 +234,10 @@ function _parseQueries<T extends (HarnessQuery<any> | string)[]>(queries: T):
       allQueries.push(query);
       elementQueries.push(query);
     } else {
-      const pred =  query instanceof HarnessPredicate ? query : new HarnessPredicate(query, {});
-      allQueries.push(pred);
-      harnessQueries.push(pred);
-      harnessTypes.add(pred.harnessType);
+      const predicate = query instanceof HarnessPredicate ? query : new HarnessPredicate(query, {});
+      allQueries.push(predicate);
+      harnessQueries.push(predicate);
+      harnessTypes.add(predicate.harnessType);
     }
   }
 
@@ -263,11 +262,9 @@ async function _removeDuplicateQueryResults<T extends (ComponentHarness | TestEl
         matchedHarnessTypes.add(result.constructor);
         dedupedMatches.push(result);
       }
-    } else {
-      if (!testElementMatched) {
-        testElementMatched = true;
-        dedupedMatches.push(result);
-      }
+    } else if (!testElementMatched) {
+      testElementMatched = true;
+      dedupedMatches.push(result);
     }
   }
   return dedupedMatches as T;
