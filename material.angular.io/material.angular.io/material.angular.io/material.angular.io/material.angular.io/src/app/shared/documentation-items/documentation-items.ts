@@ -526,7 +526,8 @@ const DOCS: {[key: string]: DocCategory[]} = {
       name: 'Components',
       summary: 'Unstyled components with useful functionality.',
       items: [
-        {id: 'stepper',
+        {
+          id: 'stepper',
           name: 'Stepper',
           summary: 'Presents content as steps through which to progress.',
           examples: [
@@ -552,6 +553,29 @@ const DOCS: {[key: string]: DocCategory[]} = {
         },
       ]
     },
+    {
+      id: 'testing',
+      name: 'Testing',
+      summary: 'Utilities for testing common components.',
+      items: [
+        {
+          id: 'testing',
+          name: 'Testing',
+          summary: 'Utilities for testing common components.',
+          examples: [],
+          additionalApiDocs: [
+            {
+              name: 'Testbed',
+              path: 'cdk-testing-testbed.html'
+            },
+            {
+              name: 'Protractor',
+              path: 'cdk-testing-protractor.html'
+            }
+          ],
+        }
+      ]
+    }
     // TODO(jelbourn): re-add utilities and a11y as top-level categories once we can generate
     // their API docs with dgeni. Currently our setup doesn't generate API docs for constants
     // and standalone functions (much of the utilities) and we have no way of generating API

@@ -51,6 +51,11 @@ const GUIDES = [
     id: 'creating-a-custom-stepper-using-the-cdk-stepper',
     name: 'Creating a custom stepper using the CdkStepper',
     document: '/docs-content/guides/creating-a-custom-stepper-using-the-cdk-stepper.html'
+  },
+  {
+    id: 'using-component-harnesses',
+    name: `Using Angular Material's component harnesses in your tests`,
+    document: '/docs-content/guides/using-component-harnesses.html'
   }
 ];
 
