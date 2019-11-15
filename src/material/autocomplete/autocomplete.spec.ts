@@ -302,11 +302,11 @@ describe('MatAutocomplete', () => {
       options[1].click();
       fixture.detectChanges();
 
-      const formValue = fixture.componentInstance.formField._control
+      const controlValue = fixture.componentInstance.formField._control
         && fixture.componentInstance.formField._control.value;
 
       expect(fixture.componentInstance.formField.floatLabel)
-          .toEqual(val != '' && val != null ? 'always' : 'auto',
+          .toEqual(controlValue != '' && controlValue != null ? 'always' : 'auto',
         'Expected label to return to auto state after panel closes.');
     }));
 
