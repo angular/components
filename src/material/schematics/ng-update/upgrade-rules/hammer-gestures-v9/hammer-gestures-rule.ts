@@ -160,7 +160,7 @@ export class HammerGesturesRule extends MigrationRule<null> {
       if (!this._usedInTemplate && this._gestureConfigReferences.length) {
         // If the Angular Material gesture events are not used and we found a custom
         // gesture config, we can safely remove references to the Material gesture config
-        // since events provided by the Material gesture config are guaranteed to be not used.
+        // since events provided by the Material gesture config are guaranteed to be unused.
         this._removeMaterialGestureConfigSetup();
         this.printInfo(
           'The HammerJS v9 migration for Angular components detected that HammerJS is ' +
