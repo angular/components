@@ -775,9 +775,9 @@ describe('v9 HammerJS removal', () => {
         <span (longpress)="onPress()"></span>
       `);
 
-      const {logOutput} = await runMigration();
+      await runMigration();
 
-      expect(logOutput).not.toContain(`unable to perform the full migration for this target`);
+      expect(tree.exists('/projects/cdk-testing/src/gesture-config.ts')).toBe(false);
       expect(tree.readContent('/projects/cdk-testing/src/main.ts')).toContain('hammerjs');
       expect(runner.tasks.some(t => t.name === 'node-package')).toBe(false);
       expect(tree.readContent('/projects/cdk-testing/src/test.component.ts')).toContain(dedent`
@@ -837,9 +837,9 @@ describe('v9 HammerJS removal', () => {
 
         const {logOutput} = await runMigration();
 
-        expect(logOutput).toContain(
-            'The migration is unable to perform the full migration for this target. Please ' +
-            'manually remove references to the deprecated Angular Material gesture config.');
+      expect(logOutput).toContain(
+        'This target cannot be migrated completely. Please manually remove references ' +
+        'to the deprecated Angular Material gesture config.');
       expect(runner.tasks.some(t => t.name === 'node-package')).toBe(false);
       expect(tree.readContent('/projects/cdk-testing/src/main.ts')).toContain('hammerjs');
         expect(tree.readContent('/projects/cdk-testing/src/test.component.ts')).toContain(dedent`
@@ -895,8 +895,9 @@ describe('v9 HammerJS removal', () => {
 
       const {logOutput} = await runMigration();
 
-      expect(logOutput).toContain(`unable to perform the full migration for this target, but ` +
-        `removed all references to the deprecated Angular Material gesture config.`);
+      expect(logOutput).toContain(
+        'This target cannot be migrated completely, but all references to the ' +
+        'deprecated Angular Material gesture have been removed.');
       expect(runner.tasks.some(t => t.name === 'node-package')).toBe(false);
       expect(tree.readContent('/projects/cdk-testing/src/main.ts')).toContain('hammerjs');
       expect(tree.readContent('/projects/cdk-testing/src/test.component.ts')).toContain(dedent`

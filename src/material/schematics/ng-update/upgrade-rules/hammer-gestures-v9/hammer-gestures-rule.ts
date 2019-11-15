@@ -165,8 +165,8 @@ export class HammerGesturesRule extends MigrationRule<null> {
         this.printInfo(
           'The HammerJS v9 migration for Angular components detected that HammerJS is ' +
           'manually set up in combination with references to the Angular Material gesture ' +
-          'config. The migration is unable to perform the full migration for this target, ' +
-          'but removed all references to the deprecated Angular Material gesture config.');
+          'config. This target cannot be migrated completely, but all references to the ' +
+          'deprecated Angular Material gesture have been removed.');
       } else if (this._usedInTemplate && this._gestureConfigReferences.length) {
         // Since there is a reference to the Angular Material gesture config, and we detected
         // usage of a gesture event that could be provided by Angular Material, we *cannot*
@@ -175,8 +175,8 @@ export class HammerGesturesRule extends MigrationRule<null> {
         this.printInfo(
           'The HammerJS v9 migration for Angular components detected that HammerJS is ' +
           'manually set up in combination with references to the Angular Material gesture ' +
-          'config. The migration is unable to perform the full migration for this target. ' +
-          'Please manually remove references to the deprecated Angular Material gesture config.');
+          'config. This target cannot be migrated completely. Please manually remove references ' +
+          'to the deprecated Angular Material gesture config.');
       }
     } else if (this._usedInRuntime || this._usedInTemplate) {
       // We keep track of whether Hammer is used globally. This is necessary because we
