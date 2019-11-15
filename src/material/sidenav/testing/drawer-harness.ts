@@ -11,13 +11,14 @@ import {DrawerHarnessFilters} from './drawer-harness-filters';
 
 /** Harness for interacting with a standard mat-drawer in tests. */
 export class MatDrawerHarness extends ComponentHarness {
+  /** The selector for the host element of a `MatDrawer` instance. */
   static hostSelector = '.mat-drawer';
 
   /**
-   * Gets a `HarnessPredicate` that can be used to search for a drawer with
-   * specific attributes.
-   * @param options Options for narrowing the search.
-   * @return `HarnessPredicate` configured with the given options.
+   * Gets a `HarnessPredicate` that can be used to search for a `MatDrawerHarness` that meets
+   * certain criteria.
+   * @param options Options for filtering which drawer instances are considered a match.
+   * @return a `HarnessPredicate` configured with the given options.
    */
   static with(options: DrawerHarnessFilters = {}): HarnessPredicate<MatDrawerHarness> {
     return new HarnessPredicate(MatDrawerHarness, options)
@@ -25,18 +26,18 @@ export class MatDrawerHarness extends ComponentHarness {
             async (harness, position) => (await harness.getPosition()) === position);
   }
 
-  /** Gets whether the drawer is open. */
+  /** Gets a boolean promise indicating whether the drawer is open. */
   async isOpen(): Promise<boolean> {
     return (await this.host()).hasClass('mat-drawer-opened');
   }
 
-  /** Gets the position of the drawer inside its container. */
+  /** Gets a promise for the position of the drawer inside its container. */
   async getPosition(): Promise<'start'|'end'> {
     const host = await this.host();
     return (await host.hasClass('mat-drawer-end')) ? 'end' : 'start';
   }
 
-  /** Gets the mode that the drawer is in. */
+  /** Gets a promise for the mode that the drawer is in. */
   async getMode(): Promise<'over'|'push'|'side'> {
     const host = await this.host();
 

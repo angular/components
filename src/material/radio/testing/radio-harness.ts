@@ -12,14 +12,13 @@ import {RadioButtonHarnessFilters, RadioGroupHarnessFilters} from './radio-harne
 
 /** Harness for interacting with a standard mat-radio-group in tests. */
 export class MatRadioGroupHarness extends ComponentHarness {
+  /** The selector for the host element of a `MatRadioGroup` instance. */
   static hostSelector = 'mat-radio-group';
 
   /**
-   * Gets a `HarnessPredicate` that can be used to search for a radio-group with
-   * specific attributes.
-   * @param options Options for narrowing the search:
-   *   - `selector` finds a radio-group whose host element matches the given selector.
-   *   - `name` finds a radio-group with specific name.
+   * Gets a `HarnessPredicate` that can be used to search for a `MatRadioGroupHarness` that meets
+   * certain criteria.
+   * @param options Options for filtering which radio group instances are considered a match.
    * @return a `HarnessPredicate` configured with the given options.
    */
   static with(options: RadioGroupHarnessFilters = {}): HarnessPredicate<MatRadioGroupHarness> {
@@ -27,7 +26,7 @@ export class MatRadioGroupHarness extends ComponentHarness {
         .addOption('name', options.name, this._checkRadioGroupName);
   }
 
-  /** Gets the name of the radio-group. */
+  /** Gets a promise for the name of the radio-group. */
   async getName(): Promise<string|null> {
     const hostName = await this._getGroupNameFromHost();
     // It's not possible to always determine the "name" of a radio-group by reading
@@ -49,12 +48,12 @@ export class MatRadioGroupHarness extends ComponentHarness {
     return radioNames[0]!;
   }
 
-  /** Gets the id of the radio-group. */
+  /** Gets a promise for the id of the radio-group. */
   async getId(): Promise<string|null> {
     return (await this.host()).getProperty('id');
   }
 
-  /** Gets the checked radio-button in a radio-group. */
+  /** Gets a promise for the checked radio-button in a radio-group. */
   async getCheckedRadioButton(): Promise<MatRadioButtonHarness|null> {
     for (let radioButton of await this.getRadioButtons()) {
       if (await radioButton.isChecked()) {
@@ -64,7 +63,7 @@ export class MatRadioGroupHarness extends ComponentHarness {
     return null;
   }
 
-  /** Gets the checked value of the radio-group. */
+  /** Gets a promise for the checked value of the radio-group. */
   async getCheckedValue(): Promise<string|null> {
     const checkedRadio = await this.getCheckedRadioButton();
     if (!checkedRadio) {
@@ -73,12 +72,20 @@ export class MatRadioGroupHarness extends ComponentHarness {
     return checkedRadio.getValue();
   }
 
-  /** Gets all radio buttons which are part of the radio-group. */
+  /**
+   * Gets a promise for a list of radio buttons which are part of the radio-group.
+   * @param filter Optionally filters which radio buttons are included.
+   */
   async getRadioButtons(filter: RadioButtonHarnessFilters = {}): Promise<MatRadioButtonHarness[]> {
     return this.locatorForAll(MatRadioButtonHarness.with(filter))();
   }
 
-  /** Checks a radio button in this group. */
+  /**
+   * Checks a radio button in this group.
+   * @param filter An optional filter to apply to the child radio buttons. The first tab matching
+   *     the filter will be selected.
+   * @return A promise that resolves when the action is complete.
+   */
   async checkRadioButton(filter: RadioButtonHarnessFilters = {}): Promise<void> {
     const radioButtons = await this.getRadioButtons(filter);
     if (!radioButtons.length) {
@@ -87,10 +94,12 @@ export class MatRadioGroupHarness extends ComponentHarness {
     return radioButtons[0].check();
   }
 
+  /** Gets a promise for the name attribute of the host element. */
   private async _getGroupNameFromHost() {
     return (await this.host()).getAttribute('name');
   }
 
+  /** Gets a promise for list of the name attributes of all child radio buttons. */
   private async _getNamesFromRadioButtons(): Promise<string[]> {
     const groupNames: string[] = [];
     for (let radio of await this.getRadioButtons()) {
@@ -147,15 +156,13 @@ export class MatRadioGroupHarness extends ComponentHarness {
 
 /** Harness for interacting with a standard mat-radio-button in tests. */
 export class MatRadioButtonHarness extends ComponentHarness {
+  /** The selector for the host element of a `MatRadioButton` instance. */
   static hostSelector = 'mat-radio-button';
 
   /**
-   * Gets a `HarnessPredicate` that can be used to search for a radio-button with
-   * specific attributes.
-   * @param options Options for narrowing the search:
-   *   - `selector` finds a radio-button whose host element matches the given selector.
-   *   - `label` finds a radio-button with specific label text.
-   *   - `name` finds a radio-button with specific name.
+   * Gets a `HarnessPredicate` that can be used to search for a `MatRadioButtonHarness` that meets
+   * certain criteria.
+   * @param options Options for filtering which radio button instances are considered a match.
    * @return a `HarnessPredicate` configured with the given options.
    */
   static with(options: RadioButtonHarnessFilters = {}): HarnessPredicate<MatRadioButtonHarness> {
@@ -177,13 +184,13 @@ export class MatRadioButtonHarness extends ComponentHarness {
     return coerceBooleanProperty(await checked);
   }
 
-  /** Whether the radio-button is disabled. */
+  /** Gets a boolean promise indicating whether the radio-button is disabled. */
   async isDisabled(): Promise<boolean> {
     const disabled = (await this._input()).getAttribute('disabled');
     return coerceBooleanProperty(await disabled);
   }
 
-  /** Whether the radio-button is required. */
+  /** Gets a boolean promise indicating whether the radio-button is required. */
   async isRequired(): Promise<boolean> {
     const required = (await this._input()).getAttribute('required');
     return coerceBooleanProperty(await required);
@@ -200,11 +207,11 @@ export class MatRadioButtonHarness extends ComponentHarness {
   }
 
   /**
-   * Gets the value of the radio-button. The radio-button value will be
+   * Gets a promise for the value of the radio-button. The radio-button value will be
    * converted to a string.
    *
-   * Note that this means that radio-button's with objects as value will
-   * intentionally have the `[object Object]` as return value.
+   * Note: This means that for radio-button's with an object as a value `[object Object]` is
+   * intentionally returned.
    */
   async getValue(): Promise<string|null> {
     return (await this._input()).getProperty('value');
@@ -216,16 +223,16 @@ export class MatRadioButtonHarness extends ComponentHarness {
   }
 
   /**
-   * Focuses the radio-button and returns a void promise that indicates when the
-   * action is complete.
+   * Focuses the radio-button.
+   * @return A promise that resolves when the action is complete.
    */
   async focus(): Promise<void> {
     return (await this._input()).focus();
   }
 
   /**
-   * Blurs the radio-button and returns a void promise that indicates when the
-   * action is complete.
+   * Blurs the radio-button.
+   * @return A promise that resolves when the action is complete.
    */
   async blur(): Promise<void> {
     return (await this._input()).blur();
@@ -233,8 +240,8 @@ export class MatRadioButtonHarness extends ComponentHarness {
 
   /**
    * Puts the radio-button in a checked state by clicking it if it is currently unchecked,
-   * or doing nothing if it is already checked. Returns a void promise that indicates when
-   * the action is complete.
+   * or doing nothing if it is already checked.
+   * @return A promise that resolves when the action is complete.
    */
   async check(): Promise<void> {
     if (!(await this.isChecked())) {

@@ -13,13 +13,13 @@ import {SlideToggleHarnessFilters} from './slide-toggle-harness-filters';
 
 /** Harness for interacting with a standard mat-slide-toggle in tests. */
 export class MatSlideToggleHarness extends ComponentHarness {
+  /** The selector for the host element of a `MatSlideToggle` instance. */
   static hostSelector = 'mat-slide-toggle';
 
   /**
-   * Gets a `HarnessPredicate` that can be used to search for a slide-toggle w/ specific attributes.
-   * @param options Options for narrowing the search:
-   *   - `selector` finds a slide-toggle whose host element matches the given selector.
-   *   - `label` finds a slide-toggle with specific label text.
+   * Gets a `HarnessPredicate` that can be used to search for a `MatSlideToggleHarness` that meets
+   * certain criteria.
+   * @param options Options for filtering which slide toggle instances are considered a match.
    * @return a `HarnessPredicate` configured with the given options.
    */
   static with(options: SlideToggleHarnessFilters = {}): HarnessPredicate<MatSlideToggleHarness> {
@@ -80,21 +80,25 @@ export class MatSlideToggleHarness extends ComponentHarness {
     return (await this._label()).text();
   }
 
-  /** Focuses the slide-toggle and returns a void promise that indicates action completion. */
+  /**
+   * Focuses the slide-toggle.
+   * @return A promise that resolves when the action is complete.
+   */
   async focus(): Promise<void> {
     return (await this._input()).focus();
   }
 
-  /** Blurs the slide-toggle and returns a void promise that indicates action completion. */
+  /**
+   * Blurs the slide-toggle and returns a void promise that indicates action completion.
+   * @return A promise that resolves when the action is complete.
+   */
   async blur(): Promise<void> {
     return (await this._input()).blur();
   }
 
   /**
-   * Toggle the checked state of the slide-toggle and returns a void promise that indicates when the
-   * action is complete.
-   *
-   * Note: This toggles the slide-toggle as a user would, by clicking it.
+   * Toggle the checked state of the slide-toggle.
+   * @return A promise that resolves when the action is complete.
    */
   async toggle(): Promise<void> {
     return (await this._inputContainer()).click();
@@ -102,10 +106,8 @@ export class MatSlideToggleHarness extends ComponentHarness {
 
   /**
    * Puts the slide-toggle in a checked state by toggling it if it is currently unchecked, or doing
-   * nothing if it is already checked. Returns a void promise that indicates when the action is
-   * complete.
-   *
-   * Note: This attempts to check the slide-toggle as a user would, by clicking it.
+   * nothing if it is already checked.
+   * @return A promise that resolves when the action is complete.
    */
   async check(): Promise<void> {
     if (!(await this.isChecked())) {
@@ -115,10 +117,8 @@ export class MatSlideToggleHarness extends ComponentHarness {
 
   /**
    * Puts the slide-toggle in an unchecked state by toggling it if it is currently checked, or doing
-   * nothing if it is already unchecked. Returns a void promise that indicates when the action is
-   * complete.
-   *
-   * Note: This toggles the slide-toggle as a user would, by clicking it.
+   * nothing if it is already unchecked.
+   * @return A promise that resolves when the action is complete.
    */
   async uncheck(): Promise<void> {
     if (await this.isChecked()) {

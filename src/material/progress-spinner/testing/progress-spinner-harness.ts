@@ -13,11 +13,14 @@ import {ProgressSpinnerHarnessFilters} from './progress-spinner-harness-filters'
 
 /** Harness for interacting with a standard mat-progress-spinner in tests. */
 export class MatProgressSpinnerHarness extends ComponentHarness {
+  /** The selector for the host element of a `MatProgressSpinner` instance. */
   static hostSelector = 'mat-progress-spinner';
 
   /**
-   * Gets a `HarnessPredicate` that can be used to search for a progress bar with specific
-   * attributes.
+   * Gets a `HarnessPredicate` that can be used to search for a `MatProgressSpinnerHarness` that
+   * meets certain criteria.
+   * @param options Options for filtering which progress spinner instances are considered a match.
+   * @return a `HarnessPredicate` configured with the given options.
    */
   static with(options: ProgressSpinnerHarnessFilters = {}):
       HarnessPredicate<MatProgressSpinnerHarness> {

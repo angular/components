@@ -12,14 +12,13 @@ import {SliderHarnessFilters} from './slider-harness-filters';
 
 /** Harness for interacting with a standard mat-slider in tests. */
 export class MatSliderHarness extends ComponentHarness {
+  /** The selector for the host element of a `MatSlider` instance. */
   static hostSelector = 'mat-slider';
 
   /**
-   * Gets a `HarnessPredicate` that can be used to search for a mat-slider with
-   * specific attributes.
-   * @param options Options for narrowing the search:
-   *   - `selector` finds a slider whose host element matches the given selector.
-   *   - `id` finds a slider with specific id.
+   * Gets a `HarnessPredicate` that can be used to search for a `MatSliderHarness` that meets
+   * certain criteria.
+   * @param options Options for filtering which slider instances are considered a match.
    * @return a `HarnessPredicate` configured with the given options.
    */
   static with(options: SliderHarnessFilters = {}): HarnessPredicate<MatSliderHarness> {
@@ -29,7 +28,7 @@ export class MatSliderHarness extends ComponentHarness {
   private _textLabel = this.locatorFor('.mat-slider-thumb-label-text');
   private _wrapper = this.locatorFor('.mat-slider-wrapper');
 
-  /** Gets the slider's id. */
+  /** Gets a promise for the slider's id. */
   async getId(): Promise<string|null> {
     const id = await (await this.host()).getAttribute('id');
     // In case no id has been specified, the "id" property always returns
@@ -38,7 +37,7 @@ export class MatSliderHarness extends ComponentHarness {
   }
 
   /**
-   * Gets the current display value of the slider. Returns null if the thumb
+   * Gets a promise for the current display value of the slider. Returns a null promise if the thumb
    * label is disabled.
    */
   async getDisplayValue(): Promise<string|null> {
@@ -49,33 +48,33 @@ export class MatSliderHarness extends ComponentHarness {
     return null;
   }
 
-  /** Gets the current percentage value of the slider. */
+  /** Gets a promise for the current percentage value of the slider. */
   async getPercentage(): Promise<number> {
     return this._calculatePercentage(await this.getValue());
   }
 
-  /** Gets the current value of the slider. */
+  /** Gets a promise for the current value of the slider. */
   async getValue(): Promise<number> {
     return coerceNumberProperty(await (await this.host()).getAttribute('aria-valuenow'));
   }
 
-  /** Gets the maximum value of the slider. */
+  /** Gets a promise for the maximum value of the slider. */
   async getMaxValue(): Promise<number> {
     return coerceNumberProperty(await (await this.host()).getAttribute('aria-valuemax'));
   }
 
-  /** Gets the minimum value of the slider. */
+  /** Gets a promise for the minimum value of the slider. */
   async getMinValue(): Promise<number> {
     return coerceNumberProperty(await (await this.host()).getAttribute('aria-valuemin'));
   }
 
-  /** Whether the slider is disabled. */
+  /** Gets a boolean promise indicating whether the slider is disabled. */
   async isDisabled(): Promise<boolean> {
     const disabled = (await this.host()).getAttribute('aria-disabled');
     return coerceBooleanProperty(await disabled);
   }
 
-  /** Gets the orientation of the slider. */
+  /** Gets a promise for the orientation of the slider. */
   async getOrientation(): Promise<'horizontal'|'vertical'> {
     // "aria-orientation" will always be set to either "horizontal" or "vertical".
     return (await this.host()).getAttribute('aria-orientation') as any;
@@ -88,6 +87,8 @@ export class MatSliderHarness extends ComponentHarness {
    * can happen if not every value of the slider maps to a single pixel that could be
    * clicked using mouse interaction. In such cases consider using the keyboard to
    * select the given value or expand the slider's size for a better user experience.
+   *
+   * @return A promise that resolves when the action is complete.
    */
   async setValue(value: number): Promise<void> {
     const [sliderEl, wrapperEl, orientation] =
@@ -111,16 +112,16 @@ export class MatSliderHarness extends ComponentHarness {
   }
 
   /**
-   * Focuses the slider and returns a void promise that indicates when the
-   * action is complete.
+   * Focuses the slider.
+   * @return A promise that resolves when the action is complete.
    */
   async focus(): Promise<void> {
     return (await this.host()).focus();
   }
 
   /**
-   * Blurs the slider and returns a void promise that indicates when the
-   * action is complete.
+   * Blurs the slider.
+   * @return A promise that resolves when the action is complete.
    */
   async blur(): Promise<void> {
     return (await this.host()).blur();
