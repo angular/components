@@ -302,7 +302,7 @@ describe('MatAutocomplete', () => {
       options[1].click();
       fixture.detectChanges();
 
-      const val = fixture.componentInstance.formField._control
+      const formValue = fixture.componentInstance.formField._control
         && fixture.componentInstance.formField._control.value;
 
       expect(fixture.componentInstance.formField.floatLabel)
