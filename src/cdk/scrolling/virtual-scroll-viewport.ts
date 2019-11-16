@@ -389,7 +389,7 @@ export class CdkVirtualScrollViewport extends CdkScrollable implements OnInit, O
   /** Run change detection. */
   private _doChangeDetection() {
     this._isChangeDetectionPending = false;
-    
+
     // Apply the content transform. The transform can't be set via an Angular binding because
     // bypassSecurityTrustStyle is banned in Google. However the value is safe, it's composed of
     // string literals, a variable that can only be 'X' or 'Y', and user input that is run through
