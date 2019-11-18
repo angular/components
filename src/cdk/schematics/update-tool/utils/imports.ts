@@ -20,10 +20,15 @@ export interface Import {
 /** Resolves the import of the specified identifier. */
 export function getImportOfIdentifier(node: ts.Identifier, typeChecker: ts.TypeChecker): Import|
     null {
+  // Free standing identifiers which resolve to an import will be handled
+  // as direct imports. e.g. "@Component()" where "Component" is an identifier
+  // referring to an import specifier.
   const directImport = getSpecificImportOfIdentifier(node, typeChecker);
   if (directImport !== null) {
     return directImport;
   } else if (ts.isQualifiedName(node.parent) && node.parent.right === node) {
+    // Determines the import of a qualified name. e.g. "let t: core.Component". In that
+    // case, the import of the most left identifier will be determined ("core").
     const qualifierRoot = getQualifiedNameRoot(node.parent);
     if (qualifierRoot) {
       const moduleName = getImportOfNamespacedIdentifier(qualifierRoot, typeChecker);
@@ -32,6 +37,8 @@ export function getImportOfIdentifier(node: ts.Identifier, typeChecker: ts.TypeC
       }
     }
   } else if (ts.isPropertyAccessExpression(node.parent) && node.parent.name === node) {
+    // Determines the import of a property expression. e.g. "@core.Component". In that
+    // case, the import of the most left identifier will be determined ("core").
     const rootIdentifier = getPropertyAccessRoot(node.parent);
     if (rootIdentifier) {
       const moduleName = getImportOfNamespacedIdentifier(rootIdentifier, typeChecker);
@@ -57,6 +64,8 @@ function getSpecificImportOfIdentifier(node: ts.Identifier, typeChecker: ts.Type
   if (!ts.isImportSpecifier(declaration)) {
     return null;
   }
+  // Since the declaration is an import specifier, we can walk up three times to get a reference
+  // to the import declaration node (NamedImports -> ImportClause -> ImportDeclaration).
   const importDecl = declaration.parent.parent.parent;
   if (!ts.isStringLiteral(importDecl.moduleSpecifier)) {
     return null;
@@ -81,6 +90,8 @@ function getImportOfNamespacedIdentifier(node: ts.Identifier, typeChecker: ts.Ty
   if (!ts.isNamespaceImport(declaration)) {
     return null;
   }
+  // Since the declaration is a namespace import, we can walk up three times to get a reference
+  // to the import declaration node (NamespaceImport -> ImportClause -> ImportDeclaration).
   const importDecl = declaration.parent.parent;
   if (!ts.isStringLiteral(importDecl.moduleSpecifier)) {
     return null;
