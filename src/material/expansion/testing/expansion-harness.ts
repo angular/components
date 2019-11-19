@@ -88,6 +88,20 @@ export class MatExpansionPanelHarness extends ComponentHarness {
     await (await this._header()).click();
   }
 
+  /** Expands the expansion panel if collapsed. */
+  async expand(): Promise<void> {
+    if (!await this.isExpanded()) {
+      await this.toggle();
+    }
+  }
+
+  /** Collapses the expansion panel if expanded. */
+  async collapse(): Promise<void> {
+    if (await this.isExpanded()) {
+      await this.toggle();
+    }
+  }
+
   /** Gets the text content of the panel. */
   async getTextContent(): Promise<string> {
     return (await this._content()).text();

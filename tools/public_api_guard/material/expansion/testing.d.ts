@@ -18,6 +18,8 @@ export declare class MatAccordionHarness extends ComponentHarness {
 
 export declare class MatExpansionPanelHarness extends ComponentHarness {
     blur(): Promise<void>;
+    collapse(): Promise<void>;
+    expand(): Promise<void>;
     focus(): Promise<void>;
     getDescription(): Promise<string | null>;
     getHarnessLoaderForContent(): Promise<HarnessLoader>;

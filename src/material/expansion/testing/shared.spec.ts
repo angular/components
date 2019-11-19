@@ -153,6 +153,30 @@ export function runHarnessTests(
     expect(await panel.isExpanded()).toBe(true);
   });
 
+  it('should be able to expand a panel', async () => {
+    const panel = await loader.getHarness(expansionPanelHarness);
+    expect(await panel.isExpanded()).toBe(false);
+    await panel.expand();
+    expect(await panel.isExpanded()).toBe(true);
+    // checking a second time to ensure it does not modify
+    // the state if already expanded.
+    await panel.expand();
+    expect(await panel.isExpanded()).toBe(true);
+  });
+
+  it('should be able to collapse a panel', async () => {
+    const panel = await loader.getHarness(expansionPanelHarness);
+    expect(await panel.isExpanded()).toBe(false);
+    await panel.expand();
+    expect(await panel.isExpanded()).toBe(true);
+    await panel.collapse();
+    expect(await panel.isExpanded()).toBe(false);
+    // checking a second time to ensure it does not modify
+    // the state if already collapsed.
+    await panel.collapse();
+    expect(await panel.isExpanded()).toBe(false);
+  });
+
   it('should be able to get text content of expansion panel', async () => {
     const panel = await loader.getHarness(expansionPanelHarness);
     expect(await panel.getTextContent()).toBe('Content of Panel#1');
