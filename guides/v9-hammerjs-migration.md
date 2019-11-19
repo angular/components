@@ -27,8 +27,9 @@ Additionally, Angular Material's `GestureConfig` (now deprecated) defined custom
 If the application directly uses any of these gestures, the migration will introduce a new
 application-specific configuration for these custom gestures, removing the dependency on Angular
 Material's `GestureConfig`.
- 
-Finally, if the application uses HammerJS directly, the migration will add an import for Angular's
+
+Finally, if the application uses any of the custom HammerJS gestures provided by Angular Material's
+`GestureConfig`, or the default HammerJS gestures, the migration will add an import for Angular's
 new `HammerModule`, which enabled HammerJS event bindings. These bindings were previously enabled
 by default in Angular versions 8 and below.
 
