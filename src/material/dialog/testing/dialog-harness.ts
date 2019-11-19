@@ -58,7 +58,7 @@ export class MatDialogHarness extends ComponentHarness {
   /**
    * Closes the dialog by pressing escape.
    *
-   * Note: this method cannot be used if `disableClose` has been set to `true` for the dialog.
+   * Note: this method does nothing if `disableClose` has been set to `true` for the dialog.
    */
   async close(): Promise<void> {
     await (await this.host()).sendKeys(TestKey.ESCAPE);
