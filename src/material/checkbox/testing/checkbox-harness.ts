@@ -91,19 +91,18 @@ export class MatCheckboxHarness extends ComponentHarness {
     return (await this._label()).text();
   }
 
-  /** Focuses the checkbox and returns a void promise that indicates when the action is complete. */
+  /** Focuses the checkbox. */
   async focus(): Promise<void> {
     return (await this._input()).focus();
   }
 
-  /** Blurs the checkbox and returns a void promise that indicates when the action is complete. */
+  /** Blurs the checkbox. */
   async blur(): Promise<void> {
     return (await this._input()).blur();
   }
 
   /**
-   * Toggle the checked state of the checkbox and returns a void promise that indicates when the
-   * action is complete.
+   * Toggles the checked state of the checkbox.
    *
    * Note: This attempts to toggle the checkbox as a user would, by clicking it. Therefore if you
    * are using `MAT_CHECKBOX_CLICK_ACTION` to change the behavior on click, calling this method
@@ -115,8 +114,7 @@ export class MatCheckboxHarness extends ComponentHarness {
 
   /**
    * Puts the checkbox in a checked state by toggling it if it is currently unchecked, or doing
-   * nothing if it is already checked. Returns a void promise that indicates when the action is
-   * complete.
+   * nothing if it is already checked.
    *
    * Note: This attempts to check the checkbox as a user would, by clicking it. Therefore if you
    * are using `MAT_CHECKBOX_CLICK_ACTION` to change the behavior on click, calling this method
@@ -130,8 +128,7 @@ export class MatCheckboxHarness extends ComponentHarness {
 
   /**
    * Puts the checkbox in an unchecked state by toggling it if it is currently checked, or doing
-   * nothing if it is already unchecked. Returns a void promise that indicates when the action is
-   * complete.
+   * nothing if it is already unchecked.
    *
    * Note: This attempts to uncheck the checkbox as a user would, by clicking it. Therefore if you
    * are using `MAT_CHECKBOX_CLICK_ACTION` to change the behavior on click, calling this method

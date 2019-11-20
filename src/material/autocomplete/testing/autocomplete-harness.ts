@@ -50,12 +50,12 @@ export class MatAutocompleteHarness extends ComponentHarness {
     return coerceBooleanProperty(await disabled);
   }
 
-  /** Focuses the input and returns a void promise that indicates when the action is complete. */
+  /** Focuses the autocomplete input. */
   async focus(): Promise<void> {
     return (await this.host()).focus();
   }
 
-  /** Blurs the input and returns a void promise that indicates when the action is complete. */
+  /** Blurs the autocomplete input. */
   async blur(): Promise<void> {
     return (await this.host()).blur();
   }

@@ -45,10 +45,7 @@ export class MatAutocompleteOptionHarness extends ComponentHarness {
             (harness, text) => HarnessPredicate.stringMatches(harness.getText(), text));
   }
 
-  /**
-   * Clicks the option.
-   * @return A promise that resolves when the action is complete.
-   */
+  /** Clicks the option. */
   async select(): Promise<void> {
     return (await this.host()).click();
   }

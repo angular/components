@@ -53,7 +53,6 @@ export class MatTabGroupHarness extends ComponentHarness {
    * Selects a tab in this tab group.
    * @param filter An optional filter to apply to the child tabs. The first tab matching the filter
    *     will be selected.
-   * @return A promise that resolves when the action is complete.
    */
   async selectTab(filter: TabHarnessFilters = {}): Promise<void> {
     const tabs = await this.getTabs(filter);

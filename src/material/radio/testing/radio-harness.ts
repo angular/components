@@ -84,7 +84,6 @@ export class MatRadioGroupHarness extends ComponentHarness {
    * Checks a radio button in this group.
    * @param filter An optional filter to apply to the child radio buttons. The first tab matching
    *     the filter will be selected.
-   * @return A promise that resolves when the action is complete.
    */
   async checkRadioButton(filter: RadioButtonHarnessFilters = {}): Promise<void> {
     const radioButtons = await this.getRadioButtons(filter);
@@ -178,7 +177,7 @@ export class MatRadioButtonHarness extends ComponentHarness {
   private _clickLabel = this.locatorFor('.mat-radio-label');
   private _input = this.locatorFor('input');
 
-  /** Whether the radio-button is checked. */
+  /** Gets a boolean promise indicating whether the radio-button is checked. */
   async isChecked(): Promise<boolean> {
     const checked = (await this._input()).getProperty('checked');
     return coerceBooleanProperty(await checked);
@@ -222,18 +221,12 @@ export class MatRadioButtonHarness extends ComponentHarness {
     return (await this._textLabel()).text();
   }
 
-  /**
-   * Focuses the radio-button.
-   * @return A promise that resolves when the action is complete.
-   */
+  /** Focuses the radio-button. */
   async focus(): Promise<void> {
     return (await this._input()).focus();
   }
 
-  /**
-   * Blurs the radio-button.
-   * @return A promise that resolves when the action is complete.
-   */
+  /** Blurs the radio-button. */
   async blur(): Promise<void> {
     return (await this._input()).blur();
   }
@@ -241,7 +234,6 @@ export class MatRadioButtonHarness extends ComponentHarness {
   /**
    * Puts the radio-button in a checked state by clicking it if it is currently unchecked,
    * or doing nothing if it is already checked.
-   * @return A promise that resolves when the action is complete.
    */
   async check(): Promise<void> {
     if (!(await this.isChecked())) {

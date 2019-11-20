@@ -53,12 +53,12 @@ export class MatButtonHarness extends ComponentHarness {
     return (await this.host()).text();
   }
 
-  /** Focuses the button and returns a void promise that indicates when the action is complete. */
+  /** Focuses the button. */
   async focus(): Promise<void> {
     return (await this.host()).focus();
   }
 
-  /** Blurs the button and returns a void promise that indicates when the action is complete. */
+  /** Blurs the button. */
   async blur(): Promise<void> {
     return (await this.host()).blur();
   }

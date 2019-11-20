@@ -61,7 +61,6 @@ export class MatSnackBarHarness extends ComponentHarness {
   /**
    * Dismisses the snack-bar by clicking the action button. Method cannot
    * be used for snack-bar's without action or with custom content.
-   * @return A promise that resolves when the action is complete.
    */
   async dismissWithAction(): Promise<void> {
     await this._assertSimpleSnackBarWithAction();

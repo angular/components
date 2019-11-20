@@ -80,26 +80,17 @@ export class MatSlideToggleHarness extends ComponentHarness {
     return (await this._label()).text();
   }
 
-  /**
-   * Focuses the slide-toggle.
-   * @return A promise that resolves when the action is complete.
-   */
+  /** Focuses the slide-toggle. */
   async focus(): Promise<void> {
     return (await this._input()).focus();
   }
 
-  /**
-   * Blurs the slide-toggle and returns a void promise that indicates action completion.
-   * @return A promise that resolves when the action is complete.
-   */
+  /** Blurs the slide-toggle. */
   async blur(): Promise<void> {
     return (await this._input()).blur();
   }
 
-  /**
-   * Toggle the checked state of the slide-toggle.
-   * @return A promise that resolves when the action is complete.
-   */
+  /** Toggle the checked state of the slide-toggle. */
   async toggle(): Promise<void> {
     return (await this._inputContainer()).click();
   }
@@ -107,7 +98,6 @@ export class MatSlideToggleHarness extends ComponentHarness {
   /**
    * Puts the slide-toggle in a checked state by toggling it if it is currently unchecked, or doing
    * nothing if it is already checked.
-   * @return A promise that resolves when the action is complete.
    */
   async check(): Promise<void> {
     if (!(await this.isChecked())) {
@@ -118,7 +108,6 @@ export class MatSlideToggleHarness extends ComponentHarness {
   /**
    * Puts the slide-toggle in an unchecked state by toggling it if it is currently checked, or doing
    * nothing if it is already unchecked.
-   * @return A promise that resolves when the action is complete.
    */
   async uncheck(): Promise<void> {
     if (await this.isChecked()) {

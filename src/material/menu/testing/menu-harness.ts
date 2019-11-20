@@ -47,36 +47,24 @@ export class MatMenuHarness extends ComponentHarness {
     return (await this.host()).text();
   }
 
-  /**
-   * Focuses the menu
-   * @return A promise that resolves when the action is complete.
-   */
+  /** Focuses the menu. */
   async focus(): Promise<void> {
     return (await this.host()).focus();
   }
 
-  /**
-   * Blurs the menu.
-   * @return A promise that resolves when the action is complete.
-   */
+  /** Blurs the menu. */
   async blur(): Promise<void> {
     return (await this.host()).blur();
   }
 
-  /**
-   * Opens the menu.
-   * @return A promise that resolves when the action is complete.
-   */
+  /** Opens the menu. */
   async open(): Promise<void> {
     if (!await this.isOpen()) {
       return (await this.host()).click();
     }
   }
 
-  /**
-   * Closes the menu.
-   * @return A promise that resolves when the action is complete.
-   */
+  /** Closes the menu. */
   async close(): Promise<void> {
     const panel = await this._getMenuPanel();
     if (panel) {
@@ -105,7 +93,6 @@ export class MatMenuHarness extends ComponentHarness {
    * @param subItemFilters A list of filters representing the items to click in any subsequent
    *     sub-menus. The first item in the sub-menu matching the corresponding filter in
    *     `subItemFilters` will be clicked.
-   * @return A promise that resolves when the action is complete.
    */
   async clickItem(
       itemFilter: Omit<MenuItemHarnessFilters, 'ancestor'>,
@@ -171,26 +158,17 @@ export class MatMenuItemHarness extends ComponentHarness {
     return (await this.host()).text();
   }
 
-  /**
-   * Focuses the menu.
-   * @return A promise that resolves when the action is complete.
-   */
+  /** Focuses the menu item. */
   async focus(): Promise<void> {
     return (await this.host()).focus();
   }
 
-  /**
-   * Blurs the menu.
-   * @return A promise that resolves when the action is complete.
-   */
+  /** Blurs the menu item. */
   async blur(): Promise<void> {
     return (await this.host()).blur();
   }
 
-  /**
-   * Clicks the menu item.
-   * @return A promise that resolves when the action is complete.
-   */
+  /** Clicks the menu item. */
   async click(): Promise<void> {
     return (await this.host()).click();
   }

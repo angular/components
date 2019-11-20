@@ -87,8 +87,6 @@ export class MatSliderHarness extends ComponentHarness {
    * can happen if not every value of the slider maps to a single pixel that could be
    * clicked using mouse interaction. In such cases consider using the keyboard to
    * select the given value or expand the slider's size for a better user experience.
-   *
-   * @return A promise that resolves when the action is complete.
    */
   async setValue(value: number): Promise<void> {
     const [sliderEl, wrapperEl, orientation] =
@@ -111,18 +109,12 @@ export class MatSliderHarness extends ComponentHarness {
     await wrapperEl.click(relativeX, relativeY);
   }
 
-  /**
-   * Focuses the slider.
-   * @return A promise that resolves when the action is complete.
-   */
+  /** Focuses the slider. */
   async focus(): Promise<void> {
     return (await this.host()).focus();
   }
 
-  /**
-   * Blurs the slider.
-   * @return A promise that resolves when the action is complete.
-   */
+  /** Blurs the slider. */
   async blur(): Promise<void> {
     return (await this.host()).blur();
   }

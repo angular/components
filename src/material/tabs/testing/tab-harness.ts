@@ -53,10 +53,7 @@ export class MatTabHarness extends ComponentHarness {
     return (await hostEl.getAttribute('aria-disabled')) === 'true';
   }
 
-  /**
-   * Selects the given tab by clicking on the label. Tab cannot be selected if disabled.
-   * @return A promise that resolves when the action is complete.
-   */
+  /** Selects the given tab by clicking on the label. Tab cannot be selected if disabled. */
   async select(): Promise<void> {
     await (await this.host()).click();
   }
