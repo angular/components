@@ -1,7 +1,7 @@
 # V9 HammerJS migration
 
 Angular Material, as of version 9, no longer requires HammerJS for any component. Components which
-previously depended on HammerJS, no longer provide a [`HAMMER_GESTURE_CONFIG`][1] that will
+previously depended on HammerJS no longer provide a [`HAMMER_GESTURE_CONFIG`][1] that will
 enable use of HammerJS events in templates.
 
 Additionally the `GestureConfig` export from `@angular/material/core` has been marked as
