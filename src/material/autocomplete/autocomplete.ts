@@ -7,7 +7,7 @@
  */
 
 import {ActiveDescendantKeyManager} from '@angular/cdk/a11y';
-import {coerceBooleanProperty} from '@angular/cdk/coercion';
+import {coerceBooleanProperty, coerceStringArray} from '@angular/cdk/coercion';
 import {
   AfterContentInit,
   ChangeDetectionStrategy,
@@ -155,10 +155,10 @@ export class MatAutocomplete extends _MatAutocompleteMixinBase implements AfterC
    * inside the overlay container to allow for easy styling.
    */
   @Input('class')
-  set classList(value: string) {
+  set classList(value: string | string[]) {
     if (value && value.length) {
-      this._classList = value.split(' ').reduce((classList, className) => {
-        classList[className.trim()] = true;
+      this._classList = coerceStringArray(value).reduce((classList, className) => {
+        classList[className] = true;
         return classList;
       }, {} as {[key: string]: boolean});
     } else {
