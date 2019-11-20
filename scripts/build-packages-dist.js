@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 /**
  * Script that builds the release output of all packages which have the "release-package
  * bazel tag set. The script builds all those packages and copies the release output to the
