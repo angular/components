@@ -205,6 +205,10 @@ export declare const MAT_OPTION_PARENT_COMPONENT: InjectionToken<MatOptionParent
 
 export declare const MAT_RIPPLE_GLOBAL_OPTIONS: InjectionToken<RippleGlobalOptions>;
 
+export declare function MAT_SINGLE_DATE_SELECTION_MODEL_FACTORY<D>(parent: MatSingleDateSelectionModel<D>, adapter: DateAdapter<D>): MatSingleDateSelectionModel<D>;
+
+export declare const MAT_SINGLE_DATE_SELECTION_MODEL_PROVIDER: FactoryProvider;
+
 export declare class MatCommonModule {
     constructor(highContrastModeDetector: HighContrastModeDetector, sanityChecks: any);
     static ɵinj: i0.ɵɵInjectorDef<MatCommonModule>;
@@ -233,6 +237,7 @@ export declare abstract class MatDateSelectionModel<D> {
     abstract isComplete(): boolean;
     abstract isSame(other: MatDateSelectionModel<D>): boolean;
     abstract isValid(): boolean;
+    abstract overlaps(range: DateRange<D>): boolean;
 }
 
 export declare const MATERIAL_SANITY_CHECKS: InjectionToken<SanityChecks>;
@@ -336,7 +341,10 @@ export declare class MatRangeDateSelectionModel<D> extends MatDateSelectionModel
     isComplete(): boolean;
     isSame(other: MatDateSelectionModel<D>): boolean;
     isValid(): boolean;
+    overlaps(range: DateRange<D>): boolean;
     setRange(start: D | null, end: D | null): void;
+    static ɵfac: i0.ɵɵFactoryDef<MatRangeDateSelectionModel<any>>;
+    static ɵprov: i0.ɵɵInjectableDef<MatRangeDateSelectionModel<any>>;
 }
 
 export declare class MatRipple implements OnInit, OnDestroy, RippleTarget {
@@ -372,17 +380,10 @@ export declare class MatSingleDateSelectionModel<D> extends MatDateSelectionMode
     isComplete(): boolean;
     isSame(other: MatDateSelectionModel<D>): boolean;
     isValid(): boolean;
+    overlaps(range: DateRange<D>): boolean;
     setDate(date: D | null): void;
-}
-
-export declare class MatSingleDateSelectionModel<D> extends MatDateSelectionModel<D> {
-    constructor(adapter: DateAdapter<D>, date?: D | null);
-    add(date: D | null): void;
-    asDate(): D | null;
-    compareDate(other: MatSingleDateSelectionModel<D>): number | boolean;
-    isComplete(): boolean;
-    isSame(other: MatDateSelectionModel<D>): boolean;
-    isValid(): boolean;
+    static ɵfac: i0.ɵɵFactoryDef<MatSingleDateSelectionModel<any>>;
+    static ɵprov: i0.ɵɵInjectableDef<MatSingleDateSelectionModel<any>>;
 }
 
 export declare const JAN = 0, FEB = 1, MAR = 2, APR = 3, MAY = 4, JUN = 5, JUL = 6, AUG = 7, SEP = 8, OCT = 9, NOV = 10, DEC = 11;
