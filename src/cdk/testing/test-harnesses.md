@@ -549,18 +549,19 @@ may need to explicitly wait for tasks outside `NgZone`, as this does not happen 
 
 ### API for harness environment authors
 
-Out-of-the-box, Angular CDK's component harnesses can be used in Protractor E2E tests and Karma unit
-tests. Developers can support additional environments by creating custom implementations of
-`TestElement` and `HarnessEnvironment`. 
+Harness environment authors are developers who want to add support for using component harnesses in
+additional testing environments. Out-of-the-box, Angular CDK's component harnesses can be used in
+Protractor E2E tests and Karma unit tests. Developers can support additional environments by
+creating custom implementations of `TestElement` and `HarnessEnvironment`. 
 
 #### Creating a `TestElement` implementation for the environment
 
 The first step in adding support for a new testing environment is to create a `TestElement`
 implementation. The `TestElement` interface serves as an environment-agnostic representation of a
 DOM element; it lets harnesses interact with DOM elements regardless of the underlying environment.
-Because some environments don't support interacting with DOM elements synchronous (e.g. webdriver),
-all of `TestElement` methods are asynchronous, returning a `Promise` with the result of the
-operation.
+Because some environments don't support interacting with DOM elements synchronously
+(e.g. webdriver), all of `TestElement` methods are asynchronous, returning a `Promise` with the
+result of the operation.
 
 | Method | Description |
 | ------ | ----------- |
@@ -586,11 +587,11 @@ implementing the `sendKeys` method, is that the key codes in the `TestKey`
 enum likely differ from the key codes used in the test environment. Environment authors should
 maintain a mapping from `TestKey` codes to the codes used in the particular testing environment.
 
-Note: the 
+The 
 [`UnitTestElement`](https://github.com/angular/components/blob/master/src/cdk/testing/testbed/unit-test-element.ts#L57)
 and 
 [`ProtractorElement`](https://github.com/angular/components/blob/master/src/cdk/testing/protractor/protractor-element.ts#L67)
-implementations that come with the CDK serve as good examples of implementations of this interface.
+implementations in Angular CDK serve as good examples of implementations of this interface.
 
 #### Creating a `HarnessEnvironemnt` implementation for the environment
 
