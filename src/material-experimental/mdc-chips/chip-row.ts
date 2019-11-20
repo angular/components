@@ -63,7 +63,7 @@ export class MatChipRow extends MatChip implements AfterContentInit, AfterViewIn
   cells!: HTMLElement[];
 
   /** Key codes for which this component has a custom handler. */
-  HANDLED_KEYS = NAVIGATION_KEYS.concat([BACKSPACE, DELETE]);
+  HANDLED_KEYS = new Set([...NAVIGATION_KEYS, BACKSPACE, DELETE]);
 
   ngAfterContentInit() {
     super.ngAfterContentInit();
@@ -146,7 +146,7 @@ export class MatChipRow extends MatChip implements AfterContentInit, AfterViewIn
         event.preventDefault();
         break;
       default:
-        this._handleInteraction(event);
+        this._handleKeydown(event);
     }
   }
 
