@@ -6,8 +6,11 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-/** Coerces a value to an array of strings. */
-export function coerceStringArray(value: any, separator: string | RegExp = ','): string[] {
+/**
+ * Coerces a value to an array of trimmed non-empty strings.
+ * Useful for defining CSS classes or table columns.
+ */
+export function coerceStringArray(value: any, separator: string | RegExp = ' '): string[] {
     if (value == null) {
         return [];
     }
