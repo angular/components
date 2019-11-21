@@ -154,11 +154,12 @@ def ng_e2e_test_library(deps = [], tsconfig = None, **kwargs):
         **kwargs
     )
 
-def karma_web_test_suite(deps = [], srcs = [], **kwargs):
+def karma_web_test_suite(deps = [], srcs = [], browsers = [], **kwargs):
     _karma_web_test_suite(
         deps = ["//tools/rxjs:rxjs_umd_modules"] + deps,
         # Required for running the compiled ng modules that use TypeScript import helpers.
         # TODO(jelbourn): remove UMDs from here once we don't have to manually include them
+        browsers = browsers or ["//tools/browsers:chromium"],
         srcs = [
             "@npm//:node_modules/tslib/tslib.js",
         ] + getAngularUmdTargets() + srcs,
@@ -168,9 +169,10 @@ def karma_web_test_suite(deps = [], srcs = [], **kwargs):
 # Protractor web test targets are flaky by default as the browser can sometimes
 # crash (e.g. due to too much concurrency). Passing the "flaky" flag ensures that
 # Bazel detects flaky tests and re-runs these a second time in case of a flake.
-def protractor_web_test_suite(flaky = True, **kwargs):
+def protractor_web_test_suite(flaky = True, browsers = [], **kwargs):
     _protractor_web_test_suite(
         flaky = flaky,
+        browsers = browsers or ["//tools/browsers:chromium"],
         **kwargs
     )
 
@@ -219,8 +221,8 @@ def ng_web_test_suite(deps = [], static_css = [], bootstrap = [], tags = [], **k
             "//test:angular_test_init",
         ] + deps,
         browsers = [
-            "@io_bazel_rules_webtesting//browsers:chromium-local",
-            "@io_bazel_rules_webtesting//browsers:firefox-local",
+            "//tools/browsers:chromium",
+            "//tools/browsers:firefox",
         ],
         bootstrap = [
             "@npm//:node_modules/zone.js/dist/zone-testing-bundle.js",
