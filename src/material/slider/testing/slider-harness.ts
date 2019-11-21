@@ -28,7 +28,7 @@ export class MatSliderHarness extends ComponentHarness {
   private _textLabel = this.locatorFor('.mat-slider-thumb-label-text');
   private _wrapper = this.locatorFor('.mat-slider-wrapper');
 
-  /** Gets a promise for the slider's id. */
+  /** Gets the slider's id. */
   async getId(): Promise<string|null> {
     const id = await (await this.host()).getAttribute('id');
     // In case no id has been specified, the "id" property always returns
@@ -37,8 +37,8 @@ export class MatSliderHarness extends ComponentHarness {
   }
 
   /**
-   * Gets a promise for the current display value of the slider. Returns a null promise if the thumb
-   * label is disabled.
+   * Gets the current display value of the slider. Returns a null promise if the thumb label is
+   * disabled.
    */
   async getDisplayValue(): Promise<string|null> {
     const [host, textLabel] = await Promise.all([this.host(), this._textLabel()]);
@@ -48,33 +48,33 @@ export class MatSliderHarness extends ComponentHarness {
     return null;
   }
 
-  /** Gets a promise for the current percentage value of the slider. */
+  /** Gets the current percentage value of the slider. */
   async getPercentage(): Promise<number> {
     return this._calculatePercentage(await this.getValue());
   }
 
-  /** Gets a promise for the current value of the slider. */
+  /** Gets the current value of the slider. */
   async getValue(): Promise<number> {
     return coerceNumberProperty(await (await this.host()).getAttribute('aria-valuenow'));
   }
 
-  /** Gets a promise for the maximum value of the slider. */
+  /** Gets the maximum value of the slider. */
   async getMaxValue(): Promise<number> {
     return coerceNumberProperty(await (await this.host()).getAttribute('aria-valuemax'));
   }
 
-  /** Gets a promise for the minimum value of the slider. */
+  /** Gets the minimum value of the slider. */
   async getMinValue(): Promise<number> {
     return coerceNumberProperty(await (await this.host()).getAttribute('aria-valuemin'));
   }
 
-  /** Gets a boolean promise indicating whether the slider is disabled. */
+  /** Whether the slider is disabled. */
   async isDisabled(): Promise<boolean> {
     const disabled = (await this.host()).getAttribute('aria-disabled');
     return coerceBooleanProperty(await disabled);
   }
 
-  /** Gets a promise for the orientation of the slider. */
+  /** Gets the orientation of the slider. */
   async getOrientation(): Promise<'horizontal'|'vertical'> {
     // "aria-orientation" will always be set to either "horizontal" or "vertical".
     return (await this.host()).getAttribute('aria-orientation') as any;

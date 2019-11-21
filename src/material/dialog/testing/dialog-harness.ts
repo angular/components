@@ -27,7 +27,7 @@ export class MatDialogHarness extends ComponentHarness {
     return new HarnessPredicate(MatDialogHarness, options);
   }
 
-  /** Gets a promise for the id of the dialog. */
+  /** Gets the id of the dialog. */
   async getId(): Promise<string|null> {
     const id = await (await this.host()).getAttribute('id');
     // In case no id has been specified, the "id" property always returns
@@ -35,22 +35,22 @@ export class MatDialogHarness extends ComponentHarness {
     return id !== '' ? id : null;
   }
 
-  /** Gets a promise for the role of the dialog. */
+  /** Gets the role of the dialog. */
   async getRole(): Promise<DialogRole|null> {
     return (await this.host()).getAttribute('role') as Promise<DialogRole|null>;
   }
 
-  /** Gets a promise for the value of the dialog's "aria-label" attribute. */
+  /** Gets the value of the dialog's "aria-label" attribute. */
   async getAriaLabel(): Promise<string|null> {
     return (await this.host()).getAttribute('aria-label');
   }
 
-  /** Gets a promise for the value of the dialog's "aria-labelledby" attribute. */
+  /** Gets the value of the dialog's "aria-labelledby" attribute. */
   async getAriaLabelledby(): Promise<string|null> {
     return (await this.host()).getAttribute('aria-labelledby');
   }
 
-  /** Gets a promise for the value of the dialog's "aria-describedby" attribute. */
+  /** Gets the value of the dialog's "aria-describedby" attribute. */
   async getAriaDescribedby(): Promise<string|null> {
     return (await this.host()).getAttribute('aria-describedby');
   }

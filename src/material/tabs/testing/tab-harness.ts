@@ -26,28 +26,28 @@ export class MatTabHarness extends ComponentHarness {
             (harness, label) => HarnessPredicate.stringMatches(harness.getLabel(), label));
   }
 
-  /** Gets a promise for the label of the tab. */
+  /** Gets the label of the tab. */
   async getLabel(): Promise<string> {
     return (await this.host()).text();
   }
 
-  /** Gets a promise for the aria label of the tab. */
+  /** Gets the aria-label of the tab. */
   async getAriaLabel(): Promise<string|null> {
     return (await this.host()).getAttribute('aria-label');
   }
 
-  /** Gets a promise for the value of the "aria-labelledby" attribute. */
+  /** Gets the value of the "aria-labelledby" attribute. */
   async getAriaLabelledby(): Promise<string|null> {
     return (await this.host()).getAttribute('aria-labelledby');
   }
 
-  /** Gets a boolean promise indicating whether the tab is selected. */
+  /** Whether the tab is selected. */
   async isSelected(): Promise<boolean> {
     const hostEl = await this.host();
     return (await hostEl.getAttribute('aria-selected')) === 'true';
   }
 
-  /** Gets a boolean promise indicating whether the tab is disabled. */
+  /** Whether the tab is disabled. */
   async isDisabled(): Promise<boolean> {
     const hostEl = await this.host();
     return (await hostEl.getAttribute('aria-disabled')) === 'true';
@@ -58,7 +58,7 @@ export class MatTabHarness extends ComponentHarness {
     await (await this.host()).click();
   }
 
-  /** Gets a promise for the text content of the tab. */
+  /** Gets the text content of the tab. */
   async getTextContent(): Promise<string> {
     const contentId = await this._getContentId();
     const contentEl = await this.documentRootLocatorFactory().locatorFor(`#${contentId}`)();
@@ -66,15 +66,15 @@ export class MatTabHarness extends ComponentHarness {
   }
 
   /**
-   * Gets a promise for a `HarnessLoader` that can be used to load harnesses for components within
-   * the tab's content area.
+   * Gets a `HarnessLoader` that can be used to load harnesses for components within the tab's
+   * content area.
    */
   async getHarnessLoaderForContent(): Promise<HarnessLoader> {
     const contentId = await this._getContentId();
     return this.documentRootLocatorFactory().harnessLoaderFor(`#${contentId}`);
   }
 
-  /** Gets a promise for the element id for the content of the current tab. */
+  /** Gets the element id for the content of the current tab. */
   private async _getContentId(): Promise<string> {
     const hostEl = await this.host();
     // Tabs never have an empty "aria-controls" attribute.

@@ -50,7 +50,7 @@ export class MatAutocompleteOptionHarness extends ComponentHarness {
     return (await this.host()).click();
   }
 
-  /** Gets a promise for the option's label text. */
+  /** Gets the option's label text. */
   async getText(): Promise<string> {
     return (await this.host()).text();
   }
@@ -75,7 +75,7 @@ export class MatAutocompleteOptionGroupHarness extends ComponentHarness {
             (harness, label) => HarnessPredicate.stringMatches(harness.getLabelText(), label));
   }
 
-  /** Gets a promise for the option group's label text. */
+  /** Gets the option group's label text. */
   async getLabelText(): Promise<string> {
     return (await this._label()).text();
   }

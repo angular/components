@@ -27,7 +27,7 @@ export class MatSidenavHarness extends MatDrawerHarness {
             async (harness, position) => (await harness.getPosition()) === position);
   }
 
-  /** Gets a promise indicating whether the sidenav is fixed in the viewport. */
+  /** Whether the sidenav is fixed in the viewport. */
   async isFixedInViewport(): Promise<boolean> {
     return (await this.host()).hasClass('mat-sidenav-fixed');
   }

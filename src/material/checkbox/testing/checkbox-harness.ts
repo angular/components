@@ -36,57 +36,57 @@ export class MatCheckboxHarness extends ComponentHarness {
   private _input = this.locatorFor('input');
   private _inputContainer = this.locatorFor('.mat-checkbox-inner-container');
 
-  /** Gets a boolean promise indicating if the checkbox is checked. */
+  /** Whether the checkbox is checked. */
   async isChecked(): Promise<boolean> {
     const checked = (await this._input()).getProperty('checked');
     return coerceBooleanProperty(await checked);
   }
 
-  /** Gets a boolean promise indicating if the checkbox is in an indeterminate state. */
+  /** Whether the checkbox is in an indeterminate state. */
   async isIndeterminate(): Promise<boolean> {
     const indeterminate = (await this._input()).getProperty('indeterminate');
     return coerceBooleanProperty(await indeterminate);
   }
 
-  /** Gets a boolean promise indicating if the checkbox is disabled. */
+  /** Whether the checkbox is disabled. */
   async isDisabled(): Promise<boolean> {
     const disabled = (await this._input()).getAttribute('disabled');
     return coerceBooleanProperty(await disabled);
   }
 
-  /** Gets a boolean promise indicating if the checkbox is required. */
+  /** Whether the checkbox is required. */
   async isRequired(): Promise<boolean> {
     const required = (await this._input()).getProperty('required');
     return coerceBooleanProperty(await required);
   }
 
-  /** Gets a boolean promise indicating if the checkbox is valid. */
+  /** Whether the checkbox is valid. */
   async isValid(): Promise<boolean> {
     const invalid = (await this.host()).hasClass('ng-invalid');
     return !(await invalid);
   }
 
-  /** Gets a promise for the checkbox's name. */
+  /** Gets the checkbox's name. */
   async getName(): Promise<string|null> {
     return (await this._input()).getAttribute('name');
   }
 
-  /** Gets a promise for the checkbox's value. */
+  /** Gets the checkbox's value. */
   async getValue(): Promise<string|null> {
     return (await this._input()).getProperty('value');
   }
 
-  /** Gets a promise for the checkbox's aria-label. */
+  /** Gets the checkbox's aria-label. */
   async getAriaLabel(): Promise<string|null> {
     return (await this._input()).getAttribute('aria-label');
   }
 
-  /** Gets a promise for the checkbox's aria-labelledby. */
+  /** Gets the checkbox's aria-labelledby. */
   async getAriaLabelledby(): Promise<string|null> {
     return (await this._input()).getAttribute('aria-labelledby');
   }
 
-  /** Gets a promise for the checkbox's label text. */
+  /** Gets the checkbox's label text. */
   async getLabelText(): Promise<string> {
     return (await this._label()).text();
   }

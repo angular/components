@@ -27,14 +27,14 @@ export class MatProgressSpinnerHarness extends ComponentHarness {
     return new HarnessPredicate(MatProgressSpinnerHarness, options);
   }
 
-  /** Gets a promise for the progress spinner's value. */
+  /** Gets the progress spinner's value. */
   async getValue(): Promise<number|null> {
     const host = await this.host();
     const ariaValue = await host.getAttribute('aria-valuenow');
     return ariaValue ? coerceNumberProperty(ariaValue) : null;
   }
 
-  /** Gets a promise for the progress spinner's mode. */
+  /** Gets the progress spinner's mode. */
   async getMode(): Promise<ProgressSpinnerMode> {
     const modeAttr = (await this.host()).getAttribute('mode');
     return await modeAttr as ProgressSpinnerMode;

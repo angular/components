@@ -36,46 +36,46 @@ export class MatSlideToggleHarness extends ComponentHarness {
   private _input = this.locatorFor('input');
   private _inputContainer = this.locatorFor('.mat-slide-toggle-bar');
 
-  /** Gets a boolean promise indicating if the slide-toggle is checked. */
+  /** Whether the slide-toggle is checked. */
   async isChecked(): Promise<boolean> {
     const checked = (await this._input()).getProperty('checked');
     return coerceBooleanProperty(await checked);
   }
 
-  /** Gets a boolean promise indicating if the slide-toggle is disabled. */
+  /** Whether the slide-toggle is disabled. */
   async isDisabled(): Promise<boolean> {
     const disabled = (await this._input()).getAttribute('disabled');
     return coerceBooleanProperty(await disabled);
   }
 
-  /** Gets a boolean promise indicating if the slide-toggle is required. */
+  /** Whether the slide-toggle is required. */
   async isRequired(): Promise<boolean> {
     const required = (await this._input()).getAttribute('required');
     return coerceBooleanProperty(await required);
   }
 
-  /** Gets a boolean promise indicating if the slide-toggle is valid. */
+  /** Whether the slide-toggle is valid. */
   async isValid(): Promise<boolean> {
     const invalid = (await this.host()).hasClass('ng-invalid');
     return !(await invalid);
   }
 
-  /** Gets a promise for the slide-toggle's name. */
+  /** Gets the slide-toggle's name. */
   async getName(): Promise<string | null> {
     return (await this._input()).getAttribute('name');
   }
 
-  /** Gets a promise for the slide-toggle's aria-label. */
+  /** Gets the slide-toggle's aria-label. */
   async getAriaLabel(): Promise<string | null> {
     return (await this._input()).getAttribute('aria-label');
   }
 
-  /** Gets a promise for the slide-toggle's aria-labelledby. */
+  /** Gets the slide-toggle's aria-labelledby. */
   async getAriaLabelledby(): Promise<string | null> {
     return (await this._input()).getAttribute('aria-labelledby');
   }
 
-  /** Gets a promise for the slide-toggle's label text. */
+  /** Gets the slide-toggle's label text. */
   async getLabelText(): Promise<string> {
     return (await this._label()).text();
   }

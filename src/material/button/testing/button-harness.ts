@@ -42,13 +42,13 @@ export class MatButtonHarness extends ComponentHarness {
     return (await this.host()).click();
   }
 
-  /** Gets a boolean promise indicating if the button is disabled. */
+  /** Whether the button is disabled. */
   async isDisabled(): Promise<boolean> {
     const disabled = (await this.host()).getAttribute('disabled');
     return coerceBooleanProperty(await disabled);
   }
 
-  /** Gets a promise for the button's label text. */
+  /** Gets the button's label text. */
   async getText(): Promise<string> {
     return (await this.host()).text();
   }

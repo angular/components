@@ -26,18 +26,18 @@ export class MatDrawerHarness extends ComponentHarness {
             async (harness, position) => (await harness.getPosition()) === position);
   }
 
-  /** Gets a boolean promise indicating whether the drawer is open. */
+  /** Whether the drawer is open. */
   async isOpen(): Promise<boolean> {
     return (await this.host()).hasClass('mat-drawer-opened');
   }
 
-  /** Gets a promise for the position of the drawer inside its container. */
+  /** Gets the position of the drawer inside its container. */
   async getPosition(): Promise<'start'|'end'> {
     const host = await this.host();
     return (await host.hasClass('mat-drawer-end')) ? 'end' : 'start';
   }
 
-  /** Gets a promise for the mode that the drawer is in. */
+  /** Gets the mode that the drawer is in. */
   async getMode(): Promise<'over'|'push'|'side'> {
     const host = await this.host();
 

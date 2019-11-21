@@ -30,14 +30,14 @@ export class MatTabGroupHarness extends ComponentHarness {
   }
 
   /**
-   * Gets a promise for the list of tabs in the tab group.
+   * Gets the list of tabs in the tab group.
    * @param filter Optionally filters which tabs are included.
    */
   async getTabs(filter: TabHarnessFilters = {}): Promise<MatTabHarness[]> {
     return this.locatorForAll(MatTabHarness.with(filter))();
   }
 
-  /** Gets a promise for the selected tab of the tab group. */
+  /** Gets the selected tab of the tab group. */
   async getSelectedTab(): Promise<MatTabHarness> {
     const tabs = await this.getTabs();
     const isSelected = await Promise.all(tabs.map(t => t.isSelected()));

@@ -32,7 +32,7 @@ export class MatSnackBarHarness extends ComponentHarness {
   }
 
   /**
-   * Gets a promise for the role of the snack-bar. The role of a snack-bar is determined based
+   * Gets the role of the snack-bar. The role of a snack-bar is determined based
    * on the ARIA politeness specified in the snack-bar config.
    */
   async getRole(): Promise<'alert'|'status'|null> {
@@ -40,8 +40,7 @@ export class MatSnackBarHarness extends ComponentHarness {
   }
 
   /**
-   * Gets a boolean promise indicating whether the snack-bar has an action. Method cannot be
-   * used for snack-bar's with custom content.
+   * Whether the snack-bar has an action. Method cannot be used for snack-bar's with custom content.
    */
   async hasAction(): Promise<boolean> {
     await this._assertSimpleSnackBar();
@@ -49,8 +48,8 @@ export class MatSnackBarHarness extends ComponentHarness {
   }
 
   /**
-   * Gets a promise for the description of the snack-bar. Method cannot be
-   * used for snack-bar's without action or with custom content.
+   * Gets the description of the snack-bar. Method cannot be used for snack-bar's without action or
+   * with custom content.
    */
   async getActionDescription(): Promise<string> {
     await this._assertSimpleSnackBarWithAction();
@@ -59,8 +58,8 @@ export class MatSnackBarHarness extends ComponentHarness {
 
 
   /**
-   * Dismisses the snack-bar by clicking the action button. Method cannot
-   * be used for snack-bar's without action or with custom content.
+   * Dismisses the snack-bar by clicking the action button. Method cannot be used for snack-bar's
+   * without action or with custom content.
    */
   async dismissWithAction(): Promise<void> {
     await this._assertSimpleSnackBarWithAction();
@@ -68,8 +67,7 @@ export class MatSnackBarHarness extends ComponentHarness {
   }
 
   /**
-   * Gets a promise for the message of the snack-bar. Method cannot be used for
-   * snack-bar's with custom content.
+   * Gets the message of the snack-bar. Method cannot be used for snack-bar's with custom content.
    */
   async getMessage(): Promise<string> {
     await this._assertSimpleSnackBar();
@@ -97,9 +95,7 @@ export class MatSnackBarHarness extends ComponentHarness {
     }
   }
 
-  /**
-   * Gets a boolean promise indicating whether the snack-bar is using the default content template.
-   */
+  /** Whether the snack-bar is using the default content template. */
   private async _isSimpleSnackBar(): Promise<boolean> {
     return await this._simpleSnackBar() !== null;
   }

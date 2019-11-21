@@ -31,18 +31,18 @@ export class MatMenuHarness extends ComponentHarness {
             (harness, text) => HarnessPredicate.stringMatches(harness.getTriggerText(), text));
   }
 
-  /** Gets a boolean promise indicating if the menu is disabled. */
+  /** Whether the menu is disabled. */
   async isDisabled(): Promise<boolean> {
     const disabled = (await this.host()).getAttribute('disabled');
     return coerceBooleanProperty(await disabled);
   }
 
-  /** Gets a boolean promise indicating whether the menu is open. */
+  /** Whether the menu is open. */
   async isOpen(): Promise<boolean> {
     return !!(await this._getMenuPanel());
   }
 
-  /** Gets a promise for the text of the menu's trigger element. */
+  /** Gets the text of the menu's trigger element. */
   async getTriggerText(): Promise<string> {
     return (await this.host()).text();
   }
@@ -73,7 +73,7 @@ export class MatMenuHarness extends ComponentHarness {
   }
 
   /**
-   * Gets a promise for a list of `MatMenuItemHarness` representing the items in the menu.
+   * Gets a list of `MatMenuItemHarness` representing the items in the menu.
    * @param filters Optionally filters which menu items are included.
    */
   async getItems(filters: Omit<MenuItemHarnessFilters, 'ancestor'> = {}):
@@ -114,13 +114,13 @@ export class MatMenuHarness extends ComponentHarness {
     return menu.clickItem(...subItemFilters as [Omit<MenuItemHarnessFilters, 'ancestor'>]);
   }
 
-  /** Gets a promise for the menu panel associated with this menu. */
+  /** Gets the menu panel associated with this menu. */
   private async _getMenuPanel(): Promise<TestElement | null> {
     const panelId = await this._getPanelId();
     return panelId ? this._documentRootLocator.locatorForOptional(`#${panelId}`)() : null;
   }
 
-  /** Gets a promise for the id of the menu panel associated with this menu. */
+  /** Gets the id of the menu panel associated with this menu. */
   private async _getPanelId(): Promise<string | null> {
     const panelId = await (await this.host()).getAttribute('aria-controls');
     return panelId || null;
@@ -147,13 +147,13 @@ export class MatMenuItemHarness extends ComponentHarness {
             async (harness, hasSubmenu) => (await harness.hasSubmenu()) === hasSubmenu);
   }
 
-  /** Gets a boolean promise indicating if the menu is disabled. */
+  /** Whether the menu is disabled. */
   async isDisabled(): Promise<boolean> {
     const disabled = (await this.host()).getAttribute('disabled');
     return coerceBooleanProperty(await disabled);
   }
 
-  /** Gets a promise for the text of the menu item. */
+  /** Gets the text of the menu item. */
   async getText(): Promise<string> {
     return (await this.host()).text();
   }
@@ -173,12 +173,12 @@ export class MatMenuItemHarness extends ComponentHarness {
     return (await this.host()).click();
   }
 
-  /** Gets a boolean promise indicating whether this item has a submenu. */
+  /** Whether this item has a submenu. */
   async hasSubmenu(): Promise<boolean> {
     return (await this.host()).matchesSelector(MatMenuHarness.hostSelector);
   }
 
-  /** Gets a promise for the submenu associated with this menu item, or null if none. */
+  /** Gets the submenu associated with this menu item, or null if none. */
   async getSubmenu(): Promise<MatMenuHarness | null> {
     if (await this.hasSubmenu()) {
       return new MatMenuHarness(this.locatorFactory);

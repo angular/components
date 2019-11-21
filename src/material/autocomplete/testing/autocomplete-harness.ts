@@ -39,12 +39,12 @@ export class MatAutocompleteHarness extends ComponentHarness {
             (harness, value) => HarnessPredicate.stringMatches(harness.getValue(), value));
   }
 
-  /** Gets a promise for the value of the autocomplete input. */
+  /** Gets the value of the autocomplete input. */
   async getValue(): Promise<string> {
     return (await this.host()).getProperty('value');
   }
 
-  /** Gets a boolean promise indicating if the autocomplete input is disabled. */
+  /** Whether the autocomplete input is disabled. */
   async isDisabled(): Promise<boolean> {
     const disabled = (await this.host()).getAttribute('disabled');
     return coerceBooleanProperty(await disabled);
@@ -65,12 +65,12 @@ export class MatAutocompleteHarness extends ComponentHarness {
     return (await this.host()).sendKeys(value);
   }
 
-  /** Gets a promise for the options inside the autocomplete panel. */
+  /** Gets the options inside the autocomplete panel. */
   async getOptions(filters: OptionHarnessFilters = {}): Promise<MatAutocompleteOptionHarness[]> {
     return this._documentRootLocator.locatorForAll(MatAutocompleteOptionHarness.with(filters))();
   }
 
-  /** Gets a promise for the option groups inside the panel. */
+  /** Gets the option groups inside the autocomplete panel. */
   async getOptionGroups(filters: OptionGroupHarnessFilters = {}):
       Promise<MatAutocompleteOptionGroupHarness[]> {
     return this._documentRootLocator.locatorForAll(
@@ -87,7 +87,7 @@ export class MatAutocompleteHarness extends ComponentHarness {
     await options[0].select();
   }
 
-  /** Gets a boolean promise indicating whether the autocomplete is open. */
+  /** Whether the autocomplete is open. */
   async isOpen(): Promise<boolean> {
     const panel = await this._optionalPanel();
     return !!panel && await panel.hasClass('mat-autocomplete-visible');
