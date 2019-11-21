@@ -7,6 +7,7 @@
  */
 
 import {DateAdapter} from '@angular/material/core';
+import {FactoryProvider, Optional, SkipSelf, Injectable} from '@angular/core';
 import {Subject, Observable} from 'rxjs';
 
 export abstract class MatDateSelectionModel<D> {
@@ -23,6 +24,7 @@ export abstract class MatDateSelectionModel<D> {
   abstract isComplete(): boolean;
   abstract isSame(other: MatDateSelectionModel<D>): boolean;
   abstract isValid(): boolean;
+  abstract overlaps(range: DateRange<D>): boolean;
 }
 
 export interface DateRange<D> {
@@ -33,6 +35,7 @@ export interface DateRange<D> {
 /**
  * Concrete implementation of a MatDateSelectionModel that holds a single date.
  */
+@Injectable()
 export class MatSingleDateSelectionModel<D> extends MatDateSelectionModel<D> {
   private _date: D | null = null;
 
@@ -75,12 +78,23 @@ export class MatSingleDateSelectionModel<D> extends MatDateSelectionModel<D> {
     this._date = date;
     this._valueChangesSubject.next();
   }
+
+  /**
+   * Determines if the single date is within a given date range. Retuns false if either dates of
+   * the range is null or if the selection is undefined.
+   */
+  overlaps(range: DateRange<D>): boolean {
+    return !!(this._date && range.start && range.end &&
+        this.adapter.compareDate(range.start, this._date) <= 0 &&
+        this.adapter.compareDate(this._date, range.end) <= 0);
+  }
 }
 
 /**
  * Concrete implementation of a MatDateSelectionModel that holds a date range, represented by
  * a start date and an end date.
  */
+@Injectable()
 export class MatRangeDateSelectionModel<D> extends MatDateSelectionModel<D> {
   private _start: D | null = null;
   private _end: D | null = null;
@@ -138,4 +152,39 @@ export class MatRangeDateSelectionModel<D> extends MatDateSelectionModel<D> {
       end: this._end,
     };
   }
+
+  /**
+   * Returns true if the given range and the selection overlap in any way. False if otherwise, that
+   * includes incomplete selections or ranges.
+   */
+  overlaps(range: DateRange<D>): boolean {
+    if (!(this._start && this._end && range.start && range.end)) {
+      return false;
+    }
+
+    return (
+      this._isBetween(range.start, this._start, this._end) ||
+      this._isBetween(range.end, this._start, this._end) ||
+      (
+        this.adapter.compareDate(range.start, this._start) <= 0 &&
+        this.adapter.compareDate(this._end, range.end) <= 0
+      )
+    );
+  }
+
+  private _isBetween(value: D, from: D, to: D): boolean {
+    return this.adapter.compareDate(from, value) <= 0 && this.adapter.compareDate(value, to) <= 0;
+  }
 }
+
+export function MAT_SINGLE_DATE_SELECTION_MODEL_FACTORY<D>(parent:
+                                                           MatSingleDateSelectionModel<D>,
+                                                           adapter: DateAdapter<D>) {
+  return parent || new MatSingleDateSelectionModel(adapter);
+}
+
+export const MAT_SINGLE_DATE_SELECTION_MODEL_PROVIDER: FactoryProvider = {
+  provide: MatDateSelectionModel,
+  deps: [[new Optional(), new SkipSelf(), MatDateSelectionModel], DateAdapter],
+  useFactory: MAT_SINGLE_DATE_SELECTION_MODEL_FACTORY,
+};
