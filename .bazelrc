@@ -73,11 +73,6 @@ build:remote --host_platform=//tools:rbe_platform
 build:remote --platforms=//tools:rbe_platform
 build:remote --extra_toolchains=@rbe_default//config:cc-toolchain
 
-# Setup Build Event Service
-build:remote --bes_backend=buildeventservice.googleapis.com
-build:remote --bes_timeout=30s
-build:remote --bes_results_url="https://source.cloud.google.com/results/invocations/"
-
 # Set remote caching settings
 build:remote --remote_accept_cached=true
 
