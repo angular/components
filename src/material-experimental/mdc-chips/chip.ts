@@ -328,24 +328,22 @@ export class MatChip extends _MatChipMixinBase implements AfterContentInit, Afte
 
   /** Handles interaction with the remove icon. */
   _listenToRemoveIconInteractions() {
-    this.removeIcon.clicks
+    this.removeIcon._clicks
         .pipe(takeUntil(this._destroyed))
         .subscribe(event => {
-          if (this.disabled) {
-            return;
+          if (!this.disabled) {
+            this._chipFoundation.handleClick(event);
           }
-          this._chipFoundation.handleClick(event);
         });
-    this.removeIcon.keydowns
+    this.removeIcon._keydowns
         .pipe(takeUntil(this._destroyed))
         .subscribe(event => {
           // The MDC chip foundation calls stopPropagation() for any trailing icon interaction
           // event, even ones it doesn't handle, so we want to avoid passing it keyboard events
           // for which we have a custom handler.
-          if (this.disabled || this.HANDLED_KEYS.has(event.keyCode)) {
-            return;
+          if (!this.disabled && !this.HANDLED_KEYS.has(event.keyCode)) {
+            this._chipFoundation.handleKeydown(event);
           }
-          this._chipFoundation.handleKeydown(event);
         });
   }
 
