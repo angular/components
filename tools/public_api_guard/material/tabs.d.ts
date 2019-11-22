@@ -35,7 +35,6 @@ export declare abstract class _MatTabGroupBase extends _MatTabGroupMixinBase imp
     abstract _tabBodyWrapper: ElementRef;
     abstract _tabHeader: MatTabGroupBaseHeader;
     _tabs: QueryList<MatTab>;
-    _tabsArray: MatTab[];
     readonly animationDone: EventEmitter<void>;
     animationDuration: string;
     backgroundColor: ThemePalette;
