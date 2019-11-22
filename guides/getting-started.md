@@ -26,6 +26,16 @@ The `ng add` command will install Angular Material, the [Component Dev Kit (CDK)
 
    Importing the [`BrowserAnimationsModule`](https://angular.io/api/platform-browser/animations/BrowserAnimationsModule) into your application enables Angular's [animation system](https://angular.io/guide/animations). Declining this will disable most of Angular Material's animations.
 
+ You can import the `BrowserAnimationsModule` by adding the following lines to your app.module.ts file.
+ 
+ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+…
+@NgModule ({....
+  imports: [...,
+  BrowserAnimationsModule,
+…]
+})
+
 The `ng add` command will additionally perform the following configurations:
 
 * Add project dependencies to `package.json`
