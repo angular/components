@@ -17,6 +17,12 @@ const PATCH_VERSION = 1;
 /** Path to the project directory. */
 const projectDir = path.join(__dirname, '../..');
 
+/**
+ * Object that maps a given file path to a list of patches that need to be
+ * applied.
+ */
+const PATCHES_PER_FILE = {};
+
 shelljs.set('-e');
 shelljs.cd(projectDir);
 
@@ -136,6 +142,25 @@ shelljs.rm('-rf', [
   'node_modules/rxjs/Subscription.*',
 ]);
 
+// Apply all collected patches on a per-file basis. This is necessary because
+// multiple edits might apply to the same file, and we only want to mark a given
+// file as patched once all edits have been made.
+Object.keys(PATCHES_PER_FILE).forEach(filePath => {
+  if (hasFileBeenPatched(filePath)) {
+    console.info('File ' + filePath + ' is already patched. Skipping..');
+    return;
+  }
+
+  let content = fs.readFileSync(filePath, 'utf8');
+  const patchFunctions = PATCHES_PER_FILE[filePath];
+
+  console.info(`Patching file ${filePath} with ${patchFunctions.length} edits..`);
+  patchFunctions.forEach(patchFn => content = patchFn(content));
+
+  fs.writeFileSync(filePath, content, 'utf8');
+  writePatchMarker(filePath);
+});
+
 /**
  * Applies the given patch if not done already. Throws if the patch does
  * not apply cleanly.
@@ -153,31 +178,26 @@ function applyPatch(patchFile) {
 }
 
 /**
- * Reads the specified file and replaces matches of the search expression
- * with the given replacement. Throws if no changes were made and the
- * patch has not been applied yet.
+ * Schedules an edit where the specified file is read and its content replaced based on
+ * the given search expression and corresponding replacement. Throws if no changes were made
+ * and the patch has not been applied.
  */
 function searchAndReplace(search, replacement, relativeFilePath) {
   const filePath = path.join(projectDir, relativeFilePath);
+  const fileEdits = PATCHES_PER_FILE[filePath] || (PATCHES_PER_FILE[filePath] = []);
 
-  if (hasFileBeenPatched(filePath)) {
-    return;
-  }
-
-  const originalContent = fs.readFileSync(filePath, 'utf8');
-  const newFileContent = originalContent.replace(search, replacement);
-
-  if (originalContent === newFileContent) {
-    throw Error(`Could not perform replacement in: ${filePath}.`);
-  }
-
-  writePatchMarker(filePath);
-  fs.writeFileSync(filePath, newFileContent, 'utf8');
+  fileEdits.push(originalContent => {
+    const newFileContent = originalContent.replace(search, replacement);
+    if (originalContent === newFileContent) {
+      throw Error(`Could not perform replacement in: ${filePath}.`);
+    }
+    return newFileContent;
+  });
 }
 
 /** Marks the specified file as patched. */
 function writePatchMarker(filePath) {
-  shelljs.echo(PATCH_VERSION).to(`${filePath}.patch_marker`);
+  new shelljs.ShellString(PATCH_VERSION).to(`${filePath}.patch_marker`);
 }
 
 /** Checks if the given file has been patched. */
