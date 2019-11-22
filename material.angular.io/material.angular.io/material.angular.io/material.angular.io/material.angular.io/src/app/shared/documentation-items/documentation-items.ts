@@ -559,9 +559,9 @@ const DOCS: {[key: string]: DocCategory[]} = {
       summary: 'Utilities for testing common components.',
       items: [
         {
-          id: 'testing',
-          name: 'Testing',
-          summary: 'Utilities for testing common components.',
+          id: 'test-harnesses',
+          name: 'Component Harnesses',
+          summary: 'Foundation for component test harnesses.',
           examples: [],
           additionalApiDocs: [
             {
