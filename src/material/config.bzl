@@ -49,6 +49,7 @@ entryPoints = [
     "sort/testing",
     "stepper",
     "table",
+    "table/testing",
     "tabs",
     "tabs/testing",
     "toolbar",
