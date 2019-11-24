@@ -174,10 +174,8 @@ describe('ContentObserver injectable', () => {
           const fixture = TestBed.createComponent(UnobservedComponentWithTextContent);
           fixture.detectChanges();
 
-          const sub1 = contentObserver.observe(fixture.componentInstance.contentEl)
-              .subscribe(() => spy());
-          contentObserver.observe(fixture.componentInstance.contentEl)
-              .subscribe(() => spy());
+          const sub1 = contentObserver.observe(fixture.componentInstance.contentEl).subscribe(spy);
+          const sub2 = contentObserver.observe(fixture.componentInstance.contentEl).subscribe(spy);
 
           expect(mof.create).toHaveBeenCalledTimes(1);
 
@@ -192,7 +190,40 @@ describe('ContentObserver injectable', () => {
           invokeCallbacks();
 
           expect(spy).toHaveBeenCalledTimes(1);
+          sub2.unsubscribe();
         })));
+
+
+    it('should create multiple observers when observing with different options',
+        fakeAsync(inject([MutationObserverFactory], (mof: MutationObserverFactory) => {
+          const spy = jasmine.createSpy('content observer');
+          spyOn(mof, 'create').and.callThrough();
+          const fixture = TestBed.createComponent(UnobservedComponentWithTextContent);
+          fixture.detectChanges();
+
+          const sub1 = contentObserver.observe(fixture.componentInstance.contentEl, {
+            characterData: true
+          }).subscribe(spy);
+          const sub2 = contentObserver.observe(fixture.componentInstance.contentEl, {
+            childList: true
+          }).subscribe(spy);
+
+          expect(mof.create).toHaveBeenCalledTimes(2);
+
+          fixture.componentInstance.text = 'text';
+          invokeCallbacks();
+
+          expect(spy).toHaveBeenCalledTimes(2);
+
+          fixture.componentInstance.text = 'text text';
+          invokeCallbacks();
+
+          expect(spy).toHaveBeenCalledTimes(4);
+
+          sub1.unsubscribe();
+          sub2.unsubscribe();
+        })));
+
   });
 });
 
