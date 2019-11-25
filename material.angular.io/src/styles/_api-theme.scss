@@ -29,6 +29,12 @@
     }
   }
 
+  .docs-api-async-method-marker {
+    $async-method-marker-hue: if($is-dark-theme, 200, 400);
+    background-color: mat-color($primary, $async-method-marker-hue);
+    color: mat-color($primary, '#{$async-method-marker-hue}-contrast');
+  }
+
   // Force the top-level API docs header to be hidden, since this is already
   // captured in the top nav-bar.
   .docs-api-h1 {
