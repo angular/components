@@ -64,6 +64,16 @@ describe('MatTree', () => {
         });
       });
 
+      it('with the right aria-levels', () => {
+	// add a child to the first node
+	let data = underlyingDataSource.data;
+	underlyingDataSource.addChild(data[2]);
+        fixture.detectChanges();
+
+        const ariaLevels = getNodes(treeElement).map(n => n.getAttribute('aria-level'));
+        expect(ariaLevels).toEqual(["0", "0", "0", "1"]);
+      });
+
       it('with the right data', () => {
         expect(underlyingDataSource.data.length).toBe(3);
 

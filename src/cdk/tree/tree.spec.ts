@@ -103,9 +103,18 @@ describe('CdkTree', () => {
       it('with the right accessibility roles', () => {
         expect(treeElement.getAttribute('role')).toBe('tree');
 
-        expect(getNodes(treeElement).every(node => {
-          return node.getAttribute('role') === 'treeitem';
-        })).toBe(true);
+	expect(getNodes(treeElement).every(node => {
+	  return node.getAttribute('role') === 'treeitem';
+	})).toBe(true);
+      });
+
+      it('with the right aria-levels', () => {
+	// add a child to the first node
+	let data = dataSource.data;
+	const child = dataSource.addChild(data[0], true);
+
+        const ariaLevels = getNodes(treeElement).map(n => n.getAttribute('aria-level'));
+        expect(ariaLevels).toEqual(["1", "2", "1", "1"]);
       });
 
       it('with the right data', () => {
