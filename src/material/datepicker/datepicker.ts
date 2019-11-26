@@ -7,7 +7,7 @@
  */
 
 import {Directionality} from '@angular/cdk/bidi';
-import {coerceBooleanProperty} from '@angular/cdk/coercion';
+import {coerceBooleanProperty, coerceStringArray} from '@angular/cdk/coercion';
 import {ESCAPE, UP_ARROW} from '@angular/cdk/keycodes';
 import {
   Overlay,
@@ -210,8 +210,21 @@ export class MatDatepicker<D> implements OnDestroy, CanColor {
    */
   @Output() readonly monthSelected: EventEmitter<D> = new EventEmitter<D>();
 
-  /** Classes to be passed to the date picker panel. Supports the same syntax as `ngClass`. */
-  @Input() panelClass: string | string[];
+  private _panelClass: string[];
+
+  /** Classes to be passed to the date picker panel. */
+  get panelClass(): string | string[] {
+      return this._panelClass;
+  }
+
+  /**
+   * Classes to be passed to the date picker panel.
+   * Supports string and string array values, similar to `ngClass`.
+   */
+  @Input()
+  set panelClass(value: string | string[]) {
+      this._panelClass = coerceStringArray(value);
+  }
 
   /** Function that can be used to add custom CSS classes to dates. */
   @Input() dateClass: (date: D) => MatCalendarCellCssClasses;
