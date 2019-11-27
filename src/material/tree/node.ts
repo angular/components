@@ -43,7 +43,7 @@ const _MatTreeNodeMixinBase: HasTabIndexCtor & CanDisableCtor & typeof CdkTreeNo
   exportAs: 'matTreeNode',
   inputs: ['disabled', 'tabIndex'],
   host: {
-    '[attr.aria-expanded]': 'isExpanded',
+    '[attr.aria-expanded]': 'expandable ? isExpanded : null',
     '[attr.aria-level]': 'level',
     '[attr.role]': 'role',
     'class': 'mat-tree-node'
@@ -86,7 +86,7 @@ export class MatTreeNodeDef<T> extends CdkTreeNodeDef<T> {
   selector: 'mat-nested-tree-node',
   exportAs: 'matNestedTreeNode',
   host: {
-    '[attr.aria-expanded]': 'isExpanded',
+    '[attr.aria-expanded]': 'expandable ? isExpanded : null',
     '[attr.role]': 'role',
     'class': 'mat-nested-tree-node',
   },

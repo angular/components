@@ -290,7 +290,7 @@ export class CdkTree<T> implements AfterContentChecked, CollectionViewer, OnDest
   selector: 'cdk-tree-node',
   exportAs: 'cdkTreeNode',
   host: {
-    '[attr.aria-expanded]': 'isExpanded',
+    '[attr.aria-expanded]': 'expandable ? isExpanded : null',
     '[attr.aria-level]': 'level',
     '[attr.role]': 'role',
     'class': 'cdk-tree-node',
@@ -334,6 +334,8 @@ export class CdkTreeNode<T> implements FocusableOption, OnDestroy {
    */
   @Input() role: 'treeitem' | 'group' = 'treeitem';
 
+  expandable = false;
+
   constructor(protected _elementRef: ElementRef<HTMLElement>,
               protected _tree: CdkTree<T>) {
     CdkTreeNode.mostRecentTreeNode = this as CdkTreeNode<T>;
@@ -358,6 +360,7 @@ export class CdkTreeNode<T> implements FocusableOption, OnDestroy {
 
   protected _setRoleFromData(): void {
     if (this._tree.treeControl.isExpandable) {
+      this.expandable = this._tree.treeControl.isExpandable(this._data);
       this.role = this._tree.treeControl.isExpandable(this._data) ? 'group' : 'treeitem';
     } else {
       if (!this._tree.treeControl.getChildren) {
@@ -374,6 +377,7 @@ export class CdkTreeNode<T> implements FocusableOption, OnDestroy {
   }
 
   protected _setRoleFromChildren(children: T[]) {
+    this.expandable = children && children.length > 0;
     this.role = children && children.length ? 'group' : 'treeitem';
   }
 }

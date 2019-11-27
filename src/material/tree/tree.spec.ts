@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 import {FlatTreeControl, NestedTreeControl, TreeControl} from '@angular/cdk/tree';
-import {Component, ViewChild, Type} from '@angular/core';
+import {Component, ViewChild, Type, Inject, InjectionToken} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {
@@ -18,6 +18,7 @@ import {
 } from './index';
 
 
+const INIT_WITH_CHILDREN = new InjectionToken<boolean>('initWithChildren');
 describe('MatTree', () => {
   /** Represents an indent for expectNestedTreeToMatch */
   const _ = {};
@@ -25,14 +26,40 @@ describe('MatTree', () => {
   let treeElement: HTMLElement;
   let underlyingDataSource: FakeDataSource;
 
-  function configureMatTreeTestingModule(declarations: Type<any>[]) {
+  function configureMatTreeTestingModule(declarations: Type<any>[], initWithChildren = false) {
     TestBed.configureTestingModule({
       imports: [MatTreeModule],
       declarations: declarations,
+      providers: [
+        {provide: INIT_WITH_CHILDREN, useValue: initWithChildren}
+      ]
     }).compileComponents();
   }
 
   describe('flat tree', () => {
+    describe('should be accessible', () => {
+      let fixture: ComponentFixture<SimpleMatTreeApp>;
+      let component: SimpleMatTreeApp;
+      beforeEach(() => {
+        configureMatTreeTestingModule([SimpleMatTreeApp], /*initWithChildren*/ true);
+        fixture = TestBed.createComponent(SimpleMatTreeApp);
+
+        component = fixture.componentInstance;
+        underlyingDataSource = component.underlyingDataSource;
+        treeElement = fixture.nativeElement.querySelector('mat-tree');
+
+        fixture.detectChanges();
+      });
+
+      it('with aria-expanded attribute on parent nodes only', () => {
+        const ariaExpandedVals = getNodes(treeElement)
+            .map(node => node.getAttribute('aria-expanded'));
+        // TODO the fourth node is not reflected in the DOM, but its parent has
+        // aria-expanded on it. Figure out why the node is not in the DOM.
+        expect(ariaExpandedVals).toEqual(['false', null, null]);
+      });
+    });
+
     describe('should initialize', () => {
       let fixture: ComponentFixture<SimpleMatTreeApp>;
       let component: SimpleMatTreeApp;
@@ -496,9 +523,13 @@ class FakeDataSource {
 
   disconnect() {}
 
-  constructor() {
+  constructor(addChildren = false) {
     for (let i = 0; i < 3; i++) {
       this.addData();
+    }
+    if (addChildren) {
+      const parent = this.data[0];
+      this.addChild(parent);
     }
   }
 
@@ -656,11 +687,11 @@ class SimpleMatTreeApp {
 
   dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
 
-  underlyingDataSource = new FakeDataSource();
+  underlyingDataSource = new FakeDataSource(this.initWithChildren);
 
   @ViewChild(MatTree) tree: MatTree<TestData>;
 
-  constructor() {
+  constructor(@Inject(INIT_WITH_CHILDREN) private readonly initWithChildren: boolean) {
     this.underlyingDataSource.connect().subscribe(data => {
       this.dataSource.data = data;
     });

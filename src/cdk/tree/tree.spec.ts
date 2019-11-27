@@ -72,7 +72,43 @@ describe('CdkTree', () => {
   });
 
   describe('flat tree', () => {
+    describe('should be accessible', () => {
+      let fixture: ComponentFixture<SimpleCdkTreeApp>;
+      let component: SimpleCdkTreeApp;
+
+      beforeEach(() => {
+        configureCdkTreeTestingModule([SimpleCdkTreeAppWithChildren]);
+        fixture = TestBed.createComponent(SimpleCdkTreeAppWithChildren);
+
+        fixture.detectChanges();
+
+        component = fixture.componentInstance;
+        dataSource = component.dataSource as FakeDataSource;
+        tree = component.tree;
+        treeElement = fixture.nativeElement.querySelector('cdk-tree');
+      });
+
+      it('with aria-expanded attribute on parent nodes only', () => {
+        const ariaExpandedVals = getNodes(treeElement)
+            .map(node => node.getAttribute('aria-expanded'));
+        expect(ariaExpandedVals).toEqual(['false', null, null, null]);
+      });
+
+      // Failing because CdkTreeNode.data is not set on the parent, so the
+      // role-setting logic does not run.
+      xit('updates aria-expanded when children are added', () => {
+        const data = dataSource.data;
+        dataSource.addChild(data[3], true);
+        fixture.detectChanges();
+      
+        const ariaExpandedVals = getNodes(treeElement)
+            .map(node => node.getAttribute('aria-expanded'));
+        expect(ariaExpandedVals).toEqual(['false', null, null, 'false', null]);
+      });
+    }); 
+
     describe('should initialize', () => {
+      
       let fixture: ComponentFixture<SimpleCdkTreeApp>;
       let component: SimpleCdkTreeApp;
 
@@ -1024,10 +1060,14 @@ class FakeDataSource extends DataSource<TestData> {
   get data() { return this._dataChange.getValue(); }
   set data(data: TestData[]) { this._dataChange.next(data); }
 
-  constructor(public treeControl: TreeControl<TestData>) {
+  constructor(public treeControl: TreeControl<TestData>, addChildren = false) {
     super();
     for (let i = 0; i < 3; i++) {
       this.addData();
+    }
+    if (addChildren) {
+      const parent = this.data[0];
+      this.addChild(parent, true);
     }
   }
 
@@ -1176,6 +1216,29 @@ class SimpleCdkTreeApp {
 
   treeControl: TreeControl<TestData> = new FlatTreeControl(this.getLevel, this.isExpandable);
   dataSource: FakeDataSource | null = new FakeDataSource(this.treeControl);
+  indent: number | string = 28;
+
+  @ViewChild(CdkTree) tree: CdkTree<TestData>;
+  @ViewChildren(CdkTreeNodePadding) paddingNodes: QueryList<CdkTreeNodePadding<TestData>>;
+}
+
+@Component({
+  template: `
+    <cdk-tree [dataSource]="dataSource" [treeControl]="treeControl">
+      <cdk-tree-node *cdkTreeNodeDef="let node" class="customNodeClass"
+                     cdkTreeNodePadding [cdkTreeNodePaddingIndent]="indent"
+                     cdkTreeNodeToggle>
+                     {{node.pizzaTopping}} - {{node.pizzaCheese}} + {{node.pizzaBase}}
+      </cdk-tree-node>
+    </cdk-tree>
+  `
+})
+class SimpleCdkTreeAppWithChildren {
+  getLevel = (node: TestData) => node.level;
+  isExpandable = (node: TestData) => node.children.length > 0;
+
+  treeControl: TreeControl<TestData> = new FlatTreeControl(this.getLevel, this.isExpandable);
+  dataSource: FakeDataSource | null = new FakeDataSource(this.treeControl, /*addChildren*/ true);
   indent: number | string = 28;
 
   @ViewChild(CdkTree) tree: CdkTree<TestData>;
