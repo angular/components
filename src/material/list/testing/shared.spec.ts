@@ -159,11 +159,11 @@ function runBaseListFunctionalityTests<
       const items = await simpleListHarness.getItems();
       expect(items.length).toBe(3);
       expect(await items[0].getText()).toBe('Item 1');
-      expect(await items[0].getLines()).toEqual(['Item', '1']);
+      expect(await items[0].getLinesText()).toEqual(['Item', '1']);
       expect(await items[1].getText()).toBe('Item 2');
-      expect(await items[1].getLines()).toEqual([]);
+      expect(await items[1].getLinesText()).toEqual([]);
       expect(await items[2].getText()).toBe('Item 3');
-      expect(await items[2].getLines()).toEqual([]);
+      expect(await items[2].getLinesText()).toEqual([]);
     });
 
     it('should check list item icons and avatars', async () => {

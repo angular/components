@@ -61,7 +61,7 @@ export class MatListItemHarnessBase extends ComponentHarness {
   }
 
   /** Gets the lines of text (`mat-line` elements) in this nav list item. */
-  async getLines(): Promise<string[]> {
+  async getLinesText(): Promise<string[]> {
     return Promise.all((await this._lines()).map(l => l.text()));
   }
 

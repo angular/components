@@ -18,11 +18,6 @@ export interface ListOptionHarnessFilters extends BaseListItemHarnessFilters {
     selected?: boolean;
 }
 
-export interface ListSection<I> {
-    heading?: string;
-    items: I[];
-}
-
 export declare class MatActionListHarness extends MatListHarnessBase<typeof MatActionListItemHarness, MatActionListItemHarness, ActionListItemHarnessFilters> {
     _itemHarness: typeof MatActionListItemHarness;
     static hostSelector: string;
@@ -43,77 +38,20 @@ export declare class MatListHarness extends MatListHarnessBase<typeof MatListIte
     static with(options?: ListHarnessFilters): HarnessPredicate<MatListHarness>;
 }
 
-export declare class MatListHarnessBase<T extends (ComponentHarnessConstructor<C> & {
-    with: (options?: BaseHarnessFilters) => HarnessPredicate<C>;
-}), C extends ComponentHarness, F extends BaseListItemHarnessFilters> extends ComponentHarness {
-    protected _itemHarness: T;
-    getItems(filters?: F): Promise<C[]>;
-    getItemsBySubheader(filters?: F): Promise<ListSection<C>[]>;
-    getItemsDivided(filters?: F): Promise<C[][]>;
-    getItemsSubheadersAndDividers(filters: {
-        item: false;
-        subheader: false;
-        divider: false;
-    }): Promise<[]>;
-    getItemsSubheadersAndDividers(filters: {
-        item?: F | false;
-        subheader: false;
-        divider: false;
-    }): Promise<C[]>;
-    getItemsSubheadersAndDividers(filters: {
-        item: false;
-        subheader?: SubheaderHarnessFilters | false;
-        divider: false;
-    }): Promise<MatSubheaderHarness[]>;
-    getItemsSubheadersAndDividers(filters: {
-        item: false;
-        subheader: false;
-        divider?: DividerHarnessFilters | false;
-    }): Promise<MatDividerHarness[]>;
-    getItemsSubheadersAndDividers(filters: {
-        item?: F | false;
-        subheader?: SubheaderHarnessFilters | false;
-        divider: false;
-    }): Promise<(C | MatSubheaderHarness)[]>;
-    getItemsSubheadersAndDividers(filters: {
-        item?: F | false;
-        subheader: false;
-        divider?: false | DividerHarnessFilters;
-    }): Promise<(C | MatDividerHarness)[]>;
-    getItemsSubheadersAndDividers(filters: {
-        item: false;
-        subheader?: false | SubheaderHarnessFilters;
-        divider?: false | DividerHarnessFilters;
-    }): Promise<(MatSubheaderHarness | MatDividerHarness)[]>;
-    getItemsSubheadersAndDividers(filters?: {
-        item?: F | false;
-        subheader?: SubheaderHarnessFilters | false;
-        divider?: DividerHarnessFilters | false;
-    }): Promise<(C | MatSubheaderHarness | MatDividerHarness)[]>;
-}
-
 export declare class MatListItemHarness extends MatListItemHarnessBase {
     static hostSelector: string;
     static with(options?: ListItemHarnessFilters): HarnessPredicate<MatListItemHarness>;
 }
 
-export declare class MatListItemHarnessBase extends ComponentHarness {
-    getHarnessLoaderForContent(): Promise<HarnessLoader>;
-    getLines(): Promise<string[]>;
-    getText(): Promise<string>;
-    hasAvatar(): Promise<boolean>;
-    hasIcon(): Promise<boolean>;
-}
-
 export declare class MatListOptionHarness extends MatListItemHarnessBase {
     blur(): Promise<void>;
-    check(): Promise<void>;
+    deselect(): Promise<void>;
     focus(): Promise<void>;
     getCheckboxPosition(): Promise<'before' | 'after'>;
     isDisabled(): Promise<boolean>;
     isSelected(): Promise<boolean>;
+    select(): Promise<void>;
     toggle(): Promise<void>;
-    uncheck(): Promise<void>;
     static hostSelector: string;
     static with(options?: ListOptionHarnessFilters): HarnessPredicate<MatListOptionHarness>;
 }
@@ -135,17 +73,11 @@ export declare class MatNavListItemHarness extends MatListItemHarnessBase {
 
 export declare class MatSelectionListHarness extends MatListHarnessBase<typeof MatListOptionHarness, MatListOptionHarness, ListOptionHarnessFilters> {
     _itemHarness: typeof MatListOptionHarness;
-    checkItems(...filters: ListOptionHarnessFilters[]): Promise<void>;
+    deselectItems(...filters: ListItemHarnessFilters[]): Promise<void>;
     isDisabled(): Promise<boolean>;
-    uncheckItems(...filters: ListItemHarnessFilters[]): Promise<void>;
+    selectItems(...filters: ListOptionHarnessFilters[]): Promise<void>;
     static hostSelector: string;
     static with(options?: SelectionListHarnessFilters): HarnessPredicate<MatSelectionListHarness>;
-}
-
-export declare class MatSubheaderHarness extends ComponentHarness {
-    getText(): Promise<string>;
-    static hostSelector: string;
-    static with(options?: SubheaderHarnessFilters): HarnessPredicate<MatSubheaderHarness>;
 }
 
 export interface NavListHarnessFilters extends BaseHarnessFilters {

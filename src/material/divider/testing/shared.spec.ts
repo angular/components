@@ -22,7 +22,7 @@ export function runHarnessTests(
     loader = TestbedHarnessEnvironment.loader(fixture);
   });
 
-  it('should load all button harnesses', async () => {
+  it('should load all divider harnesses', async () => {
     const dividers = await loader.getAllHarnesses(dividerHarness);
     expect(dividers.length).toBe(2);
   });

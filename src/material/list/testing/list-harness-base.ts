@@ -83,19 +83,16 @@ export class MatListHarnessBase
    * @return The list of items matching the given filters, grouped into sub-lists by divider.
    */
   async getItemsGroupedByDividers(filters?: F): Promise<C[][]> {
-    const listSections = [];
-    let currentSection = [];
+    const listSections: C[][] = [[]];
     const itemsAndDividers =
         await this.getItemsWithSubheadersAndDividers({item: filters, subheader: false});
     for (const itemOrDivider of itemsAndDividers) {
       if (itemOrDivider instanceof MatDividerHarness) {
-        listSections.push(currentSection);
-        currentSection = [];
+        listSections.push([]);
       } else {
-        currentSection.push(itemOrDivider);
+        listSections[listSections.length - 1].push(itemOrDivider);
       }
     }
-    listSections.push(currentSection);
     return listSections;
   }
 
