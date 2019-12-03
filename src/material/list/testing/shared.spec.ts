@@ -17,14 +17,14 @@ import {
   MatListOptionHarness,
   MatNavListItemHarness,
   MatSubheaderHarness
-} from '@angular/material/list/testing/list-item-harness';
+} from '@angular/material/list/testing/list-item-harness-base';
 import {
   MatActionListHarness,
   MatListHarness,
   MatListHarnessBase,
   MatNavListHarness,
   MatSelectionListHarness
-} from './list-harness';
+} from './list-harness-base';
 
 /** Tests that apply to all types of mat-list. */
 function runBaseListFunctionalityTests<

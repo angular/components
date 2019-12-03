@@ -6,6 +6,8 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+export * from './action-list-harness';
 export * from './list-harness';
 export * from './list-harness-filters';
-export * from './list-item-harness';
+export * from './nav-list-harness';
+export * from './selection-list-harness';

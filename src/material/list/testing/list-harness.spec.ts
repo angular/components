@@ -5,8 +5,8 @@ import {
   MatListHarness,
   MatNavListHarness,
   MatSelectionListHarness
-} from './list-harness';
-import {MatListItemHarnessBase, MatSubheaderHarness} from './list-item-harness';
+} from './list-harness-base';
+import {MatListItemHarnessBase, MatSubheaderHarness} from './list-item-harness-base';
 import {runHarnessTests} from './shared.spec';
 
 describe('Non-MDC-based list harnesses', () => {
