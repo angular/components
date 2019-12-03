@@ -25,9 +25,17 @@ import {
   SubheaderHarnessFilters
 } from './list-harness-filters';
 
-function getListItemPredicate
-    <H extends MatListItemHarnessBase, F extends BaseListItemHarnessFilters>
-    (harnessType: ComponentHarnessConstructor<H>, options: F): HarnessPredicate<H> {
+/**
+ * Gets a `HarnessPredicate` that applies the given `BaseListItemHarnessFilters` to the given
+ * list item harness.
+ * @template H The type of list item harness to create a predicate for.
+ * @param harnessType A constructor for a list item harness.
+ * @param options An instance of `BaseListItemHarnessFilters` to apply.
+ * @return A `HarnessPredicate` for the given harness type with the given options applied.
+ */
+function getListItemPredicate<H extends MatListItemHarnessBase>(
+    harnessType: ComponentHarnessConstructor<H>,
+    options: BaseListItemHarnessFilters): HarnessPredicate<H> {
   return new HarnessPredicate(harnessType, options)
       .addOption('text', options.text,
           (harness, text) => HarnessPredicate.stringMatches(harness.getText(), text));
@@ -230,7 +238,7 @@ export class MatListOptionHarness extends MatListItemHarnessBase {
    * Puts the list option in a checked state by toggling it if it is currently unchecked, or doing
    * nothing if it is already checked.
    */
-  async check() {
+  async select() {
     if (!await this.isSelected()) {
       return this.toggle();
     }
@@ -240,7 +248,7 @@ export class MatListOptionHarness extends MatListItemHarnessBase {
    * Puts the list option in an unchecked state by toggling it if it is currently checked, or doing
    * nothing if it is already unchecked.
    */
-  async uncheck() {
+  async deselect() {
     if (await this.isSelected()) {
       return this.toggle();
     }

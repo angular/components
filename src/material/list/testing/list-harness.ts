@@ -7,7 +7,6 @@
  */
 
 import {
-  BaseHarnessFilters,
   ComponentHarness,
   ComponentHarnessConstructor,
   HarnessPredicate
@@ -26,7 +25,8 @@ import {
   ListItemHarnessFilters,
   ListOptionHarnessFilters,
   NavListHarnessFilters,
-  NavListItemHarnessFilters, SelectionListHarnessFilters,
+  NavListItemHarnessFilters,
+  SelectionListHarnessFilters,
   SubheaderHarnessFilters
 } from './list-harness-filters';
 import {
@@ -48,13 +48,14 @@ export interface ListSection<I> {
 
 /**
  * Shared behavior among the harnesses for the various `MatList` flavors.
+ * @template T A constructor type for a list item harness type used by this list harness.
+ * @template C The list item harness type that `T` constructs.
+ * @template F The filter type used filter list item harness of type `C`.
  * @docs-private
  */
 export class MatListHarnessBase
     <
-      T extends (ComponentHarnessConstructor<C> & {
-        with: (options?: BaseHarnessFilters) => HarnessPredicate<C>
-      }),
+      T extends (ComponentHarnessConstructor<C> & {with: (options?: F) => HarnessPredicate<C>}),
       C extends ComponentHarness,
       F extends BaseListItemHarnessFilters
     > extends ComponentHarness {
@@ -72,14 +73,14 @@ export class MatListHarnessBase
   /**
    * Gets a list of `ListSection` representing the list items grouped by subheaders. If the list has
    * no subheaders it is represented as a single `ListSection` with an undefined `heading` property.
-   * @param filters Optional filters used to narrow which list item harnesses are included
+   * @param filters?? Optional filters used to narrow which list item harnesses are included
    * @return The list of items matching the given filters, grouped into sections by subheader.
    */
-  async getItemsBySubheader(filters?: F): Promise<ListSection<C>[]> {
+  async getItemsGroupedBySubheader(filters?: F): Promise<ListSection<C>[]> {
     const listSections = [];
     let currentSection: ListSection<C> = {items: []};
     const itemsAndSubheaders =
-        await this.getItemsSubheadersAndDividers({item: filters, divider: false});
+        await this.getItemsWithSubheadersAndDividers({item: filters, divider: false});
     for (const itemOrSubheader of itemsAndSubheaders) {
       if (itemOrSubheader instanceof MatSubheaderHarness) {
         if (currentSection.heading !== undefined || currentSection.items.length) {
@@ -103,11 +104,11 @@ export class MatListHarnessBase
    * @param filters Optional filters used to narrow which list item harnesses are included
    * @return The list of items matching the given filters, grouped into sub-lists by divider.
    */
-  async getItemsDivided(filters?: F): Promise<C[][]> {
+  async getItemsGroupedByDividers(filters?: F): Promise<C[][]> {
     const listSections = [];
     let currentSection = [];
     const itemsAndDividers =
-        await this.getItemsSubheadersAndDividers({item: filters, subheader: false});
+        await this.getItemsWithSubheadersAndDividers({item: filters, subheader: false});
     for (const itemOrDivider of itemsAndDividers) {
       if (itemOrDivider instanceof MatDividerHarness) {
         listSections.push(currentSection);
@@ -130,47 +131,47 @@ export class MatListHarnessBase
    * @return The list of harnesses representing the items, subheaders, and dividers matching the
    *     given filters.
    */
-  getItemsSubheadersAndDividers(filters: {
+  getItemsWithSubheadersAndDividers(filters: {
     item: false,
     subheader: false,
     divider: false
   }): Promise<[]>;
-  getItemsSubheadersAndDividers(filters: {
+  getItemsWithSubheadersAndDividers(filters: {
     item?: F | false,
     subheader: false,
     divider: false
   }): Promise<C[]>;
-  getItemsSubheadersAndDividers(filters: {
+  getItemsWithSubheadersAndDividers(filters: {
     item: false,
     subheader?: SubheaderHarnessFilters | false,
     divider: false
   }): Promise<MatSubheaderHarness[]>;
-  getItemsSubheadersAndDividers(filters: {
+  getItemsWithSubheadersAndDividers(filters: {
     item: false,
     subheader: false,
     divider?: DividerHarnessFilters | false
   }): Promise<MatDividerHarness[]>;
-  getItemsSubheadersAndDividers(filters: {
+  getItemsWithSubheadersAndDividers(filters: {
     item?: F | false,
     subheader?: SubheaderHarnessFilters | false,
     divider: false
   }): Promise<(C | MatSubheaderHarness)[]>;
-  getItemsSubheadersAndDividers(filters: {
+  getItemsWithSubheadersAndDividers(filters: {
     item?: F | false,
     subheader: false,
     divider?: false | DividerHarnessFilters
   }): Promise<(C | MatDividerHarness)[]>;
-  getItemsSubheadersAndDividers(filters: {
+  getItemsWithSubheadersAndDividers(filters: {
     item: false,
     subheader?: false | SubheaderHarnessFilters,
     divider?: false | DividerHarnessFilters
   }): Promise<(MatSubheaderHarness | MatDividerHarness)[]>;
-  getItemsSubheadersAndDividers(filters?: {
+  getItemsWithSubheadersAndDividers(filters?: {
     item?: F | false,
     subheader?: SubheaderHarnessFilters | false,
     divider?: DividerHarnessFilters | false
   }): Promise<(C | MatSubheaderHarness | MatDividerHarness)[]>;
-  async getItemsSubheadersAndDividers(filters: {
+  async getItemsWithSubheadersAndDividers(filters: {
     item?: F | false,
     subheader?: SubheaderHarnessFilters | false,
     divider?: DividerHarnessFilters | false
@@ -274,18 +275,18 @@ export class MatSelectionListHarness extends MatListHarnessBase<
    * Selects all items matching any of the given filters.
    * @param filters Filters that specify which items should be selected.
    */
-  async checkItems(...filters: ListOptionHarnessFilters[]): Promise<void> {
+  async selectItems(...filters: ListOptionHarnessFilters[]): Promise<void> {
     const items = await this._getItems(filters);
-    await Promise.all(items.map(item => item.check()));
+    await Promise.all(items.map(item => item.select()));
   }
 
   /**
    * Deselects all items matching any of the given filters.
    * @param filters Filters that specify which items should be deselected.
    */
-  async uncheckItems(...filters: ListItemHarnessFilters[]): Promise<void> {
+  async deselectItems(...filters: ListItemHarnessFilters[]): Promise<void> {
     const items = await this._getItems(filters);
-    await Promise.all(items.map(item => item.uncheck()));
+    await Promise.all(items.map(item => item.deselect()));
   }
 
   /** Gets all items matching the given list of filters. */

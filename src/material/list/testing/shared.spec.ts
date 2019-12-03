@@ -78,7 +78,7 @@ function runBaseListFunctionalityTests<
     });
 
     it('should get items by subheader', async () => {
-      const sections = await simpleListHarness.getItemsBySubheader();
+      const sections = await simpleListHarness.getItemsGroupedBySubheader();
       expect(sections.length).toBe(3);
       expect(sections[0].heading).toBeUndefined();
       expect(await Promise.all(sections[0].items.map(i => i.getText()))).toEqual(['Item 1']);
@@ -90,14 +90,14 @@ function runBaseListFunctionalityTests<
     });
 
     it('should get items by subheader for an empty list', async () => {
-      const sections = await emptyListHarness.getItemsBySubheader();
+      const sections = await emptyListHarness.getItemsGroupedBySubheader();
       expect(sections.length).toBe(1);
       expect(sections[0].heading).toBeUndefined();
       expect(sections[0].items.length).toBe(0);
     });
 
     it('should get items grouped by divider', async () => {
-      const sections = await simpleListHarness.getItemsDivided();
+      const sections = await simpleListHarness.getItemsGroupedByDividers();
       expect(sections.length).toBe(3);
       expect(await Promise.all(sections[0].map(i => i.getText()))).toEqual(['Item 1']);
       expect(await Promise.all(sections[1].map(i => i.getText()))).toEqual(['Item 2', 'Item 3']);
@@ -105,13 +105,13 @@ function runBaseListFunctionalityTests<
     });
 
     it('should get items grouped by divider for an empty list', async () => {
-      const sections = await emptyListHarness.getItemsDivided();
+      const sections = await emptyListHarness.getItemsGroupedByDividers();
       expect(sections.length).toBe(1);
       expect(sections[0].length).toBe(0);
     });
 
     it('should get all items, subheaders, and dividers', async () => {
-      const itemsSubheadersAndDividers = await simpleListHarness.getItemsSubheadersAndDividers();
+      const itemsSubheadersAndDividers = await simpleListHarness.getItemsWithSubheadersAndDividers();
       expect(itemsSubheadersAndDividers.length).toBe(7);
       expect(itemsSubheadersAndDividers[0] instanceof listItemHarnessBase).toBe(true);
       expect(await (itemsSubheadersAndDividers[0] as MatListItemHarnessBase).getText())
@@ -134,11 +134,11 @@ function runBaseListFunctionalityTests<
 
     it('should get all items, subheaders, and dividers excluding some harness types', async () => {
       const items =
-          await simpleListHarness.getItemsSubheadersAndDividers({subheader: false, divider: false});
+          await simpleListHarness.getItemsWithSubheadersAndDividers({subheader: false, divider: false});
       const subheaders =
-          await simpleListHarness.getItemsSubheadersAndDividers({item: false, divider: false});
+          await simpleListHarness.getItemsWithSubheadersAndDividers({item: false, divider: false});
       const dividers =
-          await simpleListHarness.getItemsSubheadersAndDividers({item: false, subheader: false});
+          await simpleListHarness.getItemsWithSubheadersAndDividers({item: false, subheader: false});
       expect(await Promise.all(items.map(i => i.getText())))
           .toEqual(['Item 1', 'Item 2', 'Item 3']);
       expect(await Promise.all(subheaders.map(s => s.getText())))
@@ -148,7 +148,7 @@ function runBaseListFunctionalityTests<
     });
 
     it('should get all items, subheaders, and dividers with filters', async () => {
-      const itemsSubheadersAndDividers = await simpleListHarness.getItemsSubheadersAndDividers({
+      const itemsSubheadersAndDividers = await simpleListHarness.getItemsWithSubheadersAndDividers({
         item: {text: /1/},
         subheader: {text: /2/}
       });
@@ -328,22 +328,22 @@ export function runHarnessTests(
       it('should get all selected options', async () => {
         expect((await harness.getItems({selected: true})).length).toBe(0);
         const items = await harness.getItems();
-        await Promise.all(items.map(item => item.check()));
+        await Promise.all(items.map(item => item.select()));
         expect((await harness.getItems({selected: true})).length).toBe(3);
       });
 
       it('should check multiple options', async () => {
         expect((await harness.getItems({selected: true})).length).toBe(0);
-        await harness.checkItems({text: /1/}, {text: /3/});
+        await harness.selectItems({text: /1/}, {text: /3/});
         const selected = await harness.getItems({selected: true});
         expect(await Promise.all(selected.map(item => item.getText())))
             .toEqual(['Item 1', 'Item 3']);
       });
 
       it('should uncheck multiple options', async () => {
-        await harness.checkItems();
+        await harness.selectItems();
         expect((await harness.getItems({selected: true})).length).toBe(3);
-        await harness.uncheckItems({text: /1/}, {text: /3/});
+        await harness.deselectItems({text: /1/}, {text: /3/});
         const selected = await harness.getItems({selected: true});
         expect(await Promise.all(selected.map(item => item.getText()))).toEqual(['Item 2']);
       });
@@ -369,20 +369,20 @@ export function runHarnessTests(
         const items = await harness.getItems();
         expect(items.length).toBe(3);
         expect(await items[0].isSelected()).toBe(false);
-        await items[0].check();
+        await items[0].select();
         expect(await items[0].isSelected()).toBe(true);
-        await items[0].check();
+        await items[0].select();
         expect(await items[0].isSelected()).toBe(true);
       });
 
       it('should uncheck single option', async () => {
         const items = await harness.getItems();
         expect(items.length).toBe(3);
-        await items[0].check();
+        await items[0].select();
         expect(await items[0].isSelected()).toBe(true);
-        await items[0].uncheck();
+        await items[0].deselect();
         expect(await items[0].isSelected()).toBe(false);
-        await items[0].uncheck();
+        await items[0].deselect();
         expect(await items[0].isSelected()).toBe(false);
       });
 
