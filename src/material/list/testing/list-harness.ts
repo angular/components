@@ -263,7 +263,6 @@ export class MatSelectionListHarness extends MatListHarnessBase<
     return new HarnessPredicate(MatSelectionListHarness, options);
   }
 
-  private _selected = this.locatorForAll(MatListOptionHarness.with({selected: true}));
   _itemHarness = MatListOptionHarness;
 
   /** Whether the selection list is disabled. */
