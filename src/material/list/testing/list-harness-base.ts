@@ -51,7 +51,7 @@ export class MatListHarnessBase
   /**
    * Gets a list of `ListSection` representing the list items grouped by subheaders. If the list has
    * no subheaders it is represented as a single `ListSection` with an undefined `heading` property.
-   * @param filters?? Optional filters used to narrow which list item harnesses are included
+   * @param filters Optional filters used to narrow which list item harnesses are included
    * @return The list of items matching the given filters, grouped into sections by subheader.
    */
   async getItemsGroupedBySubheader(filters?: F): Promise<ListSection<C>[]> {
