@@ -26,6 +26,7 @@ export declare class CdkConnectedOverlay implements OnDestroy, OnChanges {
     readonly overlayRef: OverlayRef;
     panelClass: string | string[];
     positionChange: EventEmitter<ConnectedOverlayPositionChange>;
+    positionStrategy: FlexibleConnectedPositionStrategy;
     positions: ConnectedPosition[];
     push: boolean;
     scrollStrategy: ScrollStrategy;
