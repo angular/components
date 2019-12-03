@@ -2,6 +2,7 @@ import {BreakpointObserver} from '@angular/cdk/layout';
 import {CommonModule} from '@angular/common';
 import {
   Component,
+  Directive,
   ElementRef,
   NgModule,
   OnDestroy,
@@ -68,9 +69,10 @@ export class ComponentViewer implements OnDestroy {
  * examples). Responsible for resetting the focus target on doc item changes and resetting
  * the table of contents headers.
  */
+@Directive()
 export class ComponentBaseView implements OnInit, OnDestroy {
-  @ViewChild('initialFocusTarget', {static: false}) focusTarget: ElementRef;
-  @ViewChild('toc', {static: false}) tableOfContents: TableOfContents;
+  @ViewChild('initialFocusTarget') focusTarget: ElementRef;
+  @ViewChild('toc') tableOfContents: TableOfContents;
 
   showToc: Observable<boolean>;
 

@@ -24,7 +24,7 @@ const SMALL_WIDTH_BREAKPOINT = 720;
   encapsulation: ViewEncapsulation.None,
 })
 export class ComponentSidenav implements OnInit {
-  @ViewChild(MatSidenav, {static: false}) sidenav: MatSidenav;
+  @ViewChild(MatSidenav) sidenav: MatSidenav;
   params: Observable<Params>;
   isScreenSmall: Observable<boolean>;
 
