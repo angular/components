@@ -54,7 +54,6 @@ const dependencies = {
   '@angular/router': angularVersion,
   'angular-in-memory-web-api': '~0.9.0',
   'core-js': '^2.6.9',
-  'hammerjs': '^2.0.8',
   'moment': '^2.24.0',
   'rxjs': '>=6.5.3 <7.0.0',
   'tslib': '^1.10.0',
