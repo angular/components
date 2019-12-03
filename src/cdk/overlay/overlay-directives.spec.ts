@@ -32,14 +32,14 @@ describe('Overlay directives', () => {
     });
   });
 
+  beforeEach(() => {
+    fixture = TestBed.createComponent(ConnectedOverlayDirectiveTest);
+    fixture.detectChanges();
+  });
+
   beforeEach(inject([OverlayContainer, Overlay], (oc: OverlayContainer, o: Overlay) => {
     overlayContainer = oc;
     overlay = o;
-    overlayContainerElement = oc.getContainerElement();
-  }));
-
-  beforeEach(inject([OverlayContainer], (oc: OverlayContainer) => {
-    overlayContainer = oc;
     overlayContainerElement = oc.getContainerElement();
   }));
 
