@@ -293,7 +293,8 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
 
   /** Builds the overlay config based on the directive's inputs */
   private _buildConfig(): OverlayConfig {
-    const positionStrategy = this._position = this.positionStrategy || this._createPositionStrategy();
+    const positionStrategy = this._position =
+      this.positionStrategy || this._createPositionStrategy();
     const overlayConfig = new OverlayConfig({
       direction: this._dir,
       positionStrategy,
