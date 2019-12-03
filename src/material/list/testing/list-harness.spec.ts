@@ -1,11 +1,9 @@
 import {MatDividerHarness} from '@angular/material/divider/testing';
 import {MatListModule} from '@angular/material/list';
-import {
-  MatActionListHarness,
-  MatListHarness,
-  MatNavListHarness,
-  MatSelectionListHarness
-} from './list-harness-base';
+import {MatActionListHarness} from './action-list-harness';
+import {MatListHarness} from './list-harness';
+import {MatNavListHarness} from './nav-list-harness';
+import {MatSelectionListHarness} from './selection-list-harness';
 import {MatListItemHarnessBase, MatSubheaderHarness} from './list-item-harness-base';
 import {runHarnessTests} from './shared.spec';
 

@@ -9,22 +9,13 @@ import {Component, Type} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {MatDividerHarness} from '@angular/material/divider/testing';
 import {MatListModule} from '@angular/material/list';
-import {BaseListItemHarnessFilters} from '@angular/material/list/testing/list-harness-filters';
-import {
-  MatActionListItemHarness,
-  MatListItemHarness,
-  MatListItemHarnessBase,
-  MatListOptionHarness,
-  MatNavListItemHarness,
-  MatSubheaderHarness
-} from '@angular/material/list/testing/list-item-harness-base';
-import {
-  MatActionListHarness,
-  MatListHarness,
-  MatListHarnessBase,
-  MatNavListHarness,
-  MatSelectionListHarness
-} from './list-harness-base';
+import {MatActionListHarness, MatActionListItemHarness} from './action-list-harness';
+import {MatListHarness, MatListItemHarness} from './list-harness';
+import {MatListHarnessBase} from './list-harness-base';
+import {BaseListItemHarnessFilters} from './list-harness-filters';
+import {MatListItemHarnessBase, MatSubheaderHarness} from './list-item-harness-base';
+import {MatNavListHarness, MatNavListItemHarness} from './nav-list-harness';
+import {MatListOptionHarness, MatSelectionListHarness} from './selection-list-harness';
 
 /** Tests that apply to all types of mat-list. */
 function runBaseListFunctionalityTests<
@@ -111,7 +102,8 @@ function runBaseListFunctionalityTests<
     });
 
     it('should get all items, subheaders, and dividers', async () => {
-      const itemsSubheadersAndDividers = await simpleListHarness.getItemsWithSubheadersAndDividers();
+      const itemsSubheadersAndDividers =
+          await simpleListHarness.getItemsWithSubheadersAndDividers();
       expect(itemsSubheadersAndDividers.length).toBe(7);
       expect(itemsSubheadersAndDividers[0] instanceof listItemHarnessBase).toBe(true);
       expect(await (itemsSubheadersAndDividers[0] as MatListItemHarnessBase).getText())
@@ -133,12 +125,12 @@ function runBaseListFunctionalityTests<
     });
 
     it('should get all items, subheaders, and dividers excluding some harness types', async () => {
-      const items =
-          await simpleListHarness.getItemsWithSubheadersAndDividers({subheader: false, divider: false});
-      const subheaders =
-          await simpleListHarness.getItemsWithSubheadersAndDividers({item: false, divider: false});
-      const dividers =
-          await simpleListHarness.getItemsWithSubheadersAndDividers({item: false, subheader: false});
+      const items = await simpleListHarness.getItemsWithSubheadersAndDividers(
+          {subheader: false, divider: false});
+      const subheaders = await simpleListHarness.getItemsWithSubheadersAndDividers(
+          {item: false, divider: false});
+      const dividers = await simpleListHarness.getItemsWithSubheadersAndDividers(
+          {item: false, subheader: false});
       expect(await Promise.all(items.map(i => i.getText())))
           .toEqual(['Item 1', 'Item 2', 'Item 3']);
       expect(await Promise.all(subheaders.map(s => s.getText())))
