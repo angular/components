@@ -567,7 +567,10 @@ function expectFlatTreeToMatch(treeElement: Element, expectedPaddingIndent: numb
     }
   }
 
-  getNodes(treeElement).forEach((node, index) => {
+  const nodes = getNodes(treeElement);
+  expect(nodes.length).toBe(expectedTree.length);
+
+  nodes.forEach((node, index) => {
     const expected = expectedTree ?
       expectedTree[index] :
       null;
