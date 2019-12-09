@@ -210,21 +210,16 @@ export class MatDatepicker<D> implements OnDestroy, CanColor {
    */
   @Output() readonly monthSelected: EventEmitter<D> = new EventEmitter<D>();
 
-  private _panelClass: string[];
-
-  /** Classes to be passed to the date picker panel. */
-  get panelClass(): string | string[] {
-      return this._panelClass;
-  }
-
   /**
    * Classes to be passed to the date picker panel.
    * Supports string and string array values, similar to `ngClass`.
    */
   @Input()
+  get panelClass(): string | string[] { return this._panelClass; }
   set panelClass(value: string | string[]) {
       this._panelClass = coerceStringArray(value);
   }
+  private _panelClass: string[];
 
   /** Function that can be used to add custom CSS classes to dates. */
   @Input() dateClass: (date: D) => MatCalendarCellCssClasses;
