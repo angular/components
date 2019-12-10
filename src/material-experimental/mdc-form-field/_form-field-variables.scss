@@ -1,0 +1,15 @@
+@import '@material/textfield/variables';
+
+$mat-form-field-top-inset: 4px;
+$mat-form-field-textarea-vertical-inset: 4px;
+$mat-form-field-textarea-horizontal-inset: 16px;
+$mat-form-field-label-height: 14px;
+$mat-form-field-baseline: $mdc-text-field-height / 2;
+
+// Infix stretches to fit the container, but naturally wants to be this wide. We set this
+// in order to have a a consistent natural size for the various types of controls that can
+// go in a form field.
+$mat-form-field-default-infix-width: 180px !default;
+
+// Minimum amount of space between start and end hints in the subscript.
+$mat-form-field-hint-min-space: 1em !default;
