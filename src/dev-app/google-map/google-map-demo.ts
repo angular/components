@@ -7,10 +7,13 @@
  */
 
 import {Component, ViewChild} from '@angular/core';
-import {MapInfoWindow, MapMarker} from '@angular/google-maps';
+import {MapInfoWindow, MapMarker, MapPolygon, MapPolyline} from '@angular/google-maps';
 
 const POLYLINE_PATH: google.maps.LatLngLiteral[] =
     [{lat: 25, lng: 26}, {lat: 26, lng: 27}, {lat: 30, lng: 34}];
+
+const POLYGON_PATH: google.maps.LatLngLiteral[] =
+    [{lat: 20, lng: 21}, {lat: 22, lng: 23}, {lat: 24, lng: 25}];
 
 /** Demo Component for @angular/google-maps/map */
 @Component({
@@ -20,6 +23,8 @@ const POLYLINE_PATH: google.maps.LatLngLiteral[] =
 })
 export class GoogleMapDemo {
   @ViewChild(MapInfoWindow) infoWindow: MapInfoWindow;
+  @ViewChild(MapPolyline) polyline: MapPolyline;
+  @ViewChild(MapPolygon) polygon: MapPolygon;
 
   center = {lat: 24, lng: 12};
   markerOptions = {draggable: false};
@@ -29,6 +34,9 @@ export class GoogleMapDemo {
   isPolylineDisplayed = false;
   polylineOptions:
       google.maps.PolylineOptions = {path: POLYLINE_PATH, strokeColor: 'grey', strokeOpacity: 0.8};
+  isPolygonDisplayed = false;
+  polygonOptions:
+      google.maps.PolygonOptions = {paths: POLYGON_PATH, strokeColor: 'grey', strokeOpacity: 0.8};
 
   handleClick(event: google.maps.MouseEvent) {
     this.markerPositions.push(event.latLng.toJSON());
@@ -51,6 +59,22 @@ export class GoogleMapDemo {
   }
 
   toggleEditablePolyline() {
-    this.polylineOptions = {...this.polylineOptions, editable: !this.polylineOptions.editable};
+    this.polylineOptions = {
+      ...this.polylineOptions,
+      editable: !this.polylineOptions.editable,
+      path: this.polyline.getPath()
+    };
+  }
+
+  togglePolygonDisplay() {
+    this.isPolygonDisplayed = !this.isPolygonDisplayed;
+  }
+
+  toggleEditablePolygon() {
+    this.polygonOptions = {
+      ...this.polygonOptions,
+      editable: !this.polygonOptions.editable,
+      paths: this.polygon.getPaths()
+    };
   }
 }
