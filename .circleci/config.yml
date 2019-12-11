@@ -534,7 +534,7 @@ workflows:
           requires:
             - build_release_packages
       - ngcc_compatibility_snapshot:
-          #filters: *skip_on_pull_requests_filter
+          filters: *skip_on_pull_requests_filter
           requires:
             - build_release_packages
       - publish_snapshots:
