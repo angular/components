@@ -7,7 +7,7 @@
  */
 
 import {ChangeDetectionStrategy, Component, ViewEncapsulation} from '@angular/core';
-import {MatList} from '@angular/material-experimental/mdc-list/list';
+import {MatList} from './list';
 import {MatListBase} from './list-base';
 
 @Component({
@@ -29,7 +29,7 @@ import {MatListBase} from './list-base';
      * @deprecated Provider for `MatList` will be removed, use `MatNavList` instead.
      * @breaking-change 11.0.0
      */
-    { provide: MatList, useExisting: MatNavList }
+    {provide: MatList, useExisting: MatNavList}
   ]
 })
 export class MatNavList extends MatListBase {}
