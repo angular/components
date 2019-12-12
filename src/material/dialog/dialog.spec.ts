@@ -207,6 +207,16 @@ describe('MatDialog', () => {
     expect(overlayContainerElement.querySelector('mat-dialog-container')).toBeNull();
   }));
 
+  it('should dispose of dialog if view container is destroyed before animating', fakeAsync(() => {
+    const dialogRef = dialog.open(PizzaMsg, {viewContainerRef: testViewContainerRef});
+
+    viewContainerFixture.detectChanges();
+    viewContainerFixture.destroy();
+    flush();
+
+    expect(overlayContainerElement.querySelector('mat-dialog-container')).toBeNull();
+  }));
+
   it('should dispatch the beforeClosed and afterClosed events when the ' +
     'overlay is detached externally', fakeAsync(inject([Overlay], (overlay: Overlay) => {
       const dialogRef = dialog.open(PizzaMsg, {
