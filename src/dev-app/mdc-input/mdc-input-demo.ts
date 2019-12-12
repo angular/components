@@ -31,7 +31,8 @@ export class MdcInputDemo {
   ctrlDisabled = false;
   textareaNgModelValue: string;
   textareaAutosizeEnabled = false;
-  appearance: MatFormFieldAppearance;
+  appearance: MatFormFieldAppearance = 'standard';
+  prefixSuffixAppearance: MatFormFieldAppearance = 'standard';
   placeholderTestControl = new FormControl('', Validators.required);
   options: string[] = ['One', 'Two', 'Three'];
 

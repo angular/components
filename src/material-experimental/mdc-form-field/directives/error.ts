@@ -16,7 +16,7 @@ let nextUniqueId = 0;
   host: {
     'class': 'mat-mdc-form-field-error',
     'role': 'alert',
-    '[attr.id]': 'id',
+    '[id]': 'id',
   }
 })
 export class MatError {

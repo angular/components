@@ -64,11 +64,12 @@ const DEFAULT_APPEARANCE: MatFormFieldAppearance = 'standard';
 /** Default appearance used by the form-field. */
 const DEFAULT_FLOAT_LABEL: FloatLabelType = 'auto';
 
+/** Container for form controls that applies Material Design styling and behavior. */
 @Component({
   selector: 'mat-form-field',
   exportAs: 'matFormField',
   templateUrl: './form-field.html',
-  styleUrls: ['./form-field.css', './form-field-standard.css'],
+  styleUrls: ['./form-field.css'],
   animations: [matFormFieldAnimations.transitionMessages],
   host: {
     'class': 'mat-mdc-form-field',
@@ -184,13 +185,16 @@ export class MatFormField implements AfterViewInit, OnDestroy, AfterContentCheck
     isFocused: () => this._control.focused,
     hasOutline: () => this._hasOutline(),
 
-    // Handled through template input binding. This gives us more flexibility. e.g. by
-    // respecting "floatLabel" @Input and supporting the "always floating" mode.
+    // MDC text-field will call this method on focus, blur and value change. It expects us
+    // to update the floating label state accordingly. Though we make this a noop because we
+    // want to react to floating label state changes through change detection. Relying on this
+    // adapter method would mean that the label would not update if the custom form-field control
+    // sets "shouldLabelFloat" to true, or if the "floatLabel" input binding changes to "always".
     floatLabel: () => {},
 
     // Label shaking is not supported yet. It will require a new API for form field
     // controls to trigger the shaking. This can be a feature in the future.
-    // TODO: revisit for errors already?
+    // TODO(devversion): explore options on how to integrate label shaking.
     shakeLabel: () => {},
 
     getLabelWidth: () => this._floatingLabel ? this._floatingLabel.getWidth() : 0,
@@ -254,6 +258,12 @@ export class MatFormField implements AfterViewInit, OnDestroy, AfterContentCheck
   ngAfterViewInit() {
     this._foundation = new MDCTextFieldFoundation(this._adapter);
 
+    // MDC uses the "shouldFloat" getter to know whether the label is currently floating. This
+    // does not match our implementation of when the label floats because we support more cases.
+    // For example, consumers can set "@Input floatLabel" to always, or the custom form-field
+    // control can set "MatFormFieldControl#shouldLabelFloat" to true. To ensure that MDC knows
+    // when the label is floating, we overwrite the property to be based on the method we use to
+    // determine the current state of the floating label.
     Object.defineProperty(this._foundation, 'shouldFloat', {
       get: () => this._shouldLabelFloat(),
     });
@@ -269,42 +279,8 @@ export class MatFormField implements AfterViewInit, OnDestroy, AfterContentCheck
 
   ngAfterContentInit() {
     this._assertFormFieldControl();
-    const control = this._control;
-
-    if (control.controlType) {
-      this._elementRef.nativeElement.classList.add(
-          `mat-mdc-form-field-type-${control.controlType}`);
-    }
-
-    // Subscribe to changes in the child control state in order to update the form field UI.
-    control.stateChanges.subscribe(() => {
-      this._updateFocusState();
-      this._syncDescribedByIds();
-      this._changeDetectorRef.markForCheck();
-    });
-
-    // Run change detection if the value changes.
-    if (control.ngControl && control.ngControl.valueChanges) {
-      control.ngControl.valueChanges
-        .pipe(takeUntil(this._destroyed))
-        .subscribe(() => this._changeDetectorRef.markForCheck());
-    }
-
-    // Re-validate when the number of hints changes.
-    this._hintChildren.changes.subscribe(() => {
-      this._processHints();
-      this._changeDetectorRef.markForCheck();
-    });
-
-    // Update the aria-described by when the number of errors changes.
-    this._errorChildren.changes.subscribe(() => {
-      this._syncDescribedByIds();
-      this._changeDetectorRef.markForCheck();
-    });
-
-    // Initial mat-hint validation and subscript describedByIds sync.
-    this._validateHints();
-    this._syncDescribedByIds();
+    this._initializeControl();
+    this._initializeSubscript();
   }
 
   ngAfterContentChecked() {
@@ -337,6 +313,53 @@ export class MatFormField implements AfterViewInit, OnDestroy, AfterContentCheck
     if (this._hasFloatingLabel()) {
       this.floatLabel = 'always';
     }
+  }
+
+  /** Initializes the registered form-field control. */
+  private _initializeControl() {
+    const control = this._control;
+
+    if (control.controlType) {
+      this._elementRef.nativeElement.classList.add(
+        `mat-mdc-form-field-type-${control.controlType}`);
+    }
+
+    // Subscribe to changes in the child control state in order to update the form field UI.
+    control.stateChanges.subscribe(() => {
+      this._updateFocusState();
+      this._syncDescribedByIds();
+      this._changeDetectorRef.markForCheck();
+    });
+
+    // Run change detection if the value changes.
+    if (control.ngControl && control.ngControl.valueChanges) {
+      control.ngControl.valueChanges
+        .pipe(takeUntil(this._destroyed))
+        .subscribe(() => this._changeDetectorRef.markForCheck());
+    }
+  }
+
+  /**
+   * Initializes the subscript by validating hints and synchronizing "aria-describedby" ids
+   * with the custom form-field control. Also subscribes to hint and error changes in order
+   * to be able to validate and synchronize ids on change.
+   */
+  private _initializeSubscript() {
+    // Re-validate when the number of hints changes.
+    this._hintChildren.changes.subscribe(() => {
+      this._processHints();
+      this._changeDetectorRef.markForCheck();
+    });
+
+    // Update the aria-described by when the number of errors changes.
+    this._errorChildren.changes.subscribe(() => {
+      this._syncDescribedByIds();
+      this._changeDetectorRef.markForCheck();
+    });
+
+    // Initial mat-hint validation and subscript describedByIds sync.
+    this._validateHints();
+    this._syncDescribedByIds();
   }
 
   /** Throws an error if the form field's control is missing. */

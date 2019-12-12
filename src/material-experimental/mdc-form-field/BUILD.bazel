@@ -15,10 +15,7 @@ ng_module(
         ["**/*.ts"],
         exclude = ["**/*.spec.ts"],
     ),
-    assets = [
-        ":form_field_scss",
-        ":form_field_standard_scss",
-    ] + glob(["**/*.html"]),
+    assets = [":form_field_scss"] + glob(["**/*.html"]),
     module_name = "@angular/material-experimental/mdc-form-field",
     deps = [
         "//src/cdk/observers",
@@ -36,6 +33,7 @@ sass_library(
     name = "mdc_form_field_scss_lib",
     srcs = ["_mdc-form-field.scss"],
     deps = [
+        ":form_field_partials",
         "//src/cdk/a11y:a11y_scss_lib",
         "//src/material-experimental/mdc-helpers:mdc_helpers_scss_lib",
     ],
@@ -48,14 +46,15 @@ sass_binary(
         "external/npm/node_modules",
     ],
     deps = [
-        ":form_field_variables",
+        ":form_field_partials",
         ":mdc_form_field_scss",
         "//src/material-experimental/mdc-helpers:mdc_helpers_scss_lib",
         "//src/material-experimental/mdc-helpers:mdc_scss_deps_lib",
     ],
 )
 
-# TODO(devversion): workaround until we have feature targeting.
+# TODO(devversion): Import all of the individual Sass mixins once feature targeting is available
+# for MDC text-field, notched-outline, floating-label and line-ripple.
 sass_library(
     name = "mdc_form_field_scss",
     srcs = [
@@ -74,21 +73,16 @@ sass_library(
     ],
 )
 
-sass_binary(
-    name = "form_field_standard_scss",
-    src = "form-field-standard.scss",
-    include_paths = [
-        "external/npm/node_modules",
-    ],
-    deps = [
-        ":form_field_variables",
-        "//src/material-experimental/mdc-helpers:mdc_scss_deps_lib",
-    ],
-)
-
 sass_library(
-    name = "form_field_variables",
-    srcs = ["_form-field-variables.scss"],
+    name = "form_field_partials",
+    srcs = [
+        "_form-field-bottom-line.scss",
+        "_form-field-standard-appearance.scss",
+        "_form-field-subscript.scss",
+        "_form-field-variables.scss",
+        "_mdc-text-field-structure-overwrites.scss",
+        "_mdc-text-field-textarea-overwrites.scss",
+    ],
     deps = [
         "//src/material-experimental/mdc-helpers:mdc_scss_deps_lib",
     ],

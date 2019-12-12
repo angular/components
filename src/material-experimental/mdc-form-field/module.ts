@@ -21,7 +21,11 @@ import {MatSuffix} from './directives/suffix';
 import {MatFormField} from './form-field';
 
 @NgModule({
-  imports: [MatCommonModule, CommonModule, ObserversModule],
+  imports: [
+    MatCommonModule,
+    CommonModule,
+    ObserversModule
+  ],
   exports: [
     MatFormField,
     MatLabel,

@@ -1,78 +1,17 @@
 @import '@material/textfield/variables';
 @import '../mdc-helpers/mdc-helpers';
+@import '_form-field-subscript.scss';
+@import '_form-field-bottom-line.scss';
 
 @mixin mat-form-field-theme-mdc($theme) {
-  $warn: map-get($theme, warn);
-  $underline-color-warn: mat-color($warn, text);
-
-  .mat-mdc-form-field-error {
-    color: $underline-color-warn;
-  }
-
   @include mat-using-mdc-theme($theme) {
-    .mat-mdc-form-field-bottom-line {
-      @include mdc-theme-prop(border-bottom-color, $mdc-text-field-bottom-line-idle);
-
-      .mdc-text-field--disabled & {
-        @include mdc-theme-prop(border-bottom-color, $mdc-text-field-disabled-border);
-      }
-
-      .mdc-text-field--invalid & {
-        @include mdc-theme-prop(border-bottom-color, $mdc-text-field-error);
-      }
-    }
+    @include mat-form-field-subscript-theme();
+    @include mat-form-field-bottom-line-theme();
   }
 }
 
 @mixin mat-form-field-typography-mdc($config) {
-  // The unit-less line-height from the font config.
-  $line-height: mat-line-height($config, input);
-  // The amount to scale the font for the subscript.
-  $subscript-font-scale: 0.75;
-  // Font size to use for the subscript text.
-  $subscript-font-size: $subscript-font-scale * 100%;
-  // The space between the bottom of the text-field area and the subscript wrapper. Mocks show
-  // half of the text size, but this margin is applied to an element with the subscript text
-  // font size, so we need to divide by the scale factor to make it half of the original text
-  // size.
-  $subscript-margin-top: 0.5em / $subscript-font-scale;
-  // The padding applied to the subscript wrapper to reserve space for the subscript, since it's
-  // absolutely positioned. This is a combination of the subscript's margin and line-height, but we
-  // need to multiply by the subscript font scale factor since the wrapper has a larger font size.
-  $wrapper-padding-bottom: ($subscript-margin-top + $line-height) * $subscript-font-scale;
-  // The amount to scale the font for the prefix and suffix icons.
-  $prefix-suffix-icon-font-scale: 1.5;
-  // Font size to use for the for the prefix and suffix icons.
-  $prefix-suffix-icon-font-size: $prefix-suffix-icon-font-scale * 100%;
-
-  .mat-mdc-form-field-subscript-wrapper {
-    min-height: $wrapper-padding-bottom;
-    font-size: $subscript-font-size;
-    margin-top: $subscript-margin-top;
-  }
-
-  .mat-mdc-form-field-prefix,
-  .mat-mdc-form-field-suffix {
-    // Allow icons in a prefix or suffix to adapt to the correct size.
-    .mat-icon {
-      font-size: $prefix-suffix-icon-font-size;
-      line-height: $line-height;
-    }
-
-    // Allow icon buttons in a prefix or suffix to adapt to the correct size.
-    .mat-icon-button {
-      height: $prefix-suffix-icon-font-scale * 1em;
-      width: $prefix-suffix-icon-font-scale * 1em;
-
-      .mat-icon {
-        height: $line-height * 1em;
-        line-height: $line-height;
-      }
-    }
-  }
-
-
   @include mat-using-mdc-typography($config) {
-
+    @include mat-form-field-subscript-typography($config);
   }
 }

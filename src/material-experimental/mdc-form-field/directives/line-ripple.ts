@@ -9,6 +9,14 @@
 import {Directive, ElementRef, OnDestroy} from '@angular/core';
 import {MDCLineRipple} from '@material/line-ripple';
 
+/**
+ * Internal directive that creates an instance of the MDC line-ripple component. Using a
+ * directive allows us to conditionally render a line-ripple in the template without having
+ * to manually create and destroy the `MDCLineRipple` component whenever the condition changes.
+ *
+ * The directive sets up the styles for the line-ripple and provides an API for activating
+ * and deactivating the line-ripple.
+ */
 @Directive({
   selector: 'div[matFormFieldLineRipple]',
   host: {

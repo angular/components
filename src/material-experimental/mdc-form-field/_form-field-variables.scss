@@ -2,9 +2,13 @@
 
 $mat-form-field-top-inset: 4px;
 $mat-form-field-textarea-vertical-inset: 4px;
-$mat-form-field-textarea-horizontal-inset: 16px;
+$mat-form-field-textarea-inner-padding: 4px;
 $mat-form-field-label-height: 14px;
 $mat-form-field-baseline: $mdc-text-field-height / 2;
+$mat-form-field-outline-textarea-horizontal-inset: 16px;
+
+// The horizontal padding between the edge of the form field fill box and the start of the text.
+$mat-form-field-fill-side-padding: 0.75em !default;
 
 // Infix stretches to fit the container, but naturally wants to be this wide. We set this
 // in order to have a a consistent natural size for the various types of controls that can

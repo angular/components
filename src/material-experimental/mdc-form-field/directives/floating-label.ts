@@ -9,6 +9,14 @@
 import {Directive, ElementRef, Input, OnDestroy} from '@angular/core';
 import {MDCFloatingLabel} from '@material/floating-label';
 
+/**
+ * Internal directive that creates an instance of the MDC floating label
+ * component. Using a directive allows us to conditionally render a floating label
+ * in the template without having to manually instantiate the `MDCFloatingLabel` component.
+ *
+ * The component is responsible for setting up the floating label styles, and for providing
+ * an @Input that can be used by the form-field to toggle floating state of the label.
+ */
 @Directive({
   selector: 'label[matFormFieldFloatingLabel]',
   host: {

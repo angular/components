@@ -121,7 +121,7 @@
   <mat-toolbar color="primary">Prefix + Suffix</mat-toolbar>
   <mat-card-content>
     <h4>Text</h4>
-    <mat-form-field class="demo-text-align-end">
+    <mat-form-field [appearance]="prefixSuffixAppearance" class="demo-text-align-end">
       <mat-label>Amount</mat-label>
       <input matInput>
       <span matPrefix>$&nbsp;</span>
@@ -129,20 +129,28 @@
     </mat-form-field>
 
     <h4>Icons</h4>
-    <mat-form-field>
+    <mat-form-field [appearance]="prefixSuffixAppearance">
       <mat-label>Amount</mat-label>
       <input matInput>
-      <mat-icon matPrefix>attach_money</mat-icon>
+      <mat-icon matPrefix>calendar_today</mat-icon>
       <mat-icon matSuffix>mode_edit</mat-icon>
     </mat-form-field>
 
     <h4>Icon buttons</h4>
-    <mat-form-field>
+    <mat-form-field [appearance]="prefixSuffixAppearance">
       <mat-label>Amount</mat-label>
       <input matInput>
-      <button mat-icon-button matPrefix><mat-icon>attach_money</mat-icon></button>
+      <button mat-icon-button matPrefix><mat-icon>calendar_today</mat-icon></button>
       <button mat-icon-button matSuffix><mat-icon>mode_edit</mat-icon></button>
     </mat-form-field>
+
+    <p>
+      <mat-button-toggle-group [(ngModel)]="prefixSuffixAppearance">
+        <mat-button-toggle value="standard">Standard</mat-button-toggle>
+        <mat-button-toggle value="fill">Fill</mat-button-toggle>
+        <mat-button-toggle value="outline">Outline</mat-button-toggle>
+      </mat-button-toggle-group>
+    </p>
   </mat-card-content>
 </mat-card>
 

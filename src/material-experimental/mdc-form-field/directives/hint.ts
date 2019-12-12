@@ -16,7 +16,7 @@ let nextUniqueId = 0;
   host: {
     'class': 'mat-mdc-form-field-hint',
     '[class.mat-form-field-hint-end]': 'align == "end"',
-    '[attr.id]': 'id',
+    '[id]': 'id',
     // Remove align attribute to prevent it from interfering with layout.
     '[attr.align]': 'null',
   }
