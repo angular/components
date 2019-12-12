@@ -10,73 +10,74 @@ import {DateAdapter} from '@angular/material/core';
 import {FactoryProvider, Optional, SkipSelf, Injectable} from '@angular/core';
 import {Subject, Observable} from 'rxjs';
 
-export abstract class MatDateSelectionModel<D> {
+export class DateRange<D> {
+    // DateRange should be a class with a private member.
+    // Otherwise any object with a `start` and `end` property might be considered a
+    // `DateRange`
+    private _disableStructuralEquivalency: never;
+
+    start: D | null;
+    end: D | null;
+
+    constructor(range?: { start?: D | null, end?: D | null } | null) {
+        this.start = range && range.start || null;
+        this.end = range && range.end || null;
+    }
+}
+
+type ExtractDateTypeFromSelection<T> = T extends DateRange<infer D> ? D : T;
+
+export abstract class MatDateSelectionModel<S, D = ExtractDateTypeFromSelection<S>> {
   protected _valueChangesSubject = new Subject<void>();
   valueChanges: Observable<void> = this._valueChangesSubject.asObservable();
 
-  constructor(protected readonly adapter: DateAdapter<D>) {}
+  constructor(protected readonly adapter: DateAdapter<D>, protected _selection: S |
+             null = null) {}
 
-  destroy() {
-    this._valueChangesSubject.complete();
-  }
-
-  abstract add(date: D | null): void;
+  abstract get selection(): S | null;
+  abstract set selection(selection: S | null);
+  abstract add(date: D): void;
   abstract isComplete(): boolean;
-  abstract isSame(other: MatDateSelectionModel<D>): boolean;
   abstract isValid(): boolean;
+  abstract isSame(other: MatDateSelectionModel<any, any>):boolean;
   abstract overlaps(range: DateRange<D>): boolean;
-}
-
-export interface DateRange<D> {
-  start: D | null;
-  end: D | null;
 }
 
 /**
  * Concrete implementation of a MatDateSelectionModel that holds a single date.
  */
 @Injectable()
-export class MatSingleDateSelectionModel<D> extends MatDateSelectionModel<D> {
-  private _date: D | null = null;
+export class MatSingleDateSelectionModel<D> extends MatDateSelectionModel<D, D> {
 
   constructor(adapter: DateAdapter<D>, date?: D | null) {
-    super(adapter);
-    this._date = date === undefined ? null : date;
+    super(adapter, date);
   }
 
-  add(date: D | null) {
-    this._date = date;
+  get selection(): D | null {
+    return this._selection;
+  }
+
+  set selection(selection: D | null) {
+    this._selection = selection;
+  }
+
+  add(date: D) {
+    this._selection = date;
     this._valueChangesSubject.next();
   }
 
-  compareDate(other: MatSingleDateSelectionModel<D>) {
-    const date = this.asDate();
-    const otherDate = other.asDate();
-    if (date != null && otherDate != null) {
-      return this.adapter.compareDate(date, otherDate);
-    }
-    return date === otherDate;
-  }
-
-  isComplete() { return this._date != null; }
-
-  isSame(other: MatDateSelectionModel<D>): boolean {
-    return other instanceof MatSingleDateSelectionModel &&
-        this.adapter.sameDate(other.asDate(), this._date);
+  isComplete(): boolean {
+    return this._selection != null;
   }
 
   isValid(): boolean {
-    return this._date != null && this.adapter.isDateInstance(this._date) &&
-           this.adapter.isValid(this._date);
+    return this._selection != null && this.adapter.isDateInstance(this._selection) &&
+           this.adapter.isValid(this._selection);
   }
 
-  asDate(): D | null {
-    return this.isValid() ? this._date : null;
-  }
-
-  setDate(date: D | null) {
-    this._date = date;
-    this._valueChangesSubject.next();
+  isSame(other: MatDateSelectionModel<D>): boolean {
+    return other instanceof MatSingleDateSelectionModel &&
+        this._selection === other.selection;
   }
 
   /**
@@ -84,9 +85,9 @@ export class MatSingleDateSelectionModel<D> extends MatDateSelectionModel<D> {
    * the range is null or if the selection is undefined.
    */
   overlaps(range: DateRange<D>): boolean {
-    return !!(this._date && range.start && range.end &&
-        this.adapter.compareDate(range.start, this._date) <= 0 &&
-        this.adapter.compareDate(this._date, range.end) <= 0);
+    return !!(this._selection && range.start && range.end &&
+        this.adapter.compareDate(range.start, this._selection) <= 0 &&
+        this.adapter.compareDate(this._selection, range.end) <= 0);
   }
 }
 
@@ -95,14 +96,20 @@ export class MatSingleDateSelectionModel<D> extends MatDateSelectionModel<D> {
  * a start date and an end date.
  */
 @Injectable()
-export class MatRangeDateSelectionModel<D> extends MatDateSelectionModel<D> {
-  private _start: D | null = null;
-  private _end: D | null = null;
+export class MatRangeDateSelectionModel<D> extends
+  MatDateSelectionModel<DateRange<D>, D> {
+  protected _selection: DateRange<D>;
 
-  constructor(adapter: DateAdapter<D>, start?: D | null, end?: D | null) {
-    super(adapter);
-    this._start = start === undefined ? null : start;
-    this._end = end === undefined ? null : end;
+  constructor(adapter: DateAdapter<D>, range?: DateRange<D> | null) {
+    super(adapter, range || new DateRange<D>());
+  }
+
+  get selection(): DateRange<D> | null {
+    return new DateRange(this._selection);
+  }
+
+  set selection(selection: DateRange<D> | null) {
+    this._selection = new DateRange(selection);
   }
 
   /**
@@ -111,46 +118,39 @@ export class MatRangeDateSelectionModel<D> extends MatDateSelectionModel<D> {
    * If add is called on a complete selection, it will empty the selection and set it as the start.
    */
   add(date: D | null): void {
-    if (this._start == null) {
-      this._start = date;
-    } else if (this._end == null) {
-      this._end = date;
+    if (this._selection.start == null) {
+      this._selection.start = date;
+    } else if (this._selection.end == null) {
+      this._selection.end = date;
     } else {
-      this._start = date;
-      this._end = null;
+      this._selection.start = date;
+      this._selection.end = null;
     }
 
     this._valueChangesSubject.next();
   }
 
   setRange(start: D | null, end: D | null) {
-    this._start = start;
-    this._end = end;
+    this._selection.start = start;
+    this._selection.end = end;
   }
 
   isComplete(): boolean {
-    return this._start != null && this._end != null;
+    return this._selection && this._selection.start != null && this._selection.end != null;
+  }
+
+  isValid(): boolean {
+    return this._selection.start != null && this._selection.end != null &&
+        this.adapter.isValid(this._selection.start!) &&
+        this.adapter.isValid(this._selection.end!);
   }
 
   isSame(other: MatDateSelectionModel<D>): boolean {
     if (other instanceof MatRangeDateSelectionModel) {
-      const otherRange = other.asRange();
-      return this.adapter.sameDate(this._start, otherRange.start) &&
-             this.adapter.sameDate(this._end, otherRange.end);
+      return this._selection.start === other._selection.start &&
+             this._selection.end === other._selection.end;
     }
     return false;
-  }
-
-  isValid(): boolean {
-    return this._start != null && this._end != null &&
-        this.adapter.isValid(this._start!) && this.adapter.isValid(this._end!);
-  }
-
-  asRange(): DateRange<D> {
-    return {
-      start: this._start,
-      end: this._end,
-    };
   }
 
   /**
@@ -158,16 +158,20 @@ export class MatRangeDateSelectionModel<D> extends MatDateSelectionModel<D> {
    * includes incomplete selections or ranges.
    */
   overlaps(range: DateRange<D>): boolean {
-    if (!(this._start && this._end && range.start && range.end)) {
+    const selectionStart = this._selection.start;
+    const selectionEnd = this._selection.end;
+    const rangeStart = range.start;
+    const rangeEnd = range.end;
+    if (!(selectionStart && selectionEnd && rangeStart && rangeEnd)) {
       return false;
     }
 
     return (
-      this._isBetween(range.start, this._start, this._end) ||
-      this._isBetween(range.end, this._start, this._end) ||
+      this._isBetween(rangeStart, selectionStart, selectionEnd) ||
+      this._isBetween(rangeEnd, selectionStart, selectionEnd) ||
       (
-        this.adapter.compareDate(range.start, this._start) <= 0 &&
-        this.adapter.compareDate(this._end, range.end) <= 0
+        this.adapter.compareDate(rangeStart, selectionStart) <= 0 &&
+        this.adapter.compareDate(selectionEnd, rangeEnd) <= 0
       )
     );
   }
@@ -176,15 +180,3 @@ export class MatRangeDateSelectionModel<D> extends MatDateSelectionModel<D> {
     return this.adapter.compareDate(from, value) <= 0 && this.adapter.compareDate(value, to) <= 0;
   }
 }
-
-export function MAT_SINGLE_DATE_SELECTION_MODEL_FACTORY<D>(parent:
-                                                           MatSingleDateSelectionModel<D>,
-                                                           adapter: DateAdapter<D>) {
-  return parent || new MatSingleDateSelectionModel(adapter);
-}
-
-export const MAT_SINGLE_DATE_SELECTION_MODEL_PROVIDER: FactoryProvider = {
-  provide: MatDateSelectionModel,
-  deps: [[new Optional(), new SkipSelf(), MatDateSelectionModel], DateAdapter],
-  useFactory: MAT_SINGLE_DATE_SELECTION_MODEL_FACTORY,
-};

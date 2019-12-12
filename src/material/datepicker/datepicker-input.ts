@@ -129,22 +129,22 @@ export class MatDatepickerInput<D> implements ControlValueAccessor, OnDestroy, V
 
   /** The value of the input. */
   @Input()
-  get value(): D | null { return this._selection.asDate(); }
+  get value(): D | null { return this._selectionModel.selection; }
   set value(value: D | null) {
     value  = this._dateAdapter.deserialize(value);
-    const oldDate = this._selection.asDate();
+    const oldDate = this._selectionModel.selection;
     const isDifferent = !this._dateAdapter.sameDate(oldDate, value);
-    this._selection.setDate(value);
+    this._selectionModel.selection = value;
 
-    this._lastValueValid = this._selection.isValid();
+    this._lastValueValid = this._selectionModel.isValid();
 
-    this._formatValue(this._selection.asDate());
+    this._formatValue(this._selectionModel.selection);
 
     if (isDifferent) {
       this._valueChange.emit(this.value);
     }
   }
-  private _selection: MatSingleDateSelectionModel<D>;
+  private _selectionModel: MatSingleDateSelectionModel<D>;
 
   /** The minimum valid date. */
   @Input()
@@ -259,7 +259,7 @@ export class MatDatepickerInput<D> implements ControlValueAccessor, OnDestroy, V
       throw createMissingDateImplError('MAT_DATE_FORMATS');
     }
 
-    this._selection = new MatSingleDateSelectionModel(this._dateAdapter, null);
+    this._selectionModel = new MatSingleDateSelectionModel(this._dateAdapter);
 
     // Update the displayed date when the locale changes.
     this._localeSubscription = _dateAdapter.localeChanges.subscribe(() => {
@@ -334,8 +334,10 @@ export class MatDatepickerInput<D> implements ControlValueAccessor, OnDestroy, V
     this._lastValueValid = !date || this._dateAdapter.isValid(date);
     date = this._getValidDateOrNull(date);
 
-    if (!this._dateAdapter.sameDate(date, this._selection.asDate())) {
-      this._selection.setDate(date);
+    if (!this._dateAdapter.sameDate(date, this._selectionModel.selection)) {
+      if (date) {
+        this._selectionModel.add(date);
+      }
       this._cvaOnChange(date);
       this._valueChange.emit(date);
       this.dateInput.emit(new MatDatepickerInputEvent(this, this._elementRef.nativeElement));
