@@ -208,10 +208,12 @@ describe('MatDialog', () => {
   }));
 
   it('should dispose of dialog if view container is destroyed before animating', fakeAsync(() => {
-    const dialogRef = dialog.open(PizzaMsg, {viewContainerRef: testViewContainerRef});
+    dialog.open(PizzaMsg);
 
+    expect(overlayContainerElement.querySelectorAll('mat-dialog-container').length).toBe(1);
+
+    dialog.ngOnDestroy();
     viewContainerFixture.detectChanges();
-    viewContainerFixture.destroy();
     flush();
 
     expect(overlayContainerElement.querySelector('mat-dialog-container')).toBeNull();
