@@ -22,7 +22,7 @@
     // Using padding for textareas causes a bad user experience because the text outside
     // of the text box will overflow vertically. In order to avoid this overflow where small
     // parts of the previous/followed lines are visible, we use margin for vertical spacing.
-    margin: $mat-form-field-baseline 0 $mat-form-field-textarea-vertical-inset;
+    margin: $mat-form-field-baseline 0 $mdc-text-field-input-padding-bottom;
     padding: 0;
     border: none;
   }
@@ -42,10 +42,10 @@
   // following feature is available: material-components-web#5326.
   .mat-mdc-form-field > .mat-mdc-text-field-wrapper.mdc-text-field--outlined
   .mat-mdc-form-field-infix .mat-mdc-textarea-input {
-    margin-top: $mat-form-field-label-height / 2 + $mat-form-field-textarea-vertical-inset;
+    margin-top: $mat-form-field-outline-top-spacing;
     padding: {
-      left: $mat-form-field-outline-textarea-horizontal-inset;
-      right: $mat-form-field-outline-textarea-horizontal-inset;
+      left: $mdc-text-field-input-padding;
+      right: $mdc-text-field-input-padding;
     }
   }
 }

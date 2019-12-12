@@ -18,7 +18,7 @@
       // Resets the default padding set by MDC for inputs. This is necessary because
       // in the standard appearance the inputs should expand to the full width of the
       // inner text-field and not have any horizontal and bottom padding.
-      padding: $mat-form-field-baseline - $mat-form-field-top-inset 0 0;
+      padding: $mdc-text-field-input-padding-top 0 0;
     }
 
     // Reset the horizontal spacing in the standard appearance.
