@@ -30,7 +30,11 @@ let rtlScrollAxisType: RtlScrollAxisType;
 
 /** Check whether the browser supports scroll behaviors. */
 export function supportsScrollBehavior(): boolean {
-  return !!(typeof document == 'object'  && document.documentElement.style &&  document.documentElement.style.scrollBehavior);
+  return !!(
+    typeof document == 'object' &&
+    document.documentElement.style &&
+    document.documentElement.style.scrollBehavior
+  );
 }
 
 /**
@@ -75,7 +79,7 @@ export function getRtlScrollAxisType(): RtlScrollAxisType {
       // return 0 when we read it again.
       scrollContainer.scrollLeft = 1;
       rtlScrollAxisType =
-          scrollContainer.scrollLeft === 0 ? RtlScrollAxisType.NEGATED : RtlScrollAxisType.INVERTED;
+        scrollContainer.scrollLeft === 0 ? RtlScrollAxisType.NEGATED : RtlScrollAxisType.INVERTED;
     }
 
     scrollContainer.parentNode!.removeChild(scrollContainer);
