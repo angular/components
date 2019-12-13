@@ -496,5 +496,5 @@ export class MatCheckbox extends _MatCheckboxMixinBase implements ControlValueAc
   static ngAcceptInputType_disabled: BooleanInput;
   static ngAcceptInputType_required: BooleanInput;
   static ngAcceptInputType_disableRipple: BooleanInput;
-  static ngAcceptInputType_indeterminate: boolean | string | null | undefined;
+  static ngAcceptInputType_indeterminate: BooleanInput;
 }
