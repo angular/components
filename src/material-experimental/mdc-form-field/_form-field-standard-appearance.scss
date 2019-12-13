@@ -1,7 +1,7 @@
 @import '@material/rtl/mixins';
 @import '@material/floating-label/mixins';
 @import '@material/textfield/variables';
-@import '_form-field-variables';
+@import 'form-field-sizing';
 
 // Styles for the standard appearance in the MDC-based form-field. MDC has styles for
 // full-width text-fields which kind of look like the standard appearance. Though these
@@ -10,7 +10,7 @@
 // own styles for the standard appearance that work for all types of inputs and textareas
 // and are backwards-compatible with the non-MDC based form-field.
 // TODO(devversion): consider proposing these styles to the MDC text-field implementation.
-@mixin mat-form-field-standard-appearance() {
+@mixin _mat-form-field-standard-appearance() {
   .mat-mdc-form-field-standard {
     // *Note*: Needs increased specificity because the default padding set by MDC is applied
     // with high specificity for text-fields without floating label.

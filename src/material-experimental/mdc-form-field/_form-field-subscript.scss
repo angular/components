@@ -1,7 +1,7 @@
-@import '_form-field-variables';
+@import 'form-field-sizing';
 @import '../mdc-helpers/mdc-helpers';
 
-@mixin mat-form-field-subscript() {
+@mixin _mat-form-field-subscript() {
   // Wrapper for the hints and error messages.
   .mat-mdc-form-field-subscript-wrapper {
     box-sizing: border-box;
@@ -34,14 +34,14 @@
   }
 }
 
-@mixin mat-form-field-subscript-theme() {
+@mixin _mat-form-field-subscript-theme() {
   // MDC does not have built-in error treatment.
   .mat-mdc-form-field-error {
     @include mdc-theme-prop(color, $mdc-text-field-error);
   }
 }
 
-@mixin mat-form-field-subscript-typography($config) {
+@mixin _mat-form-field-subscript-typography($config) {
   // The unit-less line-height from the font config.
   $line-height: mat-line-height($config, input);
   // The amount to scale the font for the subscript.

@@ -17,6 +17,7 @@ import {
   ElementRef,
   Inject,
   Input,
+  isDevMode,
   OnDestroy,
   Optional,
   QueryList,
@@ -429,11 +430,13 @@ export class MatFormField implements AfterViewInit, OnDestroy, AfterContentCheck
   }
 
   /**
-   * Ensure that there is a maximum of one of each `<mat-hint>` alignment specified, with the
-   * "hintLabel" attribute being considered as `align="start"`.
+   * Ensure that there is a maximum of one of each "mat-hint" alignment specified. The hint
+   * label specified set through the input is being considered as "start" aligned.
+   *
+   * This method is a noop if Angular runs in production mode.
    */
   private _validateHints() {
-    if (this._hintChildren) {
+    if (isDevMode() && this._hintChildren) {
       let startHint: MatHint;
       let endHint: MatHint;
       this._hintChildren.forEach((hint: MatHint) => {

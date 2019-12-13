@@ -1,4 +1,4 @@
-@import '_form-field-variables';
+@import 'form-field-sizing';
 
 // MDCs default textarea styles cannot be used because they only apply if a special
 // class is applied to the "mdc-text-field" wrapper. Since we cannot know whether the
@@ -7,9 +7,9 @@
 // which are scoped to the actual textarea element (i.e. not require a class in the
 // text-field wrapper) and integrate better with the standard appearance.
 
-// Mixin that can be included to overwrite the default MDC text-field styles
+// Mixin that can be included to override the default MDC text-field styles
 // to properly support textareas.
-@mixin mat-mdc-text-field-textarea-overwrites() {
+@mixin _mat-mdc-text-field-textarea-overrides() {
   // Ensures that textarea elements inside of the form-field have proper vertical spacing
   // to account for the floating label. Also ensures that there is no vertical text overflow.
   // TODO(devversion): remove extra specificity if we removed the ":not(outline-appearance)"

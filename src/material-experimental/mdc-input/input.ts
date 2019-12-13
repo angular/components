@@ -24,10 +24,10 @@ import {MatInput as BaseMatInput} from '@angular/material/input';
     '[class.mat-mdc-textarea-input]': '_isTextarea()',
     // Native input properties that are overwritten by Angular inputs need to be synced with
     // the native input element. Otherwise property bindings for those don't work.
-    '[attr.id]': 'id',
-    '[attr.placeholder]': 'placeholder',
+    '[id]': 'id',
     '[disabled]': 'disabled',
     '[required]': 'required',
+    '[attr.placeholder]': 'placeholder',
     '[attr.readonly]': 'readonly && !_isNativeSelect || null',
     '[attr.aria-describedby]': '_ariaDescribedby || null',
     '[attr.aria-invalid]': 'errorState',

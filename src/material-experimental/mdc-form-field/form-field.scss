@@ -1,24 +1,23 @@
 // TODO(devversion): do not import all text-field styles. Use feature targeting once available.
 @import '@material/textfield/mdc-text-field';
-@import '@material/textfield/variables';
-@import '_form-field-variables';
-@import '_form-field-standard-appearance';
-@import '_form-field-subscript';
-@import '_form-field-bottom-line';
-@import '_mdc-text-field-textarea-overwrites';
-@import '_mdc-text-field-structure-overwrites';
+@import 'form-field-sizing';
+@import 'form-field-standard-appearance';
+@import 'form-field-subscript';
+@import 'form-field-bottom-line';
+@import 'mdc-text-field-textarea-overrides';
+@import 'mdc-text-field-structure-overrides';
 
 // MDC text-field overwrites.
-@include mat-mdc-text-field-textarea-overwrites();
-@include mat-mdc-text-field-structure-overwrites();
+@include _mat-mdc-text-field-textarea-overrides();
+@include _mat-mdc-text-field-structure-overrides();
 
 // Include the subscript and bottom-line styles.
-@include mat-form-field-subscript();
-@include mat-form-field-bottom-line();
+@include _mat-form-field-subscript();
+@include _mat-form-field-bottom-line();
 
 // Styles for the standard appearance. MDC by default does not have a standard
 // appearance that works with floating labels.
-@include mat-form-field-standard-appearance();
+@include _mat-form-field-standard-appearance();
 
 // Host element of the form-field. It contains the mdc-text-field wrapper
 // and the subscript wrapper.

@@ -1,8 +1,9 @@
-@import '_form-field-variables';
+@import 'form-field-sizing';
 
-// Mixin that can be included to overwrite the default MDC text-field styles to
-// fit the needs
-@mixin mat-mdc-text-field-structure-overwrites() {
+// Mixin that can be included to override the default MDC text-field
+// styles to fit our needs. See individual comments for context on why
+// certain MDC styles need to be modified.
+@mixin _mat-mdc-text-field-structure-overrides() {
   // Always hide the asterisk displayed by MDC. This is necessary because MDC can only display
   // the asterisk if the label is directly preceded by the input. MDC does this because it
   // relies on CSS to figure out if the input/textarea is required. This does not apply for us
