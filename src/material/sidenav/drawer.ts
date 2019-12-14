@@ -42,11 +42,11 @@ import {fromEvent, merge, Observable, Subject} from 'rxjs';
 import {
   debounceTime,
   filter,
-  map,
   startWith,
   take,
   takeUntil,
   distinctUntilChanged,
+  mapTo,
 } from 'rxjs/operators';
 import {matDrawerAnimations} from './drawer-animations';
 import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
@@ -213,7 +213,7 @@ export class MatDrawer implements AfterContentInit, AfterContentChecked, OnDestr
   /** Event emitted when the drawer has been opened. */
   @Output('opened')
   get _openedStream(): Observable<void> {
-    return this.openedChange.pipe(filter(o => o), map(() => {}));
+    return this.openedChange.pipe(filter(o => o), mapTo(undefined));
   }
 
   /** Event emitted when the drawer has started opening. */
@@ -221,14 +221,14 @@ export class MatDrawer implements AfterContentInit, AfterContentChecked, OnDestr
   get openedStart(): Observable<void> {
     return this._animationStarted.pipe(
       filter(e => e.fromState !== e.toState && e.toState.indexOf('open') === 0),
-      map(() => {})
+      mapTo(undefined)
     );
   }
 
   /** Event emitted when the drawer has been closed. */
   @Output('closed')
   get _closedStream(): Observable<void> {
-    return this.openedChange.pipe(filter(o => !o), map(() => {}));
+    return this.openedChange.pipe(filter(o => !o), mapTo(undefined));
   }
 
   /** Event emitted when the drawer has started closing. */
@@ -236,7 +236,7 @@ export class MatDrawer implements AfterContentInit, AfterContentChecked, OnDestr
   get closedStart(): Observable<void> {
     return this._animationStarted.pipe(
       filter(e => e.fromState !== e.toState && e.toState === 'void'),
-      map(() => {})
+      mapTo(undefined)
     );
   }
 
@@ -282,24 +282,6 @@ export class MatDrawer implements AfterContentInit, AfterContentChecked, OnDestr
       } else {
         this._restoreFocus();
       }
-    });
-
-    /**
-     * Listen to `keydown` events outside the zone so that change detection is not run every
-     * time a key is pressed. Instead we re-enter the zone only if the `ESC` key is pressed
-     * and we don't have close disabled.
-     */
-    this._ngZone.runOutsideAngular(() => {
-        (fromEvent(this._elementRef.nativeElement, 'keydown') as Observable<KeyboardEvent>).pipe(
-            filter(event => {
-              return event.keyCode === ESCAPE && !this.disableClose && !hasModifierKey(event);
-            }),
-            takeUntil(this._destroyed)
-        ).subscribe(event => this._ngZone.run(() => {
-            this.close();
-            event.stopPropagation();
-            event.preventDefault();
-        }));
     });
 
     // We need a Subject with distinctUntilChanged, because the `done` event
@@ -404,11 +386,16 @@ export class MatDrawer implements AfterContentInit, AfterContentChecked, OnDestr
   toggle(isOpen: boolean = !this.opened, openedVia: FocusOrigin = 'program'):
     Promise<MatDrawerToggleResult> {
 
+    if (isOpen === this._opened) {
+      return Promise.resolve(isOpen ? 'open' : 'close');
+    }
+
     this._opened = isOpen;
 
     if (isOpen) {
       this._animationState = this._enableAnimations ? 'open' : 'open-instant';
       this._openedVia = openedVia;
+      this._listenForEscapePresses();
     } else {
       this._animationState = 'void';
       this._restoreFocus();
@@ -450,6 +437,25 @@ export class MatDrawer implements AfterContentInit, AfterContentChecked, OnDestr
   @HostListener('@transform.done', ['$event'])
   _animationDoneListener(event: AnimationEvent) {
     this._animationEnd.next(event);
+  }
+
+  /** Binds the event listener that reacts to escape key presses. */
+  private _listenForEscapePresses(): void {
+    // Listen to `keydown` events outside the zone so that change detection is not run every
+    // time a key is pressed. Instead we re-enter the zone only if the `ESC` key is pressed
+    // and we don't have close disabled.
+    this._ngZone.runOutsideAngular(() => {
+      // Note that we need to listen at the document level, rather than the sidenav, because we
+      // don't always move focus into the sidenav (e.g. in `side` mode) which means that we won't
+      // be able to catch all of the events.
+      (fromEvent(this._doc, 'keydown') as Observable<KeyboardEvent>).pipe(
+        filter(event => event.keyCode === ESCAPE && !this.disableClose && !hasModifierKey(event)),
+        takeUntil(merge(this._destroyed, this._closedStream))
+      ).subscribe(event => this._ngZone.run(() => {
+        this.close();
+        event.preventDefault();
+      }));
+    });
   }
 
   static ngAcceptInputType_disableClose: boolean | string | null | undefined;

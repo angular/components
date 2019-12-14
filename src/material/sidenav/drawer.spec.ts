@@ -204,7 +204,7 @@ describe('MatDrawer', () => {
       expect(testComponent.closeCount).toBe(0, 'Expected no close events.');
       expect(testComponent.closeStartCount).toBe(0, 'Expected no close start events.');
 
-      const event = dispatchKeyboardEvent(drawer.nativeElement, 'keydown', ESCAPE);
+      const event = dispatchKeyboardEvent(document, 'keydown', ESCAPE);
       fixture.detectChanges();
       flush();
 
@@ -230,7 +230,7 @@ describe('MatDrawer', () => {
 
       const event = createKeyboardEvent('keydown', ESCAPE);
       Object.defineProperty(event, 'altKey', {get: () => true});
-      dispatchEvent(drawer.nativeElement, event);
+      dispatchEvent(document, event);
       fixture.detectChanges();
       flush();
 
@@ -258,7 +258,7 @@ describe('MatDrawer', () => {
       fixture.detectChanges();
       tick();
 
-      dispatchKeyboardEvent(drawer.nativeElement, 'keydown', ESCAPE);
+      dispatchKeyboardEvent(document, 'keydown', ESCAPE);
       fixture.detectChanges();
       tick();
 
