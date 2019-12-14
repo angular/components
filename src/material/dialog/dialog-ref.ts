@@ -133,8 +133,8 @@ export class MatDialogRef<T, R = any> {
     this._containerInstance._startExitAnimation();
     this._state = MatDialogState.CLOSING;
 
-    // Similar to _closeFallbackTimeout but acts as a fallback till the animationStateChanged 
-    // observable executes for edge Cases like path changes with dialog open which might not 
+    // Similar to _closeFallbackTimeout but acts as a fallback till the animationStateChanged
+    // observable executes for edge Cases like path changes with dialog open which might not
     // have time to allow allow any animation events.
     this._destroyCloseFallbackTimeout = setTimeout(() => {
       if (this._overlayRef.hasAttached()) {
