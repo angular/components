@@ -36,31 +36,33 @@ export class ComponentViewer implements OnDestroy {
               public _componentPageTitle: ComponentPageTitle,
               public docItems: DocumentationItems,
               ) {
-    let params = [_route.params];
+    let routeAndParentParams = [_route.params];
     if (_route.parent) {
-      params.push(_route.parent.params);
+      routeAndParentParams.push(_route.parent.params);
     }
     // Listen to changes on the current route for the doc id (e.g. button/checkbox) and the
     // parent route for the section (material/cdk).
-    combineLatest(params).pipe(
-        map((p: [Params, Params]) => ({id: p[0]['id'], section: p[1]['section']})),
-        map(p => ({doc: docItems.getItemById(p.id, p.section), section: p.section}),
-        takeUntil(this._destroyed))
-        ).subscribe(d => {
-          if (d.doc !== undefined) {
-            this.componentDocItem.next(d.doc);
-            this._componentPageTitle.title = `${d.doc.name}`;
-            d.doc.examples && d.doc.examples.length ?
-                this.sections.add('examples') :
-                this.sections.delete('examples');
-          } else {
-            this.router.navigate(['/' + d.section]);
-          }
-        });
+    combineLatest(routeAndParentParams).pipe(
+      map((params: Params[]) => ({id: params[0]['id'], section: params[1]['section']})),
+      map((docIdAndSection: {id: string, section: string}) =>
+          ({doc: docItems.getItemById(docIdAndSection.id, docIdAndSection.section),
+            section: docIdAndSection.section}), takeUntil(this._destroyed))
+    ).subscribe((docItemAndSection: {doc: DocItem | undefined, section: string}) => {
+      if (docItemAndSection.doc !== undefined) {
+        this.componentDocItem.next(docItemAndSection.doc);
+        this._componentPageTitle.title = `${docItemAndSection.doc.name}`;
+        docItemAndSection.doc.examples && docItemAndSection.doc.examples.length ?
+          this.sections.add('examples') :
+          this.sections.delete('examples');
+      } else {
+        this.router.navigate(['/' + docItemAndSection.section]);
+      }
+    });
   }
 
   ngOnDestroy(): void {
     this._destroyed.next();
+    this._destroyed.complete();
   }
 }
 

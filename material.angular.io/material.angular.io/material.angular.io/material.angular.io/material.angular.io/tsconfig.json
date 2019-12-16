@@ -22,13 +22,17 @@
     "noImplicitReturns": true,
     "noImplicitThis": true,
     "noFallthroughCasesInSwitch": true,
-    "strictNullChecks": true
+    "strictNullChecks": true,
+    "strictBindCallApply": true,
+    "strictFunctionTypes": true
   },
   "exclude": [
-    "src/assets"
+    "src/assets",
+    "dist"
   ],
   "angularCompilerOptions": {
     "fullTemplateTypeCheck": true,
-    "strictInjectionParameters": true
+    "strictInjectionParameters": true,
+    "strictTemplates": true
   }
 }

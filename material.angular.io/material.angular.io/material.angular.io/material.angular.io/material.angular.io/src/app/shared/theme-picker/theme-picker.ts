@@ -1,13 +1,13 @@
 import {
-  Component,
-  ViewEncapsulation,
   ChangeDetectionStrategy,
+  Component,
   NgModule,
-  OnInit,
   OnDestroy,
+  OnInit,
+  ViewEncapsulation,
 } from '@angular/core';
 import {StyleManager} from '../style-manager';
-import {ThemeStorage, DocsSiteTheme} from './theme-storage/theme-storage';
+import {DocsSiteTheme, ThemeStorage} from './theme-storage/theme-storage';
 import {MatButtonModule} from '@angular/material/button';
 import {MatGridListModule} from '@angular/material/grid-list';
 import {MatIconModule} from '@angular/material/icon';
@@ -16,8 +16,7 @@ import {MatTooltipModule} from '@angular/material/tooltip';
 import {CommonModule} from '@angular/common';
 import {ActivatedRoute, ParamMap} from '@angular/router';
 import {Subscription} from 'rxjs';
-import {map, filter} from 'rxjs/operators';
-
+import {map} from 'rxjs/operators';
 
 @Component({
   selector: 'theme-picker',
@@ -71,8 +70,12 @@ export class ThemePicker implements OnInit, OnDestroy {
 
   ngOnInit() {
     this._queryParamSubscription = this._activatedRoute.queryParamMap
-      .pipe(map((params: ParamMap) => params.get('theme')), filter(Boolean))
-      .subscribe((themeName: string) => this.installTheme(themeName));
+      .pipe(map((params: ParamMap) => params.get('theme')))
+      .subscribe((themeName: string | null) => {
+        if (themeName) {
+          this.installTheme(themeName);
+        }
+    });
   }
 
   ngOnDestroy() {
