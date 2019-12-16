@@ -9,7 +9,6 @@
 import {Component} from '@angular/core';
 
 @Component({
-  moduleId: module.id,
   selector: 'mdc-snackbar-demo',
   templateUrl: 'mdc-snackbar-demo.html',
   styleUrls: ['mdc-snackbar-demo.css'],
