@@ -1,5 +1,5 @@
 import {Component, ViewEncapsulation} from '@angular/core';
-import {Router, NavigationEnd} from '@angular/router';
+import {Event, NavigationEnd, Router} from '@angular/router';
 import {filter} from 'rxjs/operators';
 
 import {GaService} from './shared/ga/ga';
@@ -16,16 +16,17 @@ export class MaterialDocsApp {
     let previousRoute = router.routerState.snapshot.url;
 
     router.events
-      .pipe(filter(event => event instanceof NavigationEnd))
-      .subscribe((data: NavigationEnd) => {
+      .pipe(filter((event: Event) => event instanceof NavigationEnd))
+      .subscribe((data: Event) => {
+        const urlAfterRedirects = (data as NavigationEnd).urlAfterRedirects;
         // We want to reset the scroll position on navigation except when navigating within
         // the documentation for a single component.
-        if (!isNavigationWithinComponentView(previousRoute, data.urlAfterRedirects)) {
+        if (!isNavigationWithinComponentView(previousRoute, urlAfterRedirects)) {
           resetScrollPosition();
         }
 
-        previousRoute = data.urlAfterRedirects;
-        ga.locationChanged(data.urlAfterRedirects);
+        previousRoute = urlAfterRedirects;
+        ga.locationChanged(urlAfterRedirects);
       });
   }
 }
