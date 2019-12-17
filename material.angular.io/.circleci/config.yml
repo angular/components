@@ -1,6 +1,6 @@
 # Cache key for CircleCI. We want to invalidate the cache whenever the Yarn lock file changes.
 var_1: &cache_key material-angular-io-{{ checksum "yarn.lock" }}
-var_2: &default_docker_image circleci/node:10.16.3-browsers
+var_2: &default_docker_image circleci/node:12.9.1-browsers
 
 # Settings common to each job
 var_3: &job_defaults
@@ -12,26 +12,47 @@ var_4: &save_cache
   save_cache:
     key: *cache_key
     paths:
-    - "node_modules/"
+    - "node_modules"
 
 var_5: &yarn_install
-  run: yarn install --frozen-lockfile --non-interactive
+  run:
+    name: "Installing project dependencies"
+    command: yarn install --frozen-lockfile --non-interactive
+
+# Job step for checking out the source code from GitHub. This also ensures that the source code
+# is rebased on top of master.
+var_6: &checkout_code
+  checkout:
+    # After checkout, rebase on top of master. By default, PRs are not rebased on top of master,
+    # which we want. See https://discuss.circleci.com/t/1662
+    post: git pull --ff-only origin "refs/pull/${CI_PULL_REQUEST//*pull\//}/merge"
 
 jobs:
   lint:
     <<: *job_defaults
     steps:
-    - checkout
+    - *checkout_code
     - restore_cache:
         key: *cache_key
     - *yarn_install
     - run: yarn lint
     - *save_cache
 
+  build:
+    <<: *job_defaults
+    steps:
+    - *checkout_code
+    - restore_cache:
+        key: *cache_key
+    - *yarn_install
+    - run: yarn build:content
+    - run: yarn prod-build
+    - *save_cache
+
   test:
     <<: *job_defaults
     steps:
-    - checkout
+    - *checkout_code
     - restore_cache:
         key: *cache_key
     - *yarn_install
@@ -42,4 +63,5 @@ workflows:
   default_workflow:
     jobs:
     - lint
+    - build
     - test
