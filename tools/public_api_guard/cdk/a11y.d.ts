@@ -176,7 +176,7 @@ export declare const LIVE_ANNOUNCER_ELEMENT_TOKEN: InjectionToken<HTMLElement | 
 export declare function LIVE_ANNOUNCER_ELEMENT_TOKEN_FACTORY(): null;
 
 export declare class LiveAnnouncer implements OnDestroy {
-    constructor(elementToken: any, _ngZone: NgZone, _document: any, _defaultOptions?: LiveAnnouncerDefaultOptions | undefined);
+    constructor(elementToken: any, _ngZone: NgZone, _taskQueue: TaskQueue, _document: any, _defaultOptions?: LiveAnnouncerDefaultOptions | undefined);
     announce(message: string): Promise<void>;
     announce(message: string, politeness?: AriaLivePoliteness): Promise<void>;
     announce(message: string, duration?: number): Promise<void>;
@@ -190,6 +190,7 @@ export declare class LiveAnnouncer implements OnDestroy {
 export interface LiveAnnouncerDefaultOptions {
     duration?: number;
     politeness?: AriaLivePoliteness;
+    useQueue?: boolean;
 }
 
 export declare const MESSAGES_CONTAINER_ID = "cdk-describedby-message-container";
