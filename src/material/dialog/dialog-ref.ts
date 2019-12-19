@@ -98,7 +98,7 @@ export class MatDialogRef<T, R = any> {
    */
   close(dialogResult?: R): void {
     this._result = dialogResult;
- 
+
     // Transition the backdrop in parallel to the dialog.
     this._containerInstance._animationStateChanged.pipe(
       filter(event => event.phaseName === 'start'),
@@ -125,7 +125,7 @@ export class MatDialogRef<T, R = any> {
           filter(event => event.phaseName === 'done' && event.toState === 'exit'),
           map(event => event.totalTime)
         ),
-      of(null).pipe(delay(200), mapTo(200)) //200ms = estimated animation time of 100ms + 100ms
+      of(null).pipe(delay(200), mapTo(200)) // 200ms = estimated animation time of 100ms + 100ms
     ).subscribe(() => {
       // Checks if the overlay still exists after assumed animation time has elapsed
       if (this._overlayRef.hasAttached()) {
