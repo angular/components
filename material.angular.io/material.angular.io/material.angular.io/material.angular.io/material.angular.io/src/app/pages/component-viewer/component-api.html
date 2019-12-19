@@ -1,16 +1,16 @@
 <ng-container *ngIf="componentViewer.componentDocItem | async; let docItem">
   <span class="cdk-visually-hidden" tabindex="-1" #initialFocusTarget>
-    API for {{docItem.id}}
+    API for {{docItem?.id}}
   </span>
 
   <span>
     <doc-viewer
-      documentUrl="/docs-content/api-docs/{{docItem.packageName}}-{{docItem.id}}.html"
+      documentUrl="/docs-content/api-docs/{{docItem?.packageName}}-{{docItem?.id}}.html"
       class="docs-component-view-text-content docs-component-api"
-      (contentRendered)="updateTableOfContents(docItem.name, $event)">
+      (contentRendered)="updateTableOfContents(docItem!.name, $event)">
     </doc-viewer>
 
-    <doc-viewer *ngFor="let additionalApiDoc of docItem.additionalApiDocs"
+    <doc-viewer *ngFor="let additionalApiDoc of docItem!.additionalApiDocs"
       documentUrl="/docs-content/api-docs/{{additionalApiDoc.path}}"
       class="docs-component-view-text-content docs-component-api"
       (contentRendered)="updateTableOfContents(additionalApiDoc.name, $event)">
