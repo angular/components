@@ -45,7 +45,6 @@ jobs:
     - restore_cache:
         key: *cache_key
     - *yarn_install
-    - run: yarn build:content
     - run: yarn prod-build
     - *save_cache
 
