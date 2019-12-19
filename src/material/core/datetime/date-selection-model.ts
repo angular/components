@@ -198,9 +198,8 @@ export class MatRangeDateSelectionModel<D> extends MatDateSelectionModel<DateRan
   }
 }
 
-export function MAT_SINGLE_DATE_SELECTION_MODEL_FACTORY<D>(parent:
-                                                               MatSingleDateSelectionModel<D>,
-                                                           adapter: DateAdapter<D>) {
+export function MAT_SINGLE_DATE_SELECTION_MODEL_FACTORY(
+    parent: MatSingleDateSelectionModel<unknown>, adapter: DateAdapter<unknown>) {
   return parent || new MatSingleDateSelectionModel(adapter);
 }
 
