@@ -15,8 +15,8 @@ export declare class MatFooterCellHarness extends MatCellHarness {
 }
 
 export declare class MatFooterRowHarness extends ComponentHarness {
+    getCellTextByIndex(filter?: CellHarnessFilters): Promise<string[]>;
     getCells(filter?: CellHarnessFilters): Promise<MatFooterCellHarness[]>;
-    getData(filter?: CellHarnessFilters): Promise<MatRowHarnessData>;
     static hostSelector: string;
     static with(options?: RowHarnessFilters): HarnessPredicate<MatFooterRowHarness>;
 }
@@ -27,46 +27,36 @@ export declare class MatHeaderCellHarness extends MatCellHarness {
 }
 
 export declare class MatHeaderRowHarness extends ComponentHarness {
+    getCellTextByIndex(filter?: CellHarnessFilters): Promise<string[]>;
     getCells(filter?: CellHarnessFilters): Promise<MatHeaderCellHarness[]>;
-    getData(filter?: CellHarnessFilters): Promise<MatRowHarnessData>;
     static hostSelector: string;
     static with(options?: RowHarnessFilters): HarnessPredicate<MatHeaderRowHarness>;
 }
 
 export declare class MatRowHarness extends ComponentHarness {
+    getCellTextByIndex(filter?: CellHarnessFilters): Promise<string[]>;
     getCells(filter?: CellHarnessFilters): Promise<MatCellHarness[]>;
-    getData(filter?: CellHarnessFilters): Promise<MatRowHarnessData>;
     static hostSelector: string;
     static with(options?: RowHarnessFilters): HarnessPredicate<MatRowHarness>;
 }
 
-export declare type MatRowHarnessData = {
-    columnName: string;
-    text: string;
-}[];
-
 export declare class MatTableHarness extends ComponentHarness {
-    getColumnsData(): Promise<MatTableHarnessColumnsData>;
+    getCellTextByColumnName(): Promise<MatTableHarnessColumnsText>;
+    getCellTextByIndex(): Promise<string[][]>;
     getFooterRows(filter?: RowHarnessFilters): Promise<MatFooterRowHarness[]>;
     getHeaderRows(filter?: RowHarnessFilters): Promise<MatHeaderRowHarness[]>;
     getRows(filter?: RowHarnessFilters): Promise<MatRowHarness[]>;
-    getRowsData(): Promise<MatTableHarnessRowsData>;
     static hostSelector: string;
     static with(options?: TableHarnessFilters): HarnessPredicate<MatTableHarness>;
 }
 
-export interface MatTableHarnessColumnsData {
+export interface MatTableHarnessColumnsText {
     [columnName: string]: {
         text: string[];
-        headerText: string;
-        footerText: string;
+        headerText: string[];
+        footerText: string[];
     };
 }
-
-export declare type MatTableHarnessRowsData = {
-    columnName: string;
-    text: string;
-}[][];
 
 export interface RowHarnessFilters extends BaseHarnessFilters {
 }

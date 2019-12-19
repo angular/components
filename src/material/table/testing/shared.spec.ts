@@ -87,105 +87,55 @@ export function runHarnessTests(
     expect(cellTexts).toEqual(['Hydrogen', 'H']);
   });
 
-  it('should be able to get the table data organized by columns', async () => {
+  it('should be able to get the table text organized by columns', async () => {
     const table = await loader.getHarness(tableHarness);
-    const data = await table.getColumnsData();
+    const text = await table.getCellTextByColumnName();
 
-    expect(data).toEqual({
+    expect(text).toEqual({
       position: {
-        headerText: 'No.',
-        footerText: 'Number of the element',
+        headerText: ['No.'],
+        footerText: ['Number of the element'],
         text: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']
       },
       name: {
-        headerText: 'Name',
-        footerText: 'Name of the element',
+        headerText: ['Name'],
+        footerText: ['Name of the element'],
         text: [
           'Hydrogen', 'Helium', 'Lithium', 'Beryllium', 'Boron',
           'Carbon', 'Nitrogen', 'Oxygen', 'Fluorine', 'Neon'
         ]
       },
       weight: {
-        headerText: 'Weight',
-        footerText: 'Weight of the element',
+        headerText: ['Weight'],
+        footerText: ['Weight of the element'],
         text: [
           '1.0079', '4.0026', '6.941', '9.0122', '10.811',
           '12.0107', '14.0067', '15.9994', '18.9984', '20.1797'
         ]
       },
       symbol: {
-        headerText: 'Symbol',
-        footerText: 'Symbol of the element',
+        headerText: ['Symbol'],
+        footerText: ['Symbol of the element'],
         text: ['H', 'He', 'Li', 'Be', 'B', 'C', 'N', 'O', 'F', 'Ne']
       }
     });
   });
 
-  it('should be able to get the table data organized by rows', async () => {
+  it('should be able to get the table text organized by rows', async () => {
     const table = await loader.getHarness(tableHarness);
-    const data = await table.getRowsData();
+    const text = await table.getCellTextByIndex();
 
-    expect(data).toEqual([
-      [
-        {text: '1', columnName: 'position'},
-        {text: 'Hydrogen', columnName: 'name'},
-        {text: '1.0079', columnName: 'weight'},
-        {text: 'H', columnName: 'symbol'}
-      ],
-      [
-        {text: '2', columnName: 'position'},
-        {text: 'Helium', columnName: 'name'},
-        {text: '4.0026', columnName: 'weight'},
-        {text: 'He', columnName: 'symbol'}
-      ],
-      [
-        {text: '3', columnName: 'position'},
-        {text: 'Lithium', columnName: 'name'},
-        {text: '6.941', columnName: 'weight'},
-        {text: 'Li', columnName: 'symbol'}
-      ],
-      [
-        {text: '4', columnName: 'position'},
-        {text: 'Beryllium', columnName: 'name'},
-        {text: '9.0122', columnName: 'weight'},
-        {text: 'Be', columnName: 'symbol'}
-      ],
-      [
-        {text: '5', columnName: 'position'},
-        {text: 'Boron', columnName: 'name'},
-        {text: '10.811', columnName: 'weight'},
-        {text: 'B', columnName: 'symbol'}
-      ],
-      [
-        {text: '6', columnName: 'position'},
-        {text: 'Carbon', columnName: 'name'},
-        {text: '12.0107', columnName: 'weight'},
-        {text: 'C', columnName: 'symbol'}
-      ],
-      [
-        {text: '7', columnName: 'position'},
-        {text: 'Nitrogen', columnName: 'name'},
-        {text: '14.0067', columnName: 'weight'},
-        {text: 'N', columnName: 'symbol'}
-      ],
-      [
-        {text: '8', columnName: 'position'},
-        {text: 'Oxygen', columnName: 'name'},
-        {text: '15.9994', columnName: 'weight'},
-        {text: 'O', columnName: 'symbol'}
-      ],
-      [
-        {text: '9', columnName: 'position'},
-        {text: 'Fluorine', columnName: 'name'},
-        {text: '18.9984', columnName: 'weight'},
-        {text: 'F', columnName: 'symbol'}
-      ],
-      [
-        {text: '10', columnName: 'position'},
-        {text: 'Neon', columnName: 'name'},
-        {text: '20.1797', columnName: 'weight'},
-        {text: 'Ne', columnName: 'symbol'}
-      ]
+    expect(text).toEqual([
+      ['1', 'Hydrogen', '1.0079', 'H'],
+      ['2', 'Helium', '4.0026', 'He'],
+      ['3', 'Lithium', '6.941', 'Li'],
+      ['4', 'Beryllium', '9.0122', 'Be'],
+      ['5', 'Boron', '10.811', 'B'],
+      ['6', 'Carbon', '12.0107', 'C'],
+      ['7', 'Nitrogen', '14.0067', 'N'],
+      ['8', 'Oxygen', '15.9994', 'O'],
+      ['9', 'Fluorine', '18.9984', 'F'],
+      ['10', 'Neon', '20.1797', 'Ne']
     ]);
   });
 }
