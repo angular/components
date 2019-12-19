@@ -16,6 +16,7 @@ export class DateRange<D> {
    * Ensures that objects with a `start` and `end` property can't be assigned to a variable that
    * expects a `DateRange`
    */
+  // tslint:disable-next-line:no-unused-variable
   private _disableStructuralEquivalency: never;
 
   /** The start date of the range. */

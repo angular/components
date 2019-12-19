@@ -209,7 +209,7 @@ export declare const MAT_OPTION_PARENT_COMPONENT: InjectionToken<MatOptionParent
 
 export declare const MAT_RIPPLE_GLOBAL_OPTIONS: InjectionToken<RippleGlobalOptions>;
 
-export declare function MAT_SINGLE_DATE_SELECTION_MODEL_FACTORY<D>(parent: MatSingleDateSelectionModel<D>, adapter: DateAdapter<D>): MatSingleDateSelectionModel<D>;
+export declare function MAT_SINGLE_DATE_SELECTION_MODEL_FACTORY(parent: MatSingleDateSelectionModel<unknown>, adapter: DateAdapter<unknown>): MatSingleDateSelectionModel<unknown>;
 
 export declare const MAT_SINGLE_DATE_SELECTION_MODEL_PROVIDER: FactoryProvider;
 
