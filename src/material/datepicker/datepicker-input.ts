@@ -32,8 +32,8 @@ import {
 import {
   DateAdapter,
   MAT_DATE_FORMATS,
-  MatSingleDateSelectionModel,
   MatDateFormats,
+  MatSingleDateSelectionModel,
   ThemePalette,
 } from '@angular/material/core';
 import {MatFormField} from '@angular/material/form-field';
@@ -67,10 +67,10 @@ export class MatDatepickerInputEvent<D> {
   value: D | null;
 
   constructor(
-    /** Reference to the datepicker input component that emitted the event. */
-    public target: MatDatepickerInput<D>,
-    /** Reference to the native input element associated with the datepicker input. */
-    public targetElement: HTMLElement) {
+      /** Reference to the datepicker input component that emitted the event. */
+      public target: MatDatepickerInput<D>,
+      /** Reference to the native input element associated with the datepicker input. */
+      public targetElement: HTMLElement) {
     this.value = this.target.value;
   }
 }
@@ -131,17 +131,15 @@ export class MatDatepickerInput<D> implements ControlValueAccessor, OnDestroy, V
   @Input()
   get value(): D | null { return this._selectionModel.selection; }
   set value(value: D | null) {
-    value  = this._dateAdapter.deserialize(value);
+    value = this._dateAdapter.deserialize(value);
+    this._lastValueValid = !value || this._dateAdapter.isValid(value);
+    value = this._getValidDateOrNull(value);
     const oldDate = this._selectionModel.selection;
-    const isDifferent = !this._dateAdapter.sameDate(oldDate, value);
     this._selectionModel.selection = value;
+    this._formatValue(value);
 
-    this._lastValueValid = this._selectionModel.isValid();
-
-    this._formatValue(this._selectionModel.selection);
-
-    if (isDifferent) {
-      this._valueChange.emit(this.value);
+    if (!this._dateAdapter.sameDate(oldDate, value)) {
+      this._valueChange.emit(value);
     }
   }
   private _selectionModel: MatSingleDateSelectionModel<D>;
@@ -335,9 +333,7 @@ export class MatDatepickerInput<D> implements ControlValueAccessor, OnDestroy, V
     date = this._getValidDateOrNull(date);
 
     if (!this._dateAdapter.sameDate(date, this._selectionModel.selection)) {
-      if (date) {
-        this._selectionModel.add(date);
-      }
+      this._selectionModel.selection = date;
       this._cvaOnChange(date);
       this._valueChange.emit(date);
       this.dateInput.emit(new MatDatepickerInputEvent(this, this._elementRef.nativeElement));
