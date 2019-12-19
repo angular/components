@@ -1,8 +1,8 @@
 <ng-container *ngIf="componentViewer.componentDocItem | async; let docItem">
   <span class="cdk-visually-hidden" tabindex="-1" #initialFocusTarget>
-    Examples for {{docItem.id}}
+    Examples for {{docItem?.id}}
   </span>
   <example-viewer
-    *ngFor="let example of docItem.examples"
+    *ngFor="let example of docItem?.examples"
     [example]="example"></example-viewer>
 </ng-container>
