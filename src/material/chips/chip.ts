@@ -6,6 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {DOCUMENT} from '@angular/common';
 import {FocusableOption} from '@angular/cdk/a11y';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
 import {BACKSPACE, DELETE, SPACE} from '@angular/cdk/keycodes';
@@ -100,7 +101,7 @@ export class MatChipTrailingIcon {}
   inputs: ['color', 'disabled', 'disableRipple'],
   exportAs: 'matChip',
   host: {
-    'class': 'mat-chip',
+    'class': 'mat-chip mat-focus-indicator',
     '[attr.tabindex]': 'disabled ? null : -1',
     'role': 'option',
     '[class.mat-chip-selected]': 'selected',
@@ -122,6 +123,13 @@ export class MatChip extends _MatChipMixinBase implements FocusableOption, OnDes
 
   /** Reference to the RippleRenderer for the chip. */
   private _chipRipple: RippleRenderer;
+
+  /**
+   * Reference to the element that acts as the chip's ripple target. This element is
+   * dynamically added as a child node of the chip. The chip itself cannot be used as the
+   * ripple target because it must be the host of the focus indicator.
+   */
+  private _chipRippleTarget: HTMLElement;
 
   /**
    * Ripple configuration for ripples that are launched on pointer down. The ripple config
@@ -232,6 +240,7 @@ export class MatChip extends _MatChipMixinBase implements FocusableOption, OnDes
 
   constructor(public _elementRef: ElementRef<HTMLElement>,
               private _ngZone: NgZone,
+              @Inject(DOCUMENT) private _document: any,
               platform: Platform,
               @Optional() @Inject(MAT_RIPPLE_GLOBAL_OPTIONS)
               globalRippleOptions: RippleGlobalOptions | null,
@@ -243,8 +252,15 @@ export class MatChip extends _MatChipMixinBase implements FocusableOption, OnDes
 
     this._addHostClassName();
 
-    this._chipRipple = new RippleRenderer(this, _ngZone, _elementRef, platform);
+    // Dynamically create the ripple target, append it within the chip, and use it as the
+    // chip's ripple target. Adding the class '.mat-chip-ripple' ensures that it will have
+    // the proper styles.
+    this._chipRippleTarget = this._document.createElement('div');
+    this._chipRippleTarget.classList.add('mat-chip-ripple');
+    this._elementRef.nativeElement.appendChild(this._chipRippleTarget);
+    this._chipRipple = new RippleRenderer(this, _ngZone, this._chipRippleTarget, platform);
     this._chipRipple.setupTriggerEvents(_elementRef);
+
     this.rippleConfig = globalRippleOptions || {};
     this._animationsDisabled = animationMode === 'NoopAnimations';
   }
