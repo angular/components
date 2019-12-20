@@ -10,6 +10,10 @@ describe('coerceStringArray', () => {
       .toEqual(['x', '1', 'true', 'null', 'undefined', 'arr,ay', '[object Object]']);
   });
 
+  it('should work with a custom delimiter', () => {
+    expect(coerceStringArray('1::2::3::4', '::')).toEqual(['1', '2', '3', '4']);
+  });
+
   it('should trim values and remove empty values', () => {
     expect(coerceStringArray(',  x,  ,, ', ',')).toEqual(['x']);
   });

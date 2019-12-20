@@ -8,11 +8,13 @@
 
 /**
  * Coerces a value to an array of trimmed non-empty strings.
- * Anything that is not an array or null-ish will be turned into a string via a template literal.
- * Null-ish values will result in an empty array.
+ * Any input that is not an array, `null` or `undefined` will be turned into a string
+ * via `toString()` and subsequently split with the given separator.
+ * `null` and `undefined` will result in an empty array.
  * This results in the following outcomes:
  * - `null` -&gt; `[]`
  * - `[null]` -&gt; `["null"]`
+ * - `["a", "b ", " "]` -&gt; `["a", "b"]`
  * - `[1, [2, 3]]` -&gt; `["1", "2,3"]`
  * - `[{ a: 0 }]` -&gt; `["[object Object]"]`
  * - `{ a: 0 }` -&gt; `["[object", "Object]"]`
@@ -28,7 +30,7 @@ export function coerceStringArray(value: any, separator: string | RegExp = /\s+/
     const sourceValues = Array.isArray(value) ? value : `${value}`.split(separator);
     for (const sourceValue of sourceValues) {
       const trimmedString = `${sourceValue}`.trim();
-      if (!!trimmedString) {
+      if (trimmedString) {
         result.push(trimmedString);
       }
     }
