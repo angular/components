@@ -21,21 +21,33 @@
   <p><label>Longitude:</label> {{display?.lng}}</p>
 
   <div>
-    <label for="polyline-checkbox">Toggle Polyline</label>
-    <input id="polyline-checkbox" type="checkbox" (click)="togglePolylineDisplay()">
+    <label for="polyline-checkbox">
+      Toggle Polyline
+      <input type="checkbox" (click)="togglePolylineDisplay()">
+    </label>
   </div>
   <div>
-    <label for="editable-polyline-checkbox">Toggle Editable Polyline</label>
-    <input id="editable-polyline-checkbox" type="checkbox" (click)="toggleEditablePolyline()">
+    <label for="editable-polyline-checkbox">
+      Toggle Editable Polyline
+      <input type="checkbox"
+             [disabled]="!isPolylineDisplayed"
+             (click)="toggleEditablePolyline()">
+    </label>
   </div>
 
   <div>
-    <label for="polygon-checkbox">Toggle Polygon</label>
-    <input id="polygon-checkbox" type="checkbox" (click)="togglePolygonDisplay()">
+    <label for="polygon-checkbox">
+      Toggle Polygon
+      <input type="checkbox" (click)="togglePolygonDisplay()">
+    </label>
   </div>
   <div>
-    <label for="editable-polygon-checkbox">Toggle Editable Polygon</label>
-    <input id="editable-polygon-checkbox" type="checkbox" (click)="toggleEditablePolygon()">
+    <label for="editable-polygon-checkbox">
+      Toggle Editable Polygon
+      <input type="checkbox"
+             [disabled]="!isPolygonDisplayed"
+             (click)="toggleEditablePolygon()">
+    </label>
   </div>
 
 </div>
