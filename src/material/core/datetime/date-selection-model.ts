@@ -6,151 +6,173 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {FactoryProvider, Injectable, OnDestroy, Optional, SkipSelf} from '@angular/core';
 import {DateAdapter} from '@angular/material/core';
-import {FactoryProvider, Optional, SkipSelf, Injectable} from '@angular/core';
-import {Subject, Observable} from 'rxjs';
+import {Observable, Subject} from 'rxjs';
 
-export abstract class MatDateSelectionModel<D> {
-  protected _valueChangesSubject = new Subject<void>();
+/** A class representing a range of dates. */
+export class DateRange<D> {
+  /**
+   * Ensures that objects with a `start` and `end` property can't be assigned to a variable that
+   * expects a `DateRange`
+   */
+  // tslint:disable-next-line:no-unused-variable
+  private _disableStructuralEquivalency: never;
+
+  /** The start date of the range. */
+  readonly start: D | null;
+
+  /** The end date of the range. */
+  readonly end: D | null;
+
+  constructor(range?: {start?: D | null, end?: D | null} | null) {
+    this.start = range && range.start || null;
+    this.end = range && range.end || null;
+  }
+}
+
+type ExtractDateTypeFromSelection<T> = T extends DateRange<infer D> ? D : NonNullable<T>;
+
+/** A selection model containing a date selection. */
+export abstract class MatDateSelectionModel<S, D = ExtractDateTypeFromSelection<S>>
+    implements OnDestroy {
+  /** Subject used to emit value change events. */
+  private _valueChangesSubject = new Subject<void>();
+
+  /** Observable of value change events. */
   valueChanges: Observable<void> = this._valueChangesSubject.asObservable();
 
-  constructor(protected readonly adapter: DateAdapter<D>) {}
+  /** The current selection. */
+  get selection (): S { return this._selection; }
+  set selection(s: S) {
+    this._selection = s;
+    this._valueChangesSubject.next();
+  }
 
-  destroy() {
+  protected constructor(protected readonly adapter: DateAdapter<D>, private _selection: S) {}
+
+  ngOnDestroy() {
     this._valueChangesSubject.complete();
   }
 
+  /** Adds a date to the current selection. */
   abstract add(date: D | null): void;
+
+  /** Checks whether the current selection is complete. */
   abstract isComplete(): boolean;
+
+  /**
+   * Checks whether the current selection is the same as the selection in the given selection model.
+   */
   abstract isSame(other: MatDateSelectionModel<D>): boolean;
+
+  /** Checks whether the current selection is valid. */
   abstract isValid(): boolean;
+
+  /** Checks whether the current selection overlaps with the given range. */
   abstract overlaps(range: DateRange<D>): boolean;
 }
 
-export interface DateRange<D> {
-  start: D | null;
-  end: D | null;
-}
-
-/**
- * Concrete implementation of a MatDateSelectionModel that holds a single date.
- */
+/**  A selection model that contains a single date. */
 @Injectable()
-export class MatSingleDateSelectionModel<D> extends MatDateSelectionModel<D> {
-  private _date: D | null = null;
-
+export class MatSingleDateSelectionModel<D> extends MatDateSelectionModel<D | null, D> {
   constructor(adapter: DateAdapter<D>, date?: D | null) {
-    super(adapter);
-    this._date = date === undefined ? null : date;
-  }
-
-  add(date: D | null) {
-    this._date = date;
-    this._valueChangesSubject.next();
-  }
-
-  compareDate(other: MatSingleDateSelectionModel<D>) {
-    const date = this.asDate();
-    const otherDate = other.asDate();
-    if (date != null && otherDate != null) {
-      return this.adapter.compareDate(date, otherDate);
-    }
-    return date === otherDate;
-  }
-
-  isComplete() { return this._date != null; }
-
-  isSame(other: MatDateSelectionModel<D>): boolean {
-    return other instanceof MatSingleDateSelectionModel &&
-        this.adapter.sameDate(other.asDate(), this._date);
-  }
-
-  isValid(): boolean {
-    return this._date != null && this.adapter.isDateInstance(this._date) &&
-           this.adapter.isValid(this._date);
-  }
-
-  asDate(): D | null {
-    return this.isValid() ? this._date : null;
-  }
-
-  setDate(date: D | null) {
-    this._date = date;
-    this._valueChangesSubject.next();
+    super(adapter, date || null);
   }
 
   /**
-   * Determines if the single date is within a given date range. Retuns false if either dates of
-   * the range is null or if the selection is undefined.
+   * Adds a date to the current selection. In the case of a single date selection, the added date
+   * simply overwrites the previous selection
    */
+  add(date: D | null) {
+    this.selection = date;
+  }
+
+  /**
+   * Checks whether the current selection is complete. In the case of a single date selection, this
+   * is true if the current selection is not null.
+   */
+  isComplete() { return this.selection != null; }
+
+  /**
+   * Checks whether the current selection is the same as the selection in the given selection model.
+   */
+  isSame(other: MatDateSelectionModel<any>): boolean {
+    return other instanceof MatSingleDateSelectionModel &&
+        this.adapter.sameDate(other.selection, this.selection);
+  }
+
+  /**
+   * Checks whether the current selection is valid. In the case of a single date selection, this
+   * means that the current selection is not null and is a valid date.
+   */
+  isValid(): boolean {
+    return this.selection != null && this.adapter.isDateInstance(this.selection) &&
+        this.adapter.isValid(this.selection);
+  }
+
+  /** Checks whether the current selection overlaps with the given range. */
   overlaps(range: DateRange<D>): boolean {
-    return !!(this._date && range.start && range.end &&
-        this.adapter.compareDate(range.start, this._date) <= 0 &&
-        this.adapter.compareDate(this._date, range.end) <= 0);
+    return !!(this.selection && range.start && range.end &&
+        this.adapter.compareDate(range.start, this.selection) <= 0 &&
+        this.adapter.compareDate(this.selection, range.end) <= 0);
   }
 }
 
-/**
- * Concrete implementation of a MatDateSelectionModel that holds a date range, represented by
- * a start date and an end date.
- */
+/**  A selection model that contains a date range. */
 @Injectable()
-export class MatRangeDateSelectionModel<D> extends MatDateSelectionModel<D> {
-  private _start: D | null = null;
-  private _end: D | null = null;
-
-  constructor(adapter: DateAdapter<D>, start?: D | null, end?: D | null) {
-    super(adapter);
-    this._start = start === undefined ? null : start;
-    this._end = end === undefined ? null : end;
+export class MatRangeDateSelectionModel<D> extends MatDateSelectionModel<DateRange<D>, D> {
+  constructor(adapter: DateAdapter<D>, range?: {start?: D | null, end?: D | null} | null) {
+    super(adapter, new DateRange(range));
   }
 
   /**
-   * Adds an additional date to the range. If no date is set thus far, it will set it to the
-   * beginning. If the beginning is set, it will set it to the end.
-   * If add is called on a complete selection, it will empty the selection and set it as the start.
+   * Adds a date to the current selection. In the case of a date range selection, the added date
+   * fills in the next `null` value in the range. If both the start and the end already have a date,
+   * the selection is reset so that the given date is the new `start` and the `end` is null.
    */
   add(date: D | null): void {
-    if (this._start == null) {
-      this._start = date;
-    } else if (this._end == null) {
-      this._end = date;
+    let {start, end} = this.selection;
+
+    if (start == null) {
+      start = date;
+    } else if (end == null) {
+      end = date;
     } else {
-      this._start = date;
-      this._end = null;
+      start = date;
+      end = null;
     }
 
-    this._valueChangesSubject.next();
+    this.selection = new DateRange<D>({start, end});
   }
 
-  setRange(start: D | null, end: D | null) {
-    this._start = start;
-    this._end = end;
-  }
-
+  /**
+   * Checks whether the current selection is complete. In the case of a date range selection, this
+   * is true if the current selection has a non-null `start` and `end`.
+   */
   isComplete(): boolean {
-    return this._start != null && this._end != null;
+    return this.selection.start != null && this.selection.end != null;
   }
 
-  isSame(other: MatDateSelectionModel<D>): boolean {
+  /**
+   * Checks whether the current selection is the same as the selection in the given selection model.
+   */
+  isSame(other: MatDateSelectionModel<any>): boolean {
     if (other instanceof MatRangeDateSelectionModel) {
-      const otherRange = other.asRange();
-      return this.adapter.sameDate(this._start, otherRange.start) &&
-             this.adapter.sameDate(this._end, otherRange.end);
+      return this.adapter.sameDate(this.selection.start, other.selection.start) &&
+          this.adapter.sameDate(this.selection.end, other.selection.end);
     }
     return false;
   }
 
+  /**
+   * Checks whether the current selection is valid. In the case of a date range selection, this
+   * means that the current selection has a `start` and `end` that are both non-null and valid
+   * dates.
+   */
   isValid(): boolean {
-    return this._start != null && this._end != null &&
-        this.adapter.isValid(this._start!) && this.adapter.isValid(this._end!);
-  }
-
-  asRange(): DateRange<D> {
-    return {
-      start: this._start,
-      end: this._end,
-    };
+    return this.selection.start != null && this.selection.end != null &&
+        this.adapter.isValid(this.selection.start!) && this.adapter.isValid(this.selection.end!);
   }
 
   /**
@@ -158,17 +180,17 @@ export class MatRangeDateSelectionModel<D> extends MatDateSelectionModel<D> {
    * includes incomplete selections or ranges.
    */
   overlaps(range: DateRange<D>): boolean {
-    if (!(this._start && this._end && range.start && range.end)) {
+    if (!(this.selection.start && this.selection.end && range.start && range.end)) {
       return false;
     }
 
     return (
-      this._isBetween(range.start, this._start, this._end) ||
-      this._isBetween(range.end, this._start, this._end) ||
-      (
-        this.adapter.compareDate(range.start, this._start) <= 0 &&
-        this.adapter.compareDate(this._end, range.end) <= 0
-      )
+        this._isBetween(range.start, this.selection.start, this.selection.end) ||
+        this._isBetween(range.end, this.selection.start, this.selection.end) ||
+        (
+            this.adapter.compareDate(range.start, this.selection.start) <= 0 &&
+            this.adapter.compareDate(this.selection.end, range.end) <= 0
+        )
     );
   }
 
@@ -177,9 +199,8 @@ export class MatRangeDateSelectionModel<D> extends MatDateSelectionModel<D> {
   }
 }
 
-export function MAT_SINGLE_DATE_SELECTION_MODEL_FACTORY<D>(parent:
-                                                           MatSingleDateSelectionModel<D>,
-                                                           adapter: DateAdapter<D>) {
+export function MAT_SINGLE_DATE_SELECTION_MODEL_FACTORY(
+    parent: MatSingleDateSelectionModel<unknown>, adapter: DateAdapter<unknown>) {
   return parent || new MatSingleDateSelectionModel(adapter);
 }
 

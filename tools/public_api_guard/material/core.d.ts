@@ -79,9 +79,13 @@ export declare abstract class DateAdapter<D> {
     abstract today(): D;
 }
 
-export interface DateRange<D> {
-    end: D | null;
-    start: D | null;
+export declare class DateRange<D> {
+    readonly end: D | null;
+    readonly start: D | null;
+    constructor(range?: {
+        start?: D | null;
+        end?: D | null;
+    } | null);
 }
 
 export declare const JAN = 0, FEB = 1, MAR = 2, APR = 3, MAY = 4, JUN = 5, JUL = 6, AUG = 7, SEP = 8, OCT = 9, NOV = 10, DEC = 11;
@@ -205,7 +209,7 @@ export declare const MAT_OPTION_PARENT_COMPONENT: InjectionToken<MatOptionParent
 
 export declare const MAT_RIPPLE_GLOBAL_OPTIONS: InjectionToken<RippleGlobalOptions>;
 
-export declare function MAT_SINGLE_DATE_SELECTION_MODEL_FACTORY<D>(parent: MatSingleDateSelectionModel<D>, adapter: DateAdapter<D>): MatSingleDateSelectionModel<D>;
+export declare function MAT_SINGLE_DATE_SELECTION_MODEL_FACTORY(parent: MatSingleDateSelectionModel<unknown>, adapter: DateAdapter<unknown>): MatSingleDateSelectionModel<unknown>;
 
 export declare const MAT_SINGLE_DATE_SELECTION_MODEL_PROVIDER: FactoryProvider;
 
@@ -227,17 +231,19 @@ export declare type MatDateFormats = {
     };
 };
 
-export declare abstract class MatDateSelectionModel<D> {
-    protected _valueChangesSubject: Subject<void>;
+export declare abstract class MatDateSelectionModel<S, D = ExtractDateTypeFromSelection<S>> implements OnDestroy {
     protected readonly adapter: DateAdapter<D>;
+    selection: S;
     valueChanges: Observable<void>;
-    constructor(adapter: DateAdapter<D>);
+    protected constructor(adapter: DateAdapter<D>, _selection: S);
     abstract add(date: D | null): void;
-    destroy(): void;
     abstract isComplete(): boolean;
     abstract isSame(other: MatDateSelectionModel<D>): boolean;
     abstract isValid(): boolean;
+    ngOnDestroy(): void;
     abstract overlaps(range: DateRange<D>): boolean;
+    static ɵdir: i0.ɵɵDirectiveDefWithMeta<MatDateSelectionModel<any, any>, never, never, {}, {}, never>;
+    static ɵfac: i0.ɵɵFactoryDef<MatDateSelectionModel<any, any>>;
 }
 
 export declare const MATERIAL_SANITY_CHECKS: InjectionToken<SanityChecks>;
@@ -334,15 +340,16 @@ export declare class MatPseudoCheckboxModule {
 
 export declare type MatPseudoCheckboxState = 'unchecked' | 'checked' | 'indeterminate';
 
-export declare class MatRangeDateSelectionModel<D> extends MatDateSelectionModel<D> {
-    constructor(adapter: DateAdapter<D>, start?: D | null, end?: D | null);
+export declare class MatRangeDateSelectionModel<D> extends MatDateSelectionModel<DateRange<D>, D> {
+    constructor(adapter: DateAdapter<D>, range?: {
+        start?: D | null;
+        end?: D | null;
+    } | null);
     add(date: D | null): void;
-    asRange(): DateRange<D>;
     isComplete(): boolean;
-    isSame(other: MatDateSelectionModel<D>): boolean;
+    isSame(other: MatDateSelectionModel<any>): boolean;
     isValid(): boolean;
     overlaps(range: DateRange<D>): boolean;
-    setRange(start: D | null, end: D | null): void;
     static ɵfac: i0.ɵɵFactoryDef<MatRangeDateSelectionModel<any>>;
     static ɵprov: i0.ɵɵInjectableDef<MatRangeDateSelectionModel<any>>;
 }
@@ -372,16 +379,13 @@ export declare class MatRippleModule {
     static ɵmod: i0.ɵɵNgModuleDefWithMeta<MatRippleModule, [typeof i1.MatRipple], [typeof i2.MatCommonModule, typeof i3.PlatformModule], [typeof i1.MatRipple, typeof i2.MatCommonModule]>;
 }
 
-export declare class MatSingleDateSelectionModel<D> extends MatDateSelectionModel<D> {
+export declare class MatSingleDateSelectionModel<D> extends MatDateSelectionModel<D | null, D> {
     constructor(adapter: DateAdapter<D>, date?: D | null);
     add(date: D | null): void;
-    asDate(): D | null;
-    compareDate(other: MatSingleDateSelectionModel<D>): number | boolean;
     isComplete(): boolean;
-    isSame(other: MatDateSelectionModel<D>): boolean;
+    isSame(other: MatDateSelectionModel<any>): boolean;
     isValid(): boolean;
     overlaps(range: DateRange<D>): boolean;
-    setDate(date: D | null): void;
     static ɵfac: i0.ɵɵFactoryDef<MatSingleDateSelectionModel<any>>;
     static ɵprov: i0.ɵɵInjectableDef<MatSingleDateSelectionModel<any>>;
 }

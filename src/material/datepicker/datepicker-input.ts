@@ -32,8 +32,8 @@ import {
 import {
   DateAdapter,
   MAT_DATE_FORMATS,
-  MatSingleDateSelectionModel,
   MatDateFormats,
+  MatSingleDateSelectionModel,
   ThemePalette,
 } from '@angular/material/core';
 import {MatFormField} from '@angular/material/form-field';
@@ -67,10 +67,10 @@ export class MatDatepickerInputEvent<D> {
   value: D | null;
 
   constructor(
-    /** Reference to the datepicker input component that emitted the event. */
-    public target: MatDatepickerInput<D>,
-    /** Reference to the native input element associated with the datepicker input. */
-    public targetElement: HTMLElement) {
+      /** Reference to the datepicker input component that emitted the event. */
+      public target: MatDatepickerInput<D>,
+      /** Reference to the native input element associated with the datepicker input. */
+      public targetElement: HTMLElement) {
     this.value = this.target.value;
   }
 }
@@ -129,22 +129,20 @@ export class MatDatepickerInput<D> implements ControlValueAccessor, OnDestroy, V
 
   /** The value of the input. */
   @Input()
-  get value(): D | null { return this._selection.asDate(); }
+  get value(): D | null { return this._selectionModel.selection; }
   set value(value: D | null) {
-    value  = this._dateAdapter.deserialize(value);
-    const oldDate = this._selection.asDate();
-    const isDifferent = !this._dateAdapter.sameDate(oldDate, value);
-    this._selection.setDate(value);
+    value = this._dateAdapter.deserialize(value);
+    this._lastValueValid = !value || this._dateAdapter.isValid(value);
+    value = this._getValidDateOrNull(value);
+    const oldDate = this._selectionModel.selection;
+    this._selectionModel.selection = value;
+    this._formatValue(value);
 
-    this._lastValueValid = this._selection.isValid();
-
-    this._formatValue(this._selection.asDate());
-
-    if (isDifferent) {
-      this._valueChange.emit(this.value);
+    if (!this._dateAdapter.sameDate(oldDate, value)) {
+      this._valueChange.emit(value);
     }
   }
-  private _selection: MatSingleDateSelectionModel<D>;
+  private _selectionModel: MatSingleDateSelectionModel<D>;
 
   /** The minimum valid date. */
   @Input()
@@ -259,7 +257,7 @@ export class MatDatepickerInput<D> implements ControlValueAccessor, OnDestroy, V
       throw createMissingDateImplError('MAT_DATE_FORMATS');
     }
 
-    this._selection = new MatSingleDateSelectionModel(this._dateAdapter, null);
+    this._selectionModel = new MatSingleDateSelectionModel(this._dateAdapter);
 
     // Update the displayed date when the locale changes.
     this._localeSubscription = _dateAdapter.localeChanges.subscribe(() => {
@@ -334,8 +332,8 @@ export class MatDatepickerInput<D> implements ControlValueAccessor, OnDestroy, V
     this._lastValueValid = !date || this._dateAdapter.isValid(date);
     date = this._getValidDateOrNull(date);
 
-    if (!this._dateAdapter.sameDate(date, this._selection.asDate())) {
-      this._selection.setDate(date);
+    if (!this._dateAdapter.sameDate(date, this._selectionModel.selection)) {
+      this._selectionModel.selection = date;
       this._cvaOnChange(date);
       this._valueChange.emit(date);
       this.dateInput.emit(new MatDatepickerInputEvent(this, this._elementRef.nativeElement));
