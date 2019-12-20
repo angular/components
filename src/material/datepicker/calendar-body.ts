@@ -34,7 +34,7 @@ export class MatCalendarCell {
               public displayValue: string,
               public ariaLabel: string,
               public enabled: boolean,
-              public cssClasses?: MatCalendarCellCssClasses) {}
+              public cssClasses: MatCalendarCellCssClasses = {}) {}
 }
 
 
@@ -43,7 +43,6 @@ export class MatCalendarCell {
  * @docs-private
  */
 @Component({
-  moduleId: module.id,
   selector: '[mat-calendar-body]',
   templateUrl: 'calendar-body.html',
   styleUrls: ['calendar-body.css'],

@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {coerceArray, coerceBooleanProperty} from '@angular/cdk/coercion';
+import {BooleanInput, coerceArray, coerceBooleanProperty} from '@angular/cdk/coercion';
 import {
   ContentChildren,
   ElementRef,
@@ -100,17 +100,17 @@ export class CdkDropList<T = any> implements AfterContentInit, OnDestroy {
     return this._disabled || (!!this._group && this._group.disabled);
   }
   set disabled(value: boolean) {
-    this._disabled = coerceBooleanProperty(value);
+    // Usually we sync the directive and ref state right before dragging starts, in order to have
+    // a single point of failure and to avoid having to use setters for everything. `disabled` is
+    // a special case, because it can prevent the `beforeStarted` event from firing, which can lock
+    // the user in a disabled state, so we also need to sync it as it's being set.
+    this._dropListRef.disabled = this._disabled = coerceBooleanProperty(value);
   }
   private _disabled = false;
 
   /** Whether sorting within this drop list is disabled. */
   @Input('cdkDropListSortingDisabled')
-  get sortingDisabled(): boolean { return this._sortingDisabled; }
-  set sortingDisabled(value: boolean) {
-    this._sortingDisabled = coerceBooleanProperty(value);
-  }
-  private _sortingDisabled = false;
+  sortingDisabled: boolean = false;
 
   /**
    * Function that is used to determine whether an item
@@ -155,7 +155,7 @@ export class CdkDropList<T = any> implements AfterContentInit, OnDestroy {
       return this.enterPredicate(drag.data, drop.data);
     };
 
-    this._syncInputs(this._dropListRef);
+    this._setupInputSyncSubscription(this._dropListRef);
     this._handleEvents(this._dropListRef);
     CdkDropList._dropLists.push(this);
 
@@ -253,7 +253,7 @@ export class CdkDropList<T = any> implements AfterContentInit, OnDestroy {
   }
 
   /** Syncs the inputs of the CdkDropList with the options of the underlying DropListRef. */
-  private _syncInputs(ref: DropListRef<CdkDropList>) {
+  private _setupInputSyncSubscription(ref: DropListRef<CdkDropList>) {
     if (this._dir) {
       this._dir.change
         .pipe(startWith(this._dir.value), takeUntil(this._destroyed))
@@ -276,8 +276,8 @@ export class CdkDropList<T = any> implements AfterContentInit, OnDestroy {
 
       ref.disabled = this.disabled;
       ref.lockAxis = this.lockAxis;
-      ref.sortingDisabled = this.sortingDisabled;
-      ref.autoScrollDisabled = this.autoScrollDisabled;
+      ref.sortingDisabled = coerceBooleanProperty(this.sortingDisabled);
+      ref.autoScrollDisabled = coerceBooleanProperty(this.autoScrollDisabled);
       ref
         .connectedTo(siblings.filter(drop => drop && drop !== this).map(list => list._dropListRef))
         .withOrientation(this.orientation);
@@ -332,4 +332,7 @@ export class CdkDropList<T = any> implements AfterContentInit, OnDestroy {
     });
   }
 
+  static ngAcceptInputType_disabled: BooleanInput;
+  static ngAcceptInputType_sortingDisabled: BooleanInput;
+  static ngAcceptInputType_autoScrollDisabled: BooleanInput;
 }

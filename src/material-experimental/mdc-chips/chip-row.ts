@@ -6,6 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {BooleanInput} from '@angular/cdk/coercion';
 import {BACKSPACE, DELETE} from '@angular/cdk/keycodes';
 import {
   AfterContentInit,
@@ -25,7 +26,6 @@ import {GridKeyManagerRow, NAVIGATION_KEYS} from './grid-key-manager';
  * the matChipInputFor directive.
  */
 @Component({
-  moduleId: module.id,
   selector: 'mat-chip-row, mat-basic-chip-row',
   templateUrl: 'chip-row.html',
   styleUrls: ['chips.css'],
@@ -42,7 +42,6 @@ import {GridKeyManagerRow, NAVIGATION_KEYS} from './grid-key-manager';
     '[tabIndex]': 'tabIndex',
     '(mousedown)': '_mousedown($event)',
     '(keydown)': '_keydown($event)',
-    '(transitionend)': '_chipFoundation.handleTransitionEnd($event)',
     '(focusin)': '_focusin()',
     '(focusout)': '_focusout()'
   },
@@ -150,4 +149,9 @@ export class MatChipRow extends MatChip implements AfterContentInit, AfterViewIn
         this._handleInteraction(event);
     }
   }
+
+  static ngAcceptInputType_disabled: BooleanInput;
+  static ngAcceptInputType_removable: BooleanInput;
+  static ngAcceptInputType_highlighted: BooleanInput;
+  static ngAcceptInputType_disableRipple: BooleanInput;
 }

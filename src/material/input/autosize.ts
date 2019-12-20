@@ -6,6 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {BooleanInput, NumberInput} from '@angular/cdk/coercion';
 import {CdkTextareaAutosize} from '@angular/cdk/text-field';
 import {Directive, Input} from '@angular/core';
 
@@ -23,7 +24,6 @@ import {Directive, Input} from '@angular/core';
     // Textarea elements that have the directive applied should have a single row by default.
     // Browsers normally show two rows by default and therefore this limits the minRows binding.
     'rows': '1',
-    '(input)': '_noopInputHandler()',
   },
 })
 export class MatTextareaAutosize extends CdkTextareaAutosize {
@@ -42,4 +42,8 @@ export class MatTextareaAutosize extends CdkTextareaAutosize {
   @Input()
   get matTextareaAutosize(): boolean { return this.enabled; }
   set matTextareaAutosize(value: boolean) { this.enabled = value; }
+
+  static ngAcceptInputType_minRows: NumberInput;
+  static ngAcceptInputType_maxRows: NumberInput;
+  static ngAcceptInputType_enabled: BooleanInput;
 }

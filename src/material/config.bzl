@@ -2,28 +2,36 @@ entryPoints = [
     "autocomplete",
     "autocomplete/testing",
     "badge",
+    "badge/testing",
     "bottom-sheet",
+    "bottom-sheet/testing",
     "button",
     "button/testing",
     "button-toggle",
+    "button-toggle/testing",
     "card",
     "checkbox",
     "checkbox/testing",
     "chips",
     "core",
+    "core/testing",
     "datepicker",
     "dialog",
     "dialog/testing",
     "divider",
+    "divider/testing",
     "expansion",
+    "expansion/testing",
     "form-field",
     "grid-list",
     "icon",
     "input",
     "list",
+    "list/testing",
     "menu",
     "menu/testing",
     "paginator",
+    "paginator/testing",
     "progress-bar",
     "progress-bar/testing",
     "progress-spinner",
@@ -40,20 +48,26 @@ entryPoints = [
     "snack-bar",
     "snack-bar/testing",
     "sort",
+    "sort/testing",
     "stepper",
     "table",
+    "table/testing",
     "tabs",
     "tabs/testing",
     "toolbar",
     "tooltip",
     "tree",
+    "form-field/testing",
+    "form-field/testing/control",
+    "input/testing",
+    "select/testing",
 ]
 
 # List of all non-testing entry-points of the Angular Material package.
 MATERIAL_ENTRYPOINTS = [
     ep
     for ep in entryPoints
-    if not ep.endswith("/testing")
+    if not "/testing" in ep
 ]
 
 # List of all testing entry-points of the Angular Material package.

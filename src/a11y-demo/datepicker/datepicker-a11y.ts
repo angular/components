@@ -10,7 +10,6 @@ import {Component} from '@angular/core';
 
 
 @Component({
-  moduleId: module.id,
   selector: 'datepicker-a11y',
   templateUrl: 'datepicker-a11y.html',
   styleUrls: ['datepicker-a11y.css'],
@@ -31,5 +30,5 @@ export class DatepickerAccessibilityDemo {
   appointmentDate: Date;
   minAppointmentDate = new Date();
   maxAppointmentDate = new Date(Date.now() + 365 * 24 * 60 * 60 * 1000);
-  weekdaysOnly = (d: Date) => d.getDay() != 0 && d.getDay() != 6;
+  weekdaysOnly = (d: Date|null) => d !== null && d.getDay() != 0 && d.getDay() != 6;
 }

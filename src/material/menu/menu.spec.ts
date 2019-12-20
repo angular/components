@@ -503,6 +503,38 @@ describe('MatMenu', () => {
     expect(role).toBe('menu', 'Expected panel to have the "menu" role.');
   });
 
+  it('should forward ARIA attributes to the menu panel', () => {
+    const fixture = createComponent(SimpleMenu, [], [FakeIcon]);
+    const instance = fixture.componentInstance;
+    fixture.detectChanges();
+    instance.trigger.openMenu();
+    fixture.detectChanges();
+
+    const menuPanel = overlayContainerElement.querySelector('.mat-menu-panel')!;
+    expect(menuPanel.hasAttribute('aria-label')).toBe(false);
+    expect(menuPanel.hasAttribute('aria-labelledby')).toBe(false);
+    expect(menuPanel.hasAttribute('aria-describedby')).toBe(false);
+
+    // Note that setting all of these at the same time is invalid,
+    // but it's up to the consumer to handle it correctly.
+    instance.ariaLabel = 'Custom aria-label';
+    instance.ariaLabelledby = 'custom-labelled-by';
+    instance.ariaDescribedby = 'custom-described-by';
+    fixture.detectChanges();
+
+    expect(menuPanel.getAttribute('aria-label')).toBe('Custom aria-label');
+    expect(menuPanel.getAttribute('aria-labelledby')).toBe('custom-labelled-by');
+    expect(menuPanel.getAttribute('aria-describedby')).toBe('custom-described-by');
+
+    // Change these to empty strings to make sure that we don't preserve empty attributes.
+    instance.ariaLabel = instance.ariaLabelledby = instance.ariaDescribedby = '';
+    fixture.detectChanges();
+
+    expect(menuPanel.hasAttribute('aria-label')).toBe(false);
+    expect(menuPanel.hasAttribute('aria-labelledby')).toBe(false);
+    expect(menuPanel.hasAttribute('aria-describedby')).toBe(false);
+  });
+
   it('should set the "menuitem" role on the items by default', () => {
     const fixture = createComponent(SimpleMenu, [], [FakeIcon]);
     fixture.detectChanges();
@@ -796,6 +828,18 @@ describe('MatMenu', () => {
     fixture.detectChanges();
     fixture.componentInstance.trigger.openMenu();
     fixture.detectChanges();
+    tick(500);
+
+    expect(document.activeElement).toBe(overlayContainerElement.querySelector('.mat-menu-panel'));
+  }));
+
+  it('should focus the menu panel if all items are disabled inside lazy content', fakeAsync(() => {
+    const fixture = createComponent(SimpleMenuWithRepeaterInLazyContent, [], [FakeIcon]);
+    fixture.componentInstance.items.forEach(item => item.disabled = true);
+    fixture.detectChanges();
+    fixture.componentInstance.trigger.openMenu();
+    fixture.detectChanges();
+    tick(500);
 
     expect(document.activeElement).toBe(overlayContainerElement.querySelector('.mat-menu-panel'));
   }));
@@ -931,6 +975,37 @@ describe('MatMenu', () => {
         expect(document.activeElement).toBe(items[1], 'Expected second item to be focused');
         flush();
       }));
+
+    it('should sync the focus order when an item is focused programmatically', fakeAsync(() => {
+      const fixture = createComponent(SimpleMenuWithRepeater);
+
+      // Add some more items to work with.
+      for (let i = 0; i < 5; i++) {
+        fixture.componentInstance.items.push({label: `Extra ${i}`, disabled: false});
+      }
+
+      fixture.detectChanges();
+      fixture.componentInstance.trigger.openMenu();
+      fixture.detectChanges();
+      tick(500);
+
+      const menuPanel = document.querySelector('.mat-menu-panel')!;
+      const items = menuPanel.querySelectorAll('.mat-menu-panel [mat-menu-item]');
+
+      expect(document.activeElement).toBe(items[0], 'Expected first item to be focused on open');
+
+      fixture.componentInstance.itemInstances.toArray()[3].focus();
+      fixture.detectChanges();
+
+      expect(document.activeElement).toBe(items[3], 'Expected fourth item to be focused');
+
+      dispatchKeyboardEvent(menuPanel, 'keydown', DOWN_ARROW);
+      fixture.detectChanges();
+      tick();
+
+      expect(document.activeElement).toBe(items[4], 'Expected fifth item to be focused');
+      flush();
+    }));
 
     it('should open submenus when the menu is inside an OnPush component', fakeAsync(() => {
       const fixture = createComponent(LazyMenuWithOnPush);
@@ -2108,7 +2183,10 @@ describe('MatMenu default overrides', () => {
       #menu="matMenu"
       [class]="panelClass"
       (closed)="closeCallback($event)"
-      [backdropClass]="backdropClass">
+      [backdropClass]="backdropClass"
+      [aria-label]="ariaLabel"
+      [aria-labelledby]="ariaLabelledby"
+      [aria-describedby]="ariaDescribedby">
 
       <button mat-menu-item> Item </button>
       <button mat-menu-item disabled> Disabled </button>
@@ -2130,6 +2208,9 @@ class SimpleMenu {
   backdropClass: string;
   panelClass: string;
   restoreFocus = true;
+  ariaLabel: string;
+  ariaLabelledby: string;
+  ariaDescribedby: string;
 }
 
 @Component({
@@ -2431,6 +2512,26 @@ class MenuWithCheckboxItems {
 class SimpleMenuWithRepeater {
   @ViewChild(MatMenuTrigger) trigger: MatMenuTrigger;
   @ViewChild(MatMenu) menu: MatMenu;
+  @ViewChildren(MatMenuItem) itemInstances: QueryList<MatMenuItem>;
+  items = [{label: 'Pizza', disabled: false}, {label: 'Pasta', disabled: false}];
+}
+
+@Component({
+  template: `
+    <button [matMenuTriggerFor]="menu">Toggle menu</button>
+    <mat-menu #menu="matMenu">
+      <ng-template matMenuContent>
+        <button
+          *ngFor="let item of items"
+          [disabled]="item.disabled"
+          mat-menu-item>{{item.label}}</button>
+      </ng-template>
+    </mat-menu>
+  `
+})
+class SimpleMenuWithRepeaterInLazyContent {
+  @ViewChild(MatMenuTrigger, {static: false}) trigger: MatMenuTrigger;
+  @ViewChild(MatMenu, {static: false}) menu: MatMenu;
   items = [{label: 'Pizza', disabled: false}, {label: 'Pasta', disabled: false}];
 }
 

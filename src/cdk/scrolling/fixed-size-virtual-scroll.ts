@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {coerceNumberProperty} from '@angular/cdk/coercion';
+import {coerceNumberProperty, NumberInput} from '@angular/cdk/coercion';
 import {Directive, forwardRef, Input, OnChanges} from '@angular/core';
 import {Observable, Subject} from 'rxjs';
 import {distinctUntilChanged} from 'rxjs/operators';
@@ -203,4 +203,8 @@ export class CdkFixedSizeVirtualScroll implements OnChanges {
   ngOnChanges() {
     this._scrollStrategy.updateItemAndBufferSize(this.itemSize, this.minBufferPx, this.maxBufferPx);
   }
+
+  static ngAcceptInputType_itemSize: NumberInput;
+  static ngAcceptInputType_minBufferPx: NumberInput;
+  static ngAcceptInputType_maxBufferPx: NumberInput;
 }

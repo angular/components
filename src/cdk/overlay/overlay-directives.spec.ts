@@ -8,7 +8,7 @@ import {
   dispatchEvent,
 } from '@angular/cdk/testing/private';
 import {ESCAPE, A} from '@angular/cdk/keycodes';
-import {CdkConnectedOverlay, OverlayModule, CdkOverlayOrigin} from './index';
+import {Overlay, CdkConnectedOverlay, OverlayModule, CdkOverlayOrigin} from './index';
 import {OverlayContainer} from './overlay-container';
 import {
   ConnectedOverlayPositionChange,
@@ -18,6 +18,7 @@ import {FlexibleConnectedPositionStrategy} from './position/flexible-connected-p
 
 
 describe('Overlay directives', () => {
+  let overlay: Overlay;
   let overlayContainer: OverlayContainer;
   let overlayContainerElement: HTMLElement;
   let fixture: ComponentFixture<ConnectedOverlayDirectiveTest>;
@@ -36,8 +37,9 @@ describe('Overlay directives', () => {
     fixture.detectChanges();
   });
 
-  beforeEach(inject([OverlayContainer], (oc: OverlayContainer) => {
+  beforeEach(inject([OverlayContainer, Overlay], (oc: OverlayContainer, o: Overlay) => {
     overlayContainer = oc;
+    overlay = o;
     overlayContainerElement = oc.getContainerElement();
   }));
 
@@ -60,6 +62,27 @@ describe('Overlay directives', () => {
     fixture.detectChanges();
 
     expect(overlayContainerElement.textContent).toBe('');
+  });
+
+  it('can change positionStrategy via input', () => {
+    const expectedPositionStrategy =
+        overlay.position()
+            .flexibleConnectedTo(document.body)
+            .withFlexibleDimensions(true)
+            .withPositions([
+
+              {originX: 'start', originY: 'top', overlayX: 'start', overlayY: 'top'},
+            ]);
+    fixture.componentInstance.isOpen = true;
+    fixture.componentInstance.positionStrategy = expectedPositionStrategy;
+    fixture.detectChanges();
+
+    const testComponent: ConnectedOverlayDirectiveTest = fixture.debugElement.componentInstance;
+    const overlayDirective = testComponent.connectedOverlayDirective;
+    const actualPositionStrategy = overlayDirective.overlayRef.getConfig().positionStrategy as
+        FlexibleConnectedPositionStrategy;
+
+    expect(expectedPositionStrategy).toBe(actualPositionStrategy);
   });
 
   it('should destroy the overlay when the directive is destroyed', () => {
@@ -480,6 +503,29 @@ describe('Overlay directives', () => {
       expect(pane.style.height).toBe('100px');
     });
 
+    it('should be able to set transform origin selector', () => {
+      const trigger = fixture.nativeElement.querySelector('#trigger');
+
+      trigger.style.position = 'fixed';
+      trigger.style.top = '200px';
+      trigger.style.left = '200px';
+
+      fixture.componentInstance.positionOverrides = [{
+        originX: 'start',
+        originY: 'top',
+        overlayX: 'start',
+        overlayY: 'bottom',
+      }];
+
+      fixture.componentInstance.transformOriginSelector = '.cdk-test-panel-class';
+      fixture.componentInstance.isOpen = true;
+      fixture.detectChanges();
+
+      const target = overlayContainerElement.querySelector('.cdk-test-panel-class')! as HTMLElement;
+
+      expect(target.style.transformOrigin).toContain('left bottom');
+    });
+
   });
 
   describe('outputs', () => {
@@ -552,6 +598,7 @@ describe('Overlay directives', () => {
             [cdkConnectedOverlayOpen]="isOpen"
             [cdkConnectedOverlayWidth]="width"
             [cdkConnectedOverlayHeight]="height"
+            [cdkConnectedOverlayPositionStrategy]="positionStrategy"
             [cdkConnectedOverlayOrigin]="triggerOverride || trigger"
             [cdkConnectedOverlayHasBackdrop]="hasBackdrop"
             [cdkConnectedOverlayViewportMargin]="viewportMargin"
@@ -569,7 +616,8 @@ describe('Overlay directives', () => {
             (overlayKeydown)="keydownHandler($event)"
             [cdkConnectedOverlayMinWidth]="minWidth"
             [cdkConnectedOverlayMinHeight]="minHeight"
-            [cdkConnectedOverlayPositions]="positionOverrides">
+            [cdkConnectedOverlayPositions]="positionOverrides"
+            [cdkConnectedOverlayTransformOriginOn]="transformOriginSelector">
     <p>Menu content</p>
   </ng-template>`,
 })
@@ -582,6 +630,7 @@ class ConnectedOverlayDirectiveTest {
   width: number | string;
   height: number | string;
   minWidth: number | string;
+  positionStrategy: FlexibleConnectedPositionStrategy;
   minHeight: number | string;
   offsetX: number;
   offsetY: number;
@@ -601,6 +650,7 @@ class ConnectedOverlayDirectiveTest {
   });
   detachHandler = jasmine.createSpy('detachHandler');
   attachResult: HTMLElement;
+  transformOriginSelector: string;
 }
 
 @Component({

@@ -52,6 +52,17 @@ export declare class MatSlider extends _MatSliderMixinBase implements ControlVal
     registerOnTouched(fn: any): void;
     setDisabledState(isDisabled: boolean): void;
     writeValue(value: any): void;
+    static ngAcceptInputType_disabled: BooleanInput;
+    static ngAcceptInputType_invert: BooleanInput;
+    static ngAcceptInputType_max: NumberInput;
+    static ngAcceptInputType_min: NumberInput;
+    static ngAcceptInputType_step: NumberInput;
+    static ngAcceptInputType_thumbLabel: BooleanInput;
+    static ngAcceptInputType_tickInterval: NumberInput;
+    static ngAcceptInputType_value: NumberInput;
+    static ngAcceptInputType_vertical: BooleanInput;
+    static ɵcmp: i0.ɵɵComponentDefWithMeta<MatSlider, "mat-slider", ["matSlider"], { 'disabled': "disabled", 'color': "color", 'tabIndex': "tabIndex", 'invert': "invert", 'max': "max", 'min': "min", 'step': "step", 'thumbLabel': "thumbLabel", 'tickInterval': "tickInterval", 'value': "value", 'displayWith': "displayWith", 'vertical': "vertical" }, { 'change': "change", 'input': "input", 'valueChange': "valueChange" }, never>;
+    static ɵfac: i0.ɵɵFactoryDef<MatSlider>;
 }
 
 export declare class MatSliderChange {
@@ -60,4 +71,6 @@ export declare class MatSliderChange {
 }
 
 export declare class MatSliderModule {
+    static ɵinj: i0.ɵɵInjectorDef<MatSliderModule>;
+    static ɵmod: i0.ɵɵNgModuleDefWithMeta<MatSliderModule, [typeof i1.MatSlider], [typeof i2.CommonModule, typeof i3.MatCommonModule], [typeof i1.MatSlider, typeof i3.MatCommonModule]>;
 }

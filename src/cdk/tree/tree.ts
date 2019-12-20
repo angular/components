@@ -45,7 +45,6 @@ import {
  * dataNodes with hierarchy. Updates the dataNodes when new data is provided by the data source.
  */
 @Component({
-  moduleId: module.id,
   selector: 'cdk-tree',
   exportAs: 'cdkTree',
   template: `<ng-container cdkTreeNodeOutlet></ng-container>`,
@@ -106,7 +105,11 @@ export class CdkTree<T> implements AfterContentChecked, CollectionViewer, OnDest
   @ViewChild(CdkTreeNodeOutlet, {static: true}) _nodeOutlet: CdkTreeNodeOutlet;
 
   /** The tree node template for the tree */
-  @ContentChildren(CdkTreeNodeDef) _nodeDefs: QueryList<CdkTreeNodeDef<T>>;
+  @ContentChildren(CdkTreeNodeDef, {
+    // We need to use `descendants: true`, because Ivy will no longer match
+    // indirect descendants if it's left as false.
+    descendants: true
+  }) _nodeDefs: QueryList<CdkTreeNodeDef<T>>;
 
   // TODO(tinayuangao): Setup a listener for scrolling, emit the calculated view to viewChange.
   //     Remove the MAX_VALUE in viewChange

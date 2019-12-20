@@ -26,6 +26,7 @@ import {
   ComponentPortal,
   TemplatePortal,
   CdkPortalOutlet,
+  DomPortal,
 } from '@angular/cdk/portal';
 import {BreakpointObserver, Breakpoints} from '@angular/cdk/layout';
 import {MatBottomSheetConfig} from './bottom-sheet-config';
@@ -41,7 +42,6 @@ import {FocusTrap, FocusTrapFactory} from '@angular/cdk/a11y';
  * @docs-private
  */
 @Component({
-  moduleId: module.id,
   selector: 'mat-bottom-sheet-container',
   templateUrl: 'bottom-sheet-container.html',
   styleUrls: ['bottom-sheet-container.css'],
@@ -120,6 +120,18 @@ export class MatBottomSheetContainer extends BasePortalOutlet implements OnDestr
     this._setPanelClass();
     this._savePreviouslyFocusedElement();
     return this._portalOutlet.attachTemplatePortal(portal);
+  }
+
+  /**
+   * Attaches a DOM portal to the bottom sheet container.
+   * @deprecated To be turned into a method.
+   * @breaking-change 10.0.0
+   */
+  attachDomPortal = (portal: DomPortal) => {
+    this._validatePortalAttached();
+    this._setPanelClass();
+    this._savePreviouslyFocusedElement();
+    return this._portalOutlet.attachDomPortal(portal);
   }
 
   /** Begin animation of bottom sheet entrance into view. */
@@ -210,7 +222,17 @@ export class MatBottomSheetContainer extends BasePortalOutlet implements OnDestr
 
     // We need the extra check, because IE can set the `activeElement` to null in some cases.
     if (this.bottomSheetConfig.restoreFocus && toFocus && typeof toFocus.focus === 'function') {
-      toFocus.focus();
+      const activeElement = this._document.activeElement;
+      const element = this._elementRef.nativeElement;
+
+      // Make sure that focus is still inside the bottom sheet or is on the body (usually because a
+      // non-focusable element like the backdrop was clicked) before moving it. It's possible that
+      // the consumer moved it themselves before the animation was done, in which case we shouldn't
+      // do anything.
+      if (!activeElement || activeElement === this._document.body || activeElement === element ||
+        element.contains(activeElement)) {
+        toFocus.focus();
+      }
     }
 
     if (this._focusTrap) {

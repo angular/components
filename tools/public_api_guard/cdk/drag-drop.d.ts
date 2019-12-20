@@ -46,6 +46,9 @@ export declare class CdkDrag<T = any> implements AfterViewInit, OnChanges, OnDes
     ngOnChanges(changes: SimpleChanges): void;
     ngOnDestroy(): void;
     reset(): void;
+    static ngAcceptInputType_disabled: BooleanInput;
+    static ɵdir: i0.ɵɵDirectiveDefWithMeta<CdkDrag<any>, "[cdkDrag]", ["cdkDrag"], { 'data': "cdkDragData", 'lockAxis': "cdkDragLockAxis", 'rootElementSelector': "cdkDragRootElement", 'boundaryElement': "cdkDragBoundary", 'dragStartDelay': "cdkDragStartDelay", 'freeDragPosition': "cdkDragFreeDragPosition", 'disabled': "cdkDragDisabled", 'constrainPosition': "cdkDragConstrainPosition", 'previewClass': "cdkDragPreviewClass" }, { 'started': "cdkDragStarted", 'released': "cdkDragReleased", 'ended': "cdkDragEnded", 'entered': "cdkDragEntered", 'exited': "cdkDragExited", 'dropped': "cdkDragDropped", 'moved': "cdkDragMoved" }, ["_previewTemplate", "_placeholderTemplate", "_handles"]>;
+    static ɵfac: i0.ɵɵFactoryDef<CdkDrag<any>>;
 }
 
 export interface CdkDragDrop<T, O = T> {
@@ -87,6 +90,9 @@ export declare class CdkDragHandle implements OnDestroy {
     element: ElementRef<HTMLElement>;
     constructor(element: ElementRef<HTMLElement>, parentDrag?: any);
     ngOnDestroy(): void;
+    static ngAcceptInputType_disabled: BooleanInput;
+    static ɵdir: i0.ɵɵDirectiveDefWithMeta<CdkDragHandle, "[cdkDragHandle]", never, { 'disabled': "cdkDragHandleDisabled" }, {}, never>;
+    static ɵfac: i0.ɵɵFactoryDef<CdkDragHandle>;
 }
 
 export interface CdkDragMove<T = any> {
@@ -110,12 +116,16 @@ export declare class CdkDragPlaceholder<T = any> {
     data: T;
     templateRef: TemplateRef<T>;
     constructor(templateRef: TemplateRef<T>);
+    static ɵdir: i0.ɵɵDirectiveDefWithMeta<CdkDragPlaceholder<any>, "ng-template[cdkDragPlaceholder]", never, { 'data': "data" }, {}, never>;
+    static ɵfac: i0.ɵɵFactoryDef<CdkDragPlaceholder<any>>;
 }
 
 export declare class CdkDragPreview<T = any> {
     data: T;
     templateRef: TemplateRef<T>;
     constructor(templateRef: TemplateRef<T>);
+    static ɵdir: i0.ɵɵDirectiveDefWithMeta<CdkDragPreview<any>, "ng-template[cdkDragPreview]", never, { 'data': "data" }, {}, never>;
+    static ɵfac: i0.ɵɵFactoryDef<CdkDragPreview<any>>;
 }
 
 export interface CdkDragRelease<T = any> {
@@ -159,12 +169,20 @@ export declare class CdkDropList<T = any> implements AfterContentInit, OnDestroy
     ngAfterContentInit(): void;
     ngOnDestroy(): void;
     start(): void;
+    static ngAcceptInputType_autoScrollDisabled: BooleanInput;
+    static ngAcceptInputType_disabled: BooleanInput;
+    static ngAcceptInputType_sortingDisabled: BooleanInput;
+    static ɵdir: i0.ɵɵDirectiveDefWithMeta<CdkDropList<any>, "[cdkDropList], cdk-drop-list", ["cdkDropList"], { 'connectedTo': "cdkDropListConnectedTo", 'data': "cdkDropListData", 'orientation': "cdkDropListOrientation", 'id': "id", 'lockAxis': "cdkDropListLockAxis", 'disabled': "cdkDropListDisabled", 'sortingDisabled': "cdkDropListSortingDisabled", 'enterPredicate': "cdkDropListEnterPredicate", 'autoScrollDisabled': "cdkDropListAutoScrollDisabled" }, { 'dropped': "cdkDropListDropped", 'entered': "cdkDropListEntered", 'exited': "cdkDropListExited", 'sorted': "cdkDropListSorted" }, ["_draggables"]>;
+    static ɵfac: i0.ɵɵFactoryDef<CdkDropList<any>>;
 }
 
 export declare class CdkDropListGroup<T> implements OnDestroy {
     readonly _items: Set<T>;
     disabled: boolean;
     ngOnDestroy(): void;
+    static ngAcceptInputType_disabled: BooleanInput;
+    static ɵdir: i0.ɵɵDirectiveDefWithMeta<CdkDropListGroup<any>, "[cdkDropListGroup]", ["cdkDropListGroup"], { 'disabled': "cdkDropListGroupDisabled" }, {}, never>;
+    static ɵfac: i0.ɵɵFactoryDef<CdkDropListGroup<any>>;
 }
 
 export declare function copyArrayItem<T = any>(currentArray: T[], targetArray: T[], currentIndex: number, targetIndex: number): void;
@@ -173,9 +191,13 @@ export declare class DragDrop {
     constructor(_document: any, _ngZone: NgZone, _viewportRuler: ViewportRuler, _dragDropRegistry: DragDropRegistry<DragRef, DropListRef>);
     createDrag<T = any>(element: ElementRef<HTMLElement> | HTMLElement, config?: DragRefConfig): DragRef<T>;
     createDropList<T = any>(element: ElementRef<HTMLElement> | HTMLElement): DropListRef<T>;
+    static ɵfac: i0.ɵɵFactoryDef<DragDrop>;
+    static ɵprov: i0.ɵɵInjectableDef<DragDrop>;
 }
 
 export declare class DragDropModule {
+    static ɵinj: i0.ɵɵInjectorDef<DragDropModule>;
+    static ɵmod: i0.ɵɵNgModuleDefWithMeta<DragDropModule, [typeof i1.CdkDropList, typeof i2.CdkDropListGroup, typeof i3.CdkDrag, typeof i4.CdkDragHandle, typeof i5.CdkDragPreview, typeof i6.CdkDragPlaceholder], never, [typeof i1.CdkDropList, typeof i2.CdkDropListGroup, typeof i3.CdkDrag, typeof i4.CdkDragHandle, typeof i5.CdkDragPreview, typeof i6.CdkDragPlaceholder]>;
 }
 
 export declare class DragDropRegistry<I, C> implements OnDestroy {
@@ -191,6 +213,8 @@ export declare class DragDropRegistry<I, C> implements OnDestroy {
     removeDropContainer(drop: C): void;
     startDragging(drag: I, event: TouchEvent | MouseEvent): void;
     stopDragging(drag: I): void;
+    static ɵfac: i0.ɵɵFactoryDef<DragDropRegistry<any, any>>;
+    static ɵprov: i0.ɵɵInjectableDef<DragDropRegistry<any, any>>;
 }
 
 export declare class DragRef<T = any> {

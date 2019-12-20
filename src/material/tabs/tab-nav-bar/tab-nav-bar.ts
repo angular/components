@@ -41,7 +41,7 @@ import {
   RippleTarget,
   ThemePalette,
 } from '@angular/material/core';
-import {coerceBooleanProperty} from '@angular/cdk/coercion';
+import {BooleanInput, coerceBooleanProperty, NumberInput} from '@angular/cdk/coercion';
 import {FocusMonitor, FocusableOption} from '@angular/cdk/a11y';
 import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 import {MatInkBar} from '../ink-bar';
@@ -52,10 +52,7 @@ import {startWith, takeUntil} from 'rxjs/operators';
  * Base class with all of the `MatTabNav` functionality.
  * @docs-private
  */
-@Directive({
-  // TODO(crisbeto): this selector can be removed when we update to Angular 9.0.
-  selector: 'do-not-use-abstract-mat-tab-nav-base'
-})
+@Directive()
 // tslint:disable-next-line:class-name
 export abstract class _MatTabNavBase extends MatPaginatedTabHeader implements AfterContentChecked,
   AfterContentInit, OnDestroy {
@@ -145,7 +142,6 @@ export abstract class _MatTabNavBase extends MatPaginatedTabHeader implements Af
  * Provides anchored navigation with animated ink bar.
  */
 @Component({
-  moduleId: module.id,
   selector: '[mat-tab-nav-bar]',
   exportAs: 'matTabNavBar, matTabNav',
   inputs: ['color'],
@@ -183,6 +179,9 @@ export class MatTabNav extends _MatTabNavBase {
     @Optional() @Inject(ANIMATION_MODULE_TYPE) animationMode?: string) {
     super(elementRef, dir, ngZone, changeDetectorRef, viewportRuler, platform, animationMode);
   }
+
+  static ngAcceptInputType_disableRipple: BooleanInput;
+  static ngAcceptInputType_selectedIndex: NumberInput;
 }
 
 // Boilerplate for applying mixins to MatTabLink.
@@ -192,10 +191,7 @@ const _MatTabLinkMixinBase:
         mixinTabIndex(mixinDisableRipple(mixinDisabled(MatTabLinkMixinBase)));
 
 /** Base class with all of the `MatTabLink` functionality. */
-@Directive({
-  // TODO(crisbeto): this selector can be removed when we update to Angular 9.0.
-  selector: 'do-not-use-abstract-mat-tab-link-base'
-})
+@Directive()
 // tslint:disable-next-line:class-name
 export class _MatTabLinkBase extends _MatTabLinkMixinBase implements OnDestroy, CanDisable,
   CanDisableRipple, HasTabIndex, RippleTarget, FocusableOption {
@@ -292,4 +288,7 @@ export class MatTabLink extends _MatTabLinkBase implements OnDestroy {
     super.ngOnDestroy();
     this._tabLinkRipple._removeTriggerEvents();
   }
+
+  static ngAcceptInputType_disabled: BooleanInput;
+  static ngAcceptInputType_disableRipple: BooleanInput;
 }

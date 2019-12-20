@@ -6,7 +6,12 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {coerceNumberProperty, coerceBooleanProperty} from '@angular/cdk/coercion';
+import {
+  coerceNumberProperty,
+  coerceBooleanProperty,
+  BooleanInput,
+  NumberInput
+} from '@angular/cdk/coercion';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -66,7 +71,6 @@ const _MatPaginatorBase: CanDisableCtor & HasInitializedCtor & typeof MatPaginat
  * navigational button to go to the previous or next page.
  */
 @Component({
-  moduleId: module.id,
   selector: 'mat-paginator',
   exportAs: 'matPaginator',
   templateUrl: 'paginator.html',
@@ -283,4 +287,11 @@ export class MatPaginator extends _MatPaginatorBase implements OnInit, OnDestroy
       length: this.length
     });
   }
+
+  static ngAcceptInputType_pageIndex: NumberInput;
+  static ngAcceptInputType_length: NumberInput;
+  static ngAcceptInputType_pageSize: NumberInput;
+  static ngAcceptInputType_hidePageSize: BooleanInput;
+  static ngAcceptInputType_showFirstLastButtons: BooleanInput;
+  static ngAcceptInputType_disabled: BooleanInput;
 }

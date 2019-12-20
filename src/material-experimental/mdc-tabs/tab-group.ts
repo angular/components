@@ -8,25 +8,27 @@
 
 import {
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   ContentChildren,
   ElementRef,
+  Inject,
+  Input,
+  Optional,
   QueryList,
   ViewChild,
   ViewEncapsulation,
-  ChangeDetectorRef,
-  Inject,
-  Optional,
 } from '@angular/core';
 import {
   _MatTabGroupBase,
+  MAT_TAB_GROUP,
   MAT_TABS_CONFIG,
   MatTabsConfig,
-  MAT_TAB_GROUP,
 } from '@angular/material/tabs';
 import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 import {MatTab} from './tab';
 import {MatTabHeader} from './tab-header';
+import {BooleanInput, coerceBooleanProperty, NumberInput} from '@angular/cdk/coercion';
 
 /**
  * Material design tab-group component. Supports basic tab pairs (label + content) and includes
@@ -34,7 +36,6 @@ import {MatTabHeader} from './tab-header';
  * See: https://material.io/design/components/tabs.html
  */
 @Component({
-  moduleId: module.id,
   selector: 'mat-tab-group',
   exportAs: 'matTabGroup',
   templateUrl: 'tab-group.html',
@@ -57,10 +58,27 @@ export class MatTabGroup extends _MatTabGroupBase {
   @ViewChild('tabBodyWrapper') _tabBodyWrapper: ElementRef;
   @ViewChild('tabHeader') _tabHeader: MatTabHeader;
 
+  /** Whether the ink bar should fit its width to the size of the tab label content. */
+  @Input()
+  get fitInkBarToContent(): boolean { return this._fitInkBarToContent; }
+  set fitInkBarToContent(v: boolean) {
+    this._fitInkBarToContent = coerceBooleanProperty(v);
+    this._changeDetectorRef.markForCheck();
+  }
+  private _fitInkBarToContent = false;
+
   constructor(elementRef: ElementRef,
               changeDetectorRef: ChangeDetectorRef,
               @Inject(MAT_TABS_CONFIG) @Optional() defaultConfig?: MatTabsConfig,
               @Optional() @Inject(ANIMATION_MODULE_TYPE) animationMode?: string) {
     super(elementRef, changeDetectorRef, defaultConfig, animationMode);
+    this.fitInkBarToContent = defaultConfig && defaultConfig.fitInkBarToContent != null ?
+        defaultConfig.fitInkBarToContent : false;
   }
+
+  static ngAcceptInputType_fitInkBarToContent: BooleanInput;
+  static ngAcceptInputType_dynamicHeight: BooleanInput;
+  static ngAcceptInputType_animationDuration: NumberInput;
+  static ngAcceptInputType_selectedIndex: NumberInput;
+  static ngAcceptInputType_disableRipple: BooleanInput;
 }

@@ -23,8 +23,8 @@ docsDistPath="${projectPath}/dist/docs"
 # Path to the cloned docs-content repository.
 docsContentPath="${projectPath}/tmp/material2-docs-content"
 
-# Path to the release output of the Bazel "@angular/material-examples" NPM package.
-examplesPackagePath="$(bazel info bazel-bin)/src/material-examples/npm_package"
+# Path to the release output of the Bazel "@angular/components-examples" NPM package.
+examplesPackagePath="$(bazel info bazel-bin)/src/components-examples/npm_package"
 
 # Git clone URL for the material2-docs-content repository.
 docsContentRepoUrl="https://github.com/angular/material2-docs-content"
@@ -40,7 +40,6 @@ commitSha=$(git rev-parse --short HEAD)
 commitAuthorName=$(git --no-pager show -s --format='%an' HEAD)
 commitAuthorEmail=$(git --no-pager show -s --format='%ae' HEAD)
 commitMessage=$(git log --oneline -n 1)
-commitTag="${buildVersion}-${commitSha}"
 
 # Note that we cannot store the commit SHA in its own version segment
 # as it will not comply with the semver specification. For example:

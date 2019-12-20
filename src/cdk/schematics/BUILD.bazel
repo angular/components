@@ -36,7 +36,6 @@ ts_library(
         "@npm//glob",
         "@npm//parse5",
         "@npm//typescript",
-        "@npm//chalk",
     ],
 )
 
@@ -78,7 +77,6 @@ ts_library(
         "@npm//@schematics/angular",
         "@npm//@types/jasmine",
         "@npm//@types/node",
-        "@npm//mock-fs",
         "@npm//typescript",
     ],
 )

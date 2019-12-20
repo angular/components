@@ -8,7 +8,7 @@
 
 import {FocusKeyManager} from '@angular/cdk/a11y';
 import {Directionality} from '@angular/cdk/bidi';
-import {coerceBooleanProperty} from '@angular/cdk/coercion';
+import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
 import {END, HOME} from '@angular/cdk/keycodes';
 import {
   AfterContentInit,
@@ -59,7 +59,6 @@ export const MAT_CHIP_LISTBOX_CONTROL_VALUE_ACCESSOR: any = {
  * Used with MatChipOption chips.
  */
 @Component({
-  moduleId: module.id,
   selector: 'mat-chip-listbox',
   template: '<ng-content></ng-content>',
   styleUrls: ['chips.css'],
@@ -554,5 +553,10 @@ export class MatChipListbox extends MatChipSet implements AfterContentInit, Cont
 
     this._lastDestroyedChipIndex = null;
   }
+
+  static ngAcceptInputType_multiple: BooleanInput;
+  static ngAcceptInputType_selectable: BooleanInput;
+  static ngAcceptInputType_required: BooleanInput;
+  static ngAcceptInputType_disabled: BooleanInput;
 }
 

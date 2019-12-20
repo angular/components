@@ -7,7 +7,7 @@
  */
 
 import {Direction, Directionality} from '@angular/cdk/bidi';
-import {coerceBooleanProperty} from '@angular/cdk/coercion';
+import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
 import {ESCAPE, hasModifierKey} from '@angular/cdk/keycodes';
 import {TemplatePortal} from '@angular/cdk/portal';
 import {
@@ -122,6 +122,12 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
   /** Registered connected position pairs. */
   @Input('cdkConnectedOverlayPositions') positions: ConnectedPosition[];
 
+  /**
+   * This input overrides the positions input if specified. It lets users pass
+   * in arbitrary positioning strategies.
+   */
+  @Input('cdkConnectedOverlayPositionStrategy') positionStrategy: FlexibleConnectedPositionStrategy;
+
   /** The offset in pixels for the overlay connection point on the x-axis */
   @Input('cdkConnectedOverlayOffsetX')
   get offsetX(): number { return this._offsetX; }
@@ -170,6 +176,9 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
 
   /** Whether the overlay is open. */
   @Input('cdkConnectedOverlayOpen') open: boolean = false;
+
+  /** CSS selector which to set the transform origin. */
+  @Input('cdkConnectedOverlayTransformOriginOn') transformOriginSelector: string;
 
   /** Whether or not the overlay should attach a backdrop. */
   @Input('cdkConnectedOverlayHasBackdrop')
@@ -284,7 +293,8 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
 
   /** Builds the overlay config based on the directive's inputs */
   private _buildConfig(): OverlayConfig {
-    const positionStrategy = this._position = this._createPositionStrategy();
+    const positionStrategy = this._position =
+      this.positionStrategy || this._createPositionStrategy();
     const overlayConfig = new OverlayConfig({
       direction: this._dir,
       positionStrategy,
@@ -338,7 +348,8 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
       .withPush(this.push)
       .withGrowAfterOpen(this.growAfterOpen)
       .withViewportMargin(this.viewportMargin)
-      .withLockedPosition(this.lockPosition);
+      .withLockedPosition(this.lockPosition)
+      .withTransformOriginOn(this.transformOriginSelector);
   }
 
   /** Returns the position strategy of the overlay to be set on the overlay config */
@@ -383,6 +394,12 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
 
     this._backdropSubscription.unsubscribe();
   }
+
+  static ngAcceptInputType_hasBackdrop: BooleanInput;
+  static ngAcceptInputType_lockPosition: BooleanInput;
+  static ngAcceptInputType_flexibleDimensions: BooleanInput;
+  static ngAcceptInputType_growAfterOpen: BooleanInput;
+  static ngAcceptInputType_push: BooleanInput;
 }
 
 

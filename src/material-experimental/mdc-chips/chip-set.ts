@@ -7,7 +7,7 @@
  */
 
 import {Directionality} from '@angular/cdk/bidi';
-import {coerceBooleanProperty} from '@angular/cdk/coercion';
+import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
 import {
   AfterContentInit,
   AfterViewInit,
@@ -49,7 +49,6 @@ const _MatChipSetMixinBase: HasTabIndexCtor & typeof MatChipSetBase =
  * Extended by MatChipListbox and MatChipGrid for different interaction patterns.
  */
 @Component({
-  moduleId: module.id,
   selector: 'mat-chip-set',
   template: '<ng-content></ng-content>',
   styleUrls: ['chips.css'],
@@ -152,7 +151,11 @@ export class MatChipSet extends _MatChipSetMixinBase implements AfterContentInit
   }
 
   /** The chips that are part of this chip set. */
-  @ContentChildren(MatChip) _chips: QueryList<MatChip>;
+  @ContentChildren(MatChip, {
+    // We need to use `descendants: true`, because Ivy will no longer match
+    // indirect descendants if it's left as false.
+    descendants: true
+  }) _chips: QueryList<MatChip>;
 
   constructor(protected _elementRef: ElementRef,
               protected _changeDetectorRef: ChangeDetectorRef,
@@ -300,5 +303,7 @@ export class MatChipSet extends _MatChipSetMixinBase implements AfterContentInit
 
     return false;
   }
+
+  static ngAcceptInputType_disabled: BooleanInput;
 }
 

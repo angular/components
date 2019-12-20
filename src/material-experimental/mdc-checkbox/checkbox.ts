@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {coerceBooleanProperty} from '@angular/cdk/coercion';
+import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
 import {Platform} from '@angular/cdk/platform';
 import {
   AfterViewInit,
@@ -26,7 +26,11 @@ import {
   ViewEncapsulation
 } from '@angular/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
-import {MAT_CHECKBOX_CLICK_ACTION, MatCheckboxClickAction} from '@angular/material/checkbox';
+import {
+  MAT_CHECKBOX_CLICK_ACTION,
+  MAT_CHECKBOX_DEFAULT_OPTIONS,
+  MatCheckboxClickAction, MatCheckboxDefaultOptions
+} from '@angular/material/checkbox';
 import {ThemePalette} from '@angular/material/core';
 import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 import {MDCCheckboxAdapter, MDCCheckboxFoundation} from '@material/checkbox';
@@ -49,7 +53,6 @@ export class MatCheckboxChange {
 }
 
 @Component({
-  moduleId: module.id,
   selector: 'mat-checkbox',
   templateUrl: 'checkbox.html',
   styleUrls: ['checkbox.css'],
@@ -120,6 +123,7 @@ export class MatCheckbox implements AfterViewInit, OnDestroy, ControlValueAccess
   }
   set indeterminate(indeterminate) {
     this._indeterminate = coerceBooleanProperty(indeterminate);
+    this._syncIndeterminate(this._indeterminate);
   }
   private _indeterminate = false;
 
@@ -228,15 +232,33 @@ export class MatCheckbox implements AfterViewInit, OnDestroy, ControlValueAccess
       private _changeDetectorRef: ChangeDetectorRef,
       private _platform: Platform,
       @Attribute('tabindex') tabIndex: string,
+      /**
+       * @deprecated `_clickAction` parameter to be removed, use
+       * `MAT_CHECKBOX_DEFAULT_OPTIONS`
+       * @breaking-change 10.0.0
+       */
       @Optional() @Inject(MAT_CHECKBOX_CLICK_ACTION) private _clickAction: MatCheckboxClickAction,
-      @Optional() @Inject(ANIMATION_MODULE_TYPE) public _animationMode?: string) {
-    this.tabIndex = parseInt(tabIndex) || 0;
-    this._checkboxFoundation = new MDCCheckboxFoundation(this._checkboxAdapter);
+      @Optional() @Inject(ANIMATION_MODULE_TYPE) public _animationMode?: string,
+      @Optional() @Inject(MAT_CHECKBOX_DEFAULT_OPTIONS)
+          private _options?: MatCheckboxDefaultOptions) {
     // Note: We don't need to set up the MDCFormFieldFoundation. Its only purpose is to manage the
     // ripple, which we do ourselves instead.
+    this.tabIndex = parseInt(tabIndex) || 0;
+    this._checkboxFoundation = new MDCCheckboxFoundation(this._checkboxAdapter);
+
+    this._options = this._options || {};
+
+    if (this._options.color) {
+      this.color = this._options.color;
+    }
+
+    // @breaking-change 10.0.0: Remove this after the `_clickAction` parameter is removed as an
+    // injection parameter.
+    this._clickAction = this._clickAction || this._options.clickAction;
   }
 
   ngAfterViewInit() {
+    this._syncIndeterminate(this._indeterminate);
     this._checkboxFoundation.init();
   }
 
@@ -349,4 +371,25 @@ export class MatCheckbox implements AfterViewInit, OnDestroy, ControlValueAccess
     this._classes[cssClass] = active;
     this._changeDetectorRef.markForCheck();
   }
+
+  /**
+   * Syncs the indeterminate value with the checkbox DOM node.
+   *
+   * We sync `indeterminate` directly on the DOM node, because in Ivy the check for whether a
+   * property is supported on an element boils down to `if (propName in element)`. Domino's
+   * HTMLInputElement doesn't have an `indeterminate` property so Ivy will warn during
+   * server-side rendering.
+   */
+  private _syncIndeterminate(value: boolean) {
+    const nativeCheckbox = this._nativeCheckbox;
+    if (nativeCheckbox) {
+      nativeCheckbox.nativeElement.indeterminate = value;
+    }
+  }
+
+  static ngAcceptInputType_checked: BooleanInput;
+  static ngAcceptInputType_indeterminate: BooleanInput;
+  static ngAcceptInputType_disabled: BooleanInput;
+  static ngAcceptInputType_required: BooleanInput;
+  static ngAcceptInputType_disableRipple: BooleanInput;
 }

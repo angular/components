@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {coerceBooleanProperty} from '@angular/cdk/coercion';
+import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
 import {
   AfterContentInit,
   Attribute,
@@ -36,7 +36,6 @@ export class MatDatepickerToggleIcon {}
 
 
 @Component({
-  moduleId: module.id,
   selector: 'mat-datepicker-toggle',
   templateUrl: 'datepicker-toggle.html',
   styleUrls: ['datepicker-toggle.css'],
@@ -132,4 +131,6 @@ export class MatDatepickerToggle<D> implements AfterContentInit, OnChanges, OnDe
       datepickerToggled
     ).subscribe(() => this._changeDetectorRef.markForCheck());
   }
+
+  static ngAcceptInputType_disabled: BooleanInput;
 }

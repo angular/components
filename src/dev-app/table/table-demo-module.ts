@@ -7,13 +7,15 @@
  */
 
 import {NgModule} from '@angular/core';
+import {CdkTableExamplesModule} from '@angular/components-examples/cdk/table';
+import {TableExamplesModule} from '@angular/components-examples/material/table';
 import {RouterModule} from '@angular/router';
-import {ExampleModule} from '../example/example-module';
 import {TableDemo} from './table-demo';
 
 @NgModule({
   imports: [
-    ExampleModule,
+    CdkTableExamplesModule,
+    TableExamplesModule,
     RouterModule.forChild([{path: '', component: TableDemo}]),
   ],
   declarations: [TableDemo],

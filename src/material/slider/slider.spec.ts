@@ -107,6 +107,15 @@ describe('MatSlider', () => {
       expect(trackFillElement.style.transform).toContain('scale3d(0.39, 1, 1)');
     });
 
+    it('should hide the fill element at zero percent', () => {
+      expect(trackFillElement.style.display).toBe('none');
+
+      dispatchMousedownEventSequence(sliderNativeElement, 0.39);
+      fixture.detectChanges();
+
+      expect(trackFillElement.style.display).toBeFalsy();
+    });
+
     it('should update the track fill on slide', () => {
       expect(trackFillElement.style.transform).toContain('scale3d(0, 1, 1)');
 
@@ -128,6 +137,27 @@ describe('MatSlider', () => {
       fixture.detectChanges();
 
       expect(sliderNativeElement.classList).not.toContain('mat-slider-sliding');
+    });
+
+    it('should stop dragging if the page loses focus', () => {
+      const classlist = sliderNativeElement.classList;
+
+      expect(classlist).not.toContain('mat-slider-sliding');
+
+      dispatchSlideStartEvent(sliderNativeElement, 0);
+      fixture.detectChanges();
+
+      expect(classlist).toContain('mat-slider-sliding');
+
+      dispatchSlideEvent(sliderNativeElement, 0.34);
+      fixture.detectChanges();
+
+      expect(classlist).toContain('mat-slider-sliding');
+
+      dispatchFakeEvent(window, 'blur');
+      fixture.detectChanges();
+
+      expect(classlist).not.toContain('mat-slider-sliding');
     });
 
     it('should reset active state upon blur', () => {

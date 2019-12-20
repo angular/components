@@ -7,7 +7,7 @@
  */
 
 import {Directionality} from '@angular/cdk/bidi';
-import {coerceBooleanProperty} from '@angular/cdk/coercion';
+import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
 import {BACKSPACE, TAB} from '@angular/cdk/keycodes';
 import {
   AfterContentInit,
@@ -77,7 +77,6 @@ const _MatChipGridMixinBase: CanUpdateErrorStateCtor & typeof MatChipGridBase =
  * the matChipInputFor directive.
  */
 @Component({
-  moduleId: module.id,
   selector: 'mat-chip-grid',
   template: '<ng-content></ng-content>',
   styleUrls: ['chips.css'],
@@ -520,4 +519,7 @@ export class MatChipGrid extends _MatChipGridMixinBase implements AfterContentIn
 
     return false;
   }
+
+  static ngAcceptInputType_disabled: BooleanInput;
+  static ngAcceptInputType_required: BooleanInput;
 }

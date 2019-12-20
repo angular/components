@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {coerceBooleanProperty} from '@angular/cdk/coercion';
+import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
 import {SPACE} from '@angular/cdk/keycodes';
 import {
   ChangeDetectionStrategy,
@@ -36,7 +36,6 @@ export class MatChipSelectionChange {
  * Used with MatChipListbox.
  */
 @Component({
-  moduleId: module.id,
   selector: 'mat-basic-chip-option, mat-chip-option',
   templateUrl: 'chip-option.html',
   styleUrls: ['chips.css'],
@@ -57,7 +56,6 @@ export class MatChipSelectionChange {
     '(keydown)': '_keydown($event)',
     '(focus)': 'focus()',
     '(blur)': '_blur()',
-    '(transitionend)': '_chipFoundation.handleTransitionEnd($event)'
   },
   providers: [{provide: MatChip, useExisting: MatChipOption}],
   encapsulation: ViewEncapsulation.None,
@@ -226,4 +224,11 @@ export class MatChipOption extends MatChip {
         this._handleInteraction(event);
     }
   }
+
+  static ngAcceptInputType_selectable: BooleanInput;
+  static ngAcceptInputType_selected: BooleanInput;
+  static ngAcceptInputType_disabled: BooleanInput;
+  static ngAcceptInputType_removable: BooleanInput;
+  static ngAcceptInputType_highlighted: BooleanInput;
+  static ngAcceptInputType_disableRipple: BooleanInput;
 }

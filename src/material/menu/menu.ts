@@ -8,7 +8,7 @@
 
 import {FocusKeyManager, FocusOrigin} from '@angular/cdk/a11y';
 import {Direction} from '@angular/cdk/bidi';
-import {coerceBooleanProperty} from '@angular/cdk/coercion';
+import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
 import {
   ESCAPE,
   LEFT_ARROW,
@@ -93,10 +93,7 @@ const MAT_MENU_BASE_ELEVATION = 4;
 let menuPanelUid = 0;
 
 /** Base class with all of the `MatMenu` functionality. */
-@Directive({
-  // TODO(devversion): this selector can be removed when we update to Angular 9.0.
-  selector: 'do-not-use-abstract-mat-menu-base'
-})
+@Directive()
 // tslint:disable-next-line:class-name
 export class _MatMenuBase implements AfterContentInit, MatMenuPanel<MatMenuItem>, OnInit,
   OnDestroy {
@@ -135,6 +132,15 @@ export class _MatMenuBase implements AfterContentInit, MatMenuPanel<MatMenuItem>
   /** Class to be added to the backdrop element. */
   @Input() backdropClass: string = this._defaultOptions.backdropClass;
 
+  /** aria-label for the menu panel. */
+  @Input('aria-label') ariaLabel: string;
+
+  /** aria-labelledby for the menu panel. */
+  @Input('aria-labelledby') ariaLabelledby: string;
+
+  /** aria-describedby for the menu panel. */
+  @Input('aria-describedby') ariaDescribedby: string;
+
   /** Position of the menu in the X axis. */
   @Input()
   get xPosition(): MenuPositionX { return this._xPosition; }
@@ -165,7 +171,7 @@ export class _MatMenuBase implements AfterContentInit, MatMenuPanel<MatMenuItem>
    * @deprecated
    * @breaking-change 8.0.0
    */
-  @ContentChildren(MatMenuItem) items: QueryList<MatMenuItem>;
+  @ContentChildren(MatMenuItem, {descendants: false}) items: QueryList<MatMenuItem>;
 
   /**
    * Menu content that will be rendered lazily.
@@ -254,6 +260,14 @@ export class _MatMenuBase implements AfterContentInit, MatMenuPanel<MatMenuItem>
     this._updateDirectDescendants();
     this._keyManager = new FocusKeyManager(this._directDescendantItems).withWrap().withTypeAhead();
     this._tabSubscription = this._keyManager.tabOut.subscribe(() => this.closed.emit('tab'));
+
+    // If a user manually (programatically) focuses a menu item, we need to reflect that focus
+    // change back to the key manager. Note that we don't need to unsubscribe here because _focused
+    // is internal and we know that it gets completed on destroy.
+    this._directDescendantItems.changes.pipe(
+      startWith(this._directDescendantItems),
+      switchMap(items => merge<MatMenuItem>(...items.map((item: MatMenuItem) => item._focused)))
+    ).subscribe(focusedItem => this._keyManager.updateActiveItem(focusedItem));
   }
 
   ngOnDestroy() {
@@ -331,16 +345,24 @@ export class _MatMenuBase implements AfterContentInit, MatMenuPanel<MatMenuItem>
    * @param origin Action from which the focus originated. Used to set the correct styling.
    */
   focusFirstItem(origin: FocusOrigin = 'program'): void {
-    const manager = this._keyManager;
-
     // When the content is rendered lazily, it takes a bit before the items are inside the DOM.
     if (this.lazyContent) {
       this._ngZone.onStable.asObservable()
         .pipe(take(1))
-        .subscribe(() => manager.setFocusOrigin(origin).setFirstItemActive());
+        .subscribe(() => this._focusFirstItem(origin));
     } else {
-      manager.setFocusOrigin(origin).setFirstItemActive();
+      this._focusFirstItem(origin);
     }
+  }
+
+  /**
+   * Actual implementation that focuses the first item. Needs to be separated
+   * out so we don't repeat the same logic in the public `focusFirstItem` method.
+   */
+  private _focusFirstItem(origin: FocusOrigin) {
+    const manager = this._keyManager;
+
+    manager.setFocusOrigin(origin).setFirstItemActive();
 
     // If there's no active item at this point, it means that all the items are disabled.
     // Move focus to the menu panel so keyboard events like Escape still work. Also this will
@@ -377,7 +399,9 @@ export class _MatMenuBase implements AfterContentInit, MatMenuPanel<MatMenuItem>
    */
   setElevation(depth: number): void {
     // The elevation starts at the base and increases by one for each level.
-    const newElevation = `mat-elevation-z${MAT_MENU_BASE_ELEVATION + depth}`;
+    // Capped at 24 because that's the maximum elevation defined in the Material design spec.
+    const elevation = Math.min(MAT_MENU_BASE_ELEVATION + depth, 24);
+    const newElevation = `mat-elevation-z${elevation}`;
     const customElevation = Object.keys(this._classList).find(c => c.startsWith('mat-elevation-z'));
 
     if (!customElevation || customElevation === this._previousElevation) {
@@ -454,10 +478,7 @@ export class _MatMenuBase implements AfterContentInit, MatMenuPanel<MatMenuItem>
 }
 
 /** @docs-private We show the "_MatMenu" class as "MatMenu" in the docs. */
-@Directive({
-  // TODO(devversion): this selector can be removed when we update to Angular 9.0.
-  selector: 'do-not-use-abstract-mat-menu'
-})
+@Directive()
 export class MatMenu extends _MatMenuBase {}
 
 // Note on the weird inheritance setup: we need three classes, because the MDC-based menu has to
@@ -473,7 +494,6 @@ export class MatMenu extends _MatMenuBase {}
 
 /** @docs-public MatMenu */
 @Component({
-  moduleId: module.id,
   selector: 'mat-menu',
   templateUrl: 'menu.html',
   styleUrls: ['menu.css'],
@@ -496,4 +516,7 @@ export class _MatMenu extends MatMenu {
       @Inject(MAT_MENU_DEFAULT_OPTIONS) defaultOptions: MatMenuDefaultOptions) {
     super(elementRef, ngZone, defaultOptions);
   }
+
+  static ngAcceptInputType_overlapTrigger: BooleanInput;
+  static ngAcceptInputType_hasBackdrop: BooleanInput;
 }

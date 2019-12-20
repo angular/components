@@ -6,6 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {BooleanInput} from '@angular/cdk/coercion';
 import {Platform} from '@angular/cdk/platform';
 import {
   ChangeDetectionStrategy,
@@ -36,7 +37,6 @@ import {ThemePalette} from '@angular/material/core';
  * The `MatFabButton` class has two appearances: normal and mini.
  */
 @Component({
-  moduleId: module.id,
   selector: `button[mat-fab], button[mat-mini-fab]`,
   templateUrl: 'button.html',
   styleUrls: ['fab.css'],
@@ -55,6 +55,9 @@ export class MatFabButton extends MatButtonBase {
       @Optional() @Inject(ANIMATION_MODULE_TYPE) animationMode?: string) {
     super(elementRef, platform, ngZone, animationMode);
   }
+
+  static ngAcceptInputType_disabled: BooleanInput;
+  static ngAcceptInputType_disableRipple: BooleanInput;
 }
 
 
@@ -66,7 +69,6 @@ export class MatFabButton extends MatButtonBase {
  * The `MatFabAnchor` class has two appearances: normal and mini.
  */
 @Component({
-  moduleId: module.id,
   selector: `a[mat-fab], a[mat-mini-fab]`,
   templateUrl: 'button.html',
   styleUrls: ['fab.css'],
@@ -85,4 +87,7 @@ export class MatFabAnchor extends MatAnchor {
       @Optional() @Inject(ANIMATION_MODULE_TYPE) animationMode?: string) {
     super(elementRef, platform, ngZone, animationMode);
   }
+
+  static ngAcceptInputType_disabled: BooleanInput;
+  static ngAcceptInputType_disableRipple: BooleanInput;
 }

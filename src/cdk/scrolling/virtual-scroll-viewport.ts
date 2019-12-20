@@ -47,7 +47,6 @@ const SCROLL_SCHEDULER =
 
 /** A viewport that virtualizes its scrolling with the help of `CdkVirtualForOf`. */
 @Component({
-  moduleId: module.id,
   selector: 'cdk-virtual-scroll-viewport',
   templateUrl: 'virtual-scroll-viewport.html',
   styleUrls: ['virtual-scroll-viewport.css'],
@@ -391,15 +390,15 @@ export class CdkVirtualScrollViewport extends CdkScrollable implements OnInit, O
   private _doChangeDetection() {
     this._isChangeDetectionPending = false;
 
-    // Apply changes to Angular bindings. Note: We must call `markForCheck` to run change detection
-    // from the root, since the repeated items are content projected in. Calling `detectChanges`
-    // instead does not properly check the projected content.
-    this.ngZone.run(() => this._changeDetectorRef.markForCheck());
     // Apply the content transform. The transform can't be set via an Angular binding because
     // bypassSecurityTrustStyle is banned in Google. However the value is safe, it's composed of
     // string literals, a variable that can only be 'X' or 'Y', and user input that is run through
     // the `Number` function first to coerce it to a numeric value.
     this._contentWrapper.nativeElement.style.transform = this._renderedContentTransform;
+    // Apply changes to Angular bindings. Note: We must call `markForCheck` to run change detection
+    // from the root, since the repeated items are content projected in. Calling `detectChanges`
+    // instead does not properly check the projected content.
+    this.ngZone.run(() => this._changeDetectorRef.markForCheck());
 
     const runAfterChangeDetection = this._runAfterChangeDetection;
     this._runAfterChangeDetection = [];

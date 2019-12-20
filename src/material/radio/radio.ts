@@ -7,7 +7,7 @@
  */
 
 import {FocusMonitor} from '@angular/cdk/a11y';
-import {coerceBooleanProperty} from '@angular/cdk/coercion';
+import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
 import {UniqueSelectionDispatcher} from '@angular/cdk/collections';
 import {
   AfterContentInit,
@@ -306,6 +306,9 @@ export class MatRadioGroup implements AfterContentInit, ControlValueAccessor {
     this.disabled = isDisabled;
     this._changeDetector.markForCheck();
   }
+
+  static ngAcceptInputType_disabled: BooleanInput;
+  static ngAcceptInputType_required: BooleanInput;
 }
 
 // Boilerplate for applying mixins to MatRadioButton.
@@ -328,7 +331,6 @@ const _MatRadioButtonMixinBase:
  * A Material design radio-button. Typically placed inside of `<mat-radio-group>` elements.
  */
 @Component({
-  moduleId: module.id,
   selector: 'mat-radio-button',
   templateUrl: 'radio.html',
   styleUrls: ['radio.css'],
@@ -595,4 +597,8 @@ export class MatRadioButton extends _MatRadioButtonMixinBase
     }
   }
 
+  static ngAcceptInputType_checked: BooleanInput;
+  static ngAcceptInputType_disabled: BooleanInput;
+  static ngAcceptInputType_required: BooleanInput;
+  static ngAcceptInputType_disableRipple: BooleanInput;
 }

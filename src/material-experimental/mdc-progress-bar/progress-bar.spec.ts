@@ -7,7 +7,7 @@ import {MatProgressBarModule} from './index';
 import {MatProgressBar} from './progress-bar';
 
 
-describe('MatProgressBar', () => {
+describe('MDC-based MatProgressBar', () => {
   function createComponent<T>(componentType: Type<T>,
                               imports?: Array<Type<{}>>): ComponentFixture<T> {
     TestBed.configureTestingModule({
@@ -73,16 +73,16 @@ describe('MatProgressBar', () => {
           progressElement.nativeElement.querySelector('.mdc-linear-progress__buffer').style;
 
         expect(primaryStyles.transform).toBe('scaleX(0)');
-        expect(bufferStyles.transform).toBeFalsy();
+        expect(bufferStyles.transform).toBe('scaleX(1)');
 
         progressComponent.value = 40;
         expect(primaryStyles.transform).toBe('scaleX(0.4)');
-        expect(bufferStyles.transform).toBeFalsy();
+        expect(bufferStyles.transform).toBe('scaleX(1)');
 
         progressComponent.value = 35;
         progressComponent.bufferValue = 55;
         expect(primaryStyles.transform).toBe('scaleX(0.35)');
-        expect(bufferStyles.transform).toBeFalsy();
+        expect(bufferStyles.transform).toBe('scaleX(1)');
 
         progressComponent.mode = 'buffer';
         expect(primaryStyles.transform).toBe('scaleX(0.35)');

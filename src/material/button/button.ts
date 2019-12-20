@@ -7,6 +7,7 @@
  */
 
 import {FocusMonitor, FocusableOption, FocusOrigin} from '@angular/cdk/a11y';
+import {BooleanInput} from '@angular/cdk/coercion';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -62,7 +63,6 @@ const _MatButtonMixinBase: CanDisableRippleCtor & CanDisableCtor & CanColorCtor 
  * Material design button.
  */
 @Component({
-  moduleId: module.id,
   selector: `button[mat-button], button[mat-raised-button], button[mat-icon-button],
              button[mat-fab], button[mat-mini-fab], button[mat-stroked-button],
              button[mat-flat-button]`,
@@ -135,13 +135,15 @@ export class MatButton extends _MatButtonMixinBase
   _hasHostAttributes(...attributes: string[]) {
     return attributes.some(attribute => this._getHostElement().hasAttribute(attribute));
   }
+
+  static ngAcceptInputType_disabled: BooleanInput;
+  static ngAcceptInputType_disableRipple: BooleanInput;
 }
 
 /**
  * Material design anchor button.
  */
 @Component({
-  moduleId: module.id,
   selector: `a[mat-button], a[mat-raised-button], a[mat-icon-button], a[mat-fab],
              a[mat-mini-fab], a[mat-stroked-button], a[mat-flat-button]`,
   exportAs: 'matButton, matAnchor',
@@ -179,4 +181,7 @@ export class MatAnchor extends MatButton {
       event.stopImmediatePropagation();
     }
   }
+
+  static ngAcceptInputType_disabled: BooleanInput;
+  static ngAcceptInputType_disableRipple: BooleanInput;
 }

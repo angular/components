@@ -800,6 +800,23 @@ describe('CdkDrag', () => {
         expect(dragElement.style.transform).toBe('translate3d(50px, 100px, 0px)');
       }));
 
+    it('should keep the old position if the boundary is invisible after a resize', fakeAsync(() => {
+      const fixture = createComponent(StandaloneDraggable);
+      const boundary: HTMLElement = fixture.nativeElement.querySelector('.wrapper');
+      fixture.componentInstance.boundary = boundary;
+      fixture.detectChanges();
+      const dragElement = fixture.componentInstance.dragElement.nativeElement;
+
+      dragElementViaMouse(fixture, dragElement, 300, 300);
+      expect(dragElement.style.transform).toBe('translate3d(100px, 100px, 0px)');
+
+      boundary.style.display = 'none';
+      dispatchFakeEvent(window, 'resize');
+      tick(20);
+
+      expect(dragElement.style.transform).toBe('translate3d(100px, 100px, 0px)');
+    }));
+
     it('should handle the element and boundary dimensions changing between drag sequences',
       fakeAsync(() => {
         const fixture = createComponent(StandaloneDraggable);
@@ -3200,7 +3217,7 @@ describe('CdkDrag', () => {
 
       const cleanup = makePageScrollable();
       const item = fixture.componentInstance.dragItems.first.element.nativeElement;
-      const viewportRuler: ViewportRuler = TestBed.get(ViewportRuler);
+      const viewportRuler = TestBed.inject(ViewportRuler);
       const viewportSize = viewportRuler.getViewportSize();
 
       expect(viewportRuler.getViewportScrollPosition().top).toBe(0);
@@ -3221,7 +3238,7 @@ describe('CdkDrag', () => {
 
       const cleanup = makePageScrollable();
       const item = fixture.componentInstance.dragItems.first.element.nativeElement;
-      const viewportRuler: ViewportRuler = TestBed.get(ViewportRuler);
+      const viewportRuler = TestBed.inject(ViewportRuler);
       const viewportSize = viewportRuler.getViewportSize();
 
       scrollTo(0, viewportSize.height * 5);
@@ -3244,7 +3261,7 @@ describe('CdkDrag', () => {
 
       const cleanup = makePageScrollable('horizontal');
       const item = fixture.componentInstance.dragItems.first.element.nativeElement;
-      const viewportRuler: ViewportRuler = TestBed.get(ViewportRuler);
+      const viewportRuler = TestBed.inject(ViewportRuler);
       const viewportSize = viewportRuler.getViewportSize();
 
       expect(viewportRuler.getViewportScrollPosition().left).toBe(0);
@@ -3265,7 +3282,7 @@ describe('CdkDrag', () => {
 
       const cleanup = makePageScrollable('horizontal');
       const item = fixture.componentInstance.dragItems.first.element.nativeElement;
-      const viewportRuler: ViewportRuler = TestBed.get(ViewportRuler);
+      const viewportRuler = TestBed.inject(ViewportRuler);
       const viewportSize = viewportRuler.getViewportSize();
 
       scrollTo(viewportSize.width * 5, 0);
@@ -3288,7 +3305,7 @@ describe('CdkDrag', () => {
         fixture.detectChanges();
 
         const list = fixture.componentInstance.dropInstance.element.nativeElement;
-        const viewportRuler: ViewportRuler = TestBed.get(ViewportRuler);
+        const viewportRuler = TestBed.inject(ViewportRuler);
         const item = fixture.componentInstance.dragItems.first.element.nativeElement;
 
         // Position the list so that its top aligns with the viewport top. That way the pointer
@@ -3326,7 +3343,7 @@ describe('CdkDrag', () => {
         fixture.detectChanges();
 
         const list = fixture.componentInstance.dropInstance.element.nativeElement;
-        const viewportRuler: ViewportRuler = TestBed.get(ViewportRuler);
+        const viewportRuler = TestBed.inject(ViewportRuler);
         const item = fixture.componentInstance.dragItems.first.element.nativeElement;
 
         // Position the list so that its top aligns with the viewport top. That way the pointer
@@ -3409,6 +3426,36 @@ describe('CdkDrag', () => {
           'Expected outer list to not be dragging.');
     }));
 
+    it('should be able to re-enable a disabled drop list', fakeAsync(() => {
+      const fixture = createComponent(DraggableInDropZone);
+      fixture.detectChanges();
+      const dragItems = fixture.componentInstance.dragItems;
+      const tryDrag = () => {
+        const firstItem = dragItems.first;
+        const thirdItemRect = dragItems.toArray()[2].element.nativeElement.getBoundingClientRect();
+        dragElementViaMouse(fixture, firstItem.element.nativeElement,
+          thirdItemRect.left + 1, thirdItemRect.top + 1);
+        flush();
+        fixture.detectChanges();
+      };
+
+      expect(dragItems.map(drag => drag.element.nativeElement.textContent!.trim()))
+          .toEqual(['Zero', 'One', 'Two', 'Three']);
+
+      fixture.componentInstance.dropInstance.disabled = true;
+      fixture.detectChanges();
+      tryDrag();
+
+      expect(dragItems.map(drag => drag.element.nativeElement.textContent!.trim()))
+          .toEqual(['Zero', 'One', 'Two', 'Three']);
+
+      fixture.componentInstance.dropInstance.disabled = false;
+      fixture.detectChanges();
+      tryDrag();
+
+      expect(dragItems.map(drag => drag.element.nativeElement.textContent!.trim()))
+          .toEqual(['One', 'Two', 'Zero', 'Three']);
+    }));
   });
 
   describe('in a connected drop container', () => {

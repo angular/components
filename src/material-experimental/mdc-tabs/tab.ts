@@ -6,6 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {BooleanInput} from '@angular/cdk/coercion';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -18,7 +19,6 @@ import {MatTabContent} from './tab-content';
 import {MatTabLabel} from './tab-label';
 
 @Component({
-  moduleId: module.id,
   selector: 'mat-tab',
 
   // Note that usually we'd go through a bit more trouble and set up another class so that
@@ -39,4 +39,6 @@ export class MatTab extends BaseMatTab {
 
   /** Content for the tab label given by `<ng-template mat-tab-label>`. */
   @ContentChild(MatTabLabel) templateLabel: MatTabLabel;
+
+  static ngAcceptInputType_disabled: BooleanInput;
 }

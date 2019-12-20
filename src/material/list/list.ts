@@ -6,6 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {BooleanInput} from '@angular/cdk/coercion';
 import {
   AfterContentInit,
   ChangeDetectionStrategy,
@@ -44,7 +45,6 @@ const _MatListItemMixinBase: CanDisableRippleCtor & typeof MatListItemBase =
     mixinDisableRipple(MatListItemBase);
 
 @Component({
-  moduleId: module.id,
   selector: 'mat-nav-list',
   exportAs: 'matNavList',
   host: {
@@ -69,10 +69,11 @@ export class MatNavList extends _MatListMixinBase implements CanDisableRipple, O
   ngOnDestroy() {
     this._stateChanges.complete();
   }
+
+  static ngAcceptInputType_disableRipple: BooleanInput;
 }
 
 @Component({
-  moduleId: module.id,
   selector: 'mat-list, mat-action-list',
   exportAs: 'matList',
   templateUrl: 'list.html',
@@ -117,6 +118,8 @@ export class MatList extends _MatListMixinBase implements CanDisableRipple, OnCh
   ngOnDestroy() {
     this._stateChanges.complete();
   }
+
+  static ngAcceptInputType_disableRipple: BooleanInput;
 }
 
 /**
@@ -151,7 +154,6 @@ export class MatListSubheaderCssMatStyler {}
 
 /** An item within a Material Design list. */
 @Component({
-  moduleId: module.id,
   selector: 'mat-list-item, a[mat-list-item], button[mat-list-item]',
   exportAs: 'matListItem',
   host: {
@@ -219,4 +221,6 @@ export class MatListItem extends _MatListItemMixinBase implements AfterContentIn
   _getHostElement(): HTMLElement {
     return this._element.nativeElement;
   }
+
+  static ngAcceptInputType_disableRipple: BooleanInput;
 }

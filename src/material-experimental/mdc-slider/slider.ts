@@ -7,7 +7,12 @@
  */
 
 import {Directionality} from '@angular/cdk/bidi';
-import {coerceBooleanProperty, coerceNumberProperty} from '@angular/cdk/coercion';
+import {
+  BooleanInput,
+  coerceBooleanProperty,
+  coerceNumberProperty,
+  NumberInput
+} from '@angular/cdk/coercion';
 import {normalizePassiveListenerOptions, Platform} from '@angular/cdk/platform';
 import {
   AfterViewInit,
@@ -72,7 +77,6 @@ export class MatSliderChange {
 }
 
 @Component({
-  moduleId: module.id,
   selector: 'mat-slider',
   templateUrl: 'slider.html',
   styleUrls: ['slider.css'],
@@ -87,6 +91,9 @@ export class MatSliderChange {
     '[class.mat-slider-has-ticks]': 'tickInterval !== 0',
     '[class.mdc-slider--display-markers]': 'tickInterval !== 0',
     '[class.mat-slider-thumb-label-showing]': 'thumbLabel',
+    // Class binding which is only used by the test harness as there is no other
+    // way for the harness to detect if mouse coordinates need to be inverted.
+    '[class.mat-slider-invert-mouse-coords]': '_isRtl()',
     '[class.mat-slider-disabled]': 'disabled',
     '[class.mat-primary]': 'color == "primary"',
     '[class.mat-accent]': 'color == "accent"',
@@ -295,7 +302,7 @@ export class MatSlider implements AfterViewInit, OnChanges, OnDestroy, ControlVa
           this._trackMarker.nativeElement.style.setProperty(
               'background', this._getTrackMarkersBackground(min, max, step));
         },
-    isRTL: () => this._dir && this._dir.value === 'rtl',
+    isRTL: () => this._isRtl(),
   };
 
   /** Instance of the MDC slider foundation for this slider. */
@@ -359,9 +366,12 @@ export class MatSlider implements AfterViewInit, OnChanges, OnDestroy, ControlVa
       // These bindings cannot be synced in the foundation, as the foundation is not
       // initialized and they cause DOM globals to be accessed (to move the thumb)
       this._syncStep();
-      this._syncValue();
       this._syncMax();
       this._syncMin();
+
+      // Note that "value" needs to be synced after "max" and "min" because otherwise
+      // the value will be clamped by the MDC foundation implementation.
+      this._syncValue();
     }
 
     this._syncDisabled();
@@ -494,6 +504,11 @@ export class MatSlider implements AfterViewInit, OnChanges, OnDestroy, ControlVa
     this._foundation.setDisabled(this.disabled);
   }
 
+  /** Whether the slider is displayed in RTL-mode. */
+  _isRtl(): boolean {
+    return this._dir && this._dir.value === 'rtl';
+  }
+
   /**
    * Registers a callback to be triggered when the value has changed.
    * Implemented as part of ControlValueAccessor.
@@ -531,4 +546,12 @@ export class MatSlider implements AfterViewInit, OnChanges, OnDestroy, ControlVa
     this.value = value;
     this._syncValue();
   }
+
+  static ngAcceptInputType_min: NumberInput;
+  static ngAcceptInputType_max: NumberInput;
+  static ngAcceptInputType_value: NumberInput;
+  static ngAcceptInputType_step: NumberInput;
+  static ngAcceptInputType_tickInterval: NumberInput;
+  static ngAcceptInputType_thumbLabel: BooleanInput;
+  static ngAcceptInputType_disabled: BooleanInput;
 }

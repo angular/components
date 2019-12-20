@@ -7,7 +7,7 @@
  */
 
 import {Directionality} from '@angular/cdk/bidi';
-import {coerceBooleanProperty} from '@angular/cdk/coercion';
+import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
 import {Platform} from '@angular/cdk/platform';
 import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 import {
@@ -26,7 +26,7 @@ import {
   OnDestroy,
   Optional,
   Output,
-  ViewEncapsulation
+  ViewEncapsulation, HostListener
 } from '@angular/core';
 import {
   CanColor,
@@ -92,7 +92,6 @@ const _MatChipMixinBase:
  * Extended by MatChipOption and MatChipRow for different interaction patterns.
  */
 @Component({
-  moduleId: module.id,
   selector: 'mat-basic-chip, mat-chip',
   inputs: ['color', 'disableRipple'],
   exportAs: 'matChip',
@@ -109,7 +108,6 @@ const _MatChipMixinBase:
     '[id]': 'id',
     '[attr.disabled]': 'disabled || null',
     '[attr.aria-disabled]': 'disabled.toString()',
-    '(transitionend)': '_chipFoundation.handleTransitionEnd($event)'
   },
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -129,6 +127,16 @@ export class MatChip extends _MatChipMixinBase implements AfterContentInit, Afte
 
     /** Whether animations for the chip are enabled. */
   _animationsDisabled: boolean;
+
+  // We have to use a `HostListener` here in order to support both Ivy and ViewEngine.
+  // In Ivy the `host` bindings will be merged when this class is extended, whereas in
+  // ViewEngine they're overwritten.
+  // TODO(mmalerba): we move this back into `host` once Ivy is turned on by default.
+  // tslint:disable-next-line:no-host-decorator-in-concrete
+  @HostListener('transitionend', ['$event'])
+  _handleTransitionEnd(event: TransitionEvent) {
+    this._chipFoundation.handleTransitionEnd(event);
+  }
 
   get _hasFocus() {
     return this._hasFocusInternal;
@@ -389,4 +397,9 @@ export class MatChip extends _MatChipMixinBase implements AfterContentInit, Afte
       this._chipFoundation.handleInteraction(event);
     }
   }
+
+  static ngAcceptInputType_disabled: BooleanInput;
+  static ngAcceptInputType_removable: BooleanInput;
+  static ngAcceptInputType_highlighted: BooleanInput;
+  static ngAcceptInputType_disableRipple: BooleanInput;
 }

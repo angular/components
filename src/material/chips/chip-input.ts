@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {coerceBooleanProperty} from '@angular/cdk/coercion';
+import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
 import {Directive, ElementRef, EventEmitter, Inject, Input, OnChanges, Output} from '@angular/core';
 import {hasModifierKey, TAB} from '@angular/cdk/keycodes';
 import {MAT_CHIPS_DEFAULT_OPTIONS, MatChipsDefaultOptions} from './chip-default-options';
@@ -170,4 +170,7 @@ export class MatChipInput implements MatChipTextControl, OnChanges {
     const keyCode = event.keyCode;
     return Array.isArray(separators) ? separators.indexOf(keyCode) > -1 : separators.has(keyCode);
   }
+
+  static ngAcceptInputType_addOnBlur: BooleanInput;
+  static ngAcceptInputType_disabled: BooleanInput;
 }

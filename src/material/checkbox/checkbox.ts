@@ -6,9 +6,10 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {FocusMonitor, FocusableOption, FocusOrigin} from '@angular/cdk/a11y';
-import {coerceBooleanProperty} from '@angular/cdk/coercion';
+import {FocusableOption, FocusMonitor, FocusOrigin} from '@angular/cdk/a11y';
+import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
 import {
+  AfterViewChecked,
   Attribute,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -24,7 +25,7 @@ import {
   Output,
   ViewChild,
   ViewEncapsulation,
-  AfterViewChecked,
+  AfterViewInit,
 } from '@angular/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {
@@ -43,7 +44,12 @@ import {
   mixinTabIndex,
 } from '@angular/material/core';
 import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
-import {MAT_CHECKBOX_CLICK_ACTION, MatCheckboxClickAction} from './checkbox-config';
+import {
+  MAT_CHECKBOX_CLICK_ACTION,
+  MAT_CHECKBOX_DEFAULT_OPTIONS,
+  MatCheckboxClickAction,
+  MatCheckboxDefaultOptions
+} from './checkbox-config';
 
 
 // Increasing integer for generating unique ids for checkbox components.
@@ -94,7 +100,7 @@ const _MatCheckboxMixinBase:
     CanDisableRippleCtor &
     CanDisableCtor &
     typeof MatCheckboxBase =
-        mixinTabIndex(mixinColor(mixinDisableRipple(mixinDisabled(MatCheckboxBase)), 'accent'));
+        mixinTabIndex(mixinColor(mixinDisableRipple(mixinDisabled(MatCheckboxBase))));
 
 
 /**
@@ -106,7 +112,6 @@ const _MatCheckboxMixinBase:
  * See: https://material.io/design/components/selection-controls.html
  */
 @Component({
-  moduleId: module.id,
   selector: 'mat-checkbox',
   templateUrl: 'checkbox.html',
   styleUrls: ['checkbox.css'],
@@ -127,7 +132,7 @@ const _MatCheckboxMixinBase:
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MatCheckbox extends _MatCheckboxMixinBase implements ControlValueAccessor,
-    AfterViewChecked, OnDestroy, CanColor, CanDisable, HasTabIndex, CanDisableRipple,
+    AfterViewInit, AfterViewChecked, OnDestroy, CanColor, CanDisable, HasTabIndex, CanDisableRipple,
     FocusableOption {
 
   /**
@@ -194,10 +199,22 @@ export class MatCheckbox extends _MatCheckboxMixinBase implements ControlValueAc
               private _focusMonitor: FocusMonitor,
               private _ngZone: NgZone,
               @Attribute('tabindex') tabIndex: string,
+              /**
+               * @deprecated `_clickAction` parameter to be removed, use
+               * `MAT_CHECKBOX_DEFAULT_OPTIONS`
+               * @breaking-change 10.0.0
+               */
               @Optional() @Inject(MAT_CHECKBOX_CLICK_ACTION)
                   private _clickAction: MatCheckboxClickAction,
-              @Optional() @Inject(ANIMATION_MODULE_TYPE) public _animationMode?: string) {
+              @Optional() @Inject(ANIMATION_MODULE_TYPE) public _animationMode?: string,
+              @Optional() @Inject(MAT_CHECKBOX_DEFAULT_OPTIONS)
+                  private _options?: MatCheckboxDefaultOptions) {
     super(elementRef);
+    this._options = this._options || {};
+
+    if (this._options.color) {
+      this.color = this._options.color;
+    }
 
     this.tabIndex = parseInt(tabIndex) || 0;
 
@@ -214,6 +231,13 @@ export class MatCheckbox extends _MatCheckboxMixinBase implements ControlValueAc
         });
       }
     });
+
+    // TODO: Remove this after the `_clickAction` parameter is removed as an injection parameter.
+    this._clickAction = this._clickAction || this._options.clickAction;
+  }
+
+  ngAfterViewInit() {
+    this._syncIndeterminate(this._indeterminate);
   }
 
   // TODO: Delete next major revision.
@@ -262,7 +286,7 @@ export class MatCheckbox extends _MatCheckboxMixinBase implements ControlValueAc
   get indeterminate(): boolean { return this._indeterminate; }
   set indeterminate(value: boolean) {
     const changed = value != this._indeterminate;
-    this._indeterminate = value;
+    this._indeterminate = coerceBooleanProperty(value);
 
     if (changed) {
       if (this._indeterminate) {
@@ -273,6 +297,8 @@ export class MatCheckbox extends _MatCheckboxMixinBase implements ControlValueAc
       }
       this.indeterminateChange.emit(this._indeterminate);
     }
+
+    this._syncIndeterminate(this._indeterminate);
   }
   private _indeterminate: boolean = false;
 
@@ -450,4 +476,25 @@ export class MatCheckbox extends _MatCheckboxMixinBase implements ControlValueAc
 
     return `mat-checkbox-anim-${animSuffix}`;
   }
+
+  /**
+   * Syncs the indeterminate value with the checkbox DOM node.
+   *
+   * We sync `indeterminate` directly on the DOM node, because in Ivy the check for whether a
+   * property is supported on an element boils down to `if (propName in element)`. Domino's
+   * HTMLInputElement doesn't have an `indeterminate` property so Ivy will warn during
+   * server-side rendering.
+   */
+  private _syncIndeterminate(value: boolean) {
+    const nativeCheckbox = this._inputElement;
+
+    if (nativeCheckbox) {
+      nativeCheckbox.nativeElement.indeterminate = value;
+    }
+  }
+
+  static ngAcceptInputType_disabled: BooleanInput;
+  static ngAcceptInputType_required: BooleanInput;
+  static ngAcceptInputType_disableRipple: BooleanInput;
+  static ngAcceptInputType_indeterminate: BooleanInput;
 }

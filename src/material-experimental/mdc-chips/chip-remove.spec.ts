@@ -4,7 +4,7 @@ import {By} from '@angular/platform-browser';
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 import {MatChip, MatChipsModule} from './index';
 
-describe('Chip Remove', () => {
+describe('MDC-based Chip Remove', () => {
   let fixture: ComponentFixture<TestChip>;
   let testChip: TestChip;
   let chipDebugElement: DebugElement;
@@ -59,7 +59,8 @@ describe('Chip Remove', () => {
       buttonElement.click();
       fixture.detectChanges();
 
-      const fakeEvent = Object.assign(createFakeEvent('transitionend'), {propertyName: 'width'});
+      const fakeEvent = createFakeEvent('transitionend');
+      (fakeEvent as any).propertyName = 'width';
       chipNativeElement.dispatchEvent(fakeEvent);
 
       expect(testChip.didRemove).toHaveBeenCalled();

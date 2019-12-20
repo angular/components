@@ -1,12 +1,15 @@
-workspace(name = "angular_material")
+workspace(
+    name = "angular_material",
+    managed_directories = {"@npm": ["node_modules"]},
+)
 
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 
 # Add NodeJS rules
 http_archive(
     name = "build_bazel_rules_nodejs",
-    sha256 = "ad4be2c6f40f5af70c7edf294955f9d9a0222c8e2756109731b25f79ea2ccea0",
-    urls = ["https://github.com/bazelbuild/rules_nodejs/releases/download/0.38.3/rules_nodejs-0.38.3.tar.gz"],
+    sha256 = "a54b2511d6dae42c1f7cdaeb08144ee2808193a088004fc3b464a04583d5aa2e",
+    urls = ["https://github.com/bazelbuild/rules_nodejs/releases/download/0.42.3/rules_nodejs-0.42.3.tar.gz"],
 )
 
 # Add sass rules
@@ -21,8 +24,8 @@ http_archive(
 
 load("@build_bazel_rules_nodejs//:defs.bzl", "check_bazel_version", "node_repositories", "yarn_install")
 
-# The minimum bazel version to use with this repo is 0.27.0
-check_bazel_version("0.27.0")
+# The minimum bazel version to use with this repo is v1.1.0.
+check_bazel_version("1.1.0")
 
 node_repositories(
     node_repositories = {
@@ -30,32 +33,22 @@ node_repositories(
         "12.9.1-linux_amd64": ("node-v12.9.1-linux-x64.tar.xz", "node-v12.9.1-linux-x64", "680a1263c9f5f91adadcada549f0a9c29f1b26d09658d2b501c334c3f63719e5"),
         "12.9.1-windows_amd64": ("node-v12.9.1-win-x64.zip", "node-v12.9.1-win-x64", "6a4e54bda091bd02dbd8ff1b9f6671e036297da012a53891e3834d4bf4bed297"),
     },
+    node_urls = ["https://nodejs.org/dist/v{version}/{filename}"],
     # For deterministic builds, specify explicit NodeJS and Yarn versions.
     node_version = "12.9.1",
     yarn_repositories = {
         "1.19.1": ("yarn-v1.19.1.tar.gz", "yarn-v1.19.1", "34293da6266f2aae9690d59c2d764056053ff7eebc56b80b8df05010c3da9343"),
     },
+    yarn_urls = ["https://github.com/yarnpkg/yarn/releases/download/v{version}/{filename}"],
     yarn_version = "1.19.1",
 )
 
 yarn_install(
     name = "npm",
-    # Ensure that all resources are available when the "postinstall" or "preinstall" scripts
-    # are executed in the Bazel sandbox.
-    data = [
-        "//:angular-tsconfig.json",
-        "//:tools/bazel/angular_bazel_0.38.2.patch",
-        "//:tools/bazel/flat_module_factory_resolution.patch",
-        "//:tools/bazel/manifest_externs_hermeticity.patch",
-        "//:tools/bazel/postinstall-patches.js",
-        "//:tools/bazel/rollup_windows_arguments.patch",
-        "//:tools/npm/check-npm.js",
-    ],
+    # We add the postinstall patches file here so that Yarn will rerun whenever
+    # the patches script changes.
+    data = ["//:tools/bazel/postinstall-patches.js"],
     package_json = "//:package.json",
-    # Temporarily disable node_modules symlinking until the fix for
-    # https://github.com/bazelbuild/bazel/issues/8487 makes it into a
-    # future Bazel release
-    symlink_node_modules = False,
     yarn_lock = "//:yarn.lock",
 )
 
@@ -100,9 +93,9 @@ sass_repositories()
 # Bring in bazel_toolchains for RBE setup configuration.
 http_archive(
     name = "bazel_toolchains",
-    sha256 = "ab0d8aaeaeeef413ddb03922dbdb99bbae9e1b2c157a87c77d70d45a830be5b0",
-    strip_prefix = "bazel-toolchains-0.29.1",
-    url = "https://github.com/bazelbuild/bazel-toolchains/archive/0.29.1.tar.gz",
+    sha256 = "3c1299efcf64a4ecf4f6def7564db28879ad2870632144d77932e7910686d3f3",
+    strip_prefix = "bazel-toolchains-1.1.2",
+    url = "https://github.com/bazelbuild/bazel-toolchains/archive/1.1.2.tar.gz",
 )
 
 load("@bazel_toolchains//repositories:repositories.bzl", bazel_toolchains_repositories = "repositories")
@@ -117,8 +110,8 @@ rbe_autoconfig(
     # platform configurations for the "ubuntu16_04" image. Otherwise the autoconfig rule would
     # need to pull the image and run it in order determine the toolchain configuration.
     # See: https://github.com/bazelbuild/bazel-toolchains/blob/master/rules/rbe_repo.bzl#L229
-    base_container_digest = "sha256:3e98e2e1233de1aed4ed7d7e05450a3f75b8c8d6f6bf53f1b390b5131c790f6f",
-    digest = "sha256:76e2e4a894f9ffbea0a0cb2fbde741b5d223d40f265dbb9bca78655430173990",
+    base_container_digest = "sha256:1ab40405810effefa0b2f45824d6d608634ccddbf06366760c341ef6fbead011",
+    digest = "sha256:0b8fa87db4b8e5366717a7164342a029d1348d2feea7ecc4b18c780bc2507059",
     registry = "marketplace.gcr.io",
     # We can't use the default "ubuntu16_04" RBE image provided by the autoconfig because we need
     # a specific Linux kernel that comes with "libx11" in order to run headless browser tests.

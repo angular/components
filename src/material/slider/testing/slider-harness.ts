@@ -10,19 +10,15 @@ import {ComponentHarness, HarnessPredicate} from '@angular/cdk/testing';
 import {coerceBooleanProperty, coerceNumberProperty} from '@angular/cdk/coercion';
 import {SliderHarnessFilters} from './slider-harness-filters';
 
-/**
- * Harness for interacting with a standard mat-slider in tests.
- * @dynamic
- */
+/** Harness for interacting with a standard mat-slider in tests. */
 export class MatSliderHarness extends ComponentHarness {
+  /** The selector for the host element of a `MatSlider` instance. */
   static hostSelector = 'mat-slider';
 
   /**
-   * Gets a `HarnessPredicate` that can be used to search for a mat-slider with
-   * specific attributes.
-   * @param options Options for narrowing the search:
-   *   - `selector` finds a slider whose host element matches the given selector.
-   *   - `id` finds a slider with specific id.
+   * Gets a `HarnessPredicate` that can be used to search for a `MatSliderHarness` that meets
+   * certain criteria.
+   * @param options Options for filtering which slider instances are considered a match.
    * @return a `HarnessPredicate` configured with the given options.
    */
   static with(options: SliderHarnessFilters = {}): HarnessPredicate<MatSliderHarness> {
@@ -40,9 +36,16 @@ export class MatSliderHarness extends ComponentHarness {
     return id !== '' ? id : null;
   }
 
-  /** Gets the current display value of the slider. */
-  async getDisplayValue(): Promise<string> {
-    return (await this._textLabel()).text();
+  /**
+   * Gets the current display value of the slider. Returns a null promise if the thumb label is
+   * disabled.
+   */
+  async getDisplayValue(): Promise<string|null> {
+    const [host, textLabel] = await Promise.all([this.host(), this._textLabel()]);
+    if (await host.hasClass('mat-slider-thumb-label-showing')) {
+      return textLabel.text();
+    }
+    return null;
   }
 
   /** Gets the current percentage value of the slider. */
@@ -106,18 +109,12 @@ export class MatSliderHarness extends ComponentHarness {
     await wrapperEl.click(relativeX, relativeY);
   }
 
-  /**
-   * Focuses the slider and returns a void promise that indicates when the
-   * action is complete.
-   */
+  /** Focuses the slider. */
   async focus(): Promise<void> {
     return (await this.host()).focus();
   }
 
-  /**
-   * Blurs the slider and returns a void promise that indicates when the
-   * action is complete.
-   */
+  /** Blurs the slider. */
   async blur(): Promise<void> {
     return (await this.host()).blur();
   }

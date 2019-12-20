@@ -6,10 +6,10 @@ import {By} from '@angular/platform-browser';
 import {BrowserAnimationsModule, NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {CommonModule} from '@angular/common';
 import {Observable} from 'rxjs';
-import {MatTab, MatTabGroup, MatTabHeaderPosition, MatTabsModule} from './index';
+import {MAT_TABS_CONFIG, MatTab, MatTabGroup, MatTabHeaderPosition, MatTabsModule} from './index';
 
 
-describe('MatTabGroup', () => {
+describe('MDC-based MatTabGroup', () => {
   beforeEach(fakeAsync(() => {
     TestBed.configureTestingModule({
       imports: [MatTabsModule, CommonModule, NoopAnimationsModule],
@@ -278,6 +278,18 @@ describe('MatTabGroup', () => {
       expect(fixture.componentInstance.handleFocus).toHaveBeenCalledTimes(2);
       expect(fixture.componentInstance.handleFocus)
         .toHaveBeenCalledWith(jasmine.objectContaining({index: 0}));
+    });
+
+    it('should clean up the tabs QueryList on destroy', () => {
+      const component: MatTabGroup =
+        fixture.debugElement.query(By.css('mat-tab-group'))!.componentInstance;
+      const spy = jasmine.createSpy('complete spy');
+      const subscription = component._tabs.changes.subscribe({complete: spy});
+
+      fixture.destroy();
+
+      expect(spy).toHaveBeenCalled();
+      subscription.unsubscribe();
     });
 
   });
@@ -677,6 +689,80 @@ describe('nested MatTabGroup with enabled animations', () => {
 });
 
 
+describe('MatTabGroup with ink bar fit to content', () => {
+  let fixture: ComponentFixture<TabGroupWithInkBarFitToContent>;
+
+  beforeEach(fakeAsync(() => {
+    TestBed.configureTestingModule({
+      imports: [MatTabsModule, BrowserAnimationsModule],
+      declarations: [TabGroupWithInkBarFitToContent]
+    });
+
+    TestBed.compileComponents();
+  }));
+
+  beforeEach(() => {
+    fixture = TestBed.createComponent(TabGroupWithInkBarFitToContent);
+    fixture.detectChanges();
+  });
+
+  it('should properly nest the ink bar when fit to content', () => {
+    const tabElement = fixture.nativeElement.querySelector('.mdc-tab');
+    const contentElement = tabElement.querySelector('.mdc-tab__content');
+    const indicatorElement = tabElement.querySelector('.mdc-tab-indicator');
+    expect(indicatorElement.parentElement).toBeTruthy();
+    expect(indicatorElement.parentElement).toBe(contentElement);
+  });
+
+  it('should be able to move the ink bar between content and full', () => {
+    fixture.componentInstance.fitInkBarToContent = false;
+    fixture.detectChanges();
+
+    const tabElement = fixture.nativeElement.querySelector('.mdc-tab');
+    const indicatorElement = tabElement.querySelector('.mdc-tab-indicator');
+    expect(indicatorElement.parentElement).toBeTruthy();
+    expect(indicatorElement.parentElement).toBe(tabElement);
+
+    fixture.componentInstance.fitInkBarToContent = true;
+    fixture.detectChanges();
+
+    const contentElement = tabElement.querySelector('.mdc-tab__content');
+    expect(indicatorElement.parentElement).toBeTruthy();
+    expect(indicatorElement.parentElement).toBe(contentElement);
+  });
+});
+
+
+describe('MatTabNavBar with a default config', () => {
+  let fixture: ComponentFixture<SimpleTabsTestApp>;
+
+  beforeEach(fakeAsync(() => {
+    TestBed.configureTestingModule({
+      imports: [MatTabsModule, BrowserAnimationsModule],
+      declarations: [SimpleTabsTestApp],
+      providers: [
+        {provide: MAT_TABS_CONFIG, useValue: {fitInkBarToContent: true}}
+      ]
+    });
+
+    TestBed.compileComponents();
+  }));
+
+  beforeEach(() => {
+    fixture = TestBed.createComponent(SimpleTabsTestApp);
+    fixture.detectChanges();
+  });
+
+  it('should set whether the ink bar fits to content', () => {
+    const tabElement = fixture.nativeElement.querySelector('.mdc-tab');
+    const contentElement = tabElement.querySelector('.mdc-tab__content');
+    const indicatorElement = tabElement.querySelector('.mdc-tab-indicator');
+    expect(indicatorElement.parentElement).toBeTruthy();
+    expect(indicatorElement.parentElement).toBe(contentElement);
+  });
+});
+
+
 @Component({
   template: `
     <mat-tab-group class="tab-group"
@@ -927,4 +1013,17 @@ class TabsWithCustomAnimationDuration {}
 })
 class TabGroupWithIndirectDescendantTabs {
   @ViewChild(MatTabGroup) tabGroup: MatTabGroup;
+}
+
+
+@Component({
+  template: `
+    <mat-tab-group [fitInkBarToContent]="fitInkBarToContent">
+      <mat-tab label="One">Tab one content</mat-tab>
+      <mat-tab label="Two">Tab two content</mat-tab>
+    </mat-tab-group>
+  `,
+})
+class TabGroupWithInkBarFitToContent {
+  fitInkBarToContent = true;
 }

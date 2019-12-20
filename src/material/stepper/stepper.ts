@@ -7,6 +7,7 @@
  */
 
 import {Directionality} from '@angular/cdk/bidi';
+import {BooleanInput, NumberInput} from '@angular/cdk/coercion';
 import {
   CdkStep,
   CdkStepper,
@@ -48,10 +49,12 @@ import {matStepperAnimations} from './stepper-animations';
 import {MatStepperIcon, MatStepperIconContext} from './stepper-icon';
 
 @Component({
-  moduleId: module.id,
   selector: 'mat-step',
   templateUrl: 'step.html',
-  providers: [{provide: ErrorStateMatcher, useExisting: MatStep}],
+  providers: [
+    {provide: ErrorStateMatcher, useExisting: MatStep},
+    {provide: CdkStep, useExisting: MatStep},
+  ],
   encapsulation: ViewEncapsulation.None,
   exportAs: 'matStep',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -78,6 +81,11 @@ export class MatStep extends CdkStep implements ErrorStateMatcher {
 
     return originalErrorState || customErrorState;
   }
+
+  static ngAcceptInputType_editable: BooleanInput;
+  static ngAcceptInputType_hasError: BooleanInput;
+  static ngAcceptInputType_optional: BooleanInput;
+  static ngAcceptInputType_completed: BooleanInput;
 }
 
 
@@ -87,10 +95,10 @@ export class MatStepper extends CdkStepper implements AfterContentInit {
   @ViewChildren(MatStepHeader) _stepHeader: QueryList<MatStepHeader>;
 
   /** Steps that the stepper holds. */
-  @ContentChildren(MatStep) _steps: QueryList<MatStep>;
+  @ContentChildren(MatStep, {descendants: true}) _steps: QueryList<MatStep>;
 
   /** Custom icon overrides passed in by the consumer. */
-  @ContentChildren(MatStepperIcon) _icons: QueryList<MatStepperIcon>;
+  @ContentChildren(MatStepperIcon, {descendants: true}) _icons: QueryList<MatStepperIcon>;
 
   /** Event emitted when the current step is done transitioning in. */
   @Output() readonly animationDone: EventEmitter<void> = new EventEmitter<void>();
@@ -105,12 +113,10 @@ export class MatStepper extends CdkStepper implements AfterContentInit {
   _animationDone = new Subject<AnimationEvent>();
 
   ngAfterContentInit() {
-    this._stepsArray = this.steps.toArray();
     this._icons.forEach(({name, templateRef}) => this._iconOverrides[name] = templateRef);
 
     // Mark the component for change detection whenever the content children query changes
     this._steps.changes.pipe(takeUntil(this._destroyed)).subscribe(() => {
-      this._stepsArray = this.steps.toArray();
       this._stateChanged();
     });
 
@@ -126,10 +132,16 @@ export class MatStepper extends CdkStepper implements AfterContentInit {
       }
     });
   }
+
+  static ngAcceptInputType_editable: BooleanInput;
+  static ngAcceptInputType_optional: BooleanInput;
+  static ngAcceptInputType_completed: BooleanInput;
+  static ngAcceptInputType_hasError: BooleanInput;
+  static ngAcceptInputType_linear: BooleanInput;
+  static ngAcceptInputType_selectedIndex: NumberInput;
 }
 
 @Component({
-  moduleId: module.id,
   selector: 'mat-horizontal-stepper',
   exportAs: 'matHorizontalStepper',
   templateUrl: 'stepper-horizontal.html',
@@ -154,10 +166,16 @@ export class MatHorizontalStepper extends MatStepper {
   /** Whether the label should display in bottom or end position. */
   @Input()
   labelPosition: 'bottom' | 'end' = 'end';
+
+  static ngAcceptInputType_editable: BooleanInput;
+  static ngAcceptInputType_optional: BooleanInput;
+  static ngAcceptInputType_completed: BooleanInput;
+  static ngAcceptInputType_hasError: BooleanInput;
+  static ngAcceptInputType_linear: BooleanInput;
+  static ngAcceptInputType_selectedIndex: NumberInput;
 }
 
 @Component({
-  moduleId: module.id,
   selector: 'mat-vertical-stepper',
   exportAs: 'matVerticalStepper',
   templateUrl: 'stepper-vertical.html',
@@ -186,4 +204,11 @@ export class MatVerticalStepper extends MatStepper {
     super(dir, changeDetectorRef, elementRef, _document);
     this._orientation = 'vertical';
   }
+
+  static ngAcceptInputType_editable: BooleanInput;
+  static ngAcceptInputType_optional: BooleanInput;
+  static ngAcceptInputType_completed: BooleanInput;
+  static ngAcceptInputType_hasError: BooleanInput;
+  static ngAcceptInputType_linear: BooleanInput;
+  static ngAcceptInputType_selectedIndex: NumberInput;
 }

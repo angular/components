@@ -8,7 +8,7 @@ import {Subject} from 'rxjs';
 import {MatChip, MatChipEvent, MatChipSet, MatChipsModule} from './index';
 
 
-describe('MatChip', () => {
+describe('MDC-based MatChip', () => {
   let fixture: ComponentFixture<any>;
   let chipDebugElement: DebugElement;
   let chipNativeElement: HTMLElement;
@@ -43,12 +43,6 @@ describe('MatChip', () => {
       chipDebugElement = fixture.debugElement.query(By.directive(MatChip))!;
       chipNativeElement = chipDebugElement.nativeElement;
       chipInstance = chipDebugElement.injector.get<MatChip>(MatChip);
-
-      document.body.appendChild(chipNativeElement);
-    });
-
-    afterEach(() => {
-      document.body.removeChild(chipNativeElement);
     });
 
     it('adds the `mat-mdc-basic-chip` class', () => {
@@ -67,12 +61,6 @@ describe('MatChip', () => {
       chipNativeElement = chipDebugElement.nativeElement;
       chipInstance = chipDebugElement.injector.get<MatChip>(MatChip);
       testComponent = fixture.debugElement.componentInstance;
-
-      document.body.appendChild(chipNativeElement);
-    });
-
-    afterEach(() => {
-      document.body.removeChild(chipNativeElement);
     });
 
     it('adds the `mat-chip` class', () => {
@@ -109,7 +97,8 @@ describe('MatChip', () => {
       chipInstance.remove();
       fixture.detectChanges();
 
-      const fakeEvent = Object.assign(createFakeEvent('transitionend'), {propertyName: 'width'});
+      const fakeEvent = createFakeEvent('transitionend');
+      (fakeEvent as any).propertyName = 'width';
       chipNativeElement.dispatchEvent(fakeEvent);
 
       expect(testComponent.chipRemove).toHaveBeenCalledWith({chip: chipInstance});

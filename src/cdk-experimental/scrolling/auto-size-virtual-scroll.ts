@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {coerceNumberProperty} from '@angular/cdk/coercion';
+import {coerceNumberProperty, NumberInput} from '@angular/cdk/coercion';
 import {ListRange} from '@angular/cdk/collections';
 import {
   CdkVirtualScrollViewport,
@@ -463,4 +463,7 @@ export class CdkAutoSizeVirtualScroll implements OnChanges {
   ngOnChanges() {
     this._scrollStrategy.updateBufferSize(this.minBufferPx, this.maxBufferPx);
   }
+
+  static ngAcceptInputType_minBufferPx: NumberInput;
+  static ngAcceptInputType_maxBufferPx: NumberInput;
 }

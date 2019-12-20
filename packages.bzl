@@ -2,10 +2,13 @@
 # all in-sync. This map is passed to each ng_package rule to stamp out the appropriate
 # version for the placeholders.
 ANGULAR_PACKAGE_VERSION = "^9.0.0-0 || ^10.0.0-0"
-MDC_PACKAGE_VERSION = "^4.0.0-canary.062ade5c0.0"
+MDC_PACKAGE_VERSION = "^4.0.0"
+TSLIB_PACKAGE_VERSION = "^1.9.0"
+
 VERSION_PLACEHOLDER_REPLACEMENTS = {
     "0.0.0-MDC": MDC_PACKAGE_VERSION,
     "0.0.0-NG": ANGULAR_PACKAGE_VERSION,
+    "0.0.0-TSLIB": TSLIB_PACKAGE_VERSION,
 }
 
 # List of default Angular library UMD bundles which are not processed by ngcc.
@@ -39,7 +42,8 @@ ANGULAR_LIBRARY_IVY_UMDS = ANGULAR_NO_NGCC_BUNDLES + [
 
 """
   Gets the list of targets for the Angular library UMD bundles. Conditionally
-  switches between View Engine or Ivy UMD bundles based on the "--define=compile" flag.
+  switches between View Engine or Ivy UMD bundles based on the 
+  "--config={ivy,view-engine}" flag.
 """
 
 def getAngularUmdTargets():

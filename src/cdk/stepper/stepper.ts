@@ -8,7 +8,12 @@
 
 import {FocusableOption, FocusKeyManager} from '@angular/cdk/a11y';
 import {Direction, Directionality} from '@angular/cdk/bidi';
-import {coerceBooleanProperty, coerceNumberProperty} from '@angular/cdk/coercion';
+import {
+  BooleanInput,
+  coerceBooleanProperty,
+  coerceNumberProperty,
+  NumberInput
+} from '@angular/cdk/coercion';
 import {END, ENTER, hasModifierKey, HOME, SPACE} from '@angular/cdk/keycodes';
 import {DOCUMENT} from '@angular/common';
 import {
@@ -105,7 +110,6 @@ export interface StepperOptions {
 }
 
 @Component({
-  moduleId: module.id,
   selector: 'cdk-step',
   exportAs: 'cdkStep',
   template: '<ng-template><ng-content></ng-content></ng-template>',
@@ -231,6 +235,11 @@ export class CdkStep implements OnChanges {
     // underlying MatStepHeader, we have to make sure that change detection runs correctly.
     this._stepper._stateChanged();
   }
+
+  static ngAcceptInputType_editable: BooleanInput;
+  static ngAcceptInputType_hasError: BooleanInput;
+  static ngAcceptInputType_optional: BooleanInput;
+  static ngAcceptInputType_completed: BooleanInput;
 }
 
 @Directive({
@@ -255,13 +264,7 @@ export class CdkStepper implements AfterViewInit, OnDestroy {
    * @deprecated use `steps` instead
    * @breaking-change 9.0.0 remove this property
    */
-  @ContentChildren(CdkStep) _steps: QueryList<CdkStep>;
-
-  /**
-   * We need to store the steps in an Iterable due to strict template type checking with *ngFor and
-   * https://github.com/angular/angular/issues/29842.
-   */
-  _stepsArray: CdkStep[] = [];
+  @ContentChildren(CdkStep, {descendants: true}) _steps: QueryList<CdkStep>;
 
   /** The list of step components that the stepper is holding. */
   get steps(): QueryList<CdkStep> {
@@ -273,7 +276,7 @@ export class CdkStepper implements AfterViewInit, OnDestroy {
    * @deprecated Type to be changed to `QueryList<CdkStepHeader>`.
    * @breaking-change 8.0.0
    */
-  @ContentChildren(CdkStepHeader) _stepHeader: QueryList<FocusableOption>;
+  @ContentChildren(CdkStepHeader, {descendants: true}) _stepHeader: QueryList<FocusableOption>;
 
   /** Whether the validity of previous steps should be checked or not. */
   @Input()
@@ -519,6 +522,13 @@ export class CdkStepper implements AfterViewInit, OnDestroy {
     const focusedElement = this._document.activeElement;
     return stepperElement === focusedElement || stepperElement.contains(focusedElement);
   }
+
+  static ngAcceptInputType_editable: BooleanInput;
+  static ngAcceptInputType_optional: BooleanInput;
+  static ngAcceptInputType_completed: BooleanInput;
+  static ngAcceptInputType_hasError: BooleanInput;
+  static ngAcceptInputType_linear: BooleanInput;
+  static ngAcceptInputType_selectedIndex: NumberInput;
 }
 
 

@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {coerceBooleanProperty} from '@angular/cdk/coercion';
+import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
 import {DOCUMENT} from '@angular/common';
 import {
   AfterViewChecked,
@@ -120,7 +120,6 @@ const funcIriPattern = /^url\(['"]?#(.*?)['"]?\)$/;
  *     `<mat-icon fontSet="fa" fontIcon="alarm"></mat-icon>`
  */
 @Component({
-  moduleId: module.id,
   template: '<ng-content></ng-content>',
   selector: 'mat-icon',
   exportAs: 'matIcon',
@@ -419,4 +418,6 @@ export class MatIcon extends _MatIconMixinBase implements OnChanges, OnInit, Aft
       });
     }
   }
+
+  static ngAcceptInputType_inline: BooleanInput;
 }

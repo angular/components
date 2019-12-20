@@ -8,7 +8,7 @@
 
 import {FocusKeyManager} from '@angular/cdk/a11y';
 import {Directionality} from '@angular/cdk/bidi';
-import {coerceBooleanProperty} from '@angular/cdk/coercion';
+import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
 import {SelectionModel} from '@angular/cdk/collections';
 import {BACKSPACE, END, HOME} from '@angular/cdk/keycodes';
 import {
@@ -73,7 +73,6 @@ export class MatChipListChange {
  * A material design chips component (named ChipList for its similarity to the List component).
  */
 @Component({
-  moduleId: module.id,
   selector: 'mat-chip-list',
   template: `<div class="mat-chip-list-wrapper"><ng-content></ng-content></div>`,
   exportAs: 'matChipList',
@@ -810,4 +809,9 @@ export class MatChipList extends _MatChipListMixinBase implements MatFormFieldCo
       });
     }
   }
+
+  static ngAcceptInputType_multiple: BooleanInput;
+  static ngAcceptInputType_required: BooleanInput;
+  static ngAcceptInputType_disabled: BooleanInput;
+  static ngAcceptInputType_selectable: BooleanInput;
 }

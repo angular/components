@@ -6,6 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {BooleanInput} from '@angular/cdk/coercion';
 import {
   CDK_ROW_TEMPLATE,
   CdkFooterRow,
@@ -27,6 +28,7 @@ import {ChangeDetectionStrategy, Component, Directive, ViewEncapsulation} from '
   inputs: ['columns: matHeaderRowDef', 'sticky: matHeaderRowDefSticky'],
 })
 export class MatHeaderRowDef extends CdkHeaderRowDef {
+  static ngAcceptInputType_sticky: BooleanInput;
 }
 
 /**
@@ -39,6 +41,7 @@ export class MatHeaderRowDef extends CdkHeaderRowDef {
   inputs: ['columns: matFooterRowDef', 'sticky: matFooterRowDefSticky'],
 })
 export class MatFooterRowDef extends CdkFooterRowDef {
+  static ngAcceptInputType_sticky: BooleanInput;
 }
 
 /**
@@ -56,7 +59,6 @@ export class MatRowDef<T> extends CdkRowDef<T> {
 
 /** Footer template container that contains the cell outlet. Adds the right class and role. */
 @Component({
-  moduleId: module.id,
   selector: 'mat-header-row, tr[mat-header-row]',
   template: CDK_ROW_TEMPLATE,
   host: {
@@ -75,7 +77,6 @@ export class MatHeaderRow extends CdkHeaderRow {
 
 /** Footer template container that contains the cell outlet. Adds the right class and role. */
 @Component({
-  moduleId: module.id,
   selector: 'mat-footer-row, tr[mat-footer-row]',
   template: CDK_ROW_TEMPLATE,
   host: {
@@ -94,7 +95,6 @@ export class MatFooterRow extends CdkFooterRow {
 
 /** Data row template container that contains the cell outlet. Adds the right class and role. */
 @Component({
-  moduleId: module.id,
   selector: 'mat-row, tr[mat-row]',
   template: CDK_ROW_TEMPLATE,
   host: {

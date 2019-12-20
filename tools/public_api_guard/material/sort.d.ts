@@ -28,6 +28,10 @@ export declare class MatSort extends _MatSortMixinBase implements CanDisable, Ha
     ngOnInit(): void;
     register(sortable: MatSortable): void;
     sort(sortable: MatSortable): void;
+    static ngAcceptInputType_disableClear: BooleanInput;
+    static ngAcceptInputType_disabled: BooleanInput;
+    static ɵdir: i0.ɵɵDirectiveDefWithMeta<MatSort, "[matSort]", ["matSort"], { 'disabled': "matSortDisabled", 'active': "matSortActive", 'start': "matSortStart", 'direction': "matSortDirection", 'disableClear': "matSortDisableClear" }, { 'sortChange': "matSortChange" }, never>;
+    static ɵfac: i0.ɵɵFactoryDef<MatSort>;
 }
 
 export interface MatSortable {
@@ -57,7 +61,8 @@ export declare class MatSortHeader extends _MatSortHeaderMixinBase implements Ca
     disableClear: boolean;
     id: string;
     start: 'asc' | 'desc';
-    constructor(_intl: MatSortHeaderIntl, changeDetectorRef: ChangeDetectorRef, _sort: MatSort, _columnDef: MatSortHeaderColumnDef);
+    constructor(_intl: MatSortHeaderIntl, changeDetectorRef: ChangeDetectorRef, _sort: MatSort, _columnDef: MatSortHeaderColumnDef,
+    _focusMonitor?: FocusMonitor | undefined, _elementRef?: ElementRef<HTMLElement> | undefined);
     _getAriaSortAttribute(): "ascending" | "descending" | null;
     _getArrowDirectionState(): string;
     _getArrowViewState(): string;
@@ -70,14 +75,22 @@ export declare class MatSortHeader extends _MatSortHeaderMixinBase implements Ca
     _updateArrowDirection(): void;
     ngOnDestroy(): void;
     ngOnInit(): void;
+    static ngAcceptInputType_disableClear: BooleanInput;
+    static ngAcceptInputType_disabled: BooleanInput;
+    static ɵcmp: i0.ɵɵComponentDefWithMeta<MatSortHeader, "[mat-sort-header]", ["matSortHeader"], { 'disabled': "disabled", 'id': "mat-sort-header", 'arrowPosition': "arrowPosition", 'start': "start", 'disableClear': "disableClear" }, {}, never>;
+    static ɵfac: i0.ɵɵFactoryDef<MatSortHeader>;
 }
 
 export declare class MatSortHeaderIntl {
     readonly changes: Subject<void>;
     sortButtonLabel: (id: string) => string;
+    static ɵfac: i0.ɵɵFactoryDef<MatSortHeaderIntl>;
+    static ɵprov: i0.ɵɵInjectableDef<MatSortHeaderIntl>;
 }
 
 export declare class MatSortModule {
+    static ɵinj: i0.ɵɵInjectorDef<MatSortModule>;
+    static ɵmod: i0.ɵɵNgModuleDefWithMeta<MatSortModule, [typeof i1.MatSort, typeof i2.MatSortHeader], [typeof i3.CommonModule], [typeof i1.MatSort, typeof i2.MatSortHeader]>;
 }
 
 export interface Sort {

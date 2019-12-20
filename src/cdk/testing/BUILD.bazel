@@ -16,7 +16,7 @@ ts_library(
 
 markdown_to_html(
     name = "overview",
-    srcs = ["testing.md"],
+    srcs = ["test-harnesses.md"],
 )
 
 filegroup(
@@ -33,6 +33,5 @@ e2e_test_suite(
     name = "e2e_tests",
     deps = [
         "//src/cdk/testing/tests:e2e_test_sources",
-        "@npm//protractor",
     ],
 )

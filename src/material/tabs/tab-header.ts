@@ -28,7 +28,7 @@ import {
   Directive,
 } from '@angular/core';
 import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
-import {coerceBooleanProperty} from '@angular/cdk/coercion';
+import {BooleanInput, coerceBooleanProperty, NumberInput} from '@angular/cdk/coercion';
 import {MatInkBar} from './ink-bar';
 import {MatTabLabelWrapper} from './tab-label-wrapper';
 import {Platform} from '@angular/cdk/platform';
@@ -38,10 +38,7 @@ import {MatPaginatedTabHeader} from './paginated-tab-header';
  * Base class with all of the `MatTabHeader` functionality.
  * @docs-private
  */
-@Directive({
-  // TODO(crisbeto): this selector can be removed when we update to Angular 9.0.
-  selector: 'do-not-use-abstract-mat-tab-header-base'
-})
+@Directive()
 // tslint:disable-next-line:class-name
 export abstract class _MatTabHeaderBase extends MatPaginatedTabHeader implements
   AfterContentChecked, AfterContentInit, AfterViewInit, OnDestroy {
@@ -76,7 +73,6 @@ export abstract class _MatTabHeaderBase extends MatPaginatedTabHeader implements
  * @docs-private
  */
 @Component({
-  moduleId: module.id,
   selector: 'mat-tab-header',
   templateUrl: 'tab-header.html',
   styleUrls: ['tab-header.css'],
@@ -92,7 +88,7 @@ export abstract class _MatTabHeaderBase extends MatPaginatedTabHeader implements
   },
 })
 export class MatTabHeader extends _MatTabHeaderBase {
-  @ContentChildren(MatTabLabelWrapper) _items: QueryList<MatTabLabelWrapper>;
+  @ContentChildren(MatTabLabelWrapper, {descendants: false}) _items: QueryList<MatTabLabelWrapper>;
   @ViewChild(MatInkBar, {static: true}) _inkBar: MatInkBar;
   @ViewChild('tabListContainer', {static: true}) _tabListContainer: ElementRef;
   @ViewChild('tabList', {static: true}) _tabList: ElementRef;
@@ -109,4 +105,7 @@ export class MatTabHeader extends _MatTabHeaderBase {
               @Optional() @Inject(ANIMATION_MODULE_TYPE) animationMode?: string) {
     super(elementRef, changeDetectorRef, viewportRuler, dir, ngZone, platform, animationMode);
   }
+
+  static ngAcceptInputType_disableRipple: BooleanInput;
+  static ngAcceptInputType_selectedIndex: NumberInput;
 }

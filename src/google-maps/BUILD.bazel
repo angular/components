@@ -10,6 +10,7 @@ ng_module(
     ),
     module_name = "@angular/google-maps",
     deps = [
+        "@npm//@angular/common",
         "@npm//@angular/core",
         "@npm//@types/googlemaps",
         "@npm//rxjs",
@@ -22,6 +23,7 @@ ng_package(
     srcs = ["package.json"],
     entry_point = ":public-api.ts",
     entry_point_name = "google-maps",
+    tags = ["release-package"],
     deps = [":google-maps"],
 )
 

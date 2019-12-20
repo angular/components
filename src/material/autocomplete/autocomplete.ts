@@ -7,7 +7,7 @@
  */
 
 import {ActiveDescendantKeyManager} from '@angular/cdk/a11y';
-import {coerceBooleanProperty, coerceStringArray} from '@angular/cdk/coercion';
+import {BooleanInput, coerceBooleanProperty, coerceStringArray} from '@angular/cdk/coercion';
 import {
   AfterContentInit,
   ChangeDetectionStrategy,
@@ -76,7 +76,6 @@ export function MAT_AUTOCOMPLETE_DEFAULT_OPTIONS_FACTORY(): MatAutocompleteDefau
 }
 
 @Component({
-  moduleId: module.id,
   selector: 'mat-autocomplete',
   templateUrl: 'autocomplete.html',
   styleUrls: ['autocomplete.css'],
@@ -221,5 +220,8 @@ export class MatAutocomplete extends _MatAutocompleteMixinBase implements AfterC
     classList['mat-autocomplete-visible'] = this.showPanel;
     classList['mat-autocomplete-hidden'] = !this.showPanel;
   }
+
+  static ngAcceptInputType_autoActiveFirstOption: BooleanInput;
+  static ngAcceptInputType_disableRipple: BooleanInput;
 }
 

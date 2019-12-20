@@ -6,6 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {BooleanInput, NumberInput} from '@angular/cdk/coercion';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -36,7 +37,6 @@ import {MatInkBar} from './ink-bar';
  * @docs-private
  */
 @Component({
-  moduleId: module.id,
   selector: 'mat-tab-header',
   templateUrl: 'tab-header.html',
   styleUrls: ['tab-header.css'],
@@ -51,7 +51,7 @@ import {MatInkBar} from './ink-bar';
   },
 })
 export class MatTabHeader extends _MatTabHeaderBase implements AfterContentInit {
-  @ContentChildren(MatTabLabelWrapper) _items: QueryList<MatTabLabelWrapper>;
+  @ContentChildren(MatTabLabelWrapper, {descendants: false}) _items: QueryList<MatTabLabelWrapper>;
   @ViewChild('tabListContainer', {static: true}) _tabListContainer: ElementRef;
   @ViewChild('tabList', {static: true}) _tabList: ElementRef;
   @ViewChild('nextPaginator') _nextPaginator: ElementRef<HTMLElement>;
@@ -73,4 +73,7 @@ export class MatTabHeader extends _MatTabHeaderBase implements AfterContentInit 
     this._inkBar = new MatInkBar(this._items);
     super.ngAfterContentInit();
   }
+
+  static ngAcceptInputType_disableRipple: BooleanInput;
+  static ngAcceptInputType_selectedIndex: NumberInput;
 }

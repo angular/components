@@ -7,7 +7,7 @@
  */
 
 import {Directive, OnDestroy, Input} from '@angular/core';
-import {coerceBooleanProperty} from '@angular/cdk/coercion';
+import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
 
 /**
  * Declaratively connects sibling `cdkDropList` instances together. All of the `cdkDropList`
@@ -34,4 +34,6 @@ export class CdkDropListGroup<T> implements OnDestroy {
   ngOnDestroy() {
     this._items.clear();
   }
+
+  static ngAcceptInputType_disabled: BooleanInput;
 }

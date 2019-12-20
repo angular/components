@@ -7,7 +7,7 @@
  */
 
 import {FocusableOption, FocusKeyManager} from '@angular/cdk/a11y';
-import {coerceBooleanProperty} from '@angular/cdk/coercion';
+import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
 import {SelectionModel} from '@angular/cdk/collections';
 import {
   A,
@@ -88,7 +88,6 @@ export class MatSelectionListChange {
  * if the current item is selected.
  */
 @Component({
-  moduleId: module.id,
   selector: 'mat-list-option',
   exportAs: 'matListOption',
   inputs: ['disableRipple'],
@@ -125,7 +124,7 @@ export class MatListOption extends _MatListOptionMixinBase implements AfterConte
 
   @ContentChild(MatListAvatarCssMatStyler) _avatar: MatListAvatarCssMatStyler;
   @ContentChild(MatListIconCssMatStyler) _icon: MatListIconCssMatStyler;
-  @ContentChildren(MatLine) _lines: QueryList<MatLine>;
+  @ContentChildren(MatLine, {descendants: true}) _lines: QueryList<MatLine>;
 
   /** DOM element containing the item's text. */
   @ViewChild('text') _text: ElementRef;
@@ -305,6 +304,10 @@ export class MatListOption extends _MatListOptionMixinBase implements AfterConte
   _markForCheck() {
     this._changeDetector.markForCheck();
   }
+
+  static ngAcceptInputType_disabled: BooleanInput;
+  static ngAcceptInputType_selected: BooleanInput;
+  static ngAcceptInputType_disableRipple: BooleanInput;
 }
 
 
@@ -312,7 +315,6 @@ export class MatListOption extends _MatListOptionMixinBase implements AfterConte
  * Material Design list component where each item is a selectable option. Behaves as a listbox.
  */
 @Component({
-  moduleId: module.id,
   selector: 'mat-selection-list',
   exportAs: 'matSelectionList',
   inputs: ['disableRipple'],
@@ -488,7 +490,7 @@ export class MatSelectionList extends _MatSelectionListMixinBase implements CanD
     switch (keyCode) {
       case SPACE:
       case ENTER:
-        if (!hasModifier) {
+        if (!hasModifier && !manager.isTyping()) {
           this._toggleFocusedOption();
           // Always prevent space from scrolling the page since the list has focus
           event.preventDefault();
@@ -502,7 +504,7 @@ export class MatSelectionList extends _MatSelectionListMixinBase implements CanD
         }
         break;
       case A:
-        if (hasModifierKey(event, 'ctrlKey')) {
+        if (hasModifierKey(event, 'ctrlKey') && !manager.isTyping()) {
           this.options.find(option => !option.selected) ? this.selectAll() : this.deselectAll();
           event.preventDefault();
         }
@@ -637,4 +639,7 @@ export class MatSelectionList extends _MatSelectionListMixinBase implements CanD
       this.options.forEach(option => option._markForCheck());
     }
   }
+
+  static ngAcceptInputType_disabled: BooleanInput;
+  static ngAcceptInputType_disableRipple: BooleanInput;
 }

@@ -7,7 +7,7 @@
  */
 
 import {FocusMonitor} from '@angular/cdk/a11y';
-import {coerceBooleanProperty} from '@angular/cdk/coercion';
+import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
 import {SelectionModel} from '@angular/cdk/collections';
 import {
   AfterContentInit,
@@ -368,6 +368,10 @@ export class MatButtonToggleGroup implements ControlValueAccessor, OnInit, After
     // it is used by Angular to sync up the two-way data binding.
     this.valueChange.emit(this.value);
   }
+
+  static ngAcceptInputType_disabled: BooleanInput;
+  static ngAcceptInputType_multiple: BooleanInput;
+  static ngAcceptInputType_vertical: BooleanInput;
 }
 
 // Boilerplate for applying mixins to the MatButtonToggle class.
@@ -378,7 +382,6 @@ const _MatButtonToggleMixinBase: CanDisableRippleCtor & typeof MatButtonToggleBa
 
 /** Single button inside of a toggle group. */
 @Component({
-  moduleId: module.id,
   selector: 'mat-button-toggle',
   templateUrl: 'button-toggle.html',
   styleUrls: ['button-toggle.css'],
@@ -556,4 +559,10 @@ export class MatButtonToggle extends _MatButtonToggleMixinBase implements OnInit
     // Use `markForCheck` to explicit update button toggle's status.
     this._changeDetectorRef.markForCheck();
   }
+
+  static ngAcceptInputType_checked: BooleanInput;
+  static ngAcceptInputType_disabled: BooleanInput;
+  static ngAcceptInputType_vertical: BooleanInput;
+  static ngAcceptInputType_multiple: BooleanInput;
+  static ngAcceptInputType_disableRipple: BooleanInput;
 }

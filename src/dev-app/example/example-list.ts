@@ -7,10 +7,10 @@
  */
 
 import {Component, Input} from '@angular/core';
-import {EXAMPLE_COMPONENTS} from '@angular/material-examples';
-import {coerceBooleanProperty} from '@angular/cdk/coercion';
+import {EXAMPLE_COMPONENTS} from '@angular/components-examples';
+import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
 
-/** Displays a set of material examples in a mat-accordion. */
+/** Displays a set of components-examples in a mat-accordion. */
 @Component({
   selector: 'material-example-list',
   template: `
@@ -65,4 +65,6 @@ export class ExampleList {
   _expandAll: boolean;
 
   exampleComponents = EXAMPLE_COMPONENTS;
+
+  static ngAcceptInputType_expandAll: BooleanInput;
 }

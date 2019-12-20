@@ -7,7 +7,7 @@
  */
 
 import {Directionality} from '@angular/cdk/bidi';
-import {coerceBooleanProperty, coerceStringArray} from '@angular/cdk/coercion';
+import {BooleanInput, coerceBooleanProperty, coerceStringArray} from '@angular/cdk/coercion';
 import {ESCAPE, UP_ARROW} from '@angular/cdk/keycodes';
 import {
   Overlay,
@@ -87,7 +87,6 @@ const _MatDatepickerContentMixinBase: CanColorCtor & typeof MatDatepickerContent
  * @docs-private
  */
 @Component({
-  moduleId: module.id,
   selector: 'mat-datepicker-content',
   templateUrl: 'datepicker-content.html',
   styleUrls: ['datepicker-content.css'],
@@ -132,7 +131,6 @@ export class MatDatepickerContent<D> extends _MatDatepickerContentMixinBase
 // if angular adds support for `exportAs: '$implicit'` on directives.
 /** Component responsible for managing the datepicker popup/dialog. */
 @Component({
-  moduleId: module.id,
   selector: 'mat-datepicker',
   template: '',
   exportAs: 'matDatepicker',
@@ -530,4 +528,7 @@ export class MatDatepicker<D> implements OnDestroy, CanColor {
       this._dialogRef.componentInstance.color = color;
     }
   }
+
+  static ngAcceptInputType_disabled: BooleanInput;
+  static ngAcceptInputType_touchUi: BooleanInput;
 }

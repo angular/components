@@ -1,10 +1,16 @@
 {
   "rulesDirectory": [
     "./tools/tslint-rules/",
+    "node_modules/vrsource-tslint-rules/rules",
     "node_modules/codelyzer"
   ],
   "rules": {
-    "max-line-length": [true, 100],
+    "max-line-length": [true, {
+        "limit": 100,
+        "check-strings": true,
+        "check-regex": true
+      }
+    ],
     // Disable this flag because of SHA tslint#48b0c597f9257712c7d1f04b55ed0aa60e333f6a
     // TSLint now shows warnings if types for properties are inferred. This rule needs to be
     // disabled because all properties need to have explicit types set to work for Dgeni.
@@ -61,7 +67,8 @@
       true,
       "ban-keywords",
       "check-format",
-      "allow-leading-underscore"
+      "allow-leading-underscore",
+      "allow-snake-case"
     ],
     "whitespace": [
       true,
@@ -79,7 +86,8 @@
       ["fdescribe"],
       ["xit"],
       ["xdescribe"],
-      {"name": "Object.assign", "message": "Use the spread operator instead."}
+      {"name": ["first"], "message": "Use take(1) instead."},
+      {"name": ["Object", "assign"], "message": "Use the spread operator instead."}
     ],
     // Avoids inconsistent linebreak styles in source files. Forces developers to use LF linebreaks.
     "linebreak-style": [true, "LF"],
@@ -109,6 +117,13 @@
     "rxjs-imports": true,
     "require-breaking-change-version": true,
     "class-list-signatures": true,
+    "coercion-types": [true,
+      ["coerceBooleanProperty", "coerceCssPixelValue", "coerceNumberProperty"],
+      {
+        "CanDisable": ["disabled"],
+        "CanDisableRipple": ["disableRipple"]
+      }
+    ],
     "no-host-decorator-in-concrete": [
       true,
       "HostBinding",
@@ -119,28 +134,46 @@
     }],
     "validate-decorators": [true, {
       "Component": {
-        "!host": "\\[class\\]",
-        "!preserveWhitespaces": ".*",
-        "!styles": ".*",
-        "changeDetection": "\\.OnPush$",
-        "encapsulation": "\\.None$",
-        "moduleId": "^module\\.id$"
+        "argument": 0,
+        "properties": {
+          "!host": "\\[class\\]",
+          "!preserveWhitespaces": ".*",
+          "!styles": ".*",
+          "!moduleId": ".*",
+          "changeDetection": "\\.OnPush$",
+          "encapsulation": "\\.None$"
+        }
       },
       "Directive": {
-        "!host": "\\[class\\]"
+        "argument": 0,
+        "properties": {
+          "!host": "\\[class\\]"
+        }
       },
-      "NgModule": "^(?!\\s*$).+"
-    }, "src/!(a11y-demo|e2e-app|material-examples|universal-app|dev-app)/**/!(*.spec).ts"],
+      "NgModule": {
+        "argument": 0,
+        "properties": {
+          "*": "^(?!\\s*$).+"
+        }
+      },
+      "ContentChildren": {
+        "argument": 1,
+        "required": true,
+        "properties": {
+          "descendants": "^(true|false)$"
+        }
+      }
+    }, "src/!(a11y-demo|e2e-app|components-examples|universal-app|dev-app)/**/!(*.spec).ts"],
     "require-license-banner": [
       true,
-      "src/!(a11y-demo|e2e-app|material-examples|universal-app)/**/!(*.spec).ts"
+      "src/!(a11y-demo|e2e-app|components-examples|universal-app)/**/!(*.spec).ts"
     ],
-    "missing-rollup-globals": [
+    "no-cross-entry-point-relative-imports": [
       true,
-      "./tools/package-tools/rollup-globals.ts",
-      "src/**/!(*.spec).ts",
-      "!src/+(a11y-demo|e2e-app|universal-app|dev-app)/**/*.ts",
-      "!src/**/schematics/**/*.ts"
+      "src/!(a11y-demo|e2e-app|components-examples|universal-app|dev-app)/**/!(*.spec).ts",
+      "!src/+(cdk|material)/schematics/**/*",
+      "!src/cdk/testing/+(private|tests)/**/*",
+      "!src/google-maps/testing/**/*"
     ],
     "file-name-casing": [true, {
       // Exclude custom lint rule files since they have to always be camel-cased and end

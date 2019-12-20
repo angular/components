@@ -20,11 +20,10 @@ import {
   Inject,
 } from '@angular/core';
 import {MatLine, setLines} from '@angular/material/core';
-import {coerceNumberProperty} from '@angular/cdk/coercion';
+import {coerceNumberProperty, NumberInput} from '@angular/cdk/coercion';
 import {MAT_GRID_LIST, MatGridListBase} from './grid-list-base';
 
 @Component({
-  moduleId: module.id,
   selector: 'mat-grid-tile',
   exportAs: 'matGridTile',
   host: {
@@ -60,17 +59,19 @@ export class MatGridTile {
   _setStyle(property: string, value: any): void {
     (this._element.nativeElement.style as any)[property] = value;
   }
+
+  static ngAcceptInputType_rowspan: NumberInput;
+  static ngAcceptInputType_colspan: NumberInput;
 }
 
 @Component({
-  moduleId: module.id,
   selector: 'mat-grid-tile-header, mat-grid-tile-footer',
   templateUrl: 'grid-tile-text.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
 export class MatGridTileText implements AfterContentInit {
-  @ContentChildren(MatLine) _lines: QueryList<MatLine>;
+  @ContentChildren(MatLine, {descendants: true}) _lines: QueryList<MatLine>;
 
   constructor(private _element: ElementRef<HTMLElement>) {}
 

@@ -8,7 +8,12 @@
 
 import {FocusMonitor, FocusOrigin} from '@angular/cdk/a11y';
 import {Directionality} from '@angular/cdk/bidi';
-import {coerceBooleanProperty, coerceNumberProperty} from '@angular/cdk/coercion';
+import {
+  BooleanInput,
+  coerceBooleanProperty,
+  coerceNumberProperty,
+  NumberInput
+} from '@angular/cdk/coercion';
 import {
   DOWN_ARROW,
   END,
@@ -108,7 +113,6 @@ const _MatSliderMixinBase:
  * behavior to the native `<input type="range">` element.
  */
 @Component({
-  moduleId: module.id,
   selector: 'mat-slider',
   exportAs: 'matSlider',
   providers: [MAT_SLIDER_VALUE_ACCESSOR],
@@ -374,13 +378,19 @@ export class MatSlider extends _MatSliderMixinBase
 
   /** CSS styles for the track fill element. */
   get _trackFillStyles(): { [key: string]: string } {
+    const percent = this.percent;
     const axis = this.vertical ? 'Y' : 'X';
-    const scale = this.vertical ? `1, ${this.percent}, 1` : `${this.percent}, 1, 1`;
+    const scale = this.vertical ? `1, ${percent}, 1` : `${percent}, 1, 1`;
     const sign = this._shouldInvertMouseCoords() ? '' : '-';
 
     return {
       // scale3d avoids some rendering issues in Chrome. See #12071.
-      transform: `translate${axis}(${sign}${this._thumbGap}px) scale3d(${scale})`
+      transform: `translate${axis}(${sign}${this._thumbGap}px) scale3d(${scale})`,
+      // iOS Safari has a bug where it won't re-render elements which start of as `scale(0)` until
+      // something forces a style recalculation on it. Since we'll end up with `scale(0)` when
+      // the value of the slider is 0, we can easily get into this situation. We force a
+      // recalculation by changing the element's `display` when it goes from 0 to any other value.
+      display: percent === 0 ? 'none' : ''
     };
   }
 
@@ -470,6 +480,9 @@ export class MatSlider extends _MatSliderMixinBase
     return (this._dir && this._dir.value == 'rtl') ? 'rtl' : 'ltr';
   }
 
+  /** Keeps track of the last pointer event that was captured by the slider. */
+  private _lastPointerEvent: MouseEvent | TouchEvent | null;
+
   constructor(elementRef: ElementRef,
               private _focusMonitor: FocusMonitor,
               private _changeDetectorRef: ChangeDetectorRef,
@@ -508,6 +521,7 @@ export class MatSlider extends _MatSliderMixinBase
     const element = this._elementRef.nativeElement;
     element.removeEventListener('mousedown', this._pointerDown, activeEventOptions);
     element.removeEventListener('touchstart', this._pointerDown, activeEventOptions);
+    this._lastPointerEvent = null;
     this._removeGlobalEvents();
     this._focusMonitor.stopMonitoring(this._elementRef);
     this._dirChangeSubscription.unsubscribe();
@@ -606,6 +620,7 @@ export class MatSlider extends _MatSliderMixinBase
       const oldValue = this.value;
       const pointerPosition = getPointerPositionOnPage(event);
       this._isSliding = true;
+      this._lastPointerEvent = event;
       event.preventDefault();
       this._focusHostElement();
       this._onMouseenter(); // Simulate mouseenter in case this is a mobile device.
@@ -632,6 +647,7 @@ export class MatSlider extends _MatSliderMixinBase
       // Prevent the slide from selecting anything else.
       event.preventDefault();
       const oldValue = this.value;
+      this._lastPointerEvent = event;
       this._updateValueFromPosition(getPointerPositionOnPage(event));
 
       // Native range elements always emit `input` events when the value changed while sliding.
@@ -649,7 +665,7 @@ export class MatSlider extends _MatSliderMixinBase
 
       event.preventDefault();
       this._removeGlobalEvents();
-      this._valueOnSlideStart = this._pointerPositionOnStart = null;
+      this._valueOnSlideStart = this._pointerPositionOnStart = this._lastPointerEvent = null;
       this._isSliding = false;
 
       if (this._valueOnSlideStart != this.value && !this.disabled &&
@@ -660,6 +676,15 @@ export class MatSlider extends _MatSliderMixinBase
     }
   }
 
+  /** Called when the window has lost focus. */
+  private _windowBlur = () => {
+    // If the window is blurred while dragging we need to stop dragging because the
+    // browser won't dispatch the `mouseup` and `touchend` events anymore.
+    if (this._lastPointerEvent) {
+      this._pointerUp(this._lastPointerEvent);
+    }
+  }
+
   /**
    * Binds our global move and end events. They're bound at the document level and only while
    * dragging so that the user doesn't have to keep their pointer exactly over the slider
@@ -667,21 +692,34 @@ export class MatSlider extends _MatSliderMixinBase
    */
   private _bindGlobalEvents(triggerEvent: TouchEvent | MouseEvent) {
     if (typeof document !== 'undefined' && document) {
+      const body = document.body;
       const isTouch = isTouchEvent(triggerEvent);
       const moveEventName = isTouch ? 'touchmove' : 'mousemove';
       const endEventName = isTouch ? 'touchend' : 'mouseup';
-      document.body.addEventListener(moveEventName, this._pointerMove, activeEventOptions);
-      document.body.addEventListener(endEventName, this._pointerUp, activeEventOptions);
+      body.addEventListener(moveEventName, this._pointerMove, activeEventOptions);
+      body.addEventListener(endEventName, this._pointerUp, activeEventOptions);
+
+      if (isTouch) {
+        body.addEventListener('touchcancel', this._pointerUp, activeEventOptions);
+      }
+    }
+    if (typeof window !== 'undefined' && window) {
+      window.addEventListener('blur', this._windowBlur);
     }
   }
 
   /** Removes any global event listeners that we may have added. */
   private _removeGlobalEvents() {
     if (typeof document !== 'undefined' && document) {
-      document.body.removeEventListener('mousemove', this._pointerMove, activeEventOptions);
-      document.body.removeEventListener('mouseup', this._pointerUp, activeEventOptions);
-      document.body.removeEventListener('touchmove', this._pointerMove, activeEventOptions);
-      document.body.removeEventListener('touchend', this._pointerUp, activeEventOptions);
+      const body = document.body;
+      body.removeEventListener('mousemove', this._pointerMove, activeEventOptions);
+      body.removeEventListener('mouseup', this._pointerUp, activeEventOptions);
+      body.removeEventListener('touchmove', this._pointerMove, activeEventOptions);
+      body.removeEventListener('touchend', this._pointerUp, activeEventOptions);
+      body.removeEventListener('touchcancel', this._pointerUp, activeEventOptions);
+    }
+    if (typeof window !== 'undefined' && window) {
+      window.removeEventListener('blur', this._windowBlur);
     }
   }
 
@@ -849,6 +887,16 @@ export class MatSlider extends _MatSliderMixinBase
   setDisabledState(isDisabled: boolean) {
     this.disabled = isDisabled;
   }
+
+  static ngAcceptInputType_invert: BooleanInput;
+  static ngAcceptInputType_max: NumberInput;
+  static ngAcceptInputType_min: NumberInput;
+  static ngAcceptInputType_step: NumberInput;
+  static ngAcceptInputType_thumbLabel: BooleanInput;
+  static ngAcceptInputType_tickInterval: NumberInput;
+  static ngAcceptInputType_value: NumberInput;
+  static ngAcceptInputType_vertical: BooleanInput;
+  static ngAcceptInputType_disabled: BooleanInput;
 }
 
 /** Returns whether an event is a touch event. */

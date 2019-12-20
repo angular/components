@@ -7,14 +7,20 @@
  */
 
 import {NgModule} from '@angular/core';
+import {
+  CdkPopoverEditExamplesModule
+} from '@angular/components-examples/cdk-experimental/popover-edit';
+import {
+  PopoverEditExamplesModule
+} from '@angular/components-examples/material-experimental/popover-edit';
 import {FormsModule} from '@angular/forms';
 import {RouterModule} from '@angular/router';
-import {ExampleModule} from '../example/example-module';
 import {PopoverEditDemo} from './popover-edit-demo';
 
 @NgModule({
   imports: [
-    ExampleModule,
+    CdkPopoverEditExamplesModule,
+    PopoverEditExamplesModule,
     FormsModule,
     RouterModule.forChild([{path: '', component: PopoverEditDemo}]),
   ],

@@ -8,6 +8,7 @@
 import {ComponentFixture, TestBed, fakeAsync, flush} from '@angular/core/testing';
 import {
   Component,
+  ErrorHandler,
   ViewChild,
   TrackByFunction,
   Type,
@@ -41,10 +42,17 @@ describe('CdkTree', () => {
   function configureCdkTreeTestingModule(declarations: Type<any>[]) {
     TestBed.configureTestingModule({
       imports: [CdkTreeModule],
-      providers: [{
-        provide: Directionality,
-        useFactory: () => dir = {value: 'ltr', change: new EventEmitter<Direction>()}
-      }],
+      providers: [
+        {
+          provide: Directionality,
+          useFactory: () => dir = {value: 'ltr', change: new EventEmitter<Direction>()}
+        },
+        // Custom error handler that re-throws the error. Errors happening within
+        // change detection phase will be reported through the handler and thrown
+        // in Ivy. Since we do not want to pollute the "console.error", but rather
+        // just rely on the actual error interrupting the test, we re-throw here.
+        {provide: ErrorHandler, useValue: ({handleError: (err: any) => { throw err; }})}
+      ],
       declarations: declarations,
     }).compileComponents();
   }
@@ -95,9 +103,9 @@ describe('CdkTree', () => {
       it('with the right accessibility roles', () => {
         expect(treeElement.getAttribute('role')).toBe('tree');
 
-        getNodes(treeElement).forEach(node => {
-          expect(node.getAttribute('role')).toBe('treeitem');
-        });
+        expect(getNodes(treeElement).every(node => {
+          return node.getAttribute('role') === 'treeitem';
+        })).toBe(true);
       });
 
       it('with the right data', () => {
@@ -469,6 +477,15 @@ describe('CdkTree', () => {
         expect(changedNodes[2].getAttribute('initialIndex')).toBe(null);
       });
     });
+
+    it('should pick up indirect descendant node definitions', () => {
+      configureCdkTreeTestingModule([SimpleCdkTreeAppWithIndirectNodes]);
+      const fixture = TestBed.createComponent(SimpleCdkTreeAppWithIndirectNodes);
+      fixture.detectChanges();
+      treeElement = fixture.nativeElement.querySelector('cdk-tree');
+
+      expect(getNodes(treeElement).length).toBe(3);
+    });
   });
 
   describe('nested tree', () => {
@@ -502,9 +519,9 @@ describe('CdkTree', () => {
       it('with the right accessibility roles', () => {
         expect(treeElement.getAttribute('role')).toBe('tree');
 
-        getNodes(treeElement).forEach(node => {
-          expect(node.getAttribute('role')).toBe('treeitem');
-        });
+        expect(getNodes(treeElement).every(node => {
+          return node.getAttribute('role') === 'treeitem';
+        })).toBe(true);
       });
 
       it('with the right data', () => {
@@ -827,9 +844,9 @@ describe('CdkTree', () => {
         getNodes(initialNodes[0]).forEach((node: Element, index: number) => {
           node.setAttribute('initialIndex', `c${index}`);
         });
-        getNodes(initialNodes[0]).forEach((node, index) => {
-          expect(node.getAttribute('initialIndex')).toBe(`c${index}`);
-        });
+        expect(getNodes(initialNodes[0]).every((node, index) => {
+          return node.getAttribute('initialIndex') === `c${index}`;
+        })).toBe(true);
       }
 
       function mutateChildren(parent: TestData) {
@@ -965,10 +982,8 @@ describe('CdkTree', () => {
 
       const depthElements = Array.from(treeElement.querySelectorAll('.tree-test-level')!);
       const expectedLevels = ['0', '0', '1', '2', '0'];
-      depthElements.forEach((element, index) => {
-        const actualLevel = element.textContent!.trim();
-        expect(actualLevel).toBe(expectedLevels[index]);
-      });
+      const actualLevels = depthElements.map(element => element.textContent!.trim());
+      expect(actualLevels).toEqual(expectedLevels);
       expect(depthElements.length).toBe(5);
     });
   });
@@ -1156,6 +1171,22 @@ class SimpleCdkTreeApp {
 
   @ViewChild(CdkTree) tree: CdkTree<TestData>;
   @ViewChildren(CdkTreeNodePadding) paddingNodes: QueryList<CdkTreeNodePadding<TestData>>;
+}
+
+@Component({
+  template: `
+    <cdk-tree [dataSource]="dataSource" [treeControl]="treeControl">
+      <ng-container [ngSwitch]="true">
+        <cdk-tree-node *cdkTreeNodeDef="let node" class="customNodeClass"
+                      cdkTreeNodePadding [cdkTreeNodePaddingIndent]="indent"
+                      cdkTreeNodeToggle>
+                      {{node.pizzaTopping}} - {{node.pizzaCheese}} + {{node.pizzaBase}}
+        </cdk-tree-node>
+      </ng-container>
+    </cdk-tree>
+  `
+})
+class SimpleCdkTreeAppWithIndirectNodes extends SimpleCdkTreeApp {
 }
 
 @Component({

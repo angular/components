@@ -8,7 +8,7 @@
 
 import {FocusMonitor} from '@angular/cdk/a11y';
 import {Directionality} from '@angular/cdk/bidi';
-import {coerceBooleanProperty} from '@angular/cdk/coercion';
+import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
 import {
   AfterContentInit,
   Attribute,
@@ -78,7 +78,6 @@ const _MatSlideToggleMixinBase:
 
 /** Represents a slidable "switch" toggle that can be moved between on and off. */
 @Component({
-  moduleId: module.id,
   selector: 'mat-slide-toggle',
   exportAs: 'matSlideToggle',
   host: {
@@ -294,4 +293,9 @@ export class MatSlideToggle extends _MatSlideToggleMixinBase implements OnDestro
     // we only trigger an explicit change detection for the slide-toggle view and its children.
     this._changeDetectorRef.detectChanges();
   }
+
+  static ngAcceptInputType_required: BooleanInput;
+  static ngAcceptInputType_checked: BooleanInput;
+  static ngAcceptInputType_disabled: BooleanInput;
+  static ngAcceptInputType_disableRipple: BooleanInput;
 }

@@ -6,7 +6,12 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {coerceBooleanProperty, coerceNumberProperty} from '@angular/cdk/coercion';
+import {
+  BooleanInput,
+  coerceBooleanProperty,
+  coerceNumberProperty,
+  NumberInput
+} from '@angular/cdk/coercion';
 import {
   AfterContentChecked,
   AfterContentInit,
@@ -14,18 +19,17 @@ import {
   ChangeDetectorRef,
   Component,
   ContentChildren,
+  Directive,
   ElementRef,
   EventEmitter,
+  Inject,
   Input,
   OnDestroy,
+  Optional,
   Output,
   QueryList,
   ViewChild,
   ViewEncapsulation,
-  Optional,
-  Inject,
-  InjectionToken,
-  Directive,
 } from '@angular/core';
 import {
   CanColor,
@@ -39,7 +43,8 @@ import {
 import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 import {merge, Subscription} from 'rxjs';
 import {startWith} from 'rxjs/operators';
-import {MatTab, MAT_TAB_GROUP} from './tab';
+import {MAT_TAB_GROUP, MatTab} from './tab';
+import {MAT_TABS_CONFIG, MatTabsConfig} from './tab-config';
 
 
 /** Used to generate unique ID's for each tab component */
@@ -55,21 +60,6 @@ export class MatTabChangeEvent {
 
 /** Possible positions for the tab header. */
 export type MatTabHeaderPosition = 'above' | 'below';
-
-/** Object that can be used to configure the default options for the tabs module. */
-export interface MatTabsConfig {
-  /** Duration for the tab animation. Must be a valid CSS value (e.g. 600ms). */
-  animationDuration?: string;
-
-  /**
-   * Whether pagination should be disabled. This can be used to avoid unnecessary
-   * layout recalculations if it's known that pagination won't be required.
-   */
-  disablePagination?: boolean;
-}
-
-/** Injection token that can be used to provide the default options the tabs module. */
-export const MAT_TABS_CONFIG = new InjectionToken<MatTabsConfig>('MAT_TABS_CONFIG');
 
 // Boilerplate for applying mixins to MatTabGroup.
 /** @docs-private */
@@ -88,10 +78,7 @@ interface MatTabGroupBaseHeader {
  * Base class with all of the `MatTabGroupBase` functionality.
  * @docs-private
  */
-@Directive({
-  // TODO(crisbeto): this selector can be removed when we update to Angular 9.0.
-  selector: 'do-not-use-abstract-mat-tab-group-base'
-})
+@Directive()
 // tslint:disable-next-line:class-name
 export abstract class _MatTabGroupBase extends _MatTabGroupMixinBase implements AfterContentInit,
     AfterContentChecked, OnDestroy, CanColor, CanDisableRipple {
@@ -106,12 +93,6 @@ export abstract class _MatTabGroupBase extends _MatTabGroupMixinBase implements 
 
   /** All of the tabs that belong to the group. */
   _tabs: QueryList<MatTab> = new QueryList<MatTab>();
-
-  /**
-   * We need to store the tabs in an Iterable due to strict template type checking with *ngFor and
-   * https://github.com/angular/angular/issues/29842.
-   */
-  _tabsArray: MatTab[] = [];
 
   /** The tab index that should be selected after the content has been checked. */
   private _indexToSelect: number | null = 0;
@@ -190,7 +171,7 @@ export abstract class _MatTabGroupBase extends _MatTabGroupMixinBase implements 
   private _groupId: number;
 
   constructor(elementRef: ElementRef,
-              private _changeDetectorRef: ChangeDetectorRef,
+              protected _changeDetectorRef: ChangeDetectorRef,
               @Inject(MAT_TABS_CONFIG) @Optional() defaultConfig?: MatTabsConfig,
               @Optional() @Inject(ANIMATION_MODULE_TYPE) public _animationMode?: string) {
     super(elementRef);
@@ -252,20 +233,19 @@ export abstract class _MatTabGroupBase extends _MatTabGroupMixinBase implements 
   ngAfterContentInit() {
     this._subscribeToAllTabChanges();
     this._subscribeToTabLabels();
-    this._tabsArray = this._tabs.toArray();
 
     // Subscribe to changes in the amount of tabs, in order to be
     // able to re-render the content as new tabs are added or removed.
     this._tabsSubscription = this._tabs.changes.subscribe(() => {
       const indexToSelect = this._clampTabIndex(this._indexToSelect);
-      this._tabsArray = this._tabs.toArray();
 
       // Maintain the previously-selected tab if a new tab is added or removed and there is no
       // explicit change that selects a different tab.
       if (indexToSelect === this._selectedIndex) {
+        const tabs = this._tabs.toArray();
 
-        for (let i = 0; i < this._tabsArray.length; i++) {
-          if (this._tabsArray[i].isActive) {
+        for (let i = 0; i < tabs.length; i++) {
+          if (tabs[i].isActive) {
             // Assign both to the `_indexToSelect` and `_selectedIndex` so we don't fire a changed
             // event, otherwise the consumer may end up in an infinite loop in some edge cases like
             // adding a tab within the `selectedIndexChange` event.
@@ -297,6 +277,7 @@ export abstract class _MatTabGroupBase extends _MatTabGroupMixinBase implements 
   }
 
   ngOnDestroy() {
+    this._tabs.destroy();
     this._tabsSubscription.unsubscribe();
     this._tabLabelSubscription.unsubscribe();
   }
@@ -402,7 +383,6 @@ export abstract class _MatTabGroupBase extends _MatTabGroupMixinBase implements 
  * See: https://material.io/design/components/tabs.html
  */
 @Component({
-  moduleId: module.id,
   selector: 'mat-tab-group',
   exportAs: 'matTabGroup',
   templateUrl: 'tab-group.html',
@@ -432,4 +412,9 @@ export class MatTabGroup extends _MatTabGroupBase {
               @Optional() @Inject(ANIMATION_MODULE_TYPE) animationMode?: string) {
     super(elementRef, changeDetectorRef, defaultConfig, animationMode);
   }
+
+  static ngAcceptInputType_dynamicHeight: BooleanInput;
+  static ngAcceptInputType_animationDuration: NumberInput;
+  static ngAcceptInputType_selectedIndex: NumberInput;
+  static ngAcceptInputType_disableRipple: BooleanInput;
 }

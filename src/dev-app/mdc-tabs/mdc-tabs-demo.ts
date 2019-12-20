@@ -9,12 +9,12 @@
 import {Component} from '@angular/core';
 
 @Component({
-  moduleId: module.id,
   selector: 'mdc-tabs-demo',
   templateUrl: 'mdc-tabs-demo.html',
   styleUrls: ['mdc-tabs-demo.css'],
 })
 export class MdcTabsDemo {
+  fitInkBarToContent = true;
   links = ['First', 'Second', 'Third'];
   lotsOfTabs = new Array(30).fill(0).map((_, index) => `Tab ${index}`);
   activeLink = this.links[0];

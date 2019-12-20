@@ -1,5 +1,5 @@
 import {async, ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/testing';
-import {Component, ViewChild, ViewChildren, QueryList} from '@angular/core';
+import {Component, QueryList, ViewChild, ViewChildren} from '@angular/core';
 import {MAT_RIPPLE_GLOBAL_OPTIONS, RippleGlobalOptions} from '@angular/material/core';
 import {By} from '@angular/platform-browser';
 import {dispatchFakeEvent, dispatchMouseEvent} from '@angular/cdk/testing/private';
@@ -7,9 +7,11 @@ import {Direction, Directionality} from '@angular/cdk/bidi';
 import {Subject} from 'rxjs';
 import {MatTabsModule} from '../module';
 import {MatTabLink, MatTabNav} from './tab-nav-bar';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {MAT_TABS_CONFIG} from '../index';
 
 
-describe('MatTabNavBar', () => {
+describe('MDC-based MatTabNavBar', () => {
   let dir: Direction = 'ltr';
   let dirChange = new Subject();
   let globalRippleOptions: RippleGlobalOptions;
@@ -321,12 +323,79 @@ describe('MatTabNavBar', () => {
         .toBe(true, 'Expected every tab link to have ripples disabled');
     });
   });
+
+  describe('with the ink bar fit to content', () => {
+    let fixture: ComponentFixture<SimpleTabNavBarTestApp>;
+
+    beforeEach(() => {
+      fixture = TestBed.createComponent(SimpleTabNavBarTestApp);
+      fixture.componentInstance.fitInkBarToContent = true;
+      fixture.detectChanges();
+    });
+
+    it('should properly nest the ink bar when fit to content', () => {
+      const tabElement = fixture.nativeElement.querySelector('.mdc-tab');
+      const contentElement = tabElement.querySelector('.mdc-tab__content');
+      const indicatorElement = tabElement.querySelector('.mdc-tab-indicator');
+      expect(indicatorElement.parentElement).toBeTruthy();
+      expect(indicatorElement.parentElement).toBe(contentElement);
+    });
+
+    it('should be able to move the ink bar between content and full', () => {
+      fixture.componentInstance.fitInkBarToContent = false;
+      fixture.detectChanges();
+
+      const tabElement = fixture.nativeElement.querySelector('.mdc-tab');
+      const indicatorElement = tabElement.querySelector('.mdc-tab-indicator');
+      expect(indicatorElement.parentElement).toBeTruthy();
+      expect(indicatorElement.parentElement).toBe(tabElement);
+
+      fixture.componentInstance.fitInkBarToContent = true;
+      fixture.detectChanges();
+
+      const contentElement = tabElement.querySelector('.mdc-tab__content');
+      expect(indicatorElement.parentElement).toBeTruthy();
+      expect(indicatorElement.parentElement).toBe(contentElement);
+    });
+  });
 });
+
+describe('MatTabNavBar with a default config', () => {
+  let fixture: ComponentFixture<TabLinkWithTabIndexBinding>;
+
+  beforeEach(fakeAsync(() => {
+    TestBed.configureTestingModule({
+      imports: [MatTabsModule, BrowserAnimationsModule],
+      declarations: [TabLinkWithTabIndexBinding],
+      providers: [
+        {provide: MAT_TABS_CONFIG, useValue: {fitInkBarToContent: true}}
+      ]
+    });
+
+    TestBed.compileComponents();
+  }));
+
+  beforeEach(() => {
+    fixture = TestBed.createComponent(TabLinkWithTabIndexBinding);
+    fixture.detectChanges();
+  });
+
+  it('should set whether the ink bar fits to content', () => {
+    const tabElement = fixture.nativeElement.querySelector('.mdc-tab');
+    const contentElement = tabElement.querySelector('.mdc-tab__content');
+    const indicatorElement = tabElement.querySelector('.mdc-tab-indicator');
+    expect(indicatorElement.parentElement).toBeTruthy();
+    expect(indicatorElement.parentElement).toBe(contentElement);
+  });
+});
+
 
 @Component({
   selector: 'test-app',
   template: `
-    <nav mat-tab-nav-bar [disableRipple]="disableRippleOnBar">
+    <nav mat-tab-nav-bar
+         [disableRipple]="disableRippleOnBar"
+         [fitInkBarToContent]="fitInkBarToContent">
       <a mat-tab-link
          *ngFor="let tab of tabs; let index = index"
          [active]="activeIndex === index"
@@ -347,6 +416,7 @@ class SimpleTabNavBarTestApp {
   disableRippleOnBar = false;
   disableRippleOnLink = false;
   tabs = [0, 1, 2];
+  fitInkBarToContent = false;
 
   activeIndex = 0;
 }

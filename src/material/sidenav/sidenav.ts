@@ -22,12 +22,16 @@ import {
 } from '@angular/core';
 import {MatDrawer, MatDrawerContainer, MatDrawerContent, MAT_DRAWER_CONTAINER} from './drawer';
 import {matDrawerAnimations} from './drawer-animations';
-import {coerceBooleanProperty, coerceNumberProperty} from '@angular/cdk/coercion';
+import {
+  BooleanInput,
+  coerceBooleanProperty,
+  coerceNumberProperty,
+  NumberInput
+} from '@angular/cdk/coercion';
 import {ScrollDispatcher} from '@angular/cdk/scrolling';
 
 
 @Component({
-  moduleId: module.id,
   selector: 'mat-sidenav-content',
   template: '<ng-content></ng-content>',
   host: {
@@ -51,7 +55,6 @@ export class MatSidenavContent extends MatDrawerContent {
 
 
 @Component({
-  moduleId: module.id,
   selector: 'mat-sidenav',
   exportAs: 'matSidenav',
   templateUrl: 'drawer.html',
@@ -97,11 +100,17 @@ export class MatSidenav extends MatDrawer {
   get fixedBottomGap(): number { return this._fixedBottomGap; }
   set fixedBottomGap(value) { this._fixedBottomGap = coerceNumberProperty(value); }
   private _fixedBottomGap = 0;
+
+  static ngAcceptInputType_fixedInViewport: BooleanInput;
+  static ngAcceptInputType_fixedTopGap: NumberInput;
+  static ngAcceptInputType_fixedBottomGap: NumberInput;
+  static ngAcceptInputType_disableClose: BooleanInput;
+  static ngAcceptInputType_autoFocus: BooleanInput;
+  static ngAcceptInputType_opened: BooleanInput;
 }
 
 
 @Component({
-  moduleId: module.id,
   selector: 'mat-sidenav-container',
   exportAs: 'matSidenavContainer',
   templateUrl: 'sidenav-container.html',
@@ -127,4 +136,7 @@ export class MatSidenavContainer extends MatDrawerContainer {
   _allDrawers: QueryList<MatSidenav>;
 
   @ContentChild(MatSidenavContent) _content: MatSidenavContent;
+
+  static ngAcceptInputType_autosize: BooleanInput;
+  static ngAcceptInputType_hasBackdrop: BooleanInput;
 }

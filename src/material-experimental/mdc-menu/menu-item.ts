@@ -6,6 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {BooleanInput} from '@angular/cdk/coercion';
 import {Component, ChangeDetectionStrategy, ViewEncapsulation} from '@angular/core';
 import {MatMenuItem as BaseMatMenuItem} from '@angular/material/menu';
 
@@ -14,12 +15,14 @@ import {MatMenuItem as BaseMatMenuItem} from '@angular/material/menu';
  * It exists mostly to set the role attribute.
  */
 @Component({
-  moduleId: module.id,
   selector: '[mat-menu-item]',
   exportAs: 'matMenuItem',
   inputs: ['disabled', 'disableRipple'],
   host: {
     '[attr.role]': 'role',
+    // The MatMenuItem parent class adds `mat-menu-item` to the CSS classlist, but this should
+    // not be added for this MDC equivalent menu item.
+    '[class.mat-menu-item]': 'false',
     'class': 'mat-mdc-menu-item',
     '[class.mat-mdc-menu-item-highlighted]': '_highlighted',
     '[class.mat-mdc-menu-item-submenu-trigger]': '_triggersSubmenu',
@@ -34,4 +37,7 @@ import {MatMenuItem as BaseMatMenuItem} from '@angular/material/menu';
     {provide: BaseMatMenuItem, useExisting: MatMenuItem},
   ]
 })
-export class MatMenuItem extends BaseMatMenuItem {}
+export class MatMenuItem extends BaseMatMenuItem {
+  static ngAcceptInputType_disabled: BooleanInput;
+  static ngAcceptInputType_disableRipple: BooleanInput;
+}

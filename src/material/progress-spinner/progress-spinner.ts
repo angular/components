@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {coerceNumberProperty} from '@angular/cdk/coercion';
+import {coerceNumberProperty, NumberInput} from '@angular/cdk/coercion';
 import {Platform} from '@angular/cdk/platform';
 import {DOCUMENT} from '@angular/common';
 import {
@@ -104,7 +104,6 @@ const INDETERMINATE_ANIMATION_TEMPLATE = `
  * `<mat-progress-spinner>` component.
  */
 @Component({
-  moduleId: module.id,
   selector: 'mat-progress-spinner',
   exportAs: 'matProgressSpinner',
   host: {
@@ -295,6 +294,10 @@ export class MatProgressSpinner extends _MatProgressSpinnerMixinBase implements 
         .replace(/END_VALUE/g, `${0.2 * this._strokeCircumference}`)
         .replace(/DIAMETER/g, `${this.diameter}`);
   }
+
+  static ngAcceptInputType_diameter: NumberInput;
+  static ngAcceptInputType_strokeWidth: NumberInput;
+  static ngAcceptInputType_value: NumberInput;
 }
 
 
@@ -305,7 +308,6 @@ export class MatProgressSpinner extends _MatProgressSpinnerMixinBase implements 
  * indeterminate `<mat-progress-spinner>` instance.
  */
 @Component({
-  moduleId: module.id,
   selector: 'mat-spinner',
   host: {
     'role': 'progressbar',
@@ -330,6 +332,10 @@ export class MatSpinner extends MatProgressSpinner {
     super(elementRef, platform, document, animationMode, defaults);
     this.mode = 'indeterminate';
   }
+
+  static ngAcceptInputType_diameter: NumberInput;
+  static ngAcceptInputType_strokeWidth: NumberInput;
+  static ngAcceptInputType_value: NumberInput;
 }
 
 

@@ -16,10 +16,10 @@ var MATERIAL_PACKAGES = $MATERIAL_ENTRYPOINTS_TMPL;
 var MATERIAL_EXPERIMENTAL_PACKAGES = $MATERIAL_EXPERIMENTAL_ENTRYPOINTS_TMPL;
 
 /** Whether the dev-app is served with Ivy enabled. */
-var isRunningWithIvy = '$COMPILE_TMPL' === 'aot';
+var isRunningWithIvy = '$ANGULAR_IVY_ENABLED_TMPL'.toString() === 'True';
 
-/** Bazel runfile path referring to the "src/" folder of the project. */
-var srcRunfilePath = 'angular_material/src';
+/** Bazel runfile path referring to the "src" folder of the project. */
+var srcRunfilePath = 'src';
 
 /** Path mappings that will be registered in SystemJS. */
 var pathMapping = {};
@@ -27,14 +27,12 @@ var pathMapping = {};
 /** Package configurations that will be used in SystemJS. */
 var packagesConfig = {};
 
-
-
 // Configure all primary entry-points.
 configureEntryPoint('cdk');
 configureEntryPoint('cdk-experimental');
+configureEntryPoint('components-examples');
 configureEntryPoint('material');
 configureEntryPoint('material-experimental');
-configureEntryPoint('material-examples');
 configureEntryPoint('material-moment-adapter');
 
 // Configure all secondary entry-points.
@@ -56,10 +54,13 @@ configureEntryPoint('youtube-player');
 /** Configures the specified package, its entry-point and its examples. */
 function configureEntryPoint(pkgName, entryPoint) {
   var name = entryPoint ? pkgName + '/' + entryPoint : pkgName;
-  var examplesName = 'material-examples/' + name;
+  var examplesName = 'components-examples/' + name;
 
   pathMapping['@angular/' + name] = srcRunfilePath + '/' + name;
   pathMapping['@angular/' + examplesName] = srcRunfilePath + '/' + examplesName;
+
+  // Ensure that imports which resolve to the entry-point directory are
+  // redirected to the "index.js" file of the directory.
   packagesConfig[srcRunfilePath + '/' + name] =
       packagesConfig[srcRunfilePath + '/' + examplesName] = {main: 'index.js'};
 }
@@ -77,6 +78,13 @@ function getBundlePath(bundleName, basePath) {
 }
 
 var map = Object.assign({
+  // Maps imports where the AMD module names start with workspace name (commonly done in Bazel).
+  // This is needed for compatibility with dynamic runfile resolution of the devserver and the
+  // static runfile resolution done in the "pkg_web" rule. In the built web package, the output
+  // tree artifact serves as workspace root and root of the current dev-app Bazel package.
+  'angular_material': '',
+  'angular_material/src/dev-app': '',
+
   'main': 'main.js',
   'tslib': 'tslib/tslib.js',
   'moment': 'moment/min/moment-with-locales.min.js',

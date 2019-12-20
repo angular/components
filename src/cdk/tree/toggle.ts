@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {coerceBooleanProperty} from '@angular/cdk/coercion';
+import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
 import {Directive, HostListener, Input} from '@angular/core';
 
 import {CdkTree, CdkTreeNode} from './tree';
@@ -38,4 +38,6 @@ export class CdkTreeNodeToggle<T> {
 
     event.stopPropagation();
   }
+
+  static ngAcceptInputType_recursive: BooleanInput;
 }

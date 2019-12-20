@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {coerceBooleanProperty} from '@angular/cdk/coercion';
+import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
 import {ENTER, SPACE, hasModifierKey} from '@angular/cdk/keycodes';
 import {
   AfterViewChecked,
@@ -63,7 +63,6 @@ export const MAT_OPTION_PARENT_COMPONENT =
  * Single option inside of a `<mat-select>` element.
  */
 @Component({
-  moduleId: module.id,
   selector: 'mat-option',
   exportAs: 'matOption',
   host: {
@@ -267,6 +266,8 @@ export class MatOption implements FocusableOption, AfterViewChecked, OnDestroy {
   private _emitSelectionChangeEvent(isUserInput = false): void {
     this.onSelectionChange.emit(new MatOptionSelectionChange(this, isUserInput));
   }
+
+  static ngAcceptInputType_disabled: BooleanInput;
 }
 
 /**

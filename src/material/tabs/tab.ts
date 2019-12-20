@@ -6,6 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {BooleanInput} from '@angular/cdk/coercion';
 import {TemplatePortal} from '@angular/cdk/portal';
 import {
   ChangeDetectionStrategy,
@@ -43,7 +44,6 @@ const _MatTabMixinBase: CanDisableCtor & typeof MatTabBase =
 export const MAT_TAB_GROUP = new InjectionToken<any>('MAT_TAB_GROUP');
 
 @Component({
-  moduleId: module.id,
   selector: 'mat-tab',
   templateUrl: 'tab.html',
   inputs: ['disabled'],
@@ -140,4 +140,6 @@ export class MatTab extends _MatTabMixinBase implements OnInit, CanDisable, OnCh
     this._contentPortal = new TemplatePortal(
         this._explicitContent || this._implicitContent, this._viewContainerRef);
   }
+
+  static ngAcceptInputType_disabled: BooleanInput;
 }

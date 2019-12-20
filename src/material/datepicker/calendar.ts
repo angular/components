@@ -47,7 +47,6 @@ export type MatCalendarView = 'month' | 'year' | 'multi-year';
 
 /** Default header for MatCalendar */
 @Component({
-  moduleId: module.id,
   selector: 'mat-calendar-header',
   templateUrl: 'calendar-header.html',
   exportAs: 'matCalendarHeader',
@@ -171,7 +170,6 @@ export class MatCalendarHeader<D> {
  * @docs-private
  */
 @Component({
-  moduleId: module.id,
   selector: 'mat-calendar',
   templateUrl: 'calendar.html',
   styleUrls: ['calendar.css'],
@@ -362,8 +360,8 @@ export class MatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDes
   }
 
   /** Handles date selection in the month view. */
-  _dateSelected(date: D): void {
-    if (!this._dateAdapter.sameDate(date, this.selected)) {
+  _dateSelected(date: D | null): void {
+    if (date && !this._dateAdapter.sameDate(date, this.selected)) {
       this.selectedChange.emit(date);
     }
   }

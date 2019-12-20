@@ -8,7 +8,7 @@
 import {AnimationEvent} from '@angular/animations';
 import {FocusMonitor, FocusOrigin, FocusTrap, FocusTrapFactory} from '@angular/cdk/a11y';
 import {Directionality} from '@angular/cdk/bidi';
-import {coerceBooleanProperty} from '@angular/cdk/coercion';
+import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
 import {ESCAPE, hasModifierKey} from '@angular/cdk/keycodes';
 import {Platform} from '@angular/cdk/platform';
 import {CdkScrollable, ScrollDispatcher, ViewportRuler} from '@angular/cdk/scrolling';
@@ -87,7 +87,6 @@ export function MAT_DRAWER_DEFAULT_AUTOSIZE_FACTORY(): boolean {
 }
 
 @Component({
-  moduleId: module.id,
   selector: 'mat-drawer-content',
   template: '<ng-content></ng-content>',
   host: {
@@ -120,7 +119,6 @@ export class MatDrawerContent extends CdkScrollable implements AfterContentInit 
  * This component corresponds to a drawer that can be opened on the drawer container.
  */
 @Component({
-  moduleId: module.id,
   selector: 'mat-drawer',
   exportAs: 'matDrawer',
   templateUrl: 'drawer.html',
@@ -180,6 +178,15 @@ export class MatDrawer implements AfterContentInit, AfterContentChecked, OnDestr
   get autoFocus(): boolean { return this._autoFocus; }
   set autoFocus(value: boolean) { this._autoFocus = coerceBooleanProperty(value); }
   private _autoFocus: boolean = true;
+
+  /**
+   * Whether the drawer is opened. We overload this because we trigger an event when it
+   * starts or end.
+   */
+  @Input()
+  get opened(): boolean { return this._opened; }
+  set opened(value: boolean) { this.toggle(coerceBooleanProperty(value)); }
+  private _opened: boolean = false;
 
   /** How the sidenav was opened (keypress, mouse click etc.) */
   private _openedVia: FocusOrigin | null;
@@ -375,15 +382,6 @@ export class MatDrawer implements AfterContentInit, AfterContentChecked, OnDestr
   }
 
   /**
-   * Whether the drawer is opened. We overload this because we trigger an event when it
-   * starts or end.
-   */
-  @Input()
-  get opened(): boolean { return this._opened; }
-  set opened(value: boolean) { this.toggle(coerceBooleanProperty(value)); }
-  private _opened: boolean = false;
-
-  /**
    * Open the drawer.
    * @param openedVia Whether the drawer was opened by a key press, mouse click or programmatically.
    * Used for focus management after the sidenav is closed.
@@ -453,6 +451,10 @@ export class MatDrawer implements AfterContentInit, AfterContentChecked, OnDestr
   _animationDoneListener(event: AnimationEvent) {
     this._animationEnd.next(event);
   }
+
+  static ngAcceptInputType_disableClose: BooleanInput;
+  static ngAcceptInputType_autoFocus: BooleanInput;
+  static ngAcceptInputType_opened: BooleanInput;
 }
 
 
@@ -463,7 +465,6 @@ export class MatDrawer implements AfterContentInit, AfterContentChecked, OnDestr
  * and coordinates the backdrop and content styling.
  */
 @Component({
-  moduleId: module.id,
   selector: 'mat-drawer-container',
   exportAs: 'matDrawerContainer',
   templateUrl: 'drawer-container.html',
@@ -629,6 +630,7 @@ export class MatDrawerContainer implements AfterContentInit, DoCheck, OnDestroy 
   ngOnDestroy() {
     this._contentMarginChanges.complete();
     this._doCheckSubject.complete();
+    this._drawers.destroy();
     this._destroyed.next();
     this._destroyed.complete();
   }
@@ -830,4 +832,6 @@ export class MatDrawerContainer implements AfterContentInit, DoCheck, OnDestroy 
     return drawer != null && drawer.opened;
   }
 
+  static ngAcceptInputType_autosize: BooleanInput;
+  static ngAcceptInputType_hasBackdrop: BooleanInput;
 }

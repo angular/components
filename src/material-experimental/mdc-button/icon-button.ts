@@ -6,6 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {BooleanInput} from '@angular/cdk/coercion';
 import {Platform} from '@angular/cdk/platform';
 import {
   ChangeDetectionStrategy,
@@ -33,7 +34,6 @@ import {
  * See https://material.io/develop/web/components/buttons/icon-buttons/
  */
 @Component({
-  moduleId: module.id,
   selector: `button[mat-icon-button]`,
   templateUrl: 'button.html',
   styleUrls: ['icon-button.css'],
@@ -52,6 +52,9 @@ export class MatIconButton extends MatButtonBase {
       @Optional() @Inject(ANIMATION_MODULE_TYPE) animationMode?: string) {
     super(elementRef, platform, ngZone, animationMode);
   }
+
+  static ngAcceptInputType_disabled: BooleanInput;
+  static ngAcceptInputType_disableRipple: BooleanInput;
 }
 
 /**
@@ -60,7 +63,6 @@ export class MatIconButton extends MatButtonBase {
  * See https://material.io/develop/web/components/buttons/icon-buttons/
  */
 @Component({
-  moduleId: module.id,
   selector: `a[mat-icon-button]`,
   templateUrl: 'button.html',
   styleUrls: ['icon-button.css'],
@@ -79,4 +81,7 @@ export class MatIconAnchor extends MatAnchorBase {
       @Optional() @Inject(ANIMATION_MODULE_TYPE) animationMode?: string) {
     super(elementRef, platform, ngZone, animationMode);
   }
+
+  static ngAcceptInputType_disabled: BooleanInput;
+  static ngAcceptInputType_disableRipple: BooleanInput;
 }

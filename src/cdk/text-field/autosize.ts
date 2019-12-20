@@ -6,7 +6,12 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {coerceBooleanProperty} from '@angular/cdk/coercion';
+import {
+  BooleanInput,
+  coerceBooleanProperty,
+  coerceNumberProperty,
+  NumberInput
+} from '@angular/cdk/coercion';
 import {
   Directive,
   ElementRef,
@@ -15,6 +20,7 @@ import {
   DoCheck,
   OnDestroy,
   NgZone,
+  HostListener,
 } from '@angular/core';
 import {Platform} from '@angular/cdk/platform';
 import {auditTime, takeUntil} from 'rxjs/operators';
@@ -30,7 +36,6 @@ import {fromEvent, Subject} from 'rxjs';
     // Textarea elements that have the directive applied should have a single row by default.
     // Browsers normally show two rows by default and therefore this limits the minRows binding.
     'rows': '1',
-    '(input)': '_noopInputHandler()',
   },
 })
 export class CdkTextareaAutosize implements AfterViewInit, DoCheck, OnDestroy {
@@ -56,7 +61,7 @@ export class CdkTextareaAutosize implements AfterViewInit, DoCheck, OnDestroy {
   @Input('cdkAutosizeMinRows')
   get minRows(): number { return this._minRows; }
   set minRows(value: number) {
-    this._minRows = value;
+    this._minRows = coerceNumberProperty(value);
     this._setMinHeight();
   }
 
@@ -64,7 +69,7 @@ export class CdkTextareaAutosize implements AfterViewInit, DoCheck, OnDestroy {
   @Input('cdkAutosizeMaxRows')
   get maxRows(): number { return this._maxRows; }
   set maxRows(value: number) {
-    this._maxRows = value;
+    this._maxRows = coerceNumberProperty(value);
     this._setMaxHeight();
   }
 
@@ -114,7 +119,9 @@ export class CdkTextareaAutosize implements AfterViewInit, DoCheck, OnDestroy {
   ngAfterViewInit() {
     if (this._platform.isBrowser) {
       // Remember the height which we started with in case autosizing is disabled
-      this._initialHeight = this._textareaElement.style.height;
+      // TODO: as any works around `height` being nullable in TS3.6, but non-null in 3.7.
+      // Remove once on TS3.7.
+      this._initialHeight = this._textareaElement.style.height as any;
 
       this.resizeToFitContent();
 
@@ -247,9 +254,15 @@ export class CdkTextareaAutosize implements AfterViewInit, DoCheck, OnDestroy {
     if (this._initialHeight === undefined) {
       return;
     }
-    this._textareaElement.style.height = this._initialHeight;
+    // TODO: "as any" inserted for migration to TS3.7.
+    this._textareaElement.style.height = this._initialHeight as any;
   }
 
+  // In Ivy the `host` metadata will be merged, whereas in ViewEngine it is overridden. In order
+  // to avoid double event listeners, we need to use `HostListener`. Once Ivy is the default, we
+  // can move this back into `host`.
+  // tslint:disable:no-host-decorator-in-concrete
+  @HostListener('input')
   _noopInputHandler() {
     // no-op handler that ensures we're running change detection on input events.
   }
@@ -272,4 +285,8 @@ export class CdkTextareaAutosize implements AfterViewInit, DoCheck, OnDestroy {
       textarea.setSelectionRange(selectionStart, selectionEnd);
     }
   }
+
+  static ngAcceptInputType_minRows: NumberInput;
+  static ngAcceptInputType_maxRows: NumberInput;
+  static ngAcceptInputType_enabled: BooleanInput;
 }
