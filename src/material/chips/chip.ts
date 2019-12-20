@@ -240,6 +240,7 @@ export class MatChip extends _MatChipMixinBase implements FocusableOption, OnDes
 
   constructor(public _elementRef: ElementRef<HTMLElement>,
               private _ngZone: NgZone,
+              @Inject(DOCUMENT) private _document: any,
               platform: Platform,
               @Optional() @Inject(MAT_RIPPLE_GLOBAL_OPTIONS)
               globalRippleOptions: RippleGlobalOptions | null,
