@@ -211,3 +211,80 @@ $mat-typography-level-mappings: (
   // Reset the original values.
   $mdc-typography-styles: $orig-mdc-typography-styles !global;
 }
+
+/// Mixin that turns on strong focus indicators.
+///
+/// @example
+///   .my-app {
+///     @include mat-mdc-strong-focus-indicators();
+///   }
+@mixin mat-mdc-strong-focus-indicators() {
+  // Border width of the focus indicators.
+  $border-width: 2px;
+
+  // Base styles for the focus indicators.
+  .mat-mdc-focus-indicator::before {
+    border-radius: 4px;
+    border: $border-width solid transparent;
+    box-sizing: border-box;
+    position: absolute;
+    pointer-events: none;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+  }
+
+  // By default, all focus indicators are flush with the bounding box of their
+  // host element. For particular elements (listed below), default inset/offset
+  // values are necessary to ensure that the focus indicator is sufficiently
+  // contrastive and renders appropriately.
+
+  .mat-mdc-focus-indicator.mdc-button::before,
+  .mat-mdc-focus-indicator.mdc-fab::before,
+  .mat-mdc-focus-indicator.mdc-icon-button::before {
+    margin: $border-width * -2;
+  }
+
+  .mat-mdc-focus-indicator.mat-mdc-tab::before,
+  .mat-mdc-focus-indicator.mat-mdc-tab-link::before {
+    margin: $border-width * 2;
+  }
+
+  // Render the focus indicator on focus. Defining a pseudo element's
+  // content will cause it to render.
+
+  // For checkboxes and slide toggles, render the focus indicator when the class .cdk-focused is
+  // present.
+  .mdc-checkbox__native-control:focus ~ .mat-mdc-focus-indicator::before,
+  .mdc-switch__native-control:focus ~ .mat-mdc-focus-indicator::before,
+
+  // For all other components, render the focus indicator on focus.
+  .mat-mdc-focus-indicator:focus::before {
+    content: '';
+  }
+}
+
+/// Mixin that sets the color of the focus indicators.
+///
+/// @param {color|map} $themeOrMap
+///   If theme, focus indicators are set to the primary color of the theme. If
+///   color, focus indicators are set to that color.
+///
+/// @example
+///   .demo-dark-theme {
+///     @include mat-mdc-strong-focus-indicators-theme($darkThemeMap);
+///   }
+///
+/// @example
+///   .demo-red-theme {
+///     @include mat-mdc-strong-focus-indicators-theme(#F00);
+///   }
+@mixin mat-mdc-strong-focus-indicators-theme($themeOrColor) {
+  .mat-mdc-focus-indicator::before {
+    border-color: if(
+      type-of($themeOrColor) == 'map',
+      mat-color(map_get($themeOrColor, primary)),
+      $themeOrColor);
+  }
+}

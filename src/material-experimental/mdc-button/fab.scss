@@ -9,9 +9,11 @@
 .mat-mdc-fab, .mat-mdc-mini-fab {
   @include _mat-button-interactive();
   @include _mat-button-disabled();
-}
 
-.mat-mdc-fab, .mat-mdc-mini-fab {
+  &:not(.mdc-ripple-upgraded):focus::before {
+    background: transparent;
+    opacity: 1;
+  }
 }
 
 // MDC expects the fab icon to contain this HTML content:

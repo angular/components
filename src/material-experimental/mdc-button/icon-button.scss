@@ -13,4 +13,14 @@
   border-radius: 50%;
 
   @include _mat-button-disabled();
+
+  &.mat-unthemed,
+  &.mat-primary,
+  &.mat-accent,
+  &.mat-warn {
+    &:not(.mdc-ripple-upgraded):focus::before {
+      background: transparent;
+      opacity: 1;
+    }
+  }
 }
