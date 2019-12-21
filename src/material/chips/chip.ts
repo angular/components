@@ -240,14 +240,15 @@ export class MatChip extends _MatChipMixinBase implements FocusableOption, OnDes
 
   constructor(public _elementRef: ElementRef<HTMLElement>,
               private _ngZone: NgZone,
-              @Inject(DOCUMENT) private _document: any,
               platform: Platform,
               @Optional() @Inject(MAT_RIPPLE_GLOBAL_OPTIONS)
               globalRippleOptions: RippleGlobalOptions | null,
               // @breaking-change 8.0.0 `animationMode` parameter to become required.
               @Optional() @Inject(ANIMATION_MODULE_TYPE) animationMode?: string,
               // @breaking-change 9.0.0 `_changeDetectorRef` parameter to become required.
-              private _changeDetectorRef?: ChangeDetectorRef) {
+              private _changeDetectorRef?: ChangeDetectorRef,
+              // @breaking-change 11.0.0 `_document` parameter to become required.
+              @Optional() @Inject(DOCUMENT) _document?: any) {
     super(_elementRef);
 
     this._addHostClassName();
@@ -255,7 +256,7 @@ export class MatChip extends _MatChipMixinBase implements FocusableOption, OnDes
     // Dynamically create the ripple target, append it within the chip, and use it as the
     // chip's ripple target. Adding the class '.mat-chip-ripple' ensures that it will have
     // the proper styles.
-    this._chipRippleTarget = this._document.createElement('div');
+    this._chipRippleTarget = (_document || document).createElement('div');
     this._chipRippleTarget.classList.add('mat-chip-ripple');
     this._elementRef.nativeElement.appendChild(this._chipRippleTarget);
     this._chipRipple = new RippleRenderer(this, _ngZone, this._chipRippleTarget, platform);
