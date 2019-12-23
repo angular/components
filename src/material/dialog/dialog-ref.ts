@@ -117,15 +117,15 @@ export class MatDialogRef<T, R = any> {
     // The logic that disposes of the overlay depends on the exit animation completing, however
     // it isn't guaranteed if the parent view is destroyed before that event. Add a fallback
     // observer which will clean everything up if the animation hasn't completed within a specified
-    // amount of time plus 100ms. We don't need to run this outside the NgZone, because for the
-    // vast majority of cases the timeout will have been cleared before it has the chance to fire.
+    // amount of time plus 100ms.
     race(
       this._containerInstance._animationStateChanged
         .pipe(
           filter(event => event.phaseName === 'done' && event.toState === 'exit'),
           map(event => event.totalTime)
         ),
-      of(null).pipe(delay(200), mapTo(200)) // 200ms = estimated animation time of 100ms + 100ms
+      of(null)
+      .pipe((take(1)), delay(200), mapTo(200)) // 200ms = estimated animation time of 100ms + 100ms
     ).subscribe(() => {
       // Checks if the overlay still exists after assumed animation time has elapsed
       if (this._overlayRef.hasAttached()) {
