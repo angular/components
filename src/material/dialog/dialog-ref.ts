@@ -120,13 +120,17 @@ export class MatDialogRef<T, R = any> {
     // amount of time plus 100ms.
     race(
       this._containerInstance._animationStateChanged
-        .pipe(
-          filter(event => event.phaseName === 'done' && event.toState === 'exit'),
-          map(event => event.totalTime)
-        ),
+      .pipe(
+        filter(event => event.phaseName === 'done' && event.toState === 'exit'),
+        map(event => event.totalTime)
+      ),
       of(null)
-      .pipe((take(1)), delay(200), mapTo(200)) // 200ms = estimated animation time of 100ms + 100ms
-    ).subscribe(() => {
+        .pipe(delay(200), mapTo(200)) // 200ms = estimated animation time of 100ms + 100ms
+    )
+    .pipe(
+      take(1)
+    )
+    .subscribe(() => {
       // Checks if the overlay still exists after assumed animation time has elapsed
       if (this._overlayRef.hasAttached()) {
         // Dispose of overlay assuming animation has not completed in time
