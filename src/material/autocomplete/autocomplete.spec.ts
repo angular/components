@@ -2593,6 +2593,410 @@ describe('MatAutocomplete', () => {
 
     expect(formControl.value).toBe('Cal', 'Expected new value to be propagated to model');
   }));
+
+  describe('option height is defined', () => {
+    let fixture: ComponentFixture<AutocompleteWithDefinedOptionHeight>;
+    let DOWN_ARROW_EVENT: KeyboardEvent;
+    let UP_ARROW_EVENT: KeyboardEvent;
+
+    beforeEach(fakeAsync(() => {
+      fixture = createComponent(AutocompleteWithDefinedOptionHeight);
+      fixture.detectChanges();
+
+      DOWN_ARROW_EVENT = createKeyboardEvent('keydown', DOWN_ARROW);
+      UP_ARROW_EVENT = createKeyboardEvent('keydown', UP_ARROW);
+
+      fixture.componentInstance.trigger.openPanel();
+      fixture.detectChanges();
+      zone.simulateZoneExit();
+    }));
+
+    it('should have height of option 16px', () => {
+      const optionEls =
+          overlayContainerElement.querySelectorAll('mat-option') as NodeListOf<HTMLElement>;
+      const trigger = fixture.componentInstance.trigger;
+      const scrollContainer = document.querySelector('.cdk-overlay-pane .mat-autocomplete-panel')!;
+
+      trigger._handleKeydown(DOWN_ARROW_EVENT);
+      fixture.detectChanges();
+
+      expect(scrollContainer.scrollTop).toEqual(0, `Expected panel not to scroll.`);
+
+      expect(trigger.panelOpen)
+          .toBe(true, 'Expected first down press to open the pane.');
+
+      expect(Math.round(optionEls[0].getBoundingClientRect().height))
+          .toBe(16, 'Expected height of option is 16');
+
+    });
+
+    it('should scroll to active options below the fold', () => {
+      const trigger = fixture.componentInstance.trigger;
+      const scrollContainer =
+          document.querySelector('.cdk-overlay-pane .mat-autocomplete-panel')!;
+
+      trigger._handleKeydown(DOWN_ARROW_EVENT);
+      fixture.detectChanges();
+      expect(scrollContainer.scrollTop).toEqual(0, `Expected panel not to scroll.`);
+
+
+      // These down arrows will set the 7th option active, below the fold.
+      for (let i = 6; i >= 1; i -= 1) {
+        trigger._handleKeydown(DOWN_ARROW_EVENT);
+      }
+
+      // Expect scroll still 0
+      expect(scrollContainer.scrollTop)
+          .toEqual(0, `Expected panel to reveal the sixth option.`);
+
+      // These down arrows will set the 17th option active, below the fold.
+      for (let i = 10; i >= 1; i -= 1) {
+        trigger._handleKeydown(DOWN_ARROW_EVENT);
+      }
+
+      // Expect option bottom minus the panel height (272 - 256 = 16)
+      expect(scrollContainer.scrollTop)
+          .toEqual(16, `Expected panel to reveal the sixth option.`);
+    });
+
+    it('should scroll to active options on UP arrow', () => {
+      const scrollContainer = document.querySelector('.cdk-overlay-pane .mat-autocomplete-panel')!;
+
+      fixture.componentInstance.trigger._handleKeydown(UP_ARROW_EVENT);
+      fixture.detectChanges();
+
+      // Expect option bottom minus the panel height (528 - 256 = 272)
+      expect(scrollContainer.scrollTop).toEqual(272, `Expected panel to reveal last option.`);
+    });
+
+    it('should not scroll to active options that are fully in the panel', () => {
+      const trigger = fixture.componentInstance.trigger;
+      const scrollContainer = document.querySelector('.cdk-overlay-pane .mat-autocomplete-panel')!;
+
+      trigger._handleKeydown(DOWN_ARROW_EVENT);
+      fixture.detectChanges();
+
+      expect(scrollContainer.scrollTop).toEqual(0, `Expected panel not to scroll.`);
+
+      // These down arrows will set the 17th option active, below the fold.
+      for (let i = 16; i >= 1; i -= 1) {
+        trigger._handleKeydown(DOWN_ARROW_EVENT);
+      }
+
+      // Expect option bottom minus the panel height (272 - 256 = 16)
+      expect(scrollContainer.scrollTop)
+          .toEqual(16, `Expected panel to reveal the sixth option.`);
+
+      // These up arrows will set the 2nd option active
+      for (let i = 14; i >= 1; i -= 1) {
+        trigger._handleKeydown(UP_ARROW_EVENT);
+      }
+
+      // Expect no scrolling to have occurred. Still showing bottom of 6th option.
+      expect(scrollContainer.scrollTop)
+          .toEqual(16, `Expected panel not to scroll up since sixth option still fully visible.`);
+    });
+
+    it('should scroll to active options that are above the panel', () => {
+      const trigger = fixture.componentInstance.trigger;
+      const scrollContainer = document.querySelector('.cdk-overlay-pane .mat-autocomplete-panel')!;
+
+      trigger._handleKeydown(DOWN_ARROW_EVENT);
+      fixture.detectChanges();
+
+      expect(scrollContainer.scrollTop).toEqual(0, `Expected panel not to scroll.`);
+
+      // These down arrows will set the 18th option active, below the fold.
+      for (let i = 17; i >= 1; i -= 1) {
+        trigger._handleKeydown(DOWN_ARROW_EVENT);
+      }
+
+      // These down arrows will set the 2d option active, below the fold.
+      for (let i = 16; i >= 1; i -= 1) {
+        trigger._handleKeydown(UP_ARROW_EVENT);
+      }
+
+      // Expect to show the top of the 2nd option at the top of the panel
+      expect(scrollContainer.scrollTop)
+          .toEqual(16, `Expected panel to scroll up when option is above panel.`);
+    });
+
+  });
+
+  describe('option height is auto detected', () => {
+    let fixture: ComponentFixture<AutocompleteWithAutoDetectedOptionHeight>;
+    let DOWN_ARROW_EVENT: KeyboardEvent;
+    let UP_ARROW_EVENT: KeyboardEvent;
+    const style = document.createElement('style');
+    style.type = 'text/css';
+    style.innerHTML = 'mat-option { height: 16px!important; }';
+
+    beforeAll(() => {
+      document.getElementsByTagName('head')[0].appendChild(style);
+    });
+
+    beforeEach(fakeAsync(() => {
+      fixture = createComponent(AutocompleteWithAutoDetectedOptionHeight);
+      fixture.detectChanges();
+
+      DOWN_ARROW_EVENT = createKeyboardEvent('keydown', DOWN_ARROW);
+      UP_ARROW_EVENT = createKeyboardEvent('keydown', UP_ARROW);
+
+      fixture.componentInstance.trigger.openPanel();
+      fixture.detectChanges();
+      zone.simulateZoneExit();
+    }));
+
+    afterAll(() => {
+      if (style.parentNode) {
+        style.parentNode.removeChild(style);
+      }
+    });
+
+    it('should have height of option 16px', () => {
+      const optionEls =
+          overlayContainerElement.querySelectorAll('mat-option') as NodeListOf<HTMLElement>;
+      const trigger = fixture.componentInstance.trigger;
+      const scrollContainer = document.querySelector('.cdk-overlay-pane .mat-autocomplete-panel')!;
+
+      trigger._handleKeydown(DOWN_ARROW_EVENT);
+      fixture.detectChanges();
+
+      expect(scrollContainer.scrollTop).toEqual(0, `Expected panel not to scroll.`);
+
+      expect(trigger.panelOpen)
+          .toBe(true, 'Expected first down press to open the pane.');
+
+      expect(Math.round(optionEls[0].getBoundingClientRect().height))
+          .toBe(16, 'Expected height of option is 16');
+
+    });
+
+    it('should scroll to active options below the fold', () => {
+      const trigger = fixture.componentInstance.trigger;
+      const scrollContainer =
+          document.querySelector('.cdk-overlay-pane .mat-autocomplete-panel')!;
+
+      trigger._handleKeydown(DOWN_ARROW_EVENT);
+      fixture.detectChanges();
+      expect(scrollContainer.scrollTop).toEqual(0, `Expected panel not to scroll.`);
+
+
+      // These down arrows will set the 7th option active, below the fold.
+      for (let i = 6; i >= 1; i -= 1) {
+        trigger._handleKeydown(DOWN_ARROW_EVENT);
+      }
+
+      // Expect scroll still 0
+      expect(scrollContainer.scrollTop)
+          .toEqual(0, `Expected panel to reveal the sixth option.`);
+
+      // These down arrows will set the 17th option active, below the fold.
+      for (let i = 10; i >= 1; i -= 1) {
+        trigger._handleKeydown(DOWN_ARROW_EVENT);
+      }
+
+      // Expect option bottom minus the panel height (272 - 256 = 16)
+      expect(scrollContainer.scrollTop)
+          .toEqual(16, `Expected panel to reveal the sixth option.`);
+    });
+
+    it('should scroll to active options on UP arrow', () => {
+      const scrollContainer = document.querySelector('.cdk-overlay-pane .mat-autocomplete-panel')!;
+
+      fixture.componentInstance.trigger._handleKeydown(UP_ARROW_EVENT);
+      fixture.detectChanges();
+
+      // Expect option bottom minus the panel height (528 - 256 = 272)
+      expect(scrollContainer.scrollTop).toEqual(272, `Expected panel to reveal last option.`);
+    });
+
+    it('should not scroll to active options that are fully in the panel', () => {
+      const trigger = fixture.componentInstance.trigger;
+      const scrollContainer = document.querySelector('.cdk-overlay-pane .mat-autocomplete-panel')!;
+
+      trigger._handleKeydown(DOWN_ARROW_EVENT);
+      fixture.detectChanges();
+
+      expect(scrollContainer.scrollTop).toEqual(0, `Expected panel not to scroll.`);
+
+      // These down arrows will set the 17th option active, below the fold.
+      for (let i = 16; i >= 1; i -= 1) {
+        trigger._handleKeydown(DOWN_ARROW_EVENT);
+      }
+
+      // Expect option bottom minus the panel height (272 - 256 = 16)
+      expect(scrollContainer.scrollTop)
+          .toEqual(16, `Expected panel to reveal the sixth option.`);
+
+      // These up arrows will set the 2nd option active
+      for (let i = 14; i >= 1; i -= 1) {
+        trigger._handleKeydown(UP_ARROW_EVENT);
+      }
+
+      // Expect no scrolling to have occurred. Still showing bottom of 6th option.
+      expect(scrollContainer.scrollTop)
+          .toEqual(16, `Expected panel not to scroll up since sixth option still fully visible.`);
+    });
+
+    it('should scroll to active options that are above the panel', () => {
+      const trigger = fixture.componentInstance.trigger;
+      const scrollContainer = document.querySelector('.cdk-overlay-pane .mat-autocomplete-panel')!;
+
+      trigger._handleKeydown(DOWN_ARROW_EVENT);
+      fixture.detectChanges();
+
+      expect(scrollContainer.scrollTop).toEqual(0, `Expected panel not to scroll.`);
+
+      // These down arrows will set the 18th option active, below the fold.
+      for (let i = 17; i >= 1; i -= 1) {
+        trigger._handleKeydown(DOWN_ARROW_EVENT);
+      }
+
+      // These down arrows will set the 2d option active, below the fold.
+      for (let i = 16; i >= 1; i -= 1) {
+        trigger._handleKeydown(UP_ARROW_EVENT);
+      }
+
+      // Expect to show the top of the 2nd option at the top of the panel
+      expect(scrollContainer.scrollTop)
+          .toEqual(16, `Expected panel to scroll up when option is above panel.`);
+    });
+
+  });
+
+  describe('option and panel heights are defined', () => {
+    let fixture: ComponentFixture<AutocompleteWithDefinedOptionAndPanelHeights>;
+    let DOWN_ARROW_EVENT: KeyboardEvent;
+    let UP_ARROW_EVENT: KeyboardEvent;
+
+    beforeEach(fakeAsync(() => {
+      fixture = createComponent(AutocompleteWithDefinedOptionAndPanelHeights);
+      fixture.detectChanges();
+
+      DOWN_ARROW_EVENT = createKeyboardEvent('keydown', DOWN_ARROW);
+      UP_ARROW_EVENT = createKeyboardEvent('keydown', UP_ARROW);
+
+      fixture.componentInstance.trigger.openPanel();
+      fixture.detectChanges();
+      zone.simulateZoneExit();
+    }));
+
+    it('should have height of option 16px', () => {
+      const optionEls =
+          overlayContainerElement.querySelectorAll('mat-option') as NodeListOf<HTMLElement>;
+      const trigger = fixture.componentInstance.trigger;
+      const scrollContainer = document.querySelector('.cdk-overlay-pane .mat-autocomplete-panel')!;
+
+      trigger._handleKeydown(DOWN_ARROW_EVENT);
+      fixture.detectChanges();
+
+      expect(scrollContainer.scrollTop).toEqual(0, `Expected panel not to scroll.`);
+
+      expect(Math.round(scrollContainer.getBoundingClientRect().height)).
+        toEqual(240, `Expected panel height is 240.`);
+
+      expect(trigger.panelOpen)
+          .toBe(true, 'Expected first down press to open the pane.');
+
+      expect(Math.round(optionEls[0].getBoundingClientRect().height))
+          .toBe(16, 'Expected height of option is 16');
+
+    });
+
+    it('should scroll to active options below the fold', () => {
+      const trigger = fixture.componentInstance.trigger;
+      const scrollContainer =
+          document.querySelector('.cdk-overlay-pane .mat-autocomplete-panel')!;
+
+      trigger._handleKeydown(DOWN_ARROW_EVENT);
+      fixture.detectChanges();
+      expect(scrollContainer.scrollTop).toEqual(0, `Expected panel not to scroll.`);
+
+
+      // These down arrows will set the 7th option active, below the fold.
+      for (let i = 6; i >= 1; i -= 1) {
+        trigger._handleKeydown(DOWN_ARROW_EVENT);
+      }
+
+      // Expect scroll still 0
+      expect(scrollContainer.scrollTop)
+          .toEqual(0, `Expected panel to reveal the sixth option.`);
+
+      // These down arrows will set the 17th option active, below the fold.
+      for (let i = 10; i >= 1; i -= 1) {
+        trigger._handleKeydown(DOWN_ARROW_EVENT);
+      }
+
+      // Expect option bottom minus the panel height (272 - 240 = 32)
+      expect(scrollContainer.scrollTop)
+          .toEqual(32, `Expected panel to reveal the sixth option.`);
+    });
+
+    it('should scroll to active options on UP arrow', () => {
+      const scrollContainer = document.querySelector('.cdk-overlay-pane .mat-autocomplete-panel')!;
+
+      fixture.componentInstance.trigger._handleKeydown(UP_ARROW_EVENT);
+      fixture.detectChanges();
+
+      // Expect option bottom minus the panel height (528 - 240 = 288)
+      expect(scrollContainer.scrollTop).toEqual(288, `Expected panel to reveal last option.`);
+    });
+
+    it('should not scroll to active options that are fully in the panel', () => {
+      const trigger = fixture.componentInstance.trigger;
+      const scrollContainer = document.querySelector('.cdk-overlay-pane .mat-autocomplete-panel')!;
+
+      trigger._handleKeydown(DOWN_ARROW_EVENT);
+      fixture.detectChanges();
+
+      expect(scrollContainer.scrollTop).toEqual(0, `Expected panel not to scroll.`);
+
+      // These down arrows will set the 17th option active, below the fold.
+      for (let i = 16; i >= 1; i -= 1) {
+        trigger._handleKeydown(DOWN_ARROW_EVENT);
+      }
+
+      // Expect option bottom minus the panel height (272 - 240 = 32)
+      expect(scrollContainer.scrollTop)
+          .toEqual(32, `Expected panel to reveal the sixth option.`);
+
+      // These up arrows will set the 2nd option active
+      for (let i = 14; i >= 1; i -= 1) {
+        trigger._handleKeydown(UP_ARROW_EVENT);
+      }
+
+      // Expect no scrolling to have occurred. Still showing bottom of 6th option.
+      expect(scrollContainer.scrollTop)
+          .toEqual(32, `Expected panel not to scroll up since sixth option still fully visible.`);
+    });
+
+    it('should scroll to active options that are above the panel', () => {
+      const trigger = fixture.componentInstance.trigger;
+      const scrollContainer = document.querySelector('.cdk-overlay-pane .mat-autocomplete-panel')!;
+
+      trigger._handleKeydown(DOWN_ARROW_EVENT);
+      fixture.detectChanges();
+
+      expect(scrollContainer.scrollTop).toEqual(0, `Expected panel not to scroll.`);
+
+      // These down arrows will set the 18th option active, below the fold.
+      for (let i = 17; i >= 1; i -= 1) {
+        trigger._handleKeydown(DOWN_ARROW_EVENT);
+      }
+
+      // These down arrows will set the 2d option active, below the fold.
+      for (let i = 16; i >= 1; i -= 1) {
+        trigger._handleKeydown(UP_ARROW_EVENT);
+      }
+
+      // Expect to show the top of the 2nd option at the top of the panel
+      expect(scrollContainer.scrollTop)
+          .toEqual(16, `Expected panel to scroll up when option is above panel.`);
+    });
+
+  });
+
 });
 
 const SIMPLE_AUTOCOMPLETE_TEMPLATE = `
@@ -3007,7 +3411,6 @@ class AutocompleteWithNativeAutocompleteAttribute {
 class InputWithoutAutocompleteAndDisabled {
 }
 
-
 @Component({
   template: `
     <mat-form-field>
@@ -3026,4 +3429,277 @@ class AutocompleteWithActivatedEvent {
   @ViewChild(MatAutocompleteTrigger) trigger: MatAutocompleteTrigger;
   @ViewChild(MatAutocomplete) autocomplete: MatAutocomplete;
   @ViewChildren(MatOption) options: QueryList<MatOption>;
+}
+
+@Component({template: `
+<mat-form-field [floatLabel]="floatLabel" [style.width.px]="width">
+  <input
+    matInput
+    placeholder="State"
+    [matAutocomplete]="auto"
+    [matAutocompletePosition]="position"
+    [matAutocompleteDisabled]="autocompleteDisabled"
+    [formControl]="stateCtrl">
+</mat-form-field>
+
+<mat-autocomplete [class]="panelClass" #auto="matAutocomplete" [displayWith]="displayFn"
+  [disableRipple]="disableRipple" (opened)="openedSpy()" (closed)="closedSpy()"
+  [optionHeight]="16">
+  <mat-option *ngFor="let state of filteredStates" [value]="state">
+    <span>{{ state.code }}: {{ state.name }}</span>
+  </mat-option>
+</mat-autocomplete>
+`})
+class AutocompleteWithDefinedOptionHeight implements OnDestroy {
+  stateCtrl = new FormControl();
+  filteredStates: any[];
+  valueSub: Subscription;
+  floatLabel = 'auto';
+  position = 'auto';
+  width: number;
+  disableRipple = false;
+  autocompleteDisabled = false;
+  panelClass = 'class-one class-two';
+  openedSpy = jasmine.createSpy('autocomplete opened spy');
+  closedSpy = jasmine.createSpy('autocomplete closed spy');
+
+  @ViewChild(MatAutocompleteTrigger, {static: true}) trigger: MatAutocompleteTrigger;
+  @ViewChild(MatAutocomplete) panel: MatAutocomplete;
+  @ViewChild(MatFormField) formField: MatFormField;
+  @ViewChildren(MatOption) options: QueryList<MatOption>;
+
+  states = [
+    {code: 'AL', name: 'Alabama'},
+    {code: 'CA', name: 'California'},
+    {code: 'FL', name: 'Florida'},
+    {code: 'KS', name: 'Kansas'},
+    {code: 'MA', name: 'Massachusetts'},
+    {code: 'NY', name: 'New York'},
+    {code: 'OR', name: 'Oregon'},
+    {code: 'PA', name: 'Pennsylvania'},
+    {code: 'TN', name: 'Tennessee'},
+    {code: 'VA', name: 'Virginia'},
+    {code: 'WY', name: 'Wyoming'},
+    {code: 'AL', name: 'Alabama'},
+    {code: 'CA', name: 'California'},
+    {code: 'FL', name: 'Florida'},
+    {code: 'KS', name: 'Kansas'},
+    {code: 'MA', name: 'Massachusetts'},
+    {code: 'NY', name: 'New York'},
+    {code: 'OR', name: 'Oregon'},
+    {code: 'PA', name: 'Pennsylvania'},
+    {code: 'TN', name: 'Tennessee'},
+    {code: 'VA', name: 'Virginia'},
+    {code: 'WY', name: 'Wyoming'},
+    {code: 'AL', name: 'Alabama'},
+    {code: 'CA', name: 'California'},
+    {code: 'FL', name: 'Florida'},
+    {code: 'KS', name: 'Kansas'},
+    {code: 'MA', name: 'Massachusetts'},
+    {code: 'NY', name: 'New York'},
+    {code: 'OR', name: 'Oregon'},
+    {code: 'PA', name: 'Pennsylvania'},
+    {code: 'TN', name: 'Tennessee'},
+    {code: 'VA', name: 'Virginia'},
+    {code: 'WY', name: 'Wyoming'},
+  ];
+
+
+  constructor() {
+    this.filteredStates = this.states;
+    this.valueSub = this.stateCtrl.valueChanges.subscribe(val => {
+      this.filteredStates = val ? this.states.filter((s) => s.name.match(new RegExp(val, 'gi')))
+                                : this.states;
+    });
+  }
+
+  displayFn(value: any): string {
+    return value ? value.name : value;
+  }
+
+  ngOnDestroy() {
+    this.valueSub.unsubscribe();
+  }
+}
+
+@Component({template: `
+<mat-form-field [floatLabel]="floatLabel" [style.width.px]="width">
+  <input
+    matInput
+    placeholder="State"
+    [matAutocomplete]="auto"
+    [matAutocompletePosition]="position"
+    [matAutocompleteDisabled]="autocompleteDisabled"
+    [formControl]="stateCtrl">
+</mat-form-field>
+
+<mat-autocomplete [class]="panelClass" #auto="matAutocomplete" [displayWith]="displayFn"
+  [disableRipple]="disableRipple" (opened)="openedSpy()" (closed)="closedSpy()"
+  [optionHeight]="'auto'">
+  <mat-option *ngFor="let state of filteredStates" [value]="state">
+    <span>{{ state.code }}: {{ state.name }}</span>
+  </mat-option>
+</mat-autocomplete>
+`})
+class AutocompleteWithAutoDetectedOptionHeight implements OnDestroy {
+  stateCtrl = new FormControl();
+  filteredStates: any[];
+  valueSub: Subscription;
+  floatLabel = 'auto';
+  position = 'auto';
+  width: number;
+  disableRipple = false;
+  autocompleteDisabled = false;
+  panelClass = 'class-one class-two';
+  openedSpy = jasmine.createSpy('autocomplete opened spy');
+  closedSpy = jasmine.createSpy('autocomplete closed spy');
+
+  @ViewChild(MatAutocompleteTrigger, {static: true}) trigger: MatAutocompleteTrigger;
+  @ViewChild(MatAutocomplete) panel: MatAutocomplete;
+  @ViewChild(MatFormField) formField: MatFormField;
+  @ViewChildren(MatOption) options: QueryList<MatOption>;
+
+  states = [
+    {code: 'AL', name: 'Alabama'},
+    {code: 'CA', name: 'California'},
+    {code: 'FL', name: 'Florida'},
+    {code: 'KS', name: 'Kansas'},
+    {code: 'MA', name: 'Massachusetts'},
+    {code: 'NY', name: 'New York'},
+    {code: 'OR', name: 'Oregon'},
+    {code: 'PA', name: 'Pennsylvania'},
+    {code: 'TN', name: 'Tennessee'},
+    {code: 'VA', name: 'Virginia'},
+    {code: 'WY', name: 'Wyoming'},
+    {code: 'AL', name: 'Alabama'},
+    {code: 'CA', name: 'California'},
+    {code: 'FL', name: 'Florida'},
+    {code: 'KS', name: 'Kansas'},
+    {code: 'MA', name: 'Massachusetts'},
+    {code: 'NY', name: 'New York'},
+    {code: 'OR', name: 'Oregon'},
+    {code: 'PA', name: 'Pennsylvania'},
+    {code: 'TN', name: 'Tennessee'},
+    {code: 'VA', name: 'Virginia'},
+    {code: 'WY', name: 'Wyoming'},
+    {code: 'AL', name: 'Alabama'},
+    {code: 'CA', name: 'California'},
+    {code: 'FL', name: 'Florida'},
+    {code: 'KS', name: 'Kansas'},
+    {code: 'MA', name: 'Massachusetts'},
+    {code: 'NY', name: 'New York'},
+    {code: 'OR', name: 'Oregon'},
+    {code: 'PA', name: 'Pennsylvania'},
+    {code: 'TN', name: 'Tennessee'},
+    {code: 'VA', name: 'Virginia'},
+    {code: 'WY', name: 'Wyoming'},
+  ];
+
+
+  constructor() {
+    this.filteredStates = this.states;
+    this.valueSub = this.stateCtrl.valueChanges.subscribe(val => {
+      this.filteredStates = val ? this.states.filter((s) => s.name.match(new RegExp(val, 'gi')))
+                                : this.states;
+    });
+  }
+
+  displayFn(value: any): string {
+    return value ? value.name : value;
+  }
+
+  ngOnDestroy() {
+    this.valueSub.unsubscribe();
+  }
+}
+
+@Component({template: `
+<mat-form-field [floatLabel]="floatLabel" [style.width.px]="width">
+  <input
+    matInput
+    placeholder="State"
+    [matAutocomplete]="auto"
+    [matAutocompletePosition]="position"
+    [matAutocompleteDisabled]="autocompleteDisabled"
+    [formControl]="stateCtrl">
+</mat-form-field>
+
+<mat-autocomplete [class]="panelClass" #auto="matAutocomplete" [displayWith]="displayFn"
+  [disableRipple]="disableRipple" (opened)="openedSpy()" (closed)="closedSpy()"
+  [optionHeight]="16" [panelHeight]="240">
+  <mat-option *ngFor="let state of filteredStates" [value]="state">
+    <span>{{ state.code }}: {{ state.name }}</span>
+  </mat-option>
+</mat-autocomplete>
+`})
+class AutocompleteWithDefinedOptionAndPanelHeights implements OnDestroy {
+  stateCtrl = new FormControl();
+  filteredStates: any[];
+  valueSub: Subscription;
+  floatLabel = 'auto';
+  position = 'auto';
+  width: number;
+  disableRipple = false;
+  autocompleteDisabled = false;
+  panelClass = 'class-one class-two';
+  openedSpy = jasmine.createSpy('autocomplete opened spy');
+  closedSpy = jasmine.createSpy('autocomplete closed spy');
+
+  @ViewChild(MatAutocompleteTrigger, {static: true}) trigger: MatAutocompleteTrigger;
+  @ViewChild(MatAutocomplete) panel: MatAutocomplete;
+  @ViewChild(MatFormField) formField: MatFormField;
+  @ViewChildren(MatOption) options: QueryList<MatOption>;
+
+  states = [
+    {code: 'AL', name: 'Alabama'},
+    {code: 'CA', name: 'California'},
+    {code: 'FL', name: 'Florida'},
+    {code: 'KS', name: 'Kansas'},
+    {code: 'MA', name: 'Massachusetts'},
+    {code: 'NY', name: 'New York'},
+    {code: 'OR', name: 'Oregon'},
+    {code: 'PA', name: 'Pennsylvania'},
+    {code: 'TN', name: 'Tennessee'},
+    {code: 'VA', name: 'Virginia'},
+    {code: 'WY', name: 'Wyoming'},
+    {code: 'AL', name: 'Alabama'},
+    {code: 'CA', name: 'California'},
+    {code: 'FL', name: 'Florida'},
+    {code: 'KS', name: 'Kansas'},
+    {code: 'MA', name: 'Massachusetts'},
+    {code: 'NY', name: 'New York'},
+    {code: 'OR', name: 'Oregon'},
+    {code: 'PA', name: 'Pennsylvania'},
+    {code: 'TN', name: 'Tennessee'},
+    {code: 'VA', name: 'Virginia'},
+    {code: 'WY', name: 'Wyoming'},
+    {code: 'AL', name: 'Alabama'},
+    {code: 'CA', name: 'California'},
+    {code: 'FL', name: 'Florida'},
+    {code: 'KS', name: 'Kansas'},
+    {code: 'MA', name: 'Massachusetts'},
+    {code: 'NY', name: 'New York'},
+    {code: 'OR', name: 'Oregon'},
+    {code: 'PA', name: 'Pennsylvania'},
+    {code: 'TN', name: 'Tennessee'},
+    {code: 'VA', name: 'Virginia'},
+    {code: 'WY', name: 'Wyoming'},
+  ];
+
+
+  constructor() {
+    this.filteredStates = this.states;
+    this.valueSub = this.stateCtrl.valueChanges.subscribe(val => {
+      this.filteredStates = val ? this.states.filter((s) => s.name.match(new RegExp(val, 'gi')))
+                                : this.states;
+    });
+  }
+
+  displayFn(value: any): string {
+    return value ? value.name : value;
+  }
+
+  ngOnDestroy() {
+    this.valueSub.unsubscribe();
+  }
 }

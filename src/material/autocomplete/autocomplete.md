@@ -90,6 +90,50 @@ injection token.
 
 <!-- example(autocomplete-auto-active-first-option) -->
 
+### Setting custom height of option
+If you need to change the height of option in autocomplete panel, you can do so by setting `optionHeight` input on the `mat-autocomplete`
+component.
+
+```html
+<mat-form-field>
+  <input type="text" matInput [formControl]="myControl" [matAutocomplete]="auto">
+</mat-form-field>
+
+<mat-autocomplete #auto="matAutocomplete" [optionHeight]="16">
+  <mat-option *ngFor="let option of options" [value]="option">{{option}}</mat-option>
+</mat-autocomplete>
+```
+
+If you would like to let component to detect a height of option automatically (for example if you've changed global styles of `mat-option`) you can set `optionHeight` into `auto`.
+
+```html
+<mat-form-field>
+  <input type="text" matInput [formControl]="myControl" [matAutocomplete]="auto">
+</mat-form-field>
+
+<mat-autocomplete #auto="matAutocomplete" [optionHeight]="'auto'">
+  <mat-option *ngFor="let option of options" [value]="option">{{option}}</mat-option>
+</mat-autocomplete>
+```
+
+If an input `optionHeight` isn't defined, will be used a default value `AUTOCOMPLETE_OPTION_HEIGHT` (48px).
+
+### Setting custom height of panel
+If you need to change the height of an autocomplete panel, you can do so by setting `panelHeight` input on the `mat-autocomplete`
+component.
+
+```html
+<mat-form-field>
+  <input type="text" matInput [formControl]="myControl" [matAutocomplete]="auto">
+</mat-form-field>
+
+<mat-autocomplete #auto="matAutocomplete" [panelHeight]="240">
+  <mat-option *ngFor="let option of options" [value]="option">{{option}}</mat-option>
+</mat-autocomplete>
+```
+
+If an input `panelHeight` isn't defined, will be used a default value `AUTOCOMPLETE_PANEL_HEIGHT` (256px).
+
 ### Autocomplete on a custom input element
 
 While `mat-autocomplete` supports attaching itself to a `mat-form-field`, you can also set it on

@@ -85,6 +85,12 @@ export function MAT_AUTOCOMPLETE_DEFAULT_OPTIONS_FACTORY(): MatAutocompleteDefau
   return {autoActiveFirstOption: false};
 }
 
+/** The height of each autocomplete option. */
+export const AUTOCOMPLETE_OPTION_HEIGHT = 48;
+
+/** The total height of the autocomplete panel. */
+export const AUTOCOMPLETE_PANEL_HEIGHT = 256;
+
 @Component({
   selector: 'mat-autocomplete',
   templateUrl: 'autocomplete.html',
@@ -150,6 +156,27 @@ export class MatAutocomplete extends _MatAutocompleteMixinBase implements AfterC
    */
   @Input() panelWidth: string | number;
 
+  /**
+   * Specify the height of each option in the autocomplete panel, px. Default 48
+   * auto - to detect option height automatically
+   * number - to set height as inline style
+   * undefined - to use default value AUTOCOMPLETE_OPTION_HEIGHT
+   */
+  @Input() optionHeight: number | 'auto' | undefined;
+
+  /**
+   * Uses to prevent multiple requests to DOM and remember last height of option.
+   * Uses only with option "auto"
+   */
+  private _cachedOptionHeight: number = 0;
+
+  /**
+   * Specify the height of the autocomplete panel, px. Default 256
+   * number - to set height as inline style
+   * undefined - to use default value AUTOCOMPLETE_PANEL_HEIGHT
+   */
+  @Input() panelHeight: number | undefined;
+
   /** Event that is emitted whenever an option from the list is selected. */
   @Output() readonly optionSelected: EventEmitter<MatAutocompleteSelectedEvent> =
       new EventEmitter<MatAutocompleteSelectedEvent>();
@@ -208,6 +235,61 @@ export class MatAutocomplete extends _MatAutocompleteMixinBase implements AfterC
 
   ngOnDestroy() {
     this._activeOptionChanges.unsubscribe();
+  }
+
+  /**
+   * Returns height of option. Uses in scope of MatAutocompleteTrigger
+   */
+  _getOptionHeightPx(): number {
+    if (this.optionHeight === 'auto') {
+      if (this.options.length > 0) {
+        if (this._cachedOptionHeight === 0) {
+          this._cachedOptionHeight = this.options.first._getHeightHostElement();
+        }
+        return this._cachedOptionHeight;
+      } else {
+        return 0;
+      }
+    } else if (typeof this.optionHeight === 'number') {
+      return this.optionHeight;
+    } else {
+      return AUTOCOMPLETE_OPTION_HEIGHT;
+    }
+  }
+
+  /**
+   * Returns height of option. Uses in scope of MatOption
+   * It also returs undefined to let MatOption component do not
+   * define anyhow height of option.
+   */
+  getOptionHeight(): number | undefined {
+    if (this.optionHeight === 'auto') {
+      return undefined;
+    } else {
+      return this._getOptionHeightPx();
+    }
+  }
+
+  /**
+   * Returns height of whole panel
+   */
+  _getPanelHeightPx(): number {
+    if (this.panelHeight === undefined) {
+      return AUTOCOMPLETE_PANEL_HEIGHT;
+    } else {
+      return this.panelHeight;
+    }
+  }
+
+  /**
+   * Returns height of whole panel to be injected as inline style into panel
+   */
+  _getPanelHeightInlineStyle(): string {
+    if (this.panelHeight === undefined) {
+      return '';
+    } else {
+      return this.panelHeight + 'px';
+    }
   }
 
   /**

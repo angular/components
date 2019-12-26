@@ -1,5 +1,9 @@
 <ng-template>
-  <div class="mat-autocomplete-panel" role="listbox" [id]="id" [ngClass]="_classList" #panel>
+  <div  class="mat-autocomplete-panel"
+        role="listbox"
+        [id]="id"
+        [ngClass]="_classList"
+        [ngStyle]="{'maxHeight': _getPanelHeightInlineStyle() }" #panel>
     <ng-content></ng-content>
   </div>
 </ng-template>

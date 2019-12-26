@@ -262,7 +262,9 @@ export declare class MatOption implements FocusableOption, AfterViewChecked, OnD
     get viewValue(): string;
     constructor(_element: ElementRef<HTMLElement>, _changeDetectorRef: ChangeDetectorRef, _parent: MatOptionParentComponent, group: MatOptgroup);
     _getAriaSelected(): boolean | null;
+    _getHeightHostElement(): number;
     _getHostElement(): HTMLElement;
+    _getInlineStyleHeight(): string;
     _getTabIndex(): string;
     _handleKeydown(event: KeyboardEvent): void;
     _selectViaInteraction(): void;
@@ -286,6 +288,7 @@ export declare class MatOptionModule {
 
 export interface MatOptionParentComponent {
     disableRipple?: boolean;
+    getOptionHeight?: () => number | undefined;
     multiple?: boolean;
 }
 

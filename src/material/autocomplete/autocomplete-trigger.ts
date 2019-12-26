@@ -49,21 +49,23 @@ import {MatFormField} from '@angular/material/form-field';
 import {defer, fromEvent, merge, Observable, of as observableOf, Subject, Subscription} from 'rxjs';
 import {delay, filter, map, switchMap, take, tap} from 'rxjs/operators';
 
-import {MatAutocomplete} from './autocomplete';
+import {
+  MatAutocomplete,
+  AUTOCOMPLETE_OPTION_HEIGHT,
+  AUTOCOMPLETE_PANEL_HEIGHT
+} from './autocomplete';
 import {MatAutocompleteOrigin} from './autocomplete-origin';
 
+/**
+ * Add exports also here for back-capability.
+ */
+export {AUTOCOMPLETE_OPTION_HEIGHT, AUTOCOMPLETE_PANEL_HEIGHT};
 
 /**
  * The following style constants are necessary to save here in order
  * to properly calculate the scrollTop of the panel. Because we are not
  * actually focusing the active item, scroll must be handled manually.
  */
-
-/** The height of each autocomplete option. */
-export const AUTOCOMPLETE_OPTION_HEIGHT = 48;
-
-/** The total height of the autocomplete panel. */
-export const AUTOCOMPLETE_PANEL_HEIGHT = 256;
 
 /** Injection token that determines the scroll handling while the autocomplete panel is open. */
 export const MAT_AUTOCOMPLETE_SCROLL_STRATEGY =
@@ -508,9 +510,9 @@ export class MatAutocompleteTrigger implements ControlValueAccessor, AfterViewIn
     } else {
       const newScrollPosition = _getOptionScrollPosition(
         index + labelCount,
-        AUTOCOMPLETE_OPTION_HEIGHT,
+        this.autocomplete._getOptionHeightPx(),
         this.autocomplete._getScrollTop(),
-        AUTOCOMPLETE_PANEL_HEIGHT
+        this.autocomplete._getPanelHeightPx()
       );
 
       this.autocomplete._setScrollTop(newScrollPosition);

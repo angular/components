@@ -36,22 +36,28 @@ export declare class MatAutocomplete extends _MatAutocompleteMixinBase implement
     readonly opened: EventEmitter<void>;
     readonly optionActivated: EventEmitter<MatAutocompleteActivatedEvent>;
     optionGroups: QueryList<MatOptgroup>;
+    optionHeight: number | 'auto' | undefined;
     readonly optionSelected: EventEmitter<MatAutocompleteSelectedEvent>;
     options: QueryList<MatOption>;
     panel: ElementRef;
+    panelHeight: number | undefined;
     panelWidth: string | number;
     showPanel: boolean;
     template: TemplateRef<any>;
     constructor(_changeDetectorRef: ChangeDetectorRef, _elementRef: ElementRef<HTMLElement>, defaults: MatAutocompleteDefaultOptions);
     _emitSelectEvent(option: MatOption): void;
+    _getOptionHeightPx(): number;
+    _getPanelHeightInlineStyle(): string;
+    _getPanelHeightPx(): number;
     _getScrollTop(): number;
     _setScrollTop(scrollTop: number): void;
     _setVisibility(): void;
+    getOptionHeight(): number | undefined;
     ngAfterContentInit(): void;
     ngOnDestroy(): void;
     static ngAcceptInputType_autoActiveFirstOption: BooleanInput;
     static ngAcceptInputType_disableRipple: BooleanInput;
-    static ɵcmp: i0.ɵɵComponentDefWithMeta<MatAutocomplete, "mat-autocomplete", ["matAutocomplete"], { "disableRipple": "disableRipple"; "displayWith": "displayWith"; "autoActiveFirstOption": "autoActiveFirstOption"; "panelWidth": "panelWidth"; "classList": "class"; }, { "optionSelected": "optionSelected"; "opened": "opened"; "closed": "closed"; "optionActivated": "optionActivated"; }, ["options", "optionGroups"]>;
+    static ɵcmp: i0.ɵɵComponentDefWithMeta<MatAutocomplete, "mat-autocomplete", ["matAutocomplete"], { 'disableRipple': "disableRipple", 'displayWith': "displayWith", 'autoActiveFirstOption': "autoActiveFirstOption", 'panelWidth': "panelWidth", 'optionHeight': "optionHeight", 'panelHeight': "panelHeight", 'classList': "class" }, { 'optionSelected': "optionSelected", 'opened': "opened", 'closed': "closed" }, ["options", "optionGroups"]>;
     static ɵfac: i0.ɵɵFactoryDef<MatAutocomplete>;
 }
 

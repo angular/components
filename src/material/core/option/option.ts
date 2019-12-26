@@ -51,6 +51,7 @@ export class MatOptionSelectionChange {
 export interface MatOptionParentComponent {
   disableRipple?: boolean;
   multiple?: boolean;
+  getOptionHeight?: () => number | undefined;
 }
 
 /**
@@ -75,6 +76,7 @@ export const MAT_OPTION_PARENT_COMPONENT =
     '[attr.aria-selected]': '_getAriaSelected()',
     '[attr.aria-disabled]': 'disabled.toString()',
     '[class.mat-option-disabled]': 'disabled',
+    '[style.height]': '_getInlineStyleHeight()',
     '(click)': '_selectViaInteraction()',
     '(keydown)': '_handleKeydown($event)',
     'class': 'mat-option mat-focus-indicator',
@@ -240,6 +242,31 @@ export class MatOption implements FocusableOption, AfterViewChecked, OnDestroy {
   /** Gets the host DOM element. */
   _getHostElement(): HTMLElement {
     return this._element.nativeElement;
+  }
+
+  /** Gets actual height of the host DOM element. */
+  _getHeightHostElement(): number {
+    if (!this._element) {
+      return 0;
+    }
+    return this._element.nativeElement.getBoundingClientRect().height;
+  }
+
+  _getInlineStyleHeight(): string {
+    if (!this._parent) {
+      return '';
+    }
+    if (typeof this._parent.getOptionHeight !== 'function') {
+      return '';
+    }
+    const height: number | undefined = this._parent.getOptionHeight();
+    if (height === undefined) {
+      return '';
+    }
+    if (isNaN(height) || !isFinite(height)) {
+      return '';
+    }
+    return height + 'px';
   }
 
   ngAfterViewChecked() {
