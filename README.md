@@ -1,5 +1,5 @@
 # Official components for Angular
-[![npm version](https://badge.fury.io/js/%40angular%2Fcdk.svg)](https://www.npmjs.com/package/%40angular%cdk)
+[![npm version](https://badge.fury.io/js/%40angular%2Fcdk.svg)](https://www.npmjs.com/package/@angular/cdk)
 [![Build status](https://circleci.com/gh/angular/components.svg?style=svg)](https://circleci.com/gh/angular/components)
 [![Gitter](https://badges.gitter.im/angular/components.svg)](https://gitter.im/angular/material2?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
@@ -16,7 +16,7 @@ own custom components. The team maintains several npm packages.
 
 #### Quick links
 [Documentation, demos, and guides][mat-docs] |
-[Frequently Asked Questions][./FAQ] |
+[Frequently Asked Questions](FAQ.md) |
 [Community Google group](https://groups.google.com/forum/#!forum/angular-material2) |
 [Contributing](https://github.com/angular/components/blob/master/CONTRIBUTING.md) |
 [StackBlitz Template](https://stackblitz.com/fork/components-issue)

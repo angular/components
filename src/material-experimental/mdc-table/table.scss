@@ -1,0 +1,4 @@
+@import '@material/data-table/mixins';
+@import '../mdc-helpers/mdc-helpers';
+
+@include mdc-data-table-core-styles($query: $mat-base-styles-without-animation-query);

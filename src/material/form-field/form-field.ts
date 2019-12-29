@@ -7,7 +7,7 @@
  */
 
 import {Directionality} from '@angular/cdk/bidi';
-import {coerceBooleanProperty} from '@angular/cdk/coercion';
+import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
 import {
   AfterContentChecked,
   AfterContentInit,
@@ -75,7 +75,12 @@ class MatFormFieldBase {
 const _MatFormFieldMixinBase: CanColorCtor & typeof MatFormFieldBase =
     mixinColor(MatFormFieldBase, 'primary');
 
-/** Possible appearance styles for the form field. */
+/**
+ * Possible appearance styles for the form field.
+ *
+ * Note: The `legacy` and `standard` appearances are deprecated. Please use `fill` or `outline`.
+ * @breaking-change 11.0.0 Remove `legacy` and `standard`.
+ */
 export type MatFormFieldAppearance = 'legacy' | 'standard' | 'fill' | 'outline';
 
 /**
@@ -594,5 +599,5 @@ export class MatFormField extends _MatFormFieldMixinBase
     return document.documentElement!.contains(element);
   }
 
-  static ngAcceptInputType_hideRequiredMarker: boolean | string | null | undefined;
+  static ngAcceptInputType_hideRequiredMarker: BooleanInput;
 }

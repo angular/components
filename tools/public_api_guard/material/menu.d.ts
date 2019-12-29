@@ -1,7 +1,7 @@
 export declare class _MatMenu extends MatMenu {
     constructor(elementRef: ElementRef<HTMLElement>, ngZone: NgZone, defaultOptions: MatMenuDefaultOptions);
-    static ngAcceptInputType_hasBackdrop: boolean | string | null | undefined;
-    static ngAcceptInputType_overlapTrigger: boolean | string | null | undefined;
+    static ngAcceptInputType_hasBackdrop: BooleanInput;
+    static ngAcceptInputType_overlapTrigger: BooleanInput;
     static ɵcmp: i0.ɵɵComponentDefWithMeta<_MatMenu, "mat-menu", ["matMenu"], {}, {}, never>;
     static ɵfac: i0.ɵɵFactoryDef<_MatMenu>;
 }
@@ -14,6 +14,9 @@ export declare class _MatMenuBase implements AfterContentInit, MatMenuPanel<MatM
     };
     _isAnimating: boolean;
     _panelAnimationState: 'void' | 'enter';
+    ariaDescribedby: string;
+    ariaLabel: string;
+    ariaLabelledby: string;
     backdropClass: string;
     classList: string;
     close: EventEmitter<void | 'click' | 'keydown' | 'tab'>;
@@ -45,7 +48,7 @@ export declare class _MatMenuBase implements AfterContentInit, MatMenuPanel<MatM
     resetActiveItem(): void;
     setElevation(depth: number): void;
     setPositionClasses(posX?: MenuPositionX, posY?: MenuPositionY): void;
-    static ɵdir: i0.ɵɵDirectiveDefWithMeta<_MatMenuBase, never, never, { 'backdropClass': "backdropClass", 'xPosition': "xPosition", 'yPosition': "yPosition", 'overlapTrigger': "overlapTrigger", 'hasBackdrop': "hasBackdrop", 'panelClass': "class", 'classList': "classList" }, { 'closed': "closed", 'close': "close" }, ["lazyContent", "_allItems", "items"]>;
+    static ɵdir: i0.ɵɵDirectiveDefWithMeta<_MatMenuBase, never, never, { 'backdropClass': "backdropClass", 'ariaLabel': "aria-label", 'ariaLabelledby': "aria-labelledby", 'ariaDescribedby': "aria-describedby", 'xPosition': "xPosition", 'yPosition': "yPosition", 'overlapTrigger': "overlapTrigger", 'hasBackdrop': "hasBackdrop", 'panelClass': "class", 'classList': "classList" }, { 'closed': "closed", 'close': "close" }, ["lazyContent", "_allItems", "items"]>;
     static ɵfac: i0.ɵɵFactoryDef<_MatMenuBase>;
 }
 
@@ -105,8 +108,8 @@ export declare class MatMenuItem extends _MatMenuItemMixinBase implements Focusa
     focus(origin?: FocusOrigin, options?: FocusOptions): void;
     getLabel(): string;
     ngOnDestroy(): void;
-    static ngAcceptInputType_disableRipple: boolean | string | null | undefined;
-    static ngAcceptInputType_disabled: boolean | string | null | undefined;
+    static ngAcceptInputType_disableRipple: BooleanInput;
+    static ngAcceptInputType_disabled: BooleanInput;
     static ɵcmp: i0.ɵɵComponentDefWithMeta<MatMenuItem, "[mat-menu-item]", ["matMenuItem"], { 'disabled': "disabled", 'disableRipple': "disableRipple", 'role': "role" }, {}, never>;
     static ɵfac: i0.ɵɵFactoryDef<MatMenuItem>;
 }

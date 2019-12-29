@@ -8,7 +8,7 @@
 
 import {FocusKeyManager, FocusOrigin} from '@angular/cdk/a11y';
 import {Direction} from '@angular/cdk/bidi';
-import {coerceBooleanProperty} from '@angular/cdk/coercion';
+import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
 import {
   ESCAPE,
   LEFT_ARROW,
@@ -131,6 +131,15 @@ export class _MatMenuBase implements AfterContentInit, MatMenuPanel<MatMenuItem>
 
   /** Class to be added to the backdrop element. */
   @Input() backdropClass: string = this._defaultOptions.backdropClass;
+
+  /** aria-label for the menu panel. */
+  @Input('aria-label') ariaLabel: string;
+
+  /** aria-labelledby for the menu panel. */
+  @Input('aria-labelledby') ariaLabelledby: string;
+
+  /** aria-describedby for the menu panel. */
+  @Input('aria-describedby') ariaDescribedby: string;
 
   /** Position of the menu in the X axis. */
   @Input()
@@ -508,6 +517,6 @@ export class _MatMenu extends MatMenu {
     super(elementRef, ngZone, defaultOptions);
   }
 
-  static ngAcceptInputType_overlapTrigger: boolean | string | null | undefined;
-  static ngAcceptInputType_hasBackdrop: boolean | string | null | undefined;
+  static ngAcceptInputType_overlapTrigger: BooleanInput;
+  static ngAcceptInputType_hasBackdrop: BooleanInput;
 }

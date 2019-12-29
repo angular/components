@@ -110,12 +110,20 @@ System.config({
     '@angular/material/button/testing': 'dist/packages/material/button/testing/index.js',
     '@angular/material/button/testing/shared.spec': 'dist/packages/material/button/testing/shared.spec.js',
     '@angular/material/button-toggle': 'dist/packages/material/button-toggle/index.js',
+    '@angular/material/button-toggle/testing': 'dist/packages/material/button-toggle/testing/index.js',
+    '@angular/material/button-toggle/testing/button-toggle-shared.spec':
+        'dist/packages/material/button-toggle/testing/button-toggle-shared.spec.js',
+    '@angular/material/button-toggle/testing/button-toggle-group.spec':
+        'dist/packages/material/button-toggle/testing/button-toggle-group.spec.js',
     '@angular/material/card': 'dist/packages/material/card/index.js',
     '@angular/material/checkbox': 'dist/packages/material/checkbox/index.js',
     '@angular/material/checkbox/testing': 'dist/packages/material/checkbox/testing/index.js',
     '@angular/material/checkbox/testing/shared.spec': 'dist/packages/material/checkbox/testing/shared.spec.js',
     '@angular/material/chips': 'dist/packages/material/chips/index.js',
     '@angular/material/core': 'dist/packages/material/core/index.js',
+    '@angular/material/core/testing': 'dist/packages/material/core/testing/index.js',
+    '@angular/material/core/testing/option-shared.spec': 'dist/packages/material/core/testing/option-shared.spec.js',
+    '@angular/material/core/testing/optgroup-shared.spec': 'dist/packages/material/core/testing/optgroup-shared.spec.js',
     '@angular/material/datepicker': 'dist/packages/material/datepicker/index.js',
     '@angular/material/dialog': 'dist/packages/material/dialog/index.js',
     '@angular/material/dialog/testing': 'dist/packages/material/dialog/testing/index.js',
@@ -133,6 +141,8 @@ System.config({
     '@angular/material/menu/testing': 'dist/packages/material/menu/testing/index.js',
     '@angular/material/menu/testing/shared.spec': 'dist/packages/material/menu/testing/shared.spec.js',
     '@angular/material/paginator': 'dist/packages/material/paginator/index.js',
+    '@angular/material/paginator/testing': 'dist/packages/material/paginator/testing/index.js',
+    '@angular/material/paginator/testing/shared.spec': 'dist/packages/material/paginator/testing/shared.spec.js',
     '@angular/material/progress-bar': 'dist/packages/material/progress-bar/index.js',
     '@angular/material/progress-bar/testing': 'dist/packages/material/progress-bar/testing/index.js',
     '@angular/material/progress-bar/testing/shared.spec': 'dist/packages/material/progress-bar/testing/shared.spec.js',
@@ -160,6 +170,8 @@ System.config({
     '@angular/material/sort/testing/shared.spec': 'dist/packages/material/sort/testing/shared.spec.js',
     '@angular/material/stepper': 'dist/packages/material/stepper/index.js',
     '@angular/material/table': 'dist/packages/material/table/index.js',
+    '@angular/material/table/testing': 'dist/packages/material/table/testing/index.js',
+    '@angular/material/table/testing/shared.spec': 'dist/packages/material/table/testing/shared.spec.js',
     '@angular/material/tabs': 'dist/packages/material/tabs/index.js',
     '@angular/material/tabs/testing': 'dist/packages/material/tabs/testing/index.js',
     '@angular/material/tabs/testing/shared.spec': 'dist/packages/material/tabs/testing/shared.spec.js',
@@ -202,6 +214,8 @@ System.config({
       'dist/packages/material-experimental/mdc-slider/index.js',
     '@angular/material-experimental/mdc-tabs':
         'dist/packages/material-experimental/mdc-tabs/index.js',
+    '@angular/material-experimental/mdc-table':
+        'dist/packages/material-experimental/mdc-table/index.js',
     '@angular/material-experimental/mdc-progress-bar':
         'dist/packages/material-experimental/mdc-progress-bar/index.js',
     '@angular/material-experimental/popover-edit':
