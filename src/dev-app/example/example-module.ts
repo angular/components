@@ -7,12 +7,11 @@
  */
 
 import {CommonModule} from '@angular/common';
+import {ExampleModule as DocsExampleModule} from '@angular/components-examples';
 import {NgModule} from '@angular/core';
 import {MatExpansionModule} from '@angular/material/expansion';
-import {ExampleModule as DocsExampleModule} from '@angular/components-examples';
+
 import {Example} from './example';
-
-
 import {ExampleList} from './example-list';
 
 @NgModule({
