@@ -146,3 +146,23 @@ $mat-select-placeholder-arrow-space: 2 * ($mat-select-arrow-size + $mat-select-a
     display: block;
   }
 }
+
+// Based on the spec a form field has two ways of indicating focus in `outline` mode: making the
+// border thicker and floating the label. The problem is that the border is also thicker when the
+// form field is invalid and we only float the label on a `mat-select` when its panel is open or it
+// has a value, resulting in us not having any focus indication when the select is empty and
+// invalid. For this special case we add an underline to the label to indicate focus by targeting
+// a `mat-form-field` label that matches the following criteria:
+// - Uses the `outline` appearance.
+// - Has a `mat-select` form control.
+// - Isn't floating.
+// - Has a label.
+// - Is invalid.
+// - Is empty.
+.mat-form-field-type-mat-select.mat-form-field-appearance-outline {
+  &:not(.mat-form-field-should-float).mat-form-field-has-label.mat-form-field-invalid {
+    .mat-form-field-label.mat-form-field-empty {
+      border-bottom: solid 2px;
+    }
+  }
+}
