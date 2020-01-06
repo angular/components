@@ -58,6 +58,7 @@ sass_binary(
     src = "_mdc-tabs.scss",
     include_paths = ["external/npm/node_modules"],
     deps = [
+        ":mdc_tabs_scss_lib",
         "//src/material-experimental/mdc-helpers:mdc_helpers_scss_lib",
         "//src/material-experimental/mdc-helpers:mdc_scss_deps_lib",
     ],

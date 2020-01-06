@@ -10,20 +10,20 @@
 @import '../mdc-table/mdc-table';
 @import '../mdc-progress-bar/mdc-progress-bar';
 
-@mixin angular-material-theme-mdc($theme) {
-  @include mat-button-theme-mdc($theme);
-  @include mat-fab-theme-mdc($theme);
-  @include mat-icon-button-theme-mdc($theme);
-  @include mat-card-theme-mdc($theme);
-  @include mat-checkbox-theme-mdc($theme);
-  @include mat-chips-theme-mdc($theme);
-  @include mat-list-theme-mdc($theme);
-  @include mat-menu-theme-mdc($theme);
-  @include mat-progress-bar-theme-mdc($theme);
-  @include mat-radio-theme-mdc($theme);
-  @include mat-slide-toggle-theme-mdc($theme);
-  @include mat-table-theme-mdc($theme);
+@mixin angular-material-theme-mdc($theme, $density-scale: $mat-default-density-scale) {
+  @include mat-button-theme-mdc($theme, $density-scale);
+  @include mat-fab-theme-mdc($theme, $density-scale);
+  @include mat-icon-button-theme-mdc($theme, $density-scale);
+  @include mat-card-theme-mdc($theme, $density-scale);
+  @include mat-checkbox-theme-mdc($theme, $density-scale);
+  @include mat-chips-theme-mdc($theme, $density-scale);
+  @include mat-list-theme-mdc($theme, $density-scale);
+  @include mat-menu-theme-mdc($theme, $density-scale);
+  @include mat-progress-bar-theme-mdc($theme, $density-scale);
+  @include mat-radio-theme-mdc($theme, $density-scale);
+  @include mat-slide-toggle-theme-mdc($theme, $density-scale);
+  @include mat-table-theme-mdc($theme, $density-scale);
   // TODO(andrewjs): Add this back when MDC syncs their slider code into Google-internal code
-  // @include mat-slider-theme-mdc($theme);
-  @include mat-tabs-theme-mdc($theme);
+  // @include mat-slider-theme-mdc($theme, $density-scale);
+  @include mat-tabs-theme-mdc($theme, $density-scale);
 }

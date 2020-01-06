@@ -1,0 +1,22 @@
+@import '@material/density/functions';
+@import '@material/checkbox/mixins';
+
+@mixin mat-checkbox-density-mdc($density-scale) {
+  $size: mdc-density-prop-value(
+    $density-config: $mdc-checkbox-density-config,
+    $density-scale: $density-scale,
+    $property-name: size
+  );
+
+  .mat-mdc-checkbox-ripple {
+    width: $size;
+    height: $size;
+    top: 50%;
+    left: 50%;
+    margin: (-$size / 2) 0 0 (-$size / 2);
+  }
+
+  .mat-mdc-checkbox .mdc-checkbox {
+    @include mdc-checkbox-density($density-scale);
+  }
+}

@@ -1,0 +1,17 @@
+@import '@material/density/functions';
+@import '@material/tab-bar/variables';
+@import '@material/tab/mixins';
+
+@mixin mat-tabs-density-mdc($density-scale) {
+  $height: mdc-density-prop-value(
+    $density-config: $mdc-tab-bar-density-config,
+    $density-scale: $density-scale,
+    $property-name: height
+  );
+
+  .mat-mdc-tab-header .mdc-tab {
+    // This is usually included by MDC's tab-bar density mixin, but we don't use
+    // the tab-bar because we implement our own pagination.
+    @include mdc-tab-height($height);
+  }
+}

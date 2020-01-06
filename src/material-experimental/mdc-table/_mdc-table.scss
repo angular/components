@@ -1,7 +1,7 @@
 @import '../mdc-helpers/mdc-helpers';
 @import '@material/data-table/mixins';
 
-@mixin mat-table-theme-mdc($theme) {
+@mixin mat-table-theme-mdc($theme, $density-scale: $mat-default-density-scale) {
   @include mat-using-mdc-theme($theme) {
     @include mdc-data-table-core-styles($query: $mat-theme-styles-query);
   }

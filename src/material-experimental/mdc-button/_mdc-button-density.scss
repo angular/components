@@ -1,0 +1,14 @@
+@import '@material/button/mixins';
+@import '@material/icon-button/mixins';
+
+@mixin mat-button-density-mdc($density-scale) {
+  .mat-mdc-button, .mat-mdc-raised-button, .mat-mdc-unelevated-button, .mat-mdc-outlined-button {
+    @include mdc-button-density($density-scale);
+  }
+}
+
+@mixin mat-icon-button-density-mdc($density-scale) {
+  .mat-mdc-icon-button {
+    @include mdc-icon-button-density($density-scale);
+  }
+}

@@ -51,13 +51,11 @@
   }
 }
 
-.mat-mdc-checkbox-ripple, .mat-mdc-checkbox .mdc-checkbox__background::before {
-  $ripple-size: 40px;
+.mat-mdc-checkbox-ripple {
+  // Usually the ripple radius would be specified through the MatRipple input, but
+  // since we dynamically adjust the size of the ripple container, we cannot use a
+  // fixed ripple radius.
+  border-radius: 50%;
   position: absolute;
-  width: $ripple-size;
-  height: $ripple-size;
-  top: 50%;
-  left: 50%;
-  margin: (-$ripple-size / 2) 0 0 (-$ripple-size / 2);
   pointer-events: none;
 }

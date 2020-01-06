@@ -9,6 +9,9 @@
 @import '../../material/core/theming/theming';
 @import '../../material/core/typography/typography';
 
+// Default density scale used for MDC based components.
+$mat-default-density-scale: default;
+
 // A set of standard queries to use with MDC's queryable mixins.
 $mat-base-styles-query: mdc-feature-without(mdc-feature-any(color, typography));
 $mat-base-styles-without-animation-query:

@@ -1,0 +1,7 @@
+@import '@material/switch/mixins';
+
+@mixin mat-slide-toggle-density-mdc($density-scale) {
+  .mat-mdc-slide-toggle {
+    @include mdc-switch-density($density-scale);
+  }
+}

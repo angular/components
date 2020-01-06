@@ -1,0 +1,9 @@
+@import '@material/chips/mixins';
+@import '@material/theme/functions';
+@import '../mdc-helpers/mdc-helpers';
+
+@mixin mat-chips-density-mdc($density-scale) {
+  .mat-mdc-chip {
+    @include mdc-chip-density($density-scale);
+  }
+}

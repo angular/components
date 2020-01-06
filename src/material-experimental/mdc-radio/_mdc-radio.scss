@@ -1,8 +1,9 @@
 @import '../mdc-helpers/mdc-helpers';
 
-@mixin mat-radio-theme-mdc($theme) {
+@mixin mat-radio-theme-mdc($theme, $density-scale: $mat-default-density-scale) {
   @include mat-using-mdc-theme($theme) {
-    // TODO: MDC theme styles here.
+    // TODO: MDC color styles here (see mdc-button)
+    // TODO: MDC density styles (see mdc-button)
   }
 }
 

@@ -18,6 +18,13 @@
     @include mat-fill;
   }
 
+  // Usually the ripple radius would be specified through an `MatRipple` input, but
+  // since the size of the container adjusts based on the density scale, we cannot rely
+  // on a fixed ripple radius.
+  .mat-mdc-slide-toggle-ripple {
+    border-radius: 50%;
+  }
+
   // The MDC switch styles related to the hover state are intertwined with the MDC ripple styles.
   // We currently don't use the MDC ripple due to size concerns, therefore we need to add some
   // additional styles to restore the hover state.

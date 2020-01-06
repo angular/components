@@ -2,7 +2,7 @@
 @import '@material/typography/mixins';
 @import '../mdc-helpers/mdc-helpers';
 
-@mixin mat-card-theme-mdc($theme) {
+@mixin mat-card-theme-mdc($theme, $density-scale: $mat-default-density-scale) {
   $foreground: map-get($theme, foreground);
   $is-dark-theme: map-get($theme, is-dark);
 

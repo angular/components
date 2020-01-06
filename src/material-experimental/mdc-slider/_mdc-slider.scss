@@ -1,7 +1,7 @@
 @import '../mdc-helpers/mdc-helpers';
 @import '@material/slider/mixins';
 
-@mixin mat-slider-theme-mdc($theme) {
+@mixin mat-slider-theme-mdc($theme, $density-scale: $mat-default-density-scale) {
   @include mat-using-mdc-theme($theme) {
     @include mdc-slider-core-styles($query: $mat-theme-styles-query);
 

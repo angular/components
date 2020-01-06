@@ -1,0 +1,14 @@
+@import '../mdc-button/mdc-button-density';
+@import '../mdc-checkbox/mdc-checkbox-density';
+@import '../mdc-slide-toggle/mdc-slide-toggle-density';
+@import '../mdc-chips/mdc-chips-density';
+@import '../mdc-tabs/mdc-tabs-density';
+
+@mixin angular-material-density-mdc($density-scale) {
+  @include mat-button-density-mdc($density-scale);
+  @include mat-icon-button-density-mdc($density-scale);
+  @include mat-checkbox-density-mdc($density-scale);
+  @include mat-slide-toggle-density-mdc($density-scale);
+  @include mat-chips-density-mdc($density-scale);
+  @include mat-tabs-density-mdc($density-scale);
+}

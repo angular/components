@@ -5,7 +5,7 @@
 @import '@material/theme/functions';
 @import '../mdc-helpers/mdc-helpers';
 
-@mixin mat-menu-theme-mdc($theme) {
+@mixin mat-menu-theme-mdc($theme, $density-scale: $mat-default-density-scale) {
   @include mat-using-mdc-theme($theme) {
     @include mdc-menu-surface-core-styles($mat-theme-styles-query);
     @include mdc-list-without-ripple($mat-theme-styles-query);
