@@ -9,7 +9,7 @@
 import {ChangeDetectionStrategy, Component} from '@angular/core';
 import {FormControl, Validators} from '@angular/forms';
 import {ErrorStateMatcher, FloatLabelType} from '@angular/material/core';
-import {MatFormFieldAppearance} from '@angular/material/form-field';
+import {MatFormFieldAppearance} from '@angular/material-experimental/mdc-form-field';
 
 
 let max = 5;
@@ -31,8 +31,8 @@ export class MdcInputDemo {
   ctrlDisabled = false;
   textareaNgModelValue: string;
   textareaAutosizeEnabled = false;
-  appearance: MatFormFieldAppearance = 'standard';
-  prefixSuffixAppearance: MatFormFieldAppearance = 'standard';
+  appearance: MatFormFieldAppearance = 'fill';
+  prefixSuffixAppearance: MatFormFieldAppearance = 'fill';
   placeholderTestControl = new FormControl('', Validators.required);
   options: string[] = ['One', 'Two', 'Three'];
 

@@ -3,9 +3,9 @@
 // MDCs default textarea styles cannot be used because they only apply if a special
 // class is applied to the "mdc-text-field" wrapper. Since we cannot know whether the
 // registered form-field control is a textarea and MDC by default does not have styles
-// for textareas in the standard appearance, we add our own minimal textarea styles
+// for textareas in the fill appearance, we add our own minimal textarea styles
 // which are scoped to the actual textarea element (i.e. not require a class in the
-// text-field wrapper) and integrate better with the standard appearance.
+// text-field wrapper) and integrate better with the any configured appearance.
 
 // Mixin that can be included to override the default MDC text-field styles
 // to properly support textareas.

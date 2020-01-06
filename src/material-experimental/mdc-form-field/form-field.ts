@@ -15,7 +15,7 @@ import {
   ContentChild,
   ContentChildren,
   ElementRef,
-  Inject,
+  Inject, InjectionToken,
   Input,
   isDevMode,
   OnDestroy,
@@ -34,12 +34,9 @@ import {
 import {
   getMatFormFieldDuplicatedHintError,
   getMatFormFieldMissingControlError,
-  MAT_FORM_FIELD_DEFAULT_OPTIONS,
   MatFormField as NonMdcFormField,
   matFormFieldAnimations,
-  MatFormFieldAppearance,
   MatFormFieldControl,
-  MatFormFieldDefaultOptions,
 } from '@angular/material/form-field';
 import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 import {MDCTextFieldAdapter, MDCTextFieldFoundation} from '@material/textfield';
@@ -57,10 +54,29 @@ import {MatSuffix} from './directives/suffix';
 /** Type for the available floatLabel values. */
 export type FloatLabelType = 'always' | 'auto';
 
+/** Possible appearance styles for the form field. */
+export type MatFormFieldAppearance = 'fill' | 'outline';
+
+/**
+ * Represents the default options for the form field that can be configured
+ * using the `MAT_FORM_FIELD_DEFAULT_OPTIONS` injection token.
+ */
+export interface MatFormFieldDefaultOptions {
+  appearance?: MatFormFieldAppearance;
+  hideRequiredMarker?: boolean;
+}
+
+/**
+ * Injection token that can be used to configure the
+ * default options for all form field within an app.
+ */
+export const MAT_FORM_FIELD_DEFAULT_OPTIONS =
+  new InjectionToken<MatFormFieldDefaultOptions>('MAT_FORM_FIELD_DEFAULT_OPTIONS');
+
 let nextUniqueId = 0;
 
 /** Default appearance used by the form-field. */
-const DEFAULT_APPEARANCE: MatFormFieldAppearance = 'standard';
+const DEFAULT_APPEARANCE: MatFormFieldAppearance = 'fill';
 
 /** Default appearance used by the form-field. */
 const DEFAULT_FLOAT_LABEL: FloatLabelType = 'auto';
@@ -74,7 +90,6 @@ const DEFAULT_FLOAT_LABEL: FloatLabelType = 'auto';
   animations: [matFormFieldAnimations.transitionMessages],
   host: {
     'class': 'mat-mdc-form-field',
-    '[class.mat-mdc-form-field-standard]': '_isStandardAppearance()',
     '[class.mat-mdc-form-field-label-always-float]': '_shouldAlwaysFloat()',
     '[class.mat-form-field-invalid]': '_control.errorState',
     '[class.mat-form-field-disabled]': '_control.disabled',
@@ -405,10 +420,6 @@ export class MatFormField implements AfterViewInit, OnDestroy, AfterContentCheck
 
   _shouldLabelFloat() {
     return this._control.shouldLabelFloat || this._shouldAlwaysFloat();
-  }
-
-  _isStandardAppearance() {
-    return this.appearance === 'standard' || this.appearance === 'legacy';
   }
 
   /** Determines whether a class from the NgControl should be forwarded to the host element. */

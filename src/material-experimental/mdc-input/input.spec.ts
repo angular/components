@@ -1081,27 +1081,27 @@ describe('MatMdcInput with forms', () => {
 });
 
 describe('MatFormField default options', () => {
-  it('should be standard appearance if no default options provided', () => {
+  it('should be fill appearance if no default options provided', () => {
     const fixture = createComponent(MatInputWithAppearance);
     fixture.detectChanges();
-    expect(fixture.componentInstance.formField.appearance).toBe('standard');
+    expect(fixture.componentInstance.formField.appearance).toBe('fill');
   });
 
-  it('should be standard appearance if empty default options provided', () => {
+  it('should be fill appearance if empty default options provided', () => {
     const fixture = createComponent(MatInputWithAppearance, [{
       provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: {}}
     ]);
 
     fixture.detectChanges();
-    expect(fixture.componentInstance.formField.appearance).toBe('standard');
+    expect(fixture.componentInstance.formField.appearance).toBe('fill');
   });
 
   it('should be able to change the default appearance', () => {
     const fixture = createComponent(MatInputWithAppearance, [{
-      provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: {appearance: 'fill'}}
+      provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: {appearance: 'outline'}}
     ]);
     fixture.detectChanges();
-    expect(fixture.componentInstance.formField.appearance).toBe('fill');
+    expect(fixture.componentInstance.formField.appearance).toBe('outline');
   });
 
   it('should default hideRequiredMarker to false', () => {

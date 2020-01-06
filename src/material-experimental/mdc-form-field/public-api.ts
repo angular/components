@@ -7,11 +7,9 @@
  */
 
 export {
-  MatFormFieldAppearance,
   MatFormFieldControl,
   getMatFormFieldDuplicatedHintError,
   getMatFormFieldMissingControlError,
-  MAT_FORM_FIELD_DEFAULT_OPTIONS
 } from '@angular/material/form-field';
 
 export * from './directives/label';

@@ -78,7 +78,6 @@ sass_library(
     srcs = [
         "_form-field-bottom-line.scss",
         "_form-field-sizing.scss",
-        "_form-field-standard-appearance.scss",
         "_form-field-subscript.scss",
         "_mdc-text-field-structure-overrides.scss",
         "_mdc-text-field-textarea-overrides.scss",
