@@ -22,7 +22,7 @@ import {
   takeUntil,
 } from 'rxjs/operators';
 
-import {closest} from '@angular/cdk-experimental/popover-edit/polyfill';
+import {_closest} from '@angular/cdk-experimental/popover-edit';
 
 import {HEADER_CELL_SELECTOR} from './constants';
 import {ColumnResizeNotifierSource} from './column-resize-notifier';
@@ -66,7 +66,7 @@ export abstract class ResizeOverlayHandle implements AfterViewInit, OnDestroy {
       fromEvent<MouseEvent>(this.elementRef.nativeElement!, 'mouseleave').pipe(
           takeUntilDestroyed,
           map(event => event.relatedTarget &&
-              closest(event.relatedTarget as Element, HEADER_CELL_SELECTOR)),
+              _closest(event.relatedTarget as Element, HEADER_CELL_SELECTOR)),
       ).subscribe(cell => this.eventDispatcher.headerCellHovered.next(cell));
 
       fromEvent<MouseEvent>(this.elementRef.nativeElement!, 'mousedown')

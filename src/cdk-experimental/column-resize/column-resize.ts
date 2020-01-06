@@ -11,7 +11,7 @@ import {Directionality} from '@angular/cdk/bidi';
 import {fromEvent, merge, ReplaySubject} from 'rxjs';
 import {filter, map, mapTo, pairwise, startWith, take, takeUntil} from 'rxjs/operators';
 
-import {closest, matches} from '@angular/cdk-experimental/popover-edit/polyfill';
+import {_closest, _matches} from '@angular/cdk-experimental/popover-edit';
 
 import {ColumnResizeNotifier, ColumnResizeNotifierSource} from './column-resize-notifier';
 import {HEADER_CELL_SELECTOR, RESIZE_OVERLAY_SELECTOR} from './constants';
@@ -65,12 +65,12 @@ export abstract class ColumnResize implements AfterViewInit, OnDestroy {
 
       fromEvent<MouseEvent>(element, 'mouseover').pipe(
           takeUntil(this.destroyed),
-          map(event => closest(event.target, HEADER_CELL_SELECTOR)),
+          map(event => _closest(event.target, HEADER_CELL_SELECTOR)),
           ).subscribe(this.eventDispatcher.headerCellHovered);
       fromEvent<MouseEvent>(element, 'mouseleave').pipe(
           takeUntil(this.destroyed),
           filter(event => !!event.relatedTarget &&
-              !matches(event.relatedTarget as Element, RESIZE_OVERLAY_SELECTOR)),
+              !_matches(event.relatedTarget as Element, RESIZE_OVERLAY_SELECTOR)),
           mapTo(null),
           ).subscribe(this.eventDispatcher.headerCellHovered);
     });

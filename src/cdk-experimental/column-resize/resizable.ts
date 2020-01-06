@@ -22,7 +22,7 @@ import {CdkColumnDef} from '@angular/cdk/table';
 import {merge, ReplaySubject} from 'rxjs';
 import {filter, takeUntil} from 'rxjs/operators';
 
-import {closest} from '@angular/cdk-experimental/popover-edit/polyfill';
+import {_closest} from '@angular/cdk-experimental/popover-edit';
 
 import {HEADER_ROW_SELECTOR} from './constants';
 import {ResizeOverlayHandle} from './overlay-handle';
@@ -132,7 +132,7 @@ export abstract class Resizable<HandleComponent extends ResizeOverlayHandle>
     const takeUntilDestroyed = takeUntil<boolean>(this.destroyed);
 
 
-    this.eventDispatcher.resizeOverlayVisibleForHeaderRow(closest(element, HEADER_ROW_SELECTOR)!)
+    this.eventDispatcher.resizeOverlayVisibleForHeaderRow(_closest(element, HEADER_ROW_SELECTOR)!)
         .pipe(takeUntilDestroyed).subscribe(hoveringRow => {
       if (hoveringRow) {
         if (!this.overlayRef) {

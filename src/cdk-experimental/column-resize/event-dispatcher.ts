@@ -10,7 +10,7 @@ import {Injectable, NgZone} from '@angular/core';
 import {combineLatest, MonoTypeOperatorFunction, Observable, Subject} from 'rxjs';
 import {distinctUntilChanged, map, share, skip, startWith} from 'rxjs/operators';
 
-import {closest} from '@angular/cdk-experimental/popover-edit/polyfill';
+import {_closest} from '@angular/cdk-experimental/popover-edit';
 
 import {HEADER_ROW_SELECTOR} from './constants';
 
@@ -30,12 +30,12 @@ export class HeaderRowEventDispatcher {
 
   readonly headerRowHoveredOrActiveDistinct = combineLatest(
       this.headerCellHoveredDistinct.pipe(
-          map(cell => closest(cell, HEADER_ROW_SELECTOR)),
+          map(cell => _closest(cell, HEADER_ROW_SELECTOR)),
           startWith(null),
           distinctUntilChanged(),
        ),
       this.overlayHandleActiveForCell.pipe(
-          map(cell => closest(cell, HEADER_ROW_SELECTOR)),
+          map(cell => _closest(cell, HEADER_ROW_SELECTOR)),
           startWith(null),
           distinctUntilChanged(),
       ),
