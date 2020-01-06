@@ -80,10 +80,42 @@
 ///     @include mat-strong-focus-indicators-theme(#F00);
 ///   }
 @mixin mat-strong-focus-indicators-theme($themeOrColor) {
-  .mat-focus-indicator::before {
-    border-color: if(
-      type-of($themeOrColor) == 'map',
-      mat-color(map_get($themeOrColor, primary)),
-      $themeOrColor);
+  @if (type-of($themeOrColor) == 'map') {
+    $primary-palette: map_get($themeOrColor, primary);
+
+    .mat-focus-indicator::before {
+      border-color: mat-color($primary-palette, default);
+    }
+
+    .mat-toolbar {
+      &.mat-primary,
+      &.mat-accent,
+      &.mat-warn {
+        .mat-focus-indicator::before {
+          border-color: currentColor;
+        }
+      }
+    }
+
+    .mat-snack-bar-container {
+      .mat-focus-indicator::before {
+        border-color: currentColor;
+      }
+    }
+
+    .mat-tab-group,
+    .mat-tab-header {
+      &.mat-background-primary,
+      &.mat-background-accent,
+      &.mat-background-warn {
+        .mat-focus-indicator::before {
+          border-color: currentColor;
+        }
+      }
+    }
+  } @else {
+    .mat-focus-indicator::before {
+      border-color: $themeOrColor;
+    }
   }
 }

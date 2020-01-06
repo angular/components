@@ -394,6 +394,13 @@ describe('MatStepper', () => {
       expect(secondStepContentEl.getAttribute('tabindex')).toBe('0');
     });
 
+    it('should have a focus indicator', () => {
+      const stepHeaders = fixture.debugElement.queryAll(By.css('.mat-vertical-stepper-header'));
+
+      expect(stepHeaders.every(stepHeader => stepHeader.nativeElement.classList.contains('mat-focus-indicator')))
+        .toBe(true);
+    });
+
   });
 
   describe('basic stepper when attempting to set the selected step too early', () => {

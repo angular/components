@@ -409,6 +409,13 @@ describe('MatSort', () => {
     expect(sortHeaderElement.querySelector('.mat-sort-header-arrow')).toBeTruthy();
   }));
 
+  it('should have a focus indicator', () => {
+    const header = fixture.debugElement.query(By.directive(MatSortHeader))!.nativeElement;
+    const button = header.querySelector('.mat-sort-header-button');
+
+    expect(button.classList.contains('mat-focus-indicator')).toBe(true);
+  });
+
 });
 
 /**

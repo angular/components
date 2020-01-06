@@ -147,6 +147,13 @@ describe('MatOption component', () => {
     subscription.unsubscribe();
   });
 
+  it('should have a focus indicator', () => {
+    const fixture = TestBed.createComponent(BasicOption);
+    const optionDebugElement = fixture.debugElement.query(By.directive(MatOption))!;
+
+    expect(optionDebugElement.nativeElement.classList.contains('mat-focus-indicator')).toBe(true);
+  });
+
   describe('ripples', () => {
     let fixture: ComponentFixture<BasicOption>;
     let optionDebugElement: DebugElement;
