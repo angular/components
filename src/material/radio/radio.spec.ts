@@ -387,6 +387,13 @@ describe('MatRadio', () => {
       expect(radioNativeElements[2].classList).toContain('mat-warn');
     });
 
+    it('should have a focus indicator', () => {
+      const radioRippleNativeElements = radioNativeElements.map(radioEl => radioEl.querySelector('.mat-radio-ripple')!);
+
+      expect(radioRippleNativeElements.every(radioRippleEl => radioRippleEl.classList.contains('mat-focus-indicator')))
+        .toBe(true);
+    });
+
   });
 
   describe('group with ngModel', () => {

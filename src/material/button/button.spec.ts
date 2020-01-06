@@ -83,6 +83,13 @@ describe('MatButton', () => {
     expect(buttonDebugEl.nativeElement.classList).toContain('cdk-touch-focused');
   });
 
+  it('should have a focus indicator', () => {
+    const fixture = TestBed.createComponent(TestApp);
+    const buttonDebugElement = fixture.debugElement.query(By.css('button'))!;
+
+    expect(buttonDebugElement.nativeElement.classList.contains('mat-focus-indicator')).toBe(true);
+  });
+
   describe('button[mat-fab]', () => {
     it('should have accent palette by default', () => {
       const fixture = TestBed.createComponent(TestApp);

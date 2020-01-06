@@ -880,6 +880,13 @@ describe('MatButtonToggle without forms', () => {
     }).not.toThrow();
   });
 
+  it('should have a focus indicator', () => {
+    const fixture = TestBed.createComponent(ButtonTogglesInsideButtonToggleGroup);
+    const buttonDebugElement = fixture.debugElement.query(By.css('button'))!;
+
+    expect(buttonDebugElement.nativeElement.classList.contains('mat-focus-indicator')).toBe(true);
+  });
+
 });
 
 @Component({
