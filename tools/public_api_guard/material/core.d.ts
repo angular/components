@@ -79,6 +79,19 @@ export declare abstract class DateAdapter<D> {
     abstract today(): D;
 }
 
+export declare class DateRange<D> {
+    readonly end: D | null;
+    readonly start: D | null;
+    constructor(
+    start: D | null,
+    end: D | null);
+}
+
+export interface DateSelectionModelChange<S> {
+    selection: S;
+    source: unknown;
+}
+
 export declare const JAN = 0, FEB = 1, MAR = 2, APR = 3, MAY = 4, JUN = 5, JUL = 6, AUG = 7, SEP = 8, OCT = 9, NOV = 10, DEC = 11;
 
 export declare const defaultRippleAnimationConfig: {
@@ -200,6 +213,10 @@ export declare const MAT_OPTION_PARENT_COMPONENT: InjectionToken<MatOptionParent
 
 export declare const MAT_RIPPLE_GLOBAL_OPTIONS: InjectionToken<RippleGlobalOptions>;
 
+export declare function MAT_SINGLE_DATE_SELECTION_MODEL_FACTORY(parent: MatSingleDateSelectionModel<unknown>, adapter: DateAdapter<unknown>): MatSingleDateSelectionModel<unknown>;
+
+export declare const MAT_SINGLE_DATE_SELECTION_MODEL_PROVIDER: FactoryProvider;
+
 export declare class MatCommonModule {
     protected _document?: Document;
     constructor(highContrastModeDetector: HighContrastModeDetector, sanityChecks: any,
@@ -219,6 +236,24 @@ export declare type MatDateFormats = {
         monthYearA11yLabel: any;
     };
 };
+
+export declare abstract class MatDateSelectionModel<S, D = ExtractDateTypeFromSelection<S>> implements OnDestroy {
+    protected readonly adapter: DateAdapter<D>;
+    readonly selection: S;
+    selectionChanged: Observable<DateSelectionModelChange<S>>;
+    protected constructor(
+    adapter: DateAdapter<D>,
+    selection: S);
+    abstract add(date: D | null): void;
+    abstract isComplete(): boolean;
+    abstract isSame(other: S): boolean;
+    abstract isValid(): boolean;
+    ngOnDestroy(): void;
+    abstract overlaps(range: DateRange<D>): boolean;
+    updateSelection(value: S, source: unknown): void;
+    static ɵdir: i0.ɵɵDirectiveDefWithMeta<MatDateSelectionModel<any, any>, never, never, {}, {}, never>;
+    static ɵfac: i0.ɵɵFactoryDef<MatDateSelectionModel<any, any>>;
+}
 
 export declare const MATERIAL_SANITY_CHECKS: InjectionToken<SanityChecks>;
 
@@ -315,6 +350,17 @@ export declare class MatPseudoCheckboxModule {
 
 export declare type MatPseudoCheckboxState = 'unchecked' | 'checked' | 'indeterminate';
 
+export declare class MatRangeDateSelectionModel<D> extends MatDateSelectionModel<DateRange<D>, D> {
+    constructor(adapter: DateAdapter<D>);
+    add(date: D | null): void;
+    isComplete(): boolean;
+    isSame(other: DateRange<D>): boolean;
+    isValid(): boolean;
+    overlaps(range: DateRange<D>): boolean;
+    static ɵfac: i0.ɵɵFactoryDef<MatRangeDateSelectionModel<any>>;
+    static ɵprov: i0.ɵɵInjectableDef<MatRangeDateSelectionModel<any>>;
+}
+
 export declare class MatRipple implements OnInit, OnDestroy, RippleTarget {
     animation: RippleAnimationConfig;
     centered: boolean;
@@ -340,6 +386,17 @@ export declare class MatRipple implements OnInit, OnDestroy, RippleTarget {
 export declare class MatRippleModule {
     static ɵinj: i0.ɵɵInjectorDef<MatRippleModule>;
     static ɵmod: i0.ɵɵNgModuleDefWithMeta<MatRippleModule, [typeof i1.MatRipple], [typeof i2.MatCommonModule, typeof i3.PlatformModule], [typeof i1.MatRipple, typeof i2.MatCommonModule]>;
+}
+
+export declare class MatSingleDateSelectionModel<D> extends MatDateSelectionModel<D | null, D> {
+    constructor(adapter: DateAdapter<D>);
+    add(date: D | null): void;
+    isComplete(): boolean;
+    isSame(other: D): boolean;
+    isValid(): boolean;
+    overlaps(range: DateRange<D>): boolean;
+    static ɵfac: i0.ɵɵFactoryDef<MatSingleDateSelectionModel<any>>;
+    static ɵprov: i0.ɵɵInjectableDef<MatSingleDateSelectionModel<any>>;
 }
 
 export declare const JAN = 0, FEB = 1, MAR = 2, APR = 3, MAY = 4, JUN = 5, JUL = 6, AUG = 7, SEP = 8, OCT = 9, NOV = 10, DEC = 11;
