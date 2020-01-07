@@ -32,7 +32,7 @@ export declare class MatCalendar<D> implements AfterContentInit, AfterViewChecke
     stateChanges: Subject<void>;
     readonly yearSelected: EventEmitter<D>;
     yearView: MatYearView<D>;
-    constructor(_intl: MatDatepickerIntl, _dateAdapter: DateAdapter<D>, _dateFormats: MatDateFormats, _changeDetectorRef: ChangeDetectorRef);
+    constructor(_intl: MatDatepickerIntl, _dateAdapter: DateAdapter<D>, _dateFormats: MatDateFormats, _changeDetectorRef: ChangeDetectorRef, _model: MatDateSelectionModel<D | null, D>);
     _dateSelected(date: D | null): void;
     _goToDateInView(date: D, view: 'month' | 'year' | 'multi-year'): void;
     _monthSelectedInYearView(normalizedMonth: D): void;
@@ -109,8 +109,6 @@ export declare class MatDatepicker<D> implements OnDestroy, CanColor {
     readonly _maxDate: D | null;
     readonly _minDate: D | null;
     _popupRef: OverlayRef;
-    _selected: D | null;
-    readonly _selectedChanged: Subject<D>;
     calendarHeaderComponent: ComponentType<any>;
     closedStream: EventEmitter<void>;
     color: ThemePalette;
@@ -125,8 +123,8 @@ export declare class MatDatepicker<D> implements OnDestroy, CanColor {
     startView: 'month' | 'year' | 'multi-year';
     touchUi: boolean;
     readonly yearSelected: EventEmitter<D>;
-    constructor(_dialog: MatDialog, _overlay: Overlay, _ngZone: NgZone, _viewContainerRef: ViewContainerRef, scrollStrategy: any, _dateAdapter: DateAdapter<D>, _dir: Directionality, _document: any);
-    _registerInput(input: MatDatepickerInput<D>): void;
+    constructor(_dialog: MatDialog, _overlay: Overlay, _ngZone: NgZone, _viewContainerRef: ViewContainerRef, scrollStrategy: any, _dateAdapter: DateAdapter<D>, _dir: Directionality, _document: any, _model: MatDateSelectionModel<D | null, D>);
+    _registerInput(input: MatDatepickerInput<D>): MatDateSelectionModel<D | null, D>;
     _selectMonth(normalizedMonth: D): void;
     _selectYear(normalizedYear: D): void;
     close(): void;

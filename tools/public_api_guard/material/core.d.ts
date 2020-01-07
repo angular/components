@@ -82,10 +82,14 @@ export declare abstract class DateAdapter<D> {
 export declare class DateRange<D> {
     readonly end: D | null;
     readonly start: D | null;
-    constructor(range?: {
-        start?: D | null;
-        end?: D | null;
-    } | null);
+    constructor(
+    start: D | null,
+    end: D | null);
+}
+
+export interface DateSelectionModelChange<S> {
+    selection: S;
+    source: unknown;
 }
 
 export declare const JAN = 0, FEB = 1, MAR = 2, APR = 3, MAY = 4, JUN = 5, JUL = 6, AUG = 7, SEP = 8, OCT = 9, NOV = 10, DEC = 11;
@@ -233,15 +237,18 @@ export declare type MatDateFormats = {
 
 export declare abstract class MatDateSelectionModel<S, D = ExtractDateTypeFromSelection<S>> implements OnDestroy {
     protected readonly adapter: DateAdapter<D>;
-    selection: S;
-    valueChanges: Observable<void>;
-    protected constructor(adapter: DateAdapter<D>, _selection: S);
+    readonly selection: S;
+    selectionChanged: Observable<DateSelectionModelChange<S>>;
+    protected constructor(
+    adapter: DateAdapter<D>,
+    selection: S);
     abstract add(date: D | null): void;
     abstract isComplete(): boolean;
-    abstract isSame(other: MatDateSelectionModel<D>): boolean;
+    abstract isSame(other: S): boolean;
     abstract isValid(): boolean;
     ngOnDestroy(): void;
     abstract overlaps(range: DateRange<D>): boolean;
+    updateSelection(value: S, source: unknown): void;
     static ɵdir: i0.ɵɵDirectiveDefWithMeta<MatDateSelectionModel<any, any>, never, never, {}, {}, never>;
     static ɵfac: i0.ɵɵFactoryDef<MatDateSelectionModel<any, any>>;
 }
@@ -341,13 +348,10 @@ export declare class MatPseudoCheckboxModule {
 export declare type MatPseudoCheckboxState = 'unchecked' | 'checked' | 'indeterminate';
 
 export declare class MatRangeDateSelectionModel<D> extends MatDateSelectionModel<DateRange<D>, D> {
-    constructor(adapter: DateAdapter<D>, range?: {
-        start?: D | null;
-        end?: D | null;
-    } | null);
+    constructor(adapter: DateAdapter<D>);
     add(date: D | null): void;
     isComplete(): boolean;
-    isSame(other: MatDateSelectionModel<any>): boolean;
+    isSame(other: DateRange<D>): boolean;
     isValid(): boolean;
     overlaps(range: DateRange<D>): boolean;
     static ɵfac: i0.ɵɵFactoryDef<MatRangeDateSelectionModel<any>>;
@@ -380,10 +384,10 @@ export declare class MatRippleModule {
 }
 
 export declare class MatSingleDateSelectionModel<D> extends MatDateSelectionModel<D | null, D> {
-    constructor(adapter: DateAdapter<D>, date?: D | null);
+    constructor(adapter: DateAdapter<D>);
     add(date: D | null): void;
     isComplete(): boolean;
-    isSame(other: MatDateSelectionModel<any>): boolean;
+    isSame(other: D): boolean;
     isValid(): boolean;
     overlaps(range: DateRange<D>): boolean;
     static ɵfac: i0.ɵɵFactoryDef<MatSingleDateSelectionModel<any>>;
