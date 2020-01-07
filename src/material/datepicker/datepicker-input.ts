@@ -30,8 +30,14 @@ import {
   ValidatorFn,
   Validators,
 } from '@angular/forms';
-import {DateAdapter, MAT_DATE_FORMATS, MatDateFormats, ThemePalette} from '@angular/material/core';
-import {MAT_FORM_FIELD, MatFormField} from '@angular/material/form-field';
+import {
+  DateAdapter,
+  MAT_DATE_FORMATS,
+  MatDateFormats,
+  ThemePalette,
+  MatDateSelectionModel,
+} from '@angular/material/core';
+import {MatFormField, MAT_FORM_FIELD} from '@angular/material/form-field';
 import {MAT_INPUT_VALUE_ACCESSOR} from '@angular/material/input';
 import {Subscription} from 'rxjs';
 import {MatDatepicker} from './datepicker';
@@ -62,10 +68,10 @@ export class MatDatepickerInputEvent<D> {
   value: D | null;
 
   constructor(
-    /** Reference to the datepicker input component that emitted the event. */
-    public target: MatDatepickerInput<D>,
-    /** Reference to the native input element associated with the datepicker input. */
-    public targetElement: HTMLElement) {
+      /** Reference to the datepicker input component that emitted the event. */
+      public target: MatDatepickerInput<D>,
+      /** Reference to the native input element associated with the datepicker input. */
+      public targetElement: HTMLElement) {
     this.value = this.target.value;
   }
 }
@@ -100,21 +106,27 @@ export class MatDatepickerInput<D> implements ControlValueAccessor, OnDestroy, A
 
   /** The datepicker that this input is associated with. */
   @Input()
-  set matDatepicker(value: MatDatepicker<D>) {
-    if (!value) {
+  set matDatepicker(datepicker: MatDatepicker<D>) {
+    if (!datepicker) {
       return;
     }
 
-    this._datepicker = value;
-    this._datepicker._registerInput(this);
-    this._datepickerSubscription.unsubscribe();
+    this._datepicker = datepicker;
+    this._model = this._datepicker._registerInput(this);
+    this._valueChangesSubscription.unsubscribe();
 
-    this._datepickerSubscription = this._datepicker._selectedChanged.subscribe((selected: D) => {
-      this.value = selected;
-      this._cvaOnChange(selected);
-      this._onTouched();
-      this.dateInput.emit(new MatDatepickerInputEvent(this, this._elementRef.nativeElement));
-      this.dateChange.emit(new MatDatepickerInputEvent(this, this._elementRef.nativeElement));
+    if (this._pendingValue) {
+      this._assignValue(this._pendingValue);
+    }
+
+    this._valueChangesSubscription = this._model.selectionChanged.subscribe(event => {
+      if (event.source !== this) {
+        this._cvaOnChange(event.selection);
+        this._onTouched();
+        this.dateInput.emit(new MatDatepickerInputEvent(this, this._elementRef.nativeElement));
+        this.dateChange.emit(new MatDatepickerInputEvent(this, this._elementRef.nativeElement));
+        this._formatValue(event.selection);
+      }
     });
   }
   _datepicker: MatDatepicker<D>;
@@ -129,20 +141,20 @@ export class MatDatepickerInput<D> implements ControlValueAccessor, OnDestroy, A
 
   /** The value of the input. */
   @Input()
-  get value(): D | null { return this._value; }
+  get value(): D | null { return this._model ? this._model.selection : this._pendingValue; }
   set value(value: D | null) {
     value = this._dateAdapter.deserialize(value);
     this._lastValueValid = !value || this._dateAdapter.isValid(value);
     value = this._getValidDateOrNull(value);
     const oldDate = this.value;
-    this._value = value;
+    this._assignValue(value);
     this._formatValue(value);
 
     if (!this._dateAdapter.sameDate(oldDate, value)) {
       this._valueChange.emit(value);
     }
   }
-  private _value: D | null;
+  private _model: MatDateSelectionModel<D | null, D> | undefined;
 
   /** The minimum valid date. */
   @Input()
@@ -204,12 +216,16 @@ export class MatDatepickerInput<D> implements ControlValueAccessor, OnDestroy, A
   _onTouched = () => {};
 
   private _cvaOnChange: (value: any) => void = () => {};
-
   private _validatorOnChange = () => {};
-
-  private _datepickerSubscription = Subscription.EMPTY;
-
+  private _valueChangesSubscription = Subscription.EMPTY;
   private _localeSubscription = Subscription.EMPTY;
+
+  /**
+   * Since the value is kept on the datepicker which is assigned in an Input,
+   * we might get a value before we have a datepicker. This property keeps track
+   * of the value until we have somewhere to assign it.
+   */
+  private _pendingValue: D | null;
 
   /** The form control validator for whether the input parses. */
   private _parseValidator: ValidatorFn = (): ValidationErrors | null => {
@@ -271,7 +287,7 @@ export class MatDatepickerInput<D> implements ControlValueAccessor, OnDestroy, A
   }
 
   ngOnDestroy() {
-    this._datepickerSubscription.unsubscribe();
+    this._valueChangesSubscription.unsubscribe();
     this._localeSubscription.unsubscribe();
     this._valueChange.complete();
     this._disabledChange.complete();
@@ -338,8 +354,8 @@ export class MatDatepickerInput<D> implements ControlValueAccessor, OnDestroy, A
     this._lastValueValid = !date || this._dateAdapter.isValid(date);
     date = this._getValidDateOrNull(date);
 
-    if (!this._dateAdapter.sameDate(date, this._value)) {
-      this._value = date;
+    if (!this._dateAdapter.sameDate(date, this.value)) {
+      this._assignValue(date);
       this._cvaOnChange(date);
       this._valueChange.emit(date);
       this.dateInput.emit(new MatDatepickerInputEvent(this, this._elementRef.nativeElement));
@@ -379,6 +395,18 @@ export class MatDatepickerInput<D> implements ControlValueAccessor, OnDestroy, A
    */
   private _getValidDateOrNull(obj: any): D | null {
     return (this._dateAdapter.isDateInstance(obj) && this._dateAdapter.isValid(obj)) ? obj : null;
+  }
+
+  /** Assigns a value to the model. */
+  private _assignValue(value: D | null) {
+    // We may get some incoming values before the datepicker was
+    // assigned. Save the value so that we can assign it later.
+    if (this._model) {
+      this._model.updateSelection(value, this);
+      this._pendingValue = null;
+    } else {
+      this._pendingValue = value;
+    }
   }
 
   // Accept `any` to avoid conflicts with other directives on `<input>` that
