@@ -43,9 +43,11 @@ import {
   DateAdapter,
   mixinColor,
   ThemePalette,
+  MatDateSelectionModel,
+  MAT_SINGLE_DATE_SELECTION_MODEL_PROVIDER,
 } from '@angular/material/core';
 import {MatDialog, MatDialogRef} from '@angular/material/dialog';
-import {merge, Subject, Subscription} from 'rxjs';
+import {merge, Subject} from 'rxjs';
 import {filter, take} from 'rxjs/operators';
 import {MatCalendar} from './calendar';
 import {matDatepickerAnimations} from './datepicker-animations';
@@ -163,6 +165,7 @@ export class MatDatepickerContent<D> extends _MatDatepickerContentMixinBase
   exportAs: 'matDatepicker',
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
+  providers: [MAT_SINGLE_DATE_SELECTION_MODEL_PROVIDER]
 })
 export class MatDatepicker<D> implements OnDestroy, CanColor {
   private _scrollStrategy: () => ScrollStrategy;
@@ -257,11 +260,6 @@ export class MatDatepicker<D> implements OnDestroy, CanColor {
   /** The id for the datepicker calendar. */
   id: string = `mat-datepicker-${datepickerUid++}`;
 
-  /** The currently selected date. */
-  get _selected(): D | null { return this._validSelected; }
-  set _selected(value: D | null) { this._validSelected = value; }
-  private _validSelected: D | null = null;
-
   /** The minimum selectable date. */
   get _minDate(): D | null {
     return this._datepickerInput && this._datepickerInput.min;
@@ -288,17 +286,11 @@ export class MatDatepicker<D> implements OnDestroy, CanColor {
   /** The element that was focused before the datepicker was opened. */
   private _focusedElementBeforeOpen: HTMLElement | null = null;
 
-  /** Subscription to value changes in the associated input element. */
-  private _inputSubscription = Subscription.EMPTY;
-
   /** The input element this datepicker is associated with. */
   _datepickerInput: MatDatepickerInput<D>;
 
   /** Emits when the datepicker is disabled. */
   readonly _disabledChange = new Subject<boolean>();
-
-  /** Emits new selected date when selected date changes. */
-  readonly _selectedChanged = new Subject<D>();
 
   constructor(private _dialog: MatDialog,
               private _overlay: Overlay,
@@ -307,7 +299,8 @@ export class MatDatepicker<D> implements OnDestroy, CanColor {
               @Inject(MAT_DATEPICKER_SCROLL_STRATEGY) scrollStrategy: any,
               @Optional() private _dateAdapter: DateAdapter<D>,
               @Optional() private _dir: Directionality,
-              @Optional() @Inject(DOCUMENT) private _document: any) {
+              @Optional() @Inject(DOCUMENT) private _document: any,
+              private _model: MatDateSelectionModel<D | null, D>) {
     if (!this._dateAdapter) {
       throw createMissingDateImplError('DateAdapter');
     }
@@ -318,17 +311,12 @@ export class MatDatepicker<D> implements OnDestroy, CanColor {
   ngOnDestroy() {
     this._destroyPopup();
     this.close();
-    this._inputSubscription.unsubscribe();
     this._disabledChange.complete();
   }
 
   /** Selects the given date */
   select(date: D): void {
-    let oldValue = this._selected;
-    this._selected = date;
-    if (!this._dateAdapter.sameDate(oldValue, this._selected)) {
-      this._selectedChanged.next(date);
-    }
+    this._model.add(date);
   }
 
   /** Emits the selected year in multiyear view */
@@ -344,14 +332,14 @@ export class MatDatepicker<D> implements OnDestroy, CanColor {
   /**
    * Register an input with this datepicker.
    * @param input The datepicker input to register with this datepicker.
+   * @returns Selection model that the input should hook itself up to.
    */
-  _registerInput(input: MatDatepickerInput<D>): void {
+  _registerInput(input: MatDatepickerInput<D>): MatDateSelectionModel<D | null, D> {
     if (this._datepickerInput) {
       throw Error('A MatDatepicker can only be associated with a single input.');
     }
     this._datepickerInput = input;
-    this._inputSubscription =
-        this._datepickerInput._valueChange.subscribe((value: D | null) => this._selected = value);
+    return this._model;
   }
 
   /** Open the calendar. */

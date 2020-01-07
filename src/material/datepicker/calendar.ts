@@ -25,7 +25,13 @@ import {
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
-import {DateAdapter, MAT_DATE_FORMATS, MatDateFormats} from '@angular/material/core';
+import {
+  DateAdapter,
+  MAT_DATE_FORMATS,
+  MatDateFormats,
+  MatDateSelectionModel,
+  MAT_SINGLE_DATE_SELECTION_MODEL_PROVIDER,
+} from '@angular/material/core';
 import {Subject, Subscription} from 'rxjs';
 import {MatCalendarCellCssClasses} from './calendar-body';
 import {createMissingDateImplError} from './datepicker-errors';
@@ -179,6 +185,7 @@ export class MatCalendarHeader<D> {
   exportAs: 'matCalendar',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [MAT_SINGLE_DATE_SELECTION_MODEL_PROVIDER]
 })
 export class MatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDestroy, OnChanges {
   /** An input indicating the type of the header component, if set. */
@@ -188,6 +195,7 @@ export class MatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDes
   _calendarHeaderPortal: Portal<any>;
 
   private _intlChanges: Subscription;
+  private _selectedChanges: Subscription;
 
   /**
    * Used for scheduling that focus should be moved to the active cell on the next tick.
@@ -209,11 +217,11 @@ export class MatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDes
 
   /** The currently selected date. */
   @Input()
-  get selected(): D | null { return this._selected; }
+  get selected(): D | null { return this._model.selection; }
   set selected(value: D | null) {
-    this._selected = this._getValidDateOrNull(this._dateAdapter.deserialize(value));
+    const newValue = this._getValidDateOrNull(this._dateAdapter.deserialize(value));
+    this._model.updateSelection(newValue, this);
   }
-  private _selected: D | null;
 
   /** The minimum selectable date. */
   @Input()
@@ -237,7 +245,10 @@ export class MatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDes
   /** Function that can be used to add custom CSS classes to dates. */
   @Input() dateClass: (date: D) => MatCalendarCellCssClasses;
 
-  /** Emits when the currently selected date changes. */
+  /**
+   * Emits when the currently selected date changes.
+   * @breaking-change 11.0.0 Emitted value to change to `D | null`.
+   */
   @Output() readonly selectedChange: EventEmitter<D> = new EventEmitter<D>();
 
   /**
@@ -293,7 +304,8 @@ export class MatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDes
   constructor(_intl: MatDatepickerIntl,
               @Optional() private _dateAdapter: DateAdapter<D>,
               @Optional() @Inject(MAT_DATE_FORMATS) private _dateFormats: MatDateFormats,
-              private _changeDetectorRef: ChangeDetectorRef) {
+              private _changeDetectorRef: ChangeDetectorRef,
+              private _model: MatDateSelectionModel<D | null, D>) {
 
     if (!this._dateAdapter) {
       throw createMissingDateImplError('DateAdapter');
@@ -306,6 +318,13 @@ export class MatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDes
     this._intlChanges = _intl.changes.subscribe(() => {
       _changeDetectorRef.markForCheck();
       this.stateChanges.next();
+    });
+
+    this._selectedChanges = _model.selectionChanged.subscribe(event => {
+      // @breaking-change 11.0.0 Remove null check once `event.selection` is allowed to be null.
+      if (event.selection) {
+        this.selectedChange.emit(event.selection);
+      }
     });
   }
 
@@ -325,6 +344,7 @@ export class MatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDes
   }
 
   ngOnDestroy() {
+    this._selectedChanges.unsubscribe();
     this._intlChanges.unsubscribe();
     this.stateChanges.complete();
   }
@@ -369,9 +389,7 @@ export class MatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDes
 
   /** Handles date selection in the month view. */
   _dateSelected(date: D | null): void {
-    if (date && !this._dateAdapter.sameDate(date, this.selected)) {
-      this.selectedChange.emit(date);
-    }
+    this._model.add(date);
   }
 
   /** Handles year selection in the multiyear view. */
