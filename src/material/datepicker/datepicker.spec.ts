@@ -12,7 +12,12 @@ import {
 import {Component, Type, ViewChild, Provider} from '@angular/core';
 import {ComponentFixture, fakeAsync, flush, inject, TestBed, tick} from '@angular/core/testing';
 import {FormControl, FormsModule, NgModel, ReactiveFormsModule} from '@angular/forms';
-import {MAT_DATE_LOCALE, MatNativeDateModule, NativeDateModule} from '@angular/material/core';
+import {
+  MAT_DATE_LOCALE,
+  MatNativeDateModule,
+  NativeDateModule,
+  MatDateSelectionModel,
+} from '@angular/material/core';
 import {MatFormField, MatFormFieldModule} from '@angular/material/form-field';
 import {DEC, JAN, JUL, JUN, SEP} from '@angular/material/testing';
 import {By} from '@angular/platform-browser';
@@ -67,12 +72,15 @@ describe('MatDatepicker', () => {
     describe('standard datepicker', () => {
       let fixture: ComponentFixture<StandardDatepicker>;
       let testComponent: StandardDatepicker;
+      let model: MatDateSelectionModel<Date | null, Date>;
 
       beforeEach(fakeAsync(() => {
         fixture = createComponent(StandardDatepicker, [MatNativeDateModule]);
         fixture.detectChanges();
 
         testComponent = fixture.componentInstance;
+        model = fixture.debugElement.query(By.directive(MatDatepicker))
+            .injector.get(MatDateSelectionModel);
       }));
 
       afterEach(fakeAsync(() => {
@@ -275,8 +283,8 @@ describe('MatDatepicker', () => {
 
       it('clicking the currently selected date should close the calendar ' +
          'without firing selectedChanged', fakeAsync(() => {
-        const selectedChangedSpy =
-            spyOn(testComponent.datepicker._selectedChanged, 'next').and.callThrough();
+        const spy = jasmine.createSpy('selectionChanged spy');
+        const selectedSubscription = model.selectionChanged.subscribe(spy);
 
         for (let changeCount = 1; changeCount < 3; changeCount++) {
           const currentDay = changeCount;
@@ -292,15 +300,16 @@ describe('MatDatepicker', () => {
           flush();
         }
 
-        expect(selectedChangedSpy.calls.count()).toEqual(1);
+        expect(spy).toHaveBeenCalledTimes(1);
         expect(document.querySelector('mat-dialog-container')).toBeNull();
         expect(testComponent.datepickerInput.value).toEqual(new Date(2020, JAN, 2));
+        selectedSubscription.unsubscribe();
       }));
 
       it('pressing enter on the currently selected date should close the calendar without ' +
          'firing selectedChanged', () => {
-        const selectedChangedSpy =
-            spyOn(testComponent.datepicker._selectedChanged, 'next').and.callThrough();
+        const spy = jasmine.createSpy('selectionChanged spy');
+        const selectedSubscription = model.selectionChanged.subscribe(spy);
 
         testComponent.datepicker.open();
         fixture.detectChanges();
@@ -313,9 +322,10 @@ describe('MatDatepicker', () => {
         fixture.detectChanges();
 
         fixture.whenStable().then(() => {
-          expect(selectedChangedSpy.calls.count()).toEqual(0);
+          expect(spy).not.toHaveBeenCalled();
           expect(document.querySelector('mat-dialog-container')).toBeNull();
           expect(testComponent.datepickerInput.value).toEqual(new Date(2020, JAN, 1));
+          selectedSubscription.unsubscribe();
         });
       });
 
@@ -508,11 +518,13 @@ describe('MatDatepicker', () => {
         const fixture = createComponent(DelayedDatepicker, [MatNativeDateModule]);
         const testComponent: DelayedDatepicker = fixture.componentInstance;
         const toSelect = new Date(2017, JAN, 1);
-
         fixture.detectChanges();
 
+        const model = fixture.debugElement.query(By.directive(MatDatepicker))
+          .injector.get(MatDateSelectionModel);
+
         expect(testComponent.datepickerInput.value).toBeNull();
-        expect(testComponent.datepicker._selected).toBeNull();
+        expect(model.selection).toBeNull();
 
         testComponent.assignedDatepicker = testComponent.datepicker;
         fixture.detectChanges();
@@ -523,7 +535,7 @@ describe('MatDatepicker', () => {
         fixture.detectChanges();
 
         expect(testComponent.datepickerInput.value).toEqual(toSelect);
-        expect(testComponent.datepicker._selected).toEqual(toSelect);
+        expect(model.selection).toEqual(toSelect);
       }));
     });
 
@@ -673,6 +685,7 @@ describe('MatDatepicker', () => {
     describe('datepicker with ngModel', () => {
       let fixture: ComponentFixture<DatepickerWithNgModel>;
       let testComponent: DatepickerWithNgModel;
+      let model: MatDateSelectionModel<Date | null, Date>;
 
       beforeEach(fakeAsync(() => {
         fixture = createComponent(DatepickerWithNgModel, [MatNativeDateModule]);
@@ -682,6 +695,8 @@ describe('MatDatepicker', () => {
           fixture.detectChanges();
 
           testComponent = fixture.componentInstance;
+          model = fixture.debugElement.query(By.directive(MatDatepicker))
+            .injector.get(MatDateSelectionModel);
         });
       }));
 
@@ -692,7 +707,7 @@ describe('MatDatepicker', () => {
 
       it('should update datepicker when model changes', fakeAsync(() => {
         expect(testComponent.datepickerInput.value).toBeNull();
-        expect(testComponent.datepicker._selected).toBeNull();
+        expect(model.selection).toBeNull();
 
         let selected = new Date(2017, JAN, 1);
         testComponent.selected = selected;
@@ -701,7 +716,7 @@ describe('MatDatepicker', () => {
         fixture.detectChanges();
 
         expect(testComponent.datepickerInput.value).toEqual(selected);
-        expect(testComponent.datepicker._selected).toEqual(selected);
+        expect(model.selection).toEqual(selected);
       }));
 
       it('should update model when date is selected', fakeAsync(() => {
@@ -821,12 +836,15 @@ describe('MatDatepicker', () => {
     describe('datepicker with formControl', () => {
       let fixture: ComponentFixture<DatepickerWithFormControl>;
       let testComponent: DatepickerWithFormControl;
+      let model: MatDateSelectionModel<Date | null, Date>;
 
       beforeEach(fakeAsync(() => {
         fixture = createComponent(DatepickerWithFormControl, [MatNativeDateModule]);
         fixture.detectChanges();
 
         testComponent = fixture.componentInstance;
+        model = fixture.debugElement.query(By.directive(MatDatepicker))
+            .injector.get(MatDateSelectionModel);
       }));
 
       afterEach(fakeAsync(() => {
@@ -836,14 +854,14 @@ describe('MatDatepicker', () => {
 
       it('should update datepicker when formControl changes', () => {
         expect(testComponent.datepickerInput.value).toBeNull();
-        expect(testComponent.datepicker._selected).toBeNull();
+        expect(model.selection).toBeNull();
 
         let selected = new Date(2017, JAN, 1);
         testComponent.formControl.setValue(selected);
         fixture.detectChanges();
 
         expect(testComponent.datepickerInput.value).toEqual(selected);
-        expect(testComponent.datepicker._selected).toEqual(selected);
+        expect(model.selection).toEqual(selected);
       });
 
       it('should update formControl when date is selected', () => {
