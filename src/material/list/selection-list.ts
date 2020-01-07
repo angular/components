@@ -108,6 +108,7 @@ export class MatSelectionListChange {
     // be placed inside a parent that has one of the other colors with a higher specificity.
     '[class.mat-accent]': 'color !== "primary" && color !== "warn"',
     '[class.mat-warn]': 'color === "warn"',
+    '[class.mat-selected]': 'selected',
     '[attr.aria-selected]': 'selected',
     '[attr.aria-disabled]': 'disabled',
   },
@@ -256,6 +257,8 @@ export class MatListOption extends _MatListOptionMixinBase implements AfterConte
 
   _handleClick() {
     if (!this.disabled) {
+      if (!this.selectionList.multiple && this.selected) { return; }
+
       this.toggle();
 
       // Emit a change event if the selected state of the option changed through user interaction.
@@ -322,6 +325,7 @@ export class MatListOption extends _MatListOptionMixinBase implements AfterConte
     'role': 'listbox',
     '[tabIndex]': 'tabIndex',
     'class': 'mat-selection-list mat-list-base',
+    '[class.mat-selection-list-single-select]': '!multiple',
     '(blur)': '_onTouched()',
     '(keydown)': '_keydown($event)',
     'aria-multiselectable': 'true',
@@ -335,6 +339,9 @@ export class MatListOption extends _MatListOptionMixinBase implements AfterConte
 })
 export class MatSelectionList extends _MatSelectionListMixinBase implements CanDisableRipple,
   AfterContentInit, ControlValueAccessor, OnDestroy, OnChanges {
+  private _multiple = true;
+  private _contentInitialized = false;
+  private _selectedOptions = new SelectionModel<MatListOption>(this._multiple);
 
   /** The FocusKeyManager which handles focus. */
   _keyManager: FocusKeyManager<MatListOption>;
@@ -373,8 +380,26 @@ export class MatSelectionList extends _MatSelectionListMixinBase implements CanD
   }
   private _disabled: boolean = false;
 
+  /** Whether selection is limited to one or multiple items (default multiple). */
+  @Input()
+  get multiple(): boolean { return this._multiple; }
+  set multiple(value: boolean) {
+    const newValue = coerceBooleanProperty(value);
+
+    if (newValue !== this._multiple) {
+      this._multiple = newValue;
+      this.selectedOptions = new SelectionModel(this._multiple, this._selectedOptions.selected);
+    }
+  }
+
   /** The currently selected options. */
-  selectedOptions: SelectionModel<MatListOption> = new SelectionModel<MatListOption>(true);
+  get selectedOptions(): SelectionModel<MatListOption> { return this._selectedOptions; }
+  set selectedOptions(selectedOptions: SelectionModel<MatListOption>) {
+    this._selectedOptions = selectedOptions;
+    this._selectionModelChanged.next();
+    this._observeSelectionModelForChanges();
+    this._markOptionsForCheck();
+  }
 
   /** View to model callback that should be called whenever the selected options change. */
   private _onChange: (value: any) => void = (_: any) => {};
@@ -384,6 +409,8 @@ export class MatSelectionList extends _MatSelectionListMixinBase implements CanD
 
   /** Emits when the list has been destroyed. */
   private _destroyed = new Subject<void>();
+  /** Emits when the underlying selection model instance has changed. */
+  private _selectionModelChanged = new Subject<void>();
 
   /** View to model callback that should be called if the list or its options lost focus. */
   _onTouched: () => void = () => {};
@@ -397,6 +424,8 @@ export class MatSelectionList extends _MatSelectionListMixinBase implements CanD
   }
 
   ngAfterContentInit(): void {
+    this._contentInitialized = true;
+
     this._keyManager = new FocusKeyManager<MatListOption>(this.options)
       .withWrap()
       .withTypeAhead()
@@ -409,20 +438,7 @@ export class MatSelectionList extends _MatSelectionListMixinBase implements CanD
       this._setOptionsFromValues(this._value);
     }
 
-    // Sync external changes to the model back to the options.
-    this.selectedOptions.changed.pipe(takeUntil(this._destroyed)).subscribe(event => {
-      if (event.added) {
-        for (let item of event.added) {
-          item.selected = true;
-        }
-      }
-
-      if (event.removed) {
-        for (let item of event.removed) {
-          item.selected = false;
-        }
-      }
-    });
+    this._observeSelectionModelForChanges();
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -438,6 +454,7 @@ export class MatSelectionList extends _MatSelectionListMixinBase implements CanD
   ngOnDestroy() {
     this._destroyed.next();
     this._destroyed.complete();
+    this._selectionModelChanged.complete();
     this._isDestroyed = true;
   }
 
@@ -577,6 +594,28 @@ export class MatSelectionList extends _MatSelectionListMixinBase implements CanD
     });
   }
 
+  private _observeSelectionModelForChanges() {
+    if (!this._contentInitialized) { return; }
+
+    // Sync external changes to the model back to the options.
+    this.selectedOptions.changed.pipe(
+        takeUntil(this._selectionModelChanged),
+        takeUntil(this._destroyed),
+    ).subscribe(event => {
+      if (event.added) {
+        for (let item of event.added) {
+          item.selected = true;
+        }
+      }
+
+      if (event.removed) {
+        for (let item of event.removed) {
+          item.selected = false;
+        }
+      }
+    });
+  }
+
   /** Returns the values of the selected options. */
   private _getSelectedOptionValues(): string[] {
     return this.options.filter(option => option.selected).map(option => option.value);
@@ -589,7 +628,7 @@ export class MatSelectionList extends _MatSelectionListMixinBase implements CanD
     if (focusedIndex != null && this._isValidIndex(focusedIndex)) {
       let focusedOption: MatListOption = this.options.toArray()[focusedIndex];
 
-      if (focusedOption && !focusedOption.disabled) {
+      if (focusedOption && !focusedOption.disabled && (this._multiple || !focusedOption.selected)) {
         focusedOption.toggle();
 
         // Emit a change event because the focused option changed its state through user
@@ -642,4 +681,5 @@ export class MatSelectionList extends _MatSelectionListMixinBase implements CanD
 
   static ngAcceptInputType_disabled: BooleanInput;
   static ngAcceptInputType_disableRipple: BooleanInput;
+  static ngAcceptInputType_multiple: BooleanInput;
 }

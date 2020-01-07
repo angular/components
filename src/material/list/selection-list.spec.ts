@@ -93,11 +93,13 @@ describe('MatSelectionList without forms', () => {
 
       expect(selectList.selected.length).toBe(0);
       expect(listOptions[2].nativeElement.getAttribute('aria-selected')).toBe('false');
+      expect(listOptions[2].nativeElement.classList.contains('mat-selected')).toBe(false);
 
       testListItem.toggle();
       fixture.detectChanges();
 
       expect(listOptions[2].nativeElement.getAttribute('aria-selected')).toBe('true');
+      expect(listOptions[2].nativeElement.classList.contains('mat-selected')).toBe(true);
       expect(listOptions[2].nativeElement.getAttribute('aria-disabled')).toBe('false');
       expect(selectList.selected.length).toBe(1);
     });
@@ -110,7 +112,9 @@ describe('MatSelectionList without forms', () => {
 
       expect(selectList.selected.length).toBe(0);
       expect(listOptions[2].nativeElement.getAttribute('aria-selected')).toBe('false');
+      expect(listOptions[2].nativeElement.classList.contains('mat-selected')).toBe(false);
       expect(listOptions[1].nativeElement.getAttribute('aria-selected')).toBe('false');
+      expect(listOptions[1].nativeElement.classList.contains('mat-selected')).toBe(false);
 
       testListItem.toggle();
       fixture.detectChanges();
@@ -120,7 +124,9 @@ describe('MatSelectionList without forms', () => {
 
       expect(selectList.selected.length).toBe(2);
       expect(listOptions[2].nativeElement.getAttribute('aria-selected')).toBe('true');
+      expect(listOptions[2].nativeElement.classList.contains('mat-selected')).toBe(true);
       expect(listOptions[1].nativeElement.getAttribute('aria-selected')).toBe('true');
+      expect(listOptions[1].nativeElement.classList.contains('mat-selected')).toBe(true);
       expect(listOptions[1].nativeElement.getAttribute('aria-disabled')).toBe('false');
       expect(listOptions[2].nativeElement.getAttribute('aria-disabled')).toBe('false');
     });
@@ -882,6 +888,97 @@ describe('MatSelectionList without forms', () => {
       expect(listOption.classList).toContain('mat-list-item-with-avatar');
     });
   });
+
+  describe('with single selection', () => {
+    let fixture: ComponentFixture<SelectionListWithListOptions>;
+    let listOption: DebugElement[];
+    let selectionList: DebugElement;
+
+    beforeEach(async(() => {
+      TestBed.configureTestingModule({
+        imports: [MatListModule],
+        declarations: [
+          SelectionListWithListOptions,
+        ],
+      }).compileComponents();
+
+      fixture = TestBed.createComponent(SelectionListWithListOptions);
+      fixture.componentInstance.multiple = false;
+      listOption = fixture.debugElement.queryAll(By.directive(MatListOption));
+      selectionList = fixture.debugElement.query(By.directive(MatSelectionList))!;
+      fixture.detectChanges();
+    }));
+
+    it('should select one option at a time', () => {
+      const testListItem1 = listOption[1].injector.get<MatListOption>(MatListOption);
+      const testListItem2 = listOption[2].injector.get<MatListOption>(MatListOption);
+      const selectList =
+          selectionList.injector.get<MatSelectionList>(MatSelectionList).selectedOptions;
+
+      expect(selectList.selected.length).toBe(0);
+
+      dispatchFakeEvent(testListItem1._getHostElement(), 'click');
+      fixture.detectChanges();
+
+      expect(selectList.selected).toEqual([testListItem1]);
+
+      dispatchFakeEvent(testListItem2._getHostElement(), 'click');
+      fixture.detectChanges();
+
+      expect(selectList.selected).toEqual([testListItem2]);
+    });
+
+    it('should not show check boxes', () => {
+      expect(fixture.nativeElement.querySelector('mat-pseudo-checkbox')).toBeFalsy();
+    });
+
+    it('should not deselect the target option on click', () => {
+      const testListItem1 = listOption[1].injector.get<MatListOption>(MatListOption);
+      const selectList =
+          selectionList.injector.get<MatSelectionList>(MatSelectionList).selectedOptions;
+
+      expect(selectList.selected.length).toBe(0);
+
+      dispatchFakeEvent(testListItem1._getHostElement(), 'click');
+      fixture.detectChanges();
+
+      expect(selectList.selected).toEqual([testListItem1]);
+
+      dispatchFakeEvent(testListItem1._getHostElement(), 'click');
+      fixture.detectChanges();
+
+      expect(selectList.selected).toEqual([testListItem1]);
+    });
+
+    it('sanely handles toggling single/multiple mode after bootstrap', () => {
+      const testListItem1 = listOption[1].injector.get<MatListOption>(MatListOption);
+      const testListItem2 = listOption[2].injector.get<MatListOption>(MatListOption);
+      const selected = () => selectionList.injector.get<MatSelectionList>(MatSelectionList)
+          .selectedOptions.selected;
+
+      expect(selected().length).toBe(0);
+
+      dispatchFakeEvent(testListItem1._getHostElement(), 'click');
+      fixture.detectChanges();
+
+      expect(selected()).toEqual([testListItem1]);
+
+      fixture.componentInstance.multiple = true;
+      fixture.detectChanges();
+
+      expect(selected()).toEqual([testListItem1]);
+
+      dispatchFakeEvent(testListItem2._getHostElement(), 'click');
+      fixture.detectChanges();
+
+      expect(selected()).toEqual([testListItem1, testListItem2]);
+
+      fixture.componentInstance.multiple = false;
+      fixture.detectChanges();
+
+      expect(selected()).toEqual([testListItem1]);
+    });
+  });
 });
 
 describe('MatSelectionList with forms', () => {
@@ -1255,7 +1352,8 @@ describe('MatSelectionList with forms', () => {
     id="selection-list-1"
     (selectionChange)="onValueChange($event)"
     [disableRipple]="listRippleDisabled"
-    [color]="selectionListColor">
+    [color]="selectionListColor"
+    [multiple]="multiple">
     <mat-list-option checkboxPosition="before" disabled="true" value="inbox"
                      [color]="firstOptionColor">
       Inbox (disabled selection-option)
@@ -1274,6 +1372,7 @@ describe('MatSelectionList with forms', () => {
 class SelectionListWithListOptions {
   showLastOption: boolean = true;
   listRippleDisabled = false;
+  multiple = true;
   selectionListColor: ThemePalette;
   firstOptionColor: ThemePalette;
 
