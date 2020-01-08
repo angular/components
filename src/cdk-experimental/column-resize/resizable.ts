@@ -58,6 +58,7 @@ export abstract class Resizable<HandleComponent extends ResizeOverlayHandle>
   protected abstract readonly resizeStrategy: ResizeStrategy;
   protected abstract readonly viewContainerRef: ViewContainerRef;
 
+  /** The minimum width to allow the column to be sized to. */
   get minWidthPx(): number {
     return this.minWidthPxInternal;
   }
@@ -69,6 +70,7 @@ export abstract class Resizable<HandleComponent extends ResizeOverlayHandle>
     }
   }
 
+  /** The maximum width to allow the column to be sized to. */
   get maxWidthPx(): number {
     return this.maxWidthPxInternal;
   }

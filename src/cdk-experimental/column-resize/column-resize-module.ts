@@ -17,12 +17,20 @@ import {
   CdkDefaultEnabledColumnResizeFlex
 } from './column-resize-directives/default-enabled-column-resize-flex';
 
+/**
+ * One of two NgModules for use with CdkColumnResize.
+ * When using this module, columns are resizable by default.
+ */
 @NgModule({
   declarations: [CdkDefaultEnabledColumnResize, CdkDefaultEnabledColumnResizeFlex],
   exports: [CdkDefaultEnabledColumnResize, CdkDefaultEnabledColumnResizeFlex],
 })
 export class CdkColumnResizeDefaultEnabledModule {}
 
+/**
+ * One of two NgModules for use with CdkColumnResize.
+ * When using this module, columns are not resizable by default.
+ */
 @NgModule({
   declarations: [CdkColumnResize, CdkColumnResizeFlex],
   exports: [CdkColumnResize, CdkColumnResizeFlex],

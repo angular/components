@@ -18,7 +18,7 @@ import {
 import {AbstractMatColumnResize, FLEX_HOST_BINDINGS, FLEX_PROVIDERS} from './common';
 
 /**
- * Explicitly enables column resizing for a flex mat-table.
+ * Explicitly enables column resizing for a flexbox-based mat-table.
  * Individual columns must be annotated specifically.
  */
 @Directive({

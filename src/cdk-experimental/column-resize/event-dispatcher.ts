@@ -14,20 +14,34 @@ import {_closest} from '@angular/cdk-experimental/popover-edit';
 
 import {HEADER_ROW_SELECTOR} from './constants';
 
+/** Coordinates events between the column resize directives. */
 @Injectable()
 export class HeaderRowEventDispatcher {
+  /**
+   * Emits the currently hovered header cell or null when no header cells are hovered.
+   * Exposed publicly for events to feed in, but subscribers should use headerCellHoveredDistinct,
+   * defined below.
+   */
   readonly headerCellHovered = new Subject<Element|null>();
 
-  // element refers to header row
+  /**
+   * Emits the header cell for which a user-triggered resize is active or null
+   * when no resize is in progress.
+   */
   readonly overlayHandleActiveForCell = new Subject<Element|null>();
 
   constructor(private readonly _ngZone: NgZone) {}
 
+  /** Distinct and shared version of headerCellHovered. */
   readonly headerCellHoveredDistinct = this.headerCellHovered.pipe(
       distinctUntilChanged(),
       share(),
   );
 
+  /**
+   * Emits the header that is currently hovered or hosting an active resize event (with active
+   * taking precedence).
+   */
   readonly headerRowHoveredOrActiveDistinct = combineLatest(
       this.headerCellHoveredDistinct.pipe(
           map(cell => _closest(cell, HEADER_ROW_SELECTOR)),
@@ -57,6 +71,10 @@ export class HeaderRowEventDispatcher {
   private _lastSeenRow: Element|null = null;
   private _lastSeenRowHover: Observable<boolean>|null = null;
 
+  /**
+   * Emits whether the specified row should show its overlay controls.
+   * Emission occurs within the NgZone.
+   */
   resizeOverlayVisibleForHeaderRow(row: Element): Observable<boolean> {
     if (row !== this._lastSeenRow) {
       this._lastSeenRow = row;

@@ -13,6 +13,9 @@ import {Injectable} from '@angular/core';
  */
 @Injectable()
 export abstract class ColumnSizeStore {
+  /** Returns the persisted size of the specified column in the specified table. */
   abstract getSize(tableId: string, columnId: string): number;
+
+  /** Persists the size of the specified column in the specified table. */
   abstract setSize(tableId: string, columnId: string): void;
 }

@@ -38,8 +38,10 @@ export abstract class ColumnResize implements AfterViewInit, OnDestroy {
   protected abstract readonly ngZone: NgZone;
   protected abstract readonly notifier: ColumnResizeNotifierSource;
 
+  /** Unique ID for this table instance. */
   protected readonly selectorId = `${++nextId}`;
 
+  /** The id attribute of the table, if specified. */
   id?: string;
 
   ngAfterViewInit() {
@@ -55,6 +57,7 @@ export abstract class ColumnResize implements AfterViewInit, OnDestroy {
     this.destroyed.complete();
   }
 
+  /** Gets the unique CSS class name for this table instance. */
   getUniqueCssClass() {
     return `cdk-column-resize-${this.selectorId}`;
   }

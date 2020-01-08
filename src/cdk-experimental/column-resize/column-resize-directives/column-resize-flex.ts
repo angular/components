@@ -15,7 +15,7 @@ import {HeaderRowEventDispatcher} from '../event-dispatcher';
 import {HOST_BINDINGS, FLEX_PROVIDERS} from './constants';
 
 /**
- * Explicitly enables column resizing for a flex cdk-table.
+ * Explicitly enables column resizing for a flexbox-based cdk-table.
  * Individual columns must be annotated specifically.
  */
 @Directive({
