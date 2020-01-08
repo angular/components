@@ -195,7 +195,7 @@ describe('MatSelectionList without forms', () => {
       fixture.detectChanges();
 
       expect(listOptions[2].nativeElement.classList.contains('mat-single-selected')).toBe(false);
-    })
+    });
 
     it('should not allow selection of disabled items', () => {
       let testListItem = listOptions[0].injector.get<MatListOption>(MatListOption);
@@ -958,7 +958,8 @@ describe('MatSelectionList without forms', () => {
 
     it('throws an exception when toggling single/multiple mode after bootstrap', () => {
       fixture.componentInstance.multiple = true;
-      expect(() => fixture.detectChanges()).toThrow(new Error('Cannot change `multiple` mode of mat-selection-list after initialization.'));
+      expect(() => fixture.detectChanges()).toThrow(new Error(
+          'Cannot change `multiple` mode of mat-selection-list after initialization.'));
     });
   });
 });

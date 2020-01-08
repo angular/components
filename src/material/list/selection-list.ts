@@ -385,9 +385,10 @@ export class MatSelectionList extends _MatSelectionListMixinBase implements CanD
 
     if (newValue !== this._multiple) {
       if (this._contentInitialized) {
-        throw new Error('Cannot change `multiple` mode of mat-selection-list after initialization.');
+        throw new Error(
+            'Cannot change `multiple` mode of mat-selection-list after initialization.');
       }
-      
+
       this._multiple = newValue;
       this.selectedOptions = new SelectionModel(this._multiple, this.selectedOptions.selected);
     }
