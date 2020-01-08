@@ -50,6 +50,7 @@ import {
   setLines,
   ThemePalette,
 } from '@angular/material/core';
+
 import {Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 
@@ -108,7 +109,7 @@ export class MatSelectionListChange {
     // be placed inside a parent that has one of the other colors with a higher specificity.
     '[class.mat-accent]': 'color !== "primary" && color !== "warn"',
     '[class.mat-warn]': 'color === "warn"',
-    '[class.mat-selected]': 'selected',
+    '[class.mat-single-selected]': 'selected && !selectionList.multiple',
     '[attr.aria-selected]': 'selected',
     '[attr.aria-disabled]': 'disabled',
   },
@@ -256,9 +257,7 @@ export class MatListOption extends _MatListOptionMixinBase implements AfterConte
   }
 
   _handleClick() {
-    if (!this.disabled) {
-      if (!this.selectionList.multiple && this.selected) { return; }
-
+    if (!this.disabled && (this.selectionList.multiple || !this.selected)) {
       this.toggle();
 
       // Emit a change event if the selected state of the option changed through user interaction.
@@ -325,10 +324,9 @@ export class MatListOption extends _MatListOptionMixinBase implements AfterConte
     'role': 'listbox',
     '[tabIndex]': 'tabIndex',
     'class': 'mat-selection-list mat-list-base',
-    '[class.mat-selection-list-single-select]': '!multiple',
     '(blur)': '_onTouched()',
     '(keydown)': '_keydown($event)',
-    'aria-multiselectable': 'true',
+    '[attr.aria-multiselectable]': 'multiple',
     '[attr.aria-disabled]': 'disabled.toString()',
   },
   template: '<ng-content></ng-content>',
@@ -341,7 +339,6 @@ export class MatSelectionList extends _MatSelectionListMixinBase implements CanD
   AfterContentInit, ControlValueAccessor, OnDestroy, OnChanges {
   private _multiple = true;
   private _contentInitialized = false;
-  private _selectedOptions = new SelectionModel<MatListOption>(this._multiple);
 
   /** The FocusKeyManager which handles focus. */
   _keyManager: FocusKeyManager<MatListOption>;
@@ -387,19 +384,17 @@ export class MatSelectionList extends _MatSelectionListMixinBase implements CanD
     const newValue = coerceBooleanProperty(value);
 
     if (newValue !== this._multiple) {
+      if (this._contentInitialized) {
+        throw new Error('Cannot change `multiple` mode of mat-selection-list after initialization.');
+      }
+      
       this._multiple = newValue;
-      this.selectedOptions = new SelectionModel(this._multiple, this._selectedOptions.selected);
+      this.selectedOptions = new SelectionModel(this._multiple, this.selectedOptions.selected);
     }
   }
 
   /** The currently selected options. */
-  get selectedOptions(): SelectionModel<MatListOption> { return this._selectedOptions; }
-  set selectedOptions(selectedOptions: SelectionModel<MatListOption>) {
-    this._selectedOptions = selectedOptions;
-    this._selectionModelChanged.next();
-    this._observeSelectionModelForChanges();
-    this._markOptionsForCheck();
-  }
+  selectedOptions = new SelectionModel<MatListOption>(this._multiple);
 
   /** View to model callback that should be called whenever the selected options change. */
   private _onChange: (value: any) => void = (_: any) => {};
@@ -409,8 +404,6 @@ export class MatSelectionList extends _MatSelectionListMixinBase implements CanD
 
   /** Emits when the list has been destroyed. */
   private _destroyed = new Subject<void>();
-  /** Emits when the underlying selection model instance has changed. */
-  private _selectionModelChanged = new Subject<void>();
 
   /** View to model callback that should be called if the list or its options lost focus. */
   _onTouched: () => void = () => {};
@@ -438,7 +431,20 @@ export class MatSelectionList extends _MatSelectionListMixinBase implements CanD
       this._setOptionsFromValues(this._value);
     }
 
-    this._observeSelectionModelForChanges();
+    // Sync external changes to the model back to the options.
+    this.selectedOptions.changed.pipe(takeUntil(this._destroyed)).subscribe(event => {
+      if (event.added) {
+        for (let item of event.added) {
+          item.selected = true;
+        }
+      }
+
+      if (event.removed) {
+        for (let item of event.removed) {
+          item.selected = false;
+        }
+      }
+    });
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -454,7 +460,6 @@ export class MatSelectionList extends _MatSelectionListMixinBase implements CanD
   ngOnDestroy() {
     this._destroyed.next();
     this._destroyed.complete();
-    this._selectionModelChanged.complete();
     this._isDestroyed = true;
   }
 
@@ -590,28 +595,6 @@ export class MatSelectionList extends _MatSelectionListMixinBase implements CanD
 
       if (correspondingOption) {
         correspondingOption._setSelected(true);
-      }
-    });
-  }
-
-  private _observeSelectionModelForChanges() {
-    if (!this._contentInitialized) { return; }
-
-    // Sync external changes to the model back to the options.
-    this.selectedOptions.changed.pipe(
-        takeUntil(this._selectionModelChanged),
-        takeUntil(this._destroyed),
-    ).subscribe(event => {
-      if (event.added) {
-        for (let item of event.added) {
-          item.selected = true;
-        }
-      }
-
-      if (event.removed) {
-        for (let item of event.removed) {
-          item.selected = false;
-        }
       }
     });
   }

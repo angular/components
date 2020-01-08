@@ -93,13 +93,11 @@ describe('MatSelectionList without forms', () => {
 
       expect(selectList.selected.length).toBe(0);
       expect(listOptions[2].nativeElement.getAttribute('aria-selected')).toBe('false');
-      expect(listOptions[2].nativeElement.classList.contains('mat-selected')).toBe(false);
 
       testListItem.toggle();
       fixture.detectChanges();
 
       expect(listOptions[2].nativeElement.getAttribute('aria-selected')).toBe('true');
-      expect(listOptions[2].nativeElement.classList.contains('mat-selected')).toBe(true);
       expect(listOptions[2].nativeElement.getAttribute('aria-disabled')).toBe('false');
       expect(selectList.selected.length).toBe(1);
     });
@@ -112,9 +110,7 @@ describe('MatSelectionList without forms', () => {
 
       expect(selectList.selected.length).toBe(0);
       expect(listOptions[2].nativeElement.getAttribute('aria-selected')).toBe('false');
-      expect(listOptions[2].nativeElement.classList.contains('mat-selected')).toBe(false);
       expect(listOptions[1].nativeElement.getAttribute('aria-selected')).toBe('false');
-      expect(listOptions[1].nativeElement.classList.contains('mat-selected')).toBe(false);
 
       testListItem.toggle();
       fixture.detectChanges();
@@ -124,9 +120,7 @@ describe('MatSelectionList without forms', () => {
 
       expect(selectList.selected.length).toBe(2);
       expect(listOptions[2].nativeElement.getAttribute('aria-selected')).toBe('true');
-      expect(listOptions[2].nativeElement.classList.contains('mat-selected')).toBe(true);
       expect(listOptions[1].nativeElement.getAttribute('aria-selected')).toBe('true');
-      expect(listOptions[1].nativeElement.classList.contains('mat-selected')).toBe(true);
       expect(listOptions[1].nativeElement.getAttribute('aria-disabled')).toBe('false');
       expect(listOptions[2].nativeElement.getAttribute('aria-disabled')).toBe('false');
     });
@@ -193,6 +187,15 @@ describe('MatSelectionList without forms', () => {
 
       expect(selectList.selected.length).toBe(0);
     });
+
+    it('should not add the mat-single-selected class (in multiple mode)', () => {
+      let testListItem = listOptions[2].injector.get<MatListOption>(MatListOption);
+
+      testListItem._handleClick();
+      fixture.detectChanges();
+
+      expect(listOptions[2].nativeElement.classList.contains('mat-single-selected')).toBe(false);
+    })
 
     it('should not allow selection of disabled items', () => {
       let testListItem = listOptions[0].injector.get<MatListOption>(MatListOption);
@@ -921,11 +924,14 @@ describe('MatSelectionList without forms', () => {
       fixture.detectChanges();
 
       expect(selectList.selected).toEqual([testListItem1]);
+      expect(listOption[1].nativeElement.classList.contains('mat-single-selected')).toBe(true);
 
       dispatchFakeEvent(testListItem2._getHostElement(), 'click');
       fixture.detectChanges();
 
       expect(selectList.selected).toEqual([testListItem2]);
+      expect(listOption[1].nativeElement.classList.contains('mat-single-selected')).toBe(false);
+      expect(listOption[2].nativeElement.classList.contains('mat-single-selected')).toBe(true);
     });
 
     it('should not show check boxes', () => {
@@ -950,33 +956,9 @@ describe('MatSelectionList without forms', () => {
       expect(selectList.selected).toEqual([testListItem1]);
     });
 
-    it('sanely handles toggling single/multiple mode after bootstrap', () => {
-      const testListItem1 = listOption[1].injector.get<MatListOption>(MatListOption);
-      const testListItem2 = listOption[2].injector.get<MatListOption>(MatListOption);
-      const selected = () => selectionList.injector.get<MatSelectionList>(MatSelectionList)
-          .selectedOptions.selected;
-
-      expect(selected().length).toBe(0);
-
-      dispatchFakeEvent(testListItem1._getHostElement(), 'click');
-      fixture.detectChanges();
-
-      expect(selected()).toEqual([testListItem1]);
-
+    it('throws an exception when toggling single/multiple mode after bootstrap', () => {
       fixture.componentInstance.multiple = true;
-      fixture.detectChanges();
-
-      expect(selected()).toEqual([testListItem1]);
-
-      dispatchFakeEvent(testListItem2._getHostElement(), 'click');
-      fixture.detectChanges();
-
-      expect(selected()).toEqual([testListItem1, testListItem2]);
-
-      fixture.componentInstance.multiple = false;
-      fixture.detectChanges();
-
-      expect(selected()).toEqual([testListItem1]);
+      expect(() => fixture.detectChanges()).toThrow(new Error('Cannot change `multiple` mode of mat-selection-list after initialization.'));
     });
   });
 });
