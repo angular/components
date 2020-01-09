@@ -53,9 +53,9 @@ const dependencies = {
   '@angular/platform-browser-dynamic': angularVersion,
   '@angular/router': angularVersion,
   'angular-in-memory-web-api': '~0.9.0',
-  'core-js': '^2.6.9',
+  'core-js': '^2.6.11',
   'moment': '^2.24.0',
-  'rxjs': '>=6.5.3 <7.0.0',
+  'rxjs': '>=6.5.4 <7.0.0',
   'tslib': '^1.10.0',
   'zone.js': '~0.10.2',
 };
