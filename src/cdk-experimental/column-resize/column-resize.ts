@@ -67,14 +67,14 @@ export abstract class ColumnResize implements AfterViewInit, OnDestroy {
       const element = this.elementRef.nativeElement!;
 
       fromEvent<MouseEvent>(element, 'mouseover').pipe(
-          takeUntil(this.destroyed),
           map(event => _closest(event.target, HEADER_CELL_SELECTOR)),
+          takeUntil(this.destroyed),
           ).subscribe(this.eventDispatcher.headerCellHovered);
       fromEvent<MouseEvent>(element, 'mouseleave').pipe(
-          takeUntil(this.destroyed),
           filter(event => !!event.relatedTarget &&
               !_matches(event.relatedTarget as Element, RESIZE_OVERLAY_SELECTOR)),
           mapTo(null),
+          takeUntil(this.destroyed),
           ).subscribe(this.eventDispatcher.headerCellHovered);
     });
   }
@@ -94,9 +94,9 @@ export abstract class ColumnResize implements AfterViewInit, OnDestroy {
 
   private _listenForHoverActivity() {
     this.eventDispatcher.headerRowHoveredOrActiveDistinct.pipe(
-        takeUntil(this.destroyed),
         startWith(null),
         pairwise(),
+        takeUntil(this.destroyed),
     ).subscribe(([previousRow, hoveredRow]) => {
       if (hoveredRow) {
         hoveredRow.classList.add(HOVER_OR_ACTIVE_CLASS);
