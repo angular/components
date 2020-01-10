@@ -40,6 +40,7 @@ import {
   SimpleChanges,
   ViewChild,
   ViewEncapsulation,
+  isDevMode,
 } from '@angular/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {
@@ -109,7 +110,7 @@ export class MatSelectionListChange {
     // be placed inside a parent that has one of the other colors with a higher specificity.
     '[class.mat-accent]': 'color !== "primary" && color !== "warn"',
     '[class.mat-warn]': 'color === "warn"',
-    '[class.mat-single-selected]': 'selected && !selectionList.multiple',
+    '[class.mat-list-single-selected-option]': 'selected && !selectionList.multiple',
     '[attr.aria-selected]': 'selected',
     '[attr.aria-disabled]': 'disabled',
   },
@@ -384,7 +385,7 @@ export class MatSelectionList extends _MatSelectionListMixinBase implements CanD
     const newValue = coerceBooleanProperty(value);
 
     if (newValue !== this._multiple) {
-      if (this._contentInitialized) {
+      if (isDevMode() && this._contentInitialized) {
         throw new Error(
             'Cannot change `multiple` mode of mat-selection-list after initialization.');
       }

@@ -34,8 +34,10 @@
     }
   }
 
-  .mat-list-option.mat-single-selected {
-    background: mat-color($background, hover, 0.12);
+  .mat-list-single-selected-option {
+    &, &:hover, &:focus {
+      background: mat-color($background, hover, 0.12);
+    }
   }
 }
 
