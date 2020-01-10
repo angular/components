@@ -147,13 +147,6 @@ describe('MatOption component', () => {
     subscription.unsubscribe();
   });
 
-  it('should have a focus indicator', () => {
-    const fixture = TestBed.createComponent(BasicOption);
-    const optionDebugElement = fixture.debugElement.query(By.directive(MatOption))!;
-
-    expect(optionDebugElement.nativeElement.classList.contains('mat-focus-indicator')).toBe(true);
-  });
-
   describe('ripples', () => {
     let fixture: ComponentFixture<BasicOption>;
     let optionDebugElement: DebugElement;
@@ -195,6 +188,13 @@ describe('MatOption component', () => {
         .toBe(0, 'Expected no ripples to show up after click on a disabled option.');
     });
 
+  });
+
+  it('should have a focus indicator', () => {
+    const fixture = TestBed.createComponent(BasicOption);
+    const optionNativeElement = fixture.debugElement.query(By.directive(MatOption))!.nativeElement;
+
+    expect(optionNativeElement.classList.contains('mat-focus-indicator')).toBe(true);
   });
 
 });

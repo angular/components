@@ -410,10 +410,10 @@ describe('MatSort', () => {
   }));
 
   it('should have a focus indicator', () => {
-    const header = fixture.debugElement.query(By.directive(MatSortHeader))!.nativeElement;
-    const button = header.querySelector('.mat-sort-header-button');
+    const headerNativeElement = fixture.debugElement.query(By.directive(MatSortHeader))!.nativeElement;
+    const buttonNativeElement = headerNativeElement.querySelector('.mat-sort-header-button');
 
-    expect(button.classList.contains('mat-focus-indicator')).toBe(true);
+    expect(buttonNativeElement.classList.contains('mat-focus-indicator')).toBe(true);
   });
 
 });

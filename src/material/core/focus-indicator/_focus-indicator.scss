@@ -93,11 +93,6 @@
     // For some components, color the focus indicators with the currentColor to
     // ensure it is contrastive.
 
-    // Primary/accent/warn toolbars.
-    .mat-toolbar.mat-primary,
-    .mat-toolbar.mat-accent,
-    .mat-toolbar.mat-warn,
-
     // Snack bars.
     .mat-snack-bar-container,
 
@@ -107,7 +102,12 @@
     .mat-tab-group.mat-background-warn,
     .mat-tab-header.mat-background-primary,
     .mat-tab-header.mat-background-accent,
-    .mat-tab-header.mat-background-warn {
+    .mat-tab-header.mat-background-warn,
+
+    // Primary/accent/warn toolbars.
+    .mat-toolbar.mat-primary,
+    .mat-toolbar.mat-accent,
+    .mat-toolbar.mat-warn {
       .mat-focus-indicator::before {
         border-color: currentColor;
       }

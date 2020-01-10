@@ -388,10 +388,9 @@ describe('MatRadio', () => {
     });
 
     it('should have a focus indicator', () => {
-      const radioRippleNativeElements = radioNativeElements.map(radioEl => radioEl.querySelector('.mat-radio-ripple')!);
+      const radioRippleNativeElements = radioNativeElements.map(element => element.querySelector('.mat-radio-ripple')!);
 
-      expect(radioRippleNativeElements.every(radioRippleEl => radioRippleEl.classList.contains('mat-focus-indicator')))
-        .toBe(true);
+      expect(radioRippleNativeElements.every(element => element.classList.contains('mat-focus-indicator'))).toBe(true);
     });
 
   });

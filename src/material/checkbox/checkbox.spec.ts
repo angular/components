@@ -387,12 +387,6 @@ describe('MatCheckbox', () => {
       expect(checkboxNativeElement.querySelector('svg')!.getAttribute('focusable')).toBe('false');
     });
 
-    it('should have a focus indicator', () => {
-      const checkboxRippleNativeElement = checkboxNativeElement.querySelector('.mat-checkbox-ripple')!;
-
-      expect(checkboxRippleNativeElement.classList.contains('mat-focus-indicator')).toBe(true);
-    });
-
     describe('ripple elements', () => {
 
       it('should show ripples on label mousedown', () => {
@@ -678,6 +672,12 @@ describe('MatCheckbox', () => {
         expect(inputElement.indeterminate).toBe(true, 'indeterminate should not change');
         expect(checkboxNativeElement.classList).toContain('mat-checkbox-indeterminate');
       }));
+    });
+
+    it('should have a focus indicator', () => {
+      const checkboxRippleNativeElement = checkboxNativeElement.querySelector('.mat-checkbox-ripple')!;
+
+      expect(checkboxRippleNativeElement.classList.contains('mat-focus-indicator')).toBe(true);
     });
   });
 

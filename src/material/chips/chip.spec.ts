@@ -220,10 +220,6 @@ describe('MatChip', () => {
 
         expect(chipInstance.value).toBeNull();
       });
-
-      it('should have a focus indicator', () => {
-        expect(chipNativeElement.classList.contains('mat-focus-indicator')).toBe(true);
-      });
     });
 
     describe('keyboard behavior', () => {
@@ -394,6 +390,10 @@ describe('MatChip', () => {
         expect(chipNativeElement.getAttribute('tabindex')).toBeFalsy();
       });
 
+    });
+
+    it('should have a focus indicator', () => {
+      expect(chipNativeElement.classList.contains('mat-focus-indicator')).toBe(true);
     });
   });
 });

@@ -292,9 +292,9 @@ describe('MatTabGroup', () => {
     });
 
     it('should have a focus indicator', () => {
-      const tabLabels = fixture.debugElement.queryAll(By.css('.mat-tab-label'));
+      const tabLabelNativeElements = [...fixture.debugElement.nativeElement.querySelectorAll('.mat-tab-label')];
 
-      expect(tabLabels.every(tabLabel => tabLabel.nativeElement.classList.contains('mat-focus-indicator')))
+      expect(tabLabelNativeElements.every(element => element.classList.contains('mat-focus-indicator')))
         .toBe(true);
     });
   });

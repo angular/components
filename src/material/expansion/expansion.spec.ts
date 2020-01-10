@@ -345,13 +345,6 @@ describe('MatExpansionPanel', () => {
     expect(header.componentInstance.collapsedHeight).toBe('16px');
   });
 
-  it('should have a focus indicator', () => {
-    const fixture = TestBed.createComponent(PanelWithContent);
-    const header = fixture.debugElement.query(By.directive(MatExpansionPanelHeader))!;
-
-    expect(header.nativeElement.classList.contains('mat-focus-indicator')).toBe(true);
-  });
-
   describe('disabled state', () => {
     let fixture: ComponentFixture<PanelWithContent>;
     let panel: HTMLElement;
@@ -410,6 +403,13 @@ describe('MatExpansionPanel', () => {
       expect(header.classList).toContain('mat-expanded');
     });
 
+  });
+
+  it('should have a focus indicator', () => {
+    const fixture = TestBed.createComponent(PanelWithContent);
+    const headerNativeElement = fixture.debugElement.query(By.directive(MatExpansionPanelHeader))!.nativeElement;
+
+    expect(headerNativeElement.classList.contains('mat-focus-indicator')).toBe(true);
   });
 });
 

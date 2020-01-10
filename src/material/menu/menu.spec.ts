@@ -812,17 +812,6 @@ describe('MatMenu', () => {
     expect(document.activeElement).toBe(overlayContainerElement.querySelector('.mat-menu-panel'));
   }));
 
-  it('should have a focus indicator', () => {
-    const fixture = createComponent(SimpleMenu, [], [FakeIcon]);
-    fixture.detectChanges();
-    fixture.componentInstance.trigger.openMenu();
-    fixture.detectChanges();
-
-    const items = Array.from(overlayContainerElement.querySelectorAll('.mat-menu-item'));
-
-    expect(items.every(item => item.classList.contains('mat-focus-indicator'))).toBe(true);
-  });
-
   describe('lazy rendering', () => {
     it('should be able to render the menu content lazily', fakeAsync(() => {
       const fixture = createComponent(SimpleLazyMenu);
@@ -2127,6 +2116,15 @@ describe('MatMenu', () => {
 
   });
 
+  it('should have a focus indicator', () => {
+    const fixture = createComponent(SimpleMenu, [], [FakeIcon]);
+    fixture.detectChanges();
+    fixture.componentInstance.trigger.openMenu();
+    fixture.detectChanges();
+    const menuItemNativeElements = Array.from(overlayContainerElement.querySelectorAll('.mat-menu-item'));
+
+    expect(menuItemNativeElements.every(element => element.classList.contains('mat-focus-indicator'))).toBe(true);
+  });
 });
 
 describe('MatMenu default overrides', () => {

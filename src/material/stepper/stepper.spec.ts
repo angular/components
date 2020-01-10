@@ -395,9 +395,9 @@ describe('MatStepper', () => {
     });
 
     it('should have a focus indicator', () => {
-      const stepHeaders = fixture.debugElement.queryAll(By.css('.mat-vertical-stepper-header'));
+      const stepHeaderNativeElements = [...fixture.debugElement.nativeElement.querySelectorAll('.mat-vertical-stepper-header')];
 
-      expect(stepHeaders.every(stepHeader => stepHeader.nativeElement.classList.contains('mat-focus-indicator')))
+      expect(stepHeaderNativeElements.every(element => element.classList.contains('mat-focus-indicator')))
         .toBe(true);
     });
 

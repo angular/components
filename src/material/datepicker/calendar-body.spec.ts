@@ -43,12 +43,6 @@ describe('MatCalendarBody', () => {
       refreshElementLists();
     });
 
-    it('should have a focus indicator', () => {
-      const firstBodyCell = calendarBodyNativeElement.querySelector('.mat-calendar-body-cell')!;
-
-      expect(firstBodyCell.classList.contains('mat-focus-indicator')).toBe(true);
-    });
-
     it('creates body', () => {
       expect(rowEls.length).toBe(3);
       expect(labelEls.length).toBe(1);
@@ -110,6 +104,10 @@ describe('MatCalendarBody', () => {
       expect((cellEls[1] as HTMLElement).innerText.trim()).toBe('2');
       expect(cellEls[0].classList).not.toContain('even');
       expect(cellEls[1].classList).toContain('even');
+    });
+
+    it('should have a focus indicator', () => {
+      expect(cellEls.every(element => element.classList.contains('mat-focus-indicator'))).toBe(true);
     });
 
   });
