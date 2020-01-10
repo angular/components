@@ -273,7 +273,7 @@ describe('MatButton', () => {
 
   it('should have a focus indicator', () => {
     const fixture = TestBed.createComponent(TestApp);
-    const buttonNativeElement = fixture.debugElement.query(By.css('button'))!.nativeElement;
+    const buttonNativeElement = fixture.debugElement.nativeElement.querySelector('button');
 
     expect(buttonNativeElement.classList.contains('mat-focus-indicator')).toBe(true);
   });

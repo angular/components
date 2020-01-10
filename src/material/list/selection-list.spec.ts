@@ -653,8 +653,7 @@ describe('MatSelectionList without forms', () => {
     it('should have a focus indicator', () => {
       const optionNativeElements = listOptions.map(option => option.nativeElement);
 
-      expect(optionNativeElements.every(element => element.classList.contains('mat-focus-indicator')))
-        .toBe(true);
+      expect(optionNativeElements.every(element => element.classList.contains('mat-focus-indicator'))).toBe(true);
       });
 
   });
