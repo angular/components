@@ -344,7 +344,8 @@ describe('MatSlideToggle without forms', () => {
     });
 
     it('should have a focus indicator', () => {
-      const slideToggleRippleNativeElement = slideToggleElement.querySelector('.mat-slide-toggle-ripple')!;
+      const slideToggleRippleNativeElement =
+          slideToggleElement.querySelector('.mat-slide-toggle-ripple')!;
 
       expect(slideToggleRippleNativeElement.classList.contains('mat-focus-indicator')).toBe(true);
     });

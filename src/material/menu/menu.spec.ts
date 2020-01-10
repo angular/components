@@ -2121,9 +2121,11 @@ describe('MatMenu', () => {
     fixture.detectChanges();
     fixture.componentInstance.trigger.openMenu();
     fixture.detectChanges();
-    const menuItemNativeElements = Array.from(overlayContainerElement.querySelectorAll('.mat-menu-item'));
+    const menuItemNativeElements =
+        Array.from(overlayContainerElement.querySelectorAll('.mat-menu-item'));
 
-    expect(menuItemNativeElements.every(element => element.classList.contains('mat-focus-indicator'))).toBe(true);
+    expect(menuItemNativeElements
+        .every(element => element.classList.contains('mat-focus-indicator'))).toBe(true);
   });
 });
 

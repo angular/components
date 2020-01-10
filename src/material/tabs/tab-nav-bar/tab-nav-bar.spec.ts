@@ -335,9 +335,11 @@ describe('MatTabNavBar', () => {
     });
 
     it('should have a focus indicator', () => {
-      const tabLinkNativeElements = [...fixture.debugElement.nativeElement.querySelectorAll('.mat-tab-link')];
+      const tabLinkNativeElements =
+          [...fixture.debugElement.nativeElement.querySelectorAll('.mat-tab-link')];
 
-      expect(tabLinkNativeElements.every(element => element.classList.contains('mat-focus-indicator'))).toBe(true);
+      expect(tabLinkNativeElements
+          .every(element => element.classList.contains('mat-focus-indicator'))).toBe(true);
     });
   });
 });

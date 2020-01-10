@@ -884,7 +884,8 @@ describe('MatButtonToggle without forms', () => {
     const fixture = TestBed.createComponent(ButtonTogglesInsideButtonToggleGroup);
     const buttonNativeElements = [...fixture.debugElement.nativeElement.querySelectorAll('button')];
 
-    expect(buttonNativeElements.every(element => element.classList.contains('mat-focus-indicator'))).toBe(true);
+    expect(buttonNativeElements.every(element => element.classList.contains('mat-focus-indicator')))
+        .toBe(true);
   });
 
 });

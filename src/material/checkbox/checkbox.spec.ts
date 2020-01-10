@@ -675,7 +675,8 @@ describe('MatCheckbox', () => {
     });
 
     it('should have a focus indicator', () => {
-      const checkboxRippleNativeElement = checkboxNativeElement.querySelector('.mat-checkbox-ripple')!;
+      const checkboxRippleNativeElement =
+          checkboxNativeElement.querySelector('.mat-checkbox-ripple')!;
 
       expect(checkboxRippleNativeElement.classList.contains('mat-focus-indicator')).toBe(true);
     });
