@@ -295,8 +295,8 @@ describe('MatTabGroup', () => {
       const tabLabelNativeElements =
           [...fixture.debugElement.nativeElement.querySelectorAll('.mat-tab-label')];
 
-      expect(tabLabelNativeElements
-          .every(element => element.classList.contains('mat-focus-indicator'))).toBe(true);
+      expect(tabLabelNativeElements.every(el => el.classList.contains('mat-focus-indicator')))
+        .toBe(true);
     });
   });
 
