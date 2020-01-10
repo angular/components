@@ -1,4 +1,5 @@
 entryPoints = [
+    "mat-feature-highlight",
     "mdc-autocomplete",
     "mdc-button",
     "mdc-button/testing",

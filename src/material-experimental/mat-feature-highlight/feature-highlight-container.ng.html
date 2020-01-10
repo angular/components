@@ -1,0 +1,26 @@
+<div
+    [attr.tabindex]='-1'
+    (click)="stopClickPropagation($event)"
+    class="feature-highlight-container-div"
+    #rootDiv>
+  <div
+      #innerCircle
+      class="feature-highlight-inner-circle">
+  </div>
+
+  <div
+      #radialPulse
+      class="feature-highlight-radial-pulse">
+  </div>
+
+  <div
+      #outerCircle
+      class="feature-highlight-outer-circle">
+  </div>
+
+  <div
+      #callout
+      class="feature-highlight-callout">
+    <feature-highlight-callout-container #calloutContainer></feature-highlight-callout-container>
+  </div>
+</div>

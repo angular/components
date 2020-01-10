@@ -188,6 +188,8 @@ System.config({
       'dist/packages/material/form-field/testing/shared.spec.js',
     '@angular/material/input/testing':
         'dist/packages/material/input/testing/index.js',
+    '@angular/material-experimental/mat-feature-highlight':
+        'dist/packages/material-experimental/mat-feature-highlight/index.js',
     '@angular/material-experimental/mdc-autocomplete':
         'dist/packages/material-experimental/mdc-autocomplete/index.js',
     '@angular/material-experimental/mdc-button':

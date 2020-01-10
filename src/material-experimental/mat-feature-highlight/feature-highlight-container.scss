@@ -1,0 +1,129 @@
+$open-animation-time: 350ms;
+$close-animation-time: 200ms;
+
+@keyframes feature-highlight-radial-pulse-expand {
+  0%, 33.333333% {
+    opacity: .54;
+    transform: scale(1, 1);
+  }
+
+  66.666666%, 100% {
+    opacity: 0;
+    transform: scale(2, 2);
+  }
+}
+
+@keyframes feature-highlight-inner-circle-expand {
+  0% {
+    transform: scale(1, 1);
+  }
+
+  33.333333% {
+    transform: scale(1.1, 1.1);
+  }
+
+  66.666666%, 100% {
+    transform: scale(1, 1);
+  }
+}
+
+:host {
+  display: block;
+  position: relative;
+}
+
+.feature-highlight-container-div {
+  position: absolute;
+  outline: none;
+}
+
+.feature-highlight-inner-circle {
+  cursor: pointer;
+  position: absolute;
+  transition: opacity $open-animation-time cubic-bezier(0, 0, .2, 1),
+              transform $open-animation-time cubic-bezier(0, 0, .2, 1);
+  border-radius: 50%;
+  opacity: 0;
+  transform: scale(0, 0);
+  z-index: 2;
+}
+
+:host(.active) .feature-highlight-inner-circle {
+  opacity: 1;
+  transform: scale(1, 1);
+}
+
+:host(.active-with-animation) .feature-highlight-inner-circle {
+  // Delay: 350ms for open + 800ms wait time = 1150ms.
+  animation: 1500ms cubic-bezier(.4, 0, .2, 1)
+             1150ms feature-highlight-inner-circle-expand;
+  animation-iteration-count: infinite;
+}
+
+:host(.fade) .feature-highlight-inner-circle {
+  transition: opacity $close-animation-time cubic-bezier(.4, 0, 1, 1),
+              transform $close-animation-time cubic-bezier(.4, 0, 1, 1);
+  opacity: 0;
+  transform: scale(0, 0);
+}
+
+:host(.fade-accept) .feature-highlight-inner-circle {
+  opacity: 0;
+  transform: scale(1.125, 1.125);
+}
+
+.feature-highlight-radial-pulse {
+  position: absolute;
+  border-radius: 50%;
+  opacity: 0;
+  transform: scale(0, 0);
+  z-index: 2;
+}
+
+:host(.active-with-animation) .feature-highlight-radial-pulse {
+  animation: 1500ms cubic-bezier(.4, 0, .2, 1)
+             1150ms feature-highlight-radial-pulse-expand;
+  animation-iteration-count: infinite;
+}
+
+.feature-highlight-callout {
+  position: absolute;
+  z-index: 2;
+  opacity: 0;
+  transition: opacity $open-animation-time cubic-bezier(0, 0, .2, 1);
+  will-change: opacity;
+}
+
+:host(.active) .feature-highlight-callout {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+:host(.fade) .feature-highlight-callout {
+  transition: opacity $close-animation-time cubic-bezier(.4, 0, 1, 1);
+}
+
+.feature-highlight-outer-circle {
+  position: absolute;
+  transition: opacity $open-animation-time cubic-bezier(0, 0, .2, 1),
+              transform $open-animation-time cubic-bezier(0, 0, .2, 1);
+  border-radius: 50%;
+  opacity: 0;
+  transform: scale(0, 0);
+  z-index: 1;
+}
+
+:host(.active) .feature-highlight-outer-circle {
+  opacity: 1;
+  transform: scale(1, 1);
+}
+
+:host(.fade) .feature-highlight-outer-circle {
+  transition: opacity $close-animation-time cubic-bezier(.4, 0, 1, 1),
+              transform $close-animation-time cubic-bezier(.4, 0, 1, 1);
+}
+
+:host(.fade-accept) .feature-highlight-outer-circle {
+  opacity: 0;
+  transform: scale(1.125, 1.125);
+}
