@@ -188,13 +188,14 @@ describe('MatSelectionList without forms', () => {
       expect(selectList.selected.length).toBe(0);
     });
 
-    it('should not add the mat-single-selected class (in multiple mode)', () => {
+    it('should not add the mat-list-single-selected-option class (in multiple mode)', () => {
       let testListItem = listOptions[2].injector.get<MatListOption>(MatListOption);
 
       testListItem._handleClick();
       fixture.detectChanges();
 
-      expect(listOptions[2].nativeElement.classList.contains('mat-single-selected')).toBe(false);
+      expect(listOptions[2].nativeElement.classList.contains('mat-list-single-selected-option'))
+          .toBe(false);
     });
 
     it('should not allow selection of disabled items', () => {
@@ -924,14 +925,17 @@ describe('MatSelectionList without forms', () => {
       fixture.detectChanges();
 
       expect(selectList.selected).toEqual([testListItem1]);
-      expect(listOption[1].nativeElement.classList.contains('mat-single-selected')).toBe(true);
+      expect(listOption[1].nativeElement.classList.contains('mat-list-single-selected-option'))
+          .toBe(true);
 
       dispatchFakeEvent(testListItem2._getHostElement(), 'click');
       fixture.detectChanges();
 
       expect(selectList.selected).toEqual([testListItem2]);
-      expect(listOption[1].nativeElement.classList.contains('mat-single-selected')).toBe(false);
-      expect(listOption[2].nativeElement.classList.contains('mat-single-selected')).toBe(true);
+      expect(listOption[1].nativeElement.classList.contains('mat-list-single-selected-option'))
+          .toBe(false);
+      expect(listOption[2].nativeElement.classList.contains('mat-list-single-selected-option'))
+          .toBe(true);
     });
 
     it('should not show check boxes', () => {
