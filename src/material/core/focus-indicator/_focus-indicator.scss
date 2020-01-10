@@ -67,8 +67,9 @@
 /// Mixin that sets the color of the focus indicators.
 ///
 /// @param {color|map} $themeOrMap
-///   If theme, focus indicators are set to the primary color of the theme. If
-///   color, focus indicators are set to that color.
+///   If theme, focus indicators are colored on a best-effort basis using the
+///   primary theme color and the currentColor. If color, focus indicators are
+///   set to that color.
 ///
 /// @example
 ///   .demo-dark-theme {
@@ -83,37 +84,36 @@
   @if (type-of($themeOrColor) == 'map') {
     $primary-palette: map_get($themeOrColor, primary);
 
+    // For most components, color the focus indicators with the primary theme
+    // color.
     .mat-focus-indicator::before {
       border-color: mat-color($primary-palette, default);
     }
 
-    .mat-toolbar {
-      &.mat-primary,
-      &.mat-accent,
-      &.mat-warn {
-        .mat-focus-indicator::before {
-          border-color: currentColor;
-        }
-      }
-    }
+    // For some components, color the focus indicators with the currentColor to
+    // ensure it is contrastive.
 
-    .mat-snack-bar-container {
+    // Primary/accent/warn toolbars.
+    .mat-toolbar.mat-primary,
+    .mat-toolbar.mat-accent,
+    .mat-toolbar.mat-warn,
+
+    // Snack bars.
+    .mat-snack-bar-container,
+
+    // Primary/accent/warn tabs.
+    .mat-tab-group.mat-background-primary,
+    .mat-tab-group.mat-background-accent,
+    .mat-tab-group.mat-background-warn,
+    .mat-tab-header.mat-background-primary,
+    .mat-tab-header.mat-background-accent,
+    .mat-tab-header.mat-background-warn {
       .mat-focus-indicator::before {
         border-color: currentColor;
       }
     }
-
-    .mat-tab-group,
-    .mat-tab-header {
-      &.mat-background-primary,
-      &.mat-background-accent,
-      &.mat-background-warn {
-        .mat-focus-indicator::before {
-          border-color: currentColor;
-        }
-      }
-    }
   } @else {
+    // If a color is passed in, then just use that for all focus indicators.
     .mat-focus-indicator::before {
       border-color: $themeOrColor;
     }
