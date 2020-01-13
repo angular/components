@@ -391,6 +391,10 @@ describe('MatChip', () => {
       });
 
     });
+
+    it('should have a focus indicator', () => {
+      expect(chipNativeElement.classList.contains('mat-focus-indicator')).toBe(true);
+    });
   });
 });
 
