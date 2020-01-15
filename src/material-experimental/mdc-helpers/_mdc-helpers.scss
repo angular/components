@@ -6,6 +6,7 @@
 @import '@material/theme/functions';
 @import '@material/theme/variables';
 @import '@material/typography/variables';
+@import '../../material/core/style/layout-common';
 @import '../../material/core/theming/theming';
 @import '../../material/core/typography/typography';
 
@@ -219,20 +220,14 @@ $mat-typography-level-mappings: (
 ///     @include mat-mdc-strong-focus-indicators();
 ///   }
 @mixin mat-mdc-strong-focus-indicators() {
-  // Border width of the focus indicators.
-  $border-width: 2px;
-
   // Base styles for the focus indicators.
   .mat-mdc-focus-indicator::before {
-    border-radius: 4px;
-    border: $border-width solid transparent;
+    @include mat-fill();
+
+    border-radius: $mat-focus-indicator-border-radius;
+    border: $mat-focus-indicator-border-width $mat-focus-indicator-border-style transparent;
     box-sizing: border-box;
-    position: absolute;
     pointer-events: none;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
   }
 
   // By default, all focus indicators are flush with the bounding box of their
@@ -243,19 +238,19 @@ $mat-typography-level-mappings: (
   .mat-mdc-focus-indicator.mdc-button::before,
   .mat-mdc-focus-indicator.mdc-fab::before,
   .mat-mdc-focus-indicator.mdc-icon-button::before {
-    margin: $border-width * -2;
+    margin: $mat-focus-indicator-border-width * -2;
   }
 
   .mat-mdc-focus-indicator.mat-mdc-tab::before,
   .mat-mdc-focus-indicator.mat-mdc-tab-link::before {
-    margin: $border-width * 2;
+    margin: $mat-focus-indicator-border-width * 2;
   }
 
   // Render the focus indicator on focus. Defining a pseudo element's
   // content will cause it to render.
 
-  // For checkboxes and slide toggles, render the focus indicator when the class .cdk-focused is
-  // present.
+  // For checkboxes and slide toggles, render the focus indicator when the sibling control is
+  // focused.
   .mdc-checkbox__native-control:focus ~ .mat-mdc-focus-indicator::before,
   .mdc-switch__native-control:focus ~ .mat-mdc-focus-indicator::before,
 
