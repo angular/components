@@ -10,11 +10,12 @@ import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {TestMainComponent} from './test-main-component';
+import {TestShadowBoundary} from './test-shadow-boundary';
 import {TestSubComponent} from './test-sub-component';
 
 @NgModule({
   imports: [CommonModule, FormsModule],
-  declarations: [TestMainComponent, TestSubComponent],
-  exports: [TestMainComponent, TestSubComponent]
+  declarations: [TestMainComponent, TestSubComponent, TestShadowBoundary],
+  exports: [TestMainComponent, TestSubComponent, TestShadowBoundary]
 })
 export class TestComponentsModule {}

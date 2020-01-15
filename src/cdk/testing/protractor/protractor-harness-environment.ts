@@ -7,18 +7,30 @@
  */
 
 import {HarnessEnvironment, HarnessLoader, TestElement} from '@angular/cdk/testing';
-import {by, element as protractorElement, ElementFinder} from 'protractor';
+import {
+  by,
+  element as protractorElement,
+  ElementArrayFinder,
+  ElementFinder,
+  Locator
+} from 'protractor';
 import {ProtractorElement} from './protractor-element';
+
+/** The default query function that respects shadow boundaries. */
+const defaultQueryFn = (selector: string, root: ElementFinder) => root.all(by.css(selector));
 
 /** A `HarnessEnvironment` implementation for Protractor. */
 export class ProtractorHarnessEnvironment extends HarnessEnvironment<ElementFinder> {
-  protected constructor(rawRootElement: ElementFinder) {
+  protected constructor(rawRootElement: ElementFinder,
+      private _queryFn: (selector: string, root: ElementFinder) => ElementArrayFinder =
+          defaultQueryFn) {
     super(rawRootElement);
   }
 
   /** Creates a `HarnessLoader` rooted at the document root. */
-  static loader(): HarnessLoader {
-    return new ProtractorHarnessEnvironment(protractorElement(by.css('body')));
+  static loader(queryFn?: (selector: string, root: ElementFinder) => ElementArrayFinder):
+      HarnessLoader {
+    return new ProtractorHarnessEnvironment(protractorElement(by.css('body')), queryFn);
   }
 
   async forceStabilize(): Promise<void> {}
@@ -37,11 +49,11 @@ export class ProtractorHarnessEnvironment extends HarnessEnvironment<ElementFind
   }
 
   protected createEnvironment(element: ElementFinder): HarnessEnvironment<ElementFinder> {
-    return new ProtractorHarnessEnvironment(element);
+    return new ProtractorHarnessEnvironment(element, this._queryFn);
   }
 
   protected async getAllRawElements(selector: string): Promise<ElementFinder[]> {
-    const elementFinderArray = this.rawRootElement.all(by.css(selector));
+    const elementFinderArray = this._queryFn(selector, this.rawRootElement);
     const length = await elementFinderArray.count();
     const elements: ElementFinder[] = [];
     for (let i = 0; i < length; i++) {

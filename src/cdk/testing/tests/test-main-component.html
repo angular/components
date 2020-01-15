@@ -32,4 +32,9 @@
   </button>
   <span id="task-state-result" #taskStateResult></span>
 </div>
-
+<test-shadow-boundary>
+  <div class="in-the-shadows">Shadow 1</div>
+  <test-shadow-boundary>
+    <div class="in-the-shadows">Shadow 2</div>
+  </test-shadow-boundary>
+</test-shadow-boundary>

@@ -19,6 +19,8 @@ import {takeWhile} from 'rxjs/operators';
 import {TaskState, TaskStateZoneInterceptor} from './task-state-zone-interceptor';
 import {UnitTestElement} from './unit-test-element';
 
+/** The default query function that respects shadow boundaries. */
+const defaultQueryFn = (selector: string, root: Element) => root.querySelectorAll(selector);
 
 /** A `HarnessEnvironment` implementation for Angular's Testbed. */
 export class TestbedHarnessEnvironment extends HarnessEnvironment<Element> {
@@ -27,23 +29,26 @@ export class TestbedHarnessEnvironment extends HarnessEnvironment<Element> {
   /** Observable that emits whenever the test task state changes. */
   private _taskState: Observable<TaskState>;
 
-  protected constructor(rawRootElement: Element, private _fixture: ComponentFixture<unknown>) {
+  protected constructor(rawRootElement: Element, private _fixture: ComponentFixture<unknown>,
+      private _queryFn: (selector: string, root: Element) => ArrayLike<Element> = defaultQueryFn) {
     super(rawRootElement);
     this._taskState = TaskStateZoneInterceptor.setup();
     _fixture.componentRef.onDestroy(() => this._destroyed = true);
   }
 
   /** Creates a `HarnessLoader` rooted at the given fixture's root element. */
-  static loader(fixture: ComponentFixture<unknown>): HarnessLoader {
-    return new TestbedHarnessEnvironment(fixture.nativeElement, fixture);
+  static loader(fixture: ComponentFixture<unknown>,
+      queryFn?: (selector: string, root: Element) => ArrayLike<Element>): HarnessLoader {
+    return new TestbedHarnessEnvironment(fixture.nativeElement, fixture, queryFn);
   }
 
   /**
    * Creates a `HarnessLoader` at the document root. This can be used if harnesses are
    * located outside of a fixture (e.g. overlays appended to the document body).
    */
-  static documentRootLoader(fixture: ComponentFixture<unknown>): HarnessLoader {
-    return new TestbedHarnessEnvironment(document.body, fixture);
+  static documentRootLoader(fixture: ComponentFixture<unknown>,
+      queryFn?: (selector: string, root: Element) => ArrayLike<Element>): HarnessLoader {
+    return new TestbedHarnessEnvironment(document.body, fixture, queryFn);
   }
 
   /**
@@ -53,8 +58,9 @@ export class TestbedHarnessEnvironment extends HarnessEnvironment<Element> {
    * of the fixture.
    */
   static async harnessForFixture<T extends ComponentHarness>(
-      fixture: ComponentFixture<unknown>, harnessType: ComponentHarnessConstructor<T>): Promise<T> {
-    const environment = new TestbedHarnessEnvironment(fixture.nativeElement, fixture);
+      fixture: ComponentFixture<unknown>, harnessType: ComponentHarnessConstructor<T>,
+      queryFn?: (selector: string, root: Element) => ArrayLike<Element>): Promise<T> {
+    const environment = new TestbedHarnessEnvironment(fixture.nativeElement, fixture, queryFn);
     await environment.forceStabilize();
     return environment.createComponentHarness(harnessType, fixture.nativeElement);
   }
@@ -95,11 +101,11 @@ export class TestbedHarnessEnvironment extends HarnessEnvironment<Element> {
   }
 
   protected createEnvironment(element: Element): HarnessEnvironment<Element> {
-    return new TestbedHarnessEnvironment(element, this._fixture);
+    return new TestbedHarnessEnvironment(element, this._fixture, this._queryFn);
   }
 
   protected async getAllRawElements(selector: string): Promise<Element[]> {
     await this.forceStabilize();
-    return Array.from(this.rawRootElement.querySelectorAll(selector));
+    return Array.from(this._queryFn(selector, this.rawRootElement));
   }
 }
