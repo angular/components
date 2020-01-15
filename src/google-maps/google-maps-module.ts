@@ -11,6 +11,7 @@ import {NgModule} from '@angular/core';
 import {GoogleMap} from './google-map/google-map';
 import {MapInfoWindow} from './map-info-window/map-info-window';
 import {MapMarker} from './map-marker/map-marker';
+import {MapPolygon} from './map-polygon/map-polygon';
 import {MapPolyline} from './map-polyline/map-polyline';
 
 const COMPONENTS = [
@@ -18,6 +19,7 @@ const COMPONENTS = [
   MapInfoWindow,
   MapMarker,
   MapPolyline,
+  MapPolygon,
 ];
 
 @NgModule({

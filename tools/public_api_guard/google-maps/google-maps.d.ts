@@ -51,7 +51,7 @@ export declare class GoogleMap implements OnChanges, OnInit, OnDestroy {
 
 export declare class GoogleMapsModule {
     static ɵinj: i0.ɵɵInjectorDef<GoogleMapsModule>;
-    static ɵmod: i0.ɵɵNgModuleDefWithMeta<GoogleMapsModule, [typeof i1.GoogleMap, typeof i2.MapInfoWindow, typeof i3.MapMarker, typeof i4.MapPolyline], never, [typeof i1.GoogleMap, typeof i2.MapInfoWindow, typeof i3.MapMarker, typeof i4.MapPolyline]>;
+    static ɵmod: i0.ɵɵNgModuleDefWithMeta<GoogleMapsModule, [typeof i1.GoogleMap, typeof i2.MapInfoWindow, typeof i3.MapMarker, typeof i4.MapPolyline, typeof i5.MapPolygon], never, [typeof i1.GoogleMap, typeof i2.MapInfoWindow, typeof i3.MapMarker, typeof i4.MapPolyline, typeof i5.MapPolygon]>;
 }
 
 export declare class MapInfoWindow implements OnInit, OnDestroy {
@@ -119,6 +119,33 @@ export declare class MapMarker implements OnInit, OnDestroy {
     ngOnInit(): void;
     static ɵcmp: i0.ɵɵComponentDefWithMeta<MapMarker, "map-marker", never, { 'options': "options", 'title': "title", 'position': "position", 'label': "label", 'clickable': "clickable" }, { 'animationChanged': "animationChanged", 'mapClick': "mapClick", 'clickableChanged': "clickableChanged", 'cursorChanged': "cursorChanged", 'mapDblclick': "mapDblclick", 'mapDrag': "mapDrag", 'mapDragend': "mapDragend", 'draggableChanged': "draggableChanged", 'mapDragstart': "mapDragstart", 'flatChanged': "flatChanged", 'iconChanged': "iconChanged", 'mapMousedown': "mapMousedown", 'mapMouseout': "mapMouseout", 'mapMouseover': "mapMouseover", 'mapMouseup': "mapMouseup", 'positionChanged': "positionChanged", 'mapRightclick': "mapRightclick", 'shapeChanged': "shapeChanged", 'titleChanged': "titleChanged", 'visibleChanged': "visibleChanged", 'zindexChanged': "zindexChanged" }, never>;
     static ɵfac: i0.ɵɵFactoryDef<MapMarker>;
+}
+
+export declare class MapPolygon implements OnInit, OnDestroy {
+    _polygon: google.maps.Polygon;
+    options: google.maps.PolygonOptions;
+    paths: google.maps.MVCArray<google.maps.MVCArray<google.maps.LatLng>> | google.maps.MVCArray<google.maps.LatLng> | google.maps.LatLng[] | google.maps.LatLngLiteral[];
+    polygonClick: Observable<google.maps.PolyMouseEvent>;
+    polygonDblclick: Observable<google.maps.PolyMouseEvent>;
+    polygonDrag: Observable<google.maps.MouseEvent>;
+    polygonDragend: Observable<google.maps.MouseEvent>;
+    polygonDragstart: Observable<google.maps.MouseEvent>;
+    polygonMousedown: Observable<google.maps.PolyMouseEvent>;
+    polygonMousemove: Observable<google.maps.PolyMouseEvent>;
+    polygonMouseout: Observable<google.maps.PolyMouseEvent>;
+    polygonMouseover: Observable<google.maps.PolyMouseEvent>;
+    polygonMouseup: Observable<google.maps.PolyMouseEvent>;
+    polygonRightclick: Observable<google.maps.PolyMouseEvent>;
+    constructor(_map: GoogleMap);
+    getDraggable(): boolean;
+    getEditable(): boolean;
+    getPath(): google.maps.MVCArray<google.maps.LatLng>;
+    getPaths(): google.maps.MVCArray<google.maps.MVCArray<google.maps.LatLng>>;
+    getVisible(): boolean;
+    ngOnDestroy(): void;
+    ngOnInit(): void;
+    static ɵdir: i0.ɵɵDirectiveDefWithMeta<MapPolygon, "map-polygon", never, { 'options': "options", 'paths': "paths" }, { 'polygonClick': "polygonClick", 'polygonDblclick': "polygonDblclick", 'polygonDrag': "polygonDrag", 'polygonDragend': "polygonDragend", 'polygonDragstart': "polygonDragstart", 'polygonMousedown': "polygonMousedown", 'polygonMousemove': "polygonMousemove", 'polygonMouseout': "polygonMouseout", 'polygonMouseover': "polygonMouseover", 'polygonMouseup': "polygonMouseup", 'polygonRightclick': "polygonRightclick" }, never>;
+    static ɵfac: i0.ɵɵFactoryDef<MapPolygon>;
 }
 
 export declare class MapPolyline implements OnInit, OnDestroy {
