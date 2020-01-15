@@ -16,6 +16,7 @@ export interface TestingWindow extends Window {
       Marker?: jasmine.Spy;
       InfoWindow?: jasmine.Spy;
       Polyline?: jasmine.Spy;
+      Polygon?: jasmine.Spy;
     };
   };
 }
@@ -140,4 +141,35 @@ export function createPolylineConstructorSpy(polylineSpy: jasmine.SpyObj<google.
     };
   }
   return polylineConstructorSpy;
+}
+
+/** Creates a jasmine.SpyObj for a google.maps.Polygon */
+export function createPolygonSpy(options: google.maps.PolygonOptions):
+    jasmine.SpyObj<google.maps.Polygon> {
+  const polygonSpy = jasmine.createSpyObj('google.maps.Polygon', [
+    'addListener', 'getDraggable', 'getEditable', 'getPath', 'getPaths', 'getVisible', 'setMap',
+    'setOptions', 'setPath'
+  ]);
+  polygonSpy.addListener.and.returnValue({remove: () => {}});
+  return polygonSpy;
+}
+
+/** Creates a jasmine.Spy to watch for the constructor of a google.maps.Polygon */
+export function createPolygonConstructorSpy(polygonSpy: jasmine.SpyObj<google.maps.Polygon>):
+    jasmine.Spy {
+  const polygonConstructorSpy =
+      jasmine.createSpy('Polygon constructor', (_options: google.maps.PolygonOptions) => {
+        return polygonSpy;
+      });
+  const testingWindow: TestingWindow = window;
+  if (testingWindow.google && testingWindow.google.maps) {
+    testingWindow.google.maps['Polygon'] = polygonConstructorSpy;
+  } else {
+    testingWindow.google = {
+      maps: {
+        'Polygon': polygonConstructorSpy,
+      },
+    };
+  }
+  return polygonConstructorSpy;
 }
