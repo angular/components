@@ -33,7 +33,7 @@ ng_web_test_suite(
     ],
     deps = [
         ":require-config.js",
-        "//src/cdk/testing/tests:unit_test_sources"
+        "//src/cdk/testing/tests:unit_test_sources",
     ],
 )
 

@@ -7,13 +7,7 @@
  */
 
 import {HarnessEnvironment, HarnessLoader, TestElement} from '@angular/cdk/testing';
-import {
-  by,
-  element as protractorElement,
-  ElementArrayFinder,
-  ElementFinder,
-  Locator
-} from 'protractor';
+import {by, element as protractorElement, ElementArrayFinder, ElementFinder} from 'protractor';
 import {ProtractorElement} from './protractor-element';
 
 /** The default query function that respects shadow boundaries. */
