@@ -24,7 +24,8 @@
 @mixin _cdk-optionally-nest-content($selector-context) {
   @if ($selector-context == '') {
     @content;
-  } @else {
+  }
+  @else {
     #{$selector-context} {
       @content;
     }
@@ -40,8 +41,8 @@
 /// @param encapsulation Whether to emit styles for view encapsulation. Values are:
 ///     * `on` - works for `Emulated`, `Native`, and `ShadowDom`
 ///     * `off` - works for `None`
-///     * `both` - works for all encapsulation modes by emitting the CSS twice (default).
-@mixin cdk-high-contrast($target: active, $encapsulation: 'both') {
+///     * `any` - works for all encapsulation modes by emitting the CSS twice (default).
+@mixin cdk-high-contrast($target: active, $encapsulation: 'any') {
   @if ($target != 'active' and $target != 'black-on-white' and $target != 'white-on-black') {
     @error 'Unknown cdk-high-contrast value "#{$target}" provided. ' +
            'Allowed values are "active", "black-on-white", and "white-on-black"';
