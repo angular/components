@@ -110,6 +110,14 @@ export class MapRectangle implements OnInit, OnDestroy {
 
   /**
    * @see
+   * developers.google.com/maps/documentation/javascript/reference/polygon#Rectangle.mouseout
+   */
+  @Output()
+  rectangleMouseout: Observable<google.maps.MouseEvent> =
+      this._eventManager.getLazyEmitter<google.maps.MouseEvent>('mouseout');
+
+  /**
+   * @see
    * developers.google.com/maps/documentation/javascript/reference/polygon#Rectangle.mouseover
    */
   @Output()
