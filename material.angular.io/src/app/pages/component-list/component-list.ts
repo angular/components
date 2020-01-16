@@ -38,9 +38,9 @@ export class ComponentList {
 }
 
 @NgModule({
-  imports: [SvgViewerModule, RouterModule, CommonModule, MatCardModule],
+  imports: [CommonModule, SvgViewerModule, MatCardModule, RouterModule],
   exports: [ComponentList],
   declarations: [ComponentList],
-  providers: [DocumentationItems, ComponentPageTitle],
+  providers: [DocumentationItems],
 })
 export class ComponentListModule { }

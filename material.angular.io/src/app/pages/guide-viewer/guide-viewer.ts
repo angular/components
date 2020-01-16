@@ -1,5 +1,5 @@
 import {Component, NgModule, OnInit} from '@angular/core';
-import {ActivatedRoute, RouterModule, Router} from '@angular/router';
+import {ActivatedRoute, Router, RouterModule, Routes} from '@angular/router';
 import {GuideItem, GuideItems} from '../../shared/guide-items/guide-items';
 import {FooterModule} from '../../shared/footer/footer';
 import {DocViewerModule} from '../../shared/doc-viewer/doc-viewer-module';
@@ -37,10 +37,12 @@ export class GuideViewer implements OnInit {
   }
 }
 
+const routes: Routes = [ {path : '', component : GuideViewer} ];
+
 @NgModule({
-  imports: [DocViewerModule, FooterModule, RouterModule, TableOfContentsModule],
+  imports: [DocViewerModule, FooterModule, TableOfContentsModule, RouterModule.forChild(routes)],
   exports: [GuideViewer],
   declarations: [GuideViewer],
-  providers: [GuideItems, ComponentPageTitle],
+  providers: [GuideItems],
 })
 export class GuideViewerModule {}
