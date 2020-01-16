@@ -151,6 +151,6 @@ export class ComponentExamples extends ComponentBaseView {
   ],
   exports: [ComponentViewer],
   declarations: [ComponentViewer, ComponentOverview, ComponentApi, ComponentExamples],
-  providers: [DocumentationItems, ComponentPageTitle],
+  providers: [DocumentationItems],
 })
 export class ComponentViewerModule {}

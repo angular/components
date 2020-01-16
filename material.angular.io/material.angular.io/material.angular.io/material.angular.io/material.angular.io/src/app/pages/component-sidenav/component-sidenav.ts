@@ -1,19 +1,42 @@
 import {
-  Component, Input, NgZone, ViewEncapsulation, ViewChild, OnInit, NgModule, OnDestroy
+  Component,
+  Input,
+  NgModule,
+  NgZone,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+  ViewEncapsulation
 } from '@angular/core';
 import {DocumentationItems} from '../../shared/documentation-items/documentation-items';
 import {MatIconModule} from '@angular/material/icon';
 import {MatSidenav, MatSidenavModule} from '@angular/material/sidenav';
-import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {ActivatedRoute, Params, Router, RouterModule} from '@angular/router';
+import {ActivatedRoute, Params, Router, RouterModule, Routes} from '@angular/router';
 import {CommonModule} from '@angular/common';
 import {ComponentHeaderModule} from '../component-page-header/component-page-header';
 import {FooterModule} from '../../shared/footer/footer';
-import {Observable, Subject, combineLatest} from 'rxjs';
-import {switchMap, takeUntil, startWith, map} from 'rxjs/operators';
-import {trigger, animate, state, style, transition} from '@angular/animations';
+import {combineLatest, Observable, Subject} from 'rxjs';
+import {map, startWith, switchMap, takeUntil} from 'rxjs/operators';
+import {animate, state, style, transition, trigger} from '@angular/animations';
 import {CdkAccordionModule} from '@angular/cdk/accordion';
 import {BreakpointObserver} from '@angular/cdk/layout';
+import {
+  ComponentCategoryList,
+  ComponentCategoryListModule
+} from '../component-category-list/component-category-list';
+import {ComponentList, ComponentListModule} from '../component-list';
+import {
+  ComponentApi,
+  ComponentExamples,
+  ComponentOverview,
+  ComponentViewer, ComponentViewerModule
+} from '../component-viewer/component-viewer';
+import {DocViewerModule} from '../../shared/doc-viewer/doc-viewer-module';
+import {FormsModule} from '@angular/forms';
+import {HttpClientModule} from '@angular/common/http';
+import {StackBlitzButtonModule} from '../../shared/stack-blitz';
+import {SvgViewerModule} from '../../shared/svg-viewer/svg-viewer';
+import {ExampleModule} from '@angular/components-examples';
 
 const SMALL_WIDTH_BREAKPOINT = 720;
 
@@ -56,7 +79,6 @@ export class ComponentSidenav implements OnInit {
   ],
 })
 export class ComponentNav implements OnInit, OnDestroy {
-
   @Input() params: Observable<Params>;
   expansions: {[key: string]: boolean} = {};
   private _onDestroy = new Subject<void>();
@@ -113,20 +135,54 @@ export class ComponentNav implements OnInit, OnDestroy {
   getExpanded(category: string): boolean {
     return this.expansions[category] === undefined ? true : this.expansions[category];
   }
-
 }
 
+const routes: Routes = [ {
+  path : '',
+  component : ComponentSidenav,
+  children : [
+    {path : '', redirectTo : 'categories', pathMatch : 'full'},
+    {path : 'component/:id', redirectTo : ':id', pathMatch : 'full'},
+    {path : 'category/:id', redirectTo : '/categories/:id', pathMatch : 'full'},
+    {
+      path : 'categories',
+      children : [
+        {path : '', component : ComponentCategoryList},
+        {path : ':id', component : ComponentList},
+      ],
+    },
+    {
+      path : ':id',
+      component : ComponentViewer,
+      children : [
+        {path : '', redirectTo : 'overview', pathMatch : 'full'},
+        {path : 'overview', component : ComponentOverview, pathMatch : 'full'},
+        {path : 'api', component : ComponentApi, pathMatch : 'full'},
+        {path : 'examples', component : ComponentExamples, pathMatch : 'full'},
+        {path : '**', redirectTo : 'overview'},
+      ],
+    },
+  ]
+} ];
 
 @NgModule({
   imports: [
-    MatSidenavModule,
-    RouterModule,
     CommonModule,
+    ComponentCategoryListModule,
     ComponentHeaderModule,
+    ComponentListModule,
+    ComponentViewerModule,
+    DocViewerModule,
+    ExampleModule,
     FooterModule,
-    BrowserAnimationsModule,
+    FormsModule,
+    HttpClientModule,
+    CdkAccordionModule,
     MatIconModule,
-    CdkAccordionModule
+    MatSidenavModule,
+    StackBlitzButtonModule,
+    SvgViewerModule,
+    RouterModule.forChild(routes)
   ],
   exports: [ComponentSidenav],
   declarations: [ComponentSidenav, ComponentNav],

@@ -1,6 +1,6 @@
 import {DocViewer} from './doc-viewer';
 import {ExampleViewer} from '../example-viewer/example-viewer';
-import {StackBlitzButtonModule} from '../stack-blitz/stack-blitz-button';
+import {StackBlitzButtonModule} from '../stack-blitz';
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
@@ -16,12 +16,12 @@ import {CopierService} from '../copier/copier.service';
 // ExampleViewer is included in the DocViewerModule because they have a circular dependency.
 @NgModule({
   imports: [
+    CommonModule,
     MatButtonModule,
     MatIconModule,
     MatTooltipModule,
     MatSnackBarModule,
     MatTabsModule,
-    CommonModule,
     PortalModule,
     StackBlitzButtonModule
   ],

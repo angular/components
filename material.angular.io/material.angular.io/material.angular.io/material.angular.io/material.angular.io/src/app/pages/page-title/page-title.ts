@@ -4,7 +4,7 @@ import {Title} from '@angular/platform-browser';
 /**
  * Service responsible for setting the title that appears above the components and guide pages.
  */
-@Injectable()
+@Injectable({providedIn: 'root'})
 export class ComponentPageTitle {
   _title = '';
   _originalTitle = 'Angular Material UI component library';

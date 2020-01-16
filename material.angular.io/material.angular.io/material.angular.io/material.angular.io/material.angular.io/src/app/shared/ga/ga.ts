@@ -2,12 +2,12 @@ import {Injectable} from '@angular/core';
 
 import {environment} from '../../../environments/environment';
 
-@Injectable()
 /**
  * Google Analytics Service - captures app behaviors and sends them to Google Analytics (GA).
  * Presupposes that GA script has been loaded from a script on the host web page.
  * Associates data with a GA "property" from the environment (`gaId`).
  */
+@Injectable({providedIn: 'root'})
 export class GaService {
 
   private previousUrl: string;

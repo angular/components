@@ -1,7 +1,7 @@
 import {Component, NgModule, OnInit} from '@angular/core';
 import {GuideItems} from '../../shared/guide-items/guide-items';
 import {MatListModule} from '@angular/material/list';
-import {RouterModule} from '@angular/router';
+import {RouterModule, Routes} from '@angular/router';
 import {FooterModule} from '../../shared/footer/footer';
 import {CommonModule} from '@angular/common';
 import {ComponentPageTitle} from '../page-title/page-title';
@@ -19,11 +19,12 @@ export class GuideList implements OnInit {
   }
 }
 
+const routes: Routes = [ {path : '', component : GuideList} ];
 
 @NgModule({
-  imports: [MatListModule, RouterModule, FooterModule, CommonModule],
+  imports: [CommonModule, MatListModule, FooterModule, RouterModule.forChild(routes)],
   exports: [GuideList],
   declarations: [GuideList],
-  providers: [GuideItems, ComponentPageTitle],
+  providers: [GuideItems],
 })
 export class GuideListModule { }

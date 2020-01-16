@@ -23,6 +23,5 @@ export class ComponentPageHeader {
   imports: [MatButtonModule, MatIconModule, NavigationFocusModule],
   exports: [ComponentPageHeader],
   declarations: [ComponentPageHeader],
-  providers: [ComponentPageTitle],
 })
 export class ComponentHeaderModule { }
