@@ -9016,7 +9016,7 @@ postcss-selector-parser@^6.0.2:
     indexes-of "^1.0.1"
     uniq "^1.0.1"
 
-"postcss-selector-parser@github:nolanlawson/postcss-selector-parser#util-deprecate":
+postcss-selector-parser@nolanlawson/postcss-selector-parser#util-deprecate:
   version "6.0.2"
   resolved "https://codeload.github.com/nolanlawson/postcss-selector-parser/tar.gz/75e38f7a7db8d58fb033ab7d24414b55d81e5b4f"
   dependencies:
