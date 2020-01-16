@@ -1,4 +1,4 @@
-import {_supportsShadowDom} from '@angular/cdk/platform';
+import {_supportsShadowDom, Platform} from '@angular/cdk/platform';
 import {
   ComponentHarness,
   ComponentHarnessConstructor,
@@ -507,7 +507,9 @@ describe('TestbedHarnessEnvironment', () => {
     });
   });
 
-  if (_supportsShadowDom()) {
+  const platform = new Platform();
+  // Safari only has parial shadow DOM support (https://caniuse.com/#feat=shadowdomv1)
+  if (_supportsShadowDom() && !platform.SAFARI) {
     describe('shadow DOM interaction', () => {
       it('should not pierce shadow boundary by default', async () => {
         const harness = await TestbedHarnessEnvironment
