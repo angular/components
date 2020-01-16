@@ -31,7 +31,6 @@ export class MapRectangle implements OnInit, OnDestroy {
           undefined);
 
   private readonly _destroyed = new Subject<void>();
-  private readonly _listeners: google.maps.MapsEventListener[] = [];
 
   _rectangle: google.maps.Rectangle;  // initialized in ngOnInit
 
@@ -159,9 +158,6 @@ export class MapRectangle implements OnInit, OnDestroy {
     this._eventManager.destroy();
     this._destroyed.next();
     this._destroyed.complete();
-    for (let listener of this._listeners) {
-      listener.remove();
-    }
     this._rectangle.setMap(null);
   }
 
