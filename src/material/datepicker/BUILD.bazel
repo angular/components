@@ -19,6 +19,7 @@ ng_module(
     assets = [
         ":datepicker-content.css",
         ":datepicker-toggle.css",
+        ":date-range-input.css",
         ":calendar-body.css",
         ":calendar.css",
     ] + glob(["**/*.html"]),
@@ -69,6 +70,12 @@ sass_binary(
     name = "calendar_body_scss",
     src = "calendar-body.scss",
     deps = ["//src/cdk/a11y:a11y_scss_lib"],
+)
+
+sass_binary(
+    name = "date_range_input_scss",
+    src = "date-range-input.scss",
+    deps = ["//src/material/core:core_scss_lib"],
 )
 
 ng_test_library(
