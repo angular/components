@@ -16,4 +16,6 @@ export * from './datepicker-intl';
 export * from './datepicker-toggle';
 export * from './month-view';
 export * from './year-view';
+export * from './date-range-input';
+export {MatStartDate, MatEndDate} from './date-range-input-parts';
 export {MatMultiYearView, yearsPerPage, yearsPerRow} from './multi-year-view';
