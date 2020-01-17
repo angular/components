@@ -26,6 +26,8 @@ import {MatDatepickerToggle, MatDatepickerToggleIcon} from './datepicker-toggle'
 import {MatMonthView} from './month-view';
 import {MatMultiYearView} from './multi-year-view';
 import {MatYearView} from './year-view';
+import {MatDateRangeInput} from './date-range-input';
+import {MatStartDate, MatEndDate} from './date-range-input-parts';
 
 
 @NgModule({
@@ -49,6 +51,9 @@ import {MatYearView} from './year-view';
     MatYearView,
     MatMultiYearView,
     MatCalendarHeader,
+    MatDateRangeInput,
+    MatStartDate,
+    MatEndDate,
   ],
   declarations: [
     MatCalendar,
@@ -62,6 +67,9 @@ import {MatYearView} from './year-view';
     MatYearView,
     MatMultiYearView,
     MatCalendarHeader,
+    MatDateRangeInput,
+    MatStartDate,
+    MatEndDate,
   ],
   providers: [
     MatDatepickerIntl,
