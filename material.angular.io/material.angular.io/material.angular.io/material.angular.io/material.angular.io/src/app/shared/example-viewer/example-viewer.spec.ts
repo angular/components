@@ -126,7 +126,7 @@ describe('ExampleViewer', () => {
     });
 
     it('should call copier service when clicked', (() => {
-      const copierService: CopierService = TestBed.get(CopierService);
+      const copierService: CopierService = TestBed.inject(CopierService);
       const spy = spyOn(copierService, 'copyText');
       expect(spy.calls.count()).toBe(0, 'before click');
       button.click();
@@ -135,8 +135,8 @@ describe('ExampleViewer', () => {
     }));
 
     it('should display a message when copy succeeds', (() => {
-      const snackBar: MatSnackBar = TestBed.get(MatSnackBar);
-      const copierService: CopierService = TestBed.get(CopierService);
+      const snackBar: MatSnackBar = TestBed.inject(MatSnackBar);
+      const copierService: CopierService = TestBed.inject(CopierService);
       spyOn(snackBar, 'open');
       spyOn(copierService, 'copyText').and.returnValue(true);
       button.click();
@@ -144,8 +144,8 @@ describe('ExampleViewer', () => {
     }));
 
     it('should display an error when copy fails', (() => {
-      const snackBar: MatSnackBar = TestBed.get(MatSnackBar);
-      const copierService: CopierService = TestBed.get(CopierService);
+      const snackBar: MatSnackBar = TestBed.inject(MatSnackBar);
+      const copierService: CopierService = TestBed.inject(CopierService);
       spyOn(snackBar, 'open');
       spyOn(copierService, 'copyText').and.returnValue(false);
       button.click();

@@ -36,7 +36,7 @@ export class ComponentViewer implements OnDestroy {
               public _componentPageTitle: ComponentPageTitle,
               public docItems: DocumentationItems,
               ) {
-    let routeAndParentParams = [_route.params];
+    const routeAndParentParams = [_route.params];
     if (_route.parent) {
       routeAndParentParams.push(_route.parent.params);
     }

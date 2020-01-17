@@ -19,7 +19,7 @@ export class SvgViewer implements OnInit {
     this.elementRef.nativeElement.innerHTML = template;
 
     if (this.scaleToContainer) {
-      let svg = this.elementRef.nativeElement.querySelector('svg');
+      const svg = this.elementRef.nativeElement.querySelector('svg');
       svg.setAttribute('width', '100%');
       svg.setAttribute('height', '100%');
       svg.setAttribute('preserveAspectRatio', 'xMidYMid meet');

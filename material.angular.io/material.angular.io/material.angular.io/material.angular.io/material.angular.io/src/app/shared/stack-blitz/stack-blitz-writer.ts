@@ -97,10 +97,10 @@ export class StackBlitzWriter {
     this._appendFormInput(form, 'dependencies', JSON.stringify(dependencies));
 
     return new Promise(resolve => {
-      let templateContents = TEMPLATE_FILES
+      const templateContents = TEMPLATE_FILES
           .map(file => this._readFile(form, data, file, TEMPLATE_PATH));
 
-      let exampleContents = data.exampleFiles
+      const exampleContents = data.exampleFiles
           .map(file => this._readFile(form, data, file, DOCS_CONTENT_PATH));
 
       // TODO(josephperrott): Prevent including assets to be manually checked.
@@ -166,7 +166,7 @@ export class StackBlitzWriter {
                  filename: string,
                  path: string,
                  prependApp = true) {
-    if (path == TEMPLATE_PATH) {
+    if (path === TEMPLATE_PATH) {
       content = this._replaceExamplePlaceholderNames(data, filename, content);
     } else if (prependApp) {
       filename = 'src/app/' + filename;
@@ -183,13 +183,13 @@ export class StackBlitzWriter {
   _replaceExamplePlaceholderNames(data: ExampleData,
                                   fileName: string,
                                   fileContent: string): string {
-    if (fileName == 'src/index.html') {
+    if (fileName === 'src/index.html') {
       // Replace the component selector in `index,html`.
       // For example, <material-docs-example></material-docs-example> will be replaced as
       // <button-demo></button-demo>
       fileContent = fileContent.replace(/material-docs-example/g, data.selectorName);
       fileContent = fileContent.replace(/{{version}}/g, VERSION.full);
-    } else if (fileName == 'src/main.ts') {
+    } else if (fileName === 'src/main.ts') {
       // Replace the component name in `main.ts`.
       // Replace `import {MaterialDocsExample} from 'material-docs-example'`
       // will be replaced as `import {ButtonDemo} from './button-demo'`

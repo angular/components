@@ -1,58 +1,62 @@
-$theme-picker-menu-padding: 8px;
-$theme-picker-grid-cell-size: 48px;
-$theme-picker-grid-cells-per-row: 2;
-$theme-picker-swatch-size: 36px;
-$theme-picker-accent-stripe-size: 6px;
-
-
 .docs-theme-picker-menu {
-  .mat-menu-content {
-    padding: $theme-picker-menu-padding;
-  }
+  .mat-menu-item {
+    .mat-icon.theme-example-icon {
+      margin-right: 0;
+      margin-left: 8px;
+      float: right;
 
-  [mat-menu-item] {
-    flex: 0 0 auto;
-    padding: 0;
-    overflow: hidden;
-  }
+      svg {
+        vertical-align: middle;
+      }
 
-  .docs-theme-picker-swatch {
-    position: relative;
-    width: $theme-picker-swatch-size;
-    height: $theme-picker-swatch-size;
-    margin: ($theme-picker-grid-cell-size - $theme-picker-swatch-size) / 2;
-    border-radius: 50%;
-    overflow: hidden;
+      // The below colors need to align with the themes defined in ThemePicker
+      &.deeppurple-amber svg {
+        .docs-theme-icon-background {
+          fill: #fafafa;
+        }
+        .docs-theme-icon-button {
+          fill: #FFC107;
+        }
+        .docs-theme-icon-toolbar {
+          fill: #673AB7;
+        }
+      }
 
-    .docs-theme-chosen-icon {
-      color: white;
-      position: absolute;
-      left: 50%; top: 50%;
-      transform: translate(-50%, -50%);
+      &.indigo-pink svg {
+        .docs-theme-icon-background {
+          fill: #fafafa;
+        }
+        .docs-theme-icon-button {
+          fill: #E91E63;
+        }
+        .docs-theme-icon-toolbar {
+          fill: #3F51B5;
+        }
+      }
+
+      &.pink-bluegrey svg {
+        .docs-theme-icon-background {
+          fill: #303030;
+        }
+        .docs-theme-icon-button {
+          fill: #607D8B;
+        }
+        .docs-theme-icon-toolbar {
+          fill: #E91E63;
+        }
+      }
+
+      &.purple-green svg {
+        .docs-theme-icon-background {
+          fill: #303030;
+        }
+        .docs-theme-icon-button {
+          fill: #4CAF50;
+        }
+        .docs-theme-icon-toolbar {
+          fill: #9C27B0;
+        }
+      }
     }
-
-    &::after {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      box-sizing: border-box;
-      border: 1px solid rgba(0,0,0,.2);
-      border-radius: 50%;
-    }
-  }
-
-  .docs-theme-picker-primary {
-    width: 100%;
-    height: 100%;
-  }
-
-  .docs-theme-picker-accent {
-    position: absolute;
-    bottom: $theme-picker-accent-stripe-size;
-    width: 100%;
-    height: $theme-picker-accent-stripe-size;
   }
 }

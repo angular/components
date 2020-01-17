@@ -1,7 +1,7 @@
 <ng-container *ngIf="componentViewer.componentDocItem | async; let docItem">
-  <span class="cdk-visually-hidden" tabindex="-1" #initialFocusTarget>
+  <h2 class="cdk-visually-hidden" tabindex="-1" #initialFocusTarget>
     Overview for {{docItem?.id}}
-  </span>
+  </h2>
   <doc-viewer
       documentUrl="/docs-content/overviews/{{docItem?.packageName}}/{{docItem?.id}}.html"
       class="docs-component-view-text-content docs-component-overview"

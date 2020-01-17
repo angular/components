@@ -1,32 +1,102 @@
 {
+  "extends": "tslint:recommended",
+  "rulesDirectory": [
+    "codelyzer"
+  ],
   "rules": {
-    "max-line-length": [true, 100],
-    // Disable this flag because of SHA tslint#48b0c597f9257712c7d1f04b55ed0aa60e333f6a
-    // TSLint now shows warnings if types for properties are inferred. This rule needs to be
-    // disabled because all properties need to have explicit types set to work for Dgeni.
-    "no-inferrable-types": false,
-    "class-name": true,
+    "array-type": false,
+    "arrow-parens": false,
+    // Bans jasmine helper functions that will prevent the CI from properly running tests.
+    "ban": [
+      true,
+      ["fit"],
+      ["fdescribe"],
+      ["xit"],
+      ["xdescribe"],
+      ["Object.assign", "Use the spread operator instead."],
+      ["Object", "Avoid using the `Object` type. Did you mean `object`?"],
+      ["Function",
+        "Avoid using the `Function` type. Prefer a specific function type, like `() => void`."
+      ],
+      ["Boolean", "Avoid using the `Boolean` type. Did you mean `boolean`?"],
+      ["Number", "Avoid using the `Number` type. Did you mean `number`?"],
+      ["String", "Avoid using the `String` type. Did you mean `string`?"],
+      ["Symbol", "Avoid using the `Symbol` type. Did you mean `symbol`?"]
+    ],
     "comment-format": [
       true,
       "check-space"
     ],
+    "contextual-lifecycle": true,
+    "deprecation": {
+      "severity": "warning"
+    },
     "indent": [
       true,
       "spaces"
     ],
-    "eofline": true,
-    "no-duplicate-variable": true,
-    "no-eval": true,
+    "import-blacklist": [
+      true,
+      "rxjs/Rx"
+    ],
+    "interface-name": false,
+    "jsdoc-format": [true, "check-multiline-start"],
+    // Avoids inconsistent linebreak styles in source files. Forces developers to use LF linebreaks.
+    "linebreak-style": [true, "LF"],
+    "max-classes-per-file": false,
+    "max-line-length": [true, 100],
+    "member-access": false,
+    "member-ordering": [
+      true,
+      {
+        "order": [
+          "static-field",
+          "instance-field",
+          "static-method",
+          "instance-method"
+        ]
+      }
+    ],
     "no-arg": true,
-    "no-internal-module": true,
-    "no-trailing-whitespace": true,
-    "no-bitwise": true,
-    "no-shadowed-variable": true,
-    "no-unused-expression": true,
-    "no-var-keyword": true,
-    "member-access": [true, "no-public"],
+    "no-conflicting-lifecycle": true,
+    "no-consecutive-blank-lines": false,
+    "no-console": [
+      true,
+      "debug",
+      "info",
+      "time",
+      "timeEnd",
+      "trace"
+    ],
     "no-debugger": true,
+    "no-duplicate-imports": true,
+    "no-duplicate-variable": true,
+    "no-empty": false,
+    "no-eval": true,
+    "no-host-metadata-property": true,
+    // Disable this flag because of SHA tslint#48b0c597f9257712c7d1f04b55ed0aa60e333f6a
+    // TSLint now shows warnings if types for properties are inferred. This rule needs to be
+    // disabled because all properties need to have explicit types set to work for Dgeni.
+    "no-inferrable-types": false,
+    "no-input-rename": true,
+    "no-inputs-metadata-property": true,
+    "no-internal-module": true,
+    // Namespaces are not allowed, because of Closure compiler.
+    "no-namespace": true,
+    "no-non-null-assertion": true,
+    "no-output-native": true,
+    "no-output-on-prefix": true,
+    "no-output-rename": true,
+    "no-outputs-metadata-property": true,
+    "no-redundant-jsdoc": true,
+    "no-switch-case-fall-through": true,
+    "no-string-literal": false,
     "no-unused-variable": true,
+    "no-use-before-declare": false,
+    "no-var-requires": false,
+    "object-literal-key-quotes": false,
+    "object-literal-shorthand": false,
+    "object-literal-sort-keys": false,
     "one-line": [
       true,
       "check-catch",
@@ -34,12 +104,14 @@
       "check-open-brace",
       "check-whitespace"
     ],
+    "ordered-imports": false,
     "quotemark": [
       true,
       "single",
       "avoid-escape"
     ],
     "semicolon": true,
+    "trailing-comma": false,
     "typedef-whitespace": [
       true,
       {
@@ -50,7 +122,6 @@
         "variable-declaration": "nospace"
       }
     ],
-    "curly": true,
     "variable-name": [
       true,
       "ban-keywords",
@@ -66,20 +137,25 @@
       "check-type",
       "check-preblock"
     ],
-    // Bans jasmine helper functions that will prevent the CI from properly running tests.
-    "ban": [
-      true,
-      ["fit"],
-      ["fdescribe"],
-      ["xit"],
-      ["xdescribe"],
-      {"name": "Object.assign", "message": "Use the spread operator instead."}
-    ],
-    // Avoids inconsistent linebreak styles in source files. Forces developers to use LF linebreaks.
-    "linebreak-style": [true, "LF"],
-    // Namespaces are no allowed, because of Closure compiler.
-    "no-namespace": true,
-    "jsdoc-format": [true, "check-multiline-start"],
-    "no-duplicate-imports": true
+    // Codelyzer rules
+    "component-class-suffix": false,
+    "component-selector": false,
+    "contextual-decorator": true,
+    "directive-class-suffix": false,
+    "directive-selector": false,
+    "template-accessibility-alt-text": true,
+    "template-accessibility-elements-content": true,
+    "template-accessibility-label-for": true,
+    "template-accessibility-tabindex-no-positive": true,
+    "template-accessibility-table-scope": true,
+    "template-accessibility-valid-aria": true,
+    "template-banana-in-box": true,
+    "template-click-events-have-key-events": true,
+    "template-mouse-events-have-key-events": true,
+    "template-no-autofocus": true,
+    "template-no-distracting-elements": true,
+    "template-no-negated-async": true,
+    "use-lifecycle-interface": true,
+    "use-pipe-transform-interface": true
   }
 }
