@@ -24,7 +24,7 @@ describe('StackBlitzWriter', () => {
   }));
 
   beforeEach(() => {
-    stackBlitzWriter = TestBed.get(StackBlitzWriter);
+    stackBlitzWriter = TestBed.inject(StackBlitzWriter);
     data = new ExampleData('');
     data.exampleFiles = ['test.ts', 'test.html', 'src/detail.ts'];
   });
@@ -51,7 +51,7 @@ describe('StackBlitzWriter', () => {
   });
 
   it('should add files to form input', () => {
-    let form = stackBlitzWriter._createFormElement('index.ts');
+    const form = stackBlitzWriter._createFormElement('index.ts');
 
     stackBlitzWriter._addFileToForm(form, data, 'NoContent', 'test.ts', 'path/to/file');
     stackBlitzWriter._addFileToForm(form, data, 'Test', 'test.html', 'path/to/file');

@@ -1,5 +1,6 @@
 <div class="docs-component-viewer">
-  <nav mat-tab-nav-bar class="docs-component-viewer-tabbed-content">
+  <nav mat-tab-nav-bar class="docs-component-viewer-tabbed-content"
+       aria-label="Documentation Sections">
     <a mat-tab-link class="docs-component-viewer-section-tab"
         *ngFor="let section of sections"
         [routerLink]="section.toLowerCase()"

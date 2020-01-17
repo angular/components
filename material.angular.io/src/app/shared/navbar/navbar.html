@@ -1,5 +1,5 @@
 <!-- TODO: figure out if the <nav> should go inside of a <header> element. -->
-<nav class="docs-navbar-header"
+<nav class="docs-navbar-header" aria-label="Top Toolbar"
      [class.is-next-version]="isNextVersion">
   <a mat-button class="docs-button" routerLink="/" aria-label="Angular Material">
     <img class="docs-angular-logo"
@@ -28,7 +28,7 @@
          alt="angular">
   </a>
 </nav>
-<nav class="docs-navbar docs-navbar-show-small">
+<nav class="docs-navbar docs-navbar-show-small" aria-label="Section Nav Bar">
   <a mat-button class="docs-navbar-link"
     *ngFor="let key of sectionKeys"
     [routerLink]="key">{{sections[key].name}}</a>

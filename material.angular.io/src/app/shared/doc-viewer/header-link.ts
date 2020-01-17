@@ -17,12 +17,8 @@ import {Router} from '@angular/router';
 @Component({
   selector: 'header-link',
   template: `
-    <a
-      title="Link to this heading"
-      aria-label="Link to this heading"
-      class="docs-markdown-a"
-      [attr.aria-describedby]="example"
-      [href]="_getFragmentUrl()">
+    <a aria-label="Link to this heading" class="docs-markdown-a"
+      [attr.aria-describedby]="example" [href]="_getFragmentUrl()">
       <mat-icon>link</mat-icon>
     </a>
   `

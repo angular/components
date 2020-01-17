@@ -8,7 +8,7 @@
     "start": "yarn build-themes && ng serve",
     "start:jit": "yarn build-themes && ng serve --aot=false",
     "start:prod": "yarn build-themes && ng serve --prod",
-    "lint": "tslint -p tsconfig.json",
+    "lint": "ng lint",
     "test": "yarn build-themes && ng test",
     "pree2e": "webdriver-manager update",
     "e2e": "yarn build-themes && ng e2e",

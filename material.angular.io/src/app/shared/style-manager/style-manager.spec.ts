@@ -16,8 +16,8 @@ describe('StyleManager', () => {
   }));
 
   afterEach(() => {
-    let links = document.head.querySelectorAll('link');
-    for (let link of Array.prototype.slice.call(links)) {
+    const links = document.head.querySelectorAll('link');
+    for (const link of Array.prototype.slice.call(links)) {
       if (link.className.includes('style-manager-')) {
         document.head.removeChild(link);
       }
@@ -26,14 +26,14 @@ describe('StyleManager', () => {
 
   it('should add stylesheet to head', () => {
     styleManager.setStyle('test', 'test.css');
-    let styleEl = document.head.querySelector('.style-manager-test') as HTMLLinkElement;
+    const styleEl = document.head.querySelector('.style-manager-test') as HTMLLinkElement;
     expect(styleEl).not.toBeNull();
     expect(styleEl.href.endsWith('test.css')).toBe(true);
   });
 
   it('should change existing stylesheet', () => {
     styleManager.setStyle('test', 'test.css');
-    let styleEl = document.head.querySelector('.style-manager-test') as HTMLLinkElement;
+    const styleEl = document.head.querySelector('.style-manager-test') as HTMLLinkElement;
     expect(styleEl).not.toBeNull();
     expect(styleEl.href.endsWith('test.css')).toBe(true);
 

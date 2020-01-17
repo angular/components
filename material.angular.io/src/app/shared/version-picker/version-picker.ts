@@ -5,6 +5,7 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import {MatMenuModule} from '@angular/material/menu';
 import {materialVersion, VersionInfo} from '../version/version';
+import {MatTooltipModule} from '@angular/material/tooltip';
 
 const versionUrl = 'assets/versions.json';
 
@@ -32,7 +33,7 @@ export class VersionPicker {
 }
 
 @NgModule({
-  imports: [MatButtonModule, MatIconModule, MatMenuModule, CommonModule],
+  imports: [MatButtonModule, MatIconModule, MatMenuModule, MatTooltipModule, CommonModule],
   exports: [VersionPicker],
   declarations: [VersionPicker]
 })

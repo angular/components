@@ -37,6 +37,7 @@ import {HttpClientModule} from '@angular/common/http';
 import {StackBlitzButtonModule} from '../../shared/stack-blitz';
 import {SvgViewerModule} from '../../shared/svg-viewer/svg-viewer';
 import {ExampleModule} from '@angular/components-examples';
+import {MatListModule} from '@angular/material/list';
 
 const SMALL_WIDTH_BREAKPOINT = 720;
 
@@ -81,6 +82,7 @@ export class ComponentSidenav implements OnInit {
 export class ComponentNav implements OnInit, OnDestroy {
   @Input() params: Observable<Params>;
   expansions: {[key: string]: boolean} = {};
+  currentItemId: string;
   private _onDestroy = new Subject<void>();
 
   constructor(public docItems: DocumentationItems,
@@ -91,7 +93,7 @@ export class ComponentNav implements OnInit, OnDestroy {
       startWith(null),
       switchMap(() => this.params),
       takeUntil(this._onDestroy)
-    ).subscribe(p => this.setExpansions(p));
+    ).subscribe(params => this.setExpansions(params));
   }
 
   ngOnDestroy() {
@@ -103,14 +105,12 @@ export class ComponentNav implements OnInit, OnDestroy {
   setExpansions(params: Params) {
     const categories = this.docItems.getCategories(params.section);
     for (const category of (categories || [])) {
-      if (this.expansions[category.id]) {
-        continue;
-      }
 
       let match = false;
       for (const item of category.items) {
         if (this._router.url.indexOf(item.id) > -1) {
           match = true;
+          this.currentItemId = item.id;
           break;
         }
       }
@@ -167,6 +167,9 @@ const routes: Routes = [ {
 
 @NgModule({
   imports: [
+    MatSidenavModule,
+    MatListModule,
+    RouterModule,
     CommonModule,
     ComponentCategoryListModule,
     ComponentHeaderModule,

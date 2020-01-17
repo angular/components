@@ -1,4 +1,4 @@
-import {ComponentPortal, DomPortalHost} from '@angular/cdk/portal';
+import {ComponentPortal, DomPortalOutlet} from '@angular/cdk/portal';
 import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import {DomSanitizer} from '@angular/platform-browser';
 import {
@@ -25,7 +25,7 @@ import {HeaderLink} from './header-link';
   template: 'Loading document...',
 })
 export class DocViewer implements OnDestroy {
-  private _portalHosts: DomPortalHost[] = [];
+  private _portalHosts: DomPortalOutlet[] = [];
   private _documentFetchSubscription: Subscription;
 
   @Input() name: string;
@@ -102,15 +102,15 @@ export class DocViewer implements OnDestroy {
 
   /** Instantiate a ExampleViewer for each example. */
   private _loadComponents(componentName: string, componentClass: any) {
-    let exampleElements =
+    const exampleElements =
         this._elementRef.nativeElement.querySelectorAll(`[${componentName}]`);
 
     Array.prototype.slice.call(exampleElements).forEach((element: Element) => {
-      let example = element.getAttribute(componentName);
-      let portalHost = new DomPortalHost(
+      const example = element.getAttribute(componentName);
+      const portalHost = new DomPortalOutlet(
           element, this._componentFactoryResolver, this._appRef, this._injector);
-      let examplePortal = new ComponentPortal(componentClass, this._viewContainerRef);
-      let exampleViewer = portalHost.attach(examplePortal);
+      const examplePortal = new ComponentPortal(componentClass, this._viewContainerRef);
+      const exampleViewer = portalHost.attach(examplePortal);
       if (example !== null) {
         (exampleViewer.instance as ExampleViewer).example = example;
       }

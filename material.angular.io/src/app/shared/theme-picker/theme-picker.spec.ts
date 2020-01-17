@@ -15,7 +15,7 @@ describe('ThemePicker', () => {
     const component = fixture.componentInstance;
     const name = 'pink-bluegrey';
     spyOn(component.styleManager, 'setStyle');
-    component.installTheme(name);
+    component.selectTheme(name);
     expect(component.styleManager.setStyle).toHaveBeenCalled();
     expect(component.styleManager.setStyle).toHaveBeenCalledWith('theme', `assets/${name}.css`);
   });

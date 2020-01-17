@@ -17,7 +17,8 @@
     }
 
     .docs-nav-content-btn {
-      color: rgba(mat-color($foreground, text), .5);
+      color: rgba(mat-color($foreground, text), 0.7);
+      font-family: Roboto, "Helvetica Neue", sans-serif;
 
       &:focus {
         // override the default background
@@ -36,6 +37,10 @@
       &.docs-component-viewer-sidenav-item-selected,
       &:hover {
         color: mat-color($primary, if($is-dark-theme, 200, default));
+      }
+
+      &.docs-component-viewer-sidenav-item-selected {
+        background: rgba(0, 0, 0, $nav-background-focus-opacity);
       }
     }
   }

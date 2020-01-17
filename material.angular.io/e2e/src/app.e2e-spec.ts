@@ -8,7 +8,7 @@ describe('Material Docs App', () => {
     page = new MaterialDocsAppPage();
   });
 
-  it('should display welcome message', async() => {
+  it('should display welcome message', async () => {
     await page.navigateTo();
     expect(await page.getTitleText()).toEqual('Angular Material');
   });
