@@ -12,7 +12,7 @@ import {InputHarnessFilters} from './input-harness-filters';
 
 /** Harness for interacting with a standard Material inputs in tests. */
 export class MatInputHarness extends MatFormFieldControlHarness {
-  static hostSelector = '[matInput]';
+  static hostSelector = '.mat-input-element';
 
   /**
    * Gets a `HarnessPredicate` that can be used to search for a `MatInputHarness` that meets
