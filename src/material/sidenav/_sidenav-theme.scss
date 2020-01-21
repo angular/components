@@ -75,7 +75,7 @@
 
 @mixin mat-sidenav-typography($config) { }
 
-@mixin mat-sidenav-density($config) {}
+@mixin mat-sidenav-density($density-scale) {}
 
 @mixin mat-sidenav-theme($theme) {
   $color: mat-get-color-config($theme);
