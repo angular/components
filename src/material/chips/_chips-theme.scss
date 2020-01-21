@@ -37,13 +37,13 @@ $mat-chip-remove-font-size: 18px;
   }
 }
 
-@mixin mat-chips-theme($theme) {
-  $is-dark-theme: map-get($theme, is-dark);
-  $primary: map-get($theme, primary);
-  $accent: map-get($theme, accent);
-  $warn: map-get($theme, warn);
-  $background: map-get($theme, background);
-  $foreground: map-get($theme, foreground);
+@mixin mat-chips-color($config) {
+  $is-dark-theme: map-get($config, is-dark);
+  $primary: map-get($config, primary);
+  $accent: map-get($config, accent);
+  $warn: map-get($config, warn);
+  $background: map-get($config, background);
+  $foreground: map-get($config, foreground);
 
   $unselected-background: mat-color($background, unselected-chip);
   $unselected-foreground: mat-color($foreground, text);
@@ -53,7 +53,7 @@ $mat-chip-remove-font-size: 18px;
 
     &:not(.mat-chip-disabled) {
       &:active {
-        @include _mat-theme-elevation(3, $theme);
+        @include _mat-theme-elevation(3, $config);
       }
 
       .mat-chip-remove:hover {
@@ -96,3 +96,23 @@ $mat-chip-remove-font-size: 18px;
     }
   }
 }
+
+@mixin mat-chips-density($config) {}
+
+@mixin mat-chips-theme($theme) {
+  $color: mat-get-color-config($theme);
+  $density: mat-get-density-config($theme);
+  $typography: mat-get-typography-config($theme);
+
+  @if $color != null {
+    @include mat-chips-color($color);
+  }
+  @if $density != null {
+    @include mat-chips-density($density);
+  }
+  @if $typography != null {
+    @include mat-chips-typography($typography);
+  }
+}
+
+
