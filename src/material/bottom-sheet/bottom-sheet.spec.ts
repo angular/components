@@ -1,5 +1,5 @@
 import {Directionality} from '@angular/cdk/bidi';
-import {A, ESCAPE} from '@angular/cdk/keycodes';
+import {A, ESCAPE} from '@angular/cdk/key';
 import {OverlayContainer, ScrollStrategy} from '@angular/cdk/overlay';
 import {ViewportRuler} from '@angular/cdk/scrolling';
 import {

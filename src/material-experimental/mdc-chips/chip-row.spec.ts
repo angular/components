@@ -1,5 +1,5 @@
 import {Directionality} from '@angular/cdk/bidi';
-import {BACKSPACE, DELETE} from '@angular/cdk/keycodes';
+import {BACKSPACE, DELETE} from '@angular/cdk/key';
 import {
   createKeyboardEvent,
   createFakeEvent,

@@ -77,7 +77,7 @@ injection token.
     {
       provide: MAT_CHIPS_DEFAULT_OPTIONS,
       useValue: {
-        separatorKeyCodes: [ENTER, COMMA]
+        separatorKeys: [ENTER, COMMA]
       }
     }
   ]

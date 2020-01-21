@@ -13,7 +13,7 @@ import {
   DOWN_ARROW,
   LEFT_ARROW,
   RIGHT_ARROW,
-} from '@angular/cdk/keycodes';
+} from '@angular/cdk/key';
 
 
 /** The keys handled by the GridKeyManager keydown method. */
@@ -98,9 +98,9 @@ export class GridKeyManager<T> {
    * @param event Keyboard event to be used for determining which element should be active.
    */
   onKeydown(event: KeyboardEvent): void {
-    const keyCode = event.keyCode;
+    const key = event.key;
 
-    switch (keyCode) {
+    switch (key) {
       case DOWN_ARROW:
         this.setNextRowActive();
         break;

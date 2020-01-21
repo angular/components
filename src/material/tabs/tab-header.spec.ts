@@ -1,5 +1,5 @@
 import {Direction, Directionality} from '@angular/cdk/bidi';
-import {END, ENTER, HOME, LEFT_ARROW, RIGHT_ARROW, SPACE} from '@angular/cdk/keycodes';
+import {END, ENTER, HOME, LEFT_ARROW, RIGHT_ARROW, SPACE} from '@angular/cdk/key';
 import {PortalModule} from '@angular/cdk/portal';
 import {ScrollingModule, ViewportRuler} from '@angular/cdk/scrolling';
 import {

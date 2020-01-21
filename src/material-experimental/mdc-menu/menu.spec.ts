@@ -17,7 +17,7 @@ import {
 } from '@angular/core';
 import {Direction, Directionality} from '@angular/cdk/bidi';
 import {OverlayContainer, Overlay} from '@angular/cdk/overlay';
-import {ESCAPE, LEFT_ARROW, RIGHT_ARROW, DOWN_ARROW, TAB, HOME, END} from '@angular/cdk/keycodes';
+import {ESCAPE, LEFT_ARROW, RIGHT_ARROW, DOWN_ARROW, TAB, HOME, END} from '@angular/cdk/key';
 import {MatMenu, MatMenuModule, MatMenuItem} from './index';
 import {MatRipple} from '@angular/material/core';
 import {

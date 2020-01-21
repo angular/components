@@ -28,6 +28,7 @@ ng_module(
         "//src/cdk/accordion",
         "//src/cdk/coercion",
         "//src/cdk/collections",
+        "//src/cdk/key",
         "//src/cdk/keycodes",
         "//src/cdk/portal",
         "@npm//@angular/animations",
@@ -67,6 +68,7 @@ ng_test_library(
     deps = [
         ":expansion",
         "//src/cdk/a11y",
+        "//src/cdk/key",
         "//src/cdk/keycodes",
         "//src/cdk/testing/private",
         "@npm//@angular/platform-browser",

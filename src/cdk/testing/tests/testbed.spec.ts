@@ -207,6 +207,7 @@ describe('TestbedHarnessEnvironment', () => {
     it('should send alt+j key', async () => {
       const specialKey = await harness.specaialKey();
       await harness.sendAltJ();
+      console.log('--------------------' + await specialKey.text());
       expect(await specialKey.text()).toBe('alt-j');
     });
 

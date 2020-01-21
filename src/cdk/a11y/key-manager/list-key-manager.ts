@@ -19,7 +19,7 @@ import {
   ZERO,
   NINE,
   hasModifierKey,
-} from '@angular/cdk/keycodes';
+} from '@angular/cdk/key';
 import {debounceTime, filter, map, tap} from 'rxjs/operators';
 
 /** This interface is for items that can be passed to a ListKeyManager. */
@@ -201,13 +201,13 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
    * @param event Keyboard event to be used for determining which element should be active.
    */
   onKeydown(event: KeyboardEvent): void {
-    const keyCode = event.keyCode;
+    const key = event.key;
     const modifiers: ListKeyManagerModifierKey[] = ['altKey', 'ctrlKey', 'metaKey', 'shiftKey'];
     const isModifierAllowed = modifiers.every(modifier => {
       return !event[modifier] || this._allowedModifierKeys.indexOf(modifier) > -1;
     });
 
-    switch (keyCode) {
+    switch (key) {
       case TAB:
         this.tabOut.next();
         return;
@@ -250,8 +250,8 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
           // otherwise fall back to resolving alphanumeric characters via the keyCode.
           if (event.key && event.key.length === 1) {
             this._letterKeyStream.next(event.key.toLocaleUpperCase());
-          } else if ((keyCode >= A && keyCode <= Z) || (keyCode >= ZERO && keyCode <= NINE)) {
-            this._letterKeyStream.next(String.fromCharCode(keyCode));
+          } else if ((key >= A && key <= Z) || (key >= ZERO && key <= NINE)) {
+            this._letterKeyStream.next(event.key.toLocaleUpperCase());
           }
         }
 

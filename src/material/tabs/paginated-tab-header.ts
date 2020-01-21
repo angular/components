@@ -25,7 +25,7 @@ import {Direction, Directionality} from '@angular/cdk/bidi';
 import {coerceNumberProperty} from '@angular/cdk/coercion';
 import {ViewportRuler} from '@angular/cdk/scrolling';
 import {FocusKeyManager, FocusableOption} from '@angular/cdk/a11y';
-import {END, ENTER, HOME, SPACE, hasModifierKey} from '@angular/cdk/keycodes';
+import {END, ENTER, HOME, SPACE, hasModifierKey} from '@angular/cdk/key';
 import {merge, of as observableOf, Subject, timer, fromEvent} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 import {Platform, normalizePassiveListenerOptions} from '@angular/cdk/platform';
@@ -257,7 +257,7 @@ export abstract class MatPaginatedTabHeader implements AfterContentChecked, Afte
       return;
     }
 
-    switch (event.keyCode) {
+    switch (event.key) {
       case HOME:
         this._keyManager.setFirstItemActive();
         event.preventDefault();

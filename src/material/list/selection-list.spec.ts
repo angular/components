@@ -1,4 +1,4 @@
-import {DOWN_ARROW, SPACE, ENTER, UP_ARROW, HOME, END, A, D} from '@angular/cdk/keycodes';
+import {DOWN_ARROW, SPACE, ENTER, UP_ARROW, HOME, END, A, D, s, d} from '@angular/cdk/key';
 import {
   createKeyboardEvent,
   dispatchFakeEvent,
@@ -488,13 +488,13 @@ describe('MatSelectionList without forms', () => {
 
       expect(manager.activeItemIndex).toBe(-1);
 
-      dispatchEvent(listEl, createKeyboardEvent('keydown', 83, 's'));
+      dispatchEvent(listEl, createKeyboardEvent('keydown', s,83));
       fixture.detectChanges();
       tick(200);
 
       expect(manager.activeItemIndex).toBe(1);
 
-      dispatchEvent(listEl, createKeyboardEvent('keydown', 68, 'd'));
+      dispatchEvent(listEl, createKeyboardEvent('keydown', d, 68));
       fixture.detectChanges();
       tick(200);
 
@@ -506,7 +506,7 @@ describe('MatSelectionList without forms', () => {
 
       expect(manager.activeItemIndex).not.toBe(3);
 
-      const event = createKeyboardEvent('keydown', D, 'd');
+      const event = createKeyboardEvent('keydown', d, 68);
       selectionList.componentInstance._keydown(event);
       fixture.detectChanges();
       tick(200);
@@ -526,7 +526,7 @@ describe('MatSelectionList without forms', () => {
       expect(manager.activeItemIndex).toBe(1);
       expect(model.isEmpty()).toBe(true);
 
-      selectionList.componentInstance._keydown(createKeyboardEvent('keydown', D, 'd'));
+      selectionList.componentInstance._keydown(createKeyboardEvent('keydown', d, 68));
       fixture.detectChanges();
       tick(100); // Tick only half the typeahead timeout.
 

@@ -8,7 +8,7 @@
 
 import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
 import {Directive, ElementRef, EventEmitter, Inject, Input, OnChanges, Output} from '@angular/core';
-import {hasModifierKey, TAB} from '@angular/cdk/keycodes';
+import {hasModifierKey, TAB} from '@angular/cdk/key';
 import {MAT_CHIPS_DEFAULT_OPTIONS, MatChipsDefaultOptions} from './chip-default-options';
 import {MatChipGrid} from './chip-grid';
 import {MatChipTextControl} from './chip-text-control';
@@ -72,8 +72,8 @@ export class MatChipInput implements MatChipTextControl, OnChanges {
    *
    * Defaults to `[ENTER]`.
    */
-  @Input('matChipInputSeparatorKeyCodes')
-  separatorKeyCodes: number[] | Set<number> = this._defaultOptions.separatorKeyCodes;
+  @Input('matChipInputSeparatorKeys')
+  separatorKeys: string[] | Set<string> = this._defaultOptions.separatorKeys;
 
   /** Emitted when a chip is to be added. */
   @Output('matChipInputTokenEnd')
@@ -111,7 +111,7 @@ export class MatChipInput implements MatChipTextControl, OnChanges {
   _keydown(event?: KeyboardEvent) {
     // Allow the user's focus to escape when they're tabbing forward. Note that we don't
     // want to do this when going backwards, because focus should go back to the first chip.
-    if (event && event.keyCode === TAB && !hasModifierKey(event, 'shiftKey')) {
+    if (event && event.key === TAB && !hasModifierKey(event, 'shiftKey')) {
       this._chipGrid._allowFocusEscape();
     }
 
@@ -160,15 +160,15 @@ export class MatChipInput implements MatChipTextControl, OnChanges {
     this._inputElement.focus();
   }
 
-  /** Checks whether a keycode is one of the configured separators. */
+  /** Checks whether a key is one of the configured separators. */
   private _isSeparatorKey(event: KeyboardEvent) {
     if (hasModifierKey(event)) {
       return false;
     }
 
-    const separators = this.separatorKeyCodes;
-    const keyCode = event.keyCode;
-    return Array.isArray(separators) ? separators.indexOf(keyCode) > -1 : separators.has(keyCode);
+    const separators = this.separatorKeys;
+    const key = event.key;
+    return Array.isArray(separators) ? separators.indexOf(key) > -1 : separators.has(key);
   }
 
   static ngAcceptInputType_addOnBlur: BooleanInput;

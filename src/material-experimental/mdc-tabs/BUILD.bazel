@@ -30,6 +30,7 @@ ng_module(
         "//src/cdk/a11y",
         "//src/cdk/bidi",
         "//src/cdk/coercion",
+        "//src/cdk/key",
         "//src/cdk/keycodes",
         "//src/cdk/observers",
         "//src/cdk/platform",
@@ -107,6 +108,7 @@ ng_test_library(
     deps = [
         ":mdc-tabs",
         "//src/cdk/bidi",
+        "//src/cdk/key",
         "//src/cdk/keycodes",
         "//src/cdk/observers",
         "//src/cdk/portal",

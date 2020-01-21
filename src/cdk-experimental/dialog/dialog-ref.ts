@@ -8,7 +8,7 @@
 
 
 import {OverlayRef, GlobalPositionStrategy, OverlaySizeConfig} from '@angular/cdk/overlay';
-import {ESCAPE, hasModifierKey} from '@angular/cdk/keycodes';
+import {ESCAPE, hasModifierKey} from '@angular/cdk/key';
 import {Observable} from 'rxjs';
 import {map, filter} from 'rxjs/operators';
 import {DialogPosition} from './dialog-config';
@@ -56,8 +56,8 @@ export class DialogRef<T, R = any> {
 
     // Close when escape keydown event occurs
     _overlayRef.keydownEvents()
-      .pipe(filter(event => {
-        return event.keyCode === ESCAPE && !this.disableClose && !hasModifierKey(event);
+      .pipe(filter((event: KeyboardEvent) => {
+        return event.key === ESCAPE && !this.disableClose && !hasModifierKey(event);
       }))
       .subscribe(event => {
         event.preventDefault();

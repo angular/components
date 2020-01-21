@@ -10,7 +10,7 @@ import {FocusKeyManager} from '@angular/cdk/a11y';
 import {Directionality} from '@angular/cdk/bidi';
 import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
 import {SelectionModel} from '@angular/cdk/collections';
-import {BACKSPACE, END, HOME} from '@angular/cdk/keycodes';
+import {BACKSPACE, END, HOME} from '@angular/cdk/key';
 import {
   AfterContentInit,
   ChangeDetectionStrategy,
@@ -491,14 +491,14 @@ export class MatChipList extends _MatChipListMixinBase implements MatFormFieldCo
     const target = event.target as HTMLElement;
 
     // If they are on an empty input and hit backspace, focus the last chip
-    if (event.keyCode === BACKSPACE && this._isInputEmpty(target)) {
+    if (event.key === BACKSPACE && this._isInputEmpty(target)) {
       this._keyManager.setLastItemActive();
       event.preventDefault();
     } else if (target && target.classList.contains('mat-chip')) {
-      if (event.keyCode === HOME) {
+      if (event.key === HOME) {
         this._keyManager.setFirstItemActive();
         event.preventDefault();
-      } else if (event.keyCode === END) {
+      } else if (event.key === END) {
         this._keyManager.setLastItemActive();
         event.preventDefault();
       } else {

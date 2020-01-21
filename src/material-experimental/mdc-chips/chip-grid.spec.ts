@@ -8,7 +8,7 @@ import {
   RIGHT_ARROW,
   SPACE,
   TAB
-} from '@angular/cdk/keycodes';
+} from '@angular/cdk/key';
 import {
   createFakeEvent,
   createKeyboardEvent,
@@ -987,7 +987,7 @@ class FormFieldChipGrid {
       </mat-chip-grid>
       <input placeholder="New food..."
           [matChipInputFor]="chipGrid"
-          [matChipInputSeparatorKeyCodes]="separatorKeyCodes"
+          [matChipInputSeparatorKeys]="separatorKeys"
           [matChipInputAddOnBlur]="addOnBlur"
           (matChipInputTokenEnd)="add($event)"/>
     </mat-form-field>
@@ -1006,7 +1006,7 @@ class InputChipGrid {
   ];
   control = new FormControl();
 
-  separatorKeyCodes = [ENTER, SPACE];
+  separatorKeys = [ENTER, SPACE];
   addOnBlur: boolean = true;
   isRequired: boolean;
 

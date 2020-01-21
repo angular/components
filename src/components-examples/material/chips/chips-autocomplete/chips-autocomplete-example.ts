@@ -1,4 +1,4 @@
-import {COMMA, ENTER} from '@angular/cdk/keycodes';
+import {COMMA, ENTER} from '@angular/cdk/key';
 import {Component, ElementRef, ViewChild} from '@angular/core';
 import {FormControl} from '@angular/forms';
 import {MatAutocompleteSelectedEvent, MatAutocomplete} from '@angular/material/autocomplete';
@@ -18,7 +18,7 @@ export class ChipsAutocompleteExample {
   visible = true;
   selectable = true;
   removable = true;
-  separatorKeysCodes: number[] = [ENTER, COMMA];
+  separatorKeys: string[] = [ENTER, COMMA];
   fruitCtrl = new FormControl();
   filteredFruits: Observable<string[]>;
   fruits: string[] = ['Lemon'];

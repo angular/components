@@ -17,6 +17,7 @@ import {
 import {SelectionModel} from '@angular/cdk/collections';
 import {
   A,
+  a,
   DOWN_ARROW,
   END,
   ENTER,
@@ -26,7 +27,7 @@ import {
   RIGHT_ARROW,
   SPACE,
   UP_ARROW,
-} from '@angular/cdk/keycodes';
+} from '@angular/cdk/key';
 import {
   CdkConnectedOverlay,
   ConnectedPosition,
@@ -724,10 +725,10 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
 
   /** Handles keyboard events while the select is closed. */
   private _handleClosedKeydown(event: KeyboardEvent): void {
-    const keyCode = event.keyCode;
-    const isArrowKey = keyCode === DOWN_ARROW || keyCode === UP_ARROW ||
-                       keyCode === LEFT_ARROW || keyCode === RIGHT_ARROW;
-    const isOpenKey = keyCode === ENTER || keyCode === SPACE;
+    const key = event.key;
+    const isArrowKey = key === DOWN_ARROW || key === UP_ARROW ||
+                       key === LEFT_ARROW || key === RIGHT_ARROW;
+    const isOpenKey = key === ENTER || key === SPACE;
     const manager = this._keyManager;
 
     // Open the select on ALT + arrow key to match the native <select>
@@ -738,8 +739,8 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
     } else if (!this.multiple) {
       const previouslySelectedOption = this.selected;
 
-      if (keyCode === HOME || keyCode === END) {
-        keyCode === HOME ? manager.setFirstItemActive() : manager.setLastItemActive();
+      if (key === HOME || key === END) {
+        key === HOME ? manager.setFirstItemActive() : manager.setLastItemActive();
         event.preventDefault();
       } else {
         manager.onKeydown(event);
@@ -759,24 +760,24 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
   /** Handles keyboard events when the selected is open. */
   private _handleOpenKeydown(event: KeyboardEvent): void {
     const manager = this._keyManager;
-    const keyCode = event.keyCode;
-    const isArrowKey = keyCode === DOWN_ARROW || keyCode === UP_ARROW;
+    const key = event.key;
+    const isArrowKey = key === DOWN_ARROW || key === UP_ARROW;
     const isTyping = manager.isTyping();
 
-    if (keyCode === HOME || keyCode === END) {
+    if (key === HOME || key === END) {
       event.preventDefault();
-      keyCode === HOME ? manager.setFirstItemActive() : manager.setLastItemActive();
+        key === HOME ? manager.setFirstItemActive() : manager.setLastItemActive();
     } else if (isArrowKey && event.altKey) {
       // Close the select on ALT + arrow key to match the native <select>
       event.preventDefault();
       this.close();
       // Don't do anything in this case if the user is typing,
       // because the typing sequence can include the space key.
-    } else if (!isTyping && (keyCode === ENTER || keyCode === SPACE) && manager.activeItem &&
+    } else if (!isTyping && (key === ENTER || key === SPACE) && manager.activeItem &&
       !hasModifierKey(event)) {
       event.preventDefault();
       manager.activeItem._selectViaInteraction();
-    } else if (!isTyping && this._multiple && keyCode === A && event.ctrlKey) {
+    } else if (!isTyping && this._multiple && (key === A || key === a) && event.ctrlKey) {
       event.preventDefault();
       const hasDeselectedOptions = this.options.some(opt => !opt.disabled && !opt.selected);
 

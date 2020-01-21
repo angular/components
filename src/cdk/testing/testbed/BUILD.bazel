@@ -10,6 +10,7 @@ ts_library(
     ),
     module_name = "@angular/cdk/testing/testbed",
     deps = [
+        "//src/cdk/key",
         "//src/cdk/keycodes",
         "//src/cdk/testing",
         "@npm//@angular/core",

@@ -120,7 +120,7 @@ export class MatChip extends _MatChipMixinBase implements AfterContentInit, Afte
   /** Emits when the chip is blurred. */
   readonly _onBlur = new Subject<MatChipEvent>();
 
-  readonly HANDLED_KEYS: number[] = [];
+  readonly HANDLED_KEYS: string[] = [];
 
   /** Whether the chip has focus. */
   protected _hasFocusInternal = false;
@@ -344,7 +344,7 @@ export class MatChip extends _MatChipMixinBase implements AfterContentInit, Afte
           // event, even ones it doesn't handle, so we want to avoid passing it keyboard events
           // for which we have a custom handler.
           if (this.disabled || (event instanceof KeyboardEvent &&
-            this.HANDLED_KEYS.indexOf(event.keyCode) !== -1)) {
+            this.HANDLED_KEYS.indexOf(event.key) !== -1)) {
             return;
           }
           this._chipFoundation.handleTrailingIconInteraction(event);

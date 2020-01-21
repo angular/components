@@ -8,7 +8,7 @@
 
 import {FocusableOption} from '@angular/cdk/a11y';
 import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
-import {BACKSPACE, DELETE, SPACE} from '@angular/cdk/keycodes';
+import {BACKSPACE, DELETE, SPACE} from '@angular/cdk/key';
 import {Platform} from '@angular/cdk/platform';
 import {
   ContentChild,
@@ -338,7 +338,7 @@ export class MatChip extends _MatChipMixinBase implements FocusableOption, OnDes
       return;
     }
 
-    switch (event.keyCode) {
+    switch (event.key) {
       case DELETE:
       case BACKSPACE:
         // If we are removable, remove the focused chip

@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {COMMA, ENTER} from '@angular/cdk/keycodes';
+import {COMMA, ENTER, SEMI_COLON} from '@angular/cdk/key';
 import {Component} from '@angular/core';
 import {MatChipInputEvent} from '@angular/material/chips';
 import {ThemePalette} from '@angular/material/core';
@@ -36,7 +36,7 @@ export class ChipsDemo {
   message = '';
 
   // Enter, comma, semi-colon
-  separatorKeysCodes = [ENTER, COMMA, 186];
+  separatorKeys: string[] = [ENTER, COMMA, SEMI_COLON];
 
   selectedPeople = null;
 

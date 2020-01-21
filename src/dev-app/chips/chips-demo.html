@@ -107,7 +107,7 @@
           </mat-chip>
           <input placeholder="New Contributor..."
                  [matChipInputFor]="chipList1"
-                 [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                 [matChipInputSeparatorKeys]="separatorKeys"
                  [matChipInputAddOnBlur]="addOnBlur"
                  (matChipInputTokenEnd)="add($event)" />
         </mat-chip-list>
@@ -130,7 +130,7 @@
         </mat-chip-list>
         <input placeholder="New Contributor..."
                [matChipInputFor]="chipList2"
-               [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+               [matChipInputSeparatorKeys]="separatorKeys"
                [matChipInputAddOnBlur]="addOnBlur"
                (matChipInputTokenEnd)="add($event)" />
       </mat-form-field>

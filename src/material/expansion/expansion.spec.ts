@@ -8,7 +8,7 @@ import {
   MatExpansionPanelHeader,
   MAT_EXPANSION_PANEL_DEFAULT_OPTIONS,
 } from './index';
-import {SPACE, ENTER} from '@angular/cdk/keycodes';
+import {SPACE, ENTER} from '@angular/cdk/key';
 import {
   dispatchKeyboardEvent,
   createKeyboardEvent,

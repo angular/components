@@ -8,7 +8,7 @@ import {
   RIGHT_ARROW,
   SPACE,
   UP_ARROW,
-} from '@angular/cdk/keycodes';
+} from '@angular/cdk/key';
 import {
   StepperOrientation,
   STEPPER_GLOBAL_OPTIONS,
@@ -1285,7 +1285,7 @@ function assertArrowKeyInteractionInRtl(fixture: ComponentFixture<any>,
 function assertSelectKeyWithModifierInteraction(fixture: ComponentFixture<any>,
                                                 stepHeaders: DebugElement[],
                                                 orientation: StepperOrientation,
-                                                selectionKey: number) {
+                                                selectionKey: string) {
   const stepperComponent = fixture.debugElement.query(By.directive(MatStepper))!.componentInstance;
   const modifiers = ['altKey', 'shiftKey', 'ctrlKey', 'metaKey'];
 

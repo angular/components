@@ -13,7 +13,7 @@ import {
   createKeyboardEvent,
   dispatchEvent,
 } from '@angular/cdk/testing/private';
-import {DOWN_ARROW, UP_ARROW, HOME, END} from '@angular/cdk/keycodes';
+import {DOWN_ARROW, UP_ARROW, HOME, END} from '@angular/cdk/key';
 import {FocusMonitor} from '@angular/cdk/a11y';
 
 

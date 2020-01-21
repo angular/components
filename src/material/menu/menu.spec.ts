@@ -1,6 +1,6 @@
 import {FocusMonitor} from '@angular/cdk/a11y';
 import {Direction, Directionality} from '@angular/cdk/bidi';
-import {DOWN_ARROW, END, ESCAPE, HOME, LEFT_ARROW, RIGHT_ARROW, TAB} from '@angular/cdk/keycodes';
+import {DOWN_ARROW, END, ESCAPE, HOME, LEFT_ARROW, RIGHT_ARROW, TAB} from '@angular/cdk/key';
 import {Overlay, OverlayContainer} from '@angular/cdk/overlay';
 import {ScrollDispatcher} from '@angular/cdk/scrolling';
 import {

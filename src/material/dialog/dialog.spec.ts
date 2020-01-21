@@ -27,7 +27,7 @@ import {Directionality} from '@angular/cdk/bidi';
 import {MatDialogContainer} from './dialog-container';
 import {OverlayContainer, ScrollStrategy, Overlay} from '@angular/cdk/overlay';
 import {ScrollDispatcher} from '@angular/cdk/scrolling';
-import {A, ESCAPE} from '@angular/cdk/keycodes';
+import {A, ESCAPE} from '@angular/cdk/key';
 import {dispatchKeyboardEvent, createKeyboardEvent} from '@angular/cdk/testing/private';
 import {
   MAT_DIALOG_DATA,

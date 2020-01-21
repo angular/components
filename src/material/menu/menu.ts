@@ -18,7 +18,7 @@ import {
   HOME,
   END,
   hasModifierKey,
-} from '@angular/cdk/keycodes';
+} from '@angular/cdk/key';
 import {
   AfterContentInit,
   ChangeDetectionStrategy,
@@ -295,10 +295,10 @@ export class _MatMenuBase implements AfterContentInit, MatMenuPanel<MatMenuItem>
 
   /** Handle a keyboard event from the menu, delegating to the appropriate action. */
   _handleKeydown(event: KeyboardEvent) {
-    const keyCode = event.keyCode;
+    const key = event.key;
     const manager = this._keyManager;
 
-    switch (keyCode) {
+    switch (key) {
       case ESCAPE:
         if (!hasModifierKey(event)) {
           event.preventDefault();
@@ -318,12 +318,12 @@ export class _MatMenuBase implements AfterContentInit, MatMenuPanel<MatMenuItem>
       case HOME:
       case END:
         if (!hasModifierKey(event)) {
-          keyCode === HOME ? manager.setFirstItemActive() : manager.setLastItemActive();
+          key === HOME ? manager.setFirstItemActive() : manager.setLastItemActive();
           event.preventDefault();
         }
       break;
       default:
-        if (keyCode === UP_ARROW || keyCode === DOWN_ARROW) {
+        if (key === UP_ARROW || key === DOWN_ARROW) {
           manager.setFocusOrigin('keyboard');
         }
 

@@ -78,6 +78,7 @@ System.config({
     '@angular/cdk/collections': 'dist/packages/cdk/collections/index.js',
     '@angular/cdk/drag-drop': 'dist/packages/cdk/drag-drop/index.js',
     '@angular/cdk/testing/private': 'dist/packages/cdk/testing/private/index.js',
+    '@angular/cdk/key': 'dist/packages/cdk/key/index.js',
     '@angular/cdk/keycodes': 'dist/packages/cdk/keycodes/index.js',
     '@angular/cdk/layout': 'dist/packages/cdk/layout/index.js',
     '@angular/cdk/observers': 'dist/packages/cdk/observers/index.js',

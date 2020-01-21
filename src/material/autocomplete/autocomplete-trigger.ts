@@ -7,7 +7,7 @@
  */
 import {Directionality} from '@angular/cdk/bidi';
 import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
-import {DOWN_ARROW, ENTER, ESCAPE, TAB, UP_ARROW} from '@angular/cdk/keycodes';
+import {DOWN_ARROW, ENTER, ESCAPE, TAB, UP_ARROW} from '@angular/cdk/key';
 import {
   FlexibleConnectedPositionStrategy,
   Overlay,
@@ -396,25 +396,25 @@ export class MatAutocompleteTrigger implements ControlValueAccessor, AfterViewIn
   }
 
   _handleKeydown(event: KeyboardEvent): void {
-    const keyCode = event.keyCode;
+    const key = event.key;
 
     // Prevent the default action on all escape key presses. This is here primarily to bring IE
     // in line with other browsers. By default, pressing escape on IE will cause it to revert
     // the input value to the one that it had on focus, however it won't dispatch any events
     // which means that the model value will be out of sync with the view.
-    if (keyCode === ESCAPE) {
+    if (key === ESCAPE) {
       event.preventDefault();
     }
 
-    if (this.activeOption && keyCode === ENTER && this.panelOpen) {
+    if (this.activeOption && key === ENTER && this.panelOpen) {
       this.activeOption._selectViaInteraction();
       this._resetActiveItem();
       event.preventDefault();
     } else if (this.autocomplete) {
       const prevActiveItem = this.autocomplete._keyManager.activeItem;
-      const isArrowKey = keyCode === UP_ARROW || keyCode === DOWN_ARROW;
+      const isArrowKey = key === UP_ARROW || key === DOWN_ARROW;
 
-      if (this.panelOpen || keyCode === TAB) {
+      if (this.panelOpen || key === TAB) {
         this.autocomplete._keyManager.onKeydown(event);
       } else if (isArrowKey && this._canOpen()) {
         this.openPanel();
@@ -631,10 +631,10 @@ export class MatAutocompleteTrigger implements ControlValueAccessor, AfterViewIn
 
       // Use the `keydownEvents` in order to take advantage of
       // the overlay event targeting provided by the CDK overlay.
-      overlayRef.keydownEvents().subscribe(event => {
+      overlayRef.keydownEvents().subscribe((event: KeyboardEvent) => {
         // Close when pressing ESCAPE or ALT + UP_ARROW, based on the a11y guidelines.
         // See: https://www.w3.org/TR/wai-aria-practices-1.1/#textbox-keyboard-interaction
-        if (event.keyCode === ESCAPE || (event.keyCode === UP_ARROW && event.altKey)) {
+        if (event.key === ESCAPE || (event.key === UP_ARROW && event.altKey)) {
           this._resetActiveItem();
           this._closeKeyEventStream.next();
 

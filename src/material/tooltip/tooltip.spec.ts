@@ -30,7 +30,7 @@ import {
   createKeyboardEvent,
   dispatchEvent,
 } from '@angular/cdk/testing/private';
-import {ESCAPE} from '@angular/cdk/keycodes';
+import {ESCAPE} from '@angular/cdk/key';
 import {FocusMonitor} from '@angular/cdk/a11y';
 import {
   MatTooltip,

@@ -9,7 +9,7 @@ import {
   PAGE_UP,
   RIGHT_ARROW,
   UP_ARROW,
-} from '@angular/cdk/keycodes';
+} from '@angular/cdk/key';
 import {Platform} from '@angular/cdk/platform';
 import {
   createKeyboardEvent,

@@ -1,5 +1,5 @@
 import {DataSource} from '@angular/cdk/collections';
-import {LEFT_ARROW, UP_ARROW, RIGHT_ARROW, DOWN_ARROW, TAB} from '@angular/cdk/keycodes';
+import {LEFT_ARROW, UP_ARROW, RIGHT_ARROW, DOWN_ARROW, TAB} from '@angular/cdk/key';
 import {MatTableModule} from '@angular/material/table';
 import {dispatchKeyboardEvent} from '@angular/cdk/testing/private';
 import {CommonModule} from '@angular/common';
@@ -416,8 +416,8 @@ describe('Material Popover Edit', () => {
         const getRowCells = () => component.getRows().map(getCells);
 
         describe('arrow keys', () => {
-          const dispatchKey = (cell: HTMLElement, keyCode: number) =>
-              dispatchKeyboardEvent(cell, 'keydown', keyCode, undefined, cell);
+          const dispatchKey = (cell: HTMLElement, key: string) =>
+              dispatchKeyboardEvent(cell, 'keydown', key, undefined, cell);
 
           it('moves focus up/down/left/right and prevents default', () => {
             const rowCells = getRowCells();

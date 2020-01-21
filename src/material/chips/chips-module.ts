@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {ENTER} from '@angular/cdk/keycodes';
+import {ENTER} from '@angular/cdk/key';
 import {NgModule} from '@angular/core';
 import {ErrorStateMatcher} from '@angular/material/core';
 import {MatChip, MatChipAvatar, MatChipRemove, MatChipTrailingIcon} from './chip';
@@ -31,7 +31,7 @@ const CHIP_DECLARATIONS = [
     {
       provide: MAT_CHIPS_DEFAULT_OPTIONS,
       useValue: {
-        separatorKeyCodes: [ENTER]
+        separatorKeys: [ENTER]
       } as MatChipsDefaultOptions
     }
   ]

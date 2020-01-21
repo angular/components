@@ -8,7 +8,7 @@
 
 import {FocusMonitor, FocusOrigin, isFakeMousedownFromScreenReader} from '@angular/cdk/a11y';
 import {Direction, Directionality} from '@angular/cdk/bidi';
-import {LEFT_ARROW, RIGHT_ARROW} from '@angular/cdk/keycodes';
+import {LEFT_ARROW, RIGHT_ARROW} from '@angular/cdk/key';
 import {
   FlexibleConnectedPositionStrategy,
   HorizontalConnectionPos,
@@ -509,11 +509,11 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
 
   /** Handles key presses on the trigger. */
   _handleKeydown(event: KeyboardEvent): void {
-    const keyCode = event.keyCode;
+    const key = event.key;
 
     if (this.triggersSubmenu() && (
-            (keyCode === RIGHT_ARROW && this.dir === 'ltr') ||
-            (keyCode === LEFT_ARROW && this.dir === 'rtl'))) {
+            (key === RIGHT_ARROW && this.dir === 'ltr') ||
+            (key === LEFT_ARROW && this.dir === 'rtl'))) {
       this.openMenu();
     }
   }

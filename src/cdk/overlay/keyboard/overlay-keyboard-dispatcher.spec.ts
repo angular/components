@@ -1,6 +1,6 @@
 import {TestBed, inject} from '@angular/core/testing';
 import {dispatchKeyboardEvent} from '@angular/cdk/testing/private';
-import {ESCAPE} from '@angular/cdk/keycodes';
+import {ESCAPE} from '@angular/cdk/key';
 import {Component, NgModule} from '@angular/core';
 import {OverlayModule, OverlayContainer, Overlay} from '../index';
 import {OverlayKeyboardDispatcher} from './overlay-keyboard-dispatcher';

@@ -7,7 +7,7 @@ import {
   RIGHT_ARROW,
   SPACE,
   TAB,
-} from '@angular/cdk/keycodes';
+} from '@angular/cdk/key';
 import {
   createKeyboardEvent,
   dispatchFakeEvent,

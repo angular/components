@@ -10,7 +10,7 @@ import {
   RIGHT_ARROW,
   SPACE,
   UP_ARROW,
-} from '@angular/cdk/keycodes';
+} from '@angular/cdk/key';
 import {dispatchFakeEvent, dispatchKeyboardEvent} from '@angular/cdk/testing/private';
 import {Component} from '@angular/core';
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';

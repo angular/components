@@ -7,7 +7,7 @@
  */
 
 import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
-import {ENTER, SPACE, hasModifierKey} from '@angular/cdk/keycodes';
+import {ENTER, SPACE, hasModifierKey} from '@angular/cdk/key';
 import {
   AfterViewChecked,
   ChangeDetectionStrategy,
@@ -202,7 +202,7 @@ export class MatOption implements FocusableOption, AfterViewChecked, OnDestroy {
 
   /** Ensures the option is selected when activated from the keyboard. */
   _handleKeydown(event: KeyboardEvent): void {
-    if ((event.keyCode === ENTER || event.keyCode === SPACE) && !hasModifierKey(event)) {
+    if ((event.key === ENTER || event.key === SPACE) && !hasModifierKey(event)) {
       this._selectViaInteraction();
 
       // Prevent the page from scrolling down and form submits.

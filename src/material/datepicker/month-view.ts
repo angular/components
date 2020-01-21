@@ -17,7 +17,7 @@ import {
   RIGHT_ARROW,
   UP_ARROW,
   SPACE,
-} from '@angular/cdk/keycodes';
+} from '@angular/cdk/key';
 import {
   AfterContentInit,
   ChangeDetectionStrategy,
@@ -172,7 +172,7 @@ export class MatMonthView<D> implements AfterContentInit {
     const oldActiveDate = this._activeDate;
     const isRtl = this._isRtl();
 
-    switch (event.keyCode) {
+    switch (event.key) {
       case LEFT_ARROW:
         this.activeDate = this._dateAdapter.addCalendarDays(this._activeDate, isRtl ? 1 : -1);
         break;

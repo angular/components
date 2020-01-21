@@ -25,7 +25,7 @@ import {SpyLocation} from '@angular/common/testing';
 import {Directionality} from '@angular/cdk/bidi';
 import {CdkDialogContainer} from './dialog-container';
 import {OverlayContainer} from '@angular/cdk/overlay';
-import {A, ESCAPE} from '@angular/cdk/keycodes';
+import {A, ESCAPE} from '@angular/cdk/key';
 import {
   dispatchKeyboardEvent,
   createKeyboardEvent,

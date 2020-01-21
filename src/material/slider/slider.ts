@@ -24,7 +24,7 @@ import {
   RIGHT_ARROW,
   UP_ARROW,
   hasModifierKey,
-} from '@angular/cdk/keycodes';
+} from '@angular/cdk/key';
 import {
   Attribute,
   ChangeDetectionStrategy,
@@ -556,7 +556,7 @@ export class MatSlider extends _MatSliderMixinBase
 
     const oldValue = this.value;
 
-    switch (event.keyCode) {
+    switch (event.key) {
       case PAGE_UP:
         this._increment(10);
         break;

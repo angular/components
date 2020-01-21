@@ -8,7 +8,7 @@
 
 import {Direction, Directionality} from '@angular/cdk/bidi';
 import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
-import {ESCAPE, hasModifierKey} from '@angular/cdk/keycodes';
+import {ESCAPE, hasModifierKey} from '@angular/cdk/key';
 import {TemplatePortal} from '@angular/cdk/portal';
 import {
   Directive,
@@ -284,7 +284,7 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
     this._overlayRef.keydownEvents().subscribe((event: KeyboardEvent) => {
       this.overlayKeydown.next(event);
 
-      if (event.keyCode === ESCAPE && !hasModifierKey(event)) {
+      if (event.key === ESCAPE && !hasModifierKey(event)) {
         event.preventDefault();
         this._detachOverlay();
       }

@@ -22,6 +22,7 @@ ng_module(
     deps = [
         "//src/cdk/bidi",
         "//src/cdk/coercion",
+        "//src/cdk/key",
         "//src/cdk/keycodes",
         "//src/cdk/platform",
         "//src/cdk/portal",
@@ -52,6 +53,7 @@ ng_test_library(
     deps = [
         ":overlay",
         "//src/cdk/bidi",
+        "//src/cdk/key",
         "//src/cdk/keycodes",
         "//src/cdk/platform",
         "//src/cdk/portal",

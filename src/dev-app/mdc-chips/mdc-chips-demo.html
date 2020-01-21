@@ -140,7 +140,7 @@
           <input [disabled]="disableInputs"
                  placeholder="New Contributor..."
                  [matChipInputFor]="chipGrid1"
-                 [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                 [matChipInputSeparatorKeys]="separatorKeys"
                  [matChipInputAddOnBlur]="addOnBlur"
                  (matChipInputTokenEnd)="add($event)" />
         </mat-chip-grid>
@@ -157,7 +157,7 @@
         </mat-chip-grid>
         <input placeholder="New Contributor..."
                [matChipInputFor]="chipGrid2"
-               [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+               [matChipInputSeparatorKeys]="separatorKeys"
                [matChipInputAddOnBlur]="addOnBlur"
                (matChipInputTokenEnd)="add($event)" />
       </mat-form-field>

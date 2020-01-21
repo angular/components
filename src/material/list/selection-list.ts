@@ -11,6 +11,7 @@ import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
 import {SelectionModel} from '@angular/cdk/collections';
 import {
   A,
+  a,
   DOWN_ARROW,
   END,
   ENTER,
@@ -18,7 +19,7 @@ import {
   HOME,
   SPACE,
   UP_ARROW,
-} from '@angular/cdk/keycodes';
+} from '@angular/cdk/key';
 import {
   AfterContentInit,
   Attribute,
@@ -482,12 +483,12 @@ export class MatSelectionList extends _MatSelectionListMixinBase implements CanD
 
   /** Passes relevant key presses to our key manager. */
   _keydown(event: KeyboardEvent) {
-    const keyCode = event.keyCode;
+    const key = event.key;
     const manager = this._keyManager;
     const previousFocusIndex = manager.activeItemIndex;
     const hasModifier = hasModifierKey(event);
 
-    switch (keyCode) {
+    switch (key) {
       case SPACE:
       case ENTER:
         if (!hasModifier && !manager.isTyping()) {
@@ -499,11 +500,12 @@ export class MatSelectionList extends _MatSelectionListMixinBase implements CanD
       case HOME:
       case END:
         if (!hasModifier) {
-          keyCode === HOME ? manager.setFirstItemActive() : manager.setLastItemActive();
+            key === HOME ? manager.setFirstItemActive() : manager.setLastItemActive();
           event.preventDefault();
         }
         break;
       case A:
+      case a:
         if (hasModifierKey(event, 'ctrlKey') && !manager.isTyping()) {
           this.options.find(option => !option.selected) ? this.selectAll() : this.deselectAll();
           event.preventDefault();
@@ -513,7 +515,7 @@ export class MatSelectionList extends _MatSelectionListMixinBase implements CanD
         manager.onKeydown(event);
     }
 
-    if ((keyCode === UP_ARROW || keyCode === DOWN_ARROW) && event.shiftKey &&
+    if ((key === UP_ARROW || key === DOWN_ARROW) && event.shiftKey &&
         manager.activeItemIndex !== previousFocusIndex) {
       this._toggleFocusedOption();
     }

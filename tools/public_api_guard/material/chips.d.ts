@@ -68,7 +68,7 @@ export declare class MatChipInput implements MatChipTextControl, OnChanges {
     focused: boolean;
     id: string;
     placeholder: string;
-    separatorKeyCodes: number[] | Set<number>;
+    separatorKeys: string[] | Set<string>;
     constructor(_elementRef: ElementRef<HTMLInputElement>, _defaultOptions: MatChipsDefaultOptions);
     _blur(): void;
     _emitChipEnd(event?: KeyboardEvent): void;
@@ -79,7 +79,7 @@ export declare class MatChipInput implements MatChipTextControl, OnChanges {
     ngOnChanges(): void;
     static ngAcceptInputType_addOnBlur: BooleanInput;
     static ngAcceptInputType_disabled: BooleanInput;
-    static ɵdir: i0.ɵɵDirectiveDefWithMeta<MatChipInput, "input[matChipInputFor]", ["matChipInput", "matChipInputFor"], { 'chipList': "matChipInputFor", 'addOnBlur': "matChipInputAddOnBlur", 'separatorKeyCodes': "matChipInputSeparatorKeyCodes", 'placeholder': "placeholder", 'id': "id", 'disabled': "disabled" }, { 'chipEnd': "matChipInputTokenEnd" }, never>;
+    static ɵdir: i0.ɵɵDirectiveDefWithMeta<MatChipInput, "input[matChipInputFor]", ["matChipInput", "matChipInputFor"], { 'chipList': "matChipInputFor", 'addOnBlur': "matChipInputAddOnBlur", 'separatorKeys': "matChipInputSeparatorKeys", 'placeholder': "placeholder", 'id': "id", 'disabled': "disabled" }, { 'chipEnd': "matChipInputTokenEnd" }, never>;
     static ɵfac: i0.ɵɵFactoryDef<MatChipInput>;
 }
 
@@ -176,7 +176,7 @@ export declare class MatChipRemove {
 }
 
 export interface MatChipsDefaultOptions {
-    separatorKeyCodes: number[] | Set<number>;
+    separatorKeys: string[] | Set<string>;
 }
 
 export declare class MatChipSelectionChange {

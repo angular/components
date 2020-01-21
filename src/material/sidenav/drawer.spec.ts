@@ -15,7 +15,7 @@ import {MatDrawer, MatSidenavModule, MatDrawerContainer} from './index';
 import {Direction} from '@angular/cdk/bidi';
 import {A11yModule} from '@angular/cdk/a11y';
 import {PlatformModule, Platform} from '@angular/cdk/platform';
-import {ESCAPE} from '@angular/cdk/keycodes';
+import {ESCAPE} from '@angular/cdk/key';
 import {
   dispatchKeyboardEvent,
   createKeyboardEvent,

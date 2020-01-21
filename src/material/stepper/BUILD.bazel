@@ -66,6 +66,7 @@ ng_test_library(
     deps = [
         ":stepper",
         "//src/cdk/bidi",
+        "//src/cdk/key",
         "//src/cdk/keycodes",
         "//src/cdk/stepper",
         "//src/cdk/testing/private",

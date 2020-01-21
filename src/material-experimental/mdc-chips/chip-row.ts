@@ -7,7 +7,7 @@
  */
 
 import {BooleanInput} from '@angular/cdk/coercion';
-import {BACKSPACE, DELETE} from '@angular/cdk/keycodes';
+import {BACKSPACE, DELETE} from '@angular/cdk/key';
 import {
   AfterContentInit,
   AfterViewInit,
@@ -137,7 +137,7 @@ export class MatChipRow extends MatChip implements AfterContentInit, AfterViewIn
     if (this.disabled) {
       return;
     }
-    switch (event.keyCode) {
+    switch (event.key) {
       case DELETE:
       case BACKSPACE:
         // Remove the focused chip

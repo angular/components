@@ -30,6 +30,7 @@ ng_module(
         "//src/cdk/a11y",
         "//src/cdk/bidi",
         "//src/cdk/coercion",
+        "//src/cdk/key",
         "//src/cdk/keycodes",
         "//src/cdk/platform",
         "@npm//@angular/animations",
@@ -116,6 +117,7 @@ ng_test_library(
     ),
     deps = [
         ":core",
+        "//src/cdk/key",
         "//src/cdk/keycodes",
         "//src/cdk/platform",
         "//src/cdk/testing/private",

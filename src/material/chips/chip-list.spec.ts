@@ -11,7 +11,7 @@ import {
   TAB,
   HOME,
   END,
-} from '@angular/cdk/keycodes';
+} from '@angular/cdk/key';
 import {
   createKeyboardEvent,
   dispatchFakeEvent,
@@ -1462,7 +1462,7 @@ class MultiSelectionChipList {
       </mat-chip-list>
       <input placeholder="New food..."
           [matChipInputFor]="chipList1"
-          [matChipInputSeparatorKeyCodes]="separatorKeyCodes"
+          [matChipInputSeparatorKeys]="separatorKeys"
           [matChipInputAddOnBlur]="addOnBlur"
           (matChipInputTokenEnd)="add($event)" />/>
     </mat-form-field>
@@ -1481,7 +1481,7 @@ class InputChipList {
   ];
   control = new FormControl();
 
-  separatorKeyCodes = [ENTER, SPACE];
+  separatorKeys = [ENTER, SPACE];
   addOnBlur: boolean = true;
   isRequired: boolean;
 

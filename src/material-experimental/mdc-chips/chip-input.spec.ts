@@ -1,5 +1,5 @@
 import {Directionality} from '@angular/cdk/bidi';
-import {ENTER, COMMA, TAB} from '@angular/cdk/keycodes';
+import {ENTER, COMMA, TAB} from '@angular/cdk/key';
 import {PlatformModule} from '@angular/cdk/platform';
 import {
   createKeyboardEvent,
@@ -166,12 +166,12 @@ describe('MDC-based MatChipInput', () => {
     });
   });
 
-  describe('[separatorKeyCodes]', () => {
+  describe('[separatorKeys]', () => {
     it('does not emit (chipEnd) when a non-separator key is pressed', () => {
       let ENTER_EVENT = createKeyboardEvent('keydown', ENTER, undefined, inputNativeElement);
       spyOn(testChipInput, 'add');
 
-      chipInputDirective.separatorKeyCodes = [COMMA];
+      chipInputDirective.separatorKeys = [COMMA];
       fixture.detectChanges();
 
       chipInputDirective._keydown(ENTER_EVENT);
@@ -182,7 +182,7 @@ describe('MDC-based MatChipInput', () => {
       let COMMA_EVENT = createKeyboardEvent('keydown', COMMA, undefined, inputNativeElement);
       spyOn(testChipInput, 'add');
 
-      chipInputDirective.separatorKeyCodes = [COMMA];
+      chipInputDirective.separatorKeys = [COMMA];
       fixture.detectChanges();
 
       chipInputDirective._keydown(COMMA_EVENT);
@@ -193,7 +193,7 @@ describe('MDC-based MatChipInput', () => {
       let COMMA_EVENT = createKeyboardEvent('keydown', COMMA, undefined, inputNativeElement);
       spyOn(testChipInput, 'add');
 
-      chipInputDirective.separatorKeyCodes = new Set([COMMA]);
+      chipInputDirective.separatorKeys = new Set([COMMA]);
       fixture.detectChanges();
 
       chipInputDirective._keydown(COMMA_EVENT);
@@ -210,7 +210,7 @@ describe('MDC-based MatChipInput', () => {
           declarations: [TestChipInput],
           providers: [{
             provide: MAT_CHIPS_DEFAULT_OPTIONS,
-            useValue: ({separatorKeyCodes: [COMMA]} as MatChipsDefaultOptions)
+            useValue: ({separatorKeys: [COMMA]} as MatChipsDefaultOptions)
           }]
         })
         .compileComponents();
@@ -236,7 +236,7 @@ describe('MDC-based MatChipInput', () => {
       Object.defineProperty(ENTER_EVENT, 'shiftKey', {get: () => true});
       spyOn(testChipInput, 'add');
 
-      chipInputDirective.separatorKeyCodes = [ENTER];
+      chipInputDirective.separatorKeys = [ENTER];
       fixture.detectChanges();
 
       chipInputDirective._keydown(ENTER_EVENT);

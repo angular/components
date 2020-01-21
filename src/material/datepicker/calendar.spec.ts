@@ -1,5 +1,5 @@
 import {Directionality} from '@angular/cdk/bidi';
-import {ENTER, RIGHT_ARROW, SPACE} from '@angular/cdk/keycodes';
+import {ENTER, RIGHT_ARROW, SPACE} from '@angular/cdk/key';
 import {
   dispatchFakeEvent,
   dispatchKeyboardEvent,

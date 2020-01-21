@@ -14,7 +14,7 @@ import {
   coerceNumberProperty,
   NumberInput
 } from '@angular/cdk/coercion';
-import {END, ENTER, hasModifierKey, HOME, SPACE} from '@angular/cdk/keycodes';
+import {END, ENTER, hasModifierKey, HOME, SPACE} from '@angular/cdk/key';
 import {DOCUMENT} from '@angular/common';
 import {
   AfterViewInit,
@@ -473,17 +473,17 @@ export class CdkStepper implements AfterViewInit, OnDestroy {
 
   _onKeydown(event: KeyboardEvent) {
     const hasModifier = hasModifierKey(event);
-    const keyCode = event.keyCode;
+    const key = event.key;
     const manager = this._keyManager;
 
     if (manager.activeItemIndex != null && !hasModifier &&
-        (keyCode === SPACE || keyCode === ENTER)) {
+        (key === SPACE || key === ENTER)) {
       this.selectedIndex = manager.activeItemIndex;
       event.preventDefault();
-    } else if (keyCode === HOME) {
+    } else if (key === HOME) {
       manager.setFirstItemActive();
       event.preventDefault();
-    } else if (keyCode === END) {
+    } else if (key === END) {
       manager.setLastItemActive();
       event.preventDefault();
     } else {

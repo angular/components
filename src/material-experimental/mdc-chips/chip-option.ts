@@ -7,7 +7,7 @@
  */
 
 import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
-import {SPACE} from '@angular/cdk/keycodes';
+import {SPACE} from '@angular/cdk/key';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -213,7 +213,7 @@ export class MatChipOption extends MatChip {
       return;
     }
 
-    switch (event.keyCode) {
+    switch (event.key) {
       case SPACE:
         this.toggleSelected(true);
 

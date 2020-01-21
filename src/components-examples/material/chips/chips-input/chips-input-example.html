@@ -7,7 +7,7 @@
     </mat-chip>
     <input placeholder="New fruit..."
            [matChipInputFor]="chipList"
-           [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+           [matChipInputSeparatorKeys]="separatorKeys"
            [matChipInputAddOnBlur]="addOnBlur"
            (matChipInputTokenEnd)="add($event)">
   </mat-chip-list>

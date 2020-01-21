@@ -9,7 +9,7 @@ import {AnimationEvent} from '@angular/animations';
 import {AriaDescriber, FocusMonitor} from '@angular/cdk/a11y';
 import {Directionality} from '@angular/cdk/bidi';
 import {BooleanInput, coerceBooleanProperty, NumberInput} from '@angular/cdk/coercion';
-import {ESCAPE, hasModifierKey} from '@angular/cdk/keycodes';
+import {ESCAPE, hasModifierKey} from '@angular/cdk/key';
 import {BreakpointObserver, Breakpoints, BreakpointState} from '@angular/cdk/layout';
 import {
   FlexibleConnectedPositionStrategy,
@@ -365,7 +365,7 @@ export class MatTooltip implements OnDestroy, OnInit {
    * Needs to be an arrow function so that we can use it in addEventListener.
    */
   private _handleKeydown = (event: KeyboardEvent) => {
-    if (this._isTooltipVisible() && event.keyCode === ESCAPE && !hasModifierKey(event)) {
+    if (this._isTooltipVisible() && event.key === ESCAPE && !hasModifierKey(event)) {
       event.preventDefault();
       event.stopPropagation();
       this._ngZone.run(() => this.hide(0));

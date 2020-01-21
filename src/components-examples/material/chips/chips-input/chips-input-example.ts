@@ -1,4 +1,4 @@
-import {COMMA, ENTER} from '@angular/cdk/keycodes';
+import {COMMA, ENTER} from '@angular/cdk/key';
 import {Component} from '@angular/core';
 import {MatChipInputEvent} from '@angular/material/chips';
 
@@ -19,7 +19,7 @@ export class ChipsInputExample {
   selectable = true;
   removable = true;
   addOnBlur = true;
-  readonly separatorKeysCodes: number[] = [ENTER, COMMA];
+  readonly separatorKeys: string[] = [ENTER, COMMA];
   fruits: Fruit[] = [
     {name: 'Lemon'},
     {name: 'Lime'},

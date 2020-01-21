@@ -1,5 +1,5 @@
 import {Directionality} from '@angular/cdk/bidi';
-import {BACKSPACE, DELETE, SPACE} from '@angular/cdk/keycodes';
+import {BACKSPACE, DELETE, SPACE} from '@angular/cdk/key';
 import {createKeyboardEvent, dispatchFakeEvent} from '@angular/cdk/testing/private';
 import {Component, DebugElement, ViewChild} from '@angular/core';
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';

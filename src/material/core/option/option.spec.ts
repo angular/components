@@ -7,7 +7,7 @@ import {
   createKeyboardEvent,
   dispatchEvent,
 } from '@angular/cdk/testing/private';
-import {SPACE, ENTER} from '@angular/cdk/keycodes';
+import {SPACE, ENTER} from '@angular/cdk/key';
 import {MatOption, MatOptionModule} from './index';
 
 describe('MatOption component', () => {

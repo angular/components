@@ -7,7 +7,7 @@
  */
 
 import {Directionality} from '@angular/cdk/bidi';
-import {LEFT_ARROW, UP_ARROW, RIGHT_ARROW, DOWN_ARROW} from '@angular/cdk/keycodes';
+import {LEFT_ARROW, UP_ARROW, RIGHT_ARROW, DOWN_ARROW} from '@angular/cdk/key';
 import {Injectable} from '@angular/core';
 import {PartialObserver} from 'rxjs';
 
@@ -69,7 +69,7 @@ export class FocusDispatcher {
       return;
     }
 
-    switch (event.keyCode) {
+    switch (event.key) {
       case UP_ARROW:
         this.moveFocusVertically(cell, -1);
         break;

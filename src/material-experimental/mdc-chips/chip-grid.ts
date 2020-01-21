@@ -8,7 +8,7 @@
 
 import {Directionality} from '@angular/cdk/bidi';
 import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
-import {BACKSPACE, TAB} from '@angular/cdk/keycodes';
+import {BACKSPACE, TAB} from '@angular/cdk/key';
 import {
   AfterContentInit,
   AfterViewInit,
@@ -403,12 +403,12 @@ export class MatChipGrid extends _MatChipGridMixinBase implements AfterContentIn
     const target = event.target as HTMLElement;
 
     // If they are on an empty input and hit backspace, focus the last chip
-    if (event.keyCode === BACKSPACE && this._isEmptyInput(target)) {
+    if (event.key === BACKSPACE && this._isEmptyInput(target)) {
       if (this._chips.length) {
         this._keyManager.setLastCellActive();
       }
       event.preventDefault();
-    } else if (event.keyCode === TAB && target.id !== this._chipInput!.id ) {
+    } else if (event.key === TAB && target.id !== this._chipInput!.id ) {
       this._allowFocusEscape();
     } else if (this._originatesFromChip(event)) {
       this._keyManager.onKeydown(event);

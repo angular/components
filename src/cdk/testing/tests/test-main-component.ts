@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {ENTER} from '@angular/cdk/keycodes';
+import {ENTER, J} from '@angular/cdk/key';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -87,10 +87,10 @@ export class TestMainComponent implements OnDestroy {
   }
 
   onKeyDown(event: KeyboardEvent) {
-    if (event.keyCode === ENTER && event.key === 'Enter') {
+    if (event.key === ENTER) {
       this.specialKey = 'enter';
     }
-    if (event.key === 'j' && event.altKey) {
+    if (event.key === J && event.altKey) {
       this.specialKey = 'alt-j';
     }
   }

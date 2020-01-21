@@ -63,6 +63,7 @@ ng_test_library(
     deps = [
         ":mdc-slider",
         "//src/cdk/bidi",
+        "//src/cdk/key",
         "//src/cdk/keycodes",
         "//src/cdk/platform",
         "//src/cdk/testing/private",

@@ -7,7 +7,7 @@ import {
   createKeyboardEvent,
   dispatchEvent,
 } from '@angular/cdk/testing/private';
-import {ESCAPE, A} from '@angular/cdk/keycodes';
+import {ESCAPE, A} from '@angular/cdk/key';
 import {Overlay, CdkConnectedOverlay, OverlayModule, CdkOverlayOrigin} from './index';
 import {OverlayContainer} from './overlay-container';
 import {

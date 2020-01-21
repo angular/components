@@ -16,7 +16,7 @@ import {
   Input,
   HostListener,
 } from '@angular/core';
-import {hasModifierKey} from '@angular/cdk/keycodes';
+import {hasModifierKey} from '@angular/cdk/key';
 import {EDIT_PANE_SELECTOR} from './constants';
 import {closest} from './polyfill';
 import {EditRef} from './edit-ref';

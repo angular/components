@@ -9,7 +9,7 @@
 import {FocusKeyManager} from '@angular/cdk/a11y';
 import {Directionality} from '@angular/cdk/bidi';
 import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
-import {END, HOME} from '@angular/cdk/keycodes';
+import {END, HOME} from '@angular/cdk/key';
 import {
   AfterContentInit,
   ChangeDetectionStrategy,
@@ -354,10 +354,10 @@ export class MatChipListbox extends MatChipSet implements AfterContentInit, Cont
    */
   _keydown(event: KeyboardEvent) {
     if (this._originatesFromChip(event)) {
-      if (event.keyCode === HOME) {
+      if (event.key === HOME) {
         this._keyManager.setFirstItemActive();
         event.preventDefault();
-      } else if (event.keyCode === END) {
+      } else if (event.key === END) {
         this._keyManager.setLastItemActive();
         event.preventDefault();
       } else {

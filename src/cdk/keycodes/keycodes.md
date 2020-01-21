@@ -1,11 +1,11 @@
-### KeyCodes
+### Key
  
-Commonly used keycode constants.
+Commonly used key constants.
 
 #### Example
 ```ts
 import {Directive} from '@angular/core';
-import {UP_ARROW, DOWN_ARROW, LEFT_ARROW, RIGHT_ARROW} from '@angular/cdk/keycodes';
+import {UP_ARROW, DOWN_ARROW, LEFT_ARROW, RIGHT_ARROW} from '@angular/cdk/key';
 
 @Directive({
   selector: '[count-arrows]'
@@ -17,7 +17,7 @@ export class ArrowCounterDirective {
   arrowPressCount = 0;
 
   handleKeyPress(event: KeyboardEvent) {
-    if ([UP_ARROW, DOWN_ARROW, LEFT_ARROW, RIGHT_ARROW].includes(event.keyCode)) {
+    if ([UP_ARROW, DOWN_ARROW, LEFT_ARROW, RIGHT_ARROW].includes(event.key)) {
       this.arrowPresscount++;
     }
   }

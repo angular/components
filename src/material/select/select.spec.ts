@@ -1,16 +1,20 @@
 import {Directionality} from '@angular/cdk/bidi';
 import {
-  DOWN_ARROW,
-  END,
-  ENTER,
-  HOME,
-  LEFT_ARROW,
-  RIGHT_ARROW,
-  SPACE,
-  TAB,
-  UP_ARROW,
-  A,
-} from '@angular/cdk/keycodes';
+    DOWN_ARROW,
+    END,
+    ENTER,
+    HOME,
+    LEFT_ARROW,
+    RIGHT_ARROW,
+    SPACE,
+    TAB,
+    UP_ARROW,
+    A,
+    P,
+    O,
+    p,
+    e,
+} from '@angular/cdk/key';
 import {OverlayContainer} from '@angular/cdk/overlay';
 import {Platform} from '@angular/cdk/platform';
 import {ScrollDispatcher, ViewportRuler} from '@angular/cdk/scrolling';
@@ -496,14 +500,14 @@ describe('MatSelect', () => {
 
           expect(formControl.value).toBeFalsy('Expected no initial value.');
 
-          dispatchEvent(select, createKeyboardEvent('keydown', 80, 'p'));
+          dispatchEvent(select, createKeyboardEvent('keydown', p, 80));
           tick(DEFAULT_TYPEAHEAD_DEBOUNCE_INTERVAL);
 
           expect(options[1].selected).toBe(true, 'Expected second option to be selected.');
           expect(formControl.value).toBe(options[1].value,
             'Expected value from second option to have been set on the model.');
 
-          dispatchEvent(select, createKeyboardEvent('keydown', 69, 'e'));
+          dispatchEvent(select, createKeyboardEvent('keydown', e, 69));
           tick(DEFAULT_TYPEAHEAD_DEBOUNCE_INTERVAL);
 
           expect(options[5].selected).toBe(true, 'Expected sixth option to be selected.');
@@ -519,11 +523,11 @@ describe('MatSelect', () => {
 
           expect(selectInstance.panelOpen).toBe(false, 'Expected select to be closed on init.');
 
-          dispatchEvent(select, createKeyboardEvent('keydown', 80, 'p'));
+          dispatchEvent(select, createKeyboardEvent('keydown', p, 80));
           tick(DEFAULT_TYPEAHEAD_DEBOUNCE_INTERVAL / 2);
           fixture.detectChanges();
 
-          dispatchKeyboardEvent(select, 'keydown', SPACE);
+          dispatchKeyboardEvent(select, 'keydown', undefined, 32);
           fixture.detectChanges();
 
           expect(selectInstance.panelOpen).toBe(false,
@@ -545,7 +549,7 @@ describe('MatSelect', () => {
 
           expect(formControl.value).toBeFalsy('Expected no initial value.');
 
-          dispatchEvent(select, createKeyboardEvent('keydown', 80, 'p'));
+          dispatchEvent(select, createKeyboardEvent('keydown',  'p', 80));
           tick(DEFAULT_TYPEAHEAD_DEBOUNCE_INTERVAL);
 
           expect(formControl.value).toBeFalsy('Expected no value after a bit of time has passed.');
@@ -613,7 +617,7 @@ describe('MatSelect', () => {
 
           expect(instance.select.panelOpen).toBe(false, 'Expected panel to be closed.');
 
-          dispatchEvent(select, createKeyboardEvent('keydown', 80, 'p'));
+          dispatchEvent(select, createKeyboardEvent('keydown', P, 80));
 
           expect(instance.select.panelOpen).toBe(false, 'Expected panel to stay closed.');
           expect(instance.control.value).toBe(initialValue, 'Expected value to stay the same.');
@@ -625,7 +629,7 @@ describe('MatSelect', () => {
           expect(formControl.value).toBeNull('Expected form control value to be empty.');
           expect(formControl.pristine).toBe(true, 'Expected form control to be clean.');
 
-          dispatchKeyboardEvent(select, 'keydown', 16); // Press a random key.
+          dispatchKeyboardEvent(select, 'keydown', LEFT_ARROW); // Press a random key.
 
           expect(formControl.value).toBeNull('Expected form control value to stay empty.');
           expect(formControl.pristine).toBe(true, 'Expected form control to stay clean.');
@@ -2042,7 +2046,7 @@ describe('MatSelect', () => {
       it('should scroll to the active option when typing', fakeAsync(() => {
         for (let i = 0; i < 15; i++) {
           // Press the letter 'o' 15 times since all the options are named 'Option <index>'
-          dispatchEvent(host, createKeyboardEvent('keydown', 79, 'o'));
+          dispatchEvent(host, createKeyboardEvent('keydown', O));
           fixture.detectChanges();
           tick(DEFAULT_TYPEAHEAD_DEBOUNCE_INTERVAL);
         }
