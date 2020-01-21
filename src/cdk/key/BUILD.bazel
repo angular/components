@@ -1,0 +1,39 @@
+package(default_visibility = ["//visibility:public"])
+load("//tools:defaults.bzl", "karma_web_test_suite", "markdown_to_html", "ng_module", "ts_library")
+# We need to use "ng_module" here since we want metadata to be generated for key
+# constants. This is necessary because some of these constants are statically used in
+# component/directive metadata (e.g. chips) and NGC needs to be able to evaluate these
+# at compile time.
+ng_module(
+    name = "key",
+    srcs = glob(
+        ["**/*.ts"],
+        exclude = ["**/*.spec.ts"],
+    ),
+    module_name = "@angular/cdk/key",
+)
+ts_library(
+    name = "unit_test_sources",
+    testonly = 1,
+    srcs = glob(
+        ["**/*.spec.ts"],
+        exclude = ["**/*.e2e.spec.ts"],
+    ),
+    deps = [
+        ":key",
+        "//src/cdk/testing/private",
+        "@npm//@types/jasmine",
+    ],
+)
+karma_web_test_suite(
+    name = "unit_tests",
+    deps = [":unit_test_sources"],
+)
+markdown_to_html(
+    name = "overview",
+    srcs = [":keycodes.md"],
+)
+filegroup(
+    name = "source-files",
+    srcs = glob(["**/*.ts"]),
+)
