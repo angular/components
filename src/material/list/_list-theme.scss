@@ -91,7 +91,7 @@
   }
 }
 
-@mixin mat-list-density($config) {}
+@mixin mat-list-density($density-scale) {}
 
 @mixin mat-list-theme($theme) {
   $color: mat-get-color-config($theme);

@@ -24,7 +24,7 @@
 
 @mixin mat-progress-spinner-typography($config) { }
 
-@mixin mat-progress-spinner-density($config) {}
+@mixin mat-progress-spinner-density($density-scale) {}
 
 @mixin mat-progress-spinner-theme($theme) {
   $color: mat-get-color-config($theme);

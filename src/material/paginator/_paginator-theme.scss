@@ -47,7 +47,7 @@
   }
 }
 
-@mixin mat-paginator-density($config) {}
+@mixin mat-paginator-density($density-scale) {}
 
 @mixin mat-paginator-theme($theme) {
   $color: mat-get-color-config($theme);

@@ -50,7 +50,7 @@
   }
 }
 
-@mixin mat-menu-density-mdc($config) {}
+@mixin mat-menu-density-mdc($density-scale) {}
 
 @mixin mat-menu-theme-mdc($theme) {
   $color: mat-get-color-config($theme);
