@@ -1,5 +1,24 @@
-@mixin mat-list-theme-mdc($theme) {
-}
+@import '../mdc-helpers/mdc-helpers';
+
+@mixin mat-list-color-mdc($config) {}
 
 @mixin mat-list-typography-mdc($config) {
+}
+
+@mixin mat-list-density-mdc($config) {}
+
+@mixin mat-list-theme-mdc($theme) {
+  $color: mat-get-color-config($theme);
+  $density: mat-get-density-config($theme);
+  $typography: mat-get-typography-config($theme);
+
+  @if $color != null {
+    @include mat-list-color-mdc($color);
+  }
+  @if $density != null {
+    @include mat-list-density-mdc($density);
+  }
+  @if $typography != null {
+    @include mat-list-typography-mdc($typography);
+  }
 }

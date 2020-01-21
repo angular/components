@@ -1,5 +1,26 @@
-@mixin mat-snackbar-theme-mdc($theme) {
+@import '../mdc-helpers/mdc-helpers';
+
+@mixin mat-snackbar-color-mdc($config) {
 }
 
 @mixin mat-snackbar-typography-mdc($config) {
+}
+
+
+@mixin mat-snackbar-density-mdc($config) {}
+
+@mixin mat-snackbar-theme-mdc($theme) {
+  $color: mat-get-color-config($theme);
+  $density: mat-get-density-config($theme);
+  $typography: mat-get-typography-config($theme);
+
+  @if $color != null {
+    @include mat-snackbar-color-mdc($color);
+  }
+  @if $density != null {
+    @include mat-snackbar-density-mdc($density);
+  }
+  @if $typography != null {
+    @include mat-snackbar-typography-mdc($typography);
+  }
 }
