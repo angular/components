@@ -170,7 +170,7 @@ $mat-button-state-target: '.mdc-button__ripple';
   }
 }
 
-@mixin mat-button-density-mdc($config) {}
+@mixin mat-button-density-mdc($density-scale) {}
 
 @mixin mat-button-theme-mdc($theme) {
   $color: mat-get-color-config($theme);
@@ -242,7 +242,7 @@ $mat-button-state-target: '.mdc-button__ripple';
   }
 }
 
-@mixin mat-fab-density-mdc($config) {}
+@mixin mat-fab-density-mdc($density-scale) {}
 
 @mixin mat-fab-theme-mdc($theme) {
   $color: mat-get-color-config($theme);
@@ -309,7 +309,7 @@ $mat-button-state-target: '.mdc-button__ripple';
   }
 }
 
-@mixin mat-icon-button-density-mdc($config) {}
+@mixin mat-icon-button-density-mdc($density-scale) {}
 
 @mixin mat-icon-button-theme-mdc($theme) {
   $color: mat-get-color-config($theme);

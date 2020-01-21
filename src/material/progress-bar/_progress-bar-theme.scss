@@ -50,7 +50,7 @@
 
 @mixin mat-progress-bar-typography($config) { }
 
-@mixin mat-progress-bar-density($config) {}
+@mixin mat-progress-bar-density($density-scale) {}
 
 @mixin mat-progress-bar-theme($theme) {
   $color: mat-get-color-config($theme);
