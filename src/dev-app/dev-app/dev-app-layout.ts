@@ -84,11 +84,18 @@ export class DevAppLayout {
     {name: 'MDC Table', route: '/mdc-table'},
   ];
 
+  /** Currently selected density scale based on the index. */
+  currentDensityIndex = 0;
+
+  /** List of possible global density scale values. */
+  densityScales = [0, -1, -2, 'minimum', 'maximum'];
+
   constructor(
       private _element: ElementRef<HTMLElement>, private _overlayContainer: OverlayContainer,
       public rippleOptions: DevAppRippleOptions,
       @Inject(Directionality) public dir: DevAppDirectionality, cdr: ChangeDetectorRef) {
     dir.change.subscribe(() => cdr.markForCheck());
+    this.updateDensityClasses();
   }
 
   toggleFullscreen() {
@@ -116,6 +123,33 @@ export class DevAppLayout {
     } else {
       this._element.nativeElement.classList.remove(darkThemeClass);
       this._overlayContainer.getContainerElement().classList.remove(darkThemeClass);
+    }
+  }
+
+
+  /** Gets the index of the next density scale that can be selected. */
+  getNextDensityIndex() {
+    return (this.currentDensityIndex + 1) % this.densityScales.length;
+  }
+
+  /** Selects the next possible density scale. */
+  selectNextDensity() {
+    this.currentDensityIndex = this.getNextDensityIndex();
+    this.updateDensityClasses();
+  }
+
+  /**
+   * Updates the density classes on the host element. Applies a unique class for
+   * a given density scale, so that the density styles are conditionally applied.
+   */
+  updateDensityClasses() {
+    for (let i = 0; i < this.densityScales.length; i++) {
+      const className = `demo-density-${this.densityScales[i]}`;
+      if (i === this.currentDensityIndex) {
+        this._element.nativeElement.classList.add(className);
+      } else {
+        this._element.nativeElement.classList.remove(className);
+      }
     }
   }
 }
