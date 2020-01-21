@@ -1,14 +1,31 @@
 @import '@material/list/mixins.import';
 @import '../mdc-helpers/mdc-helpers';
 
-@mixin mat-mdc-list-theme($theme) {
-  @include mat-using-mdc-theme($theme) {
+@mixin mat-mdc-list-color($config) {
+  @include mat-using-mdc-theme($config) {
     @include mdc-list-without-ripple($query: $mat-theme-styles-query);
   }
 }
-
-@mixin mat-mdc-list-typography($config) {
+@mixin mat-mdc-list-typography($config: null) {
   @include mat-using-mdc-typography($config) {
     @include mdc-list-without-ripple($query: $mat-typography-styles-query);
+  }
+}
+
+@mixin mat-mdc-list-density($config) {}
+
+@mixin mat-mdc-list-theme($theme) {
+  $color: mat-get-color-config($theme);
+  $density: mat-get-density-config($theme);
+  $typography: mat-get-typography-config($theme);
+
+  @if $color != null {
+    @include mat-mdc-list-color($color);
+  }
+  @if $density != null {
+    @include mat-mdc-list-density($density);
+  }
+  @if $typography != null {
+    @include mat-mdc-list-typography($typography);
   }
 }
