@@ -25,7 +25,12 @@
 // Define the default theme (same as the example above).
 $candy-app-primary: mat-palette($mat-indigo);
 $candy-app-accent: mat-palette($mat-pink, A200, A100, A400);
-$candy-app-theme: mat-light-theme($candy-app-primary, $candy-app-accent);
+$candy-app-theme: mat-light-theme((
+  color: (
+    primary: $candy-app-primary,
+    accent: $candy-app-accent
+  )
+));
 
 // Include the default theme styles.
 @include angular-material-theme($candy-app-theme);
@@ -38,7 +43,13 @@ $candy-app-theme: mat-light-theme($candy-app-primary, $candy-app-accent);
 $dark-primary: mat-palette($mat-blue-grey);
 $dark-accent: mat-palette($mat-amber, A200, A100, A400);
 $dark-warn: mat-palette($mat-deep-orange);
-$dark-theme: mat-dark-theme($dark-primary, $dark-accent, $dark-warn);
+$dark-theme: mat-dark-theme((
+  color: (
+    primary: $dark-primary,
+    accent: $dark-accent,
+    warn: $dark-warn
+  )
+));
 
 // Include the default theme for focus indicators.
 .demo-strong-focus {
