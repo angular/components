@@ -89,3 +89,27 @@
     background: $mat-dark-theme-background,
   );
 }
+
+// Needed for backwards compatibility. If the passed `$theme` variable is not a
+// overall theme configuration, we use it as color config.
+@function mat-get-color-config($theme, $default: $theme) {
+  @if map_has_key($theme, color) {
+    @return map_get($theme, color);
+  }
+  @return $default;
+}
+
+@function mat-get-density-config($theme, $default: 0) {
+  @if map_has_key($theme, density) {
+    @return map_get($theme, density);
+  }
+  @return $default;
+}
+
+// For backwards compatibility, typography is not included by default.
+@function mat-get-typography-config($theme, $default: null) {
+  @if (map_has_key($theme, typography)) {
+    @return map_get($theme, typography);
+  }
+  @return $default;
+}
