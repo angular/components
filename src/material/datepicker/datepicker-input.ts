@@ -6,27 +6,22 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
-import {DOWN_ARROW} from '@angular/cdk/keycodes';
+import {BooleanInput} from '@angular/cdk/coercion';
 import {
   Directive,
   ElementRef,
-  EventEmitter,
   forwardRef,
   Inject,
   Input,
-  OnDestroy,
   Optional,
   Output,
   AfterViewInit,
 } from '@angular/core';
 import {
   AbstractControl,
-  ControlValueAccessor,
   NG_VALIDATORS,
   NG_VALUE_ACCESSOR,
   ValidationErrors,
-  Validator,
   ValidatorFn,
   Validators,
 } from '@angular/forms';
@@ -35,13 +30,11 @@ import {
   MAT_DATE_FORMATS,
   MatDateFormats,
   ThemePalette,
-  MatDateSelectionModel,
 } from '@angular/material/core';
 import {MatFormField, MAT_FORM_FIELD} from '@angular/material/form-field';
 import {MAT_INPUT_VALUE_ACCESSOR} from '@angular/material/input';
-import {Subscription} from 'rxjs';
 import {MatDatepicker} from './datepicker';
-import {createMissingDateImplError} from './datepicker-errors';
+import {MatDatepickerInputBase} from './datepicker-input-base';
 
 /** @docs-private */
 export const MAT_DATEPICKER_VALUE_ACCESSOR: any = {
@@ -56,26 +49,6 @@ export const MAT_DATEPICKER_VALIDATORS: any = {
   useExisting: forwardRef(() => MatDatepickerInput),
   multi: true
 };
-
-
-/**
- * An event used for datepicker input and change events. We don't always have access to a native
- * input or change event because the event may have been triggered by the user clicking on the
- * calendar popup. For consistency, we always use MatDatepickerInputEvent instead.
- */
-export class MatDatepickerInputEvent<D> {
-  /** The new value for the target datepicker input. */
-  value: D | null;
-
-  constructor(
-      /** Reference to the datepicker input component that emitted the event. */
-      public target: MatDatepickerInput<D>,
-      /** Reference to the native input element associated with the datepicker input. */
-      public targetElement: HTMLElement) {
-    this.value = this.target.value;
-  }
-}
-
 
 /** Directive used to connect an input to a MatDatepicker. */
 @Directive({
@@ -98,63 +71,16 @@ export class MatDatepickerInputEvent<D> {
   },
   exportAs: 'matDatepickerInput',
 })
-export class MatDatepickerInput<D> implements ControlValueAccessor, OnDestroy, AfterViewInit,
-  Validator {
-
-  /** Whether the component has been initialized. */
-  private _isInitialized: boolean;
-
+export class MatDatepickerInput<D> extends MatDatepickerInputBase<D> {
   /** The datepicker that this input is associated with. */
   @Input()
   set matDatepicker(datepicker: MatDatepicker<D>) {
-    if (!datepicker) {
-      return;
+    if (datepicker) {
+      this._datepicker = datepicker;
+      this._registerModel(datepicker._registerInput(this));
     }
-
-    this._datepicker = datepicker;
-    this._model = this._datepicker._registerInput(this);
-    this._valueChangesSubscription.unsubscribe();
-
-    if (this._pendingValue) {
-      this._assignValue(this._pendingValue);
-    }
-
-    this._valueChangesSubscription = this._model.selectionChanged.subscribe(event => {
-      if (event.source !== this) {
-        this._cvaOnChange(event.selection);
-        this._onTouched();
-        this.dateInput.emit(new MatDatepickerInputEvent(this, this._elementRef.nativeElement));
-        this.dateChange.emit(new MatDatepickerInputEvent(this, this._elementRef.nativeElement));
-        this._formatValue(event.selection);
-      }
-    });
   }
   _datepicker: MatDatepicker<D>;
-
-  /** Function that can be used to filter out dates within the datepicker. */
-  @Input()
-  set matDatepickerFilter(value: (date: D | null) => boolean) {
-    this._dateFilter = value;
-    this._validatorOnChange();
-  }
-  _dateFilter: (date: D | null) => boolean;
-
-  /** The value of the input. */
-  @Input()
-  get value(): D | null { return this._model ? this._model.selection : this._pendingValue; }
-  set value(value: D | null) {
-    value = this._dateAdapter.deserialize(value);
-    this._lastValueValid = !value || this._dateAdapter.isValid(value);
-    value = this._getValidDateOrNull(value);
-    const oldDate = this.value;
-    this._assignValue(value);
-    this._formatValue(value);
-
-    if (!this._dateAdapter.sameDate(oldDate, value)) {
-      this._valueChange.emit(value);
-    }
-  }
-  private _model: MatDateSelectionModel<D | null, D> | undefined;
 
   /** The minimum valid date. */
   @Input()
@@ -174,63 +100,19 @@ export class MatDatepickerInput<D> implements ControlValueAccessor, OnDestroy, A
   }
   private _max: D | null;
 
-  /** Whether the datepicker-input is disabled. */
+  /** Function that can be used to filter out dates within the datepicker. */
   @Input()
-  get disabled(): boolean { return !!this._disabled; }
-  set disabled(value: boolean) {
-    const newValue = coerceBooleanProperty(value);
-    const element = this._elementRef.nativeElement;
-
-    if (this._disabled !== newValue) {
-      this._disabled = newValue;
-      this._disabledChange.emit(newValue);
-    }
-
-    // We need to null check the `blur` method, because it's undefined during SSR.
-    // In Ivy static bindings are invoked earlier, before the element is attached to the DOM.
-    // This can cause an error to be thrown in some browsers (IE/Edge) which assert that the
-    // element has been inserted.
-    if (newValue && this._isInitialized && element.blur) {
-      // Normally, native input elements automatically blur if they turn disabled. This behavior
-      // is problematic, because it would mean that it triggers another change detection cycle,
-      // which then causes a changed after checked error if the input element was focused before.
-      element.blur();
-    }
+  set matDatepickerFilter(value: (date: D | null) => boolean) {
+    this._dateFilter = value;
+    this._validatorOnChange();
   }
-  private _disabled: boolean;
+  _dateFilter: (date: D | null) => boolean;
 
-  /** Emits when a `change` event is fired on this `<input>`. */
-  @Output() readonly dateChange: EventEmitter<MatDatepickerInputEvent<D>> =
-      new EventEmitter<MatDatepickerInputEvent<D>>();
-
-  /** Emits when an `input` event is fired on this `<input>`. */
-  @Output() readonly dateInput: EventEmitter<MatDatepickerInputEvent<D>> =
-      new EventEmitter<MatDatepickerInputEvent<D>>();
-
-  /** Emits when the value changes (either due to user input or programmatic change). */
-  _valueChange = new EventEmitter<D | null>();
-
-  /** Emits when the disabled state has changed */
-  _disabledChange = new EventEmitter<boolean>();
-
-  _onTouched = () => {};
-
-  private _cvaOnChange: (value: any) => void = () => {};
-  private _validatorOnChange = () => {};
-  private _valueChangesSubscription = Subscription.EMPTY;
-  private _localeSubscription = Subscription.EMPTY;
-
-  /**
-   * Since the value is kept on the datepicker which is assigned in an Input,
-   * we might get a value before we have a datepicker. This property keeps track
-   * of the value until we have somewhere to assign it.
-   */
-  private _pendingValue: D | null;
-
-  /** The form control validator for whether the input parses. */
-  private _parseValidator: ValidatorFn = (): ValidationErrors | null => {
-    return this._lastValueValid ?
-        null : {'matDatepickerParse': {'text': this._elementRef.nativeElement.value}};
+  /** The form control validator for the date filter. */
+  private _filterValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
+    const controlValue = this._getValidDateOrNull(this._dateAdapter.deserialize(control.value));
+    return !this._dateFilter || !controlValue || this._dateFilter(controlValue) ?
+        null : {'matDatepickerFilter': true};
   }
 
   /** The form control validator for the min date. */
@@ -249,66 +131,17 @@ export class MatDatepickerInput<D> implements ControlValueAccessor, OnDestroy, A
         null : {'matDatepickerMax': {'max': this.max, 'actual': controlValue}};
   }
 
-  /** The form control validator for the date filter. */
-  private _filterValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
-    const controlValue = this._getValidDateOrNull(this._dateAdapter.deserialize(control.value));
-    return !this._dateFilter || !controlValue || this._dateFilter(controlValue) ?
-        null : {'matDatepickerFilter': true};
-  }
-
   /** The combined form control validator for this input. */
-  private _validator: ValidatorFn | null =
-      Validators.compose(
-          [this._parseValidator, this._minValidator, this._maxValidator, this._filterValidator]);
-
-  /** Whether the last value set on the input was valid. */
-  private _lastValueValid = false;
+  protected _validator: ValidatorFn | null;
 
   constructor(
-      private _elementRef: ElementRef<HTMLInputElement>,
-      @Optional() public _dateAdapter: DateAdapter<D>,
-      @Optional() @Inject(MAT_DATE_FORMATS) private _dateFormats: MatDateFormats,
+      elementRef: ElementRef<HTMLInputElement>,
+      @Optional() dateAdapter: DateAdapter<D>,
+      @Optional() @Inject(MAT_DATE_FORMATS) dateFormats: MatDateFormats,
       @Optional() @Inject(MAT_FORM_FIELD) private _formField: MatFormField) {
-    if (!this._dateAdapter) {
-      throw createMissingDateImplError('DateAdapter');
-    }
-    if (!this._dateFormats) {
-      throw createMissingDateImplError('MAT_DATE_FORMATS');
-    }
-
-    // Update the displayed date when the locale changes.
-    this._localeSubscription = _dateAdapter.localeChanges.subscribe(() => {
-      this.value = this.value;
-    });
-  }
-
-  ngAfterViewInit() {
-    this._isInitialized = true;
-  }
-
-  ngOnDestroy() {
-    this._valueChangesSubscription.unsubscribe();
-    this._localeSubscription.unsubscribe();
-    this._valueChange.complete();
-    this._disabledChange.complete();
-  }
-
-  /** @docs-private */
-  registerOnValidatorChange(fn: () => void): void {
-    this._validatorOnChange = fn;
-  }
-
-  /** @docs-private */
-  validate(c: AbstractControl): ValidationErrors | null {
-    return this._validator ? this._validator(c) : null;
-  }
-
-  /**
-   * @deprecated
-   * @breaking-change 8.0.0 Use `getConnectedOverlayOrigin` instead
-   */
-  getPopupConnectionElementRef(): ElementRef {
-    return this.getConnectedOverlayOrigin();
+    super(elementRef, dateAdapter, dateFormats);
+    this._validator = Validators.compose(
+      [this._parseValidator, this._minValidator, this._maxValidator, this._filterValidator]);
   }
 
   /**
@@ -319,93 +152,29 @@ export class MatDatepickerInput<D> implements ControlValueAccessor, OnDestroy, A
     return this._formField ? this._formField.getConnectedOverlayOrigin() : this._elementRef;
   }
 
-  // Implemented as part of ControlValueAccessor.
-  writeValue(value: D): void {
-    this.value = value;
-  }
-
-  // Implemented as part of ControlValueAccessor.
-  registerOnChange(fn: (value: any) => void): void {
-    this._cvaOnChange = fn;
-  }
-
-  // Implemented as part of ControlValueAccessor.
-  registerOnTouched(fn: () => void): void {
-    this._onTouched = fn;
-  }
-
-  // Implemented as part of ControlValueAccessor.
-  setDisabledState(isDisabled: boolean): void {
-    this.disabled = isDisabled;
-  }
-
-  _onKeydown(event: KeyboardEvent) {
-    const isAltDownArrow = event.altKey && event.keyCode === DOWN_ARROW;
-
-    if (this._datepicker && isAltDownArrow && !this._elementRef.nativeElement.readOnly) {
-      this._datepicker.open();
-      event.preventDefault();
-    }
-  }
-
-  _onInput(value: string) {
-    const lastValueWasValid = this._lastValueValid;
-    let date = this._dateAdapter.parse(value, this._dateFormats.parse.dateInput);
-    this._lastValueValid = !date || this._dateAdapter.isValid(date);
-    date = this._getValidDateOrNull(date);
-
-    if (!this._dateAdapter.sameDate(date, this.value)) {
-      this._assignValue(date);
-      this._cvaOnChange(date);
-      this._valueChange.emit(date);
-      this.dateInput.emit(new MatDatepickerInputEvent(this, this._elementRef.nativeElement));
-    } else if (lastValueWasValid !== this._lastValueValid) {
-      this._validatorOnChange();
-    }
-  }
-
-  _onChange() {
-    this.dateChange.emit(new MatDatepickerInputEvent(this, this._elementRef.nativeElement));
-  }
-
   /** Returns the palette used by the input's form field, if any. */
   _getThemePalette(): ThemePalette {
     return this._formField ? this._formField.color : undefined;
   }
 
-  /** Handles blur events on the input. */
-  _onBlur() {
-    // Reformat the input only if we have a valid value.
-    if (this.value) {
-      this._formatValue(this.value);
-    }
-
-    this._onTouched();
-  }
-
-  /** Formats a value and sets it on the input element. */
-  private _formatValue(value: D | null) {
-    this._elementRef.nativeElement.value =
-        value ? this._dateAdapter.format(value, this._dateFormats.display.dateInput) : '';
-  }
-
   /**
-   * @param obj The object to check.
-   * @returns The given object if it is both a date instance and valid, otherwise null.
+   * @deprecated
+   * @breaking-change 8.0.0 Use `getConnectedOverlayOrigin` instead
    */
-  private _getValidDateOrNull(obj: any): D | null {
-    return (this._dateAdapter.isDateInstance(obj) && this._dateAdapter.isValid(obj)) ? obj : null;
+  getPopupConnectionElementRef(): ElementRef {
+    return this.getConnectedOverlayOrigin();
   }
 
-  /** Assigns a value to the model. */
-  private _assignValue(value: D | null) {
-    // We may get some incoming values before the datepicker was
-    // assigned. Save the value so that we can assign it later.
+  /** Opens the associated datepicker. */
+  protected _openPopup(): void {
+    if (this._datepicker) {
+      this._datepicker.open();
+    }
+  }
+
+  protected _assignModelValue(value: D | null): void {
     if (this._model) {
       this._model.updateSelection(value, this);
-      this._pendingValue = null;
-    } else {
-      this._pendingValue = value;
     }
   }
 
