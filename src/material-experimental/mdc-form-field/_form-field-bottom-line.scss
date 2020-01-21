@@ -17,7 +17,7 @@
   }
 }
 
-@mixin _mat-form-field-bottom-line-theme() {
+@mixin _mat-form-field-bottom-line-color() {
   // Sets the color of the bottom-line. Our custom bottom-line is based on the default
   // MDC bottom-line that only works for inputs and textareas (hence we need a custom
   // bottom-line that works for all type of form-field controls). To replicate the

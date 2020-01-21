@@ -1,9 +1,27 @@
 @import '../mdc-helpers/mdc-helpers';
 
-@mixin mat-input-theme-mdc($theme) {
-  @include mat-using-mdc-theme($theme) {}
+@mixin mat-input-color-mdc($config) {
+  @include mat-using-mdc-theme($config) {}
 }
 
 @mixin mat-input-typography-mdc($config) {
   @include mat-using-mdc-typography($config) {}
+}
+
+@mixin mat-input-density-mdc($config) {}
+
+@mixin mat-input-theme-mdc($theme) {
+  $color: mat-get-color-config($theme);
+  $density: mat-get-density-config($theme);
+  $typography: mat-get-typography-config($theme);
+
+  @if $color != null {
+    @include mat-input-color-mdc($color);
+  }
+  @if $density != null {
+    @include mat-input-density-mdc($density);
+  }
+  @if $typography != null {
+    @include mat-input-typography-mdc($typography);
+  }
 }

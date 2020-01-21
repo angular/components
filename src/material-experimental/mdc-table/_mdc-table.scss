@@ -1,8 +1,8 @@
 @import '../mdc-helpers/mdc-helpers';
 @import '@material/data-table/mixins.import';
 
-@mixin mat-table-theme-mdc($theme) {
-  @include mat-using-mdc-theme($theme) {
+@mixin mat-table-color-mdc($config) {
+  @include mat-using-mdc-theme($config) {
     @include mdc-data-table-core-styles($query: $mat-theme-styles-query);
   }
 }
@@ -10,5 +10,23 @@
 @mixin mat-table-typography-mdc($config) {
   @include mat-using-mdc-typography($config) {
     @include mdc-data-table-core-styles($query: $mat-typography-styles-query);
+  }
+}
+
+@mixin mat-table-density-mdc($config) {}
+
+@mixin mat-table-theme-mdc($theme) {
+  $color: mat-get-color-config($theme);
+  $density: mat-get-density-config($theme);
+  $typography: mat-get-typography-config($theme);
+
+  @if $color != null {
+    @include mat-table-color-mdc($color);
+  }
+  @if $density != null {
+    @include mat-table-density-mdc($density);
+  }
+  @if $typography != null {
+    @include mat-table-typography-mdc($typography);
   }
 }
