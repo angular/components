@@ -6,14 +6,14 @@
 @import 'form-field-bottom-line';
 @import 'mdc-text-field-theme-variable-refresh';
 
-@mixin mat-form-field-theme-mdc($theme) {
-  @include mat-using-mdc-theme($theme) {
+@mixin mat-form-field-color-mdc($config) {
+  @include mat-using-mdc-theme($config) {
     @include _mdc-text-field-refresh-theme-variables() {
       @include mdc-text-field-core-styles($query: $mat-theme-styles-query);
       @include mdc-floating-label-core-styles($query: $mat-theme-styles-query);
       @include mdc-text-field-core-styles($query: $mat-theme-styles-query);
-      @include _mat-form-field-subscript-theme();
-      @include _mat-form-field-bottom-line-theme();
+      @include _mat-form-field-subscript-color();
+      @include _mat-form-field-bottom-line-color();
 
       // MDC text-field intends to hide the ripples in the outline appearance. The styles for
       // this collide with other styles from the structure styles. This is because the ripples
@@ -36,5 +36,23 @@
     @include mdc-floating-label-core-styles($query: $mat-typography-styles-query);
     @include mdc-text-field-core-styles($query: $mat-typography-styles-query);
     @include _mat-form-field-subscript-typography($config);
+  }
+}
+
+@mixin mat-form-field-density-mdc($config) {}
+
+@mixin mat-form-field-theme-mdc($theme) {
+  $color: mat-get-color-config($theme);
+  $density: mat-get-density-config($theme);
+  $typography: mat-get-typography-config($theme);
+
+  @if $color != null {
+    @include mat-form-field-color-mdc($color);
+  }
+  @if $density != null {
+    @include mat-form-field-density-mdc($density);
+  }
+  @if $typography != null {
+    @include mat-form-field-typography-mdc($typography);
   }
 }
