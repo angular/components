@@ -39,7 +39,7 @@
   }
 }
 
-@mixin mat-snack-bar-density($config) {}
+@mixin mat-snack-bar-density($density-scale) {}
 
 @mixin mat-snack-bar-theme($theme) {
   $color: mat-get-color-config($theme);

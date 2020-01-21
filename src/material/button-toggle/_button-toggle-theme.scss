@@ -86,7 +86,7 @@
   }
 }
 
-@mixin mat-button-toggle-density($config) {}
+@mixin mat-button-toggle-density($density-scale) {}
 
 @mixin mat-button-toggle-theme($theme) {
   $color: mat-get-color-config($theme);

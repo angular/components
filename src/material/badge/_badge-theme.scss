@@ -203,7 +203,7 @@ $mat-badge-large-size: $mat-badge-default-size + 6;
   }
 }
 
-@mixin mat-badge-density($config) {}
+@mixin mat-badge-density($density-scale) {}
 
 @mixin mat-badge-theme($theme) {
   $color: mat-get-color-config($theme);
