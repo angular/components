@@ -5,8 +5,8 @@
 @import '@material/theme/functions.import';
 @import '../mdc-helpers/mdc-helpers';
 
-@mixin mat-menu-theme-mdc($theme) {
-  @include mat-using-mdc-theme($theme) {
+@mixin mat-menu-color-mdc($config) {
+  @include mat-using-mdc-theme($config) {
     @include mdc-menu-surface-core-styles($mat-theme-styles-query);
     @include mdc-list-without-ripple($mat-theme-styles-query);
 
@@ -49,3 +49,22 @@
     }
   }
 }
+
+@mixin mat-menu-density-mdc($config) {}
+
+@mixin mat-menu-theme-mdc($theme) {
+  $color: mat-get-color-config($theme);
+  $density: mat-get-density-config($theme);
+  $typography: mat-get-typography-config($theme);
+
+  @if $color != null {
+    @include mat-menu-color-mdc($color);
+  }
+  @if $density != null {
+    @include mat-menu-density-mdc($density);
+  }
+  @if $typography != null {
+    @include mat-menu-typography-mdc($typography);
+  }
+}
+

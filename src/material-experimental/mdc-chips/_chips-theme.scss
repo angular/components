@@ -2,14 +2,14 @@
 @import '../mdc-helpers/mdc-helpers';
 @import '@material/theme/functions.import';
 
-@mixin mat-chips-theme-mdc($theme) {
+@mixin mat-chips-color-mdc($config) {
   @include mdc-chip-set-core-styles($query: $mat-theme-styles-query);
   @include mdc-chip-without-ripple($query: $mat-theme-styles-query);
 
-  $primary: mat-color(map-get($theme, primary));
-  $accent: mat-color(map-get($theme, accent));
-  $warn: mat-color(map-get($theme, warn));
-  $background: map-get($theme, background);
+  $primary: mat-color(map-get($config, primary));
+  $accent: mat-color(map-get($config, accent));
+  $warn: mat-color(map-get($config, warn));
+  $background: map-get($config, background);
 
   $unselected-background: mat-color($background, unselected-chip);
 
@@ -42,3 +42,22 @@
     @include mdc-chip-without-ripple($query: $mat-typography-styles-query);
   }
 }
+
+@mixin mat-chips-density-mdc($config) {}
+
+@mixin mat-chips-theme-mdc($theme) {
+  $color: mat-get-color-config($theme);
+  $density: mat-get-density-config($theme);
+  $typography: mat-get-typography-config($theme);
+
+  @if $color != null {
+    @include mat-chips-color-mdc($color);
+  }
+  @if $density != null {
+    @include mat-chips-density-mdc($density);
+  }
+  @if $typography != null {
+    @include mat-chips-typography-mdc($typography);
+  }
+}
+
