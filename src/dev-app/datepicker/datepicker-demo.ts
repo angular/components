@@ -15,7 +15,7 @@ import {
   Optional,
   ViewChild
 } from '@angular/core';
-import {FormControl} from '@angular/forms';
+import {FormControl, FormGroup} from '@angular/forms';
 import {DateAdapter, MAT_DATE_FORMATS, MatDateFormats, ThemePalette} from '@angular/material/core';
 import {
   MatCalendar,
@@ -47,6 +47,9 @@ export class DatepickerDemo {
   color: ThemePalette;
 
   dateCtrl = new FormControl();
+  range1 = new FormGroup({start: new FormControl(), end: new FormControl()});
+  range2 = new FormGroup({start: new FormControl(), end: new FormControl()});
+  range3 = new FormGroup({start: new FormControl(), end: new FormControl()});
 
   dateFilter: (date: Date | null) => boolean =
     (date: Date | null) => {
