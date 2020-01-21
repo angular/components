@@ -3,15 +3,33 @@
 @import 'form-field-subscript';
 @import 'form-field-bottom-line';
 
-@mixin mat-form-field-theme-mdc($theme) {
-  @include mat-using-mdc-theme($theme) {
-    @include _mat-form-field-subscript-theme();
-    @include _mat-form-field-bottom-line-theme();
+@mixin mat-form-field-color-mdc($config) {
+  @include mat-using-mdc-theme($config) {
+    @include _mat-form-field-subscript-color();
+    @include _mat-form-field-bottom-line-color();
   }
 }
 
 @mixin mat-form-field-typography-mdc($config) {
   @include mat-using-mdc-typography($config) {
     @include _mat-form-field-subscript-typography($config);
+  }
+}
+
+@mixin mat-form-field-density-mdc($config) {}
+
+@mixin mat-form-field-theme-mdc($theme) {
+  $color: mat-get-color-config($theme);
+  $density: mat-get-density-config($theme);
+  $typography: mat-get-typography-config($theme);
+
+  @if $color != null {
+    @include mat-form-field-color-mdc($color);
+  }
+  @if $density != null {
+    @include mat-form-field-density-mdc($density);
+  }
+  @if $typography != null {
+    @include mat-form-field-typography-mdc($typography);
   }
 }

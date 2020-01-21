@@ -5,7 +5,7 @@
 
 $mat-chip-remove-font-size: 18px;
 
-@mixin mat-chips-color($foreground, $background) {
+@mixin _mat-chip-element-color($foreground, $background) {
   background-color: $background;
   color: $foreground;
 
@@ -29,11 +29,11 @@ $mat-chip-remove-font-size: 18px;
   }
 }
 
-@mixin mat-chips-theme-color($palette) {
-  @include mat-chips-color(mat-color($palette, default-contrast), mat-color($palette));
+@mixin _mat-chip-theme-color($palette) {
+  @include _mat-chip-element-color(mat-color($palette, default-contrast), mat-color($palette));
 
   .mat-ripple-element {
-   @include _mat-chips-ripple-background($palette, default-contrast, 0.1);
+    @include _mat-chips-ripple-background($palette, default-contrast, 0.1);
   }
 }
 
@@ -49,7 +49,7 @@ $mat-chip-remove-font-size: 18px;
   $unselected-foreground: mat-color($foreground, text);
 
   .mat-chip.mat-standard-chip {
-    @include mat-chips-color($unselected-foreground, $unselected-background);
+    @include _mat-chip-element-color($unselected-foreground, $unselected-background);
 
     &:not(.mat-chip-disabled) {
       &:active {
@@ -72,15 +72,15 @@ $mat-chip-remove-font-size: 18px;
 
   .mat-chip.mat-standard-chip.mat-chip-selected {
     &.mat-primary {
-      @include mat-chips-theme-color($primary);
+      @include _mat-chip-theme-color($primary);
     }
 
     &.mat-warn {
-      @include mat-chips-theme-color($warn);
+      @include _mat-chip-theme-color($warn);
     }
 
     &.mat-accent {
-      @include mat-chips-theme-color($accent);
+      @include _mat-chip-theme-color($accent);
     }
   }
 }

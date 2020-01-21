@@ -1,7 +1,7 @@
 @import '../mdc-helpers/mdc-helpers';
 
-@mixin mat-radio-theme-mdc($theme) {
-  @include mat-using-mdc-theme($theme) {
+@mixin mat-radio-color-mdc($config) {
+  @include mat-using-mdc-theme($config) {
     // TODO: MDC theme styles here.
   }
 }
@@ -9,5 +9,23 @@
 @mixin mat-radio-typography-mdc($config) {
   @include mat-using-mdc-typography($config) {
     // TODO: MDC typography styles here.
+  }
+}
+
+@mixin mat-radio-density-mdc($config) {}
+
+@mixin mat-radio-theme-mdc($theme) {
+  $color: mat-get-color-config($theme);
+  $density: mat-get-density-config($theme);
+  $typography: mat-get-typography-config($theme);
+
+  @if $color != null {
+    @include mat-radio-color-mdc($color);
+  }
+  @if $density != null {
+    @include mat-radio-density-mdc($density);
+  }
+  @if $typography != null {
+    @include mat-radio-typography-mdc($typography);
   }
 }
