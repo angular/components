@@ -77,7 +77,7 @@
   }
 }
 
-@mixin mat-mdc-checkbox-density($config) {}
+@mixin mat-mdc-checkbox-density($density-scale) {}
 
 @mixin mat-mdc-checkbox-theme($theme) {
   $color: mat-get-color-config($theme);

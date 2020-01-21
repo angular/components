@@ -159,7 +159,7 @@ $mat-calendar-weekday-table-font-size: 11px !default;
   }
 }
 
-@mixin mat-datepicker-density($config) {}
+@mixin mat-datepicker-density($density-scale) {}
 
 @mixin mat-datepicker-theme($theme) {
   $color: mat-get-color-config($theme);

@@ -21,7 +21,7 @@
   }
 }
 
-@mixin mat-dialog-density($config) {}
+@mixin mat-dialog-density($density-scale) {}
 
 @mixin mat-dialog-theme($theme) {
   $color: mat-get-color-config($theme);

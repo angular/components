@@ -20,7 +20,7 @@
   }
 }
 
-@mixin mat-optgroup-density($config) {}
+@mixin mat-optgroup-density($density-scale) {}
 
 @mixin mat-optgroup-theme($theme) {
   $color: mat-get-color-config($theme);

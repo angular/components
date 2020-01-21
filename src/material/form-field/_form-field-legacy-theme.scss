@@ -172,7 +172,7 @@ $mat-form-field-legacy-dedupe: 0;
   }
 }
 
-@mixin mat-form-field-legacy-density($config) {}
+@mixin mat-form-field-legacy-density($density-scale) {}
 
 @mixin mat-form-field-legacy-theme($theme) {
   $color: mat-get-color-config($theme);
