@@ -7,7 +7,7 @@
 }
 
 
-@mixin mat-snackbar-density-mdc($config) {}
+@mixin mat-snackbar-density-mdc($density-scale) {}
 
 @mixin mat-snackbar-theme-mdc($theme) {
   $color: mat-get-color-config($theme);

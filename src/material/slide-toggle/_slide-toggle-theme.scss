@@ -77,7 +77,7 @@
   }
 }
 
-@mixin mat-slide-toggle-density($config) {}
+@mixin mat-slide-toggle-density($density-scale) {}
 
 @mixin mat-slide-toggle-theme($theme) {
   $color: mat-get-color-config($theme);

@@ -20,7 +20,7 @@
   }
 }
 
-@mixin mat-bottom-sheet-density($config) {}
+@mixin mat-bottom-sheet-density($density-scale) {}
 
 @mixin mat-bottom-sheet-theme($theme) {
   $color: mat-get-color-config($theme);

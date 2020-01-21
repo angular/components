@@ -148,7 +148,7 @@
 }
 
 
-@mixin mat-popover-edit-density($config) {}
+@mixin mat-popover-edit-density($density-scale) {}
 
 @mixin mat-popover-edit-theme($theme) {
   $color: mat-get-color-config($theme);

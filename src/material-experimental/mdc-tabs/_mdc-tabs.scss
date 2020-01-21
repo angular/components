@@ -98,7 +98,7 @@
   }
 }
 
-@mixin mat-tabs-density-mdc($config) {}
+@mixin mat-tabs-density-mdc($density-scale) {}
 
 @mixin mat-tabs-theme-mdc($theme) {
   $color: mat-get-color-config($theme);

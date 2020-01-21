@@ -46,7 +46,7 @@
   }
 }
 
-@mixin mat-table-density($config) {}
+@mixin mat-table-density($density-scale) {}
 
 @mixin mat-table-theme($theme) {
   $color: mat-get-color-config($theme);
