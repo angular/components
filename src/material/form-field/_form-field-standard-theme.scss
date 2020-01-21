@@ -25,7 +25,7 @@
 
 @mixin mat-form-field-standard-typography($config) {}
 
-@mixin mat-form-field-standard-density($config) {}
+@mixin mat-form-field-standard-density($density-scale) {}
 
 @mixin mat-form-field-standard-theme($theme) {
   $color: mat-get-color-config($theme);

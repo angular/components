@@ -32,7 +32,7 @@
   // No typography for this component.
 }
 
-@mixin mat-progress-bar-density-mdc($config) {}
+@mixin mat-progress-bar-density-mdc($density-scale) {}
 
 @mixin mat-progress-bar-theme-mdc($theme) {
   $color: mat-get-color-config($theme);
