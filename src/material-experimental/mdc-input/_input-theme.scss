@@ -8,7 +8,7 @@
   @include mat-using-mdc-typography($config) {}
 }
 
-@mixin mat-mdc-input-density($config) {}
+@mixin mat-mdc-input-density($density-scale) {}
 
 @mixin mat-mdc-input-theme($theme) {
   $color: mat-get-color-config($theme);

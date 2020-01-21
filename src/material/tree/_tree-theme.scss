@@ -28,7 +28,7 @@
   }
 }
 
-@mixin mat-tree-density($config) {}
+@mixin mat-tree-density($density-scale) {}
 
 @mixin mat-tree-theme($theme) {
   $color: mat-get-color-config($theme);

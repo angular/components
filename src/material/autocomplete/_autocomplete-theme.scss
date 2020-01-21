@@ -1,8 +1,6 @@
 @import '../core/style/elevation';
 @import '../core/theming/theming';
 
-@mixin mat-autocomplete-density($config) { }
-@mixin mat-autocomplete-typography($config) { }
 @mixin mat-autocomplete-color($config) {
   $foreground: map-get($config, foreground);
   $background: map-get($config, background);
@@ -26,6 +24,10 @@
     }
   }
 }
+
+@mixin mat-autocomplete-typography($config) { }
+
+@mixin mat-autocomplete-density($density-scale) { }
 
 @mixin mat-autocomplete-theme($theme) {
   $color: mat-get-color-config($theme);

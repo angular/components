@@ -33,7 +33,7 @@
   }
 }
 
-@mixin mat-mdc-card-density($config) {}
+@mixin mat-mdc-card-density($density-scale) {}
 
 @mixin mat-mdc-card-theme($theme) {
   $color: mat-get-color-config($theme);
