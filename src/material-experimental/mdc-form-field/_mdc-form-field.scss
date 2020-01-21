@@ -16,7 +16,7 @@
   }
 }
 
-@mixin mat-form-field-density-mdc($config) {}
+@mixin mat-form-field-density-mdc($density-scale) {}
 
 @mixin mat-form-field-theme-mdc($theme) {
   $color: mat-get-color-config($theme);

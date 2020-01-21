@@ -12,7 +12,7 @@
   }
 }
 
-@mixin mat-radio-density-mdc($config) {}
+@mixin mat-radio-density-mdc($density-scale) {}
 
 @mixin mat-radio-theme-mdc($theme) {
   $color: mat-get-color-config($theme);

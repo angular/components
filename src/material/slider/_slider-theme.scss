@@ -172,7 +172,7 @@
   }
 }
 
-@mixin mat-slider-density($config) {}
+@mixin mat-slider-density($density-scale) {}
 
 @mixin mat-slider-theme($theme) {
   $color: mat-get-color-config($theme);

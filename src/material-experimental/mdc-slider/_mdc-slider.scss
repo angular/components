@@ -23,7 +23,7 @@
   }
 }
 
-@mixin mat-slider-density-mdc($config) {}
+@mixin mat-slider-density-mdc($density-scale) {}
 
 @mixin mat-slider-theme-mdc($theme) {
   $color: mat-get-color-config($theme);

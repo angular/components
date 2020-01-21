@@ -129,7 +129,7 @@ $mat-form-field-outline-dedupe: 0;
   }
 }
 
-@mixin mat-form-field-outline-density($config) {}
+@mixin mat-form-field-outline-density($density-scale) {}
 
 @mixin mat-form-field-outline-theme($theme) {
   $color: mat-get-color-config($theme);
