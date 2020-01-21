@@ -97,7 +97,7 @@ $mat-chip-remove-font-size: 18px;
   }
 }
 
-@mixin mat-chips-density($config) {}
+@mixin mat-chips-density($density-scale) {}
 
 @mixin mat-chips-theme($theme) {
   $color: mat-get-color-config($theme);
