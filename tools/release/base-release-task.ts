@@ -29,7 +29,7 @@ export class BaseReleaseTask {
         `      Allowed branches are: ${chalk.bold(allowedBranches.join(', '))}`));
     console.info();
 
-    // Prompt the user if he wants to forcibly use the current branch. We support this
+    // Prompt the user if they wants to forcibly use the current branch. We support this
     // because in some cases, releases do not use the common publish branches. e.g. a major
     // release is delayed, and new features for the next minor version are collected.
     if (await this.promptConfirm(
