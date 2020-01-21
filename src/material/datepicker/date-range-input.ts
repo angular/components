@@ -162,6 +162,7 @@ export class MatDateRangeInput<D> implements MatFormFieldControl<DateRange<D>>,
    */
   onContainerClick(): void {
     if (!this.focused) {
+      // TODO(crisbeto): maybe this should go to end input if start has a value?
       this._startInput.focus();
     }
   }
@@ -193,6 +194,11 @@ export class MatDateRangeInput<D> implements MatFormFieldControl<DateRange<D>>,
   /** Handles the value in one of the child inputs changing. */
   _handleChildValueChange() {
     this._changeDetectorRef.markForCheck();
+  }
+
+  /** Opens the datepicker associated with the input. */
+  _openDatepicker() {
+    // TODO(crisbeto): implement once the datepicker is in place.
   }
 
   static ngAcceptInputType_required: BooleanInput;
