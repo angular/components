@@ -50,6 +50,7 @@ import {
   MatCheckboxClickAction,
   MatCheckboxDefaultOptions
 } from './checkbox-config';
+import {hasModifierKey, SPACE} from '@angular/cdk/keycodes';
 
 
 // Increasing integer for generating unique ids for checkbox components.
@@ -119,7 +120,7 @@ const _MatCheckboxMixinBase:
   host: {
     'class': 'mat-checkbox',
     '[id]': 'id',
-    '[attr.tabindex]': 'null',
+    '[attr.tabindex]': 'disabled ? -1 : (tabIndex || 0)',
     '[class.mat-checkbox-indeterminate]': 'indeterminate',
     '[class.mat-checkbox-checked]': 'checked',
     '[class.mat-checkbox-disabled]': 'disabled',
@@ -234,6 +235,9 @@ export class MatCheckbox extends _MatCheckboxMixinBase implements ControlValueAc
 
     // TODO: Remove this after the `_clickAction` parameter is removed as an injection parameter.
     this._clickAction = this._clickAction || this._options.clickAction;
+    _ngZone.runOutsideAngular(() => {
+        elementRef.nativeElement.addEventListener('keydown', this._handleKeydown);
+    });
   }
 
   ngAfterViewInit() {
@@ -497,4 +501,12 @@ export class MatCheckbox extends _MatCheckboxMixinBase implements ControlValueAc
   static ngAcceptInputType_required: BooleanInput;
   static ngAcceptInputType_disableRipple: BooleanInput;
   static ngAcceptInputType_indeterminate: BooleanInput;
+
+   _handleKeydown = (event: KeyboardEvent) => {
+       if (event.keyCode === SPACE && !hasModifierKey(event)) {
+           event.preventDefault();
+           event.stopPropagation();
+           this._ngZone.run(() => this.toggle());
+       }
+   }
 }
