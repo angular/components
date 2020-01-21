@@ -5,6 +5,7 @@
 @import '../material-experimental/mdc-helpers/mdc-helpers';
 @import '../material-experimental/mdc-theming/all-theme';
 @import '../material-experimental/mdc-typography/all-typography';
+@import '../material-experimental/mdc-density/all-density';
 @import '../material-experimental/popover-edit/popover-edit';
 
 // Plus imports for other components in your app.
@@ -73,4 +74,14 @@ $dark-theme: mat-dark-theme((
 .demo-unicorn-dark-theme.demo-strong-focus {
   @include mat-strong-focus-indicators-theme($dark-theme);
   @include mat-mdc-strong-focus-indicators-theme($dark-theme);
+}
+
+// Create classes for all density scales which are supported by all MDC-based components.
+// The classes are applied conditionally based on the selected density in the dev-app layout
+// component.
+$density-scales: (-1, -2, minimum, maximum);
+@each $density in$density-scales {
+  .demo-density-#{$density} {
+    @include angular-material-density-mdc($density);
+  }
 }
