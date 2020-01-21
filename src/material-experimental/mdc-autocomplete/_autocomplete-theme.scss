@@ -12,7 +12,7 @@
   }
 }
 
-@mixin mat-mdc-autocomplete-density($config) {}
+@mixin mat-mdc-autocomplete-density($density-scale) {}
 
 @mixin mat-mdc-autocomplete-theme($theme) {
   $color: mat-get-color-config($theme);

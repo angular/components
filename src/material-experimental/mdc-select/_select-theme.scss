@@ -12,7 +12,7 @@
   }
 }
 
-@mixin mat-mdc-select-density($config) {}
+@mixin mat-mdc-select-density($density-scale) {}
 
 @mixin mat-mdc-select-theme($theme) {
   $color: mat-get-color-config($theme);

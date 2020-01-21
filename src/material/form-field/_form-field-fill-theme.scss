@@ -99,7 +99,7 @@ $mat-form-field-fill-dedupe: 0;
   }
 }
 
-@mixin mat-form-field-fill-density($config) {}
+@mixin mat-form-field-fill-density($density-scale) {}
 
 @mixin mat-form-field-fill-theme($theme) {
   $color: mat-get-color-config($theme);

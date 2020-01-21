@@ -12,7 +12,7 @@
   }
 }
 
-@mixin mat-mdc-sidenav-density($config) {}
+@mixin mat-mdc-sidenav-density($density-scale) {}
 
 @mixin mat-mdc-sidenav-theme($theme) {
   $color: mat-get-color-config($theme);
