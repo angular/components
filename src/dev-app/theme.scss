@@ -13,7 +13,7 @@
 // **Be sure that you only ever include this mixin once!**
 @include mat-core();
 @include angular-material-mdc-typography();
-@include mat-edit-typography(mat-typography-config());
+@include mat-popover-edit-typography(mat-typography-config());
 
 // Include base styles for strong focus indicators.
 .demo-strong-focus {
