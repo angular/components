@@ -58,9 +58,12 @@ export declare class MatExpansionPanel extends CdkAccordionItem implements After
     _containsFocus(): boolean;
     _getExpandedState(): MatExpansionPanelState;
     _hasSpacing(): boolean;
+    close(): void;
     ngAfterContentInit(): void;
     ngOnChanges(changes: SimpleChanges): void;
     ngOnDestroy(): void;
+    open(): void;
+    toggle(): void;
     static ngAcceptInputType_disabled: BooleanInput;
     static ngAcceptInputType_expanded: BooleanInput;
     static ngAcceptInputType_hideToggle: BooleanInput;
