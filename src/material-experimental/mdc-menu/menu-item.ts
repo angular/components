@@ -6,7 +6,6 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {BooleanInput} from '@angular/cdk/coercion';
 import {Component, ChangeDetectionStrategy, ViewEncapsulation} from '@angular/core';
 import {MatMenuItem as BaseMatMenuItem} from '@angular/material/menu';
 
@@ -38,6 +37,4 @@ import {MatMenuItem as BaseMatMenuItem} from '@angular/material/menu';
   ]
 })
 export class MatMenuItem extends BaseMatMenuItem {
-  static ngAcceptInputType_disabled: BooleanInput;
-  static ngAcceptInputType_disableRipple: BooleanInput;
 }
