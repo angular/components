@@ -113,13 +113,13 @@ const _MatChipMixinBase:
 })
 export class MatChip extends _MatChipMixinBase implements AfterContentInit, AfterViewInit,
   CanColor, CanDisableRipple, HasTabIndex, OnDestroy {
-  /** The ripple animation configuration to use for the buttons. */
+  /** The ripple animation configuration to use for the chip. */
   readonly _rippleAnimation: RippleAnimationConfig = {
     enterDuration: numbers.DEACTIVATION_TIMEOUT_MS,
     exitDuration: numbers.FG_DEACTIVATION_MS
   };
 
-  /** Whether the ripple is centered on the button. */
+  /** Whether the ripple is centered on the chip. */
   readonly _isRippleCentered = false;
 
   /** Emits when the chip is focused. */
@@ -228,7 +228,7 @@ export class MatChip extends _MatChipMixinBase implements AfterContentInit, Afte
   /** The chip's trailing remove icon. */
   @ContentChild(MatChipRemove) removeIcon: MatChipRemove;
 
-  /** Reference to the MatRipple instance of the button. */
+  /** Reference to the MatRipple instance of the chip. */
   @ViewChild(MatRipple) ripple: MatRipple;
 
  /**
