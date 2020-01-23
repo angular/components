@@ -165,7 +165,7 @@ export class FocusTrap {
    * @param bound The boundary to get (start or end of trapped region).
    * @returns The boundary element.
    */
-  private _getRegionBoundary(bound: 'start' | 'end'): HTMLElement | null {
+  protected _getRegionBoundary(bound: 'start' | 'end'): HTMLElement | null {
     // Contains the deprecated version of selector, for temporary backwards comparability.
     let markers = this._element.querySelectorAll(`[cdk-focus-region-${bound}], ` +
                                                  `[cdkFocusRegion${bound}], ` +
@@ -325,8 +325,9 @@ export class FocusTrap {
   /**
    * Toggles the`tabindex` of both anchors to either trap Tab focus or allow it to escape.
    * @param enabled: Whether the anchors should trap Tab.
+   * Used by TabStopFocusTrapWrapStrategy.
    */
-  protected toggleAnchors(enabled: boolean) {
+  _toggleAnchors(enabled: boolean) {
     if (this._startAnchor && this._endAnchor) {
       this._toggleAnchorTabIndex(enabled, this._startAnchor);
       this._toggleAnchorTabIndex(enabled, this._endAnchor);

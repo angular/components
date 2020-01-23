@@ -5,8 +5,10 @@ import {
   ConfigurableFocusTrap,
   ConfigurableFocusTrapFactory,
   FOCUS_TRAP_INERT_STRATEGY,
+  FOCUS_TRAP_WRAP_STRATEGY,
   FocusTrap,
-  FocusTrapInertStrategy
+  FocusTrapInertStrategy,
+  FocusTrapWrapStrategy,
 } from '../index';
 import {FocusTrapManager} from './focus-trap-manager';
 
@@ -56,6 +58,48 @@ describe('ConfigurableFocusTrap', () => {
         expect(mockInertStrategy.allowFocus).toHaveBeenCalledTimes(1);
       });
     });
+
+  describe('with FocusTrapWrapStrategy', () => {
+    let mockWrapStrategy: FocusTrapWrapStrategy;
+
+    beforeEach(() => {
+      mockWrapStrategy = new MockFocusTrapWrapStrategy();
+      providers = [{provide: FOCUS_TRAP_WRAP_STRATEGY, useValue: mockWrapStrategy}];
+    });
+
+    it('Calls init when it is created', () => {
+      spyOn(mockWrapStrategy, 'init');
+
+      const fixture = createComponent(SimpleFocusTrap, providers);
+      fixture.detectChanges();
+
+      expect(mockWrapStrategy.init).toHaveBeenCalledTimes(1);
+    });
+
+    it('Calls trapTab when it is enabled', () => {
+      spyOn(mockWrapStrategy, 'trapTab');
+
+      const fixture = createComponent(SimpleFocusTrap, providers);
+      const componentInstance = fixture.componentInstance;
+      fixture.detectChanges();
+
+      componentInstance.focusTrap.enabled = true;
+
+      expect(mockWrapStrategy.trapTab).toHaveBeenCalledTimes(2);
+    });
+
+    it('Calls allowTabEscape when it is disabled', () => {
+      spyOn(mockWrapStrategy, 'allowTabEscape');
+
+      const fixture = createComponent(SimpleFocusTrap, providers);
+      const componentInstance = fixture.componentInstance;
+      fixture.detectChanges();
+
+      componentInstance.focusTrap.enabled = false;
+
+      expect(mockWrapStrategy.allowTabEscape).toHaveBeenCalledTimes(1);
+    });
+  });
 
     describe('with FocusTrapManager', () => {
       let manager: FocusTrapManager;
@@ -124,4 +168,12 @@ class MockFocusTrapInertStrategy implements FocusTrapInertStrategy {
   preventFocus(focusTrap: FocusTrap) {}
 
   allowFocus(focusTrap: FocusTrap) {}
+}
+
+class MockFocusTrapWrapStrategy implements FocusTrapWrapStrategy {
+  init(focusTrap: FocusTrap) {}
+
+  trapTab(focusTrap: FocusTrap) {}
+
+  allowTabEscape(focusTrap: FocusTrap) {}
 }

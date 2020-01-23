@@ -58,16 +58,20 @@ export declare class CdkTrapFocus implements OnDestroy, AfterContentInit, DoChec
 }
 
 export declare class ConfigurableFocusTrap extends FocusTrap implements ManagedFocusTrap {
+    readonly _config: ConfigurableFocusTrapConfig;
+    readonly _mutationObserverFactory: MutationObserverFactory;
     get enabled(): boolean;
     set enabled(value: boolean);
-    constructor(_element: HTMLElement, _checker: InteractivityChecker, _ngZone: NgZone, _document: Document, _focusTrapManager: FocusTrapManager, _inertStrategy: FocusTrapInertStrategy, config: ConfigurableFocusTrapConfig);
+    constructor(_element: HTMLElement, _checker: InteractivityChecker, _ngZone: NgZone, _document: Document, _focusTrapManager: FocusTrapManager, _mutationObserverFactory: MutationObserverFactory, _inertStrategy: FocusTrapInertStrategy, _wrapStrategy: FocusTrapWrapStrategy, _config: ConfigurableFocusTrapConfig);
     _disable(): void;
     _enable(): void;
     destroy(): void;
+    getFirstTabbableElement(): HTMLElement | null;
+    getLastTabbableElement(): HTMLElement | null;
 }
 
 export declare class ConfigurableFocusTrapFactory {
-    constructor(_checker: InteractivityChecker, _ngZone: NgZone, _focusTrapManager: FocusTrapManager, _document: any, _inertStrategy?: FocusTrapInertStrategy);
+    constructor(_checker: InteractivityChecker, _ngZone: NgZone, _focusTrapManager: FocusTrapManager, _mutationObserverFactory: MutationObserverFactory, _document: any, _inertStrategy?: FocusTrapInertStrategy, _wrapStrategy?: FocusTrapWrapStrategy);
     create(element: HTMLElement, config?: ConfigurableFocusTrapConfig): ConfigurableFocusTrap;
     static ɵfac: i0.ɵɵFactoryDef<ConfigurableFocusTrapFactory>;
     static ɵprov: i0.ɵɵInjectableDef<ConfigurableFocusTrapFactory>;
@@ -79,6 +83,8 @@ export declare class EventListenerFocusTrapInertStrategy implements FocusTrapIne
 }
 
 export declare const FOCUS_TRAP_INERT_STRATEGY: InjectionToken<FocusTrapInertStrategy>;
+
+export declare const FOCUS_TRAP_WRAP_STRATEGY: InjectionToken<FocusTrapWrapStrategy>;
 
 export interface FocusableOption extends ListKeyManagerOption {
     focus(origin?: FocusOrigin): void;
@@ -120,6 +126,8 @@ export declare class FocusTrap {
     protected endAnchorListener: () => boolean;
     protected startAnchorListener: () => boolean;
     constructor(_element: HTMLElement, _checker: InteractivityChecker, _ngZone: NgZone, _document: Document, deferAnchors?: boolean);
+    protected _getRegionBoundary(bound: 'start' | 'end'): HTMLElement | null;
+    _toggleAnchors(enabled: boolean): void;
     attachAnchors(): boolean;
     destroy(): void;
     focusFirstTabbableElement(): boolean;
@@ -129,7 +137,6 @@ export declare class FocusTrap {
     focusLastTabbableElement(): boolean;
     focusLastTabbableElementWhenReady(): Promise<boolean>;
     hasAttached(): boolean;
-    protected toggleAnchors(enabled: boolean): void;
 }
 
 export declare class FocusTrapFactory {
@@ -142,6 +149,12 @@ export declare class FocusTrapFactory {
 export interface FocusTrapInertStrategy {
     allowFocus(focusTrap: FocusTrap): void;
     preventFocus(focusTrap: FocusTrap): void;
+}
+
+export interface FocusTrapWrapStrategy {
+    allowTabEscape(focusTrap: FocusTrap): void;
+    init(focusTrap: FocusTrap): void;
+    trapTab(focusTrap: FocusTrap): void;
 }
 
 export declare const enum HighContrastMode {
@@ -234,6 +247,18 @@ export declare const MESSAGES_CONTAINER_ID = "cdk-describedby-message-container"
 export interface RegisteredMessage {
     messageElement: Element;
     referenceCount: number;
+}
+
+export declare class TabListenerFocusTrapWrapStrategy implements FocusTrapWrapStrategy {
+    allowTabEscape(focusTrap: ConfigurableFocusTrap): void;
+    init(focusTrap: ConfigurableFocusTrap): void;
+    trapTab(focusTrap: ConfigurableFocusTrap): void;
+}
+
+export declare class TabStopFocusTrapWrapStrategy implements FocusTrapWrapStrategy {
+    allowTabEscape(focusTrap: ConfigurableFocusTrap): void;
+    init(focusTrap: ConfigurableFocusTrap): void;
+    trapTab(focusTrap: ConfigurableFocusTrap): void;
 }
 
 export declare const TOUCH_BUFFER_MS = 650;

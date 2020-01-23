@@ -6,18 +6,20 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {MutationObserverFactory} from '@angular/cdk/observers';
 import {NgZone} from '@angular/core';
 import {InteractivityChecker} from '../interactivity-checker/interactivity-checker';
 import {FocusTrap} from './focus-trap';
 import {FocusTrapManager, ManagedFocusTrap} from './focus-trap-manager';
 import {FocusTrapInertStrategy} from './focus-trap-inert-strategy';
 import {ConfigurableFocusTrapConfig} from './configurable-focus-trap-config';
+import {FocusTrapWrapStrategy} from './strategies/wrap/wrap-strategy';
 
 /**
  * Class that allows for trapping focus within a DOM element.
  *
  * This class uses a strategy pattern that determines how it traps focus.
- * See FocusTrapInertStrategy.
+ * See FocusTrapInertStrategy and FocusTrapWrapStrategy.
  */
 export class ConfigurableFocusTrap extends FocusTrap implements ManagedFocusTrap {
   /** Whether the FocusTrap is enabled. */
@@ -37,9 +39,12 @@ export class ConfigurableFocusTrap extends FocusTrap implements ManagedFocusTrap
     _ngZone: NgZone,
     _document: Document,
     private _focusTrapManager: FocusTrapManager,
+    readonly _mutationObserverFactory: MutationObserverFactory,
     private _inertStrategy: FocusTrapInertStrategy,
-    config: ConfigurableFocusTrapConfig) {
-    super(_element, _checker, _ngZone, _document, config.defer);
+    private _wrapStrategy: FocusTrapWrapStrategy,
+    readonly _config: ConfigurableFocusTrapConfig) {
+    super(_element, _checker, _ngZone, _document, true);
+    this._wrapStrategy.init(this);
     this._focusTrapManager.register(this);
   }
 
@@ -52,12 +57,20 @@ export class ConfigurableFocusTrap extends FocusTrap implements ManagedFocusTrap
   /** @docs-private Implemented as part of ManagedFocusTrap. */
   _enable() {
     this._inertStrategy.preventFocus(this);
-    this.toggleAnchors(true);
+    this._wrapStrategy.trapTab(this);
   }
 
   /** @docs-private Implemented as part of ManagedFocusTrap. */
   _disable() {
     this._inertStrategy.allowFocus(this);
-    this.toggleAnchors(false);
+    this._wrapStrategy.allowTabEscape(this);
+  }
+
+  getFirstTabbableElement(): HTMLElement | null {
+    return this._getRegionBoundary('start');
+  }
+
+  getLastTabbableElement(): HTMLElement | null {
+    return this._getRegionBoundary('end');
   }
 }
