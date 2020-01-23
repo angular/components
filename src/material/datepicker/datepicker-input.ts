@@ -71,7 +71,7 @@ export const MAT_DATEPICKER_VALIDATORS: any = {
   },
   exportAs: 'matDatepickerInput',
 })
-export class MatDatepickerInput<D> extends MatDatepickerInputBase<D> {
+export class MatDatepickerInput<D> extends MatDatepickerInputBase<D | null, D> {
   /** The datepicker that this input is associated with. */
   @Input()
   set matDatepicker(datepicker: MatDatepicker<D>) {
@@ -172,7 +172,11 @@ export class MatDatepickerInput<D> extends MatDatepickerInputBase<D> {
     }
   }
 
-  protected _assignModelValue(value: D | null): void {
+  protected _getValueFromModel(modelValue: D | null): D | null {
+    return modelValue;
+  }
+
+  protected _assignValueToModel(value: D | null): void {
     if (this._model) {
       this._model.updateSelection(value, this);
     }
