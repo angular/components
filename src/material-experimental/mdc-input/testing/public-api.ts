@@ -6,5 +6,4 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-export {InputHarnessFilters} from '@angular/material/input/testing';
-export {MatInputHarness} from './input-harness';
+export {InputHarnessFilters, MatInputHarness} from '@angular/material/input/testing';
