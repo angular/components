@@ -30,6 +30,7 @@ import {
   MAT_DATE_FORMATS,
   MatDateFormats,
   MatDateSelectionModel,
+  ExtractDateTypeFromSelection,
 } from '@angular/material/core';
 import {Subscription} from 'rxjs';
 import {createMissingDateImplError} from './datepicker-errors';
@@ -39,13 +40,13 @@ import {createMissingDateImplError} from './datepicker-errors';
  * input or change event because the event may have been triggered by the user clicking on the
  * calendar popup. For consistency, we always use MatDatepickerInputEvent instead.
  */
-export class MatDatepickerInputEvent<D> {
+export class MatDatepickerInputEvent<D, S = unknown> {
   /** The new value for the target datepicker input. */
   value: D | null;
 
   constructor(
       /** Reference to the datepicker input component that emitted the event. */
-      public target: MatDatepickerInputBase<D>,
+      public target: MatDatepickerInputBase<S, D>,
       /** Reference to the native input element associated with the datepicker input. */
       public targetElement: HTMLElement) {
     this.value = this.target.value;
@@ -54,11 +55,13 @@ export class MatDatepickerInputEvent<D> {
 
 /** Base class for datepicker inputs. */
 @Directive()
-export abstract class MatDatepickerInputBase<D> implements ControlValueAccessor, OnDestroy,
-  Validator {
+export abstract class MatDatepickerInputBase<S, D = ExtractDateTypeFromSelection<S>>
+  implements ControlValueAccessor, OnDestroy, Validator {
   /** The value of the input. */
   @Input()
-  get value(): D | null { return this._model ? this._model.selection : this._pendingValue; }
+  get value(): D | null {
+    return this._model ? this._getValueFromModel(this._model.selection) : this._pendingValue;
+  }
   set value(value: D | null) {
     value = this._dateAdapter.deserialize(value);
     this._lastValueValid = !value || this._dateAdapter.isValid(value);
@@ -71,7 +74,7 @@ export abstract class MatDatepickerInputBase<D> implements ControlValueAccessor,
       this._valueChange.emit(value);
     }
   }
-  protected _model: MatDateSelectionModel<D | null, D> | undefined;
+  protected _model: MatDateSelectionModel<S, D> | undefined;
 
   /** Whether the datepicker-input is disabled. */
   @Input()
@@ -96,12 +99,12 @@ export abstract class MatDatepickerInputBase<D> implements ControlValueAccessor,
   private _disabled: boolean;
 
   /** Emits when a `change` event is fired on this `<input>`. */
-  @Output() readonly dateChange: EventEmitter<MatDatepickerInputEvent<D>> =
-      new EventEmitter<MatDatepickerInputEvent<D>>();
+  @Output() readonly dateChange: EventEmitter<MatDatepickerInputEvent<D, S>> =
+      new EventEmitter<MatDatepickerInputEvent<D, S>>();
 
   /** Emits when an `input` event is fired on this `<input>`. */
-  @Output() readonly dateInput: EventEmitter<MatDatepickerInputEvent<D>> =
-      new EventEmitter<MatDatepickerInputEvent<D>>();
+  @Output() readonly dateInput: EventEmitter<MatDatepickerInputEvent<D, S>> =
+      new EventEmitter<MatDatepickerInputEvent<D, S>>();
 
   /** Emits when the value changes (either due to user input or programmatic change). */
   _valueChange = new EventEmitter<D | null>();
@@ -129,7 +132,7 @@ export abstract class MatDatepickerInputBase<D> implements ControlValueAccessor,
         null : {'matDatepickerParse': {'text': this._elementRef.nativeElement.value}};
   }
 
-  protected _registerModel(model: MatDateSelectionModel<D | null, D>): void {
+  protected _registerModel(model: MatDateSelectionModel<S, D>): void {
     this._model = model;
     this._valueChangesSubscription.unsubscribe();
 
@@ -139,11 +142,12 @@ export abstract class MatDatepickerInputBase<D> implements ControlValueAccessor,
 
     this._valueChangesSubscription = this._model.selectionChanged.subscribe(event => {
       if (event.source !== this) {
-        this._cvaOnChange(event.selection);
+        const value = this._getValueFromModel(event.selection);
+        this._cvaOnChange(value);
         this._onTouched();
         this.dateInput.emit(new MatDatepickerInputEvent(this, this._elementRef.nativeElement));
         this.dateChange.emit(new MatDatepickerInputEvent(this, this._elementRef.nativeElement));
-        this._formatValue(event.selection);
+        this._formatValue(value);
       }
     });
   }
@@ -152,7 +156,10 @@ export abstract class MatDatepickerInputBase<D> implements ControlValueAccessor,
   protected abstract _openPopup(): void;
 
   /** Assigns a value to the input's model. */
-  protected abstract _assignModelValue(model: D | null): void;
+  protected abstract _assignValueToModel(model: D | null): void;
+
+  /** Converts a value from the model into a native value for the input. */
+  protected abstract _getValueFromModel(modelValue: S): D | null;
 
   /** The combined form control validator for this input. */
   protected abstract _validator: ValidatorFn | null;
@@ -272,7 +279,7 @@ export abstract class MatDatepickerInputBase<D> implements ControlValueAccessor,
     // We may get some incoming values before the model was
     // assigned. Save the value so that we can assign it later.
     if (this._model) {
-      this._assignModelValue(value);
+      this._assignValueToModel(value);
       this._pendingValue = null;
     } else {
       this._pendingValue = value;
