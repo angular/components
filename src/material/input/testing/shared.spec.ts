@@ -195,6 +195,16 @@ function getActiveElementTagName() {
     <mat-form-field>
       <input matNativeControl placeholder="Native control" id="nativeControl">
     </mat-form-field>
+
+    <mat-form-field>
+      <!--
+        Select native controls should not be handled as part of the input harness. We add this
+        to assert that the harness does not accidentally match it.
+      -->
+      <select matNativeControl>
+        <option value="first">First</option>
+      </select>
+    </mat-form-field>
   `
 })
 class InputHarnessTest {
