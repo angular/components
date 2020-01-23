@@ -34,6 +34,8 @@ import {
   DateAdapter,
   MatDateFormats,
   ErrorStateMatcher,
+  DateRange,
+  MatDateSelectionModel,
 } from '@angular/material/core';
 import {BooleanInput} from '@angular/cdk/coercion';
 import {MatDatepickerInputBase} from './datepicker-input-base';
@@ -58,8 +60,8 @@ export const MAT_DATE_RANGE_INPUT_PARENT =
  * Base class for the individual inputs that can be projected inside a `mat-date-range-input`.
  */
 @Directive()
-class MatDateRangeInputPartBase<D> extends MatDatepickerInputBase<D> implements OnInit, DoCheck {
-  protected _validator: ValidatorFn | null;
+class MatDateRangeInputPartBase<D>
+  extends MatDatepickerInputBase<DateRange<D>, D> implements OnInit, DoCheck {
 
   /** @docs-private */
   ngControl: NgControl;
@@ -75,8 +77,13 @@ class MatDateRangeInputPartBase<D> extends MatDatepickerInputBase<D> implements 
     @Optional() public _parentForm: NgForm,
     @Optional() public _parentFormGroup: FormGroupDirective,
     @Optional() dateAdapter: DateAdapter<D>,
-    @Optional() @Inject(MAT_DATE_FORMATS) dateFormats: MatDateFormats) {
+    @Optional() @Inject(MAT_DATE_FORMATS) dateFormats: MatDateFormats,
+
+    // TODO(crisbeto): this will be provided by the datepicker eventually.
+    // We provide it here for the moment so we have something to test against.
+    model: MatDateSelectionModel<DateRange<D>, D>) {
     super(elementRef, dateAdapter, dateFormats);
+    super._registerModel(model);
   }
 
   ngOnInit() {
@@ -123,9 +130,11 @@ class MatDateRangeInputPartBase<D> extends MatDatepickerInputBase<D> implements 
     this._rangeInput._openDatepicker();
   }
 
-  protected _assignModelValue(_model: D | null): void {
-    // TODO(crisbeto): implement
-  }
+  // Dummy property implementations since we can't pass an abstract class
+  // into a mixin. These are overridden by the individual input classes.
+  protected _validator: ValidatorFn | null;
+  protected _assignValueToModel: (value: D | null) => void;
+  protected _getValueFromModel: (modelValue: DateRange<D>) => D | null;
 }
 
 const _MatDateRangeInputBase:
@@ -157,9 +166,16 @@ const _MatDateRangeInputBase:
     {provide: NG_VALIDATORS, useExisting: MatStartDate, multi: true}
   ]
 })
-export class MatStartDate<D> extends _MatDateRangeInputBase<D> implements CanUpdateErrorState {
+export class MatStartDate<D> extends _MatDateRangeInputBase<D>
+  implements CanUpdateErrorState {
   // TODO(crisbeto): start-range-specific validators should go here.
   protected _validator = Validators.compose([this._parseValidator]);
+  protected _getValueFromModel = (modelValue: DateRange<D>) => modelValue.start;
+  protected _assignValueToModel = (value: D | null) => {
+    if (this._model) {
+      this._model.updateSelection(new DateRange(value, this._model.selection.end), this);
+    }
+  }
 
   /** Gets the value that should be used when mirroring the input's size. */
   getMirrorValue(): string {
@@ -200,6 +216,12 @@ export class MatStartDate<D> extends _MatDateRangeInputBase<D> implements CanUpd
 export class MatEndDate<D> extends _MatDateRangeInputBase<D> implements CanUpdateErrorState {
   // TODO(crisbeto): end-range-specific validators should go here.
   protected _validator = Validators.compose([this._parseValidator]);
+  protected _getValueFromModel = (modelValue: DateRange<D>) => modelValue.end;
+  protected _assignValueToModel = (value: D | null) => {
+    if (this._model) {
+      this._model.updateSelection(new DateRange(this._model.selection.start, value), this);
+    }
+  }
 
   static ngAcceptInputType_disabled: BooleanInput;
 }

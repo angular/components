@@ -26,7 +26,11 @@ export class DateRange<D> {
     readonly end: D | null) {}
 }
 
-type ExtractDateTypeFromSelection<T> = T extends DateRange<infer D> ? D : NonNullable<T>;
+/**
+ * Conditionally picks the date type, if a DateRange is passed in.
+ * @docs-private
+ */
+export type ExtractDateTypeFromSelection<T> = T extends DateRange<infer D> ? D : NonNullable<T>;
 
 /** Event emitted by the date selection model when its selection changes. */
 export interface DateSelectionModelChange<S> {
@@ -212,4 +216,18 @@ export const MAT_SINGLE_DATE_SELECTION_MODEL_PROVIDER: FactoryProvider = {
   provide: MatDateSelectionModel,
   deps: [[new Optional(), new SkipSelf(), MatDateSelectionModel], DateAdapter],
   useFactory: MAT_SINGLE_DATE_SELECTION_MODEL_FACTORY,
+};
+
+
+/** @docs-private */
+export function MAT_RANGE_DATE_SELECTION_MODEL_FACTORY(
+    parent: MatSingleDateSelectionModel<unknown>, adapter: DateAdapter<unknown>) {
+  return parent || new MatRangeDateSelectionModel(adapter);
+}
+
+/** Used to provide a range selection model to a component. */
+export const MAT_RANGE_DATE_SELECTION_MODEL_PROVIDER: FactoryProvider = {
+  provide: MatDateSelectionModel,
+  deps: [[new Optional(), new SkipSelf(), MatDateSelectionModel], DateAdapter],
+  useFactory: MAT_RANGE_DATE_SELECTION_MODEL_FACTORY,
 };
