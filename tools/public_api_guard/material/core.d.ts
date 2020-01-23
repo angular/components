@@ -105,6 +105,8 @@ export declare class ErrorStateMatcher {
     static ɵprov: i0.ɵɵInjectableDef<ErrorStateMatcher>;
 }
 
+export declare type ExtractDateTypeFromSelection<T> = T extends DateRange<infer D> ? D : NonNullable<T>;
+
 export declare const JAN = 0, FEB = 1, MAR = 2, APR = 3, MAY = 4, JUN = 5, JUL = 6, AUG = 7, SEP = 8, OCT = 9, NOV = 10, DEC = 11;
 
 export declare type FloatLabelType = 'always' | 'never' | 'auto';
@@ -210,6 +212,10 @@ export declare const MAT_LABEL_GLOBAL_OPTIONS: InjectionToken<LabelOptions>;
 export declare const MAT_NATIVE_DATE_FORMATS: MatDateFormats;
 
 export declare const MAT_OPTION_PARENT_COMPONENT: InjectionToken<MatOptionParentComponent>;
+
+export declare function MAT_RANGE_DATE_SELECTION_MODEL_FACTORY(parent: MatSingleDateSelectionModel<unknown>, adapter: DateAdapter<unknown>): MatSingleDateSelectionModel<unknown>;
+
+export declare const MAT_RANGE_DATE_SELECTION_MODEL_PROVIDER: FactoryProvider;
 
 export declare const MAT_RIPPLE_GLOBAL_OPTIONS: InjectionToken<RippleGlobalOptions>;
 
