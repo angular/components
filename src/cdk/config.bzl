@@ -7,6 +7,7 @@ CDK_ENTRYPOINTS = [
     "coercion",
     "collections",
     "drag-drop",
+    "key",
     "keycodes",
     "layout",
     "observers",

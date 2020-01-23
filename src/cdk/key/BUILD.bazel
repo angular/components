@@ -31,7 +31,7 @@ karma_web_test_suite(
 )
 markdown_to_html(
     name = "overview",
-    srcs = [":keycodes.md"],
+    srcs = [":key.md"],
 )
 filegroup(
     name = "source-files",
