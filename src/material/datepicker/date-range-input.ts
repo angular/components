@@ -19,7 +19,7 @@ import {
   Self,
 } from '@angular/core';
 import {MatFormFieldControl, MatFormField} from '@angular/material/form-field';
-import {DateRange} from '@angular/material/core';
+import {DateRange, MAT_RANGE_DATE_SELECTION_MODEL_PROVIDER} from '@angular/material/core';
 import {NgControl, ControlContainer} from '@angular/forms';
 import {Subject} from 'rxjs';
 import {coerceBooleanProperty, BooleanInput} from '@angular/cdk/coercion';
@@ -49,6 +49,10 @@ let nextUniqueId = 0;
   providers: [
     {provide: MatFormFieldControl, useExisting: MatDateRangeInput},
     {provide: MAT_DATE_RANGE_INPUT_PARENT, useExisting: MatDateRangeInput},
+
+    // TODO(crisbeto): this will be provided by the datepicker eventually.
+    // We provide it here for the moment so we have something to test against.
+    MAT_RANGE_DATE_SELECTION_MODEL_PROVIDER,
   ]
 })
 export class MatDateRangeInput<D> implements MatFormFieldControl<DateRange<D>>,
