@@ -21,7 +21,6 @@ import {
   QueryList,
   ViewEncapsulation,
 } from '@angular/core';
-import {BooleanInput} from '@angular/cdk/coercion';
 import {MDCRadioAdapter, MDCRadioFoundation} from '@material/radio';
 import {
   MAT_RADIO_DEFAULT_OPTIONS,
@@ -67,9 +66,6 @@ export class MatRadioGroup extends BaseMatRadioGroup {
   /** Child radio buttons. */
   @ContentChildren(forwardRef(() => MatRadioButton), { descendants: true })
       _radios: QueryList<BaseMatRadioButton>;
-
-  static ngAcceptInputType_disabled: BooleanInput;
-  static ngAcceptInputType_required: BooleanInput;
 }
 
 @Component({
@@ -136,9 +132,4 @@ export class MatRadioButton extends BaseMatRadioButton implements AfterViewInit,
     super._setDisabled(value);
     this._radioFoundation.setDisabled(this.disabled);
   }
-
-  static ngAcceptInputType_checked: BooleanInput;
-  static ngAcceptInputType_disabled: BooleanInput;
-  static ngAcceptInputType_required: BooleanInput;
-  static ngAcceptInputType_disableRipple: BooleanInput;
 }
