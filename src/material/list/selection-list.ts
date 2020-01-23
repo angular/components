@@ -41,6 +41,7 @@ import {
   SimpleChanges,
   ViewChild,
   ViewEncapsulation,
+  isDevMode,
 } from '@angular/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {
@@ -51,6 +52,7 @@ import {
   setLines,
   ThemePalette,
 } from '@angular/material/core';
+
 import {Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 
@@ -109,6 +111,7 @@ export class MatSelectionListChange {
     // be placed inside a parent that has one of the other colors with a higher specificity.
     '[class.mat-accent]': 'color !== "primary" && color !== "warn"',
     '[class.mat-warn]': 'color === "warn"',
+    '[class.mat-list-single-selected-option]': 'selected && !selectionList.multiple',
     '[attr.aria-selected]': 'selected',
     '[attr.aria-disabled]': 'disabled',
   },
@@ -256,7 +259,7 @@ export class MatListOption extends _MatListOptionMixinBase implements AfterConte
   }
 
   _handleClick() {
-    if (!this.disabled) {
+    if (!this.disabled && (this.selectionList.multiple || !this.selected)) {
       this.toggle();
 
       // Emit a change event if the selected state of the option changed through user interaction.
@@ -325,7 +328,7 @@ export class MatListOption extends _MatListOptionMixinBase implements AfterConte
     'class': 'mat-selection-list mat-list-base',
     '(blur)': '_onTouched()',
     '(keydown)': '_keydown($event)',
-    'aria-multiselectable': 'true',
+    '[attr.aria-multiselectable]': 'multiple',
     '[attr.aria-disabled]': 'disabled.toString()',
   },
   template: '<ng-content></ng-content>',
@@ -336,6 +339,8 @@ export class MatListOption extends _MatListOptionMixinBase implements AfterConte
 })
 export class MatSelectionList extends _MatSelectionListMixinBase implements CanDisableRipple,
   AfterContentInit, ControlValueAccessor, OnDestroy, OnChanges {
+  private _multiple = true;
+  private _contentInitialized = false;
 
   /** The FocusKeyManager which handles focus. */
   _keyManager: FocusKeyManager<MatListOption>;
@@ -374,8 +379,25 @@ export class MatSelectionList extends _MatSelectionListMixinBase implements CanD
   }
   private _disabled: boolean = false;
 
+  /** Whether selection is limited to one or multiple items (default multiple). */
+  @Input()
+  get multiple(): boolean { return this._multiple; }
+  set multiple(value: boolean) {
+    const newValue = coerceBooleanProperty(value);
+
+    if (newValue !== this._multiple) {
+      if (isDevMode() && this._contentInitialized) {
+        throw new Error(
+            'Cannot change `multiple` mode of mat-selection-list after initialization.');
+      }
+
+      this._multiple = newValue;
+      this.selectedOptions = new SelectionModel(this._multiple, this.selectedOptions.selected);
+    }
+  }
+
   /** The currently selected options. */
-  selectedOptions: SelectionModel<MatListOption> = new SelectionModel<MatListOption>(true);
+  selectedOptions = new SelectionModel<MatListOption>(this._multiple);
 
   /** View to model callback that should be called whenever the selected options change. */
   private _onChange: (value: any) => void = (_: any) => {};
@@ -398,6 +420,8 @@ export class MatSelectionList extends _MatSelectionListMixinBase implements CanD
   }
 
   ngAfterContentInit(): void {
+    this._contentInitialized = true;
+
     this._keyManager = new FocusKeyManager<MatListOption>(this.options)
       .withWrap()
       .withTypeAhead()
@@ -591,7 +615,7 @@ export class MatSelectionList extends _MatSelectionListMixinBase implements CanD
     if (focusedIndex != null && this._isValidIndex(focusedIndex)) {
       let focusedOption: MatListOption = this.options.toArray()[focusedIndex];
 
-      if (focusedOption && !focusedOption.disabled) {
+      if (focusedOption && !focusedOption.disabled && (this._multiple || !focusedOption.selected)) {
         focusedOption.toggle();
 
         // Emit a change event because the focused option changed its state through user
@@ -644,4 +668,5 @@ export class MatSelectionList extends _MatSelectionListMixinBase implements CanD
 
   static ngAcceptInputType_disabled: BooleanInput;
   static ngAcceptInputType_disableRipple: BooleanInput;
+  static ngAcceptInputType_multiple: BooleanInput;
 }

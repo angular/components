@@ -113,11 +113,6 @@ export class MatFormFieldHarness extends ComponentHarness {
     return labelEl ? labelEl.text() : null;
   }
 
-  /** Whether the form-field has a floating label. */
-  async hasFloatingLabel(): Promise<boolean> {
-    return (await this.host()).hasClass('mat-form-field-can-float');
-  }
-
   /** Whether the form-field has errors. */
   async hasErrors(): Promise<boolean> {
     return (await this.getTextErrors()).length > 0;
@@ -125,7 +120,13 @@ export class MatFormFieldHarness extends ComponentHarness {
 
   /** Whether the label is currently floating. */
   async isLabelFloating(): Promise<boolean> {
-    return (await this.host()).hasClass('mat-form-field-should-float');
+    const [hasLabel, shouldFloat] = await Promise.all([
+      this.hasLabel(),
+      (await this.host()).hasClass('mat-form-field-should-float'),
+    ]);
+    // If there is no label, the label conceptually can never float. The `should-float` class
+    // is just always set regardless of whether the label is displayed or not.
+    return hasLabel && shouldFloat;
   }
 
   /** Whether the form-field is disabled. */

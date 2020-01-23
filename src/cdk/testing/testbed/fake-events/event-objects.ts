@@ -14,7 +14,7 @@ import {ModifierKeys} from '@angular/cdk/testing';
  */
 export function createMouseEvent(type: string, x = 0, y = 0, button = 0) {
   const event = document.createEvent('MouseEvent');
-  const originalPreventDefault = event.preventDefault;
+  const originalPreventDefault = event.preventDefault.bind(event);
 
   event.initMouseEvent(type,
     true, /* canBubble */
@@ -39,7 +39,7 @@ export function createMouseEvent(type: string, x = 0, y = 0, button = 0) {
   // IE won't set `defaultPrevented` on synthetic events so we need to do it manually.
   event.preventDefault = function() {
     Object.defineProperty(event, 'defaultPrevented', { get: () => true });
-    return originalPreventDefault.apply(this, arguments);
+    return originalPreventDefault();
   };
 
   return event;
@@ -85,8 +85,24 @@ export function createKeyboardEvent(type: string, key: string = '', keyCode: num
   } else {
     // `initKeyboardEvent` expects to receive modifiers as a whitespace-delimited string
     // See https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/initKeyboardEvent
-    const modifiersStr = (modifiers.control ? 'Control ' : '' + modifiers.alt ? 'Alt ' : '' +
-        modifiers.shift ? 'Shift ' : '' + modifiers.meta ? 'Meta' : '').trim();
+    let modifiersList = '';
+
+    if (modifiers.control) {
+      modifiersList += 'Control ';
+    }
+
+    if (modifiers.alt) {
+      modifiersList += 'Alt ';
+    }
+
+    if (modifiers.shift) {
+      modifiersList += 'Shift ';
+    }
+
+    if (modifiers.meta) {
+      modifiersList += 'Meta ';
+    }
+
     event.initKeyboardEvent(type,
         true, /* canBubble */
         true, /* cancelable */
@@ -94,7 +110,7 @@ export function createKeyboardEvent(type: string, key: string = '', keyCode: num
         0, /* char */
         key, /* key */
         0, /* location */
-        modifiersStr, /* modifiersList */
+        modifiersList.trim(), /* modifiersList */
         false /* repeat */);
   }
 

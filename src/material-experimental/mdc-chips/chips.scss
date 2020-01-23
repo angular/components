@@ -1,4 +1,4 @@
-@import '@material/chips/mixins';
+@import '@material/chips/mixins.import';
 @import '../../material/core/style/layout-common';
 @import '../../material/core/style/noop-animation';
 @import '../../cdk/a11y/a11y';
@@ -70,4 +70,13 @@ $mat-chip-input-width: 150px;
 
 input.mat-mdc-chip-input {
   flex: 1 0 $mat-chip-input-width;
+}
+
+.mdc-chip__checkmark-path {
+  @include cdk-high-contrast(black-on-white) {
+    // SVG colors won't be changed in high contrast mode and since the checkmark is white
+    // by default, it'll blend in with the background in black-on-white mode. Override the color
+    // to ensure that it's visible. We need !important, because the theme styles are very specific.
+    stroke: #000 !important;
+  }
 }

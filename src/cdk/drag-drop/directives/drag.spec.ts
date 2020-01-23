@@ -23,7 +23,7 @@ import {
 } from '@angular/core';
 import {TestBed, ComponentFixture, fakeAsync, flush, tick} from '@angular/core/testing';
 import {DOCUMENT} from '@angular/common';
-import {ViewportRuler} from '@angular/cdk/scrolling';
+import {ViewportRuler, ScrollingModule} from '@angular/cdk/scrolling';
 import {_supportsShadowDom} from '@angular/cdk/platform';
 import {of as observableOf} from 'rxjs';
 
@@ -47,7 +47,7 @@ describe('CdkDrag', () => {
       extraDeclarations: Type<any>[] = []): ComponentFixture<T> {
     TestBed
         .configureTestingModule({
-          imports: [DragDropModule],
+          imports: [DragDropModule, ScrollingModule],
           declarations: [componentType, PassthroughComponent, ...extraDeclarations],
           providers: [
             {
@@ -1132,6 +1132,34 @@ describe('CdkDrag', () => {
       subscription.unsubscribe();
     }));
 
+    it('should prevent the default `mousemove` action even before the drag threshold has ' +
+      'been reached', fakeAsync(() => {
+        const fixture = createComponent(StandaloneDraggable, [], 5);
+        fixture.detectChanges();
+        const dragElement = fixture.componentInstance.dragElement.nativeElement;
+
+        dispatchMouseEvent(dragElement, 'mousedown', 2, 2);
+        fixture.detectChanges();
+        const mousemoveEvent = dispatchMouseEvent(document, 'mousemove', 2, 2);
+        fixture.detectChanges();
+
+        expect(mousemoveEvent.defaultPrevented).toBe(true);
+      }));
+
+    it('should prevent the default `touchmove` action even before the drag threshold has ' +
+      'been reached', fakeAsync(() => {
+        const fixture = createComponent(StandaloneDraggable, [], 5);
+        fixture.detectChanges();
+        const dragElement = fixture.componentInstance.dragElement.nativeElement;
+
+        dispatchTouchEvent(dragElement, 'touchstart', 2, 2);
+        fixture.detectChanges();
+        const touchmoveEvent = dispatchTouchEvent(document, 'touchmove', 2, 2);
+        fixture.detectChanges();
+
+        expect(touchmoveEvent.defaultPrevented).toBe(true);
+      }));
+
   });
 
   describe('draggable with a handle', () => {
@@ -1842,14 +1870,22 @@ describe('CdkDrag', () => {
           body: document.body,
           fullscreenElement: document.createElement('div'),
           ELEMENT_NODE: Node.ELEMENT_NODE,
-          querySelectorAll: function() {
-            return document.querySelectorAll.apply(document, arguments);
+          querySelectorAll: function(...args: [string]) {
+            return document.querySelectorAll(...args);
           },
-          addEventListener: function() {
-            document.addEventListener.apply(document, arguments);
+          addEventListener: function(...args: [
+              string,
+              EventListenerOrEventListenerObject,
+              (boolean | AddEventListenerOptions | undefined)?
+          ]) {
+            document.addEventListener(...args);
           },
-          removeEventListener: function() {
-            document.addEventListener.apply(document, arguments);
+          removeEventListener: function(...args: [
+            string,
+            EventListenerOrEventListenerObject,
+            (boolean | AddEventListenerOptions | undefined)?
+          ]) {
+            document.addEventListener(...args);
           }
         };
         const fixture = createComponent(DraggableInDropZone, [{
@@ -3375,6 +3411,24 @@ describe('CdkDrag', () => {
         cleanup();
       }));
 
+    it('should be able to auto-scroll a parent container', fakeAsync(() => {
+      const fixture = createComponent(DraggableInScrollableParentContainer);
+      fixture.detectChanges();
+      const item = fixture.componentInstance.dragItems.first.element.nativeElement;
+      const container = fixture.nativeElement.querySelector('.container');
+      const containerRect = container.getBoundingClientRect();
+
+      expect(container.scrollTop).toBe(0);
+
+      startDraggingViaMouse(fixture, item);
+      dispatchMouseEvent(document, 'mousemove',
+        containerRect.left + containerRect.width / 2, containerRect.top + containerRect.height);
+      fixture.detectChanges();
+      tickAnimationFrames(20);
+
+      expect(container.scrollTop).toBeGreaterThan(0);
+    }));
+
     it('should pick up descendants inside of containers', fakeAsync(() => {
       const fixture = createComponent(DraggableInDropZoneWithContainer);
       fixture.detectChanges();
@@ -4658,6 +4712,30 @@ class DraggableInScrollableVerticalDropZone extends DraggableInDropZone {
     }
   }
 }
+
+@Component({
+  template: '<div class="container" cdkScrollable>' + DROP_ZONE_FIXTURE_TEMPLATE + '</div>',
+
+  // Note that it needs a margin to ensure that it's not flush against the viewport
+  // edge which will cause the viewport to scroll, rather than the list.
+  styles: [`
+    .container {
+      max-height: 200px;
+      overflow: auto;
+      margin: 10vw 0 0 10vw;
+    }
+  `]
+})
+class DraggableInScrollableParentContainer extends DraggableInDropZone {
+  constructor() {
+    super();
+
+    for (let i = 0; i < 60; i++) {
+      this.items.push({value: `Extra item ${i}`, height: ITEM_HEIGHT, margin: 0});
+    }
+  }
+}
+
 
 @Component({
   // Note that we need the blank `ngSwitch` below to hit the code path that we're testing.

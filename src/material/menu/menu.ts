@@ -132,6 +132,15 @@ export class _MatMenuBase implements AfterContentInit, MatMenuPanel<MatMenuItem>
   /** Class to be added to the backdrop element. */
   @Input() backdropClass: string = this._defaultOptions.backdropClass;
 
+  /** aria-label for the menu panel. */
+  @Input('aria-label') ariaLabel: string;
+
+  /** aria-labelledby for the menu panel. */
+  @Input('aria-labelledby') ariaLabelledby: string;
+
+  /** aria-describedby for the menu panel. */
+  @Input('aria-describedby') ariaDescribedby: string;
+
   /** Position of the menu in the X axis. */
   @Input()
   get xPosition(): MenuPositionX { return this._xPosition; }
@@ -466,6 +475,9 @@ export class _MatMenuBase implements AfterContentInit, MatMenuPanel<MatMenuItem>
         this._directDescendantItems.notifyOnChanges();
       });
   }
+
+  static ngAcceptInputType_overlapTrigger: BooleanInput;
+  static ngAcceptInputType_hasBackdrop: BooleanInput;
 }
 
 /** @docs-private We show the "_MatMenu" class as "MatMenu" in the docs. */
@@ -507,7 +519,4 @@ export class _MatMenu extends MatMenu {
       @Inject(MAT_MENU_DEFAULT_OPTIONS) defaultOptions: MatMenuDefaultOptions) {
     super(elementRef, ngZone, defaultOptions);
   }
-
-  static ngAcceptInputType_overlapTrigger: BooleanInput;
-  static ngAcceptInputType_hasBackdrop: BooleanInput;
 }

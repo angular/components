@@ -73,7 +73,7 @@ Consider a reusable dialog-button component that opens a dialog on click, contai
 components, each with a corresponding harness:
 - `MyDialogButton` (composes the `MyButton` and `MyDialog` with a convenient API)
 - `MyButton` (a simple button component)
-- `MyDialog` (a dialog appended to `document.body` by `MyButtonDialog` upon click)
+- `MyDialog` (a dialog appended to `document.body` by `MyDialogButton` upon click)
 
 The following code loads harnesses for each of these components:
 
@@ -460,7 +460,7 @@ class MyMenuHarness extends ComponentHarness {
 
   /** Gets a list of items in the menu, optionally filtered based on the given criteria. */
   async getItems(filters: MyMenuItemHarnessFilters = {}): Promise<MyMenuItemHarness[]> {
-    const getFilteredItems = this.locatorFor(MyMenuItemHarness.with(filters));
+    const getFilteredItems = this.locatorForAll(MyMenuItemHarness.with(filters));
     return getFilteredItems();
   }
 

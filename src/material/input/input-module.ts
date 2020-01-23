@@ -7,18 +7,15 @@
  */
 
 import {TextFieldModule} from '@angular/cdk/text-field';
-import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
 import {ErrorStateMatcher} from '@angular/material/core';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatTextareaAutosize} from './autosize';
 import {MatInput} from './input';
 
-
 @NgModule({
   declarations: [MatInput, MatTextareaAutosize],
   imports: [
-    CommonModule,
     TextFieldModule,
     MatFormFieldModule,
   ],

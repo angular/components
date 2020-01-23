@@ -1,7 +1,7 @@
 export declare class A11yModule {
     constructor(highContrastModeDetector: HighContrastModeDetector);
     static ɵinj: i0.ɵɵInjectorDef<A11yModule>;
-    static ɵmod: i0.ɵɵNgModuleDefWithMeta<A11yModule, [typeof i1.CdkAriaLive, typeof i2.CdkTrapFocus, typeof i3.CdkMonitorFocus], [typeof i4.CommonModule, typeof i5.PlatformModule, typeof i6.ObserversModule], [typeof i1.CdkAriaLive, typeof i2.CdkTrapFocus, typeof i3.CdkMonitorFocus]>;
+    static ɵmod: i0.ɵɵNgModuleDefWithMeta<A11yModule, [typeof i1.CdkAriaLive, typeof i2.CdkTrapFocus, typeof i3.CdkMonitorFocus], [typeof i4.PlatformModule, typeof i5.ObserversModule], [typeof i1.CdkAriaLive, typeof i2.CdkTrapFocus, typeof i3.CdkMonitorFocus]>;
 }
 
 export declare class ActiveDescendantKeyManager<T> extends ListKeyManager<Highlightable & T> {
@@ -25,10 +25,11 @@ export declare const CDK_DESCRIBEDBY_HOST_ATTRIBUTE = "cdk-describedby-host";
 export declare const CDK_DESCRIBEDBY_ID_PREFIX = "cdk-describedby-message";
 
 export declare class CdkAriaLive implements OnDestroy {
-    politeness: AriaLivePoliteness;
+    get politeness(): AriaLivePoliteness;
+    set politeness(value: AriaLivePoliteness);
     constructor(_elementRef: ElementRef, _liveAnnouncer: LiveAnnouncer, _contentObserver: ContentObserver, _ngZone: NgZone);
     ngOnDestroy(): void;
-    static ɵdir: i0.ɵɵDirectiveDefWithMeta<CdkAriaLive, "[cdkAriaLive]", ["cdkAriaLive"], { 'politeness': "cdkAriaLive" }, {}, never>;
+    static ɵdir: i0.ɵɵDirectiveDefWithMeta<CdkAriaLive, "[cdkAriaLive]", ["cdkAriaLive"], { "politeness": "cdkAriaLive"; }, {}, never>;
     static ɵfac: i0.ɵɵFactoryDef<CdkAriaLive>;
 }
 
@@ -36,13 +37,15 @@ export declare class CdkMonitorFocus implements OnDestroy {
     cdkFocusChange: EventEmitter<FocusOrigin>;
     constructor(_elementRef: ElementRef<HTMLElement>, _focusMonitor: FocusMonitor);
     ngOnDestroy(): void;
-    static ɵdir: i0.ɵɵDirectiveDefWithMeta<CdkMonitorFocus, "[cdkMonitorElementFocus], [cdkMonitorSubtreeFocus]", never, {}, { 'cdkFocusChange': "cdkFocusChange" }, never>;
+    static ɵdir: i0.ɵɵDirectiveDefWithMeta<CdkMonitorFocus, "[cdkMonitorElementFocus], [cdkMonitorSubtreeFocus]", never, {}, { "cdkFocusChange": "cdkFocusChange"; }, never>;
     static ɵfac: i0.ɵɵFactoryDef<CdkMonitorFocus>;
 }
 
 export declare class CdkTrapFocus implements OnDestroy, AfterContentInit, DoCheck {
-    autoCapture: boolean;
-    enabled: boolean;
+    get autoCapture(): boolean;
+    set autoCapture(value: boolean);
+    get enabled(): boolean;
+    set enabled(value: boolean);
     focusTrap: FocusTrap;
     constructor(_elementRef: ElementRef<HTMLElement>, _focusTrapFactory: FocusTrapFactory, _document: any);
     ngAfterContentInit(): void;
@@ -50,7 +53,7 @@ export declare class CdkTrapFocus implements OnDestroy, AfterContentInit, DoChec
     ngOnDestroy(): void;
     static ngAcceptInputType_autoCapture: BooleanInput;
     static ngAcceptInputType_enabled: BooleanInput;
-    static ɵdir: i0.ɵɵDirectiveDefWithMeta<CdkTrapFocus, "[cdkTrapFocus]", ["cdkTrapFocus"], { 'enabled': "cdkTrapFocus", 'autoCapture': "cdkTrapFocusAutoCapture" }, {}, never>;
+    static ɵdir: i0.ɵɵDirectiveDefWithMeta<CdkTrapFocus, "[cdkTrapFocus]", ["cdkTrapFocus"], { "enabled": "cdkTrapFocus"; "autoCapture": "cdkTrapFocusAutoCapture"; }, {}, never>;
     static ɵfac: i0.ɵɵFactoryDef<CdkTrapFocus>;
 }
 
@@ -85,7 +88,8 @@ export interface FocusOptions {
 export declare type FocusOrigin = 'touch' | 'mouse' | 'keyboard' | 'program' | null;
 
 export declare class FocusTrap {
-    enabled: boolean;
+    get enabled(): boolean;
+    set enabled(value: boolean);
     protected endAnchorListener: () => boolean;
     protected startAnchorListener: () => boolean;
     constructor(_element: HTMLElement, _checker: InteractivityChecker, _ngZone: NgZone, _document: Document, deferAnchors?: boolean);
@@ -139,8 +143,8 @@ export declare class InteractivityChecker {
 export declare function isFakeMousedownFromScreenReader(event: MouseEvent): boolean;
 
 export declare class ListKeyManager<T extends ListKeyManagerOption> {
-    readonly activeItem: T | null;
-    readonly activeItemIndex: number | null;
+    get activeItem(): T | null;
+    get activeItemIndex(): number | null;
     change: Subject<number>;
     tabOut: Subject<void>;
     constructor(_items: QueryList<T> | T[]);

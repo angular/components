@@ -23,9 +23,12 @@ export declare const MAT_ICON_LOCATION: InjectionToken<MatIconLocation>;
 export declare function MAT_ICON_LOCATION_FACTORY(): MatIconLocation;
 
 export declare class MatIcon extends _MatIconMixinBase implements OnChanges, OnInit, AfterViewChecked, CanColor, OnDestroy {
-    fontIcon: string;
-    fontSet: string;
-    inline: boolean;
+    get fontIcon(): string;
+    set fontIcon(value: string);
+    get fontSet(): string;
+    set fontSet(value: string);
+    get inline(): boolean;
+    set inline(inline: boolean);
     svgIcon: string;
     constructor(elementRef: ElementRef<HTMLElement>, _iconRegistry: MatIconRegistry, ariaHidden: string,
     _location?: MatIconLocation | undefined, _errorHandler?: ErrorHandler | undefined);
@@ -34,7 +37,7 @@ export declare class MatIcon extends _MatIconMixinBase implements OnChanges, OnI
     ngOnDestroy(): void;
     ngOnInit(): void;
     static ngAcceptInputType_inline: BooleanInput;
-    static ɵcmp: i0.ɵɵComponentDefWithMeta<MatIcon, "mat-icon", ["matIcon"], { 'color': "color", 'inline': "inline", 'svgIcon': "svgIcon", 'fontSet': "fontSet", 'fontIcon': "fontIcon" }, {}, never>;
+    static ɵcmp: i0.ɵɵComponentDefWithMeta<MatIcon, "mat-icon", ["matIcon"], { "color": "color"; "inline": "inline"; "svgIcon": "svgIcon"; "fontSet": "fontSet"; "fontIcon": "fontIcon"; }, {}, never>;
     static ɵfac: i0.ɵɵFactoryDef<MatIcon>;
 }
 

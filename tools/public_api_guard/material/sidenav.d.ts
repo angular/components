@@ -6,21 +6,25 @@ export declare class MatDrawer implements AfterContentInit, AfterContentChecked,
     _animationEnd: Subject<AnimationEvent>;
     _animationStarted: Subject<AnimationEvent>;
     _animationState: 'open-instant' | 'open' | 'void';
-    readonly _closedStream: Observable<void>;
+    get _closedStream(): Observable<void>;
     _container?: MatDrawerContainer | undefined;
-    readonly _isFocusTrapEnabled: boolean;
     readonly _modeChanged: Subject<void>;
-    readonly _openedStream: Observable<void>;
-    readonly _width: number;
-    autoFocus: boolean;
-    readonly closedStart: Observable<void>;
-    disableClose: boolean;
-    mode: MatDrawerMode;
+    get _openedStream(): Observable<void>;
+    get _width(): number;
+    get autoFocus(): boolean;
+    set autoFocus(value: boolean);
+    get closedStart(): Observable<void>;
+    get disableClose(): boolean;
+    set disableClose(value: boolean);
+    get mode(): MatDrawerMode;
+    set mode(value: MatDrawerMode);
     onPositionChanged: EventEmitter<void>;
-    opened: boolean;
+    get opened(): boolean;
+    set opened(value: boolean);
     readonly openedChange: EventEmitter<boolean>;
-    readonly openedStart: Observable<void>;
-    position: 'start' | 'end';
+    get openedStart(): Observable<void>;
+    get position(): 'start' | 'end';
+    set position(value: 'start' | 'end');
     constructor(_elementRef: ElementRef<HTMLElement>, _focusTrapFactory: FocusTrapFactory, _focusMonitor: FocusMonitor, _platform: Platform, _ngZone: NgZone, _doc: any,
     _container?: MatDrawerContainer | undefined);
     _animationDoneListener(event: AnimationEvent): void;
@@ -34,7 +38,7 @@ export declare class MatDrawer implements AfterContentInit, AfterContentChecked,
     static ngAcceptInputType_autoFocus: BooleanInput;
     static ngAcceptInputType_disableClose: BooleanInput;
     static ngAcceptInputType_opened: BooleanInput;
-    static ɵcmp: i0.ɵɵComponentDefWithMeta<MatDrawer, "mat-drawer", ["matDrawer"], { 'position': "position", 'mode': "mode", 'disableClose': "disableClose", 'autoFocus': "autoFocus", 'opened': "opened" }, { 'openedChange': "openedChange", '_openedStream': "opened", 'openedStart': "openedStart", '_closedStream': "closed", 'closedStart': "closedStart", 'onPositionChanged': "positionChanged" }, never>;
+    static ɵcmp: i0.ɵɵComponentDefWithMeta<MatDrawer, "mat-drawer", ["matDrawer"], { "position": "position"; "mode": "mode"; "disableClose": "disableClose"; "autoFocus": "autoFocus"; "opened": "opened"; }, { "openedChange": "openedChange"; "_openedStream": "opened"; "openedStart": "openedStart"; "_closedStream": "closed"; "closedStart": "closedStart"; "onPositionChanged": "positionChanged"; }, never>;
     static ɵfac: i0.ɵɵFactoryDef<MatDrawer>;
 }
 
@@ -56,12 +60,14 @@ export declare class MatDrawerContainer implements AfterContentInit, DoCheck, On
     };
     _drawers: QueryList<MatDrawer>;
     _userContent: MatDrawerContent;
-    autosize: boolean;
+    get autosize(): boolean;
+    set autosize(value: boolean);
     readonly backdropClick: EventEmitter<void>;
-    readonly end: MatDrawer | null;
-    hasBackdrop: any;
-    readonly scrollable: CdkScrollable;
-    readonly start: MatDrawer | null;
+    get end(): MatDrawer | null;
+    get hasBackdrop(): any;
+    set hasBackdrop(value: any);
+    get scrollable(): CdkScrollable;
+    get start(): MatDrawer | null;
     constructor(_dir: Directionality, _element: ElementRef<HTMLElement>, _ngZone: NgZone, _changeDetectorRef: ChangeDetectorRef, viewportRuler: ViewportRuler, defaultAutosize?: boolean, _animationMode?: string | undefined);
     _closeModalDrawer(): void;
     _isShowingBackdrop(): boolean;
@@ -74,7 +80,7 @@ export declare class MatDrawerContainer implements AfterContentInit, DoCheck, On
     updateContentMargins(): void;
     static ngAcceptInputType_autosize: BooleanInput;
     static ngAcceptInputType_hasBackdrop: BooleanInput;
-    static ɵcmp: i0.ɵɵComponentDefWithMeta<MatDrawerContainer, "mat-drawer-container", ["matDrawerContainer"], { 'autosize': "autosize", 'hasBackdrop': "hasBackdrop" }, { 'backdropClick': "backdropClick" }, ["_content", "_allDrawers"]>;
+    static ɵcmp: i0.ɵɵComponentDefWithMeta<MatDrawerContainer, "mat-drawer-container", ["matDrawerContainer"], { "autosize": "autosize"; "hasBackdrop": "hasBackdrop"; }, { "backdropClick": "backdropClick"; }, ["_content", "_allDrawers"]>;
     static ɵfac: i0.ɵɵFactoryDef<MatDrawerContainer>;
 }
 
@@ -91,23 +97,22 @@ export declare type MatDrawerMode = 'over' | 'push' | 'side';
 export declare type MatDrawerToggleResult = 'open' | 'close';
 
 export declare class MatSidenav extends MatDrawer {
-    fixedBottomGap: number;
-    fixedInViewport: boolean;
-    fixedTopGap: number;
-    static ngAcceptInputType_autoFocus: BooleanInput;
-    static ngAcceptInputType_disableClose: BooleanInput;
+    get fixedBottomGap(): number;
+    set fixedBottomGap(value: number);
+    get fixedInViewport(): boolean;
+    set fixedInViewport(value: boolean);
+    get fixedTopGap(): number;
+    set fixedTopGap(value: number);
     static ngAcceptInputType_fixedBottomGap: NumberInput;
     static ngAcceptInputType_fixedInViewport: BooleanInput;
     static ngAcceptInputType_fixedTopGap: NumberInput;
-    static ngAcceptInputType_opened: BooleanInput;
-    static ɵcmp: i0.ɵɵComponentDefWithMeta<MatSidenav, "mat-sidenav", ["matSidenav"], { 'fixedInViewport': "fixedInViewport", 'fixedTopGap': "fixedTopGap", 'fixedBottomGap': "fixedBottomGap" }, {}, never>;
+    static ɵcmp: i0.ɵɵComponentDefWithMeta<MatSidenav, "mat-sidenav", ["matSidenav"], { "fixedInViewport": "fixedInViewport"; "fixedTopGap": "fixedTopGap"; "fixedBottomGap": "fixedBottomGap"; }, {}, never>;
     static ɵfac: i0.ɵɵFactoryDef<MatSidenav>;
 }
 
 export declare class MatSidenavContainer extends MatDrawerContainer {
     _allDrawers: QueryList<MatSidenav>;
     _content: MatSidenavContent;
-    static ngAcceptInputType_autosize: BooleanInput;
     static ngAcceptInputType_hasBackdrop: BooleanInput;
     static ɵcmp: i0.ɵɵComponentDefWithMeta<MatSidenavContainer, "mat-sidenav-container", ["matSidenavContainer"], {}, {}, ["_content", "_allDrawers"]>;
     static ɵfac: i0.ɵɵFactoryDef<MatSidenavContainer>;

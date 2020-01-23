@@ -3,7 +3,8 @@ export declare const MAT_BOTTOM_SHEET_DATA: InjectionToken<any>;
 export declare const MAT_BOTTOM_SHEET_DEFAULT_OPTIONS: InjectionToken<MatBottomSheetConfig<any>>;
 
 export declare class MatBottomSheet implements OnDestroy {
-    _openedBottomSheetRef: MatBottomSheetRef<any> | null;
+    get _openedBottomSheetRef(): MatBottomSheetRef<any> | null;
+    set _openedBottomSheetRef(value: MatBottomSheetRef<any> | null);
     constructor(_overlay: Overlay, _injector: Injector, _parentBottomSheet: MatBottomSheet, _location?: Location | undefined, _defaultOptions?: MatBottomSheetConfig<any> | undefined);
     dismiss(): void;
     ngOnDestroy(): void;
@@ -53,7 +54,7 @@ export declare class MatBottomSheetContainer extends BasePortalOutlet implements
 
 export declare class MatBottomSheetModule {
     static ɵinj: i0.ɵɵInjectorDef<MatBottomSheetModule>;
-    static ɵmod: i0.ɵɵNgModuleDefWithMeta<MatBottomSheetModule, [typeof i1.MatBottomSheetContainer], [typeof i2.CommonModule, typeof i3.OverlayModule, typeof i4.MatCommonModule, typeof i5.PortalModule], [typeof i1.MatBottomSheetContainer, typeof i4.MatCommonModule]>;
+    static ɵmod: i0.ɵɵNgModuleDefWithMeta<MatBottomSheetModule, [typeof i1.MatBottomSheetContainer], [typeof i2.OverlayModule, typeof i3.MatCommonModule, typeof i4.PortalModule], [typeof i1.MatBottomSheetContainer, typeof i3.MatCommonModule]>;
 }
 
 export declare class MatBottomSheetRef<T = any, R = any> {

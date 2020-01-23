@@ -12,7 +12,7 @@ const fs = require('fs');
  * Version of the post install patch. Needs to be incremented when patches
  * have been added or removed.
  */
-const PATCH_VERSION = 1;
+const PATCH_VERSION = 2;
 
 /** Path to the project directory. */
 const projectDir = path.join(__dirname, '../..');
@@ -28,6 +28,18 @@ shelljs.cd(projectDir);
 
 // Workaround for https://github.com/angular/angular/issues/18810.
 shelljs.exec('ngc -p angular-tsconfig.json');
+
+try {
+  // Temporary patch to make @angular/bazel compatible with rules_nodejs 1.0.0.
+  // This is needed to resolve the dependency sandwich between angular components and
+  // repo framework. It can be removed with a future @angular/bazel update.
+  // try/catch needed for this the material CI tests to work in angular/repo
+  applyPatch(path.join(__dirname, './angular_bazel_rules_nodejs_1.0.0.patch'));
+} catch (_) {}
+
+// Temporary patch for ts-api-guardian to be compatible with rules_nodejs 1.0.0.
+// TODO: a new ts-api-guardian release is needed.
+applyPatch(path.join(__dirname, './ts_api_guardian_rules_nodejs_1.0.0.patch'));
 
 // Workaround for https://github.com/angular/angular/issues/30586. It's not possible to
 // enable tsickle decorator processing without enabling import rewriting to closure.
@@ -108,7 +120,6 @@ searchAndReplace(`[formatProperty + "_ivy_ngcc"]`, '[formatProperty]',
 searchAndReplace(/angular_compiler_options = {/, `$&
         "strictTemplates": True,
         "strictDomLocalRefTypes ": False,
-        "strictAttributeTypes": False,
         "strictDomEventTypes": False,`, 'node_modules/@angular/bazel/src/ng_module.bzl');
 
 // More info in https://github.com/angular/angular/pull/33786

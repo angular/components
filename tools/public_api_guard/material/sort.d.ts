@@ -16,8 +16,10 @@ export declare function MAT_SORT_HEADER_INTL_PROVIDER_FACTORY(parentIntl: MatSor
 export declare class MatSort extends _MatSortMixinBase implements CanDisable, HasInitialized, OnChanges, OnDestroy, OnInit {
     readonly _stateChanges: Subject<void>;
     active: string;
-    direction: SortDirection;
-    disableClear: boolean;
+    get direction(): SortDirection;
+    set direction(direction: SortDirection);
+    get disableClear(): boolean;
+    set disableClear(v: boolean);
     readonly sortChange: EventEmitter<Sort>;
     sortables: Map<string, MatSortable>;
     start: 'asc' | 'desc';
@@ -30,7 +32,7 @@ export declare class MatSort extends _MatSortMixinBase implements CanDisable, Ha
     sort(sortable: MatSortable): void;
     static ngAcceptInputType_disableClear: BooleanInput;
     static ngAcceptInputType_disabled: BooleanInput;
-    static ɵdir: i0.ɵɵDirectiveDefWithMeta<MatSort, "[matSort]", ["matSort"], { 'disabled': "matSortDisabled", 'active': "matSortActive", 'start': "matSortStart", 'direction': "matSortDirection", 'disableClear': "matSortDisableClear" }, { 'sortChange': "matSortChange" }, never>;
+    static ɵdir: i0.ɵɵDirectiveDefWithMeta<MatSort, "[matSort]", ["matSort"], { "disabled": "matSortDisabled"; "active": "matSortActive"; "start": "matSortStart"; "direction": "matSortDirection"; "disableClear": "matSortDisableClear"; }, { "sortChange": "matSortChange"; }, never>;
     static ɵfac: i0.ɵɵFactoryDef<MatSort>;
 }
 
@@ -58,7 +60,8 @@ export declare class MatSortHeader extends _MatSortHeaderMixinBase implements Ca
     _sort: MatSort;
     _viewState: ArrowViewStateTransition;
     arrowPosition: 'before' | 'after';
-    disableClear: boolean;
+    get disableClear(): boolean;
+    set disableClear(v: boolean);
     id: string;
     start: 'asc' | 'desc';
     constructor(_intl: MatSortHeaderIntl, changeDetectorRef: ChangeDetectorRef, _sort: MatSort, _columnDef: MatSortHeaderColumnDef,
@@ -77,7 +80,7 @@ export declare class MatSortHeader extends _MatSortHeaderMixinBase implements Ca
     ngOnInit(): void;
     static ngAcceptInputType_disableClear: BooleanInput;
     static ngAcceptInputType_disabled: BooleanInput;
-    static ɵcmp: i0.ɵɵComponentDefWithMeta<MatSortHeader, "[mat-sort-header]", ["matSortHeader"], { 'disabled': "disabled", 'id': "mat-sort-header", 'arrowPosition': "arrowPosition", 'start': "start", 'disableClear': "disableClear" }, {}, never>;
+    static ɵcmp: i0.ɵɵComponentDefWithMeta<MatSortHeader, "[mat-sort-header]", ["matSortHeader"], { "disabled": "disabled"; "id": "mat-sort-header"; "arrowPosition": "arrowPosition"; "start": "start"; "disableClear": "disableClear"; }, {}, never>;
     static ɵfac: i0.ɵɵFactoryDef<MatSortHeader>;
 }
 

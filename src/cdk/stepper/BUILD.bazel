@@ -15,7 +15,6 @@ ng_module(
         "//src/cdk/coercion",
         "//src/cdk/key",
         "//src/cdk/keycodes",
-        "@npm//@angular/common",
         "@npm//@angular/core",
         "@npm//@angular/forms",
         "@npm//rxjs",
