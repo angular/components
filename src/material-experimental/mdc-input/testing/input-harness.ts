@@ -9,6 +9,4 @@
 import {MatInputHarness as BaseInputHarness} from '@angular/material/input/testing';
 
 /** Harness for interacting with a MDC-based Material inputs in tests. */
-export class MatInputHarness extends BaseInputHarness {
-  static hostSelector = '.mat-mdc-input-element';
-}
+export class MatInputHarness extends BaseInputHarness {}
