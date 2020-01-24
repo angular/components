@@ -5,9 +5,15 @@ import {
   TestElement
 } from '@angular/cdk/testing';
 import {ProtractorHarnessEnvironment} from '@angular/cdk/testing/protractor';
-import {browser} from 'protractor';
+import {browser, by, ElementFinder} from 'protractor';
 import {MainComponentHarness} from './harnesses/main-component-harness';
 import {SubComponentHarness, SubComponentSpecialHarness} from './harnesses/sub-component-harness';
+import {querySelectorAll as piercingQuerySelectorAll} from 'kagekiri';
+
+const piercingQueryFn =
+    (selector: string, root: ElementFinder) => root.all(by.js(function(this: any) {
+      piercingQuerySelectorAll(selector, this);
+    }));
 
 describe('ProtractorHarnessEnvironment', () => {
   beforeEach(async () => {
@@ -460,6 +466,27 @@ describe('ProtractorHarnessEnvironment', () => {
       }
     });
   });
+
+    describe('shadow DOM interaction', () => {
+      it('should not pierce shadow boundary by default', async () => {
+        const harness = await ProtractorHarnessEnvironment.loader(piercingQueryFn)
+            .getHarness(MainComponentHarness);
+        expect(await harness.shadows()).toEqual([]);
+      });
+
+      it('should pierce shadow boundary when using piercing query', async () => {
+        const harness = await ProtractorHarnessEnvironment.loader(piercingQueryFn)
+            .getHarness(MainComponentHarness);
+        const shadows = await harness.shadows();
+        expect(await Promise.all(shadows.map(el => el.text()))).toEqual(['Shadow 1', 'Shadow 2']);
+      });
+
+      it('should allow querying across shadow boundary', async () => {
+        const harness = await ProtractorHarnessEnvironment.loader(piercingQueryFn)
+            .getHarness(MainComponentHarness);
+        expect(await (await harness.deepShadow()).text()).toBe('Shadow 2');
+      });
+    });
 });
 
 async function checkIsElement(result: ComponentHarness | TestElement, selector?: string) {
