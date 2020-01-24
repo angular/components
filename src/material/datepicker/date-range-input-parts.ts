@@ -60,14 +60,18 @@ export const MAT_DATE_RANGE_INPUT_PARENT =
  * Base class for the individual inputs that can be projected inside a `mat-date-range-input`.
  */
 @Directive()
-class MatDateRangeInputPartBase<D>
+abstract class MatDateRangeInputPartBase<D>
   extends MatDatepickerInputBase<DateRange<D>, D> implements OnInit, DoCheck {
 
   /** @docs-private */
   ngControl: NgControl;
 
   /** @docs-private */
-  updateErrorState: () => void;
+  abstract updateErrorState(): void;
+
+  protected abstract _validator: ValidatorFn | null;
+  protected abstract _assignValueToModel(value: D | null): void;
+  protected abstract _getValueFromModel(modelValue: DateRange<D>): D | null;
 
   constructor(
     @Inject(MAT_DATE_RANGE_INPUT_PARENT) public _rangeInput: MatDateRangeInputParent,
@@ -129,17 +133,12 @@ class MatDateRangeInputPartBase<D>
   protected _openPopup(): void {
     this._rangeInput._openDatepicker();
   }
-
-  // Dummy property implementations since we can't pass an abstract class
-  // into a mixin. These are overridden by the individual input classes.
-  protected _validator: ValidatorFn | null;
-  protected _assignValueToModel: (value: D | null) => void;
-  protected _getValueFromModel: (modelValue: DateRange<D>) => D | null;
 }
 
 const _MatDateRangeInputBase:
     CanUpdateErrorStateCtor & typeof MatDateRangeInputPartBase =
-    mixinErrorState(MatDateRangeInputPartBase);
+    // Needs to be `as any`, because the base class is abstract.
+    mixinErrorState(MatDateRangeInputPartBase as any);
 
 /** Input for entering the start date in a `mat-date-range-input`. */
 @Directive({
@@ -170,8 +169,12 @@ export class MatStartDate<D> extends _MatDateRangeInputBase<D>
   implements CanUpdateErrorState {
   // TODO(crisbeto): start-range-specific validators should go here.
   protected _validator = Validators.compose([this._parseValidator]);
-  protected _getValueFromModel = (modelValue: DateRange<D>) => modelValue.start;
-  protected _assignValueToModel = (value: D | null) => {
+
+  protected _getValueFromModel(modelValue: DateRange<D>) {
+    return modelValue.start;
+  }
+
+  protected _assignValueToModel(value: D | null) {
     if (this._model) {
       this._model.updateSelection(new DateRange(value, this._model.selection.end), this);
     }
@@ -216,8 +219,12 @@ export class MatStartDate<D> extends _MatDateRangeInputBase<D>
 export class MatEndDate<D> extends _MatDateRangeInputBase<D> implements CanUpdateErrorState {
   // TODO(crisbeto): end-range-specific validators should go here.
   protected _validator = Validators.compose([this._parseValidator]);
-  protected _getValueFromModel = (modelValue: DateRange<D>) => modelValue.end;
-  protected _assignValueToModel = (value: D | null) => {
+
+  protected _getValueFromModel(modelValue: DateRange<D>) {
+    return modelValue.end;
+  }
+
+  protected _assignValueToModel(value: D | null) {
     if (this._model) {
       this._model.updateSelection(new DateRange(this._model.selection.start, value), this);
     }
