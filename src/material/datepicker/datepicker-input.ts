@@ -6,7 +6,6 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {BooleanInput} from '@angular/cdk/coercion';
 import {
   Directive,
   ElementRef,
@@ -185,5 +184,4 @@ export class MatDatepickerInput<D> extends MatDatepickerInputBase<D | null, D> {
   // Accept `any` to avoid conflicts with other directives on `<input>` that
   // may accept different types.
   static ngAcceptInputType_value: any;
-  static ngAcceptInputType_disabled: BooleanInput;
 }
