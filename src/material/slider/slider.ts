@@ -57,7 +57,7 @@ import {
 } from '@angular/material/core';
 import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 import {normalizePassiveListenerOptions} from '@angular/cdk/platform';
-import { DOCUMENT } from '@angular/common';
+import {DOCUMENT} from '@angular/common';
 import {Subscription} from 'rxjs';
 
 const activeEventOptions = normalizePassiveListenerOptions({passive: false});
@@ -495,13 +495,14 @@ export class MatSlider extends _MatSliderMixinBase
   constructor(elementRef: ElementRef,
               private _focusMonitor: FocusMonitor,
               private _changeDetectorRef: ChangeDetectorRef,
-              @Inject(DOCUMENT) document: any,
               @Optional() private _dir: Directionality,
               @Attribute('tabindex') tabIndex: string,
               // @breaking-change 8.0.0 `_animationMode` parameter to be made required.
               @Optional() @Inject(ANIMATION_MODULE_TYPE) public _animationMode?: string,
               // @breaking-change 9.0.0 `_ngZone` parameter to be made required.
-              private _ngZone?: NgZone) {
+              private _ngZone?: NgZone,
+              /** @breaking-change 11.0.0 make document required */
+              @Optional() @Inject(DOCUMENT) document?: any) {
     super(elementRef);
 
     this._document = document;
