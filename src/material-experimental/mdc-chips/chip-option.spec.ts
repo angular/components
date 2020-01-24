@@ -3,7 +3,6 @@ import {SPACE} from '@angular/cdk/keycodes';
 import {createKeyboardEvent, dispatchFakeEvent} from '@angular/cdk/testing/private';
 import {Component, DebugElement, ViewChild} from '@angular/core';
 import {async, ComponentFixture, fakeAsync, flush, TestBed} from '@angular/core/testing';
-import {MAT_RIPPLE_GLOBAL_OPTIONS, RippleGlobalOptions} from '@angular/material/core';
 import {By} from '@angular/platform-browser';
 import {Subject} from 'rxjs';
 import {
@@ -20,17 +19,14 @@ describe('MDC-based Option Chips', () => {
   let chipDebugElement: DebugElement;
   let chipNativeElement: HTMLElement;
   let chipInstance: MatChipOption;
-  let globalRippleOptions: RippleGlobalOptions;
 
   let dir = 'ltr';
 
   beforeEach(async(() => {
-    globalRippleOptions = {};
     TestBed.configureTestingModule({
       imports: [MatChipsModule],
       declarations: [SingleChip],
       providers: [
-        {provide: MAT_RIPPLE_GLOBAL_OPTIONS, useFactory: () => globalRippleOptions},
         {provide: Directionality, useFactory: () => ({
           value: dir,
           change: new Subject()
@@ -268,6 +264,10 @@ describe('MDC-based Option Chips', () => {
 
         expect(chipNativeElement.getAttribute('aria-disabled')).toBe('true');
       });
+    });
+
+    it('should have a focus indicator', () => {
+      expect(chipNativeElement.classList.contains('mat-mdc-focus-indicator')).toBe(true);
     });
   });
 });

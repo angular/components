@@ -2,7 +2,7 @@ import {Directionality} from '@angular/cdk/bidi';
 import {createFakeEvent} from '@angular/cdk/testing/private';
 import {Component, DebugElement, ViewChild} from '@angular/core';
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
-import {MAT_RIPPLE_GLOBAL_OPTIONS, RippleGlobalOptions} from '@angular/material/core';
+import {MatRipple} from '@angular/material/core';
 import {By} from '@angular/platform-browser';
 import {Subject} from 'rxjs';
 import {MatChip, MatChipEvent, MatChipSet, MatChipsModule} from './index';
@@ -13,17 +13,16 @@ describe('MDC-based MatChip', () => {
   let chipDebugElement: DebugElement;
   let chipNativeElement: HTMLElement;
   let chipInstance: MatChip;
-  let globalRippleOptions: RippleGlobalOptions;
+  let chipRippleDebugElement: DebugElement;
+  let chipRippleInstance: MatRipple;
 
   let dir = 'ltr';
 
   beforeEach(async(() => {
-    globalRippleOptions = {};
     TestBed.configureTestingModule({
       imports: [MatChipsModule],
       declarations: [BasicChip, SingleChip],
       providers: [
-        {provide: MAT_RIPPLE_GLOBAL_OPTIONS, useFactory: () => globalRippleOptions},
         {provide: Directionality, useFactory: () => ({
           value: dir,
           change: new Subject()
@@ -35,7 +34,6 @@ describe('MDC-based MatChip', () => {
   }));
 
   describe('MatBasicChip', () => {
-
     beforeEach(() => {
       fixture = TestBed.createComponent(BasicChip);
       fixture.detectChanges();
@@ -43,10 +41,16 @@ describe('MDC-based MatChip', () => {
       chipDebugElement = fixture.debugElement.query(By.directive(MatChip))!;
       chipNativeElement = chipDebugElement.nativeElement;
       chipInstance = chipDebugElement.injector.get<MatChip>(MatChip);
+      chipRippleDebugElement = chipDebugElement.query(By.directive(MatRipple))!;
+      chipRippleInstance = chipRippleDebugElement.injector.get<MatRipple>(MatRipple);
     });
 
     it('adds the `mat-mdc-basic-chip` class', () => {
       expect(chipNativeElement.classList).toContain('mat-mdc-basic-chip');
+    });
+
+    it('should have its ripple disabled', () => {
+      expect(chipRippleInstance.disabled).toBe(true, 'Expected basic chip ripples to be disabled.');
     });
   });
 
@@ -60,6 +64,8 @@ describe('MDC-based MatChip', () => {
       chipDebugElement = fixture.debugElement.query(By.directive(MatChip))!;
       chipNativeElement = chipDebugElement.nativeElement;
       chipInstance = chipDebugElement.injector.get<MatChip>(MatChip);
+      chipRippleDebugElement = chipDebugElement.query(By.directive(MatRipple))!;
+      chipRippleInstance = chipRippleDebugElement.injector.get<MatRipple>(MatRipple);
       testComponent = fixture.debugElement.componentInstance;
     });
 
@@ -115,12 +121,22 @@ describe('MDC-based MatChip', () => {
       expect(chipNativeElement.style.display).toBe('none');
     });
 
-    it('should be able to disable ripples through ripple global options at runtime', () => {
-      expect(chipInstance.rippleDisabled).toBe(false, 'Expected chip ripples to be enabled.');
+    it('should be able to disable ripples with the `[rippleDisabled]` input', () => {
+      expect(chipRippleInstance.disabled).toBe(false, 'Expected chip ripples to be enabled.');
 
-      globalRippleOptions.disabled = true;
+      testComponent.rippleDisabled = true;
+      fixture.detectChanges();
 
-      expect(chipInstance.rippleDisabled).toBe(true, 'Expected chip ripples to be disabled.');
+      expect(chipRippleInstance.disabled).toBe(true, 'Expected chip ripples to be disabled.');
+    });
+
+    it('should disable ripples when the chip is disabled', () => {
+      expect(chipRippleInstance.disabled).toBe(false, 'Expected chip ripples to be enabled.');
+
+      testComponent.disabled = true;
+      fixture.detectChanges();
+
+      expect(chipRippleInstance.disabled).toBe(true, 'Expected chip ripples to be disabled.');
     });
 
     it('should update the aria-label for disabled chips', () => {
@@ -163,7 +179,7 @@ describe('MDC-based MatChip', () => {
         <mat-chip [removable]="removable"
                  [color]="color" [disabled]="disabled"
                  (focus)="chipFocus($event)" (destroyed)="chipDestroy($event)"
-                 (removed)="chipRemove($event)" [value]="value">
+                 (removed)="chipRemove($event)" [value]="value" [disableRipple]="rippleDisabled">
           {{name}}
         </mat-chip>
       </div>
@@ -177,6 +193,7 @@ class SingleChip {
   removable: boolean = true;
   shouldShow: boolean = true;
   value: any;
+  rippleDisabled: boolean = false;
 
   chipFocus: (event?: MatChipEvent) => void = () => {};
   chipDestroy: (event?: MatChipEvent) => void = () => {};

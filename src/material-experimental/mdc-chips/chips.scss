@@ -11,10 +11,6 @@
 .mat-mdc-chip {
   // MDC uses a pointer cursor
   cursor: default;
-  // Needed to prevent mat-ripple from escaping the chip
-  overflow: hidden;
-  // Required for the ripple to clip properly in Safari.
-  transform: translateZ(0);
 
   @include cdk-high-contrast {
     outline: solid 1px;
@@ -24,6 +20,20 @@
       outline: dotted 2px;
     }
   }
+}
+
+// The ripple container should match the bounds of the entire chip.
+.mat-mdc-chip-ripple {
+  @include mat-fill;
+
+  // Disable pointer events for the ripple container and state overlay because the container
+  // will overlay the user content and we don't want to disable mouse events on the user content.
+  // Pointer events can be safely disabled because the ripple trigger element is the host element.
+  pointer-events: none;
+
+  // Inherit the border radius from the parent so that state overlay and ripples don't exceed the
+  // parent button boundaries.
+  border-radius: inherit;
 }
 
 // The MDC chip styles related to hover and focus states are intertwined with the MDC ripple styles.
@@ -37,6 +47,7 @@
     content: '';
     pointer-events: none;
     opacity: 0;
+    border-radius: inherit;
   }
 }
 
@@ -79,4 +90,9 @@ input.mat-mdc-chip-input {
     // to ensure that it's visible. We need !important, because the theme styles are very specific.
     stroke: #000 !important;
   }
+}
+
+// Needed for the focus indicator.
+.mat-chip-row-focusable-text-content {
+  position: relative;
 }
