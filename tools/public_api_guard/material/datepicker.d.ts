@@ -281,9 +281,9 @@ export declare class MatDateRangeInput<D> implements MatFormFieldControl<DateRan
 }
 
 export declare class MatEndDate<D> extends _MatDateRangeInputBase<D> implements CanUpdateErrorState {
-    protected _assignValueToModel: (value: D | null) => void;
-    protected _getValueFromModel: (modelValue: DateRange<D>) => D | null;
     protected _validator: ValidatorFn | null;
+    protected _assignValueToModel(value: D | null): void;
+    protected _getValueFromModel(modelValue: DateRange<D>): D | null;
     static ngAcceptInputType_disabled: BooleanInput;
     static ɵdir: i0.ɵɵDirectiveDefWithMeta<MatEndDate<any>, "input[matEndDate]", never, {}, {}, never>;
     static ɵfac: i0.ɵɵFactoryDef<MatEndDate<any>>;
@@ -356,9 +356,9 @@ export declare class MatMultiYearView<D> implements AfterContentInit, OnDestroy 
 }
 
 export declare class MatStartDate<D> extends _MatDateRangeInputBase<D> implements CanUpdateErrorState {
-    protected _assignValueToModel: (value: D | null) => void;
-    protected _getValueFromModel: (modelValue: DateRange<D>) => D | null;
     protected _validator: ValidatorFn | null;
+    protected _assignValueToModel(value: D | null): void;
+    protected _getValueFromModel(modelValue: DateRange<D>): D | null;
     getMirrorValue(): string;
     static ngAcceptInputType_disabled: BooleanInput;
     static ɵdir: i0.ɵɵDirectiveDefWithMeta<MatStartDate<any>, "input[matStartDate]", never, {}, {}, never>;
