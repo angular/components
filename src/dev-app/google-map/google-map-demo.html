@@ -15,6 +15,7 @@
     <map-info-window>Testing 1 2 3</map-info-window>
     <map-polyline *ngIf="isPolylineDisplayed" [options]="polylineOptions"></map-polyline>
     <map-polygon *ngIf="isPolygonDisplayed" [options]="polygonOptions"></map-polygon>
+    <map-rectangle *ngIf="isRectangleDisplayed" [options]="rectangleOptions"></map-rectangle>
   </google-map>
 
   <p><label>Latitude:</label> {{display?.lat}}</p>
@@ -47,6 +48,21 @@
       <input type="checkbox"
              [disabled]="!isPolygonDisplayed"
              (click)="toggleEditablePolygon()">
+    </label>
+  </div>
+
+  <div>
+    <label for="rectangle-checkbox">
+      Toggle Rectangle
+      <input type="checkbox" (click)="toggleRectangleDisplay()">
+    </label>
+  </div>
+  <div>
+    <label for="editable-rectangle-checkbox">
+      Toggle Editable Rectangle
+      <input type="checkbox"
+             [disabled]="!isRectangleDisplayed"
+             (click)="toggleEditableRectangle()">
     </label>
   </div>
 
