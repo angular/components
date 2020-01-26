@@ -560,7 +560,7 @@ The first step in adding support for a new testing environment is to create a `T
 implementation. The `TestElement` interface serves as an environment-agnostic representation of a
 DOM element; it lets harnesses interact with DOM elements regardless of the underlying environment.
 Because some environments don't support interacting with DOM elements synchronously
-(e.g. webdriver), all of the  `TestElement` methods are asynchronous, returning a `Promise` with the
+(e.g. webdriver), all of the `TestElement` methods are asynchronous, returning a `Promise` with the
 result of the operation.
 
 | Method | Description |
