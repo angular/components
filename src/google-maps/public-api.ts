@@ -12,3 +12,4 @@ export {MapInfoWindow} from './map-info-window/map-info-window';
 export {MapMarker} from './map-marker/map-marker';
 export {MapPolygon} from './map-polygon/map-polygon';
 export {MapPolyline} from './map-polyline/map-polyline';
+export {MapRectangle} from './map-rectangle/map-rectangle';
