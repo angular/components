@@ -17,6 +17,7 @@ export interface TestingWindow extends Window {
       InfoWindow?: jasmine.Spy;
       Polyline?: jasmine.Spy;
       Polygon?: jasmine.Spy;
+      Rectangle?: jasmine.Spy;
     };
   };
 }
@@ -172,4 +173,35 @@ export function createPolygonConstructorSpy(polygonSpy: jasmine.SpyObj<google.ma
     };
   }
   return polygonConstructorSpy;
+}
+
+/** Creates a jasmine.SpyObj for a google.maps.Rectangle */
+export function createRectangleSpy(options: google.maps.RectangleOptions):
+    jasmine.SpyObj<google.maps.Rectangle> {
+  const rectangleSpy = jasmine.createSpyObj('google.maps.Rectangle', [
+    'addListener', 'getBounds', 'getDraggable', 'getEditable', 'getVisible', 'setMap', 'setOptions',
+    'setBounds'
+  ]);
+  rectangleSpy.addListener.and.returnValue({remove: () => {}});
+  return rectangleSpy;
+}
+
+/** Creates a jasmine.Spy to watch for the constructor of a google.maps.Rectangle */
+export function createRectangleConstructorSpy(rectangleSpy: jasmine.SpyObj<google.maps.Rectangle>):
+    jasmine.Spy {
+  const rectangleConstructorSpy =
+      jasmine.createSpy('Rectangle constructor', (_options: google.maps.RectangleOptions) => {
+        return rectangleSpy;
+      });
+  const testingWindow: TestingWindow = window;
+  if (testingWindow.google && testingWindow.google.maps) {
+    testingWindow.google.maps['Rectangle'] = rectangleConstructorSpy;
+  } else {
+    testingWindow.google = {
+      maps: {
+        'Rectangle': rectangleConstructorSpy,
+      },
+    };
+  }
+  return rectangleConstructorSpy;
 }
