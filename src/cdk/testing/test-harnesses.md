@@ -499,7 +499,7 @@ class MyPopupHarness extends ComponentHarness {
 #### Accessing elements outside of the component's host element
 
 There are times when a component harness might need to access elements outside of its corresponding
-component's host element. A good example of this are the components that use the
+component's host element. Some good examples of this are the components that use the
 [CDK overlay](https://material.angular.io/cdk/overlay/overview). The CDK overlay creates an element
 that is attached directly to the body, outside of the component's host element. In this case,
 `ComponentHarness` provides a method that can be used to get a `LocatorFactory` for the root element
