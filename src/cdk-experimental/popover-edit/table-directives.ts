@@ -210,7 +210,7 @@ export class CdkPopoverEdit<C> implements AfterViewInit, OnDestroy {
 
     if (value) {
       this.services.editEventDispatcher.doneEditingCell(this.elementRef.nativeElement!);
-      this.services.editEventDispatcher.disabledCells.add(this.elementRef.nativeElement!);
+      this.services.editEventDispatcher.disabledCells.set(this.elementRef.nativeElement!, true);
     } else {
       this.services.editEventDispatcher.disabledCells.delete(this.elementRef.nativeElement!);
     }

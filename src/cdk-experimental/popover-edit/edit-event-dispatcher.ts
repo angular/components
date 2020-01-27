@@ -62,11 +62,12 @@ export class EditEventDispatcher {
   /** A subject that emits mouse move events from the table indicating the targeted row. */
   readonly mouseMove = new Subject<Element|null>();
 
+  // TODO: Use WeakSet once IE11 support is dropped.
   /**
    * Tracks the currently disabled editable cells - edit calls will be ignored
    * for these cells.
    */
-  readonly disabledCells = new WeakSet<Element>();
+  readonly disabledCells = new WeakMap<Element, boolean>();
 
   /** The EditRef for the currently active edit lens (if any). */
   get editRef(): EditRef<any>|null {
