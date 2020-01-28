@@ -6,9 +6,8 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {ComponentHarness, HarnessPredicate} from '@angular/cdk/testing';
+import {BaseHarnessFilters, ComponentHarness, HarnessPredicate} from '@angular/cdk/testing';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
-import {BaseHarnessFilters} from '@angular/cdk/testing';
 import {CellHarnessFilters} from '@angular/material/table/testing';
 
 /** Harness for interacting with a popover edit table cell in tests. */

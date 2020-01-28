@@ -180,7 +180,7 @@ export class CdkPopoverEdit<C> implements AfterViewInit, OnDestroy {
     return this._template;
   }
   set template(template: TemplateRef<any>|null) {
-    if (this._template === template) return;
+    if (this._template === template) { return; }
 
     if (this._template) {
       this._disposeOverlay();
@@ -188,7 +188,7 @@ export class CdkPopoverEdit<C> implements AfterViewInit, OnDestroy {
 
     this._template = template;
   }
-  private: TemplateRef<any>|null _template = null
+  private: TemplateRef<any>|null; _template = null;
 
   /**
    * Implicit context to pass along to the template. Can be omitted if the template
