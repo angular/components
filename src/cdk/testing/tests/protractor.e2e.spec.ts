@@ -5,15 +5,17 @@ import {
   TestElement
 } from '@angular/cdk/testing';
 import {ProtractorHarnessEnvironment} from '@angular/cdk/testing/protractor';
-import {browser, by, ElementFinder} from 'protractor';
+import {browser, by, element as protractorElement, ElementFinder} from 'protractor';
 import {MainComponentHarness} from './harnesses/main-component-harness';
 import {SubComponentHarness, SubComponentSpecialHarness} from './harnesses/sub-component-harness';
-import {querySelectorAll as piercingQuerySelectorAll} from 'kagekiri';
 
-const piercingQueryFn =
-    (selector: string, root: ElementFinder) => root.all(by.js(function(this: any) {
-      piercingQuerySelectorAll(selector, this);
-    }));
+// TODO: is there some better way to do this?
+declare const kagekiri: {
+  querySelectorAll: (selector: string, root: Element) => NodeListOf<Element>;
+};
+
+const piercingQueryFn = (selector: string, root: ElementFinder) => protractorElement.all(by.js(
+    (s: string, r: Element) => kagekiri.querySelectorAll(s, r), selector, root.getWebElement()));
 
 describe('ProtractorHarnessEnvironment', () => {
   beforeEach(async () => {
@@ -469,7 +471,7 @@ describe('ProtractorHarnessEnvironment', () => {
 
     describe('shadow DOM interaction', () => {
       it('should not pierce shadow boundary by default', async () => {
-        const harness = await ProtractorHarnessEnvironment.loader(piercingQueryFn)
+        const harness = await ProtractorHarnessEnvironment.loader()
             .getHarness(MainComponentHarness);
         expect(await harness.shadows()).toEqual([]);
       });

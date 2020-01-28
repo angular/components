@@ -47,11 +47,11 @@ export class ProtractorHarnessEnvironment extends HarnessEnvironment<ElementFind
   }
 
   protected async getAllRawElements(selector: string): Promise<ElementFinder[]> {
-    const elementFinderArray = this._queryFn(selector, this.rawRootElement);
-    const length = await elementFinderArray.count();
+    const elementArrayFinder = this._queryFn(selector, this.rawRootElement);
+    const length = await elementArrayFinder.count();
     const elements: ElementFinder[] = [];
     for (let i = 0; i < length; i++) {
-      elements.push(elementFinderArray.get(i));
+      elements.push(elementArrayFinder.get(i));
     }
     return elements;
   }

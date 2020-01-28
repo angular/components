@@ -7,5 +7,5 @@
  */
 
 declare module 'kagekiri' {
-  export function querySelectorAll(selector: string, root: Element);
+  export function querySelectorAll(selector: string, root: Element): NodeListOf<Element>;
 }

@@ -54,6 +54,5 @@ ng_e2e_test_library(
         "//src/cdk/testing",
         "//src/cdk/testing/private",
         "//src/cdk/testing/protractor",
-        "@npm//kagekiri",
     ],
 )
