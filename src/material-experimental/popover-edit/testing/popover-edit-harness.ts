@@ -6,7 +6,12 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {BaseHarnessFilters, ComponentHarness, HarnessPredicate} from '@angular/cdk/testing';
+import {
+  BaseHarnessFilters,
+  ComponentHarness,
+  HarnessPredicate,
+  TestKey,
+} from '@angular/cdk/testing';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
 import {CellHarnessFilters} from '@angular/material/table/testing';
 
@@ -25,8 +30,8 @@ export class MatPopoverEditCellHarness extends ComponentHarness {
    */
   static with(options: CellHarnessFilters = {}): HarnessPredicate<MatPopoverEditCellHarness> {
     return new HarnessPredicate(MatPopoverEditCellHarness, options)
-        .addOption('triggerText', options.triggerText,
-            (harness, text) => HarnessPredicate.stringMatches(harness.getTriggerText(), text));
+        .addOption('text', options.text,
+            (harness, text) => HarnessPredicate.stringMatches(harness.getCellText(), text));
   }
 
   /** Gets a boolean promise indicating if the menu is disabled. */
