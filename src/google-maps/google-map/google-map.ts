@@ -93,7 +93,8 @@ export class GoogleMap implements OnChanges, OnInit, OnDestroy {
   }
   @Input()
   set options(options: google.maps.MapOptions) {
-    this._options.next(options || DEFAULT_OPTIONS);
+    
+    this._options.next(Object.assign(DEFAULT_OPTIONS, options));
   }
 
   /**
