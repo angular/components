@@ -152,7 +152,7 @@ const POPOVER_EDIT_HOST_BINDINGS = {
   'class': 'cdk-popover-edit-cell',
   '[attr.aria-haspopup]': '!disabled',
   '[attr.aria-expanded]': '_isOpen',
-  '[attr.aria-controls]': '_isOpen && _panelId',
+  '[attr.aria-controls]': '_isOpen ? _panelId : null',
 };
 
 const POPOVER_EDIT_INPUTS = [
@@ -188,7 +188,7 @@ export class CdkPopoverEdit<C> implements AfterViewInit, OnDestroy {
 
     this._template = template;
   }
-  private: TemplateRef<any>|null; _template = null;
+  private _template: TemplateRef<any>|null = null;
 
   /**
    * Implicit context to pass along to the template. Can be omitted if the template

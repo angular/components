@@ -20,7 +20,7 @@ const POPOVER_EDIT_HOST_BINDINGS = {
   'class': 'mat-popover-edit-cell',
   '[attr.aria-haspopup]': '!disabled',
   '[attr.aria-expanded]': '_isOpen',
-  '[attr.aria-controls]': '_isOpen && _panelId',
+  '[attr.aria-controls]': '_isOpen ? _panelId : null',
 };
 
 const POPOVER_EDIT_INPUTS = [
