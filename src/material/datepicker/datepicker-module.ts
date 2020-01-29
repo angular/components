@@ -15,11 +15,11 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatDialogModule} from '@angular/material/dialog';
 import {MatCalendar, MatCalendarHeader} from './calendar';
 import {MatCalendarBody} from './calendar-body';
+import {MatDatepicker} from './datepicker';
 import {
-  MatDatepicker,
   MatDatepickerContent,
   MAT_DATEPICKER_SCROLL_STRATEGY_FACTORY_PROVIDER,
-} from './datepicker';
+} from './datepicker-base';
 import {MatDatepickerInput} from './datepicker-input';
 import {MatDatepickerIntl} from './datepicker-intl';
 import {MatDatepickerToggle, MatDatepickerToggleIcon} from './datepicker-toggle';
@@ -28,6 +28,7 @@ import {MatMultiYearView} from './multi-year-view';
 import {MatYearView} from './year-view';
 import {MatDateRangeInput} from './date-range-input';
 import {MatStartDate, MatEndDate} from './date-range-input-parts';
+import {MatDateRangePicker} from './date-range-picker';
 
 
 @NgModule({
@@ -54,6 +55,7 @@ import {MatStartDate, MatEndDate} from './date-range-input-parts';
     MatDateRangeInput,
     MatStartDate,
     MatEndDate,
+    MatDateRangePicker,
   ],
   declarations: [
     MatCalendar,
@@ -70,6 +72,7 @@ import {MatStartDate, MatEndDate} from './date-range-input-parts';
     MatDateRangeInput,
     MatStartDate,
     MatEndDate,
+    MatDateRangePicker,
   ],
   providers: [
     MatDatepickerIntl,

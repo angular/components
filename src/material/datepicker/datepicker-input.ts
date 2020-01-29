@@ -17,10 +17,8 @@ import {
   AfterViewInit,
 } from '@angular/core';
 import {
-  AbstractControl,
   NG_VALIDATORS,
   NG_VALUE_ACCESSOR,
-  ValidationErrors,
   ValidatorFn,
   Validators,
 } from '@angular/forms';
@@ -33,7 +31,8 @@ import {
 import {MatFormField, MAT_FORM_FIELD} from '@angular/material/form-field';
 import {MAT_INPUT_VALUE_ACCESSOR} from '@angular/material/input';
 import {MatDatepicker} from './datepicker';
-import {MatDatepickerInputBase} from './datepicker-input-base';
+import {MatDatepickerInputBase, DateFilterFn} from './datepicker-input-base';
+import {MatDatepickerControl} from './datepicker-base';
 
 /** @docs-private */
 export const MAT_DATEPICKER_VALUE_ACCESSOR: any = {
@@ -70,7 +69,8 @@ export const MAT_DATEPICKER_VALIDATORS: any = {
   },
   exportAs: 'matDatepickerInput',
 })
-export class MatDatepickerInput<D> extends MatDatepickerInputBase<D | null, D> {
+export class MatDatepickerInput<D> extends MatDatepickerInputBase<D | null, D>
+  implements MatDatepickerControl<D | null> {
   /** The datepicker that this input is associated with. */
   @Input()
   set matDatepicker(datepicker: MatDatepicker<D>) {
@@ -100,35 +100,13 @@ export class MatDatepickerInput<D> extends MatDatepickerInputBase<D | null, D> {
   private _max: D | null;
 
   /** Function that can be used to filter out dates within the datepicker. */
-  @Input()
-  set matDatepickerFilter(value: (date: D | null) => boolean) {
+  @Input('matDatepickerFilter')
+  get dateFilter() { return this._dateFilter; }
+  set dateFilter(value: DateFilterFn<D | null>) {
     this._dateFilter = value;
     this._validatorOnChange();
   }
-  _dateFilter: (date: D | null) => boolean;
-
-  /** The form control validator for the date filter. */
-  private _filterValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
-    const controlValue = this._getValidDateOrNull(this._dateAdapter.deserialize(control.value));
-    return !this._dateFilter || !controlValue || this._dateFilter(controlValue) ?
-        null : {'matDatepickerFilter': true};
-  }
-
-  /** The form control validator for the min date. */
-  private _minValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
-    const controlValue = this._getValidDateOrNull(this._dateAdapter.deserialize(control.value));
-    return (!this.min || !controlValue ||
-        this._dateAdapter.compareDate(this.min, controlValue) <= 0) ?
-        null : {'matDatepickerMin': {'min': this.min, 'actual': controlValue}};
-  }
-
-  /** The form control validator for the max date. */
-  private _maxValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
-    const controlValue = this._getValidDateOrNull(this._dateAdapter.deserialize(control.value));
-    return (!this.max || !controlValue ||
-        this._dateAdapter.compareDate(this.max, controlValue) >= 0) ?
-        null : {'matDatepickerMax': {'max': this.max, 'actual': controlValue}};
-  }
+  private _dateFilter: DateFilterFn<D | null>;
 
   /** The combined form control validator for this input. */
   protected _validator: ValidatorFn | null;
@@ -139,8 +117,7 @@ export class MatDatepickerInput<D> extends MatDatepickerInputBase<D | null, D> {
       @Optional() @Inject(MAT_DATE_FORMATS) dateFormats: MatDateFormats,
       @Optional() @Inject(MAT_FORM_FIELD) private _formField: MatFormField) {
     super(elementRef, dateAdapter, dateFormats);
-    this._validator = Validators.compose(
-      [this._parseValidator, this._minValidator, this._maxValidator, this._filterValidator]);
+    this._validator = Validators.compose(super._getValidators());
   }
 
   /**
@@ -152,8 +129,13 @@ export class MatDatepickerInput<D> extends MatDatepickerInputBase<D | null, D> {
   }
 
   /** Returns the palette used by the input's form field, if any. */
-  _getThemePalette(): ThemePalette {
+  getThemePalette(): ThemePalette {
     return this._formField ? this._formField.color : undefined;
+  }
+
+  /** Gets the value at which the calendar should start. */
+  getStartValue(): D | null {
+    return this.value;
   }
 
   /**
@@ -179,6 +161,21 @@ export class MatDatepickerInput<D> extends MatDatepickerInputBase<D | null, D> {
     if (this._model) {
       this._model.updateSelection(value, this);
     }
+  }
+
+  /** Gets the input's minimum date. */
+  protected _getMinDate() {
+    return this._min;
+  }
+
+  /** Gets the input's maximum date. */
+  protected _getMaxDate() {
+    return this._max;
+  }
+
+  /** Gets the input's date filtering function. */
+  protected _getDateFilter() {
+    return this._dateFilter;
   }
 
   // Accept `any` to avoid conflicts with other directives on `<input>` that
