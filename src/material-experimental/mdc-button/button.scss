@@ -12,7 +12,7 @@
 
   // Add an outline to make buttons more visible in high contrast mode. Stroked buttons
   // don't need a special look in high-contrast mode, because those already have an outline.
-  @include cdk-high-contrast {
+  @include cdk-high-contrast(active, off) {
     &:not(.mdc-button--outlined) {
       outline: solid 1px;
     }
