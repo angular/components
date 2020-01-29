@@ -508,7 +508,8 @@ function createPlayerObservable(
     videoIdObs
     .pipe(
       withLatestFrom(combineLatest([widthObs, heightObs, playerVarsObs])),
-      map(([videoId, [width, height, playerVars]]) => videoId ? ({ videoId, width, height, playerVars, events }) : undefined),
+      map(([videoId, [width, height, playerVars]]) => 
+          videoId ? ({ videoId, width, height, playerVars, events }) : undefined),
     );
 
   return combineLatest([youtubeContainer, playerOptions, of(ngZone)])
