@@ -517,14 +517,14 @@ describe('TestbedHarnessEnvironment', () => {
 
       it('should pierce shadow boundary when using piercing query', async () => {
         const harness = await TestbedHarnessEnvironment
-            .harnessForFixture(fixture, MainComponentHarness, piercingQuerySelectorAll);
+            .harnessForFixture(fixture, MainComponentHarness, {queryFn: piercingQuerySelectorAll});
         const shadows = await harness.shadows();
         expect(await Promise.all(shadows.map(el => el.text()))).toEqual(['Shadow 1', 'Shadow 2']);
       });
 
       it('should allow querying across shadow boundary', async () => {
         const harness = await TestbedHarnessEnvironment
-            .harnessForFixture(fixture, MainComponentHarness, piercingQuerySelectorAll);
+            .harnessForFixture(fixture, MainComponentHarness, {queryFn: piercingQuerySelectorAll});
         expect(await (await harness.deepShadow()).text()).toBe('Shadow 2');
       });
     });

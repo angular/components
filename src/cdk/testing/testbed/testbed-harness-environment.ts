@@ -19,27 +19,40 @@ import {takeWhile} from 'rxjs/operators';
 import {TaskState, TaskStateZoneInterceptor} from './task-state-zone-interceptor';
 import {UnitTestElement} from './unit-test-element';
 
-/** The default query function that respects shadow boundaries. */
-const defaultQueryFn = (selector: string, root: Element) => root.querySelectorAll(selector);
+/** Options to configure the environment. */
+export interface TestbedHarnessEnvironmentOptions {
+  /** The query function used to find DOM elements. */
+  queryFn: (selector: string, root: Element) => ArrayLike<Element>;
+}
+
+/** The default environment options. */
+const defaultEnvironmentOptions: TestbedHarnessEnvironmentOptions = {
+  queryFn: (selector: string, root: Element) => root.querySelectorAll(selector)
+};
 
 /** A `HarnessEnvironment` implementation for Angular's Testbed. */
 export class TestbedHarnessEnvironment extends HarnessEnvironment<Element> {
+  /** Whether the environment has been destroyed. */
   private _destroyed = false;
 
   /** Observable that emits whenever the test task state changes. */
   private _taskState: Observable<TaskState>;
 
+  /** The options for this environment. */
+  private _options: TestbedHarnessEnvironmentOptions;
+
   protected constructor(rawRootElement: Element, private _fixture: ComponentFixture<unknown>,
-      private _queryFn: (selector: string, root: Element) => ArrayLike<Element> = defaultQueryFn) {
+      options?: TestbedHarnessEnvironmentOptions) {
     super(rawRootElement);
+    this._options = {...defaultEnvironmentOptions, ...options};
     this._taskState = TaskStateZoneInterceptor.setup();
     _fixture.componentRef.onDestroy(() => this._destroyed = true);
   }
 
   /** Creates a `HarnessLoader` rooted at the given fixture's root element. */
-  static loader(fixture: ComponentFixture<unknown>,
-      queryFn?: (selector: string, root: Element) => ArrayLike<Element>): HarnessLoader {
-    return new TestbedHarnessEnvironment(fixture.nativeElement, fixture, queryFn);
+  static loader(fixture: ComponentFixture<unknown>, options?: TestbedHarnessEnvironmentOptions):
+      HarnessLoader {
+    return new TestbedHarnessEnvironment(fixture.nativeElement, fixture, options);
   }
 
   /**
@@ -47,8 +60,8 @@ export class TestbedHarnessEnvironment extends HarnessEnvironment<Element> {
    * located outside of a fixture (e.g. overlays appended to the document body).
    */
   static documentRootLoader(fixture: ComponentFixture<unknown>,
-      queryFn?: (selector: string, root: Element) => ArrayLike<Element>): HarnessLoader {
-    return new TestbedHarnessEnvironment(document.body, fixture, queryFn);
+      options?: TestbedHarnessEnvironmentOptions): HarnessLoader {
+    return new TestbedHarnessEnvironment(document.body, fixture, options);
   }
 
   /**
@@ -59,8 +72,8 @@ export class TestbedHarnessEnvironment extends HarnessEnvironment<Element> {
    */
   static async harnessForFixture<T extends ComponentHarness>(
       fixture: ComponentFixture<unknown>, harnessType: ComponentHarnessConstructor<T>,
-      queryFn?: (selector: string, root: Element) => ArrayLike<Element>): Promise<T> {
-    const environment = new TestbedHarnessEnvironment(fixture.nativeElement, fixture, queryFn);
+      options?: TestbedHarnessEnvironmentOptions): Promise<T> {
+    const environment = new TestbedHarnessEnvironment(fixture.nativeElement, fixture, options);
     await environment.forceStabilize();
     return environment.createComponentHarness(harnessType, fixture.nativeElement);
   }
@@ -101,11 +114,11 @@ export class TestbedHarnessEnvironment extends HarnessEnvironment<Element> {
   }
 
   protected createEnvironment(element: Element): HarnessEnvironment<Element> {
-    return new TestbedHarnessEnvironment(element, this._fixture, this._queryFn);
+    return new TestbedHarnessEnvironment(element, this._fixture, this._options);
   }
 
   protected async getAllRawElements(selector: string): Promise<Element[]> {
     await this.forceStabilize();
-    return Array.from(this._queryFn(selector, this.rawRootElement));
+    return Array.from(this._options.queryFn(selector, this.rawRootElement));
   }
 }

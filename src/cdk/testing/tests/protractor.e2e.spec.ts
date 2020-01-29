@@ -9,7 +9,8 @@ import {browser, by, element as protractorElement, ElementFinder} from 'protract
 import {MainComponentHarness} from './harnesses/main-component-harness';
 import {SubComponentHarness, SubComponentSpecialHarness} from './harnesses/sub-component-harness';
 
-// TODO: is there some better way to do this?
+// Kagekiri is available globally in the browser. We declare it here so we can use it in the
+// browser-side script passed to `by.js`.
 declare const kagekiri: {
   querySelectorAll: (selector: string, root: Element) => NodeListOf<Element>;
 };
@@ -477,14 +478,14 @@ describe('ProtractorHarnessEnvironment', () => {
       });
 
       it('should pierce shadow boundary when using piercing query', async () => {
-        const harness = await ProtractorHarnessEnvironment.loader(piercingQueryFn)
+        const harness = await ProtractorHarnessEnvironment.loader({queryFn: piercingQueryFn})
             .getHarness(MainComponentHarness);
         const shadows = await harness.shadows();
         expect(await Promise.all(shadows.map(el => el.text()))).toEqual(['Shadow 1', 'Shadow 2']);
       });
 
       it('should allow querying across shadow boundary', async () => {
-        const harness = await ProtractorHarnessEnvironment.loader(piercingQueryFn)
+        const harness = await ProtractorHarnessEnvironment.loader({queryFn: piercingQueryFn})
             .getHarness(MainComponentHarness);
         expect(await (await harness.deepShadow()).text()).toBe('Shadow 2');
       });

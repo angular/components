@@ -10,21 +10,31 @@ import {HarnessEnvironment, HarnessLoader, TestElement} from '@angular/cdk/testi
 import {by, element as protractorElement, ElementArrayFinder, ElementFinder} from 'protractor';
 import {ProtractorElement} from './protractor-element';
 
-/** The default query function that respects shadow boundaries. */
-const defaultQueryFn = (selector: string, root: ElementFinder) => root.all(by.css(selector));
+/** Options to configure the environment. */
+export interface ProtractorHarnessEnvironmentOptions {
+  /** The query function used to find DOM elements. */
+  queryFn: (selector: string, root: ElementFinder) => ElementArrayFinder;
+}
+
+/** The default environment options. */
+const defaultEnvironmentOptions: ProtractorHarnessEnvironmentOptions = {
+  queryFn: (selector: string, root: ElementFinder) => root.all(by.css(selector))
+};
 
 /** A `HarnessEnvironment` implementation for Protractor. */
 export class ProtractorHarnessEnvironment extends HarnessEnvironment<ElementFinder> {
-  protected constructor(rawRootElement: ElementFinder,
-      private _queryFn: (selector: string, root: ElementFinder) => ElementArrayFinder =
-          defaultQueryFn) {
+  /** The options for this environment. */
+  private _options: ProtractorHarnessEnvironmentOptions;
+
+  protected constructor(
+      rawRootElement: ElementFinder, options?: ProtractorHarnessEnvironmentOptions) {
     super(rawRootElement);
+    this._options = {...defaultEnvironmentOptions, ...options};
   }
 
   /** Creates a `HarnessLoader` rooted at the document root. */
-  static loader(queryFn?: (selector: string, root: ElementFinder) => ElementArrayFinder):
-      HarnessLoader {
-    return new ProtractorHarnessEnvironment(protractorElement(by.css('body')), queryFn);
+  static loader(options?: ProtractorHarnessEnvironmentOptions): HarnessLoader {
+    return new ProtractorHarnessEnvironment(protractorElement(by.css('body')), options);
   }
 
   async forceStabilize(): Promise<void> {}
@@ -43,11 +53,11 @@ export class ProtractorHarnessEnvironment extends HarnessEnvironment<ElementFind
   }
 
   protected createEnvironment(element: ElementFinder): HarnessEnvironment<ElementFinder> {
-    return new ProtractorHarnessEnvironment(element, this._queryFn);
+    return new ProtractorHarnessEnvironment(element, this._options);
   }
 
   protected async getAllRawElements(selector: string): Promise<ElementFinder[]> {
-    const elementArrayFinder = this._queryFn(selector, this.rawRootElement);
+    const elementArrayFinder = this._options.queryFn(selector, this.rawRootElement);
     const length = await elementArrayFinder.count();
     const elements: ElementFinder[] = [];
     for (let i = 0; i < length; i++) {
