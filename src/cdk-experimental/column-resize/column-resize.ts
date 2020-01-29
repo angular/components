@@ -14,7 +14,7 @@ import {filter, map, mapTo, pairwise, startWith, take, takeUntil} from 'rxjs/ope
 import {_closest, _matches} from '@angular/cdk-experimental/popover-edit';
 
 import {ColumnResizeNotifier, ColumnResizeNotifierSource} from './column-resize-notifier';
-import {HEADER_CELL_SELECTOR, RESIZE_OVERLAY_SELECTOR} from './constants';
+import {HEADER_CELL_SELECTOR, RESIZE_OVERLAY_SELECTOR} from './selectors';
 import {HeaderRowEventDispatcher} from './event-dispatcher';
 
 const HOVER_OR_ACTIVE_CLASS = 'cdk-column-resize-hover-or-active';

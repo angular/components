@@ -24,13 +24,15 @@ import {filter, takeUntil} from 'rxjs/operators';
 
 import {_closest} from '@angular/cdk-experimental/popover-edit';
 
-import {HEADER_ROW_SELECTOR} from './constants';
+import {HEADER_ROW_SELECTOR} from './selectors';
 import {ResizeOverlayHandle} from './overlay-handle';
 import {ColumnResize} from './column-resize';
 import {ColumnSizeAction, ColumnResizeNotifierSource} from './column-resize-notifier';
 import {HeaderRowEventDispatcher} from './event-dispatcher';
 import {ResizeRef} from './resize-ref';
 import {ResizeStrategy} from './resize-strategy';
+
+const OVERLAY_ACTIVE_CLASS = 'cdk-resizable-overlay-thumb-active';
 
 /**
  * Base class for Resizable directives which are applied to column headers to make those columns
@@ -108,6 +110,10 @@ export abstract class Resizable<HandleComponent extends ResizeOverlayHandle>
   protected abstract getOverlayHandleComponentType(): Type<HandleComponent>;
 
   private _createOverlayForHandle(): OverlayRef {
+    // Use of overlays allows us to properly capture click events spanning parts
+    // of two table cells and is also useful for displaying a resize thumb
+    // over both cells and extending it down the table as needed.
+
     const positionStrategy = this.overlay.position()
         .flexibleConnectedTo(this.elementRef.nativeElement!)
         .withFlexibleDimensions(false)
@@ -163,12 +169,7 @@ export abstract class Resizable<HandleComponent extends ResizeOverlayHandle>
       this._applySize(size);
 
       if (completeImmediately) {
-        this.ngZone.run(() => {
-          this.resizeNotifier.resizeCompleted.next({
-            columnId: this.columnDef.name,
-            size: this.elementRef.nativeElement!.offsetWidth,
-          });
-        });
+        this._completeResizeOperation();
       }
     });
 
@@ -176,17 +177,30 @@ export abstract class Resizable<HandleComponent extends ResizeOverlayHandle>
         this.resizeNotifier.resizeCanceled,
         this.resizeNotifier.resizeCompleted,
     ).pipe(takeUntilDestroyed).subscribe(columnSize => {
-      this.elementRef.nativeElement!.classList.remove(OVERLAY_ACTIVE_CLASS);
-
-      if (this.overlayRef && this.overlayRef.hasAttached()) {
-        this._updateOverlayHandleHeight();
-        this.overlayRef.updatePosition();
-
-        if (columnSize.columnId === this.columnDef.name) {
-          this.inlineHandle!.focus();
-        }
-      }
+      this._cleanUpAfterResize(columnSize);
     });
+  }
+
+  private _completeResizeOperation(): void {
+    this.ngZone.run(() => {
+      this.resizeNotifier.resizeCompleted.next({
+        columnId: this.columnDef.name,
+        size: this.elementRef.nativeElement!.offsetWidth,
+      });
+    });
+  }
+
+  private _cleanUpAfterResize(columnSize: ColumnSizeAction): void {
+    this.elementRef.nativeElement!.classList.remove(OVERLAY_ACTIVE_CLASS);
+
+    if (this.overlayRef && this.overlayRef.hasAttached()) {
+      this._updateOverlayHandleHeight();
+      this.overlayRef.updatePosition();
+
+      if (columnSize.columnId === this.columnDef.name) {
+        this.inlineHandle!.focus();
+      }
+    }
   }
 
   private _createHandlePortal(): ComponentPortal<HandleComponent> {
@@ -234,5 +248,3 @@ export abstract class Resizable<HandleComponent extends ResizeOverlayHandle>
     this.elementRef.nativeElement!.appendChild(this.inlineHandle);
   }
 }
-
-const OVERLAY_ACTIVE_CLASS = 'cdk-resizable-overlay-thumb-active';

@@ -24,11 +24,13 @@ import {
 
 import {_closest} from '@angular/cdk-experimental/popover-edit';
 
-import {HEADER_CELL_SELECTOR} from './constants';
+import {HEADER_CELL_SELECTOR} from './selectors';
 import {ColumnResizeNotifierSource} from './column-resize-notifier';
 import {HeaderRowEventDispatcher} from './event-dispatcher';
 import {ResizeRef} from './resize-ref';
 
+// TODO: Take another look at using cdk drag drop. IIRC I ran into a couple
+// good reasons for not using it but I don't remember what they were at this point.
 /**
  * Base class for a component shown over the edge of a resizable column that is responsible
  * for handling column resize mouse events and displaying any visible UI on the column edge.

@@ -28,7 +28,7 @@ export interface ColumnSizeAction extends ColumnSize {
   readonly completeImmediately?: boolean;
 }
 
-/** Conduit for resize-releated events within the table. */
+/** Originating source of column resize events within a table. */
 @Injectable()
 export class ColumnResizeNotifierSource {
   /** Emits when an in-progress resize is canceled. */

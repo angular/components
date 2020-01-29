@@ -12,7 +12,7 @@ import {distinctUntilChanged, map, share, skip, startWith} from 'rxjs/operators'
 
 import {_closest} from '@angular/cdk-experimental/popover-edit';
 
-import {HEADER_ROW_SELECTOR} from './constants';
+import {HEADER_ROW_SELECTOR} from './selectors';
 
 /** Coordinates events between the column resize directives. */
 @Injectable()
