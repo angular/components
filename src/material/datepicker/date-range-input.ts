@@ -17,11 +17,17 @@ import {
   AfterContentInit,
   ChangeDetectorRef,
   Self,
+  ElementRef,
 } from '@angular/core';
 import {MatFormFieldControl, MatFormField} from '@angular/material/form-field';
-import {DateRange, MAT_RANGE_DATE_SELECTION_MODEL_PROVIDER} from '@angular/material/core';
+import {
+  DateRange,
+  ThemePalette,
+  DateAdapter,
+  MatDateSelectionModel,
+} from '@angular/material/core';
 import {NgControl, ControlContainer} from '@angular/forms';
-import {Subject} from 'rxjs';
+import {Subject, merge} from 'rxjs';
 import {coerceBooleanProperty, BooleanInput} from '@angular/cdk/coercion';
 import {
   MatStartDate,
@@ -29,6 +35,10 @@ import {
   MatDateRangeInputParent,
   MAT_DATE_RANGE_INPUT_PARENT,
 } from './date-range-input-parts';
+import {MatDatepickerControl} from './datepicker-base';
+import {createMissingDateImplError} from './datepicker-errors';
+import {DateFilterFn} from './datepicker-input-base';
+import {MatDateRangePicker} from './date-range-picker';
 
 let nextUniqueId = 0;
 
@@ -49,16 +59,14 @@ let nextUniqueId = 0;
   providers: [
     {provide: MatFormFieldControl, useExisting: MatDateRangeInput},
     {provide: MAT_DATE_RANGE_INPUT_PARENT, useExisting: MatDateRangeInput},
-
-    // TODO(crisbeto): this will be provided by the datepicker eventually.
-    // We provide it here for the moment so we have something to test against.
-    MAT_RANGE_DATE_SELECTION_MODEL_PROVIDER,
   ]
 })
 export class MatDateRangeInput<D> implements MatFormFieldControl<DateRange<D>>,
-  MatDateRangeInputParent, AfterContentInit, OnDestroy {
+  MatDatepickerControl<D>, MatDateRangeInputParent<D>, AfterContentInit, OnDestroy {
   /** Current value of the range input. */
-  value: DateRange<D> | null = null;
+  get value() {
+    return this._model ? this._model.selection : null;
+  }
 
   /** Emits when the input's state has changed. */
   stateChanges = new Subject<void>();
@@ -79,10 +87,22 @@ export class MatDateRangeInput<D> implements MatFormFieldControl<DateRange<D>>,
 
   /**
    * Implemented as a part of `MatFormFieldControl`, but not used.
-   * Use `startPlaceholder` and `endPlaceholder` instead.
+   * Set the placeholder attribute on `matStartDate` and `matEndDate`.
    * @docs-private
    */
   placeholder: string;
+
+  /** The range picker that this input is associated with. */
+  @Input()
+  get rangePicker() { return this._rangePicker; }
+  set rangePicker(rangePicker: MatDateRangePicker<D>) {
+    if (rangePicker) {
+      this._model = rangePicker._registerInput(this);
+      this._rangePicker = rangePicker;
+      this._registerModel(this._model!);
+    }
+  }
+  private _rangePicker: MatDateRangePicker<D>;
 
   /** Whether the input is required. */
   @Input()
@@ -91,6 +111,33 @@ export class MatDateRangeInput<D> implements MatFormFieldControl<DateRange<D>>,
     this._required = coerceBooleanProperty(value);
   }
   private _required: boolean;
+
+  /** Function that can be used to filter out dates within the date range picker. */
+  @Input()
+  get dateFilter() { return this._dateFilter; }
+  set dateFilter(value: DateFilterFn<D>) {
+    this._dateFilter = value;
+    this._revalidate();
+  }
+  private _dateFilter: DateFilterFn<D>;
+
+  /** The minimum valid date. */
+  @Input()
+  get min(): D | null { return this._min; }
+  set min(value: D | null) {
+    this._min = this._getValidDateOrNull(this._dateAdapter.deserialize(value));
+    this._revalidate();
+  }
+  private _min: D | null;
+
+  /** The maximum valid date. */
+  @Input()
+  get max(): D | null { return this._max; }
+  set max(value: D | null) {
+    this._max = this._getValidDateOrNull(this._dateAdapter.deserialize(value));
+    this._revalidate();
+  }
+  private _max: D | null;
 
   /** Whether the input is disabled. */
   get disabled(): boolean {
@@ -123,11 +170,8 @@ export class MatDateRangeInput<D> implements MatFormFieldControl<DateRange<D>>,
   /** Value for the `aria-labelledby` attribute of the inputs. */
   _ariaLabelledBy: string | null = null;
 
-  /** Placeholder for the start input. */
-  @Input() startPlaceholder: string;
-
-  /** Placeholder for the end input. */
-  @Input() endPlaceholder: string;
+  /** Date selection model currently registered with the input. */
+  private _model: MatDateSelectionModel<DateRange<D>> | undefined;
 
   /** Separator text to be shown between the inputs. */
   @Input() separator = '–';
@@ -142,14 +186,23 @@ export class MatDateRangeInput<D> implements MatFormFieldControl<DateRange<D>>,
    */
   ngControl: NgControl | null;
 
+  /** Emits when the input's disabled state changes. */
+  _disabledChange = new Subject<boolean>();
+
   constructor(
     private _changeDetectorRef: ChangeDetectorRef,
+    private _elementRef: ElementRef<HTMLElement>,
     @Optional() @Self() control: ControlContainer,
-    @Optional() formField?: MatFormField) {
+    @Optional() private _dateAdapter: DateAdapter<D>,
+    @Optional() private _formField?: MatFormField) {
+
+    if (!_dateAdapter) {
+      throw createMissingDateImplError('DateAdapter');
+    }
 
     // TODO(crisbeto): remove `as any` after #18206 lands.
     this.ngControl = control as any;
-    this._ariaLabelledBy = formField ? formField._labelId : null;
+    this._ariaLabelledBy = _formField ? _formField._labelId : null;
   }
 
   /**
@@ -179,10 +232,36 @@ export class MatDateRangeInput<D> implements MatFormFieldControl<DateRange<D>>,
     if (!this._endInput) {
       throw Error('mat-date-range-input must contain a matEndDate input');
     }
+
+    if (this._model) {
+      this._registerModel(this._model);
+    }
+
+    // We don't need to unsubscribe from this, because we
+    // know that the input streams will be completed on destroy.
+    merge(this._startInput._disabledChange, this._endInput._disabledChange).subscribe(() => {
+      this._disabledChange.next(this.disabled);
+    });
   }
 
   ngOnDestroy() {
     this.stateChanges.complete();
+    this._disabledChange.unsubscribe();
+  }
+
+  /** Gets the date at which the calendar should start. */
+  getStartValue(): D | null {
+    return this.value ? this.value.start : null;
+  }
+
+  /** Gets the input's theme palette. */
+  getThemePalette(): ThemePalette {
+    return this._formField ? this._formField.color : undefined;
+  }
+
+  /** Gets the element to which the calendar overlay should be attached. */
+  getConnectedOverlayOrigin(): ElementRef {
+    return this._formField ? this._formField.getConnectedOverlayOrigin() : this._elementRef;
   }
 
   /** Gets the value that is used to mirror the state input. */
@@ -200,9 +279,41 @@ export class MatDateRangeInput<D> implements MatFormFieldControl<DateRange<D>>,
     this._changeDetectorRef.markForCheck();
   }
 
-  /** Opens the datepicker associated with the input. */
+  /** Opens the date range picker associated with the input. */
   _openDatepicker() {
-    // TODO(crisbeto): implement once the datepicker is in place.
+    if (this._rangePicker) {
+      this._rangePicker.open();
+    }
+  }
+
+  /**
+   * @param obj The object to check.
+   * @returns The given object if it is both a date instance and valid, otherwise null.
+   */
+  private _getValidDateOrNull(obj: any): D | null {
+    return (this._dateAdapter.isDateInstance(obj) && this._dateAdapter.isValid(obj)) ? obj : null;
+  }
+
+  /** Re-runs the validators on the start/end inputs. */
+  private _revalidate() {
+    if (this._startInput) {
+      this._startInput._validatorOnChange();
+    }
+
+    if (this._endInput) {
+      this._endInput._validatorOnChange();
+    }
+  }
+
+  /** Registers the current date selection model with the start/end inputs. */
+  private _registerModel(model: MatDateSelectionModel<DateRange<D>>) {
+    if (this._startInput) {
+      this._startInput._registerModel(model);
+    }
+
+    if (this._endInput) {
+      this._endInput._registerModel(model);
+    }
   }
 
   static ngAcceptInputType_required: BooleanInput;
