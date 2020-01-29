@@ -11,16 +11,23 @@ export * from './calendar';
 export * from './calendar-body';
 export * from './datepicker';
 export * from './datepicker-animations';
-export {MatDatepickerInputEvent} from './datepicker-input-base';
 export {
-    MAT_DATEPICKER_VALUE_ACCESSOR,
-    MAT_DATEPICKER_VALIDATORS,
-    MatDatepickerInput,
+  MAT_DATEPICKER_SCROLL_STRATEGY,
+  MAT_DATEPICKER_SCROLL_STRATEGY_FACTORY,
+  MAT_DATEPICKER_SCROLL_STRATEGY_FACTORY_PROVIDER,
+  MatDatepickerContent,
+} from './datepicker-base';
+export {MatDatepickerInputEvent, DateFilterFn} from './datepicker-input-base';
+export {
+  MAT_DATEPICKER_VALUE_ACCESSOR,
+  MAT_DATEPICKER_VALIDATORS,
+  MatDatepickerInput,
 } from './datepicker-input';
 export * from './datepicker-intl';
 export * from './datepicker-toggle';
 export * from './month-view';
 export * from './year-view';
 export * from './date-range-input';
+export * from './date-range-picker';
 export {MatStartDate, MatEndDate} from './date-range-input-parts';
 export {MatMultiYearView, yearsPerPage, yearsPerRow} from './multi-year-view';
