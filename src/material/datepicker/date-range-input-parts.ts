@@ -35,14 +35,16 @@ import {
   MatDateFormats,
   ErrorStateMatcher,
   DateRange,
-  MatDateSelectionModel,
 } from '@angular/material/core';
 import {BooleanInput} from '@angular/cdk/coercion';
-import {MatDatepickerInputBase} from './datepicker-input-base';
+import {MatDatepickerInputBase, DateFilterFn} from './datepicker-input-base';
 
 /** Parent component that should be wrapped around `MatStartDate` and `MatEndDate`. */
-export interface MatDateRangeInputParent {
+export interface MatDateRangeInputParent<D> {
   id: string;
+  min: D | null;
+  max: D | null;
+  dateFilter: DateFilterFn<D>;
   _ariaDescribedBy: string | null;
   _ariaLabelledBy: string | null;
   _handleChildValueChange: () => void;
@@ -54,14 +56,14 @@ export interface MatDateRangeInputParent {
  * to the parts without circular dependencies.
  */
 export const MAT_DATE_RANGE_INPUT_PARENT =
-    new InjectionToken<MatDateRangeInputParent>('MAT_DATE_RANGE_INPUT_PARENT');
+    new InjectionToken<MatDateRangeInputParent<unknown>>('MAT_DATE_RANGE_INPUT_PARENT');
 
 /**
  * Base class for the individual inputs that can be projected inside a `mat-date-range-input`.
  */
 @Directive()
 abstract class MatDateRangeInputPartBase<D>
-  extends MatDatepickerInputBase<DateRange<D>, D> implements OnInit, DoCheck {
+  extends MatDatepickerInputBase<DateRange<D>> implements OnInit, DoCheck {
 
   /** @docs-private */
   ngControl: NgControl;
@@ -74,20 +76,15 @@ abstract class MatDateRangeInputPartBase<D>
   protected abstract _getValueFromModel(modelValue: DateRange<D>): D | null;
 
   constructor(
-    @Inject(MAT_DATE_RANGE_INPUT_PARENT) public _rangeInput: MatDateRangeInputParent,
+    @Inject(MAT_DATE_RANGE_INPUT_PARENT) public _rangeInput: MatDateRangeInputParent<D>,
     elementRef: ElementRef<HTMLInputElement>,
     public _defaultErrorStateMatcher: ErrorStateMatcher,
     private _injector: Injector,
     @Optional() public _parentForm: NgForm,
     @Optional() public _parentFormGroup: FormGroupDirective,
     @Optional() dateAdapter: DateAdapter<D>,
-    @Optional() @Inject(MAT_DATE_FORMATS) dateFormats: MatDateFormats,
-
-    // TODO(crisbeto): this will be provided by the datepicker eventually.
-    // We provide it here for the moment so we have something to test against.
-    model: MatDateSelectionModel<DateRange<D>, D>) {
+    @Optional() @Inject(MAT_DATE_FORMATS) dateFormats: MatDateFormats) {
     super(elementRef, dateAdapter, dateFormats);
-    super._registerModel(model);
   }
 
   ngOnInit() {
@@ -133,6 +130,21 @@ abstract class MatDateRangeInputPartBase<D>
   protected _openPopup(): void {
     this._rangeInput._openDatepicker();
   }
+
+  /** Gets the minimum date from the range input. */
+  protected _getMinDate() {
+    return this._rangeInput.min;
+  }
+
+  /** Gets the maximum date from the range input. */
+  protected _getMaxDate() {
+    return this._rangeInput.max;
+  }
+
+  /** Gets the date filter function from the range input. */
+  protected _getDateFilter() {
+    return this._rangeInput.dateFilter;
+  }
 }
 
 const _MatDateRangeInputBase:
@@ -165,10 +177,9 @@ const _MatDateRangeInputBase:
     {provide: NG_VALIDATORS, useExisting: MatStartDate, multi: true}
   ]
 })
-export class MatStartDate<D> extends _MatDateRangeInputBase<D>
-  implements CanUpdateErrorState {
+export class MatStartDate<D> extends _MatDateRangeInputBase<D> implements CanUpdateErrorState {
   // TODO(crisbeto): start-range-specific validators should go here.
-  protected _validator = Validators.compose([this._parseValidator]);
+  protected _validator = Validators.compose(super._getValidators());
 
   protected _getValueFromModel(modelValue: DateRange<D>) {
     return modelValue.start;
@@ -178,6 +189,13 @@ export class MatStartDate<D> extends _MatDateRangeInputBase<D>
     if (this._model) {
       this._model.updateSelection(new DateRange(value, this._model.selection.end), this);
     }
+  }
+
+  protected _formatValue(value: D | null) {
+    super._formatValue(value);
+
+    // Any time the input value is reformatted we need to tell the parent.
+    this._rangeInput._handleChildValueChange();
   }
 
   /** Gets the value that should be used when mirroring the input's size. */
@@ -218,7 +236,7 @@ export class MatStartDate<D> extends _MatDateRangeInputBase<D>
 })
 export class MatEndDate<D> extends _MatDateRangeInputBase<D> implements CanUpdateErrorState {
   // TODO(crisbeto): end-range-specific validators should go here.
-  protected _validator = Validators.compose([this._parseValidator]);
+  protected _validator = Validators.compose(super._getValidators());
 
   protected _getValueFromModel(modelValue: DateRange<D>) {
     return modelValue.end;
