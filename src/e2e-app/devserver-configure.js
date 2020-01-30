@@ -3,7 +3,6 @@
 require.config({
   paths: {
     'moment': 'moment/min/moment.min',
-    'kagekiri': 'kagekiri/dist/kagekiri.umd.min.js',
 
     // Support for lazy-loading of component examples.
     '@angular/components-examples': 'angular_material/src/components-examples',
