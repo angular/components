@@ -1,14 +1,18 @@
 export declare class TestbedHarnessEnvironment extends HarnessEnvironment<Element> {
-    protected constructor(rawRootElement: Element, _fixture: ComponentFixture<unknown>, _queryFn?: (selector: string, root: Element) => ArrayLike<Element>);
+    protected constructor(rawRootElement: Element, _fixture: ComponentFixture<unknown>, options?: TestbedHarnessEnvironmentOptions);
     protected createEnvironment(element: Element): HarnessEnvironment<Element>;
     protected createTestElement(element: Element): TestElement;
     forceStabilize(): Promise<void>;
     protected getAllRawElements(selector: string): Promise<Element[]>;
     protected getDocumentRoot(): Element;
     waitForTasksOutsideAngular(): Promise<void>;
-    static documentRootLoader(fixture: ComponentFixture<unknown>, queryFn?: (selector: string, root: Element) => ArrayLike<Element>): HarnessLoader;
-    static harnessForFixture<T extends ComponentHarness>(fixture: ComponentFixture<unknown>, harnessType: ComponentHarnessConstructor<T>, queryFn?: (selector: string, root: Element) => ArrayLike<Element>): Promise<T>;
-    static loader(fixture: ComponentFixture<unknown>, queryFn?: (selector: string, root: Element) => ArrayLike<Element>): HarnessLoader;
+    static documentRootLoader(fixture: ComponentFixture<unknown>, options?: TestbedHarnessEnvironmentOptions): HarnessLoader;
+    static harnessForFixture<T extends ComponentHarness>(fixture: ComponentFixture<unknown>, harnessType: ComponentHarnessConstructor<T>, options?: TestbedHarnessEnvironmentOptions): Promise<T>;
+    static loader(fixture: ComponentFixture<unknown>, options?: TestbedHarnessEnvironmentOptions): HarnessLoader;
+}
+
+export interface TestbedHarnessEnvironmentOptions {
+    queryFn: (selector: string, root: Element) => ArrayLike<Element>;
 }
 
 export declare class UnitTestElement implements TestElement {
