@@ -6,9 +6,10 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {LiveAnnouncer} from '@angular/cdk/a11y';
 import {Directionality} from '@angular/cdk/bidi';
 import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
-import {BACKSPACE, TAB, HOME, END} from '@angular/cdk/keycodes';
+import {BACKSPACE, END, HOME, TAB} from '@angular/cdk/keycodes';
 import {
   AfterContentInit,
   AfterViewInit,
@@ -35,12 +36,12 @@ import {
   mixinErrorState,
 } from '@angular/material/core';
 import {MatFormFieldControl} from '@angular/material/form-field';
-import {MatChipTextControl} from './chip-text-control';
 import {merge, Observable, Subscription} from 'rxjs';
 import {startWith, takeUntil} from 'rxjs/operators';
 import {MatChipEvent} from './chip';
 import {MatChipRow} from './chip-row';
 import {MatChipSet} from './chip-set';
+import {MatChipTextControl} from './chip-text-control';
 import {GridFocusKeyManager} from './grid-focus-key-manager';
 
 
@@ -65,8 +66,9 @@ class MatChipGridBase extends MatChipSet {
               public _parentForm: NgForm,
               public _parentFormGroup: FormGroupDirective,
               /** @docs-private */
-              public ngControl: NgControl) {
-    super(_elementRef, _changeDetectorRef, _dir);
+              public ngControl: NgControl,
+              _announcer: LiveAnnouncer) {
+    super(_elementRef, _changeDetectorRef, _announcer, _dir);
   }
 }
 const _MatChipGridMixinBase: CanUpdateErrorStateCtor & typeof MatChipGridBase =
@@ -80,7 +82,7 @@ const _MatChipGridMixinBase: CanUpdateErrorStateCtor & typeof MatChipGridBase =
   selector: 'mat-chip-grid',
   template: '<ng-content></ng-content>',
   styleUrls: ['chips.css'],
-  inputs: ['tabIndex'],
+  inputs: ['tabIndex', 'chipRemovedMessage'],
   host: {
     'class': 'mat-mdc-chip-set mat-mdc-chip-grid mdc-chip-set',
     '[attr.role]': 'role',
@@ -236,6 +238,7 @@ export class MatChipGrid extends _MatChipGridMixinBase implements AfterContentIn
 
   constructor(_elementRef: ElementRef,
               _changeDetectorRef: ChangeDetectorRef,
+              _announcer: LiveAnnouncer,
               @Optional() _dir: Directionality,
               @Optional() _parentForm: NgForm,
               @Optional() _parentFormGroup: FormGroupDirective,
@@ -243,7 +246,7 @@ export class MatChipGrid extends _MatChipGridMixinBase implements AfterContentIn
               /** @docs-private */
               @Optional() @Self() public ngControl: NgControl) {
     super(_elementRef, _changeDetectorRef, _dir, _defaultErrorStateMatcher, _parentForm,
-        _parentFormGroup, ngControl);
+        _parentFormGroup, ngControl, _announcer);
     if (this.ngControl) {
       this.ngControl.valueAccessor = this;
     }

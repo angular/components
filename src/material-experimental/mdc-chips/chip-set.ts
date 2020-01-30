@@ -6,6 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {LiveAnnouncer} from '@angular/cdk/a11y';
 import {Directionality} from '@angular/cdk/bidi';
 import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
 import {
@@ -103,8 +104,7 @@ export class MatChipSet extends _MatChipSetMixinBase implements AfterContentInit
     removeFocusFromChipAtIndex: () => {},
     isRTL: () => !!this._dir && this._dir.value === 'rtl',
     getChipListCount: () => this._chips.length,
-    // TODO(mmalerba): Implement using LiveAnnouncer.
-    announceMessage: () => {},
+    announceMessage: message => this._announcer.announce(message),
   };
 
   /** The aria-describedby attribute on the chip list for improved a11y. */
@@ -118,6 +118,9 @@ export class MatChipSet extends _MatChipSetMixinBase implements AfterContentInit
    * Enabled classes are set on the MDC chip-set div.
    */
   _mdcClasses: {[key: string]: boolean} = {};
+
+  @Input()
+  chipRemovedMessage = 'Chip removed';
 
   /** Whether the chip set is disabled. */
   @Input()
@@ -161,6 +164,7 @@ export class MatChipSet extends _MatChipSetMixinBase implements AfterContentInit
 
   constructor(protected _elementRef: ElementRef,
               protected _changeDetectorRef: ChangeDetectorRef,
+              private _announcer: LiveAnnouncer,
               @Optional() protected _dir: Directionality) {
     super(_elementRef);
     this._chipSetFoundation = new MDCChipSetFoundation(this._chipSetAdapter);
@@ -236,8 +240,7 @@ export class MatChipSet extends _MatChipSetMixinBase implements AfterContentInit
     this._chipRemoveSubscription = this.chipRemoveChanges.subscribe((event: MatChipEvent) => {
        this._chipSetFoundation.handleChipRemoval({
          chipId: event.chip.id,
-         // TODO(mmalerba): Add removal message.
-         removedAnnouncement: null,
+         removedAnnouncement: this.chipRemovedMessage,
        });
     });
   }

@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {FocusKeyManager} from '@angular/cdk/a11y';
+import {FocusKeyManager, LiveAnnouncer} from '@angular/cdk/a11y';
 import {Directionality} from '@angular/cdk/bidi';
 import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
 import {END, HOME} from '@angular/cdk/keycodes';
@@ -62,7 +62,7 @@ export const MAT_CHIP_LISTBOX_CONTROL_VALUE_ACCESSOR: any = {
   selector: 'mat-chip-listbox',
   template: '<ng-content></ng-content>',
   styleUrls: ['chips.css'],
-  inputs: ['tabIndex'],
+  inputs: ['tabIndex', 'chipRemovedMessage'],
   host: {
     'class': 'mat-mdc-chip-set mat-mdc-chip-listbox mdc-chip-set',
     '[attr.role]': 'role',
@@ -206,8 +206,9 @@ export class MatChipListbox extends MatChipSet implements AfterContentInit, Cont
 
   constructor(protected _elementRef: ElementRef,
               _changeDetectorRef: ChangeDetectorRef,
+              _announcer: LiveAnnouncer,
               @Optional() _dir: Directionality) {
-    super(_elementRef, _changeDetectorRef, _dir);
+    super(_elementRef, _changeDetectorRef, _announcer, _dir);
     this._chipSetAdapter.selectChipAtIndex = (index: number, selected: boolean) => {
       this._setSelected(index, selected);
     };
