@@ -11,9 +11,8 @@ import {SubComponentHarness, SubComponentSpecialHarness} from './harnesses/sub-c
 
 // Kagekiri is available globally in the browser. We declare it here so we can use it in the
 // browser-side script passed to `by.js`.
-// TODO(mmalerba): Replace with type-only import once TS 3.8 is available
-// tslint:disable-next-line:max-line-length
-// See: https://devblogs.microsoft.com/typescript/announcing-typescript-3-8-beta/#type-only-imports-exports
+// TODO(mmalerba): Replace with type-only import once TS 3.8 is available, see:
+//  https://devblogs.microsoft.com/typescript/announcing-typescript-3-8-beta/#type-only-imports-exports
 declare const kagekiri: {
   querySelectorAll: (selector: string, root: Element) => NodeListOf<Element>;
 };
