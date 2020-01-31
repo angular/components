@@ -15,6 +15,7 @@ import {
   OnDestroy,
   OnInit,
   Output,
+  NgZone,
 } from '@angular/core';
 import {BehaviorSubject, combineLatest, Observable, Subject} from 'rxjs';
 import {map, take, takeUntil} from 'rxjs/operators';
@@ -30,7 +31,7 @@ import {MapEventManager} from '../map-event-manager';
   selector: 'map-polygon',
 })
 export class MapPolygon implements OnInit, OnDestroy {
-  private _eventManager = new MapEventManager();
+  private _eventManager = new MapEventManager(this._ngZone);
   private readonly _options = new BehaviorSubject<google.maps.PolygonOptions>({});
   private readonly _paths =
       new BehaviorSubject<google.maps.MVCArray<google.maps.MVCArray<google.maps.LatLng>>|
@@ -38,7 +39,6 @@ export class MapPolygon implements OnInit, OnDestroy {
                           google.maps.LatLngLiteral[]|undefined>(undefined);
 
   private readonly _destroyed = new Subject<void>();
-  private readonly _listeners: google.maps.MapsEventListener[] = [];
 
   _polygon: google.maps.Polygon;  // initialized in ngOnInit
 
@@ -131,13 +131,18 @@ export class MapPolygon implements OnInit, OnDestroy {
   polygonRightclick: Observable<google.maps.PolyMouseEvent> =
       this._eventManager.getLazyEmitter<google.maps.PolyMouseEvent>('rightclick');
 
-  constructor(private readonly _map: GoogleMap) {}
+  constructor(private readonly _map: GoogleMap, private readonly _ngZone: NgZone) {}
 
   ngOnInit() {
     const combinedOptionsChanges = this._combineOptions();
 
     combinedOptionsChanges.pipe(take(1)).subscribe(options => {
-      this._polygon = new google.maps.Polygon(options);
+      // Create the object outside the zone so its events don't trigger change detection.
+      // We'll bring it back in inside the `MapEventManager` only for the events that the
+      // user has subscribed to.
+      this._ngZone.runOutsideAngular(() => {
+        this._polygon = new google.maps.Polygon(options);
+      });
       this._polygon.setMap(this._map._googleMap);
       this._eventManager.setTarget(this._polygon);
     });
@@ -150,9 +155,6 @@ export class MapPolygon implements OnInit, OnDestroy {
     this._eventManager.destroy();
     this._destroyed.next();
     this._destroyed.complete();
-    for (const listener of this._listeners) {
-      listener.remove();
-    }
     this._polygon.setMap(null);
   }
 

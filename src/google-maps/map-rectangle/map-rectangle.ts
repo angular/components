@@ -9,7 +9,7 @@
 // Workaround for: https://github.com/bazelbuild/rules_nodejs/issues/1265
 /// <reference types="googlemaps" />
 
-import {Directive, Input, OnDestroy, OnInit, Output} from '@angular/core';
+import {Directive, Input, OnDestroy, OnInit, Output, NgZone} from '@angular/core';
 import {BehaviorSubject, combineLatest, Observable, Subject} from 'rxjs';
 import {map, take, takeUntil} from 'rxjs/operators';
 
@@ -24,7 +24,7 @@ import {MapEventManager} from '../map-event-manager';
   selector: 'map-rectangle',
 })
 export class MapRectangle implements OnInit, OnDestroy {
-  private _eventManager = new MapEventManager();
+  private _eventManager = new MapEventManager(this._ngZone);
   private readonly _options = new BehaviorSubject<google.maps.RectangleOptions>({});
   private readonly _bounds =
       new BehaviorSubject<google.maps.LatLngBounds|google.maps.LatLngBoundsLiteral|undefined>(
@@ -139,13 +139,18 @@ export class MapRectangle implements OnInit, OnDestroy {
   rectangleRightclick: Observable<google.maps.MouseEvent> =
       this._eventManager.getLazyEmitter<google.maps.MouseEvent>('rightclick');
 
-  constructor(private readonly _map: GoogleMap) {}
+  constructor(private readonly _map: GoogleMap, private readonly _ngZone: NgZone) {}
 
   ngOnInit() {
     const combinedOptionsChanges = this._combineOptions();
 
     combinedOptionsChanges.pipe(take(1)).subscribe(options => {
-      this._rectangle = new google.maps.Rectangle(options);
+      // Create the object outside the zone so its events don't trigger change detection.
+      // We'll bring it back in inside the `MapEventManager` only for the events that the
+      // user has subscribed to.
+      this._ngZone.runOutsideAngular(() => {
+        this._rectangle = new google.maps.Rectangle(options);
+      });
       this._rectangle.setMap(this._map._googleMap);
       this._eventManager.setTarget(this._rectangle);
     });
