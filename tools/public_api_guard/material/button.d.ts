@@ -15,7 +15,7 @@ export declare class MatButton extends _MatButtonMixinBase implements AfterViewI
     _getHostElement(): any;
     _hasHostAttributes(...attributes: string[]): boolean;
     _isRippleDisabled(): boolean;
-    focus(origin?: FocusOrigin, options?: FocusOptions): void;
+    focus(origin?: NonNullable<FocusOrigin>, options?: FocusOptions): void;
     ngAfterViewInit(): void;
     ngOnDestroy(): void;
     static ngAcceptInputType_disableRipple: BooleanInput;

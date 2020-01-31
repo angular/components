@@ -94,7 +94,7 @@ export class MatMenuItem extends _MatMenuItemMixinBase
   }
 
   /** Focuses the menu item. */
-  focus(origin: FocusOrigin = 'program', options?: FocusOptions): void {
+  focus(origin: NonNullable<FocusOrigin> = 'program', options?: FocusOptions): void {
     if (this._focusMonitor) {
       this._focusMonitor.focusVia(this._getHostElement(), origin, options);
     } else {

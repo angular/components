@@ -192,7 +192,7 @@ export class MatExpansionPanelHeader implements AfterViewInit, OnDestroy, Focusa
    * @param origin Origin of the action that triggered the focus.
    * @docs-private
    */
-  focus(origin: FocusOrigin = 'program', options?: FocusOptions) {
+  focus(origin: NonNullable<FocusOrigin> = 'program', options?: FocusOptions) {
     this._focusMonitor.focusVia(this._element, origin, options);
   }
 

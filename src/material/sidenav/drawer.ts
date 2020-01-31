@@ -349,7 +349,8 @@ export class MatDrawer implements AfterContentInit, AfterContentChecked, OnDestr
 
     // Note that we don't check via `instanceof HTMLElement` so that we can cover SVGs as well.
     if (this._elementFocusedBeforeDrawerWasOpened) {
-      this._focusMonitor.focusVia(this._elementFocusedBeforeDrawerWasOpened, this._openedVia);
+      this._focusMonitor.focusVia(this._elementFocusedBeforeDrawerWasOpened,
+          this._openedVia || 'program');
     } else {
       this._elementRef.nativeElement.blur();
     }

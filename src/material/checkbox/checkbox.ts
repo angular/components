@@ -435,7 +435,7 @@ export class MatCheckbox extends _MatCheckboxMixinBase implements ControlValueAc
   }
 
   /** Focuses the checkbox. */
-  focus(origin: FocusOrigin = 'keyboard', options?: FocusOptions): void {
+  focus(origin: NonNullable<FocusOrigin> = 'keyboard', options?: FocusOptions): void {
     this._focusMonitor.focusVia(this._inputElement, origin, options);
   }
 

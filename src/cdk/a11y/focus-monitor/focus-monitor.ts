@@ -293,7 +293,7 @@ export class FocusMonitor implements OnDestroy {
    * @param origin Focus origin.
    * @param options Options that can be used to configure the focus behavior.
    */
-  focusVia(element: HTMLElement, origin: FocusOrigin, options?: FocusOptions): void;
+  focusVia(element: HTMLElement, origin: NonNullable<FocusOrigin>, options?: FocusOptions): void;
 
   /**
    * Focuses the element via the specified focus origin.
@@ -301,20 +301,20 @@ export class FocusMonitor implements OnDestroy {
    * @param origin Focus origin.
    * @param options Options that can be used to configure the focus behavior.
    */
-  focusVia(element: ElementRef<HTMLElement>, origin: FocusOrigin, options?: FocusOptions): void;
+  focusVia(element: ElementRef<HTMLElement>,
+           origin: NonNullable<FocusOrigin>,
+           options?: FocusOptions): void;
 
   focusVia(element: HTMLElement | ElementRef<HTMLElement>,
-          origin: FocusOrigin,
-          options?: FocusOptions): void {
+           origin: NonNullable<FocusOrigin>,
+           options?: FocusOptions): void {
 
     const nativeElement = coerceElement(element);
-
     this._setOriginForCurrentEventQueue(origin);
 
-    // `focus` isn't available on the server
+    // `focus` isn't available on the server.
     if (typeof nativeElement.focus === 'function') {
-      // Cast the element to `any`, because the TS typings don't have the `options` parameter yet.
-      (nativeElement as any).focus(options);
+      nativeElement.focus(options);
     }
   }
 
