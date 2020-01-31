@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {AfterViewInit, ElementRef, NgZone, OnDestroy} from '@angular/core';
+import {AfterViewInit, Directive, ElementRef, NgZone, OnDestroy} from '@angular/core';
 import {Directionality} from '@angular/cdk/bidi';
 import {fromEvent, merge, ReplaySubject} from 'rxjs';
 import {filter, map, mapTo, pairwise, startWith, take, takeUntil} from 'rxjs/operators';
@@ -26,6 +26,7 @@ let nextId = 0;
  * Base class for ColumnResize directives which attach to mat-table elements to
  * provide common events and services for column resizing.
  */
+@Directive()
 export abstract class ColumnResize implements AfterViewInit, OnDestroy {
   protected readonly destroyed = new ReplaySubject<void>();
 
@@ -33,7 +34,7 @@ export abstract class ColumnResize implements AfterViewInit, OnDestroy {
   abstract readonly columnResizeNotifier: ColumnResizeNotifier;
 
   abstract readonly directionality: Directionality;
-  protected abstract readonly elementRef: ElementRef;
+  protected abstract readonly elementRef: ElementRef<HTMLElement>;
   protected abstract readonly eventDispatcher: HeaderRowEventDispatcher;
   protected abstract readonly ngZone: NgZone;
   protected abstract readonly notifier: ColumnResizeNotifierSource;

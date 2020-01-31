@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {AfterViewInit, ElementRef, OnDestroy, NgZone} from '@angular/core';
+import {AfterViewInit, Directive, ElementRef, OnDestroy, NgZone} from '@angular/core';
 import {coerceCssPixelValue} from '@angular/cdk/coercion';
 import {Directionality} from '@angular/cdk/bidi';
 import {ESCAPE} from '@angular/cdk/keycodes';
@@ -35,6 +35,7 @@ import {ResizeRef} from './resize-ref';
  * Base class for a component shown over the edge of a resizable column that is responsible
  * for handling column resize mouse events and displaying any visible UI on the column edge.
  */
+@Directive()
 export abstract class ResizeOverlayHandle implements AfterViewInit, OnDestroy {
   protected readonly destroyed = new ReplaySubject<void>();
 
