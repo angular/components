@@ -259,6 +259,29 @@ The easiest way to ensure this is to import one of the provided date modules:
   </tbody>
 </table>
 
+`MatDayjsDateModule`
+
+<table>
+  <tbody>
+  <tr>
+    <th align="left" scope="row">Date type</th>
+    <td><code>Day.js</code></td>
+  </tr>
+  <tr>
+    <th align="left" scope="row">Supported locales</th>
+    <td><a href="https://github.com/iamkun/dayjs/tree/dev/src/locale) for details">See project</a></td>
+  </tr>
+  <tr>
+    <th align="left" scope="row">Dependencies</th>
+    <td><a href="https://https://day.js.org/">Day.js</a></td>
+  </tr>
+  <tr>
+    <th align="left" scope="row">Import from</th>
+    <td><code>@tabuckner/material-dayjs-adapter</code></td>
+  </tr>
+  </tbody>
+</table>
+
 *Please note: `MatNativeDateModule` is based off the functionality available in JavaScript's
 native [`Date` object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Date).
 Thus it is not suitable for many locales. One of the biggest shortcomings of the native `Date`
@@ -339,8 +362,8 @@ and displaying dates. These formats are passed through to the `DateAdapter` so y
 sure that the format objects you're using are compatible with the `DateAdapter` used in your app.
 
 If you want use one of the `DateAdapters` that ships with Angular Material, but use your own
-`MAT_DATE_FORMATS`, you can import the `NativeDateModule` or `MomentDateModule`. These modules are
-identical to the "Mat"-prefixed versions (`MatNativeDateModule` and `MatMomentDateModule`) except
+`MAT_DATE_FORMATS`, you can import the `NativeDateModule`, `MomentDateModule` or `DayjsDateModule`. These modules are
+identical to the "Mat"-prefixed versions (`MatNativeDateModule`, `MatMomentDateModule` `MatDayjsDateModule`) except
 they do not include the default formats. For example:
 
 ```ts
@@ -377,6 +400,35 @@ It is also possible to support multiple parse formats. For example:
           dateInput: 'L',
           monthYearLabel: 'MMM YYYY',
           dateA11yLabel: 'LL',
+          monthYearA11yLabel: 'MMMM YYYY',
+        },
+      },
+    },
+  ],
+})
+export class MyApp {}
+```
+
+##### DayjsDateModule formats
+
+To use custom formats with the `DayjsDateModule` you can pick from the parse formats documented
+[here](https://day.js.org/docs/en/parse/string-format) and the display formats documented
+[here](https://day.js.org/docs/en/display/format).
+
+It is also possible to support multiple parse formats. For example:
+
+```ts
+@NgModule({
+  imports: [MatDatepickerModule, DayjsDateModule],
+  providers: [
+    {
+      provide: MAT_DATE_FORMATS,
+      useValue: {
+        display: {
+          dateInput: 'L',
+          dayMonthDateLabel: 'dddd MMMM D',
+          monthYearLabel: 'MMM YYYY',
+          dateA11yLabel: 'L',
           monthYearA11yLabel: 'MMMM YYYY',
         },
       },
@@ -498,7 +550,7 @@ In multi-year view:
 #### Error: MatDatepicker: No provider found for DateAdapter/MAT_DATE_FORMATS
 
 This error is thrown if you have not provided all of the injectables the datepicker needs to work.
-The easiest way to resolve this is to import the `MatNativeDateModule` or `MatMomentDateModule` in
+The easiest way to resolve this is to import the `MatNativeDateModule`, `MatMomentDateModule` or `MatDayjsDateModule` in
 your application's root module. See
 [_Choosing a date implementation_](#choosing-a-date-implementation-and-date-format-settings)) for
 more information.
