@@ -9,6 +9,7 @@ ng_module(
         ["**/*.ts"],
         exclude = [
             "**/*.spec.ts",
+            "**/*.spec.d.ts",
             "harnesses/**",
         ],
     ),
@@ -31,7 +32,10 @@ ts_library(
 ng_test_library(
     name = "unit_test_sources",
     srcs = glob(
-        ["**/*.spec.ts"],
+        [
+            "**/*.spec.ts",
+            "**/*.spec.d.ts",
+        ],
         exclude = ["**/*.e2e.spec.ts"],
     ),
     deps = [
@@ -48,7 +52,10 @@ ng_test_library(
 
 ng_e2e_test_library(
     name = "e2e_test_sources",
-    srcs = glob(["**/*.e2e.spec.ts"]),
+    srcs = glob([
+        "**/*.e2e.spec.ts",
+        "**/*.spec.d.ts",
+    ]),
     deps = [
         ":test_harnesses",
         "//src/cdk/testing",
