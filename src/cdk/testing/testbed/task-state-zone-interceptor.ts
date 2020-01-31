@@ -8,7 +8,6 @@
 
 import {BehaviorSubject, Observable} from 'rxjs';
 import {ProxyZone, ProxyZoneStatic} from './proxy-zone-types';
-import {HasTaskState, Zone, ZoneDelegate} from './zone-types';
 
 /** Current state of the intercepted zone. */
 export interface TaskState {
@@ -91,7 +90,7 @@ export class TaskStateZoneInterceptor {
     // the proxy zone keeps track of the previous task state, so we can just pass
     // this as initial state to the task zone interceptor.
     const interceptor = new TaskStateZoneInterceptor(zoneSpec.lastTaskState);
-    const zoneSpecOnHasTask = zoneSpec.onHasTask;
+    const zoneSpecOnHasTask = zoneSpec.onHasTask.bind(zoneSpec);
 
     // We setup the task state interceptor in the `ProxyZone`. Note that we cannot register
     // the interceptor as a new proxy zone delegate because it would mean that other zone
@@ -99,9 +98,9 @@ export class TaskStateZoneInterceptor {
     // our interceptor. Since we just intend to monitor the task state of the proxy zone, it is
     // sufficient to just patch the proxy zone. This also avoids that we interfere with the task
     // queue scheduling logic.
-    zoneSpec.onHasTask = function() {
-      zoneSpecOnHasTask.apply(zoneSpec, arguments);
-      interceptor.onHasTask.apply(interceptor, arguments);
+    zoneSpec.onHasTask = function(...args: [ZoneDelegate, Zone, Zone, HasTaskState]) {
+      zoneSpecOnHasTask(...args);
+      interceptor.onHasTask(...args);
     };
 
     return zoneSpec[stateObservableSymbol] = interceptor.state;

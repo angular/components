@@ -120,7 +120,7 @@ def ng_package(name, data = [], globals = ROLLUP_GLOBALS, readme_md = None, **kw
         globals = globals,
         data = data + [":license_copied"],
         readme_md = readme_md,
-        replacements = VERSION_PLACEHOLDER_REPLACEMENTS,
+        substitutions = VERSION_PLACEHOLDER_REPLACEMENTS,
         **kwargs
     )
 
@@ -175,10 +175,9 @@ def karma_web_test_suite(name, **kwargs):
     )
 
     # Workaround for: https://github.com/bazelbuild/rules_nodejs/issues/1429
-    native.sh_binary(
+    native.sh_test(
         name = "%s_local" % name,
         srcs = ["%s_local_bin" % name],
-        data = [":%s_local_bin" % name],
         tags = ["manual", "local", "ibazel_notify_changes"],
         testonly = True,
     )
@@ -243,6 +242,8 @@ def ng_web_test_suite(deps = [], static_css = [], bootstrap = [], tags = [], **k
             "//test:angular_test_init",
         ] + deps,
         browsers = [
+            # Note: when changing the browser names here, also update the "yarn test"
+            # script to reflect the new browser names.
             "@io_bazel_rules_webtesting//browsers:chromium-local",
             "@io_bazel_rules_webtesting//browsers:firefox-local",
         ],

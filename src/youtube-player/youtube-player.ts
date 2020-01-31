@@ -39,6 +39,7 @@ import {
   pipe,
   Subject,
   of,
+  BehaviorSubject,
 } from 'rxjs';
 
 import {
@@ -91,51 +92,48 @@ type UninitializedPlayer = Pick<Player, 'videoId' | 'destroy' | 'addEventListene
 export class YouTubePlayer implements AfterViewInit, OnDestroy, OnInit {
   /** YouTube Video ID to view */
   @Input()
-  get videoId(): string | undefined { return this._videoId; }
+  get videoId(): string | undefined { return this._videoId.value; }
   set videoId(videoId: string | undefined) {
-    this._videoId = videoId;
-    this._videoIdObs.next(videoId);
+    this._videoId.next(videoId);
   }
-  private _videoId: string | undefined;
-  private _videoIdObs = new Subject<string | undefined>();
+  private _videoId = new BehaviorSubject<string | undefined>(undefined);
 
   /** Height of video player */
   @Input()
-  get height(): number | undefined { return this._height; }
+  get height(): number | undefined { return this._height.value; }
   set height(height: number | undefined) {
-    this._height = height || DEFAULT_PLAYER_HEIGHT;
-    this._heightObs.next(this._height);
+    this._height.next(height || DEFAULT_PLAYER_HEIGHT);
   }
-  private _height = DEFAULT_PLAYER_HEIGHT;
-  private _heightObs = new Subject<number>();
+  private _height = new BehaviorSubject<number>(DEFAULT_PLAYER_HEIGHT);
 
   /** Width of video player */
   @Input()
-  get width(): number | undefined { return this._width; }
+  get width(): number | undefined { return this._width.value; }
   set width(width: number | undefined) {
-    this._width = width || DEFAULT_PLAYER_WIDTH;
-    this._widthObs.next(this._width);
+    this._width.next(width || DEFAULT_PLAYER_WIDTH);
   }
-  private _width = DEFAULT_PLAYER_WIDTH;
-  private _widthObs = new Subject<number>();
+  private _width = new BehaviorSubject<number>(DEFAULT_PLAYER_WIDTH);
 
   /** The moment when the player is supposed to start playing */
-  @Input() set startSeconds(startSeconds: number | undefined) {
+  @Input()
+  set startSeconds(startSeconds: number | undefined) {
     this._startSeconds.next(startSeconds);
   }
-  private _startSeconds = new Subject<number | undefined>();
+  private _startSeconds = new BehaviorSubject<number | undefined>(undefined);
 
   /** The moment when the player is supposed to stop playing */
-  @Input() set endSeconds(endSeconds: number | undefined) {
+  @Input()
+  set endSeconds(endSeconds: number | undefined) {
     this._endSeconds.next(endSeconds);
   }
-  private _endSeconds = new Subject<number | undefined>();
+  private _endSeconds = new BehaviorSubject<number | undefined>(undefined);
 
   /** The suggested quality of the player */
-  @Input() set suggestedQuality(suggestedQuality: YT.SuggestedVideoQuality | undefined) {
+  @Input()
+  set suggestedQuality(suggestedQuality: YT.SuggestedVideoQuality | undefined) {
     this._suggestedQuality.next(suggestedQuality);
   }
-  private _suggestedQuality = new Subject<YT.SuggestedVideoQuality | undefined>();
+  private _suggestedQuality = new BehaviorSubject<YT.SuggestedVideoQuality | undefined>(undefined);
 
   /**
    * Whether the iframe will attempt to load regardless of the status of the api on the
@@ -202,40 +200,36 @@ export class YouTubePlayer implements AfterViewInit, OnDestroy, OnInit {
       iframeApiAvailableObs = iframeApiAvailableSubject.pipe(take(1), startWith(false));
     }
 
-    // Add initial values to all of the inputs.
-    const videoIdObs = this._videoIdObs.pipe(startWith(this._videoId));
-    const widthObs = this._widthObs.pipe(startWith(this._width));
-    const heightObs = this._heightObs.pipe(startWith(this._height));
-
-    const startSecondsObs = this._startSeconds.pipe(startWith(undefined));
-    const endSecondsObs = this._endSeconds.pipe(startWith(undefined));
-    const suggestedQualityObs = this._suggestedQuality.pipe(startWith(undefined));
-
     // An observable of the currently loaded player.
     const playerObs =
       createPlayerObservable(
         this._youtubeContainer,
-        videoIdObs,
+        this._videoId,
         iframeApiAvailableObs,
-        widthObs,
-        heightObs,
+        this._width,
+        this._height,
         this.createEventsBoundInZone(),
         this._ngZone
-      ).pipe(waitUntilReady(), takeUntil(this._destroyed), publish());
+      ).pipe(waitUntilReady(player => {
+        // Destroy the player if loading was aborted so that we don't end up leaking memory.
+        if (!playerIsReady(player)) {
+          player.destroy();
+        }
+      }), takeUntil(this._destroyed), publish());
 
     // Set up side effects to bind inputs to the player.
     playerObs.subscribe(player => this._player = player);
 
-    bindSizeToPlayer(playerObs, widthObs, heightObs);
+    bindSizeToPlayer(playerObs, this._width, this._height);
 
-    bindSuggestedQualityToPlayer(playerObs, suggestedQualityObs);
+    bindSuggestedQualityToPlayer(playerObs, this._suggestedQuality);
 
     bindCueVideoCall(
       playerObs,
-      videoIdObs,
-      startSecondsObs,
-      endSecondsObs,
-      suggestedQualityObs,
+      this._videoId,
+      this._startSeconds,
+      this._endSeconds,
+      this._suggestedQuality,
       this._destroyed);
 
     // After all of the subscriptions are set up, connect the observable.
@@ -273,9 +267,9 @@ export class YouTubePlayer implements AfterViewInit, OnDestroy, OnInit {
       window.onYouTubeIframeAPIReady = this._existingApiReadyCallback;
     }
 
-    this._videoIdObs.complete();
-    this._heightObs.complete();
-    this._widthObs.complete();
+    this._videoId.complete();
+    this._height.complete();
+    this._width.complete();
     this._startSeconds.complete();
     this._endSeconds.complete();
     this._suggestedQuality.complete();
@@ -438,39 +432,43 @@ function bindSuggestedQualityToPlayer(
 /**
  * Returns an observable that emits the loaded player once it's ready. Certain properties/methods
  * won't be available until the iframe finishes loading.
+ * @param onAbort Callback function that will be invoked if the player loading was aborted before
+ * it was able to complete. Can be used to clean up any loose references.
  */
-function waitUntilReady(): OperatorFunction<UninitializedPlayer | undefined, Player | undefined> {
+function waitUntilReady(onAbort: (player: UninitializedPlayer) => void):
+  OperatorFunction<UninitializedPlayer | undefined, Player | undefined> {
   return flatMap(player => {
     if (!player) {
       return observableOf<Player|undefined>(undefined);
     }
-    if ('getPlayerStatus' in player) {
+    if (playerIsReady(player)) {
       return observableOf(player as Player);
     }
+
+    // Since removeEventListener is not on Player when it's initialized, we can't use fromEvent.
     // The player is not initialized fully until the ready is called.
-    return fromPlayerOnReady(player)
-        .pipe(take(1), startWith(undefined));
-  });
-}
+    return new Observable<Player>(emitter => {
+      let aborted = false;
+      let resolved = false;
+      const onReady = (event: YT.PlayerEvent) => {
+        resolved = true;
 
-/** Since removeEventListener is not on Player when it's initialized, we can't use fromEvent. */
-function fromPlayerOnReady(player: UninitializedPlayer): Observable<Player> {
-  return new Observable<Player>(emitter => {
-    let aborted = false;
+        if (!aborted) {
+          event.target.removeEventListener('onReady', onReady);
+          emitter.next(event.target);
+        }
+      };
 
-    const onReady = (event: YT.PlayerEvent) => {
-      if (aborted) {
-        return;
-      }
-      event.target.removeEventListener('onReady', onReady);
-      emitter.next(event.target);
-    };
+      player.addEventListener('onReady', onReady);
 
-    player.addEventListener('onReady', onReady);
+      return () => {
+        aborted = true;
 
-    return () => {
-      aborted = true;
-    };
+        if (!resolved) {
+          onAbort(player);
+        }
+      };
+    }).pipe(take(1), startWith(undefined));
   });
 }
 
@@ -584,7 +582,12 @@ function bindCueVideoCall(
 }
 
 function hasPlayerStarted(player: YT.Player): boolean {
-  return [YT.PlayerState.UNSTARTED, YT.PlayerState.CUED].indexOf(player.getPlayerState()) === -1;
+  const state = player.getPlayerState();
+  return state !== YT.PlayerState.UNSTARTED && state !== YT.PlayerState.CUED;
+}
+
+function playerIsReady(player: UninitializedPlayer): player is Player {
+  return 'getPlayerStatus' in player;
 }
 
 /** Combines the two observables temporarily for the filter function. */

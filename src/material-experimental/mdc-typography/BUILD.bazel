@@ -2,6 +2,11 @@ package(default_visibility = ["//visibility:public"])
 
 load("//tools:defaults.bzl", "sass_library")
 
+filegroup(
+    name = "mdc-typography",
+    srcs = [":all_typography"],
+)
+
 sass_library(
     name = "all_typography",
     srcs = [
@@ -12,6 +17,8 @@ sass_library(
         "//src/material-experimental/mdc-card:mdc_card_scss_lib",
         "//src/material-experimental/mdc-checkbox:mdc_checkbox_scss_lib",
         "//src/material-experimental/mdc-chips:mdc_chips_scss_lib",
+        "//src/material-experimental/mdc-form-field:mdc_form_field_scss_lib",
+        "//src/material-experimental/mdc-input:mdc_input_scss_lib",
         "//src/material-experimental/mdc-list:mdc_list_scss_lib",
         "//src/material-experimental/mdc-menu:mdc_menu_scss_lib",
         "//src/material-experimental/mdc-progress-bar:mdc_progress_bar_scss_lib",

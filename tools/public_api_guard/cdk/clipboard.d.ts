@@ -1,4 +1,4 @@
-export declare class CdkCopyToClipboard {
+export declare class CdkCopyToClipboard implements OnDestroy {
     _deprecatedCopied: EventEmitter<boolean>;
     attempts: number;
     copied: EventEmitter<boolean>;
@@ -6,7 +6,8 @@ export declare class CdkCopyToClipboard {
     constructor(_clipboard: Clipboard,
     _ngZone?: NgZone | undefined, config?: CdkCopyToClipboardConfig);
     copy(attempts?: number): void;
-    static ɵdir: i0.ɵɵDirectiveDefWithMeta<CdkCopyToClipboard, "[cdkCopyToClipboard]", never, { 'text': "cdkCopyToClipboard", 'attempts': "cdkCopyToClipboardAttempts" }, { 'copied': "cdkCopyToClipboardCopied", '_deprecatedCopied': "copied" }, never>;
+    ngOnDestroy(): void;
+    static ɵdir: i0.ɵɵDirectiveDefWithMeta<CdkCopyToClipboard, "[cdkCopyToClipboard]", never, { "text": "cdkCopyToClipboard"; "attempts": "cdkCopyToClipboardAttempts"; }, { "copied": "cdkCopyToClipboardCopied"; "_deprecatedCopied": "copied"; }, never>;
     static ɵfac: i0.ɵɵFactoryDef<CdkCopyToClipboard>;
 }
 
@@ -26,7 +27,7 @@ export declare class Clipboard {
 
 export declare class ClipboardModule {
     static ɵinj: i0.ɵɵInjectorDef<ClipboardModule>;
-    static ɵmod: i0.ɵɵNgModuleDefWithMeta<ClipboardModule, [typeof i1.CdkCopyToClipboard], [typeof i2.CommonModule], [typeof i1.CdkCopyToClipboard]>;
+    static ɵmod: i0.ɵɵNgModuleDefWithMeta<ClipboardModule, [typeof i1.CdkCopyToClipboard], never, [typeof i1.CdkCopyToClipboard]>;
 }
 
 export declare class PendingCopy {

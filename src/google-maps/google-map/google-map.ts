@@ -22,6 +22,7 @@ import {
   Optional,
   Inject,
   PLATFORM_ID,
+  NgZone,
 } from '@angular/core';
 import {isPlatformBrowser} from '@angular/common';
 import {BehaviorSubject, combineLatest, Observable, Subject} from 'rxjs';
@@ -64,10 +65,7 @@ export const DEFAULT_WIDTH = '500px';
   encapsulation: ViewEncapsulation.None,
 })
 export class GoogleMap implements OnChanges, OnInit, OnDestroy {
-  private _eventManager = new MapEventManager();
-
-  /** Whether we're currently rendering inside a browser. */
-  private _isBrowser: boolean;
+  private _eventManager: MapEventManager = new MapEventManager(this._ngZone);
   private _googleMapChanges: Observable<google.maps.Map>;
 
   private readonly _options = new BehaviorSubject<google.maps.MapOptions>(DEFAULT_OPTIONS);
@@ -78,9 +76,12 @@ export class GoogleMap implements OnChanges, OnInit, OnDestroy {
   private _mapEl: HTMLElement;
   _googleMap: UpdatedGoogleMap;
 
-  @Input() height = DEFAULT_HEIGHT;
+  /** Whether we're currently rendering inside a browser. */
+  _isBrowser: boolean;
 
-  @Input() width = DEFAULT_WIDTH;
+  @Input() height: string | number = DEFAULT_HEIGHT;
+
+  @Input() width: string | number = DEFAULT_WIDTH;
 
   @Input()
   set center(center: google.maps.LatLngLiteral|google.maps.LatLng) {
@@ -219,10 +220,11 @@ export class GoogleMap implements OnChanges, OnInit, OnDestroy {
    * See
    * https://developers.google.com/maps/documentation/javascript/reference/map#Map.zoom_changed
    */
-  @Output() zoomChanged: Observable<void> = this._eventManager.getLazyEmitter<void>('zoomChanged');
+  @Output() zoomChanged: Observable<void> = this._eventManager.getLazyEmitter<void>('zoom_changed');
 
   constructor(
     private readonly _elementRef: ElementRef,
+    private _ngZone: NgZone,
     /**
      * @deprecated `platformId` parameter to become required.
      * @breaking-change 10.0.0
@@ -431,8 +433,9 @@ export class GoogleMap implements OnChanges, OnInit, OnDestroy {
 
   private _setSize() {
     if (this._mapEl) {
-      this._mapEl.style.height = this.height || DEFAULT_HEIGHT;
-      this._mapEl.style.width = this.width || DEFAULT_WIDTH;
+      const styles = this._mapEl.style;
+      styles.height = coerceCssPixelValue(this.height) || DEFAULT_HEIGHT;
+      styles.width = coerceCssPixelValue(this.width) || DEFAULT_WIDTH;
     }
   }
 
@@ -453,7 +456,12 @@ export class GoogleMap implements OnChanges, OnInit, OnDestroy {
       Observable<google.maps.Map> {
     return optionsChanges.pipe(
         take(1),
-        map(options => new google.maps.Map(this._mapEl, options)),
+        map(options => {
+          // Create the object outside the zone so its events don't trigger change detection.
+          // We'll bring it back in inside the `MapEventManager` only for the events that the
+          // user has subscribed to.
+          return this._ngZone.runOutsideAngular(() => new google.maps.Map(this._mapEl, options));
+        }),
         shareReplay(1));
   }
 
@@ -492,4 +500,15 @@ export class GoogleMap implements OnChanges, OnInit, OnDestroy {
                   'Please wait for the API to load before trying to interact with it.');
     }
   }
+}
+
+const cssUnitsPattern = /([A-Za-z%]+)$/;
+
+/** Coerces a value to a CSS pixel value. */
+function coerceCssPixelValue(value: any): string {
+  if (value == null) {
+    return '';
+  }
+
+  return cssUnitsPattern.test(value) ? value : `${value}px`;
 }

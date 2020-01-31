@@ -1,3 +1,5 @@
+export declare type FloatLabelType = 'always' | 'never' | 'auto';
+
 export declare function getMatFormFieldDuplicatedHintError(align: string): Error;
 
 export declare function getMatFormFieldMissingControlError(): Error;
@@ -8,16 +10,17 @@ export declare const MAT_FORM_FIELD_DEFAULT_OPTIONS: InjectionToken<MatFormField
 
 export declare class MatError {
     id: string;
-    static ɵdir: i0.ɵɵDirectiveDefWithMeta<MatError, "mat-error", never, { 'id': "id" }, {}, never>;
+    static ɵdir: i0.ɵɵDirectiveDefWithMeta<MatError, "mat-error", never, { "id": "id"; }, {}, never>;
     static ɵfac: i0.ɵɵFactoryDef<MatError>;
 }
 
 export declare class MatFormField extends _MatFormFieldMixinBase implements AfterContentInit, AfterContentChecked, AfterViewInit, OnDestroy, CanColor {
     _animationsEnabled: boolean;
     _appearance: MatFormFieldAppearance;
-    readonly _canLabelFloat: boolean;
+    get _canLabelFloat(): boolean;
     _connectionContainerRef: ElementRef;
-    _control: MatFormFieldControl<any>;
+    get _control(): MatFormFieldControl<any>;
+    set _control(value: MatFormFieldControl<any>);
     _controlNonStatic: MatFormFieldControl<any>;
     _controlStatic: MatFormFieldControl<any>;
     _elementRef: ElementRef;
@@ -25,19 +28,23 @@ export declare class MatFormField extends _MatFormFieldMixinBase implements Afte
     _hintChildren: QueryList<MatHint>;
     _hintLabelId: string;
     _inputContainerRef: ElementRef;
-    readonly _labelChild: MatLabel;
+    get _labelChild(): MatLabel;
     _labelChildNonStatic: MatLabel;
     _labelChildStatic: MatLabel;
     _labelId: string;
     _placeholderChild: MatPlaceholder;
     _prefixChildren: QueryList<MatPrefix>;
-    readonly _shouldAlwaysFloat: boolean;
+    get _shouldAlwaysFloat(): boolean;
     _subscriptAnimationState: string;
     _suffixChildren: QueryList<MatSuffix>;
-    appearance: MatFormFieldAppearance;
-    floatLabel: FloatLabelType;
-    hideRequiredMarker: boolean;
-    hintLabel: string;
+    get appearance(): MatFormFieldAppearance;
+    set appearance(value: MatFormFieldAppearance);
+    get floatLabel(): FloatLabelType;
+    set floatLabel(value: FloatLabelType);
+    get hideRequiredMarker(): boolean;
+    set hideRequiredMarker(value: boolean);
+    get hintLabel(): string;
+    set hintLabel(value: string);
     underlineRef: ElementRef;
     constructor(_elementRef: ElementRef, _changeDetectorRef: ChangeDetectorRef, labelOptions: LabelOptions, _dir: Directionality, _defaults: MatFormFieldDefaultOptions, _platform: Platform, _ngZone: NgZone, _animationMode: string);
     _animateAndLockLabel(): void;
@@ -56,7 +63,7 @@ export declare class MatFormField extends _MatFormFieldMixinBase implements Afte
     ngOnDestroy(): void;
     updateOutlineGap(): void;
     static ngAcceptInputType_hideRequiredMarker: BooleanInput;
-    static ɵcmp: i0.ɵɵComponentDefWithMeta<MatFormField, "mat-form-field", ["matFormField"], { 'color': "color", 'appearance': "appearance", 'hideRequiredMarker': "hideRequiredMarker", 'hintLabel': "hintLabel", 'floatLabel': "floatLabel" }, {}, ["_controlNonStatic", "_controlStatic", "_labelChildNonStatic", "_labelChildStatic", "_placeholderChild", "_errorChildren", "_hintChildren", "_prefixChildren", "_suffixChildren"]>;
+    static ɵcmp: i0.ɵɵComponentDefWithMeta<MatFormField, "mat-form-field", ["matFormField"], { "color": "color"; "appearance": "appearance"; "hideRequiredMarker": "hideRequiredMarker"; "hintLabel": "hintLabel"; "floatLabel": "floatLabel"; }, {}, ["_controlNonStatic", "_controlStatic", "_labelChildNonStatic", "_labelChildStatic", "_placeholderChild", "_errorChildren", "_hintChildren", "_prefixChildren", "_suffixChildren"]>;
     static ɵfac: i0.ɵɵFactoryDef<MatFormField>;
 }
 
@@ -88,6 +95,7 @@ export declare abstract class MatFormFieldControl<T> {
 
 export interface MatFormFieldDefaultOptions {
     appearance?: MatFormFieldAppearance;
+    floatLabel?: FloatLabelType;
     hideRequiredMarker?: boolean;
 }
 
@@ -99,7 +107,7 @@ export declare class MatFormFieldModule {
 export declare class MatHint {
     align: 'start' | 'end';
     id: string;
-    static ɵdir: i0.ɵɵDirectiveDefWithMeta<MatHint, "mat-hint", never, { 'align': "align", 'id': "id" }, {}, never>;
+    static ɵdir: i0.ɵɵDirectiveDefWithMeta<MatHint, "mat-hint", never, { "align": "align"; "id": "id"; }, {}, never>;
     static ɵfac: i0.ɵɵFactoryDef<MatHint>;
 }
 

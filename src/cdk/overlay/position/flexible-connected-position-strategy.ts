@@ -921,7 +921,7 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
                             scrollPosition: ViewportScrollPosition) {
     // Reset any existing styles. This is necessary in case the
     // preferred position has changed since the last `apply`.
-    let styles = {top: null, bottom: null} as CSSStyleDeclaration;
+    let styles = {top: '', bottom: ''} as CSSStyleDeclaration;
     let overlayPoint = this._getOverlayPoint(originPoint, this._overlayRect, position);
 
     if (this._isPushed) {
@@ -957,7 +957,7 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
                             scrollPosition: ViewportScrollPosition) {
     // Reset any existing styles. This is necessary in case the preferred position has
     // changed since the last `apply`.
-    let styles = {left: null, right: null} as CSSStyleDeclaration;
+    let styles = {left: '', right: ''} as CSSStyleDeclaration;
     let overlayPoint = this._getOverlayPoint(originPoint, this._overlayRect, position);
 
     if (this._isPushed) {
@@ -1189,12 +1189,13 @@ export interface ConnectedPosition {
 }
 
 /** Shallow-extends a stylesheet object with another stylesheet object. */
-function extendStyles(dest: CSSStyleDeclaration, source: CSSStyleDeclaration): CSSStyleDeclaration {
+function extendStyles(destination: CSSStyleDeclaration,
+                      source: CSSStyleDeclaration): CSSStyleDeclaration {
   for (let key in source) {
     if (source.hasOwnProperty(key)) {
-      dest[key] = source[key];
+      destination[key] = source[key];
     }
   }
 
-  return dest;
+  return destination;
 }

@@ -17,14 +17,20 @@ export declare const MAT_TOOLTIP_SCROLL_STRATEGY_FACTORY_PROVIDER: {
 export declare class MatTooltip implements OnDestroy, OnInit {
     _overlayRef: OverlayRef | null;
     _tooltipInstance: TooltipComponent | null;
-    disabled: boolean;
+    get disabled(): boolean;
+    set disabled(value: boolean);
     hideDelay: number;
-    message: string;
-    position: TooltipPosition;
+    get message(): string;
+    set message(value: string);
+    get position(): TooltipPosition;
+    set position(value: TooltipPosition);
     showDelay: number;
-    tooltipClass: string | string[] | Set<string> | {
+    get tooltipClass(): string | string[] | Set<string> | {
         [key: string]: any;
     };
+    set tooltipClass(value: string | string[] | Set<string> | {
+        [key: string]: any;
+    });
     touchGestures: TooltipTouchGestures;
     constructor(_overlay: Overlay, _elementRef: ElementRef<HTMLElement>, _scrollDispatcher: ScrollDispatcher, _viewContainerRef: ViewContainerRef, _ngZone: NgZone, _platform: Platform, _ariaDescriber: AriaDescriber, _focusMonitor: FocusMonitor, scrollStrategy: any, _dir: Directionality, _defaultOptions: MatTooltipDefaultOptions,
     _hammerLoader?: any);
@@ -45,7 +51,7 @@ export declare class MatTooltip implements OnDestroy, OnInit {
     static ngAcceptInputType_disabled: BooleanInput;
     static ngAcceptInputType_hideDelay: NumberInput;
     static ngAcceptInputType_showDelay: NumberInput;
-    static ɵdir: i0.ɵɵDirectiveDefWithMeta<MatTooltip, "[matTooltip]", ["matTooltip"], { 'position': "matTooltipPosition", 'disabled': "matTooltipDisabled", 'showDelay': "matTooltipShowDelay", 'hideDelay': "matTooltipHideDelay", 'touchGestures': "matTooltipTouchGestures", 'message': "matTooltip", 'tooltipClass': "matTooltipClass" }, {}, never>;
+    static ɵdir: i0.ɵɵDirectiveDefWithMeta<MatTooltip, "[matTooltip]", ["matTooltip"], { "position": "matTooltipPosition"; "disabled": "matTooltipDisabled"; "showDelay": "matTooltipShowDelay"; "hideDelay": "matTooltipHideDelay"; "touchGestures": "matTooltipTouchGestures"; "message": "matTooltip"; "tooltipClass": "matTooltipClass"; }, {}, never>;
     static ɵfac: i0.ɵɵFactoryDef<MatTooltip>;
 }
 

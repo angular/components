@@ -5,15 +5,18 @@ export declare class MatGridAvatarCssMatStyler {
 
 export declare class MatGridList implements MatGridListBase, OnInit, AfterContentChecked {
     _tiles: QueryList<MatGridTile>;
-    cols: number;
-    gutterSize: string;
-    rowHeight: string | number;
+    get cols(): number;
+    set cols(value: number);
+    get gutterSize(): string;
+    set gutterSize(value: string);
+    get rowHeight(): string | number;
+    set rowHeight(value: string | number);
     constructor(_element: ElementRef<HTMLElement>, _dir: Directionality);
     _setListStyle(style: [string, string | null] | null): void;
     ngAfterContentChecked(): void;
     ngOnInit(): void;
     static ngAcceptInputType_cols: NumberInput;
-    static ɵcmp: i0.ɵɵComponentDefWithMeta<MatGridList, "mat-grid-list", ["matGridList"], { 'cols': "cols", 'gutterSize': "gutterSize", 'rowHeight': "rowHeight" }, {}, ["_tiles"]>;
+    static ɵcmp: i0.ɵɵComponentDefWithMeta<MatGridList, "mat-grid-list", ["matGridList"], { "cols": "cols"; "gutterSize": "gutterSize"; "rowHeight": "rowHeight"; }, {}, ["_tiles"]>;
     static ɵfac: i0.ɵɵFactoryDef<MatGridList>;
 }
 
@@ -26,13 +29,15 @@ export declare class MatGridTile {
     _colspan: number;
     _gridList?: MatGridListBase | undefined;
     _rowspan: number;
-    colspan: number;
-    rowspan: number;
+    get colspan(): number;
+    set colspan(value: number);
+    get rowspan(): number;
+    set rowspan(value: number);
     constructor(_element: ElementRef<HTMLElement>, _gridList?: MatGridListBase | undefined);
     _setStyle(property: string, value: any): void;
     static ngAcceptInputType_colspan: NumberInput;
     static ngAcceptInputType_rowspan: NumberInput;
-    static ɵcmp: i0.ɵɵComponentDefWithMeta<MatGridTile, "mat-grid-tile", ["matGridTile"], { 'rowspan': "rowspan", 'colspan': "colspan" }, {}, never>;
+    static ɵcmp: i0.ɵɵComponentDefWithMeta<MatGridTile, "mat-grid-tile", ["matGridTile"], { "rowspan": "rowspan"; "colspan": "colspan"; }, {}, never>;
     static ɵfac: i0.ɵɵFactoryDef<MatGridTile>;
 }
 

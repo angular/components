@@ -1,8 +1,8 @@
-@import '@material/switch/functions';
-@import '@material/switch/mixins';
-@import '@material/switch/variables';
-@import '@material/form-field/mixins';
-@import '@material/ripple/variables';
+@import '@material/switch/functions.import';
+@import '@material/switch/mixins.import';
+@import '@material/switch/variables.import';
+@import '@material/form-field/mixins.import';
+@import '@material/ripple/variables.import';
 @import '../mdc-helpers/mdc-helpers';
 @import '../../material/core/style/layout-common';
 @import '../../cdk/a11y/a11y';
@@ -55,7 +55,7 @@
 }
 
 
-@include cdk-high-contrast {
+@include cdk-high-contrast(active, off) {
   .mat-mdc-slide-toggle-focused {
     .mdc-switch__track {
       // Usually 1px would be enough, but MDC reduces the opacity on the

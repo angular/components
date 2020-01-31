@@ -20,15 +20,19 @@ export declare class MatCheckbox extends _MatCheckboxMixinBase implements Contro
     ariaLabel: string;
     ariaLabelledby: string | null;
     readonly change: EventEmitter<MatCheckboxChange>;
-    checked: boolean;
-    disabled: any;
+    get checked(): boolean;
+    set checked(value: boolean);
+    get disabled(): any;
+    set disabled(value: any);
     id: string;
-    indeterminate: boolean;
+    get indeterminate(): boolean;
+    set indeterminate(value: boolean);
     readonly indeterminateChange: EventEmitter<boolean>;
-    readonly inputId: string;
+    get inputId(): string;
     labelPosition: 'before' | 'after';
     name: string | null;
-    required: boolean;
+    get required(): boolean;
+    set required(value: boolean);
     ripple: MatRipple;
     value: string;
     constructor(elementRef: ElementRef<HTMLElement>, _changeDetectorRef: ChangeDetectorRef, _focusMonitor: FocusMonitor, _ngZone: NgZone, tabIndex: string,
@@ -51,7 +55,7 @@ export declare class MatCheckbox extends _MatCheckboxMixinBase implements Contro
     static ngAcceptInputType_disabled: BooleanInput;
     static ngAcceptInputType_indeterminate: BooleanInput;
     static ngAcceptInputType_required: BooleanInput;
-    static ɵcmp: i0.ɵɵComponentDefWithMeta<MatCheckbox, "mat-checkbox", ["matCheckbox"], { 'disableRipple': "disableRipple", 'color': "color", 'tabIndex': "tabIndex", 'ariaLabel': "aria-label", 'ariaLabelledby': "aria-labelledby", 'id': "id", 'required': "required", 'labelPosition': "labelPosition", 'name': "name", 'value': "value", 'checked': "checked", 'disabled': "disabled", 'indeterminate': "indeterminate" }, { 'change': "change", 'indeterminateChange': "indeterminateChange" }, never>;
+    static ɵcmp: i0.ɵɵComponentDefWithMeta<MatCheckbox, "mat-checkbox", ["matCheckbox"], { "disableRipple": "disableRipple"; "color": "color"; "tabIndex": "tabIndex"; "ariaLabel": "aria-label"; "ariaLabelledby": "aria-labelledby"; "id": "id"; "required": "required"; "labelPosition": "labelPosition"; "name": "name"; "value": "value"; "checked": "checked"; "disabled": "disabled"; "indeterminate": "indeterminate"; }, { "change": "change"; "indeterminateChange": "indeterminateChange"; }, never>;
     static ɵfac: i0.ɵɵFactoryDef<MatCheckbox>;
 }
 
@@ -69,7 +73,7 @@ export interface MatCheckboxDefaultOptions {
 
 export declare class MatCheckboxModule {
     static ɵinj: i0.ɵɵInjectorDef<MatCheckboxModule>;
-    static ɵmod: i0.ɵɵNgModuleDefWithMeta<MatCheckboxModule, [typeof i2.MatCheckbox], [typeof i3.CommonModule, typeof i4.MatRippleModule, typeof i4.MatCommonModule, typeof i5.ObserversModule, typeof _MatCheckboxRequiredValidatorModule], [typeof i2.MatCheckbox, typeof i4.MatCommonModule, typeof _MatCheckboxRequiredValidatorModule]>;
+    static ɵmod: i0.ɵɵNgModuleDefWithMeta<MatCheckboxModule, [typeof i2.MatCheckbox], [typeof i3.MatRippleModule, typeof i3.MatCommonModule, typeof i4.ObserversModule, typeof _MatCheckboxRequiredValidatorModule], [typeof i2.MatCheckbox, typeof i3.MatCommonModule, typeof _MatCheckboxRequiredValidatorModule]>;
 }
 
 export declare class MatCheckboxRequiredValidator extends CheckboxRequiredValidator {

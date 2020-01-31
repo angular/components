@@ -157,7 +157,7 @@
 <h2>Progress bar</h2>
 
 <mat-progress-bar value="25"></mat-progress-bar>
-<mat-progress-bar mode="buffer" value="25" bufferValue="60"></mat-progress-bar>
+<mat-progress-bar mode="buffer" value="25" [bufferValue]="60"></mat-progress-bar>
 <mat-progress-bar mode="indeterminate"></mat-progress-bar>
 <mat-progress-bar mode="query"></mat-progress-bar>
 
@@ -225,7 +225,7 @@
 
 <nav mat-tab-nav-bar>
  <a mat-tab-link href="https://google.com">Google</a>
- <a mat-tab-link href="https://google.com" active>Also Google</a>
+ <a mat-tab-link href="https://google.com" [active]="true">Also Google</a>
 </nav>
 
 <h2>Paginator</h2>
@@ -384,4 +384,12 @@
 <youtube-player videoId="dQw4w9WgXcQ"></youtube-player>
 
 <h2>Google Map</h2>
-<google-map height="400px" width="750px"></google-map>
+<google-map height="400px" width="750px">
+  <map-marker [position]="{lat: 24, lng: 12}"></map-marker>
+  <map-info-window>Hello</map-info-window>
+  <map-polyline [options]="{
+    path: [{lat: 25, lng: 26}, {lat: 26, lng: 27}, {lat: 30, lng: 34}],
+    strokeColor: 'grey',
+    strokeOpacity: 0.8
+  }"></map-polyline>
+</google-map>

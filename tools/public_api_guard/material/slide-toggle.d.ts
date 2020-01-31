@@ -17,14 +17,16 @@ export declare class MatSlideToggle extends _MatSlideToggleMixinBase implements 
     ariaLabel: string | null;
     ariaLabelledby: string | null;
     readonly change: EventEmitter<MatSlideToggleChange>;
-    checked: boolean;
+    get checked(): boolean;
+    set checked(value: boolean);
     defaults: MatSlideToggleDefaultOptions;
     readonly dragChange: EventEmitter<void>;
     id: string;
-    readonly inputId: string;
+    get inputId(): string;
     labelPosition: 'before' | 'after';
     name: string | null;
-    required: boolean;
+    get required(): boolean;
+    set required(value: boolean);
     readonly toggleChange: EventEmitter<void>;
     constructor(elementRef: ElementRef, _focusMonitor: FocusMonitor, _changeDetectorRef: ChangeDetectorRef, tabIndex: string,
     _ngZone: NgZone, defaults: MatSlideToggleDefaultOptions, _animationMode?: string | undefined, _dir?: Directionality);
@@ -43,7 +45,7 @@ export declare class MatSlideToggle extends _MatSlideToggleMixinBase implements 
     static ngAcceptInputType_disableRipple: BooleanInput;
     static ngAcceptInputType_disabled: BooleanInput;
     static ngAcceptInputType_required: BooleanInput;
-    static ɵcmp: i0.ɵɵComponentDefWithMeta<MatSlideToggle, "mat-slide-toggle", ["matSlideToggle"], { 'disabled': "disabled", 'disableRipple': "disableRipple", 'color': "color", 'tabIndex': "tabIndex", 'name': "name", 'id': "id", 'labelPosition': "labelPosition", 'ariaLabel': "aria-label", 'ariaLabelledby': "aria-labelledby", 'required': "required", 'checked': "checked" }, { 'change': "change", 'toggleChange': "toggleChange", 'dragChange': "dragChange" }, never>;
+    static ɵcmp: i0.ɵɵComponentDefWithMeta<MatSlideToggle, "mat-slide-toggle", ["matSlideToggle"], { "disabled": "disabled"; "disableRipple": "disableRipple"; "color": "color"; "tabIndex": "tabIndex"; "name": "name"; "id": "id"; "labelPosition": "labelPosition"; "ariaLabel": "aria-label"; "ariaLabelledby": "aria-labelledby"; "required": "required"; "checked": "checked"; }, { "change": "change"; "toggleChange": "toggleChange"; "dragChange": "dragChange"; }, never>;
     static ɵfac: i0.ɵɵFactoryDef<MatSlideToggle>;
 }
 

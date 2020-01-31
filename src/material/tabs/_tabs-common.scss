@@ -27,15 +27,17 @@ $mat-tab-animation-duration: 500ms !default;
       opacity: 1;
     }
 
-    @include cdk-high-contrast {
-      outline: dotted 2px;
+    @include cdk-high-contrast(active, off) {
+      $outline-width: 2px;
+      outline: dotted $outline-width;
+      outline-offset: -$outline-width; // Not supported on IE, but looks better everywhere else.
     }
   }
 
   &.mat-tab-disabled {
     cursor: default;
 
-    @include cdk-high-contrast {
+    @include cdk-high-contrast(active, off) {
       opacity: 0.5;
     }
   }
@@ -47,7 +49,7 @@ $mat-tab-animation-duration: 500ms !default;
     white-space: nowrap;
   }
 
-  @include cdk-high-contrast {
+  @include cdk-high-contrast(active, off) {
     opacity: 1;
   }
 }
@@ -67,7 +69,7 @@ $mat-tab-animation-duration: 500ms !default;
     top: 0;
   }
 
-  @include cdk-high-contrast {
+  @include cdk-high-contrast(active, off) {
     outline: solid $height;
     height: 0;
   }

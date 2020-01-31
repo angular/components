@@ -23,17 +23,18 @@ import {
 } from '@angular/core';
 import {TestBed, ComponentFixture, fakeAsync, flush, tick} from '@angular/core/testing';
 import {DOCUMENT} from '@angular/common';
-import {ViewportRuler} from '@angular/cdk/scrolling';
+import {ViewportRuler, ScrollingModule} from '@angular/cdk/scrolling';
 import {_supportsShadowDom} from '@angular/cdk/platform';
 import {of as observableOf} from 'rxjs';
 
 import {DragDropModule} from '../drag-drop-module';
 import {CdkDragDrop, CdkDragEnter} from '../drag-events';
-import {DragRefConfig, Point, DragRef} from '../drag-ref';
+import {Point, DragRef} from '../drag-ref';
 import {extendStyles} from '../drag-styling';
 import {moveItemInArray} from '../drag-utils';
 
-import {CDK_DRAG_CONFIG, CdkDrag} from './drag';
+import {CdkDrag} from './drag';
+import {CDK_DRAG_CONFIG, DragDropConfig} from './config';
 import {CdkDragHandle} from './drag-handle';
 import {CdkDropList} from './drop-list';
 import {CdkDropListGroup} from './drop-list-group';
@@ -47,7 +48,7 @@ describe('CdkDrag', () => {
       extraDeclarations: Type<any>[] = []): ComponentFixture<T> {
     TestBed
         .configureTestingModule({
-          imports: [DragDropModule],
+          imports: [DragDropModule, ScrollingModule],
           declarations: [componentType, PassthroughComponent, ...extraDeclarations],
           providers: [
             {
@@ -58,7 +59,7 @@ describe('CdkDrag', () => {
                 // have to deal with thresholds.
                 dragStartThreshold: dragDistance,
                 pointerDirectionChangeThreshold: 5
-              } as DragRefConfig
+              } as DragDropConfig
             },
             ...providers
           ],
@@ -1132,6 +1133,60 @@ describe('CdkDrag', () => {
       subscription.unsubscribe();
     }));
 
+    it('should prevent the default `mousemove` action even before the drag threshold has ' +
+      'been reached', fakeAsync(() => {
+        const fixture = createComponent(StandaloneDraggable, [], 5);
+        fixture.detectChanges();
+        const dragElement = fixture.componentInstance.dragElement.nativeElement;
+
+        dispatchMouseEvent(dragElement, 'mousedown', 2, 2);
+        fixture.detectChanges();
+        const mousemoveEvent = dispatchMouseEvent(document, 'mousemove', 2, 2);
+        fixture.detectChanges();
+
+        expect(mousemoveEvent.defaultPrevented).toBe(true);
+      }));
+
+    it('should prevent the default `touchmove` action even before the drag threshold has ' +
+      'been reached', fakeAsync(() => {
+        const fixture = createComponent(StandaloneDraggable, [], 5);
+        fixture.detectChanges();
+        const dragElement = fixture.componentInstance.dragElement.nativeElement;
+
+        dispatchTouchEvent(dragElement, 'touchstart', 2, 2);
+        fixture.detectChanges();
+        const touchmoveEvent = dispatchTouchEvent(document, 'touchmove', 2, 2);
+        fixture.detectChanges();
+
+        expect(touchmoveEvent.defaultPrevented).toBe(true);
+      }));
+
+    it('should be able to configure the drag input defaults through a provider', fakeAsync(() => {
+      const config: DragDropConfig = {
+        draggingDisabled: true,
+        dragStartDelay: 1337,
+        lockAxis: 'y',
+        constrainPosition: () => ({x: 1337, y: 42}),
+        previewClass: 'custom-preview-class',
+        boundaryElement: '.boundary',
+        rootElementSelector: '.root'
+      };
+
+      const fixture = createComponent(PlainStandaloneDraggable, [{
+        provide: CDK_DRAG_CONFIG,
+        useValue: config
+      }]);
+      fixture.detectChanges();
+      const drag = fixture.componentInstance.dragInstance;
+      expect(drag.disabled).toBe(true);
+      expect(drag.dragStartDelay).toBe(1337);
+      expect(drag.lockAxis).toBe('y');
+      expect(drag.constrainPosition).toBe(config.constrainPosition);
+      expect(drag.previewClass).toBe('custom-preview-class');
+      expect(drag.boundaryElement).toBe('.boundary');
+      expect(drag.rootElementSelector).toBe('.root');
+    }));
+
   });
 
   describe('draggable with a handle', () => {
@@ -1168,6 +1223,18 @@ describe('CdkDrag', () => {
       dragElementViaMouse(fixture, handle, 50, 100);
       expect(dragElement.style.transform).toBeFalsy();
     }));
+
+    it('should not be able to drag the element if the handle is disabled before init',
+      fakeAsync(() => {
+        const fixture = createComponent(StandaloneDraggableWithPreDisabledHandle);
+        fixture.detectChanges();
+        const dragElement = fixture.componentInstance.dragElement.nativeElement;
+        const handle = fixture.componentInstance.handleElement.nativeElement;
+
+        expect(dragElement.style.transform).toBeFalsy();
+        dragElementViaMouse(fixture, handle, 50, 100);
+        expect(dragElement.style.transform).toBeFalsy();
+      }));
 
     it('should not be able to drag using the handle if the element is disabled', fakeAsync(() => {
       const fixture = createComponent(StandaloneDraggableWithHandle);
@@ -1842,15 +1909,24 @@ describe('CdkDrag', () => {
           body: document.body,
           fullscreenElement: document.createElement('div'),
           ELEMENT_NODE: Node.ELEMENT_NODE,
-          querySelectorAll: function() {
-            return document.querySelectorAll.apply(document, arguments);
+          querySelectorAll: function(...args: [string]) {
+            return document.querySelectorAll(...args);
           },
-          addEventListener: function() {
-            document.addEventListener.apply(document, arguments);
+          addEventListener: function(...args: [
+              string,
+              EventListenerOrEventListenerObject,
+              (boolean | AddEventListenerOptions | undefined)?
+          ]) {
+            document.addEventListener(...args);
           },
-          removeEventListener: function() {
-            document.addEventListener.apply(document, arguments);
-          }
+          removeEventListener: function(...args: [
+            string,
+            EventListenerOrEventListenerObject,
+            (boolean | AddEventListenerOptions | undefined)?
+          ]) {
+            document.addEventListener(...args);
+          },
+          createComment: (text: string) => document.createComment(text)
         };
         const fixture = createComponent(DraggableInDropZone, [{
           provide: DOCUMENT,
@@ -3375,6 +3451,24 @@ describe('CdkDrag', () => {
         cleanup();
       }));
 
+    it('should be able to auto-scroll a parent container', fakeAsync(() => {
+      const fixture = createComponent(DraggableInScrollableParentContainer);
+      fixture.detectChanges();
+      const item = fixture.componentInstance.dragItems.first.element.nativeElement;
+      const container = fixture.nativeElement.querySelector('.container');
+      const containerRect = container.getBoundingClientRect();
+
+      expect(container.scrollTop).toBe(0);
+
+      startDraggingViaMouse(fixture, item);
+      dispatchMouseEvent(document, 'mousemove',
+        containerRect.left + containerRect.width / 2, containerRect.top + containerRect.height);
+      fixture.detectChanges();
+      tickAnimationFrames(20);
+
+      expect(container.scrollTop).toBeGreaterThan(0);
+    }));
+
     it('should pick up descendants inside of containers', fakeAsync(() => {
       const fixture = createComponent(DraggableInDropZoneWithContainer);
       fixture.detectChanges();
@@ -3456,6 +3550,80 @@ describe('CdkDrag', () => {
       expect(dragItems.map(drag => drag.element.nativeElement.textContent!.trim()))
           .toEqual(['One', 'Two', 'Zero', 'Three']);
     }));
+
+    it('should be able to configure the drop input defaults through a provider', fakeAsync(() => {
+      const config: DragDropConfig = {
+        draggingDisabled: true,
+        sortingDisabled: true,
+        listAutoScrollDisabled: true,
+        listOrientation: 'horizontal',
+        lockAxis: 'y'
+      };
+
+      const fixture = createComponent(PlainStandaloneDropList, [{
+        provide: CDK_DRAG_CONFIG,
+        useValue: config
+      }]);
+      fixture.detectChanges();
+      const list = fixture.componentInstance.dropList;
+      expect(list.disabled).toBe(true);
+      expect(list.sortingDisabled).toBe(true);
+      expect(list.autoScrollDisabled).toBe(true);
+      expect(list.orientation).toBe('horizontal');
+      expect(list.lockAxis).toBe('y');
+    }));
+
+    it('should disable scroll snapping while the user is dragging', fakeAsync(() => {
+      const fixture = createComponent(DraggableInDropZone);
+      fixture.detectChanges();
+      const item = fixture.componentInstance.dragItems.toArray()[1].element.nativeElement;
+      const styles: any = fixture.componentInstance.dropInstance.element.nativeElement.style;
+
+      // This test only applies to browsers that support scroll snapping.
+      if (!('scrollSnapType' in styles) && !('msScrollSnapType' in styles)) {
+        return;
+      }
+
+      expect(styles.scrollSnapType || styles.msScrollSnapType).toBeFalsy();
+
+      startDraggingViaMouse(fixture, item);
+
+      expect(styles.scrollSnapType || styles.msScrollSnapType).toBe('none');
+
+      dispatchMouseEvent(document, 'mouseup');
+      fixture.detectChanges();
+      flush();
+      fixture.detectChanges();
+
+      expect(styles.scrollSnapType || styles.msScrollSnapType).toBeFalsy();
+    }));
+
+    it('should restore the previous inline scroll snap value', fakeAsync(() => {
+      const fixture = createComponent(DraggableInDropZone);
+      fixture.detectChanges();
+      const item = fixture.componentInstance.dragItems.toArray()[1].element.nativeElement;
+      const styles: any = fixture.componentInstance.dropInstance.element.nativeElement.style;
+
+      // This test only applies to browsers that support scroll snapping.
+      if (!('scrollSnapType' in styles) && !('msScrollSnapType' in styles)) {
+        return;
+      }
+
+      styles.scrollSnapType = styles.msScrollSnapType = 'block';
+      expect(styles.scrollSnapType || styles.msScrollSnapType).toBe('block');
+
+      startDraggingViaMouse(fixture, item);
+
+      expect(styles.scrollSnapType || styles.msScrollSnapType).toBe('none');
+
+      dispatchMouseEvent(document, 'mouseup');
+      fixture.detectChanges();
+      flush();
+      fixture.detectChanges();
+
+      expect(styles.scrollSnapType || styles.msScrollSnapType).toBe('block');
+    }));
+
   });
 
   describe('in a connected drop container', () => {
@@ -4403,6 +4571,31 @@ describe('CdkDrag', () => {
         });
       }));
 
+      it('should not throw if its next sibling is removed while dragging', fakeAsync(() => {
+        const fixture = createComponent(ConnectedDropZonesWithSingleItems);
+        fixture.detectChanges();
+
+        const items = fixture.componentInstance.dragItems.toArray();
+        const item = items[0];
+        const nextSibling = items[1].element.nativeElement;
+        const extraSibling = document.createElement('div');
+        const targetRect = nextSibling.getBoundingClientRect();
+
+        // Manually insert an element after the node to simulate an external package.
+        nextSibling.parentNode!.insertBefore(extraSibling, nextSibling);
+
+        dragElementViaMouse(fixture, item.element.nativeElement,
+          targetRect.left + 1, targetRect.top + 1);
+
+        // Remove the extra node after the element was dropped, but before the animation is over.
+        extraSibling.parentNode!.removeChild(extraSibling);
+
+        expect(() => {
+          flush();
+          fixture.detectChanges();
+        }).not.toThrow();
+      }));
+
   });
 
   describe('with nested drags', () => {
@@ -4526,6 +4719,25 @@ class StandaloneDraggableWithHandle {
   @ViewChild('handleElement') handleElement: ElementRef<HTMLElement>;
   @ViewChild(CdkDrag) dragInstance: CdkDrag;
   @ViewChild(CdkDragHandle) handleInstance: CdkDragHandle;
+}
+
+@Component({
+  template: `
+    <div #dragElement cdkDrag
+      style="width: 100px; height: 100px; background: red; position: relative">
+      <div
+        #handleElement
+        cdkDragHandle
+        [cdkDragHandleDisabled]="disableHandle"
+        style="width: 10px; height: 10px; background: green;"></div>
+    </div>
+  `
+})
+class StandaloneDraggableWithPreDisabledHandle {
+  @ViewChild('dragElement', {static: false}) dragElement: ElementRef<HTMLElement>;
+  @ViewChild('handleElement', {static: false}) handleElement: ElementRef<HTMLElement>;
+  @ViewChild(CdkDrag, {static: false}) dragInstance: CdkDrag;
+  disableHandle = true;
 }
 
 @Component({
@@ -4658,6 +4870,30 @@ class DraggableInScrollableVerticalDropZone extends DraggableInDropZone {
     }
   }
 }
+
+@Component({
+  template: '<div class="container" cdkScrollable>' + DROP_ZONE_FIXTURE_TEMPLATE + '</div>',
+
+  // Note that it needs a margin to ensure that it's not flush against the viewport
+  // edge which will cause the viewport to scroll, rather than the list.
+  styles: [`
+    .container {
+      max-height: 200px;
+      overflow: auto;
+      margin: 10vw 0 0 10vw;
+    }
+  `]
+})
+class DraggableInScrollableParentContainer extends DraggableInDropZone {
+  constructor() {
+    super();
+
+    for (let i = 0; i < 60; i++) {
+      this.items.push({value: `Extra item ${i}`, height: ITEM_HEIGHT, margin: 0});
+    }
+  }
+}
+
 
 @Component({
   // Note that we need the blank `ngSwitch` below to hit the code path that we're testing.
@@ -5265,6 +5501,20 @@ class NestedDropZones {
   @ViewChild('outerList') outerList: ElementRef<HTMLElement>;
   @ViewChild('innerList') innerList: ElementRef<HTMLElement>;
   items = ['Zero', 'One', 'Two', 'Three'];
+}
+
+@Component({
+  template: `<div cdkDrag></div>`
+})
+class PlainStandaloneDraggable {
+  @ViewChild(CdkDrag) dragInstance: CdkDrag;
+}
+
+@Component({
+  template: `<div cdkDropList></div>`
+})
+class PlainStandaloneDropList {
+  @ViewChild(CdkDropList) dropList: CdkDropList;
 }
 
 /**

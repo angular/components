@@ -1,6 +1,6 @@
-@import '@material/menu-surface/mixins';
-@import '@material/list/mixins';
-@import '@material/list/variables';
+@import '@material/menu-surface/mixins.import';
+@import '@material/list/mixins.import';
+@import '@material/list/variables.import';
 @import '../../material/core/style/menu-common';
 @import '../../material/core/style/button-common';
 @import '../../cdk/a11y/a11y';
@@ -23,7 +23,7 @@
   // The CDK positioning uses flexbox to anchor the element, whereas MDC uses `position: absolute`.
   position: static;
 
-  @include cdk-high-contrast {
+  @include cdk-high-contrast(active, off) {
     outline: solid 1px;
   }
 }
@@ -75,7 +75,7 @@
     }
   }
 
-  @include cdk-high-contrast {
+  @include cdk-high-contrast(active, off) {
     &.cdk-program-focused,
     &.cdk-keyboard-focused,
     &-highlighted {

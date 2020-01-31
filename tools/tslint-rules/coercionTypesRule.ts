@@ -5,13 +5,25 @@ import * as tsutils from 'tsutils';
 const TYPE_ACCEPT_MEMBER_PREFIX = 'ngAcceptInputType_';
 
 /**
+ * Type that describes the TypeScript type checker with internal methods for
+ * the type relation API methods being exposed.
+ */
+// TODO: remove if https://github.com/microsoft/TypeScript/issues/9879 is resolved.
+type TypeCheckerWithRelationApi = ts.TypeChecker & {
+  getNullType: () => ts.Type;
+  getUndefinedType: () => ts.Type;
+  isTypeAssignableTo: (a: ts.Type, b: ts.Type) => boolean;
+};
+
+/**
  * TSLint rule that verifies that classes declare corresponding `ngAcceptInputType_*`
  * static fields for inputs that use coercion inside of their setters. Also handles
  * inherited class members and members that come from an interface.
  */
 export class Rule extends Lint.Rules.TypedRule {
   applyWithProgram(sourceFile: ts.SourceFile, program: ts.Program): Lint.RuleFailure[] {
-    const walker = new Walker(sourceFile, this.getOptions(), program.getTypeChecker());
+    const walker = new Walker(sourceFile, this.getOptions(),
+        program.getTypeChecker() as TypeCheckerWithRelationApi);
     return this.applyWithWalker(walker);
   }
 }
@@ -23,9 +35,15 @@ class Walker extends Lint.RuleWalker {
   /** Mapping of interfaces known to have coercion properties and the property names themselves. */
   private _coercionInterfaces: {[interfaceName: string]: string[]};
 
+  /** Type resolving to the TS internal `null` type. */
+  private _nullType = this._typeChecker.getNullType();
+
+  /** Type resolving to the TS internal `undefined` type. */
+  private _undefinedType = this._typeChecker.getUndefinedType();
+
   constructor(sourceFile: ts.SourceFile,
               options: Lint.IOptions,
-              private _typeChecker: ts.TypeChecker) {
+              private _typeChecker: TypeCheckerWithRelationApi) {
     super(sourceFile, options);
     this._coercionFunctions = new Set(options.ruleArguments[0] || []);
     this._coercionInterfaces = options.ruleArguments[1] || {};
@@ -40,9 +58,9 @@ class Walker extends Lint.RuleWalker {
 
   visitClassDeclaration(node: ts.ClassDeclaration) {
     if (this._shouldLintClass(node)) {
-      this._lintClass(node, node);
+      this._lintClass(node, node, true);
       this._lintSuperClasses(node);
-      this._lintInterfaces(node, node);
+      this._lintInterfaces(node, node, true);
     }
     super.visitClassDeclaration(node);
   }
@@ -58,34 +76,9 @@ class Walker extends Lint.RuleWalker {
       return;
     }
 
-    if (node.type.kind === ts.SyntaxKind.AnyKeyword) {
-      // if the type is "any", then it can be "null" and "undefined" too.
-      return;
-    } else if (
-        ts.isTypeReferenceNode(node.type) && ts.isIdentifier(node.type.typeName) &&
-        (node.type.typeName.text === 'BooleanInput' || node.type.typeName.text === 'NumberInput')) {
-      // if the type is "BooleanInput" or "NumberInput", we don't need to check more. Ideally,
-      // we'd not have any of these hardcoded checks at all, and just rely on type assignability
-      // checks, but this is only programmatically possible with TypeScript 3.7. See:
-      // https://github.com/microsoft/TypeScript/issues/9879
-      return;
-    } else if (!ts.isUnionTypeNode(node.type)) {
-      this.addFailureAtNode(
-          node,
-          'Acceptance member does not have an union type. The member ' +
-              'should use an union type to also accept "null" and "undefined".');
-      return;
-    }
-
-    let hasNull = false;
-    let hasUndefined = false;
-    for (let type of node.type.types) {
-      if (type.kind === ts.SyntaxKind.NullKeyword) {
-        hasNull = true;
-      } else if (type.kind === ts.SyntaxKind.UndefinedKeyword) {
-        hasUndefined = true;
-      }
-    }
+    const type = this._typeChecker.getTypeFromTypeNode(node.type);
+    const hasUndefined = this._typeChecker.isTypeAssignableTo(this._undefinedType, type);
+    const hasNull = this._typeChecker.isTypeAssignableTo(this._nullType, type);
 
     if (!hasNull && !hasUndefined) {
       this.addFailureAtNode(
@@ -107,12 +100,14 @@ class Walker extends Lint.RuleWalker {
    * @param node Class declaration to be checked.
    * @param sourceClass Class declaration on which to look for static properties that declare the
    *    accepted values for the setter.
+   * @param expectDeclaredMembers Whether acceptance members should be expected or unexpected.
    */
-  private _lintClass(node: ts.ClassDeclaration, sourceClass: ts.ClassDeclaration): void {
+  private _lintClass(node: ts.ClassDeclaration, sourceClass: ts.ClassDeclaration,
+      expectDeclaredMembers: boolean): void {
     node.members.forEach(member => {
       if (ts.isSetAccessor(member) && usesCoercion(member, this._coercionFunctions) &&
           this._shouldCheckSetter(member)) {
-        this._checkForStaticMember(sourceClass, member.name.getText());
+        this._checkStaticMember(sourceClass, member.name.getText(), expectDeclaredMembers);
       }
     });
   }
@@ -137,8 +132,10 @@ class Walker extends Lint.RuleWalker {
           symbol.valueDeclaration : null;
 
       if (currentClass) {
-        this._lintClass(currentClass, node);
-        this._lintInterfaces(currentClass, node);
+        // Acceptance members should not be re-declared in the derived class. This
+        // is because acceptance members are inherited.
+        this._lintClass(currentClass, node, false);
+        this._lintInterfaces(currentClass, node, false);
       }
     }
   }
@@ -148,8 +145,10 @@ class Walker extends Lint.RuleWalker {
    * @param node Class declaration to be checked.
    * @param sourceClass Class declaration on which to look for static properties that declare the
    *    accepted values for the setter.
+   * @param expectDeclaredMembers Whether acceptance members should be expected or unexpected.
    */
-  private _lintInterfaces(node: ts.ClassDeclaration, sourceClass: ts.ClassDeclaration): void {
+  private _lintInterfaces(node: ts.ClassDeclaration, sourceClass: ts.ClassDeclaration,
+                          expectDeclaredMembers: boolean): void {
     if (!node.heritageClauses) {
       return;
     }
@@ -161,7 +160,8 @@ class Walker extends Lint.RuleWalker {
             const propNames = this._coercionInterfaces[clauseType.expression.text];
 
             if (propNames) {
-              propNames.forEach(propName => this._checkForStaticMember(sourceClass, propName));
+              propNames.forEach(propName =>
+                  this._checkStaticMember(sourceClass, propName, expectDeclaredMembers));
             }
           }
         });
@@ -170,22 +170,19 @@ class Walker extends Lint.RuleWalker {
   }
 
   /**
-   * Checks whether a class declaration has a static member, corresponding
-   * to the specified setter name, and logs a failure if it doesn't.
-   * @param node
-   * @param setterName
+   * Based on whether the acceptance members are expected or not, this method checks whether
+   * the specified class declaration matches the condition.
    */
-  private _checkForStaticMember(node: ts.ClassDeclaration, setterName: string) {
-    const coercionPropertyName = `${TYPE_ACCEPT_MEMBER_PREFIX}${setterName}`;
-    const correspondingCoercionProperty = node.members.find(member => {
-      return ts.isPropertyDeclaration(member) &&
-             tsutils.hasModifier(member.modifiers, ts.SyntaxKind.StaticKeyword) &&
-             member.name.getText() === coercionPropertyName;
-    });
-
-    if (!correspondingCoercionProperty) {
+  private _checkStaticMember(node: ts.ClassDeclaration, setterName: string,
+                             expectDeclaredMembers: boolean) {
+    const {memberName, memberNode} = this._lookupStaticMember(node, setterName);
+    if (expectDeclaredMembers && !memberNode) {
       this.addFailureAtNode(node.name || node, `Class must declare static coercion ` +
-                                               `property called ${coercionPropertyName}.`);
+        `property called ${memberName}.`);
+    } else if (!expectDeclaredMembers && memberNode) {
+      this.addFailureAtNode(node.name || node, `Class should not declare static coercion ` +
+        `property called ${memberName}. Acceptance members are inherited.`,
+        Lint.Replacement.deleteText(memberNode.getFullStart(), memberNode.getFullWidth()));
     }
   }
 
@@ -195,34 +192,25 @@ class Walker extends Lint.RuleWalker {
     if (!node.decorators) {
       return false;
     }
-
-    // If the class is a component we should lint.
+    // If the class is a component,  we should lint it.
     if (node.decorators.some(decorator => isDecoratorCalled(decorator, 'Component'))) {
       return true;
     }
+    // If the class is a directive, we should lint it.
+    return node.decorators.some(decorator => isDecoratorCalled(decorator, 'Directive'));
+  }
 
-    const directiveDecorator =
-        node.decorators.find(decorator => isDecoratorCalled(decorator, 'Directive'));
-
-    if (directiveDecorator) {
-      const firstArg = (directiveDecorator.expression as ts.CallExpression).arguments[0];
-      const metadata = firstArg && ts.isObjectLiteralExpression(firstArg) ? firstArg : null;
-      const selectorProp = metadata ?
-          metadata.properties.find((prop): prop is ts.PropertyAssignment => {
-            return ts.isPropertyAssignment(prop) && prop.name && ts.isIdentifier(prop.name) &&
-                prop.name.text === 'selector';
-          }) :
-          null;
-      const selectorText =
-          selectorProp != null && ts.isStringLiteralLike(selectorProp.initializer) ?
-          selectorProp.initializer.text :
-          null;
-
-      // We only want to lint directives with a selector (i.e. no abstract directives).
-      return selectorText !== null;
-    }
-
-    return false;
+  /** Looks for a static member that corresponds to the given property. */
+  private _lookupStaticMember(node: ts.ClassDeclaration, propName: string)
+    : {memberName: string, memberNode?: ts.PropertyDeclaration} {
+    const coercionPropertyName = `${TYPE_ACCEPT_MEMBER_PREFIX}${propName}`;
+    const correspondingCoercionProperty = node.members
+      .find((member): member is ts.PropertyDeclaration => {
+        return ts.isPropertyDeclaration(member) &&
+          tsutils.hasModifier(member.modifiers, ts.SyntaxKind.StaticKeyword) &&
+          member.name.getText() === coercionPropertyName;
+      });
+    return {memberName: coercionPropertyName, memberNode: correspondingCoercionProperty};
   }
 
   /** Determines whether a setter node should be checked by the lint rule. */

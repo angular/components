@@ -16,6 +16,7 @@ import {
   OnDestroy,
   OnInit,
   Output,
+  NgZone,
 } from '@angular/core';
 import {BehaviorSubject, combineLatest, Observable, Subject} from 'rxjs';
 import {map, takeUntil} from 'rxjs/operators';
@@ -33,7 +34,7 @@ import {MapEventManager} from '../map-event-manager';
   host: {'style': 'display: none'},
 })
 export class MapInfoWindow implements OnInit, OnDestroy {
-  private _eventManager = new MapEventManager();
+  private _eventManager = new MapEventManager(this._ngZone);
   private readonly _options = new BehaviorSubject<google.maps.InfoWindowOptions>({});
   private readonly _position =
       new BehaviorSubject<google.maps.LatLngLiteral|google.maps.LatLng|undefined>(undefined);
@@ -87,17 +88,26 @@ export class MapInfoWindow implements OnInit, OnDestroy {
   zindexChanged: Observable<void> = this._eventManager.getLazyEmitter<void>('zindex_changed');
 
   constructor(private readonly _googleMap: GoogleMap,
-              private _elementRef: ElementRef<HTMLElement>) {}
+              private _elementRef: ElementRef<HTMLElement>,
+              private _ngZone: NgZone) {}
 
   ngOnInit() {
-    this._combineOptions().pipe(takeUntil(this._destroy)).subscribe(options => {
-      if (this._infoWindow) {
-        this._infoWindow.setOptions(options);
-      } else {
-        this._infoWindow = new google.maps.InfoWindow(options);
-        this._eventManager.setTarget(this._infoWindow);
-      }
-    });
+    if (this._googleMap._isBrowser) {
+      this._combineOptions().pipe(takeUntil(this._destroy)).subscribe(options => {
+        if (this._infoWindow) {
+          this._infoWindow.setOptions(options);
+        } else {
+          // Create the object outside the zone so its events don't trigger change detection.
+          // We'll bring it back in inside the `MapEventManager` only for the events that the
+          // user has subscribed to.
+          this._ngZone.runOutsideAngular(() => {
+            this._infoWindow = new google.maps.InfoWindow(options);
+          });
+
+          this._eventManager.setTarget(this._infoWindow);
+        }
+      });
+    }
   }
 
   ngOnDestroy() {
@@ -147,7 +157,7 @@ export class MapInfoWindow implements OnInit, OnDestroy {
    */
   open(anchor?: MapMarker) {
     const marker = anchor ? anchor._marker : undefined;
-    if (this._googleMap._googleMap) {
+    if (this._googleMap._googleMap && this._infoWindow) {
       this._elementRef.nativeElement.style.display = '';
       this._infoWindow!.open(this._googleMap._googleMap, marker);
     }

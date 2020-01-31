@@ -57,8 +57,8 @@ describe('ng-add schematic', () => {
     const dependencies = packageJson.dependencies;
     const angularCoreVersion = dependencies['@angular/core'];
 
-    expect(dependencies['@angular/material']).toBeDefined();
-    expect(dependencies['@angular/cdk']).toBeDefined();
+    expect(dependencies['@angular/material']).toBe('~0.0.0-PLACEHOLDER');
+    expect(dependencies['@angular/cdk']).toBe('~0.0.0-PLACEHOLDER');
     expect(dependencies['@angular/forms'])
         .toBe(
             angularCoreVersion,
@@ -73,7 +73,10 @@ describe('ng-add schematic', () => {
             Object.keys(dependencies).sort(),
             'Expected the modified "dependencies" to be sorted alphabetically.');
 
-    expect(runner.tasks.some(task => task.name === 'run-schematic')).toBe(true);
+    expect(runner.tasks.some(task => task.name === 'node-package')).toBe(true,
+      'Expected the package manager to be scheduled in order to update lock files.');
+    expect(runner.tasks.some(task => task.name === 'run-schematic')).toBe(true,
+      'Expected the setup-project schematic to be scheduled.');
   });
 
   it('should add default theme', async () => {
@@ -382,6 +385,29 @@ describe('ng-add schematic', () => {
     indexFiles.forEach(indexPath => {
       const buffer = tree.read(indexPath)!;
       expect(buffer.toString()).toContain('<body class="one mat-typography two">');
+    });
+  });
+
+  it('should not add the global typography class if the user did not opt into it', async () => {
+    appTree.overwrite('projects/material/src/index.html', `
+      <html>
+        <head></head>
+        <body class="one two"></body>
+      </html>
+    `);
+
+    const tree = await runner.runSchematicAsync('ng-add-setup-project', {
+      typography: false
+    }, appTree).toPromise();
+
+    const workspace = getWorkspace(tree);
+    const project = getProjectFromWorkspace(workspace);
+    const indexFiles = getProjectIndexFiles(project);
+    expect(indexFiles.length).toBe(1);
+
+    indexFiles.forEach(indexPath => {
+      const buffer = tree.read(indexPath)!;
+      expect(buffer.toString()).toContain('<body class="one two">');
     });
   });
 });

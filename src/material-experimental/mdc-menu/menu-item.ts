@@ -6,13 +6,11 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {BooleanInput} from '@angular/cdk/coercion';
 import {Component, ChangeDetectionStrategy, ViewEncapsulation} from '@angular/core';
 import {MatMenuItem as BaseMatMenuItem} from '@angular/material/menu';
 
 /**
- * This directive is intended to be used inside an mat-menu tag.
- * It exists mostly to set the role attribute.
+ * Single item inside of a `mat-menu`. Provides the menu item styling and accessibility treatment.
  */
 @Component({
   selector: '[mat-menu-item]',
@@ -38,6 +36,4 @@ import {MatMenuItem as BaseMatMenuItem} from '@angular/material/menu';
   ]
 })
 export class MatMenuItem extends BaseMatMenuItem {
-  static ngAcceptInputType_disabled: BooleanInput;
-  static ngAcceptInputType_disableRipple: BooleanInput;
 }

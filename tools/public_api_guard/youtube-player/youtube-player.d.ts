@@ -1,17 +1,20 @@
 export declare class YouTubePlayer implements AfterViewInit, OnDestroy, OnInit {
     apiChange: EventEmitter<YT.PlayerEvent>;
-    endSeconds: number | undefined;
+    set endSeconds(endSeconds: number | undefined);
     error: EventEmitter<YT.OnErrorEvent>;
-    height: number | undefined;
+    get height(): number | undefined;
+    set height(height: number | undefined);
     playbackQualityChange: EventEmitter<YT.OnPlaybackQualityChangeEvent>;
     playbackRateChange: EventEmitter<YT.OnPlaybackRateChangeEvent>;
     ready: EventEmitter<YT.PlayerEvent>;
     showBeforeIframeApiLoads: boolean | undefined;
-    startSeconds: number | undefined;
+    set startSeconds(startSeconds: number | undefined);
     stateChange: EventEmitter<YT.OnStateChangeEvent>;
-    suggestedQuality: YT.SuggestedVideoQuality | undefined;
-    videoId: string | undefined;
-    width: number | undefined;
+    set suggestedQuality(suggestedQuality: YT.SuggestedVideoQuality | undefined);
+    get videoId(): string | undefined;
+    set videoId(videoId: string | undefined);
+    get width(): number | undefined;
+    set width(width: number | undefined);
     youtubeContainer: ElementRef<HTMLElement>;
     constructor(_ngZone: NgZone,
     platformId?: Object);
@@ -39,7 +42,7 @@ export declare class YouTubePlayer implements AfterViewInit, OnDestroy, OnInit {
     setVolume(volume: number): void;
     stopVideo(): void;
     unMute(): void;
-    static ɵcmp: i0.ɵɵComponentDefWithMeta<YouTubePlayer, "youtube-player", never, { 'videoId': "videoId", 'height': "height", 'width': "width", 'startSeconds': "startSeconds", 'endSeconds': "endSeconds", 'suggestedQuality': "suggestedQuality", 'showBeforeIframeApiLoads': "showBeforeIframeApiLoads" }, { 'ready': "ready", 'stateChange': "stateChange", 'error': "error", 'apiChange': "apiChange", 'playbackQualityChange': "playbackQualityChange", 'playbackRateChange': "playbackRateChange" }, never>;
+    static ɵcmp: i0.ɵɵComponentDefWithMeta<YouTubePlayer, "youtube-player", never, { "videoId": "videoId"; "height": "height"; "width": "width"; "startSeconds": "startSeconds"; "endSeconds": "endSeconds"; "suggestedQuality": "suggestedQuality"; "showBeforeIframeApiLoads": "showBeforeIframeApiLoads"; }, { "ready": "ready"; "stateChange": "stateChange"; "error": "error"; "apiChange": "apiChange"; "playbackQualityChange": "playbackQualityChange"; "playbackRateChange": "playbackRateChange"; }, never>;
     static ɵfac: i0.ɵɵFactoryDef<YouTubePlayer>;
 }
 

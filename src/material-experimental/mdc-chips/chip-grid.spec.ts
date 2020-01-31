@@ -7,7 +7,9 @@ import {
   LEFT_ARROW,
   RIGHT_ARROW,
   SPACE,
-  TAB
+  TAB,
+  HOME,
+  END
 } from '@angular/cdk/keycodes';
 import {
   createFakeEvent,
@@ -103,15 +105,6 @@ describe('MDC-based MatChipGrid', () => {
 
         expect(chipGridNativeElement.hasAttribute('role')).toBe(false);
       });
-
-      it('should not set aria-required when it does not have a role', () => {
-        testComponent.chips = [];
-        fixture.detectChanges();
-
-        expect(chipGridNativeElement.hasAttribute('role')).toBe(false);
-        expect(chipGridNativeElement.hasAttribute('aria-required')).toBe(false);
-      });
-
     });
 
     describe('focus behaviors', () => {
@@ -452,6 +445,55 @@ describe('MDC-based MatChipGrid', () => {
         expect(manager.activeRowIndex).toBe(0);
         expect(manager.activeColumnIndex).toBe(0);
       });
+
+      it('should move focus to the first chip when pressing HOME', () => {
+        setupStandardGrid();
+        manager = chipGridInstance._keyManager;
+
+        const nativeChips = chipGridNativeElement.querySelectorAll('mat-chip-row');
+        const lastNativeChip = nativeChips[nativeChips.length - 1] as HTMLElement;
+
+        const HOME_EVENT: KeyboardEvent =
+          createKeyboardEvent('keydown', HOME, undefined, lastNativeChip);
+        const array = chips.toArray();
+        const lastItem = array[array.length - 1];
+
+        lastItem.focus();
+        expect(manager.activeRowIndex).toBe(4);
+        expect(manager.activeColumnIndex).toBe(0);
+
+        chipGridInstance._keydown(HOME_EVENT);
+        fixture.detectChanges();
+
+        expect(HOME_EVENT.defaultPrevented).toBe(true);
+        expect(manager.activeRowIndex).toBe(0);
+        expect(manager.activeColumnIndex).toBe(0);
+      });
+
+      it('should move focus to the last chip when pressing END', () => {
+        setupStandardGrid();
+        manager = chipGridInstance._keyManager;
+
+        const nativeChips = chipGridNativeElement.querySelectorAll('mat-chip-row');
+        const firstNativeChip = nativeChips[0] as HTMLElement;
+
+        const END_EVENT: KeyboardEvent =
+          createKeyboardEvent('keydown', END, undefined, firstNativeChip);
+        const array = chips.toArray();
+        const firstItem = array[0];
+
+        firstItem.focus();
+        expect(manager.activeRowIndex).toBe(0);
+        expect(manager.activeColumnIndex).toBe(0);
+
+        chipGridInstance._keydown(END_EVENT);
+        fixture.detectChanges();
+
+        expect(END_EVENT.defaultPrevented).toBe(true);
+        expect(manager.activeRowIndex).toBe(4);
+        expect(manager.activeColumnIndex).toBe(0);
+      });
+
     });
   });
 
