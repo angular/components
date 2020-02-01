@@ -7,7 +7,7 @@
  */
 
 import {HarnessEnvironment, HarnessLoader, TestElement} from '@angular/cdk/testing';
-import {by, element as protractorElement, ElementFinder} from 'protractor';
+import {browser, by, element as protractorElement, ElementFinder} from 'protractor';
 import {ProtractorElement} from './protractor-element';
 
 /** A `HarnessEnvironment` implementation for Protractor. */
@@ -24,8 +24,9 @@ export class ProtractorHarnessEnvironment extends HarnessEnvironment<ElementFind
   async forceStabilize(): Promise<void> {}
 
   async waitForTasksOutsideAngular(): Promise<void> {
-    // TODO: figure out how we can do this for the protractor environment.
-    // https://github.com/angular/components/issues/17412
+    await browser.executeAsyncScript(
+      'var callback = arguments[arguments.length - 1];'
+      + 'requestAnimationFrame(callback);');
   }
 
   protected getDocumentRoot(): ElementFinder {
