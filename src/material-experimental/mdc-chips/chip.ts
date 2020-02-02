@@ -44,7 +44,7 @@ import {
   RippleRenderer,
   RippleTarget,
 } from '@angular/material/core';
-import {MDCChipAdapter, MDCChipFoundation} from '@material/chips';
+import {MDCChipAdapter, MDCChipFoundation} from '@material/chips/chip';
 import {numbers} from '@material/ripple';
 import {SPACE, ENTER, hasModifierKey} from '@angular/cdk/keycodes';
 import {Subject} from 'rxjs';

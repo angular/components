@@ -10,6 +10,7 @@ require.config({
     '@material/base': '@material/base/dist/mdc.base',
     '@material/checkbox': '@material/checkbox/dist/mdc.checkbox',
     '@material/chips': '@material/chips/dist/mdc.chips',
+    '@material/chips/chip': '@material/chips/dist/mdc.chips',
     '@material/dialog': '@material/dialog/dist/mdc.dialog',
     '@material/dom': '@material/dom/dist/mdc.dom',
     '@material/drawer': '@material/drawer/dist/mdc.drawer',

@@ -91,7 +91,7 @@ export class MatChipSet extends _MatChipSetMixinBase implements AfterContentInit
    * These methods are called by the chip set foundation.
    */
   protected _chipSetAdapter: MDCChipSetAdapter = {
-    hasClass: (className) => this._hasMdcClass(className),
+    hasClass: (className: string) => this._hasMdcClass(className),
     // No-op. We keep track of chips via ContentChildren, which will be updated when a chip is
     // removed.
     removeChipAtIndex: () => {},

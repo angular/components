@@ -41,6 +41,7 @@ var pathMapping = {
   '@material/base': 'node:@material/base/dist/mdc.base.js',
   '@material/checkbox': 'node:@material/checkbox/dist/mdc.checkbox.js',
   '@material/chips': 'node:@material/chips/dist/mdc.chips.js',
+  '@material/chips/chip': 'node:@material/chips/dist/mdc.chips.js',
   '@material/dialog': 'node:@material/dialog/dist/mdc.dialog.js',
   '@material/dom': 'node:@material/dom/dist/mdc.dom.js',
   '@material/drawer': 'node:@material/drawer/dist/mdc.drawer.js',
