@@ -17,8 +17,8 @@ import {Schema} from './schema';
  * can be no dependency on `@angular/material` in the `package.json` file, and we need
  * to manually insert the dependency based on the build version placeholder.
  *
- * Note that the fallback version range does not use caret, but a caret because this is the
- * default for Angular framework dependencies in newly created CLI projects.
+ * Note that the fallback version range does not use caret, but tilde because that is
+ * the default for Angular framework dependencies in CLI projects.
  */
 const fallbackMaterialVersionRange = `~0.0.0-PLACEHOLDER`;
 

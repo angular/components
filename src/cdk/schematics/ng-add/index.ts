@@ -23,8 +23,8 @@ export default function(): Rule {
     // The CLI inserts `@angular/cdk` into the `package.json` before this schematic runs. This
     // means that we do not need to insert the CDK into `package.json` files again. In some cases
     // though, it could happen that this schematic runs outside of the CLI `ng add` command, or
-    // the CDK is only listed a dev dependency. If that is the case, we insert a version based on
-    // the current build version (substituted version placeholder).
+    // the CDK is only listed as a dev dependency. If that is the case, we insert a version based
+    // on the current build version (substituted version placeholder).
     if (getPackageVersionFromPackageJson(host, '@angular/cdk') === null) {
       // In order to align the CDK version with other Angular dependencies that are setup by
       // `@schematics/angular`, we use tilde instead of caret. This is default for Angular
