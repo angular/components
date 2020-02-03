@@ -129,7 +129,8 @@ export declare class MatDatepicker<D> implements OnDestroy, CanColor {
     get opened(): boolean;
     set opened(value: boolean);
     openedStream: EventEmitter<void>;
-    panelClass: string | string[];
+    get panelClass(): string | string[];
+    set panelClass(value: string | string[]);
     get startAt(): D | null;
     set startAt(value: D | null);
     startView: 'month' | 'year' | 'multi-year';
