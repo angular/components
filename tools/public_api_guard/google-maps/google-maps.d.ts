@@ -123,7 +123,7 @@ export declare class MapMarker implements OnInit, OnDestroy {
 }
 
 export declare class MapPolyline implements OnInit, OnDestroy {
-    _polyline: google.maps.Polyline;
+    _polyline?: google.maps.Polyline;
     set options(options: google.maps.PolylineOptions);
     set path(path: google.maps.MVCArray<google.maps.LatLng> | google.maps.LatLng[] | google.maps.LatLngLiteral[]);
     polylineClick: Observable<google.maps.PolyMouseEvent>;
