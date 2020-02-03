@@ -12,7 +12,7 @@ const fs = require('fs');
  * Version of the post install patch. Needs to be incremented when
  * existing patches or edits have been modified.
  */
-const PATCH_VERSION = 3;
+const PATCH_VERSION = 4;
 
 /** Path to the project directory. */
 const projectDir = path.join(__dirname, '../..');
@@ -28,14 +28,6 @@ shelljs.cd(projectDir);
 
 // Workaround for https://github.com/angular/angular/issues/18810.
 shelljs.exec('ngc -p angular-tsconfig.json');
-
-try {
-  // Temporary patch to make @angular/bazel compatible with rules_nodejs 1.0.0.
-  // This is needed to resolve the dependency sandwich between angular components and
-  // repo framework. It can be removed with a future @angular/bazel update.
-  // try/catch needed for this the material CI tests to work in angular/repo
-  applyPatch(path.join(__dirname, './angular_bazel_rules_nodejs_1.0.0.patch'));
-} catch (_) {}
 
 // Workaround for https://github.com/angular/angular/issues/30586. It's not possible to
 // enable tsickle decorator processing without enabling import rewriting to closure.
