@@ -12,7 +12,7 @@ const fs = require('fs');
  * Version of the post install patch. Needs to be incremented when patches
  * have been added or removed.
  */
-const PATCH_VERSION = 1;
+const PATCH_VERSION = 4;
 
 /** Path to the project directory. */
 const projectDir = path.join(__dirname, '../..');
