@@ -74,6 +74,8 @@ export class MatRadioGroup extends BaseMatRadioGroup {
   styleUrls: ['radio.css'],
   host: {
     'class': 'mat-mdc-radio-button',
+    // Ivy will inherit the mat-radio-button class from the parent class, but we do not want
+    // this to be applied in the MDC component. Set this explicitly to false so it is not applied.
     '[class.mat-radio-button]': 'false',
     '[attr.id]': 'id',
     '[class.mat-primary]': 'color === "primary"',
