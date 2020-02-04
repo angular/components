@@ -23,6 +23,7 @@ h1 {
   margin: 8px;
   min-width: 64px;
   display: none;
+
   @media (max-width: $small-breakpoint-width) {
     display: flex;
     align-items: center;

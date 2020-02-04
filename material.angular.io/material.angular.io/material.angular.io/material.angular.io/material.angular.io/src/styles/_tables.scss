@@ -22,6 +22,16 @@
 .docs-markdown-td {
   font-weight: 400;
   padding: 8px 16px;
+
+  @media (max-width: $extra-small-breakpoint-width) {
+    &.docs-api-properties-name-cell,
+    &.docs-api-method-parameter-cell,
+    &.docs-api-method-returns-type-cell,
+    &.docs-api-method-description-cell {
+      min-width: 80px;
+      word-break: break-word;
+    }
+  }
 }
 
 
