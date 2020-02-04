@@ -10,7 +10,7 @@
   flex-grow: 1;
   margin: $content-padding-side;
 
-  @media (max-width: $small-breakpoint-width) {
+  @media (max-width: $extra-small-breakpoint-width) {
     margin: 0;
   }
 }

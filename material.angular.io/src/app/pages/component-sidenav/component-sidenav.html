@@ -5,11 +5,11 @@
               [opened]="(isScreenSmall | async) === false"
               [mode]="(isScreenSmall | async) ? 'over' : 'side'"
               [fixedInViewport]="(isScreenSmall | async)"
-              [fixedTopGap]="92">
+              [fixedTopGap]="(isExtraScreenSmall | async) ? 92 : 56">
     <app-component-nav [params]="params"></app-component-nav>
   </mat-sidenav>
   <div class="docs-component-sidenav-content">
-    <component-page-header (toggleSidenav)="sidenav.toggle()"></component-page-header>
+    <component-page-header (toggleSidenav)="toggleSidenav(sidenav)"></component-page-header>
     <div class="docs-component-sidenav-inner-content">
       <main class="docs-component-sidenav-body-content">
         <!-- If on large screen, menu resides to left of content -->

@@ -38,7 +38,9 @@ export class ComponentCategoryList implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.routeParamSubscription.unsubscribe();
+    if (this.routeParamSubscription) {
+      this.routeParamSubscription.unsubscribe();
+    }
   }
 }
 

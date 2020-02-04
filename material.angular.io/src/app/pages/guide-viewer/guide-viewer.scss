@@ -30,7 +30,7 @@ $guide-content-margin-side-xs: 15px;
   max-width: 940px;
   margin: 0 auto;
 
-  @media (max-width: $small-breakpoint-width) {
+  @media (max-width: $extra-small-breakpoint-width) {
     flex-direction: column;
   }
 }
@@ -39,7 +39,7 @@ $guide-content-margin-side-xs: 15px;
   flex-grow: 1;
   width: 80%;
 
-  @media (max-width: $small-breakpoint-width) {
+  @media (max-width: $extra-small-breakpoint-width) {
     width: 100%;
   }
 }
@@ -50,7 +50,7 @@ table-of-contents {
 
   // Reposition on top of content on small screens and remove
   // sticky positioning
-  @media (max-width: $small-breakpoint-width) {
+  @media (max-width: $extra-small-breakpoint-width) {
     order: -1;
     position: inherit;
     width: auto;

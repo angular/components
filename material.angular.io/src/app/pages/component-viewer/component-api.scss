@@ -11,6 +11,13 @@
   }
 }
 
+.docs-api-type-alias-name,
+.docs-api-class-name {
+  @media (max-width: 399px) {
+    word-break: break-word;
+  }
+}
+
 .docs-api-h3 {
   font-weight: 300;
   font-size: 24px;

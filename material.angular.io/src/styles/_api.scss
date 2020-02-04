@@ -1,5 +1,9 @@
 // Styles for API docs generated via dgeni from material2 source JsDocs.
 
+.docs-api {
+  max-width: 100%;
+}
+
 // Top header, e.g., "API documentation for dialog".
 .docs-api-h2 {
   font-size: 30px;
@@ -60,6 +64,10 @@
 .docs-api-deprecated-marker {
   // Size corresponding to "caption"-style text in the spec.
   font-size: 12px;
+}
+
+.docs-api-deprecated-marker {
+  margin-right: 8px;
 }
 
 .docs-api-module-import,
