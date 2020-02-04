@@ -76,7 +76,19 @@ export class MatRadioGroup extends BaseMatRadioGroup {
     'class': 'mat-mdc-radio-button',
     '[class.mat-radio-button]': 'false',
     '[attr.id]': 'id',
+    '[class.mat-primary]': 'color === "primary"',
+    '[class.mat-accent]': 'color === "accent"',
+    '[class.mat-warn]': 'color === "warn"',
+    '[attr.tabindex]': '-1',
+    '[attr.aria-label]': 'null',
+    '[attr.aria-labelledby]': 'null',
+    '[attr.aria-describedby]': 'null',
+    // Note: under normal conditions focus shouldn't land on this element, however it may be
+    // programmatically set, for example inside of a focus trap, in this case we want to forward
+    // the focus to the native element.
+    '(focus)': '_inputElement.nativeElement.focus()',
   },
+  inputs: ['disableRipple', 'tabIndex'],
   exportAs: 'matRadioButton',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
