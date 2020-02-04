@@ -16,7 +16,7 @@
  * be pulled in from the original type definitions.
  */
 
-import {HasTaskState, Zone, ZoneDelegate} from './zone-types';
+
 
 export interface ProxyZoneStatic {
   assertPresent: () => ProxyZone;
