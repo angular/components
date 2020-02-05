@@ -87,7 +87,7 @@ $mat-card-header-size: 40px !default;
   .mat-button,
   .mat-raised-button,
   .mat-stroked-button {
-    margin: 0 8px;
+    margin: 0 4px;
   }
 }
 
@@ -200,18 +200,6 @@ $mat-card-header-size: 40px !default;
   padding-bottom: 0;
 }
 
-// actions panel should always be 8px from sides,
-// so the first button in the actions panel can't add its own margins
-.mat-card-actions {
-  .mat-button,
-  .mat-raised-button,
-  .mat-stroked-button {
-    &:first-child {
-      margin-left: 0;
-      margin-right: 0;
-    }
-  }
-}
 
 // should be 12px space between titles and subtitles generally
 // default margin-bottom is 16px, so need to move lower title up 4px
