@@ -11,5 +11,5 @@
     [@fadeInCalendar]="'enter'"
     (yearSelected)="datepicker._selectYear($event)"
     (monthSelected)="datepicker._selectMonth($event)"
-    (_userSelection)="datepicker.close()">
+    (_userSelection)="_handleUserSelection()">
 </mat-calendar>
