@@ -93,6 +93,7 @@ const DEFAULT_FLOAT_LABEL: FloatLabelType = 'auto';
     '[class.mat-form-field-invalid]': '_control.errorState',
     '[class.mat-form-field-disabled]': '_control.disabled',
     '[class.mat-form-field-autofilled]': '_control.autofilled',
+    '[class.mat-form-field-no-animations]': '_animationMode === "NoopAnimations"',
     '[class.mat-focused]': '_control.focused',
     '[class.mat-accent]': 'color == "accent"',
     '[class.mat-warn]': 'color == "warn"',
@@ -103,7 +104,6 @@ const DEFAULT_FLOAT_LABEL: FloatLabelType = 'auto';
     '[class.ng-valid]': '_shouldForward("valid")',
     '[class.ng-invalid]': '_shouldForward("invalid")',
     '[class.ng-pending]': '_shouldForward("pending")',
-    '[class._mat-animation-noopable]': '!_animationsEnabled',
   },
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -174,9 +174,6 @@ export class MatFormField implements AfterViewInit, OnDestroy, AfterContentCheck
 
   // Unique id for the internal form field label.
   _labelId = `mat-form-field-label-${nextUniqueId++}`;
-
-  /** Whether the Angular animations are enabled. */
-  _animationsEnabled: boolean;
 
   /** State of the mat-hint and mat-error animations. */
   _subscriptAnimationState: string = '';
@@ -260,9 +257,7 @@ export class MatFormField implements AfterViewInit, OnDestroy, AfterContentCheck
               @Optional() @Inject(MAT_FORM_FIELD_DEFAULT_OPTIONS)
               private _defaults?: MatFormFieldDefaultOptions,
               @Optional() @Inject(MAT_LABEL_GLOBAL_OPTIONS) private _labelOptions?: LabelOptions,
-              @Optional() @Inject(ANIMATION_MODULE_TYPE) _animationMode?: string) {
-    this._animationsEnabled = _animationMode !== 'NoopAnimations';
-
+              @Optional() @Inject(ANIMATION_MODULE_TYPE) public _animationMode?: string) {
     if (_defaults && _defaults.appearance) {
       this.appearance = _defaults.appearance;
     } else if (_defaults && _defaults.hideRequiredMarker) {
