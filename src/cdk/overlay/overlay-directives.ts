@@ -110,6 +110,7 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
   private _offsetY: number;
   private _position: FlexibleConnectedPositionStrategy;
   private _scrollStrategyFactory: () => ScrollStrategy;
+  private _disposeOnNavigation = false;
 
   /** Origin for the connected overlay. */
   @Input('cdkConnectedOverlayOrigin')
@@ -228,6 +229,17 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
     this._push = coerceBooleanProperty(value);
   }
 
+  /**
+   * Whether the overlay should be disposed of when the user goes backwards/forwards in history.
+   */
+  @Input('cdkConnectedOverlayDisposeOnNavigation')
+  get disposeOnNavigation(): boolean {
+    return this._disposeOnNavigation;
+  }
+  set disposeOnNavigation(value: boolean) {
+    this._disposeOnNavigation = coerceBooleanProperty(value);
+  }
+
   /** Event emitted when the backdrop is clicked. */
   @Output() readonly backdropClick = new EventEmitter<MouseEvent>();
 
@@ -333,6 +345,7 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
       positionStrategy,
       scrollStrategy: this.scrollStrategy,
       hasBackdrop: this.hasBackdrop,
+      disposeOnNavigation: this.disposeOnNavigation,
     });
 
     if (this.width || this.width === 0) {
