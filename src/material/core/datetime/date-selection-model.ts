@@ -149,9 +149,16 @@ export class MatRangeDateSelectionModel<D> extends MatDateSelectionModel<DateRan
       start = date;
     } else if (end == null) {
       end = date;
-    } else {
-      start = date;
-      end = null;
+    } else if (date) {
+      if (this.adapter.compareDate(date, start) <= 0) {
+        start = date;
+
+        if (end) {
+          end = null;
+        }
+      } else {
+        end = date;
+      }
     }
 
     super.updateSelection(new DateRange<D>(start, end), this);

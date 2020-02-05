@@ -32,7 +32,7 @@ import {
   ViewEncapsulation,
   OnDestroy,
 } from '@angular/core';
-import {DateAdapter, MAT_DATE_FORMATS, MatDateFormats} from '@angular/material/core';
+import {DateAdapter, MAT_DATE_FORMATS, MatDateFormats, DateRange} from '@angular/material/core';
 import {Directionality} from '@angular/cdk/bidi';
 import {MatCalendarBody, MatCalendarCell} from './calendar-body';
 import {createMissingDateImplError} from './datepicker-errors';
@@ -69,12 +69,17 @@ export class MatYearView<D> implements AfterContentInit, OnDestroy {
 
   /** The currently selected date. */
   @Input()
-  get selected(): D | null { return this._selected; }
-  set selected(value: D | null) {
-    this._selected = this._getValidDateOrNull(this._dateAdapter.deserialize(value));
-    this._selectedMonth = this._getMonthInCurrentYear(this._selected);
+  get selected(): DateRange<D> | D | null { return this._selected; }
+  set selected(value: DateRange<D> | D | null) {
+    if (value instanceof DateRange) {
+      this._selected = value;
+    } else {
+      this._selected = this._getValidDateOrNull(this._dateAdapter.deserialize(value));
+    }
+
+    this._setSelectedMonth(value);
   }
-  private _selected: D | null;
+  private _selected: DateRange<D> | D | null;
 
   /** The minimum selectable date. */
   @Input()
@@ -218,7 +223,7 @@ export class MatYearView<D> implements AfterContentInit, OnDestroy {
 
   /** Initializes this year view. */
   _init() {
-    this._selectedMonth = this._getMonthInCurrentYear(this.selected);
+    this._setSelectedMonth(this.selected);
     this._todayMonth = this._getMonthInCurrentYear(this._dateAdapter.today());
     this._yearLabel = this._dateAdapter.getYearName(this.activeDate);
 
@@ -321,5 +326,17 @@ export class MatYearView<D> implements AfterContentInit, OnDestroy {
   /** Determines whether the user has the RTL layout direction. */
   private _isRtl() {
     return this._dir && this._dir.value === 'rtl';
+  }
+
+  /** Sets the currently-selected month based on a model value. */
+  private _setSelectedMonth(value: DateRange<D> | D | null) {
+    // TODO(crisbeto): showing a date range in a year view might look weird.
+    // Revisit once closer to completion.
+    if (value instanceof DateRange) {
+      this._selectedMonth = this._getMonthInCurrentYear(value.start) ||
+                            this._getMonthInCurrentYear(value.end);
+    } else {
+      this._selectedMonth = this._getMonthInCurrentYear(value);
+    }
   }
 }
