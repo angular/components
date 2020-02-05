@@ -32,7 +32,7 @@ import {
   ViewChild,
   OnDestroy,
 } from '@angular/core';
-import {DateAdapter, MAT_DATE_FORMATS, MatDateFormats} from '@angular/material/core';
+import {DateAdapter, MAT_DATE_FORMATS, MatDateFormats, DateRange} from '@angular/material/core';
 import {Directionality} from '@angular/cdk/bidi';
 import {MatCalendarBody, MatCalendarCell, MatCalendarCellCssClasses} from './calendar-body';
 import {createMissingDateImplError} from './datepicker-errors';
@@ -75,12 +75,17 @@ export class MatMonthView<D> implements AfterContentInit, OnDestroy {
 
   /** The currently selected date. */
   @Input()
-  get selected(): D | null { return this._selected; }
-  set selected(value: D | null) {
-    this._selected = this._getValidDateOrNull(this._dateAdapter.deserialize(value));
-    this._selectedDate = this._getDateInCurrentMonth(this._selected);
+  get selected(): DateRange<D> | D | null { return this._selected; }
+  set selected(value: DateRange<D> | D | null) {
+    if (value instanceof DateRange) {
+      this._selected = value;
+    } else {
+      this._selected = this._getValidDateOrNull(this._dateAdapter.deserialize(value));
+    }
+
+    this._setRange(this._selected);
   }
-  private _selected: D | null;
+  private _selected: DateRange<D> | D | null;
 
   /** The minimum selectable date. */
   @Input()
@@ -125,11 +130,11 @@ export class MatMonthView<D> implements AfterContentInit, OnDestroy {
   /** The number of blank cells in the first row before the 1st of the month. */
   _firstWeekOffset: number;
 
-  /**
-   * The date of the month that the currently selected Date falls on.
-   * Null if the currently selected Date is in another month.
-   */
-  _selectedDate: number | null;
+  /** Start value of the currently-shown date range. */
+  _rangeStart: number | null;
+
+  /** End value of the currently-shown date range. */
+  _rangeEnd: number | null;
 
   /** The date of the month that today falls on. Null if today is in another month. */
   _todayDate: number | null;
@@ -163,7 +168,7 @@ export class MatMonthView<D> implements AfterContentInit, OnDestroy {
 
   /** Handles when a new date is selected. */
   _dateSelected(date: number) {
-    if (this._selectedDate != date) {
+    if (this._rangeStart !== date || this._rangeEnd !== date) {
       const selectedYear = this._dateAdapter.getYear(this.activeDate);
       const selectedMonth = this._dateAdapter.getMonth(this.activeDate);
       const selectedDate = this._dateAdapter.createDate(selectedYear, selectedMonth, date);
@@ -240,7 +245,7 @@ export class MatMonthView<D> implements AfterContentInit, OnDestroy {
 
   /** Initializes this month view. */
   _init() {
-    this._selectedDate = this._getDateInCurrentMonth(this.selected);
+    this._setRange(this.selected);
     this._todayDate = this._getDateInCurrentMonth(this._dateAdapter.today());
     this._monthLabel =
         this._dateAdapter.getMonthNames('short')[this._dateAdapter.getMonth(this.activeDate)]
@@ -331,5 +336,15 @@ export class MatMonthView<D> implements AfterContentInit, OnDestroy {
   /** Determines whether the user has the RTL layout direction. */
   private _isRtl() {
     return this._dir && this._dir.value === 'rtl';
+  }
+
+  /** Sets the current range based on a model value. */
+  private _setRange(value: DateRange<D> | D | null) {
+    if (value instanceof DateRange) {
+      this._rangeStart = this._getDateInCurrentMonth(value.start);
+      this._rangeEnd = this._getDateInCurrentMonth(value.end);
+    } else {
+      this._rangeStart = this._rangeEnd = this._getDateInCurrentMonth(value);
+    }
   }
 }
