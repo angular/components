@@ -31,6 +31,7 @@ import {
   MatDateFormats,
   MatDateSelectionModel,
   MAT_SINGLE_DATE_SELECTION_MODEL_PROVIDER,
+  DateRange,
 } from '@angular/material/core';
 import {Subject, Subscription} from 'rxjs';
 import {MatCalendarCellCssClasses} from './calendar-body';
@@ -217,10 +218,14 @@ export class MatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDes
 
   /** The currently selected date. */
   @Input()
-  get selected(): D | null { return this._model.selection; }
-  set selected(value: D | null) {
-    const newValue = this._getValidDateOrNull(this._dateAdapter.deserialize(value));
-    this._model.updateSelection(newValue, this);
+  get selected(): DateRange<D> | D | null { return this._model.selection; }
+  set selected(value: DateRange<D> | D | null) {
+    if (value instanceof DateRange) {
+      this._model.updateSelection(value, this);
+    } else {
+      const newValue = this._getValidDateOrNull(this._dateAdapter.deserialize(value));
+      this._model.updateSelection(newValue!, this);
+    }
   }
 
   /** The minimum selectable date. */
@@ -305,7 +310,7 @@ export class MatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDes
               @Optional() private _dateAdapter: DateAdapter<D>,
               @Optional() @Inject(MAT_DATE_FORMATS) private _dateFormats: MatDateFormats,
               private _changeDetectorRef: ChangeDetectorRef,
-              private _model: MatDateSelectionModel<D | null, D>) {
+              private _model: MatDateSelectionModel<DateRange<D> | D | null>) {
 
     if (!this._dateAdapter) {
       throw createMissingDateImplError('DateAdapter');
@@ -322,8 +327,10 @@ export class MatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDes
 
     this._selectedChanges = _model.selectionChanged.subscribe(event => {
       // @breaking-change 11.0.0 Remove null check once `event.selection` is allowed to be null.
+      // Also remove non-null assertion for `selection`.
       if (event.selection) {
-        this.selectedChange.emit(event.selection);
+        const selection = this._model.selection;
+        this.selectedChange.emit(selection instanceof DateRange ? selection.start! : selection!);
       }
     });
   }
