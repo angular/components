@@ -31,8 +31,8 @@ export declare class MatCalendar<D> implements AfterContentInit, AfterViewChecke
     readonly monthSelected: EventEmitter<D>;
     monthView: MatMonthView<D>;
     multiYearView: MatMultiYearView<D>;
-    get selected(): D | null;
-    set selected(value: D | null);
+    get selected(): DateRange<D> | D | null;
+    set selected(value: DateRange<D> | D | null);
     readonly selectedChange: EventEmitter<D>;
     get startAt(): D | null;
     set startAt(value: D | null);
@@ -40,7 +40,7 @@ export declare class MatCalendar<D> implements AfterContentInit, AfterViewChecke
     stateChanges: Subject<void>;
     readonly yearSelected: EventEmitter<D>;
     yearView: MatYearView<D>;
-    constructor(_intl: MatDatepickerIntl, _dateAdapter: DateAdapter<D>, _dateFormats: MatDateFormats, _changeDetectorRef: ChangeDetectorRef, _model: MatDateSelectionModel<D | null, D>);
+    constructor(_intl: MatDatepickerIntl, _dateAdapter: DateAdapter<D>, _dateFormats: MatDateFormats, _changeDetectorRef: ChangeDetectorRef, _model: MatDateSelectionModel<DateRange<D> | D | null>);
     _dateSelected(date: D | null): void;
     _goToDateInView(date: D, view: 'month' | 'year' | 'multi-year'): void;
     _monthSelectedInYearView(normalizedMonth: D): void;
@@ -56,25 +56,31 @@ export declare class MatCalendar<D> implements AfterContentInit, AfterViewChecke
     static ɵfac: i0.ɵɵFactoryDef<MatCalendar<any>, [null, { optional: true; }, { optional: true; }, null, null]>;
 }
 
-export declare class MatCalendarBody implements OnChanges {
+export declare class MatCalendarBody implements OnChanges, OnDestroy {
     _cellPadding: string;
     _cellWidth: string;
     _firstRowOffset: number;
+    _hoveredValue: number;
     activeCell: number;
     cellAspectRatio: number;
+    endValue: number;
     label: string;
     labelMinRequiredCells: number;
     numCols: number;
     rows: MatCalendarCell[][];
-    selectedValue: number;
     readonly selectedValueChange: EventEmitter<number>;
+    startValue: number;
     todayValue: number;
-    constructor(_elementRef: ElementRef<HTMLElement>, _ngZone: NgZone);
+    constructor(_elementRef: ElementRef<HTMLElement>, _changeDetectorRef: ChangeDetectorRef, _ngZone: NgZone);
     _cellClicked(cell: MatCalendarCell): void;
     _focusActiveCell(): void;
     _isActiveCell(rowIndex: number, colIndex: number): boolean;
+    _isInRange(value: number): boolean;
+    _isRange(): boolean;
+    _isSelected(cell: MatCalendarCell): boolean;
     ngOnChanges(changes: SimpleChanges): void;
-    static ɵcmp: i0.ɵɵComponentDefWithMeta<MatCalendarBody, "[mat-calendar-body]", ["matCalendarBody"], { "label": "label"; "rows": "rows"; "todayValue": "todayValue"; "selectedValue": "selectedValue"; "labelMinRequiredCells": "labelMinRequiredCells"; "numCols": "numCols"; "activeCell": "activeCell"; "cellAspectRatio": "cellAspectRatio"; }, { "selectedValueChange": "selectedValueChange"; }, never, never>;
+    ngOnDestroy(): void;
+    static ɵcmp: i0.ɵɵComponentDefWithMeta<MatCalendarBody, "[mat-calendar-body]", ["matCalendarBody"], { "label": "label"; "rows": "rows"; "todayValue": "todayValue"; "startValue": "startValue"; "endValue": "endValue"; "labelMinRequiredCells": "labelMinRequiredCells"; "numCols": "numCols"; "activeCell": "activeCell"; "cellAspectRatio": "cellAspectRatio"; }, { "selectedValueChange": "selectedValueChange"; }, never, never>;
     static ɵfac: i0.ɵɵFactoryDef<MatCalendarBody, never>;
 }
 
@@ -126,7 +132,8 @@ export declare class MatDatepickerContent<S, D = ExtractDateTypeFromSelection<S>
     _isAbove: boolean;
     datepicker: MatDatepickerBase<any, S, D>;
     constructor(elementRef: ElementRef,
-    _changeDetectorRef?: ChangeDetectorRef | undefined);
+    _changeDetectorRef?: ChangeDetectorRef | undefined, _model?: MatDateSelectionModel<S, D> | undefined);
+    _handleUserSelection(): void;
     _startExitAnimation(): void;
     ngAfterViewInit(): void;
     ngOnDestroy(): void;
@@ -279,7 +286,8 @@ export declare class MatMonthView<D> implements AfterContentInit, OnDestroy {
     _firstWeekOffset: number;
     _matCalendarBody: MatCalendarBody;
     _monthLabel: string;
-    _selectedDate: number | null;
+    _rangeEnd: number | null;
+    _rangeStart: number | null;
     _todayDate: number | null;
     readonly _userSelection: EventEmitter<void>;
     _weekdays: {
@@ -296,8 +304,8 @@ export declare class MatMonthView<D> implements AfterContentInit, OnDestroy {
     set maxDate(value: D | null);
     get minDate(): D | null;
     set minDate(value: D | null);
-    get selected(): D | null;
-    set selected(value: D | null);
+    get selected(): DateRange<D> | D | null;
+    set selected(value: DateRange<D> | D | null);
     readonly selectedChange: EventEmitter<D | null>;
     constructor(_changeDetectorRef: ChangeDetectorRef, _dateFormats: MatDateFormats, _dateAdapter: DateAdapter<D>, _dir?: Directionality | undefined);
     _dateSelected(date: number): void;
@@ -324,8 +332,8 @@ export declare class MatMultiYearView<D> implements AfterContentInit, OnDestroy 
     set maxDate(value: D | null);
     get minDate(): D | null;
     set minDate(value: D | null);
-    get selected(): D | null;
-    set selected(value: D | null);
+    get selected(): DateRange<D> | D | null;
+    set selected(value: DateRange<D> | D | null);
     readonly selectedChange: EventEmitter<D>;
     readonly yearSelected: EventEmitter<D>;
     constructor(_changeDetectorRef: ChangeDetectorRef, _dateAdapter: DateAdapter<D>, _dir?: Directionality | undefined);
@@ -367,8 +375,8 @@ export declare class MatYearView<D> implements AfterContentInit, OnDestroy {
     get minDate(): D | null;
     set minDate(value: D | null);
     readonly monthSelected: EventEmitter<D>;
-    get selected(): D | null;
-    set selected(value: D | null);
+    get selected(): DateRange<D> | D | null;
+    set selected(value: DateRange<D> | D | null);
     readonly selectedChange: EventEmitter<D>;
     constructor(_changeDetectorRef: ChangeDetectorRef, _dateFormats: MatDateFormats, _dateAdapter: DateAdapter<D>, _dir?: Directionality | undefined);
     _focusActiveCell(): void;

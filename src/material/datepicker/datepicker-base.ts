@@ -130,10 +130,11 @@ export class MatDatepickerContent<S, D = ExtractDateTypeFromSelection<S>>
   constructor(
     elementRef: ElementRef,
     /**
-     * @deprecated `_changeDetectorRef` parameter to become required.
+     * @deprecated `_changeDetectorRef` and `_model` parameters to become required.
      * @breaking-change 11.0.0
      */
-    private _changeDetectorRef?: ChangeDetectorRef) {
+    private _changeDetectorRef?: ChangeDetectorRef,
+    private _model?: MatDateSelectionModel<S, D>) {
     super(elementRef);
   }
 
@@ -143,6 +144,13 @@ export class MatDatepickerContent<S, D = ExtractDateTypeFromSelection<S>>
 
   ngOnDestroy() {
     this._animationDone.complete();
+  }
+
+  _handleUserSelection() {
+    // @breaking-change 11.0.0 Remove null check for _model.
+    if (!this._model || this._model.isComplete()) {
+      this.datepicker.close();
+    }
   }
 
   _startExitAnimation() {
