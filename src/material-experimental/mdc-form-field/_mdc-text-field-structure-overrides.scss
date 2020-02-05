@@ -86,9 +86,10 @@
   // Since we moved the horizontal spacing from the input to the form-field flex container
   // and the MDC floating label tries to account for the horizontal spacing, we need to reset
   // the shifting since there is no padding the label needs to account for. Note that we do not
-  // need to do this for labels in the outline appearance since MDC keeps those relative to the
-  // notched outline container.
-  .mat-mdc-text-field-wrapper:not(.mdc-text-field--outlined) .mdc-floating-label {
+  // want do this for labels in the notched-outline since MDC keeps those labels relative to
+  // the notched outline container, and already applies a specific horizontal spacing which
+  // we do not want to overwrite.
+  .mat-mdc-form-field-infix .mdc-floating-label {
     left: 0;
     right: 0;
   }

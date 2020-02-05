@@ -6,6 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 import {Directionality} from '@angular/cdk/bidi';
+import {Platform} from '@angular/cdk/platform';
 import {
   AfterContentChecked,
   AfterContentInit,
@@ -16,7 +17,8 @@ import {
   ContentChild,
   ContentChildren,
   ElementRef,
-  Inject, InjectionToken,
+  Inject,
+  InjectionToken,
   Input,
   isDevMode,
   NgZone,
@@ -277,6 +279,7 @@ export class MatFormField implements AfterViewInit, OnDestroy, AfterContentCheck
               private _changeDetectorRef: ChangeDetectorRef,
               private _ngZone: NgZone,
               private _dir: Directionality,
+              private _platform: Platform,
               @Optional() @Inject(MAT_FORM_FIELD_DEFAULT_OPTIONS)
               private _defaults?: MatFormFieldDefaultOptions,
               @Optional() @Inject(MAT_LABEL_GLOBAL_OPTIONS) private _labelOptions?: LabelOptions,
@@ -435,8 +438,7 @@ export class MatFormField implements AfterViewInit, OnDestroy, AfterContentCheck
    * checking every change detection cycle.
    */
   private _initializeOutlineLabelOffsetSubscriptions() {
-    // Whenever the prefix changes, update the label offset if the outline
-    // appearance is currently used.
+    // Whenever the prefix changes, schedule an update of the label offset.
     this._prefixChildren.changes.pipe(takeUntil(this._destroyed))
       .subscribe(() => this._needsOutlineLabelOffsetUpdateOnStable = true);
 
@@ -445,6 +447,7 @@ export class MatFormField implements AfterViewInit, OnDestroy, AfterContentCheck
     this._ngZone.runOutsideAngular(() => {
       this._ngZone.onStable.asObservable().pipe(takeUntil(this._destroyed)).subscribe(() => {
         if (this._needsOutlineLabelOffsetUpdateOnStable) {
+          this._needsOutlineLabelOffsetUpdateOnStable = false;
           this._updateOutlineLabelOffset();
         }
       });
@@ -467,6 +470,18 @@ export class MatFormField implements AfterViewInit, OnDestroy, AfterContentCheck
 
   _hasOutline() {
     return this.appearance === 'outline';
+  }
+
+  /**
+   * Whether the label should display in the infix. Labels in the outline appearance are
+   * displayed as part of the notched-outline and are horizontally offset to account for
+   * form-field prefix content. This won't work in server side rendering since we cannot
+   * measure the width of the prefix container. To make the docked label appear as if the
+   * right offset has been calculated, we forcibly render the label inside the infix. Since
+   * the label is part of the infix, the label cannot overflow the prefix content.
+   */
+  _forceDisplayInfixLabel() {
+    return !this._platform.isBrowser && this._prefixContainer && !this._shouldLabelFloat();
   }
 
   _hasFloatingLabel() {
@@ -562,12 +577,13 @@ export class MatFormField implements AfterViewInit, OnDestroy, AfterContentCheck
    * incorporate the horizontal offset into their default text-field styles.
    */
   private _updateOutlineLabelOffset() {
-    if (!this._hasOutline() || !this._prefixContainer || !this._floatingLabel) {
+    if (!this._platform.isBrowser || !this._hasOutline() || !this._prefixContainer ||
+        !this._floatingLabel) {
       return;
     }
     // If the form-field is not attached to the DOM yet (e.g. in a tab), we defer
     // the label offset update until the zone stabilizes.
-    if (!this._isAttachedToDOM()) {
+    if (!this._isAttachedToDom()) {
       this._needsOutlineLabelOffsetUpdateOnStable = true;
       return;
     }
@@ -583,11 +599,10 @@ export class MatFormField implements AfterViewInit, OnDestroy, AfterContentCheck
     // that we do not want to overwrite the default transform for docked floating labels.
     floatingLabel.style.transform =
         `${FLOATING_LABEL_DEFAULT_DOCKED_TRANSFORM} translateX(${labelHorizontalOffset}px)`;
-    this._needsOutlineLabelOffsetUpdateOnStable = false;
   }
 
   /** Checks whether the form field is attached to the DOM. */
-  private _isAttachedToDOM(): boolean {
+  private _isAttachedToDom(): boolean {
     const element: HTMLElement = this._elementRef.nativeElement;
     if (element.getRootNode) {
       const rootNode = element.getRootNode();
