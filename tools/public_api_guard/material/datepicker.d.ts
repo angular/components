@@ -86,11 +86,12 @@ export declare class MatCalendarBody implements OnChanges, OnDestroy {
 
 export declare class MatCalendarCell {
     ariaLabel: string;
+    compareValue: number;
     cssClasses: MatCalendarCellCssClasses;
     displayValue: string;
     enabled: boolean;
     value: number;
-    constructor(value: number, displayValue: string, ariaLabel: string, enabled: boolean, cssClasses?: MatCalendarCellCssClasses);
+    constructor(value: number, displayValue: string, ariaLabel: string, enabled: boolean, cssClasses?: MatCalendarCellCssClasses, compareValue?: number);
 }
 
 export declare type MatCalendarCellCssClasses = string | string[] | Set<string> | {
