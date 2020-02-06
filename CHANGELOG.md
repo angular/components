@@ -1,3 +1,20 @@
+# 9.0.0-rc.10 "brocade-arcade" (2020-02-06)
+
+### material
+
+|            |                       |
+| ---------- | --------------------- |
+| bug fix |  **form-field:** fix underline jank in fill variant ([#18406](https://github.com/angular/components/issues/18406)) ([351d0c4](https://github.com/angular/components/commit/351d0c4)) |
+| bug fix |  **ng-add:** do not overwrite version range specified in `ng add` ([#18365](https://github.com/angular/components/issues/18365)) ([06b7378](https://github.com/angular/components/commit/06b7378)) |
+| bug fix |  **ng-add:** support "navigation" in additon to "nav" for navigation schematic ([#18364](https://github.com/angular/components/issues/18364)) ([06b7378](https://github.com/angular/components/commit/447ca71)) |
+
+### youtube-player
+
+|            |                       |
+| ---------- | --------------------- |
+| bug fix |  handle API interactions before API has loaded ([#18368](https://github.com/angular/components/issues/18368)) ([98fac6c](https://github.com/angular/components/commit/98fac6c)), closes [#18279](https://github.com/angular/components/issues/18279) |
+
+
 # 9.0.0-rc.9 "uranium-surfboard" (2020-01-31)
 
 ### cdk
