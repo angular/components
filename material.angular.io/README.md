@@ -3,11 +3,11 @@
 This is the repository for the [Angular Components documentation site](https://material.angular.io/).
 
 Versions of this site are also available for
-- [Beta](https://next.material.angular.io/)
 - [v5](https://v5.material.angular.io/)
 - [v6](https://v6.material.angular.io/)
 - [v7](https://v7.material.angular.io/)
-- [v8](https://material.angular.io/)
+- [v8](https://v8.material.angular.io/)
+- [v9](https://material.angular.io/)
 
 ## Contributing
 Please open bugs against the Angular Material and CDK components, directives, documentation
