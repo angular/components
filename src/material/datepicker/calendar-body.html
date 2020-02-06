@@ -36,9 +36,9 @@
       [attr.data-mat-col]="colIndex"
       [class.mat-calendar-body-disabled]="!item.enabled"
       [class.mat-calendar-body-active]="_isActiveCell(rowIndex, colIndex)"
-      [class.mat-calendar-body-in-range]="_isInRange(item.value)"
-      [class.mat-calendar-body-range-start]="item.value === startValue"
-      [class.mat-calendar-body-range-end]="item.value === endValue || item.value === _hoveredValue"
+      [class.mat-calendar-body-in-range]="_isInRange(item.compareValue)"
+      [class.mat-calendar-body-range-start]="item.compareValue === startValue"
+      [class.mat-calendar-body-range-end]="item.compareValue === endValue || item.compareValue === _hoveredValue"
       [attr.aria-label]="item.ariaLabel"
       [attr.aria-disabled]="!item.enabled || null"
       [attr.aria-selected]="_isSelected(item)"
@@ -49,7 +49,7 @@
       [style.paddingBottom]="_cellPadding">
       <div class="mat-calendar-body-cell-content"
         [class.mat-calendar-body-selected]="_isSelected(item)"
-        [class.mat-calendar-body-today]="todayValue === item.value">
+        [class.mat-calendar-body-today]="todayValue === item.compareValue">
         {{item.displayValue}}
       </div>
   </td>
