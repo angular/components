@@ -443,6 +443,9 @@ export class DragRef<T = any> {
   /** Sets the container that the item is part of. */
   _withDropContainer(container: DropListRef) {
     this._dropContainer = container;
+    if (!this._initialContainer) {
+      this._initialContainer = container;
+    }
   }
 
   /**
