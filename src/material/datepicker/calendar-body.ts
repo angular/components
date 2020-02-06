@@ -36,7 +36,8 @@ export class MatCalendarCell {
               public displayValue: string,
               public ariaLabel: string,
               public enabled: boolean,
-              public cssClasses: MatCalendarCellCssClasses = {}) {}
+              public cssClasses: MatCalendarCellCssClasses = {},
+              public compareValue = value) {}
 }
 
 
@@ -67,11 +68,10 @@ export class MatCalendarBody implements OnChanges, OnDestroy {
   /** The value in the table that corresponds to today. */
   @Input() todayValue: number;
 
-  /** The value in the table that is currently selected. */
-  // @Input() selectedValue: number;
-
+  /** Start value of the selected date range. */
   @Input() startValue: number;
 
+  /** End value of the selected date range. */
   @Input() endValue: number;
 
   /** The minimum number of free cells needed to fit the label in the first row. */
@@ -126,7 +126,7 @@ export class MatCalendarBody implements OnChanges, OnDestroy {
 
   /** Returns whether a cell should be marked as selected. */
   _isSelected(cell: MatCalendarCell) {
-    return this.startValue === cell.value || this.endValue === cell.value;
+    return this.startValue === cell.compareValue || this.endValue === cell.compareValue;
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -209,7 +209,7 @@ export class MatCalendarBody implements OnChanges, OnDestroy {
 
     if (cell) {
       this._ngZone.run(() => {
-        this._hoveredValue = cell.value;
+        this._hoveredValue = cell.compareValue;
         this._changeDetectorRef.markForCheck();
       });
     }
