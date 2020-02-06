@@ -168,7 +168,17 @@ export class MatMonthView<D> implements AfterContentInit, OnDestroy {
 
   /** Handles when a new date is selected. */
   _dateSelected(date: number) {
-    if (this._rangeStart !== date || this._rangeEnd !== date) {
+    let rangeStartDate: number | null;
+    let rangeEndDate: number | null;
+
+    if (this._selected instanceof DateRange) {
+      rangeStartDate = this._getDateInCurrentMonth(this._selected.start);
+      rangeEndDate = this._getDateInCurrentMonth(this._selected.end);
+    } else {
+      rangeStartDate = rangeEndDate = this._getDateInCurrentMonth(this._selected);
+    }
+
+    if (rangeStartDate !== date || rangeEndDate !== date) {
       const selectedYear = this._dateAdapter.getYear(this.activeDate);
       const selectedMonth = this._dateAdapter.getMonth(this.activeDate);
       const selectedDate = this._dateAdapter.createDate(selectedYear, selectedMonth, date);
@@ -246,7 +256,7 @@ export class MatMonthView<D> implements AfterContentInit, OnDestroy {
   /** Initializes this month view. */
   _init() {
     this._setRange(this.selected);
-    this._todayDate = this._getDateInCurrentMonth(this._dateAdapter.today());
+    this._todayDate = this._getCellCompareValue(this._dateAdapter.today());
     this._monthLabel =
         this._dateAdapter.getMonthNames('short')[this._dateAdapter.getMonth(this.activeDate)]
             .toLocaleUpperCase();
@@ -297,8 +307,8 @@ export class MatMonthView<D> implements AfterContentInit, OnDestroy {
       const ariaLabel = this._dateAdapter.format(date, this._dateFormats.display.dateA11yLabel);
       const cellClasses = this.dateClass ? this.dateClass(date) : undefined;
 
-      this._weeks[this._weeks.length - 1]
-          .push(new MatCalendarCell(i + 1, dateNames[i], ariaLabel, enabled, cellClasses));
+      this._weeks[this._weeks.length - 1].push(new MatCalendarCell(i + 1, dateNames[i], ariaLabel,
+          enabled, cellClasses, this._getCellCompareValue(date)!));
     }
   }
 
@@ -325,6 +335,20 @@ export class MatMonthView<D> implements AfterContentInit, OnDestroy {
               this._dateAdapter.getYear(d1) == this._dateAdapter.getYear(d2));
   }
 
+  /** Gets the value that will be used to one cell to another. */
+  private _getCellCompareValue(date: D | null): number | null {
+    if (date) {
+      // We use the time since the Unix epoch to compare dates in this view, rather than the
+      // cell values, because we need to support ranges that span across multiple months/years.
+      const year = this._dateAdapter.getYear(date);
+      const month = this._dateAdapter.getMonth(date);
+      const day = this._dateAdapter.getDate(date);
+      return new Date(year, month, day).getTime();
+    }
+
+    return null;
+  }
+
   /**
    * @param obj The object to check.
    * @returns The given object if it is both a date instance and valid, otherwise null.
@@ -341,10 +365,10 @@ export class MatMonthView<D> implements AfterContentInit, OnDestroy {
   /** Sets the current range based on a model value. */
   private _setRange(value: DateRange<D> | D | null) {
     if (value instanceof DateRange) {
-      this._rangeStart = this._getDateInCurrentMonth(value.start);
-      this._rangeEnd = this._getDateInCurrentMonth(value.end);
+      this._rangeStart = this._getCellCompareValue(value.start);
+      this._rangeEnd = this._getCellCompareValue(value.end);
     } else {
-      this._rangeStart = this._rangeEnd = this._getDateInCurrentMonth(value);
+      this._rangeStart = this._rangeEnd = this._getCellCompareValue(value);
     }
   }
 }
