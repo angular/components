@@ -11,6 +11,7 @@ export interface DocItem {
   summary?: string;
   packageName?: string;
   examples?: string[];
+  apiDocId?: string;
   additionalApiDocs?: AdditionalApiDoc[];
 }
 
@@ -563,6 +564,7 @@ const DOCS: {[key: string]: DocCategory[]} = {
           name: 'Component Harnesses',
           summary: 'Foundation for component test harnesses.',
           examples: [],
+          apiDocId: 'cdk-testing',
           additionalApiDocs: [
             {
               name: 'Testbed',
