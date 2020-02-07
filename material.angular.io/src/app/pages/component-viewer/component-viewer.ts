@@ -128,6 +128,11 @@ export class ComponentApi extends ComponentBaseView {
   constructor(componentViewer: ComponentViewer, breakpointObserver: BreakpointObserver) {
     super(componentViewer, breakpointObserver);
   }
+
+  getApiDocumentUrl(doc: DocItem) {
+    const apiDocId = doc.apiDocId || `${doc.packageName}-${doc.id}`;
+    return `/docs-content/api-docs/${apiDocId}.html`;
+  }
 }
 
 @Component({

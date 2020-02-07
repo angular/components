@@ -3,8 +3,7 @@
     API for {{docItem?.id}}
   </span>
 
-  <doc-viewer
-    documentUrl="/docs-content/api-docs/{{docItem?.packageName}}-{{docItem?.id}}.html"
+  <doc-viewer [documentUrl]="getApiDocumentUrl(docItem!)"
     class="docs-component-view-text-content docs-component-api"
     (contentRendered)="updateTableOfContents(docItem!.name, $event)">
   </doc-viewer>
