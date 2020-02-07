@@ -5,7 +5,7 @@ about: Report a bug found in Angular Material or the CDK
 
 #### Reproduction
 
-Use StackBlitz to reproduce your issue: https://stackblitz.com/fork/components-issue
+Use StackBlitz to reproduce your issue: https://stackblitz.com/fork/components-issue-9-0-0
 
 Steps to reproduce:
 1. 
