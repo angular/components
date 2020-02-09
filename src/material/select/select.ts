@@ -866,7 +866,11 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
     // Defer setting the value in order to avoid the "Expression
     // has changed after it was checked" errors from Angular.
     Promise.resolve().then(() => {
-      this._setSelectionByValue(this.ngControl ? this.ngControl.value : this._value);
+      if (this.ngControl) {
+        this._value = this.ngControl.value;
+      }
+
+      this._setSelectionByValue(this._value);
       this.stateChanges.next();
     });
   }
