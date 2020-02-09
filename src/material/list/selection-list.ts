@@ -700,9 +700,9 @@ export class MatSelectionList extends _MatSelectionListMixinBase implements CanD
   }
 
   /**
-   * Removes the `tabindex` from the selection list and resets it back afterwards, allowing the
-   * user to tab out of it. This prevents the list from capturing focus and redirecting
-   * it back to within the list, creating a focus trap if it user tries to tab away.
+   * Removes the tabindex from the selection list and resets it back afterwards, allowing the user
+   * to tab out of it. This prevents the list from capturing focus and redirecting it back within
+   * the list, creating a focus trap if it user tries to tab away.
    */
   private _allowFocusEscape() {
     this._tabIndex = -1;
