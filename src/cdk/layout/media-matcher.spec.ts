@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 import {MediaMatcher} from './media-matcher';
-import {TestBed, inject} from '@angular/core/testing';
+import {inject} from '@angular/core/testing';
 import {Platform} from '@angular/cdk/platform';
 
 describe('MediaMatcher', () => {
