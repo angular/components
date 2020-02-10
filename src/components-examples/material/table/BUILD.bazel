@@ -20,6 +20,8 @@ ng_module(
         "//src/material/progress-spinner",
         "//src/material/sort",
         "//src/material/table",
+        "//src/cdk/table",
+        "//src/cdk/drag-drop",
     ],
 )
 
