@@ -406,6 +406,7 @@ const DOCS: {[key: string]: DocCategory[]} = {
           id: 'table',
           name: 'Table',
           summary: 'A configurable component for displaying tabular data.',
+          additionalApiDocs: [{name: 'Testing', path: 'material-table-testing.html'}],
           examples: [
             'table-basic',
             'table-basic-flex',
