@@ -5,16 +5,12 @@
   // needed to prevent LibSass from stripping the keyframes out.
   // Based on: https://medium.com/@brunn/detecting-autofilled-fields-in-javascript-aed598d25da7
   @keyframes cdk-text-field-autofill-start {
-    0% {
-    }
-    100% {
-    }
+    0% {/*!*/}
+    100% {/*!*/}
   }
   @keyframes cdk-text-field-autofill-end {
-    0% {
-    }
-    100% {
-    }
+    0% {/*!*/}
+    100% {/*!*/}
   }
 
   .cdk-text-field-autofill-monitored:-webkit-autofill {
