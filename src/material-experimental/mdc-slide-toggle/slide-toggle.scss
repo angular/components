@@ -16,6 +16,12 @@
   // The ripple needs extra specificity so the base ripple styling doesn't override its `position`.
   .mat-mdc-slide-toggle-ripple, .mdc-switch__thumb-underlay::before {
     @include mat-fill;
+    border-radius: 50%;
+    // Fixes the ripples not clipping to the border radius on Safari. Uses `:not(:empty)`
+    // in order to avoid creating extra layers when there aren't any ripples.
+    &:not(:empty) {
+      transform: translateZ(0);
+    }
   }
 
   // The MDC switch styles related to the hover state are intertwined with the MDC ripple styles.
