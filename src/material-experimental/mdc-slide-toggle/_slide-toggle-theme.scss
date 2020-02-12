@@ -72,7 +72,11 @@
   }
 }
 
-@mixin mat-slide-toggle-density-mdc($density-scale) {}
+@mixin mat-slide-toggle-density-mdc($density-scale) {
+  .mat-mdc-slide-toggle .mdc-switch {
+    @include mdc-switch-density($density-scale);
+  }
+}
 
 @mixin mat-slide-toggle-theme-mdc($theme) {
   $color: mat-get-color-config($theme);
