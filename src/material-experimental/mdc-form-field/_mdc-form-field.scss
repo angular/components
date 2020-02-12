@@ -70,5 +70,9 @@
     @include mdc-floating-label-core-styles($query: $mat-typography-styles-query);
     @include mdc-text-field-core-styles($query: $mat-typography-styles-query);
     @include _mat-form-field-subscript-typography($config);
+
+    .mat-mdc-form-field {
+      @include mat-typography-level-to-styles($config, input);
+    }
   }
 }
