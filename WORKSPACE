@@ -39,6 +39,12 @@ node_repositories(
     },
     node_urls = ["https://nodejs.org/dist/v{version}/{filename}"],
     node_version = "12.9.1",
+    # We do not need to define a specific yarn version as bazel will respect the .yarnrc file
+    # and run the version of yarn defined at the set-path value.
+    # Since bazel runs yarn from the working directory of the package.json, and our .yarnrc
+    # file is in the same directory, it correctly discovers and respects it.  Additionally,
+    # it ensures that the yarn environment variable to detect if yarn has already followed
+    # the set-path value is reset.
 )
 
 yarn_install(
