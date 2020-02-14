@@ -10,6 +10,7 @@ import {CdkCellDef, CdkColumnDef, CdkHeaderCellDef, CdkTable} from '@angular/cdk
 import {
   Component,
   Input,
+  isDevMode,
   OnDestroy,
   OnInit,
   Optional,
@@ -29,11 +30,11 @@ import {CdkSelection} from './selection';
   template: `
     <ng-container cdkColumnDef>
       <th cdkHeaderCell *cdkHeaderCellDef>
-        <input type="checkbox" *ngIf="selection.cdkSelectionMultiple"
+        <input type="checkbox" *ngIf="selection.multiple"
             cdkSelectAll
             #allToggler="cdkSelectAll"
-            [checked]="allToggler.checked$ | async"
-            [indeterminate]="allToggler.indeterminate$ | async"
+            [checked]="allToggler.checked | async"
+            [indeterminate]="allToggler.indeterminate | async"
             (click)="allToggler.toggle($event)">
       </th>
       <td cdkCell *cdkCellDef="let row; let i = $index">
@@ -43,18 +44,18 @@ import {CdkSelection} from './selection';
             [cdkSelectionToggleValue]="row"
             [cdkSelectionToggleIndex]="i"
             (click)="toggler.toggle()"
-            [checked]="toggler.checked$ | async">
+            [checked]="toggler.checked | async">
       </td>
     </ng-container>
   `,
 })
 export class CdkSelectionColumn<T> implements OnInit, OnDestroy {
   /** Column name that should be used to reference this column. */
-  @Input()
-  get cdkSelectionColumnName(): string {
+  @Input('cdkSelectionColumnName')
+  get name(): string {
     return this._name;
   }
-  set cdkSelectionColumnName(name: string) {
+  set name(name: string) {
     this._name = name;
 
     this.syncColumnDefName();
@@ -71,8 +72,8 @@ export class CdkSelectionColumn<T> implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    if (!this.selection) {
-      throw new Error('CdkSelectionColumn: missing CdkSelection in the parent');
+    if (!this.selection && isDevMode()) {
+      throw Error('CdkSelectionColumn: missing CdkSelection in the parent');
     }
 
     this.syncColumnDefName();
@@ -82,7 +83,9 @@ export class CdkSelectionColumn<T> implements OnInit, OnDestroy {
       this._columnDef.headerCell = this._headerCell;
       this.table.addColumnDef(this._columnDef);
     } else {
-      throw new Error('CdkSelectionColumn: missing parent table');
+      if (isDevMode()) {
+        throw Error('CdkSelectionColumn: missing parent table');
+      }
     }
   }
 

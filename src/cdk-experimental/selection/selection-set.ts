@@ -6,14 +6,18 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {TrackByFunction} from '@angular/core';
+import {isDevMode, TrackByFunction} from '@angular/core';
 import {Subject} from 'rxjs';
 
+/**
+ * Maintains a set of selected values. One or more values can be added to or removed from the
+ * selection.
+ */
 interface TrackBySelection<T> {
   isSelected(value: SelectableWithIndex<T>): boolean;
   select(...values: Array<SelectableWithIndex<T>>): void;
   deselect(...values: Array<SelectableWithIndex<T>>): void;
-  changed$: Subject<SelectionChange<T>>;
+  changed: Subject<SelectionChange<T>>;
 }
 
 /**
@@ -42,7 +46,7 @@ export interface SelectionChange<T> {
  */
 export class SelectionSet<T> implements TrackBySelection<T> {
   private selectionMap = new Map<T|ReturnType<TrackByFunction<T>>, SelectableWithIndex<T>>();
-  changed$ = new Subject<SelectionChange<T>>();
+  changed = new Subject<SelectionChange<T>>();
 
   constructor(private _multiple = false, private _trackByFn?: TrackByFunction<T>) {}
 
@@ -51,8 +55,8 @@ export class SelectionSet<T> implements TrackBySelection<T> {
   }
 
   select(...selects: Array<SelectableWithIndex<T>>) {
-    if (!this._multiple && selects.length > 1) {
-      throw new Error('SelectionSet: not multiple selection');
+    if (!this._multiple && selects.length > 1 && isDevMode()) {
+      throw Error('SelectionSet: not multiple selection');
     }
 
     const before = this._getCurrentSelection();
@@ -73,12 +77,12 @@ export class SelectionSet<T> implements TrackBySelection<T> {
 
     const after = this._getCurrentSelection();
 
-    this.changed$.next({before, after});
+    this.changed.next({before, after});
   }
 
   deselect(...selects: Array<SelectableWithIndex<T>>) {
-    if (!this._multiple && selects.length > 1) {
-      throw new Error('SelectionSet: not multiple selection');
+    if (!this._multiple && selects.length > 1 && isDevMode()) {
+      throw Error('SelectionSet: not multiple selection');
     }
 
     const before = this._getCurrentSelection();
@@ -94,7 +98,7 @@ export class SelectionSet<T> implements TrackBySelection<T> {
     }
 
     const after = this._getCurrentSelection();
-    this.changed$.next({before, after});
+    this.changed.next({before, after});
   }
 
   private _markSelected(key: T|ReturnType<TrackByFunction<T>>, toSelect: SelectableWithIndex<T>) {
@@ -110,11 +114,11 @@ export class SelectionSet<T> implements TrackBySelection<T> {
       return select.value;
     }
 
-    if (select.index == null) {
-      throw new Error('SelectionSet: index required when trackByFn is used.');
+    if (select.index == null && isDevMode()) {
+      throw Error('SelectionSet: index required when trackByFn is used.');
     }
 
-    return this._trackByFn(select.index, select.value);
+    return this._trackByFn(select.index!, select.value);
   }
 
   private _getCurrentSelection(): Array<SelectableWithIndex<T>> {

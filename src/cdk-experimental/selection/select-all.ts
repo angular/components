@@ -6,9 +6,9 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Directive, Inject, OnDestroy, OnInit, Optional, Self} from '@angular/core';
+import {Directive, Inject, isDevMode, OnDestroy, OnInit, Optional, Self} from '@angular/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
-import {BehaviorSubject, of as observableOf, Subject} from 'rxjs';
+import {Observable, of as observableOf, ReplaySubject} from 'rxjs';
 import {switchMap, takeUntil} from 'rxjs/operators';
 
 import {CdkSelection} from './selection';
@@ -32,14 +32,18 @@ export class CdkSelectAll<T> implements OnDestroy, OnInit {
    * The checked state of the toggle.
    * Resolves to `true` if all the values are selected, `false` if no value is selected.
    */
-  readonly checked$ = new BehaviorSubject(false);
+  readonly checked: Observable<boolean> = this._selection.change.pipe(
+      switchMap(() => observableOf(this._selection.isAllSelected())),
+  );
 
   /**
    * The indeterminate state of the toggle.
    * Resolves to `true` if part (not all) of the values are selected, `false` if all values or no
    * value at all are selected.
    */
-  readonly indeterminate$ = new BehaviorSubject(false);
+  readonly indeterminate: Observable<boolean> = this._selection.change.pipe(
+      switchMap(() => observableOf(this._selection.isPartialSelected())),
+  );
 
   /**
    * Toggles the select-all state.
@@ -60,7 +64,7 @@ export class CdkSelectAll<T> implements OnDestroy, OnInit {
     });
   }
 
-  private readonly _destroyed$ = new Subject();
+  private readonly _destroyed = new ReplaySubject(1);
 
   constructor(
       @Optional() private readonly _selection: CdkSelection<T>,
@@ -68,47 +72,35 @@ export class CdkSelectAll<T> implements OnDestroy, OnInit {
           ControlValueAccessor[]) {}
 
   ngOnInit() {
-    if (!this._selection) {
-      throw new Error('CdkSelectAll: missing CdkSelection in the parent');
-    }
+    this._assertValidParentSelection();
+    this._configureControlValueAccessor();
+  }
 
-    if (!this._selection.cdkSelectionMultiple) {
-      throw new Error('CdkSelectAll: CdkSelection must have cdkSelectionMultiple set to true');
-    }
-
-    this._selection.cdkSelectionChange
-        .pipe(
-            switchMap(() => observableOf(this._selection.isAllSelected())),
-            takeUntil(this._destroyed$),
-            )
-        .subscribe((state) => {
-          this.checked$.next(state);
-        });
-
-    this._selection.cdkSelectionChange
-        .pipe(
-            switchMap(() => observableOf(this._selection.isPartialSelected())),
-            takeUntil(this._destroyed$),
-            )
-        .subscribe((state) => {
-          this.indeterminate$.next(state);
-        });
-
+  private _configureControlValueAccessor() {
     if (this._controlValueAccessor && this._controlValueAccessor.length) {
       this._controlValueAccessor[0].registerOnChange((e: unknown) => {
         if (e === true || e === false) {
           this.toggle();
         }
       });
-
-      this.checked$.pipe(takeUntil(this._destroyed$)).subscribe((state) => {
+      this.checked.pipe(takeUntil(this._destroyed)).subscribe((state) => {
         this._controlValueAccessor[0].writeValue(state);
       });
     }
   }
 
+  private _assertValidParentSelection() {
+    if (!this._selection && isDevMode()) {
+      throw Error('CdkSelectAll: missing CdkSelection in the parent');
+    }
+
+    if (!this._selection.multiple && isDevMode()) {
+      throw Error('CdkSelectAll: CdkSelection must have cdkSelectionMultiple set to true');
+    }
+  }
+
   ngOnDestroy() {
-    this._destroyed$.next();
-    this._destroyed$.complete();
+    this._destroyed.next();
+    this._destroyed.complete();
   }
 }

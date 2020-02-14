@@ -1,5 +1,5 @@
 Selected: {{selected}}
-<table cdk-table [dataSource]="dataSource" cdkSelection [cdkSelectionMultiple]="true" (cdkSelectionChange)="selectionChanged($event)">
+<table class="example-table" cdk-table [dataSource]="dataSource" cdkSelection [cdkSelectionMultiple]="true" (cdkSelectionChange)="selectionChanged($event)">
     <cdk-selection-column cdkSelectionColumnName="select"></cdk-selection-column>
     <!-- Position Column -->
     <ng-container cdkColumnDef="position">

@@ -6,7 +6,8 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Directive, HostBinding, Input} from '@angular/core';
+import {coerceNumberProperty, NumberInput} from '@angular/cdk/coercion';
+import {Directive, Input} from '@angular/core';
 
 import {CdkSelection} from './selection';
 
@@ -19,31 +20,24 @@ import {CdkSelection} from './selection';
  */
 @Directive({
   selector: '[cdkRowSelection]',
+  host: {
+    '[class.cdk-selected]': '_selection.isSelected(this._value, this._index)',
+    '[attr.aria-selected]': '_selection.isSelected(this._value, this._index)',
+  },
 })
 export class CdkRowSelection<T> {
-  @Input()
-  get cdkRowSelectionValue(): T {
-    return this._value;
-  }
-  set cdkRowSelectionValue(value: T) {
-    this._value = value;
-  }
-  _value: T;
+  @Input('cdkRowSelectionValue') _value: T;
 
-  @Input()
-  get cdkRowSelectionIndex(): number|undefined {
+  @Input('cdkRowSelectionIndex')
+  get index(): number|undefined {
     return this._index;
   }
-  set cdkRowSelectionIndex(index: number|undefined) {
-    this._index = index;
+  set index(index: number|undefined) {
+    this._index = coerceNumberProperty(index);
   }
   _index?: number;
 
-  constructor(private readonly _selection: CdkSelection<T>) {}
+  constructor(readonly _selection: CdkSelection<T>) {}
 
-  @HostBinding('class.cdk-selected')
-  @HostBinding('attr.aria-selected')
-  get isSelected() {
-    return this._selection.isSelected(this._value, this._index);
-  }
+  static ngAcceptInputType_index: NumberInput;
 }
