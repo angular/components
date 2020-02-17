@@ -7,6 +7,7 @@
  */
 
 import {Directionality} from '@angular/cdk/bidi';
+import {OverlayContainerDomPortalOutlet} from '@angular/cdk/overlay/overlay-container-dom-portal-outlet';
 import {DomPortalOutlet} from '@angular/cdk/portal';
 import {DOCUMENT, Location} from '@angular/common';
 import {
@@ -71,7 +72,9 @@ export class Overlay {
 
     overlayConfig.direction = overlayConfig.direction || this._directionality.value;
 
-    return new OverlayRef(portalOutlet, host, pane, overlayConfig, this._ngZone,
+    const decoratedPortalOutlet = new OverlayContainerDomPortalOutlet(portalOutlet, this._overlayContainer);
+
+    return new OverlayRef(decoratedPortalOutlet, host, pane, overlayConfig, this._ngZone,
       this._keyboardDispatcher, this._document, this._location);
   }
 
