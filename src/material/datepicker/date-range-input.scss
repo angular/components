@@ -24,6 +24,9 @@ $mat-date-range-input-placeholder-transition:
   transition: $mat-date-range-input-placeholder-transition;
 
   .mat-form-field-hide-placeholder & {
+    // Disable text selection, because the user can click
+    // through the main label when the input is disabled.
+    @include user-select(none);
     color: transparent;
     transition: none;
   }
@@ -57,6 +60,10 @@ $mat-date-range-input-placeholder-transition:
   .mat-form-field-hide-placeholder &,
   .mat-date-range-input-hide-placeholders & {
     @include input-placeholder {
+      // Disable text selection, because the user can click
+      // through the main label when the input is disabled.
+      @include user-select(none);
+
       // Needs to be !important, because the placeholder will end up inheriting the
       // input color in IE, if the consumer overrides it with a higher specificity.
       color: transparent !important;

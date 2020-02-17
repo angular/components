@@ -25,6 +25,8 @@ import {
   NgControl,
   ValidatorFn,
   Validators,
+  AbstractControl,
+  ValidationErrors,
 } from '@angular/forms';
 import {
   CanUpdateErrorState,
@@ -45,6 +47,7 @@ export interface MatDateRangeInputParent<D> {
   min: D | null;
   max: D | null;
   dateFilter: DateFilterFn<D>;
+  _groupDisabled: boolean;
   _ariaDescribedBy: string | null;
   _ariaLabelledBy: string | null;
   _handleChildValueChange: () => void;
@@ -145,6 +148,16 @@ abstract class MatDateRangeInputPartBase<D>
   protected _getDateFilter() {
     return this._rangeInput.dateFilter;
   }
+
+  protected _outsideValueChanged = () => {
+    // Whenever the value changes outside the input we need to revalidate, because
+    // the validation state of each of the inputs depends on the other one.
+    this._validatorOnChange();
+  }
+
+  protected _parentDisabled() {
+    return this._rangeInput._groupDisabled;
+  }
 }
 
 const _MatDateRangeInputBase:
@@ -163,14 +176,12 @@ const _MatDateRangeInputBase:
     '(keydown)': '_onKeydown($event)',
     '[attr.aria-labelledby]': '_rangeInput._ariaLabelledBy',
     '[attr.aria-describedby]': '_rangeInput._ariaDescribedBy',
+    '[attr.aria-haspopup]': '_rangeInput.rangePicker ? "dialog" : null',
+    '[attr.aria-owns]': '(_rangeInput.rangePicker?.opened && _rangeInput.rangePicker.id) || null',
+    '[attr.min]': '_getMinDate() ? _dateAdapter.toIso8601(_getMinDate()) : null',
+    '[attr.max]': '_getMaxDate() ? _dateAdapter.toIso8601(_getMaxDate()) : null',
     '(blur)': '_onBlur()',
     'type': 'text',
-
-    // TODO(crisbeto): to be added once the datepicker is implemented
-    // '[attr.aria-haspopup]': '_datepicker ? "dialog" : null',
-    // '[attr.aria-owns]': '(_datepicker?.opened && _datepicker.id) || null',
-    // '[attr.min]': 'min ? _dateAdapter.toIso8601(min) : null',
-    // '[attr.max]': 'max ? _dateAdapter.toIso8601(max) : null',
   },
   providers: [
     {provide: NG_VALUE_ACCESSOR, useExisting: MatStartDate, multi: true},
@@ -178,8 +189,16 @@ const _MatDateRangeInputBase:
   ]
 })
 export class MatStartDate<D> extends _MatDateRangeInputBase<D> implements CanUpdateErrorState {
-  // TODO(crisbeto): start-range-specific validators should go here.
-  protected _validator = Validators.compose(super._getValidators());
+  /** Validator that checks whether the start date isn't after the end date. */
+  private _startValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
+    const start = this._getValidDateOrNull(this._dateAdapter.deserialize(control.value));
+    const end = this._model ? this._model.selection.end : null;
+    return (!start || !end ||
+        this._dateAdapter.compareDate(start, end) <= 0) ?
+        null : {'matStartDateInvalid': {'end': end, 'actual': start}};
+  }
+
+  protected _validator = Validators.compose([...super._getValidators(), this._startValidator]);
 
   protected _getValueFromModel(modelValue: DateRange<D>) {
     return modelValue.start;
@@ -220,14 +239,12 @@ export class MatStartDate<D> extends _MatDateRangeInputBase<D> implements CanUpd
     '(keydown)': '_onKeydown($event)',
     '[attr.aria-labelledby]': '_rangeInput._ariaLabelledBy',
     '[attr.aria-describedby]': '_rangeInput._ariaDescribedBy',
+    '[attr.aria-haspopup]': '_rangeInput.rangePicker ? "dialog" : null',
+    '[attr.aria-owns]': '(_rangeInput.rangePicker?.opened && _rangeInput.rangePicker.id) || null',
+    '[attr.min]': '_getMinDate() ? _dateAdapter.toIso8601(_getMinDate()) : null',
+    '[attr.max]': '_getMaxDate() ? _dateAdapter.toIso8601(_getMaxDate()) : null',
     '(blur)': '_onBlur()',
     'type': 'text',
-
-    // TODO(crisbeto): to be added once the datepicker is implemented
-    // '[attr.aria-haspopup]': '_datepicker ? "dialog" : null',
-    // '[attr.aria-owns]': '(_datepicker?.opened && _datepicker.id) || null',
-    // '[attr.min]': 'min ? _dateAdapter.toIso8601(min) : null',
-    // '[attr.max]': 'max ? _dateAdapter.toIso8601(max) : null',
   },
   providers: [
     {provide: NG_VALUE_ACCESSOR, useExisting: MatEndDate, multi: true},
@@ -235,8 +252,16 @@ export class MatStartDate<D> extends _MatDateRangeInputBase<D> implements CanUpd
   ]
 })
 export class MatEndDate<D> extends _MatDateRangeInputBase<D> implements CanUpdateErrorState {
-  // TODO(crisbeto): end-range-specific validators should go here.
-  protected _validator = Validators.compose(super._getValidators());
+  /** Validator that checks whether the end date isn't before the start date. */
+  private _endValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
+    const end = this._getValidDateOrNull(this._dateAdapter.deserialize(control.value));
+    const start = this._model ? this._model.selection.start : null;
+    return (!end || !start ||
+        this._dateAdapter.compareDate(end, start) >= 0) ?
+        null : {'matEndDateInvalid': {'start': start, 'actual': end}};
+  }
+
+  protected _validator = Validators.compose([...super._getValidators(), this._endValidator]);
 
   protected _getValueFromModel(modelValue: DateRange<D>) {
     return modelValue.end;
