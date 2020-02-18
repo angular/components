@@ -60,7 +60,7 @@ export class CdkSelectionColumn<T> implements OnInit, OnDestroy {
 
     this.syncColumnDefName();
   }
-  _name: string;
+  private _name: string;
 
   @ViewChild(CdkColumnDef, {static: true}) private readonly _columnDef: CdkColumnDef;
   @ViewChild(CdkCellDef, {static: true}) private readonly _cell: CdkCellDef;

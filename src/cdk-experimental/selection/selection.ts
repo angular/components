@@ -19,7 +19,7 @@ import {
   Output,
   TrackByFunction
 } from '@angular/core';
-import {Observable, of as observableOf, ReplaySubject, Subscription} from 'rxjs';
+import {Observable, of as observableOf, Subject, Subscription} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 
 import {SelectableWithIndex, SelectionChange, SelectionSet} from './selection-set';
@@ -48,7 +48,7 @@ export class CdkSelection<T> implements OnInit, AfterContentChecked, CollectionV
   }
   private _dataSource: TableDataSource<T>;
 
-  @Input('trackBy') private _trackByFn: TrackByFunction<T>;
+  @Input('trackBy') trackByFn: TrackByFunction<T>;
 
   /** Whether to support multiple selection */
   @Input('cdkSelectionMultiple')
@@ -69,7 +69,7 @@ export class CdkSelection<T> implements OnInit, AfterContentChecked, CollectionV
   /** Subscription that listens for the data provided by the data source.  */
   private _renderChangeSubscription: Subscription|null;
 
-  private _destroyed = new ReplaySubject<void>(1);
+  private _destroyed = new Subject<void>();
 
   private _selection: SelectionSet<T>;
 
@@ -115,7 +115,7 @@ export class CdkSelection<T> implements OnInit, AfterContentChecked, CollectionV
   }
 
   ngOnInit() {
-    this._selection = new SelectionSet<T>(this._multiple, this._trackByFn);
+    this._selection = new SelectionSet<T>(this._multiple, this.trackByFn);
     this._selection.changed.pipe(takeUntil(this._destroyed)).subscribe((change) => {
       this.updateSelectAllState();
       this.change.emit(change);
@@ -139,7 +139,7 @@ export class CdkSelection<T> implements OnInit, AfterContentChecked, CollectionV
 
   /** Toggles selection for a given value. `index` is required if `trackBy` is used. */
   toggleSelection(value: T, index?: number) {
-    if (this._trackByFn && index == null && isDevMode()) {
+    if (this.trackByFn && index == null && isDevMode()) {
       throw Error('CdkSelection: index required when trackBy is used');
     }
 
@@ -168,7 +168,7 @@ export class CdkSelection<T> implements OnInit, AfterContentChecked, CollectionV
 
   /** Checks whether a value is selected. `index` is required if `trackBy` is used. */
   isSelected(value: T, index?: number) {
-    if (this._trackByFn && index == null && isDevMode()) {
+    if (this.trackByFn && index == null && isDevMode()) {
       throw Error('CdkSelection: index required when trackBy is used');
     }
 

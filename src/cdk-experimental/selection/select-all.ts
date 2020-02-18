@@ -8,7 +8,7 @@
 
 import {Directive, Inject, isDevMode, OnDestroy, OnInit, Optional, Self} from '@angular/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
-import {Observable, of as observableOf, ReplaySubject} from 'rxjs';
+import {Observable, of as observableOf, Subject} from 'rxjs';
 import {switchMap, takeUntil} from 'rxjs/operators';
 
 import {CdkSelection} from './selection';
@@ -48,7 +48,7 @@ export class CdkSelectAll<T> implements OnDestroy, OnInit {
   /**
    * Toggles the select-all state.
    * @param event The click event if the toggle is triggered by a (mouse or keyboard) click. If
-   *     using with a native <input type="checkbox">, the parameter is required for the
+   *     using with a native `<input type="checkbox">`, the parameter is required for the
    *     indeterminate state to work properly.
    */
   toggle(event?: MouseEvent) {
@@ -64,7 +64,7 @@ export class CdkSelectAll<T> implements OnDestroy, OnInit {
     });
   }
 
-  private readonly _destroyed = new ReplaySubject(1);
+  private readonly _destroyed = new Subject<void>();
 
   constructor(
       @Optional() private readonly _selection: CdkSelection<T>,

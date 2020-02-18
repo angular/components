@@ -21,21 +21,17 @@ import {CdkSelection} from './selection';
 @Directive({
   selector: '[cdkRowSelection]',
   host: {
-    '[class.cdk-selected]': '_selection.isSelected(this._value, this._index)',
-    '[attr.aria-selected]': '_selection.isSelected(this._value, this._index)',
+    '[class.cdk-selected]': '_selection.isSelected(this.value, this.index)',
+    '[attr.aria-selected]': '_selection.isSelected(this.value, this.index)',
   },
 })
 export class CdkRowSelection<T> {
-  @Input('cdkRowSelectionValue') _value: T;
+  @Input('cdkRowSelectionValue') value: T;
 
   @Input('cdkRowSelectionIndex')
-  get index(): number|undefined {
-    return this._index;
-  }
-  set index(index: number|undefined) {
-    this._index = coerceNumberProperty(index);
-  }
-  _index?: number;
+  get index(): number|undefined { return this._index; }
+  set index(index: number|undefined) { this._index = coerceNumberProperty(index); }
+  private _index?: number;
 
   constructor(readonly _selection: CdkSelection<T>) {}
 

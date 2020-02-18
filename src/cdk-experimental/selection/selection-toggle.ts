@@ -18,8 +18,8 @@ import {
   Self
 } from '@angular/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
-import {BehaviorSubject, Observable, of as observableOf, ReplaySubject, Subject} from 'rxjs';
-import {distinctUntilChanged, startWith, switchMap, takeUntil} from 'rxjs/operators';
+import {Observable, of as observableOf, Subject} from 'rxjs';
+import {distinctUntilChanged, switchMap, takeUntil} from 'rxjs/operators';
 
 import {CdkSelection} from './selection';
 
@@ -39,16 +39,12 @@ import {CdkSelection} from './selection';
 })
 export class CdkSelectionToggle<T> implements OnDestroy, OnInit {
   /** The value that is associated with the toggle */
-  @Input('cdkSelectionToggleValue') private _value: T;
+  @Input('cdkSelectionToggleValue') value: T;
 
   /** The index of the value in the list. Required when used with `trackBy` */
   @Input('cdkSelectionToggleIndex')
-  get index(): number|undefined {
-    return this._index;
-  }
-  set index(index: number|undefined) {
-    this._index = coerceNumberProperty(index);
-  }
+  get index(): number|undefined { return this._index; }
+  set index(index: number|undefined) { this._index = coerceNumberProperty(index); }
   private _index?: number;
 
   /** The checked state of the selection toggle */
@@ -59,10 +55,10 @@ export class CdkSelectionToggle<T> implements OnDestroy, OnInit {
 
   /** Toggles the selection */
   toggle() {
-    this._selection.toggleSelection(this._value, this._index);
+    this._selection.toggleSelection(this.value, this.index);
   }
 
-  private _destroyed = new ReplaySubject(1);
+  private _destroyed = new Subject<void>();
 
   constructor(
       @Optional() private _selection: CdkSelection<T>,
@@ -101,7 +97,7 @@ export class CdkSelectionToggle<T> implements OnDestroy, OnInit {
   }
 
   private _isSelected(): boolean {
-    return this._selection.isSelected(this._value, this._index);
+    return this._selection.isSelected(this.value, this.index);
   }
 
   static ngAcceptInputType_index: NumberInput;
