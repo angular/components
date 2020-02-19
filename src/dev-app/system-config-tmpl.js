@@ -34,6 +34,8 @@ configureEntryPoint('components-examples');
 configureEntryPoint('material');
 configureEntryPoint('material-experimental');
 configureEntryPoint('material-moment-adapter');
+configureEntryPoint('google-maps');
+configureEntryPoint('youtube-player');
 
 // Configure all secondary entry-points.
 CDK_PACKAGES.forEach(function(pkgName) {
@@ -48,8 +50,9 @@ MATERIAL_EXPERIMENTAL_PACKAGES.forEach(function(pkgName) {
 MATERIAL_PACKAGES.forEach(function(pkgName) {
   configureEntryPoint('material', pkgName);
 });
-configureEntryPoint('google-maps');
-configureEntryPoint('youtube-player');
+
+// Private secondary entry-points.
+configureEntryPoint('components-examples', 'private');
 
 /** Configures the specified package, its entry-point and its examples. */
 function configureEntryPoint(pkgName, entryPoint) {
