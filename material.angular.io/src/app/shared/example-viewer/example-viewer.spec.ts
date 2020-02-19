@@ -15,6 +15,7 @@ import {DocsAppTestingModule} from '../../testing/testing-module';
 import {CopierService} from '../copier/copier.service';
 import {DocViewerModule} from '../doc-viewer/doc-viewer-module';
 import {ExampleViewer} from './example-viewer';
+import {AutocompleteExamplesModule} from '@angular/components-examples/material/autocomplete';
 
 const exampleKey = 'autocomplete-overview';
 
@@ -167,10 +168,9 @@ describe('ExampleViewer', () => {
     FormsModule,
     CommonModule,
     ReactiveFormsModule,
-    NoopAnimationsModule
+    NoopAnimationsModule,
+    AutocompleteExamplesModule,
   ],
-  declarations: [EXAMPLE_COMPONENTS[exampleKey].component],
-  entryComponents: [EXAMPLE_COMPONENTS[exampleKey].component],
 })
 class TestExampleModule { }
 

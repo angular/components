@@ -26,6 +26,7 @@ describe('StackBlitzWriter', () => {
   beforeEach(() => {
     stackBlitzWriter = TestBed.inject(StackBlitzWriter);
     data = new ExampleData('');
+    data.componentNames = [];
     data.exampleFiles = ['test.ts', 'test.html', 'src/detail.ts'];
   });
 

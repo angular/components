@@ -12,8 +12,8 @@
       </mat-icon>
     </button>
 
-  <stack-blitz-button [example]="example"></stack-blitz-button>
-</div>
+    <stack-blitz-button [example]="example"></stack-blitz-button>
+  </div>
 
   <div class="docs-example-viewer-source" *ngIf="showSource">
     <mat-tab-group>
@@ -32,6 +32,8 @@
   </div>
 
   <div class="docs-example-viewer-body">
-    <ng-template [cdkPortalOutlet]="selectedPortal"></ng-template>
+    <ng-template *ngIf="_exampleComponentType && _exampleModuleFactory"
+                 [ngComponentOutlet]="_exampleComponentType"
+                 [ngComponentOutletNgModuleFactory]="_exampleModuleFactory"></ng-template>
   </div>
 </div>
