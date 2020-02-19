@@ -1,6 +1,5 @@
-import {Component, Input} from '@angular/core';
+import {Component, Input, NgModuleFactory, Type, ɵNgModuleFactory} from '@angular/core';
 import {MatSnackBar} from '@angular/material/snack-bar';
-import {ComponentPortal} from '@angular/cdk/portal';
 
 import {EXAMPLE_COMPONENTS, LiveExample} from '@angular/components-examples';
 import {CopierService} from '../copier/copier.service';
@@ -14,9 +13,6 @@ const fileExtensionRegex = /(.*)\.(\w+)/;
   styleUrls: ['./example-viewer.scss']
 })
 export class ExampleViewer {
-  /** Component portal for the currently displayed example. */
-  selectedPortal: ComponentPortal<any>;
-
   /** Map of example files that should be displayed in the view-source tab. */
   exampleTabs: {[tabName: string]: string};
 
@@ -26,15 +22,21 @@ export class ExampleViewer {
   /** Whether the source for the example is being displayed. */
   showSource = false;
 
+  /** Component type for the current example. */
+  _exampleComponentType: Type<any>|null = null;
+
+  /** Module factory that declares the example component. */
+  _exampleModuleFactory: NgModuleFactory<any>|null = null;
+
   /** String key of the currently displayed example. */
   @Input()
   get example() { return this._example; }
   set example(exampleName: string) {
-    if (exampleName && EXAMPLE_COMPONENTS[exampleName]) {
+    if (exampleName && exampleName !== this._example && EXAMPLE_COMPONENTS[exampleName]) {
       this._example = exampleName;
       this.exampleData = EXAMPLE_COMPONENTS[exampleName];
-      this.selectedPortal = new ComponentPortal(this.exampleData.component);
       this._generateExampleTabs();
+      this._loadExampleComponent();
     } else {
       console.error(`Could not find example: ${exampleName}`);
     }
@@ -57,6 +59,26 @@ export class ExampleViewer {
 
   _getExampleTabNames() {
     return Object.keys(this.exampleTabs);
+  }
+
+  /** Loads the component and module factory for the currently selected example. */
+  private async _loadExampleComponent() {
+    const {componentName, module} = EXAMPLE_COMPONENTS[this._example];
+    // Lazily loads the example package that contains the requested example. Webpack needs to be
+    // able to statically determine possible imports for proper chunk generation. Explicitly
+    // specifying the path to the `fesm2015` folder as first segment instructs Webpack to generate
+    // chunks for each example flat esm2015 bundle. To avoid generating unnecessary chunks for
+    // source maps (which would never be loaded), we instruct Webpack to exclude source map
+    // files. More details: https://webpack.js.org/api/module-methods/#magic-comments.
+    const moduleExports: any = await import(
+      /* webpackExclude: /\.map$/ */
+      '@angular/components-examples/fesm2015/' + module.importSpecifier);
+    this._exampleComponentType = moduleExports[componentName];
+    // The components examples package is built with Ivy. This means that no factory files are
+    // generated. To retrieve the factory of the AOT compiled module, we simply pass the module
+    // class symbol to Ivy's module factory constructor. There is no equivalent for View Engine,
+    // where factories are stored in separate files. Hence the API is currently Ivy-only.
+    this._exampleModuleFactory = new ɵNgModuleFactory(moduleExports[module.name]);
   }
 
   private resolveHighlightedExampleFile(fileName: string) {

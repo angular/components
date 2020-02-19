@@ -37,7 +37,6 @@ import {FormsModule} from '@angular/forms';
 import {HttpClientModule} from '@angular/common/http';
 import {StackBlitzButtonModule} from '../../shared/stack-blitz';
 import {SvgViewerModule} from '../../shared/svg-viewer/svg-viewer';
-import {ExampleModule} from '@angular/components-examples';
 import {MatDrawerToggleResult} from '@angular/material/sidenav/drawer';
 import {MatListModule} from '@angular/material/list';
 
@@ -203,7 +202,6 @@ const routes: Routes = [ {
     ComponentListModule,
     ComponentViewerModule,
     DocViewerModule,
-    ExampleModule,
     FooterModule,
     FormsModule,
     HttpClientModule,

@@ -190,27 +190,28 @@ export class StackBlitzWriter {
       fileContent = fileContent.replace(/material-docs-example/g, data.selectorName);
       fileContent = fileContent.replace(/{{version}}/g, VERSION.full);
     } else if (fileName === 'src/main.ts') {
+      const joinedComponentNames = data.componentNames.join(', ');
       // Replace the component name in `main.ts`.
       // Replace `import {MaterialDocsExample} from 'material-docs-example'`
       // will be replaced as `import {ButtonDemo} from './button-demo'`
-      fileContent = fileContent.replace(/{MaterialDocsExample}/g, `{${data.componentName}}`);
+      fileContent = fileContent.replace(/{MaterialDocsExample}/g, `{${joinedComponentNames}}`);
 
       // Replace `declarations: [MaterialDocsExample]`
       // will be replaced as `declarations: [ButtonDemo]`
       fileContent = fileContent.
         replace(/declarations: \[MaterialDocsExample]/g,
-          `declarations: [${data.componentName}]`);
+          `declarations: [${joinedComponentNames}]`);
 
       // Replace `entryComponents: [MaterialDocsExample]`
       // will be replaced as `entryComponents: [DialogContent]`
       fileContent = fileContent.
         replace(/entryComponents: \[MaterialDocsExample]/g,
-          `entryComponents: [${data.componentName}]`);
+          `entryComponents: [${joinedComponentNames}]`);
 
       // Replace `bootstrap: [MaterialDocsExample]`
       // will be replaced as `bootstrap: [ButtonDemo]`
       // This assumes the first component listed in the main component
-      const componentList = (data.componentName || '').split(',')[0];
+      const componentList = data.componentNames[0];
       fileContent = fileContent.
         replace(/bootstrap: \[MaterialDocsExample]/g,
           `bootstrap: [${componentList}]`);
