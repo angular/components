@@ -45,13 +45,13 @@ export interface SelectionChange<T> {
  * expected to be set when calling `isSelected`, `select` and `deselect`.
  */
 export class SelectionSet<T> implements TrackBySelection<T> {
-  private selectionMap = new Map<T|ReturnType<TrackByFunction<T>>, SelectableWithIndex<T>>();
+  private _selectionMap = new Map<T|ReturnType<TrackByFunction<T>>, SelectableWithIndex<T>>();
   changed = new Subject<SelectionChange<T>>();
 
   constructor(private _multiple = false, private _trackByFn?: TrackByFunction<T>) {}
 
   isSelected(value: SelectableWithIndex<T>): boolean {
-    return this.selectionMap.has(this._getTrackedByValue(value));
+    return this._selectionMap.has(this._getTrackedByValue(value));
   }
 
   select(...selects: Array<SelectableWithIndex<T>>) {
@@ -62,7 +62,7 @@ export class SelectionSet<T> implements TrackBySelection<T> {
     const before = this._getCurrentSelection();
 
     if (!this._multiple) {
-      this.selectionMap.clear();
+      this._selectionMap.clear();
     }
 
     const toSelect: Array<SelectableWithIndex<T>> = [];
@@ -102,11 +102,11 @@ export class SelectionSet<T> implements TrackBySelection<T> {
   }
 
   private _markSelected(key: T|ReturnType<TrackByFunction<T>>, toSelect: SelectableWithIndex<T>) {
-    this.selectionMap.set(key, toSelect);
+    this._selectionMap.set(key, toSelect);
   }
 
   private _markDeselected(key: T|ReturnType<TrackByFunction<T>>) {
-    this.selectionMap.delete(key);
+    this._selectionMap.delete(key);
   }
 
   private _getTrackedByValue(select: SelectableWithIndex<T>) {
@@ -122,6 +122,6 @@ export class SelectionSet<T> implements TrackBySelection<T> {
   }
 
   private _getCurrentSelection(): Array<SelectableWithIndex<T>> {
-    return Array.from(this.selectionMap.values());
+    return Array.from(this._selectionMap.values());
   }
 }

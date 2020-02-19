@@ -117,7 +117,7 @@ export class CdkSelection<T> implements OnInit, AfterContentChecked, CollectionV
   ngOnInit() {
     this._selection = new SelectionSet<T>(this._multiple, this.trackByFn);
     this._selection.changed.pipe(takeUntil(this._destroyed)).subscribe((change) => {
-      this.updateSelectAllState();
+      this._updateSelectAllState();
       this.change.emit(change);
     });
   }
@@ -160,9 +160,9 @@ export class CdkSelection<T> implements OnInit, AfterContentChecked, CollectionV
     }
 
     if (this.selectAllState === 'none') {
-      this.selectAll();
+      this._selectAll();
     } else {
-      this.clearAll();
+      this._clearAll();
     }
   }
 
@@ -186,7 +186,7 @@ export class CdkSelection<T> implements OnInit, AfterContentChecked, CollectionV
         this._data.some((value, index) => this._selection.isSelected({value, index}));
   }
 
-  private selectAll() {
+  private _selectAll() {
     const toSelect: Array<SelectableWithIndex<T>> = [];
     this._data.forEach((value, index) => {
       toSelect.push({value, index});
@@ -195,7 +195,7 @@ export class CdkSelection<T> implements OnInit, AfterContentChecked, CollectionV
     this._selection.select(...toSelect);
   }
 
-  private clearAll() {
+  private _clearAll() {
     const toDeselect: Array<SelectableWithIndex<T>> = [];
     this._data.forEach((value, index) => {
       toDeselect.push({value, index});
@@ -204,7 +204,7 @@ export class CdkSelection<T> implements OnInit, AfterContentChecked, CollectionV
     this._selection.deselect(...toDeselect);
   }
 
-  private updateSelectAllState() {
+  private _updateSelectAllState() {
     if (this.isAllSelected()) {
       this.selectAllState = 'all';
     } else if (this.isPartialSelected()) {

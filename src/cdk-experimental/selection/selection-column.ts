@@ -15,6 +15,8 @@ import {
   OnInit,
   Optional,
   ViewChild,
+  ChangeDetectionStrategy,
+  ViewEncapsulation,
 } from '@angular/core';
 
 import {CdkSelection} from './selection';
@@ -48,6 +50,8 @@ import {CdkSelection} from './selection';
       </td>
     </ng-container>
   `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None,
 })
 export class CdkSelectionColumn<T> implements OnInit, OnDestroy {
   /** Column name that should be used to reference this column. */
@@ -58,7 +62,7 @@ export class CdkSelectionColumn<T> implements OnInit, OnDestroy {
   set name(name: string) {
     this._name = name;
 
-    this.syncColumnDefName();
+    this._syncColumnDefName();
   }
   private _name: string;
 
@@ -67,7 +71,7 @@ export class CdkSelectionColumn<T> implements OnInit, OnDestroy {
   @ViewChild(CdkHeaderCellDef, {static: true}) private readonly _headerCell: CdkHeaderCellDef;
 
   constructor(
-      @Optional() private table: CdkTable<T>,
+      @Optional() private _table: CdkTable<T>,
       @Optional() readonly selection: CdkSelection<T>,
   ) {}
 
@@ -76,12 +80,12 @@ export class CdkSelectionColumn<T> implements OnInit, OnDestroy {
       throw Error('CdkSelectionColumn: missing CdkSelection in the parent');
     }
 
-    this.syncColumnDefName();
+    this._syncColumnDefName();
 
-    if (this.table) {
+    if (this._table) {
       this._columnDef.cell = this._cell;
       this._columnDef.headerCell = this._headerCell;
-      this.table.addColumnDef(this._columnDef);
+      this._table.addColumnDef(this._columnDef);
     } else {
       if (isDevMode()) {
         throw Error('CdkSelectionColumn: missing parent table');
@@ -90,12 +94,12 @@ export class CdkSelectionColumn<T> implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    if (this.table) {
-      this.table.removeColumnDef(this._columnDef);
+    if (this._table) {
+      this._table.removeColumnDef(this._columnDef);
     }
   }
 
-  private syncColumnDefName() {
+  private _syncColumnDefName() {
     if (this._columnDef) {
       this._columnDef.name = this._name;
     }

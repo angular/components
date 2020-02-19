@@ -11,15 +11,15 @@ import {ReplaySubject} from 'rxjs';
   styleUrls: ['cdk-selection-column-example.css'],
 })
 export class CdkSelectionColumnExample implements OnDestroy {
-  private readonly destroyed$ = new ReplaySubject(1);
+  private readonly _destroyed = new ReplaySubject(1);
 
   displayedColumns: string[] = ['select', 'position', 'name', 'weight', 'symbol'];
   dataSource = ELEMENT_DATA;
   selected: string[] = [];
 
   ngOnDestroy() {
-    this.destroyed$.next();
-    this.destroyed$.complete();
+    this._destroyed.next();
+    this._destroyed.complete();
   }
 
   selectionChanged(event: SelectionChange<PeriodicElement>) {

@@ -10,7 +10,7 @@ import {ReplaySubject} from 'rxjs';
   templateUrl: 'cdk-selection-list-example.html',
 })
 export class CdkSelectionListExample implements OnDestroy {
-  private readonly destroyed$ = new ReplaySubject(1);
+  private readonly _destroyed = new ReplaySubject(1);
 
   data = ELEMENT_NAMES;
 
@@ -20,8 +20,8 @@ export class CdkSelectionListExample implements OnDestroy {
   selected4: string[] = [];
 
   ngOnDestroy() {
-    this.destroyed$.next();
-    this.destroyed$.complete();
+    this._destroyed.next();
+    this._destroyed.complete();
   }
 
   getCurrentSelected(event: SelectionChange<string>) {
