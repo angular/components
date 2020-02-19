@@ -32,7 +32,7 @@ function handleResults(context, results) {
     checkedPages.push(results.url);
 
     results.violations.forEach(violation => {
-      
+
       let specName = `${violation.help} (${results.url})`;
       let message = '\n' + buildMessage(violation);
 
