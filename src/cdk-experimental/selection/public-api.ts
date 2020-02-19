@@ -11,4 +11,5 @@ export * from './select-all';
 export * from './selection-toggle';
 export * from './selection-column';
 export * from './row-selection';
+export * from './selection-set';
 export * from './selection-module';

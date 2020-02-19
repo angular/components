@@ -1,4 +1,4 @@
-import {SelectionChange} from '@angular/cdk-experimental/selection/selection-set';
+import {SelectionChange} from '@angular/cdk-experimental/selection';
 import {Component, OnDestroy} from '@angular/core';
 import {ReplaySubject} from 'rxjs';
 
