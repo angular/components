@@ -137,6 +137,10 @@ $mat-calendar-weekday-table-font-size: 11px !default;
       color: mat-color(map-get($theme, warn), text);
     }
   }
+
+  .mat-date-range-input-inner:disabled {
+    color: mat-color($foreground, disabled-text);
+  }
 }
 
 @mixin mat-datepicker-typography($config) {

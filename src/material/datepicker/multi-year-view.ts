@@ -295,8 +295,6 @@ export class MatMultiYearView<D> implements AfterContentInit, OnDestroy {
   private _setSelectedYear(value: DateRange<D> | D | null) {
     this._selectedYear = null;
 
-    // TODO(crisbeto): showing a date range in a multi-year view might look weird.
-    // Revisit once closer to completion.
     if (value instanceof DateRange) {
       const displayValue = value.start || value.end;
 
