@@ -40,6 +40,10 @@ jobs:
 
   build:
     <<: *job_defaults
+    # We generate a lot of chunks with our build. To improve stability and to reduce
+    # the amount it takes to run, we use a higher resource class with better VM specs.
+    # https://circleci.com/docs/2.0/configuration-reference/#resource_class
+    resource_class: large
     steps:
     - *checkout_code
     - restore_cache:
