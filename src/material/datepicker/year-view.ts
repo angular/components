@@ -330,8 +330,6 @@ export class MatYearView<D> implements AfterContentInit, OnDestroy {
 
   /** Sets the currently-selected month based on a model value. */
   private _setSelectedMonth(value: DateRange<D> | D | null) {
-    // TODO(crisbeto): showing a date range in a year view might look weird.
-    // Revisit once closer to completion.
     if (value instanceof DateRange) {
       this._selectedMonth = this._getMonthInCurrentYear(value.start) ||
                             this._getMonthInCurrentYear(value.end);
