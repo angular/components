@@ -140,13 +140,21 @@ export class MatDateRangeInput<D> implements MatFormFieldControl<DateRange<D>>,
   private _max: D | null;
 
   /** Whether the input is disabled. */
+  @Input()
   get disabled(): boolean {
-    if (this._startInput && this._endInput) {
-      return this._startInput.disabled && this._endInput.disabled;
-    }
-
-    return false;
+    return (this._startInput && this._endInput) ?
+      (this._startInput.disabled && this._endInput.disabled) :
+      this._groupDisabled;
   }
+  set disabled(value: boolean) {
+    const newValue = coerceBooleanProperty(value);
+
+    if (newValue !== this._groupDisabled) {
+      this._groupDisabled = newValue;
+      this._disabledChange.next(this.disabled);
+    }
+  }
+  _groupDisabled = false;
 
   /** Whether the input is in an error state. */
   get errorState(): boolean {
@@ -218,9 +226,12 @@ export class MatDateRangeInput<D> implements MatFormFieldControl<DateRange<D>>,
    * @docs-private
    */
   onContainerClick(): void {
-    if (!this.focused) {
-      // TODO(crisbeto): maybe this should go to end input if start has a value?
-      this._startInput.focus();
+    if (!this.focused && !this.disabled) {
+      if (!this._model || !this._model.selection.start) {
+        this._startInput.focus();
+      } else {
+        this._endInput.focus();
+      }
     }
   }
 
@@ -317,4 +328,5 @@ export class MatDateRangeInput<D> implements MatFormFieldControl<DateRange<D>>,
   }
 
   static ngAcceptInputType_required: BooleanInput;
+  static ngAcceptInputType_disabled: BooleanInput;
 }
