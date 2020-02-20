@@ -117,6 +117,7 @@
     "rxjs-imports": true,
     "require-breaking-change-version": true,
     "class-list-signatures": true,
+    "prefer-const-enum": true,
     "coercion-types": [true,
       ["coerceBooleanProperty", "coerceCssPixelValue", "coerceNumberProperty"],
       {
