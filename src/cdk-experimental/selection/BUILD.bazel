@@ -1,0 +1,20 @@
+package(default_visibility = ["//visibility:public"])
+
+load("//tools:defaults.bzl", "ng_module")
+
+ng_module(
+    name = "selection",
+    srcs = glob(
+        ["**/*.ts"],
+        exclude = ["**/*.spec.ts"],
+    ),
+    module_name = "@angular/cdk-experimental/selection",
+    deps = [
+        "//src/cdk/coercion",
+        "//src/cdk/collections",
+        "//src/cdk/table",
+        "@npm//@angular/core",
+        "@npm//@angular/forms",
+        "@npm//rxjs",
+    ],
+)

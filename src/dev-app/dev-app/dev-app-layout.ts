@@ -9,8 +9,9 @@
 import {Directionality} from '@angular/cdk/bidi';
 import {OverlayContainer} from '@angular/cdk/overlay';
 import {ChangeDetectorRef, Component, ElementRef, Inject, ViewEncapsulation} from '@angular/core';
-import {DevAppRippleOptions} from './ripple-options';
+
 import {DevAppDirectionality} from './dev-app-directionality';
+import {DevAppRippleOptions} from './ripple-options';
 
 /** Root component for the dev-app demos. */
 @Component({
@@ -56,6 +57,7 @@ export class DevAppLayout {
     {name: 'Ripple', route: '/ripple'},
     {name: 'Screen Type', route: '/screen-type'},
     {name: 'Select', route: '/select'},
+    {name: 'Selection', route: '/selection'},
     {name: 'Sidenav', route: '/sidenav'},
     {name: 'Slide Toggle', route: '/slide-toggle'},
     {name: 'Slider', route: '/slider'},
