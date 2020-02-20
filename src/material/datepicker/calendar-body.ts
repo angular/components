@@ -101,6 +101,10 @@ export class MatCalendarBody implements OnChanges, OnDestroy {
   /** Width of an individual cell. */
   _cellWidth: string;
 
+  /**
+   * Value that the user is either currently hovering over or is focusing
+   * using the keyboard. Only applies when selecting the end of a date range.
+   */
   _hoveredValue: number;
 
   constructor(
@@ -201,7 +205,7 @@ export class MatCalendarBody implements OnChanges, OnDestroy {
   private _enterHandler = (event: Event) => {
     // We only need to hit the zone when we're selecting a range, we
     // have a start value without an end value and we've hovered over a date cell.
-    if (!event.target || !this._isRange() || !this.startValue || this.endValue) {
+    if (!event.target || !this.startValue || this.endValue || !this._isRange()) {
       return;
     }
 
@@ -209,7 +213,7 @@ export class MatCalendarBody implements OnChanges, OnDestroy {
 
     if (cell) {
       this._ngZone.run(() => {
-        this._hoveredValue = cell.compareValue;
+        this._hoveredValue = cell.enabled ? cell.compareValue : -1;
         this._changeDetectorRef.markForCheck();
       });
     }
@@ -221,14 +225,19 @@ export class MatCalendarBody implements OnChanges, OnDestroy {
    */
   private _leaveHandler = (event: Event) => {
     // We only need to hit the zone when we're selecting a range.
-    if (this._isRange() && this._hoveredValue !== -1) {
+    if (this._hoveredValue !== -1 && this._isRange()) {
       // Only reset the hovered value when leaving cells. This looks better, because
       // we have a gap between the cells and the rows and we don't want to remove the
       // range just for it to show up again when the user moves a few pixels to the side.
       if (event.target && isTableCell(event.target as HTMLElement)) {
         this._ngZone.run(() => {
           this._hoveredValue = -1;
-          this._changeDetectorRef.markForCheck();
+
+          // Note that here we need to use `detectChanges`, rather than `markForCheck`, because
+          // the way `_focusActiveCell` is set up at the moment makes it fire at the wrong time
+          // when navigating one month back using the keyboard which will cause this handler
+          // to throw a "changed after checked" error when updating the hover state.
+          this._changeDetectorRef.detectChanges();
         });
       }
     }

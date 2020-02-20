@@ -178,6 +178,9 @@ export class MatDatepickerInput<D> extends MatDatepickerInputBase<D | null, D>
     return this._dateFilter;
   }
 
+  // Unnecessary when selecting a single date.
+  protected _outsideValueChanged: undefined;
+
   // Accept `any` to avoid conflicts with other directives on `<input>` that
   // may accept different types.
   static ngAcceptInputType_value: any;

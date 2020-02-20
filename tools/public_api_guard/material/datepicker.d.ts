@@ -144,6 +144,7 @@ export declare class MatDatepickerContent<S, D = ExtractDateTypeFromSelection<S>
 
 export declare class MatDatepickerInput<D> extends MatDatepickerInputBase<D | null, D> implements MatDatepickerControl<D | null> {
     _datepicker: MatDatepicker<D>;
+    protected _outsideValueChanged: undefined;
     protected _validator: ValidatorFn | null;
     get dateFilter(): DateFilterFn<D | null>;
     set dateFilter(value: DateFilterFn<D | null>);
@@ -228,11 +229,13 @@ export declare class MatDateRangeInput<D> implements MatFormFieldControl<DateRan
     _ariaLabelledBy: string | null;
     _disabledChange: Subject<boolean>;
     _endInput: MatEndDate<D>;
+    _groupDisabled: boolean;
     _startInput: MatStartDate<D>;
     controlType: string;
     get dateFilter(): DateFilterFn<D>;
     set dateFilter(value: DateFilterFn<D>);
     get disabled(): boolean;
+    set disabled(value: boolean);
     get empty(): boolean;
     get errorState(): boolean;
     focused: boolean;
@@ -263,8 +266,9 @@ export declare class MatDateRangeInput<D> implements MatFormFieldControl<DateRan
     ngOnDestroy(): void;
     onContainerClick(): void;
     setDescribedByIds(ids: string[]): void;
+    static ngAcceptInputType_disabled: BooleanInput;
     static ngAcceptInputType_required: BooleanInput;
-    static ɵcmp: i0.ɵɵComponentDefWithMeta<MatDateRangeInput<any>, "mat-date-range-input", ["matDateRangeInput"], { "rangePicker": "rangePicker"; "required": "required"; "dateFilter": "dateFilter"; "min": "min"; "max": "max"; "separator": "separator"; }, {}, ["_startInput", "_endInput"], ["input[matStartDate]", "input[matEndDate]"]>;
+    static ɵcmp: i0.ɵɵComponentDefWithMeta<MatDateRangeInput<any>, "mat-date-range-input", ["matDateRangeInput"], { "rangePicker": "rangePicker"; "required": "required"; "dateFilter": "dateFilter"; "min": "min"; "max": "max"; "disabled": "disabled"; "separator": "separator"; }, {}, ["_startInput", "_endInput"], ["input[matStartDate]", "input[matEndDate]"]>;
     static ɵfac: i0.ɵɵFactoryDef<MatDateRangeInput<any>, [null, null, { optional: true; self: true; }, { optional: true; }, { optional: true; }]>;
 }
 

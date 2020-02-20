@@ -86,7 +86,7 @@ export abstract class MatDatepickerInputBase<S, D = ExtractDateTypeFromSelection
 
   /** Whether the datepicker-input is disabled. */
   @Input()
-  get disabled(): boolean { return !!this._disabled; }
+  get disabled(): boolean { return !!this._disabled || this._parentDisabled(); }
   set disabled(value: boolean) {
     const newValue = coerceBooleanProperty(value);
     const element = this._elementRef.nativeElement;
@@ -200,6 +200,10 @@ export abstract class MatDatepickerInputBase<S, D = ExtractDateTypeFromSelection
         this.dateInput.emit(new MatDatepickerInputEvent(this, this._elementRef.nativeElement));
         this.dateChange.emit(new MatDatepickerInputEvent(this, this._elementRef.nativeElement));
         this._formatValue(value);
+
+        if (this._outsideValueChanged) {
+          this._outsideValueChanged();
+        }
       }
     });
   }
@@ -213,8 +217,14 @@ export abstract class MatDatepickerInputBase<S, D = ExtractDateTypeFromSelection
   /** Converts a value from the model into a native value for the input. */
   protected abstract _getValueFromModel(modelValue: S): D | null;
 
-  /** The combined form control validator for this input. */
+  /** Combined form control validator for this input. */
   protected abstract _validator: ValidatorFn | null;
+
+  /**
+   * Callback that'll be invoked when the selection model is changed
+   * from somewhere that's not the current datepicker input.
+   */
+  protected abstract _outsideValueChanged?: () => void;
 
   /** Whether the last value set on the input was valid. */
   protected _lastValueValid = false;
@@ -340,6 +350,14 @@ export abstract class MatDatepickerInputBase<S, D = ExtractDateTypeFromSelection
     } else {
       this._pendingValue = value;
     }
+  }
+
+  /**
+   * Checks whether a parent control is disabled. This is in place so that it can be overridden
+   * by inputs extending this one which can be placed inside of a group that can be disabled.
+   */
+  protected _parentDisabled() {
+    return false;
   }
 
   // Accept `any` to avoid conflicts with other directives on `<input>` that
