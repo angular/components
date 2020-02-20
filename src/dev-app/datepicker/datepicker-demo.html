@@ -175,12 +175,21 @@
 <div class="demo-range-group">
   <mat-form-field>
     <mat-label>Enter a date range</mat-label>
-    <mat-date-range-input [formGroup]="range1" [rangePicker]="range1Picker">
+    <mat-date-range-input
+      [formGroup]="range1"
+      [rangePicker]="range1Picker"
+      [min]="minDate"
+      [max]="maxDate"
+      [disabled]="inputDisabled"
+      [dateFilter]="filterOdd ? dateFilter : undefined">
       <input matStartDate formControlName="start" placeholder="Start date"/>
       <input matEndDate formControlName="end" placeholder="End date"/>
     </mat-date-range-input>
     <mat-datepicker-toggle [for]="range1Picker" matSuffix></mat-datepicker-toggle>
-    <mat-date-range-picker #range1Picker></mat-date-range-picker>
+    <mat-date-range-picker
+      [touchUi]="touch"
+      [disabled]="datepickerDisabled"
+      #range1Picker></mat-date-range-picker>
   </mat-form-field>
   <div>{{range1.value | json}}</div>
 </div>
@@ -188,12 +197,21 @@
 <div class="demo-range-group">
   <mat-form-field appearance="fill">
     <mat-label>Enter a date range</mat-label>
-    <mat-date-range-input [formGroup]="range2" [rangePicker]="range2Picker">
+    <mat-date-range-input
+      [formGroup]="range2"
+      [rangePicker]="range2Picker"
+      [min]="minDate"
+      [max]="maxDate"
+      [disabled]="inputDisabled"
+      [dateFilter]="filterOdd ? dateFilter : undefined">
       <input matStartDate formControlName="start" placeholder="Start date"/>
       <input matEndDate formControlName="end" placeholder="End date"/>
     </mat-date-range-input>
     <mat-datepicker-toggle [for]="range2Picker" matSuffix></mat-datepicker-toggle>
-    <mat-date-range-picker #range2Picker></mat-date-range-picker>
+    <mat-date-range-picker
+      [touchUi]="touch"
+      [disabled]="datepickerDisabled"
+      #range2Picker></mat-date-range-picker>
   </mat-form-field>
   <div>{{range2.value | json}}</div>
 </div>
@@ -201,12 +219,21 @@
 <div class="demo-range-group">
   <mat-form-field appearance="outline">
     <mat-label>Enter a date range</mat-label>
-    <mat-date-range-input [formGroup]="range3" [rangePicker]="range3Picker">
+    <mat-date-range-input
+      [formGroup]="range3"
+      [rangePicker]="range3Picker"
+      [min]="minDate"
+      [max]="maxDate"
+      [disabled]="inputDisabled"
+      [dateFilter]="filterOdd ? dateFilter : undefined">
       <input matStartDate formControlName="start" placeholder="Start date"/>
       <input matEndDate formControlName="end" placeholder="End date"/>
     </mat-date-range-input>
     <mat-datepicker-toggle [for]="range3Picker" matSuffix></mat-datepicker-toggle>
-    <mat-date-range-picker #range3Picker></mat-date-range-picker>
+    <mat-date-range-picker
+      [touchUi]="touch"
+      [disabled]="datepickerDisabled"
+      #range3Picker></mat-date-range-picker>
   </mat-form-field>
   <div>{{range3.value | json}}</div>
 </div>
