@@ -10,18 +10,11 @@ import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
   styleUrls: [ './table-reorderable-example.css' ]
 })
 export class TableReorderableExample {
-  private _originalColumnPositions: string[] = ['position', 'name', 'weight', 'symbol'];
-  columns: string[] = this._originalColumnPositions.slice();
+  columns: string[] = ['position', 'name', 'weight', 'symbol'];
   dataSource = ELEMENT_DATA;
 
   drop(event: CdkDragDrop<string[]>) {
-    moveItemInArray(this.columns, this.getCurPosition(event.previousIndex), event.currentIndex);
-  }
-
-  getCurPosition(colOldIndex: number): number {
-    const colName: string = this._originalColumnPositions[colOldIndex];
-    const p = (e: string) => e == colName;
-    return this.columns.findIndex(e => e == colName);
+    moveItemInArray(this.columns, event.previousIndex, event.currentIndex);
   }
 }
 
