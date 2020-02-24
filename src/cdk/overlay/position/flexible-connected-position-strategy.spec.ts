@@ -794,7 +794,7 @@ describe('FlexibleConnectedPositionStrategy', () => {
         const overlayRect = overlayRef.overlayElement.getBoundingClientRect();
         expect(Math.floor(overlayRect.top)).toBe(Math.floor(originRect.bottom));
         expect(Math.floor(overlayRect.left)).toBe(Math.floor(originRect.left));
-      })
+      });
     });
 
     it('should account for the `offsetX` pushing the overlay out of the screen', () => {
