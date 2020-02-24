@@ -769,6 +769,7 @@ describe('FlexibleConnectedPositionStrategy', () => {
 
     describe('with origin set to an SVG element', () => {
       beforeEach(() => {
+        document.body.removeChild(originElement);
         originElement = document.createElementNS('http://www.w3.org/2000/svg', 'svg') as any;
         originElement.style.position = 'absolute';
         originElement.style.width = `${DEFAULT_WIDTH}px`;
