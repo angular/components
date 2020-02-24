@@ -1110,7 +1110,7 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
       return origin.nativeElement.getBoundingClientRect();
     }
 
-    if (origin instanceof HTMLElement) {
+    if (origin instanceof Element) {
       return origin.getBoundingClientRect();
     }
 
