@@ -33,15 +33,6 @@ interface GoogleMapsWindow extends Window {
   google?: typeof google;
 }
 
-// TODO(mbehrlich): Update this to use original map after updating DefinitelyTyped
-/**
- * Extends the Google Map interface due to the Definitely Typed implementation
- * missing "getClickableIcons".
- */
-export interface UpdatedGoogleMap extends google.maps.Map {
-  getClickableIcons: () => boolean;
-}
-
 /** default options set to the Googleplex */
 export const DEFAULT_OPTIONS: google.maps.MapOptions = {
   center: {lat: 37.421995, lng: -122.084092},
