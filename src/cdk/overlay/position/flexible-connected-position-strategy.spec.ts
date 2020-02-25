@@ -2615,11 +2615,11 @@ function createPositionedBlockElement() {
 }
 
 /** Creates a block element with a default size. */
-function createBlockElement(tagName = 'div', ns?: string) {
+function createBlockElement(tagName = 'div', namespace?: string) {
   let element;
 
-  if (ns) {
-    element = document.createElementNS(ns, tagName) as HTMLElement;
+  if (namespace) {
+    element = document.createElementNS(namespace, tagName) as HTMLElement;
   } else {
     element = document.createElement(tagName);
   }
