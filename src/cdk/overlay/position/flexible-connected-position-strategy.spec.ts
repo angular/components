@@ -768,16 +768,11 @@ describe('FlexibleConnectedPositionStrategy', () => {
     });
 
     describe('with origin set to an SVG element', () => {
-      beforeEach(() => {
-        document.body.removeChild(originElement);
-        originElement = document.createElementNS('http://www.w3.org/2000/svg', 'svg') as any;
-        originElement.style.position = 'absolute';
-        originElement.style.width = `${DEFAULT_WIDTH}px`;
-        originElement.style.height = `${DEFAULT_HEIGHT}px`;
-        document.body.appendChild(originElement);
-      });
-
       it('should position the panel correctly', () => {
+        document.body.removeChild(originElement);
+        originElement = createBlockElement('svg', 'http://www.w3.org/2000/svg');
+        document.body.appendChild(originElement);
+
         const originRect = originElement.getBoundingClientRect();
 
         positionStrategy
@@ -2622,8 +2617,15 @@ function createPositionedBlockElement() {
 }
 
 /** Creates a block element with a default size. */
-function createBlockElement() {
-  const element = document.createElement('div');
+function createBlockElement(tagName = 'div', ns?: string) {
+  let element;
+
+  if (ns) {
+    element = document.createElementNS(ns, tagName) as HTMLElement;
+  } else {
+    element = document.createElement(tagName);
+  }
+
   element.style.width = `${DEFAULT_WIDTH}px`;
   element.style.height = `${DEFAULT_HEIGHT}px`;
   element.style.backgroundColor = 'rebeccapurple';
