@@ -767,29 +767,27 @@ describe('FlexibleConnectedPositionStrategy', () => {
 
     });
 
-    describe('with origin set to an SVG element', () => {
-      it('should position the panel correctly', () => {
-        document.body.removeChild(originElement);
-        originElement = createBlockElement('svg', 'http://www.w3.org/2000/svg');
-        document.body.appendChild(originElement);
+    it('should position the panel correctly when the origin is an SVG element', () => {
+      document.body.removeChild(originElement);
+      originElement = createBlockElement('svg', 'http://www.w3.org/2000/svg');
+      document.body.appendChild(originElement);
 
-        const originRect = originElement.getBoundingClientRect();
+      const originRect = originElement.getBoundingClientRect();
 
-        positionStrategy
-          .setOrigin(originElement)
-          .withPositions([{
-            originX: 'start',
-            originY: 'bottom',
-            overlayX: 'start',
-            overlayY: 'top'
-          }]);
+      positionStrategy
+        .setOrigin(originElement)
+        .withPositions([{
+          originX: 'start',
+          originY: 'bottom',
+          overlayX: 'start',
+          overlayY: 'top'
+        }]);
 
-        attachOverlay({positionStrategy});
+      attachOverlay({positionStrategy});
 
-        const overlayRect = overlayRef.overlayElement.getBoundingClientRect();
-        expect(Math.floor(overlayRect.top)).toBe(Math.floor(originRect.bottom));
-        expect(Math.floor(overlayRect.left)).toBe(Math.floor(originRect.left));
-      });
+      const overlayRect = overlayRef.overlayElement.getBoundingClientRect();
+      expect(Math.floor(overlayRect.top)).toBe(Math.floor(originRect.bottom));
+      expect(Math.floor(overlayRect.left)).toBe(Math.floor(originRect.left));
     });
 
     it('should account for the `offsetX` pushing the overlay out of the screen', () => {
