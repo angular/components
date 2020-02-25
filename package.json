@@ -47,6 +47,7 @@
   },
   "version": "9.2.0",
   "dependencies": {
+<<<<<<< HEAD
     "@angular/animations": "^9.1.0",
     "@angular/common": "^9.1.0",
     "@angular/compiler": "^9.1.0",
@@ -55,6 +56,16 @@
     "@angular/forms": "^9.1.0",
     "@angular/platform-browser": "^9.1.0",
     "@types/googlemaps": "^3.37.0",
+=======
+    "@angular/animations": "^9.1.0-next.4",
+    "@angular/common": "^9.1.0-next.4",
+    "@angular/compiler": "^9.1.0-next.4",
+    "@angular/core": "^9.1.0-next.4",
+    "@angular/elements": "^9.1.0-next.4",
+    "@angular/forms": "^9.1.0-next.4",
+    "@angular/platform-browser": "^9.1.0-next.4",
+    "@types/googlemaps": "^3.39.3",
+>>>>>>> 466c757d7... feat(google-maps): expose the underlying Google Maps objects.
     "@types/youtube": "^0.0.38",
     "@webcomponents/custom-elements": "^1.1.0",
     "core-js": "^2.6.9",
