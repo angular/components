@@ -2,3 +2,9 @@
 @import '../mdc-helpers/mdc-helpers';
 
 @include mdc-list-without-ripple($query: $mat-base-styles-query);
+
+// MDC expects the list element to be a `<ul>`, since we use `<mat-list>` instead we need to
+// explicitly set `display: block`
+.mat-mdc-list-base {
+  display: block;
+}
