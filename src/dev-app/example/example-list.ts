@@ -10,8 +10,6 @@ import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
 import {EXAMPLE_COMPONENTS} from '@angular/components-examples';
 import {Component, Input} from '@angular/core';
 
-console.log(EXAMPLE_COMPONENTS);
-
 /** Displays a set of components-examples in a mat-accordion. */
 @Component({
   selector: 'material-example-list',
