@@ -16,6 +16,7 @@ import {addAriaReferencedId, getAriaReferenceIds, removeAriaReferencedId} from '
  * the same message and the reference to the message element used for the `aria-describedby`.
  */
 export interface RegisteredMessage {
+
   /** The element containing the message. */
   messageElement: Element;
 

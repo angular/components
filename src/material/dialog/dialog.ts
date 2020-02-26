@@ -14,7 +14,7 @@ import {
   OverlayRef,
   ScrollStrategy,
 } from '@angular/cdk/overlay';
-import {ComponentPortal, ComponentType, TemplatePortal} from '@angular/cdk/portal';
+import {ComponentPortal, ComponentType, PortalInjector, TemplatePortal} from '@angular/cdk/portal';
 import {Location} from '@angular/common';
 import {
   Inject,
@@ -25,7 +25,6 @@ import {
   Optional,
   SkipSelf,
   TemplateRef,
-  StaticProvider,
 } from '@angular/core';
 import {defer, Observable, of as observableOf, Subject} from 'rxjs';
 import {startWith} from 'rxjs/operators';
@@ -216,11 +215,9 @@ export class MatDialog implements OnDestroy {
    */
   private _attachDialogContainer(overlay: OverlayRef, config: MatDialogConfig): MatDialogContainer {
     const userInjector = config && config.viewContainerRef && config.viewContainerRef.injector;
-    const injector = Injector.create({
-      parent: userInjector || this._injector,
-      providers: [{provide: MatDialogConfig, useValue: config}]
-    });
-
+    const injector = new PortalInjector(userInjector || this._injector, new WeakMap([
+      [MatDialogConfig, config]
+    ]));
     const containerPortal = new ComponentPortal(MatDialogContainer,
         config.viewContainerRef, injector, config.componentFactoryResolver);
     const containerRef = overlay.attach<MatDialogContainer>(containerPortal);
@@ -286,7 +283,7 @@ export class MatDialog implements OnDestroy {
   private _createInjector<T>(
       config: MatDialogConfig,
       dialogRef: MatDialogRef<T>,
-      dialogContainer: MatDialogContainer): Injector {
+      dialogContainer: MatDialogContainer): PortalInjector {
 
     const userInjector = config && config.viewContainerRef && config.viewContainerRef.injector;
 
@@ -294,21 +291,21 @@ export class MatDialog implements OnDestroy {
     // content are created out of the same ViewContainerRef and as such, are siblings for injector
     // purposes. To allow the hierarchy that is expected, the MatDialogContainer is explicitly
     // added to the injection tokens.
-    const providers: StaticProvider[] = [
-      {provide: MatDialogContainer, useValue: dialogContainer},
-      {provide: MAT_DIALOG_DATA, useValue: config.data},
-      {provide: MatDialogRef, useValue: dialogRef}
-    ];
+    const injectionTokens = new WeakMap<any, any>([
+      [MatDialogContainer, dialogContainer],
+      [MAT_DIALOG_DATA, config.data],
+      [MatDialogRef, dialogRef]
+    ]);
 
     if (config.direction &&
         (!userInjector || !userInjector.get<Directionality | null>(Directionality, null))) {
-      providers.push({
-        provide: Directionality,
-        useValue: {value: config.direction, change: observableOf()}
+      injectionTokens.set(Directionality, {
+        value: config.direction,
+        change: observableOf()
       });
     }
 
-    return Injector.create({parent: userInjector || this._injector, providers});
+    return new PortalInjector(userInjector || this._injector, injectionTokens);
   }
 
   /**
