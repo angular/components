@@ -1168,7 +1168,7 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
       return null;
     }
 
-    return this._parentFormField._labelId || null;
+    return this._parentFormField.getLabelId();
   }
 
   /** Determines the `aria-activedescendant` to be set on the host. */

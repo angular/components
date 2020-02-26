@@ -28,12 +28,12 @@ export declare class MatFormField extends _MatFormFieldMixinBase implements Afte
     _elementRef: ElementRef;
     _errorChildren: QueryList<MatError>;
     _hintChildren: QueryList<MatHint>;
-    _hintLabelId: string;
+    readonly _hintLabelId: string;
     _inputContainerRef: ElementRef;
     get _labelChild(): MatLabel;
     _labelChildNonStatic: MatLabel;
     _labelChildStatic: MatLabel;
-    _labelId: string;
+    readonly _labelId: string;
     _placeholderChild: MatPlaceholder;
     _prefixChildren: QueryList<MatPrefix>;
     get _shouldAlwaysFloat(): boolean;
@@ -59,6 +59,7 @@ export declare class MatFormField extends _MatFormFieldMixinBase implements Afte
     _shouldLabelFloat(): boolean;
     protected _validateControlChild(): void;
     getConnectedOverlayOrigin(): ElementRef;
+    getLabelId(): string | null;
     ngAfterContentChecked(): void;
     ngAfterContentInit(): void;
     ngAfterViewInit(): void;
