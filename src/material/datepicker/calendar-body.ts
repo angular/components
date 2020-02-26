@@ -148,6 +148,10 @@ export class MatCalendarBody implements OnChanges, OnDestroy {
     if (columnChanges || !this._cellWidth) {
       this._cellWidth = `${100 / numCols}%`;
     }
+
+    if (changes['startValue'] || changes['endValue']) {
+      this._hoveredValue = -1;
+    }
   }
 
   ngOnDestroy() {
