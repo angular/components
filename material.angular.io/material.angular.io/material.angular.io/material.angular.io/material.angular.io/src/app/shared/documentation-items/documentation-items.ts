@@ -424,6 +424,7 @@ const DOCS: {[key: string]: DocCategory[]} = {
             'table-sticky-columns',
             'table-sticky-footer',
             'table-sticky-header',
+            'table-reorderable',
         ]},
       ]
     }
