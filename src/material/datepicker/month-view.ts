@@ -17,6 +17,7 @@ import {
   RIGHT_ARROW,
   UP_ARROW,
   SPACE,
+  ESCAPE,
 } from '@angular/cdk/keycodes';
 import {
   AfterContentInit,
@@ -237,6 +238,15 @@ export class MatMonthView<D> implements AfterContentInit, OnDestroy {
           this._userSelection.emit();
           // Prevent unexpected default actions such as form submission.
           event.preventDefault();
+        }
+        return;
+      case ESCAPE:
+        // Abort the current range selection if the user presses escape mid-selection.
+        if (this._matCalendarBody._hoveredValue > -1) {
+          this.selectedChange.emit(null);
+          this._userSelection.emit();
+          event.preventDefault();
+          event.stopPropagation(); // Prevents the overlay from closing.
         }
         return;
       default:
