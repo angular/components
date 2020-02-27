@@ -241,7 +241,10 @@ export class RippleRenderer implements EventListenerObject {
     this._registerEvents(pointerDownEvents);
   }
 
-  /** Handles all registered events. */
+  /**
+   * Handles all registered events.
+   * @docs-private
+   */
   handleEvent(event: Event) {
     if (event.type === 'mousedown') {
       this._onMousedown(event as MouseEvent);
