@@ -9,8 +9,10 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  ContentChildren, ElementRef,
+  ContentChildren,
+  ElementRef,
   forwardRef,
+  NgZone,
   QueryList,
   ViewEncapsulation
 } from '@angular/core';
@@ -60,4 +62,8 @@ export class MatSelectionList extends MatListBase {}
 export class MatListOption extends MatListItemBase {
   @ContentChildren(MatLine, {read: ElementRef, descendants: true}) lines:
       QueryList<ElementRef<Element>>;
+
+  constructor(element: ElementRef, ngZone: NgZone) {
+    super(element, ngZone);
+  }
 }

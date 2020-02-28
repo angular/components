@@ -75,7 +75,7 @@
   border-radius: 50%;
 
   // `.mdc-list-item` added for extra specificity to override MDC's built in styles.
-  [dir="rtl"] .mdc-list-item & {
+  [dir='rtl'] .mdc-list-item & {
     margin-left: $margin-value;
     margin-right: 0;
   }
@@ -94,7 +94,7 @@
   .mat-mdc-list-avatar ~ .mat-divider-inset {
     margin-left: 72px;
 
-    [dir="rtl"] & {
+    [dir='rtl'] & {
       margin-right: 72px;
     }
   }
