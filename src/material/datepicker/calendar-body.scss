@@ -14,6 +14,8 @@ $mat-calendar-body-cell-radius: 999px !default;
 $mat-calendar-body-min-size: 7 * $mat-calendar-body-cell-min-size !default;
 $mat-calendar-body-cell-content-size: 100% - $mat-calendar-body-cell-content-margin * 2 !default;
 
+$mat-calendar-range-end-body-cell-size:
+    $mat-calendar-body-cell-content-size + $mat-calendar-body-cell-content-margin !default;
 
 .mat-calendar-body {
   min-width: $mat-calendar-body-min-size;
@@ -43,10 +45,44 @@ $mat-calendar-body-cell-content-size: 100% - $mat-calendar-body-cell-content-mar
   &::before {
     content: '';
     position: absolute;
-    top: 0;
-    bottom: 0;
+    top: $mat-calendar-body-cell-content-margin;
     left: 0;
-    right: 0;
+
+    // We want the range background to be slightly shorter than the cell so
+    // that there's a gap when the range goes across multiple rows.
+    height: $mat-calendar-body-cell-content-size;
+    width: 100%;
+  }
+}
+
+.mat-calendar-body-range-start::before {
+  // Since the range background isn't a perfect circle, we need to size
+  // and offset the start so that it aligns with the main circle.
+  left: $mat-calendar-body-cell-content-margin;
+  width: $mat-calendar-range-end-body-cell-size;
+  border-top-left-radius: $mat-calendar-body-cell-radius;
+  border-bottom-left-radius: $mat-calendar-body-cell-radius;
+
+  [dir='rtl'] & {
+    left: 0;
+    border-radius: 0;
+    border-top-right-radius: $mat-calendar-body-cell-radius;
+    border-bottom-right-radius: $mat-calendar-body-cell-radius;
+  }
+}
+
+.mat-calendar-body-range-end::before {
+  // Since the range background isn't a perfect circle, we need to
+  // resize the end so that it aligns with the main circle.
+  width: $mat-calendar-range-end-body-cell-size;
+  border-top-right-radius: $mat-calendar-body-cell-radius;
+  border-bottom-right-radius: $mat-calendar-body-cell-radius;
+
+  [dir='rtl'] & {
+    left: $mat-calendar-body-cell-content-margin;
+    border-radius: 0;
+    border-top-left-radius: $mat-calendar-body-cell-radius;
+    border-bottom-left-radius: $mat-calendar-body-cell-radius;
   }
 }
 
@@ -79,16 +115,6 @@ $mat-calendar-body-cell-content-size: 100% - $mat-calendar-body-cell-content-mar
   @include cdk-high-contrast(active, off) {
     border: none;
   }
-}
-
-.mat-calendar-body-range-start::before {
-  border-top-left-radius: $mat-calendar-body-cell-radius;
-  border-bottom-left-radius: $mat-calendar-body-cell-radius;
-}
-
-.mat-calendar-body-range-end::before {
-  border-top-right-radius: $mat-calendar-body-cell-radius;
-  border-bottom-right-radius: $mat-calendar-body-cell-radius;
 }
 
 @include cdk-high-contrast(active, off) {
