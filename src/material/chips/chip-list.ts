@@ -333,6 +333,12 @@ export class MatChipList extends _MatChipListMixinBase implements MatFormFieldCo
     descendants: true
   }) chips: QueryList<MatChip>;
 
+  /**
+   * Whether the last chip should be focused when the user
+   * presses BACKSPACE when the input is empty.
+   */
+  @Input() focusLastChipOnBackspace: boolean = true;
+
   constructor(protected _elementRef: ElementRef<HTMLElement>,
               private _changeDetectorRef: ChangeDetectorRef,
               @Optional() private _dir: Directionality,
@@ -495,7 +501,9 @@ export class MatChipList extends _MatChipListMixinBase implements MatFormFieldCo
     const target = event.target as HTMLElement;
 
     // If they are on an empty input and hit backspace, focus the last chip
-    if (event.keyCode === BACKSPACE && this._isInputEmpty(target)) {
+    if (event.keyCode === BACKSPACE &&
+      this._isInputEmpty(target) &&
+      this.focusLastChipOnBackspace) {
       this._keyManager.setLastItemActive();
       event.preventDefault();
     } else if (target && target.classList.contains('mat-chip')) {
@@ -586,7 +594,7 @@ export class MatChipList extends _MatChipListMixinBase implements MatFormFieldCo
   private _selectValue(value: any, isUserInput: boolean = true): MatChip | undefined {
 
     const correspondingChip = this.chips.find(chip => {
-      return chip.value != null && this._compareWith(chip.value,  value);
+      return chip.value != null && this._compareWith(chip.value, value);
     });
 
     if (correspondingChip) {

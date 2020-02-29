@@ -544,7 +544,7 @@ describe('MatChipList', () => {
 
       describe('when the input has focus', () => {
 
-        it('should not focus the last chip when press DELETE', () => {
+        it('should not focus the last chip when pressing DELETE', () => {
           let nativeInput = fixture.nativeElement.querySelector('input');
           let DELETE_EVENT: KeyboardEvent =
               createKeyboardEvent('keydown', DELETE, nativeInput);
@@ -561,7 +561,7 @@ describe('MatChipList', () => {
           expect(manager.activeItemIndex).toEqual(-1);
         });
 
-        it('should focus the last chip when press BACKSPACE', () => {
+        it('should focus the last chip when pressing BACKSPACE', () => {
           let nativeInput = fixture.nativeElement.querySelector('input');
           let BACKSPACE_EVENT: KeyboardEvent =
               createKeyboardEvent('keydown', BACKSPACE, undefined, nativeInput);
@@ -576,6 +576,26 @@ describe('MatChipList', () => {
 
           // It focuses the last chip
           expect(manager.activeItemIndex).toEqual(chips.length - 1);
+        });
+
+        it('should not focus the last chip when pressing BACKSPACE and' +
+          ' focusLastChipOnBackspace=false', () => {
+          let nativeInput = fixture.nativeElement.querySelector('input');
+          let BACKSPACE_EVENT: KeyboardEvent =
+            createKeyboardEvent('keydown', BACKSPACE, undefined, nativeInput);
+
+          chipListInstance.focusLastChipOnBackspace = false;
+
+          // Focus the input
+          nativeInput.focus();
+          expect(manager.activeItemIndex).toBe(-1);
+
+          // Press the BACKSPACE key
+          chipListInstance._keydown(BACKSPACE_EVENT);
+          fixture.detectChanges();
+
+          // It does not focus the last chip
+          expect(manager.activeItemIndex).toEqual(-1);
         });
 
       });
