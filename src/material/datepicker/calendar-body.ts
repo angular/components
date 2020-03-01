@@ -217,7 +217,8 @@ export class MatCalendarBody implements OnChanges, OnDestroy {
 
     if (cell) {
       this._ngZone.run(() => {
-        this._hoveredValue = cell.enabled ? cell.compareValue : -1;
+        this._hoveredValue =
+            cell.enabled && cell.compareValue !== this.startValue ? cell.compareValue : -1;
         this._changeDetectorRef.markForCheck();
       });
     }
