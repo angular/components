@@ -57,7 +57,7 @@ export declare class MatAutocomplete extends _MatAutocompleteMixinBase implement
     ngOnDestroy(): void;
     static ngAcceptInputType_autoActiveFirstOption: BooleanInput;
     static ngAcceptInputType_disableRipple: BooleanInput;
-    static ɵcmp: i0.ɵɵComponentDefWithMeta<MatAutocomplete, "mat-autocomplete", ["matAutocomplete"], { "disableRipple": "disableRipple"; "displayWith": "displayWith"; "autoActiveFirstOption": "autoActiveFirstOption"; "panelWidth": "panelWidth"; "optionHeight": "optionHeight"; "panelHeight": "panelHeight"; "classList": "class"; }, { "optionSelected": "optionSelected"; "opened": "opened"; "closed": "closed"; }, ["options", "optionGroups"]>;
+    static ɵcmp: i0.ɵɵComponentDefWithMeta<MatAutocomplete, "mat-autocomplete", ["matAutocomplete"], { "disableRipple": "disableRipple"; "displayWith": "displayWith"; "autoActiveFirstOption": "autoActiveFirstOption"; "panelWidth": "panelWidth"; "optionHeight": "optionHeight"; "panelHeight": "panelHeight"; "classList": "class"; }, { "optionSelected": "optionSelected"; "opened": "opened"; "closed": "closed"; "optionActivated": "optionActivated"; }, ["options", "optionGroups"]>;
     static ɵfac: i0.ɵɵFactoryDef<MatAutocomplete>;
 }
 
