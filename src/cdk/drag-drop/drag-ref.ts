@@ -292,6 +292,12 @@ export class DragRef<T = any> {
    */
   constrainPosition?: (point: Point, dragRef: DragRef) => Point;
 
+  /**
+   * Whether drag container is placed in
+   * dialog or other element that has a fixed position.
+   */
+  dragParentFixed: boolean = false;
+
   constructor(
     element: ElementRef<HTMLElement> | HTMLElement,
     private _config: DragRefConfig,
@@ -1004,8 +1010,12 @@ export class DragRef<T = any> {
     const handleElement = referenceElement === this._rootElement ? null : referenceElement;
     const referenceRect = handleElement ? handleElement.getBoundingClientRect() : elementRect;
     const point = isTouchEvent(event) ? event.targetTouches[0] : event;
-    const x = point.pageX - referenceRect.left - this._scrollPosition.left;
-    const y = point.pageY - referenceRect.top - this._scrollPosition.top;
+    const x = this.dragParentFixed ?
+      point.pageX - referenceRect.left :
+      point.pageX - referenceRect.left - this._scrollPosition.left;
+    const y = this.dragParentFixed ?
+      point.pageY - referenceRect.top :
+      point.pageY - referenceRect.top - this._scrollPosition.top;
 
     return {
       x: referenceRect.left - elementRect.left + x,
@@ -1019,8 +1029,8 @@ export class DragRef<T = any> {
     const point = isTouchEvent(event) ? (event.touches[0] || event.changedTouches[0]) : event;
 
     return {
-      x: point.pageX - this._scrollPosition.left,
-      y: point.pageY - this._scrollPosition.top
+      x: this.dragParentFixed ? point.pageX : point.pageX - this._scrollPosition.left,
+      y: this.dragParentFixed ? point.pageY : point.pageY - this._scrollPosition.top
     };
   }
 
