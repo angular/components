@@ -468,7 +468,10 @@ export class FocusMonitor implements OnDestroy {
   }
 
   private _emitOrigin(subject: Subject<FocusOrigin>, origin: FocusOrigin) {
-    this._ngZone.run(() => subject.next(origin));
+    // Do not trigger a change detection if there are no observers.
+    if (subject.observers.length) {
+      this._ngZone.run(() => subject.next(origin));
+    }
   }
 
   private _registerGlobalListeners(elementInfo: MonitoredElementInfo) {

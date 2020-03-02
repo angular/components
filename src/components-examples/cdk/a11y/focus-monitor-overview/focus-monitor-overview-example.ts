@@ -1,10 +1,8 @@
 import {FocusMonitor, FocusOrigin} from '@angular/cdk/a11y';
 import {
   AfterViewInit,
-  ChangeDetectorRef,
   Component,
   ElementRef,
-  NgZone,
   OnDestroy,
   ViewChild
 } from '@angular/core';
@@ -22,21 +20,17 @@ export class FocusMonitorOverviewExample implements OnDestroy, AfterViewInit {
   elementOrigin = this.formatOrigin(null);
   subtreeOrigin = this.formatOrigin(null);
 
-  constructor(private _focusMonitor: FocusMonitor,
-              private _cdr: ChangeDetectorRef,
-              private _ngZone: NgZone) {}
+  constructor(private _focusMonitor: FocusMonitor) {}
 
   ngAfterViewInit() {
     this._focusMonitor.monitor(this.element)
-        .subscribe(origin => this._ngZone.run(() => {
+        .subscribe(origin => {
           this.elementOrigin = this.formatOrigin(origin);
-          this._cdr.markForCheck();
-        }));
+        });
     this._focusMonitor.monitor(this.subtree, true)
-        .subscribe(origin => this._ngZone.run(() => {
+        .subscribe(origin => {
           this.subtreeOrigin = this.formatOrigin(origin);
-          this._cdr.markForCheck();
-        }));
+        });
   }
 
   ngOnDestroy() {
