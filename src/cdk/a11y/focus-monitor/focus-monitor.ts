@@ -326,17 +326,17 @@ export class FocusMonitor implements OnDestroy {
     // 2) It was caused by a touch event, in which case we mark the origin as 'touch'.
     // 3) The element was programmatically focused, in which case we should mark the origin as
     //    'program'.
-    let origin = this._origin;
-    if (!origin) {
-      if (this._windowFocused && this._lastFocusOrigin) {
-        return this._lastFocusOrigin;
-      } else if (this._wasCausedByTouch(event)) {
-        return 'touch';
-      } else {
-        return 'program';
-      }
+    if (this._origin) {
+      return this._origin;
     }
-    return null;
+
+    if (this._windowFocused && this._lastFocusOrigin) {
+      return this._lastFocusOrigin;
+    } else if (this._wasCausedByTouch(event)) {
+      return 'touch';
+    } else {
+      return 'program';
+    }
   }
 
   /**
