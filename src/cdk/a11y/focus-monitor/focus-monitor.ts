@@ -186,13 +186,11 @@ export class FocusMonitor implements OnDestroy {
    */
   private _documentFocusAndBlurListener = (event: FocusEvent) => {
     const target = event.target as HTMLElement|null;
+    const handler = event.type === 'focus' ? this._onFocus : this._onBlur;
+
     // We need to walk up the ancestor chain in order to support `checkChildren`.
     for (let el = target; el; el = el.parentElement) {
-      if (event.type === 'focus') {
-        this._onFocus(event as FocusEvent, el);
-      } else if (event.type === 'blur') {
-        this._onBlur(event as FocusEvent, el);
-      }
+      handler.call(this, event, el);
     }
   }
 
