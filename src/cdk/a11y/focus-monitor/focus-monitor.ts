@@ -12,8 +12,11 @@ import {
   ElementRef,
   EventEmitter,
   Injectable,
+  Inject,
+  InjectionToken,
   NgZone,
   OnDestroy,
+  Optional,
   Output,
 } from '@angular/core';
 import {Observable, of as observableOf, Subject, Subscription} from 'rxjs';
@@ -36,9 +39,38 @@ export interface FocusOptions {
   preventScroll?: boolean;
 }
 
+/** A set of options to apply to calls of FocusMonitor.monitor(). */
+export interface FocusMonitorOptions {
+  /** Whether to count the element as focused when its children are focused. */
+  checkChildren: boolean;
+
+  /**
+   * The time window (in milliseconds) during which a mousedown/keydown/touchstart event is
+   * considered to be "in play" for the pupose of assigning a focus event's origin. Set to
+   * 'indefinite' to always attribute a focus event's origin to the last corresponding event's
+   * type, no matter how long ago it occured.
+   */
+  detectionWindow: number|'indefinite';
+}
+
+/** Default options used when a dependency injected options object is not provided. */
+const FOCUS_MONITOR_DEFAULT_OPTIONS: FocusMonitorOptions = {
+  checkChildren: false,
+  // A default of 1ms is used because Firefox seems to focus *one* tick after the interaction
+  // event fired, causing the focus origin to be misinterpreted. To ensure the focus origin
+  // is always correct, the focus origin should be determined at least starting from the
+  // next tick.
+  detectionWindow: 1,
+};
+
+/** InjectionToken that can be used to specify the global FocusMonitorOptions. */
+export const FOCUS_MONITOR_GLOBAL_OPTIONS =
+    new InjectionToken<Partial<FocusMonitorOptions>>('cdk-focus-monitor-global-options');
+
 type MonitoredElementInfo = {
   unlisten: Function,
   checkChildren: boolean,
+  detectionWindow: number|'indefinite',
   subject: Subject<FocusOrigin>
 };
 
@@ -58,6 +90,9 @@ export class FocusMonitor implements OnDestroy {
   /** The focus origin that the next focus event is a result of. */
   private _origin: FocusOrigin = null;
 
+  /** Timestamp that the current FocusOrigin was set at, in epoch milliseconds. */
+  private _originTimestamp = 0;
+
   /** The FocusOrigin of the last focus event tracked by the FocusMonitor. */
   private _lastFocusOrigin: FocusOrigin;
 
@@ -73,14 +108,14 @@ export class FocusMonitor implements OnDestroy {
   /** The timeout id of the window focus timeout. */
   private _windowFocusTimeoutId: number;
 
-  /** The timeout id of the origin clearing timeout. */
-  private _originTimeoutId: number;
-
   /** Map of elements being monitored to their info. */
   private _elementInfo = new Map<HTMLElement, MonitoredElementInfo>();
 
   /** The number of elements currently being monitored. */
   private _monitoredElementCount = 0;
+
+  /** Options to apply to all calls to monitor(). */
+  private _focusMonitorOptions: FocusMonitorOptions;
 
   /**
    * Event listener for `keydown` events on the document.
@@ -134,7 +169,13 @@ export class FocusMonitor implements OnDestroy {
     this._windowFocusTimeoutId = setTimeout(() => this._windowFocused = false);
   }
 
-  constructor(private _ngZone: NgZone, private _platform: Platform) {}
+  constructor(
+      private _ngZone: NgZone, private _platform: Platform,
+      @Optional() @Inject(FOCUS_MONITOR_GLOBAL_OPTIONS) globalFocusMonitorOptions?:
+          Partial<FocusMonitorOptions>) {
+    this._focusMonitorOptions =
+        coerceFocusMonitorOptions(globalFocusMonitorOptions, FOCUS_MONITOR_DEFAULT_OPTIONS);
+  }
 
   /**
    * Monitors focus on an element and applies appropriate CSS classes.
@@ -154,26 +195,47 @@ export class FocusMonitor implements OnDestroy {
    */
   monitor(element: ElementRef<HTMLElement>, checkChildren?: boolean): Observable<FocusOrigin>;
 
-  monitor(element: HTMLElement | ElementRef<HTMLElement>,
-          checkChildren: boolean = false): Observable<FocusOrigin> {
+  /**
+   * Monitors focus on an element and applies appropriate CSS classes.
+   * @param element The element to monitor
+   * @param options Options to use for focus events on the provided element.
+   * @returns An observable that emits when the focus state of the element changes.
+   *     When the element is blurred, null will be emitted.
+   */
+  monitor(element: HTMLElement, options?: FocusMonitorOptions): Observable<FocusOrigin>;
+
+  /**
+   * Monitors focus on an element and applies appropriate CSS classes.
+   * @param element The element to monitor
+   * @param options Options to use for focus events on the provided element
+   * @returns An observable that emits when the focus state of the element changes.
+   *     When the element is blurred, null will be emitted.
+   */
+  monitor(element: ElementRef<HTMLElement>, options?: FocusMonitorOptions): Observable<FocusOrigin>;
+
+  monitor(element: HTMLElement|ElementRef<HTMLElement>, options?: FocusMonitorOptions|boolean):
+      Observable<FocusOrigin> {
     // Do nothing if we're not on the browser platform.
     if (!this._platform.isBrowser) {
       return observableOf(null);
     }
+
+    options = coerceFocusMonitorOptions(options, this._focusMonitorOptions);
 
     const nativeElement = coerceElement(element);
 
     // Check if we're already monitoring this element.
     if (this._elementInfo.has(nativeElement)) {
       let cachedInfo = this._elementInfo.get(nativeElement);
-      cachedInfo!.checkChildren = checkChildren;
+      cachedInfo!.checkChildren = options.checkChildren;
       return cachedInfo!.subject.asObservable();
     }
 
     // Create monitored element info.
     let info: MonitoredElementInfo = {
       unlisten: () => {},
-      checkChildren: checkChildren,
+      checkChildren: options.checkChildren,
+      detectionWindow: options.detectionWindow,
       subject: new Subject<FocusOrigin>()
     };
     this._elementInfo.set(nativeElement, info);
@@ -241,7 +303,6 @@ export class FocusMonitor implements OnDestroy {
   focusVia(element: HTMLElement | ElementRef<HTMLElement>,
           origin: FocusOrigin,
           options?: FocusOptions): void {
-
     const nativeElement = coerceElement(element);
 
     this._setOriginForCurrentEventQueue(origin);
@@ -283,16 +344,13 @@ export class FocusMonitor implements OnDestroy {
   }
 
   /**
-   * Sets the origin and schedules an async function to clear it at the end of the event queue.
+   * Sets the origin and sets origin timestamp to now.
    * @param origin The origin to set.
    */
   private _setOriginForCurrentEventQueue(origin: FocusOrigin): void {
     this._ngZone.runOutsideAngular(() => {
       this._origin = origin;
-      // Sometimes the focus origin won't be valid in Firefox because Firefox seems to focus *one*
-      // tick after the interaction event fired. To ensure the focus origin is always correct,
-      // the focus origin will be determined at the beginning of the next tick.
-      this._originTimeoutId = setTimeout(() => this._origin = null, 1);
+      this._originTimestamp = new Date().valueOf();
     });
   }
 
@@ -349,7 +407,7 @@ export class FocusMonitor implements OnDestroy {
     // 3) The element was programmatically focused, in which case we should mark the origin as
     //    'program'.
     let origin = this._origin;
-    if (!origin) {
+    if (!origin || this._isOriginInvalid(elementInfo.detectionWindow)) {
       if (this._windowFocused && this._lastFocusOrigin) {
         origin = this._lastFocusOrigin;
       } else if (this._wasCausedByTouch(event)) {
@@ -418,11 +476,41 @@ export class FocusMonitor implements OnDestroy {
       // Clear timeouts for all potentially pending timeouts to prevent the leaks.
       clearTimeout(this._windowFocusTimeoutId);
       clearTimeout(this._touchTimeoutId);
-      clearTimeout(this._originTimeoutId);
     }
+  }
+
+  /** A focus origin is invalid if it occured before (now - detectionWindow). */
+  private _isOriginInvalid(detectionWindow: number|'indefinite'): boolean {
+    if (detectionWindow === 'indefinite') {
+      return false;
+    }
+
+    const now = new Date().valueOf();
+    return now - this._originTimestamp > detectionWindow;
   }
 }
 
+/**
+ * Takes a partial set of options and a complete default set and merges them. A boolean value for
+ * options corresponds to the checkChildren parameter.
+ */
+function coerceFocusMonitorOptions(
+    options: Partial<FocusMonitorOptions>|boolean|undefined,
+    defaultOptions: FocusMonitorOptions): FocusMonitorOptions {
+  if (!options) {
+    return defaultOptions;
+  }
+  if (typeof options === 'boolean') {
+    options = {checkChildren: options};
+  }
+
+  return {
+    checkChildren: options.checkChildren !== undefined ? options.checkChildren :
+                                                         defaultOptions.checkChildren,
+    detectionWindow: options.detectionWindow ? options.detectionWindow :
+                                               defaultOptions.detectionWindow,
+  };
+}
 
 /**
  * Directive that determines how a particular element was focused (via keyboard, mouse, touch, or
