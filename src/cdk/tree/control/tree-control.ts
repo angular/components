@@ -18,7 +18,7 @@ export interface TreeControl<T> {
   dataNodes: T[];
 
   /** The expansion model */
-  expansionModel: SelectionModel<T>;
+  expansionModel: SelectionModel<unknown>;
 
   /** Whether the data node is expanded or collapsed. Return true if it's expanded. */
   isExpanded(dataNode: T): boolean;

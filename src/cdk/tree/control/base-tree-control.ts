@@ -22,7 +22,15 @@ export abstract class BaseTreeControl<T> implements TreeControl<T> {
   dataNodes: T[];
 
   /** A selection model with multi-selection to track expansion status. */
-  expansionModel: SelectionModel<T> = new SelectionModel<T>(true);
+  expansionModel: SelectionModel<unknown> = new SelectionModel<unknown>(true);
+
+  /**
+   * Returns the identifier by which a dataNode should be tracked, should its
+   * reference change.
+   *
+   * Similar to trackBy for *ngFor
+   */
+  trackBy: (dataNode: T) => unknown = node => node;
 
   /** Get depth of a given data node, return the level number. This is for flat tree node. */
   getLevel: (dataNode: T) => number;
@@ -38,29 +46,28 @@ export abstract class BaseTreeControl<T> implements TreeControl<T> {
 
   /** Toggles one single data node's expanded/collapsed state. */
   toggle(dataNode: T): void {
-    this.expansionModel.toggle(dataNode);
+    this.expansionModel.toggle(this.trackBy(dataNode));
   }
 
   /** Expands one single data node. */
   expand(dataNode: T): void {
-    this.expansionModel.select(dataNode);
+    this.expansionModel.select(this.trackBy(dataNode));
   }
 
   /** Collapses one single data node. */
   collapse(dataNode: T): void {
-    this.expansionModel.deselect(dataNode);
+    this.expansionModel.deselect(this.trackBy(dataNode));
   }
 
   /** Whether a given data node is expanded or not. Returns true if the data node is expanded. */
   isExpanded(dataNode: T): boolean {
-    return this.expansionModel.isSelected(dataNode);
+    return this.expansionModel.isSelected(this.trackBy(dataNode));
   }
 
   /** Toggles a subtree rooted at `node` recursively. */
   toggleDescendants(dataNode: T): void {
-    this.expansionModel.isSelected(dataNode)
-        ? this.collapseDescendants(dataNode)
-        : this.expandDescendants(dataNode);
+    this.expansionModel.isSelected(this.trackBy(dataNode)) ? this.collapseDescendants(dataNode) :
+                                                             this.expandDescendants(dataNode);
   }
 
   /** Collapse all dataNodes in the tree. */

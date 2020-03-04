@@ -12,8 +12,9 @@ import {BaseTreeControl} from './base-tree-control';
 export class FlatTreeControl<T> extends BaseTreeControl<T> {
 
   /** Construct with flat tree data node functions getLevel and isExpandable. */
-  constructor(public getLevel: (dataNode: T) => number,
-              public isExpandable: (dataNode: T) => boolean) {
+  constructor(
+      public getLevel: (dataNode: T) => number, public isExpandable: (dataNode: T) => boolean,
+      public trackBy: (dataNode: T) => unknown = node => node) {
     super();
   }
 
@@ -48,6 +49,6 @@ export class FlatTreeControl<T> extends BaseTreeControl<T> {
    * data nodes of the tree.
    */
   expandAll(): void {
-    this.expansionModel.select(...this.dataNodes);
+    this.expansionModel.select(...this.dataNodes.map(node => this.trackBy(node)));
   }
 }
