@@ -15,6 +15,9 @@ import {closest} from './polyfill';
  * listener to redirect focus back inside the FocusTrap.
  */
 export class EventListenerFocusTrapInertStrategy implements FocusTrapInertStrategy {
+  /** Most recently focused element inside the focus trap. */
+  private _mostRecentlyFocusedElement: HTMLElement | null;
+
   /** Focus event handler. */
   private _listener: ((e: FocusEvent) => void) | null = null;
 
@@ -51,6 +54,10 @@ export class EventListenerFocusTrapInertStrategy implements FocusTrapInertStrate
     const target = event.target as HTMLElement;
     const focusTrapRoot = focusTrap._element;
 
+    if (focusTrapRoot.contains(target)) {
+      this._mostRecentlyFocusedElement = target;
+    }
+
     // Don't refocus if target was in an overlay, because the overlay might be associated
     // with an element inside the FocusTrap, ex. mat-select.
     if (!focusTrapRoot.contains(target) && closest(target, 'div.cdk-overlay-pane') === null) {
@@ -60,7 +67,11 @@ export class EventListenerFocusTrapInertStrategy implements FocusTrapInertStrate
         setTimeout(() => {
           // Check whether focus wasn't put back into the focus trap while the timeout was pending.
           if (focusTrap.enabled && !focusTrapRoot.contains(focusTrap._document.activeElement)) {
-            focusTrap.focusFirstTabbableElement();
+            if (this._mostRecentlyFocusedElement) {
+              this._mostRecentlyFocusedElement.focus();
+            } else {
+              focusTrap.focusFirstTabbableElement();
+            }
           }
         });
       }

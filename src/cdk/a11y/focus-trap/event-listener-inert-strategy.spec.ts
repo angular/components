@@ -28,6 +28,21 @@ describe('EventListenerFocusTrapInertStrategy', () => {
         'Expected first focusable element to be focused');
   }));
 
+  it('refocuses the most recently focused FocusTrap element when focus moves outside the FocusTrap',
+    fakeAsync(() => {
+      const fixture = createComponent(SimpleFocusTrap, providers);
+      const componentInstance = fixture.componentInstance;
+      fixture.detectChanges();
+
+      componentInstance.secondFocusableElement.nativeElement.focus();
+      componentInstance.outsideFocusableElement.nativeElement.focus();
+      flush();
+
+      expect(componentInstance.activeElement).toBe(
+        componentInstance.secondFocusableElement.nativeElement,
+        'Expected second focusable element to be focused because it was the last focused');
+  }));
+
   it('does not intercept focus when focus moves to another element in the FocusTrap',
     fakeAsync(() => {
       const fixture = createComponent(SimpleFocusTrap, providers);
