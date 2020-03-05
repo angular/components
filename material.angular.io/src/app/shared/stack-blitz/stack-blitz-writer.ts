@@ -1,7 +1,7 @@
 import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {VERSION} from '@angular/material/core';
-import {ExampleData} from '@angular/components-examples';
+import {EXAMPLE_COMPONENTS, ExampleData} from '@angular/components-examples';
 
 import {materialVersion} from '../version/version';
 
@@ -17,7 +17,7 @@ const COPYRIGHT =
  * structure is defined in the Material repository, but we include the docs-content as assets in
  * in the CLI configuration.
  */
-const DOCS_CONTENT_PATH = '/docs-content/examples-source/';
+const DOCS_CONTENT_PATH = '/docs-content/examples-source';
 
 const TEMPLATE_PATH = '/assets/stack-blitz/';
 const TEMPLATE_FILES = [
@@ -87,9 +87,12 @@ export class StackBlitzWriter {
    * Returns an HTMLFormElement that will open a new StackBlitz template with the example data when
    * called with submit().
    */
-  constructStackBlitzForm(data: ExampleData): Promise<HTMLFormElement> {
+  constructStackBlitzForm(exampleId: string, data: ExampleData): Promise<HTMLFormElement> {
+    const liveExample = EXAMPLE_COMPONENTS[exampleId];
     const indexFile = `src%2Fapp%2F${data.indexFilename}.ts`;
     const form = this._createFormElement(indexFile);
+    const baseExamplePath =
+        `${DOCS_CONTENT_PATH}/${liveExample.module.importSpecifier}/${exampleId}/`;
 
     TAGS.forEach((tag, i) => this._appendFormInput(form, `tags[${i}]`, tag));
     this._appendFormInput(form, 'private', 'true');
@@ -101,7 +104,7 @@ export class StackBlitzWriter {
           .map(file => this._readFile(form, data, file, TEMPLATE_PATH));
 
       const exampleContents = data.exampleFiles
-          .map(file => this._readFile(form, data, file, DOCS_CONTENT_PATH));
+          .map(file => this._readFile(form, data, file, baseExamplePath));
 
       // TODO(josephperrott): Prevent including assets to be manually checked.
       if (data.selectorName === 'icon-svg-example') {
