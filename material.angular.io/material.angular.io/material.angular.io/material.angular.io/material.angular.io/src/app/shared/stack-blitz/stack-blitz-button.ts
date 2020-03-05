@@ -30,7 +30,7 @@ export class StackBlitzButton {
     this.exampleData = new ExampleData(example);
 
     if (example) {
-      this.stackBlitzWriter.constructStackBlitzForm(this.exampleData)
+      this.stackBlitzWriter.constructStackBlitzForm(example, this.exampleData)
       .then((stackBlitzForm: HTMLFormElement) => {
         this.stackBlitzForm = stackBlitzForm;
         this.isDisabled = false;

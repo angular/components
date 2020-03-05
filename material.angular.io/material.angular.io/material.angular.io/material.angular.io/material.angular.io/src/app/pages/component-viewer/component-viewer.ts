@@ -116,6 +116,16 @@ export class ComponentOverview extends ComponentBaseView {
   constructor(componentViewer: ComponentViewer, breakpointObserver: BreakpointObserver) {
     super(componentViewer, breakpointObserver);
   }
+
+  getOverviewDocumentUrl(doc: DocItem) {
+    // Use the explicit overview path if specified. Otherwise, compute an overview path based
+    // on the package name and doc item id. Overviews for components are commonly stored in a
+    // folder named after the component while the overview file is named similarly. e.g.
+    //    `cdk#overlay`     -> `cdk/overlay/overlay.md`
+    //    `material#button` -> `material/button/button.md`
+    const overviewPath = doc.overviewPath || `${doc.packageName}/${doc.id}/${doc.id}.html`;
+    return `/docs-content/overviews/${overviewPath}`;
+  }
 }
 
 @Component({

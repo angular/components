@@ -1,8 +1,9 @@
 import {HttpClientTestingModule, HttpTestingController} from '@angular/common/http/testing';
 import {async, fakeAsync, flushMicrotasks, inject, TestBed} from '@angular/core/testing';
-import {ExampleData} from '@angular/components-examples';
+import {EXAMPLE_COMPONENTS, ExampleData, LiveExample} from '@angular/components-examples';
 import {StackBlitzWriter} from './stack-blitz-writer';
 
+const testExampleId = 'my-test-example-id';
 
 describe('StackBlitzWriter', () => {
   let stackBlitzWriter: StackBlitzWriter;
@@ -28,6 +29,14 @@ describe('StackBlitzWriter', () => {
     data = new ExampleData('');
     data.componentNames = [];
     data.exampleFiles = ['test.ts', 'test.html', 'src/detail.ts'];
+
+    // Fake the example in the `EXAMPLE_COMPONENTS`. The stack blitz writer relies on
+    // module information for the example in order to read the example sources from disk.
+    EXAMPLE_COMPONENTS[testExampleId] = {module: {importSpecifier: 'cdk/my-comp'}} as LiveExample;
+  });
+
+  afterEach(() => {
+    delete EXAMPLE_COMPONENTS[testExampleId];
   });
 
   it('should append correct copyright', () => {
@@ -66,7 +75,7 @@ describe('StackBlitzWriter', () => {
 
   it('should open a new window with stackblitz url', fakeAsync(() => {
     let form: HTMLFormElement;
-    stackBlitzWriter.constructStackBlitzForm(data).then((result: HTMLFormElement) => {
+    stackBlitzWriter.constructStackBlitzForm(testExampleId, data).then(result => {
       form = result;
       flushMicrotasks();
 
@@ -116,7 +125,7 @@ const TEST_URLS = [
   '/assets/stack-blitz/src/polyfills.ts',
   '/assets/stack-blitz/src/main.ts',
   '/assets/stack-blitz/src/app/material-module.ts',
-  '/docs-content/examples-source/test.ts',
-  '/docs-content/examples-source/test.html',
-  '/docs-content/examples-source/src/detail.ts',
+  `/docs-content/examples-source/cdk/my-comp/${testExampleId}/test.ts`,
+  `/docs-content/examples-source/cdk/my-comp/${testExampleId}/test.html`,
+  `/docs-content/examples-source/cdk/my-comp/${testExampleId}/src/detail.ts`,
 ];
