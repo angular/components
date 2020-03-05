@@ -12,7 +12,7 @@ export declare class TestbedHarnessEnvironment extends HarnessEnvironment<Elemen
 }
 
 export interface TestbedHarnessEnvironmentOptions {
-    queryFn: (selector: string, root: Element) => ArrayLike<Element>;
+    queryFn: (selector: string, root: Element) => Iterable<Element> | ArrayLike<Element>;
 }
 
 export declare class UnitTestElement implements TestElement {

@@ -22,7 +22,7 @@ import {UnitTestElement} from './unit-test-element';
 /** Options to configure the environment. */
 export interface TestbedHarnessEnvironmentOptions {
   /** The query function used to find DOM elements. */
-  queryFn: (selector: string, root: Element) => ArrayLike<Element>;
+  queryFn: (selector: string, root: Element) => Iterable<Element> | ArrayLike<Element>;
 }
 
 /** The default environment options. */
