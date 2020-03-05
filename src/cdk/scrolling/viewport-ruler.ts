@@ -20,6 +20,15 @@ export interface ViewportScrollPosition {
   left: number;
 }
 
+/** Runs this observable outside the zone */
+function runOutsideZone<T>(zone: NgZone): any {
+  return (source: Observable<T>): Observable<T> => {
+      return new Observable(observer => {
+          return zone.runOutsideAngular<Subscription>(() => source.subscribe(observer));
+      });
+  };
+}
+
 /**
  * Simple utility for getting the bounds of the browser viewport.
  * @docs-private
@@ -36,15 +45,12 @@ export class ViewportRuler implements OnDestroy {
   private _invalidateCache: Subscription;
 
   constructor(private _platform: Platform, ngZone: NgZone) {
-    ngZone.runOutsideAngular(() => {
-      this._change = _platform.isBrowser ?
-          merge(fromEvent(window, 'resize'), fromEvent(window, 'orientationchange')) :
-          observableOf();
+    this._change = _platform.isBrowser ?
+      merge(fromEvent(window, 'resize'), fromEvent(window, 'orientationchange'))
+        .pipe(runOutsideZone(ngZone)) :
+      observableOf();
 
-      // Note that we need to do the subscription inside `runOutsideAngular`
-      // since subscribing is what causes the event listener to be added.
       this._invalidateCache = this.change().subscribe(() => this._updateViewportSize());
-    });
   }
 
   ngOnDestroy() {

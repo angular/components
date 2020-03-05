@@ -572,8 +572,11 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
       .pipe(takeUntil(this._destroy))
       .subscribe(() => {
         if (this._panelOpen) {
-          this._triggerRect = this.trigger.nativeElement.getBoundingClientRect();
-          this._changeDetectorRef.markForCheck();
+          // Run inside the zone because viewport ruler change() event is outside it.
+          this._ngZone.run(() => {
+            this._triggerRect = this.trigger.nativeElement.getBoundingClientRect();
+            this._changeDetectorRef.markForCheck();
+          });
         }
       });
   }

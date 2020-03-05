@@ -204,8 +204,10 @@ export abstract class MatPaginatedTabHeader implements AfterContentChecked, Afte
     // On dir change or window resize, realign the ink bar and update the orientation of
     // the key manager if the direction has changed.
     merge(dirChange, resize, this._items.changes).pipe(takeUntil(this._destroyed)).subscribe(() => {
-      realign();
-      this._keyManager.withHorizontalOrientation(this._getLayoutDirection());
+      this._ngZone.run(() => {
+        realign();
+        this._keyManager.withHorizontalOrientation(this._getLayoutDirection());
+      });
     });
 
     // If there is a change in the focus key manager we need to emit the `indexFocused`
