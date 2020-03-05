@@ -19,6 +19,8 @@
         (change)="_onInputChange($event)"
         (click)="_onInputClick($event)">
 
+    <!-- The ripple comes after the input so that we can target it with a CSS
+         sibling selector when the input is focused. -->
     <div mat-ripple class="mat-radio-ripple mat-focus-indicator"
          [matRippleTrigger]="label"
          [matRippleDisabled]="_isRippleDisabled()"
