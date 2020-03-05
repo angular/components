@@ -83,7 +83,7 @@ export class MainComponentHarness extends ComponentHarness {
       this.locatorFor('.not-found', SubComponentHarness.with({title: /not found/}));
   readonly shadows = this.locatorForAll('.in-the-shadows');
   readonly deepShadow = this.locatorFor(
-      '.in-the-shadows + test-sub-shadow-boundary > .in-the-shadows');
+      'test-shadow-boundary test-sub-shadow-boundary > .in-the-shadows');
 
   private _testTools = this.locatorFor(SubComponentHarness);
 
