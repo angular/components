@@ -358,7 +358,7 @@ jobs:
 
       # Creates package archives and passes in an appropriate meaningful archive suffix. The
       # suffix consists of the pull request number and a short SHA describing the current `HEAD`.
-      - run: ./scripts/create-package-archives.js --suffix "$CIRCLE_PR_NUMBER-$(git rev-parse --short HEAD)"
+      - run: ./scripts/create-package-archives.js --suffix "pr$CIRCLE_PR_NUMBER-$(git rev-parse --short HEAD)"
       # Upload archives to the CircleCI job artifacts.
       - store_artifacts:
           path: dist/release-archives
