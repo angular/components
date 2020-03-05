@@ -5,15 +5,18 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatRippleModule} from '@angular/material/core';
 import {MatInputModule} from '@angular/material/input';
 import {ElevationOverviewExample} from './elevation-overview/elevation-overview-example';
+import {FocusIndicatorsOverviewExample} from './focus-indicators-overview/focus-indicators-overview-example';
 import {RippleOverviewExample} from './ripple-overview/ripple-overview-example';
 
 export {
   ElevationOverviewExample,
+  FocusIndicatorsOverviewExample,
   RippleOverviewExample,
 };
 
 const EXAMPLES = [
   ElevationOverviewExample,
+  FocusIndicatorsOverviewExample,
   RippleOverviewExample,
 ];
 

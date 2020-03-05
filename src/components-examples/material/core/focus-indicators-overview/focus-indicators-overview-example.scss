@@ -1,0 +1,13 @@
+@import '../material/core/focus-indicator/focus-indicator';
+
+// Including this mixin will enable strong focus indicators for your app.
+// This mixin should only be included once in your app.
+@include mat-strong-focus-indicators();
+
+// Choose a color for the focus indicators.
+$color: mat-color(mat-palette($mat-deep-purple));
+
+// Including this mixin will theme the focus indicators.
+// This mixin can be included multiple times throughout your app
+// to change the focus indicator's color.
+@include mat-strong-focus-indicators-theme($color);
