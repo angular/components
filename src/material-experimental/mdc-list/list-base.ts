@@ -21,6 +21,14 @@ export class MatListItemBase implements AfterContentInit, OnDestroy {
   constructor(protected _element: ElementRef, protected _ngZone: NgZone) {}
 
   ngAfterContentInit() {
+    this._monitorLines();
+  }
+
+  /**
+   * Subscribes to changes in `MatLine` content children and annotates them appropriately when they
+   * change.
+   */
+  private _monitorLines() {
     this._ngZone.runOutsideAngular(() => {
       this._subscriptions.add(this.lines.changes.pipe(startWith(this.lines))
           .subscribe((lines: QueryList<ElementRef<Element>>) => {

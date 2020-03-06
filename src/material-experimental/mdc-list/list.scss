@@ -10,24 +10,6 @@
   display: block;
 }
 
-// While MDC expects only span elements under mdc-list-item__text, we have historically supported
-// using other elements (e.g. h1, h2, etc). This resets some common properties that might cause
-// problems.
-// TODO(mmalerba): Do we actually want to do this? We could switch to expecting spans like MDC and
-//  let people reset as necessary instead.
-.mat-mdc-list-base .mdc-list-item__text > *,
-.mat-mdc-list-base .mdc-list-item__text > * {
-  padding: 0;
-}
-
-// .mdc-list-item__secondary-text adds its own font settings, so only reset if it doesn't have that
-// class
-.mat-mdc-list-base .mdc-list-item__text > :not(.mdc-list-item__secondary-text),
-.mat-mdc-list-base .mdc-list-item__text > :not(.mdc-list-item__secondary-text) {
-  font-size: inherit;
-  font-weight: normal;
-}
-
 // .mdc-list-item__primary-text adds its own margin settings, so only reset if it doesn't have that
 // class
 .mat-mdc-list-base .mdc-list-item__text > :not(.mdc-list-item__primary-text),
