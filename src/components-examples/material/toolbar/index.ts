@@ -1,4 +1,5 @@
 import {NgModule} from '@angular/core';
+import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import {ToolbarMultirowExample} from './toolbar-multirow/toolbar-multirow-example';
@@ -16,6 +17,7 @@ const EXAMPLES = [
 
 @NgModule({
   imports: [
+    MatButtonModule,
     MatIconModule,
     MatToolbarModule,
   ],
