@@ -79,7 +79,7 @@ export declare class EventListenerFocusTrapInertStrategy implements FocusTrapIne
     preventFocus(focusTrap: ConfigurableFocusTrap): void;
 }
 
-export declare const FOCUS_MONITOR_GLOBAL_OPTIONS: InjectionToken<Partial<FocusMonitorOptions>>;
+export declare const FOCUS_MONITOR_DETECTION_STRATEGY: InjectionToken<FocusMonitorDetectionStrategy>;
 
 export declare const FOCUS_TRAP_INERT_STRATEGY: InjectionToken<FocusTrapInertStrategy>;
 
@@ -94,14 +94,12 @@ export declare class FocusKeyManager<T> extends ListKeyManager<FocusableOption &
 }
 
 export declare class FocusMonitor implements OnDestroy {
-    constructor(_ngZone: NgZone, _platform: Platform, globalFocusMonitorOptions?: Partial<FocusMonitorOptions>);
+    constructor(_ngZone: NgZone, _platform: Platform, detectionStrategy: FocusMonitorDetectionStrategy | null);
     _onBlur(event: FocusEvent, element: HTMLElement): void;
     focusVia(element: HTMLElement, origin: FocusOrigin, options?: FocusOptions): void;
     focusVia(element: ElementRef<HTMLElement>, origin: FocusOrigin, options?: FocusOptions): void;
     monitor(element: HTMLElement, checkChildren?: boolean): Observable<FocusOrigin>;
     monitor(element: ElementRef<HTMLElement>, checkChildren?: boolean): Observable<FocusOrigin>;
-    monitor(element: HTMLElement, options?: FocusMonitorOptions): Observable<FocusOrigin>;
-    monitor(element: ElementRef<HTMLElement>, options?: FocusMonitorOptions): Observable<FocusOrigin>;
     ngOnDestroy(): void;
     stopMonitoring(element: HTMLElement): void;
     stopMonitoring(element: ElementRef<HTMLElement>): void;
@@ -109,10 +107,7 @@ export declare class FocusMonitor implements OnDestroy {
     static ɵprov: i0.ɵɵInjectableDef<FocusMonitor>;
 }
 
-export interface FocusMonitorOptions {
-    checkChildren: boolean;
-    detectionWindow: number | 'indefinite';
-}
+export declare type FocusMonitorDetectionStrategy = 'conservative' | 'aggressive';
 
 export interface FocusOptions {
     preventScroll?: boolean;
