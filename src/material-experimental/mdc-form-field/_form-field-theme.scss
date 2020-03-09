@@ -1,8 +1,11 @@
 @use '@material/ripple/mixins' as mdc-ripple;
 
+@import '@material/density/functions.import';
 @import '@material/theme/variables.import';
 @import '@material/textfield/mixins.import';
+@import '@material/textfield/variables.import';
 @import '../mdc-helpers/mdc-helpers';
+@import 'form-field-density';
 @import 'form-field-subscript';
 @import 'form-field-focus-overlay';
 @import 'mdc-text-field-theme-variable-refresh';
@@ -66,7 +69,9 @@
   }
 }
 
-@mixin mat-form-field-density-mdc($density-scale) {}
+@mixin mat-form-field-density-mdc($density-scale) {
+  @include _mat-form-field-density($density-scale);
+}
 
 @mixin mat-form-field-theme-mdc($theme) {
   $color: mat-get-color-config($theme);
