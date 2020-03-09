@@ -18,6 +18,7 @@ import {ExampleViewer} from './example-viewer';
 import {AutocompleteExamplesModule} from '@angular/components-examples/material/autocomplete';
 
 const exampleKey = 'autocomplete-overview';
+const exampleBasePath = `/docs-content/examples-highlighted/material/autocomplete/${exampleKey}`;
 
 
 describe('ExampleViewer', () => {
@@ -75,10 +76,9 @@ describe('ExampleViewer', () => {
 
     // get example file path for each extension
     const extensions = ['ts', 'css', 'html'];
-    const basePath = '/docs-content/examples-highlighted/';
 
     extensions.forEach(extension => {
-      const expected = `${basePath}${exampleKey}-example-${extension}.html`;
+      const expected = `${exampleBasePath}/${exampleKey}-example-${extension}.html`;
       const actual = component.exampleTabs[extension.toUpperCase()];
 
       expect(actual).toEqual(expected);
@@ -176,10 +176,8 @@ class TestExampleModule { }
 
 
 const FAKE_DOCS: {[key: string]: string} = {
-  '/docs-content/examples-highlighted/autocomplete-overview-example-html.html':
-      '<div>my docs page</div>',
-  '/docs-content/examples-highlighted/autocomplete-overview-example-ts.html':
-      '<span>const a = 1;</span>',
-  '/docs-content/examples-highlighted/autocomplete-overview-example-css.html':
+  [`${exampleBasePath}/autocomplete-overview-example-html.html`]: '<div>my docs page</div>',
+  [`${exampleBasePath}/autocomplete-overview-example-ts.html`]: '<span>const a = 1;</span>',
+  [`${exampleBasePath}/autocomplete-overview-example-css.html`]:
       '<pre>.class { color: black; }</pre>',
 };
