@@ -2,7 +2,7 @@
 
 ### Styling concepts
 
-There are 4 questions to keep in mind while customizing the styles of Angular Material
+There are several questions to keep in mind while customizing the styles of Angular Material
 components:
 
 1. Are your styles encapsulated?
@@ -40,13 +40,13 @@ for targeting such components.
 ##### Customizing Themed Components
 
 Component styles which are dynamic and created by your Angular Material Theme behave differently than 
-other styles.  These styles are compiled from styles.scss (and any files imported into it), and 
-inserted directly into the DOM via \<style> tags in the \<head> of your document.  This creates an
+other styles.  These styles are compiled from `styles.scss` (and any files imported into it), and 
+inserted directly into the DOM via `<style>` tags in the `<head>` of your document. This creates an
 additional challenge for modifying these styles, as they will override your individual component styles
-unless you use more specific selectors than Angular Material.   In practice, the most effective wayy to modify
+unless you use more specific selectors than Angular Material.   In practice, the most effective way to modify
 these styles is to create your own custom component theme or alternate theme and include it in
-your styles.scss.  This is true even if you only want to modify a single trait or if the style
-in question does not seem directly related to theme colors but is created by the @angular-material-theme mixin.
+your `styles.scss`.  This is true even if you only want to modify a single trait or if the style
+in question does not seem directly related to theme colors but is created by the `angular-material-theme` mixin.
 
 You can read about theming components and custom theming [here](https://material.angular.io/guide/theming) and 
 [here](https://material.angular.io/guide/theming-your-components).

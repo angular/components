@@ -72,7 +72,7 @@ component themes for each alternate color theme defined for your application.
 $primary: mat-palette($mat-indigo);
 $accent:  mat-palette($mat-pink, A200, A100, A400);
 $theme: mat-light-theme($primary, $accent);
-$alttheme: mat-dark-theme($primary, $accent);
+$alt-theme: mat-dark-theme($primary, $accent);
 
 // Include theme styles for Angular Material components.
 @include angular-material-theme($theme);
@@ -83,7 +83,7 @@ $alttheme: mat-dark-theme($primary, $accent);
 // define theme styles for your alternate theme
 .alternate-theme {
   @include angular-material-theme($alttheme);
-  @include candy-carousel-theme($alttheme);
+  @include candy-carousel-theme($alt-theme);
 }
 ```
 
