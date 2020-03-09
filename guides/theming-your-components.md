@@ -51,11 +51,19 @@ Define all styles unaffected by the theme in a separate file referenced directly
 
 #### 3. Include the theme mixin in your application
 Use the Sass `@include` keyword to include a component's theme mixin wherever you're already
-including Angular Material's built-in theme mixins. 
+including Angular Material's built-in theme mixins.  You will need to import directly to the file
+where your theme palette definitions have been made (typically styles.scss).  If you are creating 
+many custom component themes, you may wish to place them all in a single file in order to `@include`
+a single secondary theme, just as the Angular Material Theme includes styles for many components.
+This can avoid the additional complexity of creating a cascading chain of `map-get()` and `mat-color`
+commands to import your theme down a tree of imports, or having to `@include` multiple custom
+component themes for each alternate color theme defined for your application.
 
 ```scss
 // Import library functions for theme creation.
 @import '~@angular/material/theming';
+// Import your custom component theme from it's own file
+@import './candy-carousel-theme-styles.scss'
 
 // Include non-theme styles for core.
 @include mat-core();
@@ -64,18 +72,26 @@ including Angular Material's built-in theme mixins.
 $primary: mat-palette($mat-indigo);
 $accent:  mat-palette($mat-pink, A200, A100, A400);
 $theme: mat-light-theme($primary, $accent);
+$alttheme: mat-dark-theme($primary, $accent);
 
 // Include theme styles for Angular Material components.
 @include angular-material-theme($theme);
 
 // Include theme styles for your custom components.
 @include candy-carousel-theme($theme);
+
+// define theme styles for your alternate theme
+.alternate-theme {
+  @include angular-material-theme($alttheme);
+  @include candy-carousel-theme($alttheme);
+}
 ```
 
 
 #### Note: using the `mat-color` function to extract colors from a palette
 You can consume the theming functions and Material Design color palettes from
 `@angular/material/theming`. The `mat-color` Sass function extracts a specific color from a palette.
+
 For example:
 
 ```scss
@@ -96,4 +112,21 @@ For example:
   // Get a contrast color for a hue by adding `-contrast` to any other key.
   border-color: mat-color($primary, '100-contrast');
 }
+```
+
+#### Angular Material Theme Palette keys
+
+Every Angular Material palette color (eg primary, accent, warn) contains 7 defined hues which can be drawn
+out of the palette object with `mat-color`.  
+
+These seven keys are:
+
+``` 
+default: the base color
+lighter: a lightened version of the hue
+darker: a darker version of the hue
+text: the default text color for the palette
+default-contrast: the default contrast color
+lighter-contrast: a lighter contrast color; in a dark theme, usually white
+darker-contrast: a darker contrast color; in a light theme, usually black
 ```

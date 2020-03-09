@@ -2,12 +2,13 @@
 
 ### Styling concepts
 
-There are 3 questions to keep in mind while customizing the styles of Angular Material
+There are 4 questions to keep in mind while customizing the styles of Angular Material
 components:
 
 1. Are your styles encapsulated?
 2. Are your styles more specific than the defaults?
 3. Is the component a child of your component, or does it exist elsewhere in the DOM?
+4. Are the styles you wish to modify created by your Angular Material Theme?
 
 ##### View encapsulation
 
@@ -35,6 +36,20 @@ do not exist as children of your component. Often they are injected elsewhere in
 important to keep in mind, since even using high specificity and shadow-piercing selectors will
 not target elements that are not direct children of your component. Global styles are recommended
 for targeting such components.
+
+##### Customizing Themed Components
+
+Component styles which are dynamic and created by your Angular Material Theme behave differently than 
+other styles.  These styles are compiled from styles.scss (and any files imported into it), and 
+inserted directly into the DOM via \<style> tags in the \<head> of your document.  This creates an
+additional challenge for modifying these styles, as they will override your individual component styles
+unless you use more specific selectors than Angular Material.   In practice, the most effective wayy to modify
+these styles is to create your own custom component theme or alternate theme and include it in
+your styles.scss.  This is true even if you only want to modify a single trait or if the style
+in question does not seem directly related to theme colors but is created by the @angular-material-theme mixin.
+
+You can read about theming components and custom theming [here](https://material.angular.io/guide/theming) and 
+[here](https://material.angular.io/guide/theming-your-components).
 
 ### Styling overlay components
 
@@ -71,3 +86,4 @@ application.
 - Use a deprecated shadow-piercing descendant combinator to force styles to apply to all the child
 elements. Read more about this deprecated solution in the
 [Angular documentation](https://angular.io/guide/component-styles#deprecated-deep--and-ng-deep).
+

@@ -46,9 +46,14 @@ The actual path will depend on your server setup.
 
 You can also concatenate the file with the rest of your application's css.
 
-Finally, if your app's content **is not** placed inside of a `mat-sidenav-container` element, you
+#### Your theme's foundational class(es)
+
+If your app's content **is not** placed inside of a `mat-sidenav-container` element, you
 need to add the `mat-app-background` class to your wrapper element (for example the `body`). This
-ensures that the proper theme background is applied to your page.
+ensures that the proper theme background is applied to your page.   Further, some individual 
+Angular Material components rely on one of these two classes being present in order to render 
+correctly.
+
 
 ### Defining a custom theme
 When you want more customization than a pre-built theme offers, you can create your own theme file.
