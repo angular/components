@@ -14,10 +14,10 @@
       (contentRendered)="updateTableOfContents(docItem!.name, $event)">
     </doc-viewer>
 
-    <doc-viewer *ngFor="let additionalApiDoc of docItem!.additionalApiDocs"
+    <doc-viewer *ngFor="let additionalApiDoc of docItem!.additionalApiDocs; let index = index"
       documentUrl="/docs-content/api-docs/{{additionalApiDoc.path}}"
       class="docs-component-view-text-content docs-component-api"
-      (contentRendered)="updateTableOfContents(additionalApiDoc.name, $event)">
+      (contentRendered)="updateTableOfContents(additionalApiDoc.name, $event, index + 1)">
     </doc-viewer>
   </span>
 

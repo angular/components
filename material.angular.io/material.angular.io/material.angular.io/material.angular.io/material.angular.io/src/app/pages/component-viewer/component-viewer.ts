@@ -99,9 +99,9 @@ export class ComponentBaseView implements OnInit, OnDestroy {
     this.destroyed.next();
   }
 
-  updateTableOfContents(sectionName: string, docViewerContent: HTMLElement) {
+  updateTableOfContents(sectionName: string, docViewerContent: HTMLElement, sectionIndex = 0) {
     if (this.tableOfContents) {
-      this.tableOfContents.addHeaders(sectionName, docViewerContent);
+      this.tableOfContents.addHeaders(sectionName, docViewerContent, sectionIndex);
       this.tableOfContents.updateScrollPosition();
     }
   }
