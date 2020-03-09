@@ -1,4 +1,5 @@
 @import '../material/core/theming/all-theme';
+@import '../material/core/density/all-density';
 @import '../material-experimental/mdc-slider/slider-theme';
 @import '../material/core/focus-indicator/focus-indicator';
 @import '../material-experimental/column-resize/column-resize';
@@ -83,6 +84,7 @@ $dark-theme: mat-dark-theme((
 $density-scales: (-1, -2, minimum, maximum);
 @each $density in$density-scales {
   .demo-density-#{$density} {
+    @include _angular-material-density($density);
     @include angular-material-density-mdc($density);
   }
 }
