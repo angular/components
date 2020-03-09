@@ -104,7 +104,7 @@ export class TableOfContents implements OnInit, AfterViewInit, OnDestroy {
     this._links = [];
   }
 
-  addHeaders(sectionName: string, docViewerContent: HTMLElement) {
+  addHeaders(sectionName: string, docViewerContent: HTMLElement, sectionIndex = 0) {
     const headers = Array.from<HTMLHeadingElement>(docViewerContent.querySelectorAll('h3, h4'));
     const links: Link[] = [];
     headers.forEach((header) => {
@@ -119,7 +119,7 @@ export class TableOfContents implements OnInit, AfterViewInit, OnDestroy {
         active: false
       });
     });
-    this._linkSections.push({name: sectionName, links});
+    this._linkSections[sectionIndex] = {name: sectionName, links};
     this._links.push(...links);
   }
 
