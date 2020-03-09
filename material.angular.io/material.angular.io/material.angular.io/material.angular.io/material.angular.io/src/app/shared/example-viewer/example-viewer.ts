@@ -81,15 +81,14 @@ export class ExampleViewer {
     this._exampleModuleFactory = new ɵNgModuleFactory(moduleExports[module.name]);
   }
 
-  private resolveHighlightedExampleFile(fileName: string) {
-    return `/docs-content/examples-highlighted/${fileName}`;
-  }
-
   private _generateExampleTabs() {
+    const examplePath = `${this.exampleData.module.importSpecifier}/${this.example}`;
+    const docsContentPath = `/docs-content/examples-highlighted/${examplePath}`;
+
     this.exampleTabs = {
-      HTML: this.resolveHighlightedExampleFile(`${this.example}-example-html.html`),
-      TS: this.resolveHighlightedExampleFile(`${this.example}-example-ts.html`),
-      CSS: this.resolveHighlightedExampleFile(`${this.example}-example-css.html`),
+      HTML: `${docsContentPath}/${this.example}-example-html.html`,
+      TS: `${docsContentPath}/${this.example}-example-ts.html`,
+      CSS: `${docsContentPath}/${this.example}-example-css.html`,
     };
 
     const additionalFiles = this.exampleData.additionalFiles || [];
@@ -98,7 +97,7 @@ export class ExampleViewer {
       // Since the additional files refer to the original file name, we need to transform
       // the file name to match the highlighted HTML file that displays the source.
       const fileSourceName = fileName.replace(fileExtensionRegex, '$1-$2.html');
-      this.exampleTabs[fileName] = this.resolveHighlightedExampleFile(fileSourceName);
+      this.exampleTabs[fileName] = `${docsContentPath}/${fileSourceName}`;
     });
   }
 }
