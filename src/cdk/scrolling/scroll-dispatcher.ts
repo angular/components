@@ -7,11 +7,11 @@
  */
 
 import {Platform} from '@angular/cdk/platform';
-import {ElementRef, Injectable, NgZone, OnDestroy} from '@angular/core';
+import {ElementRef, Injectable, NgZone, OnDestroy, Optional, Inject} from '@angular/core';
 import {fromEvent, of as observableOf, Subject, Subscription, Observable, Observer} from 'rxjs';
 import {auditTime, filter} from 'rxjs/operators';
 import {CdkScrollable} from './scrollable';
-
+import {DOCUMENT} from '@angular/common';
 
 /** Time in ms to throttle the scrolling events by default. */
 export const DEFAULT_SCROLL_TIME = 20;
@@ -22,7 +22,15 @@ export const DEFAULT_SCROLL_TIME = 20;
  */
 @Injectable({providedIn: 'root'})
 export class ScrollDispatcher implements OnDestroy {
-  constructor(private _ngZone: NgZone, private _platform: Platform) { }
+  /** Used to reference correct document/window */
+  protected _document?: Document;
+
+  constructor(private _ngZone: NgZone,
+              private _platform: Platform,
+              /** @breaking-change 11.0.0 make document required */
+              @Optional() @Inject(DOCUMENT) document?: any) {
+    this._document = document;
+  }
 
   /** Subject for notifying that a registered scrollable reference element has been scrolled. */
   private _scrolled = new Subject<CdkScrollable|void>();
@@ -38,6 +46,16 @@ export class ScrollDispatcher implements OnDestroy {
    * scroll event subscriptions.
    */
   scrollContainers: Map<CdkScrollable, Subscription> = new Map();
+
+  /** Access injected document if available or fallback to global document reference */
+  get document(): Document {
+    return this._document || document;
+  }
+
+  /** Use defaultView of injected document if available or fallback to global window reference */
+  get window(): Window {
+    return this.document.defaultView || window;
+  }
 
   /**
    * Registers a scrollable instance with the service and listens for its scrolled events. When the
@@ -153,7 +171,7 @@ export class ScrollDispatcher implements OnDestroy {
   /** Sets up the global scroll listeners. */
   private _addGlobalListener() {
     this._globalSubscription = this._ngZone.runOutsideAngular(() => {
-      return fromEvent(window.document, 'scroll').subscribe(() => this._scrolled.next());
+      return fromEvent(this.window.document, 'scroll').subscribe(() => this._scrolled.next());
     });
   }
 

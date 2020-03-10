@@ -15,9 +15,12 @@ import {
   NgZone,
   OnDestroy,
   Output,
+  Optional,
+  Inject,
 } from '@angular/core';
 import {Observable, of as observableOf, Subject, Subscription} from 'rxjs';
 import {coerceElement} from '@angular/cdk/coercion';
+import {DOCUMENT} from '@angular/common';
 
 
 // This is the value used by AngularJS Material. Through trial and error (on iPhone 6S) they found
@@ -134,7 +137,25 @@ export class FocusMonitor implements OnDestroy {
     this._windowFocusTimeoutId = setTimeout(() => this._windowFocused = false);
   }
 
-  constructor(private _ngZone: NgZone, private _platform: Platform) {}
+   /** Used to reference correct document/window */
+   protected _document?: Document;
+
+  constructor(private _ngZone: NgZone,
+              private _platform: Platform,
+              /** @breaking-change 11.0.0 make document required */
+              @Optional() @Inject(DOCUMENT) document?: any) {
+    this._document = document;
+  }
+
+  /** Access injected document if available or fallback to global document reference */
+  get document(): Document {
+    return this._document || document;
+  }
+
+  /** Use defaultView of injected document if available or fallback to global window reference */
+  get window(): Window {
+    return this.document.defaultView || window;
+  }
 
   /**
    * Monitors focus on an element and applies appropriate CSS classes.
@@ -393,13 +414,13 @@ export class FocusMonitor implements OnDestroy {
       // Note: we listen to events in the capture phase so we
       // can detect them even if the user stops propagation.
       this._ngZone.runOutsideAngular(() => {
-        document.addEventListener('keydown', this._documentKeydownListener,
+        this.document.addEventListener('keydown', this._documentKeydownListener,
           captureEventListenerOptions);
-        document.addEventListener('mousedown', this._documentMousedownListener,
+        this.document.addEventListener('mousedown', this._documentMousedownListener,
           captureEventListenerOptions);
-        document.addEventListener('touchstart', this._documentTouchstartListener,
+        this.document.addEventListener('touchstart', this._documentTouchstartListener,
           captureEventListenerOptions);
-        window.addEventListener('focus', this._windowFocusListener);
+        this.window.addEventListener('focus', this._windowFocusListener);
       });
     }
   }
@@ -407,13 +428,13 @@ export class FocusMonitor implements OnDestroy {
   private _decrementMonitoredElementCount() {
     // Unregister global listeners when last element is unmonitored.
     if (!--this._monitoredElementCount) {
-      document.removeEventListener('keydown', this._documentKeydownListener,
+      this.document.removeEventListener('keydown', this._documentKeydownListener,
         captureEventListenerOptions);
-      document.removeEventListener('mousedown', this._documentMousedownListener,
+      this.document.removeEventListener('mousedown', this._documentMousedownListener,
         captureEventListenerOptions);
-      document.removeEventListener('touchstart', this._documentTouchstartListener,
+      this.document.removeEventListener('touchstart', this._documentTouchstartListener,
         captureEventListenerOptions);
-      window.removeEventListener('focus', this._windowFocusListener);
+      this.window.removeEventListener('focus', this._windowFocusListener);
 
       // Clear timeouts for all potentially pending timeouts to prevent the leaks.
       clearTimeout(this._windowFocusTimeoutId);

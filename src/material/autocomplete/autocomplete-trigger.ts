@@ -225,9 +225,9 @@ export class MatAutocompleteTrigger implements ControlValueAccessor, AfterViewIn
   }
 
   ngAfterViewInit() {
-    if (typeof window !== 'undefined') {
+    if (typeof this.window !== 'undefined') {
       this._zone.runOutsideAngular(() => {
-        window.addEventListener('blur', this._windowBlurHandler);
+        this.window.addEventListener('blur', this._windowBlurHandler);
       });
 
       if (_supportsShadowDom()) {
@@ -252,14 +252,19 @@ export class MatAutocompleteTrigger implements ControlValueAccessor, AfterViewIn
   }
 
   ngOnDestroy() {
-    if (typeof window !== 'undefined') {
-      window.removeEventListener('blur', this._windowBlurHandler);
+    if (typeof this.window !== 'undefined') {
+      this.window.removeEventListener('blur', this._windowBlurHandler);
     }
 
     this._viewportSubscription.unsubscribe();
     this._componentDestroyed = true;
     this._destroyPanel();
     this._closeKeyEventStream.complete();
+  }
+
+  /** Use defaultView of injected document if available or fallback to global window reference */
+  get window(): Window {
+    return this._document?.defaultView || window;
   }
 
   /** Whether or not the autocomplete panel is open. */

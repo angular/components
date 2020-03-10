@@ -10,7 +10,7 @@ import {HighContrastModeDetector} from '@angular/cdk/a11y';
 import {BidiModule} from '@angular/cdk/bidi';
 import {Inject, InjectionToken, isDevMode, NgModule, Optional, Version} from '@angular/core';
 import {VERSION as CDK_VERSION} from '@angular/cdk';
-
+import {DOCUMENT} from '@angular/common';
 
 // Private version constant to circumvent test/build issues,
 // i.e. avoid core to depend on the @angular/material primary entry-point
@@ -62,18 +62,19 @@ export class MatCommonModule {
   /** Whether we've done the global sanity checks (e.g. a theme is loaded, there is a doctype). */
   private _hasDoneGlobalChecks = false;
 
-  /** Reference to the global `document` object. */
-  private _document = typeof document === 'object' && document ? document : null;
-
-  /** Reference to the global 'window' object. */
-  private _window = typeof window === 'object' && window ? window : null;
-
   /** Configured sanity checks. */
   private _sanityChecks: SanityChecks;
 
+  /** Used to reference correct document/window */
+  protected _document?: Document;
+
   constructor(
       highContrastModeDetector: HighContrastModeDetector,
-      @Optional() @Inject(MATERIAL_SANITY_CHECKS) sanityChecks: any) {
+      @Optional() @Inject(MATERIAL_SANITY_CHECKS) sanityChecks: any,
+      /** @breaking-change 11.0.0 make document required */
+      @Optional() @Inject(DOCUMENT) document?: any) {
+    this._document = document;
+
     // While A11yModule also does this, we repeat it here to avoid importing A11yModule
     // in MatCommonModule.
     highContrastModeDetector._applyBodyHighContrastModeCssClasses();
@@ -90,6 +91,18 @@ export class MatCommonModule {
     }
   }
 
+  /** Access injected document if available or fallback to global document reference */
+  get document(): Document | null {
+    const doc = this._document || document;
+    return typeof doc === 'object' && doc ? doc : null;
+  }
+
+  /** Use defaultView of injected document if available or fallback to global window reference */
+  get window(): Window | null {
+    const win = this.document?.defaultView || window;
+    return typeof win === 'object' && win ? win : null;
+  }
+
   /** Whether any sanity checks are enabled. */
   private _checksAreEnabled(): boolean {
     return isDevMode() && !this._isTestEnv();
@@ -97,7 +110,7 @@ export class MatCommonModule {
 
   /** Whether the code is running in tests. */
   private _isTestEnv() {
-    const window = this._window as any;
+    const window = this.window as any;
     return window && (window.__karma__ || window.jasmine);
   }
 
@@ -105,7 +118,7 @@ export class MatCommonModule {
     const isEnabled = this._checksAreEnabled() &&
       (this._sanityChecks === true || (this._sanityChecks as GranularSanityChecks).doctype);
 
-    if (isEnabled && this._document && !this._document.doctype) {
+    if (isEnabled && this.document && !this.document.doctype) {
       console.warn(
         'Current document does not have a doctype. This may cause ' +
         'some Angular Material components not to behave as expected.'
@@ -119,15 +132,15 @@ export class MatCommonModule {
     const isDisabled = !this._checksAreEnabled() ||
       (this._sanityChecks === false || !(this._sanityChecks as GranularSanityChecks).theme);
 
-    if (isDisabled || !this._document || !this._document.body ||
+    if (isDisabled || !this.document || !this.document.body ||
         typeof getComputedStyle !== 'function') {
       return;
     }
 
-    const testElement = this._document.createElement('div');
+    const testElement = this.document.createElement('div');
 
     testElement.classList.add('mat-theme-loaded-marker');
-    this._document.body.appendChild(testElement);
+    this.document.body.appendChild(testElement);
 
     const computedStyle = getComputedStyle(testElement);
 
@@ -142,7 +155,7 @@ export class MatCommonModule {
       );
     }
 
-    this._document.body.removeChild(testElement);
+    this.document.body.removeChild(testElement);
   }
 
   /** Checks whether the material version matches the cdk version */

@@ -516,6 +516,11 @@ export class MatSlider extends _MatSliderMixinBase
     });
   }
 
+  /** Use defaultView of injected document if available or fallback to global window reference */
+  get window(): Window {
+    return this._document?.defaultView || window;
+  }
+
   ngOnInit() {
     this._focusMonitor
         .monitor(this._elementRef, true)
@@ -716,8 +721,8 @@ export class MatSlider extends _MatSliderMixinBase
         body.addEventListener('touchcancel', this._pointerUp, activeEventOptions);
       }
     }
-    if (typeof window !== 'undefined' && window) {
-      window.addEventListener('blur', this._windowBlur);
+    if (typeof this.window !== 'undefined' && this.window) {
+      this.window.addEventListener('blur', this._windowBlur);
     }
   }
 
@@ -731,8 +736,8 @@ export class MatSlider extends _MatSliderMixinBase
       body.removeEventListener('touchend', this._pointerUp, activeEventOptions);
       body.removeEventListener('touchcancel', this._pointerUp, activeEventOptions);
     }
-    if (typeof window !== 'undefined' && window) {
-      window.removeEventListener('blur', this._windowBlur);
+    if (typeof this.window !== 'undefined' && this.window) {
+      this.window.removeEventListener('blur', this._windowBlur);
     }
   }
 
