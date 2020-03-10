@@ -147,16 +147,6 @@ export class FocusMonitor implements OnDestroy {
     this._document = document;
   }
 
-  /** Access injected document if available or fallback to global document reference */
-  get document(): Document {
-    return this._document || document;
-  }
-
-  /** Use defaultView of injected document if available or fallback to global window reference */
-  get window(): Window {
-    return this.document.defaultView || window;
-  }
-
   /**
    * Monitors focus on an element and applies appropriate CSS classes.
    * @param element The element to monitor
@@ -276,6 +266,17 @@ export class FocusMonitor implements OnDestroy {
 
   ngOnDestroy() {
     this._elementInfo.forEach((_info, element) => this.stopMonitoring(element));
+  }
+
+  /** Access injected document if available or fallback to global document reference */
+  private _getDocument(): Document {
+    return this._document || document;
+  }
+
+  /** Use defaultView of injected document if available or fallback to global window reference */
+  private _getWindow(): Window {
+    const doc = this._getDocument();
+    return doc.defaultView || window;
   }
 
   private _toggleClass(element: Element, className: string, shouldSet: boolean) {
@@ -414,13 +415,16 @@ export class FocusMonitor implements OnDestroy {
       // Note: we listen to events in the capture phase so we
       // can detect them even if the user stops propagation.
       this._ngZone.runOutsideAngular(() => {
-        this.document.addEventListener('keydown', this._documentKeydownListener,
+        const document = this._getDocument();
+        const window = this._getWindow();
+
+        document.addEventListener('keydown', this._documentKeydownListener,
           captureEventListenerOptions);
-        this.document.addEventListener('mousedown', this._documentMousedownListener,
+        document.addEventListener('mousedown', this._documentMousedownListener,
           captureEventListenerOptions);
-        this.document.addEventListener('touchstart', this._documentTouchstartListener,
+        document.addEventListener('touchstart', this._documentTouchstartListener,
           captureEventListenerOptions);
-        this.window.addEventListener('focus', this._windowFocusListener);
+        window.addEventListener('focus', this._windowFocusListener);
       });
     }
   }
@@ -428,13 +432,16 @@ export class FocusMonitor implements OnDestroy {
   private _decrementMonitoredElementCount() {
     // Unregister global listeners when last element is unmonitored.
     if (!--this._monitoredElementCount) {
-      this.document.removeEventListener('keydown', this._documentKeydownListener,
+      const document = this._getDocument();
+      const window = this._getWindow();
+
+      document.removeEventListener('keydown', this._documentKeydownListener,
         captureEventListenerOptions);
-      this.document.removeEventListener('mousedown', this._documentMousedownListener,
+      document.removeEventListener('mousedown', this._documentMousedownListener,
         captureEventListenerOptions);
-      this.document.removeEventListener('touchstart', this._documentTouchstartListener,
+      document.removeEventListener('touchstart', this._documentTouchstartListener,
         captureEventListenerOptions);
-      this.window.removeEventListener('focus', this._windowFocusListener);
+      window.removeEventListener('focus', this._windowFocusListener);
 
       // Clear timeouts for all potentially pending timeouts to prevent the leaks.
       clearTimeout(this._windowFocusTimeoutId);

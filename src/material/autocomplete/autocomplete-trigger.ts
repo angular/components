@@ -225,9 +225,11 @@ export class MatAutocompleteTrigger implements ControlValueAccessor, AfterViewIn
   }
 
   ngAfterViewInit() {
-    if (typeof this.window !== 'undefined') {
+    const window = this._getWindow();
+
+    if (typeof window !== 'undefined') {
       this._zone.runOutsideAngular(() => {
-        this.window.addEventListener('blur', this._windowBlurHandler);
+        window.addEventListener('blur', this._windowBlurHandler);
       });
 
       if (_supportsShadowDom()) {
@@ -252,19 +254,16 @@ export class MatAutocompleteTrigger implements ControlValueAccessor, AfterViewIn
   }
 
   ngOnDestroy() {
-    if (typeof this.window !== 'undefined') {
-      this.window.removeEventListener('blur', this._windowBlurHandler);
+    const window = this._getWindow();
+
+    if (typeof window !== 'undefined') {
+      window.removeEventListener('blur', this._windowBlurHandler);
     }
 
     this._viewportSubscription.unsubscribe();
     this._componentDestroyed = true;
     this._destroyPanel();
     this._closeKeyEventStream.complete();
-  }
-
-  /** Use defaultView of injected document if available or fallback to global window reference */
-  get window(): Window {
-    return this._document?.defaultView || window;
   }
 
   /** Whether or not the autocomplete panel is open. */
@@ -762,6 +761,11 @@ export class MatAutocompleteTrigger implements ControlValueAccessor, AfterViewIn
   private _canOpen(): boolean {
     const element = this._element.nativeElement;
     return !element.readOnly && !element.disabled && !this._autocompleteDisabled;
+  }
+
+  /** Use defaultView of injected document if available or fallback to global window reference */
+  private _getWindow(): Window {
+    return this._document?.defaultView || window;
   }
 
   static ngAcceptInputType_autocompleteDisabled: BooleanInput;

@@ -104,16 +104,6 @@ export class CdkTextareaAutosize implements AfterViewInit, DoCheck, OnDestroy {
     this._textareaElement = this._elementRef.nativeElement as HTMLTextAreaElement;
   }
 
-  /** Access injected document if available or fallback to global document reference */
-  get document(): Document {
-    return this._document || document;
-  }
-
-  /** Use defaultView of injected document if available or fallback to global window reference */
-  get window(): Window {
-    return this.document.defaultView || window;
-  }
-
   /** Sets the minimum height of the textarea as determined by minRows. */
   _setMinHeight(): void {
     const minHeight = this.minRows && this._cachedLineHeight ?
@@ -142,7 +132,9 @@ export class CdkTextareaAutosize implements AfterViewInit, DoCheck, OnDestroy {
       this.resizeToFitContent();
 
       this._ngZone.runOutsideAngular(() => {
-        fromEvent(this.window, 'resize')
+        const window = this._getWindow();
+
+        fromEvent(window, 'resize')
           .pipe(auditTime(16), takeUntil(this._destroyed))
           .subscribe(() => this.resizeToFitContent(true));
       });
@@ -281,6 +273,17 @@ export class CdkTextareaAutosize implements AfterViewInit, DoCheck, OnDestroy {
     // no-op handler that ensures we're running change detection on input events.
   }
 
+  /** Access injected document if available or fallback to global document reference */
+  private _getDocument(): Document {
+    return this._document || document;
+  }
+
+  /** Use defaultView of injected document if available or fallback to global window reference */
+  private _getWindow(): Window {
+    const doc = this._getDocument();
+    return doc.defaultView || window;
+  }
+
   /**
    * Scrolls a textarea to the caret position. On Firefox resizing the textarea will
    * prevent it from scrolling to the caret position. We need to re-set the selection
@@ -288,6 +291,7 @@ export class CdkTextareaAutosize implements AfterViewInit, DoCheck, OnDestroy {
    */
   private _scrollToCaretPosition(textarea: HTMLTextAreaElement) {
     const {selectionStart, selectionEnd} = textarea;
+    const document = this._getDocument();
 
     // IE will throw an "Unspecified error" if we try to set the selection range after the
     // element has been removed from the DOM. Assert that the directive hasn't been destroyed
@@ -295,7 +299,7 @@ export class CdkTextareaAutosize implements AfterViewInit, DoCheck, OnDestroy {
     // Also note that we have to assert that the textarea is focused before we set the
     // selection range. Setting the selection range on a non-focused textarea will cause
     // it to receive focus on IE and Edge.
-    if (!this._destroyed.isStopped && this.document.activeElement === textarea) {
+    if (!this._destroyed.isStopped && document.activeElement === textarea) {
       textarea.setSelectionRange(selectionStart, selectionEnd);
     }
   }

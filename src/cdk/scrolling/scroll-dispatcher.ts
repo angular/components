@@ -47,16 +47,6 @@ export class ScrollDispatcher implements OnDestroy {
    */
   scrollContainers: Map<CdkScrollable, Subscription> = new Map();
 
-  /** Access injected document if available or fallback to global document reference */
-  get document(): Document {
-    return this._document || document;
-  }
-
-  /** Use defaultView of injected document if available or fallback to global window reference */
-  get window(): Window {
-    return this.document.defaultView || window;
-  }
-
   /**
    * Registers a scrollable instance with the service and listens for its scrolled events. When the
    * scrollable is scrolled, the service emits the event to its scrolled observable.
@@ -154,6 +144,17 @@ export class ScrollDispatcher implements OnDestroy {
     return scrollingContainers;
   }
 
+  /** Access injected document if available or fallback to global document reference */
+  private _getDocument(): Document {
+    return this._document || document;
+  }
+
+  /** Use defaultView of injected document if available or fallback to global window reference */
+  private _getWindow(): Window {
+    const doc = this._getDocument();
+    return doc.defaultView || window;
+  }
+
   /** Returns true if the element is contained within the provided Scrollable. */
   private _scrollableContainsElement(scrollable: CdkScrollable, elementRef: ElementRef): boolean {
     let element: HTMLElement | null = elementRef.nativeElement;
@@ -171,7 +172,8 @@ export class ScrollDispatcher implements OnDestroy {
   /** Sets up the global scroll listeners. */
   private _addGlobalListener() {
     this._globalSubscription = this._ngZone.runOutsideAngular(() => {
-      return fromEvent(this.window.document, 'scroll').subscribe(() => this._scrolled.next());
+      const window = this._getWindow();
+      return fromEvent(window.document, 'scroll').subscribe(() => this._scrolled.next());
     });
   }
 
