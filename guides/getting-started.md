@@ -8,7 +8,7 @@ If you are new to Angular or getting started with a new Angular application, see
 
 For existing applications, follow the steps below to begin using Angular Material.
 
-### Install Angular Material
+### Install Angular Material via Schematic(Recommended)
 
 Use the Angular CLI's install [schematic](https://material.angular.io/guide/schematics) to set up your Angular Material project by running the following command:
 
@@ -38,6 +38,77 @@ The `ng add` command will additionally perform the following configurations:
 
 You're done! Angular Material is now configured to be used in your application.
 
+### Install Angular Material manually
+
+Follow these instructions in case you might need to set-up [Angular Material](https://material.angular.io) on an online code-editor like [StackBlitz](https://stackblitz.com/fork/angular), [CodeSandbox](https://codesandbox.io/s/angular), or [NG-Run](https://ng-run.com/).
+
+#### Step 1: Install Angular Material, and Angular CDK
+
+You can use either the npm or yarn command-line tool to install packages. Use whichever is appropriate for your project in the examples below.
+
+##### NPM
+```bash
+npm install --save @angular/material @angular/cdk
+```
+
+#####  Yarn
+```bash
+yarn add @angular/material @angular/cdk
+```
+####  Step 2: Configure animations
+
+Once the animations package is installed, import `BrowserAnimationsModule` into your application to enable animations support.
+
+```ts
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+
+@NgModule({
+  ...
+  imports: [BrowserAnimationsModule],
+  ...
+})
+export class PizzaPartyAppModule { }
+```
+
+Alternatively, you can disable animations by importing `NoopAnimationsModule`.
+
+```ts
+import {NoopAnimationsModule} from '@angular/platform-browser/animations';
+
+@NgModule({
+  ...
+  imports: [NoopAnimationsModule],
+  ...
+})
+export class PizzaPartyAppModule { }
+```
+
+####  Step 3: Add Font and Material Icons to your `index.html`
+
+Add references to Roboto Fonts, and Material Icons. Also add `mat-typography`CSS Class to your body:
+
+```html
+<link  href="https://fonts.googleapis.com/css?family=Roboto:300,400,500&display=swap"  rel="stylesheet">
+<link  href="https://fonts.googleapis.com/icon?family=Material+Icons"  rel="stylesheet">
+<app-root class="mat-typography"></app-root>
+```
+
+####  Step 4: Include a theme
+
+Including a theme is **required** to apply all of the core and theme styles to your application.
+
+To get started with a prebuilt theme, include one of Angular Material's prebuilt themes globally in your application.
+
+If you're using the Angular CLI, you can add this along with a few global CSS Styles to your `styles.css`:
+
+```css
+@import "~@angular/material/prebuilt-themes/indigo-pink.css";
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+```
+
+
 
 ### Display a component
 
@@ -48,10 +119,14 @@ You need to import the `MatSliderModule` that you want to display by adding the 
 ```ts
 import { MatSliderModule } from '@angular/material/slider';
 …
-@NgModule ({....
-  imports: [...,
-  MatSliderModule,
-…]
+@NgModule ({
+  ....,
+  imports: [
+    ....,
+    MatSliderModule,
+    ....
+  ],
+  ....
 })
 ```
 
