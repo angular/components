@@ -585,8 +585,6 @@ export class MatSelect extends _MatSelectMixinBase implements AfterViewChecked, 
     this._selectionModel.changed.pipe(takeUntil(this._destroy)).subscribe(event => {
       event.added.forEach(option => option.select());
       event.removed.forEach(option => option.deselect());
-
-      this._changeDetectorRef.detectChanges();
     });
 
     this.options.changes.pipe(startWith(null), takeUntil(this._destroy)).subscribe(() => {
