@@ -109,7 +109,7 @@ export class FocusMonitor implements OnDestroy {
    * The specified detection mode, used for attributing the origin of a focus
    * event.
    */
-  private _detectionMode: FocusMonitorDetectionMode;
+  private readonly _detectionMode: FocusMonitorDetectionMode;
 
   /**
    * Event listener for `keydown` events on the document.

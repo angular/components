@@ -257,6 +257,49 @@ describe('FocusMonitor', () => {
      }));
 });
 
+describe('FocusMonitor with "eventual" detection', () => {
+  let fixture: ComponentFixture<PlainButton>;
+  let buttonElement: HTMLElement;
+  let focusMonitor: FocusMonitor;
+  let changeHandler: (origin: FocusOrigin) => void;
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [A11yModule],
+      declarations: [
+        PlainButton,
+      ],
+      providers: [
+        {
+          provide: FOCUS_MONITOR_DETECTION_MODE,
+          useValue: FocusMonitorDetectionMode.EVENTUAL,
+        },
+      ],
+    }).compileComponents();
+  });
+
+  beforeEach(inject([FocusMonitor], (fm: FocusMonitor) => {
+    fixture = TestBed.createComponent(PlainButton);
+    fixture.detectChanges();
+
+    buttonElement = fixture.debugElement.query(By.css('button'))!.nativeElement;
+    focusMonitor = fm;
+
+    changeHandler = jasmine.createSpy('focus origin change handler');
+    focusMonitor.monitor(buttonElement).subscribe(changeHandler);
+    patchElementFocus(buttonElement);
+  }));
+
+
+  it('should not clear the focus origin, even after a few seconds', fakeAsync(() => {
+    dispatchKeyboardEvent(document, 'keydown', TAB);
+    tick(2000);
+
+    buttonElement.focus();
+
+    expect(changeHandler).toHaveBeenCalledWith('keyboard');
+  }));
+});
 
 describe('cdkMonitorFocus', () => {
   beforeEach(() => {
@@ -464,49 +507,6 @@ describe('cdkMonitorFocus', () => {
           expect(childElement.classList).toContain('cdk-keyboard-focused');
         }));
   });
-});
-
-describe('FocusMonitor', () => {
-  let fixture: ComponentFixture<PlainButton>;
-  let buttonElement: HTMLElement;
-  let focusMonitor: FocusMonitor;
-  let changeHandler: (origin: FocusOrigin) => void;
-
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [A11yModule],
-      declarations: [
-        PlainButton,
-      ],
-      providers: [
-        {
-          provide: FOCUS_MONITOR_DETECTION_MODE,
-          useValue: FocusMonitorDetectionMode.EVENTUAL,
-        },
-      ],
-    }).compileComponents();
-  });
-
-  beforeEach(inject([FocusMonitor], (fm: FocusMonitor) => {
-    fixture = TestBed.createComponent(PlainButton);
-    fixture.detectChanges();
-
-    buttonElement = fixture.debugElement.query(By.css('button'))!.nativeElement;
-    focusMonitor = fm;
-
-    changeHandler = jasmine.createSpy('focus origin change handler');
-    focusMonitor.monitor(buttonElement).subscribe(changeHandler);
-    patchElementFocus(buttonElement);
-  }));
-
-  it('should not clear the focus origin, even after a few seconds', fakeAsync(() => {
-    dispatchKeyboardEvent(document, 'keydown', TAB);
-    tick(2000);
-
-    buttonElement.focus();
-
-    expect(changeHandler).toHaveBeenCalledWith('keyboard');
-  }));
 });
 
 describe('FocusMonitor observable stream', () => {
