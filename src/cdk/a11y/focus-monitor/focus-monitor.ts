@@ -54,10 +54,14 @@ export const enum FocusMonitorDetectionMode {
   EVENTUAL
 }
 
-/** InjectionToken that can be used to specify the detection mode. */
-export const FOCUS_MONITOR_DETECTION_MODE =
-    new InjectionToken<FocusMonitorDetectionMode>(
-        'cdk-focus-monitor-detection-mode');
+/** Injectable service-level options for FocusMonitor. */
+export interface FocusMonitorOptions {
+  detectionMode?: FocusMonitorDetectionMode;
+}
+
+/** InjectionToken for FocusMonitorOptions. */
+export const FOCUS_MONITOR_DEFAULT_OPTIONS =
+    new InjectionToken<FocusMonitorOptions>('cdk-focus-monitor-default-options');
 
 type MonitoredElementInfo = {
   unlisten: Function,
@@ -165,9 +169,9 @@ export class FocusMonitor implements OnDestroy {
 
   constructor(
       private _ngZone: NgZone, private _platform: Platform,
-      @Optional() @Inject(FOCUS_MONITOR_DETECTION_MODE) detectionMode:
-          FocusMonitorDetectionMode|null) {
-    this._detectionMode = detectionMode || FocusMonitorDetectionMode.IMMEDIATE;
+      @Optional() @Inject(FOCUS_MONITOR_DEFAULT_OPTIONS) options:
+          FocusMonitorOptions|null) {
+    this._detectionMode = options?.detectionMode || FocusMonitorDetectionMode.IMMEDIATE;
   }
 
   /**

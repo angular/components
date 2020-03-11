@@ -13,7 +13,7 @@ import {
   FocusMonitor,
   FocusMonitorDetectionMode,
   FocusOrigin,
-  FOCUS_MONITOR_DETECTION_MODE,
+  FOCUS_MONITOR_DEFAULT_OPTIONS,
   TOUCH_BUFFER_MS,
 } from './focus-monitor';
 
@@ -271,8 +271,10 @@ describe('FocusMonitor with "eventual" detection', () => {
       ],
       providers: [
         {
-          provide: FOCUS_MONITOR_DETECTION_MODE,
-          useValue: FocusMonitorDetectionMode.EVENTUAL,
+          provide: FOCUS_MONITOR_DEFAULT_OPTIONS,
+          useValue: {
+            detectionMode: FocusMonitorDetectionMode.EVENTUAL,
+          },
         },
       ],
     }).compileComponents();
