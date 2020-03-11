@@ -39,27 +39,25 @@ export interface FocusOptions {
   preventScroll?: boolean;
 }
 
-/**
- * Detection strategy used for attributing the origin of a focus event.
- * A 'convervative' strategy will take any mousedown, keydown, or touchstart event
- * that happened in the previous tick or current tick, and use that to assign
- * a focus event's origin (either mouse, keyboard, or touch). 'aggressive' will always
- * attribute a focus event's origin to the last corresponding user event's type, no
- * matter how long ago it occured. 'conservative' is the default option.
- */
-export type FocusMonitorDetectionStrategy = 'conservative'|'aggressive';
+/** Detection mode used for attributing the origin of a focus event. */
+export const enum FocusMonitorDetectionMode {
+  /**
+   * Any mousedown, keydown, or touchstart event that happened in the previous
+   * tick or the current tick will be used to assign a focus event's origin (to
+   * either mouse, keyboard, or touch). This is the default option.
+   */
+  IMMEDIATE,
+  /**
+   * A focus event's origin is always attributed to the last corresponding
+   * mousedown, keydown, or touchstart event, no matter how long ago it occured.
+   */
+  EVENTUAL
+}
 
-/**
- * Default detection strategy option used when a dependency injected object is
- * not provided.
- */
-const DEFAULT_FOCUS_MONITOR_DETECTION_STRATEGY: FocusMonitorDetectionStrategy =
-    'conservative';
-
-/** InjectionToken that can be used to specify the detection strategy. */
-export const FOCUS_MONITOR_DETECTION_STRATEGY =
-    new InjectionToken<FocusMonitorDetectionStrategy>(
-        'cdk-focus-monitor-detection-strategy');
+/** InjectionToken that can be used to specify the detection mode. */
+export const FOCUS_MONITOR_DETECTION_MODE =
+    new InjectionToken<FocusMonitorDetectionMode>(
+        'cdk-focus-monitor-detection-mode');
 
 type MonitoredElementInfo = {
   unlisten: Function,
@@ -108,22 +106,17 @@ export class FocusMonitor implements OnDestroy {
   private _monitoredElementCount = 0;
 
   /**
-   * Detection strategy used for attributing the origin of a focus event.
-   * A 'convervative' strategy will take any mousedown, keydown, or touchstart event
-   * that happened in the previous tick or current tick, and use that to assign
-   * a focus event's origin (either mouse, keyboard, or touch). 'aggressive' will always
-   * attribute a focus event's origin to the last corresponding user event's type, no
-   * matter how long ago it occured. 'conservative' is the default option.
+   * The specified detection mode, used for attributing the origin of a focus
+   * event.
    */
-  private _detectionStrategy: FocusMonitorDetectionStrategy;
+  private _detectionMode: FocusMonitorDetectionMode;
 
   /**
    * Event listener for `keydown` events on the document.
    * Needs to be an arrow function in order to preserve the context when it gets bound.
    */
   private _documentKeydownListener = () => {
-    // On keydown record the origin and clear any touch event that may be in
-    // progress.
+    // On keydown record the origin and clear any touch event that may be in progress.
     this._lastTouchTarget = null;
     this._setOriginForCurrentEventQueue('keyboard');
   }
@@ -172,10 +165,9 @@ export class FocusMonitor implements OnDestroy {
 
   constructor(
       private _ngZone: NgZone, private _platform: Platform,
-      @Optional() @Inject(FOCUS_MONITOR_DETECTION_STRATEGY) detectionStrategy:
-          FocusMonitorDetectionStrategy|null) {
-    this._detectionStrategy =
-        detectionStrategy || DEFAULT_FOCUS_MONITOR_DETECTION_STRATEGY;
+      @Optional() @Inject(FOCUS_MONITOR_DETECTION_MODE) detectionMode:
+          FocusMonitorDetectionMode|null) {
+    this._detectionMode = detectionMode || FocusMonitorDetectionMode.IMMEDIATE;
   }
 
   /**
@@ -326,14 +318,17 @@ export class FocusMonitor implements OnDestroy {
 
   /**
    * Sets the origin and schedules an async function to clear it at the end of the event queue.
-   * If the detection strategy is 'aggressive', the origin is never cleared.
+   * If the detection mode is 'eventual', the origin is never cleared.
    * @param origin The origin to set.
    */
   private _setOriginForCurrentEventQueue(origin: FocusOrigin): void {
     this._ngZone.runOutsideAngular(() => {
       this._origin = origin;
 
-      if (this._detectionStrategy === 'conservative') {
+      if (this._detectionMode === FocusMonitorDetectionMode.IMMEDIATE) {
+        // Sometimes the focus origin won't be valid in Firefox because Firefox seems to focus *one*
+        // tick after the interaction event fired. To ensure the focus origin is always correct,
+        // the focus origin will be determined at the beginning of the next tick.
         this._originTimeoutId = setTimeout(() => this._origin = null, 1);
       }
     });
