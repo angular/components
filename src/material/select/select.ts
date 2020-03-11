@@ -36,6 +36,7 @@ import {
 import {ViewportRuler} from '@angular/cdk/scrolling';
 import {
   AfterContentInit,
+  AfterViewChecked,
   Attribute,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -245,7 +246,7 @@ export class MatSelectTrigger {}
     {provide: MAT_OPTION_PARENT_COMPONENT, useExisting: MatSelect}
   ],
 })
-export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, OnChanges,
+export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, AfterViewChecked, OnChanges,
     OnDestroy, OnInit, DoCheck, ControlValueAccessor, CanDisable, HasTabIndex,
     MatFormFieldControl<any>, CanUpdateErrorState, CanDisableRipple {
   private _scrollStrategyFactory: () => ScrollStrategy;
@@ -596,6 +597,10 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
     if (this.ngControl) {
       this.updateErrorState();
     }
+  }
+
+  ngAfterViewChecked(): void {
+    this._changeDetectorRef.markForCheck();
   }
 
   ngOnChanges(changes: SimpleChanges) {
