@@ -89,6 +89,12 @@ export class MatCalendarBody implements OnChanges, OnDestroy {
    */
   @Input() cellAspectRatio: number = 1;
 
+  /** Start of the comparison range. */
+  @Input() comparisonStart: number | null;
+
+  /** End of the comparison range. */
+  @Input() comparisonEnd: number | null;
+
   /** Emits when a new value is selected. */
   @Output() readonly selectedValueChange: EventEmitter<number> = new EventEmitter<number>();
 
@@ -105,7 +111,7 @@ export class MatCalendarBody implements OnChanges, OnDestroy {
    * Value that the user is either currently hovering over or is focusing
    * using the keyboard. Only applies when selecting the end of a date range.
    */
-  _hoveredValue: number;
+  _hoveredValue = -1;
 
   constructor(
     private _elementRef: ElementRef<HTMLElement>,
@@ -189,17 +195,73 @@ export class MatCalendarBody implements OnChanges, OnDestroy {
   }
 
   /** Gets whether the calendar is currently selecting a range. */
-  _isRange(): boolean {
+  _isSelectingRange(): boolean {
     return this.startValue !== this.endValue;
+  }
+
+  /** Gets whether a value is the start of the main range. */
+  _isRangeStart(value: number) {
+    return value === this.startValue;
+  }
+
+  /** Gets whether a value is the end of the main range. */
+  _isRangeEnd(value: number) {
+    return value === this.endValue || (value === this._hoveredValue && value >= this.startValue);
   }
 
   /** Gets whether a value is within the currently-selected range. */
   _isInRange(value: number): boolean {
-    if (!this._isRange() || value < this.startValue) {
+    return this._isSelectingRange() && value >= this.startValue &&
+           (value <= this.endValue || value <= this._hoveredValue);
+  }
+
+  /** Gets whether a value is the start of the comparison range. */
+  _isComparisonStart(value: number) {
+    return value === this.comparisonStart;
+  }
+
+  /** Whether the cell is a start bridge cell between the main and comparison ranges. */
+  _isComparisonBridgeStart(value: number, rowIndex: number, colIndex: number) {
+    if (!this._isComparisonStart(value) || this._isRangeStart(value) || !this._isInRange(value)) {
       return false;
     }
 
-    return value <= this.endValue || value <= this._hoveredValue;
+    let previousCell: MatCalendarCell | undefined = this.rows[rowIndex][colIndex - 1];
+
+    if (!previousCell) {
+      const previousRow = this.rows[rowIndex - 1];
+      previousCell = previousRow && previousRow[previousRow.length - 1];
+    }
+
+    return previousCell && !this._isRangeEnd(previousCell.compareValue);
+  }
+
+  /** Whether the cell is an end bridge cell between the main and comparison ranges. */
+  _isComparisonBridgeEnd(value: number, rowIndex: number, colIndex: number) {
+    if (!this._isComparisonEnd(value) || this._isRangeEnd(value) || !this._isInRange(value)) {
+      return false;
+    }
+
+    let nextCell: MatCalendarCell | undefined = this.rows[rowIndex][colIndex + 1];
+
+    if (!nextCell) {
+      const nextRow = this.rows[rowIndex + 1];
+      nextCell = nextRow && nextRow[0];
+    }
+
+    return nextCell && !this._isRangeStart(nextCell.compareValue);
+  }
+
+  /** Gets whether a value is the end of the comparison range. */
+  _isComparisonEnd(value: number) {
+    return value === this.comparisonEnd;
+  }
+
+  /** Gets whether a value is within the current comparison range. */
+  _isInComparisonRange(value: number) {
+    return this.comparisonStart && this.comparisonEnd &&
+           value >= this.comparisonStart &&
+           value <= this.comparisonEnd;
   }
 
   /**
@@ -209,18 +271,20 @@ export class MatCalendarBody implements OnChanges, OnDestroy {
   private _enterHandler = (event: Event) => {
     // We only need to hit the zone when we're selecting a range, we
     // have a start value without an end value and we've hovered over a date cell.
-    if (!event.target || !this.startValue || this.endValue || !this._isRange()) {
+    if (!event.target || !this.startValue || this.endValue || !this._isSelectingRange()) {
       return;
     }
 
     const cell = this._getCellFromElement(event.target as HTMLElement);
 
     if (cell) {
-      this._ngZone.run(() => {
-        this._hoveredValue =
-            cell.enabled && cell.compareValue !== this.startValue ? cell.compareValue : -1;
-        this._changeDetectorRef.markForCheck();
-      });
+      const value = cell.compareValue;
+      const hoveredValue = cell.enabled ? value : -1;
+
+      if (hoveredValue !== this._hoveredValue) {
+        this._hoveredValue = hoveredValue;
+        this._ngZone.run(() => this._changeDetectorRef.markForCheck());
+      }
     }
   }
 
@@ -230,7 +294,7 @@ export class MatCalendarBody implements OnChanges, OnDestroy {
    */
   private _leaveHandler = (event: Event) => {
     // We only need to hit the zone when we're selecting a range.
-    if (this._hoveredValue !== -1 && this._isRange()) {
+    if (this._hoveredValue !== -1 && this._isSelectingRange()) {
       // Only reset the hovered value when leaving cells. This looks better, because
       // we have a gap between the cells and the rows and we don't want to remove the
       // range just for it to show up again when the user moves a few pixels to the side.

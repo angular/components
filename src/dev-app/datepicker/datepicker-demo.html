@@ -181,6 +181,8 @@
       [min]="minDate"
       [max]="maxDate"
       [disabled]="inputDisabled"
+      [comparisonStart]="comparisonStart"
+      [comparisonEnd]="comparisonEnd"
       [dateFilter]="filterOdd ? dateFilter : undefined">
       <input matStartDate formControlName="start" placeholder="Start date"/>
       <input matEndDate formControlName="end" placeholder="End date"/>
@@ -203,6 +205,8 @@
       [min]="minDate"
       [max]="maxDate"
       [disabled]="inputDisabled"
+      [comparisonStart]="comparisonStart"
+      [comparisonEnd]="comparisonEnd"
       [dateFilter]="filterOdd ? dateFilter : undefined">
       <input matStartDate formControlName="start" placeholder="Start date"/>
       <input matEndDate formControlName="end" placeholder="End date"/>
@@ -211,6 +215,7 @@
     <mat-date-range-picker
       [touchUi]="touch"
       [disabled]="datepickerDisabled"
+      panelClass="demo-custom-range"
       #range2Picker></mat-date-range-picker>
   </mat-form-field>
   <div>{{range2.value | json}}</div>
@@ -225,6 +230,8 @@
       [min]="minDate"
       [max]="maxDate"
       [disabled]="inputDisabled"
+      [comparisonStart]="comparisonStart"
+      [comparisonEnd]="comparisonEnd"
       [dateFilter]="filterOdd ? dateFilter : undefined">
       <input matStartDate formControlName="start" placeholder="Start date"/>
       <input matEndDate formControlName="end" placeholder="End date"/>

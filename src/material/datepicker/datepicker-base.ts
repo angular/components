@@ -118,6 +118,12 @@ export class MatDatepickerContent<S, D = ExtractDateTypeFromSelection<S>>
   /** Reference to the datepicker that created the overlay. */
   datepicker: MatDatepickerBase<any, S, D>;
 
+  /** Start of the comparison range. */
+  comparisonStart: D | null;
+
+  /** End of the comparison range. */
+  comparisonEnd: D | null;
+
   /** Whether the datepicker is above or below the input. */
   _isAbove: boolean;
 
@@ -426,8 +432,7 @@ export abstract class MatDatepickerBase<C extends MatDatepickerControl<D>, S,
     });
 
     this._dialogRef.afterClosed().subscribe(() => this.close());
-    this._dialogRef.componentInstance.datepicker = this;
-    this._dialogRef.componentInstance.color = this.color;
+    this._forwardContentValues(this._dialogRef.componentInstance);
   }
 
   /** Open the calendar as a popup. */
@@ -437,14 +442,19 @@ export abstract class MatDatepickerBase<C extends MatDatepickerControl<D>, S,
 
     this._destroyPopup();
     this._createPopup();
-    const ref = this._popupComponentRef = this._popupRef!.attach(portal);
-    ref.instance.datepicker = this;
-    ref.instance.color = this.color;
+    this._popupComponentRef = this._popupRef!.attach(portal);
+    this._forwardContentValues(this._popupComponentRef.instance);
 
     // Update the position once the calendar has rendered.
     this._ngZone.onStable.asObservable().pipe(take(1)).subscribe(() => {
       this._popupRef!.updatePosition();
     });
+  }
+
+  /** Forwards relevant values from the datepicker to the datepicker content inside the overlay. */
+  protected _forwardContentValues(instance: MatDatepickerContent<S, D>) {
+    instance.datepicker = this;
+    instance.color = this.color;
   }
 
   /** Create the popup. */
