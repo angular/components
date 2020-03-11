@@ -36,6 +36,7 @@ import {
 import {ViewportRuler} from '@angular/cdk/scrolling';
 import {
   AfterContentInit,
+  AfterViewChecked,
   Attribute,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -245,7 +246,7 @@ export class MatSelectTrigger {}
     {provide: MAT_OPTION_PARENT_COMPONENT, useExisting: MatSelect}
   ],
 })
-export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, OnChanges,
+export class MatSelect extends _MatSelectMixinBase implements AfterViewChecked, AfterContentInit, OnChanges,
     OnDestroy, OnInit, DoCheck, ControlValueAccessor, CanDisable, HasTabIndex,
     MatFormFieldControl<any>, CanUpdateErrorState, CanDisableRipple {
   private _scrollStrategyFactory: () => ScrollStrategy;
@@ -584,6 +585,8 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
     this._selectionModel.changed.pipe(takeUntil(this._destroy)).subscribe(event => {
       event.added.forEach(option => option.select());
       event.removed.forEach(option => option.deselect());
+
+      this._changeDetectorRef.detectChanges();
     });
 
     this.options.changes.pipe(startWith(null), takeUntil(this._destroy)).subscribe(() => {
@@ -596,6 +599,10 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
     if (this.ngControl) {
       this.updateErrorState();
     }
+  }
+
+  ngAfterViewChecked(): void {
+    this._changeDetectorRef.markForCheck();
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -900,6 +907,7 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
     }
 
     this._changeDetectorRef.markForCheck();
+    this._changeDetectorRef.detectChanges();
   }
 
   /**
@@ -922,6 +930,8 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
 
     if (correspondingOption) {
       this._selectionModel.select(correspondingOption);
+        this._changeDetectorRef.markForCheck();
+        this._changeDetectorRef.detectChanges();
     }
 
     return correspondingOption;
@@ -1018,6 +1028,8 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
     }
 
     this.stateChanges.next();
+      this._changeDetectorRef.markForCheck();
+      this._changeDetectorRef.detectChanges();
   }
 
   /** Sorts the selected values in the selected based on their order in the panel. */
