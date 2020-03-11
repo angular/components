@@ -903,9 +903,6 @@ export class MatSelect extends _MatSelectMixinBase implements AfterViewChecked, 
         this._keyManager.setActiveItem(-1);
       }
     }
-
-    this._changeDetectorRef.markForCheck();
-    this._changeDetectorRef.detectChanges();
   }
 
   /**
@@ -1026,8 +1023,6 @@ export class MatSelect extends _MatSelectMixinBase implements AfterViewChecked, 
     }
 
     this.stateChanges.next();
-      this._changeDetectorRef.markForCheck();
-      this._changeDetectorRef.detectChanges();
   }
 
   /** Sorts the selected values in the selected based on their order in the panel. */
