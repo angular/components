@@ -250,6 +250,12 @@ export class MatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDes
   /** Function that can be used to add custom CSS classes to dates. */
   @Input() dateClass: (date: D) => MatCalendarCellCssClasses;
 
+  /** Start of the comparison range. */
+  @Input() comparisonStart: D | null;
+
+  /** End of the comparison range. */
+  @Input() comparisonEnd: D | null;
+
   /**
    * Emits when the currently selected date changes.
    * @breaking-change 11.0.0 Emitted value to change to `D | null`.

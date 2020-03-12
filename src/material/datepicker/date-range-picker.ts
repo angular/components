@@ -8,7 +8,7 @@
 
 import {ChangeDetectionStrategy, Component, ViewEncapsulation} from '@angular/core';
 import {MAT_RANGE_DATE_SELECTION_MODEL_PROVIDER, DateRange} from '@angular/material/core';
-import {MatDatepickerBase} from './datepicker-base';
+import {MatDatepickerBase, MatDatepickerContent} from './datepicker-base';
 import {MatDateRangeInput} from './date-range-input';
 
 // TODO(mmalerba): We use a component instead of a directive here so the user can use implicit
@@ -24,4 +24,16 @@ import {MatDateRangeInput} from './date-range-input';
   providers: [MAT_RANGE_DATE_SELECTION_MODEL_PROVIDER]
 })
 export class MatDateRangePicker<D>
-  extends MatDatepickerBase<MatDateRangeInput<D>, DateRange<D>, D> {}
+  extends MatDatepickerBase<MatDateRangeInput<D>, DateRange<D>, D> {
+
+  protected _forwardContentValues(instance: MatDatepickerContent<DateRange<D>, D>) {
+    super._forwardContentValues(instance);
+
+    const input = this._datepickerInput;
+
+    if (input) {
+      instance.comparisonStart = input.comparisonStart;
+      instance.comparisonEnd = input.comparisonEnd;
+    }
+  }
+}

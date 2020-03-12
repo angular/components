@@ -1,4 +1,3 @@
-
 <ng-template [cdkPortalOutlet]="_calendarHeaderPortal"></ng-template>
 
 <div class="mat-calendar-content" [ngSwitch]="currentView" cdkMonitorSubtreeFocus tabindex="-1">
@@ -10,6 +9,8 @@
       [maxDate]="maxDate"
       [minDate]="minDate"
       [dateClass]="dateClass"
+      [comparisonStart]="comparisonStart"
+      [comparisonEnd]="comparisonEnd"
       (selectedChange)="_dateSelected($event)"
       (_userSelection)="_userSelected()">
   </mat-month-view>
