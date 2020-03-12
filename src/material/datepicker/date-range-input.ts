@@ -184,6 +184,12 @@ export class MatDateRangeInput<D> implements MatFormFieldControl<DateRange<D>>,
   /** Separator text to be shown between the inputs. */
   @Input() separator = '–';
 
+  /** Start of the comparison range that should be shown in the calendar. */
+  @Input() comparisonStart: D | null = null;
+
+  /** End of the comparison range that should be shown in the calendar. */
+  @Input() comparisonEnd: D | null = null;
+
   @ContentChild(MatStartDate) _startInput: MatStartDate<D>;
   @ContentChild(MatEndDate) _endInput: MatEndDate<D>;
 
