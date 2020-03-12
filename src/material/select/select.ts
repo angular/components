@@ -246,8 +246,9 @@ export class MatSelectTrigger {}
     {provide: MAT_OPTION_PARENT_COMPONENT, useExisting: MatSelect}
   ],
 })
-export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, AfterViewChecked, OnChanges,
-    OnDestroy, OnInit, DoCheck, ControlValueAccessor, CanDisable, HasTabIndex,
+export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, AfterViewChecked,
+    OnChanges, OnDestroy, OnInit, DoCheck,
+    ControlValueAccessor, CanDisable, HasTabIndex,
     MatFormFieldControl<any>, CanUpdateErrorState, CanDisableRipple {
   private _scrollStrategyFactory: () => ScrollStrategy;
 
