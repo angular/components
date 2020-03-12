@@ -84,7 +84,7 @@ export class MatMonthView<D> implements AfterContentInit, OnDestroy {
       this._selected = this._getValidDateOrNull(this._dateAdapter.deserialize(value));
     }
 
-    this._setRange(this._selected);
+    this._setRanges(this._selected);
   }
   private _selected: DateRange<D> | D | null;
 
@@ -109,6 +109,12 @@ export class MatMonthView<D> implements AfterContentInit, OnDestroy {
 
   /** Function that can be used to add custom CSS classes to dates. */
   @Input() dateClass: (date: D) => MatCalendarCellCssClasses;
+
+  /** Start of the comparison range. */
+  @Input() comparisonStart: D | null;
+
+  /** End of the comparison range. */
+  @Input() comparisonEnd: D | null;
 
   /** Emits when a new date is selected. */
   @Output() readonly selectedChange: EventEmitter<D | null> = new EventEmitter<D | null>();
@@ -136,6 +142,12 @@ export class MatMonthView<D> implements AfterContentInit, OnDestroy {
 
   /** End value of the currently-shown date range. */
   _rangeEnd: number | null;
+
+  /** Start value of the currently-shown comparison date range. */
+  _comparisonRangeStart: number | null;
+
+  /** End value of the currently-shown comparison date range. */
+  _comparisonRangeEnd: number | null;
 
   /** The date of the month that today falls on. Null if today is in another month. */
   _todayDate: number | null;
@@ -265,7 +277,7 @@ export class MatMonthView<D> implements AfterContentInit, OnDestroy {
 
   /** Initializes this month view. */
   _init() {
-    this._setRange(this.selected);
+    this._setRanges(this.selected);
     this._todayDate = this._getCellCompareValue(this._dateAdapter.today());
     this._monthLabel =
         this._dateAdapter.getMonthNames('short')[this._dateAdapter.getMonth(this.activeDate)]
@@ -373,12 +385,15 @@ export class MatMonthView<D> implements AfterContentInit, OnDestroy {
   }
 
   /** Sets the current range based on a model value. */
-  private _setRange(value: DateRange<D> | D | null) {
-    if (value instanceof DateRange) {
-      this._rangeStart = this._getCellCompareValue(value.start);
-      this._rangeEnd = this._getCellCompareValue(value.end);
+  private _setRanges(selectedValue: DateRange<D> | D | null) {
+    if (selectedValue instanceof DateRange) {
+      this._rangeStart = this._getCellCompareValue(selectedValue.start);
+      this._rangeEnd = this._getCellCompareValue(selectedValue.end);
     } else {
-      this._rangeStart = this._rangeEnd = this._getCellCompareValue(value);
+      this._rangeStart = this._rangeEnd = this._getCellCompareValue(selectedValue);
     }
+
+    this._comparisonRangeStart = this._getCellCompareValue(this.comparisonStart);
+    this._comparisonRangeEnd = this._getCellCompareValue(this.comparisonEnd);
   }
 }
