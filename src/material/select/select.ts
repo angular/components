@@ -594,14 +594,14 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
     });
   }
 
+  ngAfterViewChecked(): void {
+    this._changeDetectorRef.markForCheck();
+  }
+
   ngDoCheck() {
     if (this.ngControl) {
       this.updateErrorState();
     }
-  }
-
-  ngAfterViewChecked(): void {
-    this._changeDetectorRef.markForCheck();
   }
 
   ngOnChanges(changes: SimpleChanges) {
