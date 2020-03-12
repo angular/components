@@ -19,6 +19,8 @@ export declare class MatCalendar<D> implements AfterContentInit, AfterViewChecke
     readonly _userSelection: EventEmitter<void>;
     get activeDate(): D;
     set activeDate(value: D);
+    comparisonEnd: D | null;
+    comparisonStart: D | null;
     get currentView(): MatCalendarView;
     set currentView(value: MatCalendarView);
     dateClass: (date: D) => MatCalendarCellCssClasses;
@@ -52,7 +54,7 @@ export declare class MatCalendar<D> implements AfterContentInit, AfterViewChecke
     ngOnChanges(changes: SimpleChanges): void;
     ngOnDestroy(): void;
     updateTodaysDate(): void;
-    static ɵcmp: i0.ɵɵComponentDefWithMeta<MatCalendar<any>, "mat-calendar", ["matCalendar"], { "headerComponent": "headerComponent"; "startAt": "startAt"; "startView": "startView"; "selected": "selected"; "minDate": "minDate"; "maxDate": "maxDate"; "dateFilter": "dateFilter"; "dateClass": "dateClass"; }, { "selectedChange": "selectedChange"; "yearSelected": "yearSelected"; "monthSelected": "monthSelected"; "_userSelection": "_userSelection"; }, never>;
+    static ɵcmp: i0.ɵɵComponentDefWithMeta<MatCalendar<any>, "mat-calendar", ["matCalendar"], { "headerComponent": "headerComponent"; "startAt": "startAt"; "startView": "startView"; "selected": "selected"; "minDate": "minDate"; "maxDate": "maxDate"; "dateFilter": "dateFilter"; "dateClass": "dateClass"; "comparisonStart": "comparisonStart"; "comparisonEnd": "comparisonEnd"; }, { "selectedChange": "selectedChange"; "yearSelected": "yearSelected"; "monthSelected": "monthSelected"; "_userSelection": "_userSelection"; }, never>;
     static ɵfac: i0.ɵɵFactoryDef<MatCalendar<any>>;
 }
 
@@ -63,6 +65,8 @@ export declare class MatCalendarBody implements OnChanges, OnDestroy {
     _hoveredValue: number;
     activeCell: number;
     cellAspectRatio: number;
+    comparisonEnd: number | null;
+    comparisonStart: number | null;
     endValue: number;
     label: string;
     labelMinRequiredCells: number;
@@ -75,12 +79,19 @@ export declare class MatCalendarBody implements OnChanges, OnDestroy {
     _cellClicked(cell: MatCalendarCell): void;
     _focusActiveCell(): void;
     _isActiveCell(rowIndex: number, colIndex: number): boolean;
+    _isComparisonBridgeEnd(value: number, rowIndex: number, colIndex: number): boolean;
+    _isComparisonBridgeStart(value: number, rowIndex: number, colIndex: number): boolean;
+    _isComparisonEnd(value: number): boolean;
+    _isComparisonStart(value: number): boolean;
+    _isInComparisonRange(value: number): boolean | 0 | null;
     _isInRange(value: number): boolean;
-    _isRange(): boolean;
+    _isRangeEnd(value: number): boolean;
+    _isRangeStart(value: number): boolean;
     _isSelected(cell: MatCalendarCell): boolean;
+    _isSelectingRange(): boolean;
     ngOnChanges(changes: SimpleChanges): void;
     ngOnDestroy(): void;
-    static ɵcmp: i0.ɵɵComponentDefWithMeta<MatCalendarBody, "[mat-calendar-body]", ["matCalendarBody"], { "label": "label"; "rows": "rows"; "todayValue": "todayValue"; "startValue": "startValue"; "endValue": "endValue"; "labelMinRequiredCells": "labelMinRequiredCells"; "numCols": "numCols"; "activeCell": "activeCell"; "cellAspectRatio": "cellAspectRatio"; }, { "selectedValueChange": "selectedValueChange"; }, never>;
+    static ɵcmp: i0.ɵɵComponentDefWithMeta<MatCalendarBody, "[mat-calendar-body]", ["matCalendarBody"], { "label": "label"; "rows": "rows"; "todayValue": "todayValue"; "startValue": "startValue"; "endValue": "endValue"; "labelMinRequiredCells": "labelMinRequiredCells"; "numCols": "numCols"; "activeCell": "activeCell"; "cellAspectRatio": "cellAspectRatio"; "comparisonStart": "comparisonStart"; "comparisonEnd": "comparisonEnd"; }, { "selectedValueChange": "selectedValueChange"; }, never>;
     static ɵfac: i0.ɵɵFactoryDef<MatCalendarBody>;
 }
 
@@ -131,6 +142,8 @@ export declare class MatDatepickerContent<S, D = ExtractDateTypeFromSelection<S>
     _animationState: 'enter' | 'void';
     _calendar: MatCalendar<D>;
     _isAbove: boolean;
+    comparisonEnd: D | null;
+    comparisonStart: D | null;
     datepicker: MatDatepickerBase<any, S, D>;
     constructor(elementRef: ElementRef,
     _changeDetectorRef?: ChangeDetectorRef | undefined, _model?: MatDateSelectionModel<S, D> | undefined);
@@ -231,6 +244,8 @@ export declare class MatDateRangeInput<D> implements MatFormFieldControl<DateRan
     _endInput: MatEndDate<D>;
     _groupDisabled: boolean;
     _startInput: MatStartDate<D>;
+    comparisonEnd: D | null;
+    comparisonStart: D | null;
     controlType: string;
     get dateFilter(): DateFilterFn<D>;
     set dateFilter(value: DateFilterFn<D>);
@@ -268,11 +283,12 @@ export declare class MatDateRangeInput<D> implements MatFormFieldControl<DateRan
     setDescribedByIds(ids: string[]): void;
     static ngAcceptInputType_disabled: BooleanInput;
     static ngAcceptInputType_required: BooleanInput;
-    static ɵcmp: i0.ɵɵComponentDefWithMeta<MatDateRangeInput<any>, "mat-date-range-input", ["matDateRangeInput"], { "rangePicker": "rangePicker"; "required": "required"; "dateFilter": "dateFilter"; "min": "min"; "max": "max"; "disabled": "disabled"; "separator": "separator"; }, {}, ["_startInput", "_endInput"]>;
+    static ɵcmp: i0.ɵɵComponentDefWithMeta<MatDateRangeInput<any>, "mat-date-range-input", ["matDateRangeInput"], { "rangePicker": "rangePicker"; "required": "required"; "dateFilter": "dateFilter"; "min": "min"; "max": "max"; "disabled": "disabled"; "separator": "separator"; "comparisonStart": "comparisonStart"; "comparisonEnd": "comparisonEnd"; }, {}, ["_startInput", "_endInput"]>;
     static ɵfac: i0.ɵɵFactoryDef<MatDateRangeInput<any>>;
 }
 
 export declare class MatDateRangePicker<D> extends MatDatepickerBase<MatDateRangeInput<D>, DateRange<D>, D> {
+    protected _forwardContentValues(instance: MatDatepickerContent<DateRange<D>, D>): void;
     static ɵcmp: i0.ɵɵComponentDefWithMeta<MatDateRangePicker<any>, "mat-date-range-picker", ["matDateRangePicker"], {}, {}, never>;
     static ɵfac: i0.ɵɵFactoryDef<MatDateRangePicker<any>>;
 }
@@ -287,6 +303,8 @@ export declare class MatEndDate<D> extends _MatDateRangeInputBase<D> implements 
 }
 
 export declare class MatMonthView<D> implements AfterContentInit, OnDestroy {
+    _comparisonRangeEnd: number | null;
+    _comparisonRangeStart: number | null;
     _dateAdapter: DateAdapter<D>;
     _firstWeekOffset: number;
     _matCalendarBody: MatCalendarBody;
@@ -303,6 +321,8 @@ export declare class MatMonthView<D> implements AfterContentInit, OnDestroy {
     get activeDate(): D;
     set activeDate(value: D);
     readonly activeDateChange: EventEmitter<D>;
+    comparisonEnd: D | null;
+    comparisonStart: D | null;
     dateClass: (date: D) => MatCalendarCellCssClasses;
     dateFilter: (date: D) => boolean;
     get maxDate(): D | null;
@@ -319,7 +339,7 @@ export declare class MatMonthView<D> implements AfterContentInit, OnDestroy {
     _init(): void;
     ngAfterContentInit(): void;
     ngOnDestroy(): void;
-    static ɵcmp: i0.ɵɵComponentDefWithMeta<MatMonthView<any>, "mat-month-view", ["matMonthView"], { "activeDate": "activeDate"; "selected": "selected"; "minDate": "minDate"; "maxDate": "maxDate"; "dateFilter": "dateFilter"; "dateClass": "dateClass"; }, { "selectedChange": "selectedChange"; "_userSelection": "_userSelection"; "activeDateChange": "activeDateChange"; }, never>;
+    static ɵcmp: i0.ɵɵComponentDefWithMeta<MatMonthView<any>, "mat-month-view", ["matMonthView"], { "activeDate": "activeDate"; "selected": "selected"; "minDate": "minDate"; "maxDate": "maxDate"; "dateFilter": "dateFilter"; "dateClass": "dateClass"; "comparisonStart": "comparisonStart"; "comparisonEnd": "comparisonEnd"; }, { "selectedChange": "selectedChange"; "_userSelection": "_userSelection"; "activeDateChange": "activeDateChange"; }, never>;
     static ɵfac: i0.ɵɵFactoryDef<MatMonthView<any>>;
 }
 

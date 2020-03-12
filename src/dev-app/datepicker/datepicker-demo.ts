@@ -13,7 +13,8 @@ import {
   Inject,
   OnDestroy,
   Optional,
-  ViewChild
+  ViewChild,
+  ViewEncapsulation
 } from '@angular/core';
 import {FormControl, FormGroup} from '@angular/forms';
 import {DateAdapter, MAT_DATE_FORMATS, MatDateFormats, ThemePalette} from '@angular/material/core';
@@ -30,6 +31,7 @@ import {takeUntil} from 'rxjs/operators';
   selector: 'datepicker-demo',
   templateUrl: 'datepicker-demo.html',
   styleUrls: ['datepicker-demo.css'],
+  encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DatepickerDemo {
@@ -50,6 +52,16 @@ export class DatepickerDemo {
   range1 = new FormGroup({start: new FormControl(), end: new FormControl()});
   range2 = new FormGroup({start: new FormControl(), end: new FormControl()});
   range3 = new FormGroup({start: new FormControl(), end: new FormControl()});
+  comparisonStart: Date;
+  comparisonEnd: Date;
+
+  constructor() {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = today.getMonth();
+    this.comparisonStart = new Date(year, month, 9);
+    this.comparisonEnd = new Date(year, month, 13);
+  }
 
   dateFilter: (date: Date | null) => boolean =
     (date: Date | null) => {
