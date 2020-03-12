@@ -81,7 +81,6 @@ export declare class MatSelect extends _MatSelectMixinBase implements AfterConte
     close(): void;
     focus(options?: FocusOptions): void;
     ngAfterContentInit(): void;
-    ngAfterViewChecked(): void;
     ngDoCheck(): void;
     ngOnChanges(changes: SimpleChanges): void;
     ngOnDestroy(): void;
