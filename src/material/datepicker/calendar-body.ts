@@ -279,7 +279,9 @@ export class MatCalendarBody implements OnChanges, OnDestroy {
 
     if (cell) {
       const value = cell.compareValue;
-      const hoveredValue = cell.enabled ? value : -1;
+
+      // Only set as the hovered value if we're after the start of the range.
+      const hoveredValue = (cell.enabled && value > this.startValue) ? value : -1;
 
       if (hoveredValue !== this._hoveredValue) {
         this._hoveredValue = hoveredValue;
