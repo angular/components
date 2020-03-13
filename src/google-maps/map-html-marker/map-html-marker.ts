@@ -6,11 +6,10 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {ContentObserver} from '@angular/cdk/observers';
 import {Directive, ElementRef, Input, NgZone, OnDestroy, OnInit} from '@angular/core';
 import {GoogleMap} from '../google-map/google-map';
-import {BehaviorSubject, combineLatest, Observable, Subject} from 'rxjs';
-import {filter, finalize, map, startWith, take, takeUntil} from 'rxjs/operators';
+import {BehaviorSubject, combineLatest, Observable, Subject, of} from 'rxjs';
+import {filter, map, take, takeUntil} from 'rxjs/operators';
 
 import {HTMLMarkerOptions, HTMLMarker} from './html-marker';
 
@@ -49,21 +48,15 @@ export class MapHTMLMarker implements OnInit, OnDestroy {
     private readonly _googleMap: GoogleMap,
     private _ngZone: NgZone,
     elementRef: ElementRef<HTMLElement>,
-    contentObserver: ContentObserver,
   ) {
     const parentEl = elementRef.nativeElement.parentElement;
-    this._content = contentObserver.observe(elementRef).pipe(
-      takeUntil(this._destroy),
-      map(_ => elementRef.nativeElement),
-      startWith(elementRef.nativeElement),
-      filter((el): el is HTMLElement => !!el),
-      finalize(() => {
-        // 	Possibly might be omitted
-        if (parentEl && elementRef.nativeElement) {
-          parentEl.append(elementRef.nativeElement);
-        }
-      }),
-    );
+    this._content = of(elementRef.nativeElement);
+
+    if (parentEl && elementRef.nativeElement) {
+      this._destroy.subscribe(() => {
+        parentEl.append(elementRef.nativeElement);
+      });
+    }
   }
 
   ngOnInit(): void {
