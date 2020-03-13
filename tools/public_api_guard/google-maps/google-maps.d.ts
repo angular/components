@@ -59,7 +59,7 @@ export declare class GoogleMapsModule {
 export declare class MapCircle implements OnInit, OnDestroy {
     set center(center: google.maps.LatLng | google.maps.LatLngLiteral);
     centerChanged: Observable<void>;
-    circle: google.maps.Circle;
+    circle?: google.maps.Circle;
     circleClick: Observable<google.maps.MouseEvent>;
     circleDblclick: Observable<google.maps.MouseEvent>;
     circleDrag: Observable<google.maps.MouseEvent>;
