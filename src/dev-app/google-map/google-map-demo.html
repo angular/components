@@ -17,6 +17,7 @@
     <map-polygon *ngIf="isPolygonDisplayed" [options]="polygonOptions"></map-polygon>
     <map-rectangle *ngIf="isRectangleDisplayed" [options]="rectangleOptions"></map-rectangle>
     <map-circle *ngIf="isCircleDisplayed" [options]="circleOptions"></map-circle>
+    <div *ngIf="isHTMLMarkerDisplayed" html-marker [position]="htmlMarkerOptions.position">HTML Marker</div>
   </google-map>
 
   <p><label>Latitude:</label> {{display?.lat}}</p>
@@ -77,6 +78,13 @@
     <label for="editable-circle-checkbox">
       Toggle Editable Circle
       <input type="checkbox" [disabled]="!isCircleDisplayed" (click)="toggleEditableCircle()">
+    </label>
+  </div>
+
+  <div>
+    <label for="html-marker-checkbox">
+      Toggle HTMLMarker
+      <input type="checkbox" (click)="toggleHTMLMarkerDisplay()">
     </label>
   </div>
 

@@ -10,6 +10,7 @@ import {NgModule} from '@angular/core';
 
 import {GoogleMap} from './google-map/google-map';
 import {MapCircle} from './map-circle/map-circle';
+import {MapHTMLMarker} from './map-html-marker/map-html-marker';
 import {MapInfoWindow} from './map-info-window/map-info-window';
 import {MapMarker} from './map-marker/map-marker';
 import {MapPolygon} from './map-polygon/map-polygon';
@@ -19,6 +20,7 @@ import {MapRectangle} from './map-rectangle/map-rectangle';
 const COMPONENTS = [
   GoogleMap,
   MapCircle,
+  MapHTMLMarker,
   MapInfoWindow,
   MapMarker,
   MapPolygon,

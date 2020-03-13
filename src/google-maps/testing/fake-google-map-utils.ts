@@ -19,6 +19,7 @@ export interface TestingWindow extends Window {
       Polygon?: jasmine.Spy;
       Rectangle?: jasmine.Spy;
       Circle?: jasmine.Spy;
+      OverlayView?: jasmine.Spy;
     };
   };
 }
@@ -82,6 +83,58 @@ export function createMarkerConstructorSpy(markerSpy: jasmine.SpyObj<google.maps
     };
   }
   return markerConstructorSpy;
+}
+
+export type OverlayViewSpy = jasmine.SpyObj<google.maps.OverlayView & {
+  setPosition(latLng: google.maps.LatLng | google.maps.LatLngLiteral): void;
+}>;
+
+/** Creates a jasmine.SpyObj for a google.maps.Marker */
+export function createOverlayViewSpy(
+  overlayPane?: jasmine.SpyObj<Element>,
+): OverlayViewSpy {
+  const overlayViewSpy = jasmine.createSpyObj('google.maps.OverlayView', [
+    'draw', 'getMap', 'getPanes', 'getProjection', 'onAdd', 'onRemove', 'setMap',
+    'setOptions', 'setMap', 'getAnimation', 'getClickable', 'getCursor',
+    'setPosition', 'addListener',
+  ]);
+  overlayViewSpy.addListener.and.returnValue({ remove: () => { } });
+
+  overlayViewSpy.getProjection.and.returnValue({
+    fromLatLngToDivPixel: (latLng: google.maps.LatLng) => {
+      return {
+        x: latLng.lat(),
+        y: latLng.lng(),
+      };
+    },
+  });
+
+  if (overlayPane) {
+    overlayViewSpy.getPanes.and.returnValue({ overlayMouseTarget: overlayPane });
+  }
+
+  return overlayViewSpy;
+}
+
+/** Creates a jasmine.Spy to watch for the constructor of a google.maps.OverlayView */
+export function createOverlayViewConstructorSpy(
+  overlaySpy: jasmine.SpyObj<google.maps.OverlayView>,
+): jasmine.Spy {
+  const overlayConstructorSpy =
+      jasmine.createSpy('OverlayView constructor', () => {
+        return overlaySpy;
+      });
+  const testingWindow: TestingWindow = window;
+  if (testingWindow.google && testingWindow.google.maps) {
+    testingWindow.google.maps['OverlayView'] = overlayConstructorSpy;
+  } else {
+    testingWindow.google = {
+      maps: {
+        'OverlayView': overlayConstructorSpy,
+      },
+    };
+  }
+  return overlayConstructorSpy;
 }
 
 /** Creates a jasmine.SpyObj for a google.maps.InfoWindow */

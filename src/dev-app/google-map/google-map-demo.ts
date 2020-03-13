@@ -9,6 +9,7 @@
 import {Component, ViewChild} from '@angular/core';
 import {
   MapCircle,
+  MapHTMLMarker,
   MapInfoWindow,
   MapMarker,
   MapPolygon,
@@ -47,6 +48,7 @@ export class GoogleMapDemo {
   @ViewChild(MapPolygon) polygon: MapPolygon;
   @ViewChild(MapRectangle) rectangle: MapRectangle;
   @ViewChild(MapCircle) circle: MapCircle;
+  @ViewChild(MapHTMLMarker) htmlMarker: MapHTMLMarker;
 
   center = {lat: 24, lng: 12};
   markerOptions = {draggable: false};
@@ -65,6 +67,9 @@ export class GoogleMapDemo {
   isCircleDisplayed = false;
   circleOptions: google.maps.CircleOptions =
       {center: CIRCLE_CENTER, radius: CIRCLE_RADIUS, strokeColor: 'grey', strokeOpacity: 0.8};
+  isHTMLMarkerDisplayed: boolean;
+  htmlMarkerOptions: { position: google.maps.LatLng | google.maps.LatLngLiteral } =
+    { position: CIRCLE_CENTER };
 
   handleClick(event: google.maps.MouseEvent) {
     this.markerPositions.push(event.latLng.toJSON());
@@ -96,6 +101,10 @@ export class GoogleMapDemo {
 
   togglePolygonDisplay() {
     this.isPolygonDisplayed = !this.isPolygonDisplayed;
+  }
+
+  toggleHTMLMarkerDisplay() {
+    this.isHTMLMarkerDisplayed = !this.isHTMLMarkerDisplayed;
   }
 
   toggleEditablePolygon() {
