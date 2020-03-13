@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {ContentObserver} from '../../cdk/observers';
+import {ContentObserver} from '@angular/cdk/observers';
 import {Directive, ElementRef, Input, NgZone, OnDestroy, OnInit} from '@angular/core';
 import {GoogleMap} from '../google-map/google-map';
 import {BehaviorSubject, combineLatest, Observable, Subject} from 'rxjs';
