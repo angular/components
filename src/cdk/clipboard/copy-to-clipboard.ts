@@ -73,13 +73,14 @@ export class CdkCopyToClipboard implements OnDestroy {
   /** Timeout for the current copy attempt. */
   private _currentTimeout: any;
 
+  constructor(clipboard: Clipboard, ngZone: NgZone, config?: CdkCopyToClipboardConfig);
+
+  /** @deprecated @breaking-change 10.0.0 */
+  constructor(clipboard: Clipboard, ngZone?: NgZone, config?: CdkCopyToClipboardConfig);
+
   constructor(
     private _clipboard: Clipboard,
-    /**
-     * @deprecated _ngZone parameter to become required.
-     * @breaking-change 10.0.0
-     */
-    private _ngZone?: NgZone,
+    private _ngZone: NgZone,
     @Optional() @Inject(CKD_COPY_TO_CLIPBOARD_CONFIG) config?: CdkCopyToClipboardConfig) {
 
     if (config && config.attempts != null) {

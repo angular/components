@@ -30,13 +30,12 @@ export class OverlayContainer implements OnDestroy {
   protected _containerElement: HTMLElement;
   protected _document: Document;
 
-  constructor(
-    @Inject(DOCUMENT) document: any,
-    /**
-     * @deprecated `platform` parameter to become required.
-     * @breaking-change 10.0.0
-     */
-    protected _platform?: Platform) {
+  constructor(document: any, platform: Platform);
+
+  /** @deprecated @breaking-change 10.0.0 */
+  constructor(document: any);
+
+  constructor(@Inject(DOCUMENT) document: any, protected _platform?: Platform) {
     this._document = document;
   }
 

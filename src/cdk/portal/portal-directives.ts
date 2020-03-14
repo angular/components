@@ -80,13 +80,18 @@ export class CdkPortalOutlet extends BasePortalOutlet implements OnInit, OnDestr
   private _attachedRef: CdkPortalOutletAttachedRef;
 
   constructor(
+    componentFactoryResolver: ComponentFactoryResolver,
+    viewContainerRef: ViewContainerRef,
+    document: any);
+
+  /** @deprecated @breaking-change 9.0.0 */
+  constructor(
+    componentFactoryResolver: ComponentFactoryResolver,
+    viewContainerRef: ViewContainerRef);
+
+  constructor(
       private _componentFactoryResolver: ComponentFactoryResolver,
       private _viewContainerRef: ViewContainerRef,
-
-      /**
-       * @deprecated `_document` parameter to be made required.
-       * @breaking-change 9.0.0
-       */
       @Inject(DOCUMENT) _document?: any) {
     super();
     this._document = _document;

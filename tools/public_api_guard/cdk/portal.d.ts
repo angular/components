@@ -27,8 +27,8 @@ export declare class CdkPortalOutlet extends BasePortalOutlet implements OnInit,
     get attachedRef(): CdkPortalOutletAttachedRef;
     get portal(): Portal<any> | null;
     set portal(portal: Portal<any> | null);
-    constructor(_componentFactoryResolver: ComponentFactoryResolver, _viewContainerRef: ViewContainerRef,
-    _document?: any);
+    constructor(componentFactoryResolver: ComponentFactoryResolver, viewContainerRef: ViewContainerRef);
+    constructor(componentFactoryResolver: ComponentFactoryResolver, viewContainerRef: ViewContainerRef, document: any);
     attachComponentPortal<T>(portal: ComponentPortal<T>): ComponentRef<T>;
     attachTemplatePortal<C>(portal: TemplatePortal<C>): EmbeddedViewRef<C>;
     ngOnDestroy(): void;
@@ -63,9 +63,8 @@ export declare class DomPortalHost extends DomPortalOutlet {
 export declare class DomPortalOutlet extends BasePortalOutlet {
     attachDomPortal: (portal: DomPortal<HTMLElement>) => void;
     outletElement: Element;
-    constructor(
-    outletElement: Element, _componentFactoryResolver: ComponentFactoryResolver, _appRef: ApplicationRef, _defaultInjector: Injector,
-    _document?: any);
+    constructor(outletElement: Element, componentFactoryResolver: ComponentFactoryResolver, appRef: ApplicationRef, defaultInjector: Injector, document: any);
+    constructor(outletElement: Element, componentFactoryResolver: ComponentFactoryResolver, appRef: ApplicationRef, defaultInjector: Injector, document?: any);
     attachComponentPortal<T>(portal: ComponentPortal<T>): ComponentRef<T>;
     attachTemplatePortal<C>(portal: TemplatePortal<C>): EmbeddedViewRef<C>;
     dispose(): void;

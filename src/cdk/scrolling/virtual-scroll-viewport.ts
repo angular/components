@@ -152,6 +152,22 @@ export class CdkVirtualScrollViewport extends CdkScrollable implements OnInit, O
   /** Subscription to changes in the viewport size. */
   private _viewportChanges = Subscription.EMPTY;
 
+  constructor(elementRef: ElementRef<HTMLElement>,
+    changeDetectorRef: ChangeDetectorRef,
+    ngZone: NgZone,
+    scrollStrategy: VirtualScrollStrategy,
+    dir: Directionality,
+    scrollDispatcher: ScrollDispatcher,
+    viewportRuler: ViewportRuler);
+
+  /** @deprecated @breaking-change 11.0.0 */
+  constructor(elementRef: ElementRef<HTMLElement>,
+    changeDetectorRef: ChangeDetectorRef,
+    ngZone: NgZone,
+    scrollStrategy: VirtualScrollStrategy,
+    dir: Directionality,
+    scrollDispatcher: ScrollDispatcher);
+
   constructor(public elementRef: ElementRef<HTMLElement>,
               private _changeDetectorRef: ChangeDetectorRef,
               ngZone: NgZone,
@@ -159,10 +175,6 @@ export class CdkVirtualScrollViewport extends CdkScrollable implements OnInit, O
                   private _scrollStrategy: VirtualScrollStrategy,
               @Optional() dir: Directionality,
               scrollDispatcher: ScrollDispatcher,
-              /**
-               * @deprecated `viewportRuler` parameter to become required.
-               * @breaking-change 11.0.0
-               */
               @Optional() viewportRuler?: ViewportRuler) {
     super(elementRef, scrollDispatcher, ngZone, dir);
 

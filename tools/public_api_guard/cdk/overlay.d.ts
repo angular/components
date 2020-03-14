@@ -152,8 +152,8 @@ export declare type FlexibleConnectedPositionStrategyOrigin = ElementRef | HTMLE
 };
 
 export declare class FullscreenOverlayContainer extends OverlayContainer implements OnDestroy {
-    constructor(_document: any,
-    platform?: Platform);
+    constructor(document: any);
+    constructor(document: any, platform: Platform);
     protected _createContainer(): void;
     getFullscreenElement(): Element;
     ngOnDestroy(): void;
@@ -226,8 +226,8 @@ export declare class OverlayContainer implements OnDestroy {
     protected _containerElement: HTMLElement;
     protected _document: Document;
     protected _platform?: Platform | undefined;
-    constructor(document: any,
-    _platform?: Platform | undefined);
+    constructor(document: any);
+    constructor(document: any, platform: Platform);
     protected _createContainer(): void;
     getContainerElement(): HTMLElement;
     ngOnDestroy(): void;

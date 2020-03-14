@@ -3,8 +3,8 @@ export declare class CdkCopyToClipboard implements OnDestroy {
     attempts: number;
     copied: EventEmitter<boolean>;
     text: string;
-    constructor(_clipboard: Clipboard,
-    _ngZone?: NgZone | undefined, config?: CdkCopyToClipboardConfig);
+    constructor(clipboard: Clipboard, ngZone: NgZone, config?: CdkCopyToClipboardConfig);
+    constructor(clipboard: Clipboard, ngZone?: NgZone, config?: CdkCopyToClipboardConfig);
     copy(attempts?: number): void;
     ngOnDestroy(): void;
     static ɵdir: i0.ɵɵDirectiveDefWithMeta<CdkCopyToClipboard, "[cdkCopyToClipboard]", never, { "text": "cdkCopyToClipboard"; "attempts": "cdkCopyToClipboardAttempts"; }, { "copied": "cdkCopyToClipboardCopied"; "_deprecatedCopied": "copied"; }, never>;

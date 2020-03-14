@@ -24,14 +24,13 @@ export class FullscreenOverlayContainer extends OverlayContainer implements OnDe
   private _fullScreenEventName: string | undefined;
   private _fullScreenListener: () => void;
 
-  constructor(
-    @Inject(DOCUMENT) _document: any,
-    /**
-     * @deprecated `platform` parameter to become required.
-     * @breaking-change 10.0.0
-     */
-    platform?: Platform) {
-    super(_document, platform);
+  constructor(document: any, platform: Platform);
+
+  /** @deprecated @breaking-change 10.0.0 */
+  constructor(document: any);
+
+  constructor(@Inject(DOCUMENT) _document: any, platform?: Platform) {
+    super(_document, platform!);
   }
 
   ngOnDestroy() {

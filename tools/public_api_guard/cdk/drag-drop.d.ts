@@ -162,9 +162,8 @@ export declare class CdkDropList<T = any> implements AfterContentInit, OnDestroy
     orientation: DropListOrientation;
     sorted: EventEmitter<CdkDragSortEvent<T>>;
     sortingDisabled: boolean;
-    constructor(
-    element: ElementRef<HTMLElement>, dragDrop: DragDrop, _changeDetectorRef: ChangeDetectorRef, _dir?: Directionality | undefined, _group?: CdkDropListGroup<CdkDropList<any>> | undefined,
-    _scrollDispatcher?: ScrollDispatcher | undefined, config?: DragDropConfig);
+    constructor(element: ElementRef<HTMLElement>, dragDrop: DragDrop, changeDetectorRef: ChangeDetectorRef, dir: Directionality | undefined, group: CdkDropListGroup<CdkDropList> | undefined, scrollDispatcher: ScrollDispatcher, config?: DragDropConfig);
+    constructor(element: ElementRef<HTMLElement>, dragDrop: DragDrop, changeDetectorRef: ChangeDetectorRef, dir: Directionality | undefined, group: CdkDropListGroup<CdkDropList> | undefined, scrollDispatcher?: ScrollDispatcher, config?: DragDropConfig);
     addItem(item: CdkDrag): void;
     drop(item: CdkDrag, currentIndex: number, previousContainer: CdkDropList, isPointerOverContainer: boolean): void;
     enter(item: CdkDrag, pointerX: number, pointerY: number): void;

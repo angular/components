@@ -24,16 +24,26 @@ export class DomPortalOutlet extends BasePortalOutlet {
   private _document: Document;
 
   constructor(
+    outletElement: Element,
+    componentFactoryResolver: ComponentFactoryResolver,
+    appRef: ApplicationRef,
+    defaultInjector: Injector,
+    document: any);
+
+  /** @deprecated @breaking-change 10.0.0 */
+  constructor(
+    outletElement: Element,
+    componentFactoryResolver: ComponentFactoryResolver,
+    appRef: ApplicationRef,
+    defaultInjector: Injector,
+    document?: any);
+
+  constructor(
       /** Element into which the content is projected. */
       public outletElement: Element,
       private _componentFactoryResolver: ComponentFactoryResolver,
       private _appRef: ApplicationRef,
       private _defaultInjector: Injector,
-
-      /**
-       * @deprecated `_document` Parameter to be made required.
-       * @breaking-change 10.0.0
-       */
       _document?: any) {
     super();
     this._document = _document;

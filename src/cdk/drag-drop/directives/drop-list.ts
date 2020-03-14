@@ -152,15 +152,29 @@ export class CdkDropList<T = any> implements AfterContentInit, OnDestroy {
   private _unsortedItems = new Set<CdkDrag>();
 
   constructor(
+    element: ElementRef<HTMLElement>,
+    dragDrop: DragDrop,
+    changeDetectorRef: ChangeDetectorRef,
+    dir: Directionality | undefined,
+    group: CdkDropListGroup<CdkDropList> | undefined,
+    scrollDispatcher: ScrollDispatcher,
+    config?: DragDropConfig);
+
+  /** @deprecated @breaking-change 11.0.0 */
+  constructor(
+    element: ElementRef<HTMLElement>,
+    dragDrop: DragDrop,
+    changeDetectorRef: ChangeDetectorRef,
+    dir: Directionality | undefined,
+    group: CdkDropListGroup<CdkDropList> | undefined,
+    scrollDispatcher?: ScrollDispatcher,
+    config?: DragDropConfig);
+
+  constructor(
       /** Element that the drop list is attached to. */
       public element: ElementRef<HTMLElement>, dragDrop: DragDrop,
       private _changeDetectorRef: ChangeDetectorRef, @Optional() private _dir?: Directionality,
       @Optional() @SkipSelf() private _group?: CdkDropListGroup<CdkDropList>,
-
-      /**
-       * @deprecated _scrollDispatcher parameter to become required.
-       * @breaking-change 11.0.0
-       */
       private _scrollDispatcher?: ScrollDispatcher,
       @Optional() @Inject(CDK_DRAG_CONFIG) config?: DragDropConfig) {
     this._dropListRef = dragDrop.createDropList(element);
