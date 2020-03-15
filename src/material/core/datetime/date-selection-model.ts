@@ -6,7 +6,14 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {FactoryProvider, Injectable, Optional, SkipSelf, OnDestroy} from '@angular/core';
+import {
+  FactoryProvider,
+  Injectable,
+  Optional,
+  SkipSelf,
+  OnDestroy,
+  InjectionToken,
+} from '@angular/core';
 import {DateAdapter} from './date-adapter';
 import {Observable, Subject} from 'rxjs';
 
@@ -40,6 +47,34 @@ export interface DateSelectionModelChange<S> {
   /** Object that triggered the change. */
   source: unknown;
 }
+
+/**
+ * Function that determines how a date range is changed when the user selects a date.
+ * Has to return a new `DateRange` that may or may not include the selected date.
+ */
+export type DateRangeSelectionStrategy<D> =
+  (selectedDate: D | null, currentRange: DateRange<D>, adapter: DateAdapter<D>) => DateRange<D>;
+
+/** Token that can be used to customize the date range selection strategy. */
+export const DATE_RANGE_SELECTION_STRATEGY =
+    new InjectionToken<DateRangeSelectionStrategy<unknown>>('DATE_RANGE_SELECTION_STRATEGY', {
+      providedIn: 'root',
+      factory: () => (selectedDate: unknown | null, currentRange: DateRange<unknown>,
+                      adapter: DateAdapter<unknown>) => {
+        let {start, end} = currentRange;
+
+        if (start == null) {
+          start = selectedDate;
+        } else if (end == null && selectedDate && adapter.compareDate(selectedDate, start) > 0) {
+          end = selectedDate;
+        } else {
+          start = selectedDate;
+          end = null;
+        }
+
+        return new DateRange(start, end);
+      }
+    });
 
 /** A selection model containing a date selection. */
 export abstract class MatDateSelectionModel<S, D = ExtractDateTypeFromSelection<S>>
@@ -133,7 +168,7 @@ export class MatSingleDateSelectionModel<D> extends MatDateSelectionModel<D | nu
 /**  A selection model that contains a date range. */
 @Injectable()
 export class MatRangeDateSelectionModel<D> extends MatDateSelectionModel<DateRange<D>, D> {
-  constructor(adapter: DateAdapter<D>) {
+  constructor(adapter: DateAdapter<D>, private _selectionStrategy: DateRangeSelectionStrategy<D>) {
     super(adapter, new DateRange<D>(null, null));
   }
 
@@ -143,18 +178,8 @@ export class MatRangeDateSelectionModel<D> extends MatDateSelectionModel<DateRan
    * the selection is reset so that the given date is the new `start` and the `end` is null.
    */
   add(date: D | null): void {
-    let {start, end} = this.selection;
-
-    if (start == null) {
-      start = date;
-    } else if (end == null && date && this.adapter.compareDate(date, start) > 0) {
-      end = date;
-    } else {
-      start = date;
-      end = null;
-    }
-
-    super.updateSelection(new DateRange<D>(start, end), this);
+    const newRange = this._selectionStrategy(date, this.selection, this.adapter);
+    super.updateSelection(newRange, this);
   }
 
   /**
@@ -221,13 +246,19 @@ export const MAT_SINGLE_DATE_SELECTION_MODEL_PROVIDER: FactoryProvider = {
 
 /** @docs-private */
 export function MAT_RANGE_DATE_SELECTION_MODEL_FACTORY(
-    parent: MatSingleDateSelectionModel<unknown>, adapter: DateAdapter<unknown>) {
-  return parent || new MatRangeDateSelectionModel(adapter);
+    parent: MatSingleDateSelectionModel<unknown>,
+    adapter: DateAdapter<unknown>,
+    selectionStrategy: DateRangeSelectionStrategy<unknown>) {
+  return parent || new MatRangeDateSelectionModel(adapter, selectionStrategy);
 }
 
 /** Used to provide a range selection model to a component. */
 export const MAT_RANGE_DATE_SELECTION_MODEL_PROVIDER: FactoryProvider = {
   provide: MatDateSelectionModel,
-  deps: [[new Optional(), new SkipSelf(), MatDateSelectionModel], DateAdapter],
+  deps: [
+    [new Optional(), new SkipSelf(), MatDateSelectionModel],
+    DateAdapter,
+    DATE_RANGE_SELECTION_STRATEGY
+  ],
   useFactory: MAT_RANGE_DATE_SELECTION_MODEL_FACTORY,
 };

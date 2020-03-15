@@ -46,6 +46,8 @@ export interface CanUpdateErrorState {
 
 export declare type CanUpdateErrorStateCtor = Constructor<CanUpdateErrorState>;
 
+export declare const DATE_RANGE_SELECTION_STRATEGY: InjectionToken<DateRangeSelectionStrategy<unknown>>;
+
 export declare abstract class DateAdapter<D> {
     protected _localeChanges: Subject<void>;
     protected locale: any;
@@ -86,6 +88,8 @@ export declare class DateRange<D> {
     start: D | null,
     end: D | null);
 }
+
+export declare type DateRangeSelectionStrategy<D> = (selectedDate: D | null, currentRange: DateRange<D>, adapter: DateAdapter<D>) => DateRange<D>;
 
 export interface DateSelectionModelChange<S> {
     selection: S;
@@ -213,7 +217,7 @@ export declare const MAT_NATIVE_DATE_FORMATS: MatDateFormats;
 
 export declare const MAT_OPTION_PARENT_COMPONENT: InjectionToken<MatOptionParentComponent>;
 
-export declare function MAT_RANGE_DATE_SELECTION_MODEL_FACTORY(parent: MatSingleDateSelectionModel<unknown>, adapter: DateAdapter<unknown>): MatSingleDateSelectionModel<unknown>;
+export declare function MAT_RANGE_DATE_SELECTION_MODEL_FACTORY(parent: MatSingleDateSelectionModel<unknown>, adapter: DateAdapter<unknown>, selectionStrategy: DateRangeSelectionStrategy<unknown>): MatSingleDateSelectionModel<unknown>;
 
 export declare const MAT_RANGE_DATE_SELECTION_MODEL_PROVIDER: FactoryProvider;
 
@@ -355,7 +359,7 @@ export declare class MatPseudoCheckboxModule {
 export declare type MatPseudoCheckboxState = 'unchecked' | 'checked' | 'indeterminate';
 
 export declare class MatRangeDateSelectionModel<D> extends MatDateSelectionModel<DateRange<D>, D> {
-    constructor(adapter: DateAdapter<D>);
+    constructor(adapter: DateAdapter<D>, _selectionStrategy: DateRangeSelectionStrategy<D>);
     add(date: D | null): void;
     isComplete(): boolean;
     isSame(other: DateRange<D>): boolean;
