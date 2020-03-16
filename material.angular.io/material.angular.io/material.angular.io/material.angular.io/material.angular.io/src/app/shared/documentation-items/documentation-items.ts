@@ -346,6 +346,7 @@ const DOCS: {[key: string]: DocCategory[]} = {
         {
           id: 'ripple',
           name: 'Ripples',
+          overviewPath: 'material/core/ripple/ripple.html',
           summary: 'Directive for adding Material Design ripple effects',
           examples: ['ripple-overview']
         }
