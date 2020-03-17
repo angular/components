@@ -18,8 +18,6 @@ import {
   OnDestroy,
   Optional,
   Output,
-  Optional,
-  Inject,
 } from '@angular/core';
 import {Observable, of as observableOf, Subject, Subscription} from 'rxjs';
 import {coerceElement} from '@angular/cdk/coercion';
@@ -177,7 +175,7 @@ export class FocusMonitor implements OnDestroy {
       private _ngZone: NgZone,
       private _platform: Platform,
       /** @breaking-change 11.0.0 make document required */
-      @Optional() @Inject(DOCUMENT) document?: any,
+      @Optional() @Inject(DOCUMENT) document: any|null,
       @Optional() @Inject(FOCUS_MONITOR_DEFAULT_OPTIONS) options:
           FocusMonitorOptions|null) {
     this._document = document;
