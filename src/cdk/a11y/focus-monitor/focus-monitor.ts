@@ -18,9 +18,12 @@ import {
   OnDestroy,
   Optional,
   Output,
+  Optional,
+  Inject,
 } from '@angular/core';
 import {Observable, of as observableOf, Subject, Subscription} from 'rxjs';
 import {coerceElement} from '@angular/cdk/coercion';
+import {DOCUMENT} from '@angular/common';
 
 
 // This is the value used by AngularJS Material. Through trial and error (on iPhone 6S) they found
@@ -167,10 +170,17 @@ export class FocusMonitor implements OnDestroy {
     this._windowFocusTimeoutId = setTimeout(() => this._windowFocused = false);
   }
 
+  /** Used to reference correct document/window */
+  protected _document?: Document;
+
   constructor(
-      private _ngZone: NgZone, private _platform: Platform,
+      private _ngZone: NgZone,
+      private _platform: Platform,
+      /** @breaking-change 11.0.0 make document required */
+      @Optional() @Inject(DOCUMENT) document?: any,
       @Optional() @Inject(FOCUS_MONITOR_DEFAULT_OPTIONS) options:
           FocusMonitorOptions|null) {
+    this._document = document;
     this._detectionMode = options?.detectionMode || FocusMonitorDetectionMode.IMMEDIATE;
   }
 
@@ -293,6 +303,17 @@ export class FocusMonitor implements OnDestroy {
 
   ngOnDestroy() {
     this._elementInfo.forEach((_info, element) => this.stopMonitoring(element));
+  }
+
+  /** Access injected document if available or fallback to global document reference */
+  private _getDocument(): Document {
+    return this._document || document;
+  }
+
+  /** Use defaultView of injected document if available or fallback to global window reference */
+  private _getWindow(): Window {
+    const doc = this._getDocument();
+    return doc.defaultView || window;
   }
 
   private _toggleClass(element: Element, className: string, shouldSet: boolean) {
@@ -435,6 +456,9 @@ export class FocusMonitor implements OnDestroy {
       // Note: we listen to events in the capture phase so we
       // can detect them even if the user stops propagation.
       this._ngZone.runOutsideAngular(() => {
+        const document = this._getDocument();
+        const window = this._getWindow();
+
         document.addEventListener('keydown', this._documentKeydownListener,
           captureEventListenerOptions);
         document.addEventListener('mousedown', this._documentMousedownListener,
@@ -449,6 +473,9 @@ export class FocusMonitor implements OnDestroy {
   private _decrementMonitoredElementCount() {
     // Unregister global listeners when last element is unmonitored.
     if (!--this._monitoredElementCount) {
+      const document = this._getDocument();
+      const window = this._getWindow();
+
       document.removeEventListener('keydown', this._documentKeydownListener,
         captureEventListenerOptions);
       document.removeEventListener('mousedown', this._documentMousedownListener,

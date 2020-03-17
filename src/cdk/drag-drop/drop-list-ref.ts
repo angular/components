@@ -10,7 +10,7 @@ import {ElementRef, NgZone} from '@angular/core';
 import {Direction} from '@angular/cdk/bidi';
 import {coerceElement} from '@angular/cdk/coercion';
 import {ViewportRuler} from '@angular/cdk/scrolling';
-import {_supportsShadowDom} from '@angular/cdk/platform';
+import {_getShadowRoot} from '@angular/cdk/platform';
 import {Subject, Subscription, interval, animationFrameScheduler} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 import {moveItemInArray} from './drag-utils';
@@ -739,6 +739,11 @@ export class DropListRef<T = any> {
   private _updateAfterScroll(scrolledParent: HTMLElement | Document,
                              newTop: number,
                              newLeft: number) {
+    // Used when figuring out whether an element is inside the scroll parent. If the scrolled
+    // parent is the `document`, we use the `documentElement`, because IE doesn't support `contains`
+    // on the `document`.
+    const scrolledParentNode =
+        scrolledParent === this._document ? scrolledParent.documentElement : scrolledParent;
     const scrollPosition = this._parentPositions.get(scrolledParent)!.scrollPosition;
     const topDifference = scrollPosition.top - newTop;
     const leftDifference = scrollPosition.left - newLeft;
@@ -746,7 +751,7 @@ export class DropListRef<T = any> {
     // Go through and update the cached positions of the scroll
     // parents that are inside the element that was scrolled.
     this._parentPositions.forEach((position, node) => {
-      if (position.clientRect && scrolledParent !== node && scrolledParent.contains(node)) {
+      if (position.clientRect && scrolledParent !== node && scrolledParentNode.contains(node)) {
         adjustClientRect(position.clientRect, topDifference, leftDifference);
       }
     });
@@ -907,7 +912,8 @@ export class DropListRef<T = any> {
    */
   private _getShadowRoot(): DocumentOrShadowRoot {
     if (!this._cachedShadowRoot) {
-      this._cachedShadowRoot = getShadowRoot(coerceElement(this.element)) || this._document;
+      const shadowRoot = _getShadowRoot(coerceElement(this.element)) as ShadowRoot | null;
+      this._cachedShadowRoot = shadowRoot || this._document;
     }
 
     return this._cachedShadowRoot;
@@ -1101,17 +1107,4 @@ function getElementScrollDirections(element: HTMLElement, clientRect: ClientRect
   }
 
   return [verticalScrollDirection, horizontalScrollDirection];
-}
-
-/** Gets the shadow root of an element, if any. */
-function getShadowRoot(element: HTMLElement): DocumentOrShadowRoot | null {
-  if (_supportsShadowDom()) {
-    const rootNode = element.getRootNode ? element.getRootNode() : null;
-
-    if (rootNode instanceof ShadowRoot) {
-      return rootNode;
-    }
-  }
-
-  return null;
 }

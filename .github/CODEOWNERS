@@ -139,6 +139,7 @@
 /src/dev-app/card/**                               @jelbourn
 /src/dev-app/checkbox/**                           @jelbourn @devversion
 /src/dev-app/chips/**                              @jelbourn
+/src/dev-app/clipboard/**                          @jelbourn @xkxx
 /src/dev-app/column-resize/**                      @kseamon @andrewseguin
 /src/dev-app/connected-overlay/**                  @jelbourn @crisbeto
 /src/dev-app/dataset/**                            @andrewseguin
@@ -240,9 +241,12 @@
 # Universal app
 /src/universal-app/**                              @jelbourn
 
+# Integration tests
+/integration/**                                    @jelbourn @devversion
+
 # Tooling
 /.circleci/**                                      @angular/dev-infra-components
-/.yarn/**                                      @angular/dev-infra-components
+/.yarn/**                                          @angular/dev-infra-components
 /scripts/**                                        @angular/dev-infra-components
 /test/**                                           @angular/dev-infra-components
 /tools/**                                          @angular/dev-infra-components

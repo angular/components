@@ -17,7 +17,7 @@ import {
   ScrollStrategy,
   ConnectedPosition,
 } from '@angular/cdk/overlay';
-import {_supportsShadowDom} from '@angular/cdk/platform';
+import {_getShadowRoot} from '@angular/cdk/platform';
 import {TemplatePortal} from '@angular/cdk/portal';
 import {ViewportRuler} from '@angular/cdk/scrolling';
 import {DOCUMENT} from '@angular/common';
@@ -45,7 +45,7 @@ import {
   MatOption,
   MatOptionSelectionChange,
 } from '@angular/material/core';
-import {MatFormField} from '@angular/material/form-field';
+import {MAT_FORM_FIELD, MatFormField} from '@angular/material/form-field';
 import {defer, fromEvent, merge, Observable, of as observableOf, Subject, Subscription} from 'rxjs';
 import {delay, filter, map, switchMap, take, tap} from 'rxjs/operators';
 
@@ -217,7 +217,7 @@ export class MatAutocompleteTrigger implements ControlValueAccessor, AfterViewIn
               private _changeDetectorRef: ChangeDetectorRef,
               @Inject(MAT_AUTOCOMPLETE_SCROLL_STRATEGY) scrollStrategy: any,
               @Optional() private _dir: Directionality,
-              @Optional() @Host() private _formField: MatFormField,
+              @Optional() @Inject(MAT_FORM_FIELD) @Host() private _formField: MatFormField,
               @Optional() @Inject(DOCUMENT) private _document: any,
               // @breaking-change 8.0.0 Make `_viewportRuler` required.
               private _viewportRuler?: ViewportRuler) {
@@ -225,19 +225,14 @@ export class MatAutocompleteTrigger implements ControlValueAccessor, AfterViewIn
   }
 
   ngAfterViewInit() {
+    const window = this._getWindow();
+
     if (typeof window !== 'undefined') {
       this._zone.runOutsideAngular(() => {
         window.addEventListener('blur', this._windowBlurHandler);
       });
 
-      if (_supportsShadowDom()) {
-        const element = this._element.nativeElement;
-        const rootNode = element.getRootNode ? element.getRootNode() : null;
-
-        // We need to take the `ShadowRoot` off of `window`, because the built-in types are
-        // incorrect. See https://github.com/Microsoft/TypeScript/issues/27929.
-        this._isInsideShadowRoot = rootNode instanceof (window as any).ShadowRoot;
-      }
+      this._isInsideShadowRoot = !!_getShadowRoot(this._element.nativeElement);
     }
   }
 
@@ -252,6 +247,8 @@ export class MatAutocompleteTrigger implements ControlValueAccessor, AfterViewIn
   }
 
   ngOnDestroy() {
+    const window = this._getWindow();
+
     if (typeof window !== 'undefined') {
       window.removeEventListener('blur', this._windowBlurHandler);
     }
@@ -757,6 +754,11 @@ export class MatAutocompleteTrigger implements ControlValueAccessor, AfterViewIn
   private _canOpen(): boolean {
     const element = this._element.nativeElement;
     return !element.readOnly && !element.disabled && !this._autocompleteDisabled;
+  }
+
+  /** Use defaultView of injected document if available or fallback to global window reference */
+  private _getWindow(): Window {
+    return this._document?.defaultView || window;
   }
 
   static ngAcceptInputType_autocompleteDisabled: BooleanInput;
