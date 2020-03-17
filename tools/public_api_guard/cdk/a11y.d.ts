@@ -95,7 +95,8 @@ export declare class FocusKeyManager<T> extends ListKeyManager<FocusableOption &
 
 export declare class FocusMonitor implements OnDestroy {
     protected _document?: Document;
-    constructor(_ngZone: NgZone, _platform: Platform, document?: any, options: FocusMonitorOptions | null);
+    constructor(_ngZone: NgZone, _platform: Platform,
+    document: any | null, options: FocusMonitorOptions | null);
     _onBlur(event: FocusEvent, element: HTMLElement): void;
     focusVia(element: HTMLElement, origin: FocusOrigin, options?: FocusOptions): void;
     focusVia(element: ElementRef<HTMLElement>, origin: FocusOrigin, options?: FocusOptions): void;
