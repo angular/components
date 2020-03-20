@@ -1,3 +1,98 @@
+# 9.2.0-next.0 "twine-tornado" (2020-03-18)
+
+### cdk
+
+|            |                       |
+| ---------- | --------------------- |
+| bug fix |  **testing:** don't send unnecessary `Key.chord`s to protractor ([#18685](https://github.com/angular/components/issues/18685)) ([427e91f](https://github.com/angular/components/commit/427e91f)), closes [mozilla/geckodriver#1502](https://github.com/mozilla/geckodriver/issues/1502) |
+| feature |  **testing:** Allow custom `querySelectorAll` method ([#18178](https://github.com/angular/components/issues/18178)) ([40ae1b1](https://github.com/angular/components/commit/40ae1b1)) |
+
+### material
+
+|            |                       |
+| ---------- | --------------------- |
+| bug fix |  **column-resize:** don't allow dragging using the right mouse button ([#18758](https://github.com/angular/components/issues/18758)) ([c538354](https://github.com/angular/components/commit/c538354)) |
+| bug fix |  **datepicker:** prevent default dialog options from affecting touch ui calendar ([#18657](https://github.com/angular/components/issues/18657)) ([aca2533](https://github.com/angular/components/commit/aca2533)), closes [#18648](https://github.com/angular/components/issues/18648) |
+| bug fix |  **radio:** clicks not landing correctly in some cases on Chrome ([#18357](https://github.com/angular/components/issues/18357)) ([fe29835](https://github.com/angular/components/commit/fe29835)), closes [#18285](https://github.com/angular/components/issues/18285) |
+| feature |  **focus-monitor:** Add eventual detection mode option to focus monitor ([#18684](https://github.com/angular/components/issues/18684)) ([b3a2c56](https://github.com/angular/components/commit/b3a2c56)) |
+| feature |  **form-field:** use injection token for providing form-field ([#18777](https://github.com/angular/components/issues/18777)) ([8ec44a1](https://github.com/angular/components/commit/8ec44a1)) |
+| feature |  **snackbar:** add `isDismissed` harness method ([#18766](https://github.com/angular/components/issues/18766)) ([6e70cc7](https://github.com/angular/components/commit/6e70cc7)) |
+
+### material-experimental
+
+|            |                       |
+| ---------- | --------------------- |
+| bug fix |  rename sass mixins to mat-mdc-* ([#18615](https://github.com/angular/components/issues/18615)) ([b91e88f](https://github.com/angular/components/commit/b91e88f)) |
+| bug fix |  **form-field:** avoid expression changed after check ([#18741](https://github.com/angular/components/issues/18741)) ([eae5cf8](https://github.com/angular/components/commit/eae5cf8)) |
+
+
+## 9.1.3 "plastic-juice" (2020-03-16)
+
+### cdk
+
+|            |                       |
+| ---------- | --------------------- |
+| bug fix |  **overlay:** support SVG element as overlay origin ([#18595](https://github.com/angular/components/issues/18595)) ([1303d8f](https://github.com/angular/components/commit/1303d8f)) |
+
+### material
+
+|            |                       |
+| ---------- | --------------------- |
+| bug fix |  **clipboard:** not restoring focus to SVG elements ([#18626](https://github.com/angular/components/issues/18626)) ([f48ddf0](https://github.com/angular/components/commit/f48ddf0)) |
+| bug fix |  **document-injection:** Update to use injected document ([#18780](https://github.com/angular/components/issues/18780)) ([350e598](https://github.com/angular/components/commit/350e598)) |
+| bug fix |  **drag-drop:** detect changes on custom preview/placeholder before measuring ([#18698](https://github.com/angular/components/issues/18698)) ([2201a99](https://github.com/angular/components/commit/2201a99)), closes [#18622](https://github.com/angular/components/issues/18622) |
+| bug fix |  **drag-drop:** error on IE when document is being auto scrolled ([#18757](https://github.com/angular/components/issues/18757)) ([b0b44d2](https://github.com/angular/components/commit/b0b44d2)) |
+| bug fix |  **drag-drop:** only return item to initial index if the new container's sorting is disabled ([#18706](https://github.com/angular/components/issues/18706)) ([14ae95f](https://github.com/angular/components/commit/14ae95f)), closes [#18697](https://github.com/angular/components/issues/18697) |
+| bug fix |  **form-field:** error when trying to lock label into position too early ([#18666](https://github.com/angular/components/issues/18666)) ([6fd3e6c](https://github.com/angular/components/commit/6fd3e6c)), closes [#18663](https://github.com/angular/components/issues/18663) |
+| bug fix |  **list:** incorrectly selecting items when moving focus using shift + arrow key in single selection mode ([#18579](https://github.com/angular/components/issues/18579)) ([4a809d7](https://github.com/angular/components/commit/4a809d7)) |
+| bug fix |  **list:** no disabled indication in high contrast mode ([#18567](https://github.com/angular/components/issues/18567)) ([5f37eb7](https://github.com/angular/components/commit/5f37eb7)) |
+| bug fix |  **mdc-form-field:** refresh notch width when toggling appearances ([#18776](https://github.com/angular/components/issues/18776)) ([0bfa717](https://github.com/angular/components/commit/0bfa717)) |
+| bug fix |  **mdc-form-field:** text-field should stretch based on host element ([#18778](https://github.com/angular/components/issues/18778)) ([2555344](https://github.com/angular/components/commit/2555344)) |
+| bug fix |  **menu:** allow focus to be moved inside menuClosed event ([#18756](https://github.com/angular/components/issues/18756)) ([5499c40](https://github.com/angular/components/commit/5499c40)) |
+
+### google-maps
+
+|            |                       |
+| ---------- | --------------------- |
+| bug fix |  server-side rendering error for polygon and rectangle components ([#18573](https://github.com/angular/components/issues/18573)) ([d987807](https://github.com/angular/components/commit/d987807)) |
+
+### material-experimental
+
+|            |                       |
+| ---------- | --------------------- |
+| bug fix |  **mdc-list:** fix styles for normal lists ([#18632](https://github.com/angular/components/issues/18632)) ([fcef522](https://github.com/angular/components/commit/fcef522)) |
+| bug fix |  **slider:** add slider mixin to main theme mixin ([#18384](https://github.com/angular/components/issues/18384)) ([3b777eb](https://github.com/angular/components/commit/3b777eb)) |
+| bug fix |  **mdc-form-field:** account for breaking changes in MDC ([#18795](https://github.com/angular/components/issues/18795)) ([e26670f](https://github.com/angular/components/commit/e26670f)) |
+
+
+## 9.1.2 "milk-blade" (2020-03-10)
+
+### cdk
+
+|            |                       |
+| ---------- | --------------------- |
+| bug fix |  **testing:** don't send unnecessary `Key.chord`s to protractor ([#18685](https://github.com/angular/components/issues/18685)) ([f87195b](https://github.com/angular/components/commit/f87195b)), closes [mozilla/geckodriver#1502](https://github.com/mozilla/geckodriver/issues/1502) |
+
+### material
+
+|            |                       |
+| ---------- | --------------------- |
+| bug fix |  **column-resize:** don't allow dragging using the right mouse button ([#18758](https://github.com/angular/components/issues/18758)) ([b29308a](https://github.com/angular/components/commit/b29308a)) |
+| bug fix |  **datepicker:** prevent default dialog options from affecting touch ui calendar ([#18657](https://github.com/angular/components/issues/18657)) ([913ca45](https://github.com/angular/components/commit/913ca45)), closes [#18648](https://github.com/angular/components/issues/18648) |
+| bug fix |  **radio:** Move .mat-radio-input above .mat-focus-indicator. ([#18709](https://github.com/angular/components/issues/18709)) ([bdd9ec9](https://github.com/angular/components/commit/bdd9ec9)) |
+| bug fix |  **typography:** default to normal letter spacing ([e441a8c](https://github.com/angular/components/commit/e441a8c)) |
+| bug fix |  **tabs:** fix event emitter type ([#18664](https://github.com/angular/components/issues/18664)) ([b486891](https://github.com/angular/components/commit/b486891)) |
+
+### material-experimental
+
+|            |                       |
+| ---------- | --------------------- |
+| bug fix |  **mdc-*:** rename sass mixins to mat-mdc-* ([#18615](https://github.com/angular/components/issues/18615)) ([694386a](https://github.com/angular/components/commit/694386a)) |
+| bug fix |  **mdc-form-field:** avoid expression changed after check ([#18741](https://github.com/angular/components/issues/18741)) ([65a602f](https://github.com/angular/components/commit/65a602f)) |
+| bug fix |  **mdc-progress-bar:** account for breaking changes in latest canary ([5d49f37](https://github.com/angular/components/commit/5d49f37)) |
+| bug fix |  **mdc-slider:** resolve warnings about active event listeners ([#18583](https://github.com/angular/components/issues/18583)) ([6faa30c](https://github.com/angular/components/commit/6faa30c)) |
+
+
 ## 9.1.1 "tartan-tonsure" (2020-03-04)
 
 ### material

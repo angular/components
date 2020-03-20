@@ -11,13 +11,17 @@ import {
   Directive,
   ElementRef,
   EventEmitter,
+  Inject,
   Injectable,
+  InjectionToken,
   NgZone,
   OnDestroy,
+  Optional,
   Output,
 } from '@angular/core';
 import {Observable, of as observableOf, Subject, Subscription} from 'rxjs';
 import {coerceElement} from '@angular/cdk/coercion';
+import {DOCUMENT} from '@angular/common';
 
 
 // This is the value used by AngularJS Material. Through trial and error (on iPhone 6S) they found
@@ -35,6 +39,30 @@ export interface FocusOptions {
   /** Whether the browser should scroll to the element when it is focused. */
   preventScroll?: boolean;
 }
+
+/** Detection mode used for attributing the origin of a focus event. */
+export const enum FocusMonitorDetectionMode {
+  /**
+   * Any mousedown, keydown, or touchstart event that happened in the previous
+   * tick or the current tick will be used to assign a focus event's origin (to
+   * either mouse, keyboard, or touch). This is the default option.
+   */
+  IMMEDIATE,
+  /**
+   * A focus event's origin is always attributed to the last corresponding
+   * mousedown, keydown, or touchstart event, no matter how long ago it occured.
+   */
+  EVENTUAL
+}
+
+/** Injectable service-level options for FocusMonitor. */
+export interface FocusMonitorOptions {
+  detectionMode?: FocusMonitorDetectionMode;
+}
+
+/** InjectionToken for FocusMonitorOptions. */
+export const FOCUS_MONITOR_DEFAULT_OPTIONS =
+    new InjectionToken<FocusMonitorOptions>('cdk-focus-monitor-default-options');
 
 type MonitoredElementInfo = {
   unlisten: Function,
@@ -81,6 +109,12 @@ export class FocusMonitor implements OnDestroy {
 
   /** The number of elements currently being monitored. */
   private _monitoredElementCount = 0;
+
+  /**
+   * The specified detection mode, used for attributing the origin of a focus
+   * event.
+   */
+  private readonly _detectionMode: FocusMonitorDetectionMode;
 
   /**
    * Event listener for `keydown` events on the document.
@@ -134,7 +168,19 @@ export class FocusMonitor implements OnDestroy {
     this._windowFocusTimeoutId = setTimeout(() => this._windowFocused = false);
   }
 
-  constructor(private _ngZone: NgZone, private _platform: Platform) {}
+  /** Used to reference correct document/window */
+  protected _document?: Document;
+
+  constructor(
+      private _ngZone: NgZone,
+      private _platform: Platform,
+      /** @breaking-change 11.0.0 make document required */
+      @Optional() @Inject(DOCUMENT) document: any|null,
+      @Optional() @Inject(FOCUS_MONITOR_DEFAULT_OPTIONS) options:
+          FocusMonitorOptions|null) {
+    this._document = document;
+    this._detectionMode = options?.detectionMode || FocusMonitorDetectionMode.IMMEDIATE;
+  }
 
   /**
    * Monitors focus on an element and applies appropriate CSS classes.
@@ -257,6 +303,17 @@ export class FocusMonitor implements OnDestroy {
     this._elementInfo.forEach((_info, element) => this.stopMonitoring(element));
   }
 
+  /** Access injected document if available or fallback to global document reference */
+  private _getDocument(): Document {
+    return this._document || document;
+  }
+
+  /** Use defaultView of injected document if available or fallback to global window reference */
+  private _getWindow(): Window {
+    const doc = this._getDocument();
+    return doc.defaultView || window;
+  }
+
   private _toggleClass(element: Element, className: string, shouldSet: boolean) {
     if (shouldSet) {
       element.classList.add(className);
@@ -284,15 +341,19 @@ export class FocusMonitor implements OnDestroy {
 
   /**
    * Sets the origin and schedules an async function to clear it at the end of the event queue.
+   * If the detection mode is 'eventual', the origin is never cleared.
    * @param origin The origin to set.
    */
   private _setOriginForCurrentEventQueue(origin: FocusOrigin): void {
     this._ngZone.runOutsideAngular(() => {
       this._origin = origin;
-      // Sometimes the focus origin won't be valid in Firefox because Firefox seems to focus *one*
-      // tick after the interaction event fired. To ensure the focus origin is always correct,
-      // the focus origin will be determined at the beginning of the next tick.
-      this._originTimeoutId = setTimeout(() => this._origin = null, 1);
+
+      if (this._detectionMode === FocusMonitorDetectionMode.IMMEDIATE) {
+        // Sometimes the focus origin won't be valid in Firefox because Firefox seems to focus *one*
+        // tick after the interaction event fired. To ensure the focus origin is always correct,
+        // the focus origin will be determined at the beginning of the next tick.
+        this._originTimeoutId = setTimeout(() => this._origin = null, 1);
+      }
     });
   }
 
@@ -393,6 +454,9 @@ export class FocusMonitor implements OnDestroy {
       // Note: we listen to events in the capture phase so we
       // can detect them even if the user stops propagation.
       this._ngZone.runOutsideAngular(() => {
+        const document = this._getDocument();
+        const window = this._getWindow();
+
         document.addEventListener('keydown', this._documentKeydownListener,
           captureEventListenerOptions);
         document.addEventListener('mousedown', this._documentMousedownListener,
@@ -407,6 +471,9 @@ export class FocusMonitor implements OnDestroy {
   private _decrementMonitoredElementCount() {
     // Unregister global listeners when last element is unmonitored.
     if (!--this._monitoredElementCount) {
+      const document = this._getDocument();
+      const window = this._getWindow();
+
       document.removeEventListener('keydown', this._documentKeydownListener,
         captureEventListenerOptions);
       document.removeEventListener('mousedown', this._documentMousedownListener,

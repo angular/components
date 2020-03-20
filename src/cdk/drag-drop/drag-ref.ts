@@ -853,10 +853,10 @@ export class DragRef<T = any> {
         this._dropContainer!.exit(this);
         // Notify the new container that the item has entered.
         this._dropContainer = newContainer!;
-        this._dropContainer.enter(this, x, y,
-            // If we're re-entering the initial container,
+        this._dropContainer.enter(this, x, y, newContainer === this._initialContainer &&
+            // If we're re-entering the initial container and sorting is disabled,
             // put item the into its starting index to begin with.
-            newContainer === this._initialContainer ? this._initialIndex : undefined);
+            newContainer.sortingDisabled ? this._initialIndex : undefined);
         this.entered.next({
           item: this,
           container: newContainer!,
@@ -884,6 +884,7 @@ export class DragRef<T = any> {
     if (previewTemplate) {
       const viewRef = previewConfig!.viewContainer.createEmbeddedView(previewTemplate,
                                                                       previewConfig!.context);
+      viewRef.detectChanges();
       preview = getRootNode(viewRef, this._document);
       this._previewRef = viewRef;
 
@@ -984,6 +985,7 @@ export class DragRef<T = any> {
         placeholderTemplate,
         placeholderConfig!.context
       );
+      this._placeholderRef.detectChanges();
       placeholder = getRootNode(this._placeholderRef, this._document);
     } else {
       placeholder = deepCloneNode(this._rootElement);

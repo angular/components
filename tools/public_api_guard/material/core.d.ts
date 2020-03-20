@@ -201,7 +201,9 @@ export declare const MAT_OPTION_PARENT_COMPONENT: InjectionToken<MatOptionParent
 export declare const MAT_RIPPLE_GLOBAL_OPTIONS: InjectionToken<RippleGlobalOptions>;
 
 export declare class MatCommonModule {
-    constructor(highContrastModeDetector: HighContrastModeDetector, sanityChecks: any);
+    protected _document?: Document;
+    constructor(highContrastModeDetector: HighContrastModeDetector, sanityChecks: any,
+    document?: any);
     static ɵinj: i0.ɵɵInjectorDef<MatCommonModule>;
     static ɵmod: i0.ɵɵNgModuleDefWithMeta<MatCommonModule, never, [typeof i1.BidiModule], [typeof i1.BidiModule]>;
 }
@@ -457,7 +459,7 @@ export declare type SanityChecks = boolean | GranularSanityChecks;
 
 export declare const JAN = 0, FEB = 1, MAR = 2, APR = 3, MAY = 4, JUN = 5, JUL = 6, AUG = 7, SEP = 8, OCT = 9, NOV = 10, DEC = 11;
 
-export declare function setLines(lines: QueryList<MatLine>, element: ElementRef<HTMLElement>): void;
+export declare function setLines(lines: QueryList<unknown>, element: ElementRef<HTMLElement>, prefix?: string): void;
 
 export declare class ShowOnDirtyErrorStateMatcher implements ErrorStateMatcher {
     isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean;
