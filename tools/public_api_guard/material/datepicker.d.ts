@@ -295,6 +295,7 @@ export declare class MatDateRangePicker<D> extends MatDatepickerBase<MatDateRang
 
 export declare class MatEndDate<D> extends _MatDateRangeInputBase<D> implements CanUpdateErrorState {
     protected _validator: ValidatorFn | null;
+    constructor(rangeInput: MatDateRangeInputParent<D>, elementRef: ElementRef<HTMLInputElement>, defaultErrorStateMatcher: ErrorStateMatcher, injector: Injector, parentForm: NgForm, parentFormGroup: FormGroupDirective, dateAdapter: DateAdapter<D>, dateFormats: MatDateFormats);
     protected _assignValueToModel(value: D | null): void;
     protected _getValueFromModel(modelValue: DateRange<D>): D | null;
     static ngAcceptInputType_disabled: BooleanInput;
@@ -375,6 +376,7 @@ export declare class MatMultiYearView<D> implements AfterContentInit, OnDestroy 
 
 export declare class MatStartDate<D> extends _MatDateRangeInputBase<D> implements CanUpdateErrorState {
     protected _validator: ValidatorFn | null;
+    constructor(rangeInput: MatDateRangeInputParent<D>, elementRef: ElementRef<HTMLInputElement>, defaultErrorStateMatcher: ErrorStateMatcher, injector: Injector, parentForm: NgForm, parentFormGroup: FormGroupDirective, dateAdapter: DateAdapter<D>, dateFormats: MatDateFormats);
     protected _assignValueToModel(value: D | null): void;
     protected _formatValue(value: D | null): void;
     protected _getValueFromModel(modelValue: DateRange<D>): D | null;
