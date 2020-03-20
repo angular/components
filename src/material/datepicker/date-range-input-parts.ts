@@ -198,6 +198,23 @@ export class MatStartDate<D> extends _MatDateRangeInputBase<D> implements CanUpd
         null : {'matStartDateInvalid': {'end': end, 'actual': start}};
   }
 
+  constructor(
+    @Inject(MAT_DATE_RANGE_INPUT_PARENT) rangeInput: MatDateRangeInputParent<D>,
+    elementRef: ElementRef<HTMLInputElement>,
+    defaultErrorStateMatcher: ErrorStateMatcher,
+    injector: Injector,
+    @Optional() parentForm: NgForm,
+    @Optional() parentFormGroup: FormGroupDirective,
+    @Optional() dateAdapter: DateAdapter<D>,
+    @Optional() @Inject(MAT_DATE_FORMATS) dateFormats: MatDateFormats) {
+
+    // TODO(crisbeto): this constructor shouldn't be necessary, but ViewEngine doesn't seem to
+    // handle DI correctly when it is inherited from `MatDateRangeInputPartBase`. We can drop this
+    // constructor once ViewEngine is removed.
+    super(rangeInput, elementRef, defaultErrorStateMatcher, injector, parentForm, parentFormGroup,
+        dateAdapter, dateFormats);
+  }
+
   protected _validator = Validators.compose([...super._getValidators(), this._startValidator]);
 
   protected _getValueFromModel(modelValue: DateRange<D>) {
@@ -259,6 +276,23 @@ export class MatEndDate<D> extends _MatDateRangeInputBase<D> implements CanUpdat
     return (!end || !start ||
         this._dateAdapter.compareDate(end, start) >= 0) ?
         null : {'matEndDateInvalid': {'start': start, 'actual': end}};
+  }
+
+  constructor(
+    @Inject(MAT_DATE_RANGE_INPUT_PARENT) rangeInput: MatDateRangeInputParent<D>,
+    elementRef: ElementRef<HTMLInputElement>,
+    defaultErrorStateMatcher: ErrorStateMatcher,
+    injector: Injector,
+    @Optional() parentForm: NgForm,
+    @Optional() parentFormGroup: FormGroupDirective,
+    @Optional() dateAdapter: DateAdapter<D>,
+    @Optional() @Inject(MAT_DATE_FORMATS) dateFormats: MatDateFormats) {
+
+    // TODO(crisbeto): this constructor shouldn't be necessary, but ViewEngine doesn't seem to
+    // handle DI correctly when it is inherited from `MatDateRangeInputPartBase`. We can drop this
+    // constructor once ViewEngine is removed.
+    super(rangeInput, elementRef, defaultErrorStateMatcher, injector, parentForm, parentFormGroup,
+        dateAdapter, dateFormats);
   }
 
   protected _validator = Validators.compose([...super._getValidators(), this._endValidator]);
