@@ -1,1 +1,12 @@
-/** No CSS for this example */
+section {
+  margin: 8px;
+}
+
+.label {
+  font-size: 14px;
+  margin-right: 24px;
+}
+
+.button-row button {
+  margin-right: 8px;
+}
