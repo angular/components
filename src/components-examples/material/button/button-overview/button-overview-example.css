@@ -2,11 +2,11 @@ section {
   margin: 8px;
 }
 
-.label {
+.example-label {
   font-size: 14px;
   margin-right: 24px;
 }
 
-.button-row button {
+.example-button-row button {
   margin-right: 8px;
 }
