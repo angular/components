@@ -86,6 +86,7 @@ ng_test_library(
     ),
     deps = [
         ":datepicker",
+        "//src/cdk/a11y",
         "//src/cdk/bidi",
         "//src/cdk/keycodes",
         "//src/cdk/overlay",
