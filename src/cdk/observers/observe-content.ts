@@ -43,40 +43,49 @@ export class MutationObserverFactory {
 @Injectable({providedIn: 'root'})
 export class ContentObserver implements OnDestroy {
   /** Keeps track of the existing MutationObservers so they can be reused. */
-  private _observedElements = new Map<Element, {
+  private _observedElements = new Map<Element, Map<string, {
     observer: MutationObserver | null,
     stream: Subject<MutationRecord[]>,
     count: number
-  }>();
+  }>>();
 
   constructor(private _mutationObserverFactory: MutationObserverFactory) {}
 
   ngOnDestroy() {
-    this._observedElements.forEach((_, element) => this._cleanupObserver(element));
+    this._observedElements.forEach((cache, element) => {
+      cache.forEach((_, key) => this._cleanupObserver(element, key));
+    });
   }
 
   /**
    * Observe content changes on an element.
    * @param element The element to observe for content changes.
+   * @param options Options that can be used to configure what is being observed,
    */
-  observe(element: Element): Observable<MutationRecord[]>;
+  observe(element: Element, options?: MutationObserverInit): Observable<MutationRecord[]>;
 
   /**
    * Observe content changes on an element.
    * @param element The element to observe for content changes.
+   * @param options Options that can be used to configure what is being observed,
    */
-  observe(element: ElementRef<Element>): Observable<MutationRecord[]>;
+  observe(element: ElementRef<Element>, options?: MutationObserverInit):
+      Observable<MutationRecord[]>;
 
-  observe(elementOrRef: Element | ElementRef<Element>): Observable<MutationRecord[]> {
+  observe(elementOrRef: Element | ElementRef<Element>, options: MutationObserverInit = {
+    characterData: true,
+    childList: true,
+    subtree: true
+  }): Observable<MutationRecord[]> {
     const element = coerceElement(elementOrRef);
 
     return new Observable((observer: Observer<MutationRecord[]>) => {
-      const stream = this._observeElement(element);
+      const stream = this._observeElement(element, options);
       const subscription = stream.subscribe(observer);
 
       return () => {
         subscription.unsubscribe();
-        this._unobserveElement(element);
+        this._unobserveElement(element, options);
       };
     });
   }
@@ -85,47 +94,95 @@ export class ContentObserver implements OnDestroy {
    * Observes the given element by using the existing MutationObserver if available, or creating a
    * new one if not.
    */
-  private _observeElement(element: Element): Subject<MutationRecord[]> {
-    if (!this._observedElements.has(element)) {
+  private _observeElement(element: Element, options: MutationObserverInit):
+      Subject<MutationRecord[]> {
+
+    const observedElements = this._observedElements;
+    const cacheKey = this._getCacheKey(options);
+    let elementEntry = observedElements.get(element);
+
+    if (!elementEntry) {
+      elementEntry = new Map();
+      observedElements.set(element, elementEntry);
+    }
+
+    const cachedConfig = elementEntry.get(cacheKey);
+
+    if (cachedConfig) {
+      cachedConfig.count++;
+      return cachedConfig.stream;
+    } else {
       const stream = new Subject<MutationRecord[]>();
       const observer = this._mutationObserverFactory.create(mutations => stream.next(mutations));
+
       if (observer) {
-        observer.observe(element, {
-          characterData: true,
-          childList: true,
-          subtree: true
-        });
+        observer.observe(element, options);
       }
-      this._observedElements.set(element, {observer, stream, count: 1});
-    } else {
-      this._observedElements.get(element)!.count++;
+
+      elementEntry.set(cacheKey, {observer, stream, count: 1});
+      return stream;
     }
-    return this._observedElements.get(element)!.stream;
   }
 
   /**
    * Un-observes the given element and cleans up the underlying MutationObserver if nobody else is
    * observing this element.
    */
-  private _unobserveElement(element: Element) {
-    if (this._observedElements.has(element)) {
-      this._observedElements.get(element)!.count--;
-      if (!this._observedElements.get(element)!.count) {
-        this._cleanupObserver(element);
+  private _unobserveElement(element: Element, options: MutationObserverInit) {
+    const cacheKey = this._getCacheKey(options);
+    const cachedConfig = this._getConfig(element, cacheKey);
+
+    if (cachedConfig) {
+      cachedConfig.count--;
+
+      if (cachedConfig.count < 1) {
+        this._cleanupObserver(element, cacheKey);
       }
     }
   }
 
   /** Clean up the underlying MutationObserver for the specified element. */
-  private _cleanupObserver(element: Element) {
-    if (this._observedElements.has(element)) {
-      const {observer, stream} = this._observedElements.get(element)!;
+  private _cleanupObserver(element: Element, cacheKey: string) {
+    const cachedConfig = this._getConfig(element, cacheKey);
+
+    if (cachedConfig) {
+      const {observer, stream} = cachedConfig;
+
       if (observer) {
         observer.disconnect();
       }
+
       stream.complete();
-      this._observedElements.delete(element);
+      this._observedElements.get(element)!.delete(cacheKey);
+
+      if (this._observedElements.get(element)!.size < 1) {
+        this._observedElements.delete(element);
+      }
     }
+  }
+
+  /** Gets the cached config for an element, based on a cache key. */
+  private _getConfig(element: Element, cacheKey: string) {
+    const elementEntry = this._observedElements.get(element);
+
+    if (elementEntry) {
+      return elementEntry.get(cacheKey);
+    }
+
+    return undefined;
+  }
+
+  /** Generates a key for the element cache from a MutationObserver configuration object. */
+  private _getCacheKey(options: MutationObserverInit): string {
+    return [
+      options.attributeFilter ? options.attributeFilter.join(',') : '',
+      !!options.attributeOldValue,
+      !!options.attributes,
+      !!options.characterData,
+      !!options.characterDataOldValue,
+      !!options.childList,
+      !!options.subtree
+    ].join('|');
   }
 }
 

@@ -16,8 +16,8 @@ export declare class CdkObserveContent implements AfterContentInit, OnDestroy {
 export declare class ContentObserver implements OnDestroy {
     constructor(_mutationObserverFactory: MutationObserverFactory);
     ngOnDestroy(): void;
-    observe(element: Element): Observable<MutationRecord[]>;
-    observe(element: ElementRef<Element>): Observable<MutationRecord[]>;
+    observe(element: Element, options?: MutationObserverInit): Observable<MutationRecord[]>;
+    observe(element: ElementRef<Element>, options?: MutationObserverInit): Observable<MutationRecord[]>;
     static ɵfac: i0.ɵɵFactoryDef<ContentObserver>;
     static ɵprov: i0.ɵɵInjectableDef<ContentObserver>;
 }
