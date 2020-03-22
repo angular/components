@@ -206,7 +206,11 @@ export class MatCalendarBody implements OnChanges, OnDestroy {
 
   /** Gets whether a value is the end of the main range. */
   _isRangeEnd(value: number) {
-    return value === this.endValue || (value === this._hoveredValue && value >= this.startValue);
+    if (!this.startValue || value < this.startValue) {
+      return false;
+    }
+
+    return value === this.endValue || value === this._hoveredValue;
   }
 
   /** Gets whether a value is within the currently-selected range. */
@@ -254,7 +258,8 @@ export class MatCalendarBody implements OnChanges, OnDestroy {
 
   /** Gets whether a value is the end of the comparison range. */
   _isComparisonEnd(value: number) {
-    return value === this.comparisonEnd;
+    return this.comparisonStart && value >= this.comparisonStart &&
+           value === this.comparisonEnd;
   }
 
   /** Gets whether a value is within the current comparison range. */

@@ -81,7 +81,7 @@ export declare class MatCalendarBody implements OnChanges, OnDestroy {
     _isActiveCell(rowIndex: number, colIndex: number): boolean;
     _isComparisonBridgeEnd(value: number, rowIndex: number, colIndex: number): boolean;
     _isComparisonBridgeStart(value: number, rowIndex: number, colIndex: number): boolean;
-    _isComparisonEnd(value: number): boolean;
+    _isComparisonEnd(value: number): boolean | 0 | null;
     _isComparisonStart(value: number): boolean;
     _isInComparisonRange(value: number): boolean | 0 | null;
     _isInRange(value: number): boolean;

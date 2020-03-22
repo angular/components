@@ -10,11 +10,18 @@ import {
   RIGHT_ARROW,
   SPACE,
   UP_ARROW,
+  ESCAPE,
 } from '@angular/cdk/keycodes';
-import {dispatchFakeEvent, dispatchKeyboardEvent} from '@angular/cdk/testing/private';
+import {
+  dispatchFakeEvent,
+  dispatchKeyboardEvent,
+  dispatchMouseEvent,
+  createKeyboardEvent,
+  dispatchEvent,
+} from '@angular/cdk/testing/private';
 import {Component} from '@angular/core';
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
-import {MatNativeDateModule} from '@angular/material/core';
+import {MatNativeDateModule, DateRange} from '@angular/material/core';
 import {DEC, FEB, JAN, MAR, NOV} from '@angular/material/testing';
 import {By} from '@angular/platform-browser';
 import {MatCalendarBody} from './calendar-body';
@@ -287,6 +294,39 @@ describe('MatMonthView', () => {
 
           expect(testComponent.selected).toEqual(new Date(2017, JAN, 4));
         });
+
+        it('should cancel the current range selection when pressing escape', () => {
+          const cellEls = monthViewNativeElement.querySelectorAll('.mat-calendar-body-cell');
+          testComponent.selected = new DateRange(new Date(2017, JAN, 10), null);
+          fixture.detectChanges();
+          dispatchMouseEvent(cellEls[15], 'mouseenter');
+          fixture.detectChanges();
+
+          // Note that here we only care that _some_ kind of range is rendered. There are
+          // plenty of tests in the calendar body which assert that everything is correct.
+          expect(monthViewNativeElement.querySelectorAll('.mat-calendar-body-range-start').length)
+              .toBeGreaterThan(0);
+          expect(monthViewNativeElement.querySelectorAll('.mat-calendar-body-in-range').length)
+              .toBeGreaterThan(0);
+          expect(monthViewNativeElement.querySelectorAll('.mat-calendar-body-range-end').length)
+              .toBeGreaterThan(0);
+
+          const event = createKeyboardEvent('keydown', ESCAPE, 'Escape', calendarBodyEl);
+          spyOn(event, 'stopPropagation');
+          dispatchEvent(calendarBodyEl, event);
+          fixture.detectChanges();
+
+          // Expect the range range to have been cleared.
+          expect(monthViewNativeElement.querySelectorAll([
+            '.mat-calendar-body-range-start',
+            '.mat-calendar-body-in-range',
+            '.mat-calendar-body-range-end'
+          ].join(',')).length).toBe(0);
+          expect(event.stopPropagation).toHaveBeenCalled();
+          expect(event.defaultPrevented).toBe(true);
+          expect(testComponent.selected).toBeFalsy();
+        });
+
       });
     });
   });
@@ -352,7 +392,7 @@ describe('MatMonthView', () => {
 })
 class StandardMonthView {
   date = new Date(2017, JAN, 5);
-  selected = new Date(2017, JAN, 10);
+  selected: Date | DateRange<Date> = new Date(2017, JAN, 10);
 }
 
 
