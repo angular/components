@@ -32,6 +32,8 @@ export class MatListItemBase implements AfterContentInit, OnDestroy {
     this._ngZone.runOutsideAngular(() => {
       this._subscriptions.add(this.lines.changes.pipe(startWith(this.lines))
           .subscribe((lines: QueryList<ElementRef<Element>>) => {
+            this._element.nativeElement.classList
+                .toggle('mat-mdc-list-item-single-line', lines.length <= 1);
             lines.forEach((line: ElementRef<Element>, index: number) => {
               line.nativeElement.classList.toggle('mdc-list-item__primary-text', index === 0);
               line.nativeElement.classList.toggle('mdc-list-item__secondary-text', index !== 0);
