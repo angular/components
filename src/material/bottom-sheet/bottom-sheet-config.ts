@@ -44,7 +44,7 @@ export class MatBottomSheetConfig<D = any> {
   /**
    * Whether the bottom sheet should close when the user goes backwards/forwards in history.
    * Note that this usually doesn't include clicking on links (unless the user is using
-   * the `HashLocationStrategy`).
+   * the `HashLocationStrategy`). Defaults to `true`.
    */
   closeOnNavigation?: boolean = true;
 
