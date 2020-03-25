@@ -18,3 +18,9 @@ section {
   display: table-cell;
   margin-right: 8px;
 }
+
+.example-flex-container {
+  display: flex;
+  justify-content: space-between;
+  width: 480px;
+}
