@@ -1,5 +1,7 @@
 # 9.2.0 "metal-man" (2020-03-25)
 
+This release introduces support for TypeScript 3.8.
+
 ### cdk
 
 |            |                       |
