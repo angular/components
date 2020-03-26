@@ -24,3 +24,9 @@ section {
   justify-content: space-between;
   width: 480px;
 }
+
+.example-button-container {
+  display: flex;
+  justify-content: center;
+  width: 120px;
+}
