@@ -3,6 +3,10 @@
 @import '../../typography/all-typography';
 @import '../all-theme';
 
+// Disable theme style duplication warnings. This test intentionally generates
+// the same themes multiple times.
+$mat-theme-ignore-duplication-warnings: true;
+
 // A new way to configure themes has been introduced. This Sass file ensures that the theming
 // API is backwards compatible, so that the old pattern for configuring themes can be still
 // used. The Sass compilation of this file will fail if one of the tests/assertions fails.
