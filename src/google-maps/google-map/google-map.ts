@@ -254,8 +254,8 @@ export class GoogleMap implements OnChanges, OnInit, OnDestroy {
 
   ngOnChanges() {
     this._setSize();
-    if (this._googleMap && this.mapTypeId) {
-      this._googleMap.setMapTypeId(this.mapTypeId);
+    if (this.googleMap && this.mapTypeId) {
+      this.googleMap.setMapTypeId(this.mapTypeId);
     }
   }
 
