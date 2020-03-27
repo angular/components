@@ -394,6 +394,54 @@ describe('MatDatepicker', () => {
     expect(end.nativeElement.getAttribute('max')).toContain('2020');
   });
 
+  it('should pass the range input value through to the calendar', () => {
+    const fixture = createComponent(StandardRangePicker);
+    const {start, end} = fixture.componentInstance.range.controls;
+    let overlayContainerElement: HTMLElement;
+    start.setValue(new Date(2020, 1, 2));
+    end.setValue(new Date(2020, 1, 5));
+    inject([OverlayContainer], (overlayContainer: OverlayContainer) => {
+      overlayContainerElement = overlayContainer.getContainerElement();
+    })();
+    fixture.detectChanges();
+
+    fixture.componentInstance.rangePicker.open();
+    fixture.detectChanges();
+
+    const rangeTexts = Array.from(overlayContainerElement!.querySelectorAll([
+      '.mat-calendar-body-range-start',
+      '.mat-calendar-body-in-range',
+      '.mat-calendar-body-range-end'
+    ].join(','))).map(cell => cell.textContent!.trim());
+
+    expect(rangeTexts).toEqual(['2', '3', '4', '5']);
+  });
+
+  it('should pass the comparison range through to the calendar', () => {
+    const fixture = createComponent(StandardRangePicker);
+    let overlayContainerElement: HTMLElement;
+
+    // Set startAt to guarantee that the calendar opens on the proper month.
+    fixture.componentInstance.comparisonStart =
+        fixture.componentInstance.startAt = new Date(2020, 1, 2);
+    fixture.componentInstance.comparisonEnd = new Date(2020, 1, 5);
+    inject([OverlayContainer], (overlayContainer: OverlayContainer) => {
+      overlayContainerElement = overlayContainer.getContainerElement();
+    })();
+    fixture.detectChanges();
+
+    fixture.componentInstance.rangePicker.open();
+    fixture.detectChanges();
+
+    const rangeTexts = Array.from(overlayContainerElement!.querySelectorAll([
+      '.mat-calendar-body-comparison-start',
+      '.mat-calendar-body-in-comparison-range',
+      '.mat-calendar-body-comparison-end'
+    ].join(','))).map(cell => cell.textContent!.trim());
+
+    expect(rangeTexts).toEqual(['2', '3', '4', '5']);
+  });
+
 });
 
 @Component({
@@ -407,12 +455,16 @@ describe('MatDatepicker', () => {
         [separator]="separator"
         [min]="minDate"
         [max]="maxDate"
-        [dateFilter]="dateFilter">
+        [dateFilter]="dateFilter"
+        [comparisonStart]="comparisonStart"
+        [comparisonEnd]="comparisonEnd">
         <input #start formControlName="start" matStartDate placeholder="Start date"/>
         <input #end formControlName="end" matEndDate placeholder="End date"/>
       </mat-date-range-input>
 
-      <mat-date-range-picker #rangePicker></mat-date-range-picker>
+      <mat-date-range-picker
+        [startAt]="startAt"
+        #rangePicker></mat-date-range-picker>
     </mat-form-field>
   `
 })
@@ -425,6 +477,9 @@ class StandardRangePicker {
   rangeDisabled = false;
   minDate: Date | null = null;
   maxDate: Date | null = null;
+  comparisonStart: Date | null = null;
+  comparisonEnd: Date | null = null;
+  startAt: Date | null = null;
   dateFilter = () => true;
 
   range = new FormGroup({
