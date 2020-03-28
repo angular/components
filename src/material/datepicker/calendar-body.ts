@@ -111,7 +111,7 @@ export class MatCalendarBody implements OnChanges, OnDestroy {
    * Value that the user is either currently hovering over or is focusing
    * using the keyboard. Only applies when selecting the end of a date range.
    */
-  _hoveredValue = -1;
+  _previewEnd = -1;
 
   constructor(
     private _elementRef: ElementRef<HTMLElement>,
@@ -156,7 +156,7 @@ export class MatCalendarBody implements OnChanges, OnDestroy {
     }
 
     if (changes['startValue'] || changes['endValue']) {
-      this._hoveredValue = -1;
+      this._previewEnd = -1;
     }
   }
 
@@ -206,17 +206,12 @@ export class MatCalendarBody implements OnChanges, OnDestroy {
 
   /** Gets whether a value is the end of the main range. */
   _isRangeEnd(value: number) {
-    if (!this.startValue || value < this.startValue) {
-      return false;
-    }
-
-    return value === this.endValue || value === this._hoveredValue;
+    return this.startValue && value >= this.startValue && value === this.endValue;
   }
 
   /** Gets whether a value is within the currently-selected range. */
   _isInRange(value: number): boolean {
-    return this._isSelectingRange() && value >= this.startValue &&
-           (value <= this.endValue || value <= this._hoveredValue);
+    return this._isSelectingRange() && value >= this.startValue && value <= this.endValue;
   }
 
   /** Gets whether a value is the start of the comparison range. */
@@ -269,13 +264,28 @@ export class MatCalendarBody implements OnChanges, OnDestroy {
            value <= this.comparisonEnd;
   }
 
+  /** Gets whether a value is the start of the preview range. */
+  _isPreviewStart(value: number) {
+    return this._previewEnd > -1 && this._isRangeStart(value);
+  }
+
+  /** Gets whether a value is the end of the preview range. */
+  _isPreviewEnd(value: number) {
+    return value === this._previewEnd;
+  }
+
+  /** Gets whether a value is inside the preview range. */
+  _isInPreview(value: number) {
+    return this._isSelectingRange() && value >= this.startValue && value <= this._previewEnd;
+  }
+
   /**
    * Event handler for when the user enters an element
    * inside the calendar body (e.g. by hovering in or focus).
    */
   private _enterHandler = (event: Event) => {
-    // We only need to hit the zone when we're selecting a range, we
-    // have a start value without an end value and we've hovered over a date cell.
+    // We only need to hit the zone when we're selecting a range, we have a
+    // start value without an end value and we've hovered over a date cell.
     if (!event.target || !this.startValue || this.endValue || !this._isSelectingRange()) {
       return;
     }
@@ -285,11 +295,11 @@ export class MatCalendarBody implements OnChanges, OnDestroy {
     if (cell) {
       const value = cell.compareValue;
 
-      // Only set as the hovered value if we're after the start of the range.
-      const hoveredValue = (cell.enabled && value > this.startValue) ? value : -1;
+      // Only set as the preview end value if we're after the start of the range.
+      const previewEnd = (cell.enabled && value > this.startValue) ? value : -1;
 
-      if (hoveredValue !== this._hoveredValue) {
-        this._hoveredValue = hoveredValue;
+      if (previewEnd !== this._previewEnd) {
+        this._previewEnd = previewEnd;
         this._ngZone.run(() => this._changeDetectorRef.markForCheck());
       }
     }
@@ -301,18 +311,18 @@ export class MatCalendarBody implements OnChanges, OnDestroy {
    */
   private _leaveHandler = (event: Event) => {
     // We only need to hit the zone when we're selecting a range.
-    if (this._hoveredValue !== -1 && this._isSelectingRange()) {
-      // Only reset the hovered value when leaving cells. This looks better, because
+    if (this._previewEnd !== -1 && this._isSelectingRange()) {
+      // Only reset the preview end value when leaving cells. This looks better, because
       // we have a gap between the cells and the rows and we don't want to remove the
       // range just for it to show up again when the user moves a few pixels to the side.
       if (event.target && isTableCell(event.target as HTMLElement)) {
         this._ngZone.run(() => {
-          this._hoveredValue = -1;
+          this._previewEnd = -1;
 
           // Note that here we need to use `detectChanges`, rather than `markForCheck`, because
           // the way `_focusActiveCell` is set up at the moment makes it fire at the wrong time
           // when navigating one month back using the keyboard which will cause this handler
-          // to throw a "changed after checked" error when updating the hover state.
+          // to throw a "changed after checked" error when updating the preview state.
           this._changeDetectorRef.detectChanges();
         });
       }

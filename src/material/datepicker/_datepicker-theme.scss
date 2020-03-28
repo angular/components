@@ -84,6 +84,20 @@ $mat-calendar-weekday-table-font-size: 11px !default;
     }
   }
 
+  .mat-calendar-body-in-preview {
+    $divider-color: mat-color($foreground, divider);
+
+    @if type-of($divider-color) == color {
+      // The divider color is set under the assumption that it'll be used
+      // for a solid border, but because we're using a dashed border for the
+      // preview range, we need to bump its opacity to ensure that it's visible.
+      color: rgba($divider-color, min(opacity($divider-color) * 2, 1));
+    }
+    @else {
+      color: $divider-color;
+    }
+  }
+
   .mat-calendar-body-today:not(.mat-calendar-body-selected) {
     // Note: though it's not text, the border is a hint about the fact that this is today's date,
     // so we use the hint color.
