@@ -6,7 +6,10 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Platform, normalizePassiveListenerOptions} from '@angular/cdk/platform';
+import {coerceElement} from '@angular/cdk/coercion';
+import {MutationObserverFactory} from '@angular/cdk/observers';
+import {normalizePassiveListenerOptions, Platform} from '@angular/cdk/platform';
+import {DOCUMENT} from '@angular/common';
 import {
   Directive,
   ElementRef,
@@ -20,8 +23,6 @@ import {
   Output,
 } from '@angular/core';
 import {Observable, of as observableOf, Subject, Subscription} from 'rxjs';
-import {coerceElement} from '@angular/cdk/coercion';
-import {DOCUMENT} from '@angular/common';
 
 
 // This is the value used by AngularJS Material. Through trial and error (on iPhone 6S) they found
@@ -67,7 +68,8 @@ export const FOCUS_MONITOR_DEFAULT_OPTIONS =
 type MonitoredElementInfo = {
   unlisten: Function,
   checkChildren: boolean,
-  subject: Subject<FocusOrigin>
+  subject: Subject<FocusOrigin>,
+  mutationObserver: MutationObserver|null,
 };
 
 /**
@@ -172,12 +174,11 @@ export class FocusMonitor implements OnDestroy {
   protected _document?: Document;
 
   constructor(
-      private _ngZone: NgZone,
-      private _platform: Platform,
+      private _ngZone: NgZone, private _platform: Platform,
+      private _mutationObserverFactory: MutationObserverFactory,
       /** @breaking-change 11.0.0 make document required */
       @Optional() @Inject(DOCUMENT) document: any|null,
-      @Optional() @Inject(FOCUS_MONITOR_DEFAULT_OPTIONS) options:
-          FocusMonitorOptions|null) {
+      @Optional() @Inject(FOCUS_MONITOR_DEFAULT_OPTIONS) options: FocusMonitorOptions|null) {
     this._document = document;
     this._detectionMode = options?.detectionMode || FocusMonitorDetectionMode.IMMEDIATE;
   }
@@ -220,7 +221,9 @@ export class FocusMonitor implements OnDestroy {
     let info: MonitoredElementInfo = {
       unlisten: () => {},
       checkChildren: checkChildren,
-      subject: new Subject<FocusOrigin>()
+      subject: new Subject<FocusOrigin>(),
+      mutationObserver: this._mutationObserverFactory.create(
+          (mutations: MutationRecord[]) => this._onMutation(mutations, nativeElement)),
     };
     this._elementInfo.set(nativeElement, info);
     this._incrementMonitoredElementCount();
@@ -358,11 +361,11 @@ export class FocusMonitor implements OnDestroy {
   }
 
   /**
-   * Checks whether the given focus event was caused by a touchstart event.
-   * @param event The focus event to check.
+   * Checks whether the given EventTarget was the target of a recent touchstart event.
+   * @param focusTarget The EventTarget check.
    * @returns Whether the event was caused by a touch.
    */
-  private _wasCausedByTouch(event: FocusEvent): boolean {
+  private _wasRecentlyTouched(focusTarget: EventTarget|null): boolean {
     // Note(mmalerba): This implementation is not quite perfect, there is a small edge case.
     // Consider the following dom structure:
     //
@@ -380,7 +383,6 @@ export class FocusMonitor implements OnDestroy {
     // for the first focus event after the touchstart, and then the first blur event after that
     // focus event. When that blur event fires we know that whatever follows is not a result of the
     // touchstart.
-    let focusTarget = event.target;
     return this._lastTouchTarget instanceof Node && focusTarget instanceof Node &&
         (focusTarget === this._lastTouchTarget || focusTarget.contains(this._lastTouchTarget));
   }
@@ -388,9 +390,9 @@ export class FocusMonitor implements OnDestroy {
   /**
    * Handles focus events on a registered element.
    * @param event The focus event.
-   * @param element The monitored element.
+   * @param monitoredElement The monitored element.
    */
-  private _onFocus(event: FocusEvent, element: HTMLElement) {
+  private _onFocus(event: FocusEvent, monitoredElement: HTMLElement) {
     // NOTE(mmalerba): We currently set the classes based on the focus origin of the most recent
     // focus event affecting the monitored element. If we want to use the origin of the first event
     // instead we should check for the cdk-focused class here and return if the element already has
@@ -398,8 +400,9 @@ export class FocusMonitor implements OnDestroy {
 
     // If we are not counting child-element-focus as focused, make sure that the event target is the
     // monitored element itself.
-    const elementInfo = this._elementInfo.get(element);
-    if (!elementInfo || (!elementInfo.checkChildren && element !== event.target)) {
+    const elementInfo = this._elementInfo.get(monitoredElement);
+    const focusedElement = event.target as Node;
+    if (!elementInfo || (!elementInfo.checkChildren && monitoredElement !== focusedElement)) {
       return;
     }
 
@@ -413,14 +416,18 @@ export class FocusMonitor implements OnDestroy {
     if (!origin) {
       if (this._windowFocused && this._lastFocusOrigin) {
         origin = this._lastFocusOrigin;
-      } else if (this._wasCausedByTouch(event)) {
+      } else if (this._wasRecentlyTouched(focusedElement)) {
         origin = 'touch';
       } else {
         origin = 'program';
       }
     }
 
-    this._setClasses(element, origin);
+    if (elementInfo.mutationObserver) {
+      elementInfo.mutationObserver.observe(focusedElement, {attributes: true});
+    }
+
+    this._setClasses(monitoredElement, origin);
     this._emitOrigin(elementInfo.subject, origin);
     this._lastFocusOrigin = origin;
   }
@@ -428,20 +435,63 @@ export class FocusMonitor implements OnDestroy {
   /**
    * Handles blur events on a registered element.
    * @param event The blur event.
-   * @param element The monitored element.
+   * @param monitoredElement The monitored element.
    */
-  _onBlur(event: FocusEvent, element: HTMLElement) {
+  _onBlur(event: FocusEvent, monitoredElement: HTMLElement) {
     // If we are counting child-element-focus as focused, make sure that we aren't just blurring in
     // order to focus another child of the monitored element.
-    const elementInfo = this._elementInfo.get(element);
+    const elementInfo = this._elementInfo.get(monitoredElement);
 
-    if (!elementInfo || (elementInfo.checkChildren && event.relatedTarget instanceof Node &&
-        element.contains(event.relatedTarget))) {
+    if (!elementInfo ||
+        (elementInfo.checkChildren && event.relatedTarget instanceof Node &&
+         monitoredElement.contains(event.relatedTarget))) {
       return;
     }
 
-    this._setClasses(element);
+    if (elementInfo.mutationObserver) {
+      elementInfo.mutationObserver.disconnect();
+    }
+
+    this._setClasses(monitoredElement);
     this._emitOrigin(elementInfo.subject, null);
+  }
+
+  /**
+   * MutationObserver callback for attribute changes on the currently active
+   * element.
+   * @param mutations The MutationRecord array.
+   * @param monitoredElement The monitored element.
+   */
+  _onMutation(mutations: MutationRecord[], monitoredElement: HTMLElement) {
+    for (let mutation of mutations) {
+      if (mutation.type !== 'attributes' ||
+          mutation.attributeName !== 'aria-activedescendant') {
+        return;
+      }
+      const activeDescendantId =
+          (mutation.target as Element).getAttribute('aria-activedescendant');
+      if (!activeDescendantId) {
+        return;
+      }
+      const activeDescendant = this._getDocument().getElementById(activeDescendantId);
+      if (!activeDescendant) {
+        return;
+      }
+
+      let origin = this._origin;
+      if (!origin) {
+        if (this._wasRecentlyTouched(activeDescendant)) {
+          origin = 'touch';
+        } else {
+          origin = 'program';
+        }
+      }
+
+      const elementInfo = this._elementInfo.get(monitoredElement)!;
+      this._setClasses(monitoredElement, origin);
+      this._emitOrigin(elementInfo.subject, origin);
+      this._lastFocusOrigin = origin;
+    }
   }
 
   private _emitOrigin(subject: Subject<FocusOrigin>, origin: FocusOrigin) {

@@ -1,4 +1,5 @@
-import {TAB} from '@angular/cdk/keycodes';
+import {DOWN_ARROW, TAB} from '@angular/cdk/keycodes';
+import {MutationObserverFactory} from '@angular/cdk/observers';
 import {
   dispatchFakeEvent,
   dispatchKeyboardEvent,
@@ -8,12 +9,14 @@ import {
 import {Component, NgZone} from '@angular/core';
 import {ComponentFixture, fakeAsync, flush, inject, TestBed, tick} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
+
 import {A11yModule} from '../index';
+
 import {
+  FOCUS_MONITOR_DEFAULT_OPTIONS,
   FocusMonitor,
   FocusMonitorDetectionMode,
   FocusOrigin,
-  FOCUS_MONITOR_DEFAULT_OPTIONS,
   TOUCH_BUFFER_MS,
 } from './focus-monitor';
 
@@ -546,10 +549,180 @@ describe('FocusMonitor observable stream', () => {
 });
 
 
+describe('FocusMonitor aria-activedescendant monitoring', () => {
+  let fixture: ComponentFixture<Combobox>;
+  let root: HTMLElement;
+  let inputElement: HTMLElement;
+  let optionElement: HTMLElement;
+  let focusMonitor: FocusMonitor;
+  let changeHandler: (origin: FocusOrigin) => void;
+  let observersAndCallbacks: Map<MutationObserver, MutationCallback>;
+  let invokeCallbacks = (mutations: MutationRecord[]) =>
+      observersAndCallbacks.forEach((callback, observer) => callback(mutations, observer));
+  const emptyNodeList = document.querySelectorAll('matches-nothing');
+
+  beforeEach(() => {
+    observersAndCallbacks = new Map();
+    TestBed
+        .configureTestingModule({
+          imports: [A11yModule],
+          declarations: [
+            Combobox,
+          ],
+          providers: [{
+            provide: MutationObserverFactory,
+            useValue: {
+              create: function(callback: MutationCallback) {
+                const observer: MutationObserver = {
+                  observe: () => {},
+                  disconnect: () => {},
+                  takeRecords: () => [],
+                };
+                observersAndCallbacks.set(observer, callback);
+                return observer;
+              }
+            }
+          }]
+        })
+        .compileComponents();
+  });
+
+  beforeEach(inject([FocusMonitor], (fm: FocusMonitor) => {
+    fixture = TestBed.createComponent(Combobox);
+    focusMonitor = fm;
+    fixture.detectChanges();
+    root = fixture.debugElement.nativeElement;
+    inputElement = root.querySelector('input') as HTMLElement;
+    optionElement = root.querySelector('#option') as HTMLElement;
+    changeHandler = jasmine.createSpy('focus origin change handler');
+    focusMonitor.monitor(inputElement).subscribe(changeHandler);
+    patchElementFocus(inputElement);
+  }));
+
+  it('should refresh origin on aria-activedescendant change', fakeAsync(() => {
+       // Simulate focus via mouse.
+       dispatchMouseEvent(inputElement, 'mousedown');
+       inputElement.focus();
+       fixture.detectChanges();
+       flush();
+
+       expect(inputElement.classList.contains('cdk-mouse-focused'))
+           .toBe(true, 'input should have cdk-mouse-focused class');
+       expect(changeHandler).toHaveBeenCalledWith('mouse');
+
+       // Emulate user using keyboard to activate a combobox suggestion.
+       dispatchKeyboardEvent(document, 'keydown', DOWN_ARROW);
+       inputElement.setAttribute('aria-activedescendant', optionElement.id);
+       invokeCallbacks([{
+         type: 'attributes' as MutationRecordType,
+         attributeName: 'aria-activedescendant',
+         target: inputElement,
+         addedNodes: emptyNodeList,
+         removedNodes: emptyNodeList,
+         attributeNamespace: null,
+         nextSibling: null,
+         previousSibling: null,
+         oldValue: null,
+       }]);
+       flush();
+
+       expect(inputElement.classList.contains('cdk-keyboard-focused'))
+           .toBe(true, 'input should have cdk-keyboard-focused class');
+       expect(changeHandler).toHaveBeenCalledWith('keyboard');
+     }));
+
+  it('should assign touch origin on aria-activedescendant change', fakeAsync(() => {
+       // Simulate focus via mouse.
+       dispatchMouseEvent(inputElement, 'mousedown');
+       inputElement.focus();
+       fixture.detectChanges();
+       flush();
+
+       expect(inputElement.classList.contains('cdk-mouse-focused'))
+           .toBe(true, 'input should have cdk-mouse-focused class');
+       expect(changeHandler).toHaveBeenCalledWith('mouse');
+
+       // Emulate user using touch to activate a combobox suggestion.
+       dispatchFakeEvent(optionElement, 'touchstart');
+       inputElement.setAttribute('aria-activedescendant', optionElement.id);
+       invokeCallbacks([{
+         type: 'attributes' as MutationRecordType,
+         attributeName: 'aria-activedescendant',
+         target: inputElement,
+         addedNodes: emptyNodeList,
+         removedNodes: emptyNodeList,
+         attributeNamespace: null,
+         nextSibling: null,
+         previousSibling: null,
+         oldValue: null,
+       }]);
+       flush();
+
+       expect(inputElement.classList.contains('cdk-touch-focused'))
+           .toBe(true, 'input should have cdk-touch-focused class');
+       expect(changeHandler).toHaveBeenCalledWith('touch');
+     }));
+
+  it('should work with nested focus monitored elements', fakeAsync(() => {
+       const containerElement = root.querySelector('#container') as HTMLElement;
+       const containerChangeHandler = jasmine.createSpy('container change handler');
+       focusMonitor.monitor(containerElement, true).subscribe(containerChangeHandler);
+       patchElementFocus(containerElement);
+
+       // Simulate focus via mouse.
+       dispatchMouseEvent(inputElement, 'mousedown');
+       inputElement.focus();
+       fixture.detectChanges();
+       flush();
+
+       expect(inputElement.classList.contains('cdk-mouse-focused'))
+           .toBe(true, 'input should have cdk-mouse-focused class');
+       expect(changeHandler).toHaveBeenCalledWith('mouse');
+       expect(containerElement.classList.contains('cdk-mouse-focused'))
+           .toBe(true, 'container should have cdk-mouse-focused class');
+       expect(containerChangeHandler).toHaveBeenCalledWith('mouse');
+
+       // Emulate user using keyboard to activate a combobox suggestion.
+       dispatchKeyboardEvent(document, 'keydown', DOWN_ARROW);
+       inputElement.setAttribute('aria-activedescendant', optionElement.id);
+       invokeCallbacks([{
+         type: 'attributes' as MutationRecordType,
+         attributeName: 'aria-activedescendant',
+         target: inputElement,
+         addedNodes: emptyNodeList,
+         removedNodes: emptyNodeList,
+         attributeNamespace: null,
+         nextSibling: null,
+         previousSibling: null,
+         oldValue: null,
+       }]);
+       flush();
+
+       expect(inputElement.classList.contains('cdk-keyboard-focused'))
+           .toBe(true, 'input should have cdk-keyboard-focused class');
+       expect(changeHandler).toHaveBeenCalledWith('keyboard');
+       expect(containerElement.classList.contains('cdk-keyboard-focused'))
+           .toBe(true, 'container should have cdk-keyboard-focused class');
+       expect(containerChangeHandler).toHaveBeenCalledWith('keyboard');
+     }));
+});
+
 @Component({
   template: `<button>focus me!</button>`
 })
 class PlainButton {}
+
+
+@Component({
+  template: `<div id="container">
+               <input type="text">
+               <div role="listbox">
+                 <div role="option" id="option">option 1</div>
+               </div>
+             </div>`
+})
+class Combobox {
+}
 
 
 @Component({
