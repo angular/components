@@ -7,9 +7,9 @@
  */
 
 import {ChangeDetectionStrategy, Component, ViewEncapsulation} from '@angular/core';
-import {MAT_SINGLE_DATE_SELECTION_MODEL_PROVIDER} from '@angular/material/core';
 import {MatDatepickerBase} from './datepicker-base';
 import {MatDatepickerInput} from './datepicker-input';
+import {MAT_SINGLE_DATE_SELECTION_MODEL_PROVIDER} from './date-selection-model';
 
 // TODO(mmalerba): We use a component instead of a directive here so the user can use implicit
 // template reference variables (e.g. #d vs #d="matDatepicker"). We can change this to a directive

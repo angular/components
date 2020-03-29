@@ -36,10 +36,10 @@ import {
   DateAdapter,
   MatDateFormats,
   ErrorStateMatcher,
-  DateRange,
 } from '@angular/material/core';
 import {BooleanInput} from '@angular/cdk/coercion';
 import {MatDatepickerInputBase, DateFilterFn} from './datepicker-input-base';
+import {DateRange} from './date-selection-model';
 
 /** Parent component that should be wrapped around `MatStartDate` and `MatEndDate`. */
 export interface MatDateRangeInputParent<D> {
