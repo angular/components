@@ -2,9 +2,9 @@
 
 As explained in the [theming guide](./theming.md), a theme in Angular Material consists of
 configurations for the `color`, `density` and `typography` systems. As some of these individual
-systems have default configurations, it could happen that styles are unnecessarily duplicated.
+systems have default configurations, some usage patterns may cause duplication in the CSS output.
 
-Below is an example of a pattern that causes duplicated theme styles being generated.
+Below is an example of a pattern that generates duplicative theme styles:
 
 ```scss
 $light-theme: mat-light-theme((color: ...));
@@ -22,7 +22,7 @@ $dark-theme: mat-dark-theme((color: ...));
 }
 ```
 
-To fix this, the dedicated mixin for color styles should be used for the `.dark-theme`
+To fix this, you can use the dedicated mixin for color styles for the `.dark-theme`
 selector. Replace the `angular-material-theme` mixin and include the dark theme using the
 `angular-material-color` mixin. For example:
 
@@ -36,7 +36,7 @@ selector. Replace the `angular-material-theme` mixin and include the dark theme 
 }
 ```
 
-A mixin exists for the `typography` system. See `angular-material-typography`.  
+Typography can also be configured via Sass mixin; see `angular-material-typography`.  
 
 #### Disabling duplication warnings
 
