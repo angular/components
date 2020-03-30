@@ -3,12 +3,12 @@
 
 ### What is a theme?
 
-Theming is the ability to systematically customize Angular Material Design components to
+Angular Material's theming system enables you to customize components to
 better reflect your product's brand. A theme consists of configurations for the individual
-`color` and `typography` systems in Angular Material. The library's approach to theming is
-based on the guidance from the [Material Design spec][1].
+`color` and `typography` systems in Angular Material. The library's approach to theming reflects
+the guidance from the [Material Design spec][1].
 
-In Angular Material, a color configuration is created by composing multiple palettes. In
+In Angular Material, you create a color configuration by composing multiple palettes. In
 particular, a color configuration consists of:
 
 * A primary palette: colors most widely used across all screens and components.
@@ -17,10 +17,10 @@ particular, a color configuration consists of:
 * A foreground palette: colors for text and icons.
 * A background palette: colors used for element backgrounds.
 
-Additionally, in Angular Material, a configuration for the `typography` system can be part
-of a theme. More information on how typography works can be [found in a dedicated guide][3].
+Additionally, in Angular Material, a configuration may optionally include `typography` settings.
+More information on how typography works can be [found in a dedicated guide][3].
 
-In Angular Material, all theme styles are generated _statically_ at build-time so that your
+Angular Material theme styles are generated _statically_ at build-time so that your
 app doesn't have to spend cycles generating theme styles on startup.
 
 ### Using a pre-built theme
@@ -65,7 +65,7 @@ multiple times, your application will end up with multiple copies of these commo
 2. Defines a **theme** data structure as the composition of configurations for the individual
 theming systems (`color` and `typography`). This object can be created with either the
 `mat-light-theme` function or the `mat-dark-theme` function. The output of this function is then
-passed to the  `angular-material-theme` mixin, which will output all of the corresponding styles
+passed to the `angular-material-theme` mixin, which will output all of the corresponding styles
 for the theme.
 
 
