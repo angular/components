@@ -105,7 +105,7 @@
 }
 
 @mixin _mat-stepper-density($density-scale) {
-  $height: mat-density-prop-value($mat-stepper-density-config, $density-scale, height);
+  $height: _mat-density-prop-value($mat-stepper-density-config, $density-scale, height);
   $vertical-padding: ($height - $mat-stepper-label-header-height) / 2;
 
   .mat-horizontal-stepper-header {

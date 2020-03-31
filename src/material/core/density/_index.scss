@@ -1,44 +1,22 @@
-//
-// Copyright 2019 Google Inc.
-//
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
-//
-// The above copyright notice and this permission notice shall be included in
-// all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-// THE SOFTWARE.
-//
-
 // Taken from mat-density with small modifications to not rely on the new Sass module system.
 // https://github.com/material-components/material-components-web/blob/master/packages/mdc-density
 
-$mat-density-interval: 4px !default;
-$mat-density-minimum-scale: minimum !default;
-$mat-density-maximum-scale: maximum !default;
-$mat-density-supported-scales: (default, minimum, maximum) !default;
-$mat-density-supported-properties: (height, size) !default;
-$mat-density-default-scale: 0 !default;
+$_mat-density-interval: 4px !default;
+$_mat-density-minimum-scale: minimum !default;
+$_mat-density-maximum-scale: maximum !default;
+$_mat-density-supported-scales: (default, minimum, maximum) !default;
+$_mat-density-supported-properties: (height, size) !default;
+$_mat-density-default-scale: 0 !default;
 
-@function mat-density-prop-value($density-config, $density-scale, $property-name) {
+@function _mat-density-prop-value($density-config, $density-scale, $property-name) {
   @if (type-of($density-scale) == 'string' and
-      index($list: $mat-density-supported-scales, $value: $density-scale) == null) {
-    @error 'mat-density: Supported density scales #{$mat-density-supported-scales}, '  +
+      index($list: $_mat-density-supported-scales, $value: $density-scale) == null) {
+    @error 'mat-density: Supported density scales #{$_mat-density-supported-scales}, '  +
       'but received #{$density-scale}.';
   }
 
-  @if (index($list: $mat-density-supported-properties, $value: $property-name) == null) {
-    @error 'mat-density: Supported density properties #{$mat-density-supported-properties},' +
+  @if (index($list: $_mat-density-supported-properties, $value: $property-name) == null) {
+    @error 'mat-density: Supported density properties #{$_mat-density-supported-properties},' +
       'but received #{$property-name}.';
   }
 
@@ -49,11 +27,11 @@ $mat-density-default-scale: 0 !default;
     $value: map_get($property-scale-map, $density-scale);
   }
   @else {
-    $value: map_get($property-scale-map, default) + $density-scale * $mat-density-interval;
+    $value: map_get($property-scale-map, default) + $density-scale * $_mat-density-interval;
   }
 
-  $min-value: map_get($property-scale-map, $mat-density-minimum-scale);
-  $max-value: map_get($property-scale-map, $mat-density-maximum-scale);
+  $min-value: map_get($property-scale-map, $_mat-density-minimum-scale);
+  $max-value: map_get($property-scale-map, $_mat-density-maximum-scale);
 
   @if ($value < $min-value or $value > $max-value) {
     @error 'mat-density: #{$property-name} must be between #{$min-value} and ' +
