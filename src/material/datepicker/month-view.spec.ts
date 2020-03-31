@@ -305,11 +305,11 @@ describe('MatMonthView', () => {
 
           // Note that here we only care that _some_ kind of range is rendered. There are
           // plenty of tests in the calendar body which assert that everything is correct.
-          expect(monthViewNativeElement.querySelectorAll('.mat-calendar-body-range-start').length)
+          expect(monthViewNativeElement.querySelectorAll('.mat-calendar-body-preview-start').length)
               .toBeGreaterThan(0);
-          expect(monthViewNativeElement.querySelectorAll('.mat-calendar-body-in-range').length)
+          expect(monthViewNativeElement.querySelectorAll('.mat-calendar-body-in-preview').length)
               .toBeGreaterThan(0);
-          expect(monthViewNativeElement.querySelectorAll('.mat-calendar-body-range-end').length)
+          expect(monthViewNativeElement.querySelectorAll('.mat-calendar-body-preview-end').length)
               .toBeGreaterThan(0);
 
           const event = createKeyboardEvent('keydown', ESCAPE, 'Escape', calendarBodyEl);
@@ -319,9 +319,9 @@ describe('MatMonthView', () => {
 
           // Expect the range range to have been cleared.
           expect(monthViewNativeElement.querySelectorAll([
-            '.mat-calendar-body-range-start',
-            '.mat-calendar-body-in-range',
-            '.mat-calendar-body-range-end'
+            '.mat-calendar-body-preview-start',
+            '.mat-calendar-body-in-preview',
+            '.mat-calendar-body-preview-end'
           ].join(',')).length).toBe(0);
           expect(event.stopPropagation).toHaveBeenCalled();
           expect(event.defaultPrevented).toBe(true);

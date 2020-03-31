@@ -85,7 +85,7 @@ export declare class MatCalendarBody implements OnChanges, OnDestroy {
     _cellPadding: string;
     _cellWidth: string;
     _firstRowOffset: number;
-    _hoveredValue: number;
+    _previewEnd: number;
     activeCell: number;
     cellAspectRatio: number;
     comparisonEnd: number | null;
@@ -107,8 +107,11 @@ export declare class MatCalendarBody implements OnChanges, OnDestroy {
     _isComparisonEnd(value: number): boolean | 0 | null;
     _isComparisonStart(value: number): boolean;
     _isInComparisonRange(value: number): boolean | 0 | null;
+    _isInPreview(value: number): boolean;
     _isInRange(value: number): boolean;
-    _isRangeEnd(value: number): boolean;
+    _isPreviewEnd(value: number): boolean;
+    _isPreviewStart(value: number): boolean;
+    _isRangeEnd(value: number): boolean | 0;
     _isRangeStart(value: number): boolean;
     _isSelected(cell: MatCalendarCell): boolean;
     _isSelectingRange(): boolean;
