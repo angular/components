@@ -122,6 +122,7 @@
 /src/material-experimental/mdc-typography/**       @mmalerba
 /src/material-experimental/menubar/**              @jelbourn @andy9775
 /src/material-experimental/popover-edit/**         @kseamon @andrewseguin
+/src/material-experimental/selection/**            @yifange @jelbourn
 
 # CDK experimental package
 /src/cdk-experimental/*                            @jelbourn

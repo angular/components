@@ -34,6 +34,7 @@ entryPoints = [
     "mdc-tabs",
     "menubar",
     "popover-edit",
+    "selection",
 ]
 
 # List of all non-testing entry-points of the Angular material-experimental package.
