@@ -257,7 +257,7 @@ export class MatMonthView<D> implements AfterContentInit, OnDestroy {
         // Abort the current range selection if the user presses escape mid-selection.
         // Note that we handle it here, rather than the `mat-calendar-body` where have the
         // rest of the range logic, because focus may have moved outside the calendar body.
-        if (this._matCalendarBody._hoveredValue > -1) {
+        if (this._matCalendarBody._previewEnd > -1) {
           this.selectedChange.emit(null);
           this._userSelection.emit();
           event.preventDefault();
