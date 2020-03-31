@@ -16,7 +16,6 @@ import {
   MAT_DATE_LOCALE,
   MatNativeDateModule,
   NativeDateModule,
-  MatDateSelectionModel,
 } from '@angular/material/core';
 import {MatFormField, MatFormFieldModule} from '@angular/material/form-field';
 import {DEC, JAN, JUL, JUN, SEP} from '@angular/material/testing';
@@ -29,7 +28,12 @@ import {MatInputModule} from '../input/index';
 import {MatDatepicker} from './datepicker';
 import {MatDatepickerInput} from './datepicker-input';
 import {MatDatepickerToggle} from './datepicker-toggle';
-import {MAT_DATEPICKER_SCROLL_STRATEGY, MatDatepickerIntl, MatDatepickerModule} from './index';
+import {
+  MAT_DATEPICKER_SCROLL_STRATEGY,
+  MatDatepickerIntl,
+  MatDatepickerModule,
+  MatDateSelectionModel,
+} from './index';
 
 describe('MatDatepicker', () => {
   const SUPPORTS_INTL = typeof Intl != 'undefined';

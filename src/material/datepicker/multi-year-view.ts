@@ -31,12 +31,13 @@ import {
   ViewEncapsulation,
   OnDestroy,
 } from '@angular/core';
-import {DateAdapter, DateRange} from '@angular/material/core';
+import {DateAdapter} from '@angular/material/core';
 import {Directionality} from '@angular/cdk/bidi';
 import {MatCalendarBody, MatCalendarCell} from './calendar-body';
 import {createMissingDateImplError} from './datepicker-errors';
 import {Subscription} from 'rxjs';
 import {startWith} from 'rxjs/operators';
+import {DateRange} from './date-selection-model';
 
 export const yearsPerPage = 24;
 

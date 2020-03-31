@@ -1,5 +1,20 @@
 export declare type DateFilterFn<D> = (date: D | null) => boolean;
 
+export declare class DateRange<D> {
+    readonly end: D | null;
+    readonly start: D | null;
+    constructor(
+    start: D | null,
+    end: D | null);
+}
+
+export interface DateSelectionModelChange<S> {
+    selection: S;
+    source: unknown;
+}
+
+export declare type ExtractDateTypeFromSelection<T> = T extends DateRange<infer D> ? D : NonNullable<T>;
+
 export declare const MAT_DATEPICKER_SCROLL_STRATEGY: InjectionToken<() => ScrollStrategy>;
 
 export declare function MAT_DATEPICKER_SCROLL_STRATEGY_FACTORY(overlay: Overlay): () => ScrollStrategy;
@@ -13,6 +28,14 @@ export declare const MAT_DATEPICKER_SCROLL_STRATEGY_FACTORY_PROVIDER: {
 export declare const MAT_DATEPICKER_VALIDATORS: any;
 
 export declare const MAT_DATEPICKER_VALUE_ACCESSOR: any;
+
+export declare function MAT_RANGE_DATE_SELECTION_MODEL_FACTORY(parent: MatSingleDateSelectionModel<unknown>, adapter: DateAdapter<unknown>): MatSingleDateSelectionModel<unknown>;
+
+export declare const MAT_RANGE_DATE_SELECTION_MODEL_PROVIDER: FactoryProvider;
+
+export declare function MAT_SINGLE_DATE_SELECTION_MODEL_FACTORY(parent: MatSingleDateSelectionModel<unknown>, adapter: DateAdapter<unknown>): MatSingleDateSelectionModel<unknown>;
+
+export declare const MAT_SINGLE_DATE_SELECTION_MODEL_PROVIDER: FactoryProvider;
 
 export declare class MatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDestroy, OnChanges {
     _calendarHeaderPortal: Portal<any>;
@@ -293,6 +316,21 @@ export declare class MatDateRangePicker<D> extends MatDatepickerBase<MatDateRang
     static ɵfac: i0.ɵɵFactoryDef<MatDateRangePicker<any>, never>;
 }
 
+export declare abstract class MatDateSelectionModel<S, D = ExtractDateTypeFromSelection<S>> implements OnDestroy {
+    protected readonly adapter: DateAdapter<D>;
+    readonly selection: S;
+    selectionChanged: Observable<DateSelectionModelChange<S>>;
+    protected constructor(
+    adapter: DateAdapter<D>,
+    selection: S);
+    abstract add(date: D | null): void;
+    abstract isComplete(): boolean;
+    ngOnDestroy(): void;
+    updateSelection(value: S, source: unknown): void;
+    static ɵdir: i0.ɵɵDirectiveDefWithMeta<MatDateSelectionModel<any, any>, never, never, {}, {}, never>;
+    static ɵfac: i0.ɵɵFactoryDef<MatDateSelectionModel<any, any>>;
+}
+
 export declare class MatEndDate<D> extends _MatDateRangeInputBase<D> implements CanUpdateErrorState {
     protected _validator: ValidatorFn | null;
     constructor(rangeInput: MatDateRangeInputParent<D>, elementRef: ElementRef<HTMLInputElement>, defaultErrorStateMatcher: ErrorStateMatcher, injector: Injector, parentForm: NgForm, parentFormGroup: FormGroupDirective, dateAdapter: DateAdapter<D>, dateFormats: MatDateFormats);
@@ -372,6 +410,22 @@ export declare class MatMultiYearView<D> implements AfterContentInit, OnDestroy 
     ngOnDestroy(): void;
     static ɵcmp: i0.ɵɵComponentDefWithMeta<MatMultiYearView<any>, "mat-multi-year-view", ["matMultiYearView"], { "activeDate": "activeDate"; "selected": "selected"; "minDate": "minDate"; "maxDate": "maxDate"; "dateFilter": "dateFilter"; }, { "selectedChange": "selectedChange"; "yearSelected": "yearSelected"; "activeDateChange": "activeDateChange"; }, never, never>;
     static ɵfac: i0.ɵɵFactoryDef<MatMultiYearView<any>, [null, { optional: true; }, { optional: true; }]>;
+}
+
+export declare class MatRangeDateSelectionModel<D> extends MatDateSelectionModel<DateRange<D>, D> {
+    constructor(adapter: DateAdapter<D>);
+    add(date: D | null): void;
+    isComplete(): boolean;
+    static ɵfac: i0.ɵɵFactoryDef<MatRangeDateSelectionModel<any>>;
+    static ɵprov: i0.ɵɵInjectableDef<MatRangeDateSelectionModel<any>>;
+}
+
+export declare class MatSingleDateSelectionModel<D> extends MatDateSelectionModel<D | null, D> {
+    constructor(adapter: DateAdapter<D>);
+    add(date: D | null): void;
+    isComplete(): boolean;
+    static ɵfac: i0.ɵɵFactoryDef<MatSingleDateSelectionModel<any>>;
+    static ɵprov: i0.ɵɵInjectableDef<MatSingleDateSelectionModel<any>>;
 }
 
 export declare class MatStartDate<D> extends _MatDateRangeInputBase<D> implements CanUpdateErrorState {

@@ -7,9 +7,9 @@
  */
 
 import {ChangeDetectionStrategy, Component, ViewEncapsulation} from '@angular/core';
-import {MAT_RANGE_DATE_SELECTION_MODEL_PROVIDER, DateRange} from '@angular/material/core';
 import {MatDatepickerBase, MatDatepickerContent} from './datepicker-base';
 import {MatDateRangeInput} from './date-range-input';
+import {MAT_RANGE_DATE_SELECTION_MODEL_PROVIDER, DateRange} from './date-selection-model';
 
 // TODO(mmalerba): We use a component instead of a directive here so the user can use implicit
 // template reference variables (e.g. #d vs #d="matDateRangePicker"). We can change this to a

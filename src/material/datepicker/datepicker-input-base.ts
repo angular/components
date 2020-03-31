@@ -30,11 +30,10 @@ import {
   DateAdapter,
   MAT_DATE_FORMATS,
   MatDateFormats,
-  MatDateSelectionModel,
-  ExtractDateTypeFromSelection,
 } from '@angular/material/core';
 import {Subscription} from 'rxjs';
 import {createMissingDateImplError} from './datepicker-errors';
+import {ExtractDateTypeFromSelection, MatDateSelectionModel} from './date-selection-model';
 
 /**
  * An event used for datepicker input and change events. We don't always have access to a native

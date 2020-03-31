@@ -21,11 +21,12 @@ import {
 } from '@angular/cdk/testing/private';
 import {Component} from '@angular/core';
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
-import {MatNativeDateModule, DateRange} from '@angular/material/core';
+import {MatNativeDateModule} from '@angular/material/core';
 import {DEC, FEB, JAN, MAR, NOV} from '@angular/material/testing';
 import {By} from '@angular/platform-browser';
 import {MatCalendarBody} from './calendar-body';
 import {MatMonthView} from './month-view';
+import {DateRange} from './date-selection-model';
 
 describe('MatMonthView', () => {
   let dir: {value: Direction};
