@@ -114,6 +114,7 @@
 /src/material-experimental/mdc-theming/**          @mmalerba
 /src/material-experimental/mdc-typography/**       @mmalerba
 /src/material-experimental/popover-edit/**         @kseamon @andrewseguin
+/src/material-experimental/selection/**            @yifange @jelbourn
 
 # CDK experimental package
 /src/cdk-experimental/*                            @jelbourn
