@@ -8,7 +8,7 @@
 
 import {TextFieldModule} from '@angular/cdk/text-field';
 import {NgModule} from '@angular/core';
-import {ErrorStateMatcher, MatCommonModule} from '@angular/material/core';
+import {MatCommonModule} from '@angular/material/core';
 import {MatLegacyFormFieldModule} from '@angular/material/legacy-form-field';
 import {MatLegacyInput} from './input';
 
@@ -26,6 +26,5 @@ import {MatLegacyInput} from './input';
     MatLegacyFormFieldModule,
     MatLegacyInput,
   ],
-  providers: [ErrorStateMatcher],
 })
 export class MatLegacyInputModule {}

@@ -8,7 +8,7 @@
 
 import {ENTER} from '@angular/cdk/keycodes';
 import {NgModule} from '@angular/core';
-import {ErrorStateMatcher, MatCommonModule} from '@angular/material/core';
+import {MatCommonModule} from '@angular/material/core';
 import {
   MatLegacyChip,
   MatLegacyChipAvatar,
@@ -40,7 +40,6 @@ const CHIP_DECLARATIONS = [
   exports: CHIP_DECLARATIONS,
   declarations: CHIP_DECLARATIONS,
   providers: [
-    ErrorStateMatcher,
     {
       provide: MAT_LEGACY_CHIPS_DEFAULT_OPTIONS,
       useValue: {

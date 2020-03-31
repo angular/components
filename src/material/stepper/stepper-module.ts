@@ -10,7 +10,7 @@ import {PortalModule} from '@angular/cdk/portal';
 import {CdkStepperModule} from '@angular/cdk/stepper';
 import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
-import {ErrorStateMatcher, MatCommonModule, MatRippleModule} from '@angular/material/core';
+import {MatCommonModule, MatRippleModule} from '@angular/material/core';
 import {MatIconModule} from '@angular/material/icon';
 import {MatStepHeader} from './step-header';
 import {MatStepLabel} from './step-label';
@@ -50,6 +50,6 @@ import {MatStepContent} from './step-content';
     MatStepperIcon,
     MatStepContent,
   ],
-  providers: [MAT_STEPPER_INTL_PROVIDER, ErrorStateMatcher],
+  providers: [MAT_STEPPER_INTL_PROVIDER],
 })
 export class MatStepperModule {}
