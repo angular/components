@@ -122,6 +122,9 @@ describe('MatCalendarBody', () => {
     const comparisonEndClass = 'mat-calendar-body-comparison-end';
     const bridgeStart = 'mat-calendar-body-comparison-bridge-start';
     const bridgeEnd = 'mat-calendar-body-comparison-bridge-end';
+    const previewStartClass = 'mat-calendar-body-preview-start';
+    const inPreviewClass = 'mat-calendar-body-in-preview';
+    const previewEndClass = 'mat-calendar-body-preview-end';
     let fixture: ComponentFixture<RangeCalendarBody>;
     let testComponent: RangeCalendarBody;
     let cells: HTMLElement[];
@@ -405,29 +408,29 @@ describe('MatCalendarBody', () => {
       dispatchMouseEvent(cells[5], 'mouseenter');
       fixture.detectChanges();
 
-      expect(cells[2].classList).toContain(startClass);
-      expect(cells[3].classList).toContain(inRangeClass);
-      expect(cells[4].classList).toContain(inRangeClass);
-      expect(cells[5].classList).toContain(endClass);
+      expect(cells[2].classList).toContain(previewStartClass);
+      expect(cells[3].classList).toContain(inPreviewClass);
+      expect(cells[4].classList).toContain(inPreviewClass);
+      expect(cells[5].classList).toContain(previewEndClass);
 
       // Go a few cells ahead.
       dispatchMouseEvent(cells[7], 'mouseenter');
       fixture.detectChanges();
 
-      expect(cells[5].classList).not.toContain(endClass);
-      expect(cells[5].classList).toContain(inRangeClass);
-      expect(cells[6].classList).toContain(inRangeClass);
-      expect(cells[7].classList).toContain(endClass);
+      expect(cells[5].classList).not.toContain(previewEndClass);
+      expect(cells[5].classList).toContain(inPreviewClass);
+      expect(cells[6].classList).toContain(inPreviewClass);
+      expect(cells[7].classList).toContain(previewEndClass);
 
       // Go back a few cells.
       dispatchMouseEvent(cells[4], 'mouseenter');
       fixture.detectChanges();
 
-      expect(cells[5].classList).not.toContain(inRangeClass);
-      expect(cells[6].classList).not.toContain(inRangeClass);
-      expect(cells[7].classList).not.toContain(endClass);
-      expect(cells[3].classList).toContain(inRangeClass);
-      expect(cells[4].classList).toContain(endClass);
+      expect(cells[5].classList).not.toContain(inPreviewClass);
+      expect(cells[6].classList).not.toContain(inPreviewClass);
+      expect(cells[7].classList).not.toContain(previewEndClass);
+      expect(cells[3].classList).toContain(inPreviewClass);
+      expect(cells[4].classList).toContain(previewEndClass);
     });
 
     it('should preview the selected range after the user selects a start and moves focus away',
@@ -438,29 +441,29 @@ describe('MatCalendarBody', () => {
         dispatchFakeEvent(cells[5], 'focus');
         fixture.detectChanges();
 
-        expect(cells[2].classList).toContain(startClass);
-        expect(cells[3].classList).toContain(inRangeClass);
-        expect(cells[4].classList).toContain(inRangeClass);
-        expect(cells[5].classList).toContain(endClass);
+        expect(cells[2].classList).toContain(previewStartClass);
+        expect(cells[3].classList).toContain(inPreviewClass);
+        expect(cells[4].classList).toContain(inPreviewClass);
+        expect(cells[5].classList).toContain(previewEndClass);
 
         // Go a few cells ahead.
         dispatchFakeEvent(cells[7], 'focus');
         fixture.detectChanges();
 
-        expect(cells[5].classList).not.toContain(endClass);
-        expect(cells[5].classList).toContain(inRangeClass);
-        expect(cells[6].classList).toContain(inRangeClass);
-        expect(cells[7].classList).toContain(endClass);
+        expect(cells[5].classList).not.toContain(previewEndClass);
+        expect(cells[5].classList).toContain(inPreviewClass);
+        expect(cells[6].classList).toContain(inPreviewClass);
+        expect(cells[7].classList).toContain(previewEndClass);
 
         // Go back a few cells.
         dispatchFakeEvent(cells[4], 'focus');
         fixture.detectChanges();
 
-        expect(cells[5].classList).not.toContain(inRangeClass);
-        expect(cells[6].classList).not.toContain(inRangeClass);
-        expect(cells[7].classList).not.toContain(endClass);
-        expect(cells[3].classList).toContain(inRangeClass);
-        expect(cells[4].classList).toContain(endClass);
+        expect(cells[5].classList).not.toContain(inPreviewClass);
+        expect(cells[6].classList).not.toContain(inPreviewClass);
+        expect(cells[7].classList).not.toContain(previewEndClass);
+        expect(cells[3].classList).toContain(inPreviewClass);
+        expect(cells[4].classList).toContain(previewEndClass);
       });
 
     it('should not be able to extend the range before the start', () => {
@@ -471,7 +474,8 @@ describe('MatCalendarBody', () => {
       fixture.detectChanges();
 
       expect(cells[5].classList).toContain(startClass);
-      expect(cells.some(cell => cell.classList.contains(inRangeClass))).toBe(false);
+      expect(cells[5].classList).not.toContain(previewStartClass);
+      expect(cells.some(cell => cell.classList.contains(inPreviewClass))).toBe(false);
     });
 
     it('should be able to show a range, starting before the beginning of the calendar, ' +
@@ -482,10 +486,10 @@ describe('MatCalendarBody', () => {
         dispatchMouseEvent(cells[2], 'mouseenter');
         fixture.detectChanges();
 
-        expect(cells.some(cell => cell.classList.contains(startClass))).toBe(false);
-        expect(cells[0].classList).toContain(inRangeClass);
-        expect(cells[1].classList).toContain(inRangeClass);
-        expect(cells[2].classList).toContain(endClass);
+        expect(cells.some(cell => cell.classList.contains(previewStartClass))).toBe(false);
+        expect(cells[0].classList).toContain(inPreviewClass);
+        expect(cells[1].classList).toContain(inPreviewClass);
+        expect(cells[2].classList).toContain(previewEndClass);
       });
 
     it('should be able to show a range, starting before the beginning of the calendar, ' +
@@ -496,10 +500,10 @@ describe('MatCalendarBody', () => {
         dispatchMouseEvent(cells[2], 'focus');
         fixture.detectChanges();
 
-        expect(cells.some(cell => cell.classList.contains(startClass))).toBe(false);
-        expect(cells[0].classList).toContain(inRangeClass);
-        expect(cells[1].classList).toContain(inRangeClass);
-        expect(cells[2].classList).toContain(endClass);
+        expect(cells.some(cell => cell.classList.contains(previewStartClass))).toBe(false);
+        expect(cells[0].classList).toContain(inPreviewClass);
+        expect(cells[1].classList).toContain(inPreviewClass);
+        expect(cells[2].classList).toContain(previewEndClass);
       });
 
     it('should remove the preview if the user moves their pointer away', () => {
@@ -509,26 +513,26 @@ describe('MatCalendarBody', () => {
       dispatchMouseEvent(cells[4], 'mouseenter');
       fixture.detectChanges();
 
-      expect(cells[2].classList).toContain(startClass);
-      expect(cells[3].classList).toContain(inRangeClass);
-      expect(cells[4].classList).toContain(endClass);
+      expect(cells[2].classList).toContain(previewStartClass);
+      expect(cells[3].classList).toContain(inPreviewClass);
+      expect(cells[4].classList).toContain(previewEndClass);
 
       // Move the pointer away.
       dispatchMouseEvent(cells[4], 'mouseleave');
       fixture.detectChanges();
 
-      expect(cells[2].classList).toContain(startClass);
-      expect(cells[3].classList).not.toContain(inRangeClass);
-      expect(cells[4].classList).not.toContain(endClass);
+      expect(cells[2].classList).not.toContain(previewStartClass);
+      expect(cells[3].classList).not.toContain(inPreviewClass);
+      expect(cells[4].classList).not.toContain(previewEndClass);
 
       // Move the pointer back in to a different cell.
       dispatchMouseEvent(cells[5], 'mouseenter');
       fixture.detectChanges();
 
-      expect(cells[2].classList).toContain(startClass);
-      expect(cells[3].classList).toContain(inRangeClass);
-      expect(cells[4].classList).toContain(inRangeClass);
-      expect(cells[5].classList).toContain(endClass);
+      expect(cells[2].classList).toContain(previewStartClass);
+      expect(cells[3].classList).toContain(inPreviewClass);
+      expect(cells[4].classList).toContain(inPreviewClass);
+      expect(cells[5].classList).toContain(previewEndClass);
     });
 
     it('should remove the preview if the user moves their focus away', () => {
@@ -538,26 +542,26 @@ describe('MatCalendarBody', () => {
       dispatchFakeEvent(cells[4], 'focus');
       fixture.detectChanges();
 
-      expect(cells[2].classList).toContain(startClass);
-      expect(cells[3].classList).toContain(inRangeClass);
-      expect(cells[4].classList).toContain(endClass);
+      expect(cells[2].classList).toContain(previewStartClass);
+      expect(cells[3].classList).toContain(inPreviewClass);
+      expect(cells[4].classList).toContain(previewEndClass);
 
       // Move the pointer away.
       dispatchFakeEvent(cells[4], 'blur');
       fixture.detectChanges();
 
-      expect(cells[2].classList).toContain(startClass);
-      expect(cells[3].classList).not.toContain(inRangeClass);
-      expect(cells[4].classList).not.toContain(endClass);
+      expect(cells[2].classList).not.toContain(previewStartClass);
+      expect(cells[3].classList).not.toContain(inPreviewClass);
+      expect(cells[4].classList).not.toContain(previewEndClass);
 
       // Move the pointer back in to a different cell.
       dispatchFakeEvent(cells[5], 'focus');
       fixture.detectChanges();
 
-      expect(cells[2].classList).toContain(startClass);
-      expect(cells[3].classList).toContain(inRangeClass);
-      expect(cells[4].classList).toContain(inRangeClass);
-      expect(cells[5].classList).toContain(endClass);
+      expect(cells[2].classList).toContain(previewStartClass);
+      expect(cells[3].classList).toContain(inPreviewClass);
+      expect(cells[4].classList).toContain(inPreviewClass);
+      expect(cells[5].classList).toContain(previewEndClass);
     });
 
   });
