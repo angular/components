@@ -7,7 +7,7 @@
  */
 
 import {FactoryProvider, Injectable, Optional, SkipSelf, OnDestroy} from '@angular/core';
-import {DateAdapter} from './date-adapter';
+import {DateAdapter} from '@angular/material/core';
 import {Observable, Subject} from 'rxjs';
 
 /** A class representing a range of dates. */
@@ -76,15 +76,6 @@ export abstract class MatDateSelectionModel<S, D = ExtractDateTypeFromSelection<
 
   /** Checks whether the current selection is complete. */
   abstract isComplete(): boolean;
-
-  /** Checks whether the current selection is identical to the passed-in selection. */
-  abstract isSame(other: S): boolean;
-
-  /** Checks whether the current selection is valid. */
-  abstract isValid(): boolean;
-
-  /** Checks whether the current selection overlaps with the given range. */
-  abstract overlaps(range: DateRange<D>): boolean;
 }
 
 /**  A selection model that contains a single date. */
@@ -106,27 +97,8 @@ export class MatSingleDateSelectionModel<D> extends MatDateSelectionModel<D | nu
    * Checks whether the current selection is complete. In the case of a single date selection, this
    * is true if the current selection is not null.
    */
-  isComplete() { return this.selection != null; }
-
-  /** Checks whether the current selection is identical to the passed-in selection. */
-  isSame(other: D): boolean {
-    return this.adapter.sameDate(other, this.selection);
-  }
-
-  /**
-   * Checks whether the current selection is valid. In the case of a single date selection, this
-   * means that the current selection is not null and is a valid date.
-   */
-  isValid(): boolean {
-    return this.selection != null && this.adapter.isDateInstance(this.selection) &&
-        this.adapter.isValid(this.selection);
-  }
-
-  /** Checks whether the current selection overlaps with the given range. */
-  overlaps(range: DateRange<D>): boolean {
-    return !!(this.selection && range.start && range.end &&
-        this.adapter.compareDate(range.start, this.selection) <= 0 &&
-        this.adapter.compareDate(this.selection, range.end) <= 0);
+  isComplete() {
+    return this.selection != null;
   }
 }
 
@@ -163,45 +135,6 @@ export class MatRangeDateSelectionModel<D> extends MatDateSelectionModel<DateRan
    */
   isComplete(): boolean {
     return this.selection.start != null && this.selection.end != null;
-  }
-
-  /** Checks whether the current selection is identical to the passed-in selection. */
-  isSame(other: DateRange<D>): boolean {
-      return this.adapter.sameDate(this.selection.start, other.start) &&
-             this.adapter.sameDate(this.selection.end, other.end);
-  }
-
-  /**
-   * Checks whether the current selection is valid. In the case of a date range selection, this
-   * means that the current selection has a `start` and `end` that are both non-null and valid
-   * dates.
-   */
-  isValid(): boolean {
-    return this.selection.start != null && this.selection.end != null &&
-        this.adapter.isValid(this.selection.start!) && this.adapter.isValid(this.selection.end!);
-  }
-
-  /**
-   * Returns true if the given range and the selection overlap in any way. False if otherwise, that
-   * includes incomplete selections or ranges.
-   */
-  overlaps(range: DateRange<D>): boolean {
-    if (!(this.selection.start && this.selection.end && range.start && range.end)) {
-      return false;
-    }
-
-    return (
-        this._isBetween(range.start, this.selection.start, this.selection.end) ||
-        this._isBetween(range.end, this.selection.start, this.selection.end) ||
-        (
-            this.adapter.compareDate(range.start, this.selection.start) <= 0 &&
-            this.adapter.compareDate(this.selection.end, range.end) <= 0
-        )
-    );
-  }
-
-  private _isBetween(value: D, from: D, to: D): boolean {
-    return this.adapter.compareDate(from, value) <= 0 && this.adapter.compareDate(value, to) <= 0;
   }
 }
 

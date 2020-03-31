@@ -29,9 +29,6 @@ import {
   DateAdapter,
   MAT_DATE_FORMATS,
   MatDateFormats,
-  MatDateSelectionModel,
-  MAT_SINGLE_DATE_SELECTION_MODEL_PROVIDER,
-  DateRange,
 } from '@angular/material/core';
 import {Subject, Subscription} from 'rxjs';
 import {MatCalendarCellCssClasses} from './calendar-body';
@@ -45,6 +42,11 @@ import {
   yearsPerPage
 } from './multi-year-view';
 import {MatYearView} from './year-view';
+import {
+  MAT_SINGLE_DATE_SELECTION_MODEL_PROVIDER,
+  DateRange,
+  MatDateSelectionModel,
+} from './date-selection-model';
 
 /**
  * Possible views for the calendar.
