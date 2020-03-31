@@ -44,6 +44,9 @@
       [class.mat-calendar-body-comparison-start]="_isComparisonStart(item.compareValue)"
       [class.mat-calendar-body-comparison-end]="_isComparisonEnd(item.compareValue)"
       [class.mat-calendar-body-in-comparison-range]="_isInComparisonRange(item.compareValue)"
+      [class.mat-calendar-body-preview-start]="_isPreviewStart(item.compareValue)"
+      [class.mat-calendar-body-preview-end]="_isPreviewEnd(item.compareValue)"
+      [class.mat-calendar-body-in-preview]="_isInPreview(item.compareValue)"
       [attr.aria-label]="item.ariaLabel"
       [attr.aria-disabled]="!item.enabled || null"
       [attr.aria-selected]="_isSelected(item)"
@@ -57,5 +60,6 @@
         [class.mat-calendar-body-today]="todayValue === item.compareValue">
         {{item.displayValue}}
       </div>
+      <div class="mat-calendar-body-cell-preview"></div>
   </td>
 </tr>
