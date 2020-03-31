@@ -22,7 +22,6 @@ import {
   MAT_DATEPICKER_SCROLL_STRATEGY_FACTORY_PROVIDER,
 } from './datepicker-base';
 import {MatDatepickerInput} from './datepicker-input';
-import {MatDatepickerIntl} from './datepicker-intl';
 import {MatDatepickerToggle, MatDatepickerToggleIcon} from './datepicker-toggle';
 import {MatMonthView} from './month-view';
 import {MatMultiYearView} from './multi-year-view';
@@ -82,6 +81,6 @@ import {MatDatepickerActions, MatDatepickerApply, MatDatepickerCancel} from './d
     MatDatepickerCancel,
     MatDatepickerApply,
   ],
-  providers: [MatDatepickerIntl, MAT_DATEPICKER_SCROLL_STRATEGY_FACTORY_PROVIDER],
+  providers: [MAT_DATEPICKER_SCROLL_STRATEGY_FACTORY_PROVIDER],
 })
 export class MatDatepickerModule {}
