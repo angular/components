@@ -44,8 +44,6 @@ import {
   DateAdapter,
   mixinColor,
   ThemePalette,
-  MatDateSelectionModel,
-  ExtractDateTypeFromSelection,
 } from '@angular/material/core';
 import {MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {merge, Subject, Observable} from 'rxjs';
@@ -55,6 +53,7 @@ import {matDatepickerAnimations} from './datepicker-animations';
 import {createMissingDateImplError} from './datepicker-errors';
 import {MatCalendarCellCssClasses} from './calendar-body';
 import {DateFilterFn} from './datepicker-input-base';
+import {ExtractDateTypeFromSelection, MatDateSelectionModel} from './date-selection-model';
 
 /** Used to generate a unique ID for each datepicker instance. */
 let datepickerUid = 0;

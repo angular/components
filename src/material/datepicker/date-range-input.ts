@@ -20,12 +20,7 @@ import {
   ElementRef,
 } from '@angular/core';
 import {MatFormFieldControl, MatFormField} from '@angular/material/form-field';
-import {
-  DateRange,
-  ThemePalette,
-  DateAdapter,
-  MatDateSelectionModel,
-} from '@angular/material/core';
+import {ThemePalette, DateAdapter} from '@angular/material/core';
 import {NgControl, ControlContainer} from '@angular/forms';
 import {Subject, merge} from 'rxjs';
 import {coerceBooleanProperty, BooleanInput} from '@angular/cdk/coercion';
@@ -39,6 +34,7 @@ import {MatDatepickerControl} from './datepicker-base';
 import {createMissingDateImplError} from './datepicker-errors';
 import {DateFilterFn} from './datepicker-input-base';
 import {MatDateRangePicker} from './date-range-picker';
+import {DateRange, MatDateSelectionModel} from './date-selection-model';
 
 let nextUniqueId = 0;
 

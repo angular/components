@@ -33,12 +33,13 @@ import {
   ViewChild,
   OnDestroy,
 } from '@angular/core';
-import {DateAdapter, MAT_DATE_FORMATS, MatDateFormats, DateRange} from '@angular/material/core';
+import {DateAdapter, MAT_DATE_FORMATS, MatDateFormats} from '@angular/material/core';
 import {Directionality} from '@angular/cdk/bidi';
 import {MatCalendarBody, MatCalendarCell, MatCalendarCellCssClasses} from './calendar-body';
 import {createMissingDateImplError} from './datepicker-errors';
 import {Subscription} from 'rxjs';
 import {startWith} from 'rxjs/operators';
+import {DateRange} from './date-selection-model';
 
 
 const DAYS_PER_WEEK = 7;
