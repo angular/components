@@ -331,7 +331,7 @@ export declare abstract class MatDateSelectionModel<S, D = ExtractDateTypeFromSe
     ngOnDestroy(): void;
     updateSelection(value: S, source: unknown): void;
     static ɵdir: i0.ɵɵDirectiveDefWithMeta<MatDateSelectionModel<any, any>, never, never, {}, {}, never>;
-    static ɵfac: i0.ɵɵFactoryDef<MatDateSelectionModel<any, any>>;
+    static ɵfac: i0.ɵɵFactoryDef<MatDateSelectionModel<any, any>, never>;
 }
 
 export declare class MatEndDate<D> extends _MatDateRangeInputBase<D> implements CanUpdateErrorState {
@@ -341,7 +341,7 @@ export declare class MatEndDate<D> extends _MatDateRangeInputBase<D> implements 
     protected _getValueFromModel(modelValue: DateRange<D>): D | null;
     static ngAcceptInputType_disabled: BooleanInput;
     static ɵdir: i0.ɵɵDirectiveDefWithMeta<MatEndDate<any>, "input[matEndDate]", never, {}, {}, never>;
-    static ɵfac: i0.ɵɵFactoryDef<MatEndDate<any>, never>;
+    static ɵfac: i0.ɵɵFactoryDef<MatEndDate<any>, [null, null, null, null, { optional: true; }, { optional: true; }, { optional: true; }, { optional: true; }]>;
 }
 
 export declare class MatMonthView<D> implements AfterContentInit, OnDestroy {
@@ -419,7 +419,7 @@ export declare class MatRangeDateSelectionModel<D> extends MatDateSelectionModel
     constructor(adapter: DateAdapter<D>);
     add(date: D | null): void;
     isComplete(): boolean;
-    static ɵfac: i0.ɵɵFactoryDef<MatRangeDateSelectionModel<any>>;
+    static ɵfac: i0.ɵɵFactoryDef<MatRangeDateSelectionModel<any>, never>;
     static ɵprov: i0.ɵɵInjectableDef<MatRangeDateSelectionModel<any>>;
 }
 
@@ -427,7 +427,7 @@ export declare class MatSingleDateSelectionModel<D> extends MatDateSelectionMode
     constructor(adapter: DateAdapter<D>);
     add(date: D | null): void;
     isComplete(): boolean;
-    static ɵfac: i0.ɵɵFactoryDef<MatSingleDateSelectionModel<any>>;
+    static ɵfac: i0.ɵɵFactoryDef<MatSingleDateSelectionModel<any>, never>;
     static ɵprov: i0.ɵɵInjectableDef<MatSingleDateSelectionModel<any>>;
 }
 
@@ -440,7 +440,7 @@ export declare class MatStartDate<D> extends _MatDateRangeInputBase<D> implement
     getMirrorValue(): string;
     static ngAcceptInputType_disabled: BooleanInput;
     static ɵdir: i0.ɵɵDirectiveDefWithMeta<MatStartDate<any>, "input[matStartDate]", never, {}, {}, never>;
-    static ɵfac: i0.ɵɵFactoryDef<MatStartDate<any>, never>;
+    static ɵfac: i0.ɵɵFactoryDef<MatStartDate<any>, [null, null, null, null, { optional: true; }, { optional: true; }, { optional: true; }, { optional: true; }]>;
 }
 
 export declare class MatYearView<D> implements AfterContentInit, OnDestroy {
