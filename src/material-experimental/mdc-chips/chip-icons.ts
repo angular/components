@@ -11,6 +11,7 @@ import {
   ChangeDetectorRef,
   Directive,
   ElementRef,
+  OnDestroy,
 } from '@angular/core';
 import {
   CanDisable,
@@ -20,6 +21,7 @@ import {
   mixinDisabled,
   mixinTabIndex,
 } from '@angular/material/core';
+import {MDCChipTrailingActionAdapter, MDCChipTrailingActionFoundation} from '@material/chips';
 import {Subject} from 'rxjs';
 
 
@@ -57,8 +59,42 @@ export class MatChipAvatar {
     'aria-hidden': 'true',
   }
 })
-export class MatChipTrailingIcon {
-  constructor(public _elementRef: ElementRef) {}
+export class MatChipTrailingIcon implements OnDestroy {
+  private _foundation: MDCChipTrailingActionFoundation;
+  private _adapter: MDCChipTrailingActionAdapter = {
+    focus: () => this._elementRef.nativeElement.focus(),
+    getAttribute: (name: string) => this._elementRef.nativeElement.getAttribute(name),
+    setAttribute: (name: string, value: string) => {
+      this._elementRef.nativeElement.setAttribute(name, value);
+    },
+    // TODO(crisbeto): there's also a `trigger` parameter that the chip isn't
+    // handling yet. Consider passing it along once MDC start using it.
+    notifyInteraction: () => {
+      // TODO(crisbeto): uncomment this code once we've inverted the dependency on `MatChip`.
+      // this._chip._notifyInteraction();
+    },
+
+    // TODO(crisbeto): there's also a `key` parameter that the chip isn't
+    // handling yet. Consider passing it along once MDC start using it.
+    notifyNavigation: () => {
+      // TODO(crisbeto): uncomment this code once we've inverted the dependency on `MatChip`.
+      // this._chip._notifyNavigation();
+    }
+  };
+
+  constructor(
+    public _elementRef: ElementRef,
+    // TODO(crisbeto): currently the chip needs a reference to the trailing icon for the deprecated
+    // `setTrailingActionAttr` method. Until the method is removed, we can't use the chip here,
+    // because it causes a circular import.
+    // private _chip: MatChip
+  ) {
+    this._foundation = new MDCChipTrailingActionFoundation(this._adapter);
+  }
+
+  ngOnDestroy() {
+    this._foundation.destroy();
+  }
 
   focus() {
     this._elementRef.nativeElement.focus();
@@ -75,8 +111,8 @@ export class MatChipTrailingIcon {
  * @docs-private
  */
 class MatChipRemoveBase extends MatChipTrailingIcon {
-  constructor(_elementRef: ElementRef) {
-    super(_elementRef);
+  constructor(elementRef: ElementRef) {
+    super(elementRef);
   }
 }
 

@@ -254,15 +254,12 @@ export class MatChip extends _MatChipMixinBase implements AfterContentInit, Afte
       return (target && (target as Element).classList) ?
           (target as Element).classList.contains(className) : false;
     },
-    notifyInteraction: () => this.interaction.emit(this.id),
+    notifyInteraction: () => this._notifyInteraction(),
     notifySelection: () => {
       // No-op. We call dispatchSelectionEvent ourselves in MatChipOption, because we want to
       // specify whether selection occurred via user input.
     },
-    notifyNavigation: () => {
-      // TODO: This is a new feature added by MDC; consider exposing this event to users in the
-      // future.
-    },
+    notifyNavigation: () => this._notifyNavigation(),
     notifyTrailingIconInteraction: () => this.removeIconInteraction.emit(this.id),
     notifyRemoval: () => {
       this.removed.emit({ chip: this });
@@ -406,6 +403,14 @@ export class MatChip extends _MatChipMixinBase implements AfterContentInit, Afte
   /** Whether or not the ripple should be disabled. */
   _isRippleDisabled(): boolean {
     return this.disabled || this.disableRipple || this._isBasicChip;
+  }
+
+  _notifyInteraction() {
+    this.interaction.emit(this.id);
+  }
+
+  _notifyNavigation() {
+    // TODO: This is a new feature added by MDC. Consider exposing it to users in the future.
   }
 
   static ngAcceptInputType_disabled: BooleanInput;
