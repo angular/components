@@ -33,15 +33,6 @@ interface GoogleMapsWindow extends Window {
   google?: typeof google;
 }
 
-// TODO(mbehrlich): Update this to use original map after updating DefinitelyTyped
-/**
- * Extends the Google Map interface due to the Definitely Typed implementation
- * missing "getClickableIcons".
- */
-export interface UpdatedGoogleMap extends google.maps.Map {
-  getClickableIcons: () => boolean;
-}
-
 /** default options set to the Googleplex */
 export const DEFAULT_OPTIONS: google.maps.MapOptions = {
   center: {lat: 37.421995, lng: -122.084092},
@@ -75,7 +66,7 @@ export class GoogleMap implements OnChanges, OnInit, OnDestroy {
   private readonly _zoom = new BehaviorSubject<number|undefined>(undefined);
   private readonly _destroy = new Subject<void>();
   private _mapEl: HTMLElement;
-  _googleMap: UpdatedGoogleMap;
+  _googleMap: google.maps.Map;
 
   /** Whether we're currently rendering inside a browser. */
   _isBrowser: boolean;
@@ -270,7 +261,7 @@ export class GoogleMap implements OnChanges, OnInit, OnDestroy {
       this._setSize();
       this._googleMapChanges = this._initializeMap(this._combineOptions());
       this._googleMapChanges.subscribe((googleMap: google.maps.Map) => {
-        this._googleMap = googleMap as UpdatedGoogleMap;
+        this._googleMap = googleMap;
         this._eventManager.setTarget(this._googleMap);
       });
 
