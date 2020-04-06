@@ -1,10 +1,10 @@
-import {createTestCaseSetup, readFileContent} from '@angular/cdk/schematics/testing';
-import {migrationCollection} from '../../index.spec';
+import {createTestCaseSetup, readFileContent, resolveBazel} from '@angular/cdk/schematics/testing';
+import {MIGRATION_PATH} from '../../../../index.spec';
 
 describe('v8 material imports', () => {
   it('should re-map top-level material imports to the proper entry points', async () => {
     const {runFixers, appTree, writeFile, removeTempDir} = await createTestCaseSetup(
-        'migration-v8', migrationCollection, [require.resolve('./material-imports_input.ts')]);
+        'migration-v8', MIGRATION_PATH, [resolveBazel(__dirname, './material-imports_input.ts')]);
     const materialPath = '/node_modules/@angular/material';
 
     writeFile(`${materialPath}/index.d.ts`, `
@@ -28,7 +28,7 @@ describe('v8 material imports', () => {
     await runFixers();
 
     expect(appTree.readContent('/projects/cdk-testing/src/test-cases/material-imports_input.ts'))
-        .toBe(readFileContent(require.resolve('./material-imports_expected_output.ts')));
+        .toBe(readFileContent(resolveBazel(__dirname, './material-imports_expected_output.ts')));
 
     removeTempDir();
   });
