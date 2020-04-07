@@ -4,7 +4,9 @@ As explained in the [theming guide](./theming.md), a theme in Angular Material c
 configurations for the `color`, `density` and `typography` systems. As some of these individual
 systems have default configurations, some usage patterns may cause duplication in the CSS output.
 
-Below is an example of a pattern that generates duplicative theme styles:
+Below are examples of patterns that generate duplicative theme styles:
+
+**Example #1**
 
 ```scss
 $light-theme: mat-light-theme((color: ...));
@@ -36,7 +38,44 @@ selector. Replace the `angular-material-theme` mixin and include the dark theme 
 }
 ```
 
-Typography can also be configured via Sass mixin; see `angular-material-typography`.  
+Typography can also be configured via Sass mixin; see `angular-material-typography`.
+
+**Example #2**
+
+Theme styles could also be duplicated if individual theme mixins are used. For example:
+
+```scss
+@include angular-material-theme($my-theme);
+
+.my-custom-dark-button {
+  // This will also generate the default density styles again.
+  @include mat-button-theme($my-theme);
+}
+```
+
+To avoid this duplication of styles, use the dedicated mixin for the color system and
+extract the configuration for the color system from the theme.
+
+```scss
+.my-custom-dark-button {
+  // This will only generate the color styles for `mat-button`.
+  @include mat-button-color(map_get($my-theme, color));
+}
+```
+
+Alternatively, a new theme object can be constructed that explicitly disables
+styles from other systems such as `density` or `typography`:
+
+```scss
+.my-custom-dark-button {
+  $only-color-theme: map_merge($my-theme, (
+    density: null,
+    typography: null
+  ));
+  // This will only generate the color styles for `mat-button`.
+  @include mat-button-theme($only-color-theme);
+}
+```
 
 #### Disabling duplication warnings
 
