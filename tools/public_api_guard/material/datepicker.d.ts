@@ -13,7 +13,16 @@ export interface DateSelectionModelChange<S> {
     source: unknown;
 }
 
+export declare class DefaultMatCalendarRangeStrategy<D> implements MatCalendarRangeSelectionStrategy<D> {
+    constructor(_dateAdapter: DateAdapter<D>);
+    selectionFinished(date: D, currentRange: DateRange<D>): DateRange<D>;
+    static ɵfac: i0.ɵɵFactoryDef<DefaultMatCalendarRangeStrategy<any>, never>;
+    static ɵprov: i0.ɵɵInjectableDef<DefaultMatCalendarRangeStrategy<any>>;
+}
+
 export declare type ExtractDateTypeFromSelection<T> = T extends DateRange<infer D> ? D : NonNullable<T>;
+
+export declare const MAT_CALENDAR_RANGE_SELECTION_STRATEGY: InjectionToken<MatCalendarRangeSelectionStrategy<any>>;
 
 export declare const MAT_DATEPICKER_SCROLL_STRATEGY: InjectionToken<() => ScrollStrategy>;
 
@@ -29,11 +38,11 @@ export declare const MAT_DATEPICKER_VALIDATORS: any;
 
 export declare const MAT_DATEPICKER_VALUE_ACCESSOR: any;
 
-export declare function MAT_RANGE_DATE_SELECTION_MODEL_FACTORY(parent: MatSingleDateSelectionModel<unknown>, adapter: DateAdapter<unknown>): MatSingleDateSelectionModel<unknown>;
+export declare function MAT_RANGE_DATE_SELECTION_MODEL_FACTORY(parent: MatSingleDateSelectionModel<unknown>): MatSingleDateSelectionModel<unknown>;
 
 export declare const MAT_RANGE_DATE_SELECTION_MODEL_PROVIDER: FactoryProvider;
 
-export declare function MAT_SINGLE_DATE_SELECTION_MODEL_FACTORY(parent: MatSingleDateSelectionModel<unknown>, adapter: DateAdapter<unknown>): MatSingleDateSelectionModel<unknown>;
+export declare function MAT_SINGLE_DATE_SELECTION_MODEL_FACTORY(parent: MatSingleDateSelectionModel<unknown>): MatSingleDateSelectionModel<unknown>;
 
 export declare const MAT_SINGLE_DATE_SELECTION_MODEL_PROVIDER: FactoryProvider;
 
@@ -65,11 +74,10 @@ export declare class MatCalendar<D> implements AfterContentInit, AfterViewChecke
     stateChanges: Subject<void>;
     readonly yearSelected: EventEmitter<D>;
     yearView: MatYearView<D>;
-    constructor(_intl: MatDatepickerIntl, _dateAdapter: DateAdapter<D>, _dateFormats: MatDateFormats, _changeDetectorRef: ChangeDetectorRef, _model: MatDateSelectionModel<DateRange<D> | D | null>);
-    _dateSelected(date: D | null): void;
+    constructor(_intl: MatDatepickerIntl, _dateAdapter: DateAdapter<D>, _dateFormats: MatDateFormats, _changeDetectorRef: ChangeDetectorRef, _model: MatDateSelectionModel<DateRange<D> | D | null>, _rangeSelectionStrategy?: MatCalendarRangeSelectionStrategy<D> | undefined);
+    _dateSelected(event: MatCalendarUserEvent<D | null>): void;
     _goToDateInView(date: D, view: 'month' | 'year' | 'multi-year'): void;
     _monthSelectedInYearView(normalizedMonth: D): void;
-    _userSelected(): void;
     _yearSelectedInMultiYearView(normalizedYear: D): void;
     focusActiveCell(): void;
     ngAfterContentInit(): void;
@@ -78,7 +86,7 @@ export declare class MatCalendar<D> implements AfterContentInit, AfterViewChecke
     ngOnDestroy(): void;
     updateTodaysDate(): void;
     static ɵcmp: i0.ɵɵComponentDefWithMeta<MatCalendar<any>, "mat-calendar", ["matCalendar"], { "headerComponent": "headerComponent"; "startAt": "startAt"; "startView": "startView"; "selected": "selected"; "minDate": "minDate"; "maxDate": "maxDate"; "dateFilter": "dateFilter"; "dateClass": "dateClass"; "comparisonStart": "comparisonStart"; "comparisonEnd": "comparisonEnd"; }, { "selectedChange": "selectedChange"; "yearSelected": "yearSelected"; "monthSelected": "monthSelected"; "_userSelection": "_userSelection"; }, never, never>;
-    static ɵfac: i0.ɵɵFactoryDef<MatCalendar<any>, [null, { optional: true; }, { optional: true; }, null, null]>;
+    static ɵfac: i0.ɵɵFactoryDef<MatCalendar<any>, [null, { optional: true; }, { optional: true; }, null, null, { optional: true; }]>;
 }
 
 export declare class MatCalendarBody implements OnChanges, OnDestroy {
@@ -95,11 +103,11 @@ export declare class MatCalendarBody implements OnChanges, OnDestroy {
     labelMinRequiredCells: number;
     numCols: number;
     rows: MatCalendarCell[][];
-    readonly selectedValueChange: EventEmitter<number>;
+    readonly selectedValueChange: EventEmitter<MatCalendarUserEvent<number>>;
     startValue: number;
     todayValue: number;
     constructor(_elementRef: ElementRef<HTMLElement>, _changeDetectorRef: ChangeDetectorRef, _ngZone: NgZone);
-    _cellClicked(cell: MatCalendarCell): void;
+    _cellClicked(cell: MatCalendarCell, event: MouseEvent): void;
     _focusActiveCell(): void;
     _isActiveCell(rowIndex: number, colIndex: number): boolean;
     _isComparisonBridgeEnd(value: number, rowIndex: number, colIndex: number): boolean;
@@ -149,6 +157,15 @@ export declare class MatCalendarHeader<D> {
     previousEnabled(): boolean;
     static ɵcmp: i0.ɵɵComponentDefWithMeta<MatCalendarHeader<any>, "mat-calendar-header", ["matCalendarHeader"], {}, {}, never, ["*"]>;
     static ɵfac: i0.ɵɵFactoryDef<MatCalendarHeader<any>, [null, null, { optional: true; }, { optional: true; }, null]>;
+}
+
+export interface MatCalendarRangeSelectionStrategy<D> {
+    selectionFinished(date: D | null, currentRange: DateRange<D>, event: Event): DateRange<D>;
+}
+
+export interface MatCalendarUserEvent<D> {
+    event: Event;
+    value: D;
 }
 
 export declare type MatCalendarView = 'month' | 'year' | 'multi-year';
@@ -320,11 +337,9 @@ export declare class MatDateRangePicker<D> extends MatDatepickerBase<MatDateRang
 }
 
 export declare abstract class MatDateSelectionModel<S, D = ExtractDateTypeFromSelection<S>> implements OnDestroy {
-    protected readonly adapter: DateAdapter<D>;
     readonly selection: S;
     selectionChanged: Observable<DateSelectionModelChange<S>>;
     protected constructor(
-    adapter: DateAdapter<D>,
     selection: S);
     abstract add(date: D | null): void;
     abstract isComplete(): boolean;
@@ -354,7 +369,7 @@ export declare class MatMonthView<D> implements AfterContentInit, OnDestroy {
     _rangeEnd: number | null;
     _rangeStart: number | null;
     _todayDate: number | null;
-    readonly _userSelection: EventEmitter<void>;
+    readonly _userSelection: EventEmitter<MatCalendarUserEvent<D | null>>;
     _weekdays: {
         long: string;
         narrow: string;
@@ -375,7 +390,7 @@ export declare class MatMonthView<D> implements AfterContentInit, OnDestroy {
     set selected(value: DateRange<D> | D | null);
     readonly selectedChange: EventEmitter<D | null>;
     constructor(_changeDetectorRef: ChangeDetectorRef, _dateFormats: MatDateFormats, _dateAdapter: DateAdapter<D>, _dir?: Directionality | undefined);
-    _dateSelected(date: number): void;
+    _dateSelected(event: MatCalendarUserEvent<number>): void;
     _focusActiveCell(): void;
     _handleCalendarBodyKeydown(event: KeyboardEvent): void;
     _init(): void;
@@ -408,7 +423,7 @@ export declare class MatMultiYearView<D> implements AfterContentInit, OnDestroy 
     _getActiveCell(): number;
     _handleCalendarBodyKeydown(event: KeyboardEvent): void;
     _init(): void;
-    _yearSelected(year: number): void;
+    _yearSelected(event: MatCalendarUserEvent<number>): void;
     ngAfterContentInit(): void;
     ngOnDestroy(): void;
     static ɵcmp: i0.ɵɵComponentDefWithMeta<MatMultiYearView<any>, "mat-multi-year-view", ["matMultiYearView"], { "activeDate": "activeDate"; "selected": "selected"; "minDate": "minDate"; "maxDate": "maxDate"; "dateFilter": "dateFilter"; }, { "selectedChange": "selectedChange"; "yearSelected": "yearSelected"; "activeDateChange": "activeDateChange"; }, never, never>;
@@ -416,7 +431,7 @@ export declare class MatMultiYearView<D> implements AfterContentInit, OnDestroy 
 }
 
 export declare class MatRangeDateSelectionModel<D> extends MatDateSelectionModel<DateRange<D>, D> {
-    constructor(adapter: DateAdapter<D>);
+    constructor();
     add(date: D | null): void;
     isComplete(): boolean;
     static ɵfac: i0.ɵɵFactoryDef<MatRangeDateSelectionModel<any>, never>;
@@ -424,7 +439,7 @@ export declare class MatRangeDateSelectionModel<D> extends MatDateSelectionModel
 }
 
 export declare class MatSingleDateSelectionModel<D> extends MatDateSelectionModel<D | null, D> {
-    constructor(adapter: DateAdapter<D>);
+    constructor();
     add(date: D | null): void;
     isComplete(): boolean;
     static ɵfac: i0.ɵɵFactoryDef<MatSingleDateSelectionModel<any>, never>;
@@ -466,7 +481,7 @@ export declare class MatYearView<D> implements AfterContentInit, OnDestroy {
     _focusActiveCell(): void;
     _handleCalendarBodyKeydown(event: KeyboardEvent): void;
     _init(): void;
-    _monthSelected(month: number): void;
+    _monthSelected(event: MatCalendarUserEvent<number>): void;
     ngAfterContentInit(): void;
     ngOnDestroy(): void;
     static ɵcmp: i0.ɵɵComponentDefWithMeta<MatYearView<any>, "mat-year-view", ["matYearView"], { "activeDate": "activeDate"; "selected": "selected"; "minDate": "minDate"; "maxDate": "maxDate"; "dateFilter": "dateFilter"; }, { "selectedChange": "selectedChange"; "monthSelected": "monthSelected"; "activeDateChange": "activeDateChange"; }, never, never>;

@@ -10,6 +10,7 @@ export * from './datepicker-module';
 export * from './calendar';
 export * from './calendar-body';
 export * from './datepicker';
+export * from './calendar-range-selection-strategy';
 export * from './datepicker-animations';
 export {
   MAT_DATEPICKER_SCROLL_STRATEGY,

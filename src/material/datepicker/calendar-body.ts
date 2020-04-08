@@ -40,6 +40,11 @@ export class MatCalendarCell {
               public compareValue = value) {}
 }
 
+/** Event emitted when a date inside the calendar is triggered as a result of a user action. */
+export interface MatCalendarUserEvent<D> {
+  value: D;
+  event: Event;
+}
 
 /**
  * An internal component used to display calendar data in a table.
@@ -96,7 +101,8 @@ export class MatCalendarBody implements OnChanges, OnDestroy {
   @Input() comparisonEnd: number | null;
 
   /** Emits when a new value is selected. */
-  @Output() readonly selectedValueChange: EventEmitter<number> = new EventEmitter<number>();
+  @Output() readonly selectedValueChange: EventEmitter<MatCalendarUserEvent<number>> =
+      new EventEmitter<MatCalendarUserEvent<number>>();
 
   /** The number of blank cells to put at the beginning for the first row. */
   _firstRowOffset: number;
@@ -128,9 +134,9 @@ export class MatCalendarBody implements OnChanges, OnDestroy {
   }
 
   /** Called when a cell is clicked. */
-  _cellClicked(cell: MatCalendarCell): void {
+  _cellClicked(cell: MatCalendarCell, event: MouseEvent): void {
     if (cell.enabled) {
-      this.selectedValueChange.emit(cell.value);
+      this.selectedValueChange.emit({value: cell.value, event});
     }
   }
 

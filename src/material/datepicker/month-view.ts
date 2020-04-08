@@ -35,7 +35,12 @@ import {
 } from '@angular/core';
 import {DateAdapter, MAT_DATE_FORMATS, MatDateFormats} from '@angular/material/core';
 import {Directionality} from '@angular/cdk/bidi';
-import {MatCalendarBody, MatCalendarCell, MatCalendarCellCssClasses} from './calendar-body';
+import {
+  MatCalendarBody,
+  MatCalendarCell,
+  MatCalendarCellCssClasses,
+  MatCalendarUserEvent,
+} from './calendar-body';
 import {createMissingDateImplError} from './datepicker-errors';
 import {Subscription} from 'rxjs';
 import {startWith} from 'rxjs/operators';
@@ -121,7 +126,8 @@ export class MatMonthView<D> implements AfterContentInit, OnDestroy {
   @Output() readonly selectedChange: EventEmitter<D | null> = new EventEmitter<D | null>();
 
   /** Emits when any date is selected. */
-  @Output() readonly _userSelection: EventEmitter<void> = new EventEmitter<void>();
+  @Output() readonly _userSelection: EventEmitter<MatCalendarUserEvent<D | null>> =
+      new EventEmitter<MatCalendarUserEvent<D | null>>();
 
   /** Emits when any date is activated. */
   @Output() readonly activeDateChange: EventEmitter<D> = new EventEmitter<D>();
@@ -181,7 +187,9 @@ export class MatMonthView<D> implements AfterContentInit, OnDestroy {
   }
 
   /** Handles when a new date is selected. */
-  _dateSelected(date: number) {
+  _dateSelected(event: MatCalendarUserEvent<number>) {
+    const date = event.value;
+    let selectedDate: D | null = null;
     let rangeStartDate: number | null;
     let rangeEndDate: number | null;
 
@@ -195,12 +203,11 @@ export class MatMonthView<D> implements AfterContentInit, OnDestroy {
     if (rangeStartDate !== date || rangeEndDate !== date) {
       const selectedYear = this._dateAdapter.getYear(this.activeDate);
       const selectedMonth = this._dateAdapter.getMonth(this.activeDate);
-      const selectedDate = this._dateAdapter.createDate(selectedYear, selectedMonth, date);
-
+      selectedDate = this._dateAdapter.createDate(selectedYear, selectedMonth, date);
       this.selectedChange.emit(selectedDate);
     }
 
-    this._userSelection.emit();
+    this._userSelection.emit({value: selectedDate, event: event.event});
   }
 
   /** Handles keydown events on the calendar body when calendar is in month view. */
@@ -247,8 +254,7 @@ export class MatMonthView<D> implements AfterContentInit, OnDestroy {
       case ENTER:
       case SPACE:
         if (!this.dateFilter || this.dateFilter(this._activeDate)) {
-          this._dateSelected(this._dateAdapter.getDate(this._activeDate));
-          this._userSelection.emit();
+          this._dateSelected({value: this._dateAdapter.getDate(this._activeDate), event});
           // Prevent unexpected default actions such as form submission.
           event.preventDefault();
         }
@@ -259,7 +265,7 @@ export class MatMonthView<D> implements AfterContentInit, OnDestroy {
         // rest of the range logic, because focus may have moved outside the calendar body.
         if (this._matCalendarBody._previewEnd > -1) {
           this.selectedChange.emit(null);
-          this._userSelection.emit();
+          this._userSelection.emit({value: null, event});
           event.preventDefault();
           event.stopPropagation(); // Prevents the overlay from closing.
         }

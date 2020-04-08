@@ -7,7 +7,6 @@
  */
 
 import {FactoryProvider, Injectable, Optional, SkipSelf, OnDestroy} from '@angular/core';
-import {DateAdapter} from '@angular/material/core';
 import {Observable, Subject} from 'rxjs';
 
 /** A class representing a range of dates. */
@@ -50,8 +49,6 @@ export abstract class MatDateSelectionModel<S, D = ExtractDateTypeFromSelection<
   selectionChanged: Observable<DateSelectionModelChange<S>> = this._selectionChanged.asObservable();
 
   protected constructor(
-    /** Date adapter used when interacting with dates in the model. */
-    protected readonly adapter: DateAdapter<D>,
     /** The current selection. */
     readonly selection: S) {
     this.selection = selection;
@@ -81,8 +78,8 @@ export abstract class MatDateSelectionModel<S, D = ExtractDateTypeFromSelection<
 /**  A selection model that contains a single date. */
 @Injectable()
 export class MatSingleDateSelectionModel<D> extends MatDateSelectionModel<D | null, D> {
-  constructor(adapter: DateAdapter<D>) {
-    super(adapter, null);
+  constructor() {
+    super(null);
   }
 
   /**
@@ -105,8 +102,8 @@ export class MatSingleDateSelectionModel<D> extends MatDateSelectionModel<D | nu
 /**  A selection model that contains a date range. */
 @Injectable()
 export class MatRangeDateSelectionModel<D> extends MatDateSelectionModel<DateRange<D>, D> {
-  constructor(adapter: DateAdapter<D>) {
-    super(adapter, new DateRange<D>(null, null));
+  constructor() {
+    super(new DateRange<D>(null, null));
   }
 
   /**
@@ -119,7 +116,7 @@ export class MatRangeDateSelectionModel<D> extends MatDateSelectionModel<DateRan
 
     if (start == null) {
       start = date;
-    } else if (end == null && date && this.adapter.compareDate(date, start) > 0) {
+    } else if (end == null) {
       end = date;
     } else {
       start = date;
@@ -140,27 +137,27 @@ export class MatRangeDateSelectionModel<D> extends MatDateSelectionModel<DateRan
 
 /** @docs-private */
 export function MAT_SINGLE_DATE_SELECTION_MODEL_FACTORY(
-    parent: MatSingleDateSelectionModel<unknown>, adapter: DateAdapter<unknown>) {
-  return parent || new MatSingleDateSelectionModel(adapter);
+    parent: MatSingleDateSelectionModel<unknown>) {
+  return parent || new MatSingleDateSelectionModel();
 }
 
 /** Used to provide a single selection model to a component. */
 export const MAT_SINGLE_DATE_SELECTION_MODEL_PROVIDER: FactoryProvider = {
   provide: MatDateSelectionModel,
-  deps: [[new Optional(), new SkipSelf(), MatDateSelectionModel], DateAdapter],
+  deps: [[new Optional(), new SkipSelf(), MatDateSelectionModel]],
   useFactory: MAT_SINGLE_DATE_SELECTION_MODEL_FACTORY,
 };
 
 
 /** @docs-private */
 export function MAT_RANGE_DATE_SELECTION_MODEL_FACTORY(
-    parent: MatSingleDateSelectionModel<unknown>, adapter: DateAdapter<unknown>) {
-  return parent || new MatRangeDateSelectionModel(adapter);
+    parent: MatSingleDateSelectionModel<unknown>) {
+  return parent || new MatRangeDateSelectionModel();
 }
 
 /** Used to provide a range selection model to a component. */
 export const MAT_RANGE_DATE_SELECTION_MODEL_PROVIDER: FactoryProvider = {
   provide: MatDateSelectionModel,
-  deps: [[new Optional(), new SkipSelf(), MatDateSelectionModel], DateAdapter],
+  deps: [[new Optional(), new SkipSelf(), MatDateSelectionModel]],
   useFactory: MAT_RANGE_DATE_SELECTION_MODEL_FACTORY,
 };

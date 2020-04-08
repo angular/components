@@ -50,7 +50,7 @@
       [attr.aria-label]="item.ariaLabel"
       [attr.aria-disabled]="!item.enabled || null"
       [attr.aria-selected]="_isSelected(item)"
-      (click)="_cellClicked(item)"
+      (click)="_cellClicked(item, $event)"
       [style.width]="_cellWidth"
       [style.paddingTop]="_cellPadding"
       role="button"
