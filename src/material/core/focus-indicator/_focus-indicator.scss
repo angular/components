@@ -94,8 +94,10 @@ $mat-focus-indicator-border-style: solid;
   @if type-of($themeOrColor) != 'map' {
     @include _mat-strong-focus-indicators-border-color($themeOrColor);
   }
-  $color: mat-get-color-config($themeOrColor);
-  @if $color != null {
-    @include mat-strong-focus-indicators-color($color);
+  @else {
+    $color: mat-get-color-config($themeOrColor);
+    @if $color != null {
+      @include mat-strong-focus-indicators-color($color);
+    }
   }
 }

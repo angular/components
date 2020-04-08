@@ -85,8 +85,10 @@
   @if type-of($themeOrColor) != 'map' {
     @include _mat-mdc-strong-focus-indicators-border-color($themeOrColor);
   }
-  $color: mat-get-color-config($themeOrColor);
-  @if $color != null {
-    @include mat-mdc-strong-focus-indicators-color($color);
+  @else {
+    $color: mat-get-color-config($themeOrColor);
+    @if $color != null {
+      @include mat-mdc-strong-focus-indicators-color($color);
+    }
   }
 }
