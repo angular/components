@@ -1,6 +1,6 @@
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 import {Component} from '@angular/core';
-import {MatCalendarBody, MatCalendarCell} from './calendar-body';
+import {MatCalendarBody, MatCalendarCell, MatCalendarUserEvent} from './calendar-body';
 import {By} from '@angular/platform-browser';
 import {dispatchMouseEvent, dispatchFakeEvent} from '@angular/cdk/testing/private';
 
@@ -591,8 +591,8 @@ class StandardCalendarBody {
   labelMinRequiredCells = 3;
   numCols = 7;
 
-  onSelect(value: number) {
-    this.selectedValue = value;
+  onSelect(event: MatCalendarUserEvent<number>) {
+    this.selectedValue = event.value;
   }
 }
 
@@ -614,7 +614,8 @@ class RangeCalendarBody {
   comparisonStart: number | undefined;
   comparisonEnd: number | undefined;
 
-  onSelect(value: number) {
+  onSelect(event: MatCalendarUserEvent<number>) {
+    const value = event.value;
     if (!this.startValue) {
       this.startValue = value;
     } else if (!this.endValue) {

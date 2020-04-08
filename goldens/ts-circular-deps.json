@@ -1,11 +1,27 @@
 [
   [
-    "src/cdk-experimental/dialog/dialog-config.ts",
-    "src/cdk-experimental/dialog/dialog-container.ts"
-  ],
-  [
     "src/cdk-experimental/popover-edit/edit-event-dispatcher.ts",
     "src/cdk-experimental/popover-edit/edit-ref.ts"
+  ],
+  [
+    "src/cdk/scrolling/scroll-dispatcher.ts",
+    "src/cdk/scrolling/scrollable.ts"
+  ],
+  [
+    "src/cdk/scrolling/virtual-scroll-viewport.ts",
+    "src/cdk/scrolling/virtual-for-of.ts"
+  ],
+  [
+    "src/cdk/scrolling/virtual-scroll-strategy.ts",
+    "src/cdk/scrolling/virtual-scroll-viewport.ts"
+  ],
+  [
+    "src/cdk/overlay/keyboard/overlay-keyboard-dispatcher.ts",
+    "src/cdk/overlay/overlay-ref.ts"
+  ],
+  [
+    "src/cdk-experimental/dialog/dialog-config.ts",
+    "src/cdk-experimental/dialog/dialog-container.ts"
   ],
   [
     "src/cdk/drag-drop/drag-ref.ts",
@@ -25,28 +41,12 @@
     "src/cdk/drag-drop/directives/drag.ts"
   ],
   [
-    "src/cdk/overlay/keyboard/overlay-keyboard-dispatcher.ts",
-    "src/cdk/overlay/overlay-ref.ts"
+    "src/cdk/testing/private/e2e/actions.ts",
+    "src/cdk/testing/private/e2e/query.ts"
   ],
   [
     "src/cdk/schematics/testing/index.ts",
     "src/cdk/schematics/testing/test-case-setup.ts"
-  ],
-  [
-    "src/cdk/scrolling/scroll-dispatcher.ts",
-    "src/cdk/scrolling/scrollable.ts"
-  ],
-  [
-    "src/cdk/scrolling/virtual-scroll-viewport.ts",
-    "src/cdk/scrolling/virtual-for-of.ts"
-  ],
-  [
-    "src/cdk/scrolling/virtual-scroll-strategy.ts",
-    "src/cdk/scrolling/virtual-scroll-viewport.ts"
-  ],
-  [
-    "src/cdk/testing/private/e2e/actions.ts",
-    "src/cdk/testing/private/e2e/query.ts"
   ],
   [
     "src/material/core/ripple/ripple-ref.ts",
@@ -55,6 +55,10 @@
   [
     "src/material/datepicker/datepicker.ts",
     "src/material/datepicker/datepicker-input.ts"
+  ],
+  [
+    "src/material/datepicker/date-range-input.ts",
+    "src/material/datepicker/date-range-picker.ts"
   ],
   [
     "src/material/grid-list/grid-list.ts",

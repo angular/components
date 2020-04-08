@@ -31,7 +31,7 @@ import {
   MatDateFormats,
 } from '@angular/material/core';
 import {Subject, Subscription} from 'rxjs';
-import {MatCalendarCellCssClasses} from './calendar-body';
+import {MatCalendarCellCssClasses, MatCalendarUserEvent} from './calendar-body';
 import {createMissingDateImplError} from './datepicker-errors';
 import {MatDatepickerIntl} from './datepicker-intl';
 import {MatMonthView} from './month-view';
@@ -47,6 +47,10 @@ import {
   DateRange,
   MatDateSelectionModel,
 } from './date-selection-model';
+import {
+  MAT_CALENDAR_RANGE_SELECTION_STRATEGY,
+  MatCalendarRangeSelectionStrategy
+} from './calendar-range-selection-strategy';
 
 /**
  * Possible views for the calendar.
@@ -318,7 +322,9 @@ export class MatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDes
               @Optional() private _dateAdapter: DateAdapter<D>,
               @Optional() @Inject(MAT_DATE_FORMATS) private _dateFormats: MatDateFormats,
               private _changeDetectorRef: ChangeDetectorRef,
-              private _model: MatDateSelectionModel<DateRange<D> | D | null>) {
+              private _model: MatDateSelectionModel<DateRange<D> | D | null>,
+              @Optional() @Inject(MAT_CALENDAR_RANGE_SELECTION_STRATEGY)
+                  private _rangeSelectionStrategy?: MatCalendarRangeSelectionStrategy<D>) {
 
     if (!this._dateAdapter) {
       throw createMissingDateImplError('DateAdapter');
@@ -403,8 +409,25 @@ export class MatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDes
   }
 
   /** Handles date selection in the month view. */
-  _dateSelected(date: D | null): void {
-    this._model.add(date);
+  _dateSelected(event: MatCalendarUserEvent<D | null>): void {
+    const selection = this._model.selection;
+    const value = event.value;
+    const isRange = selection instanceof DateRange;
+
+    // If we're selecting a range and we have a selection strategy, always pass the value through
+    // there. Otherwise don't assign null values to the model, unless we're selecting a range.
+    // A null value when picking a range means that the user cancelled the selection (e.g. by
+    // pressing escape), whereas when selecting a single value it means that the value didn't
+    // change. This isn't very intuitive, but it's here for backwards-compatibility.
+    if (isRange && this._rangeSelectionStrategy) {
+      const newSelection = this._rangeSelectionStrategy.selectionFinished(value,
+          selection as DateRange<D>, event.event);
+      this._model.updateSelection(newSelection, this);
+    } else if (value || isRange) {
+      this._model.add(value);
+    }
+
+    this._userSelection.emit();
   }
 
   /** Handles year selection in the multiyear view. */
@@ -415,10 +438,6 @@ export class MatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDes
   /** Handles month selection in the year view. */
   _monthSelectedInYearView(normalizedMonth: D) {
     this.monthSelected.emit(normalizedMonth);
-  }
-
-  _userSelected(): void {
-    this._userSelection.emit();
   }
 
   /** Handles year/month selection in the multi-year/year views. */
