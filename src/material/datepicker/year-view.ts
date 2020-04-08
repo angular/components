@@ -34,7 +34,7 @@ import {
 } from '@angular/core';
 import {DateAdapter, MAT_DATE_FORMATS, MatDateFormats} from '@angular/material/core';
 import {Directionality} from '@angular/cdk/bidi';
-import {MatCalendarBody, MatCalendarCell} from './calendar-body';
+import {MatCalendarBody, MatCalendarCell, MatCalendarUserEvent} from './calendar-body';
 import {createMissingDateImplError} from './datepicker-errors';
 import {Subscription} from 'rxjs';
 import {startWith} from 'rxjs/operators';
@@ -153,7 +153,8 @@ export class MatYearView<D> implements AfterContentInit, OnDestroy {
   }
 
   /** Handles when a new month is selected. */
-  _monthSelected(month: number) {
+  _monthSelected(event: MatCalendarUserEvent<number>) {
+    const month = event.value;
     const normalizedDate =
           this._dateAdapter.createDate(this._dateAdapter.getYear(this.activeDate), month, 1);
 
@@ -206,7 +207,7 @@ export class MatYearView<D> implements AfterContentInit, OnDestroy {
         break;
       case ENTER:
       case SPACE:
-        this._monthSelected(this._dateAdapter.getMonth(this._activeDate));
+        this._monthSelected({value: this._dateAdapter.getMonth(this._activeDate), event});
         break;
       default:
         // Don't prevent default or focus active cell on keys that we don't explicitly handle.
