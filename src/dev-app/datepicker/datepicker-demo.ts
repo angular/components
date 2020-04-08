@@ -14,14 +14,19 @@ import {
   OnDestroy,
   Optional,
   ViewChild,
-  ViewEncapsulation
+  ViewEncapsulation,
+  Directive,
+  Injectable
 } from '@angular/core';
 import {FormControl, FormGroup} from '@angular/forms';
 import {DateAdapter, MAT_DATE_FORMATS, MatDateFormats, ThemePalette} from '@angular/material/core';
 import {
   MatCalendar,
   MatCalendarHeader,
-  MatDatepickerInputEvent
+  MatDatepickerInputEvent,
+  MAT_CALENDAR_RANGE_SELECTION_STRATEGY,
+  MatCalendarRangeSelectionStrategy,
+  DateRange
 } from '@angular/material/datepicker';
 import {Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
@@ -78,6 +83,37 @@ export class DatepickerDemo {
   customHeader = CustomHeader;
   customHeaderNgContent = CustomHeaderNgContent;
 }
+
+/** Range selection strategy that preserves the current range. */
+@Injectable()
+export class PreserveRangeStrategy<D> implements MatCalendarRangeSelectionStrategy<D> {
+  constructor(private _dateAdapter: DateAdapter<D>) {}
+
+  selectionFinished(date: D, currentRange: DateRange<D>) {
+    let {start, end} = currentRange;
+
+    if (start == null) {
+      start = date;
+    } else if (end == null) {
+      end = date;
+    } else if (this._dateAdapter.compareDate(start, date) > 0) {
+      start = date;
+    } else {
+      end = date;
+    }
+
+    return new DateRange<D>(start, end);
+  }
+}
+
+@Directive({
+  selector: '[customRangeStrategy]',
+  providers: [{
+    provide: MAT_CALENDAR_RANGE_SELECTION_STRATEGY,
+    useClass: PreserveRangeStrategy
+  }]
+})
+export class CustomRangeStrategy {}
 
 // Custom header component for datepicker
 @Component({

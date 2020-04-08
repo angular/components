@@ -244,3 +244,17 @@
   </mat-form-field>
   <div>{{range3.value | json}}</div>
 </div>
+
+
+<h2>Range picker with custom selection strategy</h2>
+<div class="demo-range-group">
+  <mat-form-field>
+    <mat-label>Enter a date range</mat-label>
+    <mat-date-range-input [rangePicker]="range4Picker">
+      <input matStartDate placeholder="Start date"/>
+      <input matEndDate placeholder="End date"/>
+    </mat-date-range-input>
+    <mat-datepicker-toggle [for]="range4Picker" matSuffix></mat-datepicker-toggle>
+    <mat-date-range-picker customRangeStrategy #range4Picker></mat-date-range-picker>
+  </mat-form-field>
+</div>
