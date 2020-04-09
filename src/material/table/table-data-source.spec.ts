@@ -18,11 +18,6 @@ describe('MatTableDataSource', () => {
     let fixture: ComponentFixture<MatSortApp>;
     let sort: MatSort;
 
-    /** Randomly shuffles the array of data. */
-    function shuffle(data: any[]) {
-      return data.slice().sort(() => (Math.random() - 0.5));
-    }
-
     beforeEach(() => {
       fixture = TestBed.createComponent(MatSortApp);
       sort = fixture.componentInstance.sort;
@@ -40,8 +35,8 @@ describe('MatTableDataSource', () => {
       // Set the active sort to be on the "prop" key
       sort.active = 'prop';
 
-      const shuffledData = shuffle(data.slice());
-      const sortedData = dataSource.sortData(shuffledData, sort);
+      const reversedData = data.slice().reverse();
+      const sortedData = dataSource.sortData(reversedData, sort);
       expect(sortedData).toEqual(data);
     }
 
