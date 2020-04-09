@@ -174,6 +174,7 @@ const _MatDateRangeInputBase:
     '(input)': '_onInput($event.target.value)',
     '(change)': '_onChange()',
     '(keydown)': '_onKeydown($event)',
+    '[attr.id]': '_rangeInput.id',
     '[attr.aria-labelledby]': '_rangeInput._ariaLabelledBy',
     '[attr.aria-describedby]': '_rangeInput._ariaDescribedBy',
     '[attr.aria-haspopup]': '_rangeInput.rangePicker ? "dialog" : null',
