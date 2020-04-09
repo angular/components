@@ -140,6 +140,16 @@ describe('MatDatepicker', () => {
     expect(rangeInput.classList).toContain(hideClass);
   });
 
+  it('should point the label aria-owns to the id of the start input', () => {
+    const fixture = createComponent(StandardRangePicker);
+    fixture.detectChanges();
+    const label = fixture.nativeElement.querySelector('label');
+    const start = fixture.componentInstance.start.nativeElement;
+
+    expect(start.id).toBeTruthy();
+    expect(label.getAttribute('aria-owns')).toBe(start.id);
+  });
+
   it('should point the input aria-labelledby to the form field label', () => {
     const fixture = createComponent(StandardRangePicker);
     fixture.detectChanges();

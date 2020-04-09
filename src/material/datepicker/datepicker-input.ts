@@ -13,8 +13,6 @@ import {
   Inject,
   Input,
   Optional,
-  Output,
-  AfterViewInit,
 } from '@angular/core';
 import {
   NG_VALIDATORS,
