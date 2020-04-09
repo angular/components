@@ -6,9 +6,9 @@
 ///
 /// @example
 ///   .my-app {
-///     @include mat-strong-focus-indicators-mdc();
+///     @include mat-mdc-strong-focus-indicators();
 ///   }
-@mixin mat-strong-focus-indicators-mdc() {
+@mixin mat-mdc-strong-focus-indicators() {
   // Base styles for the focus indicators.
   .mat-mdc-focus-indicator::before {
     @include mat-fill();
@@ -57,14 +57,14 @@
 }
 
 // Mixin that applies the border color for the focus indicators.
-@mixin _mat-strong-focus-indicators-border-color-mdc($color) {
+@mixin _mat-mdc-strong-focus-indicators-border-color($color) {
   .mat-mdc-focus-indicator::before {
     border-color: $color;
   }
 }
 
-@mixin mat-strong-focus-indicators-color-mdc($config) {
-  @include _mat-strong-focus-indicators-border-color-mdc(mat-color(map_get($config, primary)));
+@mixin mat-mdc-strong-focus-indicators-color($config) {
+  @include _mat-mdc-strong-focus-indicators-border-color(mat-color(map_get($config, primary)));
 }
 
 /// Mixin that sets the color of the focus indicators.
@@ -75,19 +75,21 @@
 ///
 /// @example
 ///   .demo-dark-theme {
-///     @include mat-strong-focus-indicators-theme-mdc($darkThemeMap);
+///     @include mat-mdc-strong-focus-indicators-theme($darkThemeMap);
 ///   }
 ///
 /// @example
 ///   .demo-red-theme {
-///     @include mat-strong-focus-indicators-theme-mdc(#F00);
+///     @include mat-mdc-strong-focus-indicators-theme(#F00);
 ///   }
-@mixin mat-strong-focus-indicators-theme-mdc($themeOrColor) {
+@mixin mat-mdc-strong-focus-indicators-theme($themeOrColor) {
   @if type-of($themeOrColor) != 'map' {
-    @include _mat-strong-focus-indicators-border-color-mdc($themeOrColor);
+    @include _mat-mdc-strong-focus-indicators-border-color($themeOrColor);
   }
-  $color: mat-get-color-config($themeOrColor);
-  @if $color != null {
-    @include mat-strong-focus-indicators-color-mdc($color);
+  @else {
+    $color: mat-get-color-config($themeOrColor);
+    @if $color != null {
+      @include mat-mdc-strong-focus-indicators-color($color);
+    }
   }
 }
