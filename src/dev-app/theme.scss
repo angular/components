@@ -6,7 +6,7 @@
 @import '../material/core/theming/all-theme';
 @import '../material-experimental/column-resize/column-resize';
 @import '../material-experimental/mdc-helpers/mdc-helpers';
-@import '../material-experimental/mdc-helpers/focus-indicator';
+@import '../material-experimental/mdc-helpers/focus-indicators';
 @import '../material-experimental/mdc-color/all-color';
 @import '../material-experimental/mdc-theming/all-theme';
 @import '../material-experimental/mdc-typography/all-typography';
@@ -69,14 +69,14 @@ $dark-theme: mat-dark-theme((
 .demo-unicorn-dark-theme {
   @include angular-material-color($dark-theme);
   @include angular-material-mdc-color($dark-theme);
-  @include mat-column-resize-theme($dark-theme);
-  @include mat-popover-edit-theme($dark-theme);
+  @include mat-column-resize-color(map_get($dark-theme, color));
+  @include mat-popover-edit-color(map_get($dark-theme, color));
 }
 
 // Include the dark theme for focus indicators.
 .demo-unicorn-dark-theme.demo-strong-focus {
-  @include mat-strong-focus-indicators-theme($dark-theme);
-  @include mat-mdc-strong-focus-indicators-theme($dark-theme);
+  @include mat-strong-focus-indicators-color(map_get($dark-theme, color));
+  @include mat-mdc-strong-focus-indicators-color(map_get($dark-theme, color));
 }
 
 // Create classes for all density scales which are supported by all MDC-based components.

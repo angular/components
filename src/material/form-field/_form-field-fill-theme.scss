@@ -1,5 +1,6 @@
 @import '../core/theming/palette';
 @import '../core/theming/theming';
+@import '../core/theming/check-duplicate-styles';
 @import '../core/style/form-common';
 @import '../core/typography/typography-utils';
 
@@ -102,6 +103,7 @@ $mat-form-field-fill-dedupe: 0;
 @mixin _mat-form-field-fill-density($density-scale) {}
 
 @mixin mat-form-field-fill-theme($theme) {
+  @include _mat-check-duplicate-theme-styles($theme, 'mat-form-field-fill');
   $color: mat-get-color-config($theme);
   $density: mat-get-density-config($theme);
   $typography: mat-get-typography-config($theme);

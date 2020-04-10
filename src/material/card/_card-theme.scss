@@ -1,5 +1,6 @@
 @import '../core/theming/palette';
 @import '../core/theming/theming';
+@import '../core/theming/check-duplicate-styles';
 @import '../core/style/elevation';
 @import '../core/typography/typography-utils';
 
@@ -49,6 +50,7 @@
 @mixin _mat-card-density($density-scale) {}
 
 @mixin mat-card-theme($theme) {
+  @include _mat-check-duplicate-theme-styles($theme, 'mat-card');
   $color: mat-get-color-config($theme);
   $density: mat-get-density-config($theme);
   $typography: mat-get-typography-config($theme);

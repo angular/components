@@ -1,5 +1,6 @@
 @import '../core/theming/palette';
 @import '../core/theming/theming';
+@import '../core/theming/check-duplicate-styles';
 @import '../core/typography/typography-utils';
 
 @mixin mat-table-color($config) {
@@ -49,6 +50,7 @@
 @mixin _mat-table-density($density-scale) {}
 
 @mixin mat-table-theme($theme) {
+  @include _mat-check-duplicate-theme-styles($theme, 'mat-table');
   $color: mat-get-color-config($theme);
   $density: mat-get-density-config($theme);
   $typography: mat-get-typography-config($theme);

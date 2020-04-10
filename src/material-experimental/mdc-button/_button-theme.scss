@@ -180,6 +180,7 @@ $mat-button-state-target: '.mdc-button__ripple';
 }
 
 @mixin mat-mdc-button-theme($theme) {
+  @include _mat-check-duplicate-theme-styles($theme, 'mat-mdc-button');
   $color: mat-get-color-config($theme);
   $density: mat-get-density-config($theme);
   $typography: mat-get-typography-config($theme);
@@ -253,6 +254,7 @@ $mat-button-state-target: '.mdc-button__ripple';
 @mixin mat-mdc-fab-density($density-scale) {}
 
 @mixin mat-mdc-fab-theme($theme) {
+  @include _mat-check-duplicate-theme-styles($theme, 'mat-mdc-fab');
   $color: mat-get-color-config($theme);
   $density: mat-get-density-config($theme);
   $typography: mat-get-typography-config($theme);
@@ -325,6 +327,7 @@ $mat-button-state-target: '.mdc-button__ripple';
 }
 
 @mixin mat-mdc-icon-button-theme($theme) {
+  @include _mat-check-duplicate-theme-styles($theme, 'mat-mdc-icon-button');
   $color: mat-get-color-config($theme);
   $density: mat-get-density-config($theme);
   $typography: mat-get-typography-config($theme);

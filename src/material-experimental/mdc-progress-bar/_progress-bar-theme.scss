@@ -35,6 +35,7 @@
 @mixin mat-mdc-progress-bar-density($density-scale) {}
 
 @mixin mat-mdc-progress-bar-theme($theme) {
+  @include _mat-check-duplicate-theme-styles($theme, 'mat-mdc-progress-bar');
   $color: mat-get-color-config($theme);
   $density: mat-get-density-config($theme);
   $typography: mat-get-typography-config($theme);
