@@ -4,7 +4,7 @@ import {
   CdkPortalOverviewExample,
   ComponentPortalExample
 } from './cdk-portal-overview/cdk-portal-overview-example';
-
+import {MatButtonModule} from '@angular/material/button';
 export {CdkPortalOverviewExample, ComponentPortalExample};
 
 const EXAMPLES = [
@@ -13,7 +13,10 @@ const EXAMPLES = [
 ];
 
 @NgModule({
-  imports: [PortalModule],
+  imports: [
+    PortalModule,
+    MatButtonModule,
+  ],
   declarations: EXAMPLES,
   exports: EXAMPLES,
   entryComponents: EXAMPLES,

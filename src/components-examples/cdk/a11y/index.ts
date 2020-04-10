@@ -1,5 +1,6 @@
 import {A11yModule} from '@angular/cdk/a11y';
 import {NgModule} from '@angular/core';
+import {MatButtonModule} from '@angular/material/button';
 import {MatSelectModule} from '@angular/material/select';
 import {
   FocusMonitorDirectivesExample
@@ -20,6 +21,7 @@ const EXAMPLES = [
 @NgModule({
   imports: [
     A11yModule,
+    MatButtonModule,
     MatSelectModule,
   ],
   declarations: EXAMPLES,
