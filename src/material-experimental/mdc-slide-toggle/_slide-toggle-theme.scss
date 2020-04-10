@@ -91,6 +91,7 @@
 }
 
 @mixin mat-mdc-slide-toggle-theme($theme) {
+  @include _mat-check-duplicate-theme-styles($theme, 'mat-mdc-slide-toggle');
   $color: mat-get-color-config($theme);
   $density: mat-get-density-config($theme);
   $typography: mat-get-typography-config($theme);

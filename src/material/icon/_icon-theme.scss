@@ -1,4 +1,5 @@
 @import '../core/theming/theming';
+@import '../core/theming/check-duplicate-styles';
 
 @mixin mat-icon-color($config) {
   $primary: map-get($config, primary);
@@ -27,6 +28,7 @@
 @mixin _mat-icon-density($density-scale) {}
 
 @mixin mat-icon-theme($theme) {
+  @include _mat-check-duplicate-theme-styles($theme, 'mat-icon');
   $color: mat-get-color-config($theme);
   $density: mat-get-density-config($theme);
   $typography: mat-get-typography-config($theme);

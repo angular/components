@@ -9,6 +9,7 @@
 @mixin mat-mdc-snackbar-density($density-scale) {}
 
 @mixin mat-mdc-snackbar-theme($theme) {
+  @include _mat-check-duplicate-theme-styles($theme, 'mat-mdc-snackbar');
   $color: mat-get-color-config($theme);
   $density: mat-get-density-config($theme);
   $typography: mat-get-typography-config($theme);

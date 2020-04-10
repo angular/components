@@ -1,4 +1,5 @@
 @import '../core/theming/theming';
+@import '../core/theming/check-duplicate-styles';
 
 @mixin mat-sort-color($config) {
   $background: map-get($config, background);
@@ -29,6 +30,7 @@
 @mixin _mat-sort-density($density-scale) {}
 
 @mixin mat-sort-theme($theme) {
+  @include _mat-check-duplicate-theme-styles($theme, 'mat-sort');
   $color: mat-get-color-config($theme);
   $density: mat-get-density-config($theme);
   $typography: mat-get-typography-config($theme);

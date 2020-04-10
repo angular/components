@@ -15,6 +15,7 @@
 @mixin mat-mdc-autocomplete-density($density-scale) {}
 
 @mixin mat-mdc-autocomplete-theme($theme) {
+  @include _mat-check-duplicate-theme-styles($theme, 'mat-mdc-autocomplete');
   $color: mat-get-color-config($theme);
   $density: mat-get-density-config($theme);
   $typography: mat-get-typography-config($theme);

@@ -100,6 +100,7 @@
 @mixin mat-column-resize-density($density-scale) {}
 
 @mixin mat-column-resize-theme($theme) {
+  @include _mat-check-duplicate-theme-styles($theme, 'mat-column-resize');
   $color: mat-get-color-config($theme);
   $density: mat-get-density-config($theme);
   $typography: mat-get-typography-config($theme);
