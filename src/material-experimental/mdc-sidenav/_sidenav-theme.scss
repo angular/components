@@ -15,6 +15,7 @@
 @mixin mat-mdc-sidenav-density($density-scale) {}
 
 @mixin mat-mdc-sidenav-theme($theme) {
+  @include _mat-check-duplicate-theme-styles($theme, 'mat-mdc-sidenav');
   $color: mat-get-color-config($theme);
   $density: mat-get-density-config($theme);
   $typography: mat-get-typography-config($theme);

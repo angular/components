@@ -66,4 +66,13 @@ $_mat-theme-emitted-density: () !default;
     $_mat-theme-emitted-typography: map_merge(
         $_mat-theme-emitted-typography, ($id: $previous-typography)) !global;
   }
+
+  // Optionally, consumers of this mixin can wrap contents inside so that nested
+  // duplicate style checks do not report another warning. e.g. if developers include
+  // the `angular-material-theme` mixin twice, only the top-level duplicate styles check
+  // should report a warning. Not all individual components should report a warning too.
+  $orig-mat-theme-ignore-duplication-warnings: $mat-theme-ignore-duplication-warnings;
+  $mat-theme-ignore-duplication-warnings: true !global;
+  @content;
+  $mat-theme-ignore-duplication-warnings: $orig-mat-theme-ignore-duplication-warnings !global;
 }

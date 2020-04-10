@@ -1,6 +1,7 @@
 @import '../core/style/elevation';
 @import '../core/theming/palette';
 @import '../core/theming/theming';
+@import '../core/theming/check-duplicate-styles';
 @import '../core/typography/typography-utils';
 
 $mat-chip-remove-font-size: 18px;
@@ -100,6 +101,7 @@ $mat-chip-remove-font-size: 18px;
 @mixin _mat-chips-density($density-scale) {}
 
 @mixin mat-chips-theme($theme) {
+  @include _mat-check-duplicate-theme-styles($theme, 'mat-chips');
   $color: mat-get-color-config($theme);
   $density: mat-get-density-config($theme);
   $typography: mat-get-typography-config($theme);

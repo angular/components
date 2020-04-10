@@ -11,6 +11,7 @@
 @mixin mat-mdc-input-density($density-scale) {}
 
 @mixin mat-mdc-input-theme($theme) {
+  @include _mat-check-duplicate-theme-styles($theme, 'mat-mdc-input');
   $color: mat-get-color-config($theme);
   $density: mat-get-density-config($theme);
   $typography: mat-get-typography-config($theme);

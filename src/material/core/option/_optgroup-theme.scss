@@ -1,5 +1,6 @@
 @import '../theming/palette';
 @import '../theming/theming';
+@import '../theming/check-duplicate-styles';
 @import '../typography/typography-utils';
 
 @mixin mat-optgroup-color($config) {
@@ -23,6 +24,7 @@
 @mixin _mat-optgroup-density($density-scale) {}
 
 @mixin mat-optgroup-theme($theme) {
+  @include _mat-check-duplicate-theme-styles($theme, 'mat-optgroup');
   $color: mat-get-color-config($theme);
   $density: mat-get-density-config($theme);
   $typography: mat-get-typography-config($theme);

@@ -1,6 +1,6 @@
 @import '../core/theming/palette';
 @import '../core/theming/theming';
-
+@import '../core/theming/check-duplicate-styles';
 
 @mixin mat-progress-bar-color($config) {
   $primary: map-get($config, primary);
@@ -53,6 +53,7 @@
 @mixin _mat-progress-bar-density($density-scale) {}
 
 @mixin mat-progress-bar-theme($theme) {
+  @include _mat-check-duplicate-theme-styles($theme, 'mat-progress-bar');
   $color: mat-get-color-config($theme);
   $density: mat-get-density-config($theme);
   $typography: mat-get-typography-config($theme);

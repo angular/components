@@ -1,5 +1,6 @@
 @import '../core/theming/palette';
 @import '../core/theming/theming';
+@import '../core/theming/check-duplicate-styles';
 @import '../core/typography/typography-utils';
 @import '../core/style/list-common';
 
@@ -94,6 +95,7 @@
 @mixin _mat-list-density($density-scale) {}
 
 @mixin mat-list-theme($theme) {
+  @include _mat-check-duplicate-theme-styles($theme, 'mat-list');
   $color: mat-get-color-config($theme);
   $density: mat-get-density-config($theme);
   $typography: mat-get-typography-config($theme);
