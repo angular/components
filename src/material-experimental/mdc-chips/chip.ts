@@ -19,7 +19,6 @@ import {
   Directive,
   ElementRef,
   EventEmitter,
-  HostListener,
   Inject,
   Input,
   NgZone,
@@ -142,16 +141,6 @@ export class MatChip extends _MatChipMixinBase implements AfterContentInit, Afte
     /** Whether animations for the chip are enabled. */
   _animationsDisabled: boolean;
 
-  // We have to use a `HostListener` here in order to support both Ivy and ViewEngine.
-  // In Ivy the `host` bindings will be merged when this class is extended, whereas in
-  // ViewEngine they're overwritten.
-  // TODO(mmalerba): we move this back into `host` once Ivy is turned on by default.
-  // tslint:disable-next-line:no-host-decorator-in-concrete
-  @HostListener('transitionend', ['$event'])
-  _handleTransitionEnd(event: TransitionEvent) {
-    this._chipFoundation.handleTransitionEnd(event);
-  }
-
   get _hasFocus() {
     return this._hasFocusInternal;
   }
@@ -238,6 +227,11 @@ export class MatChip extends _MatChipMixinBase implements AfterContentInit, Afte
   /** Reference to the MatRipple instance of the chip. */
   @ViewChild(MatRipple) ripple: MatRipple;
 
+  /** Handler for `transitionend` events on the host node. */
+  private _transitionEndHandler = (event: TransitionEvent) => {
+    this._chipFoundation.handleTransitionEnd(event);
+  }
+
  /**
   * Implementation of the MDC chip adapter interface.
   * These methods are called by the chip foundation.
@@ -265,11 +259,16 @@ export class MatChip extends _MatChipMixinBase implements AfterContentInit, Afte
     },
     notifyTrailingIconInteraction: () => this.removeIconInteraction.emit(this.id),
     notifyRemoval: () => {
-      this.removed.emit({ chip: this });
+      // Run this explicitly in the NgZone, because it can happen as a
+      // result of the `transitionend` event which is being run on the outside.
+      this._ngZone.run(() => {
+        this.removed.emit({ chip: this });
 
-      // When MDC removes a chip it just transitions it to `width: 0px` which means that it's still
-      // in the DOM and it's still focusable. Make it `display: none` so users can't tab into it.
-      this._elementRef.nativeElement.style.display = 'none';
+        // When MDC removes a chip it just transitions it to `width: 0px` which means
+        // that it's still in the DOM and it's still focusable. Make it `display: none`
+        // so users can't tab into it.
+        this._elementRef.nativeElement.style.display = 'none';
+      });
     },
     getComputedStyleValue: propertyName => {
       // This function is run when a chip is removed so it might be
@@ -318,10 +317,17 @@ export class MatChip extends _MatChipMixinBase implements AfterContentInit, Afte
     // @breaking-change 8.0.0 `animationMode` parameter to become required.
     @Optional() @Inject(ANIMATION_MODULE_TYPE) animationMode?: string) {
     super(_elementRef);
+
+    const nativeElement = _elementRef.nativeElement;
     this._chipFoundation = new MDCChipFoundation(this._chipAdapter);
     this._animationsDisabled = animationMode === 'NoopAnimations';
-    this._isBasicChip = _elementRef.nativeElement.hasAttribute(this.basicChipAttrName) ||
-                        _elementRef.nativeElement.tagName.toLowerCase() === this.basicChipAttrName;
+    this._isBasicChip = nativeElement.hasAttribute(this.basicChipAttrName) ||
+                        nativeElement.tagName.toLowerCase() === this.basicChipAttrName;
+
+    _ngZone.runOutsideAngular(() => {
+      // Bind this event ourselves so we can run it outside the NgZone.
+      nativeElement.addEventListener('transitionend', this._transitionEndHandler);
+    });
   }
 
   ngAfterContentInit() {
@@ -334,6 +340,7 @@ export class MatChip extends _MatChipMixinBase implements AfterContentInit, Afte
   }
 
   ngOnDestroy() {
+    this._elementRef.nativeElement.removeEventListener('transitionend', this._transitionEndHandler);
     this.destroyed.emit({chip: this});
     this._destroyed.next();
     this._destroyed.complete();
