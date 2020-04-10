@@ -1,6 +1,7 @@
 @import '../core/theming/theming';
 @import '../core/style/elevation';
 @import '../core/typography/typography-utils';
+@import '../core/theming/check-duplicate-styles';
 
 $_mat-button-ripple-opacity: 0.1;
 
@@ -172,6 +173,7 @@ $_mat-button-ripple-opacity: 0.1;
 @mixin _mat-button-density($density-scale) {}
 
 @mixin mat-button-theme($theme) {
+  @include _mat-check-duplicate-theme-styles($theme, 'mat-button');
   $color: mat-get-color-config($theme);
   $density: mat-get-density-config($theme);
   $typography: mat-get-typography-config($theme);

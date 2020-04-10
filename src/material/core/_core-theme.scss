@@ -36,13 +36,18 @@
 
 // Mixin that renders all of the core styles that depend on the theme.
 @mixin mat-core-theme($theme) {
-  @include mat-ripple-theme($theme);
-  @include mat-option-theme($theme);
-  @include mat-optgroup-theme($theme);
-  @include mat-pseudo-checkbox-theme($theme);
+  // Wrap the sub-theme includes in the duplicate theme styles mixin. This ensures that
+  // there won't be multiple warnings. e.g. if `mat-core-theme` reports a warning, then
+  // the imported themes (such as `mat-ripple-theme`) should not report again.
+  @include _mat-check-duplicate-theme-styles($theme, 'mat-core') {
+    @include mat-ripple-theme($theme);
+    @include mat-option-theme($theme);
+    @include mat-optgroup-theme($theme);
+    @include mat-pseudo-checkbox-theme($theme);
 
-  $color: mat-get-color-config($theme);
-  @if $color != null {
-    @include mat-core-color($color);
+    $color: mat-get-color-config($theme);
+    @if $color != null {
+      @include mat-core-color($color);
+    }
   }
 }

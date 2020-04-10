@@ -31,6 +31,7 @@
 }
 
 @mixin mat-mdc-list-theme($theme) {
+  @include _mat-check-duplicate-theme-styles($theme, 'mat-mdc-list');
   $color: mat-get-color-config($theme);
   $density: mat-get-density-config($theme);
   $typography: mat-get-typography-config($theme);

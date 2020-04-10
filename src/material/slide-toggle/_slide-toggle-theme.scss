@@ -1,6 +1,7 @@
 @import '../core/style/elevation';
 @import '../core/theming/palette';
 @import '../core/theming/theming';
+@import '../core/theming/check-duplicate-styles';
 @import '../core/typography/typography-utils';
 
 @mixin _mat-slide-toggle-checked($palette, $thumb-checked-hue) {
@@ -80,6 +81,7 @@
 @mixin _mat-slide-toggle-density($density-scale) {}
 
 @mixin mat-slide-toggle-theme($theme) {
+  @include _mat-check-duplicate-theme-styles($theme, 'mat-slide-toggle');
   $color: mat-get-color-config($theme);
   $density: mat-get-density-config($theme);
   $typography: mat-get-typography-config($theme);

@@ -1,5 +1,6 @@
 @import '../core/style/elevation';
 @import '../core/theming/theming';
+@import '../core/theming/check-duplicate-styles';
 
 @mixin mat-autocomplete-color($config) {
   $foreground: map-get($config, foreground);
@@ -30,6 +31,7 @@
 @mixin _mat-autocomplete-density($density-scale) { }
 
 @mixin mat-autocomplete-theme($theme) {
+  @include _mat-check-duplicate-theme-styles($theme, 'mat-autocomplete');
   $color: mat-get-color-config($theme);
   $density: mat-get-density-config($theme);
   $typography: mat-get-typography-config($theme);

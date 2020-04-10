@@ -1,4 +1,5 @@
 @import '../../theming/theming';
+@import '../../theming/check-duplicate-styles';
 
 @mixin mat-pseudo-checkbox-color($config) {
   $is-dark-theme: map-get($config, is-dark);
@@ -61,6 +62,7 @@
 @mixin _mat-pseudo-checkbox-density($density-scale) {}
 
 @mixin mat-pseudo-checkbox-theme($theme) {
+  @include _mat-check-duplicate-theme-styles($theme, 'mat-pseudo-checkbox');
   $color: mat-get-color-config($theme);
   $density: mat-get-density-config($theme);
   $typography: mat-get-typography-config($theme);

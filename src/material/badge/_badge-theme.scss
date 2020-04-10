@@ -3,6 +3,7 @@
 // no style sheet support for directives.
 @import '../core/theming/palette';
 @import '../core/theming/theming';
+@import '../core/theming/check-duplicate-styles';
 @import '../core/typography/typography-utils';
 @import '../../cdk/a11y/a11y';
 
@@ -206,6 +207,7 @@ $mat-badge-large-size: $mat-badge-default-size + 6;
 @mixin _mat-badge-density($density-scale) {}
 
 @mixin mat-badge-theme($theme) {
+  @include _mat-check-duplicate-theme-styles($theme, 'mat-badge');
   $color: mat-get-color-config($theme);
   $density: mat-get-density-config($theme);
   $typography: mat-get-typography-config($theme);
