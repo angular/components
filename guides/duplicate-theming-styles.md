@@ -63,20 +63,6 @@ extract the configuration for the color system from the theme.
 }
 ```
 
-Alternatively, a new theme object can be constructed that explicitly disables
-styles from other systems such as `density` or `typography`:
-
-```scss
-.my-custom-dark-button {
-  $only-color-theme: map_merge($my-theme, (
-    density: null,
-    typography: null
-  ));
-  // This will only generate the color styles for `mat-button`.
-  @include mat-button-theme($only-color-theme);
-}
-```
-
 #### Disabling duplication warnings
 
 If your application intentionally duplicates styles, a global Sass variable can be

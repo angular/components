@@ -1,4 +1,5 @@
 @import '../theming/theming';
+@import '../theming/check-duplicate-styles';
 @import '../style/layout-common';
 
 // Focus indicator styles.
@@ -90,11 +91,13 @@ $mat-focus-indicator-border-style: solid;
 ///   .demo-red-theme {
 ///     @include mat-strong-focus-indicators-theme(#F00);
 ///   }
+/* stylelint-disable-next-line material/theme-duplicate-styles-check */
 @mixin mat-strong-focus-indicators-theme($themeOrColor) {
   @if type-of($themeOrColor) != 'map' {
     @include _mat-strong-focus-indicators-border-color($themeOrColor);
   }
   @else {
+    @include _mat-check-duplicate-theme-styles($themeOrColor, 'mat-strong-focus-indicators');
     $color: mat-get-color-config($themeOrColor);
     @if $color != null {
       @include mat-strong-focus-indicators-color($color);
