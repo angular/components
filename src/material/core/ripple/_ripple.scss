@@ -1,4 +1,5 @@
 @import '../theming/theming';
+@import '../theming/check-duplicate-styles';
 @import '../../../cdk/a11y/a11y';
 
 $mat-ripple-color-opacity: 0.1;
@@ -62,6 +63,7 @@ $mat-ripple-color-opacity: 0.1;
 }
 
 @mixin mat-ripple-theme($theme) {
+  @include _mat-check-duplicate-theme-styles($theme, 'mat-ripple');
   $color: mat-get-color-config($theme);
   @if $color != null {
     @include mat-ripple-color($color);

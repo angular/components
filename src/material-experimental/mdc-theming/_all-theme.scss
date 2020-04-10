@@ -15,21 +15,22 @@
 @import '../../material/core/theming/check-duplicate-styles';
 
 @mixin angular-material-mdc-theme($theme) {
-  @include _mat-check-duplicate-theme-styles($theme, 'mat-mdc');
-  @include mat-mdc-button-theme($theme);
-  @include mat-mdc-fab-theme($theme);
-  @include mat-mdc-icon-button-theme($theme);
-  @include mat-mdc-card-theme($theme);
-  @include mat-mdc-checkbox-theme($theme);
-  @include mat-mdc-chips-theme($theme);
-  @include mat-mdc-list-theme($theme);
-  @include mat-mdc-menu-theme($theme);
-  @include mat-mdc-progress-bar-theme($theme);
-  @include mat-mdc-radio-theme($theme);
-  @include mat-mdc-slide-toggle-theme($theme);
-  @include mat-mdc-table-theme($theme);
-  @include mat-mdc-form-field-theme($theme);
-  @include mat-mdc-input-theme($theme);
-  @include mat-mdc-slider-theme($theme);
-  @include mat-mdc-tabs-theme($theme);
+  @include _mat-check-duplicate-theme-styles($theme, 'angular-material-mdc-theme') {
+    @include mat-mdc-button-theme($theme);
+    @include mat-mdc-fab-theme($theme);
+    @include mat-mdc-icon-button-theme($theme);
+    @include mat-mdc-card-theme($theme);
+    @include mat-mdc-checkbox-theme($theme);
+    @include mat-mdc-chips-theme($theme);
+    @include mat-mdc-list-theme($theme);
+    @include mat-mdc-menu-theme($theme);
+    @include mat-mdc-progress-bar-theme($theme);
+    @include mat-mdc-radio-theme($theme);
+    @include mat-mdc-slide-toggle-theme($theme);
+    @include mat-mdc-table-theme($theme);
+    @include mat-mdc-form-field-theme($theme);
+    @include mat-mdc-input-theme($theme);
+    @include mat-mdc-slider-theme($theme);
+    @include mat-mdc-tabs-theme($theme);
+  }
 }

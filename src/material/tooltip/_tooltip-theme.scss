@@ -1,5 +1,6 @@
 @import '../core/theming/palette';
 @import '../core/theming/theming';
+@import '../core/theming/check-duplicate-styles';
 @import '../core/typography/typography-utils';
 
 $mat-tooltip-target-height: 22px;
@@ -37,6 +38,7 @@ $mat-tooltip-handset-vertical-padding:
 @mixin _mat-tooltip-density($density-scale) {}
 
 @mixin mat-tooltip-theme($theme) {
+  @include _mat-check-duplicate-theme-styles($theme, 'mat-tooltip');
   $color: mat-get-color-config($theme);
   $density: mat-get-density-config($theme);
   $typography: mat-get-typography-config($theme);

@@ -15,6 +15,7 @@
 @mixin mat-mdc-select-density($density-scale) {}
 
 @mixin mat-mdc-select-theme($theme) {
+  @include _mat-check-duplicate-theme-styles($theme, 'mat-mdc-select');
   $color: mat-get-color-config($theme);
   $density: mat-get-density-config($theme);
   $typography: mat-get-typography-config($theme);
