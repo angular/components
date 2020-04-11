@@ -1,12 +1,12 @@
 .example-section {
-  margin: 10px 0;
+  margin: 12px 0;
 }
 
 .example-margin {
-  margin: 0 10px;
+  margin: 0 12px;
 }
 
 ul {
   list-style-type: none;
-  margin-top: 5px;
+  margin-top: 4px;
 }

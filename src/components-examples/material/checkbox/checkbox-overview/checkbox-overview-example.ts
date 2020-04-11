@@ -28,18 +28,21 @@ export class CheckboxOverviewExample {
     ]
   };
 
-  allComplete(): boolean {
-    return this.task.subtasks != null && this.task.subtasks.every(t => t.completed);
+  allComplete: boolean = false;
+
+  updateAllComplete() {
+    this.allComplete = this.task.subtasks != null && this.task.subtasks.every(t => t.completed);
   }
 
   someComplete(): boolean {
     if (this.task.subtasks == null) {
       return false;
     }
-    return this.task.subtasks.filter(t => t.completed).length > 0 && !this.allComplete();
+    return this.task.subtasks.filter(t => t.completed).length > 0 && !this.allComplete;
   }
 
   setAll(completed: boolean) {
+    this.allComplete = completed;
     if (this.task.subtasks == null) {
       return;
     }
