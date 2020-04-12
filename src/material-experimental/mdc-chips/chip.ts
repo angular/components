@@ -19,7 +19,6 @@ import {
   Directive,
   ElementRef,
   EventEmitter,
-  HostListener,
   Inject,
   Input,
   NgZone,
@@ -143,13 +142,11 @@ export class MatChip extends _MatChipMixinBase implements AfterContentInit, Afte
     /** Whether animations for the chip are enabled. */
   _animationsDisabled: boolean;
 
-  // We have to use a `HostListener` here in order to support both Ivy and ViewEngine.
-  // In Ivy the `host` bindings will be merged when this class is extended, whereas in
-  // ViewEngine they're overwritten.
-  // TODO(mmalerba): we move this back into `host` once Ivy is turned on by default.
-  // tslint:disable-next-line:no-host-decorator-in-concrete
-  @HostListener('transitionend', ['$event'])
-  _handleTransitionEnd(event: TransitionEvent) {
+  /**
+   * Event listener for `transitionend` events. Needs to be an arrow
+   * function so we can pass it easily into `addEventListener`.
+   */
+  private _handleTransitionEnd = (event: TransitionEvent) => {
     this._chipFoundation.handleTransitionEnd(event);
   }
 
@@ -340,6 +337,9 @@ export class MatChip extends _MatChipMixinBase implements AfterContentInit, Afte
     this._animationsDisabled = animationMode === 'NoopAnimations';
     this._isBasicChip = elementRef.nativeElement.hasAttribute(this.basicChipAttrName) ||
                         elementRef.nativeElement.tagName.toLowerCase() === this.basicChipAttrName;
+    _ngZone.runOutsideAngular(() => {
+      elementRef.nativeElement.addEventListener('transitionend', this._handleTransitionEnd);
+    });
   }
 
   ngAfterContentInit() {
@@ -348,11 +348,14 @@ export class MatChip extends _MatChipMixinBase implements AfterContentInit, Afte
 
   ngAfterViewInit() {
     this._chipFoundation.init();
-    this._textElement = this._elementRef.nativeElement.querySelector('.mdc-chip__text');
+    this._textElement =
+        this._elementRef.nativeElement.querySelector('.mdc-chip__text') as HTMLElement;
   }
 
   ngOnDestroy() {
     this.destroyed.emit({chip: this});
+    this.destroyed.complete();
+    this._elementRef.nativeElement.removeEventListener('transitionend', this._handleTransitionEnd);
     this._chipFoundation.destroy();
   }
 
