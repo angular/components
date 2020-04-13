@@ -1,10 +1,29 @@
 <div class="demo-slide-toggle">
-
-  <mat-slide-toggle color="primary" [(ngModel)]="firstToggle">
-    Default Slide Toggle
+  <mat-slide-toggle>
+    Unthemed Slide Toggle
   </mat-slide-toggle>
 
-  <mat-slide-toggle [(ngModel)]="firstToggle" disabled>
+
+  <mat-slide-toggle color="primary">
+    Primary Slide Toggle
+  </mat-slide-toggle>
+
+
+  <mat-slide-toggle color="accent">
+    Accent Slide Toggle
+  </mat-slide-toggle>
+
+
+  <mat-slide-toggle color="warn">
+    Warn Slide Toggle
+  </mat-slide-toggle>
+
+
+  <mat-slide-toggle [(ngModel)]="toggleModel">
+    Toggle with ngModel
+  </mat-slide-toggle>
+
+  <mat-slide-toggle [(ngModel)]="toggleModel" disabled>
     Disabled Slide Toggle
   </mat-slide-toggle>
 
@@ -12,7 +31,7 @@
     Always disabled (no value binding)
   </mat-slide-toggle>
 
-  <mat-slide-toggle [disabled]="firstToggle">
+  <mat-slide-toggle [disabled]="toggleModel">
     Disable Bound
   </mat-slide-toggle>
 

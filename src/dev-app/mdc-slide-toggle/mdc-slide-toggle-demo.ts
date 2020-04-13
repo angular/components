@@ -14,7 +14,7 @@ import {Component} from '@angular/core';
   styleUrls: ['mdc-slide-toggle-demo.css'],
 })
 export class MdcSlideToggleDemo {
-  firstToggle: boolean;
+  toggleModel: boolean;
 
   onFormSubmit() {
     alert(`You submitted the form.`);

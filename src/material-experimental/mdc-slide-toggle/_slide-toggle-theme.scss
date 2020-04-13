@@ -5,25 +5,22 @@
 @import '@material/theme/functions.import';
 @import '../mdc-helpers/mdc-helpers';
 
+// Apply the theme colors with the MDC color-specific slide-toggle mixins.
+@mixin _apply-mdc-switch-color($color) {
+  .mdc-switch {
+    @include mdc-switch-toggled-on-track-color($color);
+    @include mdc-switch-toggled-on-thumb-color($color);
+    @include mdc-switch-toggled-off-track-color(mdc-theme-prop-value(on-surface));
+    @include mdc-switch-toggled-off-thumb-color(mdc-theme-prop-value(surface));
+  }
+}
+
 @mixin mat-mdc-slide-toggle-theme($theme) {
   $primary: mat-color(map-get($theme, primary));
   $accent: mat-color(map-get($theme, accent));
   $warn: mat-color(map-get($theme, warn));
 
-  // Save original values of MDC global variables. We need to save these so we can restore the
-  // variables to their original values and prevent unintended side effects from using this mixin.
-  $orig-mdc-switch-baseline-theme-color: $mdc-switch-baseline-theme-color;
-  $orig-mdc-switch-toggled-off-thumb-color: $mdc-switch-toggled-off-thumb-color;
-  $orig-mdc-switch-toggled-off-track-color: $mdc-switch-toggled-off-track-color;
-  $orig-mdc-switch-disabled-thumb-color: $mdc-switch-disabled-thumb-color;
-  $orig-mdc-switch-disabled-track-color: $mdc-switch-disabled-track-color;
-
   @include mat-using-mdc-theme($theme) {
-    $mdc-switch-baseline-theme-color: primary !global;
-    $mdc-switch-toggled-off-thumb-color: mdc-theme-prop-value(surface) !global;
-    $mdc-switch-toggled-off-track-color: mdc-theme-prop-value(on-surface) !global;
-    $mdc-switch-disabled-thumb-color: mdc-theme-prop-value(surface) !global;
-    $mdc-switch-disabled-track-color: mdc-theme-prop-value(on-surface) !global;
 
     @include mdc-form-field-core-styles($query: $mat-theme-styles-query);
 
@@ -35,17 +32,15 @@
       }
 
       &.mat-primary {
-        @include mdc-switch-without-ripple($query: $mat-theme-styles-query);
+        @include _apply-mdc-switch-color(primary);
       }
 
       &.mat-accent {
-        $mdc-switch-baseline-theme-color: secondary !global;
-        @include mdc-switch-without-ripple($query: $mat-theme-styles-query);
+        @include _apply-mdc-switch-color(secondary);
       }
 
       &.mat-warn {
-        $mdc-switch-baseline-theme-color: error !global;
-        @include mdc-switch-without-ripple($query: $mat-theme-styles-query);
+        @include _apply-mdc-switch-color(error);
       }
     }
 
@@ -68,13 +63,6 @@
       }
     }
   }
-
-  // Restore original values of MDC global variables.
-  $mdc-switch-baseline-theme-color: $orig-mdc-switch-baseline-theme-color !global;
-  $mdc-switch-toggled-off-thumb-color: $orig-mdc-switch-toggled-off-thumb-color !global;
-  $mdc-switch-toggled-off-track-color: $orig-mdc-switch-toggled-off-track-color !global;
-  $mdc-switch-disabled-thumb-color: $orig-mdc-switch-disabled-thumb-color !global;
-  $mdc-switch-disabled-track-color: $orig-mdc-switch-disabled-track-color !global;
 }
 
 @mixin mat-mdc-slide-toggle-typography($config) {

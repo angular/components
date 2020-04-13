@@ -3,6 +3,7 @@
 @import '@material/switch/variables.import';
 @import '@material/form-field/mixins.import';
 @import '@material/ripple/variables.import';
+@import '@material/elevation/mixins.import';
 @import '../mdc-helpers/mdc-helpers';
 @import '../../material/core/style/layout-common';
 @import '../../cdk/a11y/a11y';
@@ -60,6 +61,13 @@
     .mdc-switch__thumb-underlay::before {
       transition: none;
     }
+  }
+
+  // Elevation should be provided through `mdc-switch-without-ripple` but it is considered
+  // to be part of a "color" query rather than "structure". Since we do not call it with
+  // color to avoid their default color styles, we need to manually provide the elevation.
+  .mdc-switch__thumb {
+    @include mdc-elevation($z-value: 2);
   }
 }
 
