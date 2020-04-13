@@ -59,6 +59,10 @@
 }
 
 .docs-header-link {
+  // padding to prevent the site header from headbutting the headers when navigating using fragment links
+  padding-top: 20px;
+  margin-top: -20px;
+
   header-link a {
     text-decoration: none;
     // deduct -30px so the anchor icon will be positioned outside the content
