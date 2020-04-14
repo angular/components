@@ -262,7 +262,7 @@ this in the [dedicated guide](./duplicate-theming-styles.md).
 .alternate-button {
   // Extract the color configuration from the theme and generate
   // the color theme styles for `mat-button`.
-  @include mat-button-color(map_get($alternate-theme, color));
+  @include mat-button-color($alternate-theme);
 }
 ```
 
