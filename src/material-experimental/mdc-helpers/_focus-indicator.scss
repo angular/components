@@ -63,7 +63,8 @@
   }
 }
 
-@mixin mat-mdc-strong-focus-indicators-color($config) {
+@mixin mat-mdc-strong-focus-indicators-color($config-or-theme) {
+  $config: mat-get-color-config($config-or-theme);
   @include _mat-mdc-strong-focus-indicators-border-color(mat-color(map_get($config, primary)));
 }
 
@@ -82,14 +83,15 @@
 ///   .demo-red-theme {
 ///     @include mat-mdc-strong-focus-indicators-theme(#F00);
 ///   }
-/* stylelint-disable-next-line material/theme-duplicate-styles-check */
+/* stylelint-disable-next-line material/theme-mixin-api */
 @mixin mat-mdc-strong-focus-indicators-theme($themeOrColor) {
   @if type-of($themeOrColor) != 'map' {
     @include _mat-mdc-strong-focus-indicators-border-color($themeOrColor);
   }
   @else {
-    @include _mat-check-duplicate-theme-styles($themeOrColor, 'mat-mdc-strong-focus-indicators');
-    $color: mat-get-color-config($themeOrColor);
+    $theme: _mat-legacy-get-theme($themeOrColor);
+    @include _mat-check-duplicate-theme-styles($theme, 'mat-mdc-strong-focus-indicators');
+    $color: mat-get-color-config($theme);
     @if $color != null {
       @include mat-mdc-strong-focus-indicators-color($color);
     }

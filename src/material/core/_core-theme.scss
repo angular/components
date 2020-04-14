@@ -5,7 +5,8 @@
 @import './option/optgroup-theme';
 @import './selection/pseudo-checkbox/pseudo-checkbox-theme';
 
-@mixin mat-core-color($config) {
+@mixin mat-core-color($config-or-theme) {
+  $config: mat-get-color-config($config-or-theme);
   // Wrapper element that provides the theme background when the user's content isn't
   // inside of a `mat-sidenav-container`. Note that we need to exclude the ampersand
   // selector in case the mixin is included at the top level.
@@ -35,7 +36,8 @@
 }
 
 // Mixin that renders all of the core styles that depend on the theme.
-@mixin mat-core-theme($theme) {
+@mixin mat-core-theme($theme-or-color-config) {
+  $theme: _mat-legacy-get-theme($theme-or-color-config);
   // Wrap the sub-theme includes in the duplicate theme styles mixin. This ensures that
   // there won't be multiple warnings. e.g. if `mat-core-theme` reports a warning, then
   // the imported themes (such as `mat-ripple-theme`) should not report again.

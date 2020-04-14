@@ -5,7 +5,8 @@
 @import '../core/typography/typography-utils';
 
 
-@mixin mat-menu-color($config) {
+@mixin mat-menu-color($config-or-theme) {
+  $config: mat-get-color-config($config-or-theme);
   $background: map-get($config, background);
   $foreground: map-get($config, foreground);
 
@@ -40,7 +41,8 @@
   }
 }
 
-@mixin mat-menu-typography($config) {
+@mixin mat-menu-typography($config-or-theme) {
+  $config: mat-get-typography-config($config-or-theme);
   .mat-menu-item {
     font: {
       family: mat-font-family($config, body-1);
@@ -50,9 +52,12 @@
   }
 }
 
-@mixin _mat-menu-density($density-scale) {}
+@mixin _mat-menu-density($config-or-theme) {
+  $density-scale: mat-get-density-config($config-or-theme);
+}
 
-@mixin mat-menu-theme($theme) {
+@mixin mat-menu-theme($theme-or-color-config) {
+  $theme: _mat-legacy-get-theme($theme-or-color-config);
   @include _mat-check-duplicate-theme-styles($theme, 'mat-menu');
   $color: mat-get-color-config($theme);
   $density: mat-get-density-config($theme);
