@@ -33,7 +33,7 @@ const plugin = stylelint.createPlugin(ruleName, (isEnabled, options, context) =>
       // Name of the component with prefix. e.g. `mat-mdc-button` or `mat-slide-toggle`.
       const componentName = matches[1] || matches[3];
       // Type of the theme mixin. e.g. `density`, `color`, `theme`.
-      const type = matches[2] ||matches[4];
+      const type = matches[2] || matches[4];
       // Naively assumes that mixin arguments can be easily retrieved by splitting based on
       // a comma. This is not always correct because Sass maps can be constructed in parameters.
       // These would contain commas that throw of the argument retrieval. It's acceptable that
@@ -62,27 +62,38 @@ const plugin = stylelint.createPlugin(ruleName, (isEnabled, options, context) =>
       const legacyColorExtractExpr = `_mat-legacy-get-theme($theme-or-color-config)`;
       const duplicateStylesCheckExpr =
           `_mat-check-duplicate-theme-styles(${themePropName}, '${componentName}')`;
-      const isLegacyColorConfigHandled = node.nodes.find(n => n.type === 'decl' &&
-          n.prop === themePropName && n.value === legacyColorExtractExpr);
-      const hasDuplicateStylesCheck = node.nodes.find(n => n.type === 'atrule' &&
-          n.name === 'include' && n.params === duplicateStylesCheckExpr);
+      const legacyConfigDecl =
+          node.nodes.find(n => n.type === 'decl' && n.value === legacyColorExtractExpr);
+      const hasDuplicateStylesCheck = node.nodes.find(
+          n =>
+              n.type === 'atrule' && n.name === 'include' && n.params === duplicateStylesCheckExpr);
 
-      if (!isLegacyColorConfigHandled) {
+      if (!legacyConfigDecl) {
         if (context.fix) {
           node.insertBefore(0, {prop: themePropName, value: legacyColorExtractExpr});
         } else {
-          reportError(node, `Legacy color API is not handled. Consumers could pass in a ` +
-              `color configuration directly to the theme mixin. For backwards compatibility, ` +
-              `use "_mat-legacy-get-theme(...)" to retrieve the theme object.`);
+          reportError(
+              node,
+              `Legacy color API is not handled. Consumers could pass in a ` +
+                  `color configuration directly to the theme mixin. For backwards compatibility, ` +
+                  `use the following declaration to retrieve the theme object: ` +
+                  `${themePropName}: ${legacyColorExtractExpr}`);
         }
+      } else if (legacyConfigDecl.prop !== themePropName) {
+        reportError(
+            legacyConfigDecl,
+            `For consistency, variable for theme should ` +
+                `be called: ${themePropName}`);
       }
 
       if (!hasDuplicateStylesCheck) {
         if (context.fix) {
           node.insertBefore(0, {name: 'include', params: duplicateStylesCheckExpr});
         } else {
-          reportError(node, `Missing check for duplicative theme styles. Please include the ` +
-              `"_mat-check-duplicate-theme-styles(...)" mixin.: `);
+          reportError(
+              node,
+              `Missing check for duplicative theme styles. Please include the ` +
+                  `duplicate styles check mixin: ${duplicateStylesCheckExpr}`);
         }
       }
     }
@@ -90,7 +101,7 @@ const plugin = stylelint.createPlugin(ruleName, (isEnabled, options, context) =>
     function validateIndividualSystemMixins(node, type, arguments) {
       if (arguments.length !== 1) {
         reportError(node, 'Expected mixin to only declare a single argument.');
-      } if (arguments[0] !== '$config-or-theme') {
+      } else if (arguments[0] !== '$config-or-theme') {
         if (context.fix) {
           node.params = node.params.replace(arguments[0], '$config-or-theme');
         } else {
@@ -100,16 +111,23 @@ const plugin = stylelint.createPlugin(ruleName, (isEnabled, options, context) =>
 
       const expectedProperty = type === 'density' ? '$density-scale' : '$config';
       const expectedValue = `mat-get-${type}-config($config-or-theme)`;
-      const isConfigExtracted = node.nodes.find(n => n.type === 'decl' &&
-          n.prop === expectedProperty && n.value === expectedValue);
+      const configExtractionNode =
+          node.nodes.find(n => n.type === 'decl' && n.value === expectedValue);
 
-      if (!isConfigExtracted) {
+      if (!configExtractionNode) {
         if (context.fix) {
           node.insertBefore(0, {prop: expectedProperty, value: expectedValue});
         } else {
-          reportError(node, `Config is not extracted. Consumers could pass a theme object. ` +
-              `Extract the configuration by using: ${expectedProperty}: ${expectedValue}`);
+          reportError(
+              node,
+              `Config is not extracted. Consumers could pass a theme object. ` +
+                  `Extract the configuration by using: ${expectedProperty}: ${expectedValue}`);
         }
+      } else if (configExtractionNode.prop !== expectedProperty) {
+        reportError(
+            configExtractionNode,
+            `For consistency, variable for configuration should ` +
+                `be called: ${expectedProperty}`);
       }
     }
 
