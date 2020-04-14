@@ -5,7 +5,7 @@ const ruleName = 'material/theme-mixin-api';
 
 /** Regular expression that matches all theme mixins. */
 const themeMixinRegex =
-    /^(?:_(mat-.+)-(density)|(mat-.+)-(density|color|typography|theme))\(([^,]+)\)$/;
+    /^(?:_(mat-.+)-(density)|(mat-.+)-(density|color|typography|theme))\((.*)\)$/;
 
 /**
  * Stylelint plugin which ensures that theme mixins have a consistent API. Besides
@@ -30,23 +30,31 @@ const plugin = stylelint.createPlugin(ruleName, (isEnabled, options, context) =>
         return;
       }
 
+      // Name of the component with prefix. e.g. `mat-mdc-button` or `mat-slide-toggle`.
       const componentName = matches[1] || matches[3];
+      // Type of the theme mixin. e.g. `density`, `color`, `theme`.
       const type = matches[2] ||matches[4];
-      const variableName = matches[5];
+      // Naively assumes that mixin arguments can be easily retrieved by splitting based on
+      // a comma. This is not always correct because Sass maps can be constructed in parameters.
+      // These would contain commas that throw of the argument retrieval. It's acceptable that
+      // this rule will fail in such edge-cases. There is no AST for `postcss.AtRule` params.
+      const arguments = matches[5].split(',');
 
       if (type === 'theme') {
-        validateThemeMixin(node, componentName, variableName);
+        validateThemeMixin(node, componentName, arguments);
       } else {
-        validateIndividualSystemMixins(node, type, variableName);
+        validateIndividualSystemMixins(node, type, arguments);
       }
     });
 
-    function validateThemeMixin(node, componentName, variableName) {
-      if (variableName !== '$theme-or-color-config') {
+    function validateThemeMixin(node, componentName, arguments) {
+      if (arguments.length !== 1) {
+        reportError(node, 'Expected theme mixin to only declare a single argument.');
+      } else if (arguments[0] !== '$theme-or-color-config') {
         if (context.fix) {
-          node.params = node.params.replace(variableName, '$theme-or-color-config');
+          node.params = node.params.replace(arguments[0], '$theme-or-color-config');
         } else {
-          reportError(node, 'Expected mixin argument to be called `$theme-or-color-config`.');
+          reportError(node, 'Expected first mixin argument to be called `$theme-or-color-config`.');
         }
       }
 
@@ -79,12 +87,14 @@ const plugin = stylelint.createPlugin(ruleName, (isEnabled, options, context) =>
       }
     }
 
-    function validateIndividualSystemMixins(node, type, variableName) {
-      if (variableName !== '$config-or-theme') {
+    function validateIndividualSystemMixins(node, type, arguments) {
+      if (arguments.length !== 1) {
+        reportError(node, 'Expected mixin to only declare a single argument.');
+      } if (arguments[0] !== '$config-or-theme') {
         if (context.fix) {
-          node.params = node.params.replace(variableName, '$config-or-theme');
+          node.params = node.params.replace(arguments[0], '$config-or-theme');
         } else {
-          reportError(node, 'Expected mixin argument to be called `$config-or-theme`.');
+          reportError(node, 'Expected first mixin argument to be called `$config-or-theme`.');
         }
       }
 
@@ -98,7 +108,7 @@ const plugin = stylelint.createPlugin(ruleName, (isEnabled, options, context) =>
           node.insertBefore(0, {prop: expectedProperty, value: expectedValue});
         } else {
           reportError(node, `Config is not extracted. Consumers could pass a theme object. ` +
-              `Extract the configuration by using: $config: ${expectedValue}`);
+              `Extract the configuration by using: ${expectedProperty}: ${expectedValue}`);
         }
       }
     }
