@@ -7,14 +7,14 @@
     "./tools/stylelint/no-nested-mixin.ts",
     "./tools/stylelint/no-concrete-rules.ts",
     "./tools/stylelint/no-top-level-ampersand-in-mixin.ts",
-    "./tools/stylelint/theme-duplicate-styles-check.js"
+    "./tools/stylelint/theme-mixin-api.js"
   ],
   "rules": {
     "material/no-prefixes": [true, {
       "browsers": ["last 2 versions", "not ie <= 10", "not ie_mob <= 10"],
       "filePattern": "**/!(*-example.css)"
     }],
-    "material/theme-duplicate-styles-check": true,
+    "material/theme-mixin-api": true,
     "material/selector-no-deep": true,
     "material/no-nested-mixin": true,
     "material/no-ampersand-beyond-selector-start": [true, {

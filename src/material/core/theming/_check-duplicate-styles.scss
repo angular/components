@@ -21,9 +21,10 @@ $_mat-theme-emitted-density: () !default;
 // id. This is necessary because a given theme can be passed to multiple disjoint theme mixins
 // (e.g. `angular-material-theme` and `angular-material-mdc-theme`) without causing any
 // style duplication.
-@mixin _mat-check-duplicate-theme-styles($theme, $id) {
+@mixin _mat-check-duplicate-theme-styles($theme-or-color-config, $id) {
   // Skip the duplicated style check if it has been explicitly disabled.
   @if not $mat-theme-ignore-duplication-warnings {
+    $theme: _mat-legacy-get-theme($theme-or-color-config);
     $color-config: mat-get-color-config($theme);
     $density-config: mat-get-density-config($theme);
     $typography-config: mat-get-typography-config($theme);
