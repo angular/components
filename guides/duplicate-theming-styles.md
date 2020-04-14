@@ -59,7 +59,7 @@ extract the configuration for the color system from the theme.
 ```scss
 .my-custom-dark-button {
   // This will only generate the color styles for `mat-button`.
-  @include mat-button-color(map_get($my-theme, color));
+  @include mat-button-color($my-theme);
 }
 ```
 
