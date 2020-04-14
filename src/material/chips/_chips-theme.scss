@@ -38,7 +38,8 @@ $mat-chip-remove-font-size: 18px;
   }
 }
 
-@mixin mat-chips-color($config) {
+@mixin mat-chips-color($config-or-theme) {
+  $config: mat-get-color-config($config-or-theme);
   $is-dark-theme: map-get($config, is-dark);
   $primary: map-get($config, primary);
   $accent: map-get($config, accent);
@@ -86,7 +87,8 @@ $mat-chip-remove-font-size: 18px;
   }
 }
 
-@mixin mat-chips-typography($config) {
+@mixin mat-chips-typography($config-or-theme) {
+  $config: mat-get-typography-config($config-or-theme);
   .mat-chip {
     font-size: mat-font-size($config, body-2);
     font-weight: mat-font-weight($config, body-2);
@@ -98,9 +100,12 @@ $mat-chip-remove-font-size: 18px;
   }
 }
 
-@mixin _mat-chips-density($density-scale) {}
+@mixin _mat-chips-density($config-or-theme) {
+  $density-scale: mat-get-density-config($config-or-theme);
+}
 
-@mixin mat-chips-theme($theme) {
+@mixin mat-chips-theme($theme-or-color-config) {
+  $theme: _mat-legacy-get-theme($theme-or-color-config);
   @include _mat-check-duplicate-theme-styles($theme, 'mat-chips');
   $color: mat-get-color-config($theme);
   $density: mat-get-density-config($theme);
