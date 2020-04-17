@@ -45,6 +45,10 @@ import {createMissingDateImplError} from './datepicker-errors';
 import {Subscription} from 'rxjs';
 import {startWith} from 'rxjs/operators';
 import {DateRange} from './date-selection-model';
+import {
+  MatCalendarRangeSelectionStrategy,
+  MAT_CALENDAR_RANGE_SELECTION_STRATEGY,
+} from './calendar-range-selection-strategy';
 
 
 const DAYS_PER_WEEK = 7;
@@ -156,6 +160,15 @@ export class MatMonthView<D> implements AfterContentInit, OnDestroy {
   /** End value of the currently-shown comparison date range. */
   _comparisonRangeEnd: number | null;
 
+  /** Start of the preview range. */
+  _previewStart: number | null;
+
+  /** End of the preview range. */
+  _previewEnd: number | null;
+
+  /** Whether the user is currently selecting a range of dates. */
+  _isRange: boolean;
+
   /** The date of the month that today falls on. Null if today is in another month. */
   _todayDate: number | null;
 
@@ -165,7 +178,9 @@ export class MatMonthView<D> implements AfterContentInit, OnDestroy {
   constructor(private _changeDetectorRef: ChangeDetectorRef,
               @Optional() @Inject(MAT_DATE_FORMATS) private _dateFormats: MatDateFormats,
               @Optional() public _dateAdapter: DateAdapter<D>,
-              @Optional() private _dir?: Directionality) {
+              @Optional() private _dir?: Directionality,
+              @Inject(MAT_CALENDAR_RANGE_SELECTION_STRATEGY) @Optional()
+                  private _rangeStrategy?: MatCalendarRangeSelectionStrategy<D>) {
     if (!this._dateAdapter) {
       throw createMissingDateImplError('DateAdapter');
     }
@@ -260,10 +275,9 @@ export class MatMonthView<D> implements AfterContentInit, OnDestroy {
         }
         return;
       case ESCAPE:
-        // Abort the current range selection if the user presses escape mid-selection.
-        // Note that we handle it here, rather than the `mat-calendar-body` where have the
-        // rest of the range logic, because focus may have moved outside the calendar body.
-        if (this._matCalendarBody._previewEnd > -1) {
+          // Abort the current range selection if the user presses escape mid-selection.
+        if (this._previewEnd !== null) {
+          this._previewStart = this._previewEnd = null;
           this.selectedChange.emit(null);
           this._userSelection.emit({value: null, event});
           event.preventDefault();
@@ -304,8 +318,21 @@ export class MatMonthView<D> implements AfterContentInit, OnDestroy {
   }
 
   /** Focuses the active cell after the microtask queue is empty. */
-  _focusActiveCell() {
-    this._matCalendarBody._focusActiveCell();
+  _focusActiveCell(movePreview?: boolean) {
+    this._matCalendarBody._focusActiveCell(movePreview);
+  }
+
+  /** Called when the user has activated a new cell and the preview needs to be updated. */
+  _previewChanged({event, value: cell}: MatCalendarUserEvent<MatCalendarCell<D> | null>) {
+    if (this._rangeStrategy) {
+      // We can assume that this will be a range, because preview
+      // events aren't fired for single date selections.
+      const value = cell ? cell.rawValue! : null;
+      const previewRange =
+          this._rangeStrategy.createPreview(value, this.selected as DateRange<D>, event);
+      this._previewStart = this._getCellCompareValue(previewRange.start);
+      this._previewEnd = this._getCellCompareValue(previewRange.end);
+    }
   }
 
   /** Initializes the weekdays. */
@@ -338,8 +365,8 @@ export class MatMonthView<D> implements AfterContentInit, OnDestroy {
       const ariaLabel = this._dateAdapter.format(date, this._dateFormats.display.dateA11yLabel);
       const cellClasses = this.dateClass ? this.dateClass(date) : undefined;
 
-      this._weeks[this._weeks.length - 1].push(new MatCalendarCell(i + 1, dateNames[i], ariaLabel,
-          enabled, cellClasses, this._getCellCompareValue(date)!));
+      this._weeks[this._weeks.length - 1].push(new MatCalendarCell<D>(i + 1, dateNames[i],
+          ariaLabel, enabled, cellClasses, this._getCellCompareValue(date)!, date));
     }
   }
 
@@ -398,8 +425,10 @@ export class MatMonthView<D> implements AfterContentInit, OnDestroy {
     if (selectedValue instanceof DateRange) {
       this._rangeStart = this._getCellCompareValue(selectedValue.start);
       this._rangeEnd = this._getCellCompareValue(selectedValue.end);
+      this._isRange = true;
     } else {
       this._rangeStart = this._rangeEnd = this._getCellCompareValue(selectedValue);
+      this._isRange = false;
     }
 
     this._comparisonRangeStart = this._getCellCompareValue(this.comparisonStart);

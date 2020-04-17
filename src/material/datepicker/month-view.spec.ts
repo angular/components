@@ -27,6 +27,10 @@ import {By} from '@angular/platform-browser';
 import {MatCalendarBody} from './calendar-body';
 import {MatMonthView} from './month-view';
 import {DateRange} from './date-selection-model';
+import {
+  MAT_CALENDAR_RANGE_SELECTION_STRATEGY,
+  DefaultMatCalendarRangeStrategy,
+} from './calendar-range-selection-strategy';
 
 describe('MatMonthView', () => {
   let dir: {value: Direction};
@@ -46,7 +50,8 @@ describe('MatMonthView', () => {
         MonthViewWithDateClass,
       ],
       providers: [
-        {provide: Directionality, useFactory: () => dir = {value: 'ltr'}}
+        {provide: Directionality, useFactory: () => dir = {value: 'ltr'}},
+        {provide: MAT_CALENDAR_RANGE_SELECTION_STRATEGY, useClass: DefaultMatCalendarRangeStrategy}
       ]
     });
 

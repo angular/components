@@ -92,17 +92,42 @@ export class PreserveRangeStrategy<D> implements MatCalendarRangeSelectionStrate
   selectionFinished(date: D, currentRange: DateRange<D>) {
     let {start, end} = currentRange;
 
+    if (start && end) {
+      return this._getRangeRelativeToDate(date, start, end);
+    }
+
     if (start == null) {
       start = date;
     } else if (end == null) {
       end = date;
-    } else if (this._dateAdapter.compareDate(start, date) > 0) {
-      start = date;
-    } else {
-      end = date;
     }
 
     return new DateRange<D>(start, end);
+  }
+
+  createPreview(activeDate: D | null, currentRange: DateRange<D>): DateRange<D> {
+    if (activeDate) {
+      if (currentRange.start && currentRange.end) {
+        return this._getRangeRelativeToDate(activeDate, currentRange.start, currentRange.end);
+      } else if (currentRange.start && !currentRange.end) {
+        return new DateRange(currentRange.start, activeDate);
+      }
+    }
+
+    return new DateRange<D>(null, null);
+  }
+
+  private _getRangeRelativeToDate(date: D | null, start: D, end: D): DateRange<D> {
+    let rangeStart: D | null = null;
+    let rangeEnd: D | null = null;
+
+    if (date) {
+      const delta = Math.round(Math.abs(this._dateAdapter.compareDate(start, end)) / 2);
+      rangeStart = this._dateAdapter.addCalendarDays(date, -delta);
+      rangeEnd = this._dateAdapter.addCalendarDays(date, delta);
+    }
+
+    return new DateRange(rangeStart, rangeEnd);
   }
 }
 
