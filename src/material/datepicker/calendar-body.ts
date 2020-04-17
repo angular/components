@@ -31,13 +31,14 @@ export type MatCalendarCellCssClasses = string | string[] | Set<string> | {[key:
  * An internal class that represents the data corresponding to a single calendar cell.
  * @docs-private
  */
-export class MatCalendarCell {
+export class MatCalendarCell<D = any> {
   constructor(public value: number,
               public displayValue: string,
               public ariaLabel: string,
               public enabled: boolean,
               public cssClasses: MatCalendarCellCssClasses = {},
-              public compareValue = value) {}
+              public compareValue = value,
+              public rawValue?: D) {}
 }
 
 /** Event emitted when a date inside the calendar is triggered as a result of a user action. */
@@ -64,6 +65,12 @@ export interface MatCalendarUserEvent<D> {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MatCalendarBody implements OnChanges, OnDestroy {
+  /**
+   * Used to skip the next focus event when rendering the preview range.
+   * We need a flag like this, because some browsers fire focus events asynchronously.
+   */
+  private _skipNextFocus: boolean;
+
   /** The label for the table. (e.g. "Jan 2017"). */
   @Input() label: string;
 
@@ -88,6 +95,9 @@ export class MatCalendarBody implements OnChanges, OnDestroy {
   /** The cell number of the active cell in the table. */
   @Input() activeCell: number = 0;
 
+  /** Whether a range is being selected. */
+  @Input() isRange: boolean = false;
+
   /**
    * The aspect ratio (width / height) to use for the cells in the table. This aspect ratio will be
    * maintained even as the table resizes.
@@ -100,9 +110,18 @@ export class MatCalendarBody implements OnChanges, OnDestroy {
   /** End of the comparison range. */
   @Input() comparisonEnd: number | null;
 
+  /** Start of the preview range. */
+  @Input() previewStart: number | null = null;
+
+  /** End of the preview range. */
+  @Input() previewEnd: number | null = null;
+
   /** Emits when a new value is selected. */
   @Output() readonly selectedValueChange: EventEmitter<MatCalendarUserEvent<number>> =
       new EventEmitter<MatCalendarUserEvent<number>>();
+
+  /** Emits when the preview has changed as a result of a user action. */
+  @Output() previewChange = new EventEmitter<MatCalendarUserEvent<MatCalendarCell | null>>();
 
   /** The number of blank cells to put at the beginning for the first row. */
   _firstRowOffset: number;
@@ -112,12 +131,6 @@ export class MatCalendarBody implements OnChanges, OnDestroy {
 
   /** Width of an individual cell. */
   _cellWidth: string;
-
-  /**
-   * Value that the user is either currently hovering over or is focusing
-   * using the keyboard. Only applies when selecting the end of a date range.
-   */
-  _previewEnd = -1;
 
   constructor(
     private _elementRef: ElementRef<HTMLElement>,
@@ -160,10 +173,6 @@ export class MatCalendarBody implements OnChanges, OnDestroy {
     if (columnChanges || !this._cellWidth) {
       this._cellWidth = `${100 / numCols}%`;
     }
-
-    if (changes['startValue'] || changes['endValue']) {
-      this._previewEnd = -1;
-    }
   }
 
   ngOnDestroy() {
@@ -187,22 +196,21 @@ export class MatCalendarBody implements OnChanges, OnDestroy {
   }
 
   /** Focuses the active cell after the microtask queue is empty. */
-  _focusActiveCell() {
+  _focusActiveCell(movePreview = true) {
     this._ngZone.runOutsideAngular(() => {
       this._ngZone.onStable.asObservable().pipe(take(1)).subscribe(() => {
         const activeCell: HTMLElement | null =
             this._elementRef.nativeElement.querySelector('.mat-calendar-body-active');
 
         if (activeCell) {
+          if (!movePreview) {
+            this._skipNextFocus = true;
+          }
+
           activeCell.focus();
         }
       });
     });
-  }
-
-  /** Gets whether the calendar is currently selecting a range. */
-  _isSelectingRange(): boolean {
-    return this.startValue !== this.endValue;
   }
 
   /** Gets whether a value is the start of the main range. */
@@ -217,7 +225,8 @@ export class MatCalendarBody implements OnChanges, OnDestroy {
 
   /** Gets whether a value is within the currently-selected range. */
   _isInRange(value: number): boolean {
-    return this._isSelectingRange() && value >= this.startValue && value <= this.endValue;
+    return this.isRange && this.startValue !== null && this.endValue !== null &&
+           value >= this.startValue && value <= this.endValue;
   }
 
   /** Gets whether a value is the start of the comparison range. */
@@ -272,17 +281,23 @@ export class MatCalendarBody implements OnChanges, OnDestroy {
 
   /** Gets whether a value is the start of the preview range. */
   _isPreviewStart(value: number) {
-    return this._previewEnd > -1 && this._isRangeStart(value);
+    return value === this.previewStart && this.previewEnd && value < this.previewEnd;
   }
 
   /** Gets whether a value is the end of the preview range. */
   _isPreviewEnd(value: number) {
-    return value === this._previewEnd;
+    return value === this.previewEnd && this.previewStart && value > this.previewStart;
   }
 
   /** Gets whether a value is inside the preview range. */
   _isInPreview(value: number) {
-    return this._isSelectingRange() && value >= this.startValue && value <= this._previewEnd;
+    if (!this.isRange) {
+      return false;
+    }
+
+    const {previewStart, previewEnd} = this;
+    return previewStart !== null && previewEnd !== null && previewStart !== previewEnd &&
+           value >= previewStart && value <= previewEnd;
   }
 
   /**
@@ -290,23 +305,17 @@ export class MatCalendarBody implements OnChanges, OnDestroy {
    * inside the calendar body (e.g. by hovering in or focus).
    */
   private _enterHandler = (event: Event) => {
-    // We only need to hit the zone when we're selecting a range, we have a
-    // start value without an end value and we've hovered over a date cell.
-    if (!event.target || !this.startValue || this.endValue || !this._isSelectingRange()) {
+    if (this._skipNextFocus && event.type === 'focus') {
+      this._skipNextFocus = false;
       return;
     }
 
-    const cell = this._getCellFromElement(event.target as HTMLElement);
+    // We only need to hit the zone when we're selecting a range.
+    if (event.target && this.isRange) {
+      const cell = this._getCellFromElement(event.target as HTMLElement);
 
-    if (cell) {
-      const value = cell.compareValue;
-
-      // Only set as the preview end value if we're after the start of the range.
-      const previewEnd = (cell.enabled && value > this.startValue) ? value : -1;
-
-      if (previewEnd !== this._previewEnd) {
-        this._previewEnd = previewEnd;
-        this._ngZone.run(() => this._changeDetectorRef.markForCheck());
+      if (cell) {
+        this._ngZone.run(() => this.previewChange.emit({value: cell.enabled ? cell : null, event}));
       }
     }
   }
@@ -317,13 +326,13 @@ export class MatCalendarBody implements OnChanges, OnDestroy {
    */
   private _leaveHandler = (event: Event) => {
     // We only need to hit the zone when we're selecting a range.
-    if (this._previewEnd !== -1 && this._isSelectingRange()) {
+    if (this.previewEnd !== null && this.isRange) {
       // Only reset the preview end value when leaving cells. This looks better, because
       // we have a gap between the cells and the rows and we don't want to remove the
       // range just for it to show up again when the user moves a few pixels to the side.
       if (event.target && isTableCell(event.target as HTMLElement)) {
         this._ngZone.run(() => {
-          this._previewEnd = -1;
+          this.previewChange.emit({value: null, event});
 
           // Note that here we need to use `detectChanges`, rather than `markForCheck`, because
           // the way `_focusActiveCell` is set up at the moment makes it fire at the wrong time

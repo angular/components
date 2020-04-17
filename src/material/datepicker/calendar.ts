@@ -389,7 +389,7 @@ export class MatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDes
   }
 
   focusActiveCell() {
-    this._getCurrentViewComponent()._focusActiveCell();
+    this._getCurrentViewComponent()._focusActiveCell(false);
   }
 
   /** Updates today's date after an update of the active date */
