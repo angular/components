@@ -7,7 +7,7 @@
     "./tools/stylelint/no-nested-mixin.ts",
     "./tools/stylelint/no-concrete-rules.ts",
     "./tools/stylelint/no-top-level-ampersand-in-mixin.ts",
-    "./tools/stylelint/theme-mixin-api.js"
+    "./tools/stylelint/theme-mixin-api.ts"
   ],
   "rules": {
     "material/no-prefixes": [true, {

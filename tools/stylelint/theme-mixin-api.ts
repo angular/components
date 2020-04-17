@@ -1,4 +1,5 @@
-const stylelint = require('stylelint');
+import {AtRule, Declaration, Node, Result, Root} from 'postcss';
+import {createPlugin, Plugin, utils} from 'stylelint';
 
 /** Name of this stylelint rule. */
 const ruleName = 'material/theme-mixin-api';
@@ -19,10 +20,11 @@ const themeMixinRegex =
  *   3. Checks if the `-theme` mixins have the duplicate style check set up. We want to
  *      consistently check for duplicative theme styles so that we can warn consumers.
  */
-const plugin = stylelint.createPlugin(ruleName, (isEnabled, options, context) => {
-  return (root, result) => {
-    if (!isEnabled)
+const plugin = (isEnabled: boolean, options: never, context: {fix: boolean}) => {
+  return (root: Root, result: Result) => {
+    if (!isEnabled) {
       return;
+    }
 
     root.walkAtRules('mixin', node => {
       const matches = node.params.match(themeMixinRegex);
@@ -38,21 +40,21 @@ const plugin = stylelint.createPlugin(ruleName, (isEnabled, options, context) =>
       // a comma. This is not always correct because Sass maps can be constructed in parameters.
       // These would contain commas that throw of the argument retrieval. It's acceptable that
       // this rule will fail in such edge-cases. There is no AST for `postcss.AtRule` params.
-      const arguments = matches[5].split(',');
+      const args = matches[5].split(',');
 
       if (type === 'theme') {
-        validateThemeMixin(node, componentName, arguments);
+        validateThemeMixin(node, componentName, args);
       } else {
-        validateIndividualSystemMixins(node, type, arguments);
+        validateIndividualSystemMixins(node, type, args);
       }
     });
 
-    function validateThemeMixin(node, componentName, arguments) {
-      if (arguments.length !== 1) {
+    function validateThemeMixin(node: AtRule, componentName: string, args: string[]) {
+      if (args.length !== 1) {
         reportError(node, 'Expected theme mixin to only declare a single argument.');
-      } else if (arguments[0] !== '$theme-or-color-config') {
+      } else if (args[0] !== '$theme-or-color-config') {
         if (context.fix) {
-          node.params = node.params.replace(arguments[0], '$theme-or-color-config');
+          node.params = node.params.replace(args[0], '$theme-or-color-config');
         } else {
           reportError(node, 'Expected first mixin argument to be called `$theme-or-color-config`.');
         }
@@ -62,11 +64,13 @@ const plugin = stylelint.createPlugin(ruleName, (isEnabled, options, context) =>
       const legacyColorExtractExpr = `_mat-legacy-get-theme($theme-or-color-config)`;
       const duplicateStylesCheckExpr =
           `_mat-check-duplicate-theme-styles(${themePropName}, '${componentName}')`;
-      const legacyConfigDecl =
-          node.nodes.find(n => n.type === 'decl' && n.value === legacyColorExtractExpr);
-      const hasDuplicateStylesCheck = node.nodes.find(
-          n =>
-              n.type === 'atrule' && n.name === 'include' && n.params === duplicateStylesCheckExpr);
+      const legacyConfigDecl = !!node.nodes &&
+          node.nodes.find(
+              (n): n is Declaration => n.type === 'decl' && n.value === legacyColorExtractExpr);
+      const hasDuplicateStylesCheck = !!node.nodes &&
+          node.nodes.find(
+              n => n.type === 'atrule' && n.name === 'include' &&
+                  n.params === duplicateStylesCheckExpr);
 
       if (!legacyConfigDecl) {
         if (context.fix) {
@@ -98,12 +102,12 @@ const plugin = stylelint.createPlugin(ruleName, (isEnabled, options, context) =>
       }
     }
 
-    function validateIndividualSystemMixins(node, type, arguments) {
-      if (arguments.length !== 1) {
+    function validateIndividualSystemMixins(node: AtRule, type: string, args: string[]) {
+      if (args.length !== 1) {
         reportError(node, 'Expected mixin to only declare a single argument.');
-      } else if (arguments[0] !== '$config-or-theme') {
+      } else if (args[0] !== '$config-or-theme') {
         if (context.fix) {
-          node.params = node.params.replace(arguments[0], '$config-or-theme');
+          node.params = node.params.replace(args[0], '$config-or-theme');
         } else {
           reportError(node, 'Expected first mixin argument to be called `$config-or-theme`.');
         }
@@ -111,8 +115,8 @@ const plugin = stylelint.createPlugin(ruleName, (isEnabled, options, context) =>
 
       const expectedProperty = type === 'density' ? '$density-scale' : '$config';
       const expectedValue = `mat-get-${type}-config($config-or-theme)`;
-      const configExtractionNode =
-          node.nodes.find(n => n.type === 'decl' && n.value === expectedValue);
+      const configExtractionNode = !!node.nodes &&
+          node.nodes.find((n): n is Declaration => n.type === 'decl' && n.value === expectedValue);
 
       if (!configExtractionNode) {
         if (context.fix) {
@@ -131,11 +135,12 @@ const plugin = stylelint.createPlugin(ruleName, (isEnabled, options, context) =>
       }
     }
 
-    function reportError(node, message) {
-      stylelint.utils.report({result, ruleName, node, message});
+    function reportError(node: Node, message: string) {
+      utils.report({result, ruleName, node, message});
     }
   };
-});
+};
 
-plugin.ruleName = ruleName;
-module.exports = plugin;
+// Note: We need to cast the value explicitly to `Plugin` because the stylelint types
+// do not type the context parameter. https://stylelint.io/developer-guide/rules#add-autofix
+module.exports = createPlugin(ruleName, plugin as Plugin);
