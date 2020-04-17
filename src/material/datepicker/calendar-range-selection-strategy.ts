@@ -33,7 +33,7 @@ export class DefaultMatCalendarRangeStrategy<D> implements MatCalendarRangeSelec
 
     if (start == null) {
       start = date;
-    } else if (end == null && date && this._dateAdapter.compareDate(date, start) > 0) {
+    } else if (end == null && date && this._dateAdapter.compareDate(date, start) >= 0) {
       end = date;
     } else {
       start = date;

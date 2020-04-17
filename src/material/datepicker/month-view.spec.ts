@@ -328,6 +328,37 @@ describe('MatMonthView', () => {
           expect(testComponent.selected).toBeFalsy();
         });
 
+        it('should not fire the selected change event when clicking on an already-selected ' +
+          'date while selecting a single date', () => {
+            testComponent.selected = new Date(2017, JAN, 10);
+            fixture.detectChanges();
+
+            expect(fixture.componentInstance.selectedChangeSpy).not.toHaveBeenCalled();
+
+            const selectedCell =
+                monthViewNativeElement.querySelector('.mat-calendar-body-selected') as HTMLElement;
+            selectedCell.click();
+            fixture.detectChanges();
+
+            expect(fixture.componentInstance.selectedChangeSpy).not.toHaveBeenCalled();
+          });
+
+        it('should fire the selected change event when clicking on an already-selected ' +
+          'date while selecting a range', () => {
+            const selectedDate = new Date(2017, JAN, 10);
+            testComponent.selected = new DateRange(selectedDate, null);
+            fixture.detectChanges();
+
+            expect(fixture.componentInstance.selectedChangeSpy).not.toHaveBeenCalled();
+
+            const selectedCell =
+                monthViewNativeElement.querySelector('.mat-calendar-body-selected') as HTMLElement;
+            selectedCell.click();
+            fixture.detectChanges();
+
+            expect(fixture.componentInstance.selectedChangeSpy).toHaveBeenCalledWith(selectedDate);
+          });
+
       });
     });
   });
@@ -389,11 +420,16 @@ describe('MatMonthView', () => {
 
 
 @Component({
-  template: `<mat-month-view [(activeDate)]="date" [(selected)]="selected"></mat-month-view>`,
+  template: `
+    <mat-month-view
+      [(activeDate)]="date"
+      [(selected)]="selected"
+      (selectedChange)="selectedChangeSpy($event)"></mat-month-view>`,
 })
 class StandardMonthView {
   date = new Date(2017, JAN, 5);
   selected: Date | DateRange<Date> = new Date(2017, JAN, 10);
+  selectedChangeSpy = jasmine.createSpy('selectedChange');
 }
 
 
