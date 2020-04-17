@@ -15,6 +15,7 @@ export interface DateSelectionModelChange<S> {
 
 export declare class DefaultMatCalendarRangeStrategy<D> implements MatCalendarRangeSelectionStrategy<D> {
     constructor(_dateAdapter: DateAdapter<D>);
+    createPreview(activeDate: D | null, currentRange: DateRange<D>): DateRange<D>;
     selectionFinished(date: D, currentRange: DateRange<D>): DateRange<D>;
     static ɵfac: i0.ɵɵFactoryDef<DefaultMatCalendarRangeStrategy<any>, never>;
     static ɵprov: i0.ɵɵInjectableDef<DefaultMatCalendarRangeStrategy<any>>;
@@ -93,22 +94,25 @@ export declare class MatCalendarBody implements OnChanges, OnDestroy {
     _cellPadding: string;
     _cellWidth: string;
     _firstRowOffset: number;
-    _previewEnd: number;
     activeCell: number;
     cellAspectRatio: number;
     comparisonEnd: number | null;
     comparisonStart: number | null;
     endValue: number;
+    isRange: boolean;
     label: string;
     labelMinRequiredCells: number;
     numCols: number;
+    previewChange: EventEmitter<MatCalendarUserEvent<MatCalendarCell<any> | null>>;
+    previewEnd: number | null;
+    previewStart: number | null;
     rows: MatCalendarCell[][];
     readonly selectedValueChange: EventEmitter<MatCalendarUserEvent<number>>;
     startValue: number;
     todayValue: number;
     constructor(_elementRef: ElementRef<HTMLElement>, _changeDetectorRef: ChangeDetectorRef, _ngZone: NgZone);
     _cellClicked(cell: MatCalendarCell, event: MouseEvent): void;
-    _focusActiveCell(): void;
+    _focusActiveCell(movePreview?: boolean): void;
     _isActiveCell(rowIndex: number, colIndex: number): boolean;
     _isComparisonBridgeEnd(value: number, rowIndex: number, colIndex: number): boolean;
     _isComparisonBridgeStart(value: number, rowIndex: number, colIndex: number): boolean;
@@ -117,26 +121,26 @@ export declare class MatCalendarBody implements OnChanges, OnDestroy {
     _isInComparisonRange(value: number): boolean | 0 | null;
     _isInPreview(value: number): boolean;
     _isInRange(value: number): boolean;
-    _isPreviewEnd(value: number): boolean;
-    _isPreviewStart(value: number): boolean;
+    _isPreviewEnd(value: number): boolean | 0 | null;
+    _isPreviewStart(value: number): boolean | 0 | null;
     _isRangeEnd(value: number): boolean | 0;
     _isRangeStart(value: number): boolean;
     _isSelected(cell: MatCalendarCell): boolean;
-    _isSelectingRange(): boolean;
     ngOnChanges(changes: SimpleChanges): void;
     ngOnDestroy(): void;
-    static ɵcmp: i0.ɵɵComponentDefWithMeta<MatCalendarBody, "[mat-calendar-body]", ["matCalendarBody"], { "label": "label"; "rows": "rows"; "todayValue": "todayValue"; "startValue": "startValue"; "endValue": "endValue"; "labelMinRequiredCells": "labelMinRequiredCells"; "numCols": "numCols"; "activeCell": "activeCell"; "cellAspectRatio": "cellAspectRatio"; "comparisonStart": "comparisonStart"; "comparisonEnd": "comparisonEnd"; }, { "selectedValueChange": "selectedValueChange"; }, never, never>;
+    static ɵcmp: i0.ɵɵComponentDefWithMeta<MatCalendarBody, "[mat-calendar-body]", ["matCalendarBody"], { "label": "label"; "rows": "rows"; "todayValue": "todayValue"; "startValue": "startValue"; "endValue": "endValue"; "labelMinRequiredCells": "labelMinRequiredCells"; "numCols": "numCols"; "activeCell": "activeCell"; "isRange": "isRange"; "cellAspectRatio": "cellAspectRatio"; "comparisonStart": "comparisonStart"; "comparisonEnd": "comparisonEnd"; "previewStart": "previewStart"; "previewEnd": "previewEnd"; }, { "selectedValueChange": "selectedValueChange"; "previewChange": "previewChange"; }, never, never>;
     static ɵfac: i0.ɵɵFactoryDef<MatCalendarBody, never>;
 }
 
-export declare class MatCalendarCell {
+export declare class MatCalendarCell<D = any> {
     ariaLabel: string;
     compareValue: number;
     cssClasses: MatCalendarCellCssClasses;
     displayValue: string;
     enabled: boolean;
+    rawValue?: D | undefined;
     value: number;
-    constructor(value: number, displayValue: string, ariaLabel: string, enabled: boolean, cssClasses?: MatCalendarCellCssClasses, compareValue?: number);
+    constructor(value: number, displayValue: string, ariaLabel: string, enabled: boolean, cssClasses?: MatCalendarCellCssClasses, compareValue?: number, rawValue?: D | undefined);
 }
 
 export declare type MatCalendarCellCssClasses = string | string[] | Set<string> | {
@@ -160,6 +164,7 @@ export declare class MatCalendarHeader<D> {
 }
 
 export interface MatCalendarRangeSelectionStrategy<D> {
+    createPreview(activeDate: D | null, currentRange: DateRange<D>, event: Event): DateRange<D>;
     selectionFinished(date: D | null, currentRange: DateRange<D>, event: Event): DateRange<D>;
 }
 
@@ -364,8 +369,11 @@ export declare class MatMonthView<D> implements AfterContentInit, OnDestroy {
     _comparisonRangeStart: number | null;
     _dateAdapter: DateAdapter<D>;
     _firstWeekOffset: number;
+    _isRange: boolean;
     _matCalendarBody: MatCalendarBody;
     _monthLabel: string;
+    _previewEnd: number | null;
+    _previewStart: number | null;
     _rangeEnd: number | null;
     _rangeStart: number | null;
     _todayDate: number | null;
@@ -389,15 +397,16 @@ export declare class MatMonthView<D> implements AfterContentInit, OnDestroy {
     get selected(): DateRange<D> | D | null;
     set selected(value: DateRange<D> | D | null);
     readonly selectedChange: EventEmitter<D | null>;
-    constructor(_changeDetectorRef: ChangeDetectorRef, _dateFormats: MatDateFormats, _dateAdapter: DateAdapter<D>, _dir?: Directionality | undefined);
+    constructor(_changeDetectorRef: ChangeDetectorRef, _dateFormats: MatDateFormats, _dateAdapter: DateAdapter<D>, _dir?: Directionality | undefined, _rangeStrategy?: MatCalendarRangeSelectionStrategy<D> | undefined);
     _dateSelected(event: MatCalendarUserEvent<number>): void;
-    _focusActiveCell(): void;
+    _focusActiveCell(movePreview?: boolean): void;
     _handleCalendarBodyKeydown(event: KeyboardEvent): void;
     _init(): void;
+    _previewChanged({ event, value: cell }: MatCalendarUserEvent<MatCalendarCell<D> | null>): void;
     ngAfterContentInit(): void;
     ngOnDestroy(): void;
     static ɵcmp: i0.ɵɵComponentDefWithMeta<MatMonthView<any>, "mat-month-view", ["matMonthView"], { "activeDate": "activeDate"; "selected": "selected"; "minDate": "minDate"; "maxDate": "maxDate"; "dateFilter": "dateFilter"; "dateClass": "dateClass"; "comparisonStart": "comparisonStart"; "comparisonEnd": "comparisonEnd"; }, { "selectedChange": "selectedChange"; "_userSelection": "_userSelection"; "activeDateChange": "activeDateChange"; }, never, never>;
-    static ɵfac: i0.ɵɵFactoryDef<MatMonthView<any>, [null, { optional: true; }, { optional: true; }, { optional: true; }]>;
+    static ɵfac: i0.ɵɵFactoryDef<MatMonthView<any>, [null, { optional: true; }, { optional: true; }, { optional: true; }, { optional: true; }]>;
 }
 
 export declare class MatMultiYearView<D> implements AfterContentInit, OnDestroy {

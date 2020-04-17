@@ -194,7 +194,7 @@ describe('MatCalendarBody', () => {
 
     it('should not mark a cell as a start bridge if there is no end range value', () => {
       testComponent.startValue = 1;
-      testComponent.endValue = undefined;
+      testComponent.endValue = null;
       testComponent.comparisonStart = 5;
       testComponent.comparisonEnd = 10;
       fixture.detectChanges();
@@ -217,7 +217,7 @@ describe('MatCalendarBody', () => {
       testComponent.comparisonStart = 1;
       testComponent.comparisonEnd = 5;
       testComponent.startValue = 5;
-      testComponent.endValue = undefined;
+      testComponent.endValue = null;
       fixture.detectChanges();
 
       expect(cells.some(cell => cell.classList.contains(bridgeEnd))).toBe(false);
@@ -375,7 +375,7 @@ describe('MatCalendarBody', () => {
     });
 
     it('should not show a range if there is no start', () => {
-      testComponent.startValue = undefined;
+      testComponent.startValue = null;
       testComponent.endValue = 10;
       fixture.detectChanges();
 
@@ -384,7 +384,7 @@ describe('MatCalendarBody', () => {
     });
 
     it('should not show a comparison range if there is no start', () => {
-      testComponent.comparisonStart = undefined;
+      testComponent.comparisonStart = null;
       testComponent.comparisonEnd = 10;
       fixture.detectChanges();
 
@@ -394,7 +394,7 @@ describe('MatCalendarBody', () => {
 
     it('should not show a comparison range if there is no end', () => {
       testComponent.comparisonStart = 10;
-      testComponent.comparisonEnd = undefined;
+      testComponent.comparisonEnd = null;
       fixture.detectChanges();
 
       expect(cells.some(cell => cell.classList.contains(inComparisonClass))).toBe(false);
@@ -599,20 +599,26 @@ class StandardCalendarBody {
 @Component({
   template: `
     <table mat-calendar-body
+          [isRange]="true"
           [rows]="rows"
           [startValue]="startValue"
           [endValue]="endValue"
           [comparisonStart]="comparisonStart"
           [comparisonEnd]="comparisonEnd"
-          (selectedValueChange)="onSelect($event)">
+          [previewStart]="previewStart"
+          [previewEnd]="previewEnd"
+          (selectedValueChange)="onSelect($event)"
+          (previewChange)="previewChanged($event)">
     </table>`,
 })
 class RangeCalendarBody {
   rows = createCalendarCells(4);
-  startValue: number | undefined;
-  endValue: number | undefined;
-  comparisonStart: number | undefined;
-  comparisonEnd: number | undefined;
+  startValue: number | null;
+  endValue: number | null;
+  comparisonStart: number | null;
+  comparisonEnd: number | null;
+  previewStart: number | null;
+  previewEnd: number | null;
 
   onSelect(event: MatCalendarUserEvent<number>) {
     const value = event.value;
@@ -622,8 +628,13 @@ class RangeCalendarBody {
       this.endValue = value;
     } else {
       this.startValue = value;
-      this.endValue = undefined;
+      this.endValue = null;
     }
+  }
+
+  previewChanged(event: MatCalendarUserEvent<MatCalendarCell<Date> | null>) {
+    this.previewStart = this.startValue;
+    this.previewEnd = event.value?.compareValue || null;
   }
 }
 
