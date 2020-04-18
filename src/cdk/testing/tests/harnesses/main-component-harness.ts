@@ -23,6 +23,7 @@ export class MainComponentHarness extends ComponentHarness {
   readonly counter = this.locatorFor('#counter');
   readonly input = this.locatorFor('#input');
   readonly value = this.locatorFor('#value');
+  readonly inputEvent = this.locatorFor('#input-event-count');
   readonly allLabels = this.locatorForAll('label');
   readonly allLists = this.locatorForAll(SubComponentHarness);
   readonly memo = this.locatorFor('textarea');
@@ -94,6 +95,15 @@ export class MainComponentHarness extends ComponentHarness {
   readonly hoverTest = this.locatorFor('#hover-box');
   readonly customEventBasic = this.locatorFor('#custom-event-basic');
   readonly customEventObject = this.locatorFor('#custom-event-object');
+
+  readonly editable = this.locatorFor('#editable');
+  readonly editableP = this.locatorFor('#editable p');
+  readonly editableInputEvent = this.locatorFor('#editable-input-event');
+  readonly notEditable = this.locatorFor('#not-editable');
+  readonly notEditableInputEvent = this.locatorFor('#not-editable-input-event');
+  readonly inheritEditable = this.locatorFor('#inherit-editable');
+  readonly designModeOnButton = this.locatorFor('#design-mode-on');
+  readonly designModeOffButton = this.locatorFor('#design-mode-off');
 
   private _testTools = this.locatorFor(SubComponentHarness);
 

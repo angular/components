@@ -14,10 +14,29 @@
   <div id="asyncCounter">{{asyncCounter}}</div>
 </div>
 <div class="inputs">
-  <input [(ngModel)]="input" id="input" aria-label="input" (keydown)="onKeyDown($event)">
+  <input #inputEl [(ngModel)]="input" id="input" aria-label="input" (keydown)="onKeyDown($event)">
   <span class="special-key">{{specialKey}}</span>
   <div id="value">Input: {{input}}</div>
+  <div id="input-event-count">Count: {{inputElementInputEventCount$ | async}}</div>
   <textarea id="memo" aria-label="memo">{{memo}}</textarea>
+  <div class="contenteditables">
+    <div #editable id="editable" contenteditable="true" style="width: 100px; height: 100px">
+      <p style="width: 50px; height: 50px">
+      </p>
+    </div>
+    <div id="editable-input-event">
+      Count: {{editableElementInputEventCount$ | async}}
+    </div>
+    <div #notEditable id="not-editable" contenteditable="false" style="width: 100px; height: 100px">
+    </div>
+    <div id="not-editable-input-event">
+      Count: {{notEditableElementInputEventCount$ | async}}
+    </div>
+    <div id="inherit-editable" style="width: 100px; height: 100px">
+    </div>
+    <button id="design-mode-on" (click)="turnOnDesignMode()">Turn designMode on</button>
+    <button id="design-mode-off" (click)="turnOffDesignMode()">Turn designMode off</button>
+  </div>
   <select
     id="single-select"
     aria-label="single select"

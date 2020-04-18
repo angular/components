@@ -18,6 +18,8 @@ import {
   ViewChild,
   ViewEncapsulation
 } from '@angular/core';
+import {fromEvent, Observable, defer} from 'rxjs';
+import {map, startWith} from 'rxjs/operators';
 
 @Component({
   selector: 'test-main',
@@ -47,6 +49,17 @@ export class TestMainComponent implements OnDestroy {
 
   @ViewChild('clickTestElement') clickTestElement: ElementRef<HTMLElement>;
   @ViewChild('taskStateResult') taskStateResultElement: ElementRef<HTMLElement>;
+
+  @ViewChild('inputEl', {static: true}) inputElement: ElementRef<HTMLElement>;
+  @ViewChild('editable', {static: true}) editableElement: ElementRef<HTMLElement>;
+  @ViewChild('notEditable', {static: true}) notEditableElement: ElementRef<HTMLElement>;
+
+  readonly inputElementInputEventCount$ =
+    defer(() => countInputEvent(this.inputElement));
+  readonly editableElementInputEventCount$ =
+    defer(() => countInputEvent(this.editableElement));
+  readonly notEditableElementInputEventCount$ =
+    defer(() => countInputEvent(this.notEditableElement));
 
   private _fakeOverlayElement: HTMLElement;
 
@@ -102,6 +115,14 @@ export class TestMainComponent implements OnDestroy {
     this.customEventData = JSON.stringify({message: event.message, value: event.value});
   }
 
+  turnOnDesignMode() {
+    document.designMode = 'on';
+  }
+
+  turnOffDesignMode() {
+    document.designMode = 'off';
+  }
+
   runTaskOutsideZone() {
     this._zone.runOutsideAngular(() => setTimeout(() => {
       this.taskStateResultElement.nativeElement.textContent = 'result';
@@ -113,4 +134,10 @@ export class TestMainComponent implements OnDestroy {
     obj.x = Math.round(event.clientX - left);
     obj.y = Math.round(event.clientY - top);
   }
+}
+
+function countInputEvent(elementRef: ElementRef<HTMLElement>): Observable<number> {
+  return fromEvent(elementRef.nativeElement, 'input').pipe(
+    map((event, index) => index + 1),
+    startWith(0));
 }

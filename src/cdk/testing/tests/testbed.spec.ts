@@ -5,7 +5,7 @@ import {
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {waitForAsync, ComponentFixture, fakeAsync, TestBed} from '@angular/core/testing';
 import {querySelectorAll as piercingQuerySelectorAll} from 'kagekiri';
-import {crossEnvironmentSpecs} from './cross-environment.spec';
+import {crossEnvironmentSpecs, TestEnvironment} from './cross-environment.spec';
 import {FakeOverlayHarness} from './harnesses/fake-overlay-harness';
 import {MainComponentHarness} from './harnesses/main-component-harness';
 import {TestComponentsModule} from './test-components-module';
@@ -167,6 +167,7 @@ describe('TestbedHarnessEnvironment', () => {
   });
 
   describe('environment independent', () => crossEnvironmentSpecs(
+    TestEnvironment.TEST_BED,
     () => TestbedHarnessEnvironment.loader(fixture),
     () => TestbedHarnessEnvironment.harnessForFixture(fixture, MainComponentHarness),
     () => Promise.resolve(document.activeElement!.id),

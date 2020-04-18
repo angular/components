@@ -22,7 +22,6 @@ import {
   dispatchFakeEvent,
   dispatchMouseEvent,
   dispatchPointerEvent,
-  isTextInput,
   triggerBlur,
   triggerFocus,
   typeInElement,
@@ -73,9 +72,6 @@ export class UnitTestElement implements TestElement {
   }
 
   async clear(): Promise<void> {
-    if (!isTextInput(this.element)) {
-      throw Error('Attempting to clear an invalid element');
-    }
     clearElement(this.element);
     await this._stabilize();
   }

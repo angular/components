@@ -78,7 +78,8 @@ export class ProtractorElement implements TestElement {
   }
 
   async clear(): Promise<void> {
-    return this.element.clear();
+    await this.element.sendKeys(Key.BACK_SPACE);
+    await this.element.clear();
   }
 
   async click(...args: [] | ['center'] | [number, number]): Promise<void> {

@@ -1,7 +1,7 @@
 import {HarnessLoader} from '@angular/cdk/testing';
 import {ProtractorHarnessEnvironment} from '@angular/cdk/testing/protractor';
 import {browser, by, element as protractorElement, ElementFinder} from 'protractor';
-import {crossEnvironmentSpecs} from './cross-environment.spec';
+import {crossEnvironmentSpecs, TestEnvironment} from './cross-environment.spec';
 import {MainComponentHarness} from './harnesses/main-component-harness';
 
 // Kagekiri is available globally in the browser. We declare it here so we can use it in the
@@ -82,6 +82,7 @@ describe('ProtractorHarnessEnvironment', () => {
   });
 
   describe('environment independent', () => crossEnvironmentSpecs(
+    TestEnvironment.PROTRACTOR,
     () => ProtractorHarnessEnvironment.loader(),
     () => ProtractorHarnessEnvironment.loader().getHarness(MainComponentHarness),
     async () => (await activeElement()).getAttribute('id'),

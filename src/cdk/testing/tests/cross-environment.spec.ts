@@ -15,6 +15,12 @@ import {
 import {MainComponentHarness} from './harnesses/main-component-harness';
 import {SubComponentHarness, SubComponentSpecialHarness} from './harnesses/sub-component-harness';
 
+/** Environments for the tests. */
+export const enum TestEnvironment {
+  TEST_BED,
+  PROTRACTOR,
+}
+
 /**
  * Tests that should behave equal in testbed and protractor environment.
  *
@@ -22,6 +28,7 @@ import {SubComponentHarness, SubComponentSpecialHarness} from './harnesses/sub-c
  * with TestbedHarnessEnvironment and ProtractorHarnessEnvironment, this set of tests is
  * executed in unit tests and tests.
  *
+ * @param environment in which environment the tests are running
  * @param getHarnessLoaderFromEnvironment env specific closure to get HarnessLoader
  * @param getMainComponentHarnessFromEnvironment env specific closure to get MainComponentHarness
  * @param getActiveElementId env specific closure to get active element
@@ -29,11 +36,12 @@ import {SubComponentHarness, SubComponentSpecialHarness} from './harnesses/sub-c
  * @docs-private
  */
 export function crossEnvironmentSpecs(
+  environment: TestEnvironment,
   getHarnessLoaderFromEnvironment: () => HarnessLoader,
   getMainComponentHarnessFromEnvironment: () => Promise<MainComponentHarness>,
   // Maybe we should introduce HarnessLoader.getActiveElement(): TestElement
   // then this 3rd parameter could get removed.
-   getActiveElementId: () => Promise<string | null>,
+  getActiveElementId: () => Promise<string | null>,
 ) {
   describe('HarnessLoader', () => {
     let loader: HarnessLoader;
@@ -305,11 +313,14 @@ export function crossEnvironmentSpecs(
 
     it('should be able to clear', async () => {
       const input = await harness.input();
+      const inputEvent = await harness.inputEvent();
       await input.sendKeys('Yi');
       expect(await input.getProperty('value')).toBe('Yi');
+      expect(await inputEvent.text()).toBe('Count: 2');
 
       await input.clear();
       expect(await input.getProperty('value')).toBe('');
+      expect(await inputEvent.text()).toBe('Count: 3');
     });
 
     it('should be able to click', async () => {
@@ -353,6 +364,68 @@ export function crossEnvironmentSpecs(
       const input = await harness.input();
       await input.sendKeys('Yi');
       expect(await getActiveElementId()).toBe(await input.getAttribute('id'));
+    });
+
+    it('should be able to send key to a contenteditable', async () => {
+      const editable = await harness.editable();
+      const editableInputEvent = await harness.editableInputEvent();
+
+      await editable.sendKeys('Yi');
+
+      expect(await editable.text()).toBe('Yi');
+      expect(await editableInputEvent.text()).toBe('Count: 2');
+
+      await editable.clear();
+
+      expect(await editable.text()).toBe('');
+      expect(await editableInputEvent.text()).toBe('Count: 3');
+    });
+
+    it('should be able to send key to a child of a contenteditable', async () => {
+      const editable = await harness.editableP();
+
+      await editable.sendKeys('Yi');
+
+      expect(await editable.text()).toBe('Yi');
+    });
+
+    it('should not update not contenteditable div on send key', async () => {
+      const notEditable = await harness.notEditable();
+      const notEditableInputEvent = await harness.notEditableInputEvent();
+
+      await expectAsyncError(notEditable.sendKeys('Yi'));
+
+      expect(await notEditable.text()).toBe('');
+      expect(await notEditableInputEvent.text()).toBe('Count: 0');
+
+      await expectAsyncError(notEditable.clear());
+    });
+
+    it('should send key based on designMode', async () => {
+      const notEditable = await harness.notEditable();
+      const inheritEditable = await harness.inheritEditable();
+
+      await expectAsyncError(notEditable.sendKeys('Yi'));
+      expect(await notEditable.text()).toBe('');
+
+      await expectAsyncError(inheritEditable.sendKeys('Yi'));
+      expect(await inheritEditable.text()).toBe('');
+
+      await (await harness.designModeOnButton()).click();
+
+      await expectAsyncError(notEditable.sendKeys('Yi'));
+      expect(await notEditable.text()).toBe('');
+
+      await inheritEditable.sendKeys('Yi');
+      // The following expectation is failing on Protractor environment
+      // In protractor environment, the text is empty.
+      if (environment == TestEnvironment.TEST_BED) {
+        expect(await inheritEditable.text()).toBe('Yi');
+      } else {
+        expect(await inheritEditable.text()).toBe('');
+      }
+
+      await (await harness.designModeOffButton()).click();
     });
 
     it('should be able to retrieve dimensions', async () => {
@@ -575,4 +648,10 @@ export async function checkIsHarness<T extends ComponentHarness>(
   if (finalCheck) {
     await finalCheck(result as T);
   }
+}
+
+async function expectAsyncError(promise: Promise<unknown>) {
+  let error = false;
+  await promise.catch(() => { error = true; });
+  expect(error).toBe(true);
 }

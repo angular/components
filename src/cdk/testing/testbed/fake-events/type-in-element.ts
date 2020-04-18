@@ -14,9 +14,29 @@ import {triggerFocus} from './element-focus';
  * Checks whether the given Element is a text input element.
  * @docs-private
  */
-export function isTextInput(element: Element): element is HTMLInputElement | HTMLTextAreaElement {
+function isTextInput(element: Element): element is HTMLInputElement | HTMLTextAreaElement {
   const nodeName = element.nodeName.toLowerCase();
   return nodeName === 'input' || nodeName === 'textarea' ;
+}
+
+/**
+ * Checks whether the given Element's content is editable.
+ * An element is content editable if
+ * - the element has "contenteditable" attribute set to "true"
+ * - any of its ancestors has "contenteditable" attribute set to "true"
+ * - the owner document has designMode attribute set to "on".
+ * @docs-private
+ */
+function isContentEditable(element: Element): element is HTMLElement {
+  return element instanceof HTMLElement && element.isContentEditable;
+}
+
+/**
+ * Checks whether the given Element changes with input from keyboard.
+ * @docs-private
+ */
+function isInputAware(element: Element): element is HTMLElement {
+  return isTextInput(element) || isContentEditable(element);
 }
 
 /**
@@ -41,6 +61,9 @@ export function typeInElement(element: HTMLElement, modifiers: ModifierKeys,
                               ...keys: (string | {keyCode?: number, key?: string})[]): void;
 
 export function typeInElement(element: HTMLElement, ...modifiersAndKeys: any) {
+  if (!isInputAware(element)) {
+    throw new Error('Attempting to send keys to an invalid element');
+  }
   const first = modifiersAndKeys[0];
   let modifiers: ModifierKeys;
   let rest: (string | {keyCode?: number, key?: string})[];
@@ -60,8 +83,12 @@ export function typeInElement(element: HTMLElement, ...modifiersAndKeys: any) {
   for (const key of keys) {
     dispatchKeyboardEvent(element, 'keydown', key.keyCode, key.key, modifiers);
     dispatchKeyboardEvent(element, 'keypress', key.keyCode, key.key, modifiers);
-    if (isTextInput(element) && key.key && key.key.length === 1) {
-      element.value += key.key;
+    if (isInputAware(element) && key.key?.length === 1) {
+      if (isTextInput(element)) {
+        element.value += key.key;
+      } else {
+        element.appendChild(new Text(key.key));
+      }
       dispatchFakeEvent(element, 'input');
     }
     dispatchKeyboardEvent(element, 'keyup', key.keyCode, key.key, modifiers);
@@ -69,11 +96,18 @@ export function typeInElement(element: HTMLElement, ...modifiersAndKeys: any) {
 }
 
 /**
- * Clears the text in an input or textarea element.
+ * Clears the content or text of an input aware element.
  * @docs-private
  */
-export function clearElement(element: HTMLInputElement | HTMLTextAreaElement) {
-  triggerFocus(element as HTMLElement);
-  element.value = '';
+export function clearElement(element: Element) {
+  if (!isInputAware(element)) {
+    throw new Error('Attempting to clear an invalid element');
+  }
+  triggerFocus(element);
+  if (isTextInput(element)) {
+    element.value = '';
+  } else {
+    element.textContent = '';
+  }
   dispatchFakeEvent(element, 'input');
 }
