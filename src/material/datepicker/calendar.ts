@@ -446,6 +446,11 @@ export class MatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDes
     this.currentView = view;
   }
 
+  /** Gets the selection that should be displayed to the user. */
+  _getDisplaySelection(): DateRange<D> | D | null {
+    return this._model.isValid() ? this._model.selection : null;
+  }
+
   /**
    * @param obj The object to check.
    * @returns The given object if it is both a date instance and valid, otherwise null.

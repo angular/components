@@ -336,22 +336,24 @@ describe('MatCalendarBody', () => {
       expect(cells[27].classList).toContain(inRangeClass);
     });
 
-    it('should be able to mark a date both as the range start and end', () => {
+    it('should not to mark a date as both the start and end', () => {
       testComponent.startValue = 1;
       testComponent.endValue = 1;
       fixture.detectChanges();
 
-      expect(cells[0].classList).toContain(startClass);
-      expect(cells[0].classList).toContain(endClass);
+      expect(cells[0].classList).not.toContain(startClass);
+      expect(cells[0].classList).not.toContain(inRangeClass);
+      expect(cells[0].classList).not.toContain(endClass);
     });
 
-    it('should be able to mark a date both as the comparison range start and end', () => {
+    it('should not mark a date as both the comparison start and end', () => {
       testComponent.comparisonStart = 1;
       testComponent.comparisonEnd = 1;
       fixture.detectChanges();
 
-      expect(cells[0].classList).toContain(comparisonStartClass);
-      expect(cells[0].classList).toContain(comparisonEndClass);
+      expect(cells[0].classList).not.toContain(comparisonStartClass);
+      expect(cells[0].classList).not.toContain(inComparisonClass);
+      expect(cells[0].classList).not.toContain(comparisonEndClass);
     });
 
     it('should not mark a date as the range end if it comes before the start', () => {
@@ -361,7 +363,7 @@ describe('MatCalendarBody', () => {
 
       expect(cells[0].classList).not.toContain(endClass);
       expect(cells[0].classList).not.toContain(inRangeClass);
-      expect(cells[1].classList).toContain(startClass);
+      expect(cells[1].classList).not.toContain(startClass);
     });
 
     it('should not mark a date as the comparison range end if it comes before the start', () => {
@@ -371,7 +373,7 @@ describe('MatCalendarBody', () => {
 
       expect(cells[0].classList).not.toContain(comparisonEndClass);
       expect(cells[0].classList).not.toContain(inComparisonClass);
-      expect(cells[1].classList).toContain(comparisonStartClass);
+      expect(cells[1].classList).not.toContain(comparisonStartClass);
     });
 
     it('should not show a range if there is no start', () => {
@@ -473,7 +475,7 @@ describe('MatCalendarBody', () => {
       dispatchMouseEvent(cells[2], 'mouseenter');
       fixture.detectChanges();
 
-      expect(cells[5].classList).toContain(startClass);
+      expect(cells[5].classList).not.toContain(startClass);
       expect(cells[5].classList).not.toContain(previewStartClass);
       expect(cells.some(cell => cell.classList.contains(inPreviewClass))).toBe(false);
     });
