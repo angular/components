@@ -309,16 +309,24 @@ export class DropListRef<T = any> {
       element.parentElement!.insertBefore(placeholder, element);
       activeDraggables.splice(newIndex, 0, item);
     } else {
-      coerceElement(this.element).appendChild(placeholder);
-      activeDraggables.push(item);
+      const element = coerceElement(this.element);
+      if (this._isEnteringFromStart(pointerX, pointerY)) {
+        element.insertBefore(placeholder, activeDraggables[0].getRootElement());
+        activeDraggables.unshift(item);
+      } else {
+        element.appendChild(placeholder);
+        activeDraggables.push(item);
+      }
     }
 
     // The transform needs to be cleared so it doesn't throw off the measurements.
     placeholder.style.transform = '';
 
     // Note that the positions were already cached when we called `start` above,
-    // but we need to refresh them since the amount of items has changed.
+    // but we need to refresh them since the amount of items has changed and also parent rects.
     this._cacheItemPositions();
+    this._cacheParentPositions();
+
     this.entered.next({item, container: this, currentIndex: this.getItemIndex(item)});
   }
 
@@ -696,6 +704,20 @@ export class DropListRef<T = any> {
   }
 
   /**
+   * Checks if pointer is entering in the first position
+   * @param pointerX Position of the user's pointer along the X axis.
+   * @param pointerY Position of the user's pointer along the Y axis.
+   */
+  private _isEnteringFromStart(pointerX: number, pointerY: number) {
+    const firstItemPosition = this._itemPositions[0];
+    const isHorizontal = this._orientation === 'horizontal';
+
+    return firstItemPosition && (isHorizontal ?
+      pointerX <= firstItemPosition.clientRect.left :
+      pointerY <= firstItemPosition.clientRect.top);
+  }
+
+  /**
    * Gets the index of an item in the drop container, based on the position of the user's pointer.
    * @param item Item that is being sorted.
    * @param pointerX Position of the user's pointer along the X axis.
@@ -726,8 +748,8 @@ export class DropListRef<T = any> {
       return isHorizontal ?
           // Round these down since most browsers report client rects with
           // sub-pixel precision, whereas the pointer coordinates are rounded to pixels.
-          pointerX >= Math.floor(clientRect.left) && pointerX <= Math.floor(clientRect.right) :
-          pointerY >= Math.floor(clientRect.top) && pointerY <= Math.floor(clientRect.bottom);
+          pointerX >= Math.floor(clientRect.left) && pointerX < Math.floor(clientRect.right) :
+          pointerY >= Math.floor(clientRect.top) && pointerY < Math.floor(clientRect.bottom);
     });
   }
 
