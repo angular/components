@@ -4,7 +4,7 @@
   <mat-month-view
       *ngSwitchCase="'month'"
       [(activeDate)]="activeDate"
-      [selected]="selected"
+      [selected]="_getDisplaySelection()"
       [dateFilter]="dateFilter"
       [maxDate]="maxDate"
       [minDate]="minDate"
@@ -17,7 +17,7 @@
   <mat-year-view
       *ngSwitchCase="'year'"
       [(activeDate)]="activeDate"
-      [selected]="selected"
+      [selected]="_getDisplaySelection()"
       [dateFilter]="dateFilter"
       [maxDate]="maxDate"
       [minDate]="minDate"
@@ -28,7 +28,7 @@
   <mat-multi-year-view
       *ngSwitchCase="'multi-year'"
       [(activeDate)]="activeDate"
-      [selected]="selected"
+      [selected]="_getDisplaySelection()"
       [dateFilter]="dateFilter"
       [maxDate]="maxDate"
       [minDate]="minDate"

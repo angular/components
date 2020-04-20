@@ -215,23 +215,22 @@ export class MatCalendarBody implements OnChanges, OnDestroy {
 
   /** Gets whether a value is the start of the main range. */
   _isRangeStart(value: number) {
-    return value === this.startValue;
+    return isStart(value, this.startValue, this.endValue);
   }
 
   /** Gets whether a value is the end of the main range. */
   _isRangeEnd(value: number) {
-    return this.startValue && value >= this.startValue && value === this.endValue;
+    return isEnd(value, this.startValue, this.endValue);
   }
 
   /** Gets whether a value is within the currently-selected range. */
   _isInRange(value: number): boolean {
-    return this.isRange && this.startValue !== null && this.endValue !== null &&
-           value >= this.startValue && value <= this.endValue;
+    return isInRange(value, this.startValue, this.endValue, this.isRange);
   }
 
   /** Gets whether a value is the start of the comparison range. */
   _isComparisonStart(value: number) {
-    return value === this.comparisonStart;
+    return isStart(value, this.comparisonStart, this.comparisonEnd);
   }
 
   /** Whether the cell is a start bridge cell between the main and comparison ranges. */
@@ -268,36 +267,27 @@ export class MatCalendarBody implements OnChanges, OnDestroy {
 
   /** Gets whether a value is the end of the comparison range. */
   _isComparisonEnd(value: number) {
-    return this.comparisonStart && value >= this.comparisonStart &&
-           value === this.comparisonEnd;
+    return isEnd(value, this.comparisonStart, this.comparisonEnd);
   }
 
   /** Gets whether a value is within the current comparison range. */
   _isInComparisonRange(value: number) {
-    return this.comparisonStart && this.comparisonEnd &&
-           value >= this.comparisonStart &&
-           value <= this.comparisonEnd;
+    return isInRange(value, this.comparisonStart, this.comparisonEnd, this.isRange);
   }
 
   /** Gets whether a value is the start of the preview range. */
   _isPreviewStart(value: number) {
-    return value === this.previewStart && this.previewEnd && value < this.previewEnd;
+    return isStart(value, this.previewStart, this.previewEnd);
   }
 
   /** Gets whether a value is the end of the preview range. */
   _isPreviewEnd(value: number) {
-    return value === this.previewEnd && this.previewStart && value > this.previewStart;
+    return isEnd(value, this.previewStart, this.previewEnd);
   }
 
   /** Gets whether a value is inside the preview range. */
   _isInPreview(value: number) {
-    if (!this.isRange) {
-      return false;
-    }
-
-    const {previewStart, previewEnd} = this;
-    return previewStart !== null && previewEnd !== null && previewStart !== previewEnd &&
-           value >= previewStart && value <= previewEnd;
+    return isInRange(value, this.previewStart, this.previewEnd, this.isRange);
   }
 
   /**
@@ -371,4 +361,23 @@ export class MatCalendarBody implements OnChanges, OnDestroy {
 /** Checks whether a node is a table cell element. */
 function isTableCell(node: Node): node is HTMLTableCellElement {
   return node.nodeName === 'TD';
+}
+
+/** Checks whether a value is the start of a range. */
+function isStart(value: number, start: number | null, end: number | null): boolean {
+  return end !== null && start !== end && value < end && value === start;
+}
+
+/** Checks whether a value is the end of a range. */
+function isEnd(value: number, start: number | null, end: number | null): boolean {
+  return start !== null && start !== end && value >= start && value === end;
+}
+
+/** Checks whether a value is inside of a range. */
+function isInRange(value: number,
+                   start: number | null,
+                   end: number | null,
+                   rangeEnabled: boolean): boolean {
+  return rangeEnabled && start !== null && end !== null && start !== end &&
+         value >= start && value <= end;
 }

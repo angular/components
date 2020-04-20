@@ -39,11 +39,11 @@ export declare const MAT_DATEPICKER_VALIDATORS: any;
 
 export declare const MAT_DATEPICKER_VALUE_ACCESSOR: any;
 
-export declare function MAT_RANGE_DATE_SELECTION_MODEL_FACTORY(parent: MatSingleDateSelectionModel<unknown>): MatSingleDateSelectionModel<unknown>;
+export declare function MAT_RANGE_DATE_SELECTION_MODEL_FACTORY(parent: MatSingleDateSelectionModel<unknown>, adapter: DateAdapter<unknown>): MatSingleDateSelectionModel<unknown>;
 
 export declare const MAT_RANGE_DATE_SELECTION_MODEL_PROVIDER: FactoryProvider;
 
-export declare function MAT_SINGLE_DATE_SELECTION_MODEL_FACTORY(parent: MatSingleDateSelectionModel<unknown>): MatSingleDateSelectionModel<unknown>;
+export declare function MAT_SINGLE_DATE_SELECTION_MODEL_FACTORY(parent: MatSingleDateSelectionModel<unknown>, adapter: DateAdapter<unknown>): MatSingleDateSelectionModel<unknown>;
 
 export declare const MAT_SINGLE_DATE_SELECTION_MODEL_PROVIDER: FactoryProvider;
 
@@ -77,6 +77,7 @@ export declare class MatCalendar<D> implements AfterContentInit, AfterViewChecke
     yearView: MatYearView<D>;
     constructor(_intl: MatDatepickerIntl, _dateAdapter: DateAdapter<D>, _dateFormats: MatDateFormats, _changeDetectorRef: ChangeDetectorRef, _model: MatDateSelectionModel<DateRange<D> | D | null>, _rangeSelectionStrategy?: MatCalendarRangeSelectionStrategy<D> | undefined);
     _dateSelected(event: MatCalendarUserEvent<D | null>): void;
+    _getDisplaySelection(): DateRange<D> | D | null;
     _goToDateInView(date: D, view: 'month' | 'year' | 'multi-year'): void;
     _monthSelectedInYearView(normalizedMonth: D): void;
     _yearSelectedInMultiYearView(normalizedYear: D): void;
@@ -116,14 +117,14 @@ export declare class MatCalendarBody implements OnChanges, OnDestroy {
     _isActiveCell(rowIndex: number, colIndex: number): boolean;
     _isComparisonBridgeEnd(value: number, rowIndex: number, colIndex: number): boolean;
     _isComparisonBridgeStart(value: number, rowIndex: number, colIndex: number): boolean;
-    _isComparisonEnd(value: number): boolean | 0 | null;
+    _isComparisonEnd(value: number): boolean;
     _isComparisonStart(value: number): boolean;
-    _isInComparisonRange(value: number): boolean | 0 | null;
+    _isInComparisonRange(value: number): boolean;
     _isInPreview(value: number): boolean;
     _isInRange(value: number): boolean;
-    _isPreviewEnd(value: number): boolean | 0 | null;
-    _isPreviewStart(value: number): boolean | 0 | null;
-    _isRangeEnd(value: number): boolean | 0;
+    _isPreviewEnd(value: number): boolean;
+    _isPreviewStart(value: number): boolean;
+    _isRangeEnd(value: number): boolean;
     _isRangeStart(value: number): boolean;
     _isSelected(cell: MatCalendarCell): boolean;
     ngOnChanges(changes: SimpleChanges): void;
@@ -342,12 +343,15 @@ export declare class MatDateRangePicker<D> extends MatDatepickerBase<MatDateRang
 }
 
 export declare abstract class MatDateSelectionModel<S, D = ExtractDateTypeFromSelection<S>> implements OnDestroy {
+    protected _adapter: DateAdapter<D>;
     readonly selection: S;
     selectionChanged: Observable<DateSelectionModelChange<S>>;
     protected constructor(
-    selection: S);
+    selection: S, _adapter: DateAdapter<D>);
+    protected _isValidDateInstance(date: D): boolean;
     abstract add(date: D | null): void;
     abstract isComplete(): boolean;
+    abstract isValid(): boolean;
     ngOnDestroy(): void;
     updateSelection(value: S, source: unknown): void;
     static ɵdir: i0.ɵɵDirectiveDefWithMeta<MatDateSelectionModel<any, any>, never, never, {}, {}, never>;
@@ -440,17 +444,19 @@ export declare class MatMultiYearView<D> implements AfterContentInit, OnDestroy 
 }
 
 export declare class MatRangeDateSelectionModel<D> extends MatDateSelectionModel<DateRange<D>, D> {
-    constructor();
+    constructor(adapter: DateAdapter<D>);
     add(date: D | null): void;
     isComplete(): boolean;
+    isValid(): boolean;
     static ɵfac: i0.ɵɵFactoryDef<MatRangeDateSelectionModel<any>, never>;
     static ɵprov: i0.ɵɵInjectableDef<MatRangeDateSelectionModel<any>>;
 }
 
 export declare class MatSingleDateSelectionModel<D> extends MatDateSelectionModel<D | null, D> {
-    constructor();
+    constructor(adapter: DateAdapter<D>);
     add(date: D | null): void;
     isComplete(): boolean;
+    isValid(): boolean;
     static ɵfac: i0.ɵɵFactoryDef<MatSingleDateSelectionModel<any>, never>;
     static ɵprov: i0.ɵɵInjectableDef<MatSingleDateSelectionModel<any>>;
 }
