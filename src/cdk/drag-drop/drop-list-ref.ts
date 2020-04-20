@@ -310,7 +310,7 @@ export class DropListRef<T = any> {
       activeDraggables.splice(newIndex, 0, item);
     } else {
       const element = coerceElement(this.element);
-      if (this._isEnteringFromStart(pointerX, pointerY)) {
+      if (activeDraggables.length && this._isEnteringFromStart(pointerX, pointerY)) {
         element.insertBefore(placeholder, activeDraggables[0].getRootElement());
         activeDraggables.unshift(item);
       } else {
@@ -712,9 +712,9 @@ export class DropListRef<T = any> {
     const firstItemPosition = this._itemPositions[0];
     const isHorizontal = this._orientation === 'horizontal';
 
-    return firstItemPosition && (isHorizontal ?
+    return isHorizontal ?
       pointerX <= firstItemPosition.clientRect.left :
-      pointerY <= firstItemPosition.clientRect.top);
+      pointerY <= firstItemPosition.clientRect.top;
   }
 
   /**
