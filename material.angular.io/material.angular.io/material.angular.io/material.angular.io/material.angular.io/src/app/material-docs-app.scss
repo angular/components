@@ -26,6 +26,10 @@ material-docs-app > guide-viewer {
   overflow-y: auto;
 }
 
+#main-content {
+  outline: none;
+}
+
 @media (max-width: 720px) {
   material-docs-app {
     top: 92px;
