@@ -12,14 +12,23 @@ import {MatSlideToggleModule} from '@angular/material-experimental/mdc-slide-tog
 import {MatSliderModule} from '@angular/material-experimental/mdc-slider';
 import {MatTabsModule} from '@angular/material-experimental/mdc-tabs';
 import {MatTableModule} from '@angular/material-experimental/mdc-table';
+import {MatDialog, MatDialogModule} from '@angular/material-experimental/mdc-dialog';
 import {MatIconModule} from '@angular/material/icon';
 import {MatSnackBarModule, MatSnackBar} from '@angular/material-experimental/mdc-snack-bar';
+
+@Component({
+  template: `<button>Do the thing</button>`
+})
+export class TestEntryComponent {}
 
 @Component({
   selector: 'kitchen-sink-mdc',
   templateUrl: './kitchen-sink-mdc.html',
 })
 export class KitchenSinkMdc {
+  constructor(dialog: MatDialog) {
+    dialog.open(TestEntryComponent);
+  }
 }
 
 @NgModule({
@@ -28,6 +37,7 @@ export class KitchenSinkMdc {
     MatCardModule,
     MatCheckboxModule,
     MatChipsModule,
+    MatDialogModule,
     MatFormFieldModule,
     MatIconModule,
     MatInputModule,
@@ -40,8 +50,9 @@ export class KitchenSinkMdc {
     MatProgressBarModule,
     MatSnackBarModule,
   ],
-  declarations: [KitchenSinkMdc],
-  exports: [KitchenSinkMdc],
+  declarations: [KitchenSinkMdc, TestEntryComponent],
+  exports: [KitchenSinkMdc, TestEntryComponent],
+  entryComponents: [TestEntryComponent],
   providers: [{
     // If an error is thrown asynchronously during server-side rendering it'll get logged to stderr,
     // but it won't cause the build to fail. We still want to catch these errors so we provide an
