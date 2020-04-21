@@ -40,6 +40,13 @@
   display: none;
 }
 
+.skip-link-wrapper {
+  position: absolute;
+  top: 10px;
+  left: 44%;
+  border-radius: 5px;
+}
+
 /**
   * Rules for when the device is detected to be a small screen.
   * Moves content two rows instead of one.

@@ -5,8 +5,10 @@
 <div class="docs-guide-wrapper">
   <div class="docs-guide-toc-and-content">
     <doc-viewer class="docs-guide-content"
-      (contentRendered)="toc.addHeaders('Guide Content', $event); toc.updateScrollPosition()"
-      [documentUrl]="guide?.document"></doc-viewer>
+                (contentRendered)="toc.addHeaders('Guide Content', $event); toc.updateScrollPosition()"
+                [documentUrl]="guide?.document"
+                focusOnNavigation
+                id="main-content" aria-label="Guide content"></doc-viewer>
     <table-of-contents #toc container="guide-viewer"></table-of-contents>
   </div>
 </div>

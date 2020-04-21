@@ -11,10 +11,8 @@ import {GaService} from './shared/ga/ga';
   encapsulation: ViewEncapsulation.None,
 })
 export class MaterialDocsApp {
-
   constructor(router: Router, ga: GaService) {
     let previousRoute = router.routerState.snapshot.url;
-
     router.events
       .pipe(filter((event: Event) => event instanceof NavigationEnd))
       .subscribe((data: Event) => {
@@ -24,7 +22,6 @@ export class MaterialDocsApp {
         if (!isNavigationWithinComponentView(previousRoute, urlAfterRedirects)) {
           resetScrollPosition();
         }
-
         previousRoute = urlAfterRedirects;
         ga.locationChanged(urlAfterRedirects);
       });

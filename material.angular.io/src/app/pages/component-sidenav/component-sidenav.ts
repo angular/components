@@ -39,6 +39,7 @@ import {StackBlitzButtonModule} from '../../shared/stack-blitz';
 import {SvgViewerModule} from '../../shared/svg-viewer/svg-viewer';
 import {MatDrawerToggleResult} from '@angular/material/sidenav/drawer';
 import {MatListModule} from '@angular/material/list';
+import {NavigationFocusModule} from '../../shared/navigation-focus/navigation-focus';
 
 // These constants are used by the ComponentSidenav for orchestrating the MatSidenav in a responsive
 // way. This includes hiding the sidenav, defaulting it to open, changing the mode from over to
@@ -210,7 +211,8 @@ const routes: Routes = [ {
     MatSidenavModule,
     StackBlitzButtonModule,
     SvgViewerModule,
-    RouterModule.forChild(routes)
+    RouterModule.forChild(routes),
+    NavigationFocusModule
   ],
   exports: [ComponentSidenav],
   declarations: [ComponentSidenav, ComponentNav],

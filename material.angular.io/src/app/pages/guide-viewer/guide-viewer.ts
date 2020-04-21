@@ -6,6 +6,7 @@ import {DocViewerModule} from '../../shared/doc-viewer/doc-viewer-module';
 import {TableOfContentsModule} from '../../shared/table-of-contents/table-of-contents.module';
 import {ComponentPageTitle} from '../page-title/page-title';
 import {ReactiveFormsModule} from '@angular/forms';
+import {NavigationFocusModule} from '../../shared/navigation-focus/navigation-focus';
 
 @Component({
   selector: 'guide-viewer',
@@ -46,7 +47,7 @@ const routes: Routes = [ {path : '', component : GuideViewer} ];
 @NgModule({
   imports: [
     DocViewerModule, FooterModule, TableOfContentsModule, ReactiveFormsModule,
-    RouterModule.forChild(routes),
+    RouterModule.forChild(routes), NavigationFocusModule,
   ],
   exports: [GuideViewer],
   declarations: [GuideViewer],

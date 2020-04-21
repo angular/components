@@ -1,5 +1,5 @@
 <ng-container *ngIf="componentViewer.componentDocItem | async; let docItem">
-  <h2 class="cdk-visually-hidden" tabindex="-1" #initialFocusTarget>
+  <h2 class="cdk-visually-hidden" tabindex="-1">
     Overview for {{docItem?.id}}
   </h2>
   <doc-viewer [documentUrl]="getOverviewDocumentUrl(docItem!)"
