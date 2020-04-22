@@ -261,16 +261,19 @@ These focus indicators render as highly visible outlines around elements.
 Strong focus indicators are off by default. To turn them on, include these mixins:
 
 ```scss
-@import '@angular/material/core/focus-indicator/focus-indicator'
+@import '@angular/material/core/focus-indicator/focus-indicator';
 
 // Including this mixin will enable strong focus indicators for your app.
 // This mixin should only be included once in your app.
 @include mat-strong-focus-indicators();
 
+// Choose a color for the focus indicators.
+$color: mat-color(mat-palette($mat-deep-purple));
+
 // Including this mixin will theme the focus indicators.
 // This mixin can be included multiple times throughout your app
 // to change the focus indicator's color.
-@include mat-strong-focus-indicators-theme($theme-or-color);
+@include mat-strong-focus-indicators-theme($color);
 ```
 
 You can also use the class `.mat-focus-indicator` to add focus indicators to your own components.
