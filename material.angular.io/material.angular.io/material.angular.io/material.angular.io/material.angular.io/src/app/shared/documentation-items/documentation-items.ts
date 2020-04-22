@@ -187,7 +187,7 @@ const DOCS: {[key: string]: DocCategory[]} = {
           examples: [
             'menu-overview',
             'menu-icons',
-            'nested-menu'
+            'menu-nested'
           ],
           additionalApiDocs: [{name: 'Testing', path: 'material-menu-testing.html'}],
         },
