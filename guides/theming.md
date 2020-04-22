@@ -253,11 +253,12 @@ For more details about theming your own components,
 see [theming-your-components.md](./theming-your-components.md).
 
 ### Showing strong focus indicators
-Angular Material has built-in support for showing **strong focus indicators** on all components. Focus indicators are visual markers that show users which element is focused. Angular Material's strong focus indicators render as highly visible outlines around elements.
+Angular Material has built-in support for showing **strong focus indicators** on all components.
+These focus indicators render as highly visible outlines around elements.
 
 <!-- example(focus-indicators-overview) -->
 
-Strong focus indicators are off by default. To turn them on, you must include two mixins:
+Strong focus indicators are off by default. To turn them on, include these mixins:
 
 ```scss
 @import '@angular/material/core/focus-indicator/focus-indicator'
@@ -272,6 +273,9 @@ Strong focus indicators are off by default. To turn them on, you must include tw
 @include mat-strong-focus-indicators-theme($theme-or-color);
 ```
 
-The mixin `mat-strong-focus-indicators-theme` accepts either a theme or a color.
-If a theme is given, focus indicators will be the primary color of the theme. If
-a color is given, focus indicators will simply be that color.
+You can also use the class `.mat-focus-indicator` to add focus indicators to your own components.
+
+```html
+<!-- Adding a focus indicator to a custom, non-Material button. -->
+<div role="button" tabindex="0" class="mat-focus-indicator">My custom button</div>
+```

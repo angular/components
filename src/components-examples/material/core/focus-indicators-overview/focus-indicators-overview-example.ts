@@ -1,7 +1,7 @@
 import {Component} from '@angular/core';
 
 /**
- * @title Focus indicator mixins.
+ * @title Focus indicators overview.
  */
 @Component({
   selector: 'focus-indicators-overview-example',

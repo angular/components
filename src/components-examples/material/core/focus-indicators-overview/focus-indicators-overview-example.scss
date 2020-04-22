@@ -4,10 +4,12 @@
 // This mixin should only be included once in your app.
 @include mat-strong-focus-indicators();
 
-// Choose a color for the focus indicators.
-$color: mat-color(mat-palette($mat-deep-purple));
+// Define your app theme.
+$candy-app-primary: mat-palette($mat-indigo);
+$candy-app-accent: mat-palette($mat-pink, A200, A100, A400);
+$candy-app-theme: mat-light-theme($candy-app-primary, $candy-app-accent);
 
 // Including this mixin will theme the focus indicators.
 // This mixin can be included multiple times throughout your app
 // to change the focus indicator's color.
-@include mat-strong-focus-indicators-theme($color);
+@include mat-strong-focus-indicators-theme($candy-app-theme);
