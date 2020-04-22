@@ -50,17 +50,18 @@ export async function loadAndValidatePullRequest(
 
   if (!labels.some(name => matchesPattern(name, config.mergeReadyLabel))) {
     return PullRequestFailure.notMergeReady();
-  } else if (!labels.some(name => matchesPattern(name, config.claSignedLabel))) {
+  }
+  if (!labels.some(name => matchesPattern(name, config.claSignedLabel))) {
     return PullRequestFailure.claUnsigned();
   }
-
-  const {data: {state}} =
-      await git.api.repos.getCombinedStatusForRef({...git.repoParams, ref: prData.head.sha});
 
   const targetLabel = getTargetLabelFromPullRequest(config, labels);
   if (targetLabel === null) {
     return PullRequestFailure.noTargetLabel();
   }
+
+  const {data: {state}} =
+      await git.api.repos.getCombinedStatusForRef({...git.repoParams, ref: prData.head.sha});
 
   if (state === 'failure' && !ignoreNonFatalFailures) {
     return PullRequestFailure.failingCiJobs();
