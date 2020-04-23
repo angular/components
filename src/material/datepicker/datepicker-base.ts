@@ -441,7 +441,14 @@ export abstract class MatDatepickerBase<C extends MatDatepickerControl<D>, S,
       maxHeight: '',
       position: {},
       autoFocus: true,
-      restoreFocus: true
+
+      // `MatDialog` has focus restoration built in, however we want to disable it since the
+      // datepicker also has focus restoration for dropdown mode. We want to do this, in order
+      // to ensure that the timing is consistent between dropdown and dialog modes since `MatDialog`
+      // restores focus when the animation is finished, but the datepicker does it immediately.
+      // Furthermore, this avoids any conflicts where the datepicker consumer might move focus
+      // inside the `closed` event which is dispatched immediately.
+      restoreFocus: false
     });
 
     this._dialogRef.afterClosed().subscribe(() => this.close());
