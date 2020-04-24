@@ -117,7 +117,7 @@ export class MapInfoWindow implements OnInit, OnDestroy {
 
     // If no info window has been created on the server, we do not try closing it.
     // On the server, an info window cannot be created and this would cause errors.
-    if (this.infoWindow) {
+    if (this._infoWindow) {
       this.close();
     }
   }
