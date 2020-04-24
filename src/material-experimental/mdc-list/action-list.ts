@@ -23,4 +23,6 @@ import {MatListBase} from './list-base';
     {provide: MatListBase, useExisting: MatActionList},
   ]
 })
-export class MatActionList extends MatListBase {}
+export class MatActionList extends MatListBase {
+  _hasRipple = true;
+}

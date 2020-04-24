@@ -21,7 +21,7 @@ import {Subscription} from 'rxjs';
 import {startWith} from 'rxjs/operators';
 
 @Directive()
-export class MatListBase {
+export abstract class MatListBase {
   // @HostBinding is used in the class as it is expected to be extended. Since @Component decorator
   // metadata is not inherited by child classes, instead the host binding data is defined in a way
   // that can be inherited.
