@@ -119,12 +119,13 @@ For example:
 Angular Material's color palettes include specially-keyed
 hues that can be used in your custom components.
 
-``` 
-default: the base color
-lighter: a lightened version of the hue
-darker: a darker version of the hue
-text: the default text color for the palette
-default-contrast: the default contrast color
-lighter-contrast: a lighter contrast color; in a dark theme, usually white
-darker-contrast: a darker contrast color; in a light theme, usually black
-```
+| Key | Description |
+| :--- | :--- |
+|default | the base color |
+|lighter | a lightened version of the hue |
+|darker | a darker version of the hue |
+|text | the default text color for the palette |
+|default-contrast | the default contrast color |
+|lighter-contrast | a lighter contrast color; in a dark theme, usually white |
+|darker-contrast | a darker contrast color; in a light theme, usually black |
+
