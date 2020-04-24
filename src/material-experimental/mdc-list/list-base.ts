@@ -6,20 +6,43 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {AfterContentInit, Directive, ElementRef, NgZone, OnDestroy, QueryList} from '@angular/core';
-import {setLines} from '@angular/material/core';
+import {Platform} from '@angular/cdk/platform';
+import {
+  AfterContentInit,
+ Directive, ElementRef,
+  Injectable,
+  NgZone,
+  OnDestroy,
+  QueryList
+} from '@angular/core';
+import {RippleConfig, RippleRenderer, RippleTarget, setLines} from '@angular/material/core';
 import {Subscription} from 'rxjs';
 import {startWith} from 'rxjs/operators';
 
-export class MatListBase {}
+@Injectable()
+export class MatListBase {
+  _hasRipple = false;
+}
 
 @Directive()
-export abstract class MatListItemBase implements AfterContentInit, OnDestroy {
+export abstract class MatListItemBase implements AfterContentInit, OnDestroy, RippleTarget {
   lines: QueryList<ElementRef<Element>>;
+
+  rippleConfig: RippleConfig = {};
+
+  rippleDisabled: boolean;
 
   private _subscriptions = new Subscription();
 
-  constructor(protected _element: ElementRef, protected _ngZone: NgZone) {}
+  private _rippleRenderer: RippleRenderer;
+
+  constructor(protected _element: ElementRef, protected _ngZone: NgZone, listBase: MatListBase,
+              platform: Platform) {
+    this.rippleDisabled = !listBase._hasRipple;
+    this._rippleRenderer =
+        new RippleRenderer(this, this._ngZone, this._element.nativeElement, platform);
+    this._rippleRenderer.setupTriggerEvents(this._element.nativeElement);
+  }
 
   ngAfterContentInit() {
     this._monitorLines();
@@ -44,5 +67,6 @@ export abstract class MatListItemBase implements AfterContentInit, OnDestroy {
 
   ngOnDestroy() {
     this._subscriptions.unsubscribe();
+    this._rippleRenderer._removeTriggerEvents();
   }
 }

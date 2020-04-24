@@ -6,6 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {Platform} from '@angular/cdk/platform';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -61,6 +62,9 @@ export class MatListSubheaderCssMatStyler {}
   styleUrls: ['list.css'],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [
+    {provide: MatListBase, useExisting: MatList},
+  ]
 })
 export class MatList extends MatListBase {}
 
@@ -78,7 +82,7 @@ export class MatListItem extends MatListItemBase {
   @ContentChildren(MatLine, {read: ElementRef, descendants: true}) lines:
       QueryList<ElementRef<Element>>;
 
-  constructor(element: ElementRef, ngZone: NgZone) {
-    super(element, ngZone);
+  constructor(element: ElementRef, ngZone: NgZone, listBase: MatListBase, platform: Platform) {
+    super(element, ngZone, listBase, platform);
   }
 }
