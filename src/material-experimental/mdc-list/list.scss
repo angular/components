@@ -95,3 +95,15 @@
     }
   }
 }
+
+// MDC's state styles are included with their ripple which we don't use. Instead we add the focus
+// and hover styles ourselves using this pseudo-element
+.mat-mdc-list-item-interactive::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  opacity: 0;
+}

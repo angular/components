@@ -9,8 +9,9 @@
 import {Platform} from '@angular/cdk/platform';
 import {
   AfterContentInit,
- Directive, ElementRef,
-  Injectable,
+  Directive,
+  ElementRef,
+  HostBinding,
   NgZone,
   OnDestroy,
   QueryList
@@ -19,9 +20,10 @@ import {RippleConfig, RippleRenderer, RippleTarget, setLines} from '@angular/mat
 import {Subscription} from 'rxjs';
 import {startWith} from 'rxjs/operators';
 
-@Injectable()
+@Directive()
 export class MatListBase {
-  _hasRipple = false;
+  @HostBinding('class.mdc-list--non-interactive')
+  _isNonInteractive: boolean;
 }
 
 @Directive()
@@ -38,7 +40,10 @@ export abstract class MatListItemBase implements AfterContentInit, OnDestroy, Ri
 
   constructor(protected _element: ElementRef, protected _ngZone: NgZone, listBase: MatListBase,
               platform: Platform) {
-    this.rippleDisabled = !listBase._hasRipple;
+    this.rippleDisabled = listBase._isNonInteractive;
+    if (!listBase._isNonInteractive) {
+      this._element.nativeElement.classList.add('mat-mdc-list-item-interactive');
+    }
     this._rippleRenderer =
         new RippleRenderer(this, this._ngZone, this._element.nativeElement, platform);
     this._rippleRenderer.setupTriggerEvents(this._element.nativeElement);

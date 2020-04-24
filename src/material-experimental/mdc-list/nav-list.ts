@@ -33,6 +33,4 @@ import {MatListBase} from './list-base';
     {provide: MatList, useExisting: MatNavList},
   ]
 })
-export class MatNavList extends MatListBase {
-  _hasRipple = true;
-}
+export class MatNavList extends MatListBase {}
