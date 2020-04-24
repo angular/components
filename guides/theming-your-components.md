@@ -51,13 +51,7 @@ Define all styles unaffected by the theme in a separate file referenced directly
 
 #### 3. Include the theme mixin in your application
 Use the Sass `@include` keyword to include a component's theme mixin wherever you're already
-including Angular Material's built-in theme mixins.  You will need to import directly to the file
-where your theme palette definitions have been made (typically styles.scss).  If you are creating 
-many custom component themes, you may wish to place them all in a single file in order to `@include`
-a single secondary theme, just as the Angular Material Theme includes styles for many components.
-This can avoid the additional complexity of creating a cascading chain of `map-get()` and `mat-color`
-commands to import your theme down a tree of imports, or having to `@include` multiple custom
-component themes for each alternate color theme defined for your application.
+including Angular Material's built-in theme mixins.  
 
 ```scss
 // Import library functions for theme creation.
@@ -119,12 +113,13 @@ For example:
 Angular Material's color palettes include specially-keyed
 hues that can be used in your custom components.
 
-``` 
-default: the base color
-lighter: a lightened version of the hue
-darker: a darker version of the hue
-text: the default text color for the palette
-default-contrast: the default contrast color
-lighter-contrast: a lighter contrast color; in a dark theme, usually white
-darker-contrast: a darker contrast color; in a light theme, usually black
-```
+| Key | Description |
+| :--- | :--- |
+| default | the base color |
+| lighter | a lightened version of the hue |
+| darker | a darker version of the hue |
+| text | the default text color for the palette |
+| default-contrast | the default contrast color |
+| lighter-contrast | a lighter contrast color; in a dark theme, usually white |
+| darker-contrast | a darker contrast color; in a light theme, usually black |
+
