@@ -1,8 +1,14 @@
 import {Injectable} from '@angular/core';
+import {EXAMPLE_COMPONENTS} from '@angular/components-examples';
 
 export interface AdditionalApiDoc {
   name: string;
   path: string;
+}
+
+export interface ExampleSpecs {
+  prefix: string;
+  exclude?: string[];
 }
 
 export interface DocItem {
@@ -14,6 +20,8 @@ export interface DocItem {
   summary?: string;
   /** Package which contains the doc item. */
   packageName?: string;
+  /** Specifications for which examples to be load. */
+  exampleSpecs: ExampleSpecs;
   /** List of examples. */
   examples?: string[];
   /** Optional id of the API document file. */
@@ -36,6 +44,7 @@ export interface DocSection {
   summary: string;
 }
 
+const exampleNames = Object.keys(EXAMPLE_COMPONENTS);
 const CDK = 'cdk';
 const COMPONENTS = 'components';
 export const SECTIONS: {[key: string]: DocSection} = {
@@ -55,7 +64,7 @@ export const SECTIONS: {[key: string]: DocSection} = {
 };
 
 
-const DOCS: {[key: string]: DocCategory[]} = {
+const DOCS: { [key: string]: DocCategory[] } = {
   [COMPONENTS]: [
     {
       id: 'forms',
@@ -66,111 +75,78 @@ const DOCS: {[key: string]: DocCategory[]} = {
           id: 'autocomplete',
           name: 'Autocomplete',
           summary: 'Suggests relevant options as the user types.',
-          examples: [
-            'autocomplete-overview',
-            'autocomplete-simple',
-            'autocomplete-display',
-            'autocomplete-filter',
-            'autocomplete-optgroup',
-            'autocomplete-auto-active-first-option',
-          ],
+          exampleSpecs: {
+            prefix: 'autocomplete-',
+          },
           additionalApiDocs: [{name: 'Testing', path: 'material-autocomplete-testing.html'}],
         },
         {
           id: 'checkbox',
           name: 'Checkbox',
           summary: 'Captures boolean input with an optional indeterminate mode.',
-          examples: ['checkbox-configurable'],
+          exampleSpecs: {
+            prefix: 'checkbox-',
+          },
           additionalApiDocs: [{name: 'Testing', path: 'material-checkbox-testing.html'}],
         },
         {
           id: 'datepicker',
           name: 'Datepicker',
           summary: 'Captures dates, agnostic about their internal representation.',
-          examples: [
-            'datepicker-overview',
-            'datepicker-start-view',
-            'datepicker-value',
-            'datepicker-min-max',
-            'datepicker-filter',
-            'datepicker-events',
-            'datepicker-disabled',
-            'datepicker-touch',
-            'datepicker-api',
-            'datepicker-locale',
-            'datepicker-moment',
-            'datepicker-formats',
-
-          ]
+          exampleSpecs: {
+            prefix: 'datepicker-',
+          },
         },
         {
           id: 'form-field',
           name: 'Form field',
           summary: 'Wraps input fields so they are displayed consistently.',
-          examples: [
-            'form-field-overview',
-            'form-field-label',
-            'form-field-appearance',
-            'form-field-hint',
-            'form-field-error',
-            'form-field-prefix-suffix',
-            'form-field-theming',
-            'form-field-custom-control',
-          ]
+          exampleSpecs: {
+            prefix: 'form-field-',
+          },
         },
         {
           id: 'input',
           name: 'Input',
           summary: 'Enables native inputs to be used within a Form field.',
-          examples: [
-            'input-overview',
-            'input-error-state-matcher',
-            'text-field-autosize-textarea',
-            'input-clearable',
-            'input-errors',
-            'input-form',
-            'input-hint',
-            'input-prefix-suffix',
-          ]
+          exampleSpecs: {
+            prefix: 'input-',
+          },
         },
         {
           id: 'radio',
           name: 'Radio button',
           summary: 'Allows the user to select one option from a group.',
-          examples: ['radio-ng-model'],
+          exampleSpecs: {
+            prefix: 'radio-',
+
+          },
           additionalApiDocs: [{name: 'Testing', path: 'material-radio-testing.html'}],
         },
         {
           id: 'select',
           name: 'Select',
           summary: 'Allows the user to select one or more options using a dropdown.',
-          examples: [
-            'select-overview',
-            'select-value-binding',
-            'select-form',
-            'select-hint-error',
-            'select-disabled',
-            'select-reset',
-            'select-optgroup',
-            'select-multiple',
-            'select-custom-trigger',
-            'select-no-ripple',
-            'select-panel-class',
-            'select-error-state-matcher',
-          ]
+          exampleSpecs: {
+            prefix: 'select-',
+          },
         },
         {
           id: 'slider',
           name: 'Slider',
           summary: 'Allows the user to input a value by dragging along a slider.',
-          examples: ['slider-configurable'],
+          exampleSpecs: {
+            prefix: 'slider-',
+          },
           additionalApiDocs: [{name: 'Testing', path: 'material-slider-testing.html'}],
         },
         {
           id: 'slide-toggle',
           name: 'Slide toggle',
           summary: 'Captures boolean values as a clickable and draggable switch.',
-          examples: ['slide-toggle-configurable'],
+          exampleSpecs: {
+            prefix: 'side-toggle-',
+          },
           additionalApiDocs: [{name: 'Testing', path: 'material-slide-toggle-testing.html'}],
         },
       ]
@@ -184,35 +160,27 @@ const DOCS: {[key: string]: DocCategory[]} = {
           id: 'menu',
           name: 'Menu',
           summary: 'A floating panel of nestable options.',
-          examples: [
-            'menu-overview',
-            'menu-icons',
-            'menu-nested'
-          ],
+          exampleSpecs: {
+            prefix: 'menu-',
+          },
           additionalApiDocs: [{name: 'Testing', path: 'material-menu-testing.html'}],
         },
         {
           id: 'sidenav',
           name: 'Sidenav',
           summary: 'A container for content that is fixed to one side of the screen.',
-          examples: [
-            'sidenav-overview',
-            'sidenav-drawer-overview',
-            'sidenav-position',
-            'sidenav-open-close',
-            'sidenav-mode',
-            'sidenav-disable-close',
-            'sidenav-autosize',
-            'sidenav-fixed',
-            'sidenav-responsive'
-          ],
+          exampleSpecs: {
+            prefix: 'sidenav-',
+          },
           additionalApiDocs: [{name: 'Testing', path: 'material-sidenav-testing.html'}],
         },
         {
           id: 'toolbar',
           name: 'Toolbar',
           summary: 'A container for top-level titles and controls.',
-          examples: ['toolbar-multirow']
+          exampleSpecs: {
+            prefix: 'toolbar-',
+          },
         },
       ]
     },
@@ -225,67 +193,67 @@ const DOCS: {[key: string]: DocCategory[]} = {
           id: 'card',
           name: 'Card',
           summary: 'A styled container for pieces of itemized content.',
-          examples: ['card-fancy']
+          exampleSpecs: {
+            prefix: 'card-',
+          },
         },
         {
           id: 'divider',
           name: 'Divider',
           summary: 'A vertical or horizontal visual divider.',
-          examples: ['divider-overview']
+          exampleSpecs: {
+            prefix: 'divider-',
+          },
         },
         {
           id: 'expansion',
           name: 'Expansion Panel',
           summary: 'A container which can be expanded to reveal more content.',
-          examples: ['expansion-overview', 'expansion-steps']
+          exampleSpecs: {
+            prefix: 'expansion-',
+          },
         },
         {
           id: 'grid-list',
           name: 'Grid list',
           summary: 'A flexible structure for presenting content items in a grid.',
-          examples: ['grid-list-dynamic']
+          exampleSpecs: {
+            prefix: 'grid-list-',
+          },
         },
         {
           id: 'list',
           name: 'List',
           summary: 'Presents conventional lists of items.',
-          examples: ['list-sections']
+          exampleSpecs: {
+            prefix: 'list-',
+          },
         },
         {
           id: 'stepper',
           name: 'Stepper',
           summary: 'Presents content as steps through which to progress.',
-          examples: ['stepper-overview']
+          exampleSpecs: {
+            prefix: 'stepper-',
+          },
         },
         {
           id: 'tabs',
           name: 'Tabs',
           summary: 'Only presents one view at a time from a provided set of views.',
-          examples: [
-            'tab-group-basic',
-            'tab-group-custom-label',
-            'tab-group-dynamic-height',
-            'tab-group-dynamic',
-            'tab-group-header-below',
-            'tab-group-lazy-loaded',
-            'tab-group-stretched',
-            'tab-group-theme',
-            'tab-group-async',
-            'tab-nav-bar-basic',
-          ],
+          exampleSpecs: {
+            prefix: 'tabs-',
+          },
           additionalApiDocs: [{name: 'Testing', path: 'material-tabs-testing.html'}],
         },
         {
           id: 'tree',
           name: 'Tree',
           summary: 'Presents hierarchical content as an expandable tree.',
-          examples: [
-          'tree-dynamic',
-          'tree-flat-overview',
-          'tree-checklist',
-          'tree-nested-overview',
-          'tree-loadmore',
-        ]},
+          exampleSpecs: {
+            prefix: 'tree-',
+          },
+        },
       ]
     },
     {
@@ -297,50 +265,59 @@ const DOCS: {[key: string]: DocCategory[]} = {
           id: 'button',
           name: 'Button',
           summary: 'An interactive button with a range of presentation options.',
-          examples: ['button-types'],
+          exampleSpecs: {
+            prefix: 'button-',
+          },
           additionalApiDocs: [{name: 'Testing', path: 'material-button-testing.html'}],
         },
         {
           id: 'button-toggle',
           name: 'Button toggle',
           summary: 'A groupable on/off toggle for enabling and disabling options.',
-          examples: ['button-toggle-exclusive']
+          exampleSpecs: {
+            prefix: 'button-toggle-',
+          },
         },
         {
           id: 'badge',
           name: 'Badge',
           summary: 'A small value indicator that can be overlaid on another object.',
-          examples: ['badge-overview']
+          exampleSpecs: {
+            prefix: 'badge-',
+          },
         },
         {
           id: 'chips',
           name: 'Chips',
           summary: 'Presents a list of items as a set of small, tactile entities.',
-          examples: [
-            'chips-overview',
-            'chips-autocomplete',
-            'chips-input',
-            'chips-stacked',
-          ]
+          exampleSpecs: {
+            prefix: 'chips-',
+          },
         },
         {
           id: 'icon',
           name: 'Icon',
           summary: 'Renders a specified icon.',
-          examples: ['icon-svg']
+          exampleSpecs: {
+            prefix: 'icon-',
+          },
         },
         {
           id: 'progress-spinner',
           name: 'Progress spinner',
           summary: 'A circular progress indicator.',
-          examples: ['progress-spinner-configurable'],
+          exampleSpecs: {
+            prefix: 'progress-spinner-',
+          },
           additionalApiDocs: [{name: 'Testing', path: 'material-progress-spinner-testing.html'}],
         },
         {
           id: 'progress-bar',
           name: 'Progress bar',
           summary: 'A linear progress indicator.',
-          examples: ['progress-bar-configurable'],
+          exampleSpecs: {
+            prefix: 'progress-bar-',
+          },
           additionalApiDocs: [{name: 'Testing', path: 'material-progress-bar-testing.html'}],
         },
         {
@@ -348,7 +325,9 @@ const DOCS: {[key: string]: DocCategory[]} = {
           name: 'Ripples',
           overviewPath: 'material/core/ripple/ripple.html',
           summary: 'Directive for adding Material Design ripple effects',
-          examples: ['ripple-overview']
+          exampleSpecs: {
+            prefix: 'ripple-',
+          },
         }
       ]
     },
@@ -361,37 +340,35 @@ const DOCS: {[key: string]: DocCategory[]} = {
           id: 'bottom-sheet',
           name: 'Bottom Sheet',
           summary: 'A large interactive panel primarily for mobile devices.',
-          examples: ['bottom-sheet-overview']
+          exampleSpecs: {
+            prefix: 'bottom-sheet-',
+          },
         },
         {
           id: 'dialog',
           name: 'Dialog',
           summary: 'A configurable modal that displays dynamic content.',
-          examples: ['dialog-overview'],
+          exampleSpecs: {
+            prefix: 'dialog-',
+          },
           additionalApiDocs: [{name: 'Testing', path: 'material-dialog-testing.html'}],
         },
         {
           id: 'snack-bar',
           name: 'Snackbar',
           summary: 'Displays short actionable messages as an uninvasive alert.',
-          examples: ['snack-bar-component'],
+          exampleSpecs: {
+            prefix: 'snack-bar-',
+          },
           additionalApiDocs: [{name: 'Testing', path: 'material-snack-bar-testing.html'}],
         },
         {
           id: 'tooltip',
           name: 'Tooltip',
           summary: 'Displays floating content when an object is hovered.',
-          examples: [
-            'tooltip-overview',
-            'tooltip-position',
-            'tooltip-custom-class',
-            'tooltip-delay',
-            'tooltip-disabled',
-            'tooltip-manual',
-            'tooltip-message',
-            'tooltip-modified-defaults',
-            'tooltip-auto-hide',
-          ]
+          exampleSpecs: {
+            prefix: 'tooltip-',
+          },
         },
       ]
     },
@@ -404,42 +381,31 @@ const DOCS: {[key: string]: DocCategory[]} = {
           id: 'paginator',
           name: 'Paginator',
           summary: 'Controls for displaying paged data.',
-          examples: ['paginator-configurable']
+          exampleSpecs: {
+            prefix: 'paginator-',
+          },
         },
         {
           id: 'sort',
           name: 'Sort header',
           summary: 'Allows the user to configure how tabular data is sorted.',
-          examples: ['sort-overview']
+          exampleSpecs: {
+            prefix: 'sort-',
+          },
         },
         {
           id: 'table',
           name: 'Table',
           summary: 'A configurable component for displaying tabular data.',
+          exampleSpecs: {
+            prefix: 'table-',
+          },
           additionalApiDocs: [{name: 'Testing', path: 'material-table-testing.html'}],
-          examples: [
-            'table-basic',
-            'table-basic-flex',
-            'table-dynamic-columns',
-            'table-expandable-rows',
-            'table-filtering',
-            'table-footer-row',
-            'table-http',
-            'table-multiple-header-footer',
-            'table-overview',
-            'table-pagination',
-            'table-row-context',
-            'table-selection',
-            'table-sorting',
-            'table-sticky-columns',
-            'table-sticky-footer',
-            'table-sticky-header',
-            'table-reorderable',
-        ]},
+        },
       ]
     }
   ],
-  [CDK] : [
+  [CDK]: [
     {
       id: 'component-composition',
       name: 'Common Behaviors',
@@ -449,88 +415,90 @@ const DOCS: {[key: string]: DocCategory[]} = {
           id: 'a11y',
           name: 'Accessibility',
           summary: 'Utilities for screen readers, focus and more.',
-          examples: []
+          exampleSpecs: {
+            prefix: 'focus-monitor-',
+          },
         },
+
         {
           id: 'bidi',
           name: 'Bidirectionality',
           summary: 'Utilities to respond to changes in LTR/RTL layout direction.',
-          examples: []
+          exampleSpecs: {
+            prefix: 'cdk-bidi-',
+          },
         },
         {
           id: 'clipboard',
           name: 'Clipboard',
           summary: 'Helpers for working with the system clipboard.',
-          examples: [
-            'cdk-clipboard-overview'
-          ]
+          exampleSpecs: {
+            prefix: 'cdk-clipboard-',
+          },
         },
         {
           id: 'drag-drop',
           name: 'Drag and Drop',
           summary: 'Directives enabling drag-and-drop interactions',
-          examples: [
-            'cdk-drag-drop-overview',
-            'cdk-drag-drop-axis-lock',
-            'cdk-drag-drop-boundary',
-            'cdk-drag-drop-connected-sorting',
-            'cdk-drag-drop-connected-sorting-group',
-            'cdk-drag-drop-custom-placeholder',
-            'cdk-drag-drop-custom-preview',
-            'cdk-drag-drop-delay',
-            'cdk-drag-drop-disabled',
-            'cdk-drag-drop-disabled-sorting',
-            'cdk-drag-drop-enter-predicate',
-            'cdk-drag-drop-free-drag-position',
-            'cdk-drag-drop-handle',
-            'cdk-drag-drop-horizontal-sorting',
-            'cdk-drag-drop-root-element',
-            'cdk-drag-drop-sorting'
-          ],
+          exampleSpecs: {
+            prefix: 'cdk-drag-drop-',
+          },
         },
         {
           id: 'layout',
           name: 'Layout',
           summary: 'Utilities to respond to changes in viewport size.',
-          examples: []
+          exampleSpecs: {
+            prefix: 'cdk-layout-',
+          },
         },
         {
           id: 'observers',
           name: 'Observers',
           summary: 'Utilities to respond to changes to element properties.',
-          examples: []
+          exampleSpecs: {
+            prefix: 'cdk-observers-',
+          },
         },
         {
           id: 'overlay',
           name: 'Overlay',
           summary: 'Utilities for dynamically displaying floating content.',
-          examples: []
+          exampleSpecs: {
+            prefix: 'cdk-overlay-',
+          },
         },
         {
           id: 'platform',
           name: 'Platform',
           summary: 'Provides information about the user\'s platform.',
-          examples: [
-            'cdk-platform-overview',
-          ]
+          exampleSpecs: {
+            prefix: 'cdk-platform-',
+          },
         },
         {
           id: 'portal',
           name: 'Portal',
           summary: 'Utilities for dynamically displaying content into a target.',
-          examples: []
+          exampleSpecs: {
+            prefix: 'cdk-portal-',
+          },
         },
         {
           id: 'scrolling',
           name: 'Scrolling',
           summary: 'Directives for managing scroll events.',
-          examples: []
+          exampleSpecs: {
+            prefix: 'cdk-virtual-scroll-',
+          },
         },
         {
           id: 'text-field',
           name: 'Text field',
           summary: 'Utilities for working with text input fields.',
-          examples: []
+          exampleSpecs: {
+            prefix: 'text-field-',
+          },
         },
       ]
     },
@@ -543,26 +511,25 @@ const DOCS: {[key: string]: DocCategory[]} = {
           id: 'stepper',
           name: 'Stepper',
           summary: 'Presents content as steps through which to progress.',
-          examples: [
-            'stepper-vertical',
-            'stepper-editable',
-            'stepper-optional',
-            'stepper-errors',
-            'stepper-label-position-bottom',
-            'stepper-states'
-          ]
+          exampleSpecs: {
+            prefix: 'cdk-custom-stepper-',
+          },
         },
         {
           id: 'table',
           name: 'Table',
           summary: 'A configurable component for displaying tabular data.',
-          examples: []
+          exampleSpecs: {
+            prefix: 'cdk-table-',
+          },
         },
         {
           id: 'tree',
           name: 'Tree',
           summary: 'Presents hierarchical content as an expandable tree.',
-          examples: []
+          exampleSpecs: {
+            prefix: 'cdk-tree-',
+          },
         },
       ]
     },
@@ -575,7 +542,9 @@ const DOCS: {[key: string]: DocCategory[]} = {
           id: 'test-harnesses',
           name: 'Component Harnesses',
           summary: 'Foundation for component test harnesses.',
-          examples: [],
+          exampleSpecs: {
+            prefix: 'cdk-test-harnesses-',
+          },
           overviewPath: 'cdk/testing/test-harnesses.html',
           apiDocId: 'cdk-testing',
           additionalApiDocs: [
@@ -601,12 +570,20 @@ const DOCS: {[key: string]: DocCategory[]} = {
 for (const category of DOCS[COMPONENTS]) {
   for (const doc of category.items) {
     doc.packageName = 'material';
+    doc.examples =
+      exampleNames
+        .filter(key => key.match(RegExp(`^${doc.exampleSpecs.prefix}`)) &&
+          !doc.exampleSpecs.exclude?.includes(key));
   }
 }
 
 for (const category of DOCS[CDK]) {
   for (const doc of category.items) {
     doc.packageName = 'cdk';
+    doc.examples =
+      exampleNames
+        .filter(key => key.match(RegExp(`^${doc.exampleSpecs.prefix}`)) &&
+          !doc.exampleSpecs.exclude?.includes(key));
   }
 }
 
