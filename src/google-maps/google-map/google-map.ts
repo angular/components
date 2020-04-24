@@ -33,20 +33,10 @@ interface GoogleMapsWindow extends Window {
   google?: typeof google;
 }
 
-// TODO(mbehrlich): Update this to use original map after updating DefinitelyTyped
-/**
- * Extends the Google Map interface due to the Definitely Typed implementation
- * missing "getClickableIcons".
- */
-export interface UpdatedGoogleMap extends google.maps.Map {
-  getClickableIcons: () => boolean;
-}
-
 /** default options set to the Googleplex */
 export const DEFAULT_OPTIONS: google.maps.MapOptions = {
   center: {lat: 37.421995, lng: -122.084092},
-  zoom: 17,
-  mapTypeId: undefined
+  zoom: 17
 };
 
 /** Arbitrary default height for the map element */
@@ -75,7 +65,13 @@ export class GoogleMap implements OnChanges, OnInit, OnDestroy {
   private readonly _zoom = new BehaviorSubject<number|undefined>(undefined);
   private readonly _destroy = new Subject<void>();
   private _mapEl: HTMLElement;
-  _googleMap: UpdatedGoogleMap;
+
+  /**
+   * The underlying google.maps.Map object
+   *
+   * See developers.google.com/maps/documentation/javascript/reference/map#Map
+   */
+  googleMap?: google.maps.Map;
 
   /** Whether we're currently rendering inside a browser. */
   _isBrowser: boolean;
@@ -258,8 +254,8 @@ export class GoogleMap implements OnChanges, OnInit, OnDestroy {
 
   ngOnChanges() {
     this._setSize();
-    if (this._googleMap && this.mapTypeId) {
-      this._googleMap.setMapTypeId(this.mapTypeId);
+    if (this.googleMap && this.mapTypeId) {
+      this.googleMap.setMapTypeId(this.mapTypeId);
     }
   }
 
@@ -270,8 +266,8 @@ export class GoogleMap implements OnChanges, OnInit, OnDestroy {
       this._setSize();
       this._googleMapChanges = this._initializeMap(this._combineOptions());
       this._googleMapChanges.subscribe((googleMap: google.maps.Map) => {
-        this._googleMap = googleMap as UpdatedGoogleMap;
-        this._eventManager.setTarget(this._googleMap);
+        this.googleMap = googleMap;
+        this._eventManager.setTarget(this.googleMap);
       });
 
       this._watchForOptionsChanges();
@@ -294,7 +290,7 @@ export class GoogleMap implements OnChanges, OnInit, OnDestroy {
       bounds: google.maps.LatLngBounds|google.maps.LatLngBoundsLiteral,
       padding?: number|google.maps.Padding) {
     this._assertInitialized();
-    this._googleMap.fitBounds(bounds, padding);
+    this.googleMap!.fitBounds(bounds, padding);
   }
 
   /**
@@ -303,7 +299,7 @@ export class GoogleMap implements OnChanges, OnInit, OnDestroy {
    */
   panBy(x: number, y: number) {
     this._assertInitialized();
-    this._googleMap.panBy(x, y);
+    this.googleMap!.panBy(x, y);
   }
 
   /**
@@ -312,7 +308,7 @@ export class GoogleMap implements OnChanges, OnInit, OnDestroy {
    */
   panTo(latLng: google.maps.LatLng|google.maps.LatLngLiteral) {
     this._assertInitialized();
-    this._googleMap.panTo(latLng);
+    this.googleMap!.panTo(latLng);
   }
 
   /**
@@ -323,7 +319,7 @@ export class GoogleMap implements OnChanges, OnInit, OnDestroy {
       latLngBounds: google.maps.LatLngBounds|google.maps.LatLngBoundsLiteral,
       padding?: number|google.maps.Padding) {
     this._assertInitialized();
-    this._googleMap.panToBounds(latLngBounds, padding);
+    this.googleMap!.panToBounds(latLngBounds, padding);
   }
 
   /**
@@ -332,7 +328,7 @@ export class GoogleMap implements OnChanges, OnInit, OnDestroy {
    */
   getBounds(): google.maps.LatLngBounds|null {
     this._assertInitialized();
-    return this._googleMap.getBounds() || null;
+    return this.googleMap!.getBounds() || null;
   }
 
   /**
@@ -341,7 +337,7 @@ export class GoogleMap implements OnChanges, OnInit, OnDestroy {
    */
   getCenter(): google.maps.LatLng {
     this._assertInitialized();
-    return this._googleMap.getCenter();
+    return this.googleMap!.getCenter();
   }
 
   /**
@@ -350,7 +346,7 @@ export class GoogleMap implements OnChanges, OnInit, OnDestroy {
    */
   getClickableIcons(): boolean {
     this._assertInitialized();
-    return this._googleMap.getClickableIcons();
+    return this.googleMap!.getClickableIcons();
   }
 
   /**
@@ -359,7 +355,7 @@ export class GoogleMap implements OnChanges, OnInit, OnDestroy {
    */
   getHeading(): number {
     this._assertInitialized();
-    return this._googleMap.getHeading();
+    return this.googleMap!.getHeading();
   }
 
   /**
@@ -368,7 +364,7 @@ export class GoogleMap implements OnChanges, OnInit, OnDestroy {
    */
   getMapTypeId(): google.maps.MapTypeId|string {
     this._assertInitialized();
-    return this._googleMap.getMapTypeId();
+    return this.googleMap!.getMapTypeId();
   }
 
   /**
@@ -377,7 +373,7 @@ export class GoogleMap implements OnChanges, OnInit, OnDestroy {
    */
   getProjection(): google.maps.Projection|null {
     this._assertInitialized();
-    return this._googleMap.getProjection();
+    return this.googleMap!.getProjection();
   }
 
   /**
@@ -386,7 +382,7 @@ export class GoogleMap implements OnChanges, OnInit, OnDestroy {
    */
   getStreetView(): google.maps.StreetViewPanorama {
     this._assertInitialized();
-    return this._googleMap.getStreetView();
+    return this.googleMap!.getStreetView();
   }
 
   /**
@@ -395,7 +391,7 @@ export class GoogleMap implements OnChanges, OnInit, OnDestroy {
    */
   getTilt(): number {
     this._assertInitialized();
-    return this._googleMap.getTilt();
+    return this.googleMap!.getTilt();
   }
 
   /**
@@ -404,7 +400,7 @@ export class GoogleMap implements OnChanges, OnInit, OnDestroy {
    */
   getZoom(): number {
     this._assertInitialized();
-    return this._googleMap.getZoom();
+    return this.googleMap!.getZoom();
   }
 
   /**
@@ -413,7 +409,7 @@ export class GoogleMap implements OnChanges, OnInit, OnDestroy {
    */
   get controls(): Array<google.maps.MVCArray<Node>> {
     this._assertInitialized();
-    return this._googleMap.controls;
+    return this.googleMap!.controls;
   }
 
   /**
@@ -422,7 +418,7 @@ export class GoogleMap implements OnChanges, OnInit, OnDestroy {
    */
   get data(): google.maps.Data {
     this._assertInitialized();
-    return this._googleMap.data;
+    return this.googleMap!.data;
   }
 
   /**
@@ -431,7 +427,7 @@ export class GoogleMap implements OnChanges, OnInit, OnDestroy {
    */
   get mapTypes(): google.maps.MapTypeRegistry {
     this._assertInitialized();
-    return this._googleMap.mapTypes;
+    return this.googleMap!.mapTypes;
   }
 
   /**
@@ -440,7 +436,7 @@ export class GoogleMap implements OnChanges, OnInit, OnDestroy {
    */
   get overlayMapTypes(): google.maps.MVCArray<google.maps.MapType> {
     this._assertInitialized();
-    return this._googleMap.overlayMapTypes;
+    return this.googleMap!.overlayMapTypes;
   }
 
   private _setSize() {
@@ -508,7 +504,7 @@ export class GoogleMap implements OnChanges, OnInit, OnDestroy {
 
   /** Asserts that the map has been initialized. */
   private _assertInitialized() {
-    if (!this._googleMap) {
+    if (!this.googleMap) {
       throw Error('Cannot access Google Map information before the API has been initialized. ' +
                   'Please wait for the API to load before trying to interact with it.');
     }

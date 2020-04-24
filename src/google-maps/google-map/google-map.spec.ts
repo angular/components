@@ -13,7 +13,6 @@ import {
   DEFAULT_OPTIONS,
   DEFAULT_WIDTH,
   GoogleMap,
-  UpdatedGoogleMap
 } from './google-map';
 
 /** Represents boundaries of a map to be used in tests. */
@@ -32,7 +31,7 @@ const testPosition: google.maps.LatLngLiteral = {
 
 describe('GoogleMap', () => {
   let mapConstructorSpy: jasmine.Spy;
-  let mapSpy: jasmine.SpyObj<UpdatedGoogleMap>;
+  let mapSpy: jasmine.SpyObj<google.maps.Map>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -74,7 +73,10 @@ describe('GoogleMap', () => {
     const container = fixture.debugElement.query(By.css('div'))!;
     expect(container.nativeElement.style.height).toBe(DEFAULT_HEIGHT);
     expect(container.nativeElement.style.width).toBe(DEFAULT_WIDTH);
-    expect(mapConstructorSpy).toHaveBeenCalledWith(container.nativeElement, DEFAULT_OPTIONS);
+    expect(mapConstructorSpy).toHaveBeenCalledWith(container.nativeElement, {
+      ...DEFAULT_OPTIONS,
+      mapTypeId: undefined
+    });
   });
 
   it('sets height and width of the map', () => {
@@ -89,7 +91,10 @@ describe('GoogleMap', () => {
     const container = fixture.debugElement.query(By.css('div'))!;
     expect(container.nativeElement.style.height).toBe('750px');
     expect(container.nativeElement.style.width).toBe('400px');
-    expect(mapConstructorSpy).toHaveBeenCalledWith(container.nativeElement, DEFAULT_OPTIONS);
+    expect(mapConstructorSpy).toHaveBeenCalledWith(container.nativeElement, {
+      ...DEFAULT_OPTIONS,
+      mapTypeId: undefined
+    });
 
     fixture.componentInstance.height = '650px';
     fixture.componentInstance.width = '350px';

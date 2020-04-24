@@ -156,7 +156,7 @@ describe('MDC-based MatSlideToggle without forms', () => {
       fixture.detectChanges();
 
       // Once the id binding is set to null, the id property should auto-generate a unique id.
-      expect(inputElement.id).toMatch(/mat-slide-toggle-\d+-input/);
+      expect(inputElement.id).toMatch(/mat-mdc-slide-toggle-\d+-input/);
     });
 
     it('should forward the tabIndex to the underlying input', () => {
@@ -299,11 +299,8 @@ describe('MDC-based MatSlideToggle without forms', () => {
     });
 
     it('should have a focus indicator', () => {
-      const slideToggleRippleNativeElement =
-          slideToggleElement.querySelector('.mat-mdc-slide-toggle-ripple')!;
-
-      expect(slideToggleRippleNativeElement.classList.contains('mat-mdc-focus-indicator'))
-          .toBe(true);
+      const underlayElement = slideToggleElement.querySelector('.mdc-switch__thumb-underlay')!;
+      expect(underlayElement.classList.contains('mat-mdc-focus-indicator')).toBe(true);
     });
   });
 

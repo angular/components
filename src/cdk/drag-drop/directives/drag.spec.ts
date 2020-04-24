@@ -23,7 +23,7 @@ import {
 } from '@angular/core';
 import {TestBed, ComponentFixture, fakeAsync, flush, tick} from '@angular/core/testing';
 import {DOCUMENT} from '@angular/common';
-import {ViewportRuler, ScrollingModule} from '@angular/cdk/scrolling';
+import {ViewportRuler, CdkScrollableModule} from '@angular/cdk/scrolling';
 import {_supportsShadowDom} from '@angular/cdk/platform';
 import {of as observableOf} from 'rxjs';
 
@@ -48,7 +48,7 @@ describe('CdkDrag', () => {
       extraDeclarations: Type<any>[] = []): ComponentFixture<T> {
     TestBed
         .configureTestingModule({
-          imports: [DragDropModule, ScrollingModule],
+          imports: [DragDropModule, CdkScrollableModule],
           declarations: [componentType, PassthroughComponent, ...extraDeclarations],
           providers: [
             {
@@ -96,7 +96,7 @@ describe('CdkDrag', () => {
           const fixture = createComponent(StandaloneDraggable);
           fixture.detectChanges();
 
-          const cleanup = makePageScrollable();
+          const cleanup = makeScrollable();
           const dragElement = fixture.componentInstance.dragElement.nativeElement;
 
           scrollTo(0, 500);
@@ -126,7 +126,7 @@ describe('CdkDrag', () => {
           fixture.detectChanges();
 
           const dragElement = fixture.componentInstance.dragElement.nativeElement;
-          const cleanup = makePageScrollable();
+          const cleanup = makeScrollable();
 
           scrollTo(0, 500);
           expect(dragElement.style.transform).toBeFalsy();
@@ -256,7 +256,7 @@ describe('CdkDrag', () => {
           fixture.detectChanges();
 
           const dragElement = fixture.componentInstance.dragElement.nativeElement;
-          const cleanup = makePageScrollable();
+          const cleanup = makeScrollable();
 
           scrollTo(0, 500);
           expect(dragElement.style.transform).toBeFalsy();
@@ -285,7 +285,7 @@ describe('CdkDrag', () => {
           fixture.detectChanges();
 
           const dragElement = fixture.componentInstance.dragElement.nativeElement;
-          const cleanup = makePageScrollable();
+          const cleanup = makeScrollable();
 
           scrollTo(0, 500);
           expect(dragElement.style.transform).toBeFalsy();
@@ -1929,6 +1929,7 @@ describe('CdkDrag', () => {
       expect(previewRect.height).toBe(itemRect.height, 'Expected preview height to match element');
       expect(preview.style.pointerEvents)
           .toBe('none', 'Expected pointer events to be disabled on the preview');
+      expect(preview.style.zIndex).toBe('1000', 'Expected preview to have a high default zIndex.');
       // Use a regex here since some browsers normalize 0 to 0px, but others don't.
       expect(preview.style.margin).toMatch(/^0(px)?$/, 'Expected the preview margin to be reset.');
 
@@ -1940,6 +1941,22 @@ describe('CdkDrag', () => {
           .toBe(initialParent, 'Expected element to be moved back into its old parent');
       expect(item.style.display).toBeFalsy('Expected element to be visible');
       expect(preview.parentNode).toBeFalsy('Expected preview to be removed from the DOM');
+    }));
+
+    it('should be able to configure the preview z-index', fakeAsync(() => {
+      const fixture = createComponent(DraggableInDropZone, [{
+        provide: CDK_DRAG_CONFIG,
+        useValue: {
+          dragStartThreshold: 0,
+          zIndex: 3000
+        }
+      }]);
+      fixture.detectChanges();
+      const item = fixture.componentInstance.dragItems.toArray()[1].element.nativeElement;
+      startDraggingViaMouse(fixture, item);
+
+      const preview = document.querySelector('.cdk-drag-preview')! as HTMLElement;
+      expect(preview.style.zIndex).toBe('3000');
     }));
 
     it('should create the preview inside the fullscreen element when in fullscreen mode',
@@ -2008,6 +2025,76 @@ describe('CdkDrag', () => {
 
       expect(Math.floor(previewRect.bottom)).toBe(Math.floor(listRect.bottom));
       expect(Math.floor(previewRect.right)).toBe(Math.floor(listRect.right));
+    }));
+
+    it('should update the boundary if the page is scrolled while dragging', fakeAsync(() => {
+      const fixture = createComponent(DraggableInDropZone);
+      fixture.componentInstance.boundarySelector = '.cdk-drop-list';
+      fixture.detectChanges();
+
+      const item = fixture.componentInstance.dragItems.toArray()[1].element.nativeElement;
+      const list = fixture.componentInstance.dropInstance.element.nativeElement;
+      const cleanup = makeScrollable();
+      scrollTo(0, 10);
+      let listRect = list.getBoundingClientRect(); // Note that we need to measure after scrolling.
+
+      startDraggingViaMouse(fixture, item);
+      startDraggingViaMouse(fixture, item, listRect.right, listRect.bottom);
+      flush();
+      dispatchMouseEvent(document, 'mousemove', listRect.right, listRect.bottom);
+      fixture.detectChanges();
+
+      const preview = document.querySelector('.cdk-drag-preview')! as HTMLElement;
+      let previewRect = preview.getBoundingClientRect();
+      expect(Math.floor(previewRect.bottom)).toBe(Math.floor(listRect.bottom));
+
+      scrollTo(0, 0);
+      dispatchFakeEvent(document, 'scroll');
+      fixture.detectChanges();
+      listRect = list.getBoundingClientRect(); // We need to update these since we've scrolled.
+      dispatchMouseEvent(document, 'mousemove', listRect.right, listRect.bottom);
+      fixture.detectChanges();
+      previewRect = preview.getBoundingClientRect();
+
+      expect(Math.floor(previewRect.bottom)).toBe(Math.floor(listRect.bottom));
+      cleanup();
+    }));
+
+    it('should update the boundary if a parent is scrolled while dragging', fakeAsync(() => {
+      const fixture = createComponent(DraggableInScrollableParentContainer);
+      fixture.componentInstance.boundarySelector = '.cdk-drop-list';
+      fixture.detectChanges();
+
+      const container: HTMLElement = fixture.nativeElement.querySelector('.container');
+      const item = fixture.componentInstance.dragItems.toArray()[1].element.nativeElement;
+      const list = fixture.componentInstance.dropInstance.element.nativeElement;
+      const cleanup = makeScrollable('vertical', container);
+      container.scrollTop = 10;
+      let listRect = list.getBoundingClientRect(); // Note that we need to measure after scrolling.
+
+      startDraggingViaMouse(fixture, item);
+      startDraggingViaMouse(fixture, item, listRect.right, listRect.bottom);
+      flush();
+      dispatchMouseEvent(document, 'mousemove', listRect.right, listRect.bottom);
+      fixture.detectChanges();
+
+      const preview = document.querySelector('.cdk-drag-preview')! as HTMLElement;
+      let previewRect = preview.getBoundingClientRect();
+
+      // Different browsers round the scroll position differently so
+      // assert that the offsets are within a pixel of each other.
+      expect(Math.abs(previewRect.bottom - listRect.bottom)).toBeLessThan(2);
+
+      container.scrollTop = 0;
+      dispatchFakeEvent(container, 'scroll');
+      fixture.detectChanges();
+      listRect = list.getBoundingClientRect(); // We need to update these since we've scrolled.
+      dispatchMouseEvent(document, 'mousemove', listRect.right, listRect.bottom);
+      fixture.detectChanges();
+      previewRect = preview.getBoundingClientRect();
+
+      expect(Math.abs(previewRect.bottom - listRect.bottom)).toBeLessThan(2);
+      cleanup();
     }));
 
     it('should clear the id from the preview', fakeAsync(() => {
@@ -2325,7 +2412,7 @@ describe('CdkDrag', () => {
       fakeAsync(() => {
         const fixture = createComponent(DraggableInDropZone);
         fixture.detectChanges();
-        const cleanup = makePageScrollable();
+        const cleanup = makeScrollable();
 
         scrollTo(0, 500);
         assertDownwardSorting(fixture, fixture.componentInstance.dragItems.map(item => {
@@ -2346,7 +2433,7 @@ describe('CdkDrag', () => {
       fakeAsync(() => {
         const fixture = createComponent(DraggableInDropZone);
         fixture.detectChanges();
-        const cleanup = makePageScrollable();
+        const cleanup = makeScrollable();
 
         scrollTo(0, 500);
         assertUpwardSorting(fixture, fixture.componentInstance.dragItems.map(item => {
@@ -2843,7 +2930,7 @@ describe('CdkDrag', () => {
     it('should keep the preview next to the trigger if the page was scrolled', fakeAsync(() => {
       const fixture = createComponent(DraggableInDropZoneWithCustomPreview);
       fixture.detectChanges();
-      const cleanup = makePageScrollable();
+      const cleanup = makeScrollable();
       const item = fixture.componentInstance.dragItems.toArray()[1].element.nativeElement;
 
       startDraggingViaMouse(fixture, item, 50, 50);
@@ -2963,6 +3050,23 @@ describe('CdkDrag', () => {
         expect(preview.style.transform).toBe('translate3d(8px, 33px, 0px)');
       }));
 
+    it('should not have the size of the inserted preview affect the size applied via matchSize',
+      fakeAsync(() => {
+        const fixture = createComponent(DraggableInHorizontalFlexDropZoneWithMatchSizePreview);
+        fixture.detectChanges();
+        const item = fixture.componentInstance.dragItems.toArray()[1].element.nativeElement;
+        const itemRect = item.getBoundingClientRect();
+
+        startDraggingViaMouse(fixture, item);
+        fixture.detectChanges();
+
+        const preview = document.querySelector('.cdk-drag-preview')! as HTMLElement;
+        const previewRect = preview.getBoundingClientRect();
+
+        expect(Math.floor(previewRect.width)).toBe(Math.floor(itemRect.width));
+        expect(Math.floor(previewRect.height)).toBe(Math.floor(itemRect.height));
+      }));
+
     it('should not throw when custom preview only has text', fakeAsync(() => {
       const fixture = createComponent(DraggableInDropZoneWithCustomTextOnlyPreview);
       fixture.detectChanges();
@@ -2976,6 +3080,21 @@ describe('CdkDrag', () => {
 
       expect(preview).toBeTruthy();
       expect(preview.textContent!.trim()).toContain('Hello One');
+    }));
+
+    it('should handle custom preview with multiple root nodes', fakeAsync(() => {
+      const fixture = createComponent(DraggableInDropZoneWithCustomMultiNodePreview);
+      fixture.detectChanges();
+      const item = fixture.componentInstance.dragItems.toArray()[1].element.nativeElement;
+
+      expect(() => {
+        startDraggingViaMouse(fixture, item);
+      }).not.toThrow();
+
+      const preview = document.querySelector('.cdk-drag-preview')! as HTMLElement;
+
+      expect(preview).toBeTruthy();
+      expect(preview.textContent!.trim()).toContain('HelloOne');
     }));
 
     it('should be able to customize the placeholder', fakeAsync(() => {
@@ -3048,6 +3167,21 @@ describe('CdkDrag', () => {
 
       expect(placeholder).toBeTruthy();
       expect(placeholder.textContent!.trim()).toContain('Hello One');
+    }));
+
+    it('should handle custom placeholder with multiple root nodes', fakeAsync(() => {
+      const fixture = createComponent(DraggableInDropZoneWithCustomMultiNodePlaceholder);
+      fixture.detectChanges();
+      const item = fixture.componentInstance.dragItems.toArray()[1].element.nativeElement;
+
+      expect(() => {
+        startDraggingViaMouse(fixture, item);
+      }).not.toThrow();
+
+      const placeholder = document.querySelector('.cdk-drag-placeholder')! as HTMLElement;
+
+      expect(placeholder).toBeTruthy();
+      expect(placeholder.textContent!.trim()).toContain('HelloOne');
     }));
 
     it('should clear the `transform` value from siblings when item is dropped`', fakeAsync(() => {
@@ -3388,7 +3522,7 @@ describe('CdkDrag', () => {
       const fixture = createComponent(DraggableInDropZone);
       fixture.detectChanges();
 
-      const cleanup = makePageScrollable();
+      const cleanup = makeScrollable();
       const item = fixture.componentInstance.dragItems.first.element.nativeElement;
       const viewportRuler = TestBed.inject(ViewportRuler);
       const viewportSize = viewportRuler.getViewportSize();
@@ -3409,7 +3543,7 @@ describe('CdkDrag', () => {
       const fixture = createComponent(DraggableInDropZone);
       fixture.detectChanges();
 
-      const cleanup = makePageScrollable();
+      const cleanup = makeScrollable();
       const item = fixture.componentInstance.dragItems.first.element.nativeElement;
       const viewportRuler = TestBed.inject(ViewportRuler);
       const viewportSize = viewportRuler.getViewportSize();
@@ -3432,7 +3566,7 @@ describe('CdkDrag', () => {
       const fixture = createComponent(DraggableInDropZone);
       fixture.detectChanges();
 
-      const cleanup = makePageScrollable('horizontal');
+      const cleanup = makeScrollable('horizontal');
       const item = fixture.componentInstance.dragItems.first.element.nativeElement;
       const viewportRuler = TestBed.inject(ViewportRuler);
       const viewportSize = viewportRuler.getViewportSize();
@@ -3453,7 +3587,7 @@ describe('CdkDrag', () => {
       const fixture = createComponent(DraggableInDropZone);
       fixture.detectChanges();
 
-      const cleanup = makePageScrollable('horizontal');
+      const cleanup = makeScrollable('horizontal');
       const item = fixture.componentInstance.dragItems.first.element.nativeElement;
       const viewportRuler = TestBed.inject(ViewportRuler);
       const viewportSize = viewportRuler.getViewportSize();
@@ -3490,7 +3624,7 @@ describe('CdkDrag', () => {
         list.style.margin = '0';
 
         const listRect = list.getBoundingClientRect();
-        const cleanup = makePageScrollable();
+        const cleanup = makeScrollable();
 
         scrollTo(0, viewportRuler.getViewportSize().height * 5);
         list.scrollTop = 50;
@@ -3528,7 +3662,7 @@ describe('CdkDrag', () => {
         list.style.margin = '0';
 
         const listRect = list.getBoundingClientRect();
-        const cleanup = makePageScrollable();
+        const cleanup = makeScrollable();
 
         scrollTo(0, viewportRuler.getViewportSize().height * 5);
         list.scrollTop = 0;
@@ -3719,6 +3853,49 @@ describe('CdkDrag', () => {
       fixture.detectChanges();
 
       expect(styles.scrollSnapType || styles.msScrollSnapType).toBe('block');
+    }));
+
+    it('should be able to start dragging again if the dragged item is destroyed', fakeAsync(() => {
+      // We have some behavior where we move the dragged element out to the bottom of the `body`,
+      // in order to work around a browser issue. We restore the element when dragging stops, but
+      // the problem is that if it's destroyed before we've had a chance to return it, ViewEngine
+      // will throw an error since the element isn't in its original parent. Skip this test if the
+      // component hasn't been compiled with Ivy since the assertions depend on the element being
+      // removed while dragging.
+      // TODO(crisbeto): remove this check once ViewEngine has been dropped.
+      if (!DraggableInDropZone.hasOwnProperty('ɵcmp')) {
+        return;
+      }
+
+      const fixture = createComponent(DraggableInDropZone);
+      fixture.detectChanges();
+
+      let item = fixture.componentInstance.dragItems.first;
+      startDraggingViaMouse(fixture, item.element.nativeElement);
+      expect(document.querySelector('.cdk-drop-list-dragging'))
+          .toBeTruthy('Expected to drag initially.');
+
+      fixture.componentInstance.items = [
+        {value: 'Five', height: ITEM_HEIGHT, margin: 0},
+        {value: 'Six', height: ITEM_HEIGHT, margin: 0}
+      ];
+      fixture.detectChanges();
+
+      expect(fixture.componentInstance.droppedSpy).not.toHaveBeenCalled();
+      expect(document.querySelector('.cdk-drop-list-dragging'))
+          .toBeFalsy('Expected not to be dragging after item is destroyed.');
+
+      item = fixture.componentInstance.dragItems.first;
+      startDraggingViaMouse(fixture, item.element.nativeElement);
+
+      expect(document.querySelector('.cdk-drop-list-dragging'))
+          .toBeTruthy('Expected to be able to start a new drag sequence.');
+
+      dispatchMouseEvent(document, 'mouseup');
+      fixture.detectChanges();
+      flush();
+
+      expect(fixture.componentInstance.droppedSpy).toHaveBeenCalledTimes(1);
     }));
 
   });
@@ -4604,7 +4781,7 @@ describe('CdkDrag', () => {
       fixture.detectChanges();
 
       // Make the page scrollable and scroll the items out of view.
-      const cleanup = makePageScrollable();
+      const cleanup = makeScrollable();
       scrollTo(0, 4000);
       dispatchFakeEvent(document, 'scroll');
       fixture.detectChanges();
@@ -5194,6 +5371,28 @@ class DraggableInDropZoneWithCustomTextOnlyPreview {
 
 @Component({
   template: `
+    <div cdkDropList style="width: 100px; background: pink;">
+      <div
+        *ngFor="let item of items"
+        cdkDrag
+        style="width: 100%; height: ${ITEM_HEIGHT}px; background: red;">
+          {{item}}
+          <ng-template cdkDragPreview>
+            <span>Hello</span>
+            <span>{{item}}</span>
+          </ng-template>
+      </div>
+    </div>
+  `
+})
+class DraggableInDropZoneWithCustomMultiNodePreview {
+  @ViewChild(CdkDropList) dropInstance: CdkDropList;
+  @ViewChildren(CdkDrag) dragItems: QueryList<CdkDrag>;
+  items = ['Zero', 'One', 'Two', 'Three'];
+}
+
+@Component({
+  template: `
     <div
       cdkDropList
       (cdkDropListDropped)="droppedSpy($event)"
@@ -5236,6 +5435,25 @@ class DraggableInDropZoneWithCustomPlaceholder {
   `
 })
 class DraggableInDropZoneWithCustomTextOnlyPlaceholder {
+  @ViewChildren(CdkDrag) dragItems: QueryList<CdkDrag>;
+  items = ['Zero', 'One', 'Two', 'Three'];
+}
+
+@Component({
+  template: `
+    <div cdkDropList style="width: 100px; background: pink;">
+      <div *ngFor="let item of items" cdkDrag
+        style="width: 100%; height: ${ITEM_HEIGHT}px; background: red;">
+          {{item}}
+          <ng-template cdkDragPlaceholder>
+            <span>Hello</span>
+            <span>{{item}}</span>
+          </ng-template>
+      </div>
+    </div>
+  `
+})
+class DraggableInDropZoneWithCustomMultiNodePlaceholder {
   @ViewChildren(CdkDrag) dragItems: QueryList<CdkDrag>;
   items = ['Zero', 'One', 'Two', 'Three'];
 }
@@ -5671,6 +5889,40 @@ class PlainStandaloneDropList {
   @ViewChild(CdkDropList) dropList: CdkDropList;
 }
 
+
+@Component({
+  styles: [`
+    .list {
+      display: flex;
+      width: 100px;
+      flex-direction: row;
+    }
+
+    .item {
+      display: flex;
+      flex-grow: 1;
+      flex-basis: 0;
+      min-height: 50px;
+    }
+  `],
+  template: `
+    <div class="list" cdkDropList cdkDropListOrientation="horizontal">
+      <div *ngFor="let item of items" class="item" cdkDrag>
+        {{item}}
+
+        <ng-template cdkDragPreview [matchSize]="true">
+          <div class="item">{{item}}</div>
+        </ng-template>
+      </div>
+    </div>
+  `
+})
+class DraggableInHorizontalFlexDropZoneWithMatchSizePreview {
+  @ViewChildren(CdkDrag) dragItems: QueryList<CdkDrag>;
+  items = ['Zero', 'One', 'Two'];
+}
+
+
 /**
  * Drags an element to a position on the page using the mouse.
  * @param fixture Fixture on which to run change detection.
@@ -5769,11 +6021,13 @@ function getElementSibligsByPosition(element: Element, direction: 'top' | 'left'
  * Adds a large element to the page in order to make it scrollable.
  * @returns Function that should be used to clean up after the test is done.
  */
-function makePageScrollable(direction: 'vertical' | 'horizontal' = 'vertical') {
+function makeScrollable(
+  direction: 'vertical' | 'horizontal' = 'vertical',
+  element = document.body) {
   const veryTallElement = document.createElement('div');
   veryTallElement.style.width = direction === 'vertical' ? '100%' : '4000px';
   veryTallElement.style.height = direction === 'vertical' ? '2000px' : '5px';
-  document.body.appendChild(veryTallElement);
+  element.appendChild(veryTallElement);
 
   return () => {
     scrollTo(0, 0);
