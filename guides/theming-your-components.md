@@ -62,7 +62,7 @@ component themes for each alternate color theme defined for your application.
 ```scss
 // Import library functions for theme creation.
 @import '~@angular/material/theming';
-// Import your custom component theme from it's own file
+// Import the theme mixin for your custom component
 @import './candy-carousel-theme-styles.scss'
 
 // Include non-theme styles for core.
@@ -114,12 +114,10 @@ For example:
 }
 ```
 
-#### Angular Material Theme Palette keys
+#### Palette keys
 
-Every Angular Material palette color (eg primary, accent, warn) contains 7 defined hues which can be drawn
-out of the palette object with `mat-color`.  
-
-These seven keys are:
+Angular Material's color palettes include specially-keyed
+hues that can be used in your custom components.
 
 ``` 
 default: the base color
