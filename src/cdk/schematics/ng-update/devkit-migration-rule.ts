@@ -13,11 +13,12 @@ import {sync as globSync} from 'glob';
 import {join} from 'path';
 
 import {UpdateProject} from '../update-tool';
+import {MigrationCtor} from '../update-tool/migration';
 import {TargetVersion} from '../update-tool/target-version';
 import {getTargetTsconfigPath, getWorkspaceConfigGracefully} from '../utils/project-tsconfig-paths';
 
 import {DevkitFileSystem} from './devkit-file-system';
-import {DevkitContext, DevkitMigrationCtor} from './devkit-migration';
+import {DevkitContext, DevkitMigration, DevkitMigrationCtor} from './devkit-migration';
 import {AttributeSelectorsMigration} from './migrations/attribute-selectors';
 import {ClassInheritanceMigration} from './migrations/class-inheritance';
 import {ClassNamesMigration} from './migrations/class-names';
@@ -33,7 +34,7 @@ import {UpgradeData} from './upgrade-data';
 
 
 /** List of migrations which run for the CDK update. */
-export const cdkMigrations: DevkitMigrationCtor<UpgradeData>[] = [
+export const cdkMigrations: MigrationCtor<UpgradeData>[] = [
   AttributeSelectorsMigration,
   ClassInheritanceMigration,
   ClassNamesMigration,
@@ -47,7 +48,7 @@ export const cdkMigrations: DevkitMigrationCtor<UpgradeData>[] = [
   PropertyNamesMigration,
 ];
 
-type NullableMigration = DevkitMigrationCtor<UpgradeData|null>;
+export type NullableDevkitMigration = MigrationCtor<UpgradeData|null, DevkitContext>;
 
 type PostMigrationFn =
     (context: SchematicContext, targetVersion: TargetVersion, hasFailure: boolean) => void;
@@ -57,8 +58,8 @@ type PostMigrationFn =
  * specified target version.
  */
 export function createMigrationSchematicRule(
-    targetVersion: TargetVersion, extraMigrations: NullableMigration[], upgradeData: UpgradeData,
-    onMigrationCompleteFn?: PostMigrationFn): Rule {
+    targetVersion: TargetVersion, extraMigrations: NullableDevkitMigration[],
+    upgradeData: UpgradeData, onMigrationCompleteFn?: PostMigrationFn): Rule {
   return async (tree: Tree, context: SchematicContext) => {
     const logger = context.logger;
     const workspace = getWorkspaceConfigGracefully(tree);
@@ -76,7 +77,7 @@ export function createMigrationSchematicRule(
     const workspaceFsPath = process.cwd();
     const fileSystem = new DevkitFileSystem(tree, workspaceFsPath);
     const projectNames = Object.keys(workspace.projects);
-    const migrations: NullableMigration[] = [...cdkMigrations, ...extraMigrations];
+    const migrations: NullableDevkitMigration[] = [...cdkMigrations, ...extraMigrations];
     let hasFailures = false;
 
     for (const projectName of projectNames) {
@@ -89,18 +90,19 @@ export function createMigrationSchematicRule(
         continue;
       }
       if (buildTsconfigPath !== null) {
-        runMigrations(project, buildTsconfigPath, false);
+        runMigrations(project, projectName, buildTsconfigPath, false);
       }
       if (testTsconfigPath !== null) {
-        runMigrations(project, testTsconfigPath, true);
+        runMigrations(project, projectName, testTsconfigPath, true);
       }
     }
 
     let runPackageManager = false;
-    // Run the global post migration static members for all migrations.
+    // Run the global post migration static members for all
+    // registered devkit migrations.
     migrations.forEach(m => {
-      const actionResult =
-          m.globalPostMigration !== undefined ? m.globalPostMigration(tree, context) : null;
+      const actionResult = isDevkitMigration(m) && m.globalPostMigration !== undefined ?
+          m.globalPostMigration(tree, context) : null;
       if (actionResult) {
         runPackageManager = runPackageManager || actionResult.runPackageManager;
       }
@@ -119,13 +121,15 @@ export function createMigrationSchematicRule(
     }
 
     /** Runs the migrations for the specified workspace project. */
-    function runMigrations(project: WorkspaceProject, tsconfigPath: string, isTestTarget: boolean) {
+    function runMigrations(project: WorkspaceProject, projectName: string,
+                           tsconfigPath: string, isTestTarget: boolean) {
       const projectRootFsPath = join(workspaceFsPath, project.root);
       const tsconfigFsPath = join(workspaceFsPath, tsconfigPath);
       const program = UpdateProject.createProgramFromTsconfig(tsconfigFsPath, fileSystem);
       const updateContext: DevkitContext = {
         workspaceFsPath,
         isTestTarget,
+        projectName,
         project,
         tree,
       };
@@ -158,4 +162,10 @@ export function createMigrationSchematicRule(
       hasFailures = hasFailures || result.hasFailures;
     }
   };
+}
+
+/** Whether the given migration type refers to a devkit migration */
+export function isDevkitMigration(value: MigrationCtor<any, any>)
+    : value is DevkitMigrationCtor<any> {
+  return DevkitMigration.isPrototypeOf(value);
 }

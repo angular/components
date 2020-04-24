@@ -11,7 +11,11 @@ import {Tree, UpdateRecorder} from '@angular-devkit/schematics';
 import {relative} from 'path';
 import {FileSystem} from '../update-tool/file-system';
 
-/** File system that leverages the virtual tree from the CLI devkit. */
+/**
+ * File system that leverages the virtual tree from the CLI devkit. This file
+ * system is commonly used by `ng update` migrations that run as part of the
+ * Angular CLI.
+ */
 export class DevkitFileSystem implements FileSystem {
   private _updateRecorderCache = new Map<string, UpdateRecorder>();
 

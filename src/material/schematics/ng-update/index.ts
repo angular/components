@@ -9,9 +9,8 @@
 import {Rule, SchematicContext} from '@angular-devkit/schematics';
 import {
   createMigrationSchematicRule,
-  DevkitMigrationCtor,
-  TargetVersion,
-  UpgradeData
+  NullableDevkitMigration,
+  TargetVersion
 } from '@angular/cdk/schematics';
 import {HammerGesturesMigration} from './migrations/hammer-gestures-v9/hammer-gestures-migration';
 import {MiscClassInheritanceMigration} from './migrations/misc-checks/misc-class-inheritance';
@@ -28,7 +27,7 @@ import {
 
 import {materialUpgradeData} from './upgrade-data';
 
-const materialMigrations: DevkitMigrationCtor<UpgradeData|null>[] = [
+const materialMigrations: NullableDevkitMigration[] = [
   MiscClassInheritanceMigration,
   MiscClassNamesMigration,
   MiscImportsMigration,

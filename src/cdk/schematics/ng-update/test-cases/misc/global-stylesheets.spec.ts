@@ -1,5 +1,5 @@
+import {resolveBazelPath} from '@angular/cdk/schematics/testing';
 import {readFileSync} from 'fs';
-import {resolveBazel} from '@angular/cdk/schematics/testing';
 import {MIGRATION_PATH} from '../../../index.spec';
 import {createTestCaseSetup} from '../../../testing';
 
@@ -7,14 +7,15 @@ describe('global stylesheets migration', () => {
 
   it('should not check stylesheet twice if referenced in component', async () => {
     const {runFixers, writeFile, removeTempDir, appTree} = await createTestCaseSetup(
-      'migration-v6', MIGRATION_PATH, [resolveBazel(__dirname, './global-stylesheets_input.ts')]);
+      'migration-v6', MIGRATION_PATH,
+      [resolveBazelPath(__dirname, './global-stylesheets_input.ts')]);
 
     const testStylesheetPath = 'projects/cdk-testing/src/test-cases/global-stylesheets-test.scss';
 
     // Copy the test stylesheets file into the test CLI application. That way it will
     // be picked up by the update-tool.
     writeFile(testStylesheetPath,
-        readFileSync(resolveBazel(__dirname, './global-stylesheets-test.scss'), 'utf8'));
+        readFileSync(resolveBazelPath(__dirname, './global-stylesheets-test.scss'), 'utf8'));
     writeFile('/projects/cdk-testing/third_party/materialize.css/bundle.css', '');
 
     await runFixers();

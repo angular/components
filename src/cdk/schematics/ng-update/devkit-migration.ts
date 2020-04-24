@@ -13,6 +13,8 @@ import {Constructor, Migration, PostMigrationAction} from '../update-tool/migrat
 export type DevkitContext = {
   /** Devkit tree for the current migrations. Can be used to insert/remove files. */
   tree: Tree,
+  /** Name of the project the migrations run against. */
+  projectName: string;
   /** Workspace project the migrations run against. */
   project: WorkspaceProject,
   /** Absolute file system path to the workspace */
@@ -22,6 +24,13 @@ export type DevkitContext = {
 };
 
 export abstract class DevkitMigration<Data> extends Migration<Data, DevkitContext> {
+
+  /** Prints an informative message with context on the current target. */
+  protected printInfo(text: string) {
+    const targetName = this.context.isTestTarget ? 'test' : 'build';
+    this.logger.info(`- ${this.context.projectName}@${targetName}: ${text}`);
+  }
+
   /**
    * Optional static method that will be called once the migration of all project
    * targets has been performed. This method can be used to make changes respecting the

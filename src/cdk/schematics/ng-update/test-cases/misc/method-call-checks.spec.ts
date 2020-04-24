@@ -1,11 +1,12 @@
-import {resolveBazel} from '@angular/cdk/schematics/testing';
+import {resolveBazelPath} from '@angular/cdk/schematics/testing';
 import {MIGRATION_PATH} from '../../../index.spec';
 import {createTestCaseSetup} from '../../../testing';
 
 describe('v6 method call checks', () => {
   it('should properly report invalid method calls', async () => {
     const {runFixers, removeTempDir} = await createTestCaseSetup(
-        'migration-v6', MIGRATION_PATH, [resolveBazel(__dirname, './method-call-checks_input.ts')]);
+        'migration-v6', MIGRATION_PATH,
+        [resolveBazelPath(__dirname, './method-call-checks_input.ts')]);
 
     const {logOutput} = await runFixers();
 

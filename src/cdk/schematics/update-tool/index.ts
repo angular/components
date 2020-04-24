@@ -42,27 +42,28 @@ export class UpdateProject<Context> {
    */
   migrate<Data>(migrationTypes: MigrationCtor<Data, Context>[], target: TargetVersion, data: Data,
       additionalStylesheetPaths?: string[]): {hasFailures: boolean} {
-    const migrations: Migration<Data, Context>[] = [];
-
-    // Create instances of all specified migrations.
-    for (const ctor of migrationTypes) {
-      const instance = new ctor(this._program, this._typeChecker, target, this._context,
-          data, this._fileSystem, this._logger);
-      instance.init();
-      if (instance.enabled) {
-        migrations.push(instance);
-      }
-    }
-
+    // Create instances of the specified migrations.
+    const migrations = this._createMigrations(migrationTypes, target, data);
+    // Creates the component resource collector. The collector can visit arbitrary
+    // TypeScript nodes and will find Angular component resources. Resources include
+    // templates and stylesheets. It also captures inline stylesheets and templates.
+    const resourceCollector = new ComponentResourceCollector(this._typeChecker, this._fileSystem);
+    // Collect all of the TypeScript source files we want to migrate. We don't
+    // migrate type definition files, or source files from external libraries.
     const sourceFiles = this._program.getSourceFiles().filter(
       f => !f.isDeclarationFile && !this._program.isSourceFileFromExternalLibrary(f));
-    const resourceCollector = new ComponentResourceCollector(this._typeChecker, this._fileSystem);
+
+    // Helper function that visits a given TypeScript node and collects all referenced
+    // component resources (i.e. stylesheets or templates). Additionally, the helper
+    // visits the node in each instantiated migration.
     const visitNodeAndCollectResources = (node: ts.Node) => {
       migrations.forEach(r => r.visitNode(node));
       ts.forEachChild(node, visitNodeAndCollectResources);
       resourceCollector.visitNode(node);
     };
 
+    // Walk through all source file, if it has not been visited before, and
+    // visit found nodes while collecting potential resources.
     sourceFiles.forEach(sourceFile => {
       const resolvedPath = this._fileSystem.resolve(sourceFile.fileName);
       // Do not visit source files which have been checked as part of a
@@ -73,6 +74,9 @@ export class UpdateProject<Context> {
       }
     });
 
+    // Walk through all resolved templates and visit them in each instantiated
+    // migration. Note that this can only happen after source files have been
+    // visited because we find templates through the TypeScript source files.
     resourceCollector.resolvedTemplates.forEach(template => {
       const resolvedPath = this._fileSystem.resolve(template.filePath);
       // Do not visit the template if it has been checked before. Inline
@@ -83,6 +87,9 @@ export class UpdateProject<Context> {
       }
     });
 
+    // Walk through all resolved stylesheets and visit them in each instantiated
+    // migration. Note that this can only happen after source files have been
+    // visited because we find stylesheets through the TypeScript source files.
     resourceCollector.resolvedStylesheets.forEach(stylesheet => {
       const resolvedPath = this._fileSystem.resolve(stylesheet.filePath);
       // Do not visit the stylesheet if it has been checked before. Inline
@@ -93,8 +100,10 @@ export class UpdateProject<Context> {
       }
     });
 
-    // In some applications, developers will have global stylesheets which are not specified
-    // in any Angular component. Therefore we allow for additional stylesheets being specified.
+    // In some applications, developers will have global stylesheets which are not
+    // specified in any Angular component. Therefore we allow for additional stylesheets
+    // being specified. We visit them in each migration unless they have been already
+    // discovered before as actual component resource.
     additionalStylesheetPaths.forEach(filePath => {
       const stylesheet = resourceCollector.resolveExternalStylesheet(filePath, null);
       const resolvedPath = this._fileSystem.resolve(filePath);
@@ -124,6 +133,24 @@ export class UpdateProject<Context> {
     return {
       hasFailures: !!failures.length,
     };
+  }
+
+  /**
+   * Creates instances of the given migrations with the specified target
+   * version and data.
+   */
+  private _createMigrations<Data>(types: MigrationCtor<Data, Context>[], target: TargetVersion,
+                                  data: Data): Migration<Data, Context>[] {
+    const result: Migration<Data, Context>[] = [];
+    for (const ctor of types) {
+      const instance = new ctor(this._program, this._typeChecker, target, this._context,
+        data, this._fileSystem, this._logger);
+      instance.init();
+      if (instance.enabled) {
+        result.push(instance);
+      }
+    }
+    return result;
   }
 
   /**

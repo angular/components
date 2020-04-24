@@ -1,10 +1,11 @@
-import {createTestCaseSetup, resolveBazel} from '@angular/cdk/schematics/testing';
+import {createTestCaseSetup, resolveBazelPath} from '@angular/cdk/schematics/testing';
 import {MIGRATION_PATH} from '../../../index.spec';
 
 describe('constructor checks', () => {
   it('should properly report invalid constructor expression signatures', async () => {
     const {removeTempDir, runFixers} = await createTestCaseSetup(
-        'migration-v6', MIGRATION_PATH, [resolveBazel(__dirname, './constructor-checks_input.ts')]);
+        'migration-v6', MIGRATION_PATH,
+        [resolveBazelPath(__dirname, './constructor-checks_input.ts')]);
 
     const {logOutput} = await runFixers();
 

@@ -12,9 +12,9 @@ import * as path from 'path';
  * Resolves a given path through Bazel while respecting the specified parent directory.
  * Usually `require.resolve` could just be used for resolving runfiles relatively, but support
  * for this has been removed and absolute manifest paths or the runfile helpers are now needed
- * on Windows. This helper provides a resolution method that works similar on all platforms.
+ * on Windows. This helper provides a resolution method that works the same on all platforms.
  */
-export function resolveBazel(parent: string, relativePath: string) {
+export function resolveBazelPath(parent: string, relativePath: string) {
   if (process.env['RUNFILES_MANIFEST_ONLY'] !== '1') {
     return path.join(parent, relativePath);
   }

@@ -1,13 +1,13 @@
 import {SchematicTestRunner, UnitTestTree} from '@angular-devkit/schematics/testing';
 import {dedent} from '@angular/cdk/testing/private';
 import {addPackageToPackageJson} from '@angular/cdk/schematics/ng-add/package-config';
-import {createTestCaseSetup, resolveBazel} from '@angular/cdk/schematics/testing';
+import {createTestCaseSetup, resolveBazelPath} from '@angular/cdk/schematics/testing';
 import {readFileSync} from 'fs';
 import {MIGRATION_PATH} from '../../../../index.spec';
 
 describe('v9 HammerJS removal', () => {
-  const GESTURE_CONFIG_TEMPLATE_PATH =
-      resolveBazel(__dirname, '../../../migrations/hammer-gestures-v9/gesture-config.template');
+  const GESTURE_CONFIG_TEMPLATE_PATH = resolveBazelPath(__dirname,
+      '../../../migrations/hammer-gestures-v9/gesture-config.template');
 
   let runner: SchematicTestRunner;
   let tree: UnitTestTree;

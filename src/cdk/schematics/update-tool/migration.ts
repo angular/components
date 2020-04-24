@@ -84,10 +84,4 @@ export abstract class Migration<Data, Context = never> {
       message: message,
     });
   }
-
-  /** Prints the given message with "info" loglevel. */
-  printInfo(text: string) {
-    // TODO: FIND REPLACEMENT???
-    this.logger.info(`- ${text}`);
-  }
 }
