@@ -46,13 +46,9 @@ The actual path will depend on your server setup.
 
 You can also concatenate the file with the rest of your application's css.
 
-#### Your theme's foundational class(es)
+#### Application background color
 
-If your app's content **is not** placed inside of a `mat-sidenav-container` element, you
-need to add the `mat-app-background` class to your wrapper element (for example the `body`). This
-ensures that the proper theme background is applied to your page.   Further, some individual 
-Angular Material components rely on one of these two classes being present in order to render 
-correctly.
+You may want to change the background color of your application based on your Angular Material theme. If you're using `<mat-sidenav>`, the sidenav content will automatically have an appropriate background color. If you don't use `<mat-sidenav>`, you can manually apply the CSS class `mat-app-background` to apply the theme background color.  If you are using a `mat-dark-theme`, some Material components will be invisible against a white background.
 
 
 ### Defining a custom theme
