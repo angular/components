@@ -1,5 +1,9 @@
 export declare type DateFilterFn<D> = (date: D | null) => boolean;
 
+export declare type DatepickerDropdownPositionX = 'start' | 'end';
+
+export declare type DatepickerDropdownPositionY = 'above' | 'below';
+
 export declare class DateRange<D> {
     readonly end: D | null;
     readonly start: D | null;
@@ -259,7 +263,7 @@ export declare class MatDatepickerIntl {
 
 export declare class MatDatepickerModule {
     static ɵinj: i0.ɵɵInjectorDef<MatDatepickerModule>;
-    static ɵmod: i0.ɵɵNgModuleDefWithMeta<MatDatepickerModule, [typeof i1.MatCalendar, typeof i2.MatCalendarBody, typeof i3.MatDatepicker, typeof i4.MatDatepickerContent, typeof i5.MatDatepickerInput, typeof i6.MatDatepickerToggle, typeof i6.MatDatepickerToggleIcon, typeof i7.MatMonthView, typeof i8.MatYearView, typeof i9.MatMultiYearView, typeof i1.MatCalendarHeader, typeof i10.MatDateRangeInput, typeof i11.MatStartDate, typeof i11.MatEndDate, typeof i12.MatDateRangePicker], [typeof i13.CommonModule, typeof i14.MatButtonModule, typeof i15.MatDialogModule, typeof i16.OverlayModule, typeof i17.A11yModule, typeof i18.PortalModule], [typeof i1.MatCalendar, typeof i2.MatCalendarBody, typeof i3.MatDatepicker, typeof i4.MatDatepickerContent, typeof i5.MatDatepickerInput, typeof i6.MatDatepickerToggle, typeof i6.MatDatepickerToggleIcon, typeof i7.MatMonthView, typeof i8.MatYearView, typeof i9.MatMultiYearView, typeof i1.MatCalendarHeader, typeof i10.MatDateRangeInput, typeof i11.MatStartDate, typeof i11.MatEndDate, typeof i12.MatDateRangePicker]>;
+    static ɵmod: i0.ɵɵNgModuleDefWithMeta<MatDatepickerModule, [typeof i1.MatCalendar, typeof i2.MatCalendarBody, typeof i3.MatDatepicker, typeof i4.MatDatepickerContent, typeof i5.MatDatepickerInput, typeof i6.MatDatepickerToggle, typeof i6.MatDatepickerToggleIcon, typeof i7.MatMonthView, typeof i8.MatYearView, typeof i9.MatMultiYearView, typeof i1.MatCalendarHeader, typeof i10.MatDateRangeInput, typeof i11.MatStartDate, typeof i11.MatEndDate, typeof i12.MatDateRangePicker], [typeof i13.CommonModule, typeof i14.MatButtonModule, typeof i15.MatDialogModule, typeof i16.OverlayModule, typeof i17.A11yModule, typeof i18.PortalModule], [typeof i19.CdkScrollableModule, typeof i1.MatCalendar, typeof i2.MatCalendarBody, typeof i3.MatDatepicker, typeof i4.MatDatepickerContent, typeof i5.MatDatepickerInput, typeof i6.MatDatepickerToggle, typeof i6.MatDatepickerToggleIcon, typeof i7.MatMonthView, typeof i8.MatYearView, typeof i9.MatMultiYearView, typeof i1.MatCalendarHeader, typeof i10.MatDateRangeInput, typeof i11.MatStartDate, typeof i11.MatEndDate, typeof i12.MatDateRangePicker]>;
 }
 
 export declare class MatDatepickerToggle<D> implements AfterContentInit, OnChanges, OnDestroy {

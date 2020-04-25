@@ -17,6 +17,8 @@ export {
   MAT_DATEPICKER_SCROLL_STRATEGY_FACTORY,
   MAT_DATEPICKER_SCROLL_STRATEGY_FACTORY_PROVIDER,
   MatDatepickerContent,
+  DatepickerDropdownPositionX,
+  DatepickerDropdownPositionY,
 } from './datepicker-base';
 export {MatDatepickerInputEvent, DateFilterFn} from './datepicker-input-base';
 export {

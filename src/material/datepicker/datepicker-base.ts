@@ -15,6 +15,7 @@ import {
   OverlayRef,
   PositionStrategy,
   ScrollStrategy,
+  FlexibleConnectedPositionStrategy,
 } from '@angular/cdk/overlay';
 import {ComponentPortal, ComponentType} from '@angular/cdk/portal';
 import {DOCUMENT} from '@angular/common';
@@ -37,6 +38,8 @@ import {
   ViewEncapsulation,
   ChangeDetectorRef,
   Directive,
+  OnChanges,
+  SimpleChanges,
 } from '@angular/core';
 import {
   CanColor,
@@ -66,6 +69,12 @@ export const MAT_DATEPICKER_SCROLL_STRATEGY =
 export function MAT_DATEPICKER_SCROLL_STRATEGY_FACTORY(overlay: Overlay): () => ScrollStrategy {
   return () => overlay.scrollStrategies.reposition();
 }
+
+/** Possible positions for the datepicker dropdown along the X axis. */
+export type DatepickerDropdownPositionX = 'start' | 'end';
+
+/** Possible positions for the datepicker dropdown along the Y axis. */
+export type DatepickerDropdownPositionY = 'above' | 'below';
 
 /** @docs-private */
 export const MAT_DATEPICKER_SCROLL_STRATEGY_FACTORY_PROVIDER = {
@@ -183,7 +192,7 @@ export interface MatDatepickerControl<D> {
 /** Base class for a datepicker. */
 @Directive()
 export abstract class MatDatepickerBase<C extends MatDatepickerControl<D>, S,
-  D = ExtractDateTypeFromSelection<S>> implements OnDestroy, CanColor {
+  D = ExtractDateTypeFromSelection<S>> implements OnDestroy, CanColor, OnChanges {
   private _scrollStrategy: () => ScrollStrategy;
 
   /** An input indicating the type of the custom header component for the calendar, if set. */
@@ -241,6 +250,14 @@ export abstract class MatDatepickerBase<C extends MatDatepickerControl<D>, S,
     }
   }
   private _disabled: boolean;
+
+  /** Preferred position of the datepicker in the X axis. */
+  @Input()
+  xPosition: DatepickerDropdownPositionX = 'start';
+
+  /** Preferred position of the datepicker in the Y axis. */
+  @Input()
+  yPosition: DatepickerDropdownPositionY = 'below';
 
   /**
    * Emits selected year in multiyear view.
@@ -322,6 +339,19 @@ export abstract class MatDatepickerBase<C extends MatDatepickerControl<D>, S,
     }
 
     this._scrollStrategy = scrollStrategy;
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    const positionChange = changes['xPosition'] || changes['yPosition'];
+
+    if (positionChange && !positionChange.firstChange && this._popupRef) {
+      this._setConnectedPositions(
+          this._popupRef.getConfig().positionStrategy as FlexibleConnectedPositionStrategy);
+
+      if (this.opened) {
+        this._popupRef.updatePosition();
+      }
+    }
   }
 
   ngOnDestroy() {
@@ -479,8 +509,15 @@ export abstract class MatDatepickerBase<C extends MatDatepickerControl<D>, S,
 
   /** Create the popup. */
   private _createPopup(): void {
+    const positionStrategy = this._overlay.position()
+      .flexibleConnectedTo(this._datepickerInput.getConnectedOverlayOrigin())
+      .withTransformOriginOn('.mat-datepicker-content')
+      .withFlexibleDimensions(false)
+      .withViewportMargin(8)
+      .withLockedPosition();
+
     const overlayConfig = new OverlayConfig({
-      positionStrategy: this._createPopupPositionStrategy(),
+      positionStrategy: this._setConnectedPositions(positionStrategy),
       hasBackdrop: true,
       backdropClass: 'mat-overlay-transparent-backdrop',
       direction: this._dir,
@@ -551,6 +588,41 @@ export abstract class MatDatepickerBase<C extends MatDatepickerControl<D>, S,
         }
       ]);
   }
+
+    /** Sets the positions of the datepicker in dropdown mode based on the current configuration. */
+    private _setConnectedPositions(strategy: FlexibleConnectedPositionStrategy) {
+      const primaryX = this.xPosition === 'end' ? 'end' : 'start';
+      const secondaryX = primaryX === 'start' ? 'end' : 'start';
+      const primaryY = this.yPosition === 'above' ? 'bottom' : 'top';
+      const secondaryY = primaryY === 'top' ? 'bottom' : 'top';
+
+      return strategy.withPositions([
+        {
+          originX: primaryX,
+          originY: secondaryY,
+          overlayX: primaryX,
+          overlayY: primaryY
+        },
+        {
+          originX: primaryX,
+          originY: primaryY,
+          overlayX: primaryX,
+          overlayY: secondaryY
+        },
+        {
+          originX: secondaryX,
+          originY: secondaryY,
+          overlayX: secondaryX,
+          overlayY: primaryY
+        },
+        {
+          originX: secondaryX,
+          originY: primaryY,
+          overlayX: secondaryX,
+          overlayY: secondaryY
+        }
+      ]);
+    }
 
   /**
    * @param obj The object to check.

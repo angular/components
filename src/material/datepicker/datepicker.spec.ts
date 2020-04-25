@@ -34,6 +34,7 @@ import {
   MatDatepickerModule,
   MatDateSelectionModel,
 } from './index';
+import {DatepickerDropdownPositionX, DatepickerDropdownPositionY} from './datepicker-base';
 
 describe('MatDatepicker', () => {
   const SUPPORTS_INTL = typeof Intl != 'undefined';
@@ -1750,6 +1751,36 @@ describe('MatDatepicker', () => {
           .toBe(Math.floor(inputRect.right), 'Expected popup to align to input right.');
     });
 
+    it('should be able to customize the calendar position along the X axis', () => {
+      input.style.top = input.style.left = '200px';
+      testComponent.xPosition = 'end';
+      fixture.detectChanges();
+
+      testComponent.datepicker.open();
+      fixture.detectChanges();
+
+      const overlayRect = document.querySelector('.cdk-overlay-pane')!.getBoundingClientRect();
+      const inputRect = input.getBoundingClientRect();
+
+      expect(Math.floor(overlayRect.right))
+          .toBe(Math.floor(inputRect.right), 'Expected popup to align to input right.');
+    });
+
+    it('should be able to customize the calendar position along the Y axis', () => {
+      input.style.bottom = input.style.left = '100px';
+      testComponent.yPosition = 'above';
+      fixture.detectChanges();
+
+      testComponent.datepicker.open();
+      fixture.detectChanges();
+
+      const overlayRect = document.querySelector('.cdk-overlay-pane')!.getBoundingClientRect();
+      const inputRect = input.getBoundingClientRect();
+
+      expect(Math.floor(overlayRect.bottom))
+          .toBe(Math.floor(inputRect.top), 'Expected popup to align to input top.');
+    });
+
   });
 
   describe('internationalization', () => {
@@ -1847,7 +1878,13 @@ describe('MatDatepicker', () => {
 @Component({
   template: `
     <input [matDatepicker]="d" [value]="date">
-    <mat-datepicker #d [touchUi]="touch" [disabled]="disabled" [opened]="opened"></mat-datepicker>
+    <mat-datepicker
+      #d
+      [touchUi]="touch"
+      [disabled]="disabled"
+      [opened]="opened"
+      [xPosition]="xPosition"
+      [yPosition]="yPosition"></mat-datepicker>
   `,
 })
 class StandardDatepicker {
@@ -1857,6 +1894,8 @@ class StandardDatepicker {
   date: Date | null = new Date(2020, JAN, 1);
   @ViewChild('d') datepicker: MatDatepicker<Date>;
   @ViewChild(MatDatepickerInput) datepickerInput: MatDatepickerInput<Date>;
+  xPosition: DatepickerDropdownPositionX;
+  yPosition: DatepickerDropdownPositionY;
 }
 
 
