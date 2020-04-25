@@ -13,7 +13,6 @@ import {
   Overlay,
   OverlayConfig,
   OverlayRef,
-  PositionStrategy,
   ScrollStrategy,
   FlexibleConnectedPositionStrategy,
 } from '@angular/cdk/overlay';
@@ -553,76 +552,40 @@ export abstract class MatDatepickerBase<C extends MatDatepickerControl<D>, S,
     }
   }
 
-  /** Create the popup PositionStrategy. */
-  private _createPopupPositionStrategy(): PositionStrategy {
-    return this._overlay.position()
-      .flexibleConnectedTo(this._datepickerInput.getConnectedOverlayOrigin())
-      .withTransformOriginOn('.mat-datepicker-content')
-      .withFlexibleDimensions(false)
-      .withViewportMargin(8)
-      .withLockedPosition()
-      .withPositions([
-        {
-          originX: 'start',
-          originY: 'bottom',
-          overlayX: 'start',
-          overlayY: 'top'
-        },
-        {
-          originX: 'start',
-          originY: 'top',
-          overlayX: 'start',
-          overlayY: 'bottom'
-        },
-        {
-          originX: 'end',
-          originY: 'bottom',
-          overlayX: 'end',
-          overlayY: 'top'
-        },
-        {
-          originX: 'end',
-          originY: 'top',
-          overlayX: 'end',
-          overlayY: 'bottom'
-        }
-      ]);
+  /** Sets the positions of the datepicker in dropdown mode based on the current configuration. */
+  private _setConnectedPositions(strategy: FlexibleConnectedPositionStrategy) {
+    const primaryX = this.xPosition === 'end' ? 'end' : 'start';
+    const secondaryX = primaryX === 'start' ? 'end' : 'start';
+    const primaryY = this.yPosition === 'above' ? 'bottom' : 'top';
+    const secondaryY = primaryY === 'top' ? 'bottom' : 'top';
+
+    return strategy.withPositions([
+      {
+        originX: primaryX,
+        originY: secondaryY,
+        overlayX: primaryX,
+        overlayY: primaryY
+      },
+      {
+        originX: primaryX,
+        originY: primaryY,
+        overlayX: primaryX,
+        overlayY: secondaryY
+      },
+      {
+        originX: secondaryX,
+        originY: secondaryY,
+        overlayX: secondaryX,
+        overlayY: primaryY
+      },
+      {
+        originX: secondaryX,
+        originY: primaryY,
+        overlayX: secondaryX,
+        overlayY: secondaryY
+      }
+    ]);
   }
-
-    /** Sets the positions of the datepicker in dropdown mode based on the current configuration. */
-    private _setConnectedPositions(strategy: FlexibleConnectedPositionStrategy) {
-      const primaryX = this.xPosition === 'end' ? 'end' : 'start';
-      const secondaryX = primaryX === 'start' ? 'end' : 'start';
-      const primaryY = this.yPosition === 'above' ? 'bottom' : 'top';
-      const secondaryY = primaryY === 'top' ? 'bottom' : 'top';
-
-      return strategy.withPositions([
-        {
-          originX: primaryX,
-          originY: secondaryY,
-          overlayX: primaryX,
-          overlayY: primaryY
-        },
-        {
-          originX: primaryX,
-          originY: primaryY,
-          overlayX: primaryX,
-          overlayY: secondaryY
-        },
-        {
-          originX: secondaryX,
-          originY: secondaryY,
-          overlayX: secondaryX,
-          overlayY: primaryY
-        },
-        {
-          originX: secondaryX,
-          originY: primaryY,
-          overlayX: secondaryX,
-          overlayY: secondaryY
-        }
-      ]);
-    }
 
   /**
    * @param obj The object to check.
