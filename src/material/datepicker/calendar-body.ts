@@ -18,7 +18,6 @@ import {
   OnChanges,
   SimpleChanges,
   OnDestroy,
-  ChangeDetectorRef,
 } from '@angular/core';
 import {take} from 'rxjs/operators';
 
@@ -132,11 +131,7 @@ export class MatCalendarBody implements OnChanges, OnDestroy {
   /** Width of an individual cell. */
   _cellWidth: string;
 
-  constructor(
-    private _elementRef: ElementRef<HTMLElement>,
-    private _changeDetectorRef: ChangeDetectorRef,
-    private _ngZone: NgZone) {
-
+  constructor(private _elementRef: ElementRef<HTMLElement>, private _ngZone: NgZone) {
     _ngZone.runOutsideAngular(() => {
       const element = _elementRef.nativeElement;
       element.addEventListener('mouseenter', this._enterHandler, true);
@@ -321,15 +316,7 @@ export class MatCalendarBody implements OnChanges, OnDestroy {
       // we have a gap between the cells and the rows and we don't want to remove the
       // range just for it to show up again when the user moves a few pixels to the side.
       if (event.target && isTableCell(event.target as HTMLElement)) {
-        this._ngZone.run(() => {
-          this.previewChange.emit({value: null, event});
-
-          // Note that here we need to use `detectChanges`, rather than `markForCheck`, because
-          // the way `_focusActiveCell` is set up at the moment makes it fire at the wrong time
-          // when navigating one month back using the keyboard which will cause this handler
-          // to throw a "changed after checked" error when updating the preview state.
-          this._changeDetectorRef.detectChanges();
-        });
+        this._ngZone.run(() => this.previewChange.emit({value: null, event}));
       }
     }
   }

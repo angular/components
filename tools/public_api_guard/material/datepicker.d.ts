@@ -115,7 +115,7 @@ export declare class MatCalendarBody implements OnChanges, OnDestroy {
     readonly selectedValueChange: EventEmitter<MatCalendarUserEvent<number>>;
     startValue: number;
     todayValue: number;
-    constructor(_elementRef: ElementRef<HTMLElement>, _changeDetectorRef: ChangeDetectorRef, _ngZone: NgZone);
+    constructor(_elementRef: ElementRef<HTMLElement>, _ngZone: NgZone);
     _cellClicked(cell: MatCalendarCell, event: MouseEvent): void;
     _focusActiveCell(movePreview?: boolean): void;
     _isActiveCell(rowIndex: number, colIndex: number): boolean;
