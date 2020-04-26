@@ -333,6 +333,26 @@ describe('MatMonthView', () => {
           expect(testComponent.selected).toBeFalsy();
         });
 
+        it('should not clear the range when pressing escape while there is no preview', () => {
+          const getRangeElements = () => monthViewNativeElement.querySelectorAll([
+            '.mat-calendar-body-range-start',
+            '.mat-calendar-body-in-range',
+            '.mat-calendar-body-range-end'
+          ].join(','));
+
+          testComponent.selected = new DateRange(new Date(2017, JAN, 10), new Date(2017, JAN, 15));
+          fixture.detectChanges();
+
+          expect(getRangeElements().length)
+              .toBeGreaterThan(0, 'Expected range to be present on init.');
+
+          dispatchKeyboardEvent(calendarBodyEl, 'keydown', ESCAPE);
+          fixture.detectChanges();
+
+          expect(getRangeElements().length)
+              .toBeGreaterThan(0, 'Expected range to be present after pressing the escape key.');
+        });
+
         it('should not fire the selected change event when clicking on an already-selected ' +
           'date while selecting a single date', () => {
             testComponent.selected = new Date(2017, JAN, 10);

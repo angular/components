@@ -275,8 +275,8 @@ export class MatMonthView<D> implements AfterContentInit, OnDestroy {
         }
         return;
       case ESCAPE:
-          // Abort the current range selection if the user presses escape mid-selection.
-        if (this._previewEnd !== null) {
+        // Abort the current range selection if the user presses escape mid-selection.
+        if (this._previewEnd != null) {
           this._previewStart = this._previewEnd = null;
           this.selectedChange.emit(null);
           this._userSelection.emit({value: null, event});
