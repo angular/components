@@ -1,5 +1,5 @@
 import {Type, Component, ViewChild, ElementRef} from '@angular/core';
-import {ComponentFixture, TestBed, inject} from '@angular/core/testing';
+import {ComponentFixture, TestBed, inject, fakeAsync, tick} from '@angular/core/testing';
 import {FormsModule, ReactiveFormsModule, FormGroup, FormControl} from '@angular/forms';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {OverlayContainer} from '@angular/cdk/overlay';
@@ -452,6 +452,20 @@ describe('MatDatepicker', () => {
     expect(rangeTexts).toEqual(['2', '3', '4', '5']);
   });
 
+  it('should preserve the preselected values when assigning through ngModel', fakeAsync(() => {
+    const start = new Date(2020, 1, 2);
+    const end = new Date(2020, 1, 2);
+    const fixture = createComponent(RangePickerNgModel);
+    fixture.componentInstance.start = start;
+    fixture.componentInstance.end = end;
+    fixture.detectChanges();
+    tick();
+    fixture.detectChanges();
+
+    expect(fixture.componentInstance.start).toBe(start);
+    expect(fixture.componentInstance.end).toBe(end);
+  }));
+
 });
 
 @Component({
@@ -523,4 +537,22 @@ class RangePickerNoStart {}
   `
 })
 class RangePickerNoEnd {}
+
+
+@Component({
+  template: `
+    <mat-form-field>
+      <mat-date-range-input [rangePicker]="rangePicker">
+        <input matStartDate [(ngModel)]="start"/>
+        <input matEndDate [(ngModel)]="end"/>
+      </mat-date-range-input>
+
+      <mat-date-range-picker #rangePicker></mat-date-range-picker>
+    </mat-form-field>
+  `
+})
+class RangePickerNgModel {
+  start: Date | null = null;
+  end: Date | null = null;
+}
 
