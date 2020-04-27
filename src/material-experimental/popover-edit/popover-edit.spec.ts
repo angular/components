@@ -182,7 +182,7 @@ class ElementDataSource extends DataSource<PeriodicElement> {
 
 @Component({
   template: `
-  <div #table style="margin: 16px">
+  <div #table style="margin: 16px; max-width: 90vw; max-height: 90vh;">
     <mat-table editable [dataSource]="dataSource">
       <ng-container matColumnDef="before">
         <mat-cell *matCellDef="let element">
