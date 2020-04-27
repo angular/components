@@ -4191,7 +4191,7 @@ describe('CdkDrag', () => {
       dispatchMouseEvent(document, 'mousemove', targetRect.left, targetRect.top);
       fixture.detectChanges();
 
-      expect(dropZones[1].firstChild === placeholder)
+      expect(dropZones[1].firstElementChild === placeholder)
           .toBe(true, 'Expected placeholder to be first child inside second container.');
 
       dispatchMouseEvent(document, 'mouseup');
