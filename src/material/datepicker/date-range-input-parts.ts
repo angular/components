@@ -224,7 +224,12 @@ export class MatStartDate<D> extends _MatDateRangeInputBase<D> implements CanUpd
 
   protected _assignValueToModel(value: D | null) {
     if (this._model) {
-      this._model.updateSelection(new DateRange(value, this._model.selection.end), this);
+      const range = new DateRange(value, this._model.selection.end);
+
+      // Note that we pass the range input as the source of the event, rather than the current
+      // field, because we treat the whole input as a single unit and we don't want the two
+      // inner inputs to respond to each other's changes.
+      this._model.updateSelection(range, this._rangeInput);
     }
   }
 
@@ -304,7 +309,12 @@ export class MatEndDate<D> extends _MatDateRangeInputBase<D> implements CanUpdat
 
   protected _assignValueToModel(value: D | null) {
     if (this._model) {
-      this._model.updateSelection(new DateRange(this._model.selection.start, value), this);
+      const range = new DateRange(this._model.selection.start, value);
+
+      // Note that we pass the range input as the source of the event, rather than the current
+      // field, because we treat the whole input as a single unit and we don't want the two
+      // inner inputs to respond to each other's changes.
+      this._model.updateSelection(range, this._rangeInput);
     }
   }
 
