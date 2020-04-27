@@ -1475,6 +1475,22 @@ describe('MatDatepicker', () => {
         expect(testComponent.onDateInput).toHaveBeenCalledTimes(1);
       });
 
+      it('should have updated the native input value when the dateChange event is emitted', () => {
+        let valueDuringChangeEvent = '';
+
+        (testComponent.onDateChange as jasmine.Spy).and.callFake(() => {
+          valueDuringChangeEvent = inputEl.value;
+        });
+
+        const model = fixture.debugElement.query(By.directive(MatDatepicker))
+          .injector.get<MatDateSelectionModel<Date>>(MatDateSelectionModel);
+
+        model.updateSelection(new Date(2020, 0, 1), null);
+        fixture.detectChanges();
+
+        expect(valueDuringChangeEvent).toBe('1/1/2020');
+      });
+
     });
 
     describe('with ISO 8601 strings as input', () => {
