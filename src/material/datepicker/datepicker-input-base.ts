@@ -196,9 +196,9 @@ export abstract class MatDatepickerInputBase<S, D = ExtractDateTypeFromSelection
         const value = this._getValueFromModel(event.selection);
         this._cvaOnChange(value);
         this._onTouched();
+        this._formatValue(value);
         this.dateInput.emit(new MatDatepickerInputEvent(this, this._elementRef.nativeElement));
         this.dateChange.emit(new MatDatepickerInputEvent(this, this._elementRef.nativeElement));
-        this._formatValue(value);
 
         if (this._outsideValueChanged) {
           this._outsideValueChanged();
