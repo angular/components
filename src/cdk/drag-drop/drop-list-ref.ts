@@ -310,7 +310,7 @@ export class DropListRef<T = any> {
       activeDraggables.splice(newIndex, 0, item);
     } else {
       const element = coerceElement(this.element);
-      if (activeDraggables.length && this._isEnteringFromStart(pointerX, pointerY)) {
+      if (this._shouldEnterAsFirstChild(pointerX, pointerY)) {
         element.insertBefore(placeholder, activeDraggables[0].getRootElement());
         activeDraggables.unshift(item);
       } else {
@@ -708,13 +708,24 @@ export class DropListRef<T = any> {
    * @param pointerX Position of the user's pointer along the X axis.
    * @param pointerY Position of the user's pointer along the Y axis.
    */
-  private _isEnteringFromStart(pointerX: number, pointerY: number) {
-    const firstItemPosition = this._itemPositions[0];
+  private _shouldEnterAsFirstChild(pointerX: number, pointerY: number) {
+    if (!this._activeDraggables.length) {
+      return false;
+    }
+
+    const itemPositions = this._itemPositions;
     const isHorizontal = this._orientation === 'horizontal';
 
-    return isHorizontal ?
-      pointerX <= firstItemPosition.clientRect.left :
-      pointerY <= firstItemPosition.clientRect.top;
+    // `itemPositions` are sorted by position while `activeDraggables` are sorted by child index
+    // check if container is using some sort of "reverse" ordering (eg: flex-direction: row-reverse)
+    const reversed = itemPositions[0].drag !== this._activeDraggables[0];
+    if (reversed) {
+      const lastItemRect = itemPositions[itemPositions.length - 1].clientRect;
+      return isHorizontal ? pointerX >= lastItemRect.right : pointerY >= lastItemRect.bottom;
+    } else {
+      const firstItemRect = itemPositions[0].clientRect;
+      return isHorizontal ? pointerX <= firstItemRect.left : pointerY <= firstItemRect.top;
+    }
   }
 
   /**
