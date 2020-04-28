@@ -202,7 +202,6 @@ export class MatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDes
   _calendarHeaderPortal: Portal<any>;
 
   private _intlChanges: Subscription;
-  private _selectedChanges: Subscription;
 
   /**
    * Used for scheduling that focus should be moved to the active cell on the next tick.
@@ -338,15 +337,6 @@ export class MatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDes
       _changeDetectorRef.markForCheck();
       this.stateChanges.next();
     });
-
-    this._selectedChanges = _model.selectionChanged.subscribe(event => {
-      // @breaking-change 11.0.0 Remove null check once `event.selection` is allowed to be null.
-      // Also remove non-null assertion for `selection`.
-      if (event.selection) {
-        const selection = this._model.selection;
-        this.selectedChange.emit(selection instanceof DateRange ? selection.start! : selection!);
-      }
-    });
   }
 
   ngAfterContentInit() {
@@ -365,7 +355,6 @@ export class MatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDes
   }
 
   ngOnDestroy() {
-    this._selectedChanges.unsubscribe();
     this._intlChanges.unsubscribe();
     this.stateChanges.complete();
   }
@@ -423,8 +412,10 @@ export class MatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDes
       const newSelection = this._rangeSelectionStrategy.selectionFinished(value,
           selection as DateRange<D>, event.event);
       this._model.updateSelection(newSelection, this);
-    } else if (value || isRange) {
+      this.selectedChange.emit(value!);
+    } else if (value && (isRange || !this._dateAdapter.sameDate(value, this.selected as D))) {
       this._model.add(value);
+      this.selectedChange.emit(value);
     }
 
     this._userSelection.emit();
