@@ -36,11 +36,7 @@
     API reference for Angular {$ doc.packageDisplayName $} {$ doc.displayName $}
   </h2>
 
-  <p class="docs-api-module-import">
-    <code>
-      import {{$ doc.primaryExportName $}} from '{$ doc.moduleImportPath $}';
-    </code>
-  </p>
+  <div docs-api-module-import exportName="{{$ doc.primaryExportName $}}" moduleImportPath="{$ doc.moduleImportPath $}"></div>
 
   {%- if doc.services.length -%}
     <h3 id="{$ doc.name $}-services" class="docs-header-link docs-api-h3">
