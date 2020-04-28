@@ -39,7 +39,7 @@ import {
 } from '@angular/material/core';
 import {BooleanInput} from '@angular/cdk/coercion';
 import {MatDatepickerInputBase, DateFilterFn} from './datepicker-input-base';
-import {DateRange} from './date-selection-model';
+import {DateRange, MatDateSelectionModel} from './date-selection-model';
 
 /** Parent component that should be wrapped around `MatStartDate` and `MatEndDate`. */
 export interface MatDateRangeInputParent<D> {
@@ -158,6 +158,15 @@ abstract class MatDateRangeInputPartBase<D>
   protected _parentDisabled() {
     return this._rangeInput._groupDisabled;
   }
+
+  _registerModel(model: MatDateSelectionModel<DateRange<D>, D>) {
+    // The very first time the range inputs write their values, they don't know about the value
+    // of the opposite input. When this is combined with the fact that `NgModel` defers writing
+    // its value with a `Promise.resolve`, we can get into a situation where the first input
+    // resets the value of the second. We work around it by deferring the registration of
+    // the model, allowing the input enough time to assign the initial value.
+    Promise.resolve().then(() => super._registerModel(model));
+  }
 }
 
 const _MatDateRangeInputBase:
@@ -225,11 +234,7 @@ export class MatStartDate<D> extends _MatDateRangeInputBase<D> implements CanUpd
   protected _assignValueToModel(value: D | null) {
     if (this._model) {
       const range = new DateRange(value, this._model.selection.end);
-
-      // Note that we pass the range input as the source of the event, rather than the current
-      // field, because we treat the whole input as a single unit and we don't want the two
-      // inner inputs to respond to each other's changes.
-      this._model.updateSelection(range, this._rangeInput);
+      this._model.updateSelection(range, this);
     }
   }
 
@@ -310,11 +315,7 @@ export class MatEndDate<D> extends _MatDateRangeInputBase<D> implements CanUpdat
   protected _assignValueToModel(value: D | null) {
     if (this._model) {
       const range = new DateRange(this._model.selection.start, value);
-
-      // Note that we pass the range input as the source of the event, rather than the current
-      // field, because we treat the whole input as a single unit and we don't want the two
-      // inner inputs to respond to each other's changes.
-      this._model.updateSelection(range, this._rangeInput);
+      this._model.updateSelection(range, this);
     }
   }
 
