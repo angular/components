@@ -100,8 +100,6 @@
       <a mat-list-item *ngFor="let link of links; last as last" href="http://www.google.com">
         <mat-icon mat-list-icon>folder</mat-icon>
         <span mat-line>{{ link.name }}</span>
-        <span mat-line class="demo-secondary-text"> Description </span>
-        <mat-divider inset *ngIf="!last"></mat-divider>
       </a>
     </mat-nav-list>
   </div>
