@@ -67,7 +67,8 @@ export abstract class MatListItemBase implements AfterContentInit, OnDestroy, Ri
       this._subscriptions.add(this.lines.changes.pipe(startWith(this.lines))
           .subscribe((lines: QueryList<ElementRef<Element>>) => {
             lines.forEach((line: ElementRef<Element>, index: number) => {
-              line.nativeElement.classList.toggle('mdc-list-item__primary-text', index === 0);
+              line.nativeElement.classList
+                  .toggle('mdc-list-item__primary-text', index === 0 && lines.length > 1);
               line.nativeElement.classList.toggle('mdc-list-item__secondary-text', index !== 0);
             });
             setLines(lines, this._element, 'mat-mdc');
