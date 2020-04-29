@@ -384,6 +384,22 @@ describe('MatMonthView', () => {
             expect(fixture.componentInstance.selectedChangeSpy).toHaveBeenCalledWith(selectedDate);
           });
 
+        it('should fire the _userSelection event with the correct value when clicking ' +
+          'on a selected date', () => {
+            const date = new Date(2017, JAN, 10);
+            testComponent.selected = date;
+            fixture.detectChanges();
+
+            expect(fixture.componentInstance.userSelectionSpy).not.toHaveBeenCalled();
+
+            const selectedCell =
+                monthViewNativeElement.querySelector('.mat-calendar-body-selected') as HTMLElement;
+            selectedCell.click();
+            fixture.detectChanges();
+
+            expect(fixture.componentInstance.userSelectionSpy).toHaveBeenCalledWith(
+              jasmine.objectContaining({value: date}));
+          });
       });
     });
   });
@@ -449,12 +465,14 @@ describe('MatMonthView', () => {
     <mat-month-view
       [(activeDate)]="date"
       [(selected)]="selected"
-      (selectedChange)="selectedChangeSpy($event)"></mat-month-view>`,
+      (selectedChange)="selectedChangeSpy($event)"
+      (_userSelection)="userSelectionSpy($event)"></mat-month-view>`,
 })
 class StandardMonthView {
   date = new Date(2017, JAN, 5);
   selected: Date | DateRange<Date> = new Date(2017, JAN, 10);
   selectedChangeSpy = jasmine.createSpy('selectedChange');
+  userSelectionSpy = jasmine.createSpy('userSelection');
 }
 
 
