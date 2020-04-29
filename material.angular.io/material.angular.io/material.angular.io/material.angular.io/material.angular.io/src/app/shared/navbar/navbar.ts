@@ -2,15 +2,15 @@ import {Component, NgModule, OnDestroy} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {MatButtonModule} from '@angular/material/button';
 import {MatMenuModule} from '@angular/material/menu';
-import {RouterModule, Event, NavigationEnd, Router} from '@angular/router';
+import {RouterModule} from '@angular/router';
 import {ThemePickerModule} from '../theme-picker';
 import {VersionPickerModule} from '../version-picker';
 import {SECTIONS} from '../documentation-items/documentation-items';
 import {ThemeStorage} from '../theme-picker/theme-storage/theme-storage';
 import {StyleManager} from '../style-manager';
 import {HttpClientModule} from '@angular/common/http';
-import {filter} from 'rxjs/operators';
 import {Subscription} from 'rxjs';
+import {NavigationFocusService} from '../navigation-focus/navigation-focus.service';
 
 const SECTIONS_KEYS = Object.keys(SECTIONS);
 
@@ -22,16 +22,11 @@ const SECTIONS_KEYS = Object.keys(SECTIONS);
 export class NavBar implements OnDestroy {
   private subscriptions = new Subscription();
   isNextVersion = location.hostname.startsWith('next.material.angular.io');
-  skipLinkHref: string;
+  skipLinkHref: string|null;
   skipLinkHidden = true;
 
-  constructor(router: Router) {
-    this.subscriptions.add(router.events
-      .pipe(filter((event: Event) => event instanceof NavigationEnd))
-      .subscribe(() => {
-        const baseUrl = router.url.split('#')[0];
-        this.skipLinkHref = `${baseUrl}#main-content`;
-      }));
+  constructor(private navigationFocusService: NavigationFocusService) {
+    setTimeout(() => this.skipLinkHref = this.navigationFocusService.getSkipLinkHref(), 100);
   }
 
   get sections() {

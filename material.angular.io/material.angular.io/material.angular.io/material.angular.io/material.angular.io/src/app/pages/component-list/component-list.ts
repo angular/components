@@ -9,6 +9,7 @@ import {SvgViewerModule} from '../../shared/svg-viewer/svg-viewer';
 import {CommonModule} from '@angular/common';
 import {MatCardModule } from '@angular/material/card';
 import {combineLatest} from 'rxjs';
+import {NavigationFocusModule} from '../../shared/navigation-focus/navigation-focus';
 
 @Component({
   selector: 'app-components',
@@ -38,7 +39,7 @@ export class ComponentList {
 }
 
 @NgModule({
-  imports: [CommonModule, SvgViewerModule, MatCardModule, RouterModule],
+  imports: [CommonModule, SvgViewerModule, MatCardModule, RouterModule, NavigationFocusModule],
   exports: [ComponentList],
   declarations: [ComponentList],
   providers: [DocumentationItems],

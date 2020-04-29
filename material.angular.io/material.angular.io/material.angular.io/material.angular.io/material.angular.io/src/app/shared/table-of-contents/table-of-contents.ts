@@ -2,9 +2,10 @@ import {
   AfterViewInit, Component, ElementRef, Inject, Input, OnDestroy, OnInit
 } from '@angular/core';
 import {DOCUMENT} from '@angular/common';
-import {ActivatedRoute, NavigationEnd, Router} from '@angular/router';
-import {Subject, fromEvent} from 'rxjs';
-import {debounceTime, takeUntil} from 'rxjs/operators';
+import {ActivatedRoute, Router} from '@angular/router';
+import {fromEvent, Subscription} from 'rxjs';
+import {debounceTime} from 'rxjs/operators';
+import {NavigationFocusService} from '../navigation-focus/navigation-focus.service';
 
 interface LinkSection {
   name: string;
@@ -41,31 +42,31 @@ export class TableOfContents implements OnInit, AfterViewInit, OnDestroy {
 
   _rootUrl = this._router.url.split('#')[0];
   private _scrollContainer: any;
-  private _destroyed = new Subject();
   private _urlFragment = '';
+  private subscriptions = new Subscription();
 
   constructor(private _router: Router,
               private _route: ActivatedRoute,
               private _element: ElementRef,
+              private _navigationFocusService: NavigationFocusService,
               @Inject(DOCUMENT) private _document: Document) {
 
-    this._router.events.pipe(takeUntil(this._destroyed)).subscribe((event) => {
-      if (event instanceof NavigationEnd) {
+    this.subscriptions.add(this._navigationFocusService.navigationEndEvents
+      .subscribe(() => {
         const rootUrl = _router.url.split('#')[0];
         if (rootUrl !== this._rootUrl) {
           this._rootUrl = rootUrl;
         }
-      }
-    });
+      }));
 
-    this._route.fragment.pipe(takeUntil(this._destroyed)).subscribe(fragment => {
+    this.subscriptions.add(this._route.fragment.subscribe(fragment => {
       this._urlFragment = fragment;
 
       const target = document.getElementById(this._urlFragment);
       if (target) {
         target.scrollIntoView();
       }
-    });
+    }));
   }
 
   ngOnInit(): void {
@@ -76,10 +77,9 @@ export class TableOfContents implements OnInit, AfterViewInit, OnDestroy {
         this._document.querySelectorAll(this.container)[0] : window;
 
       if (this._scrollContainer) {
-        fromEvent(this._scrollContainer, 'scroll').pipe(
-            takeUntil(this._destroyed),
+        this.subscriptions.add(fromEvent(this._scrollContainer, 'scroll').pipe(
             debounceTime(10))
-            .subscribe(() => this.onScroll());
+            .subscribe(() => this.onScroll()));
       }
     });
   }
@@ -89,7 +89,7 @@ export class TableOfContents implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this._destroyed.next();
+    this.subscriptions.unsubscribe();
   }
 
   updateScrollPosition(): void {
