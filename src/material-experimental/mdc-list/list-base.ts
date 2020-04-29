@@ -44,13 +44,14 @@ export abstract class MatListItemBase implements AfterContentInit, OnDestroy, Ri
 
   constructor(protected _element: ElementRef, protected _ngZone: NgZone, listBase: MatListBase,
               platform: Platform) {
+    const el = this._element.nativeElement;
     this.rippleDisabled = listBase._isNonInteractive;
     if (!listBase._isNonInteractive) {
-      this._element.nativeElement.classList.add('mat-mdc-list-item-interactive');
+      el.classList.add('mat-mdc-list-item-interactive');
     }
     this._rippleRenderer =
-        new RippleRenderer(this, this._ngZone, this._element.nativeElement, platform);
-    this._rippleRenderer.setupTriggerEvents(this._element.nativeElement);
+        new RippleRenderer(this, this._ngZone, el, platform);
+    this._rippleRenderer.setupTriggerEvents(el);
   }
 
   ngAfterContentInit() {
