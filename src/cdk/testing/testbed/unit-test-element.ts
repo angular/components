@@ -71,7 +71,7 @@ export class UnitTestElement implements TestElement {
     await this._stabilize();
   }
 
-  async click(relativeX = 0, relativeY = 0): Promise<void> {
+  async click(relativeX = 1, relativeY = 1): Promise<void> {
     await this._stabilize();
     const {left, top} = this.element.getBoundingClientRect();
     // Round the computed click position as decimal pixels are not

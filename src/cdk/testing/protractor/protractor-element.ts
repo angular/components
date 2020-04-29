@@ -73,7 +73,7 @@ export class ProtractorElement implements TestElement {
     return this.element.clear();
   }
 
-  async click(relativeX = 0, relativeY = 0): Promise<void> {
+  async click(relativeX = 1, relativeY = 1): Promise<void> {
     await browser.actions()
       .mouseMove(await this.element.getWebElement(), {x: relativeX, y: relativeY})
       .click()
