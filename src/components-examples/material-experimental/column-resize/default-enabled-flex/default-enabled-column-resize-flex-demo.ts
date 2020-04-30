@@ -45,6 +45,9 @@ const ELEMENT_DATA: PeriodicElement[] = [
   selector: 'default-enabled-column-resize-flex-demo',
   templateUrl: 'default-enabled-column-resize-flex-demo.html',
   encapsulation: ViewEncapsulation.None,
+  host: {
+    'style': 'display: block; overflow: auto',
+  },
 })
 export class DefaultEnabledColumnResizeFlexDemo {
   displayedColumns: string[] = ['position', 'name', 'weight', 'symbol'];

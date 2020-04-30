@@ -45,6 +45,9 @@ const ELEMENT_DATA: PeriodicElement[] = [
   selector: 'opt-in-column-resize-demo',
   templateUrl: 'opt-in-column-resize-demo.html',
   encapsulation: ViewEncapsulation.None,
+  host: {
+    'style': 'display: block; overflow: auto',
+  },
 })
 export class OptInColumnResizeDemo {
   displayedColumns: string[] = ['position', 'name', 'weight', 'symbol'];

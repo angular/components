@@ -32,7 +32,9 @@ export abstract class ColumnResize implements AfterViewInit, OnDestroy {
   /* Publicly accessible interface for triggering and being notified of resizes. */
   abstract readonly columnResizeNotifier: ColumnResizeNotifier;
 
-  protected abstract readonly elementRef: ElementRef<HTMLElement>;
+  /* ElementRef that this directive is attached to. Exposed For use by column-level directives */
+  abstract readonly elementRef: ElementRef<HTMLElement>;
+
   protected abstract readonly eventDispatcher: HeaderRowEventDispatcher;
   protected abstract readonly ngZone: NgZone;
   protected abstract readonly notifier: ColumnResizeNotifierSource;
@@ -61,6 +63,10 @@ export abstract class ColumnResize implements AfterViewInit, OnDestroy {
     return `cdk-column-resize-${this.selectorId}`;
   }
 
+  setResized() {
+    this.elementRef.nativeElement!.classList.add(WITH_RESIZED_COLUMN_CLASS);
+  }
+
   private _listenForRowHoverEvents() {
     this.ngZone.runOutsideAngular(() => {
       const element = this.elementRef.nativeElement!;
@@ -87,7 +93,7 @@ export abstract class ColumnResize implements AfterViewInit, OnDestroy {
         takeUntil(this.destroyed),
         take(1),
     ).subscribe(() => {
-      this.elementRef.nativeElement!.classList.add(WITH_RESIZED_COLUMN_CLASS);
+      this.setResized();
     });
   }
 
