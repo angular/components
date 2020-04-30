@@ -73,9 +73,10 @@ export class ProtractorElement implements TestElement {
     return this.element.clear();
   }
 
-  async click(relativeX = 1, relativeY = 1): Promise<void> {
+  async click(...args: number[]): Promise<void> {
+    const offsetArgs = args.length ? [{x: args[0], y: args[1]}] : [];
     await browser.actions()
-      .mouseMove(await this.element.getWebElement(), {x: relativeX, y: relativeY})
+      .mouseMove(await this.element.getWebElement(), ...offsetArgs)
       .click()
       .perform();
   }
