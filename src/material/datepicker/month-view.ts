@@ -204,7 +204,9 @@ export class MatMonthView<D> implements AfterContentInit, OnDestroy {
   /** Handles when a new date is selected. */
   _dateSelected(event: MatCalendarUserEvent<number>) {
     const date = event.value;
-    let selectedDate: D | null = null;
+    const selectedYear = this._dateAdapter.getYear(this.activeDate);
+    const selectedMonth = this._dateAdapter.getMonth(this.activeDate);
+    const selectedDate = this._dateAdapter.createDate(selectedYear, selectedMonth, date);
     let rangeStartDate: number | null;
     let rangeEndDate: number | null;
 
@@ -216,9 +218,6 @@ export class MatMonthView<D> implements AfterContentInit, OnDestroy {
     }
 
     if (rangeStartDate !== date || rangeEndDate !== date) {
-      const selectedYear = this._dateAdapter.getYear(this.activeDate);
-      const selectedMonth = this._dateAdapter.getMonth(this.activeDate);
-      selectedDate = this._dateAdapter.createDate(selectedYear, selectedMonth, date);
       this.selectedChange.emit(selectedDate);
     }
 
