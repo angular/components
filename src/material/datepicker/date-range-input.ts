@@ -38,8 +38,6 @@ import {DateRange, MatDateSelectionModel} from './date-selection-model';
 
 let nextUniqueId = 0;
 
-// TODO(crisbeto): when adding live examples, should how to use with `FormGroup`.
-
 @Component({
   selector: 'mat-date-range-input',
   templateUrl: 'date-range-input.html',

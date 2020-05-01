@@ -9,5 +9,5 @@ mat-calendar {
 }
 
 .demo-custom-range {
-  @include mat-datepicker-range-colors(hotpink, teal, yellow, purple);
+  @include mat-date-range-colors(hotpink, teal, yellow, purple);
 }
