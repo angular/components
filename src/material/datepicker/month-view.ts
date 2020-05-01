@@ -46,9 +46,9 @@ import {Subscription} from 'rxjs';
 import {startWith} from 'rxjs/operators';
 import {DateRange} from './date-selection-model';
 import {
-  MatCalendarRangeSelectionStrategy,
-  MAT_CALENDAR_RANGE_SELECTION_STRATEGY,
-} from './calendar-range-selection-strategy';
+  MatDateRangeSelectionStrategy,
+  MAT_DATE_RANGE_SELECTION_STRATEGY,
+} from './date-range-selection-strategy';
 
 
 const DAYS_PER_WEEK = 7;
@@ -179,8 +179,8 @@ export class MatMonthView<D> implements AfterContentInit, OnDestroy {
               @Optional() @Inject(MAT_DATE_FORMATS) private _dateFormats: MatDateFormats,
               @Optional() public _dateAdapter: DateAdapter<D>,
               @Optional() private _dir?: Directionality,
-              @Inject(MAT_CALENDAR_RANGE_SELECTION_STRATEGY) @Optional()
-                  private _rangeStrategy?: MatCalendarRangeSelectionStrategy<D>) {
+              @Inject(MAT_DATE_RANGE_SELECTION_STRATEGY) @Optional()
+                  private _rangeStrategy?: MatDateRangeSelectionStrategy<D>) {
     if (!this._dateAdapter) {
       throw createMissingDateImplError('DateAdapter');
     }

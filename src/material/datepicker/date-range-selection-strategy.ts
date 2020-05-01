@@ -13,12 +13,11 @@ import {DateRange} from './date-selection-model';
 // TODO(crisbeto): this needs to be expanded to allow for the preview range to be customized.
 
 /** Injection token used to customize the date range selection behavior. */
-export const MAT_CALENDAR_RANGE_SELECTION_STRATEGY =
-    new InjectionToken<MatCalendarRangeSelectionStrategy<any>>(
-        'MAT_CALENDAR_RANGE_SELECTION_STRATEGY');
+export const MAT_DATE_RANGE_SELECTION_STRATEGY =
+    new InjectionToken<MatDateRangeSelectionStrategy<any>>('MAT_DATE_RANGE_SELECTION_STRATEGY');
 
 /** Object that can be provided in order to customize the date range selection behavior. */
-export interface MatCalendarRangeSelectionStrategy<D> {
+export interface MatDateRangeSelectionStrategy<D> {
   /**
    * Called when the user has finished selecting a value.
    * @param date Date that was selected. Will be null if the user cleared the selection.
@@ -43,7 +42,7 @@ export interface MatCalendarRangeSelectionStrategy<D> {
 
 /** Provides the default date range selection behavior. */
 @Injectable()
-export class DefaultMatCalendarRangeStrategy<D> implements MatCalendarRangeSelectionStrategy<D> {
+export class DefaultMatCalendarRangeStrategy<D> implements MatDateRangeSelectionStrategy<D> {
   constructor(private _dateAdapter: DateAdapter<D>) {}
 
   selectionFinished(date: D, currentRange: DateRange<D>) {

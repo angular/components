@@ -42,15 +42,7 @@ import {
   yearsPerPage
 } from './multi-year-view';
 import {MatYearView} from './year-view';
-import {
-  MAT_SINGLE_DATE_SELECTION_MODEL_PROVIDER,
-  DateRange,
-  MatDateSelectionModel,
-} from './date-selection-model';
-import {
-  MAT_CALENDAR_RANGE_SELECTION_STRATEGY,
-  MatCalendarRangeSelectionStrategy
-} from './calendar-range-selection-strategy';
+import {MAT_SINGLE_DATE_SELECTION_MODEL_PROVIDER, DateRange} from './date-selection-model';
 
 /**
  * Possible views for the calendar.
@@ -223,15 +215,15 @@ export class MatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDes
 
   /** The currently selected date. */
   @Input()
-  get selected(): DateRange<D> | D | null { return this._model.selection; }
+  get selected(): DateRange<D> | D | null { return this._selected; }
   set selected(value: DateRange<D> | D | null) {
     if (value instanceof DateRange) {
-      this._model.updateSelection(value, this);
+      this._selected = value;
     } else {
-      const newValue = this._getValidDateOrNull(this._dateAdapter.deserialize(value));
-      this._model.updateSelection(newValue!, this);
+      this._selected = this._getValidDateOrNull(this._dateAdapter.deserialize(value));
     }
   }
+  private _selected: DateRange<D> | D | null;
 
   /** The minimum selectable date. */
   @Input()
@@ -280,7 +272,8 @@ export class MatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDes
   @Output() readonly monthSelected: EventEmitter<D> = new EventEmitter<D>();
 
   /** Emits when any date is selected. */
-  @Output() readonly _userSelection: EventEmitter<void> = new EventEmitter<void>();
+  @Output() readonly _userSelection: EventEmitter<MatCalendarUserEvent<D | null>> =
+      new EventEmitter<MatCalendarUserEvent<D | null>>();
 
   /** Reference to the current month view component. */
   @ViewChild(MatMonthView) monthView: MatMonthView<D>;
@@ -320,10 +313,7 @@ export class MatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDes
   constructor(_intl: MatDatepickerIntl,
               @Optional() private _dateAdapter: DateAdapter<D>,
               @Optional() @Inject(MAT_DATE_FORMATS) private _dateFormats: MatDateFormats,
-              private _changeDetectorRef: ChangeDetectorRef,
-              private _model: MatDateSelectionModel<DateRange<D> | D | null>,
-              @Optional() @Inject(MAT_CALENDAR_RANGE_SELECTION_STRATEGY)
-                  private _rangeSelectionStrategy?: MatCalendarRangeSelectionStrategy<D>) {
+              private _changeDetectorRef: ChangeDetectorRef) {
 
     if (!this._dateAdapter) {
       throw createMissingDateImplError('DateAdapter');
@@ -399,26 +389,16 @@ export class MatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDes
 
   /** Handles date selection in the month view. */
   _dateSelected(event: MatCalendarUserEvent<D | null>): void {
-    const selection = this._model.selection;
-    const value = event.value;
-    const isRange = selection instanceof DateRange;
+    const date = event.value;
 
-    // If we're selecting a range and we have a selection strategy, always pass the value through
-    // there. Otherwise don't assign null values to the model, unless we're selecting a range.
-    // A null value when picking a range means that the user cancelled the selection (e.g. by
-    // pressing escape), whereas when selecting a single value it means that the value didn't
-    // change. This isn't very intuitive, but it's here for backwards-compatibility.
-    if (isRange && this._rangeSelectionStrategy) {
-      const newSelection = this._rangeSelectionStrategy.selectionFinished(value,
-          selection as DateRange<D>, event.event);
-      this._model.updateSelection(newSelection, this);
-      this.selectedChange.emit(value!);
-    } else if (value && (isRange || !this._dateAdapter.sameDate(value, this.selected as D))) {
-      this._model.add(value);
-      this.selectedChange.emit(value);
+    if (this.selected instanceof DateRange ||
+        (date && !this._dateAdapter.sameDate(date, this.selected))) {
+      // @breaking-change 11.0.0 remove non-null assertion
+      // once the `selectedChange` is allowed to be null.
+      this.selectedChange.emit(date!);
     }
 
-    this._userSelection.emit();
+    this._userSelection.emit(event);
   }
 
   /** Handles year selection in the multiyear view. */
@@ -435,11 +415,6 @@ export class MatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDes
   _goToDateInView(date: D, view: 'month' | 'year' | 'multi-year'): void {
     this.activeDate = date;
     this.currentView = view;
-  }
-
-  /** Gets the selection that should be displayed to the user. */
-  _getDisplaySelection(): DateRange<D> | D | null {
-    return this._model.isValid() ? this._model.selection : null;
   }
 
   /**

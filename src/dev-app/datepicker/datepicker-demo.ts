@@ -24,8 +24,8 @@ import {
   MatCalendar,
   MatCalendarHeader,
   MatDatepickerInputEvent,
-  MAT_CALENDAR_RANGE_SELECTION_STRATEGY,
-  MatCalendarRangeSelectionStrategy,
+  MAT_DATE_RANGE_SELECTION_STRATEGY,
+  MatDateRangeSelectionStrategy,
   DateRange
 } from '@angular/material/datepicker';
 import {Subject} from 'rxjs';
@@ -86,7 +86,7 @@ export class DatepickerDemo {
 
 /** Range selection strategy that preserves the current range. */
 @Injectable()
-export class PreserveRangeStrategy<D> implements MatCalendarRangeSelectionStrategy<D> {
+export class PreserveRangeStrategy<D> implements MatDateRangeSelectionStrategy<D> {
   constructor(private _dateAdapter: DateAdapter<D>) {}
 
   selectionFinished(date: D, currentRange: DateRange<D>) {
@@ -134,7 +134,7 @@ export class PreserveRangeStrategy<D> implements MatCalendarRangeSelectionStrate
 @Directive({
   selector: '[customRangeStrategy]',
   providers: [{
-    provide: MAT_CALENDAR_RANGE_SELECTION_STRATEGY,
+    provide: MAT_DATE_RANGE_SELECTION_STRATEGY,
     useClass: PreserveRangeStrategy
   }]
 })
