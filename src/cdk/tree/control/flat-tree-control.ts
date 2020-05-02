@@ -58,6 +58,6 @@ export class FlatTreeControl<T, K = T> extends BaseTreeControl<T, K> {
    * data nodes of the tree.
    */
   expandAll(): void {
-    this.expansionModel.select(...this.dataNodes.map(node => this._trackByValue(node)));
+    this.expansionModel.select(...(this.dataNodes as T[]).map(node => this._trackByValue(node)));
   }
 }

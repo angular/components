@@ -381,7 +381,7 @@ export class CdkTreeNode<T> implements FocusableOption, OnDestroy {
     }
   }
 
-  protected _setRoleFromChildren(children: T[]) {
+  protected _setRoleFromChildren(children: T[] | ReadonlyArray<T>) {
     this.role = children && children.length ? 'group' : 'treeitem';
   }
 }

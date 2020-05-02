@@ -6,8 +6,8 @@
  * found in the LICENSE file at https://angular.io/license
  */
 import {SelectionModel} from '@angular/cdk/collections';
-import {Observable} from 'rxjs';
 import {TreeControl} from './tree-control';
+import {GetChildrenFn} from './types';
 
 /** Base tree control. It has basic toggle/expand/collapse operations on a single data node. */
 export abstract class BaseTreeControl<T, K = T> implements TreeControl<T, K> {
@@ -19,7 +19,7 @@ export abstract class BaseTreeControl<T, K = T> implements TreeControl<T, K> {
   abstract expandAll(): void;
 
   /** Saved data node for `expandAll` action. */
-  dataNodes: T[];
+  dataNodes: T[] | ReadonlyArray<T>;
 
   /** A selection model with multi-selection to track expansion status. */
   expansionModel: SelectionModel<K> = new SelectionModel<K>(true);
@@ -42,7 +42,7 @@ export abstract class BaseTreeControl<T, K = T> implements TreeControl<T, K> {
   isExpandable: (dataNode: T) => boolean;
 
   /** Gets a stream that emits whenever the given data node's children change. */
-  getChildren: (dataNode: T) => (Observable<T[]> | T[] | undefined | null);
+  getChildren: GetChildrenFn<T>;
 
   /** Toggles one single data node's expanded/collapsed state. */
   toggle(dataNode: T): void {

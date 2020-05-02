@@ -46,7 +46,7 @@ export class CdkNestedTreeNode<T> extends CdkTreeNode<T> implements AfterContent
   private _dataDiffer: IterableDiffer<T>;
 
   /** The children data dataNodes of current node. They will be placed in `CdkTreeNodeOutlet`. */
-  protected _children: T[];
+  protected _children: T[] | ReadonlyArray<T>;
 
   /** The children node placeholder. */
   @ContentChildren(CdkTreeNodeOutlet, {
@@ -84,7 +84,7 @@ export class CdkNestedTreeNode<T> extends CdkTreeNode<T> implements AfterContent
   }
 
   /** Add children dataNodes to the NodeOutlet */
-  protected updateChildrenNodes(children?: T[]): void {
+  protected updateChildrenNodes(children?: T[] | ReadonlyArray<T>): void {
     const outlet = this._getNodeOutlet();
     if (children) {
       this._children = children;

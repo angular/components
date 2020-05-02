@@ -33,11 +33,11 @@ export declare class MatTreeFlatDataSource<T, F, K = F> extends DataSource<F> {
 }
 
 export declare class MatTreeFlattener<T, F, K = F> {
-    getChildren: (node: T) => Observable<T[]> | T[] | undefined | null;
+    getChildren: GetChildrenFn<T>;
     getLevel: (node: F) => number;
     isExpandable: (node: F) => boolean;
     transformFunction: (node: T, level: number) => F;
-    constructor(transformFunction: (node: T, level: number) => F, getLevel: (node: F) => number, isExpandable: (node: F) => boolean, getChildren: (node: T) => Observable<T[]> | T[] | undefined | null);
+    constructor(transformFunction: (node: T, level: number) => F, getLevel: (node: F) => number, isExpandable: (node: F) => boolean, getChildren: GetChildrenFn<T>);
     _flattenChildren(children: T[], level: number, resultNodes: F[], parentMap: boolean[]): void;
     _flattenNode(node: T, level: number, resultNodes: F[], parentMap: boolean[]): F[];
     expandFlattenedNodes(nodes: F[], treeControl: TreeControl<F, K>): F[];

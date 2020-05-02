@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 import {SelectionModel} from '@angular/cdk/collections';
-import {Observable} from 'rxjs';
+import {GetChildrenFn} from './types';
 
 /**
  * Tree control interface. User can implement TreeControl to expand/collapse dataNodes in the tree.
@@ -15,7 +15,7 @@ import {Observable} from 'rxjs';
  */
 export interface TreeControl<T, K = T> {
   /** The saved tree nodes data for `expandAll` action. */
-  dataNodes: T[];
+  dataNodes: T[] | ReadonlyArray<T>;
 
   /** The expansion model */
   expansionModel: SelectionModel<K>;
@@ -60,5 +60,5 @@ export interface TreeControl<T, K = T> {
   readonly isExpandable: (dataNode: T) => boolean;
 
   /** Gets a stream that emits whenever the given data node's children change. */
-  readonly getChildren: (dataNode: T) => Observable<T[]> | T[] | undefined | null;
+  readonly getChildren: GetChildrenFn<T>;
 }

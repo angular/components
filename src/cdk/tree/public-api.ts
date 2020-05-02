@@ -10,6 +10,7 @@ export * from './control/base-tree-control';
 export * from './control/flat-tree-control';
 export * from './control/nested-tree-control';
 export * from './control/tree-control';
+export * from './control/types';
 export * from './nested-node';
 export * from './node';
 export * from './padding';
