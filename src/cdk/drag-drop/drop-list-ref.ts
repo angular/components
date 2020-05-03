@@ -615,7 +615,7 @@ export class DropListRef<T = any> {
     }
 
     // Reset auto-scroll parameters associated with this drop list
-    this._scrollNode = null;
+    this._scrollNode = null!;
     this._verticalScrollDirection = AutoScrollVerticalDirection.NONE;
     this._horizontalScrollDirection = AutoScrollHorizontalDirection.NONE;
   }
