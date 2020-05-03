@@ -7,8 +7,9 @@ import {MatNativeDateModule} from '@angular/material/core';
 import {MatDatepickerModule} from './datepicker-module';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
-import {dispatchFakeEvent} from '@angular/cdk/testing/private';
+import {dispatchFakeEvent, dispatchKeyboardEvent} from '@angular/cdk/testing/private';
 import {FocusMonitor} from '@angular/cdk/a11y';
+import {BACKSPACE} from '@angular/cdk/keycodes';
 import {MatDateRangeInput} from './date-range-input';
 import {MatDateRangePicker} from './date-range-picker';
 
@@ -472,6 +473,34 @@ describe('MatDateRangeInput', () => {
     expect(fixture.componentInstance.start).toBe(start);
     expect(fixture.componentInstance.end).toBe(end);
   }));
+
+  it('should move focus to the start input when pressing backspace on an empty end input', () => {
+    const fixture = createComponent(StandardRangePicker);
+    fixture.detectChanges();
+    const {start, end} = fixture.componentInstance;
+
+    spyOn(start.nativeElement, 'focus').and.callThrough();
+
+    end.nativeElement.value = '';
+    dispatchKeyboardEvent(end.nativeElement, 'keydown', BACKSPACE);
+    fixture.detectChanges();
+
+    expect(start.nativeElement.focus).toHaveBeenCalled();
+  });
+
+  it('should move not move focus when pressing backspace if the end input has a value', () => {
+    const fixture = createComponent(StandardRangePicker);
+    fixture.detectChanges();
+    const {start, end} = fixture.componentInstance;
+
+    spyOn(start.nativeElement, 'focus').and.callThrough();
+
+    end.nativeElement.value = '10/10/2020';
+    dispatchKeyboardEvent(end.nativeElement, 'keydown', BACKSPACE);
+    fixture.detectChanges();
+
+    expect(start.nativeElement.focus).not.toHaveBeenCalled();
+  });
 
 });
 

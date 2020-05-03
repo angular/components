@@ -38,6 +38,7 @@ import {
   ErrorStateMatcher,
 } from '@angular/material/core';
 import {BooleanInput} from '@angular/cdk/coercion';
+import {BACKSPACE} from '@angular/cdk/keycodes';
 import {MatDatepickerInputBase, DateFilterFn} from './datepicker-input-base';
 import {DateRange, MatDateSelectionModel} from './date-selection-model';
 
@@ -47,6 +48,8 @@ export interface MatDateRangeInputParent<D> {
   min: D | null;
   max: D | null;
   dateFilter: DateFilterFn<D>;
+  _startInput: MatDateRangeInputPartBase<D>;
+  _endInput: MatDateRangeInputPartBase<D>;
   _groupDisabled: boolean;
   _ariaDescribedBy: string | null;
   _ariaLabelledBy: string | null;
@@ -317,6 +320,15 @@ export class MatEndDate<D> extends _MatDateRangeInputBase<D> implements CanUpdat
       const range = new DateRange(this._model.selection.start, value);
       this._model.updateSelection(range, this);
     }
+  }
+
+  _onKeydown(event: KeyboardEvent) {
+    // If the user is pressing backspace on an empty end input, focus focus back to the start.
+    if (event.keyCode === BACKSPACE && !this._elementRef.nativeElement.value) {
+      this._rangeInput._startInput.focus();
+    }
+
+    super._onKeydown(event);
   }
 
   static ngAcceptInputType_disabled: BooleanInput;
