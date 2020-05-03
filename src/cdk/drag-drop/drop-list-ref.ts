@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {ElementRef, NgZone} from '@angular/core';
+import {ElementRef} from '@angular/core';
 import {Direction} from '@angular/cdk/bidi';
 import {coerceElement} from '@angular/cdk/coercion';
 import {ViewportRuler} from '@angular/cdk/scrolling';
