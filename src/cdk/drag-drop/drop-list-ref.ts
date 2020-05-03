@@ -11,8 +11,7 @@ import {Direction} from '@angular/cdk/bidi';
 import {coerceElement} from '@angular/cdk/coercion';
 import {ViewportRuler} from '@angular/cdk/scrolling';
 import {_getShadowRoot} from '@angular/cdk/platform';
-import {Subject, Subscription, interval, animationFrameScheduler} from 'rxjs';
-import {takeUntil} from 'rxjs/operators';
+import {Subject, Subscription} from 'rxjs';
 import {moveItemInArray} from './drag-utils';
 import {DragDropRegistry} from './drag-drop-registry';
 import {DragRefInternal as DragRef, Point} from './drag-ref';
@@ -40,7 +39,7 @@ const SCROLL_PROXIMITY_THRESHOLD = 0.05;
  * Number of pixels to scroll for each frame when auto-scrolling an element.
  * The value comes from trying it out manually until it feels right.
  */
-const AUTO_SCROLL_STEP = 2;
+const AUTO_SCROLL_STEP = 4;
 
 /**
  * Entry in the position cache for draggable items.
@@ -184,8 +183,11 @@ export class DropListRef<T = any> {
   /** Node that is being auto-scrolled. */
   private _scrollNode: HTMLElement | Window;
 
-  /** Used to signal to the current auto-scroll sequence when to stop. */
-  private _stopScrollTimers = new Subject<void>();
+  /**
+   * Return value from `requestAnimationFrame` (or `setTimeout` for SSR)
+   * used to cancel the auto-scroll loop.
+   */
+  private _requestId: any;
 
   /** Shadow root of the current element. Necessary for `elementFromPoint` to resolve correctly. */
   private _cachedShadowRoot: DocumentOrShadowRoot | null = null;
@@ -203,7 +205,6 @@ export class DropListRef<T = any> {
     element: ElementRef<HTMLElement> | HTMLElement,
     private _dragDropRegistry: DragDropRegistry<DragRef, DropListRef>,
     _document: any,
-    private _ngZone: NgZone,
     private _viewportRuler: ViewportRuler) {
     this.element = coerceElement(element);
     this._document = _document;
@@ -215,7 +216,6 @@ export class DropListRef<T = any> {
   /** Removes the drop list functionality from the DOM element. */
   dispose() {
     this._stopScrolling();
-    this._stopScrollTimers.complete();
     this._viewportScrollSubscription.unsubscribe();
     this.beforeStarted.complete();
     this.entered.complete();
@@ -223,7 +223,6 @@ export class DropListRef<T = any> {
     this.dropped.complete();
     this.sorted.complete();
     this._activeSiblings.clear();
-    this._scrollNode = null!;
     this._parentPositions.clear();
     this._dragDropRegistry.removeDropContainer(this);
   }
@@ -590,7 +589,12 @@ export class DropListRef<T = any> {
       this._scrollNode = scrollNode;
 
       if ((verticalScrollDirection || horizontalScrollDirection) && scrollNode) {
-        this._ngZone.runOutsideAngular(this._startScrollInterval);
+        // Do nothing if auto-scroll loop is already scheduled
+        if (!this._requestId) {
+          // Current executing method is always ran outside Angular zone.
+          // Make this a call to `runOutsideAngular` if ever changed to not be the case.
+          this._autoScrollLoop();
+        }
       } else {
         this._stopScrolling();
       }
@@ -599,7 +603,21 @@ export class DropListRef<T = any> {
 
   /** Stops any currently-running auto-scroll sequences. */
   _stopScrolling() {
-    this._stopScrollTimers.next();
+    // Cancel scheduled auto-scroll loop, if applicable.
+    const requestId = this._requestId;
+    if (requestId) {
+      this._requestId = undefined;
+      if (typeof requestAnimationFrame === 'function') {
+        cancelAnimationFrame(requestId);
+      } else {
+        clearTimeout(requestId);
+      }
+    }
+
+    // Reset auto-scroll parameters associated with this drop list
+    this._scrollNode = null;
+    this._verticalScrollDirection = AutoScrollVerticalDirection.NONE;
+    this._horizontalScrollDirection = AutoScrollHorizontalDirection.NONE;
   }
 
   /** Caches the positions of the configured scrollable parents. */
@@ -771,27 +789,29 @@ export class DropListRef<T = any> {
     this._cacheParentPositions();
   }
 
-  /** Starts the interval that'll auto-scroll the element. */
-  private _startScrollInterval = () => {
-    this._stopScrolling();
+  /** Starts the auto-scroll loop */
+  private _autoScrollLoop = () => {
+    const node = this._scrollNode;
 
-    interval(0, animationFrameScheduler)
-      .pipe(takeUntil(this._stopScrollTimers))
-      .subscribe(() => {
-        const node = this._scrollNode;
+    if (this._verticalScrollDirection === AutoScrollVerticalDirection.UP) {
+      incrementVerticalScroll(node, -AUTO_SCROLL_STEP);
+    } else if (this._verticalScrollDirection === AutoScrollVerticalDirection.DOWN) {
+      incrementVerticalScroll(node, AUTO_SCROLL_STEP);
+    }
 
-        if (this._verticalScrollDirection === AutoScrollVerticalDirection.UP) {
-          incrementVerticalScroll(node, -AUTO_SCROLL_STEP);
-        } else if (this._verticalScrollDirection === AutoScrollVerticalDirection.DOWN) {
-          incrementVerticalScroll(node, AUTO_SCROLL_STEP);
-        }
+    if (this._horizontalScrollDirection === AutoScrollHorizontalDirection.LEFT) {
+      incrementHorizontalScroll(node, -AUTO_SCROLL_STEP);
+    } else if (this._horizontalScrollDirection === AutoScrollHorizontalDirection.RIGHT) {
+      incrementHorizontalScroll(node, AUTO_SCROLL_STEP);
+    }
 
-        if (this._horizontalScrollDirection === AutoScrollHorizontalDirection.LEFT) {
-          incrementHorizontalScroll(node, -AUTO_SCROLL_STEP);
-        } else if (this._horizontalScrollDirection === AutoScrollHorizontalDirection.RIGHT) {
-          incrementHorizontalScroll(node, AUTO_SCROLL_STEP);
-        }
-      });
+    // Check if server-side rendering and loop this function appropriately
+    if (typeof requestAnimationFrame === 'function') {
+      this._requestId = requestAnimationFrame(this._autoScrollLoop);
+    } else {
+      // 1000 / 60 ~= 60 fps
+      this._requestId = setTimeout(this._autoScrollLoop, 1000 / 60);
+    }
   }
 
   /**
