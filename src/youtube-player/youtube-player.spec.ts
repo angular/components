@@ -399,6 +399,20 @@ describe('YoutubePlayer', () => {
 
       expect(spy).toHaveBeenCalled();
     });
+
+    it('should play on init if playVideo was called before the API has loaded', () => {
+      fixture = TestBed.createComponent(TestApp);
+      testComponent = fixture.debugElement.componentInstance;
+      fixture.detectChanges();
+
+      testComponent.youtubePlayer.playVideo();
+
+      window.YT = api!;
+      window.onYouTubeIframeAPIReady!();
+      events.onReady({target: playerSpy});
+
+      expect(playerSpy.playVideo).toHaveBeenCalled();
+    });
   });
 
   it('should pick up static startSeconds and endSeconds values', () => {

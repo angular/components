@@ -244,14 +244,15 @@ export class YouTubePlayer implements AfterViewInit, OnDestroy, OnInit {
 
     // Set up side effects to bind inputs to the player.
     playerObs.subscribe(player => {
+      if (!player) {
+        return;
+      }
       this._player = player;
       this._playerChanges.next(player);
-
-      if (player && this._pendingPlayerState) {
+      if (this._pendingPlayerState) {
         this._initializePlayer(player, this._pendingPlayerState);
+        this._pendingPlayerState = undefined;
       }
-
-      this._pendingPlayerState = undefined;
     });
 
     bindSizeToPlayer(playerObs, this._width, this._height);
