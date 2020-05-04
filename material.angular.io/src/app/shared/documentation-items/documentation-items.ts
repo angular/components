@@ -104,6 +104,7 @@ const DOCS: { [key: string]: DocCategory[] } = {
           exampleSpecs: {
             prefix: 'form-field-',
           },
+          additionalApiDocs: [{name: 'Testing', path: 'material-form-field-testing.html'}],
         },
         {
           id: 'input',
@@ -112,6 +113,7 @@ const DOCS: { [key: string]: DocCategory[] } = {
           exampleSpecs: {
             prefix: 'input-',
           },
+          additionalApiDocs: [{name: 'Testing', path: 'material-input-testing.html'}],
         },
         {
           id: 'radio',
@@ -130,6 +132,7 @@ const DOCS: { [key: string]: DocCategory[] } = {
           exampleSpecs: {
             prefix: 'select-',
           },
+          additionalApiDocs: [{name: 'Testing', path: 'material-select-testing.html'}],
         },
         {
           id: 'slider',
@@ -204,6 +207,7 @@ const DOCS: { [key: string]: DocCategory[] } = {
           exampleSpecs: {
             prefix: 'divider-',
           },
+          additionalApiDocs: [{name: 'Testing', path: 'material-divider-testing.html'}],
         },
         {
           id: 'expansion',
@@ -212,6 +216,7 @@ const DOCS: { [key: string]: DocCategory[] } = {
           exampleSpecs: {
             prefix: 'expansion-',
           },
+          additionalApiDocs: [{name: 'Testing', path: 'material-expansion-testing.html'}],
         },
         {
           id: 'grid-list',
@@ -220,6 +225,7 @@ const DOCS: { [key: string]: DocCategory[] } = {
           exampleSpecs: {
             prefix: 'grid-list-',
           },
+          additionalApiDocs: [{name: 'Testing', path: 'material-grid-list-testing.html'}],
         },
         {
           id: 'list',
@@ -228,6 +234,7 @@ const DOCS: { [key: string]: DocCategory[] } = {
           exampleSpecs: {
             prefix: 'list-',
           },
+          additionalApiDocs: [{name: 'Testing', path: 'material-list-testing.html'}],
         },
         {
           id: 'stepper',
@@ -285,6 +292,7 @@ const DOCS: { [key: string]: DocCategory[] } = {
           exampleSpecs: {
             prefix: 'badge-',
           },
+          additionalApiDocs: [{name: 'Testing', path: 'material-button-toggle-testing.html'}],
         },
         {
           id: 'chips',
@@ -301,6 +309,7 @@ const DOCS: { [key: string]: DocCategory[] } = {
           exampleSpecs: {
             prefix: 'icon-',
           },
+          additionalApiDocs: [{name: 'Testing', path: 'material-icon-testing.html'}],
         },
         {
           id: 'progress-spinner',
@@ -343,6 +352,7 @@ const DOCS: { [key: string]: DocCategory[] } = {
           exampleSpecs: {
             prefix: 'bottom-sheet-',
           },
+          additionalApiDocs: [{name: 'Testing', path: 'material-bottom-sheet-testing.html'}],
         },
         {
           id: 'dialog',
@@ -384,6 +394,7 @@ const DOCS: { [key: string]: DocCategory[] } = {
           exampleSpecs: {
             prefix: 'paginator-',
           },
+          additionalApiDocs: [{name: 'Testing', path: 'material-autocomplete-testing.html'}],
         },
         {
           id: 'sort',
@@ -392,6 +403,7 @@ const DOCS: { [key: string]: DocCategory[] } = {
           exampleSpecs: {
             prefix: 'sort-',
           },
+          additionalApiDocs: [{name: 'Testing', path: 'material-sort-testing.html'}],
         },
         {
           id: 'table',
