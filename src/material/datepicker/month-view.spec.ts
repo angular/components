@@ -28,9 +28,9 @@ import {MatCalendarBody} from './calendar-body';
 import {MatMonthView} from './month-view';
 import {DateRange} from './date-selection-model';
 import {
-  MAT_CALENDAR_RANGE_SELECTION_STRATEGY,
+  MAT_DATE_RANGE_SELECTION_STRATEGY,
   DefaultMatCalendarRangeStrategy,
-} from './calendar-range-selection-strategy';
+} from './date-range-selection-strategy';
 
 describe('MatMonthView', () => {
   let dir: {value: Direction};
@@ -51,7 +51,7 @@ describe('MatMonthView', () => {
       ],
       providers: [
         {provide: Directionality, useFactory: () => dir = {value: 'ltr'}},
-        {provide: MAT_CALENDAR_RANGE_SELECTION_STRATEGY, useClass: DefaultMatCalendarRangeStrategy}
+        {provide: MAT_DATE_RANGE_SELECTION_STRATEGY, useClass: DefaultMatCalendarRangeStrategy}
       ]
     });
 

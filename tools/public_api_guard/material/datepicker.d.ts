@@ -17,7 +17,7 @@ export interface DateSelectionModelChange<S> {
     source: unknown;
 }
 
-export declare class DefaultMatCalendarRangeStrategy<D> implements MatCalendarRangeSelectionStrategy<D> {
+export declare class DefaultMatCalendarRangeStrategy<D> implements MatDateRangeSelectionStrategy<D> {
     constructor(_dateAdapter: DateAdapter<D>);
     createPreview(activeDate: D | null, currentRange: DateRange<D>): DateRange<D>;
     selectionFinished(date: D, currentRange: DateRange<D>): DateRange<D>;
@@ -27,7 +27,7 @@ export declare class DefaultMatCalendarRangeStrategy<D> implements MatCalendarRa
 
 export declare type ExtractDateTypeFromSelection<T> = T extends DateRange<infer D> ? D : NonNullable<T>;
 
-export declare const MAT_CALENDAR_RANGE_SELECTION_STRATEGY: InjectionToken<MatCalendarRangeSelectionStrategy<any>>;
+export declare const MAT_DATE_RANGE_SELECTION_STRATEGY: InjectionToken<MatDateRangeSelectionStrategy<any>>;
 
 export declare const MAT_DATEPICKER_SCROLL_STRATEGY: InjectionToken<() => ScrollStrategy>;
 
@@ -53,7 +53,7 @@ export declare const MAT_SINGLE_DATE_SELECTION_MODEL_PROVIDER: FactoryProvider;
 
 export declare class MatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDestroy, OnChanges {
     _calendarHeaderPortal: Portal<any>;
-    readonly _userSelection: EventEmitter<void>;
+    readonly _userSelection: EventEmitter<MatCalendarUserEvent<D | null>>;
     get activeDate(): D;
     set activeDate(value: D);
     comparisonEnd: D | null;
@@ -79,9 +79,8 @@ export declare class MatCalendar<D> implements AfterContentInit, AfterViewChecke
     stateChanges: Subject<void>;
     readonly yearSelected: EventEmitter<D>;
     yearView: MatYearView<D>;
-    constructor(_intl: MatDatepickerIntl, _dateAdapter: DateAdapter<D>, _dateFormats: MatDateFormats, _changeDetectorRef: ChangeDetectorRef, _model: MatDateSelectionModel<DateRange<D> | D | null>, _rangeSelectionStrategy?: MatCalendarRangeSelectionStrategy<D> | undefined);
+    constructor(_intl: MatDatepickerIntl, _dateAdapter: DateAdapter<D>, _dateFormats: MatDateFormats, _changeDetectorRef: ChangeDetectorRef);
     _dateSelected(event: MatCalendarUserEvent<D | null>): void;
-    _getDisplaySelection(): DateRange<D> | D | null;
     _goToDateInView(date: D, view: 'month' | 'year' | 'multi-year'): void;
     _monthSelectedInYearView(normalizedMonth: D): void;
     _yearSelectedInMultiYearView(normalizedYear: D): void;
@@ -92,7 +91,7 @@ export declare class MatCalendar<D> implements AfterContentInit, AfterViewChecke
     ngOnDestroy(): void;
     updateTodaysDate(): void;
     static ɵcmp: i0.ɵɵComponentDefWithMeta<MatCalendar<any>, "mat-calendar", ["matCalendar"], { "headerComponent": "headerComponent"; "startAt": "startAt"; "startView": "startView"; "selected": "selected"; "minDate": "minDate"; "maxDate": "maxDate"; "dateFilter": "dateFilter"; "dateClass": "dateClass"; "comparisonStart": "comparisonStart"; "comparisonEnd": "comparisonEnd"; }, { "selectedChange": "selectedChange"; "yearSelected": "yearSelected"; "monthSelected": "monthSelected"; "_userSelection": "_userSelection"; }, never, never>;
-    static ɵfac: i0.ɵɵFactoryDef<MatCalendar<any>, [null, { optional: true; }, { optional: true; }, null, null, { optional: true; }]>;
+    static ɵfac: i0.ɵɵFactoryDef<MatCalendar<any>, [null, { optional: true; }, { optional: true; }, null]>;
 }
 
 export declare class MatCalendarBody implements OnChanges, OnDestroy {
@@ -168,11 +167,6 @@ export declare class MatCalendarHeader<D> {
     static ɵfac: i0.ɵɵFactoryDef<MatCalendarHeader<any>, [null, null, { optional: true; }, { optional: true; }, null]>;
 }
 
-export interface MatCalendarRangeSelectionStrategy<D> {
-    createPreview(activeDate: D | null, currentRange: DateRange<D>, event: Event): DateRange<D>;
-    selectionFinished(date: D | null, currentRange: DateRange<D>, event: Event): DateRange<D>;
-}
-
 export interface MatCalendarUserEvent<D> {
     event: Event;
     value: D;
@@ -199,13 +193,14 @@ export declare class MatDatepickerContent<S, D = ExtractDateTypeFromSelection<S>
     comparisonStart: D | null;
     datepicker: MatDatepickerBase<any, S, D>;
     constructor(elementRef: ElementRef,
-    _changeDetectorRef?: ChangeDetectorRef | undefined, _model?: MatDateSelectionModel<S, D> | undefined);
-    _handleUserSelection(): void;
+    _changeDetectorRef?: ChangeDetectorRef | undefined, _model?: MatDateSelectionModel<S, D> | undefined, _dateAdapter?: DateAdapter<D> | undefined, _rangeSelectionStrategy?: MatDateRangeSelectionStrategy<D> | undefined);
+    _getSelected(): D | DateRange<D> | null;
+    _handleUserSelection(event: MatCalendarUserEvent<D | null>): void;
     _startExitAnimation(): void;
     ngAfterViewInit(): void;
     ngOnDestroy(): void;
     static ɵcmp: i0.ɵɵComponentDefWithMeta<MatDatepickerContent<any, any>, "mat-datepicker-content", ["matDatepickerContent"], { "color": "color"; }, {}, never, never>;
-    static ɵfac: i0.ɵɵFactoryDef<MatDatepickerContent<any, any>, never>;
+    static ɵfac: i0.ɵɵFactoryDef<MatDatepickerContent<any, any>, [null, null, null, null, { optional: true; }]>;
 }
 
 export declare class MatDatepickerInput<D> extends MatDatepickerInputBase<D | null, D> implements MatDatepickerControl<D | null> {
@@ -346,6 +341,11 @@ export declare class MatDateRangePicker<D> extends MatDatepickerBase<MatDateRang
     static ɵfac: i0.ɵɵFactoryDef<MatDateRangePicker<any>, never>;
 }
 
+export interface MatDateRangeSelectionStrategy<D> {
+    createPreview(activeDate: D | null, currentRange: DateRange<D>, event: Event): DateRange<D>;
+    selectionFinished(date: D | null, currentRange: DateRange<D>, event: Event): DateRange<D>;
+}
+
 export declare abstract class MatDateSelectionModel<S, D = ExtractDateTypeFromSelection<S>> implements OnDestroy {
     protected _adapter: DateAdapter<D>;
     readonly selection: S;
@@ -405,7 +405,7 @@ export declare class MatMonthView<D> implements AfterContentInit, OnDestroy {
     get selected(): DateRange<D> | D | null;
     set selected(value: DateRange<D> | D | null);
     readonly selectedChange: EventEmitter<D | null>;
-    constructor(_changeDetectorRef: ChangeDetectorRef, _dateFormats: MatDateFormats, _dateAdapter: DateAdapter<D>, _dir?: Directionality | undefined, _rangeStrategy?: MatCalendarRangeSelectionStrategy<D> | undefined);
+    constructor(_changeDetectorRef: ChangeDetectorRef, _dateFormats: MatDateFormats, _dateAdapter: DateAdapter<D>, _dir?: Directionality | undefined, _rangeStrategy?: MatDateRangeSelectionStrategy<D> | undefined);
     _dateSelected(event: MatCalendarUserEvent<number>): void;
     _focusActiveCell(movePreview?: boolean): void;
     _handleCalendarBodyKeydown(event: KeyboardEvent): void;
