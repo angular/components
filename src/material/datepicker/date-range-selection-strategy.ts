@@ -10,8 +10,6 @@ import {Injectable, InjectionToken} from '@angular/core';
 import {DateAdapter} from '@angular/material/core';
 import {DateRange} from './date-selection-model';
 
-// TODO(crisbeto): this needs to be expanded to allow for the preview range to be customized.
-
 /** Injection token used to customize the date range selection behavior. */
 export const MAT_DATE_RANGE_SELECTION_STRATEGY =
     new InjectionToken<MatDateRangeSelectionStrategy<any>>('MAT_DATE_RANGE_SELECTION_STRATEGY');

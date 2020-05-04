@@ -12,7 +12,7 @@ $mat-calendar-body-font-size: 13px !default;
 $mat-calendar-weekday-table-font-size: 11px !default;
 
 @mixin _mat-datepicker-color($palette) {
-  @include mat-datepicker-range-colors(
+  @include mat-date-range-colors(
     mat-color($palette, default, $mat-datepicker-range-fade-amount));
 
   .mat-calendar-body-selected {
@@ -181,7 +181,7 @@ $mat-calendar-weekday-table-font-size: 11px !default;
   }
 }
 
-@mixin mat-datepicker-range-colors(
+@mixin mat-date-range-colors(
   $range-color,
   $comparison-color: rgba(#f9ab00, $mat-datepicker-range-fade-amount),
   $overlap-color: #a8dab5,
