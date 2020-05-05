@@ -21,16 +21,18 @@ import {Subscription} from 'rxjs';
 import {startWith} from 'rxjs/operators';
 
 @Directive()
+/** @docs-private */
 export abstract class MatListBase {
   // @HostBinding is used in the class as it is expected to be extended. Since @Component decorator
   // metadata is not inherited by child classes, instead the host binding data is defined in a way
   // that can be inherited.
   // tslint:disable-next-line:no-host-decorator-in-concrete
   @HostBinding('class.mdc-list--non-interactive')
-  _isNonInteractive: boolean;
+  _isNonInteractive: boolean = false;
 }
 
 @Directive()
+/** @docs-private */
 export abstract class MatListItemBase implements AfterContentInit, OnDestroy, RippleTarget {
   lines: QueryList<ElementRef<Element>>;
 
