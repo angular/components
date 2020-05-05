@@ -15,7 +15,7 @@ import {
   Directive,
   ElementRef,
   EventEmitter,
-  forwardRef,
+  forwardRef, HostBinding,
   Inject,
   Input,
   NgZone,
@@ -176,6 +176,14 @@ export class MatChip extends _MatChipMixinBase implements FocusableOption, OnDes
   }
   set value(value: any) { this._value = value; }
   protected _value: any;
+
+  @Input() forceColor: boolean = true;
+
+  @HostBinding('class.mat-force-color')
+  get isForceColor() {
+    console.log(this.forceColor);
+    return this.forceColor;
+  }
 
   /**
    * Whether or not the chip is selectable. When a chip is not selectable,

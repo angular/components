@@ -1,4 +1,26 @@
 <div class="demo-chips">
+<!--  <mat-card>-->
+<!--    <mat-toolbar color="primary">Vlad's Test</mat-toolbar>-->
+
+<!--    <mat-card-content>-->
+<!--      <mat-chip-list #chipList>-->
+<!--        <mat-chip *ngFor="let email of ['aa']; let i = index"-->
+<!--                  [removable]="true"-->
+<!--                  [color]="'warn'"-->
+<!--                  (removed)="remove(i)">-->
+<!--          {{email}}-->
+<!--          <mat-icon matChipRemove>cancel</mat-icon>-->
+<!--        </mat-chip>-->
+
+<!--        <input placeholder="Recipients"-->
+<!--               [matChipInputFor]="chipList"-->
+<!--               [matChipInputAddOnBlur]="true"-->
+<!--               (matChipInputTokenEnd)="add($event)">-->
+<!--      </mat-chip-list>-->
+
+<!--    </mat-card-content>-->
+<!--  </mat-card>-->
+
   <mat-card>
     <mat-toolbar color="primary">Static Chips</mat-toolbar>
 
@@ -9,6 +31,8 @@
         <mat-chip>Chip 1</mat-chip>
         <mat-chip>Chip 2</mat-chip>
         <mat-chip disabled>Chip 3</mat-chip>
+        <mat-chip selected="true" color="warn">Chip 4</mat-chip>
+        <mat-chip color="warn">Chip 5</mat-chip>
       </mat-chip-list>
 
       <h4>Unstyled</h4>
@@ -24,8 +48,8 @@
       <mat-chip-list selectable="false">
         <mat-chip color="accent" selected="true">Selected/Colored</mat-chip>
 
-        <mat-chip color="warn" selected="true" *ngIf="visible"
-                 (destroyed)="displayMessage('chip destroyed')" (removed)="toggleVisible()">
+        <mat-chip color="warn" *ngIf="visible"
+                  (destroyed)="displayMessage('chip destroyed')" (removed)="toggleVisible()">
           With Events
           <mat-icon matChipRemove>cancel</mat-icon>
         </mat-chip>
@@ -100,8 +124,8 @@
       </button>
       <mat-form-field class="demo-has-chip-list">
         <mat-chip-list [tabIndex]="tabIndex" #chipList1 [(ngModel)]="selectedPeople" required>
-          <mat-chip  *ngFor="let person of people" [color]="color" [selectable]="selectable"
-                   [removable]="removable" (removed)="remove(person)">
+          <mat-chip *ngFor="let person of people" [color]="color" [selectable]="selectable"
+                    [removable]="removable" (removed)="remove(person)">
             {{person.name}}
             <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
           </mat-chip>
@@ -109,10 +133,9 @@
                  [matChipInputFor]="chipList1"
                  [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
                  [matChipInputAddOnBlur]="addOnBlur"
-                 (matChipInputTokenEnd)="add($event)" />
+                 (matChipInputTokenEnd)="add($event)"/>
         </mat-chip-list>
       </mat-form-field>
-
 
 
       <p>
@@ -121,9 +144,9 @@
       </p>
 
       <mat-form-field>
-        <mat-chip-list [tabIndex]="tabIndex"  #chipList2 [(ngModel)]="selectedPeople" required>
+        <mat-chip-list [tabIndex]="tabIndex" #chipList2 [(ngModel)]="selectedPeople" required>
           <mat-chip *ngFor="let person of people" [color]="color" [selectable]="selectable"
-                   [removable]="removable" (removed)="remove(person)">
+                    [removable]="removable" (removed)="remove(person)">
             {{person.name}}
             <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
           </mat-chip>
@@ -132,7 +155,7 @@
                [matChipInputFor]="chipList2"
                [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
                [matChipInputAddOnBlur]="addOnBlur"
-               (matChipInputTokenEnd)="add($event)" />
+               (matChipInputTokenEnd)="add($event)"/>
       </mat-form-field>
 
       <p>
@@ -143,7 +166,7 @@
       <mat-form-field class="demo-has-chip-list">
         <mat-chip-list #chipList3>
           <mat-chip *ngFor="let person of people" [color]="color" [selectable]="selectable"
-                   [removable]="removable" (removed)="remove(person)">
+                    [removable]="removable" (removed)="remove(person)">
             {{person.name}}
             <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
           </mat-chip>
@@ -172,7 +195,7 @@
 
       <mat-chip-list class="mat-chip-list-stacked" aria-orientation="vertical" [tabIndex]="-1">
         <mat-chip *ngFor="let aColor of availableColors"
-                 (focus)="color = aColor.color" [color]="aColor.color" selected="true">
+                  (focus)="color = aColor.color" [color]="aColor.color" selected="true">
           {{aColor.name}}
         </mat-chip>
       </mat-chip-list>
@@ -180,7 +203,7 @@
       <h4>NgModel with chip list</h4>
       <mat-chip-list [multiple]="true" [(ngModel)]="selectedColors">
         <mat-chip *ngFor="let aColor of availableColors" [color]="aColor.color"
-                 [value]="aColor.name" (removed)="removeColor(aColor)">
+                  [value]="aColor.name" (removed)="removeColor(aColor)">
           {{aColor.name}}
           <mat-icon matChipRemove>cancel</mat-icon>
         </mat-chip>
@@ -191,7 +214,7 @@
       <h4>NgModel with single selection chip list</h4>
       <mat-chip-list [(ngModel)]="selectedColor">
         <mat-chip *ngFor="let aColor of availableColors" [color]="aColor.color"
-                 [value]="aColor.name" (removed)="removeColor(aColor)">
+                  [value]="aColor.name" (removed)="removeColor(aColor)">
           {{aColor.name}}
           <mat-icon matChipRemove>cancel</mat-icon>
         </mat-chip>

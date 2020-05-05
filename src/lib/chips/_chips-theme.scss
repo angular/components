@@ -56,6 +56,7 @@ $mat-chip-remove-font-size: 18px;
     }
   }
 
+  .mat-chip.mat-standard-chip.mat-force-color,
   .mat-chip.mat-standard-chip.mat-chip-selected {
     &.mat-primary {
       @include mat-chips-theme-color($primary);
