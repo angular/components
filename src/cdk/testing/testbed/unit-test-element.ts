@@ -11,6 +11,7 @@ import {ElementDimensions, ModifierKeys, TestElement, TestKey} from '@angular/cd
 import {
   clearElement,
   dispatchMouseEvent,
+  dispatchPointerEvent,
   isTextInput,
   triggerBlur,
   triggerFocus,
@@ -70,16 +71,32 @@ export class UnitTestElement implements TestElement {
     await this._stabilize();
   }
 
-  async click(relativeX = 0, relativeY = 0): Promise<void> {
-    await this._stabilize();
-    const {left, top} = this.element.getBoundingClientRect();
+  async click(...args: number[]): Promise<void> {
+    const {left, top, width, height} = await this.getDimensions();
+    const relativeX = args.length ? args[0] : width / 2;
+    const relativeY = args.length ? args[1] : height / 2;
+
     // Round the computed click position as decimal pixels are not
     // supported by mouse events and could lead to unexpected results.
     const clientX = Math.round(left + relativeX);
     const clientY = Math.round(top + relativeY);
+
+    // The latest versions of all browsers we support have the new `PointerEvent` API.
+    // Though since we capture the two most recent versions of these browsers, we also
+    // need to support Safari 12 at time of writing. Safari 12 does not have support for this,
+    // so we need to conditionally create and dispatch these events based on feature detection.
+    const emitPointerEvents = window.PointerEvent !== undefined;
+
+    if (emitPointerEvents) {
+      dispatchPointerEvent(this.element, 'pointerdown', clientX, clientY);
+    }
     dispatchMouseEvent(this.element, 'mousedown', clientX, clientY);
+    if (emitPointerEvents) {
+      dispatchMouseEvent(this.element, 'pointerup', clientX, clientY);
+    }
     dispatchMouseEvent(this.element, 'mouseup', clientX, clientY);
     dispatchMouseEvent(this.element, 'click', clientX, clientY);
+
     await this._stabilize();
   }
 
