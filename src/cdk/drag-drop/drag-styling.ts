@@ -16,12 +16,9 @@ type Writeable<T> = { -readonly [P in keyof T]-?: T[P] };
  * Extended CSSStyleDeclaration that includes a couple of drag-related
  * properties that aren't in the built-in TS typings.
  */
-export interface DragCSSStyleDeclaration extends CSSStyleDeclaration {
+interface DragCSSStyleDeclaration extends CSSStyleDeclaration {
   webkitUserDrag: string;
   MozUserSelect: string; // For some reason the Firefox property is in PascalCase.
-  msScrollSnapType: string;
-  scrollSnapType: string;
-  msUserSelect: string;
 }
 
 /**

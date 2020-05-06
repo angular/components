@@ -7,7 +7,6 @@
  */
 
 export {
-  MAT_FORM_FIELD,
   MatFormFieldControl,
   getMatFormFieldDuplicatedHintError,
   getMatFormFieldMissingControlError,

@@ -96,13 +96,10 @@ export class MatInput extends _MatInputMixinBase implements MatFormFieldControl<
   _ariaDescribedby: string;
 
   /** Whether the component is being rendered on the server. */
-  readonly _isServer: boolean;
+  _isServer = false;
 
   /** Whether the component is a native html select. */
-  readonly _isNativeSelect: boolean;
-
-  /** Whether the component is a textarea. */
-  readonly _isTextarea: boolean;
+  _isNativeSelect = false;
 
   /**
    * Implemented as part of MatFormFieldControl.
@@ -185,7 +182,7 @@ export class MatInput extends _MatInputMixinBase implements MatFormFieldControl<
     // When using Angular inputs, developers are no longer able to set the properties on the native
     // input element. To ensure that bindings for `type` work, we need to sync the setter
     // with the native property. Textarea elements don't support the type property or attribute.
-    if (!this._isTextarea && getSupportedInputTypes().has(this._type)) {
+    if (!this._isTextarea() && getSupportedInputTypes().has(this._type)) {
       (this._elementRef.nativeElement as HTMLInputElement).type = this._type;
     }
   }
@@ -237,7 +234,6 @@ export class MatInput extends _MatInputMixinBase implements MatFormFieldControl<
     super(_defaultErrorStateMatcher, _parentForm, _parentFormGroup, ngControl);
 
     const element = this._elementRef.nativeElement;
-    const nodeName = element.nodeName.toLowerCase();
 
     // If no input value accessor was explicitly specified, use the element as the input value
     // accessor.
@@ -268,8 +264,7 @@ export class MatInput extends _MatInputMixinBase implements MatFormFieldControl<
     }
 
     this._isServer = !this._platform.isBrowser;
-    this._isNativeSelect = nodeName === 'select';
-    this._isTextarea = nodeName === 'textarea';
+    this._isNativeSelect = element.nodeName.toLowerCase() === 'select';
 
     if (this._isNativeSelect) {
       this.controlType = (element as HTMLSelectElement).multiple ? 'mat-native-select-multiple' :
@@ -347,6 +342,11 @@ export class MatInput extends _MatInputMixinBase implements MatFormFieldControl<
     // value changes and will not disappear.
     // Listening to the input event wouldn't be necessary when the input is using the
     // FormsModule or ReactiveFormsModule, because Angular forms also listens to input events.
+  }
+
+  /** Determines if the component host is a textarea. */
+  _isTextarea() {
+    return this._elementRef.nativeElement.nodeName.toLowerCase() === 'textarea';
   }
 
   /** Does some manual dirty checking on the native input `value` property. */

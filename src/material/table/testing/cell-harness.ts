@@ -88,7 +88,5 @@ function getCellPredicate<T extends MatCellHarness>(
   options: CellHarnessFilters): HarnessPredicate<T> {
   return new HarnessPredicate(type, options)
     .addOption('text', options.text,
-        (harness, text) => HarnessPredicate.stringMatches(harness.getText(), text))
-    .addOption('columnName', options.columnName,
-        (harness, name) => HarnessPredicate.stringMatches(harness.getColumnName(), name));
+        (harness, text) => HarnessPredicate.stringMatches(harness.getText(), text));
 }

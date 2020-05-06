@@ -6,10 +6,9 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {ObserversModule} from '@angular/cdk/observers';
 import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
-import {MatCommonModule} from '@angular/material/core';
+import {ObserversModule} from '@angular/cdk/observers';
 import {MatError} from './error';
 import {MatFormField} from './form-field';
 import {MatHint} from './hint';
@@ -30,11 +29,9 @@ import {MatSuffix} from './suffix';
   ],
   imports: [
     CommonModule,
-    MatCommonModule,
     ObserversModule,
   ],
   exports: [
-    MatCommonModule,
     MatError,
     MatFormField,
     MatHint,

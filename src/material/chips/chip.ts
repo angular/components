@@ -29,6 +29,8 @@ import {
 import {
   CanColor,
   CanColorCtor,
+  CanDisable,
+  CanDisableCtor,
   CanDisableRipple,
   CanDisableRippleCtor,
   HasTabIndex,
@@ -36,6 +38,7 @@ import {
   mixinTabIndex,
   MAT_RIPPLE_GLOBAL_OPTIONS,
   mixinColor,
+  mixinDisabled,
   mixinDisableRipple,
   RippleConfig,
   RippleGlobalOptions,
@@ -68,13 +71,12 @@ export class MatChipSelectionChange {
 // Boilerplate for applying mixins to MatChip.
 /** @docs-private */
 class MatChipBase {
-  disabled: boolean;
   constructor(public _elementRef: ElementRef) {}
 }
 
-const _MatChipMixinBase: CanColorCtor & CanDisableRippleCtor &
+const _MatChipMixinBase: CanColorCtor & CanDisableRippleCtor & CanDisableCtor &
     HasTabIndexCtor & typeof MatChipBase =
-      mixinTabIndex(mixinColor(mixinDisableRipple(MatChipBase), 'primary'), -1);
+      mixinTabIndex(mixinColor(mixinDisableRipple(mixinDisabled(MatChipBase)), 'primary'), -1);
 
 /**
  * Dummy directive to add CSS class to chip avatar.
@@ -101,7 +103,7 @@ export class MatChipTrailingIcon {}
  */
 @Directive({
   selector: `mat-basic-chip, [mat-basic-chip], mat-chip, [mat-chip]`,
-  inputs: ['color', 'disableRipple', 'tabIndex'],
+  inputs: ['color', 'disabled', 'disableRipple', 'tabIndex'],
   exportAs: 'matChip',
   host: {
     'class': 'mat-chip mat-focus-indicator',
@@ -122,7 +124,7 @@ export class MatChipTrailingIcon {}
   },
 })
 export class MatChip extends _MatChipMixinBase implements FocusableOption, OnDestroy, CanColor,
-  CanDisableRipple, RippleTarget, HasTabIndex {
+    CanDisable, CanDisableRipple, RippleTarget, HasTabIndex {
 
   /** Reference to the RippleRenderer for the chip. */
   private _chipRipple: RippleRenderer;
@@ -161,9 +163,6 @@ export class MatChip extends _MatChipMixinBase implements FocusableOption, OnDes
 
   /** Whether the chip list is in multi-selection mode. */
   _chipListMultiple: boolean = false;
-
-  /** Whether the chip list as a whole is disabled. */
-  _chipListDisabled: boolean = false;
 
   /** The chip avatar */
   @ContentChild(MatChipAvatar) avatar: MatChipAvatar;
@@ -209,14 +208,6 @@ export class MatChip extends _MatChipMixinBase implements FocusableOption, OnDes
     this._selectable = coerceBooleanProperty(value);
   }
   protected _selectable: boolean = true;
-
-  /** Whether the chip is disabled. */
-  @Input()
-  get disabled(): boolean { return this._chipListDisabled || this._disabled; }
-  set disabled(value: boolean) {
-    this._disabled = coerceBooleanProperty(value);
-  }
-  protected _disabled: boolean = false;
 
   /**
    * Determines whether or not the chip displays the remove styling and emits (removed) events.
