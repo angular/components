@@ -21,6 +21,7 @@
             "index": "src/index.html",
             "main": "src/main.ts",
             "tsConfig": "tsconfig.app.json",
+            "extractCss": true,
             "assets": [
               {
                 "glob": "**/*",
@@ -48,24 +49,28 @@
                 "input": "src/highlightjs/material-light.scss"
               },
               {
+                "lazy": true,
                 "inject": false,
-                "input": "src/assets/pink-bluegrey.css",
-                "bundleName": "pink-bluegrey"
+                "input": "src/styles/custom-themes/pink-bluegrey.scss",
+                "bundleName": "assets/pink-bluegrey"
               },
               {
+                "lazy": true,
                 "inject": false,
-                "input": "src/assets/deeppurple-amber.css",
-                "bundleName": "deeppurple-amber"
+                "input": "src/styles/custom-themes/deeppurple-amber.scss",
+                "bundleName": "assets/deeppurple-amber"
               },
               {
+                "lazy": true,
                 "inject": false,
-                "input": "src/assets/indigo-pink.css",
-                "bundleName": "indigo-pink"
+                "input": "src/styles/custom-themes/indigo-pink.scss",
+                "bundleName": "assets/indigo-pink"
               },
               {
+                "lazy": true,
                 "inject": false,
-                "input": "src/assets/purple-green.css",
-                "bundleName": "purple-green"
+                "input": "src/styles/custom-themes/purple-green.scss",
+                "bundleName": "assets/purple-green"
               }
             ],
             "scripts": []
@@ -82,7 +87,6 @@
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,
-              "extractCss": true,
               "namedChunks": false,
               "aot": true,
               "extractLicenses": true,
@@ -130,24 +134,28 @@
                 "input": "src/highlightjs/material-light.scss"
               },
               {
+                "lazy": true,
                 "inject": false,
-                "input": "src/assets/pink-bluegrey.css",
-                "bundleName": "pink-bluegrey"
+                "input": "src/styles/custom-themes/pink-bluegrey.scss",
+                "bundleName": "assets/pink-bluegrey"
               },
               {
+                "lazy": true,
                 "inject": false,
-                "input": "src/assets/deeppurple-amber.css",
-                "bundleName": "deeppurple-amber"
+                "input": "src/styles/custom-themes/deeppurple-amber.scss",
+                "bundleName": "assets/deeppurple-amber"
               },
               {
+                "lazy": true,
                 "inject": false,
-                "input": "src/assets/indigo-pink.css",
-                "bundleName": "indigo-pink"
+                "input": "src/styles/custom-themes/indigo-pink.scss",
+                "bundleName": "assets/indigo-pink"
               },
               {
+                "lazy": true,
                 "inject": false,
-                "input": "src/assets/purple-green.css",
-                "bundleName": "purple-green"
+                "input": "src/styles/custom-themes/purple-green.scss",
+                "bundleName": "assets/purple-green"
               }
             ],
             "assets": [

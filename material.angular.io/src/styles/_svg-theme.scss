@@ -1,5 +1,4 @@
-// @import '~@angular/material/theming';
-@import '../../node_modules/@angular/material/theming';
+@import '~@angular/material/theming';
 
 // Mixin to create a css class for each fill, stroke, and stop-color for a given color.
 @mixin _svgColorProperties($className, $color) {
