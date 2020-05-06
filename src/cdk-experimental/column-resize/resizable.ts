@@ -116,15 +116,15 @@ export abstract class Resizable<HandleComponent extends ResizeOverlayHandle>
     // of two table cells and is also useful for displaying a resize thumb
     // over both cells and extending it down the table as needed.
 
-    const isLtr = this.directionality.value === 'ltr';
+    const isRtl = this.directionality.value === 'rtl';
     const positionStrategy = this.overlay.position()
         .flexibleConnectedTo(this.elementRef.nativeElement!)
         .withFlexibleDimensions(false)
         .withGrowAfterOpen(false)
         .withPush(false)
-        .withDefaultOffsetX(isLtr ? 0 : 1)
+        .withDefaultOffsetX(isRtl ? 1 : 0)
         .withPositions([{
-          originX: isLtr ? 'end' : 'start',
+          originX: isRtl ? 'start': 'end',
           originY: 'top',
           overlayX: 'center',
           overlayY: 'top',
