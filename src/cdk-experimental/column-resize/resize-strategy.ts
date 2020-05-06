@@ -219,7 +219,7 @@ export class CdkFlexTableResizeStrategy extends ResizeStrategy implements OnDest
   }
 }
 
-/** Converts CSS pixel values to numbers, eg "123px" to 123. */
+/** Converts CSS pixel values to numbers, eg "123px" to 123. Returns NaN for non pixel values. */
 function coercePixelsFromCssValue(cssValue: string): number {
   return Number(cssValue.match(/(\d+)px/)?.[1]);
 }

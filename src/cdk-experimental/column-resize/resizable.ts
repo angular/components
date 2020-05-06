@@ -132,7 +132,7 @@ export abstract class Resizable<HandleComponent extends ResizeOverlayHandle>
 
     return this.overlay.create({
       // Always position the overlay based on left-indexed coordinates.
-      direction: new Directionality(),
+      direction: 'ltr',
       disposeOnNavigation: true,
       positionStrategy,
       scrollStrategy: this.overlay.scrollStrategies.reposition(),
