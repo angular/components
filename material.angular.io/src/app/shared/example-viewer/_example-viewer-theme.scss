@@ -7,19 +7,16 @@
 
   example-viewer {
     .docs-example-viewer-wrapper {
-      border: 1px solid rgba(mat-color($foreground, secondary-text), 0.03);
-      box-shadow: 0 2px 2px rgba(0, 0, 0, 0.24), 0 0 2px rgba(0, 0, 0, 0.12);
+      border: 1px solid rgba(mat-color($foreground, secondary-text), 0.2);
       margin: 4px;
     }
 
     .docs-example-viewer-title {
       color: mat-color($foreground, secondary-text);
-      background: rgba(mat-color($foreground, secondary-text), 0.03);
     }
 
-    .docs-example-source-copy {
+    .docs-example-button {
       color: mat-color($foreground, hint-text);
-      right: 8px;
 
       [dir='rtl'] & {
         right: auto;
@@ -28,8 +25,16 @@
     }
 
     .docs-example-source {
-      border-bottom: 1px solid mat-color($foreground, divider);
       overflow: auto;
+    }
+
+    code-snippet {
+      background: rgba(mat-color($foreground, secondary-text), 0.01);
+    }
+
+    .docs-example-viewer-source code-snippet {
+      border-bottom: 1px solid mat-color($foreground, divider);
     }
   }
 }
+

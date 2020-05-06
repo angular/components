@@ -1,8 +1,18 @@
-import {Component, Input, NgModuleFactory, Type, ɵNgModuleFactory} from '@angular/core';
+import {
+  Component,
+  Input,
+  NgModuleFactory, QueryList,
+  Type,
+  ViewChildren,
+  ɵNgModuleFactory
+} from '@angular/core';
 import {MatSnackBar} from '@angular/material/snack-bar';
 
 import {EXAMPLE_COMPONENTS, LiveExample} from '@angular/components-examples';
 import {CopierService} from '../copier/copier.service';
+import {CodeSnippet} from './code-snippet';
+
+export type Views = 'compact' | 'full' | 'collapsed';
 
 /** Regular expression that matches a file name and its extension */
 const fileExtensionRegex = /(.*)\.(\w+)/;
@@ -13,20 +23,25 @@ const fileExtensionRegex = /(.*)\.(\w+)/;
   styleUrls: ['./example-viewer.scss']
 })
 export class ExampleViewer {
+  @ViewChildren(CodeSnippet) readonly snippet: QueryList<CodeSnippet>;
+
   /** Map of example files that should be displayed in the view-source tab. */
   exampleTabs: {[tabName: string]: string};
 
   /** Data for the currently selected example. */
   exampleData: LiveExample;
 
-  /** Whether the source for the example is being displayed. */
-  showSource = false;
-
   /** Component type for the current example. */
   _exampleComponentType: Type<any>|null = null;
 
   /** Module factory that declares the example component. */
   _exampleModuleFactory: NgModuleFactory<any>|null = null;
+
+  /** View of the example component. */
+  @Input() view: Views;
+
+  /** Whether to show toggle for compact view. */
+  @Input() showCompactToggle = false;
 
   /** String key of the currently displayed example. */
   @Input()
@@ -43,10 +58,21 @@ export class ExampleViewer {
   }
   private _example: string;
 
-  constructor(private snackbar: MatSnackBar, private copier: CopierService) {}
+  /** Range of lines of the source code to display in compact view. */
+  @Input() lines: readonly [number, number];
+
+  /** Name of file to display in compact view. */
+  @Input() file: string;
+
+  constructor(private readonly snackbar: MatSnackBar, private readonly copier: CopierService) {
+  }
+
+  toggleCompactView() {
+    this.view === 'compact' ? this.view = 'full' : this.view = 'compact';
+  }
 
   toggleSourceView(): void {
-    this.showSource = !this.showSource;
+    this.view === 'full' ? this.view = 'collapsed' : this.view = 'full';
   }
 
   copySource(text: string) {

@@ -70,6 +70,20 @@ describe('DocViewer', () => {
     expect(docViewer.nativeElement.innerHTML).toContain('id="my-header"');
   });
 
+  it('should show part of example source code', () => {
+    const fixture = TestBed.createComponent(DocViewerTestComponent);
+    const testUrl = 'http://material.angular.io/example-html.html';
+
+    fixture.componentInstance.documentUrl = testUrl;
+    fixture.componentInstance.lines = [0, 1];
+    fixture.detectChanges();
+
+    http.expectOne(testUrl).flush(FAKE_DOCS[testUrl]);
+
+    const docViewer = fixture.debugElement.query(By.directive(DocViewer));
+    expect(docViewer.componentInstance.textContent).toBe('line 1');
+  });
+
   it('should show error message when doc not found', () => {
     spyOn(console, 'log');
 
@@ -99,10 +113,11 @@ describe('DocViewer', () => {
 
 @Component({
   selector: 'test',
-  template: `<doc-viewer [documentUrl]="documentUrl"></doc-viewer>`,
+  template: `<doc-viewer [documentUrl]="documentUrl" [lines]="lines"></doc-viewer>`,
 })
 class DocViewerTestComponent {
   documentUrl = 'http://material.angular.io/simple-doc.html';
+  lines: [number, number];
 }
 
 const FAKE_DOCS: {[key: string]: string} = {
@@ -112,4 +127,8 @@ const FAKE_DOCS: {[key: string]: string} = {
       <div material-docs-example="some-example"></div>`,
   'http://material.angular.io/doc-with-links.html': `<a href="#test">Test link</a>`,
   'http://material.angular.io/doc-with-element-ids.html': `<h4 id="my-header">Header</h4>`,
+  'http://material.angular.io/example-html.html':
+    `<span>line 1</span>
+     <span>line 2</span>
+     <span>line 3</span>`,
 };

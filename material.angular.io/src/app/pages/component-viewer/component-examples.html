@@ -4,5 +4,7 @@
   </span>
   <example-viewer
     *ngFor="let example of docItem?.examples"
-    [example]="example"></example-viewer>
+    [example]="example"
+    [showCompactToggle]="false"
+    [view]="'collapsed'"></example-viewer>
 </ng-container>
