@@ -8,7 +8,6 @@
 
 import {
   AfterViewInit,
-  Directive,
   ElementRef,
   Injector,
   NgZone,
@@ -39,7 +38,6 @@ const OVERLAY_ACTIVE_CLASS = 'cdk-resizable-overlay-thumb-active';
  * Base class for Resizable directives which are applied to column headers to make those columns
  * resizable.
  */
-@Directive()
 export abstract class Resizable<HandleComponent extends ResizeOverlayHandle>
     implements AfterViewInit, OnDestroy {
   protected minWidthPxInternal: number = 0;
