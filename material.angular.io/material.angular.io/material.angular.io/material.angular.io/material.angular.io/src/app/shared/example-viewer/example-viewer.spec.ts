@@ -46,11 +46,14 @@ describe('ExampleViewer', () => {
     component = fixture.componentInstance;
   });
 
-  it('should toggle showSource boolean', async(() => {
+  it('should toggle between the 3 views', async(() => {
     fixture.detectChanges();
-    expect(component.showSource).toBe(false);
+    component.view = 'compact';
+    expect(component.view).toBe('compact');
+    component.toggleCompactView();
+    expect(component.view).toBe('full');
     component.toggleSourceView();
-    expect(component.showSource).toBe(true);
+    expect(component.view).toBe('collapsed');
   }));
 
   it('should set and return example properly', async(() => {
@@ -114,7 +117,7 @@ describe('ExampleViewer', () => {
     beforeEach(() => {
       // Open source view
       component.example = exampleKey;
-      component.showSource = true;
+      component.view = 'full';
       fixture.detectChanges();
 
       for (const url of Object.keys(FAKE_DOCS)) {

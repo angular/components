@@ -1,37 +1,61 @@
 <div class="docs-example-viewer-wrapper">
-  <div class="docs-example-viewer-title">
+  <div class="docs-example-viewer-title" *ngIf="view !== 'compact'">
     <div class="docs-example-viewer-title-spacer">{{exampleData?.title}}</div>
 
-    <button mat-icon-button type="button" (click)="toggleSourceView()"
-            [matTooltip]="'View ' + exampleData?.title + ' source'" aria-label="View source">
+    <button mat-icon-button type="button" (click)="toggleCompactView()" [matTooltip]="'View snippet only'"
+            aria-label="View less" *ngIf="showCompactToggle">
       <mat-icon>
-        <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 24 24" fit="" preserveAspectRatio="xMidYMid meet" focusable="false">
-          <path fill="none" d="M0 0h24v24H0V0z"></path>
-          <path d="M9.4 16.6L4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0l4.6-4.6-4.6-4.6L16 6l6 6-6 6-1.4-1.4z"></path>
-        </svg>
+      <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" focusable="false">
+        <path
+          d="M15.41,10H20v2h-8V4h2v4.59L20.59,2L22,3.41L15.41,10z M4,12v2h4.59L2,20.59L3.41,22L10,15.41V20h2v-8H4z"/>
+      </svg>
       </mat-icon>
+    </button>
+
+    <button mat-icon-button type="button" (click)="toggleSourceView()"
+            [matTooltip]="view==='collapsed' ? 'View code' : 'Hide code'" aria-label="View source">
+      <mat-icon>code</mat-icon>
     </button>
 
     <stack-blitz-button [example]="example"></stack-blitz-button>
   </div>
 
-  <div class="docs-example-viewer-source" *ngIf="showSource">
-    <mat-tab-group>
+  <div class="docs-example-viewer-source" *ngIf="view === 'full'">
+    <mat-tab-group animationDuration="0ms">
       <mat-tab *ngFor="let tabName of _getExampleTabNames()" [label]="tabName">
-        <div class="docs-example-source-wrapper">
-          <button mat-icon-button type="button" class="docs-example-source-copy"
-                  title="Copy example source" aria-label="Copy example source to clipboard"
-                  (click)="copySource(viewer.textContent)">
+        <div class="button-bar">
+          <button mat-icon-button type="button" (click)="copySource(snippet.first.viewer.textContent)"
+                  class="docs-example-source-copy docs-example-button" [matTooltip]="'Copy example source'"
+                  title="Copy example source" aria-label="Copy example source to clipboard">
             <mat-icon>content_copy</mat-icon>
           </button>
-          <pre class="docs-example-source"><doc-viewer
-              #viewer [documentUrl]="exampleTabs[tabName]"></doc-viewer></pre>
         </div>
+        <code-snippet [source]="exampleTabs[tabName]"></code-snippet>
       </mat-tab>
     </mat-tab-group>
   </div>
 
-  <div class="docs-example-viewer-body">
+  <div class="docs-example-viewer-source-compact" *ngIf="view === 'compact'">
+    <div class="button-bar">
+      <button mat-icon-button type="button" (click)="copySource(snippet.first.viewer.textContent)"
+              class="docs-example-source-copy docs-example-button" [matTooltip]="'Copy snippet'"
+              title="Copy example source" aria-label="Copy example source to clipboard">
+        <mat-icon>content_copy</mat-icon>
+      </button>
+      <button mat-icon-button type="button" (click)="toggleCompactView()"
+              class="docs-example-compact-toggle docs-example-button" [matTooltip]="'View full example'"
+              aria-label="View less">
+        <mat-icon>
+          <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" focusable="false">
+            <polygon points="13,3 13,5 17.59,5 5,17.59 5,13 3,13 3,21 11,21 11,19 6.41,19 19,6.41 19,11 21,11 21,3"/>
+          </svg>
+        </mat-icon>
+      </button>
+    </div>
+    <code-snippet [source]="file" [lines]="lines" *ngIf="file !== 'demo'"></code-snippet>
+  </div>
+
+  <div class="docs-example-viewer-body" *ngIf="view !== 'compact' || file === 'demo'">
     <ng-template *ngIf="_exampleComponentType && _exampleModuleFactory"
                  [ngComponentOutlet]="_exampleComponentType"
                  [ngComponentOutletNgModuleFactory]="_exampleModuleFactory"></ng-template>

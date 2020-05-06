@@ -38,6 +38,8 @@ export class DocViewer implements OnDestroy {
     }
   }
 
+  @Input() lines: readonly [number, number];
+
   @Output() contentRendered = new EventEmitter<HTMLElement>();
 
   /** The document text. It should not be HTML encoded. */
@@ -78,9 +80,13 @@ export class DocViewer implements OnDestroy {
       const absoluteUrl = `${location.pathname}#${fragmentUrl}`;
       return `href="${this._domSanitizer.sanitize(SecurityContext.URL, absoluteUrl)}"`;
     });
-
     this._elementRef.nativeElement.innerHTML = rawDocument;
     this.textContent = this._elementRef.nativeElement.textContent;
+    if (this.lines) {
+      this._elementRef.nativeElement.innerHTML =
+        rawDocument.split('\n').slice(this.lines[0], this.lines[1]).join('\n');
+      this.textContent = this._elementRef.nativeElement.textContent;
+    }
 
     this._loadComponents('material-docs-example', ExampleViewer);
     this._loadComponents('header-link', HeaderLink);
@@ -105,14 +111,16 @@ export class DocViewer implements OnDestroy {
     const exampleElements =
         this._elementRef.nativeElement.querySelectorAll(`[${componentName}]`);
 
-    Array.prototype.slice.call(exampleElements).forEach((element: Element) => {
+    [...exampleElements].forEach((element: Element) => {
       const example = element.getAttribute(componentName);
       const portalHost = new DomPortalOutlet(
           element, this._componentFactoryResolver, this._appRef, this._injector);
       const examplePortal = new ComponentPortal(componentClass, this._viewContainerRef);
       const exampleViewer = portalHost.attach(examplePortal);
       if (example !== null) {
-        (exampleViewer.instance as ExampleViewer).example = example;
+        const exampleViewerComponent = exampleViewer.instance as ExampleViewer;
+        exampleViewerComponent.example = example;
+        exampleViewerComponent.view = 'collapsed';
       }
 
       this._portalHosts.push(portalHost);

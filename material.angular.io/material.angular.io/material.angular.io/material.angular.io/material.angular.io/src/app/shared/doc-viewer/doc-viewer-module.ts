@@ -11,6 +11,7 @@ import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
 import {HeaderLink} from './header-link';
 import {CopierService} from '../copier/copier.service';
+import {CodeSnippet} from '../example-viewer/code-snippet';
 
 
 // ExampleViewer is included in the DocViewerModule because they have a circular dependency.
@@ -26,7 +27,7 @@ import {CopierService} from '../copier/copier.service';
     StackBlitzButtonModule
   ],
   providers: [CopierService],
-  declarations: [DocViewer, ExampleViewer, HeaderLink],
+  declarations: [DocViewer, ExampleViewer, HeaderLink, CodeSnippet],
   entryComponents: [ExampleViewer, HeaderLink],
   exports: [DocViewer, ExampleViewer, HeaderLink],
 })
