@@ -20,22 +20,26 @@ import {ColumnResize} from './column-resize';
 export abstract class ResizeStrategy {
   protected abstract readonly columnResize: ColumnResize;
 
+  /** Updates the width of the specified column. */
   abstract applyColumnSize(
       cssFriendlyColumnName: string,
       columnHeader: HTMLElement,
       sizeInPx: number,
       previousSizeInPx?: number): void;
 
+  /** Applies a minimum width to the specified column, updating its current width as needed. */
   abstract applyMinColumnSize(
       cssFriendlyColumnName: string,
       columnHeader: HTMLElement,
       minSizeInPx: number): void;
 
+  /** Applies a maximum width to the specified column, updating its current width as needed. */
   abstract applyMaxColumnSize(
       cssFriendlyColumnName: string,
       columnHeader: HTMLElement,
       minSizeInPx: number): void;
 
+  /** Adjusts the width of the table element by the specified delta. */
   protected updateTableWidth(delta: number): void {
     const table = this.columnResize.elementRef.nativeElement;
     const tableWidth = getElementWidth(table);
@@ -215,18 +219,24 @@ export class CdkFlexTableResizeStrategy extends ResizeStrategy implements OnDest
   }
 }
 
+/** Converts CSS pixel values to numbers, eg "123px" to 123. */
 function coercePixelsFromCssValue(cssValue: string): number {
   return Number(cssValue.match(/(\d+)px/)?.[1]);
 }
 
+/** Gets the style.width pixels on the specified element if present, otherwise its offsetWidth. */
 function getElementWidth(element: HTMLElement) {
   // Optimization: Check style.width first as we probably set it already before reading
   // offsetWidth which triggers layout.
   return coercePixelsFromCssValue(element.style.width) || element.offsetWidth;
 }
 
+/**
+ * Converts CSS flex values as set in CdkFlexTableResizeStrategy to numbers,
+ * eg "0 0.01 123px" to 123.
+ */
 function coercePixelsFromFlexValue(flexValue: string|undefined): number {
-  return Number(flexValue?.match(/0 0\.01 (\d+)/)?.[1]);
+  return Number(flexValue?.match(/0 0\.01 (\d+)px/)?.[1]);
 }
 
 export const TABLE_LAYOUT_FIXED_RESIZE_STRATEGY_PROVIDER: Provider = {

@@ -63,6 +63,7 @@ export abstract class ColumnResize implements AfterViewInit, OnDestroy {
     return `cdk-column-resize-${this.selectorId}`;
   }
 
+  /** Called when a column in the table is resized. Applies a css class to the table element. */
   setResized() {
     this.elementRef.nativeElement!.classList.add(WITH_RESIZED_COLUMN_CLASS);
   }
