@@ -124,7 +124,7 @@ export abstract class Resizable<HandleComponent extends ResizeOverlayHandle>
         .withPush(false)
         .withDefaultOffsetX(isRtl ? 1 : 0)
         .withPositions([{
-          originX: isRtl ? 'start': 'end',
+          originX: isRtl ? 'start' : 'end',
           originY: 'top',
           overlayX: 'center',
           overlayY: 'top',
