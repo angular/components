@@ -211,10 +211,6 @@
   version "9.2.1-sha-b0424a351"
   resolved "https://codeload.github.com/angular/material2-docs-content/tar.gz/66f276a9526a373b4c252370514f10de130561f0"
 
-"@angular/components-examples@angular/material2-docs-content#master":
-  version "9.2.0-sha-29e74eb94"
-  resolved "https://codeload.github.com/angular/material2-docs-content/tar.gz/6abb6085ffdc945607b70b7e53c1b2a0da12b421"
-
 "@angular/core@9.1.0":
   version "9.1.0"
   resolved "https://registry.yarnpkg.com/@angular/core/-/core-9.1.0.tgz#9dfc386bd1461e0fd4786031fd245da04371421c"
