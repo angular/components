@@ -66,6 +66,7 @@
 .mat-mdc-list-avatar {
   // MDC's styles don't specify this, but they probably should. It gives a nicer experience when the
   // image is not 1:1 aspect ratio.
+  // See https://github.com/material-components/material-components-web/issues/5897
   object-fit: cover;
 }
 

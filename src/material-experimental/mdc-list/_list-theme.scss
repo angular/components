@@ -15,7 +15,7 @@
   // add the hover and focus states manually.
   .mat-mdc-list-item-interactive {
     &::before {
-      background: if($is-dark-theme, #fff, #000);
+      background: if($is-dark-theme, white, black);
     }
 
     &:hover::before {
