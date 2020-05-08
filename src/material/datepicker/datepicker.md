@@ -8,7 +8,7 @@ the calendar. It is made up of several components and directives that work toget
 A datepicker is composed of a text input and a calendar pop-up, connected via the `matDatepicker`
 property on the text input.
 
-An optional datepicker toggle button is available. 
+There is also an optional datepicker toggle button that gives the user an easy way to open the datepicker pop-up.
 
 <!-- example({"example":"datepicker-overview",
               "file":"datepicker-overview-example.html", 

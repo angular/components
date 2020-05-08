@@ -4,14 +4,15 @@ The autocomplete is a normal text input enhanced by a panel of suggested options
 
 Start by creating the autocomplete panel and the options displayed inside it. Each option should be
 defined by a `mat-option` tag. Set each option's value property to whatever you'd like the value
-of the text input to be upon that option's selection.
+of the text input to be when that option is selected.
 
 <!-- example({"example":"autocomplete-simple",
               "file":"autocomplete-simple-example.html", 
               "lines":[8, 13]}) -->
 
-Next, create the input and set the matAutocomplete input to refer to the template reference we put on the autocomplete.
-Let's assume you're using the `formControl` directive from `ReactiveFormsModule` to track the value of the input.
+Next, create the input and set the `matAutocomplete` input to refer to the template reference we assigned 
+to the autocomplete. Let's assume you're using the `formControl` directive from `ReactiveFormsModule` to 
+track the value of the input.
 
 > Note: It is possible to use template-driven forms instead, if you prefer. We use reactive forms
 in this example because it makes subscribing to changes in the input's value easy. For this
@@ -22,13 +23,6 @@ If you are unfamiliar with using reactive forms, you can read more about the sub
 <!-- example({"example":"autocomplete-simple",
               "file":"autocomplete-simple-example.html", 
               "lines":[2, 8]}) -->
-
-Now we'll need to link the text input to its panel. We can do this by exporting the autocomplete
-panel instance into a local template variable (here we called it "auto"), and binding that variable
-to the input's `matAutocomplete` property.
-
-<!-- example({"example":"autocomplete-simple",
-              "file":"autocomplete-simple-example.html"}) -->
 
 ### Adding a custom filter
 
