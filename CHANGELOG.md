@@ -1,3 +1,25 @@
+## 9.2.3 "chalk-hawk" (2020-05-07)
+
+### cdk
+
+|            |                       |
+| ---------- | --------------------- |
+| bug fix |  **testing:** Make harnesses click on the center of the element by default ([#19212](https://github.com/angular/components/issues/19212)) ([26f3f57](https://github.com/angular/components/commit/26f3f57)) |
+
+### material
+
+|            |                       |
+| ---------- | --------------------- |
+| bug fix |  **datepicker:** double role definition on calendar cell ([#17297](https://github.com/angular/components/issues/17297)) ([d270bf6](https://github.com/angular/components/commit/d270bf6)), closes [#17280](https://github.com/angular/components/issues/17280) |
+
+### material-experimental
+
+|            |                       |
+| ---------- | --------------------- |
+| bug fix |  **mdc-form-field:** native select option blending in with background on dark themes ([#19232](https://github.com/angular/components/issues/19232)) ([7e63f4a](https://github.com/angular/components/commit/7e63f4a)) |
+| feature |  **mdc-form-field:** expose `MAT_FORM_FIELD` injection token ([#19277](https://github.com/angular/components/issues/19277)) ([5e9ac1c](https://github.com/angular/components/commit/5e9ac1c)) |
+| feature |  **mdc-list:** add support for focus/hover states and ripples ([#19168](https://github.com/angular/components/issues/19168)) ([9f3bba3](https://github.com/angular/components/commit/9f3bba3)) |
+
 ## 9.2.2 "graphite-graviton" (2020-04-30)
 
 ### cdk
