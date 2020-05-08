@@ -10,14 +10,23 @@ import {Direction, Directionality} from '@angular/cdk/bidi';
 import {ComponentPortal, Portal, PortalOutlet, TemplatePortal} from '@angular/cdk/portal';
 import {ComponentRef, EmbeddedViewRef, NgZone} from '@angular/core';
 import {Location} from '@angular/common';
-import {Observable, Subject, merge, SubscriptionLike, Subscription, Observer} from 'rxjs';
-import {take, takeUntil} from 'rxjs/operators';
+import {
+  Observable,
+  Subject,
+  merge,
+  SubscriptionLike,
+  Subscription,
+  Observer,
+  fromEvent,
+} from 'rxjs';
+import {take, takeUntil, tap, debounceTime} from 'rxjs/operators';
 import {OverlayKeyboardDispatcher} from './keyboard/overlay-keyboard-dispatcher';
 import {OverlayConfig} from './overlay-config';
 import {coerceCssPixelValue, coerceArray} from '@angular/cdk/coercion';
 import {OverlayReference} from './overlay-reference';
 import {PositionStrategy} from './position/position-strategy';
 import {ScrollStrategy} from './scroll';
+import {BlockScrollStrategy} from './scroll/block-scroll-strategy';
 
 
 /** An object where all of its properties cannot be written. */
@@ -396,6 +405,19 @@ export class OverlayRef implements PortalOutlet, OverlayReference {
     // Forward backdrop clicks such that the consumer of the overlay can perform whatever
     // action desired when such a click occurs (usually closing the overlay).
     this._backdropElement.addEventListener('click', this._backdropClickHandler);
+
+    if (!(this._config.scrollStrategy instanceof BlockScrollStrategy)) {
+      // When the user starts scrolling by mouse, disable pointer events on the backdrop. This
+      // allows for non-body scroll containers (e.g. a sidenav container), which would normally
+      // be blocked due to the backdrop, to scroll. When the user has stopped scrolling for 100ms
+      // restore the pointer events in order for the click handler to work.
+      this._ngZone.runOutsideAngular(() => {
+        fromEvent(this._backdropElement!, 'wheel').pipe(
+          tap(() => this._backdropElement!.style.pointerEvents = 'none'),
+          debounceTime(100)
+        ).subscribe(() => this._backdropElement!.style.pointerEvents = '');
+      });
+    }
 
     // Add class to fade-in the backdrop after one frame.
     if (typeof requestAnimationFrame !== 'undefined') {
