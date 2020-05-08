@@ -61,8 +61,8 @@ export class DocsMarkdownRenderer extends Renderer {
    *  turns into
    *  `<div material-docs-example="exampleName"
    *        file="example-html.html"
-   *        [lines]="[5, 10]"
-   *        [expanded]="true"></div>`
+   *        lines="[5, 10]"
+   *        expanded="true"></div>`
    *
    *  (old API)
    *  `<!-- example(name) -->`
@@ -75,8 +75,8 @@ export class DocsMarkdownRenderer extends Renderer {
                   const {example, file, lines, expanded} = JSON.parse(content);
                   return `<div material-docs-example="${example}"
                                file="${file}"
-                               [lines]="${lines}"
-                               [expanded]="${!!expanded}"></div>`;
+                               lines="${JSON.stringify(lines)}"
+                               expanded="${!!expanded}"></div>`;
               } else {
                   return `<div material-docs-example="${content}"></div>`;
               }
