@@ -55,7 +55,6 @@
   // components (listed below), focus indicators are shifted inwards/outwards
   // to ensure they have sufficient contrast and render appropriately.
   @if not map-has-key($config, margin) {
-    // Default margins depend upon the focus indicator's thickness.
     $border-width: map-get($config, border-width);
 
     .mat-flat-button,
