@@ -7,7 +7,7 @@
  */
 
 import {BooleanInput} from '@angular/cdk/coercion';
-import {ChangeDetectorRef, Directive, ElementRef, OnDestroy,} from '@angular/core';
+import {ChangeDetectorRef, Directive, ElementRef, OnDestroy} from '@angular/core';
 import {
   CanDisable,
   CanDisableCtor,
