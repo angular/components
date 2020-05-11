@@ -15,12 +15,6 @@
 @include angular-material-mdc-typography();
 @include mat-edit-typography(mat-typography-config());
 
-// Include base styles for strong focus indicators.
-.demo-strong-focus {
-  @include mat-strong-focus-indicators();
-  @include mat-mdc-strong-focus-indicators();
-}
-
 // Define the default theme (same as the example above).
 $candy-app-primary: mat-palette($mat-indigo);
 $candy-app-accent: mat-palette($mat-pink, A200, A100, A400);
@@ -38,12 +32,6 @@ $dark-accent: mat-palette($mat-amber, A200, A100, A400);
 $dark-warn: mat-palette($mat-deep-orange);
 $dark-theme: mat-dark-theme($dark-primary, $dark-accent, $dark-warn);
 
-// Include the default theme for focus indicators.
-.demo-strong-focus {
-  @include mat-strong-focus-indicators-theme($candy-app-theme);
-  @include mat-mdc-strong-focus-indicators-theme($candy-app-theme);
-}
-
 // Include the alternative theme styles inside of a block with a CSS class. You can make this
 // CSS class whatever you want. In this example, any component inside of an element with
 // `.demo-unicorn-dark-theme` will be affected by this alternate dark theme instead of the
@@ -55,8 +43,26 @@ $dark-theme: mat-dark-theme($dark-primary, $dark-accent, $dark-warn);
   @include mat-popover-edit-theme($dark-theme);
 }
 
-// Include the dark theme for focus indicators.
-.demo-unicorn-dark-theme.demo-strong-focus {
-  @include mat-strong-focus-indicators-theme($dark-theme);
-  @include mat-mdc-strong-focus-indicators-theme($dark-theme);
+// Enable focus indicators if the CSS class `.demo-strong-focus` is present. Again, you can
+// make this CSS class whatever you want.
+.demo-strong-focus {
+  $candy-app-config: (
+    border-color: mat-color($candy-app-primary),
+  );
+
+  // Include the base focus indicator styles and customize the focus indicator's
+  // color with the primary color of the default theme.
+  @include mat-strong-focus-indicators($candy-app-config);
+  @include mat-mdc-strong-focus-indicators($candy-app-config);
+
+  // If we're in dark theme, then customize the focus indicator's color with the
+  // primary color of the dark theme.
+  &.demo-unicorn-dark-theme {
+    $dark-config: (
+      border-color: mat-color($dark-primary),
+    );
+
+    @include mat-strong-focus-indicator-customize($dark-config);
+    @include mat-mdc-strong-focus-indicator-customize($dark-config);
+  }
 }

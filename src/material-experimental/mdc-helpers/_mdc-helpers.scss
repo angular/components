@@ -213,59 +213,94 @@ $mat-typography-level-mappings: (
   $mdc-typography-styles: $orig-mdc-typography-styles !global;
 }
 
-/// Mixin that turns on strong focus indicators.
+/// Mixin that turns on strong focus indicators. This mixin should only be
+/// included once in your app.
+///
+/// @param {map} $config
+///   If given, customizes focus indicators with the configuration. The
+///   configuration map accepts border-style, border-color, border-width,
+///   border-radius, and margin. If a given parameter is omitted, this
+///   mixin provides a default value. More on each parameter:
+///
+///   border-style: Focus indicator line style (e.g. solid, dashed, etc).
+///   border-color: Focus indicator color.
+///   border-width: Focus indicator thickness.
+///   border-radius: Focus indicator shape.
+///   margin: Focus indicator inset/offset. Positive margin moves the focus
+///       indicator inwards, negative margin moves it outwards.
 ///
 /// @example
 ///   .my-app {
-///     @include mat-mdc-strong-focus-indicators($config);
+///     @include mat-mdc-strong-focus-indicators((
+///       border-style: solid,
+///       border-color: blue,
+///       border-width: 2px,
+///       border-radius: 4px,
+///       margin: 0px,
+///     ));
 ///   }
 @mixin mat-mdc-strong-focus-indicators($config: ()) {
   // Default focus indicator config.
   $default-config: (
     border-style: solid,
+    border-color: black,
     border-width: 3px,
     border-radius: 4px,
+    // Default margin config depends on the border-width and the component.
   );
-
-  // Merge default config with user config.
-  $config: map-merge($default-config, $config);
-  $border-style: map-get($config, border-style);
-  $border-width: map-get($config, border-width);
-  $border-radius: map-get($config, border-radius);
 
   // Base styles for focus indicators.
   .mat-mdc-focus-indicator::before {
     @include mat-fill();
     box-sizing: border-box;
     pointer-events: none;
-    border: $border-width $border-style transparent;
-    border-radius: $border-radius;
   }
 
-  // By default, all focus indicators are flush with the bounding box of their
-  // host element. For particular elements (listed below), default inset/offset
-  // values are necessary to ensure that the focus indicator is sufficiently
-  // contrastive and renders appropriately.
+  // Merge default config with user config.
+  $config: map-merge($default-config, $config);
 
-  .mat-mdc-unelevated-button .mat-mdc-focus-indicator::before,
-  .mat-mdc-raised-button .mat-mdc-focus-indicator::before,
-  .mdc-fab .mat-mdc-focus-indicator::before,
-  .mat-mdc-focus-indicator.mdc-chip::before {
-    margin: -($border-width + 2px);
-  }
+  // Style focus indicators per the composed config.
+  @include mat-mdc-strong-focus-indicator-customize($config);
 
-  .mat-mdc-outlined-button .mat-mdc-focus-indicator::before {
-    margin: -($border-width + 3px);
-  }
+  // If no margin is given, apply a default. For most components, focus
+  // indicators are flush with the bounding box. However, for particular
+  // components (listed below), focus indicators are shifted inwards/outwards
+  // to ensure they have sufficient contrast and render appropriately.
+  @if not map-has-key($config, margin) {
+    $border-width: map-get($config, border-width);
 
-  .mat-mdc-focus-indicator.mat-mdc-chip-remove::before,
-  .mat-mdc-focus-indicator.mat-chip-row-focusable-text-content::before {
-    margin: -$border-width;
-  }
+    .mat-mdc-unelevated-button .mat-mdc-focus-indicator,
+    .mat-mdc-raised-button .mat-mdc-focus-indicator,
+    .mdc-fab .mat-mdc-focus-indicator,
+    .mdc-chip {
+      @include mat-mdc-strong-focus-indicator-customize(
+          $config: (margin: -($border-width + 2px)),
+          $cascade: false,
+      );
+    }
 
-  .mat-mdc-focus-indicator.mat-mdc-tab::before,
-  .mat-mdc-focus-indicator.mat-mdc-tab-link::before {
-    margin: 5px;
+    .mat-mdc-outlined-button .mat-mdc-focus-indicator {
+      @include mat-mdc-strong-focus-indicator-customize(
+          $config: (margin: -($border-width + 3px)),
+          $cascade: false,
+      );
+    }
+
+    .mat-mdc-chip-remove,
+    .mat-chip-row-focusable-text-content {
+      @include mat-mdc-strong-focus-indicator-customize(
+          $config: (margin: -($border-width)),
+          $cascade: false,
+      );
+    }
+
+    .mat-mdc-tab,
+    .mat-mdc-tab-link {
+      @include mat-mdc-strong-focus-indicator-customize(
+          $config: (margin: 5px),
+          $cascade: false,
+      );
+    }
   }
 
   // Render the focus indicator on focus. Defining a pseudo element's
@@ -286,26 +321,46 @@ $mat-typography-level-mappings: (
   }
 }
 
-/// Mixin that sets the color of the focus indicators.
+/// Mixin that customizes focus indicators. This mixin may be included
+/// multiple times throughout your app.
 ///
-/// @param {color|map} $theme-or-color
-///   If theme, focus indicators are set to the primary color of the theme. If
-///   color, focus indicators are set to that color.
+/// @param {map} $config
+///   If given, customizes focus indicators with the configuration. The
+///   configuration map accepts border-style, border-color, border-width,
+///   border-radius, and margin. See the SassDoc annotation for
+///   mat-strong-focus-indicator for more on each parameter.
+///
+/// @param {boolean} $cascade
+///   If true, the focus indicator customizations will apply to the
+///   entire element subtree. Otherwise, they only apply to the selector
+///   hosting the mixin. Defaults to true.
 ///
 /// @example
-///   .demo-dark-theme {
-///     @include mat-mdc-strong-focus-indicators-theme($dark-theme-map);
+///   .my-component {
+///     @include mat-mdc-strong-focus-indicator-customize((
+///       border-radius: 50%,
+///       color: red,
+///     ));
 ///   }
-///
-/// @example
-///   .demo-red-theme {
-///     @include mat-mdc-strong-focus-indicators-theme(#f00);
-///   }
-@mixin mat-mdc-strong-focus-indicators-theme($theme-or-color) {
-  .mat-mdc-focus-indicator::before {
-    border-color: if(
-      type-of($theme-or-color) == 'map',
-      mat-color(map_get($theme-or-color, primary)),
-      $theme-or-color);
+@mixin mat-mdc-strong-focus-indicator-customize($config: (), $cascade: true) {
+  $config-keys: (
+    border-color,
+    border-style,
+    border-width,
+    border-radius,
+    margin,
+  );
+  $selector: if($cascade,
+      '.mat-mdc-focus-indicator::before',
+      '&.mat-mdc-focus-indicator::before');
+
+  #{$selector} {
+    @each $key in $config-keys {
+      $value: map-get($config, $key);
+
+      @if ($key and $value) {
+        #{$key}: #{$value};
+      }
+    }
   }
 }
