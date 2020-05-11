@@ -87,7 +87,7 @@ export class MapKmlLayer implements OnInit, OnDestroy {
         // user has subscribed to.
         this._ngZone.runOutsideAngular(() => this.kmlLayer = new google.maps.KmlLayer(options));
         this._assertInitialized();
-        this.kmlLayer!.setMap(this._map.googleMap!);
+        this.kmlLayer.setMap(this._map.googleMap!);
         this._eventManager.setTarget(this.kmlLayer);
       });
 
@@ -111,7 +111,7 @@ export class MapKmlLayer implements OnInit, OnDestroy {
    */
   getDefaultViewport(): google.maps.LatLngBounds {
     this._assertInitialized();
-    return this.kmlLayer!.getDefaultViewport();
+    return this.kmlLayer.getDefaultViewport();
   }
 
   /**
@@ -119,7 +119,7 @@ export class MapKmlLayer implements OnInit, OnDestroy {
    */
   getMetadata(): google.maps.KmlLayerMetadata {
     this._assertInitialized();
-    return this.kmlLayer!.getMetadata();
+    return this.kmlLayer.getMetadata();
   }
 
   /**
@@ -127,7 +127,7 @@ export class MapKmlLayer implements OnInit, OnDestroy {
    */
   getStatus(): google.maps.KmlLayerStatus {
     this._assertInitialized();
-    return this.kmlLayer!.getStatus();
+    return this.kmlLayer.getStatus();
   }
 
   /**
@@ -135,7 +135,7 @@ export class MapKmlLayer implements OnInit, OnDestroy {
    */
   getUrl(): string {
     this._assertInitialized();
-    return this.kmlLayer!.getUrl();
+    return this.kmlLayer.getUrl();
   }
 
   /**
@@ -143,7 +143,7 @@ export class MapKmlLayer implements OnInit, OnDestroy {
    */
   getZIndex(): number {
     this._assertInitialized();
-    return this.kmlLayer!.getZIndex();
+    return this.kmlLayer.getZIndex();
   }
 
   private _combineOptions(): Observable<google.maps.KmlLayerOptions> {
@@ -174,7 +174,7 @@ export class MapKmlLayer implements OnInit, OnDestroy {
     });
   }
 
-  private _assertInitialized() {
+  private _assertInitialized(): asserts this is { kmlLayer: google.maps.KmlLayer } {
     if (!this._map.googleMap) {
       throw Error(
           'Cannot access Google Map information before the API has been initialized. ' +
