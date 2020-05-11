@@ -1,28 +1,28 @@
-// TypeScript config file that extends the default tsconfig file for the cdk. This config is
-// used to compile the tests for Karma. Since the code will run inside of the browser, the target
-// needs to be ES5. The format needs to be CommonJS since Karma only supports that module format.
 {
-  "extends": "./tsconfig-build",
+  "extends": "./tsconfig-build.json",
   "compilerOptions": {
+    "baseUrl": ".",
+    "outDir": "../../dist/packages/material-luxon-adapter",
+    "rootDir": ".",
+    "rootDirs": [
+      ".",
+      "../../dist/packages/material-luxon-adapter"
+    ],
     "importHelpers": false,
     "module": "commonjs",
     "target": "es5",
     "types": ["jasmine"],
-    "experimentalDecorators": true
-  },
-  "angularCompilerOptions": {
-    "strictMetadataEmit": true,
-    "skipTemplateCodegen": true,
+    "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "fullTemplateTypeCheck": true,
-
-    // Unset options inherited from tsconfig-build
-    "annotateForClosureCompiler": false,
-    "flatModuleOutFile": null,
-    "flatModuleId": null
+    "paths": {
+      "@angular/material/*": ["../../dist/packages/material/*"]
+    }
   },
   "include": [
-    "**/*.spec.ts",
-    "index.ts"
+    "**/*.ts",
+    "**/*.spec.ts"
+  ],
+  "exclude": [
+    "**/*.e2e.spec.ts"
   ]
 }
