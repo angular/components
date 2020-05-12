@@ -16,7 +16,8 @@ import {DragDropRegistry} from './drag-drop-registry';
 /** Default configuration to be used when creating a `DragRef`. */
 const DEFAULT_CONFIG = {
   dragStartThreshold: 5,
-  pointerDirectionChangeThreshold: 5
+  pointerDirectionChangeThreshold: 5,
+  propagateEvents: false
 };
 
 /**

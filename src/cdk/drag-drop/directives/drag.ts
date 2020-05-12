@@ -199,6 +199,7 @@ export class CdkDrag<T = any> implements AfterViewInit, OnChanges, OnDestroy {
           config.dragStartThreshold : 5,
       pointerDirectionChangeThreshold: config && config.pointerDirectionChangeThreshold != null ?
           config.pointerDirectionChangeThreshold : 5,
+      propagateEvents: coerceBooleanProperty(config && config.propagateEvents),
       zIndex: config?.zIndex
     });
     this._dragRef.data = this;
