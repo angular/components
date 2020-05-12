@@ -161,9 +161,9 @@ export class MatExpansionPanelHeader implements OnDestroy, FocusableOption {
   _getHeaderHeight(): string|null {
     const isExpanded = this._isExpanded();
     if (isExpanded && this.expandedHeight) {
-      return `${this.expandedHeight}px`;
+      return this.expandedHeight;
     } else if (!isExpanded && this.collapsedHeight) {
-      return `${this.collapsedHeight}px`;
+      return this.collapsedHeight;
     }
     return null;
   }
