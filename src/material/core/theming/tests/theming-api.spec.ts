@@ -1,7 +1,7 @@
 import {parse, Root, Rule} from 'postcss';
 import {renderSync} from 'sass';
 
-import {compareNodes} from './postcss-compare';
+import {compareNodes} from '../../../../../tools/postcss/compare-nodes';
 
 describe('theming api', () => {
   /** Map of known selectors for density styles and their corresponding AST rule. */
