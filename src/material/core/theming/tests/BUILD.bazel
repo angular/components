@@ -41,10 +41,10 @@ ts_library(
     name = "unit_test_lib",
     testonly = True,
     srcs = [
-        "postcss-compare.ts",
         "theming-api.spec.ts",
     ],
     deps = [
+        "//tools/postcss",
         "@npm//@types/jasmine",
         "@npm//@types/node",
         "@npm//@types/sass",
