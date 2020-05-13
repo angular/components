@@ -100,13 +100,16 @@ export class CdkColumnDef extends _CdkColumnDefBase implements CanStick {
   _stickyEnd: boolean = false;
 
   /** @docs-private */
-  @ContentChild(CdkCellDef) cell: CdkCellDef;
+  // TODO(issue/13329): Attempt to remove "!".
+  @ContentChild(CdkCellDef) cell!: CdkCellDef;
 
   /** @docs-private */
-  @ContentChild(CdkHeaderCellDef) headerCell: CdkHeaderCellDef;
+  // TODO(issue/13329): Attempt to remove "!".
+  @ContentChild(CdkHeaderCellDef) headerCell!: CdkHeaderCellDef;
 
   /** @docs-private */
-  @ContentChild(CdkFooterCellDef) footerCell: CdkFooterCellDef;
+  // TODO(issue/13329): Attempt to remove "!".
+  @ContentChild(CdkFooterCellDef) footerCell!: CdkFooterCellDef;
 
   /**
    * Transformed version of the column name that can be used as part of a CSS classname. Excludes

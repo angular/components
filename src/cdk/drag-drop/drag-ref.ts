@@ -84,28 +84,35 @@ export interface Point {
  */
 export class DragRef<T = any> {
   /** Element displayed next to the user's pointer while the element is dragged. */
-  private _preview: HTMLElement;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _preview!: HTMLElement;
 
   /** Reference to the view of the preview element. */
-  private _previewRef: EmbeddedViewRef<any> | null;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _previewRef!: EmbeddedViewRef<any> | null;
 
   /** Reference to the view of the placeholder element. */
-  private _placeholderRef: EmbeddedViewRef<any> | null;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _placeholderRef!: EmbeddedViewRef<any> | null;
 
   /** Element that is rendered instead of the draggable item while it is being sorted. */
-  private _placeholder: HTMLElement;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _placeholder!: HTMLElement;
 
   /** Coordinates within the element at which the user picked up the element. */
-  private _pickupPositionInElement: Point;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _pickupPositionInElement!: Point;
 
   /** Coordinates on the page at which the user picked up the element. */
-  private _pickupPositionOnPage: Point;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _pickupPositionOnPage!: Point;
 
   /**
    * Anchor node used to save the place in the DOM where the element was
    * picked up so that it can be restored at the end of the drag sequence.
    */
-  private _anchor: Comment;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _anchor!: Comment;
 
   /**
    * CSS `transform` applied to the element when it isn't being dragged. We need a
@@ -125,16 +132,20 @@ export class DragRef<T = any> {
    * Whether the dragging sequence has been started. Doesn't
    * necessarily mean that the element has been moved.
    */
-  private _hasStartedDragging: boolean;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _hasStartedDragging!: boolean;
 
   /** Whether the element has moved since the user started dragging it. */
-  private _hasMoved: boolean;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _hasMoved!: boolean;
 
   /** Drop container in which the DragRef resided when dragging began. */
-  private _initialContainer: DropListRef;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _initialContainer!: DropListRef;
 
   /** Index at which the item started in its initial container. */
-  private _initialIndex: number;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _initialIndex!: number;
 
   /** Cached positions of scrollable parent elements. */
   private _parentPositions: ParentPositionTracker;
@@ -149,22 +160,26 @@ export class DragRef<T = any> {
   }>();
 
   /** Keeps track of the direction in which the user is dragging along each axis. */
-  private _pointerDirectionDelta: {x: -1 | 0 | 1, y: -1 | 0 | 1};
+  // TODO(issue/13329): Attempt to remove "!".
+  private _pointerDirectionDelta!: {x: -1 | 0 | 1, y: -1 | 0 | 1};
 
   /** Pointer position at which the last change in the delta occurred. */
-  private _pointerPositionAtLastDirectionChange: Point;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _pointerPositionAtLastDirectionChange!: Point;
 
   /**
    * Root DOM node of the drag instance. This is the element that will
    * be moved around as the user is dragging.
    */
-  private _rootElement: HTMLElement;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _rootElement!: HTMLElement;
 
   /**
    * Inline style value of `-webkit-tap-highlight-color` at the time the
    * dragging was started. Used to restore the value once we're done dragging.
    */
-  private _rootElementTapHighlight: string;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _rootElementTapHighlight!: string;
 
   /** Subscription to pointer movement events. */
   private _pointerMoveSubscription = Subscription.EMPTY;
@@ -183,10 +198,12 @@ export class DragRef<T = any> {
    * events multiple times on touch devices where the browser will fire a fake
    * mouse event for each touch event, after a certain time.
    */
-  private _lastTouchEventTime: number;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _lastTouchEventTime!: number;
 
   /** Time at which the last dragging sequence was started. */
-  private _dragStartTime: number;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _dragStartTime!: number;
 
   /** Cached reference to the boundary element. */
   private _boundaryElement: HTMLElement | null = null;
@@ -219,7 +236,8 @@ export class DragRef<T = any> {
   private _direction: Direction = 'ltr';
 
   /** Axis along which dragging is locked. */
-  lockAxis: 'x' | 'y';
+  // TODO(issue/13329): Attempt to remove "!".
+  lockAxis!: 'x' | 'y';
 
   /**
    * Amount of milliseconds to wait after the user has put their
@@ -286,7 +304,8 @@ export class DragRef<T = any> {
   }> = this._moveEvents.asObservable();
 
   /** Arbitrary data that can be attached to the drag item. */
-  data: T;
+  // TODO(issue/13329): Attempt to remove "!".
+  data!: T;
 
   /**
    * Function that can be used to customize the logic of how the position of the drag item

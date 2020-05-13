@@ -71,8 +71,9 @@ const RIPPLE_ANIMATION_CONFIG: RippleAnimationConfig = {
 })
 export class MatRadioGroup extends BaseMatRadioGroup {
   /** Child radio buttons. */
+  // TODO(issue/13329): Attempt to remove "!".
   @ContentChildren(forwardRef(() => MatRadioButton), {descendants: true})
-      _radios: QueryList<_MatRadioButtonBase>;
+      _radios!: QueryList<_MatRadioButtonBase>;
 }
 
 @Component({

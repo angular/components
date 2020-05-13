@@ -20,7 +20,8 @@ const wrapperClass = 'cdk-global-overlay-wrapper';
  */
 export class GlobalPositionStrategy implements PositionStrategy {
   /** The overlay to which this strategy is attached. */
-  private _overlayRef: OverlayReference;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _overlayRef!: OverlayReference;
   private _cssPosition: string = 'static';
   private _topOffset: string = '';
   private _bottomOffset: string = '';
@@ -30,7 +31,8 @@ export class GlobalPositionStrategy implements PositionStrategy {
   private _justifyContent: string = '';
   private _width: string = '';
   private _height: string = '';
-  private _isDisposed: boolean;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _isDisposed!: boolean;
 
   attach(overlayRef: OverlayReference): void {
     const config = overlayRef.getConfig();

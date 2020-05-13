@@ -76,7 +76,8 @@ export class MatTreeNode<T> extends _MatTreeNodeMixinBase<T>
   providers: [{provide: CdkTreeNodeDef, useExisting: MatTreeNodeDef}]
 })
 export class MatTreeNodeDef<T> extends CdkTreeNodeDef<T> {
-  @Input('matTreeNode') data: T;
+  // TODO(issue/13329): Attempt to remove "!".
+  @Input('matTreeNode') data!: T;
 }
 
 /**
@@ -98,7 +99,8 @@ export class MatTreeNodeDef<T> extends CdkTreeNodeDef<T> {
 })
 export class MatNestedTreeNode<T> extends CdkNestedTreeNode<T> implements AfterContentInit,
   OnDestroy {
-  @Input('matNestedTreeNode') node: T;
+  // TODO(issue/13329): Attempt to remove "!".
+  @Input('matNestedTreeNode') node!: T;
 
   /** Whether the node is disabled. */
   @Input()
@@ -113,7 +115,8 @@ export class MatNestedTreeNode<T> extends CdkNestedTreeNode<T> implements AfterC
     // If the specified tabIndex value is null or undefined, fall back to the default value.
     this._tabIndex = value != null ? value : 0;
   }
-  private _tabIndex: number;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _tabIndex!: number;
 
   constructor(protected _elementRef: ElementRef<HTMLElement>,
               protected _tree: CdkTree<T>,

@@ -64,7 +64,8 @@ export class MatSelectionList extends MatListBase {}
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MatListOption extends MatListItemBase {
-  @ContentChildren(MatLine, {read: ElementRef, descendants: true}) lines:
+  // TODO(issue/13329): Attempt to remove "!".
+  @ContentChildren(MatLine, {read: ElementRef, descendants: true}) lines!:
       QueryList<ElementRef<Element>>;
 
   constructor(element: ElementRef, ngZone: NgZone, listBase: MatListBase, platform: Platform) {

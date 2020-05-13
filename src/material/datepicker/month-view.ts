@@ -96,7 +96,8 @@ export class MatMonthView<D> implements AfterContentInit, OnDestroy {
 
     this._setRanges(this._selected);
   }
-  private _selected: DateRange<D> | D | null;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _selected!: DateRange<D> | D | null;
 
   /** The minimum selectable date. */
   @Input()
@@ -104,7 +105,8 @@ export class MatMonthView<D> implements AfterContentInit, OnDestroy {
   set minDate(value: D | null) {
     this._minDate = this._getValidDateOrNull(this._dateAdapter.deserialize(value));
   }
-  private _minDate: D | null;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _minDate!: D | null;
 
   /** The maximum selectable date. */
   @Input()
@@ -112,19 +114,24 @@ export class MatMonthView<D> implements AfterContentInit, OnDestroy {
   set maxDate(value: D | null) {
     this._maxDate = this._getValidDateOrNull(this._dateAdapter.deserialize(value));
   }
-  private _maxDate: D | null;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _maxDate!: D | null;
 
   /** Function used to filter which dates are selectable. */
-  @Input() dateFilter: (date: D) => boolean;
+  // TODO(issue/13329): Attempt to remove "!".
+  @Input() dateFilter!: (date: D) => boolean;
 
   /** Function that can be used to add custom CSS classes to dates. */
-  @Input() dateClass: (date: D) => MatCalendarCellCssClasses;
+  // TODO(issue/13329): Attempt to remove "!".
+  @Input() dateClass!: (date: D) => MatCalendarCellCssClasses;
 
   /** Start of the comparison range. */
-  @Input() comparisonStart: D | null;
+  // TODO(issue/13329): Attempt to remove "!".
+  @Input() comparisonStart!: D | null;
 
   /** End of the comparison range. */
-  @Input() comparisonEnd: D | null;
+  // TODO(issue/13329): Attempt to remove "!".
+  @Input() comparisonEnd!: D | null;
 
   /** Emits when a new date is selected. */
   @Output() readonly selectedChange: EventEmitter<D | null> = new EventEmitter<D | null>();
@@ -137,43 +144,56 @@ export class MatMonthView<D> implements AfterContentInit, OnDestroy {
   @Output() readonly activeDateChange: EventEmitter<D> = new EventEmitter<D>();
 
   /** The body of calendar table */
-  @ViewChild(MatCalendarBody) _matCalendarBody: MatCalendarBody;
+  // TODO(issue/13329): Attempt to remove "!".
+  @ViewChild(MatCalendarBody) _matCalendarBody!: MatCalendarBody;
 
   /** The label for this month (e.g. "January 2017"). */
-  _monthLabel: string;
+  // TODO(issue/13329): Attempt to remove "!".
+  _monthLabel!: string;
 
   /** Grid of calendar cells representing the dates of the month. */
-  _weeks: MatCalendarCell[][];
+  // TODO(issue/13329): Attempt to remove "!".
+  _weeks!: MatCalendarCell[][];
 
   /** The number of blank cells in the first row before the 1st of the month. */
-  _firstWeekOffset: number;
+  // TODO(issue/13329): Attempt to remove "!".
+  _firstWeekOffset!: number;
 
   /** Start value of the currently-shown date range. */
-  _rangeStart: number | null;
+  // TODO(issue/13329): Attempt to remove "!".
+  _rangeStart!: number | null;
 
   /** End value of the currently-shown date range. */
-  _rangeEnd: number | null;
+  // TODO(issue/13329): Attempt to remove "!".
+  _rangeEnd!: number | null;
 
   /** Start value of the currently-shown comparison date range. */
-  _comparisonRangeStart: number | null;
+  // TODO(issue/13329): Attempt to remove "!".
+  _comparisonRangeStart!: number | null;
 
   /** End value of the currently-shown comparison date range. */
-  _comparisonRangeEnd: number | null;
+  // TODO(issue/13329): Attempt to remove "!".
+  _comparisonRangeEnd!: number | null;
 
   /** Start of the preview range. */
-  _previewStart: number | null;
+  // TODO(issue/13329): Attempt to remove "!".
+  _previewStart!: number | null;
 
   /** End of the preview range. */
-  _previewEnd: number | null;
+  // TODO(issue/13329): Attempt to remove "!".
+  _previewEnd!: number | null;
 
   /** Whether the user is currently selecting a range of dates. */
-  _isRange: boolean;
+  // TODO(issue/13329): Attempt to remove "!".
+  _isRange!: boolean;
 
   /** The date of the month that today falls on. Null if today is in another month. */
-  _todayDate: number | null;
+  // TODO(issue/13329): Attempt to remove "!".
+  _todayDate!: number | null;
 
   /** The names of the weekdays. */
-  _weekdays: {long: string, narrow: string}[];
+  // TODO(issue/13329): Attempt to remove "!".
+  _weekdays!: {long: string, narrow: string}[];
 
   constructor(private _changeDetectorRef: ChangeDetectorRef,
               @Optional() @Inject(MAT_DATE_FORMATS) private _dateFormats: MatDateFormats,

@@ -60,7 +60,8 @@ export class MatFooterCellDef extends CdkFooterCellDef {}
 })
 export class MatColumnDef extends CdkColumnDef {
   /** Unique name for this column. */
-  @Input('matColumnDef') name: string;
+  // TODO(issue/13329): Attempt to remove "!".
+  @Input('matColumnDef') name!: string;
 
   static ngAcceptInputType_sticky: BooleanInput;
 }

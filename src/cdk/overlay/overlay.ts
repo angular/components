@@ -42,7 +42,8 @@ let nextUniqueId = 0;
  */
 @Injectable()
 export class Overlay {
-  private _appRef: ApplicationRef;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _appRef!: ApplicationRef;
 
   constructor(
               /** Scrolling strategies that can be used when creating an overlay. */

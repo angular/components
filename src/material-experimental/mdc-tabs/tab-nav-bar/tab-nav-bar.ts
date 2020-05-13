@@ -73,12 +73,18 @@ export class MatTabNav extends _MatTabNavBase implements AfterContentInit {
   }
   _fitInkBarToContent = new BehaviorSubject(false);
 
-  @ContentChildren(forwardRef(() => MatTabLink), {descendants: true}) _items: QueryList<MatTabLink>;
-  @ViewChild('tabListContainer', {static: true}) _tabListContainer: ElementRef;
-  @ViewChild('tabList', {static: true}) _tabList: ElementRef;
-  @ViewChild('nextPaginator') _nextPaginator: ElementRef<HTMLElement>;
-  @ViewChild('previousPaginator') _previousPaginator: ElementRef<HTMLElement>;
-  _inkBar: MatInkBar;
+  // TODO(issue/13329): Attempt to remove "!".
+  @ContentChildren(forwardRef(() => MatTabLink), {descendants: true}) _items!: QueryList<MatTabLink>;
+  // TODO(issue/13329): Attempt to remove "!".
+  @ViewChild('tabListContainer', {static: true}) _tabListContainer!: ElementRef;
+  // TODO(issue/13329): Attempt to remove "!".
+  @ViewChild('tabList', {static: true}) _tabList!: ElementRef;
+  // TODO(issue/13329): Attempt to remove "!".
+  @ViewChild('nextPaginator') _nextPaginator!: ElementRef<HTMLElement>;
+  // TODO(issue/13329): Attempt to remove "!".
+  @ViewChild('previousPaginator') _previousPaginator!: ElementRef<HTMLElement>;
+  // TODO(issue/13329): Attempt to remove "!".
+  _inkBar!: MatInkBar;
 
   constructor(elementRef: ElementRef,
               @Optional() dir: Directionality,

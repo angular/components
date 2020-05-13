@@ -88,12 +88,18 @@ export abstract class _MatTabHeaderBase extends MatPaginatedTabHeader implements
   },
 })
 export class MatTabHeader extends _MatTabHeaderBase {
-  @ContentChildren(MatTabLabelWrapper, {descendants: false}) _items: QueryList<MatTabLabelWrapper>;
-  @ViewChild(MatInkBar, {static: true}) _inkBar: MatInkBar;
-  @ViewChild('tabListContainer', {static: true}) _tabListContainer: ElementRef;
-  @ViewChild('tabList', {static: true}) _tabList: ElementRef;
-  @ViewChild('nextPaginator') _nextPaginator: ElementRef<HTMLElement>;
-  @ViewChild('previousPaginator') _previousPaginator: ElementRef<HTMLElement>;
+  // TODO(issue/13329): Attempt to remove "!".
+  @ContentChildren(MatTabLabelWrapper, {descendants: false}) _items!: QueryList<MatTabLabelWrapper>;
+  // TODO(issue/13329): Attempt to remove "!".
+  @ViewChild(MatInkBar, {static: true}) _inkBar!: MatInkBar;
+  // TODO(issue/13329): Attempt to remove "!".
+  @ViewChild('tabListContainer', {static: true}) _tabListContainer!: ElementRef;
+  // TODO(issue/13329): Attempt to remove "!".
+  @ViewChild('tabList', {static: true}) _tabList!: ElementRef;
+  // TODO(issue/13329): Attempt to remove "!".
+  @ViewChild('nextPaginator') _nextPaginator!: ElementRef<HTMLElement>;
+  // TODO(issue/13329): Attempt to remove "!".
+  @ViewChild('previousPaginator') _previousPaginator!: ElementRef<HTMLElement>;
 
   constructor(elementRef: ElementRef,
               changeDetectorRef: ChangeDetectorRef,

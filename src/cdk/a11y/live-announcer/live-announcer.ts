@@ -213,7 +213,8 @@ export class CdkAriaLive implements OnDestroy {
   private _politeness: AriaLivePoliteness = 'off';
 
   private _previousAnnouncedText?: string;
-  private _subscription: Subscription | null;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _subscription!: Subscription | null;
 
   constructor(private _elementRef: ElementRef, private _liveAnnouncer: LiveAnnouncer,
               private _contentObserver: ContentObserver, private _ngZone: NgZone) {}

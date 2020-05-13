@@ -57,7 +57,8 @@ export class MatDatepickerToggle<D> implements AfterContentInit, OnChanges, OnDe
   private _stateChanges = Subscription.EMPTY;
 
   /** Datepicker instance that the button will toggle. */
-  @Input('for') datepicker: MatDatepickerBase<MatDatepickerControl<any>, D>;
+  // TODO(issue/13329): Attempt to remove "!".
+  @Input('for') datepicker!: MatDatepickerBase<MatDatepickerControl<any>, D>;
 
   /** Tabindex for the toggle. */
   @Input() tabIndex: number | null;
@@ -74,16 +75,20 @@ export class MatDatepickerToggle<D> implements AfterContentInit, OnChanges, OnDe
   set disabled(value: boolean) {
     this._disabled = coerceBooleanProperty(value);
   }
-  private _disabled: boolean;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _disabled!: boolean;
 
   /** Whether ripples on the toggle should be disabled. */
-  @Input() disableRipple: boolean;
+  // TODO(issue/13329): Attempt to remove "!".
+  @Input() disableRipple!: boolean;
 
   /** Custom icon set by the consumer. */
-  @ContentChild(MatDatepickerToggleIcon) _customIcon: MatDatepickerToggleIcon;
+  // TODO(issue/13329): Attempt to remove "!".
+  @ContentChild(MatDatepickerToggleIcon) _customIcon!: MatDatepickerToggleIcon;
 
   /** Underlying button element. */
-  @ViewChild('button') _button: MatButton;
+  // TODO(issue/13329): Attempt to remove "!".
+  @ViewChild('button') _button!: MatButton;
 
   constructor(
     public _intl: MatDatepickerIntl,

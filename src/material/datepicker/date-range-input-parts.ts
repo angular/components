@@ -72,7 +72,8 @@ abstract class MatDateRangeInputPartBase<D>
   extends MatDatepickerInputBase<DateRange<D>> implements OnInit, DoCheck {
 
   /** @docs-private */
-  ngControl: NgControl;
+  // TODO(issue/13329): Attempt to remove "!".
+  ngControl!: NgControl;
 
   /** @docs-private */
   abstract updateErrorState(): void;

@@ -75,7 +75,8 @@ export class MatGridTile {
   encapsulation: ViewEncapsulation.None,
 })
 export class MatGridTileText implements AfterContentInit {
-  @ContentChildren(MatLine, {descendants: true}) _lines: QueryList<MatLine>;
+  // TODO(issue/13329): Attempt to remove "!".
+  @ContentChildren(MatLine, {descendants: true}) _lines!: QueryList<MatLine>;
 
   constructor(private _element: ElementRef<HTMLElement>) {}
 

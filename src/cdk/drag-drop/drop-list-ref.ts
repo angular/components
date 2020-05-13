@@ -83,7 +83,8 @@ export class DropListRef<T = any> {
   sortingDisabled: boolean = false;
 
   /** Locks the position of the draggable elements inside the container along the specified axis. */
-  lockAxis: 'x' | 'y';
+  // TODO(issue/13329): Attempt to remove "!".
+  lockAxis!: 'x' | 'y';
 
   /**
    * Whether auto-scrolling the view when the user
@@ -131,7 +132,8 @@ export class DropListRef<T = any> {
   }>();
 
   /** Arbitrary data that can be attached to the drop list. */
-  data: T;
+  // TODO(issue/13329): Attempt to remove "!".
+  data!: T;
 
   /** Whether an item in the list is being dragged. */
   private _isDragging = false;
@@ -143,14 +145,16 @@ export class DropListRef<T = any> {
   private _parentPositions: ParentPositionTracker;
 
   /** Cached `ClientRect` of the drop list. */
-  private _clientRect: ClientRect;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _clientRect!: ClientRect;
 
   /**
    * Draggable items that are currently active inside the container. Includes the items
    * from `_draggables`, as well as any items that have been dragged in, but haven't
    * been dropped yet.
    */
-  private _activeDraggables: DragRef[];
+  // TODO(issue/13329): Attempt to remove "!".
+  private _activeDraggables!: DragRef[];
 
   /**
    * Keeps track of the item that was last swapped with the dragged item, as
@@ -159,7 +163,8 @@ export class DropListRef<T = any> {
   private _previousSwap = {drag: null as DragRef | null, delta: 0};
 
   /** Draggable items in the container. */
-  private _draggables: ReadonlyArray<DragRef>;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _draggables!: ReadonlyArray<DragRef>;
 
   /** Drop lists that are connected to the current one. */
   private _siblings: ReadonlyArray<DropListRef> = [];
@@ -183,7 +188,8 @@ export class DropListRef<T = any> {
   private _horizontalScrollDirection = AutoScrollHorizontalDirection.NONE;
 
   /** Node that is being auto-scrolled. */
-  private _scrollNode: HTMLElement | Window;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _scrollNode!: HTMLElement | Window;
 
   /** Used to signal to the current auto-scroll sequence when to stop. */
   private _stopScrollTimers = new Subject<void>();
@@ -195,10 +201,12 @@ export class DropListRef<T = any> {
   private _document: Document;
 
   /** Elements that can be scrolled while the user is dragging. */
-  private _scrollableElements: HTMLElement[];
+  // TODO(issue/13329): Attempt to remove "!".
+  private _scrollableElements!: HTMLElement[];
 
   /** Initial value for the element's `scroll-snap-type` style. */
-  private _initialScrollSnap: string;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _initialScrollSnap!: string;
 
   constructor(
     element: ElementRef<HTMLElement> | HTMLElement,

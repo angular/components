@@ -125,12 +125,16 @@ export class MatListOption extends _MatListOptionMixinBase implements AfterConte
   private _disabled = false;
   private _hasFocus = false;
 
-  @ContentChild(MatListAvatarCssMatStyler) _avatar: MatListAvatarCssMatStyler;
-  @ContentChild(MatListIconCssMatStyler) _icon: MatListIconCssMatStyler;
-  @ContentChildren(MatLine, {descendants: true}) _lines: QueryList<MatLine>;
+  // TODO(issue/13329): Attempt to remove "!".
+  @ContentChild(MatListAvatarCssMatStyler) _avatar!: MatListAvatarCssMatStyler;
+  // TODO(issue/13329): Attempt to remove "!".
+  @ContentChild(MatListIconCssMatStyler) _icon!: MatListIconCssMatStyler;
+  // TODO(issue/13329): Attempt to remove "!".
+  @ContentChildren(MatLine, {descendants: true}) _lines!: QueryList<MatLine>;
 
   /** DOM element containing the item's text. */
-  @ViewChild('text') _text: ElementRef;
+  // TODO(issue/13329): Attempt to remove "!".
+  @ViewChild('text') _text!: ElementRef;
 
   /** Whether the label should appear before or after the checkbox. Defaults to 'after' */
   @Input() checkboxPosition: 'before' | 'after' = 'after';
@@ -342,10 +346,12 @@ export class MatSelectionList extends _MatSelectionListMixinBase implements CanD
   private _contentInitialized = false;
 
   /** The FocusKeyManager which handles focus. */
-  _keyManager: FocusKeyManager<MatListOption>;
+  // TODO(issue/13329): Attempt to remove "!".
+  _keyManager!: FocusKeyManager<MatListOption>;
 
   /** The option components contained within this selection-list. */
-  @ContentChildren(MatListOption, {descendants: true}) options: QueryList<MatListOption>;
+  // TODO(issue/13329): Attempt to remove "!".
+  @ContentChildren(MatListOption, {descendants: true}) options!: QueryList<MatListOption>;
 
   /** Emits a change event whenever the selected state of an option changes. */
   @Output() readonly selectionChange: EventEmitter<MatSelectionListChange> =
@@ -408,7 +414,8 @@ export class MatSelectionList extends _MatSelectionListMixinBase implements CanD
   private _onChange: (value: any) => void = (_: any) => {};
 
   /** Keeps track of the currently-selected value. */
-  _value: string[]|null;
+  // TODO(issue/13329): Attempt to remove "!".
+  _value!: string[]|null;
 
   /** Emits when the list has been destroyed. */
   private _destroyed = new Subject<void>();
@@ -417,7 +424,8 @@ export class MatSelectionList extends _MatSelectionListMixinBase implements CanD
   _onTouched: () => void = () => {};
 
   /** Whether the list has been destroyed. */
-  private _isDestroyed: boolean;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _isDestroyed!: boolean;
 
   constructor(private _element: ElementRef<HTMLElement>,
     // @breaking-change 11.0.0 Remove `tabIndex` parameter.

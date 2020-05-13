@@ -147,13 +147,16 @@ export class CdkVirtualForOf<T> implements CollectionViewer, DoCheck, OnDestroy 
   private _differ: IterableDiffer<T> | null = null;
 
   /** The most recent data emitted from the DataSource. */
-  private _data: T[] | ReadonlyArray<T>;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _data!: T[] | ReadonlyArray<T>;
 
   /** The currently rendered items. */
-  private _renderedItems: T[];
+  // TODO(issue/13329): Attempt to remove "!".
+  private _renderedItems!: T[];
 
   /** The currently rendered range of indices. */
-  private _renderedRange: ListRange;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _renderedRange!: ListRange;
 
   /**
    * The template cache used to hold on ot template instancess that have been stamped out, but don't

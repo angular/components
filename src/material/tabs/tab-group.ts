@@ -53,9 +53,11 @@ let nextId = 0;
 /** A simple change event emitted on focus or selection changes. */
 export class MatTabChangeEvent {
   /** Index of the currently-selected tab. */
-  index: number;
+  // TODO(issue/13329): Attempt to remove "!".
+  index!: number;
   /** Reference to the currently-selected tab. */
-  tab: MatTab;
+  // TODO(issue/13329): Attempt to remove "!".
+  tab!: MatTab;
 }
 
 /** Possible positions for the tab header. */
@@ -129,7 +131,8 @@ export abstract class _MatTabGroupBase extends _MatTabGroupMixinBase implements 
   set animationDuration(value: string) {
     this._animationDuration = /^\d+$/.test(value) ? value + 'ms' : value;
   }
-  private _animationDuration: string;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _animationDuration!: string;
 
   /**
    * Whether pagination should be disabled. This can be used to avoid unnecessary
@@ -407,9 +410,12 @@ export abstract class _MatTabGroupBase extends _MatTabGroupMixinBase implements 
   },
 })
 export class MatTabGroup extends _MatTabGroupBase {
-  @ContentChildren(MatTab, {descendants: true}) _allTabs: QueryList<MatTab>;
-  @ViewChild('tabBodyWrapper') _tabBodyWrapper: ElementRef;
-  @ViewChild('tabHeader') _tabHeader: MatTabGroupBaseHeader;
+  // TODO(issue/13329): Attempt to remove "!".
+  @ContentChildren(MatTab, {descendants: true}) _allTabs!: QueryList<MatTab>;
+  // TODO(issue/13329): Attempt to remove "!".
+  @ViewChild('tabBodyWrapper') _tabBodyWrapper!: ElementRef;
+  // TODO(issue/13329): Attempt to remove "!".
+  @ViewChild('tabHeader') _tabHeader!: MatTabGroupBaseHeader;
 
   constructor(elementRef: ElementRef,
               changeDetectorRef: ChangeDetectorRef,

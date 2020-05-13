@@ -15,7 +15,8 @@ export class CdkTreeNodeOutletContext<T> {
   $implicit: T;
 
   /** Depth of the node. */
-  level: number;
+  // TODO(issue/13329): Attempt to remove "!".
+  level!: number;
 
   /** Index location of the node. */
   index?: number;
@@ -46,7 +47,8 @@ export class CdkTreeNodeDef<T> {
    * For every node, there must be at least one when function that passes or an undefined to
    * default.
    */
-  when: (index: number, nodeData: T) => boolean;
+  // TODO(issue/13329): Attempt to remove "!".
+  when!: (index: number, nodeData: T) => boolean;
 
   /** @docs-private */
   constructor(public template: TemplateRef<any>) {}

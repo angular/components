@@ -192,16 +192,19 @@ export class CdkTable<T> implements AfterContentChecked, CollectionViewer, OnDes
   private _document: Document;
 
   /** Latest data provided by the data source. */
-  protected _data: T[]|ReadonlyArray<T>;
+  // TODO(issue/13329): Attempt to remove "!".
+  protected _data!: T[]|ReadonlyArray<T>;
 
   /** Subject that emits when the component has been destroyed. */
   private _onDestroy = new Subject<void>();
 
   /** List of the rendered rows as identified by their `RenderRow` object. */
-  private _renderRows: RenderRow<T>[];
+  // TODO(issue/13329): Attempt to remove "!".
+  private _renderRows!: RenderRow<T>[];
 
   /** Subscription that listens for the data provided by the data source. */
-  private _renderChangeSubscription: Subscription|null;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _renderChangeSubscription!: Subscription|null;
 
   /**
    * Map of all the user's defined columns (header, data, and footer cell template) identified by
@@ -214,27 +217,32 @@ export class CdkTable<T> implements AfterContentChecked, CollectionViewer, OnDes
    * Set of all row definitions that can be used by this table. Populated by the rows gathered by
    * using `ContentChildren` as well as any custom row definitions added to `_customRowDefs`.
    */
-  private _rowDefs: CdkRowDef<T>[];
+  // TODO(issue/13329): Attempt to remove "!".
+  private _rowDefs!: CdkRowDef<T>[];
 
   /**
    * Set of all header row definitions that can be used by this table. Populated by the rows
    * gathered by using `ContentChildren` as well as any custom row definitions added to
    * `_customHeaderRowDefs`.
    */
-  private _headerRowDefs: CdkHeaderRowDef[];
+  // TODO(issue/13329): Attempt to remove "!".
+  private _headerRowDefs!: CdkHeaderRowDef[];
 
   /**
    * Set of all row definitions that can be used by this table. Populated by the rows gathered by
    * using `ContentChildren` as well as any custom row definitions added to
    * `_customFooterRowDefs`.
    */
-  private _footerRowDefs: CdkFooterRowDef[];
+  // TODO(issue/13329): Attempt to remove "!".
+  private _footerRowDefs!: CdkFooterRowDef[];
 
   /** Differ used to find the changes in the data provided by the data source. */
-  private _dataDiffer: IterableDiffer<RenderRow<T>>;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _dataDiffer!: IterableDiffer<RenderRow<T>>;
 
   /** Stores the row definition that does not have a when predicate. */
-  private _defaultRowDef: CdkRowDef<T>|null;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _defaultRowDef!: CdkRowDef<T>|null;
 
   /**
    * Column definitions that were defined outside of the direct content children of the table.
@@ -298,7 +306,8 @@ export class CdkTable<T> implements AfterContentChecked, CollectionViewer, OnDes
    * Utility class that is responsible for applying the appropriate sticky positioning styles to
    * the table's rows and cells.
    */
-  private _stickyStyler: StickyStyler;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _stickyStyler!: StickyStyler;
 
   /**
    * CSS class added to any row or cell that has sticky positioning applied. May be overriden by
@@ -326,7 +335,8 @@ export class CdkTable<T> implements AfterContentChecked, CollectionViewer, OnDes
     }
     this._trackByFn = fn;
   }
-  private _trackByFn: TrackByFunction<T>;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _trackByFn!: TrackByFunction<T>;
 
   /**
    * The table's source of data, which can be provided in three ways (in order of complexity):
@@ -357,7 +367,8 @@ export class CdkTable<T> implements AfterContentChecked, CollectionViewer, OnDes
       this._switchDataSource(dataSource);
     }
   }
-  private _dataSource: CdkTableDataSourceInput<T>;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _dataSource!: CdkTableDataSourceInput<T>;
 
   /**
    * Whether to allow multiple rows per data object by evaluating which rows evaluate their 'when'
@@ -392,32 +403,41 @@ export class CdkTable<T> implements AfterContentChecked, CollectionViewer, OnDes
       new BehaviorSubject<{start: number, end: number}>({start: 0, end: Number.MAX_VALUE});
 
   // Outlets in the table's template where the header, data rows, and footer will be inserted.
-  @ViewChild(DataRowOutlet, {static: true}) _rowOutlet: DataRowOutlet;
-  @ViewChild(HeaderRowOutlet, {static: true}) _headerRowOutlet: HeaderRowOutlet;
-  @ViewChild(FooterRowOutlet, {static: true}) _footerRowOutlet: FooterRowOutlet;
-  @ViewChild(NoDataRowOutlet, {static: true}) _noDataRowOutlet: NoDataRowOutlet;
+  // TODO(issue/13329): Attempt to remove "!".
+  @ViewChild(DataRowOutlet, {static: true}) _rowOutlet!: DataRowOutlet;
+  // TODO(issue/13329): Attempt to remove "!".
+  @ViewChild(HeaderRowOutlet, {static: true}) _headerRowOutlet!: HeaderRowOutlet;
+  // TODO(issue/13329): Attempt to remove "!".
+  @ViewChild(FooterRowOutlet, {static: true}) _footerRowOutlet!: FooterRowOutlet;
+  // TODO(issue/13329): Attempt to remove "!".
+  @ViewChild(NoDataRowOutlet, {static: true}) _noDataRowOutlet!: NoDataRowOutlet;
 
   /**
    * The column definitions provided by the user that contain what the header, data, and footer
    * cells should render for each column.
    */
-  @ContentChildren(CdkColumnDef, {descendants: true}) _contentColumnDefs: QueryList<CdkColumnDef>;
+  // TODO(issue/13329): Attempt to remove "!".
+  @ContentChildren(CdkColumnDef, {descendants: true}) _contentColumnDefs!: QueryList<CdkColumnDef>;
 
   /** Set of data row definitions that were provided to the table as content children. */
-  @ContentChildren(CdkRowDef, {descendants: true}) _contentRowDefs: QueryList<CdkRowDef<T>>;
+  // TODO(issue/13329): Attempt to remove "!".
+  @ContentChildren(CdkRowDef, {descendants: true}) _contentRowDefs!: QueryList<CdkRowDef<T>>;
 
   /** Set of header row definitions that were provided to the table as content children. */
+  // TODO(issue/13329): Attempt to remove "!".
   @ContentChildren(CdkHeaderRowDef, {
     descendants: true
-  }) _contentHeaderRowDefs: QueryList<CdkHeaderRowDef>;
+  }) _contentHeaderRowDefs!: QueryList<CdkHeaderRowDef>;
 
   /** Set of footer row definitions that were provided to the table as content children. */
+  // TODO(issue/13329): Attempt to remove "!".
   @ContentChildren(CdkFooterRowDef, {
     descendants: true
-  }) _contentFooterRowDefs: QueryList<CdkFooterRowDef>;
+  }) _contentFooterRowDefs!: QueryList<CdkFooterRowDef>;
 
   /** Row definition that will only be rendered if there's no data in the table. */
-  @ContentChild(CdkNoDataRow) _noDataRow: CdkNoDataRow;
+  // TODO(issue/13329): Attempt to remove "!".
+  @ContentChild(CdkNoDataRow) _noDataRow!: CdkNoDataRow;
 
   constructor(
       protected readonly _differs: IterableDiffers,

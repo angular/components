@@ -68,7 +68,8 @@ export class MatChipSelectionChange {
 // Boilerplate for applying mixins to MatChip.
 /** @docs-private */
 class MatChipBase {
-  disabled: boolean;
+  // TODO(issue/13329): Attempt to remove "!".
+  disabled!: boolean;
   constructor(public _elementRef: ElementRef) {}
 }
 
@@ -166,13 +167,16 @@ export class MatChip extends _MatChipMixinBase implements FocusableOption, OnDes
   _chipListDisabled: boolean = false;
 
   /** The chip avatar */
-  @ContentChild(MatChipAvatar) avatar: MatChipAvatar;
+  // TODO(issue/13329): Attempt to remove "!".
+  @ContentChild(MatChipAvatar) avatar!: MatChipAvatar;
 
   /** The chip's trailing icon. */
-  @ContentChild(MatChipTrailingIcon) trailingIcon: MatChipTrailingIcon;
+  // TODO(issue/13329): Attempt to remove "!".
+  @ContentChild(MatChipTrailingIcon) trailingIcon!: MatChipTrailingIcon;
 
   /** The chip's remove toggler. */
-  @ContentChild(forwardRef(() => MatChipRemove)) removeIcon: MatChipRemove;
+  // TODO(issue/13329): Attempt to remove "!".
+  @ContentChild(forwardRef(() => MatChipRemove)) removeIcon!: MatChipRemove;
 
   /** Whether the chip is selected. */
   @Input()

@@ -15,40 +15,51 @@ import {Directive} from '@angular/core';
 @Directive()
 export abstract class MatFormFieldControl<T> {
   /** The value of the control. */
-  value: T | null;
+  // TODO(issue/13329): Attempt to remove "!".
+  value!: T | null;
 
   /**
    * Stream that emits whenever the state of the control changes such that the parent `MatFormField`
    * needs to run change detection.
    */
-  readonly stateChanges: Observable<void>;
+  // TODO(issue/13329): Attempt to remove "!".
+  readonly stateChanges!: Observable<void>;
 
   /** The element ID for this control. */
-  readonly id: string;
+  // TODO(issue/13329): Attempt to remove "!".
+  readonly id!: string;
 
   /** The placeholder for this control. */
-  readonly placeholder: string;
+  // TODO(issue/13329): Attempt to remove "!".
+  readonly placeholder!: string;
 
   /** Gets the NgControl for this control. */
-  readonly ngControl: NgControl | null;
+  // TODO(issue/13329): Attempt to remove "!".
+  readonly ngControl!: NgControl | null;
 
   /** Whether the control is focused. */
-  readonly focused: boolean;
+  // TODO(issue/13329): Attempt to remove "!".
+  readonly focused!: boolean;
 
   /** Whether the control is empty. */
-  readonly empty: boolean;
+  // TODO(issue/13329): Attempt to remove "!".
+  readonly empty!: boolean;
 
   /** Whether the `MatFormField` label should try to float. */
-  readonly shouldLabelFloat: boolean;
+  // TODO(issue/13329): Attempt to remove "!".
+  readonly shouldLabelFloat!: boolean;
 
   /** Whether the control is required. */
-  readonly required: boolean;
+  // TODO(issue/13329): Attempt to remove "!".
+  readonly required!: boolean;
 
   /** Whether the control is disabled. */
-  readonly disabled: boolean;
+  // TODO(issue/13329): Attempt to remove "!".
+  readonly disabled!: boolean;
 
   /** Whether the control is in an error state. */
-  readonly errorState: boolean;
+  // TODO(issue/13329): Attempt to remove "!".
+  readonly errorState!: boolean;
 
   /**
    * An optional name for the control type that can be used to distinguish `mat-form-field` elements

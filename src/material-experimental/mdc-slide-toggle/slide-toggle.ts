@@ -95,7 +95,8 @@ export class MatSlideToggle implements ControlValueAccessor, AfterViewInit, OnDe
   private _uniqueId: string = `mat-mdc-slide-toggle-${++nextUniqueId}`;
   private _required: boolean = false;
   private _checked: boolean = false;
-  private _foundation: MDCSwitchFoundation;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _foundation!: MDCSwitchFoundation;
   private _adapter: MDCSwitchAdapter = {
     addClass: className => this._switchElement.nativeElement.classList.add(className),
     removeClass: className => this._switchElement.nativeElement.classList.remove(className),
@@ -107,7 +108,8 @@ export class MatSlideToggle implements ControlValueAccessor, AfterViewInit, OnDe
   };
 
   /** Whether the slide toggle is currently focused. */
-  _focused: boolean;
+  // TODO(issue/13329): Attempt to remove "!".
+  _focused!: boolean;
 
   /** Configuration for the underlying ripple. */
   _rippleAnimation: RippleAnimationConfig = RIPPLE_ANIMATION_CONFIG;
@@ -127,7 +129,8 @@ export class MatSlideToggle implements ControlValueAccessor, AfterViewInit, OnDe
   set tabIndex(value: number) {
     this._tabIndex = coerceNumberProperty(value);
   }
-  private _tabIndex: number;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _tabIndex!: number;
 
   /** Whether the label should appear after or before the slide-toggle. Defaults to 'after'. */
   @Input() labelPosition: 'before' | 'after' = 'after';
@@ -199,10 +202,12 @@ export class MatSlideToggle implements ControlValueAccessor, AfterViewInit, OnDe
   get inputId(): string { return `${this.id || this._uniqueId}-input`; }
 
   /** Reference to the underlying input element. */
-  @ViewChild('input') _inputElement: ElementRef<HTMLInputElement>;
+  // TODO(issue/13329): Attempt to remove "!".
+  @ViewChild('input') _inputElement!: ElementRef<HTMLInputElement>;
 
   /** Reference to the MDC switch element. */
-  @ViewChild('switch') _switchElement: ElementRef<HTMLElement>;
+  // TODO(issue/13329): Attempt to remove "!".
+  @ViewChild('switch') _switchElement!: ElementRef<HTMLElement>;
 
   constructor(private _changeDetectorRef: ChangeDetectorRef,
               @Attribute('tabindex') tabIndex: string,

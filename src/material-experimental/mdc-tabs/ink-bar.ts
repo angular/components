@@ -62,10 +62,13 @@ export class MatInkBar {
  * @docs-private
  */
 export class MatInkBarFoundation {
-  private _destroyed: boolean;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _destroyed!: boolean;
   private _foundation: MDCTabIndicatorFoundation;
-  private _inkBarElement: HTMLElement;
-  private _inkBarContentElement: HTMLElement;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _inkBarElement!: HTMLElement;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _inkBarContentElement!: HTMLElement;
   private _fitToContent = false;
   private _adapter: MDCTabIndicatorAdapter = {
     addClass: className => {

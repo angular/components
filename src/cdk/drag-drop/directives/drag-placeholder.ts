@@ -17,6 +17,7 @@ import {Directive, TemplateRef, Input} from '@angular/core';
 })
 export class CdkDragPlaceholder<T = any> {
   /** Context data to be added to the placeholder template instance. */
-  @Input() data: T;
+  // TODO(issue/13329): Attempt to remove "!".
+  @Input() data!: T;
   constructor(public templateRef: TemplateRef<T>) {}
 }

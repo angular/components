@@ -35,8 +35,10 @@ import {InteractivityChecker} from '../interactivity-checker/interactivity-check
  * @breaking-change for 11.0.0 Remove this class.
  */
 export class FocusTrap {
-  private _startAnchor: HTMLElement | null;
-  private _endAnchor: HTMLElement | null;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _startAnchor!: HTMLElement | null;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _endAnchor!: HTMLElement | null;
   private _hasAttached = false;
 
   // Event listeners for the anchors. Need to be regular functions so that we can unbind them later.
@@ -399,7 +401,8 @@ export class CdkTrapFocus implements OnDestroy, AfterContentInit, DoCheck {
   @Input('cdkTrapFocusAutoCapture')
   get autoCapture(): boolean { return this._autoCapture; }
   set autoCapture(value: boolean) { this._autoCapture = coerceBooleanProperty(value); }
-  private _autoCapture: boolean;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _autoCapture!: boolean;
 
   constructor(
       private _elementRef: ElementRef<HTMLElement>,

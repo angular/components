@@ -22,7 +22,8 @@ type ScrollBehaviorCSSStyleDeclaration = CSSStyleDeclaration & {scrollBehavior: 
  */
 export class BlockScrollStrategy implements ScrollStrategy {
   private _previousHTMLStyles = {top: '', left: ''};
-  private _previousScrollPosition: { top: number, left: number };
+  // TODO(issue/13329): Attempt to remove "!".
+  private _previousScrollPosition!: { top: number, left: number };
   private _isEnabled = false;
   private _document: Document;
 

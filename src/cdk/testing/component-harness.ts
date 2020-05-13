@@ -399,7 +399,8 @@ export interface BaseHarnessFilters {
 export class HarnessPredicate<T extends ComponentHarness> {
   private _predicates: AsyncPredicate<T>[] = [];
   private _descriptions: string[] = [];
-  private _ancestor: string;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _ancestor!: string;
 
   constructor(public harnessType: ComponentHarnessConstructor<T>, options: BaseHarnessFilters) {
     this._addBaseOptions(options);

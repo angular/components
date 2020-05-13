@@ -100,7 +100,8 @@ export class CdkVirtualScrollViewport extends CdkScrollable implements OnInit, O
             Promise.resolve().then(() => this.ngZone.run(() => observer.next(index)))));
 
   /** The element that wraps the rendered content. */
-  @ViewChild('contentWrapper', {static: true}) _contentWrapper: ElementRef<HTMLElement>;
+  // TODO(issue/13329): Attempt to remove "!".
+  @ViewChild('contentWrapper', {static: true}) _contentWrapper!: ElementRef<HTMLElement>;
 
   /** A stream that emits whenever the rendered range changes. */
   renderedRangeStream: Observable<ListRange> = this._renderedRangeSubject.asObservable();
@@ -120,7 +121,8 @@ export class CdkVirtualScrollViewport extends CdkScrollable implements OnInit, O
    * The CSS transform applied to the rendered subset of items so that they appear within the bounds
    * of the visible viewport.
    */
-  private _renderedContentTransform: string;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _renderedContentTransform!: string;
 
   /** The currently rendered range of indices. */
   private _renderedRange: ListRange = {start: 0, end: 0};
@@ -132,7 +134,8 @@ export class CdkVirtualScrollViewport extends CdkScrollable implements OnInit, O
   private _viewportSize = 0;
 
   /** the currently attached CdkVirtualForOf. */
-  private _forOf: CdkVirtualForOf<any> | null;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _forOf!: CdkVirtualForOf<any> | null;
 
   /** The last rendered content offset that was set. */
   private _renderedContentOffset = 0;

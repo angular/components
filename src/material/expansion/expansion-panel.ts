@@ -101,7 +101,8 @@ export class MatExpansionPanel extends CdkAccordionItem implements AfterContentI
   OnDestroy {
   private _document: Document;
   private _hideToggle = false;
-  private _togglePosition: MatAccordionTogglePosition;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _togglePosition!: MatAccordionTogglePosition;
 
   /** Whether the toggle indicator should be hidden. */
   @Input()
@@ -134,13 +135,16 @@ export class MatExpansionPanel extends CdkAccordionItem implements AfterContentI
   accordion: MatAccordionBase;
 
   /** Content that will be rendered lazily. */
-  @ContentChild(MatExpansionPanelContent) _lazyContent: MatExpansionPanelContent;
+  // TODO(issue/13329): Attempt to remove "!".
+  @ContentChild(MatExpansionPanelContent) _lazyContent!: MatExpansionPanelContent;
 
   /** Element containing the panel's user-provided content. */
-  @ViewChild('body') _body: ElementRef<HTMLElement>;
+  // TODO(issue/13329): Attempt to remove "!".
+  @ViewChild('body') _body!: ElementRef<HTMLElement>;
 
   /** Portal holding the user's content. */
-  _portal: TemplatePortal;
+  // TODO(issue/13329): Attempt to remove "!".
+  _portal!: TemplatePortal;
 
   /** ID for the associated header element. Used for a11y labelling. */
   _headerId = `mat-expansion-panel-header-${uniqueId++}`;

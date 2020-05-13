@@ -27,7 +27,8 @@ const isTestEnvironment: boolean = typeof window !== 'undefined' && !!window &&
 /** Container inside which all overlays will render. */
 @Injectable({providedIn: 'root'})
 export class OverlayContainer implements OnDestroy {
-  protected _containerElement: HTMLElement;
+  // TODO(issue/13329): Attempt to remove "!".
+  protected _containerElement!: HTMLElement;
   protected _document: Document;
 
   constructor(

@@ -98,7 +98,8 @@ export class MatButtonBase extends _MatButtonBaseMixin implements CanDisable, Ca
   _isRippleCentered = false;
 
   /** Reference to the MatRipple instance of the button. */
-  @ViewChild(MatRipple) ripple: MatRipple;
+  // TODO(issue/13329): Attempt to remove "!".
+  @ViewChild(MatRipple) ripple!: MatRipple;
 
   constructor(
       elementRef: ElementRef, public _platform: Platform, public _ngZone: NgZone,
@@ -163,7 +164,8 @@ export const MAT_ANCHOR_HOST = {
  */
 @Directive()
 export class MatAnchorBase extends MatButtonBase {
-  tabIndex: number;
+  // TODO(issue/13329): Attempt to remove "!".
+  tabIndex!: number;
 
   constructor(elementRef: ElementRef, platform: Platform, ngZone: NgZone,
               animationMode?: string) {

@@ -37,7 +37,8 @@ export class MatListHarnessBase
       C extends ComponentHarness,
       F extends BaseListItemHarnessFilters
     > extends ComponentHarness {
-  protected _itemHarness: T;
+  // TODO(issue/13329): Attempt to remove "!".
+  protected _itemHarness!: T;
 
   /**
    * Gets a list of harnesses representing the items in this list.

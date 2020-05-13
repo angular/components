@@ -34,7 +34,8 @@ export interface ComponentType<T> {
  * It can be attach to / detached from a `PortalOutlet`.
  */
 export abstract class Portal<T> {
-  private _attachedHost: PortalOutlet | null;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _attachedHost!: PortalOutlet | null;
 
   /** Attach this portal to a host. */
   attach(host: PortalOutlet): T {
@@ -196,10 +197,12 @@ export type PortalHost = PortalOutlet;
  */
 export abstract class BasePortalOutlet implements PortalOutlet {
   /** The portal currently attached to the host. */
-  protected _attachedPortal: Portal<any> | null;
+  // TODO(issue/13329): Attempt to remove "!".
+  protected _attachedPortal!: Portal<any> | null;
 
   /** A function that will permanently dispose this host. */
-  private _disposeFn: (() => void) | null;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _disposeFn!: (() => void) | null;
 
   /** Whether this host has already been permanently disposed. */
   private _isDisposed: boolean = false;

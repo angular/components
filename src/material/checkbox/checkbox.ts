@@ -84,9 +84,11 @@ export const enum TransitionCheckState {
 /** Change event object emitted by MatCheckbox. */
 export class MatCheckboxChange {
   /** The source MatCheckbox of the event. */
-  source: MatCheckbox;
+  // TODO(issue/13329): Attempt to remove "!".
+  source!: MatCheckbox;
   /** The new `checked` value of the checkbox. */
-  checked: boolean;
+  // TODO(issue/13329): Attempt to remove "!".
+  checked!: boolean;
 }
 
 // Boilerplate for applying mixins to MatCheckbox.
@@ -158,7 +160,8 @@ export class MatCheckbox extends _MatCheckboxMixinBase implements ControlValueAc
   @Input()
   get required(): boolean { return this._required; }
   set required(value: boolean) { this._required = coerceBooleanProperty(value); }
-  private _required: boolean;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _required!: boolean;
 
   /** Whether the label should appear after or before the checkbox. Defaults to 'after' */
   @Input() labelPosition: 'before' | 'after' = 'after';
@@ -174,13 +177,16 @@ export class MatCheckbox extends _MatCheckboxMixinBase implements ControlValueAc
   @Output() readonly indeterminateChange: EventEmitter<boolean> = new EventEmitter<boolean>();
 
   /** The value attribute of the native input element */
-  @Input() value: string;
+  // TODO(issue/13329): Attempt to remove "!".
+  @Input() value!: string;
 
   /** The native `<input type="checkbox">` element */
-  @ViewChild('input') _inputElement: ElementRef<HTMLInputElement>;
+  // TODO(issue/13329): Attempt to remove "!".
+  @ViewChild('input') _inputElement!: ElementRef<HTMLInputElement>;
 
   /** Reference to the ripple instance of the checkbox. */
-  @ViewChild(MatRipple) ripple: MatRipple;
+  // TODO(issue/13329): Attempt to remove "!".
+  @ViewChild(MatRipple) ripple!: MatRipple;
 
   /**
    * Called when the checkbox is blurred. Needed to properly implement ControlValueAccessor.

@@ -37,7 +37,8 @@ export class Dir implements Directionality, AfterContentInit, OnDestroy {
   private _isInitialized: boolean = false;
 
   /** Direction as passed in by the consumer. */
-  _rawDir: string;
+  // TODO(issue/13329): Attempt to remove "!".
+  _rawDir!: string;
 
   /** Event emitted when the direction changes. */
   @Output('dirChange') change = new EventEmitter<Direction>();

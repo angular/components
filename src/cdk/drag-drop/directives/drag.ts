@@ -80,26 +80,32 @@ export class CdkDrag<T = any> implements AfterViewInit, OnChanges, OnDestroy {
   _dragRef: DragRef<CdkDrag<T>>;
 
   /** Elements that can be used to drag the draggable item. */
-  @ContentChildren(CdkDragHandle, {descendants: true}) _handles: QueryList<CdkDragHandle>;
+  // TODO(issue/13329): Attempt to remove "!".
+  @ContentChildren(CdkDragHandle, {descendants: true}) _handles!: QueryList<CdkDragHandle>;
 
   /** Element that will be used as a template to create the draggable item's preview. */
-  @ContentChild(CdkDragPreview) _previewTemplate: CdkDragPreview;
+  // TODO(issue/13329): Attempt to remove "!".
+  @ContentChild(CdkDragPreview) _previewTemplate!: CdkDragPreview;
 
   /** Template for placeholder element rendered to show where a draggable would be dropped. */
-  @ContentChild(CdkDragPlaceholder) _placeholderTemplate: CdkDragPlaceholder;
+  // TODO(issue/13329): Attempt to remove "!".
+  @ContentChild(CdkDragPlaceholder) _placeholderTemplate!: CdkDragPlaceholder;
 
   /** Arbitrary data to attach to this drag instance. */
-  @Input('cdkDragData') data: T;
+  // TODO(issue/13329): Attempt to remove "!".
+  @Input('cdkDragData') data!: T;
 
   /** Locks the position of the dragged element along the specified axis. */
-  @Input('cdkDragLockAxis') lockAxis: DragAxis;
+  // TODO(issue/13329): Attempt to remove "!".
+  @Input('cdkDragLockAxis') lockAxis!: DragAxis;
 
   /**
    * Selector that will be used to determine the root draggable element, starting from
    * the `cdkDrag` element and going up the DOM. Passing an alternate root element is useful
    * when trying to enable dragging on an element that you might not have access to.
    */
-  @Input('cdkDragRootElement') rootElementSelector: string;
+  // TODO(issue/13329): Attempt to remove "!".
+  @Input('cdkDragRootElement') rootElementSelector!: string;
 
   /**
    * Node or selector that will be used to determine the element to which the draggable's
@@ -107,19 +113,22 @@ export class CdkDrag<T = any> implements AfterViewInit, OnChanges, OnDestroy {
    * will be matched starting from the element's parent and going up the DOM until a match
    * has been found.
    */
-  @Input('cdkDragBoundary') boundaryElement: string | ElementRef<HTMLElement> | HTMLElement;
+  // TODO(issue/13329): Attempt to remove "!".
+  @Input('cdkDragBoundary') boundaryElement!: string | ElementRef<HTMLElement> | HTMLElement;
 
   /**
    * Amount of milliseconds to wait after the user has put their
    * pointer down before starting to drag the element.
    */
-  @Input('cdkDragStartDelay') dragStartDelay: DragStartDelay;
+  // TODO(issue/13329): Attempt to remove "!".
+  @Input('cdkDragStartDelay') dragStartDelay!: DragStartDelay;
 
   /**
    * Sets the position of a `CdkDrag` that is outside of a drop container.
    * Can be used to restore the element's position for a returning user.
    */
-  @Input('cdkDragFreeDragPosition') freeDragPosition: {x: number, y: number};
+  // TODO(issue/13329): Attempt to remove "!".
+  @Input('cdkDragFreeDragPosition') freeDragPosition!: {x: number, y: number};
 
   /** Whether starting to drag this element is disabled. */
   @Input('cdkDragDisabled')
@@ -130,7 +139,8 @@ export class CdkDrag<T = any> implements AfterViewInit, OnChanges, OnDestroy {
     this._disabled = coerceBooleanProperty(value);
     this._dragRef.disabled = this._disabled;
   }
-  private _disabled: boolean;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _disabled!: boolean;
 
   /**
    * Function that can be used to customize the logic of how the position of the drag item
@@ -141,7 +151,8 @@ export class CdkDrag<T = any> implements AfterViewInit, OnChanges, OnDestroy {
   @Input('cdkDragConstrainPosition') constrainPosition?: (point: Point, dragRef: DragRef) => Point;
 
   /** Class to be added to the preview element. */
-  @Input('cdkDragPreviewClass') previewClass: string | string[];
+  // TODO(issue/13329): Attempt to remove "!".
+  @Input('cdkDragPreviewClass') previewClass!: string | string[];
 
   /** Emits when the user starts dragging the item. */
   @Output('cdkDragStarted') started: EventEmitter<CdkDragStart> = new EventEmitter<CdkDragStart>();

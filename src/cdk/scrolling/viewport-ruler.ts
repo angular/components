@@ -28,13 +28,16 @@ export interface ViewportScrollPosition {
 @Injectable({providedIn: 'root'})
 export class ViewportRuler implements OnDestroy {
   /** Cached viewport dimensions. */
-  private _viewportSize: {width: number; height: number};
+  // TODO(issue/13329): Attempt to remove "!".
+  private _viewportSize!: {width: number; height: number};
 
   /** Stream of viewport change events. */
-  private _change: Observable<Event>;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _change!: Observable<Event>;
 
   /** Subscription to streams that invalidate the cached viewport dimensions. */
-  private _invalidateCache: Subscription;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _invalidateCache!: Subscription;
 
   /** Used to reference correct document/window */
   protected _document?: Document;

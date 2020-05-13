@@ -47,10 +47,12 @@ export type FlexibleConnectedPositionStrategyOrigin = ElementRef | Element | Poi
  */
 export class FlexibleConnectedPositionStrategy implements PositionStrategy {
   /** The overlay to which this strategy is attached. */
-  private _overlayRef: OverlayReference;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _overlayRef!: OverlayReference;
 
   /** Whether we're performing the very first positioning of the overlay. */
-  private _isInitialRender: boolean;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _isInitialRender!: boolean;
 
   /** Last size used for the bounding box. Used to avoid resizing the overlay after open. */
   private _lastBoundingBoxSize = {width: 0, height: 0};
@@ -71,13 +73,16 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
   private _positionLocked = false;
 
   /** Cached origin dimensions */
-  private _originRect: ClientRect;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _originRect!: ClientRect;
 
   /** Cached overlay dimensions */
-  private _overlayRect: ClientRect;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _overlayRect!: ClientRect;
 
   /** Cached viewport dimensions */
-  private _viewportRect: ClientRect;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _viewportRect!: ClientRect;
 
   /** Amount of space that must be maintained between the overlay and the edge of the viewport. */
   private _viewportMargin = 0;
@@ -89,22 +94,27 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
   _preferredPositions: ConnectionPositionPair[] = [];
 
   /** The origin element against which the overlay will be positioned. */
-  private _origin: FlexibleConnectedPositionStrategyOrigin;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _origin!: FlexibleConnectedPositionStrategyOrigin;
 
   /** The overlay pane element. */
-  private _pane: HTMLElement;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _pane!: HTMLElement;
 
   /** Whether the strategy has been disposed of already. */
-  private _isDisposed: boolean;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _isDisposed!: boolean;
 
   /**
    * Parent element for the overlay panel used to constrain the overlay panel's size to fit
    * within the viewport.
    */
-  private _boundingBox: HTMLElement | null;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _boundingBox!: HTMLElement | null;
 
   /** The last position to have been calculated as the best fit position. */
-  private _lastPosition: ConnectedPosition | null;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _lastPosition!: ConnectedPosition | null;
 
   /** Subject that emits whenever the position changes. */
   private _positionChanges = new Subject<ConnectedOverlayPositionChange>();
@@ -119,13 +129,15 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
   private _offsetY = 0;
 
   /** Selector to be used when finding the elements on which to set the transform origin. */
-  private _transformOriginSelector: string;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _transformOriginSelector!: string;
 
   /** Keeps track of the CSS classes that the position strategy has applied on the overlay panel. */
   private _appliedPanelClasses: string[] = [];
 
   /** Amount by which the overlay was pushed in each axis during the last time it was positioned. */
-  private _previousPushAmount: {x: number, y: number} | null;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _previousPushAmount!: {x: number, y: number} | null;
 
   /** Observable sequence of position changes. */
   positionChanges: Observable<ConnectedOverlayPositionChange> =

@@ -260,7 +260,8 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
   private _scrollTop = 0;
 
   /** The placeholder displayed in the trigger of the select. */
-  private _placeholder: string;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _placeholder!: string;
 
   /** Whether the component is in multiple selection mode. */
   private _multiple: boolean = false;
@@ -275,19 +276,23 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
   private readonly _destroy = new Subject<void>();
 
   /** The last measured value for the trigger's client bounding rect. */
-  _triggerRect: ClientRect;
+  // TODO(issue/13329): Attempt to remove "!".
+  _triggerRect!: ClientRect;
 
   /** The aria-describedby attribute on the select for improved a11y. */
-  _ariaDescribedby: string;
+  // TODO(issue/13329): Attempt to remove "!".
+  _ariaDescribedby!: string;
 
   /** The cached font-size of the trigger element. */
   _triggerFontSize = 0;
 
   /** Deals with the selection logic. */
-  _selectionModel: SelectionModel<MatOption>;
+  // TODO(issue/13329): Attempt to remove "!".
+  _selectionModel!: SelectionModel<MatOption>;
 
   /** Manages keyboard events for options in the panel. */
-  _keyManager: ActiveDescendantKeyManager<MatOption>;
+  // TODO(issue/13329): Attempt to remove "!".
+  _keyManager!: ActiveDescendantKeyManager<MatOption>;
 
   /** `View -> model callback called when value changes` */
   _onChange: (value: any) => void = () => {};
@@ -348,10 +353,12 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
   controlType = 'mat-select';
 
   /** Trigger that opens the select. */
-  @ViewChild('trigger') trigger: ElementRef;
+  // TODO(issue/13329): Attempt to remove "!".
+  @ViewChild('trigger') trigger!: ElementRef;
 
   /** Panel containing the select options. */
-  @ViewChild('panel') panel: ElementRef;
+  // TODO(issue/13329): Attempt to remove "!".
+  @ViewChild('panel') panel!: ElementRef;
 
   /**
    * Overlay pane containing the options.
@@ -359,19 +366,24 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
    * @breaking-change 10.0.0
    * @docs-private
    */
-  @ViewChild(CdkConnectedOverlay) overlayDir: CdkConnectedOverlay;
+  // TODO(issue/13329): Attempt to remove "!".
+  @ViewChild(CdkConnectedOverlay) overlayDir!: CdkConnectedOverlay;
 
   /** All of the defined select options. */
-  @ContentChildren(MatOption, {descendants: true}) options: QueryList<MatOption>;
+  // TODO(issue/13329): Attempt to remove "!".
+  @ContentChildren(MatOption, {descendants: true}) options!: QueryList<MatOption>;
 
   /** All of the defined groups of options. */
-  @ContentChildren(MatOptgroup, {descendants: true}) optionGroups: QueryList<MatOptgroup>;
+  // TODO(issue/13329): Attempt to remove "!".
+  @ContentChildren(MatOptgroup, {descendants: true}) optionGroups!: QueryList<MatOptgroup>;
 
   /** Classes to be passed to the select panel. Supports the same syntax as `ngClass`. */
-  @Input() panelClass: string|string[]|Set<string>|{[key: string]: any};
+  // TODO(issue/13329): Attempt to remove "!".
+  @Input() panelClass!: string|string[]|Set<string>|{[key: string]: any};
 
   /** User-supplied override of the trigger element. */
-  @ContentChild(MatSelectTrigger) customTrigger: MatSelectTrigger;
+  // TODO(issue/13329): Attempt to remove "!".
+  @ContentChild(MatSelectTrigger) customTrigger!: MatSelectTrigger;
 
   /** Placeholder to be shown if no value has been selected. */
   @Input()
@@ -440,10 +452,12 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
   @Input('aria-label') ariaLabel: string = '';
 
   /** Input that can be used to specify the `aria-labelledby` attribute. */
-  @Input('aria-labelledby') ariaLabelledby: string;
+  // TODO(issue/13329): Attempt to remove "!".
+  @Input('aria-labelledby') ariaLabelledby!: string;
 
   /** Object used to control when error messages are shown. */
-  @Input() errorStateMatcher: ErrorStateMatcher;
+  // TODO(issue/13329): Attempt to remove "!".
+  @Input() errorStateMatcher!: ErrorStateMatcher;
 
   /** Time to wait in milliseconds after the last keystroke before moving focus to an item. */
   @Input()
@@ -451,13 +465,15 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
   set typeaheadDebounceInterval(value: number) {
     this._typeaheadDebounceInterval = coerceNumberProperty(value);
   }
-  private _typeaheadDebounceInterval: number;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _typeaheadDebounceInterval!: number;
 
   /**
    * Function used to sort the values in a select in multiple mode.
    * Follows the same logic as `Array.prototype.sort`.
    */
-  @Input() sortComparator: (a: MatOption, b: MatOption, options: MatOption[]) => number;
+  // TODO(issue/13329): Attempt to remove "!".
+  @Input() sortComparator!: (a: MatOption, b: MatOption, options: MatOption[]) => number;
 
   /** Unique id of the element. */
   @Input()
@@ -466,7 +482,8 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
     this._id = value || this._uid;
     this.stateChanges.next();
   }
-  private _id: string;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _id!: string;
 
   /** Combined stream of all of the child options' change events. */
   readonly optionSelectionChanges: Observable<MatOptionSelectionChange> = defer(() => {

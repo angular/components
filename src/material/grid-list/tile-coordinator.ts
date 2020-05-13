@@ -36,7 +36,8 @@ export interface Tile {
  */
 export class TileCoordinator {
   /** Tracking array (see class description). */
-  tracker: number[];
+  // TODO(issue/13329): Attempt to remove "!".
+  tracker!: number[];
 
   /** Index at which the search for the next gap will start. */
   columnIndex: number = 0;
@@ -59,7 +60,8 @@ export class TileCoordinator {
   }
 
   /** The computed (row, col) position of each tile (the output). */
-  positions: TilePosition[];
+  // TODO(issue/13329): Attempt to remove "!".
+  positions!: TilePosition[];
 
   /**
    * Updates the tile positions.

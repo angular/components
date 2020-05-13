@@ -47,7 +47,8 @@ export function mixinErrorState<T extends Constructor<HasErrorState>>(base: T)
      */
     readonly stateChanges = new Subject<void>();
 
-    errorStateMatcher: ErrorStateMatcher;
+  // TODO(issue/13329): Attempt to remove "!".
+  errorStateMatcher!: ErrorStateMatcher;
 
     updateErrorState() {
       const oldState = this.errorState;

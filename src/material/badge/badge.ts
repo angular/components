@@ -88,7 +88,8 @@ export class MatBadge extends _MatBadgeMixinBase implements OnDestroy, OnChanges
   @Input('matBadgePosition') position: MatBadgePosition = 'above after';
 
   /** The content for the badge */
-  @Input('matBadge') content: string;
+  // TODO(issue/13329): Attempt to remove "!".
+  @Input('matBadge') content!: string;
 
   /** Message used to describe the decorated element via aria-describedby */
   @Input('matBadgeDescription')
@@ -105,7 +106,8 @@ export class MatBadge extends _MatBadgeMixinBase implements OnDestroy, OnChanges
       }
     }
   }
-  private _description: string;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _description!: string;
 
   /** Size of the badge. Can be 'small', 'medium', or 'large'. */
   @Input('matBadgeSize') size: MatBadgeSize = 'medium';
@@ -116,7 +118,8 @@ export class MatBadge extends _MatBadgeMixinBase implements OnDestroy, OnChanges
   set hidden(val: boolean) {
     this._hidden = coerceBooleanProperty(val);
   }
-  private _hidden: boolean;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _hidden!: boolean;
 
   /** Unique id for the badge */
   _id: number = nextId++;

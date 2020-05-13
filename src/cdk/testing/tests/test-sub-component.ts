@@ -19,6 +19,8 @@ import {ChangeDetectionStrategy, Component, Input, ViewEncapsulation} from '@ang
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TestSubComponent {
-  @Input() title: string;
-  @Input() items: string[];
+  // TODO(issue/13329): Attempt to remove "!".
+  @Input() title!: string;
+  // TODO(issue/13329): Attempt to remove "!".
+  @Input() items!: string[];
 }

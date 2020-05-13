@@ -74,10 +74,12 @@ export class MatDialogContainer extends BasePortalOutlet {
   private _document: Document;
 
   /** The portal outlet inside of this container into which the dialog content will be loaded. */
-  @ViewChild(CdkPortalOutlet, {static: true}) _portalOutlet: CdkPortalOutlet;
+  // TODO(issue/13329): Attempt to remove "!".
+  @ViewChild(CdkPortalOutlet, {static: true}) _portalOutlet!: CdkPortalOutlet;
 
   /** The class that traps and manages focus within the dialog. */
-  private _focusTrap: FocusTrap;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _focusTrap!: FocusTrap;
 
   /** Element that was focused before the dialog was opened. Save this to restore upon close. */
   private _elementFocusedBeforeDialogWasOpened: HTMLElement | null = null;
@@ -92,7 +94,8 @@ export class MatDialogContainer extends BasePortalOutlet {
   _ariaLabelledBy: string | null;
 
   /** ID for the container DOM element. */
-  _id: string;
+  // TODO(issue/13329): Attempt to remove "!".
+  _id!: string;
 
   constructor(
     private _elementRef: ElementRef,

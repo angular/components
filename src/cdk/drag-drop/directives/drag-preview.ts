@@ -18,7 +18,8 @@ import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
 })
 export class CdkDragPreview<T = any> {
   /** Context data to be added to the preview template instance. */
-  @Input() data: T;
+  // TODO(issue/13329): Attempt to remove "!".
+  @Input() data!: T;
 
   /** Whether the preview should preserve the same size as the item that is being dragged. */
   @Input()

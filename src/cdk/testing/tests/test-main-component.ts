@@ -35,18 +35,23 @@ export class TestMainComponent implements OnDestroy {
   username: string;
   counter: number;
   asyncCounter: number;
-  input: string;
+  // TODO(issue/13329): Attempt to remove "!".
+  input!: string;
   memo: string;
   testTools: string[];
   testMethods: string[];
-  _isHovering: boolean;
+  // TODO(issue/13329): Attempt to remove "!".
+  _isHovering!: boolean;
   specialKey = '';
   relativeX = 0;
   relativeY = 0;
   _shadowDomSupported = _supportsShadowDom();
 
-  @ViewChild('clickTestElement') clickTestElement: ElementRef<HTMLElement>;
-  @ViewChild('taskStateResult') taskStateResultElement: ElementRef<HTMLElement>;
+  // TODO(issue/13329): Attempt to remove "!".
+  @ViewChild('clickTestElement') clickTestElement!: ElementRef<HTMLElement>;
+
+  // TODO(issue/13329): Attempt to remove "!".
+  @ViewChild('taskStateResult') taskStateResultElement!: ElementRef<HTMLElement>;
 
   private _fakeOverlayElement: HTMLElement;
 

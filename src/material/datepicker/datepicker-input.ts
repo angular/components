@@ -77,7 +77,8 @@ export class MatDatepickerInput<D> extends MatDatepickerInputBase<D | null, D>
       this._registerModel(datepicker._registerInput(this));
     }
   }
-  _datepicker: MatDatepicker<D>;
+  // TODO(issue/13329): Attempt to remove "!".
+  _datepicker!: MatDatepicker<D>;
 
   /** The minimum valid date. */
   @Input()
@@ -86,7 +87,8 @@ export class MatDatepickerInput<D> extends MatDatepickerInputBase<D | null, D>
     this._min = this._getValidDateOrNull(this._dateAdapter.deserialize(value));
     this._validatorOnChange();
   }
-  private _min: D | null;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _min!: D | null;
 
   /** The maximum valid date. */
   @Input()
@@ -95,7 +97,8 @@ export class MatDatepickerInput<D> extends MatDatepickerInputBase<D | null, D>
     this._max = this._getValidDateOrNull(this._dateAdapter.deserialize(value));
     this._validatorOnChange();
   }
-  private _max: D | null;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _max!: D | null;
 
   /** Function that can be used to filter out dates within the datepicker. */
   @Input('matDatepickerFilter')
@@ -104,7 +107,8 @@ export class MatDatepickerInput<D> extends MatDatepickerInputBase<D | null, D>
     this._dateFilter = value;
     this._validatorOnChange();
   }
-  private _dateFilter: DateFilterFn<D | null>;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _dateFilter!: DateFilterFn<D | null>;
 
   /** The combined form control validator for this input. */
   protected _validator: ValidatorFn | null;

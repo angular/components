@@ -158,13 +158,15 @@ export class MatInput extends _MatInputMixinBase implements MatFormFieldControl<
   @Input()
   get id(): string { return this._id; }
   set id(value: string) { this._id = value || this._uid; }
-  protected _id: string;
+  // TODO(issue/13329): Attempt to remove "!".
+  protected _id!: string;
 
   /**
    * Implemented as part of MatFormFieldControl.
    * @docs-private
    */
-  @Input() placeholder: string;
+  // TODO(issue/13329): Attempt to remove "!".
+  @Input() placeholder!: string;
 
   /**
    * Implemented as part of MatFormFieldControl.
@@ -192,7 +194,8 @@ export class MatInput extends _MatInputMixinBase implements MatFormFieldControl<
   protected _type = 'text';
 
   /** An object used to control when error messages are shown. */
-  @Input() errorStateMatcher: ErrorStateMatcher;
+  // TODO(issue/13329): Attempt to remove "!".
+  @Input() errorStateMatcher!: ErrorStateMatcher;
 
   /**
    * Implemented as part of MatFormFieldControl.

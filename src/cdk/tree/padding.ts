@@ -25,7 +25,8 @@ const cssUnitPattern = /([A-Za-z%]+)$/;
 })
 export class CdkTreeNodePadding<T> implements OnDestroy {
   /** Current padding value applied to the element. Used to avoid unnecessarily hitting the DOM. */
-  private _currentPadding: string|null;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _currentPadding!: string|null;
 
   /** Subject that emits when the component has been destroyed. */
   private _destroyed = new Subject<void>();
@@ -43,7 +44,8 @@ export class CdkTreeNodePadding<T> implements OnDestroy {
     this._level = coerceNumberProperty(value, null)!;
     this._setPadding();
   }
-  _level: number;
+  // TODO(issue/13329): Attempt to remove "!".
+  _level!: number;
 
   /**
    * The indent for each level. Can be a number or a CSS string.

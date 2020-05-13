@@ -63,7 +63,8 @@ export class CdkDropList<T = any> implements OnDestroy {
   private _destroyed = new Subject<void>();
 
   /** Whether the element's scrollable parents have been resolved. */
-  private _scrollableParentsResolved: boolean;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _scrollableParentsResolved!: boolean;
 
   /** Keeps track of the drop lists that are currently on the page. */
   private static _dropLists: CdkDropList[] = [];
@@ -80,10 +81,12 @@ export class CdkDropList<T = any> implements OnDestroy {
   connectedTo: (CdkDropList | string)[] | CdkDropList | string = [];
 
   /** Arbitrary data to attach to this container. */
-  @Input('cdkDropListData') data: T;
+  // TODO(issue/13329): Attempt to remove "!".
+  @Input('cdkDropListData') data!: T;
 
   /** Direction in which the list is oriented. */
-  @Input('cdkDropListOrientation') orientation: DropListOrientation;
+  // TODO(issue/13329): Attempt to remove "!".
+  @Input('cdkDropListOrientation') orientation!: DropListOrientation;
 
   /**
    * Unique ID for the drop zone. Can be used as a reference
@@ -92,7 +95,8 @@ export class CdkDropList<T = any> implements OnDestroy {
   @Input() id: string = `cdk-drop-list-${_uniqueIdCounter++}`;
 
   /** Locks the position of the draggable elements inside the container along the specified axis. */
-  @Input('cdkDropListLockAxis') lockAxis: DragAxis;
+  // TODO(issue/13329): Attempt to remove "!".
+  @Input('cdkDropListLockAxis') lockAxis!: DragAxis;
 
   /** Whether starting a dragging sequence from this container is disabled. */
   @Input('cdkDropListDisabled')
@@ -106,11 +110,13 @@ export class CdkDropList<T = any> implements OnDestroy {
     // the user in a disabled state, so we also need to sync it as it's being set.
     this._dropListRef.disabled = this._disabled = coerceBooleanProperty(value);
   }
-  private _disabled: boolean;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _disabled!: boolean;
 
   /** Whether sorting within this drop list is disabled. */
+  // TODO(issue/13329): Attempt to remove "!".
   @Input('cdkDropListSortingDisabled')
-  sortingDisabled: boolean;
+  sortingDisabled!: boolean;
 
   /**
    * Function that is used to determine whether an item
@@ -120,8 +126,9 @@ export class CdkDropList<T = any> implements OnDestroy {
   enterPredicate: (drag: CdkDrag, drop: CdkDropList) => boolean = () => true
 
   /** Whether to auto-scroll the view when the user moves their pointer close to the edges. */
+  // TODO(issue/13329): Attempt to remove "!".
   @Input('cdkDropListAutoScrollDisabled')
-  autoScrollDisabled: boolean;
+  autoScrollDisabled!: boolean;
 
   /** Emits when the user drops an item inside the container. */
   @Output('cdkDropListDropped')

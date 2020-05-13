@@ -125,23 +125,28 @@ export function getMatAutocompleteMissingPanelError(): Error {
 })
 export class MatAutocompleteTrigger implements ControlValueAccessor, AfterViewInit, OnChanges,
   OnDestroy {
-  private _overlayRef: OverlayRef | null;
-  private _portal: TemplatePortal;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _overlayRef!: OverlayRef | null;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _portal!: TemplatePortal;
   private _componentDestroyed = false;
   private _autocompleteDisabled = false;
   private _scrollStrategy: () => ScrollStrategy;
 
   /** Old value of the native input. Used to work around issues with the `input` event on IE. */
-  private _previousValue: string | number | null;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _previousValue!: string | number | null;
 
   /** Strategy that is used to position the panel. */
-  private _positionStrategy: FlexibleConnectedPositionStrategy;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _positionStrategy!: FlexibleConnectedPositionStrategy;
 
   /** Whether or not the label state is being overridden. */
   private _manuallyFloatingLabel = false;
 
   /** The subscription for closing actions (some are bound to document). */
-  private _closingActionsSubscription: Subscription;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _closingActionsSubscription!: Subscription;
 
   /** Subscription to viewport size changes. */
   private _viewportSubscription = Subscription.EMPTY;
@@ -154,7 +159,8 @@ export class MatAutocompleteTrigger implements ControlValueAccessor, AfterViewIn
   private _canOpenOnNextFocus = true;
 
   /** Whether the element is inside of a ShadowRoot component. */
-  private _isInsideShadowRoot: boolean;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _isInsideShadowRoot!: boolean;
 
   /** Stream of keyboard events that can close the panel. */
   private readonly _closeKeyEventStream = new Subject<void>();
@@ -178,7 +184,8 @@ export class MatAutocompleteTrigger implements ControlValueAccessor, AfterViewIn
   _onTouched = () => {};
 
   /** The autocomplete panel to be attached to this trigger. */
-  @Input('matAutocomplete') autocomplete: MatAutocomplete;
+  // TODO(issue/13329): Attempt to remove "!".
+  @Input('matAutocomplete') autocomplete!: MatAutocomplete;
 
   /**
    * Position of the autocomplete panel relative to the trigger element. A position of `auto`
@@ -193,7 +200,8 @@ export class MatAutocompleteTrigger implements ControlValueAccessor, AfterViewIn
    * Reference relative to which to position the autocomplete panel.
    * Defaults to the autocomplete trigger element.
    */
-  @Input('matAutocompleteConnectedTo') connectedTo: MatAutocompleteOrigin;
+  // TODO(issue/13329): Attempt to remove "!".
+  @Input('matAutocompleteConnectedTo') connectedTo!: MatAutocompleteOrigin;
 
   /**
    * `autocomplete` attribute to be set on the input element.

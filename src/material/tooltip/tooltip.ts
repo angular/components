@@ -133,13 +133,17 @@ export function MAT_TOOLTIP_DEFAULT_OPTIONS_FACTORY(): MatTooltipDefaultOptions 
   exportAs: 'matTooltip',
 })
 export class MatTooltip implements OnDestroy, OnInit {
-  _overlayRef: OverlayRef | null;
-  _tooltipInstance: TooltipComponent | null;
+  // TODO(issue/13329): Attempt to remove "!".
+  _overlayRef!: OverlayRef | null;
+  // TODO(issue/13329): Attempt to remove "!".
+  _tooltipInstance!: TooltipComponent | null;
 
-  private _portal: ComponentPortal<TooltipComponent>;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _portal!: ComponentPortal<TooltipComponent>;
   private _position: TooltipPosition = 'below';
   private _disabled: boolean = false;
-  private _tooltipClass: string|string[]|Set<string>|{[key: string]: any};
+  // TODO(issue/13329): Attempt to remove "!".
+  private _tooltipClass!: string|string[]|Set<string>|{[key: string]: any};
   private _scrollStrategy: () => ScrollStrategy;
 
   /** Allows the user to define the position of the tooltip relative to the parent element */
@@ -235,7 +239,8 @@ export class MatTooltip implements OnDestroy, OnInit {
   private _passiveListeners = new Map<string, EventListenerOrEventListenerObject>();
 
   /** Timer started at the last `touchstart` event. */
-  private _touchstartTimeout: number;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _touchstartTimeout!: number;
 
   /** Emits when the component is destroyed. */
   private readonly _destroyed = new Subject<void>();
@@ -630,16 +635,20 @@ export class MatTooltip implements OnDestroy, OnInit {
 })
 export class TooltipComponent implements OnDestroy {
   /** Message to display in the tooltip */
-  message: string;
+  // TODO(issue/13329): Attempt to remove "!".
+  message!: string;
 
   /** Classes to be added to the tooltip. Supports the same syntax as `ngClass`. */
-  tooltipClass: string|string[]|Set<string>|{[key: string]: any};
+  // TODO(issue/13329): Attempt to remove "!".
+  tooltipClass!: string|string[]|Set<string>|{[key: string]: any};
 
   /** The timeout ID of any current timer set to show the tooltip */
-  _showTimeoutId: number | null;
+  // TODO(issue/13329): Attempt to remove "!".
+  _showTimeoutId!: number | null;
 
   /** The timeout ID of any current timer set to hide the tooltip */
-  _hideTimeoutId: number | null;
+  // TODO(issue/13329): Attempt to remove "!".
+  _hideTimeoutId!: number | null;
 
   /** Property watched by the animation framework to show or hide the tooltip */
   _visibility: TooltipVisibility = 'initial';

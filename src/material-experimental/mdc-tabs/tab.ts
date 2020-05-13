@@ -34,8 +34,10 @@ export class MatTab extends BaseMatTab {
    * Template provided in the tab content that will be used if present, used to enable lazy-loading
    */
   @ContentChild(MatTabContent, {read: TemplateRef, static: true})
-  _explicitContent: TemplateRef<any>;
+  // TODO(issue/13329): Attempt to remove "!".
+  _explicitContent!: TemplateRef<any>;
 
   /** Content for the tab label given by `<ng-template mat-tab-label>`. */
-  @ContentChild(MatTabLabel) templateLabel: MatTabLabel;
+  // TODO(issue/13329): Attempt to remove "!".
+  @ContentChild(MatTabLabel) templateLabel!: MatTabLabel;
 }

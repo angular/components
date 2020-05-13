@@ -27,7 +27,8 @@ export const enum MatDialogState {OPEN, CLOSING, CLOSED}
  */
 export class MatDialogRef<T, R = any> {
   /** The instance of component opened into the dialog. */
-  componentInstance: T;
+  // TODO(issue/13329): Attempt to remove "!".
+  componentInstance!: T;
 
   /** Whether the user is allowed to close the dialog. */
   disableClose: boolean | undefined = this._containerInstance._config.disableClose;
@@ -45,7 +46,8 @@ export class MatDialogRef<T, R = any> {
   private _result: R | undefined;
 
   /** Handle to the timeout that's running as a fallback in case the exit animation doesn't fire. */
-  private _closeFallbackTimeout: number;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _closeFallbackTimeout!: number;
 
   /** Current state of the dialog. */
   private _state = MatDialogState.OPEN;

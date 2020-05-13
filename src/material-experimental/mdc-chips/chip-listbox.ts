@@ -87,16 +87,20 @@ export const MAT_CHIP_LISTBOX_CONTROL_VALUE_ACCESSOR: any = {
 export class MatChipListbox extends MatChipSet implements AfterContentInit, ControlValueAccessor {
 
   /** Subscription to selection changes in the chips. */
-  private _chipSelectionSubscription: Subscription | null;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _chipSelectionSubscription!: Subscription | null;
 
   /** Subscription to blur changes in the chips. */
-  private _chipBlurSubscription: Subscription | null;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _chipBlurSubscription!: Subscription | null;
 
   /** Subscription to focus changes in the chips. */
-  private _chipFocusSubscription: Subscription | null;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _chipFocusSubscription!: Subscription | null;
 
   /** The FocusKeyManager which handles focus. */
-  _keyManager: FocusKeyManager<MatChip>;
+  // TODO(issue/13329): Attempt to remove "!".
+  _keyManager!: FocusKeyManager<MatChip>;
 
   /**
    * Function when touched. Set as part of ControlValueAccessor implementation.
@@ -197,12 +201,13 @@ export class MatChipListbox extends MatChipSet implements AfterContentInit, Cont
   @Output() readonly change: EventEmitter<MatChipListboxChange> =
       new EventEmitter<MatChipListboxChange>();
 
+  // TODO(issue/13329): Attempt to remove "!".
   @ContentChildren(MatChipOption, {
     // We need to use `descendants: true`, because Ivy will no longer match
     // indirect descendants if it's left as false.
     descendants: true
   })
-  _chips: QueryList<MatChipOption>;
+  _chips!: QueryList<MatChipOption>;
 
   constructor(protected _elementRef: ElementRef,
               _changeDetectorRef: ChangeDetectorRef,

@@ -54,9 +54,12 @@ import {BooleanInput, coerceBooleanProperty, NumberInput} from '@angular/cdk/coe
   },
 })
 export class MatTabGroup extends _MatTabGroupBase {
-  @ContentChildren(MatTab, {descendants: true}) _allTabs: QueryList<MatTab>;
-  @ViewChild('tabBodyWrapper') _tabBodyWrapper: ElementRef;
-  @ViewChild('tabHeader') _tabHeader: MatTabHeader;
+  // TODO(issue/13329): Attempt to remove "!".
+  @ContentChildren(MatTab, {descendants: true}) _allTabs!: QueryList<MatTab>;
+  // TODO(issue/13329): Attempt to remove "!".
+  @ViewChild('tabBodyWrapper') _tabBodyWrapper!: ElementRef;
+  // TODO(issue/13329): Attempt to remove "!".
+  @ViewChild('tabHeader') _tabHeader!: MatTabHeader;
 
   /** Whether the ink bar should fit its width to the size of the tab label content. */
   @Input()

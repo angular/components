@@ -111,9 +111,12 @@ export class MatProgressBar extends _MatProgressBarMixinBase implements AfterVie
   }
   private _bufferValue = 0;
 
-  private _rootElement: HTMLElement;
-  private _primaryBar: HTMLElement;
-  private _bufferBar: HTMLElement;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _rootElement!: HTMLElement;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _primaryBar!: HTMLElement;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _bufferBar!: HTMLElement;
 
   /**
    * Event emitted when animation of the primary progress bar completes. This event will not

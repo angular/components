@@ -72,13 +72,16 @@ export class CdkTree<T> implements AfterContentChecked, CollectionViewer, OnDest
   private _onDestroy = new Subject<void>();
 
   /** Differ used to find the changes in the data provided by the data source. */
-  private _dataDiffer: IterableDiffer<T>;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _dataDiffer!: IterableDiffer<T>;
 
   /** Stores the node definition that does not have a when predicate. */
-  private _defaultNodeDef: CdkTreeNodeDef<T> | null;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _defaultNodeDef!: CdkTreeNodeDef<T> | null;
 
   /** Data subscription */
-  private _dataSubscription: Subscription | null;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _dataSubscription!: Subscription | null;
 
   /** Level of nodes */
   private _levels: Map<T, number> = new Map<T, number>();
@@ -95,10 +98,12 @@ export class CdkTree<T> implements AfterContentChecked, CollectionViewer, OnDest
       this._switchDataSource(dataSource);
     }
   }
-  private _dataSource: DataSource<T> | Observable<T[]> | T[];
+  // TODO(issue/13329): Attempt to remove "!".
+  private _dataSource!: DataSource<T> | Observable<T[]> | T[];
 
   /** The tree controller */
-  @Input() treeControl: TreeControl<T>;
+  // TODO(issue/13329): Attempt to remove "!".
+  @Input() treeControl!: TreeControl<T>;
 
   /**
    * Tracking function that will be used to check the differences in data changes. Used similarly
@@ -106,17 +111,20 @@ export class CdkTree<T> implements AfterContentChecked, CollectionViewer, OnDest
    * relative to the function to know if a node should be added/removed/moved.
    * Accepts a function that takes two parameters, `index` and `item`.
    */
-  @Input() trackBy: TrackByFunction<T>;
+  // TODO(issue/13329): Attempt to remove "!".
+  @Input() trackBy!: TrackByFunction<T>;
 
   // Outlets within the tree's template where the dataNodes will be inserted.
-  @ViewChild(CdkTreeNodeOutlet, {static: true}) _nodeOutlet: CdkTreeNodeOutlet;
+  // TODO(issue/13329): Attempt to remove "!".
+  @ViewChild(CdkTreeNodeOutlet, {static: true}) _nodeOutlet!: CdkTreeNodeOutlet;
 
   /** The tree node template for the tree */
   @ContentChildren(CdkTreeNodeDef, {
     // We need to use `descendants: true`, because Ivy will no longer match
     // indirect descendants if it's left as false.
     descendants: true
-  }) _nodeDefs: QueryList<CdkTreeNodeDef<T>>;
+  // TODO(issue/13329): Attempt to remove "!".
+  }) _nodeDefs!: QueryList<CdkTreeNodeDef<T>>;
 
   // TODO(tinayuangao): Setup a listener for scrolling, emit the calculated view to viewChange.
   //     Remove the MAX_VALUE in viewChange
@@ -326,7 +334,8 @@ export class CdkTreeNode<T> implements FocusableOption, OnDestroy {
       this._dataChanges.next();
     }
   }
-  protected _data: T;
+  // TODO(issue/13329): Attempt to remove "!".
+  protected _data!: T;
 
   get isExpanded(): boolean {
     return this._tree.treeControl.isExpanded(this._data);

@@ -88,22 +88,27 @@ export class FocusMonitor implements OnDestroy {
   private _origin: FocusOrigin = null;
 
   /** The FocusOrigin of the last focus event tracked by the FocusMonitor. */
-  private _lastFocusOrigin: FocusOrigin;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _lastFocusOrigin!: FocusOrigin;
 
   /** Whether the window has just been focused. */
   private _windowFocused = false;
 
   /** The target of the last touch event. */
-  private _lastTouchTarget: EventTarget | null;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _lastTouchTarget!: EventTarget | null;
 
   /** The timeout id of the touch timeout, used to cancel timeout later. */
-  private _touchTimeoutId: number;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _touchTimeoutId!: number;
 
   /** The timeout id of the window focus timeout. */
-  private _windowFocusTimeoutId: number;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _windowFocusTimeoutId!: number;
 
   /** The timeout id of the origin clearing timeout. */
-  private _originTimeoutId: number;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _originTimeoutId!: number;
 
   /** Map of elements being monitored to their info. */
   private _elementInfo = new Map<HTMLElement, MonitoredElementInfo>();

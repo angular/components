@@ -26,13 +26,15 @@ export class MatListBase {
   // metadata is not inherited by child classes, instead the host binding data is defined in a way
   // that can be inherited.
   // tslint:disable-next-line:no-host-decorator-in-concrete
+  // TODO(issue/13329): Attempt to remove "!".
   @HostBinding('class.mdc-list--non-interactive')
-  _isNonInteractive: boolean;
+  _isNonInteractive!: boolean;
 }
 
 @Directive()
 export abstract class MatListItemBase implements AfterContentInit, OnDestroy, RippleTarget {
-  lines: QueryList<ElementRef<Element>>;
+  // TODO(issue/13329): Attempt to remove "!".
+  lines!: QueryList<ElementRef<Element>>;
 
   rippleConfig: RippleConfig = {};
 

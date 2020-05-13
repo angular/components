@@ -39,31 +39,40 @@ export class MatStepHeader extends CdkStepHeader implements OnDestroy {
   private _intlSubscription: Subscription;
 
   /** State of the given step. */
-  @Input() state: StepState;
+  // TODO(issue/13329): Attempt to remove "!".
+  @Input() state!: StepState;
 
   /** Label of the given step. */
-  @Input() label: MatStepLabel | string;
+  // TODO(issue/13329): Attempt to remove "!".
+  @Input() label!: MatStepLabel | string;
 
   /** Error message to display when there's an error. */
-  @Input() errorMessage: string;
+  // TODO(issue/13329): Attempt to remove "!".
+  @Input() errorMessage!: string;
 
   /** Overrides for the header icons, passed in via the stepper. */
-  @Input() iconOverrides: {[key: string]: TemplateRef<MatStepperIconContext>};
+  // TODO(issue/13329): Attempt to remove "!".
+  @Input() iconOverrides!: {[key: string]: TemplateRef<MatStepperIconContext>};
 
   /** Index of the given step. */
-  @Input() index: number;
+  // TODO(issue/13329): Attempt to remove "!".
+  @Input() index!: number;
 
   /** Whether the given step is selected. */
-  @Input() selected: boolean;
+  // TODO(issue/13329): Attempt to remove "!".
+  @Input() selected!: boolean;
 
   /** Whether the given step label is active. */
-  @Input() active: boolean;
+  // TODO(issue/13329): Attempt to remove "!".
+  @Input() active!: boolean;
 
   /** Whether the given step is optional. */
-  @Input() optional: boolean;
+  // TODO(issue/13329): Attempt to remove "!".
+  @Input() optional!: boolean;
 
   /** Whether the ripple should be disabled. */
-  @Input() disableRipple: boolean;
+  // TODO(issue/13329): Attempt to remove "!".
+  @Input() disableRipple!: boolean;
 
   constructor(
     public _intl: MatStepperIntl,

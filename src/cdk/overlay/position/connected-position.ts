@@ -80,10 +80,14 @@ export class ConnectionPositionPair {
  *  @docs-private
  */
 export class ScrollingVisibility {
-  isOriginClipped: boolean;
-  isOriginOutsideView: boolean;
-  isOverlayClipped: boolean;
-  isOverlayOutsideView: boolean;
+  // TODO(issue/13329): Attempt to remove "!".
+  isOriginClipped!: boolean;
+  // TODO(issue/13329): Attempt to remove "!".
+  isOriginOutsideView!: boolean;
+  // TODO(issue/13329): Attempt to remove "!".
+  isOverlayClipped!: boolean;
+  // TODO(issue/13329): Attempt to remove "!".
+  isOverlayOutsideView!: boolean;
 }
 
 /** The change event emitted by the strategy when a fallback position is used. */

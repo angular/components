@@ -161,7 +161,8 @@ export class CdkObserveContent implements AfterContentInit, OnDestroy {
     this._debounce = coerceNumberProperty(value);
     this._subscribe();
   }
-  private _debounce: number;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _debounce!: number;
 
   private _currentSubscription: Subscription | null = null;
 

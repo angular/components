@@ -84,7 +84,8 @@ export class MatDateRangeInput<D> implements MatFormFieldControl<DateRange<D>>,
    * Set the placeholder attribute on `matStartDate` and `matEndDate`.
    * @docs-private
    */
-  placeholder: string;
+  // TODO(issue/13329): Attempt to remove "!".
+  placeholder!: string;
 
   /** The range picker that this input is associated with. */
   @Input()
@@ -96,7 +97,8 @@ export class MatDateRangeInput<D> implements MatFormFieldControl<DateRange<D>>,
       this._registerModel(this._model!);
     }
   }
-  private _rangePicker: MatDateRangePicker<D>;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _rangePicker!: MatDateRangePicker<D>;
 
   /** Whether the input is required. */
   @Input()
@@ -104,7 +106,8 @@ export class MatDateRangeInput<D> implements MatFormFieldControl<DateRange<D>>,
   set required(value: boolean) {
     this._required = coerceBooleanProperty(value);
   }
-  private _required: boolean;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _required!: boolean;
 
   /** Function that can be used to filter out dates within the date range picker. */
   @Input()
@@ -113,7 +116,8 @@ export class MatDateRangeInput<D> implements MatFormFieldControl<DateRange<D>>,
     this._dateFilter = value;
     this._revalidate();
   }
-  private _dateFilter: DateFilterFn<D>;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _dateFilter!: DateFilterFn<D>;
 
   /** The minimum valid date. */
   @Input()
@@ -122,7 +126,8 @@ export class MatDateRangeInput<D> implements MatFormFieldControl<DateRange<D>>,
     this._min = this._getValidDateOrNull(this._dateAdapter.deserialize(value));
     this._revalidate();
   }
-  private _min: D | null;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _min!: D | null;
 
   /** The maximum valid date. */
   @Input()
@@ -131,7 +136,8 @@ export class MatDateRangeInput<D> implements MatFormFieldControl<DateRange<D>>,
     this._max = this._getValidDateOrNull(this._dateAdapter.deserialize(value));
     this._revalidate();
   }
-  private _max: D | null;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _max!: D | null;
 
   /** Whether the input is disabled. */
   @Input()
@@ -184,8 +190,10 @@ export class MatDateRangeInput<D> implements MatFormFieldControl<DateRange<D>>,
   /** End of the comparison range that should be shown in the calendar. */
   @Input() comparisonEnd: D | null = null;
 
-  @ContentChild(MatStartDate) _startInput: MatStartDate<D>;
-  @ContentChild(MatEndDate) _endInput: MatEndDate<D>;
+  // TODO(issue/13329): Attempt to remove "!".
+  @ContentChild(MatStartDate) _startInput!: MatStartDate<D>;
+  // TODO(issue/13329): Attempt to remove "!".
+  @ContentChild(MatEndDate) _endInput!: MatEndDate<D>;
 
   /**
    * Implemented as a part of `MatFormFieldControl`.

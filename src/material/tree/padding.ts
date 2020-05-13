@@ -18,8 +18,10 @@ import {Directive, Input} from '@angular/core';
 export class MatTreeNodePadding<T> extends CdkTreeNodePadding<T> {
 
   /** The level of depth of the tree node. The padding will be `level * indent` pixels. */
-  @Input('matTreeNodePadding') level: number;
+  // TODO(issue/13329): Attempt to remove "!".
+  @Input('matTreeNodePadding') level!: number;
 
   /** The indent for each level. Default number 40px from material design menu sub-menu spec. */
-  @Input('matTreeNodePaddingIndent') indent: number;
+  // TODO(issue/13329): Attempt to remove "!".
+  @Input('matTreeNodePaddingIndent') indent!: number;
 }

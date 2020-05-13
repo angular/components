@@ -112,10 +112,12 @@ export class MatSlideToggle extends _MatSlideToggleMixinBase implements OnDestro
   private _checked: boolean = false;
 
   /** Reference to the thumb HTMLElement. */
-  @ViewChild('thumbContainer') _thumbEl: ElementRef;
+  // TODO(issue/13329): Attempt to remove "!".
+  @ViewChild('thumbContainer') _thumbEl!: ElementRef;
 
   /** Reference to the thumb bar HTMLElement. */
-  @ViewChild('toggleBar') _thumbBarEl: ElementRef;
+  // TODO(issue/13329): Attempt to remove "!".
+  @ViewChild('toggleBar') _thumbBarEl!: ElementRef;
 
   /** Name value will be applied to the input element if present. */
   @Input() name: string | null = null;
@@ -169,7 +171,8 @@ export class MatSlideToggle extends _MatSlideToggleMixinBase implements OnDestro
   get inputId(): string { return `${this.id || this._uniqueId}-input`; }
 
   /** Reference to the underlying input element. */
-  @ViewChild('input') _inputElement: ElementRef<HTMLInputElement>;
+  // TODO(issue/13329): Attempt to remove "!".
+  @ViewChild('input') _inputElement!: ElementRef<HTMLInputElement>;
 
   constructor(elementRef: ElementRef,
               private _focusMonitor: FocusMonitor,

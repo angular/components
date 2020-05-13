@@ -22,7 +22,8 @@ import {Platform} from '@angular/cdk/platform';
 @Injectable({providedIn: 'root'})
 export class FullscreenOverlayContainer extends OverlayContainer implements OnDestroy {
   private _fullScreenEventName: string | undefined;
-  private _fullScreenListener: () => void;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _fullScreenListener!: () => void;
 
   constructor(
     @Inject(DOCUMENT) _document: any,

@@ -227,16 +227,20 @@ export class MatChip extends _MatChipMixinBase implements AfterContentInit, Afte
   protected _destroyed = new Subject<void>();
 
   /** The chip's leading icon. */
-  @ContentChild(MatChipAvatar) leadingIcon: MatChipAvatar;
+  // TODO(issue/13329): Attempt to remove "!".
+  @ContentChild(MatChipAvatar) leadingIcon!: MatChipAvatar;
 
   /** The chip's trailing icon. */
-  @ContentChild(MatChipTrailingIcon) trailingIcon: MatChipTrailingIcon;
+  // TODO(issue/13329): Attempt to remove "!".
+  @ContentChild(MatChipTrailingIcon) trailingIcon!: MatChipTrailingIcon;
 
   /** The chip's trailing remove icon. */
-  @ContentChild(MatChipRemove) removeIcon: MatChipRemove;
+  // TODO(issue/13329): Attempt to remove "!".
+  @ContentChild(MatChipRemove) removeIcon!: MatChipRemove;
 
   /** Reference to the MatRipple instance of the chip. */
-  @ViewChild(MatRipple) ripple: MatRipple;
+  // TODO(issue/13329): Attempt to remove "!".
+  @ViewChild(MatRipple) ripple!: MatRipple;
 
  /**
   * Implementation of the MDC chip adapter interface.

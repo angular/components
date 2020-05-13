@@ -62,7 +62,8 @@ export abstract class MatDatepickerInputBase<S, D = ExtractDateTypeFromSelection
   implements ControlValueAccessor, AfterViewInit, OnDestroy, Validator {
 
   /** Whether the component has been initialized. */
-  private _isInitialized: boolean;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _isInitialized!: boolean;
 
   /** The value of the input. */
   @Input()
@@ -106,7 +107,8 @@ export abstract class MatDatepickerInputBase<S, D = ExtractDateTypeFromSelection
       element.blur();
     }
   }
-  private _disabled: boolean;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _disabled!: boolean;
 
   /** Emits when a `change` event is fired on this `<input>`. */
   @Output() readonly dateChange: EventEmitter<MatDatepickerInputEvent<D, S>> =
@@ -134,7 +136,8 @@ export abstract class MatDatepickerInputBase<S, D = ExtractDateTypeFromSelection
    * we might get a value before we have a model. This property keeps track
    * of the value until we have somewhere to assign it.
    */
-  private _pendingValue: D | null;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _pendingValue!: D | null;
 
   /** The form control validator for whether the input parses. */
   private _parseValidator: ValidatorFn = (): ValidationErrors | null => {

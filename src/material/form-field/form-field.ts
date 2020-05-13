@@ -185,7 +185,8 @@ export class MatFormField extends _MatFormFieldMixinBase
       this._outlineGapCalculationNeededOnStable = true;
     }
   }
-  _appearance: MatFormFieldAppearance;
+  // TODO(issue/13329): Attempt to remove "!".
+  _appearance!: MatFormFieldAppearance;
 
   /** Whether the required marker should be hidden. */
   @Input()
@@ -242,7 +243,8 @@ export class MatFormField extends _MatFormFieldMixinBase
       this._changeDetectorRef.markForCheck();
     }
   }
-  private _floatLabel: FloatLabelType;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _floatLabel!: FloatLabelType;
 
   /** Whether the Angular animations are enabled. */
   _animationsEnabled: boolean;
@@ -251,14 +253,20 @@ export class MatFormField extends _MatFormFieldMixinBase
    * @deprecated
    * @breaking-change 8.0.0
    */
-  @ViewChild('underline') underlineRef: ElementRef;
+  // TODO(issue/13329): Attempt to remove "!".
+  @ViewChild('underline') underlineRef!: ElementRef;
 
-  @ViewChild('connectionContainer', {static: true}) _connectionContainerRef: ElementRef;
-  @ViewChild('inputContainer') _inputContainerRef: ElementRef;
-  @ViewChild('label') private _label: ElementRef;
+  // TODO(issue/13329): Attempt to remove "!".
+  @ViewChild('connectionContainer', {static: true}) _connectionContainerRef!: ElementRef;
+  // TODO(issue/13329): Attempt to remove "!".
+  @ViewChild('inputContainer') _inputContainerRef!: ElementRef;
+  // TODO(issue/13329): Attempt to remove "!".
+  @ViewChild('label') private _label!: ElementRef;
 
-  @ContentChild(MatFormFieldControl) _controlNonStatic: MatFormFieldControl<any>;
-  @ContentChild(MatFormFieldControl, {static: true}) _controlStatic: MatFormFieldControl<any>;
+  // TODO(issue/13329): Attempt to remove "!".
+  @ContentChild(MatFormFieldControl) _controlNonStatic!: MatFormFieldControl<any>;
+  // TODO(issue/13329): Attempt to remove "!".
+  @ContentChild(MatFormFieldControl, {static: true}) _controlStatic!: MatFormFieldControl<any>;
   get _control() {
     // TODO(crisbeto): we need this workaround in order to support both Ivy and ViewEngine.
     //  We should clean this up once Ivy is the default renderer.
@@ -267,19 +275,27 @@ export class MatFormField extends _MatFormFieldMixinBase
   set _control(value) {
     this._explicitFormFieldControl = value;
   }
-  private _explicitFormFieldControl: MatFormFieldControl<any>;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _explicitFormFieldControl!: MatFormFieldControl<any>;
 
-  @ContentChild(MatLabel) _labelChildNonStatic: MatLabel;
-  @ContentChild(MatLabel, {static: true}) _labelChildStatic: MatLabel;
+  // TODO(issue/13329): Attempt to remove "!".
+  @ContentChild(MatLabel) _labelChildNonStatic!: MatLabel;
+  // TODO(issue/13329): Attempt to remove "!".
+  @ContentChild(MatLabel, {static: true}) _labelChildStatic!: MatLabel;
   get _labelChild() {
     return this._labelChildNonStatic || this._labelChildStatic;
   }
 
-  @ContentChild(MatPlaceholder) _placeholderChild: MatPlaceholder;
-  @ContentChildren(MatError, {descendants: true}) _errorChildren: QueryList<MatError>;
-  @ContentChildren(MatHint, {descendants: true}) _hintChildren: QueryList<MatHint>;
-  @ContentChildren(MatPrefix, {descendants: true}) _prefixChildren: QueryList<MatPrefix>;
-  @ContentChildren(MatSuffix, {descendants: true}) _suffixChildren: QueryList<MatSuffix>;
+  // TODO(issue/13329): Attempt to remove "!".
+  @ContentChild(MatPlaceholder) _placeholderChild!: MatPlaceholder;
+  // TODO(issue/13329): Attempt to remove "!".
+  @ContentChildren(MatError, {descendants: true}) _errorChildren!: QueryList<MatError>;
+  // TODO(issue/13329): Attempt to remove "!".
+  @ContentChildren(MatHint, {descendants: true}) _hintChildren!: QueryList<MatHint>;
+  // TODO(issue/13329): Attempt to remove "!".
+  @ContentChildren(MatPrefix, {descendants: true}) _prefixChildren!: QueryList<MatPrefix>;
+  // TODO(issue/13329): Attempt to remove "!".
+  @ContentChildren(MatSuffix, {descendants: true}) _suffixChildren!: QueryList<MatSuffix>;
 
   constructor(
       public _elementRef: ElementRef, private _changeDetectorRef: ChangeDetectorRef,

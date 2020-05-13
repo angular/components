@@ -29,7 +29,8 @@ export interface RepositionScrollStrategyConfig {
  */
 export class RepositionScrollStrategy implements ScrollStrategy {
   private _scrollSubscription: Subscription|null = null;
-  private _overlayRef: OverlayReference;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _overlayRef!: OverlayReference;
 
   constructor(
     private _scrollDispatcher: ScrollDispatcher,

@@ -100,16 +100,20 @@ export abstract class MatPaginatedTabHeader implements AfterContentChecked, Afte
    * The number of tab labels that are displayed on the header. When this changes, the header
    * should re-evaluate the scroll position.
    */
-  private _tabLabelCount: number;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _tabLabelCount!: number;
 
   /** Whether the scroll distance has changed and should be applied after the view is checked. */
-  private _scrollDistanceChanged: boolean;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _scrollDistanceChanged!: boolean;
 
   /** Used to manage focus between the tabs. */
-  private _keyManager: FocusKeyManager<MatPaginatedTabHeaderItem>;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _keyManager!: FocusKeyManager<MatPaginatedTabHeaderItem>;
 
   /** Cached text content of the header. */
-  private _currentTextContent: string;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _currentTextContent!: string;
 
   /** Stream that will stop the automated scrolling. */
   private _stopScrolling = new Subject<void>();

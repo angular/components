@@ -45,7 +45,8 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
   private _letterKeyStream = new Subject<string>();
   private _typeaheadSubscription = Subscription.EMPTY;
   private _vertical = true;
-  private _horizontal: 'ltr' | 'rtl' | null;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _horizontal!: 'ltr' | 'rtl' | null;
   private _allowedModifierKeys: ListKeyManagerModifierKey[] = [];
 
   /**

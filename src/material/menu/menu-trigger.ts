@@ -81,7 +81,8 @@ const passiveEventListenerOptions = normalizePassiveListenerOptions({passive: tr
   exportAs: 'matMenuTrigger'
 })
 export class MatMenuTrigger implements AfterContentInit, OnDestroy {
-  private _portal: TemplatePortal;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _portal!: TemplatePortal;
   private _overlayRef: OverlayRef | null = null;
   private _menuOpen: boolean = false;
   private _closingActionsSubscription = Subscription.EMPTY;
@@ -131,7 +132,8 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
       });
     }
   }
-  private _menu: MatMenuPanel;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _menu!: MatMenuPanel;
 
   /** Data to be passed along to any lazily-rendered content. */
   @Input('matMenuTriggerData') menuData: any;

@@ -60,16 +60,20 @@ export type StepperOrientation = 'horizontal'|'vertical';
 /** Change event emitted on selection changes. */
 export class StepperSelectionEvent {
   /** Index of the step now selected. */
-  selectedIndex: number;
+  // TODO(issue/13329): Attempt to remove "!".
+  selectedIndex!: number;
 
   /** Index of the step previously selected. */
-  previouslySelectedIndex: number;
+  // TODO(issue/13329): Attempt to remove "!".
+  previouslySelectedIndex!: number;
 
   /** The step instance now selected. */
-  selectedStep: CdkStep;
+  // TODO(issue/13329): Attempt to remove "!".
+  selectedStep!: CdkStep;
 
   /** The step instance previously selected. */
-  previouslySelectedStep: CdkStep;
+  // TODO(issue/13329): Attempt to remove "!".
+  previouslySelectedStep!: CdkStep;
 }
 
 /** The state of each step. */
@@ -122,34 +126,42 @@ export class CdkStep implements OnChanges {
   _displayDefaultIndicatorType: boolean;
 
   /** Template for step label if it exists. */
-  @ContentChild(CdkStepLabel) stepLabel: CdkStepLabel;
+  // TODO(issue/13329): Attempt to remove "!".
+  @ContentChild(CdkStepLabel) stepLabel!: CdkStepLabel;
 
   /** Template for step content. */
-  @ViewChild(TemplateRef, {static: true}) content: TemplateRef<any>;
+  // TODO(issue/13329): Attempt to remove "!".
+  @ViewChild(TemplateRef, {static: true}) content!: TemplateRef<any>;
 
   /** The top level abstract control of the step. */
-  @Input() stepControl: AbstractControlLike;
+  // TODO(issue/13329): Attempt to remove "!".
+  @Input() stepControl!: AbstractControlLike;
 
   /** Whether user has seen the expanded step content or not. */
   interacted = false;
 
   /** Plain text label of the step. */
-  @Input() label: string;
+  // TODO(issue/13329): Attempt to remove "!".
+  @Input() label!: string;
 
   /** Error message to display when there's an error. */
-  @Input() errorMessage: string;
+  // TODO(issue/13329): Attempt to remove "!".
+  @Input() errorMessage!: string;
 
   /** Aria label for the tab. */
-  @Input('aria-label') ariaLabel: string;
+  // TODO(issue/13329): Attempt to remove "!".
+  @Input('aria-label') ariaLabel!: string;
 
   /**
    * Reference to the element that the tab is labelled by.
    * Will be cleared if `aria-label` is set at the same time.
    */
-  @Input('aria-labelledby') ariaLabelledby: string;
+  // TODO(issue/13329): Attempt to remove "!".
+  @Input('aria-labelledby') ariaLabelledby!: string;
 
   /** State of the step. */
-  @Input() state: StepState;
+  // TODO(issue/13329): Attempt to remove "!".
+  @Input() state!: StepState;
 
   /** Whether the user can return to this step once it has been marked as completed. */
   @Input()
@@ -251,7 +263,8 @@ export class CdkStepper implements AfterViewInit, OnDestroy {
   protected _destroyed = new Subject<void>();
 
   /** Used for managing keyboard focus. */
-  private _keyManager: FocusKeyManager<FocusableOption>;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _keyManager!: FocusKeyManager<FocusableOption>;
 
   /**
    * @breaking-change 8.0.0 Remove `| undefined` once the `_document`
@@ -264,7 +277,8 @@ export class CdkStepper implements AfterViewInit, OnDestroy {
    * @deprecated use `steps` instead
    * @breaking-change 9.0.0 remove this property
    */
-  @ContentChildren(CdkStep, {descendants: true}) _steps: QueryList<CdkStep>;
+  // TODO(issue/13329): Attempt to remove "!".
+  @ContentChildren(CdkStep, {descendants: true}) _steps!: QueryList<CdkStep>;
 
   /** The list of step components that the stepper is holding. */
   get steps(): QueryList<CdkStep> {
@@ -276,7 +290,8 @@ export class CdkStepper implements AfterViewInit, OnDestroy {
    * @deprecated Type to be changed to `QueryList<CdkStepHeader>`.
    * @breaking-change 8.0.0
    */
-  @ContentChildren(CdkStepHeader, {descendants: true}) _stepHeader: QueryList<FocusableOption>;
+  // TODO(issue/13329): Attempt to remove "!".
+  @ContentChildren(CdkStepHeader, {descendants: true}) _stepHeader!: QueryList<FocusableOption>;
 
   /** Whether the validity of previous steps should be checked or not. */
   @Input()

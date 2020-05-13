@@ -188,10 +188,12 @@ export class MatCalendarHeader<D> {
 })
 export class MatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDestroy, OnChanges {
   /** An input indicating the type of the header component, if set. */
-  @Input() headerComponent: ComponentType<any>;
+  // TODO(issue/13329): Attempt to remove "!".
+  @Input() headerComponent!: ComponentType<any>;
 
   /** A portal containing the header component type for this calendar. */
-  _calendarHeaderPortal: Portal<any>;
+  // TODO(issue/13329): Attempt to remove "!".
+  _calendarHeaderPortal!: Portal<any>;
 
   private _intlChanges: Subscription;
 
@@ -208,7 +210,8 @@ export class MatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDes
   set startAt(value: D | null) {
     this._startAt = this._getValidDateOrNull(this._dateAdapter.deserialize(value));
   }
-  private _startAt: D | null;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _startAt!: D | null;
 
   /** Whether the calendar should be started in month or year view. */
   @Input() startView: MatCalendarView = 'month';
@@ -223,7 +226,8 @@ export class MatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDes
       this._selected = this._getValidDateOrNull(this._dateAdapter.deserialize(value));
     }
   }
-  private _selected: DateRange<D> | D | null;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _selected!: DateRange<D> | D | null;
 
   /** The minimum selectable date. */
   @Input()
@@ -231,7 +235,8 @@ export class MatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDes
   set minDate(value: D | null) {
     this._minDate = this._getValidDateOrNull(this._dateAdapter.deserialize(value));
   }
-  private _minDate: D | null;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _minDate!: D | null;
 
   /** The maximum selectable date. */
   @Input()
@@ -239,19 +244,24 @@ export class MatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDes
   set maxDate(value: D | null) {
     this._maxDate = this._getValidDateOrNull(this._dateAdapter.deserialize(value));
   }
-  private _maxDate: D | null;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _maxDate!: D | null;
 
   /** Function used to filter which dates are selectable. */
-  @Input() dateFilter: (date: D) => boolean;
+  // TODO(issue/13329): Attempt to remove "!".
+  @Input() dateFilter!: (date: D) => boolean;
 
   /** Function that can be used to add custom CSS classes to dates. */
-  @Input() dateClass: (date: D) => MatCalendarCellCssClasses;
+  // TODO(issue/13329): Attempt to remove "!".
+  @Input() dateClass!: (date: D) => MatCalendarCellCssClasses;
 
   /** Start of the comparison range. */
-  @Input() comparisonStart: D | null;
+  // TODO(issue/13329): Attempt to remove "!".
+  @Input() comparisonStart!: D | null;
 
   /** End of the comparison range. */
-  @Input() comparisonEnd: D | null;
+  // TODO(issue/13329): Attempt to remove "!".
+  @Input() comparisonEnd!: D | null;
 
   /**
    * Emits when the currently selected date changes.
@@ -276,13 +286,16 @@ export class MatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDes
       new EventEmitter<MatCalendarUserEvent<D | null>>();
 
   /** Reference to the current month view component. */
-  @ViewChild(MatMonthView) monthView: MatMonthView<D>;
+  // TODO(issue/13329): Attempt to remove "!".
+  @ViewChild(MatMonthView) monthView!: MatMonthView<D>;
 
   /** Reference to the current year view component. */
-  @ViewChild(MatYearView) yearView: MatYearView<D>;
+  // TODO(issue/13329): Attempt to remove "!".
+  @ViewChild(MatYearView) yearView!: MatYearView<D>;
 
   /** Reference to the current multi-year view component. */
-  @ViewChild(MatMultiYearView) multiYearView: MatMultiYearView<D>;
+  // TODO(issue/13329): Attempt to remove "!".
+  @ViewChild(MatMultiYearView) multiYearView!: MatMultiYearView<D>;
 
   /**
    * The current active date. This determines which time period is shown and which date is
@@ -294,7 +307,8 @@ export class MatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDes
     this.stateChanges.next();
     this._changeDetectorRef.markForCheck();
   }
-  private _clampedActiveDate: D;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _clampedActiveDate!: D;
 
   /** Whether the calendar is in month view. */
   get currentView(): MatCalendarView { return this._currentView; }
@@ -303,7 +317,8 @@ export class MatCalendar<D> implements AfterContentInit, AfterViewChecked, OnDes
     this._moveFocusOnNextTick = true;
     this._changeDetectorRef.markForCheck();
   }
-  private _currentView: MatCalendarView;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _currentView!: MatCalendarView;
 
   /**
    * Emits whenever there is a state change that the header may need to respond to.

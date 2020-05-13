@@ -181,9 +181,12 @@ export class MatListItem extends _MatListItemMixinBase implements AfterContentIn
   private _list?: MatNavList | MatList;
   private _destroyed = new Subject<void>();
 
-  @ContentChildren(MatLine, {descendants: true}) _lines: QueryList<MatLine>;
-  @ContentChild(MatListAvatarCssMatStyler) _avatar: MatListAvatarCssMatStyler;
-  @ContentChild(MatListIconCssMatStyler) _icon: MatListIconCssMatStyler;
+  // TODO(issue/13329): Attempt to remove "!".
+  @ContentChildren(MatLine, {descendants: true}) _lines!: QueryList<MatLine>;
+  // TODO(issue/13329): Attempt to remove "!".
+  @ContentChild(MatListAvatarCssMatStyler) _avatar!: MatListAvatarCssMatStyler;
+  // TODO(issue/13329): Attempt to remove "!".
+  @ContentChild(MatListIconCssMatStyler) _icon!: MatListIconCssMatStyler;
 
   constructor(private _element: ElementRef<HTMLElement>,
               _changeDetectorRef: ChangeDetectorRef,

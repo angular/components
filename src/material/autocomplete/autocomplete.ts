@@ -119,16 +119,20 @@ export class MatAutocomplete extends _MatAutocompleteMixinBase implements AfterC
   // Notably, another component may trigger `focus` on the autocomplete-trigger.
 
   /** @docs-private */
-  @ViewChild(TemplateRef, {static: true}) template: TemplateRef<any>;
+  // TODO(issue/13329): Attempt to remove "!".
+  @ViewChild(TemplateRef, {static: true}) template!: TemplateRef<any>;
 
   /** Element for the panel containing the autocomplete options. */
-  @ViewChild('panel') panel: ElementRef;
+  // TODO(issue/13329): Attempt to remove "!".
+  @ViewChild('panel') panel!: ElementRef;
 
   /** @docs-private */
-  @ContentChildren(MatOption, {descendants: true}) options: QueryList<MatOption>;
+  // TODO(issue/13329): Attempt to remove "!".
+  @ContentChildren(MatOption, {descendants: true}) options!: QueryList<MatOption>;
 
   /** @docs-private */
-  @ContentChildren(MatOptgroup, {descendants: true}) optionGroups: QueryList<MatOptgroup>;
+  // TODO(issue/13329): Attempt to remove "!".
+  @ContentChildren(MatOptgroup, {descendants: true}) optionGroups!: QueryList<MatOptgroup>;
 
   /** Function that maps an option's control value to its display value in the trigger. */
   @Input() displayWith: ((value: any) => string) | null = null;
@@ -142,13 +146,15 @@ export class MatAutocomplete extends _MatAutocompleteMixinBase implements AfterC
   set autoActiveFirstOption(value: boolean) {
     this._autoActiveFirstOption = coerceBooleanProperty(value);
   }
-  private _autoActiveFirstOption: boolean;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _autoActiveFirstOption!: boolean;
 
   /**
    * Specify the width of the autocomplete panel.  Can be any CSS sizing value, otherwise it will
    * match the width of its host.
    */
-  @Input() panelWidth: string | number;
+  // TODO(issue/13329): Attempt to remove "!".
+  @Input() panelWidth!: string | number;
 
   /** Event that is emitted whenever an option from the list is selected. */
   @Output() readonly optionSelected: EventEmitter<MatAutocompleteSelectedEvent> =

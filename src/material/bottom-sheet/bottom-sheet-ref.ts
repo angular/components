@@ -19,7 +19,8 @@ import {MatBottomSheetContainer} from './bottom-sheet-container';
  */
 export class MatBottomSheetRef<T = any, R = any> {
   /** Instance of the component making up the content of the bottom sheet. */
-  instance: T;
+  // TODO(issue/13329): Attempt to remove "!".
+  instance!: T;
 
   /**
    * Instance of the component into which the bottom sheet content is projected.
@@ -40,7 +41,8 @@ export class MatBottomSheetRef<T = any, R = any> {
   private _result: R | undefined;
 
   /** Handle to the timeout that's running as a fallback in case the exit animation doesn't fire. */
-  private _closeFallbackTimeout: number;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _closeFallbackTimeout!: number;
 
   constructor(
     containerInstance: MatBottomSheetContainer,

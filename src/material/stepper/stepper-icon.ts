@@ -27,7 +27,8 @@ export interface MatStepperIconContext {
 })
 export class MatStepperIcon {
   /** Name of the icon to be overridden. */
-  @Input('matStepperIcon') name: StepState;
+  // TODO(issue/13329): Attempt to remove "!".
+  @Input('matStepperIcon') name!: StepState;
 
   constructor(public templateRef: TemplateRef<MatStepperIconContext>) {}
 }

@@ -110,13 +110,16 @@ export class MatChipGrid extends _MatChipGridMixinBase implements AfterContentIn
   readonly controlType: string = 'mat-chip-grid';
 
   /** Subscription to blur changes in the chips. */
-  private _chipBlurSubscription: Subscription | null;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _chipBlurSubscription!: Subscription | null;
 
   /** Subscription to focus changes in the chips. */
-  private _chipFocusSubscription: Subscription | null;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _chipFocusSubscription!: Subscription | null;
 
   /** The chip input to add more chips */
-  protected _chipInput: MatChipTextControl;
+  // TODO(issue/13329): Attempt to remove "!".
+  protected _chipInput!: MatChipTextControl;
 
   /**
    * Function when touched. Set as part of ControlValueAccessor implementation.
@@ -131,7 +134,8 @@ export class MatChipGrid extends _MatChipGridMixinBase implements AfterContentIn
   _onChange: (value: any) => void = () => {};
 
   /** The GridFocusKeyManager which handles focus. */
-  _keyManager: GridFocusKeyManager;
+  // TODO(issue/13329): Attempt to remove "!".
+  _keyManager!: GridFocusKeyManager;
 
   /**
    * Implemented as part of MatFormFieldControl.
@@ -172,7 +176,8 @@ export class MatChipGrid extends _MatChipGridMixinBase implements AfterContentIn
     this._placeholder = value;
     this.stateChanges.next();
   }
-  protected _placeholder: string;
+  // TODO(issue/13329): Attempt to remove "!".
+  protected _placeholder!: string;
 
   /** Whether any chips or the matChipInput inside of this chip-grid has focus. */
   get focused(): boolean { return this._chipInput.focused || this._hasFocusedChip(); }
@@ -207,7 +212,8 @@ export class MatChipGrid extends _MatChipGridMixinBase implements AfterContentIn
   protected _value: Array<any> = [];
 
   /** An object used to control when error messages are shown. */
-  @Input() errorStateMatcher: ErrorStateMatcher;
+  // TODO(issue/13329): Attempt to remove "!".
+  @Input() errorStateMatcher!: ErrorStateMatcher;
 
   /** Combined stream of all of the child chips' blur events. */
   get chipBlurChanges(): Observable<MatChipEvent> {
@@ -235,7 +241,8 @@ export class MatChipGrid extends _MatChipGridMixinBase implements AfterContentIn
     // indirect descendants if it's left as false.
     descendants: true
   })
-  _chips: QueryList<MatChipRow>;
+  // TODO(issue/13329): Attempt to remove "!".
+  _chips!: QueryList<MatChipRow>;
 
   constructor(_elementRef: ElementRef,
               _changeDetectorRef: ChangeDetectorRef,

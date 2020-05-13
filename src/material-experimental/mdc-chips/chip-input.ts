@@ -49,7 +49,8 @@ let nextUniqueId = 0;
 export class MatChipInput implements MatChipTextControl, OnChanges {
   /** Whether the control is focused. */
   focused: boolean = false;
-  _chipGrid: MatChipGrid;
+  // TODO(issue/13329): Attempt to remove "!".
+  _chipGrid!: MatChipGrid;
 
   /** Register input for chip list */
   @Input('matChipInputFor')

@@ -77,7 +77,8 @@ export class CdkPortalOutlet extends BasePortalOutlet implements OnInit, OnDestr
   private _isInitialized = false;
 
   /** Reference to the currently-attached component/view ref. */
-  private _attachedRef: CdkPortalOutletAttachedRef;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _attachedRef!: CdkPortalOutletAttachedRef;
 
   constructor(
       private _componentFactoryResolver: ComponentFactoryResolver,

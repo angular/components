@@ -164,20 +164,23 @@ export class _MatMenuBase implements AfterContentInit, MatMenuPanel<MatMenuItem>
   }
 
   /** @docs-private */
-  @ViewChild(TemplateRef) templateRef: TemplateRef<any>;
+  // TODO(issue/13329): Attempt to remove "!".
+  @ViewChild(TemplateRef) templateRef!: TemplateRef<any>;
 
   /**
    * List of the items inside of a menu.
    * @deprecated
    * @breaking-change 8.0.0
    */
-  @ContentChildren(MatMenuItem, {descendants: false}) items: QueryList<MatMenuItem>;
+  // TODO(issue/13329): Attempt to remove "!".
+  @ContentChildren(MatMenuItem, {descendants: false}) items!: QueryList<MatMenuItem>;
 
   /**
    * Menu content that will be rendered lazily.
    * @docs-private
    */
-  @ContentChild(MatMenuContent) lazyContent: MatMenuContent;
+  // TODO(issue/13329): Attempt to remove "!".
+  @ContentChild(MatMenuContent) lazyContent!: MatMenuContent;
 
   /** Whether the menu should overlap its trigger. */
   @Input()
@@ -221,7 +224,8 @@ export class _MatMenuBase implements AfterContentInit, MatMenuPanel<MatMenuItem>
       this._elementRef.nativeElement.className = '';
     }
   }
-  private _previousPanelClass: string;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _previousPanelClass!: string;
 
   /**
    * This method takes classes set on the host mat-menu element and applies them on the

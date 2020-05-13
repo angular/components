@@ -91,10 +91,12 @@ export const MAT_SLIDER_VALUE_ACCESSOR: any = {
 /** A simple change event emitted by the MatSlider component. */
 export class MatSliderChange {
   /** The MatSlider that changed. */
-  source: MatSlider;
+  // TODO(issue/13329): Attempt to remove "!".
+  source!: MatSlider;
 
   /** The new value of the source slider. */
-  value: number | null;
+  // TODO(issue/13329): Attempt to remove "!".
+  value!: number | null;
 }
 
 // Boilerplate for applying mixins to MatSlider.
@@ -265,7 +267,8 @@ export class MatSlider extends _MatSliderMixinBase
    * in the thumb label. Can be used to format very large number in order
    * for them to fit into the slider thumb.
    */
-  @Input() displayWith: (value: number) => string | number;
+  // TODO(issue/13329): Attempt to remove "!".
+  @Input() displayWith!: (value: number) => string | number;
 
   /** Whether the slider is vertical. */
   @Input()
@@ -459,19 +462,23 @@ export class MatSlider extends _MatSliderMixinBase
   private _controlValueAccessorChangeFn: (value: any) => void = () => {};
 
   /** Decimal places to round to, based on the step amount. */
-  private _roundToDecimal: number;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _roundToDecimal!: number;
 
   /** Subscription to the Directionality change EventEmitter. */
   private _dirChangeSubscription = Subscription.EMPTY;
 
   /** The value of the slider when the slide start event fires. */
-  private _valueOnSlideStart: number | null;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _valueOnSlideStart!: number | null;
 
   /** Position of the pointer when the dragging started. */
-  private _pointerPositionOnStart: {x: number, y: number} | null;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _pointerPositionOnStart!: {x: number, y: number} | null;
 
   /** Reference to the inner slider wrapper element. */
-  @ViewChild('sliderWrapper') private _sliderWrapper: ElementRef;
+  // TODO(issue/13329): Attempt to remove "!".
+  @ViewChild('sliderWrapper') private _sliderWrapper!: ElementRef;
 
   /**
    * Whether mouse events should be converted to a slider position by calculating their distance
@@ -487,7 +494,8 @@ export class MatSlider extends _MatSliderMixinBase
   }
 
   /** Keeps track of the last pointer event that was captured by the slider. */
-  private _lastPointerEvent: MouseEvent | TouchEvent | null;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _lastPointerEvent!: MouseEvent | TouchEvent | null;
 
   /** Used to subscribe to global move and end events */
   protected _document?: Document;

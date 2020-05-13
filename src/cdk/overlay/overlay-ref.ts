@@ -43,7 +43,8 @@ export class OverlayRef implements PortalOutlet, OverlayReference {
    * Reference to the parent of the `_host` at the time it was detached. Used to restore
    * the `_host` to its original position in the DOM when it gets re-attached.
    */
-  private _previousHostParent: HTMLElement;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _previousHostParent!: HTMLElement;
 
   /** Stream of keydown events dispatched to this overlay. */
   _keydownEvents = new Subject<KeyboardEvent>();

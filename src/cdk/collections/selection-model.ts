@@ -22,7 +22,8 @@ export class SelectionModel<T> {
   private _selectedToEmit: T[] = [];
 
   /** Cache for the array value of the selected items. */
-  private _selected: T[] | null;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _selected!: T[] | null;
 
   /** Selected values. */
   get selected(): T[] {

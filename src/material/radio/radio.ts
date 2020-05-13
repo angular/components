@@ -135,7 +135,8 @@ export class MatRadioGroup implements AfterContentInit, ControlValueAccessor {
 
   /** Child radio buttons. */
   @ContentChildren(forwardRef(() => MatRadioButton), { descendants: true })
-  _radios: QueryList<MatRadioButton>;
+  // TODO(issue/13329): Attempt to remove "!".
+  _radios!: QueryList<MatRadioButton>;
 
   /** Theme color for all of the radio buttons in the group. */
   @Input() color: ThemePalette;
@@ -317,7 +318,8 @@ class MatRadioButtonBase {
   // Since the disabled property is manually defined for the MatRadioButton and isn't set up in
   // the mixin base class. To be able to use the tabindex mixin, a disabled property must be
   // defined to properly work.
-  disabled: boolean;
+  // TODO(issue/13329): Attempt to remove "!".
+  disabled!: boolean;
 
   constructor(public _elementRef: ElementRef) {}
 }
@@ -342,16 +344,20 @@ export abstract class _MatRadioButtonBase extends _MatRadioButtonMixinBase imple
   @Input() id: string = this._uniqueId;
 
   /** Analog to HTML 'name' attribute used to group radios for unique selection. */
-  @Input() name: string;
+  // TODO(issue/13329): Attempt to remove "!".
+  @Input() name!: string;
 
   /** Used to set the 'aria-label' attribute on the underlying input element. */
-  @Input('aria-label') ariaLabel: string;
+  // TODO(issue/13329): Attempt to remove "!".
+  @Input('aria-label') ariaLabel!: string;
 
   /** The 'aria-labelledby' attribute takes precedence as the element's text alternative. */
-  @Input('aria-labelledby') ariaLabelledby: string;
+  // TODO(issue/13329): Attempt to remove "!".
+  @Input('aria-labelledby') ariaLabelledby!: string;
 
   /** The 'aria-describedby' attribute is read after the element's label and field type. */
-  @Input('aria-describedby') ariaDescribedby: string;
+  // TODO(issue/13329): Attempt to remove "!".
+  @Input('aria-describedby') ariaDescribedby!: string;
 
   /** Whether this radio button is checked. */
   @Input()
@@ -403,7 +409,8 @@ export abstract class _MatRadioButtonBase extends _MatRadioButtonMixinBase imple
   set labelPosition(value) {
     this._labelPosition = value;
   }
-  private _labelPosition: 'before' | 'after';
+  // TODO(issue/13329): Attempt to remove "!".
+  private _labelPosition!: 'before' | 'after';
 
   /** Whether the radio button is disabled. */
   @Input()
@@ -431,7 +438,8 @@ export abstract class _MatRadioButtonBase extends _MatRadioButtonMixinBase imple
       this._providerOverride && this._providerOverride.color || 'accent';
   }
   set color(newValue: ThemePalette) { this._color = newValue; }
-  private _color: ThemePalette;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _color!: ThemePalette;
 
   /**
    * Event emitted when the checked state of this radio button changes.
@@ -450,10 +458,12 @@ export abstract class _MatRadioButtonBase extends _MatRadioButtonMixinBase imple
   private _checked: boolean = false;
 
   /** Whether this radio is disabled. */
-  private _disabled: boolean;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _disabled!: boolean;
 
   /** Whether this radio is required. */
-  private _required: boolean;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _required!: boolean;
 
   /** Value assigned to this radio. */
   private _value: any = null;
@@ -462,7 +472,8 @@ export abstract class _MatRadioButtonBase extends _MatRadioButtonMixinBase imple
   private _removeUniqueSelectionListener: () => void = () => {};
 
   /** The native `<input type=radio>` element */
-  @ViewChild('input') _inputElement: ElementRef<HTMLInputElement>;
+  // TODO(issue/13329): Attempt to remove "!".
+  @ViewChild('input') _inputElement!: ElementRef<HTMLInputElement>;
 
   constructor(@Optional() radioGroup: MatRadioGroup,
               elementRef: ElementRef,

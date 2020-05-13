@@ -126,7 +126,8 @@ const INDETERMINATE_ANIMATION_TEMPLATE = `
 export class MatProgressSpinner extends _MatProgressSpinnerMixinBase implements OnInit, CanColor {
   private _diameter = BASE_SIZE;
   private _value = 0;
-  private _strokeWidth: number;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _strokeWidth!: number;
   private _fallbackAnimation = false;
 
   /**
@@ -134,7 +135,8 @@ export class MatProgressSpinner extends _MatProgressSpinnerMixinBase implements 
    * For most elements this is the document, but for the ones in the Shadow DOM we need to
    * use the shadow root.
    */
-  private _styleRoot: Node;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _styleRoot!: Node;
 
   /**
    * Tracks diameters of existing instances to de-dupe generated styles (default d = 100).

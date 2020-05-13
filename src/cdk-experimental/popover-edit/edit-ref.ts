@@ -28,7 +28,8 @@ export class EditRef<FormValue> implements OnDestroy {
   readonly blurred: Observable<void> = this._blurredSubject.asObservable();
 
   /** The value to set the form back to on revert. */
-  private _revertFormValue: FormValue;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _revertFormValue!: FormValue;
 
   constructor(
       @Self() private readonly _form: ControlContainer,

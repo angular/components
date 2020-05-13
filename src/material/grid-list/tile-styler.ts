@@ -22,11 +22,14 @@ const cssCalcAllowedValue = /^-?\d+((\.\d+)?[A-Za-z%$]?)+$/;
  * @docs-private
  */
 export abstract class TileStyler {
-  _gutterSize: string;
+  // TODO(issue/13329): Attempt to remove "!".
+  _gutterSize!: string;
   _rows: number = 0;
   _rowspan: number = 0;
-  _cols: number;
-  _direction: string;
+  // TODO(issue/13329): Attempt to remove "!".
+  _cols!: number;
+  // TODO(issue/13329): Attempt to remove "!".
+  _direction!: string;
 
   /**
    * Adds grid-list layout info once it is available. Cannot be processed in the constructor
@@ -206,8 +209,10 @@ export class FixedTileStyler extends TileStyler {
 export class RatioTileStyler extends TileStyler {
 
   /** Ratio width:height given by user to determine row height. */
-  rowHeightRatio: number;
-  baseTileHeight: string;
+  // TODO(issue/13329): Attempt to remove "!".
+  rowHeightRatio!: number;
+  // TODO(issue/13329): Attempt to remove "!".
+  baseTileHeight!: string;
 
   constructor(value: string) {
     super();

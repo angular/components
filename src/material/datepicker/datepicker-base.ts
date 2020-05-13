@@ -128,19 +128,24 @@ export class MatDatepickerContent<S, D = ExtractDateTypeFromSelection<S>>
   extends _MatDatepickerContentMixinBase implements AfterViewInit, OnDestroy, CanColor {
 
   /** Reference to the internal calendar component. */
-  @ViewChild(MatCalendar) _calendar: MatCalendar<D>;
+  // TODO(issue/13329): Attempt to remove "!".
+  @ViewChild(MatCalendar) _calendar!: MatCalendar<D>;
 
   /** Reference to the datepicker that created the overlay. */
-  datepicker: MatDatepickerBase<any, S, D>;
+  // TODO(issue/13329): Attempt to remove "!".
+  datepicker!: MatDatepickerBase<any, S, D>;
 
   /** Start of the comparison range. */
-  comparisonStart: D | null;
+  // TODO(issue/13329): Attempt to remove "!".
+  comparisonStart!: D | null;
 
   /** End of the comparison range. */
-  comparisonEnd: D | null;
+  // TODO(issue/13329): Attempt to remove "!".
+  comparisonEnd!: D | null;
 
   /** Whether the datepicker is above or below the input. */
-  _isAbove: boolean;
+  // TODO(issue/13329): Attempt to remove "!".
+  _isAbove!: boolean;
 
   /** Current state of the animation. */
   _animationState: 'enter' | 'void' = 'enter';
@@ -233,7 +238,8 @@ export abstract class MatDatepickerBase<C extends MatDatepickerControl<D>, S,
   private _scrollStrategy: () => ScrollStrategy;
 
   /** An input indicating the type of the custom header component for the calendar, if set. */
-  @Input() calendarHeaderComponent: ComponentType<any>;
+  // TODO(issue/13329): Attempt to remove "!".
+  @Input() calendarHeaderComponent!: ComponentType<any>;
 
   /** The date to open the calendar to initially. */
   @Input()
@@ -245,7 +251,8 @@ export abstract class MatDatepickerBase<C extends MatDatepickerControl<D>, S,
   set startAt(value: D | null) {
     this._startAt = this._getValidDateOrNull(this._dateAdapter.deserialize(value));
   }
-  private _startAt: D | null;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _startAt!: D | null;
 
   /** The view that the calendar should start in. */
   @Input() startView: 'month' | 'year' | 'multi-year' = 'month';
@@ -286,7 +293,8 @@ export abstract class MatDatepickerBase<C extends MatDatepickerControl<D>, S,
       this._disabledChange.next(newValue);
     }
   }
-  private _disabled: boolean;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _disabled!: boolean;
 
   /** Preferred position of the datepicker in the X axis. */
   @Input()
@@ -309,10 +317,12 @@ export abstract class MatDatepickerBase<C extends MatDatepickerControl<D>, S,
   @Output() readonly monthSelected: EventEmitter<D> = new EventEmitter<D>();
 
   /** Classes to be passed to the date picker panel. Supports the same syntax as `ngClass`. */
-  @Input() panelClass: string | string[];
+  // TODO(issue/13329): Attempt to remove "!".
+  @Input() panelClass!: string | string[];
 
   /** Function that can be used to add custom CSS classes to dates. */
-  @Input() dateClass: (date: D) => MatCalendarCellCssClasses;
+  // TODO(issue/13329): Attempt to remove "!".
+  @Input() dateClass!: (date: D) => MatCalendarCellCssClasses;
 
   /** Emits when the datepicker has been opened. */
   @Output('opened') openedStream: EventEmitter<void> = new EventEmitter<void>();
@@ -345,19 +355,23 @@ export abstract class MatDatepickerBase<C extends MatDatepickerControl<D>, S,
   }
 
   /** A reference to the overlay when the calendar is opened as a popup. */
-  private _popupRef: OverlayRef | null;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _popupRef!: OverlayRef | null;
 
   /** A reference to the dialog when the calendar is opened as a dialog. */
-  private _dialogRef: MatDialogRef<MatDatepickerContent<S, D>> | null;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _dialogRef!: MatDialogRef<MatDatepickerContent<S, D>> | null;
 
   /** Reference to the component instantiated in popup mode. */
-  private _popupComponentRef: ComponentRef<MatDatepickerContent<S, D>> | null;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _popupComponentRef!: ComponentRef<MatDatepickerContent<S, D>> | null;
 
   /** The element that was focused before the datepicker was opened. */
   private _focusedElementBeforeOpen: HTMLElement | null = null;
 
   /** The input element this datepicker is associated with. */
-  _datepickerInput: C;
+  // TODO(issue/13329): Attempt to remove "!".
+  _datepickerInput!: C;
 
   /** Emits when the datepicker is disabled. */
   readonly _disabledChange = new Subject<boolean>();

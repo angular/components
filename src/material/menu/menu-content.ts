@@ -28,8 +28,10 @@ import {Subject} from 'rxjs';
   selector: 'ng-template[matMenuContent]'
 })
 export class MatMenuContent implements OnDestroy {
-  private _portal: TemplatePortal<any>;
-  private _outlet: DomPortalOutlet;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _portal!: TemplatePortal<any>;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _outlet!: DomPortalOutlet;
 
   /** Emits when the menu content has been attached. */
   _attached = new Subject<void>();

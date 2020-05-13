@@ -55,7 +55,8 @@ export class MatToolbar extends _MatToolbarMixinBase implements CanColor, AfterV
   private _document: Document;
 
   /** Reference to all toolbar row elements that have been projected. */
-  @ContentChildren(MatToolbarRow, {descendants: true}) _toolbarRows: QueryList<MatToolbarRow>;
+  // TODO(issue/13329): Attempt to remove "!".
+  @ContentChildren(MatToolbarRow, {descendants: true}) _toolbarRows!: QueryList<MatToolbarRow>;
 
   constructor(
     elementRef: ElementRef,

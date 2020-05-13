@@ -130,8 +130,10 @@ export class MatSidenavContainer extends MatDrawerContainer {
     // indirect descendants if it's left as false.
     descendants: true
   })
-  _allDrawers: QueryList<MatSidenav>;
+  // TODO(issue/13329): Attempt to remove "!".
+  _allDrawers!: QueryList<MatSidenav>;
 
-  @ContentChild(MatSidenavContent) _content: MatSidenavContent;
+  // TODO(issue/13329): Attempt to remove "!".
+  @ContentChild(MatSidenavContent) _content!: MatSidenavContent;
   static ngAcceptInputType_hasBackdrop: BooleanInput;
 }

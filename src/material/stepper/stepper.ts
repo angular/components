@@ -61,7 +61,8 @@ import {MatStepperIcon, MatStepperIconContext} from './stepper-icon';
 })
 export class MatStep extends CdkStep implements ErrorStateMatcher {
   /** Content for step label given by `<ng-template matStepLabel>`. */
-  @ContentChild(MatStepLabel) stepLabel: MatStepLabel;
+  // TODO(issue/13329): Attempt to remove "!".
+  @ContentChild(MatStepLabel) stepLabel!: MatStepLabel;
 
   /** @breaking-change 8.0.0 remove the `?` after `stepperOptions` */
   constructor(@Inject(forwardRef(() => MatStepper)) stepper: MatStepper,
@@ -87,19 +88,23 @@ export class MatStep extends CdkStep implements ErrorStateMatcher {
 @Directive({selector: '[matStepper]', providers: [{provide: CdkStepper, useExisting: MatStepper}]})
 export class MatStepper extends CdkStepper implements AfterContentInit {
   /** The list of step headers of the steps in the stepper. */
-  @ViewChildren(MatStepHeader) _stepHeader: QueryList<MatStepHeader>;
+  // TODO(issue/13329): Attempt to remove "!".
+  @ViewChildren(MatStepHeader) _stepHeader!: QueryList<MatStepHeader>;
 
   /** Steps that the stepper holds. */
-  @ContentChildren(MatStep, {descendants: true}) _steps: QueryList<MatStep>;
+  // TODO(issue/13329): Attempt to remove "!".
+  @ContentChildren(MatStep, {descendants: true}) _steps!: QueryList<MatStep>;
 
   /** Custom icon overrides passed in by the consumer. */
-  @ContentChildren(MatStepperIcon, {descendants: true}) _icons: QueryList<MatStepperIcon>;
+  // TODO(issue/13329): Attempt to remove "!".
+  @ContentChildren(MatStepperIcon, {descendants: true}) _icons!: QueryList<MatStepperIcon>;
 
   /** Event emitted when the current step is done transitioning in. */
   @Output() readonly animationDone: EventEmitter<void> = new EventEmitter<void>();
 
   /** Whether ripples should be disabled for the step headers. */
-  @Input() disableRipple: boolean;
+  // TODO(issue/13329): Attempt to remove "!".
+  @Input() disableRipple!: boolean;
 
   /** Consumer-specified template-refs to be used to override the header icons. */
   _iconOverrides: {[key: string]: TemplateRef<MatStepperIconContext>} = {};

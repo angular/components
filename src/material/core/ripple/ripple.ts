@@ -59,16 +59,19 @@ export const MAT_RIPPLE_GLOBAL_OPTIONS =
 export class MatRipple implements OnInit, OnDestroy, RippleTarget {
 
   /** Custom color for all ripples. */
-  @Input('matRippleColor') color: string;
+  // TODO(issue/13329): Attempt to remove "!".
+  @Input('matRippleColor') color!: string;
 
   /** Whether the ripples should be visible outside the component's bounds. */
-  @Input('matRippleUnbounded') unbounded: boolean;
+  // TODO(issue/13329): Attempt to remove "!".
+  @Input('matRippleUnbounded') unbounded!: boolean;
 
   /**
    * Whether the ripple always originates from the center of the host element's bounds, rather
    * than originating from the location of the click event.
    */
-  @Input('matRippleCentered') centered: boolean;
+  // TODO(issue/13329): Attempt to remove "!".
+  @Input('matRippleCentered') centered!: boolean;
 
   /**
    * If set, the radius in pixels of foreground ripples when fully expanded. If unset, the radius
@@ -82,7 +85,8 @@ export class MatRipple implements OnInit, OnDestroy, RippleTarget {
    * duration of the ripples. The animation durations will be overwritten if the
    * `NoopAnimationsModule` is being used.
    */
-  @Input('matRippleAnimation') animation: RippleAnimationConfig;
+  // TODO(issue/13329): Attempt to remove "!".
+  @Input('matRippleAnimation') animation!: RippleAnimationConfig;
 
   /**
    * Whether click events will not trigger the ripple. Ripples can be still launched manually
@@ -106,7 +110,8 @@ export class MatRipple implements OnInit, OnDestroy, RippleTarget {
     this._trigger = trigger;
     this._setupTriggerEventsIfEnabled();
   }
-  private _trigger: HTMLElement;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _trigger!: HTMLElement;
 
   /** Renderer for the ripple DOM manipulations. */
   private _rippleRenderer: RippleRenderer;

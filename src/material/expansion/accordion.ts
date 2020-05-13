@@ -39,14 +39,16 @@ import {MatExpansionPanelHeader} from './expansion-panel-header';
   }
 })
 export class MatAccordion extends CdkAccordion implements MatAccordionBase, AfterContentInit {
-  private _keyManager: FocusKeyManager<MatExpansionPanelHeader>;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _keyManager!: FocusKeyManager<MatExpansionPanelHeader>;
 
   /** Headers belonging to this accordion. */
   private _ownHeaders = new QueryList<MatExpansionPanelHeader>();
 
   /** All headers inside the accordion. Includes headers inside nested accordions. */
+  // TODO(issue/13329): Attempt to remove "!".
   @ContentChildren(MatExpansionPanelHeader, {descendants: true})
-  _headers: QueryList<MatExpansionPanelHeader>;
+  _headers!: QueryList<MatExpansionPanelHeader>;
 
   /** Whether the expansion indicator should be hidden. */
   @Input()

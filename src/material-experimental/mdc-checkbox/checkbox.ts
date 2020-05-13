@@ -46,9 +46,11 @@ export const MAT_CHECKBOX_CONTROL_VALUE_ACCESSOR: any = {
 /** Change event object emitted by MatCheckbox. */
 export class MatCheckboxChange {
   /** The source MatCheckbox of the event. */
-  source: MatCheckbox;
+  // TODO(issue/13329): Attempt to remove "!".
+  source!: MatCheckbox;
   /** The new `checked` value of the checkbox. */
-  checked: boolean;
+  // TODO(issue/13329): Attempt to remove "!".
+  checked!: boolean;
 }
 
 /** Configuration for the ripple animation. */
@@ -99,7 +101,8 @@ export class MatCheckbox implements AfterViewInit, OnDestroy, ControlValueAccess
   @Input() tabIndex: number;
 
   /** The `value` attribute to use for the input element */
-  @Input() value: string;
+  // TODO(issue/13329): Attempt to remove "!".
+  @Input() value!: string;
 
   private _uniqueId = `mat-mdc-checkbox-${++nextUniqueId}`;
 
@@ -170,13 +173,16 @@ export class MatCheckbox implements AfterViewInit, OnDestroy, ControlValueAccess
   @Output() readonly indeterminateChange: EventEmitter<boolean> = new EventEmitter<boolean>();
 
   /** The root element for the `MDCCheckbox`. */
-  @ViewChild('checkbox') _checkbox: ElementRef<HTMLElement>;
+  // TODO(issue/13329): Attempt to remove "!".
+  @ViewChild('checkbox') _checkbox!: ElementRef<HTMLElement>;
 
   /** The native input element. */
-  @ViewChild('nativeCheckbox') _nativeCheckbox: ElementRef<HTMLInputElement>;
+  // TODO(issue/13329): Attempt to remove "!".
+  @ViewChild('nativeCheckbox') _nativeCheckbox!: ElementRef<HTMLInputElement>;
 
   /** The native label element. */
-  @ViewChild('label') _label: ElementRef<HTMLElement>;
+  // TODO(issue/13329): Attempt to remove "!".
+  @ViewChild('label') _label!: ElementRef<HTMLElement>;
 
   /** Returns the unique id for the visual hidden input. */
   get inputId(): string {

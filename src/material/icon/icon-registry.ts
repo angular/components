@@ -79,8 +79,10 @@ export interface IconOptions {
  * @docs-private
  */
 class SvgIconConfig {
-  url: SafeResourceUrl | null;
-  svgElement: SVGElement | null;
+  // TODO(issue/13329): Attempt to remove "!".
+  url!: SafeResourceUrl | null;
+  // TODO(issue/13329): Attempt to remove "!".
+  svgElement!: SVGElement | null;
 
   constructor(url: SafeResourceUrl, options?: IconOptions);
   constructor(svgElement: SVGElement, options?: IconOptions);

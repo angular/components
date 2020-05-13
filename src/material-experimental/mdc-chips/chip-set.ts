@@ -65,13 +65,16 @@ const _MatChipSetMixinBase: HasTabIndexCtor & typeof MatChipSetBase =
 export class MatChipSet extends _MatChipSetMixinBase implements AfterContentInit, AfterViewInit,
   HasTabIndex, OnDestroy {
   /** Subscription to remove changes in chips. */
-  private _chipRemoveSubscription: Subscription | null;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _chipRemoveSubscription!: Subscription | null;
 
   /** Subscription to destroyed events in chips. */
-  private _chipDestroyedSubscription: Subscription | null;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _chipDestroyedSubscription!: Subscription | null;
 
   /** Subscription to chip interactions. */
-  private _chipInteractionSubscription: Subscription | null;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _chipInteractionSubscription!: Subscription | null;
 
   /**
    * When a chip is destroyed, we store the index of the destroyed chip until the chips
@@ -108,7 +111,8 @@ export class MatChipSet extends _MatChipSetMixinBase implements AfterContentInit
   };
 
   /** The aria-describedby attribute on the chip list for improved a11y. */
-  _ariaDescribedby: string;
+  // TODO(issue/13329): Attempt to remove "!".
+  _ariaDescribedby!: string;
 
   /** Uid of the chip set */
   _uid: string = `mat-mdc-chip-set-${uid++}`;
@@ -153,11 +157,12 @@ export class MatChipSet extends _MatChipSetMixinBase implements AfterContentInit
   }
 
   /** The chips that are part of this chip set. */
+  // TODO(issue/13329): Attempt to remove "!".
   @ContentChildren(MatChip, {
     // We need to use `descendants: true`, because Ivy will no longer match
     // indirect descendants if it's left as false.
     descendants: true
-  }) _chips: QueryList<MatChip>;
+  }) _chips!: QueryList<MatChip>;
 
   constructor(protected _elementRef: ElementRef,
               protected _changeDetectorRef: ChangeDetectorRef,

@@ -85,7 +85,8 @@ export class MatMultiYearView<D> implements AfterContentInit, OnDestroy {
 
     this._setSelectedYear(value);
   }
-  private _selected: DateRange<D> | D | null;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _selected!: DateRange<D> | D | null;
 
 
   /** The minimum selectable date. */
@@ -94,7 +95,8 @@ export class MatMultiYearView<D> implements AfterContentInit, OnDestroy {
   set minDate(value: D | null) {
     this._minDate = this._getValidDateOrNull(this._dateAdapter.deserialize(value));
   }
-  private _minDate: D | null;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _minDate!: D | null;
 
   /** The maximum selectable date. */
   @Input()
@@ -102,10 +104,12 @@ export class MatMultiYearView<D> implements AfterContentInit, OnDestroy {
   set maxDate(value: D | null) {
     this._maxDate = this._getValidDateOrNull(this._dateAdapter.deserialize(value));
   }
-  private _maxDate: D | null;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _maxDate!: D | null;
 
   /** A function used to filter which dates are selectable. */
-  @Input() dateFilter: (date: D) => boolean;
+  // TODO(issue/13329): Attempt to remove "!".
+  @Input() dateFilter!: (date: D) => boolean;
 
   /** Emits when a new year is selected. */
   @Output() readonly selectedChange: EventEmitter<D> = new EventEmitter<D>();
@@ -117,16 +121,20 @@ export class MatMultiYearView<D> implements AfterContentInit, OnDestroy {
   @Output() readonly activeDateChange: EventEmitter<D> = new EventEmitter<D>();
 
   /** The body of calendar table */
-  @ViewChild(MatCalendarBody) _matCalendarBody: MatCalendarBody;
+  // TODO(issue/13329): Attempt to remove "!".
+  @ViewChild(MatCalendarBody) _matCalendarBody!: MatCalendarBody;
 
   /** Grid of calendar cells representing the currently displayed years. */
-  _years: MatCalendarCell[][];
+  // TODO(issue/13329): Attempt to remove "!".
+  _years!: MatCalendarCell[][];
 
   /** The year that today falls on. */
-  _todayYear: number;
+  // TODO(issue/13329): Attempt to remove "!".
+  _todayYear!: number;
 
   /** The year of the selected date. Null if the selected date is null. */
-  _selectedYear: number | null;
+  // TODO(issue/13329): Attempt to remove "!".
+  _selectedYear!: number | null;
 
   constructor(private _changeDetectorRef: ChangeDetectorRef,
               @Optional() public _dateAdapter: DateAdapter<D>,

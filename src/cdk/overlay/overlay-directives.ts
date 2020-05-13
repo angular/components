@@ -103,7 +103,8 @@ export class CdkOverlayOrigin {
   exportAs: 'cdkConnectedOverlay'
 })
 export class CdkConnectedOverlay implements OnDestroy, OnChanges {
-  private _overlayRef: OverlayRef;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _overlayRef!: OverlayRef;
   private _templatePortal: TemplatePortal;
   private _hasBackdrop = false;
   private _lockPosition = false;
@@ -111,22 +112,28 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
   private _flexibleDimensions = false;
   private _push = false;
   private _backdropSubscription = Subscription.EMPTY;
-  private _offsetX: number;
-  private _offsetY: number;
-  private _position: FlexibleConnectedPositionStrategy;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _offsetX!: number;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _offsetY!: number;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _position!: FlexibleConnectedPositionStrategy;
   private _scrollStrategyFactory: () => ScrollStrategy;
 
   /** Origin for the connected overlay. */
-  @Input('cdkConnectedOverlayOrigin') origin: CdkOverlayOrigin;
+  // TODO(issue/13329): Attempt to remove "!".
+  @Input('cdkConnectedOverlayOrigin') origin!: CdkOverlayOrigin;
 
   /** Registered connected position pairs. */
-  @Input('cdkConnectedOverlayPositions') positions: ConnectedPosition[];
+  // TODO(issue/13329): Attempt to remove "!".
+  @Input('cdkConnectedOverlayPositions') positions!: ConnectedPosition[];
 
   /**
    * This input overrides the positions input if specified. It lets users pass
    * in arbitrary positioning strategies.
    */
-  @Input('cdkConnectedOverlayPositionStrategy') positionStrategy: FlexibleConnectedPositionStrategy;
+  // TODO(issue/13329): Attempt to remove "!".
+  @Input('cdkConnectedOverlayPositionStrategy') positionStrategy!: FlexibleConnectedPositionStrategy;
 
   /** The offset in pixels for the overlay connection point on the x-axis */
   @Input('cdkConnectedOverlayOffsetX')
@@ -151,22 +158,28 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
   }
 
   /** The width of the overlay panel. */
-  @Input('cdkConnectedOverlayWidth') width: number | string;
+  // TODO(issue/13329): Attempt to remove "!".
+  @Input('cdkConnectedOverlayWidth') width!: number | string;
 
   /** The height of the overlay panel. */
-  @Input('cdkConnectedOverlayHeight') height: number | string;
+  // TODO(issue/13329): Attempt to remove "!".
+  @Input('cdkConnectedOverlayHeight') height!: number | string;
 
   /** The min width of the overlay panel. */
-  @Input('cdkConnectedOverlayMinWidth') minWidth: number | string;
+  // TODO(issue/13329): Attempt to remove "!".
+  @Input('cdkConnectedOverlayMinWidth') minWidth!: number | string;
 
   /** The min height of the overlay panel. */
-  @Input('cdkConnectedOverlayMinHeight') minHeight: number | string;
+  // TODO(issue/13329): Attempt to remove "!".
+  @Input('cdkConnectedOverlayMinHeight') minHeight!: number | string;
 
   /** The custom class to be set on the backdrop element. */
-  @Input('cdkConnectedOverlayBackdropClass') backdropClass: string;
+  // TODO(issue/13329): Attempt to remove "!".
+  @Input('cdkConnectedOverlayBackdropClass') backdropClass!: string;
 
   /** The custom class to add to the overlay pane element. */
-  @Input('cdkConnectedOverlayPanelClass') panelClass: string | string[];
+  // TODO(issue/13329): Attempt to remove "!".
+  @Input('cdkConnectedOverlayPanelClass') panelClass!: string | string[];
 
   /** Margin between the overlay and the viewport edges. */
   @Input('cdkConnectedOverlayViewportMargin') viewportMargin: number = 0;
@@ -178,7 +191,8 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
   @Input('cdkConnectedOverlayOpen') open: boolean = false;
 
   /** CSS selector which to set the transform origin. */
-  @Input('cdkConnectedOverlayTransformOriginOn') transformOriginSelector: string;
+  // TODO(issue/13329): Attempt to remove "!".
+  @Input('cdkConnectedOverlayTransformOriginOn') transformOriginSelector!: string;
 
   /** Whether or not the overlay should attach a backdrop. */
   @Input('cdkConnectedOverlayHasBackdrop')

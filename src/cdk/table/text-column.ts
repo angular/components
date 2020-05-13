@@ -76,7 +76,8 @@ export class CdkTextColumn<T> implements OnDestroy, OnInit {
    * Text label that should be used for the column header. If this property is not
    * set, the header text will default to the column name with its first letter capitalized.
    */
-  @Input() headerText: string;
+  // TODO(issue/13329): Attempt to remove "!".
+  @Input() headerText!: string;
 
   /**
    * Accessor function to retrieve the data rendered for each cell. If this
@@ -84,7 +85,8 @@ export class CdkTextColumn<T> implements OnDestroy, OnInit {
    * the column's name. For example, if the column is named `id`, then the rendered value will be
    * value defined by the data's `id` property.
    */
-  @Input() dataAccessor: (data: T, name: string) => string;
+  // TODO(issue/13329): Attempt to remove "!".
+  @Input() dataAccessor!: (data: T, name: string) => string;
 
   /** Alignment of the cell values. */
   @Input() justify: 'start'|'end' = 'start';

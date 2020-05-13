@@ -128,19 +128,26 @@ const FLOATING_LABEL_DEFAULT_DOCKED_TRANSFORM = `translateY(-50%)`;
 })
 export class MatFormField implements AfterViewInit, OnDestroy, AfterContentChecked,
     AfterContentInit {
-  @ViewChild('textField') _textField: ElementRef<HTMLElement>;
-  @ViewChild('prefixContainer') _prefixContainer: ElementRef<HTMLElement>;
+  // TODO(issue/13329): Attempt to remove "!".
+  @ViewChild('textField') _textField!: ElementRef<HTMLElement>;
+  // TODO(issue/13329): Attempt to remove "!".
+  @ViewChild('prefixContainer') _prefixContainer!: ElementRef<HTMLElement>;
   @ViewChild(MatFormFieldFloatingLabel) _floatingLabel: MatFormFieldFloatingLabel|undefined;
   @ViewChild(MatFormFieldNotchedOutline) _notchedOutline: MatFormFieldNotchedOutline|undefined;
   @ViewChild(MatFormFieldLineRipple) _lineRipple: MatFormFieldLineRipple|undefined;
 
   @ContentChild(MatLabel) _labelChildNonStatic: MatLabel|undefined;
   @ContentChild(MatLabel, {static: true}) _labelChildStatic: MatLabel|undefined;
-  @ContentChild(MatFormFieldControl) _formFieldControl: MatFormFieldControl<any>;
-  @ContentChildren(MatPrefix, {descendants: true}) _prefixChildren: QueryList<MatPrefix>;
-  @ContentChildren(MatSuffix, {descendants: true}) _suffixChildren: QueryList<MatSuffix>;
-  @ContentChildren(MatError, {descendants: true}) _errorChildren: QueryList<MatError>;
-  @ContentChildren(MatHint, {descendants: true}) _hintChildren: QueryList<MatHint>;
+  // TODO(issue/13329): Attempt to remove "!".
+  @ContentChild(MatFormFieldControl) _formFieldControl!: MatFormFieldControl<any>;
+  // TODO(issue/13329): Attempt to remove "!".
+  @ContentChildren(MatPrefix, {descendants: true}) _prefixChildren!: QueryList<MatPrefix>;
+  // TODO(issue/13329): Attempt to remove "!".
+  @ContentChildren(MatSuffix, {descendants: true}) _suffixChildren!: QueryList<MatSuffix>;
+  // TODO(issue/13329): Attempt to remove "!".
+  @ContentChildren(MatError, {descendants: true}) _errorChildren!: QueryList<MatError>;
+  // TODO(issue/13329): Attempt to remove "!".
+  @ContentChildren(MatHint, {descendants: true}) _hintChildren!: QueryList<MatHint>;
 
   /** Whether the required marker should be hidden. */
   @Input() hideRequiredMarker: boolean = false;
@@ -164,7 +171,8 @@ export class MatFormField implements AfterViewInit, OnDestroy, AfterContentCheck
       this._changeDetectorRef.markForCheck();
     }
   }
-  private _floatLabel: FloatLabelType;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _floatLabel!: FloatLabelType;
 
   /** The form-field appearance style. */
   @Input()
@@ -200,7 +208,8 @@ export class MatFormField implements AfterViewInit, OnDestroy, AfterContentCheck
   _subscriptAnimationState = '';
 
   /** Width of the outline notch. */
-  _outlineNotchWidth: number;
+  // TODO(issue/13329): Attempt to remove "!".
+  _outlineNotchWidth!: number;
 
   /** Gets the current form field control */
   get _control(): MatFormFieldControl<any> {
@@ -210,8 +219,10 @@ export class MatFormField implements AfterViewInit, OnDestroy, AfterContentCheck
 
   private _destroyed = new Subject<void>();
   private _isFocused: boolean|null = null;
-  private _explicitFormFieldControl: MatFormFieldControl<any>;
-  private _foundation: MDCTextFieldFoundation;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _explicitFormFieldControl!: MatFormFieldControl<any>;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _foundation!: MDCTextFieldFoundation;
   private _needsOutlineLabelOffsetUpdateOnStable = false;
   private _adapter: MDCTextFieldAdapter = {
     addClass: className => this._textField.nativeElement.classList.add(className),

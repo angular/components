@@ -60,7 +60,8 @@ export class MatTabBodyPortal extends BaseMatTabBodyPortal {
   },
 })
 export class MatTabBody extends _MatTabBodyBase {
-  @ViewChild(PortalHostDirective) _portalHost: PortalHostDirective;
+  // TODO(issue/13329): Attempt to remove "!".
+  @ViewChild(PortalHostDirective) _portalHost!: PortalHostDirective;
 
   constructor(elementRef: ElementRef<HTMLElement>,
     @Optional() dir: Directionality,

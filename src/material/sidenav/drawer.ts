@@ -138,7 +138,8 @@ export class MatDrawerContent extends CdkScrollable implements AfterContentInit 
   encapsulation: ViewEncapsulation.None,
 })
 export class MatDrawer implements AfterContentInit, AfterContentChecked, OnDestroy {
-  private _focusTrap: FocusTrap;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _focusTrap!: FocusTrap;
   private _elementFocusedBeforeDrawerWasOpened: HTMLElement | null = null;
 
   /** Whether the drawer is initialized. Used for disabling the initial animation. */
@@ -200,7 +201,8 @@ export class MatDrawer implements AfterContentInit, AfterContentChecked, OnDestr
   private _opened: boolean = false;
 
   /** How the sidenav was opened (keypress, mouse click etc.) */
-  private _openedVia: FocusOrigin | null;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _openedVia!: FocusOrigin | null;
 
   /** Emits whenever the drawer has started animating. */
   _animationStarted = new Subject<AnimationEvent>();
@@ -496,13 +498,16 @@ export class MatDrawerContainer implements AfterContentInit, DoCheck, OnDestroy 
     // indirect descendants if it's left as false.
     descendants: true
   })
-  _allDrawers: QueryList<MatDrawer>;
+  // TODO(issue/13329): Attempt to remove "!".
+  _allDrawers!: QueryList<MatDrawer>;
 
   /** Drawers that belong to this container. */
   _drawers = new QueryList<MatDrawer>();
 
-  @ContentChild(MatDrawerContent) _content: MatDrawerContent;
-  @ViewChild(MatDrawerContent) _userContent: MatDrawerContent;
+  // TODO(issue/13329): Attempt to remove "!".
+  @ContentChild(MatDrawerContent) _content!: MatDrawerContent;
+  // TODO(issue/13329): Attempt to remove "!".
+  @ViewChild(MatDrawerContent) _userContent!: MatDrawerContent;
 
   /** The drawer child with the `start` position. */
   get start(): MatDrawer | null { return this._start; }
@@ -539,14 +544,17 @@ export class MatDrawerContainer implements AfterContentInit, DoCheck, OnDestroy 
   set hasBackdrop(value: any) {
     this._backdropOverride = value == null ? null : coerceBooleanProperty(value);
   }
-  _backdropOverride: boolean | null;
+  // TODO(issue/13329): Attempt to remove "!".
+  _backdropOverride!: boolean | null;
 
   /** Event emitted when the drawer backdrop is clicked. */
   @Output() readonly backdropClick: EventEmitter<void> = new EventEmitter<void>();
 
   /** The drawer at the start/end position, independent of direction. */
-  private _start: MatDrawer | null;
-  private _end: MatDrawer | null;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _start!: MatDrawer | null;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _end!: MatDrawer | null;
 
   /**
    * The drawer at the left/right. When direction changes, these will change as well.
@@ -554,8 +562,10 @@ export class MatDrawerContainer implements AfterContentInit, DoCheck, OnDestroy 
    * In LTR, _left == _start and _right == _end.
    * In RTL, _left == _end and _right == _start.
    */
-  private _left: MatDrawer | null;
-  private _right: MatDrawer | null;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _left!: MatDrawer | null;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _right!: MatDrawer | null;
 
   /** Emits when the component is destroyed. */
   private readonly _destroyed = new Subject<void>();

@@ -151,7 +151,8 @@ export class MatIcon extends _MatIconMixinBase implements OnChanges, OnInit, Aft
   private _inline: boolean = false;
 
   /** Name of the icon in the SVG icon set. */
-  @Input() svgIcon: string;
+  // TODO(issue/13329): Attempt to remove "!".
+  @Input() svgIcon!: string;
 
   /** Font set that the icon is a part of. */
   @Input()
@@ -159,7 +160,8 @@ export class MatIcon extends _MatIconMixinBase implements OnChanges, OnInit, Aft
   set fontSet(value: string) {
     this._fontSet = this._cleanupFontValue(value);
   }
-  private _fontSet: string;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _fontSet!: string;
 
   /** Name of an icon within a font set. */
   @Input()
@@ -167,10 +169,13 @@ export class MatIcon extends _MatIconMixinBase implements OnChanges, OnInit, Aft
   set fontIcon(value: string) {
     this._fontIcon = this._cleanupFontValue(value);
   }
-  private _fontIcon: string;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _fontIcon!: string;
 
-  private _previousFontSetClass: string;
-  private _previousFontIconClass: string;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _previousFontSetClass!: string;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _previousFontIconClass!: string;
 
   /** Keeps track of the current page path. */
   private _previousPath?: string;

@@ -46,8 +46,10 @@ export class CdkTextareaAutosize implements AfterViewInit, DoCheck, OnDestroy {
   private _initialHeight: string | undefined;
   private readonly _destroyed = new Subject<void>();
 
-  private _minRows: number;
-  private _maxRows: number;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _minRows!: number;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _maxRows!: number;
   private _enabled: boolean = true;
 
   /**
@@ -89,7 +91,8 @@ export class CdkTextareaAutosize implements AfterViewInit, DoCheck, OnDestroy {
   }
 
   /** Cached height of a textarea with a single row. */
-  private _cachedLineHeight: number;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _cachedLineHeight!: number;
 
   /** Used to reference correct document/window */
   protected _document?: Document;

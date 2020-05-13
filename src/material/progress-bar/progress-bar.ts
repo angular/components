@@ -143,7 +143,8 @@ export class MatProgressBar extends _MatProgressBarMixinBase implements CanColor
   set bufferValue(v: number) { this._bufferValue = clamp(v || 0); }
   private _bufferValue: number = 0;
 
-  @ViewChild('primaryValueBar') _primaryValueBar: ElementRef;
+  // TODO(issue/13329): Attempt to remove "!".
+  @ViewChild('primaryValueBar') _primaryValueBar!: ElementRef;
 
   /**
    * Event emitted when animation of the primary progress bar completes. This event will not

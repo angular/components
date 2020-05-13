@@ -112,13 +112,15 @@ export class MatTabBodyPortal extends CdkPortalOutlet implements OnInit, OnDestr
 // tslint:disable-next-line:class-name
 export abstract class _MatTabBodyBase implements OnInit, OnDestroy {
   /** Current position of the tab-body in the tab-group. Zero means that the tab is visible. */
-  private _positionIndex: number;
+  // TODO(issue/13329): Attempt to remove "!".
+  private _positionIndex!: number;
 
   /** Subscription to the directionality change observable. */
   private _dirChangeSubscription = Subscription.EMPTY;
 
   /** Tab body position state. Used by the animation trigger for the current state. */
-  _position: MatTabBodyPositionState;
+  // TODO(issue/13329): Attempt to remove "!".
+  _position!: MatTabBodyPositionState;
 
   /** Emits when an animation on the tab is complete. */
   _translateTabComplete = new Subject<AnimationEvent>();
@@ -139,10 +141,12 @@ export abstract class _MatTabBodyBase implements OnInit, OnDestroy {
   abstract _portalHost: PortalHostDirective;
 
   /** The tab body content to display. */
-  @Input('content') _content: TemplatePortal;
+  // TODO(issue/13329): Attempt to remove "!".
+  @Input('content') _content!: TemplatePortal;
 
   /** Position that will be used when the tab is immediately becoming visible after creation. */
-  @Input() origin: number | null;
+  // TODO(issue/13329): Attempt to remove "!".
+  @Input() origin!: number | null;
 
   // Note that the default value will always be overwritten by `MatTabBody`, but we need one
   // anyway to prevent the animations module from throwing an error if the body is used on its own.
@@ -261,7 +265,8 @@ export abstract class _MatTabBodyBase implements OnInit, OnDestroy {
   }
 })
 export class MatTabBody extends _MatTabBodyBase {
-  @ViewChild(PortalHostDirective) _portalHost: PortalHostDirective;
+  // TODO(issue/13329): Attempt to remove "!".
+  @ViewChild(PortalHostDirective) _portalHost!: PortalHostDirective;
 
   constructor(elementRef: ElementRef<HTMLElement>,
               @Optional() dir: Directionality,
