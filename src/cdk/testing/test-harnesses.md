@@ -139,7 +139,7 @@ are used to create `ComponentHarness` instances for elements under this root ele
 Calls to `getHarness` and `getAllHarnesses` can either take `ComponentHarness` subclass or a 
 `HarnessPredicate`. `HarnessPredicate` applies additional restrictions to the search (e.g. searching
 for a button that has some particular text, etc). The
-[details of `HarnessPredicate`](#filtering-harness-instances-with-harnesspredicate) are discussed in
+[details of `HarnessPredicate`](#filtering-harness-instances-with-code-harnesspredicate-code-) are discussed in
 the [API for component harness authors](#api-for-component-harness-authors); harness authors should
 provide convenience methods on their `ComponentHarness` subclass to facilitate the creation of
 `HarnessPredicate` instances. However, if the harness author's API is not sufficient, they can be
@@ -216,7 +216,7 @@ class MyPopupHarness extends ComponentHarness {
 
 While `ComponentHarness` subclasses require only the `hostSelector` property, most harnesses should
 also implement a static `with` method to generate `HarnessPredicate` instances. The
-[`HarnessPredicate`](#filtering-harness-instances-with-harnesspredicate) section below covers this
+[`HarnessPredicate`](#filtering-harness-instances-with-code-harnesspredicate-code-) section below covers this
 in more detail.
 
 #### Finding elements in the component's DOM
