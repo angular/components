@@ -9,6 +9,8 @@ ts_library(
     tsconfig = ":tsconfig.json",
     deps = [
         "@npm//@types/node",
+        "@npm//@types/fs-extra",
+        "//tools/region-parser"
     ],
 )
 
@@ -16,6 +18,7 @@ nodejs_binary(
     name = "highlight-files",
     data = [
         ":sources",
+        "@npm//fs-extra",
         "@npm//highlight.js",
     ],
     entry_point = ":highlight-files.ts",
