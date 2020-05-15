@@ -35,32 +35,30 @@ if (require.main === module) {
 
     // Walk through each input file and write transformed markdown output
     // to the specified output directory.
-    inputFiles.forEach(execPath => {
+    for (const execPath of inputFiles) {
         // Compute a relative path from the package to the actual input file.
         // e.g `src/components-examples/cdk/<..>/example.ts` becomes `cdk/<..>/example.ts`.
         const basePath = relative(packageName, execPath);
         const fileExtension = extname(basePath).substring(1);
         const parsed = regionParser(readFileSync(execPath, 'utf8'), fileExtension);
-        for (let region in parsed['regions']) {
-            if (region) {
-                const highlightedCodeSnippet = highlightCodeBlock(parsed['regions'][region],
-                  fileExtension);
-                // Convert "my-component-example.ts" into "my-component-example_region-ts.html"
-                const basePathOutputPath = basePath.replace(`.${fileExtension}`,
-                  `_${region}-${fileExtension}.html`);
-                const outputPath = join(outDir, basePathOutputPath);
-                ensureDirSync(dirname(outputPath));
-                writeFileSync(outputPath, highlightedCodeSnippet);
-            }
+        for (const [regionName, regionSnippet] of Object.entries(parsed.regions)) {
+            // Create files for each found region
+            if (!regionName) continue;
+            const highlightedCodeSnippet = highlightCodeBlock(regionSnippet, fileExtension);
+            // Convert "my-component-example.ts" into "my-component-example_region-ts.html"
+            const basePathOutputPath = basePath.replace(`.${fileExtension}`,
+              `_${regionName}-${fileExtension}.html`);
+            const outputPath = join(outDir, basePathOutputPath);
+            ensureDirSync(dirname(outputPath));
+            writeFileSync(outputPath, highlightedCodeSnippet);
         }
         // Convert "my-component-example.ts" into "my-component-example-ts.html"
         const baseOutputPath = basePath.replace(`.${fileExtension}`, `-${fileExtension}.html`);
         const outputPath = join(outDir, baseOutputPath);
-        const htmlOutput = highlightCodeBlock(parsed['contents'], fileExtension);
+        const htmlOutput = highlightCodeBlock(parsed.contents, fileExtension);
 
         ensureDirSync(dirname(outputPath));
         writeFileSync(outputPath, htmlOutput);
-
-    });
+    }
 
 }
