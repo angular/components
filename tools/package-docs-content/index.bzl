@@ -13,14 +13,11 @@ def _package_docs_content(ctx):
     # repeat `docs-content` is for
     output_dir = ctx.actions.declare_directory("%s/%s" % (ctx.attr.name, ctx.attr.name))
 
-
-
     # Support passing arguments through a parameter file. This is necessary because on Windows
     # there is an argument limit and we need to handle a large amount of input files. Bazel
     # switches between parameter file and normal argument passing based on the operating system.
     # Read more here: https://docs.bazel.build/versions/master/skylark/lib/Args.html#use_param_file
     args.use_param_file(param_file_arg = "--param-file=%s", use_always = True)
-
 
     # Walk through each defined input target and the associated section and compute the
     # output file which will be added to the executable arguments.
@@ -43,8 +40,6 @@ def _package_docs_content(ctx):
                 expected_out_path = "%s/%s/%s" % (output_dir.path, section_name, section_relative_file_name)
             else:
                 expected_out_path = "%s/%s" % (output_dir.path, section_relative_file_name)
-
-
 
             # Pass the input file path and the output file path to the packager executable. We need
             # to do this for each file because we cannot determine the general path to the output

@@ -7,7 +7,7 @@ nodejs_binary(
     name = "package-docs-content",
     data = [
         ":sources",
-        "@npm//fs-extra"
+        "@npm//fs-extra",
     ],
     entry_point = ":package-docs-content.ts",
 )
@@ -17,7 +17,7 @@ ts_library(
     srcs = glob(["**/*.ts"]),
     tsconfig = ":tsconfig.json",
     deps = [
-        "@npm//@types/node",
         "@npm//@types/fs-extra",
+        "@npm//@types/node",
     ],
 )

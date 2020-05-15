@@ -8,9 +8,9 @@ ts_library(
     srcs = glob(["**/*.ts"]),
     tsconfig = ":tsconfig.json",
     deps = [
-        "@npm//@types/node",
+        "//tools/region-parser",
         "@npm//@types/fs-extra",
-        "//tools/region-parser"
+        "@npm//@types/node",
     ],
 )
 

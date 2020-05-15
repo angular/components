@@ -43,14 +43,14 @@ if (require.main === module) {
         const parsed = regionParser(readFileSync(execPath, 'utf8'), fileExtension);
         for (const [regionName, regionSnippet] of Object.entries(parsed.regions)) {
             // Create files for each found region
-            if (!regionName) continue;
-            const highlightedCodeSnippet = highlightCodeBlock(regionSnippet, fileExtension);
+            if (!regionName) { continue; }
+            const highlightedRegion = highlightCodeBlock(regionSnippet, fileExtension);
             // Convert "my-component-example.ts" into "my-component-example_region-ts.html"
-            const basePathOutputPath = basePath.replace(`.${fileExtension}`,
+            const regionBaseOutputPath = basePath.replace(`.${fileExtension}`,
               `_${regionName}-${fileExtension}.html`);
-            const outputPath = join(outDir, basePathOutputPath);
-            ensureDirSync(dirname(outputPath));
-            writeFileSync(outputPath, highlightedCodeSnippet);
+            const regionOutputPath = join(outDir, regionBaseOutputPath);
+            ensureDirSync(dirname(regionOutputPath));
+            writeFileSync(regionOutputPath, highlightedRegion);
         }
         // Convert "my-component-example.ts" into "my-component-example-ts.html"
         const baseOutputPath = basePath.replace(`.${fileExtension}`, `-${fileExtension}.html`);

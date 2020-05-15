@@ -30,7 +30,6 @@ def _highlight_files(ctx):
     # be processed by the highlight binary.
     args.add_all(input_files)
 
-
     # Run the highlight-files executable that highlights the specified source files.
     ctx.actions.run(
         inputs = input_files,
