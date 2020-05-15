@@ -8,7 +8,7 @@ of the text input to be when that option is selected.
 
 <!-- example({"example":"autocomplete-simple",
               "file":"autocomplete-simple-example.html", 
-              "lines":[8, 13]}) -->
+              "region":"mat-autocomplete"}) -->
 
 Next, create the input and set the `matAutocomplete` input to refer to the template reference we assigned 
 to the autocomplete. Let's assume you're using the `formControl` directive from `ReactiveFormsModule` to 
@@ -20,9 +20,13 @@ example, be sure to import `ReactiveFormsModule` from `@angular/forms` into your
 If you are unfamiliar with using reactive forms, you can read more about the subject in the
 [Angular documentation](https://angular.io/guide/reactive-forms).
 
+Now we'll need to link the text input to its panel. We can do this by exporting the autocomplete
+panel instance into a local template variable (here we called it "auto"), and binding that variable
+to the input's `matAutocomplete` property.
+
 <!-- example({"example":"autocomplete-simple",
               "file":"autocomplete-simple-example.html", 
-              "lines":[2, 8]}) -->
+              "region":"input"}) -->
 
 ### Adding a custom filter
 
@@ -105,7 +109,7 @@ autocomplete is attached to using the `matAutocompleteOrigin` directive together
 `mat-option` can be collected into groups using the `mat-optgroup` element:
 <!-- example({"example":"autocomplete-optgroup",
               "file":"autocomplete-optgroup-example.html", 
-              "lines":[8, 15]}) -->
+              "region":"mat-autocomplete"}) -->
 
 ### Accessibility
 The input for an autocomplete without text or labels should be given a meaningful label via

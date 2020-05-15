@@ -12,7 +12,7 @@ There is also an optional datepicker toggle button that gives the user an easy w
 
 <!-- example({"example":"datepicker-overview",
               "file":"datepicker-overview-example.html", 
-              "lines":[2, 5]}) -->
+              "region":"toggle"}) -->
 
 This works exactly the same with an input that is part of an `<mat-form-field>` and the toggle
 can easily be used as a prefix or suffix on the Material input:
