@@ -12,14 +12,9 @@ export * from './checkbox';
 export * from './module';
 
 export {
-  MAT_CHECKBOX_CLICK_ACTION,
   MAT_CHECKBOX_REQUIRED_VALIDATOR,
   MatCheckboxClickAction,
   MatCheckboxRequiredValidator,
   _MatCheckboxRequiredValidatorModule,
-  /**
-   * @deprecated
-   * @breaking-change 9.0.0
-   */
   TransitionCheckState,
 } from '@angular/material/checkbox';

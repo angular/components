@@ -25,11 +25,7 @@ import {
   ViewEncapsulation
 } from '@angular/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
-import {
-  MAT_CHECKBOX_CLICK_ACTION,
-  MAT_CHECKBOX_DEFAULT_OPTIONS,
-  MatCheckboxClickAction, MatCheckboxDefaultOptions
-} from '@angular/material/checkbox';
+import {MAT_CHECKBOX_DEFAULT_OPTIONS, MatCheckboxDefaultOptions} from '@angular/material/checkbox';
 import {ThemePalette, RippleAnimationConfig} from '@angular/material/core';
 import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 import {MDCCheckboxAdapter, MDCCheckboxFoundation} from '@material/checkbox';
@@ -233,12 +229,6 @@ export class MatCheckbox implements AfterViewInit, OnDestroy, ControlValueAccess
   constructor(
       private _changeDetectorRef: ChangeDetectorRef,
       @Attribute('tabindex') tabIndex: string,
-      /**
-       * @deprecated `_clickAction` parameter to be removed, use
-       * `MAT_CHECKBOX_DEFAULT_OPTIONS`
-       * @breaking-change 10.0.0
-       */
-      @Optional() @Inject(MAT_CHECKBOX_CLICK_ACTION) private _clickAction: MatCheckboxClickAction,
       @Optional() @Inject(ANIMATION_MODULE_TYPE) public _animationMode?: string,
       @Optional() @Inject(MAT_CHECKBOX_DEFAULT_OPTIONS)
           private _options?: MatCheckboxDefaultOptions) {
@@ -252,10 +242,6 @@ export class MatCheckbox implements AfterViewInit, OnDestroy, ControlValueAccess
     if (this._options.color) {
       this.color = this._options.color;
     }
-
-    // @breaking-change 10.0.0: Remove this after the `_clickAction` parameter is removed as an
-    // injection parameter.
-    this._clickAction = this._clickAction || this._options.clickAction;
   }
 
   ngAfterViewInit() {
@@ -334,13 +320,15 @@ export class MatCheckbox implements AfterViewInit, OnDestroy, ControlValueAccess
    * state like other browsers do.
    */
   _onClick() {
-    if (this._clickAction === 'noop') {
+    const clickAction = this._options?.clickAction;
+
+    if (clickAction === 'noop') {
       this._nativeCheckbox.nativeElement.checked = this.checked;
       this._nativeCheckbox.nativeElement.indeterminate = this.indeterminate;
       return;
     }
 
-    if (this.indeterminate && this._clickAction !== 'check') {
+    if (this.indeterminate && clickAction !== 'check') {
       this.indeterminate = false;
       // tslint:disable:max-line-length
       // We use `Promise.resolve().then` to ensure the same timing as the original `MatCheckbox`:

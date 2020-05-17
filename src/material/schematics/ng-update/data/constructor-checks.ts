@@ -22,6 +22,10 @@ export const constructorChecks: VersionChanges<ConstructorChecksUpgradeData> = {
     {
       pr: 'https://github.com/angular/components/pull/19379',
       changes: ['MatSlider']
+    },
+    {
+      pr: 'https://github.com/angular/components/pull/19381',
+      changes: ['MatCheckbox']
     }
   ],
   [TargetVersion.V9]: [
