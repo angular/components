@@ -26,11 +26,30 @@ function getBazelActionArguments() {
   return args;
 }
 
+function _detectAndHighlightRegionBlocks(parsed:
+                                           { contents: string, regions: { [p: string]: string } },
+                                         basePath: string,
+                                         outDir: string,
+                                         fileExtension: string) {
+  for (const [regionName, regionSnippet] of Object.entries(parsed.regions)) {
+    // Create files for each found region
+    if (!regionName) {
+      continue;
+    }
+    const highlightedRegion = highlightCodeBlock(regionSnippet, fileExtension);
+    // Convert "my-component-example.ts" into "my-component-example_region-ts.html"
+    const regionBaseOutputPath = basePath.replace(`.${fileExtension}`,
+      `_${regionName}-${fileExtension}.html`);
+    const regionOutputPath = join(outDir, regionBaseOutputPath);
+    ensureDirSync(dirname(regionOutputPath));
+    writeFileSync(regionOutputPath, highlightedRegion);
+  }
+}
+
 if (require.main === module) {
     // The script expects the output directory as first argument. Second is the name of the
     // package where this the highlight target is declared. All remaining arguments will be
     // considered as markdown input files that need to be transformed.
-
     const [outDir, packageName, ...inputFiles] = getBazelActionArguments();
 
     // Walk through each input file and write transformed markdown output
@@ -41,17 +60,7 @@ if (require.main === module) {
         const basePath = relative(packageName, execPath);
         const fileExtension = extname(basePath).substring(1);
         const parsed = regionParser(readFileSync(execPath, 'utf8'), fileExtension);
-        for (const [regionName, regionSnippet] of Object.entries(parsed.regions)) {
-            // Create files for each found region
-            if (!regionName) { continue; }
-            const highlightedRegion = highlightCodeBlock(regionSnippet, fileExtension);
-            // Convert "my-component-example.ts" into "my-component-example_region-ts.html"
-            const regionBaseOutputPath = basePath.replace(`.${fileExtension}`,
-              `_${regionName}-${fileExtension}.html`);
-            const regionOutputPath = join(outDir, regionBaseOutputPath);
-            ensureDirSync(dirname(regionOutputPath));
-            writeFileSync(regionOutputPath, highlightedRegion);
-        }
+        _detectAndHighlightRegionBlocks(parsed, basePath, outDir, fileExtension);
         // Convert "my-component-example.ts" into "my-component-example-ts.html"
         const baseOutputPath = basePath.replace(`.${fileExtension}`, `-${fileExtension}.html`);
         const outputPath = join(outDir, baseOutputPath);

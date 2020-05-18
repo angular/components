@@ -1,5 +1,5 @@
 // These kind of comments are used in HTML
-module.exports = {
+export const html = {
   regionStartMatcher: /^\s*<!--\s*#docregion\s*(.*?)\s*(?:-->)?\s*$/,
   regionEndMatcher: /^\s*<!--\s*#enddocregion\s*(.*?)\s*-->\s*$/,
 };
