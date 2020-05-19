@@ -30,6 +30,7 @@ import {
   QueryList,
   ViewChild,
   ViewEncapsulation,
+  HostBinding,
 } from '@angular/core';
 import {
   CanColor,
@@ -105,6 +106,13 @@ export abstract class _MatTabGroupBase extends _MatTabGroupMixinBase implements 
 
   /** Subscription to changes in the tab labels. */
   private _tabLabelSubscription = Subscription.EMPTY;
+
+   /** Whether the tab group should grow to the size of the active tab. */
+   @Input()
+   @HostBinding('class.mat-stretch-tabs')
+   get stretchTabs(): boolean { return this._stretchTabs; }
+   set stretchTabs(value: boolean) { this._stretchTabs = coerceBooleanProperty(value); }
+   private _stretchTabs: boolean = false;
 
   /** Whether the tab group should grow to the size of the active tab. */
   @Input()
