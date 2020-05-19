@@ -26,11 +26,11 @@ function getBazelActionArguments() {
   return args;
 }
 
-function _detectAndHighlightRegionBlocks(parsed:
-                                           { contents: string, regions: { [p: string]: string } },
-                                         basePath: string,
-                                         outDir: string,
-                                         fileExtension: string) {
+function detectAndHighlightRegionBlocks(parsed:
+                                          { contents: string, regions: { [p: string]: string } },
+                                        basePath: string,
+                                        outDir: string) {
+  const fileExtension = extname(basePath).substring(1);
   for (const [regionName, regionSnippet] of Object.entries(parsed.regions)) {
     // Create files for each found region
     if (!regionName) {
@@ -60,7 +60,7 @@ if (require.main === module) {
         const basePath = relative(packageName, execPath);
         const fileExtension = extname(basePath).substring(1);
         const parsed = regionParser(readFileSync(execPath, 'utf8'), fileExtension);
-        _detectAndHighlightRegionBlocks(parsed, basePath, outDir, fileExtension);
+        detectAndHighlightRegionBlocks(parsed, basePath, outDir);
         // Convert "my-component-example.ts" into "my-component-example-ts.html"
         const baseOutputPath = basePath.replace(`.${fileExtension}`, `-${fileExtension}.html`);
         const outputPath = join(outDir, baseOutputPath);
