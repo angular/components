@@ -24,7 +24,8 @@
   overflow: hidden;  // Keeps the ripple from extending outside the element bounds
   -webkit-tap-highlight-color: transparent;
 
-  [mat-stretch-tabs] & {
+  [mat-stretch-tabs] & ,
+  .mat-stretch-tabs & {
     flex-basis: 0;
     flex-grow: 1;
   }

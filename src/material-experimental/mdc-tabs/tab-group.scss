@@ -13,7 +13,8 @@
 
   // Note that we only want to target direct descendant tabs. Also note that
   // `mat-stretch-tabs` is part of the public API so it should not be changed to `mat-mdc-`.
-  .mat-mdc-tab-group[mat-stretch-tabs] > .mat-mdc-tab-header & {
+  .mat-mdc-tab-group[mat-stretch-tabs] > .mat-mdc-tab-header &
+  ,.mat-mdc-tab-group.mat-stretch-tabs > .mat-mdc-tab-header & {
     flex-grow: 1;
   }
 }
