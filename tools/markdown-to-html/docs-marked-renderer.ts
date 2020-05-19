@@ -55,14 +55,12 @@ export class DocsMarkdownRenderer extends Renderer {
    *    "example": "exampleName",
    *    "file": "example-html.html",
    *    "region": "some-region",
-   *    "expanded": true
    *   }
    *  ) -->`
    *  turns into
    *  `<div material-docs-example="exampleName"
    *        file="example-html.html"
-   *        region="some-region"
-   *        expanded="true"></div>`
+   *        region="some-region"></div>`
    *
    *  (old API)
    *  `<!-- example(name) -->`
@@ -72,11 +70,10 @@ export class DocsMarkdownRenderer extends Renderer {
   html(html: string) {
         html = html.replace(exampleCommentRegex, (_match: string, content: string) => {
               if (content.startsWith('{')) {
-                  const {example, file, region, expanded} = JSON.parse(content);
+                  const {example, file, region} = JSON.parse(content);
                   return `<div material-docs-example="${example}"
                                file="${file}"
-                               region="${region}"
-                               expanded="${!!expanded}"></div>`;
+                               region="${region}"></div>`;
               } else {
                   return `<div material-docs-example="${content}"></div>`;
               }
