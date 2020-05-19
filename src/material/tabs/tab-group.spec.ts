@@ -24,6 +24,7 @@ describe('MatTabGroup', () => {
         TabGroupWithAriaInputs,
         TabGroupWithIsActiveBinding,
         NestedTabs,
+        StretchedTabGroup,
         TabGroupWithIndirectDescendantTabs,
       ],
     });
@@ -636,6 +637,29 @@ describe('MatTabGroup', () => {
     }));
   });
 
+  describe('stretch tabs', () => {
+    let fixture: ComponentFixture<StretchedTabGroup>;
+    let element: HTMLElement;
+
+    beforeEach(() => {
+      fixture = TestBed.createComponent(StretchedTabGroup);
+      fixture.detectChanges();
+      element = fixture.debugElement.query(By.css('mat-tab-group')).nativeElement;
+    });
+
+    it('should add mat-stretch-tabs class when stretchTab is true', (() => {
+      fixture.componentInstance.stretchTab = true;
+      fixture.detectChanges();
+      expect(element.classList.contains('.mat-stretch-tabs')).toBe(false);
+    }));
+
+    it('should remove mat-stretch-tabs class when stretchTab is not true', fakeAsync(() => {
+      fixture.componentInstance.stretchTab = false;
+      fixture.detectChanges();
+      expect(element.classList.contains('.mat-stretch-tabs')).toBe(false);
+    }));
+  });
+
   /**
    * Checks that the `selectedIndex` has been updated; checks that the label and body have their
    * respective `active` classes
@@ -944,4 +968,20 @@ class TabsWithCustomAnimationDuration {}
 })
 class TabGroupWithIndirectDescendantTabs {
   @ViewChild(MatTabGroup) tabGroup: MatTabGroup;
+}
+
+
+@Component({
+  template: `
+    <mat-tab-group [stretchTab]="stretchTab">
+        <mat-tab label="One">Tab one content</mat-tab>
+        <mat-tab label="Two">Tab two content</mat-tab>
+    </mat-tab-group>
+  `,
+})
+class StretchedTabGroup {
+
+  @ViewChild(MatTabGroup) tabGroup: MatTabGroup;
+
+  stretchTab = true;
 }
