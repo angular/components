@@ -973,7 +973,7 @@ class TabGroupWithIndirectDescendantTabs {
 
 @Component({
   template: `
-    <mat-tab-group [stretchTab]="stretchTab">
+    <mat-tab-group [stretchTabs]="stretchTab">
         <mat-tab label="One">Tab one content</mat-tab>
         <mat-tab label="Two">Tab two content</mat-tab>
     </mat-tab-group>
