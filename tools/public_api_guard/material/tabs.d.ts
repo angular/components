@@ -68,6 +68,7 @@ export declare abstract class _MatTabGroupBase extends _MatTabGroupMixinBase imp
     static ngAcceptInputType_disableRipple: BooleanInput;
     static ngAcceptInputType_dynamicHeight: BooleanInput;
     static ngAcceptInputType_selectedIndex: NumberInput;
+    static ngAcceptInputType_stretchTabs: BooleanInput;
     static ɵdir: i0.ɵɵDirectiveDefWithMeta<_MatTabGroupBase, never, never, { "stretchTabs": "stretchTabs"; "dynamicHeight": "dynamicHeight"; "selectedIndex": "selectedIndex"; "headerPosition": "headerPosition"; "animationDuration": "animationDuration"; "disablePagination": "disablePagination"; "backgroundColor": "backgroundColor"; }, { "selectedIndexChange": "selectedIndexChange"; "focusChange": "focusChange"; "animationDone": "animationDone"; "selectedTabChange": "selectedTabChange"; }, never>;
     static ɵfac: i0.ɵɵFactoryDef<_MatTabGroupBase, [null, null, { optional: true; }, { optional: true; }]>;
 }
