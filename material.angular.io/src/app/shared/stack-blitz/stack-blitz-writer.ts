@@ -8,7 +8,7 @@ import {materialVersion} from '../version/version';
 const STACKBLITZ_URL = 'https://run.stackblitz.com/api/angular/v1';
 
 const COPYRIGHT =
-  `Copyright 2019 Google LLC. All Rights Reserved.
+  `Copyright 2020 Google LLC. All Rights Reserved.
     Use of this source code is governed by an MIT-style license that
     can be found in the LICENSE file at http://angular.io/license`;
 
@@ -52,10 +52,10 @@ const dependencies = {
   '@angular/platform-browser': angularVersion,
   '@angular/platform-browser-dynamic': angularVersion,
   '@angular/router': angularVersion,
-  'angular-in-memory-web-api': '~0.10.0',
-  'moment': '^2.24.0',
-  'rxjs': '>=6.5.4 <7.0.0',
-  'tslib': '^1.11.1',
+  'angular-in-memory-web-api': '~0.11.0',
+  'moment': '^2.26.0',
+  'rxjs': '>=6.5.5 <7.0.0',
+  'tslib': '^1.11.2',
   'zone.js': '~0.10.3',
 };
 
