@@ -148,7 +148,7 @@ const DOCS: { [key: string]: DocCategory[] } = {
           name: 'Slide toggle',
           summary: 'Captures boolean values as a clickable and draggable switch.',
           exampleSpecs: {
-            prefix: 'side-toggle-',
+            prefix: 'slide-toggle-',
           },
           additionalApiDocs: [{name: 'Testing', path: 'material-slide-toggle-testing.html'}],
         },
@@ -249,7 +249,7 @@ const DOCS: { [key: string]: DocCategory[] } = {
           name: 'Tabs',
           summary: 'Only presents one view at a time from a provided set of views.',
           exampleSpecs: {
-            prefix: 'tabs-',
+            prefix: 'tab-',
           },
           additionalApiDocs: [{name: 'Testing', path: 'material-tabs-testing.html'}],
         },
