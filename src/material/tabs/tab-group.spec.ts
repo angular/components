@@ -650,13 +650,13 @@ describe('MatTabGroup', () => {
     it('should add mat-stretch-tabs class when stretchTab is true', (() => {
       fixture.componentInstance.stretchTab = true;
       fixture.detectChanges();
-      expect(element.classList.contains('.mat-stretch-tabs')).toBe(true);
+      expect(element.classList.contains('mat-stretch-tabs')).toBe(true);
     }));
 
     it('should remove mat-stretch-tabs class when stretchTab is not true', fakeAsync(() => {
       fixture.componentInstance.stretchTab = false;
       fixture.detectChanges();
-      expect(element.classList.contains('.mat-stretch-tabs')).toBe(false);
+      expect(element.classList.contains('mat-stretch-tabs')).toBe(false);
     }));
   });
 
