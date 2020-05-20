@@ -8,6 +8,7 @@
 @import '@material/typography/variables.import';
 @import '../../material/core/style/layout-common';
 @import '../../material/core/theming/theming';
+@import '../../material/core/theming/check-duplicate-styles';
 @import '../../material/core/typography/typography';
 
 // A set of standard queries to use with MDC's queryable mixins.
@@ -113,11 +114,12 @@ $mat-typography-level-mappings: (
 
 // Configures MDC's global variables to reflect the given theme, applies the given styles,
 // then resets the global variables to prevent unintended side effects.
-@mixin mat-using-mdc-theme($theme) {
-  $primary: mat-color(map-get($theme, primary));
-  $accent: mat-color(map-get($theme, accent));
-  $warn: mat-color(map-get($theme, warn));
-  $background-palette: map-get($theme, background);
+/* stylelint-disable-next-line material/theme-mixin-api */
+@mixin mat-using-mdc-theme($config) {
+  $primary: mat-color(map-get($config, primary));
+  $accent: mat-color(map-get($config, accent));
+  $warn: mat-color(map-get($config, warn));
+  $background-palette: map-get($config, background);
 
   // Save the original values.
   $orig-mdc-theme-primary: $mdc-theme-primary;
@@ -197,6 +199,7 @@ $mat-typography-level-mappings: (
 
 // Configures MDC's global variables to reflect the given typography config,
 // applies the given styles, then resets the global variables to prevent unintended side effects.
+/* stylelint-disable-next-line material/theme-mixin-api */
 @mixin mat-using-mdc-typography($config) {
   // Save the original values.
   $orig-mdc-typography-styles: $mdc-typography-styles;
@@ -211,81 +214,4 @@ $mat-typography-level-mappings: (
 
   // Reset the original values.
   $mdc-typography-styles: $orig-mdc-typography-styles !global;
-}
-
-/// Mixin that turns on strong focus indicators.
-///
-/// @example
-///   .my-app {
-///     @include mat-mdc-strong-focus-indicators();
-///   }
-@mixin mat-mdc-strong-focus-indicators() {
-  // Base styles for the focus indicators.
-  .mat-mdc-focus-indicator::before {
-    @include mat-fill();
-
-    border-radius: $mat-focus-indicator-border-radius;
-    border: $mat-focus-indicator-border-width $mat-focus-indicator-border-style transparent;
-    box-sizing: border-box;
-    pointer-events: none;
-  }
-
-  // By default, all focus indicators are flush with the bounding box of their
-  // host element. For particular elements (listed below), default inset/offset
-  // values are necessary to ensure that the focus indicator is sufficiently
-  // contrastive and renders appropriately.
-
-  .mat-mdc-focus-indicator.mdc-button::before,
-  .mat-mdc-focus-indicator.mdc-chip::before,
-  .mat-mdc-focus-indicator.mdc-fab::before,
-  .mat-mdc-focus-indicator.mdc-icon-button::before {
-    margin: $mat-focus-indicator-border-width * -2;
-  }
-
-  .mat-mdc-focus-indicator.mat-mdc-chip-remove::before,
-  .mat-mdc-focus-indicator.mat-chip-row-focusable-text-content::before {
-    margin: $mat-focus-indicator-border-width * -1;
-  }
-
-  .mat-mdc-focus-indicator.mat-mdc-tab::before,
-  .mat-mdc-focus-indicator.mat-mdc-tab-link::before {
-    margin: $mat-focus-indicator-border-width * 2;
-  }
-
-  // Render the focus indicator on focus. Defining a pseudo element's
-  // content will cause it to render.
-
-  // For checkboxes and slide toggles, render the focus indicator when we know the hidden input
-  // is focused (slightly different for each control).
-  .mdc-checkbox__native-control:focus ~ .mat-mdc-focus-indicator::before,
-  .mat-mdc-slide-toggle-focused .mat-mdc-focus-indicator::before,
-
-  // For all other components, render the focus indicator on focus.
-  .mat-mdc-focus-indicator:focus::before {
-    content: '';
-  }
-}
-
-/// Mixin that sets the color of the focus indicators.
-///
-/// @param {color|map} $themeOrMap
-///   If theme, focus indicators are set to the primary color of the theme. If
-///   color, focus indicators are set to that color.
-///
-/// @example
-///   .demo-dark-theme {
-///     @include mat-mdc-strong-focus-indicators-theme($darkThemeMap);
-///   }
-///
-/// @example
-///   .demo-red-theme {
-///     @include mat-mdc-strong-focus-indicators-theme(#F00);
-///   }
-@mixin mat-mdc-strong-focus-indicators-theme($themeOrColor) {
-  .mat-mdc-focus-indicator::before {
-    border-color: if(
-      type-of($themeOrColor) == 'map',
-      mat-color(map_get($themeOrColor, primary)),
-      $themeOrColor);
-  }
 }

@@ -1,5 +1,3 @@
-package(default_visibility = ["//visibility:public"])
-
 load(
     "//tools:defaults.bzl",
     "markdown_to_html",
@@ -9,6 +7,8 @@ load(
     "sass_binary",
     "sass_library",
 )
+
+package(default_visibility = ["//visibility:public"])
 
 ng_module(
     name = "paginator",
@@ -34,7 +34,9 @@ ng_module(
 sass_library(
     name = "paginator_scss_lib",
     srcs = glob(["**/_*.scss"]),
-    deps = ["//src/material/core:core_scss_lib"],
+    deps = [
+        "//src/material/core:core_scss_lib",
+    ],
 )
 
 sass_binary(

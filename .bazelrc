@@ -21,6 +21,11 @@ test --nolegacy_external_runfiles
 # when running bazel via `yarn bazel`.
 build --incompatible_strict_action_env
 
+# Do not build runfile forests by default. If an execution strategy relies on runfile
+# forests, the forest is created on-demand. See: https://github.com/bazelbuild/bazel/issues/6627
+# and https://github.com/bazelbuild/bazel/commit/03246077f948f2790a83520e7dccc2625650e6df
+build --nobuild_runfile_links
+
 ###############################
 # Output control              #
 ###############################
@@ -76,6 +81,13 @@ build:remote --project_id=internal-200822
 # Needed due to: https://github.com/bazelbuild/bazel/issues/7254
 build:remote --define=EXECUTOR=remote
 
+# For remote execution, we use the `ubuntu16_04_clang` toolchain configurations. These only
+# support `k8` or `armeabi-v7a`. Since we run on remotely with `k8` containers, we need to
+# ensure that the proper CPU is configured so that the correct toolchain can be used.
+# https://github.com/bazelbuild/bazel-toolchains/blob/master/configs/ubuntu16_04_clang/10.0.0/bazel_2.1.0/cc/BUILD#L50
+build:remote --cpu=k8
+build:remote --host_cpu=k8
+
 # Setup the remote build execution servers.
 build:remote --remote_cache=remotebuildexecution.googleapis.com
 build:remote --remote_executor=remotebuildexecution.googleapis.com
@@ -116,7 +128,3 @@ test:debug --test_arg=--node_options=--inspect-brk --test_output=streamed --test
 # Load any settings which are specific to the current user. Needs to be *last* statement
 # in this config, as the user configuration should be able to overwrite flags from this file.
 try-import .bazelrc.user
-
-# TODO: check if we can enable these deprecations.
-build --incompatible_new_actions_api=false
-build --incompatible_no_support_tools_in_action_inputs=false

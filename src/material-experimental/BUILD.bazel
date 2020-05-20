@@ -1,5 +1,3 @@
-package(default_visibility = ["//visibility:public"])
-
 load(
     "//src/material-experimental:config.bzl",
     "MATERIAL_EXPERIMENTAL_SCSS_LIBS",
@@ -7,6 +5,8 @@ load(
     "MATERIAL_EXPERIMENTAL_TESTING_TARGETS",
 )
 load("//tools:defaults.bzl", "ng_package", "ts_library")
+
+package(default_visibility = ["//visibility:public"])
 
 exports_files(["mdc_require_config.js"])
 
@@ -24,6 +24,8 @@ ng_package(
     name = "npm_package",
     srcs = ["package.json"],
     data = MATERIAL_EXPERIMENTAL_SCSS_LIBS + [
+        "//src/material-experimental/mdc-color",
+        "//src/material-experimental/mdc-density",
         "//src/material-experimental/mdc-helpers",
         "//src/material-experimental/mdc-theming",
         "//src/material-experimental/mdc-typography",

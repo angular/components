@@ -22,12 +22,12 @@ export declare class MatBadge extends _MatBadgeMixinBase implements OnDestroy, O
     static ngAcceptInputType_hidden: BooleanInput;
     static ngAcceptInputType_overlap: BooleanInput;
     static ɵdir: i0.ɵɵDirectiveDefWithMeta<MatBadge, "[matBadge]", never, { "disabled": "matBadgeDisabled"; "color": "matBadgeColor"; "overlap": "matBadgeOverlap"; "position": "matBadgePosition"; "content": "matBadge"; "description": "matBadgeDescription"; "size": "matBadgeSize"; "hidden": "matBadgeHidden"; }, {}, never>;
-    static ɵfac: i0.ɵɵFactoryDef<MatBadge>;
+    static ɵfac: i0.ɵɵFactoryDef<MatBadge, [null, null, null, null, { optional: true; }]>;
 }
 
 export declare class MatBadgeModule {
     static ɵinj: i0.ɵɵInjectorDef<MatBadgeModule>;
-    static ɵmod: i0.ɵɵNgModuleDefWithMeta<MatBadgeModule, [typeof i1.MatBadge], [typeof i2.A11yModule, typeof i3.MatCommonModule], [typeof i1.MatBadge]>;
+    static ɵmod: i0.ɵɵNgModuleDefWithMeta<MatBadgeModule, [typeof i1.MatBadge], [typeof i2.A11yModule, typeof i3.MatCommonModule], [typeof i1.MatBadge, typeof i3.MatCommonModule]>;
 }
 
 export declare type MatBadgePosition = 'above after' | 'above before' | 'below before' | 'below after' | 'before' | 'after' | 'above' | 'below';

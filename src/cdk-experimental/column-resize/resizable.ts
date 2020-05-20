@@ -8,6 +8,7 @@
 
 import {
   AfterViewInit,
+  Directive,
   ElementRef,
   Injector,
   NgZone,
@@ -38,6 +39,7 @@ const OVERLAY_ACTIVE_CLASS = 'cdk-resizable-overlay-thumb-active';
  * Base class for Resizable directives which are applied to column headers to make those columns
  * resizable.
  */
+@Directive()
 export abstract class Resizable<HandleComponent extends ResizeOverlayHandle>
     implements AfterViewInit, OnDestroy {
   protected minWidthPxInternal: number = 0;
@@ -68,6 +70,7 @@ export abstract class Resizable<HandleComponent extends ResizeOverlayHandle>
     this.minWidthPxInternal = value;
 
     if (this.elementRef.nativeElement) {
+      this.columnResize.setResized();
       this._applyMinWidthPx();
     }
   }
@@ -80,6 +83,7 @@ export abstract class Resizable<HandleComponent extends ResizeOverlayHandle>
     this.maxWidthPxInternal = value;
 
     if (this.elementRef.nativeElement) {
+      this.columnResize.setResized();
       this._applyMaxWidthPx();
     }
   }
@@ -114,20 +118,23 @@ export abstract class Resizable<HandleComponent extends ResizeOverlayHandle>
     // of two table cells and is also useful for displaying a resize thumb
     // over both cells and extending it down the table as needed.
 
+    const isRtl = this.directionality.value === 'rtl';
     const positionStrategy = this.overlay.position()
         .flexibleConnectedTo(this.elementRef.nativeElement!)
         .withFlexibleDimensions(false)
         .withGrowAfterOpen(false)
         .withPush(false)
+        .withDefaultOffsetX(isRtl ? 1 : 0)
         .withPositions([{
-          originX: 'end',
+          originX: isRtl ? 'start' : 'end',
           originY: 'top',
           overlayX: 'center',
           overlayY: 'top',
         }]);
 
     return this.overlay.create({
-      direction: this.directionality,
+      // Always position the overlay based on left-indexed coordinates.
+      direction: 'ltr',
       disposeOnNavigation: true,
       positionStrategy,
       scrollStrategy: this.overlay.scrollStrategies.reposition(),
@@ -164,9 +171,9 @@ export abstract class Resizable<HandleComponent extends ResizeOverlayHandle>
     ).pipe(
         takeUntilDestroyed,
         filter(columnSize => columnSize.columnId === this.columnDef.name),
-    ).subscribe(({size, completeImmediately}) => {
+    ).subscribe(({size, previousSize, completeImmediately}) => {
       this.elementRef.nativeElement!.classList.add(OVERLAY_ACTIVE_CLASS);
-      this._applySize(size);
+      this._applySize(size, previousSize);
 
       if (completeImmediately) {
         this._completeResizeOperation();
@@ -221,11 +228,11 @@ export abstract class Resizable<HandleComponent extends ResizeOverlayHandle>
     this.overlayRef!.updateSize({height: this.elementRef.nativeElement!.offsetHeight});
   }
 
-  private _applySize(sizeInPixels: number): void {
+  private _applySize(sizeInPixels: number, previousSize?: number): void {
     const sizeToApply = Math.min(Math.max(sizeInPixels, this.minWidthPx, 0), this.maxWidthPx);
 
     this.resizeStrategy.applyColumnSize(this.columnDef.cssClassFriendlyName,
-        this.elementRef.nativeElement!, sizeToApply);
+        this.elementRef.nativeElement!, sizeToApply, previousSize);
   }
 
   private _applyMinWidthPx(): void {

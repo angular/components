@@ -49,6 +49,14 @@ describe('MatExpansionPanel', () => {
     expect(headerEl.classList).toContain('mat-expanded');
   }));
 
+  it('should add strong focus indication', fakeAsync(() => {
+    const fixture = TestBed.createComponent(PanelWithContent);
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.querySelector('.mat-expansion-panel-header').classList)
+      .toContain('mat-focus-indicator');
+  }));
+
   it('should be able to render panel content lazily', fakeAsync(() => {
     const fixture = TestBed.createComponent(LazyPanelWithContent);
     const content = fixture.debugElement.query(
@@ -343,6 +351,11 @@ describe('MatExpansionPanel', () => {
     expect(panel.componentInstance.hideToggle).toBe(true);
     expect(header.componentInstance.expandedHeight).toBe('10px');
     expect(header.componentInstance.collapsedHeight).toBe('16px');
+    expect(header.nativeElement.style.height).toBe('16px');
+
+    fixture.componentInstance.expanded = true;
+    fixture.detectChanges();
+    expect(header.nativeElement.style.height).toBe('10px');
   });
 
   describe('disabled state', () => {

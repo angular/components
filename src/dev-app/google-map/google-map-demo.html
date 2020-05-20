@@ -5,7 +5,8 @@
               [zoom]="zoom"
               (mapClick)="handleClick($event)"
               (mapMousemove)="handleMove($event)"
-              (mapRightclick)="handleRightclick()">
+              (mapRightclick)="handleRightclick()"
+              [mapTypeId]="mapTypeId">
     <map-marker #firstMarker [position]="center" (mapClick)="clickMarker(firstMarker)"></map-marker>
     <map-marker #marker
                 *ngFor="let markerPosition of markerPositions"
@@ -16,10 +17,24 @@
     <map-polyline *ngIf="isPolylineDisplayed" [options]="polylineOptions"></map-polyline>
     <map-polygon *ngIf="isPolygonDisplayed" [options]="polygonOptions"></map-polygon>
     <map-rectangle *ngIf="isRectangleDisplayed" [options]="rectangleOptions"></map-rectangle>
+    <map-circle *ngIf="isCircleDisplayed" [options]="circleOptions"></map-circle>
+    <map-ground-overlay *ngIf="isGroundOverlayDisplayed"
+                        [url]="groundOverlayUrl"
+                        [bounds]="groundOverlayBounds"></map-ground-overlay>
   </google-map>
 
   <p><label>Latitude:</label> {{display?.lat}}</p>
   <p><label>Longitude:</label> {{display?.lng}}</p>
+
+  <div>
+    <label for="map-type">
+      Select map type
+
+      <select id="map-type" (change)="mapTypeChanged($event)" #mapType>
+        <option *ngFor="let type of mapTypeIds" [value]="type">{{type}}</option>
+      </select>
+    </label>
+  </div>
 
   <div>
     <label for="polyline-checkbox">
@@ -63,6 +78,38 @@
       <input type="checkbox"
              [disabled]="!isRectangleDisplayed"
              (click)="toggleEditableRectangle()">
+    </label>
+  </div>
+
+  <div>
+    <label for="circle-checkbox">
+      Toggle Circle
+      <input type="checkbox" (click)="toggleCircleDisplay()">
+    </label>
+  </div>
+  <div>
+    <label for="editable-circle-checkbox">
+      Toggle Editable Circle
+      <input type="checkbox" [disabled]="!isCircleDisplayed" (click)="toggleEditableCircle()">
+    </label>
+  </div>
+
+  <div>
+    <label for="ground-overlay-checkbox">
+      Toggle Ground Overlay
+      <input type="checkbox" (click)="toggleGroundOverlayDisplay()">
+    </label>
+  </div>
+
+  <div>
+    <label for="ground-overlay-image">
+      Ground Overlay image
+
+      <select id="ground-overlay-image" (change)="groundOverlayUrlChanged($event)">
+        <option
+          *ngFor="let image of groundOverlayImages"
+          [value]="image.url">{{image.title}}</option>
+      </select>
     </label>
   </div>
 

@@ -27,7 +27,6 @@ import {MDCLinearProgressAdapter, MDCLinearProgressFoundation} from '@material/l
 import {Subscription, fromEvent, Observable} from 'rxjs';
 import {filter} from 'rxjs/operators';
 import {Directionality} from '@angular/cdk/bidi';
-import {Platform} from '@angular/cdk/platform';
 
 // Boilerplate for applying mixins to MatProgressBar.
 /** @docs-private */
@@ -63,7 +62,6 @@ export class MatProgressBar extends _MatProgressBarMixinBase implements AfterVie
 
   constructor(public _elementRef: ElementRef<HTMLElement>,
               private _ngZone: NgZone,
-              private _platform: Platform,
               @Optional() private _dir?: Directionality,
               @Optional() @Inject(ANIMATION_MODULE_TYPE) public _animationMode?: string) {
     super(_elementRef);
@@ -79,15 +77,16 @@ export class MatProgressBar extends _MatProgressBarMixinBase implements AfterVie
   /** Adapter used by MDC to interact with the DOM. */
   private _adapter: MDCLinearProgressAdapter = {
     addClass: (className: string) => this._rootElement.classList.add(className),
-    getBuffer: () => this._bufferBar,
-    getPrimaryBar: () => this._primaryBar,
-    forceLayout: () => this._platform.isBrowser && this._rootElement.offsetWidth,
+    forceLayout: () => this._rootElement.offsetWidth,
     removeAttribute: (name: string) => this._rootElement.removeAttribute(name),
     setAttribute: (name: string, value: string) => this._rootElement.setAttribute(name, value),
     hasClass: (className: string) => this._rootElement.classList.contains(className),
     removeClass: (className: string) => this._rootElement.classList.remove(className),
-    setStyle: (el: HTMLElement, styleProperty: string, value: string) => {
-      (el.style as any)[styleProperty] = value;
+    setPrimaryBarStyle: (styleProperty: string, value: string) => {
+      (this._primaryBar.style as any)[styleProperty] = value;
+    },
+    setBufferBarStyle: (styleProperty: string, value: string) => {
+      (this._bufferBar.style as any)[styleProperty] = value;
     }
   };
 
@@ -151,7 +150,7 @@ export class MatProgressBar extends _MatProgressBarMixinBase implements AfterVie
 
     this._rootElement = element.querySelector('.mdc-linear-progress') as HTMLElement;
     this._primaryBar = element.querySelector('.mdc-linear-progress__primary-bar') as HTMLElement;
-    this._bufferBar = element.querySelector('.mdc-linear-progress__buffer') as HTMLElement;
+    this._bufferBar = element.querySelector('.mdc-linear-progress__buffer-bar') as HTMLElement;
 
     this._foundation = new MDCLinearProgressFoundation(this._adapter);
     this._foundation.init();
@@ -183,8 +182,7 @@ export class MatProgressBar extends _MatProgressBarMixinBase implements AfterVie
   private _syncFoundation() {
     const foundation = this._foundation;
 
-    // Don't sync any state if we're not in a browser, because MDC uses some window APIs.
-    if (foundation && this._platform.isBrowser) {
+    if (foundation) {
       const direction = this._dir ? this._dir.value : 'ltr';
       const mode = this.mode;
 

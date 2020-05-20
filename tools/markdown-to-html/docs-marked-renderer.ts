@@ -1,11 +1,8 @@
-import {Renderer} from 'marked';
+import {Renderer, Slugger} from 'marked';
 import {basename, extname} from 'path';
 
-/** Regular expression that matches whitespace. */
-const whitespaceRegex = /\W+/g;
-
 /** Regular expression that matches example comments. */
-const exampleCommentRegex = /<!--\W*example\(([^)]+)\)\W*-->/g;
+const exampleCommentRegex = /<!--\s*example\(([^)]+)\)\s*-->/g;
 
 /**
  * Custom renderer for marked that will be used to transform markdown files to HTML
@@ -13,15 +10,23 @@ const exampleCommentRegex = /<!--\W*example\(([^)]+)\)\W*-->/g;
  */
 export class DocsMarkdownRenderer extends Renderer {
 
+  /** Set of fragment links discovered in the currently rendered file. */
+  private _referencedFragments = new Set<string>();
+
+  /**
+   * Slugger provided by the `marked` package. Can be used to create unique
+   * ids  for headings.
+   */
+  private _slugger = new Slugger();
+
   /**
    * Transforms a markdown heading into the corresponding HTML output. In our case, we
    * want to create a header-link for each H3 and H4 heading. This allows users to jump to
    * specific parts of the docs.
    */
-  heading(label: string, level: number, _raw: string) {
+  heading(label: string, level: number, raw: string) {
     if (level === 3 || level === 4) {
-      const headingId = label.toLowerCase().replace(whitespaceRegex, '-');
-
+      const headingId = this._slugger.slug(raw);
       return `
         <h${level} id="${headingId}" class="docs-header-link">
           <span header-link="${headingId}"></span>
@@ -42,28 +47,79 @@ export class DocsMarkdownRenderer extends Renderer {
       return super.link(`guide/${basename(href, extname(href))}`, title, text);
     }
 
+    // Keep track of all fragments discovered in a file.
+    if (href.startsWith('#')) {
+      this._referencedFragments.add(href.substr(1));
+    }
+
     return super.link(href, title, text);
   }
 
   /**
    * Method that will be called whenever inline HTML is processed by marked. In that case,
-   * we can easily transform the example comments into real HTML elements. For example:
+   * we can easily transform the example comments into real HTML elements.
+   * For example:
+   * (New API)
+   * `<!-- example(
+   *   {
+   *    "example": "exampleName",
+   *    "file": "example-html.html",
+   *    "lines": [5, 10],
+   *    "expanded": true
+   *   }
+   *  ) -->`
+   *  turns into
+   *  `<div material-docs-example="exampleName"
+   *        file="example-html.html"
+   *        lines="[5, 10]"
+   *        expanded="true"></div>`
    *
-   *  `<!-- example(name) -->` turns into `<div material-docs-example="name"></div>`
+   *  (old API)
+   *  `<!-- example(name) -->`
+   *  turns into
+   *  `<div material-docs-example="name"></div>`
    */
   html(html: string) {
-    html = html.replace(exampleCommentRegex, (_match: string, name: string) =>
-      `<div material-docs-example="${name}"></div>`
-    );
+        html = html.replace(exampleCommentRegex, (_match: string, content: string) => {
+              if (content.startsWith('{')) {
+                  const {example, file, lines, expanded} = JSON.parse(content);
+                  return `<div material-docs-example="${example}"
+                               file="${file}"
+                               lines="${JSON.stringify(lines)}"
+                               expanded="${!!expanded}"></div>`;
+              } else {
+                  return `<div material-docs-example="${content}"></div>`;
+              }
+          }
+        );
 
-    return super.html(html);
-  }
+        return super.html(html);
+    }
 
   /**
    * Method that will be called after a markdown file has been transformed to HTML. This method
    * can be used to finalize the content (e.g. by adding an additional wrapper HTML element)
    */
-  finalizeOutput(output: string): string {
+  finalizeOutput(output: string, fileName: string): string {
+    const failures: string[] = [];
+
+    // Collect any fragment links that do not resolve to existing fragments in the
+    // rendered file. We want to error for broken fragment links.
+    this._referencedFragments.forEach(id => {
+      if (this._slugger.seen[id] === undefined) {
+        failures.push(`Found link to "${id}". This heading does not exist.`);
+      }
+    });
+
+    if (failures.length) {
+      console.error(`Could not process file: ${fileName}. Please fix the following errors:`);
+      failures.forEach(message => console.error(`  -  ${message}`));
+      process.exit(1);
+    }
+
+    this._slugger.seen = {};
+    this._referencedFragments.clear();
+
     return `<div class="docs-markdown">${output}</div>`;
   }
 }

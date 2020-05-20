@@ -12,7 +12,7 @@ const fs = require('fs');
  * Version of the post install patch. Needs to be incremented when
  * existing patches or edits have been modified.
  */
-const PATCH_VERSION = 4;
+const PATCH_VERSION = 5;
 
 /** Path to the project directory. */
 const projectDir = path.join(__dirname, '../..');
@@ -98,6 +98,13 @@ searchAndReplace(
 // Workaround for: https://github.com/bazelbuild/rules_nodejs/issues/1208.
 applyPatch(path.join(__dirname, './manifest_externs_hermeticity.patch'));
 
+try {
+  // Temporary patch pre-req for https://github.com/angular/angular/pull/36333.
+  // Can be removed once @angular/bazel is updated here to include this patch.
+  // try/catch needed for this the material CI tests to work in angular/repo
+  applyPatch(path.join(__dirname, './@angular_bazel_ng_module.patch'));
+} catch (_) {}
+
 // Workaround for https://github.com/angular/angular/issues/33452:
 searchAndReplace(/angular_compiler_options = {/, `$&
         "strictTemplates": True,`, 'node_modules/@angular/bazel/src/ng_module.bzl');
@@ -157,15 +164,19 @@ Object.keys(PATCHES_PER_FILE).forEach(filePath => {
  * not apply cleanly.
  */
 function applyPatch(patchFile) {
-  const patchMarkerFileName = `${path.basename(patchFile)}.patch_marker`;
-  const patchMarkerPath = path.join(projectDir, 'node_modules/', patchMarkerFileName);
+  // Note: We replace non-word characters from the patch marker file name.
+  // This is necessary because Yarn throws if cached node modules are restored
+  // which contain files with special characters. Below is an example error:
+  // ENOTDIR: not a directory, scandir '/<...>/node_modules/@angular_bazel_ng_module.<..>'".
+  const patchMarkerBasename = `${path.basename(patchFile).replace(/[^\w]/, '_')}`;
+  const patchMarkerPath = path.join(projectDir, 'node_modules/', patchMarkerBasename);
 
   if (hasFileBeenPatched(patchMarkerPath)) {
     return;
   }
 
-  writePatchMarker(patchMarkerPath);
   shelljs.cat(patchFile).exec('patch -p0');
+  writePatchMarker(patchMarkerPath);
 }
 
 /**

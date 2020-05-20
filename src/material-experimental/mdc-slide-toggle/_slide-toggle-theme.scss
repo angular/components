@@ -5,24 +5,33 @@
 @import '@material/theme/functions.import';
 @import '../mdc-helpers/mdc-helpers';
 
-@mixin mat-slide-toggle-theme-mdc($theme) {
-  $primary: mat-color(map-get($theme, primary));
-  $accent: mat-color(map-get($theme, accent));
-  $warn: mat-color(map-get($theme, warn));
+@mixin mat-mdc-slide-toggle-color($config-or-theme) {
+  $config: mat-get-color-config($config-or-theme);
+  $primary: mat-color(map-get($config, primary));
+  $accent: mat-color(map-get($config, accent));
+  $warn: mat-color(map-get($config, warn));
 
   // Save original values of MDC global variables. We need to save these so we can restore the
   // variables to their original values and prevent unintended side effects from using this mixin.
   $orig-mdc-switch-baseline-theme-color: $mdc-switch-baseline-theme-color;
+  $orig-mdc-switch-toggled-off-thumb-color: $mdc-switch-toggled-off-thumb-color;
+  $orig-mdc-switch-toggled-off-track-color: $mdc-switch-toggled-off-track-color;
+  $orig-mdc-switch-disabled-thumb-color: $mdc-switch-disabled-thumb-color;
+  $orig-mdc-switch-disabled-track-color: $mdc-switch-disabled-track-color;
 
-  @include mat-using-mdc-theme($theme) {
+  @include mat-using-mdc-theme($config) {
     $mdc-switch-baseline-theme-color: primary !global;
+    $mdc-switch-toggled-off-thumb-color: mdc-theme-prop-value(surface) !global;
+    $mdc-switch-toggled-off-track-color: mdc-theme-prop-value(on-surface) !global;
+    $mdc-switch-disabled-thumb-color: mdc-theme-prop-value(surface) !global;
+    $mdc-switch-disabled-track-color: mdc-theme-prop-value(on-surface) !global;
 
     @include mdc-form-field-core-styles($query: $mat-theme-styles-query);
 
     // MDC's switch doesn't support a `color` property. We add support
     // for it by adding a CSS class for accent and warn style.
     .mat-mdc-slide-toggle {
-      .mdc-switch__thumb-underlay::before, .mat-ripple-element {
+      .mdc-switch__thumb-underlay::after, .mat-ripple-element {
         background: $mdc-switch-toggled-off-ripple-color;
       }
 
@@ -43,18 +52,18 @@
 
     // The ripple color matches the palette only when it's checked.
     .mat-mdc-slide-toggle-checked {
-      .mdc-switch__thumb-underlay::before, .mat-ripple-element {
+      .mdc-switch__thumb-underlay::after, .mat-ripple-element {
         background: $primary;
       }
 
       &.mat-accent {
-        .mdc-switch__thumb-underlay::before, .mat-ripple-element {
+        .mdc-switch__thumb-underlay::after, .mat-ripple-element {
           background: $accent;
         }
       }
 
       &.mat-warn {
-        .mdc-switch__thumb-underlay::before, .mat-ripple-element {
+        .mdc-switch__thumb-underlay::after, .mat-ripple-element {
           background: $warn;
         }
       }
@@ -63,11 +72,43 @@
 
   // Restore original values of MDC global variables.
   $mdc-switch-baseline-theme-color: $orig-mdc-switch-baseline-theme-color !global;
+  $mdc-switch-toggled-off-thumb-color: $orig-mdc-switch-toggled-off-thumb-color !global;
+  $mdc-switch-toggled-off-track-color: $orig-mdc-switch-toggled-off-track-color !global;
+  $mdc-switch-disabled-thumb-color: $orig-mdc-switch-disabled-thumb-color !global;
+  $mdc-switch-disabled-track-color: $orig-mdc-switch-disabled-track-color !global;
 }
 
-@mixin mat-slide-toggle-typography-mdc($config) {
+@mixin mat-mdc-slide-toggle-typography($config-or-theme) {
+  $config: mat-get-typography-config($config-or-theme);
   @include mat-using-mdc-typography($config) {
     @include mdc-switch-without-ripple($query: $mat-typography-styles-query);
     @include mdc-form-field-core-styles($query: $mat-typography-styles-query);
   }
 }
+
+@mixin mat-mdc-slide-toggle-density($config-or-theme) {
+  $density-scale: mat-get-density-config($config-or-theme);
+  .mat-mdc-slide-toggle .mdc-switch {
+    @include mdc-switch-density($density-scale);
+  }
+}
+
+@mixin mat-mdc-slide-toggle-theme($theme-or-color-config) {
+  $theme: _mat-legacy-get-theme($theme-or-color-config);
+  @include _mat-check-duplicate-theme-styles($theme, 'mat-mdc-slide-toggle') {
+    $color: mat-get-color-config($theme);
+    $density: mat-get-density-config($theme);
+    $typography: mat-get-typography-config($theme);
+
+    @if $color != null {
+      @include mat-mdc-slide-toggle-color($color);
+    }
+    @if $density != null {
+      @include mat-mdc-slide-toggle-density($density);
+    }
+    @if $typography != null {
+      @include mat-mdc-slide-toggle-typography($typography);
+    }
+  }
+}
+

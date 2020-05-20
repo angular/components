@@ -30,6 +30,7 @@ export const DEV_APP_ROUTES: Routes = [
   {path: 'card', loadChildren: 'card/card-demo-module#CardDemoModule'},
   {path: 'checkbox', loadChildren: 'checkbox/checkbox-demo-module#CheckboxDemoModule'},
   {path: 'chips', loadChildren: 'chips/chips-demo-module#ChipsDemoModule'},
+  {path: 'clipboard', loadChildren: 'clipboard/clipboard-demo-module#ClipboardDemoModule'},
   {
     path: 'column-resize',
     loadChildren: 'column-resize/column-resize-demo-module#ColumnResizeDemoModule'
@@ -71,6 +72,7 @@ export const DEV_APP_ROUTES: Routes = [
   {path: 'mdc-list', loadChildren: 'mdc-list/mdc-list-demo-module#MdcListDemoModule'},
   {path: 'mdc-menu', loadChildren: 'mdc-menu/mdc-menu-demo-module#MdcMenuDemoModule'},
   {path: 'mdc-radio', loadChildren: 'mdc-radio/mdc-radio-demo-module#MdcRadioDemoModule'},
+  {path: 'mdc-sidenav', loadChildren: 'mdc-sidenav/mdc-sidenav-demo-module#MdcSidenavDemoModule'},
   {
     path: 'mdc-snackbar',
     loadChildren: 'mdc-snackbar/mdc-snackbar-demo-module#MdcSnackbarDemoModule'

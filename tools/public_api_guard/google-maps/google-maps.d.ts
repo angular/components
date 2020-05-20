@@ -1,11 +1,11 @@
 export declare class GoogleMap implements OnChanges, OnInit, OnDestroy {
-    _googleMap: UpdatedGoogleMap;
     _isBrowser: boolean;
     boundsChanged: Observable<void>;
     set center(center: google.maps.LatLngLiteral | google.maps.LatLng);
     centerChanged: Observable<void>;
     get controls(): Array<google.maps.MVCArray<Node>>;
     get data(): google.maps.Data;
+    googleMap?: google.maps.Map;
     headingChanged: Observable<void>;
     height: string | number;
     idle: Observable<void>;
@@ -18,6 +18,7 @@ export declare class GoogleMap implements OnChanges, OnInit, OnDestroy {
     mapMouseout: Observable<google.maps.MouseEvent>;
     mapMouseover: Observable<google.maps.MouseEvent>;
     mapRightclick: Observable<google.maps.MouseEvent>;
+    mapTypeId: google.maps.MapTypeId | undefined;
     get mapTypes(): google.maps.MapTypeRegistry;
     maptypeidChanged: Observable<void>;
     set options(options: google.maps.MapOptions);
@@ -46,19 +47,69 @@ export declare class GoogleMap implements OnChanges, OnInit, OnDestroy {
     panBy(x: number, y: number): void;
     panTo(latLng: google.maps.LatLng | google.maps.LatLngLiteral): void;
     panToBounds(latLngBounds: google.maps.LatLngBounds | google.maps.LatLngBoundsLiteral, padding?: number | google.maps.Padding): void;
-    static ɵcmp: i0.ɵɵComponentDefWithMeta<GoogleMap, "google-map", never, { "height": "height"; "width": "width"; "center": "center"; "zoom": "zoom"; "options": "options"; }, { "boundsChanged": "boundsChanged"; "centerChanged": "centerChanged"; "mapClick": "mapClick"; "mapDblclick": "mapDblclick"; "mapDrag": "mapDrag"; "mapDragend": "mapDragend"; "mapDragstart": "mapDragstart"; "headingChanged": "headingChanged"; "idle": "idle"; "maptypeidChanged": "maptypeidChanged"; "mapMousemove": "mapMousemove"; "mapMouseout": "mapMouseout"; "mapMouseover": "mapMouseover"; "projectionChanged": "projectionChanged"; "mapRightclick": "mapRightclick"; "tilesloaded": "tilesloaded"; "tiltChanged": "tiltChanged"; "zoomChanged": "zoomChanged"; }, never>;
-    static ɵfac: i0.ɵɵFactoryDef<GoogleMap>;
+    static ɵcmp: i0.ɵɵComponentDefWithMeta<GoogleMap, "google-map", never, { "height": "height"; "width": "width"; "mapTypeId": "mapTypeId"; "center": "center"; "zoom": "zoom"; "options": "options"; }, { "boundsChanged": "boundsChanged"; "centerChanged": "centerChanged"; "mapClick": "mapClick"; "mapDblclick": "mapDblclick"; "mapDrag": "mapDrag"; "mapDragend": "mapDragend"; "mapDragstart": "mapDragstart"; "headingChanged": "headingChanged"; "idle": "idle"; "maptypeidChanged": "maptypeidChanged"; "mapMousemove": "mapMousemove"; "mapMouseout": "mapMouseout"; "mapMouseover": "mapMouseover"; "projectionChanged": "projectionChanged"; "mapRightclick": "mapRightclick"; "tilesloaded": "tilesloaded"; "tiltChanged": "tiltChanged"; "zoomChanged": "zoomChanged"; }, never, ["*"]>;
+    static ɵfac: i0.ɵɵFactoryDef<GoogleMap, [null, null, { optional: true; }]>;
 }
 
 export declare class GoogleMapsModule {
     static ɵinj: i0.ɵɵInjectorDef<GoogleMapsModule>;
-    static ɵmod: i0.ɵɵNgModuleDefWithMeta<GoogleMapsModule, [typeof i1.GoogleMap, typeof i2.MapInfoWindow, typeof i3.MapMarker, typeof i4.MapPolyline, typeof i5.MapPolygon, typeof i6.MapRectangle], never, [typeof i1.GoogleMap, typeof i2.MapInfoWindow, typeof i3.MapMarker, typeof i4.MapPolyline, typeof i5.MapPolygon, typeof i6.MapRectangle]>;
+    static ɵmod: i0.ɵɵNgModuleDefWithMeta<GoogleMapsModule, [typeof i1.GoogleMap, typeof i2.MapCircle, typeof i3.MapGroundOverlay, typeof i4.MapInfoWindow, typeof i5.MapMarker, typeof i6.MapPolygon, typeof i7.MapPolyline, typeof i8.MapRectangle], never, [typeof i1.GoogleMap, typeof i2.MapCircle, typeof i3.MapGroundOverlay, typeof i4.MapInfoWindow, typeof i5.MapMarker, typeof i6.MapPolygon, typeof i7.MapPolyline, typeof i8.MapRectangle]>;
+}
+
+export declare class MapCircle implements OnInit, OnDestroy {
+    set center(center: google.maps.LatLng | google.maps.LatLngLiteral);
+    centerChanged: Observable<void>;
+    circle?: google.maps.Circle;
+    circleClick: Observable<google.maps.MouseEvent>;
+    circleDblclick: Observable<google.maps.MouseEvent>;
+    circleDrag: Observable<google.maps.MouseEvent>;
+    circleDragend: Observable<google.maps.MouseEvent>;
+    circleDragstart: Observable<google.maps.MouseEvent>;
+    circleMousedown: Observable<google.maps.MouseEvent>;
+    circleMousemove: Observable<google.maps.MouseEvent>;
+    circleMouseout: Observable<google.maps.MouseEvent>;
+    circleMouseover: Observable<google.maps.MouseEvent>;
+    circleMouseup: Observable<google.maps.MouseEvent>;
+    circleRightclick: Observable<google.maps.MouseEvent>;
+    set options(options: google.maps.CircleOptions);
+    set radius(radius: number);
+    radiusChanged: Observable<void>;
+    constructor(_map: GoogleMap, _ngZone: NgZone);
+    getBounds(): google.maps.LatLngBounds;
+    getCenter(): google.maps.LatLng;
+    getDraggable(): boolean;
+    getEditable(): boolean;
+    getRadius(): number;
+    getVisible(): boolean;
+    ngOnDestroy(): void;
+    ngOnInit(): void;
+    static ɵdir: i0.ɵɵDirectiveDefWithMeta<MapCircle, "map-circle", never, { "options": "options"; "center": "center"; "radius": "radius"; }, { "centerChanged": "centerChanged"; "circleClick": "circleClick"; "circleDblclick": "circleDblclick"; "circleDrag": "circleDrag"; "circleDragend": "circleDragend"; "circleDragstart": "circleDragstart"; "circleMousedown": "circleMousedown"; "circleMousemove": "circleMousemove"; "circleMouseout": "circleMouseout"; "circleMouseover": "circleMouseover"; "circleMouseup": "circleMouseup"; "radiusChanged": "radiusChanged"; "circleRightclick": "circleRightclick"; }, never>;
+    static ɵfac: i0.ɵɵFactoryDef<MapCircle, never>;
+}
+
+export declare class MapGroundOverlay implements OnInit, OnDestroy {
+    bounds: google.maps.LatLngBounds | google.maps.LatLngBoundsLiteral;
+    clickable: boolean;
+    groundOverlay?: google.maps.GroundOverlay;
+    mapClick: Observable<google.maps.MouseEvent>;
+    mapDblclick: Observable<google.maps.MouseEvent>;
+    set opacity(opacity: number);
+    set url(url: string);
+    constructor(_map: GoogleMap, _ngZone: NgZone);
+    getBounds(): google.maps.LatLngBounds;
+    getOpacity(): number;
+    getUrl(): string;
+    ngOnDestroy(): void;
+    ngOnInit(): void;
+    static ɵdir: i0.ɵɵDirectiveDefWithMeta<MapGroundOverlay, "map-ground-overlay", never, { "url": "url"; "bounds": "bounds"; "clickable": "clickable"; "opacity": "opacity"; }, { "mapClick": "mapClick"; "mapDblclick": "mapDblclick"; }, never>;
+    static ɵfac: i0.ɵɵFactoryDef<MapGroundOverlay, never>;
 }
 
 export declare class MapInfoWindow implements OnInit, OnDestroy {
     closeclick: Observable<void>;
     contentChanged: Observable<void>;
     domready: Observable<void>;
+    infoWindow?: google.maps.InfoWindow;
     set options(options: google.maps.InfoWindowOptions);
     set position(position: google.maps.LatLngLiteral | google.maps.LatLng);
     positionChanged: Observable<void>;
@@ -72,11 +123,10 @@ export declare class MapInfoWindow implements OnInit, OnDestroy {
     ngOnInit(): void;
     open(anchor?: MapMarker): void;
     static ɵdir: i0.ɵɵDirectiveDefWithMeta<MapInfoWindow, "map-info-window", never, { "options": "options"; "position": "position"; }, { "closeclick": "closeclick"; "contentChanged": "contentChanged"; "domready": "domready"; "positionChanged": "positionChanged"; "zindexChanged": "zindexChanged"; }, never>;
-    static ɵfac: i0.ɵɵFactoryDef<MapInfoWindow>;
+    static ɵfac: i0.ɵɵFactoryDef<MapInfoWindow, never>;
 }
 
 export declare class MapMarker implements OnInit, OnDestroy {
-    _marker?: google.maps.Marker;
     animationChanged: Observable<void>;
     set clickable(clickable: boolean);
     clickableChanged: Observable<void>;
@@ -95,6 +145,7 @@ export declare class MapMarker implements OnInit, OnDestroy {
     mapMouseover: Observable<google.maps.MouseEvent>;
     mapMouseup: Observable<google.maps.MouseEvent>;
     mapRightclick: Observable<google.maps.MouseEvent>;
+    marker?: google.maps.Marker;
     set options(options: google.maps.MarkerOptions);
     set position(position: google.maps.LatLngLiteral | google.maps.LatLng);
     positionChanged: Observable<void>;
@@ -118,14 +169,14 @@ export declare class MapMarker implements OnInit, OnDestroy {
     getZIndex(): number | null;
     ngOnDestroy(): void;
     ngOnInit(): void;
-    static ɵcmp: i0.ɵɵComponentDefWithMeta<MapMarker, "map-marker", never, { "options": "options"; "title": "title"; "position": "position"; "label": "label"; "clickable": "clickable"; }, { "animationChanged": "animationChanged"; "mapClick": "mapClick"; "clickableChanged": "clickableChanged"; "cursorChanged": "cursorChanged"; "mapDblclick": "mapDblclick"; "mapDrag": "mapDrag"; "mapDragend": "mapDragend"; "draggableChanged": "draggableChanged"; "mapDragstart": "mapDragstart"; "flatChanged": "flatChanged"; "iconChanged": "iconChanged"; "mapMousedown": "mapMousedown"; "mapMouseout": "mapMouseout"; "mapMouseover": "mapMouseover"; "mapMouseup": "mapMouseup"; "positionChanged": "positionChanged"; "mapRightclick": "mapRightclick"; "shapeChanged": "shapeChanged"; "titleChanged": "titleChanged"; "visibleChanged": "visibleChanged"; "zindexChanged": "zindexChanged"; }, never>;
-    static ɵfac: i0.ɵɵFactoryDef<MapMarker>;
+    static ɵcmp: i0.ɵɵComponentDefWithMeta<MapMarker, "map-marker", never, { "options": "options"; "title": "title"; "position": "position"; "label": "label"; "clickable": "clickable"; }, { "animationChanged": "animationChanged"; "mapClick": "mapClick"; "clickableChanged": "clickableChanged"; "cursorChanged": "cursorChanged"; "mapDblclick": "mapDblclick"; "mapDrag": "mapDrag"; "mapDragend": "mapDragend"; "draggableChanged": "draggableChanged"; "mapDragstart": "mapDragstart"; "flatChanged": "flatChanged"; "iconChanged": "iconChanged"; "mapMousedown": "mapMousedown"; "mapMouseout": "mapMouseout"; "mapMouseover": "mapMouseover"; "mapMouseup": "mapMouseup"; "positionChanged": "positionChanged"; "mapRightclick": "mapRightclick"; "shapeChanged": "shapeChanged"; "titleChanged": "titleChanged"; "visibleChanged": "visibleChanged"; "zindexChanged": "zindexChanged"; }, never, ["*"]>;
+    static ɵfac: i0.ɵɵFactoryDef<MapMarker, never>;
 }
 
 export declare class MapPolygon implements OnInit, OnDestroy {
-    _polygon: google.maps.Polygon;
     set options(options: google.maps.PolygonOptions);
     set paths(paths: google.maps.MVCArray<google.maps.MVCArray<google.maps.LatLng>> | google.maps.MVCArray<google.maps.LatLng> | google.maps.LatLng[] | google.maps.LatLngLiteral[]);
+    polygon?: google.maps.Polygon;
     polygonClick: Observable<google.maps.PolyMouseEvent>;
     polygonDblclick: Observable<google.maps.PolyMouseEvent>;
     polygonDrag: Observable<google.maps.MouseEvent>;
@@ -146,13 +197,13 @@ export declare class MapPolygon implements OnInit, OnDestroy {
     ngOnDestroy(): void;
     ngOnInit(): void;
     static ɵdir: i0.ɵɵDirectiveDefWithMeta<MapPolygon, "map-polygon", never, { "options": "options"; "paths": "paths"; }, { "polygonClick": "polygonClick"; "polygonDblclick": "polygonDblclick"; "polygonDrag": "polygonDrag"; "polygonDragend": "polygonDragend"; "polygonDragstart": "polygonDragstart"; "polygonMousedown": "polygonMousedown"; "polygonMousemove": "polygonMousemove"; "polygonMouseout": "polygonMouseout"; "polygonMouseover": "polygonMouseover"; "polygonMouseup": "polygonMouseup"; "polygonRightclick": "polygonRightclick"; }, never>;
-    static ɵfac: i0.ɵɵFactoryDef<MapPolygon>;
+    static ɵfac: i0.ɵɵFactoryDef<MapPolygon, never>;
 }
 
 export declare class MapPolyline implements OnInit, OnDestroy {
-    _polyline?: google.maps.Polyline;
     set options(options: google.maps.PolylineOptions);
     set path(path: google.maps.MVCArray<google.maps.LatLng> | google.maps.LatLng[] | google.maps.LatLngLiteral[]);
+    polyline?: google.maps.Polyline;
     polylineClick: Observable<google.maps.PolyMouseEvent>;
     polylineDblclick: Observable<google.maps.PolyMouseEvent>;
     polylineDrag: Observable<google.maps.MouseEvent>;
@@ -172,14 +223,14 @@ export declare class MapPolyline implements OnInit, OnDestroy {
     ngOnDestroy(): void;
     ngOnInit(): void;
     static ɵdir: i0.ɵɵDirectiveDefWithMeta<MapPolyline, "map-polyline", never, { "options": "options"; "path": "path"; }, { "polylineClick": "polylineClick"; "polylineDblclick": "polylineDblclick"; "polylineDrag": "polylineDrag"; "polylineDragend": "polylineDragend"; "polylineDragstart": "polylineDragstart"; "polylineMousedown": "polylineMousedown"; "polylineMousemove": "polylineMousemove"; "polylineMouseout": "polylineMouseout"; "polylineMouseover": "polylineMouseover"; "polylineMouseup": "polylineMouseup"; "polylineRightclick": "polylineRightclick"; }, never>;
-    static ɵfac: i0.ɵɵFactoryDef<MapPolyline>;
+    static ɵfac: i0.ɵɵFactoryDef<MapPolyline, never>;
 }
 
 export declare class MapRectangle implements OnInit, OnDestroy {
-    _rectangle: google.maps.Rectangle;
     set bounds(bounds: google.maps.LatLngBounds | google.maps.LatLngBoundsLiteral);
     boundsChanged: Observable<void>;
     set options(options: google.maps.RectangleOptions);
+    rectangle?: google.maps.Rectangle;
     rectangleClick: Observable<google.maps.MouseEvent>;
     rectangleDblclick: Observable<google.maps.MouseEvent>;
     rectangleDrag: Observable<google.maps.MouseEvent>;
@@ -199,5 +250,5 @@ export declare class MapRectangle implements OnInit, OnDestroy {
     ngOnDestroy(): void;
     ngOnInit(): void;
     static ɵdir: i0.ɵɵDirectiveDefWithMeta<MapRectangle, "map-rectangle", never, { "options": "options"; "bounds": "bounds"; }, { "boundsChanged": "boundsChanged"; "rectangleClick": "rectangleClick"; "rectangleDblclick": "rectangleDblclick"; "rectangleDrag": "rectangleDrag"; "rectangleDragend": "rectangleDragend"; "rectangleDragstart": "rectangleDragstart"; "rectangleMousedown": "rectangleMousedown"; "rectangleMousemove": "rectangleMousemove"; "rectangleMouseout": "rectangleMouseout"; "rectangleMouseover": "rectangleMouseover"; "rectangleMouseup": "rectangleMouseup"; "rectangleRightclick": "rectangleRightclick"; }, never>;
-    static ɵfac: i0.ɵɵFactoryDef<MapRectangle>;
+    static ɵfac: i0.ɵɵFactoryDef<MapRectangle, never>;
 }

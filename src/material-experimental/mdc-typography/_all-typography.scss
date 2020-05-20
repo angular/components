@@ -1,37 +1,17 @@
-@import '../mdc-button/button-theme';
-@import '../mdc-card/card-theme';
-@import '../mdc-checkbox/checkbox-theme';
-@import '../mdc-chips/chips-theme';
-@import '../mdc-list/list-theme';
-@import '../mdc-menu/menu-theme';
-@import '../mdc-radio/radio-theme';
-@import '../mdc-slide-toggle/slide-toggle-theme';
-@import '../mdc-slider/slider-theme';
-@import '../mdc-tabs/tabs-theme';
-@import '../mdc-table/table-theme';
-@import '../mdc-progress-bar/progress-bar-theme';
-@import '../mdc-input/input-theme';
-@import '../mdc-form-field/form-field-theme';
+@import '../mdc-theming/all-theme';
 
-@mixin angular-material-typography-mdc($config: null) {
+@mixin angular-material-mdc-typography($config-or-theme: null) {
+  $config: if(_mat-is-theme-object($config-or-theme),
+      mat-get-typography-config($config-or-theme), $config-or-theme);
+
+  // If no actual color configuration has been specified, create a default one.
   @if $config == null {
     $config: mat-typography-config();
   }
 
-  @include mat-button-typography-mdc($config);
-  @include mat-fab-typography-mdc($config);
-  @include mat-icon-button-typography-mdc($config);
-  @include mat-card-typography-mdc($config);
-  @include mat-checkbox-typography-mdc($config);
-  @include mat-chips-typography-mdc($config);
-  @include mat-list-typography-mdc($config);
-  @include mat-menu-typography-mdc($config);
-  @include mat-radio-typography-mdc($config);
-  @include mat-slide-toggle-typography-mdc($config);
-  @include mat-slider-typography-mdc($config);
-  @include mat-tabs-typography-mdc($config);
-  @include mat-table-typography-mdc($config);
-  @include mat-progress-bar-typography-mdc($config);
-  @include mat-input-typography-mdc($config);
-  @include mat-form-field-typography-mdc($config);
+  @include angular-material-mdc-theme((
+    color: null,
+    density: null,
+    typography: $config,
+  ));
 }

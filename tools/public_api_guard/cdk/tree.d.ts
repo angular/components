@@ -1,9 +1,11 @@
-export declare abstract class BaseTreeControl<T> implements TreeControl<T> {
+export declare abstract class BaseTreeControl<T, K = T> implements TreeControl<T, K> {
     dataNodes: T[];
-    expansionModel: SelectionModel<T>;
+    expansionModel: SelectionModel<K>;
     getChildren: (dataNode: T) => (Observable<T[]> | T[] | undefined | null);
     getLevel: (dataNode: T) => number;
     isExpandable: (dataNode: T) => boolean;
+    trackBy?: (dataNode: T) => K;
+    protected _trackByValue(value: T | K): K;
     collapse(dataNode: T): void;
     collapseAll(): void;
     collapseDescendants(dataNode: T): void;
@@ -30,7 +32,7 @@ export declare class CdkNestedTreeNode<T> extends CdkTreeNode<T> implements Afte
     ngOnDestroy(): void;
     protected updateChildrenNodes(children?: T[]): void;
     static ɵdir: i0.ɵɵDirectiveDefWithMeta<CdkNestedTreeNode<any>, "cdk-nested-tree-node", ["cdkNestedTreeNode"], {}, {}, ["nodeOutlet"]>;
-    static ɵfac: i0.ɵɵFactoryDef<CdkNestedTreeNode<any>>;
+    static ɵfac: i0.ɵɵFactoryDef<CdkNestedTreeNode<any>, never>;
 }
 
 export declare class CdkTree<T> implements AfterContentChecked, CollectionViewer, OnDestroy, OnInit {
@@ -51,8 +53,8 @@ export declare class CdkTree<T> implements AfterContentChecked, CollectionViewer
     ngOnDestroy(): void;
     ngOnInit(): void;
     renderNodeChanges(data: T[] | ReadonlyArray<T>, dataDiffer?: IterableDiffer<T>, viewContainer?: ViewContainerRef, parentData?: T): void;
-    static ɵcmp: i0.ɵɵComponentDefWithMeta<CdkTree<any>, "cdk-tree", ["cdkTree"], { "dataSource": "dataSource"; "treeControl": "treeControl"; "trackBy": "trackBy"; }, {}, ["_nodeDefs"]>;
-    static ɵfac: i0.ɵɵFactoryDef<CdkTree<any>>;
+    static ɵcmp: i0.ɵɵComponentDefWithMeta<CdkTree<any>, "cdk-tree", ["cdkTree"], { "dataSource": "dataSource"; "treeControl": "treeControl"; "trackBy": "trackBy"; }, {}, ["_nodeDefs"], never>;
+    static ɵfac: i0.ɵɵFactoryDef<CdkTree<any>, never>;
 }
 
 export declare class CdkTreeModule {
@@ -78,7 +80,7 @@ export declare class CdkTreeNode<T> implements FocusableOption, OnDestroy {
     ngOnDestroy(): void;
     static mostRecentTreeNode: CdkTreeNode<any> | null;
     static ɵdir: i0.ɵɵDirectiveDefWithMeta<CdkTreeNode<any>, "cdk-tree-node", ["cdkTreeNode"], { "role": "role"; }, {}, never>;
-    static ɵfac: i0.ɵɵFactoryDef<CdkTreeNode<any>>;
+    static ɵfac: i0.ɵɵFactoryDef<CdkTreeNode<any>, never>;
 }
 
 export declare class CdkTreeNodeDef<T> {
@@ -86,7 +88,7 @@ export declare class CdkTreeNodeDef<T> {
     when: (index: number, nodeData: T) => boolean;
     constructor(template: TemplateRef<any>);
     static ɵdir: i0.ɵɵDirectiveDefWithMeta<CdkTreeNodeDef<any>, "[cdkTreeNodeDef]", never, { "when": "cdkTreeNodeDefWhen"; }, {}, never>;
-    static ɵfac: i0.ɵɵFactoryDef<CdkTreeNodeDef<any>>;
+    static ɵfac: i0.ɵɵFactoryDef<CdkTreeNodeDef<any>, never>;
 }
 
 export declare class CdkTreeNodeOutlet {
@@ -94,7 +96,7 @@ export declare class CdkTreeNodeOutlet {
     viewContainer: ViewContainerRef;
     constructor(viewContainer: ViewContainerRef, _node?: any);
     static ɵdir: i0.ɵɵDirectiveDefWithMeta<CdkTreeNodeOutlet, "[cdkTreeNodeOutlet]", never, {}, {}, never>;
-    static ɵfac: i0.ɵɵFactoryDef<CdkTreeNodeOutlet>;
+    static ɵfac: i0.ɵɵFactoryDef<CdkTreeNodeOutlet, [null, { optional: true; }]>;
 }
 
 export declare class CdkTreeNodeOutletContext<T> {
@@ -113,13 +115,14 @@ export declare class CdkTreeNodePadding<T> implements OnDestroy {
     indentUnits: string;
     get level(): number;
     set level(value: number);
-    constructor(_treeNode: CdkTreeNode<T>, _tree: CdkTree<T>, _renderer: Renderer2, _element: ElementRef<HTMLElement>, _dir: Directionality);
+    constructor(_treeNode: CdkTreeNode<T>, _tree: CdkTree<T>,
+    _renderer: Renderer2, _element: ElementRef<HTMLElement>, _dir: Directionality);
     _paddingIndent(): string | null;
     _setPadding(forceChange?: boolean): void;
     ngOnDestroy(): void;
     static ngAcceptInputType_level: NumberInput;
     static ɵdir: i0.ɵɵDirectiveDefWithMeta<CdkTreeNodePadding<any>, "[cdkTreeNodePadding]", never, { "level": "cdkTreeNodePadding"; "indent": "cdkTreeNodePaddingIndent"; }, {}, never>;
-    static ɵfac: i0.ɵɵFactoryDef<CdkTreeNodePadding<any>>;
+    static ɵfac: i0.ɵɵFactoryDef<CdkTreeNodePadding<any>, [null, null, null, null, { optional: true; }]>;
 }
 
 export declare class CdkTreeNodeToggle<T> {
@@ -132,15 +135,20 @@ export declare class CdkTreeNodeToggle<T> {
     _toggle(event: Event): void;
     static ngAcceptInputType_recursive: BooleanInput;
     static ɵdir: i0.ɵɵDirectiveDefWithMeta<CdkTreeNodeToggle<any>, "[cdkTreeNodeToggle]", never, { "recursive": "cdkTreeNodeToggleRecursive"; }, {}, never>;
-    static ɵfac: i0.ɵɵFactoryDef<CdkTreeNodeToggle<any>>;
+    static ɵfac: i0.ɵɵFactoryDef<CdkTreeNodeToggle<any>, never>;
 }
 
-export declare class FlatTreeControl<T> extends BaseTreeControl<T> {
+export declare class FlatTreeControl<T, K = T> extends BaseTreeControl<T, K> {
     getLevel: (dataNode: T) => number;
     isExpandable: (dataNode: T) => boolean;
-    constructor(getLevel: (dataNode: T) => number, isExpandable: (dataNode: T) => boolean);
+    options?: FlatTreeControlOptions<T, K> | undefined;
+    constructor(getLevel: (dataNode: T) => number, isExpandable: (dataNode: T) => boolean, options?: FlatTreeControlOptions<T, K> | undefined);
     expandAll(): void;
     getDescendants(dataNode: T): T[];
+}
+
+export interface FlatTreeControlOptions<T, K> {
+    trackBy?: (dataNode: T) => K;
 }
 
 export declare function getTreeControlFunctionsMissingError(): Error;
@@ -161,9 +169,9 @@ export declare class NestedTreeControl<T> extends BaseTreeControl<T> {
     getDescendants(dataNode: T): T[];
 }
 
-export interface TreeControl<T> {
+export interface TreeControl<T, K = T> {
     dataNodes: T[];
-    expansionModel: SelectionModel<T>;
+    expansionModel: SelectionModel<K>;
     readonly getChildren: (dataNode: T) => Observable<T[]> | T[] | undefined | null;
     readonly getLevel: (dataNode: T) => number;
     readonly isExpandable: (dataNode: T) => boolean;

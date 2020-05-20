@@ -70,12 +70,17 @@ abstract class BaseTestComponent {
   @ViewChild('table') table: ElementRef;
 
   preservedValues = new FormValueContainer<PeriodicElement, {'name': string}>();
-
   nameEditDisabled = false;
   ignoreSubmitUnlessValid = true;
   clickOutBehavior: PopoverEditClickOutBehavior = 'close';
   colspan: CdkPopoverEditColspan = {};
   direction: Direction = 'ltr';
+
+  constructor() {
+    this.renderData();
+  }
+
+  abstract renderData(): void;
 
   onSubmit(element: PeriodicElement, form: NgForm) {
     if (!form.valid) { return; }
@@ -202,7 +207,11 @@ abstract class BaseTestComponent {
   `
 })
 class VanillaTableOutOfCell extends BaseTestComponent {
-  elements = createElementData();
+  elements: ChemicalElement[];
+
+  renderData() {
+    this.elements = createElementData();
+  }
 }
 
 @Component({
@@ -231,7 +240,11 @@ class VanillaTableOutOfCell extends BaseTestComponent {
   `
 })
 class VanillaTableInCell extends BaseTestComponent {
-  elements = createElementData();
+  elements: ChemicalElement[];
+
+  renderData() {
+    this.elements = createElementData();
+  }
 }
 
 class ElementDataSource extends DataSource<PeriodicElement> {
@@ -289,7 +302,11 @@ class ElementDataSource extends DataSource<PeriodicElement> {
 })
 class CdkFlexTableInCell extends BaseTestComponent {
   displayedColumns = ['before', 'name', 'weight'];
-  dataSource = new ElementDataSource();
+  dataSource: ElementDataSource;
+
+  renderData() {
+    this.dataSource = new ElementDataSource();
+  }
 }
 
 @Component({
@@ -335,7 +352,11 @@ class CdkFlexTableInCell extends BaseTestComponent {
 })
 class CdkTableInCell extends BaseTestComponent {
   displayedColumns = ['before', 'name', 'weight'];
-  dataSource = new ElementDataSource();
+  dataSource: ElementDataSource;
+
+  renderData() {
+    this.dataSource = new ElementDataSource();
+  }
 }
 
 const testCases: ReadonlyArray<[Type<BaseTestComponent>, string]> = [
@@ -369,7 +390,7 @@ describe('CDK Popover Edit', () => {
       afterEach(() => {
         // The overlay container's `ngOnDestroy` won't be called between test runs so we need
         // to call it ourselves, in order to avoid leaking containers between tests and potentially
-        // throwing `querySelector` calls.
+        // throwing off `querySelector` calls.
         overlayContainer.ngOnDestroy();
       });
 
@@ -411,6 +432,21 @@ describe('CDK Popover Edit', () => {
           expect(component.hoverContentStateForRow(1)).toBe(HoverContentState.ON);
         }));
 
+        it('shows the hover content if the data changes after initialization', fakeAsync(() => {
+          fixture.componentInstance.renderData();
+          fixture.detectChanges();
+
+          const row = component.getRows()[0];
+          row.dispatchEvent(new Event('mouseover', {bubbles: true}));
+          row.dispatchEvent(new Event('mousemove', {bubbles: true}));
+
+          tick(20);
+          row.dispatchEvent(new Event('mousemove', {bubbles: true}));
+          tick(50);
+
+          expect(component.hoverContentStateForRow(0)).toBe(HoverContentState.ON);
+        }));
+
         it('shows hover content for the focused row and makes the rows above and below focusable',
             fakeAsync(() => {
           expect(component.hoverContentStateForRow(1)).toBe(HoverContentState.OFF);
@@ -439,6 +475,21 @@ describe('CDK Popover Edit', () => {
           expect(component.hoverContentStateForRow(2)).toBe(HoverContentState.OFF);
           expect(component.hoverContentStateForRow(3)).toBe(HoverContentState.OFF);
           expect(component.hoverContentStateForRow(4)).toBe(HoverContentState.FOCUSABLE);
+        }));
+
+        it('should close the focus content when pressing escape', fakeAsync(() => {
+          expect(component.hoverContentStateForRow(2)).toBe(HoverContentState.OFF);
+
+          component.focusEditCell(2);
+          tick(1);
+
+          expect(component.hoverContentStateForRow(2)).toBe(HoverContentState.ON);
+
+          const event = new KeyboardEvent('keydown', {bubbles: true, key: 'Escape'});
+          component.getEditCell(2).dispatchEvent(event);
+          tick(1);
+
+          expect(component.hoverContentStateForRow(2)).toBe(HoverContentState.OFF);
         }));
 
         it('shows hover content for the editing row and makes the rows above and below ' +
@@ -915,7 +966,12 @@ cdkPopoverEditTabOut`, fakeAsync(() => {
   }
 });
 
-function createElementData() {
+interface ChemicalElement {
+  name: string;
+  weight: number;
+}
+
+function createElementData(): ChemicalElement[] {
   return [
     {name: 'Hydrogen', weight: 1.007},
     {name: 'Helium', weight: 4.0026},

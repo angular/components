@@ -7,7 +7,6 @@
  */
 
 import {AfterViewInit, Directive, ElementRef, NgZone, OnDestroy} from '@angular/core';
-import {Directionality} from '@angular/cdk/bidi';
 import {fromEvent, merge, ReplaySubject} from 'rxjs';
 import {filter, map, mapTo, pairwise, startWith, take, takeUntil} from 'rxjs/operators';
 
@@ -33,8 +32,9 @@ export abstract class ColumnResize implements AfterViewInit, OnDestroy {
   /* Publicly accessible interface for triggering and being notified of resizes. */
   abstract readonly columnResizeNotifier: ColumnResizeNotifier;
 
-  abstract readonly directionality: Directionality;
-  protected abstract readonly elementRef: ElementRef<HTMLElement>;
+  /* ElementRef that this directive is attached to. Exposed For use by column-level directives */
+  abstract readonly elementRef: ElementRef<HTMLElement>;
+
   protected abstract readonly eventDispatcher: HeaderRowEventDispatcher;
   protected abstract readonly ngZone: NgZone;
   protected abstract readonly notifier: ColumnResizeNotifierSource;
@@ -63,6 +63,11 @@ export abstract class ColumnResize implements AfterViewInit, OnDestroy {
     return `cdk-column-resize-${this.selectorId}`;
   }
 
+  /** Called when a column in the table is resized. Applies a css class to the table element. */
+  setResized() {
+    this.elementRef.nativeElement!.classList.add(WITH_RESIZED_COLUMN_CLASS);
+  }
+
   private _listenForRowHoverEvents() {
     this.ngZone.runOutsideAngular(() => {
       const element = this.elementRef.nativeElement!;
@@ -89,7 +94,7 @@ export abstract class ColumnResize implements AfterViewInit, OnDestroy {
         takeUntil(this.destroyed),
         take(1),
     ).subscribe(() => {
-      this.elementRef.nativeElement!.classList.add(WITH_RESIZED_COLUMN_CLASS);
+      this.setResized();
     });
   }
 

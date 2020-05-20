@@ -1,9 +1,18 @@
+@import './expansion-variables';
+
 .mat-expansion-panel-header {
   display: flex;
   flex-direction: row;
   align-items: center;
   padding: 0 24px;
   border-radius: inherit;
+  position: relative; // Necessary for the strong focus indication.
+  transition: height $mat-expansion-panel-header-transition;
+
+  // If the `NoopAnimationsModule` is used, disable the height transition.
+  &._mat-animation-noopable {
+    transition: none;
+  }
 
   &:focus,
   &:hover {

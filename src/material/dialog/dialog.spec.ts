@@ -20,7 +20,7 @@ import {
   ComponentFactoryResolver
 } from '@angular/core';
 import {By} from '@angular/platform-browser';
-import {NoopAnimationsModule} from '@angular/platform-browser/animations';
+import {BrowserAnimationsModule, NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {Location} from '@angular/common';
 import {SpyLocation} from '@angular/common/testing';
 import {Directionality} from '@angular/cdk/bidi';
@@ -28,7 +28,11 @@ import {MatDialogContainer} from './dialog-container';
 import {OverlayContainer, ScrollStrategy, Overlay} from '@angular/cdk/overlay';
 import {ScrollDispatcher} from '@angular/cdk/scrolling';
 import {A, ESCAPE} from '@angular/cdk/keycodes';
-import {dispatchKeyboardEvent, createKeyboardEvent} from '@angular/cdk/testing/private';
+import {
+  dispatchKeyboardEvent,
+  createKeyboardEvent,
+  dispatchEvent
+} from '@angular/cdk/testing/private';
 import {
   MAT_DIALOG_DATA,
   MatDialog,
@@ -268,6 +272,7 @@ describe('MatDialog', () => {
 
     const event = createKeyboardEvent('keydown', ESCAPE);
     Object.defineProperty(event, 'altKey', {get: () => true});
+    dispatchEvent(document.body, event);
     viewContainerFixture.detectChanges();
     flush();
 
@@ -772,19 +777,6 @@ describe('MatDialog', () => {
       expect(resolver.resolveComponentFactory).toHaveBeenCalled();
     }));
 
-  it('should return the current state of the dialog', fakeAsync(() => {
-    const dialogRef = dialog.open(PizzaMsg, {viewContainerRef: testViewContainerRef});
-
-    expect(dialogRef.getState()).toBe(MatDialogState.OPEN);
-    dialogRef.close();
-    viewContainerFixture.detectChanges();
-
-    expect(dialogRef.getState()).toBe(MatDialogState.CLOSING);
-    flush();
-
-    expect(dialogRef.getState()).toBe(MatDialogState.CLOSED);
-  }));
-
   describe('passing in data', () => {
     it('should be able to pass in data', () => {
       let config = {
@@ -968,6 +960,29 @@ describe('MatDialog', () => {
 
       expect(overlayContainerElement.querySelector('mat-dialog-container')).toBeFalsy();
     }));
+
+    it('should recapture focus when clicking on the backdrop', fakeAsync(() => {
+      dialog.open(PizzaMsg, {
+        disableClose: true,
+        viewContainerRef: testViewContainerRef
+      });
+
+      viewContainerFixture.detectChanges();
+      flushMicrotasks();
+
+      let backdrop = overlayContainerElement.querySelector('.cdk-overlay-backdrop') as HTMLElement;
+      let input = overlayContainerElement.querySelector('input') as HTMLInputElement;
+
+      expect(document.activeElement).toBe(input, 'Expected input to be focused on open');
+
+      input.blur(); // Programmatic clicks might not move focus so we simulate it.
+      backdrop.click();
+      viewContainerFixture.detectChanges();
+      flush();
+
+      expect(document.activeElement).toBe(input, 'Expected input to stay focused after click');
+    }));
+
   });
 
   describe('hasBackdrop option', () => {
@@ -1058,6 +1073,19 @@ describe('MatDialog', () => {
       flushMicrotasks();
 
       expect(document.activeElement!.tagName).not.toBe('INPUT');
+    }));
+
+    it('should attach the focus trap even if automatic focus is disabled', fakeAsync(() => {
+      dialog.open(PizzaMsg, {
+        viewContainerRef: testViewContainerRef,
+        autoFocus: false
+      });
+
+      viewContainerFixture.detectChanges();
+      flushMicrotasks();
+
+      expect(overlayContainerElement.querySelectorAll('.cdk-focus-trap-anchor').length)
+          .toBeGreaterThan(0);
     }));
 
     it('should re-focus trigger element when dialog closes', fakeAsync(() => {
@@ -1550,6 +1578,59 @@ describe('MatDialog with default options', () => {
   }));
 });
 
+
+describe('MatDialog with animations enabled', () => {
+  let dialog: MatDialog;
+  let overlayContainer: OverlayContainer;
+
+  let testViewContainerRef: ViewContainerRef;
+  let viewContainerFixture: ComponentFixture<ComponentWithChildViewContainer>;
+
+  beforeEach(fakeAsync(() => {
+    TestBed.configureTestingModule({
+      imports: [MatDialogModule, DialogTestModule, BrowserAnimationsModule],
+    });
+
+    TestBed.compileComponents();
+  }));
+
+  beforeEach(inject([MatDialog, OverlayContainer], (d: MatDialog, oc: OverlayContainer) => {
+    dialog = d;
+    overlayContainer = oc;
+
+    viewContainerFixture = TestBed.createComponent(ComponentWithChildViewContainer);
+    viewContainerFixture.detectChanges();
+    testViewContainerRef = viewContainerFixture.componentInstance.childViewContainer;
+  }));
+
+  afterEach(() => {
+    overlayContainer.ngOnDestroy();
+  });
+
+  it('should return the current state of the dialog', fakeAsync(() => {
+    const dialogRef = dialog.open(PizzaMsg, {viewContainerRef: testViewContainerRef});
+    // Duration of the close animation in milliseconds. Extracted from the
+    // Angular animations definition of the dialog.
+    const dialogCloseDuration = 75;
+
+    expect(dialogRef.getState()).toBe(MatDialogState.OPEN);
+    dialogRef.close();
+    viewContainerFixture.detectChanges();
+
+    expect(dialogRef.getState()).toBe(MatDialogState.CLOSING);
+
+    // Ensure that the closing state is still set if half of the animation has
+    // passed by. The dialog state should be only set to `closed` when the dialog
+    // finished the close animation.
+    tick(dialogCloseDuration / 2);
+    expect(dialogRef.getState()).toBe(MatDialogState.CLOSING);
+
+    // Flush the remaining duration of the closing animation. We flush all other remaining
+    // tasks (e.g. the fallback close timeout) to avoid fakeAsync pending timer failures.
+    flush();
+    expect(dialogRef.getState()).toBe(MatDialogState.CLOSED);
+  }));
+});
 
 @Directive({selector: 'dir-with-view-container'})
 class DirectiveWithViewContainer {

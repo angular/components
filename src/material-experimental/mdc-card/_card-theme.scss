@@ -1,12 +1,23 @@
 @import '@material/card/mixins.import';
+@import '@material/theme/functions.import';
+@import '@material/card/variables.import';
 @import '@material/typography/mixins.import';
 @import '../mdc-helpers/mdc-helpers';
 
-@mixin mat-card-theme-mdc($theme) {
-  $foreground: map-get($theme, foreground);
-  $is-dark-theme: map-get($theme, is-dark);
+@mixin mat-mdc-card-color($config-or-theme) {
+  $config: mat-get-color-config($config-or-theme);
+  $foreground: map-get($config, foreground);
+  $is-dark-theme: map-get($config, is-dark);
 
-  @include mat-using-mdc-theme($theme) {
+  $orig-mdc-card-action-icon-color: $mdc-card-action-icon-color;
+  $orig-mdc-card-outline-color: $mdc-card-outline-color;
+
+  @include mat-using-mdc-theme($config) {
+    $mdc-card-action-icon-color:
+        rgba(mdc-theme-prop-value(on-surface), mdc-theme-text-emphasis(medium)) !global;
+    $mdc-card-outline-color:
+        mix(mdc-theme-prop-value(on-surface), mdc-theme-prop-value(surface), 12%) !global;
+
     @include mdc-card-without-ripple($query: $mat-theme-styles-query);
 
     // Card subtitles are an Angular Material construct (not MDC), so we explicitly set their
@@ -15,9 +26,13 @@
       color: mat-color($foreground, secondary-text);
     }
   }
+
+  $mdc-card-action-icon-color: $orig-mdc-card-action-icon-color !global;
+  $mdc-card-outline-color: $orig-mdc-card-outline-color !global;
 }
 
-@mixin mat-card-typography-mdc($config) {
+@mixin mat-mdc-card-typography($config-or-theme) {
+  $config: mat-get-typography-config($config-or-theme);
   @include mat-using-mdc-typography($config) {
     @include mdc-card-without-ripple($query: $mat-typography-styles-query);
 
@@ -29,6 +44,29 @@
 
     .mat-mdc-card-subtitle {
       @include mdc-typography(subtitle2);
+    }
+  }
+}
+
+@mixin mat-mdc-card-density($config-or-theme) {
+  $density-scale: mat-get-density-config($config-or-theme);
+}
+
+@mixin mat-mdc-card-theme($theme-or-color-config) {
+  $theme: _mat-legacy-get-theme($theme-or-color-config);
+  @include _mat-check-duplicate-theme-styles($theme, 'mat-mdc-card') {
+    $color: mat-get-color-config($theme);
+    $density: mat-get-density-config($theme);
+    $typography: mat-get-typography-config($theme);
+
+    @if $color != null {
+      @include mat-mdc-card-color($color);
+    }
+    @if $density != null {
+      @include mat-mdc-card-density($density);
+    }
+    @if $typography != null {
+      @include mat-mdc-card-typography($typography);
     }
   }
 }

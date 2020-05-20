@@ -100,7 +100,7 @@ def ng_module(
         **kwargs
     )
 
-def ng_package(name, data = [], globals = ROLLUP_GLOBALS, readme_md = None, **kwargs):
+def ng_package(name, data = [], deps = [], globals = ROLLUP_GLOBALS, readme_md = None, **kwargs):
     # If no readme file has been specified explicitly, use the default readme for
     # release packages from "src/README.md".
     if not readme_md:
@@ -119,6 +119,10 @@ def ng_package(name, data = [], globals = ROLLUP_GLOBALS, readme_md = None, **kw
         name = name,
         globals = globals,
         data = data + [":license_copied"],
+        # Tslib needs to be explicitly specified as dependency here, so that the `ng_package`
+        # rollup bundling action can include tslib. Tslib is usually a transitive dependency of
+        # entry-points passed to `ng_package`, but the rule does not collect transitive deps.
+        deps = deps + ["@npm//tslib"],
         readme_md = readme_md,
         substitutions = VERSION_PLACEHOLDER_REPLACEMENTS,
         **kwargs
@@ -223,7 +227,7 @@ def ng_web_test_suite(deps = [], static_css = [], bootstrap = [], tags = [], **k
             outs = ["%s.js" % css_id],
             output_to_bindir = True,
             cmd = """
-        files=($(locations %s))
+        files=($(execpaths %s))
         # Escape all double-quotes so that the content can be safely inlined into the
         # JS template. Note that it needs to be escaped a second time because the string
         # will be evaluated first in Bash and will then be stored in the JS output.

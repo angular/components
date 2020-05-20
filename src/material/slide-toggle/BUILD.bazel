@@ -1,5 +1,3 @@
-package(default_visibility = ["//visibility:public"])
-
 load("//src/e2e-app:test_suite.bzl", "e2e_test_suite")
 load(
     "//tools:defaults.bzl",
@@ -12,6 +10,8 @@ load(
     "sass_library",
 )
 
+package(default_visibility = ["//visibility:public"])
+
 ng_module(
     name = "slide-toggle",
     srcs = glob(
@@ -22,7 +22,6 @@ ng_module(
     module_name = "@angular/material/slide-toggle",
     deps = [
         "//src/cdk/a11y",
-        "//src/cdk/bidi",
         "//src/cdk/coercion",
         "//src/cdk/observers",
         "//src/material/core",
@@ -57,7 +56,6 @@ ng_test_library(
     deps = [
         ":slide-toggle",
         "//src/cdk/a11y",
-        "//src/cdk/bidi",
         "//src/cdk/observers",
         "//src/cdk/testing/private",
         "//src/material/testing",

@@ -84,7 +84,7 @@ import {
   mixinErrorState,
   mixinTabIndex,
 } from '@angular/material/core';
-import {MatFormField, MatFormFieldControl} from '@angular/material/form-field';
+import {MAT_FORM_FIELD, MatFormField, MatFormFieldControl} from '@angular/material/form-field';
 import {defer, merge, Observable, Subject} from 'rxjs';
 import {
   distinctUntilChanged,
@@ -515,7 +515,7 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
     @Optional() private _dir: Directionality,
     @Optional() _parentForm: NgForm,
     @Optional() _parentFormGroup: FormGroupDirective,
-    @Optional() private _parentFormField: MatFormField,
+    @Optional() @Inject(MAT_FORM_FIELD) private _parentFormField: MatFormField,
     @Self() @Optional() public ngControl: NgControl,
     @Attribute('tabindex') tabIndex: string,
     @Inject(MAT_SELECT_SCROLL_STRATEGY) scrollStrategyFactory: any,
@@ -936,16 +936,18 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
       .withAllowedModifierKeys(['shiftKey']);
 
     this._keyManager.tabOut.pipe(takeUntil(this._destroy)).subscribe(() => {
-      // Select the active item when tabbing away. This is consistent with how the native
-      // select behaves. Note that we only want to do this in single selection mode.
-      if (!this.multiple && this._keyManager.activeItem) {
-        this._keyManager.activeItem._selectViaInteraction();
-      }
+      if (this.panelOpen) {
+        // Select the active item when tabbing away. This is consistent with how the native
+        // select behaves. Note that we only want to do this in single selection mode.
+        if (!this.multiple && this._keyManager.activeItem) {
+          this._keyManager.activeItem._selectViaInteraction();
+        }
 
-      // Restore focus to the trigger before closing. Ensures that the focus
-      // position won't be lost if the user got focus into the overlay.
-      this.focus();
-      this.close();
+        // Restore focus to the trigger before closing. Ensures that the focus
+        // position won't be lost if the user got focus into the overlay.
+        this.focus();
+        this.close();
+      }
     });
 
     this._keyManager.change.pipe(takeUntil(this._destroy)).subscribe(() => {

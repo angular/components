@@ -1,5 +1,3 @@
-package(default_visibility = ["//visibility:public"])
-
 load("//src/e2e-app:test_suite.bzl", "e2e_test_suite")
 load(
     "//tools:defaults.bzl",
@@ -10,6 +8,8 @@ load(
     "sass_binary",
     "sass_library",
 )
+
+package(default_visibility = ["//visibility:public"])
 
 ng_module(
     name = "mdc-menu",
@@ -23,6 +23,7 @@ ng_module(
     module_name = "@angular/material-experimental/mdc-menu",
     deps = [
         "//src/cdk/overlay",
+        "//src/cdk/scrolling",
         "//src/material/core",
         "//src/material/menu",
         "@npm//@angular/animations",

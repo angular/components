@@ -1,10 +1,13 @@
 @import '../core/typography/typography-utils';
+@import '../core/theming/theming';
+@import '../core/theming/check-duplicate-styles';
 @import '../core/theming/palette';
 @import '../core/style/elevation';
 
-@mixin mat-snack-bar-theme($theme) {
-  $is-dark-theme: map-get($theme, is-dark);
-  $accent: map-get($theme, accent);
+@mixin mat-snack-bar-color($config-or-theme) {
+  $config: mat-get-color-config($config-or-theme);
+  $is-dark-theme: map-get($config, is-dark);
+  $accent: map-get($config, accent);
 
   .mat-snack-bar-container {
     // Use the primary text on the dark theme, even though the lighter one uses
@@ -12,7 +15,7 @@
     color: if($is-dark-theme, $dark-primary-text, $light-secondary-text);
     background: if($is-dark-theme, map-get($mat-grey, 50), #323232);
 
-    @include _mat-theme-elevation(6, $theme);
+    @include _mat-theme-elevation(6, $config);
   }
 
   .mat-simple-snackbar-action {
@@ -20,7 +23,8 @@
   }
 }
 
-@mixin mat-snack-bar-typography($config) {
+@mixin mat-snack-bar-typography($config-or-theme) {
+  $config: mat-get-typography-config($config-or-theme);
   .mat-simple-snackbar {
     font: {
       family: mat-font-family($config, body-1);
@@ -34,6 +38,29 @@
       family: inherit;
       size: inherit;
       weight: mat-font-weight($config, button);
+    }
+  }
+}
+
+@mixin _mat-snack-bar-density($config-or-theme) {
+  $density-scale: mat-get-density-config($config-or-theme);
+}
+
+@mixin mat-snack-bar-theme($theme-or-color-config) {
+  $theme: _mat-legacy-get-theme($theme-or-color-config);
+  @include _mat-check-duplicate-theme-styles($theme, 'mat-snack-bar') {
+    $color: mat-get-color-config($theme);
+    $density: mat-get-density-config($theme);
+    $typography: mat-get-typography-config($theme);
+
+    @if $color != null {
+      @include mat-snack-bar-color($color);
+    }
+    @if $density != null {
+      @include _mat-snack-bar-density($density);
+    }
+    @if $typography != null {
+      @include mat-snack-bar-typography($typography);
     }
   }
 }

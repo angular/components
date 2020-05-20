@@ -494,6 +494,7 @@ describe('MatSelectionList without forms', () => {
     });
 
     it('should select all items using ctrl + a', () => {
+      listOptions.forEach(option => option.componentInstance.disabled = false);
       const event = createKeyboardEvent('keydown', A, selectionList.nativeElement);
       Object.defineProperty(event, 'ctrlKey', {get: () => true});
 
@@ -503,6 +504,23 @@ describe('MatSelectionList without forms', () => {
       fixture.detectChanges();
 
       expect(listOptions.every(option => option.componentInstance.selected)).toBe(true);
+    });
+
+    it('should not select disabled items when pressing ctrl + a', () => {
+      const event = createKeyboardEvent('keydown', A, selectionList.nativeElement);
+      Object.defineProperty(event, 'ctrlKey', {get: () => true});
+
+      listOptions.slice(0, 2).forEach(option => option.componentInstance.disabled = true);
+      fixture.detectChanges();
+
+      expect(listOptions.map(option => option.componentInstance.selected))
+          .toEqual([false, false, false, false, false]);
+
+      dispatchEvent(selectionList.nativeElement, event);
+      fixture.detectChanges();
+
+      expect(listOptions.map(option => option.componentInstance.selected))
+          .toEqual([false, false, true, true, true]);
     });
 
     it('should select all items using ctrl + a if some items are selected', () => {
@@ -617,11 +635,40 @@ describe('MatSelectionList without forms', () => {
       expect(list.options.toArray().every(option => option.selected)).toBe(true);
     });
 
+    it('should be able to select all options, even if they are disabled', () => {
+      const list: MatSelectionList = selectionList.componentInstance;
+
+      list.options.forEach(option => option.disabled = true);
+      fixture.detectChanges();
+
+      expect(list.options.toArray().every(option => option.selected)).toBe(false);
+
+      list.selectAll();
+      fixture.detectChanges();
+
+      expect(list.options.toArray().every(option => option.selected)).toBe(true);
+    });
+
     it('should be able to deselect all options', () => {
       const list: MatSelectionList = selectionList.componentInstance;
 
       list.options.forEach(option => option.toggle());
       expect(list.options.toArray().every(option => option.selected)).toBe(true);
+
+      list.deselectAll();
+      fixture.detectChanges();
+
+      expect(list.options.toArray().every(option => option.selected)).toBe(false);
+    });
+
+    it('should be able to deselect all options, even if they are disabled', () => {
+      const list: MatSelectionList = selectionList.componentInstance;
+
+      list.options.forEach(option => option.toggle());
+      expect(list.options.toArray().every(option => option.selected)).toBe(true);
+
+      list.options.forEach(option => option.disabled = true);
+      fixture.detectChanges();
 
       list.deselectAll();
       fixture.detectChanges();
@@ -999,6 +1046,44 @@ describe('MatSelectionList without forms', () => {
       expect(listOptions.every(option => !option.componentInstance.selected)).toBe(true);
     });
 
+    it('should focus, but not toggle, the next item when pressing SHIFT + UP_ARROW in single ' +
+      'selection mode', () => {
+        const manager = selectionList.componentInstance._keyManager;
+        const upKeyEvent = createKeyboardEvent('keydown', UP_ARROW);
+        Object.defineProperty(upKeyEvent, 'shiftKey', {get: () => true});
+
+        dispatchFakeEvent(listOptions[3].nativeElement, 'focus');
+        expect(manager.activeItemIndex).toBe(3);
+
+        expect(listOptions[1].componentInstance.selected).toBe(false);
+        expect(listOptions[2].componentInstance.selected).toBe(false);
+
+        selectionList.componentInstance._keydown(upKeyEvent);
+        fixture.detectChanges();
+
+        expect(listOptions[1].componentInstance.selected).toBe(false);
+        expect(listOptions[2].componentInstance.selected).toBe(false);
+      });
+
+    it('should focus, but not toggle, the next item when pressing SHIFT + DOWN_ARROW ' +
+      'in single selection mode', () => {
+        const manager = selectionList.componentInstance._keyManager;
+        const downKeyEvent = createKeyboardEvent('keydown', DOWN_ARROW);
+        Object.defineProperty(downKeyEvent, 'shiftKey', {get: () => true});
+
+        dispatchFakeEvent(listOptions[0].nativeElement, 'focus');
+        expect(manager.activeItemIndex).toBe(0);
+
+        expect(listOptions[1].componentInstance.selected).toBe(false);
+        expect(listOptions[2].componentInstance.selected).toBe(false);
+
+        selectionList.componentInstance._keydown(downKeyEvent);
+        fixture.detectChanges();
+
+        expect(listOptions[1].componentInstance.selected).toBe(false);
+        expect(listOptions[2].componentInstance.selected).toBe(false);
+      });
+
   });
 });
 
@@ -1075,16 +1160,27 @@ describe('MatSelectionList with forms', () => {
         .toBe(1, 'Expected first list option to be selected');
     }));
 
-    it('should set the selection-list to touched on blur', fakeAsync(() => {
+    it('should not mark the model as touched when the list is blurred', fakeAsync(() => {
       expect(ngModel.touched)
         .toBe(false, 'Expected the selection-list to be untouched by default.');
 
       dispatchFakeEvent(selectionListDebug.nativeElement, 'blur');
       fixture.detectChanges();
-
       tick();
 
-      expect(ngModel.touched).toBe(true, 'Expected the selection-list to be touched after blur');
+      expect(ngModel.touched).toBe(false, 'Expected the selection-list to remain untouched.');
+    }));
+
+    it('should mark the model as touched when a list item is blurred', fakeAsync(() => {
+      expect(ngModel.touched)
+        .toBe(false, 'Expected the selection-list to be untouched by default.');
+
+      dispatchFakeEvent(fixture.nativeElement.querySelector('.mat-list-option'), 'blur');
+      fixture.detectChanges();
+      tick();
+
+      expect(ngModel.touched)
+        .toBe(true, 'Expected the selection-list to be touched after an item is blurred.');
     }));
 
     it('should be pristine by default', fakeAsync(() => {

@@ -6,7 +6,11 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {UpdatedGoogleMap} from '../google-map/google-map';
+// The global `window` variable is typed as an intersection of `Window` and `globalThis`.
+// We re-declare `window` here and omit `globalThis` as it is typed with the actual Google
+// Maps types which we intend to override with jasmine spies for testing. Keeping `globalThis`
+// would mean that `window` is not assignable to our testing window.
+declare var window: Window;
 
 /** Window interface for testing */
 export interface TestingWindow extends Window {
@@ -18,16 +22,18 @@ export interface TestingWindow extends Window {
       Polyline?: jasmine.Spy;
       Polygon?: jasmine.Spy;
       Rectangle?: jasmine.Spy;
+      Circle?: jasmine.Spy;
+      GroundOverlay?: jasmine.Spy;
     };
   };
 }
 
 /** Creates a jasmine.SpyObj for a google.maps.Map. */
-export function createMapSpy(options: google.maps.MapOptions): jasmine.SpyObj<UpdatedGoogleMap> {
+export function createMapSpy(options: google.maps.MapOptions): jasmine.SpyObj<google.maps.Map> {
   const mapSpy = jasmine.createSpyObj('google.maps.Map', [
     'setOptions', 'setCenter', 'setZoom', 'setMap', 'addListener', 'fitBounds', 'panBy', 'panTo',
     'panToBounds', 'getBounds', 'getCenter', 'getClickableIcons', 'getHeading', 'getMapTypeId',
-    'getProjection', 'getStreetView', 'getTilt', 'getZoom'
+    'getProjection', 'getStreetView', 'getTilt', 'getZoom', 'setMapTypeId'
   ]);
   mapSpy.addListener.and.returnValue({remove: () => {}});
   return mapSpy;
@@ -35,7 +41,7 @@ export function createMapSpy(options: google.maps.MapOptions): jasmine.SpyObj<Up
 
 /** Creates a jasmine.Spy to watch for the constructor of a google.maps.Map. */
 export function createMapConstructorSpy(
-    mapSpy: jasmine.SpyObj<UpdatedGoogleMap>, apiLoaded = true): jasmine.Spy {
+    mapSpy: jasmine.SpyObj<google.maps.Map>, apiLoaded = true): jasmine.Spy {
   const mapConstructorSpy =
       jasmine.createSpy('Map constructor', (_el: Element, _options: google.maps.MapOptions) => {
         return mapSpy;
@@ -204,4 +210,76 @@ export function createRectangleConstructorSpy(rectangleSpy: jasmine.SpyObj<googl
     };
   }
   return rectangleConstructorSpy;
+}
+
+/** Creates a jasmine.SpyObj for a google.maps.Circle */
+export function createCircleSpy(options: google.maps.CircleOptions):
+    jasmine.SpyObj<google.maps.Circle> {
+  const circleSpy = jasmine.createSpyObj('google.maps.Circle', [
+    'addListener', 'getCenter', 'getRadius', 'getDraggable', 'getEditable', 'getVisible', 'setMap',
+    'setOptions', 'setCenter', 'setRadius'
+  ]);
+  circleSpy.addListener.and.returnValue({remove: () => {}});
+  return circleSpy;
+}
+
+/** Creates a jasmine.Spy to watch for the constructor of a google.maps.Circle */
+export function createCircleConstructorSpy(circleSpy: jasmine.SpyObj<google.maps.Circle>):
+    jasmine.Spy {
+  const circleConstructorSpy =
+      jasmine.createSpy('Circle constructor', (_options: google.maps.CircleOptions) => {
+        return circleSpy;
+      });
+  const testingWindow: TestingWindow = window;
+  if (testingWindow.google && testingWindow.google.maps) {
+    testingWindow.google.maps['Circle'] = circleConstructorSpy;
+  } else {
+    testingWindow.google = {
+      maps: {
+        'Circle': circleConstructorSpy,
+      },
+    };
+  }
+  return circleConstructorSpy;
+}
+
+/** Creates a jasmine.SpyObj for a google.maps.GroundOverlay */
+export function createGroundOverlaySpy(
+    url: string, bounds: google.maps.LatLngBoundsLiteral,
+    options?: google.maps.GroundOverlayOptions): jasmine.SpyObj<google.maps.GroundOverlay> {
+  const values: {[key: string]: any} = {url};
+  const groundOverlaySpy = jasmine.createSpyObj('google.maps.GroundOverlay', [
+    'addListener',
+    'getBounds',
+    'getOpacity',
+    'getUrl',
+    'setMap',
+    'setOpacity',
+    'set',
+  ]);
+  groundOverlaySpy.addListener.and.returnValue({remove: () => {}});
+  groundOverlaySpy.set.and.callFake((key: string, value: any) => values[key] = value);
+  return groundOverlaySpy;
+}
+
+/** Creates a jasmine.Spy to watch for the constructor of a google.maps.GroundOverlay */
+export function createGroundOverlayConstructorSpy(
+    groundOverlaySpy: jasmine.SpyObj<google.maps.GroundOverlay>): jasmine.Spy {
+  const groundOverlayConstructorSpy = jasmine.createSpy(
+      'GroundOverlay constructor',
+      (_url: string, _bounds: google.maps.LatLngBoundsLiteral,
+       _options: google.maps.GroundOverlayOptions) => {
+        return groundOverlaySpy;
+      });
+  const testingWindow: TestingWindow = window;
+  if (testingWindow.google && testingWindow.google.maps) {
+    testingWindow.google.maps['GroundOverlay'] = groundOverlayConstructorSpy;
+  } else {
+    testingWindow.google = {
+      maps: {
+        'GroundOverlay': groundOverlayConstructorSpy,
+      },
+    };
+  }
+  return groundOverlayConstructorSpy;
 }

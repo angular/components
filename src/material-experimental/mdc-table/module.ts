@@ -25,7 +25,8 @@ import {
   MatHeaderRow,
   MatHeaderRowDef,
   MatRow,
-  MatRowDef
+  MatRowDef,
+  MatNoDataRow
 } from './row';
 
 const EXPORTED_DECLARATIONS = [
@@ -50,11 +51,12 @@ const EXPORTED_DECLARATIONS = [
   MatHeaderRow,
   MatRow,
   MatFooterRow,
+  MatNoDataRow,
 ];
 
 @NgModule({
   imports: [MatCommonModule, CdkTableModule],
-  exports: EXPORTED_DECLARATIONS,
+  exports: [MatCommonModule, EXPORTED_DECLARATIONS],
   declarations: EXPORTED_DECLARATIONS,
 })
 export class MatTableModule {

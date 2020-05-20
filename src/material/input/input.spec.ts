@@ -850,6 +850,13 @@ describe('MatInput without forms', () => {
     expect(inputContainer.floatLabel).toBe('always');
   }));
 
+  it('should not throw when trying to animate and lock too early', fakeAsync(() => {
+    const fixture = createComponent(MatInputTextTestController);
+    const formField = fixture.debugElement.query(By.directive(MatFormField))!
+        .componentInstance as MatFormField;
+    expect(() => formField._animateAndLockLabel()).not.toThrow();
+  }));
+
   it('should not highlight when focusing a readonly input', fakeAsync(() => {
     let fixture = createComponent(MatInputWithReadonlyInput);
     fixture.detectChanges();
@@ -1325,6 +1332,28 @@ describe('MatInput with appearance', () => {
     outlineFixture.componentInstance.appearance = 'legacy';
     outlineFixture.detectChanges();
     flush();
+
+    outlineFixture.componentInstance.appearance = 'outline';
+    outlineFixture.detectChanges();
+    flush();
+    outlineFixture.detectChanges();
+
+    const wrapperElement = outlineFixture.nativeElement;
+    const outlineStart = wrapperElement.querySelector('.mat-form-field-outline-start');
+    const outlineGap = wrapperElement.querySelector('.mat-form-field-outline-gap');
+
+    expect(parseInt(outlineStart.style.width)).toBeGreaterThan(0);
+    expect(parseInt(outlineGap.style.width)).toBeGreaterThan(0);
+  }));
+
+  it('should calculate the gap when starting off in RTL', fakeAsync(() => {
+    fixture.destroy();
+    TestBed.resetTestingModule();
+
+    const outlineFixture = createComponent(MatInputWithAppearanceAndLabel, [{
+      provide: Directionality,
+      useValue: {change: new Subject<Direction>(), value: 'rtl'}
+    }]);
 
     outlineFixture.componentInstance.appearance = 'outline';
     outlineFixture.detectChanges();

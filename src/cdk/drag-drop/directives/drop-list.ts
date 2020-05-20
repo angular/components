@@ -17,7 +17,6 @@ import {
   Directive,
   ChangeDetectorRef,
   SkipSelf,
-  AfterContentInit,
   Inject,
 } from '@angular/core';
 import {Directionality} from '@angular/cdk/bidi';
@@ -59,9 +58,12 @@ export interface CdkDropListInternal extends CdkDropList {}
     '[class.cdk-drop-list-receiving]': '_dropListRef.isReceiving()',
   }
 })
-export class CdkDropList<T = any> implements AfterContentInit, OnDestroy {
+export class CdkDropList<T = any> implements OnDestroy {
   /** Emits when the list has been destroyed. */
   private _destroyed = new Subject<void>();
+
+  /** Whether the element's scrollable parents have been resolved. */
+  private _scrollableParentsResolved: boolean;
 
   /** Keeps track of the drop lists that are currently on the page. */
   private static _dropLists: CdkDropList[] = [];
@@ -183,16 +185,6 @@ export class CdkDropList<T = any> implements AfterContentInit, OnDestroy {
     }
   }
 
-  ngAfterContentInit() {
-    // @breaking-change 11.0.0 Remove null check for _scrollDispatcher once it's required.
-    if (this._scrollDispatcher) {
-      const scrollableParents = this._scrollDispatcher
-        .getAncestorScrollContainers(this.element)
-        .map(scrollable => scrollable.getElementRef().nativeElement);
-      this._dropListRef.withScrollableParents(scrollableParents);
-    }
-  }
-
   /** Registers an items with the drop list. */
   addItem(item: CdkDrag): void {
     this._unsortedItems.add(item);
@@ -241,64 +233,6 @@ export class CdkDropList<T = any> implements AfterContentInit, OnDestroy {
     this._destroyed.complete();
   }
 
-  /**
-   * Starts dragging an item.
-   * @deprecated No longer being used. To be removed.
-   * @breaking-change 10.0.0
-   */
-  start(): void {
-    this._dropListRef.start();
-  }
-
-  /**
-   * Drops an item into this container.
-   * @param item Item being dropped into the container.
-   * @param currentIndex Index at which the item should be inserted.
-   * @param previousContainer Container from which the item got dragged in.
-   * @param isPointerOverContainer Whether the user's pointer was over the
-   *    container when the item was dropped.
-   *
-   * @deprecated No longer being used. To be removed.
-   * @breaking-change 10.0.0
-   */
-  drop(item: CdkDrag, currentIndex: number, previousContainer: CdkDropList,
-    isPointerOverContainer: boolean): void {
-    this._dropListRef.drop(item._dragRef, currentIndex, previousContainer._dropListRef,
-        isPointerOverContainer, {x: 0, y: 0});
-  }
-
-  /**
-   * Emits an event to indicate that the user moved an item into the container.
-   * @param item Item that was moved into the container.
-   * @param pointerX Position of the item along the X axis.
-   * @param pointerY Position of the item along the Y axis.
-   * @deprecated No longer being used. To be removed.
-   * @breaking-change 10.0.0
-   */
-  enter(item: CdkDrag, pointerX: number, pointerY: number): void {
-    this._dropListRef.enter(item._dragRef, pointerX, pointerY);
-  }
-
-  /**
-   * Removes an item from the container after it was dragged into another container by the user.
-   * @param item Item that was dragged out.
-   * @deprecated No longer being used. To be removed.
-   * @breaking-change 10.0.0
-   */
-  exit(item: CdkDrag): void {
-    this._dropListRef.exit(item._dragRef);
-  }
-
-  /**
-   * Figures out the index of an item in the container.
-   * @param item Item whose index should be determined.
-   * @deprecated No longer being used. To be removed.
-   * @breaking-change 10.0.0
-   */
-  getItemIndex(item: CdkDrag): number {
-    return this._dropListRef.getItemIndex(item._dragRef);
-  }
-
   /** Syncs the inputs of the CdkDropList with the options of the underlying DropListRef. */
   private _setupInputSyncSubscription(ref: DropListRef<CdkDropList>) {
     if (this._dir) {
@@ -319,6 +253,20 @@ export class CdkDropList<T = any> implements AfterContentInit, OnDestroy {
             siblings.push(drop);
           }
         });
+      }
+
+      // Note that we resolve the scrollable parents here so that we delay the resolution
+      // as long as possible, ensuring that the element is in its final place in the DOM.
+      // @breaking-change 11.0.0 Remove null check for _scrollDispatcher once it's required.
+      if (!this._scrollableParentsResolved && this._scrollDispatcher) {
+        const scrollableParents = this._scrollDispatcher
+          .getAncestorScrollContainers(this.element)
+          .map(scrollable => scrollable.getElementRef().nativeElement);
+        this._dropListRef.withScrollableParents(scrollableParents);
+
+        // Only do this once since it involves traversing the DOM and the parents
+        // shouldn't be able to change without the drop list being destroyed.
+        this._scrollableParentsResolved = true;
       }
 
       ref.disabled = this.disabled;

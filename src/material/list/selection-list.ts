@@ -325,7 +325,6 @@ export class MatListOption extends _MatListOptionMixinBase implements AfterConte
     'role': 'listbox',
     'class': 'mat-selection-list mat-list-base',
     '(focus)': '_onFocus()',
-    '(blur)': '_onTouched()',
     '(keydown)': '_keydown($event)',
     '[attr.aria-multiselectable]': 'multiple',
     '[attr.aria-disabled]': 'disabled.toString()',
@@ -550,14 +549,15 @@ export class MatSelectionList extends _MatSelectionListMixinBase implements CanD
         // The "A" key gets special treatment, because it's used for the "select all" functionality.
         if (keyCode === A && this.multiple && hasModifierKey(event, 'ctrlKey') &&
             !manager.isTyping()) {
-          this.options.find(option => !option.selected) ? this.selectAll() : this.deselectAll();
+          const shouldSelect = this.options.some(option => !option.disabled && !option.selected);
+          this._setAllOptionsSelected(shouldSelect, true);
           event.preventDefault();
         } else {
           manager.onKeydown(event);
         }
     }
 
-    if ((keyCode === UP_ARROW || keyCode === DOWN_ARROW) && event.shiftKey &&
+    if (this.multiple && (keyCode === UP_ARROW || keyCode === DOWN_ARROW) && event.shiftKey &&
         manager.activeItemIndex !== previousFocusIndex) {
       this._toggleFocusedOption();
     }
@@ -663,13 +663,13 @@ export class MatSelectionList extends _MatSelectionListMixinBase implements CanD
    * Sets the selected state on all of the options
    * and emits an event if anything changed.
    */
-  private _setAllOptionsSelected(isSelected: boolean) {
+  private _setAllOptionsSelected(isSelected: boolean, skipDisabled?: boolean) {
     // Keep track of whether anything changed, because we only want to
     // emit the changed event when something actually changed.
     let hasChanged = false;
 
     this.options.forEach(option => {
-      if (option._setSelected(isSelected)) {
+      if ((!skipDisabled || !option.disabled) && option._setSelected(isSelected)) {
         hasChanged = true;
       }
     });

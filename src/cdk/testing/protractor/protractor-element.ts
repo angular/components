@@ -73,9 +73,14 @@ export class ProtractorElement implements TestElement {
     return this.element.clear();
   }
 
-  async click(relativeX = 0, relativeY = 0): Promise<void> {
+  async click(...args: number[]): Promise<void> {
+    // Omitting the offset argument to mouseMove results in clicking the center.
+    // This is the default behavior we want, so we use an empty array of offsetArgs if no args are
+    // passed to this method.
+    const offsetArgs = args.length ? [{x: args[0], y: args[1]}] : [];
+
     await browser.actions()
-      .mouseMove(await this.element.getWebElement(), {x: relativeX, y: relativeY})
+      .mouseMove(await this.element.getWebElement(), ...offsetArgs)
       .click()
       .perform();
   }
@@ -111,7 +116,9 @@ export class ProtractorElement implements TestElement {
     const modifierKeys = toProtractorModifierKeys(modifiers);
     const keys = rest.map(k => typeof k === 'string' ? k.split('') : [keyMap[k]])
         .reduce((arr, k) => arr.concat(k), [])
-        .map(k => Key.chord(...modifierKeys, k));
+        // Key.chord doesn't work well with geckodriver (mozilla/geckodriver#1502),
+        // so avoid it if no modifier keys are required.
+        .map(k => modifierKeys.length > 0 ? Key.chord(...modifierKeys, k) : k);
 
     return this.element.sendKeys(...keys);
   }

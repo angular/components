@@ -42,10 +42,12 @@
 /src/material/core/*                               @jelbourn
 /src/material/core/testing/**                      @crisbeto
 /src/material/core/animation/**                    @jelbourn
+/src/material/core/color/**                        @jelbourn @devversion
 /src/material/core/common-behaviors/**             @jelbourn @devversion
 /src/material/core/datetime/**                     @mmalerba
+/src/material/core/density/**                      @devversion
 /src/material/core/error/**                        @crisbeto @mmalerba
-/src/material/core/focus-indicator/**              @jelbourn @zelliott
+/src/material/core/focus-indicators/**             @jelbourn @zelliott
 /src/material/core/gestures/**                     @jelbourn
 /src/material/core/label/**                        @mmalerba
 /src/material/core/line/**                         @jelbourn
@@ -97,6 +99,8 @@
 /src/material-experimental/mdc-card/**             @mmalerba
 /src/material-experimental/mdc-checkbox/**         @mmalerba
 /src/material-experimental/mdc-chips/**            @mmalerba
+/src/material-experimental/mdc-color/**            @jelbourn @devversion
+/src/material-experimental/mdc-density/**          @devversion
 /src/material-experimental/mdc-dialog/**           @devversion
 /src/material-experimental/mdc-form-field/**       @devversion @mmalerba
 /src/material-experimental/mdc-helpers/**          @mmalerba
@@ -139,6 +143,7 @@
 /src/dev-app/card/**                               @jelbourn
 /src/dev-app/checkbox/**                           @jelbourn @devversion
 /src/dev-app/chips/**                              @jelbourn
+/src/dev-app/clipboard/**                          @jelbourn @xkxx
 /src/dev-app/column-resize/**                      @kseamon @andrewseguin
 /src/dev-app/connected-overlay/**                  @jelbourn @crisbeto
 /src/dev-app/dataset/**                            @andrewseguin
@@ -169,6 +174,7 @@
 /src/dev-app/mdc-progress-bar/**                   @crisbeto
 /src/dev-app/mdc-radio/**                          @mmalerba
 /src/dev-app/mdc-snackbar/**                       @opozo
+/src/dev-app/mdc-sidenav/**                        @crisbeto
 /src/dev-app/mdc-slide-toggle/**                   @crisbeto
 /src/dev-app/mdc-slider/**                         @devversion
 /src/dev-app/mdc-table/**                          @andrewseguin
@@ -240,9 +246,12 @@
 # Universal app
 /src/universal-app/**                              @jelbourn
 
+# Integration tests
+/integration/**                                    @jelbourn @devversion
+
 # Tooling
 /.circleci/**                                      @angular/dev-infra-components
-/.yarn/**                                      @angular/dev-infra-components
+/.yarn/**                                          @angular/dev-infra-components
 /scripts/**                                        @angular/dev-infra-components
 /test/**                                           @angular/dev-infra-components
 /tools/**                                          @angular/dev-infra-components
@@ -309,3 +318,4 @@
 /.github/**                                        @angular/dev-infra-components @jelbourn
 /.vscode/**                                        @angular/dev-infra-components @mmalerba
 /src/*                                             @jelbourn
+/goldens/ts-circular-deps.json                     @angular/dev-infra-components
