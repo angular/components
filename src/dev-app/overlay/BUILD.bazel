@@ -1,0 +1,13 @@
+load("//tools:defaults.bzl", "ng_module")
+
+package(default_visibility = ["//visibility:public"])
+
+ng_module(
+    name = "overlay",
+    srcs = glob(["**/*.ts"]),
+    assets = ["overlay-demo.html"],
+    deps = [
+        "//src/components-examples/cdk/overlay",
+        "@npm//@angular/router",
+    ],
+)
