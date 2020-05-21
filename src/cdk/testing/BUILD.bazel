@@ -37,14 +37,14 @@ ng_web_test_suite(
     ],
     deps = [
         ":require-config.js",
-        "//src/cdk/testing/tests:unit_test_sources",
+        "//src/cdk/testing/tests:unit_tests_lib",
     ],
 )
 
 e2e_test_suite(
     name = "protractor_e2e_tests",
     deps = [
-        "//src/cdk/testing/tests:e2e_test_sources",
+        "//src/cdk/testing/tests:e2e_tests_lib",
     ],
 )
 

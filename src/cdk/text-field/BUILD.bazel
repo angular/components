@@ -37,7 +37,7 @@ sass_binary(
 )
 
 ng_test_library(
-    name = "unit_test_sources",
+    name = "unit_tests_lib",
     srcs = glob(
         ["**/*.spec.ts"],
         exclude = ["**/*.e2e.spec.ts"],
@@ -55,7 +55,7 @@ ng_test_library(
 ng_web_test_suite(
     name = "unit_tests",
     static_css = [":text_field_prebuilt_scss"],
-    deps = [":unit_test_sources"],
+    deps = [":unit_tests_lib"],
 )
 
 markdown_to_html(
