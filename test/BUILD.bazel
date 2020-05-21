@@ -1,9 +1,14 @@
 load("//tools:create-system-config.bzl", "create_system_config")
-load("//tools:defaults.bzl", "ts_library")
+load("//tools:defaults.bzl", "js_library", "ts_library")
 
 package(default_visibility = ["//visibility:public"])
 
-exports_files(["bazel-karma-local-config.js"])
+exports_files([
+    "bazel-karma-local-config.js",
+    "karma-saucelabs.conf.js",
+    "browser-providers.js",
+    "karma-browsers.json",
+])
 
 # Common set-up for all Angular Material and CDK tests.
 ts_library(
@@ -27,4 +32,29 @@ create_system_config(
     node_modules_base_path = "node_modules/",
     output_name = "system-config.js",
     packages_dir = "dist/packages",
+)
+
+js_library(
+    name = "karma-browser-config",
+    srcs = [
+        "browser-providers.js",
+        "karma-browsers.json",
+    ],
+)
+
+js_library(
+    name = "karma_local_testing_config_lib",
+    srcs = ["bazel-karma-local-config.js"],
+    deps = ["@npm//karma-spec-reporter"],
+)
+
+js_library(
+    name = "karma_saucelabs_config_lib",
+    srcs = ["karma-saucelabs.conf.js"],
+    deps = [
+        ":karma-browser-config",
+        "//tools/saucelabs-bazel/launcher",
+        "@npm//@bazel/runfiles",
+        "@npm//karma-spec-reporter",
+    ],
 )

@@ -48,7 +48,8 @@
     "integration-tests:size-test": "bazel test //integration/size-test/...",
     "check-mdc-tests": "ts-node --project scripts/tsconfig.json scripts/check-mdc-tests.ts",
     "check-mdc-exports": "ts-node --project scripts/tsconfig.json scripts/check-mdc-exports.ts",
-    "check-tools": "yarn tsc --project tools/tsconfig-ci.json"
+    "check-tools": "yarn tsc --project tools/tsconfig-ci.json",
+    "sauce-bazel-daemon": "ts-node --project tools/saucelabs-bazel/tsconfig.json tools/saucelabs-bazel/background-service/cli.ts"
   },
   "version": "12.1.0-next.0",
   "dependencies": {
@@ -63,6 +64,7 @@
     "@types/youtube": "^0.0.42",
     "@webcomponents/custom-elements": "^1.1.0",
     "core-js-bundle": "^3.8.2",
+    "karma-spec-reporter": "^0.0.32",
     "material-components-web": "12.0.0-canary.b52196498.0",
     "rxjs": "^6.5.3",
     "rxjs-tslint-rules": "^4.33.1",

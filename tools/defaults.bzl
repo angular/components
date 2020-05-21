@@ -1,5 +1,6 @@
 # Re-export of Bazel rules with repository-wide defaults
 
+load("@build_bazel_rules_nodejs//:index.bzl", _js_library = "js_library")
 load("@io_bazel_rules_sass//:defs.bzl", _sass_binary = "sass_binary", _sass_library = "sass_library")
 load("@npm//@angular/bazel:index.bzl", _ng_module = "ng_module", _ng_package = "ng_package")
 load("@npm//@bazel/jasmine:index.bzl", _jasmine_node_test = "jasmine_node_test")
@@ -30,6 +31,9 @@ def sass_binary(sourcemap = False, **kwargs):
 
 def sass_library(**kwargs):
     _sass_library(**kwargs)
+
+def js_library(**kwargs):
+    _js_library(**kwargs)
 
 def ts_library(tsconfig = None, deps = [], testonly = False, **kwargs):
     # Add tslib because we use import helpers for all public packages.
@@ -155,6 +159,27 @@ def ng_e2e_test_library(deps = [], tsconfig = None, **kwargs):
         **kwargs
     )
 
+def karma_web_test(name, **kwargs):
+    tags = kwargs.pop("tags", [])
+    timeout = kwargs.pop("timeout", None)
+
+    # Custom standalone web test that can be run to test against any browser
+    # that is manually connected to.
+    _karma_web_test(
+        name = "%s_bin" % name,
+        tags = ["manual"],
+        timeout = timeout,
+        **kwargs
+    )
+
+    # Workaround for: https://github.com/bazelbuild/rules_nodejs/issues/1429
+    native.sh_test(
+        name = "%s" % name,
+        srcs = ["%s_bin" % name],
+        timeout = timeout,
+        tags = tags + ["ibazel_notify_changes"],
+    )
+
 def karma_web_test_suite(name, **kwargs):
     web_test_args = {}
     kwargs["srcs"] = ["@npm//:node_modules/tslib/tslib.js"] + getAngularUmdTargets() + kwargs.get("srcs", [])
@@ -171,26 +196,48 @@ def karma_web_test_suite(name, **kwargs):
         ]
 
     for opt_name in kwargs.keys():
-        # Filter out options which are specific to "karma_web_test" targets. We cannot
+        # Filter out options which are specific to "karma_web_test_suite" targets. We cannot
         # pass options like "browsers" to the local web test target.
         if not opt_name in ["wrapped_test_tags", "browsers", "wrapped_test_tags", "tags"]:
             web_test_args[opt_name] = kwargs[opt_name]
 
+    local_web_test_args = dict(**web_test_args)
+    local_web_test_args["deps"] = local_web_test_args.get("deps", []) + [
+        "//test:karma_local_testing_config_lib",
+    ]
+
     # Custom standalone web test that can be run to test against any browser
     # that is manually connected to.
-    _karma_web_test(
-        name = "%s_local_bin" % name,
+    karma_web_test(
+        name = "%s_local" % name,
         config_file = "//test:bazel-karma-local-config.js",
         tags = ["manual"],
-        **web_test_args
+        **local_web_test_args
     )
 
-    # Workaround for: https://github.com/bazelbuild/rules_nodejs/issues/1429
-    native.sh_test(
-        name = "%s_local" % name,
-        srcs = ["%s_local_bin" % name],
-        tags = ["manual", "local", "ibazel_notify_changes"],
-        testonly = True,
+    sauce_web_test_args = dict(**web_test_args)
+    sauce_web_test_args["deps"] = sauce_web_test_args.get("deps", []) + [
+        "//test:karma_saucelabs_config_lib",
+    ]
+    sauce_web_test_args["tags"] = sauce_web_test_args.get("tags", []) + [
+        "manual",
+        "saucelabs",
+        "no-remote-exec",
+    ]
+    current_package = native.package_name()
+
+    # Do not run brower tests from the `/testing` entry-points, or from the
+    # components examples on remote browsers (i.e. Saucelabs).
+    if current_package.endswith("/testing") or \
+       current_package.startswith("src/components-examples/"):
+        sauce_web_test_args["tags"] += ["skip-on-remote-browsers"]
+
+    # Add a saucelabs target for these karma tests
+    karma_web_test(
+        name = "%s_saucelabs" % name,
+        timeout = "long",
+        config_file = "//test:karma-saucelabs.conf.js",
+        **sauce_web_test_args
     )
 
     # Default test suite with all configured browsers.
