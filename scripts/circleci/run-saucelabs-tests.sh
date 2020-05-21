@@ -22,7 +22,8 @@ yarn bazel test ${TEST_TARGETS} \
   --workspace_status_command="echo SAUCE_TUNNEL_IDENTIFIER ${SAUCE_TUNNEL_IDENTIFIER}" \
   --stamp \
   --test_env=SAUCE_USERNAME \
-  --test_env=SAUCE_ACCESS_KEY
+  --test_env=SAUCE_ACCESS_KEY \
+  --jobs=3
 
 # Kill the Saucelabs tunnel. This is necessary in order to avoid rate-limit
 # errors that cause the unit tests to be flaky.

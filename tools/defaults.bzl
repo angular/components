@@ -155,6 +155,24 @@ def ng_e2e_test_library(deps = [], tsconfig = None, **kwargs):
         **kwargs
     )
 
+def karma_web_test(name, **kwargs):
+  tags = kwargs.pop("tags", [])
+  # Custom standalone web test that can be run to test against any browser
+  # that is manually connected to.
+  _karma_web_test(
+      name = "%s_bin" % name,
+      tags = ["manual"],
+      **kwargs
+  )
+
+  # Workaround for: https://github.com/bazelbuild/rules_nodejs/issues/1429
+  native.sh_test(
+      name = "%s" % name,
+      srcs = ["%s_bin" % name],
+      tags = tags + ["ibazel_notify_changes"],
+  )
+
+
 def karma_web_test_suite(name, **kwargs):
     web_test_args = {}
     kwargs["srcs"] = ["@npm//:node_modules/tslib/tslib.js"] + getAngularUmdTargets() + kwargs.get("srcs", [])
@@ -178,23 +196,12 @@ def karma_web_test_suite(name, **kwargs):
 
     # Custom standalone web test that can be run to test against any browser
     # that is manually connected to.
-    _karma_web_test(
-        name = "%s_local_bin" % name,
+    karma_web_test(
+        name = "%s_local" % name,
         config_file = "//test:bazel-karma-local-config.js",
         tags = ["manual"],
         **web_test_args
     )
-
-    # Workaround for: https://github.com/bazelbuild/rules_nodejs/issues/1429
-    native.sh_test(
-        name = "%s_local" % name,
-        srcs = ["%s_local_bin" % name],
-        tags = ["manual", "local", "ibazel_notify_changes"],
-        testonly = True,
-    )
-
-    data = kwargs.get("data", [])
-    tags = kwargs.get("tags", [])
 
     sauce_web_test_args = dict(**web_test_args)
     sauce_web_test_args["data"] = sauce_web_test_args.get("data", []) + [
@@ -207,26 +214,12 @@ def karma_web_test_suite(name, **kwargs):
     ]
 
     # Add a saucelabs target for these karma tests
-    _karma_web_test(
-        name = "%s_saucelabs_bin" % name,
+    karma_web_test(
+        name = "%s_saucelabs" % name,
         timeout = "long",
         config_file = "//test:karma-saucelabs.conf.js",
-        tags = ["manual"],
+        tags = ["manual", "saucelabs", "no-remote-exec"],
         **sauce_web_test_args
-    )
-
-    # Workaround for: https://github.com/bazelbuild/rules_nodejs/issues/1429
-    native.sh_test(
-        name = "%s_saucelabs" % name,
-        srcs = ["%s_saucelabs_bin" % name],
-        tags = tags + [
-            "ibazel_notify_changes",
-            "exclusive",
-            "manual",
-            "no-remote-exec",
-            "saucelabs",
-        ],
-        testonly = True,
     )
 
     # Default test suite with all configured browsers.

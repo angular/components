@@ -23,7 +23,7 @@ filegroup(
 )
 
 ng_test_library(
-    name = "unit_test_sources",
+    name = "unit_tests_lib",
     srcs = glob(["**/*.spec.ts"]),
     deps = [
         ":testbed",
@@ -32,5 +32,5 @@ ng_test_library(
 
 ng_web_test_suite(
     name = "unit_tests",
-    deps = [":unit_test_sources"],
+    deps = [":unit_tests_lib"],
 )

@@ -55,7 +55,7 @@ pkg_npm(
 
 jasmine_node_test(
     name = "unit_tests",
-    srcs = [":unit_test_sources"],
+    srcs = [":unit_tests_lib"],
     data = [
         ":schematics_assets",
         ":schematics_test_cases",
@@ -63,7 +63,7 @@ jasmine_node_test(
 )
 
 ts_library(
-    name = "unit_test_sources",
+    name = "unit_tests_lib",
     testonly = True,
     srcs = glob(
         ["**/*.spec.ts"],

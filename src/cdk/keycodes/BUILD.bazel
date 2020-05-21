@@ -16,7 +16,7 @@ ng_module(
 )
 
 ts_library(
-    name = "unit_test_sources",
+    name = "unit_tests_lib",
     testonly = True,
     srcs = glob(
         ["**/*.spec.ts"],
@@ -31,7 +31,7 @@ ts_library(
 
 karma_web_test_suite(
     name = "unit_tests",
-    deps = [":unit_test_sources"],
+    deps = [":unit_tests_lib"],
 )
 
 markdown_to_html(

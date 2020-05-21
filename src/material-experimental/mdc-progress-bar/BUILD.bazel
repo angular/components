@@ -52,7 +52,7 @@ sass_binary(
 )
 
 ng_test_library(
-    name = "progress_bar_tests_lib",
+    name = "unit_tests_lib",
     srcs = glob(
         ["**/*.spec.ts"],
         exclude = ["**/*.e2e.spec.ts"],
@@ -70,13 +70,13 @@ ng_web_test_suite(
         "@npm//:node_modules/@material/linear-progress/dist/mdc.linearProgress.js",
     ],
     deps = [
-        ":progress_bar_tests_lib",
+        ":unit_tests_lib",
         "//src/material-experimental:mdc_require_config.js",
     ],
 )
 
 ng_e2e_test_library(
-    name = "e2e_test_sources",
+    name = "e2e_tests_lib",
     srcs = glob(["**/*.e2e.spec.ts"]),
     deps = [
         "//src/cdk/testing/private/e2e",
@@ -86,7 +86,7 @@ ng_e2e_test_library(
 e2e_test_suite(
     name = "e2e_tests",
     deps = [
-        ":e2e_test_sources",
+        ":e2e_tests_lib",
         "//src/cdk/testing/private/e2e",
     ],
 )

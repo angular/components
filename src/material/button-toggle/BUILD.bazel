@@ -50,7 +50,7 @@ sass_binary(
 )
 
 ng_test_library(
-    name = "unit_test_sources",
+    name = "unit_tests_lib",
     srcs = glob(
         ["**/*.spec.ts"],
         exclude = ["**/*.e2e.spec.ts"],
@@ -67,11 +67,11 @@ ng_test_library(
 
 ng_web_test_suite(
     name = "unit_tests",
-    deps = [":unit_test_sources"],
+    deps = [":unit_tests_lib"],
 )
 
 ng_e2e_test_library(
-    name = "e2e_test_sources",
+    name = "e2e_tests_lib",
     srcs = glob(["**/*.e2e.spec.ts"]),
     deps = [
         "//src/cdk/testing/private/e2e",
@@ -81,7 +81,7 @@ ng_e2e_test_library(
 e2e_test_suite(
     name = "e2e_tests",
     deps = [
-        ":e2e_test_sources",
+        ":e2e_tests_lib",
         "//src/cdk/testing/private/e2e",
     ],
 )
