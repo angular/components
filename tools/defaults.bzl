@@ -193,6 +193,42 @@ def karma_web_test_suite(name, **kwargs):
         testonly = True,
     )
 
+    data = kwargs.get("data", [])
+    tags = kwargs.get("tags", [])
+
+    sauce_web_test_args = dict(**web_test_args)
+    sauce_web_test_args["data"] = sauce_web_test_args.get("data", []) + [
+      "//:saucelabs_tunnel_identifier",
+      "//test:browser-providers.js",
+      "//test:karma-browsers.json"
+    ]
+    sauce_web_test_args["deps"] = sauce_web_test_args.get("deps", []) + [
+      "@npm//karma-sauce-launcher"
+    ]
+
+    # Add a saucelabs target for these karma tests
+    _karma_web_test(
+        name = "%s_saucelabs_bin" % name,
+        timeout = "long",
+        config_file = "//test:karma-saucelabs.conf.js",
+        tags = ["manual"],
+        **sauce_web_test_args
+    )
+
+    # Workaround for: https://github.com/bazelbuild/rules_nodejs/issues/1429
+    native.sh_test(
+        name = "%s_saucelabs" % name,
+        srcs = ["%s_saucelabs_bin" % name],
+        tags = tags + [
+            "ibazel_notify_changes",
+            "exclusive",
+            "manual",
+            "no-remote-exec",
+            "saucelabs",
+        ],
+        testonly = True,
+    )
+
     # Default test suite with all configured browsers.
     _karma_web_test_suite(
         name = name,

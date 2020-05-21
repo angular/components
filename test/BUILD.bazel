@@ -3,7 +3,12 @@ load("//tools:defaults.bzl", "ts_library")
 
 package(default_visibility = ["//visibility:public"])
 
-exports_files(["bazel-karma-local-config.js"])
+exports_files([
+    "bazel-karma-local-config.js",
+    "karma-saucelabs.conf.js",
+    "browser-providers.js",
+    "karma-browsers.json",
+])
 
 # Common set-up for all Angular Material and CDK tests.
 ts_library(

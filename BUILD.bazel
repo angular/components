@@ -26,3 +26,11 @@ genrule(
     outs = ["entry_points_manifest.json"],
     cmd = "echo '%s' > $@" % entryPoints,
 )
+
+genrule(
+    name = "saucelabs_tunnel_identifier",
+    outs = ["saucelabs_tunnel_identifier.txt"],
+    cmd = "$(execpath //scripts/saucelabs:extract-tunnel-identifier) > $@",
+    stamp = True,
+    tools = ["//scripts/saucelabs:extract-tunnel-identifier"],
+)
