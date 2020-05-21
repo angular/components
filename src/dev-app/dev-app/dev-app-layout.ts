@@ -48,6 +48,7 @@ export class DevAppLayout {
     {name: 'List', route: '/list'},
     {name: 'Live Announcer', route: '/live-announcer'},
     {name: 'Menu', route: '/menu'},
+    {name: 'Overlay', route: '/overlay'},
     {name: 'Paginator', route: '/paginator'},
     {name: 'Platform', route: '/platform'},
     {name: 'Popover Edit', route: '/popover-edit'},
@@ -95,8 +96,11 @@ export class DevAppLayout {
   densityScales = [0, -1, -2, 'minimum', 'maximum'];
 
   constructor(
-      private _element: ElementRef<HTMLElement>, public rippleOptions: DevAppRippleOptions,
-      @Inject(Directionality) public dir: DevAppDirectionality, cdr: ChangeDetectorRef) {
+    private _element: ElementRef<HTMLElement>,
+    public rippleOptions: DevAppRippleOptions,
+    @Inject(Directionality) public dir: DevAppDirectionality,
+    cdr: ChangeDetectorRef
+  ) {
     dir.change.subscribe(() => cdr.markForCheck());
     this.updateDensityClasses();
   }
@@ -138,7 +142,6 @@ export class DevAppLayout {
       document.body.classList.remove(strongFocusClass);
     }
   }
-
 
   /** Gets the index of the next density scale that can be selected. */
   getNextDensityIndex() {

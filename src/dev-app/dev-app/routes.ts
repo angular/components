@@ -85,6 +85,7 @@ export const DEV_APP_ROUTES: Routes = [
   {path: 'mdc-table', loadChildren: 'mdc-table/mdc-table-demo-module#MdcTableDemoModule'},
   {path: 'mdc-tabs', loadChildren: 'mdc-tabs/mdc-tabs-demo-module#MdcTabsDemoModule'},
   {path: 'menu', loadChildren: 'menu/menu-demo-module#MenuDemoModule'},
+  {path: 'overlay', loadChildren: 'overlay/overlay-demo-module#OverlayDemoModule'},
   {path: 'paginator', loadChildren: 'paginator/paginator-demo-module#PaginatorDemoModule'},
   {path: 'platform', loadChildren: 'platform/platform-demo-module#PlatformDemoModule'},
   {
