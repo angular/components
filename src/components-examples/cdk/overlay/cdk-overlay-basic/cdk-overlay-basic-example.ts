@@ -12,5 +12,5 @@ import {Component} from '@angular/core';
   templateUrl: './cdk-overlay-basic-example.html',
 })
 export class CdkOverlayBasicExample {
-  isOpen: boolean = false;
+  isOpen = false;
 }
