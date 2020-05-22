@@ -1,0 +1,13 @@
+.list-container {
+  width: 100px;
+  border: solid 1px #ccc;
+  border-radius: 5px;
+  background: #fff;
+  text-align: center;
+  padding: 10px;
+  margin: 0px;
+}
+
+.list-container li {
+  list-style-type: none;
+}

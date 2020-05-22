@@ -1,11 +1,5 @@
 <!-- This button triggers the overlay and is it's origin -->
-<button
-  mat-raised-button
-  (click)="isOpen = !isOpen"
-  type="button"
-  cdkOverlayOrigin
-  #trigger="cdkOverlayOrigin"
->
+<button (click)="isOpen = !isOpen" type="button" cdkOverlayOrigin #trigger="cdkOverlayOrigin">
   {{isOpen ? "Close" : "Open"}}
 </button>
 
@@ -15,13 +9,11 @@
   [cdkConnectedOverlayOrigin]="trigger"
   [cdkConnectedOverlayOpen]="isOpen"
 >
-  <mat-card>
-    <mat-list>
-      <mat-list-item>Item 1</mat-list-item>
-      <mat-divider></mat-divider>
-      <mat-list-item>Item 2</mat-list-item>
-      <mat-divider></mat-divider>
-      <mat-list-item>Item 3</mat-list-item>
-    </mat-list>
-  </mat-card>
+  <ul class="list-container">
+    <li>Item 1</li>
+    <hr />
+    <li>Item 2</li>
+    <hr />
+    <li>Item 3</li>
+  </ul>
 </ng-template>
