@@ -1,13 +1,13 @@
-.list-container {
+.example-list {
   width: 100px;
   border: solid 1px #ccc;
   border-radius: 5px;
   background: #fff;
   text-align: center;
   padding: 10px;
-  margin: 0px;
+  margin: 0;
 }
 
-.list-container li {
+.example-list li {
   list-style-type: none;
 }
