@@ -1,3 +1,27 @@
-<p>
-  cdk-overlay-basic works!
-</p>
+<!-- This button triggers the overlay and is it's origin -->
+<button
+  mat-raised-button
+  (click)="isOpen = !isOpen"
+  type="button"
+  cdkOverlayOrigin
+  #trigger="cdkOverlayOrigin"
+>
+  {{isOpen ? "Close" : "Open"}}
+</button>
+
+<!-- This template displays the overlay content and is connected to the button -->
+<ng-template
+  cdkConnectedOverlay
+  [cdkConnectedOverlayOrigin]="trigger"
+  [cdkConnectedOverlayOpen]="isOpen"
+>
+  <mat-card>
+    <mat-list>
+      <mat-list-item>Item 1</mat-list-item>
+      <mat-divider></mat-divider>
+      <mat-list-item>Item 2</mat-list-item>
+      <mat-divider></mat-divider>
+      <mat-list-item>Item 3</mat-list-item>
+    </mat-list>
+  </mat-card>
+</ng-template>
