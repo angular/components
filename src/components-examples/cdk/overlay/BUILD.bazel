@@ -12,10 +12,10 @@ ng_module(
     module_name = "@angular/components-examples/cdk/overlay",
     deps = [
         "//src/cdk/overlay",
-       "//src/material/button",
-       "//src/material/list",
-       "//src/material/card",
-       "//src/material/divider",
+        "//src/material/button",
+        "//src/material/card",
+        "//src/material/divider",
+        "//src/material/list",
     ],
 )
 
