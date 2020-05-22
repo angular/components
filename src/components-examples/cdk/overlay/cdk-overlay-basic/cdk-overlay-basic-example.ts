@@ -13,6 +13,4 @@ import {Component} from '@angular/core';
 })
 export class CdkOverlayBasicExample {
   isOpen: boolean = false;
-
-  constructor() {}
 }
