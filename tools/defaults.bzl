@@ -1,5 +1,6 @@
 # Re-export of Bazel rules with repository-wide defaults
 
+load("@build_bazel_rules_nodejs//:index.bzl", _js_library = "js_library")
 load("@io_bazel_rules_sass//:defs.bzl", _sass_binary = "sass_binary", _sass_library = "sass_library")
 load("@npm//@angular/bazel:index.bzl", _ng_module = "ng_module", _ng_package = "ng_package")
 load("@npm//@bazel/jasmine:index.bzl", _jasmine_node_test = "jasmine_node_test")
@@ -30,6 +31,9 @@ def sass_binary(sourcemap = False, **kwargs):
 
 def sass_library(**kwargs):
     _sass_library(**kwargs)
+
+def js_library(**kwargs):
+    _js_library(**kwargs)
 
 def ts_library(tsconfig = None, deps = [], testonly = False, **kwargs):
     # Add tslib because we use import helpers for all public packages.
@@ -156,22 +160,25 @@ def ng_e2e_test_library(deps = [], tsconfig = None, **kwargs):
     )
 
 def karma_web_test(name, **kwargs):
-  tags = kwargs.pop("tags", [])
-  # Custom standalone web test that can be run to test against any browser
-  # that is manually connected to.
-  _karma_web_test(
-      name = "%s_bin" % name,
-      tags = ["manual"],
-      **kwargs
-  )
+    tags = kwargs.pop("tags", [])
+    timeout = kwargs.pop("timeout", None)
 
-  # Workaround for: https://github.com/bazelbuild/rules_nodejs/issues/1429
-  native.sh_test(
-      name = "%s" % name,
-      srcs = ["%s_bin" % name],
-      tags = tags + ["ibazel_notify_changes"],
-  )
+    # Custom standalone web test that can be run to test against any browser
+    # that is manually connected to.
+    _karma_web_test(
+        name = "%s_bin" % name,
+        tags = ["manual"],
+        timeout = timeout,
+        **kwargs
+    )
 
+    # Workaround for: https://github.com/bazelbuild/rules_nodejs/issues/1429
+    native.sh_test(
+        name = "%s" % name,
+        srcs = ["%s_bin" % name],
+        timeout = timeout,
+        tags = tags + ["ibazel_notify_changes"],
+    )
 
 def karma_web_test_suite(name, **kwargs):
     web_test_args = {}
@@ -204,13 +211,8 @@ def karma_web_test_suite(name, **kwargs):
     )
 
     sauce_web_test_args = dict(**web_test_args)
-    sauce_web_test_args["data"] = sauce_web_test_args.get("data", []) + [
-      "//:saucelabs_tunnel_identifier",
-      "//test:browser-providers.js",
-      "//test:karma-browsers.json"
-    ]
     sauce_web_test_args["deps"] = sauce_web_test_args.get("deps", []) + [
-      "@npm//karma-sauce-launcher"
+        "//test:karma-saucelabs-config",
     ]
 
     # Add a saucelabs target for these karma tests
@@ -219,6 +221,7 @@ def karma_web_test_suite(name, **kwargs):
         timeout = "long",
         config_file = "//test:karma-saucelabs.conf.js",
         tags = ["manual", "saucelabs", "no-remote-exec"],
+        flaky = False,
         **sauce_web_test_args
     )
 

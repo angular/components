@@ -1,5 +1,5 @@
 load("//tools:create-system-config.bzl", "create_system_config")
-load("//tools:defaults.bzl", "ts_library")
+load("//tools:defaults.bzl", "js_library", "ts_library")
 
 package(default_visibility = ["//visibility:public"])
 
@@ -32,4 +32,22 @@ create_system_config(
     node_modules_base_path = "node_modules/",
     output_name = "system-config.js",
     packages_dir = "dist/packages",
+)
+
+js_library(
+    name = "karma-browser-config",
+    srcs = [
+        "browser-providers.js",
+        "karma-browsers.json",
+    ],
+)
+
+js_library(
+    name = "karma-saucelabs-config",
+    srcs = ["karma-saucelabs.conf.js"],
+    deps = [
+        ":karma-browser-config",
+        "//tools/saucelabs-bazel/launcher",
+        "@npm//@bazel/runfiles",
+    ],
 )

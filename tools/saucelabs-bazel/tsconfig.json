@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+    "outDir": "../../dist/tools/saucelabs-bazel",
+    "lib": ["es2016"],
+    "types": ["node"],
+    "target": "es2015",
+    "strict": true
+  }
+}

@@ -312,17 +312,35 @@ jobs:
     resource_class: xlarge
     environment:
       SAUCE_USERNAME: "angular-components"
-      SAUCE_ACCESS_KEY: "63348201a846-eeb9-3ee4-300f-ea990b8a"
-      # Note: This number should not be too high because otherwise we might run into
-      # a rate limit exception.
-      KARMA_PARALLEL_BROWSERS: 2
+      SAUCE_ACCESS_KEY: "a8b099ae-f003-4ee3-9bee-648a10284336"
+      SAUCE_TUNNEL_IDENTIFIER: angular-material-<< pipeline.id >>
     steps:
     - checkout_and_rebase
     - *restore_cache
     - *setup_bazel_ci_config
     - *yarn_install
 
-    - run: ./scripts/circleci/run-saucelabs-tests.sh
+    - run:
+        name: Saucelabs tunnel
+        command: ./scripts/saucelabs/start-tunnel.sh
+        background: true
+    - run:
+        name: Waiting for Saucelabs tunnel
+        command: ./scripts/saucelabs/wait-tunnel.sh
+    - run:
+        name: Saucelabs browser daemon
+        command: yarn -s sauce-bazel-daemon
+        background: true
+
+    - run:
+        name: Running tests
+        command: |
+          TESTS=$(yarn -s bazel query --output label 'attr("tags", "saucelabs", //src/...)')
+          yarn -s bazel test ${TESTS} --jobs=2
+
+    - run:
+        name: Shutting down tunnel
+        command: ./scripts/saucelabs/stop-tunnel.sh
     - *slack_notify_on_failure
 
   # ----------------------------------
@@ -663,46 +681,8 @@ workflows:
 
   default_workflow:
     jobs:
-      - bazel_build:
-          filters: *ignore_presubmit_branch_filter
-      - view_engine_build:
-          filters: *ignore_presubmit_branch_filter
-      - view_engine_test:
-          filters: *ignore_presubmit_branch_filter
-      - api_golden_checks:
-          filters: *ignore_presubmit_branch_filter
-      - integration_tests:
-          filters: *ignore_presubmit_branch_filter
-      - tests_local_browsers:
-          filters: *ignore_presubmit_branch_filter
-      - tests_browserstack:
-          filters: *ignore_presubmit_branch_filter
       - tests_saucelabs:
           filters: *ignore_presubmit_branch_filter
-      - e2e_tests:
-          filters: *ignore_presubmit_branch_filter
-      - build_release_packages:
-          filters: *ignore_presubmit_branch_filter
-      - upload_release_packages:
-          # We don't want to run this job on push builds because for those, the
-          # `publish_snapshots` runs, and publishes build artifacts.
-          filters: *only_on_pull_requests_filter
-          requires:
-            - build_release_packages
-      - lint:
-          filters: *ignore_presubmit_branch_filter
-      - ngcc_compatibility:
-          filters: *ignore_presubmit_branch_filter
-          requires:
-            - build_release_packages
-      - ngcc_compatibility_snapshot:
-          filters: *only_main_branch_filter
-          requires:
-            - build_release_packages
-      - publish_snapshots:
-          filters: *publish_branches_filter
-          requires:
-            - build_release_packages
 
   # Snapshot tests workflow that is scheduled to run all specified jobs every hour.
   # This workflow runs various jobs against the Angular snapshot builds from Github.

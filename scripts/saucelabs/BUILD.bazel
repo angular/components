@@ -1,6 +1,0 @@
-package(default_visibility = ["//visibility:public"])
-
-sh_binary(
-    name = "extract-tunnel-identifier",
-    srcs = ["extract-tunnel-identifier.sh"],
-)

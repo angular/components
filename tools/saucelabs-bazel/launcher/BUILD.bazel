@@ -1,0 +1,12 @@
+load("//tools:defaults.bzl", "ts_library")
+
+package(default_visibility = ["//visibility:public"])
+
+ts_library(
+    name = "launcher",
+    srcs = glob(["**/*.ts"]),
+    deps = [
+        "//tools/saucelabs-bazel",
+        "@npm//@types/node",
+    ],
+)
