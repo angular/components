@@ -33,7 +33,7 @@ const boundingBoxClass = 'cdk-overlay-connected-position-bounding-box';
 const cssUnitPattern = /([A-Za-z%]+)$/;
 
 /** Possible values that can be set as the origin of a FlexibleConnectedPositionStrategy. */
-export type FlexibleConnectedPositionStrategyOrigin = ElementRef | HTMLElement | Point & {
+export type FlexibleConnectedPositionStrategyOrigin = ElementRef | Element | Point & {
   width?: number;
   height?: number;
 };
@@ -1110,7 +1110,8 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
       return origin.nativeElement.getBoundingClientRect();
     }
 
-    if (origin instanceof HTMLElement) {
+    // Check for Element so SVG elements are also supported.
+    if (origin instanceof Element) {
       return origin.getBoundingClientRect();
     }
 

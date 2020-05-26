@@ -1,8 +1,8 @@
-package(default_visibility = ["//visibility:public"])
-
 load("//tools:defaults.bzl", "ng_module", "ng_package")
 load("//tools/highlight-files:index.bzl", "highlight_files")
 load("//tools/package-docs-content:index.bzl", "package_docs_content")
+
+package(default_visibility = ["//visibility:public"])
 
 ALL_EXAMPLES = [
     # TODO(devversion): try to have for each entry-point a bazel package so that
@@ -120,13 +120,13 @@ genrule(
     ],
     cmd = """
       # Create source file manifest
-      echo "$(locations //src/components-examples:example-source-files)" \
-          > $(location _example_module.MF)
+      echo "$(execpaths //src/components-examples:example-source-files)" \
+          > $(execpath _example_module.MF)
 
       # Run the bazel entry-point for generating the example module.
-      ./$(location //tools/example-module:bazel-bin) \
-          "$(location _example_module.MF)" \
-          "$(location example-module.ts)" \
+      ./$(execpath //tools/example-module:bazel-bin) \
+          "$(execpath _example_module.MF)" \
+          "$(execpath example-module.ts)" \
           "$$PWD/src/components-examples"
     """,
     output_to_bindir = True,

@@ -17,7 +17,7 @@ import {
   ScrollStrategy,
   ConnectedPosition,
 } from '@angular/cdk/overlay';
-import {_supportsShadowDom} from '@angular/cdk/platform';
+import {_getShadowRoot} from '@angular/cdk/platform';
 import {TemplatePortal} from '@angular/cdk/portal';
 import {ViewportRuler} from '@angular/cdk/scrolling';
 import {DOCUMENT} from '@angular/common';
@@ -45,7 +45,7 @@ import {
   MatOption,
   MatOptionSelectionChange,
 } from '@angular/material/core';
-import {MatFormField} from '@angular/material/form-field';
+import {MAT_FORM_FIELD, MatFormField} from '@angular/material/form-field';
 import {defer, fromEvent, merge, Observable, of as observableOf, Subject, Subscription} from 'rxjs';
 import {delay, filter, map, switchMap, take, tap} from 'rxjs/operators';
 
@@ -217,7 +217,7 @@ export class MatAutocompleteTrigger implements ControlValueAccessor, AfterViewIn
               private _changeDetectorRef: ChangeDetectorRef,
               @Inject(MAT_AUTOCOMPLETE_SCROLL_STRATEGY) scrollStrategy: any,
               @Optional() private _dir: Directionality,
-              @Optional() @Host() private _formField: MatFormField,
+              @Optional() @Inject(MAT_FORM_FIELD) @Host() private _formField: MatFormField,
               @Optional() @Inject(DOCUMENT) private _document: any,
               // @breaking-change 8.0.0 Make `_viewportRuler` required.
               private _viewportRuler?: ViewportRuler) {
@@ -225,19 +225,10 @@ export class MatAutocompleteTrigger implements ControlValueAccessor, AfterViewIn
   }
 
   ngAfterViewInit() {
+    const window = this._getWindow();
+
     if (typeof window !== 'undefined') {
-      this._zone.runOutsideAngular(() => {
-        window.addEventListener('blur', this._windowBlurHandler);
-      });
-
-      if (_supportsShadowDom()) {
-        const element = this._element.nativeElement;
-        const rootNode = element.getRootNode ? element.getRootNode() : null;
-
-        // We need to take the `ShadowRoot` off of `window`, because the built-in types are
-        // incorrect. See https://github.com/Microsoft/TypeScript/issues/27929.
-        this._isInsideShadowRoot = rootNode instanceof (window as any).ShadowRoot;
-      }
+      this._zone.runOutsideAngular(() => window.addEventListener('blur', this._windowBlurHandler));
     }
   }
 
@@ -252,6 +243,8 @@ export class MatAutocompleteTrigger implements ControlValueAccessor, AfterViewIn
   }
 
   ngOnDestroy() {
+    const window = this._getWindow();
+
     if (typeof window !== 'undefined') {
       window.removeEventListener('blur', this._windowBlurHandler);
     }
@@ -622,6 +615,12 @@ export class MatAutocompleteTrigger implements ControlValueAccessor, AfterViewIn
       throw getMatAutocompleteMissingPanelError();
     }
 
+    // We want to resolve this once, as late as possible so that we can be
+    // sure that the element has been moved into its final place in the DOM.
+    if (this._isInsideShadowRoot == null) {
+      this._isInsideShadowRoot = !!_getShadowRoot(this._element.nativeElement);
+    }
+
     let overlayRef = this._overlayRef;
 
     if (!overlayRef) {
@@ -697,32 +696,30 @@ export class MatAutocompleteTrigger implements ControlValueAccessor, AfterViewIn
 
   /** Sets the positions on a position strategy based on the directive's input state. */
   private _setStrategyPositions(positionStrategy: FlexibleConnectedPositionStrategy) {
-    const belowPosition: ConnectedPosition = {
-      originX: 'start',
-      originY: 'bottom',
-      overlayX: 'start',
-      overlayY: 'top'
-    };
-    const abovePosition: ConnectedPosition = {
-      originX: 'start',
-      originY: 'top',
-      overlayX: 'start',
-      overlayY: 'bottom',
+    // Note that we provide horizontal fallback positions, even though by default the dropdown
+    // width matches the input, because consumers can override the width. See #18854.
+    const belowPositions: ConnectedPosition[] = [
+      {originX: 'start', originY: 'bottom', overlayX: 'start', overlayY: 'top'},
+      {originX: 'end', originY: 'bottom', overlayX: 'end', overlayY: 'top'}
+    ];
 
-      // The overlay edge connected to the trigger should have squared corners, while
-      // the opposite end has rounded corners. We apply a CSS class to swap the
-      // border-radius based on the overlay position.
-      panelClass: 'mat-autocomplete-panel-above'
-    };
+    // The overlay edge connected to the trigger should have squared corners, while
+    // the opposite end has rounded corners. We apply a CSS class to swap the
+    // border-radius based on the overlay position.
+    const panelClass = 'mat-autocomplete-panel-above';
+    const abovePositions: ConnectedPosition[] = [
+      {originX: 'start', originY: 'top', overlayX: 'start', overlayY: 'bottom', panelClass},
+      {originX: 'end', originY: 'top', overlayX: 'end', overlayY: 'bottom', panelClass}
+    ];
 
     let positions: ConnectedPosition[];
 
     if (this.position === 'above') {
-      positions = [abovePosition];
+      positions = abovePositions;
     } else if (this.position === 'below') {
-      positions = [belowPosition];
+      positions = belowPositions;
     } else {
-      positions = [belowPosition, abovePosition];
+      positions = [...belowPositions, ...abovePositions];
     }
 
     positionStrategy.withPositions(positions);
@@ -757,6 +754,11 @@ export class MatAutocompleteTrigger implements ControlValueAccessor, AfterViewIn
   private _canOpen(): boolean {
     const element = this._element.nativeElement;
     return !element.readOnly && !element.disabled && !this._autocompleteDisabled;
+  }
+
+  /** Use defaultView of injected document if available or fallback to global window reference */
+  private _getWindow(): Window {
+    return this._document?.defaultView || window;
   }
 
   static ngAcceptInputType_autocompleteDisabled: BooleanInput;

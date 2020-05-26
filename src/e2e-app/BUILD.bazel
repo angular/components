@@ -1,8 +1,8 @@
-package(default_visibility = ["//visibility:public"])
-
 load("@npm_bazel_typescript//:index.bzl", "ts_devserver")
 load("//:packages.bzl", "getAngularUmdTargets")
 load("//tools:defaults.bzl", "ng_module", "sass_binary")
+
+package(default_visibility = ["//visibility:public"])
 
 exports_files([
     "protractor.conf.js",
@@ -102,6 +102,7 @@ ts_devserver(
     static_files = [
         "@npm//zone.js",
         "@npm//core-js",
+        "@npm//kagekiri",
         "@npm//material-components-web",
         "@npm//moment",
         "@npm//@webcomponents/custom-elements",

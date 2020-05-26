@@ -198,7 +198,8 @@ export class CdkDrag<T = any> implements AfterViewInit, OnChanges, OnDestroy {
       dragStartThreshold: config && config.dragStartThreshold != null ?
           config.dragStartThreshold : 5,
       pointerDirectionChangeThreshold: config && config.pointerDirectionChangeThreshold != null ?
-          config.pointerDirectionChangeThreshold : 5
+          config.pointerDirectionChangeThreshold : 5,
+      zIndex: config?.zIndex
     });
     this._dragRef.data = this;
 
@@ -225,12 +226,18 @@ export class CdkDrag<T = any> implements AfterViewInit, OnChanges, OnDestroy {
   /**
    * Returns the element that is being used as a placeholder
    * while the current element is being dragged.
+   * @deprecated No longer being used to be removed.
+   * @breaking-change 11.0.0
    */
   getPlaceholderElement(): HTMLElement {
     return this._dragRef.getPlaceholderElement();
   }
 
-  /** Returns the root draggable element. */
+  /**
+   * Returns the root draggable element.
+   * @deprecated No longer being used to be removed.
+   * @breaking-change 11.0.0
+   */
   getRootElement(): HTMLElement {
     return this._dragRef.getRootElement();
   }

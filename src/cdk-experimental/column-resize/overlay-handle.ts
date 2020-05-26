@@ -80,6 +80,11 @@ export abstract class ResizeOverlayHandle implements AfterViewInit, OnDestroy {
   }
 
   private _dragStarted(mousedownEvent: MouseEvent) {
+    // Only allow dragging using the left mouse button.
+    if (mousedownEvent.button !== 0) {
+      return;
+    }
+
     const mouseup = fromEvent<MouseEvent>(this.document, 'mouseup');
     const mousemove = fromEvent<MouseEvent>(this.document, 'mousemove');
     const escape = fromEvent<KeyboardEvent>(this.document, 'keyup')
@@ -87,9 +92,8 @@ export abstract class ResizeOverlayHandle implements AfterViewInit, OnDestroy {
 
     const startX = mousedownEvent.screenX;
 
-    const initialOverlayOffset = this._getOverlayOffset();
     const initialSize = this._getOriginWidth();
-    let overlayOffset = initialOverlayOffset;
+    let overlayOffset = this._getOverlayOffset();
     let originOffset = this._getOriginOffset();
     let size = initialSize;
     let overshot = 0;
@@ -138,7 +142,7 @@ export abstract class ResizeOverlayHandle implements AfterViewInit, OnDestroy {
           Math.max(computedNewSize, this.resizeRef.minWidthPx, 0), this.resizeRef.maxWidthPx);
 
       this.resizeNotifier.triggerResize.next(
-          {columnId: this.columnDef.name, size: computedNewSize});
+          {columnId: this.columnDef.name, size: computedNewSize, previousSize: size});
 
       const originNewSize = this._getOriginWidth();
       const originNewOffset = this._getOriginOffset();
@@ -148,7 +152,7 @@ export abstract class ResizeOverlayHandle implements AfterViewInit, OnDestroy {
       originOffset = originNewOffset;
 
       overshot += deltaX + (this._isLtr() ? -originSizeDeltaX : originSizeDeltaX);
-      overlayOffset += originSizeDeltaX + originOffsetDeltaX;
+      overlayOffset += originOffsetDeltaX + (this._isLtr() ? originSizeDeltaX : 0);
 
       this._updateOverlayOffset(overlayOffset);
     });
@@ -164,29 +168,15 @@ export abstract class ResizeOverlayHandle implements AfterViewInit, OnDestroy {
   }
 
   private _getOriginOffset(): number {
-    const originElement = this.resizeRef.origin.nativeElement!;
-    const offsetLeft = originElement.offsetLeft;
-
-    return this._isLtr() ?
-        offsetLeft :
-        originElement.offsetParent!.offsetWidth - (offsetLeft + this._getOriginWidth());
+    return this.resizeRef.origin.nativeElement!.offsetLeft;
   }
 
   private _getOverlayOffset(): number {
-    const overlayElement = this.resizeRef.overlayRef.overlayElement;
-    return this._isLtr() ?
-        parseInt(overlayElement.style.left!, 10) : parseInt(overlayElement.style.right!, 10);
+    return parseInt(this.resizeRef.overlayRef.overlayElement.style.left!, 10);
   }
 
   private _updateOverlayOffset(offset: number): void {
-    const overlayElement = this.resizeRef.overlayRef.overlayElement;
-    const overlayOffsetCssValue = coerceCssPixelValue(offset);
-
-    if (this._isLtr()) {
-      overlayElement.style.left = overlayOffsetCssValue;
-    } else {
-      overlayElement.style.right = overlayOffsetCssValue;
-    }
+    this.resizeRef.overlayRef.overlayElement.style.left = coerceCssPixelValue(offset);
   }
 
   private _isLtr(): boolean {

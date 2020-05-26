@@ -2,21 +2,20 @@ import {Component, ViewChild} from '@angular/core';
 import {async, TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 
-import {DEFAULT_OPTIONS, UpdatedGoogleMap} from '../google-map/google-map';
+import {DEFAULT_OPTIONS} from '../google-map/google-map';
+
+import {GoogleMapsModule} from '../google-maps-module';
 import {MapMarker} from '../map-marker/map-marker';
 import {
   createInfoWindowConstructorSpy,
   createInfoWindowSpy,
   createMapConstructorSpy,
-  createMapSpy,
-  TestingWindow
+  createMapSpy
 } from '../testing/fake-google-map-utils';
-
-import {GoogleMapsModule} from '../google-maps-module';
 import {MapInfoWindow} from './map-info-window';
 
 describe('MapInfoWindow', () => {
-  let mapSpy: jasmine.SpyObj<UpdatedGoogleMap>;
+  let mapSpy: jasmine.SpyObj<google.maps.Map>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -33,8 +32,7 @@ describe('MapInfoWindow', () => {
   });
 
   afterEach(() => {
-    const testingWindow: TestingWindow = window;
-    delete testingWindow.google;
+    delete window.google;
   });
 
   it('initializes a Google Map Info Window', () => {
@@ -112,7 +110,7 @@ describe('MapInfoWindow', () => {
 
   it('exposes methods that change the configuration of the info window', () => {
     const fakeMarker = {} as unknown as google.maps.Marker;
-    const fakeMarkerComponent = {_marker: fakeMarker} as unknown as MapMarker;
+    const fakeMarkerComponent = {marker: fakeMarker} as unknown as MapMarker;
     const infoWindowSpy = createInfoWindowSpy({});
     createInfoWindowConstructorSpy(infoWindowSpy).and.callThrough();
 

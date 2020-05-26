@@ -1,10 +1,10 @@
-package(default_visibility = ["//visibility:public"])
-
 load("@build_bazel_rules_nodejs//:index.bzl", "pkg_web")
-load("@build_bazel_rules_nodejs//internal/common:devmode_js_sources.bzl", "devmode_js_sources")
 load("//tools:create-system-config.bzl", "create_system_config")
 load("//tools:defaults.bzl", "ng_module", "sass_binary")
+load("//tools:es5-named-output.bzl", "es5_named_output")
 load("//tools/dev-server:index.bzl", "dev_server")
+
+package(default_visibility = ["//visibility:public"])
 
 ng_module(
     name = "dev-app",
@@ -25,6 +25,7 @@ ng_module(
         "//src/dev-app/card",
         "//src/dev-app/checkbox",
         "//src/dev-app/chips",
+        "//src/dev-app/clipboard",
         "//src/dev-app/column-resize",
         "//src/dev-app/connected-overlay",
         "//src/dev-app/datepicker",
@@ -52,6 +53,7 @@ ng_module(
         "//src/dev-app/mdc-menu",
         "//src/dev-app/mdc-progress-bar",
         "//src/dev-app/mdc-radio",
+        "//src/dev-app/mdc-sidenav",
         "//src/dev-app/mdc-slide-toggle",
         "//src/dev-app/mdc-slider",
         "//src/dev-app/mdc-snackbar",
@@ -94,7 +96,8 @@ sass_binary(
     ],
     deps = [
         "//src/material-experimental/column-resize:column_resize_scss_lib",
-        "//src/material-experimental/mdc-slider:mdc_slider_scss_lib",
+        "//src/material-experimental/mdc-color:all_color",
+        "//src/material-experimental/mdc-density:all_density",
         "//src/material-experimental/mdc-theming:all_themes",
         "//src/material-experimental/mdc-typography:all_typography",
         "//src/material-experimental/popover-edit:popover_edit_scss_lib",
@@ -176,7 +179,7 @@ dev_server(
 
 # Collects all ES5 JavaScript files which are required to serve the dev-app. By default,
 # ts_library and ng_module targets only expose the type definition files as outputs.
-devmode_js_sources(
+es5_named_output(
     name = "dev_app_js_sources",
     tags = ["manual"],
     deps = [":dev-app"],

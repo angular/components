@@ -42,13 +42,5 @@ export interface DragDropConfig extends Partial<DragRefConfig> {
   sortingDisabled?: boolean;
   listAutoScrollDisabled?: boolean;
   listOrientation?: DropListOrientation;
-}
-
-/**
- * @deprecated No longer being used. To be removed.
- * @breaking-change 10.0.0
- * @docs-private
- */
-export function CDK_DRAG_CONFIG_FACTORY(): DragDropConfig {
-  return {dragStartThreshold: 5, pointerDirectionChangeThreshold: 5};
+  zIndex?: number;
 }

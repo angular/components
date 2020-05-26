@@ -285,6 +285,22 @@ describe('CdkTable', () => {
         ['Footer C', 'Footer B'],
       ]);
     });
+
+    it('should be able to show a message when no data is being displayed', () => {
+      expect(tableElement.textContent!.trim()).not.toContain('No data');
+
+      const originalData = dataSource.data;
+      dataSource.data = [];
+      fixture.detectChanges();
+
+      expect(tableElement.textContent!.trim()).toContain('No data');
+
+      dataSource.data = originalData;
+      fixture.detectChanges();
+
+      expect(tableElement.textContent!.trim()).not.toContain('No data');
+    });
+
   });
 
   it('should render no rows when the data is null', fakeAsync(() => {
@@ -314,6 +330,22 @@ describe('CdkTable', () => {
 
     expect(caption).toBeTruthy();
     expect(tableElement.firstElementChild).toBe(caption);
+  }));
+
+  it('should be able to project colgroup and col', fakeAsync(() => {
+    setupTableTestApp(NativeHtmlTableWithColgroupAndCol);
+    fixture.detectChanges();
+
+    const colgroupsAndCols = Array.from(tableElement.querySelectorAll('colgroup, col'));
+
+    expect(colgroupsAndCols.length).toBe(3);
+    expect(colgroupsAndCols[0].childNodes[0]).toBe(colgroupsAndCols[1]);
+    expect(colgroupsAndCols[2].parentNode!.nodeName.toLowerCase()).toBe('table');
+    expect(colgroupsAndCols.map(e => e.nodeName.toLowerCase())).toEqual([
+      'colgroup',
+      'col',
+      'col',
+    ]);
   }));
 
   describe('with different data inputs other than data source', () => {
@@ -480,6 +512,43 @@ describe('CdkTable', () => {
       ['a_2', 'b_2', 'c_2'],
       ['a_3', 'b_3', 'c_3'],
     ]);
+  });
+
+  it('should be able to nest tables', () => {
+    const thisFixture = createComponent(NestedHtmlTableApp);
+    thisFixture.detectChanges();
+    const outerTable = thisFixture.nativeElement.querySelector('table');
+    const innerTable = outerTable.querySelector('table');
+    const outerRows = Array.from<HTMLTableRowElement>(outerTable.querySelector('tbody').rows);
+    const innerRows = Array.from<HTMLTableRowElement>(innerTable.querySelector('tbody').rows);
+
+    expect(outerTable).toBeTruthy();
+    expect(outerRows.map(row => row.cells.length)).toEqual([3, 3, 3]);
+
+    expect(innerTable).toBeTruthy();
+    expect(innerRows.map(row => row.cells.length)).toEqual([3, 3, 3]);
+  });
+
+  it('should be able to show a message when no data is being displayed in a native table', () => {
+    const thisFixture = createComponent(NativeHtmlTableApp);
+    thisFixture.detectChanges();
+
+    // Assert that the data is inside the tbody specifically.
+    const tbody = thisFixture.nativeElement.querySelector('tbody');
+    const dataSource = thisFixture.componentInstance.dataSource!;
+    const originalData = dataSource.data;
+
+    expect(tbody.textContent!.trim()).not.toContain('No data');
+
+    dataSource.data = [];
+    thisFixture.detectChanges();
+
+    expect(tbody.textContent!.trim()).toContain('No data');
+
+    dataSource.data = originalData;
+    thisFixture.detectChanges();
+
+    expect(tbody.textContent!.trim()).not.toContain('No data');
   });
 
   it('should apply correct roles for native table elements', () => {
@@ -1459,6 +1528,8 @@ class BooleanDataSource extends DataSource<boolean> {
                *cdkRowDef="let row; columns: columnsToRender"></cdk-row>
       <cdk-footer-row class="customFooterRowClass"
                       *cdkFooterRowDef="columnsToRender"></cdk-footer-row>
+
+      <div *cdkNoDataRow>No data</div>
     </cdk-table>
   `
 })
@@ -2266,6 +2337,9 @@ class OuterTableApp {
 
       <tr cdk-header-row *cdkHeaderRowDef="columnsToRender"></tr>
       <tr cdk-row *cdkRowDef="let row; columns: columnsToRender" class="customRowClass"></tr>
+      <tr *cdkNoDataRow>
+        <td>No data</td>
+      </tr>
     </table>
   `
 })
@@ -2274,6 +2348,55 @@ class NativeHtmlTableApp {
   columnsToRender = ['column_a', 'column_b', 'column_c'];
 
   @ViewChild(CdkTable) table: CdkTable<TestData>;
+}
+
+
+@Component({
+  template: `
+    <table cdk-table [dataSource]="dataSource">
+      <ng-container cdkColumnDef="column_a">
+        <th cdk-header-cell *cdkHeaderCellDef> Column A</th>
+        <td cdk-cell *cdkCellDef="let row">{{row.a}}</td>
+      </ng-container>
+
+      <ng-container cdkColumnDef="column_b">
+        <th cdk-header-cell *cdkHeaderCellDef> Column B</th>
+        <td cdk-cell *cdkCellDef="let row">
+          <table cdk-table [dataSource]="dataSource">
+            <ng-container cdkColumnDef="column_a">
+              <th cdk-header-cell *cdkHeaderCellDef> Column A</th>
+              <td cdk-cell *cdkCellDef="let row"> {{row.a}}</td>
+            </ng-container>
+
+            <ng-container cdkColumnDef="column_b">
+              <th cdk-header-cell *cdkHeaderCellDef> Column B</th>
+              <td cdk-cell *cdkCellDef="let row"> {{row.b}}</td>
+            </ng-container>
+
+            <ng-container cdkColumnDef="column_c">
+              <th cdk-header-cell *cdkHeaderCellDef> Column C</th>
+              <td cdk-cell *cdkCellDef="let row"> {{row.c}}</td>
+            </ng-container>
+
+            <tr cdk-header-row *cdkHeaderRowDef="columnsToRender"></tr>
+            <tr cdk-row *cdkRowDef="let row; columns: columnsToRender" class="customRowClass"></tr>
+          </table>
+        </td>
+      </ng-container>
+
+      <ng-container cdkColumnDef="column_c">
+        <th cdk-header-cell *cdkHeaderCellDef> Column C</th>
+        <td cdk-cell *cdkCellDef="let row">{{row.c}}</td>
+      </ng-container>
+
+      <tr cdk-header-row *cdkHeaderRowDef="columnsToRender"></tr>
+      <tr cdk-row *cdkRowDef="let row; columns: columnsToRender" class="customRowClass"></tr>
+    </table>
+  `
+})
+class NestedHtmlTableApp {
+  dataSource: FakeDataSource | undefined = new FakeDataSource();
+  columnsToRender = ['column_a', 'column_b', 'column_c'];
 }
 
 @Component({
@@ -2322,6 +2445,34 @@ class NativeTableWithNoHeaderOrFooterRows {
 class NativeHtmlTableWithCaptionApp {
   dataSource: FakeDataSource | undefined = new FakeDataSource();
   columnsToRender = ['column_a'];
+
+  @ViewChild(CdkTable) table: CdkTable<TestData>;
+}
+
+@Component({
+  template: `
+    <table cdk-table [dataSource]="dataSource">
+      <colgroup>
+        <col>
+      </colgroup>
+      <col>
+      <ng-container cdkColumnDef="column_a">
+        <th cdk-header-cell *cdkHeaderCellDef> Column A</th>
+        <td cdk-cell *cdkCellDef="let row"> {{row.a}}</td>
+      </ng-container>
+      <ng-container cdkColumnDef="column_b">
+        <th cdk-header-cell *cdkHeaderCellDef> Column B</th>
+        <td cdk-cell *cdkCellDef="let row"> {{row.b}}</td>
+      </ng-container>
+
+      <tr cdk-header-row *cdkHeaderRowDef="columnsToRender"></tr>
+      <tr cdk-row *cdkRowDef="let row; columns: columnsToRender" class="customRowClass"></tr>
+    </table>
+  `
+})
+class NativeHtmlTableWithColgroupAndCol {
+  dataSource: FakeDataSource | undefined = new FakeDataSource();
+  columnsToRender = ['column_a', 'column_b'];
 
   @ViewChild(CdkTable) table: CdkTable<TestData>;
 }

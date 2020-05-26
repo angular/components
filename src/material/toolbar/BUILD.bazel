@@ -1,5 +1,3 @@
-package(default_visibility = ["//visibility:public"])
-
 load("//src/e2e-app:test_suite.bzl", "e2e_test_suite")
 load(
     "//tools:defaults.bzl",
@@ -11,6 +9,8 @@ load(
     "sass_binary",
     "sass_library",
 )
+
+package(default_visibility = ["//visibility:public"])
 
 ng_module(
     name = "toolbar",
@@ -31,7 +31,9 @@ ng_module(
 sass_library(
     name = "toolbar_scss_lib",
     srcs = glob(["**/_*.scss"]),
-    deps = ["//src/material/core:core_scss_lib"],
+    deps = [
+        "//src/material/core:core_scss_lib",
+    ],
 )
 
 sass_binary(
@@ -39,7 +41,6 @@ sass_binary(
     src = "toolbar.scss",
     deps = [
         "//src/cdk/a11y:a11y_scss_lib",
-        "//src/material/core:core_scss_lib",
     ],
 )
 

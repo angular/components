@@ -107,8 +107,8 @@ const _MatChipMixinBase:
     '[class.mat-mdc-chip-highlighted]': 'highlighted',
     '[class.mat-mdc-chip-with-avatar]': 'leadingIcon',
     '[class.mat-mdc-chip-with-trailing-icon]': 'trailingIcon || removeIcon',
-    '[class.mat-mdc-basic-chip]': '_isBasicChip()',
-    '[class.mat-mdc-standard-chip]': '!_isBasicChip()',
+    '[class.mat-mdc-basic-chip]': '_isBasicChip',
+    '[class.mat-mdc-standard-chip]': '!_isBasicChip',
     '[class._mat-animation-noopable]': '_animationsDisabled',
     '[id]': 'id',
     '[attr.disabled]': 'disabled || null',
@@ -132,6 +132,9 @@ export class MatChip extends _MatChipMixinBase implements AfterContentInit, Afte
   readonly _onBlur = new Subject<MatChipEvent>();
 
   readonly HANDLED_KEYS: number[] = [];
+
+  /** Whether this chip is a basic (unstyled) chip. */
+  readonly _isBasicChip: boolean;
 
   /** Whether the chip has focus. */
   protected _hasFocusInternal = false;
@@ -170,13 +173,14 @@ export class MatChip extends _MatChipMixinBase implements AfterContentInit, Afte
   }
   protected _disabled: boolean = false;
 
+  private _textElement!: HTMLElement;
 
-  /** The value of the chip. Defaults to the content inside `<mat-chip>` tags. */
+  /** The value of the chip. Defaults to the content inside the mdc-chip__text element. */
   @Input()
   get value(): any {
     return this._value !== undefined
       ? this._value
-      : this._elementRef.nativeElement.textContent;
+      : this._textElement.textContent!.trim();
   }
   set value(value: any) { this._value = value; }
   protected _value: any;
@@ -241,81 +245,104 @@ export class MatChip extends _MatChipMixinBase implements AfterContentInit, Afte
   protected _chipAdapter: MDCChipAdapter = {
     addClass: (className) => this._setMdcClass(className, true),
     removeClass: (className) => this._setMdcClass(className, false),
-    hasClass: (className) => this._elementRef.nativeElement.classList.contains(className),
-    addClassToLeadingIcon: (className) => this.leadingIcon.setClass(className, true),
-    removeClassFromLeadingIcon: (className) => this.leadingIcon.setClass(className, false),
-    eventTargetHasClass: (target: EventTarget | null, className: string) => {
-      // We need to null check the `classList`, because IE and Edge don't support it on SVG elements
-      // and Edge seems to throw for ripple elements, because they're outside the DOM.
-      return (target && (target as Element).classList) ?
-          (target as Element).classList.contains(className) : false;
-    },
-    notifyInteraction: () => this.interaction.emit(this.id),
-    notifySelection: () => {
-      // No-op. We call dispatchSelectionEvent ourselves in MatChipOption, because we want to
-      // specify whether selection occurred via user input.
-    },
-    notifyNavigation: () => {
-      // TODO: This is a new feature added by MDC; consider exposing this event to users in the
-      // future.
-    },
-    notifyTrailingIconInteraction: () => this.removeIconInteraction.emit(this.id),
-    notifyRemoval: () => {
-      this.removed.emit({ chip: this });
+    hasClass: (className) =>
+        this._elementRef.nativeElement.classList.contains(className),
+    addClassToLeadingIcon: (className) =>
+        this.leadingIcon.setClass(className, true),
+    removeClassFromLeadingIcon: (className) =>
+        this.leadingIcon.setClass(className, false),
+    eventTargetHasClass:
+        (target: EventTarget|null, className: string) => {
+          // We need to null check the `classList`, because IE and Edge don't
+          // support it on SVG elements and Edge seems to throw for ripple
+          // elements, because they're outside the DOM.
+          return (target && (target as Element).classList) ?
+              (target as Element).classList.contains(className) :
+              false;
+        },
+    notifyInteraction: () => this._notifyInteraction(),
+    notifySelection:
+        () => {
+          // No-op. We call dispatchSelectionEvent ourselves in MatChipOption,
+          // because we want to specify whether selection occurred via user
+          // input.
+        },
+    notifyNavigation: () => this._notifyNavigation(),
+    notifyTrailingIconInteraction: () =>
+        this.removeIconInteraction.emit(this.id),
+    notifyRemoval:
+        () => {
+          this.removed.emit({chip: this});
 
-      // When MDC removes a chip it just transitions it to `width: 0px` which means that it's still
-      // in the DOM and it's still focusable. Make it `display: none` so users can't tab into it.
-      this._elementRef.nativeElement.style.display = 'none';
-    },
-    getComputedStyleValue: propertyName => {
-      // This function is run when a chip is removed so it might be
-      // invoked during server-side rendering. Add some extra checks just in case.
-      if (typeof window !== 'undefined' && window) {
-        const getComputedStyle = window.getComputedStyle(this._elementRef.nativeElement);
-        return getComputedStyle.getPropertyValue(propertyName);
-      }
-      return '';
-    },
-    setStyleProperty: (propertyName: string, value: string) => {
-      this._elementRef.nativeElement.style.setProperty(propertyName, value);
-    },
+          // When MDC removes a chip it just transitions it to `width: 0px`
+          // which means that it's still in the DOM and it's still focusable.
+          // Make it `display: none` so users can't tab into it.
+          this._elementRef.nativeElement.style.display = 'none';
+        },
+    getComputedStyleValue:
+        propertyName => {
+          // This function is run when a chip is removed so it might be
+          // invoked during server-side rendering. Add some extra checks just in
+          // case.
+          if (typeof window !== 'undefined' && window) {
+            const getComputedStyle =
+                window.getComputedStyle(this._elementRef.nativeElement);
+            return getComputedStyle.getPropertyValue(propertyName);
+          }
+          return '';
+        },
+    setStyleProperty:
+        (propertyName: string, value: string) => {
+          this._elementRef.nativeElement.style.setProperty(propertyName, value);
+        },
     hasLeadingIcon: () => !!this.leadingIcon,
-    hasTrailingAction: () => !!this.trailingIcon,
+    isTrailingActionNavigable:
+        () => {
+          if (this.trailingIcon) {
+            return this.trailingIcon.isNavigable();
+          }
+          return false;
+        },
     isRTL: () => !!this._dir && this._dir.value === 'rtl',
-    focusPrimaryAction: () => {
-      // Angular Material MDC chips fully manage focus. TODO: Managing focus and handling keyboard
-      // events was added by MDC after our implementation; consider consolidating.
-    },
+    focusPrimaryAction:
+        () => {
+          // Angular Material MDC chips fully manage focus. TODO: Managing focus
+          // and handling keyboard events was added by MDC after our
+          // implementation; consider consolidating.
+        },
     focusTrailingAction: () => {},
-    setTrailingActionAttr: (attr, value) =>
-        this.trailingIcon && this.trailingIcon.setAttribute(attr, value),
-    setPrimaryActionAttr: (name: string, value: string) => {
-      // MDC is currently using this method to set aria-checked on choice and filter chips,
-      // which in the MDC templates have role="checkbox" and role="radio" respectively.
-      // We have role="option" on those chips instead, so we do not want aria-checked.
-      // Since we also manage the tabindex ourselves, we don't allow MDC to set it.
-      if (name === 'aria-checked' || name === 'tabindex') {
-        return;
-      }
-      this._elementRef.nativeElement.setAttribute(name, value);
-    },
+    removeTrailingActionFocus: () => {},
+    setPrimaryActionAttr:
+        (name: string, value: string) => {
+          // MDC is currently using this method to set aria-checked on choice
+          // and filter chips, which in the MDC templates have role="checkbox"
+          // and role="radio" respectively. We have role="option" on those chips
+          // instead, so we do not want aria-checked. Since we also manage the
+          // tabindex ourselves, we don't allow MDC to set it.
+          if (name === 'aria-checked' || name === 'tabindex') {
+            return;
+          }
+          this._elementRef.nativeElement.setAttribute(name, value);
+        },
     // The 2 functions below are used by the MDC ripple, which we aren't using,
     // so they will never be called
-    getRootBoundingClientRect: () => this._elementRef.nativeElement.getBoundingClientRect(),
+    getRootBoundingClientRect: () =>
+        this._elementRef.nativeElement.getBoundingClientRect(),
     getCheckmarkBoundingClientRect: () => null,
     getAttribute: (attr) => this._elementRef.nativeElement.getAttribute(attr),
- };
+  };
 
- constructor(
-    public _changeDetectorRef: ChangeDetectorRef,
-    readonly _elementRef: ElementRef,
-    protected _ngZone: NgZone,
-    @Optional() private _dir: Directionality,
-    // @breaking-change 8.0.0 `animationMode` parameter to become required.
-    @Optional() @Inject(ANIMATION_MODULE_TYPE) animationMode?: string) {
+  constructor(
+      public _changeDetectorRef: ChangeDetectorRef,
+      readonly _elementRef: ElementRef, protected _ngZone: NgZone,
+      @Optional() private _dir: Directionality,
+      // @breaking-change 8.0.0 `animationMode` parameter to become required.
+      @Optional() @Inject(ANIMATION_MODULE_TYPE) animationMode?: string) {
     super(_elementRef);
     this._chipFoundation = new MDCChipFoundation(this._chipAdapter);
     this._animationsDisabled = animationMode === 'NoopAnimations';
+    this._isBasicChip = _elementRef.nativeElement.hasAttribute(this.basicChipAttrName) ||
+                        _elementRef.nativeElement.tagName.toLowerCase() === this.basicChipAttrName;
   }
 
   ngAfterContentInit() {
@@ -324,6 +351,7 @@ export class MatChip extends _MatChipMixinBase implements AfterContentInit, Afte
 
   ngAfterViewInit() {
     this._chipFoundation.init();
+    this._textElement = this._elementRef.nativeElement.querySelector('.mdc-chip__text');
   }
 
   ngOnDestroy() {
@@ -358,7 +386,7 @@ export class MatChip extends _MatChipMixinBase implements AfterContentInit, Afte
             return;
           }
 
-          this._chipFoundation.handleTrailingIconInteraction(event);
+          this._chipFoundation.handleTrailingActionInteraction();
 
           if (isKeyboardEvent && !hasModifierKey(event as KeyboardEvent)) {
             const keyCode = (event as KeyboardEvent).keyCode;
@@ -382,13 +410,6 @@ export class MatChip extends _MatChipMixinBase implements AfterContentInit, Afte
     }
   }
 
-  /** Whether this chip is a basic (unstyled) chip. */
-  _isBasicChip() {
-    const element = this._elementRef.nativeElement as HTMLElement;
-    return element.hasAttribute(this.basicChipAttrName) ||
-      element.tagName.toLowerCase() === this.basicChipAttrName;
-  }
-
   /** Sets whether the given CSS class should be applied to the MDC chip. */
   private _setMdcClass(cssClass: string, active: boolean) {
       const classes = this._elementRef.nativeElement.classList;
@@ -398,14 +419,33 @@ export class MatChip extends _MatChipMixinBase implements AfterContentInit, Afte
 
   /** Forwards interaction events to the MDC chip foundation. */
   _handleInteraction(event: MouseEvent | KeyboardEvent) {
-    if (!this.disabled) {
-      this._chipFoundation.handleInteraction(event);
+    if (this.disabled) {
+      return;
+    }
+
+    if (event.type === 'click') {
+      this._chipFoundation.handleClick();
+      return;
+    }
+
+    if (event.type === 'keydown') {
+      this._chipFoundation.handleKeydown(event as KeyboardEvent);
+      return;
     }
   }
 
   /** Whether or not the ripple should be disabled. */
   _isRippleDisabled(): boolean {
-    return this.disabled || this.disableRipple || this._isBasicChip();
+    return this.disabled || this.disableRipple || this._animationsDisabled || this._isBasicChip;
+  }
+
+  _notifyInteraction() {
+    this.interaction.emit(this.id);
+  }
+
+  _notifyNavigation() {
+    // TODO: This is a new feature added by MDC. Consider exposing it to users
+    // in the future.
   }
 
   static ngAcceptInputType_disabled: BooleanInput;

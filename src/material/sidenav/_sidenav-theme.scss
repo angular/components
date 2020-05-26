@@ -1,14 +1,15 @@
 @import '../core/style/elevation';
 @import '../core/theming/palette';
 @import '../core/theming/theming';
+@import '../core/theming/check-duplicate-styles';
 
-
-@mixin mat-sidenav-theme($theme) {
-  $primary: map-get($theme, primary);
-  $accent: map-get($theme, accent);
-  $warn: map-get($theme, warn);
-  $background: map-get($theme, background);
-  $foreground: map-get($theme, foreground);
+@mixin mat-sidenav-color($config-or-theme) {
+  $config: mat-get-color-config($config-or-theme);
+  $primary: map-get($config, primary);
+  $accent: map-get($config, accent);
+  $warn: map-get($config, warn);
+  $background: map-get($config, background);
+  $foreground: map-get($config, foreground);
 
   $drawer-background-color: mat-color($background, dialog);
   $drawer-container-background-color:  mat-color($background, background);
@@ -31,7 +32,7 @@
     &:not(.mat-drawer-side) {
       // The elevation of z-16 is noted in the design specifications.
       // See https://material.io/design/components/navigation-drawer.html
-      @include _mat-theme-elevation(16, $theme);
+      @include _mat-theme-elevation(16, $config);
     }
   }
 
@@ -73,4 +74,29 @@
   }
 }
 
-@mixin mat-sidenav-typography($config) { }
+@mixin mat-sidenav-typography($config-or-theme) {
+  $config: mat-get-typography-config($config-or-theme);
+ }
+
+@mixin _mat-sidenav-density($config-or-theme) {
+  $density-scale: mat-get-density-config($config-or-theme);
+}
+
+@mixin mat-sidenav-theme($theme-or-color-config) {
+  $theme: _mat-legacy-get-theme($theme-or-color-config);
+  @include _mat-check-duplicate-theme-styles($theme, 'mat-sidenav') {
+    $color: mat-get-color-config($theme);
+    $density: mat-get-density-config($theme);
+    $typography: mat-get-typography-config($theme);
+
+    @if $color != null {
+      @include mat-sidenav-color($color);
+    }
+    @if $density != null {
+      @include _mat-sidenav-density($density);
+    }
+    @if $typography != null {
+      @include mat-sidenav-typography($typography);
+    }
+  }
+}

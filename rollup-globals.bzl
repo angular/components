@@ -69,11 +69,11 @@ ROLLUP_GLOBALS = {
     "@material/top-app-bar": "mdc.topAppBar",
 
     # Third-party libraries.
+    "kagekiri": "kagekiri",
     "moment": "moment",
     "protractor": "protractor",
     "rxjs": "rxjs",
     "rxjs/operators": "rxjs.operators",
-    "tslib": "tslib",
 }
 
 # Converts a string from dash-case to lower camel case.

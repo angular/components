@@ -1,6 +1,6 @@
-package(default_visibility = ["//visibility:public"])
-
 load("//tools:defaults.bzl", "sass_library")
+
+package(default_visibility = ["//visibility:public"])
 
 filegroup(
     name = "mdc-helpers",
@@ -48,6 +48,16 @@ sass_library(
         "@npm//:node_modules/@material/chips/_mixins.scss",
         "@npm//:node_modules/@material/chips/_variables.import.scss",
         "@npm//:node_modules/@material/chips/_variables.scss",
+        "@npm//:node_modules/@material/chips/trailingaction/_index.scss",
+        "@npm//:node_modules/@material/chips/trailingaction/_mixins.scss",
+        "@npm//:node_modules/@material/chips/trailingaction/_variables.scss",
+        "@npm//:node_modules/@material/circular-progress/_index.scss",
+        "@npm//:node_modules/@material/circular-progress/_keyframes.import.scss",
+        "@npm//:node_modules/@material/circular-progress/_keyframes.scss",
+        "@npm//:node_modules/@material/circular-progress/_mixins.import.scss",
+        "@npm//:node_modules/@material/circular-progress/_mixins.scss",
+        "@npm//:node_modules/@material/circular-progress/_variables.import.scss",
+        "@npm//:node_modules/@material/circular-progress/_variables.scss",
         "@npm//:node_modules/@material/data-table/_index.scss",
         "@npm//:node_modules/@material/data-table/_mixins.import.scss",
         "@npm//:node_modules/@material/data-table/_mixins.scss",
@@ -63,6 +73,8 @@ sass_library(
         "@npm//:node_modules/@material/dialog/_mixins.scss",
         "@npm//:node_modules/@material/dialog/_variables.import.scss",
         "@npm//:node_modules/@material/dialog/_variables.scss",
+        "@npm//:node_modules/@material/dom/_index.scss",
+        "@npm//:node_modules/@material/dom/_mixins.scss",
         "@npm//:node_modules/@material/drawer/_index.scss",
         "@npm//:node_modules/@material/drawer/_mixins.import.scss",
         "@npm//:node_modules/@material/drawer/_mixins.scss",
@@ -168,7 +180,6 @@ sass_library(
         "@npm//:node_modules/@material/select/_functions.import.scss",
         "@npm//:node_modules/@material/select/_functions.scss",
         "@npm//:node_modules/@material/select/_index.scss",
-        "@npm//:node_modules/@material/select/_keyframes.scss",
         "@npm//:node_modules/@material/select/_mixins.import.scss",
         "@npm//:node_modules/@material/select/_mixins.scss",
         "@npm//:node_modules/@material/select/_variables.import.scss",

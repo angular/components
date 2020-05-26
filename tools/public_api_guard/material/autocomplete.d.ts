@@ -51,8 +51,8 @@ export declare class MatAutocomplete extends _MatAutocompleteMixinBase implement
     ngOnDestroy(): void;
     static ngAcceptInputType_autoActiveFirstOption: BooleanInput;
     static ngAcceptInputType_disableRipple: BooleanInput;
-    static ɵcmp: i0.ɵɵComponentDefWithMeta<MatAutocomplete, "mat-autocomplete", ["matAutocomplete"], { "disableRipple": "disableRipple"; "displayWith": "displayWith"; "autoActiveFirstOption": "autoActiveFirstOption"; "panelWidth": "panelWidth"; "classList": "class"; }, { "optionSelected": "optionSelected"; "opened": "opened"; "closed": "closed"; "optionActivated": "optionActivated"; }, ["options", "optionGroups"]>;
-    static ɵfac: i0.ɵɵFactoryDef<MatAutocomplete>;
+    static ɵcmp: i0.ɵɵComponentDefWithMeta<MatAutocomplete, "mat-autocomplete", ["matAutocomplete"], { "disableRipple": "disableRipple"; "displayWith": "displayWith"; "autoActiveFirstOption": "autoActiveFirstOption"; "panelWidth": "panelWidth"; "classList": "class"; }, { "optionSelected": "optionSelected"; "opened": "opened"; "closed": "closed"; "optionActivated": "optionActivated"; }, ["options", "optionGroups"], ["*"]>;
+    static ɵfac: i0.ɵɵFactoryDef<MatAutocomplete, never>;
 }
 
 export interface MatAutocompleteActivatedEvent {
@@ -66,7 +66,7 @@ export interface MatAutocompleteDefaultOptions {
 
 export declare class MatAutocompleteModule {
     static ɵinj: i0.ɵɵInjectorDef<MatAutocompleteModule>;
-    static ɵmod: i0.ɵɵNgModuleDefWithMeta<MatAutocompleteModule, [typeof i1.MatAutocomplete, typeof i2.MatAutocompleteTrigger, typeof i3.MatAutocompleteOrigin], [typeof i4.MatOptionModule, typeof i5.OverlayModule, typeof i4.MatCommonModule, typeof i6.CommonModule], [typeof i1.MatAutocomplete, typeof i4.MatOptionModule, typeof i2.MatAutocompleteTrigger, typeof i3.MatAutocompleteOrigin, typeof i4.MatCommonModule]>;
+    static ɵmod: i0.ɵɵNgModuleDefWithMeta<MatAutocompleteModule, [typeof i1.MatAutocomplete, typeof i2.MatAutocompleteTrigger, typeof i3.MatAutocompleteOrigin], [typeof i4.MatOptionModule, typeof i5.OverlayModule, typeof i4.MatCommonModule, typeof i6.CommonModule], [typeof i7.CdkScrollableModule, typeof i1.MatAutocomplete, typeof i4.MatOptionModule, typeof i2.MatAutocompleteTrigger, typeof i3.MatAutocompleteOrigin, typeof i4.MatCommonModule]>;
 }
 
 export declare class MatAutocompleteOrigin {
@@ -74,7 +74,7 @@ export declare class MatAutocompleteOrigin {
     constructor(
     elementRef: ElementRef<HTMLElement>);
     static ɵdir: i0.ɵɵDirectiveDefWithMeta<MatAutocompleteOrigin, "[matAutocompleteOrigin]", ["matAutocompleteOrigin"], {}, {}, never>;
-    static ɵfac: i0.ɵɵFactoryDef<MatAutocompleteOrigin>;
+    static ɵfac: i0.ɵɵFactoryDef<MatAutocompleteOrigin, never>;
 }
 
 export declare class MatAutocompleteSelectedEvent {
@@ -114,5 +114,5 @@ export declare class MatAutocompleteTrigger implements ControlValueAccessor, Aft
     writeValue(value: any): void;
     static ngAcceptInputType_autocompleteDisabled: BooleanInput;
     static ɵdir: i0.ɵɵDirectiveDefWithMeta<MatAutocompleteTrigger, "input[matAutocomplete], textarea[matAutocomplete]", ["matAutocompleteTrigger"], { "autocomplete": "matAutocomplete"; "position": "matAutocompletePosition"; "connectedTo": "matAutocompleteConnectedTo"; "autocompleteAttribute": "autocomplete"; "autocompleteDisabled": "matAutocompleteDisabled"; }, {}, never>;
-    static ɵfac: i0.ɵɵFactoryDef<MatAutocompleteTrigger>;
+    static ɵfac: i0.ɵɵFactoryDef<MatAutocompleteTrigger, [null, null, null, null, null, null, { optional: true; }, { optional: true; host: true; }, { optional: true; }, null]>;
 }

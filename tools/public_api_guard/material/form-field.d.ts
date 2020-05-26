@@ -6,12 +6,14 @@ export declare function getMatFormFieldMissingControlError(): Error;
 
 export declare function getMatFormFieldPlaceholderConflictError(): Error;
 
+export declare const MAT_FORM_FIELD: InjectionToken<MatFormField>;
+
 export declare const MAT_FORM_FIELD_DEFAULT_OPTIONS: InjectionToken<MatFormFieldDefaultOptions>;
 
 export declare class MatError {
     id: string;
     static ɵdir: i0.ɵɵDirectiveDefWithMeta<MatError, "mat-error", never, { "id": "id"; }, {}, never>;
-    static ɵfac: i0.ɵɵFactoryDef<MatError>;
+    static ɵfac: i0.ɵɵFactoryDef<MatError, never>;
 }
 
 export declare class MatFormField extends _MatFormFieldMixinBase implements AfterContentInit, AfterContentChecked, AfterViewInit, OnDestroy, CanColor {
@@ -63,8 +65,8 @@ export declare class MatFormField extends _MatFormFieldMixinBase implements Afte
     ngOnDestroy(): void;
     updateOutlineGap(): void;
     static ngAcceptInputType_hideRequiredMarker: BooleanInput;
-    static ɵcmp: i0.ɵɵComponentDefWithMeta<MatFormField, "mat-form-field", ["matFormField"], { "color": "color"; "appearance": "appearance"; "hideRequiredMarker": "hideRequiredMarker"; "hintLabel": "hintLabel"; "floatLabel": "floatLabel"; }, {}, ["_controlNonStatic", "_controlStatic", "_labelChildNonStatic", "_labelChildStatic", "_placeholderChild", "_errorChildren", "_hintChildren", "_prefixChildren", "_suffixChildren"]>;
-    static ɵfac: i0.ɵɵFactoryDef<MatFormField>;
+    static ɵcmp: i0.ɵɵComponentDefWithMeta<MatFormField, "mat-form-field", ["matFormField"], { "color": "color"; "appearance": "appearance"; "hideRequiredMarker": "hideRequiredMarker"; "hintLabel": "hintLabel"; "floatLabel": "floatLabel"; }, {}, ["_controlNonStatic", "_controlStatic", "_labelChildNonStatic", "_labelChildStatic", "_placeholderChild", "_errorChildren", "_hintChildren", "_prefixChildren", "_suffixChildren"], ["[matPrefix]", "*", "mat-placeholder", "mat-label", "[matSuffix]", "mat-error", "mat-hint:not([align='end'])", "mat-hint[align='end']"]>;
+    static ɵfac: i0.ɵɵFactoryDef<MatFormField, [null, null, { optional: true; }, { optional: true; }, { optional: true; }, null, null, { optional: true; }]>;
 }
 
 export declare const matFormFieldAnimations: {
@@ -90,7 +92,7 @@ export declare abstract class MatFormFieldControl<T> {
     abstract onContainerClick(event: MouseEvent): void;
     abstract setDescribedByIds(ids: string[]): void;
     static ɵdir: i0.ɵɵDirectiveDefWithMeta<MatFormFieldControl<any>, never, never, {}, {}, never>;
-    static ɵfac: i0.ɵɵFactoryDef<MatFormFieldControl<any>>;
+    static ɵfac: i0.ɵɵFactoryDef<MatFormFieldControl<any>, never>;
 }
 
 export interface MatFormFieldDefaultOptions {
@@ -101,32 +103,32 @@ export interface MatFormFieldDefaultOptions {
 
 export declare class MatFormFieldModule {
     static ɵinj: i0.ɵɵInjectorDef<MatFormFieldModule>;
-    static ɵmod: i0.ɵɵNgModuleDefWithMeta<MatFormFieldModule, [typeof i1.MatError, typeof i2.MatFormField, typeof i3.MatHint, typeof i4.MatLabel, typeof i5.MatPlaceholder, typeof i6.MatPrefix, typeof i7.MatSuffix], [typeof i8.CommonModule, typeof i9.ObserversModule], [typeof i1.MatError, typeof i2.MatFormField, typeof i3.MatHint, typeof i4.MatLabel, typeof i5.MatPlaceholder, typeof i6.MatPrefix, typeof i7.MatSuffix]>;
+    static ɵmod: i0.ɵɵNgModuleDefWithMeta<MatFormFieldModule, [typeof i1.MatError, typeof i2.MatFormField, typeof i3.MatHint, typeof i4.MatLabel, typeof i5.MatPlaceholder, typeof i6.MatPrefix, typeof i7.MatSuffix], [typeof i8.CommonModule, typeof i9.MatCommonModule, typeof i10.ObserversModule], [typeof i9.MatCommonModule, typeof i1.MatError, typeof i2.MatFormField, typeof i3.MatHint, typeof i4.MatLabel, typeof i5.MatPlaceholder, typeof i6.MatPrefix, typeof i7.MatSuffix]>;
 }
 
 export declare class MatHint {
     align: 'start' | 'end';
     id: string;
     static ɵdir: i0.ɵɵDirectiveDefWithMeta<MatHint, "mat-hint", never, { "align": "align"; "id": "id"; }, {}, never>;
-    static ɵfac: i0.ɵɵFactoryDef<MatHint>;
+    static ɵfac: i0.ɵɵFactoryDef<MatHint, never>;
 }
 
 export declare class MatLabel {
     static ɵdir: i0.ɵɵDirectiveDefWithMeta<MatLabel, "mat-label", never, {}, {}, never>;
-    static ɵfac: i0.ɵɵFactoryDef<MatLabel>;
+    static ɵfac: i0.ɵɵFactoryDef<MatLabel, never>;
 }
 
 export declare class MatPlaceholder {
     static ɵdir: i0.ɵɵDirectiveDefWithMeta<MatPlaceholder, "mat-placeholder", never, {}, {}, never>;
-    static ɵfac: i0.ɵɵFactoryDef<MatPlaceholder>;
+    static ɵfac: i0.ɵɵFactoryDef<MatPlaceholder, never>;
 }
 
 export declare class MatPrefix {
     static ɵdir: i0.ɵɵDirectiveDefWithMeta<MatPrefix, "[matPrefix]", never, {}, {}, never>;
-    static ɵfac: i0.ɵɵFactoryDef<MatPrefix>;
+    static ɵfac: i0.ɵɵFactoryDef<MatPrefix, never>;
 }
 
 export declare class MatSuffix {
     static ɵdir: i0.ɵɵDirectiveDefWithMeta<MatSuffix, "[matSuffix]", never, {}, {}, never>;
-    static ɵfac: i0.ɵɵFactoryDef<MatSuffix>;
+    static ɵfac: i0.ɵɵFactoryDef<MatSuffix, never>;
 }

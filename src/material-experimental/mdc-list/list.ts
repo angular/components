@@ -6,7 +6,18 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {ChangeDetectionStrategy, Component, Directive, ViewEncapsulation} from '@angular/core';
+import {Platform} from '@angular/cdk/platform';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ContentChildren,
+  Directive,
+  ElementRef,
+  NgZone,
+  QueryList,
+  ViewEncapsulation
+} from '@angular/core';
+import {MatLine} from '@angular/material/core';
 import {MatListBase, MatListItemBase} from './list-base';
 
 /**
@@ -15,7 +26,7 @@ import {MatListBase, MatListItemBase} from './list-base';
  */
 @Directive({
   selector: '[mat-list-avatar], [matListAvatar]',
-  host: {'class': 'mat-mdc-list-avatar'}
+  host: {'class': 'mat-mdc-list-avatar mdc-list-item__graphic'}
 })
 export class MatListAvatarCssMatStyler {}
 
@@ -25,7 +36,7 @@ export class MatListAvatarCssMatStyler {}
  */
 @Directive({
   selector: '[mat-list-icon], [matListIcon]',
-  host: {'class': 'mat-mdc-list-icon'}
+  host: {'class': 'mat-mdc-list-icon mdc-list-item__graphic'}
 })
 export class MatListIconCssMatStyler {}
 
@@ -35,7 +46,9 @@ export class MatListIconCssMatStyler {}
  */
 @Directive({
   selector: '[mat-subheader], [matSubheader]',
-  host: {'class': 'mat-mdc-subheader'}
+  // TODO(mmalerba): MDC's subheader font looks identical to the list item font, figure out why and
+  //  make a change in one of the repos to visually distinguish.
+  host: {'class': 'mat-mdc-subheader mdc-list-group__subheader'}
 })
 export class MatListSubheaderCssMatStyler {}
 
@@ -49,8 +62,13 @@ export class MatListSubheaderCssMatStyler {}
   styleUrls: ['list.css'],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [
+    {provide: MatListBase, useExisting: MatList},
+  ]
 })
-export class MatList extends MatListBase {}
+export class MatList extends MatListBase {
+  _isNonInteractive = true;
+}
 
 @Component({
   selector: 'mat-list-item, a[mat-list-item], button[mat-list-item]',
@@ -62,4 +80,11 @@ export class MatList extends MatListBase {}
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MatListItem extends MatListItemBase {}
+export class MatListItem extends MatListItemBase {
+  @ContentChildren(MatLine, {read: ElementRef, descendants: true}) lines:
+      QueryList<ElementRef<Element>>;
+
+  constructor(element: ElementRef, ngZone: NgZone, listBase: MatListBase, platform: Platform) {
+    super(element, ngZone, listBase, platform);
+  }
+}

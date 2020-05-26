@@ -52,7 +52,7 @@ export declare class MatTooltip implements OnDestroy, OnInit {
     static ngAcceptInputType_hideDelay: NumberInput;
     static ngAcceptInputType_showDelay: NumberInput;
     static ɵdir: i0.ɵɵDirectiveDefWithMeta<MatTooltip, "[matTooltip]", ["matTooltip"], { "position": "matTooltipPosition"; "disabled": "matTooltipDisabled"; "showDelay": "matTooltipShowDelay"; "hideDelay": "matTooltipHideDelay"; "touchGestures": "matTooltipTouchGestures"; "message": "matTooltip"; "tooltipClass": "matTooltipClass"; }, {}, never>;
-    static ɵfac: i0.ɵɵFactoryDef<MatTooltip>;
+    static ɵfac: i0.ɵɵFactoryDef<MatTooltip, [null, null, null, null, null, null, null, null, null, { optional: true; }, { optional: true; }, null]>;
 }
 
 export declare const matTooltipAnimations: {
@@ -69,7 +69,7 @@ export interface MatTooltipDefaultOptions {
 
 export declare class MatTooltipModule {
     static ɵinj: i0.ɵɵInjectorDef<MatTooltipModule>;
-    static ɵmod: i0.ɵɵNgModuleDefWithMeta<MatTooltipModule, [typeof i1.MatTooltip, typeof i1.TooltipComponent], [typeof i2.A11yModule, typeof i3.CommonModule, typeof i4.OverlayModule, typeof i5.MatCommonModule], [typeof i1.MatTooltip, typeof i1.TooltipComponent, typeof i5.MatCommonModule]>;
+    static ɵmod: i0.ɵɵNgModuleDefWithMeta<MatTooltipModule, [typeof i1.MatTooltip, typeof i1.TooltipComponent], [typeof i2.A11yModule, typeof i3.CommonModule, typeof i4.OverlayModule, typeof i5.MatCommonModule], [typeof i1.MatTooltip, typeof i1.TooltipComponent, typeof i5.MatCommonModule, typeof i6.CdkScrollableModule]>;
 }
 
 export declare const SCROLL_THROTTLE_MS = 20;
@@ -95,8 +95,8 @@ export declare class TooltipComponent implements OnDestroy {
     isVisible(): boolean;
     ngOnDestroy(): void;
     show(delay: number): void;
-    static ɵcmp: i0.ɵɵComponentDefWithMeta<TooltipComponent, "mat-tooltip-component", never, {}, {}, never>;
-    static ɵfac: i0.ɵɵFactoryDef<TooltipComponent>;
+    static ɵcmp: i0.ɵɵComponentDefWithMeta<TooltipComponent, "mat-tooltip-component", never, {}, {}, never, never>;
+    static ɵfac: i0.ɵɵFactoryDef<TooltipComponent, never>;
 }
 
 export declare type TooltipPosition = 'left' | 'right' | 'above' | 'below' | 'before' | 'after';

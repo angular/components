@@ -11,27 +11,34 @@ const inlineStylesSourcemapRegex = /styles: ?\[["'].*sourceMappingURL=.*["']/;
 /** RegExp that matches Angular component metadata properties that refer to external resources. */
 const externalReferencesRegex = /(templateUrl|styleUrls): *["'[]/;
 
+/** RegExp that matches common Bazel manifest paths in this workspace */
+const bazelManifestPath = /(angular_material|external)\//;
+
 /**
  * List of fields which are mandatory in entry-point "package.json" files and refer
  * to files in the release output.
  */
 const packageJsonPathFields =
-    ['main', 'module', 'typings', 'es2015', 'fesm5', 'fesm2015', 'esm5', 'esm2015'];
+    ['main', 'module', 'typings', 'es2015', 'fesm2015', 'esm2015'];
 
 /**
- * Checks the specified release bundle and ensures that it does not contain
- * any external resource URLs.
+ * Checks the specified JavaScript file and ensures that it does not
+ * contain any external resource URLs, or Bazel manifest paths.
  */
-export function checkReleaseBundle(bundlePath: string): string[] {
-  const bundleContent = readFileSync(bundlePath, 'utf8');
+export function checkJavaScriptOutput(filePath: string): string[] {
+  const fileContent = readFileSync(filePath, 'utf8');
   const failures: string[] = [];
 
-  if (inlineStylesSourcemapRegex.exec(bundleContent) !== null) {
+  if (inlineStylesSourcemapRegex.exec(fileContent) !== null) {
     failures.push('Found sourcemap references in component styles.');
   }
 
-  if (externalReferencesRegex.exec(bundleContent) !== null) {
+  if (externalReferencesRegex.exec(fileContent) !== null) {
     failures.push('Found external component resource references');
+  }
+
+  if (bazelManifestPath.exec(fileContent) !== null) {
+    failures.push('Found Bazel manifest path in output.');
   }
 
   return failures;
@@ -51,6 +58,7 @@ export function checkPackageJsonFile(filePath: string): string[] {
   packageJsonPathFields.forEach(fieldName => {
     if (!parsed[fieldName]) {
       failures.push(`Missing field: ${fieldName}`);
+      return;
     }
 
     const resolvedPath = join(packageJsonDir, parsed[fieldName]);

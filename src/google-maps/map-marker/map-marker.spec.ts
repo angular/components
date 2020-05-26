@@ -2,20 +2,19 @@ import {Component, ViewChild} from '@angular/core';
 import {async, TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 
-import {DEFAULT_OPTIONS, UpdatedGoogleMap} from '../google-map/google-map';
+import {DEFAULT_OPTIONS} from '../google-map/google-map';
+
+import {GoogleMapsModule} from '../google-maps-module';
 import {
   createMapConstructorSpy,
   createMapSpy,
   createMarkerConstructorSpy,
-  createMarkerSpy,
-  TestingWindow
+  createMarkerSpy
 } from '../testing/fake-google-map-utils';
-
-import {GoogleMapsModule} from '../google-maps-module';
 import {DEFAULT_MARKER_OPTIONS, MapMarker} from './map-marker';
 
 describe('MapMarker', () => {
-  let mapSpy: jasmine.SpyObj<UpdatedGoogleMap>;
+  let mapSpy: jasmine.SpyObj<google.maps.Map>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -32,8 +31,7 @@ describe('MapMarker', () => {
   });
 
   afterEach(() => {
-    const testingWindow: TestingWindow = window;
-    delete testingWindow.google;
+    delete window.google;
   });
 
   it('initializes a Google Map marker', () => {

@@ -1,6 +1,6 @@
-package(default_visibility = ["//visibility:public"])
-
 load("//tools:defaults.bzl", "sass_binary", "sass_library")
+
+package(default_visibility = ["//visibility:public"])
 
 filegroup(
     name = "mdc-theming",
@@ -27,8 +27,10 @@ sass_library(
         "//src/material-experimental/mdc-progress-bar:mdc_progress_bar_scss_lib",
         "//src/material-experimental/mdc-radio:mdc_radio_scss_lib",
         "//src/material-experimental/mdc-slide-toggle:mdc_slide_toggle_scss_lib",
+        "//src/material-experimental/mdc-slider:mdc_slider_scss_lib",
         "//src/material-experimental/mdc-table:mdc_table_scss_lib",
         "//src/material-experimental/mdc-tabs:mdc_tabs_scss_lib",
+        "//src/material/core:core_scss_lib",
     ],
 )
 

@@ -1,14 +1,16 @@
 @import '../core/theming/palette';
 @import '../core/theming/theming';
+@import '../core/theming/check-duplicate-styles';
 @import '../core/style/form-common';
 @import '../core/typography/typography-utils';
 
 
 // Theme styles that only apply to the fill appearance of the form-field.
 
-@mixin mat-form-field-fill-theme($theme) {
-  $foreground: map-get($theme, foreground);
-  $is-dark-theme: map-get($theme, is-dark);
+@mixin mat-form-field-fill-color($config-or-theme) {
+  $config: mat-get-color-config($config-or-theme);
+  $foreground: map-get($config, foreground);
+  $is-dark-theme: map-get($config, is-dark);
 
   $fill-background: mat-color($foreground, base, if($is-dark-theme, 0.1, 0.04));
   $fill-disabled-background: mat-color($foreground, base, if($is-dark-theme, 0.05, 0.02));
@@ -55,7 +57,8 @@ $mat-form-field-fill-dedupe: 0;
   $mat-form-field-fill-dedupe: $mat-form-field-fill-dedupe + 0.00001 !global;
 }
 
-@mixin mat-form-field-fill-typography($config) {
+@mixin mat-form-field-fill-typography($config-or-theme) {
+  $config: mat-get-typography-config($config-or-theme);
   // The unit-less line-height from the font config.
   $line-height: mat-line-height($config, input);
   // The amount to scale the font for the floating label and subscript.
@@ -95,6 +98,29 @@ $mat-form-field-fill-dedupe: 0;
                 $subscript-font-scale, $infix-padding-top + $fill-appearance-label-offset,
                 $infix-margin-top);
       }
+    }
+  }
+}
+
+@mixin _mat-form-field-fill-density($config-or-theme) {
+  $density-scale: mat-get-density-config($config-or-theme);
+}
+
+@mixin mat-form-field-fill-theme($theme-or-color-config) {
+  $theme: _mat-legacy-get-theme($theme-or-color-config);
+  @include _mat-check-duplicate-theme-styles($theme, 'mat-form-field-fill') {
+    $color: mat-get-color-config($theme);
+    $density: mat-get-density-config($theme);
+    $typography: mat-get-typography-config($theme);
+
+    @if $color != null {
+      @include mat-form-field-fill-color($color);
+    }
+    @if $density != null {
+      @include _mat-form-field-fill-density($density);
+    }
+    @if $typography != null {
+      @include mat-form-field-fill-typography($typography);
     }
   }
 }

@@ -1,5 +1,3 @@
-package(default_visibility = ["//visibility:public"])
-
 load("//src/e2e-app:test_suite.bzl", "e2e_test_suite")
 load(
     "//tools:defaults.bzl",
@@ -8,6 +6,8 @@ load(
     "sass_binary",
     "sass_library",
 )
+
+package(default_visibility = ["//visibility:public"])
 
 ng_module(
     name = "mdc-form-field",
@@ -68,9 +68,6 @@ sass_library(
         "@npm//:node_modules/@material/notched-outline/mdc-notched-outline.scss",
         "@npm//:node_modules/@material/ripple/common.scss",
         "@npm//:node_modules/@material/textfield/_functions.scss",
-        "@npm//:node_modules/@material/textfield/character-counter/mdc-text-field-character-counter.scss",
-        "@npm//:node_modules/@material/textfield/helper-text/mdc-text-field-helper-text.scss",
-        "@npm//:node_modules/@material/textfield/icon/mdc-text-field-icon.scss",
         "@npm//:node_modules/@material/textfield/mdc-text-field.scss",
     ],
     deps = [
@@ -81,7 +78,9 @@ sass_library(
 sass_library(
     name = "form_field_partials",
     srcs = [
+        "_form-field-density.scss",
         "_form-field-focus-overlay.scss",
+        "_form-field-native-select.scss",
         "_form-field-sizing.scss",
         "_form-field-subscript.scss",
         "_mdc-text-field-structure-overrides.scss",

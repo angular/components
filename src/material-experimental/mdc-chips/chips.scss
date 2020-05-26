@@ -16,6 +16,13 @@
     // were disabled via the `NoopAnimationsModule`, the element won't have a transition and
     // `transitionend` won't fire. We work around the issue by assigning a very short transition.
     transition-duration: 1ms;
+
+    // Disables the chip enter animation.
+    animation: none;
+
+    .mdc-chip__checkmark-svg {
+      transition: none;
+    }
   }
 
   @include cdk-high-contrast(active, off) {
@@ -54,6 +61,10 @@
     pointer-events: none;
     opacity: 0;
     border-radius: inherit;
+
+    ._mat-animation-noopable & {
+      transition: none;
+    }
   }
 }
 
@@ -90,6 +101,10 @@ input.mat-mdc-chip-input {
 }
 
 .mdc-chip__checkmark-path {
+  ._mat-animation-noopable & {
+    transition: none;
+  }
+
   @include cdk-high-contrast(black-on-white, off) {
     // SVG colors won't be changed in high contrast mode and since the checkmark is white
     // by default, it'll blend in with the background in black-on-white mode. Override the color
