@@ -158,6 +158,7 @@ export class MatButton extends _MatButtonMixinBase
     '[attr.aria-disabled]': 'disabled.toString()',
     '(click)': '_haltDisabledEvents($event)',
     '[class._mat-animation-noopable]': '_animationMode === "NoopAnimations"',
+    '[class.mat-button-disabled]': 'disabled',
     'class': 'mat-focus-indicator',
   },
   inputs: ['disabled', 'disableRipple', 'color'],
