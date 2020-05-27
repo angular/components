@@ -582,10 +582,14 @@ workflows:
           filters: *ignore_presubmit_branch_filter
           requires:
             - build_release_packages
-      - ngcc_compatibility_snapshot:
-          filters: *skip_on_pull_requests_filter
-          requires:
-            - build_release_packages
+      # The ngcc snapshot compatibility job is disabled in the patch branch as the patch
+      # branch relies on TypeScript 3.8 that is no longer supported in the latest Angular
+      # compiler-cli version. The latest compiler version would be picked up as part of the
+      # snapshot builds and would cause errors about an unsupported TS version.
+      # - ngcc_compatibility_snapshot:
+      #     filters: *skip_on_pull_requests_filter
+      #     requires:
+      #       - build_release_packages
       - publish_snapshots:
           filters: *publish_branches_filter
           requires:
