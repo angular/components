@@ -16,6 +16,9 @@ import {CopierService} from '../copier/copier.service';
 import {DocViewerModule} from '../doc-viewer/doc-viewer-module';
 import {ExampleViewer} from './example-viewer';
 import {AutocompleteExamplesModule} from '@angular/components-examples/material/autocomplete';
+import {MatTabGroupHarness} from '@angular/material/tabs/testing';
+import {HarnessLoader} from '@angular/cdk/testing';
+import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 
 const exampleKey = 'autocomplete-overview';
 const exampleBasePath = `/docs-content/examples-highlighted/material/autocomplete/${exampleKey}`;
@@ -25,6 +28,7 @@ describe('ExampleViewer', () => {
   let fixture: ComponentFixture<ExampleViewer>;
   let component: ExampleViewer;
   let http: HttpTestingController;
+  let loader: HarnessLoader;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -44,21 +48,79 @@ describe('ExampleViewer', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(ExampleViewer);
     component = fixture.componentInstance;
+    fixture.detectChanges();
+    loader = TestbedHarnessEnvironment.loader(fixture);
   });
 
   it('should toggle between the 3 views', async(() => {
-    fixture.detectChanges();
-    component.view = 'compact';
-    expect(component.view).toBe('compact');
+    // need to specify a file because toggling from snippet to full changes the tabs to match
+    component.file = 'file.html';
+    component.view = 'snippet';
+    expect(component.view).toBe('snippet');
     component.toggleCompactView();
     expect(component.view).toBe('full');
     component.toggleSourceView();
-    expect(component.view).toBe('collapsed');
+    expect(component.view).toBe('demo');
+  }));
+
+  it('should expand to HTML tab', async(async () => {
+    component.example = exampleKey;
+    component.file = 'file.html';
+    component.view = 'snippet';
+    component.toggleCompactView();
+
+    const tabGroup = await loader.getHarness(MatTabGroupHarness);
+    const tab = await tabGroup.getSelectedTab();
+    expect(await tab.getLabel()).toBe('HTML');
+  }));
+
+  it('should expand to TS tab', async(async () => {
+    component.example = exampleKey;
+    component.file = 'file.ts';
+    component.view = 'snippet';
+    component.toggleCompactView();
+
+    const tabGroup = await loader.getHarness(MatTabGroupHarness);
+    const tab = await tabGroup.getSelectedTab();
+    expect(await tab.getLabel()).toBe('TS');
+  }));
+
+  it('should expand to CSS tab', async(async () => {
+    component.example = exampleKey;
+    component.file = 'file.css';
+    component.view = 'snippet';
+    component.toggleCompactView();
+
+    const tabGroup = await loader.getHarness(MatTabGroupHarness);
+    const tab = await tabGroup.getSelectedTab();
+    expect(await tab.getLabel()).toBe('CSS');
+  }));
+
+  it('should generate correct url with region', async(() => {
+    component.example = exampleKey;
+    component.region = 'region';
+    const url = component.generateUrl('a.b.html');
+    expect(url).toBe(exampleBasePath + '/a.b_region-html.html');
+  }));
+
+  it('should generate correct url without region', async(() => {
+    component.example = exampleKey;
+    component.region = undefined;
+    const url = component.generateUrl('a.b.ts');
+    expect(url).toBe(exampleBasePath + '/a.b-ts.html');
+  }));
+
+  it('should print an error message about incorrect file type', async(() => {
+    spyOn(console, 'error');
+    component.file = 'file.bad';
+    component.selectCorrectTab();
+
+    expect(console.error).toHaveBeenCalledWith(
+      'Unexpected file type: bad. Expected html, ts, or css.');
   }));
 
   it('should set and return example properly', async(() => {
     component.example = exampleKey;
-    fixture.detectChanges();
     const data = component.exampleData;
     // TODO(jelbourn): remove `as any` once LiveExample is updated to have optional members.
     expect(data).toEqual(EXAMPLE_COMPONENTS[exampleKey] as any);
@@ -67,7 +129,6 @@ describe('ExampleViewer', () => {
   it('should print an error message about missing example', async(() => {
     spyOn(console, 'error');
     component.example = 'foobar';
-    fixture.detectChanges();
     expect(console.error).toHaveBeenCalled();
     expect(console.error).toHaveBeenCalledWith('Could not find example: foobar');
   }));
@@ -75,7 +136,6 @@ describe('ExampleViewer', () => {
   it('should return docs-content path for example based on extension', async(() => {
     // set example
     component.example = exampleKey;
-    fixture.detectChanges();
 
     // get example file path for each extension
     const extensions = ['ts', 'css', 'html'];
@@ -92,7 +152,6 @@ describe('ExampleViewer', () => {
 
     it('should only render HTML, TS and CSS files if no additional files are specified', () => {
       component.example = exampleKey;
-      fixture.detectChanges();
 
       expect(component._getExampleTabNames()).toEqual(['HTML', 'TS', 'CSS']);
     });
@@ -104,7 +163,6 @@ describe('ExampleViewer', () => {
       };
 
       component.example = 'additional-files';
-      fixture.detectChanges();
 
       expect(component._getExampleTabNames())
         .toEqual(['HTML', 'TS', 'CSS', 'some-additional-file.html']);

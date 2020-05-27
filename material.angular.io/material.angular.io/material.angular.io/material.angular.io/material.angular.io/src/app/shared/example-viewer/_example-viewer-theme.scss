@@ -16,7 +16,7 @@
     }
 
     .docs-example-button {
-      color: mat-color($foreground, hint-text);
+      color: mat-color($foreground, secondary-text);
 
       [dir='rtl'] & {
         right: auto;
