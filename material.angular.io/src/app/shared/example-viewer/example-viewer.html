@@ -1,5 +1,5 @@
 <div class="docs-example-viewer-wrapper">
-  <div class="docs-example-viewer-title" *ngIf="view !== 'compact'">
+  <div class="docs-example-viewer-title" *ngIf="view !== 'snippet'">
     <div class="docs-example-viewer-title-spacer">{{exampleData?.title}}</div>
 
     <button mat-icon-button type="button" (click)="toggleCompactView()" [matTooltip]="'View snippet only'"
@@ -13,7 +13,7 @@
     </button>
 
     <button mat-icon-button type="button" (click)="toggleSourceView()"
-            [matTooltip]="view==='collapsed' ? 'View code' : 'Hide code'" aria-label="View source">
+            [matTooltip]="view==='demo' ? 'View code' : 'Hide code'" aria-label="View source">
       <mat-icon>code</mat-icon>
     </button>
 
@@ -21,7 +21,7 @@
   </div>
 
   <div class="docs-example-viewer-source" *ngIf="view === 'full'">
-    <mat-tab-group animationDuration="0ms">
+    <mat-tab-group animationDuration="0ms" [selectedIndex]="selectedTab" (selectedIndexChange)="selectCorrectTab()">
       <mat-tab *ngFor="let tabName of _getExampleTabNames()" [label]="tabName">
         <div class="button-bar">
           <button mat-icon-button type="button" (click)="copySource(snippet.first.viewer.textContent)"
@@ -35,7 +35,7 @@
     </mat-tab-group>
   </div>
 
-  <div class="docs-example-viewer-source-compact" *ngIf="view === 'compact'">
+  <div class="docs-example-viewer-source-compact" *ngIf="view === 'snippet'">
     <div class="button-bar">
       <button mat-icon-button type="button" (click)="copySource(snippet.first.viewer.textContent)"
               class="docs-example-source-copy docs-example-button" [matTooltip]="'Copy snippet'"
@@ -52,10 +52,10 @@
         </mat-icon>
       </button>
     </div>
-    <code-snippet [source]="file" [lines]="lines" *ngIf="file !== 'demo'"></code-snippet>
+    <code-snippet [source]="fileUrl"></code-snippet>
   </div>
 
-  <div class="docs-example-viewer-body" *ngIf="view !== 'compact' || file === 'demo'">
+  <div class="docs-example-viewer-body" *ngIf="view !== 'snippet'">
     <ng-template *ngIf="_exampleComponentType && _exampleModuleFactory"
                  [ngComponentOutlet]="_exampleComponentType"
                  [ngComponentOutletNgModuleFactory]="_exampleModuleFactory"></ng-template>

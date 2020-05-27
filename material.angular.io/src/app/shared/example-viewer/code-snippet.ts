@@ -1,4 +1,9 @@
-import {ChangeDetectionStrategy, Component, Input, ViewChild} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Input,
+  ViewChild
+} from '@angular/core';
 import {DocViewer} from '../doc-viewer/doc-viewer';
 
 @Component({
@@ -9,6 +14,5 @@ import {DocViewer} from '../doc-viewer/doc-viewer';
 })
 export class CodeSnippet {
   @Input() source: string;
-  @Input() lines: readonly [number, number];
   @ViewChild('viewer') viewer: DocViewer;
 }
