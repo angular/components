@@ -79,8 +79,8 @@ export class DocsMarkdownRenderer extends Renderer {
    */
   html(html: string) {
     html = html.replace(exampleCommentRegex, (_match: string, content: string) => {
+        // using [\s\S]* because .* does not match line breaks
         if (content.match(/\{[\s\S]*\}/g)) {
-          // using [\s\S]* because .* does not match line breaks
           const {example, file, region} = JSON.parse(content);
           return `<div material-docs-example="${example}"
                              file="${file}"
