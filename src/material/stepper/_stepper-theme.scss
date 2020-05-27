@@ -86,8 +86,8 @@
 
   .mat-step-label {
     font: {
-      size: mat-font-size($config, body-1);
-      weight: mat-font-weight($config, body-1);
+      size: mat-font-size($config, body-2);
+      weight: mat-font-weight($config, body-2);;
     };
   }
 
@@ -95,15 +95,8 @@
     font-weight: normal;
   }
 
-  .mat-step-label-error {
-    font-size: mat-font-size($config, body-2);
-  }
-
   .mat-step-label-selected {
-    font: {
-      size: mat-font-size($config, body-2);
-      weight: mat-font-weight($config, body-2);
-    };
+    font-weight: bolder;
   }
 }
 
