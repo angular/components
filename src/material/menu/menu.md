@@ -4,9 +4,9 @@
 
 By itself, the `<mat-menu>` element does not render anything. The menu is attached to and opened
 via application of the `matMenuTriggerFor` directive:
-<!-- example({"example":"menu-overview",
-              "file":"menu-overview-example.html",
-              "region:"mat-menu-trigger-for"}) -->
+<!-- example({"example": "menu-overview",
+              "file": "menu-overview-example.html",
+              "region": "mat-menu-trigger-for"}) -->
 
 ### Toggling the menu programmatically
 The menu exposes an API to open/close programmatically. Please note that in this case, an
@@ -25,8 +25,8 @@ class MyComponent {
 ### Icons
 Menus support displaying `mat-icon` elements before the menu item text.
 
-<!-- example({"example":"menu-icons",
-              "file":"menu-icons-example.html")} -->
+<!-- example({"example": "menu-icons",
+              "file": "menu-icons-example.html"}) -->
 
 ### Customizing menu position
 
@@ -35,9 +35,9 @@ its trigger. The position can be changed using the `xPosition` (`before | after`
 (`above | below`) attributes. The menu can be forced to overlap the trigger using the
 `overlapTrigger` attribute.
 
-<!-- example({"example":"menu-position",
-              "file":"menu-position-example.html",
-              "region":"menu-position")} -->
+<!-- example({"example": "menu-position",
+              "file": "menu-position-example.html",
+              "region": "menu-position"}) -->
 
 ### Nested menu
 
@@ -45,9 +45,9 @@ Material supports the ability for an `mat-menu-item` to open a sub-menu. To do s
 your root menu and sub-menus, in addition to setting the `[matMenuTriggerFor]` on the `mat-menu-item`
 that should trigger the sub-menu:
 
-<!-- example({"example":"menu-nested",
-              "file":"menu-nested-example.html",
-              "region":"sub-menu")} -->
+<!-- example({"example": "menu-nested",
+              "file": "menu-nested-example.html",
+              "region": "sub-menu"}) -->
 
 ### Lazy rendering
 By default, the menu content will be initialized even when the panel is closed. To defer

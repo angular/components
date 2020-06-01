@@ -1,7 +1,7 @@
 `<mat-chip-list>` displays a list of values as individual, keyboard accessible, chips.
 
-<!-- example{{"example":"chips-overview",
-              "file":"chips-overview-example.html"}) -->
+<!-- example({"example": "chips-overview",
+              "file": "chips-overview-example.html"}) -->
 
 ### Unstyled chips
 By default, `<mat-chip>` has Material Design styles applied. For a chip with no styles applied,
@@ -52,8 +52,8 @@ also gain focus when clicked, ensuring keyboard navigation starts at the appropr
 If you want the chips in the list to be stacked vertically, instead of horizontally, you can apply
 the `mat-chip-list-stacked` class, as well as the `aria-orientation="vertical"` attribute:
 
-<!-- example({"example":"chips-stacked",
-              "file":"chips-stacked-example.html")} -->
+<!-- example({"example": "chips-stacked",
+              "file": "chips-stacked-example.html"}) -->
 
 ### Specifying global configuration defaults
 Default options for the chips module can be specified using the `MAT_CHIPS_DEFAULT_OPTIONS`
