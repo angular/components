@@ -375,24 +375,26 @@ export class MatChip extends _MatChipMixinBase implements AfterContentInit, Afte
     this.removeIcon.interaction
         .pipe(takeUntil(this._destroyed))
         .subscribe(event => {
+          if (this.disabled) {
+            return;
+          }
+
           // The MDC chip foundation calls stopPropagation() for any trailing icon interaction
           // event, even ones it doesn't handle, so we want to avoid passing it keyboard events
           // for which we have a custom handler. Note that we assert the type of the event using
           // the `type`, because `instanceof KeyboardEvent` can throw during server-side rendering.
           const isKeyboardEvent = event.type.startsWith('key');
+          const isClickEvent = event.type.startsWith('click');
 
-          if (this.disabled || (isKeyboardEvent &&
-              this.HANDLED_KEYS.indexOf((event as KeyboardEvent).keyCode) !== -1)) {
-            return;
-          }
-
-          this._chipFoundation.handleTrailingActionInteraction();
-
-          if (isKeyboardEvent && !hasModifierKey(event as KeyboardEvent)) {
+          if (isClickEvent) {
+            this._chipFoundation.handleTrailingActionInteraction();
+          } else if (isKeyboardEvent) {
             const keyCode = (event as KeyboardEvent).keyCode;
-
-            // Prevent default space and enter presses so we don't scroll the page or submit forms.
-            if (keyCode === SPACE || keyCode === ENTER) {
+            if ((keyCode === SPACE || keyCode === ENTER) &&
+              !hasModifierKey(event as KeyboardEvent)) {
+              this._chipFoundation.handleTrailingActionInteraction();
+              // Prevent default space and enter presses so we don't scroll the page or submit
+              // forms.
               event.preventDefault();
             }
           }

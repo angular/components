@@ -7,7 +7,7 @@ import {
 import {Component, DebugElement} from '@angular/core';
 import {By} from '@angular/platform-browser';
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
-import {SPACE, ENTER} from '@angular/cdk/keycodes';
+import {SPACE, ENTER, X} from '@angular/cdk/keycodes';
 import {MatChip, MatChipsModule} from './index';
 
 describe('MDC-based Chip Remove', () => {
@@ -154,6 +154,30 @@ describe('MDC-based Chip Remove', () => {
       fixture.detectChanges();
 
       expect(event.defaultPrevented).toBe(false);
+    });
+
+    it('should remove the chip when ENTER or SPACE is pressed without a modifier key', () => {
+      const buttonElement = chipNativeElement.querySelector('button')!;
+
+      testChip.removable = true;
+      fixture.detectChanges();
+
+      dispatchKeyboardEvent(buttonElement, 'keydown', SPACE);
+      fixture.detectChanges();
+
+      expect(chipNativeElement.classList.contains('mdc-chip--exit')).toBe(true);
+    });
+
+    it('should not remove the chip when a key other than ENTER or SPACE is pressed', () => {
+      const buttonElement = chipNativeElement.querySelector('button')!;
+
+      testChip.removable = true;
+      fixture.detectChanges();
+
+      dispatchKeyboardEvent(buttonElement, 'keydown', X);
+      fixture.detectChanges();
+
+      expect(chipNativeElement.classList.contains('mdc-chip--exit')).toBe(false);
     });
 
     it('should have a focus indicator', () => {
