@@ -1,0 +1,33 @@
+@import '~@angular/material/prebuilt-themes/indigo-pink.css';
+@import '~@angular/material/theming';
+
+@include mat-core();
+
+$primary: mat-palette($mat-red, 500, 200, 900);
+$accent: mat-palette($mat-red, 500, 200, 700);
+$warn: mat-palette($mat-red);
+
+$theme: mat-light-theme($primary, $accent, $warn);
+$background-color: #fff2f4;
+
+$background: map-get($theme, background);
+$background: map_merge($background, (background: $background-color, disabled-button: rgba(red, 0.5)));
+$theme: map_merge($theme, (background: $background));
+
+$secondary-text-color: map_get($mat-red, 600);
+
+$foreground: map-get($theme, foreground);
+$foreground: map_merge($foreground,
+  (disabled-button: rgba(red, 0.45),
+    text: $secondary-text-color,
+    divider: $secondary-text-color,
+    secondary-text: $secondary-text-color,
+    dsiabled-text: $secondary-text-color));
+$theme: map_merge($theme, (foreground: $foreground));
+
+@include angular-material-theme($theme);
+
+body {
+  margin: 0;
+  color: red;
+}

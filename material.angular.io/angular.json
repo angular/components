@@ -2,6 +2,7 @@
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
   "version": 1,
   "newProjectRoot": "projects",
+  "defaultProject": "material-angular-io",
   "projects": {
     "material-angular-io": {
       "root": "",
@@ -194,6 +195,127 @@
           "configurations": {
             "production": {
               "devServerTarget": "material-angular-io:serve:production"
+            }
+          }
+        }
+      }
+    },
+    "scenes": {
+      "projectType": "application",
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "scss"
+        }
+      },
+      "root": "scenes",
+      "sourceRoot": "scenes/src",
+      "prefix": "app",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist/scenes",
+            "index": "scenes/src/index.html",
+            "main": "scenes/src/main.ts",
+            "polyfills": "scenes/src/polyfills.ts",
+            "tsConfig": "scenes/tsconfig.app.json",
+            "aot": true,
+            "assets": [
+              "scenes/src/favicon.ico",
+              "scenes/src/assets"
+            ],
+            "styles": [
+              "scenes/src/styles.scss"
+            ],
+            "scripts": []
+          },
+          "configurations": {
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "scenes/src/environments/environment.ts",
+                  "with": "scenes/src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb",
+                  "maximumError": "10kb"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "scenes:build"
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "scenes:build:production"
+            }
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "scenes:build"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "scenes/src/test.ts",
+            "polyfills": "scenes/src/polyfills.ts",
+            "tsConfig": "scenes/tsconfig.spec.json",
+            "karmaConfig": "scenes/karma.conf.js",
+            "assets": [
+              "scenes/src/favicon.ico",
+              "scenes/src/assets"
+            ],
+            "styles": [
+              "scenes/src/styles.scss"
+            ],
+            "scripts": []
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "scenes/tsconfig.app.json",
+              "scenes/tsconfig.spec.json",
+              "scenes/e2e/tsconfig.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        },
+        "e2e": {
+          "builder": "@angular-devkit/build-angular:protractor",
+          "options": {
+            "protractorConfig": "scenes/e2e/protractor.conf.js",
+            "devServerTarget": "scenes:serve"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "scenes:serve:production"
             }
           }
         }
