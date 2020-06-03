@@ -8,8 +8,8 @@ import {
 import {
     CdkLinearStepperWithFormExample,
     CustomLinearStepper
-} from "./cdk-linear-stepper-with-form/cdk-linear-stepper-with-form-example";
-import {ReactiveFormsModule} from "@angular/forms";
+} from './cdk-linear-stepper-with-form/cdk-linear-stepper-with-form-example';
+import {ReactiveFormsModule} from '@angular/forms';
 
 export {
   CdkCustomStepperWithoutFormExample,
