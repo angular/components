@@ -1,19 +1,19 @@
 <section class="example-container">
-    <header>
-        <h2>Step {{selectedIndex + 1}}/{{steps.length}}</h2>
-    </header>
+  <header>
+    <h2>Step {{selectedIndex + 1}}/{{steps.length}}</h2>
+  </header>
 
-    <div [ngTemplateOutlet]="selected ? selected.content : null"></div>
+  <div [ngTemplateOutlet]="selected ? selected.content : null"></div>
 
-    <footer class="example-step-navigation-bar">
-        <button class="example-nav-button" cdkStepperPrevious>&larr;</button>
-        <button
-                [ngClass]="selectedIndex === i ? 'example-active' : 'example-step'"
-                *ngFor="let step of steps; let i = index"
-                (click)="onClick(i)"
-        >
-            Step {{ i + 1 }}
-        </button>
-        <button class="example-nav-button" cdkStepperNext>&rarr;</button>
-    </footer>
+  <footer class="example-step-navigation-bar">
+    <button class="example-nav-button" cdkStepperPrevious>&larr;</button>
+    <button
+      [ngClass]="selectedIndex === i ? 'example-active' : 'example-step'"
+      *ngFor="let step of steps; let i = index"
+      (click)="onClick(i)"
+    >
+      Step {{ i + 1 }}
+    </button>
+    <button class="example-nav-button" cdkStepperNext>&rarr;</button>
+  </footer>
 </section>
