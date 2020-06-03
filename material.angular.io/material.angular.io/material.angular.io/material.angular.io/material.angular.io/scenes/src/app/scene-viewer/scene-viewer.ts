@@ -1,6 +1,7 @@
 import {
   Component,
   ComponentFactoryResolver,
+  HostBinding,
   Input,
   NgModule,
   OnInit,
@@ -17,19 +18,27 @@ import {DomSanitizer, SafeStyle} from '@angular/platform-browser';
   selector: 'app-scene-viewer',
   templateUrl: './scene-viewer.html',
   styleUrls: ['./scene-viewer.scss'],
-  host: {'[style.filter]': 'cssFilter'}
 })
 export class SceneViewer implements OnInit {
+
+  @HostBinding('style.filter') filter: SafeStyle;
+
   /**
    * Degree to change hue of scene by. All scenes default to a reddish hue.
    * e.g. 90 = greenish, 180 = blueish
    */
   @Input()
-  get hueRotation(): number { return this._hueRotation; }
+  get hueRotation(): number {
+    return this._hueRotation;
+  }
+
   set hueRotation(deg: number) {
     this._hueRotation = deg;
-    this.cssFilter = this.sanitizer.bypassSecurityTrustStyle(`hue-rotate(${this.hueRotation}deg)`);
+    // Modern browsers have security built in so this is just bypassing Angular's redundant checks.
+    // Furthermore these checks will soon be removed.
+    this.filter = this.sanitizer.bypassSecurityTrustStyle(`hue-rotate(${this.hueRotation}deg)`);
   }
+
   private _hueRotation: number;
 
   /** Component of scene to display */
@@ -37,8 +46,6 @@ export class SceneViewer implements OnInit {
 
   @ViewChild('scene', {read: ViewContainerRef, static: true})
   scene: ViewContainerRef;
-
-  cssFilter: SafeStyle;
 
   constructor(private readonly componentFactoryResolver: ComponentFactoryResolver,
               private route: ActivatedRoute,
