@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {CdkStepper} from '@angular/cdk/stepper';
-import {FormBuilder, FormGroup, Validators, FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 
 /** @title A custom CDK linear stepper with forms */
 @Component({
@@ -8,7 +8,7 @@ import {FormBuilder, FormGroup, Validators, FormsModule, ReactiveFormsModule} fr
   templateUrl: './cdk-linear-stepper-with-form-example.html',
   styleUrls: ['./cdk-linear-stepper-with-form-example.css']
 })
-export class CdkLinearStepperWithFormExample {
+export class CdkLinearStepperWithFormExample implements OnInit {
   isLinear = true;
   firstFormGroup: FormGroup;
   secondFormGroup: FormGroup;
