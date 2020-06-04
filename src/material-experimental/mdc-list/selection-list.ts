@@ -106,7 +106,7 @@ export class MatListOption extends MatListItemBase {
 
   // TODO: Implement these inputs.
   @Input() disableRipple: boolean;
-  @Input() checkboxPosition: 'before' | 'after';
+  @Input() checkboxPosition: 'before' | 'after' = 'before';
   @Input() color: ThemePalette;
   @Input() value: any;
   @Input() disabled: boolean;

@@ -1,16 +1,25 @@
-<ng-content select="[mat-list-avatar],[matListAvatar],[mat-list-icon],[matListIcon]"></ng-content>
-
-<!-- If lines were explicitly given, use those as the text. -->
-<ng-container *ngIf="lines.length">
-  <span class="mdc-list-item__text"><ng-content select="[mat-line],[matLine]"></ng-content></span>
-</ng-container>
-
-<!--
-  If lines were not explicitly given, assume the remaining content is the text, otherwise assume it
-  is an action that belongs in the "meta" section.
--->
-<span [class.mdc-list-item__text]="!lines.length" [class.mdc-list-item__meta]="!!lines.length">
+<!-- Save icons and unclassified content to be places later -->
+<ng-template #icons>
+  <ng-content select="[mat-list-avatar],[matListAvatar],[mat-list-icon],[matListIcon]"></ng-content>
+</ng-template>
+<ng-template #unsortedContent>
   <ng-content></ng-content>
-</span>
+</ng-template>
 
+<!-- Prefix -->
+<span class="mdc-list-item__graphic" *ngIf="checkboxPosition !== 'after' else icons">
+  <mat-pseudo-checkbox></mat-pseudo-checkbox>
+</span>
+<!-- Text -->
+<span class="mdc-list-item__text">
+  <ng-content *ngIf="lines.length else unsortedContent" select="[mat-line],[matLine]"></ng-content>
+</span>
+<!-- Suffix -->
+<span class="mdc-list-item__meta">
+  <span class="mdc-list-item__graphic" *ngIf="checkboxPosition === 'after' else icons">
+    <mat-pseudo-checkbox></mat-pseudo-checkbox>
+  </span>
+  <ng-container *ngIf="lines.length" [ngTemplateOutlet]="unsortedContent"></ng-container>
+</span>
+<!-- Divider -->
 <ng-content select="mat-divider"></ng-content>
