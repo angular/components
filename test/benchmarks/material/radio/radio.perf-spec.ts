@@ -20,7 +20,6 @@ describe('radio button performance benchmarks', () => {
       url: '',
       ignoreBrowserSynchronization: true,
       params: [],
-      setup: async () => await $('#show-two').click(),
       prepare: async () => await $('#hide-two').click(),
       work: async () => await $('#show-two').click(),
     });
@@ -32,7 +31,6 @@ describe('radio button performance benchmarks', () => {
       url: '',
       ignoreBrowserSynchronization: true,
       params: [],
-      setup: async () => await $('#show-ten').click(),
       prepare: async () => await $('#hide-ten').click(),
       work: async () => await $('#show-ten').click(),
     });
