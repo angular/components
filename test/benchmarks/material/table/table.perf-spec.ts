@@ -21,7 +21,6 @@ describe('checkbox overview performance benchmarks', () => {
         url: '',
         ignoreBrowserSynchronization: true,
         params: [],
-        setup: async () => await $('#show').click(),
         prepare: async () => await $('#hide').click(),
         work: async () => await $('#show').click()
       });
@@ -33,10 +32,7 @@ describe('checkbox overview performance benchmarks', () => {
         url: '',
         ignoreBrowserSynchronization: true,
         params: [],
-        setup: async () => {
-          await $('#one-hundred-rows').click();
-          await $('#show').click();
-        },
+        setup: async () => await $('#one-hundred-rows').click(),
         prepare: async () => await $('#hide').click(),
         work: async () => await $('#show').click()
       });
@@ -48,10 +44,7 @@ describe('checkbox overview performance benchmarks', () => {
         url: '',
         ignoreBrowserSynchronization: true,
         params: [],
-        setup: async () => {
-          await $('#one-thousand-rows').click();
-          await $('#show').click();
-        },
+        setup: async () => await $('#one-thousand-rows').click(),
         prepare: async () => await $('#hide').click(),
         work: async () => await $('#show').click()
       });
@@ -77,10 +70,7 @@ describe('checkbox overview performance benchmarks', () => {
         url: '',
         ignoreBrowserSynchronization: true,
         params: [],
-        setup: async () => {
-          await $('#ten-cols').click();
-          await $('#show').click();
-        },
+        setup: async () => await $('#ten-cols').click(),
         prepare: async () => await $('#hide').click(),
         work: async () => await $('#show').click()
       });
@@ -92,10 +82,7 @@ describe('checkbox overview performance benchmarks', () => {
         url: '',
         ignoreBrowserSynchronization: true,
         params: [],
-        setup: async () => {
-          await $('#twenty-cols').click();
-          await $('#show').click();
-        },
+        setup: async () => await $('#twenty-cols').click(),
         prepare: async () => await $('#hide').click(),
         work: async () => await $('#show').click()
       });
