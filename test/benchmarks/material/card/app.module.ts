@@ -27,7 +27,6 @@ import {MatCardModule} from '@angular/material/card';
   styleUrls: ['//src/material/core/theming/prebuilt/indigo-pink.css'],
 })
 export class CardBenchmarkApp {
-  isChecked = false;
   isVisible = false;
 
   show() { this.isVisible = true; }
