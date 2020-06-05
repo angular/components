@@ -20,7 +20,6 @@ describe('chip performance benchmarks', () => {
       url: '',
       ignoreBrowserSynchronization: true,
       params: [],
-      setup: async () => await $('#show-single').click(),
       prepare: async () => await $('#hide-single').click(),
       work: async () => await $('#show-single').click(),
     });
@@ -32,7 +31,6 @@ describe('chip performance benchmarks', () => {
       url: '',
       ignoreBrowserSynchronization: true,
       params: [],
-      setup: async () => await $('#show-multiple').click(),
       prepare: async () => await $('#hide-multiple').click(),
       work: async () => await $('#show-multiple').click(),
     });
