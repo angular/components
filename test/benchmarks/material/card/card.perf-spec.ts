@@ -20,7 +20,6 @@ describe('card performance benchmarks', () => {
       url: '',
       ignoreBrowserSynchronization: true,
       params: [],
-      setup: async () => await $('#show').click(),
       prepare: async () => await $('#hide').click(),
       work: async () => await $('#show').click()
     });
