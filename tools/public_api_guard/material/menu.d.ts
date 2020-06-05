@@ -95,7 +95,7 @@ export interface MatMenuDefaultOptions {
     backdropClass: string;
     hasBackdrop?: boolean;
     overlapTrigger: boolean;
-    overlayPanelClass: string | string[];
+    overlayPanelClass?: string | string[];
     xPosition: MenuPositionX;
     yPosition: MenuPositionY;
 }
