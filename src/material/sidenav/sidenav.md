@@ -209,6 +209,11 @@ Similarly, the `<mat-sidenav-content>` should be given a role based on what it c
 represents the primary content of the page, it may make sense to mark it `role="main"`. If no more
 specific role makes sense, `role="region"` is again a good fallback.
 
+#### Focus management
+To enable auto focus within `<mat-drawer>` component, you need to set `[autoFocus]=true`. 
+
+By default the first tabbable element will recieve focus upon open. This can be configured by setting the `cdkFocusInitial` attribute on another focusable element.
+
 ### Troubleshooting
 
 #### Error: A drawer was already declared for 'position="..."'
