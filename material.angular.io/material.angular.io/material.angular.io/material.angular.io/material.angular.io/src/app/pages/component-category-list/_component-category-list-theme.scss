@@ -8,4 +8,13 @@
   .docs-component-category-list-card-summary {
     color: mat-color($foreground, secondary-text);
   }
+
+  .docs-component-category-list-card {
+    border: 1px solid mat-color($foreground, divider);
+    border-radius: 4px;
+  }
+
+  .docs-component-category-list-card-title {
+    color: mat-color($foreground, text);
+  }
 }

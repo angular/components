@@ -10,25 +10,10 @@
   $nav-background-focus-opacity: if($is-dark-theme, 0.25, 0.08);
 
   .docs-component-viewer-nav-content {
-    background: rgba(0, 0, 0, $nav-background-opacity);
+    border-right: 1px solid mat-color($foreground, divider);
 
     &::-webkit-scrollbar-thumb {
       background: rgba(0, 0, 0, .26);
-    }
-
-    .docs-nav-content-btn {
-      color: rgba(mat-color($foreground, text), 0.7);
-      font-family: Roboto, "Helvetica Neue", sans-serif;
-
-      &:focus {
-        // override the default background
-        background: rgba(0, 0, 0, $nav-background-focus-opacity);
-      }
-    }
-
-    hr {
-      border: none;
-      border-top: solid 1px rgba(mat-color($foreground, secondary-text), .1)
     }
 
     a {
@@ -42,6 +27,10 @@
       &.docs-component-viewer-sidenav-item-selected {
         background: rgba(0, 0, 0, $nav-background-focus-opacity);
       }
+    }
+
+    .mat-list-item {
+      color: rgba(mat-color($foreground, secondary-text), 0.65);
     }
   }
 

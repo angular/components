@@ -20,8 +20,12 @@
   vertical-align: top;
   width: 260px;
 
-  .mat-card-title {
+  .docs-component-category-list-card-title {
+    align-items: center;
+    display: flex;
+    padding: 15px;
     font-size: 20px;
+    font-weight: 500;
   }
 
   &, &:active, &:hover, &:focus {
@@ -30,19 +34,7 @@
 }
 
 .docs-component-category-list-card-summary {
+  padding: 0 15px 15px 15px;
   min-height: 2.4em;
-  margin-bottom: 8px;
-}
-
-.docs-component-category-list-header {
-  align-items: center;
-  display: flex;
-  padding-left: 20px;
-
-  h1 {
-    font-size: 30px;
-    font-weight: 300;
-    margin: 0;
-    padding: 50px;
-  }
+  font-size: 15px;
 }
