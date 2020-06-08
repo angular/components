@@ -212,7 +212,7 @@ specific role makes sense, `role="region"` is again a good fallback.
 #### Focus management
 To enable auto focus within `<mat-drawer>` component, you need to set `[autoFocus]=true`. 
 
-By default the first tabbable element will recieve focus upon open. This can be configured by setting the `cdkFocusInitial` attribute on another focusable element.
+By default the first tabbable element will recieve focus upon open. If you want a different element to be focused, you can set the cdkFocusInitial attribute on it.
 
 ### Troubleshooting
 
