@@ -79,6 +79,9 @@ export class MatList extends MatListBase {
   templateUrl: 'list-item.html',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [
+    {provide: MatListItemBase, useExisting: MatListItem},
+  ]
 })
 export class MatListItem extends MatListItemBase {
   @ContentChildren(MatLine, {read: ElementRef, descendants: true}) lines:
