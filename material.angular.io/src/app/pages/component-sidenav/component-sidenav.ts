@@ -11,12 +11,12 @@ import {
 import {DocumentationItems} from '../../shared/documentation-items/documentation-items';
 import {MatIconModule} from '@angular/material/icon';
 import {MatSidenav, MatSidenavModule} from '@angular/material/sidenav';
-import {ActivatedRoute, Params, Router, RouterModule, Routes} from '@angular/router';
+import {ActivatedRoute, Params, RouterModule, Routes} from '@angular/router';
 import {CommonModule} from '@angular/common';
 import {ComponentHeaderModule} from '../component-page-header/component-page-header';
 import {FooterModule} from '../../shared/footer/footer';
-import {combineLatest, Observable, Subject, Subscription} from 'rxjs';
-import {map, startWith, switchMap, takeUntil} from 'rxjs/operators';
+import {combineLatest, Observable, Subscription} from 'rxjs';
+import {map} from 'rxjs/operators';
 import {animate, state, style, transition, trigger} from '@angular/animations';
 import {CdkAccordionModule} from '@angular/cdk/accordion';
 import {BreakpointObserver} from '@angular/cdk/layout';
@@ -24,7 +24,6 @@ import {
   ComponentCategoryList,
   ComponentCategoryListModule
 } from '../component-category-list/component-category-list';
-import {ComponentList, ComponentListModule} from '../component-list';
 import {
   ComponentApi,
   ComponentExamples,
@@ -112,61 +111,11 @@ export class ComponentSidenav implements OnInit, OnDestroy {
     ]),
   ],
 })
-export class ComponentNav implements OnInit, OnDestroy {
+export class ComponentNav {
   @Input() params: Observable<Params>;
-  expansions: {[key: string]: boolean} = {};
   currentItemId: string;
-  private _onDestroy = new Subject<void>();
 
-  constructor(public docItems: DocumentationItems, private _router: Router) {}
-
-  ngOnInit() {
-    this._router.events.pipe(
-      startWith(null),
-      switchMap(() => this.params),
-      takeUntil(this._onDestroy)
-    ).subscribe(params => this.setExpansions(params));
-  }
-
-  ngOnDestroy() {
-    this._onDestroy.next();
-    this._onDestroy.complete();
-  }
-
-  /** Set the expansions based on the route url */
-  setExpansions(params: Params) {
-    const categories = this.docItems.getCategories(params.section);
-    for (const category of (categories || [])) {
-
-      let match = false;
-      for (const item of category.items) {
-        if (this._router.url.indexOf(item.id) > -1) {
-          match = true;
-          this.currentItemId = item.id;
-          break;
-        }
-      }
-
-      if (!this.expansions[category.id]) {
-        this.expansions[category.id] = match;
-      }
-    }
-  }
-
-  /** Gets the expanded state */
-  _getExpandedState(category: string) {
-    return this.getExpanded(category) ? 'expanded' : 'collapsed';
-  }
-
-  /** Toggles the expanded state */
-  toggleExpand(category: string) {
-    this.expansions[category] = !this.expansions[category];
-  }
-
-  /** Gets whether expanded or not */
-  getExpanded(category: string): boolean {
-    return this.expansions[category] === undefined ? true : this.expansions[category];
-  }
+  constructor(public docItems: DocumentationItems) {}
 }
 
 const routes: Routes = [ {
@@ -180,7 +129,6 @@ const routes: Routes = [ {
       path : 'categories',
       children : [
         {path : '', component : ComponentCategoryList},
-        {path : ':id', component : ComponentList},
       ],
     },
     {
@@ -205,7 +153,6 @@ const routes: Routes = [ {
     CommonModule,
     ComponentCategoryListModule,
     ComponentHeaderModule,
-    ComponentListModule,
     ComponentViewerModule,
     DocViewerModule,
     FooterModule,

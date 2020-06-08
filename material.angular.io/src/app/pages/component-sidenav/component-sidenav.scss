@@ -36,47 +36,16 @@ app-component-sidenav {
 
 .docs-component-viewer-nav {
   position: sticky;
-  top: 25px;
+  top: 0;
 
   .docs-component-viewer-nav-content {
-    margin: 25px;
     width: $sidenav-width;
-    max-height: 75vh;
+    height: 100vh;
     overflow: auto;
 
     &::-webkit-scrollbar {
       height: 4px;
       width: 4px;
-    }
-
-    button {
-      padding: 10px 15px;
-      font-weight: 700;
-      line-height: 16px;
-      margin: 0;
-      font-size: 13px;
-      cursor: pointer;
-      position: relative;
-      display: block;
-      width: 100%;
-      text-align: left;
-      background: none;
-      border: none;
-
-      &:focus {
-        outline: none;
-      }
-
-      .mat-icon {
-        position: absolute;
-        right: 5px;
-        font-size: 18px;
-      }
-    }
-
-    hr {
-      padding: 0;
-      margin: 0;
     }
 
     ul {
@@ -115,6 +84,14 @@ app-component-sidenav {
 .docs-component-sidenav-body-content {
   display: flex;
   flex: 1 1 auto;
+}
+
+div .mat-list-base {
+  padding-top: 0;
+}
+
+div.docs-component-viewer-nav-content .mat-nav-list .mat-list-item .mat-list-item-content {
+  padding-left: 25px;
 }
 
 @media (max-width: $small-breakpoint-width) {

@@ -2,6 +2,7 @@ import {TestBed, inject, async} from '@angular/core/testing';
 import {DocumentationItems} from './documentation-items';
 
 const COMPONENTS = 'components';
+const CDK = 'cdk';
 
 describe('DocViewer', () => {
   let docsItems: DocumentationItems;
@@ -16,17 +17,6 @@ describe('DocViewer', () => {
     docsItems = di;
   }));
 
-  it('get a list of categories', () => {
-    expect(docsItems.getCategories(COMPONENTS)).toBeDefined();
-    expect(docsItems.getCategories(COMPONENTS).length).toBeGreaterThan(0);
-    for (const category of docsItems.getCategories(COMPONENTS)) {
-      expect(category.id).toBeDefined();
-      expect(category.name).toBeDefined();
-      expect(category.items).toBeDefined();
-      expect(category.items.length).toBeGreaterThan(0);
-    }
-  });
-
   it('should get a list of all doc items', () => {
     expect(docsItems.getItems(COMPONENTS)).toBeDefined();
     expect(docsItems.getItems(COMPONENTS).length).toBeGreaterThan(0);
@@ -38,5 +28,17 @@ describe('DocViewer', () => {
 
   it('should get a doc item by id', () => {
     expect(docsItems.getItemById('button', 'material')).toBeDefined();
+  });
+
+  it('should be sorted alphabetically (components)', () => {
+    const components = docsItems.getItems(COMPONENTS).map(c => c.id);
+    const sortedComponents = components.concat().sort();
+    expect(components).toEqual(sortedComponents);
+  });
+
+  it('should be sorted alphabetically (cdk)', () => {
+    const cdk = docsItems.getItems(CDK).map(c => c.id);
+    const sortedCdk = cdk.concat().sort();
+    expect(cdk).toEqual(sortedCdk);
   });
 });
