@@ -1,6 +1,8 @@
 app-scene-viewer {
-  display: block;
-  width: 480px;
-  height: 300px;
+  align-items: center;
+  justify-content: center;
+  display: flex;
+  width: 360px;
+  height: 200px;
   background-color: #fff2f4;
 }
