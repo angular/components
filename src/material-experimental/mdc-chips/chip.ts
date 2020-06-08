@@ -131,7 +131,7 @@ export class MatChip extends _MatChipMixinBase implements AfterContentInit, Afte
   /** Emits when the chip is blurred. */
   readonly _onBlur = new Subject<MatChipEvent>();
 
-  readonly HANDLED_KEYS: number[] = [];
+  readonly HANDLED_KEYS: Set<number> = new Set([SPACE, ENTER]);
 
   /** Whether this chip is a basic (unstyled) chip. */
   readonly _isBasicChip: boolean;
@@ -279,6 +279,9 @@ export class MatChip extends _MatChipMixinBase implements AfterContentInit, Afte
           // Make it `display: none` so users can't tab into it.
           this._elementRef.nativeElement.style.display = 'none';
         },
+    // Noop for now since we don't support editable chips yet.
+    notifyEditStart: () => {},
+    notifyEditFinish: () => {},
     getComputedStyleValue:
         propertyName => {
           // This function is run when a chip is removed so it might be
@@ -382,7 +385,7 @@ export class MatChip extends _MatChipMixinBase implements AfterContentInit, Afte
           const isKeyboardEvent = event.type.startsWith('key');
 
           if (this.disabled || (isKeyboardEvent &&
-              this.HANDLED_KEYS.indexOf((event as KeyboardEvent).keyCode) !== -1)) {
+              !this.HANDLED_KEYS.has((event as KeyboardEvent).keyCode))) {
             return;
           }
 

@@ -1,3 +1,107 @@
+# 10.0.0-rc.0 "concrete-cobbler" (2020-06-01)
+
+No library changes from 10.0.0-next.2. Built with Angular 10.0.0-rc.2, which fixes an
+issue where Angular decorators were not downleveled to properties, which caused
+any use of `@Inject()` with `forwardRef` to cause a run-time error.
+
+# 10.0.0-next.2 "wool-wind" (2020-05-26)
+
+### cdk
+
+#### Breaking changes
+* `CdkDropList.start` has been removed.
+* `CdkDropList.drop` has been removed.
+* `CdkDropList.enter` has been removed.
+* `CdkDropList.exit` has been removed.
+* `CdkDropList.getItemIndex` has been removed.
+* `CDK_DRAG_CONFIG_FACTORY` has been removed.
+* `CdkTable.setHeaderRowDef` has been removed. Use `CdkTable.addHeaderRowDef` and `CdkTable.removeHeaderRowDef` instead.
+* `CdkTable.setFooterRowDef` has been removed. Use `CdkTable.addFooterRowDef` and `CdkTable.removeFooterRowDef` instead.
+* The `_platformId` parameter in the `Platform` constructor is now required.
+* The `copied` event from `cdkCopyToClipboard` has been renamed to `cdkCopyToClipboardCopied`.
+* The `_ngZone` parameter in the `CdkCopyToClipboard` constructor is now required.
+
+### material
+
+#### Breaking changes
+* `MAT_HAMMER_OPTIONS` has been removed.
+* `GestureConfig` has been removed.
+* `HammerInput` has been removed.
+* `HammerStatic` has been removed.
+* `Recognizer` has been removed.
+* `RecognizerStatic` has been removed.
+* `HammerInstance` has been removed.
+* `HammerManager` has been removed.
+* `HammerOptions` has been removed.
+* `MatButtonToggleGroupMultiple` has been removed. Use `MatButtonToggleGroup` instead.
+* `MatSlideToggleDefaultOptions.disableDragValue` has been removed.
+* `MatSlideToggle.dragChange` has been removed.
+* The `_ngZone` and `_dir` parameters have been removed from the `MatSlideToggle` constructor.
+* The `_viewportRuler` parameter in the `MatAutocompleteTrigger` constructor is now required.
+* The `_location` and `_errorHandler` parameters in the `MatIcon` constructor are now required.
+* The `_errorHandler` parameter in the `MatIconRegistry` constructor is now required.
+* The _ngZone and _document parameters in the `MatSlider` constructor are now required.
+* The `_focusMonitor` and `_elementRef` parameters in the MatSortHeader constructor are now required.
+* The `_hammerLoader` parameter has been removed from the MatTooltip constructor.
+
+|            |                       |
+| ---------- | --------------------- |
+| bug fix |  **dialog:** focus recapturing not accounting for autoFocus option ([#19356](https://github.com/angular/components/issues/19356)) ([72b0219](https://github.com/angular/components/commit/72b0219)), closes [#18826](https://github.com/angular/components/issues/18826) [#19350](https://github.com/angular/components/issues/19350) |
+| bug fix |  **drag-drop:** error during device emulation on firefox ([#19396](https://github.com/angular/components/issues/19396)) ([d309ee2](https://github.com/angular/components/commit/d309ee2)), closes [#19385](https://github.com/angular/components/issues/19385) |
+| bug fix |  **drag-drop:** error when item enters from the top and last has an intermediate child ([#19361](https://github.com/angular/components/issues/19361)) ([fbd6440](https://github.com/angular/components/commit/fbd6440)), closes [#19116](https://github.com/angular/components/issues/19116) [#19359](https://github.com/angular/components/issues/19359) |
+| bug fix |  **ng-add:** ng add [@angular](https://github.com/angular)/material fails in library projects ([#19164](https://github.com/angular/components/issues/19164)) ([822e3e0](https://github.com/angular/components/commit/822e3e0)) |
+| bug fix |  **table:** incorrectly sticking multiple footer rows ([#19321](https://github.com/angular/components/issues/19321)) ([95007e5](https://github.com/angular/components/commit/95007e5)), closes [#19311](https://github.com/angular/components/issues/19311) |
+| feature |  **testing:** add test harness for mat-tooltip ([#19144](https://github.com/angular/components/issues/19144)) ([44accd6](https://github.com/angular/components/commit/44accd6)), closes [#16676](https://github.com/angular/components/issues/16676) |
+
+### google-maps
+
+|            |                       |
+| ---------- | --------------------- |
+| bug fix |  allow different anchor objects for info window ([#19378](https://github.com/angular/components/issues/19378)) ([d0ab041](https://github.com/angular/components/commit/d0ab041)) |
+
+### youtube-player
+
+#### Breaking changes
+* The `platformId` parameter of the `YouTubePlayer` constructor is now required.
+
+### material-experimental
+
+|            |                       |
+| ---------- | --------------------- |
+| bug fix |  **mdc-slider:** remove slider theme from all-theme ([#19411](https://github.com/angular/components/issues/19411)) ([d952a22](https://github.com/angular/components/commit/d952a22)) |
+
+
+# 10.0.0-next.1 "thorium-temple" (2020-05-18)
+
+### material
+
+|            |                       |
+| ---------- | --------------------- |
+| bug fix |  **datepicker:** set color on range separator ([#19308](https://github.com/angular/components/issues/19308)) ([2f8b271](https://github.com/angular/components/commit/2f8b271)) |
+| bug fix |  **datepicker:** strong focus indication in calendar always shown ([#19304](https://github.com/angular/components/issues/19304)) ([4eee81a](https://github.com/angular/components/commit/4eee81a)) |
+| bug fix |  **expansion:** disable header height transition if noop animations is set ([#19373](https://github.com/angular/components/issues/19373)) ([189d98e](https://github.com/angular/components/commit/189d98e)) |
+| feature |  report warning if duplicate theme styles are generated ([6095e29](https://github.com/angular/components/commit/6095e29)), closes [#19141](https://github.com/angular/components/issues/19141) |
+
+### google-maps
+
+|            |                       |
+| ---------- | --------------------- |
+| bug fix |  allow for ground overlay image to be changed ([#19306](https://github.com/angular/components/issues/19306)) ([485352e](https://github.com/angular/components/commit/485352e)) |
+
+### material-experimental
+
+|            |                       |
+| ---------- | --------------------- |
+| feature |  **mdc-button:** support density scaling ([9500e75](https://github.com/angular/components/commit/9500e75)) |
+| feature |  **mdc-checkbox:** support density scaling ([84f2c1a](https://github.com/angular/components/commit/84f2c1a)) |
+| feature |  **mdc-chips:** support for density scaling ([ee1e181](https://github.com/angular/components/commit/ee1e181)) |
+| feature |  **mdc-form-field:** support density scaling ([3bcdc5e](https://github.com/angular/components/commit/3bcdc5e)) |
+| feature |  **mdc-radio:** support for density scaling ([c659664](https://github.com/angular/components/commit/c659664)) |
+| feature |  **mdc-slide-toggle:** support density scaling ([feafb2b](https://github.com/angular/components/commit/feafb2b)) |
+| feature |  **mdc-table:** support for density scaling ([e288558](https://github.com/angular/components/commit/e288558)) |
+| feature |  **mdc-tabs:** support for density scaling ([90d294b](https://github.com/angular/components/commit/90d294b)) |
+
+
 # 10.0.0-next.0 "plywood-heart" (2020-05-08)
 
 ### cdk
@@ -37,6 +141,39 @@
 | ---------- | --------------------- |
 | bug fix |  **form-field:** add setLabelRequired adapter ([#19284](https://github.com/angular/components/issues/19284)) ([7b42c7e](https://github.com/angular/components/commit/7b42c7e)) |
 | bug fix |  better server-side rendering support for progress bar ([#19036](https://github.com/angular/components/issues/19036)) ([5d25d1b](https://github.com/angular/components/commit/5d25d1b)) |
+
+
+## 9.2.4 "aether-axiom" (2020-05-18)
+
+### cdk
+
+|            |                       |
+| ---------- | --------------------- |
+| bug fix |  **a11y:** focus monitor not checking children if monitor is called multiple times with different parameters ([#19237](https://github.com/angular/components/issues/19237)) ([07711b4](https://github.com/angular/components/commit/07711b4)), closes [/github.com/angular/components/pull/19135#discussion_r412471591](https://github.com//github.com/angular/components/pull/19135/issues/discussion_r412471591) [#19218](https://github.com/angular/components/issues/19218) |
+| bug fix |  **overlay:** remove potentially leaky observable ([#19146](https://github.com/angular/components/issues/19146)) ([6f79527](https://github.com/angular/components/commit/6f79527)), closes [#10573](https://github.com/angular/components/issues/10573) |
+
+
+### material
+
+|            |                       |
+| ---------- | --------------------- |
+| bug fix |  **autocomplete:** incorrectly detecting shadow DOM when inserted through an embedded view ([#19332](https://github.com/angular/components/issues/19332)) ([8d79d73](https://github.com/angular/components/commit/8d79d73)) |
+| bug fix |  **chips:** chip list overriding chip disabled value ([#19228](https://github.com/angular/components/issues/19228)) ([49be570](https://github.com/angular/components/commit/49be570)), closes [#19213](https://github.com/angular/components/issues/19213) |
+| bug fix |  **dialog:** focus trap not attached if autoFocus is disabled ([#19251](https://github.com/angular/components/issues/19251)) ([e61deb9](https://github.com/angular/components/commit/e61deb9)), closes [#18826](https://github.com/angular/components/issues/18826) [#19246](https://github.com/angular/components/issues/19246) |
+| bug fix |  **form-field:** add missing material common module ([#19093](https://github.com/angular/components/issues/19093)) ([8e9e1fb](https://github.com/angular/components/commit/8e9e1fb)) |
+| bug fix |  **icon:** cancel in-flight icon requests if the icon changes ([#19303](https://github.com/angular/components/issues/19303)) ([bef4e80](https://github.com/angular/components/commit/bef4e80)) |
+| bug fix |  **input:** avoid repeat accesses to check if element is a textarea ([#19115](https://github.com/angular/components/issues/19115)) ([8688dd8](https://github.com/angular/components/commit/8688dd8)) |
+| bug fix |  **list:** selection list marked as touched when tabbing in ([#19177](https://github.com/angular/components/issues/19177)) ([2e7dc62](https://github.com/angular/components/commit/2e7dc62)), closes [#18445](https://github.com/angular/components/issues/18445) [#19171](https://github.com/angular/components/issues/19171) |
+| bug fix |  **tabs:** don't prevent default space/enter action if action tab doesn't change ([#19207](https://github.com/angular/components/issues/19207)) ([7a4128b](https://github.com/angular/components/commit/7a4128b)), closes [#19190](https://github.com/angular/components/issues/19190) |
+| bug fix |  **text-field:** unable to undo/redo in autosized text field on firefox ([#19238](https://github.com/angular/components/issues/19238)) ([7e1fd89](https://github.com/angular/components/commit/7e1fd89)) |
+
+### material-experimental
+
+|            |                       |
+| ---------- | --------------------- |
+| bug fix |  **column-resize:** Resize table as well as columns, improve handing … ([#19264](https://github.com/angular/components/issues/19264)) ([87b8edb](https://github.com/angular/components/commit/87b8edb)) |
+| bug fix |  **form-field:** add setLabelRequired adapter ([#19284](https://github.com/angular/components/issues/19284)) ([e43f4ac](https://github.com/angular/components/commit/e43f4ac)) |
+| bug fix |  **mdc-list:** properly render leading and trailing icons on list items ([#19201](https://github.com/angular/components/issues/19201)) ([ce136a9](https://github.com/angular/components/commit/ce136a9)) |
 
 
 ## 9.2.3 "chalk-hawk" (2020-05-07)

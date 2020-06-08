@@ -64,15 +64,13 @@ export class DocsMarkdownRenderer extends Renderer {
    *   {
    *    "example": "exampleName",
    *    "file": "example-html.html",
-   *    "lines": [5, 10],
-   *    "expanded": true
+   *    "region": "some-region"
    *   }
    *  ) -->`
    *  turns into
    *  `<div material-docs-example="exampleName"
    *        file="example-html.html"
-   *        lines="[5, 10]"
-   *        expanded="true"></div>`
+   *        region="some-region"></div>`
    *
    *  (old API)
    *  `<!-- example(name) -->`
@@ -80,21 +78,21 @@ export class DocsMarkdownRenderer extends Renderer {
    *  `<div material-docs-example="name"></div>`
    */
   html(html: string) {
-        html = html.replace(exampleCommentRegex, (_match: string, content: string) => {
-              if (content.startsWith('{')) {
-                  const {example, file, lines, expanded} = JSON.parse(content);
-                  return `<div material-docs-example="${example}"
-                               file="${file}"
-                               lines="${JSON.stringify(lines)}"
-                               expanded="${!!expanded}"></div>`;
-              } else {
-                  return `<div material-docs-example="${content}"></div>`;
-              }
-          }
-        );
+    html = html.replace(exampleCommentRegex, (_match: string, content: string) => {
+        // using [\s\S]* because .* does not match line breaks
+        if (content.match(/\{[\s\S]*\}/g)) {
+          const {example, file, region} = JSON.parse(content);
+          return `<div material-docs-example="${example}"
+                             file="${file}"
+                             region="${region}"></div>`;
+        } else {
+          return `<div material-docs-example="${content}"></div>`;
+        }
+      }
+    );
 
-        return super.html(html);
-    }
+    return super.html(html);
+  }
 
   /**
    * Method that will be called after a markdown file has been transformed to HTML. This method

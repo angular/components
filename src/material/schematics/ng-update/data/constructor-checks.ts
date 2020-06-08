@@ -18,6 +18,26 @@ export const constructorChecks: VersionChanges<ConstructorChecksUpgradeData> = {
     {
       pr: 'https://github.com/angular/components/pull/19307',
       changes: ['MatSlideToggle']
+    },
+    {
+      pr: 'https://github.com/angular/components/pull/19379',
+      changes: ['MatSlider']
+    },
+    {
+      pr: 'https://github.com/angular/components/pull/19372',
+      changes: ['MatSortHeader']
+    },
+    {
+      pr: 'https://github.com/angular/components/pull/19324',
+      changes: ['MatAutocompleteTrigger']
+    },
+    {
+      pr: 'https://github.com/angular/components/pull/19363',
+      changes: ['MatTooltip']
+    },
+    {
+      pr: 'https://github.com/angular/components/pull/19323',
+      changes: ['MatIcon', 'MatIconRegistry']
     }
   ],
   [TargetVersion.V9]: [

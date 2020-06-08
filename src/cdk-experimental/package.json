@@ -13,11 +13,10 @@
   "homepage": "https://github.com/angular/components#readme",
   "peerDependencies": {
     "@angular/cdk": "0.0.0-PLACEHOLDER",
-    "@angular/core": "0.0.0-NG",
+    "@angular/core": "0.0.0-NG"
+  },
+  "dependencies": {
     "tslib": "0.0.0-TSLIB"
   },
-  "sideEffects": false,
-  "publishConfig":{
-    "registry":"https://wombat-dressing-room.appspot.com"
-  }
+  "sideEffects": false
 }
