@@ -15,7 +15,6 @@
 | bug fix |  **checkbox:** pass aria-describedby through to input ([#19495](https://github.com/angular/components/issues/19495)) ([e1d85d2](https://github.com/angular/components/commit/e1d85d2)), closes [#19477](https://github.com/angular/components/issues/19477) |
 | bug fix |  **datepicker:** compilation errors with ViewEngine ([#19516](https://github.com/angular/components/issues/19516)) ([00e2171](https://github.com/angular/components/commit/00e2171)) |
 | bug fix |  Focus indicators are now positioned ([#19345](https://github.com/angular/components/issues/19345)) ([c05a07e](https://github.com/angular/components/commit/c05a07e)) |
-| bug fix |  **overlay:** resolve circular dependency ([#19433](https://github.com/angular/components/issues/19433)) ([7037c3a](https://github.com/angular/components/commit/7037c3a)) |
 | bug fix |  **slider:** focus ring not matching theme color ([#19519](https://github.com/angular/components/issues/19519)) ([2a6a63c](https://github.com/angular/components/commit/2a6a63c)), closes [#19507](https://github.com/angular/components/issues/19507) |
 
 ### google-maps
