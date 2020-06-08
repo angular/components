@@ -210,7 +210,7 @@ represents the primary content of the page, it may make sense to mark it `role="
 specific role makes sense, `role="region"` is again a good fallback.
 
 #### Focus management
-To enable auto focus within `<mat-drawer>` component, you need to set `[autoFocus]=true`. 
+Auto Focus within `<mat-drawer>` component is enabled by default, if it's <b>not</b> in 'side' mode. We  can manage it explicitly, using `autoFocus` input property.
 
 By default the first tabbable element will recieve focus upon open. If you want a different element to be focused, you can set the cdkFocusInitial attribute on it.
 
