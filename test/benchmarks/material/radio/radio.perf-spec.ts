@@ -36,7 +36,7 @@ describe('radio button performance benchmarks', () => {
     });
   });
 
-  it('clicks between radio buttons', async() => {
+  it('changing between radio buttons', async() => {
     await runBenchmark({
       id: 'click-radio-button',
       url: '',

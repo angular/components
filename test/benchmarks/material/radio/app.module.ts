@@ -5,14 +5,10 @@
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
-import {A11yModule} from '@angular/cdk/a11y';
 import {Component, NgModule, ViewEncapsulation} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
 import {MatRadioModule} from '@angular/material/radio';
 
-/**
- * @title Radio benchmark component.
- */
 @Component({
   selector: 'app-root',
   template: `
@@ -60,7 +56,6 @@ export class RadioBenchmarkApp {
 @NgModule({
   declarations: [RadioBenchmarkApp],
   imports: [
-    A11yModule,
     BrowserModule,
     MatRadioModule,
   ],
