@@ -97,6 +97,7 @@
 /src/material-experimental/mdc-autocomplete/**     @crisbeto
 /src/material-experimental/mdc-button/**           @andrewseguin
 /src/material-experimental/mdc-card/**             @mmalerba
+/src/cdk-experimental/menu/**                      @andy9775
 /src/material-experimental/mdc-checkbox/**         @mmalerba
 /src/material-experimental/mdc-chips/**            @mmalerba
 /src/material-experimental/mdc-color/**            @jelbourn @devversion
@@ -141,6 +142,7 @@
 /src/dev-app/button-toggle/**                      @jelbourn
 /src/dev-app/button/**                             @jelbourn
 /src/dev-app/card/**                               @jelbourn
+/src/dev-app/cdk-experimental-menu/**              @andy9775
 /src/dev-app/checkbox/**                           @jelbourn @devversion
 /src/dev-app/chips/**                              @jelbourn
 /src/dev-app/clipboard/**                          @jelbourn @xkxx

@@ -1,0 +1,27 @@
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+
+import {Directive, Input} from '@angular/core';
+
+/**
+ * Directive applied to an element which configures it as a MenuBar by setting the appropriate
+ * role, aria attributes, and accessable keyboard and mouse handling logic. The component that
+ * this directive is applied to should contain components marked with CdkMenuItem.
+ *
+ */
+@Directive({
+  selector: '[cdkMenuBar]',
+  exportAs: 'cdkMenuBar',
+  host: {
+    role: 'menubar',
+  },
+})
+export class CdkMenuBar {
+  /** Orientation of the menu - does not affect styling/layout */
+  @Input('cdkMenuBarOrientation') _orientation: 'horizontal' | 'vertical' = 'horizontal';
+}
