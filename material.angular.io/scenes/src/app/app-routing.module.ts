@@ -6,6 +6,7 @@ import { RipplesScene } from './scenes/ripples/ripples-scene';
 
 const routes: Routes = [
   {path: 'ripples', component: SceneViewer, data: {hueRotate: 120, scene: RipplesScene}},
+  {path: 'slider', component: SceneViewer, data: {hueRotate: 135, scene: RipplesScene}},
 ];
 
 @NgModule({
