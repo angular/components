@@ -10,6 +10,7 @@ import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
 import {getSupportedInputTypes, Platform} from '@angular/cdk/platform';
 import {AutofillMonitor} from '@angular/cdk/text-field';
 import {
+  Attribute,
   Directive,
   DoCheck,
   ElementRef,
@@ -228,19 +229,20 @@ export class MatInput extends _MatInputMixinBase implements MatFormFieldControl<
   ].filter(t => getSupportedInputTypes().has(t));
 
   constructor(
-    protected _elementRef: ElementRef<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>,
-    protected _platform: Platform,
-    /** @docs-private */
-    @Optional() @Self() public ngControl: NgControl,
-    @Optional() _parentForm: NgForm,
-    @Optional() _parentFormGroup: FormGroupDirective,
-    _defaultErrorStateMatcher: ErrorStateMatcher,
-    @Optional() @Self() @Inject(MAT_INPUT_VALUE_ACCESSOR) inputValueAccessor: any,
-    private _autofillMonitor: AutofillMonitor,
-    ngZone: NgZone,
-    // TODO: Remove this once the legacy appearance has been removed. We only need
-    // to inject the form-field for determining whether the placeholder has been promoted.
-    @Optional() @Inject(MAT_FORM_FIELD) private _formField?: MatFormField) {
+      protected _elementRef: ElementRef<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>,
+      protected _platform: Platform,
+      /** @docs-private */
+      @Optional() @Self() public ngControl: NgControl,
+      @Optional() _parentForm: NgForm,
+      @Optional() _parentFormGroup: FormGroupDirective,
+      _defaultErrorStateMatcher: ErrorStateMatcher,
+      @Optional() @Self() @Inject(MAT_INPUT_VALUE_ACCESSOR) inputValueAccessor: any,
+      private _autofillMonitor: AutofillMonitor,
+      ngZone: NgZone,
+      // TODO: Remove this once the legacy appearance has been removed. We only need
+      // to inject the form-field for determining whether the placeholder has been promoted.
+      @Optional() @Inject(MAT_FORM_FIELD) private _formField?: MatFormField,
+      @Attribute('aria-describedby') private _initialAriaDescribedBy?: string|null) {
     super(_defaultErrorStateMatcher, _parentForm, _parentFormGroup, ngControl);
 
     const element = this._elementRef.nativeElement;
@@ -439,7 +441,13 @@ export class MatInput extends _MatInputMixinBase implements MatFormFieldControl<
    * @docs-private
    */
   setDescribedByIds(ids: string[]) {
-    this._ariaDescribedby = ids.join(' ');
+    let value = ids.join(' ');
+    // Append the describe-by ids from the form-field without discarding the initial
+    // `aria-describedby` value that has been specified as static attribute.
+    if (this._initialAriaDescribedBy != null) {
+      value = `${this._initialAriaDescribedBy} ${value}`;
+    }
+    this._ariaDescribedby = value;
   }
 
   /**

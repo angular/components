@@ -40,7 +40,7 @@ export declare class MatInput extends _MatInputMixinBase implements MatFormField
     get value(): string;
     set value(value: string);
     constructor(_elementRef: ElementRef<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>, _platform: Platform,
-    ngControl: NgControl, _parentForm: NgForm, _parentFormGroup: FormGroupDirective, _defaultErrorStateMatcher: ErrorStateMatcher, inputValueAccessor: any, _autofillMonitor: AutofillMonitor, ngZone: NgZone, _formField?: MatFormField | undefined);
+    ngControl: NgControl, _parentForm: NgForm, _parentFormGroup: FormGroupDirective, _defaultErrorStateMatcher: ErrorStateMatcher, inputValueAccessor: any, _autofillMonitor: AutofillMonitor, ngZone: NgZone, _formField?: MatFormField | undefined, _initialAriaDescribedBy?: string | null | undefined);
     protected _dirtyCheckNativeValue(): void;
     _focusChanged(isFocused: boolean): void;
     protected _isBadInput(): boolean;
@@ -59,7 +59,7 @@ export declare class MatInput extends _MatInputMixinBase implements MatFormField
     static ngAcceptInputType_required: BooleanInput;
     static ngAcceptInputType_value: any;
     static ɵdir: i0.ɵɵDirectiveDefWithMeta<MatInput, "input[matInput], textarea[matInput], select[matNativeControl],      input[matNativeControl], textarea[matNativeControl]", ["matInput"], { "disabled": "disabled"; "id": "id"; "placeholder": "placeholder"; "required": "required"; "type": "type"; "errorStateMatcher": "errorStateMatcher"; "value": "value"; "readonly": "readonly"; }, {}, never>;
-    static ɵfac: i0.ɵɵFactoryDef<MatInput, [null, null, { optional: true; self: true; }, { optional: true; }, { optional: true; }, null, { optional: true; self: true; }, null, null, { optional: true; }]>;
+    static ɵfac: i0.ɵɵFactoryDef<MatInput, [null, null, { optional: true; self: true; }, { optional: true; }, { optional: true; }, null, { optional: true; self: true; }, null, null, { optional: true; }, { attribute: "aria-describedby"; }]>;
 }
 
 export declare class MatInputModule {

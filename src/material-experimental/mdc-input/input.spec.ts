@@ -474,10 +474,11 @@ describe('MatMdcInput without forms', () => {
     fixture.componentInstance.label = 'label';
     fixture.detectChanges();
 
-    let hint = fixture.debugElement.query(By.css('.mat-mdc-form-field-hint'))!.nativeElement;
-    let input = fixture.debugElement.query(By.css('input'))!.nativeElement;
+    const hint = fixture.debugElement.query(By.css('.mat-mdc-form-field-hint'))!.nativeElement;
+    const input = fixture.debugElement.query(By.css('input'))!.nativeElement;
+    const hintId = hint.getAttribute('id');
 
-    expect(input.getAttribute('aria-describedby')).toBe(hint.getAttribute('id'));
+    expect(input.getAttribute('aria-describedby')).toBe(`initial ${hintId}`);
   }));
 
   it('sets the aria-describedby to the id of the mat-hint', fakeAsync(() => {
@@ -1253,7 +1254,10 @@ class MatInputHintLabel2TestController {
 }
 
 @Component({
-  template: `<mat-form-field [hintLabel]="label"><input matInput></mat-form-field>`
+  template: `
+    <mat-form-field [hintLabel]="label">
+      <input matInput aria-describedby="initial">
+    </mat-form-field>`
 })
 class MatInputHintLabelTestController {
   label: string = '';
