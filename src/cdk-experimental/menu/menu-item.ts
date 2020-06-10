@@ -47,7 +47,7 @@ export class CdkMenuItem implements OnDestroy {
   @Output() opened: Subject<void> = new Subject();
 
   /** get the aria-checked value only if element is `menuitemradio` or `menuitemcheckbox` */
-  get _ariaChecked() {
+  get _ariaChecked(): boolean | null {
     if (this.role === 'menuitem') {
       return null;
     }
