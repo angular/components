@@ -53,11 +53,20 @@ export declare class GoogleMap implements OnChanges, OnInit, OnDestroy {
 
 export declare class GoogleMapsModule {
     static ɵinj: i0.ɵɵInjectorDef<GoogleMapsModule>;
-    static ɵmod: i0.ɵɵNgModuleDefWithMeta<GoogleMapsModule, [typeof i1.GoogleMap, typeof i2.MapCircle, typeof i3.MapGroundOverlay, typeof i4.MapInfoWindow, typeof i5.MapKmlLayer, typeof i6.MapMarker, typeof i7.MapPolygon, typeof i8.MapPolyline, typeof i9.MapRectangle], never, [typeof i1.GoogleMap, typeof i2.MapCircle, typeof i3.MapGroundOverlay, typeof i4.MapInfoWindow, typeof i5.MapKmlLayer, typeof i6.MapMarker, typeof i7.MapPolygon, typeof i8.MapPolyline, typeof i9.MapRectangle]>;
+    static ɵmod: i0.ɵɵNgModuleDefWithMeta<GoogleMapsModule, [typeof i1.GoogleMap, typeof i2.MapBicyclingLayer, typeof i3.MapCircle, typeof i4.MapGroundOverlay, typeof i5.MapInfoWindow, typeof i6.MapKmlLayer, typeof i7.MapMarker, typeof i8.MapPolygon, typeof i9.MapPolyline, typeof i10.MapRectangle, typeof i11.MapTrafficLayer, typeof i12.MapTransitLayer], never, [typeof i1.GoogleMap, typeof i2.MapBicyclingLayer, typeof i3.MapCircle, typeof i4.MapGroundOverlay, typeof i5.MapInfoWindow, typeof i6.MapKmlLayer, typeof i7.MapMarker, typeof i8.MapPolygon, typeof i9.MapPolyline, typeof i10.MapRectangle, typeof i11.MapTrafficLayer, typeof i12.MapTransitLayer]>;
 }
 
 export interface MapAnchorPoint {
     getAnchor(): google.maps.MVCObject;
+}
+
+export declare class MapBicyclingLayer implements OnInit, OnDestroy {
+    bicyclingLayer?: google.maps.BicyclingLayer;
+    constructor(_map: GoogleMap, _ngZone: NgZone);
+    ngOnDestroy(): void;
+    ngOnInit(): void;
+    static ɵdir: i0.ɵɵDirectiveDefWithMeta<MapBicyclingLayer, "map-bicycling-layer", ["mapBicyclingLayer"], {}, {}, never>;
+    static ɵfac: i0.ɵɵFactoryDef<MapBicyclingLayer, never>;
 }
 
 export declare class MapCircle implements OnInit, OnDestroy {
@@ -275,4 +284,23 @@ export declare class MapRectangle implements OnInit, OnDestroy {
     ngOnInit(): void;
     static ɵdir: i0.ɵɵDirectiveDefWithMeta<MapRectangle, "map-rectangle", ["mapRectangle"], { "options": "options"; "bounds": "bounds"; }, { "boundsChanged": "boundsChanged"; "rectangleClick": "rectangleClick"; "rectangleDblclick": "rectangleDblclick"; "rectangleDrag": "rectangleDrag"; "rectangleDragend": "rectangleDragend"; "rectangleDragstart": "rectangleDragstart"; "rectangleMousedown": "rectangleMousedown"; "rectangleMousemove": "rectangleMousemove"; "rectangleMouseout": "rectangleMouseout"; "rectangleMouseover": "rectangleMouseover"; "rectangleMouseup": "rectangleMouseup"; "rectangleRightclick": "rectangleRightclick"; }, never>;
     static ɵfac: i0.ɵɵFactoryDef<MapRectangle, never>;
+}
+
+export declare class MapTrafficLayer implements OnInit, OnDestroy {
+    set autoRefresh(autoRefresh: boolean);
+    trafficLayer?: google.maps.TrafficLayer;
+    constructor(_map: GoogleMap, _ngZone: NgZone);
+    ngOnDestroy(): void;
+    ngOnInit(): void;
+    static ɵdir: i0.ɵɵDirectiveDefWithMeta<MapTrafficLayer, "map-traffic-layer", ["mapTrafficLayer"], { "autoRefresh": "autoRefresh"; }, {}, never>;
+    static ɵfac: i0.ɵɵFactoryDef<MapTrafficLayer, never>;
+}
+
+export declare class MapTransitLayer implements OnInit, OnDestroy {
+    transitLayer?: google.maps.TransitLayer;
+    constructor(_map: GoogleMap, _ngZone: NgZone);
+    ngOnDestroy(): void;
+    ngOnInit(): void;
+    static ɵdir: i0.ɵɵDirectiveDefWithMeta<MapTransitLayer, "map-transit-layer", ["mapTransitLayer"], {}, {}, never>;
+    static ɵfac: i0.ɵɵFactoryDef<MapTransitLayer, never>;
 }
