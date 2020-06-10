@@ -21,7 +21,7 @@ import {CdkMenuPanel} from './menu-panel';
   selector: '[cdkMenuItem], [cdkMenuTriggerFor]',
   exportAs: 'cdkMenuItem',
   host: {
-    type: 'button',
+    'type': 'button',
     '[attr.role]': 'role',
   },
 })

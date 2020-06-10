@@ -18,7 +18,7 @@ import {Directive, Input} from '@angular/core';
   selector: '[cdkMenuBar]',
   exportAs: 'cdkMenuBar',
   host: {
-    role: 'menubar',
+    'role': 'menubar',
   },
 })
 export class CdkMenuBar {

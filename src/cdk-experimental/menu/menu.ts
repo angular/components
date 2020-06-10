@@ -21,7 +21,7 @@ import {Subject} from 'rxjs';
   selector: '[cdkMenu]',
   exportAs: 'cdkMenu',
   host: {
-    role: 'menu',
+    'role': 'menubar',
   },
 })
 export class CdkMenu implements OnDestroy {

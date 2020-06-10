@@ -20,7 +20,7 @@ import {CdkMenuItem} from './menu-item';
   exportAs: 'cdkMenuGroup',
   host: {
     // as per aria spec
-    role: 'group',
+    'role': 'group',
   },
 })
 export class CdkMenuGroup implements OnDestroy {
