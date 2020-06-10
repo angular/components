@@ -4,14 +4,15 @@ import {NestedTreeControl} from './nested-tree-control';
 
 
 describe('CdkNestedTreeControl', () => {
-  let treeControl: NestedTreeControl<TestData>;
   let getChildren = (node: TestData) => observableOf(node.children);
 
-  beforeEach(() => {
-    treeControl = new NestedTreeControl<TestData>(getChildren);
-  });
-
   describe('base tree control actions', () => {
+    let treeControl: NestedTreeControl<TestData>;
+
+    beforeEach(() => {
+      treeControl = new NestedTreeControl<TestData>(getChildren);
+    });
+
     it('should be able to expand and collapse dataNodes', () => {
       const nodes = generateData(10, 4);
       const node = nodes[1];
