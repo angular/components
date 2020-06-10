@@ -41,6 +41,9 @@ export class SceneViewer implements OnInit {
 
   private _hueRotation: number;
 
+  /** Scale of scene (1 is unscaled) */
+  @Input() scale = 1;
+
   /** Component of scene to display */
   @Input() component: any;
 
@@ -52,11 +55,14 @@ export class SceneViewer implements OnInit {
               private sanitizer: DomSanitizer) {
     this.hueRotation = this.route.snapshot.data['hueRotate'];
     this.component = this.route.snapshot.data['scene'];
+    this.scale = this.route.snapshot.data['scale'];
   }
 
   ngOnInit() {
     const componentFactory = this.componentFactoryResolver.resolveComponentFactory(this.component);
-    this.scene.createComponent(componentFactory);
+    const sceneComponent = this.scene.createComponent(componentFactory).location.nativeElement;
+    sceneComponent.style.transform = `scale(${this.scale})`;
+    sceneComponent.style.transformOrigin = 'center';
   }
 }
 
@@ -69,4 +75,3 @@ export class SceneViewer implements OnInit {
 })
 export class SceneViewerModule {
 }
-
