@@ -19,7 +19,6 @@ import {CdkMenuItem} from './menu-item';
   selector: '[cdkMenuGroup]',
   exportAs: 'cdkMenuGroup',
   host: {
-    // as per aria spec
     'role': 'group',
   },
 })
