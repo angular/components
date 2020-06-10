@@ -22,6 +22,7 @@ import {Subject} from 'rxjs';
   exportAs: 'cdkMenu',
   host: {
     'role': 'menubar',
+    '[attr.aria-orientation]': '_orientation',
   },
 })
 export class CdkMenu implements OnDestroy {

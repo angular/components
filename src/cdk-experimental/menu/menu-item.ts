@@ -23,6 +23,7 @@ import {CdkMenuPanel} from './menu-panel';
   host: {
     'type': 'button',
     '[attr.role]': 'role',
+    '[attr.aria-checked]': '_ariaChecked',
   },
 })
 export class CdkMenuItem implements OnDestroy {
@@ -37,6 +38,14 @@ export class CdkMenuItem implements OnDestroy {
 
   /** Emits when the attached submenu is opened */
   @Output() opened: Subject<void> = new Subject();
+
+  /** get the aria-checked value only if element is `menuitemradio` or `menuitemcheckbox` */
+  get _ariaChecked() {
+    if (this.role === 'menuitem') {
+      return null;
+    }
+    return this.checked;
+  }
 
   /** Whether the menu item opens a menu */
   opensMenu() {

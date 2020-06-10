@@ -19,6 +19,7 @@ import {Directive, Input} from '@angular/core';
   exportAs: 'cdkMenuBar',
   host: {
     'role': 'menubar',
+    '[attr.aria-orientation]': '_orientation',
   },
 })
 export class CdkMenuBar {
