@@ -69,6 +69,15 @@ export abstract class MatListItemBase implements AfterContentInit, OnDestroy, Ri
     this._monitorLines();
   }
 
+  ngOnDestroy() {
+    this._subscriptions.unsubscribe();
+    this._rippleRenderer._removeTriggerEvents();
+  }
+
+  _setTabIndexForChildren(value: number) {
+    this._element.querySelectorAll('a, button').forEach(el => (el as HTMLElement).tabIndex = value);
+  }
+
   /**
    * Subscribes to changes in `MatLine` content children and annotates them appropriately when they
    * change.
@@ -88,19 +97,18 @@ export abstract class MatListItemBase implements AfterContentInit, OnDestroy, Ri
           }));
     });
   }
-
-  ngOnDestroy() {
-    this._subscriptions.unsubscribe();
-    this._rippleRenderer._removeTriggerEvents();
-  }
 }
 
 @Directive()
 /** @docs-private */
-export abstract class MatListBase implements AfterViewInit, OnDestroy {
+export abstract class MatListBase {
   @HostBinding('class.mdc-list--non-interactive')
-  _isNonInteractive: boolean = false;
+  _isNonInteractive: boolean = true;
+}
 
+@Directive()
+export abstract class MatInteractiveListBase extends MatListBase
+    implements AfterViewInit, OnDestroy {
   @HostListener('keydown', ['$event'])
   _handleKeydown(event: KeyboardEvent) {
     const index = this._indexForElement(event.target as HTMLElement);
@@ -138,7 +146,7 @@ export abstract class MatListBase implements AfterViewInit, OnDestroy {
     setAttributeForElementIndex:
         (index, attr, value) => this._itemAtIndex(index)._element.setAttribute(attr, value),
     setTabIndexForListItemChildren:
-        (index, value) => this._itemAtIndex(index)._element.tabIndex = value as unknown as number,
+        (index, value) => this._itemAtIndex(index)._setTabIndexForChildren(Number(value)),
     getFocusedElementIndex: () => this._indexForElement(this._document?.activeELement),
     isFocusInsideList: () => this._element.nativeElement.contains(this._document?.activeElement),
     isRootFocused: () => this._element.nativeElement === this._document?.activeElement,
@@ -151,21 +159,27 @@ export abstract class MatListBase implements AfterViewInit, OnDestroy {
     hasRadioAtIndex: () => false,
     setCheckedCheckboxOrRadioAtIndex: () => {},
     isCheckboxCheckedAtIndex: () => false,
-    notifyAction: () => {},
 
-    // TODO(mmalerba): Determine if we need to implement this.
+    // TODO(mmalerba): Determine if we need to implement these.
     getPrimaryTextAtIndex: () => '',
+    notifyAction: () => {},
   };
 
   protected _foundation: MDCListFoundation;
 
   constructor(protected _element: ElementRef<HTMLElement>,
-              @Inject(DOCUMENT) protected _document: any) {
+                        @Inject(DOCUMENT) protected _document: any) {
+    super();
+    this._isNonInteractive = false;
     this._foundation = new MDCListFoundation(this._adapter);
   }
 
   ngAfterViewInit() {
     this._foundation.init();
+    const first = this._items.toArray()[0]?._element;
+    if (first) {
+      first.tabIndex = 0;
+    }
     this._foundation.layout();
   }
 
@@ -181,3 +195,4 @@ export abstract class MatListBase implements AfterViewInit, OnDestroy {
     return element ? this._items.toArray().findIndex(i => i._element.contains(element)) : -1;
   }
 }
+

@@ -66,9 +66,7 @@ export class MatListSubheaderCssMatStyler {}
     {provide: MatListBase, useExisting: MatList},
   ]
 })
-export class MatList extends MatListBase {
-  _isNonInteractive = true;
-}
+export class MatList extends MatListBase {}
 
 @Component({
   selector: 'mat-list-item, a[mat-list-item], button[mat-list-item]',
