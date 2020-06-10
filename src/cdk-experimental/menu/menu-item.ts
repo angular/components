@@ -12,13 +12,13 @@ import {CdkMenuPanel} from './menu-panel';
 
 /**
  * Directive which provides behavior for an element which when clicked:
- *  If in a CdkMenuBar:
+ *  If located in a CdkMenuBar:
  *    - opens up an attached submenu
  *
- *  If in a CdkMenu, one of:
+ *  If located in a CdkMenu, one of:
  *    - executes the user defined click handler
- *    - toggles it's checkbox state
- *    - toggles it's radio button state (in relation to siblings)
+ *    - toggles its checkbox state
+ *    - toggles its radio button state (in relation to siblings)
  *
  * If it's in a CdkMenu and it triggers a sub-menu, hovering over the
  * CdkMenuItem will open the submenu.
