@@ -15,6 +15,7 @@ export declare class ProtractorElement implements TestElement {
     matchesSelector(selector: string): Promise<boolean>;
     sendKeys(...keys: (string | TestKey)[]): Promise<void>;
     sendKeys(modifiers: ModifierKeys, ...keys: (string | TestKey)[]): Promise<void>;
+    setInputValue(value: string): Promise<void>;
     text(): Promise<string>;
 }
 
