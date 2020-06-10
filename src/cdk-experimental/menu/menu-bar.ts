@@ -27,5 +27,5 @@ export class CdkMenuBar {
    * Orientation of the menu - does not affect styling/layout.
    * Sets the aria-orientation attribute and determines where sub-menus will be opened.
    */
-  @Input('cdkMenuBarOrientation') _orientation: 'horizontal' | 'vertical' = 'horizontal';
+  @Input('cdkMenuBarOrientation') orientation: 'horizontal' | 'vertical' = 'horizontal';
 }
