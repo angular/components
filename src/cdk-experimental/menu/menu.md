@@ -74,3 +74,5 @@ or `cdkMenuGroup` as both directives logically group their children.
 ### cdkMenuPanel
 
 `cdkMenuPanel` is to be applied to an `ng-template` component. It is used to reference the component it wraps (should contain a single `cdkMenu`) and opens it in an overlay.
+
+`cdkMenuPanel` is a top level element and should not be nested within any of the other directives mentioned here.

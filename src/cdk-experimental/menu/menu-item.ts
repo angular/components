@@ -15,7 +15,7 @@ import {CdkMenuPanel} from './menu-panel';
  *  If located in a CdkMenuBar:
  *    - opens up an attached submenu
  *
- *  If located in a CdkMenu, one of:
+ *  If located in a CdkMenu/CdkMenuGroup, one of:
  *    - executes the user defined click handler
  *    - toggles its checkbox state
  *    - toggles its radio button state (in relation to siblings)
