@@ -196,6 +196,24 @@ describe('CdkNestedTreeControl', () => {
       });
     });
   });
+
+  it('maintains node expansion state based on trackBy function, if provided', () => {
+    const treeControl = new NestedTreeControl<TestData, string>(getChildren);
+
+    const nodes = generateData(2, 2);
+    const secondNode = nodes[1];
+    treeControl.dataNodes = nodes;
+    treeControl.trackBy = (node: TestData) => `${node.a} ${node.b} ${node.c}`;
+
+    treeControl.expand(secondNode);
+    expect(treeControl.isExpanded(secondNode)).toBeTruthy('Expect second node to be expanded');
+
+    // Replace the second node with a brand new instance with same hash
+    nodes[1] = new TestData(
+        secondNode.a, secondNode.b, secondNode.c, secondNode.level, secondNode.children);
+    expect(treeControl.isExpanded(nodes[1])).toBeTruthy('Expect second node to still be expanded');
+  });
+
 });
 
 export class TestData {
