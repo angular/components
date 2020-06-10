@@ -1,0 +1,20 @@
+.scene-inputs .scene-input-clear {
+  margin-bottom: -10px;
+}
+
+.scene-inputs {
+  margin-top: 15px;
+  width: 250px;
+
+  .mat-form-field-appearance-outline .mat-form-field-outline-thick {
+    opacity: 0.5;
+  }
+}
+
+app-input-scene {
+  display: flex;
+}
+
+mat-form-field {
+  width: 100%;
+}
