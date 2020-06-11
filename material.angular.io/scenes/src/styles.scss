@@ -11,18 +11,21 @@ $theme: mat-light-theme($primary, $accent, $warn);
 $background-color: #fff2f4;
 
 $background: map-get($theme, background);
-$background: map_merge($background, (background: $background-color, disabled-button: rgba(red, 0.5)));
+$background: map_merge($background, (
+  background: $background-color,
+  disabled-button: rgba(red, 0.5),
+  selected-button: rgba(red, 0.23)));
 $theme: map_merge($theme, (background: $background));
 
 $secondary-text-color: map_get($mat-red, 600);
 
 $foreground: map-get($theme, foreground);
-$foreground: map_merge($foreground,
-  (disabled-button: rgba(red, 0.45),
-    text: $secondary-text-color,
-    divider: $secondary-text-color,
-    secondary-text: $secondary-text-color,
-    dsiabled-text: $secondary-text-color));
+$foreground: map_merge($foreground, (
+  disabled-button: rgba(red, 0.45),
+  text: $secondary-text-color,
+  divider: $secondary-text-color,
+  secondary-text: $secondary-text-color,
+  dsiabled-text: $secondary-text-color));
 $theme: map_merge($theme, (foreground: $foreground));
 
 @include angular-material-theme($theme);
