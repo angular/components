@@ -35,7 +35,9 @@ export class MapTrafficLayer implements OnInit, OnDestroy {
    */
   trafficLayer?: google.maps.TrafficLayer;
 
-  /** URL of the image that will be shown in the overlay. */
+  /**
+   * Whether the traffic layer refreshes with updated information automatically.
+   */
   @Input()
   set autoRefresh(autoRefresh: boolean) {
     this._autoRefresh.next(autoRefresh);
