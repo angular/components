@@ -9,15 +9,6 @@ ng_module(
         exclude = ["**/*.spec.ts"],
     ),
     module_name = "@angular/cdk-experimental/listbox",
-    deps = [
-        "//src/cdk/a11y",
-        "//src/cdk/bidi",
-        "//src/cdk/keycodes",
-        "//src/cdk/overlay",
-        "//src/cdk/portal",
-        "@npm//@angular/animations",
-        "@npm//@angular/core",
-        "@npm//rxjs",
-    ],
+    deps = [],
 )
 
