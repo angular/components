@@ -135,7 +135,7 @@ export abstract class MatInteractiveListBase extends MatListBase
     this._foundation.handleFocusOut(event, this._indexForElement(event.target as HTMLElement));
   }
 
-  @ContentChildren(MatListItemBase) _items: QueryList<MatListItemBase>;
+  @ContentChildren(MatListItemBase, {descendants: true}) _items: QueryList<MatListItemBase>;
 
   protected _adapter: MDCListAdapter = {
     getListItemCount: () => this._items.length,
