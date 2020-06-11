@@ -27,8 +27,8 @@ import {Subject} from 'rxjs';
 })
 export class CdkMenu implements OnDestroy {
   /**
-   * Orientation of the menu - does not affect styling/layout.
    * Sets the aria-orientation attribute and determines where sub-menus will be opened.
+   * Does not affect styling/layout.
    */
   @Input('cdkMenuOrientation') orientation: 'horizontal' | 'vertical' = 'vertical';
 

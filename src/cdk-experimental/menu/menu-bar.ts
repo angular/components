@@ -24,8 +24,8 @@ import {Directive, Input} from '@angular/core';
 })
 export class CdkMenuBar {
   /**
-   * Orientation of the menu - does not affect styling/layout.
    * Sets the aria-orientation attribute and determines where sub-menus will be opened.
+   * Does not affect styling/layout.
    */
   @Input('cdkMenuBarOrientation') orientation: 'horizontal' | 'vertical' = 'horizontal';
 }
