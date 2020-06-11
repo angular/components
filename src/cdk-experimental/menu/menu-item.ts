@@ -29,7 +29,7 @@ import {CdkMenuPanel} from './menu-panel';
   host: {
     'type': 'button',
     '[attr.role]': 'role',
-    '[attr.aria-checked]': '_ariaChecked',
+    '[attr.aria-checked]': '_getAriaChecked()',
   },
 })
 export class CdkMenuItem {
@@ -46,7 +46,7 @@ export class CdkMenuItem {
   @Output() opened: EventEmitter<void> = new EventEmitter();
 
   /** get the aria-checked value only if element is `menuitemradio` or `menuitemcheckbox` */
-  get _ariaChecked(): boolean | null {
+  _getAriaChecked(): boolean | null {
     if (this.role === 'menuitem') {
       return null;
     }
