@@ -45,8 +45,8 @@ export class CdkMenuItem {
   get checked() {
     return this._checked;
   }
-  set checked(val: boolean) {
-    this._checked = coerceBooleanProperty(val);
+  set checked(value: boolean) {
+    this._checked = coerceBooleanProperty(value);
   }
   private _checked = false;
 
