@@ -54,7 +54,7 @@ export class CdkMenuItem {
   }
 
   /** Whether the menu item opens a menu */
-  opensMenu() {
+  hasSubmenu() {
     return !!this._menuPanel;
   }
 }
