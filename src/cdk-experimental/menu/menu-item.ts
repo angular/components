@@ -6,8 +6,9 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Directive, Output, Input, OnDestroy, EventEmitter} from '@angular/core';
+import {Directive, Output, Input, EventEmitter} from '@angular/core';
 import {CdkMenuPanel} from './menu-panel';
+import {coerceBooleanProperty, BooleanInput} from '@angular/cdk/coercion';
 
 /**
  * Directive which provides behavior for an element which when clicked:
@@ -40,7 +41,14 @@ export class CdkMenuItem {
   @Input() role: 'menuitem' | 'menuitemradio' | 'menuitemcheckbox' = 'menuitem';
 
   /** Whether the checkbox or radiobutton is checked */
-  @Input() checked: boolean;
+  @Input()
+  get checked() {
+    return this._checked;
+  }
+  set checked(val: boolean) {
+    this._checked = coerceBooleanProperty(val);
+  }
+  private _checked = false;
 
   /** Emits when the attached submenu is opened */
   @Output() opened: EventEmitter<void> = new EventEmitter();
@@ -57,4 +65,6 @@ export class CdkMenuItem {
   hasSubmenu() {
     return !!this._menuPanel;
   }
+
+  static ngAcceptInputType_checked: BooleanInput;
 }
