@@ -6,9 +6,8 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Directive, Input, Output, OnDestroy} from '@angular/core';
+import {Directive, Input, Output, OnDestroy, EventEmitter} from '@angular/core';
 import {CdkMenuItem} from './menu-item';
-import {Subject} from 'rxjs';
 
 /**
  * Directive which configures the element as a Menu which should contain child elements marked as
@@ -25,7 +24,7 @@ import {Subject} from 'rxjs';
     '[attr.aria-orientation]': 'orientation',
   },
 })
-export class CdkMenu implements OnDestroy {
+export class CdkMenu {
   /**
    * Sets the aria-orientation attribute and determines where sub-menus will be opened.
    * Does not affect styling/layout.
@@ -33,14 +32,8 @@ export class CdkMenu implements OnDestroy {
   @Input('cdkMenuOrientation') orientation: 'horizontal' | 'vertical' = 'vertical';
 
   /** Event emitted when the menu is closed. */
-  @Output() readonly closed: Subject<void | 'click' | 'tab' | 'escape'> = new Subject();
+  @Output() readonly closed: EventEmitter<void | 'click' | 'tab' | 'escape'> = new EventEmitter();
 
   /** Emits the activated element when checkbox or radiobutton state changed  */
-  @Output() change: Subject<CdkMenuItem>;
-
-  /** Cleanup event emitters */
-  ngOnDestroy() {
-    this.closed.complete();
-    this.change.complete();
-  }
+  @Output() change: EventEmitter<CdkMenuItem>;
 }

@@ -6,8 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Directive, Output, OnDestroy} from '@angular/core';
-import {Subject} from 'rxjs';
+import {Directive, Output, EventEmitter} from '@angular/core';
 import {CdkMenuItem} from './menu-item';
 
 /**
@@ -22,12 +21,7 @@ import {CdkMenuItem} from './menu-item';
     'role': 'group',
   },
 })
-export class CdkMenuGroup implements OnDestroy {
+export class CdkMenuGroup {
   /** Emits the element when checkbox or radiobutton state changed  */
-  @Output() change: Subject<CdkMenuItem> = new Subject();
-
-  /** Cleanup event emitters */
-  ngOnDestroy() {
-    this.change.complete();
-  }
+  @Output() change: EventEmitter<CdkMenuItem> = new EventEmitter();
 }

@@ -6,8 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Directive, Output, Input, OnDestroy} from '@angular/core';
-import {Subject} from 'rxjs';
+import {Directive, Output, Input, OnDestroy, EventEmitter} from '@angular/core';
 import {CdkMenuPanel} from './menu-panel';
 
 /**
@@ -33,7 +32,7 @@ import {CdkMenuPanel} from './menu-panel';
     '[attr.aria-checked]': '_ariaChecked',
   },
 })
-export class CdkMenuItem implements OnDestroy {
+export class CdkMenuItem {
   /** Template reference variable to the menu this trigger opens */
   @Input('cdkMenuTriggerFor') _menuPanel: CdkMenuPanel;
 
@@ -44,7 +43,7 @@ export class CdkMenuItem implements OnDestroy {
   @Input() checked: boolean;
 
   /** Emits when the attached submenu is opened */
-  @Output() opened: Subject<void> = new Subject();
+  @Output() opened: EventEmitter<void> = new EventEmitter();
 
   /** get the aria-checked value only if element is `menuitemradio` or `menuitemcheckbox` */
   get _ariaChecked(): boolean | null {
@@ -57,10 +56,5 @@ export class CdkMenuItem implements OnDestroy {
   /** Whether the menu item opens a menu */
   opensMenu() {
     return !!this._menuPanel;
-  }
-
-  /** Cleanup event emitters */
-  ngOnDestroy() {
-    this.opened.complete();
   }
 }
