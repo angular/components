@@ -10,9 +10,8 @@ import {Directive, Output, EventEmitter} from '@angular/core';
 import {CdkMenuItem} from './menu-item';
 
 /**
- * Directive which provides grouping logic for CdkMenuItem components marked with role
- * menuitemradio.
- * Siblings within the element are part of the same RadioGroup and behave as such.
+ * Directive which acts as a grouping container for `CdkMenuItem` instances with
+ * `role="menuitemradio"`, similar to a `role="radiogroup"` element.
  */
 @Directive({
   selector: '[cdkMenuGroup]',
