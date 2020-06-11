@@ -6,6 +6,7 @@ import { InputScene } from './scenes/input/input-scene';
 import { ButtonToggleScene } from './scenes/button-toggle/button-toggle-scene';
 import {SliderScene} from './scenes/slider/slider-scene';
 import {SlideToggleScene} from './scenes/slide-toggle/slide-toggle-scene';
+import {DividerScene} from './scenes/divider/divider-scene';
 
 
 const routes: Routes = [
@@ -18,7 +19,11 @@ const routes: Routes = [
     data: {hueRotate: 135, scale: 1.5, scene: ButtonToggleScene}
   },
   {path: 'slide-toggle', component: SceneViewer, data: {hueRotate: 90, scene: SlideToggleScene}},
-
+  {
+    path: 'divider',
+    component: SceneViewer,
+    data: {hueRotate: 105, scale: 2.0, scene: DividerScene}
+  },
 ];
 
 @NgModule({
