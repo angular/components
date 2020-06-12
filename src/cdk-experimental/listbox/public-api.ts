@@ -7,4 +7,4 @@
  */
 
 export * from './listbox';
-export * from './listbox-module'
+export * from './listbox-module';
