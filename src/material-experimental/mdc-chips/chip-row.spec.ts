@@ -10,8 +10,14 @@ import {Component, DebugElement, ViewChild} from '@angular/core';
 import {async, ComponentFixture, TestBed, flush, fakeAsync} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {Subject} from 'rxjs';
-import {MatChipEvent, MatChipEditedEvent, MatChipGrid, MatChipRemove, MatChipRow, MatChipsModule} from './index';
-import { MatChipEditInput } from './chip-edit-input';
+import {
+  MatChipEditedEvent,
+  MatChipEvent,
+  MatChipGrid,
+  MatChipRemove,
+  MatChipRow,
+  MatChipsModule,
+} from './index';
 
 
 describe('MDC-based Row Chips', () => {

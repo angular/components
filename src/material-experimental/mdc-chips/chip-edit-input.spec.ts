@@ -1,6 +1,13 @@
 import {Component, DebugElement, ViewChild, ElementRef} from '@angular/core';
 import {async, TestBed, ComponentFixture} from '@angular/core/testing';
-import {MatChipsModule, MatChipEditInputDestroyEvent, MatChipEditInput, MatChipEditInputManager, MatChipEditInputInterface, MAT_CHIP_EDIT_INPUT_MANAGER} from './index';
+import {
+  MAT_CHIP_EDIT_INPUT_MANAGER,
+  MatChipEditInput,
+  MatChipEditInputDestroyEvent,
+  MatChipEditInputInterface,
+  MatChipEditInputManager,
+  MatChipsModule,
+} from './index';
 import {By} from '@angular/platform-browser';
 
 
