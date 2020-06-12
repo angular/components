@@ -37,9 +37,6 @@ function toggleClass(el: Element, className: string, on: boolean) {
 @Directive()
 /** @docs-private */
 export abstract class MatListItemBase implements AfterContentInit, OnDestroy, RippleTarget {
-  @HostBinding('tabindex')
-  _tabIndex = -1;
-
   lines: QueryList<ElementRef<Element>>;
 
   rippleConfig: RippleConfig = {};
@@ -180,15 +177,14 @@ export abstract class MatInteractiveListBase extends MatListBase
   }
 
   ngAfterViewInit() {
-    this._foundation.init();
-    const first = this._items.first;
-    if (first) {
-      first._elementRef.nativeElement.tabIndex = 0;
-    }
-    this._foundation.layout();
     this._subscriptions.add(
         this._items.changes.pipe(startWith(null))
             .subscribe(() => this._itemsArr = this._items.toArray()));
+    this._foundation.init();
+    for (let i = 0; this._items.length; i++) {
+      this._elementAtIndex(i).tabIndex = i === 0 ? 0 : -1;
+    }
+    this._foundation.layout();
   }
 
   ngOnDestroy() {
