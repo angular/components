@@ -58,6 +58,12 @@ export interface MatChipEvent {
   chip: MatChip;
 }
 
+/** Represents an event fired on an individual `mat-chip` when it is edited. */
+export interface MatChipEditedEvent extends MatChipEvent {
+  /** The final edit value. */
+  value: string;
+}
+
 /** Configuration for the ripple animation. */
 const RIPPLE_ANIMATION_CONFIG: RippleAnimationConfig = {
   enterDuration: numbers.DEACTIVATION_TIMEOUT_MS,
@@ -109,6 +115,7 @@ const _MatChipMixinBase:
     '[class.mat-mdc-chip-with-trailing-icon]': 'trailingIcon || removeIcon',
     '[class.mat-mdc-basic-chip]': '_isBasicChip',
     '[class.mat-mdc-standard-chip]': '!_isBasicChip',
+    '[class.mdc-chip--editable]': 'editable',
     '[class._mat-animation-noopable]': '_animationsDisabled',
     '[id]': 'id',
     '[attr.disabled]': 'disabled || null',
@@ -139,6 +146,9 @@ export class MatChip extends _MatChipMixinBase implements AfterContentInit, Afte
   /** Whether the chip has focus. */
   protected _hasFocusInternal = false;
 
+  /** The value of the chip as it is being edited. */
+  protected _editingValueInternal = '';
+
     /** Whether animations for the chip are enabled. */
   _animationsDisabled: boolean;
 
@@ -154,6 +164,10 @@ export class MatChip extends _MatChipMixinBase implements AfterContentInit, Afte
 
   get _hasFocus() {
     return this._hasFocusInternal;
+  }
+
+  get _editingValue() {
+    return this._editingValueInternal;
   }
 
   /** Default unique id for the chip. */
@@ -172,6 +186,8 @@ export class MatChip extends _MatChipMixinBase implements AfterContentInit, Afte
     }
   }
   protected _disabled: boolean = false;
+
+  @Input() editable: boolean = false;
 
   private _textElement!: HTMLElement;
 
@@ -216,6 +232,10 @@ export class MatChip extends _MatChipMixinBase implements AfterContentInit, Afte
 
   /** Emitted when a chip is to be removed. */
   @Output() readonly removed: EventEmitter<MatChipEvent> = new EventEmitter<MatChipEvent>();
+
+  /** Emitted when the chip is edited. */
+  @Output() readonly edited: EventEmitter<MatChipEditedEvent> =
+    new EventEmitter<MatChipEditedEvent>();
 
   /** The MDC foundation containing business logic for MDC chip. */
   _chipFoundation: MDCChipFoundation;
@@ -279,9 +299,17 @@ export class MatChip extends _MatChipMixinBase implements AfterContentInit, Afte
           // Make it `display: none` so users can't tab into it.
           this._elementRef.nativeElement.style.display = 'none';
         },
-    // Noop for now since we don't support editable chips yet.
-    notifyEditStart: () => {},
-    notifyEditFinish: () => {},
+    notifyEditStart:
+        () => {
+          this._editingValueInternal = this.value;
+          this._changeDetectorRef.markForCheck();
+        },
+    notifyEditFinish:
+        () => {
+          this.edited.emit({chip: this, value: this._editingValue});
+          this._editingValueInternal = '';
+          this._changeDetectorRef.markForCheck();
+        },
     getComputedStyleValue:
         propertyName => {
           // This function is run when a chip is removed so it might be
@@ -421,7 +449,7 @@ export class MatChip extends _MatChipMixinBase implements AfterContentInit, Afte
   }
 
   /** Forwards interaction events to the MDC chip foundation. */
-  _handleInteraction(event: MouseEvent | KeyboardEvent) {
+  _handleInteraction(event: MouseEvent | KeyboardEvent | FocusEvent) {
     if (this.disabled) {
       return;
     }
@@ -431,9 +459,21 @@ export class MatChip extends _MatChipMixinBase implements AfterContentInit, Afte
       return;
     }
 
+    if (event.type === 'dblclick') {
+      this._chipFoundation.handleDoubleClick();
+    }
+
     if (event.type === 'keydown') {
       this._chipFoundation.handleKeydown(event as KeyboardEvent);
       return;
+    }
+
+    if (event.type === 'focusout') {
+      this._chipFoundation.handleFocusOut(event as FocusEvent);
+    }
+
+    if (event.type === 'focusin') {
+      this._chipFoundation.handleFocusIn(event as FocusEvent);
     }
   }
 
@@ -451,8 +491,13 @@ export class MatChip extends _MatChipMixinBase implements AfterContentInit, Afte
     // in the future.
   }
 
+  _isEditing() {
+    return this._chipFoundation.isEditing();
+  }
+
   static ngAcceptInputType_disabled: BooleanInput;
   static ngAcceptInputType_removable: BooleanInput;
   static ngAcceptInputType_highlighted: BooleanInput;
   static ngAcceptInputType_disableRipple: BooleanInput;
+  static ngAcceptInputType_editable: BooleanInput;
 }

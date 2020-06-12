@@ -32,6 +32,7 @@ export class MdcChipsDemo {
   addOnBlur = true;
   disabledListboxes = false;
   disableInputs = false;
+  editable = false;
   message = '';
 
   // Enter, comma, semi-colon
@@ -79,6 +80,18 @@ export class MdcChipsDemo {
     if (index >= 0) {
       this.people.splice(index, 1);
     }
+  }
+
+  edit(person: Person, newValue: string): void {
+    if (newValue.trim().length === 0) {
+      this.remove(person);
+      return;
+    }
+
+    const index = this.people.indexOf(person);
+    const newPeople = this.people.slice();
+    newPeople[index] = {...newPeople[index], name: newValue};
+    this.people = newPeople;
   }
 
   toggleVisible(): void {

@@ -191,7 +191,7 @@ describe('MDC-based MatChipGrid', () => {
 
           // Focus and blur the middle item
           midItem.focus();
-          midItem._focusout();
+          (document.activeElement as HTMLElement|null)?.blur();
           tick();
           zone.simulateZoneExit();
 
@@ -502,6 +502,36 @@ describe('MDC-based MatChipGrid', () => {
         expect(manager.activeColumnIndex).toBe(0);
       });
 
+      it('should ignore all non-tab navigation keyboard events from an editing chip', () => {
+        setupStandardGrid();
+        testComponent.editable = true;
+        fixture.detectChanges();
+
+        const array = chips.toArray();
+        const firstItem = array[0];
+        const nativeChips = chipGridNativeElement.querySelectorAll('mat-chip-row');
+        const firstNativeChip = nativeChips[0] as HTMLElement;
+
+        const primaryActionElement = firstNativeChip.querySelector('.mdc-chip__primary-action')!;
+        const editingStartEvent =
+          createKeyboardEvent('keydown', ENTER, 'Enter', primaryActionElement);
+        firstItem._keydown(editingStartEvent);
+        fixture.detectChanges();
+
+        expect(manager.activeRowIndex).toBe(0);
+        expect(manager.activeColumnIndex).toBe(0);
+
+        const KEYS_TO_IGNORE = [HOME, END, LEFT_ARROW, RIGHT_ARROW];
+        for (const key of KEYS_TO_IGNORE) {
+          const event: KeyboardEvent =
+          createKeyboardEvent('keydown', key, undefined, document.activeElement!);
+          chipGridInstance._keydown(event);
+          fixture.detectChanges();
+
+          expect(manager.activeRowIndex).toBe(0);
+          expect(manager.activeColumnIndex).toBe(0);
+        }
+      });
     });
   });
 
@@ -991,7 +1021,8 @@ describe('MDC-based MatChipGrid', () => {
 @Component({
   template: `
     <mat-chip-grid [tabIndex]="tabIndex" #chipGrid>
-      <mat-chip-row *ngFor="let i of chips">
+      <mat-chip-row *ngFor="let i of chips"
+                    [editable]="editable">
         {{name}} {{i + 1}}
       </mat-chip-row>
     </mat-chip-grid>
@@ -1001,6 +1032,7 @@ class StandardChipGrid {
   name: string = 'Test';
   tabIndex: number = 0;
   chips = [0, 1, 2, 3, 4];
+  editable = false;
 }
 
 @Component({

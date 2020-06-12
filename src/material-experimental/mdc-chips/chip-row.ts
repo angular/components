@@ -17,6 +17,7 @@ import {
   ViewEncapsulation
 } from '@angular/core';
 import {MatChip} from './chip';
+import {MatChipEditInputDestroyEvent} from './chip-edit-input';
 import {GridKeyManagerRow} from './grid-key-manager';
 
 
@@ -35,14 +36,16 @@ import {GridKeyManagerRow} from './grid-key-manager';
     '[class.mat-mdc-chip-highlighted]': 'highlighted',
     '[class.mat-mdc-chip-with-avatar]': 'leadingIcon',
     '[class.mat-mdc-chip-with-trailing-icon]': 'trailingIcon || removeIcon',
+    '[class.mdc-chip--editable]': 'editable',
     '[id]': 'id',
     '[attr.disabled]': 'disabled || null',
     '[attr.aria-disabled]': 'disabled.toString()',
     '[tabIndex]': 'tabIndex',
     '(mousedown)': '_mousedown($event)',
+    '(dblclick)': '_dblclick($event)',
     '(keydown)': '_keydown($event)',
-    '(focusin)': '_focusin()',
-    '(focusout)': '_focusout()'
+    '(focusin)': '_focusin($event)',
+    '(focusout)': '_focusout($event)'
   },
   providers: [{provide: MatChip, useExisting: MatChipRow}],
   encapsulation: ViewEncapsulation.None,
@@ -103,7 +106,7 @@ export class MatChipRow extends MatChip implements AfterContentInit, AfterViewIn
    * Emits a blur event when one of the gridcells loses focus, unless focus moved
    * to the other gridcell.
    */
-  _focusout() {
+  _focusout(event: FocusEvent) {
     this._hasFocusInternal = false;
     // Wait to see if focus moves to the other gridcell
     setTimeout(() => {
@@ -111,16 +114,22 @@ export class MatChipRow extends MatChip implements AfterContentInit, AfterViewIn
         return;
       }
       this._onBlur.next({chip: this});
+      this._handleInteraction(event);
     });
   }
 
   /** Records that the chip has focus when one of the gridcells is focused. */
-  _focusin() {
+  _focusin(event: FocusEvent) {
     this._hasFocusInternal = true;
+    this._handleInteraction(event);
   }
 
   /** Sends focus to the first gridcell when the user clicks anywhere inside the chip. */
   _mousedown(event: MouseEvent) {
+    if (this._isEditing()) {
+      return;
+    }
+
     if (!this.disabled) {
       this.focus();
     }
@@ -128,9 +137,17 @@ export class MatChipRow extends MatChip implements AfterContentInit, AfterViewIn
     event.preventDefault();
   }
 
+  _dblclick(event: MouseEvent) {
+    this._handleInteraction(event);
+  }
+
   /** Handles custom key presses. */
   _keydown(event: KeyboardEvent): void {
     if (this.disabled) {
+      return;
+    }
+    if (this._isEditing()) {
+      this._handleInteraction(event);
       return;
     }
     switch (event.keyCode) {
@@ -143,6 +160,16 @@ export class MatChipRow extends MatChip implements AfterContentInit, AfterViewIn
         break;
       default:
         this._handleInteraction(event);
+    }
+  }
+
+  _onInputUpdated(value: string) {
+    this._editingValueInternal = value;
+  }
+
+  _onInputDestroyed({hadFocus}: MatChipEditInputDestroyEvent) {
+    if (hadFocus) {
+      this.chipContent.nativeElement.focus();
     }
   }
 }

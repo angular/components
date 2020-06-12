@@ -117,3 +117,31 @@ input.mat-mdc-chip-input {
 .mat-chip-row-focusable-text-content {
   position: relative;
 }
+
+.mat-chip-content {
+  display: inline-flex;
+}
+
+.mdc-chip--editing {
+  background-color: transparent;
+  display: flex;
+  flex-direction: column;
+
+  .mat-chip-content {
+    pointer-events: none;
+    height: 0;
+    overflow: hidden;
+  }
+}
+
+.mat-chip-edit-input {
+  cursor: text;
+  display: inline-block;
+}
+
+.mat-chip-edit-input-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
