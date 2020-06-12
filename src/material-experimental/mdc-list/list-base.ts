@@ -72,17 +72,6 @@ export abstract class MatListItemBase implements AfterContentInit, OnDestroy, Ri
   }
 
   /**
-   * Changes the tabindex of all button and anchor children of this item.
-   *
-   * This method is used by the `MatInteractiveBaseList` to implement the
-   * `setTabIndexForListItemChildren` method on the `MDCListAdapter`
-   */
-  _setTabIndexForChildren(value: number) {
-    this._elementRef.nativeElement.querySelectorAll<HTMLElement>('a, button')
-        .forEach(el => el.tabIndex = value);
-  }
-
-  /**
    * Subscribes to changes in `MatLine` content children and annotates them appropriately when they
    * change.
    */
@@ -148,12 +137,19 @@ export abstract class MatInteractiveListBase extends MatListBase
     getAttributeForElementIndex: (index, attr) => this._elementAtIndex(index).getAttribute(attr),
     setAttributeForElementIndex:
         (index, attr, value) => this._elementAtIndex(index).setAttribute(attr, value),
-    setTabIndexForListItemChildren:
-        (index, value) => this._itemAtIndex(index)._setTabIndexForChildren(Number(value)),
     getFocusedElementIndex: () => this._indexForElement(this._document?.activeElement),
     isFocusInsideList: () => this._element.nativeElement.contains(this._document?.activeElement),
     isRootFocused: () => this._element.nativeElement === this._document?.activeElement,
     focusItemAtIndex: index =>  this._elementAtIndex(index).focus(),
+
+    // MDC uses this method to disable focusable children of list items. However, we believe that
+    // this is not an accessible pattern and should be avoided, therefore we intentionally do not
+    // implement this method. In addition, implementing this would require violating Angular
+    // Material's general principle of not having components modify DOM elements they do not own.
+    // A user who feels they really need this feature can simply listen to the `(focus)` and
+    // `(blur)` events on the list item and enable/disable focus on the children themselves as
+    // appropriate.
+    setTabIndexForListItemChildren: () => {},
 
     // The following methods have a dummy implementation in the base class because they are only
     // applicable to certain types of lists. They should be implemented for the concrete classes
@@ -185,13 +181,14 @@ export abstract class MatInteractiveListBase extends MatListBase
 
   ngAfterViewInit() {
     this._foundation.init();
-    const first = this._itemAtIndex(0);
+    const first = this._items.first;
     if (first) {
       first._elementRef.nativeElement.tabIndex = 0;
     }
     this._foundation.layout();
     this._subscriptions.add(
-        this._items.changes.subscribe(() => this._itemsArr = this._items.toArray()));
+        this._items.changes.pipe(startWith(null))
+            .subscribe(() => this._itemsArr = this._items.toArray()));
   }
 
   ngOnDestroy() {
