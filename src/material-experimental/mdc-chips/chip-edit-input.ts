@@ -49,7 +49,7 @@ export interface MatChipEditInputInterface {
   styleUrls: ['chips.css'],
   inputs: ['initialValue'],
   host: {
-    '(input)': '_onInput($event)',
+    '(input)': '_onInput()',
   },
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
