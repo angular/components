@@ -511,13 +511,12 @@ describe('MDC-based MatChipGrid', () => {
         const firstItem = array[0];
         const nativeChips = chipGridNativeElement.querySelectorAll('mat-chip-row');
         const firstNativeChip = nativeChips[0] as HTMLElement;
-
+        firstItem.focus();
         const primaryActionElement = firstNativeChip.querySelector('.mdc-chip__primary-action')!;
-        const editingStartEvent =
-          createKeyboardEvent('keydown', ENTER, 'Enter', primaryActionElement);
-        firstItem._keydown(editingStartEvent);
+        firstItem._keydown(createKeyboardEvent('keydown', ENTER, 'Enter', primaryActionElement));
         fixture.detectChanges();
 
+        expect(firstNativeChip.classList).toContain('mdc-chip--editing');
         expect(manager.activeRowIndex).toBe(0);
         expect(manager.activeColumnIndex).toBe(0);
 
