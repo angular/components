@@ -138,7 +138,8 @@
         <mat-chip-grid #chipGrid1 [(ngModel)]="selectedPeople" required [disabled]="disableInputs">
           <mat-chip-row *ngFor="let person of people"
                    [editable]="editable"
-                   (removed)="remove(person)">
+                   (removed)="remove(person)"
+                   (edited)="edit(person, $event)">
             {{person.name}}
             <mat-icon matChipRemove>cancel</mat-icon>
           </mat-chip-row>

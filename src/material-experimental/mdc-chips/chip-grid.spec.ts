@@ -191,7 +191,7 @@ describe('MDC-based MatChipGrid', () => {
 
           // Focus and blur the middle item
           midItem.focus();
-          (document.activeElement as HTMLElement|null)?.blur();
+          (document.activeElement as HTMLElement).blur();
           tick();
           zone.simulateZoneExit();
 
