@@ -7,9 +7,9 @@
  */
 
 import {NgModule} from '@angular/core';
-import {CdkListbox, CdkListboxOption} from './listbox';
+import {CdkListbox, CdkOption} from './listbox';
 
-const EXPORTED_DECLARATIONS = [CdkListbox, CdkListboxOption];
+const EXPORTED_DECLARATIONS = [CdkListbox, CdkOption];
 @NgModule({
     exports: EXPORTED_DECLARATIONS,
     declarations: EXPORTED_DECLARATIONS,
