@@ -9,13 +9,13 @@
 import {Directive} from '@angular/core';
 
 @Directive({
-    selector: '[cdkListboxOption]',
-    exportAs: 'cdkListboxOption',
+    selector: '[cdkOption]',
+    exportAs: 'cdkOption',
     host: {
         role: 'option',
     }
 })
-export class CdkListboxOption {
+export class CdkOption {
 
 }
 
@@ -24,11 +24,8 @@ export class CdkListboxOption {
     exportAs: 'cdkListbox',
     host: {
         role: 'listbox',
-        tabindex: '0'
     }
 })
 export class CdkListbox {
 
 }
-
-
