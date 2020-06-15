@@ -7,6 +7,7 @@
  */
 
 import {Directive, ElementRef, Input} from '@angular/core';
+import {ListKeyManagerOption} from "@angular/cdk/a11y";
 
 @Directive({
   selector: '[cdkOption]',
@@ -16,7 +17,7 @@ import {Directive, ElementRef, Input} from '@angular/core';
     '[attr.aria-selected]': '_selected'
   }
 })
-export class CdkOption {
+export class CdkOption implements ListKeyManagerOption {
   private _selected: boolean | null = null;
 
   @Input()
@@ -28,6 +29,10 @@ export class CdkOption {
   }
 
   constructor(private el: ElementRef) {
+  }
+
+  getLabel(): string {
+      return this.el.nativeElement.textContent;
   }
 }
 
