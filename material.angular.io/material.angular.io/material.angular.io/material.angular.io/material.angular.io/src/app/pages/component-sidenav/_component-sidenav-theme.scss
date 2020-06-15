@@ -17,15 +17,19 @@
     }
 
     a {
-      color: mat-color($foreground, secondary-text);
+      color: map-get($foreground, secondary-text);
 
-      &.docs-component-viewer-sidenav-item-selected,
       &:hover {
-        color: mat-color($primary, if($is-dark-theme, 200, default));
+        color: mat-color($foreground, text);
       }
 
       &.docs-component-viewer-sidenav-item-selected {
-        background: rgba(0, 0, 0, $nav-background-focus-opacity);
+        background: rgba(mat-color($primary, default), 0.15);
+        color: lighten(mat-color($primary, default), if($is-dark-theme, 25%, 0));
+      }
+
+      &.docs-component-viewer-sidenav-item-selected:hover {
+        background: rgba(mat-color($primary, default), 0.3);
       }
     }
 
