@@ -6,8 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {ContentChildren, Directive, ElementRef, Input, QueryList} from '@angular/core';
-import {ActiveDescendantKeyManager, Highlightable, ListKeyManagerOption} from "@angular/cdk/a11y";
+import {ContentChildren, Directive, ElementRef, HostListener, Input, QueryList} from '@angular/core';
 
 @Directive({
   selector: '[cdkOption]',
@@ -18,7 +17,7 @@ import {ActiveDescendantKeyManager, Highlightable, ListKeyManagerOption} from "@
     '[attr.data-optionid]': '_optionId'
   }
 })
-export class CdkOption implements ListKeyManagerOption, Highlightable {
+export class CdkOption {
   private _selected: boolean | null = null;
   private _optionId: string;
 
@@ -33,18 +32,12 @@ export class CdkOption implements ListKeyManagerOption, Highlightable {
   constructor(private el: ElementRef) {
   }
 
-  getLabel(): string {
-      return this.el.nativeElement.textContent;
-  }
-
   setOptionId(id: string): void {
     this._optionId = id;
   }
 
-  setActiveStyles() {
-  }
-
-  setInactiveStyles() {
+  getOptionId(): string {
+      return this._optionId;
   }
 }
 
@@ -58,19 +51,51 @@ let _uniqueIdCounter = 0;
     }
 })
 export class CdkListbox {
-  _listKeyManager: ActiveDescendantKeyManager<CdkOption>;
 
   constructor(private el: ElementRef) {
   }
 
   @ContentChildren(CdkOption) _options: QueryList<CdkOption>;
 
-  ngAfterContentInit() {
-      this._options.forEach(option => {
-          option.setOptionId(`cdk-option-${_uniqueIdCounter++}`);
-      });
+  @HostListener('click', ['$event']) onClickUpdateSelectedOption($event: any) {
+    this._options.toArray().forEach(option => {
+      if (option.getOptionId() === $event.target.dataset.optionid) {
+        const selectedOption = option;
+        this.updateSelectedOption(selectedOption);
+      }
+    });
+  }
 
-      this._listKeyManager = new ActiveDescendantKeyManager(this._options)
-          .withWrap().withVerticalOrientation(true).withTypeAhead();
+  ngAfterContentInit() {
+    this._options.forEach(option => {
+      option.setOptionId(`cdk-option-${_uniqueIdCounter++}`);
+    });
+  }
+
+  private updateSelectedOption(option: CdkOption): void {
+    if (this.getSelectedOptions().includes(option)) {
+      this.deselectOption(option);
+    } else {
+      this.selectOption(option);
+    }
+  }
+
+  selectOption(option: CdkOption): void {
+    option.selected = true;
+  }
+
+  deselectOption(option: CdkOption): void {
+    option.selected = null;
+  }
+
+  getSelectedOptions(): CdkOption[] {
+    const selectedOptions: CdkOption[] = [];
+    this._options.toArray().forEach(option => {
+      if (option.selected) {
+          selectedOptions.push(option);
+      }
+    });
+
+    return selectedOptions;
   }
 }
