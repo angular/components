@@ -199,12 +199,12 @@ describe('CdkNestedTreeControl', () => {
   });
 
   it('maintains node expansion state based on trackBy function, if provided', () => {
-    const treeControl = new NestedTreeControl<TestData, string>(getChildren);
+    const treeControl = new NestedTreeControl<TestData, string>(
+        getChildren, {trackBy: (node: TestData) => `${node.a} ${node.b} ${node.c}`});
 
     const nodes = generateData(2, 2);
     const secondNode = nodes[1];
     treeControl.dataNodes = nodes;
-    treeControl.trackBy = (node: TestData) => `${node.a} ${node.b} ${node.c}`;
 
     treeControl.expand(secondNode);
     expect(treeControl.isExpanded(secondNode)).toBeTruthy('Expect second node to be expanded');
