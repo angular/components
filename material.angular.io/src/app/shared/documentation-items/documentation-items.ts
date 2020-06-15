@@ -43,16 +43,13 @@ const COMPONENTS = 'components';
 export const SECTIONS: { [key: string]: DocSection } = {
   [COMPONENTS]: {
     name: 'Components',
-    summary: 'Angular Material comprises a range of components which implement common ' +
-      'interaction patterns according to the Material Design specification.'
+    summary: 'Angular Material offers a wide variety of UI components based on the <a' +
+      ' href="https://material.io/components">Material Design specification</a>'
   },
   [CDK]: {
     name: 'CDK',
-    summary: 'The Component Dev Kit (CDK) is a set of tools that implement common interaction ' +
-      'patterns whilst being unopinionated about their presentation. It represents an ' +
-      'abstraction of the core functionalities found in the Angular Material library, without ' +
-      'any styling specific to Material Design. Think of the CDK as a blank state of well-tested ' +
-      'functionality upon which you can develop your own bespoke components.'
+    summary: 'The Component Dev Kit (CDK) is a set of behavior primitives for building UI' +
+      ' components.'
   },
 };
 

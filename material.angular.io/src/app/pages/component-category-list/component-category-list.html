@@ -1,6 +1,8 @@
 <div class="docs-component-category-list-summary"
      id="category-summary"
-     focusOnNavigation>{{_categoryListSummary}}</div>
+     focusOnNavigation>
+  <div [innerHTML]="_categoryListSummary"></div>
+</div>
 <div class="docs-component-category-list" *ngIf="(params | async)?.section as section">
   <a *ngFor="let component of docItems.getItems(section)"
      class="docs-component-category-list-item"
