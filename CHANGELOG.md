@@ -4,8 +4,6 @@
 
 |            |                       |
 | ---------- | --------------------- |
-| bug fix |  **benchmark:** fix license header and correct test descriptions ([#19596](https://github.com/angular/components/issues/19596)) ([0d266e2](https://github.com/angular/components/commit/0d266e2)) |
-| bug fix |  **benchmark:** fix license header, remove a11y import, and remove [@title](https://github.com/title) doc ([#19582](https://github.com/angular/components/issues/19582)) ([7d4fcd5](https://github.com/angular/components/commit/7d4fcd5)) |
 | bug fix |  **datepicker:** placeholder not behaving correctly in legacy form field ([#19595](https://github.com/angular/components/issues/19595)) ([ec7219d](https://github.com/angular/components/commit/ec7219d)) |
 | bug fix |  focus monitor-based styles not working in some cases inside shadow dom ([#19422](https://github.com/angular/components/issues/19422)) ([df981ee](https://github.com/angular/components/commit/df981ee)), closes [#19414](https://github.com/angular/components/issues/19414) |
 | feature |  **mdc-list:** add list-option template ([#19327](https://github.com/angular/components/issues/19327)) ([c865136](https://github.com/angular/components/commit/c865136)) |
