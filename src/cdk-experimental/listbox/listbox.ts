@@ -37,7 +37,7 @@ export class CdkOption {
   }
 
   getOptionId(): string {
-      return this._optionId;
+    return this._optionId;
   }
 }
 
@@ -47,7 +47,7 @@ let _uniqueIdCounter = 0;
     selector: '[cdkListbox]',
     exportAs: 'cdkListbox',
     host: {
-        role: 'listbox',
+      role: 'listbox',
     }
 })
 export class CdkListbox {
@@ -92,7 +92,7 @@ export class CdkListbox {
     const selectedOptions: CdkOption[] = [];
     this._options.toArray().forEach(option => {
       if (option.selected) {
-          selectedOptions.push(option);
+        selectedOptions.push(option);
       }
     });
 
