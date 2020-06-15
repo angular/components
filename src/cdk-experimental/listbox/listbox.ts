@@ -6,17 +6,29 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Directive} from '@angular/core';
+import {Directive, ElementRef, Input} from '@angular/core';
 
 @Directive({
-    selector: '[cdkOption]',
-    exportAs: 'cdkOption',
-    host: {
-        role: 'option',
-    }
+  selector: '[cdkOption]',
+  exportAs: 'cdkOption',
+  host: {
+    role: 'option',
+    '[attr.aria-selected]': '_selected'
+  }
 })
 export class CdkOption {
+  private _selected: boolean | null = null;
 
+  @Input()
+  get selected(): boolean | null {
+    return this._selected;
+  }
+  set selected(value: boolean | null) {
+    this._selected = value;
+  }
+
+  constructor(private el: ElementRef) {
+  }
 }
 
 @Directive({
