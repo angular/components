@@ -57,7 +57,7 @@ export class CdkListbox {
 
   @ContentChildren(CdkOption) _options: QueryList<CdkOption>;
 
-  @HostListener('click', ['$event']) onClickUpdateSelectedOption($event: any) {
+  @HostListener('click', ['$event']) onClickUpdateSelectedOption($event: MouseEvent) {
     this._options.toArray().forEach(option => {
       if (option.getOptionId() === $event.target.dataset.optionid) {
         const selectedOption = option;
