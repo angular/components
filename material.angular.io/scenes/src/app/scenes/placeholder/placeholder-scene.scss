@@ -1,0 +1,29 @@
+.circle-big {
+  position: absolute;
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  background: rgba(pink, 0.5);
+  top: 10px;
+  left: 50px;
+}
+
+.circle-small {
+  position: absolute;
+  width: 70px;
+  height: 70px;
+  left: 140px;
+  border-radius: 50%;
+  background: rgba(rosybrown, 0.5);
+}
+
+.half-circle {
+  transform: rotate(145deg);
+  position: absolute;
+  left: 200px;
+  width: 100px;
+  height: 50px;
+  border-top-left-radius: 100px;
+  border-top-right-radius: 100px;
+  background: rgba(indianred, 0.5);
+}
