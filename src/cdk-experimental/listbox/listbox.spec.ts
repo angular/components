@@ -10,7 +10,7 @@ import {
   CdkListbox,
   CdkListboxModule
 } from './index';
-import {dispatchFakeEvent,} from '@angular/cdk/testing/private';
+import {dispatchMouseEvent} from '@angular/cdk/testing/private';
 
 describe('CdkOption', () => {
 
@@ -63,14 +63,14 @@ describe('CdkOption', () => {
 
     it('should update selected option on click event', () => {
       expect(listboxInstance.getSelectedOptions().length).toBe(0);
-      expect(options[1].getElementRef().nativeElement.getAttribute('aria-selected')).toBe(null);
+      expect(options[0].getElementRef().nativeElement.getAttribute('aria-selected')).toBe(null);
       expect(options[0].selected).toBeFalsy();
 
-      dispatchFakeEvent(options[0].getElementRef().nativeElement, 'click');
+      dispatchMouseEvent(options[0].getElementRef().nativeElement, 'click');
       fixture.detectChanges();
 
       expect(listboxInstance.getSelectedOptions().length).toBe(1);
-      expect(options[1].getElementRef().nativeElement.getAttribute('aria-selected')).toBe('true');
+      expect(options[0].getElementRef().nativeElement.getAttribute('aria-selected')).toBe('true');
       expect(options[0].selected).toBeTruthy();
     });
   });

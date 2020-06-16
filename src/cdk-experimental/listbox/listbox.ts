@@ -6,7 +6,14 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {ContentChildren, Directive, ElementRef, HostListener, Input, QueryList} from '@angular/core';
+import {
+  ContentChildren,
+  Directive,
+  ElementRef,
+  HostListener,
+  Input,
+  QueryList
+} from '@angular/core';
 
 @Directive({
   selector: '[cdkOption]',
@@ -62,6 +69,8 @@ export class CdkListbox {
   @ContentChildren(CdkOption) _options: QueryList<CdkOption>;
 
   @HostListener('click', ['$event']) onClickUpdateSelectedOption($event: MouseEvent) {
+    console.log('in listbox click event');
+    console.log($event.target);
     this._options.toArray().forEach(option => {
       if ($event.target instanceof Element) {
         if (option.getOptionId() === $event.target?.getAttribute('data-optionid')) {
