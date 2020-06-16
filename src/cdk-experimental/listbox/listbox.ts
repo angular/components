@@ -59,9 +59,11 @@ export class CdkListbox {
 
   @HostListener('click', ['$event']) onClickUpdateSelectedOption($event: MouseEvent) {
     this._options.toArray().forEach(option => {
-      if (option.getOptionId() === $event.target.dataset.optionid) {
-        const selectedOption = option;
-        this.updateSelectedOption(selectedOption);
+      if ($event.target instanceof Element) {
+        if (option.getOptionId() === $event.target?.getAttribute('data-optionid')) {
+          const selectedOption = option;
+          this.updateSelectedOption(selectedOption);
+        }
       }
     });
   }
@@ -73,7 +75,7 @@ export class CdkListbox {
   }
 
   private updateSelectedOption(option: CdkOption): void {
-    if (this.getSelectedOptions().includes(option)) {
+    if (this.optionIsSelected(option)) {
       this.deselectOption(option);
     } else {
       this.selectOption(option);
@@ -88,8 +90,8 @@ export class CdkListbox {
     option.selected = null;
   }
 
-  getSelectedOptions(): CdkOption[] {
-    const selectedOptions: CdkOption[] = [];
+  getSelectedOptions(): Array<CdkOption> {
+    const selectedOptions = new Array<CdkOption>();
     this._options.toArray().forEach(option => {
       if (option.selected) {
         selectedOptions.push(option);
@@ -97,5 +99,15 @@ export class CdkListbox {
     });
 
     return selectedOptions;
+  }
+
+  optionIsSelected(option: CdkOption): boolean {
+    const selectedOptions = this.getSelectedOptions();
+    for (let i = 0; i < selectedOptions.length; i++) {
+      if (selectedOptions[i] === option) {
+        return true;
+      }
+    }
+    return false;
   }
 }

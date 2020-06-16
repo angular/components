@@ -1,42 +1,60 @@
 import {
-    ComponentFixture,
-    fakeAsync,
-    TestBed,
-    flush,
-    flushMicrotasks,
+  ComponentFixture,
+  async,
+  TestBed,
 } from '@angular/core/testing';
-import {FormControl, FormsModule, NgModel, ReactiveFormsModule} from '@angular/forms';
-import {Component, DebugElement, ViewChild, Type, ChangeDetectionStrategy} from '@angular/core';
+import {Component, Type} from '@angular/core';
 import {By} from '@angular/platform-browser';
-import {dispatchFakeEvent} from '@angular/cdk/testing/private';
 import {
   CdkOption,
   CdkListbox,
   CdkListboxModule
 } from './index';
-import {MutationObserverFactory} from '@angular/cdk/observers';
 
 describe('CdkOption', () => {
-  let fixture: ComponentFixture<any>;
 
-  function createComponent<T>(componentType: Type<T>, extraDeclarations: Type<any>[] = []) {
-    TestBed.configureTestingModule({
-      imports: [CdkListboxModule],
-      declarations: [componentType, ...extraDeclarations],
-    }).compileComponents();
-
-    return TestBed.createComponent<T>(componentType);
-  }
-
-  describe('basic behaviors', () => {
+  describe('selection state change', () => {
+    let fixture: ComponentFixture<CdkListboxWithCdkOptions>;
     let listboxInstance: CdkListbox;
-    let optionInstance: CdkOption;
-    let testComponent:
+    let options: Array<CdkOption>;
 
-    // beforeEach(() => {
-    //   fixture = createComponent(Cd)
-    // });
+    beforeEach(async(() => {
+      TestBed.configureTestingModule({
+        imports: [CdkListboxModule],
+        declarations: [CdkListboxWithCdkOptions],
+      }).compileComponents();
+
+      fixture = TestBed.createComponent(CdkListboxWithCdkOptions);
+      fixture.detectChanges();
+      listboxInstance = fixture.debugElement.query(By.directive(CdkListbox)).injector.get(CdkListbox);
+      options = listboxInstance._options.toArray();
+    }));
+
+    it('should have option selected defaults of null', () => {
+      options.forEach(option => {
+        expect(option.selected).toBe(null);
+      });
+    });
+
+
 
   });
 
 });
+
+@Component({
+  template:`
+    <div cdkListbox>
+      <div cdkOption></div>
+      <div cdkOption></div>
+      <div cdkOption></div>
+      <div cdkOption></div> 
+    </div>`
+})
+class CdkListboxWithCdkOptions {
+
+}
+
+
+
+
