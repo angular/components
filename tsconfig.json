@@ -36,8 +36,8 @@
     }
   },
   "include": [
+    "integration/**/*.ts",
     "src/**/*.ts",
-    "e2e/**/*.ts",
     "test/**/*.ts",
     "tools/**/*.ts"
   ],
