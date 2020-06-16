@@ -20,6 +20,7 @@ ng_test_library(
      deps = [
          ":listbox",
          "@npm//@angular/platform-browser",
+         "//src/cdk/testing/private"
      ],
 )
 

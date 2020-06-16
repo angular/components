@@ -39,6 +39,10 @@ export class CdkOption {
   getOptionId(): string {
     return this._optionId;
   }
+
+  getElementRef(): ElementRef {
+    return this.el;
+  }
 }
 
 let _uniqueIdCounter = 0;
@@ -75,7 +79,7 @@ export class CdkListbox {
   }
 
   private updateSelectedOption(option: CdkOption): void {
-    if (this.optionIsSelected(option)) {
+    if (option.selected) {
       this.deselectOption(option);
     } else {
       this.selectOption(option);
@@ -99,15 +103,5 @@ export class CdkListbox {
     });
 
     return selectedOptions;
-  }
-
-  optionIsSelected(option: CdkOption): boolean {
-    const selectedOptions = this.getSelectedOptions();
-    for (let i = 0; i < selectedOptions.length; i++) {
-      if (selectedOptions[i] === option) {
-        return true;
-      }
-    }
-    return false;
   }
 }
