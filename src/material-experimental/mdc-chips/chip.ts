@@ -146,9 +146,6 @@ export class MatChip extends _MatChipMixinBase implements AfterContentInit, Afte
   /** Whether the chip has focus. */
   protected _hasFocusInternal = false;
 
-  /** The value of the chip as it is being edited. */
-  protected _editingValueInternal = '';
-
     /** Whether animations for the chip are enabled. */
   _animationsDisabled: boolean;
 
@@ -164,10 +161,6 @@ export class MatChip extends _MatChipMixinBase implements AfterContentInit, Afte
 
   get _hasFocus() {
     return this._hasFocusInternal;
-  }
-
-  get _editingValue() {
-    return this._editingValueInternal;
   }
 
   /** Default unique id for the chip. */
@@ -301,13 +294,12 @@ export class MatChip extends _MatChipMixinBase implements AfterContentInit, Afte
         },
     notifyEditStart:
         () => {
-          this._editingValueInternal = this.value;
+          this._onEditStart();
           this._changeDetectorRef.markForCheck();
         },
     notifyEditFinish:
         () => {
-          this.edited.emit({chip: this, value: this._editingValue});
-          this._editingValueInternal = '';
+          this._onEditFinish();
           this._changeDetectorRef.markForCheck();
         },
     getComputedStyleValue:
@@ -494,6 +486,12 @@ export class MatChip extends _MatChipMixinBase implements AfterContentInit, Afte
   _isEditing() {
     return this._chipFoundation.isEditing();
   }
+
+  /** Overridden by MatChipRow. */
+  protected _onEditStart() {}
+
+  /** Overridden by MatChipRow. */
+  protected _onEditFinish() {}
 
   static ngAcceptInputType_disabled: BooleanInput;
   static ngAcceptInputType_removable: BooleanInput;

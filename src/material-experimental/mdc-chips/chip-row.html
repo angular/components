@@ -24,7 +24,9 @@
 </div>
 
 <div *ngIf="_isEditing()" role="gridcell" class="mat-chip-edit-input-container">
-  <mat-chip-edit-input [initialValue]="_editingValue"
-                       (updated)="_onInputUpdated($event)"
-                       (destroyed)="_onInputDestroyed($event)"></mat-chip-edit-input>
+  <ng-content *ngIf="contentEditInput; else defaultMatChipEditInput" select="[matChipEditInput]"></ng-content>
 </div>
+
+<ng-template #defaultMatChipEditInput>
+  <span matChipEditInput></span>
+</ng-template>

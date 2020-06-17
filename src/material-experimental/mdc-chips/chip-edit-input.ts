@@ -7,101 +7,44 @@
  */
 
 import {
-  AfterViewInit,
-  ChangeDetectionStrategy,
-  Component,
+  Directive,
   ElementRef,
-  EventEmitter,
-  Inject,
-  InjectionToken,
-  Input,
-  OnDestroy,
-  Optional,
-  Output,
-  ViewChild,
-  ViewEncapsulation,
 } from '@angular/core';
 
-export interface MatChipEditInputDestroyEvent {
-  hadFocus: boolean;
-}
-
-export interface MatChipEditInputManager {
-  setMatChipEditInput(value: MatChipEditInputInterface): void;
-  clearMatChipEditInput(): void;
-}
-
-export const MAT_CHIP_EDIT_INPUT_MANAGER =
-    new InjectionToken<MatChipEditInputManager>('MAT_CHIP_EDIT_INPUT_MANAGER');
-
-export interface MatChipEditInputInterface {
-  getNativeElement(): HTMLElement;
-  setValue(value: string): void;
-}
-
 /**
- * A component that handles editing an existing chip and exposes itself to an optional injected
- * manager so parent components can extend the editing behavior.
+ * A directive that makes a span editable and exposes functions to modify and retrieve the
+ * element's contents.
  */
-@Component({
-  selector: 'mat-chip-edit-input',
-  templateUrl: 'chip-edit-input.html',
-  styleUrls: ['chips.css'],
-  inputs: ['initialValue'],
+@Directive({
+  selector: 'span[matChipEditInput]',
   host: {
-    '(input)': '_onInput()',
+    'class': 'mdc-chip__primary-action mat-chip-edit-input',
+    'role': 'textbox',
+    'tabindex': '-1',
+    'contenteditable': 'true',
   },
-  encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MatChipEditInput implements AfterViewInit, OnDestroy, MatChipEditInputInterface {
-  @Input() initialValue = '';
-
-  @Output() readonly updated = new EventEmitter<string>();
-
-  @Output() readonly destroyed = new EventEmitter<MatChipEditInputDestroyEvent>();
-
-  @ViewChild('inputElement') inputElement!: ElementRef;
-
+export class MatChipEditInput {
   constructor(
-      @Optional() @Inject(MAT_CHIP_EDIT_INPUT_MANAGER)
-      private readonly _inputManager: MatChipEditInputManager,
-  ) {
-    if (_inputManager) {
-      _inputManager.setMatChipEditInput(this);
-    }
-  }
+      private readonly _elementRef: ElementRef,
+  ) {}
 
-  ngAfterViewInit() {
-    this.getNativeElement().innerText = this.initialValue;
+  initialize(initialValue: string) {
     this.getNativeElement().focus();
-    this._moveCursorToEndOfInput();
-  }
-
-  ngOnDestroy() {
-    this.destroyed.emit({
-      // We assume the input had focus if it is still the active element or the body
-      // has become the active element on destroy.
-      hadFocus: document.activeElement === this.getNativeElement() ||
-                document.activeElement === document.body,
-    });
-    if (this._inputManager) {
-      this._inputManager.clearMatChipEditInput();
-    }
+    this.setValue(initialValue);
   }
 
   getNativeElement(): HTMLElement {
-    return this.inputElement.nativeElement;
+    return this._elementRef.nativeElement;
   }
 
   setValue(value: string) {
     this.getNativeElement().innerText = value;
-    this._onInput();
+    this._moveCursorToEndOfInput();
   }
 
-  _onInput() {
-    this.updated.emit(
-        this.getNativeElement().textContent!.trim());
+  getValue(): string {
+    return this.getNativeElement().textContent || '';
   }
 
   private _moveCursorToEndOfInput() {

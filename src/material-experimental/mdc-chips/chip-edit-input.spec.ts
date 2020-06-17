@@ -1,20 +1,12 @@
-import {Component, DebugElement, ViewChild, ElementRef} from '@angular/core';
+import {Component, DebugElement} from '@angular/core';
 import {async, TestBed, ComponentFixture} from '@angular/core/testing';
-import {
-  MAT_CHIP_EDIT_INPUT_MANAGER,
-  MatChipEditInput,
-  MatChipEditInputDestroyEvent,
-  MatChipEditInputInterface,
-  MatChipEditInputManager,
-  MatChipsModule,
-} from './index';
+import {MatChipEditInput, MatChipsModule} from './index';
 import {By} from '@angular/platform-browser';
 
 
 describe('MDC-based MatChipEditInput', () => {
   const DEFAULT_INITIAL_VALUE = 'INITIAL_VALUE';
 
-  let testComponent: ChipEditInputContainer;
   let fixture: ComponentFixture<any>;
   let inputDebugElement: DebugElement;
   let inputInstance: MatChipEditInput;
@@ -28,91 +20,33 @@ describe('MDC-based MatChipEditInput', () => {
     });
 
     TestBed.compileComponents();
-  }));
 
-  function initialize(initialValue = DEFAULT_INITIAL_VALUE) {
     fixture = TestBed.createComponent(ChipEditInputContainer);
-    testComponent = fixture.debugElement.componentInstance;
-
-    spyOn(testComponent, 'onUpdate');
-    spyOn(testComponent, 'onDestroy');
-    spyOn(testComponent, 'setMatChipEditInput');
-    spyOn(testComponent, 'clearMatChipEditInput');
-
-    testComponent.initialValue = initialValue;
-    testComponent.active = true;
-    fixture.detectChanges();
-
     inputDebugElement = fixture.debugElement.query(By.directive(MatChipEditInput))!;
     inputInstance = inputDebugElement.injector.get<MatChipEditInput>(MatChipEditInput);
-  }
+  }));
 
   describe('on initialization', () => {
     it('should set the initial input text', () => {
-      initialize();
+      inputInstance.initialize(DEFAULT_INITIAL_VALUE);
       expect(inputInstance.getNativeElement().textContent).toEqual(DEFAULT_INITIAL_VALUE);
     });
 
     it('should focus the input', () => {
-      initialize();
+      inputInstance.initialize(DEFAULT_INITIAL_VALUE);
       expect(document.activeElement).toEqual(inputInstance.getNativeElement());
     });
-
-    it('should register itself with the injected manager', () => {
-      initialize();
-      expect(testComponent.setMatChipEditInput).toHaveBeenCalledWith(inputInstance);
-    });
   });
 
-  describe('on destruction', () => {
-    it('should emit hadFocus: true if the input had focus', () => {
-      initialize();
-      testComponent.active = false;
-      fixture.detectChanges();
-      expect(testComponent.onDestroy).toHaveBeenCalledWith({hadFocus: true});
-    });
-
-    it('should emit hadFocus: false if the input did not have focus', () => {
-      initialize();
-      testComponent.otherFocus.nativeElement.focus();
-      testComponent.active = false;
-      fixture.detectChanges();
-      expect(testComponent.onDestroy).toHaveBeenCalledWith({hadFocus: false});
-    });
-
-    it('should clear the manager\'s input', () => {
-      initialize();
-      testComponent.active = false;
-      fixture.detectChanges();
-      expect(testComponent.clearMatChipEditInput).toHaveBeenCalled();
-    });
-  });
-
-  it('should emit a new value the input changes', () => {
-    initialize();
+  it('should update the internal value as it is set', () => {
+    inputInstance.initialize(DEFAULT_INITIAL_VALUE);
     const newValue = 'NEW_VALUE';
     inputInstance.setValue(newValue);
-    expect(testComponent.onUpdate).toHaveBeenCalledWith(newValue);
+    expect(inputInstance.getValue()).toEqual(newValue);
   });
 });
 
 @Component({
-  template: `<mat-chip-edit-input *ngIf="active"
-                                  [initialValue]="initialValue"
-                                  (updated)="onUpdate($event)"
-                                  (destroyed)="onDestroy($event)"></mat-chip-edit-input>
-             <button #otherFocus></button>`,
-  providers: [{provide: MAT_CHIP_EDIT_INPUT_MANAGER, useExisting: ChipEditInputContainer}],
+  template: `<span matChipEditInput></span>`,
 })
-class ChipEditInputContainer implements MatChipEditInputManager {
-  active = false;
-  initialValue = '';
-
-  @ViewChild('otherFocus') otherFocus!: ElementRef;
-
-  onUpdate: (value: string) => void = () => {};
-  onDestroy: (event: MatChipEditInputDestroyEvent) => void = () => {};
-
-  setMatChipEditInput: (value: MatChipEditInputInterface) => void = () => {};
-  clearMatChipEditInput: () => void = () => {};
-}
+class ChipEditInputContainer {}

@@ -6,12 +6,13 @@ import {
   createFakeEvent,
   dispatchFakeEvent,
 } from '@angular/cdk/testing/private';
-import {Component, DebugElement, ViewChild} from '@angular/core';
+import {Component, DebugElement, ElementRef, ViewChild} from '@angular/core';
 import {async, ComponentFixture, TestBed, flush, fakeAsync} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {Subject} from 'rxjs';
 import {
   MatChipEditedEvent,
+  MatChipEditInput,
   MatChipEvent,
   MatChipGrid,
   MatChipRemove,
@@ -259,11 +260,21 @@ describe('MDC-based Row Chips', () => {
     });
 
     describe('editing behavior', () => {
+      let editInputInstance: MatChipEditInput;
+      let chipContentElement: HTMLElement;
+
       beforeEach(() => {
         testComponent.editable = true;
         fixture.detectChanges();
         chipInstance._dblclick(createMouseEvent('dblclick'));
         spyOn(testComponent, 'chipEdit');
+        fixture.detectChanges();
+
+        const editInputDebugElement = fixture.debugElement.query(By.directive(MatChipEditInput))!;
+        editInputInstance = editInputDebugElement.injector.get<MatChipEditInput>(MatChipEditInput);
+
+        chipContentElement =
+          chipNativeElement.querySelector('.mat-chip-row-focusable-text-content') as HTMLElement;
       });
 
       function keyDownOnPrimaryAction(keyCode: number, key: string) {
@@ -303,10 +314,33 @@ describe('MDC-based Row Chips', () => {
 
       it('should emit the new chip value when editing completes', () => {
         const chipValue = 'chip value';
-        chipInstance._onInputUpdated(chipValue);
+        editInputInstance.setValue(chipValue);
         keyDownOnPrimaryAction(ENTER, 'Enter');
         const expectedValue = jasmine.objectContaining({value: chipValue});
         expect(testComponent.chipEdit).toHaveBeenCalledWith(expectedValue);
+      });
+
+      it('should focus the chip content if the edit input has focus on completion', () => {
+        const chipValue = 'chip value';
+        editInputInstance.setValue(chipValue);
+        keyDownOnPrimaryAction(ENTER, 'Enter');
+        expect(document.activeElement).toBe(chipContentElement);
+      });
+
+      it('should focus the chip content if the body has focus on completion', () => {
+        const chipValue = 'chip value';
+        editInputInstance.setValue(chipValue);
+        (document.activeElement as HTMLElement).blur();
+        keyDownOnPrimaryAction(ENTER, 'Enter');
+        expect(document.activeElement).toBe(chipContentElement);
+      });
+
+      it('should not change focus if another element has focus on completion', () => {
+        const chipValue = 'chip value';
+        editInputInstance.setValue(chipValue);
+        testComponent.chipInput.nativeElement.focus();
+        keyDownOnPrimaryAction(ENTER, 'Enter');
+        expect(document.activeElement).not.toBe(chipContentElement);
       });
     });
   });
@@ -322,13 +356,15 @@ describe('MDC-based Row Chips', () => {
                  (removed)="chipRemove($event)" (edited)="chipEdit($event)">
           {{name}}
           <button matChipRemove>x</button>
+          <span matChipEditInput></span>
         </mat-chip-row>
-        <input matInput [matChipInputFor]="chipGrid">
+        <input matInput [matChipInputFor]="chipGrid" #chipInput>
       </div>
     </mat-chip-grid>`
 })
 class SingleChip {
   @ViewChild(MatChipGrid) chipList: MatChipGrid;
+  @ViewChild('chipInput') chipInput: ElementRef;
   disabled: boolean = false;
   name: string = 'Test';
   color: string = 'primary';

@@ -12,12 +12,13 @@ import {
   AfterViewInit,
   ChangeDetectionStrategy,
   Component,
+  ContentChild,
   ElementRef,
   ViewChild,
   ViewEncapsulation
 } from '@angular/core';
 import {MatChip} from './chip';
-import {MatChipEditInputDestroyEvent} from './chip-edit-input';
+import {MatChipEditInput} from './chip-edit-input';
 import {GridKeyManagerRow} from './grid-key-manager';
 
 
@@ -60,6 +61,20 @@ export class MatChipRow extends MatChip implements AfterContentInit, AfterViewIn
    * chip content other than the remove icon.
    */
   @ViewChild('chipContent') chipContent: ElementRef;
+
+  /** The default chip edit input that is used if none is projected into this chip row. */
+  @ViewChild(MatChipEditInput) defaultEditInput?: MatChipEditInput;
+
+  /** The projected chip edit input. */
+  @ContentChild(MatChipEditInput) contentEditInput?: MatChipEditInput;
+
+  /**
+   * Gets the projected chip edit input, or the default input if none is projected in. One of these
+   * two values is guaranteed to be defined.
+   */
+  get editInput(): MatChipEditInput {
+    return this.contentEditInput || this.defaultEditInput!;
+  }
 
   /** The focusable grid cells for this row. Implemented as part of GridKeyManagerRow. */
   cells!: HTMLElement[];
@@ -163,13 +178,20 @@ export class MatChipRow extends MatChip implements AfterContentInit, AfterViewIn
     }
   }
 
-  _onInputUpdated(value: string) {
-    this._editingValueInternal = value;
+  protected _onEditStart() {
+    // Defer initializing the input so it has time to be added to the DOM.
+    setTimeout(() => {
+      this.editInput.initialize(this.value);
+    });
   }
 
-  _onInputDestroyed({hadFocus}: MatChipEditInputDestroyEvent) {
-    if (hadFocus) {
+  protected _onEditFinish() {
+    // If the edit input is still focused or focus was returned to the body after it was destroyed,
+    // return focus to the chip contents.
+    if (document.activeElement === this.editInput.getNativeElement() ||
+        document.activeElement === document.body) {
       this.chipContent.nativeElement.focus();
     }
+    this.edited.emit({chip: this, value: this.editInput.getValue()});
   }
 }
