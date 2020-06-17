@@ -5,7 +5,13 @@ describe('screenshot scenes for each component', () => {
   // These tests simply serve as a convenient way to take snapshots of different pages,
   // they are not actually testing anything
   let page: AppPage;
-  const components = ['input', 'ripples', 'slider', 'button-toggle', 'slide-toggle', 'divider'];
+  const components = ['input',
+                      'ripples',
+                      'slider',
+                      'button-toggle',
+                      'slide-toggle',
+                      'divider',
+                      'progress-spinner'];
 
   beforeEach(() => {
     page = new AppPage();

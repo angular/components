@@ -9,6 +9,7 @@ import {SlideToggleScene} from './scenes/slide-toggle/slide-toggle-scene';
 import {DividerScene} from './scenes/divider/divider-scene';
 import {PlaceHolderScene} from './scenes/placeholder/placeholder-scene';
 import {ComponentType} from '@angular/cdk/overlay';
+import {ProgressSpinnerScene} from './scenes/progress-spinner/progress-spinner-scene';
 
 let hue = 0;
 
@@ -43,7 +44,11 @@ const routes: SceneViewerRoute[] = [
   {path: 'menu', component: SceneViewer, data: {scene: PlaceHolderScene}},
   {path: 'paginator', component: SceneViewer, data: {scene: PlaceHolderScene}},
   {path: 'progress-bar', component: SceneViewer, data: {scene: PlaceHolderScene}},
-  {path: 'progress-spinner', component: SceneViewer, data: {scene: PlaceHolderScene}},
+  {
+    path: 'progress-spinner',
+    component: SceneViewer,
+    data: {scale: 1.3, scene: ProgressSpinnerScene}
+  },
   {path: 'radio', component: SceneViewer, data: {scene: PlaceHolderScene}},
   {path: 'ripple', component: SceneViewer, data: {scene: RipplesScene}},
   {path: 'select', component: SceneViewer, data: {scene: PlaceHolderScene}},
