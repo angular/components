@@ -49,7 +49,11 @@ import {MatInputModule} from '../input/index';
 import {MatChip} from './chip';
 import {MatChipInputEvent} from './chip-input';
 import {MatChipEvent, MatChipList, MatChipRemove, MatChipsModule} from './index';
-
+import {
+  DEFAULT_MAT_CHIPS_DEFAULT_OPTIONS,
+  MAT_CHIPS_DEFAULT_OPTIONS,
+  MatChipsDefaultOptions,
+} from './chip-default-options';
 
 describe('MatChipList', () => {
   let fixture: ComponentFixture<any>;
@@ -598,6 +602,24 @@ describe('MatChipList', () => {
           expect(manager.activeItemIndex).toEqual(-1);
         });
 
+        it('should initialize focusLastChipOnBackspace from the MatChipDefaultOptions', () => {
+          fixture.destroy();
+
+          fixture = createComponent(FormFieldChipList, [{
+            provide: MAT_CHIPS_DEFAULT_OPTIONS,
+            useValue: {
+              ...DEFAULT_MAT_CHIPS_DEFAULT_OPTIONS,
+              focusLastChipOnBackspace: false,
+            } as MatChipsDefaultOptions,
+          }]);
+          fixture.detectChanges();
+
+          chipListDebugElement = fixture.debugElement.query(By.directive(MatChipList))!;
+          chipListNativeElement = chipListDebugElement.nativeElement;
+          chipListInstance = chipListDebugElement.componentInstance;
+
+          expect(chipListInstance.focusLastChipOnBackspace).toBeFalse();
+        });
       });
     });
 

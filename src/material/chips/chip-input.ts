@@ -9,7 +9,11 @@
 import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
 import {Directive, ElementRef, EventEmitter, Inject, Input, OnChanges, Output} from '@angular/core';
 import {hasModifierKey, TAB} from '@angular/cdk/keycodes';
-import {MAT_CHIPS_DEFAULT_OPTIONS, MatChipsDefaultOptions} from './chip-default-options';
+import {
+  MAT_CHIPS_DEFAULT_OPTIONS,
+  MatChipsDefaultOptions,
+  DEFAULT_MAT_CHIPS_DEFAULT_OPTIONS,
+} from './chip-default-options';
 import {MatChipList} from './chip-list';
 import {MatChipTextControl} from './chip-text-control';
 
@@ -74,7 +78,7 @@ export class MatChipInput implements MatChipTextControl, OnChanges {
    * Defaults to `[ENTER]`.
    */
   @Input('matChipInputSeparatorKeyCodes')
-  separatorKeyCodes: number[] | Set<number> = this._defaultOptions.separatorKeyCodes;
+  separatorKeyCodes: number[] | Set<number>;
 
   /** Emitted when a chip is to be added. */
   @Output('matChipInputTokenEnd')
@@ -100,8 +104,10 @@ export class MatChipInput implements MatChipTextControl, OnChanges {
 
   constructor(
     protected _elementRef: ElementRef<HTMLInputElement>,
-    @Inject(MAT_CHIPS_DEFAULT_OPTIONS) private _defaultOptions: MatChipsDefaultOptions) {
+    @Inject(MAT_CHIPS_DEFAULT_OPTIONS) _defaultOptions: MatChipsDefaultOptions) {
     this._inputElement = this._elementRef.nativeElement as HTMLInputElement;
+    this.separatorKeyCodes =
+      _defaultOptions.separatorKeyCodes || DEFAULT_MAT_CHIPS_DEFAULT_OPTIONS.separatorKeyCodes;
   }
 
   ngOnChanges() {

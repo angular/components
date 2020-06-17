@@ -20,6 +20,7 @@ import {
   DoCheck,
   ElementRef,
   EventEmitter,
+  Inject,
   Input,
   OnDestroy,
   OnInit,
@@ -40,6 +41,11 @@ import {MatFormFieldControl} from '@angular/material/form-field';
 import {merge, Observable, Subject, Subscription} from 'rxjs';
 import {startWith, takeUntil} from 'rxjs/operators';
 import {MatChip, MatChipEvent, MatChipSelectionChange} from './chip';
+import {
+  MatChipsDefaultOptions,
+  MAT_CHIPS_DEFAULT_OPTIONS,
+  DEFAULT_MAT_CHIPS_DEFAULT_OPTIONS,
+} from './chip-default-options';
 import {MatChipTextControl} from './chip-text-control';
 
 
@@ -52,9 +58,9 @@ class MatChipListBase {
               /** @docs-private */
               public ngControl: NgControl) {}
 }
-const _MatChipListMixinBase: CanUpdateErrorStateCtor & typeof MatChipListBase =
-    mixinErrorState(MatChipListBase);
 
+const _MatChipListMixinBase: CanUpdateErrorStateCtor & typeof MatChipListBase =
+  mixinErrorState(MatChipListBase);
 
 // Increasing integer for generating unique ids for chip-list components.
 let nextUniqueId = 0;
@@ -67,7 +73,6 @@ export class MatChipListChange {
     /** Value of the chip list when the event was emitted. */
     public value: any) { }
 }
-
 
 /**
  * A material design chips component (named ChipList for its similarity to the List component).
@@ -317,7 +322,7 @@ export class MatChipList extends _MatChipListMixinBase implements MatFormFieldCo
 
   /** Event emitted when the selected chip list value has been changed by the user. */
   @Output() readonly change: EventEmitter<MatChipListChange> =
-      new EventEmitter<MatChipListChange>();
+    new EventEmitter<MatChipListChange>();
 
   /**
    * Event that emits whenever the raw value of the chip-list changes. This is here primarily
@@ -333,24 +338,30 @@ export class MatChipList extends _MatChipListMixinBase implements MatFormFieldCo
     descendants: true
   }) chips: QueryList<MatChip>;
 
-  /**
-   * Whether the last chip should be focused when the user
-   * presses BACKSPACE when the input is empty.
-   */
-  @Input() focusLastChipOnBackspace: boolean = true;
+  /** Whether to focus the last chip if BACKSPACE is pressed when the input is empty. */
+  @Input() focusLastChipOnBackspace: boolean;
 
-  constructor(protected _elementRef: ElementRef<HTMLElement>,
-              private _changeDetectorRef: ChangeDetectorRef,
-              @Optional() private _dir: Directionality,
-              @Optional() _parentForm: NgForm,
-              @Optional() _parentFormGroup: FormGroupDirective,
-              _defaultErrorStateMatcher: ErrorStateMatcher,
-              /** @docs-private */
-              @Optional() @Self() public ngControl: NgControl) {
+  constructor(
+    protected _elementRef: ElementRef<HTMLElement>,
+    private _changeDetectorRef: ChangeDetectorRef,
+    @Optional() private _dir: Directionality,
+    @Optional() _parentForm: NgForm,
+    @Optional() _parentFormGroup: FormGroupDirective,
+    _defaultErrorStateMatcher: ErrorStateMatcher,
+    /** @docs-private */
+    @Optional() @Self() public ngControl: NgControl,
+    @Inject(MAT_CHIPS_DEFAULT_OPTIONS) _defaultOptions: MatChipsDefaultOptions,
+  ) {
     super(_defaultErrorStateMatcher, _parentForm, _parentFormGroup, ngControl);
+
     if (this.ngControl) {
       this.ngControl.valueAccessor = this;
     }
+
+    this.focusLastChipOnBackspace =
+      _defaultOptions.focusLastChipOnBackspace !== undefined
+        ? _defaultOptions.focusLastChipOnBackspace
+        : DEFAULT_MAT_CHIPS_DEFAULT_OPTIONS.focusLastChipOnBackspace;
   }
 
   ngAfterContentInit() {
