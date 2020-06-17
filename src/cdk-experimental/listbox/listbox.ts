@@ -9,22 +9,22 @@
 import {Directive} from '@angular/core';
 
 @Directive({
-    selector: '[cdkOption]',
-    exportAs: 'cdkOption',
-    host: {
-        role: 'option',
-    }
+  selector: '[cdkOption]',
+  exportAs: 'cdkOption',
+  host: {
+    role: 'option',
+  }
 })
 export class CdkOption {
 
 }
 
 @Directive({
-    selector: '[cdkListbox]',
-    exportAs: 'cdkListbox',
-    host: {
-        role: 'listbox',
-    }
+  selector: '[cdkListbox]',
+  exportAs: 'cdkListbox',
+  host: {
+    role: 'listbox',
+  }
 })
 export class CdkListbox {
 
