@@ -252,6 +252,7 @@ export declare const matTabsAnimations: {
 export interface MatTabsConfig {
     animationDuration?: string;
     disablePagination?: boolean;
+    dynamicHeight?: boolean;
     fitInkBarToContent?: boolean;
 }
 

@@ -110,7 +110,7 @@ export abstract class _MatTabGroupBase extends _MatTabGroupMixinBase implements 
   @Input()
   get dynamicHeight(): boolean { return this._dynamicHeight; }
   set dynamicHeight(value: boolean) { this._dynamicHeight = coerceBooleanProperty(value); }
-  private _dynamicHeight: boolean = false;
+  private _dynamicHeight: boolean;
 
   /** The index of the active tab. */
   @Input()
@@ -180,6 +180,8 @@ export abstract class _MatTabGroupBase extends _MatTabGroupMixinBase implements 
         defaultConfig.animationDuration : '500ms';
     this.disablePagination = defaultConfig && defaultConfig.disablePagination != null ?
         defaultConfig.disablePagination : false;
+    this.dynamicHeight = defaultConfig && defaultConfig.dynamicHeight != null ?
+        defaultConfig.dynamicHeight : false;
   }
 
   /**
