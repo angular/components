@@ -7,6 +7,7 @@
  */
 
 import {Directive, Input} from '@angular/core';
+import {CdkMenuGroup} from './menu-group';
 
 /**
  * Directive applied to an element which configures it as a MenuBar by setting the appropriate
@@ -21,8 +22,9 @@ import {Directive, Input} from '@angular/core';
     'role': 'menubar',
     '[attr.aria-orientation]': 'orientation',
   },
+  providers: [{provide: CdkMenuGroup, useExisting: CdkMenuBar}],
 })
-export class CdkMenuBar {
+export class CdkMenuBar extends CdkMenuGroup {
   /**
    * Sets the aria-orientation attribute and determines where sub-menus will be opened.
    * Does not affect styling/layout.

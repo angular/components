@@ -1,5 +1,4 @@
 import {Component, NgModule} from '@angular/core';
-import {platformBrowser} from '@angular/platform-browser';
 import {MatListModule} from '@angular/material/list';
 
 /**
@@ -24,5 +23,3 @@ export class TestComponent {}
   bootstrap: [TestComponent],
 })
 export class AppModule {}
-
-platformBrowser().bootstrapModule(AppModule);

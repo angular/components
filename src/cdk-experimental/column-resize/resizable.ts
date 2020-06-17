@@ -15,12 +15,13 @@ import {
   OnDestroy,
   Type,
   ViewContainerRef,
+  ChangeDetectorRef,
 } from '@angular/core';
 import {Directionality} from '@angular/cdk/bidi';
 import {ComponentPortal, PortalInjector} from '@angular/cdk/portal';
 import {Overlay, OverlayRef} from '@angular/cdk/overlay';
 import {CdkColumnDef} from '@angular/cdk/table';
-import {merge, ReplaySubject} from 'rxjs';
+import {merge, Subject} from 'rxjs';
 import {filter, takeUntil} from 'rxjs/operators';
 
 import {_closest} from '@angular/cdk-experimental/popover-edit';
@@ -47,7 +48,7 @@ export abstract class Resizable<HandleComponent extends ResizeOverlayHandle>
 
   protected inlineHandle?: HTMLElement;
   protected overlayRef?: OverlayRef;
-  protected readonly destroyed = new ReplaySubject<void>();
+  protected readonly destroyed = new Subject<void>();
 
   protected abstract readonly columnDef: CdkColumnDef;
   protected abstract readonly columnResize: ColumnResize;
@@ -61,6 +62,7 @@ export abstract class Resizable<HandleComponent extends ResizeOverlayHandle>
   protected abstract readonly resizeNotifier: ColumnResizeNotifierSource;
   protected abstract readonly resizeStrategy: ResizeStrategy;
   protected abstract readonly viewContainerRef: ViewContainerRef;
+  protected abstract readonly changeDetectorRef: ChangeDetectorRef;
 
   /** The minimum width to allow the column to be sized to. */
   get minWidthPx(): number {
@@ -222,6 +224,9 @@ export abstract class Resizable<HandleComponent extends ResizeOverlayHandle>
   private _showHandleOverlay(): void {
     this._updateOverlayHandleHeight();
     this.overlayRef!.attach(this._createHandlePortal());
+
+    // Needed to ensure that all of the lifecycle hooks inside the overlay run immediately.
+    this.changeDetectorRef.markForCheck();
   }
 
   private _updateOverlayHandleHeight() {
