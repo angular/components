@@ -164,10 +164,7 @@ export class MyTelInput
     }
   }
 
-  autoFocusNext(
-    control: AbstractControl,
-    nextElement: HTMLInputElement | null
-  ): void {
+  autoFocusNext(control: AbstractControl, nextElement?: HTMLInputElement): void {
     if (!control.errors && !!nextElement) {
       this._focusMonitor.focusVia(nextElement, 'program');
     }
@@ -216,7 +213,7 @@ export class MyTelInput
     this.disabled = isDisabled;
   }
 
-  _handleInput(control: AbstractControl, nextElement: HTMLInputElement): void {
+  _handleInput(control: AbstractControl, nextElement?: HTMLInputElement): void {
     this.autoFocusNext(control, nextElement);
     this.onChange(this.value);
   }
