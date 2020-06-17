@@ -25,7 +25,9 @@ $foreground: map_merge($foreground, (
   text: $secondary-text-color,
   divider: $secondary-text-color,
   secondary-text: $secondary-text-color,
-  dsiabled-text: $secondary-text-color));
+  dsiabled-text: $secondary-text-color,
+  hint-text: $secondary-text-color,
+  icon: $secondary-text-color));
 $theme: map_merge($theme, (foreground: $foreground));
 
 @include angular-material-theme($theme);

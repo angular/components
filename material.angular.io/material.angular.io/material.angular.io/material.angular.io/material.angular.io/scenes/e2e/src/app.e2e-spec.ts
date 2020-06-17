@@ -13,8 +13,8 @@ describe('screenshot scenes for each component', () => {
                       'slide-toggle',
                       'divider',
                       'progress-spinner',
-                      'button'];
-
+                      'button',
+                      'datepicker'];
   beforeEach(() => {
     page = new AppPage();
   });
