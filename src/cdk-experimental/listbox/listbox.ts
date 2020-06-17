@@ -24,6 +24,7 @@ import {ENTER, SPACE} from "@angular/cdk/keycodes";
     role: 'option',
     '[attr.aria-selected]': '_selected',
     '[attr.data-optionid]': '_optionId',
+    '[attr.disabled]': '_disabled',
     '[attr.aria-disabled]': '_disabled'
   }
 })
@@ -84,6 +85,7 @@ let _uniqueIdCounter = 0;
     host: {
       role: 'listbox',
       '(keydown)': '_keydown($event)',
+      '[attr.disabled]': '_disabled',
       '[attr.aria-disabled]': '_disabled'
     }
 })
@@ -166,6 +168,11 @@ export class CdkListbox {
 
   deselectOption(option: CdkOption): void {
     option.selected = null;
+  }
+
+  setDisabledOption(optionIsDisabled: boolean, option: CdkOption): void {
+    option.disabled = optionIsDisabled;
+    this.deselectOption(option);
   }
 
   getSelectedOptions(): Array<CdkOption> {
