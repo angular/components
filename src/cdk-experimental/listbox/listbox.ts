@@ -172,6 +172,10 @@ export class CdkListbox {
     option.selected = null;
   }
 
+  setActiveOption(option: CdkOption): void {
+    this._listKeyManager.updateActiveItem(option);
+  }
+
   setDisabledOption(optionIsDisabled: boolean, option: CdkOption): void {
     option.disabled = optionIsDisabled;
     this.deselectOption(option);
@@ -186,5 +190,9 @@ export class CdkListbox {
     });
 
     return selectedOptions;
+  }
+
+  getElementRef(): ElementRef {
+    return this.el;
   }
 }

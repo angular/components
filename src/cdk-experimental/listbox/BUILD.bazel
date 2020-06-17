@@ -9,6 +9,10 @@ ng_module(
         exclude = ["**/*.spec.ts"],
     ),
     module_name = "@angular/cdk-experimental/listbox",
+    deps = [
+        "//src/cdk/keycodes",
+        "//src/cdk/a11y"
+    ]
 )
 
 ng_test_library(
@@ -20,6 +24,7 @@ ng_test_library(
      deps = [
          ":listbox",
          "@npm//@angular/platform-browser",
+         "//src/cdk/keycodes",
          "//src/cdk/testing/private"
      ],
 )
