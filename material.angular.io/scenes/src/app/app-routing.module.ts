@@ -12,6 +12,7 @@ import {ComponentType} from '@angular/cdk/overlay';
 import {ProgressSpinnerScene} from './scenes/progress-spinner/progress-spinner-scene';
 import {ButtonScene} from './scenes/button/button-scene';
 import {DatepickerScene} from './scenes/datepicker/datepicker-scene';
+import {CheckboxScene} from './scenes/checkbox/checkbox-scene';
 
 let hue = 0;
 
@@ -32,7 +33,7 @@ const routes: SceneViewerRoute[] = [
   {path: 'button', component: SceneViewer, data: {scene: ButtonScene}},
   {path: 'button-toggle', component: SceneViewer, data: {scale: 1.5, scene: ButtonToggleScene}},
   {path: 'card', component: SceneViewer, data: {scene: PlaceHolderScene}},
-  {path: 'checkbox', component: SceneViewer, data: {scene: PlaceHolderScene}},
+  {path: 'checkbox', component: SceneViewer, data: {scene: CheckboxScene}},
   {path: 'chips', component: SceneViewer, data: {scene: PlaceHolderScene}},
   {path: 'datepicker', component: SceneViewer, data: {scale: 0.8, scene: DatepickerScene}},
   {path: 'dialog', component: SceneViewer, data: {scene: PlaceHolderScene}},

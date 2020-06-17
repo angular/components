@@ -1,0 +1,17 @@
+.scene-checkboxes {
+  width: 120px;
+  margin: 10px;
+  display: inline-block;
+}
+
+.mat-checkbox-layout {
+  padding: 5px 0;
+}
+
+.mat-checkbox-label {
+  font-size: 20px;
+}
+
+app-checkbox-scene {
+  display: flex;
+}
