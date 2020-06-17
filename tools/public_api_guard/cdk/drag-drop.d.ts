@@ -214,6 +214,7 @@ export interface DragDropConfig extends Partial<DragRefConfig> {
     listOrientation?: DropListOrientation;
     lockAxis?: DragAxis;
     previewClass?: string | string[];
+    propagateEvents?: boolean;
     rootElementSelector?: string;
     sortingDisabled?: boolean;
     zIndex?: number;
