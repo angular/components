@@ -54,6 +54,10 @@ export class CdkOption implements ListKeyManagerOption, Highlightable {
   constructor(private el: ElementRef) {
   }
 
+  toggleSelected(): void {
+    this.selected = !this.selected;
+  }
+
   setOptionId(id: string): void {
     this._optionId = id;
   }
@@ -145,7 +149,7 @@ export class CdkListbox {
       case SPACE:
       case ENTER:
         const currentlyActiveOption = this._listKeyManager.activeItem;
-        if (currentlyActiveOption && !currentlyActiveOption.disabled) {
+        if (currentlyActiveOption) {
           this.updateSelectedOption(currentlyActiveOption);
         }
         break;
@@ -155,10 +159,8 @@ export class CdkListbox {
   }
 
   private updateSelectedOption(option: CdkOption): void {
-    if (option.selected) {
-      this.deselectOption(option);
-    } else {
-      this.selectOption(option);
+    if (option && !option.disabled) {
+      option.toggleSelected();
     }
   }
 

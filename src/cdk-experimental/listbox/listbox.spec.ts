@@ -10,7 +10,8 @@ import {
   CdkListbox,
   CdkListboxModule
 } from './index';
-import {dispatchMouseEvent} from '@angular/cdk/testing/private';
+import {createKeyboardEvent, dispatchFakeEvent, dispatchMouseEvent} from '@angular/cdk/testing/private';
+import {SPACE} from "@angular/cdk/keycodes";
 
 describe('CdkOption', () => {
 
@@ -67,6 +68,23 @@ describe('CdkOption', () => {
       expect(options[0].selected).toBeFalsy();
 
       dispatchMouseEvent(options[0].getElementRef().nativeElement, 'click');
+      fixture.detectChanges();
+
+      expect(listboxInstance.getSelectedOptions().length).toBe(1);
+      expect(options[0].getElementRef().nativeElement.getAttribute('aria-selected')).toBe('true');
+      expect(options[0].selected).toBeTruthy();
+    });
+
+    it('should update selected option on space or enter key press', () => {
+      const optionElement = options[0].getElementRef().nativeElement as HTMLElement;
+      const SPACE_EVENT = createKeyboardEvent('keydown', SPACE, undefined, optionElement);
+
+      expect(listboxInstance.getSelectedOptions().length).toBe(0);
+      expect(options[0].getElementRef().nativeElement.getAttribute('aria-selected')).toBe(null);
+      expect(options[0].selected).toBeFalsy();
+
+      dispatchFakeEvent(options[0].getElementRef().nativeElement, 'focus');
+      listboxInstance._keydown(SPACE_EVENT);
       fixture.detectChanges();
 
       expect(listboxInstance.getSelectedOptions().length).toBe(1);
