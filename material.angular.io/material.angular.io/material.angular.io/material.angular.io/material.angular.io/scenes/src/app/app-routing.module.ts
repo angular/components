@@ -10,6 +10,7 @@ import {DividerScene} from './scenes/divider/divider-scene';
 import {PlaceHolderScene} from './scenes/placeholder/placeholder-scene';
 import {ComponentType} from '@angular/cdk/overlay';
 import {ProgressSpinnerScene} from './scenes/progress-spinner/progress-spinner-scene';
+import {ButtonScene} from './scenes/button/button-scene';
 
 let hue = 0;
 
@@ -27,7 +28,7 @@ const routes: SceneViewerRoute[] = [
   {path: 'autocomplete', component: SceneViewer, data: {scene: PlaceHolderScene}},
   {path: 'badge', component: SceneViewer, data: {scene: PlaceHolderScene}},
   {path: 'bottom-sheet', component: SceneViewer, data: {scene: PlaceHolderScene}},
-  {path: 'button', component: SceneViewer, data: {scene: PlaceHolderScene}},
+  {path: 'button', component: SceneViewer, data: {scene: ButtonScene}},
   {path: 'button-toggle', component: SceneViewer, data: {scale: 1.5, scene: ButtonToggleScene}},
   {path: 'card', component: SceneViewer, data: {scene: PlaceHolderScene}},
   {path: 'checkbox', component: SceneViewer, data: {scene: PlaceHolderScene}},
