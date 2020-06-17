@@ -318,6 +318,7 @@ export declare class DragRef<T = any> {
 export interface DragRefConfig {
     dragStartThreshold: number;
     pointerDirectionChangeThreshold: number;
+    propagateEvents?: boolean;
     zIndex?: number;
 }
 

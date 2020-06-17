@@ -38,7 +38,7 @@ export interface DragRefConfig {
    * parent elements in the DOM when CDK initiates a drag 
    * sequence.
    */
-  propagateEvents: boolean;
+  propagateEvents?: boolean;
 
   /** `z-index` for the absolutely-positioned elements that are created by the drag item. */
   zIndex?: number;
