@@ -320,6 +320,22 @@ describe('MDC-based Row Chips', () => {
         expect(testComponent.chipEdit).toHaveBeenCalledWith(expectedValue);
       });
 
+      it('should use the projected edit input if provided', () => {
+        expect(editInputInstance.getNativeElement()).toHaveClass('projected-edit-input');
+      });
+
+      it('should use the default edit input if none is projected', () => {
+        keyDownOnPrimaryAction(ENTER, 'Enter');
+        testComponent.useCustomEditInput = false;
+        fixture.detectChanges();
+        chipInstance._dblclick(createMouseEvent('dblclick'));
+        fixture.detectChanges();
+        const editInputDebugElement = fixture.debugElement.query(By.directive(MatChipEditInput))!;
+        const editInputNoProject =
+          editInputDebugElement.injector.get<MatChipEditInput>(MatChipEditInput);
+        expect(editInputNoProject.getNativeElement()).not.toHaveClass('projected-edit-input');
+      });
+
       it('should focus the chip content if the edit input has focus on completion', () => {
         const chipValue = 'chip value';
         editInputInstance.setValue(chipValue);
@@ -356,7 +372,7 @@ describe('MDC-based Row Chips', () => {
                  (removed)="chipRemove($event)" (edited)="chipEdit($event)">
           {{name}}
           <button matChipRemove>x</button>
-          <span matChipEditInput></span>
+          <span *ngIf="useCustomEditInput" class="projected-edit-input" matChipEditInput></span>
         </mat-chip-row>
         <input matInput [matChipInputFor]="chipGrid" #chipInput>
       </div>
@@ -371,6 +387,7 @@ class SingleChip {
   removable: boolean = true;
   shouldShow: boolean = true;
   editable: boolean = false;
+  useCustomEditInput: boolean = true;
 
   chipFocus: (event?: MatChipEvent) => void = () => {};
   chipDestroy: (event?: MatChipEvent) => void = () => {};
