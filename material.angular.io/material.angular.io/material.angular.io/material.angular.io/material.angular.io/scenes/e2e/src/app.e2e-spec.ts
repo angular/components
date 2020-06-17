@@ -16,7 +16,8 @@ describe('screenshot scenes for each component', () => {
                       'button',
                       'datepicker',
                       'checkbox',
-                      'chips'];
+                      'chips',
+                      'progress-bar'];
   beforeEach(() => {
     page = new AppPage();
   });

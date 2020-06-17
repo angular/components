@@ -14,6 +14,7 @@ import {ButtonScene} from './scenes/button/button-scene';
 import {DatepickerScene} from './scenes/datepicker/datepicker-scene';
 import {CheckboxScene} from './scenes/checkbox/checkbox-scene';
 import {ChipsScene} from './scenes/chips/chips-scene';
+import {ProgressBarScene} from './scenes/progress-bar/progress-bar-scene';
 
 let hue = 0;
 
@@ -47,7 +48,7 @@ const routes: SceneViewerRoute[] = [
   {path: 'list', component: SceneViewer, data: {scene: PlaceHolderScene}},
   {path: 'menu', component: SceneViewer, data: {scene: PlaceHolderScene}},
   {path: 'paginator', component: SceneViewer, data: {scene: PlaceHolderScene}},
-  {path: 'progress-bar', component: SceneViewer, data: {scene: PlaceHolderScene}},
+  {path: 'progress-bar', component: SceneViewer, data: {scene: ProgressBarScene}},
   {
     path: 'progress-spinner',
     component: SceneViewer,
