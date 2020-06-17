@@ -165,7 +165,7 @@ export class MyTelInput
   }
 
   autoFocusNext(control: AbstractControl, nextElement?: HTMLInputElement): void {
-    if (!control.errors && !!nextElement) {
+    if (!control.errors && nextElement) {
       this._focusMonitor.focusVia(nextElement, 'program');
     }
   }
