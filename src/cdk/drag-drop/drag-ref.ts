@@ -35,7 +35,7 @@ export interface DragRefConfig {
 
   /**
    * Whether touch/mouse begin events should propagate to
-   * parent elements in the DOM when CDK initiates a drag 
+   * parent elements in the DOM when CDK initiates a drag
    * sequence.
    */
   propagateEvents?: boolean;
