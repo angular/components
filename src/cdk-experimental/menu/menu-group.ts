@@ -34,7 +34,7 @@ import {CdkMenuItem} from './menu-item';
 })
 export class CdkMenuGroup implements AfterContentInit, OnDestroy {
   /** Emits the element when checkbox or radiobutton state changed  */
-  @Output() change: EventEmitter<CdkMenuItem> = new EventEmitter();
+  @Output() readonly change: EventEmitter<CdkMenuItem> = new EventEmitter();
 
   /** List of menuitemcheckbox or menuitemradio elements which reside in this group */
   @ContentChildren(CdkMenuItemSelectable, {descendants: true})
