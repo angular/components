@@ -6,8 +6,19 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Directive, Output, EventEmitter} from '@angular/core';
-import {MenuItem} from './menu-item-interface';
+import {
+  Directive,
+  Output,
+  EventEmitter,
+  ContentChildren,
+  AfterContentInit,
+  QueryList,
+  OnDestroy,
+} from '@angular/core';
+import {UniqueSelectionDispatcher} from '@angular/cdk/collections';
+import {takeUntil} from 'rxjs/operators';
+import {CdkMenuItemSelectable} from './menu-item-selectable';
+import {CdkMenuItem} from './menu-item';
 
 /**
  * Directive which acts as a grouping container for `CdkMenuItem` instances with
@@ -19,18 +30,37 @@ import {MenuItem} from './menu-item-interface';
   host: {
     'role': 'group',
   },
+  providers: [{provide: UniqueSelectionDispatcher, useClass: UniqueSelectionDispatcher}],
 })
-export class CdkMenuGroup {
+export class CdkMenuGroup implements AfterContentInit, OnDestroy {
   /** Emits the element when checkbox or radiobutton state changed  */
-  @Output() change: EventEmitter<MenuItem> = new EventEmitter();
+  @Output() change: EventEmitter<CdkMenuItem> = new EventEmitter();
 
-  /**
-   * Emits events for the clicked MenuItem
-   * @param menuItem The clicked MenuItem to handle
-   */
-  _registerTriggeredItem(menuItem: MenuItem) {
-    if (menuItem.role !== 'menuitem') {
-      this.change.emit(menuItem);
-    }
+  /** List of menuitemcheckbox or menuitemradio elements which reside in this group */
+  @ContentChildren(CdkMenuItemSelectable, {descendants: true})
+  private readonly _selectableItems: QueryList<CdkMenuItemSelectable>;
+
+  /** Emitter used to unsubscribe from selectable item click events */
+  private readonly _nextChanges: EventEmitter<void> = new EventEmitter();
+
+  ngAfterContentInit() {
+    this._selectableItems.forEach(selectable => this._registerClickListener(selectable));
+
+    this._selectableItems.changes.subscribe((selectableItems: QueryList<CdkMenuItemSelectable>) => {
+      this._nextChanges.next();
+      selectableItems.forEach(selectable => this._registerClickListener(selectable));
+    });
+  }
+
+  /** Register each selectable to emit on the change Emitter when clicked */
+  private _registerClickListener(selectable: CdkMenuItemSelectable) {
+    selectable.clicked
+      .pipe(takeUntil(this._nextChanges))
+      .subscribe(() => this.change.next(selectable));
+  }
+
+  ngOnDestroy() {
+    this._nextChanges.next();
+    this._nextChanges.complete();
   }
 }

@@ -6,13 +6,22 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Directive, Input, Output, EventEmitter} from '@angular/core';
+import {
+  Directive,
+  Input,
+  Output,
+  EventEmitter,
+  QueryList,
+  ContentChildren,
+  AfterContentInit,
+} from '@angular/core';
+import {take} from 'rxjs/operators';
 import {CdkMenuGroup} from './menu-group';
 
 /**
  * Directive which configures the element as a Menu which should contain child elements marked as
  * CdkMenuItem or CdkMenuGroup. Sets the appropriate role and aria-attributes for a menu and
- * contains accessable keyboard and mouse handling logic.
+ * contains accessible keyboard and mouse handling logic.
  *
  * It also acts as a RadioGroup for elements marked with role `menuitemradio`.
  */
@@ -25,7 +34,7 @@ import {CdkMenuGroup} from './menu-group';
   },
   providers: [{provide: CdkMenuGroup, useExisting: CdkMenu}],
 })
-export class CdkMenu extends CdkMenuGroup {
+export class CdkMenu extends CdkMenuGroup implements AfterContentInit {
   /**
    * Sets the aria-orientation attribute and determines where sub-menus will be opened.
    * Does not affect styling/layout.
@@ -34,4 +43,26 @@ export class CdkMenu extends CdkMenuGroup {
 
   /** Event emitted when the menu is closed. */
   @Output() readonly closed: EventEmitter<void | 'click' | 'tab' | 'escape'> = new EventEmitter();
+
+  /** List of nested CdkMenuGroup elements */
+  @ContentChildren(CdkMenuGroup, {descendants: true})
+  private readonly _nestedGroups: QueryList<CdkMenuGroup>;
+
+  ngAfterContentInit() {
+    super.ngAfterContentInit();
+
+    // If there are nested MenuGroup elements within this group
+    // we complete the change emitter in order to ensure that
+    // the this menu does not emit change events.
+    if (this._hasNestedGroups()) {
+      this.change.complete();
+    } else {
+      this._nestedGroups.changes.pipe(take(1)).subscribe(() => this.change.complete());
+    }
+  }
+
+  /** Return true if there are nested CdkMenuGroup elements within the Menu */
+  private _hasNestedGroups() {
+    return this._nestedGroups.length > 0;
+  }
 }
