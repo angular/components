@@ -9,8 +9,8 @@
 import {
   ContentChildren,
   Directive,
-  ElementRef,
-  HostListener,
+  ElementRef, forwardRef,
+  HostListener, Inject,
   Input,
   QueryList
 } from '@angular/core';
@@ -25,14 +25,17 @@ import {ENTER, SPACE} from "@angular/cdk/keycodes";
     '[attr.aria-selected]': '_selected',
     '[attr.data-optionid]': '_optionId',
     '[attr.disabled]': '_disabled',
-    '[attr.aria-disabled]': '_disabled'
+    '[attr.aria-disabled]': '_comboDisabled',
+    '[class.cdk-option-active]': '_active'
   }
 })
 export class CdkOption implements ListKeyManagerOption, Highlightable {
   private _selected: boolean | null = null;
   private _optionId: string;
   private _disabled: boolean = false;
+  private _comboDisabled: boolean = this.listbox.disabled || this._disabled;
   private _tabindex: number | null = null;
+  private _active: boolean = false;
 
   @Input()
   get selected(): boolean | null {
@@ -51,7 +54,8 @@ export class CdkOption implements ListKeyManagerOption, Highlightable {
     this._tabindex = value ? null : -1;
   }
 
-  constructor(private el: ElementRef) {
+  constructor(private el: ElementRef,
+              @Inject(forwardRef(() => CdkListbox)) public listbox: CdkListbox) {
   }
 
   toggleSelected(): void {
@@ -75,9 +79,11 @@ export class CdkOption implements ListKeyManagerOption, Highlightable {
   }
 
   setActiveStyles() {
+    this._active = true;
   }
 
   setInactiveStyles() {
+    this._active = false;
   }
 }
 
@@ -179,6 +185,10 @@ export class CdkListbox {
   setDisabledOption(optionIsDisabled: boolean, option: CdkOption): void {
     option.disabled = optionIsDisabled;
     this.deselectOption(option);
+  }
+
+  setDisabledListbox(isDisabled: boolean): void {
+    this.disabled = isDisabled;
   }
 
   getSelectedOptions(): Array<CdkOption> {
