@@ -605,6 +605,7 @@ describe('MatChipList', () => {
         it('should initialize focusLastChipOnBackspace from the MatChipDefaultOptions', () => {
           fixture.destroy();
 
+          TestBed.resetTestingModule();
           fixture = createComponent(FormFieldChipList, [{
             provide: MAT_CHIPS_DEFAULT_OPTIONS,
             useValue: {

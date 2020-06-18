@@ -1,3 +1,5 @@
+export declare const DEFAULT_MAT_CHIPS_DEFAULT_OPTIONS: Required<MatChipsDefaultOptions>;
+
 export declare const MAT_CHIPS_DEFAULT_OPTIONS: InjectionToken<MatChipsDefaultOptions>;
 
 export declare class MatChip extends _MatChipMixinBase implements FocusableOption, OnDestroy, CanColor, CanDisableRipple, RippleTarget, HasTabIndex {
@@ -148,7 +150,7 @@ export declare class MatChipList extends _MatChipListMixinBase implements MatFor
     set value(value: any);
     readonly valueChange: EventEmitter<any>;
     constructor(_elementRef: ElementRef<HTMLElement>, _changeDetectorRef: ChangeDetectorRef, _dir: Directionality, _parentForm: NgForm, _parentFormGroup: FormGroupDirective, _defaultErrorStateMatcher: ErrorStateMatcher,
-    ngControl: NgControl);
+    ngControl: NgControl, _defaultOptions: MatChipsDefaultOptions);
     _allowFocusEscape(): void;
     _blur(): void;
     _focusInput(options?: FocusOptions): void;
@@ -174,7 +176,7 @@ export declare class MatChipList extends _MatChipListMixinBase implements MatFor
     static ngAcceptInputType_required: BooleanInput;
     static ngAcceptInputType_selectable: BooleanInput;
     static ɵcmp: i0.ɵɵComponentDefWithMeta<MatChipList, "mat-chip-list", ["matChipList"], { "errorStateMatcher": "errorStateMatcher"; "multiple": "multiple"; "compareWith": "compareWith"; "value": "value"; "required": "required"; "placeholder": "placeholder"; "disabled": "disabled"; "ariaOrientation": "aria-orientation"; "selectable": "selectable"; "tabIndex": "tabIndex"; "focusLastChipOnBackspace": "focusLastChipOnBackspace"; }, { "change": "change"; "valueChange": "valueChange"; }, ["chips"], ["*"]>;
-    static ɵfac: i0.ɵɵFactoryDef<MatChipList, [null, null, { optional: true; }, { optional: true; }, { optional: true; }, null, { optional: true; self: true; }]>;
+    static ɵfac: i0.ɵɵFactoryDef<MatChipList, [null, null, { optional: true; }, { optional: true; }, { optional: true; }, null, { optional: true; self: true; }, null]>;
 }
 
 export declare class MatChipListChange {
@@ -194,7 +196,8 @@ export declare class MatChipRemove {
 }
 
 export interface MatChipsDefaultOptions {
-    separatorKeyCodes: number[] | Set<number>;
+    focusLastChipOnBackspace?: boolean;
+    separatorKeyCodes?: number[] | Set<number>;
 }
 
 export declare class MatChipSelectionChange {
