@@ -42,7 +42,8 @@ export class CdkOption {
     this._selected = value;
   }
 
-  constructor(private _el: ElementRef) {
+  constructor(private readonly _el: ElementRef) {
+    this.setOptionId(`cdk-option-${_uniqueIdCounter++}`);
   }
 
   /** Sets the optionId to the given id */
@@ -76,10 +77,7 @@ let _uniqueIdCounter = 0;
     '(click)': 'onClickUpdateSelectedOption($event)'
   }
 })
-export class CdkListbox implements AfterContentInit {
-
-  constructor() {
-  }
+export class CdkListbox {
 
   /** A query list containing all CdkOption elements within this listbox */
   @ContentChildren(CdkOption, {descendants: true}) _options: QueryList<CdkOption>;
@@ -92,12 +90,6 @@ export class CdkListbox implements AfterContentInit {
           optionId === $event.target?.getAttribute('data-optionid')) {
         this._updateSelectedOption(option);
       }
-    });
-  }
-
-  ngAfterContentInit() {
-    this._options.forEach(option => {
-      option.setOptionId(`cdk-option-${_uniqueIdCounter++}`);
     });
   }
 
@@ -121,13 +113,6 @@ export class CdkListbox implements AfterContentInit {
 
   /** Returns an array of all options that are currently selected */
   getSelectedOptions(): CdkOption[] {
-    const selectedOptions = new Array<CdkOption>();
-    this._options.toArray().forEach(option => {
-      if (option.selected) {
-        selectedOptions.push(option);
-      }
-    });
-
-    return selectedOptions;
+    return this._options.toArray().filter(option => option.selected);
   }
 }

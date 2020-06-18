@@ -59,7 +59,7 @@ describe('CdkOption', () => {
       const selectedOptions = listboxInstance.getSelectedOptions();
 
       expect(selectedOptions.length).toBe(1);
-      expect(selectedOptions[0].selected).toBeTruthy();
+      expect(selectedOptions[0].selected).toBeTrue();
     });
 
     it('should update selected option on click event', () => {
@@ -72,7 +72,7 @@ describe('CdkOption', () => {
 
       expect(listboxInstance.getSelectedOptions().length).toBe(1);
       expect(options[0].getElementRef().nativeElement.getAttribute('aria-selected')).toBe('true');
-      expect(options[0].selected).toBeTruthy();
+      expect(options[0].selected).toBeTrue();
     });
   });
 
