@@ -40,14 +40,14 @@ export class CdkMenuGroup implements AfterContentInit, OnDestroy {
   @ContentChildren(CdkMenuItemSelectable, {descendants: true})
   private readonly _selectableItems: QueryList<CdkMenuItemSelectable>;
 
-  /** Emitter used to unsubscribe from selectable item click events */
-  private readonly _nextChanges: EventEmitter<void> = new EventEmitter();
+  /** Emits when the _selectableItems QueryList triggers a change */
+  private readonly _selectableChanges: EventEmitter<void> = new EventEmitter();
 
   ngAfterContentInit() {
     this._selectableItems.forEach(selectable => this._registerClickListener(selectable));
 
     this._selectableItems.changes.subscribe((selectableItems: QueryList<CdkMenuItemSelectable>) => {
-      this._nextChanges.next();
+      this._selectableChanges.next();
       selectableItems.forEach(selectable => this._registerClickListener(selectable));
     });
   }
@@ -55,12 +55,12 @@ export class CdkMenuGroup implements AfterContentInit, OnDestroy {
   /** Register each selectable to emit on the change Emitter when clicked */
   private _registerClickListener(selectable: CdkMenuItemSelectable) {
     selectable.clicked
-      .pipe(takeUntil(this._nextChanges))
+      .pipe(takeUntil(this._selectableChanges))
       .subscribe(() => this.change.next(selectable));
   }
 
   ngOnDestroy() {
-    this._nextChanges.next();
-    this._nextChanges.complete();
+    this._selectableChanges.next();
+    this._selectableChanges.complete();
   }
 }
