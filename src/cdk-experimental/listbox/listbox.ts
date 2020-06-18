@@ -42,7 +42,7 @@ export class CdkOption {
     this._selected = value;
   }
 
-  constructor(private el: ElementRef) {
+  constructor(private _el: ElementRef) {
   }
 
   /** Sets the optionId to the given id */
@@ -57,7 +57,7 @@ export class CdkOption {
 
   /** Returns an ElementRef of this option */
   getElementRef(): ElementRef {
-    return this.el;
+    return this._el;
   }
 }
 
@@ -73,24 +73,24 @@ let _uniqueIdCounter = 0;
   exportAs: 'cdkListbox',
   host: {
     role: 'listbox',
+    '(click)': '_onClickUpdateSelectedOption($event)'
   }
 })
 export class CdkListbox {
 
-  constructor(private el: ElementRef) {
+  constructor() {
   }
 
   /** A query list containing all CdkOption elements within this listbox */
   @ContentChildren(CdkOption) _options: QueryList<CdkOption>;
 
-  /** Listener activated on click of this listbox */
-  @HostListener('click', ['$event']) onClickUpdateSelectedOption($event: MouseEvent) {
-    console.log('in listbox click event');
-    console.log($event.target);
+  /** On click handler of this listbox, updates selected value of clicked option */
+  private _onClickUpdateSelectedOption($event: MouseEvent) {
     this._options.toArray().forEach(option => {
       const optionId = option.getOptionId();
-      if ($event.target instanceof Element && optionId === $event.target?.getAttribute('data-optionid')) {
-        this.updateSelectedOption(option);
+      if ($event.target instanceof Element &&
+          optionId === $event.target?.getAttribute('data-optionid')) {
+        this._updateSelectedOption(option);
       }
     });
   }
@@ -101,7 +101,7 @@ export class CdkListbox {
     });
   }
 
-  private updateSelectedOption(option: CdkOption): void {
+  private _updateSelectedOption(option: CdkOption): void {
     if (option.selected) {
       this.deselectOption(option);
     } else {
@@ -120,7 +120,7 @@ export class CdkListbox {
   }
 
   /** Returns an array of all options that are currently selected */
-  getSelectedOptions(): Array<CdkOption> {
+  getSelectedOptions(): CdkOption[] {
     const selectedOptions = new Array<CdkOption>();
     this._options.toArray().forEach(option => {
       if (option.selected) {

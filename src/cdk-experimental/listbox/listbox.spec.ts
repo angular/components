@@ -17,7 +17,7 @@ describe('CdkOption', () => {
   describe('selection state change', () => {
     let fixture: ComponentFixture<CdkListboxWithCdkOptions>;
     let listboxInstance: CdkListbox;
-    let options: Array<CdkOption>;
+    let options: CdkOption[];
 
     beforeEach(async(() => {
       TestBed.configureTestingModule({
@@ -78,12 +78,12 @@ describe('CdkOption', () => {
 });
 
 @Component({
-    template:`
+    template: `
     <div cdkListbox>
       <div cdkOption></div>
       <div cdkOption></div>
       <div cdkOption></div>
-      <div cdkOption></div> 
+      <div cdkOption></div>
     </div>`
 })
 class CdkListboxWithCdkOptions {
