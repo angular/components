@@ -8,10 +8,10 @@
        [matRippleTrigger]="_elementRef.nativeElement"></span>
 </ng-container>
 
-<div class="mat-chip-content">
+<div class="mat-mdc-chip-content">
   <div role="gridcell">
     <div #chipContent tabindex="-1"
-         class="mat-chip-row-focusable-text-content mat-mdc-focus-indicator mdc-chip__primary-action"
+         class="mat-mdc-chip-row-focusable-text-content mat-mdc-focus-indicator mdc-chip__primary-action"
          [attr.role]="editable ? 'button' : null">
       <ng-content select="mat-chip-avatar, [matChipAvatar]"></ng-content>
       <span class="mdc-chip__text"><ng-content></ng-content></span>
@@ -23,7 +23,7 @@
   </div>
 </div>
 
-<div *ngIf="_isEditing()" role="gridcell" class="mat-chip-edit-input-container">
+<div *ngIf="_isEditing()" role="gridcell" class="mat-mdc-chip-edit-input-container">
   <ng-content *ngIf="contentEditInput; else defaultMatChipEditInput"
               select="[matChipEditInput]"></ng-content>
   <ng-template #defaultMatChipEditInput>

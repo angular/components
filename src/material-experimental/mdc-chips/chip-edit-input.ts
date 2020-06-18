@@ -9,7 +9,9 @@
 import {
   Directive,
   ElementRef,
+  Inject,
 } from '@angular/core';
+import {DOCUMENT} from '@angular/common';
 
 /**
  * A directive that makes a span editable and exposes functions to modify and retrieve the
@@ -26,8 +28,8 @@ import {
 })
 export class MatChipEditInput {
   constructor(
-      private readonly _elementRef: ElementRef,
-  ) {}
+    private readonly _elementRef: ElementRef,
+    @Inject(DOCUMENT) private readonly _document: any) {}
 
   initialize(initialValue: string) {
     this.getNativeElement().focus();
@@ -48,7 +50,7 @@ export class MatChipEditInput {
   }
 
   private _moveCursorToEndOfInput() {
-    const range = document.createRange();
+    const range = this._document.createRange();
     range.selectNodeContents(this.getNativeElement());
     range.collapse(false);
     const sel = window.getSelection()!;

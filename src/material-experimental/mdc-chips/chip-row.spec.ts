@@ -2,8 +2,8 @@ import {Directionality} from '@angular/cdk/bidi';
 import {BACKSPACE, DELETE, RIGHT_ARROW, ENTER} from '@angular/cdk/keycodes';
 import {
   createKeyboardEvent,
-  createMouseEvent,
   createFakeEvent,
+  dispatchEvent,
   dispatchFakeEvent,
 } from '@angular/cdk/testing/private';
 import {Component, DebugElement, ElementRef, ViewChild} from '@angular/core';
@@ -217,8 +217,7 @@ describe('MDC-based Row Chips', () => {
           dispatchFakeEvent(chipNativeElement, 'mousedown');
           fixture.detectChanges();
 
-          expect(document.activeElement!.classList.contains('mat-chip-row-focusable-text-content'))
-              .toBe(true);
+          expect(document.activeElement).toHaveClass('mat-mdc-chip-row-focusable-text-content');
         });
 
         it('emits focus only once for multiple focus() calls', () => {
@@ -247,14 +246,15 @@ describe('MDC-based Row Chips', () => {
       });
 
       it('should begin editing on double click', () => {
-        chipInstance._dblclick(createMouseEvent('dblclick'));
+        dispatchFakeEvent(chipNativeElement, 'dblclick');
         expect(chipNativeElement.classList).toContain('mdc-chip--editing');
       });
 
       it('should begin editing on ENTER', () => {
         chipInstance.focus();
         const primaryActionElement = chipNativeElement.querySelector('.mdc-chip__primary-action')!;
-        chipInstance._keydown(createKeyboardEvent('keydown', ENTER, 'Enter', primaryActionElement));
+        const enterEvent = createKeyboardEvent('keydown', ENTER, 'Enter', primaryActionElement);
+        dispatchEvent(primaryActionElement, enterEvent);
         expect(chipNativeElement.classList).toContain('mdc-chip--editing');
       });
     });
@@ -266,7 +266,7 @@ describe('MDC-based Row Chips', () => {
       beforeEach(() => {
         testComponent.editable = true;
         fixture.detectChanges();
-        chipInstance._dblclick(createMouseEvent('dblclick'));
+        dispatchFakeEvent(chipNativeElement, 'dblclick');
         spyOn(testComponent, 'chipEdit');
         fixture.detectChanges();
 
@@ -274,12 +274,14 @@ describe('MDC-based Row Chips', () => {
         editInputInstance = editInputDebugElement.injector.get<MatChipEditInput>(MatChipEditInput);
 
         chipContentElement =
-          chipNativeElement.querySelector('.mat-chip-row-focusable-text-content') as HTMLElement;
+          chipNativeElement.querySelector('.mat-mdc-chip-row-focusable-text-content') as
+            HTMLElement;
       });
 
       function keyDownOnPrimaryAction(keyCode: number, key: string) {
         const primaryActionElement = chipNativeElement.querySelector('.mdc-chip__primary-action')!;
-        chipInstance._keydown(createKeyboardEvent('keydown', keyCode, key, primaryActionElement));
+        const keyDownEvent = createKeyboardEvent('keydown', keyCode, key, primaryActionElement);
+        dispatchEvent(primaryActionElement, keyDownEvent);
       }
 
       it('should not delete the chip on DELETE or BACKSPACE', () => {
@@ -291,16 +293,13 @@ describe('MDC-based Row Chips', () => {
 
       it('should ignore mousedown events', () => {
         spyOn(testComponent, 'chipFocus');
-        chipInstance._mousedown(createMouseEvent('mousedown'));
+        dispatchFakeEvent(chipNativeElement, 'mousedown');
         expect(testComponent.chipFocus).not.toHaveBeenCalled();
       });
 
       it('should stop editing on focusout', fakeAsync(() => {
-        const fakeFocusOutEvent = {
-          type: 'focusout',
-          target: chipNativeElement.querySelector('.mdc-chip__primary-action')!,
-        } as unknown as FocusEvent;
-        chipInstance._focusout(fakeFocusOutEvent);
+        const primaryActionElement = chipNativeElement.querySelector('.mdc-chip__primary-action')!;
+        dispatchFakeEvent(primaryActionElement, 'focusout', true);
         flush();
         expect(chipNativeElement.classList).not.toContain('mdc-chip--editing');
         expect(testComponent.chipEdit).toHaveBeenCalled();
@@ -328,7 +327,7 @@ describe('MDC-based Row Chips', () => {
         keyDownOnPrimaryAction(ENTER, 'Enter');
         testComponent.useCustomEditInput = false;
         fixture.detectChanges();
-        chipInstance._dblclick(createMouseEvent('dblclick'));
+        dispatchFakeEvent(chipNativeElement, 'dblclick');
         fixture.detectChanges();
         const editInputDebugElement = fixture.debugElement.query(By.directive(MatChipEditInput))!;
         const editInputNoProject =

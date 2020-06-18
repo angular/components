@@ -6,17 +6,24 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {Directionality} from '@angular/cdk/bidi';
 import {BACKSPACE, DELETE} from '@angular/cdk/keycodes';
+import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 import {
   AfterContentInit,
   AfterViewInit,
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   ContentChild,
   ElementRef,
+  Inject,
+  NgZone,
+  Optional,
   ViewChild,
   ViewEncapsulation
 } from '@angular/core';
+import {DOCUMENT} from '@angular/common';
 import {MatChip} from './chip';
 import {MatChipEditInput} from './chip-edit-input';
 import {GridKeyManagerRow} from './grid-key-manager';
@@ -78,6 +85,16 @@ export class MatChipRow extends MatChip implements AfterContentInit, AfterViewIn
 
   /** The focusable grid cells for this row. Implemented as part of GridKeyManagerRow. */
   cells!: HTMLElement[];
+
+  constructor(
+    @Inject(DOCUMENT) private readonly _document: any,
+    changeDetectorRef: ChangeDetectorRef,
+    elementRef: ElementRef, ngZone: NgZone,
+    @Optional() dir: Directionality,
+    // @breaking-change 8.0.0 `animationMode` parameter to become required.
+    @Optional() @Inject(ANIMATION_MODULE_TYPE) animationMode?: string) {
+    super(changeDetectorRef, elementRef, ngZone, dir, animationMode);
+  }
 
   ngAfterContentInit() {
     super.ngAfterContentInit();
@@ -188,8 +205,8 @@ export class MatChipRow extends MatChip implements AfterContentInit, AfterViewIn
   protected _onEditFinish() {
     // If the edit input is still focused or focus was returned to the body after it was destroyed,
     // return focus to the chip contents.
-    if (document.activeElement === this.editInput.getNativeElement() ||
-        document.activeElement === document.body) {
+    if (this._document.activeElement === this.editInput.getNativeElement() ||
+        this._document.activeElement === this._document.body) {
       this.chipContent.nativeElement.focus();
     }
     this.edited.emit({chip: this, value: this.editInput.getValue()});
