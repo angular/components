@@ -3,7 +3,6 @@ import {ComponentFixture, TestBed, async} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {CdkMenuModule} from './menu-module';
 import {CdkMenuItem} from './menu-item';
-import {CdkMenuItemCheckbox} from './menu-item-checkbox';
 
 describe('MenuItemTrigger', () => {
   describe('on CdkMenuItem', () => {
@@ -46,48 +45,6 @@ describe('MenuItemTrigger', () => {
       expect(button.hasSubmenu).toBeTrue();
     });
   });
-
-  describe('on CdkMenuItemCheckbox', () => {
-    let fixture: ComponentFixture<TriggerOnSelectable>;
-    let button: CdkMenuItemCheckbox;
-    let nativeButton: HTMLButtonElement;
-
-    beforeEach(async(() => {
-      TestBed.configureTestingModule({
-        imports: [CdkMenuModule],
-        declarations: [TriggerOnSelectable],
-      }).compileComponents();
-
-      fixture = TestBed.createComponent(TriggerOnSelectable);
-      fixture.detectChanges();
-
-      button = fixture.debugElement
-        .query(By.directive(CdkMenuItemCheckbox))
-        .injector.get(CdkMenuItemCheckbox);
-
-      nativeButton = fixture.debugElement.query(By.directive(CdkMenuItemCheckbox)).nativeElement;
-    }));
-
-    it('should not have a submenu', () => {
-      expect(button.hasSubmenu).toBeFalse();
-    });
-
-    it('should be a menuitemcheckbox', () => {
-      expect(nativeButton.getAttribute('role')).toBe('menuitemcheckbox');
-    });
-
-    it('should toggle checked state', () => {
-      expect(button.checked).toBeFalse();
-
-      button.trigger();
-
-      expect(button.checked).toBeTrue();
-    });
-
-    it('should not have aria-haspopup attribute', () => {
-      expect(nativeButton.getAttribute('aria-haspopup')).toBeNull();
-    });
-  });
 });
 
 @Component({
@@ -97,11 +54,3 @@ describe('MenuItemTrigger', () => {
   `,
 })
 class TriggerForEmptyMenu {}
-
-@Component({
-  template: `
-    <button cdkMenuItemCheckbox [cdkMenuTriggerFor]="noop">Click me!</button>
-    <ng-template cdkMenuPanel #noop="cdkMenuPanel"><div cdkMenu></div></ng-template>
-  `,
-})
-class TriggerOnSelectable {}
