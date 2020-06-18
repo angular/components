@@ -273,9 +273,8 @@ describe('MDC-based Row Chips', () => {
         const editInputDebugElement = fixture.debugElement.query(By.directive(MatChipEditInput))!;
         editInputInstance = editInputDebugElement.injector.get<MatChipEditInput>(MatChipEditInput);
 
-        chipContentElement =
-          chipNativeElement.querySelector('.mat-mdc-chip-row-focusable-text-content') as
-            HTMLElement;
+        const chipContentSelector = '.mat-mdc-chip-row-focusable-text-content';
+        chipContentElement = chipNativeElement.querySelector(chipContentSelector) as HTMLElement;
       });
 
       function keyDownOnPrimaryAction(keyCode: number, key: string) {
