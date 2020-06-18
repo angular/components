@@ -1109,7 +1109,7 @@ describe('MatMdcInput with forms', () => {
     document.querySelector('input')!.focus();
     fixture.detectChanges();
 
-    expect(notch.style.width).not.toBe('');
+    expect(notch.style.width).toBeTruthy();
   }));
 });
 

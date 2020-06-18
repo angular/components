@@ -127,7 +127,7 @@ const FLOATING_LABEL_DEFAULT_DOCKED_TRANSFORM = `translateY(-50%)`;
   ]
 })
 export class MatFormField implements AfterViewInit, OnDestroy, AfterContentChecked,
-    AfterContentInit, AfterViewChecked {
+    AfterContentInit {
   @ViewChild('textField') _textField: ElementRef<HTMLElement>;
   @ViewChild('prefixContainer') _prefixContainer: ElementRef<HTMLElement>;
   @ViewChild(MatFormFieldFloatingLabel) _floatingLabel: MatFormFieldFloatingLabel|undefined;
@@ -173,9 +173,7 @@ export class MatFormField implements AfterViewInit, OnDestroy, AfterContentCheck
     const oldValue = this._appearance;
     this._appearance = value || (this._defaults && this._defaults.appearance) || DEFAULT_APPEARANCE;
     if (this._appearance === 'outline' && this._appearance !== oldValue) {
-      // After the view changes the appearance to outline, the label's width should be measured
-      // so that it can be provided to the notched outline.
-      this._needsOutlineNotchWidthRefresh = true;
+      this._refreshOutlineNotchWidth();
 
       // If the appearance has been switched to `outline`, the label offset needs to be updated.
       // The update can happen once the view has been re-checked, but not immediately because
@@ -217,7 +215,6 @@ export class MatFormField implements AfterViewInit, OnDestroy, AfterContentCheck
   private _explicitFormFieldControl: MatFormFieldControl<any>;
   private _foundation: MDCTextFieldFoundation;
   private _needsOutlineLabelOffsetUpdateOnStable = false;
-  private _needsOutlineNotchWidthRefresh = false;
   private _adapter: MDCTextFieldAdapter = {
     addClass: className => this._textField.nativeElement.classList.add(className),
     removeClass: className => this._textField.nativeElement.classList.remove(className),
@@ -354,16 +351,6 @@ export class MatFormField implements AfterViewInit, OnDestroy, AfterContentCheck
 
   ngAfterContentChecked() {
     this._assertFormFieldControl();
-  }
-
-  ngAfterViewChecked() {
-    // After the appearance changes to `outline`, measure the size of the label and provide it
-    // to the notched outline.
-    if (this._needsOutlineNotchWidthRefresh) {
-      this._refreshOutlineNotchWidth();
-      this._changeDetectorRef.detectChanges();
-      this._needsOutlineNotchWidthRefresh = false;
-    }
   }
 
   ngOnDestroy() {
