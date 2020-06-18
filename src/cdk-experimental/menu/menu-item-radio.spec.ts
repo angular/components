@@ -82,7 +82,7 @@ describe('MenuItemRadio', () => {
 
     radioButton.trigger();
 
-    expect(spy).toHaveBeenCalledTimes(0);
+    expect(spy).not.toHaveBeenCalled();
   });
 
   it('should toggle state when called with own id and differing id', () => {

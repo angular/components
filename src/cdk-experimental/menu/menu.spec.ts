@@ -96,7 +96,7 @@ describe('Menu', () => {
 
       menuItems.forEach(menuItem => menuItem.trigger());
 
-      expect(spy).toHaveBeenCalledTimes(0);
+      expect(spy).not.toHaveBeenCalled();
     });
   });
 
@@ -126,16 +126,16 @@ describe('Menu', () => {
       menuItems = getMenuItems();
     }));
 
-    it('should not emit after the group mounts', () => {
+    it('should not emit after the menu group element renders', () => {
       const spy = jasmine.createSpy('cdkMenu change');
       menu.change.subscribe(spy);
 
       menuItems[0].trigger();
-      fixture.componentInstance.show = true;
+      fixture.componentInstance.renderInnerGroup = true;
       fixture.detectChanges();
 
       menuItems = getMenuItems();
-      menuItems[0].trigger();
+      menuItems[1].trigger();
       fixture.detectChanges();
 
       expect(spy).withContext('Expected initial trigger only').toHaveBeenCalledTimes(1);
@@ -177,17 +177,15 @@ class MenuWithNestedGroup {}
 @Component({
   template: `
     <ul cdkMenu>
-      <ng-template [ngIf]="!show">
-        <li><button cdkMenuItemCheckbox>first</button></li>
-      </ng-template>
-      <ng-template [ngIf]="show">
+      <li><button cdkMenuItemCheckbox>first</button></li>
+      <div *ngIf="renderInnerGroup">
         <ul cdkMenuGroup>
           <li><button cdkMenuItemCheckbox>second</button></li>
         </ul>
-      </ng-template>
+      </div>
     </ul>
   `,
 })
 class MenuWithConditionalGroup {
-  show = false;
+  renderInnerGroup = false;
 }

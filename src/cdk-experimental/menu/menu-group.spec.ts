@@ -105,8 +105,8 @@ describe('MenuGroup', () => {
 
       expect(spies[1]).toHaveBeenCalledTimes(1);
       expect(spies[1]).toHaveBeenCalledWith(menuItems[0]);
-      expect(spies[2]).toHaveBeenCalledTimes(0);
-      expect(spies[3]).toHaveBeenCalledTimes(0);
+      expect(spies[2]).not.toHaveBeenCalled();
+      expect(spies[3]).not.toHaveBeenCalled();
     });
 
     it('should not emit with click on disabled button', () => {
@@ -120,7 +120,7 @@ describe('MenuGroup', () => {
 
       menuItems[0].trigger();
 
-      expect(spy).toHaveBeenCalledTimes(0);
+      expect(spy).not.toHaveBeenCalled();
     });
   });
 });
