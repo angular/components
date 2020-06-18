@@ -19,8 +19,10 @@ import {CdkMenuItemSelectable} from './menu-item-selectable';
   exportAs: 'cdkMenuItemRadio',
   host: {
     '(click)': 'trigger()',
+    'type': 'button',
     'role': 'menuitemradio',
     '[attr.aria-checked]': 'checked',
+    '[attr.aria-disabled]': 'disabled || null',
   },
   providers: [{provide: CdkMenuItemSelectable, useExisting: CdkMenuItemRadio}],
 })

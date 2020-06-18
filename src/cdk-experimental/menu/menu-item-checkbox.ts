@@ -17,8 +17,10 @@ import {CdkMenuItemSelectable} from './menu-item-selectable';
   exportAs: 'cdkMenuItemCheckbox',
   host: {
     '(click)': 'trigger()',
+    'type': 'button',
     'role': 'menuitemcheckbox',
     '[attr.aria-checked]': 'checked',
+    '[attr.aria-disabled]': 'disabled || null',
   },
   providers: [{provide: CdkMenuItemSelectable, useExisting: CdkMenuItemCheckbox}],
 })
