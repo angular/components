@@ -7,7 +7,6 @@
  */
 
 import {
-  AfterContentInit,
   ContentChildren,
   Directive,
   ElementRef,
