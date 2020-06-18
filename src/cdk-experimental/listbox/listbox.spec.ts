@@ -27,7 +27,8 @@ describe('CdkOption', () => {
 
       fixture = TestBed.createComponent(CdkListboxWithCdkOptions);
       fixture.detectChanges();
-      listboxInstance = fixture.debugElement.query(By.directive(CdkListbox)).injector.get(CdkListbox);
+      listboxInstance = fixture.debugElement.query(By.directive(CdkListbox))
+          .injector.get(CdkListbox);
       options = listboxInstance._options.toArray();
     }));
 

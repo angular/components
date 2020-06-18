@@ -7,10 +7,10 @@
  */
 
 import {
+  AfterContentInit,
   ContentChildren,
   Directive,
   ElementRef,
-  HostListener,
   Input,
   QueryList
 } from '@angular/core';
@@ -76,13 +76,13 @@ let _uniqueIdCounter = 0;
     '(click)': '_onClickUpdateSelectedOption($event)'
   }
 })
-export class CdkListbox {
+export class CdkListbox implements AfterContentInit {
 
   constructor() {
   }
 
   /** A query list containing all CdkOption elements within this listbox */
-  @ContentChildren(CdkOption) _options: QueryList<CdkOption>;
+  @ContentChildren(CdkOption, {descendants: true}) _options: QueryList<CdkOption>;
 
   /** On click handler of this listbox, updates selected value of clicked option */
   private _onClickUpdateSelectedOption($event: MouseEvent) {
@@ -114,7 +114,7 @@ export class CdkListbox {
     option.selected = true;
   }
 
-  /** Sets the given option's selected state to null. Null is preferable to false for screen readers */
+  /** Sets the given option's selected state to null. Null is preferable for screen readers */
   deselectOption(option: CdkOption): void {
     option.selected = null;
   }
