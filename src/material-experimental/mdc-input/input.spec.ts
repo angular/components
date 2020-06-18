@@ -1104,7 +1104,7 @@ describe('MatMdcInput with forms', () => {
     fixture.detectChanges();
 
     let notch = fixture.nativeElement.querySelector('.mdc-notched-outline__notch')! as HTMLElement;
-    expect(notch.style.width).toBe('');
+    expect(notch.style.width).toBeFalsy();
 
     fixture.nativeElement.querySelector('input')!.focus();
     fixture.detectChanges();
