@@ -49,11 +49,7 @@ import {MatInputModule} from '../input/index';
 import {MatChip} from './chip';
 import {MatChipInputEvent} from './chip-input';
 import {MatChipEvent, MatChipList, MatChipRemove, MatChipsModule} from './index';
-import {
-  DEFAULT_MAT_CHIPS_DEFAULT_OPTIONS,
-  MAT_CHIPS_DEFAULT_OPTIONS,
-  MatChipsDefaultOptions,
-} from './chip-default-options';
+import {MAT_CHIPS_DEFAULT_OPTIONS, MatChipsDefaultOptions} from './chip-default-options';
 
 describe('MatChipList', () => {
   let fixture: ComponentFixture<any>;
