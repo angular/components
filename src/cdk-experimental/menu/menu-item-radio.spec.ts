@@ -85,7 +85,7 @@ describe('MenuItemRadio', () => {
     expect(spy).not.toHaveBeenCalled();
   });
 
-  it('should toggle state when called with own id and differing id', () => {
+  it('should toggle state when called with own id and not toggle when called with other id', () => {
     const id = 'id-1';
     const name = 'name-1';
     radioButton.id = id;
