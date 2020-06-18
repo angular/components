@@ -1098,15 +1098,15 @@ describe('MatMdcInput with forms', () => {
     const fixture = createComponent(MatInputWithAppearance);
     fixture.detectChanges();
 
-    expect(document.querySelector('.mdc-notched-outline__notch')).toBe(null);
+    expect(fixture.nativeElement.querySelector('.mdc-notched-outline__notch')).toBe(null);
 
     fixture.componentInstance.appearance = 'outline';
     fixture.detectChanges();
 
-    let notch = document.querySelector('.mdc-notched-outline__notch')! as HTMLElement;
+    let notch = fixture.nativeElement.querySelector('.mdc-notched-outline__notch')! as HTMLElement;
     expect(notch.style.width).toBe('');
 
-    document.querySelector('input')!.focus();
+    fixture.nativeElement.querySelector('input')!.focus();
     fixture.detectChanges();
 
     expect(notch.style.width).toBeTruthy();
