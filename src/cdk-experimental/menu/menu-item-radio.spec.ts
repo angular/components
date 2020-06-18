@@ -18,7 +18,9 @@ describe('MenuItemRadio', () => {
       declarations: [SimpleRadioButton],
       providers: [{provide: UniqueSelectionDispatcher, useValue: selectionDispatcher}],
     }).compileComponents();
+  }));
 
+  beforeEach(() => {
     fixture = TestBed.createComponent(SimpleRadioButton);
     fixture.detectChanges();
 
@@ -27,7 +29,7 @@ describe('MenuItemRadio', () => {
       .injector.get(CdkMenuItemRadio);
 
     nativeButton = fixture.debugElement.query(By.directive(CdkMenuItemRadio)).nativeElement;
-  }));
+  });
 
   it('should have the menuitemradio role', () => {
     expect(nativeButton.getAttribute('role')).toBe('menuitemradio');

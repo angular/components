@@ -14,7 +14,9 @@ describe('MenuItemCheckbox', () => {
       imports: [CdkMenuModule],
       declarations: [SingleCheckboxButton],
     }).compileComponents();
+  }));
 
+  beforeEach(() => {
     fixture = TestBed.createComponent(SingleCheckboxButton);
     fixture.detectChanges();
 
@@ -23,7 +25,7 @@ describe('MenuItemCheckbox', () => {
       .injector.get(CdkMenuItemCheckbox);
 
     nativeButton = fixture.debugElement.query(By.directive(CdkMenuItemCheckbox)).nativeElement;
-  }));
+  });
 
   it('should have the menuitemcheckbox role', () => {
     expect(nativeButton.getAttribute('role')).toBe('menuitemcheckbox');

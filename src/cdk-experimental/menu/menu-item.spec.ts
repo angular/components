@@ -14,14 +14,16 @@ describe('MenuItem', () => {
       imports: [CdkMenuModule],
       declarations: [SingleMenuItem],
     }).compileComponents();
+  }));
 
+  beforeEach(() => {
     fixture = TestBed.createComponent(SingleMenuItem);
     fixture.detectChanges();
 
     button = fixture.debugElement.query(By.directive(CdkMenuItem)).injector.get(CdkMenuItem);
 
     nativeButton = fixture.debugElement.query(By.directive(CdkMenuItem)).nativeElement;
-  }));
+  });
 
   it('should have the menuitem role', () => {
     expect(nativeButton.getAttribute('role')).toBe('menuitem');
