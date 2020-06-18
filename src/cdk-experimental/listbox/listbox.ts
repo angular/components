@@ -73,7 +73,7 @@ let _uniqueIdCounter = 0;
   exportAs: 'cdkListbox',
   host: {
     role: 'listbox',
-    '(click)': '_onClickUpdateSelectedOption($event)'
+    '(click)': 'onClickUpdateSelectedOption($event)'
   }
 })
 export class CdkListbox implements AfterContentInit {
@@ -85,7 +85,7 @@ export class CdkListbox implements AfterContentInit {
   @ContentChildren(CdkOption, {descendants: true}) _options: QueryList<CdkOption>;
 
   /** On click handler of this listbox, updates selected value of clicked option */
-  private _onClickUpdateSelectedOption($event: MouseEvent) {
+  onClickUpdateSelectedOption($event: MouseEvent) {
     this._options.toArray().forEach(option => {
       const optionId = option.getOptionId();
       if ($event.target instanceof Element &&
