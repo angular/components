@@ -44,6 +44,14 @@ export class CdkMenuGroup implements AfterContentInit, OnDestroy {
   private readonly _selectableChanges: EventEmitter<void> = new EventEmitter();
 
   ngAfterContentInit() {
+    this._registerMenuSelectionListeners();
+  }
+
+  /**
+   * Register the child selectable elements with the change emitter and ensure any new child
+   * elements do so as well.
+   */
+  private _registerMenuSelectionListeners() {
     this._selectableItems.forEach(selectable => this._registerClickListener(selectable));
 
     this._selectableItems.changes.subscribe((selectableItems: QueryList<CdkMenuItemSelectable>) => {
