@@ -120,18 +120,29 @@ export class FixedSizeVirtualScrollStrategy implements VirtualScrollStrategy {
       return;
     }
 
-    const scrollOffset = this._viewport.measureScrollOffset();
     const renderedRange = this._viewport.getRenderedRange();
     const newRange = {start: renderedRange.start, end: renderedRange.end};
     const viewportSize = this._viewport.getViewportSize();
     const dataLength = this._viewport.getDataLength();
+    let scrollOffset = this._viewport.measureScrollOffset();
     let firstVisibleIndex = scrollOffset / this._itemSize;
 
-    if (newRange.end >= dataLength) {
+    // If user scrolls to the bottom of the list and data changes to a smaller list
+    if (newRange.end > dataLength) {
+      // We have to recalculate the first visible index based on new data length and viewport size.
       const maxVisibleItems = Math.ceil(viewportSize / this._itemSize);
-      firstVisibleIndex = Math.max(0, Math.min(firstVisibleIndex, dataLength - maxVisibleItems));
-      newRange.start = Math.floor(firstVisibleIndex);
-      newRange.end = Math.max(0, Math.min(dataLength - 1, newRange.start + maxVisibleItems));
+      const newVisibleIndex = Math.max(0,
+          Math.min(firstVisibleIndex, dataLength - maxVisibleItems));
+
+      // If first visible index changed we must update scroll offset to handle start/end buffers
+      // Current range must also be adjusted to cover the new position (bottom of new list).
+      if (firstVisibleIndex != newVisibleIndex) {
+        firstVisibleIndex = newVisibleIndex;
+        scrollOffset = newVisibleIndex * this._itemSize;
+        newRange.start = Math.floor(firstVisibleIndex);
+      }
+
+      newRange.end = Math.max(0, Math.min(dataLength, newRange.start + maxVisibleItems));
     }
 
     const startBuffer = scrollOffset - newRange.start * this._itemSize;

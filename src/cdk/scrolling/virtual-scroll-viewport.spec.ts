@@ -416,6 +416,26 @@ describe('CdkVirtualScrollViewport', () => {
           .toBe(testComponent.itemSize, 'should be scrolled to bottom of 5 item list');
     }));
 
+    it('should handle dynamic item array with dynamic buffer', fakeAsync(() => {
+      finishInit(fixture);
+      triggerScroll(viewport, testComponent.itemSize * 6);
+      fixture.detectChanges();
+      flush();
+
+      expect(viewport.getOffsetToRenderedContentStart())
+          .toBe(testComponent.itemSize * 6, 'should be scrolled to bottom of 10 item list');
+
+      testComponent.items = Array(5).fill(0);
+      testComponent.minBufferPx = testComponent.itemSize;
+      testComponent.maxBufferPx = testComponent.itemSize;
+
+      fixture.detectChanges();
+      flush();
+
+      expect(viewport.getOffsetToRenderedContentStart())
+          .toBe(0, 'should render from first item');
+    }));
+
     it('should handle dynamic item array keeping position when possibile', fakeAsync(() => {
       testComponent.items = Array(100).fill(0);
       finishInit(fixture);
