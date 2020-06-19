@@ -10,10 +10,8 @@ import {coerceBooleanProperty, BooleanInput} from '@angular/cdk/coercion';
 import {Input, Directive, Output, EventEmitter} from '@angular/core';
 import {CdkMenuItem} from './menu-item';
 
-/** Counter used to set a unique name for a selectable item */
-let _uniqueNameCounter = 0;
-/** Counter used to set a unique id for a selectable item */
-let _uniqueIdCounter = 0;
+/** Counter used to set a unique id and name for a selectable item */
+let nextId = 0;
 
 /**
  * Base class providing checked state for MenuItems along with outputting a clicked event when the
@@ -35,10 +33,10 @@ export abstract class CdkMenuItemSelectable extends CdkMenuItem {
   private _checked = false;
 
   /** The name of the selectable element with a default value */
-  @Input() name: string = `cdk-selectable-item-${_uniqueNameCounter++}`;
+  @Input() name: string = `cdk-selectable-item-${nextId++}`;
 
   /** The id of the selectable element with a default value */
-  @Input() id: string = `cdk-selectable-item-${_uniqueIdCounter++}`;
+  @Input() id: string = `cdk-selectable-item-${nextId++}`;
 
   /** If the element is not disabled emit the click event */
   trigger() {
