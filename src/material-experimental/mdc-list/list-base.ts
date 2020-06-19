@@ -49,14 +49,8 @@ export abstract class MatListItemBase implements AfterContentInit, OnDestroy, Ri
   private _rippleRenderer: RippleRenderer;
 
   protected constructor(public _elementRef: ElementRef<HTMLElement>, protected _ngZone: NgZone,
-                        listBase: MatListBase, platform: Platform) {
-    this.rippleDisabled = listBase._isNonInteractive;
-    if (!listBase._isNonInteractive) {
-      this._elementRef.nativeElement.classList.add('mat-mdc-list-item-interactive');
-    }
-    this._rippleRenderer =
-        new RippleRenderer(this, this._ngZone, this._elementRef.nativeElement, platform);
-    this._rippleRenderer.setupTriggerEvents(this._elementRef.nativeElement);
+                        private _listBase: MatListBase, private _platform: Platform) {
+    this._initRipple();
   }
 
   ngAfterContentInit() {
@@ -66,6 +60,23 @@ export abstract class MatListItemBase implements AfterContentInit, OnDestroy, Ri
   ngOnDestroy() {
     this._subscriptions.unsubscribe();
     this._rippleRenderer._removeTriggerEvents();
+  }
+
+  _initDefaultTabIndex(tabIndex: number) {
+    const el = this._elementRef.nativeElement;
+    if (!el.hasAttribute('tabIndex')) {
+      el.tabIndex = tabIndex;
+    }
+  }
+
+  private _initRipple() {
+    this.rippleDisabled = this._listBase._isNonInteractive;
+    if (!this._listBase._isNonInteractive) {
+      this._elementRef.nativeElement.classList.add('mat-mdc-list-item-interactive');
+    }
+    this._rippleRenderer =
+        new RippleRenderer(this, this._ngZone, this._elementRef.nativeElement, this._platform);
+    this._rippleRenderer.setupTriggerEvents(this._elementRef.nativeElement);
   }
 
   /**
@@ -177,19 +188,23 @@ export abstract class MatInteractiveListBase extends MatListBase
   }
 
   ngAfterViewInit() {
-    this._subscriptions.add(
-        this._items.changes.pipe(startWith(null))
-            .subscribe(() => this._itemsArr = this._items.toArray()));
+    this._initItems();
     this._foundation.init();
-    for (let i = 0; this._items.length; i++) {
-      this._elementAtIndex(i).tabIndex = i === 0 ? 0 : -1;
-    }
     this._foundation.layout();
   }
 
   ngOnDestroy() {
     this._foundation.destroy();
     this._subscriptions.unsubscribe();
+  }
+
+  private _initItems() {
+    this._subscriptions.add(
+        this._items.changes.pipe(startWith(null))
+            .subscribe(() => this._itemsArr = this._items.toArray()));
+    for (let i = 0; this._itemsArr.length; i++) {
+      this._itemsArr[i]._initDefaultTabIndex(i === 0 ? 0 : -1);
+    }
   }
 
   private _itemAtIndex(index: number): MatListItemBase {
