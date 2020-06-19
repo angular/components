@@ -63,13 +63,10 @@ export class CdkMenu extends CdkMenuGroup implements AfterContentInit {
 
   /** Return true if there are nested CdkMenuGroup elements within the Menu */
   private _hasNestedGroups() {
-    return (
-      this._nestedGroups.length > 0 &&
-      // view engine has a bug where @ContentChildren will return the current element
-      // along with children if the selectors match - not just the children.
-      // Here we check to see if the first element is a CdkMenu in order to ensure
-      // that we return true iff there are child CdkMenuGroup elements.
-      !(this._nestedGroups.first instanceof CdkMenu)
-    );
+    // view engine has a bug where @ContentChildren will return the current element
+    // along with children if the selectors match - not just the children.
+    // Here, if there is at least one element, we check to see if the first element is a CdkMenu in
+    // order to ensure that we return true iff there are child CdkMenuGroup elements.
+    return this._nestedGroups.length > 0 && !(this._nestedGroups.first instanceof CdkMenu);
   }
 }
