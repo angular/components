@@ -1,18 +1,15 @@
 /**
  * @license
- * Copyright Google Inc. All Rights Reserved.
+ * Copyright Google LLC All Rights Reserved.
  *
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
-import {A11yModule} from '@angular/cdk/a11y';
+
 import {Component, NgModule, ViewEncapsulation} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
 import {MatChipsModule} from '@angular/material/chips';
 
-/**
- * @title Chips benchmark component.
- */
 @Component({
   selector: 'app-root',
   template: `
@@ -22,20 +19,16 @@ import {MatChipsModule} from '@angular/material/chips';
     <button id="show-multiple" (click)="showMultiple()">Show Multiple</button>
     <button id="hide-multiple" (click)="hideMultiple()">Hide Multiple</button>
 
-    <ng-container *ngIf="isSingleVisible">
-      <mat-chip>One</mat-chip>
-    </ng-container>
+    <mat-chip *ngIf="isSingleVisible">One</mat-chip>
 
-    <ng-container *ngIf="isMultipleVisible">
-      <mat-chip-list>
-        <mat-chip>One</mat-chip>
-        <mat-chip>Two</mat-chip>
-        <mat-chip>Three</mat-chip>
-        <mat-chip>Four</mat-chip>
-        <mat-chip>Five</mat-chip>
-        <mat-chip>Six</mat-chip>
-      </mat-chip-list>
-    </ng-container>
+    <mat-chip-list *ngIf="isMultipleVisible">
+      <mat-chip>One</mat-chip>
+      <mat-chip>Two</mat-chip>
+      <mat-chip>Three</mat-chip>
+      <mat-chip>Four</mat-chip>
+      <mat-chip>Five</mat-chip>
+      <mat-chip>Six</mat-chip>
+    </mat-chip-list>
   `,
   encapsulation: ViewEncapsulation.None,
   styleUrls: ['//src/material/core/theming/prebuilt/indigo-pink.css'],
@@ -55,11 +48,10 @@ export class ChipsBenchmarkApp {
 @NgModule({
   declarations: [ChipsBenchmarkApp],
   imports: [
-    A11yModule,
     BrowserModule,
     MatChipsModule,
   ],
   providers: [],
-  bootstrap: [ChipsBenchmarkApp]
+  bootstrap: [ChipsBenchmarkApp],
 })
 export class AppModule {}
