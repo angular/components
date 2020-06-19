@@ -92,7 +92,9 @@ describe('Menu', () => {
       const spy = jasmine.createSpy('changeSpy for root menu');
       menu.change.subscribe(spy);
 
-      menuItems.forEach(menuItem => menuItem.trigger());
+      for (let menuItem of menuItems) {
+        menuItem.trigger();
+      }
 
       expect(spy).not.toHaveBeenCalled();
     });
