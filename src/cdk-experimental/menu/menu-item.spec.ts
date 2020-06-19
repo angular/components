@@ -21,7 +21,6 @@ describe('MenuItem', () => {
     fixture.detectChanges();
 
     button = fixture.debugElement.query(By.directive(CdkMenuItem)).injector.get(CdkMenuItem);
-
     nativeButton = fixture.debugElement.query(By.directive(CdkMenuItem)).nativeElement;
   });
 

@@ -23,7 +23,6 @@ describe('MenuItemCheckbox', () => {
     checkbox = fixture.debugElement
       .query(By.directive(CdkMenuItemCheckbox))
       .injector.get(CdkMenuItemCheckbox);
-
     checkboxElement = fixture.debugElement.query(By.directive(CdkMenuItemCheckbox)).nativeElement;
   });
 
@@ -59,8 +58,10 @@ describe('MenuItemCheckbox', () => {
 
   it('should toggle checked state', () => {
     expect(checkbox.checked).toBeFalse();
+
     checkbox.trigger();
     expect(checkbox.checked).toBeTrue();
+
     checkbox.trigger();
     expect(checkbox.checked).toBeFalse();
   });

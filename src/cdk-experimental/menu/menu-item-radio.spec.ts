@@ -27,7 +27,6 @@ describe('MenuItemRadio', () => {
     radioButton = fixture.debugElement
       .query(By.directive(CdkMenuItemRadio))
       .injector.get(CdkMenuItemRadio);
-
     radioElement = fixture.debugElement.query(By.directive(CdkMenuItemRadio)).nativeElement;
   });
 

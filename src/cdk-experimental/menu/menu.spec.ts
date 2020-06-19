@@ -17,7 +17,6 @@ describe('Menu', () => {
       }).compileComponents();
 
       fixture = TestBed.createComponent(MenuCheckboxGroup);
-
       fixture.detectChanges();
 
       menuItems = fixture.debugElement
@@ -50,7 +49,6 @@ describe('Menu', () => {
       }).compileComponents();
 
       fixture = TestBed.createComponent(MenuCheckboxGroup);
-
       fixture.detectChanges();
 
       menuItems = fixture.debugElement
@@ -118,11 +116,9 @@ describe('Menu', () => {
       }).compileComponents();
 
       fixture = TestBed.createComponent(MenuWithConditionalGroup);
-
       fixture.detectChanges();
 
       menu = fixture.debugElement.query(By.directive(CdkMenu)).injector.get(CdkMenu);
-
       menuItems = getMenuItems();
     }));
 
