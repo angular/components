@@ -10,9 +10,9 @@ import {Directive, OnDestroy} from '@angular/core';
 import {CdkMenuItemSelectable} from './menu-item-selectable';
 
 /**
- * A directive providing RadioButton functionality for the MenuBar/Menu. If the element this
- * directive is attached to is located within a Menu or MenuGroup, it's siblings are now part of the
- * same RadioGroup and will behave as such.
+ * A directive providing behavior for the the "menuitemradio" ARIA role, which behaves similarly to
+ * a conventional radio-button. Any sibling `CdkMenuItemRadio` instances within the same `CdkMenu`
+ * or `CdkMenuGroup` comprise a radio group with unique selection enforced.
  */
 @Directive({
   selector: '[cdkMenuItemRadio]',
@@ -43,7 +43,7 @@ export class CdkMenuItemRadio extends CdkMenuItemSelectable implements OnDestroy
     );
   }
 
-  /** Inform the Radio Group of a click event */
+  /** Toggles the checked state of the radio-button. */
   trigger() {
     super.trigger();
 

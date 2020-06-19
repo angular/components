@@ -10,7 +10,8 @@ import {Directive} from '@angular/core';
 import {CdkMenuItemSelectable} from './menu-item-selectable';
 
 /**
- * Directive which provides simple checkbox behavior to an element it is applied to.
+ * A directive providing behavior for the "menuitemcheckbox" ARIA role, which behaves similarly to a
+ * conventional checkbox.
  */
 @Directive({
   selector: '[cdkMenuItemCheckbox]',
