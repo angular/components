@@ -36,11 +36,15 @@ export class CdkMenuItemTrigger implements AfterContentInit {
   ) {}
 
   ngAfterContentInit() {
+    this._setHasSubmenu();
+  }
+
+  /** Set the hasSubmenu property on the menuitem  */
+  private _setHasSubmenu() {
     if (this._menuItemInstance) {
       this._menuItemInstance.hasSubmenu = this._hasSubmenu();
     }
   }
-
   /** Return true if the trigger has an attached menu */
   private _hasSubmenu() {
     return !!this._menuPanel;

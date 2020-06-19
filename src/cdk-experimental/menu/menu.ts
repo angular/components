@@ -51,9 +51,14 @@ export class CdkMenu extends CdkMenuGroup implements AfterContentInit {
   ngAfterContentInit() {
     super.ngAfterContentInit();
 
-    // If there are nested MenuGroup elements within this group
-    // we complete the change emitter in order to ensure that
-    // the this menu does not emit change events.
+    this._completeChangeEmitter();
+  }
+
+  /**
+   * Complete the change emitter if there are any nested MenuGroups or register to complete the
+   * change emitter if a MenuGroup is rendered at some point
+   */
+  private _completeChangeEmitter() {
     if (this._hasNestedGroups()) {
       this.change.complete();
     } else {
