@@ -1516,21 +1516,18 @@ class InputChipList {
   isRequired: boolean;
 
   add(event: MatChipInputEvent): void {
-    let input = event.input;
-    let value = event.value;
+    const value = (event.value || '').trim();
 
     // Add our foods
-    if ((value || '').trim()) {
+    if (value) {
       this.foods.push({
-        value: `${value.trim().toLowerCase()}-${this.foods.length}`,
-        viewValue: value.trim()
+        value: `${value.toLowerCase()}-${this.foods.length}`,
+        viewValue: value
       });
     }
 
-    // Reset the input value
-    if (input) {
-      input.value = '';
-    }
+    // Clear the input value
+    event.clearInput();
   }
 
   remove(food: any): void {

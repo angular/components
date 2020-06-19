@@ -70,7 +70,7 @@ export interface MatChipEvent {
     chip: MatChip;
 }
 
-export declare class MatChipInput implements MatChipTextControl, OnChanges {
+export declare class MatChipInput implements MatChipTextControl, OnChanges, OnDestroy, AfterContentInit {
     _addOnBlur: boolean;
     _chipList: MatChipList;
     protected _elementRef: ElementRef<HTMLInputElement>;
@@ -91,9 +91,12 @@ export declare class MatChipInput implements MatChipTextControl, OnChanges {
     _emitChipEnd(event?: KeyboardEvent): void;
     _focus(): void;
     _keydown(event?: KeyboardEvent): void;
+    _keyup(event: KeyboardEvent): void;
     _onInput(): void;
     focus(options?: FocusOptions): void;
+    ngAfterContentInit(): void;
     ngOnChanges(): void;
+    ngOnDestroy(): void;
     static ngAcceptInputType_addOnBlur: BooleanInput;
     static ngAcceptInputType_disabled: BooleanInput;
     static ɵdir: i0.ɵɵDirectiveDefWithMeta<MatChipInput, "input[matChipInputFor]", ["matChipInput", "matChipInputFor"], { "chipList": "matChipInputFor"; "addOnBlur": "matChipInputAddOnBlur"; "separatorKeyCodes": "matChipInputSeparatorKeyCodes"; "placeholder": "placeholder"; "id": "id"; "disabled": "disabled"; }, { "chipEnd": "matChipInputTokenEnd"; }, never>;
@@ -103,6 +106,7 @@ export declare class MatChipInput implements MatChipTextControl, OnChanges {
 export interface MatChipInputEvent {
     input: HTMLInputElement;
     value: string;
+    clearInput(): void;
 }
 
 export declare class MatChipList extends _MatChipListMixinBase implements MatFormFieldControl<any>, ControlValueAccessor, AfterContentInit, DoCheck, OnInit, OnDestroy, CanUpdateErrorState {
