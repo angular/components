@@ -7,8 +7,8 @@ import {CdkMenuItem} from './menu-item';
 describe('MenuItemTrigger', () => {
   describe('on CdkMenuItem', () => {
     let fixture: ComponentFixture<TriggerForEmptyMenu>;
-    let button: CdkMenuItem;
-    let nativeButton: HTMLButtonElement;
+    let menuItem: CdkMenuItem;
+    let menuItemElement: HTMLButtonElement;
 
     beforeEach(async(() => {
       TestBed.configureTestingModule({
@@ -21,30 +21,30 @@ describe('MenuItemTrigger', () => {
       fixture = TestBed.createComponent(TriggerForEmptyMenu);
       fixture.detectChanges();
 
-      button = fixture.debugElement.query(By.directive(CdkMenuItem)).injector.get(CdkMenuItem);
+      menuItem = fixture.debugElement.query(By.directive(CdkMenuItem)).injector.get(CdkMenuItem);
 
-      nativeButton = fixture.debugElement.query(By.directive(CdkMenuItem)).nativeElement;
+      menuItemElement = fixture.debugElement.query(By.directive(CdkMenuItem)).nativeElement;
     });
 
     it('should have the menuitem role', () => {
-      expect(nativeButton.getAttribute('role')).toBe('menuitem');
+      expect(menuItemElement.getAttribute('role')).toBe('menuitem');
     });
 
     it('should set the aria disabled attribute', () => {
-      expect(nativeButton.getAttribute('aria-disabled')).toBeNull();
+      expect(menuItemElement.getAttribute('aria-disabled')).toBeNull();
 
-      button.disabled = true;
+      menuItem.disabled = true;
       fixture.detectChanges();
 
-      expect(nativeButton.getAttribute('aria-disabled')).toBe('true');
+      expect(menuItemElement.getAttribute('aria-disabled')).toBe('true');
     });
 
     it('should be a button type', () => {
-      expect(nativeButton.getAttribute('type')).toBe('button');
+      expect(menuItemElement.getAttribute('type')).toBe('button');
     });
 
     it('should  have a submenu', () => {
-      expect(button.hasSubmenu).toBeTrue();
+      expect(menuItem.hasSubmenu).toBeTrue();
     });
   });
 });

@@ -8,7 +8,7 @@ import {CdkMenuItemRadio} from './menu-item-radio';
 describe('MenuItemRadio', () => {
   let fixture: ComponentFixture<SimpleRadioButton>;
   let radioButton: CdkMenuItemRadio;
-  let nativeButton: HTMLButtonElement;
+  let radioElement: HTMLButtonElement;
   let selectionDispatcher: UniqueSelectionDispatcher;
 
   beforeEach(async(() => {
@@ -28,33 +28,33 @@ describe('MenuItemRadio', () => {
       .query(By.directive(CdkMenuItemRadio))
       .injector.get(CdkMenuItemRadio);
 
-    nativeButton = fixture.debugElement.query(By.directive(CdkMenuItemRadio)).nativeElement;
+    radioElement = fixture.debugElement.query(By.directive(CdkMenuItemRadio)).nativeElement;
   });
 
   it('should have the menuitemradio role', () => {
-    expect(nativeButton.getAttribute('role')).toBe('menuitemradio');
+    expect(radioElement.getAttribute('role')).toBe('menuitemradio');
   });
 
   it('should set the aria disabled attribute', () => {
-    expect(nativeButton.getAttribute('aria-disabled')).toBeNull();
+    expect(radioElement.getAttribute('aria-disabled')).toBeNull();
 
     radioButton.disabled = true;
     fixture.detectChanges();
 
-    expect(nativeButton.getAttribute('aria-disabled')).toBe('true');
+    expect(radioElement.getAttribute('aria-disabled')).toBe('true');
   });
 
   it('should toggle the aria checked attribute', () => {
-    expect(nativeButton.getAttribute('aria-checked')).toBe('false');
+    expect(radioElement.getAttribute('aria-checked')).toBe('false');
 
     radioButton.trigger();
     fixture.detectChanges();
 
-    expect(nativeButton.getAttribute('aria-checked')).toBe('true');
+    expect(radioElement.getAttribute('aria-checked')).toBe('true');
   });
 
   it('should be a button type', () => {
-    expect(nativeButton.getAttribute('type')).toBe('button');
+    expect(radioElement.getAttribute('type')).toBe('button');
   });
 
   it('should not have a submenu', () => {

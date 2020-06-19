@@ -7,7 +7,7 @@ import {CdkMenuItemCheckbox} from './menu-item-checkbox';
 describe('MenuItemCheckbox', () => {
   let fixture: ComponentFixture<SingleCheckboxButton>;
   let checkbox: CdkMenuItemCheckbox;
-  let nativeButton: HTMLButtonElement;
+  let checkboxElement: HTMLButtonElement;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -24,24 +24,24 @@ describe('MenuItemCheckbox', () => {
       .query(By.directive(CdkMenuItemCheckbox))
       .injector.get(CdkMenuItemCheckbox);
 
-    nativeButton = fixture.debugElement.query(By.directive(CdkMenuItemCheckbox)).nativeElement;
+    checkboxElement = fixture.debugElement.query(By.directive(CdkMenuItemCheckbox)).nativeElement;
   });
 
   it('should have the menuitemcheckbox role', () => {
-    expect(nativeButton.getAttribute('role')).toBe('menuitemcheckbox');
+    expect(checkboxElement.getAttribute('role')).toBe('menuitemcheckbox');
   });
 
   it('should set the aria disabled attribute', () => {
-    expect(nativeButton.getAttribute('aria-disabled')).toBeNull();
+    expect(checkboxElement.getAttribute('aria-disabled')).toBeNull();
 
     checkbox.disabled = true;
     fixture.detectChanges();
 
-    expect(nativeButton.getAttribute('aria-disabled')).toBe('true');
+    expect(checkboxElement.getAttribute('aria-disabled')).toBe('true');
   });
 
   it('should be a button type', () => {
-    expect(nativeButton.getAttribute('type')).toBe('button');
+    expect(checkboxElement.getAttribute('type')).toBe('button');
   });
 
   it('should not have a submenu', () => {
@@ -49,12 +49,12 @@ describe('MenuItemCheckbox', () => {
   });
 
   it('should toggle the aria checked attribute', () => {
-    expect(nativeButton.getAttribute('aria-checked')).toBe('false');
+    expect(checkboxElement.getAttribute('aria-checked')).toBe('false');
 
     checkbox.trigger();
     fixture.detectChanges();
 
-    expect(nativeButton.getAttribute('aria-checked')).toBe('true');
+    expect(checkboxElement.getAttribute('aria-checked')).toBe('true');
   });
 
   it('should toggle checked state', () => {
