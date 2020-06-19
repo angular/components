@@ -16,9 +16,7 @@ import {MatCardModule} from '@angular/material/card';
     <button id="show" (click)="show()">Show</button>
     <button id="hide" (click)="hide()">Hide</button>
 
-    <ng-container *ngIf="isVisible">
-      <mat-card>Simple card</mat-card>
-    </ng-container>
+    <mat-card *ngIf="isVisible">Simple card</mat-card>
   `,
   encapsulation: ViewEncapsulation.None,
   styleUrls: ['//src/material/core/theming/prebuilt/indigo-pink.css'],
