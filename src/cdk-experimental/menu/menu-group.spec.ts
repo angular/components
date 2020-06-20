@@ -127,93 +127,102 @@ describe('MenuGroup', () => {
 
 @Component({
   template: `
-    <ul cdkMenu>
-      <li role="none">
-        <ul cdkMenuGroup>
-          <li #first role="none">
-            <button checked="true" cdkMenuItemCheckbox>
-              one
-            </button>
-          </li>
-          <li role="none">
-            <button cdkMenuItemCheckbox>
-              two
-            </button>
-          </li>
-        </ul>
-      </li>
-    </ul>
+    <ng-template #test cdkMenuPanel>
+      <ul cdkMenu>
+        <li role="none">
+          <ul cdkMenuGroup>
+            <li #first role="none">
+              <button checked="true" cdkMenuItemCheckbox>
+                one
+              </button>
+            </li>
+            <li role="none">
+              <button cdkMenuItemCheckbox>
+                two
+              </button>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </ng-template>
+    <div *ngTemplateOutlet="test"></div>
   `,
 })
 class CheckboxMenu {}
 
 @Component({
   template: `
-    <ul cdkMenu>
-      <li role="none">
-        <ul cdkMenuGroup>
-          <li role="none">
-            <button checked="true" cdkMenuItemRadio>
-              one
-            </button>
-          </li>
-          <li role="none">
-            <button cdkMenuItemRadio>
-              two
-            </button>
-          </li>
-        </ul>
-      </li>
-      <li role="none">
-        <ul cdkMenuGroup>
-          <li role="none">
-            <button cdkMenuItemRadio>
-              three
-            </button>
-          </li>
-          <li role="none">
-            <button cdkMenuItemRadio>
-              four
-            </button>
-          </li>
-        </ul>
-      </li>
-    </ul>
+    <ng-template #test cdkMenuPanel>
+      <ul cdkMenu>
+        <li role="none">
+          <ul cdkMenuGroup>
+            <li role="none">
+              <button checked="true" cdkMenuItemRadio>
+                one
+              </button>
+            </li>
+            <li role="none">
+              <button cdkMenuItemRadio>
+                two
+              </button>
+            </li>
+          </ul>
+        </li>
+        <li role="none">
+          <ul cdkMenuGroup>
+            <li role="none">
+              <button cdkMenuItemRadio>
+                three
+              </button>
+            </li>
+            <li role="none">
+              <button cdkMenuItemRadio>
+                four
+              </button>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </ng-template>
+    <div *ngTemplateOutlet="test"></div>
   `,
 })
 class MenuWithMultipleRadioGroups {}
 
 @Component({
   template: `
-    <ul cdkMenu>
-      <li role="none">
-        <ul cdkMenuGroup>
-          <li role="none">
-            <button cdkMenuItemRadio>
-              one
-            </button>
-          </li>
-        </ul>
-      </li>
-      <li role="none">
-        <ul cdkMenuGroup>
-          <li role="none">
-            <button cdkMenuItemRadio>
-              two
-            </button>
-          </li>
-        </ul>
-      </li>
-      <li role="none">
-        <ul cdkMenuGroup>
-          <li role="none">
-            <button cdkMenuItem>
-              three
-            </button>
-          </li>
-        </ul>
-      </li>
-    </ul>
+    <ng-template #test cdkMenuPanel>
+      <ul cdkMenu>
+        <li role="none">
+          <ul cdkMenuGroup>
+            <li role="none">
+              <button cdkMenuItemRadio>
+                one
+              </button>
+            </li>
+          </ul>
+        </li>
+        <li role="none">
+          <ul cdkMenuGroup>
+            <li role="none">
+              <button cdkMenuItemRadio>
+                two
+              </button>
+            </li>
+          </ul>
+        </li>
+        <li role="none">
+          <ul cdkMenuGroup>
+            <li role="none">
+              <button cdkMenuItem>
+                three
+              </button>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </ng-template>
+    <div *ngTemplateOutlet="test"></div>
   `,
 })
 class MenuWithMenuItemsAndRadioGroups {}
