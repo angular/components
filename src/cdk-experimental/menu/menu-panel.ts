@@ -6,8 +6,8 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Directive} from '@angular/core';
-import {CdkMenu} from './menu';
+import {Directive, TemplateRef} from '@angular/core';
+import {Menu} from './menu-interface';
 
 /**
  * Directive applied to an ng-template which wraps a CdkMenu and provides a reference to the
@@ -16,5 +16,12 @@ import {CdkMenu} from './menu';
 @Directive({selector: 'ng-template[cdkMenuPanel]', exportAs: 'cdkMenuPanel'})
 export class CdkMenuPanel {
   /** Reference to the child menu component */
-  _menu: CdkMenu;
+  _menu?: Menu;
+
+  constructor(readonly _templateReference: TemplateRef<unknown>) {}
+
+  /** Set the menu component on the menu panel */
+  _registerMenu(child: Menu) {
+    this._menu = child;
+  }
 }

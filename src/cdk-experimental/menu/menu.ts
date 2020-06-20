@@ -14,9 +14,12 @@ import {
   QueryList,
   ContentChildren,
   AfterContentInit,
+  OnDestroy,
 } from '@angular/core';
 import {take} from 'rxjs/operators';
 import {CdkMenuGroup} from './menu-group';
+import {CdkMenuPanel} from './menu-panel';
+import {Menu, CDK_MENU} from './menu-interface';
 
 /**
  * Directive which configures the element as a Menu which should contain child elements marked as
@@ -32,9 +35,12 @@ import {CdkMenuGroup} from './menu-group';
     'role': 'menu',
     '[attr.aria-orientation]': 'orientation',
   },
-  providers: [{provide: CdkMenuGroup, useExisting: CdkMenu}],
+  providers: [
+    {provide: CdkMenuGroup, useExisting: CdkMenu},
+    {provide: CDK_MENU, useExisting: CdkMenu},
+  ],
 })
-export class CdkMenu extends CdkMenuGroup implements AfterContentInit {
+export class CdkMenu extends CdkMenuGroup implements Menu, AfterContentInit, OnDestroy {
   /**
    * Sets the aria-orientation attribute and determines where sub-menus will be opened.
    * Does not affect styling/layout.
@@ -47,6 +53,11 @@ export class CdkMenu extends CdkMenuGroup implements AfterContentInit {
   /** List of nested CdkMenuGroup elements */
   @ContentChildren(CdkMenuGroup, {descendants: true})
   private readonly _nestedGroups: QueryList<CdkMenuGroup>;
+
+  constructor(_panel: CdkMenuPanel) {
+    super();
+    _panel._registerMenu(this);
+  }
 
   ngAfterContentInit() {
     super.ngAfterContentInit();
@@ -73,5 +84,15 @@ export class CdkMenu extends CdkMenuGroup implements AfterContentInit {
     // Here, if there is at least one element, we check to see if the first element is a CdkMenu in
     // order to ensure that we return true iff there are child CdkMenuGroup elements.
     return this._nestedGroups.length > 0 && !(this._nestedGroups.first instanceof CdkMenu);
+  }
+
+  ngOnDestroy() {
+    this._emitClosedEvent();
+  }
+
+  /** Emit and complete the closed event emitter */
+  private _emitClosedEvent() {
+    this.closed.next();
+    this.closed.complete();
   }
 }
