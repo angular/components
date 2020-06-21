@@ -145,7 +145,7 @@ describe('MenuGroup', () => {
         </li>
       </ul>
     </ng-template>
-    <div *ngTemplateOutlet="test"></div>
+    <ng-container *ngTemplateOutlet="test"></ng-container>
   `,
 })
 class CheckboxMenu {}
@@ -184,7 +184,7 @@ class CheckboxMenu {}
         </li>
       </ul>
     </ng-template>
-    <div *ngTemplateOutlet="test"></div>
+    <ng-container *ngTemplateOutlet="test"></ng-container>
   `,
 })
 class MenuWithMultipleRadioGroups {}
@@ -222,7 +222,7 @@ class MenuWithMultipleRadioGroups {}
         </li>
       </ul>
     </ng-template>
-    <div *ngTemplateOutlet="test"></div>
+    <ng-container *ngTemplateOutlet="test"></ng-container>
   `,
 })
 class MenuWithMenuItemsAndRadioGroups {}

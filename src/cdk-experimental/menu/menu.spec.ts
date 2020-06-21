@@ -157,7 +157,7 @@ describe('Menu', () => {
         </li>
       </ul>
     </ng-template>
-    <div *ngTemplateOutlet="test"></div>
+    <ng-container *ngTemplateOutlet="test"></ng-container>
   `,
 })
 class MenuCheckboxGroup {}
@@ -173,7 +173,7 @@ class MenuCheckboxGroup {}
         </li>
       </ul>
     </ng-template>
-    <div *ngTemplateOutlet="test"></div>
+    <ng-container *ngTemplateOutlet="test"></ng-container>
   `,
 })
 class MenuWithNestedGroup {}
@@ -190,7 +190,7 @@ class MenuWithNestedGroup {}
         </div>
       </ul>
     </ng-template>
-    <div *ngTemplateOutlet="test"></div>
+    <ng-container *ngTemplateOutlet="test"></ng-container>
   `,
 })
 class MenuWithConditionalGroup {
