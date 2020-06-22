@@ -83,13 +83,13 @@ export class CdkListbox {
 
   /** On click handler of this listbox, updates selected value of clicked option */
   onClickUpdateSelectedOption(event: MouseEvent) {
-    this._options.toArray().forEach(option => {
+    for (const option of this._options.toArray()) {
       const optionId = option.getOptionId();
       if (event.target instanceof Element &&
           optionId === event.target?.getAttribute('data-optionid')) {
         this._updateSelectedOption(option);
       }
-    });
+    }
   }
 
   private _updateSelectedOption(option: CdkOption) {

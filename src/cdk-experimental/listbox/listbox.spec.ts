@@ -33,15 +33,15 @@ describe('CdkOption', () => {
     }));
 
     it('should generate a unique optionId for each option', () => {
-      options.forEach(option => {
+      for (const option of options) {
         expect(option.getOptionId()).toMatch(/cdk-option-\d+/);
-      });
+      }
     });
 
     it('should have set the selected input of the options to null by default', () => {
-      options.forEach(option => {
+      for (const option of options) {
         expect(option.selected).toBeFalse();
-      });
+      }
     });
 
     it('should update aria-selected when selected is changed programmatically', () => {
@@ -50,16 +50,6 @@ describe('CdkOption', () => {
       fixture.detectChanges();
 
       expect(options[1].getElementRef().nativeElement.getAttribute('aria-selected')).toBeTrue();
-    });
-
-    it('should be able to return the currently selected options', () => {
-      expect(listboxInstance.getSelectedOptions().length).toBe(0);
-      options[0].selected = true;
-      fixture.detectChanges();
-      const selectedOptions = listboxInstance.getSelectedOptions();
-
-      expect(selectedOptions.length).toBe(1);
-      expect(selectedOptions[0].selected).toBeTrue();
     });
 
     it('should update selected option on click event', () => {
