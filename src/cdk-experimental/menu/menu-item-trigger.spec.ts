@@ -62,7 +62,7 @@ describe('MenuItemTrigger', () => {
     let triggers: CdkMenuItemTrigger[];
     let nativeTriggers: HTMLButtonElement[];
 
-    const setElements = () => {
+    const grabElementsForTesting = () => {
       menus = fixture.componentInstance.menus.toArray();
       nativeMenus = fixture.componentInstance.nativeMenus.map(m => m.nativeElement);
 
@@ -74,7 +74,7 @@ describe('MenuItemTrigger', () => {
     /** run change detection and, extract and set the rendered elements */
     const detectChanges = () => {
       fixture.detectChanges();
-      setElements();
+      grabElementsForTesting();
     };
 
     const setDocumentDirection = (dir: 'ltr' | 'rtl') => (document.dir = dir);
