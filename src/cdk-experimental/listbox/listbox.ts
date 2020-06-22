@@ -24,29 +24,29 @@ import {
   exportAs: 'cdkOption',
   host: {
     role: 'option',
-    '[attr.aria-selected]': '_selected',
+    '[attr.aria-selected]': '_selected || null',
     '[attr.data-optionid]': '_optionId',
   }
 })
 export class CdkOption {
-  private _selected: boolean | null = null;
+  private _selected: boolean;
   private _optionId: string;
 
   /** Whether the option is selected or not */
   @Input()
-  get selected(): boolean | null {
+  get selected(): boolean {
     return this._selected;
   }
-  set selected(value: boolean | null) {
+  set selected(value: boolean) {
     this._selected = value;
   }
 
-  constructor(private readonly _el: ElementRef) {
+  constructor(private readonly _elementRef: ElementRef) {
     this.setOptionId(`cdk-option-${_uniqueIdCounter++}`);
   }
 
   /** Sets the optionId to the given id */
-  setOptionId(id: string): void {
+  setOptionId(id: string) {
     this._optionId = id;
   }
 
@@ -57,7 +57,7 @@ export class CdkOption {
 
   /** Returns an ElementRef of this option */
   getElementRef(): ElementRef {
-    return this._el;
+    return this._elementRef;
   }
 }
 
@@ -82,32 +82,32 @@ export class CdkListbox {
   @ContentChildren(CdkOption, {descendants: true}) _options: QueryList<CdkOption>;
 
   /** On click handler of this listbox, updates selected value of clicked option */
-  onClickUpdateSelectedOption($event: MouseEvent) {
+  onClickUpdateSelectedOption(event: MouseEvent) {
     this._options.toArray().forEach(option => {
       const optionId = option.getOptionId();
-      if ($event.target instanceof Element &&
-          optionId === $event.target?.getAttribute('data-optionid')) {
+      if (event.target instanceof Element &&
+          optionId === event.target?.getAttribute('data-optionid')) {
         this._updateSelectedOption(option);
       }
     });
   }
 
-  private _updateSelectedOption(option: CdkOption): void {
+  private _updateSelectedOption(option: CdkOption) {
     if (option.selected) {
-      this.deselectOption(option);
+      this.deselect(option);
     } else {
-      this.selectOption(option);
+      this.select(option);
     }
   }
 
   /** Sets the given option's selected state to true */
-  selectOption(option: CdkOption): void {
+  select(option: CdkOption) {
     option.selected = true;
   }
 
   /** Sets the given option's selected state to null. Null is preferable for screen readers */
-  deselectOption(option: CdkOption): void {
-    option.selected = null;
+  deselect(option: CdkOption) {
+    option.selected = false;
   }
 
   /** Returns an array of all options that are currently selected */

@@ -27,12 +27,12 @@ describe('CdkOption', () => {
 
       fixture = TestBed.createComponent(CdkListboxWithCdkOptions);
       fixture.detectChanges();
-      listboxInstance = fixture.debugElement.query(By.directive(CdkListbox))
-          .injector.get(CdkListbox);
+      listboxInstance =
+          fixture.debugElement.query(By.directive(CdkListbox)).injector.get(CdkListbox);
       options = listboxInstance._options.toArray();
     }));
 
-    it('should generate a unique optionid for each option', () => {
+    it('should generate a unique optionId for each option', () => {
       options.forEach(option => {
         expect(option.getOptionId()).toMatch(/cdk-option-\d+/);
       });
@@ -40,16 +40,16 @@ describe('CdkOption', () => {
 
     it('should have set the selected input of the options to null by default', () => {
       options.forEach(option => {
-        expect(option.selected).toBe(null);
+        expect(option.selected).toBeFalse();
       });
     });
 
     it('should update aria-selected when selected is changed programmatically', () => {
-      expect(options[1].getElementRef().nativeElement.getAttribute('aria-selected')).toBe(null);
+      expect(options[1].getElementRef().nativeElement.getAttribute('aria-selected')).toBeNull();
       options[1].selected = true;
       fixture.detectChanges();
 
-      expect(options[1].getElementRef().nativeElement.getAttribute('aria-selected')).toBe('true');
+      expect(options[1].getElementRef().nativeElement.getAttribute('aria-selected')).toBeTrue();
     });
 
     it('should be able to return the currently selected options', () => {
@@ -64,14 +64,14 @@ describe('CdkOption', () => {
 
     it('should update selected option on click event', () => {
       expect(listboxInstance.getSelectedOptions().length).toBe(0);
-      expect(options[0].getElementRef().nativeElement.getAttribute('aria-selected')).toBe(null);
-      expect(options[0].selected).toBeFalsy();
+      expect(options[0].getElementRef().nativeElement.getAttribute('aria-selected')).toBeNull();
+      expect(options[0].selected).toBeFalse();
 
       dispatchMouseEvent(options[0].getElementRef().nativeElement, 'click');
       fixture.detectChanges();
 
       expect(listboxInstance.getSelectedOptions().length).toBe(1);
-      expect(options[0].getElementRef().nativeElement.getAttribute('aria-selected')).toBe('true');
+      expect(options[0].getElementRef().nativeElement.getAttribute('aria-selected')).toBeTrue();
       expect(options[0].selected).toBeTrue();
     });
   });
