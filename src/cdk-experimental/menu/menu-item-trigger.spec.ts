@@ -211,17 +211,21 @@ describe('MenuItemTrigger', () => {
         .toEqual(Math.floor(nativeMenus[0].getBoundingClientRect().top));
     });
 
-    it('should fallback to positioning the overlay above the trigger for horizontal Menu', () => {
-      nativeTriggers[0].style.position = 'fixed';
-      nativeTriggers[0].style.bottom = '0';
+    it(
+      'should fallback to positioning the overlay above the trigger for horizontal Menu ' +
+        'styled to bottom of viewport',
+      () => {
+        nativeTriggers[0].style.position = 'fixed';
+        nativeTriggers[0].style.bottom = '0';
 
-      triggers[0].toggle();
-      detectChanges();
+        triggers[0].toggle();
+        detectChanges();
 
-      expect(Math.floor(nativeTriggers[0].getBoundingClientRect().top))
-        .withContext('trigger button position set to the bottom of the viewport')
-        .toEqual(Math.floor(nativeMenus[0].getBoundingClientRect().bottom));
-    });
+        expect(Math.floor(nativeTriggers[0].getBoundingClientRect().top))
+          .withContext('trigger button position set to the bottom of the viewport')
+          .toEqual(Math.floor(nativeMenus[0].getBoundingClientRect().bottom));
+      }
+    );
 
     it('should position nested submenu overlay to right by default in ltr layout', () => {
       triggers[0].toggle();
