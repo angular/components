@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, ViewChildren, QueryList, ElementRef} from '@angular/core';
 import {ComponentFixture, TestBed, async} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {CdkMenuModule} from './menu-module';
@@ -63,20 +63,12 @@ describe('MenuItemTrigger', () => {
     let nativeTriggers: HTMLButtonElement[];
 
     const setElements = () => {
-      menus = fixture.debugElement
-        .queryAll(By.directive(CdkMenu))
-        .map(e => e.injector.get(CdkMenu));
-      nativeMenus = fixture.debugElement.queryAll(By.directive(CdkMenu)).map(e => e.nativeElement);
+      menus = fixture.componentInstance.menus.toArray();
+      nativeMenus = fixture.componentInstance.nativeMenus.map(m => m.nativeElement);
 
-      menuItems = fixture.debugElement
-        .queryAll(By.directive(CdkMenuItem))
-        .map(e => e.injector.get(CdkMenuItem));
-      triggers = fixture.debugElement
-        .queryAll(By.directive(CdkMenuItemTrigger))
-        .map(e => e.injector.get(CdkMenuItemTrigger));
-      nativeTriggers = fixture.debugElement
-        .queryAll(By.directive(CdkMenuItemTrigger))
-        .map(e => e.nativeElement);
+      menuItems = fixture.componentInstance.menuItems.toArray();
+      triggers = fixture.componentInstance.triggers.toArray();
+      nativeTriggers = fixture.componentInstance.nativeTriggers.map(t => t.nativeElement);
     };
 
     /** run change detection and, extract and set the rendered elements */
@@ -324,4 +316,12 @@ class TriggerForEmptyMenu {}
     </ng-template>
   `,
 })
-class MenuBarWithNestedSubMenus {}
+class MenuBarWithNestedSubMenus {
+  @ViewChildren(CdkMenu) menus: QueryList<CdkMenu>;
+  @ViewChildren(CdkMenu, {read: ElementRef}) nativeMenus: QueryList<ElementRef>;
+
+  @ViewChildren(CdkMenuItemTrigger) triggers: QueryList<CdkMenuItemTrigger>;
+  @ViewChildren(CdkMenuItemTrigger, {read: ElementRef}) nativeTriggers: QueryList<ElementRef>;
+
+  @ViewChildren(CdkMenuItem) menuItems: QueryList<CdkMenuItem>;
+}
