@@ -312,13 +312,13 @@ class TriggerForEmptyMenu {}
     </div>
 
     <ng-template cdkMenuPanel #sub1="cdkMenuPanel">
-      <div cdkMenu>
+      <div cdkMenu [cdkMenuPanel]="sub1">
         <button cdkMenuItem [cdkMenuTriggerFor]="sub2">Second</button>
       </div>
     </ng-template>
 
     <ng-template cdkMenuPanel #sub2="cdkMenuPanel">
-      <div cdkMenu>
+      <div cdkMenu [cdkMenuPanel]="sub2">
         <button cdkMenuItem>Third</button>
       </div>
     </ng-template>

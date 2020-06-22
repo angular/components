@@ -143,8 +143,8 @@ describe('Menu', () => {
 
 @Component({
   template: `
-    <ng-template #test cdkMenuPanel>
-      <ul cdkMenu>
+    <ng-template #template cdkMenuPanel #panel="cdkMenuPanel">
+      <ul cdkMenu [cdkMenuPanel]="panel">
         <li role="none">
           <button checked="true" cdkMenuItemCheckbox>
             first
@@ -157,15 +157,15 @@ describe('Menu', () => {
         </li>
       </ul>
     </ng-template>
-    <ng-container *ngTemplateOutlet="test"></ng-container>
+    <ng-container *ngTemplateOutlet="template"></ng-container>
   `,
 })
 class MenuCheckboxGroup {}
 
 @Component({
   template: `
-    <ng-template #test cdkMenuPanel>
-      <ul cdkMenu>
+    <ng-template #template cdkMenuPanel #panel="cdkMenuPanel">
+      <ul cdkMenu [cdkMenuPanel]="panel">
         <li>
           <ul cdkMenuGroup>
             <li><button cdkMenuCheckbox>first</button></li>
@@ -173,15 +173,15 @@ class MenuCheckboxGroup {}
         </li>
       </ul>
     </ng-template>
-    <ng-container *ngTemplateOutlet="test"></ng-container>
+    <ng-container *ngTemplateOutlet="template"></ng-container>
   `,
 })
 class MenuWithNestedGroup {}
 
 @Component({
   template: `
-    <ng-template #test cdkMenuPanel>
-      <ul cdkMenu>
+    <ng-template #template cdkMenuPanel #panel="cdkMenuPanel">
+      <ul cdkMenu [cdkMenuPanel]="panel">
         <li><button cdkMenuItemCheckbox>first</button></li>
         <div *ngIf="renderInnerGroup">
           <ul cdkMenuGroup>
@@ -190,7 +190,7 @@ class MenuWithNestedGroup {}
         </div>
       </ul>
     </ng-template>
-    <ng-container *ngTemplateOutlet="test"></ng-container>
+    <ng-container *ngTemplateOutlet="template"></ng-container>
   `,
 })
 class MenuWithConditionalGroup {

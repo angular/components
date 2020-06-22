@@ -127,8 +127,8 @@ describe('MenuGroup', () => {
 
 @Component({
   template: `
-    <ng-template #test cdkMenuPanel>
-      <ul cdkMenu>
+    <ng-template #template cdkMenuPanel #panel="cdkMenuPanel">
+      <ul cdkMenu [cdkMenuPanel]="panel">
         <li role="none">
           <ul cdkMenuGroup>
             <li #first role="none">
@@ -145,15 +145,15 @@ describe('MenuGroup', () => {
         </li>
       </ul>
     </ng-template>
-    <ng-container *ngTemplateOutlet="test"></ng-container>
+    <ng-container *ngTemplateOutlet="template"></ng-container>
   `,
 })
 class CheckboxMenu {}
 
 @Component({
   template: `
-    <ng-template #test cdkMenuPanel>
-      <ul cdkMenu>
+    <ng-template #template cdkMenuPanel #panel="cdkMenuPanel">
+      <ul cdkMenu [cdkMenuPanel]="panel">
         <li role="none">
           <ul cdkMenuGroup>
             <li role="none">
@@ -184,15 +184,15 @@ class CheckboxMenu {}
         </li>
       </ul>
     </ng-template>
-    <ng-container *ngTemplateOutlet="test"></ng-container>
+    <ng-container *ngTemplateOutlet="template"></ng-container>
   `,
 })
 class MenuWithMultipleRadioGroups {}
 
 @Component({
   template: `
-    <ng-template #test cdkMenuPanel>
-      <ul cdkMenu>
+    <ng-template #template cdkMenuPanel #panel="cdkMenuPanel">
+      <ul cdkMenu [cdkMenuPanel]="panel">
         <li role="none">
           <ul cdkMenuGroup>
             <li role="none">
@@ -222,7 +222,7 @@ class MenuWithMultipleRadioGroups {}
         </li>
       </ul>
     </ng-template>
-    <ng-container *ngTemplateOutlet="test"></ng-container>
+    <ng-container *ngTemplateOutlet="template"></ng-container>
   `,
 })
 class MenuWithMenuItemsAndRadioGroups {}
