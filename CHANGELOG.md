@@ -1,3 +1,27 @@
+# 10.0.0-rc.3 "leather-feather" (2020-06-22)
+
+### material
+
+|            |                       |
+| ---------- | --------------------- |
+| bug fix |  **datepicker:** date range overriding model value if both fields are changed at the same time ([#19593](https://github.com/angular/components/issues/19593)) ([e2a579a](https://github.com/angular/components/commit/e2a579a)), closes [#19588](https://github.com/angular/components/issues/19588) |
+| bug fix |  **datepicker:** not revalidating after value is changed through the calendar ([#19695](https://github.com/angular/components/issues/19695)) ([10888f3](https://github.com/angular/components/commit/10888f3)) |
+
+### cdk-experimental
+
+|            |                       |
+| ---------- | --------------------- |
+| bug fix |  **column-resize:** not working inside OnPush component ([#19671](https://github.com/angular/components/issues/19671)) ([8ff9844](https://github.com/angular/components/commit/8ff9844)), closes [#19670](https://github.com/angular/components/issues/19670) |
+
+### material-experimental
+
+|            |                       |
+| ---------- | --------------------- |
+| bug fix |  **mdc-menu:** menu items missing padding ([#19634](https://github.com/angular/components/issues/19634)) ([9b8baa6](https://github.com/angular/components/commit/9b8baa6)), closes [#19548](https://github.com/angular/components/issues/19548) |
+| bug fix |  **popover-edit:** closing instantly when opening with enter key ([#18444](https://github.com/angular/components/issues/18444)) ([23b9145](https://github.com/angular/components/commit/23b9145)), closes [#18194](https://github.com/angular/components/issues/18194) |
+| feature |  **mdc-list:** add MDC foundation for action/nav list ([#19601](https://github.com/angular/components/issues/19601)) ([5f15763](https://github.com/angular/components/commit/5f15763)) |
+
+
 # 10.0.0-rc.2 "ferrous-photon" (2020-06-15)
 
 ### material
