@@ -43,7 +43,8 @@ describe('radio button performance benchmarks', () => {
       ignoreBrowserSynchronization: true,
       params: [],
       setup: async() => await $('#show-two').click(),
-      work: async () => await $('.mat-radio-button:not(.mat-radio-checked)').click(),
+      prepare: async() => await $('#btn-1').click(),
+      work: async () => await $('#btn-2').click(),
     });
   });
 });

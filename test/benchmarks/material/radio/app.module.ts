@@ -20,8 +20,8 @@ import {MatRadioModule} from '@angular/material/radio';
     <button id="hide-ten" (click)="hideTen()">Hide Ten</button>
 
     <mat-radio-group aria-label="Select an option" *ngIf="isTwoVisible">
-      <mat-radio-button value="1">Option 1</mat-radio-button>
-      <mat-radio-button value="2">Option 2</mat-radio-button>
+      <mat-radio-button value="1" id="btn-1">Option 1</mat-radio-button>
+      <mat-radio-button value="2" id="btn-2">Option 2</mat-radio-button>
     </mat-radio-group>
 
     <mat-radio-group aria-label="Select an option" *ngIf="isTenVisible">
