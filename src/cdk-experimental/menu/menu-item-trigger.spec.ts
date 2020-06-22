@@ -174,6 +174,7 @@ describe('MenuItemTrigger', () => {
       detectChanges();
 
       expect(menus.length).withContext('first level menu should stay open').toEqual(1);
+      expect(triggers[0]._menuPanel!._menu).toEqual(menus[0]);
     });
 
     it('should emit request to open event on submenu open', () => {
