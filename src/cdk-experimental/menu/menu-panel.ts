@@ -18,7 +18,7 @@ export class CdkMenuPanel {
   /** Reference to the child menu component */
   _menu?: Menu;
 
-  constructor(readonly _templateReference: TemplateRef<unknown>) {}
+  constructor(readonly _templateRef: TemplateRef<unknown>) {}
 
   /**
    * Set the Menu component on the menu panel. Since we cannot use ContentChild to fetch the

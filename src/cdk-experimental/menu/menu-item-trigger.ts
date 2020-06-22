@@ -56,14 +56,14 @@ export class CdkMenuItemTrigger implements OnDestroy {
   @Output() readonly cdkMenuClosed: EventEmitter<void> = new EventEmitter();
 
   /** A reference to the overlay which manages the triggered submenu */
-  private _overlayReference: OverlayRef | null = null;
+  private _overlayRef: OverlayRef | null = null;
 
   /** The Portal in which the Menu is displayed inside of */
   private _portal: TemplatePortal;
 
   constructor(
-    private readonly _elementReference: ElementRef<HTMLElement>,
-    protected readonly _viewContainerReference: ViewContainerRef,
+    private readonly _elementRef: ElementRef<HTMLElement>,
+    protected readonly _viewContainerRef: ViewContainerRef,
     private readonly _overlay: Overlay,
     private readonly _directionality: Directionality,
     @Inject(CDK_MENU) private readonly _parentMenu: Menu
@@ -83,15 +83,15 @@ export class CdkMenuItemTrigger implements OnDestroy {
 
   /** Whether the submenu this button is a trigger for is open */
   isSubmenuOpen() {
-    return this._overlayReference ? this._overlayReference.hasAttached() : false;
+    return this._overlayRef ? this._overlayRef.hasAttached() : false;
   }
 
   /** Open the attached submenu */
   private _openSubmenu() {
     this.cdkMenuOpened.next();
 
-    this._overlayReference = this._overlay.create(this._getOverlayConfig());
-    this._overlayReference.attach(this._getPortal());
+    this._overlayRef = this._overlay.create(this._getOverlayConfig());
+    this._overlayRef.attach(this._getPortal());
   }
 
   /** Close the opened submenu */
@@ -99,7 +99,7 @@ export class CdkMenuItemTrigger implements OnDestroy {
     if (this.isSubmenuOpen()) {
       this.cdkMenuClosed.next();
 
-      this._overlayReference!.detach();
+      this._overlayRef!.detach();
     }
   }
 
@@ -116,7 +116,7 @@ export class CdkMenuItemTrigger implements OnDestroy {
   private _getOverlayPositionStrategy(): FlexibleConnectedPositionStrategy {
     return this._overlay
       .position()
-      .flexibleConnectedTo(this._elementReference)
+      .flexibleConnectedTo(this._elementRef)
       .withPositions(this._getOverlayPositions());
   }
 
@@ -139,24 +139,21 @@ export class CdkMenuItemTrigger implements OnDestroy {
 
   /** Return the portal to be attached to the overlay which contains the menu */
   private _getPortal() {
-    if (!this._portal || this._portal.templateRef !== this._menuPanel?._templateReference) {
-      this._portal = new TemplatePortal(
-        this._menuPanel!._templateReference,
-        this._viewContainerReference
-      );
+    if (!this._portal || this._portal.templateRef !== this._menuPanel?._templateRef) {
+      this._portal = new TemplatePortal(this._menuPanel!._templateRef, this._viewContainerRef);
     }
     return this._portal;
   }
 
   ngOnDestroy() {
-    this._destroyOverlayReference();
+    this._destroyOverlay();
   }
 
   /** Destroy and unset the overlay reference it if exists */
-  private _destroyOverlayReference() {
-    if (this._overlayReference) {
-      this._overlayReference.dispose();
-      this._overlayReference = null;
+  private _destroyOverlay() {
+    if (this._overlayRef) {
+      this._overlayRef.dispose();
+      this._overlayRef = null;
     }
   }
 }
