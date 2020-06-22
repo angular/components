@@ -29,7 +29,7 @@ import {
   }
 })
 export class CdkOption {
-  private _selected: boolean;
+  private _selected: boolean = false;
   private _optionId: string;
 
   /** Whether the option is selected or not */
@@ -108,10 +108,5 @@ export class CdkListbox {
   /** Sets the given option's selected state to null. Null is preferable for screen readers */
   deselect(option: CdkOption) {
     option.selected = false;
-  }
-
-  /** Returns an array of all options that are currently selected */
-  getSelectedOptions(): CdkOption[] {
-    return this._options.toArray().filter(option => option.selected);
   }
 }

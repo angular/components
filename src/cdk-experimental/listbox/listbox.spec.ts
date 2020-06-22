@@ -3,7 +3,7 @@ import {
   async,
   TestBed,
 } from '@angular/core/testing';
-import {Component} from '@angular/core';
+import {Component, DebugElement} from '@angular/core';
 import {By} from '@angular/platform-browser';
 import {
   CdkOption,
@@ -16,8 +16,8 @@ describe('CdkOption', () => {
 
   describe('selection state change', () => {
     let fixture: ComponentFixture<CdkListboxWithCdkOptions>;
-    let listboxInstance: CdkListbox;
-    let options: CdkOption[];
+    let listboxInstance: DebugElement;
+    let options: DebugElement[];
 
     beforeEach(async(() => {
       TestBed.configureTestingModule({
@@ -29,42 +29,43 @@ describe('CdkOption', () => {
     beforeEach(async(() => {
       fixture = TestBed.createComponent(CdkListboxWithCdkOptions);
       fixture.detectChanges();
-      listboxInstance =
-          fixture.debugElement.query(By.directive(CdkListbox)).injector.get(CdkListbox);
-      options = listboxInstance._options.toArray();
+      listboxInstance = fixture.debugElement.query(By.directive(CdkListbox));
+      options = fixture.debugElement.queryAll(By.directive(CdkOption));
     }));
 
     it('should generate a unique optionId for each option', () => {
       for (const option of options) {
-        expect(option.getOptionId()).toMatch(/cdk-option-\d+/);
+        expect(option.injector.get<CdkOption>(CdkOption).getOptionId()).toMatch(/cdk-option-\d+/);
       }
     });
 
     it('should have set the selected input of the options to null by default', () => {
       for (const option of options) {
-        expect(option.selected).toBeFalse();
+        expect(option.injector.get<CdkOption>(CdkOption).selected).toBeFalse();
       }
     });
 
     it('should update aria-selected when selected is changed programmatically', () => {
-      expect(options[1].getElementRef().nativeElement.getAttribute('aria-selected')).toBeNull();
-      options[1].selected = true;
+      expect(options[1].nativeElement.getAttribute('aria-selected')).toBeNull();
+      options[1].injector.get<CdkOption>(CdkOption).selected = true;
       fixture.detectChanges();
 
-      expect(options[1].getElementRef().nativeElement.getAttribute('aria-selected')).toBeTrue();
+      expect(options[1].nativeElement.getAttribute('aria-selected')).toBe('true');
     });
 
     it('should update selected option on click event', () => {
-      expect(listboxInstance.getSelectedOptions().length).toBe(0);
-      expect(options[0].getElementRef().nativeElement.getAttribute('aria-selected')).toBeNull();
-      expect(options[0].selected).toBeFalse();
+      let selectedOptions = options.filter(option => option.injector.get<CdkOption>(CdkOption).selected);
+      expect(selectedOptions.length).toBe(0);
+      expect(options[0].nativeElement.getAttribute('aria-selected')).toBeNull();
+      expect(options[0].injector.get<CdkOption>(CdkOption).selected).toBeFalse();
 
-      dispatchMouseEvent(options[0].getElementRef().nativeElement, 'click');
+      dispatchMouseEvent(options[0].nativeElement, 'click');
       fixture.detectChanges();
 
-      expect(listboxInstance.getSelectedOptions().length).toBe(1);
-      expect(options[0].getElementRef().nativeElement.getAttribute('aria-selected')).toBeTrue();
-      expect(options[0].selected).toBeTrue();
+      selectedOptions = options.filter(option => option.injector.get<CdkOption>(CdkOption).selected);
+      expect(selectedOptions.length).toBe(1);
+      expect(options[0].nativeElement.getAttribute('aria-selected')).toBe('true');
+      expect(options[0].injector.get<CdkOption>(CdkOption).selected).toBeTrue();
     });
   });
 
