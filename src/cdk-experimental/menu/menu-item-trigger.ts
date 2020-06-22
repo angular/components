@@ -103,7 +103,7 @@ export class CdkMenuItemTrigger implements OnDestroy {
     }
   }
 
-  /** Return the configuration object used to create the overlay */
+  /** Get the configuration object used to create the overlay */
   private _getOverlayConfig() {
     return new OverlayConfig({
       positionStrategy: this._getOverlayPositionStrategy(),
@@ -137,7 +137,7 @@ export class CdkMenuItemTrigger implements OnDestroy {
         ];
   }
 
-  /** Return the portal to be attached to the overlay which contains the menu */
+  /** Get the portal to be attached to the overlay which contains the menu */
   private _getPortal() {
     if (!this._portal || this._portal.templateRef !== this._menuPanel?._templateRef) {
       this._portal = new TemplatePortal(this._menuPanel!._templateRef, this._viewContainerRef);

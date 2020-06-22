@@ -87,7 +87,7 @@ export class CdkMenu extends CdkMenuGroup implements Menu, AfterContentInit, OnD
   }
 
   /**
-   * Return the enclosing CdkMenuPanel defaulting to the injected reference over the developer
+   * Get the enclosing CdkMenuPanel defaulting to the injected reference over the developer
    * provided reference.
    */
   private _getMenuPanel() {
