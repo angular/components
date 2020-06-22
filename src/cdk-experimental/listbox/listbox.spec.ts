@@ -16,7 +16,6 @@ describe('CdkOption', () => {
 
   describe('selection state change', () => {
     let fixture: ComponentFixture<CdkListboxWithCdkOptions>;
-    let listboxInstance: DebugElement;
     let options: DebugElement[];
 
     beforeEach(async(() => {
@@ -29,7 +28,6 @@ describe('CdkOption', () => {
     beforeEach(async(() => {
       fixture = TestBed.createComponent(CdkListboxWithCdkOptions);
       fixture.detectChanges();
-      listboxInstance = fixture.debugElement.query(By.directive(CdkListbox));
       options = fixture.debugElement.queryAll(By.directive(CdkOption));
     }));
 
@@ -54,7 +52,8 @@ describe('CdkOption', () => {
     });
 
     it('should update selected option on click event', () => {
-      let selectedOptions = options.filter(option => option.injector.get<CdkOption>(CdkOption).selected);
+      let selectedOptions =
+          options.filter(option => option.injector.get<CdkOption>(CdkOption).selected);
       expect(selectedOptions.length).toBe(0);
       expect(options[0].nativeElement.getAttribute('aria-selected')).toBeNull();
       expect(options[0].injector.get<CdkOption>(CdkOption).selected).toBeFalse();
@@ -62,7 +61,8 @@ describe('CdkOption', () => {
       dispatchMouseEvent(options[0].nativeElement, 'click');
       fixture.detectChanges();
 
-      selectedOptions = options.filter(option => option.injector.get<CdkOption>(CdkOption).selected);
+      selectedOptions =
+          options.filter(option => option.injector.get<CdkOption>(CdkOption).selected);
       expect(selectedOptions.length).toBe(1);
       expect(options[0].nativeElement.getAttribute('aria-selected')).toBe('true');
       expect(options[0].injector.get<CdkOption>(CdkOption).selected).toBeTrue();
