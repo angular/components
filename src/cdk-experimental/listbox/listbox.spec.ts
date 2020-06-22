@@ -24,7 +24,9 @@ describe('CdkOption', () => {
         imports: [CdkListboxModule],
         declarations: [CdkListboxWithCdkOptions],
       }).compileComponents();
+    }));
 
+    beforeEach(async(() => {
       fixture = TestBed.createComponent(CdkListboxWithCdkOptions);
       fixture.detectChanges();
       listboxInstance =
