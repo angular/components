@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {CDK_TABLE_TEMPLATE, CdkTable, CDK_TABLE} from '@angular/cdk/table';
+import {CDK_TABLE_TEMPLATE, CdkTable, CDK_TABLE, CoalescedStyleScheduler} from '@angular/cdk/table';
 import {ChangeDetectionStrategy, Component, ViewEncapsulation} from '@angular/core';
 
 /**
@@ -22,7 +22,8 @@ import {ChangeDetectionStrategy, Component, ViewEncapsulation} from '@angular/co
   },
   providers: [
     {provide: CdkTable, useExisting: MatTable},
-    {provide: CDK_TABLE, useExisting: MatTable}
+    {provide: CDK_TABLE, useExisting: MatTable},
+    CoalescedStyleScheduler,
   ],
   encapsulation: ViewEncapsulation.None,
   // See note on CdkTable for explanation on why this uses the default change detection strategy.
