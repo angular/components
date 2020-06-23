@@ -96,7 +96,7 @@ describe('MenuItemTrigger', () => {
     });
 
     it('should toggle the aria-expanded attribute', () => {
-      expect(nativeTriggers[0].getAttribute('aria-expanded')).toBeNull();
+      expect(nativeTriggers[0].getAttribute('aria-expanded')).toEqual('false');
 
       triggers[0].toggle();
       detectChanges();
@@ -104,7 +104,7 @@ describe('MenuItemTrigger', () => {
 
       triggers[0].toggle();
       detectChanges();
-      expect(nativeTriggers[0].getAttribute('aria-expanded')).toBeNull();
+      expect(nativeTriggers[0].getAttribute('aria-expanded')).toEqual('false');
     });
 
     it('should hide sub-menus on initial load', () => {

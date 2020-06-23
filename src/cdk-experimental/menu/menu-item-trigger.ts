@@ -42,7 +42,7 @@ import {Menu, CDK_MENU} from './menu-interface';
   exportAs: 'cdkMenuTriggerFor',
   host: {
     'aria-haspopup': 'menu',
-    '[attr.aria-expanded]': 'isSubmenuOpen() || null',
+    '[attr.aria-expanded]': 'isSubmenuOpen()',
   },
 })
 export class CdkMenuItemTrigger implements OnDestroy {
