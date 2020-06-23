@@ -154,6 +154,13 @@ export abstract class _MatTabGroupBase extends _MatTabGroupMixinBase implements 
   }
   private _backgroundColor: ThemePalette;
 
+  /**
+   * Whether content that overflows from the tab group should be shown. Must be false if
+   * [animationDuration] is non-zero.
+   */
+  @Input()
+  showOverflow: boolean;
+
   /** Output to enable support for two-way binding on `[(selectedIndex)]` */
   @Output() readonly selectedIndexChange: EventEmitter<number> = new EventEmitter<number>();
 
@@ -180,6 +187,8 @@ export abstract class _MatTabGroupBase extends _MatTabGroupMixinBase implements 
         defaultConfig.animationDuration : '500ms';
     this.disablePagination = defaultConfig && defaultConfig.disablePagination != null ?
         defaultConfig.disablePagination : false;
+    this.showOverflow = defaultConfig && defaultConfig.showOverflow != null ?
+        defaultConfig.showOverflow : false;
   }
 
   /**
@@ -404,6 +413,7 @@ export abstract class _MatTabGroupBase extends _MatTabGroupMixinBase implements 
     'class': 'mat-tab-group',
     '[class.mat-tab-group-dynamic-height]': 'dynamicHeight',
     '[class.mat-tab-group-inverted-header]': 'headerPosition === "below"',
+    '[class.mat-tab-group-show-overflow]': 'showOverflow',
   },
 })
 export class MatTabGroup extends _MatTabGroupBase {

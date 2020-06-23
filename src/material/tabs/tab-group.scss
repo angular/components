@@ -43,6 +43,10 @@
   overflow: hidden;
   display: flex;
   transition: height $mat-tab-animation-duration $ease-in-out-curve-function;
+
+  .mat-tab-group-show-overflow & {
+    overflow: visible;
+  }
 }
 
 // Wraps each tab body
@@ -64,5 +68,10 @@
 
   .mat-tab-group.mat-tab-group-dynamic-height &.mat-tab-body-active {
     overflow-y: hidden;
+  }
+
+  .mat-tab-group.mat-tab-group-show-overflow &,
+  .mat-tab-group-mat-tab-group-show-overflow &.mat-tab-body-active {
+    overflow: visible;
   }
 }

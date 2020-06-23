@@ -7,4 +7,8 @@
   .mat-tab-group-dynamic-height & {
     overflow: hidden;
   }
+
+  .mat-tab-group-show-overflow & {
+    overflow: visible;
+  }
 }

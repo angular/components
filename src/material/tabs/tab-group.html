@@ -45,6 +45,7 @@
                [position]="tab.position!"
                [origin]="tab.origin"
                [animationDuration]="animationDuration"
+               [style.display]="showOverflow && (selectedIndex != i) ? 'none' : null"
                (_onCentered)="_removeTabBodyWrapperHeight()"
                (_onCentering)="_setTabBodyWrapperHeight($event)">
   </mat-tab-body>
