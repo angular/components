@@ -58,12 +58,6 @@ export interface MatChipEvent {
   chip: MatChip;
 }
 
-/** Represents an event fired on an individual `mat-chip` when it is edited. */
-export interface MatChipEditedEvent extends MatChipEvent {
-  /** The final edit value. */
-  value: string;
-}
-
 /** Configuration for the ripple animation. */
 const RIPPLE_ANIMATION_CONFIG: RippleAnimationConfig = {
   enterDuration: numbers.DEACTIVATION_TIMEOUT_MS,
@@ -115,7 +109,6 @@ const _MatChipMixinBase:
     '[class.mat-mdc-chip-with-trailing-icon]': 'trailingIcon || removeIcon',
     '[class.mat-mdc-basic-chip]': '_isBasicChip',
     '[class.mat-mdc-standard-chip]': '!_isBasicChip',
-    '[class.mdc-chip--editable]': 'editable',
     '[class._mat-animation-noopable]': '_animationsDisabled',
     '[id]': 'id',
     '[attr.disabled]': 'disabled || null',
@@ -180,8 +173,6 @@ export class MatChip extends _MatChipMixinBase implements AfterContentInit, Afte
   }
   protected _disabled: boolean = false;
 
-  @Input() editable: boolean = false;
-
   private _textElement!: HTMLElement;
 
   /** The value of the chip. Defaults to the content inside the mdc-chip__text element. */
@@ -225,10 +216,6 @@ export class MatChip extends _MatChipMixinBase implements AfterContentInit, Afte
 
   /** Emitted when a chip is to be removed. */
   @Output() readonly removed: EventEmitter<MatChipEvent> = new EventEmitter<MatChipEvent>();
-
-  /** Emitted when the chip is edited. */
-  @Output() readonly edited: EventEmitter<MatChipEditedEvent> =
-    new EventEmitter<MatChipEditedEvent>();
 
   /** The MDC foundation containing business logic for MDC chip. */
   _chipFoundation: MDCChipFoundation;
@@ -483,10 +470,6 @@ export class MatChip extends _MatChipMixinBase implements AfterContentInit, Afte
     // in the future.
   }
 
-  _isEditing() {
-    return this._chipFoundation.isEditing();
-  }
-
   /** Overridden by MatChipRow. */
   protected _onEditStart() {}
 
@@ -497,5 +480,4 @@ export class MatChip extends _MatChipMixinBase implements AfterContentInit, Afte
   static ngAcceptInputType_removable: BooleanInput;
   static ngAcceptInputType_highlighted: BooleanInput;
   static ngAcceptInputType_disableRipple: BooleanInput;
-  static ngAcceptInputType_editable: BooleanInput;
 }

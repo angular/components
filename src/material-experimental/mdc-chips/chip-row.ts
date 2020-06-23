@@ -17,17 +17,26 @@ import {
   Component,
   ContentChild,
   ElementRef,
+  EventEmitter,
   Inject,
+  Input,
   NgZone,
   Optional,
+  Output,
   ViewChild,
   ViewEncapsulation
 } from '@angular/core';
 import {DOCUMENT} from '@angular/common';
-import {MatChip} from './chip';
+import {MatChip, MatChipEvent} from './chip';
 import {MatChipEditInput} from './chip-edit-input';
 import {GridKeyManagerRow} from './grid-key-manager';
 
+
+/** Represents an event fired on an individual `mat-chip` when it is edited. */
+export interface MatChipEditedEvent extends MatChipEvent {
+  /** The final edit value. */
+  value: string;
+}
 
 /**
  * An extension of the MatChip component used with MatChipGrid and
@@ -62,6 +71,12 @@ import {GridKeyManagerRow} from './grid-key-manager';
 export class MatChipRow extends MatChip implements AfterContentInit, AfterViewInit,
   GridKeyManagerRow<HTMLElement> {
   protected basicChipAttrName = 'mat-basic-chip-row';
+
+  @Input() editable: boolean = false;
+
+  /** Emitted when the chip is edited. */
+  @Output() readonly edited: EventEmitter<MatChipEditedEvent> =
+    new EventEmitter<MatChipEditedEvent>();
 
   /**
    * The focusable wrapper element in the first gridcell, which contains all
@@ -193,6 +208,10 @@ export class MatChipRow extends MatChip implements AfterContentInit, AfterViewIn
       default:
         this._handleInteraction(event);
     }
+  }
+
+  _isEditing() {
+    return this._chipFoundation.isEditing();
   }
 
   protected _onEditStart() {
