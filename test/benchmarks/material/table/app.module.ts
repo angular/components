@@ -30,12 +30,16 @@ function createRow(cols: string[], value: string): GenericObject {
 
 const fiveCols = ['a', 'b', 'c', 'd', 'e'];
 const tenCols = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j'];
-const twentyCols = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't'];
+const twentyCols = [
+  'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j',
+  'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't',
+];
 
 const tenRows = createRows(10, twentyCols);
 const oneHundredRows = createRows(100, twentyCols);
 const oneThousandRows = createRows(1000, twentyCols);
 
+// tslint:disable:max-line-length
 @Component({
   selector: 'app-root',
   template: `
