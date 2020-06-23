@@ -180,7 +180,7 @@ describe('MenuItemTrigger', () => {
 
     it('should emit request to open event on submenu open', () => {
       const triggerSpy = jasmine.createSpy('cdkMenuItem open request emitter');
-      triggers[0].cdkMenuOpened.subscribe(triggerSpy);
+      triggers[0].opened.subscribe(triggerSpy);
 
       triggers[0].toggle();
 
@@ -190,7 +190,7 @@ describe('MenuItemTrigger', () => {
     it('should emit request to close event on submenu close', () => {
       const triggerSpy = jasmine.createSpy('cdkMeuItem close request emitter');
       const closedSpy = jasmine.createSpy('cdkMenu closed emitter');
-      triggers[0].cdkMenuClosed.subscribe(triggerSpy);
+      triggers[0].closed.subscribe(triggerSpy);
 
       triggers[0].toggle();
       detectChanges();

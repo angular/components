@@ -50,10 +50,10 @@ export class CdkMenuItemTrigger implements OnDestroy {
   @Input('cdkMenuTriggerFor') _menuPanel?: CdkMenuPanel;
 
   /** Emits when the attached submenu is requested to open */
-  @Output() readonly cdkMenuOpened: EventEmitter<void> = new EventEmitter();
+  @Output('cdkMenuOpened') readonly opened: EventEmitter<void> = new EventEmitter();
 
   /** Emits when the attached submenu is requested to close  */
-  @Output() readonly cdkMenuClosed: EventEmitter<void> = new EventEmitter();
+  @Output('cdkMenuClosed') readonly closed: EventEmitter<void> = new EventEmitter();
 
   /** A reference to the overlay which manages the triggered submenu */
   private _overlayRef: OverlayRef | null = null;
@@ -88,7 +88,7 @@ export class CdkMenuItemTrigger implements OnDestroy {
 
   /** Open the attached submenu */
   private _openSubmenu() {
-    this.cdkMenuOpened.next();
+    this.opened.next();
 
     this._overlayRef = this._overlay.create(this._getOverlayConfig());
     this._overlayRef.attach(this._getPortal());
@@ -97,7 +97,7 @@ export class CdkMenuItemTrigger implements OnDestroy {
   /** Close the opened submenu */
   private _closeSubmenu() {
     if (this.isSubmenuOpen()) {
-      this.cdkMenuClosed.next();
+      this.closed.next();
 
       this._overlayRef!.detach();
     }
