@@ -158,8 +158,7 @@ export abstract class _MatTabGroupBase extends _MatTabGroupMixinBase implements 
    * Whether content that overflows from the tab group should be shown. Must be false if
    * [animationDuration] is non-zero.
    */
-  @Input()
-  showOverflow: boolean;
+  @Input() showOverflow: boolean;
 
   /** Output to enable support for two-way binding on `[(selectedIndex)]` */
   @Output() readonly selectedIndexChange: EventEmitter<number> = new EventEmitter<number>();

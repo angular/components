@@ -51,6 +51,7 @@ import {BooleanInput, coerceBooleanProperty, NumberInput} from '@angular/cdk/coe
     'class': 'mat-mdc-tab-group',
     '[class.mat-mdc-tab-group-dynamic-height]': 'dynamicHeight',
     '[class.mat-mdc-tab-group-inverted-header]': 'headerPosition === "below"',
+    '[class.mat-mdc-tab-group-show-overflow]': 'showOverflow',
   },
 })
 export class MatTabGroup extends _MatTabGroupBase {

@@ -44,4 +44,8 @@
   overflow: hidden;
   display: flex;
   transition: height $mat-tab-animation-duration $ease-in-out-curve-function;
+
+  .mat-mdc-tab-group-show-overflow & {
+    overflow: visible;
+  }
 }

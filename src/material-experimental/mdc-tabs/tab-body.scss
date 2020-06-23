@@ -22,6 +22,11 @@
   .mat-mdc-tab-group.mat-mdc-tab-group-dynamic-height &.mat-mdc-tab-body-active {
     overflow-y: hidden;
   }
+
+  .mat-mdc-tab-group.mat-mdc-tab-group-show-overflow &,
+  .mat-mdc-tab-group-mat-mdc-tab-group-show-overflow &.mat-mdc-tab-body-active {
+    overflow: visible;
+  }
 }
 
 .mat-mdc-tab-body-content {
@@ -30,5 +35,9 @@
 
   .mat-mdc-tab-group-dynamic-height & {
     overflow: hidden;
+  }
+
+  .mat-mdc-tab-group-show-overflow & {
+    overflow: visible;
   }
 }
