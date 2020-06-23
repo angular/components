@@ -138,7 +138,10 @@ export class CdkMenuItemTrigger implements OnDestroy {
         ];
   }
 
-  /** Get the portal to be attached to the overlay which contains the menu */
+  /**
+   * Get the portal to be attached to the overlay which contains the menu. Allows for the menu
+   * content to change dynamically and be reflected in the application.
+   */
   private _getPortal() {
     if (!this._portal || this._portal.templateRef !== this._menuPanel?._templateRef) {
       this._portal = new TemplatePortal(this._menuPanel!._templateRef, this._viewContainerRef);
