@@ -5,6 +5,7 @@ import {CdkMenuModule} from './menu-module';
 import {CdkMenuItem} from './menu-item';
 import {CdkMenu} from './menu';
 import {CdkMenuItemTrigger} from './menu-item-trigger';
+import {Menu} from './menu-interface';
 
 describe('MenuItemTrigger', () => {
   describe('on CdkMenuItem', () => {
@@ -116,7 +117,7 @@ describe('MenuItemTrigger', () => {
       detectChanges();
 
       expect(menus.length).toEqual(1);
-      expect(triggers[0]._menuPanel!._menu!).toEqual(menus[0]);
+      expect(menus[0] as Menu).toEqual(triggers[0]._menuPanel!._menu!);
     });
 
     it('should not open the submenu when menu item disabled', () => {
