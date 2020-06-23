@@ -7,6 +7,7 @@
  */
 
 import {Directionality} from '@angular/cdk/bidi';
+import {BooleanInput} from '@angular/cdk/coercion';
 import {BACKSPACE, DELETE} from '@angular/cdk/keycodes';
 import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 import {
@@ -230,4 +231,6 @@ export class MatChipRow extends MatChip implements AfterContentInit, AfterViewIn
     }
     this.edited.emit({chip: this, value: this.editInput.getValue()});
   }
+
+  static ngAcceptInputType_editable: BooleanInput;
 }
