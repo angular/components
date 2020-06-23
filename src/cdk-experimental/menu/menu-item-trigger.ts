@@ -58,8 +58,8 @@ export class CdkMenuItemTrigger implements OnDestroy {
   /** A reference to the overlay which manages the triggered submenu */
   private _overlayRef: OverlayRef | null = null;
 
-  /** The Portal in which the Menu is displayed inside of */
-  private _portal: TemplatePortal;
+  /** The content of the menu panel opened by this trigger. */
+  private _panelContent: TemplatePortal;
 
   constructor(
     private readonly _elementRef: ElementRef<HTMLElement>,
@@ -143,10 +143,13 @@ export class CdkMenuItemTrigger implements OnDestroy {
    * content to change dynamically and be reflected in the application.
    */
   private _getPortal() {
-    if (!this._portal || this._portal.templateRef !== this._menuPanel?._templateRef) {
-      this._portal = new TemplatePortal(this._menuPanel!._templateRef, this._viewContainerRef);
+    if (!this._panelContent || this._panelContent.templateRef !== this._menuPanel?._templateRef) {
+      this._panelContent = new TemplatePortal(
+        this._menuPanel!._templateRef,
+        this._viewContainerRef
+      );
     }
-    return this._portal;
+    return this._panelContent;
   }
 
   ngOnDestroy() {
