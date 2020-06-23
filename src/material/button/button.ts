@@ -70,6 +70,9 @@ const _MatButtonMixinBase: CanDisableRippleCtor & CanDisableCtor & CanColorCtor 
   host: {
     '[attr.disabled]': 'disabled || null',
     '[class._mat-animation-noopable]': '_animationMode === "NoopAnimations"',
+    // Add a class for disabled button styling instead of the using attribute
+    // selector or pseudo-selector.  This allows users to create focusabled
+    // disabled buttons without recreating the styles.
     '[class.mat-button-disabled]': 'disabled',
     'class': 'mat-focus-indicator',
   },
