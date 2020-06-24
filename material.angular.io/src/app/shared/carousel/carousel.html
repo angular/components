@@ -1,0 +1,13 @@
+<div class="docs-carousel-content-wrapper" #contentWrapper (window:resize)="onResize()"
+     [style.minWidth]="shiftWidth + 'px'">
+  <button mat-mini-fab class="docs-carousel-nav docs-carousel-nav-prev" (click)="previous()" *ngIf="this.showPrevArrow">
+    <mat-icon>navigate_before</mat-icon>
+  </button>
+  <div class="docs-carousel-content" role="region" tabindex="0" (keydown.arrowright)="next()"
+       (keydown.arrowleft)="previous()">
+    <ng-content></ng-content>
+  </div>
+  <button mat-mini-fab class="docs-carousel-nav docs-carousel-nav-next" (click)="next()" *ngIf="this.showNextArrow">
+    <mat-icon>navigate_next</mat-icon>
+  </button>
+</div>
