@@ -8,7 +8,7 @@
   $nav-background-opacity: if($is-dark-theme, 0.2, 0.03);
 
   .docs-component-category-list-summary a {
-    color: mat-color($primary, default);
+    color: mat-color($primary, if($is-dark-theme, 200, default));
   }
 
   .docs-component-category-list-card-summary {
