@@ -79,6 +79,7 @@ export class CdkColumnDef extends _CdkColumnDefBase implements CanStick {
     if (name) {
       this._name = name;
       this.cssClassFriendlyName = name.replace(/[^a-z0-9_-]/ig, '-');
+      this.updateColumnCssClassName();
     }
   }
   _name: string;
@@ -115,8 +116,21 @@ export class CdkColumnDef extends _CdkColumnDefBase implements CanStick {
    */
   cssClassFriendlyName: string;
 
+  /**
+   * Class name for cells in this column.
+   */
+  columnCssClassName: string;
+
   constructor(@Inject(CDK_TABLE) @Optional() public _table?: any) {
     super();
+  }
+
+  /**
+   * Overridable method that sets the css class that will be added to every cell in this
+   * column.
+   */
+  protected updateColumnCssClassName() {
+    this.columnCssClassName = `cdk-column-${this.cssClassFriendlyName}`;
   }
 
   static ngAcceptInputType_sticky: BooleanInput;
@@ -126,8 +140,7 @@ export class CdkColumnDef extends _CdkColumnDefBase implements CanStick {
 /** Base class for the cells. Adds a CSS classname that identifies the column it renders in. */
 export class BaseCdkCell {
   constructor(columnDef: CdkColumnDef, elementRef: ElementRef) {
-    const columnClassName = `cdk-column-${columnDef.cssClassFriendlyName}`;
-    elementRef.nativeElement.classList.add(columnClassName);
+    elementRef.nativeElement.classList.add(columnDef.columnCssClassName);
   }
 }
 

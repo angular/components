@@ -79,6 +79,7 @@ export declare class CdkColumnDef extends _CdkColumnDefBase implements CanStick 
     _stickyEnd: boolean;
     _table?: any;
     cell: CdkCellDef;
+    columnCssClassName: string;
     cssClassFriendlyName: string;
     footerCell: CdkFooterCellDef;
     headerCell: CdkHeaderCellDef;
@@ -87,6 +88,7 @@ export declare class CdkColumnDef extends _CdkColumnDefBase implements CanStick 
     get stickyEnd(): boolean;
     set stickyEnd(v: boolean);
     constructor(_table?: any);
+    protected updateColumnCssClassName(): void;
     static ngAcceptInputType_sticky: BooleanInput;
     static ngAcceptInputType_stickyEnd: BooleanInput;
     static ɵdir: i0.ɵɵDirectiveDefWithMeta<CdkColumnDef, "[cdkColumnDef]", never, { "sticky": "sticky"; "name": "cdkColumnDef"; "stickyEnd": "stickyEnd"; }, {}, ["cell", "headerCell", "footerCell"]>;

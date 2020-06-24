@@ -11,6 +11,7 @@ export declare class MatCellDef extends CdkCellDef {
 
 export declare class MatColumnDef extends CdkColumnDef {
     name: string;
+    protected updateColumnCssClassName(): void;
     static ngAcceptInputType_sticky: BooleanInput;
     static ɵdir: i0.ɵɵDirectiveDefWithMeta<MatColumnDef, "[matColumnDef]", never, { "sticky": "sticky"; "name": "matColumnDef"; }, {}, never>;
     static ɵfac: i0.ɵɵFactoryDef<MatColumnDef, never>;
@@ -39,7 +40,6 @@ export declare class MatFooterRowDef extends CdkFooterRowDef {
 }
 
 export declare class MatHeaderCell extends CdkHeaderCell {
-    constructor(columnDef: CdkColumnDef, elementRef: ElementRef<HTMLElement>);
     static ɵdir: i0.ɵɵDirectiveDefWithMeta<MatHeaderCell, "mat-header-cell, th[mat-header-cell]", never, {}, {}, never>;
     static ɵfac: i0.ɵɵFactoryDef<MatHeaderCell, never>;
 }
