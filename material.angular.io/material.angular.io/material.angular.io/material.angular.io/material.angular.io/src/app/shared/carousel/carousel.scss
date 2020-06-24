@@ -1,0 +1,34 @@
+app-carousel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 40px;
+}
+
+.docs-carousel-content {
+  display: flex;
+  flex-direction: row;
+  overflow: hidden;
+}
+
+.docs-carousel-content-wrapper {
+  position: relative;
+}
+
+[carousel-item] {
+  flex-shrink: 0;
+}
+
+.docs-carousel-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.docs-carousel-nav-prev {
+  left: -40px;
+}
+
+.docs-carousel-nav-next {
+  right: -40px;
+}
