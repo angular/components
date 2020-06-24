@@ -37,7 +37,7 @@ export class CdkMenuItem {
 
   constructor(
     /** Reference to the CdkMenuItemTrigger directive if one is added to the same element */
-    @Self() @Optional() private readonly _menuTrigger?: CdkMenuItemTrigger
+    @Self() @Optional() readonly _menuTrigger?: CdkMenuItemTrigger
   ) {}
 
   /** Open the menu if one is attached */

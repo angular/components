@@ -16,12 +16,14 @@ import {
   AfterContentInit,
   OnDestroy,
   Optional,
+  ElementRef,
 } from '@angular/core';
 import {take} from 'rxjs/operators';
 import {CdkMenuGroup} from './menu-group';
 import {CdkMenuPanel} from './menu-panel';
 import {Menu, CDK_MENU} from './menu-interface';
 import {throwMissingMenuPanelError} from './menu-errors';
+import {CdkMenuItem} from './menu-item';
 
 /**
  * Directive which configures the element as a Menu which should contain child elements marked as
@@ -56,6 +58,10 @@ export class CdkMenu extends CdkMenuGroup implements Menu, AfterContentInit, OnD
   @ContentChildren(CdkMenuGroup, {descendants: true})
   private readonly _nestedGroups: QueryList<CdkMenuGroup>;
 
+  /** All child MenuItem elements. */
+  @ContentChildren(CdkMenuItem, {descendants: true})
+  private readonly _allItems: QueryList<CdkMenuItem>;
+
   /**
    * A reference to the enclosing parent menu panel.
    *
@@ -65,7 +71,10 @@ export class CdkMenu extends CdkMenuGroup implements Menu, AfterContentInit, OnD
    */
   @Input('cdkMenuPanel') private readonly _explicitPanel?: CdkMenuPanel;
 
-  constructor(@Optional() private readonly _menuPanel?: CdkMenuPanel) {
+  constructor(
+    private readonly _elementRef: ElementRef<HTMLElement>,
+    @Optional() private readonly _menuPanel?: CdkMenuPanel
+  ) {
     super();
   }
 
@@ -74,6 +83,20 @@ export class CdkMenu extends CdkMenuGroup implements Menu, AfterContentInit, OnD
 
     this._completeChangeEmitter();
     this._registerWithParentPanel();
+  }
+
+  /**
+   * Returns true if this Menu, or any open submenu triggered by a MenuItem in this Menu, contains
+   * the given HTMLElement.
+   * @param element the HTML Element to search for.
+   */
+  _contains(element: HTMLElement) {
+    return (
+      this._elementRef.nativeElement.contains(element) ||
+      this._allItems
+        .filter(menuItem => menuItem.hasMenu() && menuItem._menuTrigger!.isMenuOpen())
+        .some(menuItem => menuItem._menuTrigger!._menuPanel!._menu!._contains(element))
+    );
   }
 
   /** Register this menu with its enclosing parent menu panel */

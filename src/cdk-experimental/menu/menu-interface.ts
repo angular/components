@@ -15,4 +15,7 @@ export const CDK_MENU = new InjectionToken<Menu>('cdk-menu');
 export interface Menu {
   /** The orientation of the menu */
   orientation: 'horizontal' | 'vertical';
+
+  /** Whether the menu contains the given element */
+  _contains(element: HTMLElement): boolean;
 }

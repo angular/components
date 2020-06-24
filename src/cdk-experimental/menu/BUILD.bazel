@@ -14,6 +14,7 @@ ng_module(
         "//src/cdk/coercion",
         "//src/cdk/collections",
         "//src/cdk/overlay",
+        "//src/cdk/platform",
         "@npm//@angular/core",
         "@npm//rxjs",
     ],
