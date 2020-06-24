@@ -460,27 +460,29 @@ export class CdkTable<T> implements AfterContentChecked, CollectionViewer, OnDes
     }
 
     // Render updates if the list of columns have been changed for the header, row, or footer defs.
-    let forced = this._renderUpdatedColumns();
+    const columnsChanged = this._renderUpdatedColumns();
+    const stickyColumnStyleUpdateNeeded =
+            columnsChanged || this._headerRowDefChanged || this._footerRowDefChanged;
 
     // If the header row definition has been changed, trigger a render to the header row.
     if (this._headerRowDefChanged) {
       this._forceRenderHeaderRows();
       this._headerRowDefChanged = false;
-      forced = true;
     }
 
     // If the footer row definition has been changed, trigger a render to the footer row.
     if (this._footerRowDefChanged) {
       this._forceRenderFooterRows();
       this._footerRowDefChanged = false;
-      forced = true;
     }
 
     // If there is a data source and row definitions, connect to the data source unless a
     // connection has already been made.
     if (this.dataSource && this._rowDefs.length > 0 && !this._renderChangeSubscription) {
       this._observeRenderChanges();
-    } else if (forced) {
+    } else if (stickyColumnStyleUpdateNeeded) {
+      // In the above case, _observeRenderChanges will result in updateStickyColumnStyles being
+      // called when it row data arrives. Otherwise, we need to call it proactively.
       this.updateStickyColumnStyles();
     }
 
@@ -788,28 +790,27 @@ export class CdkTable<T> implements AfterContentChecked, CollectionViewer, OnDes
    * whether the sticky states have changed for the header or footer. If there is a diff, then
    * re-render that section.
    */
-  private _renderUpdatedColumns() {
+  private _renderUpdatedColumns(): boolean {
     const columnsDiffReducer = (acc: boolean, def: BaseRowDef) => acc || !!def.getColumnsDiff();
-    let forced = false;
 
     // Force re-render data rows if the list of column definitions have changed.
-    if (this._rowDefs.reduce(columnsDiffReducer, false)) {
+    const dataColumnsChanged = this._rowDefs.reduce(columnsDiffReducer, false);
+    if (dataColumnsChanged) {
       this._forceRenderDataRows();
-      forced = true;
     }
 
-    // Force re-render header/footer rows if the list of column definitions have changed..
-    if (this._headerRowDefs.reduce(columnsDiffReducer, false)) {
+    // Force re-render header/footer rows if the list of column definitions have changed.
+    const headerColumnsChanged = this._headerRowDefs.reduce(columnsDiffReducer, false);
+    if (headerColumnsChanged) {
       this._forceRenderHeaderRows();
-      forced = true;
     }
 
-    if (this._footerRowDefs.reduce(columnsDiffReducer, false)) {
+    const footerColumnsChanged = this._footerRowDefs.reduce(columnsDiffReducer, false);
+    if (footerColumnsChanged) {
       this._forceRenderFooterRows();
-      forced = true;
     }
 
-    return forced;
+    return dataColumnsChanged || headerColumnsChanged || footerColumnsChanged;
   }
 
   /**
