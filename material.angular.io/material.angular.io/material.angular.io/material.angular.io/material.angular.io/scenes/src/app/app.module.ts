@@ -8,6 +8,9 @@ import {MatNativeDateModule} from '@angular/material/core';
 import {MatDialogModule} from '@angular/material/dialog';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import {ScrollingModule} from '@angular/cdk/scrolling';
+import {OverlayContainer} from '@angular/cdk/overlay';
+import {SceneOverlayContainer} from './scene-overlay-container';
+import {DOCUMENT} from '@angular/common';
 
 @NgModule({
   declarations: [
@@ -22,7 +25,12 @@ import {ScrollingModule} from '@angular/cdk/scrolling';
     MatDialogModule,
     ScrollingModule
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  providers: [{
+    provide: OverlayContainer,
+    useFactory: (doc: any) => new SceneOverlayContainer(doc),
+    deps: [DOCUMENT]
+  }]
 })
 export class AppModule {
 }
