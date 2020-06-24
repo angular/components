@@ -16,11 +16,11 @@
     "title": "8.2.3"
   },
   {
-    "url": "https://material.angular.io/",
+    "url": "https://v9.material.angular.io/",
     "title": "9.2.4"
   },
   {
-    "url": "https://next.material.angular.io/",
-    "title": "10.0.0-next.1"
+    "url": "https://material.angular.io/",
+    "title": "10.0.0"
   }
 ]
