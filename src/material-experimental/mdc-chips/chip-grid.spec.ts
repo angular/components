@@ -504,6 +504,7 @@ describe('MDC-based MatChipGrid', () => {
 
       it('should ignore all non-tab navigation keyboard events from an editing chip', () => {
         setupStandardGrid();
+        manager = chipGridInstance._keyManager;
         testComponent.editable = true;
         fixture.detectChanges();
 
@@ -519,7 +520,7 @@ describe('MDC-based MatChipGrid', () => {
         const KEYS_TO_IGNORE = [HOME, END, LEFT_ARROW, RIGHT_ARROW];
         for (const key of KEYS_TO_IGNORE) {
           const event: KeyboardEvent =
-          createKeyboardEvent('keydown', key, undefined, document.activeElement!);
+              createKeyboardEvent('keydown', key, undefined, document.activeElement!);
           chipGridInstance._keydown(event);
           fixture.detectChanges();
 

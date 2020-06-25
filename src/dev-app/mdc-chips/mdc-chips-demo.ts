@@ -83,7 +83,7 @@ export class MdcChipsDemo {
   }
 
   edit(person: Person, event: MatChipEditedEvent): void {
-    if (event.value.trim().length === 0) {
+    if (!event.value.trim().length) {
       this.remove(person);
       return;
     }

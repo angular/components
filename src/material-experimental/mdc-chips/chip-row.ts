@@ -77,7 +77,7 @@ export class MatChipRow extends MatChip implements AfterContentInit, AfterViewIn
 
   /** Emitted when the chip is edited. */
   @Output() readonly edited: EventEmitter<MatChipEditedEvent> =
-    new EventEmitter<MatChipEditedEvent>();
+      new EventEmitter<MatChipEditedEvent>();
 
   /**
    * The focusable wrapper element in the first gridcell, which contains all
@@ -90,14 +90,6 @@ export class MatChipRow extends MatChip implements AfterContentInit, AfterViewIn
 
   /** The projected chip edit input. */
   @ContentChild(MatChipEditInput) contentEditInput?: MatChipEditInput;
-
-  /**
-   * Gets the projected chip edit input, or the default input if none is projected in. One of these
-   * two values is guaranteed to be defined.
-   */
-  get editInput(): MatChipEditInput {
-    return this.contentEditInput || this.defaultEditInput!;
-  }
 
   /** The focusable grid cells for this row. Implemented as part of GridKeyManagerRow. */
   cells!: HTMLElement[];
@@ -218,18 +210,26 @@ export class MatChipRow extends MatChip implements AfterContentInit, AfterViewIn
   protected _onEditStart() {
     // Defer initializing the input so it has time to be added to the DOM.
     setTimeout(() => {
-      this.editInput.initialize(this.value);
+      this._getEditInput().initialize(this.value);
     });
   }
 
   protected _onEditFinish() {
     // If the edit input is still focused or focus was returned to the body after it was destroyed,
     // return focus to the chip contents.
-    if (this._document.activeElement === this.editInput.getNativeElement() ||
+    if (this._document.activeElement === this._getEditInput().getNativeElement() ||
         this._document.activeElement === this._document.body) {
       this.chipContent.nativeElement.focus();
     }
-    this.edited.emit({chip: this, value: this.editInput.getValue()});
+    this.edited.emit({chip: this, value: this._getEditInput().getValue()});
+  }
+
+  /**
+   * Gets the projected chip edit input, or the default input if none is projected in. One of these
+   * two values is guaranteed to be defined.
+   */
+  private _getEditInput(): MatChipEditInput {
+    return this.contentEditInput || this.defaultEditInput!;
   }
 
   static ngAcceptInputType_editable: BooleanInput;
