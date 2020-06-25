@@ -15,9 +15,9 @@ import {MatSnackBarRef} from './snack-bar-ref';
  * Internal interface for a simple snack bar component..
  * @docs-private
  */
-export interface BaseSimpleSnackBar {
+export interface TextOnlySnackBar {
   data: {message: string, action: string};
-  snackBarRef: MatSnackBarRef<BaseSimpleSnackBar>;
+  snackBarRef: MatSnackBarRef<TextOnlySnackBar>;
 }
 
 /**
@@ -34,7 +34,7 @@ export interface BaseSimpleSnackBar {
     'class': 'mat-simple-snackbar',
   }
 })
-export class SimpleSnackBar implements BaseSimpleSnackBar {
+export class SimpleSnackBar implements TextOnlySnackBar {
   /** Data that was injected into the snack bar. */
   data: {message: string, action: string};
 

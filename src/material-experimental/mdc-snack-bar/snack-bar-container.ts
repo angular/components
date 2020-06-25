@@ -51,6 +51,10 @@ const MDC_SNACKBAR_LABEL_CLASS = 'mdc-snackbar__label';
     '[attr.role]': '_role',
     'class': 'mdc-snackbar mat-mdc-snack-bar-container',
     '[class.mat-snack-bar-container]': 'false',
+    // Mark this element with a 'mat-exit' attribute to indicate that the snackbar has
+    // been dismissed and will soon be removed from the DOM. This is used by the snackbar
+    // test harness.
+    '[attr.mat-exit]': `_exiting ? '' : null`,
   }
 })
 export class MatSnackBarContainer extends BasePortalOutlet
@@ -63,6 +67,9 @@ export class MatSnackBarContainer extends BasePortalOutlet
 
   /** ARIA role for the snack bar container. */
   _role: 'alert' | 'status' | null;
+
+  /** Whether the snack bar is currently exiting. */
+  _exiting = false;
 
   private _mdcAdapter: MDCSnackbarAdapter = {
     addClass: (className: string) => this._setClass(className, true),
@@ -133,11 +140,7 @@ export class MatSnackBarContainer extends BasePortalOutlet
   }
 
   exit(): Observable<void> {
-    // Mark this element with an 'exit' attribute to indicate that the snackbar has
-    // been dismissed and will soon be removed from the DOM. This is used by the snackbar
-    // test harness.
-    this._elementRef.nativeElement.setAttribute('mat-exit', '');
-
+    this._exiting = true;
     this._mdcFoundation.close();
     return this._onExit.asObservable();
   }

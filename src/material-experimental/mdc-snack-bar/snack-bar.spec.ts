@@ -179,11 +179,11 @@ describe('MatSnackBar', () => {
     snackBarRef.afterDismissed().subscribe({complete: dismissCompleteSpy});
 
     snackBarRef.dismiss();
+    viewContainerFixture.detectChanges();
     const messageElement = overlayContainerElement.querySelector('mat-mdc-snack-bar-container')!;
     expect (messageElement.hasAttribute('mat-exit'))
         .toBe(true, 'Expected the snackbar container to have the "exit" attribute upon dismiss');
 
-    viewContainerFixture.detectChanges();  // Run through animations for dismissal
     flush();
 
     expect(dismissCompleteSpy).toHaveBeenCalled();
