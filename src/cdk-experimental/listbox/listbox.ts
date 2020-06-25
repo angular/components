@@ -48,7 +48,12 @@ export class CdkOption {
   }
 
   _onClickUpdateSelected() {
+    this.toggleSelected();
     this.listbox._emitChangeEvent(this);
+  }
+
+  toggleSelected() {
+    this.selected = !this.selected;
   }
 
   /** Sets the optionId to the given id */
