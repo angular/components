@@ -49,7 +49,7 @@ export class CdkOption {
   }
 
   _onClickUpdateSelected() {
-
+    this.selectionChange.emit(this);
   }
 
   /** Sets the optionId to the given id */
@@ -80,7 +80,6 @@ let _uniqueIdCounter = 0;
   exportAs: 'cdkListbox',
   host: {
     role: 'listbox',
-    '(click)': 'onClickUpdateSelectedOption($event)'
   }
 })
 export class CdkListbox {
@@ -88,23 +87,24 @@ export class CdkListbox {
   /** A query list containing all CdkOption elements within this listbox */
   @ContentChildren(CdkOption, {descendants: true}) _options: QueryList<CdkOption>;
 
-  /** On click handler of this listbox, updates selected value of clicked option */
-  onClickUpdateSelectedOption(event: MouseEvent) {
-    for (const option of this._options.toArray()) {
-      const optionId = option.getOptionId();
-      if (event.target instanceof Element &&
-          optionId === event.target?.getAttribute('data-optionid')) {
+  @Output() readonly selectionChange: EventEmitter<CdkOption> = new EventEmitter<CdkOption>();
+
+  ngAfterContentInit() {
+    for (const option of this._options) {
+      option.selectionChange.subscribe(() => {
         this._updateSelectedOption(option);
-      }
+      })
     }
   }
 
+  /** Toggles the selected state of the given option and emits the option in the selectionChange event */
   private _updateSelectedOption(option: CdkOption) {
     if (option.selected) {
       this.deselect(option);
     } else {
       this.select(option);
     }
+    this.selectionChange.emit(option);
   }
 
   /** Sets the given option's selected state to true */
