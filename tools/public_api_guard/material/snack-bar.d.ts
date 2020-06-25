@@ -4,24 +4,16 @@ export declare const MAT_SNACK_BAR_DEFAULT_OPTIONS: InjectionToken<MatSnackBarCo
 
 export declare function MAT_SNACK_BAR_DEFAULT_OPTIONS_FACTORY(): MatSnackBarConfig;
 
-export interface MatSimpleSnackBarInterface {
-    data: {
-        message: string;
-        action: string;
-    };
-    snackBarRef: MatSnackBarRef<MatSimpleSnackBarInterface>;
-}
-
 export declare class MatSnackBar implements OnDestroy {
     get _openedSnackBarRef(): MatSnackBarRef<any> | null;
     set _openedSnackBarRef(value: MatSnackBarRef<any> | null);
     protected handsetCssClass: string;
-    protected simpleSnackBarComponent: Type<MatSimpleSnackBarInterface>;
+    protected simpleSnackBarComponent: Type<TextOnlySnackBar>;
     protected snackBarContainerComponent: Type<MatSnackBarContainerInterface>;
     constructor(_overlay: Overlay, _live: LiveAnnouncer, _injector: Injector, _breakpointObserver: BreakpointObserver, _parentSnackBar: MatSnackBar, _defaultConfig: MatSnackBarConfig);
     dismiss(): void;
     ngOnDestroy(): void;
-    open(message: string, action?: string, config?: MatSnackBarConfig): MatSnackBarRef<MatSimpleSnackBarInterface>;
+    open(message: string, action?: string, config?: MatSnackBarConfig): MatSnackBarRef<TextOnlySnackBar>;
     openFromComponent<T>(component: ComponentType<T>, config?: MatSnackBarConfig): MatSnackBarRef<T>;
     openFromTemplate(template: TemplateRef<any>, config?: MatSnackBarConfig): MatSnackBarRef<EmbeddedViewRef<any>>;
     static ɵfac: i0.ɵɵFactoryDef<MatSnackBar, [null, null, null, null, { optional: true; skipSelf: true; }, null]>;
@@ -101,7 +93,7 @@ export declare class MatSnackBarRef<T> {
 
 export declare type MatSnackBarVerticalPosition = 'top' | 'bottom';
 
-export declare class SimpleSnackBar implements MatSimpleSnackBarInterface {
+export declare class SimpleSnackBar implements TextOnlySnackBar {
     data: {
         message: string;
         action: string;
@@ -112,4 +104,12 @@ export declare class SimpleSnackBar implements MatSimpleSnackBarInterface {
     action(): void;
     static ɵcmp: i0.ɵɵComponentDefWithMeta<SimpleSnackBar, "simple-snack-bar", never, {}, {}, never, never>;
     static ɵfac: i0.ɵɵFactoryDef<SimpleSnackBar, never>;
+}
+
+export interface TextOnlySnackBar {
+    data: {
+        message: string;
+        action: string;
+    };
+    snackBarRef: MatSnackBarRef<TextOnlySnackBar>;
 }
