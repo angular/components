@@ -550,7 +550,7 @@ export class MatTooltip implements OnDestroy, AfterViewInit {
 
   /** Binds the pointer events to the tooltip trigger. */
   private _setupPointerEvents() {
-    // Defer hooking up events if there's no message.
+    // Optimization: Defer hooking up events if there's no message or the tooltip is disabled.
     if (this._disabled || !this.message || !this._viewInitialized ||
         this._passiveListeners.size) {
       return;
