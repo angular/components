@@ -18,7 +18,8 @@ describe('screenshot scenes for each component', () => {
                       'checkbox',
                       'chips',
                       'progress-bar',
-                      'stepper'];
+                      'stepper',
+                      'radio'];
   beforeEach(() => {
     page = new AppPage();
   });

@@ -16,6 +16,7 @@ import {CheckboxScene} from './scenes/checkbox/checkbox-scene';
 import {ChipsScene} from './scenes/chips/chips-scene';
 import {ProgressBarScene} from './scenes/progress-bar/progress-bar-scene';
 import {StepperScene} from './scenes/stepper/stepper-scene';
+import {RadioScene} from './scenes/radio/radio-scene';
 
 let hue = 0;
 
@@ -55,7 +56,7 @@ const routes: SceneViewerRoute[] = [
     component: SceneViewer,
     data: {scale: 1.3, scene: ProgressSpinnerScene}
   },
-  {path: 'radio', component: SceneViewer, data: {scene: PlaceHolderScene}},
+  {path: 'radio', component: SceneViewer, data: {scene: RadioScene}},
   {path: 'ripple', component: SceneViewer, data: {scene: RipplesScene}},
   {path: 'select', component: SceneViewer, data: {scene: PlaceHolderScene}},
   {path: 'sidenav', component: SceneViewer, data: {scene: PlaceHolderScene}},
