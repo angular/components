@@ -24,7 +24,7 @@ import {
   exportAs: 'cdkOption',
   host: {
     role: 'option',
-    '(click)': '_onClickUpdateSelected()',
+    '(click)': 'toggle()',
     '[attr.aria-selected]': '_selected || null',
     '[attr.data-optionid]': '_optionId',
   }
@@ -47,13 +47,9 @@ export class CdkOption {
     this.setOptionId(`cdk-option-${_uniqueIdCounter++}`);
   }
 
-  _onClickUpdateSelected() {
-    this.toggleSelected();
-    this.listbox._emitChangeEvent(this);
-  }
-
-  toggleSelected() {
+  toggle() {
     this.selected = !this.selected;
+    this.listbox._emitChangeEvent(this);
   }
 
   /** Sets the optionId to the given id */
