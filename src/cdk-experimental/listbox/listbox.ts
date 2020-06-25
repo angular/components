@@ -9,7 +9,7 @@
 import {
   ContentChildren,
   Directive,
-  ElementRef, EventEmitter,
+  ElementRef, EventEmitter, forwardRef, Inject,
   Input, Output,
   QueryList
 } from '@angular/core';
@@ -42,14 +42,13 @@ export class CdkOption {
     this._selected = value;
   }
 
-  @Output() readonly selectionChange: EventEmitter<CdkOption> = new EventEmitter<CdkOption>();
-
-  constructor(private readonly _elementRef: ElementRef) {
+  constructor(private readonly _elementRef: ElementRef,
+              @Inject(forwardRef(() => CdkListbox)) public listbox: CdkListbox) {
     this.setOptionId(`cdk-option-${_uniqueIdCounter++}`);
   }
 
   _onClickUpdateSelected() {
-    this.selectionChange.emit(this);
+    this.listbox._emitChangeEvent(this);
   }
 
   /** Sets the optionId to the given id */
@@ -89,21 +88,8 @@ export class CdkListbox {
 
   @Output() readonly selectionChange: EventEmitter<CdkOption> = new EventEmitter<CdkOption>();
 
-  ngAfterContentInit() {
-    for (const option of this._options) {
-      option.selectionChange.subscribe(() => {
-        this._updateSelectedOption(option);
-      })
-    }
-  }
-
-  /** Toggles the selected state of the given option and emits the option in the selectionChange event */
-  private _updateSelectedOption(option: CdkOption) {
-    if (option.selected) {
-      this.deselect(option);
-    } else {
-      this.select(option);
-    }
+  /** Emits a selection change event, called when an option has its selected state changed */
+  _emitChangeEvent(option: CdkOption) {
     this.selectionChange.emit(option);
   }
 
