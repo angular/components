@@ -8,6 +8,7 @@
 
 export * from './simple-snack-bar';
 export * from './snack-bar-container';
+export * from './snack-bar-content';
 export * from './snack-bar';
 export * from './module';
 

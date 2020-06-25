@@ -9,39 +9,17 @@
 import {OverlayModule} from '@angular/cdk/overlay';
 import {PortalModule} from '@angular/cdk/portal';
 import {CommonModule} from '@angular/common';
-import {Directive, NgModule} from '@angular/core';
+import {NgModule} from '@angular/core';
+import {
+  MatSnackBarAction,
+  MatSnackBarActions,
+  MatSnackBarLabel
+} from '@angular/material-experimental/mdc-snack-bar/snack-bar-content';
 import {MatButtonModule} from '@angular/material/button';
 import {MatCommonModule} from '@angular/material/core';
 
 import {MatSimpleSnackBar} from './simple-snack-bar';
 import {MatSnackBarContainer} from './snack-bar-container';
-
-/** Directive that should be applied to the text element to be rendered in the snack bar. */
-@Directive({
-  selector: `[matSnackBarLabel]`,
-  host: {
-    'class': 'mat-mdc-snack-bar-label mdc-snackbar__label',
-  }
-})
-export class MatSnackBarLabel {}
-
-/** Directive that should be applied to the element containing the snack bar's action buttons. */
-@Directive({
-  selector: `[matSnackBarActions]`,
-  host: {
-    'class': 'mat-mdc-snack-bar-actions mdc-snackbar__actions',
-  }
-})
-export class MatSnackBarActions {}
-
-/** Directive that should be applied to each of the snack bar's action buttons. */
-@Directive({
-  selector: `[matSnackBarAction]`,
-  host: {
-    'class': 'mat-mdc-snack-bar-action mdc-snackbar__action',
-  }
-})
-export class MatSnackBarAction {}
 
 @NgModule({
   imports: [

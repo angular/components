@@ -17,7 +17,7 @@ import {
   MAT_SNACK_BAR_DEFAULT_OPTIONS,
   MatSimpleSnackBar,
   MatSnackBar,
-  MatSnackBarConfig,
+  MatSnackBarConfig, MatSnackBarContainer,
   MatSnackBarModule,
   MatSnackBarRef,
 } from './index';
@@ -98,6 +98,14 @@ describe('MatSnackBar', () => {
 
     const containerElement = overlayContainerElement.querySelector('mat-mdc-snack-bar-container')!;
     expect(containerElement.getAttribute('role')).toBeFalsy('Expected role to be removed');
+  });
+
+  it('should have exactly one MDC label element when opened through simple snack bar', () => {
+    let config: MatSnackBarConfig = {viewContainerRef: testViewContainerRef};
+    snackBar.open(simpleMessage, simpleActionLabel, config);
+    viewContainerFixture.detectChanges();
+
+    expect(overlayContainerElement.querySelectorAll('.mdc-snackbar__label').length).toBe(1);
   });
 
   it('should open and close a snackbar without a ViewContainerRef', fakeAsync(() => {
@@ -419,14 +427,18 @@ describe('MatSnackBar', () => {
   }));
 
   it('should dismiss the open snack bar on destroy', fakeAsync(() => {
-    snackBar.open(simpleMessage);
+    const snackBarRef = snackBar.open(simpleMessage);
     viewContainerFixture.detectChanges();
     expect(overlayContainerElement.childElementCount).toBeGreaterThan(0);
+
+    const foundation = (snackBarRef.containerInstance as MatSnackBarContainer)._mdcFoundation;
+    spyOn(foundation, 'destroy').and.callThrough();
 
     snackBar.ngOnDestroy();
     flush();
 
     expect(overlayContainerElement.childElementCount).toBe(0);
+    expect(foundation.destroy).toHaveBeenCalled();
   }));
 
   describe('with custom component', () => {
@@ -444,6 +456,12 @@ describe('MatSnackBar', () => {
 
       expect(snackBarRef.instance.snackBarRef)
           .toBe(snackBarRef, 'Expected component to have an injected snack bar reference.');
+    });
+
+    it('should have exactly one MDC label element', () => {
+      snackBar.openFromComponent(BurritosNotification);
+      viewContainerFixture.detectChanges();
+      expect(overlayContainerElement.querySelectorAll('.mdc-snackbar__label').length).toBe(1);
     });
 
     it('should be able to inject arbitrary user data', () => {

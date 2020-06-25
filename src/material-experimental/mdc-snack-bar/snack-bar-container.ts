@@ -25,7 +25,13 @@ import {
 } from '@angular/core';
 import {MatSnackBarConfig, MatSnackBarContainerInterface} from '@angular/material/snack-bar';
 import {MDCSnackbarAdapter, MDCSnackbarFoundation} from '@material/snackbar';
-import {Subject} from 'rxjs';
+import {Observable, Subject} from 'rxjs';
+
+/**
+ * The MDC label class that should wrap the label content of the snack bar.
+ * @docs-private
+ */
+const MDC_SNACKBAR_LABEL_CLASS = 'mdc-snackbar__label';
 
 /**
  * Internal component that wraps user-provided snack bar content.
@@ -41,21 +47,19 @@ import {Subject} from 'rxjs';
   // tslint:disable-next-line:validate-decorators
   changeDetection: ChangeDetectionStrategy.Default,
   encapsulation: ViewEncapsulation.None,
-  animations: [],
   host: {
     '[attr.role]': '_role',
-    '[class.mdc-snackbar]': 'true',
-    '[class.mat-mdc-snack-bar-container]': 'true',
+    'class': 'mdc-snackbar mat-mdc-snack-bar-container',
     '[class.mat-snack-bar-container]': 'false',
   }
 })
 export class MatSnackBarContainer extends BasePortalOutlet
     implements MatSnackBarContainerInterface, AfterViewChecked, OnDestroy {
   /** Subject for notifying that the snack bar has exited from view. */
-  readonly _onExit: Subject<any> = new Subject();
+  readonly _onExit: Subject<void> = new Subject();
 
   /** Subject for notifying that the snack bar has finished entering the view. */
-  readonly _onEnter: Subject<any> = new Subject();
+  readonly _onEnter: Subject<void> = new Subject();
 
   /** ARIA role for the snack bar container. */
   _role: 'alert' | 'status' | null;
@@ -64,13 +68,16 @@ export class MatSnackBarContainer extends BasePortalOutlet
     addClass: (className: string) => this._setClass(className, true),
     removeClass: (className: string) => this._setClass(className, false),
     announce: () => {},
-    notifyClosed: () => this._onExit.next(),
+    notifyClosed: () => {
+      this._onExit.next();
+      this._mdcFoundation.destroy();
+    },
     notifyClosing: () => {},
     notifyOpened: () => this._onEnter.next(),
     notifyOpening: () => {},
   };
 
-  private _mdcFoundation = new MDCSnackbarFoundation(this._mdcAdapter);
+  _mdcFoundation = new MDCSnackbarFoundation(this._mdcAdapter);
 
   /** The portal outlet inside of this container into which the snack bar content will be loaded. */
   @ViewChild(CdkPortalOutlet, {static: true}) _portalOutlet: CdkPortalOutlet;
@@ -109,9 +116,11 @@ export class MatSnackBarContainer extends BasePortalOutlet
     // Check to see if the attached component or template uses the MDC template structure,
     // specifically the MDC label. If not, the container should apply the MDC label class to this
     // component's label container, which will apply MDC's label styles to the attached view.
-    const attachedViewHasMdcLabel =
-        !!this._label.nativeElement.querySelector('.mdc-snackbar__label');
-    this._label.nativeElement.classList.toggle('mdc-snackbar__label', !attachedViewHasMdcLabel);
+    if (!this._label.nativeElement.querySelector(`.${MDC_SNACKBAR_LABEL_CLASS}`)) {
+      this._label.nativeElement.classList.add(MDC_SNACKBAR_LABEL_CLASS);
+    } else {
+      this._label.nativeElement.classList.remove(MDC_SNACKBAR_LABEL_CLASS);
+    }
   }
 
   /** Makes sure the exit callbacks have been invoked when the element is destroyed. */
@@ -123,14 +132,14 @@ export class MatSnackBarContainer extends BasePortalOutlet
     this._mdcFoundation.open();
   }
 
-  exit() {
+  exit(): Observable<void> {
     // Mark this element with an 'exit' attribute to indicate that the snackbar has
     // been dismissed and will soon be removed from the DOM. This is used by the snackbar
     // test harness.
     this._elementRef.nativeElement.setAttribute('mat-exit', '');
 
     this._mdcFoundation.close();
-    return this._onExit;
+    return this._onExit.asObservable();
   }
 
   /** Attach a component portal as content to this snack bar container. */
