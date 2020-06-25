@@ -10,16 +10,16 @@ import {OverlayModule} from '@angular/cdk/overlay';
 import {PortalModule} from '@angular/cdk/portal';
 import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
-import {
-  MatSnackBarAction,
-  MatSnackBarActions,
-  MatSnackBarLabel
-} from '@angular/material-experimental/mdc-snack-bar/snack-bar-content';
 import {MatButtonModule} from '@angular/material/button';
 import {MatCommonModule} from '@angular/material/core';
 
 import {MatSimpleSnackBar} from './simple-snack-bar';
 import {MatSnackBarContainer} from './snack-bar-container';
+import {
+  MatSnackBarAction,
+  MatSnackBarActions,
+  MatSnackBarLabel
+} from './snack-bar-content';
 
 @NgModule({
   imports: [
