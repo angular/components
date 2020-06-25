@@ -9,8 +9,8 @@
 import {
   ContentChildren,
   Directive,
-  ElementRef,
-  Input,
+  ElementRef, EventEmitter,
+  Input, Output,
   QueryList
 } from '@angular/core';
 
@@ -24,6 +24,7 @@ import {
   exportAs: 'cdkOption',
   host: {
     role: 'option',
+    '(click)': '_onClickUpdateSelected()',
     '[attr.aria-selected]': '_selected || null',
     '[attr.data-optionid]': '_optionId',
   }
@@ -41,8 +42,14 @@ export class CdkOption {
     this._selected = value;
   }
 
+  @Output() readonly selectionChange: EventEmitter<CdkOption> = new EventEmitter<CdkOption>();
+
   constructor(private readonly _elementRef: ElementRef) {
     this.setOptionId(`cdk-option-${_uniqueIdCounter++}`);
+  }
+
+  _onClickUpdateSelected() {
+
   }
 
   /** Sets the optionId to the given id */
