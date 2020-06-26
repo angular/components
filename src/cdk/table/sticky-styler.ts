@@ -62,6 +62,7 @@ export class StickyStyler {
       }
     }
 
+    // Coalesce with sticky row/column updates (and potentially other changes like column resize).
     this._coalescedStyleScheduler.schedule(() => {
       for (const element of elementsToClear) {
         this._removeStickyStyle(element, stickyDirections);
@@ -92,6 +93,7 @@ export class StickyStyler {
     const startPositions = this._getStickyStartColumnPositions(cellWidths, stickyStartStates);
     const endPositions = this._getStickyEndColumnPositions(cellWidths, stickyEndStates);
 
+    // Coalesce with sticky row updates (and potentially other changes like column resize).
     this._coalescedStyleScheduler.schedule(() => {
       const isRtl = this.direction === 'rtl';
       const start = isRtl ? 'right' : 'left';
@@ -154,6 +156,7 @@ export class StickyStyler {
       }
     }
 
+    // Coalesce with other sticky row updates (top/bottom), sticky columns updates (and potentially other changes like column resize).
     this._coalescedStyleScheduler.schedule(() => {
       for (let rowIndex = 0; rowIndex < rows.length; rowIndex++) {
         if (!states[rowIndex]) {
@@ -181,6 +184,7 @@ export class StickyStyler {
 
     const tfoot = tableElement.querySelector('tfoot')!;
 
+    // Coalesce with other sticky updates (and potentially other changes like column resize).
     this._coalescedStyleScheduler.schedule(() => {
       if (stickyStates.some(state => !state)) {
         this._removeStickyStyle(tfoot, ['bottom']);
