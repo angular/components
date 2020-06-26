@@ -44,6 +44,7 @@ export class CdkOption {
     this._selected = coerceBooleanProperty(value);
   }
 
+  /** The id of the option, set to a uniqueid if the user does not provide one */
   @Input()
   get id(): string {
     return this._id;
@@ -52,12 +53,12 @@ export class CdkOption {
     this._id = value || this._uniqueid;
   }
 
-
   constructor(@Inject(forwardRef(() => CdkListbox)) public listbox: CdkListbox) {
     this._uniqueid = `cdk-option-${nextId++}`;
     this.id = this.id;
   }
 
+  /** Toggles the selected state, emits a change event through the injected listbox */
   toggle() {
     this.selected = !this.selected;
     this.listbox._emitChangeEvent(this);
@@ -85,11 +86,11 @@ export class CdkListbox {
   /** A query list containing all CdkOption elements within this listbox */
   @ContentChildren(CdkOption, {descendants: true}) _options: QueryList<CdkOption>;
 
-  @Output() readonly selectionChange: EventEmitter<CdkOption> = new EventEmitter<CdkOption>();
+  @Output() readonly selectionChange: EventEmitter<ListboxSelectionChangeEvent> = new EventEmitter<ListboxSelectionChangeEvent>();
 
   /** Emits a selection change event, called when an option has its selected state changed */
   _emitChangeEvent(option: CdkOption) {
-    this.selectionChange.emit(option);
+    this.selectionChange.emit(new ListboxSelectionChangeEvent(this, option));
   }
 
   /** Sets the given option's selected state to true */
@@ -101,4 +102,13 @@ export class CdkListbox {
   deselect(option: CdkOption) {
     option.selected = false;
   }
+}
+
+/** Change event that is being fired whenever the selected state of an option changes. */
+export class ListboxSelectionChangeEvent {
+  constructor(
+    /** Reference to the listbox that emitted the event. */
+    public source: CdkListbox,
+    /** Reference to the option that has been changed. */
+    public option: CdkOption) {}
 }
