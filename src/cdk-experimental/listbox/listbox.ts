@@ -61,6 +61,11 @@ export class CdkOption {
   getOptionId(): string {
     return this._optionId;
   }
+
+  /** Returns an ElementRef of this option */
+  getElementRef(): ElementRef {
+    return this._elementRef;
+  }
 }
 
 let _uniqueIdCounter = 0;

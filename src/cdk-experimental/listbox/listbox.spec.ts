@@ -68,7 +68,7 @@ describe('CdkOption', () => {
 
     it('should update selected option on click event', () => {
       let selectedOptions = optionInstances.filter(option => option.selected);
-      spyOn(listboxInstance, "_emitChangeEvent");
+      spyOn(listboxInstance, '_emitChangeEvent');
 
       expect(selectedOptions.length).toBe(0);
       expect(optionElements[0].getAttribute('aria-selected')).toBeNull();
