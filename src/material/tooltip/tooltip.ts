@@ -242,7 +242,8 @@ export class MatTooltip implements OnDestroy, AfterViewInit {
   }
 
   /** Manually-bound passive event listeners. */
-  private readonly _passiveListeners: Array<readonly [string, EventListenerOrEventListenerObject]> = [];
+  private readonly _passiveListeners:
+      (readonly [string, EventListenerOrEventListenerObject])[] = [];
 
   /** Timer started at the last `touchstart` event. */
   private _touchstartTimeout: number;
@@ -586,8 +587,8 @@ export class MatTooltip implements OnDestroy, AfterViewInit {
       return;
     }
     this._pointerExitEventsInitialized = true;
-    
-    const exitListeners: Array<readonly [string, EventListenerOrEventListenerObject]> = [];
+
+    const exitListeners: (readonly [string, EventListenerOrEventListenerObject])[] = [];
     if (!this._platform.IOS && !this._platform.ANDROID) {
       exitListeners.push(['mouseleave', () => this.hide()]);
     } else if (this.touchGestures !== 'off') {
@@ -607,7 +608,8 @@ export class MatTooltip implements OnDestroy, AfterViewInit {
     this._passiveListeners.push(...exitListeners);
   }
 
-  private _hookupListeners(listeners: ReadonlyArray<readonly [string, EventListenerOrEventListenerObject]>) {
+  private _hookupListeners(
+      listeners: ReadonlyArray<readonly [string, EventListenerOrEventListenerObject]>) {
     listeners.forEach(([event, listener]) => {
       this._elementRef.nativeElement.addEventListener(event, listener, passiveListenerOptions);
     });
