@@ -26,13 +26,14 @@ import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
   host: {
     role: 'option',
     '(click)': 'toggle()',
-    '[attr.aria-selected]': '_selected || null',
-    '[attr.optionid]': '_optionid',
+    '[attr.aria-selected]': 'selected || null',
+    '[attr.id]': 'id',
   }
 })
 export class CdkOption {
   private _selected: boolean = false;
-  readonly _optionid: string;
+  readonly _uniqueid: string;
+  private _id: string;
 
   /** Whether the option is selected or not */
   @Input()
@@ -43,8 +44,18 @@ export class CdkOption {
     this._selected = coerceBooleanProperty(value);
   }
 
+  @Input()
+  get id(): string {
+    return this._id;
+  }
+  set id(value: string) {
+    this._id = value || this._uniqueid;
+  }
+
+
   constructor(@Inject(forwardRef(() => CdkListbox)) public listbox: CdkListbox) {
-    this._optionid = `cdk-option-${nextId++}`;
+    this._uniqueid = `cdk-option-${nextId++}`;
+    this.id = this.id;
   }
 
   toggle() {

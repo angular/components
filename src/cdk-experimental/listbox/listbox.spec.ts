@@ -14,22 +14,22 @@ import {dispatchMouseEvent} from '@angular/cdk/testing/private';
 describe('CdkOption', () => {
 
   describe('selection state change', () => {
-    let fixture: ComponentFixture<ListboxWithCdkOptions>;
+    let fixture: ComponentFixture<ListboxWithOptions>;
     let listbox: DebugElement;
     let listboxInstance: CdkListbox;
     let options: DebugElement[];
     let optionInstances: CdkOption[];
-    let optionElements: Element[];
+    let optionElements: HTMLElement[];
 
     beforeEach(async(() => {
       TestBed.configureTestingModule({
         imports: [CdkListboxModule],
-        declarations: [ListboxWithCdkOptions],
+        declarations: [ListboxWithOptions],
       }).compileComponents();
     }));
 
     beforeEach(async(() => {
-      fixture = TestBed.createComponent(ListboxWithCdkOptions);
+      fixture = TestBed.createComponent(ListboxWithOptions);
       fixture.detectChanges();
 
       listbox = fixture.debugElement.query(By.directive(CdkListbox));
@@ -43,12 +43,10 @@ describe('CdkOption', () => {
     it('should generate a unique optionId for each option', () => {
       let optionIds: string[] = [];
       for (const instance of optionInstances) {
-        const id = instance._optionid;
+        expect(optionIds.indexOf(instance.id)).toBe(-1);
+        optionIds.push(instance.id);
 
-        expect(optionIds.indexOf(id)).toBe(-1);
-        optionIds.push(id);
-
-        expect(id).toMatch(/cdk-option-\d+/);
+        expect(instance.id).toMatch(/cdk-option-\d+/);
       }
     });
 
@@ -68,12 +66,12 @@ describe('CdkOption', () => {
 
     it('should update selected option on click event', () => {
       let selectedOptions = optionInstances.filter(option => option.selected);
-      spyOn(listboxInstance, '_emitChangeEvent');
+      spyOn(fixture.componentInstance, 'onSelectionChange');
 
       expect(selectedOptions.length).toBe(0);
       expect(optionElements[0].getAttribute('aria-selected')).toBeNull();
       expect(optionInstances[0].selected).toBeFalse();
-      expect(listboxInstance._emitChangeEvent).toHaveBeenCalledTimes(0);
+      expect(fixture.componentInstance.onSelectionChange).toHaveBeenCalledTimes(0);
 
       dispatchMouseEvent(optionElements[0], 'click');
       fixture.detectChanges();
@@ -82,21 +80,21 @@ describe('CdkOption', () => {
       expect(selectedOptions.length).toBe(1);
       expect(optionElements[0].getAttribute('aria-selected')).toBe('true');
       expect(optionInstances[0].selected).toBeTrue();
-      expect(listboxInstance._emitChangeEvent).toHaveBeenCalledTimes(1);
+      expect(fixture.componentInstance.onSelectionChange).toHaveBeenCalledTimes(1);
     });
   });
 
 });
 
 @Component({
-    template: `
-    <div cdkListbox>
-      <div cdkOption>Void</div>
-      <div cdkOption>Solar</div>
-      <div cdkOption>Arc</div>
-      <div cdkOption>Stasis</div>
-    </div>`
+  template: `
+  <div cdkListbox (selectionChange)="onSelectionChange($event)">
+    <div cdkOption>Void</div>
+    <div cdkOption>Solar</div>
+    <div cdkOption>Arc</div>
+    <div cdkOption>Stasis</div>
+  </div>`
 })
-class ListboxWithCdkOptions {
-
+class ListboxWithOptions {
+  onSelectionChange(_option: CdkOption) {}
 }
