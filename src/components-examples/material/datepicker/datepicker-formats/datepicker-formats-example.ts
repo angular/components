@@ -17,7 +17,7 @@ const moment = _rollupMoment || _moment;
 // https://momentjs.com/docs/#/displaying/format/
 export const MY_FORMATS = {
   parse: {
-    dateInput: 'LL',
+    dateInput: 'L',
   },
   display: {
     dateInput: 'LL',
