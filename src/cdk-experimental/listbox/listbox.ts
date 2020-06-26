@@ -15,6 +15,8 @@ import {
 } from '@angular/core';
 import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
 
+let nextId = 0;
+
 /**
  * Directive that applies interaction patterns to an element following the aria role of option.
  * Typically meant to be placed inside a listbox. Logic handling selection, disabled state, and
@@ -27,13 +29,11 @@ import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
     role: 'option',
     '(click)': 'toggle()',
     '[attr.aria-selected]': 'selected || null',
-    '[attr.id]': 'id',
+    '[id]': 'id',
   }
 })
 export class CdkOption {
   private _selected: boolean = false;
-  readonly _uniqueid: string;
-  private _id: string;
 
   /** Whether the option is selected or not */
   @Input()
@@ -45,18 +45,9 @@ export class CdkOption {
   }
 
   /** The id of the option, set to a uniqueid if the user does not provide one */
-  @Input()
-  get id(): string {
-    return this._id;
-  }
-  set id(value: string) {
-    this._id = value || this._uniqueid;
-  }
+  @Input() id = `cdk-option-${nextId++}`;
 
-  constructor(@Inject(forwardRef(() => CdkListbox)) public listbox: CdkListbox) {
-    this._uniqueid = `cdk-option-${nextId++}`;
-    this.id = this.id;
-  }
+  constructor(@Inject(forwardRef(() => CdkListbox)) public listbox: CdkListbox) {}
 
   /** Toggles the selected state, emits a change event through the injected listbox */
   toggle() {
@@ -66,8 +57,6 @@ export class CdkOption {
 
   static ngAcceptInputType_selected: BooleanInput;
 }
-
-let nextId = 0;
 
 /**
  * Directive that applies interaction patterns to an element following the aria role of listbox.

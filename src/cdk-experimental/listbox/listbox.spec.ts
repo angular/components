@@ -7,7 +7,7 @@ import {Component, DebugElement} from '@angular/core';
 import {By} from '@angular/platform-browser';
 import {
   CdkOption,
-  CdkListboxModule
+  CdkListboxModule, ListboxSelectionChangeEvent
 } from './index';
 import {dispatchMouseEvent} from '@angular/cdk/testing/private';
 
@@ -61,12 +61,11 @@ describe('CdkOption', () => {
 
     it('should update selected option on click event', () => {
       let selectedOptions = optionInstances.filter(option => option.selected);
-      spyOn(fixture.componentInstance, 'onSelectionChange');
 
       expect(selectedOptions.length).toBe(0);
       expect(optionElements[0].getAttribute('aria-selected')).toBeNull();
       expect(optionInstances[0].selected).toBeFalse();
-      expect(fixture.componentInstance.onSelectionChange).toHaveBeenCalledTimes(0);
+      expect(fixture.componentInstance.changedOption).toBeUndefined();
 
       dispatchMouseEvent(optionElements[0], 'click');
       fixture.detectChanges();
@@ -75,7 +74,8 @@ describe('CdkOption', () => {
       expect(selectedOptions.length).toBe(1);
       expect(optionElements[0].getAttribute('aria-selected')).toBe('true');
       expect(optionInstances[0].selected).toBeTrue();
-      expect(fixture.componentInstance.onSelectionChange).toHaveBeenCalledTimes(1);
+      expect(fixture.componentInstance.changedOption).toBeDefined();
+      expect(fixture.componentInstance.changedOption.id).toBe(optionInstances[0].id);
     });
   });
 
@@ -91,5 +91,9 @@ describe('CdkOption', () => {
   </div>`
 })
 class ListboxWithOptions {
-  onSelectionChange(_option: CdkOption) {}
+  changedOption: CdkOption;
+
+  onSelectionChange(event: ListboxSelectionChangeEvent) {
+    this.changedOption = event.option;
+  }
 }
