@@ -206,9 +206,7 @@ export class MatTooltip implements OnDestroy, AfterViewInit {
   @Input('matTooltip')
   get message() { return this._message; }
   set message(value: string) {
-    if (this._message) {
-      this._ariaDescriber.removeDescription(this._elementRef.nativeElement, this._message);
-    }
+    this._ariaDescriber.removeDescription(this._elementRef.nativeElement, this._message);
 
     // If the message is not a string (e.g. number), convert it to a string and trim it.
     this._message = value != null ? `${value}`.trim() : '';
@@ -560,7 +558,7 @@ export class MatTooltip implements OnDestroy, AfterViewInit {
 
     // The mouse events shouldn't be bound on mobile devices, because they can prevent the
     // first tap from firing its click event or can cause the tooltip to open for clicks.
-    if (!this._platform.IOS && !this._platform.ANDROID) {
+    if (this._platformSupportsMouseEvents()) {
       this._passiveListeners
           .push(['mouseenter', () => {
             this._setupPointerExitEventsIfNeeded();
@@ -579,7 +577,7 @@ export class MatTooltip implements OnDestroy, AfterViewInit {
           }]);
     }
 
-    this._hookupListeners(this._passiveListeners);
+    this._addListeners(this._passiveListeners);
   }
 
   private _setupPointerExitEventsIfNeeded() {
@@ -589,7 +587,7 @@ export class MatTooltip implements OnDestroy, AfterViewInit {
     this._pointerExitEventsInitialized = true;
 
     const exitListeners: (readonly [string, EventListenerOrEventListenerObject])[] = [];
-    if (!this._platform.IOS && !this._platform.ANDROID) {
+    if (this._platformSupportsMouseEvents()) {
       exitListeners.push(['mouseleave', () => this.hide()]);
     } else if (this.touchGestures !== 'off') {
       this._disableNativeGesturesIfNecessary();
@@ -604,11 +602,11 @@ export class MatTooltip implements OnDestroy, AfterViewInit {
       );
     }
 
-    this._hookupListeners(exitListeners);
+    this._addListeners(exitListeners);
     this._passiveListeners.push(...exitListeners);
   }
 
-  private _hookupListeners(
+  private _addListeners(
       listeners: ReadonlyArray<readonly [string, EventListenerOrEventListenerObject]>) {
     listeners.forEach(([event, listener]) => {
       this._elementRef.nativeElement.addEventListener(event, listener, passiveListenerOptions);
@@ -750,6 +748,10 @@ export class TooltipComponent implements OnDestroy {
 
   ngOnDestroy() {
     this._onHide.complete();
+  }
+
+  private _platformSupportsMouseEvents() {
+    return !this._platform.IOS && !this._platform.ANDROID;
   }
 
   _animationStart() {
