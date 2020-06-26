@@ -613,6 +613,10 @@ export class MatTooltip implements OnDestroy, AfterViewInit {
     });
   }
 
+  private _platformSupportsMouseEvents() {
+    return !this._platform.IOS && !this._platform.ANDROID;
+  }
+
   /** Disables the native browser gestures, based on how the tooltip has been configured. */
   private _disableNativeGesturesIfNecessary() {
     const gestures = this.touchGestures;
@@ -748,10 +752,6 @@ export class TooltipComponent implements OnDestroy {
 
   ngOnDestroy() {
     this._onHide.complete();
-  }
-
-  private _platformSupportsMouseEvents() {
-    return !this._platform.IOS && !this._platform.ANDROID;
   }
 
   _animationStart() {
