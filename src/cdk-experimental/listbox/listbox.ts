@@ -86,7 +86,8 @@ export class CdkListbox {
   /** A query list containing all CdkOption elements within this listbox */
   @ContentChildren(CdkOption, {descendants: true}) _options: QueryList<CdkOption>;
 
-  @Output() readonly selectionChange: EventEmitter<ListboxSelectionChangeEvent> = new EventEmitter<ListboxSelectionChangeEvent>();
+  @Output() readonly selectionChange: EventEmitter<ListboxSelectionChangeEvent> =
+      new EventEmitter<ListboxSelectionChangeEvent>();
 
   /** Emits a selection change event, called when an option has its selected state changed */
   _emitChangeEvent(option: CdkOption) {
