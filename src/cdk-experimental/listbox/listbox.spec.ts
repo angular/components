@@ -43,7 +43,7 @@ describe('CdkOption', () => {
     it('should generate a unique optionId for each option', () => {
       let optionIds: string[] = [];
       for (const instance of optionInstances) {
-        const id = instance.getOptionId();
+        const id = instance._optionid;
 
         expect(optionIds.indexOf(id)).toBe(-1);
         optionIds.push(id);

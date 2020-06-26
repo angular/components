@@ -9,11 +9,11 @@
 import {
   ContentChildren,
   Directive,
-  ElementRef, EventEmitter, forwardRef, Inject,
+  EventEmitter, forwardRef, Inject,
   Input, Output,
   QueryList
 } from '@angular/core';
-import {coerceBooleanProperty} from "@angular/cdk/coercion";
+import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
 
 /**
  * Directive that applies interaction patterns to an element following the aria role of option.
@@ -27,12 +27,12 @@ import {coerceBooleanProperty} from "@angular/cdk/coercion";
     role: 'option',
     '(click)': 'toggle()',
     '[attr.aria-selected]': '_selected || null',
-    '[attr.optionid]': '_optionId',
+    '[attr.optionid]': '_optionid',
   }
 })
 export class CdkOption {
   private _selected: boolean = false;
-  private _optionId: string;
+  readonly _optionid: string;
 
   /** Whether the option is selected or not */
   @Input()
@@ -43,9 +43,8 @@ export class CdkOption {
     this._selected = coerceBooleanProperty(value);
   }
 
-  constructor(private readonly _elementRef: ElementRef,
-              @Inject(forwardRef(() => CdkListbox)) public listbox: CdkListbox) {
-    this.setOptionId(`cdk-option-${nextId++}`);
+  constructor(@Inject(forwardRef(() => CdkListbox)) public listbox: CdkListbox) {
+    this._optionid = `cdk-option-${nextId++}`;
   }
 
   toggle() {
@@ -53,20 +52,7 @@ export class CdkOption {
     this.listbox._emitChangeEvent(this);
   }
 
-  /** Sets the optionId to the given id */
-  setOptionId(id: string) {
-    this._optionId = id;
-  }
-
-  /** Returns the optionId of this option */
-  getOptionId(): string {
-    return this._optionId;
-  }
-
-  /** Returns an ElementRef of this option */
-  private getElementRef(): ElementRef {
-    return this._elementRef;
-  }
+  static ngAcceptInputType_selected: BooleanInput;
 }
 
 let nextId = 0;
