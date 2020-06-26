@@ -7,7 +7,7 @@ import {Component, DebugElement} from '@angular/core';
 import {By} from '@angular/platform-browser';
 import {
   CdkOption,
-  CdkListboxModule, CdkListbox
+  CdkListboxModule
 } from './index';
 import {dispatchMouseEvent} from '@angular/cdk/testing/private';
 
