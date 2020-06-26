@@ -6,8 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {ComponentHarness, HarnessPredicate} from '@angular/cdk/testing';
-import {coerceBooleanProperty} from '@angular/cdk/coercion';
+import {ComponentHarness, HarnessLoader, HarnessPredicate} from '@angular/cdk/testing';
 import {CardHarnessFilters} from './card-harness-filters';
 
 
@@ -25,11 +24,49 @@ export class MatCardHarness extends ComponentHarness {
   static with(options: CardHarnessFilters = {}): HarnessPredicate<MatCardHarness> {
     return new HarnessPredicate(MatCardHarness, options)
         .addOption('text', options.text,
-            (harness, text) => HarnessPredicate.stringMatches(harness.getText(), text));
+            (harness, text) => HarnessPredicate.stringMatches(harness.getText(), text))
+        .addOption('title', options.title,
+            (harness, title) => HarnessPredicate.stringMatches(harness.getTitleText(), title))
+        .addOption('subtitle', options.subtitle,
+            (harness, subtitle) =>
+                HarnessPredicate.stringMatches(harness.getSubtitleText(), subtitle));
   }
 
-  /** Gets the cards's text content. */
+  private _title = this.locatorForOptional('.mat-card-title');
+  private _subtitle = this.locatorForOptional('.mat-card-subtitle');
+
+  /** Gets all of the card's content as text. */
   async getText(): Promise<string> {
     return (await this.host()).text();
+  }
+
+  /** Gets the cards's title text. */
+  async getTitleText(): Promise<string> {
+    return (await this._title())?.text() ?? '';
+  }
+
+  /** Gets the cards's subtitle text. */
+  async getSubtitleText(): Promise<string> {
+    return (await this._subtitle())?.text() ?? '';
+  }
+
+  /** Gets a harness loader for the header section of this card. */
+  async getHarnessLoaderForHeader(): Promise<HarnessLoader | null> {
+    return this.locatorFactory.harnessLoaderForOptional('.mat-card-header');
+  }
+
+  /** Gets a harness loader for the content section of this card. */
+  async getHarnessLoaderForContent(): Promise<HarnessLoader | null> {
+    return this.locatorFactory.harnessLoaderForOptional('.mat-card-content');
+  }
+
+  /** Gets a harness loader for the actions section of this card. */
+  async getHarnessLoaderForActions(): Promise<HarnessLoader | null> {
+    return this.locatorFactory.harnessLoaderForOptional('.mat-card-actions');
+  }
+
+  /** Gets a harness loader for the footer section of this card. */
+  async getHarnessLoaderForFooter(): Promise<HarnessLoader | null> {
+    return this.locatorFactory.harnessLoaderForOptional('.mat-card-footer');
   }
 }

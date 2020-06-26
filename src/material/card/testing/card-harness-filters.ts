@@ -12,4 +12,8 @@ import {BaseHarnessFilters} from '@angular/cdk/testing';
 export interface CardHarnessFilters extends BaseHarnessFilters {
   /** Only find instances whose text matches the given value. */
   text?: string | RegExp;
+  /** Only find instances whose title matches the given value. */
+  title?: string | RegExp;
+  /** Only find instances whose subtitle matches the given value. */
+  subtitle?: string | RegExp;
 }
