@@ -24,19 +24,24 @@ import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
   host: {
     role: 'option',
     '(click)': 'toggle()',
+    '(focus)': 'activateOption()',
     '[attr.aria-selected]': '_selected || null',
-    '[attr.optionid]': '_optionid',
-    '[attr.disabled]': '_disabled',
+    '[attr.id]': 'id',
     '[attr.aria-disabled]': '_comboDisabled',
     '[class.cdk-option-active]': '_active'
   }
 })
 export class CdkOption implements ListKeyManagerOption, Highlightable {
   private _selected: boolean = false;
-  readonly _optionid: string;
+
+  readonly _uniqueid: string;
+  private _id: string;
+
   private _disabled: boolean = false;
   private _comboDisabled: boolean = this.listbox.disabled || this._disabled;
+
   private _tabindex: number | null = null;
+
   private _active: boolean = false;
 
   @Input()
@@ -45,6 +50,15 @@ export class CdkOption implements ListKeyManagerOption, Highlightable {
   }
   set selected(value: boolean) {
     this._selected = coerceBooleanProperty(value);
+  }
+
+  /** The id of the option, set to a uniqueid if the user does not provide one */
+  @Input()
+  get id(): string {
+    return this._id;
+  }
+  set id(value: string) {
+    this._id = value || this._uniqueid;
   }
 
   @Input()
@@ -58,11 +72,18 @@ export class CdkOption implements ListKeyManagerOption, Highlightable {
 
   constructor(private el: ElementRef,
               @Inject(forwardRef(() => CdkListbox)) public listbox: CdkListbox) {
-    this._optionid = `cdk-option-${nextId++}`
+    this._uniqueid = `cdk-option-${nextId++}`;
+    this.id = this.id;
   }
 
-  getElementRef(): ElementRef {
-    return this.el;
+  /** Toggles the selected state, emits a change event through the injected listbox */
+  toggle() {
+    this.selected = !this.selected;
+    this.listbox._emitChangeEvent(this);
+  }
+
+  activateOption() {
+    this.listbox.setActiveOption(this);
   }
 
   getLabel(): string {
@@ -77,11 +98,6 @@ export class CdkOption implements ListKeyManagerOption, Highlightable {
     this._active = false;
   }
 
-  toggle() {
-    this.selected = !this.selected;
-    this.listbox._emitChangeEvent(this);
-  }
-
   static ngAcceptInputType_selected: BooleanInput;
 }
 
@@ -93,22 +109,22 @@ let nextId = 0;
     host: {
       role: 'listbox',
       '(keydown)': '_keydown($event)',
-      '[attr.disabled]': '_disabled',
-      '[attr.aria-disabled]': '_disabled'
+      '[attr.aria-disabled]': '_disabled',
     }
 })
 export class CdkListbox {
 
   _listKeyManager: ActiveDescendantKeyManager<CdkOption>;
-  _activeOption: CdkOption; // TODO decide if user can just use _listKeyManager.activeItem
-  _disabled: boolean = false;
+  private _activeOption: CdkOption; // TODO decide if user can just use _listKeyManager.activeItem
+  private _disabled: boolean = false;
 
   constructor(private el: ElementRef) {
   }
 
   @ContentChildren(CdkOption) _options: QueryList<CdkOption>;
 
-  @Output() readonly selectionChange: EventEmitter<CdkOption> = new EventEmitter<CdkOption>();
+  @Output() readonly selectionChange: EventEmitter<ListboxSelectionChangeEvent> =
+      new EventEmitter<ListboxSelectionChangeEvent>();
 
   @Input()
   get disabled(): boolean {
@@ -120,7 +136,7 @@ export class CdkListbox {
 
   ngAfterContentInit() {
     this._listKeyManager = new ActiveDescendantKeyManager(this._options)
-      .withWrap().withVerticalOrientation(true).withTypeAhead();
+      .withWrap().withVerticalOrientation().withTypeAhead();
 
     this._listKeyManager.change.subscribe(() => {
       if (this._listKeyManager.activeItem) {
@@ -139,9 +155,8 @@ export class CdkListbox {
     switch (keyCode) {
       case SPACE:
       case ENTER:
-        const currentlyActiveOption = this._listKeyManager.activeItem;
-        if (currentlyActiveOption) {
-          this.updateSelectedOption(currentlyActiveOption);
+        if (this._listKeyManager.activeItem && !this._listKeyManager.isTyping()) {
+          this.toggleActiveOption();
         }
         break;
       default:
@@ -151,20 +166,22 @@ export class CdkListbox {
 
   /** Emits a selection change event, called when an option has its selected state changed */
   _emitChangeEvent(option: CdkOption) {
-    this.selectionChange.emit(option);
+    this.selectionChange.emit(new ListboxSelectionChangeEvent(this, option));
   }
 
-  private updateSelectedOption(option: CdkOption): void {
-    if (option && !option.disabled) {
-      option.toggle();
+  private toggleActiveOption(): void {
+    const currentActiveOption = this._listKeyManager.activeItem;
+    if (currentActiveOption && !currentActiveOption.disabled) {
+      currentActiveOption.toggle();
+      this._emitChangeEvent(currentActiveOption);
     }
   }
 
-  select(option: CdkOption): void {
+  select(option: CdkOption) {
     option.selected = true;
   }
 
-  deselect(option: CdkOption): void {
+  deselect(option: CdkOption) {
     option.selected = false;
   }
 
@@ -172,9 +189,11 @@ export class CdkListbox {
     this._listKeyManager.updateActiveItem(option);
   }
 
-  setDisabledOption(optionIsDisabled: boolean, option: CdkOption): void {
-    option.disabled = optionIsDisabled;
-    this.deselect(option);
+  setDisabledOption(isDisabled: boolean, option: CdkOption) {
+    option.disabled = isDisabled;
+    if (isDisabled) {
+      this.deselect(option);
+    }
   }
 
   setDisabledListbox(isDisabled: boolean): void {
@@ -195,4 +214,13 @@ export class CdkListbox {
   getElementRef(): ElementRef {
     return this.el;
   }
+}
+
+/** Change event that is being fired whenever the selected state of an option changes. */
+export class ListboxSelectionChangeEvent {
+  constructor(
+      /** Reference to the listbox that emitted the event. */
+      public source: CdkListbox,
+      /** Reference to the option that has been changed. */
+      public option: CdkOption) {}
 }
