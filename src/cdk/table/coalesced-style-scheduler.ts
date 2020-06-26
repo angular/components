@@ -9,12 +9,22 @@
 import {Injectable, NgZone} from '@angular/core';
 import {from, Observable} from 'rxjs';
 
+/**
+ * Allows grouping up CSSDom mutations after the current execution context.
+ * This can significantly improve performance when separate consecutive functions are
+ * reading from the CSSDom and then mutating it.
+ *
+ * @docs-private
+ */
 @Injectable()
 export class CoalescedStyleScheduler {
   private _currentSchedule: Observable<void>|null = null;
 
   constructor(private readonly _ngZone: NgZone) {}
 
+  /**
+   * Schedules the specified task to run after the current microtask.
+   */
   schedule(task: () => unknown): void {
     this._createScheduleIfNeeded();
 
