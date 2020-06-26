@@ -13,6 +13,7 @@ import {
   Input, Output,
   QueryList
 } from '@angular/core';
+import {coerceBooleanProperty} from "@angular/cdk/coercion";
 
 /**
  * Directive that applies interaction patterns to an element following the aria role of option.
@@ -26,7 +27,7 @@ import {
     role: 'option',
     '(click)': 'toggle()',
     '[attr.aria-selected]': '_selected || null',
-    '[attr.data-optionid]': '_optionId',
+    '[attr.optionid]': '_optionId',
   }
 })
 export class CdkOption {
@@ -39,12 +40,12 @@ export class CdkOption {
     return this._selected;
   }
   set selected(value: boolean) {
-    this._selected = value;
+    this._selected = coerceBooleanProperty(value);
   }
 
   constructor(private readonly _elementRef: ElementRef,
               @Inject(forwardRef(() => CdkListbox)) public listbox: CdkListbox) {
-    this.setOptionId(`cdk-option-${_uniqueIdCounter++}`);
+    this.setOptionId(`cdk-option-${nextId++}`);
   }
 
   toggle() {
@@ -63,12 +64,12 @@ export class CdkOption {
   }
 
   /** Returns an ElementRef of this option */
-  getElementRef(): ElementRef {
+  private getElementRef(): ElementRef {
     return this._elementRef;
   }
 }
 
-let _uniqueIdCounter = 0;
+let nextId = 0;
 
 /**
  * Directive that applies interaction patterns to an element following the aria role of listbox.
