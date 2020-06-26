@@ -16,7 +16,6 @@ describe('CdkOption', () => {
   describe('selection state change', () => {
     let fixture: ComponentFixture<ListboxWithOptions>;
     let listbox: DebugElement;
-    let listboxInstance: CdkListbox;
     let options: DebugElement[];
     let optionInstances: CdkOption[];
     let optionElements: HTMLElement[];
@@ -33,7 +32,6 @@ describe('CdkOption', () => {
       fixture.detectChanges();
 
       listbox = fixture.debugElement.query(By.directive(CdkListbox));
-      listboxInstance = listbox.injector.get<CdkListbox>(CdkListbox);
 
       options = fixture.debugElement.queryAll(By.directive(CdkOption));
       optionInstances = options.map(o => o.injector.get<CdkOption>(CdkOption));
