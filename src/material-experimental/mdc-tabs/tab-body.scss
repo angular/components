@@ -23,8 +23,8 @@
     overflow-y: hidden;
   }
 
-  .mat-mdc-tab-group.mat-mdc-tab-group-show-overflow &,
-  .mat-mdc-tab-group-mat-mdc-tab-group-show-overflow &.mat-mdc-tab-body-active {
+  .mat-mdc-tab-group.mat-mdc-tab-group-no-animation &,
+  .mat-mdc-tab-group-mat-mdc-tab-group-no-animation &.mat-mdc-tab-body-active {
     overflow: visible;
   }
 }
@@ -37,7 +37,7 @@
     overflow: hidden;
   }
 
-  .mat-mdc-tab-group-show-overflow & {
+  .mat-mdc-tab-group-no-animation & {
     overflow: visible;
   }
 }

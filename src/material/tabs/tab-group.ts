@@ -154,12 +154,6 @@ export abstract class _MatTabGroupBase extends _MatTabGroupMixinBase implements 
   }
   private _backgroundColor: ThemePalette;
 
-  /**
-   * Whether content that overflows from the tab group should be shown. Must be false if
-   * [animationDuration] is non-zero.
-   */
-  @Input() showOverflow: boolean;
-
   /** Output to enable support for two-way binding on `[(selectedIndex)]` */
   @Output() readonly selectedIndexChange: EventEmitter<number> = new EventEmitter<number>();
 
@@ -186,8 +180,6 @@ export abstract class _MatTabGroupBase extends _MatTabGroupMixinBase implements 
         defaultConfig.animationDuration : '500ms';
     this.disablePagination = defaultConfig && defaultConfig.disablePagination != null ?
         defaultConfig.disablePagination : false;
-    this.showOverflow = defaultConfig && defaultConfig.showOverflow != null ?
-        defaultConfig.showOverflow : false;
   }
 
   /**
@@ -412,7 +404,11 @@ export abstract class _MatTabGroupBase extends _MatTabGroupMixinBase implements 
     'class': 'mat-tab-group',
     '[class.mat-tab-group-dynamic-height]': 'dynamicHeight',
     '[class.mat-tab-group-inverted-header]': 'headerPosition === "below"',
-    '[class.mat-tab-group-show-overflow]': 'showOverflow',
+
+    // If animation is disabled, we use `display: block|none` instead of `overflow: hidden` to show
+    // and hide tab groups. This prevents us from inadverdently clipping overflow drop shadows,
+    // ripples, and focus indicators within the tab group. We apply these styles with this class.
+    '[class.mat-tab-group-no-animation]': 'animationDuration === "0ms"',
   },
 })
 export class MatTabGroup extends _MatTabGroupBase {

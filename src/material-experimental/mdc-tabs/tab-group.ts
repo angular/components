@@ -51,7 +51,11 @@ import {BooleanInput, coerceBooleanProperty, NumberInput} from '@angular/cdk/coe
     'class': 'mat-mdc-tab-group',
     '[class.mat-mdc-tab-group-dynamic-height]': 'dynamicHeight',
     '[class.mat-mdc-tab-group-inverted-header]': 'headerPosition === "below"',
-    '[class.mat-mdc-tab-group-show-overflow]': 'showOverflow',
+
+    // If animation is disabled, we use `display: block|none` instead of `overflow: hidden` to show
+    // and hide tab groups. This prevents us from inadverdently clipping overflow drop shadows,
+    // ripples, and focus indicators within the tab group. We apply these styles with this class.
+    '[class.mat-mdc-tab-group-no-animation]': 'animationDuration === "0ms"',
   },
 })
 export class MatTabGroup extends _MatTabGroupBase {

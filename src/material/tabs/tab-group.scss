@@ -44,7 +44,7 @@
   display: flex;
   transition: height $mat-tab-animation-duration $ease-in-out-curve-function;
 
-  .mat-tab-group-show-overflow & {
+  .mat-tab-group-no-animation & {
     overflow: visible;
   }
 }
@@ -70,8 +70,8 @@
     overflow-y: hidden;
   }
 
-  .mat-tab-group.mat-tab-group-show-overflow &,
-  .mat-tab-group-mat-tab-group-show-overflow &.mat-tab-body-active {
+  .mat-tab-group.mat-tab-group-no-animation &,
+  .mat-tab-group-mat-tab-group-no-animation &.mat-tab-body-active {
     overflow: visible;
   }
 }

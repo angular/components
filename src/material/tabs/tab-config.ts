@@ -23,12 +23,6 @@ export interface MatTabsConfig {
    * This only applies to the MDC-based tabs.
    */
   fitInkBarToContent?: boolean;
-
-  /**
-   * Whether content that overflows from the tab group should be shown. Must be false if
-   * [animationDuration] is non-zero.
-   */
-  showOverflow?: boolean;
 }
 
 /** Injection token that can be used to provide the default options the tabs module. */
