@@ -88,13 +88,7 @@ export class MatHeaderCell extends CdkHeaderCell {}
     'role': 'gridcell',
   },
 })
-export class MatFooterCell extends CdkFooterCell {
-  constructor(columnDef: CdkColumnDef,
-              elementRef: ElementRef) {
-    super(columnDef, elementRef);
-    elementRef.nativeElement.classList.add(`mat-column-${columnDef.cssClassFriendlyName}`);
-  }
-}
+export class MatFooterCell extends CdkFooterCell {}
 
 /** Cell template container that adds the right classes and role. */
 @Directive({
@@ -104,10 +98,4 @@ export class MatFooterCell extends CdkFooterCell {
     'role': 'gridcell',
   },
 })
-export class MatCell extends CdkCell {
-  constructor(columnDef: CdkColumnDef,
-              elementRef: ElementRef<HTMLElement>) {
-    super(columnDef, elementRef);
-    elementRef.nativeElement.classList.add(`mat-column-${columnDef.cssClassFriendlyName}`);
-  }
-}
+export class MatCell extends CdkCell {}
