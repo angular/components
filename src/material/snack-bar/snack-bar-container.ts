@@ -35,7 +35,7 @@ import {MatSnackBarConfig} from './snack-bar-config';
  * Internal interface for a snack bar container.
  * @docs-private
  */
-export interface MatSnackBarContainerInterface {
+export interface _SnackBarContainer {
   snackBarConfig: MatSnackBarConfig;
   _onExit: Subject<any>;
   _onEnter: Subject<any>;
@@ -68,7 +68,7 @@ export interface MatSnackBarContainerInterface {
   },
 })
 export class MatSnackBarContainer extends BasePortalOutlet
-    implements OnDestroy, MatSnackBarContainerInterface {
+    implements OnDestroy, _SnackBarContainer {
   /** Whether the component has been destroyed. */
   private _destroyed = false;
 
