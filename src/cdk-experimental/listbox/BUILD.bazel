@@ -11,7 +11,7 @@ ng_module(
     module_name = "@angular/cdk-experimental/listbox",
     deps = [
         "//src/cdk/coercion",
-    ]
+    ],
 )
 
 ng_test_library(
