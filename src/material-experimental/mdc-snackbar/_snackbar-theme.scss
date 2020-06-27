@@ -1,3 +1,6 @@
+@import '@material/snackbar/mixins.import';
+@import '@material/snackbar/variables.import';
+@import '@material/theme/functions.import';
 @import '../mdc-helpers/mdc-helpers';
 
 @mixin mat-mdc-snackbar-color($config-or-theme) {}

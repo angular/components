@@ -1,1 +1,3 @@
-// WIP: MDC-based snackbar
+@import '@material/snackbar/mixins.import';
+@import '../mdc-helpers/mdc-helpers';
+@import '../../material/core/style/_layout-common.scss';

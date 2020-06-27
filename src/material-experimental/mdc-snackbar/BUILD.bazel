@@ -29,4 +29,12 @@ sass_library(
 sass_binary(
     name = "snackbar_scss",
     src = "snackbar.scss",
+    include_paths = [
+        "external/npm/node_modules",
+    ],
+    deps = [
+        "//src/material-experimental/mdc-helpers:mdc_helpers_scss_lib",
+        "//src/material-experimental/mdc-helpers:mdc_scss_deps_lib",
+        "//src/material/core:core_scss_lib",
+    ],
 )
