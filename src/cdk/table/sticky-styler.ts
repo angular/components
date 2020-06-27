@@ -157,7 +157,7 @@ export class StickyStyler {
     }
 
     // Coalesce with other sticky row updates (top/bottom), sticky columns updates
-    //(and potentially other changes like column resize).
+    // (and potentially other changes like column resize).
     this._coalescedStyleScheduler.schedule(() => {
       for (let rowIndex = 0; rowIndex < rows.length; rowIndex++) {
         if (!states[rowIndex]) {
