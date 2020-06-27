@@ -1,5 +1,4 @@
 export declare class MatCell extends CdkCell {
-    constructor(columnDef: CdkColumnDef, elementRef: ElementRef<HTMLElement>);
     static ɵdir: i0.ɵɵDirectiveDefWithMeta<MatCell, "mat-cell, td[mat-cell]", never, {}, {}, never>;
     static ɵfac: i0.ɵɵFactoryDef<MatCell, never>;
 }
@@ -18,7 +17,6 @@ export declare class MatColumnDef extends CdkColumnDef {
 }
 
 export declare class MatFooterCell extends CdkFooterCell {
-    constructor(columnDef: CdkColumnDef, elementRef: ElementRef);
     static ɵdir: i0.ɵɵDirectiveDefWithMeta<MatFooterCell, "mat-footer-cell, td[mat-footer-cell]", never, {}, {}, never>;
     static ɵfac: i0.ɵɵFactoryDef<MatFooterCell, never>;
 }
