@@ -7,7 +7,7 @@
  */
 
 import {BooleanInput} from '@angular/cdk/coercion';
-import {Directive, ElementRef, Input} from '@angular/core';
+import {Directive, Input} from '@angular/core';
 import {
   CdkCell,
   CdkCellDef,
