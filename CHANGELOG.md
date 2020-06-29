@@ -1,3 +1,39 @@
+## 10.0.1 "platinum-sideburns" (2020-06-29)
+
+### cdk
+
+|            |                       |
+| ---------- | --------------------- |
+| bug fix |  **scrolling:** fixed-size-virtual-scroll wrong range and position when items length changes and current scroll is greater than new data length ([#19578](https://github.com/angular/components/issues/19578)) ([f3b6555](https://github.com/angular/components/commit/f3b6555)) |
+
+### material
+
+|            |                       |
+| ---------- | --------------------- |
+| bug fix |  **a11y:** focus trap directive not capturing focus if auto capture input is set after init ([#19689](https://github.com/angular/components/issues/19689)) ([c23de0e](https://github.com/angular/components/commit/c23de0e)), closes [#19664](https://github.com/angular/components/issues/19664) |
+| bug fix |  **a11y:** list key manager not emitting change event if new item is added to active index ([#19666](https://github.com/angular/components/issues/19666)) ([fdfec2f](https://github.com/angular/components/commit/fdfec2f)), closes [#19661](https://github.com/angular/components/issues/19661) |
+| bug fix |  **button-toggle:** remove unused property and type ToggleType ([#19497](https://github.com/angular/components/issues/19497)) ([cf53a70](https://github.com/angular/components/commit/cf53a70)) |
+| bug fix |  **datepicker:** add role to date range input ([#19717](https://github.com/angular/components/issues/19717)) ([aed23e8](https://github.com/angular/components/commit/aed23e8)) |
+| bug fix |  **datepicker:** label state not being updated in some cases ([#19761](https://github.com/angular/components/issues/19761)) ([0a22e0f](https://github.com/angular/components/commit/0a22e0f)) |
+| bug fix |  **datepicker:** not marking as dirty when invalid value is typed in ([#19730](https://github.com/angular/components/issues/19730)) ([590fdd2](https://github.com/angular/components/commit/590fdd2)), closes [#19726](https://github.com/angular/components/issues/19726) |
+| bug fix |  **datepicker:** range input separator not hidden in high contrast mode ([#19706](https://github.com/angular/components/issues/19706)) ([2894a71](https://github.com/angular/components/commit/2894a71)) |
+| bug fix |  **drag-drop:** error when cloning 0x0 canvas ([#19707](https://github.com/angular/components/issues/19707)) ([92bc813](https://github.com/angular/components/commit/92bc813)) |
+| bug fix |  **drag-drop:** placeholder element not available in started event ([#19493](https://github.com/angular/components/issues/19493)) ([94d3fda](https://github.com/angular/components/commit/94d3fda)), closes [#19457](https://github.com/angular/components/issues/19457) |
+| bug fix |  **drag-drop:** sometimes incorrectly swapping items at the ends of the list ([#19633](https://github.com/angular/components/issues/19633)) ([63fe5ed](https://github.com/angular/components/commit/63fe5ed)), closes [#19249](https://github.com/angular/components/issues/19249) |
+| bug fix |  **drag-drop:** update free drag position on scroll ([#19648](https://github.com/angular/components/issues/19648)) ([ebbe8d7](https://github.com/angular/components/commit/ebbe8d7)) |
+| bug fix |  **focus indicators:** Improve styles that determine when focus indicators should render on selection controls. ([#19546](https://github.com/angular/components/issues/19546)) ([c85920d](https://github.com/angular/components/commit/c85920d)) |
+| bug fix |  **form-field:** error in older versions of edge ([#19698](https://github.com/angular/components/issues/19698)) ([539ebf6](https://github.com/angular/components/commit/539ebf6)), closes [#17810](https://github.com/angular/components/issues/17810) |
+| bug fix |  **input:** incorrectly handling nested themes ([#19637](https://github.com/angular/components/issues/19637)) ([4a8ce63](https://github.com/angular/components/commit/4a8ce63)) |
+| bug fix |  **sidenav:** restore focus if drawer is closed through backdrop click ([#19534](https://github.com/angular/components/issues/19534)) ([c7eaec9](https://github.com/angular/components/commit/c7eaec9)), closes [#17749](https://github.com/angular/components/issues/17749) |
+| bug fix |  **progress-spinner/testing:** harness selector not matching mat-spinner selector ([#19657](https://github.com/angular/components/issues/19657)) ([d4804c1](https://github.com/angular/components/commit/d4804c1)), closes [#19649](https://github.com/angular/components/issues/19649) |
+
+### material-experimental
+
+|            |                       |
+| ---------- | --------------------- |
+| bug fix |  **mdc-form-field:** update input alignment to match spec ([27f5271](https://github.com/angular/components/commit/27f5271)) |
+
+
 # 10.0.0 "ice-dice" (2020-06-24)
 
 ## Highlights
