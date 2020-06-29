@@ -79,7 +79,7 @@ export class CdkColumnDef extends _CdkColumnDefBase implements CanStick {
     if (name) {
       this._name = name;
       this.cssClassFriendlyName = name.replace(/[^a-z0-9_-]/ig, '-');
-      this.updateColumnCssClassName();
+      this._updateColumnCssClassName();
     }
   }
   _name: string;
@@ -118,19 +118,23 @@ export class CdkColumnDef extends _CdkColumnDefBase implements CanStick {
 
   /**
    * Class name for cells in this column.
+   * @docs-private
    */
-  columnCssClassName: string;
+  _columnCssClassName: string[];
 
   constructor(@Inject(CDK_TABLE) @Optional() public _table?: any) {
     super();
   }
 
   /**
-   * Overridable method that sets the css class that will be added to every cell in this
+   * Overridable method that sets the css classes that will be added to every cell in this
    * column.
+   * In the future, columnCssClassName will change from type string[] to string and this
+   * will set a single string value.
+   * @docs-private
    */
-  protected updateColumnCssClassName() {
-    this.columnCssClassName = `cdk-column-${this.cssClassFriendlyName}`;
+  protected _updateColumnCssClassName() {
+    this._columnCssClassName = [`cdk-column-${this.cssClassFriendlyName}`];
   }
 
   static ngAcceptInputType_sticky: BooleanInput;
@@ -140,7 +144,12 @@ export class CdkColumnDef extends _CdkColumnDefBase implements CanStick {
 /** Base class for the cells. Adds a CSS classname that identifies the column it renders in. */
 export class BaseCdkCell {
   constructor(columnDef: CdkColumnDef, elementRef: ElementRef) {
-    elementRef.nativeElement.classList.add(columnDef.columnCssClassName);
+    // If IE 11 is dropped before we switch to setting a single class name, change to multi param
+    // with destructuring.
+    const classList = elementRef.nativeElement.classList;
+    for (const className of columnDef._columnCssClassName) {
+      classList.add(className);
+    }
   }
 }
 

@@ -62,9 +62,15 @@ export class MatColumnDef extends CdkColumnDef {
   /** Unique name for this column. */
   @Input('matColumnDef') name: string;
 
-  /** Override "cdk-column-" prefix. */
-  protected updateColumnCssClassName() {
-    this.columnCssClassName = `mat-column-${this.cssClassFriendlyName}`;
+  /**
+   * Add "mat-column-" prefix in addition to "cdk-column-" prefix.
+   * In the future, this will only add "mat-column-" and columnCssClassName
+   * will change from type string[] to string.
+   * @docs-private
+   */
+  protected _updateColumnCssClassName() {
+    super._updateColumnCssClassName();
+    this._columnCssClassName!.push(`mat-column-${this.cssClassFriendlyName}`);
   }
 
   static ngAcceptInputType_sticky: BooleanInput;
