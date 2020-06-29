@@ -60,9 +60,10 @@ export class SceneViewer implements OnInit {
 
   ngOnInit() {
     const componentFactory = this.componentFactoryResolver.resolveComponentFactory(this.component);
-    const sceneComponent = this.scene.createComponent(componentFactory).location.nativeElement;
-    sceneComponent.style.transform = `scale(${this.scale})`;
-    sceneComponent.style.transformOrigin = 'center';
+    this.scene.createComponent(componentFactory);
+    const container = document.querySelector('#scene-content-container') as HTMLElement;
+    container.style.transform = `scale(${this.scale})`;
+    container.style.transformOrigin = 'center';
   }
 }
 

@@ -7,7 +7,7 @@ describe('screenshot scenes for each component', () => {
   let page: AppPage;
 
   const components = ['input',
-                      'ripples',
+                      'ripple',
                       'slider',
                       'button-toggle',
                       'slide-toggle',

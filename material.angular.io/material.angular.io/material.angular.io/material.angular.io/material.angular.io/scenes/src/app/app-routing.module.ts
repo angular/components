@@ -41,7 +41,7 @@ const routes: SceneViewerRoute[] = [
   {path: 'chips', component: SceneViewer, data: {scene: ChipsScene}},
   {path: 'datepicker', component: SceneViewer, data: {scale: 0.8, scene: DatepickerScene}},
   {path: 'dialog', component: SceneViewer, data: {scene: PlaceHolderScene}},
-  {path: 'divider', component: SceneViewer, data: {scene: DividerScene}},
+  {path: 'divider', component: SceneViewer, data: {scale: 2, scene: DividerScene}},
   {path: 'expansion', component: SceneViewer, data: {scene: PlaceHolderScene}},
   {path: 'form-field', component: SceneViewer, data: {scene: PlaceHolderScene}},
   {path: 'grid-list', component: SceneViewer, data: {scene: PlaceHolderScene}},
