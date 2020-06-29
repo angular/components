@@ -15,9 +15,10 @@ import {MatSnackBarRef} from './snack-bar-ref';
  * Internal interface for a simple snack bar component..
  * @docs-private
  */
-export interface TextOnlySnackBar {
+// tslint:disable-next-line:class-name
+export interface _TextOnlySnackBar {
   data: {message: string, action: string};
-  snackBarRef: MatSnackBarRef<TextOnlySnackBar>;
+  snackBarRef: MatSnackBarRef<_TextOnlySnackBar>;
 }
 
 /**
@@ -34,7 +35,7 @@ export interface TextOnlySnackBar {
     'class': 'mat-simple-snackbar',
   }
 })
-export class SimpleSnackBar implements TextOnlySnackBar {
+export class SimpleSnackBar implements _TextOnlySnackBar {
   /** Data that was injected into the snack bar. */
   data: {message: string, action: string};
 

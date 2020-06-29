@@ -23,9 +23,9 @@ import {
   OnDestroy, Type,
 } from '@angular/core';
 import {takeUntil} from 'rxjs/operators';
-import {TextOnlySnackBar, SimpleSnackBar} from './simple-snack-bar';
+import {_TextOnlySnackBar, SimpleSnackBar} from './simple-snack-bar';
 import {MAT_SNACK_BAR_DATA, MatSnackBarConfig} from './snack-bar-config';
-import {MatSnackBarContainer, SnackBarContainer} from './snack-bar-container';
+import {MatSnackBarContainer, _SnackBarContainer} from './snack-bar-container';
 import {MatSnackBarModule} from './snack-bar-module';
 import {MatSnackBarRef} from './snack-bar-ref';
 
@@ -55,10 +55,10 @@ export class MatSnackBar implements OnDestroy {
   private _snackBarRefAtThisLevel: MatSnackBarRef<any> | null = null;
 
   /** The component that should be rendered as the snack bar's simple component. */
-  protected simpleSnackBarComponent: Type<TextOnlySnackBar> = SimpleSnackBar;
+  protected simpleSnackBarComponent: Type<_TextOnlySnackBar> = SimpleSnackBar;
 
   /** The container component that attaches the provided template or component. */
-  protected snackBarContainerComponent: Type<SnackBarContainer> = MatSnackBarContainer;
+  protected snackBarContainerComponent: Type<_SnackBarContainer> = MatSnackBarContainer;
 
   /** The CSS class to applie for handset mode. */
   protected handsetCssClass = 'mat-snack-bar-handset';
@@ -116,7 +116,7 @@ export class MatSnackBar implements OnDestroy {
    * @param config Additional configuration options for the snackbar.
    */
   open(message: string, action: string = '', config?: MatSnackBarConfig):
-      MatSnackBarRef<TextOnlySnackBar> {
+      MatSnackBarRef<_TextOnlySnackBar> {
     const _config = {...this._defaultConfig, ...config};
 
     // Since the user doesn't have access to the component, we can
@@ -150,7 +150,7 @@ export class MatSnackBar implements OnDestroy {
    * Attaches the snack bar container component to the overlay.
    */
   private _attachSnackBarContainer(overlayRef: OverlayRef,
-                                     config: MatSnackBarConfig): SnackBarContainer {
+                                     config: MatSnackBarConfig): _SnackBarContainer {
 
     const userInjector = config && config.viewContainerRef && config.viewContainerRef.injector;
     const injector = new PortalInjector(userInjector || this._injector, new WeakMap([
@@ -159,7 +159,7 @@ export class MatSnackBar implements OnDestroy {
 
     const containerPortal =
         new ComponentPortal(this.snackBarContainerComponent, config.viewContainerRef, injector);
-    const containerRef: ComponentRef<SnackBarContainer> =
+    const containerRef: ComponentRef<_SnackBarContainer> =
         overlayRef.attach(containerPortal);
     containerRef.instance.snackBarConfig = config;
     return containerRef.instance;

@@ -35,7 +35,8 @@ import {MatSnackBarConfig} from './snack-bar-config';
  * Internal interface for a snack bar container.
  * @docs-private
  */
-export interface SnackBarContainer {
+// tslint:disable-next-line:class-name
+export interface _SnackBarContainer {
   snackBarConfig: MatSnackBarConfig;
   _onExit: Subject<any>;
   _onEnter: Subject<any>;
@@ -68,7 +69,7 @@ export interface SnackBarContainer {
   },
 })
 export class MatSnackBarContainer extends BasePortalOutlet
-    implements OnDestroy, SnackBarContainer {
+    implements OnDestroy, _SnackBarContainer {
   /** Whether the component has been destroyed. */
   private _destroyed = false;
 

@@ -23,7 +23,7 @@ import {
   ViewChild,
   ViewEncapsulation
 } from '@angular/core';
-import {MatSnackBarConfig, SnackBarContainer} from '@angular/material/snack-bar';
+import {MatSnackBarConfig, _SnackBarContainer} from '@angular/material/snack-bar';
 import {MDCSnackbarAdapter, MDCSnackbarFoundation} from '@material/snackbar';
 import {Observable, Subject} from 'rxjs';
 
@@ -58,7 +58,7 @@ const MDC_SNACKBAR_LABEL_CLASS = 'mdc-snackbar__label';
   }
 })
 export class MatSnackBarContainer extends BasePortalOutlet
-    implements SnackBarContainer, AfterViewChecked, OnDestroy {
+    implements _SnackBarContainer, AfterViewChecked, OnDestroy {
   /** Subject for notifying that the snack bar has exited from view. */
   readonly _onExit: Subject<void> = new Subject();
 
