@@ -48,7 +48,7 @@ let nextUniqueId = 0;
     '[class.mat-date-range-input-hide-placeholders]': '_shouldHidePlaceholders()',
     '[attr.id]': 'null',
     'role': 'group',
-    '[attr.aria-labelledby]': '_ariaLabelledBy',
+    '[attr.aria-labelledby]': '_getAriaLabelledby()',
     '[attr.aria-describedby]': '_ariaDescribedBy',
   },
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -176,9 +176,6 @@ export class MatDateRangeInput<D> implements MatFormFieldControl<DateRange<D>>,
   /** Value for the `aria-describedby` attribute of the inputs. */
   _ariaDescribedBy: string | null = null;
 
-  /** Value for the `aria-labelledby` attribute of the inputs. */
-  _ariaLabelledBy: string | null = null;
-
   /** Date selection model currently registered with the input. */
   private _model: MatDateSelectionModel<DateRange<D>> | undefined;
 
@@ -217,7 +214,6 @@ export class MatDateRangeInput<D> implements MatFormFieldControl<DateRange<D>>,
 
     // TODO(crisbeto): remove `as any` after #18206 lands.
     this.ngControl = control as any;
-    this._ariaLabelledBy = _formField ? _formField._labelId : null;
   }
 
   /**
@@ -308,6 +304,12 @@ export class MatDateRangeInput<D> implements MatFormFieldControl<DateRange<D>>,
   /** Whether the separate text should be hidden. */
   _shouldHideSeparator() {
     return (!this._formField || this._formField._hideControlPlaceholder()) && this.empty;
+  }
+
+  /** Gets the value for the `aria-labelledby` attribute of the inputs. */
+  _getAriaLabelledby() {
+    const formField = this._formField;
+    return formField && formField._hasFloatingLabel() ? formField._labelId : null;
   }
 
   /**
