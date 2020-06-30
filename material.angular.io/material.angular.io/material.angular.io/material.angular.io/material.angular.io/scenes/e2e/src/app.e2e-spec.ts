@@ -21,7 +21,8 @@ describe('screenshot scenes for each component', () => {
                       'stepper',
                       'radio',
                       'menu',
-                      'badge'];
+                      'badge',
+                      'paginator'];
   beforeEach(() => {
     page = new AppPage();
   });
