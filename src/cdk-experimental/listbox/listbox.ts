@@ -15,7 +15,7 @@ import {
   QueryList
 } from '@angular/core';
 import {ActiveDescendantKeyManager, Highlightable, ListKeyManagerOption} from '@angular/cdk/a11y';
-import {DOWN_ARROW, ENTER, SPACE, UP_ARROW} from '@angular/cdk/keycodes';
+import {ENTER, SPACE} from '@angular/cdk/keycodes';
 import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
 
 let nextId = 0;
