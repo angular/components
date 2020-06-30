@@ -10,24 +10,26 @@ ng_module(
     ),
     module_name = "@angular/cdk-experimental/listbox",
     deps = [
-        "//src/cdk/coercion",
-    ],
+        "//src/cdk/keycodes",
+        "//src/cdk/a11y"
+    ]
 )
 
 ng_test_library(
-    name = "unit_test_sources",
-    srcs = glob(
-        ["**/*.spec.ts"],
-        exclude = ["**/*.e2e.spec.ts"],
-    ),
-    deps = [
-        ":listbox",
-        "//src/cdk/testing/private",
-        "@npm//@angular/platform-browser",
-    ],
+     name = "unit_test_sources",
+     srcs = glob(
+         ["**/*.spec.ts"],
+         exclude = ["**/*.e2e.spec.ts"],
+     ),
+     deps = [
+         ":listbox",
+         "@npm//@angular/platform-browser",
+         "//src/cdk/keycodes",
+         "//src/cdk/testing/private"
+     ],
 )
 
 ng_web_test_suite(
-    name = "unit_tests",
-    deps = [":unit_test_sources"],
+     name = "unit_tests",
+     deps = [":unit_test_sources"]
 )
