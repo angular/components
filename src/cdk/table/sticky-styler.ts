@@ -21,6 +21,7 @@ export type StickyDirection = 'top' | 'bottom' | 'left' | 'right';
  */
 export const STICKY_DIRECTIONS: StickyDirection[] = ['top', 'bottom', 'left', 'right'];
 
+
 /**
  * Applies and removes sticky positioning styles to the `CdkTable` rows and columns cells.
  * @docs-private
@@ -39,7 +40,8 @@ export class StickyStyler {
               private _stickCellCss: string,
               public direction: Direction,
               private _coalescedStyleScheduler: _CoalescedStyleScheduler,
-              private _isBrowser = true) { }
+              private _isBrowser = true,
+              private readonly _needsPositionStickyOnElement = true) { }
 
   /**
    * Clears the sticky positioning styles from the row and its cells by resetting the `position`
@@ -204,13 +206,18 @@ export class StickyStyler {
     for (const dir of stickyDirections) {
       element.style[dir] = '';
     }
-    element.style.zIndex = this._getCalculatedZIndex(element);
 
     // If the element no longer has any more sticky directions, remove sticky positioning and
     // the sticky CSS class.
-    const hasDirection = STICKY_DIRECTIONS.some(dir => !!element.style[dir]);
-    if (!hasDirection) {
-      element.style.position = '';
+    const hasDirection = STICKY_DIRECTIONS.some(dir =>
+        stickyDirections.indexOf(dir) !== -1 && !!element.style[dir]);
+    if (hasDirection) {
+      element.style.zIndex = this._getCalculatedZIndex(element);
+    } else {
+      element.style.zIndex = '';
+      if (this._needsPositionStickyOnElement) {
+        element.style.position = '';
+      }
       element.classList.remove(this._stickCellCss);
     }
   }
@@ -223,8 +230,10 @@ export class StickyStyler {
   _addStickyStyle(element: HTMLElement, dir: StickyDirection, dirValue: number) {
     element.classList.add(this._stickCellCss);
     element.style[dir] = `${dirValue}px`;
-    element.style.cssText += 'position: -webkit-sticky; position: sticky; ';
     element.style.zIndex = this._getCalculatedZIndex(element);
+    if (this._needsPositionStickyOnElement) {
+      element.style.cssText += 'position: -webkit-sticky; position: sticky; ';
+    }
   }
 
   /**
