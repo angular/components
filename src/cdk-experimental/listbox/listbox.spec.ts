@@ -1,113 +1,333 @@
 import {
   ComponentFixture,
   async,
-  TestBed,
+  TestBed, tick, fakeAsync,
 } from '@angular/core/testing';
-import {Component} from '@angular/core';
+import {Component, DebugElement} from '@angular/core';
 import {By} from '@angular/platform-browser';
 import {
   CdkOption,
-  CdkListbox,
-  CdkListboxModule
+  CdkListboxModule, ListboxSelectionChangeEvent, CdkListbox
 } from './index';
-import {
-  createKeyboardEvent,
-  dispatchFakeEvent,
-  dispatchKeyboardEvent,
-  dispatchMouseEvent
-} from '@angular/cdk/testing/private';
-import {SPACE} from "@angular/cdk/keycodes";
+import {createKeyboardEvent, dispatchKeyboardEvent, dispatchMouseEvent} from '@angular/cdk/testing/private';
+import {A, DOWN_ARROW, SPACE} from "@angular/cdk/keycodes";
 
 describe('CdkOption', () => {
 
   describe('selection state change', () => {
-    let fixture: ComponentFixture<CdkListboxWithCdkOptions>;
+    let fixture: ComponentFixture<ListboxWithOptions>;
+
+    let testComponent: ListboxWithOptions;
+
+    let listbox: DebugElement;
     let listboxInstance: CdkListbox;
-    let options: Array<CdkOption>;
+    let listboxElement: HTMLElement;
+
+    let options: DebugElement[];
+    let optionInstances: CdkOption[];
+    let optionElements: HTMLElement[];
 
     beforeEach(async(() => {
       TestBed.configureTestingModule({
         imports: [CdkListboxModule],
-        declarations: [CdkListboxWithCdkOptions],
+        declarations: [ListboxWithOptions],
       }).compileComponents();
-
-      fixture = TestBed.createComponent(CdkListboxWithCdkOptions);
-      fixture.detectChanges();
-      listboxInstance = fixture.debugElement.query(By.directive(CdkListbox)).injector.get(CdkListbox);
-      options = listboxInstance._options.toArray();
     }));
 
-    it('should generate a unique optionid for each option', () => {
-      options.forEach(option => {
-        expect(option.getOptionId()).toMatch(/cdk-option-\d+/);
-      });
+    beforeEach(async(() => {
+      fixture = TestBed.createComponent(ListboxWithOptions);
+      fixture.detectChanges();
+
+      testComponent = fixture.debugElement.componentInstance;
+
+      listbox = fixture.debugElement.query(By.directive(CdkListbox));
+      listboxInstance = listbox.injector.get<CdkListbox>(CdkListbox);
+      listboxElement = listbox.nativeElement;
+
+      options = fixture.debugElement.queryAll(By.directive(CdkOption));
+      optionInstances = options.map(o => o.injector.get<CdkOption>(CdkOption));
+      optionElements = options.map(o => o.nativeElement);
+    }));
+
+    it('should generate a unique optionId for each option', () => {
+      let optionIds: string[] = [];
+      for (const instance of optionInstances) {
+        expect(optionIds.indexOf(instance.id)).toBe(-1);
+        optionIds.push(instance.id);
+
+        expect(instance.id).toMatch(/cdk-option-\d+/);
+      }
     });
 
     it('should have set the selected input of the options to null by default', () => {
-      options.forEach(option => {
-        expect(option.selected).toBe(null);
-      });
+      for (const instance of optionInstances) {
+        expect(instance.selected).toBeFalse();
+      }
     });
 
     it('should update aria-selected when selected is changed programmatically', () => {
-      expect(options[1].getElementRef().nativeElement.getAttribute('aria-selected')).toBe(null);
-      options[1].selected = true;
+      expect(optionElements[0].getAttribute('aria-selected')).toBeNull();
+      optionInstances[1].selected = true;
       fixture.detectChanges();
 
-      expect(options[1].getElementRef().nativeElement.getAttribute('aria-selected')).toBe('true');
-    });
-
-    it('should be able to return the currently selected options', () => {
-      expect(listboxInstance.getSelectedOptions().length).toBe(0);
-      options[0].selected = true;
-      fixture.detectChanges();
-      const selectedOptions = listboxInstance.getSelectedOptions();
-
-      expect(selectedOptions.length).toBe(1);
-      expect(selectedOptions[0].selected).toBeTruthy();
+      expect(optionElements[1].getAttribute('aria-selected')).toBe('true');
     });
 
     it('should update selected option on click event', () => {
-      expect(listboxInstance.getSelectedOptions().length).toBe(0);
-      expect(options[0].getElementRef().nativeElement.getAttribute('aria-selected')).toBe(null);
-      expect(options[0].selected).toBeFalsy();
+      let selectedOptions = optionInstances.filter(option => option.selected);
 
-      dispatchMouseEvent(options[0].getElementRef().nativeElement, 'click');
+      expect(selectedOptions.length).toBe(0);
+      expect(optionElements[0].getAttribute('aria-selected')).toBeNull();
+      expect(optionInstances[0].selected).toBeFalse();
+      expect(fixture.componentInstance.changedOption).toBeUndefined();
+
+      dispatchMouseEvent(optionElements[0], 'click');
       fixture.detectChanges();
 
-      expect(listboxInstance.getSelectedOptions().length).toBe(1);
-      expect(options[0].getElementRef().nativeElement.getAttribute('aria-selected')).toBe('true');
-      expect(options[0].selected).toBeTruthy();
+      selectedOptions = optionInstances.filter(option => option.selected);
+      expect(selectedOptions.length).toBe(1);
+      expect(optionElements[0].getAttribute('aria-selected')).toBe('true');
+      expect(optionInstances[0].selected).toBeTrue();
+      expect(fixture.componentInstance.changedOption).toBeDefined();
+      expect(fixture.componentInstance.changedOption.id).toBe(optionInstances[0].id);
     });
 
     it('should update selected option on space or enter key press', () => {
-      const optionElement = options[0].getElementRef().nativeElement as HTMLElement;
+      let selectedOptions = optionInstances.filter(option => option.selected);
 
-      expect(listboxInstance.getSelectedOptions().length).toBe(0);
-      expect(options[0].getElementRef().nativeElement.getAttribute('aria-selected')).toBe(null);
-      expect(options[0].selected).toBeFalsy();
+      expect(selectedOptions.length).toBe(0);
+      expect(optionElements[0].getAttribute('aria-selected')).toBeNull();
+      expect(optionInstances[0].selected).toBeFalse();
+      expect(fixture.componentInstance.changedOption).toBeUndefined();
 
-      listboxInstance.setActiveOption(options[0]);
-      const SPACE_EVENT = dispatchKeyboardEvent(listboxInstance.getElementRef().nativeElement, 'keydown', SPACE);
+      listboxInstance.setActiveOption(optionInstances[0]);
+      dispatchKeyboardEvent(listboxElement, 'keydown', SPACE);
       fixture.detectChanges();
 
-      expect(listboxInstance.getSelectedOptions().length).toBe(1);
-      expect(options[0].getElementRef().nativeElement.getAttribute('aria-selected')).toBe('true');
-      expect(options[0].selected).toBeTruthy();
+      selectedOptions = optionInstances.filter(option => option.selected);
+      expect(selectedOptions.length).toBe(1);
+      expect(optionElements[0].getAttribute('aria-selected')).toBe('true');
+      expect(optionInstances[0].selected).toBeTrue();
+      expect(fixture.componentInstance.changedOption).toBeDefined();
+      expect(fixture.componentInstance.changedOption.id).toBe(optionInstances[0].id);
+    });
+
+    it('should be able to toggle listbox disabled state', () => {
+      expect(listboxInstance.disabled).toBeFalse();
+      expect(listboxElement.getAttribute('aria-disabled')).toBe('false');
+
+      testComponent.isListboxDisabled = true;
+      fixture.detectChanges();
+
+      expect(listboxInstance.disabled).toBeTrue();
+      expect(listboxElement.getAttribute('aria-disabled')).toBe('true');
+    });
+
+    it('should toggle option disabled state', () => {
+      expect(optionInstances[0].disabled).toBeFalse();
+      expect(optionElements[0].getAttribute('aria-disabled')).toBe('false');
+
+      testComponent.isVoidDisabled = true;
+      fixture.detectChanges();
+
+      expect(optionInstances[0].disabled).toBeTrue();
+      expect(optionElements[0].getAttribute('aria-disabled')).toBe('true');
+    });
+
+    it('should toggle option disabled state programmatically via listbox', () => {
+      expect(optionInstances[1].disabled).toBeFalse();
+      expect(optionElements[1].getAttribute('aria-disabled')).toBe('false');
+
+      listboxInstance.setDisabledOption(true, optionInstances[1]);
+      fixture.detectChanges();
+
+      expect(optionInstances[1].disabled).toBeTrue();
+      expect(optionElements[1].getAttribute('aria-disabled')).toBe('true');
+    });
+
+    it('should toggle option aria-disabled state on listbox disabled state change', () => {
+      listboxInstance.setDisabledOption(true, optionInstances[0]);
+      fixture.detectChanges();
+
+      expect(listboxInstance.disabled).toBeFalse();
+      expect(optionInstances[0].disabled).toBeTrue();
+      expect(optionElements[0].getAttribute('tabindex')).toBeNull();
+      expect(optionElements[1].getAttribute('aria-disabled')).toBe('false');
+      expect(optionElements[1].getAttribute('tabindex')).toBe('-1');
+
+      testComponent.isListboxDisabled = true;
+      fixture.detectChanges();
+
+      expect(listboxInstance.disabled).toBeTrue();
+      expect(optionInstances[0].disabled).toBeTrue();
+      expect(optionElements[0].getAttribute('tabindex')).toBeNull();
+      expect(optionElements[1].getAttribute('aria-disabled')).toBe('true');
+      expect(optionElements[1].getAttribute('tabindex')).toBeNull();
+    });
+
+    it('should not toggle selected on click of a disabled option', () => {
+      let selectedOptions = optionInstances.filter(option => option.selected);
+
+      expect(selectedOptions.length).toBe(0);
+      expect(optionElements[0].getAttribute('aria-selected')).toBeNull();
+      expect(optionInstances[0].selected).toBeFalse();
+      expect(fixture.componentInstance.changedOption).toBeUndefined();
+
+      testComponent.isVoidDisabled = true;
+      fixture.detectChanges();
+      dispatchMouseEvent(optionElements[0], 'click');
+      fixture.detectChanges();
+
+      selectedOptions = optionInstances.filter(option => option.selected);
+      expect(selectedOptions.length).toBe(0);
+      expect(optionElements[0].getAttribute('aria-selected')).toBeNull();
+      expect(optionInstances[0].selected).toBeFalse();
+      expect(fixture.componentInstance.changedOption).toBeUndefined();
+    });
+
+    it('should not toggle selected on click in a disabled listbox', () => {
+      let selectedOptions = optionInstances.filter(option => option.selected);
+
+      expect(selectedOptions.length).toBe(0);
+      expect(optionElements[0].getAttribute('aria-selected')).toBeNull();
+      expect(optionInstances[0].selected).toBeFalse();
+      expect(fixture.componentInstance.changedOption).toBeUndefined();
+
+      testComponent.isListboxDisabled = true;
+      fixture.detectChanges();
+      dispatchMouseEvent(optionElements[0], 'click');
+      fixture.detectChanges();
+
+      selectedOptions = optionInstances.filter(option => option.selected);
+      expect(selectedOptions.length).toBe(0);
+      expect(optionElements[0].getAttribute('aria-selected')).toBeNull();
+      expect(optionInstances[0].selected).toBeFalse();
+      expect(fixture.componentInstance.changedOption).toBeUndefined();
+    });
+
+    it('should change active item using type ahead', fakeAsync(() => {
+      expect(listboxInstance._listKeyManager.activeItem).toBeNull();
+      expect(listboxInstance._listKeyManager.activeItemIndex).toBe(-1);
+
+      dispatchKeyboardEvent(listboxElement, 'keydown', A);
+      fixture.detectChanges();
+      tick(200);
+
+      expect(listboxInstance._listKeyManager.activeItem).toEqual(optionInstances[2]);
+      expect(listboxInstance._listKeyManager.activeItemIndex).toBe(2);
+    }));
+
+    it('should not handle space or enter on a disabled listbox', () => {
+      let selectedOptions = optionInstances.filter(option => option.selected);
+
+      expect(selectedOptions.length).toBe(0);
+      expect(fixture.componentInstance.changedOption).toBeUndefined();
+
+      listboxInstance.setActiveOption(optionInstances[0]);
+      testComponent.isListboxDisabled = true;
+      fixture.detectChanges();
+
+      dispatchKeyboardEvent(listboxElement, 'keydown', SPACE);
+      fixture.detectChanges();
+
+      selectedOptions = optionInstances.filter(option => option.selected);
+      expect(selectedOptions.length).toBe(0);
+      expect(fixture.componentInstance.changedOption).toBeUndefined();
+    });
+
+    it('should not handle type ahead on a disabled listbox', fakeAsync(() => {
+      expect(listboxInstance._listKeyManager.activeItem).toBeNull();
+      expect(listboxInstance._listKeyManager.activeItemIndex).toBe(-1);
+
+      testComponent.isListboxDisabled = true;
+      fixture.detectChanges();
+
+      dispatchKeyboardEvent(listboxElement, 'keydown', A);
+      fixture.detectChanges();
+      tick(200);
+
+      expect(listboxInstance._listKeyManager.activeItem).toBeNull();
+      expect(listboxInstance._listKeyManager.activeItemIndex).toBe(-1);
+    }));
+
+    it('should not select a disabled option using space or enter', () => {
+      let selectedOptions = optionInstances.filter(option => option.selected);
+
+      expect(selectedOptions.length).toBe(0);
+      expect(fixture.componentInstance.changedOption).toBeUndefined();
+
+      listboxInstance.setActiveOption(optionInstances[0]);
+      testComponent.isVoidDisabled = true;
+      fixture.detectChanges();
+
+      dispatchKeyboardEvent(listboxElement, 'keydown', SPACE);
+      fixture.detectChanges();
+
+      selectedOptions = optionInstances.filter(option => option.selected);
+      expect(selectedOptions.length).toBe(0);
+      expect(fixture.componentInstance.changedOption).toBeUndefined();
+    });
+
+    it('should update active item upon arrow key presses', () => {
+      expect(listboxInstance._listKeyManager.activeItem).toBeNull();
+      expect(listboxInstance._listKeyManager.activeItemIndex).toBe(-1);
+
+      dispatchKeyboardEvent(listboxElement, 'keydown', DOWN_ARROW);
+      fixture.detectChanges();
+
+      expect(listboxInstance._listKeyManager.activeItem).toEqual(optionInstances[0]);
+      expect(listboxInstance._listKeyManager.activeItemIndex).toBe(0);
+
+      dispatchKeyboardEvent(listboxElement, 'keydown', DOWN_ARROW);
+      fixture.detectChanges();
+
+      expect(listboxInstance._listKeyManager.activeItem).toEqual(optionInstances[1]);
+      expect(listboxInstance._listKeyManager.activeItemIndex).toBe(1);
+    });
+
+    it('should skip disabled options when navigating with arrow keys', () => {
+      expect(listboxInstance._listKeyManager.activeItem).toBeNull();
+      expect(listboxInstance._listKeyManager.activeItemIndex).toBe(-1);
+
+      testComponent.isSolarDisabled = true;
+      dispatchKeyboardEvent(listboxElement, 'keydown', DOWN_ARROW);
+      fixture.detectChanges();
+
+      expect(listboxInstance._listKeyManager.activeItem).toEqual(optionInstances[0]);
+      expect(listboxInstance._listKeyManager.activeItemIndex).toBe(0);
+
+      dispatchKeyboardEvent(listboxElement, 'keydown', DOWN_ARROW);
+      fixture.detectChanges();
+
+      expect(listboxInstance._listKeyManager.activeItem).toEqual(optionInstances[2]);
+      expect(listboxInstance._listKeyManager.activeItemIndex).toBe(2);
     });
   });
 
 });
 
 @Component({
-  template:`
-    <div cdkListbox>
-      <div cdkOption></div>
-      <div cdkOption></div>
-      <div cdkOption></div>
-      <div cdkOption></div> 
+  template: `
+    <div cdkListbox 
+        [disabled]="isListboxDisabled"
+        (selectionChange)="onSelectionChange($event)">
+      <div cdkOption
+          [disabled]="isVoidDisabled">
+        Void</div>
+      <div cdkOption
+           [disabled]="isSolarDisabled">
+        Solar</div>
+      <div cdkOption>Arc</div>
+      <div cdkOption>Stasis</div>
     </div>`
 })
-class CdkListboxWithCdkOptions {
+class ListboxWithOptions {
+  changedOption: CdkOption;
+  isListboxDisabled: boolean = false;
+  isVoidDisabled: boolean = false;
+  isSolarDisabled: boolean = false;
 
+  onSelectionChange(event: ListboxSelectionChangeEvent) {
+    this.changedOption = event.option;
+  }
 }
