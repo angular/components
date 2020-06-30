@@ -9,8 +9,8 @@ import {
   CdkOption,
   CdkListboxModule, ListboxSelectionChangeEvent, CdkListbox
 } from './index';
-import {createKeyboardEvent, dispatchKeyboardEvent, dispatchMouseEvent} from '@angular/cdk/testing/private';
-import {A, DOWN_ARROW, SPACE} from "@angular/cdk/keycodes";
+import {dispatchKeyboardEvent, dispatchMouseEvent} from '@angular/cdk/testing/private';
+import {A, DOWN_ARROW, SPACE} from '@angular/cdk/keycodes';
 
 describe('CdkOption', () => {
 
@@ -308,7 +308,7 @@ describe('CdkOption', () => {
 
 @Component({
   template: `
-    <div cdkListbox 
+    <div cdkListbox
         [disabled]="isListboxDisabled"
         (selectionChange)="onSelectionChange($event)">
       <div cdkOption
