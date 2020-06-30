@@ -17,6 +17,7 @@ import {ChipsScene} from './scenes/chips/chips-scene';
 import {ProgressBarScene} from './scenes/progress-bar/progress-bar-scene';
 import {StepperScene} from './scenes/stepper/stepper-scene';
 import {RadioScene} from './scenes/radio/radio-scene';
+import {MenuScene} from './scenes/menu/menu-scene';
 
 let hue = 0;
 
@@ -48,7 +49,7 @@ const routes: SceneViewerRoute[] = [
   {path: 'icon', component: SceneViewer, data: {scene: PlaceHolderScene}},
   {path: 'input', component: SceneViewer, data: {scale: 0.7, scene: InputScene}},
   {path: 'list', component: SceneViewer, data: {scene: PlaceHolderScene}},
-  {path: 'menu', component: SceneViewer, data: {scene: PlaceHolderScene}},
+  {path: 'menu', component: SceneViewer, data: {scene: MenuScene}},
   {path: 'paginator', component: SceneViewer, data: {scene: PlaceHolderScene}},
   {path: 'progress-bar', component: SceneViewer, data: {scene: ProgressBarScene}},
   {
