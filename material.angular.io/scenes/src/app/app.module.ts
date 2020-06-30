@@ -12,6 +12,7 @@ import {OverlayContainer} from '@angular/cdk/overlay';
 import {SceneOverlayContainer} from './scene-overlay-container';
 import {DOCUMENT} from '@angular/common';
 import {MatMenuModule} from '@angular/material/menu';
+import {MatPaginatorModule} from '@angular/material/paginator';
 
 @NgModule({
   declarations: [
@@ -25,7 +26,8 @@ import {MatMenuModule} from '@angular/material/menu';
     MatNativeDateModule,
     MatDialogModule,
     ScrollingModule,
-    MatMenuModule
+    MatMenuModule,
+    MatPaginatorModule
   ],
   bootstrap: [AppComponent],
   providers: [{

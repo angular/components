@@ -19,6 +19,7 @@ import {StepperScene} from './scenes/stepper/stepper-scene';
 import {RadioScene} from './scenes/radio/radio-scene';
 import {MenuScene} from './scenes/menu/menu-scene';
 import {BadgeScene} from './scenes/badge/badge-scene';
+import {PaginatorScene} from './scenes/paginator/paginator-scene';
 
 let hue = 0;
 
@@ -51,7 +52,7 @@ const routes: SceneViewerRoute[] = [
   {path: 'input', component: SceneViewer, data: {scale: 0.7, scene: InputScene}},
   {path: 'list', component: SceneViewer, data: {scene: PlaceHolderScene}},
   {path: 'menu', component: SceneViewer, data: {scene: MenuScene}},
-  {path: 'paginator', component: SceneViewer, data: {scene: PlaceHolderScene}},
+  {path: 'paginator', component: SceneViewer, data: {scale: 1.5, scene: PaginatorScene}},
   {path: 'progress-bar', component: SceneViewer, data: {scene: ProgressBarScene}},
   {
     path: 'progress-spinner',
