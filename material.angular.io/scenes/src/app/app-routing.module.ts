@@ -18,6 +18,7 @@ import {ProgressBarScene} from './scenes/progress-bar/progress-bar-scene';
 import {StepperScene} from './scenes/stepper/stepper-scene';
 import {RadioScene} from './scenes/radio/radio-scene';
 import {MenuScene} from './scenes/menu/menu-scene';
+import {BadgeScene} from './scenes/badge/badge-scene';
 
 let hue = 0;
 
@@ -33,7 +34,7 @@ type SceneViewerRoute = {
 
 const routes: SceneViewerRoute[] = [
   {path: 'autocomplete', component: SceneViewer, data: {scene: PlaceHolderScene}},
-  {path: 'badge', component: SceneViewer, data: {scene: PlaceHolderScene}},
+  {path: 'badge', component: SceneViewer, data: {scale: 1.5, scene: BadgeScene}},
   {path: 'bottom-sheet', component: SceneViewer, data: {scene: PlaceHolderScene}},
   {path: 'button', component: SceneViewer, data: {scene: ButtonScene}},
   {path: 'button-toggle', component: SceneViewer, data: {scale: 1.5, scene: ButtonToggleScene}},
@@ -60,7 +61,6 @@ const routes: SceneViewerRoute[] = [
   {path: 'radio', component: SceneViewer, data: {scene: RadioScene}},
   {path: 'ripple', component: SceneViewer, data: {scene: RipplesScene}},
   {path: 'select', component: SceneViewer, data: {scene: PlaceHolderScene}},
-  {path: 'sidenav', component: SceneViewer, data: {scene: PlaceHolderScene}},
   {path: 'sidenav', component: SceneViewer, data: {scene: PlaceHolderScene}},
   {path: 'slide-toggle', component: SceneViewer, data: {scene: SlideToggleScene}},
   {path: 'slider', component: SceneViewer, data: {scene: SliderScene}},
