@@ -20,7 +20,8 @@ describe('screenshot scenes for each component', () => {
                       'progress-bar',
                       'stepper',
                       'radio',
-                      'menu'];
+                      'menu',
+                      'badge'];
   beforeEach(() => {
     page = new AppPage();
   });
