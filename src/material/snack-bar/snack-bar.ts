@@ -23,7 +23,7 @@ import {
   OnDestroy, Type,
 } from '@angular/core';
 import {takeUntil} from 'rxjs/operators';
-import {_TextOnlySnackBar, SimpleSnackBar} from './simple-snack-bar';
+import {TextOnlySnackBar, SimpleSnackBar} from './simple-snack-bar';
 import {MAT_SNACK_BAR_DATA, MatSnackBarConfig} from './snack-bar-config';
 import {MatSnackBarContainer, _SnackBarContainer} from './snack-bar-container';
 import {MatSnackBarModule} from './snack-bar-module';
@@ -55,7 +55,7 @@ export class MatSnackBar implements OnDestroy {
   private _snackBarRefAtThisLevel: MatSnackBarRef<any> | null = null;
 
   /** The component that should be rendered as the snack bar's simple component. */
-  protected simpleSnackBarComponent: Type<_TextOnlySnackBar> = SimpleSnackBar;
+  protected simpleSnackBarComponent: Type<TextOnlySnackBar> = SimpleSnackBar;
 
   /** The container component that attaches the provided template or component. */
   protected snackBarContainerComponent: Type<_SnackBarContainer> = MatSnackBarContainer;
@@ -116,7 +116,7 @@ export class MatSnackBar implements OnDestroy {
    * @param config Additional configuration options for the snackbar.
    */
   open(message: string, action: string = '', config?: MatSnackBarConfig):
-      MatSnackBarRef<_TextOnlySnackBar> {
+      MatSnackBarRef<TextOnlySnackBar> {
     const _config = {...this._defaultConfig, ...config};
 
     // Since the user doesn't have access to the component, we can

@@ -2,8 +2,8 @@
   {{data.message}}
 </div>
 
-<div matSnackBarActions *ngIf="data.action">
-  <button mat-button matSnackBarAction (click)="snackBarRef.dismissWithAction()">
+<div matSnackBarActions *ngIf="hasAction">
+  <button mat-button matSnackBarAction (click)="action()">
     {{data.action}}
   </button>
 </div>
