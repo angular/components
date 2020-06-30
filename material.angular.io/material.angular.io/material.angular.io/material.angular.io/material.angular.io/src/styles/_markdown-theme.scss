@@ -17,7 +17,7 @@
 
     pre {
       background: rgba(mat-color($foreground, secondary-text), .01);
-      border: .5px solid rgba(mat-color($foreground, secondary-text), .03);
+      border: .5px solid rgba(mat-color($foreground, secondary-text), .2);
 
       code {
         background: transparent;
