@@ -11,6 +11,7 @@ import {ScrollingModule} from '@angular/cdk/scrolling';
 import {OverlayContainer} from '@angular/cdk/overlay';
 import {SceneOverlayContainer} from './scene-overlay-container';
 import {DOCUMENT} from '@angular/common';
+import {MatMenuModule} from '@angular/material/menu';
 
 @NgModule({
   declarations: [
@@ -23,7 +24,8 @@ import {DOCUMENT} from '@angular/common';
     BrowserAnimationsModule,
     MatNativeDateModule,
     MatDialogModule,
-    ScrollingModule
+    ScrollingModule,
+    MatMenuModule
   ],
   bootstrap: [AppComponent],
   providers: [{
