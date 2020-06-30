@@ -1,46 +1,49 @@
-import {_supportsShadowDom} from '@angular/cdk/platform';
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+
 import {
   ComponentHarness,
   ComponentHarnessConstructor,
   HarnessLoader,
-  TestElement
+  TestElement,
 } from '@angular/cdk/testing';
-import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
-import {async, ComponentFixture, fakeAsync, TestBed} from '@angular/core/testing';
-import {querySelectorAll as piercingQuerySelectorAll} from 'kagekiri';
-import {FakeOverlayHarness} from './harnesses/fake-overlay-harness';
 import {MainComponentHarness} from './harnesses/main-component-harness';
 import {SubComponentHarness, SubComponentSpecialHarness} from './harnesses/sub-component-harness';
-import {TestComponentsModule} from './test-components-module';
-import {TestMainComponent} from './test-main-component';
 
-function activeElementText() {
-  return document.activeElement && (document.activeElement as HTMLElement).innerText || '';
-}
-
-describe('TestbedHarnessEnvironment', () => {
-  let fixture: ComponentFixture<{}>;
-
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({imports: [TestComponentsModule]}).compileComponents();
-    fixture = TestBed.createComponent(TestMainComponent);
-  });
-
+/**
+ * Tests that should behave equal in testbed and protractor environment.
+ *
+ * To reduce code duplication and ensure tests will act equal
+ * with TestbedHarnessEnvironment and ProtractorHarnessEnvironment, this set of tests is
+ * executed in unit tests and tests.
+ *
+ * @param getHarnessLoaderFromEnvironment env specific closure to get HarnessLoader
+ * @param getMainComponentHarnessFromEnvironment env specific closure to get MainComponentHarness
+ * @param getActiveElementId env specific closure to get active element
+ *
+ * @docs-private
+ */
+export function crossEnvironmentSpecs(
+  getHarnessLoaderFromEnvironment: () => HarnessLoader,
+  getMainComponentHarnessFromEnvironment: () => Promise<MainComponentHarness>,
+  // Maybe we should introduce HarnessLoader.getActiveElement(): TestElement
+  // then this 3rd parameter could get removed.
+   getActiveElementId: () => Promise<string | null>,
+) {
   describe('HarnessLoader', () => {
     let loader: HarnessLoader;
 
     beforeEach(() => {
-      loader = TestbedHarnessEnvironment.loader(fixture);
+      loader = getHarnessLoaderFromEnvironment();
     });
 
-    it('should create HarnessLoader from fixture', () => {
+    it('should create HarnessLoader', () => {
       expect(loader).not.toBeNull();
-    });
-
-    it('should create ComponentHarness for fixture', async () => {
-      const harness =
-        await TestbedHarnessEnvironment.harnessForFixture(fixture, MainComponentHarness);
-      expect(harness).not.toBeNull();
     });
 
     it('should find required HarnessLoader for child element', async () => {
@@ -86,24 +89,13 @@ describe('TestbedHarnessEnvironment', () => {
       const harnesses = await loader.getAllHarnesses(SubComponentHarness);
       expect(harnesses.length).toBe(4);
     });
-
-    it('should be able to load harness through document root loader', async () => {
-      const documentRootHarnesses =
-          await TestbedHarnessEnvironment.documentRootLoader(fixture).getAllHarnesses(
-              FakeOverlayHarness);
-      const fixtureHarnesses = await loader.getAllHarnesses(FakeOverlayHarness);
-      expect(fixtureHarnesses.length).toBe(0);
-      expect(documentRootHarnesses.length).toBe(1);
-      expect(await documentRootHarnesses[0].getDescription()).toBe('This is a fake overlay.');
-    });
   });
 
   describe('ComponentHarness', () => {
     let harness: MainComponentHarness;
 
     beforeEach(async () => {
-      harness =
-        await TestbedHarnessEnvironment.harnessForFixture(fixture, MainComponentHarness);
+      harness = await getMainComponentHarnessFromEnvironment();
     });
 
     it('should locate a required element based on CSS selector', async () => {
@@ -191,14 +183,6 @@ describe('TestbedHarnessEnvironment', () => {
       expect(await asyncCounter.text()).toBe('8');
     });
 
-    it('can get elements outside of host', async () => {
-      const subcomponents = await harness.allLists();
-      expect(subcomponents[0]).not.toBeNull();
-      const globalEl = await subcomponents[0]!.globalElement();
-      expect(globalEl).not.toBeNull();
-      expect(await globalEl.text()).toBe('Hello Yi from Angular 2!');
-    });
-
     it('should send enter key', async () => {
       const specialKey = await harness.specaialKey();
       await harness.sendEnter();
@@ -261,29 +245,62 @@ describe('TestbedHarnessEnvironment', () => {
       const subcomps = await harness.directAncestorSelectorSubcomponent();
       expect(subcomps.length).toBe(2);
     });
+  });
 
-    it('should be able to wait for tasks outside of Angular within native async/await',
-        async () => {
-      expect(await harness.getTaskStateResult()).toBe('result');
+  describe('HarnessPredicate', () => {
+    let harness: MainComponentHarness;
+
+    beforeEach(async () => {
+      harness = await getMainComponentHarnessFromEnvironment();
     });
 
-    it('should be able to wait for tasks outside of Angular within async test zone',
-        async (() => {
-      harness.getTaskStateResult().then(res => expect(res).toBe('result'));
-    }));
+    it('should find subcomponents with filter function (specific item count)', async () => {
+      const fourItemLists = await harness.fourItemLists();
+      expect(fourItemLists.length).toBe(1);
+      expect(await (await fourItemLists[0].title()).text()).toBe('List of test methods');
+    });
 
-    it('should be able to wait for tasks outside of Angular within fakeAsync test zone',
-        fakeAsync(async () => {
-      expect(await harness.getTaskStateResult()).toBe('result');
-    }));
+    it('should find subcomponents with string matcher (specific title)', async () => {
+      const toolsLists = await harness.toolsLists();
+      expect(toolsLists.length).toBe(1);
+      expect(await (await toolsLists[0].title()).text()).toBe('List of test tools');
+    });
+
+    it('should find no subcomponents if predicate does not match', async () => {
+      const fourItemToolsLists = await harness.fourItemToolsLists();
+      expect(fourItemToolsLists.length).toBe(0);
+    });
+
+    it('should find subcomponents with string matcher (title regex)', async () => {
+      const testLists = await harness.testLists();
+      expect(testLists.length).toBe(2);
+      expect(await (await testLists[0].title()).text()).toBe('List of test tools');
+      expect(await (await testLists[1].title()).text()).toBe('List of test methods');
+    });
+
+    it('should find subcomponents that match selector', async () => {
+      const lastList = await harness.lastList();
+      expect(await (await lastList.title()).text()).toBe('List of test methods');
+    });
+
+    it('should error if predicate does not match but a harness is required', async () => {
+      try {
+        await harness.requiredFourIteamToolsLists();
+        fail('Expected to throw');
+      } catch (e) {
+        expect(e.message).toBe(
+            'Failed to find element matching one of the following queries:' +
+            '\n(SubComponentHarness with host element matching selector: "test-sub" satisfying' +
+            ' the constraints: title = "List of test tools", item count = 4)');
+      }
+    });
   });
 
   describe('TestElement', () => {
     let harness: MainComponentHarness;
 
     beforeEach(async () => {
-      harness =
-          await TestbedHarnessEnvironment.harnessForFixture(fixture, MainComponentHarness);
+      harness = await getMainComponentHarnessFromEnvironment();
     });
 
     it('should be able to clear', async () => {
@@ -321,7 +338,7 @@ describe('TestbedHarnessEnvironment', () => {
     it('focuses the element before sending key', async () => {
       const input = await harness.input();
       await input.sendKeys('Yi');
-      expect(await input.getAttribute('id')).toBe(document.activeElement!.id);
+      expect(await getActiveElementId()).toBe(await input.getAttribute('id'));
     });
 
     it('should be able to retrieve dimensions', async () => {
@@ -367,11 +384,12 @@ describe('TestbedHarnessEnvironment', () => {
 
     it('should focus and blur element', async () => {
       const button = await harness.button();
-      expect(activeElementText()).not.toBe(await button.text());
+      const buttonId = await button.getAttribute('id');
+      expect(await getActiveElementId()).not.toBe(buttonId);
       await button.focus();
-      expect(activeElementText()).toBe(await button.text());
+      expect(await getActiveElementId()).toBe(buttonId);
       await button.blur();
-      expect(activeElementText()).not.toBe(await button.text());
+      expect(await getActiveElementId()).not.toBe(buttonId);
     });
 
     it('should be able to get the value of a property', async () => {
@@ -476,89 +494,16 @@ describe('TestbedHarnessEnvironment', () => {
       expect(await button.isFocused()).toBe(false);
     });
   });
+}
 
-  describe('HarnessPredicate', () => {
-    let harness: MainComponentHarness;
-
-    beforeEach(async () => {
-      harness =
-          await TestbedHarnessEnvironment.harnessForFixture(fixture, MainComponentHarness);
-    });
-
-    it('should find subcomponents with specific item count', async () => {
-      const fourItemLists = await harness.fourItemLists();
-      expect(fourItemLists.length).toBe(1);
-      expect(await (await fourItemLists[0].title()).text()).toBe('List of test methods');
-    });
-
-    it('should find subcomponents with specific title', async () => {
-      const toolsLists = await harness.toolsLists();
-      expect(toolsLists.length).toBe(1);
-      expect(await (await toolsLists[0].title()).text()).toBe('List of test tools');
-    });
-
-    it('should find no subcomponents if predicate does not match', async () => {
-      const fourItemToolsLists = await harness.fourItemToolsLists();
-      expect(fourItemToolsLists.length).toBe(0);
-    });
-
-    it('should find subcomponents with title regex', async () => {
-      const testLists = await harness.testLists();
-      expect(testLists.length).toBe(2);
-      expect(await (await testLists[0].title()).text()).toBe('List of test tools');
-      expect(await (await testLists[1].title()).text()).toBe('List of test methods');
-    });
-
-    it('should find subcomponents that match selector', async () => {
-      const lastList = await harness.lastList();
-      expect(await (await lastList.title()).text()).toBe('List of test methods');
-    });
-
-    it('should error if predicate does not match but a harness is required', async () => {
-      try {
-        await harness.requiredFourIteamToolsLists();
-        fail('Expected to throw');
-      } catch (e) {
-        expect(e.message).toBe(
-            'Failed to find element matching one of the following queries:' +
-            '\n(SubComponentHarness with host element matching selector: "test-sub" satisfying' +
-            ' the constraints: title = "List of test tools", item count = 4)');
-      }
-    });
-  });
-
-  if (_supportsShadowDom()) {
-    describe('shadow DOM interaction', () => {
-      it('should not pierce shadow boundary by default', async () => {
-        const harness = await TestbedHarnessEnvironment
-            .harnessForFixture(fixture, MainComponentHarness);
-        expect(await harness.shadows()).toEqual([]);
-      });
-
-      it('should pierce shadow boundary when using piercing query', async () => {
-        const harness = await TestbedHarnessEnvironment
-            .harnessForFixture(fixture, MainComponentHarness, {queryFn: piercingQuerySelectorAll});
-        const shadows = await harness.shadows();
-        expect(await Promise.all(shadows.map(el => el.text()))).toEqual(['Shadow 1', 'Shadow 2']);
-      });
-
-      it('should allow querying across shadow boundary', async () => {
-        const harness = await TestbedHarnessEnvironment
-            .harnessForFixture(fixture, MainComponentHarness, {queryFn: piercingQuerySelectorAll});
-        expect(await (await harness.deepShadow()).text()).toBe('Shadow 2');
-      });
-    });
-  }
-});
-
-async function checkIsElement(result: ComponentHarness | TestElement, selector?: string) {
+export async function checkIsElement(result: ComponentHarness | TestElement, selector?: string) {
   expect(result instanceof ComponentHarness).toBe(false);
   if (selector) {
     expect(await (result as TestElement).matchesSelector(selector)).toBe(true);
   }
 }
 
-async function checkIsHarness<T extends ComponentHarness>(
+export async function checkIsHarness<T extends ComponentHarness>(
     result: ComponentHarness | TestElement,
     harnessType: ComponentHarnessConstructor<T>,
     finalCheck?: (harness: T) => Promise<unknown>) {
