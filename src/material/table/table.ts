@@ -6,7 +6,12 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {CDK_TABLE_TEMPLATE, CdkTable, CDK_TABLE, _CoalescedStyleScheduler} from '@angular/cdk/table';
+import {
+  CDK_TABLE_TEMPLATE,
+  CdkTable,
+  CDK_TABLE,
+  _CoalescedStyleScheduler
+} from '@angular/cdk/table';
 import {ChangeDetectionStrategy, Component, ViewEncapsulation} from '@angular/core';
 
 /**
