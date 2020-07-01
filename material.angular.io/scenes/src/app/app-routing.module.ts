@@ -20,6 +20,7 @@ import {RadioScene} from './scenes/radio/radio-scene';
 import {MenuScene} from './scenes/menu/menu-scene';
 import {BadgeScene} from './scenes/badge/badge-scene';
 import {PaginatorScene} from './scenes/paginator/paginator-scene';
+import {TableScene} from './scenes/table/table-scene';
 
 let hue = 0;
 
@@ -68,7 +69,7 @@ const routes: SceneViewerRoute[] = [
   {path: 'snack-bar', component: SceneViewer, data: {scene: PlaceHolderScene}},
   {path: 'sort', component: SceneViewer, data: {scene: PlaceHolderScene}},
   {path: 'stepper', component: SceneViewer, data: {scene: StepperScene}},
-  {path: 'table', component: SceneViewer, data: {scene: PlaceHolderScene}},
+  {path: 'table', component: SceneViewer, data: {scene: TableScene}},
   {path: 'tabs', component: SceneViewer, data: {scene: PlaceHolderScene}},
   {path: 'toolbar', component: SceneViewer, data: {scene: PlaceHolderScene}},
   {path: 'tooltip', component: SceneViewer, data: {scene: PlaceHolderScene}},
