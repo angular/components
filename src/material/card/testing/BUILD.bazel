@@ -11,7 +11,6 @@ ts_library(
     ),
     module_name = "@angular/material/card/testing",
     deps = [
-        "//src/cdk/coercion",
         "//src/cdk/testing",
     ],
 )
@@ -26,11 +25,9 @@ ng_test_library(
     srcs = ["shared.spec.ts"],
     deps = [
         ":testing",
-        "//src/cdk/platform",
         "//src/cdk/testing",
         "//src/cdk/testing/testbed",
         "//src/material/card",
-        "@npm//@angular/forms",
         "@npm//@angular/platform-browser",
     ],
 )
@@ -60,6 +57,7 @@ ng_e2e_test_library(
     name = "e2e_test_sources",
     srcs = glob(["**/*.e2e.spec.ts"]),
     deps = [
+        "//src/cdk/testing",
         "//src/cdk/testing/private/e2e",
         "//src/cdk/testing/protractor",
         "//src/material/card/testing",
