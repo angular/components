@@ -35,6 +35,9 @@ export class StickyStyler {
    * @param direction The directionality context of the table (ltr/rtl); affects column positioning
    *     by reversing left/right positions.
    * @param _isBrowser Whether the table is currently being rendered on the server or the client.
+   * @param _needsPositionStickyOnElement Whether we need to specify position: sticky on cells
+   *     using inline styles. If false, it is assumed that position: sticky is included in
+   *     the component stylesheet for _stickCellCss.
    */
   constructor(private _isNativeHtmlTable: boolean,
               private _stickCellCss: string,
@@ -209,11 +212,14 @@ export class StickyStyler {
 
     // If the element no longer has any more sticky directions, remove sticky positioning and
     // the sticky CSS class.
+    // Short-circuit checking element.style[dir] for stickyDirections as they
+    // were already removed above.
     const hasDirection = STICKY_DIRECTIONS.some(dir =>
-        stickyDirections.indexOf(dir) === -1 && !!element.style[dir]);
+        stickyDirections.indexOf(dir) === -1 && element.style[dir]);
     if (hasDirection) {
       element.style.zIndex = this._getCalculatedZIndex(element);
     } else {
+      // When not hasDirection, _getCalculatedZIndex will always return ''.
       element.style.zIndex = '';
       if (this._needsPositionStickyOnElement) {
         element.style.position = '';
