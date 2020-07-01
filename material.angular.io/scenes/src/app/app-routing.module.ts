@@ -24,6 +24,7 @@ import {BadgeScene} from './scenes/badge/badge-scene';
 import {PaginatorScene} from './scenes/paginator/paginator-scene';
 import {TableScene} from './scenes/table/table-scene';
 import {ExpansionScene} from './scenes/expansion/expansion-scene';
+import {SelectScene} from './scenes/select/select-scene';
 
 let hue = 0;
 
@@ -65,7 +66,7 @@ const routes: SceneViewerRoute[] = [
   },
   {path: 'radio', component: SceneViewer, data: {scene: RadioScene}},
   {path: 'ripple', component: SceneViewer, data: {scene: RipplesScene}},
-  {path: 'select', component: SceneViewer, data: {scene: PlaceHolderScene}},
+  {path: 'select', component: SceneViewer, data: {scene: SelectScene}},
   {path: 'sidenav', component: SceneViewer, data: {scene: PlaceHolderScene}},
   {path: 'slide-toggle', component: SceneViewer, data: {scene: SlideToggleScene}},
   {path: 'slider', component: SceneViewer, data: {scene: SliderScene}},

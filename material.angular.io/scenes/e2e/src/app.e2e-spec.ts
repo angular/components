@@ -23,6 +23,7 @@ describe('screenshot scenes for each component', () => {
     'progress-spinner',
     'radio',
     'ripple',
+    'select',
     'slide-toggle',
     'slider',
     'stepper',
