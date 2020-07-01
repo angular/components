@@ -17,7 +17,6 @@ import {from, Observable} from 'rxjs';
  * @docs-private
  */
 @Injectable()
-// tslint:disable-next-line:class-name
 export class _CoalescedStyleScheduler {
   private _currentSchedule: Observable<void>|null = null;
 
