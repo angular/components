@@ -23,6 +23,7 @@ import {MenuScene} from './scenes/menu/menu-scene';
 import {BadgeScene} from './scenes/badge/badge-scene';
 import {PaginatorScene} from './scenes/paginator/paginator-scene';
 import {TableScene} from './scenes/table/table-scene';
+import {ExpansionScene} from './scenes/expansion/expansion-scene';
 
 let hue = 0;
 
@@ -48,7 +49,7 @@ const routes: SceneViewerRoute[] = [
   {path: 'datepicker', component: SceneViewer, data: {scale: 0.8, scene: DatepickerScene}},
   {path: 'dialog', component: SceneViewer, data: {scene: PlaceHolderScene}},
   {path: 'divider', component: SceneViewer, data: {scale: 2, scene: DividerScene}},
-  {path: 'expansion', component: SceneViewer, data: {scene: PlaceHolderScene}},
+  {path: 'expansion', component: SceneViewer, data: {scene: ExpansionScene}},
   {path: 'form-field', component: SceneViewer, data: {scene: PlaceHolderScene}},
   {path: 'grid-list', component: SceneViewer, data: {scene: PlaceHolderScene}},
   {path: 'icon', component: SceneViewer, data: {scene: PlaceHolderScene}},
