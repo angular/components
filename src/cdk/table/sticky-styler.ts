@@ -210,7 +210,7 @@ export class StickyStyler {
     // If the element no longer has any more sticky directions, remove sticky positioning and
     // the sticky CSS class.
     const hasDirection = STICKY_DIRECTIONS.some(dir =>
-        stickyDirections.indexOf(dir) !== -1 && !!element.style[dir]);
+        stickyDirections.indexOf(dir) === -1 && !!element.style[dir]);
     if (hasDirection) {
       element.style.zIndex = this._getCalculatedZIndex(element);
     } else {
