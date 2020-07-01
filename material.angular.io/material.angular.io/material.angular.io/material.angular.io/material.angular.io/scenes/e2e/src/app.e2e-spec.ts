@@ -7,6 +7,7 @@ describe('screenshot scenes for each component', () => {
   let page: AppPage;
 
   const components = [
+    'autocomplete',
     'badge',
     'bottom-sheet',
     'button',

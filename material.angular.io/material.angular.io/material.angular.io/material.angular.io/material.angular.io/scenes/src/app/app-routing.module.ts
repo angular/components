@@ -25,6 +25,7 @@ import {PaginatorScene} from './scenes/paginator/paginator-scene';
 import {TableScene} from './scenes/table/table-scene';
 import {ExpansionScene} from './scenes/expansion/expansion-scene';
 import {SelectScene} from './scenes/select/select-scene';
+import {AutocompleteScene} from './scenes/autocomplete/autocomplete-scene';
 
 let hue = 0;
 
@@ -39,7 +40,7 @@ type SceneViewerRoute = {
 };
 
 const routes: SceneViewerRoute[] = [
-  {path: 'autocomplete', component: SceneViewer, data: {scene: PlaceHolderScene}},
+  {path: 'autocomplete', component: SceneViewer, data: {scene: AutocompleteScene}},
   {path: 'badge', component: SceneViewer, data: {scale: 1.5, scene: BadgeScene}},
   {path: 'bottom-sheet', component: SceneViewer, data: {scene: BottomSheetScene}},
   {path: 'button', component: SceneViewer, data: {scene: ButtonScene}},
