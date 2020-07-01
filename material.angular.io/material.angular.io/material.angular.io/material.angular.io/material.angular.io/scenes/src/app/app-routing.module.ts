@@ -1,6 +1,7 @@
 import {NgModule} from '@angular/core';
 import {RouterModule} from '@angular/router';
 import {SceneViewer} from './scene-viewer/scene-viewer';
+import {BottomSheetScene} from './scenes/bottom-sheet/bottom-sheet-scene';
 import {RipplesScene} from './scenes/ripples/ripples-scene';
 import {InputScene} from './scenes/input/input-scene';
 import {ButtonToggleScene} from './scenes/button-toggle/button-toggle-scene';
@@ -37,7 +38,7 @@ type SceneViewerRoute = {
 const routes: SceneViewerRoute[] = [
   {path: 'autocomplete', component: SceneViewer, data: {scene: PlaceHolderScene}},
   {path: 'badge', component: SceneViewer, data: {scale: 1.5, scene: BadgeScene}},
-  {path: 'bottom-sheet', component: SceneViewer, data: {scene: PlaceHolderScene}},
+  {path: 'bottom-sheet', component: SceneViewer, data: {scene: BottomSheetScene}},
   {path: 'button', component: SceneViewer, data: {scene: ButtonScene}},
   {path: 'button-toggle', component: SceneViewer, data: {scale: 1.5, scene: ButtonToggleScene}},
   {path: 'card', component: SceneViewer, data: {scene: PlaceHolderScene}},
