@@ -15,6 +15,7 @@ import {MatMenuModule} from '@angular/material/menu';
 import {MatPaginatorModule} from '@angular/material/paginator';
 import {BottomSheetSceneModule} from './scenes/bottom-sheet/bottom-sheet-scene';
 import {SnackBarSceneModule} from './scenes/snack-bar/snack-bar-scene';
+import {SelectSceneModule} from './scenes/select/select-scene';
 
 @NgModule({
   declarations: [
@@ -32,6 +33,7 @@ import {SnackBarSceneModule} from './scenes/snack-bar/snack-bar-scene';
     MatPaginatorModule,
     BottomSheetSceneModule,
     SnackBarSceneModule,
+    SelectSceneModule
   ],
   bootstrap: [AppComponent],
   providers: [{

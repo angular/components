@@ -6,3 +6,11 @@ app-scene-viewer {
   height: 200px;
   background-color: #fff2f4;
 }
+
+.scene-overlay-container {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 100%;
+}
