@@ -16,6 +16,7 @@ import {DatepickerScene} from './scenes/datepicker/datepicker-scene';
 import {CheckboxScene} from './scenes/checkbox/checkbox-scene';
 import {ChipsScene} from './scenes/chips/chips-scene';
 import {ProgressBarScene} from './scenes/progress-bar/progress-bar-scene';
+import {SnackBarScene} from './scenes/snack-bar/snack-bar-scene';
 import {StepperScene} from './scenes/stepper/stepper-scene';
 import {RadioScene} from './scenes/radio/radio-scene';
 import {MenuScene} from './scenes/menu/menu-scene';
@@ -67,7 +68,7 @@ const routes: SceneViewerRoute[] = [
   {path: 'sidenav', component: SceneViewer, data: {scene: PlaceHolderScene}},
   {path: 'slide-toggle', component: SceneViewer, data: {scene: SlideToggleScene}},
   {path: 'slider', component: SceneViewer, data: {scene: SliderScene}},
-  {path: 'snack-bar', component: SceneViewer, data: {scene: PlaceHolderScene}},
+  {path: 'snack-bar', component: SceneViewer, data: {scene: SnackBarScene}},
   {path: 'sort', component: SceneViewer, data: {scene: PlaceHolderScene}},
   {path: 'stepper', component: SceneViewer, data: {scene: StepperScene}},
   {path: 'table', component: SceneViewer, data: {scene: TableScene}},
