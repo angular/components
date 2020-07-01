@@ -13,6 +13,7 @@ import {SceneOverlayContainer} from './scene-overlay-container';
 import {DOCUMENT} from '@angular/common';
 import {MatMenuModule} from '@angular/material/menu';
 import {MatPaginatorModule} from '@angular/material/paginator';
+import {BottomSheetSceneModule} from './scenes/bottom-sheet/bottom-sheet-scene';
 
 @NgModule({
   declarations: [
@@ -27,7 +28,8 @@ import {MatPaginatorModule} from '@angular/material/paginator';
     MatDialogModule,
     ScrollingModule,
     MatMenuModule,
-    MatPaginatorModule
+    MatPaginatorModule,
+    BottomSheetSceneModule,
   ],
   bootstrap: [AppComponent],
   providers: [{

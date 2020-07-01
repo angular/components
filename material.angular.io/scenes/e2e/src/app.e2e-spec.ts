@@ -6,23 +6,27 @@ describe('screenshot scenes for each component', () => {
   // they are not actually testing anything
   let page: AppPage;
 
-  const components = ['input',
-                      'ripple',
-                      'slider',
-                      'button-toggle',
-                      'slide-toggle',
-                      'divider',
-                      'progress-spinner',
-                      'button',
-                      'datepicker',
-                      'checkbox',
-                      'chips',
-                      'progress-bar',
-                      'stepper',
-                      'radio',
-                      'menu',
-                      'badge',
-                      'paginator'];
+  const components = [
+      'badge',
+      'bottom-sheet',
+      'button',
+      'button-toggle',
+      'checkbox',
+      'chips',
+      'datepicker',
+      'divider',
+      'input',
+      'menu',
+      'paginator',
+      'progress-bar',
+      'progress-spinner',
+      'radio',
+      'ripple',
+      'slide-toggle',
+      'slider',
+      'stepper',
+  ];
+
   beforeEach(() => {
     page = new AppPage();
   });
