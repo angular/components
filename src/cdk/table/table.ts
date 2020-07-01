@@ -48,7 +48,7 @@ import {
 } from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 import {CdkColumnDef} from './cell';
-import {CoalescedStyleScheduler} from './coalesced-style-scheduler';
+import {_CoalescedStyleScheduler} from './coalesced-style-scheduler';
 import {
   BaseRowDef,
   CdkCellOutlet,
@@ -189,7 +189,7 @@ export interface RenderRow<T> {
   changeDetection: ChangeDetectionStrategy.Default,
   providers: [
     {provide: CDK_TABLE, useExisting: CdkTable},
-    CoalescedStyleScheduler,
+    _CoalescedStyleScheduler,
   ]
 })
 export class CdkTable<T> implements AfterContentChecked, CollectionViewer, OnDestroy, OnInit {
@@ -427,7 +427,7 @@ export class CdkTable<T> implements AfterContentChecked, CollectionViewer, OnDes
   constructor(
       protected readonly _differs: IterableDiffers,
       protected readonly _changeDetectorRef: ChangeDetectorRef,
-      protected readonly _coalescedStyleScheduler: CoalescedStyleScheduler,
+      protected readonly _coalescedStyleScheduler: _CoalescedStyleScheduler,
       protected readonly _elementRef: ElementRef, @Attribute('role') role: string,
       @Optional() protected readonly _dir: Directionality, @Inject(DOCUMENT) _document: any,
       private _platform: Platform) {

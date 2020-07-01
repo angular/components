@@ -17,7 +17,8 @@ import {from, Observable} from 'rxjs';
  * @docs-private
  */
 @Injectable()
-export class CoalescedStyleScheduler {
+// tslint:disable-next-line:class-name
+export class _CoalescedStyleScheduler {
   private _currentSchedule: Observable<void>|null = null;
 
   constructor(private readonly _ngZone: NgZone) {}

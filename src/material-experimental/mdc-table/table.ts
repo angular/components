@@ -7,7 +7,7 @@
  */
 
 import {ChangeDetectionStrategy, Component, OnInit, ViewEncapsulation} from '@angular/core';
-import {CDK_TABLE_TEMPLATE, CdkTable, CoalescedStyleScheduler} from '@angular/cdk/table';
+import {CDK_TABLE_TEMPLATE, CdkTable, _CoalescedStyleScheduler} from '@angular/cdk/table';
 
 @Component({
   selector: 'table[mat-table]',
@@ -19,7 +19,7 @@ import {CDK_TABLE_TEMPLATE, CdkTable, CoalescedStyleScheduler} from '@angular/cd
   },
   providers: [
     {provide: CdkTable, useExisting: MatTable},
-    CoalescedStyleScheduler,
+    _CoalescedStyleScheduler,
   ],
   encapsulation: ViewEncapsulation.None,
   // See note on CdkTable for explanation on why this uses the default change detection strategy.

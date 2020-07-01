@@ -11,7 +11,7 @@
  * @docs-private
  */
 import {Direction} from '@angular/cdk/bidi';
-import {CoalescedStyleScheduler} from './coalesced-style-scheduler';
+import {_CoalescedStyleScheduler} from './coalesced-style-scheduler';
 
 export type StickyDirection = 'top' | 'bottom' | 'left' | 'right';
 
@@ -38,7 +38,7 @@ export class StickyStyler {
   constructor(private _isNativeHtmlTable: boolean,
               private _stickCellCss: string,
               public direction: Direction,
-              private _coalescedStyleScheduler: CoalescedStyleScheduler,
+              private _coalescedStyleScheduler: _CoalescedStyleScheduler,
               private _isBrowser = true) { }
 
   /**
