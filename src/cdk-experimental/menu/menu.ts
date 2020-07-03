@@ -16,12 +16,14 @@ import {
   AfterContentInit,
   OnDestroy,
   Optional,
+  ElementRef,
 } from '@angular/core';
 import {take} from 'rxjs/operators';
 import {CdkMenuGroup} from './menu-group';
 import {CdkMenuPanel} from './menu-panel';
 import {Menu, CDK_MENU} from './menu-interface';
 import {throwMissingMenuPanelError} from './menu-errors';
+import {OpenMenuTracker} from './menu-tree-service';
 
 /**
  * Directive which configures the element as a Menu which should contain child elements marked as
@@ -56,6 +58,9 @@ export class CdkMenu extends CdkMenuGroup implements Menu, AfterContentInit, OnD
   @ContentChildren(CdkMenuGroup, {descendants: true})
   private readonly _nestedGroups: QueryList<CdkMenuGroup>;
 
+  /** Keep track of the open menus in the menu tree. */
+  _openMenuTracker = new OpenMenuTracker();
+
   /**
    * A reference to the enclosing parent menu panel.
    *
@@ -65,8 +70,13 @@ export class CdkMenu extends CdkMenuGroup implements Menu, AfterContentInit, OnD
    */
   @Input('cdkMenuPanel') private readonly _explicitPanel?: CdkMenuPanel;
 
-  constructor(@Optional() private readonly _menuPanel?: CdkMenuPanel) {
+  constructor(
+    elementRef: ElementRef<HTMLElement>,
+    @Optional() private readonly _menuPanel?: CdkMenuPanel
+  ) {
     super();
+
+    this._openMenuTracker.push(elementRef.nativeElement);
   }
 
   ngAfterContentInit() {

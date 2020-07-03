@@ -6,9 +6,10 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Directive, Input} from '@angular/core';
+import {Directive, Input, ElementRef, OnDestroy} from '@angular/core';
 import {CdkMenuGroup} from './menu-group';
 import {CDK_MENU, Menu} from './menu-interface';
+import {OpenMenuTracker} from './menu-tree-service';
 
 /**
  * Directive applied to an element which configures it as a MenuBar by setting the appropriate
@@ -28,10 +29,19 @@ import {CDK_MENU, Menu} from './menu-interface';
     {provide: CDK_MENU, useExisting: CdkMenuBar},
   ],
 })
-export class CdkMenuBar extends CdkMenuGroup implements Menu {
+export class CdkMenuBar extends CdkMenuGroup implements Menu, OnDestroy {
   /**
    * Sets the aria-orientation attribute and determines where menus will be opened.
    * Does not affect styling/layout.
    */
   @Input('cdkMenuBarOrientation') orientation: 'horizontal' | 'vertical' = 'horizontal';
+
+  /** Keep track of the open menus in the menu tree. */
+  _openMenuTracker = new OpenMenuTracker();
+
+  constructor(elementRef: ElementRef<HTMLElement>) {
+    super();
+
+    this._openMenuTracker.push(elementRef.nativeElement);
+  }
 }

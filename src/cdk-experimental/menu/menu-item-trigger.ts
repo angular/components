@@ -92,6 +92,27 @@ export class CdkMenuItemTrigger implements OnDestroy {
 
     this._overlayRef = this._overlay.create(this._getOverlayConfig());
     this._overlayRef.attach(this._getPortal());
+
+    this._extendOpenMenus();
+    this._subscribeToClosingActions();
+  }
+
+  /** Wire up the subscription which may cause the menu to close. */
+  private _subscribeToClosingActions() {
+    if (this._overlayRef) {
+      this._overlayRef.outsidePointerEvents().subscribe(() => this.isMenuOpen() && this.toggle());
+    }
+  }
+
+  /** Add the parent menus open menu elements to the menu this trigger opens. */
+  private _extendOpenMenus() {
+    const menu = this._getOpenMenu();
+    if (menu) {
+      // push down the parents open menus to the child in order to ensure that the child menu item
+      // triggers overlay click listeners ignore the parent menus in the open menu tree when
+      // considering what to close out on background click.
+      menu._openMenuTracker.extend(this._parentMenu._openMenuTracker);
+    }
   }
 
   /** Close the opened menu */
@@ -109,6 +130,7 @@ export class CdkMenuItemTrigger implements OnDestroy {
       positionStrategy: this._getOverlayPositionStrategy(),
       scrollStrategy: this._overlay.scrollStrategies.block(),
       direction: this._directionality,
+      excludeFromOutsideClick: this._parentMenu._openMenuTracker.openMenus,
     });
   }
 
@@ -150,6 +172,11 @@ export class CdkMenuItemTrigger implements OnDestroy {
       );
     }
     return this._panelContent;
+  }
+
+  /** Get the menu this trigger has opened if it's open. */
+  private _getOpenMenu() {
+    return this._menuPanel && this._menuPanel._menu ? this._menuPanel._menu : null;
   }
 
   ngOnDestroy() {
