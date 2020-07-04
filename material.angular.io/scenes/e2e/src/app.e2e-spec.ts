@@ -17,6 +17,7 @@ describe('screenshot scenes for each component', () => {
     'datepicker',
     'divider',
     'expansion',
+    'grid-list',
     'input',
     'menu',
     'paginator',
