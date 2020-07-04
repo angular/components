@@ -1034,7 +1034,7 @@ export class DragRef<T = any> {
   /** Determines the point of the page that was touched by the user. */
   private _getPointerPositionOnPage(event: MouseEvent | TouchEvent): Point {
     const scrollPosition = this._getViewportScrollPosition();
-    const point = isTouchEvent(event) ?
+    const eventPoint = isTouchEvent(event) ?
         // `touches` will be empty for start/end events so we have to fall back to `changedTouches`.
         // Also note that on real devices we're guaranteed for either `touches` or `changedTouches`
         // to have a value, but Firefox in device emulation mode has a bug where both can be empty
@@ -1044,10 +1044,27 @@ export class DragRef<T = any> {
         // we can get away with it. See https://bugzilla.mozilla.org/show_bug.cgi?id=1615824.
         (event.touches[0] || event.changedTouches[0] || {pageX: 0, pageY: 0}) : event;
 
-    return {
-      x: point.pageX - scrollPosition.left,
-      y: point.pageY - scrollPosition.top
+    let point = {
+      x: eventPoint.pageX - scrollPosition.left,
+      y: eventPoint.pageY - scrollPosition.top
     };
+
+    // if dragging SVG element, try to convert from the screen coordinate system to the SVG
+    // coordinate system
+    if (typeof SVGElement !== 'undefined' && this._rootElement instanceof SVGElement) {
+          const svg = this._rootElement.ownerSVGElement;
+          if (svg) {
+              let svgPoint = svg.createSVGPoint();
+              svgPoint.x = point.x;
+              svgPoint.y = point.y;
+              const svgMatrix = svg.getScreenCTM();
+              if (svgMatrix) {
+                  return svgPoint.matrixTransform(svgMatrix.inverse());
+              }
+          }
+      }
+
+      return point;
   }
 
 
