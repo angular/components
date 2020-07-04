@@ -14,6 +14,7 @@ import {DOCUMENT} from '@angular/common';
 import {MatMenuModule} from '@angular/material/menu';
 import {MatPaginatorModule} from '@angular/material/paginator';
 import {BottomSheetSceneModule} from './scenes/bottom-sheet/bottom-sheet-scene';
+import {GridListSceneModule} from './scenes/grid-list/grid-list-scene';
 import {SnackBarSceneModule} from './scenes/snack-bar/snack-bar-scene';
 import {SelectSceneModule} from './scenes/select/select-scene';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
@@ -34,6 +35,7 @@ import {AutocompleteSceneModule} from './scenes/autocomplete/autocomplete-scene'
     MatMenuModule,
     MatPaginatorModule,
     BottomSheetSceneModule,
+    GridListSceneModule,
     SnackBarSceneModule,
     SelectSceneModule,
     MatAutocompleteModule,

@@ -2,6 +2,7 @@ import {NgModule} from '@angular/core';
 import {RouterModule} from '@angular/router';
 import {SceneViewer} from './scene-viewer/scene-viewer';
 import {BottomSheetScene} from './scenes/bottom-sheet/bottom-sheet-scene';
+import {GridListScene} from './scenes/grid-list/grid-list-scene';
 import {RipplesScene} from './scenes/ripples/ripples-scene';
 import {InputScene} from './scenes/input/input-scene';
 import {ButtonToggleScene} from './scenes/button-toggle/button-toggle-scene';
@@ -53,7 +54,7 @@ const routes: SceneViewerRoute[] = [
   {path: 'divider', component: SceneViewer, data: {scale: 2, scene: DividerScene}},
   {path: 'expansion', component: SceneViewer, data: {scene: ExpansionScene}},
   {path: 'form-field', component: SceneViewer, data: {scene: PlaceHolderScene}},
-  {path: 'grid-list', component: SceneViewer, data: {scene: PlaceHolderScene}},
+  {path: 'grid-list', component: SceneViewer, data: {scene: GridListScene}},
   {path: 'icon', component: SceneViewer, data: {scene: PlaceHolderScene}},
   {path: 'input', component: SceneViewer, data: {scale: 0.7, scene: InputScene}},
   {path: 'list', component: SceneViewer, data: {scene: PlaceHolderScene}},
