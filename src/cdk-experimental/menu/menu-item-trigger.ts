@@ -47,7 +47,7 @@ import {Menu, CDK_MENU} from './menu-interface';
 })
 export class CdkMenuItemTrigger implements OnDestroy {
   /** Template reference variable to the menu this trigger opens */
-  @Input('cdkMenuTriggerFor') _menuPanel?: CdkMenuPanel;
+  @Input('cdkMenuTriggerFor') private readonly _menuPanel?: CdkMenuPanel;
 
   /** Emits when the attached menu is requested to open */
   @Output('cdkMenuOpened') readonly opened: EventEmitter<void> = new EventEmitter();
@@ -86,20 +86,28 @@ export class CdkMenuItemTrigger implements OnDestroy {
     return this._overlayRef ? this._overlayRef.hasAttached() : false;
   }
 
+  /**
+   * Get a reference to the rendered Menu if the Menu is open and it is visible in the DOM.
+   * @return the menu if it is open, otherwise undefined.
+   */
+  getMenu(): Menu | undefined {
+    return this._menuPanel?._menu;
+  }
+
   /** Open the attached menu */
   private _openMenu() {
-    this.opened.next();
-
     this._overlayRef = this._overlay.create(this._getOverlayConfig());
     this._overlayRef.attach(this._getPortal());
+
+    this.opened.next();
   }
 
   /** Close the opened menu */
   private _closeMenu() {
     if (this.isMenuOpen()) {
-      this.closed.next();
-
       this._overlayRef!.detach();
+
+      this.closed.next();
     }
   }
 
@@ -143,11 +151,10 @@ export class CdkMenuItemTrigger implements OnDestroy {
    * content to change dynamically and be reflected in the application.
    */
   private _getPortal() {
-    if (!this._panelContent || this._panelContent.templateRef !== this._menuPanel?._templateRef) {
-      this._panelContent = new TemplatePortal(
-        this._menuPanel!._templateRef,
-        this._viewContainerRef
-      );
+    const hasMenuContentChanged = this._menuPanel?._templateRef !== this._panelContent?.templateRef;
+
+    if (this._menuPanel && (!this._panelContent || hasMenuContentChanged)) {
+      this._panelContent = new TemplatePortal(this._menuPanel._templateRef, this._viewContainerRef);
     }
     return this._panelContent;
   }

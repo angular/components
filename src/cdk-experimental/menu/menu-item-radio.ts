@@ -6,8 +6,10 @@
  * found in the LICENSE file at https://angular.io/license
  */
 import {UniqueSelectionDispatcher} from '@angular/cdk/collections';
-import {Directive, OnDestroy} from '@angular/core';
+import {Directive, OnDestroy, ElementRef, Self, Optional} from '@angular/core';
 import {CdkMenuItemSelectable} from './menu-item-selectable';
+import {CdkMenuItem} from './menu-item';
+import {CdkMenuItemTrigger} from './menu-item-trigger';
 
 /**
  * A directive providing behavior for the the "menuitemradio" ARIA role, which behaves similarly to
@@ -24,14 +26,22 @@ import {CdkMenuItemSelectable} from './menu-item-selectable';
     '[attr.aria-checked]': 'checked || null',
     '[attr.aria-disabled]': 'disabled || null',
   },
-  providers: [{provide: CdkMenuItemSelectable, useExisting: CdkMenuItemRadio}],
+  providers: [
+    {provide: CdkMenuItemSelectable, useExisting: CdkMenuItemRadio},
+    {provide: CdkMenuItem, useExisting: CdkMenuItemSelectable},
+  ],
 })
 export class CdkMenuItemRadio extends CdkMenuItemSelectable implements OnDestroy {
   /** Function to unregister the selection dispatcher */
   private _removeDispatcherListener: () => void;
 
-  constructor(private readonly _selectionDispatcher: UniqueSelectionDispatcher) {
-    super();
+  constructor(
+    private readonly _selectionDispatcher: UniqueSelectionDispatcher,
+    element: ElementRef<HTMLElement>,
+    /** Reference to the CdkMenuItemTrigger directive if one is added to the same element */
+    @Self() @Optional() menuTrigger?: CdkMenuItemTrigger
+  ) {
+    super(element, menuTrigger);
 
     this._registerDispatcherListener();
   }

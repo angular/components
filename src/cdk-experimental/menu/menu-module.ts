@@ -16,6 +16,7 @@ import {CdkMenuGroup} from './menu-group';
 import {CdkMenuItemRadio} from './menu-item-radio';
 import {CdkMenuItemCheckbox} from './menu-item-checkbox';
 import {CdkMenuItemTrigger} from './menu-item-trigger';
+import {TYPE_AHEAD_DEBOUNCE, defaultTypeAheadDebounce} from './menu-key-manager';
 
 const EXPORTED_DECLARATIONS = [
   CdkMenuBar,
@@ -31,5 +32,6 @@ const EXPORTED_DECLARATIONS = [
   imports: [OverlayModule],
   exports: EXPORTED_DECLARATIONS,
   declarations: EXPORTED_DECLARATIONS,
+  providers: [{provide: TYPE_AHEAD_DEBOUNCE, useValue: defaultTypeAheadDebounce}],
 })
 export class CdkMenuModule {}
