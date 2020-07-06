@@ -98,6 +98,12 @@ export function runHarnessTests(
     const footerSubcomponents = await footerLoader?.getAllHarnesses(DummyHarness) ?? [];
     expect(footerSubcomponents.length).toBe(1);
   });
+
+  it('should act as a harness loader for user content', async () => {
+    const card = await loader.getHarness(cardHarness.with({title: 'Shiba Inu'}));
+    const footerSubcomponents = await card.getAllHarnesses(DummyHarness) ?? [];
+    expect(footerSubcomponents.length).toBe(7);
+  });
 }
 
 @Component({
