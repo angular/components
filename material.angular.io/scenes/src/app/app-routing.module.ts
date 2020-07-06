@@ -24,6 +24,7 @@ import {MenuScene} from './scenes/menu/menu-scene';
 import {BadgeScene} from './scenes/badge/badge-scene';
 import {PaginatorScene} from './scenes/paginator/paginator-scene';
 import {TableScene} from './scenes/table/table-scene';
+import {TabsScene} from './scenes/tabs/tabs-scene';
 import {ExpansionScene} from './scenes/expansion/expansion-scene';
 import {SelectScene} from './scenes/select/select-scene';
 import {AutocompleteScene} from './scenes/autocomplete/autocomplete-scene';
@@ -77,7 +78,7 @@ const routes: SceneViewerRoute[] = [
   {path: 'sort', component: SceneViewer, data: {scene: PlaceHolderScene}},
   {path: 'stepper', component: SceneViewer, data: {scene: StepperScene}},
   {path: 'table', component: SceneViewer, data: {scene: TableScene}},
-  {path: 'tabs', component: SceneViewer, data: {scene: PlaceHolderScene}},
+  {path: 'tabs', component: SceneViewer, data: {scene: TabsScene}},
   {path: 'toolbar', component: SceneViewer, data: {scene: PlaceHolderScene}},
   {path: 'tooltip', component: SceneViewer, data: {scene: PlaceHolderScene}},
   {path: 'tree', component: SceneViewer, data: {scene: TreeScene}},
