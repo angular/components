@@ -21,6 +21,7 @@ describe('screenshot scenes for each component', () => {
     'expansion',
     'form-field',
     'grid-list',
+    'icon',
     'input',
     'list',
     'menu',
