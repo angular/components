@@ -25,12 +25,12 @@ let nextId = 0;
   selector: '[cdkOption]',
   exportAs: 'cdkOption',
   host: {
-    role: 'option',
+    'role': 'option',
     '(click)': 'toggle()',
-    '(focus)': 'activateOption()',
-    '(blur)': 'deactivateOption()',
-    '[attr.aria-selected]': '_selected || null',
+    '(focus)': 'activate()',
+    '(blur)': 'deactivate()',
     '[id]': 'id',
+    '[attr.aria-selected]': '_selected || null',
     '[attr.tabindex]': '_getTabIndex()',
     '[attr.aria-disabled]': '_isInteractionDisabled()',
     '[class.cdk-option-disabled]': '_isInteractionDisabled()',
@@ -53,7 +53,7 @@ export class CdkOption implements ListKeyManagerOption, Highlightable {
     }
   }
 
-  /** The id of the option, set to a uniqueid if the user does not provide one */
+  /** The id of the option, set to a uniqueid if the user does not provide one. */
   @Input() id = `cdk-option-${nextId++}`;
 
   @Input()
@@ -68,7 +68,7 @@ export class CdkOption implements ListKeyManagerOption, Highlightable {
               @Inject(forwardRef(() => CdkListbox)) public listbox: CdkListbox) {
   }
 
-  /** Toggles the selected state, emits a change event through the injected listbox */
+  /** Toggles the selected state, emits a change event through the injected listbox. */
   toggle() {
     if (!this._isInteractionDisabled()) {
       this.selected = !this.selected;
@@ -76,21 +76,25 @@ export class CdkOption implements ListKeyManagerOption, Highlightable {
     }
   }
 
-  activateOption() {
+  /** Sets the active property true if the option and listbox aren't disabled. */
+  activate() {
     if (!this._isInteractionDisabled()) {
       this._active = true;
       this.listbox.setActiveOption(this);
     }
   }
 
-  deactivateOption() {
+  /** Sets the active property false. */
+  deactivate() {
     this._active = false;
   }
 
+  /** Returns true if the option or listbox are disabled, and false otherwise. */
   _isInteractionDisabled(): boolean {
     return (this.listbox.disabled || this._disabled);
   }
 
+  /** Returns the tab index which depends on the disabled property. */
   _getTabIndex(): string | null {
     return (this.listbox.disabled || this._disabled) ? null : '-1';
   }
@@ -116,7 +120,7 @@ export class CdkOption implements ListKeyManagerOption, Highlightable {
     selector: '[cdkListbox]',
     exportAs: 'cdkListbox',
     host: {
-      role: 'listbox',
+      'role': 'listbox',
       '(keydown)': '_keydown($event)',
       '[attr.aria-disabled]': '_disabled',
     }
@@ -171,7 +175,7 @@ export class CdkListbox implements AfterContentInit, OnDestroy {
 
   }
 
-  /** Emits a selection change event, called when an option has its selected state changed */
+  /** Emits a selection change event, called when an option has its selected state changed. */
   _emitChangeEvent(option: CdkOption) {
     this.selectionChange.emit(new ListboxSelectionChangeEvent(this, option));
   }
@@ -184,18 +188,21 @@ export class CdkListbox implements AfterContentInit, OnDestroy {
     }
   }
 
+  /** Selects the given option if the option and listbox aren't disabled. */
   select(option: CdkOption) {
-    if (!this.disabled && option.disabled) {
+    if (!this.disabled && !option.disabled) {
       option.selected = true;
     }
   }
 
+  /** Deselects the given option if the option and listbox aren't disabled. */
   deselect(option: CdkOption) {
-    if (!this.disabled && option.disabled) {
+    if (!this.disabled && !option.disabled) {
       option.selected = false;
     }
   }
 
+  /** Updates the key manager's active item to the given option. */
   setActiveOption(option: CdkOption) {
     this._listKeyManager.updateActiveItem(option);
   }
