@@ -26,7 +26,7 @@ export class ExampleViewer implements OnInit {
   @ViewChildren(CodeSnippet) readonly snippet: QueryList<CodeSnippet>;
 
   /** The tab to jump to when expanding from snippet view. */
-  selectedTab: number;
+  selectedTab: number = 0;
 
   /** Map of example files that should be displayed in the view-source tab. */
   exampleTabs: {[tabName: string]: string};
@@ -118,12 +118,15 @@ export class ExampleViewer implements OnInit {
   }
 
   generateUrl(file: string): string {
+    const lastDotIndex = file.lastIndexOf('.');
+    const contentBeforeDot = file.substring(0, lastDotIndex);
+    const contentAfterDot = file.substring(lastDotIndex + 1);
     let fileName: string;
-    const last = file.lastIndexOf('.');
+
     if (this.region) {
-      fileName = file.substring(0, last) + '_' + this.region + '-' + file.substring(last + 1) + '.html';
+      fileName = `${contentBeforeDot}_${this.region}-${contentAfterDot}.html`;
     } else {
-      fileName = file.substring(0, last) + '-' + file.substring(last + 1) + '.html';
+      fileName = `${contentBeforeDot}-${contentAfterDot}.html`;
     }
 
     const examplePath = `${this.exampleData.module.importSpecifier}/${this.example}`;
@@ -166,7 +169,7 @@ export class ExampleViewer implements OnInit {
 
     const additionalFiles = this.exampleData.additionalFiles || [];
 
-    additionalFiles.forEach(fileName => {
+    additionalFiles.forEach((fileName: string) => {
       // Since the additional files refer to the original file name, we need to transform
       // the file name to match the highlighted HTML file that displays the source.
       const fileSourceName = fileName.replace(fileExtensionRegex, '$1-$2.html');
