@@ -57,6 +57,70 @@ const RIPPLE_ANIMATION_CONFIG: RippleAnimationConfig = {
   exitDuration: numbers.FG_DEACTIVATION_MS,
 };
 
+/** Singleton check box adapter. */
+class CheckBoxAdapter implements MDCCheckboxAdapter {
+
+  private static _adapter: CheckBoxAdapter;
+
+  private _delegate: MatCheckbox;
+
+  private constructor(delegate: MatCheckbox) {
+    this._delegate = delegate;
+  }
+
+  useDelegate(delegate: MatCheckbox) {
+    if (!this._delegate) {
+      CheckBoxAdapter._adapter = new CheckBoxAdapter(delegate);
+    } else {
+      this._delegate = delegate;
+    }
+
+    return CheckBoxAdapter.getAdapter();
+  }
+
+  static getAdapter() {
+    return CheckBoxAdapter._adapter;
+  }
+
+  addClass(className) {
+    return this._delegate.setClass(className, true);
+  }
+  removeClass(className) {
+    return this._delegate.setClass(className, false);
+  }
+  forceLayout() {
+    return this._delegate._checkbox.nativeElement.offsetWidth;
+  }
+  hasNativeControl() {
+    return !!this._delegate._nativeCheckbox;
+  }
+  isAttachedToDOM() {
+    return !!this._delegate._checkbox.nativeElement.parentNode;
+  }
+  isChecked() {
+    return this._delegate.checked;
+    }
+  isIndeterminate() {
+    return this._delegate.indeterminate;
+  }
+  removeNativeControlAttr(attr)  {
+    if (!this._delegate._attrBlacklist.has(attr)) {
+      this._delegate._nativeCheckbox.nativeElement.removeAttribute(attr);
+    }
+  }
+  setNativeControlAttr(attr, value)  {
+    if (!this._delegate._attrBlacklist.has(attr)) {
+      this._delegate._nativeCheckbox.nativeElement.setAttribute(attr, value);
+    }
+  }
+  setNativeControlDisabled(disabled) {
+    this._delegate.disabled = disabled;
+  }
+}
+
+const _singletonCheckboxAdapter = CheckBoxAdapter.getAdapter();
+
+
 @Component({
   selector: 'mat-checkbox',
   templateUrl: 'checkbox.html',
@@ -209,30 +273,6 @@ export class MatCheckbox implements AfterViewInit, OnDestroy, ControlValueAccess
    */
   private _attrBlacklist = new Set(['aria-checked']);
 
-  /** The `MDCCheckboxAdapter` instance for this checkbox. */
-  private _checkboxAdapter: MDCCheckboxAdapter = {
-    addClass: (className) => this._setClass(className, true),
-    removeClass: (className) => this._setClass(className, false),
-    forceLayout: () => this._checkbox.nativeElement.offsetWidth,
-    hasNativeControl: () => !!this._nativeCheckbox,
-    isAttachedToDOM: () => !!this._checkbox.nativeElement.parentNode,
-    isChecked: () => this.checked,
-    isIndeterminate: () => this.indeterminate,
-    removeNativeControlAttr:
-        (attr) => {
-          if (!this._attrBlacklist.has(attr)) {
-            this._nativeCheckbox.nativeElement.removeAttribute(attr);
-          }
-        },
-    setNativeControlAttr:
-        (attr, value) => {
-          if (!this._attrBlacklist.has(attr)) {
-            this._nativeCheckbox.nativeElement.setAttribute(attr, value);
-          }
-        },
-    setNativeControlDisabled: (disabled) => this.disabled = disabled,
-  };
-
   constructor(
       private _changeDetectorRef: ChangeDetectorRef,
       @Attribute('tabindex') tabIndex: string,
@@ -248,7 +288,8 @@ export class MatCheckbox implements AfterViewInit, OnDestroy, ControlValueAccess
     // Note: We don't need to set up the MDCFormFieldFoundation. Its only purpose is to manage the
     // ripple, which we do ourselves instead.
     this.tabIndex = parseInt(tabIndex) || 0;
-    this._checkboxFoundation = new MDCCheckboxFoundation(this._checkboxAdapter);
+    this._checkboxFoundation = new MDCCheckboxFoundation(
+      _singletonCheckboxAdapter.useDelegate(this));
 
     this._options = this._options || {};
 
@@ -375,7 +416,7 @@ export class MatCheckbox implements AfterViewInit, OnDestroy, ControlValueAccess
   }
 
   /** Sets whether the given CSS class should be applied to the native input. */
-  private _setClass(cssClass: string, active: boolean) {
+  setClass(cssClass: string, active: boolean) {
     this._classes[cssClass] = active;
     this._changeDetectorRef.markForCheck();
   }
