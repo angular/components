@@ -34,6 +34,7 @@ describe('screenshot scenes for each component', () => {
     'slider',
     'stepper',
     'snack-bar',
+    'toolbar',
     'tooltip',
     'tree',
   ];
