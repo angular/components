@@ -34,6 +34,7 @@ import {CardScene} from './scenes/card/card-scene';
 import {ListScene} from './scenes/list/list-scene';
 import {TooltipScene} from './scenes/tooltip/tooltip-scene';
 import {DialogScene} from './scenes/dialog/dialog-scene';
+import {FormFieldScene} from './scenes/form-field/form-field-scene';
 
 let hue = 0;
 
@@ -60,7 +61,7 @@ const routes: SceneViewerRoute[] = [
   {path: 'dialog', component: SceneViewer, data: {scene: DialogScene}},
   {path: 'divider', component: SceneViewer, data: {scale: 2, scene: DividerScene}},
   {path: 'expansion', component: SceneViewer, data: {scene: ExpansionScene}},
-  {path: 'form-field', component: SceneViewer, data: {scene: PlaceHolderScene}},
+  {path: 'form-field', component: SceneViewer, data: {scene: FormFieldScene}},
   {path: 'grid-list', component: SceneViewer, data: {scene: GridListScene}},
   {path: 'icon', component: SceneViewer, data: {scene: PlaceHolderScene}},
   {path: 'input', component: SceneViewer, data: {scale: 0.7, scene: InputScene}},

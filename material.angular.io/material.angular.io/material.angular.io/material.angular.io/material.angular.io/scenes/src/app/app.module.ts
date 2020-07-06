@@ -20,6 +20,7 @@ import {SelectSceneModule} from './scenes/select/select-scene';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {AutocompleteSceneModule} from './scenes/autocomplete/autocomplete-scene';
 import {DialogSceneModule} from './scenes/dialog/dialog-scene';
+import {FormFieldSceneModule} from './scenes/form-field/form-field-scene';
 
 @NgModule({
   declarations: [
@@ -42,6 +43,7 @@ import {DialogSceneModule} from './scenes/dialog/dialog-scene';
     MatAutocompleteModule,
     AutocompleteSceneModule,
     DialogSceneModule,
+    FormFieldSceneModule,
   ],
   bootstrap: [AppComponent],
   providers: [{

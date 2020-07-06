@@ -19,6 +19,7 @@ describe('screenshot scenes for each component', () => {
     'dialog',
     'divider',
     'expansion',
+    'form-field',
     'grid-list',
     'input',
     'list',
