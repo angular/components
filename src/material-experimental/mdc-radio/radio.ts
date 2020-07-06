@@ -66,29 +66,7 @@ const RIPPLE_ANIMATION_CONFIG: RippleAnimationConfig = {
 };
 
 class RadioAdapter implements MDCRadioAdapter {
-
-  private static _adapter: RadioAdapter;
-
-  private _delegate: MatRadioButton;
-
-  private constructor(delegate: MatRadioButton) {
-    this._delegate = delegate;
-  }
-
-  useDelegate(delegate: MatRadioButton) {
-    if (!this._delegate) {
-      RadioAdapter._adapter = new RadioAdapter(delegate);
-    } else {
-      this._delegate = delegate;
-    }
-
-    return RadioAdapter.getAdapter();
-  }
-
-  static getAdapter() {
-    return RadioAdapter._adapter;
-  }
-
+  constructor(private readonly _delegate: MatRadioButton) {}
   addClass(className: string) {
     return this._delegate.setClass(className, true);
   }
@@ -103,7 +81,6 @@ class RadioAdapter implements MDCRadioAdapter {
   }
 }
 
-const _singletonRadioAdapter = RadioAdapter.getAdapter();
 
 /**
  * A group of radio buttons. May contain one or more `<mat-radio-button>` elements.
@@ -152,11 +129,12 @@ export class MatRadioGroup extends _MatRadioGroupBase<MatRadioButton> {
 })
 export class MatRadioButton extends _MatRadioButtonBase implements AfterViewInit, OnDestroy {
 
+  private _radioAdapter: MDCRadioAdapter;
 
   /** Configuration for the underlying ripple. */
   _rippleAnimation: RippleAnimationConfig = RIPPLE_ANIMATION_CONFIG;
 
-  _radioFoundation = new MDCRadioFoundation(_singletonRadioAdapter.useDelegate(this));
+  _radioFoundation: MDCRadioFoundation;
   _classes: {[key: string]: boolean} = {};
 
   constructor(@Optional() @Inject(MAT_RADIO_GROUP) radioGroup: MatRadioGroup,
@@ -169,6 +147,8 @@ export class MatRadioButton extends _MatRadioButtonBase implements AfterViewInit
               _providerOverride?: MatRadioDefaultOptions) {
     super(radioGroup, elementRef, _changeDetector, _focusMonitor,
         _radioDispatcher, _animationMode, _providerOverride);
+    this._radioAdapter = new RadioAdapter(this);
+    this._radioFoundation = new MDCRadioFoundation(this._radioAdapter);
   }
 
   ngAfterViewInit() {
