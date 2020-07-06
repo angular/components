@@ -1,0 +1,16 @@
+:host {
+  position: absolute;
+  left: 0;
+  top: 0;
+  margin: 32px;
+}
+
+:host ::ng-deep mat-tab-body {
+  width: 100px;
+  padding: 16px;
+  opacity: .5;
+}
+
+:host ::ng-deep .mat-tab-label {
+  min-width: 132px;
+}
