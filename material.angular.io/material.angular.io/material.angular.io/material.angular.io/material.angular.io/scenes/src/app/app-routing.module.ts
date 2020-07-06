@@ -35,6 +35,7 @@ import {ListScene} from './scenes/list/list-scene';
 import {TooltipScene} from './scenes/tooltip/tooltip-scene';
 import {DialogScene} from './scenes/dialog/dialog-scene';
 import {FormFieldScene} from './scenes/form-field/form-field-scene';
+import {ToolbarScene} from './scenes/toolbar/toolbar-scene';
 
 let hue = 0;
 
@@ -85,7 +86,7 @@ const routes: SceneViewerRoute[] = [
   {path: 'stepper', component: SceneViewer, data: {scene: StepperScene}},
   {path: 'table', component: SceneViewer, data: {scene: TableScene}},
   {path: 'tabs', component: SceneViewer, data: {scene: TabsScene}},
-  {path: 'toolbar', component: SceneViewer, data: {scene: PlaceHolderScene}},
+  {path: 'toolbar', component: SceneViewer, data: {scene: ToolbarScene}},
   {path: 'tooltip', component: SceneViewer, data: {scene: TooltipScene}},
   {path: 'tree', component: SceneViewer, data: {scene: TreeScene}},
 ].sort((a, b) => (a.path > b.path) ? 1 : ((b.path > a.path) ? -1 : 0))

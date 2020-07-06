@@ -1,0 +1,18 @@
+.docs-scene-toolbar-spacer {
+  flex: 1 1 auto;
+}
+
+.docs-scene-toolbar.mat-toolbar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 360px;
+
+  mat-icon {
+    margin: 0 10px;
+  }
+}
+
+.docs-scene-toolbar-title {
+  margin-left: 20px;
+}
