@@ -36,6 +36,7 @@ import {TooltipScene} from './scenes/tooltip/tooltip-scene';
 import {DialogScene} from './scenes/dialog/dialog-scene';
 import {FormFieldScene} from './scenes/form-field/form-field-scene';
 import {ToolbarScene} from './scenes/toolbar/toolbar-scene';
+import {SidenavScene} from './scenes/sidenav/sidenav-scene';
 
 let hue = 0;
 
@@ -78,7 +79,7 @@ const routes: SceneViewerRoute[] = [
   {path: 'radio', component: SceneViewer, data: {scene: RadioScene}},
   {path: 'ripple', component: SceneViewer, data: {scene: RipplesScene}},
   {path: 'select', component: SceneViewer, data: {scene: SelectScene}},
-  {path: 'sidenav', component: SceneViewer, data: {scene: PlaceHolderScene}},
+  {path: 'sidenav', component: SceneViewer, data: {scene: SidenavScene}},
   {path: 'slide-toggle', component: SceneViewer, data: {scene: SlideToggleScene}},
   {path: 'slider', component: SceneViewer, data: {scene: SliderScene}},
   {path: 'snack-bar', component: SceneViewer, data: {scene: SnackBarScene}},
