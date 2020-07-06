@@ -30,6 +30,7 @@ import {ExpansionScene} from './scenes/expansion/expansion-scene';
 import {SelectScene} from './scenes/select/select-scene';
 import {AutocompleteScene} from './scenes/autocomplete/autocomplete-scene';
 import {TreeScene} from './scenes/tree/tree-scene';
+import {CardScene} from './scenes/card/card-scene';
 
 let hue = 0;
 
@@ -49,7 +50,7 @@ const routes: SceneViewerRoute[] = [
   {path: 'bottom-sheet', component: SceneViewer, data: {scene: BottomSheetScene}},
   {path: 'button', component: SceneViewer, data: {scene: ButtonScene}},
   {path: 'button-toggle', component: SceneViewer, data: {scale: 1.5, scene: ButtonToggleScene}},
-  {path: 'card', component: SceneViewer, data: {scene: PlaceHolderScene}},
+  {path: 'card', component: SceneViewer, data: {scene: CardScene}},
   {path: 'checkbox', component: SceneViewer, data: {scene: CheckboxScene}},
   {path: 'chips', component: SceneViewer, data: {scene: ChipsScene}},
   {path: 'datepicker', component: SceneViewer, data: {scale: 0.8, scene: DatepickerScene}},

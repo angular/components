@@ -12,6 +12,7 @@ describe('screenshot scenes for each component', () => {
     'bottom-sheet',
     'button',
     'button-toggle',
+    'card',
     'checkbox',
     'chips',
     'datepicker',
