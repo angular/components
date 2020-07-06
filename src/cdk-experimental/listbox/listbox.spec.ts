@@ -66,7 +66,7 @@ describe('CdkOption', () => {
     });
 
     it('should update aria-selected when selected is changed programmatically', () => {
-      expect(optionElements[0].getAttribute('aria-selected')).toBeNull();
+      expect(optionElements[0].hasAttribute('aria-selected')).toBeFalse();
       optionInstances[1].selected = true;
       fixture.detectChanges();
 
@@ -77,7 +77,7 @@ describe('CdkOption', () => {
       let selectedOptions = optionInstances.filter(option => option.selected);
 
       expect(selectedOptions.length).toBe(0);
-      expect(optionElements[0].getAttribute('aria-selected')).toBeNull();
+      expect(optionElements[0].hasAttribute('aria-selected')).toBeFalse();
       expect(optionInstances[0].selected).toBeFalse();
       expect(fixture.componentInstance.changedOption).toBeUndefined();
 
@@ -96,7 +96,7 @@ describe('CdkOption', () => {
       let selectedOptions = optionInstances.filter(option => option.selected);
 
       expect(selectedOptions.length).toBe(0);
-      expect(optionElements[0].getAttribute('aria-selected')).toBeNull();
+      expect(optionElements[0].hasAttribute('aria-selected')).toBeFalse();
       expect(optionInstances[0].selected).toBeFalse();
       expect(fixture.componentInstance.changedOption).toBeUndefined();
 
@@ -127,31 +127,20 @@ describe('CdkOption', () => {
       expect(optionInstances[0].disabled).toBeFalse();
       expect(optionElements[0].getAttribute('aria-disabled')).toBe('false');
 
-      testComponent.isVoidDisabled = true;
+      testComponent.isPurpleDisabled = true;
       fixture.detectChanges();
 
       expect(optionInstances[0].disabled).toBeTrue();
       expect(optionElements[0].getAttribute('aria-disabled')).toBe('true');
     });
 
-    it('should toggle option disabled state programmatically via listbox', () => {
-      expect(optionInstances[1].disabled).toBeFalse();
-      expect(optionElements[1].getAttribute('aria-disabled')).toBe('false');
-
-      listboxInstance.setDisabledOption(true, optionInstances[1]);
-      fixture.detectChanges();
-
-      expect(optionInstances[1].disabled).toBeTrue();
-      expect(optionElements[1].getAttribute('aria-disabled')).toBe('true');
-    });
-
     it('should toggle option aria-disabled state on listbox disabled state change', () => {
-      listboxInstance.setDisabledOption(true, optionInstances[0]);
+      optionInstances[0].disabled = true;
       fixture.detectChanges();
 
       expect(listboxInstance.disabled).toBeFalse();
       expect(optionInstances[0].disabled).toBeTrue();
-      expect(optionElements[0].getAttribute('tabindex')).toBeNull();
+      expect(optionElements[0].hasAttribute('tabindex')).toBeFalse();
       expect(optionElements[1].getAttribute('aria-disabled')).toBe('false');
       expect(optionElements[1].getAttribute('tabindex')).toBe('-1');
 
@@ -160,27 +149,27 @@ describe('CdkOption', () => {
 
       expect(listboxInstance.disabled).toBeTrue();
       expect(optionInstances[0].disabled).toBeTrue();
-      expect(optionElements[0].getAttribute('tabindex')).toBeNull();
+      expect(optionElements[0].hasAttribute('tabindex')).toBeFalse();
       expect(optionElements[1].getAttribute('aria-disabled')).toBe('true');
-      expect(optionElements[1].getAttribute('tabindex')).toBeNull();
+      expect(optionElements[1].hasAttribute('tabindex')).toBeFalse();
     });
 
     it('should not toggle selected on click of a disabled option', () => {
       let selectedOptions = optionInstances.filter(option => option.selected);
 
       expect(selectedOptions.length).toBe(0);
-      expect(optionElements[0].getAttribute('aria-selected')).toBeNull();
+      expect(optionElements[0].hasAttribute('aria-selected')).toBeFalse();
       expect(optionInstances[0].selected).toBeFalse();
       expect(fixture.componentInstance.changedOption).toBeUndefined();
 
-      testComponent.isVoidDisabled = true;
+      testComponent.isPurpleDisabled = true;
       fixture.detectChanges();
       dispatchMouseEvent(optionElements[0], 'click');
       fixture.detectChanges();
 
       selectedOptions = optionInstances.filter(option => option.selected);
       expect(selectedOptions.length).toBe(0);
-      expect(optionElements[0].getAttribute('aria-selected')).toBeNull();
+      expect(optionElements[0].hasAttribute('aria-selected')).toBeFalse();
       expect(optionInstances[0].selected).toBeFalse();
       expect(fixture.componentInstance.changedOption).toBeUndefined();
     });
@@ -189,7 +178,7 @@ describe('CdkOption', () => {
       let selectedOptions = optionInstances.filter(option => option.selected);
 
       expect(selectedOptions.length).toBe(0);
-      expect(optionElements[0].getAttribute('aria-selected')).toBeNull();
+      expect(optionElements[0].hasAttribute('aria-selected')).toBeFalse();
       expect(optionInstances[0].selected).toBeFalse();
       expect(fixture.componentInstance.changedOption).toBeUndefined();
 
@@ -200,7 +189,7 @@ describe('CdkOption', () => {
 
       selectedOptions = optionInstances.filter(option => option.selected);
       expect(selectedOptions.length).toBe(0);
-      expect(optionElements[0].getAttribute('aria-selected')).toBeNull();
+      expect(optionElements[0].hasAttribute('aria-selected')).toBeFalse();
       expect(optionInstances[0].selected).toBeFalse();
       expect(fixture.componentInstance.changedOption).toBeUndefined();
     });
@@ -257,7 +246,7 @@ describe('CdkOption', () => {
       expect(fixture.componentInstance.changedOption).toBeUndefined();
 
       listboxInstance.setActiveOption(optionInstances[0]);
-      testComponent.isVoidDisabled = true;
+      testComponent.isPurpleDisabled = true;
       fixture.detectChanges();
 
       dispatchKeyboardEvent(listboxElement, 'keydown', SPACE);
@@ -312,8 +301,8 @@ describe('CdkOption', () => {
         [disabled]="isListboxDisabled"
         (selectionChange)="onSelectionChange($event)">
       <div cdkOption
-          [disabled]="isVoidDisabled">
-        Void</div>
+          [disabled]="isPurpleDisabled">
+        Purple</div>
       <div cdkOption
            [disabled]="isSolarDisabled">
         Solar</div>
@@ -324,7 +313,7 @@ describe('CdkOption', () => {
 class ListboxWithOptions {
   changedOption: CdkOption;
   isListboxDisabled: boolean = false;
-  isVoidDisabled: boolean = false;
+  isPurpleDisabled: boolean = false;
   isSolarDisabled: boolean = false;
 
   onSelectionChange(event: ListboxSelectionChangeEvent) {

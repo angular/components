@@ -16,7 +16,7 @@ import {
   QueryList
 } from '@angular/core';
 import {ActiveDescendantKeyManager, Highlightable, ListKeyManagerOption} from '@angular/cdk/a11y';
-import {ENTER, SPACE} from '@angular/cdk/keycodes';
+import {END, ENTER, HOME, SPACE} from '@angular/cdk/keycodes';
 import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
 
 let nextId = 0;
@@ -32,8 +32,8 @@ let nextId = 0;
     '[attr.aria-selected]': '_selected || null',
     '[id]': 'id',
     '[attr.tabindex]': '_getTabIndex()',
-    '[attr.aria-disabled]': '_getComboDisabled()',
-    '[class.cdk-option-disabled]': '_getComboDisabled()',
+    '[attr.aria-disabled]': '_isInteractionDisabled()',
+    '[class.cdk-option-disabled]': '_isInteractionDisabled()',
     '[class.cdk-option-active]': '_active'
 
   }
@@ -64,20 +64,20 @@ export class CdkOption implements ListKeyManagerOption, Highlightable {
     this._disabled = coerceBooleanProperty(value);
   }
 
-  constructor(private _el: ElementRef,
+  constructor(private _elementRef: ElementRef,
               @Inject(forwardRef(() => CdkListbox)) public listbox: CdkListbox) {
   }
 
   /** Toggles the selected state, emits a change event through the injected listbox */
   toggle() {
-    if (!this._getComboDisabled()) {
+    if (!this._isInteractionDisabled()) {
       this.selected = !this.selected;
       this.listbox._emitChangeEvent(this);
     }
   }
 
   activateOption() {
-    if (!this._getComboDisabled()) {
+    if (!this._isInteractionDisabled()) {
       this._active = true;
       this.listbox.setActiveOption(this);
     }
@@ -87,7 +87,7 @@ export class CdkOption implements ListKeyManagerOption, Highlightable {
     this._active = false;
   }
 
-  _getComboDisabled(): boolean {
+  _isInteractionDisabled(): boolean {
     return (this.listbox.disabled || this._disabled);
   }
 
@@ -96,7 +96,8 @@ export class CdkOption implements ListKeyManagerOption, Highlightable {
   }
 
   getLabel(): string {
-    return this._el.nativeElement.textContent;
+    // TODO: improve to method to handle more complex combinations of elements and text
+    return this._elementRef.nativeElement.textContent;
   }
 
   setActiveStyles() {
@@ -152,18 +153,22 @@ export class CdkListbox implements AfterContentInit, OnDestroy {
       return;
     }
 
+    const manager = this._listKeyManager;
     const keyCode = event.keyCode;
 
-    switch (keyCode) {
-      case SPACE:
-      case ENTER:
-        if (this._listKeyManager.activeItem && !this._listKeyManager.isTyping()) {
-          this._toggleActiveOption();
-        }
-        break;
-      default:
-        this._listKeyManager.onKeydown(event);
+    if (keyCode === HOME || keyCode === END) {
+      event.preventDefault();
+      keyCode === HOME ? manager.setFirstItemActive() : manager.setLastItemActive();
+
+    } else if (keyCode === SPACE || keyCode === ENTER) {
+      if (manager.activeItem && !manager.isTyping()) {
+        this._toggleActiveOption();
+      }
+
+    } else {
+      manager.onKeydown(event);
     }
+
   }
 
   /** Emits a selection change event, called when an option has its selected state changed */
@@ -172,10 +177,10 @@ export class CdkListbox implements AfterContentInit, OnDestroy {
   }
 
   private _toggleActiveOption() {
-    const currentActiveOption = this._listKeyManager.activeItem;
-    if (currentActiveOption && !currentActiveOption.disabled) {
-      currentActiveOption.toggle();
-      this._emitChangeEvent(currentActiveOption);
+    const activeOption = this._listKeyManager.activeItem;
+    if (activeOption && !activeOption.disabled) {
+      activeOption.toggle();
+      this._emitChangeEvent(activeOption);
     }
   }
 
@@ -193,10 +198,6 @@ export class CdkListbox implements AfterContentInit, OnDestroy {
 
   setActiveOption(option: CdkOption) {
     this._listKeyManager.updateActiveItem(option);
-  }
-
-  setDisabledOption(isDisabled: boolean, option: CdkOption) {
-    option.disabled = isDisabled;
   }
 
   static ngAcceptInputType_disabled: BooleanInput;
