@@ -14,7 +14,8 @@ $background: map-get($theme, background);
 $background: map_merge($background, (
   background: $background-color,
   disabled-button: rgba(red, 0.5),
-  selected-button: rgba(red, 0.23)));
+  selected-button: rgba(red, 0.23),
+  dialog: $background-color));
 $theme: map_merge($theme, (background: $background));
 
 $secondary-text-color: map_get($mat-red, 600);
