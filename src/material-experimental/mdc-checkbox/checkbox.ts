@@ -104,12 +104,12 @@ class CheckBoxAdapter implements MDCCheckboxAdapter {
     return this._delegate.indeterminate;
   }
   removeNativeControlAttr(attr)  {
-    if (!this._delegate._attrBlacklist.has(attr)) {
+    if (!this._delegate.getAttrBlacklist().has(attr)) {
       this._delegate._nativeCheckbox.nativeElement.removeAttribute(attr);
     }
   }
   setNativeControlAttr(attr, value)  {
-    if (!this._delegate._attrBlacklist.has(attr)) {
+    if (!this._delegate.getAttrBlacklist().has(attr)) {
       this._delegate._nativeCheckbox.nativeElement.setAttribute(attr, value);
     }
   }
@@ -300,6 +300,10 @@ export class MatCheckbox implements AfterViewInit, OnDestroy, ControlValueAccess
     // @breaking-change 10.0.0: Remove this after the `_clickAction` parameter is removed as an
     // injection parameter.
     this._clickAction = this._clickAction || this._options.clickAction;
+  }
+
+  getAttrBlacklist() {
+    return this._attrBlacklist;
   }
 
   ngAfterViewInit() {
