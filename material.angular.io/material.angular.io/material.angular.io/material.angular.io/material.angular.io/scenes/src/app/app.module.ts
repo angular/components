@@ -22,6 +22,7 @@ import {AutocompleteSceneModule} from './scenes/autocomplete/autocomplete-scene'
 import {DialogSceneModule} from './scenes/dialog/dialog-scene';
 import {FormFieldSceneModule} from './scenes/form-field/form-field-scene';
 import {ToolbarScene, ToolbarSceneModule} from './scenes/toolbar/toolbar-scene';
+import {SidenavSceneModule} from './scenes/sidenav/sidenav-scene';
 
 @NgModule({
   declarations: [
@@ -46,6 +47,7 @@ import {ToolbarScene, ToolbarSceneModule} from './scenes/toolbar/toolbar-scene';
     DialogSceneModule,
     FormFieldSceneModule,
     ToolbarSceneModule,
+    SidenavSceneModule,
   ],
   bootstrap: [AppComponent],
   providers: [{

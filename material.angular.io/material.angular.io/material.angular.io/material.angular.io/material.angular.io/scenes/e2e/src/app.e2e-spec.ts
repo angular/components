@@ -30,6 +30,7 @@ describe('screenshot scenes for each component', () => {
     'radio',
     'ripple',
     'select',
+    'sidenav',
     'slide-toggle',
     'slider',
     'stepper',
