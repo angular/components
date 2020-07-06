@@ -21,8 +21,9 @@ import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {AutocompleteSceneModule} from './scenes/autocomplete/autocomplete-scene';
 import {DialogSceneModule} from './scenes/dialog/dialog-scene';
 import {FormFieldSceneModule} from './scenes/form-field/form-field-scene';
-import {ToolbarScene, ToolbarSceneModule} from './scenes/toolbar/toolbar-scene';
+import {ToolbarSceneModule} from './scenes/toolbar/toolbar-scene';
 import {SidenavSceneModule} from './scenes/sidenav/sidenav-scene';
+import {IconSceneModule} from './scenes/icon/icon-scene';
 
 @NgModule({
   declarations: [
@@ -48,6 +49,7 @@ import {SidenavSceneModule} from './scenes/sidenav/sidenav-scene';
     FormFieldSceneModule,
     ToolbarSceneModule,
     SidenavSceneModule,
+    IconSceneModule,
   ],
   bootstrap: [AppComponent],
   providers: [{

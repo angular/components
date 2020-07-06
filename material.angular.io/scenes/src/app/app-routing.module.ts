@@ -9,7 +9,6 @@ import {ButtonToggleScene} from './scenes/button-toggle/button-toggle-scene';
 import {SliderScene} from './scenes/slider/slider-scene';
 import {SlideToggleScene} from './scenes/slide-toggle/slide-toggle-scene';
 import {DividerScene} from './scenes/divider/divider-scene';
-import {PlaceHolderScene} from './scenes/placeholder/placeholder-scene';
 import {ComponentType} from '@angular/cdk/overlay';
 import {ProgressSpinnerScene} from './scenes/progress-spinner/progress-spinner-scene';
 import {ButtonScene} from './scenes/button/button-scene';
@@ -37,6 +36,7 @@ import {DialogScene} from './scenes/dialog/dialog-scene';
 import {FormFieldScene} from './scenes/form-field/form-field-scene';
 import {ToolbarScene} from './scenes/toolbar/toolbar-scene';
 import {SidenavScene} from './scenes/sidenav/sidenav-scene';
+import {IconScene} from './scenes/icon/icon-scene';
 
 let hue = 0;
 
@@ -65,7 +65,7 @@ const routes: SceneViewerRoute[] = [
   {path: 'expansion', component: SceneViewer, data: {scene: ExpansionScene}},
   {path: 'form-field', component: SceneViewer, data: {scene: FormFieldScene}},
   {path: 'grid-list', component: SceneViewer, data: {scene: GridListScene}},
-  {path: 'icon', component: SceneViewer, data: {scene: PlaceHolderScene}},
+  {path: 'icon', component: SceneViewer, data: {scale: 2.2, scene: IconScene}},
   {path: 'input', component: SceneViewer, data: {scale: 0.7, scene: InputScene}},
   {path: 'list', component: SceneViewer, data: {scene: ListScene}},
   {path: 'menu', component: SceneViewer, data: {scene: MenuScene}},
