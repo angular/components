@@ -20,6 +20,7 @@ describe('screenshot scenes for each component', () => {
     'expansion',
     'grid-list',
     'input',
+    'list',
     'menu',
     'paginator',
     'progress-bar',

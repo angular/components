@@ -31,6 +31,7 @@ import {SelectScene} from './scenes/select/select-scene';
 import {AutocompleteScene} from './scenes/autocomplete/autocomplete-scene';
 import {TreeScene} from './scenes/tree/tree-scene';
 import {CardScene} from './scenes/card/card-scene';
+import {ListScene} from './scenes/list/list-scene';
 
 let hue = 0;
 
@@ -61,7 +62,7 @@ const routes: SceneViewerRoute[] = [
   {path: 'grid-list', component: SceneViewer, data: {scene: GridListScene}},
   {path: 'icon', component: SceneViewer, data: {scene: PlaceHolderScene}},
   {path: 'input', component: SceneViewer, data: {scale: 0.7, scene: InputScene}},
-  {path: 'list', component: SceneViewer, data: {scene: PlaceHolderScene}},
+  {path: 'list', component: SceneViewer, data: {scene: ListScene}},
   {path: 'menu', component: SceneViewer, data: {scene: MenuScene}},
   {path: 'paginator', component: SceneViewer, data: {scale: 1.5, scene: PaginatorScene}},
   {path: 'progress-bar', component: SceneViewer, data: {scene: ProgressBarScene}},
