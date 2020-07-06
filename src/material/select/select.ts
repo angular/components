@@ -91,10 +91,10 @@ import {
   distinctUntilChanged,
   filter,
   map,
-  startWith,
   switchMap,
   take,
   takeUntil,
+  startWith,
 } from 'rxjs/operators';
 import {matSelectAnimations} from './select-animations';
 import {
@@ -592,13 +592,16 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
 
   ngAfterContentInit() {
     this._initKeyManager();
+    this._resetOptions();
 
-    this._selectionModel.changed.pipe(takeUntil(this._destroy)).subscribe(event => {
-      event.added.forEach(option => option.select());
-      event.removed.forEach(option => option.deselect());
+    this._initializeSelection().then(() => {
+      this._selectionModel.changed.pipe(takeUntil(this._destroy)).subscribe(event => {
+        event.added.forEach(option => option.select());
+        event.removed.forEach(option => option.deselect());
+      });
     });
 
-    this.options.changes.pipe(startWith(null), takeUntil(this._destroy)).subscribe(() => {
+    this.options.changes.pipe(takeUntil(this._destroy)).subscribe(() => {
       this._resetOptions();
       this._initializeSelection();
     });
@@ -874,10 +877,10 @@ export class MatSelect extends _MatSelectMixinBase implements AfterContentInit, 
     return !this._selectionModel || this._selectionModel.isEmpty();
   }
 
-  private _initializeSelection(): void {
+  private _initializeSelection(): Promise<void> {
     // Defer setting the value in order to avoid the "Expression
     // has changed after it was checked" errors from Angular.
-    Promise.resolve().then(() => {
+    return Promise.resolve().then(() => {
       this._setSelectionByValue(this.ngControl ? this.ngControl.value : this._value);
       this.stateChanges.next();
     });
