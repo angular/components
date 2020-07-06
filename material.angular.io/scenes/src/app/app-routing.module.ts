@@ -32,6 +32,7 @@ import {AutocompleteScene} from './scenes/autocomplete/autocomplete-scene';
 import {TreeScene} from './scenes/tree/tree-scene';
 import {CardScene} from './scenes/card/card-scene';
 import {ListScene} from './scenes/list/list-scene';
+import {TooltipScene} from './scenes/tooltip/tooltip-scene';
 
 let hue = 0;
 
@@ -83,7 +84,7 @@ const routes: SceneViewerRoute[] = [
   {path: 'table', component: SceneViewer, data: {scene: TableScene}},
   {path: 'tabs', component: SceneViewer, data: {scene: TabsScene}},
   {path: 'toolbar', component: SceneViewer, data: {scene: PlaceHolderScene}},
-  {path: 'tooltip', component: SceneViewer, data: {scene: PlaceHolderScene}},
+  {path: 'tooltip', component: SceneViewer, data: {scene: TooltipScene}},
   {path: 'tree', component: SceneViewer, data: {scene: TreeScene}},
 ].sort((a, b) => (a.path > b.path) ? 1 : ((b.path > a.path) ? -1 : 0))
   .map((route: SceneViewerRoute) => ({...route, data: {...route.data, hueRotate: 15 * hue++}}));
