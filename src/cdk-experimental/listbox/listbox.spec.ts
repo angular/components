@@ -10,7 +10,7 @@ import {
   CdkListboxModule, ListboxSelectionChangeEvent, CdkListbox
 } from './index';
 import {dispatchKeyboardEvent, dispatchMouseEvent} from '@angular/cdk/testing/private';
-import {A, DOWN_ARROW, SPACE} from '@angular/cdk/keycodes';
+import {A, DOWN_ARROW, END, HOME, SPACE} from '@angular/cdk/keycodes';
 
 describe('CdkOption', () => {
 
@@ -110,6 +110,23 @@ describe('CdkOption', () => {
       expect(optionInstances[0].selected).toBeTrue();
       expect(fixture.componentInstance.changedOption).toBeDefined();
       expect(fixture.componentInstance.changedOption.id).toBe(optionInstances[0].id);
+    });
+
+    it('should update active option on home and end key press', () => {
+      listboxInstance.setActiveOption(optionInstances[1]);
+      fixture.detectChanges();
+
+      expect(listboxInstance._listKeyManager.activeItem).toBe(optionInstances[1]);
+
+      dispatchKeyboardEvent(listboxElement, 'keydown', HOME);
+      fixture.detectChanges();
+
+      expect(listboxInstance._listKeyManager.activeItem).toBe(optionInstances[0]);
+
+      dispatchKeyboardEvent(listboxElement, 'keydown', END);
+      fixture.detectChanges();
+
+      expect(listboxInstance._listKeyManager.activeItem).toBe(optionInstances[3]);
     });
 
     it('should be able to toggle listbox disabled state', () => {
