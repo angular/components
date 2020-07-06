@@ -19,6 +19,7 @@ import {SnackBarSceneModule} from './scenes/snack-bar/snack-bar-scene';
 import {SelectSceneModule} from './scenes/select/select-scene';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {AutocompleteSceneModule} from './scenes/autocomplete/autocomplete-scene';
+import {DialogSceneModule} from './scenes/dialog/dialog-scene';
 
 @NgModule({
   declarations: [
@@ -39,7 +40,8 @@ import {AutocompleteSceneModule} from './scenes/autocomplete/autocomplete-scene'
     SnackBarSceneModule,
     SelectSceneModule,
     MatAutocompleteModule,
-    AutocompleteSceneModule
+    AutocompleteSceneModule,
+    DialogSceneModule,
   ],
   bootstrap: [AppComponent],
   providers: [{

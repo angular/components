@@ -33,6 +33,7 @@ import {TreeScene} from './scenes/tree/tree-scene';
 import {CardScene} from './scenes/card/card-scene';
 import {ListScene} from './scenes/list/list-scene';
 import {TooltipScene} from './scenes/tooltip/tooltip-scene';
+import {DialogScene} from './scenes/dialog/dialog-scene';
 
 let hue = 0;
 
@@ -56,7 +57,7 @@ const routes: SceneViewerRoute[] = [
   {path: 'checkbox', component: SceneViewer, data: {scene: CheckboxScene}},
   {path: 'chips', component: SceneViewer, data: {scene: ChipsScene}},
   {path: 'datepicker', component: SceneViewer, data: {scale: 0.8, scene: DatepickerScene}},
-  {path: 'dialog', component: SceneViewer, data: {scene: PlaceHolderScene}},
+  {path: 'dialog', component: SceneViewer, data: {scene: DialogScene}},
   {path: 'divider', component: SceneViewer, data: {scale: 2, scene: DividerScene}},
   {path: 'expansion', component: SceneViewer, data: {scene: ExpansionScene}},
   {path: 'form-field', component: SceneViewer, data: {scene: PlaceHolderScene}},
