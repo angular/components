@@ -24,6 +24,7 @@ import {MenuScene} from './scenes/menu/menu-scene';
 import {BadgeScene} from './scenes/badge/badge-scene';
 import {PaginatorScene} from './scenes/paginator/paginator-scene';
 import {TableScene} from './scenes/table/table-scene';
+import {SortScene} from './scenes/sort/sort-scene';
 import {TabsScene} from './scenes/tabs/tabs-scene';
 import {ExpansionScene} from './scenes/expansion/expansion-scene';
 import {SelectScene} from './scenes/select/select-scene';
@@ -75,7 +76,7 @@ const routes: SceneViewerRoute[] = [
   {path: 'slide-toggle', component: SceneViewer, data: {scene: SlideToggleScene}},
   {path: 'slider', component: SceneViewer, data: {scene: SliderScene}},
   {path: 'snack-bar', component: SceneViewer, data: {scene: SnackBarScene}},
-  {path: 'sort', component: SceneViewer, data: {scene: PlaceHolderScene}},
+  {path: 'sort', component: SceneViewer, data: {scene: SortScene}},
   {path: 'stepper', component: SceneViewer, data: {scene: StepperScene}},
   {path: 'table', component: SceneViewer, data: {scene: TableScene}},
   {path: 'tabs', component: SceneViewer, data: {scene: TabsScene}},
