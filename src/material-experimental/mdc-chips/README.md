@@ -68,9 +68,12 @@ Assuming your application is already up and running using Angular Material, you 
 
 ## API differences
 
-The MDC-based chips use a different API than the current chips.
+The API for the MDC-based chips are mostly the same as the current chips implementation, but
+one notable difference is that the names of the container and chips have been changed to clarify
+when and how they should be used.
 
-The most basic container that you can use for the chips is with the `<mat-chip-set>` containing a list of `<mat-chip>`:
+The most basic container that you can use for the chips is with the `<mat-chip-set>` containing a 
+list of `<mat-chip>`:
 
 ```html
   <mat-chip-set>
