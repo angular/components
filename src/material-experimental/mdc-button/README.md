@@ -56,20 +56,26 @@ component by following these steps:
    ``` 
    
 5. Add the theme and typography mixins to your Sass. Note that there are three separate mixins for 
-the button variants: standard buttons, icon buttons, and the FAB. Include only the mixins of the 
+the button variants: standard buttons, icon buttons, and floating action buttons. Include only the mixins of the 
 button variants you are using:
 
    ```scss
    @import '~@angular/material/theming';
    @import '~@angular/material-experimental/button-theme';
 
-   $my-primary: mat-palette($mat-indigo);
-   $my-accent:  mat-palette($mat-pink, A200, A100, A400);
-   $my-theme:   mat-light-theme($my-primary, $my-accent);
+   $candy-app-primary: mat-palette($mat-indigo);
+   $candy-app-accent:  mat-palette($mat-pink, A200, A100, A400);
+   $candy-app-theme:   mat-light-theme((
+     color: (
+       primary: $candy-app-primary,
+       accent: $candy-app-accent,
+     )
+   ));
 
-   @include mat-mdc-button-theme($my-theme);   
-   @include mat-mdc-fab-theme($my-theme);   
-   @include mat-mdc-icon-button-theme($my-theme);
+
+   @include mat-mdc-button-theme($candy-app-theme);   
+   @include mat-mdc-fab-theme($candy-app-theme);   
+   @include mat-mdc-icon-button-theme($candy-app-theme);
    ```
 
 ## API differences
