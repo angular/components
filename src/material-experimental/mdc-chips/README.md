@@ -51,7 +51,7 @@ Assuming your application is already up and running using Angular Material, you 
 
    ```scss
    @import '~@angular/material/theming';
-   @import '~@angular/material-experimental/card-theme';
+   @import '~@angular/material-experimental/mdc-chips/chips-theme';
 
    $candy-app-primary: mat-palette($mat-indigo);
    $candy-app-accent:  mat-palette($mat-pink, A200, A100, A400);
