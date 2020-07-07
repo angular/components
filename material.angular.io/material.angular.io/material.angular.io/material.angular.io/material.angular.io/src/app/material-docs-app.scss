@@ -24,6 +24,7 @@ material-docs-app > app-homepage,
 material-docs-app > app-guides,
 material-docs-app > guide-viewer {
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 @media (max-width: 720px) {
