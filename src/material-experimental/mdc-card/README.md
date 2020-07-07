@@ -59,7 +59,7 @@ component by following these steps:
 
    ```scss
    @import '~@angular/material/theming';
-   @import '~@angular/material-experimental/card-theme';
+   @import '~@angular/material-experimental/mdc-card/card-theme';
 
    $candy-app-primary: mat-palette($mat-indigo);
    $candy-app-accent:  mat-palette($mat-pink, A200, A100, A400);
