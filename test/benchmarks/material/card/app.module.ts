@@ -10,6 +10,8 @@ import {Component, NgModule, ViewEncapsulation} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
 import {MatCardModule} from '@angular/material/card';
 
+/** component: mat-card */
+
 @Component({
   selector: 'app-root',
   template: `
