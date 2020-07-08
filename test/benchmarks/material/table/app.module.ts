@@ -15,6 +15,8 @@ import {
   tenRows, oneHundredRows, oneThousandRows,
 } from './fake-table-data';
 
+/** component: mat-table */
+
 // tslint:disable:max-line-length
 @Component({
   selector: 'app-root',
