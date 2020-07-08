@@ -9,6 +9,7 @@
 export {GoogleMap} from './google-map/google-map';
 export {GoogleMapsModule} from './google-maps-module';
 export {MapAnchorPoint} from './map-anchor-point';
+export {MapBaseLayer} from './map-base-layer';
 export {MapBicyclingLayer} from './map-bicycling-layer/map-bicycling-layer';
 export {MapCircle} from './map-circle/map-circle';
 export {MapGroundOverlay} from './map-ground-overlay/map-ground-overlay';

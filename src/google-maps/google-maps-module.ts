@@ -9,6 +9,7 @@
 import {NgModule} from '@angular/core';
 
 import {GoogleMap} from './google-map/google-map';
+import {MapBaseLayer} from './map-base-layer';
 import {MapBicyclingLayer} from './map-bicycling-layer/map-bicycling-layer';
 import {MapCircle} from './map-circle/map-circle';
 import {MapGroundOverlay} from './map-ground-overlay/map-ground-overlay';
@@ -23,6 +24,7 @@ import {MapTransitLayer} from './map-transit-layer/map-transit-layer';
 
 const COMPONENTS = [
   GoogleMap,
+  MapBaseLayer,
   MapBicyclingLayer,
   MapCircle,
   MapGroundOverlay,
