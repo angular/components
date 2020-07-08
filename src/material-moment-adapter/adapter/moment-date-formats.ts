@@ -11,7 +11,7 @@ import {MatDateFormats} from '@angular/material/core';
 
 export const MAT_MOMENT_DATE_FORMATS: MatDateFormats = {
   parse: {
-    dateInput: 'l',
+    dateInput: 'HTML5_FMT.DATE',
   },
   display: {
     dateInput: 'l',
