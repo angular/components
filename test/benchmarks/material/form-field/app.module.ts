@@ -12,6 +12,8 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatSelectModule} from '@angular/material/select';
 import {MatInputModule} from '@angular/material/input';
 
+/** component: mat-radio-button */
+
 @Component({
   selector: 'app-root',
   template: `
