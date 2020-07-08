@@ -10,6 +10,8 @@ import {Component, NgModule, ViewEncapsulation} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
 import {MatRadioModule} from '@angular/material/radio';
 
+/** component: mat-radio-button */
+
 @Component({
   selector: 'app-root',
   template: `
