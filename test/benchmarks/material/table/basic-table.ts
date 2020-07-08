@@ -8,16 +8,6 @@
 
 import {Component, Input} from '@angular/core';
 
-/**
- * Just a generic object whose keys are strings and whose values can be anything.
- *
- * This is used by BasicTable whose rows are objects whose keys correspond to the cols provided and
- * whose values can be anything.
- */
-export interface GenericObject {
-  [key: string]: any;
-}
-
 @Component({
   selector: 'basic-table',
   template: `
@@ -131,5 +121,5 @@ export interface GenericObject {
 })
 export class BasicTable {
   @Input() cols: string[];
-  @Input() rows: GenericObject[];
+  @Input() rows: Record<string, string>[];
 }

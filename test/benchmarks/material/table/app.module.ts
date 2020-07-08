@@ -9,35 +9,11 @@
 import {Component, NgModule, ViewEncapsulation} from '@angular/core';
 import {MatTableModule} from '@angular/material/table';
 import {BrowserModule} from '@angular/platform-browser';
-import {BasicTable, GenericObject} from './basic-table';
-
-function createRows(numRows: number, cols: string[]): GenericObject[] {
-  const rows: GenericObject[] = new Array(numRows);
-  for (let i = 0; i < rows.length; i++) {
-    rows[i] = createRow(cols, (i + 1).toString());
-  }
-  return rows;
-}
-
-function createRow(cols: string[], value: string): GenericObject {
-  const row: GenericObject = {};
-  for (let i = 0; i < cols.length; i++) {
-    const col = cols[i];
-    row[col] = value;
-  }
-  return row;
-}
-
-const fiveCols = ['a', 'b', 'c', 'd', 'e'];
-const tenCols = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j'];
-const twentyCols = [
-  'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j',
-  'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't',
-];
-
-const tenRows = createRows(10, twentyCols);
-const oneHundredRows = createRows(100, twentyCols);
-const oneThousandRows = createRows(1000, twentyCols);
+import {BasicTable} from './basic-table';
+import {
+  fiveCols, tenCols, twentyCols,
+  tenRows, oneHundredRows, oneThousandRows,
+} from './fake-table-data';
 
 // tslint:disable:max-line-length
 @Component({

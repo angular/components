@@ -16,6 +16,7 @@ component_benchmark(
     ng_srcs = [
         ":app.module.ts",
         ":basic-table.ts",
+        ":fake-table-data.ts",
     ],
     prefix = "",
     styles = ["//src/material/prebuilt-themes:indigo-pink"],
