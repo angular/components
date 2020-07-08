@@ -9,9 +9,9 @@
 // Workaround for: https://github.com/bazelbuild/rules_nodejs/issues/1265
 /// <reference types="googlemaps" />
 
-import {Directive, NgZone, OnDestroy, OnInit} from '@angular/core';
+import {Directive} from '@angular/core';
 
-import {GoogleMap} from '../google-map/google-map';
+import {MapBaseLayer} from '../map-base-layer';
 
 /**
  * Angular component that renders a Google Maps Bicycling Layer via the Google Maps JavaScript API.
@@ -22,7 +22,7 @@ import {GoogleMap} from '../google-map/google-map';
   selector: 'map-bicycling-layer',
   exportAs: 'mapBicyclingLayer',
 })
-export class MapBicyclingLayer implements OnInit, OnDestroy {
+export class MapBicyclingLayer extends MapBaseLayer {
   /**
    * The underlying google.maps.BicyclingLayer object.
    *
@@ -30,35 +30,26 @@ export class MapBicyclingLayer implements OnInit, OnDestroy {
    */
   bicyclingLayer?: google.maps.BicyclingLayer;
 
-  constructor(private readonly _map: GoogleMap, private readonly _ngZone: NgZone) {}
-
-  ngOnInit() {
-    if (this._map._isBrowser) {
-      // Create the object outside the zone so its events don't trigger change detection.
-      this._ngZone.runOutsideAngular(() => {
-        this.bicyclingLayer = new google.maps.BicyclingLayer();
-      });
-      this._assertInitialized();
-      this.bicyclingLayer.setMap(this._map.googleMap!);
-    }
+  protected _initializeObject() {
+    this.bicyclingLayer = new google.maps.BicyclingLayer();
   }
 
-  ngOnDestroy() {
+  protected _setMap() {
+    this._assertLayerInitialized();
+    this.bicyclingLayer.setMap(this._map.googleMap!);
+  }
+
+  protected _unsetMap() {
     if (this.bicyclingLayer) {
       this.bicyclingLayer.setMap(null);
     }
   }
 
-  private _assertInitialized(): asserts this is {bicyclingLayer: google.maps.BicyclingLayer} {
-    if (!this._map.googleMap) {
-      throw Error(
-          'Cannot access Google Map information before the API has been initialized. ' +
-          'Please wait for the API to load before trying to interact with it.');
-    }
+  private _assertLayerInitialized(): asserts this is {bicyclingLayer: google.maps.BicyclingLayer} {
     if (!this.bicyclingLayer) {
       throw Error(
           'Cannot interact with a Google Map Bicycling Layer before it has been initialized. ' +
-          'Please wait for the Bicycling Layer to load before trying to interact with it.');
+          'Please wait for the Transit Layer to load before trying to interact with it.');
     }
   }
 }
