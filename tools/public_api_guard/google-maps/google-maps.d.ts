@@ -53,18 +53,31 @@ export declare class GoogleMap implements OnChanges, OnInit, OnDestroy {
 
 export declare class GoogleMapsModule {
     static ɵinj: i0.ɵɵInjectorDef<GoogleMapsModule>;
-    static ɵmod: i0.ɵɵNgModuleDefWithMeta<GoogleMapsModule, [typeof i1.GoogleMap, typeof i2.MapBicyclingLayer, typeof i3.MapCircle, typeof i4.MapGroundOverlay, typeof i5.MapInfoWindow, typeof i6.MapKmlLayer, typeof i7.MapMarker, typeof i8.MapPolygon, typeof i9.MapPolyline, typeof i10.MapRectangle, typeof i11.MapTrafficLayer, typeof i12.MapTransitLayer], never, [typeof i1.GoogleMap, typeof i2.MapBicyclingLayer, typeof i3.MapCircle, typeof i4.MapGroundOverlay, typeof i5.MapInfoWindow, typeof i6.MapKmlLayer, typeof i7.MapMarker, typeof i8.MapPolygon, typeof i9.MapPolyline, typeof i10.MapRectangle, typeof i11.MapTrafficLayer, typeof i12.MapTransitLayer]>;
+    static ɵmod: i0.ɵɵNgModuleDefWithMeta<GoogleMapsModule, [typeof i1.GoogleMap, typeof i2.MapBaseLayer, typeof i3.MapBicyclingLayer, typeof i4.MapCircle, typeof i5.MapGroundOverlay, typeof i6.MapInfoWindow, typeof i7.MapKmlLayer, typeof i8.MapMarker, typeof i9.MapPolygon, typeof i10.MapPolyline, typeof i11.MapRectangle, typeof i12.MapTrafficLayer, typeof i13.MapTransitLayer], never, [typeof i1.GoogleMap, typeof i2.MapBaseLayer, typeof i3.MapBicyclingLayer, typeof i4.MapCircle, typeof i5.MapGroundOverlay, typeof i6.MapInfoWindow, typeof i7.MapKmlLayer, typeof i8.MapMarker, typeof i9.MapPolygon, typeof i10.MapPolyline, typeof i11.MapRectangle, typeof i12.MapTrafficLayer, typeof i13.MapTransitLayer]>;
 }
 
 export interface MapAnchorPoint {
     getAnchor(): google.maps.MVCObject;
 }
 
-export declare class MapBicyclingLayer implements OnInit, OnDestroy {
-    bicyclingLayer?: google.maps.BicyclingLayer;
+export declare class MapBaseLayer implements OnInit, OnDestroy {
+    protected readonly _map: GoogleMap;
+    protected readonly _ngZone: NgZone;
     constructor(_map: GoogleMap, _ngZone: NgZone);
+    protected _initializeObject(): void;
+    protected _setMap(): void;
+    protected _unsetMap(): void;
     ngOnDestroy(): void;
     ngOnInit(): void;
+    static ɵdir: i0.ɵɵDirectiveDefWithMeta<MapBaseLayer, "map-base-layer", ["mapBaseLayer"], {}, {}, never>;
+    static ɵfac: i0.ɵɵFactoryDef<MapBaseLayer, never>;
+}
+
+export declare class MapBicyclingLayer extends MapBaseLayer {
+    bicyclingLayer?: google.maps.BicyclingLayer;
+    protected _initializeObject(): void;
+    protected _setMap(): void;
+    protected _unsetMap(): void;
     static ɵdir: i0.ɵɵDirectiveDefWithMeta<MapBicyclingLayer, "map-bicycling-layer", ["mapBicyclingLayer"], {}, {}, never>;
     static ɵfac: i0.ɵɵFactoryDef<MapBicyclingLayer, never>;
 }
@@ -296,11 +309,11 @@ export declare class MapTrafficLayer implements OnInit, OnDestroy {
     static ɵfac: i0.ɵɵFactoryDef<MapTrafficLayer, never>;
 }
 
-export declare class MapTransitLayer implements OnInit, OnDestroy {
+export declare class MapTransitLayer extends MapBaseLayer {
     transitLayer?: google.maps.TransitLayer;
-    constructor(_map: GoogleMap, _ngZone: NgZone);
-    ngOnDestroy(): void;
-    ngOnInit(): void;
+    protected _initializeObject(): void;
+    protected _setMap(): void;
+    protected _unsetMap(): void;
     static ɵdir: i0.ɵɵDirectiveDefWithMeta<MapTransitLayer, "map-transit-layer", ["mapTransitLayer"], {}, {}, never>;
     static ɵfac: i0.ɵɵFactoryDef<MapTransitLayer, never>;
 }
