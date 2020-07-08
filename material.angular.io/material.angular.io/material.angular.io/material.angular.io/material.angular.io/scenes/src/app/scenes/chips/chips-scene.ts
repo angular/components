@@ -8,7 +8,6 @@ import {MatChipsModule} from '@angular/material/chips';
   styleUrls: ['./chips-scene.scss']
 })
 export class ChipsScene {
-  value = 'Clear me';
 }
 
 @NgModule({

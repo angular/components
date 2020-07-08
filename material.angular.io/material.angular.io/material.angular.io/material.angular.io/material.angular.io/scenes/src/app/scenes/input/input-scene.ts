@@ -1,6 +1,5 @@
 import {Component, NgModule, ViewEncapsulation} from '@angular/core';
 import {MatFormFieldModule} from '@angular/material/form-field';
-import {MatIconModule} from '@angular/material/icon';
 import {FormsModule} from '@angular/forms';
 import {MatInputModule} from '@angular/material/input';
 
@@ -16,7 +15,6 @@ export class InputScene {
 @NgModule({
   imports: [
     MatFormFieldModule,
-    MatIconModule,
     FormsModule,
     MatInputModule,
   ],

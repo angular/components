@@ -1,13 +1,11 @@
-<table matSort matSortActive="name" matSortDirection="desc">
+<table matSort matSortActive="calories" matSortDirection="desc">
   <tr>
     <th mat-sort-header="name">Dessert (100g)</th>
     <th mat-sort-header="calories">Calories</th>
-    <th mat-sort-header="fat">Fat (g)</th>
   </tr>
 
   <tr *ngFor="let dessert of desserts">
     <td>{{dessert.name}}</td>
     <td>{{dessert.calories}}</td>
-    <td>{{dessert.fat}}</td>
   </tr>
 </table>

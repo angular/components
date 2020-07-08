@@ -1,6 +1,7 @@
 import {Component, NgModule, ViewChild, AfterViewInit, ViewEncapsulation} from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
 import {MatTooltipModule, MatTooltip} from '@angular/material/tooltip';
+import {MatIconModule} from '@angular/material/icon';
 
 @Component({
   encapsulation: ViewEncapsulation.None,
@@ -17,7 +18,7 @@ export class TooltipScene implements AfterViewInit {
 }
 
 @NgModule({
-  imports: [MatButtonModule, MatTooltipModule],
+  imports: [MatButtonModule, MatTooltipModule, MatIconModule],
   exports: [TooltipScene],
   declarations: [TooltipScene],
 })

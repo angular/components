@@ -1,5 +1,7 @@
 import {Component, NgModule, ViewEncapsulation} from '@angular/core';
 import {MatListModule} from '@angular/material/list';
+import {MatIconModule} from '@angular/material/icon';
+import {CommonModule} from '@angular/common';
 
 @Component({
     encapsulation: ViewEncapsulation.None,
@@ -11,9 +13,11 @@ export class ListScene {
 }
 
 @NgModule({
-    imports: [
-        MatListModule,
-    ],
+  imports: [
+    MatListModule,
+    MatIconModule,
+    CommonModule,
+  ],
     exports: [ListScene],
     declarations: [ListScene]
 })

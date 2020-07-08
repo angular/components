@@ -1,9 +1,5 @@
-.scene-list {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-div.scene-list button {
-  margin: 16px;
+app-list-scene {
+  position: absolute;
+  top: 0;
+  left: 40px;
 }
