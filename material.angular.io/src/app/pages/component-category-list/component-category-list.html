@@ -8,6 +8,9 @@
      class="docs-component-category-list-item"
     [routerLink]="'/' + section + '/' + component.id">
     <div class="docs-component-category-list-card">
+      <div *ngIf="section === 'components'" class="docs-component-category-list-card-image-wrapper"
+      [style.backgroundImage]="'url(../../../assets/screenshots/'+component.id+'.scene.png)'">
+      </div>
       <div class="docs-component-category-list-card-title">{{component.name}}</div>
       <div class="docs-component-category-list-card-summary">{{component.summary}}</div>
     </div>

@@ -5,7 +5,7 @@ import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 
 @Component({
   selector: 'app-snack-bar-scene',
-  template: '',
+  template: '<div class="docs-scene-snackbar-background"></div>',
   styleUrls: ['./snack-bar-scene.scss'],
   encapsulation: ViewEncapsulation.None,
 })

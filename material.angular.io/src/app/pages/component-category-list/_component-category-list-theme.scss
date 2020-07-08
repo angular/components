@@ -28,4 +28,8 @@
   .docs-component-category-list-card-title {
     color: mat-color($foreground, text);
   }
+
+  .docs-component-category-list-card-image-wrapper {
+    border-bottom: 1px solid mat-color($foreground, divider);
+  }
 }

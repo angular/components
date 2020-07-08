@@ -66,7 +66,7 @@ const routes: SceneViewerRoute[] = [
   {path: 'form-field', component: SceneViewer, data: {scene: FormFieldScene}},
   {path: 'grid-list', component: SceneViewer, data: {scene: GridListScene}},
   {path: 'icon', component: SceneViewer, data: {scale: 2.2, scene: IconScene}},
-  {path: 'input', component: SceneViewer, data: {scale: 0.7, scene: InputScene}},
+  {path: 'input', component: SceneViewer, data: {scene: InputScene}},
   {path: 'list', component: SceneViewer, data: {scene: ListScene}},
   {path: 'menu', component: SceneViewer, data: {scene: MenuScene}},
   {path: 'paginator', component: SceneViewer, data: {scale: 1.5, scene: PaginatorScene}},

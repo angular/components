@@ -9,7 +9,6 @@ import {MatListModule} from '@angular/material/list';
   styleUrls: ['./divider-scene.scss']
 })
 export class DividerScene {
-  value = 'Clear me';
 }
 
 @NgModule({
