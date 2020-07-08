@@ -7,7 +7,7 @@
  */
 
 function numToChar(num: number): string {
-	return String.fromCharCode('a'.charCodeAt(0) + num);
+  return String.fromCharCode('a'.charCodeAt(0) + num);
 }
 
 function generateTableColumnNames(numColumns: number) {
