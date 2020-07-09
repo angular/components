@@ -29,6 +29,3 @@ export const twentyCols = generateTableColumnNames(20);
 export const tenRows = generateTableData(10, twentyCols);
 export const oneHundredRows = generateTableData(100, twentyCols);
 export const oneThousandRows = generateTableData(1000, twentyCols);
-
-console.log(fiveCols);
-console.log(tenRows);
