@@ -38,6 +38,7 @@ let nextId = 0;
     '[attr.aria-disabled]': '_isInteractionDisabled()',
     '[class.cdk-option-disabled]': '_isInteractionDisabled()',
     '[class.cdk-option-active]': '_active'
+
   }
 })
 export class CdkOption implements ListKeyManagerOption, Highlightable {
