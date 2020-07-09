@@ -118,6 +118,12 @@ input.mat-mdc-chip-input {
   position: relative;
 }
 
+.mat-mdc-chip-row-focusable-text-content,
+.mat-chip-remove-icon {
+  display: flex;
+  align-items: center;
+}
+
 .mat-mdc-chip-content {
   display: inline-flex;
 }
