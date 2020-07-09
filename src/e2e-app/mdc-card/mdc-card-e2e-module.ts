@@ -6,13 +6,13 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {MdcCardExamplesModule} from '@angular/components-examples/material-experimental/mdc-card';
 import {NgModule} from '@angular/core';
-import {ExampleViewerModule} from '../example-viewer/example-viewer-module';
 import {MdcCardE2e} from './mdc-card-e2e';
 
 @NgModule({
   imports: [
-    ExampleViewerModule,
+    MdcCardExamplesModule,
   ],
   declarations: [MdcCardE2e],
 })

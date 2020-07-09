@@ -10,8 +10,7 @@ import {Component} from '@angular/core';
 
 @Component({
   selector: 'mdc-card-e2e',
-  template: `<example-list-viewer [ids]="examples"></example-list-viewer>`,
+  template: `<mdc-card-fancy-example></mdc-card-fancy-example>`,
 })
 export class MdcCardE2e {
-  examples = ['mdc-card-fancy'];
 }
