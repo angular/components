@@ -12,6 +12,7 @@ ng_module(
     deps = [
         "//src/cdk/a11y",
         "//src/cdk/keycodes",
+        "//src/cdk/collections"
     ],
 )
 
