@@ -13,6 +13,7 @@ ng_module(
         "//src/cdk/a11y",
         "//src/cdk/collections",
         "//src/cdk/keycodes",
+        "//src/cdk/collections"
     ],
 )
 
