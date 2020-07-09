@@ -104,10 +104,10 @@ export async function createTestCaseSetup(migrationName: string, collectionPath:
 
   writeFile(testAppTsconfigPath, JSON.stringify(testAppTsconfig, null, 2));
 
-  const runFixers = async function() {
-    // Switch to the new temporary directory to simulate that "ng update" is ran
-    // from within the project.
-    process.chdir(tempPath);
+  const runFixers = async function(workingDir = tempPath) {
+    // Switch to the given working directory. By default, switches to the workspace
+    // root to simulate the common `ng update` usage pattern.
+    process.chdir(workingDir);
 
     // Patch "executePostTasks" to do nothing. This is necessary since
     // we cannot run the node install task in unit tests. Rather we just

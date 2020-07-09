@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Rule, SchematicContext, Tree} from '@angular-devkit/schematics';
+import {Rule, SchematicContext, SchematicsException, Tree} from '@angular-devkit/schematics';
 import {NodePackageInstallTask} from '@angular-devkit/schematics/tasks';
 import {WorkspaceProject} from '@schematics/angular/utility/workspace-models';
 import {sync as globSync} from 'glob';
@@ -17,6 +17,7 @@ import {MigrationCtor} from '../update-tool/migration';
 import {TargetVersion} from '../update-tool/target-version';
 import {WorkspacePath} from '../update-tool/file-system';
 import {getTargetTsconfigPath, getWorkspaceConfigGracefully} from '../utils/project-tsconfig-paths';
+import {getWorkspaceFileSystemPath} from '../utils/workspace-fs-path';
 
 import {DevkitFileSystem} from './devkit-file-system';
 import {DevkitContext, DevkitMigration, DevkitMigrationCtor} from './devkit-migration';
@@ -70,12 +71,21 @@ export function createMigrationSchematicRule(
       return;
     }
 
+    const workspaceFsPath = getWorkspaceFileSystemPath(tree);
+
+    // The workspace path could be `null` if the CLI changed the internals of the
+    // virtual file system tree. We would want users to create an issue for this
+    // if we for some reason did not catch the internal API change.
+    if (workspaceFsPath === null) {
+      throw new SchematicsException(
+        'Could not determine workspace file system path. Please report an issue ' +
+        'in the Angular Components repository with details on your Angular CLI version.');
+    }
+
     // Keep track of all project source files which have been checked/migrated. This is
     // necessary because multiple TypeScript projects can contain the same source file and
     // we don't want to check these again, as this would result in duplicated failure messages.
     const analyzedFiles = new Set<WorkspacePath>();
-    // The CLI uses the working directory as the base directory for the virtual file system tree.
-    const workspaceFsPath = process.cwd();
     const fileSystem = new DevkitFileSystem(tree, workspaceFsPath);
     const projectNames = Object.keys(workspace.projects);
     const migrations: NullableDevkitMigration[] = [...cdkMigrations, ...extraMigrations];
@@ -124,11 +134,11 @@ export function createMigrationSchematicRule(
     /** Runs the migrations for the specified workspace project. */
     function runMigrations(project: WorkspaceProject, projectName: string,
                            tsconfigPath: string, isTestTarget: boolean) {
-      const projectRootFsPath = join(workspaceFsPath, project.root);
-      const tsconfigFsPath = join(workspaceFsPath, tsconfigPath);
+      const projectRootFsPath = join(workspaceFsPath!, project.root);
+      const tsconfigFsPath = join(workspaceFsPath!, tsconfigPath);
       const program = UpdateProject.createProgramFromTsconfig(tsconfigFsPath, fileSystem);
       const updateContext: DevkitContext = {
-        workspaceFsPath,
+        workspaceFsPath: workspaceFsPath!,
         isTestTarget,
         projectName,
         project,
