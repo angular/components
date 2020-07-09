@@ -356,8 +356,6 @@ describe('CdkOption', () => {
 
     let testComponent: ListboxMultiselect;
 
-    let listbox: DebugElement;
-
     let options: DebugElement[];
     let optionInstances: CdkOption[];
     let optionElements: HTMLElement[];
@@ -374,8 +372,6 @@ describe('CdkOption', () => {
       fixture.detectChanges();
 
       testComponent = fixture.debugElement.componentInstance;
-
-      listbox = fixture.debugElement.query(By.directive(CdkListbox));
 
       options = fixture.debugElement.queryAll(By.directive(CdkOption));
       optionInstances = options.map(o => o.injector.get<CdkOption>(CdkOption));

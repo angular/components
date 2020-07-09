@@ -269,8 +269,7 @@ export class CdkListbox implements AfterContentInit, OnDestroy, OnInit {
     this.selectionChange.emit(new ListboxSelectionChangeEvent(this, option));
   }
 
-  /** Updates the selection model after a toggle.
-   * Deselects previously selected option if multiple is not enabled. */
+  /** Updates the selection model after a toggle. */
   _updateSelectionModel(option: CdkOption) {
     if (!this.multiple && this._selectionModel.selected.length !== 0) {
       const previouslySelected = this._selectionModel.selected[0];
@@ -301,8 +300,7 @@ export class CdkListbox implements AfterContentInit, OnDestroy, OnInit {
     return null;
   }
 
-  /** Updates the activeOption variable and sets the active an
-   * focus properties of the option. */
+  /** Updates the activeOption and the active and focus properties of the option. */
   updateActiveOption() {
     if (!this._listKeyManager.activeItem) {
       return;
