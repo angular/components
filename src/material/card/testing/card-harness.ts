@@ -14,6 +14,14 @@ import {
 } from '@angular/cdk/testing';
 import {CardHarnessFilters} from './card-harness-filters';
 
+/** Selectors for different sections of the mat-card that can container user content. */
+export const enum MatCardSection {
+  HEADER = '.mat-card-header',
+  CONTENT = '.mat-card-content',
+  ACTIONS = '.mat-card-actions',
+  FOOTER = '.mat-card-footer'
+}
+
 /** Harness for interacting with a standard mat-card in tests. */
 export class MatCardHarness extends ComponentHarness implements HarnessLoader {
   /** The selector for the host element of a `MatCard` instance. */
@@ -52,26 +60,6 @@ export class MatCardHarness extends ComponentHarness implements HarnessLoader {
   /** Gets the cards's subtitle text. */
   async getSubtitleText(): Promise<string> {
     return (await this._subtitle())?.text() ?? '';
-  }
-
-  /** Gets a harness loader for the header section of this card. */
-  async getHarnessLoaderForHeader(): Promise<HarnessLoader | null> {
-    return this.locatorFactory.harnessLoaderForOptional('.mat-card-header');
-  }
-
-  /** Gets a harness loader for the content section of this card. */
-  async getHarnessLoaderForContent(): Promise<HarnessLoader | null> {
-    return this.locatorFactory.harnessLoaderForOptional('.mat-card-content');
-  }
-
-  /** Gets a harness loader for the actions section of this card. */
-  async getHarnessLoaderForActions(): Promise<HarnessLoader | null> {
-    return this.locatorFactory.harnessLoaderForOptional('.mat-card-actions');
-  }
-
-  /** Gets a harness loader for the footer section of this card. */
-  async getHarnessLoaderForFooter(): Promise<HarnessLoader | null> {
-    return this.locatorFactory.harnessLoaderForOptional('.mat-card-footer');
   }
 
   async getChildLoader(selector: string): Promise<HarnessLoader> {
