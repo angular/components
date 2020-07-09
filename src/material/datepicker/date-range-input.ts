@@ -128,8 +128,11 @@ export class MatDateRangeInput<D> implements MatFormFieldControl<DateRange<D>>,
   @Input()
   get min(): D | null { return this._min; }
   set min(value: D | null) {
-    this._min = this._getValidDateOrNull(this._dateAdapter.deserialize(value));
-    this._revalidate();
+    const min = this._getValidDateOrNull(this._dateAdapter.deserialize(value));
+    if (!this._dateAdapter.sameDate(min, this._min)) {
+      this._min = min;
+      this._revalidate();
+    }
   }
   private _min: D | null;
 
@@ -137,8 +140,11 @@ export class MatDateRangeInput<D> implements MatFormFieldControl<DateRange<D>>,
   @Input()
   get max(): D | null { return this._max; }
   set max(value: D | null) {
-    this._max = this._getValidDateOrNull(this._dateAdapter.deserialize(value));
-    this._revalidate();
+    const max = this._getValidDateOrNull(this._dateAdapter.deserialize(value));
+    if (!this._dateAdapter.sameDate(max, this._max)) {
+      this._max = max;
+      this._revalidate();
+    }
   }
   private _max: D | null;
 

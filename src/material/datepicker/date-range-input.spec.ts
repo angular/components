@@ -376,6 +376,34 @@ describe('MatDateRangeInput', () => {
     expect(end.errors?.matDatepickerMin).toBeFalsy();
   });
 
+  it('should not revalidate if minDate is unchanged', () => {
+    const fixture = createComponent(StandardRangePicker);
+    fixture.componentInstance.minDate = new Date(2020, 3, 2);
+    fixture.detectChanges();
+    spyOn(fixture.componentInstance.rangeInput._startInput, '_validatorOnChange').and.callThrough();
+    fixture.componentInstance.minDate = new Date(2020, 3, 2);
+    fixture.detectChanges();
+    expect(fixture.componentInstance.rangeInput._startInput._validatorOnChange)
+      .not.toHaveBeenCalled();
+    fixture.componentInstance.minDate = new Date(2020, 3, 3);
+    fixture.detectChanges();
+    expect(fixture.componentInstance.rangeInput._startInput._validatorOnChange).toHaveBeenCalled();
+  });
+
+  it('should not revalidate if maxDate is unchanged', () => {
+    const fixture = createComponent(StandardRangePicker);
+    fixture.componentInstance.maxDate = new Date(2020, 3, 2);
+    fixture.detectChanges();
+    spyOn(fixture.componentInstance.rangeInput._endInput, '_validatorOnChange').and.callThrough();
+    fixture.componentInstance.maxDate = new Date(2020, 3, 2);
+    fixture.detectChanges();
+    expect(fixture.componentInstance.rangeInput._endInput._validatorOnChange)
+      .not.toHaveBeenCalled();
+    fixture.componentInstance.maxDate = new Date(2020, 3, 3);
+    fixture.detectChanges();
+    expect(fixture.componentInstance.rangeInput._endInput._validatorOnChange).toHaveBeenCalled();
+  });
+
   it('should set the formatted date value as the input value', () => {
     const fixture = createComponent(StandardRangePicker);
     fixture.componentInstance.minDate = new Date(2020, 3, 2);
