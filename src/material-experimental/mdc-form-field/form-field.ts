@@ -91,6 +91,101 @@ const DEFAULT_FLOAT_LABEL: FloatLabelType = 'auto';
  */
 const FLOATING_LABEL_DEFAULT_DOCKED_TRANSFORM = `translateY(-50%)`;
 
+class TextFieldAdapter implements MDCTextFieldAdapter {
+  constructor(private _delegate: MatFormField) {}
+  addClass(className: string) {
+    this._delegate._textField.nativeElement.classList.add(className);
+  }
+  removeClass(className: string) {
+    this._delegate._textField.nativeElement.classList.remove(className);
+  }
+  hasClass(className: string) {
+    return this._delegate._textField.nativeElement.classList.contains(className);
+  }
+
+  hasLabel() {
+    return this._delegate._hasFloatingLabel();
+  }
+  isFocused() {
+    return this._delegate._control.focused;
+  }
+  hasOutline() {
+    return this._delegate._hasOutline();
+  }
+
+  // MDC text-field will call this method on focus, blur and value change. It expects us
+  // to update the floating label state accordingly. Though we make this a noop because we
+  // want to react to floating label state changes through change detection. Relying on this
+  // adapter method would mean that the label would not update if the custom form-field control
+  // sets "shouldLabelFloat" to true, or if the "floatLabel" input binding changes to "always".
+  floatLabel() {}
+
+  // Label shaking is not supported yet. It will require a new API for form field
+  // controls to trigger the shaking. This can be a feature in the future.
+  // TODO(devversion): explore options on how to integrate label shaking.
+  shakeLabel() {}
+
+  // MDC by default updates the notched-outline whenever the text-field receives focus, or
+  // is being blurred. It also computes the label width every time the notch is opened or
+  // closed. This works fine in the standard MDC text-field, but not in Angular where the
+  // floating label could change through interpolation. We want to be able to update the
+  // notched outline whenever the label content changes. Additionally, relying on focus or
+  // blur to open and close the notch does not work for us since abstract form-field controls
+  // have the ability to control the floating label state (i.e. `shouldLabelFloat`), and we
+  // want to update the notch whenever the `_shouldLabelFloat()` value changes.
+  getLabelWidth() {
+    return 0;
+  }
+
+  // We don't use `setLabelRequired` as it relies on a mutation observer for determining
+  // when the `required` state changes. This is not reliable and flexible enough for
+  // our form field, as we support custom controls and detect the required state through
+  // a public property in the abstract form control.
+  setLabelRequired() {}
+  notchOutline() {}
+  closeOutline() {}
+
+  activateLineRipple = () =>
+    this._delegate._lineRipple && this._delegate._lineRipple.activate()
+  deactivateLineRipple = () =>
+    this._delegate._lineRipple && this._delegate._lineRipple.deactivate()
+
+  // The foundation tries to register events on the input. This is not matching
+  // our concept of abstract form field controls. We handle each event manually
+  // in "stateChanges" based on the form-field control state. The following events
+  // need to be handled: focus, blur. We do not handle the "input" event since
+  // that one is only needed for the text-field character count, which we do
+  // not implement as part of the form-field, but should be implemented manually
+  // by consumers using template bindings.
+  registerInputInteractionHandler() {}
+  deregisterInputInteractionHandler() {}
+
+  // We do not have a reference to the native input since we work with abstract form field
+  // controls. MDC needs a reference to the native input optionally to handle character
+  // counting and value updating. These are both things we do not handle from within the
+  // form-field, so we can just return null.
+  getNativeInput = () => null;
+
+  // This method will never be called since we do not have the ability to add event listeners
+  // to the native input. This is because the form control is not necessarily an input, and
+  // the form field deals with abstract form controls of any type.
+  setLineRippleTransformOrigin() {}
+
+  // The foundation tries to register click and keyboard events on the form-field to figure out
+  // if the input value changes through user interaction. Based on that, the foundation tries
+  // to focus the input. Since we do not handle the input value as part of the form-field, nor
+  // it's guaranteed to be an input (see adapter methods above), this is a noop.
+  deregisterTextFieldInteractionHandler() {}
+  registerTextFieldInteractionHandler() {}
+
+  // The foundation tries to setup a "MutationObserver" in order to watch for attributes
+  // like "maxlength" or "pattern" to change. The foundation will update the validity state
+  // based on that. We do not need this logic since we handle the validity through the
+  // abstract form control instance.
+  deregisterValidationAttributeChangeHandler() {}
+  registerValidationAttributeChangeHandler = () => null as any;
+}
+
 /** Container for form controls that applies Material Design styling and behavior. */
 @Component({
   selector: 'mat-form-field',
@@ -214,83 +309,7 @@ export class MatFormField implements AfterViewInit, OnDestroy, AfterContentCheck
   private _explicitFormFieldControl: MatFormFieldControl<any>;
   private _foundation: MDCTextFieldFoundation;
   private _needsOutlineLabelOffsetUpdateOnStable = false;
-  private _adapter: MDCTextFieldAdapter = {
-    addClass: className => this._textField.nativeElement.classList.add(className),
-    removeClass: className => this._textField.nativeElement.classList.remove(className),
-    hasClass: className => this._textField.nativeElement.classList.contains(className),
-
-    hasLabel: () => this._hasFloatingLabel(),
-    isFocused: () => this._control.focused,
-    hasOutline: () => this._hasOutline(),
-
-    // MDC text-field will call this method on focus, blur and value change. It expects us
-    // to update the floating label state accordingly. Though we make this a noop because we
-    // want to react to floating label state changes through change detection. Relying on this
-    // adapter method would mean that the label would not update if the custom form-field control
-    // sets "shouldLabelFloat" to true, or if the "floatLabel" input binding changes to "always".
-    floatLabel: () => {},
-
-    // Label shaking is not supported yet. It will require a new API for form field
-    // controls to trigger the shaking. This can be a feature in the future.
-    // TODO(devversion): explore options on how to integrate label shaking.
-    shakeLabel: () => {},
-
-    // MDC by default updates the notched-outline whenever the text-field receives focus, or
-    // is being blurred. It also computes the label width every time the notch is opened or
-    // closed. This works fine in the standard MDC text-field, but not in Angular where the
-    // floating label could change through interpolation. We want to be able to update the
-    // notched outline whenever the label content changes. Additionally, relying on focus or
-    // blur to open and close the notch does not work for us since abstract form-field controls
-    // have the ability to control the floating label state (i.e. `shouldLabelFloat`), and we
-    // want to update the notch whenever the `_shouldLabelFloat()` value changes.
-    getLabelWidth: () => 0,
-
-    // We don't use `setLabelRequired` as it relies on a mutation observer for determining
-    // when the `required` state changes. This is not reliable and flexible enough for
-    // our form field, as we support custom controls and detect the required state through
-    // a public property in the abstract form control.
-    setLabelRequired: () => {},
-    notchOutline: () => {},
-    closeOutline: () => {},
-
-    activateLineRipple: () => this._lineRipple && this._lineRipple.activate(),
-    deactivateLineRipple: () => this._lineRipple && this._lineRipple.deactivate(),
-
-    // The foundation tries to register events on the input. This is not matching
-    // our concept of abstract form field controls. We handle each event manually
-    // in "stateChanges" based on the form-field control state. The following events
-    // need to be handled: focus, blur. We do not handle the "input" event since
-    // that one is only needed for the text-field character count, which we do
-    // not implement as part of the form-field, but should be implemented manually
-    // by consumers using template bindings.
-    registerInputInteractionHandler: () => {},
-    deregisterInputInteractionHandler: () => {},
-
-    // We do not have a reference to the native input since we work with abstract form field
-    // controls. MDC needs a reference to the native input optionally to handle character
-    // counting and value updating. These are both things we do not handle from within the
-    // form-field, so we can just return null.
-    getNativeInput: () => null,
-
-    // This method will never be called since we do not have the ability to add event listeners
-    // to the native input. This is because the form control is not necessarily an input, and
-    // the form field deals with abstract form controls of any type.
-    setLineRippleTransformOrigin: () => {},
-
-    // The foundation tries to register click and keyboard events on the form-field to figure out
-    // if the input value changes through user interaction. Based on that, the foundation tries
-    // to focus the input. Since we do not handle the input value as part of the form-field, nor
-    // it's guaranteed to be an input (see adapter methods above), this is a noop.
-    deregisterTextFieldInteractionHandler: () => {},
-    registerTextFieldInteractionHandler: () => {},
-
-    // The foundation tries to setup a "MutationObserver" in order to watch for attributes
-    // like "maxlength" or "pattern" to change. The foundation will update the validity state
-    // based on that. We do not need this logic since we handle the validity through the
-    // abstract form control instance.
-    deregisterValidationAttributeChangeHandler: () => {},
-    registerValidationAttributeChangeHandler: () => null as any,
-  };
+  private _adapter: MDCTextFieldAdapter;
 
   constructor(private _elementRef: ElementRef,
               private _changeDetectorRef: ChangeDetectorRef,
@@ -301,6 +320,7 @@ export class MatFormField implements AfterViewInit, OnDestroy, AfterContentCheck
               private _defaults?: MatFormFieldDefaultOptions,
               @Optional() @Inject(MAT_LABEL_GLOBAL_OPTIONS) private _labelOptions?: LabelOptions,
               @Optional() @Inject(ANIMATION_MODULE_TYPE) public _animationMode?: string) {
+    this._adapter = new TextFieldAdapter(this);
     if (_defaults && _defaults.appearance) {
       this.appearance = _defaults.appearance;
     } else if (_defaults && _defaults.hideRequiredMarker) {
