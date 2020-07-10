@@ -79,13 +79,6 @@ export class CdkOption implements ListKeyManagerOption, Highlightable {
     }
   }
 
-  toggleViaKeyboard() {
-    if (!this._isInteractionDisabled()) {
-      this.selected = !this.selected;
-      this.listbox._emitChangeEvent(this);
-    }
-  }
-
   /** Sets the active property true if the option and listbox aren't disabled. */
   activate() {
     if (!this._isInteractionDisabled()) {
@@ -283,8 +276,7 @@ export class CdkListbox implements AfterContentInit, OnDestroy, OnInit {
   private _toggleActiveOption() {
     const activeOption = this._listKeyManager.activeItem;
     if (activeOption && !activeOption.disabled) {
-      activeOption.toggleViaKeyboard();
-      this._updateSelectionModel(activeOption);
+      activeOption.toggle();
       this._emitChangeEvent(activeOption);
     }
   }
