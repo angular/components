@@ -553,14 +553,16 @@ describe('CdkOption', () => {
 @Component({
   template: `
     <div cdkListbox
-        [disabled]="isListboxDisabled"
-        (selectionChange)="onSelectionChange($event)">
+         [disabled]="isListboxDisabled"
+         (selectionChange)="onSelectionChange($event)">
       <div cdkOption
           [disabled]="isPurpleDisabled">
-        Purple</div>
+        Purple
+      </div>
       <div cdkOption
            [disabled]="isSolarDisabled">
-        Solar</div>
+        Solar
+      </div>
       <div cdkOption>Arc</div>
       <div cdkOption>Stasis</div>
     </div>`
@@ -580,7 +582,7 @@ class ListboxWithOptions {
   template: `
     <div cdkListbox
          [multiple]="isMultiselectable"
-        (selectionChange)="onSelectionChange($event)">
+         (selectionChange)="onSelectionChange($event)">
       <div cdkOption>Purple</div>
       <div cdkOption>Solar</div>
       <div cdkOption>Arc</div>
@@ -599,8 +601,7 @@ class ListboxMultiselect {
 @Component({
   template: `
     <div cdkListbox
-         [useActiveDescendant]="isActiveDescendant"
-    >
+         [useActiveDescendant]="isActiveDescendant">
       <div cdkOption>Purple</div>
       <div cdkOption>Solar</div>
       <div cdkOption>Arc</div>

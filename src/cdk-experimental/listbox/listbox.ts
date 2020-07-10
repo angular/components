@@ -101,7 +101,6 @@ export class CdkOption implements ListKeyManagerOption, Highlightable {
 
   /** Applies focus to the option. */
   focus() {
-    console.log('focusing option');
     this._elementRef.nativeElement.focus();
   }
 
@@ -219,20 +218,20 @@ export class CdkListbox implements AfterContentInit, OnDestroy, OnInit {
     this._listKeyManager = new ActiveDescendantKeyManager(this._options)
       .withWrap().withVerticalOrientation().withTypeAhead();
 
-    this._listKeyManager.change.subscribe(() => {
+    this._listKeyManager.change.pipe(takeUntil(this._destroy)).subscribe(() => {
       this.updateActiveOption();
     });
 
     this._selectionModel.changed.pipe(takeUntil(this._destroy))
         .subscribe((event: SelectionChange<CdkOption>) => {
 
-      event.added.forEach((option: CdkOption) => {
+      for (const option of event.added) {
         option.selected = true;
-      });
+      }
 
-      event.removed.forEach((option: CdkOption) => {
+      for (const option of event.removed) {
         option.selected = false;
-      });
+      }
     });
   }
 
@@ -314,7 +313,6 @@ export class CdkListbox implements AfterContentInit, OnDestroy, OnInit {
     this._activeOption = this._listKeyManager.activeItem;
     this._activeOption.activate();
 
-    console.log('here in update active option');
     if (!this.useActiveDescendant) {
       this._activeOption.focus();
     }
