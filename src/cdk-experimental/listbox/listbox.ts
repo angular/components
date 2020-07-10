@@ -276,8 +276,9 @@ export class CdkListbox implements AfterContentInit, OnDestroy, OnInit {
   private _toggleActiveOption() {
     const activeOption = this._listKeyManager.activeItem;
     if (activeOption && !activeOption.disabled) {
-      activeOption.toggle();
+      activeOption.selected ? this.deselect(activeOption) : this.select(activeOption);
       this._emitChangeEvent(activeOption);
+      this._updateSelectionModel(activeOption);
     }
   }
 
