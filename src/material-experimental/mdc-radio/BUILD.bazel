@@ -1,10 +1,10 @@
 load("//src/e2e-app:test_suite.bzl", "e2e_test_suite")
 load(
     "//tools:defaults.bzl",
+    "ng_e2e_test_library",
     "ng_module",
     "ng_test_library",
     "ng_web_test_suite",
-    "ng_e2e_test_library",
     "sass_binary",
     "sass_library",
 )
