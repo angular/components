@@ -26,6 +26,7 @@ export class MainComponentHarness extends ComponentHarness {
   readonly allLabels = this.locatorForAll('label');
   readonly allLists = this.locatorForAll(SubComponentHarness);
   readonly memo = this.locatorFor('textarea');
+  readonly checkbox = this.locatorFor('input[type=checkbox]');
   readonly clickTest = this.locatorFor('.click-test');
   readonly clickTestResult = this.locatorFor('.click-test-result');
   // Allow null for element
@@ -110,6 +111,10 @@ export class MainComponentHarness extends ComponentHarness {
 
   async sendAltJ(): Promise<void> {
     return (await this.input()).sendKeys({alt: true}, 'j');
+  }
+
+  async getInputValue(): Promise<string> {
+    return (await this.input()).getProperty('value');
   }
 
   async getTaskStateResult(): Promise<string> {

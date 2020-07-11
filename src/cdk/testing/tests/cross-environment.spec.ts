@@ -14,6 +14,7 @@ import {
 } from '@angular/cdk/testing';
 import {MainComponentHarness} from './harnesses/main-component-harness';
 import {SubComponentHarness, SubComponentSpecialHarness} from './harnesses/sub-component-harness';
+import {TestKey} from '../test-element';
 
 /**
  * Tests that should behave equal in testbed and protractor environment.
@@ -303,15 +304,6 @@ export function crossEnvironmentSpecs(
       harness = await getMainComponentHarnessFromEnvironment();
     });
 
-    it('should be able to clear', async () => {
-      const input = await harness.input();
-      await input.sendKeys('Yi');
-      expect(await input.getProperty('value')).toBe('Yi');
-
-      await input.clear();
-      expect(await input.getProperty('value')).toBe('');
-    });
-
     it('should be able to click', async () => {
       const counter = await harness.counter();
       expect(await counter.text()).toBe('0');
@@ -333,6 +325,7 @@ export function crossEnvironmentSpecs(
 
       expect(await input.getProperty('value')).toBe('Yi');
       expect(await value.text()).toBe('Input: Yi');
+      expect(await harness.getInputValue()).toBe('Yi');
     });
 
     it('focuses the element before sending key', async () => {
@@ -492,6 +485,92 @@ export function crossEnvironmentSpecs(
       expect(await button.isFocused()).toBe(true);
       await button.blur();
       expect(await button.isFocused()).toBe(false);
+    });
+  });
+
+  describe('equal behavior (emulated in testbed) on', () => {
+    let harness: MainComponentHarness;
+    const initialValue = 'abc';
+    let input: TestElement;
+    let checkbox: TestElement;
+
+    beforeEach(async () => {
+      harness = await getMainComponentHarnessFromEnvironment();
+      input = await harness.input();
+      checkbox = await harness.checkbox();
+
+      // @breaking-change 11.0.0 Remove non-null assertion once `setInputValue` is required.
+      await input.setInputValue!(initialValue);
+    });
+
+    describe('initially', () => {
+      it('input should have the value "abc"', async () => {
+        expect(await harness.getInputValue()).toBe('abc');
+      });
+      it('checkbox should be unchecked', async () => {
+        expect(await checkbox.getProperty('checked')).toBe(false, 'initial');
+      });
+    });
+
+    describe('clear', () => {
+      it('should delete text of text inputs', async () => {
+        await input.clear();
+        expect(await harness.getInputValue()).toBe('');
+      });
+
+      it('will throw for checkboxes', async () => {
+        try {
+          await checkbox.clear();
+          fail('should have thrown');
+        } catch (e) {
+          expect(e.toString()).toContain('invalid element');
+        }
+      });
+
+      it('will throw for other html elements', async () => {
+        try {
+          await (await harness.button()).clear();
+          fail('should have thrown');
+        } catch (e) {
+          expect(e.toString()).toContain('invalid element');
+        }
+      });
+    });
+
+    describe('arrow keys in inputs', () => {
+      it('arrow left should move cursor', async () => {
+        await input.sendKeys(TestKey.LEFT_ARROW, 'd');
+        expect(await harness.getInputValue()).toBe('abdc');
+      });
+
+      it('shift + arrows left should start selection backwards', async () => {
+        await input.sendKeys({ shift: true }, TestKey.LEFT_ARROW, TestKey.LEFT_ARROW);
+        await input.sendKeys('d');
+        expect(await harness.getInputValue()).toBe('ad');
+      });
+
+      it('shift + arrow up should selection all up to the start of input', async () => {
+        await input.sendKeys(TestKey.LEFT_ARROW);
+        await input.sendKeys({ shift: true }, TestKey.UP_ARROW);
+        await input.sendKeys('d');
+        expect(await harness.getInputValue()).toBe('dc');
+      });
+
+      it('shift + 2x arrows downs should select all from selection end to input end', async () => {
+        await input.sendKeys(TestKey.LEFT_ARROW);
+        await input.sendKeys({ shift: true }, TestKey.UP_ARROW);
+        await input.sendKeys({ shift: true }, TestKey.DOWN_ARROW, TestKey.DOWN_ARROW);
+        await input.sendKeys('d');
+        expect(await harness.getInputValue()).toBe('abd');
+      });
+
+      it('shift + 2x arrows up should select all from selection start to input start', async () => {
+        await input.sendKeys(TestKey.LEFT_ARROW);
+        await input.sendKeys({ shift: true }, TestKey.RIGHT_ARROW);
+        await input.sendKeys({ shift: true }, TestKey.UP_ARROW, TestKey.UP_ARROW);
+        await input.sendKeys('d');
+        expect(await harness.getInputValue()).toBe('dc');
+      });
     });
   });
 }

@@ -7,16 +7,19 @@
  */
 
 import {ModifierKeys} from '@angular/cdk/testing';
-import {dispatchFakeEvent, dispatchKeyboardEvent} from './dispatch-events';
+import {dispatchKeyboardEvent} from './dispatch-events';
 import {triggerFocus} from './element-focus';
+import {emulateKeyInTextInput, clearTextElement} from './emulate-text-input-behavior';
+import {TextInputElement, isTextInput as newIsTextInput} from './text-input-element';
 
 /**
  * Checks whether the given Element is a text input element.
+ * @deprecated use isTextInput from './emulate-key-in-text-input'
+ * @breaking-change 11.0.0
  * @docs-private
  */
-export function isTextInput(element: Element): element is HTMLInputElement | HTMLTextAreaElement {
-  const nodeName = element.nodeName.toLowerCase();
-  return nodeName === 'input' || nodeName === 'textarea' ;
+export function isTextInput(element: Element): element is TextInputElement {
+  return newIsTextInput(element);
 }
 
 /**
@@ -60,9 +63,8 @@ export function typeInElement(element: HTMLElement, ...modifiersAndKeys: any) {
   for (const key of keys) {
     dispatchKeyboardEvent(element, 'keydown', key.keyCode, key.key, modifiers);
     dispatchKeyboardEvent(element, 'keypress', key.keyCode, key.key, modifiers);
-    if (isTextInput(element) && key.key && key.key.length === 1) {
-      element.value += key.key;
-      dispatchFakeEvent(element, 'input');
+    if (isTextInput(element) && key.key) {
+      emulateKeyInTextInput(modifiers, key.key, element);
     }
     dispatchKeyboardEvent(element, 'keyup', key.keyCode, key.key, modifiers);
   }
@@ -72,8 +74,11 @@ export function typeInElement(element: HTMLElement, ...modifiersAndKeys: any) {
  * Clears the text in an input or textarea element.
  * @docs-private
  */
-export function clearElement(element: HTMLInputElement | HTMLTextAreaElement) {
+export function clearElement(element: Element) {
+  if (!isTextInput(element)) {
+    throw Error('Attempting to clear an invalid element (not inputs or textareas)');
+  }
+
   triggerFocus(element as HTMLElement);
-  element.value = '';
-  dispatchFakeEvent(element, 'input');
+  clearTextElement(element);
 }
