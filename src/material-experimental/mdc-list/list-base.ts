@@ -34,6 +34,54 @@ function toggleClass(el: Element, className: string, on: boolean) {
   }
 }
 
+class ListAdapter implements MDCListAdapter {
+  constructor(private _delegate: MatInteractiveListBase) {}
+
+  getListItemCount = () => this._delegate._items.length;
+  listItemAtIndexHasClass =
+      (index: number, className: string) =>
+        this._delegate._elementAtIndex(index).classList.contains(className)
+  addClassForElementIndex =
+      (index: number, className: string) =>
+        this._delegate._elementAtIndex(index).classList.add(className)
+  removeClassForElementIndex =
+      (index: number, className: string) =>
+        this._delegate._elementAtIndex(index).classList.remove(className)
+  getAttributeForElementIndex = (index: number, attr: string) =>
+    this._delegate._elementAtIndex(index).getAttribute(attr)
+  setAttributeForElementIndex =
+      (index: number, attr: string, value: string) =>
+        this._delegate._elementAtIndex(index).setAttribute(attr, value)
+  getFocusedElementIndex = () =>
+    this._delegate._indexForElement(this._delegate.getDocument()?.activeElement)
+  isFocusInsideList = () =>
+    this._delegate.getElement().nativeElement.contains(this._delegate.getDocument()?.activeElement)
+  isRootFocused = () =>
+    this._delegate.getElement().nativeElement === this._delegate.getDocument()?.activeElement
+  focusItemAtIndex = (index: number) =>  this._delegate._elementAtIndex(index).focus();
+
+  // MDC uses this method to disable focusable children of list items. However, we believe that
+  // this is not an accessible pattern and should be avoided, therefore we intentionally do not
+  // implement this method. In addition, implementing this would require violating Angular
+  // Material's general principle of not having components modify DOM elements they do not own.
+  // A user who feels they really need this feature can simply listen to the `(focus)` and
+  // `(blur)` events on the list item and enable/disable focus on the children themselves as
+  // appropriate.
+  setTabIndexForListItemChildren = () => {};
+
+  // The following methods have a dummy implementation in the base class because they are only
+  // applicable to certain types of lists. They should be implemented for the concrete classes
+  // where they are applicable.
+  hasCheckboxAtIndex = () => false;
+  hasRadioAtIndex = () => false;
+  setCheckedCheckboxOrRadioAtIndex = () => {};
+  isCheckboxCheckedAtIndex = () => false;
+
+  // TODO(mmalerba): Determine if we need to implement these.
+  getPrimaryTextAtIndex = () => '';
+  notifyAction = () => {};
+}
+
 @Directive()
 /** @docs-private */
 export abstract class MatListItemBase implements AfterContentInit, OnDestroy, RippleTarget {
@@ -134,43 +182,7 @@ export abstract class MatInteractiveListBase extends MatListBase
 
   @ContentChildren(MatListItemBase, {descendants: true}) _items: QueryList<MatListItemBase>;
 
-  protected _adapter: MDCListAdapter = {
-    getListItemCount: () => this._items.length,
-    listItemAtIndexHasClass:
-        (index, className) => this._elementAtIndex(index).classList.contains(className),
-    addClassForElementIndex:
-        (index, className) => this._elementAtIndex(index).classList.add(className),
-    removeClassForElementIndex:
-        (index, className) => this._elementAtIndex(index).classList.remove(className),
-    getAttributeForElementIndex: (index, attr) => this._elementAtIndex(index).getAttribute(attr),
-    setAttributeForElementIndex:
-        (index, attr, value) => this._elementAtIndex(index).setAttribute(attr, value),
-    getFocusedElementIndex: () => this._indexForElement(this._document?.activeElement),
-    isFocusInsideList: () => this._element.nativeElement.contains(this._document?.activeElement),
-    isRootFocused: () => this._element.nativeElement === this._document?.activeElement,
-    focusItemAtIndex: index =>  this._elementAtIndex(index).focus(),
-
-    // MDC uses this method to disable focusable children of list items. However, we believe that
-    // this is not an accessible pattern and should be avoided, therefore we intentionally do not
-    // implement this method. In addition, implementing this would require violating Angular
-    // Material's general principle of not having components modify DOM elements they do not own.
-    // A user who feels they really need this feature can simply listen to the `(focus)` and
-    // `(blur)` events on the list item and enable/disable focus on the children themselves as
-    // appropriate.
-    setTabIndexForListItemChildren: () => {},
-
-    // The following methods have a dummy implementation in the base class because they are only
-    // applicable to certain types of lists. They should be implemented for the concrete classes
-    // where they are applicable.
-    hasCheckboxAtIndex: () => false,
-    hasRadioAtIndex: () => false,
-    setCheckedCheckboxOrRadioAtIndex: () => {},
-    isCheckboxCheckedAtIndex: () => false,
-
-    // TODO(mmalerba): Determine if we need to implement these.
-    getPrimaryTextAtIndex: () => '',
-    notifyAction: () => {},
-  };
+  protected _adapter: MDCListAdapter;
 
   protected _foundation: MDCListFoundation;
 
@@ -184,6 +196,7 @@ export abstract class MatInteractiveListBase extends MatListBase
     super();
     this._document = document;
     this._isNonInteractive = false;
+    this._adapter = new ListAdapter(this);
     this._foundation = new MDCListFoundation(this._adapter);
   }
 
@@ -196,6 +209,18 @@ export abstract class MatInteractiveListBase extends MatListBase
   ngOnDestroy() {
     this._foundation.destroy();
     this._subscriptions.unsubscribe();
+  }
+
+  getItems() {
+    return this._items;
+  }
+
+  getDocument() {
+    return this._document;
+  }
+
+  getElement() {
+    return this._element;
   }
 
   private _initItems() {
@@ -211,11 +236,11 @@ export abstract class MatInteractiveListBase extends MatListBase
     return this._itemsArr[index];
   }
 
-  private _elementAtIndex(index: number): HTMLElement {
+  _elementAtIndex(index: number): HTMLElement {
     return this._itemAtIndex(index)._elementRef.nativeElement;
   }
 
-  private _indexForElement(element: Element | null) {
+  _indexForElement(element: Element | null) {
     return element ?
         this._itemsArr.findIndex(i => i._elementRef.nativeElement.contains(element)) : -1;
   }
