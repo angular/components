@@ -160,7 +160,7 @@ export class AriaDescriber implements OnDestroy {
       // old container so we don't get duplicates. Doing this, instead of emptying the previous
       // container, should be slightly faster.
       if (preExistingContainer && preExistingContainer.parentNode) {
-        preExistingContainer.parentNode!.removeChild(preExistingContainer);
+        preExistingContainer.parentNode.removeChild(preExistingContainer);
       }
 
       messagesContainer = this._document.createElement('div');
