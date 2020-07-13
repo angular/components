@@ -174,7 +174,7 @@ export class CdkListbox implements AfterContentInit, OnDestroy, OnInit {
   private _multiple: boolean = false;
   private _useActiveDescendant: boolean = true;
   private _activeOption: CdkOption;
-  private optionSelectionChanges: Observable<OptionSelectionChangeEvent>;
+  optionSelectionChanges: Observable<OptionSelectionChangeEvent>;
   private readonly _destroyed = new Subject<void>();
 
   @ContentChildren(CdkOption, {descendants: true}) _options: QueryList<CdkOption>;
@@ -233,7 +233,7 @@ export class CdkListbox implements AfterContentInit, OnDestroy, OnInit {
         .withWrap().withVerticalOrientation().withTypeAhead();
 
     this._listKeyManager.change.pipe(takeUntil(this._destroyed)).subscribe(() => {
-      this.updateActiveOption();
+      this._updateActiveOption();
     });
   }
 
@@ -320,7 +320,7 @@ export class CdkListbox implements AfterContentInit, OnDestroy, OnInit {
   }
 
   /** Updates the activeOption and the active and focus properties of the option. */
-  private updateActiveOption() {
+  private _updateActiveOption() {
     if (!this._listKeyManager.activeItem) {
       return;
     }
