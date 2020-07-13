@@ -9,6 +9,7 @@ app-carousel {
   display: flex;
   flex-direction: row;
   overflow: hidden;
+  outline: none;
 }
 
 .docs-carousel-content-wrapper {
@@ -17,6 +18,7 @@ app-carousel {
 
 [carousel-item] {
   flex-shrink: 0;
+  transition: transform 0.5s ease-in-out;
 }
 
 .docs-carousel-nav {
