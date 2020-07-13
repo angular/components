@@ -111,27 +111,53 @@ $_mat-theme-generate-default-density: true !default;
 
 // Creates a light-themed color configuration from the specified
 // primary, accent and warn palettes.
-@function _mat-create-light-color-config($primary, $accent, $warn: null) {
+@function _mat-create-light-color-config(
+  $primary,
+  $accent,
+  $warn: null,
+  $foreground: null,
+  $background: null) {
   @return (
     primary: $primary,
     accent: $accent,
     warn: if($warn != null, $warn, mat-palette($mat-red)),
     is-dark: false,
-    foreground: $mat-light-theme-foreground,
-    background: $mat-light-theme-background,
+    foreground: if(
+      $foreground != null,
+      map_merge($mat-light-theme-foreground, $foreground),
+      $mat-light-theme-foreground
+    ),
+    background: if(
+      $background != null,
+      map_merge($mat-light-theme-background, $background),
+      $mat-light-theme-background
+    ),
   );
 }
 
 // Creates a dark-themed color configuration from the specified
 // primary, accent and warn palettes.
-@function _mat-create-dark-color-config($primary, $accent, $warn: null) {
+@function _mat-create-dark-color-config(
+  $primary,
+  $accent,
+  $warn: null,
+  $foreground: null,
+  $background: null) {
   @return (
     primary: $primary,
     accent: $accent,
     warn: if($warn != null, $warn, mat-palette($mat-red)),
     is-dark: true,
-    foreground: $mat-dark-theme-foreground,
-    background: $mat-dark-theme-background,
+    foreground: if(
+      $foreground != null,
+      map_merge($mat-dark-theme-foreground, $foreground),
+      $mat-dark-theme-foreground
+    ),
+    background: if(
+      $background != null,
+      map_merge($mat-dark-theme-background, $background),
+      $mat-dark-theme-background
+    ),
   );
 }
 
@@ -167,7 +193,12 @@ $_mat-theme-generate-default-density: true !default;
     $primary: map_get($color-settings, primary);
     $accent: map_get($color-settings, accent);
     $warn: map_get($color-settings, warn);
-    $result: map_merge($result, (color: _mat-create-light-color-config($primary, $accent, $warn)));
+    $foreground: map_get($color-settings, foreground);
+    $background: map_get($color-settings, background);
+    $result: map_merge(
+      $result,
+      (color: _mat-create-light-color-config($primary, $accent, $warn, $foreground, $background))
+    );
   }
   @return _mat-create-backwards-compatibility-theme(_mat-validate-theme($result));
 }
@@ -204,7 +235,12 @@ $_mat-theme-generate-default-density: true !default;
     $primary: map_get($color-settings, primary);
     $accent: map_get($color-settings, accent);
     $warn: map_get($color-settings, warn);
-    $result: map_merge($result, (color: _mat-create-dark-color-config($primary, $accent, $warn)));
+    $foreground: map_get($color-settings, foreground);
+    $background: map_get($color-settings, background);
+    $result: map_merge(
+      $result,
+      (color: _mat-create-dark-color-config($primary, $accent, $warn, $foreground, $background))
+    );
   }
   @return _mat-create-backwards-compatibility-theme(_mat-validate-theme($result));
 }
