@@ -14,7 +14,7 @@ import {
   coerceNumberProperty,
   NumberInput
 } from '@angular/cdk/coercion';
-import {END, ENTER, hasModifierKey, HOME, SPACE} from '@angular/cdk/keycodes';
+import {ENTER, hasModifierKey, SPACE} from '@angular/cdk/keycodes';
 import {DOCUMENT} from '@angular/common';
 import {
   AfterViewInit,
@@ -349,6 +349,7 @@ export class CdkStepper implements AfterContentInit, AfterViewInit, OnDestroy {
     // AfterViewInit so we're guaranteed for both view and content children to be defined.
     this._keyManager = new FocusKeyManager<FocusableOption>(this._stepHeader)
                            .withWrap()
+                           .withHomeAndEnd()
                            .withVerticalOrientation(this._orientation === 'vertical');
 
     (this._dir ? (this._dir.change as Observable<Direction>) : observableOf<Direction>())
@@ -485,12 +486,6 @@ export class CdkStepper implements AfterContentInit, AfterViewInit, OnDestroy {
     if (manager.activeItemIndex != null && !hasModifier &&
         (keyCode === SPACE || keyCode === ENTER)) {
       this.selectedIndex = manager.activeItemIndex;
-      event.preventDefault();
-    } else if (keyCode === HOME) {
-      manager.setFirstItemActive();
-      event.preventDefault();
-    } else if (keyCode === END) {
-      manager.setLastItemActive();
       event.preventDefault();
     } else {
       manager.onKeydown(event);
