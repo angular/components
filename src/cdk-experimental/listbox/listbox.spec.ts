@@ -309,28 +309,6 @@ describe('CdkOption', () => {
       expect(listboxInstance._listKeyManager.activeItemIndex).toBe(2);
     });
 
-    it('should select all options using the select all method', () => {
-      let selectedOptions = optionInstances.filter(option => option.selected);
-
-      expect(selectedOptions.length).toBe(0);
-      expect(optionElements[0].hasAttribute('aria-selected')).toBeFalse();
-      expect(optionInstances[0].selected).toBeFalse();
-      expect(fixture.componentInstance.changedOption).toBeUndefined();
-
-      listboxInstance.setAllSelected(true);
-      fixture.detectChanges();
-
-      selectedOptions = optionInstances.filter(option => option.selected);
-      expect(selectedOptions.length).toBe(4);
-
-      for (const option of optionElements) {
-        expect(option.getAttribute('aria-selected')).toBe('true');
-      }
-
-      expect(fixture.componentInstance.changedOption).toBeDefined();
-      expect(fixture.componentInstance.changedOption.id).toBe(optionInstances[3].id);
-    });
-
     it('should update selected option on click event', () => {
       let selectedOptions = optionInstances.filter(option => option.selected);
 
@@ -356,6 +334,9 @@ describe('CdkOption', () => {
 
     let testComponent: ListboxMultiselect;
 
+    let listbox: DebugElement;
+    let listboxInstance: CdkListbox;
+
     let options: DebugElement[];
     let optionInstances: CdkOption[];
     let optionElements: HTMLElement[];
@@ -373,10 +354,37 @@ describe('CdkOption', () => {
 
       testComponent = fixture.debugElement.componentInstance;
 
+      listbox = fixture.debugElement.query(By.directive(CdkListbox));
+      listboxInstance = listbox.injector.get<CdkListbox>(CdkListbox);
+
       options = fixture.debugElement.queryAll(By.directive(CdkOption));
       optionInstances = options.map(o => o.injector.get<CdkOption>(CdkOption));
       optionElements = options.map(o => o.nativeElement);
     }));
+
+    it('should select all options using the select all method', () => {
+      let selectedOptions = optionInstances.filter(option => option.selected);
+      testComponent.isMultiselectable = true;
+      fixture.detectChanges();
+
+      expect(selectedOptions.length).toBe(0);
+      expect(optionElements[0].hasAttribute('aria-selected')).toBeFalse();
+      expect(optionInstances[0].selected).toBeFalse();
+      expect(fixture.componentInstance.changedOption).toBeUndefined();
+
+      listboxInstance.setAllSelected(true);
+      fixture.detectChanges();
+
+      selectedOptions = optionInstances.filter(option => option.selected);
+      expect(selectedOptions.length).toBe(4);
+
+      for (const option of optionElements) {
+        expect(option.getAttribute('aria-selected')).toBe('true');
+      }
+
+      expect(fixture.componentInstance.changedOption).toBeDefined();
+      expect(fixture.componentInstance.changedOption.id).toBe(optionInstances[3].id);
+    });
 
     it('should deselect previously selected when multiple is false', () => {
       let selectedOptions = optionInstances.filter(option => option.selected);
@@ -404,10 +412,12 @@ describe('CdkOption', () => {
       expect(optionInstances[0].selected).toBeFalse();
       expect(optionElements[2].getAttribute('aria-selected')).toBe('true');
       expect(optionInstances[2].selected).toBeTrue();
-      expect(fixture.componentInstance.changedOption.id).toBe(optionInstances[2].id);
+
+      /** Expect first option to be most recently changed because it was deselected. */
+      expect(fixture.componentInstance.changedOption.id).toBe(optionInstances[0].id);
     });
 
-    it('should allow multiple selection when multiple is false', () => {
+    it('should allow multiple selection when multiple is true', () => {
       let selectedOptions = optionInstances.filter(option => option.selected);
       testComponent.isMultiselectable = true;
 
