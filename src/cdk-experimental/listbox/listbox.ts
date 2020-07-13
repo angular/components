@@ -182,7 +182,7 @@ export class CdkListbox implements AfterContentInit, OnDestroy, OnInit {
   @Output() readonly selectionChange: EventEmitter<ListboxSelectionChangeEvent> =
       new EventEmitter<ListboxSelectionChangeEvent>();
 
-  /** Whether the listbox allows multiple options to be selected.
+  /**Whether the listbox allows multiple options to be selected.
    * When multiple switches from true to false, all options are deselected.
    * This is done rather than randomly choosing one of the selected options
    * to remain selected.*/
@@ -362,7 +362,7 @@ export class CdkListbox implements AfterContentInit, OnDestroy, OnInit {
 
   /** Sets the selected state of all options to be the given value. */
   setAllSelected(isSelected: boolean) {
-    for (const option of this._options) {
+    for (const option of this._options.toArray()) {
       const wasSelected = option.selected;
       isSelected ? this.select(option) : this.deselect(option);
 
