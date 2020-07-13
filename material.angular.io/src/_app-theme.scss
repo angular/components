@@ -5,6 +5,7 @@
 @import './app/pages/component-viewer/component-viewer-theme';
 @import './app/pages/guide-list/guide-list-theme';
 @import './app/pages/homepage/homepage-theme';
+@import './app/shared/carousel/carousel-theme';
 @import './app/shared/example-viewer/example-viewer-theme';
 @import './app/shared/footer/footer-theme';
 @import './app/shared/navbar/navbar-theme';
@@ -43,7 +44,7 @@
   .is-next-version {
     background: mat-color($next-theme, 900) !important;
   }
-
+  @include carousel-theme($theme);
   @include component-category-list-theme($theme);
   @include component-viewer-sidenav-theme($theme);
   @include component-viewer-theme($theme);
