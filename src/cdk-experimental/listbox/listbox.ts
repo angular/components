@@ -118,10 +118,10 @@ export class CdkOption implements ListKeyManagerOption, Highlightable {
   }
 
   private _emitSelectionChange(isUserInput = false) {
-      const changeEvent = {
-          source: this,
-          isUserInput: isUserInput
-      }
+    const changeEvent = {
+      source: this,
+      isUserInput: isUserInput
+    };
     this.selectionChange.emit(changeEvent);
   }
 
@@ -298,7 +298,7 @@ export class CdkListbox implements AfterContentInit, OnDestroy, OnInit {
     const changeEvent = {
       source: this,
       option: option
-    }
+    };
     this.selectionChange.emit(changeEvent);
   }
 
