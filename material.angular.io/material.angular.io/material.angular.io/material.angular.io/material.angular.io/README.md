@@ -7,7 +7,8 @@ Versions of this site are also available for
 - [v6](https://v6.material.angular.io/)
 - [v7](https://v7.material.angular.io/)
 - [v8](https://v8.material.angular.io/)
-- [v9](https://material.angular.io/)
+- [v9](https://v9.material.angular.io/)
+- [v10](https://material.angular.io/)
 
 ## Contributing
 Please open bugs against the Angular Material and CDK components, directives, documentation
@@ -28,15 +29,15 @@ documentation content and examples. They are generated from:
 - [CDK components, services, and directives](https://github.com/angular/components/tree/master/src/cdk)
 
 ## Development Setup
-1. Make sure that you have [NodeJS LTS](https://nodejs.org) installed
-1. Make sure that you have [Yarn](https://yarnpkg.com) installed
+1. Make sure you have [NodeJS LTS](https://nodejs.org) installed
+1. Make sure you have [Yarn](https://yarnpkg.com) installed
 1. Install the project's dependencies
   - `yarn install`
 1. Update to the latest version of the docs-content and examples
-  - `yarn upgrade @angular/components-examples`
+  - `yarn build:content`
 
 ## Development Server
-1. Run `yarn start` for a dev server. Navigate to `http://localhost:4200/`
+1. Run `yarn start` for a dev server. Navigate to `http://localhost:4200/`.
 
 ## Build
 Run `yarn prod-build` to build the project.
