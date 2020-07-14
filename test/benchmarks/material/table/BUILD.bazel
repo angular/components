@@ -18,6 +18,10 @@ component_benchmark(
         ":basic-table.ts",
         ":fake-table-data.ts",
     ],
+    ng_assets = [
+        ":app.module.html",
+        ":basic-table.html",
+    ],
     prefix = "",
     styles = ["//src/material/prebuilt-themes:indigo-pink"],
 )
