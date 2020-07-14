@@ -16,7 +16,10 @@ component_benchmark(
         "@npm//@angular/platform-browser",
         "//src/material/tabs",
     ],
-    ng_srcs = [":app.module.ts"],
+    ng_srcs = [
+        ":app.module.ts",
+        ":fake-tab-data.ts",
+    ],
     prefix = "",
     styles = ["//src/material/prebuilt-themes:indigo-pink"],
 )

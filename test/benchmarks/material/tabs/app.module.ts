@@ -10,49 +10,40 @@ import {Component, NgModule, ViewEncapsulation} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {MatTabsModule} from '@angular/material/tabs';
+import {threeTabs, tenTabs, twentyTabs} from './fake-tab-data';
+
+/** component: mat-tab */
 
 @Component({
   selector: 'app-root',
   template: `
-    <button id="show-small-tab-group" (click)="showSmallTabGroup()">Show Small Tab Group</button>
-    <button id="show-large-tab-group" (click)="showLargeTabGroup()">Show Large Tab Group</button>
-    <button id="hide" (click)="hide()">Hide</button>
+  <button id="show-three-tabs" (click)="showThreeTabs()">Show Three Tabs</button>
+  <button id="show-ten-tabs" (click)="showTenTabs()">Show Ten Tabs</button>
+  <button id="show-twenty-tabs" (click)="showTwentyTabs()">Show Twenty Tabs</button>
+  <button id="hide" (click)="hide()">Hide</button>
 
-    <mat-tab-group *ngIf="isSmallTabGroupVisible">
-      <mat-tab label="First"> Content 1 </mat-tab>
-      <mat-tab label="Second"> Content 2 </mat-tab>
-      <mat-tab label="Third"> Content 3 </mat-tab>
-    </mat-tab-group>
-
-    <mat-tab-group *ngIf="isLargeTabGroupVisible">
-      <mat-tab label="First"> Content 1 </mat-tab>
-      <mat-tab label="Second"> Content 2 </mat-tab>
-      <mat-tab label="Third"> Content 3 </mat-tab>
-      <mat-tab label="Fourth"> Content 4 </mat-tab>
-      <mat-tab label="Fifth"> Content 5 </mat-tab>
-      <mat-tab label="Sixth"> Content 6 </mat-tab>
-      <mat-tab label="Seventh"> Content 7 </mat-tab>
-      <mat-tab label="Eigth"> Content 8 </mat-tab>
-      <mat-tab label="Ninth"> Content 9 </mat-tab>
-      <mat-tab label="Tenth"> Content 10 </mat-tab>
-    </mat-tab-group>
+  <mat-tab-group *ngIf="areThreeTabsVisible">${threeTabs}</mat-tab-group>
+  <mat-tab-group *ngIf="areTenTabsVisible">${tenTabs}</mat-tab-group>
+  <mat-tab-group *ngIf="areTwentyTabsVisible">${twentyTabs}</mat-tab-group>
   `,
   encapsulation: ViewEncapsulation.None,
   styleUrls: ['//src/material/core/theming/prebuilt/indigo-pink.css'],
 })
 export class TabsBenchmarkApp {
-  isSmallTabGroupVisible = false;
-  isLargeTabGroupVisible = false;
+  areThreeTabsVisible = false;
+  areTenTabsVisible = false;
+  areTwentyTabsVisible = false;
 
-  showSmallTabGroup() { this.isSmallTabGroupVisible = true; }
-  showLargeTabGroup() { this.isLargeTabGroupVisible = true; }
+  showThreeTabs() { this.areThreeTabsVisible = true; }
+  showTenTabs() { this.areTenTabsVisible = true; }
+  showTwentyTabs() { this.areTwentyTabsVisible = true; }
 
   hide() {
-    this.isSmallTabGroupVisible = false;
-    this.isLargeTabGroupVisible = false;
+    this.areThreeTabsVisible = false;
+    this.areTenTabsVisible = false;
+    this.areTwentyTabsVisible = false;
   }
 }
-
 
 @NgModule({
   declarations: [TabsBenchmarkApp],

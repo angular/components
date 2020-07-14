@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {$, $$, browser} from 'protractor';
+import {$, $$, browser, ElementFinder} from 'protractor';
 import {runBenchmark} from '@angular/dev-infra-private/benchmark/driver-utilities';
 
 describe('tabs performance benchmarks', () => {
@@ -14,25 +14,36 @@ describe('tabs performance benchmarks', () => {
     browser.rootEl = '#root';
   });
 
-  it('renders a small tab group', async() => {
+  it('renders three tabs', async() => {
     await runBenchmark({
-      id: 'small-tab-group-render',
+      id: 'three-tab-render',
       url: '',
       ignoreBrowserSynchronization: true,
       params: [],
-      prepare: async () => await $('#hide').click(),
-      work: async () => await $('#show-small-tab-group').click(),
+      prepare: async() => await $('#hide').click(),
+      work: async() => await $('#show-three-tabs').click(),
     });
   });
 
-  it('renders a large tab group', async() => {
+  it('renders ten tabs', async() => {
     await runBenchmark({
-      id: 'large-tab-group-render',
+      id: 'ten-tab-render',
       url: '',
       ignoreBrowserSynchronization: true,
       params: [],
-      prepare: async () => await $('#hide').click(),
-      work: async () => await $('#show-large-tab-group').click(),
+      prepare: async() => await $('#hide').click(),
+      work: async() => await $('#show-ten-tabs').click(),
+    });
+  });
+
+  it('renders twenty tabs', async() => {
+    await runBenchmark({
+      id: 'twenty-tab-render',
+      url: '',
+      ignoreBrowserSynchronization: true,
+      params: [],
+      prepare: async() => await $('#hide').click(),
+      work: async() => await $('#show-twenty-tabs').click(),
     });
   });
 
@@ -44,14 +55,36 @@ describe('tabs performance benchmarks', () => {
       url: '',
       ignoreBrowserSynchronization: true,
       params: [],
-      setup: async () => {
-        await $('#show-small-tab-group').click();
+      setup: async() => {
+        await $('#show-three-tabs').click();
         tabs = await $$('.mat-tab-label');
       },
-      prepare: async () => {
+      prepare: async() => {
         tabToClick = tabToClick < tabs.length - 1 ? tabToClick + 1 : 0;
       },
-      work: async () => await tabs[tabToClick].click(),
+      work: async() => await tabs[tabToClick].click(),
+    });
+  });
+
+  it('paginates tabs', async() => {
+    async function isTabPaginatorDisabled(ele: ElementFinder) {
+      return (await ele.getAttribute('class')).includes('mat-tab-header-pagination-disabled');
+    }
+    await runBenchmark({
+      id: 'tab-pagination',
+      url: '',
+      ignoreBrowserSynchronization: true,
+      params: [],
+      prepare: async() => {
+        await $('#hide').click();
+        await $('#show-twenty-tabs').click();
+      },
+      work: async() => {
+        const nextBtn = $('.mat-tab-header-pagination-after');
+        while (!isTabPaginatorDisabled(nextBtn)) {
+          await nextBtn.click();
+        }
+      }
     });
   });
 });
