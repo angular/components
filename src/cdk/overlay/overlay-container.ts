@@ -45,6 +45,7 @@ export class OverlayContainer implements OnDestroy {
 
     if (container && container.parentNode) {
       container.parentNode.removeChild(container);
+      this._containerElement = null;
     }
   }
 
