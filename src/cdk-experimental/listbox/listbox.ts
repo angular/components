@@ -118,7 +118,11 @@ export class CdkOption implements ListKeyManagerOption, Highlightable {
   }
 
   private _emitSelectionChange(isUserInput = false) {
-    this.selectionChange.emit(new OptionSelectionChangeEvent(this, isUserInput));
+      const changeEvent = {
+          source: this,
+          isUserInput: isUserInput
+      }
+    this.selectionChange.emit(changeEvent);
   }
 
   /** Returns the tab index which depends on the disabled property. */
@@ -136,6 +140,7 @@ export class CdkOption implements ListKeyManagerOption, Highlightable {
   }
 
   /** Remove any child from the given element which can be identified as an icon. */
+  // TODO: make this a configurable function that can removed any desired type of node.
   private _removeIcons(element: Element) {
     for (const icon of Array.from(element.querySelectorAll('mat-icon, .material-icons'))) {
       icon.parentNode?.removeChild(icon);
@@ -170,11 +175,21 @@ export class CdkListbox implements AfterContentInit, OnDestroy, OnInit {
   _listKeyManager: ActiveDescendantKeyManager<CdkOption>;
   _selectionModel: SelectionModel<CdkOption>;
 
+  readonly optionSelectionChanges: Observable<OptionSelectionChangeEvent> = defer(() => {
+      const options = this._options;
+
+      return options.changes.pipe(
+          startWith(options),
+          switchMap(() => merge(...options.map(option => option.selectionChange)))
+      );
+  }) as Observable<OptionSelectionChangeEvent>;
+
+
   private _disabled: boolean = false;
   private _multiple: boolean = false;
   private _useActiveDescendant: boolean = true;
   private _activeOption: CdkOption;
-  optionSelectionChanges: Observable<OptionSelectionChangeEvent>;
+
   private readonly _destroyed = new Subject<void>();
 
   @ContentChildren(CdkOption, {descendants: true}) _options: QueryList<CdkOption>;
@@ -184,16 +199,14 @@ export class CdkListbox implements AfterContentInit, OnDestroy, OnInit {
 
   /**
    * Whether the listbox allows multiple options to be selected.
-   * When multiple switches from true to false, all options are deselected.
-   * This is done rather than randomly choosing one of the selected options
-   * to remain selected.
+   * If `multiple` switches from `true` to `false`, all options are deselected.
    */
   @Input()
   get multiple(): boolean {
     return this._multiple;
   }
   set multiple(value: boolean) {
-    this._handleMultipleSwitch(value);
+    this._updateSelectionOnMultiSelectionChange(value);
     this._multiple = coerceBooleanProperty(value);
   }
 
@@ -220,8 +233,13 @@ export class CdkListbox implements AfterContentInit, OnDestroy, OnInit {
 
   ngAfterContentInit() {
     this._initKeyManager();
-    this._initSelectionChange();
     this._initSelectionModel();
+
+    this.optionSelectionChanges.subscribe(event => {
+      this._emitChangeEvent(event.source);
+      this._updateSelectionModel(event.source);
+      this.setActiveOption(event.source);
+    });
   }
 
   ngOnDestroy() {
@@ -236,23 +254,6 @@ export class CdkListbox implements AfterContentInit, OnDestroy, OnInit {
 
     this._listKeyManager.change.pipe(takeUntil(this._destroyed)).subscribe(() => {
       this._updateActiveOption();
-    });
-  }
-
-  private _initSelectionChange() {
-    this.optionSelectionChanges = defer(() => {
-      const options = this._options;
-
-      return options.changes.pipe(
-          startWith(options),
-          switchMap(() => merge(...options.map(option => option.selectionChange)))
-      );
-    }) as Observable<OptionSelectionChangeEvent>;
-
-    this.optionSelectionChanges.subscribe(event => {
-      this._emitChangeEvent(event.source);
-      this._updateSelectionModel(event.source);
-      this.setActiveOption(event.source);
     });
   }
 
@@ -294,7 +295,11 @@ export class CdkListbox implements AfterContentInit, OnDestroy, OnInit {
 
   /** Emits a selection change event, called when an option has its selected state changed. */
   _emitChangeEvent(option: CdkOption) {
-    this.selectionChange.emit(new ListboxSelectionChangeEvent(this, option));
+    const changeEvent = {
+      source: this,
+      option: option
+    }
+    this.selectionChange.emit(changeEvent);
   }
 
   /** Updates the selection model after a toggle. */
@@ -327,11 +332,7 @@ export class CdkListbox implements AfterContentInit, OnDestroy, OnInit {
       return;
     }
 
-    const previouslyActive = this._activeOption;
-    if (previouslyActive) {
-      previouslyActive.deactivate();
-    }
-
+    this._activeOption?.deactivate();
     this._activeOption = this._listKeyManager.activeItem;
     this._activeOption.activate();
 
@@ -340,8 +341,10 @@ export class CdkListbox implements AfterContentInit, OnDestroy, OnInit {
     }
   }
 
-  private _handleMultipleSwitch(value: boolean) {
+  /** Updates selection states of options when the 'multiple' property changes. */
+  private _updateSelectionOnMultiSelectionChange(value: boolean) {
     if (this.multiple && !value) {
+      // Deselect all options instead of arbitrarily keeping one of the selected options.
       this.setAllSelected(false);
     } else if (!this.multiple && value) {
       this._selectionModel = new SelectionModel<CdkOption>(value, this._selectionModel.selected);
@@ -372,8 +375,6 @@ export class CdkListbox implements AfterContentInit, OnDestroy, OnInit {
         this._emitChangeEvent(option);
         this._updateSelectionModel(option);
       }
-
-      console.log(option.selected);
     }
   }
 
@@ -388,19 +389,19 @@ export class CdkListbox implements AfterContentInit, OnDestroy, OnInit {
 }
 
 /** Change event that is being fired whenever the selected state of an option changes. */
-export class ListboxSelectionChangeEvent {
-  constructor(
-      /** Reference to the listbox that emitted the event. */
-      readonly source: CdkListbox,
-      /** Reference to the option that has been changed. */
-      readonly option: CdkOption) {}
+export interface ListboxSelectionChangeEvent {
+  /** Reference to the listbox that emitted the event. */
+  readonly source: CdkListbox;
+
+  /** Reference to the option that has been changed. */
+  readonly option: CdkOption;
 }
 
 /** Event object emitted by MatOption when selected or deselected. */
-export class OptionSelectionChangeEvent {
-  constructor(
-      /** Reference to the option that emitted the event. */
-      public source: CdkOption,
-      /** Whether the change in the option's value was a result of a user action. */
-      public isUserInput = false) { }
+export interface OptionSelectionChangeEvent {
+  /** Reference to the option that emitted the event. */
+  source: CdkOption;
+
+  /** Whether the change in the option's value was a result of a user action. */
+  isUserInput: boolean;
 }

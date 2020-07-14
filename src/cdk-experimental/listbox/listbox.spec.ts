@@ -329,7 +329,7 @@ describe('CdkOption', () => {
     });
   });
 
-  describe('multiselectable tests', () => {
+  describe('with multiple selection', () => {
     let fixture: ComponentFixture<ListboxMultiselect>;
 
     let testComponent: ListboxMultiselect;
@@ -472,7 +472,7 @@ describe('CdkOption', () => {
     });
   });
 
-  describe('aria active descendant tests', () => {
+  describe('with aria active descendant', () => {
     let fixture: ComponentFixture<ListboxActiveDescendant>;
 
     let testComponent: ListboxActiveDescendant;
@@ -507,7 +507,7 @@ describe('CdkOption', () => {
       optionElements = options.map(o => o.nativeElement);
     }));
 
-    it('should update aria active descendant', () => {
+    it('should update aria active descendant when enabled', () => {
       expect(listboxElement.hasAttribute('aria-activedescendant')).toBeFalse();
 
       listboxInstance.setActiveOption(optionInstances[0]);
