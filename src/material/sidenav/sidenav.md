@@ -210,7 +210,7 @@ represents the primary content of the page, it may make sense to mark it `role="
 specific role makes sense, `role="region"` is again a good fallback.
 
 #### Focus management
-The sidenav captures focus automatically by default, unless it's in the side mode. Focus capturing can be enabled or disabled explicitly, using the `autoFocus` input.
+The sidenav has the ability to capture focus. This behavior is turned on for the `push` and `over` modes and it is off for `side` mode. You can change its default behavior by the `autoFocus` input.
 
 By default the first tabbable element will recieve focus upon open. If you want a different element to be focused, you can set the cdkFocusInitial attribute on it.
 
