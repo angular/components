@@ -45,6 +45,9 @@ export class CdkOption implements ListKeyManagerOption, Highlightable {
   private _disabled: boolean = false;
   _active: boolean = false;
 
+  /** The id of the option, set to a uniqueid if the user does not provide one. */
+  @Input() id = `cdk-option-${nextId++}`;
+
   @Input()
   get selected(): boolean {
     return this._selected;
@@ -54,9 +57,6 @@ export class CdkOption implements ListKeyManagerOption, Highlightable {
       this._selected = coerceBooleanProperty(value);
     }
   }
-
-  /** The id of the option, set to a uniqueid if the user does not provide one. */
-  @Input() id = `cdk-option-${nextId++}`;
 
   @Input()
   get disabled(): boolean {
@@ -90,9 +90,12 @@ export class CdkOption implements ListKeyManagerOption, Highlightable {
 
   /** Sets the active property false. */
   deactivate() {
-    this._active = false;
+    if (!this._isInteractionDisabled()) {
+      this._active = false;
+    }
   }
 
+  /** Sets the selected property true if it was false. */
   select() {
     if (!this.selected) {
       this.selected = true;
@@ -100,6 +103,7 @@ export class CdkOption implements ListKeyManagerOption, Highlightable {
     }
   }
 
+  /** Sets the selected property false if it was true. */
   deselect() {
     if (this.selected) {
       this.selected = false;
@@ -117,12 +121,12 @@ export class CdkOption implements ListKeyManagerOption, Highlightable {
     return (this.listbox.disabled || this._disabled);
   }
 
+  /** Emits a change event extending the Option Selection Change Event interface. */
   private _emitSelectionChange(isUserInput = false) {
-    const changeEvent = {
+    this.selectionChange.emit({
       source: this,
       isUserInput: isUserInput
-    };
-    this.selectionChange.emit(changeEvent);
+    });
   }
 
   /** Returns the tab index which depends on the disabled property. */
@@ -140,17 +144,19 @@ export class CdkOption implements ListKeyManagerOption, Highlightable {
   }
 
   /** Remove any child from the given element which can be identified as an icon. */
-  // TODO: make this a configurable function that can removed any desired type of node.
   private _removeIcons(element: Element) {
+    // TODO: make this a configurable function that can removed any desired type of node.
     for (const icon of Array.from(element.querySelectorAll('mat-icon, .material-icons'))) {
       icon.parentNode?.removeChild(icon);
     }
   }
 
+  /** Sets the active property to true to enable the active css class. */
   setActiveStyles() {
     this._active = true;
   }
 
+  /** Sets the active property to false to disable the active css class. */
   setInactiveStyles() {
     this._active = false;
   }
@@ -295,11 +301,10 @@ export class CdkListbox implements AfterContentInit, OnDestroy, OnInit {
 
   /** Emits a selection change event, called when an option has its selected state changed. */
   _emitChangeEvent(option: CdkOption) {
-    const changeEvent = {
+    this.selectionChange.emit({
       source: this,
       option: option
-    };
-    this.selectionChange.emit(changeEvent);
+    });
   }
 
   /** Updates the selection model after a toggle. */
