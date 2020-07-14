@@ -8,6 +8,10 @@ component_benchmark(
         "@npm//protractor",
         "@npm//@types/jasmine",
     ],
+    ng_assets = [
+        ":app.module.html",
+        ":basic-table.html",
+    ],
     ng_deps = [
         "@npm//@angular/core",
         "@npm//@angular/platform-browser",
@@ -17,10 +21,6 @@ component_benchmark(
         ":app.module.ts",
         ":basic-table.ts",
         ":fake-table-data.ts",
-    ],
-    ng_assets = [
-        ":app.module.html",
-        ":basic-table.html",
     ],
     prefix = "",
     styles = ["//src/material/prebuilt-themes:indigo-pink"],
