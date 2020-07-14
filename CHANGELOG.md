@@ -1,3 +1,41 @@
+## 10.0.2 "aluminum-alliteration" (2020-07-14)
+
+### cdk
+
+|            |                       |
+| ---------- | --------------------- |
+| bug fix |  **drag-drop:** pointer position calculation for SVG with viewBox ([#19863](https://github.com/angular/components/issues/19863)) ([190500a](https://github.com/angular/components/commit/190500a)) |
+| bug fix |  **platform:** rtl scroll axis incorrectly determined in Safari macOS ([#19830](https://github.com/angular/components/issues/19830)) ([09b2ae0](https://github.com/angular/components/commit/09b2ae0)), closes [#14609](https://github.com/angular/components/issues/14609) |
+| bug fix |  **schematics:** errors when attempting to read some files ([#19783](https://github.com/angular/components/issues/19783)) ([4f76a28](https://github.com/angular/components/commit/4f76a28)), closes [#19779](https://github.com/angular/components/issues/19779) |
+
+### material
+
+|            |                       |
+| ---------- | --------------------- |
+| bug fix |  **autocomplete:** don't close when clicking inside custom origin ([#19784](https://github.com/angular/components/issues/19784)) ([c4fe609](https://github.com/angular/components/commit/c4fe609)), closes [#19771](https://github.com/angular/components/issues/19771) |
+| bug fix |  **datepicker:** don't set aria-labelledby if form field does not have a label ([#19639](https://github.com/angular/components/issues/19639)) ([89da95b](https://github.com/angular/components/commit/89da95b)) |
+| bug fix |  **dialog:** restore focus with the proper focus origin ([#9257](https://github.com/angular/components/issues/9257)) ([8d7b020](https://github.com/angular/components/commit/8d7b020)), closes [#8420](https://github.com/angular/components/issues/8420) |
+| bug fix |  **drag-drop:** not starting auto scroll when inside boundary ([#19865](https://github.com/angular/components/issues/19865)) ([3db41f6](https://github.com/angular/components/commit/3db41f6)), closes [#18596](https://github.com/angular/components/issues/18596) |
+| bug fix |  **list:** single selection list selected state not shown on touch devices ([#19877](https://github.com/angular/components/issues/19877)) ([c88bf33](https://github.com/angular/components/commit/c88bf33)), closes [#19876](https://github.com/angular/components/issues/19876) |
+| bug fix |  **list:** use flexbox to size mat-line elements ([#19809](https://github.com/angular/components/issues/19809)) ([#19819](https://github.com/angular/components/issues/19819)) ([5db279e](https://github.com/angular/components/commit/5db279e)) |
+| bug fix |  **ng-update:** properly handle update from different working directory ([bb8e04b](https://github.com/angular/components/commit/bb8e04b)), closes [#19779](https://github.com/angular/components/issues/19779) |
+
+### google-maps
+
+|            |                       |
+| ---------- | --------------------- |
+| bug fix |  rendering blank if custom options with no center are provided ([#19916](https://github.com/angular/components/issues/19916)) ([a34e6bb](https://github.com/angular/components/commit/a34e6bb)), closes [#19908](https://github.com/angular/components/issues/19908) |
+
+### material-experimental
+
+|            |                       |
+| ---------- | --------------------- |
+| bug fix |  **mdc-list:** fix infinite loop on init ([#19930](https://github.com/angular/components/issues/19930)) ([9ad72cf](https://github.com/angular/components/commit/9ad72cf)) |
+| bug fix |  **mdc-snack-bar:** error during server-side rendering ([#19922](https://github.com/angular/components/issues/19922)) ([8bb6cfa](https://github.com/angular/components/commit/8bb6cfa)) |
+| bug fix |  **mdc-snack-bar:** support dark themes ([#19926](https://github.com/angular/components/issues/19926)) ([9f8683a](https://github.com/angular/components/commit/9f8683a)) |
+| feature |  **snack-bar:** add MDC-based snack-bar ([#19800](https://github.com/angular/components/issues/19800)) ([3d1c539](https://github.com/angular/components/commit/3d1c539)) |
+
+
 ## 10.0.1 "platinum-sideburns" (2020-06-29)
 
 ### cdk
