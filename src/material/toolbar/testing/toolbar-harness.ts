@@ -8,9 +8,9 @@
 
 
 import {ContentContainerComponentHarness, HarnessPredicate} from '@angular/cdk/testing';
-import {ToolbarHarnessFilters} from '@angular/material/toolbar/testing/toolbar-harness-filters';
+import {ToolbarHarnessFilters} from './toolbar-harness-filters';
 
-/** Selectors for different sections of the mat-toolbar that can container user content. */
+/** Selectors for different sections of the mat-toolbar that contain user content. */
 export const enum MatToolbarSection {
   ROW = '.mat-toolbar-row'
 }
@@ -19,8 +19,7 @@ export const enum MatToolbarSection {
 export class MatToolbarHarness extends ContentContainerComponentHarness<MatToolbarSection> {
   static hostSelector = 'mat-toolbar';
 
-  getToolbars = this.locatorForAll('mat-toolbar-row');
-
+  private _getRows = this.locatorForAll('mat-toolbar-row');
 
   /**
    * Gets a `HarnessPredicate` that can be used to search for a `MatToolbarHarness` that meets
@@ -31,22 +30,23 @@ export class MatToolbarHarness extends ContentContainerComponentHarness<MatToolb
   static with(options: ToolbarHarnessFilters = {}): HarnessPredicate<MatToolbarHarness> {
     return new HarnessPredicate(MatToolbarHarness, options)
       .addOption('text', options.text,
-        (harness, text) => HarnessPredicate.stringMatches(harness.getText(), text));
+        (harness, text) => HarnessPredicate.stringMatches(harness._getText(), text));
   }
 
+  /** Whether the toolbar has multiple rows. */
   async hasMultipleRows(): Promise<boolean> {
     return (await this.host()).hasClass('mat-toolbar-multiple-rows');
   }
 
   /** Gets all of the toolbar's content as text. */
-  async getText(): Promise<string> {
+  private async _getText(): Promise<string> {
     return (await this.host()).text();
   }
 
-  /** Gets the toolbar's content as text separated by rows. */
+  /** Gets the text of each row in the toolbar. */
   async getRowsAsText(): Promise<string[]> {
-    const toolbars = await this.getToolbars();
+    const toolbars = await this._getRows();
     return toolbars.length ? Promise.all(toolbars.map(t => t.text())) :
-      Promise.all([this.getText()]);
+      Promise.all([this._getText()]);
   }
 }

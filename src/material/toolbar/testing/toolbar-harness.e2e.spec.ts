@@ -1,7 +1,7 @@
 import {HarnessLoader} from '@angular/cdk/testing';
 import {browser} from 'protractor';
 import {ProtractorHarnessEnvironment} from '@angular/cdk/testing/protractor';
-import {MatToolbarHarness} from '@angular/material/toolbar/testing/toolbar-harness';
+import {MatToolbarHarness} from '@angular/material/toolbar/testing';
 
 describe('toolbar harness', () => {
   let loader: HarnessLoader;
