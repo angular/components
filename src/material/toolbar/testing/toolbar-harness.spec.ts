@@ -4,4 +4,4 @@ import {MatToolbarHarness} from '@angular/material/toolbar/testing/toolbar-harne
 
 describe('Non-MDC-based MatToolbarHarness', () => {
   runHarnessTexts(MatToolbarModule, MatToolbarHarness);
-})
+});

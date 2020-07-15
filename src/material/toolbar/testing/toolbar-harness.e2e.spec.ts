@@ -15,19 +15,13 @@ describe('toolbar harness', () => {
   it('should get toolbar text', async () => {
     const toolbar = await loader.getHarness(MatToolbarHarness);
 
-    expect(await toolbar.getText()).toBe([
-      'CustomToolbar',
-      'Second Line',
-      'verified_user',
-      'Third Line',
-      'favorite',
-      'delete'
-    ].join('\n'))
-  })
+    expect(await toolbar.getRowsAsText())
+      .toEqual(['Custom Toolbar', 'Second Line\nverified_user', 'Third Line\nfavorite\ndelete']);
+  });
 
   it('should have multiple rows', async () => {
-    const toolbar = await  loader.getHarness(MatToolbarHarness);
+    const toolbar = await loader.getHarness(MatToolbarHarness);
 
-    expect(await toolbar.isMultiRow()).toBeTrue();
-  })
-})
+    expect(await toolbar.hasMultipleRows()).toBe(true);
+  });
+});
