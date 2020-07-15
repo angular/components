@@ -16,7 +16,7 @@ import {
   QueryList
 } from '@angular/core';
 import {ActiveDescendantKeyManager, Highlightable, ListKeyManagerOption} from '@angular/cdk/a11y';
-import {END, ENTER, HOME, SPACE} from '@angular/cdk/keycodes';
+import {DOWN_ARROW, END, ENTER, HOME, SPACE, UP_ARROW} from '@angular/cdk/keycodes';
 import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
 import {SelectionChange, SelectionModel} from '@angular/cdk/collections';
 import {defer, merge, Observable, Subject} from 'rxjs';
@@ -259,7 +259,10 @@ export class CdkListbox implements AfterContentInit, OnDestroy, OnInit {
 
   private _initKeyManager() {
     this._listKeyManager = new ActiveDescendantKeyManager(this._options)
-        .withWrap().withVerticalOrientation().withTypeAhead();
+        .withWrap()
+        .withVerticalOrientation()
+        .withTypeAhead()
+        .withAllowedModifierKeys(['shiftKey']);
 
     this._listKeyManager.change.pipe(takeUntil(this._destroyed)).subscribe(() => {
       this._updateActiveOption();
@@ -287,6 +290,7 @@ export class CdkListbox implements AfterContentInit, OnDestroy, OnInit {
 
     const manager = this._listKeyManager;
     const {keyCode} = event;
+    const previousActiveIndex = manager.activeItemIndex;
 
     if (keyCode === HOME || keyCode === END) {
       event.preventDefault();
@@ -299,6 +303,12 @@ export class CdkListbox implements AfterContentInit, OnDestroy, OnInit {
 
     } else {
       manager.onKeydown(event);
+    }
+
+    /** Will select an option if shift was pressed while navigating to the option */
+    const isArrow = (keyCode === UP_ARROW || keyCode === DOWN_ARROW);
+    if (isArrow && event.shiftKey && previousActiveIndex !== this._listKeyManager.activeItemIndex) {
+      this._toggleActiveOption();
     }
   }
 
