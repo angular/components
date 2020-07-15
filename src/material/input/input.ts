@@ -239,6 +239,7 @@ export class MatInput extends _MatInputMixinBase implements MatFormFieldControl<
     private _autofillMonitor: AutofillMonitor,
     ngZone: NgZone,
     // @breaking-change 8.0.0 `_formField` parameter to be made required.
+    // tslint:disable-next-line lightweight-tokens
     @Optional() private _formField?: MatFormField) {
     super(_defaultErrorStateMatcher, _parentForm, _parentFormGroup, ngControl);
 
