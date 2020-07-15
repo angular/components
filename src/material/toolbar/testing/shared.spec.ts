@@ -8,7 +8,7 @@ import {
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 
-/** Shared tests to run on both the original and MDC-based badges. */
+/** Shared tests to run on both the original and MDC-based toolbars. */
 export function runHarnessTests(
   toolbarModule: typeof MatToolbarModule, toolbarHarness: typeof MatToolbarHarness) {
   let fixture: ComponentFixture<ToolbarHarnessTest>;

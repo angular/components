@@ -45,8 +45,7 @@ export class MatToolbarHarness extends ContentContainerComponentHarness<MatToolb
 
   /** Gets the text of each row in the toolbar. */
   async getRowsAsText(): Promise<string[]> {
-    const toolbars = await this._getRows();
-    return toolbars.length ? Promise.all(toolbars.map(t => t.text())) :
-      Promise.all([this._getText()]);
+    const rows = await this._getRows();
+    return Promise.all(rows.length ? rows.map(r => r.text()) : [this._getText()]);
   }
 }
