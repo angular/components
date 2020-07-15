@@ -1262,6 +1262,7 @@ describe('MatDatepicker', () => {
       afterEach(fakeAsync(() => {
         testComponent.datepicker.close();
         fixture.detectChanges();
+        flush();
       }));
 
       it('should use min and max dates specified by the input', () => {
@@ -1354,6 +1355,37 @@ describe('MatDatepicker', () => {
 
         expect(testComponent.model.valid).toBe(true);
         expect(testComponent.date).toBe(validDate);
+      }));
+
+      it('should update the calendar when the min/max dates change', fakeAsync(() => {
+        const getDisabledCells = () => {
+          return document.querySelectorAll('.mat-calendar-body-disabled').length;
+        };
+
+        testComponent.date = new Date(2020, JAN, 5);
+        fixture.detectChanges();
+
+        testComponent.minDate = new Date(2020, JAN, 3);
+        testComponent.maxDate = new Date(2020, JAN, 7);
+        fixture.detectChanges();
+
+        testComponent.datepicker.open();
+        fixture.detectChanges();
+        flush();
+
+        let disabledCellCount = getDisabledCells();
+        expect(disabledCellCount).not.toBe(0);
+
+        testComponent.minDate = new Date(2020, JAN, 1);
+        fixture.detectChanges();
+
+        expect(getDisabledCells()).not.toBe(disabledCellCount);
+        disabledCellCount = getDisabledCells();
+
+        testComponent.maxDate = new Date(2020, JAN, 10);
+        fixture.detectChanges();
+
+        expect(getDisabledCells()).not.toBe(disabledCellCount);
       }));
 
     });
