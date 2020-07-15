@@ -1,0 +1,15 @@
+.example-listbox {
+  list-style-type: none;
+  border: 1px solid black;
+  width: fit-content;
+  cursor: default;
+  padding: 0px;
+}
+
+.cdk-option-selected {
+  background: cornflowerblue;
+}
+
+.cdk-option-active {
+  background: lightgrey;
+}

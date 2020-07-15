@@ -1,0 +1,10 @@
+<ul cdkListbox class="example-listbox" [multiple]="multiSelectable" [useActiveDescendant]="activeDescendant">
+  <li class="example-option" cdkOption>Apple</li>
+  <li cdkOption>Orange</li>
+  <li cdkOption>Grapefruit</li>
+  <li cdkOption>Peach</li>
+</ul>
+
+<button (click)="toggleMultiple()">Toggle Multiple</button>
+<br>
+<button (click)="toggleActiveDescendant()">Toggle Active Descendant</button>
