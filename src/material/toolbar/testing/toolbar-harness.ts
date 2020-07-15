@@ -19,7 +19,7 @@ export const enum MatToolbarSection {
 export class MatToolbarHarness extends ContentContainerComponentHarness<MatToolbarSection> {
   static hostSelector = 'mat-toolbar';
 
-  private _getRows = this.locatorForAll('mat-toolbar-row');
+  private _getRows = this.locatorForAll(MatToolbarSection.ROW);
 
   /**
    * Gets a `HarnessPredicate` that can be used to search for a `MatToolbarHarness` that meets
