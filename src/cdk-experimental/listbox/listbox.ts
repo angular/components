@@ -21,6 +21,7 @@ import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
 import {SelectionChange, SelectionModel} from '@angular/cdk/collections';
 import {defer, merge, Observable, Subject} from 'rxjs';
 import {startWith, switchMap, takeUntil} from 'rxjs/operators';
+import {ControlValueAccessor} from "@angular/forms";
 
 let nextId = 0;
 
@@ -66,6 +67,9 @@ export class CdkOption implements ListKeyManagerOption, Highlightable {
   set disabled(value: boolean) {
     this._disabled = coerceBooleanProperty(value);
   }
+
+  /** The form value of the option. */
+  @Input() value: any;
 
   @Output() readonly selectionChange: EventEmitter<OptionSelectionChangeEvent> =
       new EventEmitter<OptionSelectionChangeEvent>();
@@ -178,11 +182,17 @@ export class CdkOption implements ListKeyManagerOption, Highlightable {
       '[attr.aria-activedescendant]': '_getAriaActiveDescendant()'
     }
 })
-export class CdkListbox implements AfterContentInit, OnDestroy, OnInit {
+export class CdkListbox implements AfterContentInit, OnDestroy, OnInit, ControlValueAccessor {
 
   _listKeyManager: ActiveDescendantKeyManager<CdkOption>;
   _selectionModel: SelectionModel<CdkOption>;
   _tabIndex = 0;
+
+  /** `View -> model callback called when select has been touched` */
+  _onTouched: () => void = () => {};
+
+  /** `View -> model callback called when value changes` */
+  _onChange: (value: any) => void = () => {};
 
   readonly optionSelectionChanges: Observable<OptionSelectionChangeEvent> = defer(() => {
     const options = this._options;
@@ -197,7 +207,6 @@ export class CdkListbox implements AfterContentInit, OnDestroy, OnInit {
   private _multiple: boolean = false;
   private _useActiveDescendant: boolean = true;
   private _activeOption: CdkOption;
-
   private readonly _destroyed = new Subject<void>();
 
   @ContentChildren(CdkOption, {descendants: true}) _options: QueryList<CdkOption>;
@@ -234,6 +243,8 @@ export class CdkListbox implements AfterContentInit, OnDestroy, OnInit {
   set useActiveDescendant(shouldUseActiveDescendant: boolean) {
     this._useActiveDescendant = coerceBooleanProperty(shouldUseActiveDescendant);
   }
+
+  @Input() compareWith: (o1: any, o2: any) => boolean = (a1, a2) => a1 === a2;
 
   ngOnInit() {
     this._selectionModel = new SelectionModel<CdkOption>(this.multiple);
@@ -371,33 +382,84 @@ export class CdkListbox implements AfterContentInit, OnDestroy, OnInit {
   /** Selects the given option if the option and listbox aren't disabled. */
   select(option: CdkOption) {
     if (!this.disabled && !option.disabled) {
+      const wasSelected = option.selected
       option.select();
-    }
-  }
 
-  /** Deselects the given option if the option and listbox aren't disabled. */
-  deselect(option: CdkOption) {
-    if (!this.disabled && !option.disabled) {
-      option.deselect();
-    }
-  }
-
-  /** Sets the selected state of all options to be the given value. */
-  setAllSelected(isSelected: boolean) {
-    for (const option of this._options.toArray()) {
-      const wasSelected = option.selected;
-      isSelected ? this.select(option) : this.deselect(option);
-
-      if (wasSelected !== isSelected) {
+      if (!wasSelected) {
         this._emitChangeEvent(option);
         this._updateSelectionModel(option);
       }
     }
   }
 
+  /** Deselects the given option if the option and listbox aren't disabled. */
+  deselect(option: CdkOption) {
+    if (!this.disabled && !option.disabled) {
+      const wasSelected = option.selected;
+      option.deselect();
+
+      if (wasSelected) {
+        this._emitChangeEvent(option);
+        this._updateSelectionModel(option);
+      }
+    }
+  }
+
+  /** Sets the selected state of all options to be the given value. */
+  setAllSelected(isSelected: boolean) {
+    for (const option of this._options.toArray()) {
+      isSelected ? this.select(option) : this.deselect(option);
+    }
+  }
+
   /** Updates the key manager's active item to the given option. */
   setActiveOption(option: CdkOption) {
     this._listKeyManager.updateActiveItem(option);
+  }
+
+  /**
+   * Saves a callback function to be invoked when the select's value
+   * changes from user input. Required to implement ControlValueAccessor.
+   */
+  registerOnChange(fn: (value: any) => void): void {
+    this._onChange = fn;
+  }
+
+  /**
+   * Saves a callback function to be invoked when the select is blurred
+   * by the user. Required to implement ControlValueAccessor.
+   */
+  registerOnTouched(fn: () => {}): void {
+    this._onTouched = fn;
+  }
+
+  /** Sets the select's value. Required to implement ControlValueAccessor. */
+  writeValue(value: any): void {
+    if (this._options) {
+      this._setSelectionByValue(value);
+    }
+  }
+
+  /** Disables the select. Required to implement ControlValueAccessor. */
+  setDisabledState(isDisabled: boolean) {
+    this.disabled = isDisabled;
+  }
+
+  /** Selects an option that has the corresponding given value. */
+  private _setSelectionByValue(values: any | any[]) {
+    for (const option of this._options) {
+      this.deselect(option);
+    }
+
+    values.forEach((value: any) => {
+      const correspondingOption = this._options.find((option: CdkOption) => {
+        return option.value != null && this.compareWith(option.value,  value);
+      });
+
+      if (correspondingOption) {
+        this.select(correspondingOption);
+      }
+    })
   }
 
   static ngAcceptInputType_disabled: BooleanInput;
@@ -421,4 +483,14 @@ export interface OptionSelectionChangeEvent {
 
   /** Whether the change in the option's value was a result of a user action. */
   isUserInput: boolean;
+}
+
+/**
+ * Returns an exception to be thrown when attempting to assign a non-array value to a select
+ * in `multiple` mode. Note that `undefined` and `null` are still valid values to allow for
+ * resetting the value.
+ * @docs-private
+ */
+export function getListboxNonArrayValueError(): Error {
+  return Error('Value must be an array in multiple-selection mode.');
 }
