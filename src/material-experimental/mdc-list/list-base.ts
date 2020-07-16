@@ -37,28 +37,38 @@ function toggleClass(el: Element, className: string, on: boolean) {
 class ListAdapter implements MDCListAdapter {
   constructor(private _delegate: MatInteractiveListBase) {}
 
-  getListItemCount = () => this._delegate._items.length;
-  listItemAtIndexHasClass =
-      (index: number, className: string) =>
-        this._delegate._elementAtIndex(index).classList.contains(className)
-  addClassForElementIndex =
-      (index: number, className: string) =>
-        this._delegate._elementAtIndex(index).classList.add(className)
-  removeClassForElementIndex =
-      (index: number, className: string) =>
-        this._delegate._elementAtIndex(index).classList.remove(className)
-  getAttributeForElementIndex = (index: number, attr: string) =>
-    this._delegate._elementAtIndex(index).getAttribute(attr)
-  setAttributeForElementIndex =
-      (index: number, attr: string, value: string) =>
-        this._delegate._elementAtIndex(index).setAttribute(attr, value)
-  getFocusedElementIndex = () =>
-    this._delegate._indexForElement(this._delegate.getDocument()?.activeElement)
-  isFocusInsideList = () =>
-    this._delegate.getElement().nativeElement.contains(this._delegate.getDocument()?.activeElement)
-  isRootFocused = () =>
-    this._delegate.getElement().nativeElement === this._delegate.getDocument()?.activeElement
-  focusItemAtIndex = (index: number) =>  this._delegate._elementAtIndex(index).focus();
+  getListItemCount() {
+    return this._delegate._items.length;
+  }
+  listItemAtIndexHasClass(index: number, className: string) {
+    return this._delegate._elementAtIndex(index).classList.contains(className);
+  }
+  addClassForElementIndex(index: number, className: string) {
+    return this._delegate._elementAtIndex(index).classList.add(className);
+  }
+  removeClassForElementIndex(index: number, className: string) {
+    return this._delegate._elementAtIndex(index).classList.remove(className);
+  }
+  getAttributeForElementIndex(index: number, attr: string) {
+    return this._delegate._elementAtIndex(index).getAttribute(attr);
+  }
+  setAttributeForElementIndex(index: number, attr: string, value: string) {
+    return this._delegate._elementAtIndex(index).setAttribute(attr, value);
+  }
+  getFocusedElementIndex() {
+    return this._delegate._indexForElement(this._delegate.getDocument()?.activeElement);
+  }
+  isFocusInsideList() {
+    return this._delegate.getElement().nativeElement.contains(
+      this._delegate.getDocument()?.activeElement);
+  }
+  isRootFocused() {
+    return this._delegate.getElement().nativeElement ===
+      this._delegate.getDocument()?.activeElement;
+  }
+  focusItemAtIndex(index: number) {
+    return this._delegate._elementAtIndex(index).focus();
+  }
 
   // MDC uses this method to disable focusable children of list items. However, we believe that
   // this is not an accessible pattern and should be avoided, therefore we intentionally do not
@@ -67,19 +77,27 @@ class ListAdapter implements MDCListAdapter {
   // A user who feels they really need this feature can simply listen to the `(focus)` and
   // `(blur)` events on the list item and enable/disable focus on the children themselves as
   // appropriate.
-  setTabIndexForListItemChildren = () => {};
+  setTabIndexForListItemChildren() {}
 
   // The following methods have a dummy implementation in the base class because they are only
   // applicable to certain types of lists. They should be implemented for the concrete classes
   // where they are applicable.
-  hasCheckboxAtIndex = () => false;
-  hasRadioAtIndex = () => false;
-  setCheckedCheckboxOrRadioAtIndex = () => {};
-  isCheckboxCheckedAtIndex = () => false;
+  hasCheckboxAtIndex() {
+    return false;
+  }
+  hasRadioAtIndex() {
+    return false;
+  }
+  setCheckedCheckboxOrRadioAtIndex() {}
+  isCheckboxCheckedAtIndex() {
+    return false;
+  }
 
   // TODO(mmalerba): Determine if we need to implement these.
-  getPrimaryTextAtIndex = () => '';
-  notifyAction = () => {};
+  getPrimaryTextAtIndex() {
+    return '';
+  }
+  notifyAction() {}
 }
 
 @Directive()
