@@ -194,9 +194,6 @@ $margin-promotion-sections-small: 15px;
   * Rules for when the device is detected to be a small screen.
   */
 @media (max-width: 720px) {
-  .docs-header-background {
-    height: 200px;
-  }
 
   .docs-header-start {
     margin: $margin-promotion-sections-small 0 0 0;
