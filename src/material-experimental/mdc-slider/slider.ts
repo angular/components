@@ -74,33 +74,33 @@ class SliderAdapter implements MDCSliderAdapter {
   constructor(private _delegate: MatSlider) {}
 
   hasClass = (className: string) =>
-    this._delegate.getElementRef().nativeElement.classList.contains(className);
+    this._delegate._elementRef.nativeElement.classList.contains(className)
   addClass = (className: string) =>
-    this._delegate.getElementRef().nativeElement.classList.add(className);
+    this._delegate._elementRef.nativeElement.classList.add(className)
   removeClass = (className: string) =>
-    this._delegate.getElementRef().nativeElement.classList.remove(className);
-  getAttribute = (name: string) => this._delegate.getElementRef().nativeElement.getAttribute(name);
+    this._delegate._elementRef.nativeElement.classList.remove(className)
+  getAttribute = (name: string) => this._delegate._elementRef.nativeElement.getAttribute(name);
   setAttribute = (name: string, value: string) =>
-    this._delegate.getElementRef().nativeElement.setAttribute(name, value);
+    this._delegate._elementRef.nativeElement.setAttribute(name, value)
   removeAttribute = (name: string) =>
-    this._delegate.getElementRef().nativeElement.removeAttribute(name);
-  computeBoundingRect = () => this._delegate.getElementRef().nativeElement.getBoundingClientRect();
-  getTabIndex = () => this._delegate.getElementRef().nativeElement.tabIndex;
+    this._delegate._elementRef.nativeElement.removeAttribute(name)
+  computeBoundingRect = () => this._delegate._elementRef.nativeElement.getBoundingClientRect();
+  getTabIndex = () => this._delegate._elementRef.nativeElement.tabIndex;
   registerInteractionHandler = (evtType: any, handler: (this: HTMLElement, ev: any) => any) =>
       // Interaction event handlers (which handle keyboard interaction) cannot be passive
       // as they will prevent the default behavior. Additionally we can't run these event
       // handlers outside of the Angular zone because we rely on the events to cause the
       // component tree to be re-checked.
       // TODO: take in the event listener options from the adapter once MDC supports it.
-      this._delegate.getElementRef().nativeElement.addEventListener(
+      this._delegate._elementRef.nativeElement.addEventListener(
         evtType, handler, activeListenerOptions)
   deregisterInteractionHandler = (evtType: any, handler: (this: HTMLElement, ev: any) => any) =>
-      this._delegate.getElementRef().nativeElement.removeEventListener(evtType, handler)
+      this._delegate._elementRef.nativeElement.removeEventListener(evtType, handler)
   registerThumbContainerInteractionHandler =
     (evtType: any, handler: (this: HTMLElement, ev: any) => any) => {
     // The thumb container interaction handlers are currently just used for transition
     // events which don't need to run in the Angular zone.
-    this._delegate.getNgZone().runOutsideAngular(() => {
+    this._delegate._ngZone.runOutsideAngular(() => {
       this._delegate._thumbContainer.nativeElement
         .addEventListener(evtType, handler, passiveListenerOptions);
     });
@@ -115,35 +115,35 @@ class SliderAdapter implements MDCSliderAdapter {
       // prevent the default behavior. Additionally we can't run these event handlers
       // outside of the Angular zone because we rely on the events to cause the component
       // tree to be re-checked.
-      document.body.addEventListener(evtType, handler);
+      document.body.addEventListener(evtType, handler)
   deregisterBodyInteractionHandler = (evtType: any, handler: (this: HTMLElement, ev: any) => any) =>
-      document.body.removeEventListener(evtType, handler);
+      document.body.removeEventListener(evtType, handler)
   registerResizeHandler = (handler: (this: Window, ev: UIEvent) => any) => {
     // The resize handler is currently responsible for detecting slider dimension
     // changes and therefore doesn't cause a value change that needs to be propagated.
-    this._delegate.getNgZone().runOutsideAngular(() => window.addEventListener('resize', handler));
+    this._delegate._ngZone.runOutsideAngular(() => window.addEventListener('resize', handler));
   }
   deregisterResizeHandler =
     (handler: (this: Window, ev: UIEvent) => any) => window.removeEventListener('resize', handler)
   notifyInput =
       () => {
-        const newValue = this._delegate.getFoundation().getValue();
+        const newValue = this._delegate._foundation.getValue();
         // MDC currently fires the input event multiple times.
         // TODO(devversion): remove this check once the input notifications are fixed.
         if (newValue !== this._delegate.value) {
           this._delegate.value = newValue;
           this._delegate.input.emit(this._delegate._createChangeEvent(newValue));
         }
-      };
+      }
   notifyChange =
       () => {
         // TODO(devversion): bug in MDC where only the "change" event is emitted if a keypress
         // updated the value. Material and native range sliders also emit an input event.
         // Usually we sync the "value" in the "input" event, but as a workaround we now sync
         // the value in the "change" event.
-        this._delegate.value = this._delegate.getFoundation().getValue();
+        this._delegate.value = this._delegate._foundation.getValue();
         this._delegate._emitChangeEvent(this._delegate.value!);
-      };
+      }
   setThumbContainerStyleProperty =
       (propertyName: string, value: string | null) => {
         this._delegate._thumbContainer.nativeElement.style.setProperty(propertyName, value);
@@ -155,14 +155,14 @@ class SliderAdapter implements MDCSliderAdapter {
   setMarkerValue =
       () => {
         // Mark the component for check as the thumb label needs to be re-rendered.
-        this._delegate.getChangeDetectorRef().markForCheck();
+        this._delegate._changeDetectorRef.markForCheck();
       }
   setTrackMarkers =
       (step: number, max: number, min: number) => {
         this._delegate._trackMarker.nativeElement.style.setProperty(
             'background', this._delegate._getTrackMarkersBackground(min, max, step));
       }
-  isRTL = () => this._delegate._isRtl()
+  isRTL = () => this._delegate._isRtl();
 }
 
 /** A simple change event emitted by the MatSlider component. */
@@ -319,7 +319,7 @@ export class MatSlider implements AfterViewInit, OnChanges, OnDestroy, ControlVa
   private _sliderAdapter: MDCSliderAdapter = new SliderAdapter(this);
 
   /** Instance of the MDC slider foundation for this slider. */
-  private _foundation = new MDCSliderFoundation(this._sliderAdapter);
+  _foundation = new MDCSliderFoundation(this._sliderAdapter);
 
   /** Whether the MDC foundation has been initialized. */
   private _isInitialized = false;
@@ -339,10 +339,10 @@ export class MatSlider implements AfterViewInit, OnChanges, OnDestroy, ControlVa
   @ViewChild('trackMarker') _trackMarker: ElementRef<HTMLElement>;
 
   constructor(
-      private _elementRef: ElementRef<HTMLElement>,
-      private _changeDetectorRef: ChangeDetectorRef,
-      private _ngZone: NgZone,
-      private _platform: Platform,
+      public _elementRef: ElementRef<HTMLElement>,
+      public _changeDetectorRef: ChangeDetectorRef,
+      public _ngZone: NgZone,
+      public _platform: Platform,
       @Optional() private _dir: Directionality,
       @Attribute('tabindex') tabIndex: string,
       @Optional() @Inject(ANIMATION_MODULE_TYPE) public _animationMode?: string) {
@@ -422,22 +422,6 @@ export class MatSlider implements AfterViewInit, OnChanges, OnDestroy, ControlVa
     if (this._platform.isBrowser) {
       this._foundation.destroy();
     }
-  }
-
-  getChangeDetectorRef() {
-    return this._changeDetectorRef;
-  }
-
-  getElementRef() {
-    return this._elementRef;
-  }
-
-  getFoundation() {
-    return this._foundation;
-  }
-
-  getNgZone() {
-    return this._ngZone;
   }
 
   /** Focuses the slider. */
