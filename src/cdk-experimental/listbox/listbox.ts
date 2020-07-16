@@ -33,12 +33,12 @@ let nextId = 0;
     '(focus)': 'activate()',
     '(blur)': 'deactivate()',
     '[id]': 'id',
-    '[attr.aria-selected]': '_selected || null',
+    '[attr.aria-selected]': 'selected || null',
     '[attr.tabindex]': '_getTabIndex()',
     '[attr.aria-disabled]': '_isInteractionDisabled()',
     '[class.cdk-option-disabled]': '_isInteractionDisabled()',
     '[class.cdk-option-active]': '_active',
-    '[class.cdk-option-selected]': '_selected'
+    '[class.cdk-option-selected]': 'selected'
   }
 })
 export class CdkOption implements ListKeyManagerOption, Highlightable {
@@ -173,8 +173,8 @@ export class CdkOption implements ListKeyManagerOption, Highlightable {
       'role': 'listbox',
       '(keydown)': '_keydown($event)',
       '[attr.tabindex]': 'tabIndex',
-      '[attr.aria-disabled]': '_disabled',
-      '[attr.aria-multiselectable]': '_multiple',
+      '[attr.aria-disabled]': 'disabled',
+      '[attr.aria-multiselectable]': 'multiple',
       '[attr.aria-activedescendant]': '_getAriaActiveDescendant()'
     }
 })
