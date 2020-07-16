@@ -9,7 +9,6 @@ import {Subject} from 'rxjs';
 @Component({
   selector: 'mdc-form-field-custom-control-example',
   templateUrl: 'form-field-custom-control-example.html',
-  styleUrls: ['form-field-custom-control-example.css'],
 })
 export class MdcFormFieldCustomControlExample {}
 
