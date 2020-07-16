@@ -1,9 +1,8 @@
 .example-listbox {
   list-style-type: none;
   border: 1px solid black;
-  width: fit-content;
   cursor: default;
-  padding: 0px;
+  padding: 0;
 }
 
 .cdk-option-selected {
