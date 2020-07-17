@@ -12,6 +12,7 @@ import {
   createKeyboardEvent,
   dispatchFakeEvent,
   dispatchKeyboardEvent,
+  setEventTarget,
   MockNgZone,
 } from '@angular/cdk/testing/private';
 import {
@@ -261,7 +262,7 @@ describe('MDC-based MatChipListbox', () => {
           let nativeChips = chipListboxNativeElement.querySelectorAll('mat-chip-option');
           let lastNativeChip = nativeChips[nativeChips.length - 1] as HTMLElement;
 
-          let LEFT_EVENT = createKeyboardEvent('keydown', LEFT_ARROW, undefined, lastNativeChip);
+          let LEFT_EVENT = createKeydownEvent(LEFT_ARROW, lastNativeChip);
           let array = chips.toArray();
           let lastIndex = array.length - 1;
           let lastItem = array[lastIndex];
@@ -283,8 +284,7 @@ describe('MDC-based MatChipListbox', () => {
           let nativeChips = chipListboxNativeElement.querySelectorAll('mat-chip-option');
           let firstNativeChip = nativeChips[0] as HTMLElement;
 
-          let RIGHT_EVENT: KeyboardEvent =
-            createKeyboardEvent('keydown', RIGHT_ARROW, undefined, firstNativeChip);
+          let RIGHT_EVENT = createKeydownEvent(RIGHT_ARROW, firstNativeChip);
           let array = chips.toArray();
           let firstItem = array[0];
 
@@ -302,8 +302,7 @@ describe('MDC-based MatChipListbox', () => {
         });
 
         it('should not handle arrow key events from non-chip elements', () => {
-          const event: KeyboardEvent =
-              createKeyboardEvent('keydown', RIGHT_ARROW, undefined, chipListboxNativeElement);
+          const event: KeyboardEvent = createKeydownEvent(RIGHT_ARROW, chipListboxNativeElement);
           const initialActiveIndex = manager.activeItemIndex;
 
           chipListboxInstance._keydown(event);
@@ -316,7 +315,7 @@ describe('MDC-based MatChipListbox', () => {
         it('should focus the first item when pressing HOME', () => {
           const nativeChips = chipListboxNativeElement.querySelectorAll('mat-chip-option');
           const lastNativeChip = nativeChips[nativeChips.length - 1] as HTMLElement;
-          const HOME_EVENT = createKeyboardEvent('keydown', HOME, undefined, lastNativeChip);
+          const HOME_EVENT = createKeydownEvent(HOME, lastNativeChip);
           const array = chips.toArray();
           const lastItem = array[array.length - 1];
 
@@ -332,7 +331,7 @@ describe('MDC-based MatChipListbox', () => {
 
         it('should focus the last item when pressing END', () => {
           const nativeChips = chipListboxNativeElement.querySelectorAll('mat-chip-option');
-          const END_EVENT = createKeyboardEvent('keydown', END, undefined, nativeChips[0]);
+          const END_EVENT = createKeydownEvent(END, nativeChips[0]);
 
           expect(manager.activeItemIndex).toBe(-1);
 
@@ -354,8 +353,7 @@ describe('MDC-based MatChipListbox', () => {
           let nativeChips = chipListboxNativeElement.querySelectorAll('mat-chip-option');
           let lastNativeChip = nativeChips[nativeChips.length - 1] as HTMLElement;
 
-          let RIGHT_EVENT: KeyboardEvent =
-              createKeyboardEvent('keydown', RIGHT_ARROW, undefined, lastNativeChip);
+          let RIGHT_EVENT = createKeydownEvent(RIGHT_ARROW, lastNativeChip);
           let array = chips.toArray();
           let lastIndex = array.length - 1;
           let lastItem = array[lastIndex];
@@ -377,8 +375,7 @@ describe('MDC-based MatChipListbox', () => {
           let nativeChips = chipListboxNativeElement.querySelectorAll('mat-chip-option');
           let firstNativeChip = nativeChips[0] as HTMLElement;
 
-          let LEFT_EVENT: KeyboardEvent =
-              createKeyboardEvent('keydown', LEFT_ARROW, undefined, firstNativeChip);
+          let LEFT_EVENT = createKeydownEvent(LEFT_ARROW, firstNativeChip);
           let array = chips.toArray();
           let firstItem = array[0];
 
@@ -396,7 +393,7 @@ describe('MDC-based MatChipListbox', () => {
         });
 
         it('should allow focus to escape when tabbing away', fakeAsync(() => {
-          chipListboxInstance._keyManager.onKeydown(createKeyboardEvent('keydown', TAB));
+          chipListboxInstance._keyManager.onKeydown(createKeydownEvent(TAB));
 
           expect(chipListboxInstance.tabIndex)
             .toBe(-1, 'Expected tabIndex to be set to -1 temporarily.');
@@ -414,7 +411,7 @@ describe('MDC-based MatChipListbox', () => {
           expect(chipListboxInstance.tabIndex)
             .toBe(4, 'Expected tabIndex to be set to user defined value 4.');
 
-          chipListboxInstance._keyManager.onKeydown(createKeyboardEvent('keydown', TAB));
+          chipListboxInstance._keyManager.onKeydown(createKeydownEvent(TAB));
 
           expect(chipListboxInstance.tabIndex)
             .toBe(-1, 'Expected tabIndex to be set to -1 temporarily.');
@@ -432,8 +429,7 @@ describe('MDC-based MatChipListbox', () => {
         let nativeChips = chipListboxNativeElement.querySelectorAll('mat-chip-option');
         let firstNativeChip = nativeChips[0] as HTMLElement;
 
-        let RIGHT_EVENT: KeyboardEvent =
-          createKeyboardEvent('keydown', RIGHT_ARROW, undefined, firstNativeChip);
+        let RIGHT_EVENT = createKeydownEvent(RIGHT_ARROW, firstNativeChip);
         let array = chips.toArray();
         let firstItem = array[0];
 
@@ -799,6 +795,15 @@ describe('MDC-based MatChipListbox', () => {
     chips = chipListboxInstance._chips;
   }
 });
+
+/** Creates a keydown event with the given key and an optional target element. */
+function createKeydownEvent(keyCode: number, target?: Element): KeyboardEvent {
+  const event = createKeyboardEvent('keydown', keyCode, undefined);
+  if (target !== undefined) {
+    setEventTarget(event, target);
+  }
+  return event;
+}
 
 @Component({
   template: `
