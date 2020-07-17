@@ -37,7 +37,7 @@ contribution.
 * Trying to get anything done at all during a global pandemic.
 * Visual refresh and updates to http://material.angular.io
 * Hosting summer interns working on cdk-experimental implementations for menu, listbox, & combobox.
-* Remaining test harnesses for Angular Material components (tree, datepicker).
+* Remaining test harnesses for Angular Material components.
 * Continuing to create new, API-compatible versions of the Angular Material components backed by
 [MDC Web][] ([see @jelbourn's ng-conf talk](https://youtu.be/4EXQKP-Sihw?t=891)). Much of our effort
 is dedicated towards rolling out these new versions of the components across Angular apps
