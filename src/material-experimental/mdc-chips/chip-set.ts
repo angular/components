@@ -33,35 +33,46 @@ let uid = 0;
 
 
 class ChipSetAdapter implements MDCChipSetAdapter {
+
   constructor(private _delegate: MatChipSet) {}
 
-    hasClass(className: string) {
-      return this._delegate._hasMdcClass(className);
-    }
-    // No-op. We keep track of chips via ContentChildren, which will be updated when a chip is
-    // removed.
-    removeChipAtIndex() {
-      return;
-    }
-    // No-op for base chip set. MatChipListbox overrides the adapter to provide this method.
-    selectChipAtIndex() {
-      return;
-    }
-    getIndexOfChipById(id: string) {
-      return this._delegate._chips.toArray().findIndex(chip => chip.id === id);
-    }
-    focusChipPrimaryActionAtIndex() {}
-    focusChipTrailingActionAtIndex() {}
-    removeFocusFromChipAtIndex() {}
-    isRTL() {
-      return !!this._delegate.getDir() && this._delegate.getDir().value === 'rtl';
-    } 
-    getChipListCount() {
-      return this._delegate._chips.length;
-    }
-    // TODO(mmalerba): Implement using LiveAnnouncer.
-    announceMessage: () => {}
+  hasClass(className: string) {
+    return this._delegate._hasMdcClass(className);
   }
+
+  // No-op. We keep track of chips via ContentChildren, which will be updated when a chip is
+  // removed.
+  removeChipAtIndex() {
+    return;
+  }
+
+  // No-op for base chip set. MatChipListbox overrides the adapter to provide this method.
+  selectChipAtIndex() {
+    return;
+  }
+
+  getIndexOfChipById(id: string) {
+    return this._delegate._chips.toArray().findIndex(chip => chip.id === id);
+  }
+
+  focusChipPrimaryActionAtIndex() {}
+
+  focusChipTrailingActionAtIndex() {}
+
+  removeFocusFromChipAtIndex() {}
+
+  isRTL() {
+    return !!this._delegate.getDir() && this._delegate.getDir().value === 'rtl';
+  }
+
+  getChipListCount() {
+    return this._delegate._chips.length;
+  }
+
+  // TODO(mmalerba): Implement using LiveAnnouncer.
+  announceMessage() {}
+
+}
 
 /**
  * Boilerplate for applying mixins to MatChipSet.

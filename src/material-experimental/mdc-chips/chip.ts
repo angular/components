@@ -71,22 +71,29 @@ const RIPPLE_ANIMATION_CONFIG: RippleAnimationConfig = {
 
 
 class ChipAdapter implements MDCChipAdapter {
+
   constructor (private _delegate: MatChip) {}
+
   addClass(className: string) {
     this._delegate._setMdcClass(className, true);
   }
+
   removeClass(className: string) {
     this._delegate._setMdcClass(className, false);
   }
+
   hasClass(className: any) {
     return this._delegate._elementRef.nativeElement.classList.contains(className);
   }
+
   addClassToLeadingIcon(className: string) {
     this._delegate.leadingIcon.setClass(className, true);
   }
+
   removeClassFromLeadingIcon(className: string) {
     this._delegate.leadingIcon.setClass(className, false);
   }
+
   eventTargetHasClass(target: EventTarget|null, className: string) {
     // We need to null check the `classList`, because IE and Edge don't
     // support it on SVG elements and Edge seems to throw for ripple
@@ -95,20 +102,25 @@ class ChipAdapter implements MDCChipAdapter {
         (target as Element).classList.contains(className) :
         false;
   }
+
   notifyInteraction() {
     this._delegate._notifyInteraction();
   }
+
   notifySelection() {
     // No-op. We call dispatchSelectionEvent ourselves in MatChipOption,
     // because we want to specify whether selection occurred via user
     // input.
   }
+
   notifyNavigation() {
     this._delegate._notifyNavigation();
   }
+
   notifyTrailingIconInteraction() {
-      this._delegate.removeIconInteraction.emit(this._delegate.id);
-    }
+    this._delegate.removeIconInteraction.emit(this._delegate.id);
+  }
+
   notifyRemoval() {
     this._delegate.removed.emit({chip: this._delegate});
 
@@ -119,7 +131,9 @@ class ChipAdapter implements MDCChipAdapter {
   }
   // Noop for now since we don't support editable chips yet.
   notifyEditStart() {}
+
   notifyEditFinish() {}
+
   getComputedStyleValue(propertyName: string) {
     // this._delegate function is run when a chip is removed so it might be
     // invoked during server-side rendering. Add some extra checks just in
@@ -137,22 +151,27 @@ class ChipAdapter implements MDCChipAdapter {
   hasLeadingIcon() {
     return !!this._delegate.leadingIcon;
   }
+
   isTrailingActionNavigable() {
     if (this._delegate.trailingIcon) {
       return this._delegate.trailingIcon.isNavigable();
     }
     return false;
   }
+
   isRTL() {
-    return !!this._delegate.getDir() && this._delegate.getDir().value === 'rtl';
+    return !!this._delegate._getDir() && this._delegate._getDir().value === 'rtl';
   }
+
   focusPrimaryAction() {
     // Angular Material MDC chips fully manage focus. TODO: Managing focus
     // and handling keyboard events was added by MDC after our
     // implementation; consider consolidating.
   }
   focusTrailingAction() {}
+
   removeTrailingActionFocus() {}
+
   setPrimaryActionAttr(name: string, value: string) {
     // MDC is currently using this._delegate method to set aria-checked on choice
     // and filter chips, which in the MDC templates have role="checkbox"
@@ -164,14 +183,17 @@ class ChipAdapter implements MDCChipAdapter {
     }
     this._delegate._elementRef.nativeElement.setAttribute(name, value);
   }
+
   // The 2 functions below are used by the MDC ripple, which we aren't using,
   // so they will never be called
   getRootBoundingClientRect() {
     return this._delegate._elementRef.nativeElement.getBoundingClientRect();
   }
+
   getCheckmarkBoundingClientRect() {
     return null;
   }
+
   getAttribute(attr: any) {
     return this._delegate._elementRef.nativeElement.getAttribute(attr);
   }
@@ -390,7 +412,7 @@ export class MatChip extends _MatChipMixinBase implements AfterContentInit, Afte
   }
 
   /** Returns the directionality */
-  getDir() {
+  _getDir() {
     return this._dir;
   }
 
