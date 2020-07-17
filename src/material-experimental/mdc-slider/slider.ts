@@ -71,33 +71,57 @@ export const MAT_SLIDER_VALUE_ACCESSOR: any = {
 };
 
 class SliderAdapter implements MDCSliderAdapter {
+
   constructor(private _delegate: MatSlider) {}
 
-  hasClass = (className: string) =>
-    this._delegate._getElementRef().nativeElement.classList.contains(className)
-  addClass = (className: string) =>
-    this._delegate._getElementRef().nativeElement.classList.add(className)
-  removeClass = (className: string) =>
-    this._delegate._getElementRef().nativeElement.classList.remove(className)
-  getAttribute = (name: string) => this._delegate._getElementRef().nativeElement.getAttribute(name);
-  setAttribute = (name: string, value: string) =>
-    this._delegate._getElementRef().nativeElement.setAttribute(name, value)
-  removeAttribute = (name: string) =>
-    this._delegate._getElementRef().nativeElement.removeAttribute(name)
-  computeBoundingRect = () => this._delegate._getElementRef().nativeElement.getBoundingClientRect();
-  getTabIndex = () => this._delegate._getElementRef().nativeElement.tabIndex;
-  registerInteractionHandler = (evtType: any, handler: (this: HTMLElement, ev: any) => any) =>
+  hasClass(className: string) {
+    return this._delegate._getElementRef().nativeElement.classList.contains(className);
+  }
+
+  addClass(className: string) {
+    return this._delegate._getElementRef().nativeElement.classList.add(className);
+  }
+
+  removeClass(className: string) {
+    this._delegate._getElementRef().nativeElement.classList.remove(className);
+  }
+
+  getAttribute(name: string) {
+    return this._delegate._getElementRef().nativeElement.getAttribute(name);
+  }
+
+  setAttribute(name: string, value: string) {
+    return this._delegate._getElementRef().nativeElement.setAttribute(name, value);
+  }
+
+  removeAttribute = (name: string) {
+    this._delegate._getElementRef().nativeElement.removeAttribute(name);
+  }
+
+  computeBoundingRect() {
+    return this._delegate._getElementRef().nativeElement.getBoundingClientRect();
+  }
+
+  getTabIndex() {
+    return this._delegate._getElementRef().nativeElement.tabIndex;
+  }
+
+  registerInteractionHandler(evtType: any, handler: (this: HTMLElement, ev: any) => any) {
       // Interaction event handlers (which handle keyboard interaction) cannot be passive
       // as they will prevent the default behavior. Additionally we can't run these event
       // handlers outside of the Angular zone because we rely on the events to cause the
       // component tree to be re-checked.
       // TODO: take in the event listener options from the adapter once MDC supports it.
-      this._delegate._getElementRef().nativeElement.addEventListener(
-        evtType, handler, activeListenerOptions)
-  deregisterInteractionHandler = (evtType: any, handler: (this: HTMLElement, ev: any) => any) =>
-      this._delegate._getElementRef().nativeElement.removeEventListener(evtType, handler)
-  registerThumbContainerInteractionHandler =
-    (evtType: any, handler: (this: HTMLElement, ev: any) => any) => {
+      return this._delegate._getElementRef().nativeElement.addEventListener(
+        evtType, handler, activeListenerOptions);
+  }
+
+  deregisterInteractionHandler(evtType: any, handler: (this: HTMLElement, ev: any) => any) {
+    return this._delegate._getElementRef().nativeElement.removeEventListener(evtType, handler);
+  }
+
+  registerThumbContainerInteractionHandler
+    (evtType: any, handler: (this: HTMLElement, ev: any) => any) {
     // The thumb container interaction handlers are currently just used for transition
     // events which don't need to run in the Angular zone.
     this._delegate._getNgZone().runOutsideAngular(() => {
@@ -105,64 +129,73 @@ class SliderAdapter implements MDCSliderAdapter {
         .addEventListener(evtType, handler, passiveListenerOptions);
     });
   }
-  deregisterThumbContainerInteractionHandler =
-    (evtType: any, handler: (this: HTMLElement, ev: any) => any) => {
+
+  deregisterThumbContainerInteractionHandler
+    (evtType: any, handler: (this: HTMLElement, ev: any) => any) {
     this._delegate._thumbContainer.nativeElement
       .removeEventListener(evtType, handler, passiveListenerOptions);
   }
-  registerBodyInteractionHandler = (evtType: any, handler: (this: HTMLElement, ev: any) => any) =>
-      // Body event handlers (which handle thumb sliding) cannot be passive as they will
-      // prevent the default behavior. Additionally we can't run these event handlers
-      // outside of the Angular zone because we rely on the events to cause the component
-      // tree to be re-checked.
-      document.body.addEventListener(evtType, handler)
-  deregisterBodyInteractionHandler = (evtType: any, handler: (this: HTMLElement, ev: any) => any) =>
-      document.body.removeEventListener(evtType, handler)
+
+  registerBodyInteractionHandler(evtType: any, handler: (this: HTMLElement, ev: any) => any) {
+    // Body event handlers (which handle thumb sliding) cannot be passive as they will
+    // prevent the default behavior. Additionally we can't run these event handlers
+    // outside of the Angular zone because we rely on the events to cause the component
+    // tree to be re-checked.
+    document.body.addEventListener(evtType, handler);
+  }
+
+  deregisterBodyInteractionHandler(evtType: any, handler: (this: HTMLElement, ev: any) => any) {
+    return document.body.removeEventListener(evtType, handler);
+  }
+
   registerResizeHandler = (handler: (this: Window, ev: UIEvent) => any) => {
     // The resize handler is currently responsible for detecting slider dimension
     // changes and therefore doesn't cause a value change that needs to be propagated.
     this._delegate._getNgZone().runOutsideAngular(() => window.addEventListener('resize', handler));
   }
-  deregisterResizeHandler =
-    (handler: (this: Window, ev: UIEvent) => any) => window.removeEventListener('resize', handler)
-  notifyInput =
-      () => {
-        const newValue = this._delegate._getFoundation().getValue();
-        // MDC currently fires the input event multiple times.
-        // TODO(devversion): remove this check once the input notifications are fixed.
-        if (newValue !== this._delegate.value) {
-          this._delegate.value = newValue;
-          this._delegate.input.emit(this._delegate._createChangeEvent(newValue));
-        }
-      }
-  notifyChange =
-      () => {
-        // TODO(devversion): bug in MDC where only the "change" event is emitted if a keypress
-        // updated the value. Material and native range sliders also emit an input event.
-        // Usually we sync the "value" in the "input" event, but as a workaround we now sync
-        // the value in the "change" event.
-        this._delegate.value = this._delegate._getFoundation().getValue();
-        this._delegate._emitChangeEvent(this._delegate.value!);
-      }
-  setThumbContainerStyleProperty =
-      (propertyName: string, value: string | null) => {
+
+  deregisterResizeHandler
+  (handler: (this: Window, ev: UIEvent) => any) {
+    return window.removeEventListener('resize', handler);
+  }
+  notifyInput() {
+    const newValue = this._delegate._getFoundation().getValue();
+    // MDC currently fires the input event multiple times.
+    // TODO(devversion): remove this check once the input notifications are fixed.
+    if (newValue !== this._delegate.value) {
+      this._delegate.value = newValue;
+      this._delegate.input.emit(this._delegate._createChangeEvent(newValue));
+    }
+  }
+  notifyChange() {
+    // TODO(devversion): bug in MDC where only the "change" event is emitted if a keypress
+    // updated the value. Material and native range sliders also emit an input event.
+    // Usually we sync the "value" in the "input" event, but as a workaround we now sync
+    // the value in the "change" event.
+    this._delegate.value = this._delegate._getFoundation().getValue();
+    this._delegate._emitChangeEvent(this._delegate.value!);
+  }
+  setThumbContainerStyleProperty
+      (propertyName: string, value: string | null) {
         this._delegate._thumbContainer.nativeElement.style.setProperty(propertyName, value);
       }
-  setTrackStyleProperty =
-      (propertyName: string, value: string | null) => {
-        this._delegate._track.nativeElement.style.setProperty(propertyName, value);
-      }
-  setMarkerValue =
-      () => {
-        // Mark the component for check as the thumb label needs to be re-rendered.
-        this._delegate._getChangeDetectorRef().markForCheck();
-      }
-  setTrackMarkers =
-      (step: number, max: number, min: number) => {
-        this._delegate._trackMarker.nativeElement.style.setProperty(
-            'background', this._delegate._getTrackMarkersBackground(min, max, step));
-      }
-  isRTL = () => this._delegate._isRtl();
+  setTrackStyleProperty
+  (propertyName: string, value: string | null) {
+    this._delegate._track.nativeElement.style.setProperty(propertyName, value);
+  }
+  setMarkerValue() {
+    // Mark the component for check as the thumb label needs to be re-rendered.
+    this._delegate._getChangeDetectorRef().markForCheck();
+  }
+  setTrackMarkers
+  (step: number, max: number, min: number) {
+    this._delegate._trackMarker.nativeElement.style.setProperty(
+        'background', this._delegate._getTrackMarkersBackground(min, max, step));
+  }
+
+  isRTL() {
+    return this._delegate._isRtl();
+  }
 }
 
 /** A simple change event emitted by the MatSlider component. */
