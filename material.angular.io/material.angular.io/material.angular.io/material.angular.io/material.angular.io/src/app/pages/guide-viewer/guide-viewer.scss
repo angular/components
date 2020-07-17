@@ -1,4 +1,4 @@
-@import "~@angular/material/theming";
+@import '~@angular/material/theming';
 @import '../../../styles/constants';
 
 /* For desktop, the content should be aligned with the page title. */
@@ -15,6 +15,10 @@ $guide-content-margin-side-xs: 15px;
   padding: 20px $content-padding-side 0;
   display: block;
   text-align: center;
+
+  // Ensures that the footer is pushed to the bottom and prevents
+  // the page from jumping around while something is loading.
+  min-height: 100vh;
 
   @media ($mat-xsmall) {
     padding-left: $content-padding-side-xs;
