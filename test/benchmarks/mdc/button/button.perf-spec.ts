@@ -32,7 +32,11 @@ describe('button performance benchmarks', () => {
       ignoreBrowserSynchronization: true,
       params: [],
       setup: async () => await $('#show').click(),
+<<<<<<< HEAD
       work: async () => await $('.mat-mdc-raised-button').click(),
+=======
+      work: async () => await $('.mat-raised-button').click(),
+>>>>>>> f1ae4d955... test(mdc-button): add performance tests for mdc-button
     });
   });
 });
