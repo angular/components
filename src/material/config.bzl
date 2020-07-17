@@ -62,6 +62,7 @@ entryPoints = [
     "tooltip",
     "tooltip/testing",
     "tree",
+    "tree/testing",
     "form-field/testing",
     "form-field/testing/control",
     "input/testing",
