@@ -359,7 +359,6 @@ describe('CdkOption', () => {
     let fixture: ComponentFixture<ListboxMultiselect>;
 
     let testComponent: ListboxMultiselect;
-
     let listbox: DebugElement;
     let listboxInstance: CdkListbox;
 
