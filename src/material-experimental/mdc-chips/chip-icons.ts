@@ -50,6 +50,33 @@ export class MatChipAvatar {
   }
 }
 
+class ChipTrailingActionAdapter implements MDCChipTrailingActionAdapter {
+  constructor(private _delegate: MatChipTrailingIcon) {
+}
+  focus() {
+    this._delegate._elementRef.nativeElement.focus();
+  }
+  getAttribute(name: string) {
+    return this._delegate._elementRef.nativeElement.getAttribute(name);
+  }
+  setAttribute(name: string, value: string) {
+    this._delegate._elementRef.nativeElement.setAttribute(name, value);
+  }
+  // TODO(crisbeto): there's also a `trigger` parameter that the chip isn't
+  // handling yet. Consider passing it along once MDC start using it.
+  notifyInteraction() {
+    // TODO(crisbeto): uncomment this code once we've inverted the
+    // dependency on `MatChip`. this._chip._notifyInteraction();
+  }
+
+  // TODO(crisbeto): there's also a `key` parameter that the chip isn't
+  // handling yet. Consider passing it along once MDC start using it.
+  notifyNavigation() {
+    // TODO(crisbeto): uncomment this code once we've inverted the
+    // dependency on `MatChip`. this._chip._notifyNavigation();
+  }
+}
+
 /**
  * Injection token that can be used to reference instances of `MatChipTrailingIcon`. It serves as
  * alternative token to the actual `MatChipTrailingIcon` class which could cause unnecessary
@@ -74,30 +101,6 @@ export const MAT_CHIP_TRAILING_ICON =
 })
 export class MatChipTrailingIcon implements OnDestroy {
   private _foundation: MDCChipTrailingActionFoundation;
-  private _adapter: MDCChipTrailingActionAdapter = {
-    focus: () => this._elementRef.nativeElement.focus(),
-    getAttribute: (name: string) =>
-        this._elementRef.nativeElement.getAttribute(name),
-    setAttribute:
-        (name: string, value: string) => {
-          this._elementRef.nativeElement.setAttribute(name, value);
-        },
-    // TODO(crisbeto): there's also a `trigger` parameter that the chip isn't
-    // handling yet. Consider passing it along once MDC start using it.
-    notifyInteraction:
-        () => {
-          // TODO(crisbeto): uncomment this code once we've inverted the
-          // dependency on `MatChip`. this._chip._notifyInteraction();
-        },
-
-    // TODO(crisbeto): there's also a `key` parameter that the chip isn't
-    // handling yet. Consider passing it along once MDC start using it.
-    notifyNavigation:
-        () => {
-          // TODO(crisbeto): uncomment this code once we've inverted the
-          // dependency on `MatChip`. this._chip._notifyNavigation();
-        }
-  };
 
   constructor(
       public _elementRef: ElementRef,
@@ -106,7 +109,7 @@ export class MatChipTrailingIcon implements OnDestroy {
       // method is removed, we can't use the chip here, because it causes a
       // circular import. private _chip: MatChip
   ) {
-    this._foundation = new MDCChipTrailingActionFoundation(this._adapter);
+    this._foundation = new MDCChipTrailingActionFoundation(new ChipTrailingActionAdapter(this));
   }
 
   ngOnDestroy() {
