@@ -379,7 +379,6 @@ describe('CdkOption', () => {
       fixture.detectChanges();
 
       testComponent = fixture.debugElement.componentInstance;
-
       listbox = fixture.debugElement.query(By.directive(CdkListbox));
       listboxInstance = listbox.injector.get<CdkListbox>(CdkListbox);
 
