@@ -9,18 +9,18 @@
 import {Component} from '@angular/core';
 
 @Component({
-    templateUrl: 'cdk-listbox-demo.html',
-    styleUrls: ['cdk-listbox-demo.css'],
+  templateUrl: 'cdk-listbox-demo.html',
+  styleUrls: ['cdk-listbox-demo.css'],
 })
 export class CdkListboxDemo {
-    multiSelectable = false;
-    activeDescendant = true;
+  multiSelectable = false;
+  activeDescendant = true;
 
-    toggleMultiple() {
-        this.multiSelectable = !this.multiSelectable;
-    }
+  toggleMultiple() {
+    this.multiSelectable = !this.multiSelectable;
+  }
 
-    toggleActiveDescendant() {
-        this.activeDescendant = !this.activeDescendant;
-    }
+  toggleActiveDescendant() {
+    this.activeDescendant = !this.activeDescendant;
+  }
 }

@@ -334,8 +334,8 @@ describe('CdkOption', () => {
 
     it('should focus and toggle the next item when pressing SHIFT + DOWN_ARROW', () => {
       let selectedOptions = optionInstances.filter(option => option.selected);
-      const downKeyEvent = createKeyboardEvent('keydown', DOWN_ARROW);
-      Object.defineProperty(downKeyEvent, 'shiftKey', {get: () => true});
+      const downKeyEvent =
+        createKeyboardEvent('keydown', DOWN_ARROW, undefined, undefined, {shift: true});
 
       expect(selectedOptions.length).toBe(0);
       expect(optionElements[0].hasAttribute('aria-selected')).toBeFalse();

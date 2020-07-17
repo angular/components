@@ -172,7 +172,7 @@ export class CdkOption implements ListKeyManagerOption, Highlightable {
     host: {
       'role': 'listbox',
       '(keydown)': '_keydown($event)',
-      '[attr.tabindex]': 'tabIndex',
+      '[attr.tabindex]': '_tabIndex',
       '[attr.aria-disabled]': 'disabled',
       '[attr.aria-multiselectable]': 'multiple',
       '[attr.aria-activedescendant]': '_getAriaActiveDescendant()'
@@ -182,15 +182,15 @@ export class CdkListbox implements AfterContentInit, OnDestroy, OnInit {
 
   _listKeyManager: ActiveDescendantKeyManager<CdkOption>;
   _selectionModel: SelectionModel<CdkOption>;
-  tabIndex = 0;
+  _tabIndex = 0;
 
   readonly optionSelectionChanges: Observable<OptionSelectionChangeEvent> = defer(() => {
-      const options = this._options;
+    const options = this._options;
 
-      return options.changes.pipe(
-          startWith(options),
-          switchMap(() => merge(...options.map(option => option.selectionChange)))
-      );
+    return options.changes.pipe(
+      startWith(options),
+      switchMap(() => merge(...options.map(option => option.selectionChange)))
+    );
   }) as Observable<OptionSelectionChangeEvent>;
 
 

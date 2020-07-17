@@ -14,11 +14,11 @@ import {CdkListboxModule} from '@angular/cdk-experimental/listbox';
 import {CdkListboxDemo} from './cdk-listbox-demo';
 
 @NgModule({
-    imports: [
-        CdkListboxModule,
-        CommonModule,
-        RouterModule.forChild([{path: '', component: CdkListboxDemo}]),
-    ],
-    declarations: [CdkListboxDemo],
+  imports: [
+    CdkListboxModule,
+    CommonModule,
+    RouterModule.forChild([{path: '', component: CdkListboxDemo}]),
+  ],
+  declarations: [CdkListboxDemo],
 })
 export class CdkListboxDemoModule {}
