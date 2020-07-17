@@ -8,14 +8,13 @@
 
 import {ComponentHarness, HarnessPredicate} from '@angular/cdk/testing';
 import {
+  MatNestedTreeNodeHarness,
+  MatTreeNodeHarness,
   TreeHarnessFilters,
   TreeNodeHarnessFilters
-} from '@angular/material/tree/testing/tree-harness-filters';
-import {
-  MatNestedTreeNodeHarness,
-  MatTreeNodeHarness
-} from '@angular/material/tree/testing/node-harness';
+} from '@angular/material/tree/testing';
 
+/** Harness for interacting with a standard mat-tree in tests. */
 export class MatTreeHarness extends ComponentHarness {
   /** The selector for the host element of a `MatTableHarness` instance. */
   static hostSelector = '.mat-tree';
@@ -29,10 +28,12 @@ export class MatTreeHarness extends ComponentHarness {
     return new HarnessPredicate(MatTreeHarness, options);
   }
 
+  /** Gets all of the nodes in the tree. */
   async getNodes(filter: TreeNodeHarnessFilters = {}): Promise<MatTreeNodeHarness[]> {
     return this.locatorForAll(MatTreeNodeHarness.with(filter))();
   }
 
+  /** Gets all of the nested nodes in the tree. */
   async getNestedNodes(filter: TreeNodeHarnessFilters = {}): Promise<MatNestedTreeNodeHarness[]> {
     return this.locatorForAll(MatNestedTreeNodeHarness.with(filter))();
   }

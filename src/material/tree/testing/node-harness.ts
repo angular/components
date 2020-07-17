@@ -14,31 +14,43 @@ import {
 import {TreeNodeHarnessFilters} from './tree-harness-filters';
 import {coerceBooleanProperty, coerceNumberProperty} from '@angular/cdk/coercion';
 
+/** Harness for interacting with a standard Angular Material tree node. */
 export class MatTreeNodeHarness extends ComponentHarness {
+  /** The selector of the host element of a `MatTreeNode` instance. */
   static hostSelector = '.mat-tree-node';
 
    _toggle = this.locatorForOptional('mattreenodetoggle');
 
+  /**
+   * Gets a `HarnessPredicate` that can be used to search for a tree node with specific attributes.
+   * @param options Options for narrowing the search
+   * @return a `HarnessPredicate` configured with the given options.
+   */
   static with(options: TreeNodeHarnessFilters = {}): HarnessPredicate<MatTreeNodeHarness> {
     return getNodePredicate(MatTreeNodeHarness, options);
   }
 
+  /** Whether the tree node is expanded. */
   async isExpanded(): Promise<boolean> {
     return coerceBooleanProperty(await (await this.host()).getAttribute('aria-expanded'));
   }
 
+  /** Whether the tree node is disabled. */
   async isDisabled(): Promise<boolean> {
     return coerceBooleanProperty(await (await this.host()).getProperty('aria-disabled'));
   }
 
+  /** Gets the level of the tree node.. */
   async getLevel(): Promise<number> {
     return coerceNumberProperty(await (await this.host()).getAttribute('aria-level'));
   }
 
+  /** Gets the role of the tree node. 'group' or 'treeitem' */
   async getRole(): Promise<string|null> {
     return (await this.host()).getAttribute('role');
   }
 
+  /** Gets the tree node's text. */
   async getText(): Promise<string> {
     return (await this.host()).text();
   }
@@ -51,9 +63,17 @@ export class MatTreeNodeHarness extends ComponentHarness {
   }
 }
 
+/** Harness for interacting with a standard Angular Material nested tree node. */
 export class MatNestedTreeNodeHarness extends MatTreeNodeHarness {
+  /** The selector for the host element of a `MatNestedTreeNode` instance. */
   static hostSelector = '.mat-nested-tree-node';
 
+  /**
+   * Gets a `HarnessPredicate` that can be used to search for
+   * a nested tree node with specific attributes.
+   * @param options Options for narrowing the search
+   * @return a `HarnessPredicate` configured with the given options.
+   */
   static with(options: TreeNodeHarnessFilters = {}): HarnessPredicate<MatNestedTreeNodeHarness> {
     return getNodePredicate(MatNestedTreeNodeHarness, options);
   }
