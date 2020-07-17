@@ -317,7 +317,7 @@ export class MatSlider implements AfterViewInit, OnChanges, OnDestroy, ControlVa
 
 
   /** Instance of the MDC slider foundation for this slider. */
-  _foundation = new MDCSliderFoundation(new SliderAdapter(this));
+  private readonly _foundation = new MDCSliderFoundation(new SliderAdapter(this));
 
   /** Whether the MDC foundation has been initialized. */
   private _isInitialized = false;
