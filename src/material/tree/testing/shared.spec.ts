@@ -50,11 +50,12 @@ export function runHarnessTests(
     expect(nestedTreeNestedNodes.length).toBe(3);
   });
 
-  it('should correctly get properties of node', async () => {
+  it('should correctly get correct node with text', async () => {
     const trees = await loader.getAllHarnesses(treeHarness);
     const flatTree = trees[0];
-    const flatTreeNodes = await flatTree.getNodes();
-    const secondGroup = flatTreeNodes[1];
+    const flatTreeNodes = await flatTree.getNodes({text: /Flat Group 2/});
+    expect(flatTreeNodes.length).toBe(1);
+    const secondGroup = flatTreeNodes[0];
 
     expect(await secondGroup.getRole()).toBe('group');
     expect(await secondGroup.getText()).toBe('Toggle  Flat Group 2');
@@ -66,15 +67,14 @@ export function runHarnessTests(
   it('should toggle expansion', async () => {
     const trees = await loader.getAllHarnesses(treeHarness);
     const nestedTree = trees[1];
-    const nestedTreeNodes = await nestedTree.getNodes();
-    const firstGroup = nestedTreeNodes[1];
+    const nestedTreeNodes = await nestedTree.getNestedNodes();
+    const firstGroup = nestedTreeNodes[0];
 
     expect(await firstGroup.isExpanded()).toBe(false);
 
     await firstGroup.toggleExpansion();
 
     expect(await firstGroup.isExpanded()).toBe(true);
-
   });
 }
 
@@ -149,8 +149,7 @@ interface ExampleFlatNode {
       </mat-tree-node>
       <!-- This is the tree node template for expandable nodes -->
       <mat-tree-node *matTreeNodeDef="let node;when: flatTreeHasChild" matTreeNodePadding>
-        <button matTreeNodeToggle
-                [attr.aria-label]="'toggle ' + node.name">
+        <button matTreeNodeToggle>
           Toggle
         </button>
         {{node.name}}
@@ -164,8 +163,7 @@ interface ExampleFlatNode {
       </mat-tree-node>
       <!-- This is the tree node template for expandable nodes -->
       <mat-nested-tree-node *matTreeNodeDef="let node; when: nestedTreeHasChild">
-        <button matTreeNodeToggle
-                [attr.aria-label]="'toggle ' + node.name">
+        <button matTreeNodeToggle>
           Toggle
         </button>
         {{node.name}}
@@ -177,6 +175,16 @@ interface ExampleFlatNode {
   `
 })
 class TreeHarnessTest {
+  private _transformer = (node: FoodNode, level: number) => {
+    return {
+      expandable: !!node.children && node.children.length > 0,
+      name: node.name,
+      level: level,
+    };
+  };
+
+  treeFlattener = new MatTreeFlattener(
+    this._transformer, node => node.level, node => node.expandable, node => node.children);
   flatTreeControl = new FlatTreeControl<ExampleFlatNode>(
     node => node.level, node => node.expandable);
   flatTreeDataSource = new MatTreeFlatDataSource(this.flatTreeControl, this.treeFlattener);
@@ -191,15 +199,4 @@ class TreeHarnessTest {
   flatTreeHasChild = (_: number, node: ExampleFlatNode) => node.expandable;
 
   nestedTreeHasChild = (_: number, node: FoodNode) => !!node.children && node.children.length > 0;
-
-  private _transformer = (node: FoodNode, level: number) => {
-    return {
-      expandable: !!node.children && node.children.length > 0,
-      name: node.name,
-      level: level,
-    };
-  };
-
-  treeFlattener = new MatTreeFlattener(
-    this._transformer, node => node.level, node => node.expandable, node => node.children);
 }

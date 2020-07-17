@@ -19,7 +19,7 @@ export class MatTreeNodeHarness extends ComponentHarness {
   /** The selector of the host element of a `MatTreeNode` instance. */
   static hostSelector = '.mat-tree-node';
 
-   _toggle = this.locatorForOptional('mattreenodetoggle');
+   _toggle = this.locatorForOptional('[matTreeNodeToggle]');
 
   /**
    * Gets a `HarnessPredicate` that can be used to search for a tree node with specific attributes.
@@ -55,6 +55,7 @@ export class MatTreeNodeHarness extends ComponentHarness {
     return (await this.host()).text();
   }
 
+  /** Expands/collapses the node by clicking on the toggle. Only works when node is not disabled. */
   async toggleExpansion(): Promise<void> {
     const toggle = await this._toggle();
     if (toggle) {
