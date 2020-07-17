@@ -125,9 +125,10 @@ export class MatInkBarFoundation {
       this._inkBarElement.parentNode.removeChild(this._inkBarElement);
     }
 
-    this._hostElement = this._inkBarElement = this._inkBarContentElement = null!;
+    (this as {_hostElement: HTMLElement})._hostElement = this._inkBarElement
+      = (this as {_inkBarContentElement: HTMLElement})._inkBarContentElement = null!;
     this._foundation.destroy();
-    this._destroyed = true;
+    (this as {_destroyed: boolean})._destroyed = true;
   }
 
   /**
@@ -153,7 +154,8 @@ export class MatInkBarFoundation {
   /** Creates and appends the ink bar element. */
   private _createInkBarElement() {
     this._inkBarElement = this._document.createElement('span');
-    this._inkBarContentElement = this._document.createElement('span');
+    (this as {_inkBarContentElement: HTMLElement})._inkBarContentElement
+      = this._document.createElement('span');
 
     this._inkBarElement.className = 'mdc-tab-indicator';
     this._inkBarContentElement.className = 'mdc-tab-indicator__content' +
