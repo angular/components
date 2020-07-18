@@ -20,9 +20,9 @@
 }
 
 .example-step.example-active {
-  color: inherit;
   border-bottom: 1px solid;
   font-weight: 600;
+  color: inherit;
 }
 
 .example-nav-button {
