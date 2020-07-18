@@ -309,7 +309,7 @@ export class MatFormField implements AfterViewInit, OnDestroy, AfterContentCheck
   private _explicitFormFieldControl: MatFormFieldControl<any>;
   private _foundation: MDCTextFieldFoundation;
   private _needsOutlineLabelOffsetUpdateOnStable = false;
-  private _adapter: MDCTextFieldAdapter;
+  private _adapter: MDCTextFieldAdapter = new TextFieldAdapter(this);
 
   constructor(private _elementRef: ElementRef,
               private _changeDetectorRef: ChangeDetectorRef,
@@ -320,7 +320,6 @@ export class MatFormField implements AfterViewInit, OnDestroy, AfterContentCheck
               private _defaults?: MatFormFieldDefaultOptions,
               @Optional() @Inject(MAT_LABEL_GLOBAL_OPTIONS) private _labelOptions?: LabelOptions,
               @Optional() @Inject(ANIMATION_MODULE_TYPE) public _animationMode?: string) {
-    this._adapter = new TextFieldAdapter(this);
     if (_defaults && _defaults.appearance) {
       this.appearance = _defaults.appearance;
     } else if (_defaults && _defaults.hideRequiredMarker) {
