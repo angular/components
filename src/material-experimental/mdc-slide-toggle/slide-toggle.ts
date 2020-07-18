@@ -49,23 +49,30 @@ const RIPPLE_ANIMATION_CONFIG: RippleAnimationConfig = {
 };
 
 class SlideToggleAdapter implements MDCSwitchAdapter {
-  constructor(private readonly _delegate: MatSlideToggle) {}
 
-    addClass(className: string) {
-      return this._delegate._switchElement.nativeElement.classList.add(className);
-    }
-    removeClass(className: string) {
-      return this._delegate._switchElement.nativeElement.classList.remove(className);
-    }
-    setNativeControlChecked(checked: boolean) {
-      this._delegate._checked = checked;
-    }
-    setNativeControlDisabled(disabled: boolean) {
-      this._delegate._disabled = disabled;
-    }
-    setNativeControlAttr(name: string, value: string) {
-      this._delegate._inputElement.nativeElement.setAttribute(name, value);
-    }
+  private _switchNativeElement: HTMLElement;
+  private _inputNativeElement: HTMLElement;
+
+  constructor(private readonly _delegate: MatSlideToggle) {
+    this._switchNativeElement = this._delegate._switchElement.nativeElement;
+    this._inputNativeElement = this._delegate._inputElement.nativeElement;
+  }
+
+  addClass(className: string) {
+    return this._switchNativeElement.classList.add(className);
+  }
+  removeClass(className: string) {
+    return this._switchNativeElement.classList.remove(className);
+  }
+  setNativeControlChecked(checked: boolean) {
+    this._delegate._checked = checked;
+  }
+  setNativeControlDisabled(disabled: boolean) {
+    this._delegate._disabled = disabled;
+  }
+  setNativeControlAttr(name: string, value: string) {
+    this._inputNativeElement.setAttribute(name, value);
+  }
 }
 
 /** @docs-private */
