@@ -10,7 +10,8 @@ export declare class ActiveDescendantKeyManager<T> extends ListKeyManager<Highli
 }
 
 export declare class AriaDescriber implements OnDestroy {
-    constructor(_document: any);
+    constructor(_document: any,
+    _platform?: Platform | undefined);
     describe(hostElement: Element, message: string | HTMLElement): void;
     ngOnDestroy(): void;
     removeDescription(hostElement: Element, message: string | HTMLElement): void;
@@ -213,6 +214,7 @@ export declare class ListKeyManager<T extends ListKeyManagerOption> {
     updateActiveItem(index: number): void;
     updateActiveItem(item: T): void;
     withAllowedModifierKeys(keys: ListKeyManagerModifierKey[]): this;
+    withHomeAndEnd(): this;
     withHorizontalOrientation(direction: 'ltr' | 'rtl' | null): this;
     withTypeAhead(debounceInterval?: number): this;
     withVerticalOrientation(enabled?: boolean): this;

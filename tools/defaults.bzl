@@ -165,8 +165,8 @@ def karma_web_test_suite(name, **kwargs):
         kwargs["browsers"] = [
             # Note: when changing the browser names here, also update the "yarn test"
             # script to reflect the new browser names.
-            "@npm_angular_dev_infra_private//browsers:chromium",
-            "@io_bazel_rules_webtesting//browsers:firefox-local",
+            "@npm_angular_dev_infra_private//browsers/chromium:chromium",
+            "@npm_angular_dev_infra_private//browsers/firefox:firefox",
         ]
 
     for opt_name in kwargs.keys():
@@ -204,7 +204,7 @@ def karma_web_test_suite(name, **kwargs):
 def protractor_web_test_suite(flaky = True, **kwargs):
     _protractor_web_test_suite(
         flaky = flaky,
-        browsers = ["@npm_angular_dev_infra_private//browsers:chromium"],
+        browsers = ["@npm_angular_dev_infra_private//browsers/chromium:chromium"],
         **kwargs
     )
 

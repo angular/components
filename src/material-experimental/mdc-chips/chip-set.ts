@@ -226,7 +226,7 @@ export class MatChipSet extends _MatChipSetMixinBase implements AfterContentInit
 
   /** Checks whether any of the chips is focused. */
   protected _hasFocusedChip() {
-    return this._chips.some(chip => chip._hasFocus);
+    return this._chips && this._chips.some(chip => chip._hasFocus);
   }
 
   /** Syncs the chip-set's state with the individual chips. */
@@ -330,11 +330,23 @@ export class MatChipSet extends _MatChipSetMixinBase implements AfterContentInit
 
   /** Checks whether an event comes from inside a chip element. */
   protected _originatesFromChip(event: Event): boolean {
+    return this._checkForClassInHierarchy(event, 'mdc-chip');
+  }
+
+  /**
+   * Checks whether an event comes from inside a chip element in the editing
+   * state.
+   */
+  protected _originatesFromEditingChip(event: Event): boolean {
+    return this._checkForClassInHierarchy(event, 'mdc-chip--editing');
+  }
+
+  private _checkForClassInHierarchy(event: Event, className: string) {
     let currentElement = event.target as HTMLElement | null;
 
     while (currentElement && currentElement !== this._elementRef.nativeElement) {
       // Null check the classList, because IE and Edge don't support it on all elements.
-      if (currentElement.classList && currentElement.classList.contains('mdc-chip')) {
+      if (currentElement.classList && currentElement.classList.contains(className)) {
         return true;
       }
 

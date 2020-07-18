@@ -154,7 +154,10 @@ export class MatChipGrid extends _MatChipGridMixinBase implements AfterContentIn
    * Implemented as part of MatFormFieldControl.
    * @docs-private
    */
-  get empty(): boolean { return this._chipInput.empty && this._chips.length === 0; }
+  get empty(): boolean {
+    return (!this._chipInput || this._chipInput.empty) &&
+        (!this._chips || this._chips.length === 0);
+  }
 
     /** The ARIA role applied to the chip grid. */
   get role(): string | null { return this.empty ? null : 'grid'; }
@@ -405,15 +408,16 @@ export class MatChipGrid extends _MatChipGridMixinBase implements AfterContentIn
     const target = event.target as HTMLElement;
     const keyCode = event.keyCode;
     const manager = this._keyManager;
-
-    // If they are on an empty input and hit backspace, focus the last chip
-    if (keyCode === BACKSPACE && this._isEmptyInput(target)) {
+    if (keyCode === TAB && target.id !== this._chipInput!.id) {
+      this._allowFocusEscape();
+    } else if (this._originatesFromEditingChip(event)) {
+      // No-op, let the editing chip handle all keyboard events except for Tab.
+    } else if (keyCode === BACKSPACE && this._isEmptyInput(target)) {
+      // If they are on an empty input and hit backspace, focus the last chip
       if (this._chips.length) {
         manager.setLastCellActive();
       }
       event.preventDefault();
-    } else if (keyCode === TAB && target.id !== this._chipInput!.id ) {
-      this._allowFocusEscape();
     } else if (this._originatesFromChip(event)) {
       if (keyCode === HOME) {
         manager.setFirstCellActive();

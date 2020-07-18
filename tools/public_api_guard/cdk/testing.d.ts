@@ -26,6 +26,13 @@ export interface ComponentHarnessConstructor<T extends ComponentHarness> {
     new (locatorFactory: LocatorFactory): T;
 }
 
+export declare abstract class ContentContainerComponentHarness<S extends string = string> extends ComponentHarness implements HarnessLoader {
+    getAllChildLoaders(selector: S): Promise<HarnessLoader[]>;
+    getAllHarnesses<T extends ComponentHarness>(query: HarnessQuery<T>): Promise<T[]>;
+    getChildLoader(selector: S): Promise<HarnessLoader>;
+    getHarness<T extends ComponentHarness>(query: HarnessQuery<T>): Promise<T>;
+}
+
 export interface ElementDimensions {
     height: number;
     left: number;
@@ -54,6 +61,7 @@ export declare abstract class HarnessEnvironment<E> implements HarnessLoader, Lo
     locatorFor<T extends (HarnessQuery<any> | string)[]>(...queries: T): AsyncFactoryFn<LocatorFnResult<T>>;
     locatorForAll<T extends (HarnessQuery<any> | string)[]>(...queries: T): AsyncFactoryFn<LocatorFnResult<T>[]>;
     locatorForOptional<T extends (HarnessQuery<any> | string)[]>(...queries: T): AsyncFactoryFn<LocatorFnResult<T> | null>;
+    rootHarnessLoader(): Promise<HarnessLoader>;
     abstract waitForTasksOutsideAngular(): Promise<void>;
 }
 
@@ -88,6 +96,7 @@ export interface LocatorFactory {
     locatorFor<T extends (HarnessQuery<any> | string)[]>(...queries: T): AsyncFactoryFn<LocatorFnResult<T>>;
     locatorForAll<T extends (HarnessQuery<any> | string)[]>(...queries: T): AsyncFactoryFn<LocatorFnResult<T>[]>;
     locatorForOptional<T extends (HarnessQuery<any> | string)[]>(...queries: T): AsyncFactoryFn<LocatorFnResult<T> | null>;
+    rootHarnessLoader(): Promise<HarnessLoader>;
     waitForTasksOutsideAngular(): Promise<void>;
 }
 

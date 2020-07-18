@@ -202,6 +202,9 @@ export interface LocatorFactory {
   locatorForAll<T extends (HarnessQuery<any> | string)[]>(...queries: T):
       AsyncFactoryFn<LocatorFnResult<T>[]>;
 
+  /** @return A `HarnessLoader` rooted at the root element of this `LocatorFactory`. */
+  rootHarnessLoader(): Promise<HarnessLoader>;
+
   /**
    * Gets a `HarnessLoader` instance for an element under the root of this `LocatorFactory`.
    * @param selector The selector for the root element.
@@ -369,6 +372,31 @@ export abstract class ComponentHarness {
    */
   protected async waitForTasksOutsideAngular() {
     return this.locatorFactory.waitForTasksOutsideAngular();
+  }
+}
+
+
+/**
+ * Base class for component harnesses that authors should extend if they anticipate that consumers
+ * of the harness may want to access other harnesses within the `<ng-content>` of the component.
+ */
+export abstract class ContentContainerComponentHarness<S extends string = string>
+  extends ComponentHarness implements HarnessLoader {
+
+  getChildLoader(selector: S): Promise<HarnessLoader> {
+    return this.locatorFactory.harnessLoaderFor(selector);
+  }
+
+  getAllChildLoaders(selector: S): Promise<HarnessLoader[]> {
+    return this.locatorFactory.harnessLoaderForAll(selector);
+  }
+
+  getHarness<T extends ComponentHarness>(query: HarnessQuery<T>): Promise<T> {
+    return this.locatorFor(query)();
+  }
+
+  getAllHarnesses<T extends ComponentHarness>(query: HarnessQuery<T>): Promise<T[]> {
+    return this.locatorForAll(query)();
   }
 }
 
