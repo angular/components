@@ -54,8 +54,8 @@ class SlideToggleAdapter implements MDCSwitchAdapter {
   private _inputNativeElement: HTMLElement;
 
   constructor(private readonly _delegate: MatSlideToggle) {
-    this._switchNativeElement = this._delegate._switchElement.nativeElement;
-    this._inputNativeElement = this._delegate._inputElement.nativeElement;
+    this._switchNativeElement = _delegate._switchElement.nativeElement;
+    this._inputNativeElement = _delegate._inputElement.nativeElement;
   }
 
   addClass(className: string) {
