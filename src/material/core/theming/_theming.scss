@@ -122,16 +122,8 @@ $_mat-theme-generate-default-density: true !default;
     accent: $accent,
     warn: if($warn != null, $warn, mat-palette($mat-red)),
     is-dark: false,
-    foreground: if(
-      $foreground != null,
-      map_merge($mat-light-theme-foreground, $foreground),
-      $mat-light-theme-foreground
-    ),
-    background: if(
-      $background != null,
-      map_merge($mat-light-theme-background, $background),
-      $mat-light-theme-background
-    ),
+    foreground: if($foreground != null, $foreground, $mat-light-theme-foreground),
+    background: if($background != null, $background, $mat-light-theme-background),
   );
 }
 
@@ -148,16 +140,8 @@ $_mat-theme-generate-default-density: true !default;
     accent: $accent,
     warn: if($warn != null, $warn, mat-palette($mat-red)),
     is-dark: true,
-    foreground: if(
-      $foreground != null,
-      map_merge($mat-dark-theme-foreground, $foreground),
-      $mat-dark-theme-foreground
-    ),
-    background: if(
-      $background != null,
-      map_merge($mat-dark-theme-background, $background),
-      $mat-dark-theme-background
-    ),
+    foreground: if($foreground != null, $foreground, $mat-dark-theme-foreground),
+    background: if($background != null, $background, $mat-dark-theme-background),
   );
 }
 
