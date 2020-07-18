@@ -65,10 +65,10 @@ class SlideToggleAdapter implements MDCSwitchAdapter {
     return this._switchNativeElement.classList.remove(className);
   }
   setNativeControlChecked(checked: boolean) {
-    this._delegate._checked = checked;
+    this._delegate.checked = checked;
   }
   setNativeControlDisabled(disabled: boolean) {
-    this._delegate._disabled = disabled;
+    this._delegate.disabled = disabled;
   }
   setNativeControlAttr(name: string, value: string) {
     this._inputNativeElement.setAttribute(name, value);
@@ -121,7 +121,7 @@ export class MatSlideToggle implements ControlValueAccessor, AfterViewInit, OnDe
 
   private _uniqueId: string = `mat-mdc-slide-toggle-${++nextUniqueId}`;
   private _required: boolean = false;
-  _checked: boolean = false;
+  private _checked: boolean = false;
   private _foundation: MDCSwitchFoundation;
   private _adapter: MDCSwitchAdapter;
 
@@ -195,7 +195,7 @@ export class MatSlideToggle implements ControlValueAccessor, AfterViewInit, OnDe
       this._foundation.setDisabled(this._disabled);
     }
   }
-  _disabled = false;
+  private _disabled = false;
 
   /** An event will be dispatched each time the slide-toggle changes its value. */
   @Output() readonly change: EventEmitter<MatSlideToggleChange> =
