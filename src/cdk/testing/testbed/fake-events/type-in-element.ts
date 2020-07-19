@@ -62,8 +62,10 @@ export function typeInElement(element: HTMLElement, ...modifiersAndKeys: any) {
   triggerFocus(element);
   for (const key of keys) {
     dispatchKeyboardEvent(element, 'keydown', key.keyCode, key.key, modifiers);
-    dispatchKeyboardEvent(element, 'keypress', key.keyCode, key.key, modifiers);
-    if (isTextInput(element) && key.key) {
+    const keypresss = dispatchKeyboardEvent(
+      element, 'keypress', key.keyCode, key.key, modifiers,
+    );
+    if (!keypresss.defaultPrevented && isTextInput(element) && key.key) {
       emulateKeyInTextInput(modifiers, key.key, element);
     }
     dispatchKeyboardEvent(element, 'keyup', key.keyCode, key.key, modifiers);
