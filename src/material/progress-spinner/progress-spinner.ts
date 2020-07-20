@@ -33,12 +33,6 @@ export type ProgressSpinnerMode = 'determinate' | 'indeterminate';
  */
 const BASE_SIZE = 100;
 
-/**
- * Base reference stroke width of the spinner.
- * @docs-private
- */
-const BASE_STROKE_WIDTH = 10;
-
 // Boilerplate for applying mixins to MatProgressSpinner.
 /** @docs-private */
 class MatProgressSpinnerBase {
@@ -231,7 +225,7 @@ export class MatProgressSpinner extends _MatProgressSpinnerMixinBase implements 
 
   /** The radius of the spinner, adjusted for stroke width. */
   get _circleRadius() {
-    return (this.diameter - BASE_STROKE_WIDTH) / 2;
+    return (this.diameter - this.strokeWidth) / 2;
   }
 
   /** The view box of the spinner's svg element. */

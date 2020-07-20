@@ -153,7 +153,20 @@ describe('MatProgressSpinner', () => {
     expect(parseInt(svgElement.style.height))
         .toBe(32, 'Expected the custom diameter to be applied to the svg element height.');
     expect(svgElement.getAttribute('viewBox'))
-        .toBe('0 0 25.2 25.2', 'Expected the custom diameter to be applied to the svg viewBox.');
+        .toBe('0 0 32 32', 'Expected the custom diameter to be applied to the svg viewBox.');
+  });
+
+  it('should handle a custom diameter value of 10 or lower', () => {
+    const fixture = TestBed.createComponent(ProgressSpinnerCustomDiameter);
+
+    fixture.componentInstance.diameter = 10;
+    fixture.detectChanges();
+
+    const circleElement = fixture.nativeElement.querySelector('circle');
+    const svgElement = fixture.nativeElement.querySelector('svg');
+
+    expect(circleElement.getAttribute('r')).toEqual('4.5');
+    expect(svgElement.getAttribute('viewBox')).toBe('0 0 10 10');
   });
 
   it('should add a style tag with the indeterminate animation to the document head when using a ' +
@@ -197,10 +210,10 @@ describe('MatProgressSpinner', () => {
     expect(parseInt(circleElement.style.strokeWidth)).toBe(40, 'Expected the custom stroke ' +
       'width to be applied to the circle element as a percentage of the element size.');
     expect(svgElement.getAttribute('viewBox'))
-      .toBe('0 0 130 130', 'Expected the viewBox to be adjusted based on the stroke width.');
+      .toBe('0 0 100 100', 'Expected the viewBox to be adjusted based on the stroke width.');
   });
 
-  it('should expand the host element if the stroke width is greater than the default', () => {
+  it('should not expand the host element if the stroke width is greater than the default', () => {
     const fixture = TestBed.createComponent(ProgressSpinnerCustomStrokeWidth);
     const element = fixture.debugElement.nativeElement.querySelector('.mat-progress-spinner');
 
@@ -275,7 +288,7 @@ describe('MatProgressSpinner', () => {
     expect(spinner.nativeElement.style.height).toBe('37px');
     expect(svgElement.style.width).toBe('37px');
     expect(svgElement.style.height).toBe('37px');
-    expect(svgElement.getAttribute('viewBox')).toBe('0 0 38 38');
+    expect(svgElement.getAttribute('viewBox')).toBe('0 0 37 37');
   });
 
   it('should update the element size when changed dynamically', () => {
