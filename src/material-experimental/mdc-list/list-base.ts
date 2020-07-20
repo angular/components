@@ -40,32 +40,41 @@ class ListAdapter implements MDCListAdapter {
   getListItemCount() {
     return this._delegate._items.length;
   }
+
   listItemAtIndexHasClass(index: number, className: string) {
     return this._delegate._elementAtIndex(index).classList.contains(className);
   }
+
   addClassForElementIndex(index: number, className: string) {
     return this._delegate._elementAtIndex(index).classList.add(className);
   }
+
   removeClassForElementIndex(index: number, className: string) {
     return this._delegate._elementAtIndex(index).classList.remove(className);
   }
+
   getAttributeForElementIndex(index: number, attr: string) {
     return this._delegate._elementAtIndex(index).getAttribute(attr);
   }
+
   setAttributeForElementIndex(index: number, attr: string, value: string) {
     return this._delegate._elementAtIndex(index).setAttribute(attr, value);
   }
+
   getFocusedElementIndex() {
-    return this._delegate._indexForElement(this._delegate.getDocument()?.activeElement);
+    return this._delegate._indexForElement(this._delegate._document?.activeElement);
   }
+
   isFocusInsideList() {
-    return this._delegate.getElement().nativeElement.contains(
-      this._delegate.getDocument()?.activeElement);
+    return this._delegate._element.nativeElement.contains(
+      this._delegate._document?.activeElement);
   }
+
   isRootFocused() {
-    return this._delegate.getElement().nativeElement ===
-      this._delegate.getDocument()?.activeElement;
+    return this._delegate._element.nativeElement ===
+      this._delegate._document?.activeElement;
   }
+
   focusItemAtIndex(index: number) {
     return this._delegate._elementAtIndex(index).focus();
   }
@@ -204,13 +213,13 @@ export abstract class MatInteractiveListBase extends MatListBase
 
   protected _foundation: MDCListFoundation;
 
-  protected _document: Document;
+  _document: Document;
 
   private _itemsArr: MatListItemBase[] = [];
 
   private _subscriptions = new Subscription();
 
-  constructor(protected _element: ElementRef<HTMLElement>, @Inject(DOCUMENT) document: any) {
+  constructor(public _element: ElementRef<HTMLElement>, @Inject(DOCUMENT) document: any) {
     super();
     this._document = document;
     this._isNonInteractive = false;
@@ -227,18 +236,6 @@ export abstract class MatInteractiveListBase extends MatListBase
   ngOnDestroy() {
     this._foundation.destroy();
     this._subscriptions.unsubscribe();
-  }
-
-  getItems() {
-    return this._items;
-  }
-
-  getDocument() {
-    return this._document;
-  }
-
-  getElement() {
-    return this._element;
   }
 
   private _initItems() {
