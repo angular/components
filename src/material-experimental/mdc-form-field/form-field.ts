@@ -92,13 +92,17 @@ const DEFAULT_FLOAT_LABEL: FloatLabelType = 'auto';
 const FLOATING_LABEL_DEFAULT_DOCKED_TRANSFORM = `translateY(-50%)`;
 
 class TextFieldAdapter implements MDCTextFieldAdapter {
+
   constructor(private _delegate: MatFormField) {}
+
   addClass(className: string) {
     this._delegate._textField.nativeElement.classList.add(className);
   }
+
   removeClass(className: string) {
     this._delegate._textField.nativeElement.classList.remove(className);
   }
+
   hasClass(className: string) {
     return this._delegate._textField.nativeElement.classList.contains(className);
   }
@@ -106,9 +110,11 @@ class TextFieldAdapter implements MDCTextFieldAdapter {
   hasLabel() {
     return this._delegate._hasFloatingLabel();
   }
+
   isFocused() {
     return this._delegate._control.focused;
   }
+
   hasOutline() {
     return this._delegate._hasOutline();
   }
@@ -145,10 +151,13 @@ class TextFieldAdapter implements MDCTextFieldAdapter {
   notchOutline() {}
   closeOutline() {}
 
-  activateLineRipple = () =>
-    this._delegate._lineRipple && this._delegate._lineRipple.activate()
-  deactivateLineRipple = () =>
-    this._delegate._lineRipple && this._delegate._lineRipple.deactivate()
+  activateLineRipple() {
+    return this._delegate._lineRipple && this._delegate._lineRipple.activate();
+  }
+
+  deactivateLineRipple() {
+    return this._delegate._lineRipple && this._delegate._lineRipple.deactivate();
+  }
 
   // The foundation tries to register events on the input. This is not matching
   // our concept of abstract form field controls. We handle each event manually
@@ -164,7 +173,9 @@ class TextFieldAdapter implements MDCTextFieldAdapter {
   // controls. MDC needs a reference to the native input optionally to handle character
   // counting and value updating. These are both things we do not handle from within the
   // form-field, so we can just return null.
-  getNativeInput = () => null;
+  getNativeInput() {
+    return null;
+  }
 
   // This method will never be called since we do not have the ability to add event listeners
   // to the native input. This is because the form control is not necessarily an input, and
@@ -183,7 +194,9 @@ class TextFieldAdapter implements MDCTextFieldAdapter {
   // based on that. We do not need this logic since we handle the validity through the
   // abstract form control instance.
   deregisterValidationAttributeChangeHandler() {}
-  registerValidationAttributeChangeHandler = () => null as any;
+  registerValidationAttributeChangeHandler() {
+    return null as any;
+  }
 }
 
 /** Container for form controls that applies Material Design styling and behavior. */
