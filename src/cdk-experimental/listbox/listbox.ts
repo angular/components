@@ -193,7 +193,6 @@ export class CdkListbox implements AfterContentInit, OnDestroy, OnInit {
     );
   }) as Observable<OptionSelectionChangeEvent>;
 
-
   private _disabled: boolean = false;
   private _multiple: boolean = false;
   private _useActiveDescendant: boolean = true;
