@@ -174,14 +174,6 @@ export function createFakeEvent(type: string, canBubble = false, cancelable = tr
 }
 
 /**
- * Sets the `target` of a given event. This method provides a convenient way to update
- * the target of a event as the `target` property is usually considered `readonly`.
- */
-export function setEventTarget(event: Event, target: Element) {
-  defineReadonlyEventProperty(event, 'target', target);
-}
-
-/**
  * Defines a readonly property on the given event object. Readonly properties on an event object
  * are always set as configurable as that matches default readonly properties for DOM event objects.
  */
