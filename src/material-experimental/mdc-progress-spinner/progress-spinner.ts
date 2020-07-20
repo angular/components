@@ -6,7 +6,14 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {ChangeDetectionStrategy, Component, ViewEncapsulation} from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  OnDestroy,
+  ViewEncapsulation
+} from '@angular/core';
+import {MDCCircularProgressFoundation} from '@material/circular-progress'
 
 @Component({
   selector: 'mat-progress-spinner',
@@ -16,4 +23,18 @@ import {ChangeDetectionStrategy, Component, ViewEncapsulation} from '@angular/co
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
-export class MatProgressSpinner {}
+export class MatProgressSpinner implements AfterViewInit, OnDestroy{
+  private _circularProgressFoundation: MDCCircularProgressFoundation;
+
+  constructor() {
+    this._circularProgressFoundation = new MDCCircularProgressFoundation();
+  }
+
+  ngAfterViewInit() {
+    this._circularProgressFoundation.init();
+  }
+
+  ngOnDestroy() {
+    this._circularProgressFoundation.destroy();
+  }
+}
