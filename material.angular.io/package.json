@@ -18,7 +18,7 @@
     "build:content": "yarn upgrade @angular/components-examples",
     "build:sm": "ng build --prod --source-map",
     "prod-build": "ng build --prod",
-    "postinstall": "webdriver-manager update --gecko false && ngcc --async false --properties es2015 browser module main --first-only --create-ivy-entry-points",
+    "postinstall": "webdriver-manager update --gecko false",
     "publish-prod": "bash ./tools/deploy.sh stable prod",
     "publish-dev": "bash ./tools/deploy.sh",
     "publish-beta": "bash ./tools/deploy.sh stable beta"
@@ -30,7 +30,7 @@
     "@angular/cdk-experimental": "^10.0.2",
     "@angular/common": "^10.0.1",
     "@angular/compiler": "^10.0.1",
-    "@angular/components-examples": "angular/material2-docs-content#10.0.x",
+    "@angular/components-examples": "https://github.com/angular/material2-docs-content.git#33b7ab32041e2845fb82497ff304c86690fded90",
     "@angular/core": "^10.0.1",
     "@angular/forms": "^10.0.1",
     "@angular/google-maps": "^10.0.2",

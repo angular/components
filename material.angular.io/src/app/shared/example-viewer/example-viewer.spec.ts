@@ -76,7 +76,7 @@ describe('ExampleViewer', () => {
 
   it('should expand to TS tab', async(async () => {
     component.example = exampleKey;
-    component.file = 'file.ts';
+    component.file = EXAMPLE_COMPONENTS[exampleKey].primaryFile;
     component.view = 'snippet';
     component.toggleCompactView();
 
@@ -112,18 +112,18 @@ describe('ExampleViewer', () => {
 
   it('should print an error message about incorrect file type', async(() => {
     spyOn(console, 'error');
+    component.example = exampleKey;
     component.file = 'file.bad';
     component.selectCorrectTab();
 
     expect(console.error).toHaveBeenCalledWith(
-      'Unexpected file type: bad. Expected html, ts, or css.');
+      `Could not find tab for file extension: "bad".`);
   }));
 
   it('should set and return example properly', async(() => {
     component.example = exampleKey;
     const data = component.exampleData;
-    // TODO(jelbourn): remove `as any` once LiveExample is updated to have optional members.
-    expect(data).toEqual(EXAMPLE_COMPONENTS[exampleKey] as any);
+    expect(data).toEqual(EXAMPLE_COMPONENTS[exampleKey]);
   }));
 
   it('should print an error message about missing example', async(() => {
@@ -159,13 +159,31 @@ describe('ExampleViewer', () => {
     it('should be able to render additional files', () => {
       EXAMPLE_COMPONENTS['additional-files'] = {
         ...EXAMPLE_COMPONENTS[exampleKey],
-        additionalFiles: ['some-additional-file.html'],
+        files: [
+          'additional-files-example.ts',
+          'additional-files-example.html',
+          'additional-files-example.css',
+          'some-additional-file.html'
+        ],
       };
 
       component.example = 'additional-files';
 
       expect(component._getExampleTabNames())
         .toEqual(['HTML', 'TS', 'CSS', 'some-additional-file.html']);
+    });
+
+    it('should be possible for example to not have CSS or HTML files', () => {
+      EXAMPLE_COMPONENTS['additional-files'] = {
+        ...EXAMPLE_COMPONENTS[exampleKey],
+        files: [
+          'additional-files-example.ts',
+        ],
+      };
+
+      component.example = 'additional-files';
+
+      expect(component._getExampleTabNames()).toEqual(['TS']);
     });
   });
 

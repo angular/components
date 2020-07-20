@@ -17,6 +17,9 @@ export type Views = 'snippet' | 'full' | 'demo';
 /** Regular expression that matches a file name and its extension */
 const fileExtensionRegex = /(.*)\.(\w+)/;
 
+/** Preferred order for files of an example displayed in the viewer. */
+const preferredExampleFileOrder = ['HTML', 'TS', 'CSS'];
+
 @Component({
   selector: 'example-viewer',
   templateUrl: './example-viewer.html',
@@ -28,7 +31,7 @@ export class ExampleViewer implements OnInit {
   /** The tab to jump to when expanding from snippet view. */
   selectedTab: number = 0;
 
-  /** Map of example files that should be displayed in the view-source tab. */
+  /** Map of example files that should be displayed in the view-source tab in order. */
   exampleTabs: {[tabName: string]: string};
 
   /** Data for the currently selected example. */
@@ -79,21 +82,24 @@ export class ExampleViewer implements OnInit {
     }
   }
 
+  /** Selects a given tab based on the example file of the compact view. */
   selectCorrectTab() {
-    const fileType = this.file?.split('.').slice(-1)[0];
-    switch (fileType) {
-      case 'html':
-        this.selectedTab = 0;
-        break;
-      case 'ts':
-        this.selectedTab = 1;
-        break;
-      case 'css':
-        this.selectedTab = 2;
-        break;
-      default:
-        console.error(`Unexpected file type: ${fileType}. Expected html, ts, or css.`);
+    if (!this.file || !this.exampleTabs) {
+      return;
     }
+
+    const extension = this.file.substring(this.file.lastIndexOf('.') + 1);
+    const exampleTabNames = this._getExampleTabNames();
+
+    for (let i = 0; i < exampleTabNames.length; i++) {
+      const tabName = exampleTabNames[i];
+      if (tabName.toLowerCase() === extension || tabName.endsWith(`.${extension}`)) {
+        this.selectedTab = i;
+        return;
+      }
+    }
+
+    console.error(`Could not find tab for file extension: "${extension}".`);
   }
 
   toggleCompactView() {
@@ -129,12 +135,19 @@ export class ExampleViewer implements OnInit {
       fileName = `${contentBeforeDot}-${contentAfterDot}.html`;
     }
 
-    const examplePath = `${this.exampleData.module.importSpecifier}/${this.example}`;
-    return `/docs-content/examples-highlighted/${examplePath}/${fileName}`;
+    return `/docs-content/examples-highlighted/${this.exampleData.packagePath}/${fileName}`;
   }
 
   _getExampleTabNames() {
-    return Object.keys(this.exampleTabs);
+    return Object.keys(this.exampleTabs).sort((a, b) => {
+      let indexA = preferredExampleFileOrder.indexOf(a);
+      let indexB = preferredExampleFileOrder.indexOf(b);
+      // Files which are not part of the preferred example file order should be
+      // moved after all items with a preferred index.
+      if (indexA === -1) indexA = preferredExampleFileOrder.length;
+      if (indexB === -1) indexB = preferredExampleFileOrder.length;
+      return (indexA - indexB) || 1;
+    });
   }
 
   /** Loads the component and module factory for the currently selected example. */
@@ -158,22 +171,28 @@ export class ExampleViewer implements OnInit {
   }
 
   private _generateExampleTabs() {
-    const examplePath = `${this.exampleData.module.importSpecifier}/${this.example}`;
-    const docsContentPath = `/docs-content/examples-highlighted/${examplePath}`;
+    const docsContentPath = `/docs-content/examples-highlighted/${this.exampleData.packagePath}`;
+    // Name of the default example files. If files with such name exist within the example,
+    // we provide a shorthand for them within the example tabs (for less verbose tabs).
+    const exampleBaseFileName = `${this.example}-example`;
 
-    this.exampleTabs = {
-      HTML: `${docsContentPath}/${this.example}-example-html.html`,
-      TS: `${docsContentPath}/${this.example}-example-ts.html`,
-      CSS: `${docsContentPath}/${this.example}-example-css.html`,
-    };
+    this.exampleTabs = {};
 
-    const additionalFiles = this.exampleData.additionalFiles || [];
-
-    additionalFiles.forEach((fileName: string) => {
+    for (const fileName of this.exampleData.files) {
       // Since the additional files refer to the original file name, we need to transform
       // the file name to match the highlighted HTML file that displays the source.
       const fileSourceName = fileName.replace(fileExtensionRegex, '$1-$2.html');
-      this.exampleTabs[fileName] = `${docsContentPath}/${fileSourceName}`;
-    });
+      const importPath = `${docsContentPath}/${fileSourceName}`;
+
+      if (fileName === `${exampleBaseFileName}.ts`) {
+        this.exampleTabs['TS'] = importPath;
+      } else if (fileName === `${exampleBaseFileName}.css`) {
+        this.exampleTabs['CSS'] = importPath;
+      } else if (fileName === `${exampleBaseFileName}.html`) {
+        this.exampleTabs['HTML'] = importPath;
+      } else {
+        this.exampleTabs[fileName] = importPath;
+      }
+    }
   }
 }

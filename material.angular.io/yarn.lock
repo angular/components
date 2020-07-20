@@ -202,15 +202,9 @@
   dependencies:
     tslib "^2.0.0"
 
-"@angular/components-examples@angular/material2-docs-content#10.0.x":
-  version "10.0.2-sha-ba5c2feb0"
-  resolved "https://codeload.github.com/angular/material2-docs-content/tar.gz/00da8d7f03897721fd841b7829f37a9afc06ed7f"
-  dependencies:
-    tslib "^2.0.0"
-
-"@angular/components-examples@https://github.com/angular/material2-docs-content.git#fd76eb77418b2193f243be0570b727e63728e3e3":
-  version "10.0.1-sha-55d50750e"
-  resolved "https://github.com/angular/material2-docs-content.git#fd76eb77418b2193f243be0570b727e63728e3e3"
+"@angular/components-examples@https://github.com/angular/material2-docs-content.git#33b7ab32041e2845fb82497ff304c86690fded90":
+  version "10.1.0-next.0-sha-57f20bfb9"
+  resolved "https://github.com/angular/material2-docs-content.git#33b7ab32041e2845fb82497ff304c86690fded90"
   dependencies:
     tslib "^2.0.0"
 
