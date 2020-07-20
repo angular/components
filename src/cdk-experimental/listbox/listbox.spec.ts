@@ -64,8 +64,8 @@ describe('CdkOption', () => {
     });
 
     it('should have set the selected input of the options to null by default', () => {
-      for (const instance of optionInstances) {
-        expect(instance.selected).toBeFalse();
+      for (const option of optionElements) {
+        expect(option.hasAttribute('aria-selected')).toBeFalse();
       }
     });
 
