@@ -57,7 +57,7 @@ export function runHarnessTests(
     expect(flatTreeNodes.length).toBe(1);
     const secondGroup = flatTreeNodes[0];
 
-    expect(await secondGroup.getRole()).toBe('group');
+    expect(await secondGroup.isLeaf()).toBe(false);
     expect(await secondGroup.getText()).toBe('Toggle  Flat Group 2');
     expect(await secondGroup.getLevel()).toBe(0);
     expect(await secondGroup.isDisabled()).toBe(false);
@@ -72,7 +72,7 @@ export function runHarnessTests(
 
     expect(await firstGroup.isExpanded()).toBe(false);
 
-    await firstGroup.toggleExpansion();
+    await firstGroup.expand();
 
     expect(await firstGroup.isExpanded()).toBe(true);
   });

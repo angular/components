@@ -45,9 +45,16 @@ export class MatTreeNodeHarness extends ComponentHarness {
     return coerceNumberProperty(await (await this.host()).getAttribute('aria-level'));
   }
 
-  /** Gets the role of the tree node. 'group' or 'treeitem' */
-  async getRole(): Promise<string|null> {
-    return (await this.host()).getAttribute('role');
+  /** Whether the node is a leaf node. */
+  async isLeaf(): Promise<boolean> {
+    const role = await (await this.host()).getAttribute('role');
+    if (role === 'group') {
+      return false;
+    } else if (role === 'treeitem') {
+      return true
+    } else {
+      throw new Error('Invalid node role');
+    }
   }
 
   /** Gets the tree node's text. */
@@ -55,11 +62,25 @@ export class MatTreeNodeHarness extends ComponentHarness {
     return (await this.host()).text();
   }
 
-  /** Expands/collapses the node by clicking on the toggle. Only works when node is not disabled. */
-  async toggleExpansion(): Promise<void> {
+  /** Toggles node between expanded/collapsed. Only works when node is not disabled. */
+  async toggle(): Promise<void> {
     const toggle = await this._toggle();
     if (toggle) {
       return toggle.click();
+    }
+  }
+
+  /** Expands the node if it is collapsed. Only works when node is not disabled. */
+  async expand(): Promise<void> {
+    if (!(await this.isExpanded())) {
+      await this.toggle();
+    }
+  }
+
+  /** Collapses the node if it is expanded. Only works when node is not disabled. */
+  async collapse(): Promise<void> {
+    if (await this.isExpanded()) {
+      await this.toggle();
     }
   }
 }
@@ -97,6 +118,6 @@ function getNodePredicate<T extends MatTreeNodeHarness>(
       'level', options.level,
       async (harness, level) => (await harness.getLevel()) === level)
     .addOption(
-      'role', options.role,
-      async (harness, role) => (await harness.getRole()) === role);
+      'leaf', options.leaf,
+      async (harness, leaf) => (await harness.isLeaf()) === leaf);
 }
