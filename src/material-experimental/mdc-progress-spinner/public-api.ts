@@ -6,5 +6,5 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-export * from './checkbox';
+export * from './progress-spinner';
 export * from './module';
