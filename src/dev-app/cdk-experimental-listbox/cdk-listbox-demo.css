@@ -1,14 +1,14 @@
-.example-listbox {
+.demo-listbox {
   list-style-type: none;
   border: 1px solid black;
   cursor: default;
   padding: 0;
 }
 
-.cdk-option-selected {
-  background: cornflowerblue;
+.demo-listbox .cdk-option-active {
+  background: lightgrey;
 }
 
-.cdk-option-active {
-  background: lightgrey;
+.demo-listbox .cdk-option-selected {
+  background: cornflowerblue;
 }
