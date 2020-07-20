@@ -27,7 +27,7 @@ export const matDrawerAnimations: {
     // 1. Having a transform can cause elements with ripples or an animated
     //    transform to shift around in Chrome with an RTL layout (see #10023).
     // 2. 3d transforms causes text to appear blurry on IE and Edge.
-    state('open, open-instant', style({
+    state('open, open-instant, void-rail', style({
       'transform': 'none',
       'visibility': 'visible',
     })),
@@ -37,7 +37,7 @@ export const matDrawerAnimations: {
       'visibility': 'hidden',
     })),
     transition('void => open-instant', animate('0ms')),
-    transition('void <=> open, open-instant => void',
-        animate('400ms cubic-bezier(0.25, 0.8, 0.25, 1)'))
+    transition('void <=> open, void-rail <=> open, open-instant => void, open-instant => void-rail',
+      animate('400ms cubic-bezier(0.25, 0.8, 0.25, 1)'))
   ])
 };

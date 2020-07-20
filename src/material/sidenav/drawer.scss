@@ -139,6 +139,10 @@ $mat-drawer-over-drawer-z-index: 4;
     z-index: $mat-drawer-side-drawer-z-index;
   }
 
+  &.mat-drawer-rail:not(.mat-drawer-opened) {
+    width: 200px;
+  }
+
   &.mat-drawer-end {
     right: 0;
     transform: translate3d(100%, 0, 0);

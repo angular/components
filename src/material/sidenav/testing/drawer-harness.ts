@@ -38,7 +38,7 @@ export class MatDrawerHarness extends ComponentHarness {
   }
 
   /** Gets the mode that the drawer is in. */
-  async getMode(): Promise<'over'|'push'|'side'> {
+  async getMode(): Promise<'over'|'push'|'side' | 'rail'> {
     const host = await this.host();
 
     if (await host.hasClass('mat-drawer-push')) {
@@ -47,6 +47,10 @@ export class MatDrawerHarness extends ComponentHarness {
 
     if (await host.hasClass('mat-drawer-side')) {
       return 'side';
+    }
+
+    if (await host.hasClass('mat-drawer-rail')) {
+      return 'rail';
     }
 
     return 'over';
