@@ -57,41 +57,50 @@ const RIPPLE_ANIMATION_CONFIG: RippleAnimationConfig = {
   exitDuration: numbers.FG_DEACTIVATION_MS,
 };
 
-/** Singleton check box adapter. */
+/** Check box adapter. */
 class CheckBoxAdapter implements MDCCheckboxAdapter {
   constructor(private readonly _delegate: MatCheckbox) {}
 
   addClass(className: string) {
-    return this._delegate.setClass(className, true);
+    return this._delegate._setClass(className, true);
   }
+
   removeClass(className: string) {
-    return this._delegate.setClass(className, false);
+    return this._delegate._setClass(className, false);
   }
+
   forceLayout() {
     return this._delegate._checkbox.nativeElement.offsetWidth;
   }
+
   hasNativeControl() {
     return !!this._delegate._nativeCheckbox;
   }
+
   isAttachedToDOM() {
     return !!this._delegate._checkbox.nativeElement.parentNode;
   }
+
   isChecked() {
     return this._delegate.checked;
-    }
+  }
+
   isIndeterminate() {
     return this._delegate.indeterminate;
   }
+
   removeNativeControlAttr(attr: string)  {
-    if (!this._delegate.getAttrBlacklist().has(attr)) {
+    if (!this._delegate._getAttrBlocklist().has(attr)) {
       this._delegate._nativeCheckbox.nativeElement.removeAttribute(attr);
     }
   }
+
   setNativeControlAttr(attr: string, value: string)  {
-    if (!this._delegate.getAttrBlacklist().has(attr)) {
+    if (!this._delegate._getAttrBlocklist().has(attr)) {
       this._delegate._nativeCheckbox.nativeElement.setAttribute(attr, value);
     }
   }
+
   setNativeControlDisabled(disabled: boolean) {
     this._delegate.disabled = disabled;
   }
@@ -279,9 +288,10 @@ export class MatCheckbox implements AfterViewInit, OnDestroy, ControlValueAccess
     // @breaking-change 10.0.0: Remove this after the `_clickAction` parameter is removed as an
     // injection parameter.
     this._clickAction = this._clickAction || this._options.clickAction;
+    console.log('potato!!!!!!!!!!!!!!!');
   }
 
-  getAttrBlacklist() {
+  _getAttrBlocklist() {
     return this._attrBlacklist;
   }
 
@@ -399,7 +409,7 @@ export class MatCheckbox implements AfterViewInit, OnDestroy, ControlValueAccess
   }
 
   /** Sets whether the given CSS class should be applied to the native input. */
-  setClass(cssClass: string, active: boolean) {
+  _setClass(cssClass: string, active: boolean) {
     this._classes[cssClass] = active;
     this._changeDetectorRef.markForCheck();
   }
