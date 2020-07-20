@@ -62,7 +62,7 @@ class ChipSetAdapter implements MDCChipSetAdapter {
   removeFocusFromChipAtIndex() {}
 
   isRTL() {
-    return !!this._delegate.getDir() && this._delegate.getDir().value === 'rtl';
+    return !!this._delegate._dir && this._delegate._dir.value === 'rtl';
   }
 
   getChipListCount() {
@@ -188,7 +188,7 @@ export class MatChipSet extends _MatChipSetMixinBase implements AfterContentInit
 
   constructor(protected _elementRef: ElementRef,
               protected _changeDetectorRef: ChangeDetectorRef,
-              @Optional() protected _dir: Directionality) {
+              @Optional() public _dir: Directionality) {
     super(_elementRef);
     this._chipSetAdapter = new ChipSetAdapter(this);
     this._chipSetFoundation = new MDCChipSetFoundation(this._chipSetAdapter);
@@ -217,11 +217,6 @@ export class MatChipSet extends _MatChipSetMixinBase implements AfterContentInit
     this._destroyed.next();
     this._destroyed.complete();
     this._chipSetFoundation.destroy();
-  }
-
-  /** Returns directionality of the chip */
-  getDir() {
-    return this._dir;
   }
 
   /** Checks whether any of the chips is focused. */
