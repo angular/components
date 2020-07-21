@@ -8,11 +8,11 @@
 
 import {NgModule} from '@angular/core';
 import {MatCommonModule} from '@angular/material/core';
-import {MatProgressSpinner} from './progress-spinner';
+import {MatProgressSpinner, MatSpinner} from './progress-spinner';
 
 @NgModule({
-  exports: [MatProgressSpinner, MatCommonModule],
-  declarations: [MatProgressSpinner],
+  exports: [MatProgressSpinner, MatSpinner, MatCommonModule],
+  declarations: [MatProgressSpinner, MatSpinner],
 })
 export class MatProgressSpinnerModule {
 }

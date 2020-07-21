@@ -131,6 +131,7 @@ filegroup(
         "@npm//:node_modules/@material/base/dist/mdc.base.js",
         "@npm//:node_modules/@material/checkbox/dist/mdc.checkbox.js",
         "@npm//:node_modules/@material/chips/dist/mdc.chips.js",
+        "@npm//:node_modules/@material/circular-progress/dist/mdc.circularProgress.js",
         "@npm//:node_modules/@material/data-table/dist/mdc.dataTable.js",
         "@npm//:node_modules/@material/dialog/dist/mdc.dialog.js",
         "@npm//:node_modules/@material/dom/dist/mdc.dom.js",

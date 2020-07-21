@@ -1,11 +1,25 @@
-@import '@material/linear-progress/mixins.import';
+@import '@material/circular-progress/mixins.import';
 @import '@material/theme/functions.import';
 @import '../mdc-helpers/mdc-helpers';
+
+@mixin _mat-mdc-progress-spinner-color($color) {
+  @include mdc-circular-progress-color($color, $query: $mat-theme-styles-query);
+}
 
 @mixin mat-mdc-progress-spinner-color($config-or-theme) {
   $config: mat-get-color-config($config-or-theme);
   @include mat-using-mdc-theme($config) {
-    @include mdc-circular-progress-core-styles($query: $mat-base-styles-without-animation-query);
+    .mat-mdc-progress-spinner {
+      @include _mat-mdc-progress-spinner-color(primary);
+
+      &.mat-accent {
+        @include _mat-mdc-progress-spinner-color(secondary);
+      }
+
+      &.mat-warn {
+        @include _mat-mdc-progress-spinner-color(error);
+      }
+    }
   }
 }
 
