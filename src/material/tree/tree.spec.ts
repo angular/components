@@ -72,7 +72,7 @@ describe('MatTree', () => {
         fixture.detectChanges();
 
         const ariaLevels = getNodes(treeElement).map(n => n.getAttribute('aria-level'));
-        expect(ariaLevels).toEqual(['0', '0', '0', '1']);
+        expect(ariaLevels).toEqual(['1', '1', '1', '2']);
       });
 
       it('with the right data', () => {

@@ -126,7 +126,7 @@ describe('CdkTree', () => {
         dataSource.addChild(data[0], true);
 
         const ariaLevels = getNodes(treeElement).map(n => n.getAttribute('aria-level'));
-        expect(ariaLevels).toEqual(['1', '2', '1', '1']);
+        expect(ariaLevels).toEqual(['2', '3', '2', '2']);
       });
 
       it('with the right data', () => {

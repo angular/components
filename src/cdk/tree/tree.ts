@@ -299,7 +299,7 @@ export class CdkTree<T> implements AfterContentChecked, CollectionViewer, OnDest
   exportAs: 'cdkTreeNode',
   host: {
     '[attr.aria-expanded]': 'isExpanded',
-    '[attr.aria-level]': 'level',
+    '[attr.aria-level]': 'level + 1',
     '[attr.role]': 'role',
     'class': 'cdk-tree-node',
   },
