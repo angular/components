@@ -90,13 +90,13 @@ class CheckBoxAdapter implements MDCCheckboxAdapter {
   }
 
   removeNativeControlAttr(attr: string)  {
-    if (!this._delegate._getAttrBlocklist().has(attr)) {
+    if (!this._delegate._attrBlocklist.has(attr)) {
       this._delegate._nativeCheckbox.nativeElement.removeAttribute(attr);
     }
   }
 
   setNativeControlAttr(attr: string, value: string)  {
-    if (!this._delegate._getAttrBlocklist().has(attr)) {
+    if (!this._delegate._attrBlocklist.has(attr)) {
       this._delegate._nativeCheckbox.nativeElement.setAttribute(attr, value);
     }
   }
@@ -256,10 +256,7 @@ export class MatCheckbox implements AfterViewInit, OnDestroy, ControlValueAccess
    * MDC uses animation events to determine when to update `aria-checked` which is unreliable.
    * Therefore we disable it and handle it ourselves.
    */
-  private _attrBlacklist = new Set(['aria-checked']);
-
-  /** The `MDCCheckboxAdapter` instance for this checkbox. */
-  private _adapter: CheckBoxAdapter;
+  readonly _attrBlocklist: ReadonlySet<string> = new Set(['aria-checked']);
 
   constructor(
       private _changeDetectorRef: ChangeDetectorRef,
@@ -276,8 +273,7 @@ export class MatCheckbox implements AfterViewInit, OnDestroy, ControlValueAccess
     // Note: We don't need to set up the MDCFormFieldFoundation. Its only purpose is to manage the
     // ripple, which we do ourselves instead.
     this.tabIndex = parseInt(tabIndex) || 0;
-    this._adapter = new CheckBoxAdapter(this);
-    this._checkboxFoundation = new MDCCheckboxFoundation(this._adapter);
+    this._checkboxFoundation = new MDCCheckboxFoundation(new CheckBoxAdapter(this));
 
     this._options = this._options || {};
 
@@ -288,11 +284,6 @@ export class MatCheckbox implements AfterViewInit, OnDestroy, ControlValueAccess
     // @breaking-change 10.0.0: Remove this after the `_clickAction` parameter is removed as an
     // injection parameter.
     this._clickAction = this._clickAction || this._options.clickAction;
-    console.log('potato!!!!!!!!!!!!!!!');
-  }
-
-  _getAttrBlocklist() {
-    return this._attrBlacklist;
   }
 
   ngAfterViewInit() {
