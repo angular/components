@@ -42,7 +42,7 @@ contribution.
 [MDC Web][] ([see @jelbourn's ng-conf talk](https://youtu.be/4EXQKP-Sihw?t=891)). Much of our effort
 is dedicated towards rolling out these new versions of the components across Angular apps
 inside Google. This work will payoff with the following benefits:
-  * Dramatically improve consistency with the Material Design spec, which has changed significatly
+  * Dramatically improve consistency with the Material Design spec, which has changed significantly
     since Angular Material's 2016 inception.
   * Introduce a new theming API for component density, a top feature request.
   * Fix a number of longstanding accessibility bugs.
