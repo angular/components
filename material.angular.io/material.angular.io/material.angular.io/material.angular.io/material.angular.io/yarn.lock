@@ -208,12 +208,6 @@
   dependencies:
     tslib "^2.0.0"
 
-"@angular/components-examples@https://github.com/angular/material2-docs-content.git#33b7ab32041e2845fb82497ff304c86690fded90":
-  version "10.1.0-next.0-sha-57f20bfb9"
-  resolved "https://github.com/angular/material2-docs-content.git#33b7ab32041e2845fb82497ff304c86690fded90"
-  dependencies:
-    tslib "^2.0.0"
-
 "@angular/core@^10.0.1":
   version "10.0.1"
   resolved "https://registry.yarnpkg.com/@angular/core/-/core-10.0.1.tgz#7737de1e7e382034e86dcff32282af8c209a7787"

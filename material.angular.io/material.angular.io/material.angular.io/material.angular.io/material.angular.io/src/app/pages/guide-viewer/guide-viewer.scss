@@ -16,10 +16,6 @@ $guide-content-margin-side-xs: 15px;
   display: block;
   text-align: center;
 
-  // Ensures that the footer is pushed to the bottom and prevents
-  // the page from jumping around while something is loading.
-  min-height: 100vh;
-
   @media ($mat-xsmall) {
     padding-left: $content-padding-side-xs;
     padding-right: $content-padding-side-xs;
@@ -33,6 +29,10 @@ $guide-content-margin-side-xs: 15px;
   text-align: left;
   max-width: 940px;
   margin: 0 auto;
+
+  // Ensures that the footer is pushed to the bottom and prevents
+  // the page from jumping around while something is loading.
+  min-height: 100vh;
 
   @media (max-width: $extra-small-breakpoint-width) {
     flex-direction: column;
