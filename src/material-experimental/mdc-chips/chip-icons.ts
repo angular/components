@@ -50,9 +50,10 @@ export class MatChipAvatar {
   }
 }
 
+/** @docs-private */
 class ChipTrailingActionAdapter implements MDCChipTrailingActionAdapter {
-  constructor(private _delegate: MatChipTrailingIcon) {
-}
+  constructor(private _delegate: MatChipTrailingIcon) {}
+
   focus() {
     this._delegate._elementRef.nativeElement.focus();
   }

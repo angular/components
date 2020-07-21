@@ -98,9 +98,7 @@ class ChipAdapter implements MDCChipAdapter {
     // We need to null check the `classList`, because IE and Edge don't
     // support it on SVG elements and Edge seems to throw for ripple
     // elements, because they're outside the DOM.
-    return (target && (target as Element).classList) ?
-        (target as Element).classList.contains(className) :
-        false;
+    return (target as Element)?.classList?.contains(className);
   }
 
   notifyInteraction() {
@@ -160,7 +158,7 @@ class ChipAdapter implements MDCChipAdapter {
   }
 
   isRTL() {
-    return !!this._delegate._getDir() && this._delegate._getDir().value === 'rtl';
+    return !!this._delegate._dir && this._delegate._dir.value === 'rtl';
   }
 
   focusPrimaryAction() {
@@ -375,21 +373,14 @@ export class MatChip extends _MatChipMixinBase implements AfterContentInit, Afte
   /** Reference to the MatRipple instance of the chip. */
   @ViewChild(MatRipple) ripple: MatRipple;
 
- /**
-  * Implementation of the MDC chip adapter interface.
-  * These methods are called by the chip foundation.
-  */
-  protected _chipAdapter: MDCChipAdapter;
-
   constructor(
       public _changeDetectorRef: ChangeDetectorRef,
       readonly _elementRef: ElementRef, protected _ngZone: NgZone,
-      @Optional() private _dir: Directionality,
+      @Optional() readonly _dir: Directionality,
       // @breaking-change 8.0.0 `animationMode` parameter to become required.
       @Optional() @Inject(ANIMATION_MODULE_TYPE) animationMode?: string) {
     super(_elementRef);
-    this._chipAdapter = new ChipAdapter(this);
-    this._chipFoundation = new MDCChipFoundation(this._chipAdapter);
+    this._chipFoundation = new MDCChipFoundation(new ChipAdapter(this));
     this._animationsDisabled = animationMode === 'NoopAnimations';
     this._isBasicChip = _elementRef.nativeElement.hasAttribute(this.basicChipAttrName) ||
                         _elementRef.nativeElement.tagName.toLowerCase() === this.basicChipAttrName;
@@ -409,11 +400,6 @@ export class MatChip extends _MatChipMixinBase implements AfterContentInit, Afte
     this._destroyed.next();
     this._destroyed.complete();
     this._chipFoundation.destroy();
-  }
-
-  /** Returns the directionality */
-  _getDir() {
-    return this._dir;
   }
 
   /** Sets up the remove icon chip foundation, and subscribes to remove icon events. */

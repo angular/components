@@ -31,7 +31,7 @@ import {MatChip, MatChipEvent} from './chip';
 
 let uid = 0;
 
-
+/** @docs-private */
 class ChipSetAdapter implements MDCChipSetAdapter {
 
   constructor(private _delegate: MatChipSet) {}
@@ -188,10 +188,9 @@ export class MatChipSet extends _MatChipSetMixinBase implements AfterContentInit
 
   constructor(protected _elementRef: ElementRef,
               protected _changeDetectorRef: ChangeDetectorRef,
-              @Optional() public _dir: Directionality) {
+              @Optional() readonly _dir: Directionality) {
     super(_elementRef);
-    this._chipSetAdapter = new ChipSetAdapter(this);
-    this._chipSetFoundation = new MDCChipSetFoundation(this._chipSetAdapter);
+    this._chipSetFoundation = new MDCChipSetFoundation(new ChipSetAdapter(this));
   }
 
   ngAfterViewInit() {
