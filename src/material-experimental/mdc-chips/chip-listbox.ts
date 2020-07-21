@@ -31,7 +31,7 @@ import {merge, Observable, Subscription} from 'rxjs';
 import {startWith, takeUntil} from 'rxjs/operators';
 import {MatChip, MatChipEvent} from './chip';
 import {MatChipOption, MatChipSelectionChange} from './chip-option';
-import {MatChipSet} from './chip-set';
+import {MatChipSet, ChipSetAdapter} from './chip-set';
 
 
 /** Change event object that is emitted when the chip listbox value has changed. */
@@ -212,7 +212,7 @@ export class MatChipListbox extends MatChipSet implements AfterContentInit, Cont
       this._setSelected(index, selected);
     };
     // Reinitialize the foundation with our overridden adapter
-    this._chipSetFoundation = new MDCChipSetFoundation(this._chipSetAdapter);
+    this._chipSetFoundation = new MDCChipSetFoundation(new ChipSetAdapter(this));
     this._updateMdcSelectionClasses();
   }
 
