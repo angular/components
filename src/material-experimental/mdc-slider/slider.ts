@@ -94,7 +94,7 @@ class SliderAdapter implements MDCSliderAdapter {
     return this._delegate._getElementRef().nativeElement.setAttribute(name, value);
   }
 
-  removeAttribute = (name: string) {
+  removeAttribute(name: string) {
     this._delegate._getElementRef().nativeElement.removeAttribute(name);
   }
 
