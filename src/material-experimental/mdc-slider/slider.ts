@@ -73,6 +73,7 @@ export const MAT_SLIDER_VALUE_ACCESSOR: any = {
   multi: true
 };
 
+new TabIndicatorAdapter(this)
 class SliderAdapter implements MDCSliderAdapter {
 
   constructor(private _delegate: MatSlider) {}
