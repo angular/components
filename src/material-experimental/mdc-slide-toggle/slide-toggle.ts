@@ -61,15 +61,19 @@ class SlideToggleAdapter implements MDCSwitchAdapter {
   addClass(className: string) {
     return this._switchNativeElement.classList.add(className);
   }
+
   removeClass(className: string) {
     return this._switchNativeElement.classList.remove(className);
   }
+
   setNativeControlChecked(checked: boolean) {
     this._delegate.checked = checked;
   }
+
   setNativeControlDisabled(disabled: boolean) {
     this._delegate.disabled = disabled;
   }
+
   setNativeControlAttr(name: string, value: string) {
     this._inputNativeElement.setAttribute(name, value);
   }
@@ -218,12 +222,11 @@ export class MatSlideToggle implements ControlValueAccessor, AfterViewInit, OnDe
               @Inject(MAT_SLIDE_TOGGLE_DEFAULT_OPTIONS)
                   public defaults: MatSlideToggleDefaultOptions,
               @Optional() @Inject(ANIMATION_MODULE_TYPE) public _animationMode?: string) {
-    this._adapter = new SlideToggleAdapter(this);
     this.tabIndex = parseInt(tabIndex) || 0;
   }
 
   ngAfterViewInit() {
-    const foundation = this._foundation = new MDCSwitchFoundation(this._adapter);
+    const foundation = this._foundation = new MDCSwitchFoundation(new SlideToggleAdapter(this));
     foundation.setDisabled(this.disabled);
     foundation.setChecked(this.checked);
   }
