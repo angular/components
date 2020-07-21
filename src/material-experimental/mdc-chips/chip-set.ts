@@ -190,7 +190,7 @@ export class MatChipSet extends _MatChipSetMixinBase implements AfterContentInit
               protected _changeDetectorRef: ChangeDetectorRef,
               @Optional() readonly _dir: Directionality) {
     super(_elementRef);
-    this._chipSetFoundation = new MDCChipSetFoundation(new ChipSetAdapter(this));
+    this._chipSetFoundation = new MDCChipSetFoundation(this._chipSetAdapter);
   }
 
   ngAfterViewInit() {

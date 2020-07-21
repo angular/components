@@ -70,6 +70,7 @@ const RIPPLE_ANIMATION_CONFIG: RippleAnimationConfig = {
 };
 
 
+/** @docs-private */
 class ChipAdapter implements MDCChipAdapter {
 
   constructor (private _delegate: MatChip) {}
