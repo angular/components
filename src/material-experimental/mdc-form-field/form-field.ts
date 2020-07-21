@@ -148,7 +148,9 @@ class TextFieldAdapter implements MDCTextFieldAdapter {
   // our form field, as we support custom controls and detect the required state through
   // a public property in the abstract form control.
   setLabelRequired() {}
+
   notchOutline() {}
+
   closeOutline() {}
 
   activateLineRipple() {
@@ -187,6 +189,7 @@ class TextFieldAdapter implements MDCTextFieldAdapter {
   // to focus the input. Since we do not handle the input value as part of the form-field, nor
   // it's guaranteed to be an input (see adapter methods above), this is a noop.
   deregisterTextFieldInteractionHandler() {}
+
   registerTextFieldInteractionHandler() {}
 
   // The foundation tries to setup a "MutationObserver" in order to watch for attributes
@@ -194,6 +197,7 @@ class TextFieldAdapter implements MDCTextFieldAdapter {
   // based on that. We do not need this logic since we handle the validity through the
   // abstract form control instance.
   deregisterValidationAttributeChangeHandler() {}
+
   registerValidationAttributeChangeHandler() {
     return null as any;
   }
@@ -322,7 +326,6 @@ export class MatFormField implements AfterViewInit, OnDestroy, AfterContentCheck
   private _explicitFormFieldControl: MatFormFieldControl<any>;
   private _foundation: MDCTextFieldFoundation;
   private _needsOutlineLabelOffsetUpdateOnStable = false;
-  private _adapter: MDCTextFieldAdapter = new TextFieldAdapter(this);
 
   constructor(private _elementRef: ElementRef,
               private _changeDetectorRef: ChangeDetectorRef,
@@ -341,7 +344,7 @@ export class MatFormField implements AfterViewInit, OnDestroy, AfterContentCheck
   }
 
   ngAfterViewInit() {
-    this._foundation = new MDCTextFieldFoundation(this._adapter);
+    this._foundation = new MDCTextFieldFoundation(new TextFieldAdapter(this));
 
     // MDC uses the "shouldFloat" getter to know whether the label is currently floating. This
     // does not match our implementation of when the label floats because we support more cases.
