@@ -127,6 +127,7 @@ class ChipAdapter implements MDCChipAdapter {
     // Make it `display: none` so users can't tab into it.
     this._delegate._elementRef.nativeElement.style.display = 'none';
   }
+  
   // Noop for now since we don't support editable chips yet.
   notifyEditStart() {}
 
