@@ -46,7 +46,7 @@
     "integration-tests:view-engine": "bazel test --test_tag_filters=view-engine-only --build_tests_only -- //integration/... -//integration/size-test/...",
     "integration-tests:size-test": "bazel test //integration/size-test/..."
   },
-  "version": "10.1.0-next.0",
+  "version": "10.1.0",
   "dependencies": {
     "@angular/animations": "^10.0.0",
     "@angular/common": "^10.0.0",
@@ -59,7 +59,7 @@
     "@types/youtube": "^0.0.38",
     "@webcomponents/custom-elements": "^1.1.0",
     "core-js": "^2.6.9",
-    "material-components-web": "8.0.0-canary.d850de590.0",
+    "material-components-web": "8.0.0-canary.abcdbcfeb.0",
     "rxjs": "^6.5.3",
     "rxjs-tslint-rules": "^4.33.1",
     "systemjs": "0.19.43",
@@ -73,7 +73,7 @@
     "@angular/bazel": "^10.0.0",
     "@angular/benchpress": "^0.2.0",
     "@angular/compiler-cli": "^10.0.0",
-    "@angular/dev-infra-private": "https://github.com/angular/dev-infra-private-builds.git#0d806013f9c76bfae91d648fb69fc3cb2bf08758",
+    "@angular/dev-infra-private": "https://github.com/angular/dev-infra-private-builds.git#0612a30aaf7a7e7eb2a4a5a9fa0f58622ce59590",
     "@angular/platform-browser-dynamic": "^10.0.0",
     "@angular/platform-server": "^10.0.0",
     "@angular/router": "^10.0.0",

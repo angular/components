@@ -143,6 +143,7 @@
 /src/dev-app/button-toggle/**                      @jelbourn
 /src/dev-app/button/**                             @jelbourn
 /src/dev-app/card/**                               @jelbourn
+/src/dev-app/cdk-experimental-listbox/**           @jelbourn @nielsr98
 /src/dev-app/cdk-experimental-menu/**              @jelbourn @andy9775
 /src/dev-app/checkbox/**                           @jelbourn @devversion
 /src/dev-app/chips/**                              @jelbourn
@@ -234,6 +235,7 @@
 /src/e2e-app/mdc-menu/**                           @crisbeto
 /src/e2e-app/mdc-progress-bar/**                   @crisbeto
 /src/e2e-app/mdc-radio/**                          @mmalerba
+/src/e2e-app/mdc-slider/**                         @andrewseguin
 /src/e2e-app/mdc-slide-toggle/**                   @crisbeto
 /src/e2e-app/mdc-tabs/**                           @crisbeto
 /src/e2e-app/mdc-table/**                          @andrewseguin

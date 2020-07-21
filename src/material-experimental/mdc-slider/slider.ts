@@ -18,7 +18,6 @@ import {
   AfterViewInit,
   Attribute,
   ChangeDetectionStrategy,
-  ChangeDetectorRef,
   Component,
   ElementRef,
   EventEmitter,
@@ -37,7 +36,7 @@ import {
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {ThemePalette} from '@angular/material/core';
 import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
-import {MDCSliderAdapter, MDCSliderFoundation} from '@material/slider';
+import {MDCSliderAdapter, MDCSliderFoundation, Thumb} from '@material/slider';
 import {Subscription} from 'rxjs';
 
 /**
@@ -53,10 +52,14 @@ const MIN_AUTO_TICK_SEPARATION = 30;
  */
 const TICK_MARKER_SIZE = 2;
 
+// TODO: disabled until we implement the new MDC slider.
 /** Event options used to bind passive listeners. */
+// tslint:disable-next-line:no-unused-variable
 const passiveListenerOptions = normalizePassiveListenerOptions({passive: true});
 
+// TODO: disabled until we implement the new MDC slider.
 /** Event options used to bind active listeners. */
+// tslint:disable-next-line:no-unused-variable
 const activeListenerOptions = normalizePassiveListenerOptions({passive: false});
 
 /**
@@ -348,7 +351,6 @@ export class MatSlider implements AfterViewInit, OnChanges, OnDestroy, ControlVa
   }
   private _disabled = false;
 
-
   /** Instance of the MDC slider foundation for this slider. */
   readonly _foundation = new MDCSliderFoundation(new SliderAdapter(this));
 
@@ -398,7 +400,7 @@ export class MatSlider implements AfterViewInit, OnChanges, OnDestroy, ControlVa
       // The MDC slider foundation accesses DOM globals, so we cannot initialize the
       // foundation on the server. The foundation would be needed to move the thumb
       // to the proper position and to render the ticks.
-      this._foundation.init();
+      // this._foundation.init();
 
       // The standard Angular Material slider is always using discrete values. We always
       // want to enable discrete values and support ticks, but want to still provide
@@ -493,15 +495,19 @@ export class MatSlider implements AfterViewInit, OnChanges, OnDestroy, ControlVa
     return event;
   }
 
+  // TODO: disabled until we implement the new MDC slider.
   /** Emits a change event and notifies the control value accessor. */
-  _emitChangeEvent(newValue: number) {
+  // tslint:disable-next-line:no-unused-variable
+  private _emitChangeEvent(newValue: number) {
     this._controlValueAccessorChangeFn(newValue);
     this.valueChange.emit(newValue);
     this.change.emit(this._createChangeEvent(newValue));
   }
 
+  // TODO: disabled until we implement the new MDC slider.
   /** Computes the CSS background value for the track markers (aka ticks). */
-  _getTrackMarkersBackground(min: number, max: number, step: number) {
+  // tslint:disable-next-line:no-unused-variable
+  private _getTrackMarkersBackground(min: number, max: number, step: number) {
     if (!this.tickInterval) {
       return '';
     }
@@ -532,32 +538,39 @@ export class MatSlider implements AfterViewInit, OnChanges, OnDestroy, ControlVa
     // the markers dynamically. This is a workaround until we can get a public API for it. See:
     // https://github.com/material-components/material-components-web/issues/5020
     (this._foundation as any).hasTrackMarker_ = this.tickInterval !== 0;
-    this._foundation.setupTrackMarker();
+
+    // TODO: disabled until we implement the new MDC slider.
+    // this._foundation.setupTrackMarker();
   }
 
   /** Syncs the "step" input value with the MDC foundation. */
   private _syncStep() {
-    this._foundation.setStep(this.step);
+    // TODO: disabled until we implement the new MDC slider.
+    // this._foundation.setStep(this.step);
   }
 
   /** Syncs the "max" input value with the MDC foundation. */
   private _syncMax() {
-    this._foundation.setMax(this.max);
+    // TODO: disabled until we implement the new MDC slider.
+    // this._foundation.setMax(this.max);
   }
 
   /** Syncs the "min" input value with the MDC foundation. */
   private _syncMin() {
-    this._foundation.setMin(this.min);
+    // TODO: disabled until we implement the new MDC slider.
+    // this._foundation.setMin(this.min);
   }
 
   /** Syncs the "value" input binding with the MDC foundation. */
   private _syncValue() {
-    this._foundation.setValue(this.value!);
+    // TODO: disabled until we implement the new MDC slider.
+    // this._foundation.setValue(this.value!);
   }
 
   /** Syncs the "disabled" input value with the MDC foundation. */
   private _syncDisabled() {
-    this._foundation.setDisabled(this.disabled);
+    // TODO: disabled until we implement the new MDC slider.
+    // this._foundation.setDisabled(this.disabled);
   }
 
   /** Whether the slider is displayed in RTL-mode. */
