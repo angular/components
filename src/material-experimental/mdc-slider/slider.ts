@@ -124,7 +124,7 @@ class SliderAdapter implements MDCSliderAdapter {
     (evtType: any, handler: (this: HTMLElement, ev: any) => any) {
     // The thumb container interaction handlers are currently just used for transition
     // events which don't need to run in the Angular zone.
-    this._delegate._getNgZone().runOutsideAngular(() => {
+    this._delegate._ngZone.runOutsideAngular(() => {
       this._delegate._thumbContainer.nativeElement
         .addEventListener(evtType, handler, passiveListenerOptions);
     });
@@ -151,7 +151,7 @@ class SliderAdapter implements MDCSliderAdapter {
   registerResizeHandler = (handler: (this: Window, ev: UIEvent) => any) => {
     // The resize handler is currently responsible for detecting slider dimension
     // changes and therefore doesn't cause a value change that needs to be propagated.
-    this._delegate._getNgZone().runOutsideAngular(() => window.addEventListener('resize', handler));
+    this._delegate._ngZone.runOutsideAngular(() => window.addEventListener('resize', handler));
   }
 
   deregisterResizeHandler
@@ -372,7 +372,7 @@ export class MatSlider implements AfterViewInit, OnChanges, OnDestroy, ControlVa
   constructor(
       private _elementRef: ElementRef<HTMLElement>,
       private _changeDetectorRef: ChangeDetectorRef,
-      private _ngZone: NgZone,
+      readonly _ngZone: NgZone,
       private _platform: Platform,
       @Optional() private _dir: Directionality,
       @Attribute('tabindex') tabIndex: string,
@@ -465,10 +465,6 @@ export class MatSlider implements AfterViewInit, OnChanges, OnDestroy, ControlVa
 
   _getFoundation() {
     return this._foundation;
-  }
-
-  _getNgZone() {
-    return this._ngZone;
   }
 
   /** Focuses the slider. */
