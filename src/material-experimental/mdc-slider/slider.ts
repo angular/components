@@ -31,7 +31,8 @@ import {
   Output,
   SimpleChanges,
   ViewChild,
-  ViewEncapsulation
+  ViewEncapsulation,
+  ChangeDetectorRef
 } from '@angular/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {ThemePalette} from '@angular/material/core';
@@ -73,7 +74,7 @@ export const MAT_SLIDER_VALUE_ACCESSOR: any = {
   multi: true
 };
 
-new TabIndicatorAdapter(this)
+/** @docs-private */
 class SliderAdapter implements MDCSliderAdapter {
 
   constructor(private _delegate: MatSlider) {}
@@ -499,7 +500,7 @@ export class MatSlider implements AfterViewInit, OnChanges, OnDestroy, ControlVa
   // TODO: disabled until we implement the new MDC slider.
   /** Emits a change event and notifies the control value accessor. */
   // tslint:disable-next-line:no-unused-variable
-  private _emitChangeEvent(newValue: number) {
+  _emitChangeEvent(newValue: number) {
     this._controlValueAccessorChangeFn(newValue);
     this.valueChange.emit(newValue);
     this.change.emit(this._createChangeEvent(newValue));
@@ -508,7 +509,7 @@ export class MatSlider implements AfterViewInit, OnChanges, OnDestroy, ControlVa
   // TODO: disabled until we implement the new MDC slider.
   /** Computes the CSS background value for the track markers (aka ticks). */
   // tslint:disable-next-line:no-unused-variable
-  private _getTrackMarkersBackground(min: number, max: number, step: number) {
+  _getTrackMarkersBackground(min: number, max: number, step: number) {
     if (!this.tickInterval) {
       return '';
     }
