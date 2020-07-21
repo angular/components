@@ -34,6 +34,7 @@ function toggleClass(el: Element, className: string, on: boolean) {
   }
 }
 
+/** @docs-private */
 class ListAdapter implements MDCListAdapter {
   constructor(private _delegate: MatInteractiveListBase) {}
 
