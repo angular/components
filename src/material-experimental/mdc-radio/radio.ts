@@ -65,6 +65,7 @@ const RIPPLE_ANIMATION_CONFIG: RippleAnimationConfig = {
   exitDuration: numbers.FG_DEACTIVATION_MS
 };
 
+/** @docs-private */
 class RadioAdapter implements MDCRadioAdapter {
   constructor(private readonly _delegate: MatRadioButton) {}
   addClass(className: string) {
@@ -129,8 +130,6 @@ export class MatRadioGroup extends _MatRadioGroupBase<MatRadioButton> {
 })
 export class MatRadioButton extends _MatRadioButtonBase implements AfterViewInit, OnDestroy {
 
-  private _radioAdapter: MDCRadioAdapter;
-
   /** Configuration for the underlying ripple. */
   _rippleAnimation: RippleAnimationConfig = RIPPLE_ANIMATION_CONFIG;
 
@@ -147,8 +146,7 @@ export class MatRadioButton extends _MatRadioButtonBase implements AfterViewInit
               _providerOverride?: MatRadioDefaultOptions) {
     super(radioGroup, elementRef, _changeDetector, _focusMonitor,
         _radioDispatcher, _animationMode, _providerOverride);
-    this._radioAdapter = new RadioAdapter(this);
-    this._radioFoundation = new MDCRadioFoundation(this._radioAdapter);
+    this._radioFoundation = new MDCRadioFoundation(new RadioAdapter(this));
   }
 
   ngAfterViewInit() {

@@ -57,8 +57,8 @@ const RIPPLE_ANIMATION_CONFIG: RippleAnimationConfig = {
   exitDuration: numbers.FG_DEACTIVATION_MS,
 };
 
-/** Check box adapter. */
-class CheckBoxAdapter implements MDCCheckboxAdapter {
+/** @docs-private */
+class CheckboxAdapter implements MDCCheckboxAdapter {
   constructor(private readonly _delegate: MatCheckbox) {}
 
   addClass(className: string) {
@@ -273,7 +273,7 @@ export class MatCheckbox implements AfterViewInit, OnDestroy, ControlValueAccess
     // Note: We don't need to set up the MDCFormFieldFoundation. Its only purpose is to manage the
     // ripple, which we do ourselves instead.
     this.tabIndex = parseInt(tabIndex) || 0;
-    this._checkboxFoundation = new MDCCheckboxFoundation(new CheckBoxAdapter(this));
+    this._checkboxFoundation = new MDCCheckboxFoundation(new CheckboxAdapter(this));
 
     this._options = this._options || {};
 
