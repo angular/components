@@ -21,7 +21,7 @@ import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
 import {SelectionChange, SelectionModel} from '@angular/cdk/collections';
 import {defer, merge, Observable, Subject} from 'rxjs';
 import {startWith, switchMap, takeUntil} from 'rxjs/operators';
-import {ControlValueAccessor} from "@angular/forms";
+import {ControlValueAccessor} from '@angular/forms';
 
 let nextId = 0;
 
@@ -382,7 +382,7 @@ export class CdkListbox implements AfterContentInit, OnDestroy, OnInit, ControlV
   /** Selects the given option if the option and listbox aren't disabled. */
   select(option: CdkOption) {
     if (!this.disabled && !option.disabled) {
-      const wasSelected = option.selected
+      const wasSelected = option.selected;
       option.select();
 
       if (!wasSelected) {
@@ -447,7 +447,7 @@ export class CdkListbox implements AfterContentInit, OnDestroy, OnInit, ControlV
 
   /** Selects an option that has the corresponding given value. */
   private _setSelectionByValue(values: any | any[]) {
-    for (const option of this._options) {
+    for (const option of this._options.toArray()) {
       this.deselect(option);
     }
 
