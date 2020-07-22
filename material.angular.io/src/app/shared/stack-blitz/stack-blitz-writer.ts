@@ -213,12 +213,14 @@ export class StackBlitzWriter {
       // Replace `bootstrap: [MaterialDocsExample]`
       // will be replaced as `bootstrap: [ButtonDemo]`
       // This assumes the first component listed in the main component
-      const componentList = data.componentNames[0];
       fileContent = fileContent.
         replace(/bootstrap: \[MaterialDocsExample]/g,
-          `bootstrap: [${componentList}]`);
+          `bootstrap: [${data.componentNames[0]}]`);
 
-      fileContent = fileContent.replace(/material-docs-example/g, data.indexFilename);
+      const dotIndex = data.indexFilename.lastIndexOf('.');
+      const importFileName = data.indexFilename.slice(0, dotIndex === -1 ? undefined : dotIndex);
+      fileContent = fileContent.replace(/material-docs-example/g, importFileName);
+
     }
     return fileContent;
   }

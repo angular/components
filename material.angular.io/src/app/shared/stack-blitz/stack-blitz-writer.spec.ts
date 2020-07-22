@@ -29,6 +29,7 @@ describe('StackBlitzWriter', () => {
     data = new ExampleData('');
     data.componentNames = [];
     data.exampleFiles = ['test.ts', 'test.html', 'src/detail.ts'];
+    data.indexFilename = data.exampleFiles[0];
 
     // Fake the example in the `EXAMPLE_COMPONENTS`. The stack blitz writer relies on
     // module information for the example in order to read the example sources from disk.
