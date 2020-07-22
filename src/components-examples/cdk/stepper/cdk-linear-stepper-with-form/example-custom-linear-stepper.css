@@ -2,7 +2,6 @@
   border: 1px solid;
   padding: 10px;
   margin: 10px;
-  color: inherit;
 }
 
 .example-step-navigation-bar {
@@ -20,7 +19,6 @@
 }
 
 .example-step.example-active {
-  color: inherit;
   border-bottom: 1px solid;
   font-weight: 600;
 }
