@@ -88,7 +88,7 @@ export class StackBlitzWriter {
    */
   constructStackBlitzForm(exampleId: string, data: ExampleData): Promise<HTMLFormElement> {
     const liveExample = EXAMPLE_COMPONENTS[exampleId];
-    const indexFile = `src%2Fapp%2F${data.indexFilename}.ts`;
+    const indexFile = `src%2Fapp%2F${data.indexFilename}`;
     const form = this._createFormElement(indexFile);
     const baseExamplePath =
         `${DOCS_CONTENT_PATH}/${liveExample.module.importSpecifier}/${exampleId}/`;
