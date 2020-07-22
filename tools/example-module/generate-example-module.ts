@@ -50,7 +50,7 @@ function inlineExampleModuleTemplate(parsedData: AnalyzedExamples): string {
       files: data.files,
       selector: data.selector,
       additionalComponents: data.additionalComponents,
-      primaryFile: path.basename(data.sourcePath),
+      primaryFile: path.basename(data.sourcePath, path.extname(data.sourcePath)),
       module: {
         name: data.module.name,
         importSpecifier: data.module.packagePath,
