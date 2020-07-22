@@ -467,28 +467,22 @@ export class CdkTable<T> implements AfterContentChecked, CollectionViewer, OnDes
     // Render updates if the list of columns have been changed for the header, row, or footer defs.
     this._renderUpdatedColumns();
 
-    let forced = false;
-
     // If the header row definition has been changed, trigger a render to the header row.
     if (this._headerRowDefChanged) {
       this._forceRenderHeaderRows();
       this._headerRowDefChanged = false;
-      forced = true;
     }
 
     // If the footer row definition has been changed, trigger a render to the footer row.
     if (this._footerRowDefChanged) {
       this._forceRenderFooterRows();
       this._footerRowDefChanged = false;
-      forced = true;
     }
 
     // If there is a data source and row definitions, connect to the data source unless a
     // connection has already been made.
     if (this.dataSource && this._rowDefs.length > 0 && !this._renderChangeSubscription) {
       this._observeRenderChanges();
-    } else if (forced) {
-      this.updateStickyColumnStyles();
     }
 
     this._checkStickyStates();
@@ -797,27 +791,19 @@ export class CdkTable<T> implements AfterContentChecked, CollectionViewer, OnDes
    */
   private _renderUpdatedColumns() {
     const columnsDiffReducer = (acc: boolean, def: BaseRowDef) => acc || !!def.getColumnsDiff();
-    let forced = false;
 
     // Force re-render data rows if the list of column definitions have changed.
     if (this._rowDefs.reduce(columnsDiffReducer, false)) {
       this._forceRenderDataRows();
-      forced = true;
     }
 
     // Force re-render header/footer rows if the list of column definitions have changed..
     if (this._headerRowDefs.reduce(columnsDiffReducer, false)) {
       this._forceRenderHeaderRows();
-      forced = true;
     }
 
     if (this._footerRowDefs.reduce(columnsDiffReducer, false)) {
       this._forceRenderFooterRows();
-      forced = true;
-    }
-
-    if (forced) {
-      this.updateStickyColumnStyles();
     }
   }
 
@@ -888,6 +874,7 @@ export class CdkTable<T> implements AfterContentChecked, CollectionViewer, OnDes
 
     this._headerRowDefs.forEach((def, i) => this._renderRow(this._headerRowOutlet, def, i));
     this.updateStickyHeaderRowStyles();
+    this.updateStickyColumnStyles();
   }
   /**
    * Clears any existing content in the footer row outlet and creates a new embedded view
@@ -901,6 +888,7 @@ export class CdkTable<T> implements AfterContentChecked, CollectionViewer, OnDes
 
     this._footerRowDefs.forEach((def, i) => this._renderRow(this._footerRowOutlet, def, i));
     this.updateStickyFooterRowStyles();
+    this.updateStickyColumnStyles();
   }
 
   /** Adds the sticky column styles for the rows according to the columns' stick states. */
@@ -1060,6 +1048,7 @@ export class CdkTable<T> implements AfterContentChecked, CollectionViewer, OnDes
     this._dataDiffer.diff([]);
     this._rowOutlet.viewContainer.clear();
     this.renderRows();
+    this.updateStickyColumnStyles();
   }
 
   /**
