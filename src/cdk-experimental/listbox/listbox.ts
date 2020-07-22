@@ -451,7 +451,7 @@ export class CdkListbox implements AfterContentInit, OnDestroy, OnInit, ControlV
       this.deselect(option);
     }
 
-    values.forEach((value: any) => {
+    for (const value of values) {
       const correspondingOption = this._options.find((option: CdkOption) => {
         return option.value != null && this.compareWith(option.value,  value);
       });
@@ -459,7 +459,7 @@ export class CdkListbox implements AfterContentInit, OnDestroy, OnInit, ControlV
       if (correspondingOption) {
         this.select(correspondingOption);
       }
-    })
+    }
   }
 
   static ngAcceptInputType_disabled: BooleanInput;
@@ -483,14 +483,4 @@ export interface OptionSelectionChangeEvent {
 
   /** Whether the change in the option's value was a result of a user action. */
   isUserInput: boolean;
-}
-
-/**
- * Returns an exception to be thrown when attempting to assign a non-array value to a select
- * in `multiple` mode. Note that `undefined` and `null` are still valid values to allow for
- * resetting the value.
- * @docs-private
- */
-export function getListboxNonArrayValueError(): Error {
-  return Error('Value must be an array in multiple-selection mode.');
 }
