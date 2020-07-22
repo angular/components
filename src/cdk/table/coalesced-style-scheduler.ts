@@ -20,7 +20,7 @@ import {takeUntil} from 'rxjs/operators';
 @Injectable()
 export class _CoalescedStyleScheduler implements OnDestroy {
   private _currentSchedule: Observable<void>|null = null;
-  private _destroyed = new Subject<void>();
+  private readonly _destroyed = new Subject<void>();
 
   constructor(private readonly _ngZone: NgZone) {}
 
