@@ -6,8 +6,9 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Injectable, NgZone} from '@angular/core';
-import {from, Observable} from 'rxjs';
+import {Injectable, NgZone, OnDestroy} from '@angular/core';
+import {from, Observable, Subject} from 'rxjs';
+import {takeUntil} from 'rxjs/operators';
 
 /**
  * Allows grouping up CSSDom mutations after the current execution context.
@@ -17,8 +18,9 @@ import {from, Observable} from 'rxjs';
  * @docs-private
  */
 @Injectable()
-export class _CoalescedStyleScheduler {
+export class _CoalescedStyleScheduler implements OnDestroy {
   private _currentSchedule: Observable<void>|null = null;
+  private _destroyed = new Subject<void>();
 
   constructor(private readonly _ngZone: NgZone) {}
 
@@ -31,6 +33,14 @@ export class _CoalescedStyleScheduler {
     this._currentSchedule!.subscribe(task);
   }
 
+  /** Cancel and prevent new subscriptions. */
+  ngOnDestroy() {
+    this._destroyed.next();
+    this._destroyed.complete();
+
+    this._currentSchedule = this._destroyed;
+  }
+
   private _createScheduleIfNeeded() {
     if (this._currentSchedule) { return; }
 
@@ -38,7 +48,7 @@ export class _CoalescedStyleScheduler {
       this._currentSchedule = from(new Promise<void>((resolve) => {
         this._currentSchedule = null;
         resolve(undefined);
-      }));
+      })).pipe(takeUntil(this._destroyed));
     });
   }
 }
