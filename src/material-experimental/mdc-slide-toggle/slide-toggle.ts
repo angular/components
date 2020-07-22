@@ -127,7 +127,6 @@ export class MatSlideToggle implements ControlValueAccessor, AfterViewInit, OnDe
   private _required: boolean = false;
   private _checked: boolean = false;
   private _foundation: MDCSwitchFoundation;
-  private _adapter: MDCSwitchAdapter;
 
   /** Whether the slide toggle is currently focused. */
   _focused: boolean;
