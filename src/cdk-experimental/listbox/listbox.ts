@@ -43,7 +43,7 @@ let nextId = 0;
     '[class.cdk-option-selected]': 'selected'
   }
 })
-export class CdkOption implements ListKeyManagerOption, Highlightable {
+export class CdkOption<T = unknown> implements ListKeyManagerOption, Highlightable {
   private _selected: boolean = false;
   private _disabled: boolean = false;
   _active: boolean = false;
@@ -70,7 +70,7 @@ export class CdkOption implements ListKeyManagerOption, Highlightable {
   }
 
   /** The form value of the option. */
-  @Input() value: any;
+  @Input() value: T;
 
   @Output() readonly selectionChange: EventEmitter<OptionSelectionChangeEvent> =
       new EventEmitter<OptionSelectionChangeEvent>();
@@ -460,6 +460,9 @@ export class CdkListbox implements AfterContentInit, OnDestroy, OnInit, ControlV
 
       if (correspondingOption) {
         this.select(correspondingOption);
+        if (!this.multiple) {
+          return;
+        }
       }
     }
   }
