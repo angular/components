@@ -1,11 +1,22 @@
-<div class="mdc-circular-progress" role="progressbar">
-  <div class="mdc-circular-progress__determinate-container">
-    <svg [attr.viewBox]="_viewBox" class="mdc-circular-progress__determinate-circle-graphic"
+<ng-template #circle>
+  <svg [attr.viewBox]="_viewBox()" class="mdc-circular-progress__indeterminate-circle-graphic"
+       xmlns="http://www.w3.org/2000/svg">
+    <circle [attr.r]="_circleRadius()"
+            [style.stroke-dasharray.px]="_strokeCircumference()"
+            [style.stroke-dashoffset.px]="_strokeCircumference()/2"
+            [style.stroke-width.%]="_circleStrokeWidth()"
+            cx="50%" cy="50%"/>
+  </svg>
+</ng-template>
+
+<div class="mdc-circular-progress" role="progressbar" #spinnerRoot>
+  <div class="mdc-circular-progress__determinate-container" #determinateSpinner>
+    <svg [attr.viewBox]="_viewBox()" class="mdc-circular-progress__determinate-circle-graphic"
          xmlns="http://www.w3.org/2000/svg">
-      <circle [attr.r]="_circleRadius"
-              [style.stroke-dasharray.px]="_strokeCircumference"
-              [style.stroke-dashoffset.px]="_strokeDashOffset"
-              [style.stroke-width.%]="_circleStrokeWidth"
+      <circle [attr.r]="_circleRadius()"
+              [style.stroke-dasharray.px]="_strokeCircumference()"
+              [style.stroke-dashoffset.px]="_strokeDashOffset()"
+              [style.stroke-width.%]="_circleStrokeWidth()"
               class="mdc-circular-progress__determinate-circle"
               cx="50%" cy="50%"/>
     </svg>
@@ -13,34 +24,13 @@
   <div class="mdc-circular-progress__indeterminate-container">
     <div class="mdc-circular-progress__spinner-layer">
       <div class="mdc-circular-progress__circle-clipper mdc-circular-progress__circle-left">
-        <svg [attr.viewBox]="_viewBox" class="mdc-circular-progress__indeterminate-circle-graphic"
-             xmlns="http://www.w3.org/2000/svg">
-          <circle [attr.r]="_circleRadius"
-                  [style.stroke-dasharray.px]="_strokeCircumference"
-                  [style.stroke-dashoffset.px]="_strokeCircumference/2"
-                  [style.stroke-width.%]="_circleStrokeWidth"
-                  cx="50%" cy="50%"/>
-        </svg>
+        <ng-container [ngTemplateOutlet]="circle"></ng-container>
       </div>
       <div class="mdc-circular-progress__gap-patch">
-        <svg [attr.viewBox]="_viewBox" class="mdc-circular-progress__indeterminate-circle-graphic"
-             xmlns="http://www.w3.org/2000/svg">
-          <circle [attr.r]="_circleRadius"
-                  [style.stroke-dasharray.px]="_strokeCircumference"
-                  [style.stroke-dashoffset.px]="_strokeCircumference/2"
-                  [style.stroke-width.%]="_circleStrokeWidth"
-                  cx="50%" cy="50%"/>
-        </svg>
+        <ng-container [ngTemplateOutlet]="circle"></ng-container>
       </div>
       <div class="mdc-circular-progress__circle-clipper mdc-circular-progress__circle-right">
-        <svg [attr.viewBox]="_viewBox" class="mdc-circular-progress__indeterminate-circle-graphic"
-             xmlns="http://www.w3.org/2000/svg">
-          <circle [attr.r]="_circleRadius"
-                  [style.stroke-dasharray.px]="_strokeCircumference"
-                  [style.stroke-dashoffset.px]="_strokeCircumference/2"
-                  [style.stroke-width.%]="_circleStrokeWidth"
-                  cx="50%" cy="50%"/>
-        </svg>
+        <ng-container [ngTemplateOutlet]="circle"></ng-container>
       </div>
     </div>
   </div>

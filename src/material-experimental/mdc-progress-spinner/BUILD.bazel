@@ -22,9 +22,10 @@ ng_module(
     assets = [":progress_spinner_scss"] + glob(["**/*.html"]),
     module_name = "@angular/material-experimental/mdc-progress-spinner",
     deps = [
-        "//src/cdk/bidi",
+        "//src/cdk/platform",
         "//src/material/core",
         "//src/material/progress-spinner",
+        "@npm//@angular/common",
         "@npm//@angular/core",
         "@npm//@material/circular-progress",
     ],
@@ -59,8 +60,10 @@ ng_test_library(
     ),
     deps = [
         ":mdc-progress-spinner",
-        "//src/cdk/testing/private",
-        "@npm//@angular/platform-browser",
+         "//src/cdk/platform",
+         "//src/material/progress-spinner",
+         "@npm//@angular/common",
+         "@npm//@angular/platform-browser",
     ],
 )
 

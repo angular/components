@@ -4,15 +4,10 @@
 
 @include mdc-circular-progress-core-styles($query: $mat-base-styles-without-animation-query);
 
-.mdc-circular-progress {
-  width: 100%;
-  height: 100%;
-}
-
 .mat-mdc-progress-spinner {
   display: block;
 
-  .mdc-circular-progress--indeterminate {
+  .mdc-circular-progress {
     width: 100%;
     height: 100%;
   }

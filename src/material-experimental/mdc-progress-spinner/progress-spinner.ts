@@ -15,6 +15,7 @@ import {
   Input,
   OnDestroy,
   Optional,
+  ViewChild,
   ViewEncapsulation
 } from '@angular/core';
 import {
@@ -27,10 +28,9 @@ import {
   MAT_PROGRESS_SPINNER_DEFAULT_OPTIONS,
   MatProgressSpinnerDefaultOptions
 } from '@angular/material/progress-spinner';
-import {coerceNumberProperty} from '@angular/cdk/coercion';
+import {coerceNumberProperty, NumberInput} from '@angular/cdk/coercion';
 
 // Boilerplate for applying mixins to MatProgressBar.
-/** @docs-private */
 class MatProgressSpinnerBase {
   constructor(public _elementRef: ElementRef) {
   }
@@ -44,15 +44,14 @@ export type ProgressSpinnerMode = 'determinate' | 'indeterminate';
 
 /**
  * Base reference size of the spinner.
- * @docs-private
  */
 const BASE_SIZE = 100;
 
 /**
  * Base reference stroke width of the spinner.
- * @docs-private
  */
 const BASE_STROKE_WIDTH = 10;
+
 
 @Component({
   selector: 'mat-progress-spinner',
@@ -77,27 +76,29 @@ const BASE_STROKE_WIDTH = 10;
 export class MatProgressSpinner extends _MatProgressSpinnerMixinBase implements AfterViewInit,
   OnDestroy,
   CanColor {
+  static ngAcceptInputType_diameter: NumberInput;
+  static ngAcceptInputType_strokeWidth: NumberInput;
+  static ngAcceptInputType_value: NumberInput;
+
   /** Whether the _mat-animation-noopable class should be applied, disabling animations.  */
   _noopAnimations: boolean;
   /** Implements all of the logic of the MDC circular progress. */
-  private _foundation: MDCCircularProgressFoundation | undefined;
-  private _rootElement: HTMLElement;
-  private _determinateCircle: HTMLElement;
-  /** Adapter used by MDC to interact with the DOM. */
-  private _adapter: MDCCircularProgressAdapter = {
-    addClass: (className: string) => this._rootElement.classList.add(className),
-    hasClass: (className: string) => this._rootElement.classList.contains(className),
-    removeClass: (className: string) => this._rootElement.classList.remove(className),
-    removeAttribute: (name: string) => this._rootElement.removeAttribute(name),
-    setAttribute: (name: string, value: string) => this._rootElement.setAttribute(name, value),
-    getDeterminateCircleAttribute: (attributeName: string) => this._determinateCircle.getAttribute(
-      attributeName),
-    setDeterminateCircleAttribute: (attributeName: string,
-                                    value: string) => this._determinateCircle.setAttribute(
-      attributeName,
-      value),
-  };
+  _foundation: MDCCircularProgressFoundation;
+  @ViewChild('spinnerRoot') _rootElement: ElementRef<HTMLElement>;
+  @ViewChild('determinateSpinner') _determinateCircle: ElementRef<HTMLElement>;
 
+  private _adapter: MDCCircularProgressAdapter = {
+    addClass: (className: string) => this._rootElement.nativeElement.classList.add(className),
+    hasClass: (className: string) => this._rootElement.nativeElement.classList.contains(className),
+    removeClass: (className: string) => this._rootElement.nativeElement.classList.remove(className),
+    removeAttribute: (name: string) => this._rootElement.nativeElement.removeAttribute(name),
+    setAttribute: (name: string, value: string) =>
+      this._rootElement.nativeElement.setAttribute(name, value),
+    getDeterminateCircleAttribute: (attributeName: string) =>
+      this._determinateCircle.nativeElement.getAttribute(attributeName),
+    setDeterminateCircleAttribute: (attributeName: string, value: string) =>
+      this._determinateCircle.nativeElement.setAttribute(attributeName, value),
+  };
   constructor(public _elementRef: ElementRef<HTMLElement>,
               @Optional() @Inject(ANIMATION_MODULE_TYPE) animationMode: string,
               @Inject(MAT_PROGRESS_SPINNER_DEFAULT_OPTIONS)
@@ -160,7 +161,7 @@ export class MatProgressSpinner extends _MatProgressSpinnerMixinBase implements 
   }
 
   set diameter(size: number) {
-    this._diameter = size;
+    this._diameter = coerceNumberProperty(size);
     this._syncFoundation();
   }
 
@@ -169,7 +170,7 @@ export class MatProgressSpinner extends _MatProgressSpinnerMixinBase implements 
   /** Stroke width of the progress spinner. */
   @Input()
   get strokeWidth(): number {
-    return this._strokeWidth || this.diameter / 10;
+    return this._strokeWidth ?? this.diameter / 10;
   }
 
   set strokeWidth(value: number) {
@@ -177,42 +178,35 @@ export class MatProgressSpinner extends _MatProgressSpinnerMixinBase implements 
   }
 
   /** The radius of the spinner, adjusted for stroke width. */
-  get _circleRadius() {
+  _circleRadius(): number {
     return (this.diameter - BASE_STROKE_WIDTH) / 2;
   }
 
   /** The view box of the spinner's svg element. */
-  get _viewBox() {
-    const viewBox = this._circleRadius * 2 + this.strokeWidth;
+  _viewBox() {
+    const viewBox = this._circleRadius() * 2 + this.strokeWidth;
     return `0 0 ${viewBox} ${viewBox}`;
   }
 
   /** The stroke circumference of the svg circle. */
-  get _strokeCircumference(): number {
-    return 2 * Math.PI * this._circleRadius;
+  _strokeCircumference(): number {
+    return 2 * Math.PI * this._circleRadius();
   }
 
   /** The dash offset of the svg circle. */
-  get _strokeDashOffset() {
+  _strokeDashOffset() {
     if (this.mode === 'determinate') {
-      return this._strokeCircumference * (100 - this._value) / 100;
+      return this._strokeCircumference() * (100 - this._value) / 100;
     }
-
     return null;
   }
 
   /** Stroke width of the circle in percent. */
-  get _circleStrokeWidth() {
+  _circleStrokeWidth() {
     return this.strokeWidth / this.diameter * 100;
   }
 
   ngAfterViewInit() {
-    const element = this._elementRef.nativeElement;
-
-    this._rootElement = element.querySelector('.mdc-circular-progress') as HTMLElement;
-    this._determinateCircle =
-      element.querySelector('.mdc-circular-progress__determinate-container') as HTMLElement;
-
     this._foundation = new MDCCircularProgressFoundation(this._adapter);
     this._foundation.init();
     this._syncFoundation();
