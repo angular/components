@@ -7,8 +7,16 @@
  */
 
 import {Injectable, NgZone, OnDestroy} from '@angular/core';
-import {from, Observable, Subject} from 'rxjs';
-import {takeUntil} from 'rxjs/operators';
+import {Subject} from 'rxjs';
+import {take, takeUntil} from 'rxjs/operators';
+
+/**
+ * @docs-private
+ */
+export class _Schedule {
+  tasks: (() => unknown)[] = [];
+  endTasks: (() => unknown)[] = [];
+}
 
 /**
  * Allows grouping up CSSDom mutations after the current execution context.
@@ -19,36 +27,54 @@ import {takeUntil} from 'rxjs/operators';
  */
 @Injectable()
 export class _CoalescedStyleScheduler implements OnDestroy {
-  private _currentSchedule: Observable<void>|null = null;
+  private _currentSchedule: _Schedule|null = null;
   private readonly _destroyed = new Subject<void>();
 
   constructor(private readonly _ngZone: NgZone) {}
 
   /**
-   * Schedules the specified task to run after the current microtask.
+   * Schedules the specified task to run at the end of the current VM turn.
    */
   schedule(task: () => unknown): void {
     this._createScheduleIfNeeded();
 
-    this._currentSchedule!.subscribe(task);
+    this._currentSchedule!.tasks.push(task);
   }
 
-  /** Cancel and prevent new subscriptions. */
+  /**
+   * Schedules the specified task to run after other scheduled tasks at the end of the current
+   * VM turn.
+   */
+  scheduleEnd(task: () => unknown): void {
+    this._createScheduleIfNeeded();
+
+    this._currentSchedule!.endTasks.push(task);
+  }
+
+  /** Prevent any further tasks from running. */
   ngOnDestroy() {
     this._destroyed.next();
     this._destroyed.complete();
-
-    this._currentSchedule = this._destroyed;
   }
 
   private _createScheduleIfNeeded() {
     if (this._currentSchedule) { return; }
 
-    this._ngZone.runOutsideAngular(() => {
-      this._currentSchedule = from(new Promise<void>((resolve) => {
-        this._currentSchedule = null;
-        resolve(undefined);
-      })).pipe(takeUntil(this._destroyed));
+    this._currentSchedule = new _Schedule();
+
+    this._ngZone.onStable.pipe(
+        take(1),
+        takeUntil(this._destroyed),
+    ).subscribe(() => {
+      const schedule = this._currentSchedule!;
+      this._currentSchedule = null;
+
+      for (const task of schedule.tasks) {
+        task();
+      }
+      for (const task of schedule.endTasks) {
+        task();
+      }
     });
   }
 }
