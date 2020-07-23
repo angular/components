@@ -22,6 +22,7 @@ import {SelectionChange, SelectionModel} from '@angular/cdk/collections';
 import {defer, merge, Observable, Subject} from 'rxjs';
 import {startWith, switchMap, takeUntil} from 'rxjs/operators';
 import {ControlValueAccessor} from '@angular/forms';
+import {coerceArray} from "@angular/cdk/coercion/array";
 
 let nextId = 0;
 
@@ -451,7 +452,8 @@ export class CdkListbox implements AfterContentInit, OnDestroy, OnInit, ControlV
       this.deselect(option);
     }
 
-    for (const value of values) {
+    const valuesArray = coerceArray(values);
+    for (const value of valuesArray) {
       const correspondingOption = this._options.find((option: CdkOption) => {
         return option.value != null && this.compareWith(option.value,  value);
       });
