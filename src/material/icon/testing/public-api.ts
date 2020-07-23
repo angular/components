@@ -6,6 +6,4 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-export * from './icon-harness';
-export * from './icon-harness-filters';
 export * from './fake-icon-registry';
