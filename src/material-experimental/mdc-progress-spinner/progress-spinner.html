@@ -1,6 +1,6 @@
 <ng-template #circle>
   <svg [attr.viewBox]="_viewBox()" class="mdc-circular-progress__indeterminate-circle-graphic"
-       xmlns="http://www.w3.org/2000/svg">
+       xmlns="http://www.w3.org/2000/svg" focusable="false">
     <circle [attr.r]="_circleRadius()"
             [style.stroke-dasharray.px]="_strokeCircumference()"
             [style.stroke-dashoffset.px]="_strokeCircumference()/2"
@@ -12,7 +12,7 @@
 <div class="mdc-circular-progress" role="progressbar" #spinnerRoot>
   <div class="mdc-circular-progress__determinate-container" #determinateSpinner>
     <svg [attr.viewBox]="_viewBox()" class="mdc-circular-progress__determinate-circle-graphic"
-         xmlns="http://www.w3.org/2000/svg">
+         xmlns="http://www.w3.org/2000/svg" focusable="false">
       <circle [attr.r]="_circleRadius()"
               [style.stroke-dasharray.px]="_strokeCircumference()"
               [style.stroke-dashoffset.px]="_strokeDashOffset()"

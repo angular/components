@@ -52,6 +52,39 @@ const BASE_SIZE = 100;
  */
 const BASE_STROKE_WIDTH = 10;
 
+/** @docs-private */
+class ProgressSpinnerAdapter implements MDCCircularProgressAdapter {
+  constructor(private readonly _delegate: MatProgressSpinner) {
+  }
+
+  addClass(className: string) {
+    return this._delegate._rootElement.nativeElement.classList.add(className);
+  }
+
+  removeClass(className: string) {
+    return this._delegate._rootElement.nativeElement.classList.remove(className);
+  }
+
+  hasClass(className: string) {
+    return this._delegate._rootElement.nativeElement.classList.contains(className);
+  }
+
+  setAttribute(attributeName: string, value: string) {
+    return this._delegate._rootElement.nativeElement.setAttribute(attributeName, value);
+  }
+
+  removeAttribute(attributeName: string) {
+    return this._delegate._rootElement.nativeElement.removeAttribute(attributeName);
+  }
+
+  setDeterminateCircleAttribute(attributeName: string, value: string) {
+    return this._delegate._determinateCircle.nativeElement.setAttribute(attributeName, value);
+  }
+
+  getDeterminateCircleAttribute(attributeName: string) {
+    return this._delegate._determinateCircle.nativeElement.getAttribute(attributeName);
+  }
+}
 
 @Component({
   selector: 'mat-progress-spinner',
@@ -74,17 +107,21 @@ const BASE_STROKE_WIDTH = 10;
   encapsulation: ViewEncapsulation.None,
 })
 export class MatProgressSpinner extends _MatProgressSpinnerMixinBase implements AfterViewInit,
-  OnDestroy,
-  CanColor {
+  OnDestroy, CanColor {
   static ngAcceptInputType_diameter: NumberInput;
   static ngAcceptInputType_strokeWidth: NumberInput;
   static ngAcceptInputType_value: NumberInput;
 
   /** Whether the _mat-animation-noopable class should be applied, disabling animations.  */
   _noopAnimations: boolean;
+
   /** Implements all of the logic of the MDC circular progress. */
   _foundation: MDCCircularProgressFoundation;
+
+  /** Root element of MDCCircularProgress. */
   @ViewChild('spinnerRoot') _rootElement: ElementRef<HTMLElement>;
+
+  /** The element of the determinate spinner. */
   @ViewChild('determinateSpinner') _determinateCircle: ElementRef<HTMLElement>;
 
   private _adapter: MDCCircularProgressAdapter = {
@@ -218,13 +255,14 @@ export class MatProgressSpinner extends _MatProgressSpinnerMixinBase implements 
     }
   }
 
+  /** Syncs the state of the progress spinner with the MDC foundation. */
   private _syncFoundation() {
     const foundation = this._foundation;
 
     if (foundation) {
       const mode = this.mode;
-      foundation.setDeterminate(mode === 'determinate');
       foundation.setProgress(this.value / 100);
+      foundation.setDeterminate(mode === 'determinate');
     }
   }
 }
