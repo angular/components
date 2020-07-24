@@ -52,40 +52,6 @@ const BASE_SIZE = 100;
  */
 const BASE_STROKE_WIDTH = 10;
 
-/** @docs-private */
-class ProgressSpinnerAdapter implements MDCCircularProgressAdapter {
-  constructor(private readonly _delegate: MatProgressSpinner) {
-  }
-
-  addClass(className: string) {
-    return this._delegate._rootElement.nativeElement.classList.add(className);
-  }
-
-  removeClass(className: string) {
-    return this._delegate._rootElement.nativeElement.classList.remove(className);
-  }
-
-  hasClass(className: string) {
-    return this._delegate._rootElement.nativeElement.classList.contains(className);
-  }
-
-  setAttribute(attributeName: string, value: string) {
-    return this._delegate._rootElement.nativeElement.setAttribute(attributeName, value);
-  }
-
-  removeAttribute(attributeName: string) {
-    return this._delegate._rootElement.nativeElement.removeAttribute(attributeName);
-  }
-
-  setDeterminateCircleAttribute(attributeName: string, value: string) {
-    return this._delegate._determinateCircle.nativeElement.setAttribute(attributeName, value);
-  }
-
-  getDeterminateCircleAttribute(attributeName: string) {
-    return this._delegate._determinateCircle.nativeElement.getAttribute(attributeName);
-  }
-}
-
 @Component({
   selector: 'mat-progress-spinner, mat-spinner',
   exportAs: 'matProgressSpinner',
@@ -121,6 +87,8 @@ export class MatProgressSpinner extends _MatProgressSpinnerMixinBase implements 
   /** The element of the determinate spinner. */
   @ViewChild('determinateSpinner') _determinateCircle: ElementRef<HTMLElement>;
 
+  /** Adapter used by MDC to interact with the DOM. */
+  // TODO: switch to class when MDC removes object spread in foundation
   private _adapter: MDCCircularProgressAdapter = {
     addClass: (className: string) => this._rootElement.nativeElement.classList.add(className),
     hasClass: (className: string) => this._rootElement.nativeElement.classList.contains(className),

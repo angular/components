@@ -5,6 +5,8 @@
 @include mdc-circular-progress-core-styles($query: $mat-base-styles-without-animation-query);
 
 .mat-mdc-progress-spinner {
+  // Explicitly set to `block` since the browser defaults custom elements to `inline`.
+  display: block;
 
   .mdc-circular-progress {
     // MDC circular spinner sets width and height to 48px by default.
