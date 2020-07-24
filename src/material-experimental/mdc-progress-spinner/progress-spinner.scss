@@ -5,9 +5,9 @@
 @include mdc-circular-progress-core-styles($query: $mat-base-styles-without-animation-query);
 
 .mat-mdc-progress-spinner {
-  display: block;
 
   .mdc-circular-progress {
+    // MDC circular spinner sets width and height to 48px by default.
     width: 100%;
     height: 100%;
   }

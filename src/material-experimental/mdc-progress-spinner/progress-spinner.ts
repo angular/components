@@ -87,7 +87,7 @@ class ProgressSpinnerAdapter implements MDCCircularProgressAdapter {
 }
 
 @Component({
-  selector: 'mat-progress-spinner',
+  selector: 'mat-progress-spinner, mat-spinner',
   exportAs: 'matProgressSpinner',
   host: {
     'role': 'progressbar',
@@ -95,9 +95,9 @@ class ProgressSpinnerAdapter implements MDCCircularProgressAdapter {
     '[class._mat-animation-noopable]': `_noopAnimations`,
     '[style.width.px]': 'diameter',
     '[style.height.px]': 'diameter',
-    '[attr.aria-valuemin]': 'mode === "determinate" ? 0 : null',
-    '[attr.aria-valuemax]': 'mode === "determinate" ? 100 : null',
-    '[attr.aria-valuenow]': 'mode === "determinate" ? value : null',
+    '[attr.aria-valuemin]': '0',
+    '[attr.aria-valuemax]': '1',
+    '[attr.aria-valuenow]': 'mode === "determinate" ? value / 100 : null',
     '[attr.mode]': 'mode',
   },
   inputs: ['color'],
@@ -108,9 +108,6 @@ class ProgressSpinnerAdapter implements MDCCircularProgressAdapter {
 })
 export class MatProgressSpinner extends _MatProgressSpinnerMixinBase implements AfterViewInit,
   OnDestroy, CanColor {
-  static ngAcceptInputType_diameter: NumberInput;
-  static ngAcceptInputType_strokeWidth: NumberInput;
-  static ngAcceptInputType_value: NumberInput;
 
   /** Whether the _mat-animation-noopable class should be applied, disabling animations.  */
   _noopAnimations: boolean;
@@ -155,7 +152,8 @@ export class MatProgressSpinner extends _MatProgressSpinnerMixinBase implements 
     }
   }
 
-  private _mode: ProgressSpinnerMode = 'determinate';
+  private _mode: ProgressSpinnerMode = this._elementRef.nativeElement.nodeName.toLowerCase() ===
+  'mat-spinner' ? 'indeterminate' : 'determinate';
 
   /**
    * Mode of the progress bar.
@@ -165,13 +163,9 @@ export class MatProgressSpinner extends _MatProgressSpinnerMixinBase implements 
    * Mirrored to mode attribute.
    */
   @Input()
-  get mode(): ProgressSpinnerMode {
-    return this._mode;
-  }
+  get mode(): ProgressSpinnerMode { return this._mode; }
 
   set mode(value: ProgressSpinnerMode) {
-    // Note that we don't technically need a getter and a setter here,
-    // but we use it to match the behavior of the existing mat-progress-bar.
     this._mode = value;
     this._syncFoundation();
   }
@@ -265,6 +259,10 @@ export class MatProgressSpinner extends _MatProgressSpinnerMixinBase implements 
       foundation.setDeterminate(mode === 'determinate');
     }
   }
+
+  static ngAcceptInputType_diameter: NumberInput;
+  static ngAcceptInputType_strokeWidth: NumberInput;
+  static ngAcceptInputType_value: NumberInput;
 }
 
 /**
@@ -273,28 +271,4 @@ export class MatProgressSpinner extends _MatProgressSpinnerMixinBase implements 
  * This is a component definition to be used as a convenience reference to create an
  * indeterminate `<mat-progress-spinner>` instance.
  */
-@Component({
-  selector: 'mat-spinner',
-  host: {
-    'role': 'progressbar',
-    'mode': 'indeterminate',
-    'class': 'mat-mdc-spinner mat-mdc-progress-spinner',
-    '[class._mat-animation-noopable]': `_noopAnimations`,
-    '[style.width.px]': 'diameter',
-    '[style.height.px]': 'diameter',
-  },
-  inputs: ['color'],
-  templateUrl: 'progress-spinner.html',
-  styleUrls: ['progress-spinner.css'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  encapsulation: ViewEncapsulation.None,
-})
-export class MatSpinner extends MatProgressSpinner {
-  constructor(elementRef: ElementRef<HTMLElement>,
-              @Optional() @Inject(ANIMATION_MODULE_TYPE) animationMode: string,
-              @Inject(MAT_PROGRESS_SPINNER_DEFAULT_OPTIONS)
-                defaults?: MatProgressSpinnerDefaultOptions) {
-    super(elementRef, animationMode, defaults);
-    this.mode = 'indeterminate';
-  }
-}
+export {MatProgressSpinner as MatSpinner}
