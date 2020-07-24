@@ -60,10 +60,10 @@ ng_test_library(
     ),
     deps = [
         ":mdc-progress-spinner",
-         "//src/cdk/platform",
-         "//src/material/progress-spinner",
-         "@npm//@angular/common",
-         "@npm//@angular/platform-browser",
+        "//src/cdk/platform",
+        "//src/material/progress-spinner",
+        "@npm//@angular/common",
+        "@npm//@angular/platform-browser",
     ],
 )
 

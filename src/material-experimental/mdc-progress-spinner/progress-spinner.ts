@@ -57,7 +57,7 @@ const BASE_STROKE_WIDTH = 10;
   exportAs: 'matProgressSpinner',
   host: {
     'role': 'progressbar',
-    'class': 'mat-mdc-progress-spinner',
+    'class': 'mat-mdc-progress-spinner mdc-circular-progress',
     '[class._mat-animation-noopable]': `_noopAnimations`,
     '[style.width.px]': 'diameter',
     '[style.height.px]': 'diameter',
@@ -82,7 +82,7 @@ export class MatProgressSpinner extends _MatProgressSpinnerMixinBase implements 
   _foundation: MDCCircularProgressFoundation;
 
   /** Root element of MDCCircularProgress. */
-  @ViewChild('spinnerRoot') _rootElement: ElementRef<HTMLElement>;
+  // @ViewChild('spinnerRoot') _elementRef: ElementRef<HTMLElement>;
 
   /** The element of the determinate spinner. */
   @ViewChild('determinateSpinner') _determinateCircle: ElementRef<HTMLElement>;
@@ -90,12 +90,12 @@ export class MatProgressSpinner extends _MatProgressSpinnerMixinBase implements 
   /** Adapter used by MDC to interact with the DOM. */
   // TODO: switch to class when MDC removes object spread in foundation
   private _adapter: MDCCircularProgressAdapter = {
-    addClass: (className: string) => this._rootElement.nativeElement.classList.add(className),
-    hasClass: (className: string) => this._rootElement.nativeElement.classList.contains(className),
-    removeClass: (className: string) => this._rootElement.nativeElement.classList.remove(className),
-    removeAttribute: (name: string) => this._rootElement.nativeElement.removeAttribute(name),
+    addClass: (className: string) => this._elementRef.nativeElement.classList.add(className),
+    hasClass: (className: string) => this._elementRef.nativeElement.classList.contains(className),
+    removeClass: (className: string) => this._elementRef.nativeElement.classList.remove(className),
+    removeAttribute: (name: string) => this._elementRef.nativeElement.removeAttribute(name),
     setAttribute: (name: string, value: string) =>
-      this._rootElement.nativeElement.setAttribute(name, value),
+      this._elementRef.nativeElement.setAttribute(name, value),
     getDeterminateCircleAttribute: (attributeName: string) =>
       this._determinateCircle.nativeElement.getAttribute(attributeName),
     setDeterminateCircleAttribute: (attributeName: string, value: string) =>
