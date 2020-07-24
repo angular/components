@@ -609,7 +609,6 @@ describe('CdkOption and CdkListbox', () => {
 
       listbox = fixture.debugElement.query(By.directive(CdkListbox));
       listboxInstance = listbox.injector.get<CdkListbox>(CdkListbox);
-      listboxElement = listbox.nativeElement;
 
       options = fixture.debugElement.queryAll(By.directive(CdkOption));
       optionInstances = options.map(o => o.injector.get<CdkOption>(CdkOption));
