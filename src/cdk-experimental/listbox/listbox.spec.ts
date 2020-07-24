@@ -589,7 +589,6 @@ describe('CdkOption and CdkListbox', () => {
 
     let listbox: DebugElement;
     let listboxInstance: CdkListbox;
-    let listboxElement: HTMLElement;
 
     let options: DebugElement[];
     let optionInstances: CdkOption[];

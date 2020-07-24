@@ -382,7 +382,6 @@ export class CdkListbox implements AfterContentInit, OnDestroy, OnInit, ControlV
   /** Selects the given option if the option and listbox aren't disabled. */
   select(option: CdkOption) {
     if (!this.disabled && !option.disabled) {
-      const wasSelected = option.selected;
       option.select();
     }
   }
@@ -390,7 +389,6 @@ export class CdkListbox implements AfterContentInit, OnDestroy, OnInit, ControlV
   /** Deselects the given option if the option and listbox aren't disabled. */
   deselect(option: CdkOption) {
     if (!this.disabled && !option.disabled) {
-      const wasSelected = option.selected;
       option.deselect();
     }
   }
