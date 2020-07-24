@@ -2,8 +2,14 @@ export declare class _CoalescedStyleScheduler implements OnDestroy {
     constructor(_ngZone: NgZone);
     ngOnDestroy(): void;
     schedule(task: () => unknown): void;
+    scheduleEnd(task: () => unknown): void;
     static ɵfac: i0.ɵɵFactoryDef<_CoalescedStyleScheduler, never>;
     static ɵprov: i0.ɵɵInjectableDef<_CoalescedStyleScheduler>;
+}
+
+export declare class _Schedule {
+    endTasks: (() => unknown)[];
+    tasks: (() => unknown)[];
 }
 
 export declare class BaseCdkCell {
