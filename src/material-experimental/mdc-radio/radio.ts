@@ -69,15 +69,15 @@ const RIPPLE_ANIMATION_CONFIG: RippleAnimationConfig = {
 class RadioAdapter implements MDCRadioAdapter {
   constructor(private readonly _delegate: MatRadioButton) {}
   addClass(className: string) {
-    return this._delegate.setClass(className, true);
+    return this._delegate._setClass(className, true);
   }
   removeClass(className: string) {
-    return this._delegate.setClass(className, false);
+    return this._delegate._setClass(className, false);
   }
   setNativeControlDisabled(disabled: boolean) {
     if (this._delegate.disabled !== disabled) {
       this._delegate.disabled = disabled;
-      this._delegate.getChangeDetector().markForCheck();
+      this._delegate._changeDetector.markForCheck();
     }
   }
 }
@@ -138,7 +138,7 @@ export class MatRadioButton extends _MatRadioButtonBase implements AfterViewInit
 
   constructor(@Optional() @Inject(MAT_RADIO_GROUP) radioGroup: MatRadioGroup,
               elementRef: ElementRef,
-              _changeDetector: ChangeDetectorRef,
+              readonly _changeDetector: ChangeDetectorRef,
               _focusMonitor: FocusMonitor,
               _radioDispatcher: UniqueSelectionDispatcher,
               @Optional() @Inject(ANIMATION_MODULE_TYPE) _animationMode?: string,
@@ -159,13 +159,9 @@ export class MatRadioButton extends _MatRadioButtonBase implements AfterViewInit
     this._radioFoundation.destroy();
   }
 
-  setClass(cssClass: string, active: boolean) {
+  _setClass(cssClass: string, active: boolean) {
     this._classes = {...this._classes, [cssClass]: active};
     this._changeDetector.markForCheck();
-  }
-
-  getChangeDetector() {
-    return this._changeDetector;
   }
 
   /**
