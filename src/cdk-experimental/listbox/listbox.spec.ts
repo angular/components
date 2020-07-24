@@ -16,7 +16,7 @@ import {
 } from '@angular/cdk/testing/private';
 import {A, DOWN_ARROW, END, HOME, SPACE} from '@angular/cdk/keycodes';
 
-describe('CdkOption', () => {
+describe('CdkOption and CdkListbox', () => {
 
   describe('selection state change', () => {
     let fixture: ComponentFixture<ListboxWithOptions>;
@@ -582,6 +582,91 @@ describe('CdkOption', () => {
 
     });
   });
+
+  describe('with control value accessor implemented', () => {
+    let fixture: ComponentFixture<ListboxControlValueAccessor>;
+    let testComponent: ListboxControlValueAccessor;
+
+    let listbox: DebugElement;
+    let listboxInstance: CdkListbox;
+    let listboxElement: HTMLElement;
+
+    let options: DebugElement[];
+    let optionInstances: CdkOption[];
+    let optionElements: HTMLElement[];
+
+    beforeEach(async(() => {
+      TestBed.configureTestingModule({
+        imports: [CdkListboxModule],
+        declarations: [ListboxControlValueAccessor],
+      }).compileComponents();
+    }));
+
+    beforeEach(() => {
+      fixture = TestBed.createComponent(ListboxControlValueAccessor);
+      fixture.detectChanges();
+
+      testComponent = fixture.debugElement.componentInstance;
+
+      listbox = fixture.debugElement.query(By.directive(CdkListbox));
+      listboxInstance = listbox.injector.get<CdkListbox>(CdkListbox);
+      listboxElement = listbox.nativeElement;
+
+      options = fixture.debugElement.queryAll(By.directive(CdkOption));
+      optionInstances = options.map(o => o.injector.get<CdkOption>(CdkOption));
+      optionElements = options.map(o => o.nativeElement);
+    });
+
+    it('should be able to set the disabled state via setDisabledState', () => {
+      expect(listboxInstance.disabled)
+          .toBe(false, 'Expected the selection list to be enabled.');
+      expect(optionInstances.every(option => !option.disabled))
+          .toBe(true, 'Expected every list option to be enabled.');
+
+      listboxInstance.setDisabledState(true);
+      fixture.detectChanges();
+
+      expect(listboxInstance.disabled)
+          .toBe(true, 'Expected the selection list to be disabled.');
+      for (const option of optionElements) {
+        expect(option.getAttribute('aria-disabled')).toBe('true');
+      }
+    });
+
+    it('should be able to select options via writeValue', () => {
+      expect(optionInstances.every(option => !option.disabled))
+          .toBe(true, 'Expected every list option to be enabled.');
+
+      listboxInstance.writeValue('arc');
+      fixture.detectChanges();
+
+      expect(optionElements[0].hasAttribute('aria-selected')).toBeFalse();
+      expect(optionElements[1].hasAttribute('aria-selected')).toBeFalse();
+      expect(optionElements[3].hasAttribute('aria-selected')).toBeFalse();
+
+      expect(optionInstances[2].selected).toBeTrue();
+      expect(optionElements[2].getAttribute('aria-selected')).toBe('true');
+    });
+
+    it('should be select multiple options by their values', () => {
+      expect(optionInstances.every(option => !option.disabled))
+          .toBe(true, 'Expected every list option to be enabled.');
+
+      testComponent.isMultiselectable = true;
+      fixture.detectChanges();
+
+      listboxInstance.writeValue(['arc', 'stasis']);
+      fixture.detectChanges();
+
+      expect(optionElements[0].hasAttribute('aria-selected')).toBeFalse();
+      expect(optionElements[1].hasAttribute('aria-selected')).toBeFalse();
+
+      expect(optionInstances[2].selected).toBeTrue();
+      expect(optionElements[2].getAttribute('aria-selected')).toBe('true');
+      expect(optionInstances[3].selected).toBeTrue();
+      expect(optionElements[3].getAttribute('aria-selected')).toBe('true');
+    });
+  });
 });
 
 @Component({
@@ -653,5 +738,25 @@ class ListboxActiveDescendant {
 
   onFocus(option: string) {
     this.focusedOption = option;
+  }
+}
+
+@Component({
+  template: `
+    <div cdkListbox
+         [multiple]="isMultiselectable"
+         (selectionChange)="onSelectionChange($event)">
+      <div cdkOption [value]="'purple'">Purple</div>
+      <div cdkOption [value]="'solar'">Solar</div>
+      <div cdkOption [value]="'arc'">Arc</div>
+      <div cdkOption [value]="'stasis'">Stasis</div>
+    </div>`
+})
+class ListboxControlValueAccessor {
+  changedOption: CdkOption;
+  isMultiselectable: boolean = false;
+
+  onSelectionChange(event: ListboxSelectionChangeEvent) {
+    this.changedOption = event.option;
   }
 }

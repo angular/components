@@ -385,11 +385,6 @@ export class CdkListbox implements AfterContentInit, OnDestroy, OnInit, ControlV
     if (!this.disabled && !option.disabled) {
       const wasSelected = option.selected;
       option.select();
-
-      if (!wasSelected) {
-        this._emitChangeEvent(option);
-        this._updateSelectionModel(option);
-      }
     }
   }
 
@@ -398,11 +393,6 @@ export class CdkListbox implements AfterContentInit, OnDestroy, OnInit, ControlV
     if (!this.disabled && !option.disabled) {
       const wasSelected = option.selected;
       option.deselect();
-
-      if (wasSelected) {
-        this._emitChangeEvent(option);
-        this._updateSelectionModel(option);
-      }
     }
   }
 
@@ -435,9 +425,9 @@ export class CdkListbox implements AfterContentInit, OnDestroy, OnInit, ControlV
   }
 
   /** Sets the select's value. Required to implement ControlValueAccessor. */
-  writeValue(value: any): void {
+  writeValue(values: any | any[]): void {
     if (this._options) {
-      this._setSelectionByValue(value);
+      this._setSelectionByValue(values);
     }
   }
 
@@ -453,12 +443,14 @@ export class CdkListbox implements AfterContentInit, OnDestroy, OnInit, ControlV
     }
 
     const valuesArray = coerceArray(values);
+    console.log(valuesArray);
     for (const value of valuesArray) {
       const correspondingOption = this._options.find((option: CdkOption) => {
-        return option.value != null && this.compareWith(option.value,  value);
+        return option.value != null && this.compareWith(option.value, value);
       });
 
       if (correspondingOption) {
+        console.log('selecting');
         this.select(correspondingOption);
         if (!this.multiple) {
           return;
