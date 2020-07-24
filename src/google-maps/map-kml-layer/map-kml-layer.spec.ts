@@ -9,7 +9,6 @@ import {
   createKmlLayerSpy,
   createMapConstructorSpy,
   createMapSpy,
-  TestingWindow,
 } from '../testing/fake-google-map-utils';
 
 import {MapKmlLayer} from './map-kml-layer';
@@ -39,8 +38,7 @@ describe('MapKmlLayer', () => {
   });
 
   afterEach(() => {
-    const testingWindow: TestingWindow = window;
-    delete testingWindow.google;
+    delete window.google;
   });
 
   it('initializes a Google Map Kml Layer', () => {
