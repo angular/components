@@ -145,7 +145,7 @@ export declare class MapKmlLayer implements OnInit, OnDestroy {
     getZIndex(): number;
     ngOnDestroy(): void;
     ngOnInit(): void;
-    static ɵdir: i0.ɵɵDirectiveDefWithMeta<MapKmlLayer, "map-kml-layer", never, { "options": "options"; "url": "url"; }, { "kmlClick": "kmlClick"; "defaultviewportChanged": "defaultviewportChanged"; "statusChanged": "statusChanged"; }, never>;
+    static ɵdir: i0.ɵɵDirectiveDefWithMeta<MapKmlLayer, "map-kml-layer", ["mapKmlLayer"], { "options": "options"; "url": "url"; }, { "kmlClick": "kmlClick"; "defaultviewportChanged": "defaultviewportChanged"; "statusChanged": "statusChanged"; }, never>;
     static ɵfac: i0.ɵɵFactoryDef<MapKmlLayer, never>;
 }
 

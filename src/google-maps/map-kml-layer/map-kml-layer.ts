@@ -30,6 +30,7 @@ import {MapEventManager} from '../map-event-manager';
  */
 @Directive({
   selector: 'map-kml-layer',
+  exportAs: 'mapKmlLayer',
 })
 export class MapKmlLayer implements OnInit, OnDestroy {
   private _eventManager = new MapEventManager(this._ngZone);
