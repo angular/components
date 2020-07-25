@@ -30,8 +30,18 @@ export function writeCharacter(element: TextInputElement, key: string) {
   dispatchFakeEvent(element, 'input');
 }
 
+const knownInputTypesWithSelectionIssues = ['color'];
 function hasToRespectSelection(element: TextInputElement): boolean {
-  return typeof element.value === 'string' && element.value.length > 0
-    && typeof element.selectionStart === 'number' && element.selectionStart < element.value.length
-  ;
+  try {
+    return typeof element.value === 'string' && element.value.length > 0
+      && typeof element.selectionStart === 'number' && element.selectionStart < element.value.length
+    ;
+  } catch (e) {
+    // Safari will throw 'type error' on input[type=color].selectionStart.get().
+    if (knownInputTypesWithSelectionIssues.indexOf(element.type) < 0) {
+      console.warn('could not detect selection of ', element);
+    }
+    // In general we can't respect selection if we can't detect selection so this will return false.
+    return false;
+  }
 }
