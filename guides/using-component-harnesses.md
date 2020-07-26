@@ -8,7 +8,7 @@ idea for component harnesses comes from the
 [PageObject](https://martinfowler.com/bliki/PageObject.html) pattern commonly used for integration
 testing.
 
-Angular Material offers test harnesses for many of its components. The Angular team strongly
+Angular Material offers test harnesses for most of its components. The Angular team strongly
 encourages developers to use these harnesses for testing to avoid creating brittle tests that rely
 on a component's internals.
 
@@ -262,3 +262,23 @@ When tests depend on the implementation details, they become a common source of 
 library changes. Angular CDK's test harnesses makes component library updates easier for both
 application authors and the Angular team, as the Angular team only has to update the harness once
 for everyone.
+
+## Differences between Testbed and real browser testing (Protractor)
+
+Writing test for both environments is very similar now. But even thought we do our best to get the
+behavior as close as possible, it's a low priority task and there are still some slight differences
+in the result of sending keys you should be arware of:
+
+* **All keys** will send keydown, keypress and keyup events.
+* **Normal characters** will change the value of text inputs at the cursor position or replace
+    selection.
+* **Arrow keys**
+  * **in text inputs** will emulate cursor movement or, if send with modifier ```{ shift: true }```,
+    seletion. But in textareas arrow up and down will just use col count and won't hit exactly one
+    line beacuse font measures and width and line wrapping.
+  * **in select inputs** might change the selected option.
+* **Page-Up/-Down** won't do anything but sending the key events.
+* **Backspace/Delete** won't delete anything.
+* **Enter** in inputs won't submit forms or insert a new line in multiline inputs. But of course it
+    may sometimes select an option, if the component listens to the keydown event.
+* **Tab** won't change focus to the next or previous input, nor select it's text value.
