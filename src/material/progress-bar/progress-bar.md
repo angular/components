@@ -20,7 +20,7 @@ not necessary to indicate how long it will take should use the indeterminate ind
 In this mode the `value` property is ignored.
 
 #### Buffer
-Use the buffer indicator when want to indicate some activity or loading from the server.
+Use the `buffer` mode of the progress-bar to indicate some activity or loading from the server.
 
 <!-- example(progress-bar-buffer) -->
 
@@ -28,7 +28,7 @@ In "buffer" mode, `value` determines the progress of the primary bar while the `
 used to show the additional buffering progress.
 
 #### Query
-Use the query indicator to indicate pre-loading before the actual loading starts.
+Use the `query` mode of the progress-bar to indicate pre-loading before the actual loading starts.
 
 
 <!-- example(progress-bar-query) -->
