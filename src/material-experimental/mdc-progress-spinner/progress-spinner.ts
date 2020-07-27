@@ -85,7 +85,8 @@ export class MatProgressSpinner extends _MatProgressSpinnerMixinBase implements 
   @ViewChild('determinateSpinner') _determinateCircle: ElementRef<HTMLElement>;
 
   /** Adapter used by MDC to interact with the DOM. */
-  // TODO: switch to class when MDC removes object spread in foundation
+    // TODO: switch to class when MDC removes object spread in foundation
+    // https://github.com/material-components/material-components-web/pull/6256
   private _adapter: MDCCircularProgressAdapter = {
     addClass: (className: string) => this._elementRef.nativeElement.classList.add(className),
     hasClass: (className: string) => this._elementRef.nativeElement.classList.contains(className),
