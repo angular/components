@@ -62,8 +62,8 @@ const BASE_STROKE_WIDTH = 10;
     '[style.width.px]': 'diameter',
     '[style.height.px]': 'diameter',
     '[attr.aria-valuemin]': '0',
-    '[attr.aria-valuemax]': '1',
-    '[attr.aria-valuenow]': 'mode === "determinate" ? value / 100 : null',
+    '[attr.aria-valuemax]': '100',
+    '[attr.aria-valuenow]': 'mode === "determinate" ? value : null',
     '[attr.mode]': 'mode',
   },
   inputs: ['color'],
@@ -237,4 +237,4 @@ export class MatProgressSpinner extends _MatProgressSpinnerMixinBase implements 
  * This is a component definition to be used as a convenience reference to create an
  * indeterminate `<mat-progress-spinner>` instance.
  */
-export {MatProgressSpinner as MatSpinner}
+export {MatProgressSpinner as MatSpinner};

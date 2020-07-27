@@ -29,7 +29,7 @@ ng_test_library(
 ng_web_test_suite(
     name = "unit_tests",
     static_files = [
-        "@npm//:node_modules/@material/linear-progress/dist/mdc.linearProgress.js",
+        "@npm//:node_modules/@material/circular-progress/dist/mdc.circularProgress.js",
     ],
     deps = [
         ":unit_tests_lib",
