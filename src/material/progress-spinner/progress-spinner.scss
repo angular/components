@@ -77,7 +77,7 @@ $_mat-progress-spinner-default-circumference: $pi * $_mat-progress-spinner-defau
   $end: (1 - 0.8) * $_mat-progress-spinner-default-circumference; // end the animation at 80%
   $fallback-iterations: 4;
 
-  @keyframes mat-progress-spinner-stroke-rotate-100 {
+  @keyframes mat-progress-spinner-stroke-rotate-90 {
     /*
       stylelint-disable declaration-block-single-line-max-declarations,
         declaration-block-semicolon-space-after

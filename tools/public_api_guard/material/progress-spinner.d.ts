@@ -3,10 +3,12 @@ export declare const MAT_PROGRESS_SPINNER_DEFAULT_OPTIONS: InjectionToken<MatPro
 export declare function MAT_PROGRESS_SPINNER_DEFAULT_OPTIONS_FACTORY(): MatProgressSpinnerDefaultOptions;
 
 export declare class MatProgressSpinner extends _MatProgressSpinnerMixinBase implements OnInit, CanColor {
+    get _circleDiameter(): number;
     get _circleRadius(): number;
     get _circleStrokeWidth(): number;
     _elementRef: ElementRef<HTMLElement>;
     _noopAnimations: boolean;
+    _spinnerAnimationLabel: string;
     get _strokeCircumference(): number;
     get _strokeDashOffset(): number | null;
     get _viewBox(): string;

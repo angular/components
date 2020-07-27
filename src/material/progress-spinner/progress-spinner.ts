@@ -33,6 +33,12 @@ export type ProgressSpinnerMode = 'determinate' | 'indeterminate';
  */
 const BASE_SIZE = 100;
 
+/**
+ * Base reference stroke width of the spinner.
+ * @docs-private
+ */
+const BASE_STROKE_WIDTH = 10;
+
 // Boilerplate for applying mixins to MatProgressSpinner.
 /** @docs-private */
 class MatProgressSpinnerBase {
@@ -141,11 +147,15 @@ export class MatProgressSpinner extends _MatProgressSpinnerMixinBase implements 
   /** Whether the _mat-animation-noopable class should be applied, disabling animations.  */
   _noopAnimations: boolean;
 
+  /** A string that is used for setting the spinner animation-name CSS property */
+  _spinnerAnimationLabel: string;
+
   /** The diameter of the progress spinner (will set width and height of svg). */
   @Input()
   get diameter(): number { return this._diameter; }
   set diameter(size: number) {
     this._diameter = coerceNumberProperty(size);
+    this._spinnerAnimationLabel = this._getSpinnerAnimationLabel();
 
     // If this is set before `ngOnInit`, the style root may not have been resolved yet.
     if (!this._fallbackAnimation && this._styleRoot) {
@@ -160,6 +170,11 @@ export class MatProgressSpinner extends _MatProgressSpinnerMixinBase implements 
   }
   set strokeWidth(value: number) {
     this._strokeWidth = coerceNumberProperty(value);
+    this._spinnerAnimationLabel = this._getSpinnerAnimationLabel();
+
+    if (!this._fallbackAnimation && this._styleRoot) {
+      this._attachStyleNode();
+    }
   }
 
   /** Mode of the progress circle */
@@ -184,16 +199,18 @@ export class MatProgressSpinner extends _MatProgressSpinnerMixinBase implements 
     super(_elementRef);
 
     const trackedDiameters = MatProgressSpinner._diameters;
+    this._spinnerAnimationLabel = this._getSpinnerAnimationLabel();
 
     // The base size is already inserted via the component's structural styles. We still
     // need to track it so we don't end up adding the same styles again.
     if (!trackedDiameters.has(_document.head)) {
-      trackedDiameters.set(_document.head, new Set<number>([BASE_SIZE]));
+      const baseDiameter = BASE_SIZE - BASE_STROKE_WIDTH;
+      trackedDiameters.set(_document.head, new Set<number>([baseDiameter]));
     }
 
     this._fallbackAnimation = platform.EDGE || platform.TRIDENT;
     this._noopAnimations = animationMode === 'NoopAnimations' &&
-        (!!defaults && !defaults._forceAnimations);
+    (!!defaults && !defaults._forceAnimations);
 
     if (defaults) {
       if (defaults.diameter) {
@@ -223,20 +240,25 @@ export class MatProgressSpinner extends _MatProgressSpinnerMixinBase implements 
     element.classList.add(animationClass);
   }
 
+  /** The diameter of the spinner, adjusted for stroke width. */
+  get _circleDiameter() {
+    return this.diameter - this.strokeWidth;
+  }
+
   /** The radius of the spinner, adjusted for stroke width. */
   get _circleRadius() {
-    return (this.diameter - this.strokeWidth) / 2;
+    return this._circleDiameter / 2;
   }
 
   /** The view box of the spinner's svg element. */
   get _viewBox() {
-    const viewBox = this._circleRadius * 2 + this.strokeWidth;
-    return `0 0 ${viewBox} ${viewBox}`;
+    const viewBoxSize = this.diameter;
+    return `0 0 ${viewBoxSize} ${viewBoxSize}`;
   }
 
   /** The stroke circumference of the svg circle. */
   get _strokeCircumference(): number {
-    return 2 * Math.PI * this._circleRadius;
+    return Math.PI * this._circleDiameter;
   }
 
   /** The dash offset of the svg circle. */
@@ -261,13 +283,13 @@ export class MatProgressSpinner extends _MatProgressSpinnerMixinBase implements 
   /** Dynamically generates a style tag containing the correct animation for this diameter. */
   private _attachStyleNode(): void {
     const styleRoot = this._styleRoot;
-    const currentDiameter = this._diameter;
+    const currentDiameter = this._circleDiameter;
     const diameters = MatProgressSpinner._diameters;
     let diametersForElement = diameters.get(styleRoot);
 
     if (!diametersForElement || !diametersForElement.has(currentDiameter)) {
       const styleTag: HTMLStyleElement = this._document.createElement('style');
-      styleTag.setAttribute('mat-spinner-animation', currentDiameter + '');
+      styleTag.setAttribute('mat-spinner-animation', this._spinnerAnimationLabel);
       styleTag.textContent = this._getAnimationText();
       styleRoot.appendChild(styleTag);
 
@@ -286,7 +308,13 @@ export class MatProgressSpinner extends _MatProgressSpinnerMixinBase implements 
         // Animation should begin at 5% and end at 80%
         .replace(/START_VALUE/g, `${0.95 * this._strokeCircumference}`)
         .replace(/END_VALUE/g, `${0.2 * this._strokeCircumference}`)
-        .replace(/DIAMETER/g, `${this.diameter}`);
+        .replace(/DIAMETER/g, `${this._spinnerAnimationLabel}`);
+  }
+
+  /** Returns the circle diameter formatted for use with the animation-name CSS property. */
+  private _getSpinnerAnimationLabel(): string {
+    // Period '.' character cannot be included in an animation-name.
+    return this._circleDiameter.toString().replace('.', '_');
   }
 
   static ngAcceptInputType_diameter: NumberInput;
