@@ -120,3 +120,7 @@ th.mat-header-cell:last-of-type, td.mat-cell:last-of-type, td.mat-footer-cell:la
 .mat-table-sticky {
   @include vendor-prefixes.position-sticky;
 }
+
+.mat-table-fixed-layout {
+  table-layout: fixed;
+}
