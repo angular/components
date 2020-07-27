@@ -81,9 +81,6 @@ export class MatProgressSpinner extends _MatProgressSpinnerMixinBase implements 
   /** Implements all of the logic of the MDC circular progress. */
   _foundation: MDCCircularProgressFoundation;
 
-  /** Root element of MDCCircularProgress. */
-  // @ViewChild('spinnerRoot') _elementRef: ElementRef<HTMLElement>;
-
   /** The element of the determinate spinner. */
   @ViewChild('determinateSpinner') _determinateCircle: ElementRef<HTMLElement>;
 
