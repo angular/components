@@ -34,6 +34,34 @@ import {Observable, Subject} from 'rxjs';
  */
 const MDC_SNACKBAR_LABEL_CLASS = 'mdc-snackbar__label';
 
+/** @docs-private */
+class SnackBarAdapter implements MDCSnackbarAdapter {
+  constructor(private readonly _delegate: MatSnackBarContainer) {}
+
+  addClass(className: string) {
+    this._delegate._setClass(className, true);
+  }
+
+  removeClass(className: string) {
+    this._delegate._setClass(className, false);
+  }
+
+  announce() {}
+
+  notifyClosed() {
+    this._delegate._onExit.next();
+    this._delegate._mdcFoundation.destroy();
+  }
+
+  notifyClosing() {}
+
+  notifyOpened() {
+    this._delegate._onEnter.next();
+  }
+
+  notifyOpening() {}
+}
+
 /**
  * Internal component that wraps user-provided snack bar content.
  * @docs-private
@@ -72,20 +100,7 @@ export class MatSnackBarContainer extends BasePortalOutlet
   /** Whether the snack bar is currently exiting. */
   _exiting = false;
 
-  private _mdcAdapter: MDCSnackbarAdapter = {
-    addClass: (className: string) => this._setClass(className, true),
-    removeClass: (className: string) => this._setClass(className, false),
-    announce: () => {},
-    notifyClosed: () => {
-      this._onExit.next();
-      this._mdcFoundation.destroy();
-    },
-    notifyClosing: () => {},
-    notifyOpened: () => this._onEnter.next(),
-    notifyOpening: () => {},
-  };
-
-  _mdcFoundation = new MDCSnackbarFoundation(this._mdcAdapter);
+  _mdcFoundation = new MDCSnackbarFoundation(new SnackBarAdapter(this));
 
   /** The portal outlet inside of this container into which the snack bar content will be loaded. */
   @ViewChild(CdkPortalOutlet, {static: true}) _portalOutlet: CdkPortalOutlet;
@@ -164,7 +179,7 @@ export class MatSnackBarContainer extends BasePortalOutlet
     return this._portalOutlet.attachTemplatePortal(portal);
   }
 
-  private _setClass(cssClass: string, active: boolean) {
+  _setClass(cssClass: string, active: boolean) {
     const classList = this._elementRef.nativeElement.classList;
     active ? classList.add(cssClass) : classList.remove(cssClass);
   }
