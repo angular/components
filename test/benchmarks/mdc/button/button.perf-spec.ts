@@ -32,7 +32,7 @@ describe('button performance benchmarks', () => {
       ignoreBrowserSynchronization: true,
       params: [],
       setup: async () => await $('#show').click(),
-      work: async () => await $('.mat-raised-button').click(),
+      work: async () => await $('.mat-mdc-raised-button').click(),
     });
   });
 });
