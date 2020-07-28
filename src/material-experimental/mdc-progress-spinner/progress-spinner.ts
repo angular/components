@@ -237,4 +237,4 @@ export class MatProgressSpinner extends _MatProgressSpinnerMixinBase implements 
  * This is a component definition to be used as a convenience reference to create an
  * indeterminate `<mat-progress-spinner>` instance.
  */
-export {MatProgressSpinner as MatSpinner};
+export const MatSpinner = MatProgressSpinner;
