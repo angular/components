@@ -27,8 +27,8 @@ ng_test_library(
         ":listbox",
         "//src/cdk/keycodes",
         "//src/cdk/testing/private",
-        "@npm//@angular/platform-browser",
         "@npm//@angular/forms",
+        "@npm//@angular/platform-browser",
     ],
 )
 
