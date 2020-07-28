@@ -1873,10 +1873,8 @@ describe('MatSelect', () => {
 
         fixture.componentInstance.control.disable();
         fixture.detectChanges();
-
         let trigger =
             fixture.debugElement.query(By.css('.mat-select-trigger'))!.nativeElement;
-
         expect(getComputedStyle(trigger).getPropertyValue('cursor'))
             .toEqual('default', `Expected cursor to be default arrow on disabled control.`);
 

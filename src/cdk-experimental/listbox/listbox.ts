@@ -7,7 +7,7 @@
  */
 
 import {
-  AfterContentInit, ChangeDetectorRef,
+  AfterContentInit,
   ContentChildren,
   Directive,
   ElementRef, EventEmitter, forwardRef,
@@ -263,11 +263,6 @@ export class CdkListbox<T> implements AfterContentInit, OnDestroy, OnInit, Contr
 
   @Input() compareWith: (o1: any, o2: any) => boolean = (a1, a2) => a1 === a2;
 
-  constructor(
-      private _changeDetectorRef: ChangeDetectorRef
-  ) {
-  }
-
   ngOnInit() {
     this._selectionModel = new SelectionModel<CdkOption<T>>(this.multiple);
   }
@@ -453,7 +448,6 @@ export class CdkListbox<T> implements AfterContentInit, OnDestroy, OnInit, Contr
   /** Disables the select. Required to implement ControlValueAccessor. */
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
-    this._changeDetectorRef.markForCheck();
   }
 
   /** Selects an option that has the corresponding given value. */
