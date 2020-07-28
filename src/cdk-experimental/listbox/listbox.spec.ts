@@ -15,7 +15,7 @@ import {
   dispatchMouseEvent
 } from '@angular/cdk/testing/private';
 import {A, DOWN_ARROW, END, HOME, SPACE} from '@angular/cdk/keycodes';
-import {FormControl, FormsModule, ReactiveFormsModule} from "@angular/forms";
+import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
 
 describe('CdkOption and CdkListbox', () => {
 
@@ -840,9 +840,9 @@ class ListboxActiveDescendant {
   template: `
     <select cdkListbox
          [disabled]="isDisabled"
-         [multiple]="isMultiselectable"   
+         [multiple]="isMultiselectable"
          (selectionChange)="onSelectionChange($event)"
-         [formControl]="form" 
+         [formControl]="form"
          *ngIf="showListbox"   ngDefaultControl>
       <option cdkOption [value]="'purple'">Purple</option>
       <option cdkOption [value]="'solar'">Solar</option>
