@@ -33,10 +33,14 @@ describe('button performance benchmarks', () => {
       params: [],
       setup: async () => await $('#show').click(),
 <<<<<<< HEAD
+<<<<<<< HEAD
       work: async () => await $('.mat-mdc-raised-button').click(),
 =======
       work: async () => await $('.mat-raised-button').click(),
 >>>>>>> f1ae4d955... test(mdc-button): add performance tests for mdc-button
+=======
+      work: async () => await $('.mat-mdc-raised-button').click(),
+>>>>>>> 63f2747fc... fixup! test(mdc-button): add performance tests for mdc-button
     });
   });
 });
