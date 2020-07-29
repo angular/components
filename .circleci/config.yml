@@ -143,7 +143,7 @@ var_21: &slack_notify_on_failure
   run:
     name: "Notifying team about job failure"
     when: on_fail
-    command: ./scripts/circleci/notify-slack-job-failure.sh
+    command: node ./scripts/circleci/notify-slack-job-failure.js
 
 # -----------------------------
 # Container version of CircleCI
@@ -359,7 +359,12 @@ jobs:
       - *setup_bazel_binary
 
       - run: yarn build
-      - run: yarn check-release-output
+      - run:
+          name: Checking release output
+          command: |
+            pkg_json_version=$(node -pe "require('./package.json').version")
+            expected_version="${pkg_json_version}-sha-$(git rev-parse --short HEAD)"
+            yarn check-release-output ${expected_version}
 
       # TODO(devversion): replace this with bazel tests that run Madge. This is
       # cumbersome and doesn't guarantee no circular deps for other entry-points.
@@ -435,7 +440,7 @@ jobs:
       # The components examples package is not a release package, but we publish it
       # as part of this job to the docs-content repository. It's not contained in the
       # attached release output, so we need to build it here.
-      - run: bazel build src/components-examples:npm_package --config=release
+      - run: bazel build src/components-examples:npm_package --config=snapshot-build
 
       # Ensures that we do not push the snapshot artifacts upstream until all previous
       # snapshot build jobs have completed. This helps avoiding conflicts when multiple
@@ -582,7 +587,8 @@ jobs:
       - run:
           name: Running size integration tests (failures are reported in Slack only).
           command: |
-            yarn integration-tests:size-test || ./scripts/circleci/notify-slack-job-failure.sh
+            # If the size integration tests fail, report the failure to a dedicated #components-ci-size-tracking Slack channel.
+            yarn integration-tests:size-test || node ./scripts/circleci/notify-slack-job-failure.js components-ci-size-tracking
       - run: yarn integration-tests:view-engine
       - *slack_notify_on_failure
 

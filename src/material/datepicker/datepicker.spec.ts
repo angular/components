@@ -454,8 +454,7 @@ describe('MatDatepicker', () => {
 
         expect(testComponent.datepicker.opened).toBe(true);
 
-        const event = createKeyboardEvent('keydown', UP_ARROW);
-        Object.defineProperty(event, 'altKey', {get: () => true});
+        const event = createKeyboardEvent('keydown', UP_ARROW, undefined, {alt: true});
 
         dispatchEvent(document.body, event);
         fixture.detectChanges();
@@ -467,8 +466,7 @@ describe('MatDatepicker', () => {
       it('should open the datepicker using ALT + DOWN_ARROW', fakeAsync(() => {
         expect(testComponent.datepicker.opened).toBe(false);
 
-        const event = createKeyboardEvent('keydown', DOWN_ARROW);
-        Object.defineProperty(event, 'altKey', {get: () => true});
+        const event = createKeyboardEvent('keydown', DOWN_ARROW, undefined, {alt: true});
 
         dispatchEvent(fixture.nativeElement.querySelector('input'), event);
         fixture.detectChanges();
@@ -485,8 +483,7 @@ describe('MatDatepicker', () => {
 
         input.setAttribute('readonly', 'true');
 
-        const event = createKeyboardEvent('keydown', DOWN_ARROW);
-        Object.defineProperty(event, 'altKey', {get: () => true});
+        const event = createKeyboardEvent('keydown', DOWN_ARROW, undefined, {alt: true});
 
         dispatchEvent(input, event);
         fixture.detectChanges();
@@ -511,8 +508,7 @@ describe('MatDatepicker', () => {
         fixture.detectChanges();
 
         expect(() => {
-          const event = createKeyboardEvent('keydown', DOWN_ARROW);
-          Object.defineProperty(event, 'altKey', {get: () => true});
+          const event = createKeyboardEvent('keydown', DOWN_ARROW, undefined, {alt: true});
           dispatchEvent(fixture.nativeElement.querySelector('input'), event);
           fixture.detectChanges();
           flush();
@@ -1262,11 +1258,12 @@ describe('MatDatepicker', () => {
       afterEach(fakeAsync(() => {
         testComponent.datepicker.close();
         fixture.detectChanges();
+        flush();
       }));
 
       it('should use min and max dates specified by the input', () => {
-        expect(testComponent.datepicker._minDate).toEqual(new Date(2010, JAN, 1));
-        expect(testComponent.datepicker._maxDate).toEqual(new Date(2020, JAN, 1));
+        expect(testComponent.datepicker._getMinDate()).toEqual(new Date(2010, JAN, 1));
+        expect(testComponent.datepicker._getMaxDate()).toEqual(new Date(2020, JAN, 1));
       });
 
       it('should mark invalid when value is before min', fakeAsync(() => {
@@ -1286,7 +1283,7 @@ describe('MatDatepicker', () => {
       }));
 
       it('should not mark invalid when value equals min', fakeAsync(() => {
-        testComponent.date = testComponent.datepicker._minDate;
+        testComponent.date = testComponent.datepicker._getMinDate();
         revalidate();
 
         expect(fixture.debugElement.query(By.css('input'))!.nativeElement.classList)
@@ -1294,7 +1291,7 @@ describe('MatDatepicker', () => {
       }));
 
       it('should not mark invalid when value equals max', fakeAsync(() => {
-        testComponent.date = testComponent.datepicker._maxDate;
+        testComponent.date = testComponent.datepicker._getMaxDate();
         revalidate();
 
         expect(fixture.debugElement.query(By.css('input'))!.nativeElement.classList)
@@ -1354,6 +1351,37 @@ describe('MatDatepicker', () => {
 
         expect(testComponent.model.valid).toBe(true);
         expect(testComponent.date).toBe(validDate);
+      }));
+
+      it('should update the calendar when the min/max dates change', fakeAsync(() => {
+        const getDisabledCells = () => {
+          return document.querySelectorAll('.mat-calendar-body-disabled').length;
+        };
+
+        testComponent.date = new Date(2020, JAN, 5);
+        fixture.detectChanges();
+
+        testComponent.minDate = new Date(2020, JAN, 3);
+        testComponent.maxDate = new Date(2020, JAN, 7);
+        fixture.detectChanges();
+
+        testComponent.datepicker.open();
+        fixture.detectChanges();
+        flush();
+
+        let disabledCellCount = getDisabledCells();
+        expect(disabledCellCount).not.toBe(0);
+
+        testComponent.minDate = new Date(2020, JAN, 1);
+        fixture.detectChanges();
+
+        expect(getDisabledCells()).not.toBe(disabledCellCount);
+        disabledCellCount = getDisabledCells();
+
+        testComponent.maxDate = new Date(2020, JAN, 10);
+        fixture.detectChanges();
+
+        expect(getDisabledCells()).not.toBe(disabledCellCount);
       }));
 
     });

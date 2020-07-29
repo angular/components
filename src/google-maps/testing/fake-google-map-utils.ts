@@ -24,6 +24,7 @@ export interface TestingWindow extends Window {
       Rectangle?: jasmine.Spy;
       Circle?: jasmine.Spy;
       GroundOverlay?: jasmine.Spy;
+      KmlLayer?: jasmine.Spy;
     };
   };
 }
@@ -92,10 +93,14 @@ export function createMarkerConstructorSpy(markerSpy: jasmine.SpyObj<google.maps
 /** Creates a jasmine.SpyObj for a google.maps.InfoWindow */
 export function createInfoWindowSpy(options: google.maps.InfoWindowOptions):
     jasmine.SpyObj<google.maps.InfoWindow> {
+  let anchor: any;
   const infoWindowSpy = jasmine.createSpyObj(
       'google.maps.InfoWindow',
-      ['addListener', 'close', 'getContent', 'getPosition', 'getZIndex', 'open']);
+      ['addListener', 'close', 'getContent', 'getPosition', 'getZIndex', 'open', 'get']);
   infoWindowSpy.addListener.and.returnValue({remove: () => {}});
+  infoWindowSpy.open.and.callFake((_map: any, target: any) => anchor = target);
+  infoWindowSpy.close.and.callFake(() => anchor = null);
+  infoWindowSpy.get.and.callFake((key: string) => key === 'anchor' ? anchor : null);
   return infoWindowSpy;
 }
 
@@ -282,4 +287,42 @@ export function createGroundOverlayConstructorSpy(
     };
   }
   return groundOverlayConstructorSpy;
+}
+
+/** Creates a jasmine.SpyObj for a google.maps.KmlLayer */
+export function createKmlLayerSpy(options?: google.maps.KmlLayerOptions):
+    jasmine.SpyObj<google.maps.KmlLayer> {
+  const kmlLayerSpy = jasmine.createSpyObj('google.maps.KmlLayer', [
+    'addListener',
+    'getDefaultViewport',
+    'getMetadata',
+    'getStatus',
+    'getUrl',
+    'getZIndex',
+    'setOptions',
+    'setUrl',
+    'setMap',
+  ]);
+  kmlLayerSpy.addListener.and.returnValue({remove: () => {}});
+  return kmlLayerSpy;
+}
+
+/** Creates a jasmine.Spy to watch for the constructor of a google.maps.KmlLayer */
+export function createKmlLayerConstructorSpy(kmlLayerSpy: jasmine.SpyObj<google.maps.KmlLayer>):
+    jasmine.Spy {
+  const kmlLayerConstructorSpy =
+      jasmine.createSpy('KmlLayer constructor', (_options: google.maps.KmlLayerOptions) => {
+        return kmlLayerSpy;
+      });
+  const testingWindow: TestingWindow = window;
+  if (testingWindow.google && testingWindow.google.maps) {
+    testingWindow.google.maps['KmlLayer'] = kmlLayerConstructorSpy;
+  } else {
+    testingWindow.google = {
+      maps: {
+        'KmlLayer': kmlLayerConstructorSpy,
+      },
+    };
+  }
+  return kmlLayerConstructorSpy;
 }

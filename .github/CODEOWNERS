@@ -119,6 +119,7 @@
 /src/material-experimental/mdc-table/**            @andrewseguin
 /src/material-experimental/mdc-theming/**          @mmalerba
 /src/material-experimental/mdc-typography/**       @mmalerba
+/src/material-experimental/menubar/**              @jelbourn @andy9775
 /src/material-experimental/popover-edit/**         @kseamon @andrewseguin
 
 # CDK experimental package
@@ -143,6 +144,7 @@
 /src/dev-app/button-toggle/**                      @jelbourn
 /src/dev-app/button/**                             @jelbourn
 /src/dev-app/card/**                               @jelbourn
+/src/dev-app/cdk-experimental-listbox/**           @jelbourn @nielsr98
 /src/dev-app/cdk-experimental-menu/**              @jelbourn @andy9775
 /src/dev-app/checkbox/**                           @jelbourn @devversion
 /src/dev-app/chips/**                              @jelbourn
@@ -184,6 +186,7 @@
 /src/dev-app/mdc-table/**                          @andrewseguin
 /src/dev-app/mdc-tabs/**                           @crisbeto
 /src/dev-app/menu/**                               @crisbeto
+/src/dev-app/menubar/**                            @jelbourn @andy9775
 /src/dev-app/overlay/**                            @jelbourn @crisbeto
 /src/dev-app/paginator/**                          @andrewseguin
 /src/dev-app/platform/**                           @jelbourn @devversion
@@ -290,6 +293,7 @@
 /tools/public_api_guard/material/card.d.ts              @jelbourn
 /tools/public_api_guard/material/checkbox.d.ts          @jelbourn @devversion
 /tools/public_api_guard/material/chips.d.ts             @jelbourn
+/tools/public_api_guard/material/chips/testing.d.ts     @jelbourn
 /tools/public_api_guard/material/core.d.ts              @jelbourn
 /tools/public_api_guard/material/datepicker.d.ts        @mmalerba
 /tools/public_api_guard/material/dialog.d.ts            @jelbourn @crisbeto

@@ -29,7 +29,8 @@ import {
   hasModifierKey,
 } from '@angular/cdk/keycodes';
 import {Directionality} from '@angular/cdk/bidi';
-import {take, takeUntil} from 'rxjs/operators';
+import {take, takeUntil, startWith, mergeMap, mapTo, mergeAll, switchMap} from 'rxjs/operators';
+import {merge} from 'rxjs';
 import {CdkMenuGroup} from './menu-group';
 import {CdkMenuPanel} from './menu-panel';
 import {Menu, CDK_MENU} from './menu-interface';
@@ -50,6 +51,7 @@ import {MenuStack, MenuStackItem, FocusNext} from './menu-stack';
   host: {
     '(keydown)': '_handleKeyEvent($event)',
     'role': 'menu',
+    'class': 'cdk-menu',
     '[attr.aria-orientation]': 'orientation',
   },
   providers: [
@@ -81,6 +83,9 @@ export class CdkMenu extends CdkMenuGroup implements Menu, AfterContentInit, OnI
   @ContentChildren(CdkMenuItem, {descendants: true})
   private readonly _allItems: QueryList<CdkMenuItem>;
 
+  /** The Menu Item which triggered the open submenu. */
+  private _openItem?: CdkMenuItem;
+
   /**
    * A reference to the enclosing parent menu panel.
    *
@@ -92,6 +97,8 @@ export class CdkMenu extends CdkMenuGroup implements Menu, AfterContentInit, OnI
 
   constructor(
     @Optional() private readonly _dir?: Directionality,
+    // `CdkMenuPanel` is always used in combination with a `CdkMenu`.
+    // tslint:disable-next-line: lightweight-tokens
     @Optional() private readonly _menuPanel?: CdkMenuPanel
   ) {
     super();
@@ -106,6 +113,7 @@ export class CdkMenu extends CdkMenuGroup implements Menu, AfterContentInit, OnI
 
     this._completeChangeEmitter();
     this._setKeyManager();
+    this._subscribeToMenuOpen();
     this._subscribeToMenuStack();
   }
 
@@ -146,7 +154,7 @@ export class CdkMenu extends CdkMenuGroup implements Menu, AfterContentInit, OnI
       case ESCAPE:
         if (!hasModifierKey(event)) {
           event.preventDefault();
-          this._menuStack.closeLatest(FocusNext.currentItem);
+          this._menuStack.close(this, FocusNext.currentItem);
         }
         break;
 
@@ -214,11 +222,11 @@ export class CdkMenu extends CdkMenuGroup implements Menu, AfterContentInit, OnI
 
   /** Subscribe to the MenuStack close and empty observables. */
   private _subscribeToMenuStack() {
-    this._menuStack.close
+    this._menuStack.closed
       .pipe(takeUntil(this.closed))
       .subscribe((item: MenuStackItem) => this._closeOpenMenu(item));
 
-    this._menuStack.empty
+    this._menuStack.emptied
       .pipe(takeUntil(this.closed))
       .subscribe((event: FocusNext) => this._toggleMenuFocus(event));
   }
@@ -227,12 +235,13 @@ export class CdkMenu extends CdkMenuGroup implements Menu, AfterContentInit, OnI
    * Close the open menu if the current active item opened the requested MenuStackItem.
    * @param item the MenuStackItem requested to be closed.
    */
-  private _closeOpenMenu(item: MenuStackItem) {
+  private _closeOpenMenu(menu: MenuStackItem) {
     const keyManager = this._keyManager;
-    if (item === keyManager.activeItem?.getMenu()) {
-      keyManager.activeItem.getMenuTrigger()?.closeMenu();
+    const trigger = this._openItem;
+    if (menu === trigger?.getMenuTrigger()?.getMenu()) {
+      trigger.getMenuTrigger()?.closeMenu();
       keyManager.setFocusOrigin('keyboard');
-      keyManager.setActiveItem(keyManager.activeItem);
+      keyManager.setActiveItem(trigger);
     }
   }
 
@@ -257,6 +266,31 @@ export class CdkMenu extends CdkMenuGroup implements Menu, AfterContentInit, OnI
         }
         break;
     }
+  }
+
+  // TODO(andy9775): remove duplicate logic between menu an menu bar
+  /**
+   * Subscribe to the menu trigger's open events in order to track the trigger which opened the menu
+   * and stop tracking it when the menu is closed.
+   */
+  private _subscribeToMenuOpen() {
+    const exitCondition = merge(this._allItems.changes, this.closed);
+    this._allItems.changes
+      .pipe(
+        startWith(this._allItems),
+        mergeMap((list: QueryList<CdkMenuItem>) =>
+          list
+            .filter(item => item.hasMenu())
+            .map(item => item.getMenuTrigger()!.opened.pipe(mapTo(item), takeUntil(exitCondition)))
+        ),
+        mergeAll(),
+        switchMap((item: CdkMenuItem) => {
+          this._openItem = item;
+          return item.getMenuTrigger()!.closed;
+        }),
+        takeUntil(this.closed)
+      )
+      .subscribe(() => (this._openItem = undefined));
   }
 
   /** Return true if this menu has been configured in a horizontal orientation. */

@@ -246,37 +246,37 @@ export class MatProgressSpinner extends _MatProgressSpinnerMixinBase implements 
   }
 
   /** The radius of the spinner, adjusted for stroke width. */
-  get _circleRadius() {
+  _getCircleRadius() {
     return this._circleDiameter / 2;
   }
 
   /** The view box of the spinner's svg element. */
-  get _viewBox() {
+  _getViewBox() {
     const viewBoxSize = this.diameter;
     return `0 0 ${viewBoxSize} ${viewBoxSize}`;
   }
 
   /** The stroke circumference of the svg circle. */
-  get _strokeCircumference(): number {
+  _getStrokeCircumference(): number {
     return Math.PI * this._circleDiameter;
   }
 
   /** The dash offset of the svg circle. */
-  get _strokeDashOffset() {
+  _getStrokeDashOffset() {
     if (this.mode === 'determinate') {
-      return this._strokeCircumference * (100 - this._value) / 100;
+      return this._getStrokeCircumference() * (100 - this._value) / 100;
     }
 
     // In fallback mode set the circle to 80% and rotate it with CSS.
     if (this._fallbackAnimation && this.mode === 'indeterminate') {
-      return this._strokeCircumference * 0.2;
+      return this._getStrokeCircumference() * 0.2;
     }
 
     return null;
   }
 
   /** Stroke width of the circle in percent. */
-  get _circleStrokeWidth() {
+  _getCircleStrokeWidth() {
     return this.strokeWidth / this.diameter * 100;
   }
 
@@ -304,10 +304,11 @@ export class MatProgressSpinner extends _MatProgressSpinnerMixinBase implements 
 
   /** Generates animation styles adjusted for the spinner's diameter. */
   private _getAnimationText(): string {
+    const strokeCircumference = this._getStrokeCircumference();
     return INDETERMINATE_ANIMATION_TEMPLATE
         // Animation should begin at 5% and end at 80%
-        .replace(/START_VALUE/g, `${0.95 * this._strokeCircumference}`)
-        .replace(/END_VALUE/g, `${0.2 * this._strokeCircumference}`)
+        .replace(/START_VALUE/g, `${0.95 * strokeCircumference}`)
+        .replace(/END_VALUE/g, `${0.2 * strokeCircumference}`)
         .replace(/DIAMETER/g, `${this._spinnerAnimationLabel}`);
   }
 

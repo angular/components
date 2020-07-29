@@ -37,15 +37,19 @@ query --output=label_kind
 # By default, failing tests don't print any output, it goes to the log file
 test --test_output=errors
 
-#################################
-# Release configuration.        #
-# Run with "--config=release"   #
-#################################
+####################################
+# Stamping configurations.         #
+# Run with "--config=release" or   #
+# "--config=snapshot-build".       #
+####################################
 
 # Configures script to do version stamping.
 # See https://docs.bazel.build/versions/master/user-manual.html#flag--workspace_status_command
 build:release --workspace_status_command="node ./tools/bazel-stamp-vars.js"
 build:release --stamp
+
+build:snapshot-build --workspace_status_command="node ./tools/bazel-stamp-vars.js --snapshot"
+build:snapshot-build --stamp
 
 ################################
 # View Engine / Ivy toggle     #
@@ -92,10 +96,18 @@ build:remote --host_platform=//tools:rbe_platform
 build:remote --platforms=//tools:rbe_platform
 build:remote --extra_toolchains=@rbe_default//config:cc-toolchain
 
-# Setup Build Event Service
-build:remote --bes_backend=buildeventservice.googleapis.com
-build:remote --bes_timeout=60s
-build:remote --bes_results_url="https://source.cloud.google.com/results/invocations/"
+################################
+# --config=build-results       #
+################################
+
+# Sets up Build Event Service if the `builds-results` configuration is used. We
+# do not upload build results by default as this makes us reliant on external servers
+# that could cause builds to fail unnecessarily. If desired, build result uploading
+# can be manually uploaded, but given that the build event service server has been
+# less stable than the remote executors, we do not want to degrade CI stability.
+build:build-results --bes_backend=buildeventservice.googleapis.com
+build:build-results --bes_timeout=60s
+build:build-results --bes_results_url="https://source.cloud.google.com/results/invocations/"
 
 # Set remote caching settings
 build:remote --remote_accept_cached=true

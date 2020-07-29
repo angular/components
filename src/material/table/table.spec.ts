@@ -104,6 +104,15 @@ describe('MatTable', () => {
       expect(table.textContent.trim()).not.toContain('No data');
     });
 
+    it('should show the no data row if there is no data on init', () => {
+      const fixture = TestBed.createComponent(MatTableApp);
+      fixture.componentInstance.dataSource!.data = [];
+      fixture.detectChanges();
+
+      const table = fixture.nativeElement.querySelector('.mat-table')!;
+      expect(table.textContent.trim()).toContain('No data');
+    });
+
   });
 
   it('should be able to render a table correctly with native elements', () => {
@@ -186,13 +195,14 @@ describe('MatTable', () => {
     ]);
   });
 
-  it('should apply custom sticky CSS class to sticky cells', () => {
+  it('should apply custom sticky CSS class to sticky cells', fakeAsync(() => {
     let fixture = TestBed.createComponent(StickyTableApp);
     fixture.detectChanges();
+    flushMicrotasks();
 
     const stuckCellElement = fixture.nativeElement.querySelector('.mat-table th')!;
     expect(stuckCellElement.classList).toContain('mat-table-sticky');
-  });
+  }));
 
   // Note: needs to be fakeAsync so it catches the error.
   it('should not throw when a row definition is on an ng-container', fakeAsync(() => {

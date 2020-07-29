@@ -442,9 +442,8 @@ describe('MatMenu', () => {
     fixture.componentInstance.trigger.openMenu();
 
     const panel = overlayContainerElement.querySelector('.mat-menu-panel')!;
-    const event = createKeyboardEvent('keydown', ESCAPE);
+    const event = createKeyboardEvent('keydown', ESCAPE, undefined, {alt: true});
 
-    Object.defineProperty(event, 'altKey', {get: () => true});
     dispatchEvent(panel, event);
     fixture.detectChanges();
     tick(500);
@@ -748,6 +747,13 @@ describe('MatMenu', () => {
     }).toThrowError(/must pass in an mat-menu instance/);
   });
 
+  it('should throw if assigning a menu that contains the trigger', () => {
+    expect(() => {
+      const fixture = createComponent(InvalidRecursiveMenu, [], [FakeIcon]);
+      fixture.detectChanges();
+    }).toThrowError(/menu cannot contain its own trigger/);
+  });
+
   it('should be able to swap out a menu after the first time it is opened', fakeAsync(() => {
     const fixture = createComponent(DynamicPanelMenu);
     fixture.detectChanges();
@@ -823,8 +829,7 @@ describe('MatMenu', () => {
 
     spyOn(items[0], 'focus').and.callThrough();
 
-    const event = createKeyboardEvent('keydown', HOME);
-    Object.defineProperty(event, 'altKey', {get: () => true});
+    const event = createKeyboardEvent('keydown', HOME, undefined, {alt: true});
 
     dispatchEvent(panel, event);
     fixture.detectChanges();
@@ -868,8 +873,7 @@ describe('MatMenu', () => {
 
     spyOn(items[items.length - 1], 'focus').and.callThrough();
 
-    const event = createKeyboardEvent('keydown', END);
-    Object.defineProperty(event, 'altKey', {get: () => true});
+    const event = createKeyboardEvent('keydown', END, undefined, {alt: true});
 
     dispatchEvent(panel, event);
     fixture.detectChanges();
@@ -2624,4 +2628,15 @@ class SimpleMenuWithRepeaterInLazyContent {
 class LazyMenuWithOnPush {
   @ViewChild('triggerEl', {read: ElementRef}) rootTrigger: ElementRef;
   @ViewChild('menuItem', {read: ElementRef}) menuItemWithSubmenu: ElementRef;
+}
+
+
+@Component({
+  template: `
+    <mat-menu #menu="matMenu">
+      <button [matMenuTriggerFor]="menu"></button>
+    </mat-menu>
+  `
+})
+class InvalidRecursiveMenu {
 }

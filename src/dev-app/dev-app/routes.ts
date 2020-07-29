@@ -29,6 +29,10 @@ export const DEV_APP_ROUTES: Routes = [
   },
   {path: 'card', loadChildren: 'card/card-demo-module#CardDemoModule'},
   {
+    path: 'cdk-experimental-listbox',
+    loadChildren: 'cdk-experimental-listbox/cdk-listbox-demo-module#CdkListboxDemoModule'
+  },
+  {
     path: 'cdk-experimental-menu',
     loadChildren: 'cdk-experimental-menu/cdk-menu-demo-module#CdkMenuDemoModule'
   },
@@ -60,6 +64,10 @@ export const DEV_APP_ROUTES: Routes = [
   {
     path: 'live-announcer',
     loadChildren: 'live-announcer/live-announcer-demo-module#LiveAnnouncerDemoModule'
+  },
+  {
+    path: 'menubar',
+    loadChildren: 'menubar/mat-menubar-demo-module#MatMenuBarDemoModule'
   },
   {path: 'mdc-button', loadChildren: 'mdc-button/mdc-button-demo-module#MdcButtonDemoModule'},
   {path: 'mdc-card', loadChildren: 'mdc-card/mdc-card-demo-module#MdcCardDemoModule'},

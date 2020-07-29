@@ -435,8 +435,7 @@ describe('MatSelect', () => {
           expect(selectInstance.panelOpen).toBe(false, 'Expected select to be closed.');
           expect(formControl.value).toBeFalsy('Expected no initial value.');
 
-          const event = createKeyboardEvent('keydown', DOWN_ARROW);
-          Object.defineProperty(event, 'altKey', {get: () => true});
+          const event = createKeyboardEvent('keydown', DOWN_ARROW, undefined, {alt: true});
 
           dispatchEvent(select, event);
 
@@ -450,8 +449,7 @@ describe('MatSelect', () => {
           expect(selectInstance.panelOpen).toBe(false, 'Expected select to be closed.');
           expect(formControl.value).toBeFalsy('Expected no initial value.');
 
-          const event = createKeyboardEvent('keydown', UP_ARROW);
-          Object.defineProperty(event, 'altKey', {get: () => true});
+          const event = createKeyboardEvent('keydown', UP_ARROW, undefined, {alt: true});
 
           dispatchEvent(select, event);
 
@@ -467,8 +465,7 @@ describe('MatSelect', () => {
 
           expect(selectInstance.panelOpen).toBe(true, 'Expected select to be open.');
 
-          const event = createKeyboardEvent('keydown', DOWN_ARROW);
-          Object.defineProperty(event, 'altKey', {get: () => true});
+          const event = createKeyboardEvent('keydown', DOWN_ARROW, undefined, {alt: true});
 
           dispatchEvent(select, event);
 
@@ -484,8 +481,7 @@ describe('MatSelect', () => {
 
           expect(selectInstance.panelOpen).toBe(true, 'Expected select to be open.');
 
-          const event = createKeyboardEvent('keydown', UP_ARROW);
-          Object.defineProperty(event, 'altKey', {get: () => true});
+          const event = createKeyboardEvent('keydown', UP_ARROW, undefined, {alt: true});
 
           dispatchEvent(select, event);
 
@@ -721,8 +717,7 @@ describe('MatSelect', () => {
             fixture.destroy();
 
             const multiFixture = TestBed.createComponent(MultiSelect);
-            const event = createKeyboardEvent('keydown', DOWN_ARROW);
-            Object.defineProperty(event, 'shiftKey', {get: () => true});
+            const event = createKeyboardEvent('keydown', DOWN_ARROW, undefined, {shift: true});
 
             multiFixture.detectChanges();
             select = multiFixture.debugElement.query(By.css('mat-select'))!.nativeElement;
@@ -749,8 +744,7 @@ describe('MatSelect', () => {
             fixture.destroy();
 
             const multiFixture = TestBed.createComponent(MultiSelect);
-            const event = createKeyboardEvent('keydown', UP_ARROW);
-            Object.defineProperty(event, 'shiftKey', {get: () => true});
+            const event = createKeyboardEvent('keydown', UP_ARROW, undefined, {shift: true});
 
             multiFixture.detectChanges();
             select = multiFixture.debugElement.query(By.css('mat-select'))!.nativeElement;
@@ -791,8 +785,7 @@ describe('MatSelect', () => {
         it('should not prevent the default actions on selection keys when pressing a modifier',
           fakeAsync(() => {
             [ENTER, SPACE].forEach(key => {
-              const event = createKeyboardEvent('keydown', key);
-              Object.defineProperty(event, 'shiftKey', {get: () => true});
+              const event = createKeyboardEvent('keydown', key, undefined, {shift: true});
               expect(event.defaultPrevented).toBe(false);
             });
 
@@ -1659,6 +1652,19 @@ describe('MatSelect', () => {
 
           subscription!.unsubscribe();
         }));
+
+        it('should not indicate programmatic value changes as user interactions', () => {
+          const events: MatOptionSelectionChange[] = [];
+          const subscription = fixture.componentInstance.select.optionSelectionChanges
+            .subscribe((event: MatOptionSelectionChange) => events.push(event));
+
+          fixture.componentInstance.control.setValue('eggs-5');
+          fixture.detectChanges();
+
+          expect(events.map(event => event.isUserInput)).toEqual([false]);
+
+          subscription.unsubscribe();
+        });
 
     });
 
@@ -4357,8 +4363,7 @@ describe('MatSelect', () => {
       fixture.componentInstance.select.open();
       fixture.detectChanges();
 
-      const event = createKeyboardEvent('keydown', A, selectElement);
-      Object.defineProperty(event, 'ctrlKey', {get: () => true});
+      const event = createKeyboardEvent('keydown', A, undefined, {control: true});
       dispatchEvent(selectElement, event);
       fixture.detectChanges();
 
@@ -4388,8 +4393,7 @@ describe('MatSelect', () => {
       fixture.componentInstance.select.open();
       fixture.detectChanges();
 
-      const event = createKeyboardEvent('keydown', A, selectElement);
-      Object.defineProperty(event, 'ctrlKey', {get: () => true});
+      const event = createKeyboardEvent('keydown', A, undefined, {control: true});
       dispatchEvent(selectElement, event);
       fixture.detectChanges();
 
@@ -4415,8 +4419,7 @@ describe('MatSelect', () => {
       fixture.componentInstance.select.open();
       fixture.detectChanges();
 
-      const event = createKeyboardEvent('keydown', A, selectElement);
-      Object.defineProperty(event, 'ctrlKey', {get: () => true});
+      const event = createKeyboardEvent('keydown', A, undefined, {control: true});
       dispatchEvent(selectElement, event);
       fixture.detectChanges();
 
@@ -4455,8 +4458,7 @@ describe('MatSelect', () => {
       fixture.componentInstance.select.open();
       fixture.detectChanges();
 
-      const event = createKeyboardEvent('keydown', A, selectElement);
-      Object.defineProperty(event, 'ctrlKey', {get: () => true});
+      const event = createKeyboardEvent('keydown', A, undefined, {control: true});
       dispatchEvent(selectElement, event);
       fixture.detectChanges();
 

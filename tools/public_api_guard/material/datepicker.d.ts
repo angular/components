@@ -216,6 +216,7 @@ export declare class MatDatepickerInput<D> extends MatDatepickerInputBase<D | nu
     set min(value: D | null);
     constructor(elementRef: ElementRef<HTMLInputElement>, dateAdapter: DateAdapter<D>, dateFormats: MatDateFormats, _formField: MatFormField);
     protected _assignValueToModel(value: D | null): void;
+    protected _canEmitChangeEvent(): boolean;
     protected _getDateFilter(): DateFilterFn<D | null>;
     _getMaxDate(): D | null;
     _getMinDate(): D | null;
@@ -285,12 +286,12 @@ export declare class MatDatepickerToggleIcon {
     static ɵfac: i0.ɵɵFactoryDef<MatDatepickerToggleIcon, never>;
 }
 
-export declare class MatDateRangeInput<D> implements MatFormFieldControl<DateRange<D>>, MatDatepickerControl<D>, MatDateRangeInputParent<D>, MatDateRangePickerInput<D>, AfterContentInit, OnDestroy {
+export declare class MatDateRangeInput<D> implements MatFormFieldControl<DateRange<D>>, MatDatepickerControl<D>, MatDateRangeInputParent<D>, MatDateRangePickerInput<D>, AfterContentInit, OnChanges, OnDestroy {
     _ariaDescribedBy: string | null;
-    _disabledChange: Subject<boolean>;
     _endInput: MatEndDate<D>;
     _groupDisabled: boolean;
     _startInput: MatStartDate<D>;
+    _stateChanges: Subject<void>;
     comparisonEnd: D | null;
     comparisonStart: D | null;
     controlType: string;
@@ -327,6 +328,7 @@ export declare class MatDateRangeInput<D> implements MatFormFieldControl<DateRan
     getStartValue(): D | null;
     getThemePalette(): ThemePalette;
     ngAfterContentInit(): void;
+    ngOnChanges(): void;
     ngOnDestroy(): void;
     onContainerClick(): void;
     setDescribedByIds(ids: string[]): void;
@@ -364,6 +366,7 @@ export declare abstract class MatDateSelectionModel<S, D = ExtractDateTypeFromSe
 }
 
 export declare class MatEndDate<D> extends _MatDateRangeInputBase<D> implements CanUpdateErrorState {
+    protected _canEmitChangeEvent: (event: DateSelectionModelChange<DateRange<D>>) => boolean;
     protected _validator: ValidatorFn | null;
     constructor(rangeInput: MatDateRangeInputParent<D>, elementRef: ElementRef<HTMLInputElement>, defaultErrorStateMatcher: ErrorStateMatcher, injector: Injector, parentForm: NgForm, parentFormGroup: FormGroupDirective, dateAdapter: DateAdapter<D>, dateFormats: MatDateFormats);
     protected _assignValueToModel(value: D | null): void;
@@ -468,6 +471,7 @@ export declare class MatSingleDateSelectionModel<D> extends MatDateSelectionMode
 }
 
 export declare class MatStartDate<D> extends _MatDateRangeInputBase<D> implements CanUpdateErrorState {
+    protected _canEmitChangeEvent: (event: DateSelectionModelChange<DateRange<D>>) => boolean;
     protected _validator: ValidatorFn | null;
     constructor(rangeInput: MatDateRangeInputParent<D>, elementRef: ElementRef<HTMLInputElement>, defaultErrorStateMatcher: ErrorStateMatcher, injector: Injector, parentForm: NgForm, parentFormGroup: FormGroupDirective, dateAdapter: DateAdapter<D>, dateFormats: MatDateFormats);
     protected _assignValueToModel(value: D | null): void;

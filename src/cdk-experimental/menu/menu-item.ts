@@ -45,6 +45,7 @@ function removeIcons(element: Element) {
     'tabindex': '-1',
     'type': 'button',
     'role': 'menuitem',
+    'class': 'cdk-menu-item',
     '[attr.aria-disabled]': 'disabled || null',
   },
 })
@@ -70,6 +71,8 @@ export class CdkMenuItem implements FocusableOption {
     @Inject(CDK_MENU) private readonly _parentMenu: Menu,
     @Optional() private readonly _dir?: Directionality,
     /** Reference to the CdkMenuItemTrigger directive if one is added to the same element */
+    // `CdkMenuItem` is commonly used in combination with a `CdkMenuItemTrigger`.
+    // tslint:disable-next-line: lightweight-tokens
     @Self() @Optional() private readonly _menuTrigger?: CdkMenuItemTrigger
   ) {}
 
@@ -145,7 +148,7 @@ export class CdkMenuItem implements FocusableOption {
         if (this._isParentVertical() && !this.hasMenu()) {
           event.preventDefault();
           this._dir?.value === 'rtl'
-            ? this._getMenuStack().closeLatest(FocusNext.previousItem)
+            ? this._getMenuStack().close(this._parentMenu, FocusNext.previousItem)
             : this._getMenuStack().closeAll(FocusNext.nextItem);
         }
         break;
@@ -155,7 +158,7 @@ export class CdkMenuItem implements FocusableOption {
           event.preventDefault();
           this._dir?.value === 'rtl'
             ? this._getMenuStack().closeAll(FocusNext.nextItem)
-            : this._getMenuStack().closeLatest(FocusNext.previousItem);
+            : this._getMenuStack().close(this._parentMenu, FocusNext.previousItem);
         }
         break;
     }

@@ -42,7 +42,7 @@ import {
   RippleTarget,
   ThemePalette,
 } from '@angular/material/core';
-import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
+import {BooleanInput, coerceBooleanProperty, NumberInput} from '@angular/cdk/coercion';
 import {FocusMonitor, FocusableOption} from '@angular/cdk/a11y';
 import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 import {MatInkBar} from '../ink-bar';
@@ -92,7 +92,7 @@ export abstract class _MatTabNavBase extends MatPaginatedTabHeader implements Af
               /**
                * @deprecated @breaking-change 9.0.0 `platform` parameter to become required.
                */
-              @Optional() platform?: Platform,
+              platform?: Platform,
               @Optional() @Inject(ANIMATION_MODULE_TYPE) animationMode?: string) {
     super(elementRef, changeDetectorRef, viewportRuler, dir, ngZone, platform, animationMode);
   }
@@ -175,7 +175,7 @@ export class MatTabNav extends _MatTabNavBase {
     /**
      * @deprecated @breaking-change 9.0.0 `platform` parameter to become required.
      */
-    @Optional() platform?: Platform,
+    platform?: Platform,
     @Optional() @Inject(ANIMATION_MODULE_TYPE) animationMode?: string) {
     super(elementRef, dir, ngZone, changeDetectorRef, viewportRuler, platform, animationMode);
   }
@@ -253,6 +253,7 @@ export class _MatTabLinkBase extends _MatTabLinkMixinBase implements AfterViewIn
 
   static ngAcceptInputType_disabled: BooleanInput;
   static ngAcceptInputType_disableRipple: BooleanInput;
+  static ngAcceptInputType_tabIndex: NumberInput;
 }
 
 

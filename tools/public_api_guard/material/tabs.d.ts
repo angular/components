@@ -92,6 +92,7 @@ export declare class _MatTabLinkBase extends _MatTabLinkMixinBase implements Aft
     ngOnDestroy(): void;
     static ngAcceptInputType_disableRipple: BooleanInput;
     static ngAcceptInputType_disabled: BooleanInput;
+    static ngAcceptInputType_tabIndex: NumberInput;
     static ɵdir: i0.ɵɵDirectiveDefWithMeta<_MatTabLinkBase, never, never, { "active": "active"; }, {}, never>;
     static ɵfac: i0.ɵɵFactoryDef<_MatTabLinkBase, [null, null, { optional: true; }, { attribute: "tabindex"; }, null, { optional: true; }]>;
 }
@@ -111,7 +112,7 @@ export declare abstract class _MatTabNavBase extends MatPaginatedTabHeader imple
     ngAfterContentInit(): void;
     updateActiveLink(_element?: ElementRef): void;
     static ɵdir: i0.ɵɵDirectiveDefWithMeta<_MatTabNavBase, never, never, { "backgroundColor": "backgroundColor"; "disableRipple": "disableRipple"; "color": "color"; }, {}, never>;
-    static ɵfac: i0.ɵɵFactoryDef<_MatTabNavBase, [null, { optional: true; }, null, null, null, { optional: true; }, { optional: true; }]>;
+    static ɵfac: i0.ɵɵFactoryDef<_MatTabNavBase, [null, { optional: true; }, null, null, null, null, { optional: true; }]>;
 }
 
 export declare const MAT_TAB_GROUP: InjectionToken<any>;
@@ -242,7 +243,7 @@ export declare class MatTabNav extends _MatTabNavBase {
     platform?: Platform, animationMode?: string);
     static ngAcceptInputType_disableRipple: BooleanInput;
     static ɵcmp: i0.ɵɵComponentDefWithMeta<MatTabNav, "[mat-tab-nav-bar]", ["matTabNavBar", "matTabNav"], { "color": "color"; }, {}, ["_items"], ["*"]>;
-    static ɵfac: i0.ɵɵFactoryDef<MatTabNav, [null, { optional: true; }, null, null, null, { optional: true; }, { optional: true; }]>;
+    static ɵfac: i0.ɵɵFactoryDef<MatTabNav, [null, { optional: true; }, null, null, null, null, { optional: true; }]>;
 }
 
 export declare const matTabsAnimations: {
