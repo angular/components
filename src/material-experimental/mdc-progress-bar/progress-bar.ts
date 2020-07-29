@@ -28,6 +28,43 @@ import {Subscription, fromEvent, Observable} from 'rxjs';
 import {filter} from 'rxjs/operators';
 import {Directionality} from '@angular/cdk/bidi';
 
+/** @docs-private */
+class ProgressBarAdapter implements MDCLinearProgressAdapter {
+  constructor(private readonly _delegate: MatProgressBar) {}
+
+  addClass(className: string) {
+    this._delegate._rootElement.classList.add(className);
+  }
+
+  forceLayout() {
+    return this._delegate._rootElement.offsetWidth;
+  }
+
+  removeAttribute(name: string) {
+    this._delegate._rootElement.removeAttribute(name);
+  }
+
+  setAttribute(name: string, value: string) {
+    this._delegate._rootElement.setAttribute(name, value);
+  }
+
+  hasClass(className: string) {
+    return this._delegate._rootElement.classList.contains(className);
+  }
+
+  removeClass(className: string) {
+    this._delegate._rootElement.classList.remove(className);
+  }
+
+  setPrimaryBarStyle(styleProperty: string, value: string) {
+    (this._delegate._primaryBar.style as any)[styleProperty] = value;
+  }
+
+  setBufferBarStyle(styleProperty: string, value: string) {
+    (this._delegate._bufferBar.style as any)[styleProperty] = value;
+  }
+}
+
 // Boilerplate for applying mixins to MatProgressBar.
 /** @docs-private */
 class MatProgressBarBase {
@@ -74,21 +111,6 @@ export class MatProgressBar extends _MatProgressBarMixinBase implements AfterVie
   /** Implements all of the logic of the MDC progress bar. */
   private _foundation: MDCLinearProgressFoundation | undefined;
 
-  /** Adapter used by MDC to interact with the DOM. */
-  private _adapter: MDCLinearProgressAdapter = {
-    addClass: (className: string) => this._rootElement.classList.add(className),
-    forceLayout: () => this._rootElement.offsetWidth,
-    removeAttribute: (name: string) => this._rootElement.removeAttribute(name),
-    setAttribute: (name: string, value: string) => this._rootElement.setAttribute(name, value),
-    hasClass: (className: string) => this._rootElement.classList.contains(className),
-    removeClass: (className: string) => this._rootElement.classList.remove(className),
-    setPrimaryBarStyle: (styleProperty: string, value: string) => {
-      (this._primaryBar.style as any)[styleProperty] = value;
-    },
-    setBufferBarStyle: (styleProperty: string, value: string) => {
-      (this._bufferBar.style as any)[styleProperty] = value;
-    }
-  };
 
   /** Flag that indicates whether NoopAnimations mode is set to true. */
   _isNoopAnimation = false;
@@ -111,9 +133,9 @@ export class MatProgressBar extends _MatProgressBarMixinBase implements AfterVie
   }
   private _bufferValue = 0;
 
-  private _rootElement: HTMLElement;
-  private _primaryBar: HTMLElement;
-  private _bufferBar: HTMLElement;
+  _rootElement: HTMLElement;
+  _primaryBar: HTMLElement;
+  _bufferBar: HTMLElement;
 
   /**
    * Event emitted when animation of the primary progress bar completes. This event will not
@@ -152,7 +174,7 @@ export class MatProgressBar extends _MatProgressBarMixinBase implements AfterVie
     this._primaryBar = element.querySelector('.mdc-linear-progress__primary-bar') as HTMLElement;
     this._bufferBar = element.querySelector('.mdc-linear-progress__buffer-bar') as HTMLElement;
 
-    this._foundation = new MDCLinearProgressFoundation(this._adapter);
+    this._foundation = new MDCLinearProgressFoundation(new ProgressBarAdapter(this));
     this._foundation.init();
     this._syncFoundation();
 
