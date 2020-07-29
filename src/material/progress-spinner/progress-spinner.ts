@@ -241,13 +241,13 @@ export class MatProgressSpinner extends _MatProgressSpinnerMixinBase implements 
   }
 
   /** The diameter of the spinner, adjusted for stroke width. */
-  get _circleDiameter() {
+  _getCircleDiameter() {
     return this.diameter - this.strokeWidth;
   }
 
   /** The radius of the spinner, adjusted for stroke width. */
   _getCircleRadius() {
-    return this._circleDiameter / 2;
+    return this._getCircleDiameter() / 2;
   }
 
   /** The view box of the spinner's svg element. */
@@ -258,7 +258,7 @@ export class MatProgressSpinner extends _MatProgressSpinnerMixinBase implements 
 
   /** The stroke circumference of the svg circle. */
   _getStrokeCircumference(): number {
-    return Math.PI * this._circleDiameter;
+    return Math.PI * this._getCircleDiameter();
   }
 
   /** The dash offset of the svg circle. */
@@ -283,7 +283,7 @@ export class MatProgressSpinner extends _MatProgressSpinnerMixinBase implements 
   /** Dynamically generates a style tag containing the correct animation for this diameter. */
   private _attachStyleNode(): void {
     const styleRoot = this._styleRoot;
-    const currentDiameter = this._circleDiameter;
+    const currentDiameter = this._getCircleDiameter();
     const diameters = MatProgressSpinner._diameters;
     let diametersForElement = diameters.get(styleRoot);
 
@@ -315,7 +315,7 @@ export class MatProgressSpinner extends _MatProgressSpinnerMixinBase implements 
   /** Returns the circle diameter formatted for use with the animation-name CSS property. */
   private _getSpinnerAnimationLabel(): string {
     // Period '.' character cannot be included in an animation-name.
-    return this._circleDiameter.toString().replace('.', '_');
+    return this._getCircleDiameter().toString().replace('.', '_');
   }
 
   static ngAcceptInputType_diameter: NumberInput;
