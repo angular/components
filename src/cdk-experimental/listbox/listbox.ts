@@ -209,7 +209,7 @@ export class CdkListbox<T> implements AfterContentInit, OnDestroy, OnInit, Contr
   _onTouched: () => void = () => {};
 
   /** `View -> model callback called when value changes` */
-  _onChange: (value: any) => void = () => {};
+  _onChange: (value: T) => void = () => {};
 
   readonly optionSelectionChanges: Observable<OptionSelectionChangeEvent<T>> = defer(() => {
     const options = this._options;
@@ -261,7 +261,7 @@ export class CdkListbox<T> implements AfterContentInit, OnDestroy, OnInit, Contr
     this._useActiveDescendant = coerceBooleanProperty(shouldUseActiveDescendant);
   }
 
-  @Input() compareWith: (o1: any, o2: any) => boolean = (a1, a2) => a1 === a2;
+  @Input() compareWith: (o1: T, o2: T) => boolean = (a1, a2) => a1 === a2;
 
   ngOnInit() {
     this._selectionModel = new SelectionModel<CdkOption<T>>(this.multiple);
@@ -426,7 +426,7 @@ export class CdkListbox<T> implements AfterContentInit, OnDestroy, OnInit, Contr
    * Saves a callback function to be invoked when the select's value
    * changes from user input. Required to implement ControlValueAccessor.
    */
-  registerOnChange(fn: (value: any) => void): void {
+  registerOnChange(fn: (value: T) => void): void {
     this._onChange = fn;
   }
 
