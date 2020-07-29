@@ -77,6 +77,9 @@ export type EventData = string | number | boolean | undefined | null | EventData
 };
 
 // @public
+export function getNoKeysSpecifiedError(): Error;
+
+// @public
 export function _getTextWithExcludedElements(element: Element, excludeSelector: string): string;
 
 // @public
