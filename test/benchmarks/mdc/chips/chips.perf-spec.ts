@@ -9,31 +9,36 @@
 import {$, browser} from 'protractor';
 import {runBenchmark} from '@angular/dev-infra-private/benchmark/driver-utilities';
 
+async function runRenderBenchmark(testId: string, showBtnId: string) {
+  return runBenchmark({
+    id: testId,
+    url: '',
+    ignoreBrowserSynchronization: true,
+    params: [],
+    prepare: async () => await $('#hide').click(),
+    work: async () => await $(showBtnId).click(),
+  });
+}
+
 describe('chip performance benchmarks', () => {
   beforeAll(() => {
     browser.rootEl = '#root';
   });
 
   it('renders a single chip', async() => {
-    await runBenchmark({
-      id: 'single-chip-render',
-      url: '',
-      ignoreBrowserSynchronization: true,
-      params: [],
-      prepare: async () => await $('#hide-single').click(),
-      work: async () => await $('#show-single').click(),
-    });
+    await runRenderBenchmark('single-chip-render', '#show-single-chip');
   });
 
-  it('renders multiple chips', async() => {
-    await runBenchmark({
-      id: 'multiple-chip-render',
-      url: '',
-      ignoreBrowserSynchronization: true,
-      params: [],
-      prepare: async () => await $('#hide-multiple').click(),
-      work: async () => await $('#show-multiple').click(),
-    });
+  it('renders a set', async() => {
+    await runRenderBenchmark('chip-set-render', '#show-chip-set');
+  });
+
+  it('renders a grid', async() => {
+    await runRenderBenchmark('chip-grid-render', '#show-chip-grid');
+  });
+
+  it('renders a listbox', async() => {
+    await runRenderBenchmark('chip-listbox-render', '#show-chip-listbox');
   });
 
   it('clicks a chip', async() => {
@@ -42,8 +47,8 @@ describe('chip performance benchmarks', () => {
       url: '',
       ignoreBrowserSynchronization: true,
       params: [],
-      setup: async() => await $('#show-single').click(),
-      work: async () => await $('.mat-mdc-chip').click(),
+      setup: async() => await $('#show-single-chip').click(),
+      work: async () => await $('#single-chip').click(),
     });
   });
 });

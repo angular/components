@@ -16,6 +16,7 @@ component_benchmark(
         "@npm//@angular/platform-browser",
         "//src/material-experimental/mdc-chips",
     ],
+    ng_assets = [":chips.html"],
     ng_srcs = [":app.module.ts"],
     prefix = "",
     styles = ["//src/material-experimental/mdc-theming:indigo_pink_prebuilt"],
