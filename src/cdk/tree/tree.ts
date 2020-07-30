@@ -337,8 +337,7 @@ export class CdkTreeNode<T> implements FocusableOption, OnDestroy {
   }
 
   /**
-   * The role of the node should be 'group' if it's an internal node,
-   * and 'treeitem' if it's a leaf node.
+   * The role of the node should always be 'treeitem'.
    */
   @Input() role: 'treeitem' | 'group' = 'treeitem';
 
@@ -363,10 +362,10 @@ export class CdkTreeNode<T> implements FocusableOption, OnDestroy {
   focus(): void {
     this._elementRef.nativeElement.focus();
   }
-
+  
   protected _setRoleFromData(): void {
     if (this._tree.treeControl.isExpandable) {
-      this.role = this._tree.treeControl.isExpandable(this._data) ? 'group' : 'treeitem';
+      this.role = this._tree.treeControl.isExpandable(this._data) ? 'treeitem' : 'treeitem';
     } else {
       if (!this._tree.treeControl.getChildren) {
         throw getTreeControlFunctionsMissingError();
@@ -376,12 +375,12 @@ export class CdkTreeNode<T> implements FocusableOption, OnDestroy {
         this._setRoleFromChildren(childrenNodes as T[]);
       } else if (isObservable(childrenNodes)) {
         childrenNodes.pipe(takeUntil(this._destroyed))
-            .subscribe(children => this._setRoleFromChildren(children));
+          .subscribe(children => this._setRoleFromChildren(children));
       }
     }
   }
 
   protected _setRoleFromChildren(children: T[]) {
-    this.role = children && children.length ? 'group' : 'treeitem';
+    this.role = 'treeitem';
   }
 }
