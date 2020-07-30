@@ -101,8 +101,8 @@ export interface TestElement {
    */
   sendKeys(modifiers: ModifierKeys, ...keys: (string | TestKey)[]): Promise<void>;
 
-  /** Gets the text from the element. */
-  text(): Promise<string>;
+  /** Gets the text from the element. Optionally exclude specific selectors. */
+  text(options?: {excludes: string}): Promise<string>;
 
   /** Gets the value for the given attribute from the element. */
   getAttribute(name: string): Promise<string | null>;
