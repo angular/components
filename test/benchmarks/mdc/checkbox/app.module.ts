@@ -46,7 +46,7 @@ export class CheckboxBenchmarkApp {
     BrowserModule,
     MatCheckboxModule,
   ],
-  providers: [],
+
   bootstrap: [CheckboxBenchmarkApp],
 })
 export class AppModule {}
