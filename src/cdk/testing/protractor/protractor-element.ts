@@ -7,7 +7,7 @@
  */
 
 import {ElementDimensions, ModifierKeys, TestElement, TestKey} from '@angular/cdk/testing';
-import {browser, ElementFinder, Key} from 'protractor';
+import {browser, by, ElementFinder, Key} from 'protractor';
 
 /** Maps the `TestKey` constants to Protractor's `Key` constants. */
 const keyMap = {
@@ -129,8 +129,14 @@ export class ProtractorElement implements TestElement {
     return this.element.sendKeys(...keys);
   }
 
-  async text(): Promise<string> {
-    return this.element.getText();
+  async text(options?: {excludes?: string}): Promise<string> {
+    if (options?.excludes) {
+      return browser.executeScript(`var clone = arguments[0].cloneNode(true); 
+      var remove = clone.querySelectorAll(arguments[1]); 
+      remove.forEach(n => n.remove()); return clone.textContent`, this.element, options.excludes);
+    } else {
+      return this.element.getText();
+    }
   }
 
   async getAttribute(name: string): Promise<string|null> {

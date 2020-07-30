@@ -126,9 +126,16 @@ export class UnitTestElement implements TestElement {
     await this._stabilize();
   }
 
-  async text(): Promise<string> {
+  async text(options?: {excludes?: string}): Promise<string> {
     await this._stabilize();
-    return (this.element.textContent || '').trim();
+    if (options?.excludes) {
+      const clone = this.element.cloneNode(true);
+      const exclusions = this.element.querySelectorAll(options.excludes);
+      exclusions.forEach(n => n.remove());
+      return (clone.textContent || '').trim();
+    } else {
+      return (this.element.textContent || '').trim();
+    }
   }
 
   async getAttribute(name: string): Promise<string|null> {
