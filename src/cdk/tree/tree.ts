@@ -364,23 +364,9 @@ export class CdkTreeNode<T> implements FocusableOption, OnDestroy {
   }
   
   protected _setRoleFromData(): void {
-    if (this._tree.treeControl.isExpandable) {
-      this.role = this._tree.treeControl.isExpandable(this._data) ? 'treeitem' : 'treeitem';
-    } else {
-      if (!this._tree.treeControl.getChildren) {
-        throw getTreeControlFunctionsMissingError();
-      }
-      const childrenNodes = this._tree.treeControl.getChildren(this._data);
-      if (Array.isArray(childrenNodes)) {
-        this._setRoleFromChildren(childrenNodes as T[]);
-      } else if (isObservable(childrenNodes)) {
-        childrenNodes.pipe(takeUntil(this._destroyed))
-          .subscribe(children => this._setRoleFromChildren(children));
-      }
+    if (!this._tree.treeControl.isExpandable && !this._tree.treeControl.getChildren) {
+      throw getTreeControlFunctionsMissingError();
     }
-  }
-
-  protected _setRoleFromChildren(children: T[]) {
     this.role = 'treeitem';
   }
 }
