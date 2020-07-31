@@ -17,7 +17,9 @@ export declare class ProtractorElement implements TestElement {
     sendKeys(...keys: (string | TestKey)[]): Promise<void>;
     sendKeys(modifiers: ModifierKeys, ...keys: (string | TestKey)[]): Promise<void>;
     setInputValue(value: string): Promise<void>;
-    text(options?: {excludes?: string}): Promise<string>;
+    text(options?: {
+        excludes?: string;
+    }): Promise<string>;
 }
 
 export declare class ProtractorHarnessEnvironment extends HarnessEnvironment<ElementFinder> {

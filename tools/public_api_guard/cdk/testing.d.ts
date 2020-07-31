@@ -40,6 +40,8 @@ export interface ElementDimensions {
     width: number;
 }
 
+export declare function getTextWithExcludedElements(element: Element, excludeSelector: string): string;
+
 export declare abstract class HarnessEnvironment<E> implements HarnessLoader, LocatorFactory {
     protected rawRootElement: E;
     rootElement: TestElement;
@@ -131,7 +133,9 @@ export interface TestElement {
     sendKeys(...keys: (string | TestKey)[]): Promise<void>;
     sendKeys(modifiers: ModifierKeys, ...keys: (string | TestKey)[]): Promise<void>;
     setInputValue?(value: string): Promise<void>;
-    text(): Promise<string>;
+    text(options?: {
+        excludes?: string;
+    }): Promise<string>;
 }
 
 export declare enum TestKey {
