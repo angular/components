@@ -8,12 +8,12 @@
 
 import {
   ElementDimensions,
-  getTextWithExcludedElements,
   ModifierKeys,
   TestElement,
   TestKey
 } from '@angular/cdk/testing';
 import {browser, ElementFinder, Key} from 'protractor';
+import {getTextWithExcludedElements} from '@angular/cdk/testing/dom-helpers';
 
 /** Maps the `TestKey` constants to Protractor's `Key` constants. */
 const keyMap = {
@@ -135,12 +135,11 @@ export class ProtractorElement implements TestElement {
     return this.element.sendKeys(...keys);
   }
 
-  async text(options?: {excludes?: string}): Promise<string> {
-    if (options?.excludes) {
-      return browser.executeScript(getTextWithExcludedElements, this.element, options.excludes);
-    } else {
-      return this.element.getText();
+  async text(options?: {exclude?: string}): Promise<string> {
+    if (options?.exclude) {
+      return browser.executeScript(getTextWithExcludedElements, this.element, options.exclude);
     }
+    return this.element.getText();
   }
 
   async getAttribute(name: string): Promise<string|null> {

@@ -106,7 +106,7 @@ export interface TestElement {
    * @param options Options that affect what text is included
    *   exclude: A selector for elements whose text should be excluded from the result.
    */
-  text(options?: {excludes?: string}): Promise<string>;
+  text(options?: {exclude?: string}): Promise<string>;
 
   /** Gets the value for the given attribute from the element. */
   getAttribute(name: string): Promise<string | null>;
@@ -131,14 +131,4 @@ export interface TestElement {
 
   /** Checks whether the element is focused. */
   isFocused(): Promise<boolean>;
-}
-
-export function getTextWithExcludedElements(element: Element, excludeSelector: string) {
-  const clone = element.cloneNode(true) as Element;
-  const exclusions = clone.querySelectorAll(excludeSelector);
-  for (let i = 0; i < exclusions.length; i++) {
-    let child = exclusions[i];
-    child.parentNode?.removeChild(child);
-  }
-  return (clone.textContent || '').trim();
 }

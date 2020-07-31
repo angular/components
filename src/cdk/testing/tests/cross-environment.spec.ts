@@ -417,8 +417,8 @@ export function crossEnvironmentSpecs(
       const results = await harness.subcomponentAndSpecialHarnesses();
       const subHarnessHost = await results[0].host();
 
-      expect(await subHarnessHost.text({excludes: 'h2'})).toBe('ProtractorTestBedOther');
-      expect(await subHarnessHost.text({excludes: 'li'})).toBe('List of test tools');
+      expect(await subHarnessHost.text({exclude: 'h2'})).toBe('ProtractorTestBedOther');
+      expect(await subHarnessHost.text({exclude: 'li'})).toBe('List of test tools');
     });
 
     it('should get TestElements and ComponentHarnesses', async () => {
