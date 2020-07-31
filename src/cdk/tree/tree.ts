@@ -22,18 +22,18 @@ import {
   OnDestroy,
   OnInit,
   QueryList,
+  TrackByFunction,
   ViewChild,
   ViewContainerRef,
-  ViewEncapsulation,
-  TrackByFunction
+  ViewEncapsulation
 } from '@angular/core';
 import {
   BehaviorSubject,
+  isObservable,
   Observable,
   of as observableOf,
   Subject,
   Subscription,
-  isObservable,
 } from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 import {TreeControl} from './control/tree-control';
@@ -339,6 +339,7 @@ export class CdkTreeNode<T> implements FocusableOption, OnDestroy {
   /**
    * The role of the node should always be 'treeitem'.
    */
+  // TODO: mark as deprecated
   @Input() role: 'treeitem' | 'group' = 'treeitem';
 
   constructor(protected _elementRef: ElementRef<HTMLElement>,
@@ -362,7 +363,8 @@ export class CdkTreeNode<T> implements FocusableOption, OnDestroy {
   focus(): void {
     this._elementRef.nativeElement.focus();
   }
-  
+
+  // TODO: role should eventually just be set in the component host
   protected _setRoleFromData(): void {
     if (!this._tree.treeControl.isExpandable && !this._tree.treeControl.getChildren) {
       throw getTreeControlFunctionsMissingError();
