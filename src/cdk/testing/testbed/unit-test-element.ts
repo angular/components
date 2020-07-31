@@ -7,7 +7,13 @@
  */
 
 import * as keyCodes from '@angular/cdk/keycodes';
-import {ElementDimensions, ModifierKeys, TestElement, TestKey} from '@angular/cdk/testing';
+import {
+  ElementDimensions,
+  getTextWithExcludedElements,
+  ModifierKeys,
+  TestElement,
+  TestKey
+} from '@angular/cdk/testing';
 import {
   clearElement,
   dispatchMouseEvent,
@@ -129,10 +135,7 @@ export class UnitTestElement implements TestElement {
   async text(options?: {excludes?: string}): Promise<string> {
     await this._stabilize();
     if (options?.excludes) {
-      const clone = this.element.cloneNode(true);
-      const exclusions = this.element.querySelectorAll(options.excludes);
-      exclusions.forEach(n => n.remove());
-      return (clone.textContent || '').trim();
+      return getTextWithExcludedElements(this.element, options.excludes);
     } else {
       return (this.element.textContent || '').trim();
     }
