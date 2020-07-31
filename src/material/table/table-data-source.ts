@@ -148,6 +148,14 @@ export class MatTableDataSource<T> extends DataSource<T> {
       let valueA = this.sortingDataAccessor(a, active);
       let valueB = this.sortingDataAccessor(b, active);
 
+      const valueAType = typeof valueA;
+      const valueBType = typeof valueB;
+      const sameType = valueAType === valueBType;
+      if (!sameType) {
+        valueA = valueAType === 'number' ? valueA.toString() : valueA;
+        valueB = valueBType === 'number' ? valueB.toString() : valueB;
+      }
+
       // If both valueA and valueB exist (truthy), then compare the two. Otherwise, check if
       // one value exists while the other doesn't. In this case, existing value should come last.
       // This avoids inconsistent results when comparing values to undefined/null.
