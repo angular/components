@@ -13,7 +13,7 @@ import {
   TestKey, TextOptions
 } from '@angular/cdk/testing';
 import {browser, ElementFinder, Key} from 'protractor';
-import {getTextWithExcludedElements} from '@angular/cdk/testing/text-filtering';
+import {getTextWithExcludedElements} from '../text-filtering';
 
 /** Maps the `TestKey` constants to Protractor's `Key` constants. */
 const keyMap = {

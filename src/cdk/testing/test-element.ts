@@ -103,8 +103,7 @@ export interface TestElement {
 
   /**
    * Gets the text from the element.
-   * @param options Options that affect what text is included
-   *   exclude: A selector for elements whose text should be excluded from the result.
+   * @param options Options that affect what text is included.
    */
   text(options?: TextOptions): Promise<string>;
 
@@ -135,5 +134,5 @@ export interface TestElement {
 
 export interface TextOptions {
   /** Optional selector for elements to exclude. */
-  exclude?: string
+  exclude?: string;
 }

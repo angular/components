@@ -22,7 +22,7 @@ import {
   triggerFocus,
   typeInElement,
 } from './fake-events';
-import {getTextWithExcludedElements} from '@angular/cdk/testing/text-filtering';
+import {getTextWithExcludedElements} from '../text-filtering';
 
 /** Maps `TestKey` constants to the `keyCode` and `key` values used by native browser events. */
 const keyMap = {
@@ -132,7 +132,7 @@ export class UnitTestElement implements TestElement {
     await this._stabilize();
   }
 
-  async text(options?:TextOptions): Promise<string> {
+  async text(options?: TextOptions): Promise<string> {
     await this._stabilize();
     if (options?.exclude) {
       return getTextWithExcludedElements(this.element, options.exclude);
