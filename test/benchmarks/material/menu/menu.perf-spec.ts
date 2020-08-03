@@ -6,67 +6,63 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {$, by, element, ElementFinder, Key} from 'protractor';
 import {runBenchmark} from '@angular/dev-infra-private/benchmark/driver-utilities';
 
-import {HarnessLoader} from '@angular/cdk/testing';
-import {ProtractorHarnessEnvironment} from '@angular/cdk/testing/protractor';
-import {MatMenuHarness} from '@angular/material/menu/testing/menu-harness';
+// Clicking to close a menu is problematic. This is a solution that uses `.sendKeys()` avoids
+// issues with `.click()`.
 
-let loader: HarnessLoader;
+async function closeMenu(trigger: ElementFinder) {
+  const backdropId = await trigger.getAttribute('aria-controls');
+  if (await $(`#${backdropId}`).isPresent()) {
+    await $(`#${backdropId}`).sendKeys(Key.ESCAPE);
+  }
+}
 
 describe('menu performance benchmarks', () => {
-  beforeEach(() => {
-    loader = ProtractorHarnessEnvironment.loader();
-  });
-
-  it('opens a menu with 10 items', async () => {
-    let menu: MatMenuHarness;
+  it('opens a basic menu', async () => {
+    let trigger: ElementFinder;
     await runBenchmark({
-      id: 'menu-open',
+      id: 'basic-menu-open',
       url: '',
       ignoreBrowserSynchronization: true,
       params: [],
-      setup: async () => {
-        menu = await loader.getHarness(MatMenuHarness.with({ triggerText: 'Basic Menu' }));
-      },
-      prepare: async () => await menu.close(),
-      work: async () => await menu.open(),
-    });
-  });
-
-  it('opens a nested menu', async () => {
-    let menu: MatMenuHarness;
-    await runBenchmark({
-      id: 'nested-menu-open',
-      url: '',
-      ignoreBrowserSynchronization: true,
-      params: [],
-      setup: async () => {
-        menu = await loader.getHarness(MatMenuHarness.with({ triggerText: 'Nested Menu' }));
-      },
-      prepare: async () => await menu.close(),
-      work: async () => await menu.open(),
-    });
-  });
-
-  // NOTE: This test seems very slow at the moment. This IS NOT because opening nested menus is
-  // slow. This IS because calls to the loader are expensive.
-
-  it('fully opens a nested menu', async () => {
-    let menu: MatMenuHarness;
-    await runBenchmark({
-      id: 'nested-menu-open',
-      url: '',
-      ignoreBrowserSynchronization: true,
-      params: [],
-      setup: async () => {
-        menu = await loader.getHarness(MatMenuHarness.with({ triggerText: 'Nested Menu' }));
-      },
-      prepare: async () => await menu.close(),
+      setup: async () => trigger = element(by.buttonText('Basic Menu')),
       work: async () => {
-        await menu.open();
-        await (await loader.getHarness(MatMenuHarness.with({ triggerText: 'Sub Menu 1' }))).open();
-        await (await loader.getHarness(MatMenuHarness.with({ triggerText: 'Sub Menu 2' }))).open();
+        await trigger.click();
+        await closeMenu(trigger);
+      }
+    });
+  });
+
+  it('opens the root menu of a set of nested menus', async () => {
+    let trigger: ElementFinder;
+    await runBenchmark({
+      id: 'nested-menu-open-shallow',
+      url: '',
+      ignoreBrowserSynchronization: true,
+      params: [],
+      setup: async () => trigger = element(by.buttonText('Nested Menu')),
+      work: async () => {
+        await trigger.click();
+        await closeMenu(trigger);
+      },
+    });
+  });
+
+  it('fully opens a menu with nested menus', async () => {
+    let trigger: ElementFinder;
+    await runBenchmark({
+      id: 'menu-open-deep',
+      url: '',
+      ignoreBrowserSynchronization: true,
+      params: [],
+      setup: async () => trigger = element(by.buttonText('Nested Menu')),
+      work: async () => {
+        await trigger.click();
+        await element(by.buttonText('Sub Menu 1')).click();
+        await element(by.buttonText('Sub Menu 2')).click();
+        await closeMenu(trigger);
       },
     });
   });

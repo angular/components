@@ -10,9 +10,6 @@ component_benchmark(
         "@npm//@angular/dev-infra-private",
         "@npm//protractor",
         "@npm//@types/jasmine",
-        "//src/cdk/testing",
-        "//src/cdk/testing/protractor",
-        "//src/material/menu/testing",
     ],
     ng_assets = [":menu.html"],
     ng_deps = [
