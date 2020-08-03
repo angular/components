@@ -8,10 +8,12 @@
 
 import * as keyCodes from '@angular/cdk/keycodes';
 import {
+  _getTextWithExcludedElements,
   ElementDimensions,
   ModifierKeys,
   TestElement,
-  TestKey, TextOptions
+  TestKey,
+  TextOptions
 } from '@angular/cdk/testing';
 import {
   clearElement,
@@ -22,7 +24,6 @@ import {
   triggerFocus,
   typeInElement,
 } from './fake-events';
-import {getTextWithExcludedElements} from '../text-filtering';
 
 /** Maps `TestKey` constants to the `keyCode` and `key` values used by native browser events. */
 const keyMap = {
@@ -135,7 +136,7 @@ export class UnitTestElement implements TestElement {
   async text(options?: TextOptions): Promise<string> {
     await this._stabilize();
     if (options?.exclude) {
-      return getTextWithExcludedElements(this.element, options.exclude);
+      return _getTextWithExcludedElements(this.element, options.exclude);
     }
     return (this.element.textContent || '').trim();
   }

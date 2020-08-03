@@ -7,13 +7,14 @@
  */
 
 import {
+  _getTextWithExcludedElements,
   ElementDimensions,
   ModifierKeys,
   TestElement,
-  TestKey, TextOptions
+  TestKey,
+  TextOptions
 } from '@angular/cdk/testing';
 import {browser, ElementFinder, Key} from 'protractor';
-import {getTextWithExcludedElements} from '../text-filtering';
 
 /** Maps the `TestKey` constants to Protractor's `Key` constants. */
 const keyMap = {
@@ -137,7 +138,7 @@ export class ProtractorElement implements TestElement {
 
   async text(options?: TextOptions): Promise<string> {
     if (options?.exclude) {
-      return browser.executeScript(getTextWithExcludedElements, this.element, options.exclude);
+      return browser.executeScript(_getTextWithExcludedElements, this.element, options.exclude);
     }
     return this.element.getText();
   }

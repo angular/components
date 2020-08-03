@@ -1,3 +1,5 @@
+export declare function _getTextWithExcludedElements(element: Element, excludeSelector: string): string;
+
 export declare type AsyncFactoryFn<T> = () => Promise<T>;
 
 export declare type AsyncOptionPredicate<T, O> = (item: T, option: O) => Promise<boolean>;
