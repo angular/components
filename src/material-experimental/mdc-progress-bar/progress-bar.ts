@@ -28,7 +28,6 @@ import {Subscription, fromEvent, Observable} from 'rxjs';
 import {filter} from 'rxjs/operators';
 import {Directionality} from '@angular/cdk/bidi';
 
-/** @docs-private */
 class ProgressBarAdapter implements MDCLinearProgressAdapter {
   constructor(private readonly _delegate: MatProgressBar) {}
 
