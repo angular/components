@@ -14,11 +14,11 @@ component_benchmark(
         "//src/cdk/testing/protractor",
         "//src/material/menu/testing",
     ],
+    ng_assets = [":menu.html"],
     ng_deps = [
         "@npm//@angular/core",
         "@npm//@angular/platform-browser",
         "//src/material/menu",
-        "//src/cdk/a11y",
     ],
     ng_srcs = [":app.module.ts"],
     prefix = "",
