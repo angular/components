@@ -106,7 +106,7 @@ export interface TestElement {
    * @param options Options that affect what text is included
    *   exclude: A selector for elements whose text should be excluded from the result.
    */
-  text(options?: {exclude?: string}): Promise<string>;
+  text(options?: TextOptions): Promise<string>;
 
   /** Gets the value for the given attribute from the element. */
   getAttribute(name: string): Promise<string | null>;
@@ -131,4 +131,9 @@ export interface TestElement {
 
   /** Checks whether the element is focused. */
   isFocused(): Promise<boolean>;
+}
+
+interface TextOptions {
+  /** Optional selector for elements to exclude. */
+  exclude?: string
 }

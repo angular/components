@@ -22,7 +22,7 @@ import {
   triggerFocus,
   typeInElement,
 } from './fake-events';
-import {getTextWithExcludedElements} from '@angular/cdk/testing/dom-helpers';
+import {getTextWithExcludedElements} from '@angular/cdk/testing/text-filtering';
 
 /** Maps `TestKey` constants to the `keyCode` and `key` values used by native browser events. */
 const keyMap = {

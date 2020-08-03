@@ -40,8 +40,6 @@ export interface ElementDimensions {
     width: number;
 }
 
-export declare function getTextWithExcludedElements(element: Element, excludeSelector: string): string;
-
 export declare abstract class HarnessEnvironment<E> implements HarnessLoader, LocatorFactory {
     protected rawRootElement: E;
     rootElement: TestElement;
