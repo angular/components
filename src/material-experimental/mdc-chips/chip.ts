@@ -69,8 +69,6 @@ const RIPPLE_ANIMATION_CONFIG: RippleAnimationConfig = {
   exitDuration: numbers.FG_DEACTIVATION_MS
 };
 
-
-/** @docs-private */
 class ChipAdapter implements MDCChipAdapter {
 
   constructor (private _delegate: MatChip) {}
@@ -145,9 +143,11 @@ class ChipAdapter implements MDCChipAdapter {
     }
     return '';
   }
+
   setStyleProperty(propertyName: string, value: string) {
     this._delegate._elementRef.nativeElement.style.setProperty(propertyName, value);
   }
+
   hasLeadingIcon() {
     return !!this._delegate.leadingIcon;
   }
@@ -168,6 +168,7 @@ class ChipAdapter implements MDCChipAdapter {
     // and handling keyboard events was added by MDC after our
     // implementation; consider consolidating.
   }
+  
   focusTrailingAction() {}
 
   removeTrailingActionFocus() {}

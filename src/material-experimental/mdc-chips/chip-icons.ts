@@ -50,19 +50,21 @@ export class MatChipAvatar {
   }
 }
 
-/** @docs-private */
 class ChipTrailingActionAdapter implements MDCChipTrailingActionAdapter {
   constructor(private _delegate: MatChipTrailingIcon) {}
 
   focus() {
     this._delegate._elementRef.nativeElement.focus();
   }
+
   getAttribute(name: string) {
     return this._delegate._elementRef.nativeElement.getAttribute(name);
   }
+
   setAttribute(name: string, value: string) {
     this._delegate._elementRef.nativeElement.setAttribute(name, value);
   }
+
   // TODO(crisbeto): there's also a `trigger` parameter that the chip isn't
   // handling yet. Consider passing it along once MDC start using it.
   notifyInteraction() {

@@ -71,7 +71,6 @@ export class ChipSetAdapter implements MDCChipSetAdapter {
 
   // TODO(mmalerba): Implement using LiveAnnouncer.
   announceMessage() {}
-
 }
 
 /**
