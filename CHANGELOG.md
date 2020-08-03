@@ -1,3 +1,37 @@
+## 10.1.2 "pearl-parachute" (2020-08-03)
+
+### cdk
+
+|            |                       |
+| ---------- | --------------------- |
+| bug fix |  **clipboard:** scroll position changing while copying on some browsers ([#20073](https://github.com/angular/components/issues/20073)) ([f58407d](https://github.com/angular/components/commit/f58407d)) |
+| bug fix |  **overlay:** only dispatch position change event if requested ([#19785](https://github.com/angular/components/issues/19785)) ([37b9664](https://github.com/angular/components/commit/37b9664)) |
+| bug fix |  **portal:** running change detection before nodes have been moved to outlet ([#16407](https://github.com/angular/components/issues/16407)) ([30da7e1](https://github.com/angular/components/commit/30da7e1)), closes [#16346](https://github.com/angular/components/issues/16346) |
+| bug fix |  **scrolling:** virtual scroll not accounting for margin when measuring range ([#19852](https://github.com/angular/components/issues/19852)) ([5892285](https://github.com/angular/components/commit/5892285)), closes [#19851](https://github.com/angular/components/issues/19851) |
+| bug fix |  **testing:** emit pointer events on hover and mouseAway ([#20098](https://github.com/angular/components/issues/20098)) ([5b63309](https://github.com/angular/components/commit/5b63309)) |
+| performance |  **table:** Reduce calls to updateStickyColumnStyles ([#19739](https://github.com/angular/components/issues/19739)) ([c1d4597](https://github.com/angular/components/commit/c1d4597)) |
+
+### material
+
+|            |                       |
+| ---------- | --------------------- |
+| bug fix |  **select:** emitting change event twice for reset values ([#13598](https://github.com/angular/components/issues/13598)) ([0c4ed0a](https://github.com/angular/components/commit/0c4ed0a)), closes [#10859](https://github.com/angular/components/issues/10859) [#10675](https://github.com/angular/components/issues/10675) [#13579](https://github.com/angular/components/issues/13579) |
+| bug fix |  **sidenav:** run autosize debounce timer outside the NgZone ([#18898](https://github.com/angular/components/issues/18898)) ([02210d8](https://github.com/angular/components/commit/02210d8)), closes [#18894](https://github.com/angular/components/issues/18894) |
+| performance |  **tooltip:** Hook up to pointer leave events when pointer enter events fire ([#19777](https://github.com/angular/components/issues/19777)) ([3c9a4ac](https://github.com/angular/components/commit/3c9a4ac)) |
+
+### google-maps
+
+|            |                       |
+| ---------- | --------------------- |
+| bug fix |  avoid re-initializing info window for same marker ([#19299](https://github.com/angular/components/issues/19299)) ([d62c70d](https://github.com/angular/components/commit/d62c70d)) |
+
+### material-experimental
+
+|            |                       |
+| ---------- | --------------------- |
+| feature |  add MDC-based mat-option and mdc-core entry point ([#19557](https://github.com/angular/components/issues/19557)) ([3d0f827](https://github.com/angular/components/commit/3d0f827)) |
+
+
 ## 10.1.1 "tin-hat" (2020-07-27)
 
 ### cdk
