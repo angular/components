@@ -10,7 +10,7 @@ import {
   ElementDimensions,
   ModifierKeys,
   TestElement,
-  TestKey
+  TestKey, TextOptions
 } from '@angular/cdk/testing';
 import {browser, ElementFinder, Key} from 'protractor';
 import {getTextWithExcludedElements} from '@angular/cdk/testing/text-filtering';
@@ -135,7 +135,7 @@ export class ProtractorElement implements TestElement {
     return this.element.sendKeys(...keys);
   }
 
-  async text(options?: {exclude?: string}): Promise<string> {
+  async text(options?: TextOptions): Promise<string> {
     if (options?.exclude) {
       return browser.executeScript(getTextWithExcludedElements, this.element, options.exclude);
     }

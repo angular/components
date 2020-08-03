@@ -11,7 +11,7 @@ import {
   ElementDimensions,
   ModifierKeys,
   TestElement,
-  TestKey
+  TestKey, TextOptions
 } from '@angular/cdk/testing';
 import {
   clearElement,
@@ -132,7 +132,7 @@ export class UnitTestElement implements TestElement {
     await this._stabilize();
   }
 
-  async text(options?: {exclude?: string}): Promise<string> {
+  async text(options?:TextOptions): Promise<string> {
     await this._stabilize();
     if (options?.exclude) {
       return getTextWithExcludedElements(this.element, options.exclude);

@@ -34,7 +34,5 @@ export declare class UnitTestElement implements TestElement {
     sendKeys(...keys: (string | TestKey)[]): Promise<void>;
     sendKeys(modifiers: ModifierKeys, ...keys: (string | TestKey)[]): Promise<void>;
     setInputValue(value: string): Promise<void>;
-    text(options?: {
-        exclude?: string;
-    }): Promise<string>;
+    text(options?: TextOptions): Promise<string>;
 }

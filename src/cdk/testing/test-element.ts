@@ -133,7 +133,7 @@ export interface TestElement {
   isFocused(): Promise<boolean>;
 }
 
-interface TextOptions {
+export interface TextOptions {
   /** Optional selector for elements to exclude. */
   exclude?: string
 }

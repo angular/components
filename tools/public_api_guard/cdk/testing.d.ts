@@ -131,9 +131,7 @@ export interface TestElement {
     sendKeys(...keys: (string | TestKey)[]): Promise<void>;
     sendKeys(modifiers: ModifierKeys, ...keys: (string | TestKey)[]): Promise<void>;
     setInputValue?(value: string): Promise<void>;
-    text(options?: {
-        exclude?: string;
-    }): Promise<string>;
+    text(options?: TextOptions): Promise<string>;
 }
 
 export declare enum TestKey {
@@ -167,4 +165,8 @@ export declare enum TestKey {
     F11 = 27,
     F12 = 28,
     META = 29
+}
+
+export interface TextOptions {
+    exclude?: string;
 }

@@ -1,3 +1,8 @@
+/**
+ * Gets text of element excluding certain selectors within the element.
+ * @param element Element to get text from,
+ * @param excludeSelector Selector identifying which elements to exclude,
+ */
 export function getTextWithExcludedElements(element: Element, excludeSelector: string) {
   const clone = element.cloneNode(true) as Element;
   const exclusions = clone.querySelectorAll(excludeSelector);
