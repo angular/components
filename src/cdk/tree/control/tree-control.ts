@@ -61,4 +61,10 @@ export interface TreeControl<T, K = T> {
 
   /** Gets a stream that emits whenever the given data node's children change. */
   readonly getChildren: (dataNode: T) => Observable<T[]> | T[] | undefined | null;
+
+  /** Gets unique id of given data node. */
+  readonly getId: (dataNode: T) => number;
+
+  /** Gets unique id of parent of given data node. */
+  readonly getParentId: (dataNode: T) => number;
 }

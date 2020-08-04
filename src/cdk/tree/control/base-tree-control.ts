@@ -35,6 +35,12 @@ export abstract class BaseTreeControl<T, K = T> implements TreeControl<T, K> {
   /** Get depth of a given data node, return the level number. This is for flat tree node. */
   getLevel: (dataNode: T) => number;
 
+  /** Gets unique id of given data node. */
+  getId: (dataNode: T) => number;
+
+  /** Gets unique id of parent of given data node. */
+  getParentId: (dataNode: T) => number;
+
   /**
    * Whether the data node is expandable. Returns true if expandable.
    * This is for flat tree node.

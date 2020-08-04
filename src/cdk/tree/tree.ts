@@ -336,6 +336,14 @@ export class CdkTreeNode<T> implements FocusableOption, OnDestroy {
     return this._tree.treeControl.getLevel ? this._tree.treeControl.getLevel(this._data) : 0;
   }
 
+  get id(): number {
+    return this._tree.treeControl.getId(this._data);
+  }
+
+  get parentId(): number {
+    return this._tree.treeControl.getParentId(this._data);
+  }
+
   /**
    * The role of the node should be 'group' if it's an internal node,
    * and 'treeitem' if it's a leaf node.
