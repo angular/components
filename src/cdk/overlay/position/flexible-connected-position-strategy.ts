@@ -1210,7 +1210,7 @@ function extendStyles(destination: CSSStyleDeclaration,
   return destination;
 }
 
-/** Shallow-extends a stylesheet object with another stylesheet object, but schedules the. */
+/** Shallow-extends a stylesheet object with another stylesheet object, but schedules the process */
 function extendStylesScheduled(
     destination: CSSStyleDeclaration,
     source: CSSStyleDeclaration,
