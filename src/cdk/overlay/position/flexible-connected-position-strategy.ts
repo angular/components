@@ -145,7 +145,8 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
   constructor(
       connectedTo: FlexibleConnectedPositionStrategyOrigin, private _viewportRuler: ViewportRuler,
       private _document: Document, private _platform: Platform,
-      private _overlayContainer: OverlayContainer) {
+      private _overlayContainer: OverlayContainer,
+      private _scheduler: _CoalescedStyleScheduler) {
     this.setOrigin(connectedTo);
   }
 
@@ -317,7 +318,7 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
     // We can't use `_resetBoundingBoxStyles` here, because it resets
     // some properties to zero, rather than removing them.
     if (this._boundingBox) {
-      extendStyles(this._boundingBox.style, {
+      extendStylesScheduled(this._boundingBox.style, {
         top: '',
         left: '',
         right: '',
@@ -326,7 +327,7 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
         width: '',
         alignItems: '',
         justifyContent: '',
-      } as CSSStyleDeclaration);
+      } as CSSStyleDeclaration, this._scheduler);
     }
 
     if (this._pane) {
@@ -697,9 +698,11 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
       xOrigin = position.overlayX === 'start' ? 'left' : 'right';
     }
 
-    for (let i = 0; i < elements.length; i++) {
-      elements[i].style.transformOrigin = `${xOrigin} ${yOrigin}`;
-    }
+    this._scheduler.schedule(() => {
+      for (let i = 0; i < elements.length; i++) {
+        elements[i].style.transformOrigin = `${xOrigin} ${yOrigin}`;
+      }
+    });
   }
 
   /**
@@ -837,12 +840,12 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
 
     this._lastBoundingBoxSize = boundingBoxRect;
 
-    extendStyles(this._boundingBox!.style, styles);
+    extendStylesScheduled(this._boundingBox!.style, styles, this._scheduler);
   }
 
   /** Resets the styles for the bounding box so that a new positioning can be computed. */
   private _resetBoundingBoxStyles() {
-    extendStyles(this._boundingBox!.style, {
+    extendStylesScheduled(this._boundingBox!.style, {
       top: '0',
       left: '0',
       right: '0',
@@ -851,19 +854,19 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
       width: '',
       alignItems: '',
       justifyContent: '',
-    } as CSSStyleDeclaration);
+    } as CSSStyleDeclaration, this._scheduler);
   }
 
   /** Resets the styles for the overlay pane so that a new positioning can be computed. */
   private _resetOverlayElementStyles() {
-    extendStyles(this._pane.style, {
+    extendStylesScheduled(this._pane.style, {
       top: '',
       left: '',
       bottom: '',
       right: '',
       position: '',
       transform: '',
-    } as CSSStyleDeclaration);
+    } as CSSStyleDeclaration, this._scheduler);
   }
 
   /** Sets positioning styles to the overlay element. */
@@ -875,8 +878,12 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
 
     if (hasExactPosition) {
       const scrollPosition = this._viewportRuler.getViewportScrollPosition();
-      extendStyles(styles, this._getExactOverlayY(position, originPoint, scrollPosition));
-      extendStyles(styles, this._getExactOverlayX(position, originPoint, scrollPosition));
+      extendStylesScheduled(styles,
+        this._getExactOverlayY(position, originPoint, scrollPosition),
+        this._scheduler);
+      extendStylesScheduled(styles,
+        this._getExactOverlayX(position, originPoint, scrollPosition),
+        this._scheduler);
     } else {
       styles.position = 'static';
     }
@@ -921,7 +928,7 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
       }
     }
 
-    extendStyles(this._pane.style, styles);
+    extendStylesScheduled(this._pane.style, styles, this._scheduler);
   }
 
   /** Gets the exact top/bottom for the overlay when not using flexible sizing or when pushing. */
