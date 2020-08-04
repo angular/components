@@ -7,7 +7,7 @@
  */
 
 import {PositionStrategy} from './position-strategy';
-import {ElementRef} from '@angular/core';
+import {ElementRef, Inject} from '@angular/core';
 import {ViewportRuler, CdkScrollable, ViewportScrollPosition} from '@angular/cdk/scrolling';
 import {
   ConnectedOverlayPositionChange,
@@ -22,6 +22,8 @@ import {isElementScrolledOutsideView, isElementClippedByScrolling} from './scrol
 import {coerceCssPixelValue, coerceArray} from '@angular/cdk/coercion';
 import {Platform} from '@angular/cdk/platform';
 import {OverlayContainer} from '../overlay-container';
+import {_CoalescedStyleScheduler} from './coalesced-style-scheduler';
+
 
 // TODO: refactor clipping detection into a separate thing (part of scrolling module)
 // TODO: doesn't handle both flexible width and height when it has to scroll along both axis.
@@ -31,6 +33,10 @@ const boundingBoxClass = 'cdk-overlay-connected-position-bounding-box';
 
 /** Regex used to split a string on its CSS units. */
 const cssUnitPattern = /([A-Za-z%]+)$/;
+
+class Scheduler {
+  constructor(@Inject(_CoalescedStyleScheduler) readonly _scheduler: _CoalescedStyleScheduler) {}
+}
 
 /** Possible values that can be set as the origin of a FlexibleConnectedPositionStrategy. */
 export type FlexibleConnectedPositionStrategyOrigin = ElementRef | Element | Point & {
@@ -1202,6 +1208,24 @@ function extendStyles(destination: CSSStyleDeclaration,
   }
 
   return destination;
+}
+
+/** Shallow-extends a stylesheet object with another stylesheet object, but schedules the. */
+function extendStylesScheduled(
+    destination: CSSStyleDeclaration,
+    source: CSSStyleDeclaration,
+    _scheduler: _CoalescedStyleScheduler
+  ): Promise<CSSStyleDeclaration> {
+    return new Promise((resolve, reject) => {
+      _scheduler.schedule(() => {
+      for (let key in source) {
+        if (source.hasOwnProperty(key)) {
+          destination[key] = source[key];
+        }
+      }
+      resolve(destination);
+    });
+  });
 }
 
 
