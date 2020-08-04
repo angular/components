@@ -11,10 +11,7 @@ import {Directive} from '@angular/core';
 @Directive({
   selector: 'ng-template[cdkComboboxPanel]',
   exportAs: 'cdkComboboxPanel',
-  host: {
-    'role': 'combobox'
-  }
 })
-export class CdkComboboxPanel<V = unknown> {
+export class CdkComboboxPanel<T = unknown> {
 
 }

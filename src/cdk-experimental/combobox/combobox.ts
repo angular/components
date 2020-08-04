@@ -15,6 +15,6 @@ import {Directive} from '@angular/core';
     'role': 'combobox'
   }
 })
-export class CdkCombobox<V = unknown> {
+export class CdkCombobox<T = unknown> {
 
 }
