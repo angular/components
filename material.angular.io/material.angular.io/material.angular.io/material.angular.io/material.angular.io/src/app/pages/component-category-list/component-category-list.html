@@ -8,9 +8,13 @@
      class="docs-component-category-list-item"
     [routerLink]="'/' + section + '/' + component.id">
     <div class="docs-component-category-list-card">
-      <div *ngIf="section === 'components'" class="docs-component-category-list-card-image-wrapper"
-      [style.backgroundImage]="'url(../../../assets/screenshots/'+component.id+'.scene.png)'">
-      </div>
+      <img *ngIf="section === 'components'"
+          class="docs-component-category-list-card-image-wrapper"
+          [src]="'../../../assets/screenshots/' + component.id + '.scene.png'"
+          loading="lazy"
+          alt=""
+          role="presentation"
+          aria-hidden="true">
       <div class="docs-component-category-list-card-title">{{component.name}}</div>
       <div class="docs-component-category-list-card-summary">{{component.summary}}</div>
     </div>
