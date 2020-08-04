@@ -8,11 +8,11 @@
 
 import {NgModule} from '@angular/core';
 import {CdkCombobox} from './combobox';
-import {CdkComboboxPanel} from "./combobox-panel";
+import {CdkComboboxPanel} from './combobox-panel';
 
 const EXPORTED_DECLARATIONS = [CdkCombobox, CdkComboboxPanel];
 @NgModule({
-    exports: EXPORTED_DECLARATIONS,
-    declarations: EXPORTED_DECLARATIONS,
+  exports: EXPORTED_DECLARATIONS,
+  declarations: EXPORTED_DECLARATIONS,
 })
 export class CdkComboboxModule {}
