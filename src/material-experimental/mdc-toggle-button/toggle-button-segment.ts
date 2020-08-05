@@ -15,13 +15,10 @@ import {
   ElementRef,
   ChangeDetectorRef,
   EventEmitter,
-  OnDestroy
+  OnDestroy,
+  ViewEncapsulation,
+  ChangeDetectionStrategy
 } from '@angular/core';
-import {
-  MDCSegmentedButtonSegmentAdapter,
-  MDCSegmentedButtonSegmentFoundation
-} from '@material/segmented-button';
-import {SegmentDetail} from '@material/segmented-button/types';
 import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
 
 
@@ -33,14 +30,10 @@ export class MatToggleButtonSegmentCssInternalOnly { }
 
 @Component({
   selector: 'mat-toggle-button-segment',
-  templateUrl: `
-    <button class="mdc-segmented-button__segment">
-      <div class="mdc-segmented-button__ripple></div>
-      <ng-content select="[matToggleButtonSegmentIcon]"></ng-content>
-      <ng-content select="[matToggleButtonSegmentLabel]"></ng-content>
-    </button>
-  `,
-  exportAs: 'matToggleButtonSegment'
+  templateUrl: 'toggle-button-segment.html',
+  exportAs: 'matToggleButtonSegment',
+  encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MatToggleButtonSegment implements AfterViewInit, OnDestroy {
   @Input()
@@ -53,19 +46,22 @@ export class MatToggleButtonSegment implements AfterViewInit, OnDestroy {
 
   @Input() segmentId: string;
 
-  @Output() readonly selected: EventEmitter<SegmentDetail> = new EventEmitter<SegmentDetail>();
+  @Output() readonly selected: EventEmitter<any> = new EventEmitter<any>();
 
+  // tslint:disable:no-unused-variable
   private _index: number;
   private _selected: boolean = false;
-  private _foundation: MDCSegmentedButtonSegmentFoundation;
-  private _adapter: MDCSegmentedButtonSegmentAdapter = {
+  // tslint:disable:no-unused-variable
+  private _foundation: any;
+  // tslint:disable:no-unused-variable
+  private _adapter = {
     isSingleSelect: () => false,
-    getAttr: (_attrName) => null,
-    setAttr: (_attrName, _value) => undefined,
-    addClass: (_className) => undefined,
-    removeClass: (_className) => undefined,
-    hasClass: (_className) => false,
-    notifySelectedChange: (_selected) => undefined
+    getAttr: (_attrName: string) => null,
+    setAttr: (_attrName: string, _value: string) => undefined,
+    addClass: (_className: string) => undefined,
+    removeClass: (_className: string) => undefined,
+    hasClass: (_className: string) => false,
+    notifySelectedChange: (_selected: boolean) => undefined
   };
 
   constructor(
@@ -74,17 +70,17 @@ export class MatToggleButtonSegment implements AfterViewInit, OnDestroy {
   ) { }
 
   ngAfterViewInit() {
-    this._foundation = new MDCSegmentedButtonSegmentFoundation(this._adapter);
+    // this._foundation = new MDCSegmentedButtonSegmentFoundation(this._adapter);
   }
 
   ngOnDestroy() {
-    if (this._foundation) {
-      this._foundation.destroy();
-    }
+    // if (this._foundation) {
+    //   this._foundation.destroy();
+    // }
   }
 
   handleClick() {
-    this._foundation.handleClick();
+    // this._foundation.handleClick();
   }
 
   setIndex(index: number) {
@@ -92,11 +88,11 @@ export class MatToggleButtonSegment implements AfterViewInit, OnDestroy {
   }
 
   setSelected() {
-    this._foundation.setSelected();
+    // this._foundation.setSelected();
   }
 
   setUnselected() {
-    this._foundation.setUnselected();
+    // this._foundation.setUnselected();
   }
 
   static ngAcceptInputType_isSelected: BooleanInput;

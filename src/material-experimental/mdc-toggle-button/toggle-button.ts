@@ -21,11 +21,11 @@ import {
   ContentChildren,
   QueryList
 } from '@angular/core';
-import {
-  MDCSegmentedButtonAdapter,
-  MDCSegmentedButtonFoundation
-} from '@material/segmented-button';
-import {SegmentDetail} from '@material/segmented-button/types';
+// import {
+//   MDCSegmentedButtonAdapter,
+//   MDCSegmentedButtonFoundation
+// } from '@material/segmented-button';
+// import {SegmentDetail} from '@material/segmented-button/types';
 import {MatToggleButtonSegment} from './toggle-button-segment';
 import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
 
@@ -38,7 +38,7 @@ export class MatToggleButtonCssInternalOnly { }
 
 @Component({
   selector: 'mat-toggle-button',
-  templateUrl: '<ng-content></ng-content>',
+  templateUrl: 'toggle-button.html',
   styleUrls: ['toggle-button.css'],
   host: { },
   exportAs: 'matToggleButton',
@@ -48,13 +48,15 @@ export class MatToggleButtonCssInternalOnly { }
 })
 export class MatToggleButton implements AfterViewInit, OnDestroy {
   private _singleSelect: boolean = false;
-  private _foundation: MDCSegmentedButtonFoundation;
-  private _adapter: MDCSegmentedButtonAdapter = {
-    hasClass: (_className) => false,
+  // tslint:disable:no-unused-variable
+  private _foundation: any;
+  // tslint:disable:no-unused-variable
+  private _adapter = {
+    hasClass: (_className: string) => false,
     getSegments: () => [],
-    selectSegment: (_indexOrSegmentId) => undefined,
-    unselectSegment: (_indexOrSegmentId) => undefined,
-    notifySelectedChange: (_detail) => undefined
+    selectSegment: (_indexOrSegmentId: string | number) => undefined,
+    unselectSegment: (_indexOrSegmentId: string | number) => undefined,
+    notifySelectedChange: (_detail: any) => undefined
   };
 
   @Input()
@@ -65,7 +67,7 @@ export class MatToggleButton implements AfterViewInit, OnDestroy {
     this._singleSelect = coerceBooleanProperty(value);
   }
 
-  @Output() readonly change: EventEmitter<SegmentDetail> = new EventEmitter<SegmentDetail>();
+  @Output() readonly change: EventEmitter<any> = new EventEmitter<any>();
 
   @ContentChildren(MatToggleButtonSegment, {
     descendants: true
@@ -77,13 +79,13 @@ export class MatToggleButton implements AfterViewInit, OnDestroy {
   ) { }
 
   ngAfterViewInit() {
-    this._foundation = new MDCSegmentedButtonFoundation(this._adapter);
+    // this._foundation = new MDCSegmentedButtonFoundation(this._adapter);
   }
 
   ngOnDestroy() {
-    if (this._foundation) {
-      this._foundation.destroy();
-    }
+    // if (this._foundation) {
+      // this._foundation.destroy();
+    // }
   }
 
   static ngAcceptInputType_singleSelect: BooleanInput;

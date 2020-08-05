@@ -27,6 +27,7 @@ entryPoints = [
     "mdc-snack-bar",
     "mdc-table",
     "mdc-tabs",
+    "mdc-toggle-button",
     "popover-edit",
 ]
 

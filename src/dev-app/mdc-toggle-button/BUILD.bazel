@@ -1,0 +1,22 @@
+load("//tools:defaults.bzl", "ng_module", "sass_binary")
+
+package(default_visibility = ["//visibility:public"])
+
+ng_module(
+    name = "mdc-toggle-button",
+    srcs = glob(["**/*.ts"]),
+    assets = [
+        "mdc-toggle-button-demo.html",
+        ":mdc_toggle_button_demo_scss",
+    ],
+    deps = [
+        "//src/material-experimental/mdc-toggle-button",
+        "//src/material/icon",
+        "@npm//@angular/router",
+    ],
+)
+
+sass_binary(
+    name = "mdc_toggle_button_demo_scss",
+    src = "mdc-toggle-button-demo.scss",
+)

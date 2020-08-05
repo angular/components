@@ -1,0 +1,17 @@
+<div class="demo-toggle-button">
+  <h4 class="demo-section-header">Toggle Buttons</h4>
+  <section>
+    <mat-toggle-button (change)="handleChange($event)">
+      <mat-toggle-button-segment [segmentId]="'segment0'">
+        <i matToggleButtonSegmentIcon class="material-icons">favorite</i>
+      </mat-toggle-button-segment>
+      <mat-toggle-button-segment [isSelected]="true">
+        <div matToggleButtonSegmentLabel>Test Label</div>
+      </mat-toggle-button-segment>
+      <mat-toggle-button-segment (selected)="handleSelected($event)">
+        <i matToggleButtonSegmentIcon class="material-icons">android</i>
+        <div matToggleButtonSegmentLabel>Test Text</div>
+      </mat-toggle-button-segment>
+    </mat-toggle-button>
+  </section>
+</div>

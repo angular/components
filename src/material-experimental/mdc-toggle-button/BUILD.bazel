@@ -22,9 +22,6 @@ ng_module(
     ),
     assets = [":toggle_button_scss"] + glob(["**/*.html"]),
     module_name = "@angular/material-experimental/mdc-toggle-button",
-    additional_root_paths = {
-        "//node_modules"
-    },
     deps = [
         "//src/cdk/coercion",
         "//src/material/core",
@@ -33,7 +30,6 @@ ng_module(
         "@npm//@angular/core",
         "@npm//@angular/forms",
         "@npm//@material/ripple",
-        "@material/segmented-button",
     ],
 )
 
@@ -48,7 +44,7 @@ sass_library(
 
 sass_binary(
     name = "toggle_button_scss",
-    src = "toggle_button.scss",
+    src = "toggle-button.scss",
     include_paths = [
         "external/npm/node_modules",
     ],
@@ -65,10 +61,9 @@ ng_test_library(
         exclude = ["**/*.e2e.spec.ts"],
     ),
     deps = [
-        ":mdc-segmented-button",
+        ":mdc-toggle-button",
         "//src/cdk/bidi",
         "//src/cdk/testing/private",
-        "@npm//:node_modules/@material/segmented-button",
         "@npm//@angular/forms",
         "@npm//@angular/platform-browser",
     ],
@@ -78,7 +73,6 @@ ng_web_test_suite(
     name = "unit_tests",
     static_files = [
         "@npm//:node_modules/@material/ripple/dist/mdc.ripple.js",
-        "@npm//:node_modules/@material/segmented-button/index.js",
     ],
     deps = [
         ":toggle_button_tests_lib",

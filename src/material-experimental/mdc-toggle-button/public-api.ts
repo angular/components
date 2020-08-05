@@ -7,4 +7,5 @@
  */
 
 export * from './toggle-button';
+export * from './toggle-button-segment';
 export * from './module';
