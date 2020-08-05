@@ -153,7 +153,7 @@ export class MatTableDataSource<T> extends DataSource<T> {
       const valueAType = typeof valueA;
       const valueBType = typeof valueB;
 
-      if valueAType !== valueBType) {
+      if (valueAType !== valueBType) {
         if (valueAType === 'number'){
           valueA += '';
         }
