@@ -43,7 +43,6 @@ export class CheckboxBenchmarkApp {
   toggleIsChecked() { this.isChecked = !this.isChecked; }
 }
 
-
 @NgModule({
   declarations: [CheckboxBenchmarkApp],
   imports: [

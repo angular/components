@@ -30,14 +30,12 @@ export class ButtonBenchmarkApp {
   hide() { this.isVisible = false; }
 }
 
-
 @NgModule({
   declarations: [ButtonBenchmarkApp],
   imports: [
     BrowserModule,
     MatButtonModule,
   ],
-
   bootstrap: [ButtonBenchmarkApp],
 })
 export class AppModule {}
