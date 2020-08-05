@@ -20,7 +20,7 @@ import {
   ElementRef,
   Input,
   IterableDiffers,
-  OnDestroy,
+  OnDestroy, SkipSelf,
 } from '@angular/core';
 import {
   CanDisable,
@@ -56,8 +56,9 @@ export class MatTreeNode<T> extends _MatTreeNodeMixinBase<T>
 
   constructor(protected _elementRef: ElementRef<HTMLElement>,
               protected _tree: CdkTree<T>,
+              @SkipSelf() _parentNode: CdkTreeNode<T>,
               @Attribute('tabindex') tabIndex: string) {
-    super(_elementRef, _tree);
+    super(_elementRef, _tree, _parentNode);
 
     this.tabIndex = Number(tabIndex) || 0;
   }
@@ -119,8 +120,9 @@ export class MatNestedTreeNode<T> extends CdkNestedTreeNode<T> implements AfterC
   constructor(protected _elementRef: ElementRef<HTMLElement>,
               protected _tree: CdkTree<T>,
               protected _differs: IterableDiffers,
+              @SkipSelf() _parentNode: CdkTreeNode<T>,
               @Attribute('tabindex') tabIndex: string) {
-    super(_elementRef, _tree, _differs);
+    super(_elementRef, _tree, _parentNode, _differs);
     this.tabIndex = Number(tabIndex) || 0;
   }
 
