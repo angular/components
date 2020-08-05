@@ -12,7 +12,7 @@ import {
   ElementRef,
   IterableDiffer,
   IterableDiffers,
-  OnDestroy,
+  OnDestroy, Optional,
   QueryList, SkipSelf,
 } from '@angular/core';
 import {isObservable} from 'rxjs';
@@ -58,8 +58,8 @@ export class CdkNestedTreeNode<T> extends CdkTreeNode<T> implements AfterContent
 
   constructor(protected _elementRef: ElementRef<HTMLElement>,
               protected _tree: CdkTree<T>,
-              @SkipSelf() _parentNode: CdkTreeNode<T>,
-              protected _differs: IterableDiffers) {
+              protected _differs: IterableDiffers,
+              @Optional() @SkipSelf() _parentNode?: CdkTreeNode<T>,) {
     super(_elementRef, _tree, _parentNode);
   }
 

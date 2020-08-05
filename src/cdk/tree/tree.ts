@@ -25,7 +25,7 @@ import {
   ViewChild,
   ViewContainerRef,
   ViewEncapsulation,
-  TrackByFunction, SkipSelf
+  TrackByFunction, SkipSelf, Optional
 } from '@angular/core';
 import {
   BehaviorSubject,
@@ -317,7 +317,7 @@ export class CdkTreeNode<T> implements FocusableOption, OnDestroy {
   /** Emits when the node's data has changed. */
   _dataChanges = new Subject<void>();
 
-  parentNode: CdkTreeNode<T>;
+  parentNode?: CdkTreeNode<T>;
 
   /** The tree node's data. */
   get data(): T { return this._data; }
@@ -335,7 +335,16 @@ export class CdkTreeNode<T> implements FocusableOption, OnDestroy {
   }
 
   get level(): number {
-    return this._tree.treeControl.getLevel ? this._tree.treeControl.getLevel(this._data) :0;
+    if (this._tree.treeControl.getLevel) {
+    // flat tree node
+      return this._tree.treeControl.getLevel(this._data);
+    } else if (this.parentNode) {
+    // nested tree node
+      return this.parentNode.level;
+    } else {
+    // root level node of nested tree
+      return -1;
+    }
   }
 
   /**
@@ -346,7 +355,7 @@ export class CdkTreeNode<T> implements FocusableOption, OnDestroy {
 
   constructor(protected _elementRef: ElementRef<HTMLElement>,
               protected _tree: CdkTree<T>,
-              @SkipSelf() _parentNode: CdkTreeNode<T>) {
+              @Optional() @SkipSelf() _parentNode?: CdkTreeNode<T>) {
     CdkTreeNode.mostRecentTreeNode = this as CdkTreeNode<T>;
     this.parentNode = _parentNode;
   }
