@@ -7,7 +7,7 @@
  */
 
 import {PositionStrategy} from './position-strategy';
-import {ElementRef, Inject} from '@angular/core';
+import {ElementRef} from '@angular/core';
 import {ViewportRuler, CdkScrollable, ViewportScrollPosition} from '@angular/cdk/scrolling';
 import {
   ConnectedOverlayPositionChange,
