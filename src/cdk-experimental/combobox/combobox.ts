@@ -1,4 +1,4 @@
-import {BooleanInput} from "@angular/cdk/coercion";
+import {BooleanInput, coerceBooleanProperty} from "@angular/cdk/coercion";
 
 /**
  * @license
@@ -68,9 +68,9 @@ export class CdkCombobox<T = unknown> implements OnDestroy, AfterContentInit {
     return this._disabled;
   }
   set disabled(value: boolean) {
-    this._disabled = value;
+    this._disabled = coerceBooleanProperty(value);
   }
-  private _disabled: boolean;
+  private _disabled: boolean = false;
 
   @Input()
   get openAction(): OpenAction[] {
@@ -195,5 +195,6 @@ export class CdkCombobox<T = unknown> implements OnDestroy, AfterContentInit {
     return actions;
   }
 
+  static ngAcceptInputType_disabled: BooleanInput;
   static ngAcceptInputType_openActions: OpenActionInput;
 }

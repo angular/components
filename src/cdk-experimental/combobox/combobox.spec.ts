@@ -4,8 +4,7 @@ import {By} from '@angular/platform-browser';
 import {CdkComboboxModule} from "./combobox-module";
 import {CdkCombobox} from "./combobox";
 import {CdkComboboxPanel} from "./combobox-panel";
-import {dispatchMouseEvent} from "@angular/cdk/testing/testbed/fake-events";
-import {ListboxSelectionChangeEvent} from "@angular/cdk-experimental/listbox";
+import {dispatchMouseEvent} from "@angular/cdk/testing/private";
 
 describe('Combobox', () => {
   describe('with a basic toggle trigger', () => {
@@ -47,7 +46,7 @@ describe('Combobox', () => {
       comboboxInstance.disabled = false;
       fixture.detectChanges();
 
-      expect(comboboxElement.hasAttribute('aria-disabled')).toBeFalse();
+      expect(comboboxElement.getAttribute('aria-disabled')).toBe('false');
     });
 
     it('should have a panel that is closed by default', () => {
