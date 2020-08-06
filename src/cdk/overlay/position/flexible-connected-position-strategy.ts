@@ -318,7 +318,7 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
     // We can't use `_resetBoundingBoxStyles` here, because it resets
     // some properties to zero, rather than removing them.
     if (this._boundingBox) {
-      extendStylesScheduled(this._boundingBox.style, {
+      extendStyles(this._boundingBox.style, {
         top: '',
         left: '',
         right: '',
@@ -840,12 +840,12 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
 
     this._lastBoundingBoxSize = boundingBoxRect;
 
-    extendStylesScheduled(this._boundingBox!.style, styles, this._scheduler);
+    extendStyles(this._boundingBox!.style, styles, this._scheduler);
   }
 
   /** Resets the styles for the bounding box so that a new positioning can be computed. */
   private _resetBoundingBoxStyles() {
-    extendStylesScheduled(this._boundingBox!.style, {
+    extendStyles(this._boundingBox!.style, {
       top: '0',
       left: '0',
       right: '0',
@@ -859,7 +859,7 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
 
   /** Resets the styles for the overlay pane so that a new positioning can be computed. */
   private _resetOverlayElementStyles() {
-    extendStylesScheduled(this._pane.style, {
+    extendStyles(this._pane.style, {
       top: '',
       left: '',
       bottom: '',
@@ -878,10 +878,10 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
 
     if (hasExactPosition) {
       const scrollPosition = this._viewportRuler.getViewportScrollPosition();
-      extendStylesScheduled(styles,
+      extendStyles(styles,
         this._getExactOverlayY(position, originPoint, scrollPosition),
         this._scheduler);
-      extendStylesScheduled(styles,
+      extendStyles(styles,
         this._getExactOverlayX(position, originPoint, scrollPosition),
         this._scheduler);
     } else {
@@ -928,7 +928,7 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
       }
     }
 
-    extendStylesScheduled(this._pane.style, styles, this._scheduler);
+    extendStyles(this._pane.style, styles, this._scheduler);
   }
 
   /** Gets the exact top/bottom for the overlay when not using flexible sizing or when pushing. */
@@ -1205,20 +1205,8 @@ export interface ConnectedPosition {
   panelClass?: string | string[];
 }
 
-/** Shallow-extends a stylesheet object with another stylesheet object. */
-function extendStyles(destination: CSSStyleDeclaration,
-                      source: CSSStyleDeclaration): CSSStyleDeclaration {
-  for (let key in source) {
-    if (source.hasOwnProperty(key)) {
-      destination[key] = source[key];
-    }
-  }
-
-  return destination;
-}
-
 /** Shallow-extends a stylesheet object with another stylesheet object, but schedules the process */
-function extendStylesScheduled(
+function extendStyles(
     destination: CSSStyleDeclaration,
     source: CSSStyleDeclaration,
     _scheduler: _CoalescedStyleScheduler
