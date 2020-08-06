@@ -7,7 +7,7 @@
  */
 
 import {NgModule} from '@angular/core';
-import {OverlayModule} from "@angular/cdk/overlay";
+import {OverlayModule} from '@angular/cdk/overlay';
 import {CdkCombobox} from './combobox';
 import {CdkComboboxPanel} from './combobox-panel';
 

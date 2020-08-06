@@ -75,7 +75,7 @@ describe('Combobox', () => {
 
 @Component({
   template: `
-  <button cdkCombobox #toggleCombobox class="example-combobox" 
+  <button cdkCombobox #toggleCombobox class="example-combobox"
           [triggerFor]="panel"
           [openAction]="'focus'">
     No Value
