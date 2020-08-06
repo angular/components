@@ -1,4 +1,4 @@
-import {BooleanInput} from "@angular/cdk/coercion";
+import {BooleanInput, coerceBooleanProperty} from "@angular/cdk/coercion";
 
 /**
  * @license
