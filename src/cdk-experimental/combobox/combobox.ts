@@ -1,5 +1,3 @@
-import {BooleanInput, coerceBooleanProperty} from "@angular/cdk/coercion";
-
 /**
  * @license
  * Copyright Google LLC All Rights Reserved.
@@ -10,11 +8,10 @@ import {BooleanInput, coerceBooleanProperty} from "@angular/cdk/coercion";
 
 export type OpenAction = 'focus' | 'click' | 'downKey' | 'toggle';
 
-export type OpenActionInput = OpenAction | OpenAction[] | string;
+export type OpenActionInput = OpenAction | OpenAction[] | string | null | undefined;
 
 import {
   AfterContentInit,
-  ChangeDetectorRef,
   Directive,
   ElementRef,
   EventEmitter,
@@ -23,17 +20,18 @@ import {
   Optional,
   Output, ViewContainerRef
 } from '@angular/core';
-import {CdkComboboxPanel} from "@angular/cdk-experimental/combobox";
-import {TemplatePortal} from "@angular/cdk/portal";
+import {CdkComboboxPanel} from '@angular/cdk-experimental/combobox';
+import {TemplatePortal} from '@angular/cdk/portal';
 import {
   ConnectedPosition,
   FlexibleConnectedPositionStrategy,
   Overlay,
   OverlayConfig,
   OverlayRef
-} from "@angular/cdk/overlay";
-import {Directionality} from "@angular/cdk/bidi";
-import {coerceArray} from "@angular/cdk/coercion";
+} from '@angular/cdk/overlay';
+import {Directionality} from '@angular/cdk/bidi';
+import {BooleanInput, coerceBooleanProperty, coerceArray} from '@angular/cdk/coercion';
+
 
 @Directive({
   selector: '[cdkCombobox]',
@@ -77,7 +75,7 @@ export class CdkCombobox<T = unknown> implements OnDestroy, AfterContentInit {
     return this._openActions;
   }
   set openAction(action: OpenAction[]) {
-    this._openActions = this.coerceOpenActionProperty(action);
+    this._openActions = this._coerceOpenActionProperty(action);
   }
   private _openActions: OpenAction[] = ['click'];
 
@@ -91,7 +89,6 @@ export class CdkCombobox<T = unknown> implements OnDestroy, AfterContentInit {
   constructor(
     private readonly _elementRef: ElementRef<HTMLElement>,
     private readonly _overlay: Overlay,
-    private cd: ChangeDetectorRef,
     protected readonly _viewContainerRef: ViewContainerRef,
     @Optional() private readonly _directionality?: Directionality
   ) {}
@@ -100,7 +97,7 @@ export class CdkCombobox<T = unknown> implements OnDestroy, AfterContentInit {
     this._comboboxPanel?.valueUpdated.subscribe(data => {
       this._setComboboxValue(data);
       this.close();
-    })
+    });
   }
 
   ngOnDestroy() {
@@ -180,7 +177,7 @@ export class CdkCombobox<T = unknown> implements OnDestroy, AfterContentInit {
     return this._panel;
   }
 
-  private coerceOpenActionProperty(input: any): OpenAction[] {
+  private _coerceOpenActionProperty(input: any): OpenAction[] {
     const actions: OpenAction[] = [];
 
     const inputArray = coerceArray(input);

@@ -1,15 +1,13 @@
-import {Component, DebugElement, Type} from '@angular/core';
+import {Component, DebugElement} from '@angular/core';
 import {ComponentFixture, TestBed, async} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
-import {CdkComboboxModule} from "./combobox-module";
-import {CdkCombobox} from "./combobox";
-import {CdkComboboxPanel} from "./combobox-panel";
-import {dispatchMouseEvent} from "@angular/cdk/testing/private";
+import {CdkComboboxModule} from './combobox-module';
+import {CdkCombobox} from './combobox';
+import {dispatchMouseEvent} from '@angular/cdk/testing/private';
 
 describe('Combobox', () => {
   describe('with a basic toggle trigger', () => {
     let fixture: ComponentFixture<ComboboxToggle>;
-    let testComponent: ComboboxToggle;
 
     let combobox: DebugElement;
     let comboboxInstance: CdkCombobox<unknown>;
@@ -25,8 +23,6 @@ describe('Combobox', () => {
     beforeEach(() => {
       fixture = TestBed.createComponent(ComboboxToggle);
       fixture.detectChanges();
-
-      testComponent = fixture.debugElement.componentInstance;
 
       combobox = fixture.debugElement.query(By.directive(CdkCombobox));
       comboboxInstance = combobox.injector.get<CdkCombobox<unknown>>(CdkCombobox);
@@ -79,7 +75,9 @@ describe('Combobox', () => {
 
 @Component({
   template: `
-  <button cdkCombobox #toggleCombobox class="example-combobox" [triggerFor]="panel" [openAction]="'focus'">
+  <button cdkCombobox #toggleCombobox class="example-combobox" 
+          [triggerFor]="panel"
+          [openAction]="'focus'">
     No Value
   </button>
 
