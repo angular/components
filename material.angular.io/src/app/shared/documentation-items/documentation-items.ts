@@ -89,6 +89,7 @@ const DOCS: { [key: string]: DocItem[] } = {
       summary: 'An interactive button with a range of presentation options.',
       exampleSpecs: {
         prefix: 'button-',
+        exclude: ['button-toggle-']
       },
       additionalApiDocs: [{name: 'Testing', path: 'material-button-testing.html'}],
     },
@@ -510,7 +511,7 @@ for (const doc of DOCS[COMPONENTS]) {
   doc.examples =
     exampleNames
       .filter(key => key.match(RegExp(`^${doc.exampleSpecs.prefix}`)) &&
-        !doc.exampleSpecs.exclude?.includes(key));
+        !doc.exampleSpecs.exclude?.some(excludeName => key.indexOf(excludeName) === 0));
 }
 
 for (const doc of DOCS[CDK]) {
