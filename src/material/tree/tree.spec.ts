@@ -349,6 +349,20 @@ describe('MatTree', () => {
           [_, _, `topping_6 - cheese_6 + base_6`],
           [`topping_3 - cheese_3 + base_3`]);
       });
+
+      it('with correct aria-level', () => {
+        expect(getNodes(treeElement).every(node => {
+          return node.getAttribute('aria-level') === '1';
+        })).toBe(true);
+
+        let data = underlyingDataSource.data;
+        const child = underlyingDataSource.addChild(data[1]);
+        underlyingDataSource.addChild(child);
+        fixture.detectChanges();
+
+        const ariaLevels = getNodes(treeElement).map(n => n.getAttribute('aria-level'));
+        expect(ariaLevels).toEqual(['1', '1', '2', '3', '1']);
+      });
     });
 
     describe('with when node', () => {

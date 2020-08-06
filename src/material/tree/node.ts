@@ -44,7 +44,6 @@ const _MatTreeNodeMixinBase: HasTabIndexCtor & CanDisableCtor & typeof CdkTreeNo
   inputs: ['disabled', 'tabIndex'],
   host: {
     '[attr.aria-expanded]': 'isExpanded',
-    '[attr.aria-level]': 'level + 1',
     '[attr.role]': 'role',
     'class': 'mat-tree-node'
   },
