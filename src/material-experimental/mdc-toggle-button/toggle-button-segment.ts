@@ -65,8 +65,8 @@ export class MatToggleButtonSegment implements AfterViewInit, OnDestroy {
   };
 
   constructor(
-    public _changeDetectorRef: ChangeDetectorRef,
-    readonly _elementRef: ElementRef
+    private readonly _changeDetectorRef: ChangeDetectorRef,
+    private readonly _elementRef: ElementRef
   ) { }
 
   ngAfterViewInit() {

@@ -74,8 +74,8 @@ export class MatToggleButton implements AfterViewInit, OnDestroy {
   }) _segments: QueryList<MatToggleButtonSegment>;
 
   constructor(
-    readonly _elementRef: ElementRef,
-    public _changeDetectorRef: ChangeDetectorRef
+    private readonly _elementRef: ElementRef,
+    private readonly _changeDetectorRef: ChangeDetectorRef
   ) { }
 
   ngAfterViewInit() {
