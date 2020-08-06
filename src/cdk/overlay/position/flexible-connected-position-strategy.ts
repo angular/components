@@ -34,10 +34,6 @@ const boundingBoxClass = 'cdk-overlay-connected-position-bounding-box';
 /** Regex used to split a string on its CSS units. */
 const cssUnitPattern = /([A-Za-z%]+)$/;
 
-class Scheduler {
-  constructor(@Inject(_CoalescedStyleScheduler) readonly _scheduler: _CoalescedStyleScheduler) {}
-}
-
 /** Possible values that can be set as the origin of a FlexibleConnectedPositionStrategy. */
 export type FlexibleConnectedPositionStrategyOrigin = ElementRef | Element | Point & {
   width?: number;
