@@ -9,6 +9,7 @@ import {FocusableOption} from '@angular/cdk/a11y';
 import {CollectionViewer, DataSource, isDataSource} from '@angular/cdk/collections';
 import {
   AfterContentChecked,
+  AfterViewInit,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
@@ -302,12 +303,11 @@ export class CdkTree<T> implements AfterContentChecked, CollectionViewer, OnDest
   exportAs: 'cdkTreeNode',
   host: {
     '[attr.aria-expanded]': 'isExpanded',
-    '[attr.aria-level]': 'level + 1',
     '[attr.role]': 'role',
     'class': 'cdk-tree-node',
   },
 })
-export class CdkTreeNode<T> implements FocusableOption, OnDestroy {
+export class CdkTreeNode<T> implements FocusableOption, OnDestroy, AfterViewInit {
   /**
    * The most recently created `CdkTreeNode`. We save it in static variable so we can retrieve it
    * in `CdkTree` and set the data to it.
@@ -336,8 +336,11 @@ export class CdkTreeNode<T> implements FocusableOption, OnDestroy {
   }
 
   get level(): number {
-    return this._tree.treeControl.getLevel ? this._tree.treeControl.getLevel(this._data) : 0;
-  }
+   // Retrieve the aria-level of the parent node because level from treeControl is 0 indexed and
+   // aria-level is 1 indexed
+   return this._tree.treeControl.getLevel ?
+     this._tree.treeControl.getLevel(this._data) : this._parentNodeAriaLevel();
+   }
 
   /**
    * The role of the node should always be 'treeitem'.
@@ -348,6 +351,10 @@ export class CdkTreeNode<T> implements FocusableOption, OnDestroy {
   constructor(protected _elementRef: ElementRef<HTMLElement>,
               protected _tree: CdkTree<T>) {
     CdkTreeNode.mostRecentTreeNode = this as CdkTreeNode<T>;
+  }
+
+  ngAfterViewInit(): void {
+    this._elementRef.nativeElement.setAttribute('aria-level', String(this.level + 1));
   }
 
   ngOnDestroy() {
@@ -374,5 +381,23 @@ export class CdkTreeNode<T> implements FocusableOption, OnDestroy {
       throw getTreeControlFunctionsMissingError();
     }
     this.role = 'treeitem';
+  }
+
+  private _parentNodeAriaLevel(): number {
+    let parent = this._elementRef.nativeElement.parentElement;
+    while (parent &&
+    !(parent.classList.contains('cdk-nested-tree-node') || parent.classList.contains('cdk-tree'))) {
+      parent = parent.parentElement;
+    }
+    if (!parent) {
+      throw Error('Incorrect tree structure containing detached node.');
+    }
+    if (parent.classList.contains('cdk-nested-tree-node')) {
+      return parseInt(parent.getAttribute('aria-level')!);
+    } else if (parent.classList.contains('cdk-tree')) {
+      return 0;
+    } else {
+      throw Error(`Incorrect tree structure containing ${parent.className}.`);
+    }
   }
 }

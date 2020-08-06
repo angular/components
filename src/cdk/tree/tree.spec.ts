@@ -595,6 +595,21 @@ describe('CdkTree', () => {
             [_, _, `topping_6 - cheese_6 + base_6`],
             [`topping_3 - cheese_3 + base_3`]);
       });
+
+      it('with correct aria-level', () => {
+        expect(getNodes(treeElement).every(node => {
+          return node.getAttribute('aria-level') === '1';
+        })).toBe(true);
+
+        let data = dataSource.data;
+        const child = dataSource.addChild(data[1], false);
+        dataSource.addChild(child, false);
+        fixture.detectChanges();
+
+        const nodes = getNodes(treeElement);
+        const levels = nodes.map(n => n.getAttribute('aria-level'));
+        expect(levels).toEqual(['1', '1', '2', '3', '1']);
+      });
     });
 
     describe('with static children', () => {
