@@ -1,0 +1,26 @@
+load("@npm_angular_dev_infra_private//benchmark/component_benchmark:component_benchmark.bzl", "component_benchmark")
+load("//tools:defaults.bzl", "ng_e2e_test_library", "ng_test_library", "ng_web_test_suite", "ts_library")
+
+# TODO(wagnermaciel): Update this target to provide indigo-pink in a way that doesn't require having to import it with
+# stylesUrls inside the components once `component_benchmark` supports asset injection.
+
+component_benchmark(
+    name = "benchmark",
+    driver = ":protractor.perf-spec.ts",
+    driver_deps = [
+        "@npm//@angular/dev-infra-private",
+        "@npm//protractor",
+        "@npm//@types/jasmine",
+        "//src/cdk/testing",
+        "//src/material/button/testing",
+        "//src/cdk/testing/protractor",
+    ],
+    ng_deps = [
+        "@npm//@angular/core",
+        "@npm//@angular/platform-browser",
+        "//src/material/button",
+    ],
+    ng_srcs = [":app.module.ts"],
+    prefix = "",
+    styles = ["//src/material/prebuilt-themes:indigo-pink"],
+)
