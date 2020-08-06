@@ -20,7 +20,7 @@ import {
   FlexibleConnectedPositionStrategyOrigin,
 } from './flexible-connected-position-strategy';
 import {GlobalPositionStrategy} from './global-position-strategy';
-import { _CoalescedStyleScheduler } from './coalesced-style-scheduler';
+import {_CoalescedStyleScheduler} from './coalesced-style-scheduler';
 
 
 /** Builder for overlay position strategy. */
@@ -29,7 +29,7 @@ export class OverlayPositionBuilder {
   constructor(
       private _viewportRuler: ViewportRuler, @Inject(DOCUMENT) private _document: any,
       private _platform: Platform, private _overlayContainer: OverlayContainer,
-      @Inject(_CoalescedStyleScheduler) private _scheduler: _CoalescedStyleScheduler) {}
+      private _scheduler: _CoalescedStyleScheduler) {}
 
   /**
    * Creates a global position strategy.

@@ -23,7 +23,7 @@ import {
 } from './connected-position';
 import {FlexibleConnectedPositionStrategy} from './flexible-connected-position-strategy';
 import {PositionStrategy} from './position-strategy';
-import { _CoalescedStyleScheduler } from './coalesced-style-scheduler';
+import {_CoalescedStyleScheduler} from './coalesced-style-scheduler';
 
 /**
  * A strategy for positioning overlays. Using this strategy, an overlay is given an
