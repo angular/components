@@ -23,7 +23,7 @@ import {
   Optional,
   Output, ViewContainerRef
 } from '@angular/core';
-import {CdkComboboxPanel} from "@angular/cdk-experimental/combobox/combobox-panel";
+import {CdkComboboxPanel} from "@angular/cdk-experimental/combobox";
 import {TemplatePortal} from "@angular/cdk/portal";
 import {
   ConnectedPosition,
