@@ -33,7 +33,7 @@ import {
   OverlayRef
 } from "@angular/cdk/overlay";
 import {Directionality} from "@angular/cdk/bidi";
-import {coerceArray} from "@angular/cdk/coercion/array";
+import {coerceArray} from "@angular/cdk/coercion";
 
 @Directive({
   selector: '[cdkCombobox]',
