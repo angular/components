@@ -204,6 +204,7 @@ export declare class CdkTable<T> implements AfterContentChecked, CollectionViewe
     set dataSource(dataSource: CdkTableDataSourceInput<T>);
     get multiTemplateDataRows(): boolean;
     set multiTemplateDataRows(v: boolean);
+    protected needsPositionStickyOnElement: boolean;
     protected stickyCssClass: string;
     get trackBy(): TrackByFunction<T>;
     set trackBy(fn: TrackByFunction<T>);
@@ -316,7 +317,7 @@ export declare type StickyDirection = 'top' | 'bottom' | 'left' | 'right';
 
 export declare class StickyStyler {
     direction: Direction;
-    constructor(_isNativeHtmlTable: boolean, _stickCellCss: string, direction: Direction, _coalescedStyleScheduler: _CoalescedStyleScheduler, _isBrowser?: boolean);
+    constructor(_isNativeHtmlTable: boolean, _stickCellCss: string, direction: Direction, _coalescedStyleScheduler: _CoalescedStyleScheduler, _isBrowser?: boolean, _needsPositionStickyOnElement?: boolean);
     _addStickyStyle(element: HTMLElement, dir: StickyDirection, dirValue: number): void;
     _getCalculatedZIndex(element: HTMLElement): string;
     _getCellWidths(row: HTMLElement): number[];
