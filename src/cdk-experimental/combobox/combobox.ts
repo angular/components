@@ -7,7 +7,6 @@
  */
 
 export type OpenAction = 'focus' | 'click' | 'downKey' | 'toggle';
-export type ContentType = 'false' | 'true' | 'menu' | 'listbox' | 'tree' | 'grid' | 'dialog';
 export type OpenActionInput = OpenAction | OpenAction[] | string | null | undefined;
 
 import {
@@ -20,7 +19,7 @@ import {
   Optional,
   Output, ViewContainerRef
 } from '@angular/core';
-import {CdkComboboxPanel} from './combobox-panel';
+import {CdkComboboxPanel, ContentType} from './combobox-panel';
 import {TemplatePortal} from '@angular/cdk/portal';
 import {
   ConnectedPosition,
@@ -177,7 +176,7 @@ export class CdkCombobox<T = unknown> implements OnDestroy, AfterContentInit {
       this._panelContent = new TemplatePortal(this._panel._templateRef, this._viewContainerRef);
     }
 
-    return this._panel;
+    return this._panelContent;
   }
 
   private _coerceOpenActionProperty(input: any): OpenAction[] {
