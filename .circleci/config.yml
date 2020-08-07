@@ -183,7 +183,7 @@ jobs:
 
       # Exclude release and docs packages here as those will be built within
       # the "build_release_packages" and "publish_snapshots" jobs.
-      - run: bazel build src/... --build_tag_filters=-docs-package,-release-package
+      - run: bazel build src/... test/... --build_tag_filters=-docs-package,-release-package
       - *slack_notify_on_failure
 
   # -----------------------------------
