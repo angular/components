@@ -596,7 +596,7 @@ describe('CdkTree', () => {
             [`topping_3 - cheese_3 + base_3`]);
       });
 
-      it('with correct aria-level', () => {
+      fit('with correct aria-level', () => {
         expect(getNodes(treeElement).every(node => {
           return node.getAttribute('aria-level') === '1';
         })).toBe(true);

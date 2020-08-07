@@ -294,7 +294,7 @@ export class CdkTree<T> implements AfterContentChecked, CollectionViewer, OnDest
   }
 }
 
-
+let uuid = 0;
 /**
  * Tree node for CdkTree. It contains the data in the tree node.
  */
@@ -308,6 +308,7 @@ export class CdkTree<T> implements AfterContentChecked, CollectionViewer, OnDest
   },
 })
 export class CdkTreeNode<T> implements FocusableOption, OnDestroy, AfterViewInit {
+  unique: number;
   /**
    * The most recently created `CdkTreeNode`. We save it in static variable so we can retrieve it
    * in `CdkTree` and set the data to it.
@@ -353,14 +354,18 @@ export class CdkTreeNode<T> implements FocusableOption, OnDestroy, AfterViewInit
   constructor(protected _elementRef: ElementRef<HTMLElement>,
               protected _tree: CdkTree<T>) {
     CdkTreeNode.mostRecentTreeNode = this as CdkTreeNode<T>;
+    this.unique = uuid++;
+    console.error(`constructor: node ${this.unique}`)
   }
 
   ngAfterViewInit(): void {
     this._parentNodeAriaLevel = this._getParentNodeAriaLevel();
+    console.error(`ngAfterViewInit: node ${this.unique} set aria-level to ${this.level + 1}`)
     this._elementRef.nativeElement.setAttribute('aria-level', String(this.level + 1));
   }
 
   ngOnDestroy() {
+    console.error(`ngOnDestroy: node ${this.unique}`)
     // If this is the last tree node being destroyed,
     // clear out the reference to avoid leaking memory.
     if (CdkTreeNode.mostRecentTreeNode === this) {
