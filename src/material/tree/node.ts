@@ -88,7 +88,7 @@ export class MatTreeNodeDef<T> extends CdkTreeNodeDef<T> {
   host: {
     '[attr.aria-expanded]': 'isExpanded',
     '[attr.role]': 'role',
-    'class': 'mat-nested-tree-node cdk-nested-tree-node',
+    'class': 'mat-nested-tree-node',
   },
   providers: [
     {provide: CdkNestedTreeNode, useExisting: MatNestedTreeNode},

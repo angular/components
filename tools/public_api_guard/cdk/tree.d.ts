@@ -62,7 +62,7 @@ export declare class CdkTreeModule {
     static ɵmod: i0.ɵɵNgModuleDefWithMeta<CdkTreeModule, [typeof i1.CdkNestedTreeNode, typeof i2.CdkTreeNodeDef, typeof i3.CdkTreeNodePadding, typeof i4.CdkTreeNodeToggle, typeof i5.CdkTree, typeof i5.CdkTreeNode, typeof i6.CdkTreeNodeOutlet], never, [typeof i1.CdkNestedTreeNode, typeof i2.CdkTreeNodeDef, typeof i3.CdkTreeNodePadding, typeof i4.CdkTreeNodeToggle, typeof i5.CdkTree, typeof i5.CdkTreeNode, typeof i6.CdkTreeNodeOutlet]>;
 }
 
-export declare class CdkTreeNode<T> implements FocusableOption, OnDestroy {
+export declare class CdkTreeNode<T> implements FocusableOption, OnDestroy, OnInit {
     protected _data: T;
     _dataChanges: Subject<void>;
     protected _destroyed: Subject<void>;
@@ -77,6 +77,7 @@ export declare class CdkTreeNode<T> implements FocusableOption, OnDestroy {
     protected _setRoleFromData(): void;
     focus(): void;
     ngOnDestroy(): void;
+    ngOnInit(): void;
     static mostRecentTreeNode: CdkTreeNode<any> | null;
     static ɵdir: i0.ɵɵDirectiveDefWithMeta<CdkTreeNode<any>, "cdk-tree-node", ["cdkTreeNode"], { "role": "role"; }, {}, never>;
     static ɵfac: i0.ɵɵFactoryDef<CdkTreeNode<any>, never>;

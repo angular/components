@@ -307,7 +307,6 @@ export class CdkTree<T> implements AfterContentChecked, CollectionViewer, OnDest
   },
 })
 export class CdkTreeNode<T> implements FocusableOption, OnDestroy, OnInit {
-  unique: number;
   /**
    * The most recently created `CdkTreeNode`. We save it in static variable so we can retrieve it
    * in `CdkTree` and set the data to it.
