@@ -320,6 +320,8 @@ export class CdkTreeNode<T> implements FocusableOption, OnDestroy, AfterViewInit
   /** Emits when the node's data has changed. */
   _dataChanges = new Subject<void>();
 
+  private _parentNodeAriaLevel: number;
+
   /** The tree node's data. */
   get data(): T { return this._data; }
   set data(value: T) {
@@ -339,7 +341,7 @@ export class CdkTreeNode<T> implements FocusableOption, OnDestroy, AfterViewInit
    // Retrieve the aria-level of the parent node because level from treeControl is 0 indexed and
    // aria-level is 1 indexed
    return this._tree.treeControl.getLevel ?
-     this._tree.treeControl.getLevel(this._data) : this._parentNodeAriaLevel();
+     this._tree.treeControl.getLevel(this._data) : this._parentNodeAriaLevel;
    }
 
   /**
@@ -354,6 +356,7 @@ export class CdkTreeNode<T> implements FocusableOption, OnDestroy, AfterViewInit
   }
 
   ngAfterViewInit(): void {
+    this._parentNodeAriaLevel = this._getParentNodeAriaLevel();
     this._elementRef.nativeElement.setAttribute('aria-level', String(this.level + 1));
   }
 
@@ -383,7 +386,7 @@ export class CdkTreeNode<T> implements FocusableOption, OnDestroy, AfterViewInit
     this.role = 'treeitem';
   }
 
-  private _parentNodeAriaLevel(): number {
+  private _getParentNodeAriaLevel(): number {
     let parent = this._elementRef.nativeElement.parentElement;
     while (parent &&
     !(parent.classList.contains('cdk-nested-tree-node') || parent.classList.contains('cdk-tree'))) {
