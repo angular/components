@@ -7,7 +7,16 @@
  */
 
 import {CdkTree} from '@angular/cdk/tree';
-import {ChangeDetectionStrategy, Component, ViewChild, ViewEncapsulation} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  HostBinding,
+  IterableDiffers,
+  ViewChild,
+  ViewEncapsulation
+} from '@angular/core';
 import {MatTreeNodeOutlet} from './outlet';
 
 /**
@@ -17,10 +26,6 @@ import {MatTreeNodeOutlet} from './outlet';
   selector: 'mat-tree',
   exportAs: 'matTree',
   template: `<ng-container matTreeNodeOutlet></ng-container>`,
-  host: {
-    'class': 'mat-tree',
-    'role': 'tree',
-  },
   styleUrls: ['tree.css'],
   encapsulation: ViewEncapsulation.None,
   // See note on CdkTree for explanation on why this uses the default change detection strategy.
@@ -29,6 +34,15 @@ import {MatTreeNodeOutlet} from './outlet';
   providers: [{provide: CdkTree, useExisting: MatTree}]
 })
 export class MatTree<T> extends CdkTree<T> {
+  @HostBinding('attr.role') _role = 'tree';
+
   // Outlets within the tree's template where the dataNodes will be inserted.
   @ViewChild(MatTreeNodeOutlet, {static: true}) _nodeOutlet: MatTreeNodeOutlet;
+
+  constructor(_differs: IterableDiffers,
+              _changeDetectorRef: ChangeDetectorRef,
+              _elementRef: ElementRef<HTMLElement>) {
+    super(_differs, _changeDetectorRef, _elementRef);
+    _elementRef.nativeElement.classList.add('mat-tree');
+  }
 }

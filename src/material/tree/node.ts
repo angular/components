@@ -18,6 +18,7 @@ import {
   Attribute,
   Directive,
   ElementRef,
+  HostBinding,
   Input,
   IterableDiffers,
   OnDestroy,
@@ -42,16 +43,13 @@ const _MatTreeNodeMixinBase: HasTabIndexCtor & CanDisableCtor & typeof CdkTreeNo
   selector: 'mat-tree-node',
   exportAs: 'matTreeNode',
   inputs: ['disabled', 'tabIndex'],
-  host: {
-    '[attr.aria-expanded]': 'isExpanded',
-    '[attr.role]': 'role',
-    'class': 'mat-tree-node'
-  },
   providers: [{provide: CdkTreeNode, useExisting: MatTreeNode}]
 })
 export class MatTreeNode<T> extends _MatTreeNodeMixinBase<T>
     implements CanDisable, HasTabIndex {
-  @Input() role: 'treeitem' | 'group' = 'treeitem';
+  @HostBinding('attr.role') @Input() role: 'treeitem' | 'group' = 'treeitem';
+
+  @HostBinding('attr.aria-expanded') _expanded = this.isExpanded;
 
   constructor(protected _elementRef: ElementRef<HTMLElement>,
               protected _tree: CdkTree<T>,
@@ -59,6 +57,7 @@ export class MatTreeNode<T> extends _MatTreeNodeMixinBase<T>
     super(_elementRef, _tree);
 
     this.tabIndex = Number(tabIndex) || 0;
+    this._elementRef.nativeElement.classList.add('mat-tree-node');
   }
 
   static ngAcceptInputType_disabled: BooleanInput;
@@ -85,11 +84,6 @@ export class MatTreeNodeDef<T> extends CdkTreeNodeDef<T> {
 @Directive({
   selector: 'mat-nested-tree-node',
   exportAs: 'matNestedTreeNode',
-  host: {
-    '[attr.aria-expanded]': 'isExpanded',
-    '[attr.role]': 'role',
-    'class': 'mat-nested-tree-node',
-  },
   providers: [
     {provide: CdkNestedTreeNode, useExisting: MatNestedTreeNode},
     {provide: CdkTreeNode, useExisting: MatNestedTreeNode},
@@ -98,6 +92,9 @@ export class MatTreeNodeDef<T> extends CdkTreeNodeDef<T> {
 })
 export class MatNestedTreeNode<T> extends CdkNestedTreeNode<T> implements AfterContentInit,
   OnDestroy {
+  @HostBinding('attr.aria-expanded') _expanded = this.isExpanded;
+  @HostBinding('attr.role') _role = this.role;
+
   @Input('matNestedTreeNode') node: T;
 
   /** Whether the node is disabled. */
@@ -121,6 +118,7 @@ export class MatNestedTreeNode<T> extends CdkNestedTreeNode<T> implements AfterC
               @Attribute('tabindex') tabIndex: string) {
     super(_elementRef, _tree, _differs);
     this.tabIndex = Number(tabIndex) || 0;
+    this._elementRef.nativeElement.classList.add('mat-nested-tree-node');
   }
 
   // This is a workaround for https://github.com/angular/angular/issues/23091

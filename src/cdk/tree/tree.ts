@@ -15,6 +15,7 @@ import {
   ContentChildren,
   Directive,
   ElementRef,
+  HostBinding,
   Input,
   IterableChangeRecord,
   IterableDiffer,
@@ -55,10 +56,6 @@ import {
   selector: 'cdk-tree',
   exportAs: 'cdkTree',
   template: `<ng-container cdkTreeNodeOutlet></ng-container>`,
-  host: {
-    'class': 'cdk-tree',
-    'role': 'tree',
-  },
   encapsulation: ViewEncapsulation.None,
 
   // The "OnPush" status for the `CdkTree` component is effectively a noop, so we are removing it.
@@ -68,6 +65,8 @@ import {
   changeDetection: ChangeDetectionStrategy.Default
 })
 export class CdkTree<T> implements AfterContentChecked, CollectionViewer, OnDestroy, OnInit {
+  @HostBinding('attr.role') _role = 'tree';
+
   /** Subject that emits when the component has been destroyed. */
   private _onDestroy = new Subject<void>();
 
@@ -128,7 +127,10 @@ export class CdkTree<T> implements AfterContentChecked, CollectionViewer, OnDest
     new BehaviorSubject<{start: number, end: number}>({start: 0, end: Number.MAX_VALUE});
 
   constructor(private _differs: IterableDiffers,
-              private _changeDetectorRef: ChangeDetectorRef) {}
+              private _changeDetectorRef: ChangeDetectorRef,
+              private _elementRef: ElementRef<HTMLElement>) {
+    this._elementRef.nativeElement.classList.add('cdk-tree');
+  }
 
   ngOnInit() {
     this._dataDiffer = this._differs.find([]).create(this.trackBy);
@@ -300,13 +302,14 @@ export class CdkTree<T> implements AfterContentChecked, CollectionViewer, OnDest
 @Directive({
   selector: 'cdk-tree-node',
   exportAs: 'cdkTreeNode',
-  host: {
-    '[attr.aria-expanded]': 'isExpanded',
-    '[attr.role]': 'role',
-    'class': 'cdk-tree-node',
-  },
 })
 export class CdkTreeNode<T> implements FocusableOption, OnDestroy, OnInit {
+  /**
+   * The role of the node should always be 'treeitem'.
+   */
+    // TODO: mark as deprecated
+  @HostBinding('attr.role') @Input() role: 'treeitem' | 'group' = 'treeitem';
+
   /**
    * The most recently created `CdkTreeNode`. We save it in static variable so we can retrieve it
    * in `CdkTree` and set the data to it.
@@ -332,26 +335,22 @@ export class CdkTreeNode<T> implements FocusableOption, OnDestroy, OnInit {
   }
   protected _data: T;
 
-  get isExpanded(): boolean {
+  @HostBinding('attr.aria-expanded') get isExpanded(): boolean {
     return this._tree.treeControl.isExpanded(this._data);
   }
 
   get level(): number {
-   // Retrieve the aria-level of the parent node because level from treeControl is 0 indexed and
-   // aria-level is 1 indexed
+   // If the treeControl has a getLevel method, use it to get the level. Otherwise read the
+   // aria-level off the parent node and use it as the level for this node (note aria-level is
+   // 1-indexed, while this property is 0-indexed, so we don't need to increment).
    return this._tree.treeControl.getLevel ?
      this._tree.treeControl.getLevel(this._data) : this._parentNodeAriaLevel;
    }
 
-  /**
-   * The role of the node should always be 'treeitem'.
-   */
-  // TODO: mark as deprecated
-  @Input() role: 'treeitem' | 'group' = 'treeitem';
-
   constructor(protected _elementRef: ElementRef<HTMLElement>,
               protected _tree: CdkTree<T>) {
     CdkTreeNode.mostRecentTreeNode = this as CdkTreeNode<T>;
+    this._elementRef.nativeElement.classList.add('cdk-tree-node');
   }
 
   ngOnInit(): void {

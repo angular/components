@@ -10,6 +10,7 @@ import {
   ContentChildren,
   Directive,
   ElementRef,
+  HostBinding,
   IterableDiffer,
   IterableDiffers,
   OnDestroy,
@@ -31,17 +32,15 @@ import {getTreeControlFunctionsMissingError} from './tree-errors';
 @Directive({
   selector: 'cdk-nested-tree-node',
   exportAs: 'cdkNestedTreeNode',
-  host: {
-    '[attr.aria-expanded]': 'isExpanded',
-    '[attr.role]': 'role',
-    'class': 'cdk-tree-node cdk-nested-tree-node',
-  },
   providers: [
     {provide: CdkTreeNode, useExisting: CdkNestedTreeNode},
     {provide: CDK_TREE_NODE_OUTLET_NODE, useExisting: CdkNestedTreeNode}
   ]
 })
 export class CdkNestedTreeNode<T> extends CdkTreeNode<T> implements AfterContentInit, OnDestroy {
+  @HostBinding('attr.aria-expanded') _expanded = this.isExpanded;
+  @HostBinding('attr.role') _role = this.role;
+
   /** Differ used to find the changes in the data provided by the data source. */
   private _dataDiffer: IterableDiffer<T>;
 
@@ -60,6 +59,7 @@ export class CdkNestedTreeNode<T> extends CdkTreeNode<T> implements AfterContent
               protected _tree: CdkTree<T>,
               protected _differs: IterableDiffers) {
     super(_elementRef, _tree);
+    this._elementRef.nativeElement.classList.add('cdk-tree-node', 'cdk-nested-tree-node');
   }
 
   ngAfterContentInit() {
