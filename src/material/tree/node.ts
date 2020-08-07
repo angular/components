@@ -126,13 +126,13 @@ export class MatNestedTreeNode<T> extends CdkNestedTreeNode<T> implements AfterC
   // This is a workaround for https://github.com/angular/angular/issues/23091
   // In aot mode, the lifecycle hooks from parent class are not called.
   // TODO(tinayuangao): Remove when the angular issue #23091 is fixed
-  // ngAfterContentInit() {
-  //   super.ngAfterContentInit();
-  // }
-  //
-  // ngOnDestroy() {
-  //   super.ngOnDestroy();
-  // }
+  ngAfterContentInit() {
+    super.ngAfterContentInit();
+  }
+
+  ngOnDestroy() {
+    super.ngOnDestroy();
+  }
 
   static ngAcceptInputType_disabled: BooleanInput;
 }
