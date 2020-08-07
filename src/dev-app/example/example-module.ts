@@ -7,7 +7,6 @@
  */
 
 import {CommonModule} from '@angular/common';
-import {ExampleModule as DocsExampleModule} from '@angular/components-examples';
 import {NgModule} from '@angular/core';
 import {MatExpansionModule} from '@angular/material/expansion';
 

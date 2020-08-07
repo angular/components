@@ -15,8 +15,8 @@ import {Subject} from 'rxjs';
  */
 interface TrackBySelection<T> {
   isSelected(value: SelectableWithIndex<T>): boolean;
-  select(...values: Array<SelectableWithIndex<T>>): void;
-  deselect(...values: Array<SelectableWithIndex<T>>): void;
+  select(...values: SelectableWithIndex<T>[]): void;
+  deselect(...values: SelectableWithIndex<T>[]): void;
   changed: Subject<SelectionChange<T>>;
 }
 
@@ -33,8 +33,8 @@ export interface SelectableWithIndex<T> {
  * Represents the change in the selection set.
  */
 export interface SelectionChange<T> {
-  before: Array<SelectableWithIndex<T>>;
-  after: Array<SelectableWithIndex<T>>;
+  before: SelectableWithIndex<T>[];
+  after: SelectableWithIndex<T>[];
 }
 
 /**
@@ -54,7 +54,7 @@ export class SelectionSet<T> implements TrackBySelection<T> {
     return this._selectionMap.has(this._getTrackedByValue(value));
   }
 
-  select(...selects: Array<SelectableWithIndex<T>>) {
+  select(...selects: SelectableWithIndex<T>[]) {
     if (!this._multiple && selects.length > 1 && isDevMode()) {
       throw Error('SelectionSet: not multiple selection');
     }
@@ -65,7 +65,7 @@ export class SelectionSet<T> implements TrackBySelection<T> {
       this._selectionMap.clear();
     }
 
-    const toSelect: Array<SelectableWithIndex<T>> = [];
+    const toSelect: SelectableWithIndex<T>[] = [];
     for (const select of selects) {
       if (this.isSelected(select)) {
         continue;
@@ -80,13 +80,13 @@ export class SelectionSet<T> implements TrackBySelection<T> {
     this.changed.next({before, after});
   }
 
-  deselect(...selects: Array<SelectableWithIndex<T>>) {
+  deselect(...selects: SelectableWithIndex<T>[]) {
     if (!this._multiple && selects.length > 1 && isDevMode()) {
       throw Error('SelectionSet: not multiple selection');
     }
 
     const before = this._getCurrentSelection();
-    const toDeselect: Array<SelectableWithIndex<T>> = [];
+    const toDeselect: SelectableWithIndex<T>[] = [];
 
     for (const select of selects) {
       if (!this.isSelected(select)) {
@@ -121,7 +121,7 @@ export class SelectionSet<T> implements TrackBySelection<T> {
     return this._trackByFn(select.index!, select.value);
   }
 
-  private _getCurrentSelection(): Array<SelectableWithIndex<T>> {
+  private _getCurrentSelection(): SelectableWithIndex<T>[] {
     return Array.from(this._selectionMap.values());
   }
 }

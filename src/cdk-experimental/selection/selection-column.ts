@@ -17,6 +17,7 @@ import {
   ViewChild,
   ChangeDetectionStrategy,
   ViewEncapsulation,
+  Inject,
 } from '@angular/core';
 
 import {CdkSelection} from './selection';
@@ -71,8 +72,8 @@ export class CdkSelectionColumn<T> implements OnInit, OnDestroy {
   @ViewChild(CdkHeaderCellDef, {static: true}) private readonly _headerCell: CdkHeaderCellDef;
 
   constructor(
-      @Optional() private _table: CdkTable<T>,
-      @Optional() readonly selection: CdkSelection<T>,
+      @Optional() @Inject(CdkTable) private _table: CdkTable<T>,
+      @Optional() @Inject(CdkSelection) readonly selection: CdkSelection<T>,
   ) {}
 
   ngOnInit() {

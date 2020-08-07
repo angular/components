@@ -61,7 +61,7 @@ export class CdkSelectionToggle<T> implements OnDestroy, OnInit {
   private _destroyed = new Subject<void>();
 
   constructor(
-      @Optional() private _selection: CdkSelection<T>,
+      @Optional() @Inject(CdkSelection) private _selection: CdkSelection<T>,
       @Optional() @Self() @Inject(NG_VALUE_ACCESSOR) private _controlValueAccessors:
           ControlValueAccessor[],
   ) {}

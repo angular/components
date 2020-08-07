@@ -67,7 +67,7 @@ export class CdkSelectAll<T> implements OnDestroy, OnInit {
   private readonly _destroyed = new Subject<void>();
 
   constructor(
-      @Optional() private readonly _selection: CdkSelection<T>,
+      @Optional() @Inject(CdkSelection) private readonly _selection: CdkSelection<T>,
       @Optional() @Self() @Inject(NG_VALUE_ACCESSOR) private readonly _controlValueAccessor:
           ControlValueAccessor[]) {}
 

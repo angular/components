@@ -187,7 +187,7 @@ export class CdkSelection<T> implements OnInit, AfterContentChecked, CollectionV
   }
 
   private _selectAll() {
-    const toSelect: Array<SelectableWithIndex<T>> = [];
+    const toSelect: SelectableWithIndex<T>[] = [];
     this._data.forEach((value, index) => {
       toSelect.push({value, index});
     });
@@ -196,7 +196,7 @@ export class CdkSelection<T> implements OnInit, AfterContentChecked, CollectionV
   }
 
   private _clearAll() {
-    const toDeselect: Array<SelectableWithIndex<T>> = [];
+    const toDeselect: SelectableWithIndex<T>[] = [];
     this._data.forEach((value, index) => {
       toDeselect.push({value, index});
     });

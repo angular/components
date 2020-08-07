@@ -17,6 +17,7 @@ import {
   ViewChild,
   ChangeDetectionStrategy,
   ViewEncapsulation,
+  Inject,
 } from '@angular/core';
 
 import {MatSelection} from './selection';
@@ -67,8 +68,8 @@ export class MatSelectionColumn<T> implements OnInit, OnDestroy {
   @ViewChild(MatHeaderCellDef, {static: true}) private readonly _headerCell: MatHeaderCellDef;
 
   constructor(
-      @Optional() private _table: MatTable<T>,
-      @Optional() readonly selection: MatSelection<T>,
+      @Optional() @Inject(MatTable) private _table: MatTable<T>,
+      @Optional() @Inject(MatSelection) readonly selection: MatSelection<T>,
   ) {}
 
   ngOnInit() {
