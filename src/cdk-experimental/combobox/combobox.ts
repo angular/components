@@ -7,7 +7,7 @@
  */
 
 export type OpenAction = 'focus' | 'click' | 'downKey' | 'toggle';
-
+export type ContentType = 'false' | 'true' | 'menu' | 'listbox' | 'tree' | 'grid' | 'dialog';
 export type OpenActionInput = OpenAction | OpenAction[] | string | null | undefined;
 
 import {
@@ -39,35 +39,23 @@ import {BooleanInput, coerceBooleanProperty, coerceArray} from '@angular/cdk/coe
   host: {
     'role': 'combobox',
     '(click)': 'toggle()',
-    '[attr.aria-disabled]': 'disabled'
+    '[attr.aria-disabled]': 'disabled',
+    '[attr.aria-controls]': '_contentId',
+    '[attr.aria-haspopup]': '_contentType'
   }
 })
 export class CdkCombobox<T = unknown> implements OnDestroy, AfterContentInit {
-  @Input('triggerFor')
-  get comboboxPanel(): CdkComboboxPanel<T> | undefined {
-    return this._comboboxPanel;
-  }
-  set comboboxPanel(panel: CdkComboboxPanel<T> | undefined) {
-    this._comboboxPanel = panel;
-  }
-  private _comboboxPanel: CdkComboboxPanel<T> | undefined;
+  @Input('cdkComboboxTriggerFor')
+  get comboboxPanel(): CdkComboboxPanel<T> | undefined { return this._panel; }
+  set comboboxPanel(panel: CdkComboboxPanel<T> | undefined) { this._panel = panel; }
+  private _panel: CdkComboboxPanel<T> | undefined;
 
   @Input()
-  get value(): T {
-    return this._value;
-  }
-  set value(val: T) {
-    this._value = val;
-  }
-  private _value: T;
+  value: T;
 
   @Input()
-  get disabled(): boolean {
-    return this._disabled;
-  }
-  set disabled(value: boolean) {
-    this._disabled = coerceBooleanProperty(value);
-  }
+  get disabled(): boolean { return this._disabled; }
+  set disabled(value: boolean) { this._disabled = coerceBooleanProperty(value); }
   private _disabled: boolean = false;
 
   @Input()
@@ -84,7 +72,9 @@ export class CdkCombobox<T = unknown> implements OnDestroy, AfterContentInit {
   @Output('panelValueChanged') readonly panelValueChanged: EventEmitter<T> = new EventEmitter<T>();
 
   private _overlayRef: OverlayRef;
-  private _panel: TemplatePortal;
+  private _panelContent: TemplatePortal;
+  private _contentId: string = '';
+  private _contentType: ContentType;
 
   constructor(
     private readonly _elementRef: ElementRef<HTMLElement>,
@@ -94,9 +84,17 @@ export class CdkCombobox<T = unknown> implements OnDestroy, AfterContentInit {
   ) {}
 
   ngAfterContentInit() {
-    this._comboboxPanel?.valueUpdated.subscribe(data => {
+    this._panel?.valueUpdated.subscribe(data => {
       this._setComboboxValue(data);
       this.close();
+    });
+
+    this._panel?.contentIdUpdated.subscribe(id => {
+      this._contentId = id;
+    });
+
+    this._panel?.contentTypeUpdated.subscribe(type => {
+      this._contentType = type;
     });
   }
 
@@ -116,7 +114,7 @@ export class CdkCombobox<T = unknown> implements OnDestroy, AfterContentInit {
     if (!this.isOpen() && !this.disabled) {
       this.opened.next();
       this._overlayRef = this._overlayRef || this._overlay.create(this._getOverlayConfig());
-      this._overlayRef.attach(this._getPortal());
+      this._overlayRef.attach(this._getPanelContent());
     }
   }
 
@@ -168,10 +166,10 @@ export class CdkCombobox<T = unknown> implements OnDestroy, AfterContentInit {
     ];
   }
 
-  private _getPortal() {
-    const hasPanelChanged = this._comboboxPanel?._templateRef !== this._panel?.templateRef;
-    if (this._comboboxPanel && (!this._panel || hasPanelChanged)) {
-      this._panel = new TemplatePortal(this._comboboxPanel._templateRef, this._viewContainerRef);
+  private _getPanelContent() {
+    const hasPanelChanged = this._panel?._templateRef !== this._panelContent?.templateRef;
+    if (this._panel && (!this._panel || hasPanelChanged)) {
+      this._panelContent = new TemplatePortal(this._panel._templateRef, this._viewContainerRef);
     }
 
     return this._panel;

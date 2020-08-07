@@ -6,23 +6,23 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+export type ContentType = 'false' | 'true' | 'menu' | 'listbox' | 'tree' | 'grid' | 'dialog';
+
 import {Directive, TemplateRef} from '@angular/core';
 import {Subject} from 'rxjs';
 
 @Directive({
   selector: 'ng-template[cdkComboboxPanel]',
   exportAs: 'cdkComboboxPanel',
-  host: {
-    'aria-controls': 'contentId',
-    'aria-haspopup': 'contentType'
-  }
-
 })
 export class CdkComboboxPanel<T = unknown> {
 
   valueUpdated: Subject<T> = new Subject<T>();
+  contentIdUpdated: Subject<string> = new Subject<string>();
+  contentTypeUpdated: Subject<ContentType> = new Subject<ContentType>();
+
   contentId: string = '';
-  contentType: string = '';
+  contentType: ContentType;
 
   constructor(readonly _templateRef: TemplateRef<unknown>) {}
 
@@ -30,11 +30,14 @@ export class CdkComboboxPanel<T = unknown> {
     this.valueUpdated.next(data);
   }
 
-  _registerContent(contentId: string, contentType: string) {
+  _registerContent(contentId: string, contentType: ContentType) {
     this.contentId = contentId;
     if (contentType !== 'listbox' && contentType !== 'dialog') {
-      throw Error('CdkComboboxPanel content must be either a listbox or dialog');
+      throw Error('CdkComboboxPanel currently only supports listbox or dialog content.');
     }
     this.contentType = contentType;
+
+    this.contentIdUpdated.next(this.contentId);
+    this.contentTypeUpdated.next(this.contentType);
   }
 }
