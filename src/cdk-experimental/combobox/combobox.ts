@@ -104,12 +104,14 @@ export class CdkCombobox<T = unknown> implements OnDestroy, AfterContentInit {
     this.panelValueChanged.complete();
   }
 
+  /** Toggles the open state of the panel. */
   toggle() {
     if (this.hasPanel()) {
       this.isOpen() ? this.close() : this.open();
     }
   }
 
+  /** If the combobox is closed and not disabled, opens the panel. */
   open() {
     if (!this.isOpen() && !this.disabled) {
       this.opened.next();
@@ -118,6 +120,7 @@ export class CdkCombobox<T = unknown> implements OnDestroy, AfterContentInit {
     }
   }
 
+  /** If the combobox is open and not disabled, closes the panel. */
   close() {
     if (this.isOpen() && !this.disabled) {
       this.closed.next();
@@ -125,10 +128,12 @@ export class CdkCombobox<T = unknown> implements OnDestroy, AfterContentInit {
     }
   }
 
+  /** Returns true if panel is currently opened. */
   isOpen(): boolean {
     return this._overlayRef ? this._overlayRef.hasAttached() : false;
   }
 
+  /** Returns true if combobox has a child panel. */
   hasPanel(): boolean {
     return !!this.comboboxPanel;
   }

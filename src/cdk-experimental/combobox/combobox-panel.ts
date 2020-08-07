@@ -26,10 +26,12 @@ export class CdkComboboxPanel<T = unknown> {
 
   constructor(readonly _templateRef: TemplateRef<unknown>) {}
 
+  /** Tells the parent combobox to closet he panel and sends back the content value. */
   closePanel(data?: T) {
     this.valueUpdated.next(data);
   }
 
+  /** Registers the content's id and the content type with the panel. */
   _registerContent(contentId: string, contentType: ContentType) {
     this.contentId = contentId;
     if (contentType !== 'listbox' && contentType !== 'dialog') {
