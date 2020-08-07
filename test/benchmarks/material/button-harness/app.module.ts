@@ -9,19 +9,20 @@
 import {Component, NgModule, ViewEncapsulation} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
 import {MatButtonModule} from '@angular/material/button';
+import {NUM_BUTTONS} from './constants';
 
 /** component: mat-raised-button-harness-test */
 
 @Component({
-	selector: 'app-root',
+  selector: 'app-root',
   template: `
     <button *ngFor="let val of vals" mat-button> {{ val }} </button>
-	`,
-	encapsulation: ViewEncapsulation.None,
+  `,
+  encapsulation: ViewEncapsulation.None,
   styleUrls: ['//src/material/core/theming/prebuilt/indigo-pink.css'],
 })
 export class ButtonHarnessTest {
-	vals = Array.from({ length: 100 }, (_, i) => i);
+  vals = Array.from({ length: NUM_BUTTONS }, (_, i) => i);
 }
 
 @NgModule({
