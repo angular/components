@@ -39,8 +39,8 @@ import {BooleanInput, coerceBooleanProperty, coerceArray} from '@angular/cdk/coe
     'role': 'combobox',
     '(click)': 'toggle()',
     '[attr.aria-disabled]': 'disabled',
-    '[attr.aria-controls]': '_contentId',
-    '[attr.aria-haspopup]': '_contentType'
+    '[attr.aria-controls]': 'contentId',
+    '[attr.aria-haspopup]': 'contentType'
   }
 })
 export class CdkCombobox<T = unknown> implements OnDestroy, AfterContentInit {
@@ -72,8 +72,8 @@ export class CdkCombobox<T = unknown> implements OnDestroy, AfterContentInit {
 
   private _overlayRef: OverlayRef;
   private _panelContent: TemplatePortal;
-  private _contentId: string = '';
-  private _contentType: ContentType;
+  contentId: string = '';
+  contentType: ContentType;
 
   constructor(
     private readonly _elementRef: ElementRef<HTMLElement>,
@@ -89,11 +89,11 @@ export class CdkCombobox<T = unknown> implements OnDestroy, AfterContentInit {
     });
 
     this._panel?.contentIdUpdated.subscribe(id => {
-      this._contentId = id;
+      this.contentId = id;
     });
 
     this._panel?.contentTypeUpdated.subscribe(type => {
-      this._contentType = type;
+      this.contentType = type;
     });
   }
 
