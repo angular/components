@@ -334,7 +334,9 @@ export abstract class MatDatepickerBase<C extends MatDatepickerControl<D>, S,
   /** Whether the calendar is open. */
   @Input()
   get opened(): boolean { return this._opened; }
-  set opened(value: boolean) { value ? this.open() : this.close(); }
+  set opened(value: boolean) {
+    coerceBooleanProperty(value) ? this.open() : this.close();
+  }
   private _opened = false;
 
   /** The id for the datepicker calendar. */
@@ -642,5 +644,6 @@ export abstract class MatDatepickerBase<C extends MatDatepickerControl<D>, S,
   }
 
   static ngAcceptInputType_disabled: BooleanInput;
+  static ngAcceptInputType_opened: BooleanInput;
   static ngAcceptInputType_touchUi: BooleanInput;
 }
