@@ -60,7 +60,7 @@ export class BreakpointObserver implements OnDestroy {
    * @param value One or more media queries to check.
    * @returns Whether any of the media queries match.
    */
-  isMatched(value: string | string[]): boolean {
+  isMatched(value: string | readonly string[]): boolean {
     const queries = splitQueries(coerceArray(value));
     return queries.some(mediaQuery => this._registerQuery(mediaQuery).mql.matches);
   }
@@ -71,7 +71,7 @@ export class BreakpointObserver implements OnDestroy {
    * @param value One or more media queries to check.
    * @returns A stream of matches for the given queries.
    */
-  observe(value: string | string[]): Observable<BreakpointState> {
+  observe(value: string | readonly string[]): Observable<BreakpointState> {
     const queries = splitQueries(coerceArray(value));
     const observables = queries.map(query => this._registerQuery(query).observable);
 
@@ -132,7 +132,7 @@ export class BreakpointObserver implements OnDestroy {
  * Split each query string into separate query strings if two queries are provided as comma
  * separated.
  */
-function splitQueries(queries: string[]): string[] {
+function splitQueries(queries: readonly string[]): readonly string[] {
   return queries.map((query: string) => query.split(','))
                 .reduce((a1: string[], a2: string[]) => a1.concat(a2))
                 .map(query => query.trim());
