@@ -1,8 +1,8 @@
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 import {Component, DebugElement} from '@angular/core';
-import {By} from '@angular/platform-browser';
-import {MatButtonModule, MatButton} from './index';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 import {MatRipple, ThemePalette} from '@angular/material/core';
+import {By} from '@angular/platform-browser';
+import {MatButton, MatButtonModule, MAT_BUTTON_DEFAULT_OPTIONS} from './index';
 
 
 describe('MatButton', () => {
@@ -39,6 +39,28 @@ describe('MatButton', () => {
 
     expect(buttonDebugElement.nativeElement.classList).not.toContain('mat-accent');
     expect(aDebugElement.nativeElement.classList).not.toContain('mat-accent');
+  });
+
+  it('should have no default type setted', () => {
+    const fixture = TestBed.createComponent(TestApp);
+    const button = fixture.debugElement.query(By.css('button'));
+
+    expect(button.nativeElement.getAttribute('type')).toEqual(null);
+  });
+
+  it('should be able to override default type', () => {
+    TestBed.resetTestingModule().configureTestingModule({
+      declarations: [TestApp],
+      imports: [MatButtonModule],
+      providers: [
+        {provide: MAT_BUTTON_DEFAULT_OPTIONS, useValue: {type: 'button'}}
+      ]
+    }).compileComponents();
+    const fixture = TestBed.createComponent(TestApp);
+    fixture.detectChanges();
+    const button = fixture.debugElement.query(By.css('button'));
+
+    expect(button.nativeElement.getAttribute('type')).toEqual('button');
   });
 
   it('should expose the ripple instance', () => {
@@ -286,7 +308,7 @@ describe('MatButton', () => {
 @Component({
   selector: 'test-app',
   template: `
-    <button [tabIndex]="tabIndex" mat-button type="button" (click)="increment()"
+    <button [tabIndex]="tabIndex" mat-button (click)="increment()"
       [disabled]="isDisabled" [color]="buttonColor" [disableRipple]="rippleDisabled">
       Go
     </button>

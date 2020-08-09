@@ -6,26 +6,27 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {FocusMonitor, FocusableOption, FocusOrigin} from '@angular/cdk/a11y';
+import {FocusableOption, FocusMonitor, FocusOrigin} from '@angular/cdk/a11y';
 import {BooleanInput} from '@angular/cdk/coercion';
 import {
+  AfterViewInit,
   ChangeDetectionStrategy,
   Component,
   ElementRef,
+  Inject,
+  InjectionToken,
+  Input,
   OnDestroy,
+  Optional,
   ViewChild,
   ViewEncapsulation,
-  Optional,
-  Inject,
-  Input,
-  AfterViewInit,
 } from '@angular/core';
 import {
   CanColor,
-  CanDisable,
-  CanDisableRipple,
   CanColorCtor,
+  CanDisable,
   CanDisableCtor,
+  CanDisableRipple,
   CanDisableRippleCtor,
   MatRipple,
   mixinColor,
@@ -54,11 +55,24 @@ const BUTTON_HOST_ATTRIBUTES = [
 // Boilerplate for applying mixins to MatButton.
 /** @docs-private */
 class MatButtonBase {
-  constructor(public _elementRef: ElementRef) {}
+  constructor(public _elementRef: ElementRef<HTMLAnchorElement|HTMLButtonElement>) {}
 }
 
 const _MatButtonMixinBase: CanDisableRippleCtor & CanDisableCtor & CanColorCtor &
     typeof MatButtonBase = mixinColor(mixinDisabled(mixinDisableRipple(MatButtonBase)));
+
+/** The type of button. */
+export type MatButtonType = 'button'|'reset'|'submit';
+
+/** Default `mat-button` options that can be overridden. */
+export interface MatButtonDefaultOptions {
+  /** The type of button. */
+  type?: MatButtonType;
+}
+
+/** Injection token to be used to override the default options for `mat-button`. */
+export const MAT_BUTTON_DEFAULT_OPTIONS =
+    new InjectionToken<MatButtonDefaultOptions>('mat-button-default-options');
 
 /**
  * Material design button.
@@ -97,21 +111,29 @@ export class MatButton extends _MatButtonMixinBase
 
   constructor(elementRef: ElementRef,
               private _focusMonitor: FocusMonitor,
-              @Optional() @Inject(ANIMATION_MODULE_TYPE) public _animationMode: string) {
+              @Optional() @Inject(ANIMATION_MODULE_TYPE) public _animationMode: string,
+              @Optional() @Inject(MAT_BUTTON_DEFAULT_OPTIONS)
+                  defaultOptions?: MatButtonDefaultOptions) {
     super(elementRef);
+
+    const hostElement = this._getHostElement();
+
+    if (!this._hasHostAttributes('type') && defaultOptions?.type) {
+      hostElement.type = defaultOptions.type;
+    }
 
     // For each of the variant selectors that is present in the button's host
     // attributes, add the correct corresponding class.
     for (const attr of BUTTON_HOST_ATTRIBUTES) {
       if (this._hasHostAttributes(attr)) {
-        (this._getHostElement() as HTMLElement).classList.add(attr);
+        hostElement.classList.add(attr);
       }
     }
 
     // Add a class that applies to all buttons. This makes it easier to target if somebody
     // wants to target all Material buttons. We do it here rather than `host` to ensure that
     // the class is applied to derived classes.
-    elementRef.nativeElement.classList.add('mat-button-base');
+    hostElement.classList.add('mat-button-base');
 
     if (this.isRoundButton) {
       this.color = DEFAULT_ROUND_BUTTON_COLOR;
@@ -141,7 +163,8 @@ export class MatButton extends _MatButtonMixinBase
 
   /** Gets whether the button has one of the given attributes. */
   _hasHostAttributes(...attributes: string[]) {
-    return attributes.some(attribute => this._getHostElement().hasAttribute(attribute));
+    const hostElement = this._getHostElement();
+    return attributes.some(attribute => hostElement.hasAttribute(attribute));
   }
 
   static ngAcceptInputType_disabled: BooleanInput;
