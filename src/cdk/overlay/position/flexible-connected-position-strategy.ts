@@ -696,11 +696,18 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
       xOrigin = position.overlayX === 'start' ? 'left' : 'right';
     }
 
-    this._scheduler.schedule(() => {
+    if (this._scheduler) {
+      this._scheduler.schedule(() => {
+        for (let i = 0; i < elements.length; i++) {
+          elements[i].style.transformOrigin = `${xOrigin} ${yOrigin}`;
+        }
+      });
+    } else {
       for (let i = 0; i < elements.length; i++) {
         elements[i].style.transformOrigin = `${xOrigin} ${yOrigin}`;
       }
-    });
+    }
+    
   }
 
   /**
@@ -1201,6 +1208,15 @@ export interface ConnectedPosition {
   offsetX?: number;
   offsetY?: number;
   panelClass?: string | string[];
+}
+
+export interface Scheduler {
+  scheduleStyle(name: string, value: string): void;
+  flushStyles(): void;
+}
+
+export interface Schedulable {
+  withScheduler(scheduler: Scheduler): void;
 }
 
 /** Shallow-extends a stylesheet object with another stylesheet object, but schedules the process */
