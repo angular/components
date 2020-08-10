@@ -48,21 +48,14 @@ describe('tabs performance benchmarks', () => {
   });
 
   it('switches between tabs', async() => {
-    let tabs: any[];
-    let tabToClick = 0;
     await runBenchmark({
       id: 'tab-switching',
       url: '',
       ignoreBrowserSynchronization: true,
       params: [],
-      setup: async() => {
-        await $('#show-three-tabs').click();
-        tabs = await $$('.mat-tab-label');
-      },
-      prepare: async() => {
-        tabToClick = tabToClick < tabs.length - 1 ? tabToClick + 1 : 0;
-      },
-      work: async() => await tabs[tabToClick].click(),
+      setup: async() => await $('#show-three-tabs').click(),
+      prepare: async() => await $('#mat-tab-label-0-0').click(),
+      work: async() => await $('#mat-tab-label-0-1').click(),
     });
   });
 
