@@ -47,7 +47,7 @@ export type FlexibleConnectedPositionStrategyOrigin = ElementRef | Element | Poi
  * a basic dropdown is connecting the bottom-left corner of the origin to the top-left corner
  * of the overlay.
  */
-export class FlexibleConnectedPositionStrategy implements PositionStrategy {
+export class FlexibleConnectedPositionStrategy implements PositionStrategy, Schedulable {
   /** The overlay to which this strategy is attached. */
   private _overlayRef: OverlayReference;
 
@@ -139,13 +139,18 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
   }
 
   /** Optional scheduler */
-  private _scheduler: Scheduler | undefined;
+  private _scheduler: ScheduleType;
 
   constructor(
       connectedTo: FlexibleConnectedPositionStrategyOrigin, private _viewportRuler: ViewportRuler,
       private _document: Document, private _platform: Platform,
       private _overlayContainer: OverlayContainer) {
     this.setOrigin(connectedTo);
+  }
+
+  /** Uses scheduler */
+  withStyleScheduler(scheduler: Scheduler) {
+    this._scheduler = scheduler;
   }
 
   /** Attaches this position strategy to an overlay. */
@@ -707,7 +712,6 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
         elements[i].style.transformOrigin = `${xOrigin} ${yOrigin}`;
       }
     }
-    
   }
 
   /**
@@ -1212,21 +1216,24 @@ export interface ConnectedPosition {
 
 export interface Scheduler {
   scheduleStyle(name: string, value: string): void;
+  schedule(task: () => void): void;
   flushStyles(): void;
 }
 
 export interface Schedulable {
-  withScheduler(scheduler: Scheduler): void;
+  withStyleScheduler(scheduler: Scheduler): void;
 }
+
+type ScheduleType = Scheduler | undefined;
 
 /** Shallow-extends a stylesheet object with another stylesheet object, but schedules the process */
 function extendStyles(
     destination: CSSStyleDeclaration,
     source: CSSStyleDeclaration,
-    _scheduler: _CoalescedStyleScheduler
+    _scheduler: ScheduleType = undefined
   ): Promise<CSSStyleDeclaration> {
     return new Promise((resolve, reject) => {
-      _scheduler.schedule(() => {
+      _scheduler?.schedule(() => {
       for (let key in source) {
         if (source.hasOwnProperty(key)) {
           destination[key] = source[key];
