@@ -38,6 +38,7 @@ import {getTreeControlFunctionsMissingError} from './tree-errors';
   ]
 })
 export class CdkNestedTreeNode<T> extends CdkTreeNode<T> implements AfterContentInit, OnDestroy {
+  // tslint:disable:no-host-decorator-in-concrete
   @HostBinding('attr.aria-expanded') _expanded = this.isExpanded;
   @HostBinding('attr.role') _role = this.role;
 

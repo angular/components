@@ -17,6 +17,7 @@ export declare class MatNestedTreeNode<T> extends CdkNestedTreeNode<T> implement
 
 export declare class MatTree<T> extends CdkTree<T> {
     _nodeOutlet: MatTreeNodeOutlet;
+    constructor(_differs: IterableDiffers, _changeDetectorRef: ChangeDetectorRef, _elementRef: ElementRef<HTMLElement>);
     static ɵcmp: i0.ɵɵComponentDefWithMeta<MatTree<any>, "mat-tree", ["matTree"], {}, {}, never, never>;
     static ɵfac: i0.ɵɵFactoryDef<MatTree<any>, never>;
 }

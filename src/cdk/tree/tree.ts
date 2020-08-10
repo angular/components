@@ -65,6 +65,7 @@ import {
   changeDetection: ChangeDetectionStrategy.Default
 })
 export class CdkTree<T> implements AfterContentChecked, CollectionViewer, OnDestroy, OnInit {
+  // tslint:disable:no-host-decorator-in-concrete
   @HostBinding('attr.role') _role = 'tree';
 
   /** Subject that emits when the component has been destroyed. */
@@ -307,7 +308,8 @@ export class CdkTreeNode<T> implements FocusableOption, OnDestroy, OnInit {
   /**
    * The role of the node should always be 'treeitem'.
    */
-    // TODO: mark as deprecated
+   // TODO: mark as deprecated
+   // tslint:disable:no-host-decorator-in-concrete
   @HostBinding('attr.role') @Input() role: 'treeitem' | 'group' = 'treeitem';
 
   /**
@@ -335,6 +337,7 @@ export class CdkTreeNode<T> implements FocusableOption, OnDestroy, OnInit {
   }
   protected _data: T;
 
+  // tslint:disable:no-host-decorator-in-concrete
   @HostBinding('attr.aria-expanded') get isExpanded(): boolean {
     return this._tree.treeControl.isExpanded(this._data);
   }
@@ -392,13 +395,11 @@ export class CdkTreeNode<T> implements FocusableOption, OnDestroy, OnInit {
     }
     if (!parent) {
       throw Error('Incorrect tree structure containing detached node.');
-    }
-    if (parent.classList.contains('cdk-nested-tree-node')) {
+    } else if (parent.classList.contains('cdk-nested-tree-node')) {
       return parseInt(parent.getAttribute('aria-level')!);
-    } else if (parent.classList.contains('cdk-tree')) {
-      return 0;
     } else {
-      throw Error(`Incorrect tree structure containing ${parent.className}.`);
+      // parent.classList.contains('cdk-tree')
+      return 0;
     }
   }
 }
