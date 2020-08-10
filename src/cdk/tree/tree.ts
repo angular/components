@@ -353,6 +353,8 @@ export class CdkTreeNode<T> implements FocusableOption, OnDestroy, OnInit {
   constructor(protected _elementRef: ElementRef<HTMLElement>,
               protected _tree: CdkTree<T>) {
     CdkTreeNode.mostRecentTreeNode = this as CdkTreeNode<T>;
+    // The classes are directly added here instead of in the host property because classes on
+    // the host property are not inherited with View Engine.
     this._elementRef.nativeElement.classList.add('cdk-tree-node');
   }
 
@@ -389,7 +391,6 @@ export class CdkTreeNode<T> implements FocusableOption, OnDestroy, OnInit {
 }
 
 function getParentNodeAriaLevel(nodeElement: HTMLElement): number {
-  debugger;
   let parent = nodeElement.parentElement;
   while (parent && isNodeElement(parent)) {
     parent = parent.parentElement;

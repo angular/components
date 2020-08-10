@@ -40,7 +40,6 @@ export declare class CdkNestedTreeNode<T> extends CdkTreeNode<T> implements Afte
 export declare class CdkTree<T> implements AfterContentChecked, CollectionViewer, OnDestroy, OnInit {
     _nodeDefs: QueryList<CdkTreeNodeDef<T>>;
     _nodeOutlet: CdkTreeNodeOutlet;
-    _role: string;
     get dataSource(): DataSource<T> | Observable<T[]> | T[];
     set dataSource(dataSource: DataSource<T> | Observable<T[]> | T[]);
     trackBy: TrackByFunction<T>;
@@ -49,7 +48,7 @@ export declare class CdkTree<T> implements AfterContentChecked, CollectionViewer
         start: number;
         end: number;
     }>;
-    constructor(_differs: IterableDiffers, _changeDetectorRef: ChangeDetectorRef, _elementRef: ElementRef<HTMLElement>);
+    constructor(_differs: IterableDiffers, _changeDetectorRef: ChangeDetectorRef);
     _getNodeDef(data: T, i: number): CdkTreeNodeDef<T>;
     insertNode(nodeData: T, index: number, viewContainer?: ViewContainerRef, parentData?: T): void;
     ngAfterContentChecked(): void;

@@ -59,6 +59,8 @@ export class MatTreeNode<T> extends _MatTreeNodeMixinBase<T>
     super(_elementRef, _tree);
 
     this.tabIndex = Number(tabIndex) || 0;
+    // The classes are directly added here instead of in the host property because classes on
+    // the host property are not inherited with View Engine.
     this._elementRef.nativeElement.classList.add('mat-tree-node');
   }
 
@@ -121,6 +123,8 @@ export class MatNestedTreeNode<T> extends CdkNestedTreeNode<T> implements AfterC
               @Attribute('tabindex') tabIndex: string) {
     super(_elementRef, _tree, _differs);
     this.tabIndex = Number(tabIndex) || 0;
+    // The classes are directly added here instead of in the host property because classes on
+    // the host property are not inherited with View Engine.
     this._elementRef.nativeElement.classList.add('mat-nested-tree-node');
   }
 
