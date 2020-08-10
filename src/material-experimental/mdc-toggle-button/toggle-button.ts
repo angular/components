@@ -49,14 +49,36 @@ export class MatToggleButtonCssInternalOnly { }
 export class MatToggleButton implements AfterViewInit, OnDestroy {
   private _singleSelect: boolean = false;
   // tslint:disable:no-unused-variable
+  // private _foundation: MDCSegmentedButtonFoundation;
   private _foundation: any;
   // tslint:disable:no-unused-variable
-  private _adapter = {
-    hasClass: (_className: string) => false,
-    getSegments: () => [],
-    selectSegment: (_indexOrSegmentId: string | number) => undefined,
-    unselectSegment: (_indexOrSegmentId: string | number) => undefined,
-    notifySelectedChange: (_detail: any) => undefined
+  // private _adapter: MDCSegmentedButtonAdapter = {
+  private _adapter: any = {
+    hasClass: (className: string) => this._elementRef.nativeElement.classList.contains(className),
+    getSegments: () => this._segments.map((segment: any) => {
+      return {
+        index: segment.setIndex,
+        selected: segment.idSelected,
+        segmentId: segment.segmentId
+      };
+    }),
+    selectSegment: (indexOrSegmentId: string | number) => {
+      const foundSegment = this._segments.find((segment: any) => {
+        return segment.index === indexOrSegmentId || segment.segmentId === indexOrSegmentId;
+      });
+      if (foundSegment) {
+        foundSegment.setSelected();
+      }
+    },
+    unselectSegment: (indexOrSegmentId: string | number) => {
+      const foundSegment = this._segments.find((segment: any) => {
+        return segment.index === indexOrSegmentId || segment.segmentId === indexOrSegmentId;
+      });
+      if (foundSegment) {
+        foundSegment.setUnselected();
+      }
+    },
+    notifySelectedChange: (detail: any) => this.change.emit(detail)
   };
 
   @Input()
@@ -80,11 +102,12 @@ export class MatToggleButton implements AfterViewInit, OnDestroy {
 
   ngAfterViewInit() {
     // this._foundation = new MDCSegmentedButtonFoundation(this._adapter);
+    this._segments.forEach((segment, index) => segment.setIndex(index));
   }
 
   ngOnDestroy() {
     // if (this._foundation) {
-      // this._foundation.destroy();
+    //   this._foundation.destroy();
     // }
   }
 
