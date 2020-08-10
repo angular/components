@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-export type ContentType = 'false' | 'true' | 'menu' | 'listbox' | 'tree' | 'grid' | 'dialog';
+export type AriaHasPopupValue = 'false' | 'true' | 'menu' | 'listbox' | 'tree' | 'grid' | 'dialog';
 
 import {Directive, TemplateRef} from '@angular/core';
 import {Subject} from 'rxjs';
@@ -19,10 +19,10 @@ export class CdkComboboxPanel<T = unknown> {
 
   valueUpdated: Subject<T> = new Subject<T>();
   contentIdUpdated: Subject<string> = new Subject<string>();
-  contentTypeUpdated: Subject<ContentType> = new Subject<ContentType>();
+  contentTypeUpdated: Subject<AriaHasPopupValue> = new Subject<AriaHasPopupValue>();
 
   contentId: string = '';
-  contentType: ContentType;
+  contentType: AriaHasPopupValue;
 
   constructor(readonly _templateRef: TemplateRef<unknown>) {}
 
@@ -32,7 +32,7 @@ export class CdkComboboxPanel<T = unknown> {
   }
 
   /** Registers the content's id and the content type with the panel. */
-  _registerContent(contentId: string, contentType: ContentType) {
+  _registerContent(contentId: string, contentType: AriaHasPopupValue) {
     this.contentId = contentId;
     if (contentType !== 'listbox' && contentType !== 'dialog') {
       throw Error('CdkComboboxPanel currently only supports listbox or dialog content.');

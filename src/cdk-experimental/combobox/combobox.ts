@@ -19,7 +19,7 @@ import {
   Optional,
   Output, ViewContainerRef
 } from '@angular/core';
-import {CdkComboboxPanel, ContentType} from './combobox-panel';
+import {CdkComboboxPanel, AriaHasPopupValue} from './combobox-panel';
 import {TemplatePortal} from '@angular/cdk/portal';
 import {
   ConnectedPosition,
@@ -29,7 +29,7 @@ import {
   OverlayRef
 } from '@angular/cdk/overlay';
 import {Directionality} from '@angular/cdk/bidi';
-import {BooleanInput, coerceBooleanProperty, coerceArray} from '@angular/cdk/coercion';
+import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
 
 
 @Directive({
@@ -45,8 +45,8 @@ import {BooleanInput, coerceBooleanProperty, coerceArray} from '@angular/cdk/coe
 })
 export class CdkCombobox<T = unknown> implements OnDestroy, AfterContentInit {
   @Input('cdkComboboxTriggerFor')
-  get comboboxPanel(): CdkComboboxPanel<T> | undefined { return this._panel; }
-  set comboboxPanel(panel: CdkComboboxPanel<T> | undefined) { this._panel = panel; }
+  get panel(): CdkComboboxPanel<T> | undefined { return this._panel; }
+  set panel(panel: CdkComboboxPanel<T> | undefined) { this._panel = panel; }
   private _panel: CdkComboboxPanel<T> | undefined;
 
   @Input()
@@ -73,7 +73,7 @@ export class CdkCombobox<T = unknown> implements OnDestroy, AfterContentInit {
   private _overlayRef: OverlayRef;
   private _panelContent: TemplatePortal;
   contentId: string = '';
-  contentType: ContentType;
+  contentType: AriaHasPopupValue;
 
   constructor(
     private readonly _elementRef: ElementRef<HTMLElement>,
@@ -134,7 +134,7 @@ export class CdkCombobox<T = unknown> implements OnDestroy, AfterContentInit {
 
   /** Returns true if combobox has a child panel. */
   hasPanel(): boolean {
-    return !!this.comboboxPanel;
+    return !!this.panel;
   }
 
   private _setComboboxValue(value: T) {
@@ -179,18 +179,13 @@ export class CdkCombobox<T = unknown> implements OnDestroy, AfterContentInit {
     return this._panelContent;
   }
 
-  private _coerceOpenActionProperty(input: any): OpenAction[] {
-    const actions: OpenAction[] = [];
-
-    const inputArray = coerceArray(input);
-    for (const action of inputArray) {
-      if (action !== 'focus' && action !== 'click' && action !== 'downKey' && action !== 'toggle') {
-        throw Error('Not a valid open action.');
-      } else {
-        actions.push(action);
-      }
+  private _coerceOpenActionProperty(input: string | OpenAction[]): OpenAction[] {
+    let actions: OpenAction[] = [];
+    if (typeof input === 'string') {
+      actions.push(input as OpenAction);
+    } else {
+      actions = input;
     }
-
     return actions;
   }
 
