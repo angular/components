@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {$, $$, browser, ElementFinder} from 'protractor';
+import {$, browser, ElementFinder} from 'protractor';
 import {runBenchmark} from '@angular/dev-infra-private/benchmark/driver-utilities';
 
 describe('tabs performance benchmarks', () => {
