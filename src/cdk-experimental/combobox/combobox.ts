@@ -189,7 +189,7 @@ export class CdkCombobox<T = unknown> implements OnDestroy, AfterContentInit {
   private _coerceOpenActionProperty(input: string | OpenAction[]): OpenAction[] {
     let actions: OpenAction[] = [];
     if (typeof input === 'string') {
-      actions.push(input as OpenAction);
+      actions.push(<OpenAction> input);
     } else {
       actions = input;
     }
