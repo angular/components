@@ -1,3 +1,22 @@
+## 10.1.3 "silver-potato" (2020-08-10)
+
+### cdk
+
+|            |                       |
+| ---------- | --------------------- |
+| bug fix |  **overlay:** fix wrong overflow calculation ([#17791](https://github.com/angular/components/issues/17791)) ([6ddcd04](https://github.com/angular/components/commit/6ddcd04)) |
+
+### material
+
+|            |                       |
+| ---------- | --------------------- |
+| bug fix |  **stepper:** remove tabindex from content ([#16809](https://github.com/angular/components/issues/16809)) ([237a6cc](https://github.com/angular/components/commit/237a6cc)), closes [#14892](https://github.com/angular/components/issues/14892) [#16692](https://github.com/angular/components/issues/16692) |
+| bug fix |  **tree:** Apply aria-level to all nodes ([#17818](https://github.com/angular/components/issues/17818)) ([c60fc9e](https://github.com/angular/components/commit/c60fc9e)) |
+| performance |  **column-resize:** Coalesce style updates along with sticky styler ([#20086](https://github.com/angular/components/issues/20086)) ([7e2079a](https://github.com/angular/components/commit/7e2079a)) |
+| performance |  **table:** Do column name string interpolation once per column instead of once per cell ([#19801](https://github.com/angular/components/issues/19801)) ([19dd8bb](https://github.com/angular/components/commit/19dd8bb)) |
+| performance |  **table:** Slightly improve speed of adding/remvoing sticky styles ([#19823](https://github.com/angular/components/issues/19823)) ([ba35ee1](https://github.com/angular/components/commit/ba35ee1)) |
+
+
 ## 10.1.2 "pearl-parachute" (2020-08-03)
 
 ### cdk
