@@ -138,11 +138,13 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
     return this._preferredPositions;
   }
 
+  /** Optional scheduler */
+  private _scheduler: Scheduler | undefined;
+
   constructor(
       connectedTo: FlexibleConnectedPositionStrategyOrigin, private _viewportRuler: ViewportRuler,
       private _document: Document, private _platform: Platform,
-      private _overlayContainer: OverlayContainer,
-      private _scheduler: _CoalescedStyleScheduler) {
+      private _overlayContainer: OverlayContainer) {
     this.setOrigin(connectedTo);
   }
 
