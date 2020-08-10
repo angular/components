@@ -9,10 +9,7 @@
 import {CdkTree} from '@angular/cdk/tree';
 import {
   ChangeDetectionStrategy,
-  ChangeDetectorRef,
   Component,
-  ElementRef,
-  IterableDiffers,
   ViewChild,
   ViewEncapsulation
 } from '@angular/core';
@@ -26,6 +23,13 @@ import {MatTreeNodeOutlet} from './outlet';
   exportAs: 'matTree',
   template: `<ng-container matTreeNodeOutlet></ng-container>`,
   host: {
+    // The 'cdk-tree' class needs to be included here because classes set in the host in the
+    // parent class are not inherited with View Engine. The 'cdk-tree' class in CdkTreeNode has
+    // to be set in the host because:
+    // if it is set as a @HostBinding it is not set by the time the tree nodes try to read the
+    // class from it.
+    // the ElementRef is not available in the constructor so the class can't be applied directly.
+    'class': 'mat-tree cdk-tree',
     'role': 'tree',
   },
   styleUrls: ['tree.css'],
@@ -38,11 +42,4 @@ import {MatTreeNodeOutlet} from './outlet';
 export class MatTree<T> extends CdkTree<T> {
   // Outlets within the tree's template where the dataNodes will be inserted.
   @ViewChild(MatTreeNodeOutlet, {static: true}) _nodeOutlet: MatTreeNodeOutlet;
-
-  constructor(_differs: IterableDiffers,
-              _changeDetectorRef: ChangeDetectorRef,
-              _elementRef: ElementRef<HTMLElement>) {
-    super(_differs, _changeDetectorRef, _elementRef);
-    _elementRef.nativeElement.classList.add('mat-tree');
-  }
 }

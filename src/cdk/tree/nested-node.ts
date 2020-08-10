@@ -41,6 +41,7 @@ export class CdkNestedTreeNode<T> extends CdkTreeNode<T> implements AfterContent
   // tslint:disable:no-host-decorator-in-concrete
   @HostBinding('attr.aria-expanded') _expanded = this.isExpanded;
   @HostBinding('attr.role') _role = this.role;
+  // tslint:enable:no-host-decorator-in-concrete
 
   /** Differ used to find the changes in the data provided by the data source. */
   private _dataDiffer: IterableDiffer<T>;

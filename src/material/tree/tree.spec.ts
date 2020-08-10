@@ -350,7 +350,7 @@ describe('MatTree', () => {
           [`topping_3 - cheese_3 + base_3`]);
       });
 
-      it('with correct aria-level', () => {
+      it('with correct aria-level on nodes', () => {
         expect(getNodes(treeElement).every(node => {
           return node.getAttribute('aria-level') === '1';
         })).toBe(true);

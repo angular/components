@@ -17,6 +17,7 @@ import {
   ElementRef,
   HostBinding,
   Input,
+  isDevMode,
   IterableChangeRecord,
   IterableDiffer,
   IterableDiffers,
@@ -56,6 +57,10 @@ import {
   selector: 'cdk-tree',
   exportAs: 'cdkTree',
   template: `<ng-container cdkTreeNodeOutlet></ng-container>`,
+  host: {
+    'class': 'cdk-tree',
+    'role': 'tree',
+  },
   encapsulation: ViewEncapsulation.None,
 
   // The "OnPush" status for the `CdkTree` component is effectively a noop, so we are removing it.
@@ -65,9 +70,6 @@ import {
   changeDetection: ChangeDetectionStrategy.Default
 })
 export class CdkTree<T> implements AfterContentChecked, CollectionViewer, OnDestroy, OnInit {
-  // tslint:disable:no-host-decorator-in-concrete
-  @HostBinding('attr.role') _role = 'tree';
-
   /** Subject that emits when the component has been destroyed. */
   private _onDestroy = new Subject<void>();
 
@@ -128,10 +130,7 @@ export class CdkTree<T> implements AfterContentChecked, CollectionViewer, OnDest
     new BehaviorSubject<{start: number, end: number}>({start: 0, end: Number.MAX_VALUE});
 
   constructor(private _differs: IterableDiffers,
-              private _changeDetectorRef: ChangeDetectorRef,
-              private _elementRef: ElementRef<HTMLElement>) {
-    this._elementRef.nativeElement.classList.add('cdk-tree');
-  }
+              private _changeDetectorRef: ChangeDetectorRef) {}
 
   ngOnInit() {
     this._dataDiffer = this._differs.find([]).create(this.trackBy);
@@ -305,12 +304,13 @@ export class CdkTree<T> implements AfterContentChecked, CollectionViewer, OnDest
   exportAs: 'cdkTreeNode',
 })
 export class CdkTreeNode<T> implements FocusableOption, OnDestroy, OnInit {
+  // TODO: mark as deprecated
+  // tslint:disable:no-host-decorator-in-concrete
   /**
-   * The role of the node should always be 'treeitem'.
+   * The role of the tree node.
    */
-   // TODO: mark as deprecated
-   // tslint:disable:no-host-decorator-in-concrete
   @HostBinding('attr.role') @Input() role: 'treeitem' | 'group' = 'treeitem';
+  // tslint:enable:no-host-decorator-in-concrete
 
   /**
    * The most recently created `CdkTreeNode`. We save it in static variable so we can retrieve it
@@ -337,7 +337,7 @@ export class CdkTreeNode<T> implements FocusableOption, OnDestroy, OnInit {
   }
   protected _data: T;
 
-  // tslint:disable:no-host-decorator-in-concrete
+  // tslint:disable-next-line:no-host-decorator-in-concrete
   @HostBinding('attr.aria-expanded') get isExpanded(): boolean {
     return this._tree.treeControl.isExpanded(this._data);
   }
@@ -357,7 +357,7 @@ export class CdkTreeNode<T> implements FocusableOption, OnDestroy, OnInit {
   }
 
   ngOnInit(): void {
-    this._parentNodeAriaLevel = this._getParentNodeAriaLevel();
+    this._parentNodeAriaLevel = getParentNodeAriaLevel(this._elementRef.nativeElement);
     this._elementRef.nativeElement.setAttribute('aria-level', String(this.level + 1));
   }
 
@@ -386,20 +386,29 @@ export class CdkTreeNode<T> implements FocusableOption, OnDestroy, OnInit {
     }
     this.role = 'treeitem';
   }
+}
 
-  private _getParentNodeAriaLevel(): number {
-    let parent = this._elementRef.nativeElement.parentElement;
-    while (parent &&
-    !(parent.classList.contains('cdk-nested-tree-node') || parent.classList.contains('cdk-tree'))) {
-      parent = parent.parentElement;
-    }
-    if (!parent) {
-      throw Error('Incorrect tree structure containing detached node.');
-    } else if (parent.classList.contains('cdk-nested-tree-node')) {
-      return parseInt(parent.getAttribute('aria-level')!);
-    } else {
-      // parent.classList.contains('cdk-tree')
-      return 0;
-    }
+function getParentNodeAriaLevel(nodeElement: HTMLElement): number {
+  debugger;
+  let parent = nodeElement.parentElement;
+  while (parent && isNodeElement(parent)) {
+    parent = parent.parentElement;
   }
+  if (!parent) {
+    if (isDevMode()) {
+      throw Error('Incorrect tree structure containing detached node.');
+    } else {
+      return -1;
+    }
+  } else if (parent.classList.contains('cdk-nested-tree-node')) {
+    return Number(parent.getAttribute('aria-level')!);
+  } else {
+    // The ancestor element is the cdk-tree itself
+    return 0;
+  }
+}
+
+function isNodeElement(element: HTMLElement) {
+  const classList = element?.classList;
+  return !(classList?.contains('cdk-nested-tree-node') || classList?.contains('cdk-tree'));
 }
