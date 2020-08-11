@@ -151,6 +151,8 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy, Sche
   /** Uses scheduler */
   withStyleScheduler(scheduler: Scheduler) {
     this._scheduler = scheduler;
+
+    return this;
   }
 
   /** Attaches this position strategy to an overlay. */

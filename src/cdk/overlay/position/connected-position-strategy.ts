@@ -21,7 +21,7 @@ import {
   OriginConnectionPosition,
   OverlayConnectionPosition,
 } from './connected-position';
-import {FlexibleConnectedPositionStrategy} from './flexible-connected-position-strategy';
+import {FlexibleConnectedPositionStrategy, Scheduler} from './flexible-connected-position-strategy';
 import {PositionStrategy} from './position-strategy';
 import {_CoalescedStyleScheduler} from './coalesced-style-scheduler';
 
@@ -58,14 +58,15 @@ export class ConnectedPositionStrategy implements PositionStrategy {
       originPos: OriginConnectionPosition, overlayPos: OverlayConnectionPosition,
       connectedTo: ElementRef<HTMLElement>, viewportRuler: ViewportRuler, document: Document,
       platform: Platform, overlayContainer: OverlayContainer,
-      @Inject(_CoalescedStyleScheduler) private _scheduler: _CoalescedStyleScheduler) {
+      @Inject(_CoalescedStyleScheduler) private _scheduler: Scheduler) {
     // Since the `ConnectedPositionStrategy` is deprecated and we don't want to maintain
     // the extra logic, we create an instance of the positioning strategy that has some
     // defaults that make it behave as the old position strategy and to which we'll
     // proxy all of the API calls.
     this._positionStrategy = new FlexibleConnectedPositionStrategy(
                                  connectedTo, viewportRuler, document, platform,
-                                 overlayContainer, this._scheduler)
+                                 overlayContainer)
+                                 .withStyleScheduler(this._scheduler);
                                  .withFlexibleDimensions(false)
                                  .withPush(false)
                                  .withViewportMargin(0);
