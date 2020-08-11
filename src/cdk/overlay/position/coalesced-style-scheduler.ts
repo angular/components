@@ -9,7 +9,7 @@
 import {Injectable, NgZone, OnDestroy} from '@angular/core';
 import {from, Subject} from 'rxjs';
 import {take, takeUntil} from 'rxjs/operators';
-import { Scheduler } from './flexible-connected-position-strategy';
+import {Scheduler} from './flexible-connected-position-strategy';
 
 /**
  * @docs-private
