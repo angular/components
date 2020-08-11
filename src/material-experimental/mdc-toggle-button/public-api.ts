@@ -8,4 +8,5 @@
 
 export * from './toggle-button';
 export * from './toggle-button-segment';
+export * from './new-toggle-button';
 export * from './module';

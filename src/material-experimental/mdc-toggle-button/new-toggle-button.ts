@@ -17,7 +17,9 @@ import {
   EventEmitter,
   OnDestroy,
   ViewEncapsulation,
-  ChangeDetectionStrategy
+  ChangeDetectionStrategy,
+  ContentChildren,
+  QueryList
 } from '@angular/core';
 // import {
 //   MDCSegmentedButtonSegmentAdapter,
@@ -27,20 +29,14 @@ import {
 import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
 
 
-@Directive({
-  selector: 'mat-toggle-button-segment',
-  host: {'class': 'mdc-segmented-button__segment'}
-})
-export class MatToggleButtonSegmentCssInternalOnly { }
-
 @Component({
-  selector: 'mat-toggle-button-segment',
+  selector: 'mat-new-toggle-button-segment',
   templateUrl: 'toggle-button-segment.html',
-  exportAs: 'matToggleButtonSegment',
+  exportAs: 'matNewToggleButtonSegment',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MatToggleButtonSegment implements AfterViewInit, OnDestroy {
+export class MatNewToggleButtonSegment implements AfterViewInit, OnDestroy {
   @Input()
   get isSelected(): boolean {
     return this._selected;
@@ -112,4 +108,75 @@ export class MatToggleButtonSegment implements AfterViewInit, OnDestroy {
   }
 
   static ngAcceptInputType_isSelected: BooleanInput;
+}
+
+
+@Directive({
+  selector: 'mat-new-toggle-button',
+  exportAs: 'matNewToggleButton',
+  host: {
+    'class': 'mdc-segmented-button'
+  }
+})
+export class MatNewToggleButton implements AfterViewInit, OnDestroy {
+  @Input()
+  get singleSelect(): boolean {
+    return this._singleSelect;
+  }
+  set singleSelect(value: boolean) {
+    this._singleSelect = coerceBooleanProperty(value);
+  }
+
+  @Output() readonly change: EventEmitter<any> = new EventEmitter<any>();
+
+  @ContentChildren(MatNewToggleButtonSegment, {
+    descendants: true
+  }) _segments: QueryList<MatNewToggleButtonSegment>;
+
+  private _singleSelect: boolean = false;
+  private _foundation: any;
+  private _adapter: any = {
+    hasClass: (className: string) => this._elementRef.nativeElement.classList.contains(className),
+    getSegments: () => this._segments.map((segment: any) => {
+      return {
+        index: segment.setIndex,
+        selected: segment.idSelected,
+        segmentId: segment.segmentId
+      };
+    }),
+    selectSegment: (indexOrSegmentId: string | number) => {
+      const foundSegment = this._segments.find((segment: any) => {
+        return segment.index === indexOrSegmentId || segment.segmentId === indexOrSegmentId;
+      });
+      if (foundSegment) {
+        foundSegment.setSelected();
+      }
+    },
+    unselectSegment: (indexOrSegmentId: string | number) => {
+      const foundSegment = this._segments.find((segment: any) => {
+        return segment.index === indexOrSegmentId || segment.segmentId === indexOrSegmentId;
+      });
+      if (foundSegment) {
+        foundSegment.setUnselected();
+      }
+    },
+    notifySelectedChange: (detail: any) => this.change.emit(detail)
+  };
+
+  constructor(
+    private readonly _elementRef: ElementRef
+  ) { }
+
+  ngAfterViewInit() {
+    // this._foundation = new MDCSegmentedButtonFoundation(this._adapter);
+    this._segments.forEach((segment, index) => segment.setIndex(index));
+  }
+
+  ngOnDestroy() {
+    // if (this._foundation) {
+    //   this._foundation.destroy();
+    // }
+  }
+
+  static ngAcceptInputType_singleSelect: BooleanInput;
 }
