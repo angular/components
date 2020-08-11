@@ -35,7 +35,7 @@ export class ExampleViewer implements OnInit {
   exampleTabs: {[tabName: string]: string};
 
   /** Data for the currently selected example. */
-  exampleData: LiveExample;
+  exampleData: LiveExample|null = null;
 
   /** URL to fetch code snippet for snippet view. */
   fileUrl: string;
@@ -135,7 +135,8 @@ export class ExampleViewer implements OnInit {
       fileName = `${contentBeforeDot}-${contentAfterDot}.html`;
     }
 
-    return `/docs-content/examples-highlighted/${this.exampleData.packagePath}/${fileName}`;
+    return this.exampleData ?
+        `/docs-content/examples-highlighted/${this.exampleData.packagePath}/${fileName}` : '';
   }
 
   _getExampleTabNames() {
@@ -171,27 +172,30 @@ export class ExampleViewer implements OnInit {
   }
 
   private _generateExampleTabs() {
-    const docsContentPath = `/docs-content/examples-highlighted/${this.exampleData.packagePath}`;
-    // Name of the default example files. If files with such name exist within the example,
-    // we provide a shorthand for them within the example tabs (for less verbose tabs).
-    const exampleBaseFileName = `${this.example}-example`;
-
     this.exampleTabs = {};
 
-    for (const fileName of this.exampleData.files) {
-      // Since the additional files refer to the original file name, we need to transform
-      // the file name to match the highlighted HTML file that displays the source.
-      const fileSourceName = fileName.replace(fileExtensionRegex, '$1-$2.html');
-      const importPath = `${docsContentPath}/${fileSourceName}`;
+    if (this.exampleData) {
+      // Name of the default example files. If files with such name exist within the example,
+      // we provide a shorthand for them within the example tabs (for less verbose tabs).
+      const exampleBaseFileName = `${this.example}-example`;
+      const docsContentPath = `/docs-content/examples-highlighted/${this.exampleData.packagePath}`;
 
-      if (fileName === `${exampleBaseFileName}.ts`) {
-        this.exampleTabs['TS'] = importPath;
-      } else if (fileName === `${exampleBaseFileName}.css`) {
-        this.exampleTabs['CSS'] = importPath;
-      } else if (fileName === `${exampleBaseFileName}.html`) {
-        this.exampleTabs['HTML'] = importPath;
-      } else {
-        this.exampleTabs[fileName] = importPath;
+
+      for (const fileName of this.exampleData.files) {
+        // Since the additional files refer to the original file name, we need to transform
+        // the file name to match the highlighted HTML file that displays the source.
+        const fileSourceName = fileName.replace(fileExtensionRegex, '$1-$2.html');
+        const importPath = `${docsContentPath}/${fileSourceName}`;
+
+        if (fileName === `${exampleBaseFileName}.ts`) {
+          this.exampleTabs['TS'] = importPath;
+        } else if (fileName === `${exampleBaseFileName}.css`) {
+          this.exampleTabs['CSS'] = importPath;
+        } else if (fileName === `${exampleBaseFileName}.html`) {
+          this.exampleTabs['HTML'] = importPath;
+        } else {
+          this.exampleTabs[fileName] = importPath;
+        }
       }
     }
   }
