@@ -9,6 +9,7 @@
 import {Injectable, NgZone, OnDestroy} from '@angular/core';
 import {from, Subject} from 'rxjs';
 import {take, takeUntil} from 'rxjs/operators';
+import { Scheduler } from './flexible-connected-position-strategy';
 
 /**
  * @docs-private
@@ -28,11 +29,18 @@ export class _Schedule {
 @Injectable({
   providedIn: 'root'
 })
-export class _CoalescedStyleScheduler implements OnDestroy {
+export class _CoalescedStyleScheduler implements OnDestroy, Scheduler {
   private _currentSchedule: _Schedule|null = null;
   private readonly _destroyed = new Subject<void>();
 
   constructor(private readonly _ngZone: NgZone) {}
+
+  scheduleStyle(name: string, value: string): void {
+    throw new Error('Method not implemented.');
+  }
+  flushStyles(): void {
+    throw new Error('Method not implemented.');
+  }
 
   /**
    * Schedules the specified task to run at the end of the current VM turn.
