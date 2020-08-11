@@ -52,7 +52,7 @@
         </mat-icon>
       </button>
     </div>
-    <code-snippet [source]="fileUrl"></code-snippet>
+    <code-snippet *ngIf="fileUrl" [source]="fileUrl"></code-snippet>
   </div>
 
   <div class="docs-example-viewer-body" *ngIf="view !== 'snippet'">
