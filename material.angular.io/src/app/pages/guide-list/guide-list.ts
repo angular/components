@@ -6,6 +6,7 @@ import {FooterModule} from '../../shared/footer/footer';
 import {CommonModule} from '@angular/common';
 import {NavigationFocusModule} from '../../shared/navigation-focus/navigation-focus';
 import {ComponentPageTitle} from '../page-title/page-title';
+import {MatCardModule} from '@angular/material/card';
 
 @Component({
   selector: 'app-guides',
@@ -27,7 +28,7 @@ const routes: Routes = [{path: '', component: GuideList}];
             MatListModule,
             FooterModule,
             RouterModule.forChild(routes),
-            NavigationFocusModule],
+            NavigationFocusModule, MatCardModule],
   exports: [GuideList],
   declarations: [GuideList],
   providers: [GuideItems],

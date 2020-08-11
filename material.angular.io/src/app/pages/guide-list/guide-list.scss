@@ -1,9 +1,7 @@
 @import '../../../styles/constants';
 
 :host {
-  display: flex;
-  flex-direction: column;
-  flex-grow: 1;
+  min-height: 100%;
 }
 
 .docs-guide {
@@ -11,14 +9,37 @@
 }
 
 .docs-guide-list {
-  flex-grow: 1;
-  margin: $content-padding-side;
-
-  @media (max-width: $extra-small-breakpoint-width) {
-    margin: 0;
-  }
+  display: flex;
+  flex-wrap: wrap;
+  align-content: center;
+  justify-content: center;
+  padding-top: 15px;
 }
 
-.docs-guide-item, .docs-guide-item:hover {
+.docs-guide-item {
   text-decoration: none;
+
+  display: flex;
+  margin: 15px;
+}
+
+.docs-guide-card.mat-card {
+  text-align: center;
+  width: 210px;
+  height: 210px;
+}
+
+.docs-guide-card .mat-card-title {
+  height: 33%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+}
+
+
+.docs-guide-card-divider {
+  width: 40%;
+  height: 7px;
+  margin: 15px auto;
 }
