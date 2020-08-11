@@ -66,7 +66,7 @@ export class ConnectedPositionStrategy implements PositionStrategy {
     this._positionStrategy = new FlexibleConnectedPositionStrategy(
                                  connectedTo, viewportRuler, document, platform,
                                  overlayContainer)
-                                 .withStyleScheduler(this._scheduler);
+                                 .withStyleScheduler(this._scheduler)
                                  .withFlexibleDimensions(false)
                                  .withPush(false)
                                  .withViewportMargin(0);

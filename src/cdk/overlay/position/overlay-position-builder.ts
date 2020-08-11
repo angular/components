@@ -62,7 +62,8 @@ export class OverlayPositionBuilder {
   flexibleConnectedTo(origin: FlexibleConnectedPositionStrategyOrigin):
     FlexibleConnectedPositionStrategy {
     return new FlexibleConnectedPositionStrategy(origin, this._viewportRuler, this._document,
-        this._platform, this._overlayContainer, this._scheduler);
+        this._platform, this._overlayContainer)
+        .withStyleScheduler(this._scheduler);
   }
 
 }
