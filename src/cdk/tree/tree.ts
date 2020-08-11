@@ -48,6 +48,7 @@ import {
   getTreeMultipleDefaultNodeDefsError,
   getTreeNoValidDataSourceError
 } from './tree-errors';
+import {coerceNumberProperty} from '@angular/cdk/coercion';
 
 /**
  * CDK tree component that connects with a data source to retrieve data of type `T` and renders
@@ -360,7 +361,7 @@ export class CdkTreeNode<T> implements FocusableOption, OnDestroy, OnInit {
 
   ngOnInit(): void {
     this._parentNodeAriaLevel = getParentNodeAriaLevel(this._elementRef.nativeElement);
-    this._elementRef.nativeElement.setAttribute('aria-level', String(this.level + 1));
+    this._elementRef.nativeElement.setAttribute('aria-level', `${this.level + 1}`);
   }
 
   ngOnDestroy() {
@@ -402,7 +403,7 @@ function getParentNodeAriaLevel(nodeElement: HTMLElement): number {
       return -1;
     }
   } else if (parent.classList.contains('cdk-nested-tree-node')) {
-    return Number(parent.getAttribute('aria-level')!);
+    return coerceNumberProperty(parent.getAttribute('aria-level')!);
   } else {
     // The ancestor element is the cdk-tree itself
     return 0;
@@ -410,6 +411,6 @@ function getParentNodeAriaLevel(nodeElement: HTMLElement): number {
 }
 
 function isNodeElement(element: HTMLElement) {
-  const classList = element?.classList;
+  const classList = element.classList;
   return !(classList?.contains('cdk-nested-tree-node') || classList?.contains('cdk-tree'));
 }

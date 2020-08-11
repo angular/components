@@ -63,7 +63,8 @@ export class CdkNestedTreeNode<T> extends CdkTreeNode<T> implements AfterContent
     super(_elementRef, _tree);
     // The classes are directly added here instead of in the host property because classes on
     // the host property are not inherited with View Engine.
-    this._elementRef.nativeElement.classList.add('cdk-tree-node', 'cdk-nested-tree-node');
+    this._elementRef.nativeElement.classList.add('cdk-tree-node');
+    this._elementRef.nativeElement.classList.add('cdk-nested-tree-node');
   }
 
   ngAfterContentInit() {
