@@ -72,7 +72,7 @@ const DOCS: { [key: string]: DocItem[] } = {
       exampleSpecs: {
         prefix: 'badge-',
       },
-      additionalApiDocs: [{name: 'Testing', path: 'material-button-toggle-testing.html'}],
+      additionalApiDocs: [{name: 'Testing', path: 'material-badge-testing.html'}],
     },
     {
       id: 'bottom-sheet',
@@ -100,6 +100,7 @@ const DOCS: { [key: string]: DocItem[] } = {
       exampleSpecs: {
         prefix: 'button-toggle-',
       },
+      additionalApiDocs: [{name: 'Testing', path: 'material-button-toggle-testing.html'}],
     },
     {
       id: 'card',
@@ -222,7 +223,7 @@ const DOCS: { [key: string]: DocItem[] } = {
       exampleSpecs: {
         prefix: 'paginator-',
       },
-      additionalApiDocs: [{name: 'Testing', path: 'material-autocomplete-testing.html'}],
+      additionalApiDocs: [{name: 'Testing', path: 'material-paginator-testing.html'}],
     },
     {
       id: 'progress-bar',
@@ -356,6 +357,7 @@ const DOCS: { [key: string]: DocItem[] } = {
       exampleSpecs: {
         prefix: 'tooltip-',
       },
+      additionalApiDocs: [{name: 'Testing', path: 'material-tooltip-testing.html'}],
     },
     {
       id: 'tree',
