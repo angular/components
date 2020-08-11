@@ -1232,8 +1232,8 @@ function extendStyles(
     source: CSSStyleDeclaration,
     _scheduler: ScheduleType = undefined
   ): Promise<CSSStyleDeclaration> {
-    return new Promise((resolve, reject) => {
-      _scheduler?.schedule(() => {
+  return _scheduler ? new Promise((resolve, reject) => {
+    _scheduler!.schedule(() => {
       for (let key in source) {
         if (source.hasOwnProperty(key)) {
           destination[key] = source[key];
@@ -1241,6 +1241,13 @@ function extendStyles(
       }
       resolve(destination);
     });
+  }) : new Promise((resolve, reject) => {
+    for (let key in source) {
+      if (source.hasOwnProperty(key)) {
+        destination[key] = source[key];
+      }
+    }
+    resolve(destination);
   });
 }
 
