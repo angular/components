@@ -11,4 +11,19 @@
   .docs-guide-list .docs-guide-item {
     color: mat-color($primary, if($is-dark-theme, 200, default));
   }
+
+  .docs-guide-card-divider {
+    background: mat-color($accent);
+  }
+
+  .docs-guide-card:hover {
+    background: mat-color($background, hover);
+  }
+
+  .docs-guide-item:focus {
+    .docs-guide-card {
+      background: mat-color($background, focused-button);
+    }
+    outline: none;
+  }
 }
