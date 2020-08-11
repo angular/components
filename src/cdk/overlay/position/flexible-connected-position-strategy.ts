@@ -138,7 +138,7 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy, Sche
     return this._preferredPositions;
   }
 
-  /** Optional scheduler */
+  /** Optional scheduler that can be used to coalesce style updates */
   private _scheduler: ScheduleType;
 
   constructor(
@@ -148,7 +148,7 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy, Sche
     this.setOrigin(connectedTo);
   }
 
-  /** Uses scheduler */
+  /** Uses scheduler to coalesce style updates */
   withStyleScheduler(scheduler: Scheduler) {
     this._scheduler = scheduler;
 
