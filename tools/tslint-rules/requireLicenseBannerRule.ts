@@ -1,3 +1,4 @@
+import * as fs from 'fs';
 import * as path from 'path';
 import * as ts from 'typescript';
 import * as Lint from 'tslint';
@@ -37,8 +38,14 @@ class RequireLicenseBannerWalker extends Lint.RuleWalker {
     // Globs that are used to determine which files to lint.
     const fileGlobs = options.ruleArguments;
 
+    // Since tslint resolved file names are lowercase when working on a case insensitive
+    // filesystem, we need to transform the current working directory and the source
+    // file name to the real native paths using fs.realpathSync.native function.
+    const cwd = fs.realpathSync.native(process.cwd());
+    const fileName = fs.realpathSync.native(sourceFile.fileName);
+
     // Relative path for the current TypeScript source file.
-    const relativeFilePath = path.relative(process.cwd(), sourceFile.fileName);
+    const relativeFilePath = path.relative(cwd, fileName);
 
     // Whether the file should be checked at all.
     this._enabled = fileGlobs.some(p => minimatch(relativeFilePath, p));
