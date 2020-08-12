@@ -770,7 +770,8 @@ describe('CdkOption and CdkListbox', () => {
     let testComponent: ListboxInsideCombobox;
 
     let listbox: DebugElement;
-    let listboxInstance: CdkListbox<string>;
+    let listboxInstance: CdkListbox<unknown>;
+    let listboxElement: HTMLElement;
 
     let combobox: DebugElement;
     let comboboxInstance: CdkCombobox<string>;
@@ -799,7 +800,7 @@ describe('CdkOption and CdkListbox', () => {
 
     });
 
-    fit('should update combobox value on selection of an option', () => {
+    it('should update combobox value on selection of an option', () => {
       expect(comboboxInstance.value).toBeUndefined();
       expect(comboboxInstance.isOpen()).toBeFalse();
 
@@ -807,7 +808,7 @@ describe('CdkOption and CdkListbox', () => {
       fixture.detectChanges();
 
       listbox = fixture.debugElement.query(By.directive(CdkListbox));
-      listboxInstance = listbox.injector.get<CdkListbox<string>>(CdkListbox);
+      listboxInstance = listbox.injector.get<CdkListbox<unknown>>(CdkListbox);
 
       options = fixture.debugElement.queryAll(By.directive(CdkOption));
       optionInstances = options.map(o => o.injector.get<CdkOption>(CdkOption));
@@ -820,6 +821,95 @@ describe('CdkOption and CdkListbox', () => {
 
       expect(comboboxInstance.isOpen()).toBeFalse();
       expect(comboboxInstance.value).toBe('purple');
+    });
+
+    it('should update combobox value on selection via keyboard', () => {
+      expect(comboboxInstance.value).toBeUndefined();
+      expect(comboboxInstance.isOpen()).toBeFalse();
+
+      dispatchMouseEvent(comboboxElement, 'click');
+      fixture.detectChanges();
+
+      listbox = fixture.debugElement.query(By.directive(CdkListbox));
+      listboxInstance = listbox.injector.get<CdkListbox<unknown>>(CdkListbox);
+      listboxElement = listbox.nativeElement;
+
+      options = fixture.debugElement.queryAll(By.directive(CdkOption));
+      optionInstances = options.map(o => o.injector.get<CdkOption>(CdkOption));
+      optionElements = options.map(o => o.nativeElement);
+
+      expect(comboboxInstance.isOpen()).toBeTrue();
+
+      listboxInstance.setActiveOption(optionInstances[1]);
+      dispatchKeyboardEvent(listboxElement, 'keydown', SPACE);
+      fixture.detectChanges();
+
+      expect(comboboxInstance.isOpen()).toBeFalse();
+      expect(comboboxInstance.value).toBe('solar');
+    });
+
+    it('should not update combobox if listbox is in multiple mode', () => {
+      expect(comboboxInstance.value).toBeUndefined();
+      expect(comboboxInstance.isOpen()).toBeFalse();
+
+      dispatchMouseEvent(comboboxElement, 'click');
+      fixture.detectChanges();
+
+      listbox = fixture.debugElement.query(By.directive(CdkListbox));
+      listboxInstance = listbox.injector.get<CdkListbox<unknown>>(CdkListbox);
+      listboxElement = listbox.nativeElement;
+
+      testComponent.isMultiselectable = true;
+      fixture.detectChanges();
+
+      options = fixture.debugElement.queryAll(By.directive(CdkOption));
+      optionInstances = options.map(o => o.injector.get<CdkOption>(CdkOption));
+      optionElements = options.map(o => o.nativeElement);
+
+      expect(comboboxInstance.isOpen()).toBeTrue();
+
+      listboxInstance.setActiveOption(optionInstances[1]);
+      dispatchKeyboardEvent(listboxElement, 'keydown', SPACE);
+      fixture.detectChanges();
+
+      expect(comboboxInstance.isOpen()).toBeTrue();
+      expect(comboboxInstance.value).toBeUndefined();
+    });
+
+    it('should not update combobox if the listbox or option is disabled', () => {
+      expect(comboboxInstance.value).toBeUndefined();
+      expect(comboboxInstance.isOpen()).toBeFalse();
+
+      dispatchMouseEvent(comboboxElement, 'click');
+      fixture.detectChanges();
+
+      listbox = fixture.debugElement.query(By.directive(CdkListbox));
+      listboxInstance = listbox.injector.get<CdkListbox<unknown>>(CdkListbox);
+      listboxElement = listbox.nativeElement;
+
+      options = fixture.debugElement.queryAll(By.directive(CdkOption));
+      optionInstances = options.map(o => o.injector.get<CdkOption>(CdkOption));
+      optionElements = options.map(o => o.nativeElement);
+
+      expect(comboboxInstance.isOpen()).toBeTrue();
+      testComponent.isDisabled = true;
+      fixture.detectChanges();
+
+      dispatchMouseEvent(optionElements[0], 'click');
+      fixture.detectChanges();
+
+      expect(comboboxInstance.isOpen()).toBeTrue();
+      expect(comboboxInstance.value).toBeUndefined();
+
+      testComponent.isDisabled = false;
+      optionInstances[0].disabled = true;
+      fixture.detectChanges();
+
+      dispatchMouseEvent(optionElements[0], 'click');
+      fixture.detectChanges();
+
+      expect(comboboxInstance.isOpen()).toBeTrue();
+      expect(comboboxInstance.value).toBeUndefined();
     });
   });
 });
