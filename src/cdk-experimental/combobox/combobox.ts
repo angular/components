@@ -149,7 +149,7 @@ export class CdkCombobox<T = unknown> implements OnDestroy, AfterContentInit {
 
   private _setTextContent(content: T) {
     if (typeof content === 'string') {
-      this._elementRef.nativeElement.textContent = content;
+      this._elementRef.nativeElement.textContent = `${content}`;
     }
   }
 

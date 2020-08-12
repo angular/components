@@ -9,7 +9,7 @@
 import {Component} from '@angular/core';
 
 @Component({
-    templateUrl: 'cdk-combobox-demo.html',
+  templateUrl: 'cdk-combobox-demo.html',
 })
 export class CdkComboboxDemo {
 }

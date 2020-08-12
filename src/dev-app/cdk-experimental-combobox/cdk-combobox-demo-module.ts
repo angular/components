@@ -14,11 +14,11 @@ import {CdkComboboxDemo} from './cdk-combobox-demo';
 import {PanelContent} from './panel-content';
 
 @NgModule({
-    imports: [
-        CdkComboboxModule,
-        CommonModule,
-        RouterModule.forChild([{path: '', component: CdkComboboxDemo}]),
-    ],
-    declarations: [CdkComboboxDemo, PanelContent],
+  imports: [
+    CdkComboboxModule,
+    CommonModule,
+    RouterModule.forChild([{path: '', component: CdkComboboxDemo}]),
+  ],
+  declarations: [CdkComboboxDemo, PanelContent],
 })
 export class CdkComboboxDemoModule {}
