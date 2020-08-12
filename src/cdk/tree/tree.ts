@@ -393,7 +393,7 @@ export class CdkTreeNode<T> implements FocusableOption, OnDestroy, OnInit {
 
 function getParentNodeAriaLevel(nodeElement: HTMLElement): number {
   let parent = nodeElement.parentElement;
-  while (parent && isNodeElement(parent)) {
+  while (parent && !isNodeElement(parent)) {
     parent = parent.parentElement;
   }
   if (!parent) {
@@ -412,5 +412,5 @@ function getParentNodeAriaLevel(nodeElement: HTMLElement): number {
 
 function isNodeElement(element: HTMLElement) {
   const classList = element.classList;
-  return !(classList?.contains('cdk-nested-tree-node') || classList?.contains('cdk-tree'));
+  return !!(classList?.contains('cdk-nested-tree-node') || classList?.contains('cdk-tree'));
 }
