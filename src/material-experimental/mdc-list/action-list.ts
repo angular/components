@@ -7,7 +7,7 @@
  */
 
 import {ChangeDetectionStrategy, Component, ViewEncapsulation} from '@angular/core';
-import {MatInteractiveListBase, MatListBase} from './list-base';
+import {MatListBase} from './list-base';
 
 @Component({
   selector: 'mat-action-list',
@@ -23,4 +23,10 @@ import {MatInteractiveListBase, MatListBase} from './list-base';
     {provide: MatListBase, useExisting: MatActionList},
   ]
 })
-export class MatActionList extends MatInteractiveListBase {}
+export class MatActionList extends MatListBase {
+  // An action list is considered interactive, but does not extend the interactive
+  // list base class. We do this because as per MDC, items of interactive lists are
+  // only reachable through keyboard shortcuts. We want all items for the action list
+  // to be reachable through tab key though. This ensures best accessibility.
+  _isNonInteractive = false;
+}
