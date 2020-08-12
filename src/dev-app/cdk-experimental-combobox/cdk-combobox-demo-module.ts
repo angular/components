@@ -10,7 +10,6 @@ import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {RouterModule} from '@angular/router';
 import {CdkComboboxModule} from '@angular/cdk-experimental/combobox';
-// import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {CdkComboboxDemo} from './cdk-combobox-demo';
 import {PanelContent} from './panel-content';
 
