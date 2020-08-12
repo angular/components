@@ -5,6 +5,7 @@
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
+import {coerceArray} from "@angular/cdk/coercion/array";
 
 export type OpenAction = 'focus' | 'click' | 'downKey' | 'toggle';
 export type OpenActionInput = OpenAction | OpenAction[] | string | null | undefined;
@@ -188,10 +189,17 @@ export class CdkCombobox<T = unknown> implements OnDestroy, AfterContentInit {
 
   private _coerceOpenActionProperty(input: string | OpenAction[]): OpenAction[] {
     let actions: OpenAction[] = [];
+    const viableActions = ['focus', 'click', 'downKey', 'toggle'];
     if (typeof input === 'string') {
-      actions.push(input as OpenAction);
+      const tokens = input.trim().split('\s');
+      for (const token of tokens) {
+        if (!viableActions.includes(token)) {
+          throw Error(`${token} is not a supported open action`);
+        }
+        actions.push(input as OpenAction);
+      }
     } else {
-      actions = input;
+      actions = coerceArray(input);
     }
     return actions;
   }
