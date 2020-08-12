@@ -5,8 +5,8 @@ import {Component} from '@angular/core';
  */
 @Component({
   selector: 'cdk-overlay-basic-example',
-  templateUrl: './cdk-overlay-basic-example.html',
-  styleUrls: ['./cdk-overlay-basic-example.css'],
+  templateUrl: 'cdk-overlay-basic-example.html',
+  styleUrls: ['cdk-overlay-basic-example.css'],
 })
 export class CdkOverlayBasicExample {
   isOpen = false;

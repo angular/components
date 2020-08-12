@@ -4,8 +4,8 @@ import {AfterViewInit, Component, ElementRef, OnDestroy, ViewChild} from '@angul
 /** @title Monitoring autofill state with AutofillMonitor */
 @Component({
   selector: 'text-field-autofill-monitor-example',
-  templateUrl: './text-field-autofill-monitor-example.html',
-  styleUrls: ['./text-field-autofill-monitor-example.css'],
+  templateUrl: 'text-field-autofill-monitor-example.html',
+  styleUrls: ['text-field-autofill-monitor-example.css'],
 })
 export class TextFieldAutofillMonitorExample implements AfterViewInit, OnDestroy {
   @ViewChild('first', {read: ElementRef}) firstName: ElementRef<HTMLElement>;

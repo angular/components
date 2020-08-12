@@ -33,9 +33,9 @@ import {LabelOptions, MAT_LABEL_GLOBAL_OPTIONS, ThemePalette} from '@angular/mat
 import {
   getMatFormFieldDuplicatedHintError,
   getMatFormFieldMissingControlError,
-  MAT_FORM_FIELD,
   matFormFieldAnimations,
   MatFormFieldControl,
+  MAT_FORM_FIELD,
 } from '@angular/material/form-field';
 import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 import {
@@ -45,14 +45,14 @@ import {
 } from '@material/textfield';
 import {merge, Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
-import {MAT_ERROR, MatError} from './directives/error';
+import {MatError, MAT_ERROR} from './directives/error';
 import {MatFormFieldFloatingLabel} from './directives/floating-label';
 import {MatHint} from './directives/hint';
 import {MatLabel} from './directives/label';
 import {MatFormFieldLineRipple} from './directives/line-ripple';
 import {MatFormFieldNotchedOutline} from './directives/notched-outline';
-import {MAT_PREFIX, MatPrefix} from './directives/prefix';
-import {MAT_SUFFIX, MatSuffix} from './directives/suffix';
+import {MatPrefix, MAT_PREFIX} from './directives/prefix';
+import {MatSuffix, MAT_SUFFIX} from './directives/suffix';
 
 /** Type for the available floatLabel values. */
 export type FloatLabelType = 'always' | 'auto';
@@ -95,8 +95,8 @@ const FLOATING_LABEL_DEFAULT_DOCKED_TRANSFORM = `translateY(-50%)`;
 @Component({
   selector: 'mat-form-field',
   exportAs: 'matFormField',
-  templateUrl: './form-field.html',
-  styleUrls: ['./form-field.css'],
+  templateUrl: 'form-field.html',
+  styleUrls: ['form-field.css'],
   animations: [matFormFieldAnimations.transitionMessages],
   host: {
     'class': 'mat-mdc-form-field',

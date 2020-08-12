@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup} from '@angular/forms';
 import {Observable} from 'rxjs';
-import {startWith, map} from 'rxjs/operators';
+import {map, startWith} from 'rxjs/operators';
 
 export interface StateGroup {
   letter: string;
@@ -19,7 +19,7 @@ export const _filter = (opt: string[], value: string): string[] => {
  */
 @Component({
   selector: 'autocomplete-optgroup-example',
-  templateUrl: './autocomplete-optgroup-example.html',
+  templateUrl: 'autocomplete-optgroup-example.html',
 })
 
 export class AutocompleteOptgroupExample implements OnInit {

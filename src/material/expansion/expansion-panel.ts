@@ -11,6 +11,7 @@ import {CdkAccordionItem} from '@angular/cdk/accordion';
 import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
 import {UniqueSelectionDispatcher} from '@angular/cdk/collections';
 import {TemplatePortal} from '@angular/cdk/portal';
+import {DOCUMENT} from '@angular/common';
 import {
   AfterContentInit,
   ChangeDetectionStrategy,
@@ -18,28 +19,27 @@ import {
   Component,
   ContentChild,
   Directive,
-  EventEmitter,
   ElementRef,
-  Input,
+  EventEmitter,
   Inject,
+  InjectionToken,
+  Input,
   OnChanges,
   OnDestroy,
   Optional,
   Output,
   SimpleChanges,
   SkipSelf,
+  ViewChild,
   ViewContainerRef,
   ViewEncapsulation,
-  ViewChild,
-  InjectionToken,
 } from '@angular/core';
-import {DOCUMENT} from '@angular/common';
 import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 import {Subject} from 'rxjs';
-import {filter, startWith, take, distinctUntilChanged} from 'rxjs/operators';
+import {distinctUntilChanged, filter, startWith, take} from 'rxjs/operators';
+import {MatAccordionBase, MatAccordionTogglePosition, MAT_ACCORDION} from './accordion-base';
 import {matExpansionAnimations} from './expansion-animations';
 import {MatExpansionPanelContent} from './expansion-panel-content';
-import {MAT_ACCORDION, MatAccordionBase, MatAccordionTogglePosition} from './accordion-base';
 
 /** MatExpansionPanel's states. */
 export type MatExpansionPanelState = 'expanded' | 'collapsed';
@@ -76,10 +76,10 @@ export const MAT_EXPANSION_PANEL_DEFAULT_OPTIONS =
  * multiple children of an element with the MatAccordion directive attached.
  */
 @Component({
-  styleUrls: ['./expansion-panel.css'],
+  styleUrls: ['expansion-panel.css'],
   selector: 'mat-expansion-panel',
   exportAs: 'matExpansionPanel',
-  templateUrl: './expansion-panel.html',
+  templateUrl: 'expansion-panel.html',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
   inputs: ['disabled', 'expanded'],

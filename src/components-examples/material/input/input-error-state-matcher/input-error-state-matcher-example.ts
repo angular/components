@@ -13,8 +13,8 @@ export class MyErrorStateMatcher implements ErrorStateMatcher {
 /** @title Input with a custom ErrorStateMatcher */
 @Component({
   selector: 'input-error-state-matcher-example',
-  templateUrl: './input-error-state-matcher-example.html',
-  styleUrls: ['./input-error-state-matcher-example.css'],
+  templateUrl: 'input-error-state-matcher-example.html',
+  styleUrls: ['input-error-state-matcher-example.css'],
 })
 export class InputErrorStateMatcherExample {
   emailFormControl = new FormControl('', [

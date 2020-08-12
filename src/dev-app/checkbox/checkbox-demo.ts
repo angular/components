@@ -8,8 +8,8 @@
 
 import {Component, Directive} from '@angular/core';
 import {MAT_CHECKBOX_CLICK_ACTION} from '@angular/material/checkbox';
-import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 import {ThemePalette} from '@angular/material/core';
+import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 
 
 export interface Task {
@@ -46,7 +46,7 @@ export class AnimationsNoop {
       margin-bottom: 4px;
     }
   `],
-  templateUrl: './nested-checklist.html',
+  templateUrl: 'nested-checklist.html',
 })
 export class MatCheckboxDemoNestedChecklist {
   tasks: Task[] = [

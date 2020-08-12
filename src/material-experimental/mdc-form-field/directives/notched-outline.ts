@@ -30,7 +30,7 @@ import {MDCNotchedOutline} from '@material/notched-outline';
  */
 @Component({
   selector: 'div[matFormFieldNotchedOutline]',
-  templateUrl: './notched-outline.html',
+  templateUrl: 'notched-outline.html',
   host: {
     'class': 'mdc-notched-outline',
     // Besides updating the notch state through the MDC component, we toggle this class through

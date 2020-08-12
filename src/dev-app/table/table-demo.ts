@@ -9,6 +9,6 @@
 import {Component} from '@angular/core';
 
 @Component({
-  templateUrl: './table-demo.html',
+  templateUrl: 'table-demo.html',
 })
 export class TableDemo {}

@@ -5,8 +5,8 @@ import {take} from 'rxjs/operators';
 /** @title Auto-resizing textarea */
 @Component({
   selector: 'text-field-autosize-textarea-example',
-  templateUrl: './text-field-autosize-textarea-example.html',
-  styleUrls: ['./text-field-autosize-textarea-example.css'],
+  templateUrl: 'text-field-autosize-textarea-example.html',
+  styleUrls: ['text-field-autosize-textarea-example.css'],
 })
 export class TextFieldAutosizeTextareaExample {
   constructor(private _ngZone: NgZone) {}
