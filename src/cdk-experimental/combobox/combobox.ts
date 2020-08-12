@@ -1,5 +1,3 @@
-import {BooleanInput, coerceBooleanProperty} from "@angular/cdk/coercion";
-
 /**
  * @license
  * Copyright Google LLC All Rights Reserved.
