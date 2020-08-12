@@ -45,7 +45,6 @@ export class PanelContent<V> implements OnInit {
     }
 
     sendValue(): void {
-        console.log('in send value');
         if (this._parentPanel === null || this._parentPanel === undefined) {
             this._explicitPanel.closePanel(this.value);
         } else {

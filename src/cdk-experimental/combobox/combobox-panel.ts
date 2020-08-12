@@ -28,7 +28,6 @@ export class CdkComboboxPanel<T = unknown> {
 
   /** Tells the parent combobox to closet he panel and sends back the content value. */
   closePanel(data?: T) {
-    console.log('closing panel, sending data');
     this.valueUpdated.next(data);
   }
 
