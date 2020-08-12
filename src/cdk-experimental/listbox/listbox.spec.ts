@@ -16,6 +16,8 @@ import {
 } from '@angular/cdk/testing/private';
 import {A, DOWN_ARROW, END, HOME, SPACE} from '@angular/cdk/keycodes';
 import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {CdkCombobox, CdkComboboxModule} from "@angular/cdk-experimental/combobox";
+
 
 describe('CdkOption and CdkListbox', () => {
 
@@ -762,6 +764,64 @@ describe('CdkOption and CdkListbox', () => {
       expect(testComponent.form.value).toEqual(['solar']);
     });
   });
+
+  describe('inside a combobox', () => {
+    let fixture: ComponentFixture<ListboxInsideCombobox>;
+    let testComponent: ListboxInsideCombobox;
+
+    let listbox: DebugElement;
+    let listboxInstance: CdkListbox<string>;
+
+    let combobox: DebugElement;
+    let comboboxInstance: CdkCombobox<string>;
+    let comboboxElement: HTMLElement;
+
+    let options: DebugElement[];
+    let optionInstances: CdkOption[];
+    let optionElements: HTMLElement[];
+
+    beforeEach(async(() => {
+      TestBed.configureTestingModule({
+        imports: [CdkListboxModule, CdkComboboxModule],
+        declarations: [ListboxInsideCombobox],
+      }).compileComponents();
+    }));
+
+    beforeEach(() => {
+      fixture = TestBed.createComponent(ListboxInsideCombobox);
+      fixture.detectChanges();
+
+      testComponent = fixture.debugElement.componentInstance;
+
+      combobox = fixture.debugElement.query(By.directive(CdkCombobox));
+      comboboxInstance = combobox.injector.get<CdkCombobox<string>>(CdkCombobox);
+      comboboxElement = combobox.nativeElement;
+
+    });
+
+    fit('should update combobox value on selection of an option', () => {
+      expect(comboboxInstance.value).toBeUndefined();
+      expect(comboboxInstance.isOpen()).toBeFalse();
+
+      dispatchMouseEvent(comboboxElement, 'click');
+      fixture.detectChanges();
+
+      listbox = fixture.debugElement.query(By.directive(CdkListbox));
+      listboxInstance = listbox.injector.get<CdkListbox<string>>(CdkListbox);
+
+      options = fixture.debugElement.queryAll(By.directive(CdkOption));
+      optionInstances = options.map(o => o.injector.get<CdkOption>(CdkOption));
+      optionElements = options.map(o => o.nativeElement);
+
+      expect(comboboxInstance.isOpen()).toBeTrue();
+
+      dispatchMouseEvent(optionElements[0], 'click');
+      fixture.detectChanges();
+
+      expect(comboboxInstance.isOpen()).toBeFalse();
+      expect(comboboxInstance.value).toBe('purple');
+    });
+  });
 });
 
 @Component({
@@ -856,6 +916,39 @@ class ListboxControlValueAccessor {
   isDisabled: boolean = false;
   isMultiselectable: boolean = false;
   showListbox: boolean = true;
+  @ViewChild(CdkListbox) listbox: CdkListbox<string>;
+
+  onSelectionChange(event: ListboxSelectionChangeEvent<string>) {
+    this.changedOption = event.option;
+  }
+}
+
+@Component({
+  template: `
+    <button cdkCombobox #toggleCombobox class="example-combobox"
+            [cdkComboboxTriggerFor]="panel"
+            [openActions]="'focus'">
+      No Value
+    </button>
+
+    <ng-template cdkComboboxPanel #panel="cdkComboboxPanel">
+      <select cdkListbox
+              [parentPanel]="panel"
+              [disabled]="isDisabled"
+              [multiple]="isMultiselectable"
+              (selectionChange)="onSelectionChange($event)">
+        <option cdkOption [value]="'purple'">Purple</option>
+        <option cdkOption [value]="'solar'">Solar</option>
+        <option cdkOption [value]="'arc'">Arc</option>
+        <option cdkOption [value]="'stasis'">Stasis</option>
+      </select>
+    </ng-template>
+  `
+})
+class ListboxInsideCombobox {
+  changedOption: CdkOption<string>;
+  isDisabled: boolean = false;
+  isMultiselectable: boolean = false;
   @ViewChild(CdkListbox) listbox: CdkListbox<string>;
 
   onSelectionChange(event: ListboxSelectionChangeEvent<string>) {
