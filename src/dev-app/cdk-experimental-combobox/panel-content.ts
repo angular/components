@@ -1,5 +1,15 @@
-import {Directive, ElementRef, Input, OnInit, Optional} from '@angular/core';
-import {AriaHasPopupValue, CdkComboboxPanel} from "@angular/cdk-experimental/combobox";
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+
+import {Directive, ElementRef, Inject, InjectionToken, Input, OnInit, Optional} from '@angular/core';
+import {AriaHasPopupValue, CdkComboboxPanel} from '@angular/cdk-experimental/combobox';
+
+export const PANEL = new InjectionToken<CdkComboboxPanel>('CdkComboboxPanel');
 
 let id = 0;
 
@@ -28,8 +38,7 @@ export class PanelContent<V> implements OnInit {
     @Input('parentPanel') private readonly _explicitPanel: CdkComboboxPanel;
 
     constructor(
-        private readonly _elementRef: ElementRef,
-        @Optional() readonly _parentPanel?: CdkComboboxPanel<V>,
+        @Optional() @Inject(PANEL) readonly _parentPanel?: CdkComboboxPanel<V>,
     ) { }
 
     ngOnInit() {
