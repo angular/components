@@ -190,8 +190,9 @@ export class CdkCombobox<T = unknown> implements OnDestroy, AfterContentInit {
   private _coerceOpenActionProperty(input: string | OpenAction[]): OpenAction[] {
     let actions: OpenAction[] = [];
     const viableActions = ['focus', 'click', 'downKey', 'toggle'];
+
     if (typeof input === 'string') {
-      const tokens = input.trim().split('\s');
+      const tokens = input.trim().split(/[ ,]+/);
       for (const token of tokens) {
         if (!viableActions.includes(token)) {
           throw Error(`${token} is not a supported open action`);
@@ -201,6 +202,7 @@ export class CdkCombobox<T = unknown> implements OnDestroy, AfterContentInit {
     } else {
       actions = coerceArray(input);
     }
+
     return actions;
   }
 
