@@ -31,6 +31,8 @@ import {
 } from '@angular/cdk/overlay';
 import {Directionality} from '@angular/cdk/bidi';
 import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
+import {Key} from "readline";
+import {DOWN_ARROW} from "@angular/cdk/keycodes";
 
 
 @Directive({
@@ -38,10 +40,14 @@ import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
   exportAs: 'cdkCombobox',
   host: {
     'role': 'combobox',
-    '(click)': 'toggle()',
+    '(click)': 'onClick()',
+    '(focus)': 'onFocus()',
+    '(keydown)': 'keydown($event)',
+    '(blur)': 'attemptClose()',
     '[attr.aria-disabled]': 'disabled',
-    '[attr.aria-controls]': 'contentId',
-    '[attr.aria-haspopup]': 'contentType'
+    '[attr.aria-owns]': 'contentId',
+    '[attr.aria-haspopup]': 'contentType',
+    '[attr.aria-expanded]': 'isOpen()'
   }
 })
 export class CdkCombobox<T = unknown> implements OnDestroy, AfterContentInit {
@@ -102,6 +108,36 @@ export class CdkCombobox<T = unknown> implements OnDestroy, AfterContentInit {
     this.opened.complete();
     this.closed.complete();
     this.panelValueChanged.complete();
+  }
+
+  onClick() {
+    if (this._openActions.includes('toggle')) {
+      this.toggle();
+    } else if (this._openActions.includes('click')) {
+      this.open();
+    }
+  }
+
+  onFocus() {
+    if (!this._openActions.includes('focus')) {
+      return;
+    }
+
+    this.open();
+  }
+
+  keydown(event: KeyboardEvent) {
+    const {keyCode} = event;
+
+    if (keyCode === DOWN_ARROW && this._openActions.includes('downKey')) {
+      this.toggle();
+    }
+  }
+
+  attemptClose() {
+    if (this.contentType !== 'dialog') {
+      this.close();
+    }
   }
 
   /** Toggles the open state of the panel. */
