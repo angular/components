@@ -114,6 +114,18 @@ describe('Key managers', () => {
       expect(keyManager.activeItem).toBeNull();
     });
 
+    it('should reset the activeItem to null if it is removed from the QueryList', () => {
+      expect(keyManager.activeItemIndex).toBe(0);
+      expect(keyManager.activeItem!.getLabel()).toBe('one');
+
+      itemList.items.splice(0);
+      itemList.notifyOnChanges();
+
+      expect(keyManager.activeItemIndex).toBe(-1);
+      expect(keyManager.activeItem).toBeNull();
+
+    });
+
     describe('Key events', () => {
 
       it('should emit tabOut when the tab key is pressed', () => {

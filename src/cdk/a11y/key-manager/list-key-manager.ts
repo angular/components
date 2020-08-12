@@ -72,6 +72,9 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
 
           if (newIndex > -1 && newIndex !== this._activeItemIndex) {
             this._activeItemIndex = newIndex;
+          } else {
+            this._activeItemIndex = -1;
+            this._activeItem = null;
           }
         }
       });
