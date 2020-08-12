@@ -60,10 +60,10 @@ export class CdkCombobox<T = unknown> implements OnDestroy, AfterContentInit {
   private _disabled: boolean = false;
 
   @Input()
-  get openAction(): OpenAction[] {
+  get openActions(): OpenAction[] {
     return this._openActions;
   }
-  set openAction(action: OpenAction[]) {
+  set openActions(action: OpenAction[]) {
     this._openActions = this._coerceOpenActionProperty(action);
   }
   private _openActions: OpenAction[] = ['click'];
@@ -145,6 +145,13 @@ export class CdkCombobox<T = unknown> implements OnDestroy, AfterContentInit {
 
     if (valueChanged) {
       this.panelValueChanged.emit(value);
+      this._setTextContent(value);
+    }
+  }
+
+  private _setTextContent(content: T) {
+    if (typeof content === 'string') {
+      this._elementRef.nativeElement.textContent = content;
     }
   }
 
@@ -191,6 +198,6 @@ export class CdkCombobox<T = unknown> implements OnDestroy, AfterContentInit {
     return actions;
   }
 
-  static ngAcceptInputType_disabled: BooleanInput;
   static ngAcceptInputType_openActions: OpenActionInput;
+  static ngAcceptInputType_disabled: BooleanInput;
 }
