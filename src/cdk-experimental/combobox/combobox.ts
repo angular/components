@@ -5,7 +5,6 @@
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
-import {coerceArray} from "@angular/cdk/coercion/array";
 
 export type OpenAction = 'focus' | 'click' | 'downKey' | 'toggle';
 export type OpenActionInput = OpenAction | OpenAction[] | string | null | undefined;
@@ -30,8 +29,8 @@ import {
   OverlayRef
 } from '@angular/cdk/overlay';
 import {Directionality} from '@angular/cdk/bidi';
-import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
-import {DOWN_ARROW, ESCAPE, TAB} from "@angular/cdk/keycodes";
+import {BooleanInput, coerceBooleanProperty, coerceArray} from '@angular/cdk/coercion';
+import {DOWN_ARROW, ESCAPE} from "@angular/cdk/keycodes";
 
 
 @Directive({
