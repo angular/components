@@ -102,6 +102,8 @@ describe('Combobox', () => {
       dispatchMouseEvent(comboboxElement, 'click');
       fixture.detectChanges();
 
+      expect(comboboxInstance.isOpen()).toBeTrue();
+
       panel = fixture.debugElement.query(By.directive(DialogContent));
       panelElement = panel.nativeElement;
 
@@ -138,7 +140,7 @@ describe('Combobox', () => {
       expect(comboboxInstance.isOpen()).toBeFalse();
     });
 
-    fit('should update textContent on close of panel', () => {
+    it('should update textContent on close of panel', () => {
       expect(comboboxInstance.isOpen()).toBeFalse();
 
       dispatchMouseEvent(comboboxElement, 'click');
