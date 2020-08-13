@@ -47,7 +47,7 @@ export abstract class MatInteractiveListBase<T extends MatListItemBase>
   @HostListener('focusin', ['$event'])
   _handleFocusin(event: FocusEvent) {
     const itemIndex = this._indexForElement(event.target as HTMLElement);
-    const tabIndex = this._itemsArr[itemIndex]?._getHostElement().tabIndex;
+    const tabIndex = this._itemsArr[itemIndex]?._hostElement.tabIndex;
 
     // If the newly focused item is not the designated item that should have received focus
     // first through keyboard interaction, the tabindex of the previously designated list item
@@ -128,7 +128,7 @@ export abstract class MatInteractiveListBase<T extends MatListItemBase>
    */
   private _clearTabindexForAllItems() {
     for (let items of this._itemsArr) {
-      items._elementRef.nativeElement.setAttribute('tabindex', '-1');
+      items._hostElement.setAttribute('tabindex', '-1');
     }
   }
 
@@ -138,16 +138,20 @@ export abstract class MatInteractiveListBase<T extends MatListItemBase>
    */
   protected _resetTabindexToFirstSelectedOrFocusedItem() {
     this._clearTabindexForAllItems();
-    (this._foundation as any)['setTabindexToFirstSelectedOrFocusedItem']();
+    // MDC does not expose the method for setting the tabindex to the first selected
+    // or previously focused item. We can still access the method as private class
+    // members are accessible in the transpiled JavaScript. Tracked upstream with:
+    // TODO: https://github.com/material-components/material-components-web/issues/6375
+    (this._foundation as any).setTabindexToFirstSelectedOrFocusedItem();
   }
 
   _elementAtIndex(index: number): HTMLElement|undefined {
-    return this._itemsArr[index]?._elementRef.nativeElement;
+    return this._itemsArr[index]?._hostElement;
   }
 
   _indexForElement(element: Element | null): number {
     return element ?
-      this._itemsArr.findIndex(i => i._elementRef.nativeElement.contains(element)) : -1;
+      this._itemsArr.findIndex(i => i._hostElement.contains(element)) : -1;
   }
 }
 

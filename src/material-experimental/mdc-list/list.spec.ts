@@ -107,7 +107,7 @@ describe('MDC-based MatList', () => {
     expect(items.length).toBeGreaterThan(0);
 
     items.forEach(item => {
-      dispatchMouseEvent(item._elementRef.nativeElement, 'mousedown');
+      dispatchMouseEvent(item._hostElement, 'mousedown');
       expect(fixture.nativeElement.querySelector('.mat-ripple-element')).toBe(null);
     });
   }));

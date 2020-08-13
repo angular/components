@@ -18,7 +18,6 @@ import {
   EventEmitter,
   forwardRef,
   Inject,
-  InjectionToken,
   Input,
   isDevMode,
   OnChanges,
@@ -35,21 +34,13 @@ import {Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 import {getInteractiveListAdapter, MatInteractiveListBase} from './interactive-list-base';
 import {MatListBase} from './list-base';
-import {MatListOption} from './list-option';
+import {MatListOption, SELECTION_LIST, SelectionList} from './list-option';
 
 const MAT_SELECTION_LIST_VALUE_ACCESSOR: any = {
   provide: NG_VALUE_ACCESSOR,
   useExisting: forwardRef(() => MatSelectionList),
   multi: true
 };
-
-/**
- * Injection token that can be used to reference instances of `MatListOption`. It
- * serves as alternative token to the actual `MatListOption` class which would result
- * in circular references.
- * @docs-private
- */
-export const MAT_LIST_OPTION = new InjectionToken<MatSelectionList>('MatSelectionList');
 
 /** Change event that is being fired whenever the selected state of an option changes. */
 export class MatSelectionListChange {
@@ -74,17 +65,17 @@ export class MatSelectionListChange {
   providers: [
     MAT_SELECTION_LIST_VALUE_ACCESSOR,
     {provide: MatListBase, useExisting: MatSelectionList},
+    {provide: SELECTION_LIST, useExisting: MatSelectionList},
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MatSelectionList extends MatInteractiveListBase<MatListOption>
-    implements ControlValueAccessor, AfterViewInit, OnChanges, OnDestroy {
+    implements SelectionList, ControlValueAccessor, AfterViewInit, OnChanges, OnDestroy {
 
   private _multiple = true;
   private _initialized = false;
 
-  // TODO: Remove cast once https://github.com/angular/angular/pull/37506 is available.
-  @ContentChildren(MAT_LIST_OPTION as any, {descendants: true}) _items: QueryList<MatListOption>;
+  @ContentChildren(MatListOption, {descendants: true}) _items: QueryList<MatListOption>;
 
   /** Emits a change event whenever the selected state of an option changes. */
   @Output() readonly selectionChange: EventEmitter<MatSelectionListChange> =

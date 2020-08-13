@@ -39,6 +39,9 @@ export abstract class MatListItemBase implements AfterContentInit, OnDestroy, Ri
   /** Element reference referring to the primary list item text. */
   abstract _itemText: ElementRef<HTMLElement>;
 
+  /** Host element for the list item. */
+  _hostElement: HTMLElement;
+
   @Input()
   get disableRipple(): boolean {
     return this.disabled || this._disableRipple || this._listBase.disableRipple;
@@ -71,6 +74,8 @@ export abstract class MatListItemBase implements AfterContentInit, OnDestroy, Ri
 
   constructor(public _elementRef: ElementRef<HTMLElement>, protected _ngZone: NgZone,
               private _listBase: MatListBase, private _platform: Platform) {
+    this._hostElement = this._elementRef.nativeElement;
+
     if (!this._listBase._isNonInteractive) {
       this._initInteractiveListItem();
     }
@@ -78,15 +83,14 @@ export abstract class MatListItemBase implements AfterContentInit, OnDestroy, Ri
     // Only interactive list items are commonly focusable, but in some situations,
     // consumers provide a custom tabindex. We still would want to have strong focus
     // indicator support in such scenarios.
-    this._elementRef.nativeElement.classList.add('mat-mdc-focus-indicator');
+    this._hostElement.classList.add('mat-mdc-focus-indicator');
 
-    // If no type attributed is specified for a host `<button>` element, set it to
-    // "button". If a type attribute is already specified, do nothing. We do this
-    // for backwards compatibility with the old list.
+    // If no type attribute is specified for a host `<button>` element, set it to `button`. If a
+    // type attribute is already specified, we do nothing. We do this for backwards compatibility.
     // TODO: Determine if we intend to continue doing this for the MDC-based list.
-    const element = _elementRef.nativeElement;
-    if (element.nodeName.toLowerCase() === 'button' && !element.hasAttribute('type')) {
-      element.setAttribute('type', 'button');
+    if (this._hostElement.nodeName.toLowerCase() === 'button' &&
+        !this._hostElement.hasAttribute('type')) {
+      this._hostElement.setAttribute('type', 'button');
     }
   }
 
@@ -106,16 +110,11 @@ export abstract class MatListItemBase implements AfterContentInit, OnDestroy, Ri
     return this._itemText ? (this._itemText.nativeElement.textContent || '') : '';
   }
 
-  /** Gets the host element of the list item. */
-  _getHostElement(): HTMLElement {
-    return this._elementRef.nativeElement;
-  }
-
   private _initInteractiveListItem() {
-    this._elementRef.nativeElement.classList.add('mat-mdc-list-item-interactive');
+    this._hostElement.classList.add('mat-mdc-list-item-interactive');
     this._rippleRenderer =
-        new RippleRenderer(this, this._ngZone, this._elementRef.nativeElement, this._platform);
-    this._rippleRenderer.setupTriggerEvents(this._elementRef.nativeElement);
+        new RippleRenderer(this, this._ngZone, this._hostElement, this._platform);
+    this._rippleRenderer.setupTriggerEvents(this._hostElement);
   }
 
   /**
@@ -126,8 +125,7 @@ export abstract class MatListItemBase implements AfterContentInit, OnDestroy, Ri
     this._ngZone.runOutsideAngular(() => {
       this._subscriptions.add(this.lines.changes.pipe(startWith(this.lines))
           .subscribe((lines: QueryList<ElementRef<Element>>) => {
-            this._elementRef.nativeElement.classList
-                .toggle('mat-mdc-list-item-single-line', lines.length <= 1);
+            toggleClass(this._hostElement, 'mat-mdc-list-item-single-line', lines.length <= 1);
             lines.forEach((line: ElementRef<Element>, index: number) => {
               toggleClass(line.nativeElement,
                   'mdc-list-item__primary-text', index === 0 && lines.length > 1);

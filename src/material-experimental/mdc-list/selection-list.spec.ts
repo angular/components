@@ -189,7 +189,7 @@ describe('MDC-based MatSelectionList without forms', () => {
     it('should not add the mdc-list-item--selected class (in multiple mode)', () => {
       let testListItem = listOptions[2].injector.get<MatListOption>(MatListOption);
 
-      dispatchMouseEvent(testListItem._elementRef.nativeElement, 'click');
+      dispatchMouseEvent(testListItem._hostElement, 'click');
       fixture.detectChanges();
 
       expect(listOptions[2].nativeElement.classList.contains('mdc-list-item--selected'))
@@ -204,7 +204,7 @@ describe('MDC-based MatSelectionList without forms', () => {
       expect(selectList.selected.length).toBe(0);
       expect(listOptions[0].nativeElement.getAttribute('aria-disabled')).toBe('true');
 
-      dispatchMouseEvent(testListItem._elementRef.nativeElement, 'click');
+      dispatchMouseEvent(testListItem._hostElement, 'click');
       fixture.detectChanges();
 
       expect(selectList.selected.length).toBe(0);
@@ -843,7 +843,7 @@ describe('MDC-based MatSelectionList without forms', () => {
 
       expect(selectList.selected.length).toBe(0);
 
-      dispatchMouseEvent(testListItem._elementRef.nativeElement, 'click');
+      dispatchMouseEvent(testListItem._hostElement, 'click');
       fixture.detectChanges();
 
       expect(selectList.selected.length).toBe(0);
@@ -953,14 +953,14 @@ describe('MDC-based MatSelectionList without forms', () => {
 
       expect(selectList.selected.length).toBe(0);
 
-      dispatchMouseEvent(testListItem1._elementRef.nativeElement, 'click');
+      dispatchMouseEvent(testListItem1._hostElement, 'click');
       fixture.detectChanges();
 
       expect(selectList.selected).toEqual([testListItem1]);
       expect(listOptions[1].nativeElement.classList.contains('mdc-list-item--selected'))
         .toBe(true);
 
-      dispatchMouseEvent(testListItem2._elementRef.nativeElement, 'click');
+      dispatchMouseEvent(testListItem2._hostElement, 'click');
       fixture.detectChanges();
 
       expect(selectList.selected).toEqual([testListItem2]);
@@ -981,12 +981,12 @@ describe('MDC-based MatSelectionList without forms', () => {
 
       expect(selectList.selected.length).toBe(0);
 
-      dispatchMouseEvent(testListItem1._elementRef.nativeElement, 'click');
+      dispatchMouseEvent(testListItem1._hostElement, 'click');
       fixture.detectChanges();
 
       expect(selectList.selected).toEqual([testListItem1]);
 
-      dispatchMouseEvent(testListItem1._elementRef.nativeElement, 'click');
+      dispatchMouseEvent(testListItem1._hostElement, 'click');
       fixture.detectChanges();
 
       expect(selectList.selected).toEqual([testListItem1]);
@@ -1095,7 +1095,7 @@ describe('MDC-based MatSelectionList with forms', () => {
       expect(fixture.componentInstance.selectedOptions.length)
         .toBe(0, 'Expected no options to be selected by default');
 
-      dispatchMouseEvent(listOptions[0]._elementRef.nativeElement, 'click');
+      dispatchMouseEvent(listOptions[0]._hostElement, 'click');
       fixture.detectChanges();
 
       tick();

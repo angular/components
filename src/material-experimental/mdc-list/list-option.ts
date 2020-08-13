@@ -7,6 +7,7 @@
  */
 
 import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
+import {SelectionModel} from '@angular/cdk/collections';
 import {Platform} from '@angular/cdk/platform';
 import {
   ChangeDetectionStrategy,
@@ -14,6 +15,8 @@ import {
   Component,
   ContentChildren,
   ElementRef,
+  Inject,
+  InjectionToken,
   Input,
   NgZone,
   OnDestroy,
@@ -24,8 +27,29 @@ import {
 } from '@angular/core';
 import {MatLine, ThemePalette} from '@angular/material/core';
 import {MatListAvatarCssMatStyler, MatListIconCssMatStyler} from './list';
-import {MatListItemBase} from './list-base';
-import {MAT_LIST_OPTION, MatSelectionList} from './selection-list';
+import {MatListBase, MatListItemBase} from './list-base';
+
+/**
+ * Injection token that can be used to reference instances of an `SelectionList`. It serves
+ * as alternative token to an actual implementation which would result in circular references.
+ * @docs-private
+ */
+export const SELECTION_LIST = new InjectionToken<SelectionList>('SelectionList');
+
+/**
+ * Interface describing the containing list of an list option. This is used to avoid
+ * circular dependencies between the list-option and the selection list.
+ * @docs-private
+ */
+export interface SelectionList extends MatListBase {
+  multiple: boolean;
+  color: ThemePalette;
+  selectedOptions: SelectionModel<MatListOption>;
+  compareWith: (o1: any, o2: any) => boolean;
+  _value: string[]|null;
+  _reportValueChange: () => void;
+  _onTouched: () => void;
+}
 
 /** Unique id for created list options. */
 let uniqueId = 0;
@@ -39,7 +63,7 @@ let uniqueId = 0;
     'role': 'option',
     // As per MDC, only list items in single selection mode should receive the `--selected`
     // class. For multi selection, the checkbox is used as indicator.
-    '[class.mdc-list-item--selected]': 'selected && !selectionList.multiple',
+    '[class.mdc-list-item--selected]': 'selected && !_selectionList.multiple',
     '[class.mat-mdc-list-item-with-avatar]': '_hasIconOrAvatar()',
     '[class.mat-accent]': 'color !== "primary" && color !== "warn"',
     '[class.mat-warn]': 'color === "warn"',
@@ -49,7 +73,6 @@ let uniqueId = 0;
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
-    {provide: MAT_LIST_OPTION, useExisting: MatListOption},
     {provide: MatListItemBase, useExisting: MatListOption},
   ]
 })
@@ -75,7 +98,7 @@ export class MatListOption extends MatListItemBase implements OnInit, OnDestroy 
 
   /** Theme color of the list option. This sets the color of the checkbox. */
   @Input()
-  get color(): ThemePalette { return this._color || this.selectionList.color; }
+  get color(): ThemePalette { return this._color || this._selectionList.color; }
   set color(newValue: ThemePalette) { this._color = newValue; }
   private _color: ThemePalette;
 
@@ -93,13 +116,13 @@ export class MatListOption extends MatListItemBase implements OnInit, OnDestroy 
 
   /** Whether the option is selected. */
   @Input()
-  get selected(): boolean { return this.selectionList.selectedOptions.isSelected(this); }
+  get selected(): boolean { return this._selectionList.selectedOptions.isSelected(this); }
   set selected(value: boolean) {
     const isSelected = coerceBooleanProperty(value);
 
     if (isSelected !== this._selected) {
       this._setSelected(isSelected);
-      this.selectionList._reportValueChange();
+      this._selectionList._reportValueChange();
     }
   }
   private _selected = false;
@@ -108,9 +131,9 @@ export class MatListOption extends MatListItemBase implements OnInit, OnDestroy 
       element: ElementRef,
       ngZone: NgZone,
       platform: Platform,
-      public selectionList: MatSelectionList,
+      @Inject(SELECTION_LIST) public _selectionList: SelectionList,
       private _changeDetectorRef: ChangeDetectorRef) {
-    super(element, ngZone, selectionList, platform);
+    super(element, ngZone, _selectionList, platform);
 
     // By default, we mark all options as unselected. The MDC list foundation will
     // automatically update the attribute based on selection. Note that we need to
@@ -120,7 +143,7 @@ export class MatListOption extends MatListItemBase implements OnInit, OnDestroy 
   }
 
   ngOnInit() {
-    const list = this.selectionList;
+    const list = this._selectionList;
 
     if (list._value && list._value.some(value => list.compareWith(value, this._value))) {
       this._setSelected(true);
@@ -159,7 +182,7 @@ export class MatListOption extends MatListItemBase implements OnInit, OnDestroy 
 
   /** Allows for programmatic focusing of the option. */
   focus(): void {
-    this._elementRef.nativeElement.focus();
+    this._hostElement.focus();
   }
 
   _isReversed(): boolean {
@@ -168,7 +191,7 @@ export class MatListOption extends MatListItemBase implements OnInit, OnDestroy 
 
   /** Whether the list-option has a checkbox. */
   _hasCheckbox() {
-    return this.selectionList.multiple;
+    return this._selectionList.multiple;
   }
 
   /** Whether the list-option has icons or avatars. */
@@ -177,7 +200,7 @@ export class MatListOption extends MatListItemBase implements OnInit, OnDestroy 
   }
 
   _handleBlur() {
-    this.selectionList._onTouched();
+    this._selectionList._onTouched();
   }
 
   /**
@@ -192,9 +215,9 @@ export class MatListOption extends MatListItemBase implements OnInit, OnDestroy 
     this._selected = selected;
 
     if (selected) {
-      this.selectionList.selectedOptions.select(this);
+      this._selectionList.selectedOptions.select(this);
     } else {
-      this.selectionList.selectedOptions.deselect(this);
+      this._selectionList.selectedOptions.deselect(this);
     }
 
     this._changeDetectorRef.markForCheck();
