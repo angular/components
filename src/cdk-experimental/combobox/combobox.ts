@@ -14,7 +14,7 @@ import {
   AfterContentInit,
   Directive,
   ElementRef,
-  EventEmitter,
+  EventEmitter, HostListener,
   Input,
   OnDestroy,
   Optional,
@@ -31,7 +31,6 @@ import {
 } from '@angular/cdk/overlay';
 import {Directionality} from '@angular/cdk/bidi';
 import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
-import {Key} from "readline";
 import {DOWN_ARROW} from "@angular/cdk/keycodes";
 
 
@@ -40,10 +39,10 @@ import {DOWN_ARROW} from "@angular/cdk/keycodes";
   exportAs: 'cdkCombobox',
   host: {
     'role': 'combobox',
+    'class': 'cdk-combobox',
     '(click)': 'onClick()',
     '(focus)': 'onFocus()',
     '(keydown)': 'keydown($event)',
-    '(blur)': 'attemptClose()',
     '[attr.aria-disabled]': 'disabled',
     '[attr.aria-owns]': 'contentId',
     '[attr.aria-haspopup]': 'contentType',
@@ -134,10 +133,19 @@ export class CdkCombobox<T = unknown> implements OnDestroy, AfterContentInit {
     }
   }
 
-  attemptClose() {
-    if (this.contentType !== 'dialog') {
-      this.close();
+  @HostListener('document:click', ['$event'])
+  _attemptClose(event: MouseEvent) {
+    if (this.isOpen()) {
+      let target = event.composedPath ? event.composedPath()[0] : event.target;
+      while (target instanceof Element) {
+        if (target.className.indexOf('cdk-combobox') !== -1) {
+          return;
+        }
+        target = target.parentElement;
+      }
     }
+
+    this.close();
   }
 
   /** Toggles the open state of the panel. */
@@ -153,6 +161,7 @@ export class CdkCombobox<T = unknown> implements OnDestroy, AfterContentInit {
       this.opened.next();
       this._overlayRef = this._overlayRef || this._overlay.create(this._getOverlayConfig());
       this._overlayRef.attach(this._getPanelContent());
+      this._panel?._templateRef.elementRef.nativeElement.focus();
     }
   }
 
@@ -161,6 +170,7 @@ export class CdkCombobox<T = unknown> implements OnDestroy, AfterContentInit {
     if (this.isOpen() && !this.disabled) {
       this.closed.next();
       this._overlayRef.detach();
+      this._elementRef.nativeElement.focus();
     }
   }
 
@@ -185,9 +195,13 @@ export class CdkCombobox<T = unknown> implements OnDestroy, AfterContentInit {
   }
 
   private _setTextContent(content: T) {
-    if (typeof content === 'string') {
-      this._elementRef.nativeElement.textContent = `${content}`;
+    const contentArray = coerceArray(content);
+    const contentString = '';
+    for (const token of contentArray) {
+      contentString.concat(`${token} `);
     }
+
+    this._elementRef.nativeElement.textContent = contentString;
   }
 
   private _getOverlayConfig() {
