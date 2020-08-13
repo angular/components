@@ -30,7 +30,7 @@ import {
 } from '@angular/cdk/overlay';
 import {Directionality} from '@angular/cdk/bidi';
 import {BooleanInput, coerceBooleanProperty, coerceArray} from '@angular/cdk/coercion';
-import {DOWN_ARROW, ESCAPE} from "@angular/cdk/keycodes";
+import {DOWN_ARROW, ESCAPE} from '@angular/cdk/keycodes';
 
 
 @Directive({

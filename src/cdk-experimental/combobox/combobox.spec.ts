@@ -9,13 +9,15 @@ import {
   Optional,
   ViewChild
 } from '@angular/core';
-import {ComponentFixture, TestBed, async, fakeAsync} from '@angular/core/testing';
+import {ComponentFixture, TestBed, async} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {CdkComboboxModule} from './combobox-module';
 import {CdkCombobox} from './combobox';
 import {dispatchKeyboardEvent, dispatchMouseEvent} from '@angular/cdk/testing/private';
-import {AriaHasPopupValue, CdkComboboxPanel} from "@angular/cdk-experimental/combobox/combobox-panel";
-import {DOWN_ARROW, ESCAPE} from "@angular/cdk/keycodes";
+import {
+  AriaHasPopupValue,
+  CdkComboboxPanel} from '@angular/cdk-experimental/combobox/combobox-panel';
+import {DOWN_ARROW, ESCAPE} from '@angular/cdk/keycodes';
 
 describe('Combobox', () => {
   describe('with a basic toggle trigger', () => {
@@ -185,7 +187,6 @@ describe('Combobox', () => {
 
     let combobox: DebugElement;
     let comboboxInstance: CdkCombobox<unknown>;
-    let comboboxElement: HTMLElement;
 
     beforeEach(async(() => {
       TestBed.configureTestingModule({
@@ -202,7 +203,6 @@ describe('Combobox', () => {
 
       combobox = fixture.debugElement.query(By.directive(CdkCombobox));
       comboboxInstance = combobox.injector.get<CdkCombobox<unknown>>(CdkCombobox);
-      comboboxElement = combobox.nativeElement;
     });
 
     it('should coerce single string into open action', () => {
@@ -380,7 +380,6 @@ describe('Combobox', () => {
   </button>
   
   <div id="other-content"></div>
-
   <ng-template cdkComboboxPanel #panel="cdkComboboxPanel">
     <div dialogContent #dialog="dialogContent" [parentPanel]="panel">
       <input #input>
