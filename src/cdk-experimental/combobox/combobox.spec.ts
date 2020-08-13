@@ -26,9 +26,9 @@ describe('Combobox', () => {
     let comboboxInstance: CdkCombobox<unknown>;
     let comboboxElement: HTMLElement;
 
-    let panel: DebugElement;
-    let panelInstance: DialogContent<unknown>;
-    let panelElement: HTMLElement;
+    let dialog: DebugElement;
+    let dialogInstance: DialogContent<unknown>;
+    let dialogElement: HTMLElement;
 
     let applyButton: DebugElement;
     let applyButtonElement: HTMLElement;
@@ -71,10 +71,10 @@ describe('Combobox', () => {
       dispatchMouseEvent(comboboxElement, 'click');
       fixture.detectChanges();
 
-      panel = fixture.debugElement.query(By.directive(DialogContent));
-      panelInstance = panel.injector.get<DialogContent<unknown>>(DialogContent);
+      dialog = fixture.debugElement.query(By.directive(DialogContent));
+      dialogInstance = dialog.injector.get<DialogContent<unknown>>(DialogContent);
 
-      expect(comboboxElement.getAttribute('aria-owns')).toBe(panelInstance.dialogId);
+      expect(comboboxElement.getAttribute('aria-owns')).toBe(dialogInstance.dialogId);
       expect(comboboxElement.getAttribute('aria-haspopup')).toBe('dialog');
     });
 
@@ -92,7 +92,7 @@ describe('Combobox', () => {
       expect(comboboxElement.getAttribute('aria-expanded')).toBe('false');
     });
 
-    fit('should toggle focus upon toggling the panel', () => {
+    it('should toggle focus upon toggling the panel', () => {
       comboboxElement.focus();
       testComponent.actions = 'toggle';
       fixture.detectChanges();
@@ -104,15 +104,15 @@ describe('Combobox', () => {
 
       expect(comboboxInstance.isOpen()).toBeTrue();
 
-      panel = fixture.debugElement.query(By.directive(DialogContent));
-      panelElement = panel.nativeElement;
+      dialog = fixture.debugElement.query(By.directive(DialogContent));
+      dialogElement = dialog.nativeElement;
 
-      expect(document.activeElement).toEqual(panelElement);
+      expect(document.activeElement).toBe(dialogElement);
 
       dispatchMouseEvent(comboboxElement, 'click');
       fixture.detectChanges();
 
-      expect(document.activeElement).not.toEqual(panelElement);
+      expect(document.activeElement).not.toEqual(dialogElement);
     });
 
     it('should have a panel that is closed by default', () => {
@@ -148,7 +148,7 @@ describe('Combobox', () => {
 
       expect(comboboxInstance.isOpen()).toBeTrue();
 
-      testComponent.input.nativeElement.value = 'testing input';
+      testComponent.inputElement.nativeElement.value = 'testing input';
       fixture.detectChanges();
 
       applyButton = fixture.debugElement.query(By.css('#applyButton'));
@@ -389,7 +389,7 @@ describe('Combobox', () => {
   </ng-template>`,
 })
 class ComboboxToggle {
-  @ViewChild('input') input: ElementRef<HTMLInputElement>;
+  @ViewChild('input') inputElement: ElementRef<HTMLInputElement>;
 
   actions: string = 'click';
 }
@@ -402,8 +402,9 @@ let id = 0;
   selector: '[dialogContent]',
   exportAs: 'dialogContent',
   host: {
-    'role': 'role',
-    '[id]': 'dialogId'
+    '[attr.role]': 'role',
+    '[id]': 'dialogId',
+    'tabIndex': '-1'
   }
 })
 export class DialogContent<V> implements OnInit {

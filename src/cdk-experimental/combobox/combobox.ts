@@ -46,7 +46,8 @@ import {DOWN_ARROW, ESCAPE, TAB} from "@angular/cdk/keycodes";
     '[attr.aria-disabled]': 'disabled',
     '[attr.aria-owns]': 'contentId',
     '[attr.aria-haspopup]': 'contentType',
-    '[attr.aria-expanded]': 'isOpen()'
+    '[attr.aria-expanded]': 'isOpen()',
+    '[attr.tabindex]': '_getTabIndex()'
   }
 })
 export class CdkCombobox<T = unknown> implements OnDestroy, AfterContentInit {
@@ -164,7 +165,7 @@ export class CdkCombobox<T = unknown> implements OnDestroy, AfterContentInit {
       this.opened.next();
       this._overlayRef = this._overlayRef || this._overlay.create(this._getOverlayConfig());
       this._overlayRef.attach(this._getPanelContent());
-      this._panel?.focus();
+      this._panel?.focusContent();
     }
   }
 
@@ -186,7 +187,12 @@ export class CdkCombobox<T = unknown> implements OnDestroy, AfterContentInit {
     return !!this.panel;
   }
 
+  _getTabIndex(): string | null {
+    return this.disabled ? null : '0';
+  }
+
   private _setComboboxValue(value: T) {
+
     const valueChanged = (this.value !== value);
     this.value = value;
 
@@ -198,12 +204,7 @@ export class CdkCombobox<T = unknown> implements OnDestroy, AfterContentInit {
 
   private _setTextContent(content: T) {
     const contentArray = coerceArray(content);
-    const contentString = '';
-    for (const token of contentArray) {
-      contentString.concat(`${token} `);
-    }
-
-    this._elementRef.nativeElement.textContent = contentString;
+    this._elementRef.nativeElement.textContent = contentArray.join(' ');
   }
 
   private _getOverlayConfig() {

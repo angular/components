@@ -34,13 +34,11 @@ export class CdkComboboxPanel<T = unknown> {
 
   /** Tells the parent combobox to close the panel and sends back the content value. */
   closePanel(data?: T) {
-    console.log('closing panel');
-    console.log(`data ${data}`);
     this.valueUpdated.next(data);
   }
 
-  focus() {
-    this._elementRef.nativeElement.focus();
+  focusContent() {
+    document.getElementById(this.contentId)?.focus();
   }
 
   /** Registers the content's id and the content type with the panel. */
