@@ -8,7 +8,7 @@
 
 export type AriaHasPopupValue = 'false' | 'true' | 'menu' | 'listbox' | 'tree' | 'grid' | 'dialog';
 
-import {Directive, TemplateRef} from '@angular/core';
+import {Directive, ElementRef, TemplateRef} from '@angular/core';
 import {Subject} from 'rxjs';
 
 @Directive({
@@ -27,11 +27,20 @@ export class CdkComboboxPanel<T = unknown> {
   contentId: string = '';
   contentType: AriaHasPopupValue;
 
-  constructor(readonly _templateRef: TemplateRef<unknown>) {}
+  constructor(
+    readonly _templateRef: TemplateRef<unknown>,
+    readonly _elementRef: ElementRef<HTMLElement>
+  ) {}
 
-  /** Tells the parent combobox to closet he panel and sends back the content value. */
+  /** Tells the parent combobox to close the panel and sends back the content value. */
   closePanel(data?: T) {
+    console.log('closing panel');
+    console.log(`data ${data}`);
     this.valueUpdated.next(data);
+  }
+
+  focus() {
+    this._elementRef.nativeElement.focus();
   }
 
   /** Registers the content's id and the content type with the panel. */

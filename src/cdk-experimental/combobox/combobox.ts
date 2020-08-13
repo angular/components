@@ -31,7 +31,7 @@ import {
 } from '@angular/cdk/overlay';
 import {Directionality} from '@angular/cdk/bidi';
 import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
-import {DOWN_ARROW} from "@angular/cdk/keycodes";
+import {DOWN_ARROW, ESCAPE, TAB} from "@angular/cdk/keycodes";
 
 
 @Directive({
@@ -110,15 +110,15 @@ export class CdkCombobox<T = unknown> implements OnDestroy, AfterContentInit {
   }
 
   onClick() {
-    if (this._openActions.includes('toggle')) {
+    if (this._openActions.indexOf('toggle') !== -1) {
       this.toggle();
-    } else if (this._openActions.includes('click')) {
+    } else if (this._openActions.indexOf('click') !== -1) {
       this.open();
     }
   }
 
   onFocus() {
-    if (!this._openActions.includes('focus')) {
+    if (this._openActions.indexOf('focus') === -1) {
       return;
     }
 
@@ -128,8 +128,11 @@ export class CdkCombobox<T = unknown> implements OnDestroy, AfterContentInit {
   keydown(event: KeyboardEvent) {
     const {keyCode} = event;
 
-    if (keyCode === DOWN_ARROW && this._openActions.includes('downKey')) {
+    if (keyCode === DOWN_ARROW && this._openActions.indexOf('downKey') !== -1) {
       this.toggle();
+    } else if (keyCode === ESCAPE) {
+      event.preventDefault();
+      this.close();
     }
   }
 
@@ -161,7 +164,7 @@ export class CdkCombobox<T = unknown> implements OnDestroy, AfterContentInit {
       this.opened.next();
       this._overlayRef = this._overlayRef || this._overlay.create(this._getOverlayConfig());
       this._overlayRef.attach(this._getPanelContent());
-      this._panel?._templateRef.elementRef.nativeElement.focus();
+      // this._panel?.focus();
     }
   }
 
@@ -170,7 +173,6 @@ export class CdkCombobox<T = unknown> implements OnDestroy, AfterContentInit {
     if (this.isOpen() && !this.disabled) {
       this.closed.next();
       this._overlayRef.detach();
-      this._elementRef.nativeElement.focus();
     }
   }
 
@@ -244,15 +246,14 @@ export class CdkCombobox<T = unknown> implements OnDestroy, AfterContentInit {
     if (typeof input === 'string') {
       const tokens = input.trim().split(/[ ,]+/);
       for (const token of tokens) {
-        if (!viableActions.includes(token)) {
+        if (viableActions.indexOf(token) === -1) {
           throw Error(`${token} is not a supported open action`);
         }
-        actions.push(input as OpenAction);
+        actions.push(token as OpenAction);
       }
     } else {
       actions = coerceArray(input);
     }
-
     return actions;
   }
 
