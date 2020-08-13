@@ -71,6 +71,35 @@ describe('Combobox', () => {
     });
   });
 
+  describe('with a coerce open action property function', () => {
+    let fixture: ComponentFixture<ComboboxToggle>;
+
+    let combobox: DebugElement;
+    let comboboxInstance: CdkCombobox<unknown>;
+    let comboboxElement: HTMLElement;
+
+    beforeEach(async(() => {
+      TestBed.configureTestingModule({
+        imports: [CdkComboboxModule],
+        declarations: [ComboboxToggle],
+      }).compileComponents();
+    }));
+
+    beforeEach(() => {
+      fixture = TestBed.createComponent(ComboboxToggle);
+      fixture.detectChanges();
+
+      combobox = fixture.debugElement.query(By.directive(CdkCombobox));
+      comboboxInstance = combobox.injector.get<CdkCombobox<unknown>>(CdkCombobox);
+      comboboxElement = combobox.nativeElement;
+    });
+
+    it('should have the combobox role', () => {
+      expect(comboboxElement.getAttribute('role')).toBe('combobox');
+    });
+
+  });
+
 });
 
 @Component({
@@ -86,4 +115,19 @@ describe('Combobox', () => {
   </ng-template>`,
 })
 class ComboboxToggle {
+}
+
+@Component({
+  template: `
+  <button cdkCombobox #toggleCombobox class="example-combobox"
+          [cdkComboboxTriggerFor]="panel"
+          [openActions]="'focus'">
+    No Value
+  </button>
+
+  <ng-template cdkComboboxPanel #panel="cdkComboboxPanel">
+    Panel Content
+  </ng-template>`,
+})
+class ComboboxCoercion {
 }
