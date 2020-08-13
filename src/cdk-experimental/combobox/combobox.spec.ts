@@ -28,6 +28,7 @@ describe('Combobox', () => {
 
     let panel: DebugElement;
     let panelInstance: DialogContent<unknown>;
+    let panelElement: HTMLElement;
 
     let applyButton: DebugElement;
     let applyButtonElement: HTMLElement;
@@ -91,23 +92,26 @@ describe('Combobox', () => {
       expect(comboboxElement.getAttribute('aria-expanded')).toBe('false');
     });
 
-    // fit('should toggle focus upon toggling the panel', () => {
-    //   comboboxElement.focus();
-    //   testComponent.actions = 'toggle';
-    //   fixture.detectChanges();
-    //
-    //   expect(document.activeElement).toEqual(comboboxElement);
-    //
-    //   dispatchMouseEvent(comboboxElement, 'click');
-    //   fixture.detectChanges();
-    //
-    //   expect(document.activeElement).toEqual(panelElement);
-    //
-    //   dispatchMouseEvent(comboboxElement, 'click');
-    //   fixture.detectChanges();
-    //
-    //   expect(document.activeElement).toEqual(comboboxElement);
-    // });
+    fit('should toggle focus upon toggling the panel', () => {
+      comboboxElement.focus();
+      testComponent.actions = 'toggle';
+      fixture.detectChanges();
+
+      expect(document.activeElement).toEqual(comboboxElement);
+
+      dispatchMouseEvent(comboboxElement, 'click');
+      fixture.detectChanges();
+
+      panel = fixture.debugElement.query(By.directive(DialogContent));
+      panelElement = panel.nativeElement;
+
+      expect(document.activeElement).toEqual(panelElement);
+
+      dispatchMouseEvent(comboboxElement, 'click');
+      fixture.detectChanges();
+
+      expect(document.activeElement).not.toEqual(panelElement);
+    });
 
     it('should have a panel that is closed by default', () => {
       expect(comboboxInstance.hasPanel()).toBeTrue();
@@ -134,26 +138,26 @@ describe('Combobox', () => {
       expect(comboboxInstance.isOpen()).toBeFalse();
     });
 
-    // fit('should update textContent on close of panel', () => {
-    //   expect(comboboxInstance.isOpen()).toBeFalse();
-    //
-    //   dispatchMouseEvent(comboboxElement, 'click');
-    //   fixture.detectChanges();
-    //
-    //   expect(comboboxInstance.isOpen()).toBeTrue();
-    //
-    //   testComponent.input.nativeElement.value = 'testing input';
-    //   fixture.detectChanges();
-    //
-    //   applyButton = fixture.debugElement.query(By.css('#applyButton'));
-    //   applyButtonElement = applyButton.nativeElement;
-    //
-    //   dispatchMouseEvent(applyButtonElement, 'click');
-    //   fixture.detectChanges();
-    //
-    //   expect(comboboxInstance.isOpen()).toBeFalse();
-    //   expect(comboboxElement.textContent).toEqual('testing input');
-    // });
+    fit('should update textContent on close of panel', () => {
+      expect(comboboxInstance.isOpen()).toBeFalse();
+
+      dispatchMouseEvent(comboboxElement, 'click');
+      fixture.detectChanges();
+
+      expect(comboboxInstance.isOpen()).toBeTrue();
+
+      testComponent.input.nativeElement.value = 'testing input';
+      fixture.detectChanges();
+
+      applyButton = fixture.debugElement.query(By.css('#applyButton'));
+      applyButtonElement = applyButton.nativeElement;
+
+      dispatchMouseEvent(applyButtonElement, 'click');
+      fixture.detectChanges();
+
+      expect(comboboxInstance.isOpen()).toBeFalse();
+      expect(comboboxElement.textContent).toEqual('testing input');
+    });
 
     it('should close panel on outside click', () => {
       expect(comboboxInstance.isOpen()).toBeFalse();
