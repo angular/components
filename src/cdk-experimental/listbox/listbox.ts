@@ -11,7 +11,7 @@ import {
   ContentChildren,
   Directive,
   ElementRef, EventEmitter, forwardRef,
-  Inject,
+  Inject, InjectionToken,
   Input, OnDestroy, OnInit, Optional, Output,
   QueryList
 } from '@angular/core';
@@ -32,6 +32,8 @@ export const CDK_LISTBOX_VALUE_ACCESSOR: any = {
   useExisting: forwardRef(() => CdkListbox),
   multi: true
 };
+
+export const PANEL = new InjectionToken<CdkComboboxPanel>('CdkComboboxPanel');
 
 @Directive({
   selector: '[cdkOption]',
@@ -271,7 +273,7 @@ export class CdkListbox<T> implements AfterContentInit, OnDestroy, OnInit, Contr
   @Input('parentPanel') private readonly _explicitPanel: CdkComboboxPanel;
 
   constructor(
-      @Optional() readonly _parentPanel?: CdkComboboxPanel<T>,
+      @Optional() @Inject(PANEL) readonly _parentPanel?: CdkComboboxPanel<T>,
   ) { }
 
   ngOnInit() {
