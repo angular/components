@@ -286,9 +286,9 @@ export class CdkListbox<T> implements AfterContentInit, OnDestroy, OnInit, Contr
     this.registerWithPanel();
 
     this.optionSelectionChanges.subscribe(event => {
+      this._emitChangeEvent(event.source);
       this._updateSelectionModel(event.source);
       this.setActiveOption(event.source);
-      this._emitChangeEvent(event.source);
       this._updatePanel(event.source);
     });
   }
