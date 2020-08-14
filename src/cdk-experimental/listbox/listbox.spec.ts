@@ -659,6 +659,11 @@ describe('CdkOption and CdkListbox', () => {
       listboxInstance.writeValue(['arc', 'stasis']);
       fixture.detectChanges();
 
+      const selectedValues = listboxInstance.getSelectedValues();
+      expect(selectedValues.length).toBe(2);
+      expect(selectedValues[0]).toBe('arc');
+      expect(selectedValues[1]).toBe('stasis');
+
       expect(optionElements[0].hasAttribute('aria-selected')).toBeFalse();
       expect(optionElements[1].hasAttribute('aria-selected')).toBeFalse();
 

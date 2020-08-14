@@ -176,6 +176,10 @@ export class CdkOption<T = unknown> implements ListKeyManagerOption, Highlightab
     }
   }
 
+  getElementRef() {
+    return this._elementRef;
+  }
+
   /** Sets the active property to true to enable the active css class. */
   setActiveStyles() {
     this._active = true;
@@ -273,6 +277,7 @@ export class CdkListbox<T> implements AfterContentInit, OnDestroy, OnInit, Contr
   @Input('parentPanel') private readonly _explicitPanel: CdkComboboxPanel;
 
   constructor(
+      private readonly _elementRef: ElementRef,
       @Optional() @Inject(PANEL) readonly _parentPanel?: CdkComboboxPanel<T>,
   ) { }
 
@@ -421,6 +426,10 @@ export class CdkListbox<T> implements AfterContentInit, OnDestroy, OnInit, Contr
 
     if (!this.useActiveDescendant) {
       this._activeOption.focus();
+    } else {
+      if (document.activeElement === this._activeOption.getElementRef().nativeElement) {
+        this._elementRef.nativeElement.focus();
+      }
     }
   }
 
@@ -458,6 +467,7 @@ export class CdkListbox<T> implements AfterContentInit, OnDestroy, OnInit, Contr
   /** Updates the key manager's active item to the given option. */
   setActiveOption(option: CdkOption<T>) {
     this._listKeyManager.updateActiveItem(option);
+    this._updateActiveOption();
   }
 
   /**
@@ -486,6 +496,11 @@ export class CdkListbox<T> implements AfterContentInit, OnDestroy, OnInit, Contr
   /** Disables the select. Required to implement ControlValueAccessor. */
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
+  }
+
+  /** Returns the values of the currently selected options. */
+  getSelectedValues(): T[] {
+    return this._options.filter(option => option.selected).map(option => option.value);
   }
 
   /** Selects an option that has the corresponding given value. */
