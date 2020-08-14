@@ -378,7 +378,6 @@ describe('Combobox', () => {
           [openActions]="actions">
     No Value
   </button>
-  
   <div id="other-content"></div>
   <ng-template cdkComboboxPanel #panel="cdkComboboxPanel">
     <div dialogContent #dialog="dialogContent" [parentPanel]="panel">
