@@ -294,7 +294,7 @@ export class CdkListbox<T> implements AfterContentInit, OnDestroy, OnInit, Contr
       this._emitChangeEvent(event.source);
       this._updateSelectionModel(event.source);
       this.setActiveOption(event.source);
-      this._updatePanel(event.source);
+      this._updatePanelForSelection(event.source);
     });
   }
 
@@ -383,7 +383,7 @@ export class CdkListbox<T> implements AfterContentInit, OnDestroy, OnInit, Contr
                       this._selectionModel.deselect(option);
   }
 
-  _updatePanel(option: CdkOption<T>) {
+  _updatePanelForSelection(option: CdkOption<T>) {
     if (!this.multiple) {
       const panel = this._parentPanel || this._explicitPanel;
       option.selected ? panel?.closePanel(option.value) : panel?.closePanel();
