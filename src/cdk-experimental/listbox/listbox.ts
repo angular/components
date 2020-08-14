@@ -305,13 +305,8 @@ export class CdkListbox<T> implements AfterContentInit, OnDestroy, OnInit, Contr
   }
 
   private _registerWithPanel(): void {
-    if (this._parentPanel === null || this._parentPanel === undefined) {
-      if (this._explicitPanel !== null && this._explicitPanel !== undefined) {
-        this._explicitPanel._registerContent(this.id, 'listbox');
-      }
-    } else {
-      this._parentPanel._registerContent(this.id, 'listbox');
-    }
+    const panel = this._parentPanel || this._explicitPanel;
+    panel?._registerContent(this.id, 'listbox');
   }
 
   private _initKeyManager() {
@@ -389,16 +384,9 @@ export class CdkListbox<T> implements AfterContentInit, OnDestroy, OnInit, Contr
   }
 
   _updatePanel(option: CdkOption<T>) {
-    const data = option.selected ? option.value : null;
     if (!this.multiple) {
-      if (this._parentPanel === null || this._parentPanel === undefined) {
-        if (this._explicitPanel !== null && this._explicitPanel !== undefined) {
-          this._explicitPanel.closePanel(data);
-        }
-      } else {
-        option.selected ?
-            this._parentPanel.closePanel(option.value) : this._parentPanel.closePanel();
-      }
+      const panel = this._parentPanel || this._explicitPanel;
+      option.selected ? panel?.closePanel(option.value) : panel?.closePanel();
     }
   }
 
@@ -427,10 +415,6 @@ export class CdkListbox<T> implements AfterContentInit, OnDestroy, OnInit, Contr
 
     if (!this.useActiveDescendant) {
       this._activeOption.focus();
-    } else {
-      if (document.activeElement === this._activeOption.getElementRef().nativeElement) {
-        this._elementRef.nativeElement.focus();
-      }
     }
   }
 
