@@ -116,7 +116,7 @@ export class CdkCombobox<T = unknown> implements OnDestroy, AfterContentInit {
     const {keyCode} = event;
 
     if (keyCode === DOWN_ARROW && this._openActions.indexOf('downKey') !== -1) {
-      this.toggle();
+      this.open();
     } else if (keyCode === ESCAPE) {
       event.preventDefault();
       this.close();
