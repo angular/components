@@ -880,42 +880,6 @@ describe('CdkOption and CdkListbox', () => {
       expect(comboboxInstance.isOpen()).toBeTrue();
       expect(comboboxInstance.value).toBeUndefined();
     });
-
-    it('should not update combobox if the listbox or option is disabled', () => {
-      expect(comboboxInstance.value).toBeUndefined();
-      expect(comboboxInstance.isOpen()).toBeFalse();
-
-      dispatchMouseEvent(comboboxElement, 'click');
-      fixture.detectChanges();
-
-      listbox = fixture.debugElement.query(By.directive(CdkListbox));
-      listboxInstance = listbox.injector.get<CdkListbox<unknown>>(CdkListbox);
-      listboxElement = listbox.nativeElement;
-
-      options = fixture.debugElement.queryAll(By.directive(CdkOption));
-      optionInstances = options.map(o => o.injector.get<CdkOption>(CdkOption));
-      optionElements = options.map(o => o.nativeElement);
-
-      expect(comboboxInstance.isOpen()).toBeTrue();
-      testComponent.isDisabled = true;
-      fixture.detectChanges();
-
-      dispatchMouseEvent(optionElements[0], 'click');
-      fixture.detectChanges();
-
-      expect(comboboxInstance.isOpen()).toBeTrue();
-      expect(comboboxInstance.value).toBeUndefined();
-
-      testComponent.isDisabled = false;
-      optionInstances[0].disabled = true;
-      fixture.detectChanges();
-
-      dispatchMouseEvent(optionElements[0], 'click');
-      fixture.detectChanges();
-
-      expect(comboboxInstance.isOpen()).toBeTrue();
-      expect(comboboxInstance.value).toBeUndefined();
-    });
   });
 });
 
@@ -1022,7 +986,7 @@ class ListboxControlValueAccessor {
   template: `
     <button cdkCombobox #toggleCombobox class="example-combobox"
             [cdkComboboxTriggerFor]="panel"
-            [openActions]="'focus'">
+            [openActions]="'click'">
       No Value
     </button>
 
