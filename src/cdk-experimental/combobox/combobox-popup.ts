@@ -7,7 +7,7 @@
  */
 
 import {Directive, Inject, InjectionToken, Input, OnInit, Optional} from '@angular/core';
-import {AriaHasPopupValue, CdkComboboxPanel} from '@angular/cdk-experimental/combobox';
+import {AriaHasPopupValue, CdkComboboxPanel} from './combobox-panel';
 
 export const PANEL = new InjectionToken<CdkComboboxPanel>('CdkComboboxPanel');
 
