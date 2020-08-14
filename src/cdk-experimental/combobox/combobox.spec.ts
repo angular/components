@@ -29,7 +29,7 @@ describe('Combobox', () => {
     let comboboxElement: HTMLElement;
 
     let dialog: DebugElement;
-    let dialogInstance: DialogContent<unknown>;
+    let dialogInstance: FakeDialogContent<unknown>;
     let dialogElement: HTMLElement;
 
     let applyButton: DebugElement;
@@ -38,7 +38,7 @@ describe('Combobox', () => {
     beforeEach(async(() => {
       TestBed.configureTestingModule({
         imports: [CdkComboboxModule],
-        declarations: [ComboboxToggle, DialogContent],
+        declarations: [ComboboxToggle, FakeDialogContent],
       }).compileComponents();
     }));
 
@@ -73,8 +73,8 @@ describe('Combobox', () => {
       dispatchMouseEvent(comboboxElement, 'click');
       fixture.detectChanges();
 
-      dialog = fixture.debugElement.query(By.directive(DialogContent));
-      dialogInstance = dialog.injector.get<DialogContent<unknown>>(DialogContent);
+      dialog = fixture.debugElement.query(By.directive(FakeDialogContent));
+      dialogInstance = dialog.injector.get<FakeDialogContent<unknown>>(FakeDialogContent);
 
       expect(comboboxElement.getAttribute('aria-owns')).toBe(dialogInstance.dialogId);
       expect(comboboxElement.getAttribute('aria-haspopup')).toBe('dialog');
@@ -106,7 +106,7 @@ describe('Combobox', () => {
 
       expect(comboboxInstance.isOpen()).toBeTrue();
 
-      dialog = fixture.debugElement.query(By.directive(DialogContent));
+      dialog = fixture.debugElement.query(By.directive(FakeDialogContent));
       dialogElement = dialog.nativeElement;
 
       expect(document.activeElement).toBe(dialogElement);
@@ -191,7 +191,7 @@ describe('Combobox', () => {
     beforeEach(async(() => {
       TestBed.configureTestingModule({
         imports: [CdkComboboxModule],
-        declarations: [ComboboxToggle, DialogContent],
+        declarations: [ComboboxToggle, FakeDialogContent],
       }).compileComponents();
     }));
 
@@ -262,7 +262,7 @@ describe('Combobox', () => {
     beforeEach(async(() => {
       TestBed.configureTestingModule({
         imports: [CdkComboboxModule],
-        declarations: [ComboboxToggle, DialogContent],
+        declarations: [ComboboxToggle, FakeDialogContent],
       }).compileComponents();
     }));
 
@@ -405,7 +405,7 @@ let id = 0;
     'tabIndex': '-1'
   }
 })
-export class DialogContent<V> implements OnInit {
+export class FakeDialogContent<V> implements OnInit {
 
   dialogId = `dialog-${id++}`;
   role = 'dialog';

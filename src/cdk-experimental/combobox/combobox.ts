@@ -43,7 +43,7 @@ const allowedOpenActions = ['focus', 'click', 'downKey', 'toggle'];
     'class': 'cdk-combobox',
     '(click)': '_handleInteractions("click")',
     '(focus)': '_handleInteractions("focus")',
-    '(keydown)': 'keydown($event)',
+    '(keydown)': '_keydown($event)',
     '(document:click)': '_attemptClose($event)',
     '[attr.aria-disabled]': 'disabled',
     '[attr.aria-owns]': 'contentId',
@@ -112,7 +112,7 @@ export class CdkCombobox<T = unknown> implements OnDestroy, AfterContentInit {
     this.panelValueChanged.complete();
   }
 
-  keydown(event: KeyboardEvent) {
+  _keydown(event: KeyboardEvent) {
     const {keyCode} = event;
 
     if (keyCode === DOWN_ARROW && this._openActions.indexOf('downKey') !== -1) {
@@ -123,7 +123,7 @@ export class CdkCombobox<T = unknown> implements OnDestroy, AfterContentInit {
     }
   }
 
-  _handleInteractions(interaction: string) {
+  _handleInteractions(interaction: OpenAction) {
     if (interaction === 'click') {
       if (this._openActions.indexOf('toggle') !== -1) {
         this.toggle();
