@@ -14,7 +14,7 @@ import {
   AfterContentInit,
   Directive,
   ElementRef,
-  EventEmitter, HostListener,
+  EventEmitter,
   Input, isDevMode,
   OnDestroy,
   Optional,

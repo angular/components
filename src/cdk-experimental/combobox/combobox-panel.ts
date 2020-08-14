@@ -8,7 +8,7 @@
 
 export type AriaHasPopupValue = 'false' | 'true' | 'menu' | 'listbox' | 'tree' | 'grid' | 'dialog';
 
-import {Directive, ElementRef, TemplateRef} from '@angular/core';
+import {Directive, TemplateRef} from '@angular/core';
 import {Subject} from 'rxjs';
 
 @Directive({
