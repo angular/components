@@ -276,10 +276,7 @@ export class CdkListbox<T> implements AfterContentInit, OnDestroy, OnInit, Contr
 
   @Input('parentPanel') private readonly _explicitPanel: CdkComboboxPanel;
 
-  constructor(
-      private readonly _elementRef: ElementRef,
-      @Optional() @Inject(PANEL) readonly _parentPanel?: CdkComboboxPanel<T>,
-  ) { }
+  constructor(@Optional() @Inject(PANEL) readonly _parentPanel?: CdkComboboxPanel<T>) { }
 
   ngOnInit() {
     this._selectionModel = new SelectionModel<CdkOption<T>>(this.multiple);
