@@ -28,8 +28,7 @@ export class CdkComboboxPanel<T = unknown> {
   contentType: AriaHasPopupValue;
 
   constructor(
-    readonly _templateRef: TemplateRef<unknown>,
-    readonly _elementRef: ElementRef<HTMLElement>
+    readonly _templateRef: TemplateRef<unknown>
   ) {}
 
   /** Tells the parent combobox to close the panel and sends back the content value. */
@@ -37,7 +36,9 @@ export class CdkComboboxPanel<T = unknown> {
     this.valueUpdated.next(data);
   }
 
+  // TODO: instead of using a focus function, potentially use cdk/a11y focus trapping
   focusContent() {
+    // TODO: Use an injected document here
     document.getElementById(this.contentId)?.focus();
   }
 
