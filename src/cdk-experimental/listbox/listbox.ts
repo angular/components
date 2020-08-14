@@ -22,7 +22,7 @@ import {SelectionChange, SelectionModel} from '@angular/cdk/collections';
 import {defer, merge, Observable, Subject} from 'rxjs';
 import {startWith, switchMap, takeUntil} from 'rxjs/operators';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
-import {CdkComboboxPanel} from "@angular/cdk-experimental/combobox";
+import {CdkComboboxPanel} from '@angular/cdk-experimental/combobox';
 
 let nextId = 0;
 let listboxId = 0;
@@ -288,7 +288,7 @@ export class CdkListbox<T> implements AfterContentInit, OnDestroy, OnInit, Contr
   ngAfterContentInit() {
     this._initKeyManager();
     this._initSelectionModel();
-    this.registerWithPanel();
+    this._registerWithPanel();
 
     this.optionSelectionChanges.subscribe(event => {
       this._emitChangeEvent(event.source);
@@ -304,7 +304,7 @@ export class CdkListbox<T> implements AfterContentInit, OnDestroy, OnInit, Contr
     this._destroyed.complete();
   }
 
-  private registerWithPanel(): void {
+  private _registerWithPanel(): void {
     if (this._parentPanel === null || this._parentPanel === undefined) {
       if (this._explicitPanel !== null && this._explicitPanel !== undefined) {
         this._explicitPanel._registerContent(this.id, 'listbox');
@@ -396,7 +396,8 @@ export class CdkListbox<T> implements AfterContentInit, OnDestroy, OnInit, Contr
           this._explicitPanel.closePanel(data);
         }
       } else {
-        option.selected ? this._parentPanel.closePanel(option.value) : this._parentPanel.closePanel();
+        option.selected ?
+            this._parentPanel.closePanel(option.value) : this._parentPanel.closePanel();
       }
     }
   }

@@ -16,7 +16,7 @@ import {
 } from '@angular/cdk/testing/private';
 import {A, DOWN_ARROW, END, HOME, SPACE} from '@angular/cdk/keycodes';
 import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {CdkCombobox, CdkComboboxModule} from "@angular/cdk-experimental/combobox";
+import {CdkCombobox, CdkComboboxModule} from '@angular/cdk-experimental/combobox';
 
 
 describe('CdkOption and CdkListbox', () => {
