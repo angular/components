@@ -34,6 +34,7 @@ entryPoints = [
     "mdc-snack-bar",
     "mdc-table",
     "mdc-tabs",
+    "mdc-tabs/testing",
     "menubar",
     "popover-edit",
     "selection",
