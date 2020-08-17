@@ -28,12 +28,7 @@ export class MatTreeHarness extends ComponentHarness {
   }
 
   /** Gets all of the nodes in the tree. */
-  async getAllDescendants(filter: TreeNodeHarnessFilters = {}): Promise<MatTreeNodeHarness[]> {
-    return this.locatorForAll(MatTreeNodeHarness.with(filter))();
-  }
-
-  /** Gets the immediate children nodes in the tree. */
-  async getChildren(filter: TreeNodeHarnessFilters = {level: 1}): Promise<MatTreeNodeHarness[]> {
+  async getNodes(filter: TreeNodeHarnessFilters = {}): Promise<MatTreeNodeHarness[]> {
     return this.locatorForAll(MatTreeNodeHarness.with(filter))();
   }
 }

@@ -39,29 +39,23 @@ export function runHarnessTests(
     const trees = await loader.getAllHarnesses(treeHarness);
     const flatTree = trees[0];
     const nestedTree = trees[1];
-    const flatTreeDescendants = await flatTree.getAllDescendants();
-    const flatTreeChildren = await flatTree.getChildren();
-    const nestedDescendants = await nestedTree.getAllDescendants();
-    const nestedTreeChildren = await nestedTree.getChildren();
+    const flatTreeDescendants = await flatTree.getNodes();
+    const nestedDescendants = await nestedTree.getNodes();
 
     // flat nodes are not rendered until expanded
     expect(flatTreeDescendants.length).toBe(2);
-    expect(flatTreeChildren.length).toBe(2);
 
-    await flatTreeChildren[0].expand();
+    await flatTreeDescendants[0].expand();
 
-    expect((await flatTree.getAllDescendants()).length).toBe(5);
-    // number of immediate children should stay the same
-    expect((await flatTree.getChildren()).length).toBe(2);
+    expect((await flatTree.getNodes()).length).toBe(5);
 
     expect(nestedDescendants.length).toBe(8);
-    expect(nestedTreeChildren.length).toBe(2);
   });
 
   it('should correctly get correct node with text (flat tree)', async () => {
     const trees = await loader.getAllHarnesses(treeHarness);
     const flatTree = trees[0];
-    const flatTreeNodes = await flatTree.getChildren({text: /Flat Group/});
+    const flatTreeNodes = await flatTree.getNodes({text: /Flat Group/});
     expect(flatTreeNodes.length).toBe(2);
     const secondGroup = flatTreeNodes[0];
 
@@ -74,12 +68,12 @@ export function runHarnessTests(
   it('should correctly get correct node with text (nested tree)', async () => {
     const trees = await loader.getAllHarnesses(treeHarness);
     const nestedTree = trees[1];
-    const nestedTreeNodes = await nestedTree.getAllDescendants({text: /Group/});
+    const nestedTreeNodes = await nestedTree.getNodes({text: /2./});
     expect(nestedTreeNodes.length).toBe(3);
-    const thirdGroup = nestedTreeNodes[2];
+    const thirdGroup = nestedTreeNodes[1];
 
-    expect(await thirdGroup.getText()).toBe('Nested Group 2.1');
-    expect(await thirdGroup.getLevel()).toBe(2);
+    expect(await thirdGroup.getText()).toBe('Nested Leaf 2.1.1');
+    expect(await thirdGroup.getLevel()).toBe(3);
     expect(await thirdGroup.isDisabled()).toBe(false);
     expect(await thirdGroup.isExpanded()).toBe(false);
   });
@@ -87,7 +81,7 @@ export function runHarnessTests(
   it('should toggle expansion', async () => {
     const trees = await loader.getAllHarnesses(treeHarness);
     const nestedTree = trees[1];
-    const nestedTreeNodes = await nestedTree.getChildren();
+    const nestedTreeNodes = await nestedTree.getNodes();
     const firstGroup = nestedTreeNodes[0];
 
     expect(await firstGroup.isExpanded()).toBe(false);

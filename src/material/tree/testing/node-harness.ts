@@ -40,7 +40,7 @@ export class MatTreeNodeHarness extends ComponentHarness {
     return coerceBooleanProperty(await (await this.host()).getProperty('aria-disabled'));
   }
 
-  /** Gets the level of the tree node. Noe that this gets the aria-level and is 1 indexed. */
+  /** Gets the level of the tree node. Note that this gets the aria-level and is 1 indexed. */
   async getLevel(): Promise<number> {
     return coerceNumberProperty(await (await this.host()).getAttribute('aria-level'));
   }
