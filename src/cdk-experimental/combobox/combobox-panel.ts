@@ -20,7 +20,7 @@ import {Subject} from 'rxjs';
 })
 export class CdkComboboxPanel<T = unknown> {
 
-  valueUpdated: Subject<T> = new Subject<T>();
+  valueUpdated: Subject<T | T[]> = new Subject<T | T[]>();
   contentIdUpdated: Subject<string> = new Subject<string>();
   contentTypeUpdated: Subject<AriaHasPopupValue> = new Subject<AriaHasPopupValue>();
 
@@ -32,7 +32,7 @@ export class CdkComboboxPanel<T = unknown> {
   ) {}
 
   /** Tells the parent combobox to close the panel and sends back the content value. */
-  closePanel(data?: T) {
+  closePanel(data?: T | T[]) {
     this.valueUpdated.next(data);
   }
 

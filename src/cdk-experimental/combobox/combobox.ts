@@ -5,6 +5,7 @@
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
+import {coerce} from "semver";
 
 export type OpenAction = 'focus' | 'click' | 'downKey' | 'toggle';
 export type OpenActionInput = OpenAction | OpenAction[] | string | null | undefined;
@@ -58,7 +59,7 @@ export class CdkCombobox<T = unknown> implements OnDestroy, AfterContentInit {
   private _panel: CdkComboboxPanel<T> | undefined;
 
   @Input()
-  value: T;
+  value: T | T[];
 
   @Input()
   get disabled(): boolean { return this._disabled; }
@@ -74,9 +75,14 @@ export class CdkCombobox<T = unknown> implements OnDestroy, AfterContentInit {
   }
   private _openActions: OpenAction[] = ['click'];
 
+  @Input()
+  get autoSetText(): boolean { return this._autoSetText; }
+  set autoSetText(value: boolean) { this._autoSetText = coerceBooleanProperty(value); }
+  private _autoSetText: boolean = true;
+
   @Output('comboboxPanelOpened') readonly opened: EventEmitter<void> = new EventEmitter<void>();
   @Output('comboboxPanelClosed') readonly closed: EventEmitter<void> = new EventEmitter<void>();
-  @Output('panelValueChanged') readonly panelValueChanged: EventEmitter<T> = new EventEmitter<T>();
+  @Output('panelValueChanged') readonly panelValueChanged: EventEmitter<T[]> = new EventEmitter<T[]>();
 
   private _overlayRef: OverlayRef;
   private _panelContent: TemplatePortal;
@@ -189,18 +195,20 @@ export class CdkCombobox<T = unknown> implements OnDestroy, AfterContentInit {
     return this.disabled ? null : '0';
   }
 
-  private _setComboboxValue(value: T) {
+  private _setComboboxValue(value: T | T[]) {
 
     const valueChanged = (this.value !== value);
     this.value = value;
 
     if (valueChanged) {
-      this.panelValueChanged.emit(value);
-      this._setTextContent(value);
+      this.panelValueChanged.emit(coerceArray(value));
+      if (this._autoSetText) {
+        this._setTextContent(value);
+      }
     }
   }
 
-  private _setTextContent(content: T) {
+  private _setTextContent(content: T | T[]) {
     const contentArray = coerceArray(content);
     this._elementRef.nativeElement.textContent = contentArray.join(' ');
   }
