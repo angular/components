@@ -40,6 +40,7 @@ export const PANEL = new InjectionToken<CdkComboboxPanel>('CdkComboboxPanel');
   exportAs: 'cdkOption',
   host: {
     'role': 'option',
+    'class': 'cdk-option',
     '(click)': 'toggle()',
     '(focus)': 'activate()',
     '(blur)': 'deactivate()',
@@ -199,6 +200,7 @@ export class CdkOption<T = unknown> implements ListKeyManagerOption, Highlightab
   exportAs: 'cdkListbox',
   host: {
     'role': 'listbox',
+    'class': 'cdk-listbox',
     '[id]': 'id',
     '(keydown)': '_keydown($event)',
     '[attr.tabindex]': '_tabIndex',
@@ -231,7 +233,7 @@ export class CdkListbox<T> implements AfterContentInit, OnDestroy, OnInit, Contr
 
   private _disabled: boolean = false;
   private _multiple: boolean = false;
-  private _useActiveDescendant: boolean = true;
+  private _useActiveDescendant: boolean = false;
   private _activeOption: CdkOption<T>;
   private readonly _destroyed = new Subject<void>();
 
