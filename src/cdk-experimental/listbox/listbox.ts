@@ -411,8 +411,6 @@ export class CdkListbox<T> implements AfterContentInit, OnDestroy, OnInit, Contr
     const panel = this._parentPanel || this._explicitPanel;
     if (!this.multiple) {
       option.selected ? panel?.closePanel(option.value) : panel?.closePanel();
-    } else {
-      panel?.closePanel(this.getSelectedValues());
     }
   }
 
