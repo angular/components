@@ -5,8 +5,21 @@ Toggle Combobox!
 </button>
 
 <ng-template cdkComboboxPanel #panel="cdkComboboxPanel">
-    <div panelContent [parentPanel]="panel">
+    <div cdkComboboxPopup [parentPanel]="panel" [firstFocus]="input">
         <input #input>
         <button (click)="panel.closePanel(input.value)">Apply</button>
+    </div>
+</ng-template>
+
+<br>
+<br>
+<br>
+
+<input cdkCombobox class="example-combobox" [cdkComboboxTriggerFor]="inputPanel" [openActions]="'toggle'">
+
+<ng-template cdkComboboxPanel #inputPanel="cdkComboboxPanel">
+    <div panelContent [parentPanel]="inputPanel">
+        <input #inputTwo>
+        <button (click)="inputPanel.closePanel(inputTwo.value)">Apply</button>
     </div>
 </ng-template>

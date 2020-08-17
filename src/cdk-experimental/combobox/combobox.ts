@@ -5,7 +5,6 @@
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
-import {coerce} from "semver";
 
 export type OpenAction = 'focus' | 'click' | 'downKey' | 'toggle';
 export type OpenActionInput = OpenAction | OpenAction[] | string | null | undefined;
@@ -109,6 +108,9 @@ export class CdkCombobox<T = unknown> implements OnDestroy, AfterContentInit {
     this._panel?.contentTypeUpdated.subscribe(type => {
       this.contentType = type;
     });
+
+    console.log(this._elementRef.nativeElement.tagName);
+    console.log(this._elementRef.nativeElement.nodeName);
   }
 
   ngOnDestroy() {
@@ -169,7 +171,9 @@ export class CdkCombobox<T = unknown> implements OnDestroy, AfterContentInit {
       this.opened.next();
       this._overlayRef = this._overlayRef || this._overlay.create(this._getOverlayConfig());
       this._overlayRef.attach(this._getPanelContent());
-      this._panel?.focusContent();
+      // if (!this._isTextTrigger()) {
+        this._panel?.focusContent();
+      // }
     }
   }
 
@@ -211,6 +215,11 @@ export class CdkCombobox<T = unknown> implements OnDestroy, AfterContentInit {
   private _setTextContent(content: T | T[]) {
     const contentArray = coerceArray(content);
     this._elementRef.nativeElement.textContent = contentArray.join(' ');
+  }
+
+  private _isTextTrigger() {
+    const tagName = this._elementRef.nativeElement.tagName.toLowerCase();
+    return tagName === 'input' || tagName === 'textarea' ? true : false;
   }
 
   private _getOverlayConfig() {
