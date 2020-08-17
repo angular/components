@@ -21,9 +21,10 @@ import {
   OriginConnectionPosition,
   OverlayConnectionPosition,
 } from './connected-position';
-import {FlexibleConnectedPositionStrategy, Scheduler} from './flexible-connected-position-strategy';
+import {FlexibleConnectedPositionStrategy} from './flexible-connected-position-strategy';
 import {PositionStrategy} from './position-strategy';
 import {_CoalescedStyleScheduler} from './coalesced-style-scheduler';
+import {Scheduler} from './scheduler';
 
 /**
  * A strategy for positioning overlays. Using this strategy, an overlay is given an

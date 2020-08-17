@@ -23,6 +23,7 @@ import {coerceCssPixelValue, coerceArray} from '@angular/cdk/coercion';
 import {Platform} from '@angular/cdk/platform';
 import {OverlayContainer} from '../overlay-container';
 import {_CoalescedStyleScheduler} from './coalesced-style-scheduler';
+import {Schedulable, ScheduleType, Scheduler} from './scheduler';
 
 
 // TODO: refactor clipping detection into a separate thing (part of scrolling module)
@@ -1216,17 +1217,6 @@ export interface ConnectedPosition {
   panelClass?: string | string[];
 }
 
-export interface Scheduler {
-  scheduleStyle(name: string, value: string): void;
-  schedule(task: () => void): void;
-  flushStyles(): void;
-}
-
-export interface Schedulable {
-  withStyleScheduler(scheduler: Scheduler): void;
-}
-
-type ScheduleType = Scheduler | undefined;
 
 /** Shallow-extends a stylesheet object with another stylesheet object, but schedules the process */
 function extendStyles(
