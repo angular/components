@@ -255,7 +255,7 @@ export class CdkListbox<T> implements AfterContentInit, OnDestroy, OnInit, Contr
   @Output() readonly selectionChange: EventEmitter<ListboxSelectionChangeEvent<T>> =
       new EventEmitter<ListboxSelectionChangeEvent<T>>();
 
-  @Input() id = `cdk-option-${listboxId++}`;
+  @Input() id = `cdk-listbox-${listboxId++}`;
 
   /**
    * Whether the listbox allows multiple options to be selected.
