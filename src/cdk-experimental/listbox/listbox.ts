@@ -16,7 +16,7 @@ import {
   QueryList
 } from '@angular/core';
 import {ActiveDescendantKeyManager, Highlightable, ListKeyManagerOption} from '@angular/cdk/a11y';
-import {DOWN_ARROW, END, ENTER, HOME, SPACE, UP_ARROW} from '@angular/cdk/keycodes';
+import {DOWN_ARROW, END, ENTER, HOME, LEFT_ARROW, RIGHT_ARROW, SPACE, UP_ARROW} from '@angular/cdk/keycodes';
 import {BooleanInput, coerceBooleanProperty, coerceArray} from '@angular/cdk/coercion';
 import {SelectionChange, SelectionModel} from '@angular/cdk/collections';
 import {defer, merge, Observable, Subject} from 'rxjs';
@@ -381,7 +381,10 @@ export class CdkListbox<T> implements AfterContentInit, OnDestroy, OnInit, Contr
     }
 
     /** Will select an option if shift was pressed while navigating to the option */
-    const isArrow = (keyCode === UP_ARROW || keyCode === DOWN_ARROW);
+    const isArrow = (keyCode === UP_ARROW
+        || keyCode === DOWN_ARROW
+        || keyCode === LEFT_ARROW
+        || keyCode === RIGHT_ARROW);
     if (isArrow && event.shiftKey && previousActiveIndex !== this._listKeyManager.activeItemIndex) {
       this._toggleActiveOption();
     }
@@ -449,7 +452,7 @@ export class CdkListbox<T> implements AfterContentInit, OnDestroy, OnInit, Contr
       // Deselect all options instead of arbitrarily keeping one of the selected options.
       this.setAllSelected(false);
     } else if (!this.multiple && value) {
-      this._selectionModel = new SelectionModel<CdkOption<T>>(value, this._selectionModel.selected);
+      this._selectionModel = new SelectionModel<CdkOption<T>>(value, this._selectionModel?.selected);
     }
   }
 
