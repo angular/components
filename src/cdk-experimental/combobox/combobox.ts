@@ -75,6 +75,7 @@ export class CdkCombobox<T = unknown> implements OnDestroy, AfterContentInit {
   }
   private _openActions: OpenAction[] = ['click'];
 
+  /** Whether the textContent is automatically updated upon change of the combobox value. */
   @Input()
   get autoSetText(): boolean { return this._autoSetText; }
   set autoSetText(value: boolean) { this._autoSetText = coerceBooleanProperty(value); }
@@ -142,6 +143,7 @@ export class CdkCombobox<T = unknown> implements OnDestroy, AfterContentInit {
     }
   }
 
+  /** Handles click or focus interactions. */
   _handleInteractions(interaction: OpenAction) {
     if (interaction === 'click') {
       if (this._openActions.indexOf('toggle') !== -1) {
@@ -156,6 +158,7 @@ export class CdkCombobox<T = unknown> implements OnDestroy, AfterContentInit {
     }
   }
 
+  /** Given a click in the document, determines if the click was inside a combobox. */
   _attemptClose(event: MouseEvent) {
     if (this.isOpen()) {
       let target = event.composedPath ? event.composedPath()[0] : event.target;
@@ -230,6 +233,7 @@ export class CdkCombobox<T = unknown> implements OnDestroy, AfterContentInit {
   }
 
   private _isTextTrigger() {
+    // TODO: Should check if the trigger is contenteditable.
     const tagName = this._elementRef.nativeElement.tagName.toLowerCase();
     return tagName === 'input' || tagName === 'textarea' ? true : false;
   }

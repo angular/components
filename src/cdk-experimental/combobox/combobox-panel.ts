@@ -44,6 +44,7 @@ export class CdkComboboxPanel<T = unknown> {
 
   /** Registers the content's id and the content type with the panel. */
   _registerContent(contentId: string, contentType: AriaHasPopupValue) {
+    // If content has already been registered, no further contentIds are registered.
     if (this.contentType && this.contentType !== contentType) {
       return;
     }
