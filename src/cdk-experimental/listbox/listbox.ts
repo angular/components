@@ -202,6 +202,7 @@ export class CdkOption<T = unknown> implements ListKeyManagerOption, Highlightab
     'role': 'listbox',
     'class': 'cdk-listbox',
     '[id]': 'id',
+    '(focus)': '_focusActiveOption()',
     '(keydown)': '_keydown($event)',
     '[attr.tabindex]': '_tabIndex',
     '[attr.aria-disabled]': 'disabled',
@@ -234,6 +235,7 @@ export class CdkListbox<T> implements AfterContentInit, OnDestroy, OnInit, Contr
   private _disabled: boolean = false;
   private _multiple: boolean = false;
   private _useActiveDescendant: boolean = false;
+  private _autoFocus: boolean = true;
   private _activeOption: CdkOption<T>;
   private readonly _destroyed = new Subject<void>();
 
@@ -272,6 +274,15 @@ export class CdkListbox<T> implements AfterContentInit, OnDestroy, OnInit, Contr
   }
   set useActiveDescendant(shouldUseActiveDescendant: boolean) {
     this._useActiveDescendant = coerceBooleanProperty(shouldUseActiveDescendant);
+  }
+
+  /** Whether on focus the listbox will focus its active option, default to true. */
+  @Input()
+  get autoFocus(): boolean {
+    return this._autoFocus;
+  }
+  set autoFocus(shouldAutoFocus: boolean) {
+    this._autoFocus = coerceBooleanProperty(shouldAutoFocus);
   }
 
   @Input() compareWith: (o1: T, o2: T) => boolean = (a1, a2) => a1 === a2;
@@ -424,6 +435,18 @@ export class CdkListbox<T> implements AfterContentInit, OnDestroy, OnInit, Contr
       this.setAllSelected(false);
     } else if (!this.multiple && value) {
       this._selectionModel = new SelectionModel<CdkOption<T>>(value, this._selectionModel.selected);
+    }
+  }
+
+  _focusActiveOption() {
+    if (!this.autoFocus) {
+      return;
+    }
+
+    if (this._listKeyManager.activeItem) {
+      this.setActiveOption(this._listKeyManager.activeItem);
+    } else if (this._options.first) {
+      this.setActiveOption(this._options.first);
     }
   }
 
