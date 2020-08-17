@@ -138,11 +138,7 @@ export class CdkCombobox<T = unknown> implements OnDestroy, AfterContentInit {
       event.preventDefault();
       this.close();
     } else if (keyCode === TAB) {
-      if (this.contentType === 'listbox') {
-        this.close();
-      } else {
-        this._panel?.focusContent();
-      }
+      this.close();
     }
   }
 
