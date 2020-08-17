@@ -30,13 +30,13 @@ export async function benchmark(id: string, callback: Function) {
  * @param callback
  */
 async function benchmarkWithBenchpress(id: string, callback: Function) {
-	await runBenchmark({
-		id,
-		url: '',
-		ignoreBrowserSynchronization: true,
-		params: [],
-		work: async () => await callback(),
-	});
+  await runBenchmark({
+    id,
+    url: '',
+    ignoreBrowserSynchronization: true,
+    params: [],
+    work: async () => await callback(),
+  });
 }
 
 /**
@@ -46,7 +46,7 @@ async function benchmarkWithBenchpress(id: string, callback: Function) {
  * @param callback
  */
 async function benchmarkWithConsoleAPI(id: string, callback: Function) {
-	console.time(id);
-	await callback();
-	console.timeEnd(id);
+  console.time(id);
+  await callback();
+  console.timeEnd(id);
 }

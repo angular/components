@@ -44,14 +44,14 @@ describe('performance baseline for the testbed harness', () => {
   it('(baseline) should click the middle button', async () => {
     await benchmark('(baseline) click middle button', async () => {
       const button = getButtonWithText(MIDDLE_BUTTON);
-      await button.click();
+      button.click();
     });
   });
 
   it('(baseline) should click the last button', async () => {
     await benchmark('(baseline) click last button', async () => {
       const button = getButtonWithText(LAST_BUTTON);
-      await button.click();
+      button.click();
     });
   });
 
@@ -60,7 +60,7 @@ describe('performance baseline for the testbed harness', () => {
       const buttons = document.getElementsByTagName('button');
       for (let i = 0; i < buttons.length; i++) {
         const button = buttons[i];
-        await button.click();
+        button.click();
       }
     });
   });
@@ -128,8 +128,8 @@ describe('performance tests for the testbed harness', () => {
 @Component({
   template: `
     <button *ngFor="let val of vals" mat-button> {{ val }} </button>
-	`,
+  `,
 })
 export class ButtonHarnessTest {
-	vals = Array.from({ length: NUM_BUTTONS }, (_, i) => i);
+  vals = Array.from({ length: NUM_BUTTONS }, (_, i) => i);
 }

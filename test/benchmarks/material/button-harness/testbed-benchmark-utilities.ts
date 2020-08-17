@@ -6,14 +6,14 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
- /**
+/**
  * Records the performance of the given function.
  *
  * @param id A unique identifier.
  * @param callback A function whose performance will be recorded.
  */
 export async function benchmark(id: string, callback: Function) {
-	const t0 = performance.now();
+  const t0 = performance.now();
   await callback();
   const t1 = performance.now();
   console.warn(`${id}: ${t1 - t0}`);

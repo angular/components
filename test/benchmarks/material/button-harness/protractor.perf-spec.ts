@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {HarnessLoader, HarnessPredicate} from '@angular/cdk/testing';
+import {HarnessLoader} from '@angular/cdk/testing';
 import {MatButtonHarness} from '@angular/material/button/testing/button-harness';
 import {ProtractorHarnessEnvironment} from '@angular/cdk/testing/protractor';
 import {$$, element, by, browser} from 'protractor';
