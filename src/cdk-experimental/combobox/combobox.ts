@@ -108,9 +108,6 @@ export class CdkCombobox<T = unknown> implements OnDestroy, AfterContentInit {
     this._panel?.contentTypeUpdated.subscribe(type => {
       this.contentType = type;
     });
-
-    console.log(this._elementRef.nativeElement.tagName);
-    console.log(this._elementRef.nativeElement.nodeName);
   }
 
   ngOnDestroy() {
@@ -122,8 +119,13 @@ export class CdkCombobox<T = unknown> implements OnDestroy, AfterContentInit {
   _keydown(event: KeyboardEvent) {
     const {keyCode} = event;
 
-    if (keyCode === DOWN_ARROW && this._openActions.indexOf('downKey') !== -1) {
-      this.open();
+    if (keyCode === DOWN_ARROW) {
+      if (this.isOpen()) {
+        this._panel?.focusContent();
+      } else if (this._openActions.indexOf('downKey') !== -1) {
+        this.open();
+      }
+
     } else if (keyCode === ESCAPE) {
       event.preventDefault();
       this.close();
@@ -171,9 +173,9 @@ export class CdkCombobox<T = unknown> implements OnDestroy, AfterContentInit {
       this.opened.next();
       this._overlayRef = this._overlayRef || this._overlay.create(this._getOverlayConfig());
       this._overlayRef.attach(this._getPanelContent());
-      // if (!this._isTextTrigger()) {
+      if (!this._isTextTrigger()) {
         this._panel?.focusContent();
-      // }
+      }
     }
   }
 

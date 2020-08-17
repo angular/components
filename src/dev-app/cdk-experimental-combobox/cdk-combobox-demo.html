@@ -18,7 +18,7 @@ Toggle Combobox!
 <input cdkCombobox class="example-combobox" [cdkComboboxTriggerFor]="inputPanel" [openActions]="'toggle'">
 
 <ng-template cdkComboboxPanel #inputPanel="cdkComboboxPanel">
-    <div panelContent [parentPanel]="inputPanel">
+    <div cdkComboboxPopup [parentPanel]="inputPanel" [firstFocus]="inputTwo">
         <input #inputTwo>
         <button (click)="inputPanel.closePanel(inputTwo.value)">Apply</button>
     </div>
