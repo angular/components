@@ -384,6 +384,7 @@ export class CdkListbox<T> implements AfterContentInit, OnDestroy, OnInit, Contr
       if (manager.activeItem && !manager.isTyping()) {
         this._toggleActiveOption();
       }
+      event.preventDefault();
 
     } else {
       manager.onKeydown(event);
