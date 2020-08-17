@@ -16,14 +16,23 @@ import {
   QueryList
 } from '@angular/core';
 import {ActiveDescendantKeyManager, Highlightable, ListKeyManagerOption} from '@angular/cdk/a11y';
-import {DOWN_ARROW, END, ENTER, HOME, LEFT_ARROW, RIGHT_ARROW, SPACE, UP_ARROW} from '@angular/cdk/keycodes';
+import {
+  DOWN_ARROW,
+  END,
+  ENTER,
+  HOME,
+  LEFT_ARROW,
+  RIGHT_ARROW,
+  SPACE,
+  UP_ARROW
+} from '@angular/cdk/keycodes';
 import {BooleanInput, coerceBooleanProperty, coerceArray} from '@angular/cdk/coercion';
 import {SelectionChange, SelectionModel} from '@angular/cdk/collections';
 import {defer, merge, Observable, Subject} from 'rxjs';
 import {startWith, switchMap, takeUntil} from 'rxjs/operators';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {CdkComboboxPanel} from '@angular/cdk-experimental/combobox';
-import {Directionality} from "@angular/cdk/bidi";
+import {Directionality} from '@angular/cdk/bidi';
 
 let nextId = 0;
 let listboxId = 0;
@@ -450,7 +459,8 @@ export class CdkListbox<T> implements AfterContentInit, OnDestroy, OnInit, Contr
       // Deselect all options instead of arbitrarily keeping one of the selected options.
       this.setAllSelected(false);
     } else if (!this.multiple && value) {
-      this._selectionModel = new SelectionModel<CdkOption<T>>(value, this._selectionModel?.selected);
+      this._selectionModel =
+          new SelectionModel<CdkOption<T>>(value, this._selectionModel?.selected);
     }
   }
 
@@ -550,6 +560,7 @@ export class CdkListbox<T> implements AfterContentInit, OnDestroy, OnInit, Contr
   static ngAcceptInputType_disabled: BooleanInput;
   static ngAcceptInputType_multiple: BooleanInput;
   static ngAcceptInputType_useActiveDescendant: BooleanInput;
+  static ngAcceptInputType_autoFocus: BooleanInput;
 }
 
 /** Change event that is being fired whenever the selected state of an option changes. */

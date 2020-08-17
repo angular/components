@@ -81,7 +81,8 @@ export class CdkCombobox<T = unknown> implements OnDestroy, AfterContentInit {
 
   @Output('comboboxPanelOpened') readonly opened: EventEmitter<void> = new EventEmitter<void>();
   @Output('comboboxPanelClosed') readonly closed: EventEmitter<void> = new EventEmitter<void>();
-  @Output('panelValueChanged') readonly panelValueChanged: EventEmitter<T[]> = new EventEmitter<T[]>();
+  @Output('panelValueChanged') readonly panelValueChanged: EventEmitter<T[]>
+      = new EventEmitter<T[]>();
 
   private _overlayRef: OverlayRef;
   private _panelContent: TemplatePortal;
@@ -266,5 +267,6 @@ export class CdkCombobox<T = unknown> implements OnDestroy, AfterContentInit {
   }
 
   static ngAcceptInputType_openActions: OpenActionInput;
+  static ngAcceptInputType_autoSetText: OpenActionInput;
   static ngAcceptInputType_disabled: BooleanInput;
 }

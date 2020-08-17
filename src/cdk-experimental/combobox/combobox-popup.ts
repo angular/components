@@ -6,7 +6,14 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Directive, ElementRef, Inject, InjectionToken, Input, OnInit, Optional} from '@angular/core';
+import {
+  Directive,
+  ElementRef,
+  Inject,
+  InjectionToken,
+  Input,
+  OnInit,
+  Optional} from '@angular/core';
 import {AriaHasPopupValue, CdkComboboxPanel} from './combobox-panel';
 
 export const PANEL = new InjectionToken<CdkComboboxPanel>('CdkComboboxPanel');
