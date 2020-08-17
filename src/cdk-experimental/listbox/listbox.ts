@@ -23,6 +23,7 @@ import {defer, merge, Observable, Subject} from 'rxjs';
 import {startWith, switchMap, takeUntil} from 'rxjs/operators';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {CdkComboboxPanel} from '@angular/cdk-experimental/combobox';
+import {Directionality} from "@angular/cdk/bidi";
 
 let nextId = 0;
 let listboxId = 0;
@@ -207,7 +208,8 @@ export class CdkOption<T = unknown> implements ListKeyManagerOption, Highlightab
     '[attr.tabindex]': '_tabIndex',
     '[attr.aria-disabled]': 'disabled',
     '[attr.aria-multiselectable]': 'multiple',
-    '[attr.aria-activedescendant]': '_getAriaActiveDescendant()'
+    '[attr.aria-activedescendant]': '_getAriaActiveDescendant()',
+    '[attr.aria-orientation]': 'orientation'
   },
   providers: [CDK_LISTBOX_VALUE_ACCESSOR]
 })
@@ -285,11 +287,17 @@ export class CdkListbox<T> implements AfterContentInit, OnDestroy, OnInit, Contr
     this._autoFocus = coerceBooleanProperty(shouldAutoFocus);
   }
 
+  /** Determines the orientation for the list key manager. Affects keyboard interaction. */
+  @Input('listboxOrientation') orientation: 'horizontal' | 'vertical' = 'vertical';
+
   @Input() compareWith: (o1: T, o2: T) => boolean = (a1, a2) => a1 === a2;
 
   @Input('parentPanel') private readonly _explicitPanel: CdkComboboxPanel;
 
-  constructor(@Optional() @Inject(PANEL) readonly _parentPanel?: CdkComboboxPanel<T>) { }
+  constructor(
+    @Optional() @Inject(PANEL) readonly _parentPanel?: CdkComboboxPanel<T>,
+    @Optional() private readonly _dir?: Directionality
+  ) { }
 
   ngOnInit() {
     this._selectionModel = new SelectionModel<CdkOption<T>>(this.multiple);
@@ -322,9 +330,14 @@ export class CdkListbox<T> implements AfterContentInit, OnDestroy, OnInit, Contr
   private _initKeyManager() {
     this._listKeyManager = new ActiveDescendantKeyManager(this._options)
         .withWrap()
-        .withVerticalOrientation()
         .withTypeAhead()
         .withAllowedModifierKeys(['shiftKey']);
+
+    if (this.orientation === 'vertical') {
+      this._listKeyManager.withVerticalOrientation();
+    } else {
+      this._listKeyManager.withHorizontalOrientation(this._dir?.value || 'ltr');
+    }
 
     this._listKeyManager.change.pipe(takeUntil(this._destroyed)).subscribe(() => {
       this._updateActiveOption();
