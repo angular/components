@@ -130,6 +130,11 @@ export const DEV_APP_ROUTES: Routes = [
   },
   {path: 'radio', loadChildren: 'radio/radio-demo-module#RadioDemoModule'},
   {path: 'ripple', loadChildren: 'ripple/ripple-demo-module#RippleDemoModule'},
+  {
+    path: 'scrollable-table-body',
+    loadChildren:
+        'scrollable-table-body/scrollable-table-body-demo-module#ScrollableTableBodyDemoModule'
+  },
   {path: 'select', loadChildren: 'select/select-demo-module#SelectDemoModule'},
   {path: 'sidenav', loadChildren: 'sidenav/sidenav-demo-module#SidenavDemoModule'},
   {

@@ -1,0 +1,27 @@
+load("//tools:defaults.bzl", "ng_module")
+
+package(default_visibility = ["//visibility:public"])
+
+ng_module(
+    name = "scrollable-table-body",
+    srcs = glob(["**/*.ts"]),
+    assets = glob([
+        "**/*.html",
+        "**/*.css",
+    ]),
+    module_name = "@angular/components-examples/material-experimental/scrollable-table-body",
+    deps = [
+        "//src/cdk-experimental/scrollable-table-body",
+        "//src/material/button",
+        "//src/material/table",
+    ],
+)
+
+filegroup(
+    name = "source-files",
+    srcs = glob([
+        "**/*.html",
+        "**/*.css",
+        "**/*.ts",
+    ]),
+)

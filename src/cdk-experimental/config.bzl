@@ -6,6 +6,7 @@ CDK_EXPERIMENTAL_ENTRYPOINTS = [
     "menu",
     "listbox",
     "popover-edit",
+    "scrollable-table-body",
     "scrolling",
     "selection",
     "table-scroll-container",

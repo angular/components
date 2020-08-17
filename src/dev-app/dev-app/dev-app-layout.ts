@@ -66,6 +66,7 @@ export class DevAppLayout {
     {name: 'Radio', route: '/radio'},
     {name: 'Ripple', route: '/ripple'},
     {name: 'Screen Type', route: '/screen-type'},
+    {name: 'Scrollable table body', route: '/scrollable-table-body'},
     {name: 'Select', route: '/select'},
     {name: 'Selection', route: '/selection'},
     {name: 'Sidenav', route: '/sidenav'},

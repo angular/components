@@ -1,0 +1,35 @@
+load("//tools:defaults.bzl", "ng_module", "ng_test_library", "ng_web_test_suite")
+
+package(default_visibility = ["//visibility:public"])
+
+ng_module(
+    name = "scrollable-table-body",
+    srcs = glob(
+        ["**/*.ts"],
+        exclude = ["**/*.spec.ts"],
+    ),
+    module_name = "@angular/cdk-experimental/scrollable-table-body",
+    deps = [
+        "//src/cdk/table",
+        "@npm//@angular/common",
+        "@npm//@angular/core",
+        "@npm//rxjs",
+    ],
+)
+
+ng_test_library(
+    name = "unit_test_sources",
+    srcs = glob(
+        ["**/*.spec.ts"],
+        exclude = ["**/*.e2e.spec.ts"],
+    ),
+    deps = [
+        ":scrollable-table-body",
+        "//src/cdk/table",
+    ],
+)
+
+ng_web_test_suite(
+    name = "unit_tests",
+    deps = [":unit_test_sources"],
+)

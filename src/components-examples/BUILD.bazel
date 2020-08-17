@@ -47,6 +47,7 @@ ALL_EXAMPLES = [
     "//src/components-examples/material-experimental/popover-edit",
     "//src/components-examples/material-experimental/mdc-card",
     "//src/components-examples/material-experimental/mdc-form-field",
+    "//src/components-examples/material-experimental/scrollable-table-body",
     "//src/components-examples/material-experimental/selection",
     "//src/components-examples/cdk/tree",
     "//src/components-examples/cdk/text-field",
@@ -61,6 +62,7 @@ ALL_EXAMPLES = [
     "//src/components-examples/cdk/overlay",
     "//src/components-examples/cdk-experimental/menu",
     "//src/components-examples/cdk-experimental/popover-edit",
+    "//src/components-examples/cdk-experimental/scrollable-table-body",
     "//src/components-examples/cdk-experimental/selection",
 ]
 

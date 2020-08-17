@@ -78,6 +78,7 @@ ng_module(
         "//src/dev-app/radio",
         "//src/dev-app/ripple",
         "//src/dev-app/screen-type",
+        "//src/dev-app/scrollable-table-body",
         "//src/dev-app/select",
         "//src/dev-app/selection",
         "//src/dev-app/sidenav",

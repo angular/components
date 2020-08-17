@@ -81,6 +81,11 @@ import {
 } from './table-errors';
 import {STICKY_POSITIONING_LISTENER, StickyPositioningListener} from './sticky-position-listener';
 import {CDK_TABLE} from './tokens';
+import {
+  _DefaultTableLayoutStrategy,
+  _TABLE_LAYOUT_STRATEGY,
+  _TableLayoutStrategy
+} from './table-layout-strategy';
 
 /** Interface used to provide an outlet for rows to be inserted into. */
 export interface RowOutlet {
@@ -486,22 +491,23 @@ export class CdkTable<T> implements AfterContentChecked, CollectionViewer, OnDes
       protected readonly _elementRef: ElementRef, @Attribute('role') role: string,
       @Optional() protected readonly _dir: Directionality, @Inject(DOCUMENT) _document: any,
       private _platform: Platform,
-
       /**
        * @deprecated `_coalescedStyleScheduler`, `_viewRepeater` and `_viewportRuler`
        *    parameters to become required.
        * @breaking-change 11.0.0
        */
       @Optional() @Inject(_VIEW_REPEATER_STRATEGY)
-        protected readonly _viewRepeater?: _ViewRepeater<T, RenderRow<T>, RowContext<T>>,
+      protected readonly _viewRepeater?: _ViewRepeater<T, RenderRow<T>, RowContext<T>>,
       @Optional() @Inject(_COALESCED_STYLE_SCHEDULER)
-        protected readonly _coalescedStyleScheduler?: _CoalescedStyleScheduler,
+      protected readonly _coalescedStyleScheduler?: _CoalescedStyleScheduler,
       @Optional() @SkipSelf() @Inject(STICKY_POSITIONING_LISTENER)
       protected readonly _stickyPositioningListener?: StickyPositioningListener,
       // Optional for backwards compatibility. The viewport ruler is provided in root. Therefore,
       // this property will never be null.
       // tslint:disable-next-line: lightweight-tokens
-      @Optional() private readonly _viewportRuler?: ViewportRuler) {
+      @Optional() private readonly _viewportRuler?: ViewportRuler,
+      @Optional() @Inject(_TABLE_LAYOUT_STRATEGY)
+      @Optional() private readonly _layoutStrategy?: _TableLayoutStrategy|null) {
     if (!role) {
       this._elementRef.nativeElement.setAttribute('role', 'grid');
     }
@@ -512,10 +518,7 @@ export class CdkTable<T> implements AfterContentChecked, CollectionViewer, OnDes
 
   ngOnInit() {
     this._setupStickyStyler();
-
-    if (this._isNativeHtmlTable) {
-      this._applyNativeTableSections();
-    }
+    this._initTableLayout();
 
     // Set up the trackBy function so that it uses the `RenderRow` as its identity by default. If
     // the user has provided a custom trackBy, return the result of that function as evaluated
@@ -1153,28 +1156,14 @@ export class CdkTable<T> implements AfterContentChecked, CollectionViewer, OnDes
     });
   }
 
-  /** Adds native table sections (e.g. tbody) and moves the row outlets into them. */
-  private _applyNativeTableSections() {
-    const documentFragment = this._document.createDocumentFragment();
-    const sections = [
-      {tag: 'thead', outlets: [this._headerRowOutlet]},
-      {tag: 'tbody', outlets: [this._rowOutlet, this._noDataRowOutlet]},
-      {tag: 'tfoot', outlets: [this._footerRowOutlet]},
-    ];
-
-    for (const section of sections) {
-      const element = this._document.createElement(section.tag);
-      element.setAttribute('role', 'rowgroup');
-
-      for (const outlet of section.outlets) {
-        element.appendChild(outlet.elementRef.nativeElement);
-      }
-
-      documentFragment.appendChild(element);
-    }
+  private _initTableLayout() {
+    const layoutStrategy = this._layoutStrategy || new _DefaultTableLayoutStrategy(this._document);
+    const layout = this._isNativeHtmlTable
+        ? layoutStrategy.getNativeLayout(this)
+        : layoutStrategy.getFlexLayout(this);
 
     // Use a DocumentFragment so we don't hit the DOM on each iteration.
-    this._elementRef.nativeElement.appendChild(documentFragment);
+    this._elementRef.nativeElement.appendChild(layout);
   }
 
   /**
