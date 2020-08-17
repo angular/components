@@ -121,30 +121,27 @@ export class CdkCombobox<T = unknown> implements OnDestroy, AfterContentInit {
   _keydown(event: KeyboardEvent) {
     const {keyCode} = event;
 
-    if (keyCode === DOWN_ARROW && this._openActions.indexOf('downKey') !== -1) {
-      this.open();
-      if (keyCode === DOWN_ARROW) {
-        if (this.isOpen()) {
-          this._panel?.focusContent();
-        } else if (this._openActions.indexOf('downKey') !== -1) {
-          this.open();
-        }
-      } else if (keyCode === ENTER) {
-        if (this._openActions.indexOf('toggle') !== -1) {
-          this.toggle();
-        } else if (this._openActions.indexOf('click') !== -1) {
-          this.open();
-        }
+    if (keyCode === DOWN_ARROW) {
+      if (this.isOpen()) {
+        this._panel?.focusContent();
+      } else if (this._openActions.indexOf('downKey') !== -1) {
+        this.open();
+      }
+    } else if (keyCode === ENTER) {
+      if (this._openActions.indexOf('toggle') !== -1) {
+        this.toggle();
+      } else if (this._openActions.indexOf('click') !== -1) {
+        this.open();
+      }
 
-      } else if (keyCode === ESCAPE) {
-        event.preventDefault();
+    } else if (keyCode === ESCAPE) {
+      event.preventDefault();
+      this.close();
+    } else if (keyCode === TAB) {
+      if (this.contentType === 'listbox') {
         this.close();
-      } else if (keyCode === TAB) {
-        if (this.contentType === 'listbox') {
-          this.close();
-        } else {
-          this._panel?.focusContent();
-        }
+      } else {
+        this._panel?.focusContent();
       }
     }
   }
