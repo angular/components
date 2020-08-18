@@ -245,6 +245,11 @@ export function crossEnvironmentSpecs(
       const subcomps = await harness.directAncestorSelectorSubcomponent();
       expect(subcomps.length).toBe(2);
     });
+
+    it('should be able to wait for tasks outside of Angular within native async/await',
+      async () => {
+        expect(await harness.getTaskStateResult()).toBe('result');
+      });
   });
 
   describe('HarnessPredicate', () => {

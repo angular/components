@@ -11,12 +11,10 @@ import {
   ComponentHarnessConstructor,
   HarnessEnvironment,
   HarnessLoader,
-  TestElement
+  TestElement,
+  ɵwaitForProxyZoneToStabilize,
 } from '@angular/cdk/testing';
 import {ComponentFixture, flush} from '@angular/core/testing';
-import {Observable} from 'rxjs';
-import {takeWhile} from 'rxjs/operators';
-import {TaskState, TaskStateZoneInterceptor} from './task-state-zone-interceptor';
 import {UnitTestElement} from './unit-test-element';
 
 /** Options to configure the environment. */
@@ -35,9 +33,6 @@ export class TestbedHarnessEnvironment extends HarnessEnvironment<Element> {
   /** Whether the environment has been destroyed. */
   private _destroyed = false;
 
-  /** Observable that emits whenever the test task state changes. */
-  private _taskState: Observable<TaskState>;
-
   /** The options for this environment. */
   private _options: TestbedHarnessEnvironmentOptions;
 
@@ -45,7 +40,6 @@ export class TestbedHarnessEnvironment extends HarnessEnvironment<Element> {
       options?: TestbedHarnessEnvironmentOptions) {
     super(rawRootElement);
     this._options = {...defaultEnvironmentOptions, ...options};
-    this._taskState = TaskStateZoneInterceptor.setup();
     _fixture.componentRef.onDestroy(() => this._destroyed = true);
   }
 
@@ -98,11 +92,11 @@ export class TestbedHarnessEnvironment extends HarnessEnvironment<Element> {
       flush();
     }
 
-    // Wait until the task queue has been drained and the zone is stable. Note that
+    // Wait until the task queue has been drained and the proxy zone is stable. Note that
     // we cannot rely on "fixture.whenStable" since it does not catch tasks scheduled
     // outside of the Angular zone. For test harnesses, we want to ensure that the
     // app is fully stabilized and therefore need to use our own zone interceptor.
-    await this._taskState.pipe(takeWhile(state => !state.stable)).toPromise();
+    await ɵwaitForProxyZoneToStabilize();
   }
 
   protected getDocumentRoot(): Element {

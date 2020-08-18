@@ -1,7 +1,5 @@
 import {_supportsShadowDom} from '@angular/cdk/platform';
-import {
-  HarnessLoader,
-} from '@angular/cdk/testing';
+import {HarnessLoader} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {async, ComponentFixture, fakeAsync, TestBed} from '@angular/core/testing';
 import {querySelectorAll as piercingQuerySelectorAll} from 'kagekiri';
@@ -64,20 +62,15 @@ describe('TestbedHarnessEnvironment', () => {
         expect(await globalEl.text()).toBe('Hello Yi from Angular 2!');
       });
 
-      it('should be able to wait for tasks outside of Angular within native async/await',
-          async () => {
-        expect(await harness.getTaskStateResult()).toBe('result');
-      });
-
       it('should be able to wait for tasks outside of Angular within async test zone',
-          async (() => {
-        harness.getTaskStateResult().then(res => expect(res).toBe('result'));
-      }));
+        async (() => {
+          harness.getTaskStateResult().then(res => expect(res).toBe('result'));
+        }));
 
       it('should be able to wait for tasks outside of Angular within fakeAsync test zone',
-          fakeAsync(async () => {
-        expect(await harness.getTaskStateResult()).toBe('result');
-      }));
+        fakeAsync(async () => {
+          expect(await harness.getTaskStateResult()).toBe('result');
+        }));
     });
 
     if (_supportsShadowDom()) {

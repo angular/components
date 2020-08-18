@@ -25,6 +25,7 @@
   ],
   "exclude": [
     "testing/protractor/**.ts",
+    "testing/zone-patch/**/*.ts",
     "testing/private/e2e/**.ts",
     "**/schematics/**/*.ts",
     "**/*.e2e.spec.ts"

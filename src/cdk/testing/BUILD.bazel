@@ -12,6 +12,7 @@ ts_library(
         ],
     ),
     module_name = "@angular/cdk/testing",
+    deps = ["@npm//zone.js"],
 )
 
 markdown_to_html(

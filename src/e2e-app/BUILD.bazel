@@ -106,6 +106,7 @@ ts_devserver(
     # Files which should be provided by Bazel when running the devserver. These are not
     # automatically served, but can be loaded manually through HTTP requests.
     static_files = [
+        "//src/cdk/testing/zone-patch:zone-patch-es5",
         "@npm//zone.js",
         "@npm//core-js",
         "@npm//kagekiri",

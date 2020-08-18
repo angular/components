@@ -6,8 +6,20 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {HarnessEnvironment, HarnessLoader, TestElement} from '@angular/cdk/testing';
-import {by, element as protractorElement, ElementArrayFinder, ElementFinder} from 'protractor';
+import {
+  HarnessEnvironment,
+  HarnessLoader,
+  TestElement,
+  ɵwaitForRootZoneToStabilize,
+  ɵhasInterceptedRootZone,
+} from '@angular/cdk/testing';
+import {
+  browser as protractorBrowser,
+  by as protractorBy,
+  element as protractorElement,
+  ElementArrayFinder,
+  ElementFinder
+} from 'protractor';
 import {ProtractorElement} from './protractor-element';
 
 /** Options to configure the environment. */
@@ -18,7 +30,7 @@ export interface ProtractorHarnessEnvironmentOptions {
 
 /** The default environment options. */
 const defaultEnvironmentOptions: ProtractorHarnessEnvironmentOptions = {
-  queryFn: (selector: string, root: ElementFinder) => root.all(by.css(selector))
+  queryFn: (selector: string, root: ElementFinder) => root.all(protractorBy.css(selector))
 };
 
 /** A `HarnessEnvironment` implementation for Protractor. */
@@ -34,18 +46,29 @@ export class ProtractorHarnessEnvironment extends HarnessEnvironment<ElementFind
 
   /** Creates a `HarnessLoader` rooted at the document root. */
   static loader(options?: ProtractorHarnessEnvironmentOptions): HarnessLoader {
-    return new ProtractorHarnessEnvironment(protractorElement(by.css('body')), options);
+    return new ProtractorHarnessEnvironment(protractorElement(protractorBy.css('body')), options);
   }
 
-  async forceStabilize(): Promise<void> {}
+  async forceStabilize(): Promise<void> {
+    // Protractor automatically stabilizes whenever a command is executed. See
+    // Angular's `blocking-proxy` for more details: https://github.com/angular/blocking-proxy.
+  }
 
   async waitForTasksOutsideAngular(): Promise<void> {
-    // TODO: figure out how we can do this for the protractor environment.
-    // https://github.com/angular/components/issues/17412
+    // Wait until the task queue has been drained and the zone is stable. Note that
+    // we cannot rely on "fixture.whenStable" since it does not catch tasks scheduled
+    // outside of the Angular zone. For test harnesses, we want to ensure that the
+    // app is fully stabilized and therefore need to use our own zone interceptor.
+    await protractorBrowser.executeScript<Promise<void>>(`
+      // Inline helper functions needed for checking the root zone.
+      ${ɵhasInterceptedRootZone}
+      // Wait for the root zone to stabilize and return a promise.
+      return (${ɵwaitForRootZoneToStabilize})();
+    `);
   }
 
   protected getDocumentRoot(): ElementFinder {
-    return protractorElement(by.css('body'));
+    return protractorElement(protractorBy.css('body'));
   }
 
   protected createTestElement(element: ElementFinder): TestElement {

@@ -16,6 +16,8 @@
  * be pulled in from the original type definitions.
  */
 
+/// <reference types="zone.js" />
+
 export interface ProxyZoneStatic {
   assertPresent: () => ProxyZone;
   get(): ProxyZone;
@@ -24,4 +26,9 @@ export interface ProxyZoneStatic {
 export interface ProxyZone {
   lastTaskState: HasTaskState|null;
   onHasTask(delegate: ZoneDelegate, current: Zone, target: Zone, hasTaskState: HasTaskState): void;
+}
+
+export interface HasTaskState {
+  microTask: boolean;
+  macroTask: boolean;
 }

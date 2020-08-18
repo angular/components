@@ -104,7 +104,9 @@ export class TestMainComponent implements OnDestroy {
   }
 
   runTaskOutsideZone() {
+    console.error('Start');
     this._zone.runOutsideAngular(() => setTimeout(() => {
+      console.error('Timeout ');
       this.taskStateResultElement.nativeElement.textContent = 'result';
     }, 100));
   }

@@ -1,0 +1,27 @@
+load("//tools:defaults.bzl", "ts_library")
+
+package(default_visibility = ["//visibility:public"])
+
+ts_library(
+    name = "zone-patch",
+    srcs = ["index.ts"],
+    # This entry-point uses ES2015 module output also for devmode as we do not want to wrap
+    # code in AMD or UMD headers. Loading the file should result in it immediately being executed.
+    devmode_module = "es2015",
+    module_name = "@angular/cdk/testing/zone-patch",
+    deps = [
+        "//src/cdk/testing",
+        "@npm//@types/node",
+    ],
+)
+
+filegroup(
+    name = "zone-patch-es5",
+    srcs = [":zone-patch"],
+    output_group = "es5_sources",
+)
+
+filegroup(
+    name = "source-files",
+    srcs = glob(["**/*.ts"]),
+)
