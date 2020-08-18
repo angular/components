@@ -70,6 +70,9 @@ export interface MatMenuDefaultOptions {
 
   /** Whether the menu has a backdrop. */
   hasBackdrop?: boolean;
+
+  /** Close menu when an outside click is detected */
+  closeOnOutsideClick?: boolean;
 }
 
 /** Injection token to be used to override the default options for `mat-menu`. */
@@ -201,6 +204,15 @@ export class _MatMenuBase implements AfterContentInit, MatMenuPanel<MatMenuItem>
     this._hasBackdrop = coerceBooleanProperty(value);
   }
   private _hasBackdrop: boolean | undefined = this._defaultOptions.hasBackdrop;
+
+  /** Close menu when an outside click is detected */
+  @Input()
+  get closeOnOutsideClick(): boolean | undefined { return this._closeOnOutsideClick; }
+  set closeOnOutsideClick(value: boolean | undefined) {
+    this._closeOnOutsideClick = coerceBooleanProperty(value);
+  }
+  private _closeOnOutsideClick: boolean | undefined = this._defaultOptions.closeOnOutsideClick;
+
 
   /**
    * This method takes classes set on the host mat-menu element and applies them on the

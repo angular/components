@@ -88,6 +88,7 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
   private _closingActionsSubscription = Subscription.EMPTY;
   private _hoverSubscription = Subscription.EMPTY;
   private _menuCloseSubscription = Subscription.EMPTY;
+  private _outsidePointerEventsSubscription = Subscription.EMPTY;
   private _scrollStrategy: () => ScrollStrategy;
 
   /**
@@ -212,6 +213,7 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
     this._menuCloseSubscription.unsubscribe();
     this._closingActionsSubscription.unsubscribe();
     this._hoverSubscription.unsubscribe();
+    this._outsidePointerEventsSubscription.unsubscribe();
   }
 
   /** Whether the menu is open. */
@@ -244,6 +246,15 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
 
     const overlayRef = this._createOverlay();
     const overlayConfig = overlayRef.getConfig();
+
+    // Listen for outside click and close the menu when it occurs
+    if(this.menu.closeOnOutsideClick) {
+      this._outsidePointerEventsSubscription = overlayRef.outsidePointerEvents().subscribe(() => {
+        if(this.menuOpen) {
+          this.menu.close.emit(); // or this.closeMenu();
+        }
+      });
+    }
 
     this._setPosition(overlayConfig.positionStrategy as FlexibleConnectedPositionStrategy);
     overlayConfig.hasBackdrop = this.menu.hasBackdrop == null ? !this.triggersSubmenu() :

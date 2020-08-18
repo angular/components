@@ -38,6 +38,7 @@ export interface MatMenuPanel<T = any> {
   backdropClass?: string;
   overlayPanelClass?: string|string[];
   hasBackdrop?: boolean;
+  closeOnOutsideClick?: boolean;
   readonly panelId?: string;
 
   /**
