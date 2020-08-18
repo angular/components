@@ -50,25 +50,6 @@ export class MatTreeNodeHarness extends ComponentHarness {
     return (await this.host()).text({exclude: '.mat-tree-node, .mat-nested-tree-node, button'});
   }
 
-  /** Gets all of the nodes under this node. */
-  async getAllDescendants(filter: TreeNodeHarnessFilters = {}): Promise<MatTreeNodeHarness[]> {
-    if (await this._isNestedNode()) {
-      return this.locatorForAll(MatTreeNodeHarness.with(filter))();
-    } else {
-      throw Error('not implemented');
-    }
-  }
-
-  /** Gets the immediate children nodes under this node. */
-  async getChildren(filter: TreeNodeHarnessFilters = {}): Promise<MatTreeNodeHarness[]> {
-    if (await this._isNestedNode()) {
-      filter.level = await this.getLevel() + 1;
-      return this.getAllDescendants(filter);
-    } else {
-      throw Error('not implemented');
-    }
-  }
-
   /** Toggles node between expanded/collapsed. Only works when node is not disabled. */
   async toggle(): Promise<void> {
     const toggle = await this._toggle();
@@ -89,10 +70,6 @@ export class MatTreeNodeHarness extends ComponentHarness {
     if (await this.isExpanded()) {
       await this.toggle();
     }
-  }
-
-  private async _isNestedNode() {
-    return (await this.host()).hasClass('mat-nested-tree-node');
   }
 }
 

@@ -7,11 +7,8 @@
  */
 
 import {ComponentHarness, HarnessPredicate} from '@angular/cdk/testing';
-import {
-  MatTreeNodeHarness,
-  TreeHarnessFilters,
-  TreeNodeHarnessFilters
-} from '@angular/material/tree/testing';
+import {MatTreeNodeHarness} from './node-harness';
+import {TreeHarnessFilters, TreeNodeHarnessFilters} from './tree-harness-filters';
 
 /** Harness for interacting with a standard mat-tree in tests. */
 export class MatTreeHarness extends ComponentHarness {
