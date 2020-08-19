@@ -29,11 +29,12 @@
                  [pageSize]="pageSize"
                  [disabled]="disabled"
                  [showFirstLastButtons]="showFirstLastButtons"
-                 [pageSizeOptions]="showPageSizeOptions ? pageSizeOptions : []"
+                 [pageSizeOptions]="showPageSizeOptions ? pageSizeOptions : {}"
                  [hidePageSize]="hidePageSize"
                  [pageIndex]="pageIndex">
   </mat-paginator>
 
+  <div> pageSizeOptions: {{pageSizeOptionsString()}} </div>
   <div> Output event: {{pageEvent | json}} </div>
   <div> getNumberOfPages: {{paginator.getNumberOfPages()}} </div>
 </mat-card>

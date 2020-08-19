@@ -9,8 +9,9 @@
 </mat-form-field>
 <mat-form-field>
   <mat-label>Page size options</mat-label>
-  <input matInput [ngModel]="pageSizeOptions" (ngModelChange)="setPageSizeOptions($event)"
-         [ngModelOptions]="{updateOn: 'blur'}" placeholder="Ex. 10,25,50">
+  <input matInput [ngModel]="pageSizeOptionsString" (ngModelChange)="setPageSizeOptions($event)"
+         [ngModelOptions]="{updateOn: 'blur'}"
+         placeholder="Ex. 10: '10', 25: '25', 50: '50'">
 </mat-form-field>
 
 <mat-paginator [length]="length"

@@ -22,12 +22,17 @@ export declare class MatPaginator extends _MatPaginatorBase implements OnInit, O
     set pageIndex(value: number);
     get pageSize(): number;
     set pageSize(value: number);
-    get pageSizeOptions(): number[];
-    set pageSizeOptions(value: number[]);
+    get pageSizeOptions(): {
+        [key: string]: string;
+    };
+    set pageSizeOptions(p: {
+        [key: string]: string;
+    });
     get showFirstLastButtons(): boolean;
     set showFirstLastButtons(value: boolean);
     constructor(_intl: MatPaginatorIntl, _changeDetectorRef: ChangeDetectorRef, defaults?: MatPaginatorDefaultOptions);
     _changePageSize(pageSize: number): void;
+    _getPageSizeOptionLabel(pageSize: number): string;
     _nextButtonsDisabled(): boolean;
     _previousButtonsDisabled(): boolean;
     firstPage(): void;
@@ -53,7 +58,9 @@ export interface MatPaginatorDefaultOptions {
     formFieldAppearance?: MatFormFieldAppearance;
     hidePageSize?: boolean;
     pageSize?: number;
-    pageSizeOptions?: number[];
+    pageSizeOptions?: {
+        [key: string]: string;
+    };
     showFirstLastButtons?: boolean;
 }
 

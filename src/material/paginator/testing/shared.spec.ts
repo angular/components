@@ -107,7 +107,7 @@ export function runHarnessTests(
   it('should throw an error if the page size selector is not available', async () => {
     const paginator = await loader.getHarness(paginatorHarness);
 
-    instance.pageSizeOptions = [];
+    instance.pageSizeOptions = {};
     fixture.detectChanges();
 
     await expectAsync(paginator.setPageSize(10)).toBeRejectedWithError(
@@ -132,7 +132,7 @@ class PaginatorHarnessTest {
   length = 500;
   pageSize = 10;
   pageIndex = 0;
-  pageSizeOptions = [5, 10, 25];
+  pageSizeOptions: {[key: string]: string} = {5: '5', 10: '10', 25: '25'};
   showFirstLastButtons = true;
 
   handlePageEvent(event: PageEvent) {

@@ -279,7 +279,7 @@ describe('MatPaginator', () => {
     // Having one option and the same page size should remove the select menu
     expect(fixture.nativeElement.querySelector('.mat-select')).not.toBeNull();
     paginator.pageSize = 10;
-    paginator.pageSizeOptions = [10];
+    paginator.pageSizeOptions = {10: '10'};
     fixture.detectChanges();
     expect(fixture.nativeElement.querySelector('.mat-select')).toBeNull();
   });
@@ -306,10 +306,10 @@ describe('MatPaginator', () => {
 
     component.pageSize = 30;
     fixture.detectChanges();
-    expect(paginator.pageSizeOptions).toEqual([5, 10, 25, 100]);
+    expect(paginator.pageSizeOptions).toEqual({'5': '5', '10': '10', '25': '25', '100': '100'});
     expect(paginator._displayedPageSizeOptions).toEqual([5, 10, 25, 30, 100]);
 
-    component.pageSizeOptions = [100, 25, 10, 5];
+    expect(paginator.pageSizeOptions).toEqual({'100': '100', '25': '25', '10': '10', '5': '5'});
     fixture.detectChanges();
     expect(paginator._displayedPageSizeOptions).toEqual([5, 10, 25, 30, 100]);
   });
@@ -390,20 +390,22 @@ describe('MatPaginator', () => {
 
     // Remove options so that the paginator only uses the current page size (10) as an option.
     // Should no longer show the select component since there is only one option.
-    component.pageSizeOptions = [];
+    component.pageSizeOptions = {};
     fixture.detectChanges();
     expect(fixture.nativeElement.querySelector('.mat-select')).toBeNull();
   });
 
-  it('should handle the number inputs being passed in as strings', () => {
-    const fixture = createComponent(MatPaginatorWithStringValues);
-    fixture.detectChanges();
+  it('should show label for an option if specified', () => {
+    const fixture = createComponent(MatPaginatorApp);
+    const component = fixture.componentInstance;
+    const paginator = component.paginator;
 
-    const withStringPaginator = fixture.componentInstance.paginator;
-    expect(withStringPaginator.pageIndex).toEqual(0);
-    expect(withStringPaginator.length).toEqual(100);
-    expect(withStringPaginator.pageSize).toEqual(10);
-    expect(withStringPaginator.pageSizeOptions).toEqual([5, 10, 25, 100]);
+    expect(paginator._getPageSizeOptionLabel(5)).toBe('5');
+
+    // Change label for option '5' to the word 'Five'.
+    paginator.pageSizeOptions = {5: 'Five'};
+    fixture.detectChanges();
+    expect(paginator._getPageSizeOptionLabel(5)).toBe('Five');
   });
 
   it('should be able to hide the page size select', () => {
@@ -423,7 +425,7 @@ describe('MatPaginator', () => {
   it('should be able to disable all the controls in the paginator via the binding', () => {
     const fixture = createComponent(MatPaginatorApp);
     const select: MatSelect =
-        fixture.debugElement.query(By.directive(MatSelect))!.componentInstance;
+      fixture.debugElement.query(By.directive(MatSelect))!.componentInstance;
 
     fixture.componentInstance.pageIndex = 1;
     fixture.componentInstance.showFirstLastButtons = true;
@@ -451,7 +453,11 @@ describe('MatPaginator', () => {
       provide: MAT_PAGINATOR_DEFAULT_OPTIONS,
       useValue: {
         pageSize: 7,
-        pageSizeOptions: [7, 14, 21],
+        pageSizeOptions: {
+          7: '7',
+          14: '14',
+          21: '21'
+        },
         hidePageSize: true,
         showFirstLastButtons: true
       } as MatPaginatorDefaultOptions
@@ -459,7 +465,7 @@ describe('MatPaginator', () => {
     const paginator = fixture.componentInstance.paginator;
 
     expect(paginator.pageSize).toBe(7);
-    expect(paginator.pageSizeOptions).toEqual([7, 14, 21]);
+    expect(paginator.pageSizeOptions).toEqual({'7': '7', '14': '14', '21': '21'});
     expect(paginator.hidePageSize).toBe(true);
     expect(paginator.showFirstLastButtons).toBe(true);
   });
@@ -479,7 +485,7 @@ function getFirstButton(fixture: ComponentFixture<any>) {
 }
 
 function getLastButton(fixture: ComponentFixture<any>) {
-    return fixture.nativeElement.querySelector('.mat-paginator-navigation-last');
+  return fixture.nativeElement.querySelector('.mat-paginator-navigation-last');
 }
 
 @Component({
@@ -499,7 +505,7 @@ function getLastButton(fixture: ComponentFixture<any>) {
 class MatPaginatorApp {
   pageIndex = 0;
   pageSize = 10;
-  pageSizeOptions = [5, 10, 25, 100];
+  pageSizeOptions: {[key: string]: string} = {5: '5', 10: '10', 25: '25', 100: '100'};
   hidePageSize = false;
   showFirstLastButtons = false;
   length = 100;
@@ -518,14 +524,14 @@ class MatPaginatorApp {
   template: `
     <mat-paginator></mat-paginator>
   `,
-})
+ })
 class MatPaginatorWithoutInputsApp {
   @ViewChild(MatPaginator) paginator: MatPaginator;
 }
 
 @Component({
   template: `
-    <mat-paginator [pageSizeOptions]="[10, 20, 30]"></mat-paginator>
+    <mat-paginator [pageSizeOptions]="{'10': '10', '20': '20', '30': '30'}"></mat-paginator>
   `,
 })
 class MatPaginatorWithoutPageSizeApp {
@@ -538,18 +544,5 @@ class MatPaginatorWithoutPageSizeApp {
   `,
 })
 class MatPaginatorWithoutOptionsApp {
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-}
-
-@Component({
-  template: `
-    <mat-paginator pageIndex="0"
-                   pageSize="10"
-                   [pageSizeOptions]="['5', '10', '25', '100']"
-                   length="100">
-    </mat-paginator>
-  `
-  })
-class MatPaginatorWithStringValues {
   @ViewChild(MatPaginator) paginator: MatPaginator;
 }

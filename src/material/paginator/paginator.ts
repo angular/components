@@ -69,8 +69,8 @@ export interface MatPaginatorDefaultOptions {
   /** Number of items to display on a page. By default set to 50. */
   pageSize?: number;
 
-  /** The set of provided page size options to display to the user. */
-  pageSizeOptions?: number[];
+  /** The set of provided page size options (and their labels) to display to the user. */
+  pageSizeOptions?: {[key: string]: string};
 
   /** Whether to hide the page size selection UI from the user. */
   hidePageSize?: boolean;
@@ -146,12 +146,17 @@ export class MatPaginator extends _MatPaginatorBase implements OnInit, OnDestroy
 
   /** The set of provided page size options to display to the user. */
   @Input()
-  get pageSizeOptions(): number[] { return this._pageSizeOptions; }
-  set pageSizeOptions(value: number[]) {
-    this._pageSizeOptions = (value || []).map(p => coerceNumberProperty(p));
+  get pageSizeOptions(): {[key: string]: string} { return this._pageSizeOptions; }
+  set pageSizeOptions(p: {[key: string]: string}) {
+    this._pageSizeOptions = {};
+    for (const key in p || {}) {
+      const keyNum = (!isNaN(parseInt(key as any)) && !isNaN(Number(key))) ? Number(key) : 0;
+      const value = p[key];
+      this._pageSizeOptions[keyNum] = (value.trim() || keyNum.toString());
+    }
     this._updateDisplayedPageSizeOptions();
   }
-  private _pageSizeOptions: number[] = [];
+  private _pageSizeOptions: {[key: number]: string} = {};
 
   /** Whether to hide the page size selection UI from the user. */
   @Input()
@@ -180,9 +185,9 @@ export class MatPaginator extends _MatPaginatorBase implements OnInit, OnDestroy
   _formFieldAppearance?: MatFormFieldAppearance;
 
   constructor(public _intl: MatPaginatorIntl,
-              private _changeDetectorRef: ChangeDetectorRef,
-              @Optional() @Inject(MAT_PAGINATOR_DEFAULT_OPTIONS)
-                  defaults?: MatPaginatorDefaultOptions) {
+            private _changeDetectorRef: ChangeDetectorRef,
+            @Optional() @Inject(MAT_PAGINATOR_DEFAULT_OPTIONS)
+                defaults?: MatPaginatorDefaultOptions) {
     super();
     this._intlChanges = _intl.changes.subscribe(() => this._changeDetectorRef.markForCheck());
 
@@ -315,6 +320,13 @@ export class MatPaginator extends _MatPaginatorBase implements OnInit, OnDestroy
     return this.disabled || !this.hasPreviousPage();
   }
 
+  /** Gets the label for a given page size option.  If no label, return the option (value). */
+  _getPageSizeOptionLabel(pageSize: number): string {
+    return !!this._pageSizeOptions[pageSize] ?
+        this._pageSizeOptions[pageSize] :
+        '' + pageSize;
+  }
+
   /**
    * Updates the list of page size options to display to the user. Includes making sure that
    * the page size is an option and that the list is sorted.
@@ -322,15 +334,17 @@ export class MatPaginator extends _MatPaginatorBase implements OnInit, OnDestroy
   private _updateDisplayedPageSizeOptions() {
     if (!this._initialized) { return; }
 
+    this._displayedPageSizeOptions = Object.keys(this._pageSizeOptions)
+        .map(key => Number.parseInt(key));
+
     // If no page size is provided, use the first page size option or the default page size.
     if (!this.pageSize) {
-      this._pageSize = this.pageSizeOptions.length != 0 ?
-          this.pageSizeOptions[0] :
+      this._pageSize = this._displayedPageSizeOptions.length != 0 ?
+          this._displayedPageSizeOptions[0] :
           DEFAULT_PAGE_SIZE;
     }
 
-    this._displayedPageSizeOptions = this.pageSizeOptions.slice();
-
+    // If page size is provided but not in the set of options, add it to the set.
     if (this._displayedPageSizeOptions.indexOf(this.pageSize) === -1) {
       this._displayedPageSizeOptions.push(this.pageSize);
     }

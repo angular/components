@@ -19,10 +19,11 @@ export class PaginatorDemo {
   length = 50;
   pageSize = 10;
   pageIndex = 0;
-  pageSizeOptions = [5, 10, 25];
+  pageSizeOptions: {[key: string]: string} = {5: '5', 10: '10', 25: '25', 100: 'All'};
 
   hidePageSize = false;
   showPageSizeOptions = true;
+  showPageSizeOptionLabels = false;
   showFirstLastButtons = true;
   disabled = false;
 
@@ -34,4 +35,9 @@ export class PaginatorDemo {
     this.pageSize = e.pageSize;
     this.pageIndex = e.pageIndex;
   }
+
+  pageSizeOptionsString(): string {
+    return JSON.stringify(this.pageSizeOptions);
+  }
+
 }
