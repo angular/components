@@ -24,7 +24,7 @@ class Walker extends Lint.ProgramAwareRuleWalker {
       // Walk through all the nodes and look for property access expressions
       // (e.g. `changes.something`). Note that this is different from element access
       // expressions which look like `changes['something']`.
-      if (tsutils.isPropertyAccessExpression(node)) {
+      if (ts.isPropertyAccessExpression(node)) {
         const symbol = this.getTypeChecker().getTypeAtLocation(node.expression).symbol;
 
         // Add a failure if we're trying to access a property on a SimpleChanges object

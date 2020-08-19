@@ -173,7 +173,7 @@
     "yaml": "^1.10.0"
   },
   "resolutions": {
-    "dgeni-packages/typescript": "3.9.5",
+    "dgeni-packages/typescript": "4.0.2-insiders.20200818",
     "**/graceful-fs": "4.2.2"
   }
 }
