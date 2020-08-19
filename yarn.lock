@@ -12110,12 +12110,7 @@ typedarray@^0.0.6:
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.9.7.tgz#98d600a5ebdc38f40cb277522f12dc800e9e25fa"
   integrity sha512-BLbiRkiBzAwsjut4x/dsibSTB6yWpwT5qWmC2OfuCg3GgVQCSgMs4vEctYPhsaGtd0AeuuHMkjZ2h2WG8MSzRw==
 
-typescript@3.9.5, typescript@^3.2.2:
-  version "3.9.5"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.9.5.tgz#586f0dba300cde8be52dd1ac4f7e1009c1b13f36"
-  integrity sha512-hSAifV3k+i6lEoCJ2k6R2Z/rp/H3+8sdmcn5NrS3/3kE7+RyZXm9aqvxWqjEXHAd8b0pShatpcdMTvEdvAJltQ==
-
-typescript@4.0.2-insiders.20200818:
+typescript@4.0.2-insiders.20200818, typescript@^3.2.2:
   version "4.0.2-insiders.20200818"
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.0.2-insiders.20200818.tgz#50d949f8d7ae460ce2f2f5a4121ff020a54711e8"
   integrity sha512-5/y/W/EFwly+UAm8X77bPjh8FG1GsLRRtrWApIIAsT6kcN9auKhHyrEIUYSahm/WX9F3f7svRxKm6eddvEzyAw==
