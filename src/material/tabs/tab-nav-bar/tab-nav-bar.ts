@@ -201,7 +201,9 @@ export class _MatTabLinkBase extends _MatTabLinkMixinBase implements AfterViewIn
   @Input()
   get active(): boolean { return this._isActive; }
   set active(value: boolean) {
-    if (value !== this._isActive) {
+    const newValue = coerceBooleanProperty(value);
+
+    if (newValue !== this._isActive) {
       this._isActive = value;
       this._tabNavBar.updateActiveLink(this.elementRef);
     }
@@ -251,6 +253,7 @@ export class _MatTabLinkBase extends _MatTabLinkMixinBase implements AfterViewIn
     this._focusMonitor.stopMonitoring(this.elementRef);
   }
 
+  static ngAcceptInputType_active: BooleanInput;
   static ngAcceptInputType_disabled: BooleanInput;
   static ngAcceptInputType_disableRipple: BooleanInput;
   static ngAcceptInputType_tabIndex: NumberInput;
