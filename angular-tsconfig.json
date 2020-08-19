@@ -5,7 +5,8 @@
   "angularCompilerOptions": {
     // In snapshot builds the compiler-cli will now use ngtsc by default. In
     // order to be able to build the summary files, we need to use ngc.
-    "enableIvy": false
+    "enableIvy": false,
+    "disableTypeScriptVersionCheck": true
   },
   "compilerOptions": {
     "module": "umd",
