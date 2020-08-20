@@ -111,6 +111,8 @@ export class CdkCombobox<T = unknown> implements OnDestroy, AfterContentInit {
     this._panel?.contentTypeUpdated.subscribe(type => {
       this.contentType = type;
     });
+
+    this._panel?._registerTrigger(this._elementRef);
   }
 
   ngOnDestroy() {
