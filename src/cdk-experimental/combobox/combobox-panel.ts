@@ -9,13 +9,12 @@
 
 export type AriaHasPopupValue = 'false' | 'true' | 'menu' | 'listbox' | 'tree' | 'grid' | 'dialog';
 
-import {Directive, ElementRef, TemplateRef} from '@angular/core';
+import {Directive, TemplateRef} from '@angular/core';
 import {Subject} from 'rxjs';
 
 @Directive({
   host: {
-    'class': 'cdk-combobox-panel',
-    '(focusout)': 'focusParent()'
+    'class': 'cdk-combobox-panel'
   },
   selector: 'ng-template[cdkComboboxPanel]',
   exportAs: 'cdkComboboxPanel',
@@ -26,10 +25,8 @@ export class CdkComboboxPanel<T = unknown> {
   contentIdUpdated: Subject<string> = new Subject<string>();
   contentTypeUpdated: Subject<AriaHasPopupValue> = new Subject<AriaHasPopupValue>();
 
-  private contentId: string = '';
-  private contentType: AriaHasPopupValue;
-
-  private _triggerElement: HTMLElement;
+  contentId: string = '';
+  contentType: AriaHasPopupValue;
 
   constructor(
     readonly _templateRef: TemplateRef<unknown>
@@ -44,14 +41,6 @@ export class CdkComboboxPanel<T = unknown> {
   focusContent() {
     // TODO: Use an injected document here
     document.getElementById(this.contentId)?.focus();
-  }
-
-  focusParent() {
-    this._triggerElement.focus();
-  }
-
-  _registerTrigger(triggerElement: ElementRef<HTMLElement>) {
-    this._triggerElement = triggerElement.nativeElement;
   }
 
   /** Registers the content's id and the content type with the panel. */
