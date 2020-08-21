@@ -17,7 +17,6 @@ import {
   ElementRef,
   HostBinding,
   Input,
-  isDevMode,
   IterableChangeRecord,
   IterableDiffer,
   IterableDiffers,
@@ -397,7 +396,7 @@ function getParentNodeAriaLevel(nodeElement: HTMLElement): number {
     parent = parent.parentElement;
   }
   if (!parent) {
-    if (isDevMode()) {
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
       throw Error('Incorrect tree structure containing detached node.');
     } else {
       return -1;

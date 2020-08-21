@@ -24,8 +24,6 @@ export declare class CdkNestedTreeNode<T> extends CdkTreeNode<T> implements Afte
     protected _children: T[];
     protected _differs: IterableDiffers;
     protected _elementRef: ElementRef<HTMLElement>;
-    _expanded: boolean;
-    _role: "treeitem" | "group";
     protected _tree: CdkTree<T>;
     nodeOutlet: QueryList<CdkTreeNodeOutlet>;
     constructor(_elementRef: ElementRef<HTMLElement>, _tree: CdkTree<T>, _differs: IterableDiffers);
