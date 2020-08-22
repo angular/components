@@ -178,9 +178,8 @@ export declare class MatTabChangeEvent {
     tab: MatTab;
 }
 
-export declare class MatTabContent {
-    template: TemplateRef<any>;
-    constructor(template: TemplateRef<any>);
+export declare class MatTabContent { template: TemplateRef<any>;
+    constructor( template: TemplateRef<any>);
     static ɵdir: i0.ɵɵDirectiveDefWithMeta<MatTabContent, "[matTabContent]", never, {}, {}, never>;
     static ɵfac: i0.ɵɵFactoryDef<MatTabContent, never>;
 }
