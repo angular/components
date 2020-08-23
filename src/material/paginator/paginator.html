@@ -16,14 +16,14 @@
           [aria-label]="_intl.itemsPerPageLabel"
           (selectionChange)="_changePageSize($event.value)">
           <mat-option *ngFor="let pageSizeOption of _displayedPageSizeOptions" [value]="pageSizeOption">
-            {{pageSizeOption}}
+            {{_getPageSizeOptionLabel(pageSizeOption)}}
           </mat-option>
         </mat-select>
       </mat-form-field>
 
       <div
         class="mat-paginator-page-size-value"
-        *ngIf="_displayedPageSizeOptions.length <= 1">{{pageSize}}</div>
+        *ngIf="_displayedPageSizeOptions.length <= 1">{{_getPageSizeOptionLabel(pageSize)}}</div>
     </div>
 
     <div class="mat-paginator-range-actions">

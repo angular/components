@@ -19,6 +19,7 @@
 
     <mat-slide-toggle [(ngModel)]="hidePageSize">Hide page size</mat-slide-toggle>
     <mat-slide-toggle [(ngModel)]="showPageSizeOptions">Show multiple page size options</mat-slide-toggle>
+    <mat-slide-toggle [(ngModel)]="showAllPageSizeOption">Show 'All' page size option</mat-slide-toggle>
     <mat-slide-toggle [(ngModel)]="showFirstLastButtons">Show first/last buttons</mat-slide-toggle>
     <mat-slide-toggle [(ngModel)]="disabled">Disabled</mat-slide-toggle>
   </div>
@@ -30,6 +31,7 @@
                  [disabled]="disabled"
                  [showFirstLastButtons]="showFirstLastButtons"
                  [pageSizeOptions]="showPageSizeOptions ? pageSizeOptions : []"
+                 [showAllPageSizeOption]="showAllPageSizeOption"
                  [hidePageSize]="hidePageSize"
                  [pageIndex]="pageIndex">
   </mat-paginator>

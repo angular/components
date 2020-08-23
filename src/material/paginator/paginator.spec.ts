@@ -314,6 +314,23 @@ describe('MatPaginator', () => {
     expect(paginator._displayedPageSizeOptions).toEqual([5, 10, 25, 30, 100]);
   });
 
+  it('should show a sorted list of page size options including the "All" option', () => {
+    const fixture = createComponent(MatPaginatorApp);
+    const component = fixture.componentInstance;
+    const paginator = component.paginator;
+    expect(paginator._displayedPageSizeOptions).toEqual([5, 10, 25, 100]);
+    expect(paginator._getPageSizeOptionLabel(5)).toBe('5');
+    expect(paginator._getPageSizeOptionLabel(paginator.allPageSize))
+      .toBe(paginator.allPageSize.toString());
+
+    component.showAllPageSizeOption = true;
+    fixture.detectChanges();
+    expect(paginator.pageSizeOptions).toEqual([5, 10, 25, 100]);
+    expect(paginator._displayedPageSizeOptions).toEqual([5, 10, 25, 100, paginator.allPageSize]);
+    expect(paginator._getPageSizeOptionLabel(5)).toBe('5');
+    expect(paginator._getPageSizeOptionLabel(paginator.allPageSize)).toBe('All');
+  });
+
   it('should be able to change the page size while keeping the first item present', () => {
     const fixture = createComponent(MatPaginatorApp);
     const component = fixture.componentInstance;
@@ -452,6 +469,7 @@ describe('MatPaginator', () => {
       useValue: {
         pageSize: 7,
         pageSizeOptions: [7, 14, 21],
+        showAllPageSizeOption: true,
         hidePageSize: true,
         showFirstLastButtons: true
       } as MatPaginatorDefaultOptions
@@ -460,6 +478,7 @@ describe('MatPaginator', () => {
 
     expect(paginator.pageSize).toBe(7);
     expect(paginator.pageSizeOptions).toEqual([7, 14, 21]);
+    expect(paginator.showAllPageSizeOption).toBe(true);
     expect(paginator.hidePageSize).toBe(true);
     expect(paginator.showFirstLastButtons).toBe(true);
   });
@@ -487,6 +506,7 @@ function getLastButton(fixture: ComponentFixture<any>) {
     <mat-paginator [pageIndex]="pageIndex"
                    [pageSize]="pageSize"
                    [pageSizeOptions]="pageSizeOptions"
+                   [showAllPageSizeOption]="showAllPageSizeOption"
                    [hidePageSize]="hidePageSize"
                    [showFirstLastButtons]="showFirstLastButtons"
                    [length]="length"
@@ -500,6 +520,7 @@ class MatPaginatorApp {
   pageIndex = 0;
   pageSize = 10;
   pageSizeOptions = [5, 10, 25, 100];
+  showAllPageSizeOption = false;
   hidePageSize = false;
   showFirstLastButtons = false;
   length = 100;

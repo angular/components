@@ -72,6 +72,9 @@ export interface MatPaginatorDefaultOptions {
   /** The set of provided page size options to display to the user. */
   pageSizeOptions?: number[];
 
+  /** Whether to display the 'All' page size option to the user. */
+  showAllPageSizeOption?: boolean;
+
   /** Whether to hide the page size selection UI from the user. */
   hidePageSize?: boolean;
 
@@ -113,6 +116,9 @@ export class MatPaginator extends _MatPaginatorBase implements OnInit, OnDestroy
   HasInitialized {
   private _initialized: boolean;
   private _intlChanges: Subscription;
+
+  /** The (numeric) page size represented by 'All' page size option. */
+  readonly allPageSize = Number.MAX_SAFE_INTEGER;
 
   /** Theme color to be used for the underlying form controls. */
   @Input() color: ThemePalette;
@@ -170,6 +176,15 @@ export class MatPaginator extends _MatPaginatorBase implements OnInit, OnDestroy
   }
   private _showFirstLastButtons = false;
 
+  /** Whether to show the 'All' page size option to the user. */
+  @Input()
+  get showAllPageSizeOption(): boolean { return this._showAllPageSizeOption; }
+  set showAllPageSizeOption(value: boolean) {
+    this._showAllPageSizeOption = coerceBooleanProperty(value);
+    this._updateDisplayedPageSizeOptions();
+  }
+  private _showAllPageSizeOption = false;
+
   /** Event emitted when the paginator changes the page size or page index. */
   @Output() readonly page: EventEmitter<PageEvent> = new EventEmitter<PageEvent>();
 
@@ -190,6 +205,7 @@ export class MatPaginator extends _MatPaginatorBase implements OnInit, OnDestroy
       const {
         pageSize,
         pageSizeOptions,
+        showAllPageSizeOption,
         hidePageSize,
         showFirstLastButtons,
         formFieldAppearance,
@@ -201,6 +217,10 @@ export class MatPaginator extends _MatPaginatorBase implements OnInit, OnDestroy
 
       if (pageSizeOptions != null) {
         this._pageSizeOptions = pageSizeOptions;
+      }
+
+      if (showAllPageSizeOption != null) {
+        this._showAllPageSizeOption = showAllPageSizeOption;
       }
 
       if (hidePageSize != null) {
@@ -331,13 +351,29 @@ export class MatPaginator extends _MatPaginatorBase implements OnInit, OnDestroy
 
     this._displayedPageSizeOptions = this.pageSizeOptions.slice();
 
+    if (this._showAllPageSizeOption) {
+      this._displayedPageSizeOptions.push(this.allPageSize);
+    }
+
     if (this._displayedPageSizeOptions.indexOf(this.pageSize) === -1) {
       this._displayedPageSizeOptions.push(this.pageSize);
     }
 
     // Sort the numbers using a number-specific sort function.
     this._displayedPageSizeOptions.sort((a, b) => a - b);
+    console.log(this._displayedPageSizeOptions);
     this._changeDetectorRef.markForCheck();
+  }
+
+  /** Returns the label for a page size option. */
+  _getPageSizeOptionLabel(pageSize: number): string {
+    let labelText = '' + pageSize;
+
+    if (this._showAllPageSizeOption && pageSize === this.allPageSize) {
+      labelText = this._intl.allPageSizeOptionLabel;
+    }
+
+    return labelText;
   }
 
   /** Emits an event notifying that a change of the paginator's properties has been triggered. */
@@ -353,6 +389,7 @@ export class MatPaginator extends _MatPaginatorBase implements OnInit, OnDestroy
   static ngAcceptInputType_pageIndex: NumberInput;
   static ngAcceptInputType_length: NumberInput;
   static ngAcceptInputType_pageSize: NumberInput;
+  static ngAcceptInputType_showAllPageSizeOption: BooleanInput;
   static ngAcceptInputType_hidePageSize: BooleanInput;
   static ngAcceptInputType_showFirstLastButtons: BooleanInput;
   static ngAcceptInputType_disabled: BooleanInput;

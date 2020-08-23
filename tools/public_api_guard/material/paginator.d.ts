@@ -12,6 +12,7 @@ export declare class MatPaginator extends _MatPaginatorBase implements OnInit, O
     _displayedPageSizeOptions: number[];
     _formFieldAppearance?: MatFormFieldAppearance;
     _intl: MatPaginatorIntl;
+    readonly allPageSize: number;
     color: ThemePalette;
     get hidePageSize(): boolean;
     set hidePageSize(value: boolean);
@@ -24,10 +25,13 @@ export declare class MatPaginator extends _MatPaginatorBase implements OnInit, O
     set pageSize(value: number);
     get pageSizeOptions(): number[];
     set pageSizeOptions(value: number[]);
+    get showAllPageSizeOption(): boolean;
+    set showAllPageSizeOption(value: boolean);
     get showFirstLastButtons(): boolean;
     set showFirstLastButtons(value: boolean);
     constructor(_intl: MatPaginatorIntl, _changeDetectorRef: ChangeDetectorRef, defaults?: MatPaginatorDefaultOptions);
     _changePageSize(pageSize: number): void;
+    _getPageSizeOptionLabel(pageSize: number): string;
     _nextButtonsDisabled(): boolean;
     _previousButtonsDisabled(): boolean;
     firstPage(): void;
@@ -44,8 +48,9 @@ export declare class MatPaginator extends _MatPaginatorBase implements OnInit, O
     static ngAcceptInputType_length: NumberInput;
     static ngAcceptInputType_pageIndex: NumberInput;
     static ngAcceptInputType_pageSize: NumberInput;
+    static ngAcceptInputType_showAllPageSizeOption: BooleanInput;
     static ngAcceptInputType_showFirstLastButtons: BooleanInput;
-    static ɵcmp: i0.ɵɵComponentDefWithMeta<MatPaginator, "mat-paginator", ["matPaginator"], { "disabled": "disabled"; "color": "color"; "pageIndex": "pageIndex"; "length": "length"; "pageSize": "pageSize"; "pageSizeOptions": "pageSizeOptions"; "hidePageSize": "hidePageSize"; "showFirstLastButtons": "showFirstLastButtons"; }, { "page": "page"; }, never, never>;
+    static ɵcmp: i0.ɵɵComponentDefWithMeta<MatPaginator, "mat-paginator", ["matPaginator"], { "disabled": "disabled"; "color": "color"; "pageIndex": "pageIndex"; "length": "length"; "pageSize": "pageSize"; "pageSizeOptions": "pageSizeOptions"; "hidePageSize": "hidePageSize"; "showFirstLastButtons": "showFirstLastButtons"; "showAllPageSizeOption": "showAllPageSizeOption"; }, { "page": "page"; }, never, never>;
     static ɵfac: i0.ɵɵFactoryDef<MatPaginator, [null, null, { optional: true; }]>;
 }
 
@@ -54,10 +59,12 @@ export interface MatPaginatorDefaultOptions {
     hidePageSize?: boolean;
     pageSize?: number;
     pageSizeOptions?: number[];
+    showAllPageSizeOption?: boolean;
     showFirstLastButtons?: boolean;
 }
 
 export declare class MatPaginatorIntl {
+    allPageSizeOptionLabel: string;
     readonly changes: Subject<void>;
     firstPageLabel: string;
     getRangeLabel: (page: number, pageSize: number, length: number) => string;

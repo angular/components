@@ -23,6 +23,7 @@ export class PaginatorDemo {
 
   hidePageSize = false;
   showPageSizeOptions = true;
+  showAllPageSizeOption = false;
   showFirstLastButtons = true;
   disabled = false;
 
