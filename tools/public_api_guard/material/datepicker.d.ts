@@ -292,7 +292,6 @@ export declare class MatDateRangeInput<D> implements MatFormFieldControl<DateRan
     _endInput: MatEndDate<D>;
     _groupDisabled: boolean;
     _startInput: MatStartDate<D>;
-    _stateChanges: Subject<void>;
     comparisonEnd: D | null;
     comparisonStart: D | null;
     controlType: string;
@@ -329,7 +328,7 @@ export declare class MatDateRangeInput<D> implements MatFormFieldControl<DateRan
     getStartValue(): D | null;
     getThemePalette(): ThemePalette;
     ngAfterContentInit(): void;
-    ngOnChanges(): void;
+    ngOnChanges(changes: SimpleChanges): void;
     ngOnDestroy(): void;
     onContainerClick(): void;
     setDescribedByIds(ids: string[]): void;
