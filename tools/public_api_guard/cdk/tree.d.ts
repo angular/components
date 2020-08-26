@@ -20,7 +20,7 @@ export declare abstract class BaseTreeControl<T, K = T> implements TreeControl<T
 
 export declare const CDK_TREE_NODE_OUTLET_NODE: InjectionToken<{}>;
 
-export declare class CdkNestedTreeNode<T> extends CdkTreeNode<T> implements AfterContentInit, OnDestroy {
+export declare class CdkNestedTreeNode<T> extends CdkTreeNode<T> implements AfterContentInit, OnDestroy, OnInit {
     protected _children: T[];
     protected _differs: IterableDiffers;
     protected _elementRef: ElementRef<HTMLElement>;
@@ -30,6 +30,7 @@ export declare class CdkNestedTreeNode<T> extends CdkTreeNode<T> implements Afte
     protected _clear(): void;
     ngAfterContentInit(): void;
     ngOnDestroy(): void;
+    ngOnInit(): void;
     protected updateChildrenNodes(children?: T[]): void;
     static ɵdir: i0.ɵɵDirectiveDefWithMeta<CdkNestedTreeNode<any>, "cdk-nested-tree-node", ["cdkNestedTreeNode"], {}, {}, ["nodeOutlet"]>;
     static ɵfac: i0.ɵɵFactoryDef<CdkNestedTreeNode<any>, never>;
@@ -72,7 +73,8 @@ export declare class CdkTreeNode<T> implements FocusableOption, OnDestroy, OnIni
     set data(value: T);
     get isExpanded(): boolean;
     get level(): number;
-    role: 'treeitem' | 'group';
+    get role(): 'treeitem' | 'group';
+    set role(_role: 'treeitem' | 'group');
     constructor(_elementRef: ElementRef<HTMLElement>, _tree: CdkTree<T>);
     protected _setRoleFromData(): void;
     focus(): void;
