@@ -13,6 +13,7 @@ import {
   IterableDiffer,
   IterableDiffers,
   OnDestroy,
+  OnInit,
   QueryList,
 } from '@angular/core';
 import {isObservable} from 'rxjs';
@@ -36,7 +37,9 @@ import {getTreeControlFunctionsMissingError} from './tree-errors';
     {provide: CDK_TREE_NODE_OUTLET_NODE, useExisting: CdkNestedTreeNode}
   ]
 })
-export class CdkNestedTreeNode<T> extends CdkTreeNode<T> implements AfterContentInit, OnDestroy {
+export class CdkNestedTreeNode<T> extends CdkTreeNode<T> implements AfterContentInit,
+  OnDestroy,
+  OnInit {
   /** Differ used to find the changes in the data provided by the data source. */
   private _dataDiffer: IterableDiffer<T>;
 
@@ -59,6 +62,10 @@ export class CdkNestedTreeNode<T> extends CdkTreeNode<T> implements AfterContent
     // the host property are not inherited with View Engine.
     this._elementRef.nativeElement.classList.add('cdk-tree-node');
     this._elementRef.nativeElement.classList.add('cdk-nested-tree-node');
+  }
+
+  ngOnInit() {
+    super.ngOnInit();
   }
 
   ngAfterContentInit() {

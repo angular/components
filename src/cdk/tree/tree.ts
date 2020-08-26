@@ -305,12 +305,15 @@ export class CdkTree<T> implements AfterContentChecked, CollectionViewer, OnDest
 })
 export class CdkTreeNode<T> implements FocusableOption, OnDestroy, OnInit {
   // TODO: mark as deprecated
-  // tslint:disable:no-host-decorator-in-concrete
   /**
    * The role of the tree node.
    */
-  @HostBinding('attr.role') @Input() role: 'treeitem' | 'group' = 'treeitem';
-  // tslint:enable:no-host-decorator-in-concrete
+  @Input() get role(): 'treeitem'|'group' { return 'treeitem'; }
+
+  set role(_role: 'treeitem'|'group') {
+    // TODO: move to host
+    this._elementRef.nativeElement.setAttribute('role', _role);
+  }
 
   /**
    * The most recently created `CdkTreeNode`. We save it in static variable so we can retrieve it

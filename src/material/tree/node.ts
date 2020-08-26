@@ -20,7 +20,7 @@ import {
   ElementRef,
   Input,
   IterableDiffers,
-  OnDestroy,
+  OnDestroy, OnInit,
 } from '@angular/core';
 import {
   CanDisable,
@@ -45,7 +45,7 @@ const _MatTreeNodeMixinBase: HasTabIndexCtor & CanDisableCtor & typeof CdkTreeNo
   providers: [{provide: CdkTreeNode, useExisting: MatTreeNode}]
 })
 export class MatTreeNode<T> extends _MatTreeNodeMixinBase<T>
-    implements CanDisable, HasTabIndex {
+    implements CanDisable, HasTabIndex, OnInit, OnDestroy {
   @Input() role: 'treeitem' | 'group' = 'treeitem';
 
 
@@ -58,6 +58,14 @@ export class MatTreeNode<T> extends _MatTreeNodeMixinBase<T>
     // The classes are directly added here instead of in the host property because classes on
     // the host property are not inherited with View Engine.
     this._elementRef.nativeElement.classList.add('mat-tree-node');
+  }
+
+  ngOnInit() {
+    super.ngOnInit();
+  }
+
+  ngOnDestroy() {
+    super.ngOnDestroy();
   }
 
   static ngAcceptInputType_disabled: BooleanInput;
@@ -91,7 +99,7 @@ export class MatTreeNodeDef<T> extends CdkTreeNodeDef<T> {
   ]
 })
 export class MatNestedTreeNode<T> extends CdkNestedTreeNode<T> implements AfterContentInit,
-  OnDestroy {
+  OnDestroy, OnInit {
   @Input('matNestedTreeNode') node: T;
 
   /** Whether the node is disabled. */
@@ -123,6 +131,10 @@ export class MatNestedTreeNode<T> extends CdkNestedTreeNode<T> implements AfterC
   // This is a workaround for https://github.com/angular/angular/issues/23091
   // In aot mode, the lifecycle hooks from parent class are not called.
   // TODO(tinayuangao): Remove when the angular issue #23091 is fixed
+  ngOnInit() {
+    super.ngOnInit();
+  }
+
   ngAfterContentInit() {
     super.ngAfterContentInit();
   }
