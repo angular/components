@@ -341,8 +341,13 @@ export class CdkTreeNode<T> implements FocusableOption, OnDestroy, OnInit {
   protected _data: T;
 
   // tslint:disable-next-line:no-host-decorator-in-concrete
-  @HostBinding('attr.aria-expanded') get isExpanded(): boolean {
+  @HostBinding('attr.aria-expanded')
+  get isExpanded(): boolean {
     return this._tree.treeControl.isExpanded(this._data);
+  }
+
+  set isExpanded(_expanded: boolean) {
+    this._elementRef.nativeElement.setAttribute('aria-expanded', `${_expanded}`);
   }
 
   get level(): number {
@@ -357,8 +362,11 @@ export class CdkTreeNode<T> implements FocusableOption, OnDestroy, OnInit {
               protected _tree: CdkTree<T>) {
     CdkTreeNode.mostRecentTreeNode = this as CdkTreeNode<T>;
     // The classes are directly added here instead of in the host property because classes on
-    // the host property are not inherited with View Engine.
+    // the host property are not inherited with View Engine. It is not set as a @HostBinding because
+    // it is not set by the time it's children nodes try to read the class from it.
     this._elementRef.nativeElement.classList.add('cdk-tree-node');
+    this.role = 'treeitem';
+    this.isExpanded = this.isExpanded;
   }
 
   ngOnInit(): void {

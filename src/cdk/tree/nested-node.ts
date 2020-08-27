@@ -59,13 +59,9 @@ export class CdkNestedTreeNode<T> extends CdkTreeNode<T> implements AfterContent
               protected _differs: IterableDiffers) {
     super(_elementRef, _tree);
     // The classes are directly added here instead of in the host property because classes on
-    // the host property are not inherited with View Engine.
-    this._elementRef.nativeElement.classList.add('cdk-tree-node');
+    // the host property are not inherited with View Engine. It is not set as a @HostBinding because
+    // it is not set by the time it's children nodes try to read the class from it.
     this._elementRef.nativeElement.classList.add('cdk-nested-tree-node');
-  }
-
-  ngOnInit() {
-    super.ngOnInit();
   }
 
   ngAfterContentInit() {
@@ -82,6 +78,12 @@ export class CdkNestedTreeNode<T> extends CdkTreeNode<T> implements AfterContent
     }
     this.nodeOutlet.changes.pipe(takeUntil(this._destroyed))
         .subscribe(() => this.updateChildrenNodes());
+  }
+
+  // This is a workaround for https://github.com/angular/angular/issues/23091
+  // In aot mode, the lifecycle hooks from parent class are not called.// Life cycle hooks in
+  ngOnInit() {
+    super.ngOnInit();
   }
 
   ngOnDestroy() {

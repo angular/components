@@ -56,10 +56,13 @@ export class MatTreeNode<T> extends _MatTreeNodeMixinBase<T>
 
     this.tabIndex = Number(tabIndex) || 0;
     // The classes are directly added here instead of in the host property because classes on
-    // the host property are not inherited with View Engine.
+    // the host property are not inherited with View Engine. It is not set as a @HostBinding because
+    // it is not set by the time it's children nodes try to read the class from it.
     this._elementRef.nativeElement.classList.add('mat-tree-node');
   }
 
+  // This is a workaround for https://github.com/angular/angular/issues/23091
+  // In aot mode, the lifecycle hooks from parent class are not called.
   ngOnInit() {
     super.ngOnInit();
   }
@@ -124,7 +127,8 @@ export class MatNestedTreeNode<T> extends CdkNestedTreeNode<T> implements AfterC
     super(_elementRef, _tree, _differs);
     this.tabIndex = Number(tabIndex) || 0;
     // The classes are directly added here instead of in the host property because classes on
-    // the host property are not inherited with View Engine.
+    // the host property are not inherited with View Engine. It is not set as a @HostBinding because
+    // it is not set by the time it's children nodes try to read the class from it.
     this._elementRef.nativeElement.classList.add('mat-nested-tree-node');
   }
 
