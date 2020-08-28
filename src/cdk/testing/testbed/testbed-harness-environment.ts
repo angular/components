@@ -87,12 +87,14 @@ export class TestbedHarnessEnvironment extends HarnessEnvironment<Element> {
   }
 
   async forceStabilize(): Promise<void> {
-    if (this._destroyed) {
-      throw Error('Harness is attempting to use a fixture that has already been destroyed.');
-    }
+    if (!this.isCDBatching()) {
+      if (this._destroyed) {
+        throw Error('Harness is attempting to use a fixture that has already been destroyed.');
+      }
 
-    this._fixture.detectChanges();
-    await this._fixture.whenStable();
+      this._fixture.detectChanges();
+      await this._fixture.whenStable();
+    }
   }
 
   async waitForTasksOutsideAngular(): Promise<void> {

@@ -101,6 +101,8 @@ export interface HarnessLoader {
    * @return A list instances of the given harness type.
    */
   getAllHarnesses<T extends ComponentHarness>(query: HarnessQuery<T>): Promise<T[]>;
+
+  batchCD<T>(fn: () => Promise<T>): Promise<T>;
 }
 
 /**
@@ -240,6 +242,8 @@ export interface LocatorFactory {
    * authors to wait for async tasks outside of the Angular zone.
    */
   waitForTasksOutsideAngular(): Promise<void>;
+
+  batchCD<T>(fn: () => Promise<T>): Promise<T>;
 }
 
 /**
@@ -373,6 +377,10 @@ export abstract class ComponentHarness {
   protected async waitForTasksOutsideAngular() {
     return this.locatorFactory.waitForTasksOutsideAngular();
   }
+
+  async batchCD<T>(fn: () => Promise<T>) {
+    return this.locatorFactory.batchCD(fn);
+  }
 }
 
 
@@ -486,7 +494,11 @@ export class HarnessPredicate<T extends ComponentHarness> {
    * @return A list of harnesses that satisfy this predicate.
    */
   async filter(harnesses: T[]): Promise<T[]> {
-    const results = await Promise.all(harnesses.map(h => this.evaluate(h)));
+    if (harnesses.length === 0) {
+      return [];
+    }
+    const results =
+        await harnesses[0].batchCD(() => Promise.all(harnesses.map(h => this.evaluate(h))));
     return harnesses.filter((_, i) => results[i]);
   }
 
@@ -497,7 +509,7 @@ export class HarnessPredicate<T extends ComponentHarness> {
    *   and resolves to false otherwise.
    */
   async evaluate(harness: T): Promise<boolean> {
-    const results = await Promise.all(this._predicates.map(p => p(harness)));
+    const results = await harness.batchCD(() => Promise.all(this._predicates.map(p => p(harness))));
     return results.reduce((combined, current) => combined && current, true);
   }
 

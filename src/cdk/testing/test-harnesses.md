@@ -157,16 +157,23 @@ Note that `await` statements block the execution of your test until the associat
 resolves. When reading multiple properties of a harness it may not be necessary to block on the
 first before asking for the next, in these cases use `Promise.all` to parallelize.
 
+Another thing to consider when parallelizing multiple operations is the component harnesses
+automatically trigger change detection before reading state from an element and after interacting
+with it. When you're running multiple operations in a `Promise.all`, you don't need change detection
+to be triggered multiple times. In order to optimize performance, both `HarnessLoader` and
+`ComponentHarness` offer a `batchCD` method that can be used to ensure change detection is only
+triggered once before the batch operation, and once after.
+
 For example, consider the following example of reading both the `checked` and `indeterminate` state
 off of a checkbox harness:
 
 ```ts
 it('reads properties in parallel', async () => {
   const checkboxHarness = loader.getHarness(MyCheckboxHarness);
-  const [checked, indeterminate] = await Promise.all([
+  const [checked, indeterminate] = await loader.batchCD(() => Promise.all([
     checkboxHarness.isChecked(),
     checkboxHarness.isIndeterminate()
-  ]);
+  ]));
 
   // ... make some assertions
 });

@@ -109,6 +109,38 @@ describe('TestbedHarnessEnvironment', () => {
           const element = TestbedHarnessEnvironment.getNativeElement(await harness.host());
           expect(element.id).toContain('root');
         });
+
+        it('should batch change detection', async () => {
+          const detectChangesSpy = spyOn(fixture, 'detectChanges').and.callThrough();
+          const harness =
+              await TestbedHarnessEnvironment.harnessForFixture(fixture, MainComponentHarness);
+          detectChangesSpy.calls.reset();
+          await harness.batchCD(async () => {
+            expect(detectChangesSpy).toHaveBeenCalledTimes(1);
+            const button = await harness.button();
+            await button.text();
+            await button.click();
+            expect(detectChangesSpy).toHaveBeenCalledTimes(1);
+          });
+          expect(detectChangesSpy).toHaveBeenCalledTimes(2);
+        });
+
+        it('should handle nested calls to batch change detection', async () => {
+          const detectChangesSpy = spyOn(fixture, 'detectChanges').and.callThrough();
+          const harness =
+              await TestbedHarnessEnvironment.harnessForFixture(fixture, MainComponentHarness);
+          detectChangesSpy.calls.reset();
+          await harness.batchCD(async () => {
+            const button = await harness.button();
+            await button.text();
+            await button.click();
+            await harness.batchCD(async () => {
+              await button.text();
+              await button.click();
+            });
+          });
+          expect(detectChangesSpy).toHaveBeenCalledTimes(2);
+        });
       });
     }
   });

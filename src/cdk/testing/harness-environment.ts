@@ -36,6 +36,8 @@ type ParsedQueries<T extends ComponentHarness> = {
   harnessTypes: Set<ComponentHarnessConstructor<T>>,
 };
 
+let isCDBatching = false;
+
 /**
  * Base harness environment class that can be extended to allow `ComponentHarness`es to be used in
  * different test environments (e.g. testbed, protractor, etc.). This class implements the
@@ -119,6 +121,24 @@ export abstract class HarnessEnvironment<E> implements HarnessLoader, LocatorFac
     return (await this.getAllRawElements(selector)).map(e => this.createEnvironment(e));
   }
 
+  protected isCDBatching() {
+    return isCDBatching;
+  }
+
+  async batchCD<T>(fn: () => Promise<T>) {
+    const alreadyBatching = isCDBatching;
+    if (!alreadyBatching) {
+      await this.forceStabilize();
+      isCDBatching = true;
+    }
+    const result = await fn();
+    if (!alreadyBatching) {
+      isCDBatching = false;
+      await this.forceStabilize();
+    }
+    return result;
+  }
+
   /** Creates a `ComponentHarness` for the given harness type with the given raw host element. */
   protected createComponentHarness<T extends ComponentHarness>(
       harnessType: ComponentHarnessConstructor<T>, element: E): T {
@@ -165,17 +185,18 @@ export abstract class HarnessEnvironment<E> implements HarnessLoader, LocatorFac
     const skipSelectorCheck = (elementQueries.length === 0 && harnessTypes.size === 1) ||
         harnessQueries.length === 0;
 
-    const perElementMatches = await Promise.all(rawElements.map(async rawElement => {
-      const testElement = this.createTestElement(rawElement);
-      const allResultsForElement = await Promise.all(
-          // For each query, get `null` if it doesn't match, or a `TestElement` or
-          // `ComponentHarness` as appropriate if it does match. This gives us everything that
-          // matches the current raw element, but it may contain duplicate entries (e.g. multiple
-          // `TestElement` or multiple `ComponentHarness` of the same type.
-          allQueries.map(query =>
-              this._getQueryResultForElement(query, rawElement, testElement, skipSelectorCheck)));
-      return _removeDuplicateQueryResults(allResultsForElement);
-    }));
+    const perElementMatches = await this.batchCD(() =>
+        Promise.all(rawElements.map(async rawElement => {
+          const testElement = this.createTestElement(rawElement);
+          const allResultsForElement = await Promise.all(
+              // For each query, get `null` if it doesn't match, or a `TestElement` or
+              // `ComponentHarness` as appropriate if it does match. This gives us everything that
+              // matches the current raw element, but it may contain duplicate entries (e.g.
+              // multiple `TestElement` or multiple `ComponentHarness` of the same type).
+              allQueries.map(query => this._getQueryResultForElement(
+                  query, rawElement, testElement, skipSelectorCheck)));
+          return _removeDuplicateQueryResults(allResultsForElement);
+        })));
     return ([] as any).concat(...perElementMatches);
   }
 
