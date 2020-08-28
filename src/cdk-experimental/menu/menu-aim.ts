@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Injectable, NgZone, OnDestroy, InjectionToken} from '@angular/core';
+import {Injectable, NgZone, OnDestroy, InjectionToken, Directive} from '@angular/core';
 import {fromEvent, Subject} from 'rxjs';
 import {takeUntil, filter} from 'rxjs/operators';
 import {PointerFocusTracker, FocusableElement} from './pointer-focus-tracker';
@@ -263,3 +263,14 @@ export class TargetMenuAim implements MenuAim, OnDestroy {
     this._destroyed.complete();
   }
 }
+
+/**
+ * CdkTargetMenuAim is a provider for the TargetMenuAim service. It should be added to an
+ * element with either the `cdkMenu` or `cdkMenuBar` directive and child menu items.
+ */
+@Directive({
+  selector: '[cdkTargetMenuAim]',
+  exportAs: 'cdkTargetMenuAim',
+  providers: [{provide: MENU_AIM, useClass: TargetMenuAim}],
+})
+export class CdkTargetMenuAim {}

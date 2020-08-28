@@ -711,7 +711,7 @@ class InlineMenu {}
 
 @Component({
   template: `
-    <div cdkMenuBar>
+    <div cdkTargetMenuAim cdkMenuBar>
       <button #file_trigger cdkMenuItem [cdkMenuTriggerFor]="file">File</button>
     </div>
 
@@ -720,6 +720,7 @@ class InlineMenu {}
         id="file_menu"
         style="display: flex; flex-direction: column;"
         cdkMenu
+        cdkTargetMenuAim
         [cdkMenuPanel]="file"
       >
         <button #edit_trigger cdkMenuItem [cdkMenuTriggerFor]="edit">Edit</button>
@@ -735,6 +736,7 @@ class InlineMenu {}
         id="edit_menu"
         style="display: flex; flex-direction: column;"
         cdkMenu
+        cdkTargetMenuAim
         [cdkMenuPanel]="edit"
         id="edit_menu"
       >
@@ -751,6 +753,7 @@ class InlineMenu {}
         id="share_menu"
         style="display: flex; flex-direction: column;"
         cdkMenu
+        cdkTargetMenuAim
         [cdkMenuPanel]="share"
       >
         <button cdkMenuItem>GVC</button>
@@ -769,7 +772,7 @@ class WithComplexNestedMenus {
 }
 @Component({
   template: `
-    <div cdkMenuBar style="position: fixed; bottom: 0;">
+    <div cdkMenuBar cdkTargetMenuAim style="position: fixed; bottom: 0;">
       <button #file_trigger cdkMenuItem [cdkMenuTriggerFor]="file">File</button>
     </div>
 
@@ -778,6 +781,7 @@ class WithComplexNestedMenus {
         id="file_menu"
         style="display: flex; flex-direction: column;"
         cdkMenu
+        cdkTargetMenuAim
         [cdkMenuPanel]="file"
       >
         <button cdkMenuItem>Print</button>
@@ -793,6 +797,7 @@ class WithComplexNestedMenus {
         id="edit_menu"
         style="display: flex; flex-direction: column;"
         cdkMenu
+        cdkTargetMenuAim
         [cdkMenuPanel]="edit"
         id="edit_menu"
       >
@@ -809,6 +814,7 @@ class WithComplexNestedMenus {
         id="share_menu"
         style="display: flex; flex-direction: column;"
         cdkMenu
+        cdkTargetMenuAim
         [cdkMenuPanel]="share"
       >
         <button cdkMenuItem>GVC</button>

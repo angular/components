@@ -21,6 +21,7 @@ import {
   HostListener,
   ElementRef,
   Inject,
+  Self,
 } from '@angular/core';
 import {FocusKeyManager, FocusOrigin} from '@angular/cdk/a11y';
 import {
@@ -41,7 +42,7 @@ import {Menu, CDK_MENU} from './menu-interface';
 import {CdkMenuItem} from './menu-item';
 import {MenuStack, MenuStackItem, FocusNext, NoopMenuStack} from './menu-stack';
 import {PointerFocusTracker} from './pointer-focus-tracker';
-import {TargetMenuAim, MENU_AIM, MenuAim} from './menu-aim';
+import {MENU_AIM, MenuAim} from './menu-aim';
 
 /**
  * Directive which configures the element as a Menu which should contain child elements marked as
@@ -63,7 +64,6 @@ import {TargetMenuAim, MENU_AIM, MenuAim} from './menu-aim';
   providers: [
     {provide: CdkMenuGroup, useExisting: CdkMenu},
     {provide: CDK_MENU, useExisting: CdkMenu},
-    {provide: MENU_AIM, useClass: TargetMenuAim},
   ],
 })
 export class CdkMenu extends CdkMenuGroup implements Menu, AfterContentInit, OnInit, OnDestroy {
@@ -111,7 +111,7 @@ export class CdkMenu extends CdkMenuGroup implements Menu, AfterContentInit, OnI
   constructor(
     private readonly _ngZone: NgZone,
     readonly _elementRef: ElementRef<HTMLElement>,
-    @Optional() @Inject(MENU_AIM) private readonly _menuAim?: MenuAim,
+    @Self() @Optional() @Inject(MENU_AIM) private readonly _menuAim?: MenuAim,
     @Optional() private readonly _dir?: Directionality,
     // `CdkMenuPanel` is always used in combination with a `CdkMenu`.
     // tslint:disable-next-line: lightweight-tokens

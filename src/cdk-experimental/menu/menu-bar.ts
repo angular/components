@@ -18,6 +18,7 @@ import {
   HostListener,
   ElementRef,
   Inject,
+  Self,
 } from '@angular/core';
 import {Directionality} from '@angular/cdk/bidi';
 import {FocusKeyManager, FocusOrigin} from '@angular/cdk/a11y';
@@ -29,7 +30,7 @@ import {CDK_MENU, Menu} from './menu-interface';
 import {CdkMenuItem} from './menu-item';
 import {MenuStack, MenuStackItem, FocusNext} from './menu-stack';
 import {PointerFocusTracker} from './pointer-focus-tracker';
-import {MenuAim, MENU_AIM, TargetMenuAim} from './menu-aim';
+import {MenuAim, MENU_AIM} from './menu-aim';
 
 /**
  * Directive applied to an element which configures it as a MenuBar by setting the appropriate
@@ -50,7 +51,6 @@ import {MenuAim, MENU_AIM, TargetMenuAim} from './menu-aim';
     {provide: CdkMenuGroup, useExisting: CdkMenuBar},
     {provide: CDK_MENU, useExisting: CdkMenuBar},
     {provide: MenuStack, useClass: MenuStack},
-    {provide: MENU_AIM, useClass: TargetMenuAim},
   ],
 })
 export class CdkMenuBar extends CdkMenuGroup implements Menu, AfterContentInit, OnDestroy {
@@ -80,7 +80,7 @@ export class CdkMenuBar extends CdkMenuGroup implements Menu, AfterContentInit, 
     readonly _menuStack: MenuStack,
     private readonly _ngZone: NgZone,
     readonly _elementRef: ElementRef<HTMLElement>,
-    @Optional() @Inject(MENU_AIM) private readonly _menuAim?: MenuAim,
+    @Self() @Optional() @Inject(MENU_AIM) private readonly _menuAim?: MenuAim,
     @Optional() private readonly _dir?: Directionality
   ) {
     super();
