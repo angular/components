@@ -395,10 +395,13 @@ describe('Menu', () => {
         const sharePosition = nativeShareTrigger!.getBoundingClientRect();
 
         const numEnters = hover(
-          editPosition,
           {
-            x: sharePosition.x + sharePosition.width - 1,
-            y: sharePosition.y + sharePosition.height - 1,
+            x: editPosition.x + editPosition.width / 2,
+            y: editPosition.y + editPosition.height - 10,
+          },
+          {
+            x: sharePosition.x + sharePosition.width - 10,
+            y: sharePosition.y + sharePosition.height - 10,
           },
           nativeMenus[0],
           100
@@ -580,7 +583,7 @@ describe('Menu', () => {
 
           const numEnterEvents = hover(
             {x: editPosition.x + editPosition.width / 2, y: editPosition.y + 5},
-            {x: printPosition.x, y: printPosition.y - 1},
+            {x: printPosition.x + 10, y: printPosition.y - 10},
             nativeMenus[0],
             100
           );
@@ -601,8 +604,8 @@ describe('Menu', () => {
         const numEnters = hover(
           {x: editPosition.x + editPosition.width / 2, y: editPosition.y + 5},
           {
-            x: sharePosition.x + 1,
-            y: sharePosition.y + 1,
+            x: sharePosition.x + 10,
+            y: sharePosition.y + 10,
           },
           nativeMenus[0],
           100
@@ -772,14 +775,14 @@ class WithComplexNestedMenus {
 }
 @Component({
   template: `
-    <div cdkMenuBar cdkTargetMenuAim style="position: fixed; bottom: 0;">
+    <div cdkMenuBar cdkTargetMenuAim style="position: fixed; bottom: 0">
       <button #file_trigger cdkMenuItem [cdkMenuTriggerFor]="file">File</button>
     </div>
 
     <ng-template cdkMenuPanel #file="cdkMenuPanel">
       <div
         id="file_menu"
-        style="display: flex; flex-direction: column;"
+        style="display: flex; flex-direction: column"
         cdkMenu
         cdkTargetMenuAim
         [cdkMenuPanel]="file"
@@ -795,7 +798,7 @@ class WithComplexNestedMenus {
     <ng-template cdkMenuPanel #edit="cdkMenuPanel">
       <div
         id="edit_menu"
-        style="display: flex; flex-direction: column;"
+        style="display: flex; flex-direction: column"
         cdkMenu
         cdkTargetMenuAim
         [cdkMenuPanel]="edit"
@@ -812,7 +815,7 @@ class WithComplexNestedMenus {
     <ng-template cdkMenuPanel #share="cdkMenuPanel">
       <div
         id="share_menu"
-        style="display: flex; flex-direction: column;"
+        style="display: flex; flex-direction: column"
         cdkMenu
         cdkTargetMenuAim
         [cdkMenuPanel]="share"

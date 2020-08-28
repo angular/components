@@ -133,7 +133,7 @@ export class CdkMenu extends CdkMenuGroup implements Menu, AfterContentInit, OnI
     this._subscribeToMenuStack();
     this._subscribeToMouseManager();
 
-    this._menuAim?.withMouseManager(this._pointerTracker!).withMenu(this);
+    this._menuAim?.initialize(this, this._pointerTracker!);
   }
 
   // In Ivy the `host` metadata will be merged, whereas in ViewEngine it is overridden. In order

@@ -19,11 +19,8 @@ import {throwMissingPointerFocusTracker, throwMissingMenuReference} from './menu
  * order to determine if it may perform its close actions.
  */
 export interface MenuAim {
-  /** Set the mouse manager tracking the menu's menu items. */
-  withMouseManager(pointerTracker: PointerFocusTracker<FocusableElement & Toggler>): this;
-
-  /** Set the menu for which this tracks mouse movements in. */
-  withMenu(menu: Menu): this;
+  /** Set the Menu and its PointerFocusTracker. */
+  initialize(menu: Menu, pointerTracker: PointerFocusTracker<FocusableElement & Toggler>): void;
 
   /**
    * Calls the `doToggle` callback when it is deemed that the user is not moving towards
@@ -37,7 +34,10 @@ export interface MenuAim {
 export const MENU_AIM = new InjectionToken<MenuAim>('cdk-menu-aim');
 
 /** Capture every nth mouse move event. */
-const MOUSE_MOVE_SAMPLE_FREQUENCY = 5;
+const MOUSE_MOVE_SAMPLE_FREQUENCY = 3;
+
+/** The number of mouse move events to track. */
+const NUM_POINTS = 5;
 
 /**
  * How long to wait before closing a sibling menu if a user stops short of the submenu they were
@@ -53,53 +53,55 @@ export interface Toggler {
   getMenu(): Menu | undefined;
 }
 
-/**
- * Whether the target element opened to the right of the origin element.
- * @param origin the base element
- * @param target the relative element
- */
-function isOpenedToRight(origin: HTMLElement, target: HTMLElement) {
-  return target.getBoundingClientRect().right > origin.getBoundingClientRect().right;
+/** Calculate the slope between point a and b. */
+function getSlope(a: Point, b: Point) {
+  return (b.y - a.y) / (b.x - a.x);
 }
 
-/**  Whether the given points indicate that the users mouse is moving down the screen. */
-function isMovingDown(currPoint: Point, prevPoint: Point) {
-  // in a browser, the origin coordinates (0,0) are in the top-left corner.
-  // Moving down means the y coordinate is getting bigger.
-  return currPoint.y > prevPoint.y;
-}
-
-/** Calculate the absolute slope between point a and b. */
-function slope(a: Point, b: Point) {
-  return Math.abs((b.y - a.y) / (b.x - a.x));
+/** Calculate the y intercept for the given point and slope. */
+function getYIntercept(point: Point, slope: number) {
+  return point.y - slope * point.x;
 }
 
 /** Represents a coordinate of mouse travel. */
 type Point = {x: number; y: number};
 
 /**
- * TargetMenuAim attempts to predict if a user is moving into a submenu. It calculates the
- * trajectory of the users mouse movement in the current menu in order to determine if the
- * mouse is moving towards an opened submenu.
+ * The bounding top and bottom points within the opened submenu, and the left, middle and right x
+ * coordinates.
+ */
+type SubmenuPoints = {bottom: number; top: number; x: number; midX: number; endX: number};
+
+/** Whether the given line defined by the slope and y intercept falls within the submenu. */
+function isWithinSubmenu(submenuPoints: SubmenuPoints, slope: number, yIntercept: number) {
+  return (
+    (slope * submenuPoints.x + yIntercept > submenuPoints.top &&
+      slope * submenuPoints.x + yIntercept < submenuPoints.bottom) ||
+    (slope * submenuPoints.midX + yIntercept > submenuPoints.top &&
+      slope * submenuPoints.midX + yIntercept < submenuPoints.bottom) ||
+    (slope * submenuPoints.endX + yIntercept > submenuPoints.top &&
+      slope * submenuPoints.endX + yIntercept < submenuPoints.bottom)
+  );
+}
+/**
+ * TargetMenuAim predicts if a user is moving into a submenu. It calculates the
+ * trajectory of the user's mouse movement in the current menu to determine if the
+ * mouse is moving towards an open submenu.
  *
- * This movement is predicted by selecting some target coordinate in the open submenu (nearest
- * corner of the direction the user is moving) and calculating the slope between the target
- * coordinate and the current mouse position, and the target and previous mouse position. If the
- * slope of the current mouse  position is steeper it is determined that the user is moving towards
- * to submenu and the submenu is not closed out.
+ * The determination is made by calculating the slope of the users last NUM_POINTS moves where each
+ * pair of points determines if the trajectory line points into the submenu. It uses consensus
+ * approach by checking if at least NUM_POINTS / 2 pairs determine that the user is moving towards
+ * to submenu.
  */
 @Injectable()
 export class TargetMenuAim implements MenuAim, OnDestroy {
-  /** The latest sampled mouse move point */
-  private _currPoint?: Point;
-
-  /** The previous sampled mouse move point. */
-  private _prevPoint?: Point;
+  /** The last NUM_POINTS mouse move events. */
+  private readonly _points: Point[] = [];
 
   /** Reference to the root menu in which we are tracking mouse moves. */
   private _menu: Menu;
 
-  /** Reference to the root menus mouse manager. */
+  /** Reference to the root menu's mouse manager. */
   private _pointerTracker: PointerFocusTracker<Toggler & FocusableElement>;
 
   /** The id associated with the current timeout call waiting to resolve. */
@@ -110,17 +112,11 @@ export class TargetMenuAim implements MenuAim, OnDestroy {
 
   constructor(private readonly _ngZone: NgZone) {}
 
-  /** Set the mouse manager tracking the menu's menu items. */
-  withMouseManager(pointerTracker: PointerFocusTracker<FocusableElement & Toggler>): this {
-    this._pointerTracker = pointerTracker;
-    return this;
-  }
-
-  /** Set the menu for which this tracks mouse movements in. */
-  withMenu(menu: Menu): this {
+  /** Set the Menu and its PointerFocusTracker. */
+  initialize(menu: Menu, pointerTracker: PointerFocusTracker<FocusableElement & Toggler>) {
     this._menu = menu;
+    this._pointerTracker = pointerTracker;
     this._subscribeToMouseMoves();
-    return this;
   }
 
   /**
@@ -138,7 +134,7 @@ export class TargetMenuAim implements MenuAim, OnDestroy {
     this._checkConfigured();
 
     const siblingItemIsWaiting = !!this._timeoutId;
-    const hasPoints = this._currPoint && this._prevPoint;
+    const hasPoints = this._points.length > 1;
 
     if (hasPoints && !siblingItemIsWaiting) {
       if (this._isMovingToSubmenu()) {
@@ -175,57 +171,45 @@ export class TargetMenuAim implements MenuAim, OnDestroy {
 
   /** Whether the user is heading towards the open submenu. */
   private _isMovingToSubmenu() {
-    const target = this._getSubmenuTarget();
-    if (target && this._currPoint && this._prevPoint) {
-      const currSlope = slope(target, this._currPoint);
-      const prevSlope = slope(target, this._prevPoint);
-      return currSlope > prevSlope;
+    const submenuPoints = this._getSubmenuPoints();
+    if (!submenuPoints) {
+      return false;
     }
-    return false;
+
+    let numMoving = 0;
+    const currPoint = this._points[this._points.length - 1];
+    // start from the second last point and calculate the slope between each point and the last
+    // point.
+    for (let i = this._points.length - 2; i >= 0; i--) {
+      const previous = this._points[i];
+      const slope = getSlope(currPoint, previous);
+      if (isWithinSubmenu(submenuPoints, slope, getYIntercept(currPoint, slope))) {
+        numMoving++;
+      }
+    }
+    return numMoving >= Math.floor(NUM_POINTS / 2);
   }
 
   /**
-   * Get the target coordinates of the opened submenu based on where the submenu is opened and which
-   * direction the users mouse is moving.
-   *
-   * If the menu opened to the right and,
-   *  - the user is moving down, return the bottom left coordinates of the submenu
-   *  - the user is moving up, return the top left coordinates of the submenu
-   * If the menu opened to the left and,
-   *  - the user is moving down, return the bottom right coordinates of the submenu
-   *  - the user is moving up, return the top right coordinates of the submenu
-   *
-   * @return A corner of the opened submenu used to calculate the slope change, or null if no points
-   * are set or no target or root menu is configured.
+   * Get the bounding top and bottom points from withing the submenu as well as the left, middle
+   * and right x coordinates.
    */
-  private _getSubmenuTarget(): Point | null {
-    // Since we check if we can toggle the menu after we've hovered out of current sub-menus
-    // trigger, the current active element is either a new trigger or a regular menu item.
-    // Therefore the previous element is the one which opened the current open submenu.
-    const target = this._pointerTracker?.previousElement?.getMenu()?._elementRef.nativeElement;
-    const currentMenu = this._menu._elementRef.nativeElement;
-    const curr = this._currPoint;
-    const prev = this._prevPoint;
-
-    if (!target || !curr || !prev) {
-      return null;
+  private _getSubmenuPoints() {
+    const target = this._pointerTracker?.previousElement
+      ?.getMenu()
+      ?._elementRef.nativeElement.getBoundingClientRect();
+    if (target) {
+      const x = target.x;
+      const width = target.width;
+      return {
+        bottom: target.bottom,
+        top: target.top,
+        x: x,
+        midX: x + width / 2,
+        endX: x + width,
+      };
     }
-
-    const targetRect = target.getBoundingClientRect();
-    const movingDown = isMovingDown(curr, prev);
-    if (isOpenedToRight(currentMenu, target)) {
-      if (movingDown) {
-        return {x: targetRect.left, y: targetRect.bottom};
-      } else {
-        return {x: targetRect.left, y: targetRect.top};
-      }
-    } else {
-      if (movingDown) {
-        return {x: targetRect.right, y: targetRect.bottom};
-      } else {
-        return {x: targetRect.right, y: targetRect.top};
-      }
-    }
+    return null;
   }
 
   /**
@@ -252,8 +236,10 @@ export class TargetMenuAim implements MenuAim, OnDestroy {
           takeUntil(this._destroyed)
         )
         .subscribe((event: MouseEvent) => {
-          this._prevPoint = this._currPoint;
-          this._currPoint = {x: event.clientX, y: event.clientY};
+          this._points.push({x: event.clientX, y: event.clientY});
+          if (this._points.length > NUM_POINTS) {
+            this._points.shift();
+          }
         });
     });
   }

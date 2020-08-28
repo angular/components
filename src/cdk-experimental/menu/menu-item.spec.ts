@@ -18,7 +18,7 @@ describe('MenuItem', () => {
         declarations: [SingleMenuItem],
         providers: [
           {provide: CDK_MENU, useClass: CdkMenu},
-          // View engine can't figure out the ElementRef to inject so we need to provide a mock
+          // View engine can't figure out the ElementRef to inject so we need to provide a fake
           {provide: ElementRef, useValue: new ElementRef<null>(null)},
         ],
       }).compileComponents();
@@ -79,7 +79,7 @@ describe('MenuItem', () => {
         declarations: [componentClass, MatIcon],
         providers: [
           {provide: CDK_MENU, useClass: CdkMenu},
-          // View engine can't figure out the ElementRef to inject so we need to provide a mock
+          // View engine can't figure out the ElementRef to inject so we need to provide a fake
           {provide: ElementRef, useValue: new ElementRef<null>(null)},
         ],
       }).compileComponents();
