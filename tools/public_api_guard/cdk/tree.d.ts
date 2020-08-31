@@ -32,7 +32,7 @@ export declare class CdkNestedTreeNode<T> extends CdkTreeNode<T> implements Afte
     ngOnDestroy(): void;
     ngOnInit(): void;
     protected updateChildrenNodes(children?: T[]): void;
-    static ɵdir: i0.ɵɵDirectiveDefWithMeta<CdkNestedTreeNode<any>, "cdk-nested-tree-node", ["cdkNestedTreeNode"], {}, {}, ["nodeOutlet"]>;
+    static ɵdir: i0.ɵɵDirectiveDefWithMeta<CdkNestedTreeNode<any>, "cdk-nested-tree-node", ["cdkNestedTreeNode"], { "role": "role"; "disabled": "disabled"; "tabIndex": "tabIndex"; }, {}, ["nodeOutlet"]>;
     static ɵfac: i0.ɵɵFactoryDef<CdkNestedTreeNode<any>, never>;
 }
 
@@ -63,21 +63,24 @@ export declare class CdkTreeModule {
     static ɵmod: i0.ɵɵNgModuleDefWithMeta<CdkTreeModule, [typeof i1.CdkNestedTreeNode, typeof i2.CdkTreeNodeDef, typeof i3.CdkTreeNodePadding, typeof i4.CdkTreeNodeToggle, typeof i5.CdkTree, typeof i5.CdkTreeNode, typeof i6.CdkTreeNodeOutlet], never, [typeof i1.CdkNestedTreeNode, typeof i2.CdkTreeNodeDef, typeof i3.CdkTreeNodePadding, typeof i4.CdkTreeNodeToggle, typeof i5.CdkTree, typeof i5.CdkTreeNode, typeof i6.CdkTreeNodeOutlet]>;
 }
 
-export declare class CdkTreeNode<T> implements FocusableOption, OnDestroy, OnInit {
+export declare class CdkTreeNode<T> implements DoCheck, FocusableOption, OnDestroy, OnInit {
     protected _data: T;
     _dataChanges: Subject<void>;
     protected _destroyed: Subject<void>;
     protected _elementRef: ElementRef<HTMLElement>;
+    protected _expanded: boolean;
     protected _tree: CdkTree<T>;
     get data(): T;
     set data(value: T);
     get isExpanded(): boolean;
+    set isExpanded(_expanded: boolean);
     get level(): number;
     get role(): 'treeitem' | 'group';
     set role(_role: 'treeitem' | 'group');
     constructor(_elementRef: ElementRef<HTMLElement>, _tree: CdkTree<T>);
     protected _setRoleFromData(): void;
     focus(): void;
+    ngDoCheck(): void;
     ngOnDestroy(): void;
     ngOnInit(): void;
     static mostRecentTreeNode: CdkTreeNode<any> | null;

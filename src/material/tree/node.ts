@@ -41,12 +41,11 @@ const _MatTreeNodeMixinBase: HasTabIndexCtor & CanDisableCtor & typeof CdkTreeNo
 @Directive({
   selector: 'mat-tree-node',
   exportAs: 'matTreeNode',
-  inputs: ['disabled', 'tabIndex'],
+  inputs: ['role', 'disabled', 'tabIndex'],
   providers: [{provide: CdkTreeNode, useExisting: MatTreeNode}]
 })
 export class MatTreeNode<T> extends _MatTreeNodeMixinBase<T>
     implements CanDisable, HasTabIndex, OnInit, OnDestroy {
-  @Input() role: 'treeitem' | 'group' = 'treeitem';
 
 
   constructor(protected _elementRef: ElementRef<HTMLElement>,
@@ -96,6 +95,7 @@ export class MatTreeNodeDef<T> extends CdkTreeNodeDef<T> {
 @Directive({
   selector: 'mat-nested-tree-node',
   exportAs: 'matNestedTreeNode',
+  inputs: ['role', 'disabled', 'tabIndex'],
   providers: [
     {provide: CdkNestedTreeNode, useExisting: MatNestedTreeNode},
     {provide: CdkTreeNode, useExisting: MatNestedTreeNode},

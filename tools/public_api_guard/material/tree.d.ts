@@ -12,7 +12,7 @@ export declare class MatNestedTreeNode<T> extends CdkNestedTreeNode<T> implement
     ngOnDestroy(): void;
     ngOnInit(): void;
     static ngAcceptInputType_disabled: BooleanInput;
-    static ɵdir: i0.ɵɵDirectiveDefWithMeta<MatNestedTreeNode<any>, "mat-nested-tree-node", ["matNestedTreeNode"], { "node": "matNestedTreeNode"; "disabled": "disabled"; "tabIndex": "tabIndex"; }, {}, never>;
+    static ɵdir: i0.ɵɵDirectiveDefWithMeta<MatNestedTreeNode<any>, "mat-nested-tree-node", ["matNestedTreeNode"], { "role": "role"; "disabled": "disabled"; "tabIndex": "tabIndex"; "node": "matNestedTreeNode"; }, {}, never>;
     static ɵfac: i0.ɵɵFactoryDef<MatNestedTreeNode<any>, [null, null, null, { attribute: "tabindex"; }]>;
 }
 
@@ -61,13 +61,12 @@ export declare class MatTreeNestedDataSource<T> extends DataSource<T> {
 export declare class MatTreeNode<T> extends _MatTreeNodeMixinBase<T> implements CanDisable, HasTabIndex, OnInit, OnDestroy {
     protected _elementRef: ElementRef<HTMLElement>;
     protected _tree: CdkTree<T>;
-    role: 'treeitem' | 'group';
     constructor(_elementRef: ElementRef<HTMLElement>, _tree: CdkTree<T>, tabIndex: string);
     ngOnDestroy(): void;
     ngOnInit(): void;
     static ngAcceptInputType_disabled: BooleanInput;
     static ngAcceptInputType_tabIndex: NumberInput;
-    static ɵdir: i0.ɵɵDirectiveDefWithMeta<MatTreeNode<any>, "mat-tree-node", ["matTreeNode"], { "disabled": "disabled"; "tabIndex": "tabIndex"; "role": "role"; }, {}, never>;
+    static ɵdir: i0.ɵɵDirectiveDefWithMeta<MatTreeNode<any>, "mat-tree-node", ["matTreeNode"], { "role": "role"; "disabled": "disabled"; "tabIndex": "tabIndex"; }, {}, never>;
     static ɵfac: i0.ɵɵFactoryDef<MatTreeNode<any>, [null, null, { attribute: "tabindex"; }]>;
 }
 
