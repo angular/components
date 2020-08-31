@@ -67,20 +67,25 @@ function getYIntercept(point: Point, slope: number) {
 type Point = {x: number; y: number};
 
 /**
- * The bounding top and bottom points within the opened submenu, and the left, middle and right x
- * coordinates.
+ * Whether the given mouse trajectory line defined by the slope and y intercept falls within the
+ * submenu as defined by `submenuPoints`
+ * @param submenuPoints the submenu DOMRect points.
+ * @param m the slope of the trajectory line.
+ * @param b the y intercept of the trajectory line.
+ *
+ * @return true if any point on the line falls within the submenu.
  */
-type SubmenuPoints = {bottom: number; top: number; x: number; midX: number; endX: number};
+function isWithinSubmenu(submenuPoints: DOMRect, m: number, b: number) {
+  const {left, right, top, bottom} = submenuPoints;
 
-/** Whether the given line defined by the slope and y intercept falls within the submenu. */
-function isWithinSubmenu(submenuPoints: SubmenuPoints, slope: number, yIntercept: number) {
+  // Check for intersection with each edge of the submenu (left, right, top, bottom)
+  // by fixing one coordinate to that edge's coordinate (either x or y) and checking if the
+  // other coordinate is within bounds.
   return (
-    (slope * submenuPoints.x + yIntercept > submenuPoints.top &&
-      slope * submenuPoints.x + yIntercept < submenuPoints.bottom) ||
-    (slope * submenuPoints.midX + yIntercept > submenuPoints.top &&
-      slope * submenuPoints.midX + yIntercept < submenuPoints.bottom) ||
-    (slope * submenuPoints.endX + yIntercept > submenuPoints.top &&
-      slope * submenuPoints.endX + yIntercept < submenuPoints.bottom)
+    (m * left + b >= top && m * left + b <= bottom) ||
+    (m * right + b >= top && m * right + b <= bottom) ||
+    ((top - b) / m >= left && (top - b) / m <= right) ||
+    ((bottom - b) / m >= left && (bottom - b) / m <= right)
   );
 }
 /**
@@ -171,7 +176,7 @@ export class TargetMenuAim implements MenuAim, OnDestroy {
 
   /** Whether the user is heading towards the open submenu. */
   private _isMovingToSubmenu() {
-    const submenuPoints = this._getSubmenuPoints();
+    const submenuPoints = this._getSubmenuBounds();
     if (!submenuPoints) {
       return false;
     }
@@ -190,26 +195,11 @@ export class TargetMenuAim implements MenuAim, OnDestroy {
     return numMoving >= Math.floor(NUM_POINTS / 2);
   }
 
-  /**
-   * Get the bounding top and bottom points from withing the submenu as well as the left, middle
-   * and right x coordinates.
-   */
-  private _getSubmenuPoints() {
-    const target = this._pointerTracker?.previousElement
+  /** Get the bounding DOMRect for the open submenu. */
+  private _getSubmenuBounds(): DOMRect | undefined {
+    return this._pointerTracker?.previousElement
       ?.getMenu()
       ?._elementRef.nativeElement.getBoundingClientRect();
-    if (target) {
-      const x = target.x;
-      const width = target.width;
-      return {
-        bottom: target.bottom,
-        top: target.top,
-        x: x,
-        midX: x + width / 2,
-        endX: x + width,
-      };
-    }
-    return null;
   }
 
   /**
