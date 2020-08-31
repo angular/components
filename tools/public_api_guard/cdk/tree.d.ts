@@ -20,7 +20,7 @@ export declare abstract class BaseTreeControl<T, K = T> implements TreeControl<T
 
 export declare const CDK_TREE_NODE_OUTLET_NODE: InjectionToken<{}>;
 
-export declare class CdkNestedTreeNode<T> extends CdkTreeNode<T> implements AfterContentInit, OnDestroy, OnInit {
+export declare class CdkNestedTreeNode<T> extends CdkTreeNode<T> implements AfterContentInit, DoCheck, OnDestroy, OnInit {
     protected _children: T[];
     protected _differs: IterableDiffers;
     protected _elementRef: ElementRef<HTMLElement>;
@@ -29,6 +29,7 @@ export declare class CdkNestedTreeNode<T> extends CdkTreeNode<T> implements Afte
     constructor(_elementRef: ElementRef<HTMLElement>, _tree: CdkTree<T>, _differs: IterableDiffers);
     protected _clear(): void;
     ngAfterContentInit(): void;
+    ngDoCheck(): void;
     ngOnDestroy(): void;
     ngOnInit(): void;
     protected updateChildrenNodes(children?: T[]): void;

@@ -17,6 +17,7 @@ import {
   AfterContentInit,
   Attribute,
   Directive,
+  DoCheck,
   ElementRef,
   Input,
   IterableDiffers,
@@ -45,7 +46,7 @@ const _MatTreeNodeMixinBase: HasTabIndexCtor & CanDisableCtor & typeof CdkTreeNo
   providers: [{provide: CdkTreeNode, useExisting: MatTreeNode}]
 })
 export class MatTreeNode<T> extends _MatTreeNodeMixinBase<T>
-    implements CanDisable, HasTabIndex, OnInit, OnDestroy {
+    implements CanDisable, DoCheck, HasTabIndex, OnInit, OnDestroy {
 
 
   constructor(protected _elementRef: ElementRef<HTMLElement>,
@@ -65,6 +66,10 @@ export class MatTreeNode<T> extends _MatTreeNodeMixinBase<T>
   // In aot mode, the lifecycle hooks from parent class are not called.
   ngOnInit() {
     super.ngOnInit();
+  }
+
+  ngDoCheck() {
+    super.ngDoCheck();
   }
 
   ngOnDestroy() {
@@ -102,7 +107,7 @@ export class MatTreeNodeDef<T> extends CdkTreeNodeDef<T> {
     {provide: CDK_TREE_NODE_OUTLET_NODE, useExisting: MatNestedTreeNode}
   ]
 })
-export class MatNestedTreeNode<T> extends CdkNestedTreeNode<T> implements AfterContentInit,
+export class MatNestedTreeNode<T> extends CdkNestedTreeNode<T> implements AfterContentInit, DoCheck,
   OnDestroy, OnInit {
   @Input('matNestedTreeNode') node: T;
 
@@ -139,6 +144,10 @@ export class MatNestedTreeNode<T> extends CdkNestedTreeNode<T> implements AfterC
   // TODO(tinayuangao): Remove when the angular issue #23091 is fixed
   ngOnInit() {
     super.ngOnInit();
+  }
+
+  ngDoCheck() {
+    super.ngDoCheck();
   }
 
   ngAfterContentInit() {

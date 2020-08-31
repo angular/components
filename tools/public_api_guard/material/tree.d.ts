@@ -1,4 +1,4 @@
-export declare class MatNestedTreeNode<T> extends CdkNestedTreeNode<T> implements AfterContentInit, OnDestroy, OnInit {
+export declare class MatNestedTreeNode<T> extends CdkNestedTreeNode<T> implements AfterContentInit, DoCheck, OnDestroy, OnInit {
     protected _differs: IterableDiffers;
     protected _elementRef: ElementRef<HTMLElement>;
     protected _tree: CdkTree<T>;
@@ -9,6 +9,7 @@ export declare class MatNestedTreeNode<T> extends CdkNestedTreeNode<T> implement
     set tabIndex(value: number);
     constructor(_elementRef: ElementRef<HTMLElement>, _tree: CdkTree<T>, _differs: IterableDiffers, tabIndex: string);
     ngAfterContentInit(): void;
+    ngDoCheck(): void;
     ngOnDestroy(): void;
     ngOnInit(): void;
     static ngAcceptInputType_disabled: BooleanInput;
@@ -58,10 +59,11 @@ export declare class MatTreeNestedDataSource<T> extends DataSource<T> {
     disconnect(): void;
 }
 
-export declare class MatTreeNode<T> extends _MatTreeNodeMixinBase<T> implements CanDisable, HasTabIndex, OnInit, OnDestroy {
+export declare class MatTreeNode<T> extends _MatTreeNodeMixinBase<T> implements CanDisable, DoCheck, HasTabIndex, OnInit, OnDestroy {
     protected _elementRef: ElementRef<HTMLElement>;
     protected _tree: CdkTree<T>;
     constructor(_elementRef: ElementRef<HTMLElement>, _tree: CdkTree<T>, tabIndex: string);
+    ngDoCheck(): void;
     ngOnDestroy(): void;
     ngOnInit(): void;
     static ngAcceptInputType_disabled: BooleanInput;

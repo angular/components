@@ -9,6 +9,7 @@ import {
   AfterContentInit,
   ContentChildren,
   Directive,
+  DoCheck,
   ElementRef,
   IterableDiffer,
   IterableDiffers,
@@ -38,7 +39,7 @@ import {getTreeControlFunctionsMissingError} from './tree-errors';
     {provide: CDK_TREE_NODE_OUTLET_NODE, useExisting: CdkNestedTreeNode}
   ]
 })
-export class CdkNestedTreeNode<T> extends CdkTreeNode<T> implements AfterContentInit,
+export class CdkNestedTreeNode<T> extends CdkTreeNode<T> implements AfterContentInit, DoCheck,
   OnDestroy,
   OnInit {
   /** Differ used to find the changes in the data provided by the data source. */
@@ -86,6 +87,10 @@ export class CdkNestedTreeNode<T> extends CdkTreeNode<T> implements AfterContent
   // In aot mode, the lifecycle hooks from parent class are not called.
   ngOnInit() {
     super.ngOnInit();
+  }
+
+  ngDoCheck() {
+    super.ngDoCheck();
   }
 
   ngOnDestroy() {
