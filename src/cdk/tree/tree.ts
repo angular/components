@@ -13,9 +13,8 @@ import {
   ChangeDetectorRef,
   Component,
   ContentChildren,
-  Directive,
+  Directive, DoCheck,
   ElementRef,
-  HostBinding,
   Input,
   IterableChangeRecord,
   IterableDiffer,
@@ -303,15 +302,17 @@ export class CdkTree<T> implements AfterContentChecked, CollectionViewer, OnDest
   selector: 'cdk-tree-node',
   exportAs: 'cdkTreeNode',
 })
-export class CdkTreeNode<T> implements FocusableOption, OnDestroy, OnInit {
-  // TODO: mark as deprecated
+export class CdkTreeNode<T> implements DoCheck, FocusableOption, OnDestroy, OnInit {
   /**
    * The role of the tree node.
+   * @deprecated The correct role is 'treeitem', 'group' should not be used. This input will be
+   *   removed in a future version.
+   * @breaking-change 12.0.0 Remove this input
    */
   @Input() get role(): 'treeitem'|'group' { return 'treeitem'; }
 
   set role(_role: 'treeitem'|'group') {
-    // TODO: move to host
+    // TODO: move to host after View Engine deprecation
     this._elementRef.nativeElement.setAttribute('role', _role);
   }
 
@@ -340,15 +341,16 @@ export class CdkTreeNode<T> implements FocusableOption, OnDestroy, OnInit {
   }
   protected _data: T;
 
-  // tslint:disable-next-line:no-host-decorator-in-concrete
-  @HostBinding('attr.aria-expanded')
   get isExpanded(): boolean {
     return this._tree.treeControl.isExpanded(this._data);
   }
 
   set isExpanded(_expanded: boolean) {
+    this._expanded = _expanded;
     this._elementRef.nativeElement.setAttribute('aria-expanded', `${_expanded}`);
   }
+
+  protected _expanded: boolean;
 
   get level(): number {
    // If the treeControl has a getLevel method, use it to get the level. Otherwise read the
@@ -364,6 +366,7 @@ export class CdkTreeNode<T> implements FocusableOption, OnDestroy, OnInit {
     // The classes are directly added here instead of in the host property because classes on
     // the host property are not inherited with View Engine. It is not set as a @HostBinding because
     // it is not set by the time it's children nodes try to read the class from it.
+    // TODO: move to host after View Engine deprecation
     this._elementRef.nativeElement.classList.add('cdk-tree-node');
     this.role = 'treeitem';
     this.isExpanded = this.isExpanded;
@@ -372,6 +375,16 @@ export class CdkTreeNode<T> implements FocusableOption, OnDestroy, OnInit {
   ngOnInit(): void {
     this._parentNodeAriaLevel = getParentNodeAriaLevel(this._elementRef.nativeElement);
     this._elementRef.nativeElement.setAttribute('aria-level', `${this.level + 1}`);
+  }
+
+  ngDoCheck() {
+    // aria-expanded is be set here because the expanded state is stored in the tree control and
+    // the node isn't aware when the state is changed.
+    // It is not set using a @HostBinding because they sometimes get lost with Mixin based classes.
+    // TODO: move to host after View Engine deprecation
+    if (this.isExpanded != this._expanded) {
+      this.isExpanded = this.isExpanded;
+    }
   }
 
   ngOnDestroy() {

@@ -58,6 +58,7 @@ export class MatTreeNode<T> extends _MatTreeNodeMixinBase<T>
     // The classes are directly added here instead of in the host property because classes on
     // the host property are not inherited with View Engine. It is not set as a @HostBinding because
     // it is not set by the time it's children nodes try to read the class from it.
+    // TODO: move to host after View Engine deprecation
     this._elementRef.nativeElement.classList.add('mat-tree-node');
   }
 
@@ -129,6 +130,7 @@ export class MatNestedTreeNode<T> extends CdkNestedTreeNode<T> implements AfterC
     // The classes are directly added here instead of in the host property because classes on
     // the host property are not inherited with View Engine. It is not set as a @HostBinding because
     // it is not set by the time it's children nodes try to read the class from it.
+    // TODO: move to host after View Engine deprecation
     this._elementRef.nativeElement.classList.add('mat-nested-tree-node');
   }
 
