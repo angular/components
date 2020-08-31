@@ -69,12 +69,11 @@ export declare class CdkTreeNode<T> implements DoCheck, FocusableOption, OnDestr
     _dataChanges: Subject<void>;
     protected _destroyed: Subject<void>;
     protected _elementRef: ElementRef<HTMLElement>;
-    protected _expanded: boolean;
+    protected _isAriaExpanded: boolean;
     protected _tree: CdkTree<T>;
     get data(): T;
     set data(value: T);
     get isExpanded(): boolean;
-    set isExpanded(_expanded: boolean);
     get level(): number;
     get role(): 'treeitem' | 'group';
     set role(_role: 'treeitem' | 'group');

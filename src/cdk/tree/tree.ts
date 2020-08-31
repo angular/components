@@ -346,12 +346,12 @@ export class CdkTreeNode<T> implements DoCheck, FocusableOption, OnDestroy, OnIn
     return this._tree.treeControl.isExpanded(this._data);
   }
 
-  set isExpanded(_expanded: boolean) {
-    this._expanded = _expanded;
+  private _setExpanded(_expanded: boolean) {
+    this._isAriaExpanded = _expanded;
     this._elementRef.nativeElement.setAttribute('aria-expanded', `${_expanded}`);
   }
 
-  protected _expanded: boolean;
+  protected _isAriaExpanded: boolean;
 
   get level(): number {
    // If the treeControl has a getLevel method, use it to get the level. Otherwise read the
@@ -370,7 +370,7 @@ export class CdkTreeNode<T> implements DoCheck, FocusableOption, OnDestroy, OnIn
     // TODO: move to host after View Engine deprecation
     this._elementRef.nativeElement.classList.add('cdk-tree-node');
     this.role = 'treeitem';
-    this.isExpanded = this.isExpanded;
+    this._setExpanded(this.isExpanded);
   }
 
   ngOnInit(): void {
@@ -383,8 +383,8 @@ export class CdkTreeNode<T> implements DoCheck, FocusableOption, OnDestroy, OnIn
     // the node isn't aware when the state is changed.
     // It is not set using a @HostBinding because they sometimes get lost with Mixin based classes.
     // TODO: move to host after View Engine deprecation
-    if (this.isExpanded != this._expanded) {
-      this.isExpanded = this.isExpanded;
+    if (this.isExpanded != this._isAriaExpanded) {
+      this._setExpanded(this.isExpanded);
     }
   }
 
