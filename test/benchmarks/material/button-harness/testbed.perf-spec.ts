@@ -12,63 +12,16 @@ import {Component} from '@angular/core';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {MatButtonModule} from '@angular/material/button';
 import {MatButtonHarness} from '@angular/material/button/testing/button-harness';
-import {benchmark, getButtonWithText} from './testbed-benchmark-utilities';
-import {FIRST_BUTTON, MIDDLE_BUTTON, NUM_BUTTONS, LAST_BUTTON} from './constants';
+import {MIDDLE_BUTTON, NUM_BUTTONS} from './constants';
+import {benchmark} from './testbed-benchmark-utilities';
 
-describe('performance baseline for the testbed harness', () => {
-  let fixture: ComponentFixture<ButtonHarnessTest>;
-
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [MatButtonModule],
-      declarations: [ButtonHarnessTest],
-    }).compileComponents();
-
-    fixture = TestBed.createComponent(ButtonHarnessTest);
-    fixture.detectChanges();
-  });
-
-  it('(baseline) should retrieve all of the buttons', async () => {
-    await benchmark('(baseline) get every button', async () => {
-      document.querySelectorAll('button');
-    });
-  });
-
-  it('(baseline) should click the first button', async () => {
-    await benchmark('(baseline) click first button', async () => {
-      const button = getButtonWithText(FIRST_BUTTON);
-      button.click();
-    });
-  });
-
-  it('(baseline) should click the middle button', async () => {
-    await benchmark('(baseline) click middle button', async () => {
-      const button = getButtonWithText(MIDDLE_BUTTON);
-      button.click();
-    });
-  });
-
-  it('(baseline) should click the last button', async () => {
-    await benchmark('(baseline) click last button', async () => {
-      const button = getButtonWithText(LAST_BUTTON);
-      button.click();
-    });
-  });
-
-  it('(baseline) should click all of the buttons', async () => {
-    await benchmark('(baseline) click every button', async () => {
-      const buttons = document.getElementsByTagName('button');
-      for (let i = 0; i < buttons.length; i++) {
-        const button = buttons[i];
-        button.click();
-      }
-    });
-  });
-});
-
-describe('performance tests for the testbed harness', () => {
+describe('performance for the testbed harness environment', () => {
   let fixture: ComponentFixture<ButtonHarnessTest>;
   let loader: HarnessLoader;
+
+  beforeAll(() => {
+    jasmine.DEFAULT_TIMEOUT_INTERVAL = 36000000;
+  });
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -81,48 +34,78 @@ describe('performance tests for the testbed harness', () => {
     loader = TestbedHarnessEnvironment.loader(fixture);
   });
 
-  it('should retrieve all of the buttons', async () => {
-    await benchmark('get every button', async () => {
-      await loader.getAllHarnesses(MatButtonHarness);
+  describe('(baseline)', () => {
+    it('should find a button', async () => {
+      await benchmark('(baseline) find a button', async () => {
+        document.querySelector('button');
+      });
+    });
+
+    it('should find all buttons', async () => {
+      await benchmark('(baseline) find all buttons', async () => {
+        document.querySelectorAll('button');
+      });
+    });
+
+    it('should find a button via text filter', async () => {
+      await benchmark('(baseline) find a button via text filter', async () => {
+        return Array.from(document.querySelectorAll('button'))
+            .filter(b => b.innerText === MIDDLE_BUTTON);
+      });
+    });
+
+    it('should click a button', async () => {
+      const button = document.querySelector('button')!;
+      await benchmark('(baseline) click a button', async () => {
+        button.click();
+        fixture.detectChanges();
+      });
+    });
+
+    it('should click all buttons', async () => {
+      const buttons = Array.prototype.slice.call(document.querySelectorAll('button'));
+      await benchmark('(baseline) click all buttons', async () => {
+        buttons.forEach(button => button.click());
+        fixture.detectChanges();
+      });
     });
   });
 
-  it('should click the first button', async () => {
-    await benchmark('click first button', async () => {
-      const button = await loader.getHarness(MatButtonHarness.with({text: FIRST_BUTTON}));
-      await button.click();
+  describe('(with harness)', () => {
+    it('should find a button', async () => {
+      await benchmark('(with harness) find a button', async () => {
+        await loader.getHarness(MatButtonHarness);
+      });
     });
-  });
 
-  it('should click the middle button', async () => {
-    await benchmark('click middle button', async () => {
-      const button = await loader.getHarness(MatButtonHarness.with({text: MIDDLE_BUTTON}));
-      await button.click();
+    it('should find all buttons', async () => {
+      await benchmark('(with harness) find all buttons', async () => {
+        await loader.getAllHarnesses(MatButtonHarness);
+      });
     });
-  });
 
-  it('should click the last button', async () => {
-    await benchmark('click last button', async () => {
-      const button = await loader.getHarness(MatButtonHarness.with({text: LAST_BUTTON}));
-      await button.click();
+    it('should find a button via text filter', async () => {
+      await benchmark('(with harness) find a button via text filter', async () => {
+        await loader.getAllHarnesses(MatButtonHarness.with({text: MIDDLE_BUTTON}));
+      });
     });
-  });
 
-  it('should click all of the buttons', async () => {
-    await benchmark('click every button', async () => {
-      const buttons = await loader.getAllHarnesses(MatButtonHarness);
-      for (let i = 0; i < buttons.length; i++) {
-        const button = buttons[i];
+    it('should click a button', async () => {
+      const button = await loader.getHarness(MatButtonHarness);
+      await benchmark('(with harness) click a button', async () => {
         await button.click();
-      }
+      });
+    });
+
+    it('should click all buttons', async () => {
+      const buttons = await loader.getAllHarnesses(MatButtonHarness);
+      await benchmark('(with harness) click all buttons', async () => {
+        await Promise.all(buttons.map(button => button.click()));
+      });
     });
   });
 
-  // To see the benchmarks for this test, uncomment the it test below.
-  //
-  // I don't know how to force karma_web_test to show logs in the console so we are using this as
-  // a solution for now.
-  // it('should fail intentionally', () => expect(1).toBe(2));
+  it('should fail intentionally so performance numbers are logged', fail);
 });
 
 @Component({

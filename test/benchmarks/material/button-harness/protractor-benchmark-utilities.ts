@@ -15,7 +15,7 @@ import {USE_BENCHPRESS} from './constants';
  * @param id A unique identifier.
  * @param callback A function whose performance will be recorded.
  */
-export async function benchmark(id: string, callback: Function) {
+export async function benchmark(id: string, callback: () => Promise<unknown>) {
   if (USE_BENCHPRESS) {
     await benchmarkWithBenchpress(id, callback);
   } else {
@@ -24,12 +24,9 @@ export async function benchmark(id: string, callback: Function) {
 }
 
 /**
- * A simple wrapper for runBenchmark ... which is a wrapper for benchpress.
- *
- * @param id
- * @param callback
+ * A simple wrapper for runBenchmark which is a wrapper for benchpress.
  */
-async function benchmarkWithBenchpress(id: string, callback: Function) {
+async function benchmarkWithBenchpress(id: string, callback: () => Promise<unknown>) {
   await runBenchmark({
     id,
     url: '',
@@ -40,12 +37,9 @@ async function benchmarkWithBenchpress(id: string, callback: Function) {
 }
 
 /**
- * Uses console.time with the given id to record the time it takes for the given callback to run.
- *
- * @param id
- * @param callback
+ * Measures the time it takes to invoke the given function and prints the duration to the console.
  */
-async function benchmarkWithConsoleAPI(id: string, callback: Function) {
+async function benchmarkWithConsoleAPI(id: string, callback: () => Promise<unknown>, runs = 5) {
   console.time(id);
   await callback();
   console.timeEnd(id);

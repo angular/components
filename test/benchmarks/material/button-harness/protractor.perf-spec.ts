@@ -17,7 +17,7 @@ const FIRST_BUTTON = '0';
 const MIDDLE_BUTTON = `${Math.floor(NUM_BUTTONS / 2)}`;
 const LAST_BUTTON = `${NUM_BUTTONS - 1}`;
 
-describe('performance baseline for the protractor harness', () => {
+describe('baseline tests for interacting with the page through Protractor directly', () => {
   beforeEach(async () => {
     await browser.get('');
   });
@@ -54,7 +54,7 @@ describe('performance baseline for the protractor harness', () => {
   });
 });
 
-describe('performance tests for the protractor harness', () => {
+describe('performance tests for the protractor button harness', () => {
   let loader: HarnessLoader;
 
   beforeEach(async () => {

@@ -6,8 +6,12 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+
+/**
+ * Benchpress gives us fine-grained metrics on browser interactions. In some cases, we want to
+ * just get a whole measurement of how long the entire interaction took.
+ */
 export const USE_BENCHPRESS = false;
-export const NUM_BUTTONS = 5;
-export const FIRST_BUTTON = '0';
+
+export const NUM_BUTTONS = 25;
 export const MIDDLE_BUTTON = `${Math.floor(NUM_BUTTONS / 2)}`;
-export const LAST_BUTTON = `${NUM_BUTTONS - 1}`;
