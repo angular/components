@@ -157,12 +157,13 @@ Note that `await` statements block the execution of your test until the associat
 resolves. When reading multiple properties of a harness it may not be necessary to block on the
 first before asking for the next, in these cases use `Promise.all` to parallelize.
 
-Another thing to consider when parallelizing multiple operations is the component harnesses
-automatically trigger change detection before reading state from an element and after interacting
-with it. When you're running multiple operations in a `Promise.all`, you don't need change detection
-to be triggered multiple times. In order to optimize performance, both `HarnessLoader` and
-`ComponentHarness` offer a `batchCD` method that can be used to ensure change detection is only
-triggered once before the batch operation, and once after.
+By default, test harnesses will run Angular's change detection before reading the state of a DOM
+element and after interacting with a DOM element. If you're performing a large number of operations,
+this may slow down your tests. To avoid running change detection for every operation, you can use
+the `batchCD` method on `ComponentHarness` and `HarnessLoader` to run change detection just once
+before the batch operation and once after. When using `Promise.all` to parallelize operations, you
+almost always want to use `batchCD`, as it doesn't make sense to trigger change detection multiple
+times in parallel.
 
 For example, consider the following example of reading both the `checked` and `indeterminate` state
 off of a checkbox harness:

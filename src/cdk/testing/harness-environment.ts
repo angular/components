@@ -126,16 +126,25 @@ export abstract class HarnessEnvironment<E> implements HarnessLoader, LocatorFac
   }
 
   async batchCD<T>(fn: () => Promise<T>) {
+    // Flipping on the `isCDBatching` flag will turn all calls to `forceStabilize` into no-ops to
+    // prevent triggering redundant change detection. However, we want to make sure we trigger
+    // change detection exactly once before flipping this flag to ensure that any pending changes
+    // are flushed before the harness tries to read state from DOM elements.
     const alreadyBatching = isCDBatching;
     if (!alreadyBatching) {
       await this.forceStabilize();
       isCDBatching = true;
     }
+
     const result = await fn();
+
+    // We also want to run change detection exactly once after the batched operation is complete.
+    // This will ensure that any changes from interacting with DOM elements are properly flushed.
     if (!alreadyBatching) {
       isCDBatching = false;
       await this.forceStabilize();
     }
+
     return result;
   }
 
@@ -185,6 +194,10 @@ export abstract class HarnessEnvironment<E> implements HarnessLoader, LocatorFac
     const skipSelectorCheck = (elementQueries.length === 0 && harnessTypes.size === 1) ||
         harnessQueries.length === 0;
 
+    // We want to batch change detection while we're filtering harnesses, because harness predicates
+    // may trigger change detection by reading state from DOM elements. If not batched these change
+    // detections would be triggered once per potential match element which could cause significant
+    // slowdown.
     const perElementMatches = await this.batchCD(() =>
         Promise.all(rawElements.map(async rawElement => {
           const testElement = this.createTestElement(rawElement);
