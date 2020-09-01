@@ -40,7 +40,10 @@ async function benchmarkWithBenchpress(id: string, callback: () => Promise<unkno
  * Measures the time it takes to invoke the given function and prints the duration to the console.
  */
 async function benchmarkWithConsoleAPI(id: string, callback: () => Promise<unknown>, runs = 5) {
-  console.time(id);
-  await callback();
-  console.timeEnd(id);
+  const t0 = Number(process.hrtime.bigint()) / 1000000;
+  for (let i = 0; i < runs; i++) {
+    await callback();
+  }
+  const t1 = Number(process.hrtime.bigint()) / 1000000;
+  console.warn(`${id}: ${((t1 - t0) / runs).toFixed(2)}ms (avg over ${runs} runs)`);
 }

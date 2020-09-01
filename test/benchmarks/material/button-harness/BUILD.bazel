@@ -21,6 +21,7 @@ ts_library(
     deps = [
         ":constants",
         "@npm//@angular/dev-infra-private",
+        "@npm//@types/node",
     ],
 )
 
@@ -40,6 +41,7 @@ component_benchmark(
         ":protractor-benchmark-utilities",
         "@npm//protractor",
         "@npm//@types/jasmine",
+        "@npm//@types/node",
         "//src/cdk/testing",
         "//src/material/button/testing",
         "//src/cdk/testing/protractor",
