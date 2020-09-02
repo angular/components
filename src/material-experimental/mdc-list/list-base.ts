@@ -138,7 +138,7 @@ export abstract class MatListItemBase implements AfterContentInit, OnDestroy, Ri
 @Directive()
 /** @docs-private */
 export abstract class MatListBase {
-  @HostBinding('class.mdc-list--non-interactive')
+  @HostBinding('class.mat-mdc-list-non-interactive')
   _isNonInteractive: boolean = true;
 
   /** Whether ripples for all list items is disabled. */

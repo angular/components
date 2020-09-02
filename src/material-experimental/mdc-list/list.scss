@@ -105,6 +105,12 @@
   opacity: 0;
 }
 
+// MDC always sets the cursor to `pointer`. We do not want to show this for non-interactive
+// lists. See: https://github.com/material-components/material-components-web/issues/6443
+.mat-mdc-list-non-interactive .mdc-list-item {
+  cursor: default;
+}
+
 // The MDC-based list items already use the `::before` pseudo element for the standard
 // focus/selected/hover state. Hence, we need to have a separate list-item spanning
 // element that can be used for strong focus indicators.
