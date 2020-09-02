@@ -370,7 +370,6 @@ export class CdkTreeNode<T> implements DoCheck, FocusableOption, OnDestroy, OnIn
     // TODO: move to host after View Engine deprecation
     this._elementRef.nativeElement.classList.add('cdk-tree-node');
     this.role = 'treeitem';
-    this._setExpanded(this.isExpanded);
   }
 
   ngOnInit(): void {
