@@ -27,7 +27,9 @@ describe('menu performance benchmarks', () => {
       url: '',
       ignoreBrowserSynchronization: true,
       params: [],
-      setup: async () => trigger = element(by.buttonText('Basic Menu')),
+      setup: async () => {
+        trigger = element(by.buttonText('Basic Menu'));
+      },
       work: async () => {
         await trigger.click();
         await closeMenu(trigger);
@@ -57,9 +59,7 @@ describe('menu performance benchmarks', () => {
       url: '',
       ignoreBrowserSynchronization: true,
       params: [],
-      setup: () => {
-        trigger = element(by.buttonText('Nested Menu'));
-      },
+      setup: async () => trigger = element(by.buttonText('Nested Menu')),
       work: async () => {
         await trigger.click();
         await element(by.buttonText('Sub Menu 1')).click();
