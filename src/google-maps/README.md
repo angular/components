@@ -104,7 +104,7 @@ export class GoogleMapsDemoComponent {
 
 ## The Options Input
 
-The Google Maps components implement all of the options for their respective objects from the Google Maps JavaScript API through an `options` input, but they also have specific inputs for some of the most common options. For example, the google maps component could have its options set either in with a google.maps.MapOptions object:
+The Google Maps components implement all of the options for their respective objects from the Google Maps JavaScript API through an `options` input, but they also have specific inputs for some of the most common options. For example, the Google Maps component could have its options set either in with a google.maps.MapOptions object:
 
 ```html
 <google-map [options]="options"></google-map>
@@ -129,4 +129,4 @@ center: google.maps.LatLngLiteral = {lat: 40, lng: -20};
 zoom = 4;
 ```
 
-Not every option has its own input. See the api for each component to see if the option has a dedicated input or if it should be set in the options input.
+Not every option has its own input. See the API for each component to see if the option has a dedicated input or if it should be set in the options input.
