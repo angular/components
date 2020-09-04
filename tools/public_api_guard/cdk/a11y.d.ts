@@ -239,7 +239,7 @@ export declare class LiveAnnouncer implements OnDestroy {
     announce(message: string): Promise<void>;
     announce(message: string, politeness?: AriaLivePoliteness): Promise<void>;
     announce(message: string, duration?: number): Promise<void>;
-    announce(message: string, politeness?: AriaLivePoliteness, duration?: number): Promise<void>;
+    announce(message: string, politeness?: AriaLivePoliteness, duration?: number, labelledBy?: string[] | string, describedBy?: string[] | string): Promise<void>;
     clear(): void;
     ngOnDestroy(): void;
     static ɵfac: i0.ɵɵFactoryDef<LiveAnnouncer, [{ optional: true; }, null, null, { optional: true; }]>;

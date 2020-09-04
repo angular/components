@@ -72,6 +72,7 @@ export class LiveAnnouncer implements OnDestroy {
    */
   announce(message: string, duration?: number): Promise<void>;
 
+
   /**
    * Announces a message to screenreaders.
    * @param message Message to be announced to the screenreader.
@@ -79,19 +80,29 @@ export class LiveAnnouncer implements OnDestroy {
    * @param duration Time in milliseconds after which to clear out the announcer element. Note
    *   that this takes effect after the message has been added to the DOM, which can be up to
    *   100ms after `announce` has been called.
+   * @param labelledBy List of label identifiers associated with announcer element.
+   * @param describedBy List of description identifiers associated with announcer element.
    * @returns Promise that will be resolved when the message is added to the DOM.
    */
-  announce(message: string, politeness?: AriaLivePoliteness, duration?: number): Promise<void>;
+  announce(
+    message: string,
+    politeness?: AriaLivePoliteness,
+    duration?: number,
+    labelledBy?: string[] | string,
+    describedBy?: string[] | string
+  ): Promise<void>;
 
   announce(message: string, ...args: any[]): Promise<void> {
     const defaultOptions = this._defaultOptions;
     let politeness: AriaLivePoliteness | undefined;
     let duration: number | undefined;
+    let labelledBy: string[] | string | undefined;
+    let describedBy: string[] | string | undefined;
 
     if (args.length === 1 && typeof args[0] === 'number') {
       duration = args[0];
     } else {
-      [politeness, duration] = args;
+      [politeness, duration, labelledBy, describedBy] = args;
     }
 
     this.clear();
@@ -108,6 +119,9 @@ export class LiveAnnouncer implements OnDestroy {
 
     // TODO: ensure changing the politeness works on all environments we support.
     this._liveElement.setAttribute('aria-live', politeness);
+
+    this._setIdentifiersAttribute('aria-labelledby', labelledBy);
+    this._setIdentifiersAttribute('aria-describedby', describedBy);
 
     // This 100ms timeout is necessary for some browser + screen-reader combinations:
     // - Both JAWS and NVDA over IE11 will not announce anything without a non-zero timeout.
@@ -168,6 +182,16 @@ export class LiveAnnouncer implements OnDestroy {
     this._document.body.appendChild(liveEl);
 
     return liveEl;
+  }
+
+  private _setIdentifiersAttribute(attribute: string, identifiers?: string | string[]): void {
+    if (identifiers && this._liveElement) {
+      if (Array.isArray(identifiers)) {
+        this._liveElement.setAttribute(attribute, identifiers.join(' '));
+      } else {
+        this._liveElement.setAttribute(attribute, identifiers);
+      }
+    }
   }
 
 }
