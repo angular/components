@@ -56,11 +56,10 @@ describe('LiveAnnouncer', () => {
 
     it('should correctly update labelledby and describedby attributes', fakeAsync(() => {
       announcer.announce('Hey Google', 'assertive', 0, 'ID123', 'ID456');
-
-      tick(100);
-
       expect(ariaLiveElement.getAttribute('aria-labelledby')).toBe('ID123');
       expect(ariaLiveElement.getAttribute('aria-describedby')).toBe('ID456');
+
+      tick(100);
     }));
 
     it('should correctly update aria attributes with array arguments', fakeAsync(() => {
@@ -68,11 +67,10 @@ describe('LiveAnnouncer', () => {
       const describeBy = ['d', 'e', 'f'];
 
       announcer.announce('Hey Google', 'assertive', 0, labelledBy, describeBy);
-
-      tick(100);
-
       expect(ariaLiveElement.getAttribute('aria-labelledby')).toBe('a b c');
       expect(ariaLiveElement.getAttribute('aria-describedby')).toBe('d e f');
+
+      tick(100);
     }));
 
     it('should apply the aria-live value polite by default', fakeAsync(() => {

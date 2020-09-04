@@ -151,6 +151,8 @@ export class LiveAnnouncer implements OnDestroy {
   clear() {
     if (this._liveElement) {
       this._liveElement.textContent = '';
+      this._liveElement.removeAttribute('aria-labelledby');
+      this._liveElement.removeAttribute('aria-describedby');
     }
   }
 
