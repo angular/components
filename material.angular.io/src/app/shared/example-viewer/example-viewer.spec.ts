@@ -7,12 +7,12 @@ import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {MatInputModule} from '@angular/material/input';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import {MatSnackBar} from '@angular/material/snack-bar';
+import {Clipboard} from '@angular/cdk/clipboard';
 
 import {EXAMPLE_COMPONENTS} from '@angular/components-examples';
 import {By} from '@angular/platform-browser';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {DocsAppTestingModule} from '../../testing/testing-module';
-import {CopierService} from '../copier/copier.service';
 import {DocViewerModule} from '../doc-viewer/doc-viewer-module';
 import {ExampleViewer} from './example-viewer';
 import {AutocompleteExamplesModule} from '@angular/components-examples/material/autocomplete';
@@ -205,9 +205,9 @@ describe('ExampleViewer', () => {
       button = btnDe ? btnDe.nativeElement : null;
     });
 
-    it('should call copier service when clicked', (() => {
-      const copierService: CopierService = TestBed.inject(CopierService);
-      const spy = spyOn(copierService, 'copyText');
+    it('should call clipboard service when clicked', (() => {
+      const clipboardService = TestBed.inject(Clipboard);
+      const spy = spyOn(clipboardService, 'copy');
       expect(spy.calls.count()).toBe(0, 'before click');
       button.click();
       expect(spy.calls.count()).toBe(1, 'after click');
@@ -216,18 +216,18 @@ describe('ExampleViewer', () => {
 
     it('should display a message when copy succeeds', (() => {
       const snackBar: MatSnackBar = TestBed.inject(MatSnackBar);
-      const copierService: CopierService = TestBed.inject(CopierService);
+      const clipboardService = TestBed.inject(Clipboard);
       spyOn(snackBar, 'open');
-      spyOn(copierService, 'copyText').and.returnValue(true);
+      spyOn(clipboardService, 'copy').and.returnValue(true);
       button.click();
       expect(snackBar.open).toHaveBeenCalledWith('Code copied', '', {duration: 2500});
     }));
 
     it('should display an error when copy fails', (() => {
       const snackBar: MatSnackBar = TestBed.inject(MatSnackBar);
-      const copierService: CopierService = TestBed.inject(CopierService);
+      const clipboardService = TestBed.inject(Clipboard);
       spyOn(snackBar, 'open');
-      spyOn(copierService, 'copyText').and.returnValue(false);
+      spyOn(clipboardService, 'copy').and.returnValue(false);
       button.click();
       expect(snackBar.open)
           .toHaveBeenCalledWith('Copy failed. Please try again!', '', {duration: 2500});
