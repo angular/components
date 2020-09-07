@@ -10,7 +10,6 @@ import {PortalModule} from '@angular/cdk/portal';
 import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
 import {HeaderLink} from './header-link';
-import {CopierService} from '../copier/copier.service';
 import {CodeSnippet} from '../example-viewer/code-snippet';
 
 
@@ -26,7 +25,6 @@ import {CodeSnippet} from '../example-viewer/code-snippet';
     PortalModule,
     StackBlitzButtonModule
   ],
-  providers: [CopierService],
   declarations: [DocViewer, ExampleViewer, HeaderLink, CodeSnippet],
   entryComponents: [ExampleViewer, HeaderLink],
   exports: [DocViewer, ExampleViewer, HeaderLink],

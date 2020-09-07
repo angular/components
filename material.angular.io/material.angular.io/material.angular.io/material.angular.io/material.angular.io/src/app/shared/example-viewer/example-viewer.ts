@@ -7,9 +7,9 @@ import {
   ɵNgModuleFactory
 } from '@angular/core';
 import {MatSnackBar} from '@angular/material/snack-bar';
+import {Clipboard} from '@angular/cdk/clipboard';
 
 import {EXAMPLE_COMPONENTS, LiveExample} from '@angular/components-examples';
-import {CopierService} from '../copier/copier.service';
 import {CodeSnippet} from './code-snippet';
 
 export type Views = 'snippet' | 'full' | 'demo';
@@ -73,8 +73,9 @@ export class ExampleViewer implements OnInit {
   /** Name of file to display in compact view. */
   @Input() file?: string;
 
-  constructor(private readonly snackbar: MatSnackBar, private readonly copier: CopierService) {
-  }
+  constructor(
+    private readonly snackbar: MatSnackBar,
+    private readonly clipboard: Clipboard) {}
 
   ngOnInit() {
     if (this.file) {
@@ -116,7 +117,7 @@ export class ExampleViewer implements OnInit {
   }
 
   copySource(text: string) {
-    if (this.copier.copyText(text)) {
+    if (this.clipboard.copy(text)) {
       this.snackbar.open('Code copied', '', {duration: 2500});
     } else {
       this.snackbar.open('Copy failed. Please try again!', '', {duration: 2500});

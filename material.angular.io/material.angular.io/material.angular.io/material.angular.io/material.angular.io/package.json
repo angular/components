@@ -25,21 +25,21 @@
   },
   "private": true,
   "dependencies": {
-    "@angular/animations": "10.0.1",
+    "@angular/animations": "^10.1.0",
     "@angular/cdk": "^10.2.0",
     "@angular/cdk-experimental": "^10.2.0",
-    "@angular/common": "^10.0.1",
-    "@angular/compiler": "^10.0.1",
+    "@angular/common": "^10.1.0",
+    "@angular/compiler": "^10.1.0",
     "@angular/components-examples": "angular/material2-docs-content#10.2.x",
-    "@angular/core": "^10.0.1",
-    "@angular/forms": "^10.0.1",
+    "@angular/core": "^10.1.0",
+    "@angular/forms": "^10.1.0",
     "@angular/google-maps": "^10.2.0",
     "@angular/material": "^10.2.0",
     "@angular/material-experimental": "^10.2.0",
     "@angular/material-moment-adapter": "^10.2.0",
-    "@angular/platform-browser": "^10.0.1",
-    "@angular/platform-browser-dynamic": "^10.0.1",
-    "@angular/router": "^10.0.1",
+    "@angular/platform-browser": "^10.1.0",
+    "@angular/platform-browser-dynamic": "^10.1.0",
+    "@angular/router": "^10.1.0",
     "@angular/youtube-player": "^10.2.0",
     "material-components-web": "7.0.0-canary.058cfd23c.0",
     "moment": "^2.24.0",
@@ -48,10 +48,10 @@
     "zone.js": "0.10.3"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "^0.1000.0",
+    "@angular-devkit/build-angular": "^0.1001.0",
     "@angular/cli": "^10.0.0",
-    "@angular/compiler-cli": "^10.0.1",
-    "@angular/localize": "^10.0.1",
+    "@angular/compiler-cli": "^10.1.0",
+    "@angular/localize": "^10.1.0",
     "@types/jasmine": "^3.5.9",
     "@types/node": "^12.12.30",
     "codelyzer": "^5.2.1",
@@ -67,6 +67,6 @@
     "protractor": "^5.4.4",
     "ts-node": "^8.10.1",
     "tslint": "^6.1.2",
-    "typescript": "3.9.3"
+    "typescript": "4.0.2"
   }
 }
