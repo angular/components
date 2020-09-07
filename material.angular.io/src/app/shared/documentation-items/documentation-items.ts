@@ -109,6 +109,7 @@ const DOCS: { [key: string]: DocItem[] } = {
       exampleSpecs: {
         prefix: 'card-',
       },
+      additionalApiDocs: [{name: 'Testing', path: 'material-card-testing.html'}],
     },
     {
       id: 'checkbox',
@@ -126,6 +127,7 @@ const DOCS: { [key: string]: DocItem[] } = {
       exampleSpecs: {
         prefix: 'chips-',
       },
+      additionalApiDocs: [{name: 'Testing', path: 'material-chips-testing.html'}],
     },
     {
       id: 'datepicker',
@@ -134,6 +136,7 @@ const DOCS: { [key: string]: DocItem[] } = {
       exampleSpecs: {
         prefix: 'datepicker-',
       },
+      additionalApiDocs: [{name: 'Testing', path: 'material-datepicker-testing.html'}],
     },
     {
       id: 'dialog',
@@ -323,6 +326,7 @@ const DOCS: { [key: string]: DocItem[] } = {
       exampleSpecs: {
         prefix: 'stepper-',
       },
+      additionalApiDocs: [{name: 'Testing', path: 'material-stepper-testing.html'}],
     },
     {
       id: 'table',
@@ -349,6 +353,7 @@ const DOCS: { [key: string]: DocItem[] } = {
       exampleSpecs: {
         prefix: 'toolbar-',
       },
+      additionalApiDocs: [{name: 'Testing', path: 'material-toolbar-testing.html'}],
     },
     {
       id: 'tooltip',
