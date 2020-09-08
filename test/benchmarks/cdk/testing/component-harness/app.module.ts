@@ -19,7 +19,7 @@ import {NUM_BUTTONS} from './constants';
     <button *ngFor="let val of vals" mat-button> {{ val }} </button>
   `,
   encapsulation: ViewEncapsulation.None,
-  styleUrls: ['//src/material/core/theming/prebuilt/indigo-pink.css'],
+  styleUrls: ['../../../../../src/material/core/theming/prebuilt/indigo-pink.css'],
 })
 export class ButtonHarnessTest {
   vals = Array.from({ length: NUM_BUTTONS }, (_, i) => i);
