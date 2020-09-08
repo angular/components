@@ -11,7 +11,7 @@ import {BrowserModule} from '@angular/platform-browser';
 import {MatButtonModule} from '@angular/material/button';
 import {NUM_BUTTONS} from './constants';
 
-/** component: mat-button-harness-test */
+/** component: component-harness-test */
 
 @Component({
   selector: 'app-root',
