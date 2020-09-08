@@ -20,14 +20,16 @@ async function closeMenu(trigger: ElementFinder) {
 }
 
 describe('menu performance benchmarks', () => {
-  it('opens a basic menu', async () => {
+  it('opens and closes a basic menu', async () => {
     let trigger: ElementFinder;
     await runBenchmark({
-      id: 'basic-menu-open',
+      id: 'open-and-close-basic-menu',
       url: '',
       ignoreBrowserSynchronization: true,
       params: [],
-      setup: async () => trigger = element(by.buttonText('Basic Menu')),
+      setup: async () => {
+        trigger = element(by.buttonText('Basic Menu'));
+      },
       work: async () => {
         await trigger.click();
         await closeMenu(trigger);
@@ -35,14 +37,16 @@ describe('menu performance benchmarks', () => {
     });
   });
 
-  it('opens the root menu of a set of nested menus', async () => {
+  it('opens and closes the root menu of a set of nested menus', async () => {
     let trigger: ElementFinder;
     await runBenchmark({
-      id: 'nested-menu-open-shallow',
+      id: 'shallow-open-and-close-nested-menu',
       url: '',
       ignoreBrowserSynchronization: true,
       params: [],
-      setup: async () => trigger = element(by.buttonText('Nested Menu')),
+      setup: async () => {
+        trigger = element(by.buttonText('Nested Menu'));
+      },
       work: async () => {
         await trigger.click();
         await closeMenu(trigger);
@@ -50,10 +54,10 @@ describe('menu performance benchmarks', () => {
     });
   });
 
-  it('fully opens a menu with nested menus', async () => {
+  it('fully opens and closes a menu with nested menus', async () => {
     let trigger: ElementFinder;
     await runBenchmark({
-      id: 'menu-open-deep',
+      id: 'deep-open-and-close-nested-menus',
       url: '',
       ignoreBrowserSynchronization: true,
       params: [],
