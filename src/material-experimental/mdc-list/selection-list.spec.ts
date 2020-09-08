@@ -25,7 +25,13 @@ import {FormControl, FormsModule, NgModel, ReactiveFormsModule} from '@angular/f
 import {defaultRippleAnimationConfig, ThemePalette} from '@angular/material/core';
 import {By} from '@angular/platform-browser';
 import {numbers} from '@material/list';
-import {MatListModule, MatListOption, MatSelectionList, MatSelectionListChange} from './index';
+import {
+  MatListModule,
+  MatListOption,
+  MatListOptionCheckboxPosition,
+  MatSelectionList,
+  MatSelectionListChange
+} from './index';
 
 describe('MDC-based MatSelectionList without forms', () => {
   describe('with list option', () => {
@@ -912,6 +918,14 @@ describe('MDC-based MatSelectionList without forms', () => {
       }).compileComponents();
     }));
 
+    function expectCheckboxAtPosition(listItemElement: HTMLElement,
+                              position: MatListOptionCheckboxPosition) {
+      const containerSelector = position === 'before' ?
+          '.mdc-list-item__graphic' : 'mdc-list-item__meta';
+      expect(listItemElement.querySelector(`${containerSelector} .mdc-checkbox`))
+          .toBeDefined(`Expected checkbox to be aligned ${position}`);
+    }
+
     it('should add a class to reflect that it has an avatar', () => {
       const fixture = TestBed.createComponent(SelectionListWithIcon);
       fixture.detectChanges();
@@ -926,6 +940,48 @@ describe('MDC-based MatSelectionList without forms', () => {
 
       const listOption = fixture.nativeElement.querySelector('.mat-mdc-list-option');
       expect(listOption.classList).toContain('mat-mdc-list-item-with-avatar');
+    });
+
+    it('should align icons properly together with checkbox', () => {
+      const fixture = TestBed.createComponent(SelectionListWithIcon);
+      fixture.detectChanges();
+      const listOption = fixture.nativeElement
+        .querySelector('.mat-mdc-list-option')! as HTMLElement;
+      const icon = listOption.querySelector('.mat-mdc-list-icon')!;
+
+      expectCheckboxAtPosition(listOption, 'after');
+      expect(icon.classList).toContain('mdc-list-item__graphic');
+
+      fixture.componentInstance.checkboxPosition = 'before';
+      fixture.detectChanges();
+      expectCheckboxAtPosition(listOption, 'before');
+      expect(icon.classList).toContain('mdc-list-item__meta');
+
+      fixture.componentInstance.checkboxPosition = 'after';
+      fixture.detectChanges();
+      expectCheckboxAtPosition(listOption, 'after');
+      expect(icon.classList).toContain('mdc-list-item__graphic');
+    });
+
+    it('should align avatars properly together with checkbox', () => {
+      const fixture = TestBed.createComponent(SelectionListWithAvatar);
+      fixture.detectChanges();
+      const listOption = fixture.nativeElement
+          .querySelector('.mat-mdc-list-option')! as HTMLElement;
+      const avatar = listOption.querySelector('.mat-mdc-list-avatar')!;
+
+      expectCheckboxAtPosition(listOption, 'after');
+      expect(avatar.classList).toContain('mdc-list-item__graphic');
+
+      fixture.componentInstance.checkboxPosition = 'before';
+      fixture.detectChanges();
+      expect(avatar.classList).toContain('mdc-list-item__meta');
+      expectCheckboxAtPosition(listOption, 'before');
+
+      fixture.componentInstance.checkboxPosition = 'after';
+      fixture.detectChanges();
+      expect(avatar.classList).toContain('mdc-list-item__graphic');
+      expectCheckboxAtPosition(listOption, 'after');
     });
   });
 
@@ -1627,7 +1683,7 @@ class SelectionListWithCustomComparator {
 @Component({
   template: `
     <mat-selection-list>
-      <mat-list-option>
+      <mat-list-option [checkboxPosition]="checkboxPosition">
         <div mat-list-avatar>I</div>
         Inbox
       </mat-list-option>
@@ -1635,12 +1691,13 @@ class SelectionListWithCustomComparator {
   `
 })
 class SelectionListWithAvatar {
+  checkboxPosition: MatListOptionCheckboxPosition|undefined;
 }
 
 @Component({
   template: `
     <mat-selection-list>
-      <mat-list-option>
+      <mat-list-option [checkboxPosition]="checkboxPosition">
         <div mat-list-icon>I</div>
         Inbox
       </mat-list-option>
@@ -1648,6 +1705,7 @@ class SelectionListWithAvatar {
   `
 })
 class SelectionListWithIcon {
+  checkboxPosition: MatListOptionCheckboxPosition|undefined;
 }
 
 

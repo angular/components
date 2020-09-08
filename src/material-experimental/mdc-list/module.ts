@@ -11,16 +11,16 @@ import {NgModule} from '@angular/core';
 import {MatLineModule, MatPseudoCheckboxModule, MatRippleModule} from '@angular/material/core';
 import {MatDividerModule} from '@angular/material/divider';
 import {MatActionList} from './action-list';
+import {MatList, MatListItem} from './list';
+import {MatListOption} from './list-option';
 import {
-  MatList,
   MatListAvatarCssMatStyler,
+  MatListGraphicAlignmentStyler,
   MatListIconCssMatStyler,
-  MatListItem,
-  MatListSubheaderCssMatStyler,
-} from './list';
+  MatListSubheaderCssMatStyler
+} from './list-styler-elements';
 import {MatNavList} from './nav-list';
 import {MatSelectionList} from './selection-list';
-import {MatListOption} from './list-option';
 
 @NgModule({
   imports: [
@@ -39,6 +39,7 @@ import {MatListOption} from './list-option';
     MatListAvatarCssMatStyler,
     MatListIconCssMatStyler,
     MatListSubheaderCssMatStyler,
+    MatListGraphicAlignmentStyler,
     MatDividerModule,
     MatLineModule,
   ],
@@ -52,6 +53,7 @@ import {MatListOption} from './list-option';
     MatListAvatarCssMatStyler,
     MatListIconCssMatStyler,
     MatListSubheaderCssMatStyler,
+    MatListGraphicAlignmentStyler,
   ]
 })
 export class MatListModule {}
