@@ -5,7 +5,7 @@ load("@npm_angular_dev_infra_private//benchmark/component_benchmark:component_be
 
 component_benchmark(
     name = "benchmark",
-    driver = ":tabs.perf-spec.ts",
+    driver = "tabs.perf-spec.ts",
     driver_deps = [
         "@npm//@angular/dev-infra-private",
         "@npm//protractor",
@@ -17,8 +17,8 @@ component_benchmark(
         "//src/material-experimental/mdc-tabs",
     ],
     ng_srcs = [
-        ":app.module.ts",
-        ":fake-tab-data.ts",
+        "app.module.ts",
+        "fake-tab-data.ts",
     ],
     prefix = "",
     styles = ["//src/material-experimental/mdc-theming:indigo_pink_prebuilt"],
