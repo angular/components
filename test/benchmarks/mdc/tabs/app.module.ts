@@ -17,14 +17,14 @@ import {threeTabs, tenTabs, twentyTabs} from './fake-tab-data';
 @Component({
   selector: 'app-root',
   template: `
-  <button id="show-three-tabs" (click)="showThreeTabs()">Show Three Tabs</button>
-  <button id="show-ten-tabs" (click)="showTenTabs()">Show Ten Tabs</button>
-  <button id="show-twenty-tabs" (click)="showTwentyTabs()">Show Twenty Tabs</button>
-  <button id="hide" (click)="hide()">Hide</button>
+    <button id="show-three-tabs" (click)="showThreeTabs()">Show Three Tabs</button>
+    <button id="show-ten-tabs" (click)="showTenTabs()">Show Ten Tabs</button>
+    <button id="show-twenty-tabs" (click)="showTwentyTabs()">Show Twenty Tabs</button>
+    <button id="hide" (click)="hide()">Hide</button>
 
-  <mat-tab-group *ngIf="areThreeTabsVisible">${threeTabs}</mat-tab-group>
-  <mat-tab-group *ngIf="areTenTabsVisible">${tenTabs}</mat-tab-group>
-  <mat-tab-group *ngIf="areTwentyTabsVisible">${twentyTabs}</mat-tab-group>
+    <mat-tab-group *ngIf="areThreeTabsVisible">${threeTabs}</mat-tab-group>
+    <mat-tab-group *ngIf="areTenTabsVisible">${tenTabs}</mat-tab-group>
+    <mat-tab-group *ngIf="areTwentyTabsVisible">${twentyTabs}</mat-tab-group>
   `,
   encapsulation: ViewEncapsulation.None,
   styleUrls: ['//src/material-experimental/mdc-theming/prebuilt/indigo-pink.css'],
@@ -52,7 +52,6 @@ export class TabsBenchmarkApp {
     BrowserAnimationsModule,
     MatTabsModule,
   ],
-  providers: [],
   bootstrap: [TabsBenchmarkApp],
 })
 export class AppModule {}
