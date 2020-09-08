@@ -61,7 +61,7 @@ describe('tabs performance benchmarks', () => {
 
   it('paginates tabs', async() => {
     async function isTabPaginatorDisabled(ele: ElementFinder) {
-      return (await ele.getAttribute('class')).includes('mat-tab-header-pagination-disabled');
+      return (await ele.getAttribute('class')).includes('mat-mdc-tab-header-pagination-disabled');
     }
     await runBenchmark({
       id: 'tab-pagination',
@@ -73,7 +73,7 @@ describe('tabs performance benchmarks', () => {
         await $('#show-twenty-tabs').click();
       },
       work: async() => {
-        const nextBtn = $('.mat-tab-header-pagination-after');
+        const nextBtn = $('.mat-mdc-tab-header-pagination-after');
         while (!isTabPaginatorDisabled(nextBtn)) {
           await nextBtn.click();
         }
