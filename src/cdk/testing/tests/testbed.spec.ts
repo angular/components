@@ -1,6 +1,6 @@
 import {_supportsShadowDom} from '@angular/cdk/platform';
 import {
-  HarnessLoader,
+  HarnessLoader, noAutoChangeDetection, parallel,
 } from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {waitForAsync, ComponentFixture, fakeAsync, TestBed} from '@angular/core/testing';
@@ -80,6 +80,53 @@ describe('TestbedHarnessEnvironment', () => {
       }));
     });
 
+    describe('change detection behavior', () => {
+      it('noAutoChangeDetection should prevent auto change detection', async () => {
+        const detectChangesSpy = spyOn(fixture, 'detectChanges').and.callThrough();
+        const harness =
+            await TestbedHarnessEnvironment.harnessForFixture(fixture, MainComponentHarness);
+        detectChangesSpy.calls.reset();
+        await noAutoChangeDetection(async () => {
+          const button = await harness.button();
+          await button.text();
+          await button.click();
+        });
+        expect(detectChangesSpy).toHaveBeenCalledTimes(0);
+      });
+
+      it('parallel should only auto detect changes once before and after', async () => {
+        const detectChangesSpy = spyOn(fixture, 'detectChanges').and.callThrough();
+        const harness =
+            await TestbedHarnessEnvironment.harnessForFixture(fixture, MainComponentHarness);
+
+        // Chain together our promises to ensure the before clause runs first and the after clause
+        // runs last.
+        const before =
+            Promise.resolve().then(() => expect(detectChangesSpy).toHaveBeenCalledTimes(1));
+        const actions = before.then(() => Promise.all(Array.from({length: 5},
+            () => harness.button().then(b => b.click()))));
+        const after = actions.then(() => expect(detectChangesSpy).toHaveBeenCalledTimes(1));
+
+        // Run them in "parallel" (though the order is guaranteed because of how we constructed the
+        // promises.
+        detectChangesSpy.calls.reset();
+        expect(detectChangesSpy).toHaveBeenCalledTimes(0);
+        await parallel<unknown>([before, actions, after]);
+        expect(detectChangesSpy).toHaveBeenCalledTimes(2);
+      });
+
+      it('parallel inside noAutoChangeDetection should not cause change detection', async () => {
+        const detectChangesSpy = spyOn(fixture, 'detectChanges').and.callThrough();
+        const harness =
+            await TestbedHarnessEnvironment.harnessForFixture(fixture, MainComponentHarness);
+        detectChangesSpy.calls.reset();
+        await noAutoChangeDetection(async () => {
+          await parallel(Array.from({length: 5}, () => harness.button().then(b => b.click())));
+        });
+        expect(detectChangesSpy).toHaveBeenCalledTimes(0);
+      });
+    });
+
     if (_supportsShadowDom()) {
       describe('shadow DOM interaction', () => {
         it('should not pierce shadow boundary by default', async () => {
@@ -105,41 +152,9 @@ describe('TestbedHarnessEnvironment', () => {
 
         it('should be able to retrieve the native DOM element from a UnitTestElement', async () => {
           const harness = await TestbedHarnessEnvironment
-            .harnessForFixture(fixture, MainComponentHarness);
+              .harnessForFixture(fixture, MainComponentHarness);
           const element = TestbedHarnessEnvironment.getNativeElement(await harness.host());
           expect(element.id).toContain('root');
-        });
-
-        it('should batch change detection', async () => {
-          const detectChangesSpy = spyOn(fixture, 'detectChanges').and.callThrough();
-          const harness =
-              await TestbedHarnessEnvironment.harnessForFixture(fixture, MainComponentHarness);
-          detectChangesSpy.calls.reset();
-          await harness.batchCD(async () => {
-            expect(detectChangesSpy).toHaveBeenCalledTimes(1);
-            const button = await harness.button();
-            await button.text();
-            await button.click();
-            expect(detectChangesSpy).toHaveBeenCalledTimes(1);
-          });
-          expect(detectChangesSpy).toHaveBeenCalledTimes(2);
-        });
-
-        it('should handle nested calls to batch change detection', async () => {
-          const detectChangesSpy = spyOn(fixture, 'detectChanges').and.callThrough();
-          const harness =
-              await TestbedHarnessEnvironment.harnessForFixture(fixture, MainComponentHarness);
-          detectChangesSpy.calls.reset();
-          await harness.batchCD(async () => {
-            const button = await harness.button();
-            await button.text();
-            await button.click();
-            await harness.batchCD(async () => {
-              await button.text();
-              await button.click();
-            });
-          });
-          expect(detectChangesSpy).toHaveBeenCalledTimes(2);
         });
       });
     }

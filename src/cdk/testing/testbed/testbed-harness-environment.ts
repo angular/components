@@ -9,8 +9,10 @@
 import {
   ComponentHarness,
   ComponentHarnessConstructor,
+  handleChangeDetectionBatching,
   HarnessEnvironment,
   HarnessLoader,
+  stopHandlingChangeDetectionBatching,
   TestElement
 } from '@angular/cdk/testing';
 import {ComponentFixture, flush} from '@angular/core/testing';
@@ -30,6 +32,50 @@ const defaultEnvironmentOptions: TestbedHarnessEnvironmentOptions = {
   queryFn: (selector: string, root: Element) => root.querySelectorAll(selector)
 };
 
+/** Whether auto change detection is currently disabled. */
+let disableAutoChangeDetection = false;
+
+/**
+ * The set of non-destroyed fixtures currently being used by `TestbedHarnessEnvironment` instances.
+ */
+const activeFixtures = new Set<ComponentFixture<unknown>>();
+
+/**
+ * Installs a handler for change detection batching status changes for a specific fixture.
+ * @param fixture The fixture to handle change detection batching for.
+ */
+function installChangeDetectionBatchingHandler(fixture: ComponentFixture<unknown>) {
+  if (!activeFixtures.size) {
+    handleChangeDetectionBatching(({isBatching, onDetectChangesNow}) => {
+      disableAutoChangeDetection = isBatching;
+      if (onDetectChangesNow) {
+        Promise.all([...activeFixtures].map(detectChanges)).then(onDetectChangesNow);
+      }
+    });
+  }
+  activeFixtures.add(fixture);
+}
+
+/**
+ * Uninstalls a handler for change detection batching status changes for a specific fixture.
+ * @param fixture The fixture to stop handling change detection batching for.
+ */
+function uninstallChangeDetectionBatchingHandler(fixture: ComponentFixture<unknown>) {
+  activeFixtures.delete(fixture);
+  if (!activeFixtures.size) {
+    stopHandlingChangeDetectionBatching();
+  }
+}
+
+/**
+ * Triggers change detection for a specific fixture.
+ * @param fixture The fixture to trigger change detection for.
+ */
+async function detectChanges(fixture: ComponentFixture<unknown>) {
+  fixture.detectChanges();
+  await fixture.whenStable();
+}
+
 /** A `HarnessEnvironment` implementation for Angular's Testbed. */
 export class TestbedHarnessEnvironment extends HarnessEnvironment<Element> {
   /** Whether the environment has been destroyed. */
@@ -46,7 +92,11 @@ export class TestbedHarnessEnvironment extends HarnessEnvironment<Element> {
     super(rawRootElement);
     this._options = {...defaultEnvironmentOptions, ...options};
     this._taskState = TaskStateZoneInterceptor.setup();
-    _fixture.componentRef.onDestroy(() => this._destroyed = true);
+    installChangeDetectionBatchingHandler(_fixture);
+    _fixture.componentRef.onDestroy(() => {
+      uninstallChangeDetectionBatchingHandler(_fixture);
+      this._destroyed = true;
+    });
   }
 
   /** Creates a `HarnessLoader` rooted at the given fixture's root element. */
@@ -87,13 +137,12 @@ export class TestbedHarnessEnvironment extends HarnessEnvironment<Element> {
   }
 
   async forceStabilize(): Promise<void> {
-    if (!this.isCDBatching()) {
+    if (!disableAutoChangeDetection) {
       if (this._destroyed) {
         throw Error('Harness is attempting to use a fixture that has already been destroyed.');
       }
 
-      this._fixture.detectChanges();
-      await this._fixture.whenStable();
+      await detectChanges(this._fixture);
     }
   }
 

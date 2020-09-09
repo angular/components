@@ -1,5 +1,5 @@
 import {OverlayContainer} from '@angular/cdk/overlay';
-import {HarnessLoader} from '@angular/cdk/testing';
+import {HarnessLoader, parallel} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {Component} from '@angular/core';
 import {ComponentFixture, inject, TestBed} from '@angular/core/testing';
@@ -146,6 +146,24 @@ export function runHarnessTests(
     await input.enterText('New');
     await expectAsync(input.selectOption({text: 'Texas'})).toBeRejectedWithError(
         /Could not find a mat-option matching {"text":"Texas"}/);
+  });
+
+  it('should parallelize actions', async () => {
+    let count = 0;
+    const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+    // To check that parallel indeed parallelizes the actions we verify that the statements
+    // are executed in the order we would expect based on how long they take, rather than the
+    // order they appear in the code.
+    await parallel([
+      sleep(2).then(async () => {
+        count++;
+        expect(count).toBe(2, 'should be run second');
+      }),
+      sleep(1).then(async () => {
+        count++;
+        expect(count).toBe(1, 'should be run first');
+      })
+    ]);
   });
 }
 
