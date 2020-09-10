@@ -47,8 +47,8 @@ export class MatButtonHarness extends ComponentHarness {
   click(location: 'center'): Promise<void>;
   /** Clicks the button. */
   click(): Promise<void>;
-  async click(...args: ['center'] | [number, number]): Promise<void> {
-    return (await this.host()).click(...(args as [any]));
+  async click(...args: [] | ['center'] | [number, number]): Promise<void> {
+    return (await this.host()).click(...(args as []));
   }
 
   /** Whether the button is disabled. */

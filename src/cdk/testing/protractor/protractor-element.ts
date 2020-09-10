@@ -80,7 +80,7 @@ export class ProtractorElement implements TestElement {
     return this.element.clear();
   }
 
-  async click(...args: ['center'] | [number, number]): Promise<void> {
+  async click(...args: [] | ['center'] | [number, number]): Promise<void> {
     // Omitting the offset argument to mouseMove results in clicking the center.
     // This is the default behavior we want, so we use an empty array of offsetArgs if no args are
     // passed to this method.

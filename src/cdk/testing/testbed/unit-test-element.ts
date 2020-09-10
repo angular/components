@@ -77,7 +77,7 @@ export class UnitTestElement implements TestElement {
     await this._stabilize();
   }
 
-  async click(...args: ['center'] | [number, number]): Promise<void> {
+  async click(...args: [] | ['center'] | [number, number]): Promise<void> {
     let clientX: number | undefined = undefined;
     let clientY: number | undefined = undefined;
     if (args.length) {
