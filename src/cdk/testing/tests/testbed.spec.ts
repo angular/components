@@ -2,7 +2,7 @@ import {_supportsShadowDom} from '@angular/cdk/platform';
 import {
   HarnessLoader,
 } from '@angular/cdk/testing';
-import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
+import {TestbedHarnessEnvironment, UnitTestElement} from '@angular/cdk/testing/testbed';
 import {waitForAsync, ComponentFixture, fakeAsync, TestBed} from '@angular/core/testing';
 import {querySelectorAll as piercingQuerySelectorAll} from 'kagekiri';
 import {crossEnvironmentSpecs} from './cross-environment.spec';
@@ -101,6 +101,14 @@ describe('TestbedHarnessEnvironment', () => {
             fixture, MainComponentHarness, {queryFn: piercingQuerySelectorAll},
           );
           expect(await (await harness.deepShadow()).text()).toBe('Shadow 2');
+        });
+
+        fit('should be able to retrieve the native DOM element from a UnitTestElement', async () => {
+          const harness = await TestbedHarnessEnvironment
+            .harnessForFixture(fixture, MainComponentHarness);
+          const element = TestbedHarnessEnvironment
+            .getNativeElement(await harness.host() as UnitTestElement);
+          expect(element.id).toBe('root0');
         });
       });
     }

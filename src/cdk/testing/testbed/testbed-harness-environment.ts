@@ -64,6 +64,10 @@ export class TestbedHarnessEnvironment extends HarnessEnvironment<Element> {
     return new TestbedHarnessEnvironment(document.body, fixture, options);
   }
 
+  static getNativeElement(el: UnitTestElement) {
+    return el.element;
+  }
+
   /**
    * Creates an instance of the given harness type, using the fixture's root element as the
    * harness's host element. This method should be used when creating a harness for the root element

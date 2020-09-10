@@ -1,5 +1,5 @@
 import {HarnessLoader} from '@angular/cdk/testing';
-import {ProtractorHarnessEnvironment} from '@angular/cdk/testing/protractor';
+import {ProtractorHarnessEnvironment, ProtractorElement} from '@angular/cdk/testing/protractor';
 import {browser, by, element as protractorElement, ElementFinder} from 'protractor';
 import {crossEnvironmentSpecs} from './cross-environment.spec';
 import {MainComponentHarness} from './harnesses/main-component-harness';
@@ -72,6 +72,14 @@ describe('ProtractorHarnessEnvironment', () => {
         const harness = await ProtractorHarnessEnvironment.loader({queryFn: piercingQueryFn})
             .getHarness(MainComponentHarness);
         expect(await (await harness.deepShadow()).text()).toBe('Shadow 2');
+      });
+
+      it('should be able to retrieve the ElementFinder from a ProtractorElement', async () => {
+        const harness = await ProtractorHarnessEnvironment.loader({queryFn: piercingQueryFn})
+            .getHarness(MainComponentHarness);
+        const element = ProtractorHarnessEnvironment
+          .getNativeElement(await harness.host() as ProtractorElement);
+        expect(await element.getTagName()).toBe('test-main');
       });
     });
   });
