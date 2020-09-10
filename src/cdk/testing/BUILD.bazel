@@ -11,10 +11,10 @@ ts_library(
             "**/*.spec.ts",
         ],
     ),
+    module_name = "@angular/cdk/testing",
     deps = [
         "@npm//rxjs",
     ],
-    module_name = "@angular/cdk/testing",
 )
 
 markdown_to_html(

@@ -11,6 +11,11 @@ export interface BaseHarnessFilters {
     selector?: string;
 }
 
+export interface ChangeDetectionBatchingStatus {
+    isBatching: boolean;
+    onDetectChangesNow?: () => void;
+}
+
 export declare abstract class ComponentHarness {
     protected readonly locatorFactory: LocatorFactory;
     constructor(locatorFactory: LocatorFactory);
@@ -41,6 +46,8 @@ export interface ElementDimensions {
     top: number;
     width: number;
 }
+
+export declare function handleChangeDetectionBatching(handler: (status: ChangeDetectionBatchingStatus) => void): void;
 
 export declare abstract class HarnessEnvironment<E> implements HarnessLoader, LocatorFactory {
     protected rawRootElement: E;
@@ -114,6 +121,12 @@ export interface ModifierKeys {
     meta?: boolean;
     shift?: boolean;
 }
+
+export declare function noAutoChangeDetection<T>(fn: () => Promise<T>): Promise<T>;
+
+export declare function parallel<T>(values: Iterable<T | PromiseLike<T>>): Promise<T[]>;
+
+export declare function stopHandlingChangeDetectionBatching(): void;
 
 export interface TestElement {
     blur(): Promise<void>;

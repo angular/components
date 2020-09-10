@@ -49,7 +49,7 @@ function installChangeDetectionBatchingHandler(fixture: ComponentFixture<unknown
     handleChangeDetectionBatching(({isBatching, onDetectChangesNow}) => {
       disableAutoChangeDetection = isBatching;
       if (onDetectChangesNow) {
-        Promise.all([...activeFixtures].map(detectChanges)).then(onDetectChangesNow);
+        Promise.all(Array.from(activeFixtures).map(detectChanges)).then(onDetectChangesNow);
       }
     });
   }
