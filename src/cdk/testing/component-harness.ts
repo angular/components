@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {noAutoChangeDetection, parallel} from '@angular/cdk/testing/harness-environment';
+import {parallel} from '@angular/cdk/testing/harness-environment';
 import {TestElement} from './test-element';
 
 /** An async function that returns a promise when called. */
