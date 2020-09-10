@@ -36,6 +36,7 @@ export declare class CdkDrag<T = any> implements AfterViewInit, OnChanges, OnDes
     lockAxis: DragAxis;
     moved: Observable<CdkDragMove<T>>;
     previewClass: string | string[];
+    previewContainer: 'global' | ElementRef<HTMLElement> | HTMLElement;
     released: EventEmitter<CdkDragRelease>;
     rootElementSelector: string;
     started: EventEmitter<CdkDragStart>;
@@ -54,7 +55,7 @@ export declare class CdkDrag<T = any> implements AfterViewInit, OnChanges, OnDes
     ngOnDestroy(): void;
     reset(): void;
     static ngAcceptInputType_disabled: BooleanInput;
-    static ɵdir: i0.ɵɵDirectiveDefWithMeta<CdkDrag<any>, "[cdkDrag]", ["cdkDrag"], { "data": "cdkDragData"; "lockAxis": "cdkDragLockAxis"; "rootElementSelector": "cdkDragRootElement"; "boundaryElement": "cdkDragBoundary"; "dragStartDelay": "cdkDragStartDelay"; "freeDragPosition": "cdkDragFreeDragPosition"; "disabled": "cdkDragDisabled"; "constrainPosition": "cdkDragConstrainPosition"; "previewClass": "cdkDragPreviewClass"; }, { "started": "cdkDragStarted"; "released": "cdkDragReleased"; "ended": "cdkDragEnded"; "entered": "cdkDragEntered"; "exited": "cdkDragExited"; "dropped": "cdkDragDropped"; "moved": "cdkDragMoved"; }, ["_previewTemplate", "_placeholderTemplate", "_handles"]>;
+    static ɵdir: i0.ɵɵDirectiveDefWithMeta<CdkDrag<any>, "[cdkDrag]", ["cdkDrag"], { "data": "cdkDragData"; "lockAxis": "cdkDragLockAxis"; "rootElementSelector": "cdkDragRootElement"; "boundaryElement": "cdkDragBoundary"; "dragStartDelay": "cdkDragStartDelay"; "freeDragPosition": "cdkDragFreeDragPosition"; "disabled": "cdkDragDisabled"; "constrainPosition": "cdkDragConstrainPosition"; "previewClass": "cdkDragPreviewClass"; "previewContainer": "cdkDragPreviewContainer"; }, { "started": "cdkDragStarted"; "released": "cdkDragReleased"; "ended": "cdkDragEnded"; "entered": "cdkDragEntered"; "exited": "cdkDragExited"; "dropped": "cdkDragDropped"; "moved": "cdkDragMoved"; }, ["_previewTemplate", "_placeholderTemplate", "_handles"]>;
     static ɵfac: i0.ɵɵFactoryDef<CdkDrag<any>, [null, { optional: true; skipSelf: true; }, null, null, null, { optional: true; }, { optional: true; }, null, null, { optional: true; self: true; }]>;
 }
 
@@ -315,6 +316,7 @@ export declare class DragRef<T = any> {
     withDirection(direction: Direction): this;
     withHandles(handles: (HTMLElement | ElementRef<HTMLElement>)[]): this;
     withPlaceholderTemplate(template: DragHelperTemplate | null): this;
+    withPreviewContainer(previewContainer: HTMLElement | ElementRef<HTMLElement> | null): this;
     withPreviewTemplate(template: DragPreviewTemplate | null): this;
     withRootElement(rootElement: ElementRef<HTMLElement> | HTMLElement): this;
 }

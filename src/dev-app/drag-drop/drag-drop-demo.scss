@@ -99,3 +99,11 @@ pre {
   justify-content: center;
   align-items: center;
 }
+
+.demo-preview-container .cdk-drag-preview {
+  border: 2px solid #3f51b5;
+}
+
+.demo-list .cdk-drag-preview {
+  border: 2px solid #607d8b;
+}

@@ -18,6 +18,9 @@ import {
 import {
   CdkDragDropCustomPreviewExample
 } from './cdk-drag-drop-custom-preview/cdk-drag-drop-custom-preview-example';
+import {
+  CdkDragDropCustomPreviewContainerExample,
+} from './cdk-drag-drop-custom-preview-container/cdk-drag-drop-custom-preview-container-example';
 import {CdkDragDropDelayExample} from './cdk-drag-drop-delay/cdk-drag-drop-delay-example';
 import {
   CdkDragDropDisabledSortingExample
@@ -49,6 +52,7 @@ export {
   CdkDragDropConnectedSortingGroupExample,
   CdkDragDropCustomPlaceholderExample,
   CdkDragDropCustomPreviewExample,
+  CdkDragDropCustomPreviewContainerExample,
   CdkDragDropDelayExample,
   CdkDragDropDisabledExample,
   CdkDragDropDisabledSortingExample,
@@ -69,6 +73,7 @@ const EXAMPLES = [
   CdkDragDropConnectedSortingGroupExample,
   CdkDragDropCustomPlaceholderExample,
   CdkDragDropCustomPreviewExample,
+  CdkDragDropCustomPreviewContainerExample,
   CdkDragDropDelayExample,
   CdkDragDropDisabledExample,
   CdkDragDropDisabledSortingExample,

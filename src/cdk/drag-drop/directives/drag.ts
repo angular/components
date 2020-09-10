@@ -137,6 +137,22 @@ export class CdkDrag<T = any> implements AfterViewInit, OnChanges, OnDestroy {
   /** Class to be added to the preview element. */
   @Input('cdkDragPreviewClass') previewClass: string | string[];
 
+  /**
+   *  Target for Drag Preview clone to append into.
+   *  `global` will place the clone at the end of `<body>`.
+   *  An `ElementRef` or `HTMLElement` will place the clone inside the element.
+   *
+   *  When `global` (default), the Drag Preview is appended to `<body>` to avoid
+   *  potential issues with `z-index` and `overflow: hidden`. By changing the
+   *  location you run risk of ancestors styled with `overflow: hidden` hiding part
+   *  or all of the Drag Preview, as well as other items styled with a higher
+   *  `z-index` overlapping the preview container.
+   *
+   *  Specifying the cdkDropList can lead to rendering performance issues.
+   */
+  @Input('cdkDragPreviewContainer') previewContainer:
+    'global' | ElementRef<HTMLElement> | HTMLElement;
+
   /** Emits when the user starts dragging the item. */
   @Output('cdkDragStarted') started: EventEmitter<CdkDragStart> = new EventEmitter<CdkDragStart>();
 
@@ -356,6 +372,20 @@ export class CdkDrag<T = any> implements AfterViewInit, OnChanges, OnDestroy {
     return element;
   }
 
+  /**
+   *  Gets the element for the preview clone to be created in,
+   *  based on the `previewContainer` value.
+   */
+  private _getPreviewContainer(): HTMLElement | ElementRef<HTMLElement> | null {
+    const cloneTarget = this.previewContainer;
+
+    if (!cloneTarget || cloneTarget === 'global') {
+      return null;
+    }
+
+    return cloneTarget;
+  }
+
   /** Syncs the inputs of the CdkDrag with the options of the underlying DragRef. */
   private _syncInputs(ref: DragRef<CdkDrag<T>>) {
     ref.beforeStarted.subscribe(() => {
@@ -383,7 +413,8 @@ export class CdkDrag<T = any> implements AfterViewInit, OnChanges, OnDestroy {
         ref
           .withBoundaryElement(this._getBoundaryElement())
           .withPlaceholderTemplate(placeholder)
-          .withPreviewTemplate(preview);
+          .withPreviewTemplate(preview)
+          .withPreviewContainer(this._getPreviewContainer());
 
         if (dir) {
           ref.withDirection(dir.value);

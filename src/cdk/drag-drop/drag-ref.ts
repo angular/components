@@ -227,6 +227,9 @@ export class DragRef<T = any> {
   /** Layout direction of the item. */
   private _direction: Direction = 'ltr';
 
+  /** Location for preview clone to append into */
+  private _previewContainer: HTMLElement | null;
+
   /** Axis along which dragging is locked. */
   lockAxis: 'x' | 'y';
 
@@ -375,6 +378,15 @@ export class DragRef<T = any> {
    */
   withPlaceholderTemplate(template: DragHelperTemplate | null): this {
     this._placeholderTemplate = template;
+    return this;
+  }
+
+  /**
+   * Registers the element which the drag template is to be cloned into.
+   * @param previewContainer Element which the drag template is to be cloned into
+   */
+  withPreviewContainer(previewContainer: HTMLElement | ElementRef<HTMLElement> | null): this {
+    this._previewContainer = previewContainer ? coerceElement<HTMLElement>(previewContainer) : null;
     return this;
   }
 
@@ -740,9 +752,9 @@ export class DragRef<T = any> {
       const element = this._rootElement;
       const parent = element.parentNode!;
       const preview = this._preview = this._createPreviewElement();
+      const previewContainer = this._previewContainer || getPreviewInsertionPoint(this._document);
       const placeholder = this._placeholder = this._createPlaceholderElement();
       const anchor = this._anchor = this._anchor || this._document.createComment('');
-
       // Insert an anchor node so that we can restore the element's position in the DOM.
       parent.insertBefore(anchor, element);
 
@@ -751,7 +763,7 @@ export class DragRef<T = any> {
       // from the DOM completely, because iOS will stop firing all subsequent events in the chain.
       toggleVisibility(element, false);
       this._document.body.appendChild(parent.replaceChild(placeholder, element));
-      getPreviewInsertionPoint(this._document).appendChild(preview);
+      previewContainer.appendChild(preview);
       this.started.next({source: this}); // Emit before notifying the container.
       dropContainer.start();
       this._initialContainer = dropContainer;

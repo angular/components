@@ -6,7 +6,13 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Component, ViewEncapsulation, ChangeDetectionStrategy} from '@angular/core';
+import {
+  Component,
+  ViewEncapsulation,
+  ChangeDetectionStrategy,
+  ViewChild,
+  ElementRef
+} from '@angular/core';
 import {MatIconRegistry} from '@angular/material/icon';
 import {DomSanitizer} from '@angular/platform-browser';
 import {CdkDragDrop, moveItemInArray, transferArrayItem} from '@angular/cdk/drag-drop';
@@ -19,8 +25,10 @@ import {CdkDragDrop, moveItemInArray, transferArrayItem} from '@angular/cdk/drag
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DragAndDropDemo {
+  @ViewChild('previewContainer') previewContainerElementRef: ElementRef<HTMLDivElement>;
   axisLock: 'x' | 'y';
   dragStartDelay = 0;
+  dragPreviewContainer: 'global' | ElementRef<HTMLElement> | HTMLElement = 'global';
   todo = [
     'Go out for Lunch',
     'Make a cool app',

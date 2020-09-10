@@ -136,6 +136,16 @@ directive:
 
 <!-- example(cdk-drag-drop-custom-placeholder) -->
 
+### Customizing the drag preview container
+When a `cdkDrag` element is picked up, it will create a preview element which is appended to
+the end of `<body>`. There may be times when you need to have the preview created elsewhere.
+
+This can be configured using the `cdkDragPreviewContainer` input.
+Passing `global` will respect the default behavior and the preview will be appended to `<body>`.
+You can also pass in `ElementRef` for finer control.
+
+<!-- example(cdk-drag-drop-custom-preview-container) -->
+
 ### List orientation
 The `cdkDropList` directive assumes that lists are vertical by default. This can be
 changed by setting the `orientation` property to `"horizontal".

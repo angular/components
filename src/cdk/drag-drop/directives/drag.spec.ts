@@ -4255,6 +4255,44 @@ describe('CdkDrag', () => {
       expect(spy).not.toHaveBeenCalled();
     }));
 
+    it('should clone the CDK Drag to preview container (via template ref)', () => {
+      const fixture = createComponent(DraggableInDropZoneWithCustomDragPreviewContainerTemplateRef);
+      fixture.detectChanges();
+      const item = fixture.componentInstance.dragItems.toArray()[1].element.nativeElement;
+
+      startDraggingViaMouse(fixture, item);
+
+      const preview = document.querySelector('.cdk-drag-preview')! as HTMLElement;
+      const previewContainer = document.querySelector('#preview-container')! as HTMLElement;
+
+      expect(preview.parentNode).toBe(previewContainer);
+    });
+
+    it('should clone the CDK Drag to preview container (via element ref)', () => {
+      const fixture = createComponent(DraggableInDropZoneWithCustomDragPreviewContainerElementRef);
+      fixture.detectChanges();
+      const item = fixture.componentInstance.dragItems.toArray()[1].element.nativeElement;
+
+      startDraggingViaMouse(fixture, item);
+
+      const preview = document.querySelector('.cdk-drag-preview')! as HTMLElement;
+      expect(preview.parentNode)
+        .toBe(fixture.componentInstance.previewContainerElementRef.nativeElement);
+    });
+
+    it('should clone the CDK Drag to <body> (global)', () => {
+      const fixture = createComponent(DraggableInDropZoneWithCustomDragPreviewContainerString);
+      fixture.componentInstance.previewContainer = 'global';
+      fixture.detectChanges();
+      const item = fixture.componentInstance.dragItems.toArray()[1].element.nativeElement;
+
+      startDraggingViaMouse(fixture, item);
+      const previewContainer = document.querySelector('body')! as HTMLElement;
+
+      const preview = document.querySelector('.cdk-drag-preview')! as HTMLElement;
+      expect(preview.parentNode).toBe(previewContainer);
+    });
+
     it('should throw if drop list is attached to an ng-container', fakeAsync(() => {
       expect(() => {
         createComponent(DropListOnNgContainer).detectChanges();
@@ -5934,6 +5972,59 @@ class DraggableInDropZoneWithCustomPreview {
   constrainPosition: (point: Point) => Point;
 }
 
+@Component({
+  template: `
+    <div cdkDropList style="width: 100px; background: pink;">
+      <div *ngFor="let item of items" cdkDrag [cdkDragPreviewContainer]="previewContainer"
+        style="width: 100%; height: ${ITEM_HEIGHT}px; background: red;">
+          {{item}}
+          <ng-template cdkDragPlaceholder>Hello {{item}}</ng-template>
+      </div>
+    </div>
+    <div id="preview-container" #previewContainer></div>
+  `,
+})
+class DraggableInDropZoneWithCustomDragPreviewContainerTemplateRef {
+  @ViewChildren(CdkDrag) dragItems: QueryList<CdkDrag>;
+  items = ['Zero', 'One', 'Two', 'Three'];
+}
+
+@Component({
+  template: `
+    <div cdkDropList style="width: 100px; background: pink;">
+      <div *ngFor="let item of items" cdkDrag [cdkDragPreviewContainer]="previewContainer"
+        style="width: 100%; height: ${ITEM_HEIGHT}px; background: red;">
+          {{item}}
+          <ng-template cdkDragPlaceholder>Hello {{item}}</ng-template>
+      </div>
+    </div>
+    <div id="preview-container" #previewContainer></div>
+  `,
+})
+class DraggableInDropZoneWithCustomDragPreviewContainerElementRef {
+  @ViewChildren(CdkDrag) dragItems: QueryList<CdkDrag>;
+  @ViewChild('previewContainer') previewContainerElementRef: ElementRef<HTMLDivElement>;
+  items = ['Zero', 'One', 'Two', 'Three'];
+}
+
+@Component({
+  template: `
+    <div id="preview-container">
+      <div cdkDropList style="width: 100px; background: pink;">
+        <div *ngFor="let item of items" cdkDrag [cdkDragPreviewContainer]="previewContainer"
+          style="width: 100%; height: ${ITEM_HEIGHT}px; background: red;">
+          {{item}}
+            <ng-template cdkDragPlaceholder>Hello {{item}}</ng-template>
+        </div>
+      </div>
+    </div>
+  `,
+})
+class DraggableInDropZoneWithCustomDragPreviewContainerString {
+  @ViewChildren(CdkDrag) dragItems: QueryList<CdkDrag>;
+  previewContainer = 'global';
+  items = ['Zero', 'One', 'Two', 'Three'];
+}
 
 @Component({
   template: `

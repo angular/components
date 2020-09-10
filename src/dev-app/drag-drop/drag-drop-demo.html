@@ -7,7 +7,7 @@
       (cdkDropListDropped)="drop($event)"
       [cdkDropListLockAxis]="axisLock"
       [cdkDropListData]="todo">
-      <div *ngFor="let item of todo" cdkDrag>
+      <div *ngFor="let item of todo" cdkDrag [cdkDragPreviewContainer]="dragPreviewContainer">
         {{item}}
         <mat-icon cdkDragHandle svgIcon="dnd-move"></mat-icon>
       </div>
@@ -21,7 +21,7 @@
       (cdkDropListDropped)="drop($event)"
       [cdkDropListLockAxis]="axisLock"
       [cdkDropListData]="done">
-      <div *ngFor="let item of done" cdkDrag>
+      <div *ngFor="let item of done" cdkDrag [cdkDragPreviewContainer]="dragPreviewContainer">
         {{item}}
         <mat-icon cdkDragHandle svgIcon="dnd-move"></mat-icon>
       </div>
@@ -38,7 +38,7 @@
       (cdkDropListDropped)="drop($event)"
       [cdkDropListLockAxis]="axisLock"
       [cdkDropListData]="ages">
-      <div *ngFor="let item of ages" cdkDrag>
+      <div *ngFor="let item of ages" cdkDrag [cdkDragPreviewContainer]="dragPreviewContainer">
         {{item}}
         <mat-icon cdkDragHandle svgIcon="dnd-move"></mat-icon>
       </div>
@@ -53,7 +53,7 @@
       (cdkDropListDropped)="drop($event)"
       [cdkDropListLockAxis]="axisLock"
       [cdkDropListData]="preferredAges">
-      <div *ngFor="let item of preferredAges" cdkDrag>
+      <div *ngFor="let item of preferredAges" cdkDrag [cdkDragPreviewContainer]="dragPreviewContainer">
         {{item}}
         <mat-icon cdkDragHandle svgIcon="dnd-move"></mat-icon>
       </div>
@@ -65,6 +65,8 @@
   <h2>Free dragging</h2>
   <div cdkDrag class="demo-free-draggable" [cdkDragLockAxis]="axisLock" [cdkDragStartDelay]="dragStartDelay">Drag me around</div>
 </div>
+
+<div class="demo-preview-container" #previewContainer></div>
 
 <div>
   <h2>Data</h2>
@@ -82,6 +84,18 @@
       <mat-option>None</mat-option>
       <mat-option value="x">X axis</mat-option>
       <mat-option value="y">Y axis</mat-option>
+    </mat-select>
+  </mat-form-field>
+</div>
+
+<div>
+  <h2>Drag Preview Container</h2>
+  <mat-form-field>
+    <mat-label>Drag preview should clone into</mat-label>
+    <mat-select [(ngModel)]="dragPreviewContainer">
+      <mat-option value="global">Global</mat-option>
+      <mat-option [value]="previewContainer">Preview Container (HTMLElement)</mat-option>
+      <mat-option [value]="previewContainerElementRef">Preview Container (ElementRef)</mat-option>
     </mat-select>
   </mat-form-field>
 </div>

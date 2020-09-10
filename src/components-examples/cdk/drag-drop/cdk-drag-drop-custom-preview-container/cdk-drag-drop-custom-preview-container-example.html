@@ -1,0 +1,17 @@
+<div class="example-container">
+  <div cdkDropList class="example-list example-list-one" (cdkDropListDropped)="drop(moviesOne, $event)">
+    <div class="example-box" *ngFor="let movie of moviesOne," cdkDrag cdkDragPreviewContainer="global">
+      {{movie.title}}
+    </div>
+  </div>
+</div>
+
+<div class="example-container">
+  <div cdkDropList class="example-list example-list-two" (cdkDropListDropped)="drop(moviesTwo, $event)">
+    <div class="example-box" *ngFor="let movie of moviesTwo," cdkDrag [cdkDragPreviewContainer]="previewContainer">
+      {{movie.title}}
+    </div>
+  </div>
+</div>
+
+<div class="example-preview-container" #previewContainer></div>
