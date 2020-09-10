@@ -103,7 +103,7 @@ describe('TestbedHarnessEnvironment', () => {
           expect(await (await harness.deepShadow()).text()).toBe('Shadow 2');
         });
 
-        fit('should be able to retrieve the native DOM element from a UnitTestElement', async () => {
+        it('should be able to retrieve the native DOM element from a UnitTestElement', async () => {
           const harness = await TestbedHarnessEnvironment
             .harnessForFixture(fixture, MainComponentHarness);
           const element = TestbedHarnessEnvironment
