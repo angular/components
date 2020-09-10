@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {parallel} from '@angular/cdk/testing';
+import {parallel} from './change-detection';
 import {TestElement} from './test-element';
 
 /** An async function that returns a promise when called. */
