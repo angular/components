@@ -64,8 +64,11 @@ export class TestbedHarnessEnvironment extends HarnessEnvironment<Element> {
     return new TestbedHarnessEnvironment(document.body, fixture, options);
   }
 
-  static getNativeElement(el: UnitTestElement) {
-    return el.element;
+  static getNativeElement(el: TestElement) {
+    if (el instanceof UnitTestElement) {
+      return el.element;
+    }
+    throw Error('This TestElement was not created by the TestbedHarnessEnvironment');
   }
 
   /**

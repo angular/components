@@ -37,8 +37,11 @@ export class ProtractorHarnessEnvironment extends HarnessEnvironment<ElementFind
     return new ProtractorHarnessEnvironment(protractorElement(by.css('body')), options);
   }
 
-  static getNativeElement(el: ProtractorElement): ElementFinder {
-    return el.element;
+  static getNativeElement(el: TestElement) {
+    if (el instanceof ProtractorElement) {
+      return el.element;
+    }
+    throw Error('This TestElement was not created by the ProtractorHarnessEnvironment');
   }
 
   async forceStabilize(): Promise<void> {}

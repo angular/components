@@ -77,8 +77,7 @@ describe('ProtractorHarnessEnvironment', () => {
       it('should be able to retrieve the ElementFinder from a ProtractorElement', async () => {
         const harness = await ProtractorHarnessEnvironment.loader({queryFn: piercingQueryFn})
             .getHarness(MainComponentHarness);
-        const element = ProtractorHarnessEnvironment
-          .getNativeElement(await harness.host() as ProtractorElement);
+        const element = ProtractorHarnessEnvironment.getNativeElement(await harness.host());
         expect(await element.getTagName()).toBe('test-main');
       });
     });

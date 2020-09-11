@@ -106,9 +106,8 @@ describe('TestbedHarnessEnvironment', () => {
         it('should be able to retrieve the native DOM element from a UnitTestElement', async () => {
           const harness = await TestbedHarnessEnvironment
             .harnessForFixture(fixture, MainComponentHarness);
-          const element = TestbedHarnessEnvironment
-            .getNativeElement(await harness.host() as UnitTestElement);
-          expect(element.id).toBe('root0');
+          const element = TestbedHarnessEnvironment.getNativeElement(await harness.host());
+          expect(element.id).toContain('root');
         });
       });
     }
