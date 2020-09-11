@@ -2,7 +2,7 @@ import {_supportsShadowDom} from '@angular/cdk/platform';
 import {
   HarnessLoader,
 } from '@angular/cdk/testing';
-import {TestbedHarnessEnvironment, UnitTestElement} from '@angular/cdk/testing/testbed';
+import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {waitForAsync, ComponentFixture, fakeAsync, TestBed} from '@angular/core/testing';
 import {querySelectorAll as piercingQuerySelectorAll} from 'kagekiri';
 import {crossEnvironmentSpecs} from './cross-environment.spec';

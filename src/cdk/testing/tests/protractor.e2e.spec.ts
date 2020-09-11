@@ -1,5 +1,5 @@
 import {HarnessLoader} from '@angular/cdk/testing';
-import {ProtractorHarnessEnvironment, ProtractorElement} from '@angular/cdk/testing/protractor';
+import {ProtractorHarnessEnvironment} from '@angular/cdk/testing/protractor';
 import {browser, by, element as protractorElement, ElementFinder} from 'protractor';
 import {crossEnvironmentSpecs} from './cross-environment.spec';
 import {MainComponentHarness} from './harnesses/main-component-harness';
