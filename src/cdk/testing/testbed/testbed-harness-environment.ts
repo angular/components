@@ -64,7 +64,8 @@ export class TestbedHarnessEnvironment extends HarnessEnvironment<Element> {
     return new TestbedHarnessEnvironment(document.body, fixture, options);
   }
 
-  static getNativeElement(el: TestElement) {
+  /** Gets the native DOM element corresponding to the given TestElement. */
+  static getNativeElement(el: TestElement): Element {
     if (el instanceof UnitTestElement) {
       return el.element;
     }
