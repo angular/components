@@ -154,21 +154,19 @@ export class RippleRenderer implements EventListenerObject {
       this._mostRecentTransientRipple = rippleRef;
     }
 
-    // Wait for the ripple element to be completely faded in.
-    // Once it's faded in, the ripple can be hidden immediately if the mouse is released.
-    this._runTimeoutOutsideZone(() => {
-      const isMostRecentTransientRipple = rippleRef === this._mostRecentTransientRipple;
+    // Do not register the `transition` event listener if fade-in and fade-out duration
+    // are set to zero. The events won't fire anyway and we can save resources here.
+    if (duration || animationConfig.exitDuration) {
+      this._ngZone.runOutsideAngular(() => {
+        ripple.addEventListener('transitionend', () => this._finishRippleTransition(rippleRef));
+      });
+    }
 
-      rippleRef.state = RippleState.VISIBLE;
-
-      // When the timer runs out while the user has kept their pointer down, we want to
-      // keep only the persistent ripples and the latest transient ripple. We do this,
-      // because we don't want stacked transient ripples to appear after their enter
-      // animation has finished.
-      if (!config.persistent && (!isMostRecentTransientRipple || !this._isPointerDown)) {
-        rippleRef.fadeOut();
-      }
-    }, duration);
+    // In case there is no fade-in transition duration, we need to manually call the transition
+    // end listener because `transitionend` doesn't fire if there is no transition.
+    if (!duration) {
+      this._finishRippleTransition(rippleRef);
+    }
 
     return rippleRef;
   }
@@ -194,15 +192,17 @@ export class RippleRenderer implements EventListenerObject {
     const rippleEl = rippleRef.element;
     const animationConfig = {...defaultRippleAnimationConfig, ...rippleRef.config.animation};
 
+    // This starts the fade-out transition and will fire the transition end listener that
+    // removes the ripple element from the DOM.
     rippleEl.style.transitionDuration = `${animationConfig.exitDuration}ms`;
     rippleEl.style.opacity = '0';
     rippleRef.state = RippleState.FADING_OUT;
 
-    // Once the ripple faded out, the ripple can be safely removed from the DOM.
-    this._runTimeoutOutsideZone(() => {
-      rippleRef.state = RippleState.HIDDEN;
-      rippleEl.remove();
-    }, animationConfig.exitDuration);
+    // In case there is no fade-out transition duration, we need to manually call the
+    // transition end listener because `transitionend` doesn't fire if there is no transition.
+    if (!animationConfig.exitDuration) {
+      this._finishRippleTransition(rippleRef);
+    }
   }
 
   /** Fades out all currently active ripples. */
@@ -254,6 +254,40 @@ export class RippleRenderer implements EventListenerObject {
       this._registerEvents(pointerUpEvents);
       this._pointerUpEventsRegistered = true;
     }
+  }
+
+  /** Method that will be called if the fade-in or fade-in transition completed. */
+  private _finishRippleTransition(rippleRef: RippleRef) {
+    if (rippleRef.state === RippleState.FADING_IN) {
+      this._startFadeOutTransition(rippleRef);
+    } else if (rippleRef.state === RippleState.FADING_OUT) {
+      this._destroyRipple(rippleRef);
+    }
+  }
+
+  /**
+   * Starts the fade-out transition of the given ripple if it's not persistent and the pointer
+   * is not held down anymore.
+   */
+  private _startFadeOutTransition(rippleRef: RippleRef) {
+    const isMostRecentTransientRipple = rippleRef === this._mostRecentTransientRipple;
+    const {persistent} = rippleRef.config;
+
+    rippleRef.state = RippleState.VISIBLE;
+
+    // When the timer runs out while the user has kept their pointer down, we want to
+    // keep only the persistent ripples and the latest transient ripple. We do this,
+    // because we don't want stacked transient ripples to appear after their enter
+    // animation has finished.
+    if (!persistent && (!isMostRecentTransientRipple || !this._isPointerDown)) {
+      rippleRef.fadeOut();
+    }
+  }
+
+  /** Destroys the given ripple by removing it from the DOM and updating its state. */
+  private _destroyRipple(rippleRef: RippleRef) {
+    rippleRef.state = RippleState.HIDDEN;
+    rippleRef.element.remove();
   }
 
   /** Function being called whenever the trigger is being pressed using mouse. */
@@ -310,11 +344,6 @@ export class RippleRenderer implements EventListenerObject {
         ripple.fadeOut();
       }
     });
-  }
-
-  /** Runs a timeout outside of the Angular zone to avoid triggering the change detection. */
-  private _runTimeoutOutsideZone(fn: Function, delay = 0) {
-    this._ngZone.runOutsideAngular(() => setTimeout(fn, delay));
   }
 
   /** Registers event listeners for a given list of events. */
