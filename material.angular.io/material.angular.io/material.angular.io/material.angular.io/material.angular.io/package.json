@@ -18,7 +18,7 @@
     "build:content": "yarn upgrade @angular/components-examples",
     "build:sm": "ng build --prod --source-map",
     "prod-build": "ng build --prod",
-    "postinstall": "webdriver-manager update --gecko false",
+    "postinstall": "webdriver-manager update --gecko false && ngcc --properties es2015 browser module main --first-only --create-ivy-entry-points",
     "publish-prod": "bash ./tools/deploy.sh stable prod",
     "publish-dev": "bash ./tools/deploy.sh",
     "publish-beta": "bash ./tools/deploy.sh stable beta"
