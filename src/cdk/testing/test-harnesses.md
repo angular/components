@@ -145,6 +145,29 @@ provide convenience methods on their `ComponentHarness` subclass to facilitate t
 `HarnessPredicate` instances. However, if the harness author's API is not sufficient, they can be
 created manually.
 
+#### Change detection
+By default, test harnesses will run Angular's change detection before reading the state of a DOM
+element and after interacting with a DOM element. While this is convenient in most cases, there may
+be times that you need finer-grained control over change detection. (e.g. to check the state of
+something while an async operation is in progress). In these cases you can use the 
+`noAutoChangeDetection` function to disable automatic handling of change detection for a block of
+code. For example:
+
+```ts
+it('checks state while async action is in progress', async () => {
+  const buttonHarness = loader.getHarness(MyButtonHarness);
+  await noAutoChangeDetection(async () => {
+    await buttonHarness.click();
+    fixture.detectChanges();
+    // Check expectations while async click operation is in progress.
+    expect(isProgressSpinnerVisible()).toBe(true);
+    await fixture.whenStable();
+    // Check expectations after async click operation complete.
+    expect(isProgressSpinnerVisible()).toBe(false);
+  });
+});
+```
+
 #### Working with asynchronous component harness methods
 
 To support both unit and end-to-end tests, and to insulate tests against changes in
@@ -154,29 +177,22 @@ therefore, the Angular team recommends using
 to improve the test readability.
 
 Note that `await` statements block the execution of your test until the associated `Promise`
-resolves. When reading multiple properties of a harness it may not be necessary to block on the
-first before asking for the next, in these cases use `Promise.all` to parallelize.
-
-By default, test harnesses will run Angular's change detection before reading the state of a DOM
-element and after interacting with a DOM element. If you're performing a large number of operations,
-this may slow down your tests. To avoid running change detection for every operation, you can use
-the `batchCD` method on `ComponentHarness` and `HarnessLoader` to run change detection just once
-before the batch operation and once after. When using `Promise.all` to parallelize operations, you
-almost always want to use `batchCD`, as it doesn't make sense to trigger change detection multiple
-times in parallel.
-
-For example, consider the following example of reading both the `checked` and `indeterminate` state
-off of a checkbox harness:
+resolves. There are often times when you want to perform multiple actions simultaneously and wait
+until they're all done rather than blocking. For example, reading multiple properties off a harness.
+In these situations use the `parallel` function to parallelize the operations. The parallel function
+works similarly to `Promise.all`, while also optimizing change detection, so it is not run an
+excessive number of times. For example:
 
 ```ts
 it('reads properties in parallel', async () => {
   const checkboxHarness = loader.getHarness(MyCheckboxHarness);
-  const [checked, indeterminate] = await loader.batchCD(() => Promise.all([
+  // Read the checked and intermediate properties simultaneously.
+  const [checked, indeterminate] = await parallel([
     checkboxHarness.isChecked(),
     checkboxHarness.isIndeterminate()
-  ]));
-
-  // ... make some assertions
+  ]);
+  expect(checked).toBe(false);
+  expect(indeterminate).toBe(true);
 });
 ```
 
