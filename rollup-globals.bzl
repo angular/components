@@ -58,6 +58,7 @@ ROLLUP_GLOBALS = {
     "@material/notched-outline": "mdc.notchedOutline",
     "@material/radio": "mdc.radio",
     "@material/ripple": "mdc.ripple",
+    "@material/segmented-button": "mdc.segmentedButton",
     "@material/select": "mdc.select",
     "@material/slider": "mdc.slider",
     "@material/snackbar": "mdc.snackbar",

@@ -83,6 +83,7 @@ export class DevAppLayout {
     {name: 'YouTube Player', route: '/youtube-player'},
     {name: 'MDC Autocomplete', route: '/mdc-autocomplete'},
     {name: 'MDC Button', route: '/mdc-button'},
+    {name: 'MDC Button Toggle', route: '/mdc-button-toggle'},
     {name: 'MDC Card', route: '/mdc-card'},
     {name: 'MDC Checkbox', route: '/mdc-checkbox'},
     {name: 'MDC Chips', route: '/mdc-chips'},

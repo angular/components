@@ -23,6 +23,7 @@ require.config({
     '@material/notched-outline': '/base/npm/node_modules/@material/notched-outline/dist/mdc.notchedOutline',
     '@material/radio': '/base/npm/node_modules/@material/radio/dist/mdc.radio',
     '@material/ripple': '/base/npm/node_modules/@material/ripple/dist/mdc.ripple',
+    '@material/segmented-button': '/base/npm/node_modules/@material/segmented-button/dist/mdc.segmentedButton',
     '@material/select': '/base/npm/node_modules/@material/select/dist/mdc.select',
     '@material/slider': '/base/npm/node_modules/@material/slider/dist/mdc.slider',
     '@material/snackbar': '/base/npm/node_modules/@material/snackbar/dist/mdc.snackbar',

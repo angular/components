@@ -4,6 +4,7 @@ entryPoints = [
     "mdc-autocomplete/testing",
     "mdc-button",
     "mdc-button/testing",
+    "mdc-button-toggle",
     "mdc-card",
     "mdc-card/testing",
     "mdc-checkbox",

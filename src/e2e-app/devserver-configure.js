@@ -29,6 +29,7 @@ require.config({
     '@material/notched-outline': '@material/notched-outline/dist/mdc.notchedOutline',
     '@material/radio': '@material/radio/dist/mdc.radio',
     '@material/ripple': '@material/ripple/dist/mdc.ripple',
+    '@material/segmented-button': '@material/segmented-button/dist/mdc.segmentedButton',
     '@material/select': '@material/select/dist/mdc.select',
     '@material/slider': '@material/slider/dist/mdc.slider',
     '@material/snackbar': '@material/snackbar/dist/mdc.snackbar',

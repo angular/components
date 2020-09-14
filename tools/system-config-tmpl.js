@@ -57,6 +57,7 @@ var pathMapping = {
   '@material/notched-outline': 'node:@material/notched-outline/dist/mdc.notchedOutline.js',
   '@material/radio': 'node:@material/radio/dist/mdc.radio.js',
   '@material/ripple': 'node:@material/ripple/dist/mdc.ripple.js',
+  '@material/segmented-button': 'node:@material/segmented-button/dist/mdc.segmentedButton.js',
   '@material/select': 'node:@material/select/dist/mdc.select.js',
   '@material/slider': 'node:@material/slider/dist/mdc.slider.js',
   '@material/snackbar': 'node:@material/snackbar/dist/mdc.snackbar.js',

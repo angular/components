@@ -75,6 +75,10 @@ export const DEV_APP_ROUTES: Routes = [
     loadChildren: 'mdc-autocomplete/mdc-autocomplete-demo-module#MdcAutocompleteDemoModule'
   },
   {path: 'mdc-button', loadChildren: 'mdc-button/mdc-button-demo-module#MdcButtonDemoModule'},
+  {
+    path: 'mdc-button-toggle',
+    loadChildren: 'mdc-button-toggle/mdc-button-toggle-demo-module#MdcButtonToggleDemoModule'
+  },
   {path: 'mdc-card', loadChildren: 'mdc-card/mdc-card-demo-module#MdcCardDemoModule'},
   {
     path: 'mdc-checkbox',
