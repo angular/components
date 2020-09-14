@@ -1,3 +1,25 @@
+## 10.2.1 "wooden-cowboy" (2020-09-14)
+
+### cdk
+
+|            |                       |
+| ---------- | --------------------- |
+| bug fix |  **table:** resolve breaking constructor changes ([#20425](https://github.com/angular/components/issues/20425)) ([fdd87b9](https://github.com/angular/components/commit/fdd87b9)), closes [#19964](https://github.com/angular/components/issues/19964) [#19750](https://github.com/angular/components/issues/19750) [#20422](https://github.com/angular/components/issues/20422) |
+| bug fix |  **tree:** remove CdkTreeNodeDef from CdkTreeModules providers ([#20491](https://github.com/angular/components/issues/20491)) ([1887f80](https://github.com/angular/components/commit/1887f80)) |
+
+### material
+
+|            |                       |
+| ---------- | --------------------- |
+| bug fix |  **datepicker:** don't revalidate if new date object for same date is passed through input ([#20362](https://github.com/angular/components/issues/20362)) ([5dca925](https://github.com/angular/components/commit/5dca925)), closes [#19907](https://github.com/angular/components/issues/19907) |
+
+### material-experimental
+
+|            |                       |
+| ---------- | --------------------- |
+| feature |  bump peer dependency to MDC v8.0.0 canary ([#20527](https://github.com/angular/components/issues/20527)) ([1dd6edb](https://github.com/angular/components/commit/1dd6edb)) |
+
+
 # 10.2.0 "cloth-shirt" (2020-09-02)
 
 ### cdk
