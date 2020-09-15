@@ -14,6 +14,7 @@ export declare class ProtractorElement implements TestElement {
     isFocused(): Promise<boolean>;
     matchesSelector(selector: string): Promise<boolean>;
     mouseAway(): Promise<void>;
+    selectOptions(...optionIndexes: number[]): Promise<void>;
     sendKeys(...keys: (string | TestKey)[]): Promise<void>;
     sendKeys(modifiers: ModifierKeys, ...keys: (string | TestKey)[]): Promise<void>;
     setInputValue(value: string): Promise<void>;
@@ -28,6 +29,7 @@ export declare class ProtractorHarnessEnvironment extends HarnessEnvironment<Ele
     protected getAllRawElements(selector: string): Promise<ElementFinder[]>;
     protected getDocumentRoot(): ElementFinder;
     waitForTasksOutsideAngular(): Promise<void>;
+    static getNativeElement(el: TestElement): ElementFinder;
     static loader(options?: ProtractorHarnessEnvironmentOptions): HarnessLoader;
 }
 
