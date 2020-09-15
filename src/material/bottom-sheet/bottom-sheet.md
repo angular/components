@@ -49,6 +49,39 @@ export class HobbitSheet {
 }
 ```
 
+### Configuring bottom sheet content via `entryComponents`
+
+Similarly to `MatDialog`, `MatBottomSheet` instantiates components at run-time. In order for it to
+work, the Angular compiler needs extra information to create the necessary `ComponentFactory` for
+your bottom sheet content component.
+
+Any components that are include inside of a bottom sheet have to be added to the `entryComponents`
+inside your `NgModule`
+when using the older compiler and runtime known as View Engine.
+`entryComponents` is redundant when using Ivy which is new compilation and rendering pipeline for Angular.
+
+
+```ts
+@NgModule({
+  imports: [
+    // ...
+    MatBottomSheetModule
+  ],
+
+  declarations: [
+    AppComponent,
+    ExampleBottomSheetComponent
+  ],
+
+  entryComponents: [
+    ExampleBottomSheetComponent
+  ],
+
+  bootstrap: [AppComponent]
+})
+export class AppModule {}
+```
+
 ### Specifying global configuration defaults
 Default bottom sheet options can be specified by providing an instance of `MatBottomSheetConfig`
 for `MAT_BOTTOM_SHEET_DEFAULT_OPTIONS` in your application's root module.
