@@ -58,7 +58,7 @@ your bottom sheet content component.
 Any components that are include inside of a bottom sheet have to be added to the `entryComponents`
 inside your `NgModule`
 when using the older compiler and runtime known as View Engine.
-`entryComponents` is redundant when using Ivy which is new compilation and rendering pipeline for Angular.
+`entryComponents` is redundant when using Ivy which is the new compilation and rendering pipeline for Angular. Ivy is used by default.
 
 
 ```ts
