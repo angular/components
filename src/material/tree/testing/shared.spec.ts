@@ -96,6 +96,28 @@ export function runHarnessTests(
     // no-op if already collapsed
     expect(await firstGroup.isExpanded()).toBe(false);
   });
+
+  it ('should correctly get tree structure', async () => {
+    const trees = await loader.getAllHarnesses(treeHarness);
+    const flatTree = trees[0];
+    expect(await flatTree.getTreeStructure()).toEqual(
+      `Flat Group 1
+Flat Group 2`);
+  });
+
+  it('should correctly get tree structure', async () => {
+    const trees = await loader.getAllHarnesses(treeHarness);
+    const nestedTree = trees[1];
+    expect(await nestedTree.getTreeStructure()).toEqual(
+      `Nested Group 1
+\tNested Leaf 1.1
+\tNested Leaf 1.2
+\tNested Leaf 1.3
+Nested Group 2
+\tNested Group 2.1
+\t\tNested Leaf 2.1.1
+\t\tNested Leaf 2.1.2`);
+  });
 }
 
 interface FoodNode {

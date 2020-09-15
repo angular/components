@@ -28,4 +28,17 @@ export class MatTreeHarness extends ComponentHarness {
   async getNodes(filter: TreeNodeHarnessFilters = {}): Promise<MatTreeNodeHarness[]> {
     return this.locatorForAll(MatTreeNodeHarness.with(filter))();
   }
+
+  async getTreeStructure(): Promise<string> {
+    let treeString = '';
+    const nodes = await this.getNodes();
+    for (let i = 0; i < nodes.length; i++) {
+      treeString += i === 0 ? '' : '\n';
+      const node = nodes[i];
+      const level = await node.getLevel();
+      treeString += '\t'.repeat(level - 1);
+      treeString += await node.getText();
+    }
+    return treeString;
+  }
 }

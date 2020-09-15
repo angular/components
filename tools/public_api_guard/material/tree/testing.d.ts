@@ -1,5 +1,6 @@
 export declare class MatTreeHarness extends ComponentHarness {
     getNodes(filter?: TreeNodeHarnessFilters): Promise<MatTreeNodeHarness[]>;
+    getTreeStructure(): Promise<string>;
     static hostSelector: string;
     static with(options?: TreeHarnessFilters): HarnessPredicate<MatTreeHarness>;
 }
