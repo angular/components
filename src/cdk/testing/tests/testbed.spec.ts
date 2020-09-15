@@ -1,6 +1,6 @@
 import {_supportsShadowDom} from '@angular/cdk/platform';
 import {
-  HarnessLoader, noAutoChangeDetection, parallel,
+  HarnessLoader, manualChangeDetection, parallel,
 } from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 import {waitForAsync, ComponentFixture, fakeAsync, TestBed} from '@angular/core/testing';
@@ -81,12 +81,12 @@ describe('TestbedHarnessEnvironment', () => {
     });
 
     describe('change detection behavior', () => {
-      it('noAutoChangeDetection should prevent auto change detection', async () => {
+      it('manualChangeDetection should prevent auto change detection', async () => {
         const detectChangesSpy = spyOn(fixture, 'detectChanges').and.callThrough();
         const harness =
             await TestbedHarnessEnvironment.harnessForFixture(fixture, MainComponentHarness);
         detectChangesSpy.calls.reset();
-        await noAutoChangeDetection(async () => {
+        await manualChangeDetection(async () => {
           const button = await harness.button();
           await button.text();
           await button.click();
@@ -115,12 +115,12 @@ describe('TestbedHarnessEnvironment', () => {
         expect(detectChangesSpy).toHaveBeenCalledTimes(2);
       });
 
-      it('parallel inside noAutoChangeDetection should not cause change detection', async () => {
+      it('parallel inside manualChangeDetection should not cause change detection', async () => {
         const detectChangesSpy = spyOn(fixture, 'detectChanges').and.callThrough();
         const harness =
             await TestbedHarnessEnvironment.harnessForFixture(fixture, MainComponentHarness);
         detectChangesSpy.calls.reset();
-        await noAutoChangeDetection(async () => {
+        await manualChangeDetection(async () => {
           await parallel(Array.from({length: 5}, () => harness.button().then(b => b.click())));
         });
         expect(detectChangesSpy).toHaveBeenCalledTimes(0);

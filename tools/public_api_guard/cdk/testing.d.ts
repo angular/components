@@ -115,14 +115,14 @@ export declare type LocatorFnResult<T extends (HarnessQuery<any> | string)[]> = 
     } ? C : T[I] extends string ? TestElement : never;
 }[number];
 
+export declare function manualChangeDetection<T>(fn: () => Promise<T>): Promise<T>;
+
 export interface ModifierKeys {
     alt?: boolean;
     control?: boolean;
     meta?: boolean;
     shift?: boolean;
 }
-
-export declare function noAutoChangeDetection<T>(fn: () => Promise<T>): Promise<T>;
 
 export declare function parallel<T>(values: Iterable<T | PromiseLike<T>>): Promise<T[]>;
 

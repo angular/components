@@ -96,7 +96,7 @@ async function batchChangeDetection<T>(fn: () => Promise<T>, triggerBeforeAndAft
  * @param fn The function to disable auto change detection for.
  * @return The result of the given function.
  */
-export async function noAutoChangeDetection<T>(fn: () => Promise<T>) {
+export async function manualChangeDetection<T>(fn: () => Promise<T>) {
   return batchChangeDetection(fn, false);
 }
 

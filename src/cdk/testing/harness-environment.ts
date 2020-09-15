@@ -166,10 +166,6 @@ export abstract class HarnessEnvironment<E> implements HarnessLoader, LocatorFac
     const skipSelectorCheck = (elementQueries.length === 0 && harnessTypes.size === 1) ||
         harnessQueries.length === 0;
 
-    // We want to batch change detection while we're filtering harnesses, because harness predicates
-    // may trigger change detection by reading state from DOM elements. If not batched these change
-    // detections would be triggered once per potential match element which could cause significant
-    // slowdown.
     const perElementMatches = await parallel(rawElements.map(async rawElement => {
       const testElement = this.createTestElement(rawElement);
       const allResultsForElement = await Promise.all(
