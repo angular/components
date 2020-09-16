@@ -20,6 +20,7 @@
             "sourceMap": true,
             "outputPath": "dist/material-angular-io",
             "index": "src/index.html",
+            "polyfills": "src/polyfills.ts",
             "main": "src/main.ts",
             "tsConfig": "tsconfig.app.json",
             "assets": [
