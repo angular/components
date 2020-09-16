@@ -100,7 +100,7 @@ export function runHarnessTests(
   it ('should correctly get tree structure', async () => {
     const trees = await loader.getAllHarnesses(treeHarness);
     const flatTree = trees[0];
-    expect(await flatTree.getTreeStructure()).toEqual(
+    expect(await flatTree.getStructureText()).toEqual(
       `Flat Group 1
 Flat Group 2`);
   });
@@ -108,7 +108,7 @@ Flat Group 2`);
   it('should correctly get tree structure', async () => {
     const trees = await loader.getAllHarnesses(treeHarness);
     const nestedTree = trees[1];
-    expect(await nestedTree.getTreeStructure()).toEqual(
+    expect(await nestedTree.getStructureText()).toEqual(
       `Nested Group 1
 \tNested Leaf 1.1
 \tNested Leaf 1.2

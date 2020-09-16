@@ -29,15 +29,45 @@ export class MatTreeHarness extends ComponentHarness {
     return this.locatorForAll(MatTreeNodeHarness.with(filter))();
   }
 
-  async getTreeStructure(): Promise<string> {
+  /**
+   * String representation of the tree structure.
+   * Eg.
+   * Tree:
+   * `
+   * <mat-tree>
+   *   <mat-tree-node>Node 1<mat-tree-node>
+   *   <mat-nested-tree-node>
+   *     Node 2
+   *     <mat-nested-tree-node>
+   *       Node 2.1
+   *       <mat-tree-node>
+   *         Node 2.1.1
+   *       <mat-tree-node>
+   *     <mat-nested-tree-node>
+   *     <mat-tree-node>
+   *       Node 2.2
+   *     <mat-tree-node>
+   *   <mat-nested-tree-node>
+   * </mat-tree>`
+   *
+   * Structured text:
+   * Node 1
+   * Node 2
+   *   Node 2.1
+   *     Node 2.1.1
+   *   Node 2.2
+   */
+  async getStructureText(): Promise<string> {
     let treeString = '';
     const nodes = await this.getNodes();
+    const levelsAndText = await Promise.all(nodes.map(node => {
+      return Promise.all([node.getLevel(), node.getText()]);
+    }));
     for (let i = 0; i < nodes.length; i++) {
+      const [level, text] = levelsAndText[i];
       treeString += i === 0 ? '' : '\n';
-      const node = nodes[i];
-      const level = await node.getLevel();
       treeString += '\t'.repeat(level - 1);
-      treeString += await node.getText();
+      treeString += text;
     }
     return treeString;
   }
