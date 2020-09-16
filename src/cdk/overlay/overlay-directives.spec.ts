@@ -176,6 +176,18 @@ describe('Overlay directives', () => {
     expect(event.defaultPrevented).toBe(false);
   });
 
+  it('should not close when pressing escape with closeOnEscape disabled', () => {
+    fixture.componentInstance.isOpen = true;
+    fixture.componentInstance.closeOnEscape = false;
+    fixture.detectChanges();
+
+    const event = dispatchKeyboardEvent(document.body, 'keydown', ESCAPE);
+    fixture.detectChanges();
+
+    expect(overlayContainerElement.textContent!.trim()).toBeTruthy();
+    expect(event.defaultPrevented).toBe(false);
+  });
+
   it('should not depend on the order in which the `origin` and `open` are set', waitForAsync(() => {
     fixture.destroy();
 
@@ -663,6 +675,7 @@ describe('Overlay directives', () => {
             [cdkConnectedOverlayGrowAfterOpen]="growAfterOpen"
             [cdkConnectedOverlayPush]="push"
             [cdkConnectedOverlayScrollStrategy]="scrollStrategy"
+            [cdkConnectedOverlayCloseOnEscape]="closeOnEscape"
             cdkConnectedOverlayBackdropClass="mat-test-class"
             cdkConnectedOverlayPanelClass="cdk-test-panel-class"
             (backdropClick)="backdropClickHandler($event)"
@@ -694,6 +707,7 @@ class ConnectedOverlayDirectiveTest {
   offsetY: number;
   triggerOverride: CdkOverlayOrigin;
   hasBackdrop: boolean;
+  closeOnEscape: boolean = true;
   viewportMargin: number;
   flexibleDimensions: boolean;
   growAfterOpen: boolean;

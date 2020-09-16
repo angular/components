@@ -181,6 +181,9 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
   /** Whether the overlay is open. */
   @Input('cdkConnectedOverlayOpen') open: boolean = false;
 
+  /** Whether the overlay is open. */
+  @Input('cdkConnectedOverlayCloseOnEscape') closeOnEscape: boolean = true;
+
   /** CSS selector which to set the transform origin. */
   @Input('cdkConnectedOverlayTransformOriginOn') transformOriginSelector: string;
 
@@ -295,7 +298,7 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
     overlayRef.keydownEvents().subscribe((event: KeyboardEvent) => {
       this.overlayKeydown.next(event);
 
-      if (event.keyCode === ESCAPE && !hasModifierKey(event)) {
+      if (event.keyCode === ESCAPE && this.closeOnEscape && !hasModifierKey(event)) {
         event.preventDefault();
         this._detachOverlay();
       }
