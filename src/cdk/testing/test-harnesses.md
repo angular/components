@@ -188,7 +188,7 @@ can read multiple properties from a harness with `parallel`:
 it('reads properties in parallel', async () => {
   const checkboxHarness = loader.getHarness(MyCheckboxHarness);
   // Read the checked and intermediate properties simultaneously.
-  const [checked, indeterminate] = await parallel([
+  const [checked, indeterminate] = await parallel(() => [
     checkboxHarness.isChecked(),
     checkboxHarness.isIndeterminate()
   ]);

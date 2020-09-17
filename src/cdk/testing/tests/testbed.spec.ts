@@ -99,19 +99,21 @@ describe('TestbedHarnessEnvironment', () => {
         const harness =
             await TestbedHarnessEnvironment.harnessForFixture(fixture, MainComponentHarness);
 
-        // Chain together our promises to ensure the before clause runs first and the after clause
-        // runs last.
-        const before =
-            Promise.resolve().then(() => expect(detectChangesSpy).toHaveBeenCalledTimes(1));
-        const actions = before.then(() => Promise.all(Array.from({length: 5},
-            () => harness.button().then(b => b.click()))));
-        const after = actions.then(() => expect(detectChangesSpy).toHaveBeenCalledTimes(1));
-
         // Run them in "parallel" (though the order is guaranteed because of how we constructed the
         // promises.
         detectChangesSpy.calls.reset();
         expect(detectChangesSpy).toHaveBeenCalledTimes(0);
-        await parallel<unknown>([before, actions, after]);
+        await parallel<unknown>(() => {
+          // Chain together our promises to ensure the before clause runs first and the after clause
+          // runs last.
+          const before =
+              Promise.resolve().then(() => expect(detectChangesSpy).toHaveBeenCalledTimes(1));
+          const actions = before.then(() => Promise.all(Array.from({length: 5},
+              () => harness.button().then(b => b.click()))));
+          const after = actions.then(() => expect(detectChangesSpy).toHaveBeenCalledTimes(1));
+
+          return [before, actions, after];
+        });
         expect(detectChangesSpy).toHaveBeenCalledTimes(2);
       });
 
@@ -121,7 +123,7 @@ describe('TestbedHarnessEnvironment', () => {
             await TestbedHarnessEnvironment.harnessForFixture(fixture, MainComponentHarness);
         detectChangesSpy.calls.reset();
         await manualChangeDetection(() => parallel(
-            Array.from({length: 5}, () => harness.button().then(b => b.click()))));
+            () => Array.from({length: 5}, () => harness.button().then(b => b.click()))));
         expect(detectChangesSpy).toHaveBeenCalledTimes(0);
       });
     });

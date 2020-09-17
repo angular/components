@@ -124,7 +124,7 @@ export interface ModifierKeys {
     shift?: boolean;
 }
 
-export declare function parallel<T>(values: Iterable<T | PromiseLike<T>>): Promise<T[]>;
+export declare function parallel<T>(values: () => Iterable<T | PromiseLike<T>>): Promise<T[]>;
 
 export declare function stopHandlingAutoChangeDetectionStatus(): void;
 

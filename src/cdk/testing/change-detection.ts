@@ -104,9 +104,9 @@ export async function manualChangeDetection<T>(fn: () => Promise<T>) {
  * Resolves the given list of async values in parallel (i.e. via Promise.all) while batching change
  * detection over the entire operation such that change detection occurs exactly once before
  * resolving the values and once after.
- * @param values The async values to resolve in parallel with batched change detection.
+ * @param values A getter for the async values to resolve in parallel with batched change detection.
  * @return The resolved values.
  */
-export async function parallel<T>(values: Iterable<T | PromiseLike<T>>) {
-  return batchChangeDetection(() => Promise.all(values), true);
+export async function parallel<T>(values: () => Iterable<T | PromiseLike<T>>) {
+  return batchChangeDetection(() => Promise.all(values()), true);
 }

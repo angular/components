@@ -166,7 +166,7 @@ export abstract class HarnessEnvironment<E> implements HarnessLoader, LocatorFac
     const skipSelectorCheck = (elementQueries.length === 0 && harnessTypes.size === 1) ||
         harnessQueries.length === 0;
 
-    const perElementMatches = await parallel(rawElements.map(async rawElement => {
+    const perElementMatches = await parallel(() => rawElements.map(async rawElement => {
       const testElement = this.createTestElement(rawElement);
       const allResultsForElement = await Promise.all(
           // For each query, get `null` if it doesn't match, or a `TestElement` or
