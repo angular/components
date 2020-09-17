@@ -120,9 +120,8 @@ describe('TestbedHarnessEnvironment', () => {
         const harness =
             await TestbedHarnessEnvironment.harnessForFixture(fixture, MainComponentHarness);
         detectChangesSpy.calls.reset();
-        await manualChangeDetection(async () => {
-          await parallel(Array.from({length: 5}, () => harness.button().then(b => b.click())));
-        });
+        await manualChangeDetection(() => parallel(
+            Array.from({length: 5}, () => harness.button().then(b => b.click()))));
         expect(detectChangesSpy).toHaveBeenCalledTimes(0);
       });
     });

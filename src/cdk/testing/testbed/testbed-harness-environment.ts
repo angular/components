@@ -9,10 +9,10 @@
 import {
   ComponentHarness,
   ComponentHarnessConstructor,
-  handleChangeDetectionBatching,
+  handleAutoChangeDetectionStatus,
   HarnessEnvironment,
   HarnessLoader,
-  stopHandlingChangeDetectionBatching,
+  stopHandlingAutoChangeDetectionStatus,
   TestElement
 } from '@angular/cdk/testing';
 import {ComponentFixture, flush} from '@angular/core/testing';
@@ -44,10 +44,10 @@ const activeFixtures = new Set<ComponentFixture<unknown>>();
  * Installs a handler for change detection batching status changes for a specific fixture.
  * @param fixture The fixture to handle change detection batching for.
  */
-function installChangeDetectionBatchingHandler(fixture: ComponentFixture<unknown>) {
+function installAutoChangeDetectionStatusHandler(fixture: ComponentFixture<unknown>) {
   if (!activeFixtures.size) {
-    handleChangeDetectionBatching(({isBatching, onDetectChangesNow}) => {
-      disableAutoChangeDetection = isBatching;
+    handleAutoChangeDetectionStatus(({isDisabled, onDetectChangesNow}) => {
+      disableAutoChangeDetection = isDisabled;
       if (onDetectChangesNow) {
         Promise.all(Array.from(activeFixtures).map(detectChanges)).then(onDetectChangesNow);
       }
@@ -60,10 +60,10 @@ function installChangeDetectionBatchingHandler(fixture: ComponentFixture<unknown
  * Uninstalls a handler for change detection batching status changes for a specific fixture.
  * @param fixture The fixture to stop handling change detection batching for.
  */
-function uninstallChangeDetectionBatchingHandler(fixture: ComponentFixture<unknown>) {
+function uninstallAutoChangeDetectionStatusHandler(fixture: ComponentFixture<unknown>) {
   activeFixtures.delete(fixture);
   if (!activeFixtures.size) {
-    stopHandlingChangeDetectionBatching();
+    stopHandlingAutoChangeDetectionStatus();
   }
 }
 
@@ -92,9 +92,9 @@ export class TestbedHarnessEnvironment extends HarnessEnvironment<Element> {
     super(rawRootElement);
     this._options = {...defaultEnvironmentOptions, ...options};
     this._taskState = TaskStateZoneInterceptor.setup();
-    installChangeDetectionBatchingHandler(_fixture);
+    installAutoChangeDetectionStatusHandler(_fixture);
     _fixture.componentRef.onDestroy(() => {
-      uninstallChangeDetectionBatchingHandler(_fixture);
+      uninstallAutoChangeDetectionStatusHandler(_fixture);
       this._destroyed = true;
     });
   }

@@ -501,7 +501,7 @@ export class HarnessPredicate<T extends ComponentHarness> {
    *   and resolves to false otherwise.
    */
   async evaluate(harness: T): Promise<boolean> {
-    const results = await parallel((this._predicates.map(p => p(harness))));
+    const results = await parallel(this._predicates.map(p => p(harness)));
     return results.reduce((combined, current) => combined && current, true);
   }
 

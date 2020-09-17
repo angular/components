@@ -6,14 +6,14 @@ export declare type AsyncOptionPredicate<T, O> = (item: T, option: O) => Promise
 
 export declare type AsyncPredicate<T> = (item: T) => Promise<boolean>;
 
+export interface AutoChangeDetectionStatus {
+    isDisabled: boolean;
+    onDetectChangesNow?: () => void;
+}
+
 export interface BaseHarnessFilters {
     ancestor?: string;
     selector?: string;
-}
-
-export interface ChangeDetectionBatchingStatus {
-    isBatching: boolean;
-    onDetectChangesNow?: () => void;
 }
 
 export declare abstract class ComponentHarness {
@@ -47,7 +47,7 @@ export interface ElementDimensions {
     width: number;
 }
 
-export declare function handleChangeDetectionBatching(handler: (status: ChangeDetectionBatchingStatus) => void): void;
+export declare function handleAutoChangeDetectionStatus(handler: (status: AutoChangeDetectionStatus) => void): void;
 
 export declare abstract class HarnessEnvironment<E> implements HarnessLoader, LocatorFactory {
     protected rawRootElement: E;
@@ -126,7 +126,7 @@ export interface ModifierKeys {
 
 export declare function parallel<T>(values: Iterable<T | PromiseLike<T>>): Promise<T[]>;
 
-export declare function stopHandlingChangeDetectionBatching(): void;
+export declare function stopHandlingAutoChangeDetectionStatus(): void;
 
 export interface TestElement {
     blur(): Promise<void>;

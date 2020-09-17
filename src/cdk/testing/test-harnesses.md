@@ -147,9 +147,9 @@ created manually.
 
 #### Change detection
 By default, test harnesses will run Angular's change detection before reading the state of a DOM
-element and after interacting with a DOM element. While this is convenient in most cases, there may
-be times that you need finer-grained control over change detection. (e.g. to check the state of
-something while an async operation is in progress). In these cases you can use the 
+element and after interacting with a DOM element. While convenient in most cases, there may be times
+that you need finer-grained control over change detection. For example, you may want to check the
+state of a component while an async operation is pending. In these cases you can use the
 `manualChangeDetection` function to disable automatic handling of change detection for a block of
 code. For example:
 
@@ -177,11 +177,12 @@ therefore, the Angular team recommends using
 to improve the test readability.
 
 Note that `await` statements block the execution of your test until the associated `Promise`
-resolves. There are often times when you want to perform multiple actions simultaneously and wait
-until they're all done rather than blocking. For example, reading multiple properties off a harness.
-In these situations use the `parallel` function to parallelize the operations. The parallel function
-works similarly to `Promise.all`, while also optimizing change detection, so it is not run an
-excessive number of times. For example:
+resolves. Occasionally, you may want to perform multiple actions simultaneously and wait until
+they're all done rather than performing each action sequentially. For example, reading multiple
+properties off a single component. In these situations use the `parallel` function to parallelize
+the operations. The parallel function works similarly to `Promise.all`, while also optimizing change
+detection, so it is not run an excessive number of times. The following code demonstrates how you
+can read multiple properties from a harness with `parallel`:
 
 ```ts
 it('reads properties in parallel', async () => {
@@ -445,7 +446,7 @@ class MyMenuHarness extends ComponentHarness {
   protected getPopupHarness = this.locatorFor(MyPopupHarness);
 
   /** Gets the text of the menu trigger. */
-  getTriggerText(): Promise<string> {
+  async getTriggerText(): Promise<string> {
     const popupHarness = await this.getPopupHarness();
     return popupHarness.getTriggerText();
   }
@@ -650,19 +651,19 @@ and
 [`ProtractorHarnessEnvironment`](https://github.com/angular/components/blob/master/src/cdk/testing/protractor/protractor-harness-environment.ts#L16)
 implementations in Angular CDK serve as good examples of implementations of this interface.
 
-#### Handling change detection batching
+#### Handling auto change detection status
 In order to support the `manualChangeDetection` and `parallel` APIs, your environment should install
-a handler for change detection batching.
+a handler for the auto change detection status.
 
-When your environment wants to start handling change detection batching it can call
-`handleChangeDetectionBatching(handler)`. The handler function will receive a 
-`ChangeDetectionBatchingStatus` which has two properties:
+When your environment wants to start handling the auto change detection status it can call
+`handleAutoChangeDetectionStatus(handler)`. The handler function will receive a 
+`AutoChangeDetectionStatus` which has two properties:
  
-* `isBatching: boolean` - Indicates whether change detection is batching. When change detection is
-  batching, your environment's `forceStabilize` method should act as a no-op. This allows users to
-  trigger change detection manually instead.
+* `isDisabled: boolean` - Indicates whether auto change detection is currently disabled. When true,
+  your environment's `forceStabilize` method should act as a no-op. This allows users to trigger
+  change detection manually instead.
 * `onDetectChangesNow?: () => void` - If this optional callback is specified, your environment
   should trigger change detection immediately and call the callback when change detection finishes.
 
-If your environment wants to stop handling change detection batching it can call
-`stopHandlingChangeDetectionBatching()`.
+If your environment wants to stop handling auto change detection status it can call
+`stopHandlingAutoChangeDetectionStatus()`.
