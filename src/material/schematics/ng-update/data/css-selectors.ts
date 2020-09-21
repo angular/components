@@ -17,13 +17,13 @@ export interface MaterialCssSelectorData {
    * Controls which file types in which this replacement is made. If omitted, it is made in all
    * files.
    */
-  fileTypeFilter?: {
+  replaceIn?: {
     /** Replace this name in stylesheet files. */
     stylesheet?: boolean,
     /** Replace this name in HTML files. */
     html?: boolean,
     /** Replace this name in TypeScript strings. */
-    strings?: boolean
+    tsStringLiterals?: boolean
   };
 }
 
@@ -57,7 +57,7 @@ export const cssSelectors: VersionChanges<MaterialCssSelectorData> = {
       changes: [{
         replace: '$mat-font-family',
         replaceWith: 'Roboto, \'Helvetica Neue\', sans-serif',
-        fileTypeFilter: {stylesheet: true}
+        replaceIn: {stylesheet: true}
       }]
     }
   ]

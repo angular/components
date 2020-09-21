@@ -16,7 +16,7 @@ export const propertyNames: VersionChanges<PropertyNameUpgradeData> = {
         {
           replace: 'getPopupConnectionElementRef',
           replaceWith: 'getConnectedOverlayOrigin',
-          fileTypeFilter: {classes: ['MatDatepickerInput']}
+          limitedTo: {classes: ['MatDatepickerInput']}
         }
       ]
     }
@@ -28,17 +28,17 @@ export const propertyNames: VersionChanges<PropertyNameUpgradeData> = {
         {
           replace: 'afterOpen',
           replaceWith: 'afterOpened',
-          fileTypeFilter: {classes: ['MatDialogRef']}
+          limitedTo: {classes: ['MatDialogRef']}
         },
         {
           replace: 'beforeClose',
           replaceWith: 'beforeClosed',
-          fileTypeFilter: {classes: ['MatDialogRef']}
+          limitedTo: {classes: ['MatDialogRef']}
         },
         {
           replace: 'afterOpen',
           replaceWith: 'afterOpened',
-          fileTypeFilter: {classes: ['MatDialog']}
+          limitedTo: {classes: ['MatDialog']}
         }
       ]
     }
@@ -47,15 +47,15 @@ export const propertyNames: VersionChanges<PropertyNameUpgradeData> = {
     {
       pr: 'https://github.com/angular/components/pull/10163',
       changes: [
-        {replace: 'change', replaceWith: 'selectionChange', fileTypeFilter: {classes: ['MatSelect']}}, {
+        {replace: 'change', replaceWith: 'selectionChange', limitedTo: {classes: ['MatSelect']}}, {
           replace: 'onOpen',
           replaceWith: 'openedChange.pipe(filter(isOpen => isOpen))',
-          fileTypeFilter: {classes: ['MatSelect']}
+          limitedTo: {classes: ['MatSelect']}
         },
         {
           replace: 'onClose',
           replaceWith: 'openedChange.pipe(filter(isOpen => !isOpen))',
-          fileTypeFilter: {classes: ['MatSelect']}
+          limitedTo: {classes: ['MatSelect']}
         }
       ]
     },
@@ -65,7 +65,7 @@ export const propertyNames: VersionChanges<PropertyNameUpgradeData> = {
       changes: [{
         replace: 'align',
         replaceWith: 'labelPosition',
-        fileTypeFilter: {classes: ['MatRadioGroup', 'MatRadioButton']}
+        limitedTo: {classes: ['MatRadioGroup', 'MatRadioButton']}
       }]
     },
 
@@ -74,7 +74,7 @@ export const propertyNames: VersionChanges<PropertyNameUpgradeData> = {
       changes: [{
         replace: 'extraClasses',
         replaceWith: 'panelClass',
-        fileTypeFilter: {classes: ['MatSnackBarConfig']}
+        limitedTo: {classes: ['MatSnackBarConfig']}
       }]
     },
 
@@ -84,22 +84,22 @@ export const propertyNames: VersionChanges<PropertyNameUpgradeData> = {
         {
           replace: 'align',
           replaceWith: 'position',
-          fileTypeFilter: {classes: ['MatDrawer', 'MatSidenav']}
+          limitedTo: {classes: ['MatDrawer', 'MatSidenav']}
         },
         {
           replace: 'onAlignChanged',
           replaceWith: 'onPositionChanged',
-          fileTypeFilter: {classes: ['MatDrawer', 'MatSidenav']}
+          limitedTo: {classes: ['MatDrawer', 'MatSidenav']}
         },
         {
           replace: 'onOpen',
           replaceWith: 'openedChange.pipe(filter(isOpen => isOpen))',
-          fileTypeFilter: {classes: ['MatDrawer', 'MatSidenav']}
+          limitedTo: {classes: ['MatDrawer', 'MatSidenav']}
         },
         {
           replace: 'onClose',
           replaceWith: 'openedChange.pipe(filter(isOpen => !isOpen))',
-          fileTypeFilter: {classes: ['MatDrawer', 'MatSidenav']}
+          limitedTo: {classes: ['MatDrawer', 'MatSidenav']}
         }
       ]
     },
@@ -109,17 +109,17 @@ export const propertyNames: VersionChanges<PropertyNameUpgradeData> = {
       changes: [{
         replace: 'shouldPlaceholderFloat',
         replaceWith: 'shouldLabelFloat',
-        fileTypeFilter: {classes: ['MatFormFieldControl', 'MatSelect']}
+        limitedTo: {classes: ['MatFormFieldControl', 'MatSelect']}
       }]
     },
 
     {
       pr: 'https://github.com/angular/components/pull/10294',
       changes: [
-        {replace: 'dividerColor', replaceWith: 'color', fileTypeFilter: {classes: ['MatFormField']}}, {
+        {replace: 'dividerColor', replaceWith: 'color', limitedTo: {classes: ['MatFormField']}}, {
           replace: 'floatPlaceholder',
           replaceWith: 'floatLabel',
-          fileTypeFilter: {classes: ['MatFormField']}
+          limitedTo: {classes: ['MatFormField']}
         }
       ]
     },
@@ -130,12 +130,12 @@ export const propertyNames: VersionChanges<PropertyNameUpgradeData> = {
         {
           replace: 'selectChange',
           replaceWith: 'selectedTabChange',
-          fileTypeFilter: {classes: ['MatTabGroup']}
+          limitedTo: {classes: ['MatTabGroup']}
         },
         {
           replace: '_dynamicHeightDeprecated',
           replaceWith: 'dynamicHeight',
-          fileTypeFilter: {classes: ['MatTabGroup']}
+          limitedTo: {classes: ['MatTabGroup']}
         }
       ]
     },
@@ -143,15 +143,15 @@ export const propertyNames: VersionChanges<PropertyNameUpgradeData> = {
     {
       pr: 'https://github.com/angular/components/pull/10311',
       changes: [
-        {replace: 'destroy', replaceWith: 'destroyed', fileTypeFilter: {classes: ['MatChip']}},
-        {replace: 'onRemove', replaceWith: 'removed', fileTypeFilter: {classes: ['MatChip']}}
+        {replace: 'destroy', replaceWith: 'destroyed', limitedTo: {classes: ['MatChip']}},
+        {replace: 'onRemove', replaceWith: 'removed', limitedTo: {classes: ['MatChip']}}
       ]
     },
 
     {
       pr: 'https://github.com/angular/components/pull/10342',
       changes:
-          [{replace: 'align', replaceWith: 'labelPosition', fileTypeFilter: {classes: ['MatCheckbox']}}]
+          [{replace: 'align', replaceWith: 'labelPosition', limitedTo: {classes: ['MatCheckbox']}}]
     },
 
     {
@@ -159,7 +159,7 @@ export const propertyNames: VersionChanges<PropertyNameUpgradeData> = {
       changes: [{
         replace: '_positionDeprecated',
         replaceWith: 'position',
-        fileTypeFilter: {classes: ['MatTooltip']}
+        limitedTo: {classes: ['MatTooltip']}
       }]
     },
 
@@ -169,12 +169,12 @@ export const propertyNames: VersionChanges<PropertyNameUpgradeData> = {
         {
           replace: '_thumbLabelDeprecated',
           replaceWith: 'thumbLabel',
-          fileTypeFilter: {classes: ['MatSlider']}
+          limitedTo: {classes: ['MatSlider']}
         },
         {
           replace: '_tickIntervalDeprecated',
           replaceWith: 'tickInterval',
-          fileTypeFilter: {classes: ['MatSlider']}
+          limitedTo: {classes: ['MatSlider']}
         }
       ]
     },

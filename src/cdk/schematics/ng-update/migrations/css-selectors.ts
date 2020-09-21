@@ -33,7 +33,7 @@ export class CssSelectorsMigration extends Migration<UpgradeData> {
 
   visitTemplate(template: ResolvedResource): void {
     this.data.forEach(data => {
-      if (data.fileTypeFilter && !data.fileTypeFilter.html) {
+      if (data.replaceIn && !data.replaceIn.html) {
         return;
       }
 
@@ -45,7 +45,7 @@ export class CssSelectorsMigration extends Migration<UpgradeData> {
 
   visitStylesheet(stylesheet: ResolvedResource): void {
     this.data.forEach(data => {
-      if (data.fileTypeFilter && !data.fileTypeFilter.stylesheet) {
+      if (data.replaceIn && !data.replaceIn.stylesheet) {
         return;
       }
 
@@ -64,7 +64,7 @@ export class CssSelectorsMigration extends Migration<UpgradeData> {
     const filePath = this.fileSystem.resolve(node.getSourceFile().fileName);
 
     this.data.forEach(data => {
-      if (data.fileTypeFilter && !data.fileTypeFilter.strings) {
+      if (data.replaceIn && !data.replaceIn.tsStringLiterals) {
         return;
       }
 

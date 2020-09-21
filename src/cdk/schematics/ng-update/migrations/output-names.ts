@@ -30,17 +30,17 @@ export class OutputNamesMigration extends Migration<UpgradeData> {
 
   visitTemplate(template: ResolvedResource): void {
     this.data.forEach(name => {
-      const fileTypeFilter = name.fileTypeFilter;
+      const limitedTo = name.limitedTo;
       const relativeOffsets: number[] = [];
 
-      if (fileTypeFilter.attributes) {
+      if (limitedTo.attributes) {
         relativeOffsets.push(
-            ...findOutputsOnElementWithAttr(template.content, name.replace, fileTypeFilter.attributes));
+            ...findOutputsOnElementWithAttr(template.content, name.replace, limitedTo.attributes));
       }
 
-      if (fileTypeFilter.elements) {
+      if (limitedTo.elements) {
         relativeOffsets.push(
-            ...findOutputsOnElementWithTag(template.content, name.replace, fileTypeFilter.elements));
+            ...findOutputsOnElementWithTag(template.content, name.replace, limitedTo.elements));
       }
 
       relativeOffsets.map(offset => template.start + offset)

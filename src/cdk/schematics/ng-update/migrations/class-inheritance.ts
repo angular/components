@@ -28,9 +28,9 @@ export class ClassInheritanceMigration extends Migration<UpgradeData> {
 
   init(): void {
     getVersionUpgradeData(this, 'propertyNames')
-        .filter(data => data.fileTypeFilter && data.fileTypeFilter.classes)
+        .filter(data => data.limitedTo && data.limitedTo.classes)
         .forEach(
-            data => data.fileTypeFilter.classes.forEach(name => this.propertyNames.set(name, data)));
+            data => data.limitedTo.classes.forEach(name => this.propertyNames.set(name, data)));
   }
 
   visitNode(node: ts.Node): void {

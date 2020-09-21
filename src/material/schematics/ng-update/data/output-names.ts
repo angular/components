@@ -16,21 +16,21 @@ export const outputNames: VersionChanges<OutputNameUpgradeData> = {
         {
           replace: 'change',
           replaceWith: 'selectionChange',
-          fileTypeFilter: {
+          limitedTo: {
             elements: ['mat-select'],
           },
         },
         {
           replace: 'onClose',
           replaceWith: 'closed',
-          fileTypeFilter: {
+          limitedTo: {
             elements: ['mat-select'],
           },
         },
         {
           replace: 'onOpen',
           replaceWith: 'opened',
-          fileTypeFilter: {
+          limitedTo: {
             elements: ['mat-select'],
           },
         },
@@ -43,21 +43,21 @@ export const outputNames: VersionChanges<OutputNameUpgradeData> = {
         {
           replace: 'align-changed',
           replaceWith: 'positionChanged',
-          fileTypeFilter: {
+          limitedTo: {
             elements: ['mat-drawer', 'mat-sidenav'],
           },
         },
         {
           replace: 'close',
           replaceWith: 'closed',
-          fileTypeFilter: {
+          limitedTo: {
             elements: ['mat-drawer', 'mat-sidenav'],
           },
         },
         {
           replace: 'open',
           replaceWith: 'opened',
-          fileTypeFilter: {
+          limitedTo: {
             elements: ['mat-drawer', 'mat-sidenav'],
           },
         },
@@ -70,7 +70,7 @@ export const outputNames: VersionChanges<OutputNameUpgradeData> = {
         {
           replace: 'selectChange',
           replaceWith: 'selectedTabChange',
-          fileTypeFilter: {
+          limitedTo: {
             elements: ['mat-tab-group'],
           },
         },
@@ -83,7 +83,7 @@ export const outputNames: VersionChanges<OutputNameUpgradeData> = {
         {
           replace: 'remove',
           replaceWith: 'removed',
-          fileTypeFilter: {
+          limitedTo: {
             attributes: ['mat-chip', 'mat-basic-chip'],
             elements: ['mat-chip', 'mat-basic-chip'],
           },
@@ -91,7 +91,7 @@ export const outputNames: VersionChanges<OutputNameUpgradeData> = {
         {
           replace: 'destroy',
           replaceWith: 'destroyed',
-          fileTypeFilter: {
+          limitedTo: {
             attributes: ['mat-chip', 'mat-basic-chip'],
             elements: ['mat-chip', 'mat-basic-chip'],
           },

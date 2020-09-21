@@ -14,11 +14,8 @@ export interface PropertyNameUpgradeData {
   replace: string;
   /** The new name for the property. */
   replaceWith: string;
-  /**
-   * Controls which file types in which this replacement is made. If omitted, it is made in all
-   * files.
-   */
-  fileTypeFilter: {
+  /** Controls which classes in which this replacement is made. */
+  limitedTo: {
     /** Replace the property only when its type is one of the given Classes. */
     classes: string[];
   };
@@ -31,7 +28,7 @@ export const propertyNames: VersionChanges<PropertyNameUpgradeData> = {
       changes: [{
         replace: 'boundaryElementSelector',
         replaceWith: 'boundaryElement',
-        fileTypeFilter: {classes: ['CdkDrag']}
+        limitedTo: {classes: ['CdkDrag']}
       }]
     },
     {
@@ -39,7 +36,7 @@ export const propertyNames: VersionChanges<PropertyNameUpgradeData> = {
       changes: [{
         replace: 'onChange',
         replaceWith: 'changed',
-        fileTypeFilter: {classes: ['SelectionModel']}
+        limitedTo: {classes: ['SelectionModel']}
       }]
     }
   ],
@@ -48,7 +45,7 @@ export const propertyNames: VersionChanges<PropertyNameUpgradeData> = {
     {
       pr: 'https://github.com/angular/components/pull/8286',
       changes:
-          [{replace: 'onChange', replaceWith: 'changed', fileTypeFilter: {classes: ['SelectionModel']}}]
+          [{replace: 'onChange', replaceWith: 'changed', limitedTo: {classes: ['SelectionModel']}}]
     },
 
     {
@@ -56,7 +53,7 @@ export const propertyNames: VersionChanges<PropertyNameUpgradeData> = {
       changes: [{
         replace: 'flexibleDiemsions',
         replaceWith: 'flexibleDimensions',
-        fileTypeFilter: {classes: ['CdkConnectedOverlay']}
+        limitedTo: {classes: ['CdkConnectedOverlay']}
       }]
     }
   ],
@@ -68,62 +65,62 @@ export const propertyNames: VersionChanges<PropertyNameUpgradeData> = {
         {
           replace: '_deprecatedOrigin',
           replaceWith: 'origin',
-          fileTypeFilter: {classes: ['CdkConnectedOverlay', 'ConnectedOverlayDirective']}
+          limitedTo: {classes: ['CdkConnectedOverlay', 'ConnectedOverlayDirective']}
         },
         {
           replace: '_deprecatedPositions',
           replaceWith: 'positions',
-          fileTypeFilter: {classes: ['CdkConnectedOverlay', 'ConnectedOverlayDirective']}
+          limitedTo: {classes: ['CdkConnectedOverlay', 'ConnectedOverlayDirective']}
         },
         {
           replace: '_deprecatedOffsetX',
           replaceWith: 'offsetX',
-          fileTypeFilter: {classes: ['CdkConnectedOverlay', 'ConnectedOverlayDirective']}
+          limitedTo: {classes: ['CdkConnectedOverlay', 'ConnectedOverlayDirective']}
         },
         {
           replace: '_deprecatedOffsetY',
           replaceWith: 'offsetY',
-          fileTypeFilter: {classes: ['CdkConnectedOverlay', 'ConnectedOverlayDirective']}
+          limitedTo: {classes: ['CdkConnectedOverlay', 'ConnectedOverlayDirective']}
         },
         {
           replace: '_deprecatedWidth',
           replaceWith: 'width',
-          fileTypeFilter: {classes: ['CdkConnectedOverlay', 'ConnectedOverlayDirective']}
+          limitedTo: {classes: ['CdkConnectedOverlay', 'ConnectedOverlayDirective']}
         },
         {
           replace: '_deprecatedHeight',
           replaceWith: 'height',
-          fileTypeFilter: {classes: ['CdkConnectedOverlay', 'ConnectedOverlayDirective']}
+          limitedTo: {classes: ['CdkConnectedOverlay', 'ConnectedOverlayDirective']}
         },
         {
           replace: '_deprecatedMinWidth',
           replaceWith: 'minWidth',
-          fileTypeFilter: {classes: ['CdkConnectedOverlay', 'ConnectedOverlayDirective']}
+          limitedTo: {classes: ['CdkConnectedOverlay', 'ConnectedOverlayDirective']}
         },
         {
           replace: '_deprecatedMinHeight',
           replaceWith: 'minHeight',
-          fileTypeFilter: {classes: ['CdkConnectedOverlay', 'ConnectedOverlayDirective']}
+          limitedTo: {classes: ['CdkConnectedOverlay', 'ConnectedOverlayDirective']}
         },
         {
           replace: '_deprecatedBackdropClass',
           replaceWith: 'backdropClass',
-          fileTypeFilter: {classes: ['CdkConnectedOverlay', 'ConnectedOverlayDirective']}
+          limitedTo: {classes: ['CdkConnectedOverlay', 'ConnectedOverlayDirective']}
         },
         {
           replace: '_deprecatedScrollStrategy',
           replaceWith: 'scrollStrategy',
-          fileTypeFilter: {classes: ['CdkConnectedOverlay', 'ConnectedOverlayDirective']}
+          limitedTo: {classes: ['CdkConnectedOverlay', 'ConnectedOverlayDirective']}
         },
         {
           replace: '_deprecatedOpen',
           replaceWith: 'open',
-          fileTypeFilter: {classes: ['CdkConnectedOverlay', 'ConnectedOverlayDirective']}
+          limitedTo: {classes: ['CdkConnectedOverlay', 'ConnectedOverlayDirective']}
         },
         {
           replace: '_deprecatedHasBackdrop',
           replaceWith: 'hasBackdrop',
-          fileTypeFilter: {classes: ['CdkConnectedOverlay', 'ConnectedOverlayDirective']}
+          limitedTo: {classes: ['CdkConnectedOverlay', 'ConnectedOverlayDirective']}
         }
       ]
     },
@@ -134,12 +131,12 @@ export const propertyNames: VersionChanges<PropertyNameUpgradeData> = {
         {
           replace: '_deprecatedPortal',
           replaceWith: 'portal',
-          fileTypeFilter: {classes: ['CdkPortalOutlet']}
+          limitedTo: {classes: ['CdkPortalOutlet']}
         },
         {
           replace: '_deprecatedPortalHost',
           replaceWith: 'portal',
-          fileTypeFilter: {classes: ['CdkPortalOutlet']}
+          limitedTo: {classes: ['CdkPortalOutlet']}
         }
       ]
     },
