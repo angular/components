@@ -14,8 +14,11 @@ export interface OutputNameUpgradeData {
   replace: string;
   /** The new name for the @Output(). */
   replaceWith: string;
-  /** Whitelist where this replacement is made. If omitted it is made in all HTML & CSS */
-  whitelist: {
+  /**
+   * Controls which file types in which this replacement is made. If omitted, it is made in all
+   * files.
+   */
+  fileTypeFilter: {
     /** Limit to elements with any of these element tags. */
     elements?: string[],
     /** Limit to elements with any of these attributes. */
@@ -30,7 +33,7 @@ export const outputNames: VersionChanges<OutputNameUpgradeData> = {
       changes: [{
         replace: 'copied',
         replaceWith: 'cdkCopyToClipboardCopied',
-        whitelist: {
+        fileTypeFilter: {
           attributes: ['cdkCopyToClipboard']
         }
       }]

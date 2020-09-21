@@ -30,17 +30,17 @@ export class OutputNamesMigration extends Migration<UpgradeData> {
 
   visitTemplate(template: ResolvedResource): void {
     this.data.forEach(name => {
-      const whitelist = name.whitelist;
+      const fileTypeFilter = name.fileTypeFilter;
       const relativeOffsets: number[] = [];
 
-      if (whitelist.attributes) {
+      if (fileTypeFilter.attributes) {
         relativeOffsets.push(
-            ...findOutputsOnElementWithAttr(template.content, name.replace, whitelist.attributes));
+            ...findOutputsOnElementWithAttr(template.content, name.replace, fileTypeFilter.attributes));
       }
 
-      if (whitelist.elements) {
+      if (fileTypeFilter.elements) {
         relativeOffsets.push(
-            ...findOutputsOnElementWithTag(template.content, name.replace, whitelist.elements));
+            ...findOutputsOnElementWithTag(template.content, name.replace, fileTypeFilter.elements));
       }
 
       relativeOffsets.map(offset => template.start + offset)

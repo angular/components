@@ -14,8 +14,11 @@ export interface InputNameUpgradeData {
   replace: string;
   /** The new name for the @Input(). */
   replaceWith: string;
-  /** Whitelist where this replacement is made. If omitted it is made in all HTML & CSS */
-  whitelist: {
+  /**
+   * Controls which file types in which this replacement is made. If omitted, it is made in all
+   * files.
+   */
+  fileTypeFilter: {
     /** Limit to elements with any of these element tags. */
     elements?: string[],
     /** Limit to elements with any of these attributes. */
@@ -31,73 +34,73 @@ export const inputNames: VersionChanges<InputNameUpgradeData> = {
         {
           replace: 'origin',
           replaceWith: 'cdkConnectedOverlayOrigin',
-          whitelist:
+          fileTypeFilter:
               {attributes: ['cdk-connected-overlay', 'connected-overlay', 'cdkConnectedOverlay']}
         },
         {
           replace: 'positions',
           replaceWith: 'cdkConnectedOverlayPositions',
-          whitelist:
+          fileTypeFilter:
               {attributes: ['cdk-connected-overlay', 'connected-overlay', 'cdkConnectedOverlay']}
         },
         {
           replace: 'offsetX',
           replaceWith: 'cdkConnectedOverlayOffsetX',
-          whitelist:
+          fileTypeFilter:
               {attributes: ['cdk-connected-overlay', 'connected-overlay', 'cdkConnectedOverlay']}
         },
         {
           replace: 'offsetY',
           replaceWith: 'cdkConnectedOverlayOffsetY',
-          whitelist:
+          fileTypeFilter:
               {attributes: ['cdk-connected-overlay', 'connected-overlay', 'cdkConnectedOverlay']}
         },
         {
           replace: 'width',
           replaceWith: 'cdkConnectedOverlayWidth',
-          whitelist:
+          fileTypeFilter:
               {attributes: ['cdk-connected-overlay', 'connected-overlay', 'cdkConnectedOverlay']}
         },
         {
           replace: 'height',
           replaceWith: 'cdkConnectedOverlayHeight',
-          whitelist:
+          fileTypeFilter:
               {attributes: ['cdk-connected-overlay', 'connected-overlay', 'cdkConnectedOverlay']}
         },
         {
           replace: 'minWidth',
           replaceWith: 'cdkConnectedOverlayMinWidth',
-          whitelist:
+          fileTypeFilter:
               {attributes: ['cdk-connected-overlay', 'connected-overlay', 'cdkConnectedOverlay']}
         },
         {
           replace: 'minHeight',
           replaceWith: 'cdkConnectedOverlayMinHeight',
-          whitelist:
+          fileTypeFilter:
               {attributes: ['cdk-connected-overlay', 'connected-overlay', 'cdkConnectedOverlay']}
         },
         {
           replace: 'backdropClass',
           replaceWith: 'cdkConnectedOverlayBackdropClass',
-          whitelist:
+          fileTypeFilter:
               {attributes: ['cdk-connected-overlay', 'connected-overlay', 'cdkConnectedOverlay']}
         },
         {
           replace: 'scrollStrategy',
           replaceWith: 'cdkConnectedOverlayScrollStrategy',
-          whitelist:
+          fileTypeFilter:
               {attributes: ['cdk-connected-overlay', 'connected-overlay', 'cdkConnectedOverlay']}
         },
         {
           replace: 'open',
           replaceWith: 'cdkConnectedOverlayOpen',
-          whitelist:
+          fileTypeFilter:
               {attributes: ['cdk-connected-overlay', 'connected-overlay', 'cdkConnectedOverlay']}
         },
         {
           replace: 'hasBackdrop',
           replaceWith: 'cdkConnectedOverlayHasBackdrop',
-          whitelist:
+          fileTypeFilter:
               {attributes: ['cdk-connected-overlay', 'connected-overlay', 'cdkConnectedOverlay']}
         }
       ]
