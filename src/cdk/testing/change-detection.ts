@@ -77,17 +77,27 @@ async function batchChangeDetection<T>(fn: () => Promise<T>, triggerBeforeAndAft
       isDisabled: true,
       onDetectChangesNow: resolve,
     }));
-    const result = await fn();
-    await new Promise(resolve => autoChangeDetectionSubject.next({
-      isDisabled: false,
-      onDetectChangesNow: resolve,
-    }));
-    return result;
+    // The function passed in may throw (e.g. if the user wants to make an expectation of an error
+    // being thrown. If this happens, we need to make sure we still re-enable change detection, so
+    // we wrap it in a `finally` block.
+    try {
+      return await fn();
+    } finally {
+      await new Promise(resolve => autoChangeDetectionSubject.next({
+        isDisabled: false,
+        onDetectChangesNow: resolve,
+      }));
+    }
   } else {
     autoChangeDetectionSubject.next({isDisabled: true});
-    const result = await fn();
-    autoChangeDetectionSubject.next({isDisabled: false});
-    return result;
+    // The function passed in may throw (e.g. if the user wants to make an expectation of an error
+    // being thrown. If this happens, we need to make sure we still re-enable change detection, so
+    // we wrap it in a `finally` block.
+    try {
+      return await fn();
+    } finally {
+      autoChangeDetectionSubject.next({isDisabled: false});
+    }
   }
 }
 
