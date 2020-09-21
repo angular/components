@@ -21,7 +21,7 @@ import {MatButtonModule} from '@angular/material/button';
     <button *ngIf="isVisible" mat-raised-button>Basic</button>
   `,
   encapsulation: ViewEncapsulation.None,
-  styleUrls: ['//src/material/core/theming/prebuilt/indigo-pink.css'],
+  styleUrls: ['../../../../src/material/core/theming/prebuilt/indigo-pink.css'],
 })
 export class ButtonBenchmarkApp {
   isChecked = false;

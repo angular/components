@@ -22,7 +22,7 @@ import {
   selector: 'app-root',
   templateUrl: './table-app.html',
   encapsulation: ViewEncapsulation.None,
-  styleUrls: ['//src/material/core/theming/prebuilt/indigo-pink.css'],
+  styleUrls: ['../../../../src/material/core/theming/prebuilt/indigo-pink.css'],
 })
 export class TableBenchmarkApp {
   fiveCols = fiveCols;

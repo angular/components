@@ -40,7 +40,7 @@ import {MatRadioModule} from '@angular/material/radio';
     </mat-radio-group>
   `,
   encapsulation: ViewEncapsulation.None,
-  styleUrls: ['//src/material/core/theming/prebuilt/indigo-pink.css'],
+  styleUrls: ['../../../../src/material/core/theming/prebuilt/indigo-pink.css'],
 })
 export class RadioBenchmarkApp {
   isTwoVisible = false;

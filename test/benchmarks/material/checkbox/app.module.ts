@@ -26,7 +26,7 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
     Check me!</mat-checkbox>
   `,
   encapsulation: ViewEncapsulation.None,
-  styleUrls: ['//src/material/core/theming/prebuilt/indigo-pink.css'],
+  styleUrls: ['../../../../src/material/core/theming/prebuilt/indigo-pink.css'],
 })
 export class CheckboxBenchmarkApp {
 

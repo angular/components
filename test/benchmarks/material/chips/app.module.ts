@@ -33,7 +33,7 @@ import {MatChipsModule} from '@angular/material/chips';
     </mat-chip-list>
   `,
   encapsulation: ViewEncapsulation.None,
-  styleUrls: ['//src/material/core/theming/prebuilt/indigo-pink.css'],
+  styleUrls: ['../../../../src/material/core/theming/prebuilt/indigo-pink.css'],
 })
 export class ChipsBenchmarkApp {
   isSingleVisible = false;

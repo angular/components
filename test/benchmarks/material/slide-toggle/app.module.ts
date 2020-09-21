@@ -23,7 +23,7 @@ import {MatSlideToggleModule} from '@angular/material/slide-toggle';
     </ng-container>
   `,
   encapsulation: ViewEncapsulation.None,
-  styleUrls: ['//src/material/core/theming/prebuilt/indigo-pink.css'],
+  styleUrls: ['../../../../src/material/core/theming/prebuilt/indigo-pink.css'],
 })
 export class SlideToggleBenchmarkApp {
   isVisible = false;
