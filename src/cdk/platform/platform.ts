@@ -40,6 +40,11 @@ export class Platform {
   /** Whether the current browser is Microsoft Edge. */
   EDGE: boolean = this.isBrowser && /(edge)/i.test(navigator.userAgent);
 
+  // The new version Edge uses chronium as kernel, the userAgent tag is not
+  // 'edge', but 'Edg'.
+  /** Whether the current browser is new Microsoft Edge using chronium kernel */
+  NEW_EDGE: boolean = this.isBrowser && /(Edg)/i.test(navigator.userAgent);
+
   /** Whether the current rendering engine is Microsoft Trident. */
   TRIDENT: boolean = this.isBrowser && /(msie|trident)/i.test(navigator.userAgent);
 
