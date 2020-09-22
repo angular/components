@@ -78,6 +78,11 @@ describe('TestbedHarnessEnvironment', () => {
           fakeAsync(async () => {
         expect(await harness.getTaskStateResult()).toBe('result');
       }));
+
+      it('should be able to retrieve the native DOM element from a UnitTestElement', async () => {
+        const element = TestbedHarnessEnvironment.getNativeElement(await harness.host());
+        expect(element.id).toContain('root');
+      });
     });
 
     if (_supportsShadowDom()) {
@@ -101,13 +106,6 @@ describe('TestbedHarnessEnvironment', () => {
             fixture, MainComponentHarness, {queryFn: piercingQuerySelectorAll},
           );
           expect(await (await harness.deepShadow()).text()).toBe('Shadow 2');
-        });
-
-        it('should be able to retrieve the native DOM element from a UnitTestElement', async () => {
-          const harness = await TestbedHarnessEnvironment
-            .harnessForFixture(fixture, MainComponentHarness);
-          const element = TestbedHarnessEnvironment.getNativeElement(await harness.host());
-          expect(element.id).toContain('root');
         });
       });
     }
