@@ -119,7 +119,7 @@ export declare class MatStepperPrevious extends CdkStepperPrevious {
 }
 
 export declare class MatVerticalStepper extends MatStepper {
-    constructor(dir: Directionality, changeDetectorRef: ChangeDetectorRef, elementRef?: ElementRef<HTMLElement>, _document?: any);
+    constructor(dir: Directionality, changeDetectorRef: ChangeDetectorRef, elementRef: ElementRef<HTMLElement>, _document: any);
     static ngAcceptInputType_completed: BooleanInput;
     static ngAcceptInputType_editable: BooleanInput;
     static ngAcceptInputType_hasError: BooleanInput;

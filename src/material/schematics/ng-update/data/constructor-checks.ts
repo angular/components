@@ -38,6 +38,10 @@ export const constructorChecks: VersionChanges<ConstructorChecksUpgradeData> = {
     {
       pr: 'https://github.com/angular/components/pull/20479',
       changes: ['MatCommonModule']
+    },
+    {
+      pr: 'https://github.com/angular/components/issues/20456',
+      changes: ['MatVerticalStepper']
     }
   ],
   [TargetVersion.V10]: [

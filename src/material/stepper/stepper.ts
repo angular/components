@@ -66,7 +66,6 @@ export class MatStep extends CdkStep implements ErrorStateMatcher {
   /** Theme color for the particular step. */
   @Input() color: ThemePalette;
 
-  /** @breaking-change 8.0.0 remove the `?` after `stepperOptions` */
   constructor(@Inject(forwardRef(() => MatStepper)) stepper: MatStepper,
               @SkipSelf() private _errorStateMatcher: ErrorStateMatcher,
               @Optional() @Inject(STEPPER_GLOBAL_OPTIONS) stepperOptions?: StepperOptions) {
@@ -199,9 +198,8 @@ export class MatVerticalStepper extends MatStepper {
   constructor(
     @Optional() dir: Directionality,
     changeDetectorRef: ChangeDetectorRef,
-    // @breaking-change 8.0.0 `elementRef` and `_document` parameters to become required.
-    elementRef?: ElementRef<HTMLElement>,
-    @Inject(DOCUMENT) _document?: any) {
+    elementRef: ElementRef<HTMLElement>,
+    @Inject(DOCUMENT) _document: any) {
     super(dir, changeDetectorRef, elementRef, _document);
     this._orientation = 'vertical';
   }

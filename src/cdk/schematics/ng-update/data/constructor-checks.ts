@@ -33,6 +33,10 @@ export const constructorChecks: VersionChanges<ConstructorChecksUpgradeData> = {
     {
       pr: 'https://github.com/angular/components/pull/20511',
       changes: ['OverlayContainer', 'FullscreenOverlayContainer', 'OverlayRef', 'Overlay']
+    },
+    {
+      pr: 'https://github.com/angular/components/issues/20456',
+      changes: ['CdkStepper']
     }
   ],
   [TargetVersion.V10]: [
