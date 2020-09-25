@@ -19,10 +19,10 @@
     "platformName": "iOS",
     "deviceName": "iPhone XS Simulator"
   },
-  "SAUCELABS_EDGE83": {
+  "SAUCELABS_EDGE14": {
     "base": "SauceLabs",
     "browserName": "MicrosoftEdge",
-    "browserVersion": "83.0",
+    "browserVersion": "14",
     "platformName": "Windows 10"
   },
   "BROWSERSTACK_SAFARI13": {
