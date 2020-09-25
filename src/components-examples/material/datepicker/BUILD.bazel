@@ -14,6 +14,7 @@ ng_module(
     tsconfig = ":tsconfig",
     deps = [
         "//src/material-moment-adapter",
+        "//src/material-luxon-adapter",
         "//src/material/button",
         "//src/material/core",
         "//src/material/datepicker",

@@ -7,7 +7,7 @@
  */
 
 import {LOCALE_ID} from '@angular/core';
-import {async, inject, TestBed} from '@angular/core/testing';
+import {inject, TestBed, waitForAsync} from '@angular/core/testing';
 import {DateAdapter, MAT_DATE_LOCALE} from '@angular/material/core';
 import {Platform} from '@angular/cdk/platform';
 import {DateTime, Info, Features} from 'luxon';
@@ -24,7 +24,7 @@ describe('LuxonDateAdapter', () => {
   let platform: Platform;
   let features: Features;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [LuxonDateModule]
     }).compileComponents();
@@ -35,7 +35,7 @@ describe('LuxonDateAdapter', () => {
     platform = p;
     features = Info.features();
 
-    adapter.setLocale('en-US');
+    adapter.setLocale('en');
     assertValidDate = (d: DateTime | null, valid: boolean) => {
       expect(adapter.isDateInstance(d)).not.toBeNull(`Expected ${d} to be a date instance`);
       expect(adapter.isValid(d!)).toBe(valid,
@@ -404,7 +404,7 @@ describe('LuxonDateAdapter with MAT_DATE_LOCALE override', () => {
   let adapter: LuxonDateAdapter;
   let platform: Platform;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [LuxonDateModule],
       providers: [{provide: MAT_DATE_LOCALE, useValue: 'da-DK'}]
@@ -432,7 +432,7 @@ describe('LuxonDateAdapter with MAT_DATE_LOCALE override', () => {
 describe('LuxonDateAdapter with LOCALE_ID override', () => {
   let adapter: LuxonDateAdapter;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [LuxonDateModule],
       providers: [{provide: LOCALE_ID, useValue: 'fr-FR'}]
@@ -454,7 +454,7 @@ describe('LuxonDateAdapter with LOCALE_ID override', () => {
 describe('LuxonDateAdapter with MAT_LUXON_DATE_ADAPTER_OPTIONS override', () => {
   let adapter: LuxonDateAdapter;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [LuxonDateModule],
       providers: [{

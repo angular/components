@@ -11,6 +11,7 @@
       "@angular/cdk-experimental/*": ["../cdk-experimental/*"],
       "@angular/material/*": ["../material/*"],
       "@angular/material-experimental/*": ["../material-experimental/*"],
+      "@angular/material-luxon-adapter": ["../material-luxon-adapter/public-api.ts"]
       "@angular/material-moment-adapter": ["../material-moment-adapter/public-api.ts"]
     }
   },

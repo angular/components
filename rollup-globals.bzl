@@ -34,6 +34,7 @@ ROLLUP_GLOBALS = {
     "@angular/material": "ng.material",
     "@angular/material-experimental": "ng.materialExperimental",
     "@angular/material-moment-adapter": "ng.materialMomentAdapter",
+    "@angular/material-luxon-adapter": "ng.materialLuxonAdapter",
     "@angular/youtube-player": "ng.youtubePlayer",
 
     # MDC Web
@@ -72,6 +73,7 @@ ROLLUP_GLOBALS = {
     # Third-party libraries.
     "kagekiri": "kagekiri",
     "moment": "moment",
+    "luxon": "luxon",
     "protractor": "protractor",
     "rxjs": "rxjs",
     "rxjs/operators": "rxjs.operators",

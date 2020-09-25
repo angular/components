@@ -67,6 +67,7 @@ export const commitMessage: CommitMessageConfig = {
     'material-experimental/menubar',
     'material-experimental/popover-edit',
     'material-experimental/selection',
+    'material-luxon-adapter',
     'material-moment-adapter',
     'material/autocomplete',
     'material/badge',

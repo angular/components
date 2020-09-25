@@ -30,6 +30,7 @@
       "@angular/material-experimental": ["./src/material-experimental"],
       "@angular/cdk-experimental/*": ["./src/cdk-experimental/*"],
       "@angular/cdk-experimental": ["./src/cdk-experimental"],
+      "@angular/material-luxon-adapter": ["./src/material-luxon-adapter"],
       "@angular/material-moment-adapter": ["./src/material-moment-adapter"],
       "@angular/components-examples": ["./src/components-examples"],
       "@angular/components-examples/*": ["./src/components-examples/*"]

@@ -1,6 +1,8 @@
 {
   "extends": "./tsconfig-build.json",
   "compilerOptions": {
+    // Needed for Moment.js since it doesn't have a default export.
+    "allowSyntheticDefaultImports": true,
     "baseUrl": ".",
     "outDir": "../../dist/packages/material-luxon-adapter",
     "rootDir": ".",
@@ -20,7 +22,8 @@
   },
   "include": [
     "**/*.ts",
-    "**/*.spec.ts"
+    "**/*.spec.ts",
+    "../dev-mode-types.d.ts"
   ],
   "exclude": [
     "**/*.e2e.spec.ts"

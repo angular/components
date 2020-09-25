@@ -149,6 +149,7 @@ function setupLocalReleasePackages() {
   configureEntryPoint('components-examples');
   configureEntryPoint('material');
   configureEntryPoint('material-experimental');
+  configureEntryPoint('material-luxon-adapter');
   configureEntryPoint('material-moment-adapter');
   configureEntryPoint('google-maps');
   configureEntryPoint('youtube-player');

@@ -14,8 +14,10 @@ ng_module(
     # because "luxon" does not have a typed default import.
     tsconfig = ":tsconfig",
     deps = [
+        "//src:dev_mode_types",
         "//src/material/core",
         "@npm//@angular/core",
+        "@npm//@types/luxon",
         "@npm//luxon",
     ],
 )
@@ -36,6 +38,8 @@ ng_test_library(
         ":material-luxon-adapter",
         "//src/material/core",
         "//src/material/testing",
+        "//src/cdk/platform",
+        "@npm//@types/luxon",
         "@npm//luxon",
     ],
 )

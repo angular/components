@@ -110,6 +110,7 @@ ts_devserver(
         "@npm//core-js",
         "@npm//kagekiri",
         "@npm//material-components-web",
+        "@npm//luxon",
         "@npm//moment",
         "@npm//@webcomponents/custom-elements",
         "//src/material/prebuilt-themes:indigo-pink",

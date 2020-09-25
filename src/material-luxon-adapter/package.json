@@ -11,10 +11,15 @@
     "url": "https://github.com/angular/components/issues"
   },
   "homepage": "https://github.com/angular/components#readme",
+  "devDependencies": {
+    "@types/luxon": "^1.25.0"
+  },
   "peerDependencies": {
     "@angular/material": "0.0.0-PLACEHOLDER",
     "@angular/core": "0.0.0-NG",
-    "luxon": "^1.8.3",
+    "luxon": "^1.25.0"
+  },
+  "dependencies": {
     "tslib": "0.0.0-TSLIB"
   },
   "ng-update": {
