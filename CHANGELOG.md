@@ -1,3 +1,12 @@
+## 10.2.3 "polyester-pancake" (2020-09-28)
+
+### cdk
+
+|            |                       |
+| ---------- | --------------------- |
+| bug fix |  **table:** add fallback code if view repeater isn't provided ([#20604](https://github.com/angular/components/issues/20604)) ([bfb7e57](https://github.com/angular/components/commit/bfb7e57)), closes [#20601](https://github.com/angular/components/issues/20601) |
+
+
 ## 10.2.2 "cement-flower" (2020-09-21)
 
 ### cdk
