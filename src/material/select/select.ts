@@ -179,6 +179,9 @@ export interface MatSelectConfig {
 
   /** Time to wait in milliseconds after the last keystroke before moving focus to an item. */
   typeaheadDebounceInterval?: number;
+
+  /** Class or list of classes to be applied to the menu's overlay panel. */
+  overlayPanelClass?: string | string[];
 }
 
 /** Injection token that can be used to provide the default options the select module. */
@@ -475,6 +478,8 @@ export abstract class _MatSelectBase<C> extends _MatSelectMixinBase implements A
    */
   @Output() readonly valueChange: EventEmitter<any> = new EventEmitter<any>();
 
+  _overlayPanelClass: string | string[] = this._defaultOptions?.overlayPanelClass || '';
+
   constructor(
     protected _viewportRuler: ViewportRuler,
     protected _changeDetectorRef: ChangeDetectorRef,
@@ -489,7 +494,7 @@ export abstract class _MatSelectBase<C> extends _MatSelectMixinBase implements A
     @Attribute('tabindex') tabIndex: string,
     @Inject(MAT_SELECT_SCROLL_STRATEGY) scrollStrategyFactory: any,
     private _liveAnnouncer: LiveAnnouncer,
-    @Optional() @Inject(MAT_SELECT_CONFIG) defaults?: MatSelectConfig) {
+    @Optional() @Inject(MAT_SELECT_CONFIG) protected _defaultOptions?: MatSelectConfig) {
     super(elementRef, _defaultErrorStateMatcher, _parentForm,
           _parentFormGroup, ngControl);
 
@@ -506,13 +511,13 @@ export abstract class _MatSelectBase<C> extends _MatSelectMixinBase implements A
     // Force setter to be called in case id was not specified.
     this.id = this.id;
 
-    if (defaults) {
-      if (defaults.disableOptionCentering != null) {
-        this.disableOptionCentering = defaults.disableOptionCentering;
+    if (_defaultOptions) {
+      if (_defaultOptions.disableOptionCentering != null) {
+        this.disableOptionCentering = _defaultOptions.disableOptionCentering;
       }
 
-      if (defaults.typeaheadDebounceInterval != null) {
-        this.typeaheadDebounceInterval = defaults.typeaheadDebounceInterval;
+      if (_defaultOptions.typeaheadDebounceInterval != null) {
+        this.typeaheadDebounceInterval = _defaultOptions.typeaheadDebounceInterval;
       }
     }
   }

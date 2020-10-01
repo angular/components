@@ -2,12 +2,14 @@ export declare abstract class _MatSelectBase<C> extends _MatSelectMixinBase impl
     _ariaDescribedby: string;
     protected _changeDetectorRef: ChangeDetectorRef;
     readonly _closedStream: Observable<void>;
+    protected _defaultOptions?: MatSelectConfig | undefined;
     protected readonly _destroy: Subject<void>;
     _keyManager: ActiveDescendantKeyManager<MatOption>;
     protected _ngZone: NgZone;
     _onChange: (value: any) => void;
     _onTouched: () => void;
     readonly _openedStream: Observable<void>;
+    _overlayPanelClass: string | string[];
     _panelDoneAnimatingStream: Subject<string>;
     protected _parentFormField: MatFormField;
     abstract _positions: ConnectedPosition[];
@@ -56,7 +58,7 @@ export declare abstract class _MatSelectBase<C> extends _MatSelectMixinBase impl
     get value(): any;
     set value(newValue: any);
     readonly valueChange: EventEmitter<any>;
-    constructor(_viewportRuler: ViewportRuler, _changeDetectorRef: ChangeDetectorRef, _ngZone: NgZone, _defaultErrorStateMatcher: ErrorStateMatcher, elementRef: ElementRef, _dir: Directionality, _parentForm: NgForm, _parentFormGroup: FormGroupDirective, _parentFormField: MatFormField, ngControl: NgControl, tabIndex: string, scrollStrategyFactory: any, _liveAnnouncer: LiveAnnouncer, defaults?: MatSelectConfig);
+    constructor(_viewportRuler: ViewportRuler, _changeDetectorRef: ChangeDetectorRef, _ngZone: NgZone, _defaultErrorStateMatcher: ErrorStateMatcher, elementRef: ElementRef, _dir: Directionality, _parentForm: NgForm, _parentFormGroup: FormGroupDirective, _parentFormField: MatFormField, ngControl: NgControl, tabIndex: string, scrollStrategyFactory: any, _liveAnnouncer: LiveAnnouncer, _defaultOptions?: MatSelectConfig | undefined);
     protected _canOpen(): boolean;
     _getAriaActiveDescendant(): string | null;
     protected abstract _getChangeEvent(value: any): C;
@@ -145,6 +147,7 @@ export declare class MatSelectChange {
 
 export interface MatSelectConfig {
     disableOptionCentering?: boolean;
+    overlayPanelClass?: string | string[];
     typeaheadDebounceInterval?: number;
 }
 
