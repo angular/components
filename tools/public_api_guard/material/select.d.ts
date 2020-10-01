@@ -2,7 +2,6 @@ export declare abstract class _MatSelectBase<C> extends _MatSelectMixinBase impl
     _ariaDescribedby: string;
     protected _changeDetectorRef: ChangeDetectorRef;
     readonly _closedStream: Observable<void>;
-    protected _defaultOptions?: MatSelectConfig | undefined;
     protected readonly _destroy: Subject<void>;
     _keyManager: ActiveDescendantKeyManager<MatOption>;
     protected _ngZone: NgZone;

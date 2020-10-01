@@ -112,8 +112,6 @@ export class MatSelect extends _MatSelectBase<MatSelectChange> implements OnInit
   /** Width of the overlay panel. */
   _overlayWidth: number;
 
-  _overlayPanelClass: string | string[] = this._defaultOptions?.overlayPanelClass || '';
-
   get shouldLabelFloat(): boolean {
     // Since the panel doesn't overlap the trigger, we
     // want the label to only float when there's a value.

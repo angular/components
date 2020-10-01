@@ -3732,7 +3732,7 @@ describe('MDC-based MatSelect', () => {
 
   });
 
-  it('should be able to provide default values through an injection token', async () => {
+  it('should be able to provide default values through an injection token', fakeAsync(() => {
     configureMatSelectTestingModule([NgModelSelect], [{
       provide: MAT_SELECT_CONFIG,
       useValue: {
@@ -3746,12 +3746,12 @@ describe('MDC-based MatSelect', () => {
     const select = fixture.componentInstance.select;
     select.open();
     fixture.detectChanges();
-    await fixture.whenStable();
+    flush();
 
     expect(select.disableOptionCentering).toBe(true);
     expect(select.typeaheadDebounceInterval).toBe(1337);
     expect(document.querySelector('.cdk-overlay-pane')?.classList).toContain('test-panel-class');
-  });
+  }));
 
   it('should not not throw if the select is inside an ng-container with ngIf', fakeAsync(() => {
     configureMatSelectTestingModule([SelectInNgContainer]);
