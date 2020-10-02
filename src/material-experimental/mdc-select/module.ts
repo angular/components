@@ -16,6 +16,11 @@ import {CdkScrollableModule} from '@angular/cdk/scrolling';
 import {MAT_SELECT_SCROLL_STRATEGY_PROVIDER} from '@angular/material/select';
 import {MatSelect, MatSelectTrigger} from './select';
 
+@NgModule({
+  declarations: [MatSelect, MatSelectTrigger],
+  exports: [MatSelect, MatSelectTrigger]
+})
+export class _MatSelectDeclarationModule {}
 
 @NgModule({
   imports: [
@@ -27,12 +32,10 @@ import {MatSelect, MatSelectTrigger} from './select';
   exports: [
     CdkScrollableModule,
     MatFormFieldModule,
-    MatSelect,
-    MatSelectTrigger,
     MatOptionModule,
-    MatCommonModule
+    MatCommonModule,
+    _MatSelectDeclarationModule,
   ],
-  declarations: [MatSelect, MatSelectTrigger],
   providers: [MAT_SELECT_SCROLL_STRATEGY_PROVIDER]
 })
 export class MatSelectModule {}
