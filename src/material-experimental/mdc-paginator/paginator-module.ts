@@ -14,6 +14,11 @@ import {MatSelectModule} from '@angular/material-experimental/mdc-select';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatPaginator} from './paginator';
 
+@NgModule({
+  declarations: [MatPaginator],
+  exports: [MatPaginator],
+})
+export class _MatPaginatorDeclarationsModule {}
 
 @NgModule({
   imports: [
@@ -22,8 +27,7 @@ import {MatPaginator} from './paginator';
     MatSelectModule,
     MatTooltipModule,
   ],
-  exports: [MatPaginator],
-  declarations: [MatPaginator],
+  exports: [_MatPaginatorDeclarationsModule],
   providers: [MAT_PAGINATOR_INTL_PROVIDER],
 })
 export class MatPaginatorModule {}
