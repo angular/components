@@ -8,4 +8,4 @@
 
 export {getMatInputUnsupportedTypeError, MAT_INPUT_VALUE_ACCESSOR} from '@angular/material/input';
 export {MatInput} from './input';
-export {MatInputModule} from './module';
+export {MatInputModule, _MatInputDeclarationModule} from './module';

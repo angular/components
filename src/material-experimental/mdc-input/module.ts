@@ -13,8 +13,13 @@ import {MatFormFieldModule} from '@angular/material-experimental/mdc-form-field'
 import {MatInput} from './input';
 
 @NgModule({
-  imports: [MatCommonModule, MatFormFieldModule],
-  exports: [MatInput, MatFormFieldModule, TextFieldModule, MatCommonModule],
   declarations: [MatInput],
+  exports: [MatInput]
+})
+export class _MatInputDeclarationModule {}
+
+@NgModule({
+  imports: [MatCommonModule, MatFormFieldModule],
+  exports: [MatFormFieldModule, TextFieldModule, MatCommonModule, _MatInputDeclarationModule],
 })
 export class MatInputModule {}
