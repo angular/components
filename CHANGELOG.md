@@ -1,3 +1,34 @@
+## 10.2.4 "thorium-thunder" (2020-10-05)
+
+### cdk
+
+|            |                       |
+| ---------- | --------------------- |
+| bug fix |  **a11y:** cdkAriaLive default to polite ([#20672](https://github.com/angular/components/issues/20672)) ([f514ae5](https://github.com/angular/components/commit/f514ae5)), closes [#11618](https://github.com/angular/components/issues/11618) |
+| bug fix |  **a11y:** error if FocusMonitor is used on non-element nodes ([#20640](https://github.com/angular/components/issues/20640)) ([92c29c8](https://github.com/angular/components/commit/92c29c8)), closes [#20632](https://github.com/angular/components/issues/20632) |
+
+### material
+
+|            |                       |
+| ---------- | --------------------- |
+| bug fix |  **core:** incorrectly formatting dates in the years 0 to 99 ([#20612](https://github.com/angular/components/issues/20612)) ([9a0c4c0](https://github.com/angular/components/commit/9a0c4c0)), closes [#20418](https://github.com/angular/components/issues/20418) |
+| bug fix |  **datepicker:** fix handling of short years ([#20709](https://github.com/angular/components/issues/20709)) ([8b4ce73](https://github.com/angular/components/commit/8b4ce73)) |
+
+### youtube-player
+
+|            |                       |
+| ---------- | --------------------- |
+| bug fix |  YT.Player is not a constructor ([#20616](https://github.com/angular/components/issues/20616)) ([3393ec7](https://github.com/angular/components/commit/3393ec7)), closes [#20598](https://github.com/angular/components/issues/20598) [angular#20598](https://github.com/angular/issues/20598) |
+
+### material-experimental
+
+|            |                       |
+| ---------- | --------------------- |
+| bug fix |  **mdc-button:** align public API with material/button ([#20679](https://github.com/angular/components/issues/20679)) ([3a34ab0](https://github.com/angular/components/commit/3a34ab0)) |
+| bug fix |  **mdc-snack-bar:** button pushed outside container ([#20696](https://github.com/angular/components/issues/20696)) ([c5fd98a](https://github.com/angular/components/commit/c5fd98a)), closes [#20690](https://github.com/angular/components/issues/20690) |
+| bug fix |  **mdc-snack-bar:** not aligned correctly on IE11 ([#20690](https://github.com/angular/components/issues/20690)) ([e1ea7df](https://github.com/angular/components/commit/e1ea7df)) |
+
+
 ## 10.2.3 "polyester-pancake" (2020-09-28)
 
 ### cdk
