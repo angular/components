@@ -91,7 +91,6 @@ export class MainComponentHarness extends ComponentHarness {
   readonly deepShadow = this.locatorFor(
       'test-shadow-boundary test-sub-shadow-boundary > .in-the-shadows');
   readonly hoverTest = this.locatorFor('#hover-box');
-  readonly customEventBasic = this.locatorFor('#custom-event-basic');
 
   private _testTools = this.locatorFor(SubComponentHarness);
 

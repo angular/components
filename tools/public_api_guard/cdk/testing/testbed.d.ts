@@ -22,7 +22,6 @@ export declare class UnitTestElement implements TestElement {
     blur(): Promise<void>;
     clear(): Promise<void>;
     click(...args: [] | ['center'] | [number, number]): Promise<void>;
-    dispatchEvent(name: string): Promise<void>;
     focus(): Promise<void>;
     getAttribute(name: string): Promise<string | null>;
     getCssValue(property: string): Promise<string>;
