@@ -212,5 +212,5 @@ export class ProtractorElement implements TestElement {
 function _dispatchEvent(name: string, element: ElementFinder) {
   const event = document.createEvent('Event');
   event.initEvent(name);
-  element.dispatchEvent(event);
+  element['dispatchEvent'](event);
 }
