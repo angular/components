@@ -3,7 +3,11 @@ export declare class ProtractorElement implements TestElement {
     constructor(element: ElementFinder);
     blur(): Promise<void>;
     clear(): Promise<void>;
-    click(...args: [] | ['center'] | [number, number]): Promise<void>;
+    click(...args: [ModifierKeys?] | ['center', ModifierKeys?] | [
+        number,
+        number,
+        ModifierKeys?
+    ]): Promise<void>;
     dispatchEvent(name: string, data?: Record<string, EventData>): Promise<void>;
     focus(): Promise<void>;
     getAttribute(name: string): Promise<string | null>;

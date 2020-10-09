@@ -21,7 +21,11 @@ export declare class UnitTestElement implements TestElement {
     constructor(element: Element, _stabilize: () => Promise<void>);
     blur(): Promise<void>;
     clear(): Promise<void>;
-    click(...args: [] | ['center'] | [number, number]): Promise<void>;
+    click(...args: [ModifierKeys?] | ['center', ModifierKeys?] | [
+        number,
+        number,
+        ModifierKeys?
+    ]): Promise<void>;
     dispatchEvent(name: string, data?: Record<string, EventData>): Promise<void>;
     focus(): Promise<void>;
     getAttribute(name: string): Promise<string | null>;
