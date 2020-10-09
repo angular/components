@@ -151,9 +151,9 @@ export declare function stopHandlingAutoChangeDetectionStatus(): void;
 export interface TestElement {
     blur(): Promise<void>;
     clear(): Promise<void>;
-    click(): Promise<void>;
-    click(location: 'center'): Promise<void>;
-    click(relativeX: number, relativeY: number): Promise<void>;
+    click(modifiers?: ModifierKeys): Promise<void>;
+    click(location: 'center', modifiers?: ModifierKeys): Promise<void>;
+    click(relativeX: number, relativeY: number, modifiers?: ModifierKeys): Promise<void>;
     dispatchEvent?(name: string, data?: Record<string, EventData>): Promise<void>;
     focus(): Promise<void>;
     getAttribute(name: string): Promise<string | null>;
