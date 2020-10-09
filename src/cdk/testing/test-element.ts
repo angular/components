@@ -76,17 +76,17 @@ export interface TestElement {
    * the element is clicked at a specific location, consider using `click('center')` or
    * `click(x, y)` instead.
    */
-  click(): Promise<void>;
+  click(modifiers?: ModifierKeys): Promise<void>;
 
   /** Click the element at the element's center. */
-  click(location: 'center'): Promise<void>;
+  click(location: 'center', modifiers?: ModifierKeys, ): Promise<void>;
 
   /**
    * Click the element at the specified coordinates relative to the top-left of the element.
    * @param relativeX Coordinate within the element, along the X-axis at which to click.
    * @param relativeY Coordinate within the element, along the Y-axis at which to click.
    */
-  click(relativeX: number, relativeY: number): Promise<void>;
+  click(relativeX: number, relativeY: number, modifiers?: ModifierKeys, ): Promise<void>;
 
   /**
    * Right clicks on the element at the specified coordinates relative to the top-left of it.

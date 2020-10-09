@@ -320,6 +320,22 @@ export function crossEnvironmentSpecs(
       expect(await counter.text()).toBe('3');
     });
 
+    it('should be able to click with no modifiers', async () => {
+      const clickTest = await harness.clickTest();
+      const modifiersResult = await harness.clickModifiersResult();
+
+      await clickTest.click();
+      expect(await modifiersResult.text()).toBe('---');
+    });
+
+    it('should be able to click with shift and meta modifiers', async () => {
+      const clickTest = await harness.clickTest();
+      const modifiersResult = await harness.clickModifiersResult();
+
+      await clickTest.click({shift: true, meta: true});
+      expect(await modifiersResult.text()).toBe('shift---meta');
+    });
+
     it('should be able to click at a specific position within an element', async () => {
       const clickTest = await harness.clickTest();
       const clickTestResult = await harness.clickTestResult();
@@ -327,11 +343,27 @@ export function crossEnvironmentSpecs(
       expect(await clickTestResult.text()).toBe('10-10');
     });
 
+    it('should be able to click at a specific position with shift and meta modifiers', async () => {
+      const clickTest = await harness.clickTest();
+      const modifiersResult = await harness.clickModifiersResult();
+
+      await clickTest.click(10, 10, {shift: true, meta: true});
+      expect(await modifiersResult.text()).toBe('shift---meta');
+    });
+
     it('should be able to click the center of an element', async () => {
       const clickTest = await harness.clickTest();
       const clickTestResult = await harness.clickTestResult();
       await clickTest.click('center');
       expect(await clickTestResult.text()).toBe('50-50');
+    });
+
+    it('should be able to click the center of an element with shift meta modifiers', async () => {
+      const clickTest = await harness.clickTest();
+      const modifiersResult = await harness.clickModifiersResult();
+
+      await clickTest.click('center', {shift: true, meta: true});
+      expect(await modifiersResult.text()).toBe('shift---meta');
     });
 
     it('should be able to right click at a specific position within an element', async () => {

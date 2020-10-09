@@ -80,8 +80,9 @@ export class UnitTestElement implements TestElement {
     await this._stabilize();
   }
 
-  async click(...args: [] | ['center'] | [number, number]): Promise<void> {
-    await this._dispatchMouseEventSequence('click', args);
+  async click(...args: [ModifierKeys?] | ['center', ModifierKeys?] |
+    [number, number, ModifierKeys?]): Promise<void> {
+    await this._dispatchMouseEventSequence('click', args, 0);
     await this._stabilize();
   }
 
@@ -224,15 +225,20 @@ export class UnitTestElement implements TestElement {
   /** Dispatches all the events that are part of a mouse event sequence. */
   private async _dispatchMouseEventSequence(
     name: string,
-    args: [] | ['center'] | [number, number],
+    args: [ModifierKeys?] | ['center', ModifierKeys?] | [number, number, ModifierKeys?],
     button?: number) {
     let clientX: number | undefined = undefined;
     let clientY: number | undefined = undefined;
+    let modifiers: ModifierKeys = {};
+
+    if (args.length && typeof args[args.length - 1] === 'object') {
+      modifiers = args.pop() as ModifierKeys;
+    }
 
     if (args.length) {
       const {left, top, width, height} = await this.getDimensions();
-      const relativeX = args[0] === 'center' ? width / 2 : args[0];
-      const relativeY = args[0] === 'center' ? height / 2 : args[1];
+      const relativeX = args[0] === 'center' ? width / 2 : args[0] as number;
+      const relativeY = args[0] === 'center' ? height / 2 : args[1] as number;
 
       // Round the computed click position as decimal pixels are not
       // supported by mouse events and could lead to unexpected results.
@@ -241,10 +247,9 @@ export class UnitTestElement implements TestElement {
     }
 
     this._dispatchPointerEventIfSupported('pointerdown', clientX, clientY, button);
-    dispatchMouseEvent(this.element, 'mousedown', clientX, clientY, button);
+    dispatchMouseEvent(this.element, 'mousedown', clientX, clientY, button, modifiers);
     this._dispatchPointerEventIfSupported('pointerup', clientX, clientY, button);
-    dispatchMouseEvent(this.element, 'mouseup', clientX, clientY, button);
-    dispatchMouseEvent(this.element, name, clientX, clientY, button);
-    await this._stabilize();
+    dispatchMouseEvent(this.element, 'mouseup', clientX, clientY, button, modifiers);
+    dispatchMouseEvent(this.element, name, clientX, clientY, button, modifiers);
   }
 }

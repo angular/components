@@ -35,6 +35,7 @@ export class TestMainComponent implements OnDestroy {
   testMethods: string[];
   isHovering = false;
   specialKey = '';
+  modifiers: string;
   singleSelect: string;
   singleSelectChangeEventCount = 0;
   multiSelect: string[] = [];
@@ -91,6 +92,9 @@ export class TestMainComponent implements OnDestroy {
 
   onClick(event: MouseEvent) {
     this._assignRelativeCoordinates(event, this.clickResult);
+
+    this.modifiers = ['Shift', 'Alt', 'Control', 'Meta']
+      .map(key => event.getModifierState(key) ? key.toLowerCase() : '').join('-');
   }
 
   onRightClick(event: MouseEvent) {
