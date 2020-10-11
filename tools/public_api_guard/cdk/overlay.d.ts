@@ -107,7 +107,7 @@ export declare class ConnectedPositionStrategy implements PositionStrategy {
     withOffsetX(offset: number): this;
     withOffsetY(offset: number): this;
     withPositions(positions: ConnectionPositionPair[]): this;
-    withScrollableContainers(scrollables: CdkScrollable[]): void;
+    withScrollableContainers(scrollables: Scrollable[]): void;
 }
 
 export declare class ConnectionPositionPair {
@@ -142,7 +142,7 @@ export declare class FlexibleConnectedPositionStrategy implements PositionStrate
     withLockedPosition(isLocked?: boolean): this;
     withPositions(positions: ConnectedPosition[]): this;
     withPush(canPush?: boolean): this;
-    withScrollableContainers(scrollables: CdkScrollable[]): this;
+    withScrollableContainers(scrollables: Scrollable[]): this;
     withTransformOriginOn(selector: string): this;
     withViewportMargin(margin: number): this;
 }

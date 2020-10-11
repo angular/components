@@ -16,25 +16,16 @@ import {Directive, ElementRef, NgZone, OnDestroy, OnInit, Optional} from '@angul
 import {fromEvent, Observable, Subject, Observer} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 import {ScrollDispatcher} from './scroll-dispatcher';
-
-export type _Without<T> = {[P in keyof T]?: never};
-export type _XOR<T, U> = (_Without<T> & U) | (_Without<U> & T);
-export type _Top = {top?: number};
-export type _Bottom = {bottom?: number};
-export type _Left = {left?: number};
-export type _Right = {right?: number};
-export type _Start = {start?: number};
-export type _End = {end?: number};
-export type _XAxis = _XOR<_XOR<_Left, _Right>, _XOR<_Start, _End>>;
-export type _YAxis = _XOR<_Top, _Bottom>;
-
-/**
- * An extended version of ScrollToOptions that allows expressing scroll offsets relative to the
- * top, bottom, left, right, start, or end of the viewport rather than just the top and left.
- * Please note: the top and bottom properties are mutually exclusive, as are the left, right,
- * start, and end properties.
- */
-export type ExtendedScrollToOptions = _XAxis & _YAxis & ScrollOptions;
+import {
+  ExtendedScrollToOptions,
+  _Without,
+  _Left,
+  _Right,
+  _Bottom,
+  _Top,
+  ScrollOffsetEdge,
+  Scrollable,
+} from './scroll-types';
 
 /**
  * Sends an event when the directive's element is scrolled. Registers itself with the
@@ -44,7 +35,7 @@ export type ExtendedScrollToOptions = _XAxis & _YAxis & ScrollOptions;
 @Directive({
   selector: '[cdk-scrollable], [cdkScrollable]'
 })
-export class CdkScrollable implements OnInit, OnDestroy {
+export class CdkScrollable implements Scrollable, OnInit, OnDestroy {
   private _destroyed = new Subject<void>();
 
   private _elementScrolled: Observable<Event> = new Observable((observer: Observer<Event>) =>
@@ -150,7 +141,7 @@ export class CdkScrollable implements OnInit, OnDestroy {
    * in an RTL context.
    * @param from The edge to measure from.
    */
-  measureScrollOffset(from: 'top' | 'left' | 'right' | 'bottom' | 'start' | 'end'): number {
+  measureScrollOffset(from: ScrollOffsetEdge): number {
     const LEFT = 'left';
     const RIGHT = 'right';
     const el = this.elementRef.nativeElement;

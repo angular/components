@@ -33,7 +33,8 @@ import {
 } from 'rxjs';
 import {auditTime, startWith, takeUntil} from 'rxjs/operators';
 import {ScrollDispatcher} from './scroll-dispatcher';
-import {CdkScrollable, ExtendedScrollToOptions} from './scrollable';
+import {CdkScrollable} from './scrollable';
+import {ExtendedScrollToOptions} from './scroll-types';
 import {VIRTUAL_SCROLL_STRATEGY, VirtualScrollStrategy} from './virtual-scroll-strategy';
 import {ViewportRuler} from './viewport-ruler';
 import {CdkVirtualScrollRepeater} from './virtual-scroll-repeater';

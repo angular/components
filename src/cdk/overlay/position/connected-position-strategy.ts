@@ -8,7 +8,7 @@
 
 import {Direction} from '@angular/cdk/bidi';
 import {Platform} from '@angular/cdk/platform';
-import {CdkScrollable, ViewportRuler} from '@angular/cdk/scrolling';
+import {Scrollable, ViewportRuler} from '@angular/cdk/scrolling';
 import {ElementRef} from '@angular/core';
 import {Observable} from 'rxjs';
 
@@ -118,7 +118,7 @@ export class ConnectedPositionStrategy implements PositionStrategy {
    * on reposition we can evaluate if it or the overlay has been clipped or outside view. Every
    * Scrollable must be an ancestor element of the strategy's origin element.
    */
-  withScrollableContainers(scrollables: CdkScrollable[]) {
+  withScrollableContainers(scrollables: Scrollable[]) {
     this._positionStrategy.withScrollableContainers(scrollables);
   }
 

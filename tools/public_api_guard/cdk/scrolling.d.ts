@@ -53,7 +53,7 @@ export declare class CdkFixedSizeVirtualScroll implements OnChanges {
     static ɵfac: i0.ɵɵFactoryDef<CdkFixedSizeVirtualScroll, never>;
 }
 
-export declare class CdkScrollable implements OnInit, OnDestroy {
+export declare class CdkScrollable implements Scrollable, OnInit, OnDestroy {
     protected dir?: Directionality | undefined;
     protected elementRef: ElementRef<HTMLElement>;
     protected ngZone: NgZone;
@@ -61,7 +61,7 @@ export declare class CdkScrollable implements OnInit, OnDestroy {
     constructor(elementRef: ElementRef<HTMLElement>, scrollDispatcher: ScrollDispatcher, ngZone: NgZone, dir?: Directionality | undefined);
     elementScrolled(): Observable<Event>;
     getElementRef(): ElementRef<HTMLElement>;
-    measureScrollOffset(from: 'top' | 'left' | 'right' | 'bottom' | 'start' | 'end'): number;
+    measureScrollOffset(from: ScrollOffsetEdge): number;
     ngOnDestroy(): void;
     ngOnInit(): void;
     scrollTo(options: ExtendedScrollToOptions): void;
@@ -165,17 +165,24 @@ export declare class FixedSizeVirtualScrollStrategy implements VirtualScrollStra
     updateItemAndBufferSize(itemSize: number, minBufferPx: number, maxBufferPx: number): void;
 }
 
+export interface Scrollable {
+    elementScrolled(): Observable<Event>;
+    getElementRef(): ElementRef<HTMLElement>;
+    measureScrollOffset(from: ScrollOffsetEdge): number;
+    scrollTo(options: ExtendedScrollToOptions): void;
+}
+
 export declare class ScrollDispatcher implements OnDestroy {
     protected _document: Document;
     _globalSubscription: Subscription | null;
-    scrollContainers: Map<CdkScrollable, Subscription>;
+    scrollContainers: Map<Scrollable, Subscription>;
     constructor(_ngZone: NgZone, _platform: Platform, document: any);
-    ancestorScrolled(elementRef: ElementRef, auditTimeInMs?: number): Observable<CdkScrollable | void>;
-    deregister(scrollable: CdkScrollable): void;
-    getAncestorScrollContainers(elementRef: ElementRef): CdkScrollable[];
+    ancestorScrolled(elementRef: ElementRef, auditTimeInMs?: number): Observable<Scrollable | void>;
+    deregister(scrollable: Scrollable): void;
+    getAncestorScrollContainers(elementRef: ElementRef): Scrollable[];
     ngOnDestroy(): void;
-    register(scrollable: CdkScrollable): void;
-    scrolled(auditTimeInMs?: number): Observable<CdkScrollable | void>;
+    register(scrollable: Scrollable): void;
+    scrolled(auditTimeInMs?: number): Observable<Scrollable | void>;
     static ɵfac: i0.ɵɵFactoryDef<ScrollDispatcher, [null, null, { optional: true; }]>;
     static ɵprov: i0.ɵɵInjectableDef<ScrollDispatcher>;
 }
@@ -184,6 +191,8 @@ export declare class ScrollingModule {
     static ɵinj: i0.ɵɵInjectorDef<ScrollingModule>;
     static ɵmod: i0.ɵɵNgModuleDefWithMeta<ScrollingModule, [typeof i2.CdkFixedSizeVirtualScroll, typeof i3.CdkVirtualForOf, typeof i4.CdkVirtualScrollViewport], [typeof i5.BidiModule, typeof i6.PlatformModule, typeof CdkScrollableModule], [typeof i5.BidiModule, typeof CdkScrollableModule, typeof i2.CdkFixedSizeVirtualScroll, typeof i3.CdkVirtualForOf, typeof i4.CdkVirtualScrollViewport]>;
 }
+
+export declare type ScrollOffsetEdge = 'top' | 'left' | 'right' | 'bottom' | 'start' | 'end';
 
 export declare class ViewportRuler implements OnDestroy {
     protected _document: Document;
