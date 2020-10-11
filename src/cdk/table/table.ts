@@ -340,6 +340,18 @@ export class CdkTable<T> implements AfterContentChecked, CollectionViewer, OnDes
    */
   private _cachedRenderRowsMap = new Map<T, WeakMap<CdkRowDef<T>, RenderRow<T>[]>>();
 
+  /**
+   * Cache of the current rendering rows by render index and their row definition (CdkRowDef)
+   * that was used to render them.
+   *
+   * This will update every time the differ emits a change and will support detection of a change
+   * in the row definition without a change in the context or identity which did not result
+   * in a differ operation. This is most common when the `trackBy` method return the `index` which
+   * will prevent the differ from adding/removing/moving rows so a change in the rowDef
+   * will be missed.
+   */
+  private _cachedRenderDefMap = new Map<number, CdkRowDef<T>>();
+
   /** Whether the table is applied to a native `<table>`. */
   protected _isNativeHtmlTable: boolean;
 
@@ -667,17 +679,36 @@ export class CdkTable<T> implements AfterContentChecked, CollectionViewer, OnDes
         if (change.operation === _ViewRepeaterOperation.INSERTED && change.context) {
           this._renderCellTemplateForItem(change.record.item.rowDef, change.context);
         }
+        switch (change.operation) {
+          case _ViewRepeaterOperation.REPLACED:
+          case _ViewRepeaterOperation.INSERTED:
+          case _ViewRepeaterOperation.MOVED:
+            this._cachedRenderDefMap.set(
+                change.record.currentIndex!, change.record.item.rowDef);
+            break;
+          case _ViewRepeaterOperation.REMOVED:
+            this._cachedRenderDefMap.delete(change.record.previousIndex!);
+            break;
+        }
       },
     );
 
     // Update the meta context of a row's context data (index, count, first, last, ...)
     this._updateRowIndexContext();
 
-    // Update rows that did not get added/removed/moved but may have had their identity changed,
+    // Update rows that did not get added/removed/moved but may have had their identity changed
+    // or rowDef changed.
     // e.g. if trackBy matched data on some property but the actual data reference changed.
     changes.forEachIdentityChange((record: IterableChangeRecord<RenderRow<T>>) => {
       const rowView = <RowViewRef<T>>viewContainer.get(record.currentIndex!);
       rowView.context.$implicit = record.item.data;
+      if (this._cachedRenderDefMap.get(record.currentIndex!) !== record.item.rowDef) {
+        viewContainer.remove(record.currentIndex!);
+        const args = this._getEmbeddedViewArgs(record.item, record.currentIndex!);
+        viewContainer.createEmbeddedView(args.templateRef, args.context, args.index);
+        this._cachedRenderDefMap.set(record.currentIndex!, record.item.rowDef);
+        this._renderCellTemplateForItem(record.item.rowDef, args.context!);
+      }
     });
 
     this._updateNoDataRow();

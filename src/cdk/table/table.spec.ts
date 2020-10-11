@@ -863,6 +863,27 @@ describe('CdkTable', () => {
           fixture.detectChanges();
         }).not.toThrow();
       });
+
+      it('should be able to detect row template changes and re-render', () => {
+        setupTableTestApp(WhenRowChangeDetectionCdkTableApp);
+        fixture.detectChanges();
+
+        let dataRows: Element[] = getRows(tableElement);
+        dataRows.forEach(element => {
+          expect(element.classList.contains('row-version-1')).toBe(true);
+          expect(element.classList.contains('row-version-2')).toBe(false);
+        });
+
+        component.swapRows();
+        component.table.renderRows();
+        fixture.detectChanges();
+
+        dataRows = getRows(tableElement);
+        dataRows.forEach( element => {
+          expect(element.classList.contains('row-version-2')).toBe(true);
+          expect(element.classList.contains('row-version-1')).toBe(false);
+        });
+      });
     });
   });
 
@@ -2108,6 +2129,55 @@ class NullDataCdkTableApp {
   `,
 })
 class MultipleHeaderFooterRowsCdkTableApp {}
+
+@Component({
+  template: `
+    <cdk-table [dataSource]="dataSource" [trackBy]="trackByIndex">
+      <ng-container cdkColumnDef="column_a">
+        <cdk-header-cell *cdkHeaderCellDef> Column A</cdk-header-cell>
+        <cdk-cell *cdkCellDef="let row"> {{row.a}}</cdk-cell>
+      </ng-container>
+
+      <ng-container cdkColumnDef="column_b">
+        <cdk-header-cell *cdkHeaderCellDef> Column B</cdk-header-cell>
+        <cdk-cell *cdkCellDef="let row"> {{row.b}}</cdk-cell>
+      </ng-container>
+
+      <ng-container cdkColumnDef="column_c">
+        <cdk-header-cell *cdkHeaderCellDef> Column C</cdk-header-cell>
+        <cdk-cell *cdkCellDef="let row"> {{row.c}}</cdk-cell>
+      </ng-container>
+
+      <cdk-header-row *cdkHeaderRowDef="columnsToRender"></cdk-header-row>
+      <cdk-row *cdkRowDef="let row; columns: columnsToRender; when: isAnimal" class="row-version-1">
+      </cdk-row>
+      <cdk-row *cdkRowDef="let row; columns: columnsToRender; when: isNotAnimal"
+               class="row-version-2">
+      </cdk-row>
+    </cdk-table>
+  `
+})
+class WhenRowChangeDetectionCdkTableApp {
+  dataSource: FakeDataSource = new FakeDataSource();
+  columnsToRender = ['column_a', 'column_b', 'column_c'];
+
+  isAnimalFlag = true;
+
+  trackByIndex = (index: number, item: TestData) => index;
+  isAnimal = (index: number, _rowData: TestData) => this.isAnimalFlag;
+  isNotAnimal = (index: number, _rowData: TestData) => !this.isAnimalFlag;
+
+  constructor() {
+    this.dataSource.addData();
+  }
+
+  @ViewChild(CdkTable) table: CdkTable<TestData>;
+
+  swapRows() {
+    this.isAnimalFlag = !this.isAnimalFlag;
+  }
+}
+
 
 @Component({
   template: `
