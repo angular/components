@@ -42,6 +42,7 @@ export class TestMainComponent implements OnDestroy {
   multiSelect: string[] = [];
   multiSelectChangeEventCount = 0;
   basicEvent = 0;
+  customEventData: string | null = null;
   _shadowDomSupported = _supportsShadowDom();
 
   @ViewChild('clickTestElement') clickTestElement: ElementRef<HTMLElement>;
@@ -92,6 +93,10 @@ export class TestMainComponent implements OnDestroy {
     const {top, left} = this.clickTestElement.nativeElement.getBoundingClientRect();
     this.relativeX = Math.round(event.clientX - left);
     this.relativeY = Math.round(event.clientY - top);
+  }
+
+  onCustomEvent(event: any) {
+    this.customEventData = JSON.stringify({message: event.message, value: event.value});
   }
 
   runTaskOutsideZone() {

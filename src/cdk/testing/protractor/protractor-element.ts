@@ -12,7 +12,8 @@ import {
   ModifierKeys,
   TestElement,
   TestKey,
-  TextOptions
+  TextOptions,
+  EventData,
 } from '@angular/cdk/testing';
 import {browser, by, ElementFinder, Key} from 'protractor';
 
@@ -199,8 +200,8 @@ export class ProtractorElement implements TestElement {
     return this.element.equals(browser.driver.switchTo().activeElement());
   }
 
-  async dispatchEvent(name: string): Promise<void> {
-    return browser.executeScript(_dispatchEvent, name, this.element);
+  async dispatchEvent(name: string, data?: Record<string, EventData>): Promise<void> {
+    return browser.executeScript(_dispatchEvent, name, this.element, data);
   }
 }
 
@@ -209,9 +210,15 @@ export class ProtractorElement implements TestElement {
  * Note that this needs to be a pure function, because it gets stringified by
  * Protractor and is executed inside the browser.
  */
-function _dispatchEvent(name: string, element: ElementFinder) {
+function _dispatchEvent(name: string, element: ElementFinder, data?: Record<string, EventData>) {
   const event = document.createEvent('Event');
   event.initEvent(name);
+
+  if (data) {
+    // tslint:disable-next-line:ban Have to use `Object.assign` to preserve the original object.
+    Object.assign(event, data);
+  }
+
   // This type has a string index signature, so we cannot access it using a dotted property access.
   element['dispatchEvent'](event);
 }
