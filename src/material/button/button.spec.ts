@@ -3,6 +3,7 @@ import {Component, DebugElement} from '@angular/core';
 import {By} from '@angular/platform-browser';
 import {MatButtonModule, MatButton} from './index';
 import {MatRipple, ThemePalette} from '@angular/material/core';
+import {dispatchFakeEvent} from '@angular/cdk/testing/private';
 
 
 describe('MatButton', () => {
@@ -73,6 +74,8 @@ describe('MatButton', () => {
   it('should be able to focus button with a specific focus origin', () => {
     const fixture = TestBed.createComponent(TestApp);
     fixture.detectChanges();
+    dispatchFakeEvent(document, 'mousemove');
+
     const buttonDebugEl = fixture.debugElement.query(By.css('button'));
     const buttonInstance = buttonDebugEl.componentInstance as MatButton;
 

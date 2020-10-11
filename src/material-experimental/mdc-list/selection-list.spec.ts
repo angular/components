@@ -56,6 +56,7 @@ describe('MDC-based MatSelectionList without forms', () => {
 
       listOptions = fixture.debugElement.queryAll(By.directive(MatListOption));
       selectionList = fixture.debugElement.query(By.directive(MatSelectionList))!;
+      dispatchFakeEvent(document, 'mousemove'); // Trigger the focus monitor event registration.
     }));
 
     function getFocusIndex() {

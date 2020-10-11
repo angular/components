@@ -44,6 +44,7 @@ describe('MatSlider', () => {
     beforeEach(() => {
       fixture = createComponent(StandardSlider);
       fixture.detectChanges();
+      dispatchFakeEvent(document, 'mousemove');
 
       sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider))!;
       sliderNativeElement = sliderDebugElement.nativeElement;

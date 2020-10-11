@@ -5,6 +5,7 @@ import {
   createMouseEvent,
   dispatchMouseEvent,
   wrappedErrorMessage,
+  dispatchFakeEvent,
 } from '@angular/cdk/testing/private';
 import {Component, ElementRef, ViewChild} from '@angular/core';
 import {waitForAsync, ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/testing';
@@ -51,6 +52,7 @@ describe('MatSort', () => {
     fixture = TestBed.createComponent(SimpleMatSortApp);
     component = fixture.componentInstance;
     fixture.detectChanges();
+    dispatchFakeEvent(document, 'mousemove');
   });
 
   it('should have the sort headers register and deregister themselves', () => {

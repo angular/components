@@ -44,6 +44,7 @@ describe('FocusMonitor', () => {
 
     changeHandler = jasmine.createSpy('focus origin change handler');
     focusMonitor.monitor(buttonElement).subscribe(changeHandler);
+    registerPendingEvents();
     patchElementFocus(buttonElement);
   }));
 
@@ -283,6 +284,7 @@ describe('FocusMonitor', () => {
 
     focusMonitor.monitor(parent, true);
     focusMonitor.monitor(parent, false);
+    registerPendingEvents();
 
     // Simulate focus via mouse.
     dispatchMouseEvent(buttonElement, 'mousedown');
@@ -328,6 +330,7 @@ describe('FocusMonitor with "eventual" detection', () => {
 
     changeHandler = jasmine.createSpy('focus origin change handler');
     focusMonitor.monitor(buttonElement).subscribe(changeHandler);
+    registerPendingEvents();
     patchElementFocus(buttonElement);
   }));
 
@@ -364,6 +367,7 @@ describe('cdkMonitorFocus', () => {
       fixture = TestBed.createComponent(ButtonWithFocusClasses);
       fixture.detectChanges();
 
+      registerPendingEvents();
       spyOn(fixture.componentInstance, 'focusChanged');
       buttonElement = fixture.debugElement.query(By.css('button'))!.nativeElement;
       patchElementFocus(buttonElement);
@@ -468,6 +472,7 @@ describe('cdkMonitorFocus', () => {
 
       patchElementFocus(parentElement);
       patchElementFocus(childElement);
+      registerPendingEvents();
     });
 
     it('should add focus classes on parent focus', fakeAsync(() => {
@@ -501,6 +506,7 @@ describe('cdkMonitorFocus', () => {
 
       patchElementFocus(parentElement);
       patchElementFocus(childElement);
+      registerPendingEvents();
     });
 
     it('should add focus classes on parent focus', fakeAsync(() => {
@@ -537,6 +543,7 @@ describe('cdkMonitorFocus', () => {
 
       patchElementFocus(parentElement);
       patchElementFocus(childElement);
+      registerPendingEvents();
     }));
 
     it('should add keyboard focus classes on both elements when child is focused via keyboard',
@@ -584,6 +591,7 @@ describe('FocusMonitor observable stream', () => {
   it('should emit inside the NgZone', fakeAsync(() => {
     const spy = jasmine.createSpy('zone spy');
     focusMonitor.monitor(buttonElement).subscribe(() => spy(NgZone.isInAngularZone()));
+    registerPendingEvents();
     expect(spy).not.toHaveBeenCalled();
 
     buttonElement.focus();
@@ -593,6 +601,10 @@ describe('FocusMonitor observable stream', () => {
   }));
 });
 
+
+function registerPendingEvents() {
+  dispatchFakeEvent(document, 'mousemove');
+}
 
 @Component({
   template: `<div class="parent"><button>focus me!</button></div>`

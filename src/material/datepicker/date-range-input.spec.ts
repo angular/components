@@ -200,6 +200,7 @@ describe('MatDateRangeInput', () => {
   it('should float the form field label when either input is focused', () => {
     const fixture = createComponent(StandardRangePicker);
     fixture.detectChanges();
+    dispatchFakeEvent(document, 'mousemove');
     const {rangeInput, end} = fixture.componentInstance;
     let focusMonitor: FocusMonitor;
 

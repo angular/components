@@ -34,7 +34,7 @@ import {
   createKeyboardEvent,
   dispatchEvent,
   patchElementFocus,
-  dispatchMouseEvent
+  dispatchMouseEvent, dispatchFakeEvent
 } from '@angular/cdk/testing/private';
 import {
   MAT_DIALOG_DATA,
@@ -1123,6 +1123,7 @@ describe('MatDialog', () => {
       let button = document.createElement('button');
       button.id = 'dialog-trigger';
       document.body.appendChild(button);
+      dispatchFakeEvent(document, 'mousemove'); // Trigger the focus monitor event registration.
       button.focus();
 
       let dialogRef = dialog.open(PizzaMsg, { viewContainerRef: testViewContainerRef });
@@ -1156,6 +1157,7 @@ describe('MatDialog', () => {
         .subscribe(focusOrigin => lastFocusOrigin = focusOrigin);
 
       document.body.appendChild(button);
+      dispatchFakeEvent(document, 'mousemove'); // Trigger the focus monitor event registration.
       button.focus();
 
       // Patch the element focus after the initial and real focus, because otherwise the
@@ -1189,6 +1191,7 @@ describe('MatDialog', () => {
         .subscribe(focusOrigin => lastFocusOrigin = focusOrigin);
 
       document.body.appendChild(button);
+      dispatchFakeEvent(document, 'mousemove'); // Trigger the focus monitor event registration.
       button.focus();
 
       // Patch the element focus after the initial and real focus, because otherwise the
@@ -1225,6 +1228,7 @@ describe('MatDialog', () => {
         .subscribe(focusOrigin => lastFocusOrigin = focusOrigin);
 
       document.body.appendChild(button);
+      dispatchFakeEvent(document, 'mousemove'); // Trigger the focus monitor event registration.
       button.focus();
 
       // Patch the element focus after the initial and real focus, because otherwise the
@@ -1262,6 +1266,7 @@ describe('MatDialog', () => {
         .subscribe(focusOrigin => lastFocusOrigin = focusOrigin);
 
       document.body.appendChild(button);
+      dispatchFakeEvent(document, 'mousemove'); // Trigger the focus monitor event registration.
       button.focus();
 
       // Patch the element focus after the initial and real focus, because otherwise the

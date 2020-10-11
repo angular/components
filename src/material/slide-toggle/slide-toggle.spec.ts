@@ -68,6 +68,7 @@ describe('MatSlideToggle without forms', () => {
 
       // Initialize the slide-toggle component, by triggering the first change detection cycle.
       fixture.detectChanges();
+      dispatchFakeEvent(document, 'mousemove');
 
       const slideToggleDebug = fixture.debugElement.query(By.css('mat-slide-toggle'))!;
 
@@ -558,6 +559,7 @@ describe('MatSlideToggle with forms', () => {
     beforeEach(fakeAsync(() => {
       fixture = TestBed.createComponent(SlideToggleWithModel);
       fixture.detectChanges();
+      dispatchFakeEvent(document, 'mousemove');
 
       const slideToggleDebug = fixture.debugElement.query(By.directive(MatSlideToggle))!;
 

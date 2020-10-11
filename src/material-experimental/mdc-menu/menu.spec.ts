@@ -343,6 +343,7 @@ describe('MDC-based MatMenu', () => {
 
       patchElementFocus(triggerEl);
       focusMonitor.monitor(triggerEl, false);
+      dispatchFakeEvent(document, 'mousemove');
       triggerEl.click(); // A click without a mousedown before it is considered a keyboard open.
       fixture.detectChanges();
       fixture.componentInstance.trigger.closeMenu();
@@ -365,6 +366,7 @@ describe('MDC-based MatMenu', () => {
       fixture.detectChanges();
       patchElementFocus(triggerEl);
       focusMonitor.monitor(triggerEl, false);
+      dispatchFakeEvent(document, 'mousemove');
       fixture.componentInstance.trigger.closeMenu();
       fixture.detectChanges();
       tick(500);
@@ -382,6 +384,7 @@ describe('MDC-based MatMenu', () => {
 
       patchElementFocus(triggerEl);
       focusMonitor.monitor(triggerEl, false);
+      dispatchFakeEvent(document, 'mousemove');
 
       // Trigger a fake right click.
       dispatchEvent(triggerEl, createMouseEvent('mousedown', 50, 100, 2));
@@ -410,6 +413,7 @@ describe('MDC-based MatMenu', () => {
         fixture.detectChanges();
         patchElementFocus(triggerEl);
         focusMonitor.monitor(triggerEl, false);
+        dispatchFakeEvent(document, 'mousemove');
         fixture.componentInstance.trigger.closeMenu();
         fixture.detectChanges();
         tick(500);

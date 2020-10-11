@@ -411,6 +411,7 @@ describe('MatRadio', () => {
     beforeEach(() => {
       fixture = TestBed.createComponent(RadioGroupWithNgModel);
       fixture.detectChanges();
+      dispatchFakeEvent(document, 'mousemove');
 
       testComponent = fixture.debugElement.componentInstance;
 

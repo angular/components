@@ -923,6 +923,7 @@ describe('MatCheckbox', () => {
 
       fixture.componentInstance.isRequired = false;
       fixture.detectChanges();
+      dispatchFakeEvent(document, 'mousemove');
 
       checkboxDebugElement = fixture.debugElement.query(By.directive(MatCheckbox))!;
       checkboxNativeElement = checkboxDebugElement.nativeElement;
@@ -972,6 +973,7 @@ describe('MatCheckbox', () => {
 
       inputElement.click();
       fixture.detectChanges();
+      dispatchFakeEvent(document, 'mousemove');
       flush();
 
       expect(checkboxNativeElement.classList).not.toContain('ng-touched');

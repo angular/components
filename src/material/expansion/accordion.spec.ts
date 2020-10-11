@@ -12,6 +12,7 @@ import {
   dispatchKeyboardEvent,
   createKeyboardEvent,
   dispatchEvent,
+  dispatchFakeEvent,
 } from '@angular/cdk/testing/private';
 import {DOWN_ARROW, UP_ARROW, HOME, END} from '@angular/cdk/keycodes';
 import {FocusMonitor} from '@angular/cdk/a11y';
@@ -162,6 +163,7 @@ describe('MatAccordion', () => {
   it('should move focus to the next header when pressing the down arrow', () => {
     const fixture = TestBed.createComponent(SetOfItems);
     fixture.detectChanges();
+    dispatchFakeEvent(document, 'mousemove');
 
     const headerElements = fixture.debugElement.queryAll(By.css('mat-expansion-panel-header'));
     const headers = fixture.componentInstance.headers.toArray();
@@ -180,6 +182,7 @@ describe('MatAccordion', () => {
   it('should not move focus into nested accordions', () => {
     const fixture = TestBed.createComponent(NestedAccordions);
     fixture.detectChanges();
+    dispatchFakeEvent(document, 'mousemove');
 
     const headerElements = fixture.debugElement.queryAll(By.css('mat-expansion-panel-header'));
     const headers = fixture.componentInstance.headers.toArray();
@@ -197,6 +200,7 @@ describe('MatAccordion', () => {
   it('should move focus to the next header when pressing the up arrow', () => {
     const fixture = TestBed.createComponent(SetOfItems);
     fixture.detectChanges();
+    dispatchFakeEvent(document, 'mousemove');
 
     const headerElements = fixture.debugElement.queryAll(By.css('mat-expansion-panel-header'));
     const headers = fixture.componentInstance.headers.toArray();
@@ -215,6 +219,7 @@ describe('MatAccordion', () => {
   it('should skip disabled items when moving focus with the keyboard', () => {
     const fixture = TestBed.createComponent(SetOfItems);
     fixture.detectChanges();
+    dispatchFakeEvent(document, 'mousemove');
 
     const headerElements = fixture.debugElement.queryAll(By.css('mat-expansion-panel-header'));
     const panels = fixture.componentInstance.panels.toArray();

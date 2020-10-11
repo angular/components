@@ -6,6 +6,7 @@ import {ScrollDispatcher} from '@angular/cdk/scrolling';
 import {
   createKeyboardEvent,
   dispatchEvent,
+  dispatchFakeEvent,
   dispatchKeyboardEvent,
   dispatchMouseEvent,
   patchElementFocus
@@ -1028,6 +1029,7 @@ describe('MDC-based MatDialog', () => {
          let button = document.createElement('button');
          button.id = 'dialog-trigger';
          document.body.appendChild(button);
+         dispatchFakeEvent(document, 'mousemove'); // Trigger the focus monitor event registration.
          button.focus();
 
          let dialogRef = dialog.open(PizzaMsg, {viewContainerRef: testViewContainerRef});
@@ -1065,6 +1067,7 @@ describe('MDC-based MatDialog', () => {
              .subscribe(focusOrigin => lastFocusOrigin = focusOrigin);
 
          document.body.appendChild(button);
+         dispatchFakeEvent(document, 'mousemove'); // Trigger the focus monitor event registration.
          button.focus();
 
          // Patch the element focus after the initial and real focus, because otherwise the
@@ -1099,6 +1102,7 @@ describe('MDC-based MatDialog', () => {
              .subscribe(focusOrigin => lastFocusOrigin = focusOrigin);
 
          document.body.appendChild(button);
+         dispatchFakeEvent(document, 'mousemove'); // Trigger the focus monitor event registration.
          button.focus();
 
          // Patch the element focus after the initial and real focus, because otherwise the
@@ -1135,6 +1139,7 @@ describe('MDC-based MatDialog', () => {
              .subscribe(focusOrigin => lastFocusOrigin = focusOrigin);
 
          document.body.appendChild(button);
+         dispatchFakeEvent(document, 'mousemove'); // Trigger the focus monitor event registration.
          button.focus();
 
          // Patch the element focus after the initial and real focus, because otherwise the
@@ -1173,6 +1178,7 @@ describe('MDC-based MatDialog', () => {
              .subscribe(focusOrigin => lastFocusOrigin = focusOrigin);
 
          document.body.appendChild(button);
+         dispatchFakeEvent(document, 'mousemove'); // Trigger the focus monitor event registration.
          button.focus();
 
          // Patch the element focus after the initial and real focus, because otherwise the
