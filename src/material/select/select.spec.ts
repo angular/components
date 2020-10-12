@@ -2374,7 +2374,7 @@ describe('MatSelect', () => {
           .toBe(true, 'Label should be floating');
     }));
 
-    it ('should default to global floating label type', fakeAsync(() => {
+    it('should default to global floating label type', fakeAsync(() => {
       fixture.destroy();
 
       TestBed.resetTestingModule();
@@ -2402,6 +2402,19 @@ describe('MatSelect', () => {
 
       expect(formField.classList.contains('mat-form-field-can-float'))
           .toBe(true, 'Label should be able to float');
+      expect(formField.classList.contains('mat-form-field-should-float'))
+          .toBe(true, 'Label should be floating');
+    }));
+
+    it('should float the label on focus if it has a placeholder', fakeAsync(() => {
+      expect(fixture.componentInstance.placeholder).toBeTruthy();
+
+      fixture.componentInstance.floatLabel = 'auto';
+      fixture.detectChanges();
+
+      dispatchFakeEvent(fixture.nativeElement.querySelector('.mat-select'), 'focus');
+      fixture.detectChanges();
+
       expect(formField.classList.contains('mat-form-field-should-float'))
           .toBe(true, 'Label should be floating');
     }));
@@ -4920,7 +4933,7 @@ class BasicSelectOnPushPreselected {
   selector: 'floating-label-select',
   template: `
     <mat-form-field [floatLabel]="floatLabel">
-      <mat-select placeholder="Food I want to eat right now" [formControl]="control">
+      <mat-select [placeholder]="placeholder" [formControl]="control">
         <mat-option *ngFor="let food of foods" [value]="food.value">
           {{ food.viewValue }}
         </mat-option>
@@ -4930,6 +4943,7 @@ class BasicSelectOnPushPreselected {
 })
 class FloatLabelSelect {
   floatLabel: FloatLabelType | null = 'auto';
+  placeholder = 'Food I want to eat right now';
   control = new FormControl();
   foods: any[] = [
     { value: 'steak-0', viewValue: 'Steak' },
@@ -5034,7 +5048,7 @@ class BasicSelectWithTheming {
   selector: 'reset-values-select',
   template: `
     <mat-form-field>
-      <mat-select placeholder="Food" [formControl]="control">
+      <mat-select [formControl]="control">
         <mat-option *ngFor="let food of foods" [value]="food.value">
           {{ food.viewValue }}
         </mat-option>
