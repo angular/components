@@ -39,7 +39,7 @@ export const CDK_DRAG_HANDLE = new InjectionToken<CdkDragHandle>('CdkDragHandle'
 })
 export class CdkDragHandle implements OnDestroy {
   /** Closest parent draggable instance. */
-  _parentDrag: CdkDrag | null;
+  _parentDrag: CdkDrag | undefined;
 
   /** Emits when the state of the handle has changed. */
   _stateChanges = new Subject<CdkDragHandle>();
