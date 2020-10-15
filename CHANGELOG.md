@@ -1,3 +1,18 @@
+## 10.2.5 "ink-peony" (2020-10-15)
+
+### material
+
+|            |                       |
+| ---------- | --------------------- |
+| bug fix |  **autocomplete:** don't prevent escape key actions with modifiers ([#20706](https://github.com/angular/components/issues/20706)) ([9332230](https://github.com/angular/components/commit/9332230)), closes [#16202](https://github.com/angular/components/issues/16202) |
+| bug fix |  **datepicker:** lifecycle hooks not being called ([#20700](https://github.com/angular/components/issues/20700)) ([6318389](https://github.com/angular/components/commit/6318389)) |
+| bug fix |  **form-field:** dynamic hint end alignment not working ([#20657](https://github.com/angular/components/issues/20657)) ([95cc020](https://github.com/angular/components/commit/95cc020)), closes [#20629](https://github.com/angular/components/issues/20629) |
+| bug fix |  **list:** emit selectionChange event when selecting with ctrl + a ([#20667](https://github.com/angular/components/issues/20667)) ([d10a20f](https://github.com/angular/components/commit/d10a20f)), closes [#15696](https://github.com/angular/components/issues/15696) |
+| bug fix |  **slider:** some screen readers announcing long decimal values ([#20721](https://github.com/angular/components/issues/20721)) ([ad17eb9](https://github.com/angular/components/commit/ad17eb9)), closes [#20719](https://github.com/angular/components/issues/20719) |
+| bug fix |  **tabs:** some bugs with docs and coercion ([#20356](https://github.com/angular/components/issues/20356)) ([f9547dd](https://github.com/angular/components/commit/f9547dd)) |
+| bug fix |  **tooltip:** convert message to string ([#20685](https://github.com/angular/components/issues/20685)) ([214bc7b](https://github.com/angular/components/commit/214bc7b)), closes [#20684](https://github.com/angular/components/issues/20684) |
+
+
 ## 10.2.4 "thorium-thunder" (2020-10-05)
 
 ### cdk
