@@ -93,6 +93,42 @@ describe('Key managers', () => {
       expect(keyManager.activeItem!.getLabel()).toBe('one');
     });
 
+    it('should update the active item if the current one is removed and there is ' +
+      'a new one at the same index', () => {
+        expect(keyManager.activeItemIndex).toBe(0);
+        expect(keyManager.activeItem!.getLabel()).toBe('one');
+
+        itemList.reset([new FakeFocusable('new-0'), new FakeFocusable('new-1')]);
+        itemList.notifyOnChanges();
+
+        expect(keyManager.activeItemIndex).toBe(0);
+        expect(keyManager.activeItem!.getLabel()).toBe('new-0');
+      });
+
+    it('should clear the active item if nothing exists at the new index', () => {
+      keyManager.setActiveItem(2);
+
+      expect(keyManager.activeItemIndex).toBe(2);
+      expect(keyManager.activeItem!.getLabel()).toBe('three');
+
+      itemList.reset(itemList.toArray().slice(0, 1));
+      itemList.notifyOnChanges();
+
+      expect(keyManager.activeItemIndex).toBe(-1);
+      expect(keyManager.activeItem).toBe(null);
+    });
+
+    it('should clear the active item if the list is cleared', () => {
+      expect(keyManager.activeItemIndex).toBe(0);
+      expect(keyManager.activeItem!.getLabel()).toBe('one');
+
+      itemList.reset([]);
+      itemList.notifyOnChanges();
+
+      expect(keyManager.activeItemIndex).toBe(-1);
+      expect(keyManager.activeItem).toBe(null);
+    });
+
     it('should start off the activeItem as null', () => {
       expect(new ListKeyManager([]).activeItem).toBeNull();
     });
