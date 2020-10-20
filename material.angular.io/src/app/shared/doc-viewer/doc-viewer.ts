@@ -68,7 +68,7 @@ export class DocViewer implements OnDestroy {
 
   constructor(private _appRef: ApplicationRef,
               private _componentFactoryResolver: ComponentFactoryResolver,
-              private _elementRef: ElementRef,
+              public _elementRef: ElementRef,
               private _http: HttpClient,
               private _injector: Injector,
               private _viewContainerRef: ViewContainerRef,

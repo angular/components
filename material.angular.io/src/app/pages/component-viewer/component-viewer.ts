@@ -1,24 +1,29 @@
 import {BreakpointObserver} from '@angular/cdk/layout';
 import {CommonModule} from '@angular/common';
 import {
+  ChangeDetectorRef,
   Component,
   Directive,
   NgModule,
   OnDestroy,
   OnInit,
+  QueryList,
   ViewChild,
+  ViewChildren,
   ViewEncapsulation,
 } from '@angular/core';
 import {MatTabsModule} from '@angular/material/tabs';
 import {ActivatedRoute, Params, Router, RouterModule} from '@angular/router';
 import {combineLatest, Observable, ReplaySubject, Subject} from 'rxjs';
-import {map, takeUntil} from 'rxjs/operators';
+import {map, skip, takeUntil} from 'rxjs/operators';
 import {DocViewerModule} from '../../shared/doc-viewer/doc-viewer-module';
 import {DocItem, DocumentationItems} from '../../shared/documentation-items/documentation-items';
 import {TableOfContents} from '../../shared/table-of-contents/table-of-contents';
 import {TableOfContentsModule} from '../../shared/table-of-contents/table-of-contents.module';
 import {ComponentPageTitle} from '../page-title/page-title';
 import {NavigationFocusModule} from '../../shared/navigation-focus/navigation-focus';
+import {DocViewer} from '../../shared/doc-viewer/doc-viewer';
+
 
 @Component({
   selector: 'app-component-viewer',
@@ -74,20 +79,40 @@ export class ComponentViewer implements OnDestroy {
 @Directive()
 export class ComponentBaseView implements OnInit, OnDestroy {
   @ViewChild('toc') tableOfContents: TableOfContents;
+  @ViewChildren(DocViewer) viewers: QueryList<DocViewer>;
 
   showToc: Observable<boolean>;
 
   destroyed = new Subject<void>();
 
-  constructor(public componentViewer: ComponentViewer, breakpointObserver: BreakpointObserver) {
+  constructor(
+    public componentViewer: ComponentViewer,
+    breakpointObserver: BreakpointObserver,
+    private changeDetectorRef: ChangeDetectorRef) {
     this.showToc = breakpointObserver.observe('(max-width: 1200px)')
-      .pipe(map(result => !result.matches));
+      .pipe(
+        map(result => {
+          this.changeDetectorRef.detectChanges();
+          return !result.matches;
+        })
+      );
   }
 
   ngOnInit() {
     this.componentViewer.componentDocItem.pipe(takeUntil(this.destroyed)).subscribe(() => {
       if (this.tableOfContents) {
         this.tableOfContents.resetHeaders();
+      }
+    });
+
+    this.showToc.pipe(
+      skip(1),
+      takeUntil(this.destroyed)
+    ).subscribe(() => {
+      if (this.tableOfContents) {
+        this.viewers.forEach(viewer => {
+          viewer.contentRendered.emit(viewer._elementRef.nativeElement);
+        });
       }
     });
   }
@@ -110,8 +135,12 @@ export class ComponentBaseView implements OnInit, OnDestroy {
   encapsulation: ViewEncapsulation.None,
 })
 export class ComponentOverview extends ComponentBaseView {
-  constructor(componentViewer: ComponentViewer, breakpointObserver: BreakpointObserver) {
-    super(componentViewer, breakpointObserver);
+  constructor(
+    componentViewer: ComponentViewer,
+    breakpointObserver: BreakpointObserver,
+    changeDetectorRef: ChangeDetectorRef
+  ) {
+    super(componentViewer, breakpointObserver, changeDetectorRef);
   }
 
   getOverviewDocumentUrl(doc: DocItem) {
@@ -132,8 +161,12 @@ export class ComponentOverview extends ComponentBaseView {
   encapsulation: ViewEncapsulation.None,
 })
 export class ComponentApi extends ComponentBaseView {
-  constructor(componentViewer: ComponentViewer, breakpointObserver: BreakpointObserver) {
-    super(componentViewer, breakpointObserver);
+  constructor(
+    componentViewer: ComponentViewer,
+    breakpointObserver: BreakpointObserver,
+    changeDetectorRef: ChangeDetectorRef
+  ) {
+    super(componentViewer, breakpointObserver, changeDetectorRef);
   }
 
   getApiDocumentUrl(doc: DocItem) {
@@ -148,8 +181,12 @@ export class ComponentApi extends ComponentBaseView {
   encapsulation: ViewEncapsulation.None,
 })
 export class ComponentExamples extends ComponentBaseView {
-  constructor(componentViewer: ComponentViewer, breakpointObserver: BreakpointObserver) {
-    super(componentViewer, breakpointObserver);
+  constructor(
+    componentViewer: ComponentViewer,
+    breakpointObserver: BreakpointObserver,
+    changeDetectorRef: ChangeDetectorRef
+  ) {
+    super(componentViewer, breakpointObserver, changeDetectorRef);
   }
 }
 
