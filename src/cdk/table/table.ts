@@ -82,7 +82,7 @@ import {
 import {STICKY_POSITIONING_LISTENER, StickyPositioningListener} from './sticky-position-listener';
 import {CDK_TABLE} from './tokens';
 import {
-  _DefaultTableLayoutStrategy,
+  _StandardTableLayoutStrategy,
   _TABLE_LAYOUT_STRATEGY,
   _TableLayoutStrategy
 } from './table-layout-strategy';
@@ -1157,7 +1157,7 @@ export class CdkTable<T> implements AfterContentChecked, CollectionViewer, OnDes
   }
 
   private _initTableLayout() {
-    const layoutStrategy = this._layoutStrategy || new _DefaultTableLayoutStrategy(this._document);
+    const layoutStrategy = this._layoutStrategy || new _StandardTableLayoutStrategy(this._document);
     const layout = this._isNativeHtmlTable
         ? layoutStrategy.getNativeLayout(this)
         : layoutStrategy.getFlexLayout(this);

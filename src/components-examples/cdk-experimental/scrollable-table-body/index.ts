@@ -2,7 +2,7 @@ import {NgModule} from '@angular/core';
 import {CdkTableModule} from '@angular/cdk/table';
 import {
   CdkScrollableTableBodyModule,
-} from '@angular/cdk-experimental/scrollable-table-body/scrollable-table-body-module';
+} from '@angular/cdk-experimental/table/scrollable-table-body-module';
 import {
   CdkScrollableTableBodyFlexExample,
 } from './cdk-scrollable-table-body-flex/cdk-scrollable-table-body-flex-example';

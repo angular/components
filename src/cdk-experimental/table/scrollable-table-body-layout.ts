@@ -12,7 +12,7 @@ import {DOCUMENT} from '@angular/common';
 import {
   _TABLE_LAYOUT_STRATEGY,
   _TableLayoutStrategy,
-  _DefaultTableLayoutStrategy,
+  _StandardTableLayoutStrategy,
 } from '@angular/cdk/table/table-layout-strategy';
 
 /**
@@ -20,15 +20,17 @@ import {
  */
 @Injectable()
 class ScrollableTableBodyLayoutStrategy implements _TableLayoutStrategy {
-  private defaultLayout: _DefaultTableLayoutStrategy;
+  private readonly _document: Document;
+  private defaultLayout: _StandardTableLayoutStrategy;
   private _pendingMaxHeight = 'none';
   private _scrollViewport?: HTMLElement;
   readonly headerCssClass = 'cdk-table-scrollable-table-header';
   readonly bodyCssClass = 'cdk-table-scrollable-table-body';
   readonly footerCssClass = 'cdk-table-scrollable-table-footer';
 
-  constructor(@Inject(DOCUMENT) private readonly _document: any) {
-    this.defaultLayout = new _DefaultTableLayoutStrategy(this._document);
+  constructor(@Inject(DOCUMENT) document: any) {
+    this._document = document;
+    this.defaultLayout = new _StandardTableLayoutStrategy(this._document);
   }
 
   /**
@@ -47,14 +49,14 @@ class ScrollableTableBodyLayoutStrategy implements _TableLayoutStrategy {
   getFlexLayout(table: CdkTable<unknown>): DocumentFragment {
     const documentFragment = this._document.createDocumentFragment();
     const sections = [
-      {selector: this.headerCssClass, outlets: [table._headerRowOutlet]},
-      {selector: this.bodyCssClass, outlets: [table._rowOutlet, table._noDataRowOutlet]},
-      {selector: this.footerCssClass, outlets: [table._footerRowOutlet]},
+      {cssClass: this.headerCssClass, outlets: [table._headerRowOutlet]},
+      {cssClass: this.bodyCssClass, outlets: [table._rowOutlet, table._noDataRowOutlet]},
+      {cssClass: this.footerCssClass, outlets: [table._footerRowOutlet]},
     ];
 
     for (const section of sections) {
       const element = this._document.createElement('div');
-      element.classList.add(section.selector);
+      element.classList.add(section.cssClass);
       for (const outlet of section.outlets) {
         element.appendChild(outlet.elementRef.nativeElement);
       }
@@ -87,7 +89,7 @@ class ScrollableTableBodyLayoutStrategy implements _TableLayoutStrategy {
 
 /** A directive that enables scrollable body content for flex tables. */
 @Directive({
-  selector: 'cdk-table[scrollableBody], mat-table[scrollableBody]',
+  selector: 'cdk-table[scrollableBody]',
   providers: [
     {provide: _TABLE_LAYOUT_STRATEGY, useClass: ScrollableTableBodyLayoutStrategy},
   ]

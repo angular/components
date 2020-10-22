@@ -3,12 +3,12 @@ load("//tools:defaults.bzl", "ng_module", "ng_test_library", "ng_web_test_suite"
 package(default_visibility = ["//visibility:public"])
 
 ng_module(
-    name = "scrollable-table-body",
+    name = "table",
     srcs = glob(
         ["**/*.ts"],
         exclude = ["**/*.spec.ts"],
     ),
-    module_name = "@angular/cdk-experimental/scrollable-table-body",
+    module_name = "@angular/cdk-experimental/table",
     deps = [
         "//src/cdk/table",
         "@npm//@angular/common",
