@@ -1,3 +1,31 @@
+# 11.0.0-rc.0 "thorium-flower" (2020-10-22)
+
+### cdk
+
+|            |                       |
+| ---------- | --------------------- |
+| bug fix |  **drag-drop:** error if dragging starts from active sibling container ([#20704](https://github.com/angular/components/issues/20704)) ([6d86f0f](https://github.com/angular/components/commit/6d86f0f)), closes [#20623](https://github.com/angular/components/issues/20623) |
+| bug fix |  **drag-drop:** error when cloning file input with value ([#20793](https://github.com/angular/components/issues/20793)) ([5eb1035](https://github.com/angular/components/commit/5eb1035)), closes [#20783](https://github.com/angular/components/issues/20783) |
+| bug fix |  **drag-drop:** references to SVG not working inside preview ([#20742](https://github.com/angular/components/issues/20742)) ([06294d1](https://github.com/angular/components/commit/06294d1)), closes [#20720](https://github.com/angular/components/issues/20720) |
+| feature |  **scrolling:** update CdkVirtualForOf to work with sets. ([#20594](https://github.com/angular/components/issues/20594)) ([e15f82c](https://github.com/angular/components/commit/e15f82c)), closes [#20210](https://github.com/angular/components/issues/20210) |
+
+### material
+
+|            |                       |
+| ---------- | --------------------- |
+| bug fix |  **button:** add more prominent focus indication in high contrast mode ([#20821](https://github.com/angular/components/issues/20821)) ([345ad70](https://github.com/angular/components/commit/345ad70)), closes [#20820](https://github.com/angular/components/issues/20820) |
+| bug fix |  **menu:** getLabel not working if text is inside indirect descendant node ([#20705](https://github.com/angular/components/issues/20705)) ([a461929](https://github.com/angular/components/commit/a461929)), closes [#20200](https://github.com/angular/components/issues/20200) |
+| feature |  **tabs:** add test harnesses for tab nav bar ([#20822](https://github.com/angular/components/issues/20822)) ([bb44f02](https://github.com/angular/components/commit/bb44f02)) |
+
+### material-experimental
+
+|            |                       |
+| ---------- | --------------------- |
+| bug fix |  **mdc-card:** double outline in high contrast mode ([#20823](https://github.com/angular/components/issues/20823)) ([17de49c](https://github.com/angular/components/commit/17de49c)) |
+| bug fix |  **mdc-chips:** add missing functionality and align tests ([#20814](https://github.com/angular/components/issues/20814)) ([de542df](https://github.com/angular/components/commit/de542df)) |
+| bug fix |  **mdc-slide-toggle:** align focus behavior with standard version ([#20772](https://github.com/angular/components/issues/20772)) ([f854196](https://github.com/angular/components/commit/f854196)) |
+
+
 # 11.0.0-next.2 "cashmere-cup" (2020-10-15)
 
 ### cdk
