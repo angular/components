@@ -79,6 +79,12 @@ export class MatSnackBarContainer extends BasePortalOutlet
   /** aria-live value for the live region. */
   _live: AriaLivePoliteness;
 
+  /** The aria-hidden container which holds the snack bar content. */
+  @ViewChild('inertElement') inertElement: ElementRef<HTMLElement>;
+
+  /** The aria-live container used to announce contents to screen readers. */
+  @ViewChild('liveElement') liveElement: ElementRef<HTMLElement>;
+
   /** Whether the snack bar is currently exiting. */
   _exiting = false;
 
@@ -214,8 +220,8 @@ export class MatSnackBarContainer extends BasePortalOutlet
     if (!this._announceTimeoutId) {
       this._ngZone.runOutsideAngular(() => {
         this._announceTimeoutId = setTimeout(() => {
-          const inertElement = this._elementRef.nativeElement.querySelector('[aria-hidden]');
-          const liveElement = this._elementRef.nativeElement.querySelector('[aria-live]');
+          const inertElement = this.inertElement.nativeElement;
+          const liveElement = this.liveElement.nativeElement;
 
           if (inertElement && liveElement) {
             // If an element in the snack bar content is focused before being moved
