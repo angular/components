@@ -80,6 +80,13 @@ describe('MatSnackBar', () => {
         .toBe(0, 'Expected live region to not contain any content');
   });
 
+  it('should not error when opening a component with an aria-live attribute', fakeAsync(() => {
+    snackBar.openFromComponent(KenobiNotification);
+    viewContainerFixture.detectChanges();
+    tick(announceDelay);
+    flush();
+  }));
+
   it('should move content to the live region after 150ms', fakeAsync(() => {
     snackBar.open('Snack time!', 'Chew');
     viewContainerFixture.detectChanges();
@@ -1036,6 +1043,14 @@ class BurritosNotification {
     @Inject(MAT_SNACK_BAR_DATA) public data: any) { }
 }
 
+/** Component with an aria-live element for testing ComponentPortal. */
+@Component({template: '<span aria-live="polite">Hello there.</span>'})
+class KenobiNotification {
+  constructor(
+    public snackBarRef: MatSnackBarRef<KenobiNotification>,
+    @Inject(MAT_SNACK_BAR_DATA) public data: any) { }
+}
+
 
 @Component({
   template: '',
@@ -1053,12 +1068,17 @@ class ComponentThatProvidesMatSnackBar {
  */
 const TEST_DIRECTIVES = [ComponentWithChildViewContainer,
                          BurritosNotification,
+                         KenobiNotification,
                          DirectiveWithViewContainer,
                          ComponentWithTemplateRef];
 @NgModule({
   imports: [CommonModule, MatSnackBarModule],
   exports: TEST_DIRECTIVES,
   declarations: TEST_DIRECTIVES,
-  entryComponents: [ComponentWithChildViewContainer, BurritosNotification],
+  entryComponents: [
+    ComponentWithChildViewContainer,
+    BurritosNotification,
+    KenobiNotification,
+  ],
 })
 class SnackBarTestModule { }

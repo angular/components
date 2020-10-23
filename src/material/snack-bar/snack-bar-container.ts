@@ -253,8 +253,8 @@ export class MatSnackBarContainer extends BasePortalOutlet
     if (!this._announceTimeoutId) {
       this._ngZone.runOutsideAngular(() => {
         this._announceTimeoutId = setTimeout(() => {
-          const inertElement = this.inertElement.nativeElement;
-          const liveElement = this.liveElement.nativeElement;
+          const inertElement = this.inertElement?.nativeElement;
+          const liveElement = this.liveElement?.nativeElement;
 
           if (inertElement && liveElement) {
             // If an element in the snack bar content is focused before being moved
