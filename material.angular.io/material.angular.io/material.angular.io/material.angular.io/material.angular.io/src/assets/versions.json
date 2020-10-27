@@ -22,5 +22,9 @@
   {
     "url": "https://material.angular.io/",
     "title": "10.2.5"
+  },
+  {
+    "url": "https://next.material.angular.io/",
+    "title": "11.0.0-rc.0"
   }
 ]
