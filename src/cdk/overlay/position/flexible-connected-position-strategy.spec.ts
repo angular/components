@@ -1280,6 +1280,26 @@ describe('FlexibleConnectedPositionStrategy', () => {
       expect(Math.floor(overlayRect.left)).toBe(200);
     });
 
+    it('should not mess with the right offset when pushing from the right', () => {
+      const MARGIN = 20;
+      originElement.style.top = '30px';
+      originElement.style.left = `${viewport.getViewportSize().width - MARGIN - DEFAULT_WIDTH}px`;
+
+      positionStrategy
+        .withViewportMargin(MARGIN)
+        .withPositions([{
+          originX: 'end',
+          originY: 'bottom',
+          overlayX: 'end',
+          overlayY: 'top'
+        }]);
+
+      attachOverlay({positionStrategy});
+
+      const overlayRect = overlayRef.overlayElement.getBoundingClientRect();
+      expect(Math.floor(overlayRect.left)).toBe(viewport.getViewportSize().width - MARGIN - DEFAULT_WIDTH);
+    });
+
     it('should align to the trigger if the overlay is wider than the viewport, but the trigger ' +
       'is still within the viewport', () => {
         originElement.style.top = '200px';
