@@ -1,3 +1,29 @@
+## 10.2.6 "aluminum-mums" (2020-10-27)
+
+### cdk
+
+|            |                       |
+| ---------- | --------------------- |
+| bug fix |  **drag-drop:** error if dragging starts from active sibling container ([#20704](https://github.com/angular/components/issues/20704)) ([f85facf](https://github.com/angular/components/commit/f85facf)), closes [#20623](https://github.com/angular/components/issues/20623) |
+| bug fix |  **drag-drop:** error when cloning file input with value ([#20793](https://github.com/angular/components/issues/20793)) ([ff5d09f](https://github.com/angular/components/commit/ff5d09f)), closes [#20783](https://github.com/angular/components/issues/20783) |
+| bug fix |  **drag-drop:** references to SVG not working inside preview ([#20742](https://github.com/angular/components/issues/20742)) ([b371b51](https://github.com/angular/components/commit/b371b51)), closes [#20720](https://github.com/angular/components/issues/20720) |
+| feature |  **scrolling:** update CdkVirtualForOf to work with sets. ([#20594](https://github.com/angular/components/issues/20594)) ([9ea3d01](https://github.com/angular/components/commit/9ea3d01)), closes [#20210](https://github.com/angular/components/issues/20210) |
+
+### material
+
+|            |                       |
+| ---------- | --------------------- |
+| bug fix |  **button:** add more prominent focus indication in high contrast mode ([#20821](https://github.com/angular/components/issues/20821)) ([1c39b72](https://github.com/angular/components/commit/1c39b72)), closes [#20820](https://github.com/angular/components/issues/20820) |
+| bug fix |  **menu:** getLabel not working if text is inside indirect descendant node ([#20705](https://github.com/angular/components/issues/20705)) ([37bf838](https://github.com/angular/components/commit/37bf838)), closes [#20200](https://github.com/angular/components/issues/20200) |
+| bug fix |  **slider:** some screen readers announcing long decimal values ([#20760](https://github.com/angular/components/issues/20760)) ([2226577](https://github.com/angular/components/commit/2226577)), closes [#20719](https://github.com/angular/components/issues/20719) |
+
+### material-experimental
+
+|            |                       |
+| ---------- | --------------------- |
+| bug fix |  **mdc-slide-toggle:** align focus behavior with standard version ([#20772](https://github.com/angular/components/issues/20772)) ([77358cc](https://github.com/angular/components/commit/77358cc)) |
+
+
 ## 10.2.5 "ink-peony" (2020-10-15)
 
 ### material
