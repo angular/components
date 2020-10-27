@@ -1,5 +1,10 @@
 <ng-template>
-  <div class="mat-autocomplete-panel" role="listbox" [id]="id" [ngClass]="_classList" #panel>
+  <div class="mat-autocomplete-panel"
+       role="listbox" [id]="id"
+       [attr.aria-label]="ariaLabel || null"
+       [attr.aria-labelledby]="_getPanelAriaLabelledby()"
+       [ngClass]="_classList"
+       #panel>
     <ng-content></ng-content>
   </div>
 </ng-template>

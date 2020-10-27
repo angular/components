@@ -115,6 +115,9 @@ export abstract class _MatAutocompleteBase extends _MatAutocompleteMixinBase imp
   get isOpen(): boolean { return this._isOpen && this.showPanel; }
   _isOpen: boolean = false;
 
+  /** Label id of form field the autocomplete is associated with. */
+  _formFieldLabelId: string;
+
   // The @ViewChild query for TemplateRef here needs to be static because some code paths
   // lead to the overlay being created before change detection has finished for this component.
   // Notably, another component may trigger `focus` on the autocomplete-trigger.
@@ -130,6 +133,12 @@ export abstract class _MatAutocompleteBase extends _MatAutocompleteMixinBase imp
 
   /** @docs-private */
   abstract optionGroups: QueryList<_MatOptgroupBase>;
+
+  /** Aria label of the select. If not specified, the placeholder will be used as label. */
+  @Input('aria-label') ariaLabel: string;
+
+  /** Input that can be used to specify the `aria-labelledby` attribute. */
+  @Input('aria-labelledby') ariaLabelledby: string;
 
   /** Function that maps an option's control value to its display value in the trigger. */
   @Input() displayWith: ((value: any) => string) | null = null;
@@ -250,6 +259,17 @@ export abstract class _MatAutocompleteBase extends _MatAutocompleteMixinBase imp
     const event = new MatAutocompleteSelectedEvent(this, option);
     this.optionSelected.emit(event);
   }
+
+  /** Gets the aria-labelledby for the autocomplete panel. */
+  _getPanelAriaLabelledby(): string | null {
+    if (this.ariaLabel) {
+      return null;
+    }
+
+    const labelId = this._formFieldLabelId ?? '';
+    return this.ariaLabelledby ? labelId + ' ' + this.ariaLabelledby : labelId;
+  }
+
 
   /** Sets the autocomplete visibility classes on a classlist based on the panel is visible. */
   private _setVisibilityClasses(classList: {[key: string]: boolean}) {

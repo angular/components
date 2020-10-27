@@ -632,6 +632,7 @@ export abstract class _MatAutocompleteTriggerBase implements ControlValueAccesso
 
     this.autocomplete._setVisibility();
     this.autocomplete._isOpen = this._overlayAttached = true;
+    this.autocomplete._formFieldLabelId = this._formField?._labelId;
 
     // We need to do an extra `panelOpen` check in here, because the
     // autocomplete won't be shown if there are no options.
