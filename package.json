@@ -148,7 +148,7 @@
     "moment": "^2.18.1",
     "node-fetch": "^2.6.0",
     "parse5": "^5.0.0",
-    "postcss": "^7.0.27",
+    "postcss": "^8.1.4",
     "protractor": "^5.4.3",
     "requirejs": "^2.3.6",
     "rollup": "~1.25.0",
