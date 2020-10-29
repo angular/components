@@ -74,6 +74,12 @@
   // Note: Increased specificity needed here since MDC overwrites the padding on `:focus`.
   .mat-mdc-form-field .mat-mdc-text-field-wrapper.mdc-text-field .mdc-notched-outline__notch {
     padding-top: 0;
+    // MDC adds a 8px padding on the right/left (depending on LTR or RTL mode) that causes the
+    // label to get cut off.
+    // When there is no label the padding rule causes a gap in the outline in RTL mode since it
+    // overwrites the "padding: 0" style.
+    padding-right: 0;
+    padding-left: 0;
   }
 
   // Unset the baseline adjustment styles that are applied to the `.mdc-text-field` before
