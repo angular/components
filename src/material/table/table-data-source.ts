@@ -8,18 +8,17 @@
 
 import {_isNumberValue} from '@angular/cdk/coercion';
 import {DataSource} from '@angular/cdk/table';
-import {EventEmitter} from '@angular/core';
+import {MatPaginator, PageEvent} from '@angular/material/paginator';
+import {MatSort, Sort} from '@angular/material/sort';
 import {
   BehaviorSubject,
   combineLatest,
   merge,
   Observable,
   of as observableOf,
-  Subscription,
   Subject,
+  Subscription,
 } from 'rxjs';
-import {MatPaginator, PageEvent} from '@angular/material/paginator';
-import {MatSort, Sort} from '@angular/material/sort';
 import {map} from 'rxjs/operators';
 
 /**
@@ -29,7 +28,7 @@ import {map} from 'rxjs/operators';
 const MAX_SAFE_INTEGER = 9007199254740991;
 
 interface Paginator {
-  page: EventEmitter<PageEvent>;
+  page: Subject<PageEvent>;
   pageIndex: number;
   initialized: Observable<void>;
   pageSize: number;
