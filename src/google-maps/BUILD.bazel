@@ -1,4 +1,4 @@
-load("//tools:defaults.bzl", "ng_module", "ng_package", "ng_test_library", "ng_web_test_suite")
+load("//tools:defaults.bzl", "ng_module", "ng_package", "ng_test_library", "ng_web_test_suite", "ts_library")
 
 package(default_visibility = ["//visibility:public"])
 
@@ -6,16 +6,25 @@ ng_module(
     name = "google-maps",
     srcs = glob(
         ["**/*.ts"],
-        exclude = ["**/*.spec.ts"],
+        exclude = [
+            "**/*.d.ts",
+            "**/*.spec.ts",
+        ],
     ),
     module_name = "@angular/google-maps",
     deps = [
+        ":google-maps-types",
         "//src:dev_mode_types",
         "@npm//@angular/common",
         "@npm//@angular/core",
         "@npm//@types/googlemaps",
         "@npm//rxjs",
     ],
+)
+
+ts_library(
+    name = "google-maps-types",
+    srcs = glob(["**/*.d.ts"]),
 )
 
 # Creates the @angular/google-maps package published to npm
