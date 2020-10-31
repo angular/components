@@ -35,7 +35,9 @@ export const config = {
       'should not remove if parent chip is disabled',
 
       // This test checks something that isn't supported in the MDC form field.
-      'should propagate the dynamic `placeholder` value to the form field'
+      'should propagate the dynamic `placeholder` value to the form field',
+      'should propagate the dynamic `placeholder` value to the form field and clear the ' +
+        'native placeholder',
     ],
     'mdc-dialog': [
       // These tests are verifying implementation details that are not relevant for MDC.

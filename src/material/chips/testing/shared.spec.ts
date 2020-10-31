@@ -323,6 +323,7 @@ export function runHarnessTests(
     <mat-chip-list></mat-chip-list>
 
     <mat-form-field>
+      <mat-label>Hobbits</mat-label>
       <mat-chip-list #chipList required>
         <mat-chip (removed)="remove()">
           Frodo

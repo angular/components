@@ -70,7 +70,7 @@ export interface MatChipEvent {
     chip: MatChip;
 }
 
-export declare class MatChipInput implements MatChipTextControl, OnChanges, OnDestroy, AfterContentInit {
+export declare class MatChipInput implements MatChipTextControl, OnChanges, OnDestroy, AfterContentInit, DoCheck {
     _addOnBlur: boolean;
     _chipList: MatChipList;
     protected _elementRef: ElementRef<HTMLInputElement>;
@@ -86,7 +86,7 @@ export declare class MatChipInput implements MatChipTextControl, OnChanges, OnDe
     readonly inputElement: HTMLInputElement;
     placeholder: string;
     separatorKeyCodes: readonly number[] | ReadonlySet<number>;
-    constructor(_elementRef: ElementRef<HTMLInputElement>, _defaultOptions: MatChipsDefaultOptions);
+    constructor(_elementRef: ElementRef<HTMLInputElement>, _defaultOptions: MatChipsDefaultOptions, _formField?: MatFormField | undefined);
     _blur(): void;
     _emitChipEnd(event?: KeyboardEvent): void;
     _focus(): void;
@@ -96,12 +96,13 @@ export declare class MatChipInput implements MatChipTextControl, OnChanges, OnDe
     clear(): void;
     focus(options?: FocusOptions): void;
     ngAfterContentInit(): void;
+    ngDoCheck(): void;
     ngOnChanges(): void;
     ngOnDestroy(): void;
     static ngAcceptInputType_addOnBlur: BooleanInput;
     static ngAcceptInputType_disabled: BooleanInput;
     static ɵdir: i0.ɵɵDirectiveDeclaration<MatChipInput, "input[matChipInputFor]", ["matChipInput", "matChipInputFor"], { "chipList": "matChipInputFor"; "addOnBlur": "matChipInputAddOnBlur"; "separatorKeyCodes": "matChipInputSeparatorKeyCodes"; "placeholder": "placeholder"; "id": "id"; "disabled": "disabled"; }, { "chipEnd": "matChipInputTokenEnd"; }, never>;
-    static ɵfac: i0.ɵɵFactoryDeclaration<MatChipInput, never>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<MatChipInput, [null, null, { optional: true; }]>;
 }
 
 export interface MatChipInputEvent {

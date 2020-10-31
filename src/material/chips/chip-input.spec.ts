@@ -70,20 +70,24 @@ describe('MatChipInput', () => {
       expect(inputNativeElement.getAttribute('placeholder')).toBe('bound placeholder');
     });
 
-    it('should propagate the dynamic `placeholder` value to the form field', () => {
-      fixture.componentInstance.placeholder = 'add a chip';
-      fixture.detectChanges();
+    it('should propagate the dynamic `placeholder` value to the form field and clear the ' +
+      'native placeholder', () => {
+        fixture.componentInstance.appearance = 'legacy';
+        fixture.componentInstance.placeholder = 'add a chip';
+        fixture.detectChanges();
 
-      const label: HTMLElement = fixture.nativeElement.querySelector('.mat-form-field-label');
+        const label: HTMLElement = fixture.nativeElement.querySelector('.mat-form-field-label');
 
-      expect(label).toBeTruthy();
-      expect(label.textContent).toContain('add a chip');
+        expect(label).toBeTruthy();
+        expect(label.textContent).toContain('add a chip');
+        expect(inputNativeElement.hasAttribute('placeholder')).toBe(false);
 
-      fixture.componentInstance.placeholder = 'or don\'t';
-      fixture.detectChanges();
+        fixture.componentInstance.placeholder = 'or don\'t';
+        fixture.detectChanges();
 
-      expect(label.textContent).toContain('or don\'t');
-    });
+        expect(label.textContent).toContain('or don\'t');
+        expect(inputNativeElement.hasAttribute('placeholder')).toBe(false);
+      });
 
     it('should become disabled if the list is disabled', () => {
       expect(inputNativeElement.hasAttribute('disabled')).toBe(false);
@@ -244,7 +248,7 @@ describe('MatChipInput', () => {
 
 @Component({
   template: `
-    <mat-form-field>
+    <mat-form-field [appearance]="appearance">
       <mat-chip-list #chipList [required]="required">
         <mat-chip>Hello</mat-chip>
         <input matInput [matChipInputFor]="chipList"
@@ -260,6 +264,7 @@ class TestChipInput {
   addOnBlur = false;
   required = false;
   placeholder = '';
+  appearance = 'standard';
 
   add(_: MatChipInputEvent) {
   }

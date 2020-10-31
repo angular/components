@@ -11,14 +11,17 @@ import {BACKSPACE, hasModifierKey, TAB} from '@angular/cdk/keycodes';
 import {
   AfterContentInit,
   Directive,
+  DoCheck,
   ElementRef,
   EventEmitter,
   Inject,
   Input,
   OnChanges,
   OnDestroy,
+  Optional,
   Output
 } from '@angular/core';
+import {MAT_FORM_FIELD, MatFormField} from '@angular/material/form-field';
 import {MatChipsDefaultOptions, MAT_CHIPS_DEFAULT_OPTIONS} from './chip-default-options';
 import {MatChipList} from './chip-list';
 import {MatChipTextControl} from './chip-text-control';
@@ -61,14 +64,15 @@ let nextUniqueId = 0;
     '(input)': '_onInput()',
     '[id]': 'id',
     '[attr.disabled]': 'disabled || null',
-    '[attr.placeholder]': 'placeholder || null',
     '[attr.aria-invalid]': '_chipList && _chipList.ngControl ? _chipList.ngControl.invalid : null',
     '[attr.aria-required]': '_chipList && _chipList.required || null',
   }
 })
-export class MatChipInput implements MatChipTextControl, OnChanges, OnDestroy, AfterContentInit {
+export class MatChipInput implements MatChipTextControl, OnChanges, OnDestroy, AfterContentInit,
+  DoCheck {
   /** Used to prevent focus moving to chips while user is holding backspace */
   private _focusLastChipOnBackspace: boolean;
+  private _previousPlaceholder: string | null;
 
   /** Whether the control is focused. */
   focused: boolean = false;
@@ -123,7 +127,10 @@ export class MatChipInput implements MatChipTextControl, OnChanges, OnDestroy, A
 
   constructor(
     protected _elementRef: ElementRef<HTMLInputElement>,
-    @Inject(MAT_CHIPS_DEFAULT_OPTIONS) private _defaultOptions: MatChipsDefaultOptions) {
+    @Inject(MAT_CHIPS_DEFAULT_OPTIONS) private _defaultOptions: MatChipsDefaultOptions,
+    // TODO: Remove this once the legacy appearance has been removed. We only need
+    // to inject the form-field for determining whether the placeholder has been promoted.
+    @Optional() @Inject(MAT_FORM_FIELD) private _formField?: MatFormField) {
     this.inputElement = this._elementRef.nativeElement as HTMLInputElement;
   }
 
@@ -137,6 +144,12 @@ export class MatChipInput implements MatChipTextControl, OnChanges, OnDestroy, A
 
   ngAfterContentInit(): void {
     this._focusLastChipOnBackspace = this.empty;
+  }
+
+  ngDoCheck() {
+    // We need to dirty-check and set the placeholder attribute ourselves, because whether it's
+    // present or not depends on a query which is prone to "changed after checked" errors.
+    this._dirtyCheckPlaceholder();
   }
 
   /** Utility method to make host definition/tests more clear. */
@@ -228,6 +241,25 @@ export class MatChipInput implements MatChipTextControl, OnChanges, OnDestroy, A
   /** Checks whether a keycode is one of the configured separators. */
   private _isSeparatorKey(event: KeyboardEvent) {
     return !hasModifierKey(event) && new Set(this.separatorKeyCodes).has(event.keyCode);
+  }
+
+  /** Does some manual dirty checking on the native input `placeholder` attribute. */
+  private _dirtyCheckPlaceholder() {
+    // Form fields with a `placeholder`, but without a `mat-label` with the `legacy` appearance
+    // promote their placeholder to a label by default. This causes screen readers to read out
+    // the same text twice. If that is the case, remove the placeholder from the DOM.
+    // TODO: can be removed once we get rid of the `legacy` style for the form field, because it's
+    // the only one that supports promoting the placeholder to a label.
+    const formField = this._formField;
+    const placeholder = formField && formField.appearance === 'legacy' && !formField._hasLabel() ?
+      null : this.placeholder;
+
+    if (placeholder !== this._previousPlaceholder) {
+      const element = this._elementRef.nativeElement;
+      this._previousPlaceholder = placeholder;
+      placeholder ?
+          element.setAttribute('placeholder', placeholder) : element.removeAttribute('placeholder');
+    }
   }
 
   static ngAcceptInputType_addOnBlur: BooleanInput;
