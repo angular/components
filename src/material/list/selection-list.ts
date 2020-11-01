@@ -6,16 +6,14 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {FocusableOption, FocusKeyManager} from '@angular/cdk/a11y';
+import {FocusableOption, FocusKeyManager, FocusMonitor} from '@angular/cdk/a11y';
 import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
 import {SelectionModel} from '@angular/cdk/collections';
 import {
   A,
   DOWN_ARROW,
-  END,
   ENTER,
   hasModifierKey,
-  HOME,
   SPACE,
   UP_ARROW,
 } from '@angular/cdk/keycodes';
@@ -40,7 +38,6 @@ import {
   SimpleChanges,
   ViewChild,
   ViewEncapsulation,
-  isDevMode,
 } from '@angular/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {
@@ -51,19 +48,14 @@ import {
   setLines,
   ThemePalette,
 } from '@angular/material/core';
-
 import {Subject} from 'rxjs';
 import {startWith, takeUntil} from 'rxjs/operators';
-
 import {MatListAvatarCssMatStyler, MatListIconCssMatStyler} from './list';
 
-
-/** @docs-private */
 class MatSelectionListBase {}
 const _MatSelectionListMixinBase: CanDisableRippleCtor & typeof MatSelectionListBase =
     mixinDisableRipple(MatSelectionListBase);
 
-/** @docs-private */
 class MatListOptionBase {}
 const _MatListOptionMixinBase: CanDisableRippleCtor & typeof MatListOptionBase =
     mixinDisableRipple(MatListOptionBase);
@@ -80,8 +72,14 @@ export class MatSelectionListChange {
   constructor(
     /** Reference to the selection list that emitted the event. */
     public source: MatSelectionList,
-    /** Reference to the option that has been changed. */
-    public option: MatListOption) {}
+    /**
+     * Reference to the option that has been changed.
+     * @deprecated Use `options` instead, because some events may change more than one option.
+     * @breaking-change 12.0.0
+     */
+    public option: MatListOption,
+    /** Reference to the options that have been changed. */
+    public options: MatListOption[]) {}
 }
 
 /**
@@ -150,7 +148,11 @@ export class MatListOption extends _MatListOptionMixinBase implements AfterConte
   @Input()
   get value(): any { return this._value; }
   set value(newValue: any) {
-    if (this.selected && newValue !== this.value && this._inputsInitialized) {
+    if (
+      this.selected &&
+      !this.selectionList.compareWith(newValue, this.value) &&
+      this._inputsInitialized
+    ) {
       this.selected = false;
     }
 
@@ -262,7 +264,7 @@ export class MatListOption extends _MatListOptionMixinBase implements AfterConte
       this.toggle();
 
       // Emit a change event if the selected state of the option changed through user interaction.
-      this.selectionList._emitChangeEvent(this);
+      this.selectionList._emitChangeEvent([this]);
     }
   }
 
@@ -324,8 +326,6 @@ export class MatListOption extends _MatListOptionMixinBase implements AfterConte
   host: {
     'role': 'listbox',
     'class': 'mat-selection-list mat-list-base',
-    '(focus)': '_onFocus()',
-    '(blur)': '_onTouched()',
     '(keydown)': '_keydown($event)',
     '[attr.aria-multiselectable]': 'multiple',
     '[attr.aria-disabled]': 'disabled.toString()',
@@ -389,7 +389,7 @@ export class MatSelectionList extends _MatSelectionListMixinBase implements CanD
     const newValue = coerceBooleanProperty(value);
 
     if (newValue !== this._multiple) {
-      if (isDevMode() && this._contentInitialized) {
+      if (this._contentInitialized && (typeof ngDevMode === 'undefined' || ngDevMode)) {
         throw new Error(
             'Cannot change `multiple` mode of mat-selection-list after initialization.');
       }
@@ -423,7 +423,9 @@ export class MatSelectionList extends _MatSelectionListMixinBase implements CanD
   constructor(private _element: ElementRef<HTMLElement>,
     // @breaking-change 11.0.0 Remove `tabIndex` parameter.
     @Attribute('tabindex') tabIndex: string,
-    private _changeDetector: ChangeDetectorRef) {
+    private _changeDetector: ChangeDetectorRef,
+    // @breaking-change 11.0.0 `_focusMonitor` parameter to become required.
+    private _focusMonitor?: FocusMonitor) {
     super();
   }
 
@@ -433,6 +435,7 @@ export class MatSelectionList extends _MatSelectionListMixinBase implements CanD
     this._keyManager = new FocusKeyManager<MatListOption>(this.options)
       .withWrap()
       .withTypeAhead()
+      .withHomeAndEnd()
       // Allow disabled items to be focusable. For accessibility reasons, there must be a way for
       // screenreader users, that allows reading the different options of the list.
       .skipPredicate(() => false)
@@ -466,6 +469,23 @@ export class MatSelectionList extends _MatSelectionListMixinBase implements CanD
         }
       }
     });
+
+    // @breaking-change 11.0.0 Remove null assertion once _focusMonitor is required.
+    this._focusMonitor?.monitor(this._element)
+      .pipe(takeUntil(this._destroyed))
+      .subscribe(origin => {
+        if (origin === 'keyboard' || origin === 'program') {
+          const activeIndex = this._keyManager.activeItemIndex;
+
+          if (!activeIndex || activeIndex === -1) {
+            // If there is no active index, set focus to the first option.
+            this._keyManager.setFirstItemActive();
+          } else {
+            // Otherwise, set focus to the active option.
+            this._keyManager.setActiveItem(activeIndex);
+          }
+        }
+      });
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -479,6 +499,8 @@ export class MatSelectionList extends _MatSelectionListMixinBase implements CanD
   }
 
   ngOnDestroy() {
+    // @breaking-change 11.0.0 Remove null assertion once _focusMonitor is required.
+    this._focusMonitor?.stopMonitoring(this._element);
     this._destroyed.next();
     this._destroyed.complete();
     this._isDestroyed = true;
@@ -539,18 +561,12 @@ export class MatSelectionList extends _MatSelectionListMixinBase implements CanD
           event.preventDefault();
         }
         break;
-      case HOME:
-      case END:
-        if (!hasModifier) {
-          keyCode === HOME ? manager.setFirstItemActive() : manager.setLastItemActive();
-          event.preventDefault();
-        }
-        break;
       default:
         // The "A" key gets special treatment, because it's used for the "select all" functionality.
         if (keyCode === A && this.multiple && hasModifierKey(event, 'ctrlKey') &&
             !manager.isTyping()) {
-          this.options.find(option => !option.selected) ? this.selectAll() : this.deselectAll();
+          const shouldSelect = this.options.some(option => !option.disabled && !option.selected);
+          this._setAllOptionsSelected(shouldSelect, true, true);
           event.preventDefault();
         } else {
           manager.onKeydown(event);
@@ -576,24 +592,8 @@ export class MatSelectionList extends _MatSelectionListMixinBase implements CanD
   }
 
   /** Emits a change event if the selected state of an option changed. */
-  _emitChangeEvent(option: MatListOption) {
-    this.selectionChange.emit(new MatSelectionListChange(this, option));
-  }
-
-  /**
-   * When the selection list is focused, we want to move focus to an option within the list. Do this
-   * by setting the appropriate option to be active.
-   */
-  _onFocus(): void {
-    const activeIndex = this._keyManager.activeItemIndex;
-
-    if (!activeIndex || (activeIndex === -1)) {
-      // If there is no active index, set focus to the first option.
-      this._keyManager.setFirstItemActive();
-    } else {
-      // Otherwise, set focus to the active option.
-      this._keyManager.setActiveItem(activeIndex);
-    }
+  _emitChangeEvent(options: MatListOption[]) {
+    this.selectionChange.emit(new MatSelectionListChange(this, options[0], options));
   }
 
   /** Implemented as part of ControlValueAccessor. */
@@ -654,7 +654,7 @@ export class MatSelectionList extends _MatSelectionListMixinBase implements CanD
 
         // Emit a change event because the focused option changed its state through user
         // interaction.
-        this._emitChangeEvent(focusedOption);
+        this._emitChangeEvent([focusedOption]);
       }
     }
   }
@@ -663,19 +663,26 @@ export class MatSelectionList extends _MatSelectionListMixinBase implements CanD
    * Sets the selected state on all of the options
    * and emits an event if anything changed.
    */
-  private _setAllOptionsSelected(isSelected: boolean) {
+  private _setAllOptionsSelected(
+    isSelected: boolean,
+    skipDisabled?: boolean,
+    isUserInput?: boolean) {
     // Keep track of whether anything changed, because we only want to
     // emit the changed event when something actually changed.
-    let hasChanged = false;
+    const changedOptions: MatListOption[] = [];
 
     this.options.forEach(option => {
-      if (option._setSelected(isSelected)) {
-        hasChanged = true;
+      if ((!skipDisabled || !option.disabled) && option._setSelected(isSelected)) {
+        changedOptions.push(option);
       }
     });
 
-    if (hasChanged) {
+    if (changedOptions.length) {
       this._reportValueChange();
+
+      if (isUserInput) {
+        this._emitChangeEvent(changedOptions);
+      }
     }
   }
 

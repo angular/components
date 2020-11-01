@@ -5,12 +5,15 @@
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
+import {FocusableOption, FocusMonitor} from '@angular/cdk/a11y';
 import {Directionality} from '@angular/cdk/bidi';
+import {BooleanInput, coerceBooleanProperty, NumberInput} from '@angular/cdk/coercion';
 import {Platform} from '@angular/cdk/platform';
 import {ViewportRuler} from '@angular/cdk/scrolling';
 import {
   AfterContentChecked,
   AfterContentInit,
+  AfterViewInit,
   Attribute,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -41,19 +44,16 @@ import {
   RippleTarget,
   ThemePalette,
 } from '@angular/material/core';
-import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
-import {FocusMonitor, FocusableOption} from '@angular/cdk/a11y';
 import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
+import {startWith, takeUntil} from 'rxjs/operators';
 import {MatInkBar} from '../ink-bar';
 import {MatPaginatedTabHeader, MatPaginatedTabHeaderItem} from '../paginated-tab-header';
-import {startWith, takeUntil} from 'rxjs/operators';
 
 /**
  * Base class with all of the `MatTabNav` functionality.
  * @docs-private
  */
 @Directive()
-// tslint:disable-next-line:class-name
 export abstract class _MatTabNavBase extends MatPaginatedTabHeader implements AfterContentChecked,
   AfterContentInit, OnDestroy {
 
@@ -89,10 +89,7 @@ export abstract class _MatTabNavBase extends MatPaginatedTabHeader implements Af
               ngZone: NgZone,
               changeDetectorRef: ChangeDetectorRef,
               viewportRuler: ViewportRuler,
-              /**
-               * @deprecated @breaking-change 9.0.0 `platform` parameter to become required.
-               */
-              @Optional() platform?: Platform,
+              platform: Platform,
               @Optional() @Inject(ANIMATION_MODULE_TYPE) animationMode?: string) {
     super(elementRef, changeDetectorRef, viewportRuler, dir, ngZone, platform, animationMode);
   }
@@ -111,11 +108,8 @@ export abstract class _MatTabNavBase extends MatPaginatedTabHeader implements Af
     super.ngAfterContentInit();
   }
 
-  /**
-   * Notifies the component that the active link has been changed.
-   * @breaking-change 8.0.0 `element` parameter to be removed.
-   */
-  updateActiveLink(_element?: ElementRef) {
+  /** Notifies the component that the active link has been changed. */
+  updateActiveLink() {
     if (!this._items) {
       return;
     }
@@ -172,10 +166,7 @@ export class MatTabNav extends _MatTabNavBase {
     ngZone: NgZone,
     changeDetectorRef: ChangeDetectorRef,
     viewportRuler: ViewportRuler,
-    /**
-     * @deprecated @breaking-change 9.0.0 `platform` parameter to become required.
-     */
-    @Optional() platform?: Platform,
+    platform: Platform,
     @Optional() @Inject(ANIMATION_MODULE_TYPE) animationMode?: string) {
     super(elementRef, dir, ngZone, changeDetectorRef, viewportRuler, platform, animationMode);
   }
@@ -191,9 +182,8 @@ const _MatTabLinkMixinBase:
 
 /** Base class with all of the `MatTabLink` functionality. */
 @Directive()
-// tslint:disable-next-line:class-name
-export class _MatTabLinkBase extends _MatTabLinkMixinBase implements OnDestroy, CanDisable,
-  CanDisableRipple, HasTabIndex, RippleTarget, FocusableOption {
+export class _MatTabLinkBase extends _MatTabLinkMixinBase implements AfterViewInit, OnDestroy,
+  CanDisable, CanDisableRipple, HasTabIndex, RippleTarget, FocusableOption {
 
   /** Whether the tab link is active or not. */
   protected _isActive: boolean = false;
@@ -202,9 +192,11 @@ export class _MatTabLinkBase extends _MatTabLinkMixinBase implements OnDestroy, 
   @Input()
   get active(): boolean { return this._isActive; }
   set active(value: boolean) {
-    if (value !== this._isActive) {
+    const newValue = coerceBooleanProperty(value);
+
+    if (newValue !== this._isActive) {
       this._isActive = value;
-      this._tabNavBar.updateActiveLink(this.elementRef);
+      this._tabNavBar.updateActiveLink();
     }
   }
 
@@ -226,7 +218,8 @@ export class _MatTabLinkBase extends _MatTabLinkMixinBase implements OnDestroy, 
   }
 
   constructor(
-      private _tabNavBar: _MatTabNavBase, public elementRef: ElementRef,
+      private _tabNavBar: _MatTabNavBase,
+      /** @docs-private */ public elementRef: ElementRef,
       @Optional() @Inject(MAT_RIPPLE_GLOBAL_OPTIONS) globalRippleOptions: RippleGlobalOptions|null,
       @Attribute('tabindex') tabIndex: string, private _focusMonitor: FocusMonitor,
       @Optional() @Inject(ANIMATION_MODULE_TYPE) animationMode?: string) {
@@ -238,20 +231,25 @@ export class _MatTabLinkBase extends _MatTabLinkMixinBase implements OnDestroy, 
     if (animationMode === 'NoopAnimations') {
       this.rippleConfig.animation = {enterDuration: 0, exitDuration: 0};
     }
-
-    _focusMonitor.monitor(elementRef);
   }
 
+  /** Focuses the tab link. */
   focus() {
     this.elementRef.nativeElement.focus();
+  }
+
+  ngAfterViewInit() {
+    this._focusMonitor.monitor(this.elementRef);
   }
 
   ngOnDestroy() {
     this._focusMonitor.stopMonitoring(this.elementRef);
   }
 
+  static ngAcceptInputType_active: BooleanInput;
   static ngAcceptInputType_disabled: BooleanInput;
   static ngAcceptInputType_disableRipple: BooleanInput;
+  static ngAcceptInputType_tabIndex: NumberInput;
 }
 
 

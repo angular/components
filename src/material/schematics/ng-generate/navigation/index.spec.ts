@@ -1,5 +1,6 @@
 import {SchematicTestRunner, UnitTestTree} from '@angular-devkit/schematics/testing';
 import {createTestApp, getFileContent} from '@angular/cdk/schematics/testing';
+import {COLLECTION_PATH} from '../../index.spec';
 
 import {Schema} from './schema';
 
@@ -12,7 +13,7 @@ describe('material-navigation-schematic', () => {
   };
 
   beforeEach(() => {
-    runner = new SchematicTestRunner('schematics', require.resolve('../../collection.json'));
+    runner = new SchematicTestRunner('schematics', COLLECTION_PATH);
   });
 
   function expectNavigationSchematicModuleImports(tree: UnitTestTree) {
@@ -152,6 +153,28 @@ describe('material-navigation-schematic', () => {
               .toPromise();
 
       expect(tree.files).not.toContain('/projects/material/src/app/foo/foo.component.spec.ts');
+    });
+  });
+  describe('router option', () => {
+    it('should respect the option value if routing true', async () => {
+      const tree =
+        await runner
+          .runSchematicAsync(
+            'navigation', { routing: true, ...baseOptions }, await createTestApp(runner))
+          .toPromise();
+      const template = tree
+          .readContent('/projects/material/src/app/foo/foo.component.html');
+      expect(template).toContain('<a mat-list-item routerLink="/">Link 1</a>');
+    });
+    it('should respect the option value if routing false', async () => {
+      const tree =
+        await runner
+          .runSchematicAsync(
+            'navigation', { routing: false, ...baseOptions }, await createTestApp(runner))
+          .toPromise();
+      const template = tree
+          .readContent('/projects/material/src/app/foo/foo.component.html');
+      expect(template).toContain('<a mat-list-item href="#">Link 1</a>');
     });
   });
 });

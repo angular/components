@@ -1,13 +1,13 @@
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import {waitForAsync, ComponentFixture, TestBed} from '@angular/core/testing';
 import {Component, DebugElement} from '@angular/core';
 import {By} from '@angular/platform-browser';
 import {MatButtonModule, MatButton} from './index';
-import {MatRipple, ThemePalette} from '@angular/material/core';
+import {MatRipple, ThemePalette} from '@angular/material-experimental/mdc-core';
 
 
 describe('MDC-based MatButton', () => {
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [MatButtonModule],
       declarations: [TestApp],
@@ -264,7 +264,7 @@ describe('MDC-based MatButton', () => {
         [...fixture.debugElement.nativeElement.querySelectorAll('a, button')];
 
     expect(buttonNativeElements
-        .every(element => element.classList.contains('mat-mdc-focus-indicator'))).toBe(true);
+        .every(element => !!element.querySelector('.mat-mdc-focus-indicator'))).toBe(true);
   });
 });
 

@@ -20,7 +20,13 @@ import {
 } from '@angular/core';
 import {MatGridTile} from './grid-tile';
 import {TileCoordinator} from './tile-coordinator';
-import {TileStyler, FitTileStyler, RatioTileStyler, FixedTileStyler} from './tile-styler';
+import {
+  TileStyler,
+  FitTileStyler,
+  RatioTileStyler,
+  FixedTileStyler,
+  TileStyleTarget,
+} from './tile-styler';
 import {Directionality} from '@angular/cdk/bidi';
 import {coerceNumberProperty, NumberInput} from '@angular/cdk/coercion';
 import {MAT_GRID_LIST, MatGridListBase} from './grid-list-base';
@@ -50,7 +56,7 @@ const MAT_FIT_MODE = 'fit';
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
-export class MatGridList implements MatGridListBase, OnInit, AfterContentChecked {
+export class MatGridList implements MatGridListBase, OnInit, AfterContentChecked, TileStyleTarget {
   /** Number of columns being rendered. */
   private _cols: number;
 
@@ -116,7 +122,7 @@ export class MatGridList implements MatGridListBase, OnInit, AfterContentChecked
 
   /** Throw a friendly error if cols property is missing */
   private _checkCols() {
-    if (!this.cols) {
+    if (!this.cols && (typeof ngDevMode === 'undefined' || ngDevMode)) {
       throw Error(`mat-grid-list: must pass in number of columns. ` +
                   `Example: <mat-grid-list cols="3">`);
     }

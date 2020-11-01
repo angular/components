@@ -14,7 +14,7 @@ import {SlideToggleHarnessFilters} from './slide-toggle-harness-filters';
 /** Harness for interacting with a standard mat-slide-toggle in tests. */
 export class MatSlideToggleHarness extends ComponentHarness {
   /** The selector for the host element of a `MatSlideToggle` instance. */
-  static hostSelector = 'mat-slide-toggle';
+  static hostSelector = '.mat-slide-toggle';
 
   /**
    * Gets a `HarnessPredicate` that can be used to search for a `MatSlideToggleHarness` that meets
@@ -88,6 +88,11 @@ export class MatSlideToggleHarness extends ComponentHarness {
   /** Blurs the slide-toggle. */
   async blur(): Promise<void> {
     return (await this._input()).blur();
+  }
+
+  /** Whether the slide-toggle is focused. */
+  async isFocused(): Promise<boolean> {
+    return (await this._input()).isFocused();
   }
 
   /** Toggle the checked state of the slide-toggle. */

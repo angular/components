@@ -90,7 +90,7 @@ module.exports = config => {
       startConnect: false,
       recordVideo: false,
       recordScreenshots: false,
-      idleTimeout: 600,
+      idleTimeout: 1000,
       commandTimeout: 600,
       maxDuration: 5400,
     },
@@ -106,7 +106,7 @@ module.exports = config => {
     browserDisconnectTolerance: 1,
     browserNoActivityTimeout: 300000,
 
-    browsers: ['ChromeHeadlessLocal'],
+    browsers: ['ChromeLocalDebug'],
     singleRun: false,
 
     // Try Websocket for a faster transmission first. Fallback to polling if necessary.

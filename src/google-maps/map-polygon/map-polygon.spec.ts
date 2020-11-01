@@ -1,25 +1,24 @@
 import {Component, ViewChild} from '@angular/core';
-import {async, TestBed} from '@angular/core/testing';
+import {waitForAsync, TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 
-import {DEFAULT_OPTIONS, UpdatedGoogleMap} from '../google-map/google-map';
+import {DEFAULT_OPTIONS} from '../google-map/google-map';
 import {GoogleMapsModule} from '../google-maps-module';
 import {
   createMapConstructorSpy,
   createMapSpy,
   createPolygonConstructorSpy,
   createPolygonSpy,
-  TestingWindow,
 } from '../testing/fake-google-map-utils';
 
 import {MapPolygon} from './map-polygon';
 
 describe('MapPolygon', () => {
-  let mapSpy: jasmine.SpyObj<UpdatedGoogleMap>;
+  let mapSpy: jasmine.SpyObj<google.maps.Map>;
   let polygonPath: google.maps.LatLngLiteral[];
   let polygonOptions: google.maps.PolygonOptions;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     polygonPath = [{lat: 25, lng: 26}, {lat: 26, lng: 27}, {lat: 30, lng: 34}];
     polygonOptions = {paths: polygonPath, strokeColor: 'grey', strokeOpacity: 0.8};
     TestBed.configureTestingModule({
@@ -36,8 +35,7 @@ describe('MapPolygon', () => {
   });
 
   afterEach(() => {
-    const testingWindow: TestingWindow = window;
-    delete testingWindow.google;
+    (window.google as any) = undefined;
   });
 
   it('initializes a Google Map Polygon', () => {

@@ -39,7 +39,7 @@ import {
 } from '@angular/core';
 import {FormControl, FormGroupDirective, NgForm} from '@angular/forms';
 import {DOCUMENT} from '@angular/common';
-import {ErrorStateMatcher} from '@angular/material/core';
+import {ErrorStateMatcher, ThemePalette} from '@angular/material/core';
 import {Subject} from 'rxjs';
 import {takeUntil, distinctUntilChanged} from 'rxjs/operators';
 
@@ -62,6 +62,9 @@ import {MatStepperIcon, MatStepperIconContext} from './stepper-icon';
 export class MatStep extends CdkStep implements ErrorStateMatcher {
   /** Content for step label given by `<ng-template matStepLabel>`. */
   @ContentChild(MatStepLabel) stepLabel: MatStepLabel;
+
+  /** Theme color for the particular step. */
+  @Input() color: ThemePalette;
 
   /** @breaking-change 8.0.0 remove the `?` after `stepperOptions` */
   constructor(@Inject(forwardRef(() => MatStepper)) stepper: MatStepper,
@@ -89,8 +92,11 @@ export class MatStepper extends CdkStepper implements AfterContentInit {
   /** The list of step headers of the steps in the stepper. */
   @ViewChildren(MatStepHeader) _stepHeader: QueryList<MatStepHeader>;
 
-  /** Steps that the stepper holds. */
+  /** Full list of steps inside the stepper, including inside nested steppers. */
   @ContentChildren(MatStep, {descendants: true}) _steps: QueryList<MatStep>;
+
+  /** Steps that belong to the current stepper, excluding ones from nested steppers. */
+  readonly steps: QueryList<MatStep> = new QueryList<MatStep>();
 
   /** Custom icon overrides passed in by the consumer. */
   @ContentChildren(MatStepperIcon, {descendants: true}) _icons: QueryList<MatStepperIcon>;
@@ -101,6 +107,9 @@ export class MatStepper extends CdkStepper implements AfterContentInit {
   /** Whether ripples should be disabled for the step headers. */
   @Input() disableRipple: boolean;
 
+  /** Theme color for all of the steps in stepper. */
+  @Input() color: ThemePalette;
+
   /** Consumer-specified template-refs to be used to override the header icons. */
   _iconOverrides: {[key: string]: TemplateRef<MatStepperIconContext>} = {};
 
@@ -108,10 +117,11 @@ export class MatStepper extends CdkStepper implements AfterContentInit {
   _animationDone = new Subject<AnimationEvent>();
 
   ngAfterContentInit() {
+    super.ngAfterContentInit();
     this._icons.forEach(({name, templateRef}) => this._iconOverrides[name] = templateRef);
 
     // Mark the component for change detection whenever the content children query changes
-    this._steps.changes.pipe(takeUntil(this._destroyed)).subscribe(() => {
+    this.steps.changes.pipe(takeUntil(this._destroyed)).subscribe(() => {
       this._stateChanged();
     });
 

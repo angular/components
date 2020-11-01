@@ -7,6 +7,7 @@ export declare class TestbedHarnessEnvironment extends HarnessEnvironment<Elemen
     protected getDocumentRoot(): Element;
     waitForTasksOutsideAngular(): Promise<void>;
     static documentRootLoader(fixture: ComponentFixture<unknown>, options?: TestbedHarnessEnvironmentOptions): HarnessLoader;
+    static getNativeElement(el: TestElement): Element;
     static harnessForFixture<T extends ComponentHarness>(fixture: ComponentFixture<unknown>, harnessType: ComponentHarnessConstructor<T>, options?: TestbedHarnessEnvironmentOptions): Promise<T>;
     static loader(fixture: ComponentFixture<unknown>, options?: TestbedHarnessEnvironmentOptions): HarnessLoader;
 }
@@ -20,7 +21,8 @@ export declare class UnitTestElement implements TestElement {
     constructor(element: Element, _stabilize: () => Promise<void>);
     blur(): Promise<void>;
     clear(): Promise<void>;
-    click(relativeX?: number, relativeY?: number): Promise<void>;
+    click(...args: [] | ['center'] | [number, number]): Promise<void>;
+    dispatchEvent(name: string, data?: Record<string, EventData>): Promise<void>;
     focus(): Promise<void>;
     getAttribute(name: string): Promise<string | null>;
     getCssValue(property: string): Promise<string>;
@@ -30,7 +32,11 @@ export declare class UnitTestElement implements TestElement {
     hover(): Promise<void>;
     isFocused(): Promise<boolean>;
     matchesSelector(selector: string): Promise<boolean>;
+    mouseAway(): Promise<void>;
+    rightClick(...args: [] | ['center'] | [number, number]): Promise<void>;
+    selectOptions(...optionIndexes: number[]): Promise<void>;
     sendKeys(...keys: (string | TestKey)[]): Promise<void>;
     sendKeys(modifiers: ModifierKeys, ...keys: (string | TestKey)[]): Promise<void>;
-    text(): Promise<string>;
+    setInputValue(value: string): Promise<void>;
+    text(options?: TextOptions): Promise<string>;
 }

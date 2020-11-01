@@ -5,25 +5,36 @@
 @import '@material/theme/functions.import';
 @import '../mdc-helpers/mdc-helpers';
 
-@mixin mat-mdc-checkbox-theme($theme) {
-  $primary: mat-color(map-get($theme, primary));
-  $accent: mat-color(map-get($theme, accent));
-  $warn: mat-color(map-get($theme, warn));
+// Mixin that includes the checkbox theme styles with a given palette.
+// By default, the MDC checkbox always uses the `secondary` palette.
+@mixin _mdc-checkbox-styles-with-color($color) {
+  $orig-mdc-checkbox-mark-color: $mdc-checkbox-mark-color;
+  $mdc-checkbox-mark-color: mdc-theme-prop-value(on-#{$color}) !global;
+  $orig-mdc-checkbox-baseline-theme-color: $mdc-checkbox-baseline-theme-color;
+  $mdc-checkbox-baseline-theme-color: $color !global;
+
+  @include mdc-checkbox-without-ripple($query: $mat-theme-styles-query);
+
+  $mdc-checkbox-mark-color: $orig-mdc-checkbox-mark-color !global;
+  $mdc-checkbox-baseline-theme-color: $orig-mdc-checkbox-baseline-theme-color !global;
+}
+
+@mixin mat-mdc-checkbox-color($config-or-theme) {
+  $config: mat-get-color-config($config-or-theme);
+  $primary: mat-color(map-get($config, primary));
+  $accent: mat-color(map-get($config, accent));
+  $warn: mat-color(map-get($config, warn));
 
   // Save original values of MDC global variables. We need to save these so we can restore the
   // variables to their original values and prevent unintended side effects from using this mixin.
-  $orig-mdc-checkbox-mark-color: $mdc-checkbox-mark-color;
-  $orig-mdc-checkbox-baseline-theme-color: $mdc-checkbox-baseline-theme-color;
   $orig-mdc-checkbox-border-color: $mdc-checkbox-border-color;
   $orig-mdc-checkbox-disabled-color: $mdc-checkbox-disabled-color;
 
-  @include mat-using-mdc-theme($theme) {
-    $mdc-checkbox-mark-color: mdc-theme-prop-value(on-primary) !global;
-    $mdc-checkbox-baseline-theme-color: primary !global;
+  @include mat-using-mdc-theme($config) {
     $mdc-checkbox-border-color: rgba(mdc-theme-prop-value(on-surface), 0.54) !global;
     $mdc-checkbox-disabled-color: rgba(mdc-theme-prop-value(on-surface), 0.26) !global;
 
-    @include mdc-checkbox-without-ripple($query: $mat-theme-styles-query);
+    @include _mdc-checkbox-styles-with-color(primary);
     @include mdc-form-field-core-styles($query: $mat-theme-styles-query);
 
     // MDC's checkbox doesn't support a `color` property. We add support for it by adding a CSS
@@ -40,10 +51,7 @@
       }
 
       &.mat-accent {
-        $mdc-checkbox-mark-color: mdc-theme-prop-value(on-secondary) !global;
-        $mdc-checkbox-baseline-theme-color: secondary !global;
-
-        @include mdc-checkbox-without-ripple($query: $mat-theme-styles-query);
+        @include _mdc-checkbox-styles-with-color(secondary);
 
         .mdc-checkbox--selected ~ .mat-mdc-checkbox-ripple .mat-ripple-element {
           background: $accent;
@@ -51,10 +59,7 @@
       }
 
       &.mat-warn {
-        $mdc-checkbox-mark-color: mdc-theme-prop-value(on-error) !global;
-        $mdc-checkbox-baseline-theme-color: error !global;
-
-        @include mdc-checkbox-without-ripple($query: $mat-theme-styles-query);
+        @include _mdc-checkbox-styles-with-color(error);
 
         .mdc-checkbox--selected ~ .mat-mdc-checkbox-ripple .mat-ripple-element {
           background: $warn;
@@ -64,15 +69,40 @@
   }
 
   // Restore original values of MDC global variables.
-  $mdc-checkbox-mark-color: $orig-mdc-checkbox-mark-color !global;
-  $mdc-checkbox-baseline-theme-color: $orig-mdc-checkbox-baseline-theme-color !global;
   $mdc-checkbox-border-color: $orig-mdc-checkbox-border-color !global;
   $mdc-checkbox-disabled-color: $orig-mdc-checkbox-disabled-color !global;
 }
 
-@mixin mat-mdc-checkbox-typography($config) {
+@mixin mat-mdc-checkbox-typography($config-or-theme) {
+  $config: mat-get-typography-config($config-or-theme);
   @include mat-using-mdc-typography($config) {
     @include mdc-checkbox-without-ripple($query: $mat-typography-styles-query);
     @include mdc-form-field-core-styles($query: $mat-typography-styles-query);
+  }
+}
+
+@mixin mat-mdc-checkbox-density($config-or-theme) {
+  $density-scale: mat-get-density-config($config-or-theme);
+  .mat-mdc-checkbox .mdc-checkbox {
+    @include mdc-checkbox-density($density-scale, $query: $mat-base-styles-query);
+  }
+}
+
+@mixin mat-mdc-checkbox-theme($theme-or-color-config) {
+  $theme: _mat-legacy-get-theme($theme-or-color-config);
+  @include _mat-check-duplicate-theme-styles($theme, 'mat-mdc-checkbox') {
+    $color: mat-get-color-config($theme);
+    $density: mat-get-density-config($theme);
+    $typography: mat-get-typography-config($theme);
+
+    @if $color != null {
+      @include mat-mdc-checkbox-color($color);
+    }
+    @if $density != null {
+      @include mat-mdc-checkbox-density($density);
+    }
+    @if $typography != null {
+      @include mat-mdc-checkbox-typography($typography);
+    }
   }
 }

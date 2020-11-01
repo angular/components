@@ -1,10 +1,12 @@
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import {waitForAsync, ComponentFixture, TestBed} from '@angular/core/testing';
 import {Component, ViewChild} from '@angular/core';
 import {YouTubePlayerModule} from './youtube-module';
 import {YouTubePlayer, DEFAULT_PLAYER_WIDTH, DEFAULT_PLAYER_HEIGHT} from './youtube-player';
 import {createFakeYtNamespace} from './fake-youtube-player';
+import {Subscription} from 'rxjs';
 
 const VIDEO_ID = 'a12345';
+const YT_LOADING_STATE_MOCK = {loading: 1, loaded: 0};
 
 describe('YoutubePlayer', () => {
   let playerCtorSpy: jasmine.Spy;
@@ -13,7 +15,7 @@ describe('YoutubePlayer', () => {
   let testComponent: TestApp;
   let events: Required<YT.Events>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     const fake = createFakeYtNamespace();
     playerCtorSpy = fake.playerCtorSpy;
     playerSpy = fake.playerSpy;
@@ -22,7 +24,7 @@ describe('YoutubePlayer', () => {
 
     TestBed.configureTestingModule({
       imports: [YouTubePlayerModule],
-      declarations: [TestApp, StaticStartEndSecondsApp],
+      declarations: [TestApp, StaticStartEndSecondsApp, NoEventsApp],
     });
 
     TestBed.compileComponents();
@@ -36,7 +38,7 @@ describe('YoutubePlayer', () => {
     });
 
     afterEach(() => {
-      delete window.YT;
+      (window as any).YT = undefined;
       window.onYouTubeIframeAPIReady = undefined;
     });
 
@@ -48,6 +50,7 @@ describe('YoutubePlayer', () => {
           videoId: VIDEO_ID,
           width: DEFAULT_PLAYER_WIDTH,
           height: DEFAULT_PLAYER_HEIGHT,
+          playerVars: undefined
         }));
     });
 
@@ -128,6 +131,21 @@ describe('YoutubePlayer', () => {
       expect(playerSpy.setSize).toHaveBeenCalledWith(DEFAULT_PLAYER_WIDTH, DEFAULT_PLAYER_HEIGHT);
       expect(testComponent.youtubePlayer.width).toBe(DEFAULT_PLAYER_WIDTH);
       expect(testComponent.youtubePlayer.height).toBe(DEFAULT_PLAYER_HEIGHT);
+    });
+
+    it('passes the configured playerVars to the player', () => {
+      const playerVars: YT.PlayerVars = { modestbranding: YT.ModestBranding.Modest };
+      fixture.componentInstance.playerVars = playerVars;
+      fixture.detectChanges();
+
+      events.onReady({target: playerSpy});
+      const calls = playerCtorSpy.calls.all();
+
+      // We expect 2 calls since the first one is run on init and the
+      // second one happens after the `playerVars` have changed.
+      expect(calls.length).toBe(2);
+      expect(calls[0].args[1]).toEqual(jasmine.objectContaining({playerVars: undefined}));
+      expect(calls[1].args[1]).toEqual(jasmine.objectContaining({playerVars}));
     });
 
     it('initializes the player with start and end seconds', () => {
@@ -351,19 +369,21 @@ describe('YoutubePlayer', () => {
   });
 
   describe('API loaded asynchronously', () => {
-    let api: typeof YT | undefined;
+    let api: typeof YT;
 
     beforeEach(() => {
       api = window.YT;
-      delete window.YT;
+      (window as any).YT = undefined;
     });
 
     afterEach(() => {
-      delete window.YT;
+      (window as any).YT = undefined;
       window.onYouTubeIframeAPIReady = undefined;
     });
 
     it('waits until the api is ready before initializing', () => {
+      (window.YT as any) = YT_LOADING_STATE_MOCK;
+
       fixture = TestBed.createComponent(TestApp);
       testComponent = fixture.debugElement.componentInstance;
       fixture.detectChanges();
@@ -411,6 +431,48 @@ describe('YoutubePlayer', () => {
       jasmine.objectContaining({startSeconds: 42, endSeconds: 1337}));
   });
 
+  it('should be able to subscribe to events after initialization', () => {
+    const noEventsApp = TestBed.createComponent(NoEventsApp);
+    noEventsApp.detectChanges();
+    events.onReady({target: playerSpy});
+    noEventsApp.detectChanges();
+
+    const player = noEventsApp.componentInstance.player;
+    const subscriptions: Subscription[] = [];
+    const readySpy = jasmine.createSpy('ready spy');
+    const stateChangeSpy = jasmine.createSpy('stateChange spy');
+    const playbackQualityChangeSpy = jasmine.createSpy('playbackQualityChange spy');
+    const playbackRateChangeSpy = jasmine.createSpy('playbackRateChange spy');
+    const errorSpy = jasmine.createSpy('error spy');
+    const apiChangeSpy = jasmine.createSpy('apiChange spy');
+
+    subscriptions.push(player.ready.subscribe(readySpy));
+    events.onReady({target: playerSpy});
+    expect(readySpy).toHaveBeenCalledWith({target: playerSpy});
+
+    subscriptions.push(player.stateChange.subscribe(stateChangeSpy));
+    events.onStateChange({target: playerSpy, data: 5});
+    expect(stateChangeSpy).toHaveBeenCalledWith({target: playerSpy, data: 5});
+
+    subscriptions.push(player.playbackQualityChange.subscribe(playbackQualityChangeSpy));
+    events.onPlaybackQualityChange({target: playerSpy, data: 'large'});
+    expect(playbackQualityChangeSpy).toHaveBeenCalledWith({target: playerSpy, data: 'large'});
+
+    subscriptions.push(player.playbackRateChange.subscribe(playbackRateChangeSpy));
+    events.onPlaybackRateChange({target: playerSpy, data: 2});
+    expect(playbackRateChangeSpy).toHaveBeenCalledWith({target: playerSpy, data: 2});
+
+    subscriptions.push(player.error.subscribe(errorSpy));
+    events.onError({target: playerSpy, data: 5});
+    expect(errorSpy).toHaveBeenCalledWith({target: playerSpy, data: 5});
+
+    subscriptions.push(player.apiChange.subscribe(apiChangeSpy));
+    events.onApiChange({target: playerSpy});
+    expect(apiChangeSpy).toHaveBeenCalledWith({target: playerSpy});
+
+    subscriptions.forEach(subscription => subscription.unsubscribe());
+  });
+
 });
 
 /** Test component that contains a YouTubePlayer. */
@@ -419,6 +481,7 @@ describe('YoutubePlayer', () => {
   template: `
     <youtube-player #player [videoId]="videoId" *ngIf="visible" [width]="width" [height]="height"
       [startSeconds]="startSeconds" [endSeconds]="endSeconds" [suggestedQuality]="suggestedQuality"
+      [playerVars]="playerVars"
       (ready)="onReady($event)"
       (stateChange)="onStateChange($event)"
       (playbackQualityChange)="onPlaybackQualityChange($event)"
@@ -436,6 +499,7 @@ class TestApp {
   startSeconds: number | undefined;
   endSeconds: number | undefined;
   suggestedQuality: YT.SuggestedVideoQuality | undefined;
+  playerVars: YT.PlayerVars | undefined;
   onReady = jasmine.createSpy('onReady');
   onStateChange = jasmine.createSpy('onStateChange');
   onPlaybackQualityChange = jasmine.createSpy('onPlaybackQualityChange');
@@ -448,9 +512,18 @@ class TestApp {
 
 @Component({
   template: `
-    <youtube-player [videoId]="videoId" [startSeconds]="42"[endSeconds]="1337"></youtube-player>
+    <youtube-player [videoId]="videoId" [startSeconds]="42" [endSeconds]="1337"></youtube-player>
   `
 })
 class StaticStartEndSecondsApp {
+  videoId = VIDEO_ID;
+}
+
+
+@Component({
+  template: `<youtube-player [videoId]="videoId"></youtube-player>`
+})
+class NoEventsApp {
+  @ViewChild(YouTubePlayer) player: YouTubePlayer;
   videoId = VIDEO_ID;
 }

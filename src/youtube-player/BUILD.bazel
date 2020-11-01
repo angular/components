@@ -19,6 +19,7 @@ ng_module(
     ),
     module_name = "@angular/youtube-player",
     deps = [
+        "//src:dev_mode_types",
         "@npm//@angular/common",
         "@npm//@angular/core",
         "@npm//@types/youtube",
@@ -44,6 +45,7 @@ ng_test_library(
     deps = [
         ":youtube-player",
         "@npm//@angular/platform-browser",
+        "@npm//rxjs",
     ],
 )
 

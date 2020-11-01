@@ -19,5 +19,15 @@ import {MatListBase} from './list-base';
   styleUrls: ['list.css'],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [
+    {provide: MatListBase, useExisting: MatActionList},
+  ]
 })
-export class MatActionList extends MatListBase {}
+export class MatActionList extends MatListBase {
+  // An navigation list is considered interactive, but does not extend the interactive list
+  // base class. We do this because as per MDC, items of interactive lists are only reachable
+  // through keyboard shortcuts. We want all items for the navigation list to be reachable
+  // through tab key as we do not intend to provide any special accessibility treatment. The
+  // accessibility treatment depends on how the end-user will interact with it.
+  _isNonInteractive = false;
+}

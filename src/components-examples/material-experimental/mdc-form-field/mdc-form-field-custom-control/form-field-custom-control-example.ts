@@ -1,17 +1,17 @@
 import {FocusMonitor} from '@angular/cdk/a11y';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
-import {Component, ElementRef, Input, OnDestroy, Optional, Self} from '@angular/core';
-import {FormBuilder, FormGroup, ControlValueAccessor, NgControl, Validators} from '@angular/forms';
-import {MatFormFieldControl} from '@angular/material-experimental/mdc-form-field';
+import {Component, ElementRef, Inject, Input, OnDestroy, Optional, Self} from '@angular/core';
+import {ControlValueAccessor, FormBuilder, FormGroup, NgControl, Validators} from '@angular/forms';
+import {MatFormField, MatFormFieldControl} from '@angular/material-experimental/mdc-form-field';
+import {MAT_FORM_FIELD} from '@angular/material/form-field';
 import {Subject} from 'rxjs';
 
 /** @title Form field with custom telephone number input control. */
 @Component({
-  selector: 'form-field-custom-control-example',
+  selector: 'mdc-form-field-custom-control-example',
   templateUrl: 'form-field-custom-control-example.html',
-  styleUrls: ['form-field-custom-control-example.css'],
 })
-export class FormFieldCustomControlExample {}
+export class MdcFormFieldCustomControlExample {}
 
 /** Data structure for holding telephone number. */
 export class MyTel {
@@ -27,7 +27,6 @@ export class MyTel {
   host: {
     '[class.example-floating]': 'shouldLabelFloat',
     '[id]': 'id',
-    '[attr.aria-describedby]': 'describedBy',
   }
 })
 export class MyTelInput implements ControlValueAccessor, MatFormFieldControl<MyTel>, OnDestroy {
@@ -39,7 +38,6 @@ export class MyTelInput implements ControlValueAccessor, MatFormFieldControl<MyT
   errorState = false;
   controlType = 'example-tel-input';
   id = `example-tel-input-${MyTelInput.nextId++}`;
-  describedBy = '';
   onChange = (_: any) => {};
   onTouched = () => {};
 
@@ -50,6 +48,8 @@ export class MyTelInput implements ControlValueAccessor, MatFormFieldControl<MyT
   }
 
   get shouldLabelFloat() { return this.focused || !this.empty; }
+
+  @Input('aria-describedby') userAriaDescribedBy: string;
 
   @Input()
   get placeholder(): string { return this._placeholder; }
@@ -94,6 +94,7 @@ export class MyTelInput implements ControlValueAccessor, MatFormFieldControl<MyT
     formBuilder: FormBuilder,
     private _focusMonitor: FocusMonitor,
     private _elementRef: ElementRef<HTMLElement>,
+    @Optional() @Inject(MAT_FORM_FIELD) public _formField: MatFormField,
     @Optional() @Self() public ngControl: NgControl) {
 
     this.parts = formBuilder.group({
@@ -121,7 +122,9 @@ export class MyTelInput implements ControlValueAccessor, MatFormFieldControl<MyT
   }
 
   setDescribedByIds(ids: string[]) {
-    this.describedBy = ids.join(' ');
+    const controlElement = this._elementRef.nativeElement
+      .querySelector('.example-tel-input-container')!;
+    controlElement.setAttribute('aria-describedby', ids.join(' '));
   }
 
   onContainerClick(event: MouseEvent) {

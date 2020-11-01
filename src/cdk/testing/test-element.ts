@@ -16,6 +16,10 @@ export interface ModifierKeys {
   meta?: boolean;
 }
 
+/** Data that can be attached to a custom event dispatched from a `TestElement`. */
+export type EventData =
+    string | number | boolean | undefined | null | EventData[] | {[key: string]: EventData};
+
 /** An enum of non-text keys that can be used with the `sendKeys` method. */
 // NOTE: This is a separate enum from `@angular/cdk/keycodes` because we don't necessarily want to
 // support every possible keyCode. We also can't rely on Protractor's `Key` because we don't want a
@@ -68,11 +72,29 @@ export interface TestElement {
   clear(): Promise<void>;
 
   /**
-   * Click the element.
+   * Click the element at the default location for the current environment. If you need to guarantee
+   * the element is clicked at a specific location, consider using `click('center')` or
+   * `click(x, y)` instead.
+   */
+  click(): Promise<void>;
+
+  /** Click the element at the element's center. */
+  click(location: 'center'): Promise<void>;
+
+  /**
+   * Click the element at the specified coordinates relative to the top-left of the element.
    * @param relativeX Coordinate within the element, along the X-axis at which to click.
    * @param relativeY Coordinate within the element, along the Y-axis at which to click.
    */
-  click(relativeX?: number, relativeY?: number): Promise<void>;
+  click(relativeX: number, relativeY: number): Promise<void>;
+
+  /**
+   * Right clicks on the element at the specified coordinates relative to the top-left of it.
+   * @param relativeX Coordinate within the element, along the X-axis at which to click.
+   * @param relativeY Coordinate within the element, along the Y-axis at which to click.
+   * @breaking-change 11.0.0 To become a required method.
+   */
+  rightClick?(relativeX: number, relativeY: number): Promise<void>;
 
   /** Focus the element. */
   focus(): Promise<void>;
@@ -82,6 +104,9 @@ export interface TestElement {
 
   /** Hovers the mouse over the element. */
   hover(): Promise<void>;
+
+  /** Moves the mouse away from the element. */
+  mouseAway(): Promise<void>;
 
   /**
    * Sends the given string to the input as a series of key presses. Also fires input events
@@ -95,8 +120,11 @@ export interface TestElement {
    */
   sendKeys(modifiers: ModifierKeys, ...keys: (string | TestKey)[]): Promise<void>;
 
-  /** Gets the text from the element. */
-  text(): Promise<string>;
+  /**
+   * Gets the text from the element.
+   * @param options Options that affect what text is included.
+   */
+  text(options?: TextOptions): Promise<string>;
 
   /** Gets the value for the given attribute from the element. */
   getAttribute(name: string): Promise<string | null>;
@@ -115,4 +143,32 @@ export interface TestElement {
 
   /** Checks whether the element is focused. */
   isFocused(): Promise<boolean>;
+
+  /**
+   * Sets the value of a property of an input.
+   * @breaking-change 11.0.0 To become a required method.
+   */
+  setInputValue?(value: string): Promise<void>;
+
+  // Note that ideally here we'd be selecting options based on their value, rather than their
+  // index, but we're limited by `@angular/forms` which will modify the option value in some cases.
+  // Since the value will be truncated, we can't rely on it to do the lookup in the DOM. See:
+  // https://github.com/angular/angular/blob/master/packages/forms/src/directives/select_control_value_accessor.ts#L19
+  /**
+   * Selects the options at the specified indexes inside of a native `select` element.
+   * @breaking-change 12.0.0 To become a required method.
+   */
+  selectOptions?(...optionIndexes: number[]): Promise<void>;
+
+  /**
+   * Dispatches an event with a particular name.
+   * @param name Name of the event to be dispatched.
+   * @breaking-change 12.0.0 To be a required method.
+   */
+  dispatchEvent?(name: string, data?: Record<string, EventData>): Promise<void>;
+}
+
+export interface TextOptions {
+  /** Optional selector for elements to exclude. */
+  exclude?: string;
 }

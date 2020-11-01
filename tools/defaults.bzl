@@ -1,11 +1,11 @@
 # Re-export of Bazel rules with repository-wide defaults
 
 load("@io_bazel_rules_sass//:defs.bzl", _sass_binary = "sass_binary", _sass_library = "sass_library")
-load("@npm_angular_bazel//:index.bzl", _ng_module = "ng_module", _ng_package = "ng_package")
-load("@npm_bazel_jasmine//:index.bzl", _jasmine_node_test = "jasmine_node_test")
-load("@npm_bazel_karma//:index.bzl", _karma_web_test = "karma_web_test", _karma_web_test_suite = "karma_web_test_suite")
-load("@npm_bazel_protractor//:index.bzl", _protractor_web_test_suite = "protractor_web_test_suite")
-load("@npm_bazel_typescript//:index.bzl", _ts_library = "ts_library")
+load("@npm//@angular/bazel:index.bzl", _ng_module = "ng_module", _ng_package = "ng_package")
+load("@npm//@bazel/jasmine:index.bzl", _jasmine_node_test = "jasmine_node_test")
+load("@npm//@bazel/karma:index.bzl", _karma_web_test = "karma_web_test", _karma_web_test_suite = "karma_web_test_suite")
+load("@npm//@bazel/protractor:index.bzl", _protractor_web_test_suite = "protractor_web_test_suite")
+load("@npm//@bazel/typescript:index.bzl", _ts_library = "ts_library")
 load("//:packages.bzl", "VERSION_PLACEHOLDER_REPLACEMENTS", "getAngularUmdTargets")
 load("//:rollup-globals.bzl", "ROLLUP_GLOBALS")
 load("//tools/markdown-to-html:index.bzl", _markdown_to_html = "markdown_to_html")
@@ -41,10 +41,6 @@ def ts_library(tsconfig = None, deps = [], testonly = False, **kwargs):
     _ts_library(
         tsconfig = tsconfig,
         testonly = testonly,
-        # The default "ts_library" compiler does not come with "tsickle" available. Since
-        # we have targets that use "tsickle" decorator processing, we need to ensure that
-        # the compiler could load "tsickle" if needed.
-        compiler = "//tools:tsc_wrapped_with_tsickle",
         deps = local_deps,
         **kwargs
     )
@@ -140,7 +136,7 @@ def ng_test_library(deps = [], tsconfig = None, **kwargs):
     ] + deps
 
     ts_library(
-        testonly = 1,
+        testonly = True,
         deps = local_deps,
         **kwargs
     )
@@ -153,7 +149,7 @@ def ng_e2e_test_library(deps = [], tsconfig = None, **kwargs):
     ] + deps
 
     ts_library(
-        testonly = 1,
+        testonly = True,
         deps = local_deps,
         **kwargs
     )
@@ -162,6 +158,16 @@ def karma_web_test_suite(name, **kwargs):
     web_test_args = {}
     kwargs["srcs"] = ["@npm//:node_modules/tslib/tslib.js"] + getAngularUmdTargets() + kwargs.get("srcs", [])
     kwargs["deps"] = ["//tools/rxjs:rxjs_umd_modules"] + kwargs.get("deps", [])
+
+    # Set up default browsers if no explicit `browsers` have been specified.
+    if not hasattr(kwargs, "browsers"):
+        kwargs["tags"] = ["native"] + kwargs.get("tags", [])
+        kwargs["browsers"] = [
+            # Note: when changing the browser names here, also update the "yarn test"
+            # script to reflect the new browser names.
+            "@npm_angular_dev_infra_private//browsers/chromium:chromium",
+            "@npm_angular_dev_infra_private//browsers/firefox:firefox",
+        ]
 
     for opt_name in kwargs.keys():
         # Filter out options which are specific to "karma_web_test" targets. We cannot
@@ -192,16 +198,13 @@ def karma_web_test_suite(name, **kwargs):
         **kwargs
     )
 
-# Protractor web test targets are flaky by default as the browser can sometimes
-# crash (e.g. due to too much concurrency). Passing the "flaky" flag ensures that
-# Bazel detects flaky tests and re-runs these a second time in case of a flake.
-def protractor_web_test_suite(flaky = True, **kwargs):
+def protractor_web_test_suite(**kwargs):
     _protractor_web_test_suite(
-        flaky = flaky,
+        browsers = ["@npm_angular_dev_infra_private//browsers/chromium:chromium"],
         **kwargs
     )
 
-def ng_web_test_suite(deps = [], static_css = [], bootstrap = [], tags = [], **kwargs):
+def ng_web_test_suite(deps = [], static_css = [], bootstrap = [], **kwargs):
     # Always include a prebuilt theme in the test suite because otherwise tests, which depend on CSS
     # that is needed for measuring, will unexpectedly fail. Also always adding a prebuilt theme
     # reduces the amount of setup that is needed to create a test suite Bazel target. Note that the
@@ -245,16 +248,18 @@ def ng_web_test_suite(deps = [], static_css = [], bootstrap = [], tags = [], **k
         deps = [
             "//test:angular_test_init",
         ] + deps,
-        browsers = [
-            # Note: when changing the browser names here, also update the "yarn test"
-            # script to reflect the new browser names.
-            "@io_bazel_rules_webtesting//browsers:chromium-local",
-            "@io_bazel_rules_webtesting//browsers:firefox-local",
-        ],
         bootstrap = [
-            "@npm//:node_modules/zone.js/dist/zone-testing-bundle.js",
+            # This matches the ZoneJS bundles used in default CLI projects. See:
+            # https://github.com/angular/angular-cli/blob/master/packages/schematics/angular/application/files/src/polyfills.ts.template#L58
+            # https://github.com/angular/angular-cli/blob/master/packages/schematics/angular/application/files/src/test.ts.template#L3
+            # Note `zone.js/dist/zone.js` is aliased in the CLI to point to the evergreen
+            # output that does not include legacy patches. See: https://github.com/angular/angular/issues/35157.
+            # TODO: Consider adding the legacy patches when testing Saucelabs/Browserstack with Bazel.
+            # CLI loads the legacy patches conditionally for ES5 legacy browsers. See:
+            # https://github.com/angular/angular-cli/blob/277bad3895cbce6de80aa10a05c349b10d9e09df/packages/angular_devkit/build_angular/src/angular-cli-files/models/webpack-configs/common.ts#L141
+            "@npm//:node_modules/zone.js/dist/zone-evergreen.js",
+            "@npm//:node_modules/zone.js/dist/zone-testing.js",
             "@npm//:node_modules/reflect-metadata/Reflect.js",
         ] + bootstrap,
-        tags = ["native"] + tags,
         **kwargs
     )

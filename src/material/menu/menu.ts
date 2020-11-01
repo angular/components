@@ -15,8 +15,6 @@ import {
   RIGHT_ARROW,
   DOWN_ARROW,
   UP_ARROW,
-  HOME,
-  END,
   hasModifierKey,
 } from '@angular/cdk/keycodes';
 import {
@@ -43,7 +41,7 @@ import {
 import {merge, Observable, Subject, Subscription} from 'rxjs';
 import {startWith, switchMap, take} from 'rxjs/operators';
 import {matMenuAnimations} from './menu-animations';
-import {MatMenuContent} from './menu-content';
+import {MAT_MENU_CONTENT, MatMenuContent} from './menu-content';
 import {MenuPositionX, MenuPositionY} from './menu-positions';
 import {throwMatMenuInvalidPositionX, throwMatMenuInvalidPositionY} from './menu-errors';
 import {MatMenuItem} from './menu-item';
@@ -63,6 +61,9 @@ export interface MatMenuDefaultOptions {
 
   /** Class to be applied to the menu's backdrop. */
   backdropClass: string;
+
+  /** Class or list of classes to be applied to the menu's overlay panel. */
+  overlayPanelClass?: string | string[];
 
   /** Whether the menu has a backdrop. */
   hasBackdrop?: boolean;
@@ -94,7 +95,6 @@ let menuPanelUid = 0;
 
 /** Base class with all of the `MatMenu` functionality. */
 @Directive()
-// tslint:disable-next-line:class-name
 export class _MatMenuBase implements AfterContentInit, MatMenuPanel<MatMenuItem>, OnInit,
   OnDestroy {
   private _keyManager: FocusKeyManager<MatMenuItem>;
@@ -129,6 +129,9 @@ export class _MatMenuBase implements AfterContentInit, MatMenuPanel<MatMenuItem>
   /** Layout direction of the menu. */
   direction: Direction;
 
+  /** Class or list of classes to be added to the overlay panel. */
+  overlayPanelClass: string|string[] = this._defaultOptions.overlayPanelClass || '';
+
   /** Class to be added to the backdrop element. */
   @Input() backdropClass: string = this._defaultOptions.backdropClass;
 
@@ -145,7 +148,8 @@ export class _MatMenuBase implements AfterContentInit, MatMenuPanel<MatMenuItem>
   @Input()
   get xPosition(): MenuPositionX { return this._xPosition; }
   set xPosition(value: MenuPositionX) {
-    if (value !== 'before' && value !== 'after') {
+    if (value !== 'before' && value !== 'after' &&
+      (typeof ngDevMode === 'undefined' || ngDevMode)) {
       throwMatMenuInvalidPositionX();
     }
     this._xPosition = value;
@@ -156,7 +160,7 @@ export class _MatMenuBase implements AfterContentInit, MatMenuPanel<MatMenuItem>
   @Input()
   get yPosition(): MenuPositionY { return this._yPosition; }
   set yPosition(value: MenuPositionY) {
-    if (value !== 'above' && value !== 'below') {
+    if (value !== 'above' && value !== 'below' && (typeof ngDevMode === 'undefined' || ngDevMode)) {
       throwMatMenuInvalidPositionY();
     }
     this._yPosition = value;
@@ -177,7 +181,7 @@ export class _MatMenuBase implements AfterContentInit, MatMenuPanel<MatMenuItem>
    * Menu content that will be rendered lazily.
    * @docs-private
    */
-  @ContentChild(MatMenuContent) lazyContent: MatMenuContent;
+  @ContentChild(MAT_MENU_CONTENT) lazyContent: MatMenuContent;
 
   /** Whether the menu should overlap its trigger. */
   @Input()
@@ -258,7 +262,10 @@ export class _MatMenuBase implements AfterContentInit, MatMenuPanel<MatMenuItem>
 
   ngAfterContentInit() {
     this._updateDirectDescendants();
-    this._keyManager = new FocusKeyManager(this._directDescendantItems).withWrap().withTypeAhead();
+    this._keyManager = new FocusKeyManager(this._directDescendantItems)
+      .withWrap()
+      .withTypeAhead()
+      .withHomeAndEnd();
     this._tabSubscription = this._keyManager.tabOut.subscribe(() => this.closed.emit('tab'));
 
     // If a user manually (programatically) focuses a menu item, we need to reflect that focus
@@ -324,13 +331,6 @@ export class _MatMenuBase implements AfterContentInit, MatMenuPanel<MatMenuItem>
           this.closed.emit('keydown');
         }
       break;
-      case HOME:
-      case END:
-        if (!hasModifierKey(event)) {
-          keyCode === HOME ? manager.setFirstItemActive() : manager.setLastItemActive();
-          event.preventDefault();
-        }
-      break;
       default:
         if (keyCode === UP_ARROW || keyCode === DOWN_ARROW) {
           manager.setFocusOrigin('keyboard');
@@ -347,7 +347,7 @@ export class _MatMenuBase implements AfterContentInit, MatMenuPanel<MatMenuItem>
   focusFirstItem(origin: FocusOrigin = 'program'): void {
     // When the content is rendered lazily, it takes a bit before the items are inside the DOM.
     if (this.lazyContent) {
-      this._ngZone.onStable.asObservable()
+      this._ngZone.onStable
         .pipe(take(1))
         .subscribe(() => this._focusFirstItem(origin));
     } else {
@@ -480,21 +480,6 @@ export class _MatMenuBase implements AfterContentInit, MatMenuPanel<MatMenuItem>
   static ngAcceptInputType_hasBackdrop: BooleanInput;
 }
 
-/** @docs-private We show the "_MatMenu" class as "MatMenu" in the docs. */
-@Directive()
-export class MatMenu extends _MatMenuBase {}
-
-// Note on the weird inheritance setup: we need three classes, because the MDC-based menu has to
-// extend `MatMenu`, however keeping a reference to it will cause the inlined template and styles
-// to be retained as well. The MDC menu also has to provide itself as a `MatMenu` in order for
-// queries and DI to work correctly, while still not referencing the actual menu class.
-// Class responsibility is split up as follows:
-// * _MatMenuBase - provides all the functionality without any of the Angular metadata.
-// * MatMenu - keeps the same name symbol name as the current menu and
-// is used as a provider for DI and query purposes.
-// * _MatMenu - the actual menu component implementation with the Angular metadata that should
-// be tree shaken away for MDC.
-
 /** @docs-public MatMenu */
 @Component({
   selector: 'mat-menu',
@@ -509,12 +494,9 @@ export class MatMenu extends _MatMenuBase {}
   ],
   providers: [
     {provide: MAT_MENU_PANEL, useExisting: MatMenu},
-    {provide: MatMenu, useExisting: _MatMenu}
   ]
 })
-// tslint:disable-next-line:class-name
-export class _MatMenu extends MatMenu {
-
+export class MatMenu extends _MatMenuBase {
   constructor(elementRef: ElementRef<HTMLElement>, ngZone: NgZone,
       @Inject(MAT_MENU_DEFAULT_OPTIONS) defaultOptions: MatMenuDefaultOptions) {
     super(elementRef, ngZone, defaultOptions);

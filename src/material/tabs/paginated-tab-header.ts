@@ -25,7 +25,7 @@ import {Direction, Directionality} from '@angular/cdk/bidi';
 import {coerceNumberProperty, NumberInput} from '@angular/cdk/coercion';
 import {ViewportRuler} from '@angular/cdk/scrolling';
 import {FocusKeyManager, FocusableOption} from '@angular/cdk/a11y';
-import {END, ENTER, HOME, SPACE, hasModifierKey} from '@angular/cdk/keycodes';
+import {ENTER, SPACE, hasModifierKey} from '@angular/cdk/keycodes';
 import {merge, of as observableOf, Subject, timer, fromEvent} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 import {Platform, normalizePassiveListenerOptions} from '@angular/cdk/platform';
@@ -148,11 +148,7 @@ export abstract class MatPaginatedTabHeader implements AfterContentChecked, Afte
               private _viewportRuler: ViewportRuler,
               @Optional() private _dir: Directionality,
               private _ngZone: NgZone,
-              /**
-               * @deprecated @breaking-change 9.0.0 `_platform` and `_animationMode`
-               * parameters to become required.
-               */
-              private _platform?: Platform,
+              private _platform: Platform,
               @Optional() @Inject(ANIMATION_MODULE_TYPE) public _animationMode?: string) {
 
     // Bind the `mouseleave` event on the outside since it doesn't change anything in the view.
@@ -193,9 +189,10 @@ export abstract class MatPaginatedTabHeader implements AfterContentChecked, Afte
 
     this._keyManager = new FocusKeyManager<MatPaginatedTabHeaderItem>(this._items)
       .withHorizontalOrientation(this._getLayoutDirection())
+      .withHomeAndEnd()
       .withWrap();
 
-    this._keyManager.updateActiveItem(0);
+    this._keyManager.updateActiveItem(this._selectedIndex);
 
     // Defer the first call in order to allow for slower browsers to lay out the elements.
     // This helps in cases where the user lands directly on a page with paginated tabs.
@@ -204,7 +201,8 @@ export abstract class MatPaginatedTabHeader implements AfterContentChecked, Afte
     // On dir change or window resize, realign the ink bar and update the orientation of
     // the key manager if the direction has changed.
     merge(dirChange, resize, this._items.changes).pipe(takeUntil(this._destroyed)).subscribe(() => {
-      realign();
+      // We need to defer this to give the browser some time to recalculate the element dimensions.
+      Promise.resolve().then(realign);
       this._keyManager.withHorizontalOrientation(this._getLayoutDirection());
     });
 
@@ -258,18 +256,12 @@ export abstract class MatPaginatedTabHeader implements AfterContentChecked, Afte
     }
 
     switch (event.keyCode) {
-      case HOME:
-        this._keyManager.setFirstItemActive();
-        event.preventDefault();
-        break;
-      case END:
-        this._keyManager.setLastItemActive();
-        event.preventDefault();
-        break;
       case ENTER:
       case SPACE:
-        this.selectFocusedIndex.emit(this.focusIndex);
-        this._itemSelected(event);
+        if (this.focusIndex !== this.selectedIndex) {
+          this.selectFocusedIndex.emit(this.focusIndex);
+          this._itemSelected(event);
+        }
         break;
       default:
         this._keyManager.onKeydown(event);
@@ -374,7 +366,6 @@ export abstract class MatPaginatedTabHeader implements AfterContentChecked, Afte
     }
 
     const scrollDistance = this.scrollDistance;
-    const platform = this._platform;
     const translateX = this._getLayoutDirection() === 'ltr' ? -scrollDistance : scrollDistance;
 
     // Don't use `translate3d` here because we don't want to create a new layer. A new layer
@@ -389,8 +380,7 @@ export abstract class MatPaginatedTabHeader implements AfterContentChecked, Afte
     // position to be thrown off in some cases. We have to reset it ourselves to ensure that
     // it doesn't get thrown off. Note that we scope it only to IE and Edge, because messing
     // with the scroll position throws off Chrome 71+ in RTL mode (see #14689).
-    // @breaking-change 9.0.0 Remove null check for `platform` after it can no longer be undefined.
-    if (platform && (platform.TRIDENT || platform.EDGE)) {
+    if (this._platform.TRIDENT || this._platform.EDGE) {
       this._tabListContainer.nativeElement.scrollLeft = 0;
     }
   }

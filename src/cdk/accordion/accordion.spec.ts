@@ -1,11 +1,11 @@
-import {async, TestBed} from '@angular/core/testing';
+import {waitForAsync, TestBed} from '@angular/core/testing';
 import {Component, ViewChild} from '@angular/core';
 import {By} from '@angular/platform-browser';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {CdkAccordionModule, CdkAccordionItem} from './public-api';
 
 describe('CdkAccordion', () => {
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [
         BrowserAnimationsModule,
@@ -53,6 +53,7 @@ describe('CdkAccordion', () => {
 
   it('should not register nested items to the same accordion', () => {
     const fixture = TestBed.createComponent(NestedItems);
+    fixture.detectChanges();
     const innerItem = fixture.componentInstance.innerItem;
     const outerItem = fixture.componentInstance.outerItem;
 
@@ -77,6 +78,6 @@ class SetOfItems {
     </cdk-accordion-item>
   </cdk-accordion>`})
 class NestedItems {
-  @ViewChild('outerItem', {static: true}) outerItem: CdkAccordionItem;
-  @ViewChild('innerItem', {static: true}) innerItem: CdkAccordionItem;
+  @ViewChild('outerItem') outerItem: CdkAccordionItem;
+  @ViewChild('innerItem') innerItem: CdkAccordionItem;
 }

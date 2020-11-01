@@ -28,9 +28,8 @@ import {
 } from '@angular/forms';
 import {
   ErrorStateMatcher,
-  FloatLabelType,
-  MAT_LABEL_GLOBAL_OPTIONS,
   ShowOnDirtyErrorStateMatcher,
+  ThemePalette,
 } from '@angular/material/core';
 import {
   getMatFormFieldDuplicatedHintError,
@@ -40,6 +39,7 @@ import {
   MatFormField,
   MatFormFieldAppearance,
   MatFormFieldModule,
+  FloatLabelType,
 } from '@angular/material/form-field';
 import {By} from '@angular/platform-browser';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
@@ -61,18 +61,6 @@ describe('MatInput without forms', () => {
         'Expected MatInput to set floatingLabel to auto by default.');
   }));
 
-  it('should default to floating label type from deprecated global label options', fakeAsync(() => {
-    let fixture = createComponent(MatInputWithId, [{
-      provide: MAT_LABEL_GLOBAL_OPTIONS, useValue: {float: 'always'}
-    }]);
-    fixture.detectChanges();
-
-    let formField = fixture.debugElement.query(By.directive(MatFormField))!
-        .componentInstance as MatFormField;
-    expect(formField.floatLabel).toBe('always',
-      'Expected MatInput to set floatingLabel to always from global option.');
-  }));
-
   it('should default to floating label type provided by global default options', fakeAsync(() => {
     let fixture = createComponent(MatInputWithId, [{
       provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: {floatLabel: 'always'}
@@ -86,13 +74,12 @@ describe('MatInput without forms', () => {
   }));
 
   it('should not be treated as empty if type is date', fakeAsync(() => {
-    const platform = new Platform();
+    const fixture = createComponent(MatInputDateTestController);
+    const platform = TestBed.inject(Platform);
+    fixture.detectChanges();
 
     if (!(platform.TRIDENT || (platform.SAFARI && !platform.IOS))) {
-      let fixture = createComponent(MatInputDateTestController);
-      fixture.detectChanges();
-
-      let el = fixture.debugElement.query(By.css('label'))!.nativeElement;
+      const el = fixture.debugElement.query(By.css('label'))!.nativeElement;
       expect(el).not.toBeNull();
       expect(el.classList.contains('mat-form-field-empty')).toBe(false);
     }
@@ -100,13 +87,12 @@ describe('MatInput without forms', () => {
 
   // Safari Desktop and IE don't support type="date" and fallback to type="text".
   it('should be treated as empty if type is date in Safari Desktop or IE', fakeAsync(() => {
-    const platform = new Platform();
+    const fixture = createComponent(MatInputDateTestController);
+    const platform = TestBed.inject(Platform);
+    fixture.detectChanges();
 
     if (platform.TRIDENT || (platform.SAFARI && !platform.IOS)) {
-      let fixture = createComponent(MatInputDateTestController);
-      fixture.detectChanges();
-
-      let el = fixture.debugElement.query(By.css('label'))!.nativeElement;
+      const el = fixture.debugElement.query(By.css('label'))!.nativeElement;
       expect(el).not.toBeNull();
       expect(el.classList.contains('mat-form-field-empty')).toBe(true);
     }
@@ -369,20 +355,29 @@ describe('MatInput without forms', () => {
     let fixture = createComponent(MatInputPlaceholderAttrTestComponent);
     fixture.detectChanges();
 
-    let inputEl = fixture.debugElement.query(By.css('input'))!.nativeElement;
-
     expect(fixture.debugElement.query(By.css('label'))).toBeNull();
-    expect(inputEl.placeholder).toBe('');
 
     fixture.componentInstance.placeholder = 'Other placeholder';
     fixture.detectChanges();
 
     let labelEl = fixture.debugElement.query(By.css('label'))!;
 
-    expect(inputEl.placeholder).toBe('Other placeholder');
     expect(labelEl).not.toBeNull();
     expect(labelEl.nativeElement.textContent).toBe('Other placeholder');
   }));
+
+  it('should not render the native placeholder when its value is mirrored in the label',
+    fakeAsync(() => {
+      const fixture = createComponent(MatInputPlaceholderAttrTestComponent);
+      fixture.componentInstance.placeholder = 'Enter a name';
+      fixture.detectChanges();
+
+      const inputEl = fixture.debugElement.query(By.css('input')).nativeElement;
+      const labelEl = fixture.debugElement.query(By.css('label'));
+
+      expect(inputEl.hasAttribute('placeholder')).toBe(false);
+      expect(labelEl.nativeElement.textContent).toContain('Enter a name');
+    }));
 
   it('supports placeholder element', fakeAsync(() => {
     let fixture = createComponent(MatInputPlaceholderElementTestComponent);
@@ -557,10 +552,44 @@ describe('MatInput without forms', () => {
     fixture.componentInstance.label = 'label';
     fixture.detectChanges();
 
-    let hint = fixture.debugElement.query(By.css('.mat-hint'))!.nativeElement;
-    let input = fixture.debugElement.query(By.css('input'))!.nativeElement;
+    const hint = fixture.debugElement.query(By.css('.mat-hint'))!.nativeElement;
+    const input = fixture.debugElement.query(By.css('input'))!.nativeElement;
+    const hintId = hint.getAttribute('id');
 
-    expect(input.getAttribute('aria-describedby')).toBe(hint.getAttribute('id'));
+    expect(input.getAttribute('aria-describedby')).toBe(`initial ${hintId}`);
+  }));
+
+  it('supports user binding to aria-describedby', fakeAsync(() => {
+    let fixture = createComponent(MatInputWithSubscriptAndAriaDescribedBy);
+
+    fixture.componentInstance.label = 'label';
+    fixture.detectChanges();
+
+    const hint = fixture.debugElement.query(By.css('.mat-hint'))!.nativeElement;
+    const input = fixture.debugElement.query(By.css('input'))!.nativeElement;
+    const hintId = hint.getAttribute('id');
+
+    expect(input.getAttribute('aria-describedby')).toBe(hintId);
+
+    fixture.componentInstance.userDescribedByValue = 'custom-error custom-error-two';
+    fixture.detectChanges();
+    expect(input.getAttribute('aria-describedby')).toBe(`custom-error custom-error-two ${hintId}`);
+
+    fixture.componentInstance.userDescribedByValue = 'custom-error';
+    fixture.detectChanges();
+    expect(input.getAttribute('aria-describedby')).toBe(`custom-error ${hintId}`);
+
+    fixture.componentInstance.showError = true;
+    fixture.componentInstance.formControl.markAsTouched();
+    fixture.componentInstance.formControl.setErrors({invalid: true});
+    fixture.detectChanges();
+    expect(input.getAttribute('aria-describedby')).toMatch(/^custom-error mat-error-\d+$/);
+
+    fixture.componentInstance.label = '';
+    fixture.componentInstance.userDescribedByValue = '';
+    fixture.componentInstance.showError = false;
+    fixture.detectChanges();
+    expect(input.hasAttribute('aria-describedby')).toBe(false);
   }));
 
   it('sets the aria-describedby to the id of the mat-hint', fakeAsync(() => {
@@ -587,15 +616,30 @@ describe('MatInput without forms', () => {
     expect(input.getAttribute('aria-describedby')).toBe('start end');
   }));
 
+  it('should set a class on the hint element based on its alignment', fakeAsync(() => {
+    const fixture = createComponent(MatInputMultipleHintTestController);
+
+    fixture.componentInstance.startId = 'start';
+    fixture.componentInstance.endId = 'end';
+    fixture.detectChanges();
+
+    const start = fixture.nativeElement.querySelector('#start');
+    const end = fixture.nativeElement.querySelector('#end');
+
+    expect(start.classList).not.toContain('mat-form-field-hint-end');
+    expect(end.classList).toContain('mat-form-field-hint-end');
+  }));
+
   it('sets the aria-describedby when a hintLabel is set, in addition to a mat-hint',
     fakeAsync(() => {
       let fixture = createComponent(MatInputMultipleHintMixedTestController);
 
       fixture.detectChanges();
 
-      let hintLabel =
-          fixture.debugElement.query(By.css('.mat-hint:not(.mat-right)'))!.nativeElement;
-      let endLabel = fixture.debugElement.query(By.css('.mat-hint.mat-right'))!.nativeElement;
+      let hintLabel = fixture.debugElement
+          .query(By.css('.mat-hint:not(.mat-form-field-hint-end)'))!.nativeElement;
+      let endLabel = fixture.debugElement
+          .query(By.css('.mat-hint.mat-form-field-hint-end'))!.nativeElement;
       let input = fixture.debugElement.query(By.css('input'))!.nativeElement;
       let ariaValue = input.getAttribute('aria-describedby');
 
@@ -838,7 +882,7 @@ describe('MatInput without forms', () => {
     inputContainer._animateAndLockLabel();
     fixture.detectChanges();
 
-    expect(inputContainer._shouldAlwaysFloat).toBe(false);
+    expect(inputContainer._shouldAlwaysFloat()).toBe(false);
     expect(inputContainer.floatLabel).toBe('always');
 
     const fakeEvent = createFakeEvent('transitionend');
@@ -846,7 +890,7 @@ describe('MatInput without forms', () => {
     label.dispatchEvent(fakeEvent);
     fixture.detectChanges();
 
-    expect(inputContainer._shouldAlwaysFloat).toBe(true);
+    expect(inputContainer._shouldAlwaysFloat()).toBe(true);
     expect(inputContainer.floatLabel).toBe('always');
   }));
 
@@ -913,8 +957,8 @@ describe('MatInput without forms', () => {
 
     expect(container.classList).toContain('mat-form-field-hide-placeholder');
     expect(container.classList).not.toContain('mat-form-field-should-float');
-    expect(label.textContent).toBe('Label');
-    expect(input.getAttribute('placeholder')).toBe('Placeholder');
+    expect(label.textContent.trim()).toBe('Label');
+    expect(input.hasAttribute('placeholder')).toBe(false);
 
     input.value = 'Value';
     fixture.detectChanges();
@@ -982,6 +1026,39 @@ describe('MatInput without forms', () => {
 
       expect(label.classList).not.toContain('mat-form-field-empty');
     }));
+
+  it('should not throw when there is a default ngIf on the label element', fakeAsync(() => {
+    expect(() => {
+      createComponent(MatInputWithDefaultNgIf).detectChanges();
+    }).not.toThrow();
+  }));
+
+  it('should not throw when there is a default ngIf on the input element', fakeAsync(() => {
+    expect(() => {
+      createComponent(MatInputWithAnotherNgIf).detectChanges();
+    }).not.toThrow();
+  }));
+
+  it('should default the form field color to primary', fakeAsync(() => {
+    const fixture = createComponent(MatInputWithColor);
+    fixture.detectChanges();
+
+    const formField = fixture.nativeElement.querySelector('.mat-form-field');
+    expect(formField.classList).toContain('mat-primary');
+  }));
+
+  it('should be able to change the form field color', fakeAsync(() => {
+    const fixture = createComponent(MatInputWithColor);
+    fixture.componentInstance.color = 'accent';
+    fixture.detectChanges();
+    const formField = fixture.nativeElement.querySelector('.mat-form-field');
+
+    expect(formField.classList).toContain('mat-accent');
+
+    fixture.componentInstance.color = 'warn';
+    fixture.detectChanges();
+    expect(formField.classList).toContain('mat-warn');
+  }));
 
 });
 
@@ -1748,10 +1825,27 @@ class MatInputHintLabel2TestController {
 }
 
 @Component({
-  template: `<mat-form-field [hintLabel]="label"><input matInput></mat-form-field>`
+  template: `
+    <mat-form-field [hintLabel]="label">
+      <input matInput aria-describedby="initial">
+    </mat-form-field>`
 })
 class MatInputHintLabelTestController {
   label: string = '';
+}
+
+@Component({
+  template: `
+    <mat-form-field [hintLabel]="label">
+      <input matInput [formControl]="formControl" [aria-describedby]="userDescribedByValue">
+      <mat-error *ngIf="showError">Some error</mat-error>
+    </mat-form-field>`
+})
+class MatInputWithSubscriptAndAriaDescribedBy {
+  label: string = '';
+  userDescribedByValue: string = '';
+  showError = false;
+  formControl = new FormControl();
 }
 
 @Component({template: `<mat-form-field><input matInput [type]="t"></mat-form-field>`})
@@ -2222,4 +2316,45 @@ class CustomMatInputAccessor {
   get value() { return this._value; }
   set value(_value: any) {}
   private _value = null;
+}
+
+
+// Note that the DOM structure is slightly weird, but it's
+// testing a specific g3 issue. See the discussion on #10466.
+@Component({
+  template: `
+    <mat-form-field appearance="outline">
+      <mat-label *ngIf="true">My Label</mat-label>
+      <ng-container *ngIf="true">
+        <input matInput>
+      </ng-container>
+    </mat-form-field>
+  `
+})
+class MatInputWithDefaultNgIf {}
+
+
+// Note that the DOM structure is slightly weird, but it's
+// testing a specific g3 issue. See the discussion on #10466.
+@Component({
+  template: `
+    <mat-form-field>
+      <mat-label>App name</mat-label>
+      <input matInput *ngIf="true" placeholder="My placeholder" [value]="inputValue">
+    </mat-form-field>
+  `
+})
+class MatInputWithAnotherNgIf {
+  inputValue = 'test';
+}
+
+
+@Component({
+  template: `
+    <mat-form-field [color]="color">
+      <input matNativeControl>
+    </mat-form-field>`
+})
+class MatInputWithColor {
+  color: ThemePalette;
 }

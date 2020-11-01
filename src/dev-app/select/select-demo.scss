@@ -4,7 +4,11 @@
 
   .mat-card {
     width: 450px;
-    margin: 24px;
+    margin: 24px 24px 0 0;
+
+    [dir='rtl'] :host & {
+      margin: 24px 0 0 24px;
+    }
   }
 
   .demo-drink-icon {
@@ -18,5 +22,5 @@
 }
 
 .demo-card {
-  margin-bottom: 30px;
+  margin: 30px 0;
 }

@@ -16,6 +16,9 @@ export interface ColumnSize {
 
   /** The width in pixels of the column. */
   readonly size: number;
+
+  /** The width in pixels of the column prior to this update, if known. */
+  readonly previousSize?: number;
 }
 
 /** Interface describing column size changes. */
@@ -26,9 +29,17 @@ export interface ColumnSizeAction extends ColumnSize {
    * for all programatically triggered resizes.
    */
   readonly completeImmediately?: boolean;
+
+  /**
+   * Whether the resize action is being applied to a sticky/stickyEnd column.
+   */
+  readonly isStickyColumn?: boolean;
 }
 
-/** Originating source of column resize events within a table. */
+/**
+ * Originating source of column resize events within a table.
+ * @docs-private
+ */
 @Injectable()
 export class ColumnResizeNotifierSource {
   /** Emits when an in-progress resize is canceled. */
@@ -45,12 +56,13 @@ export class ColumnResizeNotifierSource {
 @Injectable()
 export class ColumnResizeNotifier {
   /** Emits whenever a column is resized. */
-  readonly resizeCompleted: Observable<ColumnSize> = this._source.resizeCompleted.asObservable();
+  readonly resizeCompleted: Observable<ColumnSize> = this._source.resizeCompleted;
 
   constructor(private readonly _source: ColumnResizeNotifierSource) {}
 
   /** Instantly resizes the specified column. */
   resize(columnId: string, size: number): void {
-    this._source.triggerResize.next({columnId, size, completeImmediately: true});
+    this._source.triggerResize.next(
+        {columnId, size, completeImmediately: true, isStickyColumn: true});
   }
 }

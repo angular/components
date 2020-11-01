@@ -33,7 +33,9 @@
           <button mat-icon-button (click)="toggleFullscreen()" title="Toggle fullscreen">
             <mat-icon>fullscreen</mat-icon>
           </button>
-          <button mat-button (click)="toggleTheme()">{{dark ? 'Light' : 'Dark'}} theme</button>
+          <button mat-button (click)="isDark = !isDark">
+            {{isDark ? 'Light' : 'Dark'}} theme
+          </button>
           <button mat-button (click)="rippleOptions.disabled = !rippleOptions.disabled">
             {{rippleOptions.disabled ? 'Enable' : 'Disable'}} ripples
           </button>
@@ -43,6 +45,10 @@
           <button mat-button (click)="dir.value = (dir.value === 'rtl' ? 'ltr' : 'rtl')"
                   title="Toggle between RTL and LTR">
             {{dir.value.toUpperCase()}}
+          </button>
+          <button mat-button (click)="selectNextDensity()"
+                  title="Use next density scale: {{densityScales[getNextDensityIndex()]}}">
+            Density scale: {{densityScales[this.currentDensityIndex]}}
           </button>
         </div>
       </div>

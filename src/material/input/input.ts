@@ -10,15 +10,16 @@ import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
 import {getSupportedInputTypes, Platform} from '@angular/cdk/platform';
 import {AutofillMonitor} from '@angular/cdk/text-field';
 import {
+  AfterViewInit,
   Directive,
   DoCheck,
   ElementRef,
+  HostListener,
   Inject,
   Input,
   NgZone,
   OnChanges,
   OnDestroy,
-  OnInit,
   Optional,
   Self,
 } from '@angular/core';
@@ -29,7 +30,7 @@ import {
   ErrorStateMatcher,
   mixinErrorState,
 } from '@angular/material/core';
-import {MatFormFieldControl} from '@angular/material/form-field';
+import {MatFormFieldControl, MatFormField, MAT_FORM_FIELD} from '@angular/material/form-field';
 import {Subject} from 'rxjs';
 import {getMatInputUnsupportedTypeError} from './input-errors';
 import {MAT_INPUT_VALUE_ACCESSOR} from './input-value-accessor';
@@ -76,32 +77,33 @@ const _MatInputMixinBase: CanUpdateErrorStateCtor & typeof MatInputBase =
     // Native input properties that are overwritten by Angular inputs need to be synced with
     // the native input element. Otherwise property bindings for those don't work.
     '[attr.id]': 'id',
-    '[attr.placeholder]': 'placeholder',
+    // At the time of writing, we have a lot of customer tests that look up the input based on its
+    // placeholder. Since we sometimes omit the placeholder attribute from the DOM to prevent screen
+    // readers from reading it twice, we have to keep it somewhere in the DOM for the lookup.
+    '[attr.data-placeholder]': 'placeholder',
     '[disabled]': 'disabled',
     '[required]': 'required',
     '[attr.readonly]': 'readonly && !_isNativeSelect || null',
-    '[attr.aria-describedby]': '_ariaDescribedby || null',
     '[attr.aria-invalid]': 'errorState',
     '[attr.aria-required]': 'required.toString()',
-    '(blur)': '_focusChanged(false)',
-    '(focus)': '_focusChanged(true)',
-    '(input)': '_onInput()',
   },
   providers: [{provide: MatFormFieldControl, useExisting: MatInput}],
 })
 export class MatInput extends _MatInputMixinBase implements MatFormFieldControl<any>, OnChanges,
-    OnDestroy, OnInit, DoCheck, CanUpdateErrorState {
+    OnDestroy, AfterViewInit, DoCheck, CanUpdateErrorState {
   protected _uid = `mat-input-${nextUniqueId++}`;
   protected _previousNativeValue: any;
   private _inputValueAccessor: {value: any};
-  /** The aria-describedby attribute on the input for improved a11y. */
-  _ariaDescribedby: string;
+  private _previousPlaceholder: string | null;
 
   /** Whether the component is being rendered on the server. */
-  _isServer = false;
+  readonly _isServer: boolean;
 
   /** Whether the component is a native html select. */
-  _isNativeSelect = false;
+  readonly _isNativeSelect: boolean;
+
+  /** Whether the component is a textarea. */
+  readonly _isTextarea: boolean;
 
   /**
    * Implemented as part of MatFormFieldControl.
@@ -184,7 +186,7 @@ export class MatInput extends _MatInputMixinBase implements MatFormFieldControl<
     // When using Angular inputs, developers are no longer able to set the properties on the native
     // input element. To ensure that bindings for `type` work, we need to sync the setter
     // with the native property. Textarea elements don't support the type property or attribute.
-    if (!this._isTextarea() && getSupportedInputTypes().has(this._type)) {
+    if (!this._isTextarea && getSupportedInputTypes().has(this._type)) {
       (this._elementRef.nativeElement as HTMLInputElement).type = this._type;
     }
   }
@@ -192,6 +194,12 @@ export class MatInput extends _MatInputMixinBase implements MatFormFieldControl<
 
   /** An object used to control when error messages are shown. */
   @Input() errorStateMatcher: ErrorStateMatcher;
+
+  /**
+   * Implemented as part of MatFormFieldControl.
+   * @docs-private
+   */
+  @Input('aria-describedby') userAriaDescribedBy: string;
 
   /**
    * Implemented as part of MatFormFieldControl.
@@ -222,20 +230,24 @@ export class MatInput extends _MatInputMixinBase implements MatFormFieldControl<
   ].filter(t => getSupportedInputTypes().has(t));
 
   constructor(
-    protected _elementRef: ElementRef<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>,
-    protected _platform: Platform,
-    /** @docs-private */
-    @Optional() @Self() public ngControl: NgControl,
-    @Optional() _parentForm: NgForm,
-    @Optional() _parentFormGroup: FormGroupDirective,
-    _defaultErrorStateMatcher: ErrorStateMatcher,
-    @Optional() @Self() @Inject(MAT_INPUT_VALUE_ACCESSOR) inputValueAccessor: any,
-    private _autofillMonitor: AutofillMonitor,
-    ngZone: NgZone) {
+      protected _elementRef: ElementRef<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>,
+      protected _platform: Platform,
+      /** @docs-private */
+      @Optional() @Self() public ngControl: NgControl,
+      @Optional() _parentForm: NgForm,
+      @Optional() _parentFormGroup: FormGroupDirective,
+      _defaultErrorStateMatcher: ErrorStateMatcher,
+      @Optional() @Self() @Inject(MAT_INPUT_VALUE_ACCESSOR) inputValueAccessor: any,
+      private _autofillMonitor: AutofillMonitor,
+      ngZone: NgZone,
+      // TODO: Remove this once the legacy appearance has been removed. We only need
+      // to inject the form-field for determining whether the placeholder has been promoted.
+      @Optional() @Inject(MAT_FORM_FIELD) private _formField?: MatFormField) {
 
     super(_defaultErrorStateMatcher, _parentForm, _parentFormGroup, ngControl);
 
     const element = this._elementRef.nativeElement;
+    const nodeName = element.nodeName.toLowerCase();
 
     // If no input value accessor was explicitly specified, use the element as the input value
     // accessor.
@@ -266,7 +278,8 @@ export class MatInput extends _MatInputMixinBase implements MatFormFieldControl<
     }
 
     this._isServer = !this._platform.isBrowser;
-    this._isNativeSelect = element.nodeName.toLowerCase() === 'select';
+    this._isNativeSelect = nodeName === 'select';
+    this._isTextarea = nodeName === 'textarea';
 
     if (this._isNativeSelect) {
       this.controlType = (element as HTMLSelectElement).multiple ? 'mat-native-select-multiple' :
@@ -274,7 +287,7 @@ export class MatInput extends _MatInputMixinBase implements MatFormFieldControl<
     }
   }
 
-  ngOnInit() {
+  ngAfterViewInit() {
     if (this._platform.isBrowser) {
       this._autofillMonitor.monitor(this._elementRef.nativeElement).subscribe(event => {
         this.autofilled = event.isAutofilled;
@@ -307,6 +320,10 @@ export class MatInput extends _MatInputMixinBase implements MatFormFieldControl<
     // we won't be notified when it changes (e.g. the consumer isn't using forms or they're
     // updating the value using `emitEvent: false`).
     this._dirtyCheckNativeValue();
+
+    // We need to dirty-check and set the placeholder attribute ourselves, because whether it's
+    // present or not depends on a query which is prone to "changed after checked" errors.
+    this._dirtyCheckPlaceholder();
   }
 
   /** Focuses the input. */
@@ -314,7 +331,15 @@ export class MatInput extends _MatInputMixinBase implements MatFormFieldControl<
     this._elementRef.nativeElement.focus(options);
   }
 
+  // We have to use a `HostListener` here in order to support both Ivy and ViewEngine.
+  // In Ivy the `host` bindings will be merged when this class is extended, whereas in
+  // ViewEngine they're overwritten.
+  // TODO(crisbeto): we move this back into `host` once Ivy is turned on by default.
   /** Callback for the cases where the focused state of the input changes. */
+  // tslint:disable:no-host-decorator-in-concrete
+  @HostListener('focus', ['true'])
+  @HostListener('blur', ['false'])
+  // tslint:enable:no-host-decorator-in-concrete
   _focusChanged(isFocused: boolean) {
     if (isFocused !== this.focused && (!this.readonly || !isFocused)) {
       this.focused = isFocused;
@@ -322,6 +347,12 @@ export class MatInput extends _MatInputMixinBase implements MatFormFieldControl<
     }
   }
 
+  // We have to use a `HostListener` here in order to support both Ivy and ViewEngine.
+  // In Ivy the `host` bindings will be merged when this class is extended, whereas in
+  // ViewEngine they're overwritten.
+  // TODO(crisbeto): we move this back into `host` once Ivy is turned on by default.
+  // tslint:disable-next-line:no-host-decorator-in-concrete
+  @HostListener('input')
   _onInput() {
     // This is a noop function and is used to let Angular know whenever the value changes.
     // Angular will run a new change detection each time the `input` event has been dispatched.
@@ -332,9 +363,19 @@ export class MatInput extends _MatInputMixinBase implements MatFormFieldControl<
     // FormsModule or ReactiveFormsModule, because Angular forms also listens to input events.
   }
 
-  /** Determines if the component host is a textarea. */
-  _isTextarea() {
-    return this._elementRef.nativeElement.nodeName.toLowerCase() === 'textarea';
+  /** Does some manual dirty checking on the native input `placeholder` attribute. */
+  private _dirtyCheckPlaceholder() {
+    // If we're hiding the native placeholder, it should also be cleared from the DOM, otherwise
+    // screen readers will read it out twice: once from the label and once from the attribute.
+    // TODO: can be removed once we get rid of the `legacy` style for the form field, because it's
+    // the only one that supports promoting the placeholder to a label.
+    const placeholder = this._formField?._hideControlPlaceholder?.() ? null : this.placeholder;
+    if (placeholder !== this._previousPlaceholder) {
+      const element = this._elementRef.nativeElement;
+      this._previousPlaceholder = placeholder;
+      placeholder ?
+          element.setAttribute('placeholder', placeholder) : element.removeAttribute('placeholder');
+    }
   }
 
   /** Does some manual dirty checking on the native input `value` property. */
@@ -349,7 +390,8 @@ export class MatInput extends _MatInputMixinBase implements MatFormFieldControl<
 
   /** Make sure the input is a supported type. */
   protected _validateType() {
-    if (MAT_INPUT_INVALID_TYPES.indexOf(this._type) > -1) {
+    if (MAT_INPUT_INVALID_TYPES.indexOf(this._type) > -1 &&
+      (typeof ngDevMode === 'undefined' || ngDevMode)) {
       throw getMatInputUnsupportedTypeError(this._type);
     }
   }
@@ -401,7 +443,11 @@ export class MatInput extends _MatInputMixinBase implements MatFormFieldControl<
    * @docs-private
    */
   setDescribedByIds(ids: string[]) {
-    this._ariaDescribedby = ids.join(' ');
+    if (ids.length) {
+      this._elementRef.nativeElement.setAttribute('aria-describedby', ids.join(' '));
+    } else {
+      this._elementRef.nativeElement.removeAttribute('aria-describedby');
+    }
   }
 
   /**

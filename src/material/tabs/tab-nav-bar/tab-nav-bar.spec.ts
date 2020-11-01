@@ -1,4 +1,4 @@
-import {async, ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/testing';
+import {waitForAsync, ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/testing';
 import {Component, ViewChild, ViewChildren, QueryList} from '@angular/core';
 import {MAT_RIPPLE_GLOBAL_OPTIONS, RippleGlobalOptions} from '@angular/material/core';
 import {By} from '@angular/platform-browser';
@@ -13,7 +13,7 @@ describe('MatTabNavBar', () => {
   let dirChange = new Subject();
   let globalRippleOptions: RippleGlobalOptions;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     globalRippleOptions = {};
 
     TestBed.configureTestingModule({
@@ -27,8 +27,7 @@ describe('MatTabNavBar', () => {
       ],
       providers: [
         {provide: MAT_RIPPLE_GLOBAL_OPTIONS, useFactory: () => globalRippleOptions},
-        {provide: Directionality, useFactory: () =>
-            ({value: dir, change: dirChange.asObservable()})},
+        {provide: Directionality, useFactory: () => ({value: dir, change: dirChange})},
       ]
     });
 
@@ -142,27 +141,29 @@ describe('MatTabNavBar', () => {
       expect(tabLinkElement.classList).toContain('mat-tab-disabled');
     });
 
-    it('should re-align the ink bar when the direction changes', () => {
+    it('should re-align the ink bar when the direction changes', fakeAsync(() => {
       const inkBar = fixture.componentInstance.tabNavBar._inkBar;
 
       spyOn(inkBar, 'alignToElement');
 
       dirChange.next();
+      tick();
       fixture.detectChanges();
 
       expect(inkBar.alignToElement).toHaveBeenCalled();
-    });
+    }));
 
-    it('should re-align the ink bar when the tabs list change', () => {
+    it('should re-align the ink bar when the tabs list change', fakeAsync(() => {
       const inkBar = fixture.componentInstance.tabNavBar._inkBar;
 
       spyOn(inkBar, 'alignToElement');
 
       fixture.componentInstance.tabs = [1, 2, 3, 4];
       fixture.detectChanges();
+      tick();
 
       expect(inkBar.alignToElement).toHaveBeenCalled();
-    });
+    }));
 
     it('should re-align the ink bar when the tab labels change the width', done => {
       const inkBar = fixture.componentInstance.tabNavBar._inkBar;

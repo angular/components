@@ -35,10 +35,10 @@ import {
   Input,
   NgZone,
   OnDestroy,
-  OnInit,
   Optional,
   ViewContainerRef,
   ViewEncapsulation,
+  AfterViewInit,
 } from '@angular/core';
 import {Observable, Subject} from 'rxjs';
 import {take, takeUntil} from 'rxjs/operators';
@@ -131,8 +131,11 @@ export function MAT_TOOLTIP_DEFAULT_OPTIONS_FACTORY(): MatTooltipDefaultOptions 
 @Directive({
   selector: '[matTooltip]',
   exportAs: 'matTooltip',
+  host: {
+    'class': 'mat-tooltip-trigger'
+  }
 })
-export class MatTooltip implements OnDestroy, OnInit {
+export class MatTooltip implements OnDestroy, AfterViewInit {
   _overlayRef: OverlayRef | null;
   _tooltipInstance: TooltipComponent | null;
 
@@ -141,6 +144,8 @@ export class MatTooltip implements OnDestroy, OnInit {
   private _disabled: boolean = false;
   private _tooltipClass: string|string[]|Set<string>|{[key: string]: any};
   private _scrollStrategy: () => ScrollStrategy;
+  private _viewInitialized = false;
+  private _pointerExitEventsInitialized = false;
 
   /** Allows the user to define the position of the tooltip relative to the parent element */
   @Input('matTooltipPosition')
@@ -170,6 +175,8 @@ export class MatTooltip implements OnDestroy, OnInit {
     // If tooltip is disabled, hide immediately.
     if (this._disabled) {
       this.hide(0);
+    } else {
+      this._setupPointerEnterEventsIfNeeded();
     }
   }
 
@@ -202,11 +209,14 @@ export class MatTooltip implements OnDestroy, OnInit {
     this._ariaDescriber.removeDescription(this._elementRef.nativeElement, this._message);
 
     // If the message is not a string (e.g. number), convert it to a string and trim it.
-    this._message = value != null ? `${value}`.trim() : '';
+    // Must convert with `String(value)`, not `${value}`, otherwise Closure Compiler optimises
+    // away the string-conversion: https://github.com/angular/components/issues/20684
+    this._message = value != null ? String(value).trim() : '';
 
     if (!this._message && this._isTooltipVisible()) {
       this.hide(0);
     } else {
+      this._setupPointerEnterEventsIfNeeded();
       this._updateTooltipMessage();
       this._ngZone.runOutsideAngular(() => {
         // The `AriaDescriber` has some functionality that avoids adding a description if it's the
@@ -232,7 +242,8 @@ export class MatTooltip implements OnDestroy, OnInit {
   }
 
   /** Manually-bound passive event listeners. */
-  private _passiveListeners = new Map<string, EventListenerOrEventListenerObject>();
+  private readonly _passiveListeners:
+      (readonly [string, EventListenerOrEventListenerObject])[] = [];
 
   /** Timer started at the last `touchstart` event. */
   private _touchstartTimeout: number;
@@ -252,13 +263,7 @@ export class MatTooltip implements OnDestroy, OnInit {
     @Inject(MAT_TOOLTIP_SCROLL_STRATEGY) scrollStrategy: any,
     @Optional() private _dir: Directionality,
     @Optional() @Inject(MAT_TOOLTIP_DEFAULT_OPTIONS)
-      private _defaultOptions: MatTooltipDefaultOptions,
-      /**
-       * @deprecated _hammerLoader parameter to be removed.
-       * @breaking-change 9.0.0
-       */
-      // Note that we need to give Angular something to inject here so it doesn't throw.
-      @Inject(ElementRef) _hammerLoader?: any) {
+      private _defaultOptions: MatTooltipDefaultOptions) {
 
     this._scrollStrategy = scrollStrategy;
 
@@ -272,28 +277,26 @@ export class MatTooltip implements OnDestroy, OnInit {
       }
     }
 
-    _focusMonitor.monitor(_elementRef)
-      .pipe(takeUntil(this._destroyed))
-      .subscribe(origin => {
-        // Note that the focus monitor runs outside the Angular zone.
-        if (!origin) {
-          _ngZone.run(() => this.hide(0));
-        } else if (origin === 'keyboard') {
-          _ngZone.run(() => this.show());
-        }
-    });
-
     _ngZone.runOutsideAngular(() => {
       _elementRef.nativeElement.addEventListener('keydown', this._handleKeydown);
     });
   }
 
-  /**
-   * Setup styling-specific things
-   */
-  ngOnInit() {
-    // This needs to happen in `ngOnInit` so the initial values for all inputs have been set.
-    this._setupPointerEvents();
+  ngAfterViewInit() {
+    // This needs to happen after view init so the initial values for all inputs have been set.
+    this._viewInitialized = true;
+    this._setupPointerEnterEventsIfNeeded();
+
+    this._focusMonitor.monitor(this._elementRef)
+      .pipe(takeUntil(this._destroyed))
+      .subscribe(origin => {
+        // Note that the focus monitor runs outside the Angular zone.
+        if (!origin) {
+          this._ngZone.run(() => this.hide(0));
+        } else if (origin === 'keyboard') {
+          this._ngZone.run(() => this.show());
+        }
+    });
   }
 
   /**
@@ -311,10 +314,10 @@ export class MatTooltip implements OnDestroy, OnInit {
 
     // Clean up the event listeners set in the constructor
     nativeElement.removeEventListener('keydown', this._handleKeydown);
-    this._passiveListeners.forEach((listener, event) => {
+    this._passiveListeners.forEach(([event, listener]) => {
       nativeElement.removeEventListener(event, listener, passiveListenerOptions);
     });
-    this._passiveListeners.clear();
+    this._passiveListeners.length = 0;
 
     this._destroyed.next();
     this._destroyed.complete();
@@ -331,7 +334,6 @@ export class MatTooltip implements OnDestroy, OnInit {
     }
 
     const overlayRef = this._createOverlay();
-
     this._detach();
     this._portal = this._portal || new ComponentPortal(TooltipComponent, this._viewContainerRef);
     this._tooltipInstance = overlayRef.attach(this._portal).instance;
@@ -458,14 +460,14 @@ export class MatTooltip implements OnDestroy, OnInit {
       (position == 'right' && isLtr) ||
       (position == 'left' && !isLtr)) {
       originPosition = {originX: 'end', originY: 'center'};
-    } else {
+    } else if (typeof ngDevMode === 'undefined' || ngDevMode) {
       throw getMatTooltipInvalidPositionError(position);
     }
 
-    const {x, y} = this._invertPosition(originPosition.originX, originPosition.originY);
+    const {x, y} = this._invertPosition(originPosition!.originX, originPosition!.originY);
 
     return {
-      main: originPosition,
+      main: originPosition!,
       fallback: {originX: x, originY: y}
     };
   }
@@ -490,14 +492,14 @@ export class MatTooltip implements OnDestroy, OnInit {
       (position == 'right' && isLtr) ||
       (position == 'left' && !isLtr)) {
       overlayPosition = {overlayX: 'start', overlayY: 'center'};
-    } else {
+    } else if (typeof ngDevMode === 'undefined' || ngDevMode) {
       throw getMatTooltipInvalidPositionError(position);
     }
 
-    const {x, y} = this._invertPosition(overlayPosition.overlayX, overlayPosition.overlayY);
+    const {x, y} = this._invertPosition(overlayPosition!.overlayX, overlayPosition!.overlayY);
 
     return {
-      main: overlayPosition,
+      main: overlayPosition!,
       fallback: {overlayX: x, overlayY: y}
     };
   }
@@ -510,7 +512,7 @@ export class MatTooltip implements OnDestroy, OnInit {
       this._tooltipInstance.message = this.message;
       this._tooltipInstance._markForCheck();
 
-      this._ngZone.onMicrotaskEmpty.asObservable().pipe(
+      this._ngZone.onMicrotaskEmpty.pipe(
         take(1),
         takeUntil(this._destroyed)
       ).subscribe(() => {
@@ -549,13 +551,46 @@ export class MatTooltip implements OnDestroy, OnInit {
   }
 
   /** Binds the pointer events to the tooltip trigger. */
-  private _setupPointerEvents() {
+  private _setupPointerEnterEventsIfNeeded() {
+    // Optimization: Defer hooking up events if there's no message or the tooltip is disabled.
+    if (this._disabled || !this.message || !this._viewInitialized ||
+        this._passiveListeners.length) {
+      return;
+    }
+
     // The mouse events shouldn't be bound on mobile devices, because they can prevent the
     // first tap from firing its click event or can cause the tooltip to open for clicks.
-    if (!this._platform.IOS && !this._platform.ANDROID) {
+    if (this._platformSupportsMouseEvents()) {
       this._passiveListeners
-        .set('mouseenter', () => this.show())
-        .set('mouseleave', () => this.hide());
+          .push(['mouseenter', () => {
+            this._setupPointerExitEventsIfNeeded();
+            this.show();
+          }]);
+    } else if (this.touchGestures !== 'off') {
+      this._disableNativeGesturesIfNecessary();
+
+      this._passiveListeners
+          .push(['touchstart', () => {
+            // Note that it's important that we don't `preventDefault` here,
+            // because it can prevent click events from firing on the element.
+            this._setupPointerExitEventsIfNeeded();
+            clearTimeout(this._touchstartTimeout);
+            this._touchstartTimeout = setTimeout(() => this.show(), LONGPRESS_DELAY);
+          }]);
+    }
+
+    this._addListeners(this._passiveListeners);
+  }
+
+  private _setupPointerExitEventsIfNeeded() {
+    if (this._pointerExitEventsInitialized) {
+      return;
+    }
+    this._pointerExitEventsInitialized = true;
+
+    const exitListeners: (readonly [string, EventListenerOrEventListenerObject])[] = [];
+    if (this._platformSupportsMouseEvents()) {
+      exitListeners.push(['mouseleave', () => this.hide()]);
     } else if (this.touchGestures !== 'off') {
       this._disableNativeGesturesIfNecessary();
       const touchendListener = () => {
@@ -563,33 +598,39 @@ export class MatTooltip implements OnDestroy, OnInit {
         this.hide(this._defaultOptions.touchendHideDelay);
       };
 
-      this._passiveListeners
-        .set('touchend', touchendListener)
-        .set('touchcancel', touchendListener)
-        .set('touchstart', () => {
-          // Note that it's important that we don't `preventDefault` here,
-          // because it can prevent click events from firing on the element.
-          clearTimeout(this._touchstartTimeout);
-          this._touchstartTimeout = setTimeout(() => this.show(), LONGPRESS_DELAY);
-        });
+      exitListeners.push(
+        ['touchend', touchendListener],
+        ['touchcancel', touchendListener],
+      );
     }
 
-    this._passiveListeners.forEach((listener, event) => {
+    this._addListeners(exitListeners);
+    this._passiveListeners.push(...exitListeners);
+  }
+
+  private _addListeners(
+      listeners: ReadonlyArray<readonly [string, EventListenerOrEventListenerObject]>) {
+    listeners.forEach(([event, listener]) => {
       this._elementRef.nativeElement.addEventListener(event, listener, passiveListenerOptions);
     });
   }
 
+  private _platformSupportsMouseEvents() {
+    return !this._platform.IOS && !this._platform.ANDROID;
+  }
+
   /** Disables the native browser gestures, based on how the tooltip has been configured. */
   private _disableNativeGesturesIfNecessary() {
-    const element = this._elementRef.nativeElement;
-    const style = element.style;
     const gestures = this.touchGestures;
 
     if (gestures !== 'off') {
+      const element = this._elementRef.nativeElement;
+      const style = element.style;
+
       // If gestures are set to `auto`, we don't disable text selection on inputs and
       // textareas, because it prevents the user from typing into them on iOS Safari.
       if (gestures === 'on' || (element.nodeName !== 'INPUT' && element.nodeName !== 'TEXTAREA')) {
-        style.userSelect = style.msUserSelect = style.webkitUserSelect =
+        style.userSelect = (style as any).msUserSelect = style.webkitUserSelect =
             (style as any).MozUserSelect = 'none';
       }
 
@@ -648,7 +689,7 @@ export class TooltipComponent implements OnDestroy {
   private _closeOnInteraction: boolean = false;
 
   /** Subject for notifying that the tooltip has been hidden from the view */
-  private readonly _onHide: Subject<any> = new Subject();
+  private readonly _onHide: Subject<void> = new Subject();
 
   /** Stream that emits whether the user has a handset-sized display.  */
   _isHandset: Observable<BreakpointState> = this._breakpointObserver.observe(Breakpoints.Handset);
@@ -703,7 +744,7 @@ export class TooltipComponent implements OnDestroy {
 
   /** Returns an observable that notifies when the tooltip has been hidden from view. */
   afterHidden(): Observable<void> {
-    return this._onHide.asObservable();
+    return this._onHide;
   }
 
   /** Whether the tooltip is being displayed. */

@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Platform, normalizePassiveListenerOptions} from '@angular/cdk/platform';
+import {Platform, normalizePassiveListenerOptions, _getShadowRoot} from '@angular/cdk/platform';
 import {
   Directive,
   ElementRef,
@@ -18,6 +18,7 @@ import {
   OnDestroy,
   Optional,
   Output,
+  AfterViewInit,
 } from '@angular/core';
 import {Observable, of as observableOf, Subject, Subscription} from 'rxjs';
 import {coerceElement} from '@angular/cdk/coercion';
@@ -67,7 +68,8 @@ export const FOCUS_MONITOR_DEFAULT_OPTIONS =
 
 type MonitoredElementInfo = {
   checkChildren: boolean,
-  subject: Subject<FocusOrigin>
+  subject: Subject<FocusOrigin>,
+  rootNode: HTMLElement|Document
 };
 
 /**
@@ -109,6 +111,14 @@ export class FocusMonitor implements OnDestroy {
 
   /** The number of elements currently being monitored. */
   private _monitoredElementCount = 0;
+
+  /**
+   * Keeps track of the root nodes to which we've currently bound a focus/blur handler,
+   * as well as the number of monitored elements that they contain. We have to treat focus/blur
+   * handlers differently from the rest of the events, because the browser won't emit events
+   * to the document when focus moves inside of a shadow root.
+   */
+  private _rootNodeFocusListenerCount = new Map<HTMLElement|Document, number>();
 
   /**
    * The specified detection mode, used for attributing the origin of a focus
@@ -153,10 +163,7 @@ export class FocusMonitor implements OnDestroy {
       clearTimeout(this._touchTimeoutId);
     }
 
-    // Since this listener is bound on the `document` level, any events coming from the shadow DOM
-    // will have their `target` set to the shadow root. If available, use `composedPath` to
-    // figure out the event target.
-    this._lastTouchTarget = event.composedPath ? event.composedPath()[0] : event.target;
+    this._lastTouchTarget = getTarget(event);
     this._touchTimeoutId = setTimeout(() => this._lastTouchTarget = null, TOUCH_BUFFER_MS);
   }
 
@@ -188,13 +195,13 @@ export class FocusMonitor implements OnDestroy {
    * Event listener for `focus` and 'blur' events on the document.
    * Needs to be an arrow function in order to preserve the context when it gets bound.
    */
-  private _documentFocusAndBlurListener = (event: FocusEvent) => {
-    const target = event.target as HTMLElement|null;
+  private _rootNodeFocusAndBlurListener = (event: Event) => {
+    const target = getTarget(event);
     const handler = event.type === 'focus' ? this._onFocus : this._onBlur;
 
     // We need to walk up the ancestor chain in order to support `checkChildren`.
-    for (let el = target; el; el = el.parentElement) {
-      handler.call(this, event, el);
+    for (let element = target; element; element = element.parentElement) {
+      handler.call(this, event as FocusEvent, element);
     }
   }
 
@@ -218,29 +225,41 @@ export class FocusMonitor implements OnDestroy {
 
   monitor(element: HTMLElement | ElementRef<HTMLElement>,
           checkChildren: boolean = false): Observable<FocusOrigin> {
-    // Do nothing if we're not on the browser platform.
-    if (!this._platform.isBrowser) {
+    const nativeElement = coerceElement(element);
+
+    // Do nothing if we're not on the browser platform or the passed in node isn't an element.
+    if (!this._platform.isBrowser || nativeElement.nodeType !== 1) {
       return observableOf(null);
     }
 
-    const nativeElement = coerceElement(element);
+    // If the element is inside the shadow DOM, we need to bind our focus/blur listeners to
+    // the shadow root, rather than the `document`, because the browser won't emit focus events
+    // to the `document`, if focus is moving within the same shadow root.
+    const rootNode = (_getShadowRoot(nativeElement) as HTMLElement|null) || this._getDocument();
+    const cachedInfo = this._elementInfo.get(nativeElement);
 
     // Check if we're already monitoring this element.
-    if (this._elementInfo.has(nativeElement)) {
-      const cachedInfo = this._elementInfo.get(nativeElement);
-      cachedInfo!.checkChildren = checkChildren;
-      return cachedInfo!.subject.asObservable();
+    if (cachedInfo) {
+      if (checkChildren) {
+        // TODO(COMP-318): this can be problematic, because it'll turn all non-checkChildren
+        // observers into ones that behave as if `checkChildren` was turned on. We need a more
+        // robust solution.
+        cachedInfo.checkChildren = true;
+      }
+
+      return cachedInfo.subject;
     }
 
     // Create monitored element info.
     const info: MonitoredElementInfo = {
       checkChildren: checkChildren,
-      subject: new Subject<FocusOrigin>()
+      subject: new Subject<FocusOrigin>(),
+      rootNode
     };
     this._elementInfo.set(nativeElement, info);
-    this._incrementMonitoredElementCount();
+    this._registerGlobalListeners(info);
 
-    return info.subject.asObservable();
+    return info.subject;
   }
 
   /**
@@ -264,7 +283,7 @@ export class FocusMonitor implements OnDestroy {
 
       this._setClasses(nativeElement);
       this._elementInfo.delete(nativeElement);
-      this._decrementMonitoredElementCount();
+      this._removeGlobalListeners(elementInfo);
     }
   }
 
@@ -396,7 +415,7 @@ export class FocusMonitor implements OnDestroy {
     // for the first focus event after the touchstart, and then the first blur event after that
     // focus event. When that blur event fires we know that whatever follows is not a result of the
     // touchstart.
-    let focusTarget = event.target;
+    const focusTarget = getTarget(event);
     return this._lastTouchTarget instanceof Node && focusTarget instanceof Node &&
         (focusTarget === this._lastTouchTarget || focusTarget.contains(this._lastTouchTarget));
   }
@@ -415,7 +434,7 @@ export class FocusMonitor implements OnDestroy {
     // If we are not counting child-element-focus as focused, make sure that the event target is the
     // monitored element itself.
     const elementInfo = this._elementInfo.get(element);
-    if (!elementInfo || (!elementInfo.checkChildren && element !== event.target)) {
+    if (!elementInfo || (!elementInfo.checkChildren && element !== getTarget(event))) {
       return;
     }
 
@@ -448,19 +467,33 @@ export class FocusMonitor implements OnDestroy {
     this._ngZone.run(() => subject.next(origin));
   }
 
-  private _incrementMonitoredElementCount() {
+  private _registerGlobalListeners(elementInfo: MonitoredElementInfo) {
+    if (!this._platform.isBrowser) {
+      return;
+    }
+
+    const rootNode = elementInfo.rootNode;
+    const rootNodeFocusListeners = this._rootNodeFocusListenerCount.get(rootNode) || 0;
+
+    if (!rootNodeFocusListeners) {
+      this._ngZone.runOutsideAngular(() => {
+        rootNode.addEventListener('focus', this._rootNodeFocusAndBlurListener,
+          captureEventListenerOptions);
+        rootNode.addEventListener('blur', this._rootNodeFocusAndBlurListener,
+          captureEventListenerOptions);
+      });
+    }
+
+    this._rootNodeFocusListenerCount.set(rootNode, rootNodeFocusListeners + 1);
+
     // Register global listeners when first element is monitored.
-    if (++this._monitoredElementCount == 1 && this._platform.isBrowser) {
+    if (++this._monitoredElementCount === 1) {
       // Note: we listen to events in the capture phase so we
       // can detect them even if the user stops propagation.
       this._ngZone.runOutsideAngular(() => {
         const document = this._getDocument();
         const window = this._getWindow();
 
-        document.addEventListener('focus', this._documentFocusAndBlurListener,
-          captureEventListenerOptions);
-        document.addEventListener('blur', this._documentFocusAndBlurListener,
-          captureEventListenerOptions);
         document.addEventListener('keydown', this._documentKeydownListener,
           captureEventListenerOptions);
         document.addEventListener('mousedown', this._documentMousedownListener,
@@ -472,16 +505,28 @@ export class FocusMonitor implements OnDestroy {
     }
   }
 
-  private _decrementMonitoredElementCount() {
+  private _removeGlobalListeners(elementInfo: MonitoredElementInfo) {
+    const rootNode = elementInfo.rootNode;
+
+    if (this._rootNodeFocusListenerCount.has(rootNode)) {
+      const rootNodeFocusListeners = this._rootNodeFocusListenerCount.get(rootNode)!;
+
+      if (rootNodeFocusListeners > 1) {
+        this._rootNodeFocusListenerCount.set(rootNode, rootNodeFocusListeners - 1);
+      } else {
+        rootNode.removeEventListener('focus', this._rootNodeFocusAndBlurListener,
+          captureEventListenerOptions);
+        rootNode.removeEventListener('blur', this._rootNodeFocusAndBlurListener,
+          captureEventListenerOptions);
+        this._rootNodeFocusListenerCount.delete(rootNode);
+      }
+    }
+
     // Unregister global listeners when last element is unmonitored.
     if (!--this._monitoredElementCount) {
       const document = this._getDocument();
       const window = this._getWindow();
 
-      document.removeEventListener('focus', this._documentFocusAndBlurListener,
-        captureEventListenerOptions);
-      document.removeEventListener('blur', this._documentFocusAndBlurListener,
-        captureEventListenerOptions);
       document.removeEventListener('keydown', this._documentKeydownListener,
         captureEventListenerOptions);
       document.removeEventListener('mousedown', this._documentMousedownListener,
@@ -498,6 +543,13 @@ export class FocusMonitor implements OnDestroy {
   }
 }
 
+/** Gets the target of an event, accounting for Shadow DOM. */
+function getTarget(event: Event): HTMLElement|null {
+  // If an event is bound outside the Shadow DOM, the `event.target` will
+  // point to the shadow root so we have to use `composedPath` instead.
+  return (event.composedPath ? event.composedPath()[0] : event.target) as HTMLElement | null;
+}
+
 
 /**
  * Directive that determines how a particular element was focused (via keyboard, mouse, touch, or
@@ -511,19 +563,25 @@ export class FocusMonitor implements OnDestroy {
 @Directive({
   selector: '[cdkMonitorElementFocus], [cdkMonitorSubtreeFocus]',
 })
-export class CdkMonitorFocus implements OnDestroy {
+export class CdkMonitorFocus implements AfterViewInit, OnDestroy {
   private _monitorSubscription: Subscription;
   @Output() cdkFocusChange = new EventEmitter<FocusOrigin>();
 
-  constructor(private _elementRef: ElementRef<HTMLElement>, private _focusMonitor: FocusMonitor) {
+  constructor(private _elementRef: ElementRef<HTMLElement>, private _focusMonitor: FocusMonitor) {}
+
+  ngAfterViewInit() {
+    const element = this._elementRef.nativeElement;
     this._monitorSubscription = this._focusMonitor.monitor(
-        this._elementRef,
-        this._elementRef.nativeElement.hasAttribute('cdkMonitorSubtreeFocus'))
-        .subscribe(origin => this.cdkFocusChange.emit(origin));
+      element,
+      element.nodeType === 1 && element.hasAttribute('cdkMonitorSubtreeFocus'))
+    .subscribe(origin => this.cdkFocusChange.emit(origin));
   }
 
   ngOnDestroy() {
     this._focusMonitor.stopMonitoring(this._elementRef);
-    this._monitorSubscription.unsubscribe();
+
+    if (this._monitorSubscription) {
+      this._monitorSubscription.unsubscribe();
+    }
   }
 }

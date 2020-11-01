@@ -10,9 +10,13 @@ import {
   ComponentHarness,
   ComponentHarnessConstructor,
   HarnessLoader,
-  HarnessPredicate
+  HarnessPredicate,
+  ContentContainerComponentHarness,
 } from '@angular/cdk/testing';
 import {BaseListItemHarnessFilters, SubheaderHarnessFilters} from './list-harness-filters';
+
+const iconSelector = '.mat-list-icon';
+const avatarSelector = '.mat-list-avatar';
 
 /**
  * Gets a `HarnessPredicate` that applies the given `BaseListItemHarnessFilters` to the given
@@ -32,7 +36,7 @@ export function getListItemPredicate<H extends MatListItemHarnessBase>(
 
 /** Harness for interacting with a list subheader. */
 export class MatSubheaderHarness extends ComponentHarness {
-  static hostSelector = '[mat-subheader], [matSubheader]';
+  static hostSelector = '.mat-subheader';
 
   static with(options: SubheaderHarnessFilters = {}): HarnessPredicate<MatSubheaderHarness> {
     return new HarnessPredicate(MatSubheaderHarness, options)
@@ -46,18 +50,23 @@ export class MatSubheaderHarness extends ComponentHarness {
   }
 }
 
+/** Selectors for the various list item sections that may contain user content. */
+export const enum MatListItemSection {
+  CONTENT = '.mat-list-item-content'
+}
+
 /**
  * Shared behavior among the harnesses for the various `MatListItem` flavors.
  * @docs-private
  */
-export class MatListItemHarnessBase extends ComponentHarness {
-  private _lines = this.locatorForAll('[mat-line], [matLine]');
-  private _avatar = this.locatorForOptional('[mat-list-avatar], [matListAvatar]');
-  private _icon = this.locatorForOptional('[mat-list-icon], [matListIcon]');
+export class MatListItemHarnessBase extends ContentContainerComponentHarness<MatListItemSection> {
+  private _lines = this.locatorForAll('.mat-line');
+  private _avatar = this.locatorForOptional(avatarSelector);
+  private _icon = this.locatorForOptional(iconSelector);
 
   /** Gets the full text content of the list item (including text from any font icons). */
   async getText(): Promise<string> {
-    return (await this.host()).text();
+    return (await this.host()).text({exclude: `${iconSelector}, ${avatarSelector}`});
   }
 
   /** Gets the lines of text (`mat-line` elements) in this nav list item. */
@@ -75,8 +84,12 @@ export class MatListItemHarnessBase extends ComponentHarness {
     return !!await this._icon();
   }
 
-  /** Gets a `HarnessLoader` used to get harnesses within the list item's content. */
+  /**
+   * Gets a `HarnessLoader` used to get harnesses within the list item's content.
+   * @deprecated Use `getChildLoader(MatListItemSection.CONTENT)` or `getHarness` instead.
+   * @breaking-change 12.0.0
+   */
   async getHarnessLoaderForContent(): Promise<HarnessLoader> {
-    return this.locatorFactory.harnessLoaderFor('.mat-list-item-content');
+    return this.getChildLoader(MatListItemSection.CONTENT);
   }
 }

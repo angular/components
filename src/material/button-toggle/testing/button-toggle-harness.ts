@@ -15,7 +15,7 @@ import {ButtonToggleHarnessFilters} from './button-toggle-harness-filters';
 /** Harness for interacting with a standard mat-button-toggle in tests. */
 export class MatButtonToggleHarness extends ComponentHarness {
   /** The selector for the host element of a `MatButton` instance. */
-  static hostSelector = 'mat-button-toggle';
+  static hostSelector = '.mat-button-toggle';
 
   private _label = this.locatorFor('.mat-button-toggle-label-content');
   private _button = this.locatorFor('.mat-button-toggle-button');
@@ -83,6 +83,11 @@ export class MatButtonToggleHarness extends ComponentHarness {
   /** Blurs the toggle. */
   async blur(): Promise<void> {
     return (await this._button()).blur();
+  }
+
+  /** Whether the toggle is focused. */
+  async isFocused(): Promise<boolean> {
+    return (await this._button()).isFocused();
   }
 
   /** Toggle the checked state of the buttons toggle. */

@@ -1,7 +1,7 @@
 import {Direction} from '@angular/cdk/bidi';
 import {CdkScrollable, ScrollingModule} from '@angular/cdk/scrolling';
 import {Component, ElementRef, Input, ViewChild} from '@angular/core';
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import {waitForAsync, ComponentFixture, TestBed} from '@angular/core/testing';
 
 function expectOverlapping(el1: ElementRef<Element>, el2: ElementRef<Element>, expected = true) {
   const r1 = el1.nativeElement.getBoundingClientRect();
@@ -22,7 +22,7 @@ describe('CdkScrollable', () => {
   let testComponent: ScrollableViewport;
   let maxOffset = 0;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [ScrollingModule],
       declarations: [ScrollableViewport],
@@ -31,12 +31,16 @@ describe('CdkScrollable', () => {
 
   beforeEach(() => {
     fixture = TestBed.createComponent(ScrollableViewport);
+    fixture.detectChanges();
     testComponent = fixture.componentInstance;
+    // Firefox preserves the `scrollTop` value from previous similar containers. This
+    // could throw off test assertions and result in flaky results.
+    // See: https://bugzilla.mozilla.org/show_bug.cgi?id=959812.
+    testComponent.scrollContainer.nativeElement.scrollTop = 0;
   });
 
   describe('in LTR context', () => {
     beforeEach(() => {
-      fixture.detectChanges();
       maxOffset = testComponent.scrollContainer.nativeElement.scrollHeight -
           testComponent.scrollContainer.nativeElement.clientHeight;
     });

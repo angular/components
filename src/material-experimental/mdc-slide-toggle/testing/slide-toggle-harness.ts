@@ -13,7 +13,7 @@ import {SlideToggleHarnessFilters} from '@angular/material/slide-toggle/testing'
 
 /** Harness for interacting with a MDC-based mat-slide-toggle in tests. */
 export class MatSlideToggleHarness extends ComponentHarness {
-  static hostSelector = 'mat-slide-toggle';
+  static hostSelector = '.mat-mdc-slide-toggle';
 
   /**
    * Gets a `HarnessPredicate` that can be used to search for a slide-toggle w/ specific attributes.
@@ -88,6 +88,11 @@ export class MatSlideToggleHarness extends ComponentHarness {
   /** Blurs the slide-toggle and returns a void promise that indicates action completion. */
   async blur(): Promise<void> {
     return (await this._input()).blur();
+  }
+
+  /** Whether the slide-toggle is focused. */
+  async isFocused(): Promise<boolean> {
+    return (await this._input()).isFocused();
   }
 
   /**

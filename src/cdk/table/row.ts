@@ -37,6 +37,7 @@ export const CDK_ROW_TEMPLATE = `<ng-container cdkCellOutlet></ng-container>`;
  * Base class for the CdkHeaderRowDef and CdkRowDef that handles checking their columns inputs
  * for changes and notifying the table.
  */
+@Directive()
 export abstract class BaseRowDef implements OnChanges {
   /** The columns to be displayed on this row. */
   columns: Iterable<string>;
@@ -305,4 +306,12 @@ export class CdkFooterRow {
   encapsulation: ViewEncapsulation.None,
 })
 export class CdkRow {
+}
+
+/** Row that can be used to display a message when no data is shown in the table. */
+@Directive({
+  selector: 'ng-template[cdkNoDataRow]'
+})
+export class CdkNoDataRow {
+  constructor(public templateRef: TemplateRef<any>) {}
 }

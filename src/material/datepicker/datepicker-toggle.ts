@@ -24,8 +24,8 @@ import {
 } from '@angular/core';
 import {MatButton} from '@angular/material/button';
 import {merge, of as observableOf, Subscription} from 'rxjs';
-import {MatDatepicker} from './datepicker';
 import {MatDatepickerIntl} from './datepicker-intl';
+import {MatDatepickerBase, MatDatepickerControl} from './datepicker-base';
 
 
 /** Can be used to override the icon of a `matDatepickerToggle`. */
@@ -47,6 +47,8 @@ export class MatDatepickerToggleIcon {}
     '[class.mat-datepicker-toggle-active]': 'datepicker && datepicker.opened',
     '[class.mat-accent]': 'datepicker && datepicker.color === "accent"',
     '[class.mat-warn]': 'datepicker && datepicker.color === "warn"',
+    // Used by the test harness to tie this toggle to its datepicker.
+    '[attr.data-mat-calendar]': 'datepicker ? datepicker.id : null',
     '(focus)': '_button.focus()',
   },
   exportAs: 'matDatepickerToggle',
@@ -57,7 +59,7 @@ export class MatDatepickerToggle<D> implements AfterContentInit, OnChanges, OnDe
   private _stateChanges = Subscription.EMPTY;
 
   /** Datepicker instance that the button will toggle. */
-  @Input('for') datepicker: MatDatepicker<D>;
+  @Input('for') datepicker: MatDatepickerBase<MatDatepickerControl<any>, D>;
 
   /** Tabindex for the toggle. */
   @Input() tabIndex: number | null;
@@ -116,9 +118,9 @@ export class MatDatepickerToggle<D> implements AfterContentInit, OnChanges, OnDe
   }
 
   private _watchStateChanges() {
-    const datepickerDisabled = this.datepicker ? this.datepicker._disabledChange : observableOf();
-    const inputDisabled = this.datepicker && this.datepicker._datepickerInput ?
-        this.datepicker._datepickerInput._disabledChange : observableOf();
+    const datepickerStateChanged = this.datepicker ? this.datepicker._stateChanges : observableOf();
+    const inputStateChanged = this.datepicker && this.datepicker._datepickerInput ?
+        this.datepicker._datepickerInput.stateChanges : observableOf();
     const datepickerToggled = this.datepicker ?
         merge(this.datepicker.openedStream, this.datepicker.closedStream) :
         observableOf();
@@ -126,8 +128,8 @@ export class MatDatepickerToggle<D> implements AfterContentInit, OnChanges, OnDe
     this._stateChanges.unsubscribe();
     this._stateChanges = merge(
       this._intl.changes,
-      datepickerDisabled,
-      inputDisabled,
+      datepickerStateChanged,
+      inputStateChanged,
       datepickerToggled
     ).subscribe(() => this._changeDetectorRef.markForCheck());
   }

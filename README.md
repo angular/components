@@ -33,16 +33,19 @@ If you'd like to contribute, please follow our [contributing guidelines][contrib
 our [`help wanted`][help-wanted] label for a list of issues with good opportunities for
 contribution.
 
-## What we're working on now (Q1 2020):
-* Date-range picker
-* Remaining test harnesses for Angular Material components (four remaining as of January)
+## What we're working on now (Q4 2020):
 * Continuing to create new, API-compatible versions of the Angular Material components backed by
-[MDC Web][] ([see @jelbourn's ng-conf talk](https://youtu.be/4EXQKP-Sihw?t=891)). There are five
-remaining components to complete here as of January.
-* Add support for density configuration for the new components based on MDC Web.
-* Authoring benchmarks to collect performance metrics for Angular Material components. These
-benchmarks will live inside Google's internal code repository for the time being, but we should
-be able to publish the results.
+[MDC Web][] ([see @jelbourn's ng-conf talk](https://youtu.be/4EXQKP-Sihw?t=891)). Much of our effort
+is dedicated towards rolling out these new versions of the components across Angular apps
+inside Google. This work will payoff with the following benefits:
+  * Dramatically improve consistency with the Material Design spec, which has changed significantly
+    since Angular Material's 2016 inception.
+  * Introduce a new theming API for component density, a top feature request.
+  * Fix a number of longstanding accessibility bugs.
+  * Increase number of people working to continuously improve the components on an on-going basis
+    (both the Angular team and the Material Design team).
+* Continue work on virtual-scroll support for cdk/table.
+* Switching to new Sass module system (`@use`)
 
 
 ## About the team

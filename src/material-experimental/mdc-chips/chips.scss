@@ -19,6 +19,10 @@
 
     // Disables the chip enter animation.
     animation: none;
+
+    .mdc-chip__checkmark-svg {
+      transition: none;
+    }
   }
 
   @include cdk-high-contrast(active, off) {
@@ -57,6 +61,10 @@
     pointer-events: none;
     opacity: 0;
     border-radius: inherit;
+
+    ._mat-animation-noopable & {
+      transition: none;
+    }
   }
 }
 
@@ -65,7 +73,7 @@
 .mat-mdc-chip-disabled.mat-mdc-chip {
   opacity: 0.4;
 
-  .mat-mdc-chip-trailing-icon, .mat-chip-row-focusable-text-content {
+  .mat-mdc-chip-trailing-icon, .mat-mdc-chip-row-focusable-text-content {
     pointer-events: none;
   }
 
@@ -92,7 +100,24 @@ input.mat-mdc-chip-input {
   flex: 1 0 $mat-chip-input-width;
 }
 
+// The margin value is set in MDC.
+$mat-mdc-chip-margin: 4px;
+
+// Don't let the chip margin increase the mat-form-field height.
+.mat-mdc-chip-grid {
+  margin: -$mat-mdc-chip-margin;
+
+  // Keep the mat-chip-grid height the same even when there are no chips.
+  input.mat-input-element {
+    margin: $mat-mdc-chip-margin;
+  }
+}
+
 .mdc-chip__checkmark-path {
+  ._mat-animation-noopable & {
+    transition: none;
+  }
+
   @include cdk-high-contrast(black-on-white, off) {
     // SVG colors won't be changed in high contrast mode and since the checkmark is white
     // by default, it'll blend in with the background in black-on-white mode. Override the color
@@ -102,6 +127,40 @@ input.mat-mdc-chip-input {
 }
 
 // Needed for the focus indicator.
-.mat-chip-row-focusable-text-content {
+.mat-mdc-chip-row-focusable-text-content {
   position: relative;
+}
+
+.mat-mdc-chip-row-focusable-text-content,
+.mat-mdc-chip-remove-icon {
+  display: flex;
+  align-items: center;
+}
+
+.mat-mdc-chip-content {
+  display: inline-flex;
+}
+
+.mdc-chip--editing {
+  background-color: transparent;
+  display: flex;
+  flex-direction: column;
+
+  .mat-mdc-chip-content {
+    pointer-events: none;
+    height: 0;
+    overflow: hidden;
+  }
+}
+
+.mat-chip-edit-input {
+  cursor: text;
+  display: inline-block;
+}
+
+.mat-mdc-chip-edit-input-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
 }

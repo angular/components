@@ -13,19 +13,23 @@ import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
 import {MatDialogModule} from '@angular/material/dialog';
+import {CdkScrollableModule} from '@angular/cdk/scrolling';
 import {MatCalendar, MatCalendarHeader} from './calendar';
 import {MatCalendarBody} from './calendar-body';
+import {MatDatepicker} from './datepicker';
 import {
-  MatDatepicker,
   MatDatepickerContent,
   MAT_DATEPICKER_SCROLL_STRATEGY_FACTORY_PROVIDER,
-} from './datepicker';
+} from './datepicker-base';
 import {MatDatepickerInput} from './datepicker-input';
 import {MatDatepickerIntl} from './datepicker-intl';
 import {MatDatepickerToggle, MatDatepickerToggleIcon} from './datepicker-toggle';
 import {MatMonthView} from './month-view';
 import {MatMultiYearView} from './multi-year-view';
 import {MatYearView} from './year-view';
+import {MatDateRangeInput} from './date-range-input';
+import {MatStartDate, MatEndDate} from './date-range-input-parts';
+import {MatDateRangePicker} from './date-range-picker';
 
 
 @NgModule({
@@ -38,6 +42,7 @@ import {MatYearView} from './year-view';
     PortalModule,
   ],
   exports: [
+    CdkScrollableModule,
     MatCalendar,
     MatCalendarBody,
     MatDatepicker,
@@ -49,6 +54,10 @@ import {MatYearView} from './year-view';
     MatYearView,
     MatMultiYearView,
     MatCalendarHeader,
+    MatDateRangeInput,
+    MatStartDate,
+    MatEndDate,
+    MatDateRangePicker,
   ],
   declarations: [
     MatCalendar,
@@ -62,10 +71,14 @@ import {MatYearView} from './year-view';
     MatYearView,
     MatMultiYearView,
     MatCalendarHeader,
+    MatDateRangeInput,
+    MatStartDate,
+    MatEndDate,
+    MatDateRangePicker,
   ],
   providers: [
     MatDatepickerIntl,
-    MAT_DATEPICKER_SCROLL_STRATEGY_FACTORY_PROVIDER,
+    MAT_DATEPICKER_SCROLL_STRATEGY_FACTORY_PROVIDER
   ],
   entryComponents: [
     MatDatepickerContent,

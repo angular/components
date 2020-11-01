@@ -14,8 +14,8 @@ export interface OutputNameUpgradeData {
   replace: string;
   /** The new name for the @Output(). */
   replaceWith: string;
-  /** Whitelist where this replacement is made. If omitted it is made in all HTML & CSS */
-  whitelist: {
+  /** Controls which elements and attributes in which this replacement is made. */
+  limitedTo: {
     /** Limit to elements with any of these element tags. */
     elements?: string[],
     /** Limit to elements with any of these attributes. */
@@ -24,5 +24,17 @@ export interface OutputNameUpgradeData {
 }
 
 export const outputNames: VersionChanges<OutputNameUpgradeData> = {
+  [TargetVersion.V10]: [
+    {
+      pr: 'https://github.com/angular/components/pull/19362',
+      changes: [{
+        replace: 'copied',
+        replaceWith: 'cdkCopyToClipboardCopied',
+        limitedTo: {
+          attributes: ['cdkCopyToClipboard']
+        }
+      }]
+    }
+  ],
   [TargetVersion.V6]: [],
 };

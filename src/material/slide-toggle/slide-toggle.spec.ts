@@ -1,4 +1,3 @@
-import {BidiModule, Direction} from '@angular/cdk/bidi';
 import {MutationObserverFactory} from '@angular/cdk/observers';
 import {dispatchFakeEvent} from '@angular/cdk/testing/private';
 import {Component} from '@angular/core';
@@ -25,7 +24,7 @@ describe('MatSlideToggle without forms', () => {
     mutationObserverCallbacks = [];
 
     TestBed.configureTestingModule({
-      imports: [MatSlideToggleModule, BidiModule],
+      imports: [MatSlideToggleModule],
       declarations: [
         SlideToggleBasic,
         SlideToggleWithTabindexAttr,
@@ -334,7 +333,7 @@ describe('MatSlideToggle without forms', () => {
       expect(slideToggleElement.classList).toContain('mat-slide-toggle-label-before');
     });
 
-    it('should show ripples on label mousedown', () => {
+    it('should show ripples', () => {
       const rippleSelector = '.mat-ripple-element:not(.mat-slide-toggle-persistent-ripple)';
 
       expect(slideToggleElement.querySelectorAll(rippleSelector).length).toBe(0);
@@ -409,7 +408,8 @@ describe('MatSlideToggle without forms', () => {
   });
 
   describe('custom action configuration', () => {
-    it('should not change value on click when click action is noop', () => {
+    it('should not change value on click when click action is noop when using custom a ' +
+      'action configuration', () => {
       TestBed
         .resetTestingModule()
         .configureTestingModule({
@@ -850,7 +850,7 @@ describe('MatSlideToggle with forms', () => {
 
 @Component({
   template: `
-    <mat-slide-toggle [dir]="direction" [required]="isRequired"
+    <mat-slide-toggle [required]="isRequired"
                      [disabled]="isDisabled"
                      [color]="slideColor"
                      [id]="slideId"
@@ -883,7 +883,6 @@ class SlideToggleBasic {
   labelPosition: string;
   toggleTriggered: number = 0;
   dragTriggered: number = 0;
-  direction: Direction = 'ltr';
 
   onSlideClick: (event?: Event) => void = () => {};
   onSlideChange = (event: MatSlideToggleChange) => this.lastEvent = event;

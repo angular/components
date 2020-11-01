@@ -8,8 +8,12 @@
 
 import {Directionality} from '@angular/cdk/bidi';
 import {ChangeDetectorRef, Component, ElementRef, Inject, ViewEncapsulation} from '@angular/core';
-import {DevAppRippleOptions} from './ripple-options';
+
 import {DevAppDirectionality} from './dev-app-directionality';
+import {DevAppRippleOptions} from './ripple-options';
+import {DOCUMENT} from '@angular/common';
+
+const isDarkThemeKey = 'ANGULAR_COMPONENTS_DEV_APP_DARK_THEME';
 
 /** Root component for the dev-app demos. */
 @Component({
@@ -19,7 +23,8 @@ import {DevAppDirectionality} from './dev-app-directionality';
   encapsulation: ViewEncapsulation.None,
 })
 export class DevAppLayout {
-  dark = false;
+  readonly darkThemeClass = 'demo-unicorn-dark-theme';
+  _isDark = false;
   strongFocus = false;
   navItems = [
     {name: 'Examples', route: '/examples'},
@@ -29,6 +34,9 @@ export class DevAppLayout {
     {name: 'Button Toggle', route: '/button-toggle'},
     {name: 'Button', route: '/button'},
     {name: 'Card', route: '/card'},
+    {name: 'Cdk Experimental Combobox', route: '/cdk-experimental-combobox'},
+    {name: 'Cdk Experimental Listbox', route: '/cdk-experimental-listbox'},
+    {name: 'Cdk Experimental Menu', route: '/cdk-experimental-menu'},
     {name: 'Checkbox', route: '/checkbox'},
     {name: 'Chips', route: '/chips'},
     {name: 'Clipboard', route: '/clipboard'},
@@ -48,6 +56,7 @@ export class DevAppLayout {
     {name: 'List', route: '/list'},
     {name: 'Live Announcer', route: '/live-announcer'},
     {name: 'Menu', route: '/menu'},
+    {name: 'Menubar', route: '/menubar'},
     {name: 'Paginator', route: '/paginator'},
     {name: 'Platform', route: '/platform'},
     {name: 'Popover Edit', route: '/popover-edit'},
@@ -58,6 +67,7 @@ export class DevAppLayout {
     {name: 'Ripple', route: '/ripple'},
     {name: 'Screen Type', route: '/screen-type'},
     {name: 'Select', route: '/select'},
+    {name: 'Selection', route: '/selection'},
     {name: 'Sidenav', route: '/sidenav'},
     {name: 'Slide Toggle', route: '/slide-toggle'},
     {name: 'Slider', route: '/slider'},
@@ -71,26 +81,69 @@ export class DevAppLayout {
     {name: 'Typography', route: '/typography'},
     {name: 'Virtual Scrolling', route: '/virtual-scroll'},
     {name: 'YouTube Player', route: '/youtube-player'},
+    {name: 'MDC Autocomplete', route: '/mdc-autocomplete'},
     {name: 'MDC Button', route: '/mdc-button'},
     {name: 'MDC Card', route: '/mdc-card'},
     {name: 'MDC Checkbox', route: '/mdc-checkbox'},
     {name: 'MDC Chips', route: '/mdc-chips'},
+    {name: 'MDC Dialog', route: '/mdc-dialog'},
     {name: 'MDC Input', route: '/mdc-input'},
     {name: 'MDC List', route: '/mdc-list'},
     {name: 'MDC Menu', route: '/mdc-menu'},
     {name: 'MDC Radio', route: '/mdc-radio'},
+    {name: 'MDC Paginator', route: '/mdc-paginator'},
     {name: 'MDC Progress Bar', route: '/mdc-progress-bar'},
+    {name: 'MDC Progress Spinner', route: '/mdc-progress-spinner'},
     {name: 'MDC Tabs', route: '/mdc-tabs'},
+    {name: 'MDC Select', route: '/mdc-select'},
+    {name: 'MDC Sidenav', route: '/mdc-sidenav'},
     {name: 'MDC Slide Toggle', route: '/mdc-slide-toggle'},
     {name: 'MDC Slider', route: '/mdc-slider'},
-    {name: 'MDC Snackbar', route: '/mdc-snackbar'},
+    {name: 'MDC Snack Bar', route: '/mdc-snack-bar'},
     {name: 'MDC Table', route: '/mdc-table'},
   ];
 
+  /** Currently selected density scale based on the index. */
+  currentDensityIndex = 0;
+
+  /** List of possible global density scale values. */
+  densityScales = [0, -1, -2, 'minimum', 'maximum'];
+
   constructor(
       private _element: ElementRef<HTMLElement>, public rippleOptions: DevAppRippleOptions,
-      @Inject(Directionality) public dir: DevAppDirectionality, cdr: ChangeDetectorRef) {
+      @Inject(Directionality) public dir: DevAppDirectionality, cdr: ChangeDetectorRef,
+      @Inject(DOCUMENT) private _document: Document) {
     dir.change.subscribe(() => cdr.markForCheck());
+    this.updateDensityClasses();
+    try {
+      const isDark = localStorage.getItem(isDarkThemeKey);
+      if (isDark != null) {
+        // We avoid calling the setter and apply the themes directly here.
+        // This avoids writing the same value, that we just read, back to localStorage.
+        this._isDark = isDark === 'true';
+        this.updateThemeClass(this._isDark);
+      }
+    } catch (error) {
+      console.error(`Failed to read ${isDarkThemeKey} from localStorage: `, error);
+    }
+  }
+
+  get isDark(): boolean {
+    return this._isDark;
+  }
+
+  set isDark(value: boolean) {
+    // Noop if the value is the same as is already set.
+    if (value !== this._isDark) {
+      this._isDark = value;
+      this.updateThemeClass(this._isDark);
+
+      try {
+        localStorage.setItem(isDarkThemeKey, String(value));
+      } catch (error) {
+        console.error(`Failed to write ${isDarkThemeKey} to localStorage: `, error);
+      }
+    }
   }
 
   toggleFullscreen() {
@@ -107,15 +160,11 @@ export class DevAppLayout {
     }
   }
 
-  toggleTheme() {
-    const darkThemeClass = 'demo-unicorn-dark-theme';
-
-    this.dark = !this.dark;
-
-    if (this.dark) {
-      document.body.classList.add(darkThemeClass);
+  updateThemeClass(isDark?: boolean) {
+    if (isDark) {
+      this._document.body.classList.add(this.darkThemeClass);
     } else {
-      document.body.classList.remove(darkThemeClass);
+      this._document.body.classList.remove(this.darkThemeClass);
     }
   }
 
@@ -125,9 +174,36 @@ export class DevAppLayout {
     this.strongFocus = !this.strongFocus;
 
     if (this.strongFocus) {
-      document.body.classList.add(strongFocusClass);
+      this._document.body.classList.add(strongFocusClass);
     } else {
-      document.body.classList.remove(strongFocusClass);
+      this._document.body.classList.remove(strongFocusClass);
+    }
+  }
+
+
+  /** Gets the index of the next density scale that can be selected. */
+  getNextDensityIndex() {
+    return (this.currentDensityIndex + 1) % this.densityScales.length;
+  }
+
+  /** Selects the next possible density scale. */
+  selectNextDensity() {
+    this.currentDensityIndex = this.getNextDensityIndex();
+    this.updateDensityClasses();
+  }
+
+  /**
+   * Updates the density classes on the host element. Applies a unique class for
+   * a given density scale, so that the density styles are conditionally applied.
+   */
+  updateDensityClasses() {
+    for (let i = 0; i < this.densityScales.length; i++) {
+      const className = `demo-density-${this.densityScales[i]}`;
+      if (i === this.currentDensityIndex) {
+        this._document.body.classList.add(className);
+      } else {
+        this._document.body.classList.remove(className);
+      }
     }
   }
 }

@@ -1,9 +1,13 @@
 # List of all entry-points of the Angular cdk-experimental package.
 CDK_EXPERIMENTAL_ENTRYPOINTS = [
     "column-resize",
+    "combobox",
     "dialog",
+    "menu",
+    "listbox",
     "popover-edit",
     "scrolling",
+    "selection",
 ]
 
 # List of all entry-point targets of the Angular cdk-experimental package.

@@ -39,7 +39,6 @@ import {MatPaginatedTabHeader} from './paginated-tab-header';
  * @docs-private
  */
 @Directive()
-// tslint:disable-next-line:class-name
 export abstract class _MatTabHeaderBase extends MatPaginatedTabHeader implements
   AfterContentChecked, AfterContentInit, AfterViewInit, OnDestroy {
 
@@ -55,7 +54,6 @@ export abstract class _MatTabHeaderBase extends MatPaginatedTabHeader implements
               @Optional() dir: Directionality,
               ngZone: NgZone,
               platform: Platform,
-              // @breaking-change 9.0.0 `_animationMode` parameter to be made required.
               @Optional() @Inject(ANIMATION_MODULE_TYPE) animationMode?: string) {
     super(elementRef, changeDetectorRef, viewportRuler, dir, ngZone, platform, animationMode);
   }
@@ -101,7 +99,6 @@ export class MatTabHeader extends _MatTabHeaderBase {
               @Optional() dir: Directionality,
               ngZone: NgZone,
               platform: Platform,
-              // @breaking-change 9.0.0 `_animationMode` parameter to be made required.
               @Optional() @Inject(ANIMATION_MODULE_TYPE) animationMode?: string) {
     super(elementRef, changeDetectorRef, viewportRuler, dir, ngZone, platform, animationMode);
   }

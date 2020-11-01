@@ -1,6 +1,6 @@
 import {Platform} from '@angular/cdk/platform';
 import {LOCALE_ID} from '@angular/core';
-import {async, inject, TestBed} from '@angular/core/testing';
+import {waitForAsync, inject, TestBed} from '@angular/core/testing';
 import {DEC, FEB, JAN, MAR} from '@angular/material/testing';
 import {DateAdapter, MAT_DATE_LOCALE, NativeDateAdapter, NativeDateModule} from './index';
 
@@ -12,7 +12,7 @@ describe('NativeDateAdapter', () => {
   let adapter: NativeDateAdapter;
   let assertValidDate: (d: Date | null, valid: boolean) => void;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [NativeDateModule]
     }).compileComponents();
@@ -152,6 +152,16 @@ describe('NativeDateAdapter', () => {
     expect(adapter.getYearName(new Date(2017, JAN, 1))).toBe('2017');
   });
 
+  it('should get year name for low year numbers', () => {
+    const createAndFormat = (year: number) => {
+      return adapter.getYearName(adapter.createDate(year, JAN, 1));
+    };
+
+    expect(createAndFormat(50)).toBe('50');
+    expect(createAndFormat(99)).toBe('99');
+    expect(createAndFormat(100)).toBe('100');
+  });
+
   it('should get year name in a different locale', () => {
     adapter.setLocale('ja-JP');
     if (SUPPORTS_INTL) {
@@ -185,6 +195,22 @@ describe('NativeDateAdapter', () => {
     expect(adapter.createDate(50, JAN, 1).getFullYear()).toBe(50);
     expect(adapter.createDate(99, JAN, 1).getFullYear()).toBe(99);
     expect(adapter.createDate(100, JAN, 1).getFullYear()).toBe(100);
+  });
+
+  it('should format Date with low year number', () => {
+    const createAndFormat = (year: number) => {
+      return adapter.format(adapter.createDate(year, JAN, 1), {});
+    };
+
+    if (SUPPORTS_INTL) {
+      expect(createAndFormat(50)).toBe('1/1/50');
+      expect(createAndFormat(99)).toBe('1/1/99');
+      expect(createAndFormat(100)).toBe('1/1/100');
+    } else {
+      expect(createAndFormat(50)).toBe('Sat Jan 01 0050');
+      expect(createAndFormat(99)).toBe('Thu Jan 01 0099');
+      expect(createAndFormat(100)).toBe('Fri Jan 01 0100');
+    }
   });
 
   it("should get today's date", () => {
@@ -349,6 +375,18 @@ describe('NativeDateAdapter', () => {
     expect(adapter.isDateInstance(d)).toBe(false);
   });
 
+  it('should provide a method to return a valid date or null', () => {
+    let d = new Date();
+    expect(adapter.getValidDateOrNull(d)).toBe(d);
+    expect(adapter.getValidDateOrNull(new Date(NaN))).toBeNull();
+    expect(adapter.getValidDateOrNull(null)).toBeNull();
+    expect(adapter.getValidDateOrNull(undefined)).toBeNull();
+    expect(adapter.getValidDateOrNull('')).toBeNull();
+    expect(adapter.getValidDateOrNull(0)).toBeNull();
+    expect(adapter.getValidDateOrNull('Wed Jul 28 1993')).toBeNull();
+    expect(adapter.getValidDateOrNull('1595204418000')).toBeNull();
+  });
+
   it('should create dates from valid ISO strings', () => {
     assertValidDate(adapter.deserialize('1985-04-12T23:20:50.52Z'), true);
     assertValidDate(adapter.deserialize('1996-12-19T16:39:57-08:00'), true);
@@ -381,7 +419,7 @@ describe('NativeDateAdapter', () => {
 describe('NativeDateAdapter with MAT_DATE_LOCALE override', () => {
   let adapter: NativeDateAdapter;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [NativeDateModule],
       providers: [{provide: MAT_DATE_LOCALE, useValue: 'da-DK'}]
@@ -405,7 +443,7 @@ describe('NativeDateAdapter with MAT_DATE_LOCALE override', () => {
 describe('NativeDateAdapter with LOCALE_ID override', () => {
   let adapter: NativeDateAdapter;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [NativeDateModule],
       providers: [{provide: LOCALE_ID, useValue: 'da-DK'}]

@@ -3,8 +3,6 @@ export declare class _MatCheckboxRequiredValidatorModule {
     static ɵmod: i0.ɵɵNgModuleDefWithMeta<_MatCheckboxRequiredValidatorModule, [typeof i1.MatCheckboxRequiredValidator], never, [typeof i1.MatCheckboxRequiredValidator]>;
 }
 
-export declare const MAT_CHECKBOX_CLICK_ACTION: InjectionToken<MatCheckboxClickAction>;
-
 export declare const MAT_CHECKBOX_CONTROL_VALUE_ACCESSOR: any;
 
 export declare const MAT_CHECKBOX_DEFAULT_OPTIONS: InjectionToken<MatCheckboxDefaultOptions>;
@@ -17,6 +15,7 @@ export declare class MatCheckbox extends _MatCheckboxMixinBase implements Contro
     _animationMode?: string | undefined;
     _inputElement: ElementRef<HTMLInputElement>;
     _onTouched: () => any;
+    ariaDescribedby: string;
     ariaLabel: string;
     ariaLabelledby: string | null;
     readonly change: EventEmitter<MatCheckboxChange>;
@@ -35,8 +34,7 @@ export declare class MatCheckbox extends _MatCheckboxMixinBase implements Contro
     set required(value: boolean);
     ripple: MatRipple;
     value: string;
-    constructor(elementRef: ElementRef<HTMLElement>, _changeDetectorRef: ChangeDetectorRef, _focusMonitor: FocusMonitor, _ngZone: NgZone, tabIndex: string,
-    _clickAction: MatCheckboxClickAction, _animationMode?: string | undefined, _options?: MatCheckboxDefaultOptions | undefined);
+    constructor(elementRef: ElementRef<HTMLElement>, _changeDetectorRef: ChangeDetectorRef, _focusMonitor: FocusMonitor, _ngZone: NgZone, tabIndex: string, _animationMode?: string | undefined, _options?: MatCheckboxDefaultOptions | undefined);
     _getAriaChecked(): 'true' | 'false' | 'mixed';
     _isRippleDisabled(): any;
     _onInputClick(event: Event): void;
@@ -55,8 +53,9 @@ export declare class MatCheckbox extends _MatCheckboxMixinBase implements Contro
     static ngAcceptInputType_disabled: BooleanInput;
     static ngAcceptInputType_indeterminate: BooleanInput;
     static ngAcceptInputType_required: BooleanInput;
-    static ɵcmp: i0.ɵɵComponentDefWithMeta<MatCheckbox, "mat-checkbox", ["matCheckbox"], { "disableRipple": "disableRipple"; "color": "color"; "tabIndex": "tabIndex"; "ariaLabel": "aria-label"; "ariaLabelledby": "aria-labelledby"; "id": "id"; "required": "required"; "labelPosition": "labelPosition"; "name": "name"; "value": "value"; "checked": "checked"; "disabled": "disabled"; "indeterminate": "indeterminate"; }, { "change": "change"; "indeterminateChange": "indeterminateChange"; }, never, ["*"]>;
-    static ɵfac: i0.ɵɵFactoryDef<MatCheckbox, [null, null, null, null, { attribute: "tabindex"; }, { optional: true; }, { optional: true; }, { optional: true; }]>;
+    static ngAcceptInputType_tabIndex: NumberInput;
+    static ɵcmp: i0.ɵɵComponentDefWithMeta<MatCheckbox, "mat-checkbox", ["matCheckbox"], { "disableRipple": "disableRipple"; "color": "color"; "tabIndex": "tabIndex"; "ariaLabel": "aria-label"; "ariaLabelledby": "aria-labelledby"; "ariaDescribedby": "aria-describedby"; "id": "id"; "required": "required"; "labelPosition": "labelPosition"; "name": "name"; "value": "value"; "checked": "checked"; "disabled": "disabled"; "indeterminate": "indeterminate"; }, { "change": "change"; "indeterminateChange": "indeterminateChange"; }, never, ["*"]>;
+    static ɵfac: i0.ɵɵFactoryDef<MatCheckbox, [null, null, null, null, { attribute: "tabindex"; }, { optional: true; }, { optional: true; }]>;
 }
 
 export declare class MatCheckboxChange {

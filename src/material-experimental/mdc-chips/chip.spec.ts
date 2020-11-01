@@ -1,8 +1,8 @@
 import {Directionality} from '@angular/cdk/bidi';
 import {createFakeEvent} from '@angular/cdk/testing/private';
 import {Component, DebugElement, ViewChild} from '@angular/core';
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
-import {MatRipple} from '@angular/material/core';
+import {waitForAsync, ComponentFixture, TestBed} from '@angular/core/testing';
+import {MatRipple} from '@angular/material-experimental/mdc-core';
 import {By} from '@angular/platform-browser';
 import {Subject} from 'rxjs';
 import {MatChip, MatChipEvent, MatChipSet, MatChipsModule} from './index';
@@ -18,7 +18,7 @@ describe('MDC-based MatChip', () => {
 
   let dir = 'ltr';
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [MatChipsModule],
       declarations: [
@@ -39,7 +39,7 @@ describe('MDC-based MatChip', () => {
   }));
 
   describe('MatBasicChip', () => {
-    it('adds the `mat-mdc-basic-chip` class', () => {
+    it('adds a class to indicate that it is a basic chip', () => {
       fixture = TestBed.createComponent(BasicChip);
       fixture.detectChanges();
 
@@ -180,7 +180,7 @@ describe('MDC-based MatChip', () => {
       expect(chipNativeElement.getAttribute('aria-disabled')).toBe('true');
     });
 
-    it('should not be focusable', () => {
+    it('should make disabled chips non-focusable', () => {
       expect(chipNativeElement.getAttribute('tabindex')).toBeFalsy();
     });
 

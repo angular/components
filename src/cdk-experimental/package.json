@@ -2,14 +2,6 @@
   "name": "@angular/cdk-experimental",
   "version": "0.0.0-PLACEHOLDER",
   "description": "Experimental components for Angular CDK",
-  "main": "./bundles/cdk-experimental.umd.js",
-  "fesm5": "./fesm5/cdk-experimental.js",
-  "fesm2015": "./fesm2015/cdk-experimental.js",
-  "esm5": "./esm5/index.js",
-  "esm2015": "./esm2015/index.js",
-  "typings": "./index.d.ts",
-  "module": "./fesm5/cdk-experimental.js",
-  "es2015": "./fesm2015/cdk-experimental.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/angular/components.git"
@@ -21,7 +13,9 @@
   "homepage": "https://github.com/angular/components#readme",
   "peerDependencies": {
     "@angular/cdk": "0.0.0-PLACEHOLDER",
-    "@angular/core": "0.0.0-NG",
+    "@angular/core": "0.0.0-NG"
+  },
+  "dependencies": {
     "tslib": "0.0.0-TSLIB"
   },
   "sideEffects": false,

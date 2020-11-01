@@ -32,7 +32,6 @@ export declare type MatAccordionTogglePosition = 'before' | 'after';
 
 export declare const matExpansionAnimations: {
     readonly indicatorRotate: AnimationTriggerMetadata;
-    readonly expansionHeaderHeight: AnimationTriggerMetadata;
     readonly bodyExpansion: AnimationTriggerMetadata;
 };
 
@@ -96,15 +95,15 @@ export declare class MatExpansionPanelDescription {
     static ɵfac: i0.ɵɵFactoryDef<MatExpansionPanelDescription, never>;
 }
 
-export declare class MatExpansionPanelHeader implements OnDestroy, FocusableOption {
-    _animationsDisabled: boolean;
+export declare class MatExpansionPanelHeader implements AfterViewInit, OnDestroy, FocusableOption {
+    _animationMode?: string | undefined;
     collapsedHeight: string;
     get disabled(): any;
     expandedHeight: string;
     panel: MatExpansionPanel;
-    constructor(panel: MatExpansionPanel, _element: ElementRef, _focusMonitor: FocusMonitor, _changeDetectorRef: ChangeDetectorRef, defaultOptions?: MatExpansionPanelDefaultOptions);
-    _animationStarted(): void;
+    constructor(panel: MatExpansionPanel, _element: ElementRef, _focusMonitor: FocusMonitor, _changeDetectorRef: ChangeDetectorRef, defaultOptions?: MatExpansionPanelDefaultOptions, _animationMode?: string | undefined);
     _getExpandedState(): string;
+    _getHeaderHeight(): string | null;
     _getPanelId(): string;
     _getTogglePosition(): MatAccordionTogglePosition;
     _isExpanded(): boolean;
@@ -112,9 +111,10 @@ export declare class MatExpansionPanelHeader implements OnDestroy, FocusableOpti
     _showToggle(): boolean;
     _toggle(): void;
     focus(origin?: FocusOrigin, options?: FocusOptions): void;
+    ngAfterViewInit(): void;
     ngOnDestroy(): void;
     static ɵcmp: i0.ɵɵComponentDefWithMeta<MatExpansionPanelHeader, "mat-expansion-panel-header", never, { "expandedHeight": "expandedHeight"; "collapsedHeight": "collapsedHeight"; }, {}, never, ["mat-panel-title", "mat-panel-description", "*"]>;
-    static ɵfac: i0.ɵɵFactoryDef<MatExpansionPanelHeader, [{ host: true; }, null, null, null, { optional: true; }]>;
+    static ɵfac: i0.ɵɵFactoryDef<MatExpansionPanelHeader, [{ host: true; }, null, null, null, { optional: true; }, { optional: true; }]>;
 }
 
 export declare type MatExpansionPanelState = 'expanded' | 'collapsed';

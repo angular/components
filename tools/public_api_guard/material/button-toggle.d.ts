@@ -1,10 +1,11 @@
 export declare const MAT_BUTTON_TOGGLE_DEFAULT_OPTIONS: InjectionToken<MatButtonToggleDefaultOptions>;
 
+export declare const MAT_BUTTON_TOGGLE_GROUP: InjectionToken<MatButtonToggleGroup>;
+
 export declare const MAT_BUTTON_TOGGLE_GROUP_VALUE_ACCESSOR: any;
 
-export declare class MatButtonToggle extends _MatButtonToggleMixinBase implements OnInit, CanDisableRipple, OnDestroy {
+export declare class MatButtonToggle extends _MatButtonToggleMixinBase implements OnInit, AfterViewInit, CanDisableRipple, OnDestroy {
     _buttonElement: ElementRef<HTMLButtonElement>;
-    _type: ToggleType;
     get appearance(): MatButtonToggleAppearance;
     set appearance(value: MatButtonToggleAppearance);
     ariaLabel: string;
@@ -24,6 +25,7 @@ export declare class MatButtonToggle extends _MatButtonToggleMixinBase implement
     _markForCheck(): void;
     _onButtonClick(): void;
     focus(options?: FocusOptions): void;
+    ngAfterViewInit(): void;
     ngOnDestroy(): void;
     ngOnInit(): void;
     static ngAcceptInputType_checked: BooleanInput;
@@ -83,9 +85,6 @@ export declare class MatButtonToggleGroup implements ControlValueAccessor, OnIni
     static ngAcceptInputType_vertical: BooleanInput;
     static ɵdir: i0.ɵɵDirectiveDefWithMeta<MatButtonToggleGroup, "mat-button-toggle-group", ["matButtonToggleGroup"], { "appearance": "appearance"; "name": "name"; "vertical": "vertical"; "value": "value"; "multiple": "multiple"; "disabled": "disabled"; }, { "valueChange": "valueChange"; "change": "change"; }, ["_buttonToggles"]>;
     static ɵfac: i0.ɵɵFactoryDef<MatButtonToggleGroup, [null, { optional: true; }]>;
-}
-
-export declare class MatButtonToggleGroupMultiple {
 }
 
 export declare class MatButtonToggleModule {

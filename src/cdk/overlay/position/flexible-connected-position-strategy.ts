@@ -33,7 +33,7 @@ const boundingBoxClass = 'cdk-overlay-connected-position-bounding-box';
 const cssUnitPattern = /([A-Za-z%]+)$/;
 
 /** Possible values that can be set as the origin of a FlexibleConnectedPositionStrategy. */
-export type FlexibleConnectedPositionStrategyOrigin = ElementRef | HTMLElement | Point & {
+export type FlexibleConnectedPositionStrategyOrigin = ElementRef | Element | Point & {
   width?: number;
   height?: number;
 };
@@ -128,8 +128,7 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
   private _previousPushAmount: {x: number, y: number} | null;
 
   /** Observable sequence of position changes. */
-  positionChanges: Observable<ConnectedOverlayPositionChange> =
-      this._positionChanges.asObservable();
+  positionChanges: Observable<ConnectedOverlayPositionChange> = this._positionChanges;
 
   /** Ordered list of preferred positions, from most to least desirable. */
   get positions(): ConnectionPositionPair[] {
@@ -145,7 +144,8 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
 
   /** Attaches this position strategy to an overlay. */
   attach(overlayRef: OverlayReference): void {
-    if (this._overlayRef && overlayRef !== this._overlayRef) {
+    if (this._overlayRef && overlayRef !== this._overlayRef &&
+      (typeof ngDevMode === 'undefined' || ngDevMode)) {
       throw Error('This position strategy is already attached to an overlay');
     }
 
@@ -611,8 +611,8 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
 
     // Determine how much the overlay goes outside the viewport on each
     // side, which we'll use to decide which direction to push it.
-    const overflowRight = Math.max(start.x + overlay.width - viewport.right, 0);
-    const overflowBottom = Math.max(start.y + overlay.height - viewport.bottom, 0);
+    const overflowRight = Math.max(start.x + overlay.width - viewport.width, 0);
+    const overflowBottom = Math.max(start.y + overlay.height - viewport.height, 0);
     const overflowTop = Math.max(viewport.top - scrollPosition.top - start.y, 0);
     const overflowLeft = Math.max(viewport.left - scrollPosition.left - start.x, 0);
 
@@ -1066,18 +1066,20 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
 
   /** Validates that the current position match the expected values. */
   private _validatePositions(): void {
-    if (!this._preferredPositions.length) {
-      throw Error('FlexibleConnectedPositionStrategy: At least one position is required.');
-    }
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      if (!this._preferredPositions.length) {
+        throw Error('FlexibleConnectedPositionStrategy: At least one position is required.');
+      }
 
-    // TODO(crisbeto): remove these once Angular's template type
-    // checking is advanced enough to catch these cases.
-    this._preferredPositions.forEach(pair => {
-      validateHorizontalPosition('originX', pair.originX);
-      validateVerticalPosition('originY', pair.originY);
-      validateHorizontalPosition('overlayX', pair.overlayX);
-      validateVerticalPosition('overlayY', pair.overlayY);
-    });
+      // TODO(crisbeto): remove these once Angular's template type
+      // checking is advanced enough to catch these cases.
+      this._preferredPositions.forEach(pair => {
+        validateHorizontalPosition('originX', pair.originX);
+        validateVerticalPosition('originY', pair.originY);
+        validateHorizontalPosition('overlayX', pair.overlayX);
+        validateVerticalPosition('overlayY', pair.overlayY);
+      });
+    }
   }
 
   /** Adds a single CSS class or an array of classes on the overlay panel. */

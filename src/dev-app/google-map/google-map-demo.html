@@ -7,8 +7,11 @@
               (mapMousemove)="handleMove($event)"
               (mapRightclick)="handleRightclick()"
               [mapTypeId]="mapTypeId">
-    <map-marker #firstMarker [position]="center" (mapClick)="clickMarker(firstMarker)"></map-marker>
-    <map-marker #marker
+    <map-marker
+      #firstMarker="mapMarker"
+      [position]="center"
+      (mapClick)="clickMarker(firstMarker)"></map-marker>
+    <map-marker #marker="mapMarker"
                 *ngFor="let markerPosition of markerPositions"
                 [position]="markerPosition"
                 [options]="markerOptions"
@@ -18,6 +21,14 @@
     <map-polygon *ngIf="isPolygonDisplayed" [options]="polygonOptions"></map-polygon>
     <map-rectangle *ngIf="isRectangleDisplayed" [options]="rectangleOptions"></map-rectangle>
     <map-circle *ngIf="isCircleDisplayed" [options]="circleOptions"></map-circle>
+    <map-ground-overlay *ngIf="isGroundOverlayDisplayed"
+                        [url]="groundOverlayUrl"
+                        [bounds]="groundOverlayBounds"></map-ground-overlay>
+    <map-kml-layer *ngIf="isKmlLayerDisplayed"
+                   [url]="demoKml"></map-kml-layer>
+    <map-traffic-layer *ngIf="isTrafficLayerDisplayed"></map-traffic-layer>
+    <map-transit-layer *ngIf="isTransitLayerDisplayed"></map-transit-layer>
+    <map-bicycling-layer *ngIf="isBicyclingLayerDisplayed"></map-bicycling-layer>
   </google-map>
 
   <p><label>Latitude:</label> {{display?.lat}}</p>
@@ -88,6 +99,53 @@
     <label for="editable-circle-checkbox">
       Toggle Editable Circle
       <input type="checkbox" [disabled]="!isCircleDisplayed" (click)="toggleEditableCircle()">
+    </label>
+  </div>
+
+  <div>
+    <label for="ground-overlay-checkbox">
+      Toggle Ground Overlay
+      <input type="checkbox" (click)="toggleGroundOverlayDisplay()">
+    </label>
+  </div>
+
+  <div>
+    <label for="ground-overlay-image">
+      Ground Overlay image
+
+      <select id="ground-overlay-image" (change)="groundOverlayUrlChanged($event)">
+        <option
+          *ngFor="let image of groundOverlayImages"
+          [value]="image.url">{{image.title}}</option>
+      </select>
+    </label>
+  </div>
+
+  <div>
+    <label for="kml-layer-checkbox">
+      Toggle KML Layer
+      <input type="checkbox" (click)="toggleKmlLayerDisplay()">
+    </label>
+  </div>
+
+  <div>
+    <label for="traffic-layer-checkbox">
+      Toggle Traffic Layer
+      <input type="checkbox" (click)="toggleTrafficLayerDisplay()">
+    </label>
+  </div>
+
+  <div>
+    <label for="transit-layer-checkbox">
+      Toggle Transit Layer
+      <input type="checkbox" (click)="toggleTransitLayerDisplay()">
+    </label>
+  </div>
+
+  <div>
+    <label for="bicycling-layer-checkbox">
+      Toggle Bicycling Layer
+      <input type="checkbox" (click)="toggleBicyclingLayerDisplay()">
     </label>
   </div>
 

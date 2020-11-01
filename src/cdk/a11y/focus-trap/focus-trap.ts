@@ -18,7 +18,8 @@ import {
   NgZone,
   OnDestroy,
   DoCheck,
-  isDevMode,
+  SimpleChanges,
+  OnChanges,
 } from '@angular/core';
 import {take} from 'rxjs/operators';
 import {InteractivityChecker} from '../interactivity-checker/interactivity-checker';
@@ -29,7 +30,7 @@ import {InteractivityChecker} from '../interactivity-checker/interactivity-check
  *
  * This class currently uses a relatively simple approach to focus trapping.
  * It assumes that the tab order is the same as DOM order, which is not necessarily true.
- * Things like `tabIndex > 0`, flex `order`, and shadow roots can cause to two to misalign.
+ * Things like `tabIndex > 0`, flex `order`, and shadow roots can cause the two to misalign.
  *
  * @deprecated Use `ConfigurableFocusTrap` instead.
  * @breaking-change for 11.0.0 Remove this class.
@@ -89,6 +90,7 @@ export class FocusTrap {
     }
 
     this._startAnchor = this._endAnchor = null;
+    this._hasAttached = false;
   }
 
   /**
@@ -210,7 +212,8 @@ export class FocusTrap {
 
       // Warn the consumer if the element they've pointed to
       // isn't focusable, when not in production mode.
-      if (isDevMode() && !this._checker.isFocusable(redirectToElement)) {
+      if ((typeof ngDevMode === 'undefined' || ngDevMode) &&
+        !this._checker.isFocusable(redirectToElement)) {
         console.warn(`Element matching '[cdkFocusInitial]' is not focusable.`, redirectToElement);
       }
 
@@ -338,7 +341,7 @@ export class FocusTrap {
     if (this._ngZone.isStable) {
       fn();
     } else {
-      this._ngZone.onStable.asObservable().pipe(take(1)).subscribe(fn);
+      this._ngZone.onStable.pipe(take(1)).subscribe(fn);
     }
   }
 }
@@ -378,7 +381,7 @@ export class FocusTrapFactory {
   selector: '[cdkTrapFocus]',
   exportAs: 'cdkTrapFocus',
 })
-export class CdkTrapFocus implements OnDestroy, AfterContentInit, DoCheck {
+export class CdkTrapFocus implements OnDestroy, AfterContentInit, OnChanges, DoCheck {
   private _document: Document;
 
   /** Underlying FocusTrap instance. */
@@ -425,8 +428,7 @@ export class CdkTrapFocus implements OnDestroy, AfterContentInit, DoCheck {
     this.focusTrap.attachAnchors();
 
     if (this.autoCapture) {
-      this._previouslyFocusedElement = this._document.activeElement as HTMLElement;
-      this.focusTrap.focusInitialElementWhenReady();
+      this._captureFocus();
     }
   }
 
@@ -434,6 +436,20 @@ export class CdkTrapFocus implements OnDestroy, AfterContentInit, DoCheck {
     if (!this.focusTrap.hasAttached()) {
       this.focusTrap.attachAnchors();
     }
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    const autoCaptureChange = changes['autoCapture'];
+
+    if (autoCaptureChange && !autoCaptureChange.firstChange && this.autoCapture &&
+        this.focusTrap.hasAttached()) {
+      this._captureFocus();
+    }
+  }
+
+  private _captureFocus() {
+    this._previouslyFocusedElement = this._document.activeElement as HTMLElement;
+    this.focusTrap.focusInitialElementWhenReady();
   }
 
   static ngAcceptInputType_enabled: BooleanInput;

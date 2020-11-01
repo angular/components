@@ -13,7 +13,15 @@ import {
   QueryList,
   ViewChildren,
 } from '@angular/core';
-import {async, ComponentFixture, fakeAsync, TestBed, tick, flush} from '@angular/core/testing';
+import {
+  waitForAsync,
+  ComponentFixture,
+  fakeAsync,
+  TestBed,
+  tick,
+  flush,
+  inject,
+} from '@angular/core/testing';
 import {MatRipple, defaultRippleAnimationConfig, ThemePalette} from '@angular/material/core';
 import {By} from '@angular/platform-browser';
 import {
@@ -23,6 +31,7 @@ import {
   MatSelectionListChange
 } from './index';
 import {FormControl, FormsModule, NgModel, ReactiveFormsModule} from '@angular/forms';
+import {FocusMonitor} from '@angular/cdk/a11y';
 
 describe('MatSelectionList without forms', () => {
   describe('with list option', () => {
@@ -30,7 +39,7 @@ describe('MatSelectionList without forms', () => {
     let listOptions: DebugElement[];
     let selectionList: DebugElement;
 
-    beforeEach(async(() => {
+    beforeEach(waitForAsync(() => {
       TestBed.configureTestingModule({
         imports: [MatListModule],
         declarations: [
@@ -48,7 +57,7 @@ describe('MatSelectionList without forms', () => {
     }));
 
 
-    beforeEach(async(() => {
+    beforeEach(waitForAsync(() => {
       fixture = TestBed.createComponent(SelectionListWithListOptions);
       fixture.detectChanges();
 
@@ -65,25 +74,25 @@ describe('MatSelectionList without forms', () => {
     });
 
     it('should not emit a selectionChange event if an option changed programmatically', () => {
-      spyOn(fixture.componentInstance, 'onValueChange');
+      spyOn(fixture.componentInstance, 'onSelectionChange');
 
-      expect(fixture.componentInstance.onValueChange).toHaveBeenCalledTimes(0);
+      expect(fixture.componentInstance.onSelectionChange).toHaveBeenCalledTimes(0);
 
       listOptions[2].componentInstance.toggle();
       fixture.detectChanges();
 
-      expect(fixture.componentInstance.onValueChange).toHaveBeenCalledTimes(0);
+      expect(fixture.componentInstance.onSelectionChange).toHaveBeenCalledTimes(0);
     });
 
     it('should emit a selectionChange event if an option got clicked', () => {
-      spyOn(fixture.componentInstance, 'onValueChange');
+      spyOn(fixture.componentInstance, 'onSelectionChange');
 
-      expect(fixture.componentInstance.onValueChange).toHaveBeenCalledTimes(0);
+      expect(fixture.componentInstance.onSelectionChange).toHaveBeenCalledTimes(0);
 
       dispatchFakeEvent(listOptions[2].nativeElement, 'click');
       fixture.detectChanges();
 
-      expect(fixture.componentInstance.onValueChange).toHaveBeenCalledTimes(1);
+      expect(fixture.componentInstance.onSelectionChange).toHaveBeenCalledTimes(1);
     });
 
     it('should be able to dispatch one selected item', () => {
@@ -225,7 +234,7 @@ describe('MatSelectionList without forms', () => {
 
     it('should be able to use keyboard select with SPACE', () => {
       const testListItem = listOptions[1].nativeElement as HTMLElement;
-      const SPACE_EVENT = createKeyboardEvent('keydown', SPACE, undefined, testListItem);
+      const SPACE_EVENT = createKeyboardEvent('keydown', SPACE);
       const selectList =
           selectionList.injector.get<MatSelectionList>(MatSelectionList).selectedOptions;
       expect(selectList.selected.length).toBe(0);
@@ -241,7 +250,7 @@ describe('MatSelectionList without forms', () => {
 
     it('should be able to select an item using ENTER', () => {
       const testListItem = listOptions[1].nativeElement as HTMLElement;
-      const ENTER_EVENT = createKeyboardEvent('keydown', ENTER, undefined, testListItem);
+      const ENTER_EVENT = createKeyboardEvent('keydown', ENTER);
       const selectList =
           selectionList.injector.get<MatSelectionList>(MatSelectionList).selectedOptions;
       expect(selectList.selected.length).toBe(0);
@@ -263,8 +272,7 @@ describe('MatSelectionList without forms', () => {
       expect(selectList.selected.length).toBe(0);
 
       [ENTER, SPACE].forEach(key => {
-        const event = createKeyboardEvent('keydown', key, undefined, testListItem);
-        Object.defineProperty(event, 'ctrlKey', { get: () => true });
+        const event = createKeyboardEvent('keydown', key, undefined, {control: true});
 
         dispatchFakeEvent(testListItem, 'focus');
         selectionList.componentInstance._keydown(event);
@@ -284,8 +292,7 @@ describe('MatSelectionList without forms', () => {
       listOptions[1].componentInstance.disabled = true;
 
       dispatchFakeEvent(testListItem, 'focus');
-      selectionList.componentInstance._keydown(
-          createKeyboardEvent('keydown', SPACE, undefined, testListItem));
+      selectionList.componentInstance._keydown(createKeyboardEvent('keydown', SPACE));
       fixture.detectChanges();
 
       expect(selectionModel.selected.length).toBe(0);
@@ -303,6 +310,21 @@ describe('MatSelectionList without forms', () => {
       expect(manager.activeItemIndex).toBe(0);
       expect(listOptions[0].componentInstance.focus).toHaveBeenCalled();
     });
+
+    it('should not move focus to the first item if focus originated from a mouse interaction',
+      fakeAsync(inject([FocusMonitor], (focusMonitor: FocusMonitor) => {
+        spyOn(listOptions[0].componentInstance, 'focus').and.callThrough();
+
+        const manager = selectionList.componentInstance._keyManager;
+        expect(manager.activeItemIndex).toBe(-1);
+
+        focusMonitor.focusVia(selectionList.nativeElement, 'mouse');
+        fixture.detectChanges();
+        flush();
+
+        expect(manager.activeItemIndex).toBe(-1);
+        expect(listOptions[0].componentInstance.focus).not.toHaveBeenCalled();
+      })));
 
     it('should focus the previously focused option when the list takes focus a second time', () => {
       spyOn(listOptions[1].componentInstance, 'focus').and.callThrough();
@@ -369,8 +391,7 @@ describe('MatSelectionList without forms', () => {
       });
 
     it('should focus previous item when press UP ARROW', () => {
-      let testListItem = listOptions[2].nativeElement as HTMLElement;
-      let UP_EVENT = createKeyboardEvent('keydown', UP_ARROW, undefined, testListItem);
+      let UP_EVENT = createKeyboardEvent('keydown', UP_ARROW);
       let manager = selectionList.componentInstance._keyManager;
 
       dispatchFakeEvent(listOptions[2].nativeElement, 'focus');
@@ -385,8 +406,7 @@ describe('MatSelectionList without forms', () => {
 
     it('should focus and toggle the next item when pressing SHIFT + UP_ARROW', () => {
       const manager = selectionList.componentInstance._keyManager;
-      const upKeyEvent = createKeyboardEvent('keydown', UP_ARROW);
-      Object.defineProperty(upKeyEvent, 'shiftKey', {get: () => true});
+      const upKeyEvent = createKeyboardEvent('keydown', UP_ARROW, undefined, {shift: true});
 
       dispatchFakeEvent(listOptions[3].nativeElement, 'focus');
       expect(manager.activeItemIndex).toBe(3);
@@ -421,8 +441,7 @@ describe('MatSelectionList without forms', () => {
 
     it('should focus and toggle the next item when pressing SHIFT + DOWN_ARROW', () => {
       const manager = selectionList.componentInstance._keyManager;
-      const downKeyEvent = createKeyboardEvent('keydown', DOWN_ARROW);
-      Object.defineProperty(downKeyEvent, 'shiftKey', {get: () => true});
+      const downKeyEvent = createKeyboardEvent('keydown', DOWN_ARROW, undefined, {shift: true});
 
       dispatchFakeEvent(listOptions[0].nativeElement, 'focus');
       expect(manager.activeItemIndex).toBe(0);
@@ -458,8 +477,7 @@ describe('MatSelectionList without forms', () => {
       const manager = selectionList.componentInstance._keyManager;
       expect(manager.activeItemIndex).toBe(-1);
 
-      const event = createKeyboardEvent('keydown', HOME);
-      Object.defineProperty(event, 'shiftKey', { get: () => true });
+      const event = createKeyboardEvent('keydown', HOME, undefined, {alt: true});
 
       dispatchEvent(selectionList.nativeElement, event);
       fixture.detectChanges();
@@ -483,8 +501,7 @@ describe('MatSelectionList without forms', () => {
       const manager = selectionList.componentInstance._keyManager;
       expect(manager.activeItemIndex).toBe(-1);
 
-      const event = createKeyboardEvent('keydown', END);
-      Object.defineProperty(event, 'shiftKey', { get: () => true });
+      const event = createKeyboardEvent('keydown', END, undefined, {alt: true});
 
       dispatchEvent(selectionList.nativeElement, event);
       fixture.detectChanges();
@@ -494,8 +511,8 @@ describe('MatSelectionList without forms', () => {
     });
 
     it('should select all items using ctrl + a', () => {
-      const event = createKeyboardEvent('keydown', A, selectionList.nativeElement);
-      Object.defineProperty(event, 'ctrlKey', {get: () => true});
+      listOptions.forEach(option => option.componentInstance.disabled = false);
+      const event = createKeyboardEvent('keydown', A, undefined, {control: true});
 
       expect(listOptions.some(option => option.componentInstance.selected)).toBe(false);
 
@@ -505,9 +522,24 @@ describe('MatSelectionList without forms', () => {
       expect(listOptions.every(option => option.componentInstance.selected)).toBe(true);
     });
 
+    it('should not select disabled items when pressing ctrl + a', () => {
+      const event = createKeyboardEvent('keydown', A, undefined, {control: true});
+
+      listOptions.slice(0, 2).forEach(option => option.componentInstance.disabled = true);
+      fixture.detectChanges();
+
+      expect(listOptions.map(option => option.componentInstance.selected))
+          .toEqual([false, false, false, false, false]);
+
+      dispatchEvent(selectionList.nativeElement, event);
+      fixture.detectChanges();
+
+      expect(listOptions.map(option => option.componentInstance.selected))
+          .toEqual([false, false, true, true, true]);
+    });
+
     it('should select all items using ctrl + a if some items are selected', () => {
-      const event = createKeyboardEvent('keydown', A, selectionList.nativeElement);
-      Object.defineProperty(event, 'ctrlKey', {get: () => true});
+      const event = createKeyboardEvent('keydown', A, undefined, {control: true});
 
       listOptions.slice(0, 2).forEach(option => option.componentInstance.selected = true);
       fixture.detectChanges();
@@ -521,8 +553,7 @@ describe('MatSelectionList without forms', () => {
     });
 
     it('should deselect all with ctrl + a if all options are selected', () => {
-      const event = createKeyboardEvent('keydown', A, selectionList.nativeElement);
-      Object.defineProperty(event, 'ctrlKey', {get: () => true});
+      const event = createKeyboardEvent('keydown', A, undefined, {control: true});
 
       listOptions.forEach(option => option.componentInstance.selected = true);
       fixture.detectChanges();
@@ -533,6 +564,20 @@ describe('MatSelectionList without forms', () => {
       fixture.detectChanges();
 
       expect(listOptions.every(option => option.componentInstance.selected)).toBe(false);
+    });
+
+    it('should dispatch the selectionChange event when selecting via ctrl + a', () => {
+      const spy = spyOn(fixture.componentInstance, 'onSelectionChange');
+      listOptions.forEach(option => option.componentInstance.disabled = false);
+      const event = createKeyboardEvent('keydown', A, undefined, {control: true});
+
+      dispatchEvent(selectionList.nativeElement, event);
+      fixture.detectChanges();
+
+      expect(spy).toHaveBeenCalledTimes(1);
+      expect(spy).toHaveBeenCalledWith(jasmine.objectContaining({
+        options: listOptions.map(option => option.componentInstance)
+      }));
     });
 
     it('should be able to jump focus down to an item by typing', fakeAsync(() => {
@@ -597,8 +642,7 @@ describe('MatSelectionList without forms', () => {
       fixture.detectChanges();
       tick(100); // Tick only half the typeahead timeout.
 
-      selectionList.componentInstance._keydown(
-        createKeyboardEvent('keydown', SPACE, undefined, testListItem));
+      selectionList.componentInstance._keydown(createKeyboardEvent('keydown', SPACE));
       fixture.detectChanges();
       tick(100); // Tick the rest of the timeout.
 
@@ -617,11 +661,40 @@ describe('MatSelectionList without forms', () => {
       expect(list.options.toArray().every(option => option.selected)).toBe(true);
     });
 
+    it('should be able to select all options, even if they are disabled', () => {
+      const list: MatSelectionList = selectionList.componentInstance;
+
+      list.options.forEach(option => option.disabled = true);
+      fixture.detectChanges();
+
+      expect(list.options.toArray().every(option => option.selected)).toBe(false);
+
+      list.selectAll();
+      fixture.detectChanges();
+
+      expect(list.options.toArray().every(option => option.selected)).toBe(true);
+    });
+
     it('should be able to deselect all options', () => {
       const list: MatSelectionList = selectionList.componentInstance;
 
       list.options.forEach(option => option.toggle());
       expect(list.options.toArray().every(option => option.selected)).toBe(true);
+
+      list.deselectAll();
+      fixture.detectChanges();
+
+      expect(list.options.toArray().every(option => option.selected)).toBe(false);
+    });
+
+    it('should be able to deselect all options, even if they are disabled', () => {
+      const list: MatSelectionList = selectionList.componentInstance;
+
+      list.options.forEach(option => option.toggle());
+      expect(list.options.toArray().every(option => option.selected)).toBe(true);
+
+      list.options.forEach(option => option.disabled = true);
+      fixture.detectChanges();
 
       list.deselectAll();
       fixture.detectChanges();
@@ -696,6 +769,7 @@ describe('MatSelectionList without forms', () => {
 
         dispatchMouseEvent(rippleTarget, 'mousedown');
         dispatchMouseEvent(rippleTarget, 'mouseup');
+        flush();
 
         expect(rippleTarget.querySelectorAll('.mat-ripple-element').length)
             .toBe(0, 'Expected no ripples after list ripples are disabled.');
@@ -731,7 +805,7 @@ describe('MatSelectionList without forms', () => {
     let listItemEl: DebugElement;
     let selectionList: DebugElement;
 
-    beforeEach(async(() => {
+    beforeEach(waitForAsync(() => {
       TestBed.configureTestingModule({
         imports: [MatListModule],
         declarations: [SelectionListWithSelectedOption],
@@ -740,7 +814,7 @@ describe('MatSelectionList without forms', () => {
       TestBed.compileComponents();
     }));
 
-    beforeEach(async(() => {
+    beforeEach(waitForAsync(() => {
       fixture = TestBed.createComponent(SelectionListWithSelectedOption);
       listItemEl = fixture.debugElement.query(By.directive(MatListOption))!;
       selectionList = fixture.debugElement.query(By.directive(MatSelectionList))!;
@@ -754,12 +828,45 @@ describe('MatSelectionList without forms', () => {
     });
   });
 
+  describe('with changing option value', () => {
+    let fixture: ComponentFixture<SelectionListWithChangingOptionValue>;
+    let selectionList: MatSelectionList;
+    let listOption: MatListOption;
+
+    beforeEach(waitForAsync(() => {
+      TestBed.configureTestingModule({
+        imports: [MatListModule],
+        declarations: [SelectionListWithChangingOptionValue],
+      });
+
+      TestBed.compileComponents();
+    }));
+
+    beforeEach(() => {
+      fixture = TestBed.createComponent(SelectionListWithChangingOptionValue);
+      fixture.detectChanges();
+
+      selectionList = fixture.debugElement.query(By.directive(MatSelectionList))!.componentInstance;
+      listOption = fixture.debugElement.query(By.directive(MatListOption))!.componentInstance;
+    });
+
+    it('should use `compareWith` function when updating option selection state', () => {
+      expect(selectionList.selectedOptions.isSelected(listOption)).toBeTrue();
+      fixture.componentInstance.value = {id: 1};
+      fixture.detectChanges();
+      expect(selectionList.selectedOptions.isSelected(listOption)).toBeTrue();
+      fixture.componentInstance.value = {id: 2};
+      fixture.detectChanges();
+      expect(selectionList.selectedOptions.isSelected(listOption)).toBeFalse();
+    });
+  });
+
   describe('with option disabled', () => {
     let fixture: ComponentFixture<SelectionListWithDisabledOption>;
     let listOptionEl: HTMLElement;
     let listOption: MatListOption;
 
-    beforeEach(async(() => {
+    beforeEach(waitForAsync(() => {
       TestBed.configureTestingModule({
         imports: [MatListModule],
         declarations: [SelectionListWithDisabledOption]
@@ -768,7 +875,7 @@ describe('MatSelectionList without forms', () => {
       TestBed.compileComponents();
     }));
 
-    beforeEach(async(() => {
+    beforeEach(waitForAsync(() => {
       fixture = TestBed.createComponent(SelectionListWithDisabledOption);
 
       const listOptionDebug = fixture.debugElement.query(By.directive(MatListOption))!;
@@ -805,7 +912,7 @@ describe('MatSelectionList without forms', () => {
     let listOption: DebugElement[];
     let selectionList: DebugElement;
 
-    beforeEach(async(() => {
+    beforeEach(waitForAsync(() => {
       TestBed.configureTestingModule({
         imports: [MatListModule],
         declarations: [
@@ -819,7 +926,7 @@ describe('MatSelectionList without forms', () => {
       TestBed.compileComponents();
     }));
 
-    beforeEach(async(() => {
+    beforeEach(waitForAsync(() => {
       fixture = TestBed.createComponent(SelectionListWithListDisabled);
       listOption = fixture.debugElement.queryAll(By.directive(MatListOption));
       selectionList = fixture.debugElement.query(By.directive(MatSelectionList))!;
@@ -861,7 +968,7 @@ describe('MatSelectionList without forms', () => {
   describe('with checkbox position after', () => {
     let fixture: ComponentFixture<SelectionListWithCheckboxPositionAfter>;
 
-    beforeEach(async(() => {
+    beforeEach(waitForAsync(() => {
       TestBed.configureTestingModule({
         imports: [MatListModule],
         declarations: [
@@ -875,7 +982,7 @@ describe('MatSelectionList without forms', () => {
       TestBed.compileComponents();
     }));
 
-    beforeEach(async(() => {
+    beforeEach(waitForAsync(() => {
       fixture = TestBed.createComponent(SelectionListWithCheckboxPositionAfter);
       fixture.detectChanges();
     }));
@@ -887,7 +994,7 @@ describe('MatSelectionList without forms', () => {
   });
 
   describe('with list item elements', () => {
-    beforeEach(async(() => {
+    beforeEach(waitForAsync(() => {
       TestBed.configureTestingModule({
         imports: [MatListModule],
         declarations: [
@@ -919,7 +1026,7 @@ describe('MatSelectionList without forms', () => {
     let listOptions: DebugElement[];
     let selectionList: DebugElement;
 
-    beforeEach(async(() => {
+    beforeEach(waitForAsync(() => {
       TestBed.configureTestingModule({
         imports: [MatListModule],
         declarations: [
@@ -988,8 +1095,7 @@ describe('MatSelectionList without forms', () => {
     });
 
     it('should do nothing when pressing ctrl + a', () => {
-      const event = createKeyboardEvent('keydown', A, selectionList.nativeElement);
-      Object.defineProperty(event, 'ctrlKey', {get: () => true});
+      const event = createKeyboardEvent('keydown', A, undefined, {control: true});
 
       expect(listOptions.every(option => !option.componentInstance.selected)).toBe(true);
 
@@ -1002,8 +1108,7 @@ describe('MatSelectionList without forms', () => {
     it('should focus, but not toggle, the next item when pressing SHIFT + UP_ARROW in single ' +
       'selection mode', () => {
         const manager = selectionList.componentInstance._keyManager;
-        const upKeyEvent = createKeyboardEvent('keydown', UP_ARROW);
-        Object.defineProperty(upKeyEvent, 'shiftKey', {get: () => true});
+        const upKeyEvent = createKeyboardEvent('keydown', UP_ARROW, undefined, {shift: true});
 
         dispatchFakeEvent(listOptions[3].nativeElement, 'focus');
         expect(manager.activeItemIndex).toBe(3);
@@ -1021,8 +1126,7 @@ describe('MatSelectionList without forms', () => {
     it('should focus, but not toggle, the next item when pressing SHIFT + DOWN_ARROW ' +
       'in single selection mode', () => {
         const manager = selectionList.componentInstance._keyManager;
-        const downKeyEvent = createKeyboardEvent('keydown', DOWN_ARROW);
-        Object.defineProperty(downKeyEvent, 'shiftKey', {get: () => true});
+        const downKeyEvent = createKeyboardEvent('keydown', DOWN_ARROW, undefined, {shift: true});
 
         dispatchFakeEvent(listOptions[0].nativeElement, 'focus');
         expect(manager.activeItemIndex).toBe(0);
@@ -1042,7 +1146,7 @@ describe('MatSelectionList without forms', () => {
 
 describe('MatSelectionList with forms', () => {
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [MatListModule, FormsModule, ReactiveFormsModule],
       declarations: [
@@ -1113,16 +1217,27 @@ describe('MatSelectionList with forms', () => {
         .toBe(1, 'Expected first list option to be selected');
     }));
 
-    it('should set the selection-list to touched on blur', fakeAsync(() => {
+    it('should not mark the model as touched when the list is blurred', fakeAsync(() => {
       expect(ngModel.touched)
         .toBe(false, 'Expected the selection-list to be untouched by default.');
 
       dispatchFakeEvent(selectionListDebug.nativeElement, 'blur');
       fixture.detectChanges();
-
       tick();
 
-      expect(ngModel.touched).toBe(true, 'Expected the selection-list to be touched after blur');
+      expect(ngModel.touched).toBe(false, 'Expected the selection-list to remain untouched.');
+    }));
+
+    it('should mark the model as touched when a list item is blurred', fakeAsync(() => {
+      expect(ngModel.touched)
+        .toBe(false, 'Expected the selection-list to be untouched by default.');
+
+      dispatchFakeEvent(fixture.nativeElement.querySelector('.mat-list-option'), 'blur');
+      fixture.detectChanges();
+      tick();
+
+      expect(ngModel.touched)
+        .toBe(true, 'Expected the selection-list to be touched after an item is blurred.');
     }));
 
     it('should be pristine by default', fakeAsync(() => {
@@ -1419,7 +1534,7 @@ describe('MatSelectionList with forms', () => {
 @Component({template: `
   <mat-selection-list
     id="selection-list-1"
-    (selectionChange)="onValueChange($event)"
+    (selectionChange)="onSelectionChange($event)"
     [disableRipple]="listRippleDisabled"
     [color]="selectionListColor"
     [multiple]="multiple">
@@ -1448,7 +1563,7 @@ class SelectionListWithListOptions {
   selectionListColor: ThemePalette;
   firstOptionColor: ThemePalette;
 
-  onValueChange(_change: MatSelectionListChange) {}
+  onSelectionChange(_change: MatSelectionListChange) {}
 }
 
 @Component({template: `
@@ -1607,6 +1722,20 @@ class SelectionListWithCustomComparator {
     {id: 2, label: 'Two'},
     {id: 3, label: 'Three'}
   ];
+}
+
+
+@Component({
+  template: `
+    <mat-selection-list [compareWith]="compareWith">
+      <mat-list-option [value]="value" [selected]="value.id === 1">
+        One
+      </mat-list-option>
+    </mat-selection-list>`
+})
+class SelectionListWithChangingOptionValue {
+  compareWith = (o1: any, o2: any) => o1 && o2 && o1.id === o2.id;
+  value = {id: 1};
 }
 
 

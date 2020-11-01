@@ -14,7 +14,9 @@
     *Note*: We add aria-owns as a workaround for an issue in JAWS & NVDA where the label isn't
     read if it comes before the control in the DOM.
   -->
-  <label matFormFieldFloatingLabel [floating]="_shouldLabelFloat()"
+  <label matFormFieldFloatingLabel
+         [floating]="_shouldLabelFloat()"
+         [required]="!hideRequiredMarker && _control.required"
          *ngIf="_hasFloatingLabel()"
          (cdkObserveContent)="_refreshOutlineNotchWidth()"
          [cdkObserveContentDisabled]="!_hasOutline()"
@@ -22,23 +24,17 @@
          [attr.for]="_control.id"
          [attr.aria-owns]="_control.id">
     <ng-content select="mat-label"></ng-content>
-
-    <!-- Manually handle the required asterisk. This is necessary because MDC can only
-         display the asterisk if the label is directly preceded by the input. This cannot
-         be guaranteed here since the form control is not necessarily an input, or is wrapped.
-      -->
-    <span class="mat-mdc-form-field-required-marker" aria-hidden="true"
-          *ngIf="!hideRequiredMarker && _control.required && !_control.disabled">&#32;*</span>
   </label>
 </ng-template>
 
 <div class="mat-mdc-text-field-wrapper mdc-text-field" #textField
+     [class.mdc-text-field--filled]="!_hasOutline()"
      [class.mdc-text-field--outlined]="_hasOutline()"
      [class.mdc-text-field--no-label]="!_hasFloatingLabel()"
      [class.mdc-text-field--disabled]="_control.disabled"
      [class.mdc-text-field--invalid]="_control.errorState"
      (click)="_control.onContainerClick && _control.onContainerClick($event)">
-  <div class="mat-mdc-form-field-focus-overlay" *ngIf="!_hasOutline()"></div>
+  <div class="mat-mdc-form-field-focus-overlay" *ngIf="!_hasOutline() && !_control.disabled"></div>
   <div class="mat-mdc-form-field-flex">
     <div *ngIf="_hasOutline()" matFormFieldNotchedOutline
          [matFormFieldNotchedOutlineOpen]="_shouldLabelFloat()"

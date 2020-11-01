@@ -14,23 +14,33 @@ import {Platform} from '@angular/cdk/platform';
 import {
   createKeyboardEvent,
   createMouseEvent,
+  createPointerEvent,
   dispatchEvent,
   dispatchFakeEvent,
   dispatchKeyboardEvent,
   dispatchMouseEvent,
 } from '@angular/cdk/testing/private';
 import {Component, DebugElement, Type, ViewChild} from '@angular/core';
-import {ComponentFixture, fakeAsync, flush, TestBed, tick} from '@angular/core/testing';
+import {ComponentFixture, fakeAsync, flush, TestBed, tick, inject} from '@angular/core/testing';
 import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {By} from '@angular/platform-browser';
+import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {MatSlider, MatSliderModule} from './index';
 
-describe('MDC-based MatSlider', () => {
-  const platform = new Platform();
+// TODO: disabled until we implement the new MDC slider.
+describe('MDC-based MatSlider dummy' , () => it('', () => {}));
 
+// tslint:disable-next-line:ban
+xdescribe('MDC-based MatSlider', () => {
   function createComponent<T>(component: Type<T>): ComponentFixture<T> {
     TestBed.configureTestingModule({
-      imports: [MatSliderModule, ReactiveFormsModule, FormsModule, BidiModule],
+      imports: [
+        MatSliderModule,
+        ReactiveFormsModule,
+        FormsModule,
+        BidiModule,
+        NoopAnimationsModule,
+      ],
       declarations: [component],
     }).compileComponents();
 
@@ -186,14 +196,14 @@ describe('MDC-based MatSlider', () => {
       expect(sliderNativeElement.classList).not.toContain('mat-slider-active');
     });
 
-    it('should disable tabbing to the slider', () => {
+    it('should disable tabbing to the slider', inject([Platform], (platform: Platform) => {
       expect(sliderNativeElement.hasAttribute('tabindex')).toBe(false);
       // The "tabIndex" property returns an incorrect value in Edge 17.
       // See: https://developer.microsoft.com/en-us/microsoft-edge/platform/issues/4365703/
       if (!platform.EDGE) {
         expect(sliderNativeElement.tabIndex).toBe(-1);
       }
-    });
+    }));
   });
 
   describe('slider with set min and max', () => {
@@ -414,10 +424,12 @@ describe('MDC-based MatSlider', () => {
       // pixel will be a tick.
       const ticksPerTrackPercentage = (tickInterval * step);
       // iOS evaluates the "background" expression for the ticks to the exact number,
-      // Firefox, Edge, Safari evaluate to a percentage value, and Chrome evaluates to
-      // a rounded five-digit decimal number.
+      // Firefox, Edge, Safari 12.1 evaluate to a percentage value. Chrome evaluates to
+      // a rounded five-digit decimal number and Safari 13.1 evaluates to a decimal
+      // representing the percentage.
       const expectationRegex = new RegExp(
-          `(${sizeOfTick}|${ticksPerTrackPercentage}%|${sizeOfTick.toFixed(5)})`);
+          `(${sizeOfTick}|${ticksPerTrackPercentage}%|${sizeOfTick.toFixed(5)}|` +
+          `${ticksPerTrackPercentage / 100})`);
       expect(ticksContainerElement.style.background)
         .toMatch(expectationRegex);
     });
@@ -718,10 +730,10 @@ describe('MDC-based MatSlider', () => {
     it('should emit an input event while sliding', () => {
       expect(testComponent.onChange).not.toHaveBeenCalled();
 
-      dispatchSliderMouseEvent(sliderNativeElement, 'mousedown', 0);
-      dispatchSliderMouseEvent(sliderNativeElement, 'mousemove', 0.5);
-      dispatchSliderMouseEvent(sliderNativeElement, 'mousemove', 1);
-      dispatchSliderMouseEvent(sliderNativeElement, 'mouseup', 1);
+      dispatchSliderMouseEvent(sliderNativeElement, 'down', 0);
+      dispatchSliderMouseEvent(sliderNativeElement, 'move', 0.5);
+      dispatchSliderMouseEvent(sliderNativeElement, 'move', 1);
+      dispatchSliderMouseEvent(sliderNativeElement, 'up', 1);
 
       fixture.detectChanges();
 
@@ -922,8 +934,7 @@ describe('MDC-based MatSlider', () => {
         UP_ARROW, DOWN_ARROW, RIGHT_ARROW,
         LEFT_ARROW, PAGE_DOWN, PAGE_UP, HOME, END
       ].forEach(key => {
-        const event = createKeyboardEvent('keydown', key);
-        Object.defineProperty(event, 'altKey', {get: () => true});
+        const event = createKeyboardEvent('keydown', key, undefined, {alt: true});
         dispatchEvent(sliderNativeElement, event);
         fixture.detectChanges();
         expect(event.defaultPrevented).toBe(false);
@@ -1230,10 +1241,13 @@ function flushRequestAnimationFrame() {
   tick(16);
 }
 
-// Disable animations and make the slider an even 100px, so that we get nice
-// round values in tests.
+// Disable animations and make the slider an even 100px, so that we get
+// nice round values in tests.
 const styles = `
-  .mat-mdc-slider { min-width: 100px !important; }
+  .mat-mdc-slider {
+    min-width: 100px !important;
+    width: 100px;
+  }
 `;
 
 @Component({
@@ -1409,8 +1423,8 @@ class SliderWithTwoWayBinding {
  */
 function dispatchMousedownEventSequence(sliderElement: HTMLElement, percentage: number,
                                         button = 0): void {
-  dispatchSliderMouseEvent(sliderElement, 'mousedown', percentage, button);
-  dispatchSliderMouseEvent(sliderElement, 'mouseup', percentage, button);
+  dispatchSliderMouseEvent(sliderElement, 'down', percentage, button);
+  dispatchSliderMouseEvent(sliderElement, 'up', percentage, button);
 }
 
 /**
@@ -1421,25 +1435,32 @@ function dispatchMousedownEventSequence(sliderElement: HTMLElement, percentage: 
  */
 function dispatchSlideEventSequence(sliderElement: HTMLElement, startPercent: number,
                                     endPercent: number): void {
-  dispatchSliderMouseEvent(sliderElement, 'mousedown', startPercent);
-  dispatchSliderMouseEvent(sliderElement, 'mousemove', startPercent);
-  dispatchSliderMouseEvent(sliderElement, 'mousemove', endPercent);
-  dispatchSliderMouseEvent(sliderElement, 'mouseup', endPercent);
+  dispatchSliderMouseEvent(sliderElement, 'down', startPercent);
+  dispatchSliderMouseEvent(sliderElement, 'move', startPercent);
+  dispatchSliderMouseEvent(sliderElement, 'move', endPercent);
+  dispatchSliderMouseEvent(sliderElement, 'up', endPercent);
 }
 
 /**
  * Dispatches a mouse event from an element at a given position based on the percentage.
  * @param sliderElement The mat-slider element from which the event will be dispatched.
- * @param type Type of the mouse event that should be dispatched.
+ * @param type Type of mouse interaction.
  * @param percent The percentage of the slider where the event will happen.
  * @param button Button that should be held for this event.
  */
-function dispatchSliderMouseEvent(sliderElement: HTMLElement, type: string, percent: number,
-                                  button = 0): void {
-  let trackElement = sliderElement.querySelector('.mdc-slider__track-container')!;
-  let dimensions = trackElement.getBoundingClientRect();
-  let x = dimensions.left + (dimensions.width * percent);
-  let y = dimensions.top + (dimensions.height * percent);
+function dispatchSliderMouseEvent(sliderElement: HTMLElement, type: 'up' | 'down' | 'move',
+                                  percent: number, button = 0): void {
+  const trackElement = sliderElement.querySelector('.mdc-slider__track-container')!;
+  const dimensions = trackElement.getBoundingClientRect();
+  const clientX = dimensions.left + (dimensions.width * percent);
+  const clientY = dimensions.top + (dimensions.height * percent);
 
-  dispatchEvent(sliderElement, createMouseEvent(type, x, y, 0));
+  // The latest versions of all browsers we support have the new `PointerEvent` API.
+  // Though since we capture the two most recent versions of these browsers, we also
+  // need to support Safari 12 at time of writing. Safari 12 does not have support for this,
+  // so we need to conditionally create and dispatch these events based on feature detection.
+  if (window.PointerEvent !== undefined) {
+    dispatchEvent(sliderElement, createPointerEvent(`pointer${type}`, clientX, clientY));
+  }
+  dispatchEvent(sliderElement, createMouseEvent(`mouse${type}`, clientX, clientY, 0));
 }

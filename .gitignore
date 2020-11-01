@@ -39,3 +39,6 @@ testem.log
 /.git
 /.firebase
 /.bazelrc.user
+*.log
+.ng-dev.user*
+.husky/_

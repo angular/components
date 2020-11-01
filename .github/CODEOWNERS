@@ -42,10 +42,12 @@
 /src/material/core/*                               @jelbourn
 /src/material/core/testing/**                      @crisbeto
 /src/material/core/animation/**                    @jelbourn
+/src/material/core/color/**                        @jelbourn @devversion
 /src/material/core/common-behaviors/**             @jelbourn @devversion
 /src/material/core/datetime/**                     @mmalerba
+/src/material/core/density/**                      @devversion
 /src/material/core/error/**                        @crisbeto @mmalerba
-/src/material/core/focus-indicator/**              @jelbourn @zelliott
+/src/material/core/focus-indicators/**             @jelbourn @zelliott
 /src/material/core/gestures/**                     @jelbourn
 /src/material/core/label/**                        @mmalerba
 /src/material/core/line/**                         @jelbourn
@@ -97,17 +99,21 @@
 /src/material-experimental/mdc-card/**             @mmalerba
 /src/material-experimental/mdc-checkbox/**         @mmalerba
 /src/material-experimental/mdc-chips/**            @mmalerba
+/src/material-experimental/mdc-color/**            @jelbourn @devversion
+/src/material-experimental/mdc-core/**             @crisbeto
+/src/material-experimental/mdc-density/**          @devversion
 /src/material-experimental/mdc-dialog/**           @devversion
 /src/material-experimental/mdc-form-field/**       @devversion @mmalerba
 /src/material-experimental/mdc-helpers/**          @mmalerba
 /src/material-experimental/mdc-input/**            @devversion @mmalerba
-/src/material-experimental/mdc-list/**             @mmalerba
+/src/material-experimental/mdc-list/**             @mmalerba @devversion
 /src/material-experimental/mdc-menu/**             @crisbeto
 /src/material-experimental/mdc-select/**           @crisbeto
+/src/material-experimental/mdc-paginator/**        @crisbeto
 /src/material-experimental/mdc-progress-spinner/** @andrewseguin
 /src/material-experimental/mdc-progress-bar/**     @andrewseguin
 /src/material-experimental/mdc-radio/**            @mmalerba
-/src/material-experimental/mdc-snackbar/**         @opozo
+/src/material-experimental/mdc-snack-bar/**        @andrewseguin
 /src/material-experimental/mdc-slide-toggle/**     @crisbeto
 /src/material-experimental/mdc-slider/**           @devversion
 /src/material-experimental/mdc-tabs/**             @crisbeto
@@ -115,28 +121,38 @@
 /src/material-experimental/mdc-table/**            @andrewseguin
 /src/material-experimental/mdc-theming/**          @mmalerba
 /src/material-experimental/mdc-typography/**       @mmalerba
+/src/material-experimental/menubar/**              @jelbourn @andy9775
 /src/material-experimental/popover-edit/**         @kseamon @andrewseguin
+/src/material-experimental/selection/**            @yifange @jelbourn
 
 # CDK experimental package
 /src/cdk-experimental/*                            @jelbourn
 /src/cdk-experimental/column-resize/**             @kseamon @andrewseguin
+/src/cdk-experimental/combobox/**                  @nielsr98 @jelbourn
 /src/cdk-experimental/dialog/**                    @jelbourn @crisbeto
+/src/cdk-experimental/menu/**                      @jelbourn @andy9775
 /src/cdk-experimental/popover-edit/**              @kseamon @andrewseguin
 /src/cdk-experimental/scrolling/**                 @mmalerba
+/src/cdk-experimental/listbox/**                   @nielsr98 @jelbourn
+/src/cdk-experimental/selection/**                 @yifange @jelbourn
 
 # Docs examples & guides
 /guides/**                                         @jelbourn
-/src/components-examples/**                        @jelbourn
+/src/components-examples/**                        @andrewseguin
 
 # Dev-app
-/src/dev-app/*                                     @jelbourn
+/src/dev-app/*                                     @devversion
 /src/dev-app/autocomplete/**                       @crisbeto
 /src/dev-app/badge/**                              @jelbourn
 /src/dev-app/baseline/**                           @mmalerba
 /src/dev-app/bottom-sheet/**                       @jelbourn @crisbeto
 /src/dev-app/button-toggle/**                      @jelbourn
+/src/dev-app/mdc-autocomplete/**                   @crisbeto
 /src/dev-app/button/**                             @jelbourn
 /src/dev-app/card/**                               @jelbourn
+/src/dev-app/cdk-experimental-combobox/**          @jelbourn @nielsr98
+/src/dev-app/cdk-experimental-listbox/**           @jelbourn @nielsr98
+/src/dev-app/cdk-experimental-menu/**              @jelbourn @andy9775
 /src/dev-app/checkbox/**                           @jelbourn @devversion
 /src/dev-app/chips/**                              @jelbourn
 /src/dev-app/clipboard/**                          @jelbourn @xkxx
@@ -164,17 +180,24 @@
 /src/dev-app/mdc-card/**                           @mmalerba
 /src/dev-app/mdc-checkbox/**                       @mmalerba
 /src/dev-app/mdc-chips/**                          @mmalerba
+/src/dev-app/mdc-dialog/**                         @devversion
 /src/dev-app/mdc-input/**                          @devversion @mmalerba
 /src/dev-app/mdc-list/**                           @mmalerba
 /src/dev-app/mdc-menu/**                           @crisbeto
+/src/dev-app/mdc-paginator/**                      @crisbeto
 /src/dev-app/mdc-progress-bar/**                   @crisbeto
+/src/dev-app/mdc-progress-spinner/**               @annieyw @mmalerba
 /src/dev-app/mdc-radio/**                          @mmalerba
-/src/dev-app/mdc-snackbar/**                       @opozo
+/src/dev-app/mdc-select/**                         @crisbeto
+/src/dev-app/mdc-snack-bar/**                      @andrewseguin
+/src/dev-app/mdc-sidenav/**                        @crisbeto
+/src/dev-app/mdc-snack-bar/**                      @andrewseguin
 /src/dev-app/mdc-slide-toggle/**                   @crisbeto
 /src/dev-app/mdc-slider/**                         @devversion
 /src/dev-app/mdc-table/**                          @andrewseguin
 /src/dev-app/mdc-tabs/**                           @crisbeto
 /src/dev-app/menu/**                               @crisbeto
+/src/dev-app/menubar/**                            @jelbourn @andy9775
 /src/dev-app/overlay/**                            @jelbourn @crisbeto
 /src/dev-app/paginator/**                          @andrewseguin
 /src/dev-app/platform/**                           @jelbourn @devversion
@@ -199,6 +222,7 @@
 /src/dev-app/typography/**                         @crisbeto
 /src/dev-app/virtual-scroll/**                     @mmalerba
 /src/dev-app/youtube-player/**                     @nathantate
+/src/dev-app/selection/**                          @yifange @jelbourn
 
 # E2E app
 /src/e2e-app/*                                     @jelbourn
@@ -221,11 +245,16 @@
 /src/e2e-app/mdc-card/**                           @mmalerba
 /src/e2e-app/mdc-checkbox/**                       @mmalerba
 /src/e2e-app/mdc-chips/**                          @mmalerba
+/src/e2e-app/mdc-dialog/**                         @devversion
+/src/e2e-app/mdc-input/**                          @devversion
 /src/e2e-app/mdc-menu/**                           @crisbeto
 /src/e2e-app/mdc-progress-bar/**                   @crisbeto
+/src/e2e-app/mdc-progress-spinner/**               @annieyw @mmalerba
 /src/e2e-app/mdc-radio/**                          @mmalerba
+/src/e2e-app/mdc-slider/**                         @andrewseguin
 /src/e2e-app/mdc-slide-toggle/**                   @crisbeto
 /src/e2e-app/mdc-tabs/**                           @crisbeto
+/src/e2e-app/mdc-table/**                          @andrewseguin
 /src/e2e-app/menu/**                               @crisbeto
 /src/e2e-app/progress-bar/**                       @jelbourn @crisbeto
 /src/e2e-app/progress-spinner/**                   @jelbourn @crisbeto
@@ -239,7 +268,7 @@
 /src/e2e-app/virtual-scroll/**                     @mmalerba
 
 # Universal app
-/src/universal-app/**                              @jelbourn
+/src/universal-app/**                              @devversion
 
 # Integration tests
 /integration/**                                    @jelbourn @devversion
@@ -278,6 +307,7 @@
 /tools/public_api_guard/material/card.d.ts              @jelbourn
 /tools/public_api_guard/material/checkbox.d.ts          @jelbourn @devversion
 /tools/public_api_guard/material/chips.d.ts             @jelbourn
+/tools/public_api_guard/material/chips/testing.d.ts     @jelbourn
 /tools/public_api_guard/material/core.d.ts              @jelbourn
 /tools/public_api_guard/material/datepicker.d.ts        @mmalerba
 /tools/public_api_guard/material/dialog.d.ts            @jelbourn @crisbeto
@@ -309,8 +339,12 @@
 /tools/public_api_guard/youtube-player/youtube-player.d.ts      @jelbourn @nathantate
 
 # Misc
-/*                                                 @angular/dev-infra-components @jelbourn
-/.github/**                                        @angular/dev-infra-components @jelbourn
+/.github/**                                        @angular/dev-infra-components
+/.github/CODEOWNERS                                @angular/dev-infra-components @jelbourn
+/.github/ISSUE_TEMPLATE/**                         @andrewseguin @jelbourn
 /.vscode/**                                        @angular/dev-infra-components @mmalerba
-/src/*                                             @jelbourn
-/goldens/ts-circular-deps.json                     @angular/dev-infra-components
+/.ng-dev/**                                        @angular/dev-infra-components
+/goldens/size-test.yml                             @jelbourn @mmalerba @crisbeto
+/goldens/**                                        @angular/dev-infra-components
+/src/*                                             @angular/dev-infra-components
+/*                                                 @angular/dev-infra-components

@@ -79,21 +79,16 @@ export interface IconOptions {
  * @docs-private
  */
 class SvgIconConfig {
-  url: SafeResourceUrl | null;
   svgElement: SVGElement | null;
 
-  constructor(url: SafeResourceUrl, options?: IconOptions);
-  constructor(svgElement: SVGElement, options?: IconOptions);
-  constructor(data: SafeResourceUrl | SVGElement, public options?: IconOptions) {
-    // Note that we can't use `instanceof SVGElement` here,
-    // because it'll break during server-side rendering.
-    if (!!(data as any).nodeName) {
-      this.svgElement = data as SVGElement;
-    } else {
-      this.url = data as SafeResourceUrl;
-    }
-  }
+  constructor(
+    public url: SafeResourceUrl,
+    public svgText: string | null,
+    public options?: IconOptions) {}
 }
+
+/** Icon configuration whose content has already been loaded. */
+type LoadedSvgIconConfig = SvgIconConfig & {svgText: string};
 
 /**
  * Service to register and display icons used by the `<mat-icon>` component.
@@ -137,8 +132,7 @@ export class MatIconRegistry implements OnDestroy {
     @Optional() private _httpClient: HttpClient,
     private _sanitizer: DomSanitizer,
     @Optional() @Inject(DOCUMENT) document: any,
-    // @breaking-change 9.0.0 _errorHandler parameter to be made required
-    @Optional() private readonly _errorHandler?: ErrorHandler) {
+    private readonly _errorHandler: ErrorHandler) {
       this._document = document;
     }
 
@@ -168,7 +162,7 @@ export class MatIconRegistry implements OnDestroy {
    */
   addSvgIconInNamespace(namespace: string, iconName: string, url: SafeResourceUrl,
                         options?: IconOptions): this {
-    return this._addSvgIconConfig(namespace, iconName, new SvgIconConfig(url, options));
+    return this._addSvgIconConfig(namespace, iconName, new SvgIconConfig(url, null, options));
   }
 
   /**
@@ -179,14 +173,15 @@ export class MatIconRegistry implements OnDestroy {
    */
   addSvgIconLiteralInNamespace(namespace: string, iconName: string, literal: SafeHtml,
                                options?: IconOptions): this {
-    const sanitizedLiteral = this._sanitizer.sanitize(SecurityContext.HTML, literal);
+    const cleanLiteral = this._sanitizer.sanitize(SecurityContext.HTML, literal);
 
-    if (!sanitizedLiteral) {
+    // TODO: add an ngDevMode check
+    if (!cleanLiteral) {
       throw getMatIconFailedToSanitizeLiteralError(literal);
     }
 
-    const svgElement = this._createSvgElementForSingleIcon(sanitizedLiteral, options);
-    return this._addSvgIconConfig(namespace, iconName, new SvgIconConfig(svgElement, options));
+    return this._addSvgIconConfig(namespace, iconName,
+        new SvgIconConfig('', cleanLiteral, options));
   }
 
   /**
@@ -211,7 +206,7 @@ export class MatIconRegistry implements OnDestroy {
    * @param url
    */
   addSvgIconSetInNamespace(namespace: string, url: SafeResourceUrl, options?: IconOptions): this {
-    return this._addSvgIconSetConfig(namespace, new SvgIconConfig(url, options));
+    return this._addSvgIconSetConfig(namespace, new SvgIconConfig(url, null, options));
   }
 
   /**
@@ -221,14 +216,13 @@ export class MatIconRegistry implements OnDestroy {
    */
   addSvgIconSetLiteralInNamespace(namespace: string, literal: SafeHtml,
                                   options?: IconOptions): this {
-    const sanitizedLiteral = this._sanitizer.sanitize(SecurityContext.HTML, literal);
+    const cleanLiteral = this._sanitizer.sanitize(SecurityContext.HTML, literal);
 
-    if (!sanitizedLiteral) {
+    if (!cleanLiteral) {
       throw getMatIconFailedToSanitizeLiteralError(literal);
     }
 
-    const svgElement = this._svgElementFromString(sanitizedLiteral);
-    return this._addSvgIconSetConfig(namespace, new SvgIconConfig(svgElement, options));
+    return this._addSvgIconSetConfig(namespace, new SvgIconConfig('', cleanLiteral, options));
   }
 
   /**
@@ -292,7 +286,7 @@ export class MatIconRegistry implements OnDestroy {
       return observableOf(cloneSvg(cachedIcon));
     }
 
-    return this._loadSvgIconFromConfig(new SvgIconConfig(safeUrl)).pipe(
+    return this._loadSvgIconFromConfig(new SvgIconConfig(safeUrl, null)).pipe(
       tap(svg => this._cachedIconsByUrl.set(url!, svg)),
       map(svg => cloneSvg(svg)),
     );
@@ -335,15 +329,12 @@ export class MatIconRegistry implements OnDestroy {
    * Returns the cached icon for a SvgIconConfig if available, or fetches it from its URL if not.
    */
   private _getSvgFromConfig(config: SvgIconConfig): Observable<SVGElement> {
-    if (config.svgElement) {
+    if (config.svgText) {
       // We already have the SVG element for this icon, return a copy.
-      return observableOf(cloneSvg(config.svgElement));
+      return observableOf(cloneSvg(this._svgElementFromConfig(config as LoadedSvgIconConfig)));
     } else {
       // Fetch the icon from the config's URL, cache it, and return a copy.
-      return this._loadSvgIconFromConfig(config).pipe(
-        tap(svg => config.svgElement = svg),
-        map(svg => cloneSvg(svg)),
-      );
+      return this._loadSvgIconFromConfig(config).pipe(map(svg => cloneSvg(svg)));
     }
   }
 
@@ -370,22 +361,17 @@ export class MatIconRegistry implements OnDestroy {
 
     // Not found in any cached icon sets. If there are icon sets with URLs that we haven't
     // fetched, fetch them now and look for iconName in the results.
-    const iconSetFetchRequests: Observable<SVGElement | null>[] = iconSetConfigs
-      .filter(iconSetConfig => !iconSetConfig.svgElement)
+    const iconSetFetchRequests: Observable<string | null>[] = iconSetConfigs
+      .filter(iconSetConfig => !iconSetConfig.svgText)
       .map(iconSetConfig => {
         return this._loadSvgIconSetFromConfig(iconSetConfig).pipe(
-          catchError((err: HttpErrorResponse): Observable<SVGElement | null> => {
+          catchError((err: HttpErrorResponse) => {
             const url = this._sanitizer.sanitize(SecurityContext.RESOURCE_URL, iconSetConfig.url);
 
             // Swallow errors fetching individual URLs so the
             // combined Observable won't necessarily fail.
             const errorMessage = `Loading icon set URL: ${url} failed: ${err.message}`;
-            // @breaking-change 9.0.0 _errorHandler parameter to be made required
-            if (this._errorHandler) {
-              this._errorHandler.handleError(new Error(errorMessage));
-            } else {
-              console.error(errorMessage);
-            }
+            this._errorHandler.handleError(new Error(errorMessage));
             return observableOf(null);
           })
         );
@@ -396,6 +382,7 @@ export class MatIconRegistry implements OnDestroy {
     return forkJoin(iconSetFetchRequests).pipe(map(() => {
       const foundIcon = this._extractIconWithNameFromAnySet(name, iconSetConfigs);
 
+      // TODO: add an ngDevMode check
       if (!foundIcon) {
         throw getMatIconNameNotFoundError(name);
       }
@@ -414,8 +401,14 @@ export class MatIconRegistry implements OnDestroy {
     // Iterate backwards, so icon sets added later have precedence.
     for (let i = iconSetConfigs.length - 1; i >= 0; i--) {
       const config = iconSetConfigs[i];
-      if (config.svgElement) {
-        const foundIcon = this._extractSvgIconFromSet(config.svgElement, iconName, config.options);
+
+      // Parsing the icon set's text into an SVG element can be expensive. We can avoid some of
+      // the parsing by doing a quick check using `indexOf` to see if there's any chance for the
+      // icon to be in the set. This won't be 100% accurate, but it should help us avoid at least
+      // some of the parsing.
+      if (config.svgText && config.svgText.indexOf(iconName) > -1) {
+        const svg = this._svgElementFromConfig(config as LoadedSvgIconConfig);
+        const foundIcon = this._extractSvgIconFromSet(svg, iconName, config.options);
         if (foundIcon) {
           return foundIcon;
         }
@@ -429,38 +422,22 @@ export class MatIconRegistry implements OnDestroy {
    * from it.
    */
   private _loadSvgIconFromConfig(config: SvgIconConfig): Observable<SVGElement> {
-    return this._fetchIcon(config)
-        .pipe(map(svgText => this._createSvgElementForSingleIcon(svgText, config.options)));
+    return this._fetchIcon(config).pipe(
+      tap(svgText => config.svgText = svgText),
+      map(() => this._svgElementFromConfig(config as LoadedSvgIconConfig))
+    );
   }
 
   /**
-   * Loads the content of the icon set URL specified in the SvgIconConfig and creates an SVG element
-   * from it.
+   * Loads the content of the icon set URL specified in the
+   * SvgIconConfig and attaches it to the config.
    */
-  private _loadSvgIconSetFromConfig(config: SvgIconConfig): Observable<SVGElement> {
-    // If the SVG for this icon set has already been parsed, do nothing.
-    if (config.svgElement) {
-      return observableOf(config.svgElement);
+  private _loadSvgIconSetFromConfig(config: SvgIconConfig): Observable<string | null> {
+    if (config.svgText) {
+      return observableOf(null);
     }
 
-    return this._fetchIcon(config).pipe(map(svgText => {
-      // It is possible that the icon set was parsed and cached by an earlier request, so parsing
-      // only needs to occur if the cache is yet unset.
-      if (!config.svgElement) {
-        config.svgElement = this._svgElementFromString(svgText);
-      }
-
-      return config.svgElement;
-    }));
-  }
-
-  /**
-   * Creates a DOM element from the given SVG string, and adds default attributes.
-   */
-  private _createSvgElementForSingleIcon(responseText: string, options?: IconOptions): SVGElement {
-    const svg = this._svgElementFromString(responseText);
-    this._setSvgAttributes(svg, options);
-    return svg;
+    return this._fetchIcon(config).pipe(tap(svgText => config.svgText = svgText));
   }
 
   /**
@@ -516,6 +493,7 @@ export class MatIconRegistry implements OnDestroy {
     div.innerHTML = str;
     const svg = div.querySelector('svg') as SVGElement;
 
+    // TODO: add an ngDevMode check
     if (!svg) {
       throw Error('<svg> tag not found');
     }
@@ -577,12 +555,14 @@ export class MatIconRegistry implements OnDestroy {
       throw getMatIconNoHttpProviderError();
     }
 
+    // TODO: add an ngDevMode check
     if (safeUrl == null) {
       throw Error(`Cannot fetch icon from URL "${safeUrl}".`);
     }
 
     const url = this._sanitizer.sanitize(SecurityContext.RESOURCE_URL, safeUrl);
 
+    // TODO: add an ngDevMode check
     if (!url) {
       throw getMatIconFailedToSanitizeUrlError(safeUrl);
     }
@@ -596,8 +576,6 @@ export class MatIconRegistry implements OnDestroy {
       return inProgressFetch;
     }
 
-    // TODO(jelbourn): for some reason, the `finalize` operator "loses" the generic type on the
-    // Observable. Figure out why and fix it.
     const req = this._httpClient.get(url, {responseType: 'text', withCredentials}).pipe(
       finalize(() => this._inProgressUrlFetches.delete(url)),
       share(),
@@ -634,6 +612,17 @@ export class MatIconRegistry implements OnDestroy {
 
     return this;
   }
+
+  /** Parses a config's text into an SVG element. */
+  private _svgElementFromConfig(config: LoadedSvgIconConfig): SVGElement {
+    if (!config.svgElement) {
+      const svg = this._svgElementFromString(config.svgText);
+      this._setSvgAttributes(svg, config.options);
+      config.svgElement = svg;
+    }
+
+    return config.svgElement;
+  }
 }
 
 /** @docs-private */
@@ -641,8 +630,8 @@ export function ICON_REGISTRY_PROVIDER_FACTORY(
   parentRegistry: MatIconRegistry,
   httpClient: HttpClient,
   sanitizer: DomSanitizer,
-  document?: any,
-  errorHandler?: ErrorHandler) {
+  errorHandler: ErrorHandler,
+  document?: any) {
   return parentRegistry || new MatIconRegistry(httpClient, sanitizer, document, errorHandler);
 }
 
@@ -654,7 +643,7 @@ export const ICON_REGISTRY_PROVIDER = {
     [new Optional(), new SkipSelf(), MatIconRegistry],
     [new Optional(), HttpClient],
     DomSanitizer,
-    [new Optional(), ErrorHandler],
+    ErrorHandler,
     [new Optional(), DOCUMENT as InjectionToken<any>],
   ],
   useFactory: ICON_REGISTRY_PROVIDER_FACTORY,

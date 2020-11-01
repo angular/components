@@ -15,7 +15,6 @@ import {
   MatCheckboxChange,
   MatCheckboxModule
 } from './index';
-import {MAT_CHECKBOX_CLICK_ACTION} from './checkbox-config';
 import {MutationObserverFactory} from '@angular/cdk/observers';
 import {ThemePalette} from '@angular/material/core';
 
@@ -465,8 +464,14 @@ describe('MatCheckbox', () => {
         expect(checkboxNativeElement.classList.contains('mat-primary')).toBe(false);
         expect(checkboxNativeElement.classList.contains('mat-accent')).toBe(true);
         expect(checkboxNativeElement.classList.contains('custom-class')).toBe(true);
-
       });
+
+      it('should default to accent if no color is passed in', () => {
+        testComponent.checkboxColor = undefined;
+        fixture.detectChanges();
+        expect(checkboxNativeElement.classList).toContain('mat-accent');
+      });
+
     });
 
     describe('state transition css classes', () => {
@@ -536,39 +541,6 @@ describe('MatCheckbox', () => {
 
         expect(checkboxNativeElement.classList)
           .not.toContain('mat-checkbox-anim-unchecked-indeterminate');
-      }));
-    });
-
-    describe(`when MAT_CHECKBOX_CLICK_ACTION is set`, () => {
-      beforeEach(() => {
-        TestBed.resetTestingModule();
-        TestBed.configureTestingModule({
-          imports: [MatCheckboxModule, FormsModule, ReactiveFormsModule],
-          declarations: [SingleCheckbox],
-          providers: [
-            {provide: MAT_CHECKBOX_CLICK_ACTION, useValue: 'check'},
-            {provide: MAT_CHECKBOX_DEFAULT_OPTIONS, useValue: {clickAction: 'noop'}}
-          ]
-        });
-
-        fixture = createComponent(SingleCheckbox);
-        fixture.detectChanges();
-
-        checkboxDebugElement = fixture.debugElement.query(By.directive(MatCheckbox))!;
-        checkboxNativeElement = checkboxDebugElement.nativeElement;
-        testComponent = fixture.debugElement.componentInstance;
-
-        inputElement = checkboxNativeElement.querySelector('input') as HTMLInputElement;
-      });
-
-      it('should override the value set in the default options', fakeAsync(() => {
-        testComponent.isIndeterminate = true;
-        inputElement.click();
-        fixture.detectChanges();
-        flush();
-
-        expect(inputElement.checked).toBe(true);
-        expect(inputElement.indeterminate).toBe(true);
       }));
     });
 
@@ -781,6 +753,32 @@ describe('MatCheckbox', () => {
 
       fixture.detectChanges();
       expect(inputElement.getAttribute('aria-labelledby')).toBe(null);
+    });
+  });
+
+  describe('with provided aria-describedby ', () => {
+    let checkboxDebugElement: DebugElement;
+    let checkboxNativeElement: HTMLElement;
+    let inputElement: HTMLInputElement;
+
+    it('should use the provided aria-describedby', () => {
+      fixture = createComponent(CheckboxWithAriaDescribedby);
+      checkboxDebugElement = fixture.debugElement.query(By.directive(MatCheckbox))!;
+      checkboxNativeElement = checkboxDebugElement.nativeElement;
+      inputElement = <HTMLInputElement>checkboxNativeElement.querySelector('input');
+
+      fixture.detectChanges();
+      expect(inputElement.getAttribute('aria-describedby')).toBe('some-id');
+    });
+
+    it('should not assign aria-describedby if none is provided', () => {
+      fixture = createComponent(SingleCheckbox);
+      checkboxDebugElement = fixture.debugElement.query(By.directive(MatCheckbox))!;
+      checkboxNativeElement = checkboxDebugElement.nativeElement;
+      inputElement = <HTMLInputElement>checkboxNativeElement.querySelector('input');
+
+      fixture.detectChanges();
+      expect(inputElement.getAttribute('aria-describedby')).toBe(null);
     });
   });
 
@@ -1216,7 +1214,7 @@ describe('MatCheckboxDefaultOptions', () => {
       TestBed.compileComponents();
     });
 
-    it('should override default color in Component', () => {
+    it('should override default color in component', () => {
       const fixture: ComponentFixture<SimpleCheckbox> =
           TestBed.createComponent(SimpleCheckbox);
       fixture.detectChanges();
@@ -1345,6 +1343,12 @@ class CheckboxWithAriaLabel { }
   template: `<mat-checkbox aria-labelledby="some-id"></mat-checkbox>`
 })
 class CheckboxWithAriaLabelledby {}
+
+/** Simple test component with an aria-describedby set. */
+@Component({
+  template: `<mat-checkbox aria-describedby="some-id"></mat-checkbox>`
+})
+class CheckboxWithAriaDescribedby {}
 
 /** Simple test component with name attribute */
 @Component({

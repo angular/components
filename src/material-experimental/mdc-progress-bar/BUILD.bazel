@@ -23,10 +23,11 @@ ng_module(
     module_name = "@angular/material-experimental/mdc-progress-bar",
     deps = [
         "//src/cdk/bidi",
-        "//src/material/core",
+        "//src/material-experimental/mdc-core",
         "//src/material/progress-bar",
         "@npm//@angular/core",
         "@npm//@material/linear-progress",
+        "@npm//@types/resize-observer-browser",
     ],
 )
 

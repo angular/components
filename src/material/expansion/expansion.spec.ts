@@ -1,4 +1,11 @@
-import {async, TestBed, fakeAsync, tick, ComponentFixture, flush} from '@angular/core/testing';
+import {
+  waitForAsync,
+  TestBed,
+  fakeAsync,
+  tick,
+  ComponentFixture,
+  flush,
+} from '@angular/core/testing';
 import {Component, ViewChild} from '@angular/core';
 import {By} from '@angular/platform-browser';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
@@ -17,7 +24,7 @@ import {
 
 
 describe('MatExpansionPanel', () => {
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [
         MatExpansionModule,
@@ -351,6 +358,11 @@ describe('MatExpansionPanel', () => {
     expect(panel.componentInstance.hideToggle).toBe(true);
     expect(header.componentInstance.expandedHeight).toBe('10px');
     expect(header.componentInstance.collapsedHeight).toBe('16px');
+    expect(header.nativeElement.style.height).toBe('16px');
+
+    fixture.componentInstance.expanded = true;
+    fixture.detectChanges();
+    expect(header.nativeElement.style.height).toBe('10px');
   });
 
   describe('disabled state', () => {

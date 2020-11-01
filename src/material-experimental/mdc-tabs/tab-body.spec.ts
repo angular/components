@@ -2,8 +2,8 @@ import {Direction, Directionality} from '@angular/cdk/bidi';
 import {PortalModule, TemplatePortal} from '@angular/cdk/portal';
 import {CommonModule} from '@angular/common';
 import {AfterContentInit, Component, TemplateRef, ViewChild, ViewContainerRef} from '@angular/core';
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
-import {MatRippleModule} from '@angular/material/core';
+import {waitForAsync, ComponentFixture, TestBed} from '@angular/core/testing';
+import {MatRippleModule} from '@angular/material-experimental/mdc-core';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {MatTabBody, MatTabBodyPortal} from './tab-body';
 import {Subject} from 'rxjs';
@@ -13,7 +13,7 @@ describe('MDC-based MatTabBody', () => {
   let dir: Direction = 'ltr';
   let dirChange: Subject<Direction> = new Subject<Direction>();
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     dir = 'ltr';
     TestBed.configureTestingModule({
       imports: [CommonModule, PortalModule, MatRippleModule, NoopAnimationsModule],
@@ -193,7 +193,7 @@ class SimpleTabBodyApp implements AfterContentInit {
   origin: number | null;
 
   @ViewChild(MatTabBody) tabBody: MatTabBody;
-  @ViewChild(TemplateRef, {static: true}) template: TemplateRef<any>;
+  @ViewChild(TemplateRef) template: TemplateRef<any>;
 
   constructor(private _viewContainerRef: ViewContainerRef) { }
 

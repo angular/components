@@ -1,18 +1,19 @@
 import {Platform} from '@angular/cdk/platform';
-import {InteractivityChecker} from './interactivity-checker';
+import {PLATFORM_ID} from '@angular/core';
+import {inject} from '@angular/core/testing';
+import {InteractivityChecker, IsFocusableConfig} from './interactivity-checker';
 
 describe('InteractivityChecker', () => {
-  const platform: Platform = new Platform();
-
+  let platform: Platform;
   let testContainerElement: HTMLElement;
   let checker: InteractivityChecker;
 
-  beforeEach(() => {
+  beforeEach(inject([PLATFORM_ID], (platformId: Object) => {
     testContainerElement = document.createElement('div');
     document.body.appendChild(testContainerElement);
-
+    platform = new Platform(platformId);
     checker = new InteractivityChecker(platform);
-  });
+  }));
 
   afterEach(() => {
     document.body.removeChild(testContainerElement);
@@ -21,7 +22,7 @@ describe('InteractivityChecker', () => {
 
   describe('isDisabled', () => {
     it('should return true for disabled elements', () => {
-      let elements = createElements('input', 'textarea', 'select', 'button', 'mat-checkbox');
+      const elements = createElements('input', 'textarea', 'select', 'button', 'mat-checkbox');
       elements.forEach(el => el.setAttribute('disabled', ''));
       appendElements(elements);
 
@@ -32,7 +33,7 @@ describe('InteractivityChecker', () => {
     });
 
     it('should return false for elements without disabled', () => {
-      let elements = createElements('input', 'textarea', 'select', 'button', 'mat-checkbox');
+      const elements = createElements('input', 'textarea', 'select', 'button', 'mat-checkbox');
       appendElements(elements);
 
       elements.forEach(el => {
@@ -46,7 +47,7 @@ describe('InteractivityChecker', () => {
     it('should return false for a `display: none` element', () => {
       testContainerElement.innerHTML =
           `<input style="display: none;">`;
-      let input = testContainerElement.querySelector('input') as HTMLElement;
+      const input = testContainerElement.querySelector('input') as HTMLElement;
 
       expect(checker.isVisible(input))
           .toBe(false, 'Expected element with `display: none` to not be visible');
@@ -57,7 +58,7 @@ describe('InteractivityChecker', () => {
         `<div style="display: none;">
            <input>
          </div>`;
-      let input = testContainerElement.querySelector('input') as HTMLElement;
+      const input = testContainerElement.querySelector('input') as HTMLElement;
 
       expect(checker.isVisible(input))
           .toBe(false, 'Expected element with `display: none` parent to not be visible');
@@ -66,7 +67,7 @@ describe('InteractivityChecker', () => {
     it('should return false for a `visibility: hidden` element', () => {
       testContainerElement.innerHTML =
           `<input style="visibility: hidden;">`;
-      let input = testContainerElement.querySelector('input') as HTMLElement;
+      const input = testContainerElement.querySelector('input') as HTMLElement;
 
       expect(checker.isVisible(input))
           .toBe(false, 'Expected element with `visibility: hidden` to not be visible');
@@ -77,7 +78,7 @@ describe('InteractivityChecker', () => {
         `<div style="visibility: hidden;">
            <input>
          </div>`;
-      let input = testContainerElement.querySelector('input') as HTMLElement;
+      const input = testContainerElement.querySelector('input') as HTMLElement;
 
       expect(checker.isVisible(input))
           .toBe(false, 'Expected element with `visibility: hidden` parent to not be visible');
@@ -91,7 +92,7 @@ describe('InteractivityChecker', () => {
              <input>
            </div>
          </div>`;
-      let input = testContainerElement.querySelector('input') as HTMLElement;
+      const input = testContainerElement.querySelector('input') as HTMLElement;
 
       expect(checker.isVisible(input))
           .toBe(true, 'Expected element with `visibility: hidden` ancestor and closer ' +
@@ -99,7 +100,7 @@ describe('InteractivityChecker', () => {
     });
 
     it('should return true for an element without visibility modifiers', () => {
-      let input = document.createElement('input');
+      const input = document.createElement('input');
       testContainerElement.appendChild(input);
 
       expect(checker.isVisible(input))
@@ -109,7 +110,7 @@ describe('InteractivityChecker', () => {
 
   describe('isFocusable', () => {
     it('should return true for native form controls', () => {
-      let elements = createElements('input', 'textarea', 'select', 'button');
+      const elements = createElements('input', 'textarea', 'select', 'button');
       appendElements(elements);
 
       elements.forEach(el => {
@@ -118,7 +119,7 @@ describe('InteractivityChecker', () => {
     });
 
     it('should return true for an anchor with an href', () => {
-      let anchor = document.createElement('a');
+      const anchor = document.createElement('a');
       anchor.href = 'google.com';
       testContainerElement.appendChild(anchor);
 
@@ -126,7 +127,7 @@ describe('InteractivityChecker', () => {
     });
 
     it('should return false for an anchor without an href', () => {
-      let anchor = document.createElement('a');
+      const anchor = document.createElement('a');
       testContainerElement.appendChild(anchor);
 
       expect(checker.isFocusable(anchor))
@@ -134,7 +135,7 @@ describe('InteractivityChecker', () => {
     });
 
     it('should return false for disabled form controls', () => {
-      let elements = createElements('input', 'textarea', 'select', 'button');
+      const elements = createElements('input', 'textarea', 'select', 'button');
       elements.forEach(el => el.setAttribute('disabled', ''));
       appendElements(elements);
 
@@ -147,10 +148,21 @@ describe('InteractivityChecker', () => {
     it('should return false for a `display: none` element', () => {
       testContainerElement.innerHTML =
           `<input style="display: none;">`;
-      let input = testContainerElement.querySelector('input') as HTMLElement;
+      const input = testContainerElement.querySelector('input') as HTMLElement;
 
       expect(checker.isFocusable(input))
           .toBe(false, 'Expected element with `display: none` to not be visible');
+    });
+
+    it('should return true for a `display: none` element with ignoreVisibility', () => {
+      testContainerElement.innerHTML =
+          `<input style="display: none;">`;
+      const input = testContainerElement.querySelector('input') as HTMLElement;
+      let config = new IsFocusableConfig();
+      config.ignoreVisibility = true;
+
+      expect(checker.isFocusable(input, config))
+          .toBe(true, 'Expected element with `display: none` to be focusable');
     });
 
     it('should return false for the child of a `display: none` element', () => {
@@ -158,7 +170,7 @@ describe('InteractivityChecker', () => {
         `<div style="display: none;">
            <input>
          </div>`;
-      let input = testContainerElement.querySelector('input') as HTMLElement;
+      const input = testContainerElement.querySelector('input') as HTMLElement;
 
       expect(checker.isFocusable(input))
           .toBe(false, 'Expected element with `display: none` parent to not be visible');
@@ -167,7 +179,7 @@ describe('InteractivityChecker', () => {
     it('should return false for a `visibility: hidden` element', () => {
       testContainerElement.innerHTML =
           `<input style="visibility: hidden;">`;
-      let input = testContainerElement.querySelector('input') as HTMLElement;
+      const input = testContainerElement.querySelector('input') as HTMLElement;
 
       expect(checker.isFocusable(input))
           .toBe(false, 'Expected element with `visibility: hidden` not to be focusable');
@@ -178,7 +190,7 @@ describe('InteractivityChecker', () => {
         `<div style="visibility: hidden;">
            <input>
          </div>`;
-      let input = testContainerElement.querySelector('input') as HTMLElement;
+      const input = testContainerElement.querySelector('input') as HTMLElement;
 
       expect(checker.isFocusable(input))
           .toBe(false, 'Expected element with `visibility: hidden` parent not to be focusable');
@@ -192,7 +204,7 @@ describe('InteractivityChecker', () => {
              <input>
            </div>
          </div>`;
-      let input = testContainerElement.querySelector('input') as HTMLElement;
+      const input = testContainerElement.querySelector('input') as HTMLElement;
 
       expect(checker.isFocusable(input))
           .toBe(true, 'Expected element with `visibility: hidden` ancestor and closer ' +
@@ -200,7 +212,7 @@ describe('InteractivityChecker', () => {
     });
 
     it('should return false for an element with an empty tabindex', () => {
-      let element = document.createElement('div');
+      const element = document.createElement('div');
       element.setAttribute('tabindex', '');
       testContainerElement.appendChild(element);
 
@@ -209,7 +221,7 @@ describe('InteractivityChecker', () => {
     });
 
     it('should return false for an element with a non-numeric tabindex', () => {
-      let element = document.createElement('div');
+      const element = document.createElement('div');
       element.setAttribute('tabindex', 'abba');
       testContainerElement.appendChild(element);
 
@@ -218,7 +230,7 @@ describe('InteractivityChecker', () => {
     });
 
     it('should return true for an element with contenteditable', () => {
-      let element = document.createElement('div');
+      const element = document.createElement('div');
       element.setAttribute('contenteditable', '');
       testContainerElement.appendChild(element);
 
@@ -228,7 +240,7 @@ describe('InteractivityChecker', () => {
 
 
     it('should return false for inert div and span', () => {
-      let elements = createElements('div', 'span');
+      const elements = createElements('div', 'span');
       appendElements(elements);
 
       elements.forEach(el => {
@@ -242,40 +254,56 @@ describe('InteractivityChecker', () => {
 
   describe('isTabbable', () => {
 
-    it('should respect the tabindex for video elements with controls',
-      // Do not run for Blink, Firefox and iOS because those treat video elements
-      // with controls different and are covered in other tests.
-      runIf(!platform.BLINK && !platform.FIREFOX && !platform.IOS, () => {
-        let video = createFromTemplate('<video controls>', true);
-
-        expect(checker.isTabbable(video)).toBe(true);
-
-        video.tabIndex = -1;
-
-        expect(checker.isTabbable(video)).toBe(false);
-      })
-    );
-
-    it('should always mark video elements with controls as tabbable (BLINK & FIREFOX)',
-      // Only run this spec for Blink and Firefox, because those always treat video
-      // elements with controls as tabbable.
-      runIf(platform.BLINK || platform.FIREFOX, () => {
-        let video = createFromTemplate('<video controls>', true);
-
-        expect(checker.isTabbable(video)).toBe(true);
-
-        video.tabIndex = -1;
-
-        expect(checker.isTabbable(video)).toBe(true);
-      })
-    );
-
     // Some tests should not run inside of iOS browsers, because those only allow specific
     // elements to be tabbable and cause the tests to always fail.
-    describe('for non-iOS browsers', runIf(!platform.IOS, () => {
+    describe('for non-iOS browsers', () => {
+      let shouldSkip: boolean;
+
+      beforeEach(() => {
+        shouldSkip = platform.IOS;
+      });
+
+      it('should by default treat video elements with controls as tabbable', () => {
+        if (shouldSkip) {
+          return;
+        }
+
+        const video = createFromTemplate('<video controls>', true);
+        expect(checker.isTabbable(video)).toBe(true);
+      });
+
+      it('should respect the tabindex for video elements with controls', () => {
+        if (shouldSkip) {
+          return;
+        }
+
+        const video = createFromTemplate('<video controls>', true);
+        expect(checker.isTabbable(video)).toBe(true);
+
+        video.tabIndex = -1;
+        expect(checker.isTabbable(video)).toBe(false);
+      });
+
+      // Firefox always makes video elements (regardless of the controls) as tabbable, unless
+      // explicitly opted-out by setting the tabindex.
+      it('should by default treat video elements without controls as tabbable in firefox', () => {
+        if (!platform.FIREFOX) {
+          return;
+        }
+
+        const video = createFromTemplate('<video>', true);
+        expect(checker.isTabbable(video)).toBe(true);
+
+        video.tabIndex = -1;
+        expect(checker.isTabbable(video)).toBe(false);
+      });
 
       it('should mark form controls and anchors without tabindex attribute as tabbable', () => {
-        let elements = createElements('input', 'textarea', 'select', 'button', 'a');
+        if (shouldSkip) {
+          return;
+        }
+
+        const elements = createElements('input', 'textarea', 'select', 'button', 'a');
         appendElements(elements);
 
         elements.forEach(el => {
@@ -284,7 +312,11 @@ describe('InteractivityChecker', () => {
       });
 
       it('should return true for div and span with tabindex == 0', () => {
-        let elements = createElements('div', 'span');
+        if (shouldSkip) {
+          return;
+        }
+
+        const elements = createElements('div', 'span');
 
         elements.forEach(el => el.setAttribute('tabindex', '0'));
         appendElements(elements);
@@ -296,7 +328,11 @@ describe('InteractivityChecker', () => {
       });
 
       it('should return false for native form controls and anchor with tabindex == -1', () => {
-        let elements = createElements('input', 'textarea', 'select', 'button', 'a');
+        if (shouldSkip) {
+          return;
+        }
+
+        const elements = createElements('input', 'textarea', 'select', 'button', 'a');
 
         elements.forEach(el => el.setAttribute('tabindex', '-1'));
         appendElements(elements);
@@ -308,7 +344,11 @@ describe('InteractivityChecker', () => {
       });
 
       it('should return true for div and span with tabindex == 0', () => {
-        let elements = createElements('div', 'span');
+        if (shouldSkip) {
+          return;
+        }
+
+        const elements = createElements('div', 'span');
 
         elements.forEach(el => el.setAttribute('tabindex', '0'));
         appendElements(elements);
@@ -320,8 +360,12 @@ describe('InteractivityChecker', () => {
       });
 
       it('should respect the inherited tabindex inside of frame elements', () => {
-        let iframe = createFromTemplate('<iframe>', true) as HTMLFrameElement;
-        let button = createFromTemplate('<button tabindex="0">Not Tabbable</button>');
+        if (shouldSkip) {
+          return;
+        }
+
+        const iframe = createFromTemplate('<iframe>', true) as HTMLFrameElement;
+        const button = createFromTemplate('<button tabindex="0">Not Tabbable</button>');
 
         appendElements([iframe]);
 
@@ -338,6 +382,10 @@ describe('InteractivityChecker', () => {
       });
 
       it('should carefully try to access the frame element of an elements window', () => {
+        if (shouldSkip) {
+          return;
+        }
+
         const iframe = createFromTemplate('<iframe>', true) as HTMLFrameElement;
         const button = createFromTemplate('<button tabindex="1">Not Tabbable</button>');
 
@@ -357,7 +405,11 @@ describe('InteractivityChecker', () => {
       });
 
       it('should mark elements which are contentEditable as tabbable', () => {
-        let editableEl = createFromTemplate('<div contenteditable="true">', true);
+        if (shouldSkip) {
+          return;
+        }
+
+        const editableEl = createFromTemplate('<div contenteditable="true">', true);
 
         expect(checker.isTabbable(editableEl)).toBe(true);
 
@@ -367,40 +419,43 @@ describe('InteractivityChecker', () => {
       });
 
       it('should never mark iframe elements as tabbable', () => {
-        let iframe = createFromTemplate('<iframe>', true);
+        if (!shouldSkip) {
+          const iframe = createFromTemplate('<iframe>', true);
 
-        // iFrame elements will be never marked as tabbable, because it depends on the content
-        // which is mostly not detectable due to CORS and also the checks will be not reliable.
-        expect(checker.isTabbable(iframe)).toBe(false);
+          // iFrame elements will be never marked as tabbable, because it depends on the content
+          // which is mostly not detectable due to CORS and also the checks will be not reliable.
+          expect(checker.isTabbable(iframe)).toBe(false);
+        }
       });
 
-      it('should always mark audio elements without controls as not tabbable', () => {
-        let audio = createFromTemplate('<audio>', true);
-
-        expect(checker.isTabbable(audio)).toBe(false);
+      it('should detect audio elements with controls as tabbable', () => {
+        if (!shouldSkip) {
+          const audio = createFromTemplate('<audio controls>', true);
+          expect(checker.isTabbable(audio)).toBe(true);
+          audio.tabIndex = -1;
+          expect(checker.isTabbable(audio)).toBe(false);
+        }
       });
 
-    }));
+      it('should always detect audio elements without controls as non-tabbable', () => {
+        if (!shouldSkip) {
+          const audio = createFromTemplate('<audio>', true);
+          expect(checker.isTabbable(audio)).toBe(false);
 
-    describe('for Blink and Webkit browsers', runIf(platform.BLINK || platform.WEBKIT, () => {
-
-      it('should not mark elements inside of object frames as tabbable', () => {
-        let objectEl = createFromTemplate('<object>', true) as HTMLObjectElement;
-        let button = createFromTemplate('<button tabindex="0">Not Tabbable</button>');
-
-        appendElements([objectEl]);
-
-        // This creates an empty contentDocument for the frame element.
-        objectEl.type = 'text/html';
-        objectEl.contentDocument!.body.appendChild(button);
-
-        expect(checker.isTabbable(objectEl)).toBe(false);
-        expect(checker.isTabbable(button)).toBe(false);
+          // Setting a `tabindex` has no effect. The audio element is expected
+          // to be still not tabbable.
+          audio.tabIndex = 0;
+          expect(checker.isTabbable(audio)).toBe(false);
+        }
       });
 
       it('should not mark elements inside of invisible frames as tabbable', () => {
-        let iframe = createFromTemplate('<iframe>', true) as HTMLFrameElement;
-        let button = createFromTemplate('<button tabindex="0">Not Tabbable</button>');
+        if (shouldSkip) {
+          return;
+        }
+
+        const iframe = createFromTemplate('<iframe>', true) as HTMLFrameElement;
+        const button = createFromTemplate('<button tabindex="0">Not Tabbable</button>');
 
         appendElements([iframe]);
 
@@ -412,72 +467,49 @@ describe('InteractivityChecker', () => {
       });
 
       it('should never mark object frame elements as tabbable', () => {
-        let objectEl = createFromTemplate('<object>', true);
-
-        expect(checker.isTabbable(objectEl)).toBe(false);
+        if (!shouldSkip) {
+          const objectEl = createFromTemplate('<object>', true);
+          expect(checker.isTabbable(objectEl)).toBe(false);
+        }
       });
+    });
 
-    }));
+    describe('for iOS browsers', () => {
+      let shouldSkip: boolean;
 
-    describe('for Blink browsers', runIf(platform.BLINK, () => {
-
-      it('should always mark audio elements with controls as tabbable', () => {
-        let audio = createFromTemplate('<audio controls>', true);
-
-        expect(checker.isTabbable(audio)).toBe(true);
-
-        audio.tabIndex = -1;
-
-        // The audio element will be still tabbable because Blink always
-        // considers them as tabbable.
-        expect(checker.isTabbable(audio)).toBe(true);
+      beforeEach(() => {
+        shouldSkip = !platform.IOS || !platform.WEBKIT;
       });
-
-    }));
-
-    describe('for Internet Explorer', runIf(platform.TRIDENT, () => {
-
-      it('should never mark video elements without controls as tabbable', () => {
-        // In Internet Explorer video elements without controls are never tabbable.
-        let video = createFromTemplate('<video>', true);
-
-        expect(checker.isTabbable(video)).toBe(false);
-
-        video.tabIndex = 0;
-
-        expect(checker.isTabbable(video)).toBe(false);
-
-      });
-
-    }));
-
-    describe('for iOS browsers', runIf(platform.IOS && platform.WEBKIT, () => {
 
       it('should never allow div elements to be tabbable', () => {
-        let divEl = createFromTemplate('<div tabindex="0">', true);
-
-        expect(checker.isTabbable(divEl)).toBe(false);
+        if (!shouldSkip) {
+          const divEl = createFromTemplate('<div tabindex="0">', true);
+          expect(checker.isTabbable(divEl)).toBe(false);
+        }
       });
 
       it('should never allow span elements to be tabbable', () => {
-        let spanEl = createFromTemplate('<span tabindex="0">Text</span>', true);
-
-        expect(checker.isTabbable(spanEl)).toBe(false);
+        if (!shouldSkip) {
+          const spanEl = createFromTemplate('<span tabindex="0">Text</span>', true);
+          expect(checker.isTabbable(spanEl)).toBe(false);
+        }
       });
 
       it('should never allow button elements to be tabbable', () => {
-        let buttonEl = createFromTemplate('<button tabindex="0">', true);
-
-        expect(checker.isTabbable(buttonEl)).toBe(false);
+        if (!shouldSkip) {
+          const buttonEl = createFromTemplate('<button tabindex="0">', true);
+          expect(checker.isTabbable(buttonEl)).toBe(false);
+        }
       });
 
       it('should never allow anchor elements to be tabbable', () => {
-        let anchorEl = createFromTemplate('<a tabindex="0">Link</a>', true);
-
-        expect(checker.isTabbable(anchorEl)).toBe(false);
+        if (!shouldSkip) {
+          const anchorEl = createFromTemplate('<a tabindex="0">Link</a>', true);
+          expect(checker.isTabbable(anchorEl)).toBe(false);
+        }
       });
 
-    }));
+    });
 
 
   });
@@ -488,10 +520,10 @@ describe('InteractivityChecker', () => {
   }
 
   function createFromTemplate(template: string, append = false) {
-    let tmpRoot = document.createElement('div');
+    const tmpRoot = document.createElement('div');
     tmpRoot.innerHTML = template;
 
-    let element = tmpRoot.firstElementChild!;
+    const element = tmpRoot.firstElementChild!;
 
     tmpRoot.removeChild(element);
 
@@ -504,17 +536,9 @@ describe('InteractivityChecker', () => {
 
   /** Appends elements to the testContainerElement. */
   function appendElements(elements: Element[]) {
-    for (let e of elements) {
+    for (const e of elements) {
       testContainerElement.appendChild(e);
     }
-  }
-
-  function runIf(this: any, condition: boolean, runFn: Function): () => void {
-    return (...args: any[]) => {
-      if (condition) {
-        runFn.apply(this, args);
-      }
-    };
   }
 
 });

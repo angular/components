@@ -1,4 +1,4 @@
-import {async, TestBed, inject} from '@angular/core/testing';
+import {waitForAsync, TestBed, inject} from '@angular/core/testing';
 import {Component, ViewChild, QueryList, ViewChildren} from '@angular/core';
 import {By} from '@angular/platform-browser';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
@@ -20,7 +20,7 @@ import {FocusMonitor} from '@angular/cdk/a11y';
 describe('MatAccordion', () => {
   let focusMonitor: FocusMonitor;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [
         BrowserAnimationsModule,
@@ -257,8 +257,7 @@ describe('MatAccordion', () => {
 
     headers.forEach(header => spyOn(header, 'focus'));
     const eventTarget = headerElements[headerElements.length - 1].nativeElement;
-    const event = createKeyboardEvent('keydown', HOME, eventTarget);
-    Object.defineProperty(event, 'altKey', {get: () => true});
+    const event = createKeyboardEvent('keydown', HOME, undefined, {alt: true});
 
     dispatchEvent(eventTarget, event);
     fixture.detectChanges();
@@ -292,8 +291,7 @@ describe('MatAccordion', () => {
     headers.forEach(header => spyOn(header, 'focus'));
 
     const eventTarget = headerElements[0].nativeElement;
-    const event = createKeyboardEvent('keydown', END, eventTarget);
-    Object.defineProperty(event, 'altKey', {get: () => true});
+    const event = createKeyboardEvent('keydown', END, undefined, {alt: true});
 
     dispatchEvent(eventTarget, event);
     fixture.detectChanges();
@@ -339,8 +337,8 @@ class SetOfItems {
   </mat-accordion>`})
 class NestedAccordions {
   @ViewChildren(MatExpansionPanelHeader) headers: QueryList<MatExpansionPanelHeader>;
-  @ViewChild('secondOuterHeader', {static: false}) secondOuterHeader: MatExpansionPanelHeader;
-  @ViewChild('firstInnerHeader', {static: false}) firstInnerHeader: MatExpansionPanelHeader;
+  @ViewChild('secondOuterHeader') secondOuterHeader: MatExpansionPanelHeader;
+  @ViewChild('firstInnerHeader') firstInnerHeader: MatExpansionPanelHeader;
 }
 
 @Component({template: `

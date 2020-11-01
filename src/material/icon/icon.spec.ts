@@ -1,15 +1,16 @@
-import {inject, async, fakeAsync, tick, TestBed} from '@angular/core/testing';
+import {inject, waitForAsync, fakeAsync, tick, TestBed} from '@angular/core/testing';
 import {SafeResourceUrl, DomSanitizer, SafeHtml} from '@angular/platform-browser';
 import {
   HttpClientTestingModule,
   HttpTestingController,
   TestRequest,
 } from '@angular/common/http/testing';
-import {Component, ErrorHandler} from '@angular/core';
+import {Component, ErrorHandler, ViewChild} from '@angular/core';
 import {MatIconModule, MAT_ICON_LOCATION} from './index';
 import {MatIconRegistry, getMatIconNoHttpProviderError} from './icon-registry';
 import {FAKE_SVGS} from './fake-svgs';
 import {wrappedErrorMessage} from '@angular/cdk/testing/private';
+import {MatIcon} from './icon';
 
 
 /** Returns the CSS classes assigned to an element as a sorted array. */
@@ -46,7 +47,7 @@ describe('MatIcon', () => {
   let fakePath: string;
   let errorHandler: jasmine.SpyObj<ErrorHandler>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     // The $ prefix tells Karma not to try to process the
     // request so that we don't get warnings in our logs.
     fakePath = '/$fake-path';
@@ -64,6 +65,7 @@ describe('MatIcon', () => {
         InlineIcon,
         SvgIconWithUserContent,
         IconWithLigatureAndSvgBinding,
+        BlankIcon,
       ],
       providers: [
         {
@@ -610,6 +612,42 @@ describe('MatIcon', () => {
       tick();
     }));
 
+    it('should cancel in-progress fetches if the icon changes', fakeAsync(() => {
+      // Register an icon that will resolve immediately.
+      iconRegistry.addSvgIconLiteral('fluffy', trustHtml(FAKE_SVGS.cat));
+
+      // Register a different icon that takes some time to resolve.
+      iconRegistry.addSvgIcon('fido', trustUrl('dog.svg'));
+
+      const fixture = TestBed.createComponent(IconFromSvgName);
+      const iconElement = fixture.debugElement.nativeElement.querySelector('mat-icon');
+
+      // Assign the slow icon first.
+      fixture.componentInstance.iconName = 'fido';
+      fixture.detectChanges();
+
+      // Assign the quick icon while the slow one is still in-flight.
+      fixture.componentInstance.iconName = 'fluffy';
+      fixture.detectChanges();
+
+      // Expect for the in-flight request to have been cancelled.
+      expect(http.expectOne('dog.svg').cancelled).toBe(true);
+
+      // Expect the last icon to have been assigned.
+      verifyPathChildElement(verifyAndGetSingleSvgChild(iconElement), 'meow');
+    }));
+
+    it('should cancel in-progress fetches if the component is destroyed', fakeAsync(() => {
+      iconRegistry.addSvgIcon('fido', trustUrl('dog.svg'));
+
+      const fixture = TestBed.createComponent(IconFromSvgName);
+      fixture.componentInstance.iconName = 'fido';
+      fixture.detectChanges();
+      fixture.destroy();
+
+      expect(http.expectOne('dog.svg').cancelled).toBe(true);
+    }));
+
   });
 
   describe('Icons from HTML string', () => {
@@ -963,6 +1001,22 @@ describe('MatIcon', () => {
 
   });
 
+  it('should handle assigning an icon through the setter', fakeAsync(() => {
+    iconRegistry.addSvgIconLiteral('fido', trustHtml(FAKE_SVGS.dog));
+
+    const fixture = TestBed.createComponent(BlankIcon);
+    fixture.detectChanges();
+    let svgElement: SVGElement;
+    const testComponent = fixture.componentInstance;
+    const iconElement = fixture.debugElement.nativeElement.querySelector('mat-icon');
+
+    testComponent.icon.svgIcon = 'fido';
+    fixture.detectChanges();
+    svgElement = verifyAndGetSingleSvgChild(iconElement);
+    verifyPathChildElement(svgElement, 'woof');
+    tick();
+  }));
+
   /** Marks an SVG icon url as explicitly trusted. */
   function trustUrl(iconUrl: string): SafeResourceUrl {
     return sanitizer.bypassSecurityTrustResourceUrl(iconUrl);
@@ -979,7 +1033,7 @@ describe('MatIcon without HttpClientModule', () => {
   let iconRegistry: MatIconRegistry;
   let sanitizer: DomSanitizer;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [MatIconModule],
       declarations: [IconFromSvgName],
@@ -1052,4 +1106,9 @@ class SvgIconWithUserContent {
 @Component({template: '<mat-icon [svgIcon]="iconName">house</mat-icon>'})
 class IconWithLigatureAndSvgBinding {
   iconName: string | undefined;
+}
+
+@Component({template: `<mat-icon></mat-icon>`})
+class BlankIcon {
+  @ViewChild(MatIcon) icon: MatIcon;
 }

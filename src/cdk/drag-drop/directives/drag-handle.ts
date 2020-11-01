@@ -6,18 +6,35 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Directive, ElementRef, Inject, Optional, Input, OnDestroy} from '@angular/core';
 import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
+import {
+  Directive,
+  ElementRef,
+  Inject,
+  InjectionToken,
+  Input,
+  OnDestroy,
+  Optional,
+  SkipSelf,
+} from '@angular/core';
 import {Subject} from 'rxjs';
 import {CDK_DRAG_PARENT} from '../drag-parent';
-import {toggleNativeDragInteractions} from '../drag-styling';
+import {assertElementNode} from './assertions';
 
-/** Handle that can be used to drag and CdkDrag instance. */
+/**
+ * Injection token that can be used to reference instances of `CdkDragHandle`. It serves as
+ * alternative token to the actual `CdkDragHandle` class which could cause unnecessary
+ * retention of the class and its directive metadata.
+ */
+export const CDK_DRAG_HANDLE = new InjectionToken<CdkDragHandle>('CdkDragHandle');
+
+/** Handle that can be used to drag a CdkDrag instance. */
 @Directive({
   selector: '[cdkDragHandle]',
   host: {
     'class': 'cdk-drag-handle'
-  }
+  },
+  providers: [{provide: CDK_DRAG_HANDLE, useExisting: CdkDragHandle}],
 })
 export class CdkDragHandle implements OnDestroy {
   /** Closest parent draggable instance. */
@@ -37,10 +54,13 @@ export class CdkDragHandle implements OnDestroy {
 
   constructor(
     public element: ElementRef<HTMLElement>,
-    @Inject(CDK_DRAG_PARENT) @Optional() parentDrag?: any) {
+    @Inject(CDK_DRAG_PARENT) @Optional() @SkipSelf() parentDrag?: any) {
+
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      assertElementNode(element.nativeElement, 'cdkDragHandle');
+    }
 
     this._parentDrag = parentDrag;
-    toggleNativeDragInteractions(element.nativeElement, false);
   }
 
   ngOnDestroy() {

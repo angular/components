@@ -1,12 +1,17 @@
 @import '../core/theming/palette';
 @import '../core/theming/theming';
+@import '../core/theming/check-duplicate-styles';
 @import '../core/typography/typography-utils';
+@import '../core/density/index';
+@import './stepper-variables';
 
-@mixin mat-stepper-theme($theme) {
-  $foreground: map-get($theme, foreground);
-  $background: map-get($theme, background);
-  $primary: map-get($theme, primary);
-  $warn: map-get($theme, warn);
+@mixin mat-stepper-color($config-or-theme) {
+  $config: mat-get-color-config($config-or-theme);
+  $foreground: map-get($config, foreground);
+  $background: map-get($config, background);
+  $primary: map-get($config, primary);
+  $accent: map-get($config, accent);
+  $warn: map-get($config, warn);
 
   .mat-step-header {
     &.cdk-keyboard-focused,
@@ -45,6 +50,32 @@
       color: mat-color($primary, default-contrast);
     }
 
+    &.mat-accent {
+      .mat-step-icon {
+        color: mat-color($accent, default-contrast);
+      }
+
+      .mat-step-icon-selected,
+      .mat-step-icon-state-done,
+      .mat-step-icon-state-edit {
+        background-color: mat-color($accent);
+        color: mat-color($accent, default-contrast);
+      }
+    }
+
+    &.mat-warn {
+      .mat-step-icon {
+        color: mat-color($warn, default-contrast);
+      }
+
+      .mat-step-icon-selected,
+      .mat-step-icon-state-done,
+      .mat-step-icon-state-edit {
+        background-color: mat-color($warn);
+        color: mat-color($warn, default-contrast);
+      }
+    }
+
     .mat-step-icon-state-error {
       background-color: transparent;
       color: mat-color($warn, text);
@@ -74,7 +105,8 @@
   }
 }
 
-@mixin mat-stepper-typography($config) {
+@mixin mat-stepper-typography($config-or-theme) {
+  $config: mat-get-typography-config($config-or-theme);
   .mat-stepper-vertical, .mat-stepper-horizontal {
     font-family: mat-font-family($config);
   }
@@ -99,5 +131,60 @@
       size: mat-font-size($config, body-2);
       weight: mat-font-weight($config, body-2);
     };
+  }
+}
+
+@mixin mat-stepper-density($config-or-theme) {
+  $density-scale: mat-get-density-config($config-or-theme);
+  $height: _mat-density-prop-value($mat-stepper-density-config, $density-scale, height);
+  $vertical-padding: ($height - $mat-stepper-label-header-height) / 2;
+
+  @include _mat-density-legacy-compatibility() {
+    .mat-horizontal-stepper-header {
+      height: $height;
+    }
+
+    .mat-stepper-label-position-bottom .mat-horizontal-stepper-header,
+    .mat-vertical-stepper-header {
+      padding: $vertical-padding $mat-stepper-side-gap;
+    }
+
+    // Ensures that the vertical lines for the step content exceed into the step
+    // headers with a given distance (`$mat-stepper-line-gap`) to the step icon.
+    .mat-stepper-vertical-line::before {
+      top: $mat-stepper-line-gap - $vertical-padding;
+      bottom: $mat-stepper-line-gap - $vertical-padding;
+    }
+
+    // Ensures that the horizontal lines for the step header are centered vertically.
+    .mat-stepper-label-position-bottom .mat-horizontal-stepper-header {
+      &::after, &::before {
+        top: $vertical-padding + $mat-stepper-label-header-height / 2;
+      }
+    }
+
+    // Ensures that the horizontal line for the step content is aligned centered vertically.
+    .mat-stepper-label-position-bottom .mat-stepper-horizontal-line {
+      top: $vertical-padding + $mat-stepper-label-header-height / 2;
+    }
+  }
+}
+
+@mixin mat-stepper-theme($theme-or-color-config) {
+  $theme: _mat-legacy-get-theme($theme-or-color-config);
+  @include _mat-check-duplicate-theme-styles($theme, 'mat-stepper') {
+    $color: mat-get-color-config($theme);
+    $density: mat-get-density-config($theme);
+    $typography: mat-get-typography-config($theme);
+
+    @if $color != null {
+      @include mat-stepper-color($color);
+    }
+    @if $density != null {
+      @include mat-stepper-density($density);
+    }
+    @if $typography != null {
+      @include mat-stepper-typography($typography);
+    }
   }
 }

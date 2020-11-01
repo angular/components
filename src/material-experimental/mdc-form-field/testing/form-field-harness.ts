@@ -15,8 +15,8 @@ import {
 } from '@angular/cdk/testing';
 import {FormFieldHarnessFilters} from '@angular/material/form-field/testing';
 import {MatFormFieldControlHarness} from '@angular/material/form-field/testing/control';
-import {MatInputHarness} from '@angular/material/input/testing';
-import {MatSelectHarness} from '@angular/material/select/testing';
+import {MatInputHarness} from '@angular/material-experimental/mdc-input/testing';
+import {MatSelectHarness} from '@angular/material-experimental/mdc-select/testing';
 
 // TODO(devversion): support datepicker harness once developed (COMP-203).
 // Also support chip list harness.
@@ -160,17 +160,33 @@ export class MatFormFieldHarness extends ComponentHarness {
   /**
    * Gets a reference to the container element which contains all projected
    * prefixes of the form-field.
+   * @deprecated Use `getPrefixText` instead.
+   * @breaking-change 11.0.0
    */
   async getHarnessLoaderForPrefix(): Promise<TestElement|null> {
     return this._prefixContainer();
   }
 
+  /** Gets the text inside the prefix element. */
+  async getPrefixText(): Promise<string> {
+    const prefix = await this._prefixContainer();
+    return prefix ? prefix.text() : '';
+  }
+
   /**
    * Gets a reference to the container element which contains all projected
    * suffixes of the form-field.
+   * @deprecated Use `getSuffixText` instead.
+   * @breaking-change 11.0.0
    */
   async getHarnessLoaderForSuffix(): Promise<TestElement|null> {
     return this._suffixContainer();
+  }
+
+  /** Gets the text inside the suffix element. */
+  async getSuffixText(): Promise<string> {
+    const suffix = await this._suffixContainer();
+    return suffix ? suffix.text() : '';
   }
 
   /**

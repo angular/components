@@ -9,12 +9,9 @@
 import {ComponentHarness, HarnessPredicate} from '@angular/cdk/testing';
 import {DividerHarnessFilters} from './divider-harness-filters';
 
-/**
- * Harness for interacting with a `mat-divider`.
- * @dynamic
- */
+/** Harness for interacting with a `mat-divider`. */
 export class MatDividerHarness extends ComponentHarness {
-  static hostSelector = 'mat-divider';
+  static hostSelector = '.mat-divider';
 
   static with(options: DividerHarnessFilters = {}) {
     return new HarnessPredicate(MatDividerHarness, options);

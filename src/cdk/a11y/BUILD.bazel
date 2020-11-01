@@ -18,6 +18,7 @@ ng_module(
     ),
     module_name = "@angular/cdk/a11y",
     deps = [
+        "//src:dev_mode_types",
         "//src/cdk/coercion",
         "//src/cdk/keycodes",
         "//src/cdk/observers",
@@ -49,6 +50,7 @@ ng_test_library(
         "//src/cdk/keycodes",
         "//src/cdk/observers",
         "//src/cdk/platform",
+        "//src/cdk/portal",
         "//src/cdk/testing/private",
         "@npm//@angular/platform-browser",
         "@npm//rxjs",

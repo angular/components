@@ -197,7 +197,7 @@ class YourComponent implements AfterViewInit {
 
 ### Accessibility
 
-The `<mat-sidenav>` an `<mat-sidenav-content>` should each be given an appropriate `role` attribute
+The `<mat-sidenav>` and `<mat-sidenav-content>` should each be given an appropriate `role` attribute
 depending on the context in which they are used.
 
 For example, a `<mat-sidenav>` that contains links
@@ -208,6 +208,11 @@ describes your sidenav, `role="region"` is recommended.
 Similarly, the `<mat-sidenav-content>` should be given a role based on what it contains. If it
 represents the primary content of the page, it may make sense to mark it `role="main"`. If no more
 specific role makes sense, `role="region"` is again a good fallback.
+
+#### Focus management
+The sidenav has the ability to capture focus. This behavior is turned on for the `push` and `over` modes and it is off for `side` mode. You can change its default behavior by the `autoFocus` input.
+
+By default the first tabbable element will recieve focus upon open. If you want a different element to be focused, you can set the `cdkFocusInitial` attribute on it.
 
 ### Troubleshooting
 

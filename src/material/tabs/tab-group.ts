@@ -79,7 +79,6 @@ interface MatTabGroupBaseHeader {
  * @docs-private
  */
 @Directive()
-// tslint:disable-next-line:class-name
 export abstract class _MatTabGroupBase extends _MatTabGroupMixinBase implements AfterContentInit,
     AfterContentChecked, OnDestroy, CanColor, CanDisableRipple {
 
@@ -110,7 +109,7 @@ export abstract class _MatTabGroupBase extends _MatTabGroupMixinBase implements 
   @Input()
   get dynamicHeight(): boolean { return this._dynamicHeight; }
   set dynamicHeight(value: boolean) { this._dynamicHeight = coerceBooleanProperty(value); }
-  private _dynamicHeight: boolean = false;
+  private _dynamicHeight: boolean;
 
   /** The index of the active tab. */
   @Input()
@@ -180,6 +179,8 @@ export abstract class _MatTabGroupBase extends _MatTabGroupMixinBase implements 
         defaultConfig.animationDuration : '500ms';
     this.disablePagination = defaultConfig && defaultConfig.disablePagination != null ?
         defaultConfig.disablePagination : false;
+    this.dynamicHeight = defaultConfig && defaultConfig.dynamicHeight != null ?
+        defaultConfig.dynamicHeight : false;
   }
 
   /**
@@ -267,11 +268,7 @@ export abstract class _MatTabGroupBase extends _MatTabGroupMixinBase implements 
     this._allTabs.changes
       .pipe(startWith(this._allTabs))
       .subscribe((tabs: QueryList<MatTab>) => {
-        this._tabs.reset(tabs.filter(tab => {
-          // @breaking-change 10.0.0 Remove null check for `_closestTabGroup`
-          // once it becomes a required parameter in MatTab.
-          return !tab._closestTabGroup || tab._closestTabGroup === this;
-        }));
+        this._tabs.reset(tabs.filter(tab => tab._closestTabGroup === this));
         this._tabs.notifyOnChanges();
       });
   }

@@ -64,7 +64,6 @@ the `ComponentFactory` for it.
     ExampleDialogComponent
   ],
 
-  providers: [],
   bootstrap: [AppComponent]
 })
 export class AppModule {}
@@ -103,7 +102,7 @@ import {MAT_DIALOG_DATA} from '@angular/material/dialog';
   template: 'passed in {{ data.name }}',
 })
 export class YourDialog {
-  constructor(@Inject(MAT_DIALOG_DATA) public data: any) { }
+  constructor(@Inject(MAT_DIALOG_DATA) public data: {name: string}) { }
 }
 ```
 

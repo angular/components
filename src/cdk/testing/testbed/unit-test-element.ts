@@ -7,14 +7,26 @@
  */
 
 import * as keyCodes from '@angular/cdk/keycodes';
-import {ElementDimensions, ModifierKeys, TestElement, TestKey} from '@angular/cdk/testing';
+import {
+  _getTextWithExcludedElements,
+  ElementDimensions,
+  ModifierKeys,
+  TestElement,
+  TestKey,
+  TextOptions,
+  EventData,
+} from '@angular/cdk/testing';
 import {
   clearElement,
+  createFakeEvent,
+  dispatchFakeEvent,
   dispatchMouseEvent,
+  dispatchPointerEvent,
   isTextInput,
   triggerBlur,
   triggerFocus,
   typeInElement,
+  dispatchEvent,
 } from './fake-events';
 
 /** Maps `TestKey` constants to the `keyCode` and `key` values used by native browser events. */
@@ -56,13 +68,11 @@ export class UnitTestElement implements TestElement {
   constructor(readonly element: Element, private _stabilize: () => Promise<void>) {}
 
   async blur(): Promise<void> {
-    await this._stabilize();
     triggerBlur(this.element as HTMLElement);
     await this._stabilize();
   }
 
   async clear(): Promise<void> {
-    await this._stabilize();
     if (!isTextInput(this.element)) {
       throw Error('Attempting to clear an invalid element');
     }
@@ -70,21 +80,17 @@ export class UnitTestElement implements TestElement {
     await this._stabilize();
   }
 
-  async click(relativeX = 0, relativeY = 0): Promise<void> {
+  async click(...args: [] | ['center'] | [number, number]): Promise<void> {
+    await this._dispatchMouseEventSequence('click', args);
     await this._stabilize();
-    const {left, top} = this.element.getBoundingClientRect();
-    // Round the computed click position as decimal pixels are not
-    // supported by mouse events and could lead to unexpected results.
-    const clientX = Math.round(left + relativeX);
-    const clientY = Math.round(top + relativeY);
-    dispatchMouseEvent(this.element, 'mousedown', clientX, clientY);
-    dispatchMouseEvent(this.element, 'mouseup', clientX, clientY);
-    dispatchMouseEvent(this.element, 'click', clientX, clientY);
+  }
+
+  async rightClick(...args: [] | ['center'] | [number, number]): Promise<void> {
+    await this._dispatchMouseEventSequence('contextmenu', args, 2);
     await this._stabilize();
   }
 
   async focus(): Promise<void> {
-    await this._stabilize();
     triggerFocus(this.element as HTMLElement);
     await this._stabilize();
   }
@@ -97,22 +103,30 @@ export class UnitTestElement implements TestElement {
   }
 
   async hover(): Promise<void> {
-    await this._stabilize();
+    this._dispatchPointerEventIfSupported('pointerenter');
     dispatchMouseEvent(this.element, 'mouseenter');
+    await this._stabilize();
+  }
+
+  async mouseAway(): Promise<void> {
+    this._dispatchPointerEventIfSupported('pointerleave');
+    dispatchMouseEvent(this.element, 'mouseleave');
     await this._stabilize();
   }
 
   async sendKeys(...keys: (string | TestKey)[]): Promise<void>;
   async sendKeys(modifiers: ModifierKeys, ...keys: (string | TestKey)[]): Promise<void>;
   async sendKeys(...modifiersAndKeys: any[]): Promise<void> {
-    await this._stabilize();
     const args = modifiersAndKeys.map(k => typeof k === 'number' ? keyMap[k as TestKey] : k);
     typeInElement(this.element as HTMLElement, ...args);
     await this._stabilize();
   }
 
-  async text(): Promise<string> {
+  async text(options?: TextOptions): Promise<string> {
     await this._stabilize();
+    if (options?.exclude) {
+      return _getTextWithExcludedElements(this.element, options.exclude);
+    }
     return (this.element.textContent || '').trim();
   }
 
@@ -136,6 +150,35 @@ export class UnitTestElement implements TestElement {
     return (this.element as any)[name];
   }
 
+  async setInputValue(value: string): Promise<void> {
+    (this.element as any).value = value;
+    await this._stabilize();
+  }
+
+  async selectOptions(...optionIndexes: number[]): Promise<void> {
+    let hasChanged = false;
+    const options = this.element.querySelectorAll('option');
+    const indexes = new Set(optionIndexes); // Convert to a set to remove duplicates.
+
+    for (let i = 0; i < options.length; i++) {
+      const option = options[i];
+      const wasSelected = option.selected;
+
+      // We have to go through `option.selected`, because `HTMLSelectElement.value` doesn't
+      // allow for multiple options to be selected, even in `multiple` mode.
+      option.selected = indexes.has(i);
+
+      if (option.selected !== wasSelected) {
+        hasChanged = true;
+        dispatchFakeEvent(this.element, 'change');
+      }
+    }
+
+    if (hasChanged) {
+      await this._stabilize();
+    }
+  }
+
   async matchesSelector(selector: string): Promise<boolean> {
     await this._stabilize();
     const elementPrototype = Element.prototype as any;
@@ -146,5 +189,62 @@ export class UnitTestElement implements TestElement {
   async isFocused(): Promise<boolean> {
     await this._stabilize();
     return document.activeElement === this.element;
+  }
+
+  async dispatchEvent(name: string, data?: Record<string, EventData>): Promise<void> {
+    const event = createFakeEvent(name);
+
+    if (data) {
+      // tslint:disable-next-line:ban Have to use `Object.assign` to preserve the original object.
+      Object.assign(event, data);
+    }
+
+    dispatchEvent(this.element, event);
+    await this._stabilize();
+  }
+
+  /**
+   * Dispatches a pointer event on the current element if the browser supports it.
+   * @param name Name of the pointer event to be dispatched.
+   * @param clientX Coordinate of the user's pointer along the X axis.
+   * @param clientY Coordinate of the user's pointer along the Y axis.
+   * @param button Mouse button that should be pressed when dispatching the event.
+   */
+  private _dispatchPointerEventIfSupported(
+    name: string, clientX?: number, clientY?: number, button?: number) {
+    // The latest versions of all browsers we support have the new `PointerEvent` API.
+    // Though since we capture the two most recent versions of these browsers, we also
+    // need to support Safari 12 at time of writing. Safari 12 does not have support for this,
+    // so we need to conditionally create and dispatch these events based on feature detection.
+    if (typeof PointerEvent !== 'undefined' && PointerEvent) {
+      dispatchPointerEvent(this.element, name, clientX, clientY, {isPrimary: true, button});
+    }
+  }
+
+  /** Dispatches all the events that are part of a mouse event sequence. */
+  private async _dispatchMouseEventSequence(
+    name: string,
+    args: [] | ['center'] | [number, number],
+    button?: number) {
+    let clientX: number | undefined = undefined;
+    let clientY: number | undefined = undefined;
+
+    if (args.length) {
+      const {left, top, width, height} = await this.getDimensions();
+      const relativeX = args[0] === 'center' ? width / 2 : args[0];
+      const relativeY = args[0] === 'center' ? height / 2 : args[1];
+
+      // Round the computed click position as decimal pixels are not
+      // supported by mouse events and could lead to unexpected results.
+      clientX = Math.round(left + relativeX);
+      clientY = Math.round(top + relativeY);
+    }
+
+    this._dispatchPointerEventIfSupported('pointerdown', clientX, clientY, button);
+    dispatchMouseEvent(this.element, 'mousedown', clientX, clientY, button);
+    this._dispatchPointerEventIfSupported('pointerup', clientX, clientY, button);
+    dispatchMouseEvent(this.element, 'mouseup', clientX, clientY, button);
+    dispatchMouseEvent(this.element, name, clientX, clientY, button);
+    await this._stabilize();
   }
 }

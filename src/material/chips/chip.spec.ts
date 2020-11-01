@@ -2,7 +2,7 @@ import {Directionality} from '@angular/cdk/bidi';
 import {BACKSPACE, DELETE, SPACE} from '@angular/cdk/keycodes';
 import {createKeyboardEvent, dispatchFakeEvent} from '@angular/cdk/testing/private';
 import {Component, DebugElement, ViewChild} from '@angular/core';
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import {waitForAsync, ComponentFixture, TestBed} from '@angular/core/testing';
 import {MAT_RIPPLE_GLOBAL_OPTIONS, RippleGlobalOptions} from '@angular/material/core';
 import {By} from '@angular/platform-browser';
 import {Subject} from 'rxjs';
@@ -17,7 +17,7 @@ describe('MatChip', () => {
   let globalRippleOptions: RippleGlobalOptions;
   let dir = 'ltr';
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     globalRippleOptions = {};
     TestBed.configureTestingModule({
       imports: [MatChipsModule],
@@ -40,7 +40,7 @@ describe('MatChip', () => {
   }));
 
   describe('MatBasicChip', () => {
-    it('adds the `mat-basic-chip` class', () => {
+    it('adds a class to indicate that it is a basic chip', () => {
       fixture = TestBed.createComponent(BasicChip);
       fixture.detectChanges();
 
@@ -251,7 +251,7 @@ describe('MatChip', () => {
         });
 
         it('should selects/deselects the currently focused chip on SPACE', () => {
-          const SPACE_EVENT: KeyboardEvent = createKeyboardEvent('keydown', SPACE) as KeyboardEvent;
+          const SPACE_EVENT = createKeyboardEvent('keydown', SPACE);
           const CHIP_SELECTED_EVENT: MatChipSelectionChange = {
             source: chipInstance,
             isUserInput: true,
@@ -313,7 +313,7 @@ describe('MatChip', () => {
         });
 
         it('SPACE ignores selection', () => {
-          const SPACE_EVENT: KeyboardEvent = createKeyboardEvent('keydown', SPACE) as KeyboardEvent;
+          const SPACE_EVENT = createKeyboardEvent('keydown', SPACE);
 
           spyOn(testComponent, 'chipSelectionChange');
 
@@ -337,7 +337,7 @@ describe('MatChip', () => {
         });
 
         it('DELETE emits the (removed) event', () => {
-          const DELETE_EVENT = createKeyboardEvent('keydown', DELETE) as KeyboardEvent;
+          const DELETE_EVENT = createKeyboardEvent('keydown', DELETE);
 
           spyOn(testComponent, 'chipRemove');
 
@@ -349,7 +349,7 @@ describe('MatChip', () => {
         });
 
         it('BACKSPACE emits the (removed) event', () => {
-          const BACKSPACE_EVENT = createKeyboardEvent('keydown', BACKSPACE) as KeyboardEvent;
+          const BACKSPACE_EVENT = createKeyboardEvent('keydown', BACKSPACE);
 
           spyOn(testComponent, 'chipRemove');
 
@@ -368,7 +368,7 @@ describe('MatChip', () => {
         });
 
         it('DELETE does not emit the (removed) event', () => {
-          const DELETE_EVENT = createKeyboardEvent('keydown', DELETE) as KeyboardEvent;
+          const DELETE_EVENT = createKeyboardEvent('keydown', DELETE);
 
           spyOn(testComponent, 'chipRemove');
 
@@ -380,7 +380,7 @@ describe('MatChip', () => {
         });
 
         it('BACKSPACE does not emit the (removed) event', () => {
-          const BACKSPACE_EVENT = createKeyboardEvent('keydown', BACKSPACE) as KeyboardEvent;
+          const BACKSPACE_EVENT = createKeyboardEvent('keydown', BACKSPACE);
 
           spyOn(testComponent, 'chipRemove');
 

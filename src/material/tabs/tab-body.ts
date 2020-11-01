@@ -71,11 +71,7 @@ export class MatTabBodyPortal extends CdkPortalOutlet implements OnInit, OnDestr
     componentFactoryResolver: ComponentFactoryResolver,
     viewContainerRef: ViewContainerRef,
     @Inject(forwardRef(() => MatTabBody)) private _host: MatTabBody,
-    /**
-     * @deprecated `_document` parameter to be made required.
-     * @breaking-change 9.0.0
-     */
-    @Inject(DOCUMENT) _document?: any) {
+    @Inject(DOCUMENT) _document: any) {
     super(componentFactoryResolver, viewContainerRef, _document);
   }
 
@@ -109,7 +105,6 @@ export class MatTabBodyPortal extends CdkPortalOutlet implements OnInit, OnDestr
  * @docs-private
  */
 @Directive()
-// tslint:disable-next-line:class-name
 export abstract class _MatTabBodyBase implements OnInit, OnDestroy {
   /** Current position of the tab-body in the tab-group. Zero means that the tab is visible. */
   private _positionIndex: number;

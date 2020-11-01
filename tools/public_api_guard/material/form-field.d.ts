@@ -1,3 +1,5 @@
+export declare const _MAT_HINT: InjectionToken<MatHint>;
+
 export declare type FloatLabelType = 'always' | 'never' | 'auto';
 
 export declare function getMatFormFieldDuplicatedHintError(align: string): Error;
@@ -6,9 +8,15 @@ export declare function getMatFormFieldMissingControlError(): Error;
 
 export declare function getMatFormFieldPlaceholderConflictError(): Error;
 
+export declare const MAT_ERROR: InjectionToken<MatError>;
+
 export declare const MAT_FORM_FIELD: InjectionToken<MatFormField>;
 
 export declare const MAT_FORM_FIELD_DEFAULT_OPTIONS: InjectionToken<MatFormFieldDefaultOptions>;
+
+export declare const MAT_PREFIX: InjectionToken<MatPrefix>;
+
+export declare const MAT_SUFFIX: InjectionToken<MatSuffix>;
 
 export declare class MatError {
     id: string;
@@ -19,7 +27,6 @@ export declare class MatError {
 export declare class MatFormField extends _MatFormFieldMixinBase implements AfterContentInit, AfterContentChecked, AfterViewInit, OnDestroy, CanColor {
     _animationsEnabled: boolean;
     _appearance: MatFormFieldAppearance;
-    get _canLabelFloat(): boolean;
     _connectionContainerRef: ElementRef;
     get _control(): MatFormFieldControl<any>;
     set _control(value: MatFormFieldControl<any>);
@@ -28,15 +35,13 @@ export declare class MatFormField extends _MatFormFieldMixinBase implements Afte
     _elementRef: ElementRef;
     _errorChildren: QueryList<MatError>;
     _hintChildren: QueryList<MatHint>;
-    _hintLabelId: string;
+    readonly _hintLabelId: string;
     _inputContainerRef: ElementRef;
-    get _labelChild(): MatLabel;
     _labelChildNonStatic: MatLabel;
     _labelChildStatic: MatLabel;
-    _labelId: string;
+    readonly _labelId: string;
     _placeholderChild: MatPlaceholder;
     _prefixChildren: QueryList<MatPrefix>;
-    get _shouldAlwaysFloat(): boolean;
     _subscriptAnimationState: string;
     _suffixChildren: QueryList<MatSuffix>;
     get appearance(): MatFormFieldAppearance;
@@ -48,17 +53,21 @@ export declare class MatFormField extends _MatFormFieldMixinBase implements Afte
     get hintLabel(): string;
     set hintLabel(value: string);
     underlineRef: ElementRef;
-    constructor(_elementRef: ElementRef, _changeDetectorRef: ChangeDetectorRef, labelOptions: LabelOptions, _dir: Directionality, _defaults: MatFormFieldDefaultOptions, _platform: Platform, _ngZone: NgZone, _animationMode: string);
+    constructor(_elementRef: ElementRef, _changeDetectorRef: ChangeDetectorRef,
+    _labelOptions: any, _dir: Directionality, _defaults: MatFormFieldDefaultOptions, _platform: Platform, _ngZone: NgZone, _animationMode: string);
     _animateAndLockLabel(): void;
+    _canLabelFloat(): boolean;
     _getDisplayedMessages(): 'error' | 'hint';
     _hasFloatingLabel(): boolean;
     _hasLabel(): boolean;
     _hasPlaceholder(): boolean;
     _hideControlPlaceholder(): boolean;
+    _shouldAlwaysFloat(): boolean;
     _shouldForward(prop: keyof NgControl): boolean;
     _shouldLabelFloat(): boolean;
     protected _validateControlChild(): void;
     getConnectedOverlayOrigin(): ElementRef;
+    getLabelId(): string | null;
     ngAfterContentChecked(): void;
     ngAfterContentInit(): void;
     ngAfterViewInit(): void;
@@ -66,7 +75,7 @@ export declare class MatFormField extends _MatFormFieldMixinBase implements Afte
     updateOutlineGap(): void;
     static ngAcceptInputType_hideRequiredMarker: BooleanInput;
     static ɵcmp: i0.ɵɵComponentDefWithMeta<MatFormField, "mat-form-field", ["matFormField"], { "color": "color"; "appearance": "appearance"; "hideRequiredMarker": "hideRequiredMarker"; "hintLabel": "hintLabel"; "floatLabel": "floatLabel"; }, {}, ["_controlNonStatic", "_controlStatic", "_labelChildNonStatic", "_labelChildStatic", "_placeholderChild", "_errorChildren", "_hintChildren", "_prefixChildren", "_suffixChildren"], ["[matPrefix]", "*", "mat-placeholder", "mat-label", "[matSuffix]", "mat-error", "mat-hint:not([align='end'])", "mat-hint[align='end']"]>;
-    static ɵfac: i0.ɵɵFactoryDef<MatFormField, [null, null, { optional: true; }, { optional: true; }, { optional: true; }, null, null, { optional: true; }]>;
+    static ɵfac: i0.ɵɵFactoryDef<MatFormField, [null, null, null, { optional: true; }, { optional: true; }, null, null, { optional: true; }]>;
 }
 
 export declare const matFormFieldAnimations: {
@@ -88,6 +97,7 @@ export declare abstract class MatFormFieldControl<T> {
     readonly required: boolean;
     readonly shouldLabelFloat: boolean;
     readonly stateChanges: Observable<void>;
+    readonly userAriaDescribedBy?: string;
     value: T | null;
     abstract onContainerClick(event: MouseEvent): void;
     abstract setDescribedByIds(ids: string[]): void;
@@ -103,7 +113,7 @@ export interface MatFormFieldDefaultOptions {
 
 export declare class MatFormFieldModule {
     static ɵinj: i0.ɵɵInjectorDef<MatFormFieldModule>;
-    static ɵmod: i0.ɵɵNgModuleDefWithMeta<MatFormFieldModule, [typeof i1.MatError, typeof i2.MatFormField, typeof i3.MatHint, typeof i4.MatLabel, typeof i5.MatPlaceholder, typeof i6.MatPrefix, typeof i7.MatSuffix], [typeof i8.CommonModule, typeof i9.ObserversModule], [typeof i1.MatError, typeof i2.MatFormField, typeof i3.MatHint, typeof i4.MatLabel, typeof i5.MatPlaceholder, typeof i6.MatPrefix, typeof i7.MatSuffix]>;
+    static ɵmod: i0.ɵɵNgModuleDefWithMeta<MatFormFieldModule, [typeof i1.MatError, typeof i2.MatFormField, typeof i3.MatHint, typeof i4.MatLabel, typeof i5.MatPlaceholder, typeof i6.MatPrefix, typeof i7.MatSuffix], [typeof i8.CommonModule, typeof i9.MatCommonModule, typeof i10.ObserversModule], [typeof i9.MatCommonModule, typeof i1.MatError, typeof i2.MatFormField, typeof i3.MatHint, typeof i4.MatLabel, typeof i5.MatPlaceholder, typeof i6.MatPrefix, typeof i7.MatSuffix]>;
 }
 
 export declare class MatHint {

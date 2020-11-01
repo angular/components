@@ -4,14 +4,16 @@ import {
   Component,
   ContentChildren,
   Input,
-  OnInit,
+  AfterViewInit,
   QueryList,
-  ViewChild
+  ViewChild,
+  ContentChild,
 } from '@angular/core';
 import {MatSort} from '@angular/material/sort';
 import {
   MatColumnDef,
   MatHeaderRowDef,
+  MatNoDataRow,
   MatRowDef,
   MatTable,
   MatTableDataSource
@@ -45,14 +47,22 @@ const ELEMENT_DATA: PeriodicElement[] = [
   styleUrls: ['table-wrapped-example.css'],
   templateUrl: 'table-wrapped-example.html',
 })
-export class TableWrappedExample implements OnInit {
+export class TableWrappedExample implements AfterViewInit {
   displayedColumns: string[] = ['position', 'name', 'weight', 'symbol'];
   dataSource = new MatTableDataSource<PeriodicElement>(ELEMENT_DATA);
 
-  @ViewChild('sort', {static: true}) sort: MatSort;
+  @ViewChild('sort') sort: MatSort;
 
-  ngOnInit() {
+  ngAfterViewInit() {
     this.dataSource.sort = this.sort;
+  }
+
+  clearTable() {
+    this.dataSource.data = [];
+  }
+
+  addData() {
+    this.dataSource.data = ELEMENT_DATA;
   }
 }
 
@@ -73,6 +83,7 @@ export class WrapperTable<T> implements AfterContentInit {
   @ContentChildren(MatHeaderRowDef) headerRowDefs: QueryList<MatHeaderRowDef>;
   @ContentChildren(MatRowDef) rowDefs: QueryList<MatRowDef<T>>;
   @ContentChildren(MatColumnDef) columnDefs: QueryList<MatColumnDef>;
+  @ContentChild(MatNoDataRow) noDataRow: MatNoDataRow;
 
   @ViewChild(MatTable, {static: true}) table: MatTable<T>;
 
@@ -84,5 +95,6 @@ export class WrapperTable<T> implements AfterContentInit {
     this.columnDefs.forEach(columnDef => this.table.addColumnDef(columnDef));
     this.rowDefs.forEach(rowDef => this.table.addRowDef(rowDef));
     this.headerRowDefs.forEach(headerRowDef => this.table.addHeaderRowDef(headerRowDef));
+    this.table.setNoDataRow(this.noDataRow);
   }
 }

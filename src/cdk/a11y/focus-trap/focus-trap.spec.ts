@@ -1,14 +1,15 @@
 import {Platform} from '@angular/cdk/platform';
-import {Component, PLATFORM_ID, ViewChild} from '@angular/core';
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import {Component, ViewChild, TemplateRef, ViewContainerRef} from '@angular/core';
+import {waitForAsync, ComponentFixture, TestBed} from '@angular/core/testing';
+import {PortalModule, CdkPortalOutlet, TemplatePortal} from '@angular/cdk/portal';
 import {A11yModule, FocusTrap, CdkTrapFocus} from '../index';
 
 
 describe('FocusTrap', () => {
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [A11yModule],
+      imports: [A11yModule, PortalModule],
       declarations: [
         FocusTrapWithBindings,
         SimpleFocusTrap,
@@ -17,6 +18,7 @@ describe('FocusTrap', () => {
         FocusTrapWithoutFocusableElements,
         FocusTrapWithAutoCapture,
         FocusTrapUnfocusableTarget,
+        FocusTrapInsidePortal,
       ],
     });
 
@@ -48,9 +50,9 @@ describe('FocusTrap', () => {
       // focus event handler directly.
       const result = focusTrapInstance.focusLastTabbableElement();
 
-      const platformId = TestBed.inject(PLATFORM_ID);
+      const platform = TestBed.inject(Platform);
       // In iOS button elements are never tabbable, so the last element will be the input.
-      const lastElement = new Platform(platformId).IOS ? 'input' : 'button';
+      const lastElement = platform.IOS ? 'input' : 'button';
 
       expect(document.activeElement!.nodeName.toLowerCase())
           .toBe(lastElement, `Expected ${lastElement} element to be focused`);
@@ -168,7 +170,7 @@ describe('FocusTrap', () => {
   });
 
   describe('with autoCapture', () => {
-    it('should automatically capture and return focus on init / destroy', async(() => {
+    it('should automatically capture and return focus on init / destroy', waitForAsync(() => {
       const fixture = TestBed.createComponent(FocusTrapWithAutoCapture);
       fixture.detectChanges();
 
@@ -186,6 +188,49 @@ describe('FocusTrap', () => {
         expect(document.activeElement).toBe(buttonOutsideTrappedRegion);
       });
     }));
+
+    it('should capture focus if auto capture is enabled later on', waitForAsync(() => {
+      const fixture = TestBed.createComponent(FocusTrapWithAutoCapture);
+      fixture.componentInstance.autoCaptureEnabled = false;
+      fixture.componentInstance.showTrappedRegion = true;
+      fixture.detectChanges();
+
+      const buttonOutsideTrappedRegion = fixture.nativeElement.querySelector('button');
+      buttonOutsideTrappedRegion.focus();
+      expect(document.activeElement).toBe(buttonOutsideTrappedRegion);
+
+      fixture.componentInstance.autoCaptureEnabled = true;
+      fixture.detectChanges();
+
+      fixture.whenStable().then(() => {
+        expect(document.activeElement!.id).toBe('auto-capture-target');
+
+        fixture.destroy();
+        expect(document.activeElement).toBe(buttonOutsideTrappedRegion);
+      });
+    }));
+
+  });
+
+  it('should put anchors inside the outlet when set at the root of a template portal', () => {
+    const fixture = TestBed.createComponent(FocusTrapInsidePortal);
+    const instance = fixture.componentInstance;
+    fixture.detectChanges();
+    const outlet: HTMLElement = fixture.nativeElement.querySelector('.portal-outlet');
+
+    expect(outlet.querySelectorAll('button').length)
+      .toBe(0, 'Expected no buttons inside the outlet on init.');
+    expect(outlet.querySelectorAll('.cdk-focus-trap-anchor').length)
+      .toBe(0, 'Expected no focus trap anchors inside the outlet on init.');
+
+    const portal = new TemplatePortal(instance.template, instance.viewContainerRef);
+    instance.portalOutlet.attachTemplatePortal(portal);
+    fixture.detectChanges();
+
+    expect(outlet.querySelectorAll('button').length)
+      .toBe(1, 'Expected one button inside the outlet after attaching.');
+    expect(outlet.querySelectorAll('.cdk-focus-trap-anchor').length)
+      .toBe(2, 'Expected two focus trap anchors in the outlet after attaching.');
   });
 });
 
@@ -205,7 +250,7 @@ class SimpleFocusTrap {
 @Component({
   template: `
     <button type="button">Toggle</button>
-    <div *ngIf="showTrappedRegion" cdkTrapFocus cdkTrapFocusAutoCapture>
+    <div *ngIf="showTrappedRegion" cdkTrapFocus [cdkTrapFocusAutoCapture]="autoCaptureEnabled">
       <input id="auto-capture-target">
       <button>SAVE</button>
     </div>
@@ -214,6 +259,7 @@ class SimpleFocusTrap {
 class FocusTrapWithAutoCapture {
   @ViewChild(CdkTrapFocus) focusTrapDirective: CdkTrapFocus;
   showTrappedRegion = false;
+  autoCaptureEnabled = true;
 }
 
 
@@ -282,4 +328,25 @@ class FocusTrapWithSvg {
 })
 class FocusTrapWithoutFocusableElements {
   @ViewChild(CdkTrapFocus) focusTrapDirective: CdkTrapFocus;
+}
+
+
+@Component({
+  template: `
+  <div class="portal-outlet">
+    <ng-template cdkPortalOutlet></ng-template>
+  </div>
+
+  <ng-template #template>
+    <div cdkTrapFocus>
+      <button>Click me</button>
+    </div>
+  </ng-template>
+  `,
+})
+class FocusTrapInsidePortal {
+  @ViewChild('template') template: TemplateRef<any>;
+  @ViewChild(CdkPortalOutlet) portalOutlet: CdkPortalOutlet;
+
+  constructor(public viewContainerRef: ViewContainerRef) {}
 }

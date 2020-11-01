@@ -6,12 +6,18 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {ComponentHarness, HarnessPredicate, TestElement, TestKey} from '@angular/cdk/testing';
+import {
+  ContentContainerComponentHarness,
+  HarnessLoader,
+  HarnessPredicate,
+  TestElement,
+  TestKey,
+} from '@angular/cdk/testing';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
 import {MenuHarnessFilters, MenuItemHarnessFilters} from './menu-harness-filters';
 
 /** Harness for interacting with a standard mat-menu in tests. */
-export class MatMenuHarness extends ComponentHarness {
+export class MatMenuHarness extends ContentContainerComponentHarness<string> {
   /** The selector for the host element of a `MatMenu` instance. */
   static hostSelector = '.mat-menu-trigger';
 
@@ -55,6 +61,11 @@ export class MatMenuHarness extends ComponentHarness {
   /** Blurs the menu. */
   async blur(): Promise<void> {
     return (await this.host()).blur();
+  }
+
+  /** Whether the menu is focused. */
+  async isFocused(): Promise<boolean> {
+    return (await this.host()).isFocused();
   }
 
   /** Opens the menu. */
@@ -114,6 +125,11 @@ export class MatMenuHarness extends ComponentHarness {
     return menu.clickItem(...subItemFilters as [Omit<MenuItemHarnessFilters, 'ancestor'>]);
   }
 
+  protected async getRootHarnessLoader(): Promise<HarnessLoader> {
+    const panelId = await this._getPanelId();
+    return this.documentRootLocatorFactory().harnessLoaderFor(`#${panelId}`);
+  }
+
   /** Gets the menu panel associated with this menu. */
   private async _getMenuPanel(): Promise<TestElement | null> {
     const panelId = await this._getPanelId();
@@ -129,7 +145,7 @@ export class MatMenuHarness extends ComponentHarness {
 
 
 /** Harness for interacting with a standard mat-menu-item in tests. */
-export class MatMenuItemHarness extends ComponentHarness {
+export class MatMenuItemHarness extends ContentContainerComponentHarness<string> {
   /** The selector for the host element of a `MatMenuItem` instance. */
   static hostSelector = '.mat-menu-item';
 
@@ -166,6 +182,11 @@ export class MatMenuItemHarness extends ComponentHarness {
   /** Blurs the menu item. */
   async blur(): Promise<void> {
     return (await this.host()).blur();
+  }
+
+  /** Whether the menu item is focused. */
+  async isFocused(): Promise<boolean> {
+    return (await this.host()).isFocused();
   }
 
   /** Clicks the menu item. */

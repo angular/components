@@ -28,6 +28,13 @@ export class MainComponentHarness extends ComponentHarness {
   readonly memo = this.locatorFor('textarea');
   readonly clickTest = this.locatorFor('.click-test');
   readonly clickTestResult = this.locatorFor('.click-test-result');
+  readonly singleSelect = this.locatorFor('#single-select');
+  readonly singleSelectValue = this.locatorFor('#single-select-value');
+  readonly singleSelectChangeEventCounter = this.locatorFor('#single-select-change-counter');
+  readonly multiSelect = this.locatorFor('#multi-select');
+  readonly multiSelectValue = this.locatorFor('#multi-select-value');
+  readonly multiSelectChangeEventCounter = this.locatorFor('#multi-select-change-counter');
+  readonly contextmenuTestResult = this.locatorFor('.contextmenu-test-result');
   // Allow null for element
   readonly nullItem = this.locatorForOptional('wrong locator');
   // Allow null for component harness
@@ -84,6 +91,9 @@ export class MainComponentHarness extends ComponentHarness {
   readonly shadows = this.locatorForAll('.in-the-shadows');
   readonly deepShadow = this.locatorFor(
       'test-shadow-boundary test-sub-shadow-boundary > .in-the-shadows');
+  readonly hoverTest = this.locatorFor('#hover-box');
+  readonly customEventBasic = this.locatorFor('#custom-event-basic');
+  readonly customEventObject = this.locatorFor('#custom-event-object');
 
   private _testTools = this.locatorFor(SubComponentHarness);
 

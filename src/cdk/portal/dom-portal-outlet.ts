@@ -83,13 +83,17 @@ export class DomPortalOutlet extends BasePortalOutlet {
   attachTemplatePortal<C>(portal: TemplatePortal<C>): EmbeddedViewRef<C> {
     let viewContainer = portal.viewContainerRef;
     let viewRef = viewContainer.createEmbeddedView(portal.templateRef, portal.context);
-    viewRef.detectChanges();
 
     // The method `createEmbeddedView` will add the view as a child of the viewContainer.
     // But for the DomPortalOutlet the view can be added everywhere in the DOM
     // (e.g Overlay Container) To move the view to the specified host element. We just
     // re-append the existing root nodes.
     viewRef.rootNodes.forEach(rootNode => this.outletElement.appendChild(rootNode));
+
+    // Note that we want to detect changes after the nodes have been moved so that
+    // any directives inside the portal that are looking at the DOM inside a lifecycle
+    // hook won't be invoked too early.
+    viewRef.detectChanges();
 
     this.setDisposeFn((() => {
       let index = viewContainer.indexOf(viewRef);
@@ -111,12 +115,12 @@ export class DomPortalOutlet extends BasePortalOutlet {
   attachDomPortal = (portal: DomPortal) => {
     // @breaking-change 10.0.0 Remove check and error once the
     // `_document` constructor parameter is required.
-    if (!this._document) {
+    if (!this._document && (typeof ngDevMode === 'undefined' || ngDevMode)) {
       throw Error('Cannot attach DOM portal without _document constructor parameter');
     }
 
     const element = portal.element;
-    if (!element.parentNode) {
+    if (!element.parentNode && (typeof ngDevMode === 'undefined' || ngDevMode)) {
       throw Error('DOM portal content must be attached to a parent node.');
     }
 
@@ -124,7 +128,7 @@ export class DomPortalOutlet extends BasePortalOutlet {
     // that we can restore it when the portal is detached.
     const anchorNode = this._document.createComment('dom-portal');
 
-    element.parentNode.insertBefore(anchorNode, element);
+    element.parentNode!.insertBefore(anchorNode, element);
     this.outletElement.appendChild(element);
 
     super.setDisposeFn(() => {

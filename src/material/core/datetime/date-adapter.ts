@@ -20,22 +20,14 @@ export function MAT_DATE_LOCALE_FACTORY(): string {
   return inject(LOCALE_ID);
 }
 
-/**
- * No longer needed since MAT_DATE_LOCALE has been changed to a scoped injectable.
- * If you are importing and providing this in your code you can simply remove it.
- * @deprecated
- * @breaking-change 8.0.0
- */
-export const MAT_DATE_LOCALE_PROVIDER = {provide: MAT_DATE_LOCALE, useExisting: LOCALE_ID};
-
 /** Adapts type `D` to be usable as a date by cdk-based components that work with dates. */
 export abstract class DateAdapter<D> {
   /** The locale to use for all dates. */
   protected locale: any;
+  protected _localeChanges = new Subject<void>();
 
   /** A stream that emits when the locale changes. */
-  get localeChanges(): Observable<void> { return this._localeChanges; }
-  protected _localeChanges = new Subject<void>();
+  readonly localeChanges: Observable<void> = this._localeChanges;
 
   /**
    * Gets the year component of the given date.
@@ -202,6 +194,16 @@ export abstract class DateAdapter<D> {
    * @returns An invalid date.
    */
   abstract invalid(): D;
+
+ /**
+  * Given a potential date object, returns that same date object if it is
+  * a valid date, or `null` if it's not a valid date.
+  * @param obj The object to check.
+  * @returns A date or `null`.
+  */
+  getValidDateOrNull(obj: unknown): D | null {
+    return this.isDateInstance(obj) && this.isValid(obj as D) ? obj as D : null;
+  }
 
   /**
    * Attempts to deserialize a value to a valid date object. This is different from parsing in that

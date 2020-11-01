@@ -1,3 +1,7 @@
+export declare const MAT_LIST: InjectionToken<MatList>;
+
+export declare const MAT_NAV_LIST: InjectionToken<MatNavList>;
+
 export declare const MAT_SELECTION_LIST_VALUE_ACCESSOR: any;
 
 export declare class MatList extends _MatListMixinBase implements CanDisable, CanDisableRipple, OnChanges, OnDestroy {
@@ -111,10 +115,9 @@ export declare class MatSelectionList extends _MatSelectionListMixinBase impleme
     selectedOptions: SelectionModel<MatListOption>;
     readonly selectionChange: EventEmitter<MatSelectionListChange>;
     tabIndex: number;
-    constructor(_element: ElementRef<HTMLElement>, tabIndex: string, _changeDetector: ChangeDetectorRef);
-    _emitChangeEvent(option: MatListOption): void;
+    constructor(_element: ElementRef<HTMLElement>, tabIndex: string, _changeDetector: ChangeDetectorRef, _focusMonitor?: FocusMonitor | undefined);
+    _emitChangeEvent(options: MatListOption[]): void;
     _keydown(event: KeyboardEvent): void;
-    _onFocus(): void;
     _removeOptionFromList(option: MatListOption): MatListOption | null;
     _reportValueChange(): void;
     _setFocusedOption(option: MatListOption): void;
@@ -132,13 +135,15 @@ export declare class MatSelectionList extends _MatSelectionListMixinBase impleme
     static ngAcceptInputType_disabled: BooleanInput;
     static ngAcceptInputType_multiple: BooleanInput;
     static ɵcmp: i0.ɵɵComponentDefWithMeta<MatSelectionList, "mat-selection-list", ["matSelectionList"], { "disableRipple": "disableRipple"; "tabIndex": "tabIndex"; "color": "color"; "compareWith": "compareWith"; "disabled": "disabled"; "multiple": "multiple"; }, { "selectionChange": "selectionChange"; }, ["options"], ["*"]>;
-    static ɵfac: i0.ɵɵFactoryDef<MatSelectionList, [null, { attribute: "tabindex"; }, null]>;
+    static ɵfac: i0.ɵɵFactoryDef<MatSelectionList, [null, { attribute: "tabindex"; }, null, null]>;
 }
 
 export declare class MatSelectionListChange {
     option: MatListOption;
+    options: MatListOption[];
     source: MatSelectionList;
     constructor(
     source: MatSelectionList,
-    option: MatListOption);
+    option: MatListOption,
+    options: MatListOption[]);
 }

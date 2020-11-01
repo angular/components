@@ -7,6 +7,7 @@
  */
 
 import {Directive, ElementRef, NgZone} from '@angular/core';
+import {CdkTable} from '@angular/cdk/table';
 
 import {ColumnResize} from '../column-resize';
 import {ColumnResizeNotifier, ColumnResizeNotifierSource} from '../column-resize-notifier';
@@ -27,10 +28,11 @@ import {FLEX_PROVIDERS} from './constants';
 export class CdkDefaultEnabledColumnResizeFlex extends ColumnResize {
   constructor(
       readonly columnResizeNotifier: ColumnResizeNotifier,
-      protected readonly elementRef: ElementRef,
+      readonly elementRef: ElementRef<HTMLElement>,
       protected readonly eventDispatcher: HeaderRowEventDispatcher,
       protected readonly ngZone: NgZone,
-      protected readonly notifier: ColumnResizeNotifierSource) {
+      protected readonly notifier: ColumnResizeNotifierSource,
+      protected readonly table: CdkTable<unknown>) {
     super();
   }
 }

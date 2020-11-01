@@ -44,7 +44,7 @@ export class MatChipSelectionChange {
   inputs: ['color', 'disableRipple', 'tabIndex'],
   host: {
     'role': 'option',
-    'class': 'mat-mdc-focus-indicator',
+    'class': 'mat-mdc-focus-indicator mat-mdc-chip-option',
     '[class.mat-mdc-chip-disabled]': 'disabled',
     '[class.mat-mdc-chip-highlighted]': 'highlighted',
     '[class.mat-mdc-chip-with-avatar]': 'leadingIcon',
@@ -183,7 +183,7 @@ export class MatChipOption extends MatChip implements AfterContentInit {
       return;
     }
 
-    if (!this._hasFocus) {
+    if (!this._hasFocus()) {
       this._elementRef.nativeElement.focus();
       this._onFocus.next({chip: this});
     }
@@ -197,7 +197,6 @@ export class MatChipOption extends MatChip implements AfterContentInit {
     // that moves focus not the next item. To work around the issue, we defer marking the chip
     // as not focused until the next time the zone stabilizes.
     this._ngZone.onStable
-      .asObservable()
       .pipe(take(1))
       .subscribe(() => {
         this._ngZone.run(() => {

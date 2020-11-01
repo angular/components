@@ -12,11 +12,15 @@ import {
   DataSource,
   ListRange,
   isDataSource,
+  _RecycleViewRepeaterStrategy,
+  _VIEW_REPEATER_STRATEGY,
+  _ViewRepeaterItemInsertArgs,
 } from '@angular/cdk/collections';
 import {
   Directive,
   DoCheck,
   EmbeddedViewRef,
+  Inject,
   Input,
   IterableChangeRecord,
   IterableChanges,
@@ -30,8 +34,10 @@ import {
   TrackByFunction,
   ViewContainerRef,
 } from '@angular/core';
+import {coerceNumberProperty, NumberInput} from '@angular/cdk/coercion';
 import {Observable, Subject, of as observableOf, isObservable} from 'rxjs';
 import {pairwise, shareReplay, startWith, switchMap, takeUntil} from 'rxjs/operators';
+import {CdkVirtualScrollRepeater} from './virtual-scroll-repeater';
 import {CdkVirtualScrollViewport} from './virtual-scroll-viewport';
 
 
@@ -56,16 +62,20 @@ export type CdkVirtualForOfContext<T> = {
 };
 
 
-/** Helper to extract size from a DOM Node. */
-function getSize(orientation: 'horizontal' | 'vertical', node: Node): number {
+/** Helper to extract the offset of a DOM Node in a certain direction. */
+function getOffset(orientation: 'horizontal' | 'vertical', direction: 'start' | 'end', node: Node) {
   const el = node as Element;
   if (!el.getBoundingClientRect) {
     return 0;
   }
   const rect = el.getBoundingClientRect();
-  return orientation == 'horizontal' ? rect.width : rect.height;
-}
 
+  if (orientation === 'horizontal') {
+    return direction === 'start' ? rect.left : rect.right;
+  }
+
+  return direction === 'start' ? rect.top : rect.bottom;
+}
 
 /**
  * A directive similar to `ngForOf` to be used for rendering data inside a virtual scrolling
@@ -73,8 +83,12 @@ function getSize(orientation: 'horizontal' | 'vertical', node: Node): number {
  */
 @Directive({
   selector: '[cdkVirtualFor][cdkVirtualForOf]',
+  providers: [
+    {provide: _VIEW_REPEATER_STRATEGY, useClass: _RecycleViewRepeaterStrategy},
+  ]
 })
-export class CdkVirtualForOf<T> implements CollectionViewer, DoCheck, OnDestroy {
+export class CdkVirtualForOf<T> implements
+    CdkVirtualScrollRepeater<T>, CollectionViewer, DoCheck, OnDestroy {
   /** Emits when the rendered view of the data changes. */
   viewChange = new Subject<ListRange>();
 
@@ -91,11 +105,12 @@ export class CdkVirtualForOf<T> implements CollectionViewer, DoCheck, OnDestroy 
     if (isDataSource(value)) {
       this._dataSourceChanges.next(value);
     } else {
-      // Slice the value if its an NgIterable to ensure we're working with an array.
+      // If value is an an NgIterable, convert it to an array.
       this._dataSourceChanges.next(new ArrayDataSource<T>(
-          isObservable(value) ? value : Array.prototype.slice.call(value || [])));
+          isObservable(value) ? value : Array.from(value || [])));
     }
   }
+
   _cdkVirtualForOf: DataSource<T> | Observable<T[]> | NgIterable<T> | null | undefined;
 
   /**
@@ -127,21 +142,27 @@ export class CdkVirtualForOf<T> implements CollectionViewer, DoCheck, OnDestroy 
    * The size of the cache used to store templates that are not being used for re-use later.
    * Setting the cache size to `0` will disable caching. Defaults to 20 templates.
    */
-  @Input() cdkVirtualForTemplateCacheSize: number = 20;
+  @Input()
+  get cdkVirtualForTemplateCacheSize() {
+    return this._viewRepeater.viewCacheSize;
+  }
+  set cdkVirtualForTemplateCacheSize(size: number) {
+    this._viewRepeater.viewCacheSize = coerceNumberProperty(size);
+  }
 
   /** Emits whenever the data in the current DataSource changes. */
   dataStream: Observable<T[] | ReadonlyArray<T>> = this._dataSourceChanges
-      .pipe(
-          // Start off with null `DataSource`.
-          startWith(null!),
-          // Bundle up the previous and current data sources so we can work with both.
-          pairwise(),
-          // Use `_changeDataSource` to disconnect from the previous data source and connect to the
-          // new one, passing back a stream of data changes which we run through `switchMap` to give
-          // us a data stream that emits the latest data from whatever the current `DataSource` is.
-          switchMap(([prev, cur]) => this._changeDataSource(prev, cur)),
-          // Replay the last emitted data when someone subscribes.
-          shareReplay(1));
+  .pipe(
+      // Start off with null `DataSource`.
+      startWith(null!),
+      // Bundle up the previous and current data sources so we can work with both.
+      pairwise(),
+      // Use `_changeDataSource` to disconnect from the previous data source and connect to the
+      // new one, passing back a stream of data changes which we run through `switchMap` to give
+      // us a data stream that emits the latest data from whatever the current `DataSource` is.
+      switchMap(([prev, cur]) => this._changeDataSource(prev, cur)),
+      // Replay the last emitted data when someone subscribes.
+      shareReplay(1));
 
   /** The differ used to calculate changes to the data. */
   private _differ: IterableDiffer<T> | null = null;
@@ -155,13 +176,6 @@ export class CdkVirtualForOf<T> implements CollectionViewer, DoCheck, OnDestroy 
   /** The currently rendered range of indices. */
   private _renderedRange: ListRange;
 
-  /**
-   * The template cache used to hold on ot template instancess that have been stamped out, but don't
-   * currently need to be rendered. These instances will be reused in the future rather than
-   * stamping out brand new ones.
-   */
-  private _templateCache: EmbeddedViewRef<CdkVirtualForOfContext<T>>[] = [];
-
   /** Whether the rendered data should be updated during the next ngDoCheck cycle. */
   private _needsUpdate = false;
 
@@ -174,6 +188,9 @@ export class CdkVirtualForOf<T> implements CollectionViewer, DoCheck, OnDestroy 
       private _template: TemplateRef<CdkVirtualForOfContext<T>>,
       /** The set of available differs. */
       private _differs: IterableDiffers,
+      /** The strategy used to render items in the virtual scroll viewport. */
+      @Inject(_VIEW_REPEATER_STRATEGY)
+      private _viewRepeater: _RecycleViewRepeaterStrategy<T, T, CdkVirtualForOfContext<T>>,
       /** The virtual scrolling viewport that these items are being rendered in. */
       @SkipSelf() private _viewport: CdkVirtualScrollViewport,
       ngZone: NgZone) {
@@ -198,7 +215,8 @@ export class CdkVirtualForOf<T> implements CollectionViewer, DoCheck, OnDestroy 
     if (range.start >= range.end) {
       return 0;
     }
-    if (range.start < this._renderedRange.start || range.end > this._renderedRange.end) {
+    if ((range.start < this._renderedRange.start || range.end > this._renderedRange.end) &&
+      (typeof ngDevMode === 'undefined' || ngDevMode)) {
       throw Error(`Error: attempted to measure an item that isn't rendered.`);
     }
 
@@ -207,19 +225,33 @@ export class CdkVirtualForOf<T> implements CollectionViewer, DoCheck, OnDestroy 
     // The length of the range we're measuring.
     const rangeLen = range.end - range.start;
 
-    // Loop over all root nodes for all items in the range and sum up their size.
-    let totalSize = 0;
-    let i = rangeLen;
-    while (i--) {
+    // Loop over all the views, find the first and land node and compute the size by subtracting
+    // the top of the first node from the bottom of the last one.
+    let firstNode: HTMLElement | undefined;
+    let lastNode: HTMLElement | undefined;
+
+    // Find the first node by starting from the beginning and going forwards.
+    for (let i = 0; i < rangeLen; i++) {
       const view = this._viewContainerRef.get(i + renderedStartIndex) as
           EmbeddedViewRef<CdkVirtualForOfContext<T>> | null;
-      let j = view ? view.rootNodes.length : 0;
-      while (j--) {
-        totalSize += getSize(orientation, view!.rootNodes[j]);
+      if (view && view.rootNodes.length) {
+        firstNode = lastNode = view.rootNodes[0];
+        break;
       }
     }
 
-    return totalSize;
+    // Find the last node by starting from the end and going backwards.
+    for (let i = rangeLen - 1; i > -1; i--) {
+      const view = this._viewContainerRef.get(i + renderedStartIndex) as
+          EmbeddedViewRef<CdkVirtualForOfContext<T>> | null;
+      if (view && view.rootNodes.length) {
+        lastNode = view.rootNodes[view.rootNodes.length - 1];
+        break;
+      }
+    }
+
+    return firstNode && lastNode ?
+        getOffset(orientation, 'end', lastNode) - getOffset(orientation, 'start', firstNode) : 0;
   }
 
   ngDoCheck() {
@@ -240,16 +272,13 @@ export class CdkVirtualForOf<T> implements CollectionViewer, DoCheck, OnDestroy 
   ngOnDestroy() {
     this._viewport.detach();
 
-    this._dataSourceChanges.next();
+    this._dataSourceChanges.next(undefined!);
     this._dataSourceChanges.complete();
     this.viewChange.complete();
 
     this._destroyed.next();
     this._destroyed.complete();
-
-    for (let view of this._templateCache) {
-      view.destroy();
-    }
+    this._viewRepeater.detach();
   }
 
   /** React to scroll state changes in the viewport. */
@@ -266,7 +295,7 @@ export class CdkVirtualForOf<T> implements CollectionViewer, DoCheck, OnDestroy 
 
   /** Swap out one `DataSource` for another. */
   private _changeDataSource(oldDs: DataSource<T> | null, newDs: DataSource<T> | null):
-    Observable<T[] | ReadonlyArray<T>> {
+      Observable<T[] | ReadonlyArray<T>> {
 
     if (oldDs) {
       oldDs.disconnect(this);
@@ -291,22 +320,13 @@ export class CdkVirtualForOf<T> implements CollectionViewer, DoCheck, OnDestroy 
 
   /** Apply changes to the DOM. */
   private _applyChanges(changes: IterableChanges<T>) {
-    // Rearrange the views to put them in the right location.
-    changes.forEachOperation((record: IterableChangeRecord<T>,
-                              adjustedPreviousIndex: number | null,
-                              currentIndex: number | null) => {
-      if (record.previousIndex == null) {  // Item added.
-        const view = this._insertViewForNewItem(currentIndex!);
-        view.context.$implicit = record.item;
-      } else if (currentIndex == null) {  // Item removed.
-        this._cacheView(this._detachView(adjustedPreviousIndex !));
-      } else {  // Item moved.
-        const view = this._viewContainerRef.get(adjustedPreviousIndex!) as
-            EmbeddedViewRef<CdkVirtualForOfContext<T>>;
-        this._viewContainerRef.move(view, currentIndex);
-        view.context.$implicit = record.item;
-      }
-    });
+    this._viewRepeater.applyChanges(
+        changes,
+        this._viewContainerRef,
+        (record: IterableChangeRecord<T>,
+         adjustedPreviousIndex: number | null,
+         currentIndex: number | null) => this._getEmbeddedViewArgs(record, currentIndex!),
+        (record) => record.item);
 
     // Update $implicit for any items that had an identity change.
     changes.forEachIdentityChange((record: IterableChangeRecord<T>) => {
@@ -326,29 +346,6 @@ export class CdkVirtualForOf<T> implements CollectionViewer, DoCheck, OnDestroy 
     }
   }
 
-  /** Cache the given detached view. */
-  private _cacheView(view: EmbeddedViewRef<CdkVirtualForOfContext<T>>) {
-    if (this._templateCache.length < this.cdkVirtualForTemplateCacheSize) {
-      this._templateCache.push(view);
-    } else {
-      const index = this._viewContainerRef.indexOf(view);
-
-      // It's very unlikely that the index will ever be -1, but just in case,
-      // destroy the view on its own, otherwise destroy it through the
-      // container to ensure that all the references are removed.
-      if (index === -1) {
-        view.destroy();
-      } else {
-        this._viewContainerRef.remove(index);
-      }
-    }
-  }
-
-  /** Inserts a view for a new item, either from the cache or by creating a new one. */
-  private _insertViewForNewItem(index: number): EmbeddedViewRef<CdkVirtualForOfContext<T>> {
-    return this._insertViewFromCache(index) || this._createEmbeddedViewAt(index);
-  }
-
   /** Update the computed properties on the `CdkVirtualForOfContext`. */
   private _updateComputedContextProperties(context: CdkVirtualForOfContext<any>) {
     context.first = context.index === 0;
@@ -357,38 +354,29 @@ export class CdkVirtualForOf<T> implements CollectionViewer, DoCheck, OnDestroy 
     context.odd = !context.even;
   }
 
-  /** Creates a new embedded view and moves it to the given index */
-  private _createEmbeddedViewAt(index: number): EmbeddedViewRef<CdkVirtualForOfContext<T>> {
+  private _getEmbeddedViewArgs(record: IterableChangeRecord<T>, index: number):
+      _ViewRepeaterItemInsertArgs<CdkVirtualForOfContext<T>> {
     // Note that it's important that we insert the item directly at the proper index,
     // rather than inserting it and the moving it in place, because if there's a directive
     // on the same node that injects the `ViewContainerRef`, Angular will insert another
     // comment node which can throw off the move when it's being repeated for all items.
-    return this._viewContainerRef.createEmbeddedView(this._template, {
-      $implicit: null!,
-      // It's guaranteed that the iterable is not "undefined" or "null" because we only
-      // generate views for elements if the "cdkVirtualForOf" iterable has elements.
-      cdkVirtualForOf: this._cdkVirtualForOf!,
-      index: -1,
-      count: -1,
-      first: false,
-      last: false,
-      odd: false,
-      even: false
-    }, index);
+    return {
+      templateRef: this._template,
+      context: {
+        $implicit: record.item,
+        // It's guaranteed that the iterable is not "undefined" or "null" because we only
+        // generate views for elements if the "cdkVirtualForOf" iterable has elements.
+        cdkVirtualForOf: this._cdkVirtualForOf!,
+        index: -1,
+        count: -1,
+        first: false,
+        last: false,
+        odd: false,
+        even: false
+      },
+      index,
+    };
   }
 
-  /** Inserts a recycled view from the cache at the given index. */
-  private _insertViewFromCache(index: number): EmbeddedViewRef<CdkVirtualForOfContext<T>>|null {
-    const cachedView = this._templateCache.pop();
-    if (cachedView) {
-      this._viewContainerRef.insert(cachedView, index);
-    }
-    return cachedView || null;
-  }
-
-  /** Detaches the embedded view at the given index. */
-  private _detachView(index: number): EmbeddedViewRef<CdkVirtualForOfContext<T>> {
-    return this._viewContainerRef.detach(index) as
-        EmbeddedViewRef<CdkVirtualForOfContext<T>>;
-  }
+  static ngAcceptInputType_cdkVirtualForTemplateCacheSize: NumberInput;
 }

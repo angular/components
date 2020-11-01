@@ -18,10 +18,12 @@ import {MapEventManager} from '../map-event-manager';
 
 /**
  * Angular component that renders a Google Maps Rectangle via the Google Maps JavaScript API.
- * @see developers.google.com/maps/documentation/javascript/reference/polygon#Rectangle
+ *
+ * See developers.google.com/maps/documentation/javascript/reference/polygon#Rectangle
  */
 @Directive({
   selector: 'map-rectangle',
+  exportAs: 'mapRectangle',
 })
 export class MapRectangle implements OnInit, OnDestroy {
   private _eventManager = new MapEventManager(this._ngZone);
@@ -32,7 +34,12 @@ export class MapRectangle implements OnInit, OnDestroy {
 
   private readonly _destroyed = new Subject<void>();
 
-  _rectangle: google.maps.Rectangle;  // initialized in ngOnInit
+  /**
+   * The underlying google.maps.Rectangle object.
+   *
+   * See developers.google.com/maps/documentation/javascript/reference/polygon#Rectangle
+   */
+  rectangle?: google.maps.Rectangle;
 
   @Input()
   set options(options: google.maps.RectangleOptions) {
@@ -45,14 +52,14 @@ export class MapRectangle implements OnInit, OnDestroy {
   }
 
   /**
-   * @see
+   * See
    * developers.google.com/maps/documentation/javascript/reference/polygon#Rectangle.boundsChanged
    */
   @Output()
   boundsChanged: Observable<void> = this._eventManager.getLazyEmitter<void>('bounds_changed');
 
   /**
-   * @see
+   * See
    * developers.google.com/maps/documentation/javascript/reference/polygon#Rectangle.click
    */
   @Output()
@@ -60,7 +67,7 @@ export class MapRectangle implements OnInit, OnDestroy {
       this._eventManager.getLazyEmitter<google.maps.MouseEvent>('click');
 
   /**
-   * @see
+   * See
    * developers.google.com/maps/documentation/javascript/reference/polygon#Rectangle.dblclick
    */
   @Output()
@@ -68,7 +75,7 @@ export class MapRectangle implements OnInit, OnDestroy {
       this._eventManager.getLazyEmitter<google.maps.MouseEvent>('dblclick');
 
   /**
-   * @see
+   * See
    * developers.google.com/maps/documentation/javascript/reference/polygon#Rectangle.drag
    */
   @Output()
@@ -76,7 +83,7 @@ export class MapRectangle implements OnInit, OnDestroy {
       this._eventManager.getLazyEmitter<google.maps.MouseEvent>('drag');
 
   /**
-   * @see
+   * See
    * developers.google.com/maps/documentation/javascript/reference/polygon#Rectangle.dragend
    */
   @Output()
@@ -84,7 +91,7 @@ export class MapRectangle implements OnInit, OnDestroy {
       this._eventManager.getLazyEmitter<google.maps.MouseEvent>('dragend');
 
   /**
-   * @see
+   * See
    * developers.google.com/maps/documentation/javascript/reference/polygon#Rectangle.dragstart
    */
   @Output()
@@ -92,7 +99,7 @@ export class MapRectangle implements OnInit, OnDestroy {
       this._eventManager.getLazyEmitter<google.maps.MouseEvent>('dragstart');
 
   /**
-   * @see
+   * See
    * developers.google.com/maps/documentation/javascript/reference/polygon#Rectangle.mousedown
    */
   @Output()
@@ -100,7 +107,7 @@ export class MapRectangle implements OnInit, OnDestroy {
       this._eventManager.getLazyEmitter<google.maps.MouseEvent>('mousedown');
 
   /**
-   * @see
+   * See
    * developers.google.com/maps/documentation/javascript/reference/polygon#Rectangle.mousemove
    */
   @Output()
@@ -108,7 +115,7 @@ export class MapRectangle implements OnInit, OnDestroy {
       this._eventManager.getLazyEmitter<google.maps.MouseEvent>('mousemove');
 
   /**
-   * @see
+   * See
    * developers.google.com/maps/documentation/javascript/reference/polygon#Rectangle.mouseout
    */
   @Output()
@@ -116,7 +123,7 @@ export class MapRectangle implements OnInit, OnDestroy {
       this._eventManager.getLazyEmitter<google.maps.MouseEvent>('mouseout');
 
   /**
-   * @see
+   * See
    * developers.google.com/maps/documentation/javascript/reference/polygon#Rectangle.mouseover
    */
   @Output()
@@ -124,7 +131,7 @@ export class MapRectangle implements OnInit, OnDestroy {
       this._eventManager.getLazyEmitter<google.maps.MouseEvent>('mouseover');
 
   /**
-   * @see
+   * See
    * developers.google.com/maps/documentation/javascript/reference/polygon#Rectangle.mouseup
    */
   @Output()
@@ -132,7 +139,7 @@ export class MapRectangle implements OnInit, OnDestroy {
       this._eventManager.getLazyEmitter<google.maps.MouseEvent>('mouseup');
 
   /**
-   * @see
+   * See
    * developers.google.com/maps/documentation/javascript/reference/polygon#Rectangle.rightclick
    */
   @Output()
@@ -148,10 +155,11 @@ export class MapRectangle implements OnInit, OnDestroy {
         // We'll bring it back in inside the `MapEventManager` only for the events that the
         // user has subscribed to.
         this._ngZone.runOutsideAngular(() => {
-          this._rectangle = new google.maps.Rectangle(options);
+          this.rectangle = new google.maps.Rectangle(options);
         });
-        this._rectangle.setMap(this._map._googleMap);
-        this._eventManager.setTarget(this._rectangle);
+        this._assertInitialized();
+        this.rectangle.setMap(this._map.googleMap!);
+        this._eventManager.setTarget(this.rectangle);
       });
 
       this._watchForOptionsChanges();
@@ -163,41 +171,45 @@ export class MapRectangle implements OnInit, OnDestroy {
     this._eventManager.destroy();
     this._destroyed.next();
     this._destroyed.complete();
-    if (this._rectangle) {
-      this._rectangle.setMap(null);
+    if (this.rectangle) {
+      this.rectangle.setMap(null);
     }
   }
 
   /**
-   * @see
+   * See
    * developers.google.com/maps/documentation/javascript/reference/polygon#Rectangle.getBounds
    */
   getBounds(): google.maps.LatLngBounds {
-    return this._rectangle.getBounds();
+    this._assertInitialized();
+    return this.rectangle.getBounds();
   }
 
   /**
-   * @see
+   * See
    * developers.google.com/maps/documentation/javascript/reference/polygon#Rectangle.getDraggable
    */
   getDraggable(): boolean {
-    return this._rectangle.getDraggable();
+    this._assertInitialized();
+    return this.rectangle.getDraggable();
   }
 
   /**
-   * @see
+   * See
    * developers.google.com/maps/documentation/javascript/reference/polygon#Rectangle.getEditable
    */
   getEditable(): boolean {
-    return this._rectangle.getEditable();
+    this._assertInitialized();
+    return this.rectangle.getEditable();
   }
 
   /**
-   * @see
+   * See
    * developers.google.com/maps/documentation/javascript/reference/polygon#Rectangle.getVisible
    */
   getVisible(): boolean {
-    return this._rectangle.getVisible();
+    this._assertInitialized();
+    return this.rectangle.getVisible();
   }
 
   private _combineOptions(): Observable<google.maps.RectangleOptions> {
@@ -212,15 +224,32 @@ export class MapRectangle implements OnInit, OnDestroy {
 
   private _watchForOptionsChanges() {
     this._options.pipe(takeUntil(this._destroyed)).subscribe(options => {
-      this._rectangle.setOptions(options);
+      this._assertInitialized();
+      this.rectangle.setOptions(options);
     });
   }
 
   private _watchForBoundsChanges() {
     this._bounds.pipe(takeUntil(this._destroyed)).subscribe(bounds => {
       if (bounds) {
-        this._rectangle.setBounds(bounds);
+        this._assertInitialized();
+        this.rectangle.setBounds(bounds);
       }
     });
+  }
+
+  private _assertInitialized(): asserts this is {rectangle: google.maps.Rectangle} {
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      if (!this._map.googleMap) {
+        throw Error(
+            'Cannot access Google Map information before the API has been initialized. ' +
+            'Please wait for the API to load before trying to interact with it.');
+      }
+      if (!this.rectangle) {
+        throw Error(
+            'Cannot interact with a Google Map Rectangle before it has been initialized. ' +
+            'Please wait for the Rectangle to load before trying to interact with it.');
+      }
+    }
   }
 }

@@ -1,14 +1,79 @@
+@import '@material/density/functions.import';
+@import '@material/list/variables.import';
 @import '@material/list/mixins.import';
+
+@import './interactive-list-theme';
+@import './list-option-theme';
 @import '../mdc-helpers/mdc-helpers';
 
-@mixin mat-mdc-list-theme($theme) {
-  @include mat-using-mdc-theme($theme) {
+
+// TODO: implement mat-list[dense] once density system is in master
+
+
+@mixin mat-mdc-list-color($config-or-theme) {
+  $config: mat-get-color-config($config-or-theme);
+
+  // MDC's state styles are tied in with their ripple. Since we don't use the MDC
+  // ripple, we need to add the hover, focus and selected states manually.
+  @include _mat-mdc-interactive-list-item-state-colors($config);
+
+  @include mat-using-mdc-theme($config) {
     @include mdc-list-without-ripple($query: $mat-theme-styles-query);
+
+    .mat-mdc-list-option {
+      @include _mat-mdc-list-option-color-override(primary);
+    }
+    .mat-mdc-list-option.mat-accent {
+      @include _mat-mdc-list-option-color-override(secondary);
+    }
+    .mat-mdc-list-option.mat-warn {
+      @include _mat-mdc-list-option-color-override(error);
+    }
   }
 }
 
-@mixin mat-mdc-list-typography($config) {
+@mixin mat-mdc-list-density($config-or-theme) {
+  $density-scale: mat-get-density-config($config-or-theme);
+  $height: mdc-density-prop-value(
+    $density-config: $mdc-list-single-line-density-config,
+    $density-scale: $density-scale,
+    $property-name: height,
+  );
+
+  // MDC list provides a mixin called `mdc-list-single-line-density`, but we cannot use
+  // that mixin, as the generated generated density styles are scoped to `.mdc-list-item`, while
+  // the styles should actually only affect single-line list items. This has been reported as
+  // a bug in the MDC repository: https://github.com/material-components/material-components-web/issues/5737.
+  .mat-mdc-list-item-single-line {
+    @include mdc-list-single-line-height($height);
+  }
+
+  @include _mat-mdc-list-option-density-styles($density-scale);
+}
+
+@mixin mat-mdc-list-typography($config-or-theme) {
+  $config: mat-get-typography-config($config-or-theme);
   @include mat-using-mdc-typography($config) {
     @include mdc-list-without-ripple($query: $mat-typography-styles-query);
+    @include _mat-mdc-list-option-typography-styles();
+  }
+}
+
+@mixin mat-mdc-list-theme($theme-or-color-config) {
+  $theme: _mat-legacy-get-theme($theme-or-color-config);
+  @include _mat-check-duplicate-theme-styles($theme, 'mat-mdc-list') {
+    $color: mat-get-color-config($theme);
+    $density: mat-get-density-config($theme);
+    $typography: mat-get-typography-config($theme);
+
+    @if $color != null {
+      @include mat-mdc-list-color($color);
+    }
+    @if $density != null {
+      @include mat-mdc-list-density($density);
+    }
+    @if $typography != null {
+      @include mat-mdc-list-typography($typography);
+    }
   }
 }

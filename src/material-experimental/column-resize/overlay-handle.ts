@@ -15,7 +15,11 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import {DOCUMENT} from '@angular/common';
-import {CdkColumnDef} from '@angular/cdk/table';
+import {
+  CdkColumnDef,
+  _CoalescedStyleScheduler,
+  _COALESCED_STYLE_SCHEDULER,
+} from '@angular/cdk/table';
 import {Directionality} from '@angular/cdk/bidi';
 import {
   ColumnResize,
@@ -49,6 +53,8 @@ export class MatColumnResizeOverlayHandle extends ResizeOverlayHandle {
       protected readonly ngZone: NgZone,
       protected readonly resizeNotifier: ColumnResizeNotifierSource,
       protected readonly resizeRef: ResizeRef,
+      @Inject(_COALESCED_STYLE_SCHEDULER)
+          protected readonly styleScheduler: _CoalescedStyleScheduler,
       @Inject(DOCUMENT) document: any) {
     super();
     this.document = document;

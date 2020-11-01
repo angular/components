@@ -15,11 +15,11 @@ let nextUniqueId = 0;
   selector: 'mat-hint',
   host: {
     'class': 'mat-mdc-form-field-hint',
-    '[class.mat-form-field-hint-end]': 'align == "end"',
+    '[class.mat-mdc-form-field-hint-end]': 'align === "end"',
     '[id]': 'id',
     // Remove align attribute to prevent it from interfering with layout.
     '[attr.align]': 'null',
-  }
+  },
 })
 export class MatHint {
   /** Whether to align the hint label at the start or end of the line. */

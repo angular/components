@@ -6,14 +6,13 @@ export declare class MatDrawer implements AfterContentInit, AfterContentChecked,
     _animationEnd: Subject<AnimationEvent>;
     _animationStarted: Subject<AnimationEvent>;
     _animationState: 'open-instant' | 'open' | 'void';
-    get _closedStream(): Observable<void>;
+    _closedStream: Observable<void>;
     _container?: MatDrawerContainer | undefined;
     readonly _modeChanged: Subject<void>;
-    get _openedStream(): Observable<void>;
-    get _width(): number;
+    _openedStream: Observable<void>;
     get autoFocus(): boolean;
     set autoFocus(value: boolean);
-    get closedStart(): Observable<void>;
+    readonly closedStart: Observable<void>;
     get disableClose(): boolean;
     set disableClose(value: boolean);
     get mode(): MatDrawerMode;
@@ -22,13 +21,14 @@ export declare class MatDrawer implements AfterContentInit, AfterContentChecked,
     get opened(): boolean;
     set opened(value: boolean);
     readonly openedChange: EventEmitter<boolean>;
-    get openedStart(): Observable<void>;
+    readonly openedStart: Observable<void>;
     get position(): 'start' | 'end';
     set position(value: 'start' | 'end');
-    constructor(_elementRef: ElementRef<HTMLElement>, _focusTrapFactory: FocusTrapFactory, _focusMonitor: FocusMonitor, _platform: Platform, _ngZone: NgZone, _doc: any,
-    _container?: MatDrawerContainer | undefined);
+    constructor(_elementRef: ElementRef<HTMLElement>, _focusTrapFactory: FocusTrapFactory, _focusMonitor: FocusMonitor, _platform: Platform, _ngZone: NgZone, _doc: any, _container?: MatDrawerContainer | undefined);
     _animationDoneListener(event: AnimationEvent): void;
     _animationStartListener(event: AnimationEvent): void;
+    _closeViaBackdropClick(): Promise<MatDrawerToggleResult>;
+    _getWidth(): number;
     close(): Promise<MatDrawerToggleResult>;
     ngAfterContentChecked(): void;
     ngAfterContentInit(): void;
@@ -69,7 +69,7 @@ export declare class MatDrawerContainer implements AfterContentInit, DoCheck, On
     get scrollable(): CdkScrollable;
     get start(): MatDrawer | null;
     constructor(_dir: Directionality, _element: ElementRef<HTMLElement>, _ngZone: NgZone, _changeDetectorRef: ChangeDetectorRef, viewportRuler: ViewportRuler, defaultAutosize?: boolean, _animationMode?: string | undefined);
-    _closeModalDrawer(): void;
+    _closeModalDrawersViaBackdrop(): void;
     _isShowingBackdrop(): boolean;
     _onBackdropClicked(): void;
     close(): void;
@@ -126,7 +126,7 @@ export declare class MatSidenavContent extends MatDrawerContent {
 
 export declare class MatSidenavModule {
     static ɵinj: i0.ɵɵInjectorDef<MatSidenavModule>;
-    static ɵmod: i0.ɵɵNgModuleDefWithMeta<MatSidenavModule, [typeof i1.MatDrawer, typeof i1.MatDrawerContainer, typeof i1.MatDrawerContent, typeof i2.MatSidenav, typeof i2.MatSidenavContainer, typeof i2.MatSidenavContent], [typeof i3.CommonModule, typeof i4.MatCommonModule, typeof i5.ScrollingModule, typeof i6.PlatformModule], [typeof i4.MatCommonModule, typeof i1.MatDrawer, typeof i1.MatDrawerContainer, typeof i1.MatDrawerContent, typeof i2.MatSidenav, typeof i2.MatSidenavContainer, typeof i2.MatSidenavContent]>;
+    static ɵmod: i0.ɵɵNgModuleDefWithMeta<MatSidenavModule, [typeof i1.MatDrawer, typeof i1.MatDrawerContainer, typeof i1.MatDrawerContent, typeof i2.MatSidenav, typeof i2.MatSidenavContainer, typeof i2.MatSidenavContent], [typeof i3.CommonModule, typeof i4.MatCommonModule, typeof i5.PlatformModule, typeof i6.CdkScrollableModule], [typeof i6.CdkScrollableModule, typeof i4.MatCommonModule, typeof i1.MatDrawer, typeof i1.MatDrawerContainer, typeof i1.MatDrawerContent, typeof i2.MatSidenav, typeof i2.MatSidenavContainer, typeof i2.MatSidenavContent]>;
 }
 
 export declare function throwMatDuplicatedDrawerError(position: string): void;

@@ -2,19 +2,18 @@ import chalk from 'chalk';
 import {existsSync} from 'fs';
 import {sync as glob} from 'glob';
 import {join} from 'path';
-import {Version} from '../version-name/parse-version';
 
 import {
   checkCdkPackage,
-  checkMaterialPackage,
-  checkPackageJsonFile,
-  checkPackageJsonMigrations,
+  checkEntryPointPackageJsonFile,
   checkJavaScriptOutput,
+  checkMaterialPackage,
+  checkPrimaryPackageJson,
   checkTypeDefinitionFile
 } from './output-validations';
 
 /** Glob that matches all JavaScript files within a release package. */
-const releaseJsFilesGlob = '+(fesm5|fesm2015|esm5|esm2015|bundles)/**/*.js';
+const releaseJsFilesGlob = '+(fesm2015|esm2015|bundles)/**/*.js';
 
 /** Glob that matches all TypeScript definition files within a release package. */
 const releaseTypeDefinitionsGlob = '**/*.d.ts';
@@ -35,7 +34,7 @@ type PackageFailures = Map<string, string[]>;
  * @returns Whether the package passed all checks or not.
  */
 export function checkReleasePackage(
-    releasesPath: string, packageName: string, currentVersion: Version): boolean {
+    releasesPath: string, packageName: string, expectedVersion: string): boolean {
   const packagePath = join(releasesPath, packageName);
   const failures = new Map() as PackageFailures;
   const addFailure = (message, filePath?) => {
@@ -64,7 +63,7 @@ export function checkReleasePackage(
   // Check each "package.json" file in the release output. We want to ensure
   // that there are no invalid file references in the entry-point definitions.
   packageJsonFiles.forEach(filePath => {
-    checkPackageJsonFile(filePath).forEach(message => addFailure(message, filePath));
+    checkEntryPointPackageJsonFile(filePath).forEach(message => addFailure(message, filePath));
   });
 
   // Special release validation checks for the "material" release package.
@@ -82,7 +81,7 @@ export function checkReleasePackage(
     addFailure('No "README.md" file found in package output.');
   }
 
-  checkPackageJsonMigrations(join(packagePath, 'package.json'), currentVersion)
+  checkPrimaryPackageJson(join(packagePath, 'package.json'), expectedVersion)
       .forEach(f => addFailure(f));
 
   // In case there are failures for this package, we want to print those

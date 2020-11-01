@@ -9,8 +9,10 @@
 import {
   ComponentHarness,
   ComponentHarnessConstructor,
+  handleAutoChangeDetectionStatus,
   HarnessEnvironment,
   HarnessLoader,
+  stopHandlingAutoChangeDetectionStatus,
   TestElement
 } from '@angular/cdk/testing';
 import {ComponentFixture, flush} from '@angular/core/testing';
@@ -30,6 +32,59 @@ const defaultEnvironmentOptions: TestbedHarnessEnvironmentOptions = {
   queryFn: (selector: string, root: Element) => root.querySelectorAll(selector)
 };
 
+/** Whether auto change detection is currently disabled. */
+let disableAutoChangeDetection = false;
+
+/**
+ * The set of non-destroyed fixtures currently being used by `TestbedHarnessEnvironment` instances.
+ */
+const activeFixtures = new Set<ComponentFixture<unknown>>();
+
+/**
+ * Installs a handler for change detection batching status changes for a specific fixture.
+ * @param fixture The fixture to handle change detection batching for.
+ */
+function installAutoChangeDetectionStatusHandler(fixture: ComponentFixture<unknown>) {
+  if (!activeFixtures.size) {
+    handleAutoChangeDetectionStatus(({isDisabled, onDetectChangesNow}) => {
+      disableAutoChangeDetection = isDisabled;
+      if (onDetectChangesNow) {
+        Promise.all(Array.from(activeFixtures).map(detectChanges)).then(onDetectChangesNow);
+      }
+    });
+  }
+  activeFixtures.add(fixture);
+}
+
+/**
+ * Uninstalls a handler for change detection batching status changes for a specific fixture.
+ * @param fixture The fixture to stop handling change detection batching for.
+ */
+function uninstallAutoChangeDetectionStatusHandler(fixture: ComponentFixture<unknown>) {
+  activeFixtures.delete(fixture);
+  if (!activeFixtures.size) {
+    stopHandlingAutoChangeDetectionStatus();
+  }
+}
+
+/** Whether we are currently in the fake async zone. */
+function isInFakeAsyncZone() {
+  return Zone!.current.get('FakeAsyncTestZoneSpec') != null;
+}
+
+/**
+ * Triggers change detection for a specific fixture.
+ * @param fixture The fixture to trigger change detection for.
+ */
+async function detectChanges(fixture: ComponentFixture<unknown>) {
+  fixture.detectChanges();
+  if (isInFakeAsyncZone()) {
+    flush();
+  } else {
+    await fixture.whenStable();
+  }
+}
+
 /** A `HarnessEnvironment` implementation for Angular's Testbed. */
 export class TestbedHarnessEnvironment extends HarnessEnvironment<Element> {
   /** Whether the environment has been destroyed. */
@@ -46,7 +101,11 @@ export class TestbedHarnessEnvironment extends HarnessEnvironment<Element> {
     super(rawRootElement);
     this._options = {...defaultEnvironmentOptions, ...options};
     this._taskState = TaskStateZoneInterceptor.setup();
-    _fixture.componentRef.onDestroy(() => this._destroyed = true);
+    installAutoChangeDetectionStatusHandler(_fixture);
+    _fixture.componentRef.onDestroy(() => {
+      uninstallAutoChangeDetectionStatusHandler(_fixture);
+      this._destroyed = true;
+    });
   }
 
   /** Creates a `HarnessLoader` rooted at the given fixture's root element. */
@@ -64,6 +123,14 @@ export class TestbedHarnessEnvironment extends HarnessEnvironment<Element> {
     return new TestbedHarnessEnvironment(document.body, fixture, options);
   }
 
+  /** Gets the native DOM element corresponding to the given TestElement. */
+  static getNativeElement(el: TestElement): Element {
+    if (el instanceof UnitTestElement) {
+      return el.element;
+    }
+    throw Error('This TestElement was not created by the TestbedHarnessEnvironment');
+  }
+
   /**
    * Creates an instance of the given harness type, using the fixture's root element as the
    * harness's host element. This method should be used when creating a harness for the root element
@@ -79,12 +146,13 @@ export class TestbedHarnessEnvironment extends HarnessEnvironment<Element> {
   }
 
   async forceStabilize(): Promise<void> {
-    if (this._destroyed) {
-      throw Error('Harness is attempting to use a fixture that has already been destroyed.');
-    }
+    if (!disableAutoChangeDetection) {
+      if (this._destroyed) {
+        throw Error('Harness is attempting to use a fixture that has already been destroyed.');
+      }
 
-    this._fixture.detectChanges();
-    await this._fixture.whenStable();
+      await detectChanges(this._fixture);
+    }
   }
 
   async waitForTasksOutsideAngular(): Promise<void> {
@@ -94,7 +162,7 @@ export class TestbedHarnessEnvironment extends HarnessEnvironment<Element> {
     // cannot just rely on the task state observable to become stable because the state will
     // never change. This is because the task queue will be only drained if the fake async
     // zone is being flushed.
-    if (Zone!.current.get('FakeAsyncTestZoneSpec')) {
+    if (isInFakeAsyncZone()) {
       flush();
     }
 

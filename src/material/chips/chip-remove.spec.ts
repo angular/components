@@ -1,6 +1,6 @@
 import {Component, DebugElement} from '@angular/core';
 import {By} from '@angular/platform-browser';
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import {waitForAsync, ComponentFixture, TestBed} from '@angular/core/testing';
 import {MatChip, MatChipsModule} from './index';
 
 describe('Chip Remove', () => {
@@ -9,7 +9,7 @@ describe('Chip Remove', () => {
   let chipDebugElement: DebugElement;
   let chipNativeElement: HTMLElement;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [MatChipsModule],
       declarations: [
@@ -20,7 +20,7 @@ describe('Chip Remove', () => {
     TestBed.compileComponents();
   }));
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     fixture = TestBed.createComponent(TestChip);
     testChip = fixture.debugElement.componentInstance;
     fixture.detectChanges();
@@ -30,7 +30,7 @@ describe('Chip Remove', () => {
   }));
 
   describe('basic behavior', () => {
-    it('should apply the `mat-chip-remove` CSS class', () => {
+    it('should apply a CSS class to the remove icon', () => {
       let buttonElement = chipNativeElement.querySelector('button')!;
 
       expect(buttonElement.classList).toContain('mat-chip-remove');
@@ -48,7 +48,7 @@ describe('Chip Remove', () => {
       expect(buttonElement.hasAttribute('type')).toBe(false);
     });
 
-    it('should emits (removed) on click', () => {
+    it('should emit (removed) on click', () => {
       let buttonElement = chipNativeElement.querySelector('button')!;
 
       testChip.removable = true;

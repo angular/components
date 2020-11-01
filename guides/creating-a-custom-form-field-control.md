@@ -23,7 +23,7 @@ class MyTel {
 @Component({
   selector: 'example-tel-input',
   template: `
-    <div [formGroup]="parts">
+    <div role="group" [formGroup]="parts">
       <input class="area" formControlName="area" maxlength="3">
       <span>&ndash;</span>
       <input class="exchange" formControlName="exchange" maxlength="3">
@@ -45,7 +45,7 @@ class MyTel {
     }
   `],
 })
-class MyTelInput {
+export class MyTelInput {
   parts: FormGroup;
 
   @Input()
@@ -85,7 +85,7 @@ a provider to our component so that the form field will be able to inject it as 
   ...
   providers: [{provide: MatFormFieldControl, useExisting: MyTelInput}],
 })
-class MyTelInput implements MatFormFieldControl<MyTel> {
+export class MyTelInput implements MatFormFieldControl<MyTel> {
   ...
 }
 ```
@@ -201,7 +201,7 @@ To resolve this, remove the `NG_VALUE_ACCESSOR` provider and instead set the val
     // },
   ],
 })
-class MyTelInput implements MatFormFieldControl<MyTel> {
+export class MyTelInput implements MatFormFieldControl<MyTel> {
   constructor(
     ...,
     @Optional() @Self() public ngControl: NgControl,
@@ -339,15 +339,32 @@ controlType = 'example-tel-input';
 
 #### `setDescribedByIds(ids: string[])`
 
-This method is used by the `<mat-form-field>` to specify the IDs that should be used for the
-`aria-describedby` attribute of your component. The method has one parameter, the list of IDs, we
-just need to apply the given IDs to our host element.
+This method is used by the `<mat-form-field>` to set element ids that should be used for the
+`aria-describedby` attribute of your control. The ids are controlled through the form field
+as hints or errors are conditionally displayed and should be reflected in the control's
+`aria-describedby` attribute for an improved accessibility experience. 
+
+The `setDescribedByIds` method is invoked whenever the control's state changes. Custom controls
+need to implement this method and update the `aria-describedby` attribute based on the specified
+element ids. Below is an example that shows how this can be achieved.
+
+Note that the method by default will not respect element ids that have been set manually on the
+control element through the `aria-describedby` attribute. To ensure that your control does not
+accidentally override existing element ids specified by consumers of your control, create an
+input called `userAriaDescribedby`  like followed:
 
 ```ts
-@HostBinding('attr.aria-describedby') describedBy = '';
+@Input('aria-describedby') userAriaDescribedBy: string;
+```
 
+The form field will then pick up the user specified `aria-describedby` ids and merge
+them with ids for hints or errors whenever `setDescribedByIds` is invoked.
+
+```ts
 setDescribedByIds(ids: string[]) {
-  this.describedBy = ids.join(' ');
+  const controlElement = this._elementRef.nativeElement
+    .querySelector('.example-tel-input-container')!;
+  controlElement.setAttribute('aria-describedby', ids.join(' '));
 }
 ```
 
@@ -364,6 +381,41 @@ onContainerClick(event: MouseEvent) {
     this.elRef.nativeElement.querySelector('input').focus();
   }
 }
+```
+
+### Improving accessibility
+
+Our custom form field control consists of multiple inputs that describe segments of a phone
+number. For accessibility purposes, we put those inputs as part of a `div` element with
+`role="group"`. This ensures that screen reader users can tell that all those inputs belong
+together.
+
+One significant piece of information is missing for screen reader users though. They won't be able
+to tell what this input group represents. To improve this, we should add a label for the group
+element using either `aria-label` or `aria-labelledby`.
+
+It's recommended to link the group to the label that is displayed as part of the parent
+`<mat-form-field>`. This ensures that explicitly specified labels (using `<mat-label>`) are
+actually used for labelling the control.
+
+In our concrete example, we add an attribute binding for `aria-labelledby` and bind it
+to the label element id provided by the parent `<mat-form-field>`.
+
+```typescript
+export class MyTelInput implements MatFormFieldControl<MyTel> {
+  ...
+
+  constructor(...
+              @Optional() public parentFormField: MatFormField) {
+```
+
+```html
+@Component({
+  selector: 'example-tel-input',
+  template: `
+    <div role="group" [formGroup]="parts"
+         [attr.aria-describedby]="describedBy"
+         [attr.aria-labelledby]="parentFormField?.getLabelId()">
 ```
 
 ### Trying it out

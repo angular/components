@@ -210,6 +210,9 @@ it is contained in the reduced string, and the row would be displayed in the tab
 To override the default filtering behavior, a custom `filterPredicate` function can be set which
 takes a data object and filter string and returns true if the data object is considered a match.
 
+If you want to show a message when not data matches the filter, you can use the `*matNoDataRow`
+directive.
+
 <!--- example(table-filtering) -->
 
 #### Selection
@@ -342,6 +345,11 @@ Also, sticky positioning in Edge will appear shaky for special cases. For exampl
 container has a complex box shadow and has sibling elements, the stuck cells will appear jittery.
 There is currently an [open issue with Edge](https://developer.microsoft.com/en-us/microsoft-edge/platform/issues/17514118/)
 to resolve this.
+
+
+#### Multiple row templates
+
+When using the `multiTemplateDataRows` directive to support multiple rows for each data object, the context of `*matRowDef` is the same except that the `index` value is replaced by `dataIndex` and `renderIndex`.
 
 ### Accessibility
 Tables without text or labels should be given a meaningful label via `aria-label` or

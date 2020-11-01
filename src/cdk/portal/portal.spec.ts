@@ -14,6 +14,8 @@ import {
   ViewChild,
   ViewChildren,
   ViewContainerRef,
+  Directive,
+  AfterViewInit,
 } from '@angular/core';
 import {ComponentFixture, inject, TestBed} from '@angular/core/testing';
 import {DomPortalOutlet} from './dom-portal-outlet';
@@ -35,6 +37,7 @@ describe('Portals', () => {
 
     beforeEach(() => {
       fixture = TestBed.createComponent(PortalTestApp);
+      fixture.detectChanges();
 
       inject([ComponentFactoryResolver], (cfr: ComponentFactoryResolver) => {
         componentFactoryResolver = cfr;
@@ -346,6 +349,7 @@ describe('Portals', () => {
       fixture.destroy();
 
       const unboundFixture = TestBed.createComponent(UnboundPortalTestApp);
+      unboundFixture.detectChanges();
 
       // Note: calling `detectChanges` here will cause a false positive.
       // What we're testing is attaching before the first CD cycle.
@@ -404,7 +408,7 @@ describe('Portals', () => {
     let componentFactoryResolver: ComponentFactoryResolver;
     let someViewContainerRef: ViewContainerRef;
     let someInjector: Injector;
-    let someFixture: ComponentFixture<any>;
+    let someFixture: ComponentFixture<ArbitraryViewContainerRefComponent>;
     let someDomElement: HTMLElement;
     let host: DomPortalOutlet;
     let injector: Injector;
@@ -438,6 +442,19 @@ describe('Portals', () => {
       host.detach();
 
       expect(someDomElement.innerHTML).toBe('');
+    });
+
+    it('should move the DOM nodes before running change detection', () => {
+      someFixture.detectChanges();
+      let portal = new TemplatePortal(someFixture.componentInstance.template, someViewContainerRef);
+
+      host.attachTemplatePortal(portal);
+      someFixture.detectChanges();
+
+      expect(someFixture.componentInstance.saveParentNodeOnInit.parentOnViewInit)
+          .toBe(someDomElement);
+
+      host.dispose();
     });
 
     it('should attach and detach a component portal with a given injector', () => {
@@ -634,12 +651,38 @@ class PizzaMsg {
   constructor(@Optional() public snack: Chocolate) { }
 }
 
+/**
+ * Saves the parent node that the directive was attached to on init.
+ * Useful to see where the element was in the DOM when it was first attached.
+ */
+@Directive({
+  selector: '[savesParentNodeOnInit]'
+})
+class SaveParentNodeOnInit implements AfterViewInit {
+  parentOnViewInit: HTMLElement;
+
+  constructor(private _elementRef: ElementRef<HTMLElement>) {}
+
+  ngAfterViewInit() {
+    this.parentOnViewInit = this._elementRef.nativeElement.parentElement!;
+  }
+}
+
 /** Simple component to grab an arbitrary ViewContainerRef */
 @Component({
   selector: 'some-placeholder',
-  template: '<p>Hello</p>'
+  template: `
+    <p>Hello</p>
+
+    <ng-template #template>
+      <div savesParentNodeOnInit></div>
+    </ng-template>
+  `
 })
 class ArbitraryViewContainerRefComponent {
+  @ViewChild('template') template: TemplateRef<any>;
+  @ViewChild(SaveParentNodeOnInit) saveParentNodeOnInit: SaveParentNodeOnInit;
+
   constructor(public viewContainerRef: ViewContainerRef, public injector: Injector) { }
 }
 
@@ -676,10 +719,10 @@ class ArbitraryViewContainerRefComponent {
 })
 class PortalTestApp {
   @ViewChildren(CdkPortal) portals: QueryList<CdkPortal>;
-  @ViewChild(CdkPortalOutlet, {static: true}) portalOutlet: CdkPortalOutlet;
-  @ViewChild('templateRef', {read: TemplateRef, static: true}) templateRef: TemplateRef<any>;
-  @ViewChild('domPortalContent', {static: true}) domPortalContent: ElementRef<HTMLElement>;
-  @ViewChild('alternateContainer', {read: ViewContainerRef, static: true})
+  @ViewChild(CdkPortalOutlet) portalOutlet: CdkPortalOutlet;
+  @ViewChild('templateRef', {read: TemplateRef}) templateRef: TemplateRef<any>;
+  @ViewChild('domPortalContent') domPortalContent: ElementRef<HTMLElement>;
+  @ViewChild('alternateContainer', {read: ViewContainerRef})
   alternateContainer: ViewContainerRef;
 
   selectedPortal: Portal<any>|undefined;
@@ -716,7 +759,7 @@ class PortalTestApp {
   `,
 })
 class UnboundPortalTestApp {
-  @ViewChild(CdkPortalOutlet, {static: true}) portalOutlet: CdkPortalOutlet;
+  @ViewChild(CdkPortalOutlet) portalOutlet: CdkPortalOutlet;
 }
 
 // Create a real (non-test) NgModule as a workaround for
@@ -731,7 +774,7 @@ const TEST_COMPONENTS = [
 @NgModule({
   imports: [CommonModule, PortalModule],
   exports: TEST_COMPONENTS,
-  declarations: TEST_COMPONENTS,
+  declarations: [...TEST_COMPONENTS, SaveParentNodeOnInit],
   entryComponents: TEST_COMPONENTS,
 })
 class PortalTestModule { }

@@ -10,7 +10,7 @@ import {FocusKeyManager} from '@angular/cdk/a11y';
 import {Directionality} from '@angular/cdk/bidi';
 import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
 import {SelectionModel} from '@angular/cdk/collections';
-import {BACKSPACE, END, HOME} from '@angular/cdk/keycodes';
+import {BACKSPACE} from '@angular/cdk/keycodes';
 import {
   AfterContentInit,
   ChangeDetectionStrategy,
@@ -250,7 +250,7 @@ export class MatChipList extends _MatChipListMixinBase implements MatFormFieldCo
    * @docs-private
    */
   get empty(): boolean {
-    return (!this._chipInput || this._chipInput.empty) && this.chips.length === 0;
+    return (!this._chipInput || this._chipInput.empty) && (!this.chips || this.chips.length === 0);
   }
 
   /**
@@ -351,6 +351,7 @@ export class MatChipList extends _MatChipListMixinBase implements MatFormFieldCo
     this._keyManager = new FocusKeyManager<MatChip>(this.chips)
       .withWrap()
       .withVerticalOrientation()
+      .withHomeAndEnd()
       .withHorizontalOrientation(this._dir ? this._dir.value : 'ltr');
 
     if (this._dir) {
@@ -399,6 +400,10 @@ export class MatChipList extends _MatChipListMixinBase implements MatFormFieldCo
       // error triggers that we can't subscribe to (e.g. parent form submissions). This means
       // that whatever logic is in here has to be super lean or we risk destroying the performance.
       this.updateErrorState();
+
+      if (this.ngControl.disabled !== this._disabled) {
+        this.disabled = !!this.ngControl.disabled;
+      }
     }
   }
 
@@ -414,6 +419,10 @@ export class MatChipList extends _MatChipListMixinBase implements MatFormFieldCo
   /** Associates an HTML input element with this chip list. */
   registerInput(inputElement: MatChipTextControl): void {
     this._chipInput = inputElement;
+
+    // We use this attribute to match the chip list to its input in test harnesses.
+    // Set the attribute directly here to avoid "changed after checked" errors.
+    this._elementRef.nativeElement.setAttribute('data-mat-chip-input', inputElement.id);
   }
 
   /**
@@ -495,16 +504,7 @@ export class MatChipList extends _MatChipListMixinBase implements MatFormFieldCo
       this._keyManager.setLastItemActive();
       event.preventDefault();
     } else if (target && target.classList.contains('mat-chip')) {
-      if (event.keyCode === HOME) {
-        this._keyManager.setFirstItemActive();
-        event.preventDefault();
-      } else if (event.keyCode === END) {
-        this._keyManager.setLastItemActive();
-        event.preventDefault();
-      } else {
-        this._keyManager.onKeydown(event);
-      }
-
+      this._keyManager.onKeydown(event);
       this.stateChanges.next();
     }
   }
@@ -797,14 +797,14 @@ export class MatChipList extends _MatChipListMixinBase implements MatFormFieldCo
 
   /** Checks whether any of the chips is focused. */
   private _hasFocusedChip() {
-    return this.chips.some(chip => chip._hasFocus);
+    return this.chips && this.chips.some(chip => chip._hasFocus);
   }
 
   /** Syncs the list's state with the individual chips. */
   private _syncChipsState() {
     if (this.chips) {
       this.chips.forEach(chip => {
-        chip.disabled = this._disabled;
+        chip._chipListDisabled = this._disabled;
         chip._chipListMultiple = this.multiple;
       });
     }

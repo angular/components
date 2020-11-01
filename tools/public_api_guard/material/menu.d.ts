@@ -1,9 +1,3 @@
-export declare class _MatMenu extends MatMenu {
-    constructor(elementRef: ElementRef<HTMLElement>, ngZone: NgZone, defaultOptions: MatMenuDefaultOptions);
-    static ɵcmp: i0.ɵɵComponentDefWithMeta<_MatMenu, "mat-menu", ["matMenu"], {}, {}, never, ["*"]>;
-    static ɵfac: i0.ɵɵFactoryDef<_MatMenu, never>;
-}
-
 export declare class _MatMenuBase implements AfterContentInit, MatMenuPanel<MatMenuItem>, OnInit, OnDestroy {
     _allItems: QueryList<MatMenuItem>;
     _animationDone: Subject<AnimationEvent>;
@@ -27,6 +21,7 @@ export declare class _MatMenuBase implements AfterContentInit, MatMenuPanel<MatM
     lazyContent: MatMenuContent;
     get overlapTrigger(): boolean;
     set overlapTrigger(value: boolean);
+    overlayPanelClass: string | string[];
     set panelClass(classes: string);
     readonly panelId: string;
     parentMenu: MatMenuPanel | undefined;
@@ -64,6 +59,8 @@ export declare class _MatMenuDirectivesModule {
 
 export declare const fadeInItems: AnimationTriggerMetadata;
 
+export declare const MAT_MENU_CONTENT: InjectionToken<MatMenuContent>;
+
 export declare const MAT_MENU_DEFAULT_OPTIONS: InjectionToken<MatMenuDefaultOptions>;
 
 export declare const MAT_MENU_PANEL: InjectionToken<MatMenuPanel<any>>;
@@ -71,7 +68,8 @@ export declare const MAT_MENU_PANEL: InjectionToken<MatMenuPanel<any>>;
 export declare const MAT_MENU_SCROLL_STRATEGY: InjectionToken<() => ScrollStrategy>;
 
 export declare class MatMenu extends _MatMenuBase {
-    static ɵdir: i0.ɵɵDirectiveDefWithMeta<MatMenu, never, never, {}, {}, never>;
+    constructor(elementRef: ElementRef<HTMLElement>, ngZone: NgZone, defaultOptions: MatMenuDefaultOptions);
+    static ɵcmp: i0.ɵɵComponentDefWithMeta<MatMenu, "mat-menu", ["matMenu"], {}, {}, never, ["*"]>;
     static ɵfac: i0.ɵɵFactoryDef<MatMenu, never>;
 }
 
@@ -94,24 +92,27 @@ export interface MatMenuDefaultOptions {
     backdropClass: string;
     hasBackdrop?: boolean;
     overlapTrigger: boolean;
+    overlayPanelClass?: string | string[];
     xPosition: MenuPositionX;
     yPosition: MenuPositionY;
 }
 
-export declare class MatMenuItem extends _MatMenuItemMixinBase implements FocusableOption, CanDisable, CanDisableRipple, OnDestroy {
+export declare class MatMenuItem extends _MatMenuItemMixinBase implements FocusableOption, CanDisable, CanDisableRipple, AfterViewInit, OnDestroy {
     readonly _focused: Subject<MatMenuItem>;
     _highlighted: boolean;
     readonly _hovered: Subject<MatMenuItem>;
     _parentMenu?: MatMenuPanel<MatMenuItem> | undefined;
     _triggersSubmenu: boolean;
     role: 'menuitem' | 'menuitemradio' | 'menuitemcheckbox';
-    constructor(_elementRef: ElementRef<HTMLElement>, document?: any, _focusMonitor?: FocusMonitor | undefined, _parentMenu?: MatMenuPanel<MatMenuItem> | undefined);
+    constructor(_elementRef: ElementRef<HTMLElement>,
+    _document?: any, _focusMonitor?: FocusMonitor | undefined, _parentMenu?: MatMenuPanel<MatMenuItem> | undefined);
     _checkDisabled(event: Event): void;
     _getHostElement(): HTMLElement;
     _getTabIndex(): string;
     _handleMouseEnter(): void;
     focus(origin?: FocusOrigin, options?: FocusOptions): void;
     getLabel(): string;
+    ngAfterViewInit(): void;
     ngOnDestroy(): void;
     static ngAcceptInputType_disableRipple: BooleanInput;
     static ngAcceptInputType_disabled: BooleanInput;
@@ -121,7 +122,7 @@ export declare class MatMenuItem extends _MatMenuItemMixinBase implements Focusa
 
 export declare class MatMenuModule {
     static ɵinj: i0.ɵɵInjectorDef<MatMenuModule>;
-    static ɵmod: i0.ɵɵNgModuleDefWithMeta<MatMenuModule, [typeof i4._MatMenu, typeof i5.MatMenuItem], [typeof i6.CommonModule, typeof i3.MatCommonModule, typeof i3.MatRippleModule, typeof i7.OverlayModule, typeof _MatMenuDirectivesModule], [typeof i4._MatMenu, typeof i5.MatMenuItem, typeof _MatMenuDirectivesModule]>;
+    static ɵmod: i0.ɵɵNgModuleDefWithMeta<MatMenuModule, [typeof i4.MatMenu, typeof i5.MatMenuItem], [typeof i6.CommonModule, typeof i3.MatCommonModule, typeof i3.MatRippleModule, typeof i7.OverlayModule, typeof _MatMenuDirectivesModule], [typeof i8.CdkScrollableModule, typeof i3.MatCommonModule, typeof i4.MatMenu, typeof i5.MatMenuItem, typeof _MatMenuDirectivesModule]>;
 }
 
 export interface MatMenuPanel<T = any> {
@@ -133,6 +134,7 @@ export interface MatMenuPanel<T = any> {
     hasBackdrop?: boolean;
     lazyContent?: MatMenuContent;
     overlapTrigger: boolean;
+    overlayPanelClass?: string | string[];
     readonly panelId?: string;
     parentMenu?: MatMenuPanel | undefined;
     removeItem?: (item: T) => void;
@@ -158,7 +160,7 @@ export declare class MatMenuTrigger implements AfterContentInit, OnDestroy {
     readonly onMenuClose: EventEmitter<void>;
     readonly onMenuOpen: EventEmitter<void>;
     restoreFocus: boolean;
-    constructor(_overlay: Overlay, _element: ElementRef<HTMLElement>, _viewContainerRef: ViewContainerRef, scrollStrategy: any, _parentMenu: MatMenu, _menuItemInstance: MatMenuItem, _dir: Directionality, _focusMonitor?: FocusMonitor | undefined);
+    constructor(_overlay: Overlay, _element: ElementRef<HTMLElement>, _viewContainerRef: ViewContainerRef, scrollStrategy: any, parentMenu: MatMenuPanel, _menuItemInstance: MatMenuItem, _dir: Directionality, _focusMonitor?: FocusMonitor | undefined);
     _handleClick(event: MouseEvent): void;
     _handleKeydown(event: KeyboardEvent): void;
     _handleMousedown(event: MouseEvent): void;

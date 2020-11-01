@@ -5,17 +5,14 @@
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
-
-import {getSystemPath, normalize} from '@angular-devkit/core';
-import {TempScopedNodeJsSyncHost} from '@angular-devkit/core/node/testing';
-import * as virtualFs from '@angular-devkit/core/src/virtual-fs/host';
+import {getSystemPath, JsonParseMode, parseJson, Path} from '@angular-devkit/core';
 import {HostTree, Tree} from '@angular-devkit/schematics';
 import {SchematicTestRunner, UnitTestTree} from '@angular-devkit/schematics/testing';
-import {readFileSync, removeSync} from 'fs-extra';
+import {readFileSync} from 'fs-extra';
 import {sync as globSync} from 'glob';
 import {basename, extname, join, relative, sep} from 'path';
 import {EMPTY} from 'rxjs';
-import {createTestApp} from '../testing';
+import {createTestApp} from './test-app';
 
 /** Suffix that indicates whether a given file is a test case input. */
 const TEST_CASE_INPUT_SUFFIX = '_input.ts';
@@ -39,10 +36,8 @@ export function readFileContent(filePath: string): string {
  * schematic tree. This would allow us to fully take advantage of the virtual file system.
  */
 export async function createFileSystemTestApp(runner: SchematicTestRunner) {
-  const tempFileSystemHost = new TempScopedNodeJsSyncHost();
-  const hostTree = new HostTree(tempFileSystemHost);
+  const hostTree = new HostTree();
   const appTree: UnitTestTree = await createTestApp(runner, {name: 'cdk-testing'}, hostTree);
-  const tempPath = getSystemPath(tempFileSystemHost.root);
 
   // Since the TypeScript compiler API expects all files to be present on the real file system, we
   // map every file in the app tree to a temporary location on the file system.
@@ -50,17 +45,13 @@ export async function createFileSystemTestApp(runner: SchematicTestRunner) {
 
   return {
     appTree,
-    tempFileSystemHost,
-    tempPath,
     writeFile,
-    removeTempDir: () => removeSync(tempPath),
   };
 
   function writeFile(filePath: string, content: string) {
     // Update the temp file system host to reflect the changes in the real file system.
     // This is still necessary since we depend on the real file system for parsing the
     // TypeScript project.
-    tempFileSystemHost.sync.write(normalize(filePath), virtualFs.stringToFileBuffer(content));
     if (hostTree.exists(filePath)) {
       hostTree.overwrite(filePath, content);
     } else {
@@ -73,13 +64,10 @@ export async function createTestCaseSetup(migrationName: string, collectionPath:
                                    inputFiles: string[]) {
 
   const runner = new SchematicTestRunner('schematics', collectionPath);
-  const initialWorkingDir = process.cwd();
 
   let logOutput = '';
   runner.logger.subscribe(entry => logOutput += `${entry.message}\n`);
-
-  const {appTree, tempPath, writeFile, removeTempDir} =
-    await createFileSystemTestApp(runner);
+  const {appTree, writeFile} = await createFileSystemTestApp(runner);
 
   _patchTypeScriptDefaultLib(appTree);
 
@@ -94,7 +82,10 @@ export async function createTestCaseSetup(migrationName: string, collectionPath:
   });
 
   const testAppTsconfigPath = 'projects/cdk-testing/tsconfig.app.json';
-  const testAppTsconfig = JSON.parse(appTree.readContent(testAppTsconfigPath));
+  // Parse TypeScript configuration files with JSON5 as they could contain comments or
+  // unquoted properties.
+  const testAppTsconfig =
+      parseJson(appTree.readContent(testAppTsconfigPath), JsonParseMode.Json5) as any;
 
   // include all TypeScript files in the project. Otherwise all test input
   // files won't be part of the program and cannot be migrated.
@@ -103,10 +94,6 @@ export async function createTestCaseSetup(migrationName: string, collectionPath:
   writeFile(testAppTsconfigPath, JSON.stringify(testAppTsconfig, null, 2));
 
   const runFixers = async function() {
-    // Switch to the new temporary directory to simulate that "ng update" is ran
-    // from within the project.
-    process.chdir(tempPath);
-
     // Patch "executePostTasks" to do nothing. This is necessary since
     // we cannot run the node install task in unit tests. Rather we just
     // assert that certain async post tasks are scheduled.
@@ -115,13 +102,10 @@ export async function createTestCaseSetup(migrationName: string, collectionPath:
 
     await runner.runSchematicAsync(migrationName, {}, appTree).toPromise();
 
-    // Switch back to the initial working directory.
-    process.chdir(initialWorkingDir);
-
     return {logOutput};
   };
 
-  return {runner, appTree, writeFile, tempPath, removeTempDir, runFixers};
+  return {runner, appTree, writeFile, runFixers};
 }
 
 /**
@@ -190,20 +174,16 @@ export function defineJasmineTestCases(versionName: string, collectionFile: stri
 
   let appTree: UnitTestTree;
   let testCasesOutputPath: string;
-  let cleanupTestApp: () => void;
 
   beforeAll(async () => {
-    const {appTree: _tree, runFixers, removeTempDir} =
+    const {appTree: _tree, runFixers} =
       await createTestCaseSetup(`migration-${versionName}`, collectionFile, inputFiles);
 
     await runFixers();
 
     appTree = _tree;
     testCasesOutputPath = '/projects/cdk-testing/src/test-cases/';
-    cleanupTestApp = removeTempDir;
   });
-
-  afterAll(() => cleanupTestApp());
 
   // Iterates through every test case directory and generates a jasmine test block that will
   // verify that the update schematics properly updated the test input to the expected output.
@@ -224,15 +204,15 @@ export function defineJasmineTestCases(versionName: string, collectionFile: stri
  */
 export function _patchTypeScriptDefaultLib(tree: Tree) {
   const _originalRead = tree.read;
-  tree.read = function(filePath: string) {
+  tree.read = function(filePath: Path) {
     // In case a file within the TypeScript package is requested, we read the file from
     // the real file system. This is necessary because within unit tests, the "typeScript"
     // package from within the Bazel "@npm" repository  is used. The virtual tree can't be
     // used because the "@npm" repository directory is not part of the virtual file system.
     if (filePath.match(/node_modules[/\\]typescript/)) {
-      return readFileSync(filePath);
+      return readFileSync(getSystemPath(filePath));
     } else {
-      return _originalRead.apply(this, arguments);
+      return _originalRead.call(this, filePath);
     }
   };
 }

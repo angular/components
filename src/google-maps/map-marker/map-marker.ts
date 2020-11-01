@@ -9,21 +9,13 @@
 // Workaround for: https://github.com/bazelbuild/rules_nodejs/issues/1265
 /// <reference types="googlemaps" />
 
-import {
-  ChangeDetectionStrategy,
-  Component,
-  Input,
-  OnDestroy,
-  OnInit,
-  Output,
-  ViewEncapsulation,
-  NgZone
-} from '@angular/core';
+import {Input, OnDestroy, OnInit, Output, NgZone, Directive} from '@angular/core';
 import {BehaviorSubject, combineLatest, Observable, Subject} from 'rxjs';
 import {map, take, takeUntil} from 'rxjs/operators';
 
 import {GoogleMap} from '../google-map/google-map';
 import {MapEventManager} from '../map-event-manager';
+import {MapAnchorPoint} from '../map-anchor-point';
 
 /**
  * Default options for the Google Maps marker component. Displays a marker
@@ -35,15 +27,14 @@ export const DEFAULT_MARKER_OPTIONS = {
 
 /**
  * Angular component that renders a Google Maps marker via the Google Maps JavaScript API.
- * @see developers.google.com/maps/documentation/javascript/reference/marker
+ *
+ * See developers.google.com/maps/documentation/javascript/reference/marker
  */
-@Component({
+@Directive({
   selector: 'map-marker',
-  template: '<ng-content></ng-content>',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  encapsulation: ViewEncapsulation.None,
+  exportAs: 'mapMarker',
 })
-export class MapMarker implements OnInit, OnDestroy {
+export class MapMarker implements OnInit, OnDestroy, MapAnchorPoint {
   private _eventManager = new MapEventManager(this._ngZone);
   private readonly _options =
       new BehaviorSubject<google.maps.MarkerOptions>(DEFAULT_MARKER_OPTIONS);
@@ -235,7 +226,12 @@ export class MapMarker implements OnInit, OnDestroy {
   @Output()
   zindexChanged: Observable<void> = this._eventManager.getLazyEmitter<void>('zindex_changed');
 
-  _marker?: google.maps.Marker;
+  /**
+   * The underlying google.maps.Marker object.
+   *
+   * See developers.google.com/maps/documentation/javascript/reference/marker#Marker
+   */
+  marker?: google.maps.Marker;
 
   constructor(
     private readonly _googleMap: GoogleMap,
@@ -247,9 +243,10 @@ export class MapMarker implements OnInit, OnDestroy {
         // Create the object outside the zone so its events don't trigger change detection.
         // We'll bring it back in inside the `MapEventManager` only for the events that the
         // user has subscribed to.
-        this._ngZone.runOutsideAngular(() => this._marker = new google.maps.Marker(options));
-        this._marker!.setMap(this._googleMap._googleMap);
-        this._eventManager.setTarget(this._marker);
+        this._ngZone.runOutsideAngular(() => this.marker = new google.maps.Marker(options));
+        this._assertInitialized();
+        this.marker.setMap(this._googleMap.googleMap!);
+        this._eventManager.setTarget(this.marker);
       });
 
       this._watchForOptionsChanges();
@@ -264,8 +261,8 @@ export class MapMarker implements OnInit, OnDestroy {
     this._destroy.next();
     this._destroy.complete();
     this._eventManager.destroy();
-    if (this._marker) {
-      this._marker.setMap(null);
+    if (this.marker) {
+      this.marker.setMap(null);
     }
   }
 
@@ -274,7 +271,8 @@ export class MapMarker implements OnInit, OnDestroy {
    * developers.google.com/maps/documentation/javascript/reference/marker#Marker.getAnimation
    */
   getAnimation(): google.maps.Animation|null {
-    return (this._marker && this._marker.getAnimation()) || null;
+    this._assertInitialized();
+    return this.marker.getAnimation() || null;
   }
 
   /**
@@ -282,7 +280,8 @@ export class MapMarker implements OnInit, OnDestroy {
    * developers.google.com/maps/documentation/javascript/reference/marker#Marker.getClickable
    */
   getClickable(): boolean {
-    return this._marker ? this._marker.getClickable() : false;
+    this._assertInitialized();
+    return this.marker.getClickable();
   }
 
   /**
@@ -290,7 +289,8 @@ export class MapMarker implements OnInit, OnDestroy {
    * developers.google.com/maps/documentation/javascript/reference/marker#Marker.getCursor
    */
   getCursor(): string|null {
-    return (this._marker && this._marker.getCursor()) || null;
+    this._assertInitialized();
+    return this.marker.getCursor() || null;
   }
 
   /**
@@ -298,7 +298,8 @@ export class MapMarker implements OnInit, OnDestroy {
    * developers.google.com/maps/documentation/javascript/reference/marker#Marker.getDraggable
    */
   getDraggable(): boolean {
-    return this._marker ? !!this._marker.getDraggable() : false;
+    this._assertInitialized();
+    return !!this.marker.getDraggable();
   }
 
   /**
@@ -306,7 +307,8 @@ export class MapMarker implements OnInit, OnDestroy {
    * developers.google.com/maps/documentation/javascript/reference/marker#Marker.getIcon
    */
   getIcon(): string|google.maps.Icon|google.maps.Symbol|null {
-    return (this._marker && this._marker.getIcon()) || null;
+    this._assertInitialized();
+    return this.marker.getIcon() || null;
   }
 
   /**
@@ -314,7 +316,8 @@ export class MapMarker implements OnInit, OnDestroy {
    * developers.google.com/maps/documentation/javascript/reference/marker#Marker.getLabel
    */
   getLabel(): google.maps.MarkerLabel|null {
-    return (this._marker && this._marker.getLabel()) || null;
+    this._assertInitialized();
+    return this.marker.getLabel() || null;
   }
 
   /**
@@ -322,7 +325,8 @@ export class MapMarker implements OnInit, OnDestroy {
    * developers.google.com/maps/documentation/javascript/reference/marker#Marker.getOpacity
    */
   getOpacity(): number|null {
-    return (this._marker && this._marker.getOpacity()) || null;
+    this._assertInitialized();
+    return this.marker.getOpacity() || null;
   }
 
   /**
@@ -330,7 +334,8 @@ export class MapMarker implements OnInit, OnDestroy {
    * developers.google.com/maps/documentation/javascript/reference/marker#Marker.getPosition
    */
   getPosition(): google.maps.LatLng|null {
-    return (this._marker && this._marker.getPosition()) || null;
+    this._assertInitialized();
+    return this.marker.getPosition() || null;
   }
 
   /**
@@ -338,7 +343,8 @@ export class MapMarker implements OnInit, OnDestroy {
    * developers.google.com/maps/documentation/javascript/reference/marker#Marker.getShape
    */
   getShape(): google.maps.MarkerShape|null {
-    return (this._marker && this._marker.getShape()) || null;
+    this._assertInitialized();
+    return this.marker.getShape() || null;
   }
 
   /**
@@ -346,7 +352,8 @@ export class MapMarker implements OnInit, OnDestroy {
    * developers.google.com/maps/documentation/javascript/reference/marker#Marker.getTitle
    */
   getTitle(): string|null {
-    return (this._marker && this._marker.getTitle()) || null;
+    this._assertInitialized();
+    return this.marker.getTitle() || null;
   }
 
   /**
@@ -354,7 +361,8 @@ export class MapMarker implements OnInit, OnDestroy {
    * developers.google.com/maps/documentation/javascript/reference/marker#Marker.getVisible
    */
   getVisible(): boolean {
-    return this._marker ? this._marker.getVisible() : false;
+    this._assertInitialized();
+    return this.marker.getVisible();
   }
 
   /**
@@ -362,7 +370,14 @@ export class MapMarker implements OnInit, OnDestroy {
    * developers.google.com/maps/documentation/javascript/reference/marker#Marker.getZIndex
    */
   getZIndex(): number|null {
-    return (this._marker && this._marker.getZIndex()) || null;
+    this._assertInitialized();
+    return this.marker.getZIndex() || null;
+  }
+
+  /** Gets the anchor point that can be used to attach other Google Maps objects. */
+  getAnchor(): google.maps.MVCObject {
+    this._assertInitialized();
+    return this.marker;
   }
 
   private _combineOptions(): Observable<google.maps.MarkerOptions> {
@@ -374,7 +389,7 @@ export class MapMarker implements OnInit, OnDestroy {
             position: position || options.position,
             label: label || options.label,
             clickable: clickable !== undefined ? clickable : options.clickable,
-            map: this._googleMap._googleMap || null,
+            map: this._googleMap.googleMap,
           };
           return combinedOptions;
         }));
@@ -382,41 +397,61 @@ export class MapMarker implements OnInit, OnDestroy {
 
   private _watchForOptionsChanges() {
     this._options.pipe(takeUntil(this._destroy)).subscribe(options => {
-      if (this._marker) {
-        this._marker.setOptions(options);
+      if (this.marker) {
+        this._assertInitialized();
+        this.marker.setOptions(options);
       }
     });
   }
 
   private _watchForTitleChanges() {
     this._title.pipe(takeUntil(this._destroy)).subscribe(title => {
-      if (this._marker && title !== undefined) {
-        this._marker.setTitle(title);
+      if (this.marker && title !== undefined) {
+        this._assertInitialized();
+        this.marker.setTitle(title);
       }
     });
   }
 
   private _watchForPositionChanges() {
     this._position.pipe(takeUntil(this._destroy)).subscribe(position => {
-      if (this._marker && position) {
-        this._marker.setPosition(position);
+      if (this.marker && position) {
+        this._assertInitialized();
+        this.marker.setPosition(position);
       }
     });
   }
 
   private _watchForLabelChanges() {
     this._label.pipe(takeUntil(this._destroy)).subscribe(label => {
-      if (this._marker && label !== undefined) {
-        this._marker.setLabel(label);
+      if (this.marker && label !== undefined) {
+        this._assertInitialized();
+        this.marker.setLabel(label);
       }
     });
   }
 
   private _watchForClickableChanges() {
     this._clickable.pipe(takeUntil(this._destroy)).subscribe(clickable => {
-      if (this._marker && clickable !== undefined) {
-        this._marker.setClickable(clickable);
+      if (this.marker && clickable !== undefined) {
+        this._assertInitialized();
+        this.marker.setClickable(clickable);
       }
     });
+  }
+
+  private _assertInitialized(): asserts this is {marker: google.maps.Marker} {
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      if (!this._googleMap.googleMap) {
+        throw Error(
+            'Cannot access Google Map information before the API has been initialized. ' +
+            'Please wait for the API to load before trying to interact with it.');
+      }
+      if (!this.marker) {
+        throw Error(
+            'Cannot interact with a Google Map Marker before it has been ' +
+            'initialized. Please wait for the Marker to load before trying to interact with it.');
+      }
+    }
   }
 }

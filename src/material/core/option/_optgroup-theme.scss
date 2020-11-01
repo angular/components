@@ -1,9 +1,11 @@
 @import '../theming/palette';
 @import '../theming/theming';
+@import '../theming/check-duplicate-styles';
 @import '../typography/typography-utils';
 
-@mixin mat-optgroup-theme($theme) {
-  $foreground: map-get($theme, foreground);
+@mixin mat-optgroup-color($config-or-theme) {
+  $config: mat-get-color-config($config-or-theme);
+  $foreground: map-get($config, foreground);
 
   .mat-optgroup-label {
     color: mat-color($foreground, secondary-text);
@@ -14,8 +16,30 @@
   }
 }
 
-@mixin mat-optgroup-typography($config) {
+@mixin mat-optgroup-typography($config-or-theme) {
+  $config: mat-get-typography-config($config-or-theme);
   .mat-optgroup-label {
     @include mat-typography-level-to-styles($config, body-2);
+  }
+}
+
+@mixin _mat-optgroup-density($config-or-theme) {}
+
+@mixin mat-optgroup-theme($theme-or-color-config) {
+  $theme: _mat-legacy-get-theme($theme-or-color-config);
+  @include _mat-check-duplicate-theme-styles($theme, 'mat-optgroup') {
+    $color: mat-get-color-config($theme);
+    $density: mat-get-density-config($theme);
+    $typography: mat-get-typography-config($theme);
+
+    @if $color != null {
+      @include mat-optgroup-color($color);
+    }
+    @if $density != null {
+      @include _mat-optgroup-density($density);
+    }
+    @if $typography != null {
+      @include mat-optgroup-typography($typography);
+    }
   }
 }

@@ -1,4 +1,4 @@
-import {async, TestBed, fakeAsync, tick} from '@angular/core/testing';
+import {waitForAsync, TestBed, fakeAsync, tick} from '@angular/core/testing';
 import {Component, QueryList, ViewChildren} from '@angular/core';
 import {defaultRippleAnimationConfig} from '@angular/material/core';
 import {dispatchMouseEvent} from '@angular/cdk/testing/private';
@@ -9,7 +9,7 @@ describe('MatList', () => {
   // Default ripple durations used for testing.
   const {enterDuration, exitDuration} = defaultRippleAnimationConfig;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [MatListModule],
       declarations: [
@@ -34,7 +34,7 @@ describe('MatList', () => {
     expect(listItem.nativeElement.classList).toContain('mat-focus-indicator');
   });
 
-  it('should apply mat-2-line class to lists with two lines', () => {
+  it('should apply a particular class to lists with two lines', () => {
     const fixture = TestBed.createComponent(ListWithTwoLineItem);
     fixture.detectChanges();
 
@@ -43,7 +43,7 @@ describe('MatList', () => {
     expect(listItems[1].nativeElement.className).toContain('mat-2-line');
   });
 
-  it('should apply mat-3-line class to lists with three lines', () => {
+  it('should apply a particular class to lists with three lines', () => {
     const fixture = TestBed.createComponent(ListWithThreeLineItem);
     fixture.detectChanges();
 
@@ -52,7 +52,7 @@ describe('MatList', () => {
     expect(listItems[1].nativeElement.className).toContain('mat-3-line');
   });
 
-  it('should apply mat-multi-line class to lists with more than 3 lines', () => {
+  it('should apply a particular class to lists with more than 3 lines', () => {
     const fixture = TestBed.createComponent(ListWithManyLines);
     fixture.detectChanges();
 

@@ -88,7 +88,7 @@ it('should work', async () => {
 
 Notice the example code uses `async` and `await` syntax. All component harness APIs are
 asynchronous and return `Promise` objects. Because of this, the Angular team recommends using the
-[ES2017 `async`/`await` synax](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/async_function)
+[ES2017 `async`/`await` syntax](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/async_function)
 with your tests.
 
 The example above retrieves all button harnesses and uses an array index to get the harness for a
@@ -113,7 +113,7 @@ provided constraints. The particular constraint options vary depending on the ha
 harnesses support at least:
  
 - `selector` - CSS selector that the component must match (in addition to its host selector, such
-               as `[mat-button]`)
+  as `[mat-button]`)
 - `ancestor` - CSS selector for a some ancestor element above the component in the DOM
  
 In addition to these standard options, `MatButtonHarness` also supports
@@ -156,7 +156,7 @@ it('should mark confirmed when ok button clicked', async () => {
 });
 ```
 
-Note that the code above has does not call `fixture.detectChanges()`, something you commonly see in
+Note that the code above does not call `fixture.detectChanges()`, something you commonly see in
 unit tests. The CDK's component harnesses automatically invoke change detection after performing
 actions and before reading state. The harness also automatically waits for the fixture to be stable,
 which will cause the test to wait for `setTimeout`, `Promise`, etc.
@@ -217,7 +217,7 @@ describe('issue-report-selector', () => {
 
   it('should switch to bug report template', async () => {
     expect(fixture.debugElement.query('bug-report-form')).toBeNull();
-    const select = await loader.getHarness(MatSelect);
+    const select = await loader.getHarness(MatSelectHarness);
     await select.open();
     const bugOption = await select.getOption({text: 'Bug'});
     await bugOption.click();

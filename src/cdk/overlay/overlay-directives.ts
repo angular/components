@@ -26,6 +26,7 @@ import {
   ViewContainerRef,
 } from '@angular/core';
 import {Subscription} from 'rxjs';
+import {takeWhile} from 'rxjs/operators';
 import {Overlay} from './overlay';
 import {OverlayConfig} from './overlay-config';
 import {OverlayRef} from './overlay-ref';
@@ -36,7 +37,6 @@ import {
 } from './position/flexible-connected-position-strategy';
 import {
   RepositionScrollStrategy,
-  RepositionScrollStrategyConfig,
   ScrollStrategy,
 } from './scroll/index';
 
@@ -73,12 +73,6 @@ const defaultPositionList: ConnectedPosition[] = [
 export const CDK_CONNECTED_OVERLAY_SCROLL_STRATEGY =
     new InjectionToken<() => ScrollStrategy>('cdk-connected-overlay-scroll-strategy');
 
-/** @docs-private @deprecated @breaking-change 8.0.0 */
-export function CDK_CONNECTED_OVERLAY_SCROLL_STRATEGY_FACTORY(overlay: Overlay):
-  () => ScrollStrategy {
-  return (config?: RepositionScrollStrategyConfig) => overlay.scrollStrategies.reposition(config);
-}
-
 /**
  * Directive applied to an element to make it usable as an origin for an Overlay using a
  * ConnectedPositionStrategy.
@@ -111,6 +105,9 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
   private _flexibleDimensions = false;
   private _push = false;
   private _backdropSubscription = Subscription.EMPTY;
+  private _attachSubscription = Subscription.EMPTY;
+  private _detachSubscription = Subscription.EMPTY;
+  private _positionSubscription = Subscription.EMPTY;
   private _offsetX: number;
   private _offsetY: number;
   private _position: FlexibleConnectedPositionStrategy;
@@ -177,6 +174,9 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
   /** Whether the overlay is open. */
   @Input('cdkConnectedOverlayOpen') open: boolean = false;
 
+  /** Whether the overlay can be closed by user interaction. */
+  @Input('cdkConnectedOverlayDisableClose') disableClose: boolean = false;
+
   /** CSS selector which to set the transform origin. */
   @Input('cdkConnectedOverlayTransformOriginOn') transformOriginSelector: string;
 
@@ -222,6 +222,9 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
   /** Emits when there are keyboard events that are targeted at the overlay. */
   @Output() overlayKeydown = new EventEmitter<KeyboardEvent>();
 
+  /** Emits when there are mouse outside click events that are targeted at the overlay. */
+  @Output() overlayOutsideClick = new EventEmitter<MouseEvent>();
+
   // TODO(jelbourn): inputs for size, scroll behavior, animation, etc.
 
   constructor(
@@ -246,11 +249,14 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
   }
 
   ngOnDestroy() {
+    this._attachSubscription.unsubscribe();
+    this._detachSubscription.unsubscribe();
+    this._backdropSubscription.unsubscribe();
+    this._positionSubscription.unsubscribe();
+
     if (this._overlayRef) {
       this._overlayRef.dispose();
     }
-
-    this._backdropSubscription.unsubscribe();
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -279,15 +285,20 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
       this.positions = defaultPositionList;
     }
 
-    this._overlayRef = this._overlay.create(this._buildConfig());
-
-    this._overlayRef.keydownEvents().subscribe((event: KeyboardEvent) => {
+    const overlayRef = this._overlayRef = this._overlay.create(this._buildConfig());
+    this._attachSubscription = overlayRef.attachments().subscribe(() => this.attach.emit());
+    this._detachSubscription = overlayRef.detachments().subscribe(() => this.detach.emit());
+    overlayRef.keydownEvents().subscribe((event: KeyboardEvent) => {
       this.overlayKeydown.next(event);
 
-      if (event.keyCode === ESCAPE && !hasModifierKey(event)) {
+      if (event.keyCode === ESCAPE && !this.disableClose && !hasModifierKey(event)) {
         event.preventDefault();
         this._detachOverlay();
       }
+    });
+
+    this._overlayRef.outsidePointerEvents().subscribe((event: MouseEvent) => {
+      this.overlayOutsideClick.next(event);
     });
   }
 
@@ -355,10 +366,7 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
   /** Returns the position strategy of the overlay to be set on the overlay config */
   private _createPositionStrategy(): FlexibleConnectedPositionStrategy {
     const strategy = this._overlay.position().flexibleConnectedTo(this.origin.elementRef);
-
     this._updatePositionStrategy(strategy);
-    strategy.positionChanges.subscribe(p => this.positionChange.emit(p));
-
     return strategy;
   }
 
@@ -373,7 +381,6 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
 
     if (!this._overlayRef.hasAttached()) {
       this._overlayRef.attach(this._templatePortal);
-      this.attach.emit();
     }
 
     if (this.hasBackdrop) {
@@ -383,16 +390,32 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
     } else {
       this._backdropSubscription.unsubscribe();
     }
+
+    this._positionSubscription.unsubscribe();
+
+    // Only subscribe to `positionChanges` if requested, because putting
+    // together all the information for it can be expensive.
+    if (this.positionChange.observers.length > 0) {
+      this._positionSubscription = this._position.positionChanges
+        .pipe(takeWhile(() => this.positionChange.observers.length > 0))
+        .subscribe(position => {
+          this.positionChange.emit(position);
+
+          if (this.positionChange.observers.length === 0) {
+            this._positionSubscription.unsubscribe();
+          }
+        });
+    }
   }
 
   /** Detaches the overlay and unsubscribes to backdrop clicks if backdrop exists */
   private _detachOverlay() {
     if (this._overlayRef) {
       this._overlayRef.detach();
-      this.detach.emit();
     }
 
     this._backdropSubscription.unsubscribe();
+    this._positionSubscription.unsubscribe();
   }
 
   static ngAcceptInputType_hasBackdrop: BooleanInput;

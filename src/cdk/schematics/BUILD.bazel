@@ -23,7 +23,11 @@ ts_library(
             "testing/**/*.ts",
         ],
     ),
+    # Schematics do not need to run in browsers and can use `commonjs`
+    # as format instead the default `umd` format.
+    devmode_module = "commonjs",
     module_name = "@angular/cdk/schematics",
+    prodmode_module = "commonjs",
     tsconfig = ":tsconfig.json",
     deps = [
         "//src/cdk/schematics/update-tool",
@@ -32,6 +36,7 @@ ts_library(
         "@npm//@angular-devkit/schematics",
         # TODO(devversion): Only include jasmine for test sources (See: tsconfig types).
         "@npm//@types/jasmine",
+        "@npm//@types/glob",
         "@npm//@types/node",
         "@npm//glob",
         "@npm//parse5",
@@ -73,6 +78,7 @@ ts_library(
         ":schematics",
         "//src/cdk/schematics/testing",
         "//src/cdk/schematics/update-tool",
+        "//src/cdk/testing/private",
         "@npm//@angular-devkit/schematics",
         "@npm//@schematics/angular",
         "@npm//@types/jasmine",

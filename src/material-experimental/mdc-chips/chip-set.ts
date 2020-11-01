@@ -7,7 +7,7 @@
  */
 
 import {Directionality} from '@angular/cdk/bidi';
-import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
+import {BooleanInput, coerceBooleanProperty, NumberInput} from '@angular/cdk/coercion';
 import {
   AfterContentInit,
   AfterViewInit,
@@ -22,7 +22,7 @@ import {
   QueryList,
   ViewEncapsulation
 } from '@angular/core';
-import {HasTabIndex, HasTabIndexCtor, mixinTabIndex} from '@angular/material/core';
+import {HasTabIndex, HasTabIndexCtor, mixinTabIndex} from '@angular/material-experimental/mdc-core';
 import {MDCChipSetAdapter, MDCChipSetFoundation} from '@material/chips';
 import {merge, Observable, Subject, Subscription} from 'rxjs';
 import {startWith, takeUntil} from 'rxjs/operators';
@@ -36,8 +36,8 @@ let uid = 0;
  * Boilerplate for applying mixins to MatChipSet.
  * @docs-private
  */
-class MatChipSetBase {
-  disabled!: boolean;
+abstract class MatChipSetBase {
+  abstract disabled: boolean;
   constructor(_elementRef: ElementRef) {}
 }
 const _MatChipSetMixinBase: HasTabIndexCtor & typeof MatChipSetBase =
@@ -193,7 +193,7 @@ export class MatChipSet extends _MatChipSetMixinBase implements AfterContentInit
 
   /** Checks whether any of the chips is focused. */
   protected _hasFocusedChip() {
-    return this._chips.some(chip => chip._hasFocus);
+    return this._chips && this._chips.some(chip => chip._hasFocus());
   }
 
   /** Syncs the chip-set's state with the individual chips. */
@@ -251,7 +251,7 @@ export class MatChipSet extends _MatChipSetMixinBase implements AfterContentInit
       // In case the chip that will be removed is currently focused, we temporarily store
       // the index in order to be able to determine an appropriate sibling chip that will
       // receive focus.
-      if (this._isValidIndex(chipIndex) && chip._hasFocus) {
+      if (this._isValidIndex(chipIndex) && chip._hasFocus()) {
         this._lastDestroyedChipIndex = chipIndex;
       }
     });
@@ -297,11 +297,23 @@ export class MatChipSet extends _MatChipSetMixinBase implements AfterContentInit
 
   /** Checks whether an event comes from inside a chip element. */
   protected _originatesFromChip(event: Event): boolean {
+    return this._checkForClassInHierarchy(event, 'mdc-chip');
+  }
+
+  /**
+   * Checks whether an event comes from inside a chip element in the editing
+   * state.
+   */
+  protected _originatesFromEditingChip(event: Event): boolean {
+    return this._checkForClassInHierarchy(event, 'mdc-chip--editing');
+  }
+
+  private _checkForClassInHierarchy(event: Event, className: string) {
     let currentElement = event.target as HTMLElement | null;
 
     while (currentElement && currentElement !== this._elementRef.nativeElement) {
       // Null check the classList, because IE and Edge don't support it on all elements.
-      if (currentElement.classList && currentElement.classList.contains('mdc-chip')) {
+      if (currentElement.classList && currentElement.classList.contains(className)) {
         return true;
       }
 
@@ -312,4 +324,5 @@ export class MatChipSet extends _MatChipSetMixinBase implements AfterContentInit
   }
 
   static ngAcceptInputType_disabled: BooleanInput;
+  static ngAcceptInputType_tabIndex: NumberInput;
 }

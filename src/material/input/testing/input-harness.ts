@@ -25,11 +25,11 @@ export class MatInputHarness extends MatFormFieldControlHarness {
    */
   static with(options: InputHarnessFilters = {}): HarnessPredicate<MatInputHarness> {
     return new HarnessPredicate(MatInputHarness, options)
-        .addOption('value', options.value, async (harness, value) => {
-          return (await harness.getValue()) === value;
+        .addOption('value', options.value, (harness, value) => {
+          return HarnessPredicate.stringMatches(harness.getValue(), value);
         })
-        .addOption('placeholder', options.placeholder, async (harness, placeholder) => {
-          return (await harness.getPlaceholder()) === placeholder;
+        .addOption('placeholder', options.placeholder, (harness, placeholder) => {
+          return HarnessPredicate.stringMatches(harness.getPlaceholder(), placeholder);
         });
   }
 
@@ -71,8 +71,12 @@ export class MatInputHarness extends MatFormFieldControlHarness {
 
   /** Gets the placeholder of the input. */
   async getPlaceholder(): Promise<string> {
-    // The "placeholder" property of the native input is never undefined.
-    return (await (await this.host()).getProperty('placeholder'))!;
+    const host = await this.host();
+    const [nativePlaceholder, fallback] = await Promise.all([
+      host.getProperty('placeholder'),
+      host.getAttribute('data-placeholder')
+    ]);
+    return nativePlaceholder || fallback || '';
   }
 
   /** Gets the id of the input. */
@@ -98,6 +102,11 @@ export class MatInputHarness extends MatFormFieldControlHarness {
     return (await this.host()).blur();
   }
 
+  /** Whether the input is focused. */
+  async isFocused(): Promise<boolean> {
+    return (await this.host()).isFocused();
+  }
+
   /**
    * Sets the value of the input. The value will be set by simulating
    * keypresses that correspond to the given value.
@@ -110,6 +119,14 @@ export class MatInputHarness extends MatFormFieldControlHarness {
     // still results in unnecessary focus events.
     if (newValue) {
       await inputEl.sendKeys(newValue);
+    }
+
+    // Some input types won't respond to key presses (e.g. `color`) so to be sure that the
+    // value is set, we also set the property after the keyboard sequence. Note that we don't
+    // want to do it before, because it can cause the value to be entered twice.
+    // @breaking-change 11.0.0 Remove non-null assertion once `setInputValue` is required.
+    if (inputEl.setInputValue) {
+      await inputEl.setInputValue(newValue);
     }
   }
 }

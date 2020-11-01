@@ -7,7 +7,7 @@
  */
 
 import {AfterViewInit, Directive, ElementRef, NgZone, OnDestroy} from '@angular/core';
-import {fromEvent, merge, ReplaySubject} from 'rxjs';
+import {fromEvent, merge, Subject} from 'rxjs';
 import {filter, map, mapTo, pairwise, startWith, take, takeUntil} from 'rxjs/operators';
 
 import {_closest, _matches} from '@angular/cdk-experimental/popover-edit';
@@ -27,12 +27,14 @@ let nextId = 0;
  */
 @Directive()
 export abstract class ColumnResize implements AfterViewInit, OnDestroy {
-  protected readonly destroyed = new ReplaySubject<void>();
+  protected readonly destroyed = new Subject<void>();
 
   /* Publicly accessible interface for triggering and being notified of resizes. */
   abstract readonly columnResizeNotifier: ColumnResizeNotifier;
 
-  protected abstract readonly elementRef: ElementRef<HTMLElement>;
+  /* ElementRef that this directive is attached to. Exposed For use by column-level directives */
+  abstract readonly elementRef: ElementRef<HTMLElement>;
+
   protected abstract readonly eventDispatcher: HeaderRowEventDispatcher;
   protected abstract readonly ngZone: NgZone;
   protected abstract readonly notifier: ColumnResizeNotifierSource;
@@ -61,6 +63,11 @@ export abstract class ColumnResize implements AfterViewInit, OnDestroy {
     return `cdk-column-resize-${this.selectorId}`;
   }
 
+  /** Called when a column in the table is resized. Applies a css class to the table element. */
+  setResized() {
+    this.elementRef.nativeElement!.classList.add(WITH_RESIZED_COLUMN_CLASS);
+  }
+
   private _listenForRowHoverEvents() {
     this.ngZone.runOutsideAngular(() => {
       const element = this.elementRef.nativeElement!;
@@ -84,10 +91,10 @@ export abstract class ColumnResize implements AfterViewInit, OnDestroy {
         this.notifier.triggerResize.pipe(mapTo(undefined)),
         this.notifier.resizeCompleted.pipe(mapTo(undefined))
     ).pipe(
-        takeUntil(this.destroyed),
-        take(1),
+      take(1),
+      takeUntil(this.destroyed),
     ).subscribe(() => {
-      this.elementRef.nativeElement!.classList.add(WITH_RESIZED_COLUMN_CLASS);
+      this.setResized();
     });
   }
 

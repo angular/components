@@ -12,14 +12,14 @@ import {
 import {CommonModule} from '@angular/common';
 import {Component, ViewChild} from '@angular/core';
 import {
-  async,
+  waitForAsync,
   ComponentFixture,
   discardPeriodicTasks,
   fakeAsync,
   TestBed,
   tick,
 } from '@angular/core/testing';
-import {MatRippleModule} from '@angular/material/core';
+import {MatRippleModule} from '@angular/material-experimental/mdc-core';
 import {By} from '@angular/platform-browser';
 import {MatTabHeader} from './tab-header';
 import {MatTabLabelWrapper} from './tab-label-wrapper';
@@ -33,7 +33,7 @@ describe('MDC-based MatTabHeader', () => {
   let fixture: ComponentFixture<SimpleTabHeaderApp>;
   let appComponent: SimpleTabHeaderApp;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     dir = 'ltr';
     TestBed.configureTestingModule({
       imports: [CommonModule, PortalModule, MatRippleModule, ScrollingModule, ObserversModule],
@@ -44,7 +44,7 @@ describe('MDC-based MatTabHeader', () => {
       ],
       providers: [
         ViewportRuler,
-        {provide: Directionality, useFactory: () => ({value: dir, change: change.asObservable()})},
+        {provide: Directionality, useFactory: () => ({value: dir, change: change})},
       ]
     });
 
@@ -63,8 +63,15 @@ describe('MDC-based MatTabHeader', () => {
     });
 
     it('should initialize to the selected index', () => {
+      // Recreate the fixture so we can test that it works with a non-default selected index
+      fixture.destroy();
+      fixture = TestBed.createComponent(SimpleTabHeaderApp);
+      fixture.componentInstance.selectedIndex = 1;
       fixture.detectChanges();
-      expect(appComponent.tabHeader.focusIndex).toBe(appComponent.selectedIndex);
+      appComponent = fixture.componentInstance;
+      tabListContainer = appComponent.tabHeader._tabListContainer.nativeElement;
+
+      expect(appComponent.tabHeader.focusIndex).toBe(1);
     });
 
     it('should send focus change event', () => {
@@ -148,6 +155,19 @@ describe('MDC-based MatTabHeader', () => {
       expect(spaceEvent.defaultPrevented).toBe(true);
     });
 
+    it('should not prevent the default space/enter action if the current is selected', () => {
+      appComponent.tabHeader.focusIndex = appComponent.tabHeader.selectedIndex = 0;
+      fixture.detectChanges();
+
+      const spaceEvent = dispatchKeyboardEvent(tabListContainer, 'keydown', SPACE);
+      fixture.detectChanges();
+      expect(spaceEvent.defaultPrevented).toBe(false);
+
+      const enterEvent = dispatchKeyboardEvent(tabListContainer, 'keydown', ENTER);
+      fixture.detectChanges();
+      expect(enterEvent.defaultPrevented).toBe(false);
+    });
+
     it('should move focus to the first tab when pressing HOME', () => {
       appComponent.tabHeader.focusIndex = 3;
       fixture.detectChanges();
@@ -198,12 +218,8 @@ describe('MDC-based MatTabHeader', () => {
     });
 
     it('should not do anything if a modifier key is pressed', () => {
-      const rightArrowEvent = createKeyboardEvent('keydown', RIGHT_ARROW);
-      const enterEvent = createKeyboardEvent('keydown', ENTER);
-
-      [rightArrowEvent, enterEvent].forEach(event => {
-        Object.defineProperty(event, 'shiftKey', {get: () => true});
-      });
+      const rightArrowEvent = createKeyboardEvent('keydown', RIGHT_ARROW, undefined, {shift: true});
+      const enterEvent = createKeyboardEvent('keydown', ENTER, undefined, {shift: true});
 
       appComponent.tabHeader.focusIndex = 0;
       fixture.detectChanges();

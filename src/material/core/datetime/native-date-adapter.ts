@@ -160,19 +160,21 @@ export class NativeDateAdapter extends DateAdapter<Date> {
   }
 
   createDate(year: number, month: number, date: number): Date {
-    // Check for invalid month and date (except upper bound on date which we have to check after
-    // creating the Date).
-    if (month < 0 || month > 11) {
-      throw Error(`Invalid month index "${month}". Month index has to be between 0 and 11.`);
-    }
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      // Check for invalid month and date (except upper bound on date which we have to check after
+      // creating the Date).
+      if (month < 0 || month > 11) {
+        throw Error(`Invalid month index "${month}". Month index has to be between 0 and 11.`);
+      }
 
-    if (date < 1) {
-      throw Error(`Invalid date "${date}". Date has to be greater than 0.`);
+      if (date < 1) {
+        throw Error(`Invalid date "${date}". Date has to be greater than 0.`);
+      }
     }
 
     let result = this._createDateWithOverflow(year, month, date);
     // Check that the date wasn't above the upper bound for the month, causing the month to overflow
-    if (result.getMonth() != month) {
+    if (result.getMonth() != month && (typeof ngDevMode === 'undefined' || ngDevMode)) {
       throw Error(`Invalid date "${date}" for month with index "${month}".`);
     }
 
@@ -281,14 +283,12 @@ export class NativeDateAdapter extends DateAdapter<Date> {
 
   /** Creates a date but allows the month and date to overflow. */
   private _createDateWithOverflow(year: number, month: number, date: number) {
-    const result = new Date(year, month, date);
-
-    // We need to correct for the fact that JS native Date treats years in range [0, 99] as
-    // abbreviations for 19xx.
-    if (year >= 0 && year < 100) {
-      result.setFullYear(this.getYear(result) - 1900);
-    }
-    return result;
+    // Passing the year to the constructor causes year numbers <100 to be converted to 19xx.
+    // To work around this we use `setFullYear` and `setHours` instead.
+    const d = new Date();
+    d.setFullYear(year, month, date);
+    d.setHours(0, 0, 0, 0);
+    return d;
   }
 
   /**
@@ -323,9 +323,11 @@ export class NativeDateAdapter extends DateAdapter<Date> {
    * @returns A Date object with its UTC representation based on the passed in date info
    */
   private _format(dtf: Intl.DateTimeFormat, date: Date) {
-    const d = new Date(Date.UTC(
-        date.getFullYear(), date.getMonth(), date.getDate(), date.getHours(),
-        date.getMinutes(), date.getSeconds(), date.getMilliseconds()));
+    // Passing the year to the constructor causes year numbers <100 to be converted to 19xx.
+    // To work around this we use `setUTCFullYear` and `setUTCHours` instead.
+    const d = new Date();
+    d.setUTCFullYear(date.getFullYear(), date.getMonth(), date.getDate());
+    d.setUTCHours(date.getHours(), date.getMinutes(), date.getSeconds(), date.getMilliseconds());
     return dtf.format(d);
   }
 }

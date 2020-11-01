@@ -22,10 +22,7 @@ filegroup(
 
 ng_test_library(
     name = "unit_tests_lib",
-    srcs = glob(
-        ["**/*.spec.ts"],
-        exclude = ["shared.spec.ts"],
-    ),
+    srcs = glob(["**/*.spec.ts"]),
     deps = [
         ":testing",
         "//src/material-experimental/mdc-input",
@@ -39,7 +36,7 @@ ng_web_test_suite(
         "@npm//:node_modules/@material/textfield/dist/mdc.textfield.js",
         "@npm//:node_modules/@material/line-ripple/dist/mdc.lineRipple.js",
         "@npm//:node_modules/@material/notched-outline/dist/mdc.notchedOutline.js",
-        "@npm//:node_modules/@material/floating-label/dist/mdc.floatingLabel.js",
+        "@npm//:node_modules/@material/dom/dist/mdc.dom.js",
     ],
     deps = [
         ":unit_tests_lib",

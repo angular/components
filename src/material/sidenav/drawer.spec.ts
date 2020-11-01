@@ -1,6 +1,6 @@
 import {
   fakeAsync,
-  async,
+  waitForAsync,
   tick,
   ComponentFixture,
   TestBed,
@@ -26,7 +26,7 @@ import {CommonModule} from '@angular/common';
 
 
 describe('MatDrawer', () => {
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [MatSidenavModule, A11yModule, PlatformModule, NoopAnimationsModule, CommonModule],
       declarations: [
@@ -228,8 +228,7 @@ describe('MatDrawer', () => {
       expect(testComponent.closeCount).toBe(0, 'Expected no close events.');
       expect(testComponent.closeStartCount).toBe(0, 'Expected no close start events.');
 
-      const event = createKeyboardEvent('keydown', ESCAPE);
-      Object.defineProperty(event, 'altKey', {get: () => true});
+      const event = createKeyboardEvent('keydown', ESCAPE, undefined, {alt: true});
       dispatchEvent(drawer.nativeElement, event);
       fixture.detectChanges();
       flush();
@@ -284,7 +283,36 @@ describe('MatDrawer', () => {
       expect(testComponent.closeStartCount).toBe(0);
     }));
 
-    it('should restore focus on close if focus is inside drawer', fakeAsync(() => {
+    it('should restore focus on close if backdrop has been clicked', fakeAsync(() => {
+      const fixture = TestBed.createComponent(BasicTestApp);
+      fixture.detectChanges();
+
+      const drawer = fixture.debugElement.query(By.directive(MatDrawer))!.componentInstance;
+      const openButton = fixture.componentInstance.openButton.nativeElement;
+
+      openButton.focus();
+      drawer.open();
+      fixture.detectChanges();
+      flush();
+
+      const backdrop = fixture.nativeElement.querySelector('.mat-drawer-backdrop');
+      expect(backdrop).toBeTruthy();
+
+      // Ensure the element that has been focused on drawer open is blurred. This simulates
+      // the behavior where clicks on the backdrop blur the active element.
+      if (document.activeElement !== null && document.activeElement instanceof HTMLElement) {
+        document.activeElement.blur();
+      }
+
+      backdrop.click();
+      fixture.detectChanges();
+      flush();
+
+      expect(document.activeElement)
+          .toBe(openButton, 'Expected focus to be restored to the open button on close.');
+    }));
+
+    it('should restore focus on close if focus is on drawer', fakeAsync(() => {
       let fixture = TestBed.createComponent(BasicTestApp);
 
       fixture.detectChanges();
@@ -617,7 +645,7 @@ describe('MatDrawer', () => {
 });
 
 describe('MatDrawerContainer', () => {
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [MatSidenavModule, A11yModule, PlatformModule, NoopAnimationsModule],
       declarations: [

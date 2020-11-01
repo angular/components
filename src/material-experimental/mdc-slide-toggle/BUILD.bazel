@@ -24,7 +24,7 @@ ng_module(
     module_name = "@angular/material-experimental/mdc-slide-toggle",
     deps = [
         "//src/cdk/coercion",
-        "//src/material/core",
+        "//src/material-experimental/mdc-core",
         "//src/material/slide-toggle",
         "@npm//@angular/animations",
         "@npm//@angular/common",
@@ -64,6 +64,7 @@ ng_test_library(
     ),
     deps = [
         ":mdc-slide-toggle",
+        "//src/cdk/a11y",
         "//src/cdk/bidi",
         "//src/cdk/testing/private",
         "//src/material/slide-toggle",

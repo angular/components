@@ -1,23 +1,24 @@
 export declare class YouTubePlayer implements AfterViewInit, OnDestroy, OnInit {
-    apiChange: EventEmitter<YT.PlayerEvent>;
+    apiChange: Observable<YT.PlayerEvent>;
     set endSeconds(endSeconds: number | undefined);
-    error: EventEmitter<YT.OnErrorEvent>;
+    error: Observable<YT.OnErrorEvent>;
     get height(): number | undefined;
     set height(height: number | undefined);
-    playbackQualityChange: EventEmitter<YT.OnPlaybackQualityChangeEvent>;
-    playbackRateChange: EventEmitter<YT.OnPlaybackRateChangeEvent>;
-    ready: EventEmitter<YT.PlayerEvent>;
+    playbackQualityChange: Observable<YT.OnPlaybackQualityChangeEvent>;
+    playbackRateChange: Observable<YT.OnPlaybackRateChangeEvent>;
+    get playerVars(): YT.PlayerVars | undefined;
+    set playerVars(playerVars: YT.PlayerVars | undefined);
+    ready: Observable<YT.PlayerEvent>;
     showBeforeIframeApiLoads: boolean | undefined;
     set startSeconds(startSeconds: number | undefined);
-    stateChange: EventEmitter<YT.OnStateChangeEvent>;
+    stateChange: Observable<YT.OnStateChangeEvent>;
     set suggestedQuality(suggestedQuality: YT.SuggestedVideoQuality | undefined);
     get videoId(): string | undefined;
     set videoId(videoId: string | undefined);
     get width(): number | undefined;
     set width(width: number | undefined);
     youtubeContainer: ElementRef<HTMLElement>;
-    constructor(_ngZone: NgZone,
-    platformId?: Object);
+    constructor(_ngZone: NgZone, platformId: Object);
     createEventsBoundInZone(): YT.Events;
     getAvailablePlaybackRates(): number[];
     getAvailableQualityLevels(): YT.SuggestedVideoQuality[];
@@ -42,8 +43,8 @@ export declare class YouTubePlayer implements AfterViewInit, OnDestroy, OnInit {
     setVolume(volume: number): void;
     stopVideo(): void;
     unMute(): void;
-    static ɵcmp: i0.ɵɵComponentDefWithMeta<YouTubePlayer, "youtube-player", never, { "videoId": "videoId"; "height": "height"; "width": "width"; "startSeconds": "startSeconds"; "endSeconds": "endSeconds"; "suggestedQuality": "suggestedQuality"; "showBeforeIframeApiLoads": "showBeforeIframeApiLoads"; }, { "ready": "ready"; "stateChange": "stateChange"; "error": "error"; "apiChange": "apiChange"; "playbackQualityChange": "playbackQualityChange"; "playbackRateChange": "playbackRateChange"; }, never, never>;
-    static ɵfac: i0.ɵɵFactoryDef<YouTubePlayer, [null, { optional: true; }]>;
+    static ɵcmp: i0.ɵɵComponentDefWithMeta<YouTubePlayer, "youtube-player", never, { "videoId": "videoId"; "height": "height"; "width": "width"; "startSeconds": "startSeconds"; "endSeconds": "endSeconds"; "suggestedQuality": "suggestedQuality"; "playerVars": "playerVars"; "showBeforeIframeApiLoads": "showBeforeIframeApiLoads"; }, { "ready": "ready"; "stateChange": "stateChange"; "error": "error"; "apiChange": "apiChange"; "playbackQualityChange": "playbackQualityChange"; "playbackRateChange": "playbackRateChange"; }, never, never>;
+    static ɵfac: i0.ɵɵFactoryDef<YouTubePlayer, never>;
 }
 
 export declare class YouTubePlayerModule {

@@ -1,4 +1,4 @@
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import {waitForAsync, ComponentFixture, TestBed} from '@angular/core/testing';
 import {Component, DebugElement} from '@angular/core';
 import {By} from '@angular/platform-browser';
 import {MatButtonModule, MatButton} from './index';
@@ -7,7 +7,7 @@ import {MatRipple, ThemePalette} from '@angular/material/core';
 
 describe('MatButton', () => {
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [MatButtonModule],
       declarations: [TestApp],
@@ -72,6 +72,7 @@ describe('MatButton', () => {
 
   it('should be able to focus button with a specific focus origin', () => {
     const fixture = TestBed.createComponent(TestApp);
+    fixture.detectChanges();
     const buttonDebugEl = fixture.debugElement.query(By.css('button'));
     const buttonInstance = buttonDebugEl.componentInstance as MatButton;
 

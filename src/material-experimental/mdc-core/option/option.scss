@@ -1,0 +1,92 @@
+@import '@material/list/mixins.import';
+@import '@material/list/variables.import';
+@import '../../mdc-helpers/mdc-helpers';
+@import '../../../material/core/style/vendor-prefixes';
+@import '../../../cdk/a11y/a11y';
+
+.mat-mdc-option {
+  // Note that we include this private mixin, because the public
+  // one adds a bunch of styles that we aren't using for the menu.
+  @include mdc-list-item-base_;
+  @include mdc-list-list-item-padding-variant(
+    $mdc-list-textual-variant-config, $query: $mat-base-styles-query);
+  @include mdc-list-item-disabled-text-opacity($mdc-list-text-disabled-opacity,
+    $query: $mat-base-styles-query);
+  @include user-select(none);
+
+  // Set the `min-height` here ourselves, instead of going through
+  // the `mdc-list-list-item-height-variant` mixin, because it sets a `height`
+  // which doesn't work well with multi-line options.
+  min-height: map-get($mdc-list-textual-variant-config, single-line-height);
+
+  // Workaround for https://goo.gl/pFmjJD in IE 11. Adds a pseudo
+  // element that will stretch the option to the correct height. See:
+  // https://connect.microsoft.com/IE/feedback/details/802625
+  &::after {
+    display: inline-block;
+    min-height: inherit;
+    content: '';
+  }
+
+  &:not(.mdc-list-item--disabled) {
+    cursor: pointer;
+  }
+
+  // Note that we bump the padding here, rather than padding inside the
+  // group so that ripples still reach to the edges of the panel.
+  .mat-mdc-optgroup &:not(.mat-mdc-option-multiple) {
+    padding-left: $mdc-list-side-padding * 2;
+
+    [dir='rtl'] & {
+      padding-left: $mdc-list-side-padding;
+      padding-right: $mdc-list-side-padding * 2;
+    }
+  }
+
+  .mat-pseudo-checkbox {
+    margin-right: $mdc-list-side-padding;
+
+    [dir='rtl'] & {
+      margin-right: 0;
+      margin-left: $mdc-list-side-padding;
+    }
+  }
+
+  // Increase specificity because ripple styles are part of the `mat-core` mixin and can
+  // potentially overwrite the absolute position of the container.
+  .mat-mdc-option-ripple {
+    @include mat-fill;
+
+    // Disable pointer events for the ripple container because the container will overlay the
+    // user content and we don't want to disable mouse events on the user content.
+    // Pointer events can be safely disabled because the ripple trigger element is the host element.
+    pointer-events: none;
+
+    // Prevents the ripple from completely covering the option in high contrast mode.
+    @include cdk-high-contrast(active, off) {
+      opacity: 0.5;
+    }
+  }
+}
+
+.mat-mdc-option-active {
+  @include cdk-high-contrast(active, off) {
+    // A pseudo element is used here, because the active indication gets moved between options
+    // and we don't want the border from below to shift the layout around as it's added and removed.
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      pointer-events: none;
+
+      // We use a border here, rather than an outline, because the outline will be cut off
+      // by the `overflow: hidden` on the panel wrapping the options, whereas a border
+      // will push the element inwards. This could be done using `outline-offset: -1px`,
+      // however the property isn't supported on IE11.
+      border: solid 1px currentColor;
+    }
+  }
+}

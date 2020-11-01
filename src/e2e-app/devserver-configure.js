@@ -13,6 +13,7 @@ require.config({
     '@material/base': '@material/base/dist/mdc.base',
     '@material/checkbox': '@material/checkbox/dist/mdc.checkbox',
     '@material/chips': '@material/chips/dist/mdc.chips',
+    '@material/circular-progress': '@material/circular-progress/dist/mdc.circularProgress',
     '@material/dialog': '@material/dialog/dist/mdc.dialog',
     '@material/dom': '@material/dom/dist/mdc.dom',
     '@material/drawer': '@material/drawer/dist/mdc.drawer',
@@ -36,7 +37,7 @@ require.config({
     '@material/tab-bar': '@material/tab-bar/dist/mdc.tabBar',
     '@material/tab-indicator': '@material/tab-indicator/dist/mdc.tabIndicator',
     '@material/tab-scroller': '@material/tab-scroller/dist/mdc.tabScroller',
-    '@material/text-field': '@material/textfield/dist/mdc.textField',
+    '@material/textfield': '@material/textfield/dist/mdc.textfield',
     '@material/top-app-bar': '@material/top-app-bar/dist/mdc.topAppBar',
   }
 });

@@ -6,12 +6,8 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {BooleanInput} from '@angular/cdk/coercion';
-import {
-  ChangeDetectorRef,
-  Directive,
-  ElementRef,
-} from '@angular/core';
+import {BooleanInput, NumberInput} from '@angular/cdk/coercion';
+import {ChangeDetectorRef, Directive, ElementRef, InjectionToken, OnDestroy} from '@angular/core';
 import {
   CanDisable,
   CanDisableCtor,
@@ -19,9 +15,17 @@ import {
   HasTabIndexCtor,
   mixinDisabled,
   mixinTabIndex,
-} from '@angular/material/core';
+} from '@angular/material-experimental/mdc-core';
+import {MDCChipTrailingActionAdapter, MDCChipTrailingActionFoundation} from '@material/chips';
 import {Subject} from 'rxjs';
 
+
+/**
+ * Injection token that can be used to reference instances of `MatChipAvatar`. It serves as
+ * alternative token to the actual `MatChipAvatar` class which could cause unnecessary
+ * retention of the class and its directive metadata.
+ */
+export const MAT_CHIP_AVATAR = new InjectionToken<MatChipAvatar>('MatChipAvatar');
 
 /**
  * Directive to add CSS classes to chip leading icon.
@@ -32,7 +36,8 @@ import {Subject} from 'rxjs';
   host: {
     'class': 'mat-mdc-chip-avatar mdc-chip__icon mdc-chip__icon--leading',
     'role': 'img'
-  }
+  },
+  providers: [{provide: MAT_CHIP_AVATAR, useExisting: MatChipAvatar}],
 })
 export class MatChipAvatar {
   constructor(private _changeDetectorRef: ChangeDetectorRef,
@@ -46,19 +51,67 @@ export class MatChipAvatar {
 }
 
 /**
+ * Injection token that can be used to reference instances of `MatChipTrailingIcon`. It serves as
+ * alternative token to the actual `MatChipTrailingIcon` class which could cause unnecessary
+ * retention of the class and its directive metadata.
+ */
+export const MAT_CHIP_TRAILING_ICON =
+  new InjectionToken<MatChipTrailingIcon>('MatChipTrailingIcon');
+
+/**
  * Directive to add CSS classes to and configure attributes for chip trailing icon.
  * @docs-private
  */
 @Directive({
   selector: 'mat-chip-trailing-icon, [matChipTrailingIcon]',
   host: {
-    'class': 'mat-mdc-chip-trailing-icon mdc-chip__icon mdc-chip__icon--trailing',
+    'class':
+        'mat-mdc-chip-trailing-icon mdc-chip__icon mdc-chip__icon--trailing',
     'tabindex': '-1',
     'aria-hidden': 'true',
-  }
+  },
+  providers: [{provide: MAT_CHIP_TRAILING_ICON, useExisting: MatChipTrailingIcon}],
 })
-export class MatChipTrailingIcon {
-  constructor(public _elementRef: ElementRef) {}
+export class MatChipTrailingIcon implements OnDestroy {
+  private _foundation: MDCChipTrailingActionFoundation;
+  private _adapter: MDCChipTrailingActionAdapter = {
+    focus: () => this._elementRef.nativeElement.focus(),
+    getAttribute: (name: string) =>
+        this._elementRef.nativeElement.getAttribute(name),
+    setAttribute:
+        (name: string, value: string) => {
+          this._elementRef.nativeElement.setAttribute(name, value);
+        },
+    // TODO(crisbeto): there's also a `trigger` parameter that the chip isn't
+    // handling yet. Consider passing it along once MDC start using it.
+    notifyInteraction:
+        () => {
+          // TODO(crisbeto): uncomment this code once we've inverted the
+          // dependency on `MatChip`. this._chip._notifyInteraction();
+        },
+
+    // TODO(crisbeto): there's also a `key` parameter that the chip isn't
+    // handling yet. Consider passing it along once MDC start using it.
+    notifyNavigation:
+        () => {
+          // TODO(crisbeto): uncomment this code once we've inverted the
+          // dependency on `MatChip`. this._chip._notifyNavigation();
+        }
+  };
+
+  constructor(
+      public _elementRef: ElementRef,
+      // TODO(crisbeto): currently the chip needs a reference to the trailing
+      // icon for the deprecated `setTrailingActionAttr` method. Until the
+      // method is removed, we can't use the chip here, because it causes a
+      // circular import. private _chip: MatChip
+  ) {
+    this._foundation = new MDCChipTrailingActionFoundation(this._adapter);
+  }
+
+  ngOnDestroy() {
+    this._foundation.destroy();
+  }
 
   focus() {
     this._elementRef.nativeElement.focus();
@@ -68,15 +121,26 @@ export class MatChipTrailingIcon {
   setAttribute(name: string, value: string) {
     this._elementRef.nativeElement.setAttribute(name, value);
   }
+
+  isNavigable() {
+    return this._foundation.isNavigable();
+  }
 }
+
+/**
+ * Injection token that can be used to reference instances of `MatChipRemove`. It serves as
+ * alternative token to the actual `MatChipRemove` class which could cause unnecessary
+ * retention of the class and its directive metadata.
+ */
+export const MAT_CHIP_REMOVE = new InjectionToken<MatChipRemove>('MatChipRemove');
 
 /**
  * Boilerplate for applying mixins to MatChipRemove.
  * @docs-private
  */
 class MatChipRemoveBase extends MatChipTrailingIcon {
-  constructor(_elementRef: ElementRef) {
-    super(_elementRef);
+  constructor(elementRef: ElementRef) {
+    super(elementRef);
   }
 }
 
@@ -114,7 +178,8 @@ const _MatChipRemoveMixinBase:
 
     // We need to remove this explicitly, because it gets inherited from MatChipTrailingIcon.
     '[attr.aria-hidden]': 'null',
-  }
+  },
+  providers: [{provide: MAT_CHIP_REMOVE, useExisting: MatChipRemove}],
 })
 export class MatChipRemove extends _MatChipRemoveMixinBase implements CanDisable, HasTabIndex {
   /**
@@ -132,4 +197,5 @@ export class MatChipRemove extends _MatChipRemoveMixinBase implements CanDisable
   }
 
   static ngAcceptInputType_disabled: BooleanInput;
+  static ngAcceptInputType_tabIndex: NumberInput;
 }

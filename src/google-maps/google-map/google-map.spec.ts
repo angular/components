@@ -1,20 +1,10 @@
 import {Component, ViewChild} from '@angular/core';
-import {async, TestBed} from '@angular/core/testing';
+import {waitForAsync, TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 
 import {GoogleMapsModule} from '../google-maps-module';
-import {
-  createMapConstructorSpy,
-  createMapSpy,
-  TestingWindow
-} from '../testing/fake-google-map-utils';
-import {
-  DEFAULT_HEIGHT,
-  DEFAULT_OPTIONS,
-  DEFAULT_WIDTH,
-  GoogleMap,
-  UpdatedGoogleMap
-} from './google-map';
+import {createMapConstructorSpy, createMapSpy} from '../testing/fake-google-map-utils';
+import {DEFAULT_HEIGHT, DEFAULT_OPTIONS, DEFAULT_WIDTH, GoogleMap} from './google-map';
 
 /** Represents boundaries of a map to be used in tests. */
 const testBounds: google.maps.LatLngBoundsLiteral = {
@@ -32,9 +22,9 @@ const testPosition: google.maps.LatLngLiteral = {
 
 describe('GoogleMap', () => {
   let mapConstructorSpy: jasmine.Spy;
-  let mapSpy: jasmine.SpyObj<UpdatedGoogleMap>;
+  let mapSpy: jasmine.SpyObj<google.maps.Map>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [
         GoogleMapsModule,
@@ -48,8 +38,7 @@ describe('GoogleMap', () => {
   });
 
   afterEach(() => {
-    const testingWindow: TestingWindow = window;
-    delete testingWindow.google;
+    (window.google as any) = undefined;
   });
 
   it('throws an error is the Google Maps JavaScript API was not loaded', () => {
@@ -127,6 +116,20 @@ describe('GoogleMap', () => {
     expect(container.style.width).toBe('600px');
   });
 
+  it('should be able to set null as the width/height', () => {
+    mapSpy = createMapSpy(DEFAULT_OPTIONS);
+    mapConstructorSpy = createMapConstructorSpy(mapSpy);
+
+    const fixture = TestBed.createComponent(TestApp);
+    const instance = fixture.componentInstance;
+    instance.height = instance.width = null;
+    fixture.detectChanges();
+
+    const container = fixture.debugElement.query(By.css('div'))!.nativeElement;
+    expect(container.style.height).toBeFalsy();
+    expect(container.style.width).toBeFalsy();
+  });
+
   it('sets center and zoom of the map', () => {
     const options = {center: {lat: 3, lng: 5}, zoom: 7, mapTypeId: undefined};
     mapSpy = createMapSpy(options);
@@ -164,6 +167,42 @@ describe('GoogleMap', () => {
     fixture.detectChanges();
 
     expect(mapSpy.setOptions).toHaveBeenCalledWith({...options, heading: 170});
+  });
+
+  it('should set a default center if the custom options do not provide one', () => {
+    const options = {zoom: 7};
+    mapSpy = createMapSpy(options);
+    mapConstructorSpy = createMapConstructorSpy(mapSpy).and.callThrough();
+
+    const fixture = TestBed.createComponent(TestApp);
+    fixture.componentInstance.options = options;
+    fixture.detectChanges();
+
+    expect(mapConstructorSpy.calls.mostRecent()?.args[1].center).toBeTruthy();
+  });
+
+  it('should set a default zoom level if the custom options do not provide one', () => {
+    const options = {};
+    mapSpy = createMapSpy(options);
+    mapConstructorSpy = createMapConstructorSpy(mapSpy).and.callThrough();
+
+    const fixture = TestBed.createComponent(TestApp);
+    fixture.componentInstance.options = options;
+    fixture.detectChanges();
+
+    expect(mapConstructorSpy.calls.mostRecent()?.args[1].zoom).toEqual(DEFAULT_OPTIONS.zoom);
+  });
+
+  it('should not set a default zoom level if the custom options provide "zoom: 0"', () => {
+    const options = {zoom: 0};
+    mapSpy = createMapSpy(options);
+    mapConstructorSpy = createMapConstructorSpy(mapSpy).and.callThrough();
+
+    const fixture = TestBed.createComponent(TestApp);
+    fixture.componentInstance.options = options;
+    fixture.detectChanges();
+
+    expect(mapConstructorSpy.calls.mostRecent()?.args[1].zoom).toEqual(0);
   });
 
   it('gives precedence to center and zoom over options', () => {
@@ -325,8 +364,8 @@ describe('GoogleMap', () => {
 })
 class TestApp {
   @ViewChild(GoogleMap) map: GoogleMap;
-  height?: string | number;
-  width?: string | number;
+  height?: string | number | null;
+  width?: string | number | null;
   center?: google.maps.LatLngLiteral;
   zoom?: number;
   options?: google.maps.MapOptions;

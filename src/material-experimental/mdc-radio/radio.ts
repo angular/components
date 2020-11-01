@@ -8,6 +8,7 @@
 
 import {
   AfterViewInit,
+  Attribute,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
@@ -16,6 +17,7 @@ import {
   ElementRef,
   forwardRef,
   Inject,
+  InjectionToken,
   OnDestroy,
   Optional,
   QueryList,
@@ -24,15 +26,15 @@ import {
 import {MDCRadioAdapter, MDCRadioFoundation} from '@material/radio';
 import {
   MAT_RADIO_DEFAULT_OPTIONS,
-  MatRadioButton as BaseMatRadioButton,
+  _MatRadioButtonBase,
   MatRadioDefaultOptions,
-  MatRadioGroup as BaseMatRadioGroup,
+  _MatRadioGroupBase,
 } from '@angular/material/radio';
 import {FocusMonitor} from '@angular/cdk/a11y';
 import {UniqueSelectionDispatcher} from '@angular/cdk/collections';
 import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 import {NG_VALUE_ACCESSOR} from '@angular/forms';
-import {RippleAnimationConfig} from '@angular/material/core';
+import {RippleAnimationConfig} from '@angular/material-experimental/mdc-core';
 import {numbers} from '@material/ripple';
 
 // Re-export symbols used by the base Material radio component so that users do not need to depend
@@ -50,6 +52,14 @@ export const MAT_RADIO_GROUP_CONTROL_VALUE_ACCESSOR: any = {
   multi: true
 };
 
+/**
+ * Injection token that can be used to inject instances of `MatRadioGroup`. It serves as
+ * alternative token to the actual `MatRadioGroup` class which could cause unnecessary
+ * retention of the class and its component metadata.
+ */
+export const MAT_RADIO_GROUP =
+  new InjectionToken<_MatRadioGroupBase<_MatRadioButtonBase>>('MatRadioGroup');
+
 /** Configuration for the ripple animation. */
 const RIPPLE_ANIMATION_CONFIG: RippleAnimationConfig = {
   enterDuration: numbers.DEACTIVATION_TIMEOUT_MS,
@@ -62,17 +72,19 @@ const RIPPLE_ANIMATION_CONFIG: RippleAnimationConfig = {
 @Directive({
   selector: 'mat-radio-group',
   exportAs: 'matRadioGroup',
-  providers: [MAT_RADIO_GROUP_CONTROL_VALUE_ACCESSOR],
+  providers: [
+    MAT_RADIO_GROUP_CONTROL_VALUE_ACCESSOR,
+    {provide: MAT_RADIO_GROUP, useExisting: MatRadioGroup},
+  ],
   host: {
     'role': 'radiogroup',
     'class': 'mat-mdc-radio-group',
-    '[class.mat-radio-group]': 'false',
   },
 })
-export class MatRadioGroup extends BaseMatRadioGroup {
+export class MatRadioGroup extends _MatRadioGroupBase<MatRadioButton> {
   /** Child radio buttons. */
-  @ContentChildren(forwardRef(() => MatRadioButton), { descendants: true })
-      _radios: QueryList<BaseMatRadioButton>;
+  @ContentChildren(forwardRef(() => MatRadioButton), {descendants: true})
+      _radios: QueryList<MatRadioButton>;
 }
 
 @Component({
@@ -81,9 +93,6 @@ export class MatRadioGroup extends BaseMatRadioGroup {
   styleUrls: ['radio.css'],
   host: {
     'class': 'mat-mdc-radio-button',
-    // Ivy will inherit the mat-radio-button class from the parent class, but we do not want
-    // this to be applied in the MDC component. Set this explicitly to false so it is not applied.
-    '[class.mat-radio-button]': 'false',
     '[attr.id]': 'id',
     '[class.mat-primary]': 'color === "primary"',
     '[class.mat-accent]': 'color === "accent"',
@@ -102,7 +111,7 @@ export class MatRadioGroup extends BaseMatRadioGroup {
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MatRadioButton extends BaseMatRadioButton implements AfterViewInit, OnDestroy {
+export class MatRadioButton extends _MatRadioButtonBase implements AfterViewInit, OnDestroy {
 
   private _radioAdapter: MDCRadioAdapter = {
     addClass: (className: string) => this._setClass(className, true),
@@ -121,16 +130,17 @@ export class MatRadioButton extends BaseMatRadioButton implements AfterViewInit,
   _radioFoundation = new MDCRadioFoundation(this._radioAdapter);
   _classes: {[key: string]: boolean} = {};
 
-  constructor(@Optional() radioGroup: MatRadioGroup,
+  constructor(@Optional() @Inject(MAT_RADIO_GROUP) radioGroup: MatRadioGroup,
               elementRef: ElementRef,
               _changeDetector: ChangeDetectorRef,
               _focusMonitor: FocusMonitor,
               _radioDispatcher: UniqueSelectionDispatcher,
               @Optional() @Inject(ANIMATION_MODULE_TYPE) _animationMode?: string,
               @Optional() @Inject(MAT_RADIO_DEFAULT_OPTIONS)
-              _providerOverride?: MatRadioDefaultOptions) {
+              _providerOverride?: MatRadioDefaultOptions,
+              @Attribute('tabindex') tabIndex?: string) {
     super(radioGroup, elementRef, _changeDetector, _focusMonitor,
-        _radioDispatcher, _animationMode, _providerOverride);
+        _radioDispatcher, _animationMode, _providerOverride, tabIndex);
   }
 
   ngAfterViewInit() {

@@ -23,7 +23,10 @@ import {
   ChangeDetectorRef, OnInit, Input,
 } from '@angular/core';
 import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
-import {MAT_RIPPLE_GLOBAL_OPTIONS, RippleGlobalOptions} from '@angular/material/core';
+import {
+  MAT_RIPPLE_GLOBAL_OPTIONS,
+  RippleGlobalOptions,
+} from '@angular/material-experimental/mdc-core';
 import {FocusMonitor} from '@angular/cdk/a11y';
 import {
   _MatTabNavBase,
@@ -85,10 +88,7 @@ export class MatTabNav extends _MatTabNavBase implements AfterContentInit {
               ngZone: NgZone,
               changeDetectorRef: ChangeDetectorRef,
               viewportRuler: ViewportRuler,
-              /**
-               * @deprecated @breaking-change 9.0.0 `platform` parameter to become required.
-               */
-              @Optional() platform?: Platform,
+              platform: Platform,
               @Optional() @Inject(ANIMATION_MODULE_TYPE) animationMode?: string,
               @Optional() @Inject(MAT_TABS_CONFIG) defaultConfig?: MatTabsConfig) {
     super(elementRef, dir, ngZone, changeDetectorRef, viewportRuler, platform, animationMode);

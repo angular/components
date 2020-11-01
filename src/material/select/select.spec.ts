@@ -10,6 +10,7 @@ import {
   TAB,
   UP_ARROW,
   A,
+  ESCAPE,
 } from '@angular/cdk/keycodes';
 import {OverlayContainer} from '@angular/cdk/overlay';
 import {Platform} from '@angular/cdk/platform';
@@ -32,7 +33,7 @@ import {
   Provider,
 } from '@angular/core';
 import {
-  async,
+  waitForAsync,
   ComponentFixture,
   fakeAsync,
   flush,
@@ -52,12 +53,14 @@ import {
 } from '@angular/forms';
 import {
   ErrorStateMatcher,
-  FloatLabelType,
-  MAT_LABEL_GLOBAL_OPTIONS,
   MatOption,
   MatOptionSelectionChange,
 } from '@angular/material/core';
-import {MatFormFieldModule} from '@angular/material/form-field';
+import {
+  FloatLabelType,
+  MatFormFieldModule,
+  MAT_FORM_FIELD_DEFAULT_OPTIONS,
+} from '@angular/material/form-field';
 import {By} from '@angular/platform-browser';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {LiveAnnouncer} from '@angular/cdk/a11y';
@@ -103,7 +106,7 @@ describe('MatSelect', () => {
         {provide: Directionality, useFactory: () => dir = {value: 'ltr', change: EMPTY}},
         {
           provide: ScrollDispatcher, useFactory: () => ({
-            scrolled: () => scrolledSubject.asObservable(),
+            scrolled: () => scrolledSubject,
           }),
         },
         ...providers
@@ -122,7 +125,7 @@ describe('MatSelect', () => {
   });
 
   describe('core', () => {
-    beforeEach(async(() => {
+    beforeEach(waitForAsync(() => {
       configureMatSelectTestingModule([
         BasicSelect,
         MultiSelect,
@@ -144,12 +147,45 @@ describe('MatSelect', () => {
           select = fixture.debugElement.query(By.css('mat-select'))!.nativeElement;
         }));
 
-        it('should set the role of the select to listbox', fakeAsync(() => {
-          expect(select.getAttribute('role')).toEqual('listbox');
+        it('should set the role of the select to combobox', fakeAsync(() => {
+          expect(select.getAttribute('role')).toEqual('combobox');
+          expect(select.getAttribute('aria-autocomplete')).toBe('none');
+          expect(select.getAttribute('aria-haspopup')).toBe('true');
         }));
 
-        it('should set the aria label of the select to the placeholder', fakeAsync(() => {
-          expect(select.getAttribute('aria-label')).toEqual('Food');
+        it('should point the aria-controls attribute to the listbox', fakeAsync(() => {
+          expect(select.hasAttribute('aria-controls')).toBe(false);
+
+          fixture.componentInstance.select.open();
+          fixture.detectChanges();
+          flush();
+
+          const ariaControls = select.getAttribute('aria-controls');
+          expect(ariaControls).toBeTruthy();
+          expect(ariaControls).toBe(document.querySelector('.mat-select-panel')!.id);
+        }));
+
+        it('should point the aria-owns attribute to the listbox on the trigger', fakeAsync(() => {
+          const trigger = select.querySelector('.mat-select-trigger')!;
+          expect(trigger.hasAttribute('aria-owns')).toBe(false);
+
+          fixture.componentInstance.select.open();
+          fixture.detectChanges();
+          flush();
+
+          const ariaOwns = trigger.getAttribute('aria-owns');
+          expect(ariaOwns).toBeTruthy();
+          expect(ariaOwns).toBe(document.querySelector('.mat-select-panel')!.id);
+        }));
+
+        it('should set aria-expanded based on the select open state', fakeAsync(() => {
+          expect(select.getAttribute('aria-expanded')).toBe('false');
+
+          fixture.componentInstance.select.open();
+          fixture.detectChanges();
+          flush();
+
+          expect(select.getAttribute('aria-expanded')).toBe('true');
         }));
 
         it('should support setting a custom aria-label', fakeAsync(() => {
@@ -157,19 +193,25 @@ describe('MatSelect', () => {
           fixture.detectChanges();
 
           expect(select.getAttribute('aria-label')).toEqual('Custom Label');
+          expect(select.hasAttribute('aria-labelledby')).toBeFalsy();
         }));
 
-        it('should not set an aria-label if aria-labelledby is specified', fakeAsync(() => {
+        it('should be able to add an extra aria-labelledby on top of the default', fakeAsync(() => {
           fixture.componentInstance.ariaLabelledby = 'myLabelId';
           fixture.detectChanges();
 
-          expect(select.getAttribute('aria-label')).toBeFalsy('Expected no aria-label to be set.');
-          expect(select.getAttribute('aria-labelledby')).toBe('myLabelId');
+          const labelId = fixture.nativeElement.querySelector('.mat-form-field-label').id;
+          const valueId = fixture.nativeElement.querySelector('.mat-select-value').id;
+
+          expect(select.getAttribute('aria-labelledby')).toBe(`${labelId} ${valueId} myLabelId`);
         }));
 
-        it('should not have aria-labelledby in the DOM if it`s not specified', fakeAsync(() => {
+        it('should set aria-labelledby to the value and label IDs', fakeAsync(() => {
           fixture.detectChanges();
-          expect(select.hasAttribute('aria-labelledby')).toBeFalsy();
+
+          const labelId = fixture.nativeElement.querySelector('.mat-form-field-label').id;
+          const valueId = fixture.nativeElement.querySelector('.mat-select-value').id;
+          expect(select.getAttribute('aria-labelledby')).toBe(`${labelId} ${valueId}`);
         }));
 
         it('should set the tabindex of the select to 0 by default', fakeAsync(() => {
@@ -236,37 +278,15 @@ describe('MatSelect', () => {
           expect(select.getAttribute('tabindex')).toEqual('0');
         }));
 
-        it('should set `aria-labelledby` to form field label if there is no placeholder', () => {
-          fixture.destroy();
-
-          const labelFixture = TestBed.createComponent(SelectWithFormFieldLabel);
-          labelFixture.detectChanges();
-          select = labelFixture.debugElement.query(By.css('mat-select'))!.nativeElement;
-
-          expect(select.getAttribute('aria-labelledby')).toBeTruthy();
-          expect(select.getAttribute('aria-labelledby'))
-              .toBe(labelFixture.nativeElement.querySelector('label').getAttribute('id'));
-        });
-
-        it('should not set `aria-labelledby` if there is a placeholder', () => {
-          fixture.destroy();
-
-          const labelFixture = TestBed.createComponent(SelectWithFormFieldLabel);
-          labelFixture.componentInstance.placeholder = 'Thing selector';
-          labelFixture.detectChanges();
-          select = labelFixture.debugElement.query(By.css('mat-select'))!.nativeElement;
-
-          expect(select.getAttribute('aria-labelledby')).toBeFalsy();
-        });
-
-        it('should not set `aria-labelledby` if there is no form field label', () => {
+        it('should set `aria-labelledby` to the value ID if there is no form field', () => {
           fixture.destroy();
 
           const labelFixture = TestBed.createComponent(SelectWithChangeEvent);
           labelFixture.detectChanges();
           select = labelFixture.debugElement.query(By.css('mat-select'))!.nativeElement;
+          const valueId = labelFixture.nativeElement.querySelector('.mat-select-value').id;
 
-          expect(select.getAttribute('aria-labelledby')).toBeFalsy();
+          expect(select.getAttribute('aria-labelledby')?.trim()).toBe(valueId);
         });
 
         it('should select options via the UP/DOWN arrow keys on a closed select', fakeAsync(() => {
@@ -434,8 +454,7 @@ describe('MatSelect', () => {
           expect(selectInstance.panelOpen).toBe(false, 'Expected select to be closed.');
           expect(formControl.value).toBeFalsy('Expected no initial value.');
 
-          const event = createKeyboardEvent('keydown', DOWN_ARROW);
-          Object.defineProperty(event, 'altKey', {get: () => true});
+          const event = createKeyboardEvent('keydown', DOWN_ARROW, undefined, {alt: true});
 
           dispatchEvent(select, event);
 
@@ -449,8 +468,7 @@ describe('MatSelect', () => {
           expect(selectInstance.panelOpen).toBe(false, 'Expected select to be closed.');
           expect(formControl.value).toBeFalsy('Expected no initial value.');
 
-          const event = createKeyboardEvent('keydown', UP_ARROW);
-          Object.defineProperty(event, 'altKey', {get: () => true});
+          const event = createKeyboardEvent('keydown', UP_ARROW, undefined, {alt: true});
 
           dispatchEvent(select, event);
 
@@ -466,8 +484,7 @@ describe('MatSelect', () => {
 
           expect(selectInstance.panelOpen).toBe(true, 'Expected select to be open.');
 
-          const event = createKeyboardEvent('keydown', DOWN_ARROW);
-          Object.defineProperty(event, 'altKey', {get: () => true});
+          const event = createKeyboardEvent('keydown', DOWN_ARROW, undefined, {alt: true});
 
           dispatchEvent(select, event);
 
@@ -483,8 +500,7 @@ describe('MatSelect', () => {
 
           expect(selectInstance.panelOpen).toBe(true, 'Expected select to be open.');
 
-          const event = createKeyboardEvent('keydown', UP_ARROW);
-          Object.defineProperty(event, 'altKey', {get: () => true});
+          const event = createKeyboardEvent('keydown', UP_ARROW, undefined, {alt: true});
 
           dispatchEvent(select, event);
 
@@ -720,8 +736,7 @@ describe('MatSelect', () => {
             fixture.destroy();
 
             const multiFixture = TestBed.createComponent(MultiSelect);
-            const event = createKeyboardEvent('keydown', DOWN_ARROW);
-            Object.defineProperty(event, 'shiftKey', {get: () => true});
+            const event = createKeyboardEvent('keydown', DOWN_ARROW, undefined, {shift: true});
 
             multiFixture.detectChanges();
             select = multiFixture.debugElement.query(By.css('mat-select'))!.nativeElement;
@@ -748,8 +763,7 @@ describe('MatSelect', () => {
             fixture.destroy();
 
             const multiFixture = TestBed.createComponent(MultiSelect);
-            const event = createKeyboardEvent('keydown', UP_ARROW);
-            Object.defineProperty(event, 'shiftKey', {get: () => true});
+            const event = createKeyboardEvent('keydown', UP_ARROW, undefined, {shift: true});
 
             multiFixture.detectChanges();
             select = multiFixture.debugElement.query(By.css('mat-select'))!.nativeElement;
@@ -790,8 +804,7 @@ describe('MatSelect', () => {
         it('should not prevent the default actions on selection keys when pressing a modifier',
           fakeAsync(() => {
             [ENTER, SPACE].forEach(key => {
-              const event = createKeyboardEvent('keydown', key);
-              Object.defineProperty(event, 'shiftKey', {get: () => true});
+              const event = createKeyboardEvent('keydown', key, undefined, {shift: true});
               expect(event.defaultPrevented).toBe(false);
             });
 
@@ -818,28 +831,28 @@ describe('MatSelect', () => {
           expect(document.activeElement).toBe(select, 'Expected select element to be focused.');
         }));
 
-        // Having `aria-hidden` on the trigger avoids issues where
-        // screen readers read out the wrong amount of options.
-        it('should set aria-hidden on the trigger element', fakeAsync(() => {
-          const trigger = fixture.debugElement.query(By.css('.mat-select-trigger'))!.nativeElement;
+        it('should set `aria-multiselectable` to true on the listbox inside multi select',
+          fakeAsync(() => {
+            fixture.destroy();
 
-          expect(trigger.getAttribute('aria-hidden'))
-              .toBe('true', 'Expected aria-hidden to be true when the select is open.');
-        }));
+            const multiFixture = TestBed.createComponent(MultiSelect);
+            multiFixture.detectChanges();
+            select = multiFixture.debugElement.query(By.css('mat-select'))!.nativeElement;
+            multiFixture.componentInstance.select.open();
+            multiFixture.detectChanges();
+            flush();
 
-        it('should set `aria-multiselectable` to true on multi-select instances', fakeAsync(() => {
-          fixture.destroy();
-
-          const multiFixture = TestBed.createComponent(MultiSelect);
-
-          multiFixture.detectChanges();
-          select = multiFixture.debugElement.query(By.css('mat-select'))!.nativeElement;
-
-          expect(select.getAttribute('aria-multiselectable')).toBe('true');
-        }));
+            const panel = document.querySelector('.mat-select-panel')!;
+            expect(panel.getAttribute('aria-multiselectable')).toBe('true');
+          }));
 
         it('should set aria-multiselectable false on single-selection instances', fakeAsync(() => {
-          expect(select.getAttribute('aria-multiselectable')).toBe('false');
+          fixture.componentInstance.select.open();
+          fixture.detectChanges();
+          flush();
+
+          const panel = document.querySelector('.mat-select-panel')!;
+          expect(panel.getAttribute('aria-multiselectable')).toBe('false');
         }));
 
         it('should set aria-activedescendant only while the panel is open', fakeAsync(() => {
@@ -935,12 +948,53 @@ describe('MatSelect', () => {
             expect(document.activeElement).toBe(select, 'Expected trigger to be focused.');
           }));
 
+        it('should set a role of listbox on the select panel', fakeAsync(() => {
+          fixture.componentInstance.select.open();
+          fixture.detectChanges();
+          flush();
+
+          const panel = document.querySelector('.mat-select-panel')!;
+          expect(panel.getAttribute('role')).toBe('listbox');
+        }));
+
+        it('should point the aria-labelledby of the panel to the field label', fakeAsync(() => {
+          fixture.componentInstance.select.open();
+          fixture.detectChanges();
+          flush();
+
+          const labelId = fixture.nativeElement.querySelector('.mat-form-field-label').id;
+          const panel = document.querySelector('.mat-select-panel')!;
+          expect(panel.getAttribute('aria-labelledby')).toBe(labelId);
+        }));
+
+        it('should add a custom aria-labelledby to the panel', fakeAsync(() => {
+          fixture.componentInstance.ariaLabelledby = 'myLabelId';
+          fixture.componentInstance.select.open();
+          fixture.detectChanges();
+          flush();
+
+          const labelId = fixture.nativeElement.querySelector('.mat-form-field-label').id;
+          const panel = document.querySelector('.mat-select-panel')!;
+          expect(panel.getAttribute('aria-labelledby')).toBe(`${labelId} myLabelId`);
+        }));
+
+        it('should clear aria-labelledby from the panel if an aria-label is set', fakeAsync(() => {
+          fixture.componentInstance.ariaLabel = 'My label';
+          fixture.componentInstance.select.open();
+          fixture.detectChanges();
+          flush();
+
+          const panel = document.querySelector('.mat-select-panel')!;
+          expect(panel.getAttribute('aria-label')).toBe('My label');
+          expect(panel.hasAttribute('aria-labelledby')).toBe(false);
+        }));
+
       });
 
       describe('for options', () => {
         let fixture: ComponentFixture<BasicSelect>;
         let trigger: HTMLElement;
-        let options: Array<HTMLElement>;
+        let options: HTMLElement[];
 
         beforeEach(fakeAsync(() => {
           fixture = TestBed.createComponent(BasicSelect);
@@ -1025,6 +1079,33 @@ describe('MatSelect', () => {
           expect(options[1].getAttribute('aria-disabled')).toEqual('false');
           expect(options[2].getAttribute('aria-disabled')).toEqual('false');
         }));
+
+        it('should remove the active state from options that have been deselected while closed',
+          fakeAsync(() => {
+            let activeOptions = options.filter(option => option.classList.contains('mat-active'));
+            expect(activeOptions).toEqual([options[0]],
+                'Expected first option to have active styles.');
+
+            options[1].click();
+            fixture.detectChanges();
+            trigger.click();
+            fixture.detectChanges();
+            flush();
+
+            activeOptions = options.filter(option => option.classList.contains('mat-active'));
+            expect(activeOptions).toEqual([options[1]],
+              'Expected only selected option to be marked as active after it is clicked.');
+
+            fixture.componentInstance.control.setValue(fixture.componentInstance.foods[7].value);
+            fixture.detectChanges();
+            trigger.click();
+            fixture.detectChanges();
+            flush();
+
+            activeOptions = options.filter(option => option.classList.contains('mat-active'));
+            expect(activeOptions).toEqual([options[7]],
+              'Expected only selected option to be marked as active after the value has changed.');
+          }));
       });
 
       describe('for option groups', () => {
@@ -1659,6 +1740,19 @@ describe('MatSelect', () => {
           subscription!.unsubscribe();
         }));
 
+        it('should not indicate programmatic value changes as user interactions', () => {
+          const events: MatOptionSelectionChange[] = [];
+          const subscription = fixture.componentInstance.select.optionSelectionChanges
+            .subscribe((event: MatOptionSelectionChange) => events.push(event));
+
+          fixture.componentInstance.control.setValue('eggs-5');
+          fixture.detectChanges();
+
+          expect(events.map(event => event.isUserInput)).toEqual([false]);
+
+          subscription.unsubscribe();
+        });
+
     });
 
     describe('forms integration', () => {
@@ -2058,7 +2152,7 @@ describe('MatSelect', () => {
   });
 
   describe('when initialized without options', () => {
-    beforeEach(async(() => configureMatSelectTestingModule([SelectInitWithoutOptions])));
+    beforeEach(waitForAsync(() => configureMatSelectTestingModule([SelectInitWithoutOptions])));
 
     it('should select the proper option when option list is initialized later', fakeAsync(() => {
       const fixture = TestBed.createComponent(SelectInitWithoutOptions);
@@ -2080,7 +2174,7 @@ describe('MatSelect', () => {
   });
 
   describe('with a selectionChange event handler', () => {
-    beforeEach(async(() => configureMatSelectTestingModule([SelectWithChangeEvent])));
+    beforeEach(waitForAsync(() => configureMatSelectTestingModule([SelectWithChangeEvent])));
 
     let fixture: ComponentFixture<SelectWithChangeEvent>;
     let trigger: HTMLElement;
@@ -2124,7 +2218,7 @@ describe('MatSelect', () => {
   });
 
   describe('with ngModel', () => {
-    beforeEach(async(() => configureMatSelectTestingModule([NgModelSelect])));
+    beforeEach(waitForAsync(() => configureMatSelectTestingModule([NgModelSelect])));
 
     it('should disable itself when control is disabled using the property', fakeAsync(() => {
       const fixture = TestBed.createComponent(NgModelSelect);
@@ -2167,7 +2261,7 @@ describe('MatSelect', () => {
   });
 
   describe('with ngIf', () => {
-    beforeEach(async(() => configureMatSelectTestingModule([NgIfSelect])));
+    beforeEach(waitForAsync(() => configureMatSelectTestingModule([NgIfSelect])));
 
     it('should handle nesting in an ngIf', fakeAsync(() => {
       const fixture = TestBed.createComponent(NgIfSelect);
@@ -2198,7 +2292,7 @@ describe('MatSelect', () => {
   });
 
   describe('with multiple mat-select elements in one view', () => {
-    beforeEach(async(() => configureMatSelectTestingModule([ManySelects])));
+    beforeEach(waitForAsync(() => configureMatSelectTestingModule([ManySelects])));
 
       let fixture: ComponentFixture<ManySelects>;
       let triggers: DebugElement[];
@@ -2216,49 +2310,7 @@ describe('MatSelect', () => {
         options = overlayContainerElement.querySelectorAll('mat-option') as NodeListOf<HTMLElement>;
       }));
 
-      it('should set aria-owns properly', fakeAsync(() => {
-        const selects = fixture.debugElement.queryAll(By.css('mat-select'));
-
-        expect(selects[0].nativeElement.getAttribute('aria-owns'))
-            .toContain(options[0].id, `Expected aria-owns to contain IDs of its child options.`);
-        expect(selects[0].nativeElement.getAttribute('aria-owns'))
-            .toContain(options[1].id, `Expected aria-owns to contain IDs of its child options.`);
-
-        const backdrop =
-            overlayContainerElement.querySelector('.cdk-overlay-backdrop') as HTMLElement;
-        backdrop.click();
-        fixture.detectChanges();
-        flush();
-
-        triggers[1].nativeElement.click();
-        fixture.detectChanges();
-        flush();
-
-        options =
-            overlayContainerElement.querySelectorAll('mat-option') as NodeListOf<HTMLElement>;
-        expect(selects[1].nativeElement.getAttribute('aria-owns'))
-            .toContain(options[0].id, `Expected aria-owns to contain IDs of its child options.`);
-        expect(selects[1].nativeElement.getAttribute('aria-owns'))
-            .toContain(options[1].id, `Expected aria-owns to contain IDs of its child options.`);
-      }));
-
-      it('should remove aria-owns when the options are not visible', fakeAsync(() => {
-        const select = fixture.debugElement.query(By.css('mat-select'))!;
-
-        expect(select.nativeElement.hasAttribute('aria-owns'))
-            .toBe(true, 'Expected select to have aria-owns while open.');
-
-        const backdrop =
-            overlayContainerElement.querySelector('.cdk-overlay-backdrop') as HTMLElement;
-        backdrop.click();
-        fixture.detectChanges();
-        flush();
-
-        expect(select.nativeElement.hasAttribute('aria-owns'))
-            .toBe(false, 'Expected select not to have aria-owns when closed.');
-      }));
-
-      it('should set the option id properly', fakeAsync(() => {
+      it('should set the option id', fakeAsync(() => {
         let firstOptionID = options[0].id;
 
         expect(options[0].id)
@@ -2285,7 +2337,7 @@ describe('MatSelect', () => {
   });
 
   describe('with floatLabel', () => {
-    beforeEach(async(() => configureMatSelectTestingModule([FloatLabelSelect])));
+    beforeEach(waitForAsync(() => configureMatSelectTestingModule([FloatLabelSelect])));
 
     let fixture: ComponentFixture<FloatLabelSelect>;
     let formField: HTMLElement;
@@ -2337,7 +2389,10 @@ describe('MatSelect', () => {
         declarations: [
           FloatLabelSelect
         ],
-        providers: [{ provide: MAT_LABEL_GLOBAL_OPTIONS, useValue: { float: 'always' } }]
+        providers: [{
+          provide: MAT_FORM_FIELD_DEFAULT_OPTIONS,
+          useValue: {floatLabel: 'always'}
+        }]
       });
 
       fixture = TestBed.createComponent(FloatLabelSelect);
@@ -2353,7 +2408,7 @@ describe('MatSelect', () => {
   });
 
   describe('with a sibling component that throws an error', () => {
-    beforeEach(async(() => configureMatSelectTestingModule([
+    beforeEach(waitForAsync(() => configureMatSelectTestingModule([
       SelectWithErrorSibling,
       ThrowsErrorOnInit,
     ])));
@@ -2368,7 +2423,7 @@ describe('MatSelect', () => {
   });
 
   describe('with tabindex', () => {
-    beforeEach(async(() => configureMatSelectTestingModule([SelectWithPlainTabindex])));
+    beforeEach(waitForAsync(() => configureMatSelectTestingModule([SelectWithPlainTabindex])));
 
     it('should be able to set the tabindex via the native attribute', fakeAsync(() => {
       const fixture = TestBed.createComponent(SelectWithPlainTabindex);
@@ -2380,7 +2435,7 @@ describe('MatSelect', () => {
   });
 
   describe('change events', () => {
-    beforeEach(async(() => configureMatSelectTestingModule([SelectWithPlainTabindex])));
+    beforeEach(waitForAsync(() => configureMatSelectTestingModule([SelectWithPlainTabindex])));
 
     it('should complete the stateChanges stream on destroy', () => {
       const fixture = TestBed.createComponent(SelectWithPlainTabindex);
@@ -2399,7 +2454,7 @@ describe('MatSelect', () => {
   });
 
   describe('when initially hidden', () => {
-    beforeEach(async(() => configureMatSelectTestingModule([BasicSelectInitiallyHidden])));
+    beforeEach(waitForAsync(() => configureMatSelectTestingModule([BasicSelectInitiallyHidden])));
 
     it('should set the width of the overlay if the element was hidden initially', fakeAsync(() => {
       const fixture = TestBed.createComponent(BasicSelectInitiallyHidden);
@@ -2420,7 +2475,7 @@ describe('MatSelect', () => {
   });
 
   describe('with no placeholder', () => {
-    beforeEach(async(() => configureMatSelectTestingModule([BasicSelectNoPlaceholder])));
+    beforeEach(waitForAsync(() => configureMatSelectTestingModule([BasicSelectNoPlaceholder])));
 
     it('should set the width of the overlay if there is no placeholder', fakeAsync(() => {
       const fixture = TestBed.createComponent(BasicSelectNoPlaceholder);
@@ -2438,7 +2493,7 @@ describe('MatSelect', () => {
   });
 
   describe('with theming', () => {
-    beforeEach(async(() => configureMatSelectTestingModule([BasicSelectWithTheming])));
+    beforeEach(waitForAsync(() => configureMatSelectTestingModule([BasicSelectWithTheming])));
 
     let fixture: ComponentFixture<BasicSelectWithTheming>;
 
@@ -2460,7 +2515,7 @@ describe('MatSelect', () => {
   });
 
   describe('when invalid inside a form', () => {
-    beforeEach(async(() => configureMatSelectTestingModule([InvalidSelectInForm])));
+    beforeEach(waitForAsync(() => configureMatSelectTestingModule([InvalidSelectInForm])));
 
     it('should not throw SelectionModel errors in addition to ngModel errors', fakeAsync(() => {
       const fixture = TestBed.createComponent(InvalidSelectInForm);
@@ -2474,7 +2529,7 @@ describe('MatSelect', () => {
   });
 
   describe('with ngModel using compareWith', () => {
-    beforeEach(async(() => configureMatSelectTestingModule([NgModelCompareWithSelect])));
+    beforeEach(waitForAsync(() => configureMatSelectTestingModule([NgModelCompareWithSelect])));
 
     let fixture: ComponentFixture<NgModelCompareWithSelect>;
     let instance: NgModelCompareWithSelect;
@@ -2539,7 +2594,7 @@ describe('MatSelect', () => {
   });
 
   describe(`when the select's value is accessed on initialization`, () => {
-    beforeEach(async(() => configureMatSelectTestingModule([SelectEarlyAccessSibling])));
+    beforeEach(waitForAsync(() => configureMatSelectTestingModule([SelectEarlyAccessSibling])));
 
     it('should not throw when trying to access the selected value on init', fakeAsync(() => {
       expect(() => {
@@ -2549,7 +2604,7 @@ describe('MatSelect', () => {
   });
 
   describe('with ngIf and mat-label', () => {
-    beforeEach(async(() => configureMatSelectTestingModule([SelectWithNgIfAndLabel])));
+    beforeEach(waitForAsync(() => configureMatSelectTestingModule([SelectWithNgIfAndLabel])));
 
     it('should not throw when using ngIf on a select with an associated label', fakeAsync(() => {
       expect(() => {
@@ -2560,7 +2615,7 @@ describe('MatSelect', () => {
   });
 
   describe('inside of a form group', () => {
-    beforeEach(async(() => configureMatSelectTestingModule([SelectInsideFormGroup])));
+    beforeEach(waitForAsync(() => configureMatSelectTestingModule([SelectInsideFormGroup])));
 
     let fixture: ComponentFixture<SelectInsideFormGroup>;
     let testComponent: SelectInsideFormGroup;
@@ -2681,7 +2736,7 @@ describe('MatSelect', () => {
   });
 
   describe('with custom error behavior', () => {
-    beforeEach(async(() => configureMatSelectTestingModule([CustomErrorBehaviorSelect])));
+    beforeEach(waitForAsync(() => configureMatSelectTestingModule([CustomErrorBehaviorSelect])));
 
     it('should be able to override the error matching behavior via an @Input', fakeAsync(() => {
       const fixture = TestBed.createComponent(CustomErrorBehaviorSelect);
@@ -2702,7 +2757,7 @@ describe('MatSelect', () => {
   });
 
   describe('with preselected array values', () => {
-    beforeEach(async(() => configureMatSelectTestingModule([
+    beforeEach(waitForAsync(() => configureMatSelectTestingModule([
       SingleSelectWithPreselectedArrayValues,
     ])));
 
@@ -2720,7 +2775,7 @@ describe('MatSelect', () => {
   });
 
   describe('with custom value accessor', () => {
-    beforeEach(async(() => configureMatSelectTestingModule([
+    beforeEach(waitForAsync(() => configureMatSelectTestingModule([
       CompWithCustomSelect,
       CustomSelectAccessor,
     ])));
@@ -2737,7 +2792,7 @@ describe('MatSelect', () => {
   });
 
   describe('with a falsy value', () => {
-    beforeEach(async(() => configureMatSelectTestingModule([FalsyValueSelect])));
+    beforeEach(waitForAsync(() => configureMatSelectTestingModule([FalsyValueSelect])));
 
     it('should be able to programmatically select a falsy option', fakeAsync(() => {
       const fixture = TestBed.createComponent(FalsyValueSelect);
@@ -2756,7 +2811,7 @@ describe('MatSelect', () => {
   });
 
   describe('with OnPush', () => {
-    beforeEach(async(() => configureMatSelectTestingModule([
+    beforeEach(waitForAsync(() => configureMatSelectTestingModule([
       BasicSelectOnPush,
       BasicSelectOnPushPreselected,
     ])));
@@ -2792,7 +2847,7 @@ describe('MatSelect', () => {
   });
 
   describe('with custom trigger', () => {
-    beforeEach(async(() => configureMatSelectTestingModule([SelectWithCustomTrigger])));
+    beforeEach(waitForAsync(() => configureMatSelectTestingModule([SelectWithCustomTrigger])));
 
     it('should allow the user to customize the label', fakeAsync(() => {
       const fixture = TestBed.createComponent(SelectWithCustomTrigger);
@@ -2809,7 +2864,7 @@ describe('MatSelect', () => {
   });
 
   describe('when reseting the value by setting null or undefined', () => {
-    beforeEach(async(() => configureMatSelectTestingModule([ResetValuesSelect])));
+    beforeEach(waitForAsync(() => configureMatSelectTestingModule([ResetValuesSelect])));
 
     let fixture: ComponentFixture<ResetValuesSelect>;
     let trigger: HTMLElement;
@@ -2903,8 +2958,46 @@ describe('MatSelect', () => {
         }));
   });
 
+  describe('with reset option and a form control', () => {
+    let fixture: ComponentFixture<SelectWithResetOptionAndFormControl>;
+    let options: HTMLElement[];
+
+    beforeEach(fakeAsync(() => {
+      configureMatSelectTestingModule([SelectWithResetOptionAndFormControl]);
+      fixture = TestBed.createComponent(SelectWithResetOptionAndFormControl);
+      fixture.detectChanges();
+      fixture.debugElement.query(By.css('.mat-select-trigger'))!.nativeElement.click();
+      fixture.detectChanges();
+      options = Array.from(overlayContainerElement.querySelectorAll('mat-option'));
+    }));
+
+    it('should set the select value', fakeAsync(() => {
+      fixture.componentInstance.control.setValue('a');
+      fixture.detectChanges();
+      expect(fixture.componentInstance.select.value).toBe('a');
+    }));
+
+    it('should reset the control value', fakeAsync(() => {
+      fixture.componentInstance.control.setValue('a');
+      fixture.detectChanges();
+
+      options[0].click();
+      fixture.detectChanges();
+      flush();
+      expect(fixture.componentInstance.control.value).toBe(undefined);
+    }));
+
+    it('should reflect the value in the form control', fakeAsync(() => {
+      options[1].click();
+      fixture.detectChanges();
+      flush();
+      expect(fixture.componentInstance.select.value).toBe('a');
+      expect(fixture.componentInstance.control.value).toBe('a');
+    }));
+  });
+
   describe('without Angular forms', () => {
-    beforeEach(async(() => configureMatSelectTestingModule([
+    beforeEach(waitForAsync(() => configureMatSelectTestingModule([
       BasicSelectWithoutForms,
       BasicSelectWithoutFormsPreselected,
       BasicSelectWithoutFormsMultiple,
@@ -3102,7 +3195,7 @@ describe('MatSelect', () => {
       expect(spy).toHaveBeenCalledWith('steak-0');
     }));
 
-    it('should set the value when options are clicked', fakeAsync(() => {
+    it('should select the active option when tabbing away while open', fakeAsync(() => {
       const fixture = TestBed.createComponent(BasicSelectWithoutForms);
       fixture.detectChanges();
       const select = fixture.nativeElement.querySelector('.mat-select');
@@ -3129,6 +3222,33 @@ describe('MatSelect', () => {
       expect(trigger.textContent).toContain('Sandwich');
     }));
 
+    it('should not select the active option when tabbing away while close', fakeAsync(() => {
+      const fixture = TestBed.createComponent(BasicSelectWithoutForms);
+      fixture.detectChanges();
+      const select = fixture.nativeElement.querySelector('.mat-select');
+
+      expect(fixture.componentInstance.selectedFood).toBeFalsy();
+
+      const trigger = fixture.nativeElement.querySelector('.mat-select-trigger');
+
+      trigger.click();
+      fixture.detectChanges();
+      flush();
+
+      dispatchKeyboardEvent(select, 'keydown', DOWN_ARROW);
+      fixture.detectChanges();
+      dispatchKeyboardEvent(select, 'keydown', DOWN_ARROW);
+      fixture.detectChanges();
+      dispatchKeyboardEvent(select, 'keydown', ESCAPE);
+      fixture.detectChanges();
+
+      dispatchKeyboardEvent(select, 'keydown', TAB);
+      fixture.detectChanges();
+      flush();
+
+      expect(fixture.componentInstance.selectedFood).toBeFalsy();
+    }));
+
     it('should not change the multiple value selection when tabbing away', fakeAsync(() => {
       const fixture = TestBed.createComponent(BasicSelectWithoutFormsMultiple);
       fixture.detectChanges();
@@ -3153,11 +3273,68 @@ describe('MatSelect', () => {
           .toBeFalsy('Expected no value after tabbing away.');
     }));
 
+    it('should emit once when a reset value is selected', fakeAsync(() => {
+      const fixture = TestBed.createComponent(BasicSelectWithoutForms);
+      const instance = fixture.componentInstance;
+      const spy = jasmine.createSpy('change spy');
+
+      instance.selectedFood = 'sandwich-2';
+      instance.foods[0].value = null;
+      fixture.detectChanges();
+
+      const subscription = instance.select.selectionChange.subscribe(spy);
+
+      fixture.debugElement.query(By.css('.mat-select-trigger')).nativeElement.click();
+      fixture.detectChanges();
+      flush();
+
+      (overlayContainerElement.querySelector('mat-option') as HTMLElement).click();
+      fixture.detectChanges();
+      flush();
+
+      expect(spy).toHaveBeenCalledTimes(1);
+
+      subscription.unsubscribe();
+    }));
+
+    it('should not emit the change event multiple times when a reset option is ' +
+      'selected twice in a row', fakeAsync(() => {
+        const fixture = TestBed.createComponent(BasicSelectWithoutForms);
+        const instance = fixture.componentInstance;
+        const spy = jasmine.createSpy('change spy');
+
+        instance.foods[0].value = null;
+        fixture.detectChanges();
+
+        const subscription = instance.select.selectionChange.subscribe(spy);
+
+        fixture.debugElement.query(By.css('.mat-select-trigger')).nativeElement.click();
+        fixture.detectChanges();
+        flush();
+
+        (overlayContainerElement.querySelector('mat-option') as HTMLElement).click();
+        fixture.detectChanges();
+        flush();
+
+        expect(spy).not.toHaveBeenCalled();
+
+        fixture.debugElement.query(By.css('.mat-select-trigger')).nativeElement.click();
+        fixture.detectChanges();
+        flush();
+
+        (overlayContainerElement.querySelector('mat-option') as HTMLElement).click();
+        fixture.detectChanges();
+        flush();
+
+        expect(spy).not.toHaveBeenCalled();
+
+        subscription.unsubscribe();
+      }));
 
   });
 
   describe('with option centering disabled', () => {
-    beforeEach(async(() => configureMatSelectTestingModule([
+    beforeEach(waitForAsync(() => configureMatSelectTestingModule([
       SelectWithoutOptionCentering,
     ])));
 
@@ -3188,7 +3365,7 @@ describe('MatSelect', () => {
   });
 
   describe('positioning', () => {
-    beforeEach(async(() => configureMatSelectTestingModule([
+    beforeEach(waitForAsync(() => configureMatSelectTestingModule([
       BasicSelect,
       MultiSelect,
       SelectWithGroups,
@@ -4052,7 +4229,7 @@ describe('MatSelect', () => {
   });
 
   describe('with multiple selection', () => {
-    beforeEach(async(() => configureMatSelectTestingModule([
+    beforeEach(waitForAsync(() => configureMatSelectTestingModule([
       MultiSelect,
       MultiSelectWithLotsOfOptions
     ])));
@@ -4329,8 +4506,7 @@ describe('MatSelect', () => {
       fixture.componentInstance.select.open();
       fixture.detectChanges();
 
-      const event = createKeyboardEvent('keydown', A, selectElement);
-      Object.defineProperty(event, 'ctrlKey', {get: () => true});
+      const event = createKeyboardEvent('keydown', A, undefined, {control: true});
       dispatchEvent(selectElement, event);
       fixture.detectChanges();
 
@@ -4360,8 +4536,7 @@ describe('MatSelect', () => {
       fixture.componentInstance.select.open();
       fixture.detectChanges();
 
-      const event = createKeyboardEvent('keydown', A, selectElement);
-      Object.defineProperty(event, 'ctrlKey', {get: () => true});
+      const event = createKeyboardEvent('keydown', A, undefined, {control: true});
       dispatchEvent(selectElement, event);
       fixture.detectChanges();
 
@@ -4387,8 +4562,7 @@ describe('MatSelect', () => {
       fixture.componentInstance.select.open();
       fixture.detectChanges();
 
-      const event = createKeyboardEvent('keydown', A, selectElement);
-      Object.defineProperty(event, 'ctrlKey', {get: () => true});
+      const event = createKeyboardEvent('keydown', A, undefined, {control: true});
       dispatchEvent(selectElement, event);
       fixture.detectChanges();
 
@@ -4427,8 +4601,7 @@ describe('MatSelect', () => {
       fixture.componentInstance.select.open();
       fixture.detectChanges();
 
-      const event = createKeyboardEvent('keydown', A, selectElement);
-      Object.defineProperty(event, 'ctrlKey', {get: () => true});
+      const event = createKeyboardEvent('keydown', A, undefined, {control: true});
       dispatchEvent(selectElement, event);
       fixture.detectChanges();
 
@@ -4450,21 +4623,33 @@ describe('MatSelect', () => {
 
   });
 
-  it('should be able to provide default values through an injection token', () => {
+  it('should be able to provide default values through an injection token', fakeAsync(() => {
     configureMatSelectTestingModule([NgModelSelect], [{
       provide: MAT_SELECT_CONFIG,
       useValue: {
         disableOptionCentering: true,
-        typeaheadDebounceInterval: 1337
+        typeaheadDebounceInterval: 1337,
+        overlayPanelClass: 'test-panel-class',
       } as MatSelectConfig
     }]);
     const fixture = TestBed.createComponent(NgModelSelect);
     fixture.detectChanges();
     const select = fixture.componentInstance.select;
+    select.open();
+    fixture.detectChanges();
+    flush();
 
     expect(select.disableOptionCentering).toBe(true);
     expect(select.typeaheadDebounceInterval).toBe(1337);
-  });
+    expect(document.querySelector('.cdk-overlay-pane')?.classList).toContain('test-panel-class');
+  }));
+
+  it('should not not throw if the select is inside an ng-container with ngIf', fakeAsync(() => {
+    configureMatSelectTestingModule([SelectInNgContainer]);
+    const fixture = TestBed.createComponent(SelectInNgContainer);
+    expect(() => fixture.detectChanges()).not.toThrow();
+  }));
+
 });
 
 
@@ -5285,3 +5470,40 @@ class MultiSelectWithLotsOfOptions {
     this.value = [];
   }
 }
+
+
+@Component({
+  selector: 'basic-select-with-reset',
+  template: `
+    <mat-form-field>
+      <mat-select [formControl]="control">
+        <mat-option>Reset</mat-option>
+        <mat-option value="a">A</mat-option>
+        <mat-option value="b">B</mat-option>
+        <mat-option value="c">C</mat-option>
+      </mat-select>
+    </mat-form-field>
+  `
+})
+class SelectWithResetOptionAndFormControl {
+  @ViewChild(MatSelect) select: MatSelect;
+  @ViewChildren(MatOption) options: QueryList<MatOption>;
+  control = new FormControl();
+}
+
+
+@Component({
+  selector: 'select-with-placeholder-in-ngcontainer-with-ngIf',
+  template: `
+    <mat-form-field>
+      <ng-container *ngIf="true">
+        <mat-select placeholder="Product Area">
+          <mat-option value="a">A</mat-option>
+          <mat-option value="b">B</mat-option>
+          <mat-option value="c">C</mat-option>
+        </mat-select>
+      </ng-container>
+    </mat-form-field>
+  `
+})
+class SelectInNgContainer {}

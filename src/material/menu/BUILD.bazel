@@ -21,6 +21,7 @@ ng_module(
     assets = [":menu.css"] + glob(["**/*.html"]),
     module_name = "@angular/material/menu",
     deps = [
+        "//src:dev_mode_types",
         "//src/cdk/a11y",
         "//src/cdk/bidi",
         "//src/cdk/coercion",
@@ -28,6 +29,7 @@ ng_module(
         "//src/cdk/overlay",
         "//src/cdk/platform",
         "//src/cdk/portal",
+        "//src/cdk/scrolling",
         "//src/material/core",
         "@npm//@angular/animations",
         "@npm//@angular/common",

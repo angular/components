@@ -21,7 +21,9 @@ ng_module(
     module_name = "@angular/material-experimental/mdc-table",
     deps = [
         "//src/cdk/table",
-        "//src/material/core",
+        "//src/material-experimental/mdc-core",
+        "//src/material-experimental/mdc-paginator",
+        "//src/material/sort",
         "@npm//@angular/core",
         "@npm//material-components-web",
     ],
@@ -44,6 +46,7 @@ sass_binary(
     deps = [
         "//src/material-experimental/mdc-helpers:mdc_helpers_scss_lib",
         "//src/material-experimental/mdc-helpers:mdc_scss_deps_lib",
+        "//src/material/core:core_scss_lib",
     ],
 )
 

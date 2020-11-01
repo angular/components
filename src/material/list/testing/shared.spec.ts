@@ -180,8 +180,8 @@ function runBaseListFunctionalityTests<
     it('should get harness loader for list item content', async () => {
       const items = await simpleListHarness.getItems();
       expect(items.length).toBe(3);
-      const item2Loader = await items[1].getHarnessLoaderForContent();
-      expect(await item2Loader.getHarness(TestItemContentHarness)).not.toBeNull();
+      const childHarness = await items[1].getHarness(TestItemContentHarness);
+      expect(childHarness).not.toBeNull();
     });
   });
 }
@@ -395,8 +395,8 @@ export function runHarnessTests(
         <mat-list-item>
           <div matLine>Item </div>
           <div matLine>1</div>
-          <svg matListIcon></svg>
-          <svg matListAvatar></svg>
+          <div matListIcon>icon</div>
+          <div matListAvatar>Avatar</div>
         </mat-list-item>
         <div matSubheader>Section 1</div>
         <mat-divider></mat-divider>
@@ -419,8 +419,8 @@ class ListHarnessTest {}
         <mat-list-item (click)="lastClicked = 'Item 1'">
           <div matLine>Item </div>
           <div matLine>1</div>
-          <svg matListIcon></svg>
-          <svg matListAvatar></svg>
+          <div matListIcon>icon</div>
+          <div matListAvatar>Avatar</div>
         </mat-list-item>
         <div matSubheader>Section 1</div>
         <mat-divider></mat-divider>
@@ -445,8 +445,8 @@ class ActionListHarnessTest {
         <a mat-list-item (click)="onClick($event, 'Item 1')">
           <div matLine>Item </div>
           <div matLine>1</div>
-          <svg matListIcon></svg>
-          <svg matListAvatar></svg>
+          <div matListIcon>icon</div>
+          <div matListAvatar>Avatar</div>
         </a>
         <div matSubheader>Section 1</div>
         <mat-divider></mat-divider>
@@ -476,8 +476,8 @@ class NavListHarnessTest {
       <mat-list-option checkboxPosition="before">
         <div matLine>Item </div>
         <div matLine>1</div>
-        <svg matListIcon></svg>
-        <svg matListAvatar></svg>
+        <div matListIcon>icon</div>
+        <div matListAvatar>Avatar</div>
       </mat-list-option>
       <div matSubheader>Section 1</div>
       <mat-divider></mat-divider>

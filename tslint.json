@@ -1,4 +1,7 @@
 {
+  "extends": [
+    "rxjs-tslint-rules"
+  ],
   "rulesDirectory": [
     "./tools/tslint-rules/",
     "node_modules/vrsource-tslint-rules/rules",
@@ -6,17 +9,16 @@
   ],
   "rules": {
     "max-line-length": [true, {
-        "limit": 100,
-        "check-strings": true,
-        "check-regex": true,
-        "ignore-pattern": "//\\s+https?://"
+      "limit": 100,
+      "check-strings": true,
+      "check-regex": true,
+      "ignore-pattern": "//\\s+https?://"
       }
     ],
     // Disable this flag because of SHA tslint#48b0c597f9257712c7d1f04b55ed0aa60e333f6a
     // TSLint now shows warnings if types for properties are inferred. This rule needs to be
     // disabled because all properties need to have explicit types set to work for Dgeni.
     "no-inferrable-types": false,
-    "class-name": true,
     "comment-format": [
       true,
       "check-space"
@@ -88,7 +90,9 @@
       ["xit"],
       ["xdescribe"],
       {"name": ["first"], "message": "Use take(1) instead."},
-      {"name": ["Object", "assign"], "message": "Use the spread operator instead."}
+      {"name": ["Object", "assign"], "message": "Use the spread operator instead."},
+      {"name": ["*", "asObservable"], "message": "Cast to Observable type instead."},
+      {"name": ["isDevMode"], "message": "Use `typeof ngDevMode === 'undefined' || ngDevMode` instead"}
     ],
     // Avoids inconsistent linebreak styles in source files. Forces developers to use LF linebreaks.
     "linebreak-style": [true, "LF"],
@@ -97,6 +101,7 @@
     "jsdoc-format": [true, "check-multiline-start"],
     "no-duplicate-imports": true,
     "await-promise": true,
+    "array-type": [true, "array"],
 
     // Codelyzer
     "template-banana-in-box": true,
@@ -106,13 +111,17 @@
     "template-no-negated-async": true,
     "use-lifecycle-interface": true,
 
+    // RxJS
+    "rxjs-no-unsafe-takeuntil": true,
+    "rxjs-no-unsafe-catch": true,
+
     // Custom Rules
     "ts-loader": true,
     "no-exposed-todo": true,
     "no-import-export-spacing": true,
-    "no-private-getters": true,
+    "no-private-getters": [true, "^_"],
     "no-undecorated-base-class-di": true,
-    "no-undecorated-class-with-ng-fields": true,
+    "no-undecorated-class-with-angular-features": true,
     "setters-after-getters": true,
     "ng-on-changes-property-access": true,
     "require-breaking-change-version": true,
@@ -120,11 +129,20 @@
     "no-nested-ternary": true,
     "prefer-const-enum": true,
     "no-lifecycle-invocation": [true, "**/!(*.spec).ts"],
+    "lightweight-tokens": [
+      true,
+      ["src/**/!(*.spec).ts"],
+      // Directionality is always used in Angular Material and therefore does not
+      // need a lightweight token. Date Adapter is not very significant and does not
+      // need a dedicated token.
+      ["Directionality", "DateAdapter"]
+    ],
     "coercion-types": [true,
       ["coerceBooleanProperty", "coerceCssPixelValue", "coerceNumberProperty"],
       {
         "CanDisable": ["disabled"],
-        "CanDisableRipple": ["disableRipple"]
+        "CanDisableRipple": ["disableRipple"],
+        "HasTabIndex": ["tabIndex"]
       }
     ],
     "no-host-decorator-in-concrete": [
@@ -135,6 +153,7 @@
     "member-naming": [true, {
       "private": "^_"
     }],
+    "symbol-naming": [true, "^_?[A-Z][a-zA-Z0-9]*$"],
     "validate-decorators": [true, {
       "Component": {
         "argument": 0,
@@ -169,7 +188,8 @@
     }, "src/!(e2e-app|components-examples|universal-app|dev-app)/**/!(*.spec).ts"],
     "require-license-banner": [
       true,
-      "src/!(e2e-app|components-examples|universal-app)/**/!(*.spec).ts"
+      "src/!(e2e-app|components-examples|universal-app)/**/!(*.spec).ts",
+      "test/benchmarks/**/*.ts"
     ],
     "no-cross-entry-point-relative-imports": [
       true,

@@ -51,7 +51,7 @@ export declare const matSortAnimations: {
     readonly allowChildren: AnimationTriggerMetadata;
 };
 
-export declare class MatSortHeader extends _MatSortHeaderMixinBase implements CanDisable, MatSortable, OnDestroy, OnInit {
+export declare class MatSortHeader extends _MatSortHeaderMixinBase implements CanDisable, MatSortable, OnDestroy, OnInit, AfterViewInit {
     _arrowDirection: SortDirection;
     _columnDef: MatSortHeaderColumnDef;
     _disableViewStateAnimation: boolean;
@@ -64,18 +64,20 @@ export declare class MatSortHeader extends _MatSortHeaderMixinBase implements Ca
     set disableClear(v: boolean);
     id: string;
     start: 'asc' | 'desc';
-    constructor(_intl: MatSortHeaderIntl, changeDetectorRef: ChangeDetectorRef, _sort: MatSort, _columnDef: MatSortHeaderColumnDef,
-    _focusMonitor?: FocusMonitor | undefined, _elementRef?: ElementRef<HTMLElement> | undefined);
-    _getAriaSortAttribute(): "ascending" | "descending" | null;
+    constructor(_intl: MatSortHeaderIntl, changeDetectorRef: ChangeDetectorRef, _sort: MatSort, _columnDef: MatSortHeaderColumnDef, _focusMonitor: FocusMonitor, _elementRef: ElementRef<HTMLElement>);
+    _getAriaSortAttribute(): "none" | "ascending" | "descending";
     _getArrowDirectionState(): string;
     _getArrowViewState(): string;
     _handleClick(): void;
+    _handleKeydown(event: KeyboardEvent): void;
     _isDisabled(): boolean;
     _isSorted(): boolean;
     _renderArrow(): boolean;
     _setAnimationTransitionState(viewState: ArrowViewStateTransition): void;
     _setIndicatorHintVisible(visible: boolean): void;
+    _toggleOnInteraction(): void;
     _updateArrowDirection(): void;
+    ngAfterViewInit(): void;
     ngOnDestroy(): void;
     ngOnInit(): void;
     static ngAcceptInputType_disableClear: BooleanInput;

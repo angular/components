@@ -7,7 +7,13 @@
  */
 
 import {ChangeDetectionStrategy, Component, OnInit, ViewEncapsulation} from '@angular/core';
-import {CDK_TABLE_TEMPLATE, CdkTable} from '@angular/cdk/table';
+import {
+  CDK_TABLE_TEMPLATE,
+  CdkTable,
+  _CoalescedStyleScheduler,
+  _COALESCED_STYLE_SCHEDULER,
+} from '@angular/cdk/table';
+import {_DisposeViewRepeaterStrategy, _VIEW_REPEATER_STRATEGY} from '@angular/cdk/collections';
 
 @Component({
   selector: 'table[mat-table]',
@@ -16,8 +22,15 @@ import {CDK_TABLE_TEMPLATE, CdkTable} from '@angular/cdk/table';
   styleUrls: ['table.css'],
   host: {
     'class': 'mat-mdc-table mdc-data-table__table',
+    '[class.mdc-table-fixed-layout]': 'fixedLayout',
   },
-  providers: [{provide: CdkTable, useExisting: MatTable}],
+  providers: [
+    {provide: CdkTable, useExisting: MatTable},
+    {provide: _COALESCED_STYLE_SCHEDULER, useClass: _CoalescedStyleScheduler},
+    // TODO(michaeljamesparsons) Abstract the view repeater strategy to a directive API so this code
+    //  is only included in the build if used.
+    {provide: _VIEW_REPEATER_STRATEGY, useClass: _DisposeViewRepeaterStrategy},
+  ],
   encapsulation: ViewEncapsulation.None,
   // See note on CdkTable for explanation on why this uses the default change detection strategy.
   // tslint:disable-next-line:validate-decorators
@@ -26,6 +39,9 @@ import {CDK_TABLE_TEMPLATE, CdkTable} from '@angular/cdk/table';
 export class MatTable<T> extends CdkTable<T> implements OnInit {
   /** Overrides the sticky CSS class set by the `CdkTable`. */
   protected stickyCssClass = 'mat-mdc-table-sticky';
+
+  /** Overrides the need to add position: sticky on every sticky cell element in `CdkTable`. */
+  protected needsPositionStickyOnElement = false;
 
   // After ngOnInit, the `CdkTable` has created and inserted the table sections (thead, tbody,
   // tfoot). MDC requires the `mdc-data-table__content` class to be added to the body.

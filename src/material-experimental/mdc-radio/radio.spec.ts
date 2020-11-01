@@ -1,4 +1,4 @@
-import {async, ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/testing';
+import {waitForAsync, ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/testing';
 import {FormControl, FormsModule, NgModel, ReactiveFormsModule} from '@angular/forms';
 import {Component, DebugElement, ViewChild} from '@angular/core';
 import {By} from '@angular/platform-browser';
@@ -12,7 +12,7 @@ import {
 } from './index';
 
 describe('MDC-based MatRadio', () => {
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [MatRadioModule, FormsModule, ReactiveFormsModule],
       declarations: [
@@ -44,7 +44,7 @@ describe('MDC-based MatRadio', () => {
     let radioInstances: MatRadioButton[];
     let testComponent: RadiosInsideRadioGroup;
 
-    beforeEach(async(() => {
+    beforeEach(waitForAsync(() => {
       fixture = TestBed.createComponent(RadiosInsideRadioGroup);
       fixture.detectChanges();
 
@@ -399,7 +399,7 @@ describe('MDC-based MatRadio', () => {
           radioNativeElements.map(element => element.querySelector('.mat-radio-ripple')!);
 
       expect(radioRippleNativeElements
-          .every(element => element.classList.contains('mat-focus-indicator'))).toBe(true);
+          .every(element => element.classList.contains('mat-mdc-focus-indicator'))).toBe(true);
     });
 
   });
@@ -784,6 +784,16 @@ describe('MDC-based MatRadio', () => {
           .toBe(4, 'Expected the tabindex to be set to "4".');
     });
 
+    it('should remove the tabindex from the host element', () => {
+      const predefinedFixture = TestBed.createComponent(RadioButtonWithPredefinedTabindex);
+      predefinedFixture.detectChanges();
+
+      const radioButtonEl =
+          predefinedFixture.debugElement.query(By.css('.mat-mdc-radio-button'))!.nativeElement;
+
+      expect(radioButtonEl.getAttribute('tabindex')).toBe('-1');
+    });
+
     it('should set the tabindex to -1 on the host element', () => {
       const predefinedFixture = TestBed.createComponent(RadioButtonWithPredefinedTabindex);
       predefinedFixture.detectChanges();
@@ -792,6 +802,16 @@ describe('MDC-based MatRadio', () => {
           predefinedFixture.debugElement.query(By.css('.mat-mdc-radio-button'))!.nativeElement;
 
       expect(radioButtonEl.getAttribute('tabindex')).toBe('-1');
+    });
+
+    it('should forward a pre-defined tabindex to the underlying input', () => {
+      const predefinedFixture = TestBed.createComponent(RadioButtonWithPredefinedTabindex);
+      predefinedFixture.detectChanges();
+
+      const radioButtonInput = predefinedFixture.debugElement
+        .query(By.css('.mat-mdc-radio-button input'))!.nativeElement as HTMLInputElement;
+
+      expect(radioButtonInput.getAttribute('tabindex')).toBe('5');
     });
 
     it('should remove the aria attributes from the host element', () => {
@@ -824,7 +844,7 @@ describe('MDC-based MatRadio', () => {
     let radioDebugElements: DebugElement[];
     let radioInstances: MatRadioButton[];
 
-    beforeEach(async(() => {
+    beforeEach(waitForAsync(() => {
       fixture = TestBed.createComponent(InterleavedRadioGroup);
       fixture.detectChanges();
 
@@ -842,7 +862,7 @@ describe('MDC-based MatRadio', () => {
 
 describe('MatRadioDefaultOverrides', () => {
   describe('when MAT_RADIO_DEFAULT_OPTIONS overridden', () => {
-    beforeEach(async(() => {
+    beforeEach(waitForAsync(() => {
       TestBed.configureTestingModule({
         imports: [MatRadioModule, FormsModule],
         declarations: [DefaultRadioButton, RadioButtonWithColorBinding],
@@ -1016,7 +1036,7 @@ class TranscludingWrapper {}
 
 
 @Component({
-  template: `<mat-radio-button tabindex="0"></mat-radio-button>`
+  template: `<mat-radio-button tabindex="5"></mat-radio-button>`
 })
 class RadioButtonWithPredefinedTabindex {}
 

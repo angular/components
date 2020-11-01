@@ -12,7 +12,7 @@ import {CheckboxHarnessFilters} from '@angular/material/checkbox/testing';
 
 /** Harness for interacting with a MDC-based mat-checkbox in tests. */
 export class MatCheckboxHarness extends ComponentHarness {
-  static hostSelector = 'mat-checkbox';
+  static hostSelector = '.mat-mdc-checkbox';
 
   /**
    * Gets a `HarnessPredicate` that can be used to search for a checkbox with specific attributes.
@@ -100,6 +100,11 @@ export class MatCheckboxHarness extends ComponentHarness {
   /** Blurs the checkbox and returns a void promise that indicates when the action is complete. */
   async blur(): Promise<void> {
     return (await this._input()).blur();
+  }
+
+  /** Whether the checkbox is focused. */
+  async isFocused(): Promise<boolean> {
+    return (await this._input()).isFocused();
   }
 
   /**

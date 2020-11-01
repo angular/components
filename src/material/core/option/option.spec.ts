@@ -1,4 +1,4 @@
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import {waitForAsync, ComponentFixture, TestBed} from '@angular/core/testing';
 import {Component, DebugElement} from '@angular/core';
 import {By} from '@angular/platform-browser';
 import {
@@ -12,7 +12,7 @@ import {MatOption, MatOptionModule} from './index';
 
 describe('MatOption component', () => {
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [MatOptionModule],
       declarations: [BasicOption]
@@ -135,8 +135,7 @@ describe('MatOption component', () => {
     const subscription = optionInstance.onSelectionChange.subscribe(spy);
 
     [ENTER, SPACE].forEach(key => {
-      const event = createKeyboardEvent('keydown', key);
-      Object.defineProperty(event, 'shiftKey', {get: () => true});
+      const event = createKeyboardEvent('keydown', key, undefined, {shift: true});
       dispatchEvent(optionNativeElement, event);
       fixture.detectChanges();
 

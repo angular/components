@@ -1,26 +1,28 @@
 import {animate, style, transition, trigger} from '@angular/animations';
 import {FocusKeyManager} from '@angular/cdk/a11y';
-import {Directionality, Direction} from '@angular/cdk/bidi';
+import {Direction, Directionality} from '@angular/cdk/bidi';
 import {
   BACKSPACE,
   DELETE,
+  END,
   ENTER,
+  HOME,
   LEFT_ARROW,
   RIGHT_ARROW,
   SPACE,
   TAB,
-  HOME,
-  END,
 } from '@angular/cdk/keycodes';
 import {
   createKeyboardEvent,
+  dispatchEvent,
   dispatchFakeEvent,
   dispatchKeyboardEvent,
   dispatchMouseEvent,
-  typeInElement,
   MockNgZone,
+  typeInElement,
 } from '@angular/cdk/testing/private';
 import {
+  ChangeDetectionStrategy,
   Component,
   DebugElement,
   NgZone,
@@ -29,10 +31,17 @@ import {
   Type,
   ViewChild,
   ViewChildren,
-  ChangeDetectionStrategy,
 } from '@angular/core';
 import {ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/testing';
-import {FormControl, FormsModule, NgForm, ReactiveFormsModule, Validators} from '@angular/forms';
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  FormsModule,
+  NgForm,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {By} from '@angular/platform-browser';
 import {BrowserAnimationsModule, NoopAnimationsModule} from '@angular/platform-browser/animations';
@@ -103,6 +112,28 @@ describe('MatChipList', () => {
 
         expect(chips.toArray().every(chip => chip.disabled)).toBe(true);
       }));
+
+      it('should preserve the disabled state of a chip if the list gets re-enabled', () => {
+        const chipArray = chips.toArray();
+
+        chipArray[2].disabled = true;
+        fixture.detectChanges();
+
+        expect(chips.toArray().map(chip => chip.disabled))
+            .toEqual([false, false, true, false, false]);
+
+        chipListInstance.disabled = true;
+        fixture.detectChanges();
+
+        expect(chips.toArray().map(chip => chip.disabled))
+            .toEqual([true, true, true, true, true]);
+
+        chipListInstance.disabled = false;
+        fixture.detectChanges();
+
+        expect(chips.toArray().map(chip => chip.disabled))
+            .toEqual([false, false, true, false, false]);
+      });
 
     });
 
@@ -288,7 +319,6 @@ describe('MatChipList', () => {
           let nativeChips = chipListNativeElement.querySelectorAll('mat-chip');
           let lastNativeChip = nativeChips[nativeChips.length - 1] as HTMLElement;
 
-          let LEFT_EVENT = createKeyboardEvent('keydown', LEFT_ARROW, undefined, lastNativeChip);
           let array = chips.toArray();
           let lastIndex = array.length - 1;
           let lastItem = array[lastIndex];
@@ -298,7 +328,7 @@ describe('MatChipList', () => {
           expect(manager.activeItemIndex).toEqual(lastIndex);
 
           // Press the LEFT arrow
-          chipListInstance._keydown(LEFT_EVENT);
+          dispatchKeyboardEvent(lastNativeChip, 'keydown', LEFT_ARROW);
           chipListInstance._blur(); // Simulate focus leaving the list and going to the chip.
           fixture.detectChanges();
 
@@ -310,8 +340,6 @@ describe('MatChipList', () => {
           let nativeChips = chipListNativeElement.querySelectorAll('mat-chip');
           let firstNativeChip = nativeChips[0] as HTMLElement;
 
-          let RIGHT_EVENT: KeyboardEvent =
-            createKeyboardEvent('keydown', RIGHT_ARROW, undefined, firstNativeChip);
           let array = chips.toArray();
           let firstItem = array[0];
 
@@ -320,7 +348,7 @@ describe('MatChipList', () => {
           expect(manager.activeItemIndex).toEqual(0);
 
           // Press the RIGHT arrow
-          chipListInstance._keydown(RIGHT_EVENT);
+          dispatchKeyboardEvent(firstNativeChip, 'keydown', RIGHT_ARROW);
           chipListInstance._blur(); // Simulate focus leaving the list and going to the chip.
           fixture.detectChanges();
 
@@ -329,11 +357,9 @@ describe('MatChipList', () => {
         });
 
         it('should not handle arrow key events from non-chip elements', () => {
-          const event: KeyboardEvent =
-              createKeyboardEvent('keydown', RIGHT_ARROW, undefined, chipListNativeElement);
           const initialActiveIndex = manager.activeItemIndex;
 
-          chipListInstance._keydown(event);
+          dispatchKeyboardEvent(chipListNativeElement, 'keydown', RIGHT_ARROW);
           fixture.detectChanges();
 
           expect(manager.activeItemIndex)
@@ -343,14 +369,14 @@ describe('MatChipList', () => {
         it('should focus the first item when pressing HOME', () => {
           const nativeChips = chipListNativeElement.querySelectorAll('mat-chip');
           const lastNativeChip = nativeChips[nativeChips.length - 1] as HTMLElement;
-          const HOME_EVENT = createKeyboardEvent('keydown', HOME, undefined, lastNativeChip);
+          const HOME_EVENT = createKeyboardEvent('keydown', HOME);
           const array = chips.toArray();
           const lastItem = array[array.length - 1];
 
           lastItem.focus();
           expect(manager.activeItemIndex).toBe(array.length - 1);
 
-          chipListInstance._keydown(HOME_EVENT);
+          dispatchEvent(lastNativeChip, HOME_EVENT);
           fixture.detectChanges();
 
           expect(manager.activeItemIndex).toBe(0);
@@ -359,11 +385,11 @@ describe('MatChipList', () => {
 
         it('should focus the last item when pressing END', () => {
           const nativeChips = chipListNativeElement.querySelectorAll('mat-chip');
-          const END_EVENT = createKeyboardEvent('keydown', END, undefined, nativeChips[0]);
+          const END_EVENT = createKeyboardEvent('keydown', END);
 
           expect(manager.activeItemIndex).toBe(-1);
 
-          chipListInstance._keydown(END_EVENT);
+          dispatchEvent(nativeChips[0], END_EVENT);
           fixture.detectChanges();
 
           expect(manager.activeItemIndex).toBe(chips.length - 1);
@@ -382,8 +408,6 @@ describe('MatChipList', () => {
           let nativeChips = chipListNativeElement.querySelectorAll('mat-chip');
           let lastNativeChip = nativeChips[nativeChips.length - 1] as HTMLElement;
 
-          let RIGHT_EVENT: KeyboardEvent =
-              createKeyboardEvent('keydown', RIGHT_ARROW, undefined, lastNativeChip);
           let array = chips.toArray();
           let lastIndex = array.length - 1;
           let lastItem = array[lastIndex];
@@ -393,7 +417,7 @@ describe('MatChipList', () => {
           expect(manager.activeItemIndex).toEqual(lastIndex);
 
           // Press the RIGHT arrow
-          chipListInstance._keydown(RIGHT_EVENT);
+          dispatchKeyboardEvent(lastNativeChip, 'keydown', RIGHT_ARROW);
           chipListInstance._blur(); // Simulate focus leaving the list and going to the chip.
           fixture.detectChanges();
 
@@ -405,8 +429,6 @@ describe('MatChipList', () => {
           let nativeChips = chipListNativeElement.querySelectorAll('mat-chip');
           let firstNativeChip = nativeChips[0] as HTMLElement;
 
-          let LEFT_EVENT: KeyboardEvent =
-              createKeyboardEvent('keydown', LEFT_ARROW, undefined, firstNativeChip);
           let array = chips.toArray();
           let firstItem = array[0];
 
@@ -415,7 +437,7 @@ describe('MatChipList', () => {
           expect(manager.activeItemIndex).toEqual(0);
 
           // Press the LEFT arrow
-          chipListInstance._keydown(LEFT_EVENT);
+          dispatchKeyboardEvent(firstNativeChip, 'keydown', LEFT_ARROW);
           chipListInstance._blur(); // Simulate focus leaving the list and going to the chip.
           fixture.detectChanges();
 
@@ -460,15 +482,14 @@ describe('MatChipList', () => {
         let nativeChips = chipListNativeElement.querySelectorAll('mat-chip');
         let firstNativeChip = nativeChips[0] as HTMLElement;
 
-        let RIGHT_EVENT: KeyboardEvent =
-          createKeyboardEvent('keydown', RIGHT_ARROW, undefined, firstNativeChip);
+        let RIGHT_EVENT = createKeyboardEvent('keydown', RIGHT_ARROW);
         let array = chips.toArray();
         let firstItem = array[0];
 
         firstItem.focus();
         expect(manager.activeItemIndex).toBe(0);
 
-        chipListInstance._keydown(RIGHT_EVENT);
+        dispatchEvent(firstNativeChip, RIGHT_EVENT);
         chipListInstance._blur();
         fixture.detectChanges();
 
@@ -516,15 +537,13 @@ describe('MatChipList', () => {
 
         it('should not focus the last chip when press DELETE', () => {
           let nativeInput = fixture.nativeElement.querySelector('input');
-          let DELETE_EVENT: KeyboardEvent =
-              createKeyboardEvent('keydown', DELETE, nativeInput);
 
           // Focus the input
           nativeInput.focus();
           expect(manager.activeItemIndex).toBe(-1);
 
           // Press the DELETE key
-          chipListInstance._keydown(DELETE_EVENT);
+          dispatchKeyboardEvent(nativeInput, 'keydown', DELETE);
           fixture.detectChanges();
 
           // It doesn't focus the last chip
@@ -533,15 +552,13 @@ describe('MatChipList', () => {
 
         it('should focus the last chip when press BACKSPACE', () => {
           let nativeInput = fixture.nativeElement.querySelector('input');
-          let BACKSPACE_EVENT: KeyboardEvent =
-              createKeyboardEvent('keydown', BACKSPACE, undefined, nativeInput);
 
           // Focus the input
           nativeInput.focus();
           expect(manager.activeItemIndex).toBe(-1);
 
           // Press the BACKSPACE key
-          chipListInstance._keydown(BACKSPACE_EVENT);
+          dispatchKeyboardEvent(nativeInput, 'keydown', BACKSPACE);
           fixture.detectChanges();
 
           // It focuses the last chip
@@ -935,6 +952,23 @@ describe('MatChipList', () => {
           .toBeFalsy(`Expected chip with the old value not to be selected.`);
       });
     });
+
+    it('should keep the disabled state in sync if the form group is swapped and ' +
+      'disabled at the same time', fakeAsync(() => {
+        fixture = createComponent(ChipListInsideDynamicFormGroup);
+        fixture.detectChanges();
+        const instance = fixture.componentInstance;
+        const list: MatChipList = instance.chipList;
+
+        expect(list.disabled).toBe(false);
+        expect(list.chips.toArray().every(chip => chip.disabled)).toBe(false);
+
+        instance.assignGroup(true);
+        fixture.detectChanges();
+
+        expect(list.disabled).toBe(true);
+        expect(list.chips.toArray().every(chip => chip.disabled)).toBe(true);
+      }));
   });
 
   describe('chip list with chip input', () => {
@@ -1128,15 +1162,13 @@ describe('MatChipList', () => {
 
         it('should not focus the last chip when press DELETE', () => {
           let nativeInput = fixture.nativeElement.querySelector('input');
-          let DELETE_EVENT: KeyboardEvent =
-            createKeyboardEvent('keydown', DELETE, nativeInput);
 
           // Focus the input
           nativeInput.focus();
           expect(manager.activeItemIndex).toBe(-1);
 
           // Press the DELETE key
-          chipListInstance._keydown(DELETE_EVENT);
+          dispatchKeyboardEvent(nativeInput, 'keydown', DELETE);
           fixture.detectChanges();
 
           // It doesn't focus the last chip
@@ -1145,15 +1177,13 @@ describe('MatChipList', () => {
 
         it('should focus the last chip when press BACKSPACE', () => {
           let nativeInput = fixture.nativeElement.querySelector('input');
-          let BACKSPACE_EVENT: KeyboardEvent =
-            createKeyboardEvent('keydown', BACKSPACE, undefined, nativeInput);
 
           // Focus the input
           nativeInput.focus();
           expect(manager.activeItemIndex).toBe(-1);
 
           // Press the BACKSPACE key
-          chipListInstance._keydown(BACKSPACE_EVENT);
+          dispatchKeyboardEvent(nativeInput, 'keydown', BACKSPACE);
           fixture.detectChanges();
 
           // It focuses the last chip
@@ -1641,4 +1671,32 @@ class ChipListWithRemove {
 })
 class PreselectedChipInsideOnPush {
   control = new FormControl('Pizza');
+}
+
+
+@Component({
+  template: `
+    <form [formGroup]="form">
+      <mat-form-field>
+        <mat-chip-list formControlName="control">
+          <mat-chip>Pizza</mat-chip>
+          <mat-chip>Pasta</mat-chip>
+        </mat-chip-list>
+      </mat-form-field>
+    </form>
+  `
+})
+class ChipListInsideDynamicFormGroup {
+  @ViewChild(MatChipList) chipList: MatChipList;
+  form: FormGroup;
+
+  constructor(private _formBuilder: FormBuilder) {
+    this.assignGroup(false);
+  }
+
+  assignGroup(isDisabled: boolean) {
+    this.form = this._formBuilder.group({
+      control: {value: [], disabled: isDisabled}
+    });
+  }
 }

@@ -10,7 +10,8 @@ export declare class ActiveDescendantKeyManager<T> extends ListKeyManager<Highli
 }
 
 export declare class AriaDescriber implements OnDestroy {
-    constructor(_document: any);
+    constructor(_document: any,
+    _platform?: Platform | undefined);
     describe(hostElement: Element, message: string | HTMLElement): void;
     ngOnDestroy(): void;
     removeDescription(hostElement: Element, message: string | HTMLElement): void;
@@ -33,15 +34,16 @@ export declare class CdkAriaLive implements OnDestroy {
     static ɵfac: i0.ɵɵFactoryDef<CdkAriaLive, never>;
 }
 
-export declare class CdkMonitorFocus implements OnDestroy {
+export declare class CdkMonitorFocus implements AfterViewInit, OnDestroy {
     cdkFocusChange: EventEmitter<FocusOrigin>;
     constructor(_elementRef: ElementRef<HTMLElement>, _focusMonitor: FocusMonitor);
+    ngAfterViewInit(): void;
     ngOnDestroy(): void;
     static ɵdir: i0.ɵɵDirectiveDefWithMeta<CdkMonitorFocus, "[cdkMonitorElementFocus], [cdkMonitorSubtreeFocus]", never, {}, { "cdkFocusChange": "cdkFocusChange"; }, never>;
     static ɵfac: i0.ɵɵFactoryDef<CdkMonitorFocus, never>;
 }
 
-export declare class CdkTrapFocus implements OnDestroy, AfterContentInit, DoCheck {
+export declare class CdkTrapFocus implements OnDestroy, AfterContentInit, OnChanges, DoCheck {
     get autoCapture(): boolean;
     set autoCapture(value: boolean);
     get enabled(): boolean;
@@ -50,6 +52,7 @@ export declare class CdkTrapFocus implements OnDestroy, AfterContentInit, DoChec
     constructor(_elementRef: ElementRef<HTMLElement>, _focusTrapFactory: FocusTrapFactory, _document: any);
     ngAfterContentInit(): void;
     ngDoCheck(): void;
+    ngOnChanges(changes: SimpleChanges): void;
     ngOnDestroy(): void;
     static ngAcceptInputType_autoCapture: BooleanInput;
     static ngAcceptInputType_enabled: BooleanInput;
@@ -180,7 +183,7 @@ export interface Highlightable extends ListKeyManagerOption {
 export declare class InteractivityChecker {
     constructor(_platform: Platform);
     isDisabled(element: HTMLElement): boolean;
-    isFocusable(element: HTMLElement): boolean;
+    isFocusable(element: HTMLElement, config?: IsFocusableConfig): boolean;
     isTabbable(element: HTMLElement): boolean;
     isVisible(element: HTMLElement): boolean;
     static ɵfac: i0.ɵɵFactoryDef<InteractivityChecker, never>;
@@ -188,6 +191,10 @@ export declare class InteractivityChecker {
 }
 
 export declare function isFakeMousedownFromScreenReader(event: MouseEvent): boolean;
+
+export declare class IsFocusableConfig {
+    ignoreVisibility: boolean;
+}
 
 export declare class ListKeyManager<T extends ListKeyManagerOption> {
     get activeItem(): T | null;
@@ -207,6 +214,7 @@ export declare class ListKeyManager<T extends ListKeyManagerOption> {
     updateActiveItem(index: number): void;
     updateActiveItem(item: T): void;
     withAllowedModifierKeys(keys: ListKeyManagerModifierKey[]): this;
+    withHomeAndEnd(enabled?: boolean): this;
     withHorizontalOrientation(direction: 'ltr' | 'rtl' | null): this;
     withTypeAhead(debounceInterval?: number): this;
     withVerticalOrientation(enabled?: boolean): this;

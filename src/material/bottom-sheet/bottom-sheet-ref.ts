@@ -6,7 +6,6 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Location} from '@angular/common';
 import {ESCAPE, hasModifierKey} from '@angular/cdk/keycodes';
 import {OverlayRef} from '@angular/cdk/overlay';
 import {merge, Observable, Subject} from 'rxjs';
@@ -44,9 +43,7 @@ export class MatBottomSheetRef<T = any, R = any> {
 
   constructor(
     containerInstance: MatBottomSheetContainer,
-    private _overlayRef: OverlayRef,
-    // @breaking-change 8.0.0 `_location` parameter to be removed.
-    _location?: Location) {
+    private _overlayRef: OverlayRef) {
     this.containerInstance = containerInstance;
     this.disableClose = containerInstance.bottomSheetConfig.disableClose;
 
@@ -115,12 +112,12 @@ export class MatBottomSheetRef<T = any, R = any> {
 
   /** Gets an observable that is notified when the bottom sheet is finished closing. */
   afterDismissed(): Observable<R | undefined> {
-    return this._afterDismissed.asObservable();
+    return this._afterDismissed;
   }
 
   /** Gets an observable that is notified when the bottom sheet has opened and appeared. */
   afterOpened(): Observable<void> {
-    return this._afterOpened.asObservable();
+    return this._afterOpened;
   }
 
   /**

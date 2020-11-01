@@ -3,7 +3,6 @@
 @import '../../cdk/a11y/a11y';
 
 $mat-button-toggle-standard-padding: 0 12px !default;
-$mat-button-toggle-standard-height: 48px !default;
 $mat-button-toggle-standard-border-radius: 4px !default;
 
 $mat-button-toggle-legacy-padding: 0 16px !default;
@@ -104,7 +103,6 @@ $mat-button-toggle-legacy-border-radius: 2px !default;
   position: relative;
 
   .mat-button-toggle-appearance-standard & {
-    line-height: $mat-button-toggle-standard-height;
     padding: $mat-button-toggle-standard-padding;
   }
 }
@@ -136,10 +134,13 @@ $mat-button-toggle-legacy-border-radius: 2px !default;
 }
 
 @include cdk-high-contrast(active, off) {
-  .mat-button-toggle-checked {
-    &.mat-button-toggle-appearance-standard .mat-button-toggle-focus-overlay {
-      border-bottom: solid $mat-button-toggle-standard-height;
-    }
+  .mat-button-toggle-checked.mat-button-toggle-appearance-standard
+  .mat-button-toggle-focus-overlay {
+    // In high contrast mode, we use a border for the checked state because backgrounds
+    // can either be opaque or transparent. We set the border height to a value that is larger
+    // than usual button toggles are. This allows us to keep this high contrast style in the
+    // base component style, instead of making it dependent on height determined through density.
+    border-bottom: solid 500px;
   }
 }
 

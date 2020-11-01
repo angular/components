@@ -6,11 +6,15 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {ComponentHarness, HarnessLoader, HarnessPredicate} from '@angular/cdk/testing';
+import {
+  ContentContainerComponentHarness,
+  HarnessLoader,
+  HarnessPredicate,
+} from '@angular/cdk/testing';
 import {TabHarnessFilters} from './tab-harness-filters';
 
 /** Harness for interacting with a standard Angular Material tab-label in tests. */
-export class MatTabHarness extends ComponentHarness {
+export class MatTabHarness extends ContentContainerComponentHarness<string> {
   /** The selector for the host element of a `MatTab` instance. */
   static hostSelector = '.mat-tab-label';
 
@@ -68,8 +72,14 @@ export class MatTabHarness extends ComponentHarness {
   /**
    * Gets a `HarnessLoader` that can be used to load harnesses for components within the tab's
    * content area.
+   * @deprecated Use `getHarness` or `getChildLoader` instead.
+   * @breaking-change 12.0.0
    */
   async getHarnessLoaderForContent(): Promise<HarnessLoader> {
+    return this.getRootHarnessLoader();
+  }
+
+  protected async getRootHarnessLoader(): Promise<HarnessLoader> {
     const contentId = await this._getContentId();
     return this.documentRootLocatorFactory().harnessLoaderFor(`#${contentId}`);
   }

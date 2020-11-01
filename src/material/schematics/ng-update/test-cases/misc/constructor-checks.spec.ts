@@ -1,11 +1,11 @@
-import {createTestCaseSetup} from '@angular/cdk/schematics/testing';
-
-import {migrationCollection} from '../index.spec';
+import {createTestCaseSetup, resolveBazelPath} from '@angular/cdk/schematics/testing';
+import {MIGRATION_PATH} from '../../../index.spec';
 
 describe('constructor checks', () => {
   it('should properly report invalid constructor expression signatures', async () => {
-    const {removeTempDir, runFixers} = await createTestCaseSetup(
-        'migration-v6', migrationCollection, [require.resolve('./constructor-checks_input.ts')]);
+    const {runFixers} = await createTestCaseSetup(
+        'migration-v6', MIGRATION_PATH,
+        [resolveBazelPath(__dirname, './constructor-checks_input.ts')]);
 
     const {logOutput} = await runFixers();
 
@@ -41,7 +41,5 @@ describe('constructor checks', () => {
 
     expect(logOutput).toMatch(/Found "ExtendedDateAdapter".*super.*: super\(string, Platform\)/);
     expect(logOutput).toMatch(/Found "ExtendedDateAdapter".*: new \w+\(string, Platform\)/);
-
-    removeTempDir();
   });
 });

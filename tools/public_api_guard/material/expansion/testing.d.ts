@@ -16,7 +16,7 @@ export declare class MatAccordionHarness extends ComponentHarness {
     static with(options?: AccordionHarnessFilters): HarnessPredicate<MatAccordionHarness>;
 }
 
-export declare class MatExpansionPanelHarness extends ComponentHarness {
+export declare class MatExpansionPanelHarness extends ContentContainerComponentHarness<MatExpansionPanelSection> {
     blur(): Promise<void>;
     collapse(): Promise<void>;
     expand(): Promise<void>;
@@ -29,7 +29,15 @@ export declare class MatExpansionPanelHarness extends ComponentHarness {
     hasToggleIndicator(): Promise<boolean>;
     isDisabled(): Promise<boolean>;
     isExpanded(): Promise<boolean>;
+    isFocused(): Promise<boolean>;
     toggle(): Promise<void>;
     static hostSelector: string;
     static with(options?: ExpansionPanelHarnessFilters): HarnessPredicate<MatExpansionPanelHarness>;
+}
+
+export declare const enum MatExpansionPanelSection {
+    HEADER = ".mat-expansion-panel-header",
+    TITLE = ".mat-expansion-panel-header-title",
+    DESCRIPTION = ".mat-expansion-panel-header-description",
+    CONTENT = ".mat-expansion-panel-content"
 }

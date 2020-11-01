@@ -177,13 +177,16 @@ describe('MatPaginator', () => {
     const component = fixture.componentInstance;
     const formField: HTMLElement = fixture.nativeElement.querySelector('.mat-form-field');
 
-    expect(formField.classList).toContain('mat-primary');
-
     component.color = 'accent';
     fixture.detectChanges();
 
-    expect(formField.classList).not.toContain('mat-primary');
+    expect(formField.classList).not.toContain('mat-warn');
     expect(formField.classList).toContain('mat-accent');
+
+    component.color = 'warn';
+    fixture.detectChanges();
+    expect(formField.classList).toContain('mat-warn');
+    expect(formField.classList).not.toContain('mat-accent');
   });
 
   describe('when showing the first and last button', () => {
@@ -475,11 +478,11 @@ function getNextButton(fixture: ComponentFixture<any>) {
 }
 
 function getFirstButton(fixture: ComponentFixture<any>) {
-    return fixture.nativeElement.querySelector('.mat-paginator-navigation-first');
+  return fixture.nativeElement.querySelector('.mat-paginator-navigation-first');
 }
 
 function getLastButton(fixture: ComponentFixture<any>) {
-    return fixture.nativeElement.querySelector('.mat-paginator-navigation-last');
+  return fixture.nativeElement.querySelector('.mat-paginator-navigation-last');
 }
 
 @Component({

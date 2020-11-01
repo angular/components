@@ -1,15 +1,17 @@
 @import '../core/style/elevation';
 @import '../core/theming/palette';
 @import '../core/theming/theming';
+@import '../core/theming/check-duplicate-styles';
 @import '../core/typography/typography-utils';
 
 
-@mixin mat-menu-theme($theme) {
-  $background: map-get($theme, background);
-  $foreground: map-get($theme, foreground);
+@mixin mat-menu-color($config-or-theme) {
+  $config: mat-get-color-config($config-or-theme);
+  $background: map-get($config, background);
+  $foreground: map-get($config, foreground);
 
   .mat-menu-panel {
-    @include _mat-theme-overridable-elevation(4, $theme);
+    @include _mat-theme-overridable-elevation(4, $config);
     background: mat-color($background, 'card');
   }
 
@@ -39,7 +41,8 @@
   }
 }
 
-@mixin mat-menu-typography($config) {
+@mixin mat-menu-typography($config-or-theme) {
+  $config: mat-get-typography-config($config-or-theme);
   .mat-menu-item {
     font: {
       family: mat-font-family($config, body-1);
@@ -48,3 +51,25 @@
     }
   }
 }
+
+@mixin _mat-menu-density($config-or-theme) {}
+
+@mixin mat-menu-theme($theme-or-color-config) {
+  $theme: _mat-legacy-get-theme($theme-or-color-config);
+  @include _mat-check-duplicate-theme-styles($theme, 'mat-menu') {
+    $color: mat-get-color-config($theme);
+    $density: mat-get-density-config($theme);
+    $typography: mat-get-typography-config($theme);
+
+    @if $color != null {
+      @include mat-menu-color($color);
+    }
+    @if $density != null {
+      @include _mat-menu-density($density);
+    }
+    @if $typography != null {
+      @include mat-menu-typography($typography);
+    }
+  }
+}
+

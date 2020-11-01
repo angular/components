@@ -23,8 +23,8 @@ ng_module(
     module_name = "@angular/material-experimental/mdc-checkbox",
     deps = [
         "//src/cdk/coercion",
+        "//src/material-experimental/mdc-core",
         "//src/material/checkbox",
-        "//src/material/core",
         "@npm//@angular/animations",
         "@npm//@angular/common",
         "@npm//@angular/core",
@@ -52,6 +52,7 @@ sass_binary(
     deps = [
         "//src/material-experimental/mdc-helpers:mdc_helpers_scss_lib",
         "//src/material-experimental/mdc-helpers:mdc_scss_deps_lib",
+        "//src/material/core:core_scss_lib",
     ],
 )
 
@@ -65,6 +66,7 @@ ng_test_library(
         ":mdc-checkbox",
         "//src/cdk/testing/private",
         "//src/cdk/testing/testbed",
+        "//src/material-experimental/mdc-core",
         "//src/material/checkbox",
         "@npm//@angular/forms",
         "@npm//@angular/platform-browser",

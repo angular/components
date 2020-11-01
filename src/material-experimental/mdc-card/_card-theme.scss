@@ -4,14 +4,15 @@
 @import '@material/typography/mixins.import';
 @import '../mdc-helpers/mdc-helpers';
 
-@mixin mat-mdc-card-theme($theme) {
-  $foreground: map-get($theme, foreground);
-  $is-dark-theme: map-get($theme, is-dark);
+@mixin mat-mdc-card-color($config-or-theme) {
+  $config: mat-get-color-config($config-or-theme);
+  $foreground: map-get($config, foreground);
+  $is-dark-theme: map-get($config, is-dark);
 
   $orig-mdc-card-action-icon-color: $mdc-card-action-icon-color;
   $orig-mdc-card-outline-color: $mdc-card-outline-color;
 
-  @include mat-using-mdc-theme($theme) {
+  @include mat-using-mdc-theme($config) {
     $mdc-card-action-icon-color:
         rgba(mdc-theme-prop-value(on-surface), mdc-theme-text-emphasis(medium)) !global;
     $mdc-card-outline-color:
@@ -30,7 +31,8 @@
   $mdc-card-outline-color: $orig-mdc-card-outline-color !global;
 }
 
-@mixin mat-mdc-card-typography($config) {
+@mixin mat-mdc-card-typography($config-or-theme) {
+  $config: mat-get-typography-config($config-or-theme);
   @include mat-using-mdc-typography($config) {
     @include mdc-card-without-ripple($query: $mat-typography-styles-query);
 
@@ -42,6 +44,27 @@
 
     .mat-mdc-card-subtitle {
       @include mdc-typography(subtitle2);
+    }
+  }
+}
+
+@mixin mat-mdc-card-density($config-or-theme) {}
+
+@mixin mat-mdc-card-theme($theme-or-color-config) {
+  $theme: _mat-legacy-get-theme($theme-or-color-config);
+  @include _mat-check-duplicate-theme-styles($theme, 'mat-mdc-card') {
+    $color: mat-get-color-config($theme);
+    $density: mat-get-density-config($theme);
+    $typography: mat-get-typography-config($theme);
+
+    @if $color != null {
+      @include mat-mdc-card-color($color);
+    }
+    @if $density != null {
+      @include mat-mdc-card-density($density);
+    }
+    @if $typography != null {
+      @include mat-mdc-card-typography($typography);
     }
   }
 }

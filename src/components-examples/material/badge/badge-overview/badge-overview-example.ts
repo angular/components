@@ -6,6 +6,11 @@ import {Component} from '@angular/core';
 @Component({
   selector: 'badge-overview-example',
   templateUrl: 'badge-overview-example.html',
-  styleUrls: ['badge-overview-example.css'],
 })
-export class BadgeOverviewExample {}
+export class BadgeOverviewExample {
+  hidden = false;
+
+  toggleBadgeVisibility() {
+    this.hidden = !this.hidden;
+  }
+}

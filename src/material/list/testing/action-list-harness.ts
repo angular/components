@@ -15,7 +15,7 @@ import {getListItemPredicate, MatListItemHarnessBase} from './list-item-harness-
 export class MatActionListHarness extends MatListHarnessBase<
     typeof MatActionListItemHarness, MatActionListItemHarness, ActionListItemHarnessFilters> {
   /** The selector for the host element of a `MatActionList` instance. */
-  static hostSelector = 'mat-action-list';
+  static hostSelector = 'mat-action-list.mat-list';
 
   /**
    * Gets a `HarnessPredicate` that can be used to search for a `MatActionListHarness` that meets
@@ -33,9 +33,7 @@ export class MatActionListHarness extends MatListHarnessBase<
 /** Harness for interacting with an action list item. */
 export class MatActionListItemHarness extends MatListItemHarnessBase {
   /** The selector for the host element of a `MatListItem` instance. */
-  static hostSelector = ['mat-list-item', 'a[mat-list-item]', 'button[mat-list-item]']
-      .map(selector => `${MatActionListHarness.hostSelector} ${selector}`)
-      .join(',');
+  static hostSelector = `${MatActionListHarness.hostSelector} .mat-list-item`;
 
   /**
    * Gets a `HarnessPredicate` that can be used to search for a `MatActionListItemHarness` that
@@ -61,5 +59,10 @@ export class MatActionListItemHarness extends MatListItemHarnessBase {
   /** Blurs the action list item. */
   async blur(): Promise<void> {
     return (await this.host()).blur();
+  }
+
+  /** Whether the action list item is focused. */
+  async isFocused(): Promise<boolean> {
+    return (await this.host()).isFocused();
   }
 }

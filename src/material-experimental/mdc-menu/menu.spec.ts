@@ -14,12 +14,13 @@ import {
   QueryList,
   Type,
   Provider,
+  ChangeDetectionStrategy,
 } from '@angular/core';
 import {Direction, Directionality} from '@angular/cdk/bidi';
 import {OverlayContainer, Overlay} from '@angular/cdk/overlay';
 import {ESCAPE, LEFT_ARROW, RIGHT_ARROW, DOWN_ARROW, TAB, HOME, END} from '@angular/cdk/keycodes';
 import {MatMenu, MatMenuModule, MatMenuItem} from './index';
-import {MatRipple} from '@angular/material/core';
+import {MatRipple} from '@angular/material-experimental/mdc-core';
 import {
   dispatchKeyboardEvent,
   dispatchMouseEvent,
@@ -243,6 +244,42 @@ describe('MDC-based MatMenu', () => {
     expect(backdrop.classList).toContain('custom-backdrop');
   }));
 
+
+  it('should be able to set a custom class on the overlay panel', fakeAsync(() => {
+    const optionsProvider =  {
+      provide: MAT_MENU_DEFAULT_OPTIONS,
+      useValue: {overlayPanelClass: 'custom-panel-class'}
+    };
+    const fixture = createComponent(SimpleMenu, [optionsProvider], [FakeIcon]);
+
+    fixture.detectChanges();
+    fixture.componentInstance.trigger.openMenu();
+    fixture.detectChanges();
+    tick(500);
+
+    const overlayPane = <HTMLElement>overlayContainerElement.querySelector('.cdk-overlay-pane');
+
+    expect(overlayPane.classList).toContain('custom-panel-class');
+  }));
+
+  it('should be able to set a custom classes on the overlay panel', fakeAsync(() => {
+    const optionsProvider =  {
+      provide: MAT_MENU_DEFAULT_OPTIONS,
+      useValue: {overlayPanelClass: ['custom-panel-class-1', 'custom-panel-class-2']}
+    };
+    const fixture = createComponent(SimpleMenu, [optionsProvider], [FakeIcon]);
+
+    fixture.detectChanges();
+    fixture.componentInstance.trigger.openMenu();
+    fixture.detectChanges();
+    tick(500);
+
+    const overlayPane = <HTMLElement>overlayContainerElement.querySelector('.cdk-overlay-pane');
+
+    expect(overlayPane.classList).toContain('custom-panel-class-1');
+    expect(overlayPane.classList).toContain('custom-panel-class-2');
+  }));
+
   it('should restore focus to the root trigger when the menu was opened by mouse', fakeAsync(() => {
     const fixture = createComponent(SimpleMenu, [], [FakeIcon]);
     fixture.detectChanges();
@@ -405,9 +442,8 @@ describe('MDC-based MatMenu', () => {
     fixture.componentInstance.trigger.openMenu();
 
     const panel = overlayContainerElement.querySelector('.mat-mdc-menu-panel')!;
-    const event = createKeyboardEvent('keydown', ESCAPE);
+    const event = createKeyboardEvent('keydown', ESCAPE, undefined, {alt: true});
 
-    Object.defineProperty(event, 'altKey', {get: () => true});
     dispatchEvent(panel, event);
     fixture.detectChanges();
     tick(500);
@@ -592,10 +628,18 @@ describe('MDC-based MatMenu', () => {
     expect(fixture.componentInstance.items.first.getLabel()).toBe('Item');
   });
 
-  it('should filter out non-text nodes when figuring out the label', () => {
+  it('should filter out icon nodes when figuring out the label', () => {
     const fixture = createComponent(SimpleMenu, [], [FakeIcon]);
     fixture.detectChanges();
-    expect(fixture.componentInstance.items.last.getLabel()).toBe('Item with an icon');
+    const items = fixture.componentInstance.items.toArray();
+    expect(items[2].getLabel()).toBe('Item with an icon');
+  });
+
+  it('should get the label of an item if the text is not in a direct descendant node', () => {
+    const fixture = createComponent(SimpleMenu, [], [FakeIcon]);
+    fixture.detectChanges();
+    const items = fixture.componentInstance.items.toArray();
+    expect(items[3].getLabel()).toBe('Item with text inside span');
   });
 
   it('should set the proper focus origin when opening by mouse', fakeAsync(() => {
@@ -713,6 +757,13 @@ describe('MDC-based MatMenu', () => {
     }).toThrowError(/must pass in an mat-menu instance/);
   });
 
+  it('should throw if assigning a menu that contains the trigger', () => {
+    expect(() => {
+      const fixture = createComponent(InvalidRecursiveMenu, [], [FakeIcon]);
+      fixture.detectChanges();
+    }).toThrowError(/menu cannot contain its own trigger/);
+  });
+
   it('should be able to swap out a menu after the first time it is opened', fakeAsync(() => {
     const fixture = createComponent(DynamicPanelMenu);
     fixture.detectChanges();
@@ -788,8 +839,7 @@ describe('MDC-based MatMenu', () => {
 
     spyOn(items[0], 'focus').and.callThrough();
 
-    const event = createKeyboardEvent('keydown', HOME);
-    Object.defineProperty(event, 'altKey', {get: () => true});
+    const event = createKeyboardEvent('keydown', HOME, undefined, {alt: true});
 
     dispatchEvent(panel, event);
     fixture.detectChanges();
@@ -833,8 +883,7 @@ describe('MDC-based MatMenu', () => {
 
     spyOn(items[items.length - 1], 'focus').and.callThrough();
 
-    const event = createKeyboardEvent('keydown', END);
-    Object.defineProperty(event, 'altKey', {get: () => true});
+    const event = createKeyboardEvent('keydown', END, undefined, {alt: true});
 
     dispatchEvent(panel, event);
     fixture.detectChanges();
@@ -900,6 +949,25 @@ describe('MDC-based MatMenu', () => {
 
     expect(document.activeElement).toBe(items[4], 'Expected fifth item to be focused');
     flush();
+  }));
+
+  it('should open submenus when the menu is inside an OnPush component', fakeAsync(() => {
+    const fixture = createComponent(LazyMenuWithOnPush);
+    fixture.detectChanges();
+
+    // Open the top-level menu
+    fixture.componentInstance.rootTrigger.nativeElement.click();
+    fixture.detectChanges();
+    flush();
+
+    // Dispatch a `mouseenter` on the menu item to open the submenu.
+    // This will only work if the top-level menu is aware the this menu item exists.
+    dispatchMouseEvent(fixture.componentInstance.menuItemWithSubmenu.nativeElement, 'mouseenter');
+    fixture.detectChanges();
+    flush();
+
+    expect(overlayContainerElement.querySelectorAll('.mat-mdc-menu-item').length)
+        .toBe(2, 'Expected two open menus');
   }));
 
   it('should focus the menu panel if all items are disabled', fakeAsync(() => {
@@ -2035,7 +2103,7 @@ describe('MDC-based MatMenu', () => {
       Object.defineProperty(event, 'buttons', {get: () => 1});
       event.preventDefault = jasmine.createSpy('preventDefault spy');
 
-      dispatchMouseEvent(overlay.querySelector('[mat-menu-item]')!, 'mousedown', 0, 0, event);
+      dispatchEvent(overlay.querySelector('[mat-menu-item]')!, event);
       expect(event.preventDefault).toHaveBeenCalled();
     });
 
@@ -2237,8 +2305,11 @@ describe('MatMenu default overrides', () => {
       <button mat-menu-item> Item </button>
       <button mat-menu-item disabled> Disabled </button>
       <button mat-menu-item disableRipple>
-        <fake-icon>unicorn</fake-icon>
+        <mat-icon>unicorn</mat-icon>
         Item with an icon
+      </button>
+      <button mat-menu-item>
+        <span>Item with text inside span</span>
       </button>
       <button *ngFor="let item of extraItems" mat-menu-item> {{item}} </button>
     </mat-menu>
@@ -2460,7 +2531,7 @@ class SubmenuDeclaredInsideParentMenu {
 
 
 @Component({
-  selector: 'fake-icon',
+  selector: 'mat-icon',
   template: '<ng-content></ng-content>'
 })
 class FakeIcon {}
@@ -2578,7 +2649,42 @@ class SimpleMenuWithRepeater {
   `
 })
 class SimpleMenuWithRepeaterInLazyContent {
-  @ViewChild(MatMenuTrigger, {static: false}) trigger: MatMenuTrigger;
-  @ViewChild(MatMenu, {static: false}) menu: MatMenu;
+  @ViewChild(MatMenuTrigger) trigger: MatMenuTrigger;
+  @ViewChild(MatMenu) menu: MatMenu;
   items = [{label: 'Pizza', disabled: false}, {label: 'Pasta', disabled: false}];
+}
+
+
+@Component({
+  template: `
+    <button [matMenuTriggerFor]="menu" #triggerEl>Toggle menu</button>
+
+    <mat-menu #menu="matMenu">
+      <ng-template matMenuContent>
+        <button [matMenuTriggerFor]="menu2" mat-menu-item #menuItem>Item</button>
+      </ng-template>
+    </mat-menu>
+
+    <mat-menu #menu2="matMenu">
+      <ng-template matMenuContent>
+        <button mat-menu-item #subMenuItem>Sub item</button>
+      </ng-template>
+    </mat-menu>
+  `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+class LazyMenuWithOnPush {
+  @ViewChild('triggerEl', {read: ElementRef}) rootTrigger: ElementRef;
+  @ViewChild('menuItem', {read: ElementRef}) menuItemWithSubmenu: ElementRef;
+}
+
+
+@Component({
+  template: `
+    <mat-menu #menu="matMenu">
+      <button [matMenuTriggerFor]="menu"></button>
+    </mat-menu>
+  `
+})
+class InvalidRecursiveMenu {
 }

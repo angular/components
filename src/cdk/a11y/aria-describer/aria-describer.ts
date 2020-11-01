@@ -9,6 +9,7 @@
 import {DOCUMENT} from '@angular/common';
 import {Inject, Injectable, OnDestroy} from '@angular/core';
 import {addAriaReferencedId, getAriaReferenceIds, removeAriaReferencedId} from './aria-reference';
+import {Platform} from '@angular/cdk/platform';
 
 
 /**
@@ -50,7 +51,12 @@ let messagesContainer: HTMLElement | null = null;
 export class AriaDescriber implements OnDestroy {
   private _document: Document;
 
-  constructor(@Inject(DOCUMENT) _document: any) {
+  constructor(
+    @Inject(DOCUMENT) _document: any,
+    /**
+     * @breaking-change 8.0.0 `_platform` parameter to be made required.
+     */
+    private _platform?: Platform) {
     this._document = _document;
   }
 
@@ -79,7 +85,7 @@ export class AriaDescriber implements OnDestroy {
 
   /** Removes the host element's aria-describedby reference to the message element. */
   removeDescription(hostElement: Element, message: string|HTMLElement) {
-    if (!this._isElementNode(hostElement)) {
+    if (!message || !this._isElementNode(hostElement)) {
       return;
     }
 
@@ -153,20 +159,27 @@ export class AriaDescriber implements OnDestroy {
   /** Creates the global container for all aria-describedby messages. */
   private _createMessagesContainer() {
     if (!messagesContainer) {
+      // @breaking-change 8.0.0 `_platform` null check can be removed once the parameter is required
+      const canBeAriaHidden = !this._platform || (!this._platform.EDGE && !this._platform.TRIDENT);
       const preExistingContainer = this._document.getElementById(MESSAGES_CONTAINER_ID);
 
       // When going from the server to the client, we may end up in a situation where there's
       // already a container on the page, but we don't have a reference to it. Clear the
       // old container so we don't get duplicates. Doing this, instead of emptying the previous
       // container, should be slightly faster.
-      if (preExistingContainer) {
-        preExistingContainer.parentNode!.removeChild(preExistingContainer);
+      if (preExistingContainer && preExistingContainer.parentNode) {
+        preExistingContainer.parentNode.removeChild(preExistingContainer);
       }
 
       messagesContainer = this._document.createElement('div');
       messagesContainer.id = MESSAGES_CONTAINER_ID;
-      messagesContainer.setAttribute('aria-hidden', 'true');
-      messagesContainer.style.display = 'none';
+      messagesContainer.classList.add('cdk-visually-hidden');
+
+      // IE and Edge won't read out the messages if they're in an `aria-hidden` container.
+      // We only disable `aria-hidden` for these platforms, because it comes with the
+      // disadvantage that people might hit the messages when they've navigated past
+      // the end of the document using the arrow keys.
+      messagesContainer.setAttribute('aria-hidden', canBeAriaHidden + '');
       this._document.body.appendChild(messagesContainer);
     }
   }

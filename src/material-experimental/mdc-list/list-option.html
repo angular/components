@@ -1,1 +1,58 @@
-TODO: Implement.
+<!--
+  Save icons and the pseudo checkbox so that they can be re-used in the
+  template without duplication.
+-->
+<ng-template #icons>
+  <ng-content select="[mat-list-avatar],[matListAvatar],[mat-list-icon],[matListIcon]">
+  </ng-content>
+</ng-template>
+
+<ng-template #checkbox>
+  <div class="mdc-checkbox" [class.mdc-checkbox--disabled]="disabled">
+    <!--
+      Note: We stop propagation of the change event for the indicator checkbox so that
+      no accidental change event leaks out of the list option or selection list when
+      the checkbox is directly clicked.
+    -->
+    <input type="checkbox" tabindex="-1" class="mdc-checkbox__native-control"
+           [checked]="selected" [disabled]="disabled" [attr.aria-describedby]="_optionTextId"
+           (change)="$event.stopPropagation()" />
+    <div class="mdc-checkbox__background">
+      <svg class="mdc-checkbox__checkmark"
+           viewBox="0 0 24 24">
+        <path class="mdc-checkbox__checkmark-path"
+              fill="none"
+              d="M1.73,12.91 8.1,19.28 22.79,4.59"/>
+      </svg>
+      <div class="mdc-checkbox__mixedmark"></div>
+    </div>
+  </div>
+</ng-template>
+
+<!-- Prefix -->
+<span class="mdc-list-item__graphic"
+      *ngIf="!_isReversed() && (_hasIconOrAvatar() || _hasCheckbox())">
+  <ng-container [ngTemplateOutlet]="_hasCheckbox() ? checkbox : icons">
+  </ng-container>
+</span>
+
+<!-- Text -->
+<span class="mdc-list-item__text" #text [id]="_optionTextId">
+  <ng-content></ng-content>
+</span>
+
+<!-- Suffix -->
+<span class="mdc-list-item__meta"
+      *ngIf="_isReversed() && (_hasCheckbox() || _hasIconOrAvatar())">
+  <ng-container [ngTemplateOutlet]="_hasCheckbox() ? checkbox : icons">
+  </ng-container>
+</span>
+
+<!-- Divider -->
+<ng-content select="mat-divider"></ng-content>
+
+<!--
+  Strong focus indicator element. MDC uses the `::before` pseudo element for the default
+  focus/hover/selected state, so we need a separate element.
+-->
+<div class="mat-mdc-focus-indicator"></div>

@@ -1,6 +1,6 @@
 import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
 import {
-  async,
+  waitForAsync,
   ComponentFixture,
   fakeAsync,
   flushMicrotasks,
@@ -16,13 +16,14 @@ import {MatTableDataSource} from '@angular/material/table';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 
 describe('MDC-based MatTable', () => {
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [MatTableModule, MatPaginatorModule, MatSortModule, NoopAnimationsModule],
       declarations: [
         MatTableApp,
         MatTableWithWhenRowApp,
         ArrayDataSourceMatTableApp,
+        NativeHtmlTableApp,
         MatTableWithSortApp,
         MatTableWithPaginatorApp,
         StickyTableApp,
@@ -81,6 +82,21 @@ describe('MDC-based MatTable', () => {
       ]);
     });
 
+    it('should be able to render a table correctly with native elements', () => {
+      let fixture = TestBed.createComponent(NativeHtmlTableApp);
+      fixture.detectChanges();
+
+      const tableElement = fixture.nativeElement.querySelector('table');
+      const data = fixture.componentInstance.dataSource!.data;
+      expectTableToMatchContent(tableElement, [
+        ['Column A', 'Column B', 'Column C'],
+        [data[0].a, data[0].b, data[0].c],
+        [data[1].a, data[1].b, data[1].c],
+        [data[2].a, data[2].b, data[2].c],
+        [data[3].a, data[3].b, data[3].c],
+      ]);
+    });
+
     it('should be able to nest tables', () => {
       const fixture = TestBed.createComponent(NestedTableApp);
       fixture.detectChanges();
@@ -94,6 +110,58 @@ describe('MDC-based MatTable', () => {
 
       expect(innerTable).toBeTruthy();
       expect(innerRows.map(row => row.cells.length)).toEqual([3, 3, 3, 3]);
+    });
+
+    it('should be able to show a message when no data is being displayed in a native table', () => {
+      const fixture = TestBed.createComponent(NativeHtmlTableApp);
+      fixture.detectChanges();
+
+      // Assert that the data is inside the tbody specifically.
+      const tbody = fixture.nativeElement.querySelector('tbody')!;
+      const dataSource = fixture.componentInstance.dataSource!;
+      const initialData = dataSource.data;
+
+      expect(tbody.textContent.trim()).not.toContain('No data');
+
+      dataSource.data = [];
+      fixture.detectChanges();
+
+      expect(tbody.textContent.trim()).toContain('No data');
+
+      dataSource.data = initialData;
+      fixture.detectChanges();
+
+      expect(tbody.textContent.trim()).not.toContain('No data');
+    });
+
+    it('should be able to show a message when no data is being displayed', () => {
+      const fixture = TestBed.createComponent(MatTableApp);
+      fixture.detectChanges();
+
+      // Assert that the data is inside the tbody specifically.
+      const tbody = fixture.nativeElement.querySelector('tbody')!;
+      const initialData = fixture.componentInstance.dataSource!.data;
+
+      expect(tbody.textContent.trim()).not.toContain('No data');
+
+      fixture.componentInstance.dataSource!.data = [];
+      fixture.detectChanges();
+
+      expect(tbody.textContent.trim()).toContain('No data');
+
+      fixture.componentInstance.dataSource!.data = initialData;
+      fixture.detectChanges();
+
+      expect(tbody.textContent.trim()).not.toContain('No data');
+    });
+
+    it('should show the no data row if there is no data on init', () => {
+      const fixture = TestBed.createComponent(MatTableApp);
+      fixture.componentInstance.dataSource!.data = [];
+      fixture.detectChanges();
+
+      const tbody = fixture.nativeElement.querySelector('tbody')!;
+      expect(tbody.textContent.trim()).toContain('No data');
     });
 
   });
@@ -126,13 +194,14 @@ describe('MDC-based MatTable', () => {
     ]);
   });
 
-  it('should apply custom sticky CSS class to sticky cells', () => {
+  it('should apply custom sticky CSS class to sticky cells', fakeAsync(() => {
     let fixture = TestBed.createComponent(StickyTableApp);
     fixture.detectChanges();
+    flushMicrotasks();
 
     const stuckCellElement = fixture.nativeElement.querySelector('table th')!;
     expect(stuckCellElement.classList).toContain('mat-mdc-table-sticky');
-  });
+  }));
 
   // Note: needs to be fakeAsync so it catches the error.
   it('should not throw when a row definition is on an ng-container', fakeAsync(() => {
@@ -555,6 +624,9 @@ class FakeDataSource extends DataSource<TestData> {
       <tr mat-header-row *matHeaderRowDef="columnsToRender"></tr>
       <tr mat-row *matRowDef="let row; columns: columnsToRender"></tr>
       <tr mat-row *matRowDef="let row; columns: ['special_column']; when: isFourthRow"></tr>
+      <tr *matNoDataRow>
+        <td>No data</td>
+      </tr>
       <tr mat-footer-row *matFooterRowDef="columnsToRender"></tr>
     </table>
   `
@@ -564,7 +636,40 @@ class MatTableApp {
   columnsToRender = ['column_a', 'column_b', 'column_c'];
   isFourthRow = (i: number, _rowData: TestData) => i == 3;
 
-  @ViewChild(MatTable, {static: true}) table: MatTable<TestData>;
+  @ViewChild(MatTable) table: MatTable<TestData>;
+}
+
+@Component({
+  template: `
+    <table mat-table [dataSource]="dataSource">
+      <ng-container matColumnDef="column_a">
+        <th mat-header-cell *matHeaderCellDef> Column A</th>
+        <td mat-cell *matCellDef="let row"> {{row.a}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="column_b">
+        <th mat-header-cell *matHeaderCellDef> Column B</th>
+        <td mat-cell *matCellDef="let row"> {{row.b}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="column_c">
+        <th mat-header-cell *matHeaderCellDef> Column C</th>
+        <td mat-cell *matCellDef="let row"> {{row.c}}</td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="columnsToRender"></tr>
+      <tr mat-row *matRowDef="let row; columns: columnsToRender"></tr>
+      <tr *matNoDataRow>
+        <td>No data</td>
+      </tr>
+    </table>
+  `
+})
+class NativeHtmlTableApp {
+  dataSource: FakeDataSource | null = new FakeDataSource();
+  columnsToRender = ['column_a', 'column_b', 'column_c'];
+
+  @ViewChild(MatTable) table: MatTable<TestData>;
 }
 
 @Component({
@@ -635,7 +740,7 @@ class StickyTableApp {
   dataSource = new FakeDataSource();
   columnsToRender = ['column_a'];
 
-  @ViewChild(MatTable, {static: true}) table: MatTable<TestData>;
+  @ViewChild(MatTable) table: MatTable<TestData>;
 }
 
 
@@ -702,9 +807,9 @@ class ArrayDataSourceMatTableApp implements AfterViewInit {
   dataSource = new MatTableDataSource<TestData>();
   columnsToRender = ['column_a', 'column_b', 'column_c'];
 
-  @ViewChild(MatTable, {static: true}) table: MatTable<TestData>;
-  @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
-  @ViewChild(MatSort, {static: true}) sort: MatSort;
+  @ViewChild(MatTable) table: MatTable<TestData>;
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatSortHeader) sortHeader: MatSortHeader;
 
   constructor() {
@@ -755,8 +860,8 @@ class MatTableWithSortApp implements OnInit {
   dataSource = new MatTableDataSource<TestData>();
   columnsToRender = ['column_a', 'column_b', 'column_c'];
 
-  @ViewChild(MatTable, {static: true}) table: MatTable<TestData>;
-  @ViewChild(MatSort, {static: true}) sort: MatSort;
+  @ViewChild(MatTable) table: MatTable<TestData>;
+  @ViewChild(MatSort) sort: MatSort;
 
   constructor() {
     this.underlyingDataSource.data = [];
@@ -806,8 +911,8 @@ class MatTableWithPaginatorApp implements OnInit {
   dataSource = new MatTableDataSource<TestData>();
   columnsToRender = ['column_a', 'column_b', 'column_c'];
 
-  @ViewChild(MatTable, {static: true}) table: MatTable<TestData>;
-  @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
+  @ViewChild(MatTable) table: MatTable<TestData>;
+  @ViewChild(MatPaginator) paginator: MatPaginator;
 
   constructor() {
     this.underlyingDataSource.data = [];

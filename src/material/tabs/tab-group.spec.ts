@@ -1,12 +1,12 @@
 import {LEFT_ARROW} from '@angular/cdk/keycodes';
 import {dispatchFakeEvent, dispatchKeyboardEvent} from '@angular/cdk/testing/private';
 import {Component, OnInit, QueryList, ViewChild, ViewChildren} from '@angular/core';
-import {async, ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/testing';
+import {waitForAsync, ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {BrowserAnimationsModule, NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {CommonModule} from '@angular/common';
 import {Observable} from 'rxjs';
-import {MatTab, MatTabGroup, MatTabHeaderPosition, MatTabsModule} from './index';
+import {MatTab, MatTabGroup, MatTabHeaderPosition, MatTabsModule, MAT_TABS_CONFIG} from './index';
 
 
 describe('MatTabGroup', () => {
@@ -80,7 +80,7 @@ describe('MatTabGroup', () => {
     }));
 
     // Note: needs to be `async` in order to fail when we expect it to.
-    it('should set to correct tab on fast change', async(() => {
+    it('should set to correct tab on fast change', waitForAsync(() => {
       let component = fixture.componentInstance;
       component.selectedIndex = 0;
       fixture.detectChanges();
@@ -247,12 +247,12 @@ describe('MatTabGroup', () => {
 
       expect(fixture.componentInstance.handleFocus).toHaveBeenCalledTimes(0);
 
-      tabLabels[1].nativeElement.click();
+      tabLabels[2].nativeElement.click();
       fixture.detectChanges();
 
       expect(fixture.componentInstance.handleFocus).toHaveBeenCalledTimes(1);
       expect(fixture.componentInstance.handleFocus)
-        .toHaveBeenCalledWith(jasmine.objectContaining({index: 1}));
+        .toHaveBeenCalledWith(jasmine.objectContaining({index: 2}));
     });
 
     it('should emit focusChange on arrow key navigation', () => {
@@ -266,8 +266,8 @@ describe('MatTabGroup', () => {
       expect(fixture.componentInstance.handleFocus).toHaveBeenCalledTimes(0);
 
       // In order to verify that the `focusChange` event also fires with the correct
-      // index, we focus the second tab before testing the keyboard navigation.
-      tabLabels[1].nativeElement.click();
+      // index, we focus the third tab before testing the keyboard navigation.
+      tabLabels[2].nativeElement.click();
       fixture.detectChanges();
 
       expect(fixture.componentInstance.handleFocus).toHaveBeenCalledTimes(1);
@@ -276,7 +276,7 @@ describe('MatTabGroup', () => {
 
       expect(fixture.componentInstance.handleFocus).toHaveBeenCalledTimes(2);
       expect(fixture.componentInstance.handleFocus)
-        .toHaveBeenCalledWith(jasmine.objectContaining({index: 0}));
+        .toHaveBeenCalledWith(jasmine.objectContaining({index: 1}));
     });
 
     it('should clean up the tabs QueryList on destroy', () => {
@@ -665,6 +665,30 @@ describe('MatTabGroup', () => {
   }
 });
 
+describe('MatTabNavBar with a default config', () => {
+  let fixture: ComponentFixture<SimpleTabsTestApp>;
+
+  beforeEach(fakeAsync(() => {
+    TestBed.configureTestingModule({
+      imports: [MatTabsModule, BrowserAnimationsModule],
+      declarations: [SimpleTabsTestApp],
+      providers: [
+        {provide: MAT_TABS_CONFIG, useValue: {dynamicHeight: true}}
+      ]
+    });
+
+    TestBed.compileComponents();
+  }));
+
+  beforeEach(() => {
+    fixture = TestBed.createComponent(SimpleTabsTestApp);
+    fixture.detectChanges();
+  });
+
+  it('should set whether the height of the tab group is dynamic', () => {
+    expect(fixture.componentInstance.tabGroup.dynamicHeight).toBe(true);
+  });
+});
 
 describe('nested MatTabGroup with enabled animations', () => {
   beforeEach(fakeAsync(() => {
@@ -719,6 +743,7 @@ describe('nested MatTabGroup with enabled animations', () => {
   `
 })
 class SimpleTabsTestApp {
+  @ViewChild(MatTabGroup) tabGroup: MatTabGroup;
   @ViewChildren(MatTab) tabs: QueryList<MatTab>;
   selectedIndex: number = 1;
   focusEvent: any;

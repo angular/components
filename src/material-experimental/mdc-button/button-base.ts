@@ -21,8 +21,9 @@ import {
   mixinDisabled,
   mixinDisableRipple,
   RippleAnimationConfig
-} from '@angular/material/core';
+} from '@angular/material-experimental/mdc-core';
 import {numbers} from '@material/ripple';
+import {FocusOrigin} from '@angular/cdk/a11y';
 
 /** Inputs common to all buttons. */
 export const MAT_BUTTON_INPUTS = ['disabled', 'disableRipple', 'color'];
@@ -38,7 +39,6 @@ export const MAT_BUTTON_HOST = {
   // Add a class that applies to all buttons. This makes it easier to target if somebody
   // wants to target all Material buttons.
   '[class.mat-mdc-button-base]': 'true',
-  'class': 'mat-mdc-focus-indicator',
 };
 
 /** Configuration for the ripple animation. */
@@ -120,8 +120,8 @@ export class MatButtonBase extends _MatButtonBaseMixin implements CanDisable, Ca
   }
 
   /** Focuses the button. */
-  focus(): void {
-    this._elementRef.nativeElement.focus();
+  focus(_origin: FocusOrigin = 'program', options?: FocusOptions): void {
+    this._elementRef.nativeElement.focus(options);
   }
 
   /** Gets whether the button has one of the given attributes. */
@@ -154,7 +154,6 @@ export const MAT_ANCHOR_HOST = {
   // an unthemed version. If color is undefined, apply a CSS class that makes it easy to
   // select and style this "theme".
   '[class.mat-unthemed]': '!color',
-  'class': 'mat-mdc-focus-indicator',
   // Add a class that applies to all buttons. This makes it easier to target if somebody
   // wants to target all Material buttons.
   '[class.mat-mdc-button-base]': 'true',

@@ -6,6 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {parallel} from './change-detection';
 import {TestElement} from './test-element';
 
 /** An async function that returns a promise when called. */
@@ -202,6 +203,9 @@ export interface LocatorFactory {
   locatorForAll<T extends (HarnessQuery<any> | string)[]>(...queries: T):
       AsyncFactoryFn<LocatorFnResult<T>[]>;
 
+  /** @return A `HarnessLoader` rooted at the root element of this `LocatorFactory`. */
+  rootHarnessLoader(): Promise<HarnessLoader>;
+
   /**
    * Gets a `HarnessLoader` instance for an element under the root of this `LocatorFactory`.
    * @param selector The selector for the root element.
@@ -372,6 +376,39 @@ export abstract class ComponentHarness {
   }
 }
 
+
+/**
+ * Base class for component harnesses that authors should extend if they anticipate that consumers
+ * of the harness may want to access other harnesses within the `<ng-content>` of the component.
+ */
+export abstract class ContentContainerComponentHarness<S extends string = string>
+  extends ComponentHarness implements HarnessLoader {
+
+  async getChildLoader(selector: S): Promise<HarnessLoader> {
+    return (await this.getRootHarnessLoader()).getChildLoader(selector);
+  }
+
+  async getAllChildLoaders(selector: S): Promise<HarnessLoader[]> {
+    return (await this.getRootHarnessLoader()).getAllChildLoaders(selector);
+  }
+
+  async getHarness<T extends ComponentHarness>(query: HarnessQuery<T>): Promise<T> {
+    return (await this.getRootHarnessLoader()).getHarness(query);
+  }
+
+  async getAllHarnesses<T extends ComponentHarness>(query: HarnessQuery<T>): Promise<T[]> {
+    return (await this.getRootHarnessLoader()).getAllHarnesses(query);
+  }
+
+  /**
+   * Gets the root harness loader from which to start
+   * searching for content contained by this harness.
+   */
+  protected async getRootHarnessLoader(): Promise<HarnessLoader> {
+    return this.locatorFactory.rootHarnessLoader();
+  }
+}
+
 /** Constructor for a ComponentHarness subclass. */
 export interface ComponentHarnessConstructor<T extends ComponentHarness> {
   new(locatorFactory: LocatorFactory): T;
@@ -458,7 +495,10 @@ export class HarnessPredicate<T extends ComponentHarness> {
    * @return A list of harnesses that satisfy this predicate.
    */
   async filter(harnesses: T[]): Promise<T[]> {
-    const results = await Promise.all(harnesses.map(h => this.evaluate(h)));
+    if (harnesses.length === 0) {
+      return [];
+    }
+    const results = await parallel(() => harnesses.map(h => this.evaluate(h)));
     return harnesses.filter((_, i) => results[i]);
   }
 
@@ -469,7 +509,7 @@ export class HarnessPredicate<T extends ComponentHarness> {
    *   and resolves to false otherwise.
    */
   async evaluate(harness: T): Promise<boolean> {
-    const results = await Promise.all(this._predicates.map(p => p(harness)));
+    const results = await parallel(() => this._predicates.map(p => p(harness)));
     return results.reduce((combined, current) => combined && current, true);
   }
 

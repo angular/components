@@ -21,6 +21,7 @@ ng_module(
     assets = [":toolbar.css"] + glob(["**/*.html"]),
     module_name = "@angular/material/toolbar",
     deps = [
+        "//src:dev_mode_types",
         "//src/cdk/platform",
         "//src/material/core",
         "@npm//@angular/common",
@@ -31,7 +32,9 @@ ng_module(
 sass_library(
     name = "toolbar_scss_lib",
     srcs = glob(["**/_*.scss"]),
-    deps = ["//src/material/core:core_scss_lib"],
+    deps = [
+        "//src/material/core:core_scss_lib",
+    ],
 )
 
 sass_binary(
@@ -39,7 +42,6 @@ sass_binary(
     src = "toolbar.scss",
     deps = [
         "//src/cdk/a11y:a11y_scss_lib",
-        "//src/material/core:core_scss_lib",
     ],
 )
 

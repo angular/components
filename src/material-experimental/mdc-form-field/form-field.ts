@@ -20,7 +20,6 @@ import {
   Inject,
   InjectionToken,
   Input,
-  isDevMode,
   NgZone,
   OnDestroy,
   Optional,
@@ -29,11 +28,7 @@ import {
   ViewEncapsulation
 } from '@angular/core';
 import {NgControl} from '@angular/forms';
-import {
-  LabelOptions,
-  MAT_LABEL_GLOBAL_OPTIONS,
-  ThemePalette
-} from '@angular/material/core';
+import {ThemePalette} from '@angular/material-experimental/mdc-core';
 import {
   getMatFormFieldDuplicatedHintError,
   getMatFormFieldMissingControlError,
@@ -49,14 +44,14 @@ import {
 } from '@material/textfield';
 import {merge, Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
-import {MatError} from './directives/error';
+import {MAT_ERROR, MatError} from './directives/error';
 import {MatFormFieldFloatingLabel} from './directives/floating-label';
 import {MatHint} from './directives/hint';
 import {MatLabel} from './directives/label';
 import {MatFormFieldLineRipple} from './directives/line-ripple';
 import {MatFormFieldNotchedOutline} from './directives/notched-outline';
-import {MatPrefix} from './directives/prefix';
-import {MatSuffix} from './directives/suffix';
+import {MAT_PREFIX, MatPrefix} from './directives/prefix';
+import {MAT_SUFFIX, MatSuffix} from './directives/suffix';
 
 /** Type for the available floatLabel values. */
 export type FloatLabelType = 'always' | 'auto';
@@ -71,6 +66,7 @@ export type MatFormFieldAppearance = 'fill' | 'outline';
 export interface MatFormFieldDefaultOptions {
   appearance?: MatFormFieldAppearance;
   hideRequiredMarker?: boolean;
+  floatLabel?: FloatLabelType;
 }
 
 /**
@@ -105,13 +101,21 @@ const FLOATING_LABEL_DEFAULT_DOCKED_TRANSFORM = `translateY(-50%)`;
   host: {
     'class': 'mat-mdc-form-field',
     '[class.mat-mdc-form-field-label-always-float]': '_shouldAlwaysFloat()',
+
+    // Note that these classes reuse the same names as the non-MDC version, because they can be
+    // considered a public API since custom form controls may use them to style themselves.
+    // See https://github.com/angular/components/pull/20502#discussion_r486124901.
     '[class.mat-form-field-invalid]': '_control.errorState',
     '[class.mat-form-field-disabled]': '_control.disabled',
     '[class.mat-form-field-autofilled]': '_control.autofilled',
     '[class.mat-form-field-no-animations]': '_animationMode === "NoopAnimations"',
+    '[class.mat-form-field-appearance-fill]': 'appearance == "fill"',
+    '[class.mat-form-field-appearance-outline]': 'appearance == "outline"',
+    '[class.mat-form-field-hide-placeholder]': '_hasFloatingLabel() && !_shouldLabelFloat()',
     '[class.mat-focused]': '_control.focused',
-    '[class.mat-accent]': 'color == "accent"',
-    '[class.mat-warn]': 'color == "warn"',
+    '[class.mat-primary]': 'color !== "accent" && color !== "warn"',
+    '[class.mat-accent]': 'color === "accent"',
+    '[class.mat-warn]': 'color === "warn"',
     '[class.ng-untouched]': '_shouldForward("untouched")',
     '[class.ng-touched]': '_shouldForward("touched")',
     '[class.ng-pristine]': '_shouldForward("pristine")',
@@ -137,9 +141,9 @@ export class MatFormField implements AfterViewInit, OnDestroy, AfterContentCheck
   @ContentChild(MatLabel) _labelChildNonStatic: MatLabel|undefined;
   @ContentChild(MatLabel, {static: true}) _labelChildStatic: MatLabel|undefined;
   @ContentChild(MatFormFieldControl) _formFieldControl: MatFormFieldControl<any>;
-  @ContentChildren(MatPrefix, {descendants: true}) _prefixChildren: QueryList<MatPrefix>;
-  @ContentChildren(MatSuffix, {descendants: true}) _suffixChildren: QueryList<MatSuffix>;
-  @ContentChildren(MatError, {descendants: true}) _errorChildren: QueryList<MatError>;
+  @ContentChildren(MAT_PREFIX, {descendants: true}) _prefixChildren: QueryList<MatPrefix>;
+  @ContentChildren(MAT_SUFFIX, {descendants: true}) _suffixChildren: QueryList<MatSuffix>;
+  @ContentChildren(MAT_ERROR, {descendants: true}) _errorChildren: QueryList<MatError>;
   @ContentChildren(MatHint, {descendants: true}) _hintChildren: QueryList<MatHint>;
 
   /** Whether the required marker should be hidden. */
@@ -151,8 +155,7 @@ export class MatFormField implements AfterViewInit, OnDestroy, AfterContentCheck
   /** Whether the label should always float or float as the user types. */
   @Input()
   get floatLabel(): FloatLabelType {
-    return this._floatLabel || (this._labelOptions && this._labelOptions.float)
-        || DEFAULT_FLOAT_LABEL;
+    return this._floatLabel || this._defaults?.floatLabel || DEFAULT_FLOAT_LABEL;
   }
   set floatLabel(value: FloatLabelType) {
     if (value !== this._floatLabel) {
@@ -172,10 +175,12 @@ export class MatFormField implements AfterViewInit, OnDestroy, AfterContentCheck
   set appearance(value: MatFormFieldAppearance) {
     const oldValue = this._appearance;
     this._appearance = value || (this._defaults && this._defaults.appearance) || DEFAULT_APPEARANCE;
-    // If the appearance has been switched to `outline`, the label offset needs to be updated.
-    // The update can happen once the view has been re-checked, but not immediately because
-    // the view has not been updated and the notched-outline floating label is not present.
     if (this._appearance === 'outline' && this._appearance !== oldValue) {
+      this._refreshOutlineNotchWidth();
+
+      // If the appearance has been switched to `outline`, the label offset needs to be updated.
+      // The update can happen once the view has been re-checked, but not immediately because
+      // the view has not been updated and the notched-outline floating label is not present.
       this._needsOutlineLabelOffsetUpdateOnStable = true;
     }
   }
@@ -190,11 +195,11 @@ export class MatFormField implements AfterViewInit, OnDestroy, AfterContentCheck
   }
   private _hintLabel = '';
 
-  // Unique id for the hint label.
-  _hintLabelId = `mat-mdc-hint-${nextUniqueId++}`;
-
   // Unique id for the internal form field label.
-  _labelId = `mat-mdc-form-field-label-${nextUniqueId++}`;
+  readonly _labelId = `mat-mdc-form-field-label-${nextUniqueId++}`;
+
+  // Unique id for the hint label.
+  readonly _hintLabelId = `mat-mdc-hint-${nextUniqueId++}`;
 
   /** State of the mat-hint and mat-error animations. */
   _subscriptAnimationState = '';
@@ -243,6 +248,12 @@ export class MatFormField implements AfterViewInit, OnDestroy, AfterContentCheck
     // have the ability to control the floating label state (i.e. `shouldLabelFloat`), and we
     // want to update the notch whenever the `_shouldLabelFloat()` value changes.
     getLabelWidth: () => 0,
+
+    // We don't use `setLabelRequired` as it relies on a mutation observer for determining
+    // when the `required` state changes. This is not reliable and flexible enough for
+    // our form field, as we support custom controls and detect the required state through
+    // a public property in the abstract form control.
+    setLabelRequired: () => {},
     notchOutline: () => {},
     closeOutline: () => {},
 
@@ -283,6 +294,11 @@ export class MatFormField implements AfterViewInit, OnDestroy, AfterContentCheck
     // abstract form control instance.
     deregisterValidationAttributeChangeHandler: () => {},
     registerValidationAttributeChangeHandler: () => null as any,
+
+    // Used by foundation to dynamically remove aria-describedby when the hint text
+    // is shown only on invalid state, which should not be applicable here.
+    setInputAttr: () => undefined,
+    removeInputAttr: () => undefined,
   };
 
   constructor(private _elementRef: ElementRef,
@@ -292,7 +308,6 @@ export class MatFormField implements AfterViewInit, OnDestroy, AfterContentCheck
               private _platform: Platform,
               @Optional() @Inject(MAT_FORM_FIELD_DEFAULT_OPTIONS)
               private _defaults?: MatFormFieldDefaultOptions,
-              @Optional() @Inject(MAT_LABEL_GLOBAL_OPTIONS) private _labelOptions?: LabelOptions,
               @Optional() @Inject(ANIMATION_MODULE_TYPE) public _animationMode?: string) {
     if (_defaults && _defaults.appearance) {
       this.appearance = _defaults.appearance;
@@ -348,6 +363,13 @@ export class MatFormField implements AfterViewInit, OnDestroy, AfterContentCheck
   ngOnDestroy() {
     this._destroyed.next();
     this._destroyed.complete();
+  }
+
+  /**
+   * Gets the id of the label element. If no label is present, returns `null`.
+   */
+  getLabelId(): string|null {
+    return this._hasFloatingLabel() ? this._labelId : null;
   }
 
   /**
@@ -431,7 +453,7 @@ export class MatFormField implements AfterViewInit, OnDestroy, AfterContentCheck
 
   /** Throws an error if the form field's control is missing. */
   private _assertFormFieldControl() {
-    if (!this._control) {
+    if (!this._control && (typeof ngDevMode === 'undefined' || ngDevMode)) {
       throw getMatFormFieldMissingControlError();
     }
   }
@@ -467,7 +489,7 @@ export class MatFormField implements AfterViewInit, OnDestroy, AfterContentCheck
     // Note that we have to run outside of the `NgZone` explicitly, in order to avoid
     // throwing users into an infinite loop if `zone-patch-rxjs` is included.
     this._ngZone.runOutsideAngular(() => {
-      this._ngZone.onStable.asObservable().pipe(takeUntil(this._destroyed)).subscribe(() => {
+      this._ngZone.onStable.pipe(takeUntil(this._destroyed)).subscribe(() => {
         if (this._needsOutlineLabelOffsetUpdateOnStable) {
           this._needsOutlineLabelOffsetUpdateOnStable = false;
           this._updateOutlineLabelOffset();
@@ -544,7 +566,7 @@ export class MatFormField implements AfterViewInit, OnDestroy, AfterContentCheck
    * This method is a noop if Angular runs in production mode.
    */
   private _validateHints() {
-    if (isDevMode() && this._hintChildren) {
+    if (this._hintChildren && (typeof ngDevMode === 'undefined' || ngDevMode)) {
       let startHint: MatHint;
       let endHint: MatHint;
       this._hintChildren.forEach((hint: MatHint) => {
@@ -571,6 +593,12 @@ export class MatFormField implements AfterViewInit, OnDestroy, AfterContentCheck
     if (this._control) {
       let ids: string[] = [];
 
+      // TODO(wagnermaciel): Remove the type check when we find the root cause of this bug.
+      if (this._control.userAriaDescribedBy &&
+        typeof this._control.userAriaDescribedBy === 'string') {
+        ids.push(...this._control.userAriaDescribedBy.split(' '));
+      }
+
       if (this._getDisplayedMessages() === 'hint') {
         const startHint = this._hintChildren ?
           this._hintChildren.find(hint => hint.align === 'start') : null;
@@ -587,7 +615,7 @@ export class MatFormField implements AfterViewInit, OnDestroy, AfterContentCheck
           ids.push(endHint.id);
         }
       } else if (this._errorChildren) {
-        ids = this._errorChildren.map(error => error.id);
+        ids.push(...this._errorChildren.map(error => error.id));
       }
 
       this._control.setDescribedByIds(ids);

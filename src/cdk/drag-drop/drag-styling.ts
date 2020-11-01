@@ -16,9 +16,12 @@ type Writeable<T> = { -readonly [P in keyof T]-?: T[P] };
  * Extended CSSStyleDeclaration that includes a couple of drag-related
  * properties that aren't in the built-in TS typings.
  */
-interface DragCSSStyleDeclaration extends CSSStyleDeclaration {
+export interface DragCSSStyleDeclaration extends CSSStyleDeclaration {
   webkitUserDrag: string;
   MozUserSelect: string; // For some reason the Firefox property is in PascalCase.
+  msScrollSnapType: string;
+  scrollSnapType: string;
+  msUserSelect: string;
 }
 
 /**
@@ -56,4 +59,17 @@ export function toggleNativeDragInteractions(element: HTMLElement, enable: boole
     webkitUserSelect: userSelect,
     MozUserSelect: userSelect
   });
+}
+
+/**
+ * Toggles whether an element is visible while preserving its dimensions.
+ * @param element Element whose visibility to toggle
+ * @param enable Whether the element should be visible.
+ * @docs-private
+ */
+export function toggleVisibility(element: HTMLElement, enable: boolean) {
+  const styles = element.style;
+  styles.position = enable ? '' : 'fixed';
+  styles.top = styles.opacity = enable ? '' : '0';
+  styles.left = enable ? '' : '-999em';
 }

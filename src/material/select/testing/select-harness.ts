@@ -16,13 +16,11 @@ import {
 } from '@angular/material/core/testing';
 import {SelectHarnessFilters} from './select-harness-filters';
 
-const PANEL_SELECTOR = '.mat-select-panel';
 
 /** Harness for interacting with a standard mat-select in tests. */
 export class MatSelectHarness extends MatFormFieldControlHarness {
   private _documentRootLocator = this.documentRootLocatorFactory();
   private _backdrop = this._documentRootLocator.locatorFor('.cdk-overlay-backdrop');
-  private _optionalPanel = this._documentRootLocator.locatorForOptional(PANEL_SELECTOR);
   private _trigger = this.locatorFor('.mat-select-trigger');
   private _value = this.locatorFor('.mat-select-value');
 
@@ -60,8 +58,7 @@ export class MatSelectHarness extends MatFormFieldControlHarness {
 
   /** Gets a boolean promise indicating if the select is in multi-selection mode. */
   async isMultiple(): Promise<boolean> {
-    const ariaMultiselectable = (await this.host()).getAttribute('aria-multiselectable');
-    return (await ariaMultiselectable) === 'true';
+    return (await this.host()).hasClass('mat-select-multiple');
   }
 
   /** Gets a promise for the select's value text. */
@@ -79,12 +76,17 @@ export class MatSelectHarness extends MatFormFieldControlHarness {
     return (await this.host()).blur();
   }
 
+  /** Whether the select is focused. */
+  async isFocused(): Promise<boolean> {
+    return (await this.host()).isFocused();
+  }
+
   /** Gets the options inside the select panel. */
   async getOptions(filter: Omit<OptionHarnessFilters, 'ancestor'> = {}):
     Promise<MatOptionHarness[]> {
     return this._documentRootLocator.locatorForAll(MatOptionHarness.with({
       ...filter,
-      ancestor: PANEL_SELECTOR
+      ancestor: await this._getPanelSelector()
     }))();
   }
 
@@ -93,13 +95,13 @@ export class MatSelectHarness extends MatFormFieldControlHarness {
     Promise<MatOptgroupHarness[]> {
     return this._documentRootLocator.locatorForAll(MatOptgroupHarness.with({
       ...filter,
-      ancestor: PANEL_SELECTOR
+      ancestor: await this._getPanelSelector()
     }))();
   }
 
   /** Gets whether the select is open. */
   async isOpen(): Promise<boolean> {
-    return !!(await this._optionalPanel());
+    return !!await this._documentRootLocator.locatorForOptional(await this._getPanelSelector())();
   }
 
   /** Opens the select's panel. */
@@ -137,5 +139,11 @@ export class MatSelectHarness extends MatFormFieldControlHarness {
       // a bit more precise after #16645 where we can dispatch an ESCAPE press to the host instead.
       return (await this._backdrop()).click();
     }
+  }
+
+  /** Gets the selector that should be used to find this select's panel. */
+  private async _getPanelSelector(): Promise<string> {
+    const id = await (await this.host()).getAttribute('id');
+    return `#${id}-panel`;
   }
 }

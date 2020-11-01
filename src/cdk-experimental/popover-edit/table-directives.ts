@@ -41,6 +41,7 @@ import {
   FocusEscapeNotifierFactory
 } from './focus-escape-notifier';
 import {closest} from './polyfill';
+import {EditRef} from './edit-ref';
 
 /**
  * Describes the number of columns before and after the originating cell that the
@@ -69,7 +70,7 @@ export class CdkEditable implements AfterViewInit, OnDestroy {
 
   constructor(
       protected readonly elementRef: ElementRef,
-      protected readonly editEventDispatcher: EditEventDispatcher,
+      protected readonly editEventDispatcher: EditEventDispatcher<EditRef<unknown>>,
       protected readonly focusDispatcher: FocusDispatcher, protected readonly ngZone: NgZone) {}
 
   ngAfterViewInit(): void {
@@ -107,9 +108,9 @@ export class CdkEditable implements AfterViewInit, OnDestroy {
           handler => element.addEventListener('focus', handler, true),
           handler => element.removeEventListener('focus', handler, true)
           ).pipe(
-              takeUntil(this.destroyed),
               toClosest(ROW_SELECTOR),
               share(),
+              takeUntil(this.destroyed),
               ).subscribe(this.editEventDispatcher.focused);
 
       merge(
@@ -119,22 +120,22 @@ export class CdkEditable implements AfterViewInit, OnDestroy {
         ),
         fromEvent<KeyboardEvent>(element, 'keydown').pipe(filter(event => event.key === 'Escape'))
       ).pipe(
-        takeUntil(this.destroyed),
         mapTo(null),
         share(),
+        takeUntil(this.destroyed),
       ).subscribe(this.editEventDispatcher.focused);
 
       // Keep track of rows within the table. This is used to know which rows with hover content
       // are first or last in the table. They are kept focusable in case focus enters from above
       // or below the table.
       this.ngZone.onStable.pipe(
-          takeUntil(this.destroyed),
           // Optimization: ignore dom changes while focus is within the table as we already
           // ensure that rows above and below the focused/active row are tabbable.
           withLatestFrom(this.editEventDispatcher.editingOrFocused),
           filter(([_, activeRow]) => activeRow == null),
           map(() => element.querySelectorAll(ROW_SELECTOR)),
           share(),
+          takeUntil(this.destroyed),
           ).subscribe(this.editEventDispatcher.allRows);
 
       fromEvent<KeyboardEvent>(element, 'keydown').pipe(
@@ -310,10 +311,9 @@ export class CdkPopoverEdit<C> implements AfterViewInit, OnDestroy {
     // scroll position and viewport size.
     merge(this.services.scrollDispatcher.scrolled(), this.services.viewportRuler.change())
         .pipe(
-            startWith(null),
-            takeUntil(this.overlayRef!.detachments()),
-            takeUntil(this.destroyed),
-            )
+          startWith(null),
+          takeUntil(merge(this.overlayRef!.detachments(), this.destroyed))
+        )
         .subscribe(() => {
           this._updateOverlaySize();
         });
@@ -488,7 +488,7 @@ export class CdkRowHoverContent implements AfterViewInit, OnDestroy {
 export class CdkEditOpen {
   constructor(
       protected readonly elementRef: ElementRef<HTMLElement>,
-      protected readonly editEventDispatcher: EditEventDispatcher) {
+      protected readonly editEventDispatcher: EditEventDispatcher<EditRef<unknown>>) {
 
     const nativeElement = elementRef.nativeElement;
 

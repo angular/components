@@ -9,7 +9,7 @@
       "../../dist/packages/material"
     ],
     "importHelpers": false,
-    "module": "commonjs",
+    "module": "umd",
     "target": "es5",
     "types": ["jasmine"],
     "experimentalDecorators": true,
@@ -22,9 +22,11 @@
   },
   "include": [
     "**/index.ts",
-    "**/*.spec.ts"
+    "**/*.spec.ts",
+    "../dev-mode-types.d.ts"
   ],
   "exclude": [
+    "core/theming/tests/**/*.ts",
     "**/schematics/**/*.ts",
     "**/*.e2e.spec.ts"
   ]

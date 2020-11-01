@@ -6,9 +6,11 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Component} from '@angular/core';
+import {Component, TemplateRef} from '@angular/core';
 import {FormControl, Validators} from '@angular/forms';
-import {ErrorStateMatcher, ThemePalette, FloatLabelType} from '@angular/material/core';
+import {ErrorStateMatcher, ThemePalette} from '@angular/material/core';
+import {MatDialog} from '@angular/material/dialog';
+import {FloatLabelType} from '@angular/material/form-field';
 import {MatSelectChange} from '@angular/material/select';
 
 /** Error any time control is invalid */
@@ -22,9 +24,9 @@ export class MyErrorStateMatcher implements ErrorStateMatcher {
 }
 
 @Component({
-    selector: 'select-demo',
-    templateUrl: 'select-demo.html',
-    styleUrls: ['select-demo.css'],
+  selector: 'select-demo',
+  templateUrl: 'select-demo.html',
+  styleUrls: ['select-demo.css'],
 })
 export class SelectDemo {
   drinksRequired = false;
@@ -132,6 +134,8 @@ export class SelectDemo {
     {value: 'indramon-5', viewValue: 'Indramon'}
   ];
 
+  constructor(private _dialog: MatDialog) {}
+
   toggleDisabled() {
     this.foodControl.enabled ? this.foodControl.disable() : this.foodControl.enable();
   }
@@ -156,5 +160,9 @@ export class SelectDemo {
 
   toggleSelected() {
     this.currentAppearanceValue = this.currentAppearanceValue ? null : this.digimon[0].value;
+  }
+
+  openDialogWithSelectInside(dialogTemplate: TemplateRef<unknown>) {
+    this._dialog.open(dialogTemplate);
   }
 }

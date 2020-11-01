@@ -13,7 +13,7 @@ import {CheckboxHarnessFilters} from './checkbox-harness-filters';
 /** Harness for interacting with a standard mat-checkbox in tests. */
 export class MatCheckboxHarness extends ComponentHarness {
   /** The selector for the host element of a `MatCheckbox` instance. */
-  static hostSelector = 'mat-checkbox';
+  static hostSelector = '.mat-checkbox';
 
   /**
    * Gets a `HarnessPredicate` that can be used to search for a `MatCheckboxHarness` that meets
@@ -99,6 +99,11 @@ export class MatCheckboxHarness extends ComponentHarness {
   /** Blurs the checkbox. */
   async blur(): Promise<void> {
     return (await this._input()).blur();
+  }
+
+  /** Whether the checkbox is focused. */
+  async isFocused(): Promise<boolean> {
+    return (await this._input()).isFocused();
   }
 
   /**

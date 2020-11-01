@@ -34,10 +34,16 @@ import {
 } from '@angular/core';
 import {DateAdapter, MAT_DATE_FORMATS, MatDateFormats} from '@angular/material/core';
 import {Directionality} from '@angular/cdk/bidi';
-import {MatCalendarBody, MatCalendarCell} from './calendar-body';
+import {
+  MatCalendarBody,
+  MatCalendarCell,
+  MatCalendarUserEvent,
+  MatCalendarCellClassFunction,
+} from './calendar-body';
 import {createMissingDateImplError} from './datepicker-errors';
 import {Subscription} from 'rxjs';
 import {startWith} from 'rxjs/operators';
+import {DateRange} from './date-selection-model';
 
 /**
  * An internal component used to display a single year in the datepicker.
@@ -59,7 +65,9 @@ export class MatYearView<D> implements AfterContentInit, OnDestroy {
   set activeDate(value: D) {
     let oldActiveDate = this._activeDate;
     const validDate =
-        this._getValidDateOrNull(this._dateAdapter.deserialize(value)) || this._dateAdapter.today();
+      this._dateAdapter.getValidDateOrNull(
+        this._dateAdapter.deserialize(value)
+      ) || this._dateAdapter.today();
     this._activeDate = this._dateAdapter.clampDate(validDate, this.minDate, this.maxDate);
     if (this._dateAdapter.getYear(oldActiveDate) !== this._dateAdapter.getYear(this._activeDate)) {
       this._init();
@@ -69,18 +77,23 @@ export class MatYearView<D> implements AfterContentInit, OnDestroy {
 
   /** The currently selected date. */
   @Input()
-  get selected(): D | null { return this._selected; }
-  set selected(value: D | null) {
-    this._selected = this._getValidDateOrNull(this._dateAdapter.deserialize(value));
-    this._selectedMonth = this._getMonthInCurrentYear(this._selected);
+  get selected(): DateRange<D> | D | null { return this._selected; }
+  set selected(value: DateRange<D> | D | null) {
+    if (value instanceof DateRange) {
+      this._selected = value;
+    } else {
+      this._selected = this._dateAdapter.getValidDateOrNull(this._dateAdapter.deserialize(value));
+    }
+
+    this._setSelectedMonth(value);
   }
-  private _selected: D | null;
+  private _selected: DateRange<D> | D | null;
 
   /** The minimum selectable date. */
   @Input()
   get minDate(): D | null { return this._minDate; }
   set minDate(value: D | null) {
-    this._minDate = this._getValidDateOrNull(this._dateAdapter.deserialize(value));
+    this._minDate = this._dateAdapter.getValidDateOrNull(this._dateAdapter.deserialize(value));
   }
   private _minDate: D | null;
 
@@ -88,12 +101,15 @@ export class MatYearView<D> implements AfterContentInit, OnDestroy {
   @Input()
   get maxDate(): D | null { return this._maxDate; }
   set maxDate(value: D | null) {
-    this._maxDate = this._getValidDateOrNull(this._dateAdapter.deserialize(value));
+    this._maxDate = this._dateAdapter.getValidDateOrNull(this._dateAdapter.deserialize(value));
   }
   private _maxDate: D | null;
 
   /** A function used to filter which dates are selectable. */
   @Input() dateFilter: (date: D) => boolean;
+
+  /** Function that can be used to add custom CSS classes to date cells. */
+  @Input() dateClass: MatCalendarCellClassFunction<D>;
 
   /** Emits when a new month is selected. */
   @Output() readonly selectedChange: EventEmitter<D> = new EventEmitter<D>();
@@ -126,11 +142,14 @@ export class MatYearView<D> implements AfterContentInit, OnDestroy {
               @Optional() @Inject(MAT_DATE_FORMATS) private _dateFormats: MatDateFormats,
               @Optional() public _dateAdapter: DateAdapter<D>,
               @Optional() private _dir?: Directionality) {
-    if (!this._dateAdapter) {
-      throw createMissingDateImplError('DateAdapter');
-    }
-    if (!this._dateFormats) {
-      throw createMissingDateImplError('MAT_DATE_FORMATS');
+
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      if (!this._dateAdapter) {
+        throw createMissingDateImplError('DateAdapter');
+      }
+      if (!this._dateFormats) {
+        throw createMissingDateImplError('MAT_DATE_FORMATS');
+      }
     }
 
     this._activeDate = this._dateAdapter.today();
@@ -147,7 +166,8 @@ export class MatYearView<D> implements AfterContentInit, OnDestroy {
   }
 
   /** Handles when a new month is selected. */
-  _monthSelected(month: number) {
+  _monthSelected(event: MatCalendarUserEvent<number>) {
+    const month = event.value;
     const normalizedDate =
           this._dateAdapter.createDate(this._dateAdapter.getYear(this.activeDate), month, 1);
 
@@ -200,7 +220,7 @@ export class MatYearView<D> implements AfterContentInit, OnDestroy {
         break;
       case ENTER:
       case SPACE:
-        this._monthSelected(this._dateAdapter.getMonth(this._activeDate));
+        this._monthSelected({value: this._dateAdapter.getMonth(this._activeDate), event});
         break;
       default:
         // Don't prevent default or focus active cell on keys that we don't explicitly handle.
@@ -218,7 +238,7 @@ export class MatYearView<D> implements AfterContentInit, OnDestroy {
 
   /** Initializes this year view. */
   _init() {
-    this._selectedMonth = this._getMonthInCurrentYear(this.selected);
+    this._setSelectedMonth(this.selected);
     this._todayMonth = this._getMonthInCurrentYear(this._dateAdapter.today());
     this._yearLabel = this._dateAdapter.getYearName(this.activeDate);
 
@@ -245,11 +265,12 @@ export class MatYearView<D> implements AfterContentInit, OnDestroy {
 
   /** Creates an MatCalendarCell for the given month. */
   private _createCellForMonth(month: number, monthName: string) {
-    let ariaLabel = this._dateAdapter.format(
-        this._dateAdapter.createDate(this._dateAdapter.getYear(this.activeDate), month, 1),
-        this._dateFormats.display.monthYearA11yLabel);
-    return new MatCalendarCell(
-        month, monthName.toLocaleUpperCase(), ariaLabel, this._shouldEnableMonth(month));
+    const date = this._dateAdapter.createDate(this._dateAdapter.getYear(this.activeDate), month, 1);
+    const ariaLabel = this._dateAdapter.format(date, this._dateFormats.display.monthYearA11yLabel);
+    const cellClasses = this.dateClass ? this.dateClass(date, 'year') : undefined;
+
+    return new MatCalendarCell(month, monthName.toLocaleUpperCase(), ariaLabel,
+        this._shouldEnableMonth(month), cellClasses);
   }
 
   /** Whether the given month is enabled. */
@@ -310,16 +331,18 @@ export class MatYearView<D> implements AfterContentInit, OnDestroy {
     return false;
   }
 
-  /**
-   * @param obj The object to check.
-   * @returns The given object if it is both a date instance and valid, otherwise null.
-   */
-  private _getValidDateOrNull(obj: any): D | null {
-    return (this._dateAdapter.isDateInstance(obj) && this._dateAdapter.isValid(obj)) ? obj : null;
-  }
-
   /** Determines whether the user has the RTL layout direction. */
   private _isRtl() {
     return this._dir && this._dir.value === 'rtl';
+  }
+
+  /** Sets the currently-selected month based on a model value. */
+  private _setSelectedMonth(value: DateRange<D> | D | null) {
+    if (value instanceof DateRange) {
+      this._selectedMonth = this._getMonthInCurrentYear(value.start) ||
+                            this._getMonthInCurrentYear(value.end);
+    } else {
+      this._selectedMonth = this._getMonthInCurrentYear(value);
+    }
   }
 }

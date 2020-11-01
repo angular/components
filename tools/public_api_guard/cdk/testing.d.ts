@@ -1,8 +1,15 @@
+export declare function _getTextWithExcludedElements(element: Element, excludeSelector: string): string;
+
 export declare type AsyncFactoryFn<T> = () => Promise<T>;
 
 export declare type AsyncOptionPredicate<T, O> = (item: T, option: O) => Promise<boolean>;
 
 export declare type AsyncPredicate<T> = (item: T) => Promise<boolean>;
+
+export interface AutoChangeDetectionStatus {
+    isDisabled: boolean;
+    onDetectChangesNow?: () => void;
+}
 
 export interface BaseHarnessFilters {
     ancestor?: string;
@@ -26,12 +33,26 @@ export interface ComponentHarnessConstructor<T extends ComponentHarness> {
     new (locatorFactory: LocatorFactory): T;
 }
 
+export declare abstract class ContentContainerComponentHarness<S extends string = string> extends ComponentHarness implements HarnessLoader {
+    getAllChildLoaders(selector: S): Promise<HarnessLoader[]>;
+    getAllHarnesses<T extends ComponentHarness>(query: HarnessQuery<T>): Promise<T[]>;
+    getChildLoader(selector: S): Promise<HarnessLoader>;
+    getHarness<T extends ComponentHarness>(query: HarnessQuery<T>): Promise<T>;
+    protected getRootHarnessLoader(): Promise<HarnessLoader>;
+}
+
 export interface ElementDimensions {
     height: number;
     left: number;
     top: number;
     width: number;
 }
+
+export declare type EventData = string | number | boolean | undefined | null | EventData[] | {
+    [key: string]: EventData;
+};
+
+export declare function handleAutoChangeDetectionStatus(handler: (status: AutoChangeDetectionStatus) => void): void;
 
 export declare abstract class HarnessEnvironment<E> implements HarnessLoader, LocatorFactory {
     protected rawRootElement: E;
@@ -54,6 +75,7 @@ export declare abstract class HarnessEnvironment<E> implements HarnessLoader, Lo
     locatorFor<T extends (HarnessQuery<any> | string)[]>(...queries: T): AsyncFactoryFn<LocatorFnResult<T>>;
     locatorForAll<T extends (HarnessQuery<any> | string)[]>(...queries: T): AsyncFactoryFn<LocatorFnResult<T>[]>;
     locatorForOptional<T extends (HarnessQuery<any> | string)[]>(...queries: T): AsyncFactoryFn<LocatorFnResult<T> | null>;
+    rootHarnessLoader(): Promise<HarnessLoader>;
     abstract waitForTasksOutsideAngular(): Promise<void>;
 }
 
@@ -88,6 +110,7 @@ export interface LocatorFactory {
     locatorFor<T extends (HarnessQuery<any> | string)[]>(...queries: T): AsyncFactoryFn<LocatorFnResult<T>>;
     locatorForAll<T extends (HarnessQuery<any> | string)[]>(...queries: T): AsyncFactoryFn<LocatorFnResult<T>[]>;
     locatorForOptional<T extends (HarnessQuery<any> | string)[]>(...queries: T): AsyncFactoryFn<LocatorFnResult<T> | null>;
+    rootHarnessLoader(): Promise<HarnessLoader>;
     waitForTasksOutsideAngular(): Promise<void>;
 }
 
@@ -97,6 +120,8 @@ export declare type LocatorFnResult<T extends (HarnessQuery<any> | string)[]> = 
     } ? C : T[I] extends string ? TestElement : never;
 }[number];
 
+export declare function manualChangeDetection<T>(fn: () => Promise<T>): Promise<T>;
+
 export interface ModifierKeys {
     alt?: boolean;
     control?: boolean;
@@ -104,10 +129,17 @@ export interface ModifierKeys {
     shift?: boolean;
 }
 
+export declare function parallel<T>(values: () => Iterable<T | PromiseLike<T>>): Promise<T[]>;
+
+export declare function stopHandlingAutoChangeDetectionStatus(): void;
+
 export interface TestElement {
     blur(): Promise<void>;
     clear(): Promise<void>;
-    click(relativeX?: number, relativeY?: number): Promise<void>;
+    click(): Promise<void>;
+    click(location: 'center'): Promise<void>;
+    click(relativeX: number, relativeY: number): Promise<void>;
+    dispatchEvent?(name: string, data?: Record<string, EventData>): Promise<void>;
     focus(): Promise<void>;
     getAttribute(name: string): Promise<string | null>;
     getCssValue(property: string): Promise<string>;
@@ -117,9 +149,13 @@ export interface TestElement {
     hover(): Promise<void>;
     isFocused(): Promise<boolean>;
     matchesSelector(selector: string): Promise<boolean>;
+    mouseAway(): Promise<void>;
+    rightClick?(relativeX: number, relativeY: number): Promise<void>;
+    selectOptions?(...optionIndexes: number[]): Promise<void>;
     sendKeys(...keys: (string | TestKey)[]): Promise<void>;
     sendKeys(modifiers: ModifierKeys, ...keys: (string | TestKey)[]): Promise<void>;
-    text(): Promise<string>;
+    setInputValue?(value: string): Promise<void>;
+    text(options?: TextOptions): Promise<string>;
 }
 
 export declare enum TestKey {
@@ -153,4 +189,8 @@ export declare enum TestKey {
     F11 = 27,
     F12 = 28,
     META = 29
+}
+
+export interface TextOptions {
+    exclude?: string;
 }

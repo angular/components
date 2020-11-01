@@ -62,11 +62,11 @@ export function runHarnessTests(
 
     it('should focus and blur a menu', async () => {
       const menu = await loader.getHarness(menuHarness.with({triggerText: 'Settings'}));
-      expect(getActiveElementId()).not.toBe('settings');
+      expect(await menu.isFocused()).toBe(false);
       await menu.focus();
-      expect(getActiveElementId()).toBe('settings');
+      expect(await menu.isFocused()).toBe(true);
       await menu.blur();
-      expect(getActiveElementId()).not.toBe('settings');
+      expect(await menu.isFocused()).toBe(false);
     });
 
     it('should open and close', async () => {
@@ -123,7 +123,7 @@ export function runHarnessTests(
     });
 
     it('should get submenus', async () => {
-      const menu1 = await loader.getHarness(MatMenuHarness.with({triggerText: 'Menu 1'}));
+      const menu1 = await loader.getHarness(menuHarness.with({triggerText: 'Menu 1'}));
 
       await menu1.open();
       let submenus = await menu1.getItems({hasSubmenu: true});
@@ -147,33 +147,29 @@ export function runHarnessTests(
     });
 
     it('should select item in top-level menu', async () => {
-      const menu1 = await loader.getHarness(MatMenuHarness.with({triggerText: 'Menu 1'}));
+      const menu1 = await loader.getHarness(menuHarness.with({triggerText: 'Menu 1'}));
       await menu1.clickItem({text: /Leaf/});
       expect(fixture.componentInstance.lastClickedLeaf).toBe(1);
     });
 
     it('should throw when item is not found', async () => {
-      const menu1 = await loader.getHarness(MatMenuHarness.with({triggerText: 'Menu 1'}));
+      const menu1 = await loader.getHarness(menuHarness.with({triggerText: 'Menu 1'}));
       await expectAsync(menu1.clickItem({text: 'Fake Item'})).toBeRejectedWithError(
           /Could not find item matching {"text":"Fake Item"}/);
     });
 
     it('should select item in nested menu', async () => {
-      const menu1 = await loader.getHarness(MatMenuHarness.with({triggerText: 'Menu 1'}));
+      const menu1 = await loader.getHarness(menuHarness.with({triggerText: 'Menu 1'}));
       await menu1.clickItem({text: 'Menu 3'}, {text: 'Menu 4'}, {text: /Leaf/});
       expect(fixture.componentInstance.lastClickedLeaf).toBe(3);
     });
 
     it('should throw when intermediate item does not have submenu', async () => {
-      const menu1 = await loader.getHarness(MatMenuHarness.with({triggerText: 'Menu 1'}));
+      const menu1 = await loader.getHarness(menuHarness.with({triggerText: 'Menu 1'}));
       await expectAsync(menu1.clickItem({text: 'Leaf Item 1'}, {})).toBeRejectedWithError(
           /Item matching {"text":"Leaf Item 1"} does not have a submenu/);
     });
   });
-}
-
-function getActiveElementId() {
-  return document.activeElement ? document.activeElement.id : '';
 }
 
 @Component({

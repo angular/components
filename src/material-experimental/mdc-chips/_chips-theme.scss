@@ -2,11 +2,12 @@
 @import '../mdc-helpers/mdc-helpers';
 @import '@material/theme/functions.import';
 
-@mixin mat-mdc-chips-theme($theme) {
-  $primary: mat-color(map-get($theme, primary));
-  $accent: mat-color(map-get($theme, accent));
-  $warn: mat-color(map-get($theme, warn));
-  $background: map-get($theme, background);
+@mixin mat-mdc-chips-color($config-or-theme) {
+  $config: mat-get-color-config($config-or-theme);
+  $primary: mat-color(map-get($config, primary));
+  $accent: mat-color(map-get($config, accent));
+  $warn: mat-color(map-get($config, warn));
+  $background: map-get($config, background);
   $unselected-background: mat-color($background, unselected-chip);
 
   // Save original values of MDC global variables. We need to save these so we can restore the
@@ -15,7 +16,7 @@
   $orig-mdc-chips-ink-color-default: $mdc-chips-ink-color-default;
   $orig-mdc-chips-icon-color: $mdc-chips-icon-color;
 
-  @include mat-using-mdc-theme($theme) {
+  @include mat-using-mdc-theme($config) {
     $mdc-chips-fill-color-default:
         mix(mdc-theme-prop-value(on-surface), mdc-theme-prop-value(surface), 12%) !global;
     $mdc-chips-ink-color-default: rgba(mdc-theme-prop-value(on-surface), 0.87) !global;
@@ -54,9 +55,37 @@
   $mdc-chips-icon-color: $orig-mdc-chips-icon-color !global;
 }
 
-@mixin mat-mdc-chips-typography($config) {
+@mixin mat-mdc-chips-typography($config-or-theme) {
+  $config: mat-get-typography-config($config-or-theme);
   @include mdc-chip-set-core-styles($query: $mat-typography-styles-query);
   @include mat-using-mdc-typography($config) {
     @include mdc-chip-without-ripple($query: $mat-typography-styles-query);
   }
 }
+
+@mixin mat-mdc-chips-density($config-or-theme) {
+  $density-scale: mat-get-density-config($config-or-theme);
+  .mat-mdc-chip {
+    @include mdc-chip-density($density-scale, $query: $mat-base-styles-query);
+  }
+}
+
+@mixin mat-mdc-chips-theme($theme-or-color-config) {
+  $theme: _mat-legacy-get-theme($theme-or-color-config);
+  @include _mat-check-duplicate-theme-styles($theme, 'mat-mdc-chips') {
+    $color: mat-get-color-config($theme);
+    $density: mat-get-density-config($theme);
+    $typography: mat-get-typography-config($theme);
+
+    @if $color != null {
+      @include mat-mdc-chips-color($color);
+    }
+    @if $density != null {
+      @include mat-mdc-chips-density($density);
+    }
+    @if $typography != null {
+      @include mat-mdc-chips-typography($typography);
+    }
+  }
+}
+

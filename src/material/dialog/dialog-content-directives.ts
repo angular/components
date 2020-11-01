@@ -16,7 +16,7 @@ import {
   ElementRef,
 } from '@angular/core';
 import {MatDialog} from './dialog';
-import {MatDialogRef} from './dialog-ref';
+import {_closeDialogVia, MatDialogRef} from './dialog-ref';
 
 /** Counter used to generate unique IDs for dialog elements. */
 let dialogElementUid = 0;
@@ -28,7 +28,7 @@ let dialogElementUid = 0;
   selector: '[mat-dialog-close], [matDialogClose]',
   exportAs: 'matDialogClose',
   host: {
-    '(click)': 'dialogRef.close(dialogResult)',
+    '(click)': '_onButtonClick($event)',
     '[attr.aria-label]': 'ariaLabel || null',
     '[attr.type]': 'type',
   }
@@ -46,6 +46,8 @@ export class MatDialogClose implements OnInit, OnChanges {
   @Input('matDialogClose') _matDialogClose: any;
 
   constructor(
+    // The dialog title directive is always used in combination with a `MatDialogRef`.
+    // tslint:disable-next-line: lightweight-tokens
     @Optional() public dialogRef: MatDialogRef<any>,
     private _elementRef: ElementRef<HTMLElement>,
     private _dialog: MatDialog) {}
@@ -68,6 +70,15 @@ export class MatDialogClose implements OnInit, OnChanges {
       this.dialogResult = proxiedChange.currentValue;
     }
   }
+
+  _onButtonClick(event: MouseEvent) {
+    // Determinate the focus origin using the click event, because using the FocusMonitor will
+    // result in incorrect origins. Most of the time, close buttons will be auto focused in the
+    // dialog, and therefore clicking the button won't result in a focus change. This means that
+    // the FocusMonitor won't detect any origin change, and will always output `program`.
+    _closeDialogVia(this.dialogRef,
+        event.screenX === 0 && event.screenY === 0 ? 'keyboard' : 'mouse', this.dialogResult);
+  }
 }
 
 /**
@@ -85,9 +96,11 @@ export class MatDialogTitle implements OnInit {
   @Input() id: string = `mat-dialog-title-${dialogElementUid++}`;
 
   constructor(
-    @Optional() private _dialogRef: MatDialogRef<any>,
-    private _elementRef: ElementRef<HTMLElement>,
-    private _dialog: MatDialog) {}
+      // The dialog title directive is always used in combination with a `MatDialogRef`.
+      // tslint:disable-next-line: lightweight-tokens
+      @Optional() private _dialogRef: MatDialogRef<any>,
+      private _elementRef: ElementRef<HTMLElement>,
+      private _dialog: MatDialog) {}
 
   ngOnInit() {
     if (!this._dialogRef) {

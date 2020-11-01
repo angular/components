@@ -1,6 +1,9 @@
-import {async, ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/testing';
+import {waitForAsync, ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/testing';
 import {Component, QueryList, ViewChild, ViewChildren} from '@angular/core';
-import {MAT_RIPPLE_GLOBAL_OPTIONS, RippleGlobalOptions} from '@angular/material/core';
+import {
+  MAT_RIPPLE_GLOBAL_OPTIONS,
+  RippleGlobalOptions,
+} from '@angular/material-experimental/mdc-core';
 import {By} from '@angular/platform-browser';
 import {dispatchFakeEvent, dispatchMouseEvent} from '@angular/cdk/testing/private';
 import {Direction, Directionality} from '@angular/cdk/bidi';
@@ -16,7 +19,7 @@ describe('MDC-based MatTabNavBar', () => {
   let dirChange = new Subject();
   let globalRippleOptions: RippleGlobalOptions;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     globalRippleOptions = {};
 
     TestBed.configureTestingModule({
@@ -31,7 +34,7 @@ describe('MDC-based MatTabNavBar', () => {
       providers: [
         {provide: MAT_RIPPLE_GLOBAL_OPTIONS, useFactory: () => globalRippleOptions},
         {provide: Directionality, useFactory: () =>
-            ({value: dir, change: dirChange.asObservable()})},
+            ({value: dir, change: dirChange})},
       ]
     });
 
@@ -147,27 +150,29 @@ describe('MDC-based MatTabNavBar', () => {
       expect(tabLinkElement.classList).toContain('mat-mdc-tab-disabled');
     });
 
-    it('should re-align the ink bar when the direction changes', () => {
+    it('should re-align the ink bar when the direction changes', fakeAsync(() => {
       const inkBar = fixture.componentInstance.tabNavBar._inkBar;
 
       spyOn(inkBar, 'alignToElement');
 
       dirChange.next();
+      tick();
       fixture.detectChanges();
 
       expect(inkBar.alignToElement).toHaveBeenCalled();
-    });
+    }));
 
-    it('should re-align the ink bar when the tabs list change', () => {
+    it('should re-align the ink bar when the tabs list change', fakeAsync(() => {
       const inkBar = fixture.componentInstance.tabNavBar._inkBar;
 
       spyOn(inkBar, 'alignToElement');
 
       fixture.componentInstance.tabs = [1, 2, 3, 4];
       fixture.detectChanges();
+      tick();
 
       expect(inkBar.alignToElement).toHaveBeenCalled();
-    });
+    }));
 
     it('should re-align the ink bar when the tab labels change the width', done => {
       const inkBar = fixture.componentInstance.tabNavBar._inkBar;
@@ -256,6 +261,22 @@ describe('MDC-based MatTabNavBar', () => {
     fixture.detectChanges();
 
     expect(tabLink.tabIndex).toBe(3, 'Expected the tabIndex to be have been set to 3.');
+  });
+
+  it('should select the proper tab, if the tabs come in after init', () => {
+    const fixture = TestBed.createComponent(SimpleTabNavBarTestApp);
+    const instance = fixture.componentInstance;
+
+    instance.tabs = [];
+    instance.activeIndex = 1;
+    fixture.detectChanges();
+
+    expect(instance.tabNavBar.selectedIndex).toBe(-1);
+
+    instance.tabs = [0, 1, 2];
+    fixture.detectChanges();
+
+    expect(instance.tabNavBar.selectedIndex).toBe(1);
   });
 
   describe('ripples', () => {

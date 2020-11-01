@@ -11,7 +11,7 @@ import {
 } from '@angular/cdk/keycodes';
 import {dispatchFakeEvent, dispatchKeyboardEvent} from '@angular/cdk/testing/private';
 import {Component, ViewChild} from '@angular/core';
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import {waitForAsync, ComponentFixture, TestBed} from '@angular/core/testing';
 import {MatNativeDateModule} from '@angular/material/core';
 import {AUG, DEC, FEB, JAN, JUL, JUN, MAR, MAY, NOV, OCT, SEP} from '@angular/material/testing';
 import {By} from '@angular/platform-browser';
@@ -21,7 +21,7 @@ import {MatYearView} from './year-view';
 describe('MatYearView', () => {
   let dir: {value: Direction};
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [
         MatNativeDateModule,
@@ -33,6 +33,7 @@ describe('MatYearView', () => {
         // Test components.
         StandardYearView,
         YearViewWithDateFilter,
+        YearViewWithDateClass,
       ],
       providers: [
         {provide: Directionality, useFactory: () => dir = {value: 'ltr'}}
@@ -108,7 +109,7 @@ describe('MatYearView', () => {
       testComponent.date = new Date(2017, JUL, 31);
       fixture.detectChanges();
 
-      testComponent.yearView._monthSelected(JUN);
+      testComponent.yearView._monthSelected({value: JUN, event: null!});
       fixture.detectChanges();
 
       expect(testComponent.selected).toEqual(new Date(2017, JUN, 30));
@@ -329,6 +330,32 @@ describe('MatYearView', () => {
     });
 
   });
+
+  describe('year view with custom date classes', () => {
+    let fixture: ComponentFixture<YearViewWithDateClass>;
+    let yearViewNativeElement: Element;
+    let dateClassSpy: jasmine.Spy;
+
+    beforeEach(() => {
+      fixture = TestBed.createComponent(YearViewWithDateClass);
+      dateClassSpy = spyOn(fixture.componentInstance, 'dateClass').and.callThrough();
+      fixture.detectChanges();
+
+      let yearViewDebugElement = fixture.debugElement.query(By.directive(MatYearView))!;
+      yearViewNativeElement = yearViewDebugElement.nativeElement;
+    });
+
+    it('should be able to add a custom class to some month cells', () => {
+      let cells = yearViewNativeElement.querySelectorAll('.mat-calendar-body-cell');
+      expect(cells[0].classList).toContain('even');
+      expect(cells[1].classList).not.toContain('even');
+    });
+
+    it('should call dateClass with the correct view name', () => {
+      expect(dateClassSpy).toHaveBeenCalledWith(jasmine.any(Date), 'year');
+    });
+  });
+
 });
 
 
@@ -366,5 +393,16 @@ class YearViewWithDateFilter {
       return false;
     }
     return true;
+  }
+}
+
+
+@Component({
+  template: `<mat-year-view [activeDate]="activeDate" [dateClass]="dateClass"></mat-year-view>`
+})
+class YearViewWithDateClass {
+  activeDate = new Date(2017, JAN, 1);
+  dateClass(date: Date) {
+    return date.getMonth() % 2 == 0 ? 'even' : undefined;
   }
 }

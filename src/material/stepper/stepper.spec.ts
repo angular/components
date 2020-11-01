@@ -20,7 +20,16 @@ import {
   createKeyboardEvent,
   dispatchEvent,
 } from '@angular/cdk/testing/private';
-import {Component, DebugElement, EventEmitter, OnInit, Type, Provider} from '@angular/core';
+import {
+  Component,
+  DebugElement,
+  EventEmitter,
+  OnInit,
+  Type,
+  Provider,
+  ViewChildren,
+  QueryList,
+} from '@angular/core';
 import {ComponentFixture, fakeAsync, flush, inject, TestBed} from '@angular/core/testing';
 import {
   AbstractControl,
@@ -32,7 +41,7 @@ import {
   Validators,
   FormBuilder
 } from '@angular/forms';
-import {MatRipple} from '@angular/material/core';
+import {MatRipple, ThemePalette} from '@angular/material/core';
 import {By} from '@angular/platform-browser';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {Observable, Subject} from 'rxjs';
@@ -375,23 +384,6 @@ describe('MatStepper', () => {
     it('should not do anything when pressing the SPACE key with a modifier', () => {
       const stepHeaders = fixture.debugElement.queryAll(By.css('.mat-vertical-stepper-header'));
       assertSelectKeyWithModifierInteraction(fixture, stepHeaders, 'vertical', SPACE);
-    });
-
-    it('should set the proper tabindex', () => {
-      let stepContents = fixture.debugElement.queryAll(By.css(`.mat-vertical-stepper-content`));
-      let stepperComponent =
-          fixture.debugElement.query(By.directive(MatStepper))!.componentInstance;
-      let firstStepContentEl = stepContents[0].nativeElement;
-      let secondStepContentEl = stepContents[1].nativeElement;
-
-      expect(firstStepContentEl.getAttribute('tabindex')).toBe('0');
-      expect(secondStepContentEl.getAttribute('tabindex')).toBeFalsy();
-
-      stepperComponent.selectedIndex = 1;
-      fixture.detectChanges();
-
-      expect(firstStepContentEl.getAttribute('tabindex')).toBeFalsy();
-      expect(secondStepContentEl.getAttribute('tabindex')).toBe('0');
     });
 
     it('should have a focus indicator', () => {
@@ -888,6 +880,43 @@ describe('MatStepper', () => {
 
       expect(headerRipples.every(ripple => ripple.disabled)).toBe(true);
     });
+
+    it('should be able to set the theme for all steps', () => {
+      const fixture = createComponent(SimpleMatVerticalStepperApp);
+      fixture.detectChanges();
+
+      const headers =
+          Array.from<HTMLElement>(fixture.nativeElement.querySelectorAll('.mat-step-header'));
+
+      expect(headers.every(element => element.classList.contains('mat-primary'))).toBe(true);
+      expect(headers.some(element => element.classList.contains('mat-accent'))).toBe(false);
+      expect(headers.some(element => element.classList.contains('mat-warn'))).toBe(false);
+
+      fixture.componentInstance.stepperTheme = 'accent';
+      fixture.detectChanges();
+
+      expect(headers.some(element => element.classList.contains('mat-accent'))).toBe(true);
+      expect(headers.some(element => element.classList.contains('mat-primary'))).toBe(false);
+      expect(headers.some(element => element.classList.contains('mat-warn'))).toBe(false);
+    });
+
+    it('should be able to set the theme for a specific step', () => {
+      const fixture = createComponent(SimpleMatVerticalStepperApp);
+      fixture.detectChanges();
+
+      const headers =
+          Array.from<HTMLElement>(fixture.nativeElement.querySelectorAll('.mat-step-header'));
+
+      expect(headers.every(element => element.classList.contains('mat-primary'))).toBe(true);
+
+      fixture.componentInstance.secondStepTheme = 'accent';
+      fixture.detectChanges();
+
+      expect(headers[0].classList.contains('mat-primary')).toBe(true);
+      expect(headers[1].classList.contains('mat-primary')).toBe(false);
+      expect(headers[2].classList.contains('mat-primary')).toBe(true);
+      expect(headers[1].classList.contains('mat-accent')).toBe(true);
+    });
   });
 
   describe('horizontal stepper', () => {
@@ -944,6 +973,43 @@ describe('MatStepper', () => {
       fixture.detectChanges();
 
       expect(headerRipples.every(ripple => ripple.disabled)).toBe(true);
+    });
+
+    it('should be able to set the theme for all steps', () => {
+      const fixture = createComponent(SimpleMatHorizontalStepperApp);
+      fixture.detectChanges();
+
+      const headers =
+          Array.from<HTMLElement>(fixture.nativeElement.querySelectorAll('.mat-step-header'));
+
+      expect(headers.every(element => element.classList.contains('mat-primary'))).toBe(true);
+      expect(headers.some(element => element.classList.contains('mat-accent'))).toBe(false);
+      expect(headers.some(element => element.classList.contains('mat-warn'))).toBe(false);
+
+      fixture.componentInstance.stepperTheme = 'accent';
+      fixture.detectChanges();
+
+      expect(headers.some(element => element.classList.contains('mat-accent'))).toBe(true);
+      expect(headers.some(element => element.classList.contains('mat-primary'))).toBe(false);
+      expect(headers.some(element => element.classList.contains('mat-warn'))).toBe(false);
+    });
+
+    it('should be able to set the theme for a specific step', () => {
+      const fixture = createComponent(SimpleMatHorizontalStepperApp);
+      fixture.detectChanges();
+
+      const headers =
+          Array.from<HTMLElement>(fixture.nativeElement.querySelectorAll('.mat-step-header'));
+
+      expect(headers.every(element => element.classList.contains('mat-primary'))).toBe(true);
+
+      fixture.componentInstance.secondStepTheme = 'accent';
+      fixture.detectChanges();
+
+      expect(headers[0].classList.contains('mat-primary')).toBe(true);
+      expect(headers[1].classList.contains('mat-primary')).toBe(false);
+      expect(headers[2].classList.contains('mat-primary')).toBe(true);
+      expect(headers[1].classList.contains('mat-accent')).toBe(true);
     });
   });
 
@@ -1195,6 +1261,15 @@ describe('MatStepper', () => {
 
     expect(fixture.nativeElement.querySelectorAll('.mat-step-header').length).toBe(2);
   });
+
+  it('should not pick up the steps from descendant steppers', () => {
+    const fixture = createComponent(NestedSteppers);
+    fixture.detectChanges();
+    const steppers = fixture.componentInstance.steppers.toArray();
+
+    expect(steppers[0].steps.length).toBe(3);
+    expect(steppers[1].steps.length).toBe(2);
+  });
 });
 
 /** Asserts that keyboard interaction works correctly. */
@@ -1310,7 +1385,7 @@ function assertSelectKeyWithModifierInteraction(fixture: ComponentFixture<any>,
       .toBe(0, 'Expected index of selected step to remain unchanged after pressing the next key.');
 
   modifiers.forEach(modifier => {
-    const event: KeyboardEvent = createKeyboardEvent('keydown', selectionKey);
+    const event = createKeyboardEvent('keydown', selectionKey);
     Object.defineProperty(event, modifier, {get: () => true});
     dispatchEvent(stepHeaders[1].nativeElement, event);
     fixture.detectChanges();
@@ -1394,7 +1469,7 @@ class MatHorizontalStepperWithErrorsApp implements OnInit {
 
 @Component({
   template: `
-    <mat-horizontal-stepper [disableRipple]="disableRipple">
+    <mat-horizontal-stepper [disableRipple]="disableRipple" [color]="stepperTheme">
       <mat-step>
         <ng-template matStepLabel>Step 1</ng-template>
         Content 1
@@ -1403,7 +1478,7 @@ class MatHorizontalStepperWithErrorsApp implements OnInit {
           <button mat-button matStepperNext>Next</button>
         </div>
       </mat-step>
-      <mat-step>
+      <mat-step [color]="secondStepTheme">
         <ng-template matStepLabel>Step 2</ng-template>
         Content 2
         <div>
@@ -1424,11 +1499,13 @@ class MatHorizontalStepperWithErrorsApp implements OnInit {
 class SimpleMatHorizontalStepperApp {
   inputLabel = 'Step 3';
   disableRipple = false;
+  stepperTheme: ThemePalette;
+  secondStepTheme: ThemePalette;
 }
 
 @Component({
   template: `
-    <mat-vertical-stepper [disableRipple]="disableRipple">
+    <mat-vertical-stepper [disableRipple]="disableRipple" [color]="stepperTheme">
       <mat-step>
         <ng-template matStepLabel>Step 1</ng-template>
         Content 1
@@ -1437,7 +1514,7 @@ class SimpleMatHorizontalStepperApp {
           <button mat-button matStepperNext>Next</button>
         </div>
       </mat-step>
-      <mat-step *ngIf="showStepTwo">
+      <mat-step *ngIf="showStepTwo" [color]="secondStepTheme">
         <ng-template matStepLabel>Step 2</ng-template>
         Content 2
         <div>
@@ -1459,6 +1536,8 @@ class SimpleMatVerticalStepperApp {
   inputLabel = 'Step 3';
   showStepTwo = true;
   disableRipple = false;
+  stepperTheme: ThemePalette;
+  secondStepTheme: ThemePalette;
 }
 
 @Component({
@@ -1681,4 +1760,23 @@ class StepperWithIndirectDescendantSteps {
 })
 class StepperWithNgIf {
   showStep2 = false;
+}
+
+
+@Component({
+  template: `
+    <mat-vertical-stepper>
+      <mat-step label="Step 1">Content 1</mat-step>
+      <mat-step label="Step 2">Content 2</mat-step>
+      <mat-step label="Step 3">
+        <mat-horizontal-stepper>
+          <mat-step label="Sub-Step 1">Sub-Content 1</mat-step>
+          <mat-step label="Sub-Step 2">Sub-Content 2</mat-step>
+        </mat-horizontal-stepper>
+      </mat-step>
+    </mat-vertical-stepper>
+  `
+})
+class NestedSteppers {
+  @ViewChildren(MatStepper) steppers: QueryList<MatStepper>;
 }

@@ -6,14 +6,13 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {Component, ViewEncapsulation} from '@angular/core';
+import {Component} from '@angular/core';
 import {PageEvent} from '@angular/material/paginator';
 
 @Component({
   selector: 'paginator-demo',
   templateUrl: 'paginator-demo.html',
   styleUrls: ['paginator-demo.css'],
-  encapsulation: ViewEncapsulation.None,
 })
 export class PaginatorDemo {
   length = 50;

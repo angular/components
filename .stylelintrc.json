@@ -1,4 +1,5 @@
 {
+  "defaultSeverity": "error",
   "plugins": [
     "./tools/stylelint/loader-rule.js",
     "./tools/stylelint/no-prefixes/index.ts",
@@ -6,13 +7,15 @@
     "./tools/stylelint/selector-no-deep.ts",
     "./tools/stylelint/no-nested-mixin.ts",
     "./tools/stylelint/no-concrete-rules.ts",
-    "./tools/stylelint/no-top-level-ampersand-in-mixin.ts"
+    "./tools/stylelint/no-top-level-ampersand-in-mixin.ts",
+    "./tools/stylelint/theme-mixin-api.ts"
   ],
   "rules": {
     "material/no-prefixes": [true, {
       "browsers": ["last 2 versions", "not ie <= 10", "not ie_mob <= 10"],
       "filePattern": "**/!(*-example.css)"
     }],
+    "material/theme-mixin-api": true,
     "material/selector-no-deep": true,
     "material/no-nested-mixin": true,
     "material/no-ampersand-beyond-selector-start": [true, {
@@ -33,7 +36,7 @@
     "function-comma-space-before": "never",
     "function-name-case": "lower",
     "function-url-quotes": "always",
-    "function-url-scheme-blacklist": ["data"],
+    "function-url-scheme-disallowed-list": ["data"],
     "function-whitespace-after": "always",
 
     "number-leading-zero": "always",
@@ -45,7 +48,7 @@
 
     "unit-case": "lower",
     "unit-no-unknown": true,
-    "unit-whitelist": ["px", "%", "deg", "s", "ms", "em", "vh", "vw", "vmin"],
+    "unit-allowed-list": ["px", "%", "deg", "s", "ms", "em", "vh", "vw", "vmin"],
 
     "value-list-comma-space-after": "always-single-line",
     "value-list-comma-space-before": "never",
@@ -64,7 +67,8 @@
     "declaration-block-semicolon-space-after": "always-single-line",
     "declaration-block-semicolon-newline-before": "never-multi-line",
     "declaration-block-semicolon-newline-after": "always-multi-line",
-    "declaration-property-value-blacklist": [
+    "declaration-colon-space-after": "always-single-line",
+    "declaration-property-value-disallowed-list": [
         {"/.*/": ["initial"]},
         {"message": "The `initial` value is not supported in IE."}
     ],
@@ -92,7 +96,7 @@
       "ignorePattern": "/https?://.*/"
     }],
     "linebreaks": "unix",
-    "selector-class-pattern": ["^_?(mat-|cdk-|example-|demo-|ng-|mdc-|map-)", {
+    "selector-class-pattern": ["^_?(mat-|cdk-|example-|demo-|ng-|mdc-|map-|test-)", {
       "resolveNestedSelectors": true
     }]
   }

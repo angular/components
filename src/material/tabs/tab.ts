@@ -23,12 +23,11 @@ import {
   ViewEncapsulation,
   InjectionToken,
   Inject,
-  Optional,
 } from '@angular/core';
 import {CanDisable, CanDisableCtor, mixinDisabled} from '@angular/material/core';
 import {Subject} from 'rxjs';
-import {MatTabContent} from './tab-content';
-import {MatTabLabel} from './tab-label';
+import {MAT_TAB_CONTENT} from './tab-content';
+import {MAT_TAB_LABEL, MatTabLabel} from './tab-label';
 
 
 // Boilerplate for applying mixins to MatTab.
@@ -54,23 +53,15 @@ export const MAT_TAB_GROUP = new InjectionToken<any>('MAT_TAB_GROUP');
 })
 export class MatTab extends _MatTabMixinBase implements OnInit, CanDisable, OnChanges, OnDestroy {
   /** Content for the tab label given by `<ng-template mat-tab-label>`. */
-  @ContentChild(MatTabLabel)
+  @ContentChild(MAT_TAB_LABEL)
   get templateLabel(): MatTabLabel { return this._templateLabel; }
-  set templateLabel(value: MatTabLabel) {
-    // Only update the templateLabel via query if there is actually
-    // a MatTabLabel found. This works around an issue where a user may have
-    // manually set `templateLabel` during creation mode, which would then get clobbered
-    // by `undefined` when this query resolves.
-    if (value) {
-      this._templateLabel = value;
-    }
-  }
-  private _templateLabel: MatTabLabel;
+  set templateLabel(value: MatTabLabel) { this._setTemplateLabelInput(value); }
+  protected _templateLabel: MatTabLabel;
 
   /**
    * Template provided in the tab content that will be used if present, used to enable lazy-loading
    */
-  @ContentChild(MatTabContent, {read: TemplateRef, static: true})
+  @ContentChild(MAT_TAB_CONTENT, {read: TemplateRef, static: true})
   _explicitContent: TemplateRef<any>;
 
   /** Template inside the MatTab view that contains an `<ng-content>`. */
@@ -118,11 +109,7 @@ export class MatTab extends _MatTabMixinBase implements OnInit, CanDisable, OnCh
 
   constructor(
     private _viewContainerRef: ViewContainerRef,
-    /**
-     * @deprecated `_closestTabGroup` parameter to become required.
-     * @breaking-change 10.0.0
-     */
-    @Optional() @Inject(MAT_TAB_GROUP) public _closestTabGroup?: any) {
+    @Inject(MAT_TAB_GROUP) public _closestTabGroup: any) {
     super();
   }
 
@@ -139,6 +126,22 @@ export class MatTab extends _MatTabMixinBase implements OnInit, CanDisable, OnCh
   ngOnInit(): void {
     this._contentPortal = new TemplatePortal(
         this._explicitContent || this._implicitContent, this._viewContainerRef);
+  }
+
+  /**
+   * This has been extracted to a util because of TS 4 and VE.
+   * View Engine doesn't support property rename inheritance.
+   * TS 4.0 doesn't allow properties to override accessors or vice-versa.
+   * @docs-private
+   */
+  protected _setTemplateLabelInput(value: MatTabLabel) {
+    // Only update the templateLabel via query if there is actually
+    // a MatTabLabel found. This works around an issue where a user may have
+    // manually set `templateLabel` during creation mode, which would then get clobbered
+    // by `undefined` when this query resolves.
+    if (value) {
+      this._templateLabel = value;
+    }
   }
 
   static ngAcceptInputType_disabled: BooleanInput;

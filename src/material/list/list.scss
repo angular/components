@@ -48,9 +48,6 @@ $mat-list-item-inset-divider-offset: 72px;
   width: 100%;
   padding: 0;
 
-  // Required for focus indicator.
-  position: relative;
-
   .mat-list-item-content {
     display: flex;
     flex-direction: row;
@@ -353,7 +350,7 @@ mat-action-list {
 // enhancement and not all desktop browsers support this kind of media query, we can't
 // use something like `@media (hover)`.
 @media (hover: none) {
-  .mat-list-option,
+  .mat-list-option:not(.mat-list-single-selected-option),
   .mat-nav-list .mat-list-item,
   .mat-action-list .mat-list-item {
     &:not(.mat-list-item-disabled):hover {

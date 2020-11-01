@@ -174,7 +174,7 @@ class ElementDataSource extends DataSource<PeriodicElement> {
 
   /** Connect function called by the table to retrieve one stream containing the data to render. */
   connect() {
-    return this.data.asObservable();
+    return this.data;
   }
 
   disconnect() {}
@@ -182,7 +182,7 @@ class ElementDataSource extends DataSource<PeriodicElement> {
 
 @Component({
   template: `
-  <div #table style="margin: 16px">
+  <div #table style="margin: 16px; max-width: 90vw; max-height: 90vh;">
     <mat-table editable [dataSource]="dataSource">
       <ng-container matColumnDef="before">
         <mat-cell *matCellDef="let element">
@@ -219,7 +219,12 @@ class ElementDataSource extends DataSource<PeriodicElement> {
       <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
     </mat-table>
   </div>
-  `
+  `,
+  styles: [`
+    mat-table {
+      margin: 16px;
+    }
+  `]
 })
 class MatFlexTableInCell extends BaseTestComponent {
   displayedColumns = ['before', 'name', 'weight'];
@@ -265,7 +270,12 @@ class MatFlexTableInCell extends BaseTestComponent {
       <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
     </table>
   <div>
-  `
+  `,
+  styles: [`
+    table {
+      margin: 16px;
+    }
+  `]
 })
 class MatTableInCell extends BaseTestComponent {
   displayedColumns = ['before', 'name', 'weight'];
@@ -444,7 +454,7 @@ describe('Material Popover Edit', () => {
 
         describe('arrow keys', () => {
           const dispatchKey = (cell: HTMLElement, keyCode: number) =>
-              dispatchKeyboardEvent(cell, 'keydown', keyCode, undefined, cell);
+              dispatchKeyboardEvent(cell, 'keydown', keyCode);
 
           it('moves focus up/down/left/right and prevents default', () => {
             const rowCells = getRowCells();
@@ -564,6 +574,10 @@ matPopoverEditTabOut`, fakeAsync(() => {
       });
 
       describe('edit lens', () => {
+        function expectPixelsToEqual(actual: number, expected: number) {
+          expect(Math.floor(actual)).toBe(Math.floor(expected));
+        }
+
         it('shows a lens with the value from the table', fakeAsync(() => {
           component.openLens();
 
@@ -578,9 +592,9 @@ matPopoverEditTabOut`, fakeAsync(() => {
              const paneRect = component.getEditPane()!.getBoundingClientRect();
              const cellRect = component.getEditCell().getBoundingClientRect();
 
-             expect(paneRect.width).toBe(cellRect.width);
-             expect(paneRect.left).toBe(cellRect.left);
-             expect(paneRect.top).toBe(cellRect.top);
+             expectPixelsToEqual(paneRect.width, cellRect.width);
+             expectPixelsToEqual(paneRect.left, cellRect.left);
+             expectPixelsToEqual(paneRect.top, cellRect.top);
              clearLeftoverTimers();
            }));
 
@@ -594,25 +608,25 @@ matPopoverEditTabOut`, fakeAsync(() => {
              component.openLens();
 
              let paneRect = component.getEditPane()!.getBoundingClientRect();
-             expect(paneRect.top).toBe(cellRects[0].top);
-             expect(paneRect.left).toBe(cellRects[0].left);
-             expect(paneRect.right).toBe(cellRects[1].right);
+             expectPixelsToEqual(paneRect.top, cellRects[0].top);
+             expectPixelsToEqual(paneRect.left, cellRects[0].left);
+             expectPixelsToEqual(paneRect.right, cellRects[1].right);
 
              component.colspan = {after: 1};
              fixture.detectChanges();
 
              paneRect = component.getEditPane()!.getBoundingClientRect();
-             expect(paneRect.top).toBe(cellRects[1].top);
-             expect(paneRect.left).toBe(cellRects[1].left);
-             expect(paneRect.right).toBe(cellRects[2].right);
+             expectPixelsToEqual(paneRect.top, cellRects[1].top);
+             expectPixelsToEqual(paneRect.left, cellRects[1].left);
+             expectPixelsToEqual(paneRect.right, cellRects[2].right);
 
              component.colspan = {before: 1, after: 1};
              fixture.detectChanges();
 
              paneRect = component.getEditPane()!.getBoundingClientRect();
-             expect(paneRect.top).toBe(cellRects[0].top);
-             expect(paneRect.left).toBe(cellRects[0].left);
-             expect(paneRect.right).toBe(cellRects[2].right);
+             expectPixelsToEqual(paneRect.top, cellRects[0].top);
+             expectPixelsToEqual(paneRect.left, cellRects[0].left);
+             expectPixelsToEqual(paneRect.right, cellRects[2].right);
              clearLeftoverTimers();
            }));
 

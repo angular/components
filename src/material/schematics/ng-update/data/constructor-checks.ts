@@ -14,6 +14,58 @@ import {ConstructorChecksUpgradeData, TargetVersion, VersionChanges} from '@angu
  * automatically through type checking.
  */
 export const constructorChecks: VersionChanges<ConstructorChecksUpgradeData> = {
+  [TargetVersion.V11]: [
+    {
+      pr: 'https://github.com/angular/components/issues/20463',
+      changes: ['MatChip', 'MatChipRemove']
+    },
+    {
+      pr: 'https://github.com/angular/components/pull/20449',
+      changes: ['MatDatepickerContent']
+    },
+    {
+      pr: 'https://github.com/angular/components/pull/20545',
+      changes: ['MatBottomSheet', 'MatBottomSheetRef']
+    },
+    {
+      pr: 'https://github.com/angular/components/issues/20535',
+      changes: ['MatCheckbox']
+    },
+    {
+      pr: 'https://github.com/angular/components/pull/20499',
+      changes: ['MatPaginatedTabHeader', 'MatTabBodyPortal', 'MatTabNav', 'MatTab']
+    },
+    {
+      pr: 'https://github.com/angular/components/pull/20479',
+      changes: ['MatCommonModule']
+    }
+  ],
+  [TargetVersion.V10]: [
+    {
+      pr: 'https://github.com/angular/components/pull/19307',
+      changes: ['MatSlideToggle']
+    },
+    {
+      pr: 'https://github.com/angular/components/pull/19379',
+      changes: ['MatSlider']
+    },
+    {
+      pr: 'https://github.com/angular/components/pull/19372',
+      changes: ['MatSortHeader']
+    },
+    {
+      pr: 'https://github.com/angular/components/pull/19324',
+      changes: ['MatAutocompleteTrigger']
+    },
+    {
+      pr: 'https://github.com/angular/components/pull/19363',
+      changes: ['MatTooltip']
+    },
+    {
+      pr: 'https://github.com/angular/components/pull/19323',
+      changes: ['MatIcon', 'MatIconRegistry']
+    }
+  ],
   [TargetVersion.V9]: [
     {
       pr: 'https://github.com/angular/components/pull/17230',

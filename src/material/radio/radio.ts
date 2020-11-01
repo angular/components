@@ -7,11 +7,17 @@
  */
 
 import {FocusMonitor} from '@angular/cdk/a11y';
-import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
+import {
+  BooleanInput,
+  coerceBooleanProperty,
+  coerceNumberProperty,
+  NumberInput,
+} from '@angular/cdk/coercion';
 import {UniqueSelectionDispatcher} from '@angular/cdk/collections';
 import {
   AfterContentInit,
   AfterViewInit,
+  Attribute,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
@@ -78,24 +84,26 @@ export const MAT_RADIO_GROUP_CONTROL_VALUE_ACCESSOR: any = {
 export class MatRadioChange {
   constructor(
     /** The MatRadioButton that emits the change event. */
-    public source: MatRadioButton,
+    public source: _MatRadioButtonBase,
     /** The value of the MatRadioButton. */
     public value: any) {}
 }
 
 /**
- * A group of radio buttons. May contain one or more `<mat-radio-button>` elements.
+ * Injection token that can be used to inject instances of `MatRadioGroup`. It serves as
+ * alternative token to the actual `MatRadioGroup` class which could cause unnecessary
+ * retention of the class and its component metadata.
  */
-@Directive({
-  selector: 'mat-radio-group',
-  exportAs: 'matRadioGroup',
-  providers: [MAT_RADIO_GROUP_CONTROL_VALUE_ACCESSOR],
-  host: {
-    'role': 'radiogroup',
-    'class': 'mat-radio-group',
-  },
-})
-export class MatRadioGroup implements AfterContentInit, ControlValueAccessor {
+export const MAT_RADIO_GROUP =
+    new InjectionToken<_MatRadioGroupBase<_MatRadioButtonBase>>('MatRadioGroup');
+
+/**
+ * Base class with all of the `MatRadioGroup` functionality.
+ * @docs-private
+ */
+@Directive()
+export abstract class _MatRadioGroupBase<T extends _MatRadioButtonBase> implements AfterContentInit,
+  ControlValueAccessor {
   /** Selected value for the radio group. */
   private _value: any = null;
 
@@ -103,7 +111,7 @@ export class MatRadioGroup implements AfterContentInit, ControlValueAccessor {
   private _name: string = `mat-radio-group-${nextUniqueId++}`;
 
   /** The currently selected radio button. Should match value. */
-  private _selected: MatRadioButton | null = null;
+  private _selected: T | null = null;
 
   /** Whether the `value` has been set to its initial value. */
   private _isInitialized: boolean = false;
@@ -134,8 +142,7 @@ export class MatRadioGroup implements AfterContentInit, ControlValueAccessor {
   @Output() readonly change: EventEmitter<MatRadioChange> = new EventEmitter<MatRadioChange>();
 
   /** Child radio buttons. */
-  @ContentChildren(forwardRef(() => MatRadioButton), { descendants: true })
-  _radios: QueryList<MatRadioButton>;
+  abstract _radios: QueryList<T>;
 
   /** Theme color for all of the radio buttons in the group. */
   @Input() color: ThemePalette;
@@ -188,7 +195,7 @@ export class MatRadioGroup implements AfterContentInit, ControlValueAccessor {
    */
   @Input()
   get selected() { return this._selected; }
-  set selected(selected: MatRadioButton | null) {
+  set selected(selected: T | null) {
     this._selected = selected;
     this.value = selected ? selected.value : null;
     this._checkSelectedRadioButton();
@@ -311,14 +318,33 @@ export class MatRadioGroup implements AfterContentInit, ControlValueAccessor {
   static ngAcceptInputType_required: BooleanInput;
 }
 
+/**
+ * A group of radio buttons. May contain one or more `<mat-radio-button>` elements.
+ */
+@Directive({
+  selector: 'mat-radio-group',
+  exportAs: 'matRadioGroup',
+  providers: [
+    MAT_RADIO_GROUP_CONTROL_VALUE_ACCESSOR,
+    {provide: MAT_RADIO_GROUP, useExisting: MatRadioGroup},
+  ],
+  host: {
+    'role': 'radiogroup',
+    'class': 'mat-radio-group',
+  },
+})
+export class MatRadioGroup extends _MatRadioGroupBase<MatRadioButton> {
+  @ContentChildren(forwardRef(() => MatRadioButton), {descendants: true})
+  _radios: QueryList<MatRadioButton>;
+}
+
 // Boilerplate for applying mixins to MatRadioButton.
 /** @docs-private */
-class MatRadioButtonBase {
+abstract class MatRadioButtonBase {
   // Since the disabled property is manually defined for the MatRadioButton and isn't set up in
   // the mixin base class. To be able to use the tabindex mixin, a disabled property must be
   // defined to properly work.
-  disabled: boolean;
-
+  abstract disabled: boolean;
   constructor(public _elementRef: ElementRef) {}
 }
 // As per Material design specifications the selection control radio should use the accent color
@@ -328,38 +354,12 @@ const _MatRadioButtonMixinBase:
         mixinDisableRipple(mixinTabIndex(MatRadioButtonBase));
 
 /**
- * A Material design radio-button. Typically placed inside of `<mat-radio-group>` elements.
+ * Base class with all of the `MatRadioButton` functionality.
+ * @docs-private
  */
-@Component({
-  selector: 'mat-radio-button',
-  templateUrl: 'radio.html',
-  styleUrls: ['radio.css'],
-  inputs: ['disableRipple', 'tabIndex'],
-  encapsulation: ViewEncapsulation.None,
-  exportAs: 'matRadioButton',
-  host: {
-    'class': 'mat-radio-button',
-    '[class.mat-radio-checked]': 'checked',
-    '[class.mat-radio-disabled]': 'disabled',
-    '[class._mat-animation-noopable]': '_animationMode === "NoopAnimations"',
-    '[class.mat-primary]': 'color === "primary"',
-    '[class.mat-accent]': 'color === "accent"',
-    '[class.mat-warn]': 'color === "warn"',
-    // Needs to be -1 so the `focus` event still fires.
-    '[attr.tabindex]': '-1',
-    '[attr.id]': 'id',
-    '[attr.aria-label]': 'null',
-    '[attr.aria-labelledby]': 'null',
-    '[attr.aria-describedby]': 'null',
-    // Note: under normal conditions focus shouldn't land on this element, however it may be
-    // programmatically set, for example inside of a focus trap, in this case we want to forward
-    // the focus to the native element.
-    '(focus)': '_inputElement.nativeElement.focus()',
-  },
-  changeDetection: ChangeDetectionStrategy.OnPush,
-})
-export class MatRadioButton extends _MatRadioButtonMixinBase
-    implements OnInit, AfterViewInit, OnDestroy, CanDisableRipple, HasTabIndex {
+@Directive()
+export abstract class _MatRadioButtonBase extends _MatRadioButtonMixinBase implements OnInit,
+  AfterViewInit, OnDestroy, CanDisableRipple, HasTabIndex {
 
   private _uniqueId: string = `mat-radio-${++nextUniqueId}`;
 
@@ -466,7 +466,7 @@ export class MatRadioButton extends _MatRadioButtonMixinBase
   @Output() readonly change: EventEmitter<MatRadioChange> = new EventEmitter<MatRadioChange>();
 
   /** The parent radio group. May or may not be present. */
-  radioGroup: MatRadioGroup;
+  radioGroup: _MatRadioGroupBase<_MatRadioButtonBase>;
 
   /** ID of the native input element inside `<mat-radio-button>` */
   get inputId(): string { return `${this.id || this._uniqueId}-input`; }
@@ -489,19 +489,23 @@ export class MatRadioButton extends _MatRadioButtonMixinBase
   /** The native `<input type=radio>` element */
   @ViewChild('input') _inputElement: ElementRef<HTMLInputElement>;
 
-  constructor(@Optional() radioGroup: MatRadioGroup,
+  constructor(radioGroup: _MatRadioGroupBase<_MatRadioButtonBase>,
               elementRef: ElementRef,
               protected _changeDetector: ChangeDetectorRef,
               private _focusMonitor: FocusMonitor,
               private _radioDispatcher: UniqueSelectionDispatcher,
-              @Optional() @Inject(ANIMATION_MODULE_TYPE) public _animationMode?: string,
-                @Optional() @Inject(MAT_RADIO_DEFAULT_OPTIONS)
-                private _providerOverride?: MatRadioDefaultOptions) {
+              public _animationMode?: string,
+              private _providerOverride?: MatRadioDefaultOptions,
+              tabIndex?: string) {
     super(elementRef);
 
     // Assertions. Ideally these should be stripped out by the compiler.
     // TODO(jelbourn): Assert that there's no name binding AND a parent radio group.
     this.radioGroup = radioGroup;
+
+    if (tabIndex) {
+      this.tabIndex = coerceNumberProperty(tabIndex, 0);
+    }
 
     this._removeUniqueSelectionListener =
       _radioDispatcher.listen((id: string, name: string) => {
@@ -605,4 +609,52 @@ export class MatRadioButton extends _MatRadioButtonMixinBase
   static ngAcceptInputType_disabled: BooleanInput;
   static ngAcceptInputType_required: BooleanInput;
   static ngAcceptInputType_disableRipple: BooleanInput;
+  static ngAcceptInputType_tabIndex: NumberInput;
+}
+
+
+/**
+ * A Material design radio-button. Typically placed inside of `<mat-radio-group>` elements.
+ */
+@Component({
+  selector: 'mat-radio-button',
+  templateUrl: 'radio.html',
+  styleUrls: ['radio.css'],
+  inputs: ['disableRipple', 'tabIndex'],
+  encapsulation: ViewEncapsulation.None,
+  exportAs: 'matRadioButton',
+  host: {
+    'class': 'mat-radio-button',
+    '[class.mat-radio-checked]': 'checked',
+    '[class.mat-radio-disabled]': 'disabled',
+    '[class._mat-animation-noopable]': '_animationMode === "NoopAnimations"',
+    '[class.mat-primary]': 'color === "primary"',
+    '[class.mat-accent]': 'color === "accent"',
+    '[class.mat-warn]': 'color === "warn"',
+    // Needs to be -1 so the `focus` event still fires.
+    '[attr.tabindex]': '-1',
+    '[attr.id]': 'id',
+    '[attr.aria-label]': 'null',
+    '[attr.aria-labelledby]': 'null',
+    '[attr.aria-describedby]': 'null',
+    // Note: under normal conditions focus shouldn't land on this element, however it may be
+    // programmatically set, for example inside of a focus trap, in this case we want to forward
+    // the focus to the native element.
+    '(focus)': '_inputElement.nativeElement.focus()',
+  },
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class MatRadioButton extends _MatRadioButtonBase {
+  constructor(@Optional() @Inject(MAT_RADIO_GROUP) radioGroup: MatRadioGroup,
+              elementRef: ElementRef,
+              changeDetector: ChangeDetectorRef,
+              focusMonitor: FocusMonitor,
+              radioDispatcher: UniqueSelectionDispatcher,
+              @Optional() @Inject(ANIMATION_MODULE_TYPE) animationMode?: string,
+                @Optional() @Inject(MAT_RADIO_DEFAULT_OPTIONS)
+                  providerOverride?: MatRadioDefaultOptions,
+              @Attribute('tabindex') tabIndex?: string) {
+    super(radioGroup, elementRef, changeDetector, focusMonitor, radioDispatcher,
+          animationMode, providerOverride, tabIndex);
+  }
 }

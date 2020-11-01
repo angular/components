@@ -19,7 +19,6 @@ import {
   OnInit,
   Output,
   ViewEncapsulation,
-  Optional,
   Inject,
   PLATFORM_ID,
   NgZone,
@@ -31,15 +30,6 @@ import {MapEventManager} from '../map-event-manager';
 
 interface GoogleMapsWindow extends Window {
   google?: typeof google;
-}
-
-// TODO(mbehrlich): Update this to use original map after updating DefinitelyTyped
-/**
- * Extends the Google Map interface due to the Definitely Typed implementation
- * missing "getClickableIcons".
- */
-export interface UpdatedGoogleMap extends google.maps.Map {
-  getClickableIcons: () => boolean;
 }
 
 /** default options set to the Googleplex */
@@ -60,6 +50,7 @@ export const DEFAULT_WIDTH = '500px';
  */
 @Component({
   selector: 'google-map',
+  exportAs: 'googleMap',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: '<div class="map-container"></div><ng-content></ng-content>',
   encapsulation: ViewEncapsulation.None,
@@ -74,16 +65,22 @@ export class GoogleMap implements OnChanges, OnInit, OnDestroy {
   private readonly _zoom = new BehaviorSubject<number|undefined>(undefined);
   private readonly _destroy = new Subject<void>();
   private _mapEl: HTMLElement;
-  _googleMap: UpdatedGoogleMap;
+
+  /**
+   * The underlying google.maps.Map object
+   *
+   * See developers.google.com/maps/documentation/javascript/reference/map#Map
+   */
+  googleMap?: google.maps.Map;
 
   /** Whether we're currently rendering inside a browser. */
   _isBrowser: boolean;
 
-  /** Height of the map. */
-  @Input() height: string | number = DEFAULT_HEIGHT;
+  /** Height of the map. Set this to `null` if you'd like to control the height through CSS. */
+  @Input() height: string | number | null = DEFAULT_HEIGHT;
 
-  /** Width of the map. */
-  @Input() width: string | number = DEFAULT_WIDTH;
+  /** Width of the map. Set this to `null` if you'd like to control the width through CSS. */
+  @Input() width: string | number | null = DEFAULT_WIDTH;
 
   /**
    * Type of map that should be rendered. E.g. hybrid map, terrain map etc.
@@ -233,19 +230,13 @@ export class GoogleMap implements OnChanges, OnInit, OnDestroy {
   constructor(
     private readonly _elementRef: ElementRef,
     private _ngZone: NgZone,
-    /**
-     * @deprecated `platformId` parameter to become required.
-     * @breaking-change 10.0.0
-     */
-    @Optional() @Inject(PLATFORM_ID) platformId?: Object) {
+    @Inject(PLATFORM_ID) platformId: Object) {
 
-    // @breaking-change 10.0.0 Remove null check for `platformId`.
-    this._isBrowser =
-        platformId ? isPlatformBrowser(platformId) : typeof window === 'object' && !!window;
+    this._isBrowser = isPlatformBrowser(platformId);
 
     if (this._isBrowser) {
       const googleMapsWindow: GoogleMapsWindow = window;
-      if (!googleMapsWindow.google) {
+      if (!googleMapsWindow.google && (typeof ngDevMode === 'undefined' || ngDevMode)) {
         throw Error(
             'Namespace google not found, cannot construct embedded google ' +
             'map. Please install the Google Maps JavaScript API: ' +
@@ -257,8 +248,8 @@ export class GoogleMap implements OnChanges, OnInit, OnDestroy {
 
   ngOnChanges() {
     this._setSize();
-    if (this._googleMap && this.mapTypeId) {
-      this._googleMap.setMapTypeId(this.mapTypeId);
+    if (this.googleMap && this.mapTypeId) {
+      this.googleMap.setMapTypeId(this.mapTypeId);
     }
   }
 
@@ -269,8 +260,8 @@ export class GoogleMap implements OnChanges, OnInit, OnDestroy {
       this._setSize();
       this._googleMapChanges = this._initializeMap(this._combineOptions());
       this._googleMapChanges.subscribe((googleMap: google.maps.Map) => {
-        this._googleMap = googleMap as UpdatedGoogleMap;
-        this._eventManager.setTarget(this._googleMap);
+        this.googleMap = googleMap;
+        this._eventManager.setTarget(this.googleMap);
       });
 
       this._watchForOptionsChanges();
@@ -293,7 +284,7 @@ export class GoogleMap implements OnChanges, OnInit, OnDestroy {
       bounds: google.maps.LatLngBounds|google.maps.LatLngBoundsLiteral,
       padding?: number|google.maps.Padding) {
     this._assertInitialized();
-    this._googleMap.fitBounds(bounds, padding);
+    this.googleMap.fitBounds(bounds, padding);
   }
 
   /**
@@ -302,7 +293,7 @@ export class GoogleMap implements OnChanges, OnInit, OnDestroy {
    */
   panBy(x: number, y: number) {
     this._assertInitialized();
-    this._googleMap.panBy(x, y);
+    this.googleMap.panBy(x, y);
   }
 
   /**
@@ -311,7 +302,7 @@ export class GoogleMap implements OnChanges, OnInit, OnDestroy {
    */
   panTo(latLng: google.maps.LatLng|google.maps.LatLngLiteral) {
     this._assertInitialized();
-    this._googleMap.panTo(latLng);
+    this.googleMap.panTo(latLng);
   }
 
   /**
@@ -322,7 +313,7 @@ export class GoogleMap implements OnChanges, OnInit, OnDestroy {
       latLngBounds: google.maps.LatLngBounds|google.maps.LatLngBoundsLiteral,
       padding?: number|google.maps.Padding) {
     this._assertInitialized();
-    this._googleMap.panToBounds(latLngBounds, padding);
+    this.googleMap.panToBounds(latLngBounds, padding);
   }
 
   /**
@@ -331,7 +322,7 @@ export class GoogleMap implements OnChanges, OnInit, OnDestroy {
    */
   getBounds(): google.maps.LatLngBounds|null {
     this._assertInitialized();
-    return this._googleMap.getBounds() || null;
+    return this.googleMap.getBounds() || null;
   }
 
   /**
@@ -340,7 +331,7 @@ export class GoogleMap implements OnChanges, OnInit, OnDestroy {
    */
   getCenter(): google.maps.LatLng {
     this._assertInitialized();
-    return this._googleMap.getCenter();
+    return this.googleMap.getCenter();
   }
 
   /**
@@ -349,7 +340,7 @@ export class GoogleMap implements OnChanges, OnInit, OnDestroy {
    */
   getClickableIcons(): boolean {
     this._assertInitialized();
-    return this._googleMap.getClickableIcons();
+    return this.googleMap.getClickableIcons();
   }
 
   /**
@@ -358,7 +349,7 @@ export class GoogleMap implements OnChanges, OnInit, OnDestroy {
    */
   getHeading(): number {
     this._assertInitialized();
-    return this._googleMap.getHeading();
+    return this.googleMap.getHeading();
   }
 
   /**
@@ -367,7 +358,7 @@ export class GoogleMap implements OnChanges, OnInit, OnDestroy {
    */
   getMapTypeId(): google.maps.MapTypeId|string {
     this._assertInitialized();
-    return this._googleMap.getMapTypeId();
+    return this.googleMap.getMapTypeId();
   }
 
   /**
@@ -376,7 +367,7 @@ export class GoogleMap implements OnChanges, OnInit, OnDestroy {
    */
   getProjection(): google.maps.Projection|null {
     this._assertInitialized();
-    return this._googleMap.getProjection();
+    return this.googleMap.getProjection();
   }
 
   /**
@@ -385,7 +376,7 @@ export class GoogleMap implements OnChanges, OnInit, OnDestroy {
    */
   getStreetView(): google.maps.StreetViewPanorama {
     this._assertInitialized();
-    return this._googleMap.getStreetView();
+    return this.googleMap.getStreetView();
   }
 
   /**
@@ -394,7 +385,7 @@ export class GoogleMap implements OnChanges, OnInit, OnDestroy {
    */
   getTilt(): number {
     this._assertInitialized();
-    return this._googleMap.getTilt();
+    return this.googleMap.getTilt();
   }
 
   /**
@@ -403,16 +394,16 @@ export class GoogleMap implements OnChanges, OnInit, OnDestroy {
    */
   getZoom(): number {
     this._assertInitialized();
-    return this._googleMap.getZoom();
+    return this.googleMap.getZoom();
   }
 
   /**
    * See
    * https://developers.google.com/maps/documentation/javascript/reference/map#Map.controls
    */
-  get controls(): Array<google.maps.MVCArray<Node>> {
+  get controls(): google.maps.MVCArray<Node>[] {
     this._assertInitialized();
-    return this._googleMap.controls;
+    return this.googleMap.controls;
   }
 
   /**
@@ -421,7 +412,7 @@ export class GoogleMap implements OnChanges, OnInit, OnDestroy {
    */
   get data(): google.maps.Data {
     this._assertInitialized();
-    return this._googleMap.data;
+    return this.googleMap.data;
   }
 
   /**
@@ -430,7 +421,7 @@ export class GoogleMap implements OnChanges, OnInit, OnDestroy {
    */
   get mapTypes(): google.maps.MapTypeRegistry {
     this._assertInitialized();
-    return this._googleMap.mapTypes;
+    return this.googleMap.mapTypes;
   }
 
   /**
@@ -439,14 +430,15 @@ export class GoogleMap implements OnChanges, OnInit, OnDestroy {
    */
   get overlayMapTypes(): google.maps.MVCArray<google.maps.MapType> {
     this._assertInitialized();
-    return this._googleMap.overlayMapTypes;
+    return this.googleMap.overlayMapTypes;
   }
 
   private _setSize() {
     if (this._mapEl) {
       const styles = this._mapEl.style;
-      styles.height = coerceCssPixelValue(this.height) || DEFAULT_HEIGHT;
-      styles.width = coerceCssPixelValue(this.width) || DEFAULT_WIDTH;
+      styles.height =
+          this.height === null ? '' : (coerceCssPixelValue(this.height) || DEFAULT_HEIGHT);
+      styles.width = this.width === null ? '' : (coerceCssPixelValue(this.width) || DEFAULT_WIDTH);
     }
   }
 
@@ -456,8 +448,10 @@ export class GoogleMap implements OnChanges, OnInit, OnDestroy {
         .pipe(map(([options, center, zoom]) => {
           const combinedOptions: google.maps.MapOptions = {
             ...options,
-            center: center || options.center,
-            zoom: zoom !== undefined ? zoom : options.zoom,
+            // It's important that we set **some** kind of `center` and `zoom`, otherwise
+            // Google Maps will render a blank rectangle which looks broken.
+            center: center || options.center || DEFAULT_OPTIONS.center,
+            zoom: zoom ?? options.zoom ?? DEFAULT_OPTIONS.zoom,
             mapTypeId: this.mapTypeId
           };
           return combinedOptions;
@@ -506,8 +500,8 @@ export class GoogleMap implements OnChanges, OnInit, OnDestroy {
   }
 
   /** Asserts that the map has been initialized. */
-  private _assertInitialized() {
-    if (!this._googleMap) {
+  private _assertInitialized(): asserts this is {googleMap: google.maps.Map} {
+    if (!this.googleMap && (typeof ngDevMode === 'undefined' || ngDevMode)) {
       throw Error('Cannot access Google Map information before the API has been initialized. ' +
                   'Please wait for the API to load before trying to interact with it.');
     }

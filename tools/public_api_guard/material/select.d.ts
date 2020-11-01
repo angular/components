@@ -1,37 +1,27 @@
-export declare const MAT_SELECT_CONFIG: InjectionToken<MatSelectConfig>;
-
-export declare const MAT_SELECT_SCROLL_STRATEGY: InjectionToken<() => ScrollStrategy>;
-
-export declare const MAT_SELECT_SCROLL_STRATEGY_PROVIDER: {
-    provide: InjectionToken<() => ScrollStrategy>;
-    deps: (typeof Overlay)[];
-    useFactory: typeof MAT_SELECT_SCROLL_STRATEGY_PROVIDER_FACTORY;
-};
-
-export declare function MAT_SELECT_SCROLL_STRATEGY_PROVIDER_FACTORY(overlay: Overlay): () => ScrollStrategy;
-
-export declare class MatSelect extends _MatSelectMixinBase implements AfterContentInit, OnChanges, OnDestroy, OnInit, DoCheck, ControlValueAccessor, CanDisable, HasTabIndex, MatFormFieldControl<any>, CanUpdateErrorState, CanDisableRipple {
+export declare abstract class _MatSelectBase<C> extends _MatSelectMixinBase implements AfterContentInit, OnChanges, OnDestroy, OnInit, DoCheck, ControlValueAccessor, CanDisable, HasTabIndex, MatFormFieldControl<any>, CanUpdateErrorState, CanDisableRipple {
     _ariaDescribedby: string;
+    protected _changeDetectorRef: ChangeDetectorRef;
     readonly _closedStream: Observable<void>;
+    protected readonly _destroy: Subject<void>;
     _keyManager: ActiveDescendantKeyManager<MatOption>;
-    _offsetY: number;
+    protected _ngZone: NgZone;
     _onChange: (value: any) => void;
     _onTouched: () => void;
     readonly _openedStream: Observable<void>;
-    _optionIds: string;
+    _overlayPanelClass: string | string[];
     _panelDoneAnimatingStream: Subject<string>;
-    _positions: ConnectedPosition[];
+    protected _parentFormField: MatFormField;
+    abstract _positions: ConnectedPosition[];
     _scrollStrategy: ScrollStrategy;
     _selectionModel: SelectionModel<MatOption>;
-    _transformOrigin: string;
-    _triggerFontSize: number;
-    _triggerRect: ClientRect;
+    _valueId: string;
+    protected _viewportRuler: ViewportRuler;
     ariaLabel: string;
     ariaLabelledby: string;
     get compareWith(): (o1: any, o2: any) => boolean;
     set compareWith(fn: (o1: any, o2: any) => boolean);
     controlType: string;
-    customTrigger: MatSelectTrigger;
+    abstract customTrigger: {};
     get disableOptionCentering(): boolean;
     set disableOptionCentering(value: boolean);
     get empty(): boolean;
@@ -43,9 +33,9 @@ export declare class MatSelect extends _MatSelectMixinBase implements AfterConte
     set multiple(value: boolean);
     ngControl: NgControl;
     readonly openedChange: EventEmitter<boolean>;
-    optionGroups: QueryList<MatOptgroup>;
+    abstract optionGroups: QueryList<MatOptgroup>;
     readonly optionSelectionChanges: Observable<MatOptionSelectionChange>;
-    options: QueryList<MatOption>;
+    abstract options: QueryList<_MatOptionBase>;
     overlayDir: CdkConnectedOverlay;
     panel: ElementRef;
     panelClass: string | string[] | Set<string> | {
@@ -57,7 +47,7 @@ export declare class MatSelect extends _MatSelectMixinBase implements AfterConte
     get required(): boolean;
     set required(value: boolean);
     get selected(): MatOption | MatOption[];
-    readonly selectionChange: EventEmitter<MatSelectChange>;
+    readonly selectionChange: EventEmitter<C>;
     get shouldLabelFloat(): boolean;
     sortComparator: (a: MatOption, b: MatOption, options: MatOption[]) => number;
     trigger: ElementRef;
@@ -67,17 +57,20 @@ export declare class MatSelect extends _MatSelectMixinBase implements AfterConte
     get value(): any;
     set value(newValue: any);
     readonly valueChange: EventEmitter<any>;
-    constructor(_viewportRuler: ViewportRuler, _changeDetectorRef: ChangeDetectorRef, _ngZone: NgZone, _defaultErrorStateMatcher: ErrorStateMatcher, elementRef: ElementRef, _dir: Directionality, _parentForm: NgForm, _parentFormGroup: FormGroupDirective, _parentFormField: MatFormField, ngControl: NgControl, tabIndex: string, scrollStrategyFactory: any, _liveAnnouncer: LiveAnnouncer, defaults?: MatSelectConfig);
-    _calculateOverlayScroll(selectedIndex: number, scrollBuffer: number, maxScroll: number): number;
+    constructor(_viewportRuler: ViewportRuler, _changeDetectorRef: ChangeDetectorRef, _ngZone: NgZone, _defaultErrorStateMatcher: ErrorStateMatcher, elementRef: ElementRef, _dir: Directionality, _parentForm: NgForm, _parentFormGroup: FormGroupDirective, _parentFormField: MatFormField, ngControl: NgControl, tabIndex: string, scrollStrategyFactory: any, _liveAnnouncer: LiveAnnouncer, _defaultOptions?: MatSelectConfig | undefined);
+    protected _canOpen(): boolean;
     _getAriaActiveDescendant(): string | null;
-    _getAriaLabel(): string | null;
-    _getAriaLabelledby(): string | null;
+    protected abstract _getChangeEvent(value: any): C;
+    _getPanelAriaLabelledby(): string | null;
     _getPanelTheme(): string;
     _handleKeydown(event: KeyboardEvent): void;
     _isRtl(): boolean;
     _onAttached(): void;
     _onBlur(): void;
     _onFocus(): void;
+    protected _panelDoneAnimating(isOpen: boolean): void;
+    protected abstract _positioningSettled(): void;
+    protected abstract _scrollOptionIntoView(index: number): void;
     close(): void;
     focus(options?: FocusOptions): void;
     ngAfterContentInit(): void;
@@ -98,9 +91,44 @@ export declare class MatSelect extends _MatSelectMixinBase implements AfterConte
     static ngAcceptInputType_disabled: BooleanInput;
     static ngAcceptInputType_multiple: BooleanInput;
     static ngAcceptInputType_required: BooleanInput;
+    static ngAcceptInputType_tabIndex: NumberInput;
     static ngAcceptInputType_typeaheadDebounceInterval: NumberInput;
-    static ɵcmp: i0.ɵɵComponentDefWithMeta<MatSelect, "mat-select", ["matSelect"], { "disabled": "disabled"; "disableRipple": "disableRipple"; "tabIndex": "tabIndex"; "panelClass": "panelClass"; "placeholder": "placeholder"; "required": "required"; "multiple": "multiple"; "disableOptionCentering": "disableOptionCentering"; "compareWith": "compareWith"; "value": "value"; "ariaLabel": "aria-label"; "ariaLabelledby": "aria-labelledby"; "errorStateMatcher": "errorStateMatcher"; "typeaheadDebounceInterval": "typeaheadDebounceInterval"; "sortComparator": "sortComparator"; "id": "id"; }, { "openedChange": "openedChange"; "_openedStream": "opened"; "_closedStream": "closed"; "selectionChange": "selectionChange"; "valueChange": "valueChange"; }, ["customTrigger", "options", "optionGroups"], ["mat-select-trigger", "*"]>;
-    static ɵfac: i0.ɵɵFactoryDef<MatSelect, [null, null, null, null, null, { optional: true; }, { optional: true; }, { optional: true; }, { optional: true; }, { optional: true; self: true; }, { attribute: "tabindex"; }, null, null, { optional: true; }]>;
+    static ɵdir: i0.ɵɵDirectiveDefWithMeta<_MatSelectBase<any>, never, never, { "panelClass": "panelClass"; "placeholder": "placeholder"; "required": "required"; "multiple": "multiple"; "disableOptionCentering": "disableOptionCentering"; "compareWith": "compareWith"; "value": "value"; "ariaLabel": "aria-label"; "ariaLabelledby": "aria-labelledby"; "errorStateMatcher": "errorStateMatcher"; "typeaheadDebounceInterval": "typeaheadDebounceInterval"; "sortComparator": "sortComparator"; "id": "id"; }, { "openedChange": "openedChange"; "_openedStream": "opened"; "_closedStream": "closed"; "selectionChange": "selectionChange"; "valueChange": "valueChange"; }, never>;
+    static ɵfac: i0.ɵɵFactoryDef<_MatSelectBase<any>, [null, null, null, null, null, { optional: true; }, { optional: true; }, { optional: true; }, { optional: true; }, { optional: true; self: true; }, { attribute: "tabindex"; }, null, null, { optional: true; }]>;
+}
+
+export declare const MAT_SELECT_CONFIG: InjectionToken<MatSelectConfig>;
+
+export declare const MAT_SELECT_SCROLL_STRATEGY: InjectionToken<() => ScrollStrategy>;
+
+export declare const MAT_SELECT_SCROLL_STRATEGY_PROVIDER: {
+    provide: InjectionToken<() => ScrollStrategy>;
+    deps: (typeof Overlay)[];
+    useFactory: typeof MAT_SELECT_SCROLL_STRATEGY_PROVIDER_FACTORY;
+};
+
+export declare function MAT_SELECT_SCROLL_STRATEGY_PROVIDER_FACTORY(overlay: Overlay): () => ScrollStrategy;
+
+export declare const MAT_SELECT_TRIGGER: InjectionToken<MatSelectTrigger>;
+
+export declare class MatSelect extends _MatSelectBase<MatSelectChange> implements OnInit {
+    _offsetY: number;
+    _positions: ConnectedPosition[];
+    _transformOrigin: string;
+    _triggerFontSize: number;
+    _triggerRect: ClientRect;
+    customTrigger: MatSelectTrigger;
+    optionGroups: QueryList<MatOptgroup>;
+    options: QueryList<MatOption>;
+    _calculateOverlayScroll(selectedIndex: number, scrollBuffer: number, maxScroll: number): number;
+    protected _getChangeEvent(value: any): MatSelectChange;
+    protected _panelDoneAnimating(isOpen: boolean): void;
+    protected _positioningSettled(): void;
+    protected _scrollOptionIntoView(index: number): void;
+    ngOnInit(): void;
+    open(): void;
+    static ɵcmp: i0.ɵɵComponentDefWithMeta<MatSelect, "mat-select", ["matSelect"], { "disabled": "disabled"; "disableRipple": "disableRipple"; "tabIndex": "tabIndex"; }, {}, ["customTrigger", "options", "optionGroups"], ["mat-select-trigger", "*"]>;
+    static ɵfac: i0.ɵɵFactoryDef<MatSelect, never>;
 }
 
 export declare const matSelectAnimations: {
@@ -118,12 +146,13 @@ export declare class MatSelectChange {
 
 export interface MatSelectConfig {
     disableOptionCentering?: boolean;
+    overlayPanelClass?: string | string[];
     typeaheadDebounceInterval?: number;
 }
 
 export declare class MatSelectModule {
     static ɵinj: i0.ɵɵInjectorDef<MatSelectModule>;
-    static ɵmod: i0.ɵɵNgModuleDefWithMeta<MatSelectModule, [typeof i1.MatSelect, typeof i1.MatSelectTrigger], [typeof i2.CommonModule, typeof i3.OverlayModule, typeof i4.MatOptionModule, typeof i4.MatCommonModule], [typeof i5.MatFormFieldModule, typeof i1.MatSelect, typeof i1.MatSelectTrigger, typeof i4.MatOptionModule, typeof i4.MatCommonModule]>;
+    static ɵmod: i0.ɵɵNgModuleDefWithMeta<MatSelectModule, [typeof i1.MatSelect, typeof i1.MatSelectTrigger], [typeof i2.CommonModule, typeof i3.OverlayModule, typeof i4.MatOptionModule, typeof i4.MatCommonModule], [typeof i5.CdkScrollableModule, typeof i6.MatFormFieldModule, typeof i1.MatSelect, typeof i1.MatSelectTrigger, typeof i4.MatOptionModule, typeof i4.MatCommonModule]>;
 }
 
 export declare class MatSelectTrigger {

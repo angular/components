@@ -1,5 +1,5 @@
 The datepicker allows users to enter a date either through text input, or by choosing a date from
-the calendar. It is made up of several components and directives that work together.
+the calendar. It is made up of several components, directives and [the date implementation module](#choosing-a-date-implementation-and-date-format-settings) that work together.
 
 <!-- example(datepicker-overview) -->
 
@@ -8,34 +8,65 @@ the calendar. It is made up of several components and directives that work toget
 A datepicker is composed of a text input and a calendar pop-up, connected via the `matDatepicker`
 property on the text input.
 
-```html
-<input [matDatepicker]="myDatepicker">
-<mat-datepicker #myDatepicker></mat-datepicker>
-```
+There is also an optional datepicker toggle button that gives the user an easy way to open the datepicker pop-up.
 
-An optional datepicker toggle button is available. A toggle can be added to the example above:
-
-```html
-<input [matDatepicker]="myDatepicker">
-<mat-datepicker-toggle [for]="myDatepicker"></mat-datepicker-toggle>
-<mat-datepicker #myDatepicker></mat-datepicker>
-```
+<!-- example({"example":"datepicker-overview",
+              "file":"datepicker-overview-example.html",
+              "region":"toggle"}) -->
 
 This works exactly the same with an input that is part of an `<mat-form-field>` and the toggle
-can easily be used as a prefix or suffix on the material input:
+can easily be used as a prefix or suffix on the Material input:
 
-```html
-<mat-form-field>
-  <input matInput [matDatepicker]="myDatepicker">
-  <mat-datepicker-toggle matSuffix [for]="myDatepicker"></mat-datepicker-toggle>
-  <mat-datepicker #myDatepicker></mat-datepicker>
-</mat-form-field>
-```
+<!-- example({"example":"datepicker-overview",
+              "file":"datepicker-overview-example.html"}) -->
 
 If you want to customize the icon that is rendered inside the `mat-datepicker-toggle`, you can do so
 by using the `matDatepickerToggleIcon` directive:
 
 <!-- example(datepicker-custom-icon) -->
+
+### Date range selection
+
+If you want your users to select a range of dates, instead of a single date, you can use the
+`mat-date-range-input` and `mat-date-range-picker` components. They work in tandem, similarly to the
+`mat-datepicker` and the basic datepicker input.
+
+The `mat-date-range-input` component requires two `input` elements for the start and end dates,
+respectively:
+
+```html
+<mat-date-range-input>
+  <input matStartDate placeholder="Start date">
+  <input matEndDate placeholder="End date">
+</mat-date-range-input>
+```
+
+The `mat-date-range-picker` component acts as the pop-up panel for selecting dates. This works in
+the same way as `mat-datepicker`, but allows the user to select multiple times:
+
+```html
+<mat-date-range-picker #picker></mat-date-range-picker>
+```
+
+Connect the range picker and range input using the `rangePicker` property:
+
+```html
+<mat-date-range-input [rangePicker]="picker">
+  <input matStartDate placeholder="Start date">
+  <input matEndDate placeholder="End date">
+</mat-date-range-input>
+
+<mat-date-range-picker #picker></mat-date-range-picker>
+```
+
+<!-- example(date-range-picker-overview) -->
+
+### Date range input forms integration
+
+The `mat-date-range-input` component can be used together with the `FormGroup` directive from
+`@angular/forms` to group the start and end values together and to validate them as a group.
+
+<!-- example(date-range-picker-forms) -->
 
 ### Setting the calendar starting view
 
@@ -161,6 +192,30 @@ property on the datepicker or toggle elements. This can be useful if you want to
 but allow selection via the calendar or vice-versa.
 
 <!-- example(datepicker-disabled) -->
+
+### Comparison ranges
+
+If your users need to compare the date range that they're currently selecting with another range,
+you can provide the comparison range start and end dates to the `mat-date-range-input` using the
+`comparisonStart` and `comparisonEnd` bindings. The comparison range will be rendered statically
+within the calendar, but it will change colors to indicate which dates overlap with the user's
+selected range.
+
+<!-- example(date-range-picker-comparison) -->
+
+Note that comparison and overlap colors aren't derived from the current theme, due
+to limitations in the Material Design theming system. They can be customized using the
+`mat-date-range-colors` mixin.
+
+### Customizing the date selection logic
+
+The `mat-date-range-picker` supports custom behaviors for range previews and selection. To customize
+this, you first create a class that implements `MatDateRangeSelectionStrategy`, and then provide
+the class via the `MAT_DATE_RANGE_SELECTION_STRATEGY` injection token. The following example
+uses the range selection strategy to create a custom range picker that limits the user to five-day
+ranges.
+
+<!-- example(date-range-picker-selection-strategy) -->
 
 ### Touch UI mode
 
@@ -288,7 +343,7 @@ export class MyComponent {
 
 <!-- example(datepicker-moment) -->
 
-By default the `MomentDateAdapter` will creates dates in your time zone specific locale. You can change the default behaviour to parse dates as UTC by providing the `MAT_MOMENT_DATE_ADAPTER_OPTIONS` and setting it to `useUtc: true`.
+By default the `MomentDateAdapter` creates dates in your time zone specific locale. You can change the default behaviour to parse dates as UTC by providing the `MAT_MOMENT_DATE_ADAPTER_OPTIONS` and setting it to `useUtc: true`.
 
 ```ts
 @NgModule({

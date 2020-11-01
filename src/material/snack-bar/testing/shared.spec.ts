@@ -1,7 +1,7 @@
 import {OverlayContainer} from '@angular/cdk/overlay';
 import {HarnessLoader} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
-import {Component, TemplateRef, ViewChild} from '@angular/core';
+import {Component, TemplateRef, ViewChild, Injector} from '@angular/core';
 import {ComponentFixture, inject, TestBed} from '@angular/core/testing';
 import {MatSnackBar, MatSnackBarConfig, MatSnackBarModule} from '@angular/material/snack-bar';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
@@ -13,6 +13,7 @@ import {MatSnackBarHarness} from './snack-bar-harness';
  */
 export function runHarnessTests(
     snackBarModule: typeof MatSnackBarModule,
+    snackBarToken: typeof MatSnackBar,
     snackBarHarness: typeof MatSnackBarHarness) {
   let fixture: ComponentFixture<SnackbarHarnessTest>;
   let loader: HarnessLoader;
@@ -69,17 +70,32 @@ export function runHarnessTests(
   });
 
   it('should be able to get role of snack-bar', async () => {
+    // Get role is now deprecated, so it should always return null.
     fixture.componentInstance.openCustom();
     let snackBar = await loader.getHarness(snackBarHarness);
-    expect(await snackBar.getRole()).toBe('alert');
+    expect(await snackBar.getRole()).toBe(null);
 
     fixture.componentInstance.openCustom({politeness: 'polite'});
     snackBar = await loader.getHarness(snackBarHarness);
-    expect(await snackBar.getRole()).toBe('status');
+    expect(await snackBar.getRole()).toBe(null);
 
     fixture.componentInstance.openCustom({politeness: 'off'});
     snackBar = await loader.getHarness(snackBarHarness);
     expect(await snackBar.getRole()).toBe(null);
+  });
+
+  it('should be able to get aria-live of snack-bar', async () => {
+    fixture.componentInstance.openCustom();
+    let snackBar = await loader.getHarness(snackBarHarness);
+    expect(await snackBar.getAriaLive()).toBe('assertive');
+
+    fixture.componentInstance.openCustom({politeness: 'polite'});
+    snackBar = await loader.getHarness(snackBarHarness);
+    expect(await snackBar.getAriaLive()).toBe('polite');
+
+    fixture.componentInstance.openCustom({politeness: 'off'});
+    snackBar = await loader.getHarness(snackBarHarness);
+    expect(await snackBar.getAriaLive()).toBe('off');
   });
 
   it('should be able to get message of simple snack-bar', async () => {
@@ -140,25 +156,24 @@ export function runHarnessTests(
     snackBar = await loader.getHarness(snackBarHarness);
     await expectAsync(snackBar.dismissWithAction()).toBeRejectedWithError(/without action/);
   });
-}
 
-@Component({
-  template: `
-      <ng-template>
-          My custom snack-bar.
-      </ng-template>
-  `
-})
-class SnackbarHarnessTest {
-  @ViewChild(TemplateRef) customTmpl: TemplateRef<any>;
+  @Component({
+    template: `<ng-template>My custom snack-bar.</ng-template>`
+  })
+  class SnackbarHarnessTest {
+    @ViewChild(TemplateRef) customTmpl: TemplateRef<any>;
+    snackBar: MatSnackBar;
 
-  constructor(readonly snackBar: MatSnackBar) {}
+    constructor(injector: Injector) {
+      this.snackBar = injector.get(snackBarToken);
+    }
 
-  openSimple(message: string, action = '', config?: MatSnackBarConfig) {
-    return this.snackBar.open(message, action, config);
-  }
+    openSimple(message: string, action = '', config?: MatSnackBarConfig) {
+      return this.snackBar.open(message, action, config);
+    }
 
-  openCustom(config?: MatSnackBarConfig) {
-    return this.snackBar.openFromTemplate(this.customTmpl, config);
+    openCustom(config?: MatSnackBarConfig) {
+      return this.snackBar.openFromTemplate(this.customTmpl, config);
+    }
   }
 }

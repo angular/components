@@ -1,4 +1,5 @@
 export interface CellHarnessFilters extends BaseHarnessFilters {
+    columnName?: string | RegExp;
     text?: string | RegExp;
 }
 
@@ -47,7 +48,7 @@ export interface MatRowHarnessColumnsText {
     [columnName: string]: string;
 }
 
-export declare class MatTableHarness extends ComponentHarness {
+export declare class MatTableHarness extends ContentContainerComponentHarness<string> {
     getCellTextByColumnName(): Promise<MatTableHarnessColumnsText>;
     getCellTextByIndex(): Promise<string[][]>;
     getFooterRows(filter?: RowHarnessFilters): Promise<MatFooterRowHarness[]>;

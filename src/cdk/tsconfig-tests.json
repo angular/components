@@ -9,7 +9,7 @@
       "../../dist/packages/cdk"
     ],
     "importHelpers": false,
-    "module": "commonjs",
+    "module": "umd",
     "target": "es5",
     "types": ["jasmine"],
     "experimentalDecorators": true,
@@ -21,7 +21,8 @@
   "include": [
     "**/index.ts",
     "**/*.spec.ts",
-    "**/*.d.ts"
+    "**/*.d.ts",
+    "../dev-mode-types.d.ts"
   ],
   "exclude": [
     "testing/protractor/**.ts",
