@@ -221,8 +221,8 @@ export declare class MapMarker implements OnInit, OnDestroy, MapAnchorPoint {
 
 export declare class MapMarkerClusterer implements OnInit, AfterContentInit, OnDestroy {
     _markers: QueryList<MapMarker>;
-    set ariaLabelFn(ariaLabelFn: AriaLabelFn);
     get ariaLabelFn(): AriaLabelFn;
+    set ariaLabelFn(ariaLabelFn: AriaLabelFn);
     set averageCenter(averageCenter: boolean);
     batchSize?: number;
     set batchSizeIE(batchSizeIE: number);

@@ -561,13 +561,13 @@ export class MapMarkerClusterer implements OnInit, AfterContentInit, OnDestroy {
         .map((markerComponent: MapMarker) => markerComponent.marker));
       const markersToAdd: google.maps.Marker[] = [];
       const markersToRemove: google.maps.Marker[] = [];
-      for (const marker of newMarkers) {
+      for (const marker of Array.from(newMarkers)) {
         if (!this._currentMarkers.has(marker)) {
           this._currentMarkers.add(marker);
           markersToAdd.push(marker);
         }
       }
-      for (const marker of this._currentMarkers) {
+      for (const marker of Array.from(this._currentMarkers)) {
         if (!newMarkers.has(marker)) {
           markersToRemove.push(marker);
         }

@@ -15,10 +15,11 @@ import {MapMarkerClusterer} from './map-marker-clusterer';
 
 describe('MapMarkerClusterer', () => {
   let mapSpy: jasmine.SpyObj<google.maps.Map>;
-  // let markerSpy: jasmine.SpyObj<google.maps.Marker>;
   let markerClustererSpy: jasmine.SpyObj<MarkerClusterer>;
   let markerClustererConstructorSpy: jasmine.Spy;
   let fixture: ComponentFixture<TestApp>;
+
+  const anyMarkerMatcher = jasmine.any(Object) as unknown as google.maps.Marker;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
@@ -119,20 +120,20 @@ describe('MapMarkerClusterer', () => {
     fixture.detectChanges();
 
     expect(markerClustererSpy.addMarkers)
-        .toHaveBeenCalledWith([jasmine.any(Object), jasmine.any(Object)]);
+        .toHaveBeenCalledWith([anyMarkerMatcher, anyMarkerMatcher]);
   });
 
   it('updates Google Maps Markers in the Marker Clusterer', () => {
     fixture.detectChanges();
 
     expect(markerClustererSpy.addMarkers)
-        .toHaveBeenCalledWith([jasmine.any(Object), jasmine.any(Object)]);
+        .toHaveBeenCalledWith([anyMarkerMatcher, anyMarkerMatcher]);
 
     fixture.componentInstance.state = 'state2';
     fixture.detectChanges();
 
-    expect(markerClustererSpy.addMarkers).toHaveBeenCalledWith([jasmine.any(Object)], true);
-    expect(markerClustererSpy.removeMarkers).toHaveBeenCalledWith([jasmine.any(Object)], true);
+    expect(markerClustererSpy.addMarkers).toHaveBeenCalledWith([anyMarkerMatcher], true);
+    expect(markerClustererSpy.removeMarkers).toHaveBeenCalledWith([anyMarkerMatcher], true);
     expect(markerClustererSpy.repaint).toHaveBeenCalledTimes(1);
 
     fixture.componentInstance.state = 'state0';
@@ -140,7 +141,7 @@ describe('MapMarkerClusterer', () => {
 
     expect(markerClustererSpy.addMarkers).toHaveBeenCalledWith([], true);
     expect(markerClustererSpy.removeMarkers)
-        .toHaveBeenCalledWith([jasmine.any(Object), jasmine.any(Object)], true);
+        .toHaveBeenCalledWith([anyMarkerMatcher, anyMarkerMatcher], true);
     expect(markerClustererSpy.repaint).toHaveBeenCalledTimes(2);
   });
 
