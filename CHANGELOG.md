@@ -19,7 +19,6 @@
 |            |                       |
 | ---------- | --------------------- |
 | bug fix |  **mdc-checkbox:** fix broken dark theme ([#20940](https://github.com/angular/components/issues/20940)) ([f76578d](https://github.com/angular/components/commit/f76578d)) |
-| bug fix |  **mdc-checkbox:** fix dark theme ([#20926](https://github.com/angular/components/issues/20926)) ([d018d48](https://github.com/angular/components/commit/d018d48)) |
 | bug fix |  **mdc-snack-bar:** add missing exports ([#20928](https://github.com/angular/components/issues/20928)) ([6add7fe](https://github.com/angular/components/commit/6add7fe)) |
 
 
