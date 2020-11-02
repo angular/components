@@ -1,3 +1,27 @@
+# 11.0.0-rc.1 "tanzanite-cable" (2020-11-02)
+
+### material
+
+|            |                       |
+| ---------- | --------------------- |
+| bug fix |  **icon:** not updating svg icon assigned through setter ([#20509](https://github.com/angular/components/issues/20509)) ([9f73933](https://github.com/angular/components/commit/9f73933)), closes [#20470](https://github.com/angular/components/issues/20470) |
+| bug fix |  **list:** exclude icons from harness getText result ([#20845](https://github.com/angular/components/issues/20845)) ([aec12b6](https://github.com/angular/components/commit/aec12b6)), closes [#20812](https://github.com/angular/components/issues/20812) |
+
+### google-maps
+
+|            |                       |
+| ---------- | --------------------- |
+| bug fix |  maintain subscriptions across event targets ([#20897](https://github.com/angular/components/issues/20897)) ([ca04bce](https://github.com/angular/components/commit/ca04bce)), closes [#20873](https://github.com/angular/components/issues/20873) [#20873](https://github.com/angular/components/issues/20873) |
+| bug fix |  rendering blank if custom options with no zoom are provided ([#20882](https://github.com/angular/components/issues/20882)) ([0b9160b](https://github.com/angular/components/commit/0b9160b)) |
+
+### material-experimental
+
+|            |                       |
+| ---------- | --------------------- |
+| bug fix |  **mdc-checkbox:** fix broken dark theme ([#20940](https://github.com/angular/components/issues/20940)) ([f76578d](https://github.com/angular/components/commit/f76578d)) |
+| bug fix |  **mdc-snack-bar:** add missing exports ([#20928](https://github.com/angular/components/issues/20928)) ([6add7fe](https://github.com/angular/components/commit/6add7fe)) |
+
+
 # 11.0.0-rc.0 "thorium-flower" (2020-10-22)
 
 ### cdk
