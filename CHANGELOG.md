@@ -1,3 +1,27 @@
+## 10.2.7 "carnelian mountain" (2020-11-02)
+
+### material
+
+|            |                       |
+| ---------- | --------------------- |
+| bug fix |  **icon:** not updating svg icon assigned through setter ([#20509](https://github.com/angular/components/issues/20509)) ([6b13154](https://github.com/angular/components/commit/6b13154)), closes [#20470](https://github.com/angular/components/issues/20470) |
+| bug fix |  **list:** exclude icons from harness getText result ([#20845](https://github.com/angular/components/issues/20845)) ([8638456](https://github.com/angular/components/commit/8638456)), closes [#20812](https://github.com/angular/components/issues/20812) |
+
+### google-maps
+
+|            |                       |
+| ---------- | --------------------- |
+| bug fix |  maintain subscriptions across event targets ([#20897](https://github.com/angular/components/issues/20897)) ([38dc511](https://github.com/angular/components/commit/38dc511)), closes [#20873](https://github.com/angular/components/issues/20873) [#20873](https://github.com/angular/components/issues/20873) |
+| bug fix |  rendering blank if custom options with no zoom are provided ([#20882](https://github.com/angular/components/issues/20882)) ([c9700df](https://github.com/angular/components/commit/c9700df)) |
+
+### material-experimental
+
+|            |                       |
+| ---------- | --------------------- |
+| bug fix |  **mdc-checkbox:** fix broken dark theme ([#20940](https://github.com/angular/components/issues/20940)) ([15e4802](https://github.com/angular/components/commit/15e4802)) |
+| bug fix |  **mdc-snack-bar:** add missing exports ([#20928](https://github.com/angular/components/issues/20928)) ([308dd24](https://github.com/angular/components/commit/308dd24)) |
+
+
 ## 10.2.6 "aluminum-mums" (2020-10-27)
 
 ### cdk
