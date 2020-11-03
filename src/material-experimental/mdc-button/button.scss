@@ -45,3 +45,15 @@
   right: -$mdc-button-outlined-border-width;
   border: none;
 }
+
+// MDC expects button icons to contain this HTML content:
+// ```html
+//   <span class="mdc-button__icon material-icons">favorite</span>
+// ```
+// However, Angular Material expects a `mat-icon` instead. The following
+// will extend the `mdc-button__icon` styling to the mat icon. Note that
+// the extended styles inherently only match icons that nest themselves in
+// a parent `mdc-button`.
+.mat-icon {
+  @extend .mdc-button__icon;
+}
