@@ -1,12 +1,22 @@
-/// <reference types="googlemaps" />
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+
+ /// <reference types="googlemaps" />
 
 /**
  * Class for clustering markers on a Google Map.
  *
- * See googlemaps.github.io/v3-utility-library/classes/_google_markerclustererplus.markerclusterer.html
+ * See
+ * googlemaps.github.io/v3-utility-library/classes/_google_markerclustererplus.markerclusterer.html
  */
 declare class MarkerClusterer {
-  constructor(map: google.maps.Map, markers?: google.maps.Marker[], options?: MarkerClustererOptions);
+  constructor(
+      map: google.maps.Map, markers?: google.maps.Marker[], options?: MarkerClustererOptions);
   ariaLabelFn: AriaLabelFn;
   static BATCH_SIZE: number;
   static BATCH_SIZE_IE: number;
@@ -32,7 +42,7 @@ declare class MarkerClusterer {
   getImageExtension(): string;
   getImagePath(): string;
   getImageSizes(): number[];
-  getMap(): google.maps.Map|google.maps.StreetViewPanorama;
+  getMap(): google.maps.Map | google.maps.StreetViewPanorama;
   getMarkers(): google.maps.Marker[];
   getMaxZoom(): number;
   getMinimumClusterSize(): number;
@@ -89,7 +99,9 @@ declare class Cluster {
 /**
  * Options for constructing a MarkerClusterer from the @google/markerclustererplus library.
  *
- * See googlemaps.github.io/v3-utility-library/classes/_google_markerclustererplus.markerclustereroptions.html
+ * See
+ * googlemaps.github.io/v3-utility-library/classes/
+ * _google_markerclustererplus.markerclustereroptions.html
  */
 declare interface MarkerClustererOptions {
   ariaLabelFn?: AriaLabelFn;
@@ -115,7 +127,9 @@ declare interface MarkerClustererOptions {
 /**
  * Style interface for a marker cluster icon.
  *
- * See googlemaps.github.io/v3-utility-library/interfaces/_google_markerclustererplus.clustericonstyle.html
+ * See
+ * googlemaps.github.io/v3-utility-library/interfaces/
+ * _google_markerclustererplus.clustericonstyle.html
  */
 declare interface ClusterIconStyle {
   anchorIcon?: [number, number];
@@ -137,7 +151,9 @@ declare interface ClusterIconStyle {
 /**
  * Info interface for a marker cluster icon.
  *
- * See googlemaps.github.io/v3-utility-library/interfaces/_google_markerclustererplus.clustericoninfo.html
+ * See
+ * googlemaps.github.io/v3-utility-library/interfaces/
+ * _google_markerclustererplus.clustericoninfo.html
  */
 declare interface ClusterIconInfo {
   index: number;
@@ -157,4 +173,5 @@ declare type AriaLabelFn = (text: string) => string;
  *
  * See googlemaps.github.io/v3-utility-library/modules/_google_markerclustererplus.html#calculator
  */
-declare type Calculator = (markers: google.maps.Marker[], clusterIconStylesCount: number) => ClusterIconInfo;
+declare type Calculator =
+    (markers: google.maps.Marker[], clusterIconStylesCount: number) => ClusterIconInfo;

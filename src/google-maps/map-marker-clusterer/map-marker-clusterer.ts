@@ -8,6 +8,7 @@
 
 // Workaround for: https://github.com/bazelbuild/rules_nodejs/issues/1265
 /// <reference types="googlemaps" />
+/// <reference path="marker-clusterer-types.ts" />
 
 import {
   AfterContentInit,
@@ -556,9 +557,7 @@ export class MapMarkerClusterer implements OnInit, AfterContentInit, OnDestroy {
 
     this._markers.changes.pipe(takeUntil(this._destroy)).subscribe(markerComponents => {
       this._assertInitialized();
-      const newMarkers = new Set<google.maps.Marker>(markerComponents
-        .filter((markerComponent: MapMarker) => !!markerComponent.marker)
-        .map((markerComponent: MapMarker) => markerComponent.marker));
+      const newMarkers = new Set<google.maps.Marker>(this._getInternalMarkers(markerComponents));
       const markersToAdd: google.maps.Marker[] = [];
       const markersToRemove: google.maps.Marker[] = [];
       for (const marker of Array.from(newMarkers)) {
@@ -582,8 +581,13 @@ export class MapMarkerClusterer implements OnInit, AfterContentInit, OnDestroy {
   }
 
   private _getInternalMarkers(markers: MapMarker[]): google.maps.Marker[] {
-    return markers.filter(markerComponent => !!markerComponent.marker)
-        .map(markerComponent => markerComponent.marker!);
+    const internalMarkers: google.maps.Marker[] = [];
+    for (const markerComponent of markers) {
+      if (!!markerComponent.marker) {
+        internalMarkers.push(markerComponent.marker);
+      }
+    }
+    return internalMarkers;
   }
 
   private _assertInitialized(): asserts this is {markerClusterer: MarkerClusterer} {

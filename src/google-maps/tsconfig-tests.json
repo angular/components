@@ -16,7 +16,6 @@
     "emitDecoratorMetadata": true
   },
   "include": [
-    "**/*.d.ts",
     "**/*.spec.ts",
     "../dev-mode-types.d.ts"
   ],
