@@ -64,9 +64,9 @@ describe('StackBlitzWriter', () => {
   it('should add files to form input', () => {
     const form = stackBlitzWriter._createFormElement('index.ts');
 
-    stackBlitzWriter._addFileToForm(form, data, 'NoContent', 'test.ts', 'path/to/file');
-    stackBlitzWriter._addFileToForm(form, data, 'Test', 'test.html', 'path/to/file');
-    stackBlitzWriter._addFileToForm(form, data, 'Detail', 'src/detail.ts', 'path/to/file');
+    stackBlitzWriter._addFileToForm(form, data, 'NoContent', 'test.ts', 'path/to/file', false);
+    stackBlitzWriter._addFileToForm(form, data, 'Test', 'test.html', 'path/to/file', false);
+    stackBlitzWriter._addFileToForm(form, data, 'Detail', 'src/detail.ts', 'path/to/file', false);
 
     expect(form.elements.length).toBe(3);
     expect(form.elements[0].getAttribute('name')).toBe('files[src/app/test.ts]');
@@ -76,7 +76,7 @@ describe('StackBlitzWriter', () => {
 
   it('should open a new window with stackblitz url', fakeAsync(() => {
     let form: HTMLFormElement;
-    stackBlitzWriter.constructStackBlitzForm(testExampleId, data).then(result => {
+    stackBlitzWriter.constructStackBlitzForm(testExampleId, data, false).then(result => {
       form = result;
       flushMicrotasks();
 
