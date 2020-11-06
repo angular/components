@@ -318,6 +318,17 @@ jobs:
     <<: *job_defaults
     steps:
       - *checkout_code
+      - run: node -v
+      - run:
+          name: Rebase PR on target branch
+          # After checkout, rebase on top of target branch.
+          command: |
+            if [ -n "$CIRCLE_PR_NUMBER" ]; then
+              # User is required for rebase.
+              git config user.name "angular-ci"
+              git config user.email "angular-ci"
+              node .circleci/rebase-pr.js
+            fi
       - *restore_cache
       - *setup_bazel_ci_config
       - *yarn_install
@@ -639,65 +650,5 @@ workflows:
 
   default_workflow:
     jobs:
-      - bazel_build:
-          filters: *ignore_presubmit_branch_filter
-      - view_engine_build:
-          filters: *ignore_presubmit_branch_filter
-      - view_engine_test:
-          filters: *ignore_presubmit_branch_filter
-      - api_golden_checks:
-          filters: *ignore_presubmit_branch_filter
-      - integration_tests:
-          filters: *ignore_presubmit_branch_filter
-      - tests_local_browsers:
-          filters: *ignore_presubmit_branch_filter
-      - tests_browserstack:
-          filters: *ignore_presubmit_branch_filter
-      - tests_saucelabs:
-          filters: *ignore_presubmit_branch_filter
-      - e2e_tests:
-          filters: *ignore_presubmit_branch_filter
-      - build_release_packages:
-          filters: *ignore_presubmit_branch_filter
-      - upload_release_packages:
-          # We don't want to run this job on push builds because for those, the
-          # `publish_snapshots` runs, and publishes build artifacts.
-          filters: *only_on_pull_requests_filter
-          requires:
-            - build_release_packages
       - lint:
           filters: *ignore_presubmit_branch_filter
-      - ngcc_compatibility:
-          filters: *ignore_presubmit_branch_filter
-          requires:
-            - build_release_packages
-      - ngcc_compatibility_snapshot:
-          filters: *skip_on_pull_requests_filter
-          requires:
-            - build_release_packages
-      - publish_snapshots:
-          filters: *publish_branches_filter
-          requires:
-            - build_release_packages
-
-  # Snapshot tests workflow that is scheduled to run all specified jobs every hour.
-  # This workflow runs various jobs against the Angular snapshot builds from Github.
-  snapshot_tests:
-    jobs:
-      # Note that we need additional jobs for the cronjob snapshot tests because there
-      # is no easy way to detect whether a job runs inside of a cronjob or specific
-      # workflow. See: https://circleci.com/ideas/?idea=CCI-I-295
-      - snapshot_tests_local_browsers
-      - view_engine_snapshot_test_cronjob
-      - mdc_snapshot_test_cronjob
-
-    triggers:
-      - schedule:
-          cron: "0 * * * *"
-          filters:
-            branches:
-              only:
-                # We only want to run the "master" branch against the snapshot builds because
-                # it's not guaranteed that older versions of Angular Material always work
-                # with the latest Angular version.
-                - master
