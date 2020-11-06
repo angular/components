@@ -30,11 +30,13 @@ export class StackBlitzButton {
     this.exampleData = new ExampleData(example);
 
     if (example) {
-      this.stackBlitzWriter.constructStackBlitzForm(example, this.exampleData)
-      .then((stackBlitzForm: HTMLFormElement) => {
-        this.stackBlitzForm = stackBlitzForm;
-        this.isDisabled = false;
-      });
+      this.stackBlitzWriter.constructStackBlitzForm(example,
+        this.exampleData,
+        example.includes('harness'))
+        .then((stackBlitzForm: HTMLFormElement) => {
+          this.stackBlitzForm = stackBlitzForm;
+          this.isDisabled = false;
+        });
     } else {
       this.isDisabled = true;
     }
