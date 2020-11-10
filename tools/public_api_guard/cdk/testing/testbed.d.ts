@@ -21,8 +21,11 @@ export declare class UnitTestElement implements TestElement {
     constructor(element: Element, _stabilize: () => Promise<void>);
     blur(): Promise<void>;
     clear(): Promise<void>;
-    click(...args: [ModifierKeys?] | ['center', ModifierKeys?] |
-      [number, number, ModifierKeys?]): Promise<void>;
+    click(...args: [ModifierKeys?] | ['center', ModifierKeys?] | [
+        number,
+        number,
+        ModifierKeys?
+    ]): Promise<void>;
     dispatchEvent(name: string, data?: Record<string, EventData>): Promise<void>;
     focus(): Promise<void>;
     getAttribute(name: string): Promise<string | null>;
@@ -34,8 +37,11 @@ export declare class UnitTestElement implements TestElement {
     isFocused(): Promise<boolean>;
     matchesSelector(selector: string): Promise<boolean>;
     mouseAway(): Promise<void>;
-    rightClick(...args: [ModifierKeys?] | ['center', ModifierKeys?] |
-      [number, number, ModifierKeys?]): Promise<void>;
+    rightClick(...args: [ModifierKeys?] | ['center', ModifierKeys?] | [
+        number,
+        number,
+        ModifierKeys?
+    ]): Promise<void>;
     selectOptions(...optionIndexes: number[]): Promise<void>;
     sendKeys(...keys: (string | TestKey)[]): Promise<void>;
     sendKeys(modifiers: ModifierKeys, ...keys: (string | TestKey)[]): Promise<void>;
