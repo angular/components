@@ -86,7 +86,8 @@ export class UnitTestElement implements TestElement {
     await this._stabilize();
   }
 
-  async rightClick(...args: [] | ['center'] | [number, number]): Promise<void> {
+  async rightClick(...args: [ModifierKeys?] | ['center', ModifierKeys?] |
+    [number, number, ModifierKeys?]): Promise<void> {
     await this._dispatchMouseEventSequence('contextmenu', args, 2);
     await this._stabilize();
   }

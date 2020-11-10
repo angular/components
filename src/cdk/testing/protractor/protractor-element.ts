@@ -86,7 +86,8 @@ export class ProtractorElement implements TestElement {
     await this._dispatchClickEventSequence(args, Button.LEFT);
   }
 
-  async rightClick(...args: [] | ['center'] | [number, number]): Promise<void> {
+  async rightClick(...args: [ModifierKeys?] | ['center', ModifierKeys?] |
+    [number, number, ModifierKeys?]): Promise<void> {
     await this._dispatchClickEventSequence(args, Button.RIGHT);
   }
 

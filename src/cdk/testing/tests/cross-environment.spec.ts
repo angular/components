@@ -373,6 +373,13 @@ export function crossEnvironmentSpecs(
       expect(await contextmenuTestResult.text()).toBe('50-50-2');
     });
 
+    it('should be able to right click with modifiers', async () => {
+      const clickTest = await harness.clickTest();
+      const modifiersResult = await harness.clickModifiersResult();
+      await clickTest.rightClick!(50, 50, {alt: true, control: true});
+      expect(await modifiersResult.text()).toBe('-alt-control-');
+    });
+
     it('should be able to send key', async () => {
       const input = await harness.input();
       const value = await harness.value();

@@ -100,6 +100,9 @@ export class TestMainComponent implements OnDestroy {
   onRightClick(event: MouseEvent) {
     this.rightClickResult.button = event.button;
     this._assignRelativeCoordinates(event, this.rightClickResult);
+
+    this.modifiers = ['Shift', 'Alt', 'Control', 'Meta']
+    .map(key => event.getModifierState(key) ? key.toLowerCase() : '').join('-');
   }
 
   onCustomEvent(event: any) {
