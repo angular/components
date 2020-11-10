@@ -1,3 +1,6 @@
+# 11.0.0-rc.3 "merino-meadow" (2020-11-10)
+There are no changes bewteen 11.0.0-rc.2 and 11.0.0-rc.3.
+
 # 11.0.0-rc.2 "vicuna-valley" (2020-11-10)
 
 ### cdk
