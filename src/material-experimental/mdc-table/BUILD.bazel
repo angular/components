@@ -21,10 +21,10 @@ ng_module(
     module_name = "@angular/material-experimental/mdc-table",
     deps = [
         "//src/cdk/table",
-        "//src/material/table",
         "//src/material-experimental/mdc-core",
         "//src/material-experimental/mdc-paginator",
         "//src/material/sort",
+        "//src/material/table",
         "@npm//@angular/core",
         "@npm//material-components-web",
     ],
