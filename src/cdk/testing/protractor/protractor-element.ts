@@ -220,7 +220,7 @@ export class ProtractorElement implements TestElement {
       [{x: args[0], y: args[1]}] : []) as [{x: number, y: number}];
 
     let actions = browser.actions()
-    .mouseMove(await this.element.getWebElement(), ...offsetArgs);
+      .mouseMove(await this.element.getWebElement(), ...offsetArgs);
 
     for (const modifierKey of modifierKeys) {
       actions = actions.keyDown(modifierKey);
