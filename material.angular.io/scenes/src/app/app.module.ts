@@ -24,6 +24,7 @@ import {FormFieldSceneModule} from './scenes/form-field/form-field-scene';
 import {ToolbarSceneModule} from './scenes/toolbar/toolbar-scene';
 import {SidenavSceneModule} from './scenes/sidenav/sidenav-scene';
 import {IconSceneModule} from './scenes/icon/icon-scene';
+import { Platform } from '@angular/cdk/platform';
 
 @NgModule({
   declarations: [
@@ -52,11 +53,12 @@ import {IconSceneModule} from './scenes/icon/icon-scene';
     IconSceneModule,
   ],
   bootstrap: [AppComponent],
-  providers: [{
-    provide: OverlayContainer,
-    useFactory: (doc: any) => new SceneOverlayContainer(doc),
-    deps: [DOCUMENT]
-  }]
+  providers: [
+    {
+      provide: OverlayContainer,
+      useFactory: (doc: any, platform: Platform) => new SceneOverlayContainer(doc, platform),
+      deps: [DOCUMENT, Platform]
+    }]
 })
 export class AppModule {
 }

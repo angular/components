@@ -1,4 +1,4 @@
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import {waitForAsync, ComponentFixture, TestBed} from '@angular/core/testing';
 import {ComponentHeaderModule, ComponentPageHeader} from './component-page-header';
 import {DocsAppTestingModule} from '../../testing/testing-module';
 
@@ -6,7 +6,7 @@ import {DocsAppTestingModule} from '../../testing/testing-module';
 describe('ComponentPageHeader', () => {
   let fixture: ComponentFixture<ComponentPageHeader>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [ComponentHeaderModule, DocsAppTestingModule],
     }).compileComponents();

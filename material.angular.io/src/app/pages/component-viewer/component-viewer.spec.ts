@@ -1,4 +1,4 @@
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import {waitForAsync, ComponentFixture, TestBed} from '@angular/core/testing';
 import {ActivatedRoute} from '@angular/router';
 import {of as observableOf} from 'rxjs';
 import {ComponentViewer, ComponentViewerModule} from './component-viewer';
@@ -23,7 +23,7 @@ const mockActivatedRoute = {
 describe('ComponentViewer', () => {
   let fixture: ComponentFixture<ComponentViewer>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [ComponentViewerModule, DocsAppTestingModule, TestExampleModule],
       providers: [

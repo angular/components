@@ -1,6 +1,6 @@
 {
   "hosting": {
-    "public": "dist",
+    "public": "dist/material-angular-io",
     "cleanUrls": true,
     "rewrites": [
       {

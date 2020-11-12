@@ -1,4 +1,4 @@
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import {waitForAsync, ComponentFixture, TestBed} from '@angular/core/testing';
 import {GuideList, GuideListModule} from './guide-list';
 import {DocsAppTestingModule} from '../../testing/testing-module';
 
@@ -6,7 +6,7 @@ import {DocsAppTestingModule} from '../../testing/testing-module';
 describe('GuideList', () => {
   let fixture: ComponentFixture<GuideList>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [GuideListModule, DocsAppTestingModule],
     }).compileComponents();
