@@ -1,11 +1,11 @@
-import {TestBed, inject, async} from '@angular/core/testing';
+import {TestBed, inject, waitForAsync} from '@angular/core/testing';
 import {GuideItems} from './guide-items';
 
 
 describe('GuideItems', () => {
   let guideItems: GuideItems;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       providers: [GuideItems]
     }).compileComponents();

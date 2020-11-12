@@ -1,4 +1,4 @@
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import {waitForAsync, ComponentFixture, TestBed} from '@angular/core/testing';
 import {take} from 'rxjs/operators';
 import {ComponentSidenav, ComponentSidenavModule} from './component-sidenav';
 import {DocsAppTestingModule} from '../../testing/testing-module';
@@ -8,7 +8,7 @@ describe('ComponentSidenav', () => {
   let fixture: ComponentFixture<ComponentSidenav>;
   let component: ComponentSidenav;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [ComponentSidenavModule, DocsAppTestingModule],
     }).compileComponents();
@@ -27,7 +27,7 @@ describe('ComponentSidenav', () => {
     } as any);
 
     // TODO refactor this as none of these expectations are ever verified
-    async(() => {
+    waitForAsync(() => {
       expect(component.sidenav instanceof MatSidenav).toBeTruthy();
       component.isScreenSmall.pipe(take(1)).subscribe(isSmall => expect(isSmall).toBeTruthy());
       expect(component.sidenav.opened).toBe(false);

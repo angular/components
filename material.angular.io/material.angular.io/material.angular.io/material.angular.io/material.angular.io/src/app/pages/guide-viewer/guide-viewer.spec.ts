@@ -1,4 +1,4 @@
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import {waitForAsync, ComponentFixture, TestBed} from '@angular/core/testing';
 import {Observable} from 'rxjs';
 import {ActivatedRoute} from '@angular/router';
 import {GuideViewer, GuideViewerModule} from './guide-viewer';
@@ -20,7 +20,7 @@ const mockActivatedRoute = {
 describe('GuideViewer', () => {
   let fixture: ComponentFixture<GuideViewer>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [GuideViewerModule, DocsAppTestingModule],
       providers: [

@@ -1,5 +1,5 @@
 import {Carousel} from './carousel';
-import {async, ComponentFixture, fakeAsync, flush, TestBed} from '@angular/core/testing';
+import {waitForAsync, ComponentFixture, fakeAsync, flush, TestBed} from '@angular/core/testing';
 import {DocsAppTestingModule} from '../../testing/testing-module';
 import {Component, ViewChild} from '@angular/core';
 import {CarouselModule} from './carousel-module';
@@ -10,7 +10,7 @@ describe('HorizontalCarousel', () => {
   let component: Carousel;
 
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule(
       {
         imports: [CarouselModule, DocsAppTestingModule],

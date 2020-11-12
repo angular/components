@@ -24,7 +24,7 @@ const TEMPLATE_FILES = [
   '.editorconfig',
   '.gitignore',
   'angular.json',
-  'browserslist',
+  '.browserslistrc',
   'package.json',
   'tsconfig.json',
   'tsconfig.app.json',
@@ -42,7 +42,7 @@ const TEST_TEMPLATE_FILES = [
   '.editorconfig',
   '.gitignore',
   'angular.json',
-  'browserslist',
+  '.browserslistrc',
   'package.json',
   'src/test.ts',
   'tsconfig.json',
@@ -57,7 +57,7 @@ const TEST_TEMPLATE_FILES = [
 ];
 
 const TAGS: string[] = ['angular', 'material', 'example'];
-const angularVersion = '^10.0.0';
+const angularVersion = '^11.0.0';
 
 const dependencies = {
   '@angular/cdk': materialVersion,
@@ -72,10 +72,10 @@ const dependencies = {
   '@angular/platform-browser-dynamic': angularVersion,
   '@angular/router': angularVersion,
   'angular-in-memory-web-api': '~0.11.0',
-  'moment': '^2.26.0',
-  'rxjs': '>=6.5.5 <7.0.0',
-  'tslib': '^1.11.2',
-  'zone.js': '~0.10.3',
+  'moment': '^2.29.1',
+  'rxjs': '^6.6.3',
+  'tslib': '^2.0.3',
+  'zone.js': '^0.11.2',
 };
 
 const testDependencies = {
@@ -90,13 +90,13 @@ const testDependencies = {
   '@angular/platform-browser': angularVersion,
   '@angular/platform-browser-dynamic': angularVersion,
   '@angular/router': angularVersion,
-  '@types/jasmine': '^3.5.10',
+  '@types/jasmine': '^3.6.0',
   'angular-in-memory-web-api': '~0.11.0',
-  'jasmine-core': '^3.5.0',
-  'moment': '^2.26.0',
-  'rxjs': '>=6.5.5 <7.0.0',
-  'tslib': '^1.11.2',
-  'zone.js': '~0.10.3',
+  'jasmine-core': '^3.6.0',
+  'moment': '^2.29.1',
+  'rxjs': '^6.6.3',
+  'tslib': '^2.0.3',
+  'zone.js': '^0.11.2',
 };
 
 /**

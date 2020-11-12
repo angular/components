@@ -1,6 +1,6 @@
 import {HttpTestingController} from '@angular/common/http/testing';
 import {Component} from '@angular/core';
-import {async, inject, TestBed} from '@angular/core/testing';
+import {waitForAsync, inject, TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {DocsAppTestingModule} from '../../testing/testing-module';
 import {DocViewer} from './doc-viewer';
@@ -11,7 +11,7 @@ import {ExampleViewer} from '../example-viewer/example-viewer';
 describe('DocViewer', () => {
   let http: HttpTestingController;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [DocViewerModule, DocsAppTestingModule],
       declarations: [DocViewerTestComponent],

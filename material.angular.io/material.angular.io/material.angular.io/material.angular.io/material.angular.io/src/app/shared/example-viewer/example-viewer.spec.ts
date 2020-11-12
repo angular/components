@@ -1,7 +1,7 @@
 import {CommonModule} from '@angular/common';
 import {HttpTestingController} from '@angular/common/http/testing';
 import {NgModule} from '@angular/core';
-import {async, ComponentFixture, inject, TestBed} from '@angular/core/testing';
+import {waitForAsync, ComponentFixture, inject, TestBed} from '@angular/core/testing';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {MatInputModule} from '@angular/material/input';
@@ -30,7 +30,7 @@ describe('ExampleViewer', () => {
   let http: HttpTestingController;
   let loader: HarnessLoader;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [
         DocViewerModule,
@@ -52,7 +52,7 @@ describe('ExampleViewer', () => {
     loader = TestbedHarnessEnvironment.loader(fixture);
   });
 
-  it('should toggle between the 3 views', async(() => {
+  it('should toggle between the 3 views', waitForAsync(() => {
     // need to specify a file because toggling from snippet to full changes the tabs to match
     component.file = 'file.html';
     component.view = 'snippet';
@@ -63,7 +63,7 @@ describe('ExampleViewer', () => {
     expect(component.view).toBe('demo');
   }));
 
-  it('should expand to HTML tab', async(async () => {
+  it('should expand to HTML tab', waitForAsync(async () => {
     component.example = exampleKey;
     component.file = 'file.html';
     component.view = 'snippet';
@@ -74,7 +74,7 @@ describe('ExampleViewer', () => {
     expect(await tab.getLabel()).toBe('HTML');
   }));
 
-  it('should expand to TS tab', async(async () => {
+  it('should expand to TS tab', waitForAsync(async () => {
     component.example = exampleKey;
     component.file = EXAMPLE_COMPONENTS[exampleKey].primaryFile;
     component.view = 'snippet';
@@ -85,7 +85,7 @@ describe('ExampleViewer', () => {
     expect(await tab.getLabel()).toBe('TS');
   }));
 
-  it('should expand to CSS tab', async(async () => {
+  it('should expand to CSS tab', waitForAsync(async () => {
     component.example = exampleKey;
     component.file = 'file.css';
     component.view = 'snippet';
@@ -96,21 +96,21 @@ describe('ExampleViewer', () => {
     expect(await tab.getLabel()).toBe('CSS');
   }));
 
-  it('should generate correct url with region', async(() => {
+  it('should generate correct url with region', waitForAsync(() => {
     component.example = exampleKey;
     component.region = 'region';
     const url = component.generateUrl('a.b.html');
     expect(url).toBe(exampleBasePath + '/a.b_region-html.html');
   }));
 
-  it('should generate correct url without region', async(() => {
+  it('should generate correct url without region', waitForAsync(() => {
     component.example = exampleKey;
     component.region = undefined;
     const url = component.generateUrl('a.b.ts');
     expect(url).toBe(exampleBasePath + '/a.b-ts.html');
   }));
 
-  it('should print an error message about incorrect file type', async(() => {
+  it('should print an error message about incorrect file type', waitForAsync(() => {
     spyOn(console, 'error');
     component.example = exampleKey;
     component.file = 'file.bad';
@@ -120,20 +120,20 @@ describe('ExampleViewer', () => {
       `Could not find tab for file extension: "bad".`);
   }));
 
-  it('should set and return example properly', async(() => {
+  it('should set and return example properly', waitForAsync(() => {
     component.example = exampleKey;
     const data = component.exampleData;
     expect(data).toEqual(EXAMPLE_COMPONENTS[exampleKey]);
   }));
 
-  it('should print an error message about missing example', async(() => {
+  it('should print an error message about missing example', waitForAsync(() => {
     spyOn(console, 'error');
     component.example = 'foobar';
     expect(console.error).toHaveBeenCalled();
     expect(console.error).toHaveBeenCalledWith('Could not find example: foobar');
   }));
 
-  it('should return docs-content path for example based on extension', async(() => {
+  it('should return docs-content path for example based on extension', waitForAsync(() => {
     // set example
     component.example = exampleKey;
 

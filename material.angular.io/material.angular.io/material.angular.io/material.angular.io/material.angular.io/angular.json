@@ -18,11 +18,10 @@
           "options": {
             "aot": true,
             "sourceMap": true,
-            "outputPath": "dist",
+            "outputPath": "dist/material-angular-io",
             "index": "src/index.html",
             "main": "src/main.ts",
             "tsConfig": "tsconfig.app.json",
-            "extractCss": true,
             "assets": [
               {
                 "glob": "**/*",
@@ -232,7 +231,6 @@
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,
-              "extractCss": true,
               "namedChunks": false,
               "extractLicenses": true,
               "vendorChunk": false,

@@ -1,4 +1,4 @@
-import {TestBed, inject, async} from '@angular/core/testing';
+import {TestBed, inject, waitForAsync} from '@angular/core/testing';
 import {DocumentationItems} from './documentation-items';
 
 const COMPONENTS = 'components';
@@ -7,7 +7,7 @@ const CDK = 'cdk';
 describe('DocViewer', () => {
   let docsItems: DocumentationItems;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       providers: [DocumentationItems]
     }).compileComponents();

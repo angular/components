@@ -1,4 +1,4 @@
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import {waitForAsync, ComponentFixture, TestBed} from '@angular/core/testing';
 import {ActivatedRoute, Params} from '@angular/router';
 import {BehaviorSubject} from 'rxjs';
 import {DocsAppTestingModule} from '../../testing/testing-module';
@@ -8,7 +8,7 @@ describe('ComponentCategoryList', () => {
   let fixture: ComponentFixture<ComponentCategoryList>;
   let params: BehaviorSubject<Params>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     params = new BehaviorSubject<Params>({});
 
     const fakeActivatedRoute = {
