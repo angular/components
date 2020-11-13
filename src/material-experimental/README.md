@@ -54,6 +54,7 @@ be included in the pre-built CSS mixin and will need to be explicitly included.
 ```scss
   @import '~@angular/material/theming';
   @import '~@angular/material-experimental/mdc-theming/all-theme';
+  @import "~@angular/material-experimental/mdc-typography/all-typography";
   
   $my-primary: mat-palette($mat-indigo);
   $my-accent:  mat-palette($mat-pink, A200, A100, A400);
