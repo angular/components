@@ -27,7 +27,6 @@ ng_module(
         "@npm//@angular/core",
         "@npm//@angular/forms",
         "@npm//@material/ripple",
-        "@npm//@material/segmented-button",
     ],
 )
 
@@ -72,7 +71,6 @@ ng_web_test_suite(
     name = "unit_tests",
     static_files = [
         "@npm//:node_modules/@material/ripple/dist/mdc.ripple.js",
-        "@npm//:node_modules/@material/segmented-button/dist/mdc.segmentedButton.js",
     ],
     deps = [
         ":button_toggle_tests_lib",

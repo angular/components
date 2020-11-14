@@ -18,9 +18,11 @@ import {
   ElementRef,
   EventEmitter,
   forwardRef,
-  Inject, InjectionToken,
+  Inject,
+  InjectionToken,
   Input,
-  OnDestroy, OnInit,
+  OnDestroy,
+  OnInit,
   Optional,
   Output,
   QueryList,
@@ -38,27 +40,10 @@ import {
   RippleAnimationConfig
 } from '@angular/material/core';
 import {numbers} from '@material/ripple';
-import {
-  MDCSegmentedButtonAdapter,
-  MDCSegmentedButtonFoundation,
-  MDCSegmentedButtonSegmentAdapter,
-  MDCSegmentedButtonSegmentFoundation,
-} from '@material/segmented-button';
 import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
 import {FocusMonitor} from '@angular/cdk/a11y';
 import {SelectionModel} from '@angular/cdk/collections';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
-
-/**
- * SHOULD BE EXPORTED BY MDC
- * Event detail triggered by a click on a segment. This event detail is used
- * to alert the segment-button to the change and trigger a DOM event.
- */
-export interface SegmentDetail {
-  index: number;
-  selected: boolean;
-  segmentId?: string;
-}
 
 /** Configuration for the ripple animation. */
 const RIPPLE_ANIMATION_CONFIG: RippleAnimationConfig = {
@@ -108,7 +93,7 @@ export const _MatButtonToggleBaseMixin: CanDisableRippleCtor & CanDisableCtor & 
   typeof MatButtonToggleMixinCore =
   mixinColor(mixinDisabled(mixinDisableRipple(MatButtonToggleMixinCore)));
 
-/** Exclusive selection button toggle group that behaves like a radio-button group. */
+/** Selection button toggle group. */
 @Directive({
   selector: 'mat-button-toggle-group',
   providers: [
@@ -124,7 +109,7 @@ export const _MatButtonToggleBaseMixin: CanDisableRippleCtor & CanDisableCtor & 
   exportAs: 'matButtonToggleGroup',
 })
 export class MatButtonToggleGroup implements ControlValueAccessor, OnInit, AfterViewInit,
-  AfterContentInit, OnDestroy {
+  AfterContentInit {
   /**
    * Reference to the raw value that the consumer tried to assign. The real
    * value will exclude any values from this one that don't correspond to a
@@ -149,30 +134,12 @@ export class MatButtonToggleGroup implements ControlValueAccessor, OnInit, After
     descendants: true
   }) _buttonToggles: QueryList<MatButtonToggle>;
 
-  _foundation: MDCSegmentedButtonFoundation;
-
   private _selectionModel: SelectionModel<MatButtonToggle>;
 
-  private _adapter: MDCSegmentedButtonAdapter = {
-    hasClass: (name: string) => this._elementRef.nativeElement.classList.contains(name),
-    getSegments: () => {
-      return this._buttonToggles.map(segment => {
-        return {index: segment.index, selected: segment.checked} as SegmentDetail;
-      });
-    },
-    selectSegment: (indexOrSegmentId: number | string) => this._selectValue(indexOrSegmentId),
-    unselectSegment: (indexOrSegmentId: number | string) => this._unselectValue(indexOrSegmentId),
-    notifySelectedChange: (detail: SegmentDetail) => this._emitChangeEvent(),
-  };
-
-  constructor(private _changeDetector: ChangeDetectorRef,
-              private _elementRef: ElementRef<HTMLElement>) {
-    this._foundation = new MDCSegmentedButtonFoundation(this._adapter);
-  }
+  constructor(private _changeDetector: ChangeDetectorRef) {}
 
   /**
-   * @deprecated No longer used.
-   * @breaking-change 12.0.0
+   * Not yet implemented
    */
   @Input() vertical: boolean;
 
@@ -213,7 +180,7 @@ export class MatButtonToggleGroup implements ControlValueAccessor, OnInit, After
     }
   }
 
-  private _name = `mat-button-toggle-group-${_uniqueIdCounter++}`;
+  private _name = `mat-mdc-button-toggle-group-${_uniqueIdCounter++}`;
 
   /** Whether multiple button toggles can be selected. */
   @Input()
@@ -260,28 +227,17 @@ export class MatButtonToggleGroup implements ControlValueAccessor, OnInit, After
   }
 
   ngAfterViewInit() {
-    this._foundation.init();
-
-    const _isSingleSelect = this._foundation.isSingleSelect();
-    this._buttonToggles.forEach((segment, index: number) => {
-      segment.index = index;
-      segment._isSingleSelect = _isSingleSelect;
-    });
-
     const selectedSegments =
-      this._buttonToggles.filter((segment) => segment._foundation.isSelected());
-    if (_isSingleSelect && selectedSegments.length == 0 &&
-      this._buttonToggles.length > 0) {
+      this._buttonToggles.filter((toggle) => toggle.checked);
+    // if (_isSingleSelect && selectedSegments.length == 0 &&
+    //   this._buttonToggles.length > 0) {
+    //   throw new Error(
+    //     'No mat-button-toggle selected in singleSelect mat-button-toggle-group');
+    // } else
+    if (!this.multiple && selectedSegments.length > 1) {
       throw new Error(
-        'No segment selected in singleSelect mdc-segmented-button');
-    } else if (_isSingleSelect && selectedSegments.length > 1) {
-      throw new Error(
-        'Multiple segments selected in singleSelect mdc-segmented-button');
+        'Multiple mat-button-toggle selected in singleSelect mat-button-toggle-group');
     }
-  }
-
-  ngOnDestroy() {
-    this._foundation.destroy();
   }
 
   /**
@@ -396,29 +352,16 @@ export class MatButtonToggleGroup implements ControlValueAccessor, OnInit, After
   /** Clears the selected toggles. */
   private _clearSelection() {
     this._selectionModel.clear();
-    this._buttonToggles.forEach(toggle => toggle.checked = false);
   }
 
   /** Selects a value if there's a toggle that corresponds to it. */
-  private _selectValue(value: any) {
+  _selectValue(value: any) {
     const correspondingOption = this._buttonToggles.find(toggle => {
       return toggle.value != null && toggle.value === value;
     });
 
     if (correspondingOption) {
       correspondingOption.checked = true;
-      this._selectionModel.select(correspondingOption);
-    }
-  }
-
-  /** Unselects a value if there's a toggle that corresponds to it. */
-  private _unselectValue(value: any) {
-    const correspondingOption = this._buttonToggles.find(toggle => {
-      return toggle.value != null && toggle.value === value;
-    });
-
-    if (correspondingOption) {
-      correspondingOption.checked = false;
       this._selectionModel.select(correspondingOption);
     }
   }
@@ -464,7 +407,6 @@ export class MatButtonToggleGroup implements ControlValueAccessor, OnInit, After
   inputs: ['disableRipple'],
 })
 export class MatButtonToggle extends _MatButtonToggleBaseMixin implements OnInit,
-  AfterViewInit,
   OnDestroy {
 
   /**
@@ -498,12 +440,8 @@ export class MatButtonToggle extends _MatButtonToggleBaseMixin implements OnInit
   /** Tabindex for the toggle. */
   @Input() tabIndex: number | null;
 
-  /** Event that emits whenever the selected toggle is changed. */
-  @Output() readonly selectChange: EventEmitter<SegmentDetail> = new EventEmitter<SegmentDetail>();
-  index: number;
-
   /** Whether this is a single select button toggle. */
-  _isSingleSelect = false;
+  private _isSingleSelect = false;
 
   /** The ripple animation configuration to use for the buttons. */
   _rippleAnimation: RippleAnimationConfig = RIPPLE_ANIMATION_CONFIG;
@@ -513,26 +451,6 @@ export class MatButtonToggle extends _MatButtonToggleBaseMixin implements OnInit
 
   /** Reference to the MatRipple instance of the button. */
   @ViewChild(MatRipple) ripple: MatRipple;
-  _foundation: MDCSegmentedButtonSegmentFoundation;
-
-  private _adapter: MDCSegmentedButtonSegmentAdapter = {
-    isSingleSelect: () => this._isSingleSelect,
-    getAttr: (attributeName: string) => this._elementRef.nativeElement.getAttribute(attributeName),
-    setAttr: (attributeName: string, value: string) => this._elementRef.nativeElement.setAttribute(
-      attributeName,
-      value),
-    addClass: (name: string) => this._elementRef.nativeElement.classList.add(name),
-    removeClass: (name: string) => this._elementRef.nativeElement.classList.remove(name),
-    hasClass: (name: string) => this._elementRef.nativeElement.classList.contains(name),
-    notifySelectedChange: (selected: boolean) => this.selectChange.emit(
-      {
-        index: this.index,
-        selected,
-        segmentId: this._foundation.getSegmentId()
-      },
-    ),
-    getRootBoundingClientRect: () => this._elementRef.nativeElement.getBoundingClientRect(),
-  };
 
   /** Unique ID for the underlying `button` element. */
   get buttonId(): string {
@@ -586,7 +504,6 @@ export class MatButtonToggle extends _MatButtonToggleBaseMixin implements OnInit
               @Attribute('tabindex') defaultTabIndex: string) {
     super(_elementRef);
 
-    this._foundation = new MDCSegmentedButtonSegmentFoundation(this._adapter);
     const parsedTabIndex = Number(defaultTabIndex);
     this.tabIndex = (parsedTabIndex || parsedTabIndex === 0) ? parsedTabIndex : null;
     this.buttonToggleGroup = toggleGroup;
@@ -614,14 +531,7 @@ export class MatButtonToggle extends _MatButtonToggleBaseMixin implements OnInit
     }
   }
 
-  ngAfterViewInit() {
-    this._foundation.init();
-    this._focusMonitor.monitor(this._elementRef, true);
-  }
-
   ngOnDestroy() {
-    this._foundation.destroy();
-
     const group = this.buttonToggleGroup;
 
     this._focusMonitor.stopMonitoring(this._elementRef);
