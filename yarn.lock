@@ -1694,14 +1694,6 @@
   resolved "https://registry.yarnpkg.com/@types/browserslist/-/browserslist-4.8.0.tgz#60489aefdf0fcb56c2d8eb65267ff08dad7a526d"
   integrity sha512-4PyO9OM08APvxxo1NmQyQKlJdowPCOQIy5D/NLO3aO0vGC57wsMptvGp3b8IbYnupFZr92l1dlVief1JvS6STQ==
 
-"@types/chokidar@*":
-  version "1.7.5"
-  resolved "https://registry.yarnpkg.com/@types/chokidar/-/chokidar-1.7.5.tgz#1fa78c8803e035bed6d98e6949e514b133b0c9b6"
-  integrity sha512-PDkSRY7KltW3M60hSBlerxI8SFPXsO3AL/aRVsO4Kh9IHRW74Ih75gUuTd/aE4LSSFqypb10UIX3QzOJwBQMGQ==
-  dependencies:
-    "@types/events" "*"
-    "@types/node" "*"
-
 "@types/color-name@^1.1.1":
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/@types/color-name/-/color-name-1.1.1.tgz#1c1261bbeaa10a8055bbc5d8ab84b7b2afc846a0"
@@ -1782,23 +1774,14 @@
   resolved "https://registry.yarnpkg.com/@types/googlemaps/-/googlemaps-3.40.2.tgz#282fc5383ffdb035e1698f846c941cad501f02cb"
   integrity sha512-LYlp497JZ/AjsjmGQMHcKmqO/MkUSLeUtsY++CQwy3VN8rqeotMacxnCF3xoGd8LphNqDdgQX7PL6qG0Pmh0Hw==
 
-"@types/gulp@*":
-  version "4.0.5"
-  resolved "https://registry.yarnpkg.com/@types/gulp/-/gulp-4.0.5.tgz#f5f498d5bf9538364792de22490a12c0e6bc5eb4"
-  integrity sha512-nx1QjPTiRpvLfYsZ7MBu7bT6Cm7tAXyLbY0xbdx2IEMxCK2v2urIhJMQZHW0iV1TskM71Xl6p2uRRuWDbk+/7g==
+"@types/gulp@*", "@types/gulp@4.0.7":
+  version "4.0.7"
+  resolved "https://registry.yarnpkg.com/@types/gulp/-/gulp-4.0.7.tgz#cf3928fc4d351284453e876b560ed271bababad5"
+  integrity sha512-AjvRWEMr6pl9yQ5Yyg+2tiv/n6Ifowpi+NjhRqGwpHWSHH21uXPMHEqKVUT3HGVguACOuzgtk9jtWjChSREPFQ==
   dependencies:
-    "@types/chokidar" "*"
     "@types/undertaker" "*"
     "@types/vinyl-fs" "*"
-
-"@types/gulp@3.8.32":
-  version "3.8.32"
-  resolved "https://registry.yarnpkg.com/@types/gulp/-/gulp-3.8.32.tgz#83c59c681cc233d1ec7f82d269555566fa133156"
-  integrity sha1-g8WcaBzCM9Hsf4LSaVVVZvoTMVY=
-  dependencies:
-    "@types/node" "*"
-    "@types/orchestrator" "*"
-    "@types/vinyl" "*"
+    chokidar "^3.3.1"
 
 "@types/inquirer@^7.3.1":
   version "7.3.1"
@@ -1922,14 +1905,6 @@
   resolved "https://registry.yarnpkg.com/@types/normalize-package-data/-/normalize-package-data-2.4.0.tgz#e486d0d97396d79beedd0a6e33f4534ff6b4973e"
   integrity sha512-f5j5b/Gf71L+dbqxIpQ4Z2WlmI/mPJ0fOkGGmFgtb6sAu97EPczzbS3/tJKxmcYDj55OX6ssqwDAWOHIYDRDGA==
 
-"@types/orchestrator@*":
-  version "0.3.2"
-  resolved "https://registry.yarnpkg.com/@types/orchestrator/-/orchestrator-0.3.2.tgz#cd15c6cea978a32b98e5054239cbcc78e55671f1"
-  integrity sha512-cKB4yTX0wGaRCSkdHDX2fkGQbMAA8UOshC2U7DQky1CE5o+5q2iQQ8VkbPbE/88uaTtsusvBPMcCX7dgmjxBhQ==
-  dependencies:
-    "@types/node" "*"
-    "@types/q" "*"
-
 "@types/parse-glob@*":
   version "3.0.29"
   resolved "https://registry.yarnpkg.com/@types/parse-glob/-/parse-glob-3.0.29.tgz#6a40ec7ebd2418ee69ee397e48e42169268a10bf"
@@ -1944,11 +1919,6 @@
   version "5.0.3"
   resolved "https://registry.yarnpkg.com/@types/parse5/-/parse5-5.0.3.tgz#e7b5aebbac150f8b5fdd4a46e7f0bd8e65e19109"
   integrity sha512-kUNnecmtkunAoQ3CnjmMkzNU/gtxG8guhi+Fk2U/kOpIKjIMKnXGp4IJCgQJrXSgMsWYimYG4TGjz/UzbGEBTw==
-
-"@types/q@*":
-  version "1.5.1"
-  resolved "https://registry.yarnpkg.com/@types/q/-/q-1.5.1.tgz#48fd98c1561fe718b61733daed46ff115b496e18"
-  integrity sha512-eqz8c/0kwNi/OEHQfvIuJVLTst3in0e7uTKeuY+WL/zfKn0xVujOTp42bS/vUUokhK5P2BppLd9JXMOMHcgbjA==
 
 "@types/q@^0.0.32":
   version "0.0.32"
