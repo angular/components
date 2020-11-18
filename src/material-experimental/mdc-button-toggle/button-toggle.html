@@ -1,4 +1,4 @@
-<span class="mdc-button-toggle__ripple"></span>
+<span *ngIf="!this._isRippleDisabled()" class="mdc-segmented-button__ripple"></span>
 
 <ng-content select=".material-icons:not([iconPositionEnd]), mat-icon:not([iconPositionEnd])">
 </ng-content>

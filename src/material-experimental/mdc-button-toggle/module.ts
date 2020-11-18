@@ -9,9 +9,10 @@
 import {NgModule} from '@angular/core';
 import {MatCommonModule, MatRippleModule} from '@angular/material/core';
 import {MatButtonToggle, MatButtonToggleGroup} from './button-toggle';
+import {CommonModule} from '@angular/common';
 
 @NgModule({
-  imports: [MatCommonModule, MatRippleModule],
+  imports: [MatCommonModule, MatRippleModule, CommonModule],
   exports: [MatButtonToggle, MatButtonToggleGroup, MatCommonModule],
   declarations: [MatButtonToggle, MatButtonToggleGroup],
 })

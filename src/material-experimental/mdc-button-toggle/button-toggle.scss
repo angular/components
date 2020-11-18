@@ -1,5 +1,10 @@
-@use '@material/ripple/common';
-@use '@material/segmented-button/styles';
+@use '@material/segmented-button/segment/segment';
+@use '@material/segmented-button/segmented-button/segmented-button';
 
+@import '@material/ripple/mixins.import';
 @import '../mdc-helpers/mdc-helpers';
 @import '../../cdk/a11y/a11y';
+
+@include segment.core-styles($query: $mat-base-styles-query);
+
+@include segmented-button.core-styles($query: $mat-base-styles-query);

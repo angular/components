@@ -1,5 +1,54 @@
-@use '@material/ripple/common';
-@use '@material/segmented-button/styles';
+@use '@material/segmented-button/segment/segment-theme';
+@use '@material/segmented-button/segment/segment';
+@use '@material/segmented-button/segmented-button/segmented-button-theme';
 
+@import '@material/ripple/mixins.import';
+@import '../../material/core/ripple/ripple';
 @import '../mdc-helpers/mdc-helpers';
-@import '../../cdk/a11y/a11y';
+
+// Selector for the element that has a background color and opacity applied to its ::before and
+// ::after for state interactions (hover, active, focus). Their API calls this their
+// "ripple target", but we do not use it as our ripple, just state color.
+$mat-button-toggle-state-target: '.mdc-segmented-button__ripple';
+
+@mixin mat-mdc-button-toggle-color($config-or-theme) {
+  $config: mat-get-color-config($config-or-theme);
+  @include mat-using-mdc-theme($config) {
+    .mat-mdc-button-toggle {
+      @include mdc-states(
+              $query: $mat-theme-styles-query, $ripple-target: $mat-button-toggle-state-target);
+    }
+    // TODO: determine if we can merge top level selector with mat-mdc-button-toggle
+    @include segment.core-styles($query: $mat-theme-styles-query);
+  }
+}
+
+@mixin mat-mdc-button-toggle-typography($config-or-theme) {
+  $config: mat-get-typography-config($config-or-theme);
+  @include mat-using-mdc-typography($config) {
+    @include segment.core-styles($query: $mat-typography-styles-query);
+  }
+}
+
+@mixin mat-mdc-button-toggle-density($config-or-theme) {
+  // TODO: include density theme
+}
+
+@mixin mat-mdc-button-toggle-theme($theme-or-color-config) {
+  $theme: mat-private-legacy-get-theme($theme-or-color-config);
+  @include mat-private-check-duplicate-theme-styles($theme, 'mat-mdc-button-toggle') {
+    $color: mat-get-color-config($theme);
+    $density: mat-get-density-config($theme);
+    $typography: mat-get-typography-config($theme);
+
+    @if $color != null {
+      @include mat-mdc-button-toggle-color($color);
+    }
+    @if $density != null {
+      @include mat-mdc-button-toggle-density($density);
+    }
+    @if $typography != null {
+      @include mat-mdc-button-toggle-typography($typography);
+    }
+  }
+}

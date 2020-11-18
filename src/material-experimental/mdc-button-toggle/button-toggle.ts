@@ -390,7 +390,6 @@ export class MatButtonToggleGroup implements ControlValueAccessor, OnInit, After
   host: {
     'class': 'mat-mdc-button-toggle mdc-segmented-button__segment',
     '[class.mdc-segmented-button__segment--selected]': 'checked',
-    '[class.mdc-segmented-button__ripple]': '!_isRippleDisabled()',
     '[attr.aria-pressed]' : 'checked',
     '[attr.role]' : 'buttonToggleGroup?.multiple ? null : "radio"',
     '[attr.name]' : 'name || null',
