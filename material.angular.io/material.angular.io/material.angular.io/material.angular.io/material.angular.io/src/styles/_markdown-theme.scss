@@ -11,7 +11,7 @@
   $exportBackgroundOpacity: if($is-dark-theme, 0.06, 0.03);
 
   .docs-markdown {
-    a {
+    a:not(.mat-button-base) {
       color: mat-color($primary, if($is-dark-theme, 200, default));
     }
 
