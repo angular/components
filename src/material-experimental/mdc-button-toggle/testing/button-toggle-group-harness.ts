@@ -43,6 +43,6 @@ export class MatButtonToggleGroupHarness extends ComponentHarness {
 
   /** Gets whether the button toggle group is laid out vertically. */
   async isVertical(): Promise<boolean> {
-    return (await this.host()).hasClass('mat-button-toggle-vertical');
+    return false;
   }
 }

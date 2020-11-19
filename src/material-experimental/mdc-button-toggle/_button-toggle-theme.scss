@@ -26,6 +26,7 @@ $mat-button-toggle-state-target: '.mdc-segmented-button__ripple';
 @mixin mat-mdc-button-toggle-typography($config-or-theme) {
   $config: mat-get-typography-config($config-or-theme);
   @include mat-using-mdc-typography($config) {
+    // TODO: determine if we can merge top level selector with mat-mdc-button-toggle
     @include segment.core-styles($query: $mat-typography-styles-query);
   }
 }

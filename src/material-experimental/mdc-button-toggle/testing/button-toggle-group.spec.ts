@@ -38,12 +38,11 @@ describe('MatButtonToggleGroup Harness', () => {
     expect(await group.isDisabled()).toBe(true);
   });
 
-  // it('should get whether the group is vertical', async () => {
-  //   const group = await loader.getHarness(MatButtonToggleGroupHarness);
-  //   expect(await group.isVertical()).toBe(false);
-  //   fixture.componentInstance.vertical = true;
-  //   expect(await group.isVertical()).toBe(true);
-  // });
+  it('should get whether the group is vertical', async () => {
+    const group = await loader.getHarness(MatButtonToggleGroupHarness);
+    expect(await group.isVertical()).toBe(false);
+    // vertical appearance is not implemented yet so for now it is always false
+  });
 });
 
 @Component({

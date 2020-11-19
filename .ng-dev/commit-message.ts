@@ -40,6 +40,7 @@ export const commitMessage: CommitMessageConfig = {
     'material-experimental/column-resize',
     'material-experimental/mdc-autocomplete',
     'material-experimental/mdc-button',
+    'material-experimental/mdc-button-toggle',
     'material-experimental/mdc-card',
     'material-experimental/mdc-checkbox',
     'material-experimental/mdc-chips',

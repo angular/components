@@ -5,6 +5,6 @@
 @import '../mdc-helpers/mdc-helpers';
 @import '../../cdk/a11y/a11y';
 
+// TODO: determine if we can merge top level selector with mat-mdc-button-toggle
 @include segment.core-styles($query: $mat-base-styles-query);
-
 @include segmented-button.core-styles($query: $mat-base-styles-query);

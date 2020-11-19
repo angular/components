@@ -1,13 +1,16 @@
 <p>
-  <mat-checkbox (change)="isVertical = $event.checked">Show Button Toggles Vertical (currently not implemented)</mat-checkbox>
+  <mat-checkbox (change)="isVertical = $event.checked">
+    Show Button Toggles Vertical (currently not implemented)
+  </mat-checkbox>
 </p>
 
 <p>
-  <mat-checkbox (change)="isDisabled = $event.checked">Disable Button Toggle Items</mat-checkbox>
+  <mat-checkbox (change)="isDisabled = $event.checked">
+    Disable Button Toggle Items (currently functional with styles pending)
+  </mat-checkbox>
 </p>
 
 <h1>Exclusive Selection</h1>
-
 <section>
   <mat-button-toggle-group name="alignment" [vertical]="isVertical">
     <button mat-button-toggle value="left" [disabled]="isDisabled">
@@ -25,25 +28,7 @@
   </mat-button-toggle-group>
 </section>
 
-<section>
-  <mat-button-toggle-group appearance="legacy" name="alignment" [vertical]="isVertical">
-    <button mat-button-toggle value="left" [disabled]="isDisabled">
-      <mat-icon>format_align_left</mat-icon>
-    </button>
-    <button mat-button-toggle value="center" [disabled]="isDisabled">
-      <mat-icon>format_align_center</mat-icon>
-    </button>
-    <button mat-button-toggle value="right" [disabled]="isDisabled">
-      <mat-icon>format_align_right</mat-icon>
-    </button>
-    <button mat-button-toggle value="justify" [disabled]="isDisabled">
-      <mat-icon>format_align_justify</mat-icon>
-    </button>
-  </mat-button-toggle-group>
-</section>
-
 <h1>Disabled Group</h1>
-
 <section>
   <mat-button-toggle-group name="checkbox" [vertical]="isVertical" [disabled]="isDisabled">
     <button mat-button-toggle value="bold">
@@ -67,18 +52,9 @@
     <button mat-button-toggle [disabled]="isDisabled">Milk</button>
   </mat-button-toggle-group>
 </section>
-<section>
-  <mat-button-toggle-group appearance="legacy" multiple [vertical]="isVertical">
-    <button mat-button-toggle>Flour</button>
-    <button mat-button-toggle>Eggs</button>
-    <button mat-button-toggle>Sugar</button>
-    <button mat-button-toggle [disabled]="isDisabled">Milk</button>
-  </mat-button-toggle-group>
-</section>
 
 <h1>Single Toggle</h1>
 <button mat-button-toggle>Yes</button>
-<button mat-button-toggle appearance="legacy">Yes</button>
 
 <h1>Dynamic Exclusive Selection</h1>
 <section>

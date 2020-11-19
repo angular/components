@@ -62,13 +62,6 @@ export class MatButtonToggleHarness extends ComponentHarness {
     return (await this.host()).getAttribute('aria-labelledby');
   }
 
-  // /** Gets the appearance that the button toggle is using. */
-  // async getAppearance(): Promise<MatButtonToggleAppearance> {
-  //   const host = await this.host();
-  //   const className = 'mat-button-toggle-appearance-standard';
-  //   return await host.hasClass(className) ? 'standard' : 'legacy';
-  // }
-
   /** Gets a promise for the button toggle's text. */
   async getText(): Promise<string> {
     return (await this._label()).text();
