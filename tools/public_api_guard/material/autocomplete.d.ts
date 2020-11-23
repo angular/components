@@ -2,7 +2,6 @@ export declare abstract class _MatAutocompleteBase extends _MatAutocompleteMixin
     _classList: {
         [key: string]: boolean;
     };
-    _formFieldLabelId: string;
     protected abstract _hiddenClass: string;
     _isOpen: boolean;
     _keyManager: ActiveDescendantKeyManager<_MatOptionBase>;
@@ -28,7 +27,7 @@ export declare abstract class _MatAutocompleteBase extends _MatAutocompleteMixin
     template: TemplateRef<any>;
     constructor(_changeDetectorRef: ChangeDetectorRef, _elementRef: ElementRef<HTMLElement>, defaults: MatAutocompleteDefaultOptions, platform?: Platform);
     _emitSelectEvent(option: _MatOptionBase): void;
-    _getPanelAriaLabelledby(): string | null;
+    _getPanelAriaLabelledby(labelId: string): string | null;
     _getScrollTop(): number;
     _setScrollTop(scrollTop: number): void;
     _setVisibility(): void;

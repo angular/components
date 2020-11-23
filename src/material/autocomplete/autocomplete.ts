@@ -115,9 +115,6 @@ export abstract class _MatAutocompleteBase extends _MatAutocompleteMixinBase imp
   get isOpen(): boolean { return this._isOpen && this.showPanel; }
   _isOpen: boolean = false;
 
-  /** Label id of form field the autocomplete is associated with. */
-  _formFieldLabelId: string;
-
   // The @ViewChild query for TemplateRef here needs to be static because some code paths
   // lead to the overlay being created before change detection has finished for this component.
   // Notably, another component may trigger `focus` on the autocomplete-trigger.
@@ -261,12 +258,11 @@ export abstract class _MatAutocompleteBase extends _MatAutocompleteMixinBase imp
   }
 
   /** Gets the aria-labelledby for the autocomplete panel. */
-  _getPanelAriaLabelledby(): string | null {
+  _getPanelAriaLabelledby(labelId: string): string | null {
     if (this.ariaLabel) {
       return null;
     }
 
-    const labelId = this._formFieldLabelId ?? '';
     return this.ariaLabelledby ? labelId + ' ' + this.ariaLabelledby : labelId;
   }
 

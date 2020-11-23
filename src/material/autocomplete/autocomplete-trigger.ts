@@ -591,7 +591,9 @@ export abstract class _MatAutocompleteTriggerBase implements ControlValueAccesso
     let overlayRef = this._overlayRef;
 
     if (!overlayRef) {
-      this._portal = new TemplatePortal(this.autocomplete.template, this._viewContainerRef);
+      this._portal = new TemplatePortal(this.autocomplete.template,
+        this._viewContainerRef,
+        {id: this._formField?._labelId});
       overlayRef = this._overlay.create(this._getOverlayConfig());
       this._overlayRef = overlayRef;
 
@@ -632,7 +634,6 @@ export abstract class _MatAutocompleteTriggerBase implements ControlValueAccesso
 
     this.autocomplete._setVisibility();
     this.autocomplete._isOpen = this._overlayAttached = true;
-    this.autocomplete._formFieldLabelId = this._formField?._labelId;
 
     // We need to do an extra `panelOpen` check in here, because the
     // autocomplete won't be shown if there are no options.
