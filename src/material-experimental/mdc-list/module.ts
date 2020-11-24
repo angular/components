@@ -12,6 +12,7 @@ import {
   MatLineModule,
   MatPseudoCheckboxModule,
   MatRippleModule,
+  MatCommonModule,
 } from '@angular/material-experimental/mdc-core';
 import {MatDividerModule} from '@angular/material/divider';
 import {MatActionList} from './action-list';
@@ -31,6 +32,7 @@ import {
 @NgModule({
   imports: [
     CommonModule,
+    MatCommonModule,
     MatLineModule,
     MatRippleModule,
     MatPseudoCheckboxModule,
