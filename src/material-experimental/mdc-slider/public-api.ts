@@ -7,4 +7,5 @@
  */
 
 export * from './slider';
+export * from './slider-thumb';
 export * from './module';

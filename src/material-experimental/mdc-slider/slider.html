@@ -1,1 +1,13 @@
-<!-- TODO: to be implemented as a part of the new MDC slider -->
+<input class="mdc-slider__input" type="range" min="{{min}}" max="{{maxStartValue}}" step="{{step}}" [attr.value]="startValue" [attr.aria-label]="ariaLabel" [disabled]="isDisabled" #startInput>
+<input *ngIf="isRange" class="mdc-slider__input" type="range" min="{{minEndValue}}" max="{{max}}" step="{{step}}" [attr.value]="endValue" [attr.aria-label]="ariaLabel" [disabled]="isDisabled" #endInput>
+<div class="mdc-slider__track">
+	<div class="mdc-slider__track--inactive"></div>
+	<div class="mdc-slider__track--active">
+		<div class="mdc-slider__track--active_fill" #trackActive></div>
+	</div>
+	<div *ngIf="hasTickMarks" class="mdc-slider__tick-marks" #tickMarkContainer>
+		<div *ngFor="let tickMark of tickMarks" class="{{getTickMarkClass(tickMark)}}"></div>
+	</div>
+</div>
+<mat-slider-thumb [isDiscrete]="isDiscrete" [valueIndicatorText]="startValueIndicatorText" #startThumb></mat-slider-thumb>
+<mat-slider-thumb *ngIf="isRange" [isDiscrete]="isDiscrete" [valueIndicatorText]="endValueIndicatorText" #endThumb></mat-slider-thumb>
