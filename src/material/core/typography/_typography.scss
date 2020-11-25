@@ -71,10 +71,7 @@
 
 // Whether a config is for the Material Design 2018 typography system.
 @function mat-private-typography-is-2018-config($config) {
-  @if map-get($config, headline-1) {
-    @return true;
-  }
-  @return false;
+  @return map-get($config, headline-1) != null;
 }
 
 // Given a config for either the 2014 or 2018 Material Design typography system,
