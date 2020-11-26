@@ -244,9 +244,10 @@ export declare class DragDropModule {
 export declare class DragDropRegistry<I extends {
     isDragging(): boolean;
 }, C> implements OnDestroy {
-    readonly pointerMove: Subject<TouchEvent | MouseEvent>;
-    readonly pointerUp: Subject<TouchEvent | MouseEvent>;
-    readonly scroll: Subject<Event>;
+    pageBlurred: Subject<void>;
+    pointerMove: Subject<TouchEvent | MouseEvent>;
+    pointerUp: Subject<TouchEvent | MouseEvent>;
+    scroll: Subject<Event>;
     constructor(_ngZone: NgZone, _document: any);
     isDragging(drag: I): boolean;
     ngOnDestroy(): void;

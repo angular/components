@@ -28,6 +28,7 @@ const activeCapturingEventOptions = normalizePassiveListenerOptions({
 @Injectable({providedIn: 'root'})
 export class DragDropRegistry<I extends {isDragging(): boolean}, C> implements OnDestroy {
   private _document: Document;
+  private _window: Window | null;
 
   /** Registered drop container instances. */
   private _dropInstances = new Set<C>();
@@ -41,6 +42,10 @@ export class DragDropRegistry<I extends {isDragging(): boolean}, C> implements O
   /** Keeps track of the event listeners that we've bound to the `document`. */
   private _globalListeners = new Map<string, {
     handler: (event: Event) => void,
+    // The target needs to be `| null` because we bind either to `window` or `document` which
+    // aren't available during SSR. There's an injection token for the document, but not one for
+    // window so we fall back to not binding events to it.
+    target: EventTarget | null,
     options?: AddEventListenerOptions | boolean
   }>();
 
@@ -54,13 +59,13 @@ export class DragDropRegistry<I extends {isDragging(): boolean}, C> implements O
    * Emits the `touchmove` or `mousemove` events that are dispatched
    * while the user is dragging a drag item instance.
    */
-  readonly pointerMove: Subject<TouchEvent | MouseEvent> = new Subject<TouchEvent | MouseEvent>();
+  pointerMove: Subject<TouchEvent | MouseEvent> = new Subject<TouchEvent | MouseEvent>();
 
   /**
    * Emits the `touchend` or `mouseup` events that are dispatched
    * while the user is dragging a drag item instance.
    */
-  readonly pointerUp: Subject<TouchEvent | MouseEvent> = new Subject<TouchEvent | MouseEvent>();
+  pointerUp: Subject<TouchEvent | MouseEvent> = new Subject<TouchEvent | MouseEvent>();
 
   /**
    * Emits when the viewport has been scrolled while the user is dragging an item.
@@ -69,10 +74,14 @@ export class DragDropRegistry<I extends {isDragging(): boolean}, C> implements O
    */
   readonly scroll: Subject<Event> = new Subject<Event>();
 
+  /** Emits when the page has been blurred while the user is dragging an item. */
+  pageBlurred: Subject<void> = new Subject<void>();
+
   constructor(
     private _ngZone: NgZone,
     @Inject(DOCUMENT) _document: any) {
     this._document = _document;
+    this._window = (typeof window !== 'undefined' && window.addEventListener) ? window : null;
   }
 
   /** Adds a drop container to the registry. */
@@ -137,13 +146,15 @@ export class DragDropRegistry<I extends {isDragging(): boolean}, C> implements O
       this._globalListeners
         .set(isTouchEvent ? 'touchend' : 'mouseup', {
           handler: (e: Event) => this.pointerUp.next(e as TouchEvent | MouseEvent),
-          options: true
+          options: true,
+          target: this._document
         })
         .set('scroll', {
           handler: (e: Event) => this.scroll.next(e),
           // Use capturing so that we pick up scroll changes in any scrollable nodes that aren't
           // the document. See https://github.com/angular/components/issues/17144.
-          options: true
+          options: true,
+          target: this._document
         })
         // Preventing the default action on `mousemove` isn't enough to disable text selection
         // on Safari so we need to prevent the selection event as well. Alternatively this can
@@ -151,7 +162,12 @@ export class DragDropRegistry<I extends {isDragging(): boolean}, C> implements O
         // recalculation which can be expensive on pages with a lot of elements.
         .set('selectstart', {
           handler: this._preventDefaultWhileDragging,
-          options: activeCapturingEventOptions
+          options: activeCapturingEventOptions,
+          target: this._document
+        })
+        .set('blur', {
+          handler: () => this.pageBlurred.next(),
+          target: this._window // Note that this event can only be bound on the window, not document
         });
 
       // We don't have to bind a move event for touch drag sequences, because
@@ -159,13 +175,16 @@ export class DragDropRegistry<I extends {isDragging(): boolean}, C> implements O
       if (!isTouchEvent) {
         this._globalListeners.set('mousemove', {
           handler: (e: Event) => this.pointerMove.next(e as MouseEvent),
-          options: activeCapturingEventOptions
+          options: activeCapturingEventOptions,
+          target: this._document
         });
       }
 
       this._ngZone.runOutsideAngular(() => {
         this._globalListeners.forEach((config, name) => {
-          this._document.addEventListener(name, config.handler, config.options);
+          if (config.target) {
+            config.target.addEventListener(name, config.handler, config.options);
+          }
         });
       });
     }
@@ -230,6 +249,7 @@ export class DragDropRegistry<I extends {isDragging(): boolean}, C> implements O
     this._clearGlobalListeners();
     this.pointerMove.complete();
     this.pointerUp.complete();
+    this.pageBlurred.complete();
   }
 
   /**
@@ -259,7 +279,9 @@ export class DragDropRegistry<I extends {isDragging(): boolean}, C> implements O
   /** Clears out the global event listeners from the `document`. */
   private _clearGlobalListeners() {
     this._globalListeners.forEach((config, name) => {
-      this._document.removeEventListener(name, config.handler, config.options);
+      if (config.target) {
+        config.target.removeEventListener(name, config.handler, config.options);
+      }
     });
 
     this._globalListeners.clear();
