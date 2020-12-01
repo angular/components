@@ -1,0 +1,5 @@
+@forward '../core/style/form-common.import';
+@forward '../core/typography/typography-utils.import';
+@forward '../core/style/vendor-prefixes.import';
+@forward 'input-theme' hide color, theme, typography;
+@forward 'input-theme' as mat-input-* hide mat-input-density;

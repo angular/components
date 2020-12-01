@@ -1,15 +1,17 @@
-@import '../mdc-theming/all-theme';
+@use '../mdc-theming/all-theme';
+@use '../../material/core/theming/theming';
+@use '../../material/core/typography/typography';
 
 @mixin angular-material-mdc-typography($config-or-theme: null) {
-  $config: if(mat-private-is-theme-object($config-or-theme),
-      mat-get-typography-config($config-or-theme), $config-or-theme);
+  $config: if(theming.is-theme-object($config-or-theme),
+      theming.get-typography-config($config-or-theme), $config-or-theme);
 
   // If no actual color configuration has been specified, create a default one.
   @if $config == null {
-    $config: mat-typography-config();
+    $config: typography.config();
   }
 
-  @include angular-material-mdc-theme((
+  @include all-theme.angular-material-mdc-theme((
     color: null,
     density: null,
     typography: $config,

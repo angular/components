@@ -1,0 +1,4 @@
+@forward '../mdc-helpers/mdc-helpers.import';
+@forward '../mdc-helpers/mdc-helpers';
+@forward 'paginator-variables';
+@forward 'paginator-theme' as mat-mdc-paginator-*;

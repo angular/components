@@ -1,4 +1,4 @@
-@import './expansion-variables';
+@use './expansion-variables';
 
 .mat-expansion-panel-header {
   display: flex;
@@ -6,7 +6,7 @@
   align-items: center;
   padding: 0 24px;
   border-radius: inherit;
-  transition: height $mat-expansion-panel-header-transition;
+  transition: height expansion-variables.$panel-header-transition;
 
   // If the `NoopAnimationsModule` is used, disable the height transition.
   &._mat-animation-noopable {

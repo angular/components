@@ -1,9 +1,11 @@
+@use 'form-field-sizing';
+@use '../mdc-helpers/mdc-helpers';
+@use '../../material/core/theming/theming';
+@use '../../material/core/typography/typography-utils';
 @import '@material/theme/mixins.import';
 @import '@material/textfield/variables.import';
-@import 'form-field-sizing';
-@import '../mdc-helpers/mdc-helpers';
 
-@mixin mat-mdc-private-form-field-subscript() {
+@mixin private-form-field-subscript() {
   // Wrapper for the hints and error messages.
   .mat-mdc-form-field-subscript-wrapper {
     box-sizing: border-box;
@@ -27,7 +29,7 @@
 
   // Spacer used to make sure start and end hints have enough space between them.
   .mat-mdc-form-field-hint-spacer {
-    flex: 1 0 $mat-form-field-hint-min-space;
+    flex: 1 0 form-field-sizing.$mat-form-field-hint-min-space;
   }
 
   // Single error message displayed beneath the form field underline.
@@ -36,17 +38,17 @@
   }
 }
 
-@mixin mat-mdc-private-form-field-subscript-color() {
+@mixin private-form-field-subscript-color() {
   // MDC does not have built-in error treatment.
   .mat-mdc-form-field-error {
     @include mdc-theme-prop(color, $mdc-text-field-error);
   }
 }
 
-@mixin mat-mdc-private-form-field-subscript-typography($config-or-theme) {
-  $config: mat-get-typography-config($config-or-theme);
+@mixin private-form-field-subscript-typography($config-or-theme) {
+  $config: theming.get-typography-config($config-or-theme);
   // The unit-less line-height from the font config.
-  $line-height: mat-line-height($config, input);
+  $line-height: typography-utils.height($config, input);
   // The amount to scale the font for the subscript.
   $subscript-font-scale: 0.75;
   // Font size to use for the subscript text.

@@ -1,0 +1,5 @@
+@forward '../core/style/private.import';
+@forward '../core/theming/theming.import';
+@forward '../core/typography/typography-utils.import';
+@forward 'bottom-sheet-theme' hide color, theme, typography;
+@forward 'bottom-sheet-theme' as mat-bottom-sheet-* hide mat-bottom-sheet-density;

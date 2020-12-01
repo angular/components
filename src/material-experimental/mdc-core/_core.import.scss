@@ -1,0 +1,4 @@
+@forward 'option/optgroup-theme.import';
+@forward '../mdc-helpers/mdc-helpers';
+@forward 'option/option-theme.import';
+@forward 'core' as mat-mdc-core-*;

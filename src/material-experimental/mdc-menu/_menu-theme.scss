@@ -1,16 +1,17 @@
+@use '../mdc-helpers/mdc-helpers';
+@use '../../material/core/theming/theming';
 @import '@material/menu-surface/mixins.import';
 @import '@material/menu-surface/variables.import';
 @import '@material/list/mixins.import';
 @import '@material/list/variables.import';
 @import '@material/theme/functions.import';
 @import '@material/theme/mixins.import';
-@import '../mdc-helpers/mdc-helpers';
 
-@mixin mat-mdc-menu-color($config-or-theme) {
-  $config: mat-get-color-config($config-or-theme);
-  @include mat-using-mdc-theme($config) {
-    @include mdc-menu-surface-core-styles($mat-theme-styles-query);
-    @include mdc-list-without-ripple($mat-theme-styles-query);
+@mixin color($config-or-theme) {
+  $config: theming.get-color-config($config-or-theme);
+  @include mdc-helpers.mat-using-mdc-theme($config) {
+    @include mdc-menu-surface-core-styles(mdc-helpers.$mat-theme-styles-query);
+    @include mdc-list-without-ripple(mdc-helpers.$mat-theme-styles-query);
 
     // MDC doesn't appear to have disabled styling for menu
     // items so we have to grey them out ourselves.
@@ -35,43 +36,43 @@
     .mat-mdc-menu-item.cdk-keyboard-focused,
     .mat-mdc-menu-item-highlighted {
       &:not([disabled]) {
-        $color: $mdc-theme-on-surface;
+        $color: mdc-helpers.$mdc-theme-on-surface;
         background: rgba($color, mdc-states-opacity($color, hover));
       }
     }
   }
 }
 
-@mixin mat-mdc-menu-typography($config-or-theme) {
-  $config: mat-get-typography-config($config-or-theme);
-  @include mat-using-mdc-typography($config) {
-    @include mdc-menu-surface-core-styles($mat-typography-styles-query);
+@mixin typography($config-or-theme) {
+  $config: theming.get-typography-config($config-or-theme);
+  @include mdc-helpers.mat-using-mdc-typography($config) {
+    @include mdc-menu-surface-core-styles(mdc-helpers.$mat-typography-styles-query);
 
     .mat-mdc-menu-content, .mat-mdc-menu-item {
       // Note that we include this private mixin, because the public
       // one adds a bunch of styles that we aren't using for the menu.
-      @include mdc-list-base_($mat-typography-styles-query);
+      @include mdc-list-base_(mdc-helpers.$mat-typography-styles-query);
     }
   }
 }
 
-@mixin mat-mdc-menu-density($config-or-theme) {}
+@mixin density($config-or-theme) {}
 
-@mixin mat-mdc-menu-theme($theme-or-color-config) {
-  $theme: mat-private-legacy-get-theme($theme-or-color-config);
-  @include mat-private-check-duplicate-theme-styles($theme, 'mat-mdc-menu') {
-    $color: mat-get-color-config($theme);
-    $density: mat-get-density-config($theme);
-    $typography: mat-get-typography-config($theme);
+@mixin theme($theme-or-color-config) {
+  $theme: theming.legacy-get-theme($theme-or-color-config);
+  @include theming.check-duplicate-theme-styles($theme, 'mat-mdc-menu') {
+    $color: theming.get-color-config($theme);
+    $density: theming.get-density-config($theme);
+    $typography: theming.get-typography-config($theme);
 
     @if $color != null {
-      @include mat-mdc-menu-color($color);
+      @include color($color);
     }
     @if $density != null {
-      @include mat-mdc-menu-density($density);
+      @include density($density);
     }
     @if $typography != null {
-      @include mat-mdc-menu-typography($typography);
+      @include typography($typography);
     }
   }
 }

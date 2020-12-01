@@ -1,0 +1,7 @@
+@forward '../core/style/private.import';
+@forward '../core/theming/theming.import';
+@forward '../core/density/private/compatibility.import';
+@forward 'button-toggle-variables' as mat-button-toggle-*;
+@forward '../../cdk/a11y/a11y.import';
+@forward '../core/typography/typography-utils.import';
+@forward 'button-toggle-theme' as mat-button-toggle-*;

@@ -1,0 +1,5 @@
+@forward '../core/style/form-common.import';
+@forward '../core/style/private.import';
+@forward '../core/typography/typography-utils.import';
+@forward 'select-theme' hide color, theme, typography;
+@forward 'select-theme' as mat-select-* hide mat-select-density;

@@ -1,0 +1,4 @@
+@forward '../core/style/form-common.import';
+@forward '../core/typography/typography-utils.import';
+@forward 'form-field-standard-theme' as mat-form-field-* hide mat-form-field-form-field-standard-density;
+@forward 'form-field-standard-theme' as mat-private-* hide mat-private-standard-color, mat-private-standard-theme, mat-private-standard-typography;

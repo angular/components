@@ -1,0 +1,5 @@
+@forward '../core/theming/theming.import';
+@forward '../core/style/private.import';
+@forward 'expansion-variables' as mat-expansion-*;
+@forward '../core/typography/typography-utils.import';
+@forward 'expansion-theme' as mat-expansion-*;
