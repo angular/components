@@ -110,8 +110,8 @@ export class MatSelect extends _MatSelectBase<MatSelectChange> implements OnInit
   /** Ideal origin for the overlay panel. */
   _preferredOverlayOrigin: CdkOverlayOrigin | undefined;
 
-  /** Width of the overlay panel. */
-  _overlayWidth: number;
+  /** Min. width of the overlay panel. */
+  _overlayMinWidth: number;
 
   get shouldLabelFloat(): boolean {
     // Since the panel doesn't overlap the trigger, we
@@ -123,7 +123,7 @@ export class MatSelect extends _MatSelectBase<MatSelectChange> implements OnInit
     super.ngOnInit();
     this._viewportRuler.change().pipe(takeUntil(this._destroy)).subscribe(() => {
       if (this.panelOpen) {
-        this._overlayWidth = this._getOverlayWidth();
+        this._overlayMinWidth = this._getOverlayMinWidth();
         this._changeDetectorRef.detectChanges();
       }
     });
@@ -145,7 +145,7 @@ export class MatSelect extends _MatSelectBase<MatSelectChange> implements OnInit
   }
 
   open() {
-    this._overlayWidth = this._getOverlayWidth();
+    this._overlayMinWidth = this._getOverlayMinWidth();
     super.open();
   }
 
@@ -182,8 +182,10 @@ export class MatSelect extends _MatSelectBase<MatSelectChange> implements OnInit
   }
 
   /** Gets how wide the overlay panel should be. */
-  private _getOverlayWidth() {
+  private _getOverlayMinWidth() {
     const refToMeasure = (this._preferredOverlayOrigin?.elementRef || this._elementRef);
-    return refToMeasure.nativeElement.getBoundingClientRect().width;
+    // The min width of a drop down menu panel is 112px but the panel should not be smaller than
+    // the containing form field.
+    return Math.max(refToMeasure.nativeElement.getBoundingClientRect().width, 112);
   }
 }
