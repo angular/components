@@ -1,5 +1,9 @@
 @forward '../core/style/form-common.import';
 @forward '../core/typography/typography-utils.import';
-@forward 'form-field-fill-theme' hide $fill-dedupe, fill-color, fill-theme, fill-typography, form-field-fill-density;
-@forward 'form-field-fill-theme' as mat-form-field-* hide mat-form-field-fill-label-floating, mat-form-field-form-field-fill-density;
-@forward 'form-field-fill-theme' as mat-private-* hide $mat-private-fill-dedupe, mat-private-fill-color, mat-private-fill-label-floating, mat-private-fill-theme, mat-private-fill-typography;
+@forward 'form-field-fill-theme' hide $fill-dedupe, fill-color, fill-theme, fill-typography,
+  form-field-fill-density;
+@forward 'form-field-fill-theme' as mat-form-field-* hide mat-form-field-fill-label-floating,
+  mat-form-field-form-field-fill-density;
+@forward 'form-field-fill-theme' as mat-private-* hide $mat-private-fill-dedupe,
+  mat-private-fill-color, mat-private-fill-label-floating, mat-private-fill-theme,
+  mat-private-fill-typography;

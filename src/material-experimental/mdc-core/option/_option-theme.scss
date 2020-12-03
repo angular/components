@@ -28,15 +28,18 @@
     }
 
     .mat-primary .mat-mdc-option.mdc-list-item--selected:not(.mdc-list-item--disabled) {
-      @include mdc-list-item-primary-text-ink-color(primary, $query: mdc-helpers.$mat-theme-styles-query);
+      @include mdc-list-item-primary-text-ink-color(primary,
+        $query: mdc-helpers.$mat-theme-styles-query);
     }
 
     .mat-accent .mat-mdc-option.mdc-list-item--selected:not(.mdc-list-item--disabled) {
-      @include mdc-list-item-primary-text-ink-color(secondary, $query: mdc-helpers.$mat-theme-styles-query);
+      @include mdc-list-item-primary-text-ink-color(secondary,
+        $query: mdc-helpers.$mat-theme-styles-query);
     }
 
     .mat-warn .mat-mdc-option.mdc-list-item--selected:not(.mdc-list-item--disabled) {
-      @include mdc-list-item-primary-text-ink-color(error, $query: mdc-helpers.$mat-theme-styles-query);
+      @include mdc-list-item-primary-text-ink-color(error,
+        $query: mdc-helpers.$mat-theme-styles-query);
     }
   }
 }

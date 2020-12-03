@@ -11,7 +11,8 @@
   // lightening the color of the primary bar.
   $buffer-color: color.adjust(mdc-theme-prop-value($color), $lightness: 30%);
   @include mdc-linear-progress-bar-color($color, $query: mdc-helpers.$mat-theme-styles-query);
-  @include mdc-linear-progress-buffer-color($buffer-color, $query: mdc-helpers.$mat-theme-styles-query);
+  @include mdc-linear-progress-buffer-color($buffer-color,
+    $query: mdc-helpers.$mat-theme-styles-query);
 }
 
 @mixin color($config-or-theme) {

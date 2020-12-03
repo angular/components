@@ -42,5 +42,7 @@
 @forward '../tabs/tabs-theme.import';
 @forward 'typography/all-typography';
 @forward 'core' hide color, core, theme;
-@forward 'core' as mat-* hide mat-color, mat-mdc-core, mat-mdc-strong-focus-indicators-positioning, mat-theme;
-@forward 'core' as mat-core-* hide mat-core-core, mat-core-mdc-core, mat-core-mdc-strong-focus-indicators-positioning;
+@forward 'core' as mat-* hide mat-color, mat-mdc-core,
+  mat-mdc-strong-focus-indicators-positioning, mat-theme;
+@forward 'core' as mat-core-* hide mat-core-core, mat-core-mdc-core,
+  mat-core-mdc-strong-focus-indicators-positioning;

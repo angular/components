@@ -2,8 +2,10 @@
 @forward '../mdc-helpers/mdc-helpers.import';
 @forward '../mdc-helpers/mdc-helpers';
 @forward 'form-field-sizing';
-@forward 'form-field-native-select' hide private-form-field-native-select, private-form-field-native-select-color;
-@forward 'form-field-native-select' as mat-mdc-* hide $mat-mdc-mat-form-field-select-arrow-height, $mat-mdc-mat-form-field-select-arrow-width, $mat-mdc-mat-form-field-select-horizontal-end-padding;
+@forward 'form-field-native-select' hide private-form-field-native-select,
+  private-form-field-native-select-color;
+@forward 'form-field-native-select' as mat-mdc-* hide $mat-mdc-mat-form-field-select-arrow-height,
+  $mat-mdc-mat-form-field-select-arrow-width, $mat-mdc-mat-form-field-select-horizontal-end-padding;
 @forward '../../material/core/style/layout-common.import';
 @forward 'form-field-density' as mat-mdc-*;
 @forward 'form-field-subscript' as mat-mdc-*;
@@ -11,4 +13,6 @@
 @forward '../../cdk/a11y/a11y.import';
 @forward 'mdc-text-field-theme-variable-refresh' as mat-mdc-*;
 @forward 'form-field-theme' hide color, density, theme, typography;
-@forward 'form-field-theme' as mat-mdc-form-field-* hide $mat-mdc-form-field-mdc-text-field-focused-label-color, mat-mdc-form-field-text-field-color-styles;
+@forward 'form-field-theme' as mat-mdc-form-field-*
+  hide $mat-mdc-form-field-mdc-text-field-focused-label-color,
+  mat-mdc-form-field-text-field-color-styles;
