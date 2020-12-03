@@ -86,6 +86,8 @@ $default-infix-width: 180px !default;
 // basically `empty || (float && (!empty || focused))`. Float is dependent on the
 // `floatingPlaceholder` property.
 .mat-form-field-label {
+  $transition-timing-function: variables.$swift-ease-out-timing-function;
+
   // The label is after the form field control, but needs to be aligned top-left of the infix <div>.
   position: absolute;
   left: 0;
@@ -100,9 +102,9 @@ $default-infix-width: 180px !default;
   overflow: hidden;
 
   transform-origin: 0 0;
-  transition: transform variables.$swift-ease-out-duration variables.$swift-ease-out-timing-function,
-              color variables.$swift-ease-out-duration variables.$swift-ease-out-timing-function,
-              width variables.$swift-ease-out-duration variables.$swift-ease-out-timing-function;
+  transition: transform variables.$swift-ease-out-duration $transition-timing-function,
+              color variables.$swift-ease-out-duration $transition-timing-function,
+              width variables.$swift-ease-out-duration $transition-timing-function;
 
   // Hide the label initially, and only show it when it's floating or the control is empty.
   display: none;
@@ -177,7 +179,9 @@ $default-infix-width: 180px !default;
   transform-origin: 50%;
   transform: scaleX(0.5);
   opacity: 0;
-  transition: background-color variables.$swift-ease-in-duration variables.$swift-ease-in-timing-function;
+  transition: background-color
+              variables.$swift-ease-in-duration
+              variables.$swift-ease-in-timing-function;
 }
 
 .mat-form-field.mat-focused,

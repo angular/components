@@ -1,4 +1,5 @@
 @forward '../core/theming/theming.import';
 @forward '../core/typography/typography-utils.import';
 @forward 'tabs-theme' hide color, theme, typography;
-@forward 'tabs-theme' as mat-tabs-* hide mat-tabs-background, mat-tabs-density, mat-tabs-ink-bar, mat-tabs-tab-label-focus;
+@forward 'tabs-theme' as mat-tabs-* hide mat-tabs-background, mat-tabs-density,
+  mat-tabs-ink-bar, mat-tabs-tab-label-focus;

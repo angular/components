@@ -2,33 +2,73 @@
 @forward '../mdc-helpers/mdc-helpers.import';
 @forward '../mdc-helpers/mdc-helpers';
 @forward '../../material/core/core.import';
-@forward '../mdc-button/button-theme' hide color, density, fab-color, fab-density, fab-theme, fab-typography, icon-button-color, icon-button-density, icon-button-theme, icon-button-typography, theme, typography;
-@forward '../mdc-button/button-theme' as mat-mdc-* hide $mat-mdc-mat-button-state-target, mat-mdc-color, mat-mdc-density, mat-mdc-theme, mat-mdc-typography;
-@forward '../mdc-button/button-theme' as mat-mdc-button-* hide $mat-mdc-button-mat-button-state-target, mat-mdc-button-fab-color, mat-mdc-button-fab-density, mat-mdc-button-fab-theme, mat-mdc-button-fab-typography, mat-mdc-button-icon-button-color, mat-mdc-button-icon-button-density, mat-mdc-button-icon-button-theme, mat-mdc-button-icon-button-typography;
+@forward '../mdc-button/button-theme' hide color, density, fab-color, fab-density, fab-theme,
+  fab-typography, icon-button-color, icon-button-density, icon-button-theme, icon-button-typography,
+  theme, typography;
+@forward '../mdc-button/button-theme' as mat-mdc-* hide $mat-mdc-mat-button-state-target,
+  mat-mdc-color, mat-mdc-density, mat-mdc-theme, mat-mdc-typography;
+@forward '../mdc-button/button-theme' as mat-mdc-button-*
+  hide $mat-mdc-button-mat-button-state-target, mat-mdc-button-fab-color,
+  mat-mdc-button-fab-density, mat-mdc-button-fab-theme, mat-mdc-button-fab-typography,
+  mat-mdc-button-icon-button-color, mat-mdc-button-icon-button-density,
+  mat-mdc-button-icon-button-theme, mat-mdc-button-icon-button-typography;
 @forward '../mdc-card/card-theme' hide color, density, theme, typography;
-@forward '../mdc-card/card-theme' as mat-mdc-card-* hide $mat-mdc-card-mdc-card-action-icon-color, $mat-mdc-card-mdc-card-outline-color;
-@forward '../mdc-checkbox/checkbox-theme' hide color, density, private-checkbox-styles-with-color, theme, typography;
-@forward '../mdc-checkbox/checkbox-theme' as mat-mdc-* hide $mat-mdc-mdc-checkbox-border-color, $mat-mdc-mdc-checkbox-disabled-color, mat-mdc-color, mat-mdc-density, mat-mdc-theme, mat-mdc-typography;
-@forward '../mdc-checkbox/checkbox-theme' as mat-mdc-checkbox-* hide $mat-mdc-checkbox-mdc-checkbox-border-color, $mat-mdc-checkbox-mdc-checkbox-disabled-color, mat-mdc-checkbox-private-checkbox-styles-with-color;
+@forward '../mdc-card/card-theme' as mat-mdc-card-* hide $mat-mdc-card-mdc-card-action-icon-color,
+  $mat-mdc-card-mdc-card-outline-color;
+@forward '../mdc-checkbox/checkbox-theme' hide color, density, private-checkbox-styles-with-color,
+  theme, typography;
+@forward '../mdc-checkbox/checkbox-theme' as mat-mdc-* hide $mat-mdc-mdc-checkbox-border-color,
+  $mat-mdc-mdc-checkbox-disabled-color, mat-mdc-color, mat-mdc-density, mat-mdc-theme,
+  mat-mdc-typography;
+@forward '../mdc-checkbox/checkbox-theme' as mat-mdc-checkbox-*
+  hide $mat-mdc-checkbox-mdc-checkbox-border-color, $mat-mdc-checkbox-mdc-checkbox-disabled-color,
+  mat-mdc-checkbox-private-checkbox-styles-with-color;
 @forward '../mdc-chips/chips-theme' hide color, density, theme, typography;
-@forward '../mdc-chips/chips-theme' as mat-mdc-chips-* hide $mat-mdc-chips-mdc-chips-fill-color-default, $mat-mdc-chips-mdc-chips-icon-color, $mat-mdc-chips-mdc-chips-ink-color-default;
+@forward '../mdc-chips/chips-theme' as mat-mdc-chips-*
+  hide $mat-mdc-chips-mdc-chips-fill-color-default, $mat-mdc-chips-mdc-chips-icon-color,
+  $mat-mdc-chips-mdc-chips-ink-color-default;
 @forward '../mdc-radio/radio-theme' hide color, density, theme, typography;
-@forward '../mdc-radio/radio-theme' as mat-mdc-radio-* hide $mat-mdc-radio-mdc-radio-baseline-theme-color, $mat-mdc-radio-mdc-radio-disabled-circle-color, $mat-mdc-radio-mdc-radio-unchecked-color;
+@forward '../mdc-radio/radio-theme' as mat-mdc-radio-*
+  hide $mat-mdc-radio-mdc-radio-baseline-theme-color,
+  $mat-mdc-radio-mdc-radio-disabled-circle-color, $mat-mdc-radio-mdc-radio-unchecked-color;
 @forward '../mdc-select/select-theme' hide color, density, theme, typography;
-@forward '../mdc-select/select-theme' as mat-mdc-select-* hide $mat-mdc-select-mdc-select-disabled-dropdown-icon-color, $mat-mdc-select-mdc-select-disabled-label-color, $mat-mdc-select-mdc-select-dropdown-icon-color, $mat-mdc-select-mdc-select-ink-color, $mat-mdc-select-mdc-select-label-color;
+@forward '../mdc-select/select-theme' as mat-mdc-select-*
+  hide $mat-mdc-select-mdc-select-disabled-dropdown-icon-color,
+  $mat-mdc-select-mdc-select-disabled-label-color, $mat-mdc-select-mdc-select-dropdown-icon-color,
+  $mat-mdc-select-mdc-select-ink-color, $mat-mdc-select-mdc-select-label-color;
 @forward '../mdc-slide-toggle/slide-toggle-theme' hide color, density, theme, typography;
-@forward '../mdc-slide-toggle/slide-toggle-theme' as mat-mdc-slide-toggle-* hide $mat-mdc-slide-toggle-mdc-switch-baseline-theme-color, $mat-mdc-slide-toggle-mdc-switch-disabled-thumb-color, $mat-mdc-slide-toggle-mdc-switch-disabled-track-color, $mat-mdc-slide-toggle-mdc-switch-toggled-off-thumb-color, $mat-mdc-slide-toggle-mdc-switch-toggled-off-track-color;
+@forward '../mdc-slide-toggle/slide-toggle-theme' as mat-mdc-slide-toggle-*
+  hide $mat-mdc-slide-toggle-mdc-switch-baseline-theme-color,
+  $mat-mdc-slide-toggle-mdc-switch-disabled-thumb-color,
+  $mat-mdc-slide-toggle-mdc-switch-disabled-track-color,
+  $mat-mdc-slide-toggle-mdc-switch-toggled-off-thumb-color,
+  $mat-mdc-slide-toggle-mdc-switch-toggled-off-track-color;
 @forward '../mdc-snack-bar/snack-bar-theme' hide color, density, theme, typography;
-@forward '../mdc-snack-bar/snack-bar-theme' as mat-mdc-snack-bar-* hide $mat-mdc-snack-bar-mdc-snackbar-dismiss-ink-color, $mat-mdc-snack-bar-mdc-snackbar-fill-color, $mat-mdc-snack-bar-mdc-snackbar-label-ink-color;
+@forward '../mdc-snack-bar/snack-bar-theme' as mat-mdc-snack-bar-*
+  hide $mat-mdc-snack-bar-mdc-snackbar-dismiss-ink-color,
+  $mat-mdc-snack-bar-mdc-snackbar-fill-color,
+  $mat-mdc-snack-bar-mdc-snackbar-label-ink-color;
 @forward '../mdc-tabs/tabs-theme' hide color, density, theme, typography;
-@forward '../mdc-tabs/tabs-theme' as mat-mdc-tabs-* hide $mat-mdc-tabs-mdc-tab-icon-color-active, $mat-mdc-tabs-mdc-tab-text-label-color-active, $mat-mdc-tabs-mdc-tab-text-label-color-default;
+@forward '../mdc-tabs/tabs-theme' as mat-mdc-tabs-* hide $mat-mdc-tabs-mdc-tab-icon-color-active,
+  $mat-mdc-tabs-mdc-tab-text-label-color-active, $mat-mdc-tabs-mdc-tab-text-label-color-default;
 @forward '../mdc-table/table-theme' hide color, density, theme, typography;
-@forward '../mdc-table/table-theme' as mat-mdc-table-* hide $mat-mdc-table-mdc-data-table-divider-color, $mat-mdc-table-mdc-data-table-header-row-text-color, $mat-mdc-table-mdc-data-table-row-hover-fill-color, $mat-mdc-table-mdc-data-table-row-text-color, $mat-mdc-table-mdc-data-table-selected-row-fill-color, $mat-mdc-table-mdc-data-table-sort-icon-active-color, $mat-mdc-table-mdc-data-table-sort-icon-color, $mat-mdc-table-mdc-data-table-stroke-color, $mat-mdc-table-mdc-data-table-table-divider-color;
+@forward '../mdc-table/table-theme' as mat-mdc-table-*
+  hide $mat-mdc-table-mdc-data-table-divider-color,
+  $mat-mdc-table-mdc-data-table-header-row-text-color,
+  $mat-mdc-table-mdc-data-table-row-hover-fill-color, $mat-mdc-table-mdc-data-table-row-text-color,
+  $mat-mdc-table-mdc-data-table-selected-row-fill-color,
+  $mat-mdc-table-mdc-data-table-sort-icon-active-color,
+  $mat-mdc-table-mdc-data-table-sort-icon-color, $mat-mdc-table-mdc-data-table-stroke-color,
+  $mat-mdc-table-mdc-data-table-table-divider-color;
 @forward '../mdc-form-field/form-field-sizing';
-@forward '../mdc-form-field/form-field-native-select' hide private-form-field-native-select, private-form-field-native-select-color;
-@forward '../mdc-form-field/form-field-native-select' as mat-mdc-* hide $mat-mdc-mat-form-field-select-arrow-height, $mat-mdc-mat-form-field-select-arrow-width, $mat-mdc-mat-form-field-select-horizontal-end-padding;
+@forward '../mdc-form-field/form-field-native-select' hide private-form-field-native-select,
+  private-form-field-native-select-color;
+@forward '../mdc-form-field/form-field-native-select' as mat-mdc-*
+  hide $mat-mdc-mat-form-field-select-arrow-height, $mat-mdc-mat-form-field-select-arrow-width,
+  $mat-mdc-mat-form-field-select-horizontal-end-padding;
 @forward '../mdc-form-field/form-field-theme' hide color, density, theme, typography;
-@forward '../mdc-form-field/form-field-theme' as mat-mdc-form-field-* hide $mat-mdc-form-field-mdc-text-field-focused-label-color;
+@forward '../mdc-form-field/form-field-theme' as mat-mdc-form-field-*
+  hide $mat-mdc-form-field-mdc-text-field-focused-label-color;
 @forward '../mdc-core/option/option-theme.import';
 @forward '../mdc-core/option/optgroup-theme.import';
 @forward '../mdc-core/core' as mat-mdc-core-*;

@@ -35,19 +35,22 @@
 
       &.mat-primary {
         &.mdc-chip--selected, &.mat-mdc-chip-highlighted {
-          @include mdc-chip-fill-color-accessible($primary, $query: mdc-helpers.$mat-theme-styles-query);
+          @include mdc-chip-fill-color-accessible($primary,
+            $query: mdc-helpers.$mat-theme-styles-query);
         }
       }
 
       &.mat-accent {
         &.mdc-chip--selected, &.mat-mdc-chip-highlighted {
-          @include mdc-chip-fill-color-accessible($accent, $query: mdc-helpers.$mat-theme-styles-query);
+          @include mdc-chip-fill-color-accessible($accent,
+            $query: mdc-helpers.$mat-theme-styles-query);
         }
       }
 
       &.mat-warn {
         &.mdc-chip--selected, &.mat-mdc-chip-highlighted {
-          @include mdc-chip-fill-color-accessible($warn, $query: mdc-helpers.$mat-theme-styles-query);
+          @include mdc-chip-fill-color-accessible($warn,
+            $query: mdc-helpers.$mat-theme-styles-query);
         }
       }
     }
