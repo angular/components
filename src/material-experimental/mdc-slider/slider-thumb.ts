@@ -8,6 +8,7 @@
 
 import {
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   ElementRef,
   Input,
@@ -24,30 +25,25 @@ import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MatSliderThumb {
+  /** Whether the slider is discrete. */
+  @Input()
+  get isDiscrete(): boolean { return this._isDiscrete; }
+  set isDiscrete(v) { this._isDiscrete = coerceBooleanProperty(v); }
+  private _isDiscrete = false;
+
   /** The text content of the value indicator for a discrete slider. */
   @Input()
-  get valueIndicatorText(): string {
-    return this._valueIndicatorText;
-  }
-  set valueIndicatorText(value: string) {
-    this._valueIndicatorText = value;
+  get valueIndicatorText(): string { return this._valueIndicatorText; }
+  set valueIndicatorText(v: string) {
+    this._valueIndicatorText = v;
+    this._cdr.detectChanges();
   }
   private _valueIndicatorText: string;
 
-  /** Whether the slider is discrete. */
-  @Input()
-  get isDiscrete(): boolean {
-    return this._isDiscrete;
-  }
-  set isDiscrete(value) {
-    this._isDiscrete = coerceBooleanProperty(value);
-  }
-  private _isDiscrete = false;
+  @ViewChild('knob') private _knob: ElementRef<HTMLElement>;
+  private get knob(): Element { return this._knob.nativeElement; }
 
-  @ViewChild('knob') _knob: ElementRef<HTMLElement>;
-  get knob(): Element { return this._knob.nativeElement; }
-
-  constructor(private _elementRef: ElementRef<HTMLElement>) {}
+  constructor(private _cdr: ChangeDetectorRef, private _elementRef: ElementRef<HTMLElement>) {}
 
   getRootEl() {
     return this._elementRef.nativeElement;

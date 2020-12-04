@@ -14,9 +14,25 @@ import {Component} from '@angular/core';
   templateUrl: 'mdc-slider-demo.html',
 })
 export class MdcSliderDemo {
-  demo: number;
-  val: number = 50;
-  min: number = 0;
-  max: number = 100;
-  disabledValue = 0;
+  changingNum: number = 0;
+  changingBool: boolean = true;
+
+  toggleNumForever(v1: any, v2: any, time: number) {
+    setTimeout(() => {
+      this.changingNum = this.changingNum === v1 ? v2 : v1;
+      this.toggleNumForever(v1, v2, time);
+    }, time);
+  }
+
+  toggleBoolForever(time: number) {
+    setTimeout(() => {
+      this.changingBool = !this.changingBool;
+      this.toggleBoolForever(time);
+    }, time);
+  }
+
+  constructor() {
+    this.toggleNumForever(0, 10, 3000);
+    this.toggleBoolForever(3000)
+  }
 }

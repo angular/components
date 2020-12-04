@@ -1,20 +1,37 @@
 <p>Continuous slider</p>
-<mat-slider [startValue]="50" ariaLabel="Continuous slider demo"></mat-slider>
+<mat-slider ariaLabel="Continuous slider demo">
+	<input [value]="10" matSliderInput>
+</mat-slider>
 
 <p>Ranged slider</p>
-<mat-slider [isRange]="true" [startValue]="30" [endValue]="70" ariaLabel="Continuous ranged slider demo"></mat-slider>
+<mat-slider ariaLabel="Continuous ranged slider demo">
+	<input [value]="10" matSliderInput>
+	<input [value]="20" matSliderInput>
+</mat-slider>
 
 <p>Discrete slider</p>
-<mat-slider [isDiscrete]="true" ariaLabel="Discrete slider demo"></mat-slider>
+<mat-slider [isDiscrete]="true" ariaLabel="Discrete slider demo">
+	<input [value]="10" matSliderInput>
+</mat-slider>
 
 <p>Discrete ranged slider</p>
-<mat-slider [isRange]="true" [isDiscrete]="true" ariaLabel="Discrete ranged slider demo"></mat-slider>
+<mat-slider [isDiscrete]="changingBool" ariaLabel="Discrete ranged slider demo">
+	<input [value]="10" matSliderInput>
+	<input [value]="20" matSliderInput>
+</mat-slider>
 
 <p>Discrete slider w/ tick marks</p>
-<mat-slider [isDiscrete]="true" [hasTickMarks]="true" [step]="10" ariaLabel="Discrete slider with tick marks demo"></mat-slider>
+<mat-slider [isDiscrete]="true" [hasTickMarks]="changingBool" [step]="10" ariaLabel="Discrete slider with tick marks demo">
+	<input [value]="10" matSliderInput>
+</mat-slider>
 
 <p>Discrete ranged slider w/ tick marks</p>
-<mat-slider [isRange]="true" [isDiscrete]="true" [hasTickMarks]="true" [step]="10" ariaLabel="Discrete ranged slider with tick marks demo"></mat-slider>
+<mat-slider [isDiscrete]="true" [hasTickMarks]="changingBool" [step]="10" ariaLabel="Discrete ranged slider with tick marks demo">
+	<input [value]="10" matSliderInput>
+	<input [value]="20" matSliderInput>
+</mat-slider>
 
 <p>Disabled slider</p>
-<mat-slider [isDisabled]="true" ariaLabel="Disabled slider demo"></mat-slider>
+<mat-slider [isDisabled]="changingBool" ariaLabel="Disabled slider demo">
+	<input [value]="10" matSliderInput>
+</mat-slider>

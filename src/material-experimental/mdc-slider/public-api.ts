@@ -7,5 +7,6 @@
  */
 
 export * from './slider';
+export * from './slider-input';
 export * from './slider-thumb';
 export * from './module';
