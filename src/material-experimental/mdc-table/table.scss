@@ -4,7 +4,7 @@
 @import '../../material/table/table-flex-styles';
 
 @include mdc-data-table-core-styles($query: $mat-base-styles-without-animation-query);
-@include _mat-table-flex-styles;
+@include mat-private-table-flex-styles();
 
 .mat-mdc-table-sticky {
   @include vendor-prefixes.position-sticky;

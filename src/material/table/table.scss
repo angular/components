@@ -1,7 +1,7 @@
 @use '../core/style/vendor-prefixes';
 @import './table-flex-styles';
 
-@include _mat-table-flex-styles;
+@include mat-private-table-flex-styles();
 
 /**
  * Native HTML table structure

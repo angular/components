@@ -5,7 +5,8 @@ $mat-header-row-height: 56px;
 $mat-row-height: 48px;
 $mat-row-horizontal-padding: 24px;
 
-@mixin _mat-table-flex-styles {
+// Only use tag name selectors here since the styles are shared between MDC and non-MDC
+@mixin mat-private-table-flex-styles {
   mat-table {
     display: block;
   }
