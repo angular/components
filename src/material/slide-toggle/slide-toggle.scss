@@ -118,6 +118,7 @@ $mat-slide-toggle-bar-track-width: $mat-slide-toggle-bar-width - $mat-slide-togg
   height: $mat-slide-toggle-thumb-size;
   width: $mat-slide-toggle-thumb-size;
   border-radius: 50%;
+  display: block;
 }
 
 // Horizontal bar for the slide-toggle.
