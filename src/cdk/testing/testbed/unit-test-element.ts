@@ -252,5 +252,10 @@ export class UnitTestElement implements TestElement {
     this._dispatchPointerEventIfSupported('pointerup', clientX, clientY, button);
     dispatchMouseEvent(this.element, 'mouseup', clientX, clientY, button, modifiers);
     dispatchMouseEvent(this.element, name, clientX, clientY, button, modifiers);
+
+    // This call to _stabilize should not be needed since the callers will already do that them-
+    // selves. Nevertheless it breaks some tests in g3 without it. It needs to be investigated
+    // why removing breaks those tests.
+    await this._stabilize();
   }
 }
