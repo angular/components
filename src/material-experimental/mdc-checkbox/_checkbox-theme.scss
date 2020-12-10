@@ -1,5 +1,6 @@
 @use '@material/checkbox/checkbox-theme' as checkbox-theme;
 @use '@material/ripple/ripple-theme' as ripple-theme;
+@use '@material/theme/theme';
 
 @import '@material/checkbox/mixins.import';
 @import '@material/checkbox/variables.import';
@@ -24,6 +25,18 @@
       ripple-checked-color: $color,
       ripple-checked-opacity: ripple-theme.$dark-ink-opacities,
   ));
+  @include _background-focus-indicator-color($color);
+}
+
+// TODO(b/175233410): Use ripple element to show focus indicator.
+@mixin _background-focus-indicator-color($color) {
+  .mdc-checkbox__native-control:checked ~ .mdc-checkbox__background::before,
+  .mdc-checkbox__native-control:indeterminate
+    ~ .mdc-checkbox__background::before,
+  .mdc-checkbox__native-control[data-indeterminate='true']
+    ~ .mdc-checkbox__background::before {
+    @include theme.property(background-color, $color);
+  }
 }
 
 @mixin mat-mdc-checkbox-color($config-or-theme) {
@@ -90,10 +103,24 @@
   }
 }
 
+// TODO(b/175233410): Use ripple element to show focus indicator.
+@mixin _background-focus-density($density-scale) {
+  $ripple-size: checkbox-theme.get-ripple-size($density-scale);
+  $checkbox-padding: ($ripple-size - checkbox-theme.$icon-size) / 2;
+
+  .mdc-checkbox__background::before {
+    top: -(checkbox-theme.$border-width) - $checkbox-padding;
+    left: -(checkbox-theme.$border-width) - $checkbox-padding;
+    width: $ripple-size;
+    height: $ripple-size;
+  }
+}
+
 @mixin mat-mdc-checkbox-density($config-or-theme) {
   $density-scale: mat-get-density-config($config-or-theme);
   .mat-mdc-checkbox .mdc-checkbox {
     @include mdc-checkbox-density($density-scale, $query: $mat-base-styles-query);
+    @include _background-focus-density($density-scale);
   }
 }
 
