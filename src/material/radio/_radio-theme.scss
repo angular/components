@@ -1,5 +1,6 @@
 @import '../core/theming/palette';
 @import '../core/theming/theming';
+@import '../core/typography/typography';
 @import '../core/typography/typography-utils';
 
 @mixin _mat-radio-color($palette) {
@@ -68,6 +69,7 @@
 }
 
 @mixin mat-radio-typography($config-or-theme) {
+  $config: mat-private-typography-normalized-config(mat-get-typography-config($config-or-theme));
   $config: mat-get-typography-config($config-or-theme);
   .mat-radio-button {
     font-family: mat-font-family($config);
