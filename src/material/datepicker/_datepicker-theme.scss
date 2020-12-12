@@ -1,6 +1,7 @@
 @import '../core/style/private';
 @import '../core/theming/palette';
 @import '../core/theming/theming';
+@import '../core/typography/typography';
 @import '../core/typography/typography-utils';
 
 
@@ -179,6 +180,7 @@ $mat-calendar-weekday-table-font-size: 11px !default;
 }
 
 @mixin mat-datepicker-typography($config-or-theme) {
+  $config: mat-private-typography-normalized-config(mat-get-typography-config($config-or-theme));
   $config: mat-get-typography-config($config-or-theme);
   .mat-calendar {
     font-family: mat-font-family($config);
