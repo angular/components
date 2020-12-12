@@ -1,5 +1,6 @@
 @import '../core/theming/palette';
 @import '../core/theming/theming';
+@import '../core/typography/typography';
 @import '../core/typography/typography-utils';
 
 @mixin _mat-slider-inner-content-theme($palette) {
@@ -164,6 +165,7 @@
 }
 
 @mixin mat-slider-typography($config-or-theme) {
+  $config: mat-private-typography-normalized-config(mat-get-typography-config($config-or-theme));
   $config: mat-get-typography-config($config-or-theme);
   .mat-slider-thumb-label-text {
     font: {
