@@ -2,6 +2,7 @@
 @import '../core/theming/palette';
 @import '../core/theming/theming';
 @import '../core/style/private';
+@import '../core/typography/typography';
 @import '../core/typography/typography-utils';
 @import './expansion-variables';
 
@@ -59,6 +60,7 @@
 }
 
 @mixin mat-expansion-panel-typography($config-or-theme) {
+  $config: mat-private-typography-normalized-config(mat-get-typography-config($config-or-theme));
   $config: mat-get-typography-config($config-or-theme);
   .mat-expansion-panel-header {
     font: {
