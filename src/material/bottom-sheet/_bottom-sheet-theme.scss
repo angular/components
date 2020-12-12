@@ -1,4 +1,5 @@
 @import '../core/style/private';
+@import '../core/typography/typography';
 @import '../core/typography/typography-utils';
 @import '../core/theming/palette';
 @import '../core/theming/theming';
@@ -16,6 +17,7 @@
 }
 
 @mixin mat-bottom-sheet-typography($config-or-theme) {
+  $config: mat-private-typography-normalized-config(mat-get-typography-config($config-or-theme));
   $config: mat-get-typography-config($config-or-theme);
   .mat-bottom-sheet-container {
     @include mat-typography-level-to-styles($config, body-1);
