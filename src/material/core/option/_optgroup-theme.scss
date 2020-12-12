@@ -1,5 +1,6 @@
 @import '../theming/palette';
 @import '../theming/theming';
+@import '../typography/typography';
 @import '../typography/typography-utils';
 
 @mixin mat-optgroup-color($config-or-theme) {
@@ -16,6 +17,7 @@
 }
 
 @mixin mat-optgroup-typography($config-or-theme) {
+  $config: mat-private-typography-normalized-config(mat-get-typography-config($config-or-theme));
   $config: mat-get-typography-config($config-or-theme);
   .mat-optgroup-label {
     @include mat-typography-level-to-styles($config, body-2);

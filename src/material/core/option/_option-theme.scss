@@ -1,5 +1,6 @@
 @import '../theming/palette';
 @import '../theming/theming';
+@import '../typography/typography';
 @import '../typography/typography-utils';
 
 @mixin mat-option-color($config-or-theme) {
@@ -47,6 +48,7 @@
 }
 
 @mixin mat-option-typography($config-or-theme) {
+  $config: mat-private-typography-normalized-config(mat-get-typography-config($config-or-theme));
   $config: mat-get-typography-config($config-or-theme);
   .mat-option {
     font: {
