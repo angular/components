@@ -9,6 +9,7 @@
 }
 
 @mixin mat-mdc-dialog-typography($config-or-theme) {
+  $config: mat-private-typography-normalized-config(mat-get-typography-config($config-or-theme));
   $config: mat-get-typography-config($config-or-theme);
   @include mat-using-mdc-typography($config) {
     @include mdc-dialog-core-styles($query: $mat-typography-styles-query);
