@@ -20,6 +20,7 @@
 }
 
 @mixin mat-mdc-optgroup-typography($config-or-theme) {
+  $config: mat-private-typography-normalized-config(mat-get-typography-config($config-or-theme));
   $config: mat-get-typography-config($config-or-theme);
 }
 
