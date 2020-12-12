@@ -1,6 +1,7 @@
 @import '../core/style/private';
 @import '../core/theming/palette';
 @import '../core/theming/theming';
+@import '../core/typography/typography';
 @import '../core/typography/typography-utils';
 
 $mat-chip-remove-font-size: 18px;
@@ -87,6 +88,7 @@ $mat-chip-remove-font-size: 18px;
 }
 
 @mixin mat-chips-typography($config-or-theme) {
+  $config: mat-private-typography-normalized-config(mat-get-typography-config($config-or-theme));
   $config: mat-get-typography-config($config-or-theme);
   .mat-chip {
     font-size: mat-font-size($config, body-2);
