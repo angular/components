@@ -1,4 +1,5 @@
 @import '../core/theming/theming';
+@import '../core/typography/typography';
 @import '../core/typography/typography-utils';
 
 
@@ -96,6 +97,7 @@
 }
 
 @mixin mat-checkbox-typography($config-or-theme) {
+  $config: mat-private-typography-normalized-config(mat-get-typography-config($config-or-theme));
   $config: mat-get-typography-config($config-or-theme);
   .mat-checkbox {
     font-family: mat-font-family($config);
