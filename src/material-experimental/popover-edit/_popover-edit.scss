@@ -3,6 +3,7 @@
 @import '../../material/core/style/private';
 @import '../../material/core/theming/palette';
 @import '../../material/core/theming/theming';
+@import '../../material/core/typography/typography';
 @import '../../material/core/typography/typography-utils';
 
 @function mat-edit-hover-content-background($direction, $background-color) {
@@ -143,6 +144,7 @@
 }
 
 @mixin mat-popover-edit-typography($config-or-theme) {
+  $config: mat-private-typography-normalized-config(mat-get-typography-config($config-or-theme));
   $config: mat-get-typography-config($config-or-theme);
   [mat-edit-title] {
     @include mat-typography-level-to-styles($config, title);
