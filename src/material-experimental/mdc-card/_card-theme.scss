@@ -32,6 +32,7 @@
 }
 
 @mixin mat-mdc-card-typography($config-or-theme) {
+  $config: mat-private-typography-normalized-config(mat-get-typography-config($config-or-theme));
   $config: mat-get-typography-config($config-or-theme);
   @include mat-using-mdc-typography($config) {
     @include mdc-card-without-ripple($query: $mat-typography-styles-query);
