@@ -13,7 +13,7 @@ import {
   ContentChildren,
   QueryList,
 } from '@angular/core';
-import {_MatAutocompleteBase} from '@angular/material/autocomplete';
+import {_MatAutocompleteBase, matAutocompleteAnimations} from '@angular/material/autocomplete';
 import {
   MAT_OPTION_PARENT_COMPONENT,
   MAT_OPTGROUP,
@@ -33,6 +33,7 @@ import {
   host: {
     'class': 'mat-mdc-autocomplete'
   },
+  animations: [matAutocompleteAnimations.transformPanel],
   providers: [
     {provide: MAT_OPTION_PARENT_COMPONENT, useExisting: MatAutocomplete}
   ]

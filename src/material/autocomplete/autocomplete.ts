@@ -26,7 +26,7 @@ import {
   ViewChild,
   ViewEncapsulation,
   OnDestroy,
-  Directive,
+  Directive, OnInit,
 } from '@angular/core';
 import {
   CanDisableRipple,
@@ -39,7 +39,9 @@ import {
   MatOption,
   MatOptgroup,
 } from '@angular/material/core';
-import {Subscription} from 'rxjs';
+import {Subject, Subscription} from 'rxjs';
+import {distinctUntilChanged, takeUntil} from 'rxjs/operators';
+import {matAutocompleteAnimations} from '@angular/material/autocomplete/autocomplete-animation';
 
 
 /**
@@ -96,7 +98,7 @@ export function MAT_AUTOCOMPLETE_DEFAULT_OPTIONS_FACTORY(): MatAutocompleteDefau
 /** Base class with all of the `MatAutocomplete` functionality. */
 @Directive()
 export abstract class _MatAutocompleteBase extends _MatAutocompleteMixinBase implements
-  AfterContentInit, CanDisableRipple, OnDestroy {
+  AfterContentInit, CanDisableRipple, OnDestroy, OnInit {
   private _activeOptionChanges = Subscription.EMPTY;
 
   /** Class to apply to the panel when it's visible. */
@@ -110,6 +112,12 @@ export abstract class _MatAutocompleteBase extends _MatAutocompleteMixinBase imp
 
   /** Whether the autocomplete panel should be visible, depending on option length. */
   showPanel: boolean = false;
+
+  /** Emits when the panel element is finished transforming in. */
+  _panelDoneAnimatingStream = new Subject<string>();
+
+  /** Emits whenever the component is destroyed. */
+  protected readonly _destroy = new Subject<void>();
 
   /** Whether the autocomplete panel is open. */
   get isOpen(): boolean { return this._isOpen && this.showPanel; }
@@ -215,6 +223,15 @@ export abstract class _MatAutocompleteBase extends _MatAutocompleteMixinBase imp
     this._autoActiveFirstOption = !!defaults.autoActiveFirstOption;
   }
 
+  ngOnInit() {
+    // We need `distinctUntilChanged` here, because some browsers will
+    // fire the animation end event twice for the same animation. See:
+    // https://github.com/angular/angular/issues/24084
+    this._panelDoneAnimatingStream
+      .pipe(distinctUntilChanged(), takeUntil(this._destroy))
+      .subscribe(() => this._panelDoneAnimating(this.isOpen));
+  }
+
   ngAfterContentInit() {
     this._keyManager = new ActiveDescendantKeyManager<_MatOptionBase>(this.options).withWrap();
     this._activeOptionChanges = this._keyManager.change.subscribe(index => {
@@ -266,6 +283,15 @@ export abstract class _MatAutocompleteBase extends _MatAutocompleteMixinBase imp
     return this.ariaLabelledby ? labelId + ' ' + this.ariaLabelledby : labelId;
   }
 
+  /** Called when the overlay panel is done animating. */
+  protected _panelDoneAnimating(isOpen: boolean) {
+    if (isOpen) {
+      this.opened.emit();
+    } else {
+      this.closed.emit();
+    }
+  }
+
 
   /** Sets the autocomplete visibility classes on a classlist based on the panel is visible. */
   private _setVisibilityClasses(classList: {[key: string]: boolean}) {
@@ -288,6 +314,7 @@ export abstract class _MatAutocompleteBase extends _MatAutocompleteMixinBase imp
   host: {
     'class': 'mat-autocomplete'
   },
+  animations: [matAutocompleteAnimations.transformPanel],
   providers: [
     {provide: MAT_OPTION_PARENT_COMPONENT, useExisting: MatAutocomplete}
   ]

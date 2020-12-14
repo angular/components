@@ -5,6 +5,8 @@
        [attr.aria-label]="ariaLabel || null"
        [attr.aria-labelledby]="_getPanelAriaLabelledby(formFieldId)"
        [ngClass]="_classList"
+       (@transformPanel.done)="_panelDoneAnimatingStream.next($event.toState)"
+       [@transformPanel]="'showing'"
        #panel>
     <ng-content></ng-content>
   </div>
