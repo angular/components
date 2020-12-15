@@ -191,7 +191,9 @@ export class _MatTableDataSource<T, P extends Paginator> extends DataSource<T> {
     // Transform the filter by converting it to lowercase and removing whitespace.
     const transformedFilter = filter.trim().toLowerCase();
     // Loops over the values in the array and returns true if any of them match the filter string
-    return Object.values(data).some(term=>term.toLowerCase().includes(transformedFilter));
+    return Object.keys(data).some(
+      (key)=>(data as {[key: string]: any})[key].toLowerCase().includes(transformedFilter)
+    );
   }
 
   constructor(initialData: T[] = []) {
