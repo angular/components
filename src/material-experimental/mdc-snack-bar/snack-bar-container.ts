@@ -80,10 +80,10 @@ export class MatSnackBarContainer extends BasePortalOutlet
   _live: AriaLivePoliteness;
 
   /** The aria-hidden container which holds the snack bar content. */
-  @ViewChild('inertElement') inertElement: ElementRef<HTMLElement>;
+  @ViewChild('_inertElement') private _inertElement: ElementRef<HTMLElement>;
 
   /** The aria-live container used to announce contents to screen readers. */
-  @ViewChild('liveElement') liveElement: ElementRef<HTMLElement>;
+  @ViewChild('_liveElement') private _liveElement: ElementRef<HTMLElement>;
 
   /** Whether the snack bar is currently exiting. */
   _exiting = false;
@@ -220,20 +220,20 @@ export class MatSnackBarContainer extends BasePortalOutlet
     if (!this._announceTimeoutId) {
       this._ngZone.runOutsideAngular(() => {
         this._announceTimeoutId = setTimeout(() => {
-          const inertElement = this.inertElement?.nativeElement;
-          const liveElement = this.liveElement?.nativeElement;
+          const _inertElement = this._inertElement?.nativeElement;
+          const _liveElement = this._liveElement?.nativeElement;
 
-          if (inertElement && liveElement) {
+          if (_inertElement && _liveElement) {
             // If an element in the snack bar content is focused before being moved
             // track it and restore focus after moving to the live region.
             let focusedElement: HTMLElement | null = null;
             if (document.activeElement instanceof HTMLElement &&
-                inertElement.contains(document.activeElement)) {
+                _inertElement.contains(document.activeElement)) {
               focusedElement = document.activeElement;
             }
 
-            inertElement.removeAttribute('aria-hidden');
-            liveElement.appendChild(inertElement);
+            _inertElement.removeAttribute('aria-hidden');
+            _liveElement.appendChild(_inertElement);
             focusedElement?.focus();
 
             this._onAnnounce.next();
