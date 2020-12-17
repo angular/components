@@ -26,7 +26,7 @@ import {coerceNumberProperty, NumberInput} from '@angular/cdk/coercion';
 import {ViewportRuler} from '@angular/cdk/scrolling';
 import {FocusKeyManager, FocusableOption} from '@angular/cdk/a11y';
 import {ENTER, SPACE, hasModifierKey} from '@angular/cdk/keycodes';
-import {merge, of as observableOf, Subject, timer, fromEvent} from 'rxjs';
+import {merge, Observable, of as observableOf, Subject, timer, fromEvent} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 import {Platform, normalizePassiveListenerOptions} from '@angular/cdk/platform';
 import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
@@ -200,7 +200,7 @@ export abstract class MatPaginatedTabHeader implements AfterContentChecked, Afte
 
     // On dir change or window resize, realign the ink bar and update the orientation of
     // the key manager if the direction has changed.
-    merge(dirChange, resize, this._items.changes).pipe(takeUntil(this._destroyed)).subscribe(() => {
+    merge(dirChange as Observable<Direction|null>, resize, this._items.changes).pipe(takeUntil(this._destroyed)).subscribe(() => {
       // We need to defer this to give the browser some time to recalculate the element dimensions.
       Promise.resolve().then(realign);
       this._keyManager.withHorizontalOrientation(this._getLayoutDirection());

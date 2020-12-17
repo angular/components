@@ -149,8 +149,8 @@ export class MatTreeFlatDataSource<T, F, K = F> extends DataSource<F> {
   connect(collectionViewer: CollectionViewer): Observable<F[]> {
     const changes = [
       collectionViewer.viewChange,
-      this._treeControl.expansionModel.changed,
-      this._flattenedData
+      this._treeControl.expansionModel.changed.asObservable(),
+      this._flattenedData.asObservable()
     ];
     return merge(...changes).pipe(map(() => {
       this._expandedData.next(

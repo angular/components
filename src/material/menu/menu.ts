@@ -273,7 +273,7 @@ export class _MatMenuBase implements AfterContentInit, MatMenuPanel<MatMenuItem>
     // is internal and we know that it gets completed on destroy.
     this._directDescendantItems.changes.pipe(
       startWith(this._directDescendantItems),
-      switchMap(items => merge<MatMenuItem>(...items.map((item: MatMenuItem) => item._focused)))
+      switchMap(items => merge<MatMenuItem[]>(...items.map((item: MatMenuItem) => item._focused)))
     ).subscribe(focusedItem => this._keyManager.updateActiveItem(focusedItem));
   }
 
