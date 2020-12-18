@@ -157,7 +157,7 @@
     "rollup-plugin-commonjs": "^10.1.0",
     "rollup-plugin-node-resolve": "^5.2.0",
     "rollup-plugin-sourcemaps": "^0.6.3",
-    "run-sequence": "^1.2.2",
+    "run-sequence": "^2.2.1",
     "sass": "^1.29.0",
     "scss-bundle": "^3.1.2",
     "selenium-webdriver": "^3.6.0",
