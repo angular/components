@@ -23,6 +23,8 @@ import {
   ViewEncapsulation,
   Inject,
   PLATFORM_ID,
+  InjectionToken,
+  Optional,
 } from '@angular/core';
 import {isPlatformBrowser} from '@angular/common';
 
@@ -89,6 +91,25 @@ interface PendingPlayerState {
   volume?: number;
   muted?: boolean;
   seek?: {seconds: number, allowSeekAhead: boolean};
+}
+
+/** Injection token used to configure the `YouTubePlayer`. */
+export const YOUTUBE_PLAYER_CONFIG =
+    new InjectionToken<YouTubePlayerConfig>('YOUTUBE_PLAYER_CONFIG');
+
+/** Object that can be used to configure the `YouTubePlayer`. */
+export interface YouTubePlayerConfig {
+  /**
+   * Whether the component should automatically load YouTube Iframe API.
+   * Otherwise it assumes that the API will be loaded by the consumer.
+   */
+  loadApi?: boolean;
+
+  /**
+   * URL from which to load the API, if `loadApi` is enabled.
+   * Otherwise falls back to `https://www.youtube.com/iframe_api`.
+   */
+  apiUrl?: string;
 }
 
 /**
@@ -200,7 +221,10 @@ export class YouTubePlayer implements AfterViewInit, OnDestroy, OnInit {
   @ViewChild('youtubeContainer')
   youtubeContainer: ElementRef<HTMLElement>;
 
-  constructor(private _ngZone: NgZone, @Inject(PLATFORM_ID) platformId: Object) {
+  constructor(
+    private _ngZone: NgZone,
+    @Inject(PLATFORM_ID) platformId: Object,
+    @Optional() @Inject(YOUTUBE_PLAYER_CONFIG) private _config?: YouTubePlayerConfig) {
     this._isBrowser = isPlatformBrowser(platformId);
   }
 
@@ -216,6 +240,8 @@ export class YouTubePlayer implements AfterViewInit, OnDestroy, OnInit {
         throw new Error('Namespace YT not found, cannot construct embedded youtube player. ' +
             'Please install the YouTube Player API Reference for iframe Embeds: ' +
             'https://developers.google.com/youtube/iframe_api_reference');
+      } else if (this._config?.loadApi) {
+        loadApi(this._config?.apiUrl || 'https://www.youtube.com/iframe_api');
       }
 
       const iframeApiAvailableSubject = new Subject<boolean>();
@@ -755,4 +781,36 @@ function filterOnOther<R, T>(
     filter(([value, other]) => filterFn(other, value)),
     map(([value]) => value),
   );
+}
+
+let apiLoaded = false;
+
+/** Loads the YouTube API from a specified URL only once. */
+function loadApi(url: string): void {
+  if (apiLoaded) {
+    return;
+  }
+
+  // We can use `document` directly here, because this logic doesn't run outside the browser.
+  const script = document.createElement('script');
+  const callback = (event: Event) => {
+    script.removeEventListener('load', callback);
+    script.removeEventListener('error', callback);
+
+    if (event.type === 'error') {
+      apiLoaded = false;
+
+      if (typeof ngDevMode === 'undefined' || ngDevMode) {
+        console.error(`Failed to load YouTube API from ${url}`);
+      }
+    }
+  };
+  script.addEventListener('load', callback);
+  script.addEventListener('error', callback);
+  script.src = url;
+
+  // Set this immediately to true so we don't start loading another script
+  // while this one is pending. If loading fails, we'll flip it back to false.
+  apiLoaded = true;
+  document.body.appendChild(script);
 }

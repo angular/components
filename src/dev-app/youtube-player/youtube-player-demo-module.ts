@@ -11,7 +11,11 @@ import {FormsModule} from '@angular/forms';
 import {MatRadioModule} from '@angular/material/radio';
 import {NgModule} from '@angular/core';
 import {RouterModule} from '@angular/router';
-import {YouTubePlayerModule} from '@angular/youtube-player';
+import {
+  YouTubePlayerModule,
+  YOUTUBE_PLAYER_CONFIG,
+  YouTubePlayerConfig,
+} from '@angular/youtube-player';
 import {YouTubePlayerDemo} from './youtube-player-demo';
 
 @NgModule({
@@ -23,6 +27,12 @@ import {YouTubePlayerDemo} from './youtube-player-demo';
     RouterModule.forChild([{path: '', component: YouTubePlayerDemo}]),
   ],
   declarations: [YouTubePlayerDemo],
+  providers: [{
+    provide: YOUTUBE_PLAYER_CONFIG,
+    useValue: {
+      loadApi: true
+    } as YouTubePlayerConfig
+  }]
 })
 export class YouTubePlayerDemoModule {
 }

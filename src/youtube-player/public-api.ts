@@ -7,4 +7,4 @@
  */
 
 export * from './youtube-module';
-export {YouTubePlayer} from './youtube-player';
+export {YouTubePlayer, YouTubePlayerConfig, YOUTUBE_PLAYER_CONFIG} from './youtube-player';

@@ -9,6 +9,7 @@
 import { AfterViewInit } from '@angular/core';
 import { ElementRef } from '@angular/core';
 import * as i0 from '@angular/core';
+import { InjectionToken } from '@angular/core';
 import { NgZone } from '@angular/core';
 import { Observable } from 'rxjs';
 import { OnDestroy } from '@angular/core';
@@ -21,8 +22,11 @@ const DEFAULT_PLAYER_HEIGHT = 390;
 const DEFAULT_PLAYER_WIDTH = 640;
 
 // @public
+export const YOUTUBE_PLAYER_CONFIG: InjectionToken<YouTubePlayerConfig>;
+
+// @public
 export class YouTubePlayer implements AfterViewInit, OnDestroy, OnInit {
-    constructor(_ngZone: NgZone, platformId: Object);
+    constructor(_ngZone: NgZone, platformId: Object, _config?: YouTubePlayerConfig | undefined);
     // (undocumented)
     readonly apiChange: Observable<YT.PlayerEvent>;
     // @deprecated (undocumented)
@@ -78,7 +82,13 @@ export class YouTubePlayer implements AfterViewInit, OnDestroy, OnInit {
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<YouTubePlayer, "youtube-player", never, { "videoId": "videoId"; "height": "height"; "width": "width"; "startSeconds": "startSeconds"; "endSeconds": "endSeconds"; "suggestedQuality": "suggestedQuality"; "playerVars": "playerVars"; "showBeforeIframeApiLoads": "showBeforeIframeApiLoads"; }, { "ready": "ready"; "stateChange": "stateChange"; "error": "error"; "apiChange": "apiChange"; "playbackQualityChange": "playbackQualityChange"; "playbackRateChange": "playbackRateChange"; }, never, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<YouTubePlayer, never>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<YouTubePlayer, [null, null, { optional: true; }]>;
+}
+
+// @public
+export interface YouTubePlayerConfig {
+    apiUrl?: string;
+    loadApi?: boolean;
 }
 
 // @public (undocumented)
