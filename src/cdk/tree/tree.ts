@@ -69,7 +69,7 @@ import {coerceNumberProperty} from '@angular/cdk/coercion';
   // tslint:disable-next-line:validate-decorators
   changeDetection: ChangeDetectionStrategy.Default
 })
-export class CdkTree<T> implements AfterContentChecked, CollectionViewer, OnDestroy, OnInit {
+export class CdkTree<T, K = T> implements AfterContentChecked, CollectionViewer, OnDestroy, OnInit {
   /** Subject that emits when the component has been destroyed. */
   private _onDestroy = new Subject<void>();
 
@@ -100,7 +100,7 @@ export class CdkTree<T> implements AfterContentChecked, CollectionViewer, OnDest
   private _dataSource: DataSource<T> | Observable<T[]> | T[];
 
   /** The tree controller */
-  @Input() treeControl: TreeControl<T>;
+  @Input() treeControl: TreeControl<T, K>;
 
   /**
    * Tracking function that will be used to check the differences in data changes. Used similarly
