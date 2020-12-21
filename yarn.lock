@@ -675,9 +675,9 @@
   integrity sha512-s0gyec6lArcRDwVfIP6xpY8iEaFpzrSpyErSppd3r2O49pOEg7n6HGS/qJ8ncvme56vrDk6crl/kQ6VAdEO+rg==
 
 "@bazel/jasmine@^2.2.0":
-  version "2.2.1"
-  resolved "https://registry.yarnpkg.com/@bazel/jasmine/-/jasmine-2.2.1.tgz#4a1cc54b0092569104cf88fc1cbb27e34578cd90"
-  integrity sha512-l028iUpIbQ8WIWI+3OQpnBRa+NBKKrvtbrQNCrRv4+R305c4KAS2cGixIKI62CizD4nmhNAXRN/jE849I1g1zg==
+  version "2.3.2"
+  resolved "https://registry.yarnpkg.com/@bazel/jasmine/-/jasmine-2.3.2.tgz#ff120008a69a93ea2138c29cc266d7dec58333a9"
+  integrity sha512-GG2xAvYXgoW9SHco8RETuxkBTeLF7RI4rtuvAJdVhwwzsUeGovKROTbHvQEyo1qxmeQjQu0hzKr11VfwZPcCMA==
   dependencies:
     c8 "~7.1.0"
     jasmine-reporters "~2.3.2"
