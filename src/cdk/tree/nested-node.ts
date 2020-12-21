@@ -39,9 +39,8 @@ import {getTreeControlFunctionsMissingError} from './tree-errors';
     {provide: CDK_TREE_NODE_OUTLET_NODE, useExisting: CdkNestedTreeNode}
   ]
 })
-export class CdkNestedTreeNode<T, K = T> extends CdkTreeNode<T, K> implements AfterContentInit, DoCheck,
-  OnDestroy,
-  OnInit {
+export class CdkNestedTreeNode<T, K = T> extends CdkTreeNode<T, K>
+    implements AfterContentInit, DoCheck, OnDestroy, OnInit {
   /** Differ used to find the changes in the data provided by the data source. */
   private _dataDiffer: IterableDiffer<T>;
 
