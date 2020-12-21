@@ -303,7 +303,7 @@ export class CdkTree<T, K = T> implements AfterContentChecked, CollectionViewer,
   selector: 'cdk-tree-node',
   exportAs: 'cdkTreeNode',
 })
-export class CdkTreeNode<T> implements DoCheck, FocusableOption, OnDestroy, OnInit {
+export class CdkTreeNode<T, K = T> implements DoCheck, FocusableOption, OnDestroy, OnInit {
   /**
    * The role of the tree node.
    * @deprecated The correct role is 'treeitem', 'group' should not be used. This input will be
@@ -362,8 +362,8 @@ export class CdkTreeNode<T> implements DoCheck, FocusableOption, OnDestroy, OnIn
    }
 
   constructor(protected _elementRef: ElementRef<HTMLElement>,
-              protected _tree: CdkTree<T>) {
-    CdkTreeNode.mostRecentTreeNode = this as CdkTreeNode<T>;
+              protected _tree: CdkTree<T, K>) {
+    CdkTreeNode.mostRecentTreeNode = this as CdkTreeNode<T, K>;
     // The classes are directly added here instead of in the host property because classes on
     // the host property are not inherited with View Engine. It is not set as a @HostBinding because
     // it is not set by the time it's children nodes try to read the class from it.

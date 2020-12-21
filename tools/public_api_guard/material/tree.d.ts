@@ -1,13 +1,13 @@
-export declare class MatNestedTreeNode<T> extends CdkNestedTreeNode<T> implements AfterContentInit, DoCheck, OnDestroy, OnInit {
+export declare class MatNestedTreeNode<T, K = T> extends CdkNestedTreeNode<T, K> implements AfterContentInit, DoCheck, OnDestroy, OnInit {
     protected _differs: IterableDiffers;
     protected _elementRef: ElementRef<HTMLElement>;
-    protected _tree: CdkTree<T>;
+    protected _tree: CdkTree<T, K>;
     get disabled(): any;
     set disabled(value: any);
     node: T;
     get tabIndex(): number;
     set tabIndex(value: number);
-    constructor(_elementRef: ElementRef<HTMLElement>, _tree: CdkTree<T>, _differs: IterableDiffers, tabIndex: string);
+    constructor(_elementRef: ElementRef<HTMLElement>, _tree: CdkTree<T, K>, _differs: IterableDiffers, tabIndex: string);
     ngAfterContentInit(): void;
     ngDoCheck(): void;
     ngOnDestroy(): void;
@@ -17,7 +17,7 @@ export declare class MatNestedTreeNode<T> extends CdkNestedTreeNode<T> implement
     static ɵfac: i0.ɵɵFactoryDef<MatNestedTreeNode<any>, [null, null, null, { attribute: "tabindex"; }]>;
 }
 
-export declare class MatTree<T> extends CdkTree<T> {
+export declare class MatTree<T, K = T> extends CdkTree<T, K> {
     _nodeOutlet: MatTreeNodeOutlet;
     static ɵcmp: i0.ɵɵComponentDefWithMeta<MatTree<any>, "mat-tree", ["matTree"], {}, {}, never, never>;
     static ɵfac: i0.ɵɵFactoryDef<MatTree<any>, never>;
@@ -59,10 +59,10 @@ export declare class MatTreeNestedDataSource<T> extends DataSource<T> {
     disconnect(): void;
 }
 
-export declare class MatTreeNode<T> extends _MatTreeNodeMixinBase<T> implements CanDisable, DoCheck, HasTabIndex, OnInit, OnDestroy {
+export declare class MatTreeNode<T, K = T> extends _MatTreeNodeMixinBase<T, K> implements CanDisable, DoCheck, HasTabIndex, OnInit, OnDestroy {
     protected _elementRef: ElementRef<HTMLElement>;
-    protected _tree: CdkTree<T>;
-    constructor(_elementRef: ElementRef<HTMLElement>, _tree: CdkTree<T>, tabIndex: string);
+    protected _tree: CdkTree<T, K>;
+    constructor(_elementRef: ElementRef<HTMLElement>, _tree: CdkTree<T, K>, tabIndex: string);
     ngDoCheck(): void;
     ngOnDestroy(): void;
     ngOnInit(): void;
@@ -86,7 +86,7 @@ export declare class MatTreeNodeOutlet implements CdkTreeNodeOutlet {
     static ɵfac: i0.ɵɵFactoryDef<MatTreeNodeOutlet, [null, { optional: true; }]>;
 }
 
-export declare class MatTreeNodePadding<T> extends CdkTreeNodePadding<T> {
+export declare class MatTreeNodePadding<T, K = T> extends CdkTreeNodePadding<T, K> {
     get indent(): number | string;
     set indent(indent: number | string);
     get level(): number;
@@ -95,7 +95,7 @@ export declare class MatTreeNodePadding<T> extends CdkTreeNodePadding<T> {
     static ɵfac: i0.ɵɵFactoryDef<MatTreeNodePadding<any>, never>;
 }
 
-export declare class MatTreeNodeToggle<T> extends CdkTreeNodeToggle<T> {
+export declare class MatTreeNodeToggle<T, K = T> extends CdkTreeNodeToggle<T, K> {
     get recursive(): boolean;
     set recursive(value: boolean);
     static ɵdir: i0.ɵɵDirectiveDefWithMeta<MatTreeNodeToggle<any>, "[matTreeNodeToggle]", never, { "recursive": "matTreeNodeToggleRecursive"; }, {}, never>;
