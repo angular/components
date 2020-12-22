@@ -107,8 +107,8 @@ export class MatTreeNodeDef<T> extends CdkTreeNodeDef<T> {
     {provide: CDK_TREE_NODE_OUTLET_NODE, useExisting: MatNestedTreeNode}
   ]
 })
-export class MatNestedTreeNode<T, K = T> extends CdkNestedTreeNode<T, K> implements AfterContentInit, DoCheck,
-  OnDestroy, OnInit {
+export class MatNestedTreeNode<T, K = T> extends CdkNestedTreeNode<T, K>
+    implements AfterContentInit, DoCheck, OnDestroy, OnInit {
   @Input('matNestedTreeNode') node: T;
 
   /** Whether the node is disabled. */
