@@ -29,6 +29,7 @@ app-component-viewer {
   component-overview, component-api {
     display: flex;
     align-items: flex-start;
+    overflow: visible;
 
     @media (max-width: $small-breakpoint-width) {
       flex-direction: column;
