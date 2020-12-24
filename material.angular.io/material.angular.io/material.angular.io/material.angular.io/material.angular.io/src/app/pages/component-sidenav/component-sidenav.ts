@@ -160,7 +160,6 @@ const routes: Routes = [ {
     HttpClientModule,
     CdkAccordionModule,
     MatIconModule,
-    MatSidenavModule,
     StackBlitzButtonModule,
     SvgViewerModule,
     RouterModule.forChild(routes),
