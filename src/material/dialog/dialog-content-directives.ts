@@ -77,7 +77,7 @@ export class MatDialogClose implements OnInit, OnChanges {
     // dialog, and therefore clicking the button won't result in a focus change. This means that
     // the FocusMonitor won't detect any origin change, and will always output `program`.
     _closeDialogVia(this.dialogRef,
-        event.screenX === 0 && event.screenY === 0 ? 'keyboard' : 'mouse', this.dialogResult);
+      event.screenX === 0 && event.screenY === 0 ? 'keyboard' : 'mouse', this.dialogResult);
   }
 }
 
@@ -96,11 +96,11 @@ export class MatDialogTitle implements OnInit {
   @Input() id: string = `mat-dialog-title-${dialogElementUid++}`;
 
   constructor(
-      // The dialog title directive is always used in combination with a `MatDialogRef`.
-      // tslint:disable-next-line: lightweight-tokens
-      @Optional() private _dialogRef: MatDialogRef<any>,
-      private _elementRef: ElementRef<HTMLElement>,
-      private _dialog: MatDialog) {}
+    // The dialog title directive is always used in combination with a `MatDialogRef`.
+    // tslint:disable-next-line: lightweight-tokens
+    @Optional() private _dialogRef: MatDialogRef<any>,
+    private _elementRef: ElementRef<HTMLElement>,
+    private _dialog: MatDialog) {}
 
   ngOnInit() {
     if (!this._dialogRef) {
@@ -136,9 +136,15 @@ export class MatDialogContent {}
  */
 @Directive({
   selector: `[mat-dialog-actions], mat-dialog-actions, [matDialogActions]`,
-  host: {'class': 'mat-dialog-actions'}
+  host: {
+    'class': 'mat-dialog-actions',
+    '[class.mat-dialog-actions-align-center]': 'align === "center"',
+    '[class.mat-dialog-actions-align-end]': 'align === "end"'
+  }
 })
-export class MatDialogActions {}
+export class MatDialogActions {
+  @Input() align?: 'center' | 'end' = undefined;
+}
 
 
 /**

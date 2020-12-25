@@ -22,7 +22,7 @@ export class DialogDemo {
   dialogRef: MatDialogRef<JazzDialog> | null;
   lastAfterClosedResult: string;
   lastBeforeCloseResult: string;
-  actionsAlignment: string;
+  actionsAlignment: 'end' | 'center' | undefined;
   config = {
     disableClose: false,
     panelClass: 'custom-overlay-pane-class',
@@ -110,20 +110,20 @@ export class JazzDialog {
   private _dimesionToggle = false;
 
   constructor(
-    public dialogRef: MatDialogRef<JazzDialog>,
-    @Inject(MAT_DIALOG_DATA) public data: any) { }
+      public dialogRef: MatDialogRef<JazzDialog>,
+      @Inject(MAT_DIALOG_DATA) public data: any) { }
 
   togglePosition(): void {
     this._dimesionToggle = !this._dimesionToggle;
 
     if (this._dimesionToggle) {
       this.dialogRef
-        .updateSize('500px', '500px')
-        .updatePosition({ top: '25px', left: '25px' });
+      .updateSize('500px', '500px')
+      .updatePosition({ top: '25px', left: '25px' });
     } else {
       this.dialogRef
-        .updateSize()
-        .updatePosition();
+      .updateSize()
+      .updatePosition();
     }
   }
 
@@ -160,7 +160,7 @@ export class JazzDialog {
       </p>
     </mat-dialog-content>
 
-    <mat-dialog-actions [attr.align]="actionsAlignment">
+    <mat-dialog-actions [align]="actionsAlignment">
       <button
         mat-raised-button
         color="primary"
@@ -181,7 +181,7 @@ export class JazzDialog {
   `
 })
 export class ContentElementDialog {
-  actionsAlignment: string;
+  actionsAlignment: 'end' | 'center' | undefined;
 
   constructor(public dialog: MatDialog) { }
 

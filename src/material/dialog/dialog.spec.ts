@@ -1493,6 +1493,14 @@ describe('MatDialog', () => {
         expect(container.getAttribute('aria-labelledby'))
             .toBe(title.id, 'Expected the aria-labelledby to match the title id.');
       }));
+
+      it('should add align-* class according to given [align] input in [mat-dialog-actions]', () => {
+        let actions =
+          overlayContainerElement.querySelector('mat-dialog-actions')!;
+
+        expect(actions).not.toHaveClass('mat-dialog-actions-align-center', 'Expected action buttons to not have class align-center');
+        expect(actions).toHaveClass('mat-dialog-actions-align-end', 'Expected action buttons to have class align-end');
+      });
     }
   });
 
@@ -1876,7 +1884,7 @@ class PizzaMsg {
   template: `
     <h1 mat-dialog-title>This is the title</h1>
     <mat-dialog-content>Lorem ipsum dolor sit amet.</mat-dialog-content>
-    <mat-dialog-actions>
+    <mat-dialog-actions align="end">
       <button mat-dialog-close>Close</button>
       <button class="close-with-true" [mat-dialog-close]="true">Close and return true</button>
       <button
@@ -1895,7 +1903,7 @@ class ContentElementDialog {}
     <ng-template>
       <h1 mat-dialog-title>This is the title</h1>
       <mat-dialog-content>Lorem ipsum dolor sit amet.</mat-dialog-content>
-      <mat-dialog-actions>
+      <mat-dialog-actions align="end">
         <button mat-dialog-close>Close</button>
         <button class="close-with-true" [mat-dialog-close]="true">Close and return true</button>
         <button
