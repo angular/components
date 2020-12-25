@@ -74,7 +74,8 @@ export declare class MatDialog extends _MatDialogBase<MatDialogContainer> {
 }
 
 export declare class MatDialogActions {
-    static ɵdir: i0.ɵɵDirectiveDefWithMeta<MatDialogActions, "[mat-dialog-actions], mat-dialog-actions, [matDialogActions]", never, {}, {}, never>;
+    align?: 'center' | 'end';
+    static ɵdir: i0.ɵɵDirectiveDefWithMeta<MatDialogActions, "[mat-dialog-actions], mat-dialog-actions, [matDialogActions]", never, { "align": "align"; }, {}, never>;
     static ɵfac: i0.ɵɵFactoryDef<MatDialogActions, never>;
 }
 

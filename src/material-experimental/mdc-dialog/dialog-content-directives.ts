@@ -139,9 +139,13 @@ export class MatDialogContent {
  */
 @Directive({
   selector: `[mat-dialog-actions], mat-dialog-actions, [matDialogActions]`,
-  host: {'class': 'mat-mdc-dialog-actions mdc-dialog__actions'}
+  host: {
+    'class': 'mat-mdc-dialog-actions mdc-dialog__actions',
+    '[class.mat-mdc-dialog-actions-align-center]': 'align === "center"',
+    '[class.mat-mdc-dialog-actions-align-end]': 'align === "end"'}
 })
 export class MatDialogActions {
+  @Input() align?: 'center' | 'end' = undefined;
 }
 
 
