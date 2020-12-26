@@ -95,8 +95,11 @@ export class MatDialogConfig<D = any> {
   /** Aria label to assign to the dialog element. */
   ariaLabel?: string | null = null;
 
+  // Note that this is disabled by default, because while the a11y recommendations are to focus
+  // the first focusable element, doing so prevents screen readers from reading out the
+  // rest of the dialog's content.
   /** Whether the dialog should focus the first focusable element on open. */
-  autoFocus?: boolean = true;
+  autoFocus?: boolean = false;
 
   /**
    * Whether the dialog should restore focus to the

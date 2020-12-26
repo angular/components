@@ -59,7 +59,7 @@ describe('dialog', () => {
     await element(by.id('default')).click();
 
     await waitForDialog();
-    await expectFocusOn('mat-dialog-container input');
+    await expectFocusOn('mat-dialog-container');
   });
 
   it('should restore focus to the element that opened the dialog', async () => {
@@ -76,7 +76,7 @@ describe('dialog', () => {
     await element(by.id('default')).click();
 
     await waitForDialog();
-    await pressKeys(Key.TAB, Key.TAB, Key.TAB);
+    await pressKeys(Key.TAB, Key.TAB, Key.TAB, Key.TAB);
     await expectFocusOn('#close');
   });
 
