@@ -134,7 +134,7 @@ const DOCS: { [key: string]: DocItem[] } = {
       name: 'Datepicker',
       summary: 'Captures dates, agnostic about their internal representation.',
       exampleSpecs: {
-        prefix: 'datepicker-',
+        prefix: 'date',
       },
       additionalApiDocs: [{name: 'Testing', path: 'material-datepicker-testing.html'}],
     },
