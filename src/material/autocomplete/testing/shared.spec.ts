@@ -8,7 +8,7 @@ import {MatAutocompleteHarness} from '@angular/material/autocomplete/testing';
 
 /**
  * Function that can be used to run the shared autocomplete harness tests for either the non-MDC or
- * MDC based checkbox harness.
+ * MDC based autocomplete harness.
  */
 export function runHarnessTests(
     autocompleteModule: typeof MatAutocompleteModule,
