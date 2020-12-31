@@ -672,6 +672,16 @@ describe('MatInput without forms', () => {
     expect(formFieldEl.classList).toContain('mat-form-field-should-float');
   }));
 
+  it('should float the label when the text comes into textarea via text binding', fakeAsync(() => {
+    const fixture = createComponent(MatInputWithTextareaTextBindingOnPush);
+    fixture.detectChanges();
+
+    const formFieldEl = fixture.debugElement.query(By.css('.mat-form-field')).nativeElement;
+
+    expect(formFieldEl.classList).toContain('mat-form-field-can-float');
+    expect(formFieldEl.classList).toContain('mat-form-field-should-float');
+  }));
+
   it('should always float the label when floatLabel is set to true', fakeAsync(() => {
     let fixture = createComponent(MatInputWithDynamicLabel);
     fixture.detectChanges();
@@ -2302,6 +2312,17 @@ class MatInputWithCustomAccessor {}
     </mat-form-field>`
 })
 class MatInputSelectWithoutOptions {}
+
+@Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: `
+    <mat-form-field>
+      <textarea matInput placeholder="Type something" readonly>{{text}}</textarea>
+    </mat-form-field>`
+})
+class MatInputWithTextareaTextBindingOnPush {
+  text = 'Hello there';
+}
 
 
 /** Custom component that never has a value. Used for testing the `MAT_INPUT_VALUE_ACCESSOR`. */

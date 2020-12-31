@@ -79,7 +79,8 @@ export const config = {
       'should be legacy appearance if empty default options provided',
       'should not calculate wrong content height due to long placeholders',
       'should work in a tab',
-      'should work in a step'
+      'should work in a step',
+      'should float the label when the text comes into textarea via text binding'
     ],
     'mdc-list': [
       // TODO: these tests need to be double-checked for missing functionality.

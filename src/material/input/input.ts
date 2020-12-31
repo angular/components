@@ -11,6 +11,7 @@ import {getSupportedInputTypes, Platform} from '@angular/cdk/platform';
 import {AutofillMonitor} from '@angular/cdk/text-field';
 import {
   AfterViewInit,
+  ChangeDetectorRef,
   Directive,
   DoCheck,
   ElementRef,
@@ -90,7 +91,7 @@ const _MatInputMixinBase: CanUpdateErrorStateCtor & typeof MatInputBase =
   providers: [{provide: MatFormFieldControl, useExisting: MatInput}],
 })
 export class MatInput extends _MatInputMixinBase implements MatFormFieldControl<any>, OnChanges,
-    OnDestroy, AfterViewInit, DoCheck, CanUpdateErrorState {
+    OnDestroy, DoCheck, AfterViewInit, CanUpdateErrorState {
   protected _uid = `mat-input-${nextUniqueId++}`;
   protected _previousNativeValue: any;
   private _inputValueAccessor: {value: any};
@@ -242,7 +243,12 @@ export class MatInput extends _MatInputMixinBase implements MatFormFieldControl<
       ngZone: NgZone,
       // TODO: Remove this once the legacy appearance has been removed. We only need
       // to inject the form-field for determining whether the placeholder has been promoted.
-      @Optional() @Inject(MAT_FORM_FIELD) private _formField?: MatFormField) {
+      @Optional() @Inject(MAT_FORM_FIELD) private _formField?: MatFormField,
+      /**
+       * @deprecated `_changeDetectorRef` parameter to be made required.
+       * @breaking-change 12.0.0
+       */
+      private _changeDetectorRef?: ChangeDetectorRef) {
 
     super(_defaultErrorStateMatcher, _parentForm, _parentFormGroup, ngControl);
 
@@ -293,6 +299,14 @@ export class MatInput extends _MatInputMixinBase implements MatFormFieldControl<
         this.autofilled = event.isAutofilled;
         this.stateChanges.next();
       });
+    }
+
+    // If this is a `textarea`, we need to do an extra check of the value after the
+    // view is initialized, because the value can be bound via a text binding. E.g:
+    // `<textarea matInput>{{someValue}}</textarea>`
+    // @breaking-change 9.0.0 Remove null check for _changeDetectorRef.
+    if (this._changeDetectorRef && this._isTextarea && this._dirtyCheckNativeValue()) {
+      this._changeDetectorRef.detectChanges();
     }
   }
 
@@ -379,13 +393,16 @@ export class MatInput extends _MatInputMixinBase implements MatFormFieldControl<
   }
 
   /** Does some manual dirty checking on the native input `value` property. */
-  protected _dirtyCheckNativeValue() {
+  protected _dirtyCheckNativeValue(): boolean {
     const newValue = this._elementRef.nativeElement.value;
+    const hasChanged = this._previousNativeValue !== newValue;
 
-    if (this._previousNativeValue !== newValue) {
+    if (hasChanged) {
       this._previousNativeValue = newValue;
       this.stateChanges.next();
     }
+
+    return hasChanged;
   }
 
   /** Make sure the input is a supported type. */
