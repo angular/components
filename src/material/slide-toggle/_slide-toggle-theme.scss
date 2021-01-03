@@ -9,10 +9,16 @@
       background-color: mat-color($palette, $thumb-checked-hue);
     }
 
-    .mat-slide-toggle-bar {
+    .mat-slide-toggle-bar::before {
       // Opacity is determined from the specs for the selection controls.
       // See: https://material.io/design/components/selection-controls.html#specs
-      background-color: mat-color($palette, $thumb-checked-hue, 0.54);
+      $opacity: 0.54;
+      $color: mat-color($palette, $thumb-checked-hue, 0.54);
+      background-color: $color;
+
+      @if (type-of($color) != color) {
+        opacity: $opacity;
+      }
     }
 
     .mat-ripple-element {
@@ -67,7 +73,7 @@
     background-color: mat-color($mat-grey, $thumb-unchecked-hue);
   }
 
-  .mat-slide-toggle-bar {
+  .mat-slide-toggle-bar::before {
     background-color: $bar-unchecked-color;
   }
 }

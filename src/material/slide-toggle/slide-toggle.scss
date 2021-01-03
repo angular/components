@@ -131,8 +131,22 @@ $mat-slide-toggle-bar-track-width: $mat-slide-toggle-bar-width - $mat-slide-togg
   // Prevent shrinking of the bar container. It can happen that the content is long enough to
   // shrink the bar and the thumb.
   flex-shrink: 0;
-
   border-radius: $mat-slide-toggle-bar-border-radius;
+
+  // Used to provide the background color for the toggle bar. We need a separate (pseudo) element
+  // for this, because we need to fall back to using `rgb` and `opacity` for the background if
+  // the theme has some values that are provided as CSS variables. We can't set the background
+  // and an opacity directly on the `.mat-slide-toggle-bar`, because it has other elements that
+  // the opacity shouldn't apply to (e.g. the thumb).
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    border-radius: inherit;
+  }
 }
 
 // The slide toggle shows a visually hidden input inside of the component, which is used
