@@ -6,16 +6,8 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {
-  Directive,
-  Output,
-  Input,
-  EventEmitter,
-  AfterContentInit,
-  OnDestroy,
-} from '@angular/core';
-
-import {Direction, Directionality} from './directionality';
+import {Directive, AfterContentInit} from '@angular/core';
+import {Directionality} from './directionality';
 
 /**
  * Directive to listen for changes of direction of part of the DOM.
@@ -26,47 +18,23 @@ import {Direction, Directionality} from './directionality';
 @Directive({
   selector: '[dir]',
   providers: [{provide: Directionality, useExisting: Dir}],
+  inputs: ['dir'],
+  outputs: ['change: dirChange'],
   host: {'[attr.dir]': '_rawDir'},
   exportAs: 'dir',
 })
-export class Dir implements Directionality, AfterContentInit, OnDestroy {
-  /** Normalized direction that accounts for invalid/unsupported values. */
-  private _dir: Direction = 'ltr';
+export class Dir extends Directionality implements AfterContentInit {
+  constructor() {
+    super();
 
-  /** Whether the `value` has been set to its initial value. */
-  private _isInitialized: boolean = false;
-
-  /** Direction as passed in by the consumer. */
-  _rawDir: string;
-
-  /** Event emitted when the direction changes. */
-  @Output('dirChange') change = new EventEmitter<Direction>();
-
-  /** @docs-private */
-  @Input()
-  get dir(): Direction { return this._dir; }
-  set dir(value: Direction) {
-    const old = this._dir;
-    const normalizedValue = value ? value.toLowerCase() : value;
-
-    this._rawDir = value;
-    this._dir = (normalizedValue === 'ltr' || normalizedValue === 'rtl') ? normalizedValue : 'ltr';
-
-    if (old !== this._dir && this._isInitialized) {
-      this.change.emit(this._dir);
-    }
+    // Reset the initialized flag here so that we don't emit the `change` event
+    // immediately. We'll turn it on again once the content is initialized.
+    this._isInitialized = false;
   }
-
-  /** Current layout direction of the element. */
-  get value(): Direction { return this.dir; }
 
   /** Initialize once default value has been set. */
   ngAfterContentInit() {
     this._isInitialized = true;
-  }
-
-  ngOnDestroy() {
-    this.change.complete();
   }
 }
 

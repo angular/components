@@ -9,7 +9,7 @@
 import {EventEmitter, Inject, Injectable, Optional, OnDestroy} from '@angular/core';
 import {DIR_DOCUMENT} from './dir-document-token';
 
-
+/** Possible values for the layout direction of a node. */
 export type Direction = 'ltr' | 'rtl';
 
 
@@ -19,11 +19,31 @@ export type Direction = 'ltr' | 'rtl';
  */
 @Injectable({providedIn: 'root'})
 export class Directionality implements OnDestroy {
-  /** The current 'ltr' or 'rtl' value. */
-  readonly value: Direction = 'ltr';
+  protected _isInitialized: boolean;
+
+  /** Current layout direction of the element. */
+  get value(): Direction { return this.dir; }
 
   /** Stream that emits whenever the 'ltr' / 'rtl' state changes. */
   readonly change = new EventEmitter<Direction>();
+
+  /** @docs-private */
+  get dir(): Direction { return this._dir; }
+  set dir(value: Direction) {
+    const old = this._dir;
+    const normalizedValue = value ? value.toLowerCase() : value;
+
+    this._rawDir = value;
+    this._dir = (normalizedValue === 'ltr' || normalizedValue === 'rtl') ? normalizedValue : 'ltr';
+
+    if (old !== this._dir && this._isInitialized) {
+      this.change.emit(this._dir);
+    }
+  }
+  private _dir: Direction = 'ltr';
+
+  /** Direction as passed in by the consumer. */
+  _rawDir: string;
 
   constructor(@Optional() @Inject(DIR_DOCUMENT) _document?: any) {
     if (_document) {
@@ -34,8 +54,10 @@ export class Directionality implements OnDestroy {
       const bodyDir = _document.body ? _document.body.dir : null;
       const htmlDir = _document.documentElement ? _document.documentElement.dir : null;
       const value = bodyDir || htmlDir;
-      this.value = (value === 'ltr' || value === 'rtl') ? value : 'ltr';
+      this.dir = (value === 'ltr' || value === 'rtl') ? value : 'ltr';
     }
+
+    this._isInitialized = true;
   }
 
   ngOnDestroy() {
