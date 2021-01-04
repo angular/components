@@ -123,16 +123,16 @@ export class YouTubePlayer implements AfterViewInit, OnDestroy, OnInit {
 
   /** Height of video player */
   @Input()
-  get height(): number | undefined { return this._height.value; }
-  set height(height: number | undefined) {
+  get height(): string | number | undefined { return this._height.value; }
+  set height(height: string | number | undefined) {
     this._height.next(height || DEFAULT_PLAYER_HEIGHT);
   }
   private _height = new BehaviorSubject<number>(DEFAULT_PLAYER_HEIGHT);
 
   /** Width of video player */
   @Input()
-  get width(): number | undefined { return this._width.value; }
-  set width(width: number | undefined) {
+  get width(): string | number | undefined { return this._width.value; }
+  set width(width: string | number | undefined) {
     this._width.next(width || DEFAULT_PLAYER_WIDTH);
   }
   private _width = new BehaviorSubject<number>(DEFAULT_PLAYER_WIDTH);
