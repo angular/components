@@ -91,6 +91,7 @@ export const config = {
       'should not attempt to focus the next option when the destroyed option was not focused',
       'should use `compareWith` function when updating option selection state',
       'should only be in the tab order if it has options',
+      'should not preselect options without values when the list of options is swapped',
 
       // MDC does not support SHIFT + ARROW for item selection. Tracked as a feature request:
       // https://github.com/material-components/material-components-web/issues/6364.

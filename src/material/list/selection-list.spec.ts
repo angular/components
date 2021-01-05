@@ -50,6 +50,7 @@ describe('MatSelectionList without forms', () => {
           SelectionListWithIndirectChildOptions,
           SelectionListWithSelectedOptionAndValue,
           SelectionListWithIndirectDescendantLines,
+          SelectionListWithDynamicOptionsWithoutValue,
         ],
       });
 
@@ -800,6 +801,34 @@ describe('MatSelectionList without forms', () => {
       expect(optionNativeElements
           .every(element => element.classList.contains('mat-focus-indicator'))).toBe(true);
       });
+
+    it('should not preselect options without values when the list of options is swapped', () => {
+      const componentFixture = TestBed.createComponent(SelectionListWithDynamicOptionsWithoutValue);
+      componentFixture.detectChanges();
+      listOptions = componentFixture.debugElement.queryAll(By.directive(MatListOption));
+      selectionList = componentFixture.debugElement.query(By.directive(MatSelectionList))!;
+      const list: MatSelectionList = selectionList.componentInstance;
+
+      expect(list.options.map(option => option.selected)).toEqual([false, false]);
+
+      componentFixture.componentInstance.items = [
+        {name: 'One', selected: true},
+        {name: 'Two', selected: false}
+      ];
+      componentFixture.detectChanges();
+
+      expect(list.options.map(option => option.selected)).toEqual([true, false]);
+
+      // Assign identical data again, but use different
+      // object references so the list is re-rendered.
+      componentFixture.componentInstance.items = [
+        {name: 'One', selected: true},
+        {name: 'Two', selected: false}
+      ];
+      componentFixture.detectChanges();
+
+      expect(list.options.map(option => option.selected)).toEqual([true, false]);
+    });
 
   });
 
@@ -1874,4 +1903,21 @@ class SelectionListWithIndirectDescendantLines {
 `})
 class ListOptionWithTwoWayBinding {
   selected = false;
+}
+
+
+@Component({
+  template: `
+    <mat-selection-list>
+      <mat-list-option *ngFor="let item of items" [selected]="item.selected">
+        {{item.name}}
+      </mat-list-option>
+    </mat-selection-list>
+  `
+})
+class SelectionListWithDynamicOptionsWithoutValue {
+  items = [
+    {name: 'One', selected: false},
+    {name: 'Two', selected: false}
+  ];
 }

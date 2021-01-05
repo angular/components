@@ -650,7 +650,9 @@ export class MatSelectionList extends _MatSelectionListBase implements CanDisabl
 
   /** Returns the values of the selected options. */
   private _getSelectedOptionValues(): string[] {
-    return this.options.filter(option => option.selected).map(option => option.value);
+    return this.options.filter(option => {
+      return option.selected && option.value !== undefined;
+    }).map(option => option.value);
   }
 
   /** Toggles the state of the currently focused option if enabled. */
