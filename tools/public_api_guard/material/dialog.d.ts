@@ -1,4 +1,4 @@
-export declare function _closeDialogVia<R>(ref: MatDialogRef<R>, interactionType: FocusOrigin, result?: R): void;
+export declare function _closeDialogVia<T, R>(ref: MatDialogRef<T, R>, interactionType: FocusOrigin, result?: R): void;
 
 export declare abstract class _MatDialogBase<C extends _MatDialogContainerBase> implements OnDestroy {
     readonly afterAllClosed: Observable<void>;
