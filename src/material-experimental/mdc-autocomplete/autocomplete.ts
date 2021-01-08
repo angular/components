@@ -13,6 +13,7 @@ import {
   ContentChildren,
   QueryList,
 } from '@angular/core';
+import {panelAnimation} from '@angular/material-experimental/mdc-autocomplete/animations';
 import {_MatAutocompleteBase} from '@angular/material/autocomplete';
 import {
   MAT_OPTION_PARENT_COMPONENT,
@@ -35,7 +36,8 @@ import {
   },
   providers: [
     {provide: MAT_OPTION_PARENT_COMPONENT, useExisting: MatAutocomplete}
-  ]
+  ],
+  animations: [panelAnimation],
 })
 export class MatAutocomplete extends _MatAutocompleteBase {
   @ContentChildren(MAT_OPTGROUP, {descendants: true}) optionGroups: QueryList<MatOptgroup>;
