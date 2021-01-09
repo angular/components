@@ -859,7 +859,7 @@ export class DropListRef<T = any> {
    * outer drop container appear before the inner drop container.
    * @param refs List of DropListRefs.
    */
-  _orderByHierarchy(refs: DropListRef[]): DropListRef[] {
+  private _orderByHierarchy(refs: DropListRef[]): DropListRef[] {
     // Build a map from HTMLElement to DropListRef
     let refsByElement: Map<HTMLElement, DropListRef> = new Map();
     refs.forEach(ref => {
