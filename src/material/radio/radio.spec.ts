@@ -783,7 +783,7 @@ describe('MatRadio', () => {
         .toBe(4, 'Expected the tabindex to be set to "4".');
     });
 
-    it('should remove the tabindex from the host element', () => {
+    it('should set the tabindex to -1 on the host element', () => {
       const predefinedFixture = TestBed.createComponent(RadioButtonWithPredefinedTabindex);
       predefinedFixture.detectChanges();
 
@@ -813,6 +813,15 @@ describe('MatRadio', () => {
       expect(radioButtonEl.hasAttribute('aria-label')).toBe(false);
       expect(radioButtonEl.hasAttribute('aria-describedby')).toBe(false);
       expect(radioButtonEl.hasAttribute('aria-labelledby')).toBe(false);
+    });
+
+    it('should remove the tabindex from the host element when disabled', () => {
+      const radioButtonEl = fixture.debugElement.query(By.css('.mat-radio-button')).nativeElement;
+
+      fixture.componentInstance.disabled = true;
+      fixture.detectChanges();
+
+      expect(radioButtonEl.hasAttribute('tabindex')).toBe(false);
     });
 
   });
@@ -982,11 +991,11 @@ class RadioGroupWithFormControl {
   formControl = new FormControl();
 }
 
-@Component({
-  template: `<mat-radio-button [tabIndex]="tabIndex"></mat-radio-button>`
-})
+@Component(
+    {template: `<mat-radio-button [disabled]="disabled" [tabIndex]="tabIndex"></mat-radio-button>`})
 class FocusableRadioButton {
   tabIndex: number;
+  disabled = false;
 }
 
 @Component({
