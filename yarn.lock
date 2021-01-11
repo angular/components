@@ -116,9 +116,9 @@
   dependencies:
     tslib "^2.0.0"
 
-"@angular/dev-infra-private@https://github.com/angular/dev-infra-private-builds.git#f8bc880d554d45ca8bf881b8a776f00f61b918fb":
+"@angular/dev-infra-private@https://github.com/angular/dev-infra-private-builds.git#e8252104662751a17ad59b3ccfe5cfc4d1f0fa30":
   version "0.0.0"
-  resolved "https://github.com/angular/dev-infra-private-builds.git#f8bc880d554d45ca8bf881b8a776f00f61b918fb"
+  resolved "https://github.com/angular/dev-infra-private-builds.git#e8252104662751a17ad59b3ccfe5cfc4d1f0fa30"
   dependencies:
     "@angular/benchpress" "0.2.1"
     "@bazel/buildifier" "^0.29.0"
@@ -144,9 +144,9 @@
     ts-node "^8.6.2"
     tslib "^2.0.0"
     typed-graphqlify "^2.3.0"
-    typescript "~4.0.2"
+    typescript "~4.1.2"
     yaml "^1.10.0"
-    yargs "^15.4.1"
+    yargs "^16.1.1"
 
 "@angular/elements@^11.1.0-next.2":
   version "11.1.0-next.2"
@@ -8812,23 +8812,6 @@ meow@^8.0.0:
     type-fest "^0.18.0"
     yargs-parser "^20.2.3"
 
-meow@^8.0.0:
-  version "8.0.0"
-  resolved "https://registry.yarnpkg.com/meow/-/meow-8.0.0.tgz#1aa10ee61046719e334ffdc038bb5069250ec99a"
-  integrity sha512-nbsTRz2fwniJBFgUkcdISq8y/q9n9VbiHYbfwklFh5V4V2uAcxtKQkDc0yCLPM/kP0d+inZBewn3zJqewHE7kg==
-  dependencies:
-    "@types/minimist" "^1.2.0"
-    camelcase-keys "^6.2.2"
-    decamelize-keys "^1.1.0"
-    hard-rejection "^2.1.0"
-    minimist-options "4.1.0"
-    normalize-package-data "^3.0.0"
-    read-pkg-up "^7.0.1"
-    redent "^3.0.0"
-    trim-newlines "^3.0.0"
-    type-fest "^0.18.0"
-    yargs-parser "^20.2.3"
-
 merge-descriptors@1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/merge-descriptors/-/merge-descriptors-1.0.1.tgz#b00aaa556dd8b44568150ec9d1b953f3f90cbb61"
@@ -12804,11 +12787,6 @@ type-fest@^0.18.0:
   resolved "https://registry.yarnpkg.com/type-fest/-/type-fest-0.18.1.tgz#db4bc151a4a2cf4eebf9add5db75508db6cc841f"
   integrity sha512-OIAYXk8+ISY+qTOwkHtKqzAuxchoMiD9Udx+FSGQDuiRR+PJKJHc2NJAXlbhkGwTt/4/nKZxELY1w3ReWOL8mw==
 
-type-fest@^0.18.0:
-  version "0.18.1"
-  resolved "https://registry.yarnpkg.com/type-fest/-/type-fest-0.18.1.tgz#db4bc151a4a2cf4eebf9add5db75508db6cc841f"
-  integrity sha512-OIAYXk8+ISY+qTOwkHtKqzAuxchoMiD9Udx+FSGQDuiRR+PJKJHc2NJAXlbhkGwTt/4/nKZxELY1w3ReWOL8mw==
-
 type-fest@^0.6.0:
   version "0.6.0"
   resolved "https://registry.yarnpkg.com/type-fest/-/type-fest-0.6.0.tgz#8d2a2370d3df886eb5c90ada1c5bf6188acf838b"
@@ -12858,11 +12836,6 @@ typescript@~3.7.2:
   version "3.7.5"
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.7.5.tgz#0692e21f65fd4108b9330238aac11dd2e177a1ae"
   integrity sha512-/P5lkRXkWHNAbcJIiHPfRoKqyd7bsyCma1hZNUGfn20qm64T6ZBlrzprymeu918H+mB/0rIg2gGK/BXkhhYgBw==
-
-typescript@~4.0.2:
-  version "4.0.5"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.0.5.tgz#ae9dddfd1069f1cb5beb3ef3b2170dd7c1332389"
-  integrity sha512-ywmr/VrTVCmNTJ6iV2LwIrfG1P+lv6luD8sUJs+2eI9NLGigaN+nUQc13iHqisq7bra9lnmUSYqbJvegraBOPQ==
 
 ua-parser-js@^0.7.18:
   version "0.7.23"
