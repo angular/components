@@ -20,6 +20,7 @@ ng_module(
         "//src/material-experimental/mdc-core",
         "//src/material/autocomplete",
         "@npm//@angular/common",
+        "@npm//@material/menu-surface",
     ],
 )
 
