@@ -13,7 +13,7 @@
     "yarn": ">= 1.0.0"
   },
   "scripts": {
-    "postinstall": "node tools/postinstall/apply-patches.js && ngcc --properties module main --create-ivy-entry-points && node tools/postinstall/update-ngcc-main-fields.js",
+    "postinstall": "husky install && node tools/postinstall/apply-patches.js && ngcc --properties module main --create-ivy-entry-points && node tools/postinstall/update-ngcc-main-fields.js",
     "build": "node ./scripts/build-packages-dist.js",
     "build-docs-content": "node ./scripts/build-docs-content.js",
     "dev-app": "ibazel run //src/dev-app:devserver",
@@ -125,7 +125,7 @@
     "gulp-cli": "^2.3.0",
     "gulp-sass": "^4.0.2",
     "highlight.js": "^10.4.0",
-    "husky": "^4.3.0",
+    "husky": "5.0.1",
     "inquirer": "^7.1.0",
     "jasmine": "^3.5.0",
     "jasmine-core": "^3.5.0",
@@ -174,11 +174,5 @@
   },
   "resolutions": {
     "dgeni-packages/typescript": "4.1.2"
-  },
-  "husky": {
-    "hooks": {
-      "commit-msg": "yarn -s ng-dev commit-message pre-commit-validate --file-env-variable HUSKY_GIT_PARAMS",
-      "prepare-commit-msg": "yarn -s ng-dev commit-message restore-commit-message-draft --file-env-variable HUSKY_GIT_PARAMS"
-    }
   }
 }
