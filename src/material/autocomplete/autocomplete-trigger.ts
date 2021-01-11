@@ -190,9 +190,16 @@ export abstract class _MatAutocompleteTriggerBase implements ControlValueAccesso
 
   /**
    * `autocomplete` attribute to be set on the input element.
+   * Chrome ignores the `autocomplete="off"` attribute due to the fact that it has historically
+   * been abused. Instead the team recommends using a value other than one of the officially
+   * supported values (See
+   * https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/autocomplete#values for a list) to
+   * disable it. Ideally the value should have semantic meaning for its context, but if the user
+   * doesn't specify one, we'll use the generic `mat-off` value. See
+   * https://bugs.chromium.org/p/chromium/issues/detail?id=468153#c16 for the Chrome team's stance.
    * @docs-private
    */
-  @Input('autocomplete') autocompleteAttribute: string = 'off';
+  @Input('autocomplete') autocompleteAttribute: string = 'mat-off';
 
   /**
    * Whether the autocomplete is disabled. When disabled, the element will
