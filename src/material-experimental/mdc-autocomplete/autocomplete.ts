@@ -7,21 +7,20 @@
  */
 
 import {
-  Component,
-  ViewEncapsulation,
   ChangeDetectionStrategy,
+  Component,
   ContentChildren,
   QueryList,
+  ViewEncapsulation,
 } from '@angular/core';
-import {panelAnimation} from '@angular/material-experimental/mdc-autocomplete/animations';
-import {_MatAutocompleteBase} from '@angular/material/autocomplete';
 import {
-  MAT_OPTION_PARENT_COMPONENT,
   MAT_OPTGROUP,
+  MAT_OPTION_PARENT_COMPONENT,
   MatOptgroup,
   MatOption,
 } from '@angular/material-experimental/mdc-core';
-
+import {_MatAutocompleteBase} from '@angular/material/autocomplete';
+import {panelAnimation} from './animations';
 
 @Component({
   selector: 'mat-autocomplete',

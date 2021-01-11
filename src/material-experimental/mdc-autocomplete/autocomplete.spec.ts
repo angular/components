@@ -193,6 +193,7 @@ describe('MDC-based MatAutocomplete', () => {
       fixture.detectChanges();
       zone.simulateZoneExit();
       dispatchFakeEvent(document, 'auxclick');
+      tick();
 
       expect(fixture.componentInstance.trigger.panelOpen)
           .toBe(false, `Expected clicking outside the panel to set its state to closed.`);

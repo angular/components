@@ -15,7 +15,6 @@ import {
   transition,
   trigger
 } from '@angular/animations';
-import {numbers as menuSurfaceConstants} from '@material/menu-surface';
 
 // Animation values come from
 // https://github.com/material-components/material-components-web/blob/master/packages/mdc-menu-surface/_mixins.scss
@@ -28,12 +27,10 @@ export const panelAnimation: AnimationTriggerMetadata = trigger('panelAnimation'
   transition(':enter, hidden => visible', [
     group([
         animate('0.03s linear', style({ opacity: 1 })),
-        animate(
-            `${menuSurfaceConstants.TRANSITION_OPEN_DURATION}ms cubic-bezier(0, 0, 0.2, 1)`,
-            style({ transform: 'scale(1)' })),
+        animate('0.12s cubic-bezier(0, 0, 0.2, 1)', style({ transform: 'scale(1)' })),
     ]),
   ]),
   transition(':leave, visible => hidden', [
-    animate(`${menuSurfaceConstants.TRANSITION_CLOSE_DURATION}ms linear`, style({ opacity: 0 })),
+    animate('0.075s linear', style({ opacity: 0 })),
   ]),
 ]);
