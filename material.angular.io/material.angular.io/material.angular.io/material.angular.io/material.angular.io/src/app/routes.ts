@@ -3,10 +3,13 @@ import {CanActivateComponentSidenav} from './pages/component-sidenav/component-s
 
 export const MATERIAL_DOCS_ROUTES: Routes = [
   {
-    path: '', pathMatch: 'full',
+    path: '',
+    pathMatch: 'full',
     loadChildren: () => import('./pages/homepage').then(m => m.HomepageModule)
   },
   {path: 'categories', redirectTo: '/components/categories'},
+  {path: 'cdk', pathMatch: 'full', redirectTo: '/cdk/categories'},
+  {path: 'components', pathMatch: 'full', redirectTo: '/components/categories'},
   {
     path: 'guides',
     loadChildren: () => import('./pages/guide-list').then(m => m.GuideListModule)
@@ -18,11 +21,16 @@ export const MATERIAL_DOCS_ROUTES: Routes = [
     path: 'guide/:id',
     loadChildren: () => import('./pages/guide-viewer').then(m => m.GuideViewerModule)
   },
+  // Needs to be defined before `:section` so it gets picked first when redirecting a missing page.
+  {
+    path: '404',
+    loadChildren: () => import('./pages/not-found').then(m => m.NotFoundModule)
+  },
   {
     path: ':section',
     canActivate: [CanActivateComponentSidenav],
     loadChildren: () =>
       import('./pages/component-sidenav/component-sidenav').then(m => m.ComponentSidenavModule)
   },
-  {path: '**', redirectTo: ''},
+  {path: '**', redirectTo: '/404'},
 ];
