@@ -241,8 +241,10 @@ export class StackBlitzWriter {
       // Replace the component selector in `index,html`.
       // For example, <material-docs-example></material-docs-example> will be replaced as
       // <button-demo></button-demo>
-      fileContent = fileContent.replace(/material-docs-example/g, data.selectorName);
-      fileContent = fileContent.replace(/{{version}}/g, VERSION.full);
+      fileContent = fileContent
+        .replace(/material-docs-example/g, data.selectorName)
+        .replace(/{{title}}/g, data.description)
+        .replace(/{{version}}/g, VERSION.full);
     } else if (fileName === 'src/main.ts') {
       const joinedComponentNames = data.componentNames.join(', ');
       // Replace the component name in `main.ts`.
