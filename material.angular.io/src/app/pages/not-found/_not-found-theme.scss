@@ -1,0 +1,27 @@
+@mixin not-found-theme($theme) {
+  $primary: map-get($theme, primary);
+  $foreground: map-get($theme, foreground);
+  $background: map-get($theme, background);
+  $frown-color: mat-color($background, background);
+  $shield-color: mat-color($primary);
+
+  app-not-found {
+    color: mat-color($foreground, text);
+
+    .shield-left {
+      fill: $shield-color;
+    }
+
+    .shield-right {
+      fill: darken($shield-color, 10%);
+    }
+
+    .eye {
+      fill: $frown-color;
+    }
+
+    .frown {
+      stroke: $frown-color;
+    }
+  }
+}

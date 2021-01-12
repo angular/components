@@ -5,6 +5,7 @@
 @import './app/pages/component-viewer/component-viewer-theme';
 @import './app/pages/guide-list/guide-list-theme';
 @import './app/pages/homepage/homepage-theme';
+@import './app/pages/not-found/not-found-theme';
 @import './app/shared/carousel/carousel-theme';
 @import './app/shared/example-viewer/example-viewer-theme';
 @import './app/shared/footer/footer-theme';
@@ -56,6 +57,7 @@
   @include footer-theme($theme);
   @include guide-list-theme($theme);
   @include home-page-theme($theme);
+  @include not-found-theme($theme);
   @include nav-bar-theme($theme);
   @include table-of-contents-theme($theme);
 }

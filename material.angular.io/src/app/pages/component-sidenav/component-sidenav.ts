@@ -118,32 +118,31 @@ export class ComponentNav {
   constructor(public docItems: DocumentationItems) {}
 }
 
-const routes: Routes = [ {
-  path : '',
-  component : ComponentSidenav,
-  children : [
-    {path : '', redirectTo : 'categories', pathMatch : 'full'},
-    {path : 'component/:id', redirectTo : ':id', pathMatch : 'full'},
-    {path : 'category/:id', redirectTo : '/categories/:id', pathMatch : 'full'},
+const routes: Routes = [{
+  path: '',
+  component: ComponentSidenav,
+  children: [
+    {path: 'component/:id', redirectTo: ':id', pathMatch: 'full'},
+    {path: 'category/:id', redirectTo: '/categories/:id', pathMatch: 'full'},
     {
-      path : 'categories',
-      children : [
-        {path : '', component : ComponentCategoryList},
+      path: 'categories',
+      children: [
+        {path: '', component: ComponentCategoryList},
       ],
     },
     {
-      path : ':id',
-      component : ComponentViewer,
-      children : [
-        {path : '', redirectTo : 'overview', pathMatch : 'full'},
-        {path : 'overview', component : ComponentOverview, pathMatch : 'full'},
-        {path : 'api', component : ComponentApi, pathMatch : 'full'},
-        {path : 'examples', component : ComponentExamples, pathMatch : 'full'},
-        {path : '**', redirectTo : 'overview'},
+      path: ':id',
+      component: ComponentViewer,
+      children: [
+        {path: '', redirectTo: 'overview', pathMatch: 'full'},
+        {path: 'overview', component: ComponentOverview, pathMatch: 'full'},
+        {path: 'api', component: ComponentApi, pathMatch: 'full'},
+        {path: 'examples', component: ComponentExamples, pathMatch: 'full'}
       ],
     },
+    {path: '**', redirectTo: '/404'}
   ]
-} ];
+}];
 
 @NgModule({
   imports: [
