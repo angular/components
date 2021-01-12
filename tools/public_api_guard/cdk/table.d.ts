@@ -199,7 +199,6 @@ export declare class CdkTable<T> implements AfterContentChecked, CollectionViewe
     protected readonly _elementRef: ElementRef;
     _footerRowOutlet: FooterRowOutlet;
     _headerRowOutlet: HeaderRowOutlet;
-    protected _isNativeHtmlTable: boolean;
     _multiTemplateDataRows: boolean;
     _noDataRow: CdkNoDataRow;
     _noDataRowOutlet: NoDataRowOutlet;
