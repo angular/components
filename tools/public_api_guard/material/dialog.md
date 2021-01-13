@@ -132,7 +132,7 @@ export abstract class _MatDialogBase<C extends _MatDialogContainerBase> implemen
 // @public
 export class MatDialogClose implements OnInit, OnChanges {
     constructor(
-    dialogRef: MatDialogRef<any>, _elementRef: ElementRef<HTMLElement>, _dialog: MatDialog);
+    _dialogRef: any, _elementRef: ElementRef<HTMLElement>, _dialog: MatDialog);
     ariaLabel: string;
     // @deprecated
     dialogRef: MatDialogRef<any>;
@@ -149,7 +149,7 @@ export class MatDialogClose implements OnInit, OnChanges {
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<MatDialogClose, "[mat-dialog-close], [matDialogClose]", ["matDialogClose"], { "ariaLabel": "aria-label"; "type": "type"; "dialogResult": "mat-dialog-close"; "_matDialogClose": "matDialogClose"; }, {}, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<MatDialogClose, [{ optional: true; }, null, null]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<MatDialogClose, never>;
 }
 
 // @public
@@ -277,14 +277,15 @@ export const enum MatDialogState {
 
 // @public
 export class MatDialogTitle implements OnInit {
-    constructor(_dialogRef: MatDialogRef<any>, _elementRef: ElementRef<HTMLElement>, _dialog: MatDialog);
+    constructor(
+    _dialogRef: any, _elementRef: ElementRef<HTMLElement>, _dialog: MatDialog);
     id: string;
     // (undocumented)
     ngOnInit(): void;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<MatDialogTitle, "[mat-dialog-title], [matDialogTitle]", ["matDialogTitle"], { "id": "id"; }, {}, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<MatDialogTitle, [{ optional: true; }, null, null]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<MatDialogTitle, never>;
 }
 
 // @public
