@@ -1,3 +1,56 @@
+## 11.0.4 "silver-specter" (2021-01-14)
+
+### cdk
+
+|            |                       |
+| ---------- | --------------------- |
+| bug fix |  **a11y:** focusVia not accounting for focused child node ([#21512](https://github.com/angular/components/issues/21512)) ([612cdc1](https://github.com/angular/components/commit/612cdc1)), closes [#20966](https://github.com/angular/components/issues/20966) [#21500](https://github.com/angular/components/issues/21500) |
+| bug fix |  **drag-drop:** account for enterPredicate when setting receiving class ([#21346](https://github.com/angular/components/issues/21346)) ([c535444](https://github.com/angular/components/commit/c535444)), closes [#21171](https://github.com/angular/components/issues/21171) |
+| bug fix |  **drag-drop:** don't block scrolling if it happens before delay has elapsed ([#21382](https://github.com/angular/components/issues/21382)) ([4134580](https://github.com/angular/components/commit/4134580)), closes [#17923](https://github.com/angular/components/issues/17923) |
+| bug fix |  **drag-drop:** don't stop event propagation unless nested ([#21227](https://github.com/angular/components/issues/21227)) ([87ee0b8](https://github.com/angular/components/commit/87ee0b8)), closes [#19334](https://github.com/angular/components/issues/19334) [#19333](https://github.com/angular/components/issues/19333) |
+| bug fix |  **overlay:** block scroll strategy throwing off scroll behavior feature detection ([#17223](https://github.com/angular/components/issues/17223)) ([c04d8be](https://github.com/angular/components/commit/c04d8be)), closes [#17221](https://github.com/angular/components/issues/17221) |
+| bug fix |  **scrolling:** Prevents NaN being returned as firstVisibleIndex. ([#21505](https://github.com/angular/components/issues/21505)) ([8875221](https://github.com/angular/components/commit/8875221)) |
+| bug fix |  **scrolling:** virtual scroll not picking up trackBy function when items come in after init ([#21335](https://github.com/angular/components/issues/21335)) ([2a6862d](https://github.com/angular/components/commit/2a6862d)), closes [#21281](https://github.com/angular/components/issues/21281) |
+| bug fix |  **tree:** add missing generic types to trackBy Fixes ([#21364](https://github.com/angular/components/issues/21364)) ([#21421](https://github.com/angular/components/issues/21421)) ([6318d11](https://github.com/angular/components/commit/6318d11)) |
+
+### material
+
+|            |                       |
+| ---------- | --------------------- |
+| bug fix |  **autocomplete:** not closing when clicking outside using auxilliary button ([#21397](https://github.com/angular/components/issues/21397)) ([9c6dfd6](https://github.com/angular/components/commit/9c6dfd6)) |
+| bug fix |  **core:** unable to distinguish disabled mat-option in high contrast mode ([#21484](https://github.com/angular/components/issues/21484)) ([c2f337e](https://github.com/angular/components/commit/c2f337e)) |
+| bug fix |  **datepicker:** a couple of accessibility issues in touch UI mode ([#21228](https://github.com/angular/components/issues/21228)) ([175d4e4](https://github.com/angular/components/commit/175d4e4)) |
+| bug fix |  **datepicker:** adjust focused date background for better visibility ([#21176](https://github.com/angular/components/issues/21176)) ([3889bf4](https://github.com/angular/components/commit/3889bf4)) |
+| bug fix |  **datepicker:** remove scroll bar while animating in touch UI mode ([#21493](https://github.com/angular/components/issues/21493)) ([819e2f8](https://github.com/angular/components/commit/819e2f8)) |
+| bug fix |  **datepicker:** unable to distinguish disabled calendar cells in high contrast mode ([#21399](https://github.com/angular/components/issues/21399)) ([748072d](https://github.com/angular/components/commit/748072d)) |
+| bug fix |  **datepicker:** unable to pass in errorStateMatcher through binding on range input ([#21210](https://github.com/angular/components/issues/21210)) ([421a849](https://github.com/angular/components/commit/421a849)), closes [#21205](https://github.com/angular/components/issues/21205) |
+| bug fix |  **menu:** allow menu height to grow after open ([#21436](https://github.com/angular/components/issues/21436)) ([bc5c3a7](https://github.com/angular/components/commit/bc5c3a7)), closes [#18168](https://github.com/angular/components/issues/18168) [#13988](https://github.com/angular/components/issues/13988) |
+| bug fix |  **menu:** set correct focus origin on item when opened via keyboard ([#21252](https://github.com/angular/components/issues/21252)) ([995ed98](https://github.com/angular/components/commit/995ed98)), closes [#21241](https://github.com/angular/components/issues/21241) |
+| bug fix |  **sort:** animation not working correctly when activated on focus ([#21339](https://github.com/angular/components/issues/21339)) ([2e13216](https://github.com/angular/components/commit/2e13216)) |
+| bug fix |  **table:** increase specificity on sticky selector ([#21403](https://github.com/angular/components/issues/21403)) ([760fb30](https://github.com/angular/components/commit/760fb30)), closes [#19823](https://github.com/angular/components/issues/19823) [#19823](https://github.com/angular/components/issues/19823) [#20558](https://github.com/angular/components/issues/20558) |
+
+### material-experimental
+
+|            |                       |
+| ---------- | --------------------- |
+| bug fix |  **mdc-autocomplete:** panel losing max-height if menu is opened after autocomplete ([#21394](https://github.com/angular/components/issues/21394)) ([007d4ac](https://github.com/angular/components/commit/007d4ac)), closes [#21341](https://github.com/angular/components/issues/21341) |
+| bug fix |  **mdc-button:** fix ripple noop animation ([#21360](https://github.com/angular/components/issues/21360)) ([5d2edfd](https://github.com/angular/components/commit/5d2edfd)) |
+| bug fix |  **mdc-form-field:** fill appearance blending in with the background in high contrast mode ([#21446](https://github.com/angular/components/issues/21446)) ([a0adffd](https://github.com/angular/components/commit/a0adffd)) |
+| bug fix |  **mdc-form-field:** fix fill appearance contrast ratio ([#21365](https://github.com/angular/components/issues/21365)) ([f9a166d](https://github.com/angular/components/commit/f9a166d)) |
+| bug fix |  **mdc-list:** make internal input non-interactive ([#21438](https://github.com/angular/components/issues/21438)) ([22bd693](https://github.com/angular/components/commit/22bd693)) |
+| bug fix |  **mdc-progress-spinner:** fix noop animation ([#21359](https://github.com/angular/components/issues/21359)) ([b1d8fb3](https://github.com/angular/components/commit/b1d8fb3)) |
+| bug fix |  **mdc-progress-spinner:** indeterminate animation not working ([#21391](https://github.com/angular/components/issues/21391)) ([4d60f90](https://github.com/angular/components/commit/4d60f90)), closes [#21359](https://github.com/angular/components/issues/21359) |
+| bug fix |  **mdc-select:** panel losing max-height if menu is opened after select ([#21341](https://github.com/angular/components/issues/21341)) ([8714cd5](https://github.com/angular/components/commit/8714cd5)) |
+| bug fix |  **mdc-slide-toggle:** add class to mdc-switch element ([#21284](https://github.com/angular/components/issues/21284)) ([0266db2](https://github.com/angular/components/commit/0266db2)) |
+| bug fix |  **mdc-snack-bar:** disable animations in noop ([#21377](https://github.com/angular/components/issues/21377)) ([97aac4e](https://github.com/angular/components/commit/97aac4e)) |
+| bug fix |  **mdc-snack-bar:** not stretching to full width on handset ([#21477](https://github.com/angular/components/issues/21477)) ([3e9ef44](https://github.com/angular/components/commit/3e9ef44)) |
+| bug fix |  **mdc-snack-bar:** simple snack button should be accent ([#21384](https://github.com/angular/components/issues/21384)) ([8e57fc8](https://github.com/angular/components/commit/8e57fc8)) |
+| bug fix |  **mdc-table:** error when flexbox-based table is initialized ([#21428](https://github.com/angular/components/issues/21428)) ([aade5d1](https://github.com/angular/components/commit/aade5d1)), closes [#20994](https://github.com/angular/components/issues/20994) |
+| bug fix |  **mdc-table:** remove bottom border for flex table ([#21566](https://github.com/angular/components/issues/21566)) ([ce5d10a](https://github.com/angular/components/commit/ce5d10a)) |
+| feature |  **mdc-autocomplete:** add panel animation ([#21525](https://github.com/angular/components/issues/21525)) ([2063a55](https://github.com/angular/components/commit/2063a55)) |
+| feature |  **mdc-table:** add mat-table selector ([#20994](https://github.com/angular/components/issues/20994)) ([d84d3d0](https://github.com/angular/components/commit/d84d3d0)) |
+
+
 ## 11.0.3 "adobe-home" (2020-12-14)
 
 ### material
