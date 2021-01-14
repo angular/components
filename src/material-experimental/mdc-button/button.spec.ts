@@ -94,6 +94,18 @@ describe('MDC-based MatButton', () => {
     });
   });
 
+  // describe('button[mat-fab] extended', () => {
+  //   it('should have accent palette by default', () => {
+  //     const fixture = TestBed.createComponent(TestApp);
+  //     const extendedFabButtonDebugEl = fixture.debugElement.query(By.css('.mat-mdc-extended-fab'))!;
+  //
+  //     fixture.detectChanges();
+  //
+  //     expect(extendedFabButtonDebugEl.nativeElement.classList)
+  //       .toContain('mat-accent', 'Expected extended fab buttons to use accent palette by default');
+  //   });
+  // });
+
   // Regular button tests
   describe('button[mat-button]', () => {
     it('should handle a click on the button', () => {
@@ -281,6 +293,7 @@ describe('MDC-based MatButton', () => {
       Link
     </a>
     <button mat-fab>Fab Button</button>
+    <button mat-fab [extended]="true">Extended</button>
     <button mat-mini-fab>Mini Fab Button</button>
   `
 })

@@ -39,8 +39,11 @@ import {ThemePalette} from '@angular/material-experimental/mdc-core';
   selector: `button[mat-fab], button[mat-mini-fab]`,
   templateUrl: 'button.html',
   styleUrls: ['fab.css'],
-  inputs: MAT_BUTTON_INPUTS,
-  host: MAT_BUTTON_HOST,
+  inputs: [...MAT_BUTTON_INPUTS, 'extended'],
+  host: {
+    '[class.mdc-fab--extended]': 'extended',
+    '[class.mat-mdc-extended-fab]': 'extended', ...MAT_BUTTON_HOST
+  },
   exportAs: 'matButton',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -48,6 +51,8 @@ import {ThemePalette} from '@angular/material-experimental/mdc-core';
 export class MatFabButton extends MatButtonBase {
   // The FAB by default has its color set to accent.
   color = 'accent' as ThemePalette;
+
+  extended: boolean;
 
   constructor(
       elementRef: ElementRef, platform: Platform, ngZone: NgZone,
@@ -68,8 +73,11 @@ export class MatFabButton extends MatButtonBase {
   selector: `a[mat-fab], a[mat-mini-fab]`,
   templateUrl: 'button.html',
   styleUrls: ['fab.css'],
-  inputs: MAT_ANCHOR_INPUTS,
-  host: MAT_ANCHOR_HOST,
+  inputs: [...MAT_ANCHOR_INPUTS, 'extended'],
+  host: {
+    '[class.mdc-fab--extended]': 'extended',
+    '[class.mat-mdc-extended-fab]': 'extended', ...MAT_ANCHOR_HOST
+  },
   exportAs: 'matButton, matAnchor',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -77,6 +85,8 @@ export class MatFabButton extends MatButtonBase {
 export class MatFabAnchor extends MatAnchor {
   // The FAB by default has its color set to accent.
   color = 'accent' as ThemePalette;
+
+  extended: boolean;
 
   constructor(
       elementRef: ElementRef, platform: Platform, ngZone: NgZone,
