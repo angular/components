@@ -13,10 +13,4 @@ import {Component} from '@angular/core';
   selector: 'mdc-slider-demo',
   templateUrl: 'mdc-slider-demo.html',
 })
-export class MdcSliderDemo {
-  demo: number;
-  val: number = 50;
-  min: number = 0;
-  max: number = 100;
-  disabledValue = 0;
-}
+export class MdcSliderDemo {}
