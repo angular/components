@@ -13,7 +13,7 @@ import {MatSlider} from './slider';
 
 @NgModule({
   imports: [MatCommonModule, CommonModule],
-  exports: [MatSlider, MatCommonModule],
+  exports: [MatSlider],
   declarations: [MatSlider],
 })
 export class MatSliderModule {
