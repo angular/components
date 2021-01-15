@@ -36,7 +36,9 @@ import {MatDatepicker} from './datepicker';
 import {MatDatepickerInput} from './datepicker-input';
 import {MatDatepickerToggle} from './datepicker-toggle';
 import {
+  MAT_DATEPICKER_CONTENT,
   MAT_DATEPICKER_SCROLL_STRATEGY,
+  MatDatepickerContent,
   MatDatepickerIntl,
   MatDatepickerModule,
   MatDateSelectionModel,
@@ -2075,6 +2077,49 @@ describe('MatDatepicker', () => {
     }));
   });
 
+  describe('datepicker with custom content', () => {
+    let fixture: ComponentFixture<DatepickerWithCustomContent>;
+    let testComponent: DatepickerWithCustomContent;
+
+    beforeEach(fakeAsync(() => {
+      fixture = createComponent(
+        DatepickerWithCustomContent,
+        [MatNativeDateModule],
+        [{
+          provide: MAT_DATEPICKER_CONTENT,
+          useValue: CustomDatepickerContent
+        }],
+        [CustomDatepickerContent]
+      );
+      fixture.detectChanges();
+      testComponent = fixture.componentInstance;
+    }));
+
+    it('should instantiate a datepicker with a custom content', fakeAsync(() => {
+      expect(testComponent).toBeTruthy();
+    }));
+
+    it('should find the custom element when open as popup', fakeAsync(() => {
+      testComponent.datepicker.open();
+      fixture.detectChanges();
+      flush();
+      fixture.detectChanges();
+
+      expect(document.querySelector('.custom-element')).toBeTruthy();
+    }));
+
+    it('should find the custom element when open as dialog', fakeAsync(() => {
+      testComponent.touchUi = true;
+      fixture.detectChanges();
+      testComponent.datepicker.open();
+      fixture.detectChanges();
+      flush();
+      fixture.detectChanges();
+
+      expect(document.querySelector('.custom-element')).toBeTruthy();
+    }));
+  });
+
   it('should not pick up values from the global dialog config', () => {
     const fixture = createComponent(StandardDatepicker, [MatNativeDateModule], [{
       provide: MAT_DIALOG_DEFAULT_OPTIONS,
@@ -2506,6 +2551,27 @@ class DatepickerWithCustomHeader {
   `,
 })
 class CustomHeaderForDatepicker {}
+
+
+@Component({
+  template: `
+    <input [matDatepicker]="d">
+    <mat-datepicker #d [touchUi]="touchUi"></mat-datepicker>
+  `
+})
+class DatepickerWithCustomContent {
+  @ViewChild('d') datepicker: MatDatepicker<Date>;
+  touchUi = false;
+}
+
+@Component({
+  template: `
+    <div class="custom-element">Custom element</div>
+    <mat-calendar></mat-calendar>
+  `,
+})
+class CustomDatepickerContent extends MatDatepickerContent<any> {}
+
 
 @Component({
   template: `

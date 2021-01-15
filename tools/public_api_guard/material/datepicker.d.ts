@@ -29,6 +29,8 @@ export declare type ExtractDateTypeFromSelection<T> = T extends DateRange<infer 
 
 export declare const MAT_DATE_RANGE_SELECTION_STRATEGY: InjectionToken<MatDateRangeSelectionStrategy<any>>;
 
+export declare const MAT_DATEPICKER_CONTENT: InjectionToken<ComponentType<MatDatepickerContent<any, any>>>;
+
 export declare const MAT_DATEPICKER_SCROLL_STRATEGY: InjectionToken<() => ScrollStrategy>;
 
 export declare function MAT_DATEPICKER_SCROLL_STRATEGY_FACTORY(overlay: Overlay): () => ScrollStrategy;

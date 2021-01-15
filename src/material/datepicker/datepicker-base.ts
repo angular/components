@@ -101,6 +101,13 @@ const _MatDatepickerContentMixinBase: CanColorCtor & typeof MatDatepickerContent
     mixinColor(MatDatepickerContentBase);
 
 /**
+ * Injection token used to customize the MatDatepickerContent class in the datepicker dialog and
+ * popup.
+ */
+export const MAT_DATEPICKER_CONTENT =
+  new InjectionToken<ComponentType<MatDatepickerContent<any>>>('mat-datepicker-content');
+
+/**
  * Component used as the content for the datepicker dialog and popup. We use this instead of using
  * MatCalendar directly as the content so we can control the initial focus. This also gives us a
  * place to put additional features of the popup that are not part of the calendar itself in the
@@ -238,6 +245,12 @@ export class MatDatepickerContent<S, D = ExtractDateTypeFromSelection<S>>
     }
   }
 }
+
+/** @docs-private */
+export const MAT_DATEPICKER_CONTENT_PROVIDER = {
+  provide: MAT_DATEPICKER_CONTENT,
+  useValue: MatDatepickerContent,
+};
 
 /** Form control that can be associated with a datepicker. */
 export interface MatDatepickerControl<D> {
@@ -452,6 +465,8 @@ export abstract class MatDatepickerBase<C extends MatDatepickerControl<D>, S,
               private _ngZone: NgZone,
               private _viewContainerRef: ViewContainerRef,
               @Inject(MAT_DATEPICKER_SCROLL_STRATEGY) scrollStrategy: any,
+              @Inject(MAT_DATEPICKER_CONTENT)
+                  private _datepickerContent: ComponentType<MatDatepickerContent<S, D>>,
               @Optional() private _dateAdapter: DateAdapter<D>,
               @Optional() private _dir: Directionality,
               @Optional() @Inject(DOCUMENT) private _document: any,
@@ -614,7 +629,7 @@ export abstract class MatDatepickerBase<C extends MatDatepickerControl<D>, S,
       this._dialogRef.close();
     }
 
-    this._dialogRef = this._dialog.open<MatDatepickerContent<S, D>>(MatDatepickerContent, {
+    this._dialogRef = this._dialog.open<MatDatepickerContent<S, D>>(this._datepickerContent, {
       direction: this._dir ? this._dir.value : 'ltr',
       viewContainerRef: this._viewContainerRef,
       panelClass: 'mat-datepicker-dialog',
@@ -651,7 +666,7 @@ export abstract class MatDatepickerBase<C extends MatDatepickerControl<D>, S,
 
   /** Open the calendar as a popup. */
   private _openAsPopup(): void {
-    const portal = new ComponentPortal<MatDatepickerContent<S, D>>(MatDatepickerContent,
+    const portal = new ComponentPortal<MatDatepickerContent<S, D>>(this._datepickerContent,
                                                                    this._viewContainerRef);
 
     this._destroyPopup();

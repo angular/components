@@ -20,7 +20,8 @@ import {MatCalendarBody} from './calendar-body';
 import {MatDatepicker} from './datepicker';
 import {
   MatDatepickerContent,
-  MAT_DATEPICKER_SCROLL_STRATEGY_FACTORY_PROVIDER,
+  MAT_DATEPICKER_CONTENT_PROVIDER,
+  MAT_DATEPICKER_SCROLL_STRATEGY_FACTORY_PROVIDER
 } from './datepicker-base';
 import {MatDatepickerInput} from './datepicker-input';
 import {MatDatepickerIntl} from './datepicker-intl';
@@ -87,7 +88,8 @@ import {MatDatepickerActions, MatDatepickerApply, MatDatepickerCancel} from './d
   ],
   providers: [
     MatDatepickerIntl,
-    MAT_DATEPICKER_SCROLL_STRATEGY_FACTORY_PROVIDER
+    MAT_DATEPICKER_SCROLL_STRATEGY_FACTORY_PROVIDER,
+    MAT_DATEPICKER_CONTENT_PROVIDER
   ],
   entryComponents: [
     MatDatepickerContent,
