@@ -1,14 +1,16 @@
-import {browser, by, element} from 'protractor';
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
 
-// TODO: disabled until we implement the new MDC slider.
-describe('mat-slider dummy' , () => it('', () => {}));
+/* tslint:disable-next-line:no-unused-variable */
+import {MatSlider} from './index';
 
-// tslint:disable-next-line:ban
-xdescribe('mat-slider', () => {
-  beforeEach(async () => await browser.get('/mdc-slider'));
+// TODO(wagnermaciel): Implement this in a separate PR
 
-  it('should show a slider', async () => {
-    expect(await element(by.tagName('mat-slider')).isPresent()).toBe(true);
-  });
-
+describe('MDC-based MatSlider' , () => {
+  it('does nothing yet', async () => {});
 });
