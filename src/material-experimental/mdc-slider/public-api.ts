@@ -7,4 +7,5 @@
  */
 
 export {MatSlider} from './slider';
+export {MatSliderThumb} from './slider-thumb';
 export {MatSliderModule} from './module';
