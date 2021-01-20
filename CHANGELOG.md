@@ -1,3 +1,31 @@
+# 11.1.0 "protoplasm-phantasm" (2021-01-20)
+
+### cdk
+
+|            |                       |
+| ---------- | --------------------- |
+| bug fix |  **overlay:** sub-pixel deviations throwing off positioning in some cases ([#21427](https://github.com/angular/components/issues/21427)) ([5900d70cc65882307a8ef374bd1d41e228c8d5c7](https://github.com/angular/components/commit/5900d70cc65882307a8ef374bd1d41e228c8d5c7)), closes [#21350](https://github.com/angular/components/issues/21350) |
+
+### material
+
+|            |                       |
+| ---------- | --------------------- |
+| bug fix |  **autocomplete:** activate first enabled option with autoActiveFirstOption ([#21513](https://github.com/angular/components/issues/21513)) ([032c317d40e7d073755b769674effaf21f9e8944](https://github.com/angular/components/commit/032c317d40e7d073755b769674effaf21f9e8944)), closes [#21498](https://github.com/angular/components/issues/21498) |
+| bug fix |  **button:** anchor mat-icon-button as matSuffix focus misaligned ([#21117](https://github.com/angular/components/issues/21117)) ([55253abd3f2cd17686702827a47f98e5132e54a5](https://github.com/angular/components/commit/55253abd3f2cd17686702827a47f98e5132e54a5)), closes [#20949](https://github.com/angular/components/issues/20949) [#20949](https://github.com/angular/components/issues/20949) |
+| bug fix |  **menu:** focus indication rendering partially in high contrast mode ([#21527](https://github.com/angular/components/issues/21527)) ([e180655270b9639965af1e8a9d963a9aec1f7f59](https://github.com/angular/components/commit/e180655270b9639965af1e8a9d963a9aec1f7f59)), closes [#21524](https://github.com/angular/components/issues/21524) |
+| bug fix |  **radio:** remove tabindex from host node ([#21280](https://github.com/angular/components/issues/21280)) ([d17883c5d49cb53bf40c9ff0894b16008a50e73c](https://github.com/angular/components/commit/d17883c5d49cb53bf40c9ff0894b16008a50e73c)), closes [#21046](https://github.com/angular/components/issues/21046) [#21266](https://github.com/angular/components/issues/21266) |
+| bug fix |  **snack-bar:** fix Firefox/JAWS not reading out snackbar message ([#21552](https://github.com/angular/components/issues/21552)) ([f76369ab71a6dd807705ce42c104ecc48a97aef3](https://github.com/angular/components/commit/f76369ab71a6dd807705ce42c104ecc48a97aef3)) |
+| bug fix |  **tabs:** background color inherited to nested groups ([#21533](https://github.com/angular/components/issues/21533)) ([934f7eb15a40f24aa3e36acfa7a5bf171dcca1e3](https://github.com/angular/components/commit/934f7eb15a40f24aa3e36acfa7a5bf171dcca1e3)), closes [#14819](https://github.com/angular/components/issues/14819) [#21530](https://github.com/angular/components/issues/21530) |
+| bug fix |  **tooltip:** not closing when clicking outside using auxiliary button ([#21467](https://github.com/angular/components/issues/21467)) ([01cbebe744b7fcebf2f0b0d32f54788d26a743ee](https://github.com/angular/components/commit/01cbebe744b7fcebf2f0b0d32f54788d26a743ee)) |
+
+### material-experimental
+
+|            |                       |
+| ---------- | --------------------- |
+| bug fix |  **mdc-chips:** decouple removal from animation ([#21586](https://github.com/angular/components/issues/21586)) ([1bb842958fe83e25a6191bf854d0ba490d682661](https://github.com/angular/components/commit/1bb842958fe83e25a6191bf854d0ba490d682661)), closes [#21561](https://github.com/angular/components/issues/21561) |
+| bug fix |  **mdc-list:** not accounting for global ripple options ([#21393](https://github.com/angular/components/issues/21393)) ([e1ed7aecc46e0ae138069a19d63a9a15dacb3c3b](https://github.com/angular/components/commit/e1ed7aecc46e0ae138069a19d63a9a15dacb3c3b)) |
+
+
 # 11.1.0-rc.0 "gallium-ghoul" (2021-01-14)
 
 ### cdk
