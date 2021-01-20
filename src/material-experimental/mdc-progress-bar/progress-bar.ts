@@ -6,27 +6,32 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {Directionality} from '@angular/cdk/bidi';
 import {
+  AfterViewInit,
   ChangeDetectionStrategy,
   Component,
-  ViewEncapsulation,
   ElementRef,
-  NgZone,
-  Optional,
+  EventEmitter,
   Inject,
   Input,
-  Output,
-  EventEmitter,
-  AfterViewInit,
+  NgZone,
   OnDestroy,
+  Optional,
+  Output,
+  ViewEncapsulation,
 } from '@angular/core';
 import {CanColor, CanColorCtor, mixinColor} from '@angular/material-experimental/mdc-core';
-import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 import {ProgressAnimationEnd} from '@angular/material/progress-bar';
-import {MDCLinearProgressAdapter, MDCLinearProgressFoundation} from '@material/linear-progress';
-import {Subscription, fromEvent, Observable} from 'rxjs';
+import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
+import {
+  MDCLinearProgressAdapter,
+  MDCLinearProgressFoundation,
+  WithMDCResizeObserver
+} from '@material/linear-progress';
+import {fromEvent, Observable, Subscription} from 'rxjs';
 import {filter} from 'rxjs/operators';
-import {Directionality} from '@angular/cdk/bidi';
+
 
 // Boilerplate for applying mixins to MatProgressBar.
 /** @docs-private */
@@ -93,10 +98,12 @@ export class MatProgressBar extends _MatProgressBarMixinBase implements AfterVie
     },
     getWidth: () => this._rootElement.offsetWidth,
     attachResizeObserver: (callback) => {
-      if ((typeof window !== 'undefined') && window.ResizeObserver) {
-        const ro = new ResizeObserver(callback);
-        ro.observe(this._rootElement);
-        return ro;
+      if ((typeof window !== 'undefined') &&
+          (window as unknown as WithMDCResizeObserver).ResizeObserver) {
+        const ResizeObserver = (window as unknown as WithMDCResizeObserver).ResizeObserver;
+        const resizeObserver = new ResizeObserver(callback);
+        resizeObserver.observe(this._rootElement);
+        return resizeObserver;
       }
 
       return null;
