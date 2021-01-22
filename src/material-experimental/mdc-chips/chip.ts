@@ -213,9 +213,6 @@ export class MatChip extends _MatChipMixinBase implements AfterContentInit, Afte
   }
   protected _highlighted: boolean = false;
 
-  /** Emitted when the user interacts with the remove icon. */
-  @Output() removeIconInteraction = new EventEmitter<string>();
-
   /** Emitted when the user interacts with the chip. */
   @Output() interaction = new EventEmitter<string>();
 
@@ -273,8 +270,7 @@ export class MatChip extends _MatChipMixinBase implements AfterContentInit, Afte
           // input.
         },
     notifyNavigation: () => this._notifyNavigation(),
-    notifyTrailingIconInteraction: () =>
-        this.removeIconInteraction.emit(this.id),
+    notifyTrailingIconInteraction: () => {},
     notifyRemoval: () => this.remove(),
     notifyEditStart:
         () => {
