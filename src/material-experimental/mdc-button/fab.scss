@@ -33,11 +33,15 @@
   @include mdc-fab-extended_();
 
   .mat-icon {
-    @include mdc-fab-extended-icon-padding($mdc-fab-extended-icon-padding, $mdc-fab-extended-label-padding);
+    @include mdc-fab-extended-icon-padding(
+                    $mdc-fab-extended-icon-padding,
+                    $mdc-fab-extended-label-padding
+    );
   }
 
   // For Extended FAB with text label followed by icon.
-  // We are checking for the a button class because white this is a FAB it uses the same template as button.
+  // We are checking for the a button class because white this is a FAB it
+  // uses the same template as button.
   .mdc-button__label + .mat-icon {
     @include mdc-fab-extended-icon-padding(
                     $mdc-fab-extended-icon-padding,

@@ -27,7 +27,7 @@ import {
   MatButtonBase
 } from './button-base';
 import {ThemePalette} from '@angular/material-experimental/mdc-core';
-import {BooleanInput} from '@angular/cdk/coercion';
+import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
 
 /**
  * Material Design floating action button (FAB) component. These buttons represent the primary
@@ -63,7 +63,9 @@ export class MatFabButton extends MatButtonBase {
   // The FAB by default has its color set to accent.
   color = 'accent' as ThemePalette;
 
-  extended: boolean;
+  private _extended: boolean;
+  get extended(): boolean { return this._extended; }
+  set extended(value: boolean) { this._extended = coerceBooleanProperty(value); }
 
   constructor(
       elementRef: ElementRef, platform: Platform, ngZone: NgZone,
@@ -141,7 +143,10 @@ export class MatFabAnchor extends MatAnchor {
   // The FAB by default has its color set to accent.
   color = 'accent' as ThemePalette;
 
-  extended: boolean;
+  private _extended: boolean;
+  get extended(): boolean { return this._extended; }
+  set extended(value: boolean) { this._extended = coerceBooleanProperty(value); }
+
 
   constructor(
       elementRef: ElementRef, platform: Platform, ngZone: NgZone,

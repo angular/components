@@ -95,14 +95,18 @@ describe('MDC-based MatButton', () => {
   });
 
   describe('button[mat-fab] extended', () => {
-    it('should have accent palette by default', () => {
+    it('should be extended', () => {
       const fixture = TestBed.createComponent(TestApp);
-      const extendedFabButtonDebugEl = fixture.debugElement.query(By.css('.mat-mdc-extended-fab'))!;
+      fixture.detectChanges();
+      const extendedFabButtonDebugEl = fixture.debugElement.query(By.css('.extended-fab-test'))!;
+
+      expect(extendedFabButtonDebugEl.nativeElement.classList.contains('mat-mdc-extended-fab'))
+        .toBeFalse();
+
+      fixture.componentInstance.extended = true;
 
       fixture.detectChanges();
-
-      expect(extendedFabButtonDebugEl.nativeElement.classList)
-        .toContain('mat-accent', 'Expected extended fab buttons to use accent palette by default');
+      expect(extendedFabButtonDebugEl.nativeElement.classList).toContain('mat-mdc-extended-fab');
     });
   });
 
@@ -293,7 +297,7 @@ describe('MDC-based MatButton', () => {
       Link
     </a>
     <button mat-fab>Fab Button</button>
-    <button mat-fab [extended]="true">Extended</button>
+    <button mat-fab [extended]="extended" class="extended-fab-test">Extended</button>
     <button mat-mini-fab>Mini Fab Button</button>
   `
 })
@@ -303,6 +307,7 @@ class TestApp {
   rippleDisabled: boolean = false;
   buttonColor: ThemePalette;
   tabIndex: number;
+  extended: boolean = false;
 
   increment() {
     this.clickCount++;
