@@ -68,7 +68,7 @@
     "rxjs-tslint-rules": "^4.33.1",
     "systemjs": "0.19.43",
     "tslib": "^2.0.0",
-    "zone.js": "~0.10.3"
+    "zone.js": "~0.11.3"
   },
   "devDependencies": {
     "@angular-devkit/build-optimizer": "^0.1101.0",
@@ -137,7 +137,7 @@
     "karma-jasmine": "^4.0.1",
     "karma-parallel": "^0.3.0",
     "karma-requirejs": "^1.1.0",
-    "karma-sauce-launcher": "^2.0.2",
+    "karma-sauce-launcher": "^4.3.5",
     "karma-sourcemap-loader": "^0.3.7",
     "madge": "^4.0.0",
     "marked": "^1.0.0",
