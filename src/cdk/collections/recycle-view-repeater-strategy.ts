@@ -37,8 +37,8 @@ export class _RecycleViewRepeaterStrategy<T, R, C extends _ViewRepeaterItemConte
   implements _ViewRepeater<T, R, C>
 {
   /**
-   * The size of the cache used to store unused views.
-   * Setting the cache size to `0` will disable caching. Defaults to 20 views.
+   * The size of the cache used to store unused views. Setting the cache size to `0` will disable
+   * caching. Defaults to 20 views.
    */
   viewCacheSize: number = 20;
 

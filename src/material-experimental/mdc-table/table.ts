@@ -37,6 +37,7 @@ import {
 })
 export class MatRecycleRows {}
 
+
 @Component({
   selector: 'mat-table, table[mat-table]',
   exportAs: 'matTable',

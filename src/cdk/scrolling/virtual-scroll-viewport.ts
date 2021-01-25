@@ -29,9 +29,9 @@ import {
   Observable,
   Subject,
   Observer,
-  Subscription,
+  Subscription, OperatorFunction,
 } from 'rxjs';
-import {auditTime, startWith, takeUntil} from 'rxjs/operators';
+import {auditTime, distinctUntilChanged, filter, startWith, takeUntil} from 'rxjs/operators';
 import {ScrollDispatcher} from './scroll-dispatcher';
 import {CdkScrollable, ExtendedScrollToOptions} from './scrollable';
 import {VIRTUAL_SCROLL_STRATEGY, VirtualScrollStrategy} from './virtual-scroll-strategy';
@@ -77,6 +77,14 @@ export class CdkVirtualScrollViewport extends CdkScrollable implements OnInit, O
 
   /** Emits when the rendered range changes. */
   private readonly _renderedRangeSubject = new Subject<ListRange>();
+
+  /**
+   * Emits the offset from the start of the viewport to the start of the rendered data (in pixels).
+   */
+  private readonly _renderedContentOffsetRenderedSubject = new Subject<number|null>();
+  readonly _renderedContentOffsetRendered = this._renderedContentOffsetRenderedSubject.pipe(
+      filter(offset => offset !== null) as OperatorFunction<number|null, number>,
+      distinctUntilChanged());
 
   /** The direction the viewport scrolls. */
   @Input()
@@ -444,6 +452,11 @@ export class CdkVirtualScrollViewport extends CdkScrollable implements OnInit, O
     // string literals, a variable that can only be 'X' or 'Y', and user input that is run through
     // the `Number` function first to coerce it to a numeric value.
     this._contentWrapper.nativeElement.style.transform = this._renderedContentTransform;
+
+    // Emit the offset to rendered content start when it is in sync with what is rendered in the
+    // DOM.
+    this._renderedContentOffsetRenderedSubject.next(this.getOffsetToRenderedContentStart());
+
     // Apply changes to Angular bindings. Note: We must call `markForCheck` to run change detection
     // from the root, since the repeated items are content projected in. Calling `detectChanges`
     // instead does not properly check the projected content.

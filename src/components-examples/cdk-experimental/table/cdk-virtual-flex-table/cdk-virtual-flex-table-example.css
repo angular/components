@@ -1,0 +1,40 @@
+.example-container {
+  height: 600px;
+  max-width: 1000px;
+  overflow: auto;
+}
+
+.example-virtual-table {
+  width: 1200px;
+}
+
+.example-virtual-table .cdk-header-cell,
+.example-virtual-table .cdk-footer-cell {
+  align-items: center;
+  background: #3f51b5;
+  color: white;
+  display: flex;
+  font-weight: bold;
+  justify-content: center;
+}
+
+.example-virtual-table .cdk-cell,
+.example-virtual-table .cdk-footer-cell,
+.example-virtual-table .cdk-header-cell {
+  height: 48px;
+}
+
+/**
+ * Add basic flex styling so that the cells evenly space themselves in the row.
+ */
+.example-virtual-table cdk-row,
+.example-virtual-table cdk-header-row,
+.example-virtual-table cdk-footer-row {
+  display: flex;
+}
+
+.example-virtual-table cdk-cell,
+.example-virtual-table cdk-header-cell,
+.example-virtual-table cdk-footer-cell {
+  flex: 1;
+}

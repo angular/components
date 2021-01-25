@@ -1,0 +1,30 @@
+.example-container {
+  height: 600px;
+  max-width: 1000px;
+  overflow: auto;
+}
+
+.example-virtual-table {
+  width: 1200px;
+}
+
+.example-virtual-table td,
+.example-virtual-table th {
+  height: 48px;
+  padding: 0;
+}
+
+.example-virtual-table th.cdk-header-cell,
+.example-virtual-table .cdk-footer-row th {
+  background: #3f51b5;
+  color: white;
+}
+
+.example-virtual-table th.mat-column-position,
+.example-virtual-table td.mat-column-position {
+  padding-left: 8px;
+}
+
+.example-virtual-table .cdk-cell.cdk-table-sticky {
+  background: #f0f0f0;
+}

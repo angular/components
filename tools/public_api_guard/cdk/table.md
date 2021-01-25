@@ -20,6 +20,7 @@ import { InjectionToken } from '@angular/core';
 import { IterableChanges } from '@angular/core';
 import { IterableDiffer } from '@angular/core';
 import { IterableDiffers } from '@angular/core';
+import { ListRange } from '@angular/cdk/collections';
 import { NgZone } from '@angular/core';
 import { Observable } from 'rxjs';
 import { OnChanges } from '@angular/core';
@@ -28,6 +29,7 @@ import { OnInit } from '@angular/core';
 import { Platform } from '@angular/cdk/platform';
 import { QueryList } from '@angular/core';
 import { SimpleChanges } from '@angular/core';
+import { Subject } from 'rxjs';
 import { TemplateRef } from '@angular/core';
 import { TrackByFunction } from '@angular/core';
 import { ViewContainerRef } from '@angular/core';
@@ -288,9 +290,14 @@ export class CdkRowDef<T> extends BaseRowDef {
 
 // @public
 export class CdkTable<T> implements AfterContentChecked, CollectionViewer, OnDestroy, OnInit {
+<<<<<<< fb4e395bb37b1a10f3fc8af49ae63200b0619c7f
     constructor(_differs: IterableDiffers, _changeDetectorRef: ChangeDetectorRef, _elementRef: ElementRef, role: string, _dir: Directionality, _document: any, _platform: Platform, _viewRepeater: _ViewRepeater<T, RenderRow<T>, RowContext<T>>, _coalescedStyleScheduler: _CoalescedStyleScheduler, _viewportRuler: ViewportRuler,
     _stickyPositioningListener: StickyPositioningListener,
     _ngZone?: NgZone | undefined);
+=======
+    constructor(_differs: IterableDiffers, _changeDetectorRef: ChangeDetectorRef, _elementRef: ElementRef, role: string, _dir: Directionality, _document: any, _platform: Platform, _viewRepeater: _ViewRepeater<T, RenderRow<T>, RowContext<T>>, _coalescedStyleScheduler: _CoalescedStyleScheduler,
+    _parentPositioningListener?: StickyPositioningListener | undefined, _viewportRuler?: ViewportRuler | undefined, _positioningListener?: StickyPositioningListener | undefined, viewChange?: BehaviorSubject<ListRange>);
+>>>>>>> feat(cdk/table): Virtual scroll directive for tables
     addColumnDef(columnDef: CdkColumnDef): void;
     addFooterRowDef(footerRowDef: CdkFooterRowDef): void;
     addHeaderRowDef(headerRowDef: CdkHeaderRowDef): void;
@@ -307,6 +314,8 @@ export class CdkTable<T> implements AfterContentChecked, CollectionViewer, OnDes
     protected _data: readonly T[];
     get dataSource(): CdkTableDataSourceInput<T>;
     set dataSource(dataSource: CdkTableDataSourceInput<T>);
+    readonly _dataSourceChanges: Subject<CdkTableDataSourceInput<T>>;
+    readonly _dataStream: Subject<readonly T[]>;
     // (undocumented)
     protected readonly _differs: IterableDiffers;
     // (undocumented)
@@ -338,32 +347,36 @@ export class CdkTable<T> implements AfterContentChecked, CollectionViewer, OnDes
     _noDataRow: CdkNoDataRow;
     // (undocumented)
     _noDataRowOutlet: NoDataRowOutlet;
+    // @deprecated (undocumented)
+    protected readonly _parentPositioningListener?: StickyPositioningListener | undefined;
+    // (undocumented)
+    protected readonly _positioningListener?: StickyPositioningListener | undefined;
     removeColumnDef(columnDef: CdkColumnDef): void;
     removeFooterRowDef(footerRowDef: CdkFooterRowDef): void;
     removeHeaderRowDef(headerRowDef: CdkHeaderRowDef): void;
     removeRowDef(rowDef: CdkRowDef<T>): void;
+    protected _renderedRange?: ListRange;
     renderRows(): void;
     // (undocumented)
     _rowOutlet: DataRowOutlet;
     setNoDataRow(noDataRow: CdkNoDataRow | null): void;
     protected stickyCssClass: string;
-    // @deprecated (undocumented)
-    protected readonly _stickyPositioningListener: StickyPositioningListener;
     get trackBy(): TrackByFunction<T>;
     set trackBy(fn: TrackByFunction<T>);
     updateStickyColumnStyles(): void;
     updateStickyFooterRowStyles(): void;
     updateStickyHeaderRowStyles(): void;
-    readonly viewChange: BehaviorSubject<{
-        start: number;
-        end: number;
-    }>;
+    readonly viewChange: BehaviorSubject<ListRange>;
     // (undocumented)
     protected readonly _viewRepeater: _ViewRepeater<T, RenderRow<T>, RowContext<T>>;
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<CdkTable<any>, "cdk-table, table[cdk-table]", ["cdkTable"], { "trackBy": "trackBy"; "dataSource": "dataSource"; "multiTemplateDataRows": "multiTemplateDataRows"; "fixedLayout": "fixedLayout"; }, { "contentChanged": "contentChanged"; }, ["_noDataRow", "_contentColumnDefs", "_contentRowDefs", "_contentHeaderRowDefs", "_contentFooterRowDefs"], ["caption", "colgroup, col"], false>;
     // (undocumented)
+<<<<<<< fb4e395bb37b1a10f3fc8af49ae63200b0619c7f
     static ɵfac: i0.ɵɵFactoryDeclaration<CdkTable<any>, [null, null, null, { attribute: "role"; }, { optional: true; }, null, null, null, null, null, { optional: true; skipSelf: true; }, { optional: true; }]>;
+=======
+    static ɵfac: i0.ɵɵFactoryDeclaration<CdkTable<any>, [null, null, null, { attribute: "role"; }, { optional: true; }, null, null, null, null, { optional: true; skipSelf: true; }, { optional: true; }, { optional: true; }, { optional: true; }]>;
+>>>>>>> feat(cdk/table): Virtual scroll directive for tables
 }
 
 // @public
@@ -561,6 +574,9 @@ export interface StickyUpdate {
     // (undocumented)
     sizes: StickySize[];
 }
+
+// @public
+export const _TABLE_VIEW_CHANGE_STRATEGY: InjectionToken<TableViewChangeStrategy>;
 
 // @public
 export const TEXT_COLUMN_OPTIONS: InjectionToken<TextColumnOptions<any>>;

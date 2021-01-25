@@ -1,0 +1,37 @@
+<cdk-virtual-scroll-viewport class="example-container" [itemSize]="48" [maxBufferPx]="1200" [minBufferPx]="400">
+  <table class="example-virtual-table" cdk-table fixedLayout virtualScroll [dataSource]="dataSource" [trackBy]="trackBy">
+    <!-- Position Column -->
+    <ng-container cdkColumnDef="position">
+      <th cdk-header-cell *cdkHeaderCellDef> No. </th>
+      <td cdk-cell *cdkCellDef="let element"> {{element.position}} </td>
+      <th cdk-footer-cell *cdkFooterCellDef> No. </th>
+    </ng-container>
+
+    <!-- Name Column -->
+    <ng-container cdkColumnDef="name">
+      <th cdk-header-cell *cdkHeaderCellDef> Name </th>
+      <td cdk-cell *cdkCellDef="let element"> {{element.name}} </td>
+      <th cdk-footer-cell *cdkFooterCellDef> Name </th>
+    </ng-container>
+
+    <!-- Weight Column -->
+    <ng-container cdkColumnDef="weight">
+      <th cdk-header-cell *cdkHeaderCellDef> Weight </th>
+      <td cdk-cell *cdkCellDef="let element"> {{element.weight}} </td>
+      <th cdk-footer-cell *cdkFooterCellDef> Weight </th>
+    </ng-container>
+
+    <!-- Symbol Column -->
+    <ng-container cdkColumnDef="symbol">
+      <th cdk-header-cell *cdkHeaderCellDef> Symbol </th>
+      <td cdk-cell *cdkCellDef="let element"> {{element.symbol}} </td>
+      <th cdk-footer-cell *cdkFooterCellDef> Symbol </th>
+    </ng-container>
+
+    <tr cdk-header-row *cdkHeaderRowDef="displayedColumns; sticky: true;"></tr>
+    <tr cdk-header-row *cdkHeaderRowDef="displayedColumns; sticky: true;"></tr>
+    <tr cdk-row *cdkRowDef="let row; columns: displayedColumns;"></tr>
+    <tr cdk-footer-row *cdkFooterRowDef="displayedColumns; sticky: true;"></tr>
+    <tr cdk-footer-row *cdkFooterRowDef="displayedColumns; sticky: true;"></tr>
+  </table>
+</cdk-virtual-scroll-viewport>
