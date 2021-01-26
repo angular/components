@@ -113,7 +113,7 @@ function addMaterialAppStyles(options: Schema) {
     if (!buffer) {
       logger.error(`Could not read the default style file within the project ` +
         `(${styleFilePath})`);
-      logger.info(`Please consider manually setting up the Robot font.`);
+      logger.info(`Please consider manually setting up the Roboto font.`);
       return;
     }
 
