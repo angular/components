@@ -32,6 +32,7 @@
 .mat-mdc-unelevated-button, .mat-mdc-raised-button, .mat-mdc-outlined-button {
   // Icons inside contained buttons have different styles due to increased button padding
   .mat-icon {
+    @include button.icon();
     @include button.icon-contained();
   }
 
