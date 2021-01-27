@@ -94,7 +94,7 @@
     "@firebase/app-types": "^0.6.1",
     "@octokit/rest": "18.0.14",
     "@schematics/angular": "^11.1.0",
-    "@types/autoprefixer": "^9.7.2",
+    "@types/autoprefixer": "^10.2.0",
     "@types/browser-sync": "^2.26.1",
     "@types/fs-extra": "^9.0.5",
     "@types/glob": "^7.1.3",
