@@ -35,36 +35,13 @@ import {MDCSliderFoundation, Thumb, TickMark} from '@material/slider';
 import {SliderAdapter} from './slider-adapter';
 import {MatSliderThumb} from './slider-thumb';
 
-/** A simple change event emitted by the MatSlider component. */
-export class MatSliderChange {
-  /** The MatSlider that changed. */
-  source: MatSlider;
-
-  /** The new value of the slider thumb that changed. */
-  value: number;
-
-  /** The thumb that changed. */
-  thumb: Thumb;
-
-  constructor(source: MatSlider, value: number, thumb: Thumb) {
-    this.source = source;
-    this.value = value;
-    this.thumb = thumb;
-  }
-}
-
-/** A simple interaction event emitted by the MatSlider component. */
-export class MatSliderInteraction {
+/** Represents an interaction event emitted by the MatSlider component. */
+export interface MatSliderThumbInteractionEvent {
   /** The MatSlider that was interacted with. */
   source: MatSlider;
 
   /** The thumb that was interacted with. */
   thumb: Thumb;
-
-  constructor(source: MatSlider, thumb: Thumb) {
-    this.source = source;
-    this.thumb = thumb;
-  }
 }
 
 /**
@@ -78,9 +55,9 @@ export class MatSliderInteraction {
   host: {
     'class': 'mat-mdc-slider mdc-slider',
     '[class.mdc-slider--range]': 'isRange',
-    '[class.mdc-slider--disabled]': 'isDisabled',
-    '[class.mdc-slider--discrete]': 'isDiscrete',
-    '[class.mdc-slider--tick-marks]': 'hasTickMarks',
+    '[class.mdc-slider--disabled]': 'disabled',
+    '[class.mdc-slider--discrete]': 'discrete',
+    '[class.mdc-slider--tick-marks]': 'showTickMarks',
   },
   exportAs: 'matSlider',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -97,30 +74,32 @@ export class MatSlider implements AfterViewInit, OnDestroy {
   @ViewChild('trackActive') _trackActive: ElementRef<HTMLElement>;
 
   /** The sliders hidden range input(s). */
-  @ContentChildren(MatSliderThumb, { descendants: false }) _inputs: QueryList<MatSliderThumb>;
+  @ContentChildren(MatSliderThumb, {descendants: false}) _inputs: QueryList<MatSliderThumb>;
 
   /** Whether the slider is disabled. */
   @Input()
-  get isDisabled(): boolean { return this._isDisabled; }
-  set isDisabled(v: boolean) {
-    this._isDisabled = coerceBooleanProperty(v);
+  get disabled(): boolean { return this._disabled; }
+  set disabled(v: boolean) {
+    this._disabled = coerceBooleanProperty(v);
     if (this._initialized) {
       this._foundation.setDisabled(v);
     }
   }
-  private _isDisabled: boolean = false;
+  private _disabled: boolean = false;
 
   /** Whether the slider displays a numeric value label upon pressing the thumb. */
   @Input()
-  get isDiscrete(): boolean { return this._isDiscrete; }
-  set isDiscrete(v: boolean) { this._isDiscrete = coerceBooleanProperty(v); }
-  private _isDiscrete: boolean = false;
+  get discrete(): boolean { return this._discrete; }
+  set discrete(v: boolean) { this._discrete = coerceBooleanProperty(v); }
+  private _discrete: boolean = false;
 
   /** Whether the slider displays tick marks along the slider track. */
   @Input()
-  get hasTickMarks(): boolean { return this._hasTickMarks; }
-  set hasTickMarks(v: boolean) { this._hasTickMarks = coerceBooleanProperty(this._hasTickMarks); }
-  private _hasTickMarks: boolean = false;
+  get showTickMarks(): boolean { return this._showTickMarks; }
+  set showTickMarks(v: boolean) {
+    this._showTickMarks = coerceBooleanProperty(this._showTickMarks);
+  }
+  private _showTickMarks: boolean = false;
 
   /** The minimum value that the slider can have. */
   @Input()
@@ -147,19 +126,13 @@ export class MatSlider implements AfterViewInit, OnDestroy {
    */
   @Input() displayWith: ((value: number) => string) | null;
 
-  /** Event emitted when a slider thumb value has changed. */
-  @Output() readonly change: EventEmitter<MatSliderChange> = new EventEmitter<MatSliderChange>();
-
-  /** Event emitted when a slider thumb moves. */
-  @Output() readonly input: EventEmitter<MatSliderChange> = new EventEmitter<MatSliderChange>();
-
   /** Event emitted when the slider thumb starts being dragged. */
-  @Output() readonly dragStart: EventEmitter<MatSliderInteraction>
-    = new EventEmitter<MatSliderInteraction>();
+  @Output() readonly dragStart: EventEmitter<MatSliderThumbInteractionEvent>
+    = new EventEmitter<MatSliderThumbInteractionEvent>();
 
   /** Event emitted when the slider thumb stops being dragged. */
-  @Output() readonly dragEnd: EventEmitter<MatSliderInteraction>
-    = new EventEmitter<MatSliderInteraction>();
+  @Output() readonly dragEnd: EventEmitter<MatSliderThumbInteractionEvent>
+    = new EventEmitter<MatSliderThumbInteractionEvent>();
 
   /** Whether this is a ranged slider. */
   get isRange(): boolean { return this._inputs.length === 2; }
@@ -176,6 +149,18 @@ export class MatSlider implements AfterViewInit, OnDestroy {
   /** The string representation of the end thumbs value. */
   _endValueIndicatorText: string;
 
+  /** The injected document if available or fallback to the global document reference. */
+  _document: Document;
+
+  /**
+   * The defaultView of the injected document if
+   * available or fallback to global window reference.
+   */
+  _window: Window;
+
+  /** The hosts native HTML element. */
+  _hostElement: HTMLElement;
+
   /** Used to keep track of & render the active & inactive tick marks on the slider track. */
   get tickMarks(): TickMark[] { return this._tickMarks; }
   set tickMarks(v: TickMark[]) {
@@ -188,7 +173,11 @@ export class MatSlider implements AfterViewInit, OnDestroy {
     private _cdr: ChangeDetectorRef,
     private readonly _elementRef: ElementRef<HTMLElement>,
     private readonly _platform: Platform,
-    @Inject(DOCUMENT) private readonly _document: any) {}
+    @Inject(DOCUMENT) protected readonly document: any) {
+      this._document = this.document;
+      this._window = this._document.defaultView || window;
+      this._hostElement = this._elementRef.nativeElement;
+    }
 
   ngAfterViewInit() {
     this._foundation.init();
@@ -217,24 +206,6 @@ export class MatSlider implements AfterViewInit, OnDestroy {
       : this._foundation.setValue(value);
   }
 
-  /** Returns the injected document if available or fallback to the global document reference. */
-  _getDocument(): Document {
-    return this._document || document;
-  }
-
-  /**
-   * Returns the defaultView of the injected document
-   * if available or fallback to global window reference.
-   */
-  _getWindow(): Window {
-    return this._document.defaultView || window;
-  }
-
-  /** Gets the hosts native HTML element. */
-  _getHostElement(): HTMLElement {
-    return this._elementRef.nativeElement;
-  }
-
   /** Gets the slider thumb input of the given thumb. */
   _getInput(thumb: Thumb): MatSliderThumb {
     return thumb === Thumb.END ? this._inputs.get(this._inputs.length - 1)! : this._inputs.get(0)!;
@@ -242,7 +213,7 @@ export class MatSlider implements AfterViewInit, OnDestroy {
 
   /** Gets the slider thumb HTML input element of the given thumb. */
   _getInputElement(thumb: Thumb): HTMLInputElement {
-    return this._getInput(thumb)._getHostElement();
+    return this._getInput(thumb)._hostElement;
   }
 
   /** Gets the slider thumb HTML element of the given thumb. */
@@ -284,19 +255,14 @@ export class MatSlider implements AfterViewInit, OnDestroy {
     return this.isRange ? [Thumb.START, Thumb.END] : [Thumb.END];
   }
 
-  /** Creates a MatSliderChange event. */
-  _createChangeEvent(value: number, thumb: Thumb): MatSliderChange {
-    return new MatSliderChange(this, value, thumb);
-  }
-
   /** Creates a MatSliderInteraction event. */
-  _createInteractionEvent(thumb: Thumb): MatSliderInteraction {
-    return new MatSliderInteraction(this, thumb);
+  _createThumbInteractionEvent(thumb: Thumb): MatSliderThumbInteractionEvent {
+    return {source: this, thumb};
   }
 
-  static ngAcceptInputType_isDisabled: BooleanInput;
-  static ngAcceptInputType_isDiscrete: BooleanInput;
-  static ngAcceptInputType_hasTickMarks: BooleanInput;
+  static ngAcceptInputType_disabled: BooleanInput;
+  static ngAcceptInputType_discrete: BooleanInput;
+  static ngAcceptInputType_showTickMarks: BooleanInput;
   static ngAcceptInputType_min: NumberInput;
   static ngAcceptInputType_max: NumberInput;
   static ngAcceptInputType_step: NumberInput;

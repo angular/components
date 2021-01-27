@@ -61,19 +61,19 @@ import {Thumb} from '@material/slider';
   /** Indicates which slider thumb this input corresponds to. */
   thumb: Thumb;
 
+  /** The hosts native HTML element. */
+  _hostElement: HTMLInputElement;
+
   constructor(
     @Inject(DOCUMENT) private readonly _document: Document,
     private readonly _elementRef: ElementRef<HTMLInputElement>,
-    ) {}
-
-  /** Returns the hosts native HTML element. */
-  _getHostElement(): HTMLInputElement {
-    return this._elementRef.nativeElement;
-  }
+    ) {
+      this._hostElement = this._elementRef.nativeElement;
+    }
 
   /** Returns true if this slider input currently has focus. */
   _isFocused(): boolean {
-    return this._document.activeElement === this._getHostElement();
+    return this._document.activeElement === this._hostElement;
   }
 
   static ngAcceptInputType_value: NumberInput;

@@ -7,14 +7,14 @@
   <div class="mdc-slider__track--active">
     <div class="mdc-slider__track--active_fill" #trackActive></div>
   </div>
-  <div *ngIf="hasTickMarks" class="mdc-slider__tick-marks" #tickMarkContainer>
+  <div *ngIf="showTickMarks" class="mdc-slider__tick-marks" #tickMarkContainer>
     <div *ngFor="let tickMark of tickMarks" class="{{_getTickMarkClass(tickMark)}}"></div>
   </div>
 </div>
 
 <!-- Thumbs -->
 <div class="mdc-slider__thumb" *ngFor="let thumb of _getThumbTypes()" #thumb>
-  <div class="mdc-slider__value-indicator-container" *ngIf="isDiscrete">
+  <div class="mdc-slider__value-indicator-container" *ngIf="discrete">
     <div class="mdc-slider__value-indicator">
       <span class="mdc-slider__value-indicator-text">
         {{_getValueIndicatorTextByThumb(thumb)}}
