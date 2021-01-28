@@ -33,16 +33,8 @@ import {
 } from '@angular/core';
 import {MDCSliderFoundation, Thumb, TickMark} from '@material/slider';
 import {SliderAdapter} from './slider-adapter';
+import {MatSliderDragEvent} from './slider-events';
 import {MatSliderThumb} from './slider-thumb';
-
-/** Represents an interaction event emitted by the MatSlider component. */
-export interface MatSliderThumbInteractionEvent {
-  /** The MatSlider that was interacted with. */
-  source: MatSlider;
-
-  /** The thumb that was interacted with. */
-  thumb: Thumb;
-}
 
 /**
  * Allows users to select from a range of values by moving the slider thumb. It is similar in
@@ -54,7 +46,7 @@ export interface MatSliderThumbInteractionEvent {
   styleUrls: ['slider.css'],
   host: {
     'class': 'mat-mdc-slider mdc-slider',
-    '[class.mdc-slider--range]': 'isRange',
+    '[class.mdc-slider--range]': '_isRange()',
     '[class.mdc-slider--disabled]': 'disabled',
     '[class.mdc-slider--discrete]': 'discrete',
     '[class.mdc-slider--tick-marks]': 'showTickMarks',
@@ -127,15 +119,12 @@ export class MatSlider implements AfterViewInit, OnDestroy {
   @Input() displayWith: ((value: number) => string) | null;
 
   /** Event emitted when the slider thumb starts being dragged. */
-  @Output() readonly dragStart: EventEmitter<MatSliderThumbInteractionEvent>
-    = new EventEmitter<MatSliderThumbInteractionEvent>();
+  @Output() readonly dragStart: EventEmitter<MatSliderDragEvent>
+    = new EventEmitter<MatSliderDragEvent>();
 
   /** Event emitted when the slider thumb stops being dragged. */
-  @Output() readonly dragEnd: EventEmitter<MatSliderThumbInteractionEvent>
-    = new EventEmitter<MatSliderThumbInteractionEvent>();
-
-  /** Whether this is a ranged slider. */
-  get isRange(): boolean { return this._inputs.length === 2; }
+  @Output() readonly dragEnd: EventEmitter<MatSliderDragEvent>
+    = new EventEmitter<MatSliderDragEvent>();
 
   /** Instance of the MDC slider foundation for this slider. */
   private _foundation = new MDCSliderFoundation(new SliderAdapter());
@@ -184,6 +173,7 @@ export class MatSlider implements AfterViewInit, OnDestroy {
     if (this._platform.isBrowser) {
       this._foundation.layout();
     }
+    this._initialized = true;
   }
 
   ngOnDestroy() {
@@ -204,6 +194,11 @@ export class MatSlider implements AfterViewInit, OnDestroy {
     thumb === Thumb.START
       ? this._foundation.setValueStart(value)
       : this._foundation.setValue(value);
+  }
+
+  /** Whether this is a ranged slider. */
+  _isRange(): boolean {
+    return this._inputs.length === 2;
   }
 
   /** Gets the slider thumb input of the given thumb. */
@@ -252,12 +247,12 @@ export class MatSlider implements AfterViewInit, OnDestroy {
 
   /** Returns an array of the thumb types that exist on the current slider instance. */
   _getThumbTypes(): Thumb[] {
-    return this.isRange ? [Thumb.START, Thumb.END] : [Thumb.END];
+    return this._isRange() ? [Thumb.START, Thumb.END] : [Thumb.END];
   }
 
-  /** Creates a MatSliderInteraction event. */
-  _createThumbInteractionEvent(thumb: Thumb): MatSliderThumbInteractionEvent {
-    return {source: this, thumb};
+  /** Creates a MatSliderDragEvent event. */
+  _createDragEvent(value: number, thumb: Thumb): MatSliderDragEvent {
+    return {source: this, value, thumb};
   }
 
   static ngAcceptInputType_disabled: BooleanInput;
