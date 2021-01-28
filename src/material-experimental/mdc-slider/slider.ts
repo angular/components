@@ -89,7 +89,7 @@ export class MatSlider implements AfterViewInit, OnDestroy {
   @Input()
   get showTickMarks(): boolean { return this._showTickMarks; }
   set showTickMarks(v: boolean) {
-    this._showTickMarks = coerceBooleanProperty(this._showTickMarks);
+    this._showTickMarks = coerceBooleanProperty(v);
   }
   private _showTickMarks: boolean = false;
 
