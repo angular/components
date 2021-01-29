@@ -16,7 +16,6 @@ import {
   MapPolyline,
   MapRectangle
 } from '@angular/google-maps';
-import {take} from 'rxjs/operators';
 
 const POLYLINE_PATH: google.maps.LatLngLiteral[] =
     [{lat: 25, lng: 26}, {lat: 26, lng: 27}, {lat: 30, lng: 34}];
@@ -204,7 +203,7 @@ export class GoogleMapDemo {
         origin: this.markerPositions[0],
         travelMode: google.maps.TravelMode.DRIVING,
       };
-      this._mapDirectionsService.route(request).pipe(take(1)).subscribe(response => {
+      this._mapDirectionsService.route(request).subscribe(response => {
         this.directionsResult = response.result;
       });
     }

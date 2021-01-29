@@ -23,7 +23,7 @@ export interface MapDirectionsResponse {
  *
  * See developers.google.com/maps/documentation/javascript/reference/directions#DirectionsService
  */
-@Injectable()
+@Injectable({providedIn: 'root'})
 export class MapDirectionsService {
   private readonly _directionsService: google.maps.DirectionsService;
 
@@ -45,6 +45,7 @@ export class MapDirectionsService {
           ) => {
         this._ngZone.run(() => {
           observer.next({result, status});
+          observer.complete();
         });
       };
       this._directionsService.route(request, callback);

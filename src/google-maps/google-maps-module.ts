@@ -13,7 +13,6 @@ import {MapBaseLayer} from './map-base-layer';
 import {MapBicyclingLayer} from './map-bicycling-layer/map-bicycling-layer';
 import {MapCircle} from './map-circle/map-circle';
 import {MapDirectionsRenderer} from './map-directions-renderer/map-directions-renderer';
-import {MapDirectionsService} from './map-directions-renderer/map-directions-service';
 import {MapGroundOverlay} from './map-ground-overlay/map-ground-overlay';
 import {MapInfoWindow} from './map-info-window/map-info-window';
 import {MapKmlLayer} from './map-kml-layer/map-kml-layer';
@@ -43,14 +42,9 @@ const COMPONENTS = [
   MapTransitLayer,
 ];
 
-const SERVICES = [
-  MapDirectionsService,
-];
-
 @NgModule({
   declarations: COMPONENTS,
   exports: COMPONENTS,
-  providers: SERVICES,
 })
 export class GoogleMapsModule {
 }
