@@ -73,6 +73,10 @@ export class MatSlider implements AfterViewInit, OnDestroy {
   get disabled(): boolean { return this._disabled; }
   set disabled(v: boolean) {
     this._disabled = coerceBooleanProperty(v);
+
+    // If we want to disable the slider after the foundation has been initialized,
+    // we need to inform the foundation by calling `setDisabled`. Also, we can't call
+    // this before initializing the foundation because it will throw errors.
     if (this._initialized) {
       this._foundation.setDisabled(v);
     }
@@ -151,15 +155,10 @@ export class MatSlider implements AfterViewInit, OnDestroy {
   _hostElement: HTMLElement;
 
   /** Used to keep track of & render the active & inactive tick marks on the slider track. */
-  get tickMarks(): TickMark[] { return this._tickMarks; }
-  set tickMarks(v: TickMark[]) {
-    this._tickMarks = v;
-    this._cdr.markForCheck();
-  }
-  private _tickMarks: TickMark[];
+  _tickMarks: TickMark[];
 
   constructor(
-    private _cdr: ChangeDetectorRef,
+    readonly _cdr: ChangeDetectorRef,
     private readonly _elementRef: ElementRef<HTMLElement>,
     private readonly _platform: Platform,
     @Inject(DOCUMENT) protected readonly document: any) {

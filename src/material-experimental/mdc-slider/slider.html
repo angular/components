@@ -8,7 +8,7 @@
     <div class="mdc-slider__track--active_fill" #trackActive></div>
   </div>
   <div *ngIf="showTickMarks" class="mdc-slider__tick-marks" #tickMarkContainer>
-    <div *ngFor="let tickMark of tickMarks" [class]="_getTickMarkClass(tickMark)"></div>
+    <div *ngFor="let tickMark of _tickMarks" [class]="_getTickMarkClass(tickMark)"></div>
   </div>
 </div>
 
