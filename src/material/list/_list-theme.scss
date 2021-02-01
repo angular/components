@@ -1,5 +1,6 @@
 @import '../core/theming/palette';
 @import '../core/theming/theming';
+@import '../core/typography/typography';
 @import '../core/typography/typography-utils';
 @import '../core/style/list-common';
 
@@ -43,7 +44,7 @@
 }
 
 @mixin mat-list-typography($config-or-theme) {
-  $config: mat-get-typography-config($config-or-theme);
+  $config: mat-private-typography-to-2014-config(mat-get-typography-config($config-or-theme));
   $font-family: mat-font-family($config);
 
   .mat-list-item {

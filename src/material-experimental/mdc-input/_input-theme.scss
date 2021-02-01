@@ -1,4 +1,5 @@
 @import '../mdc-helpers/mdc-helpers';
+@import '../../material/core/typography/typography';
 
 @mixin mat-mdc-input-color($config-or-theme) {
   $config: mat-get-color-config($config-or-theme);
@@ -6,7 +7,7 @@
 }
 
 @mixin mat-mdc-input-typography($config-or-theme) {
-  $config: mat-get-typography-config($config-or-theme);
+  $config: mat-private-typography-to-2018-config(mat-get-typography-config($config-or-theme));
   @include mat-using-mdc-typography($config) {}
 }
 

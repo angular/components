@@ -4,6 +4,8 @@
 @import '@material/ripple/variables.import';
 @import '@material/theme/functions.import';
 @import '../mdc-helpers/mdc-helpers';
+@import '../../material/core/typography/typography';
+
 
 @mixin mat-mdc-slide-toggle-color($config-or-theme) {
   $config: mat-get-color-config($config-or-theme);
@@ -79,7 +81,7 @@
 }
 
 @mixin mat-mdc-slide-toggle-typography($config-or-theme) {
-  $config: mat-get-typography-config($config-or-theme);
+  $config: mat-private-typography-to-2018-config(mat-get-typography-config($config-or-theme));
   @include mat-using-mdc-typography($config) {
     @include mdc-switch-without-ripple($query: $mat-typography-styles-query);
     @include mdc-form-field-core-styles($query: $mat-typography-styles-query);

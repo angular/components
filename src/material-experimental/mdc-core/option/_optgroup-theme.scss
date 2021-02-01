@@ -4,6 +4,8 @@
 @import '@material/theme/mixins.import';
 @import '../../mdc-helpers/mdc-helpers';
 @import '../../../material/core/theming/theming';
+@import '../../../material/core/typography/typography';
+
 
 @mixin mat-mdc-optgroup-color($config-or-theme) {
   $config: mat-get-color-config($config-or-theme);
@@ -20,7 +22,7 @@
 }
 
 @mixin mat-mdc-optgroup-typography($config-or-theme) {
-  $config: mat-get-typography-config($config-or-theme);
+  $config: mat-private-typography-to-2018-config(mat-get-typography-config($config-or-theme));
 }
 
 @mixin mat-mdc-optgroup-density($config-or-theme) {

@@ -5,6 +5,7 @@
 @import '@material/typography/mixins.import';
 @import '../../mdc-helpers/mdc-helpers';
 @import '../../../material/core/theming/theming';
+@import '../../../material/core/typography/typography';
 
 @mixin mat-mdc-option-color($config-or-theme) {
   $config: mat-get-color-config($config-or-theme);
@@ -43,7 +44,7 @@
 }
 
 @mixin mat-mdc-option-typography($config-or-theme) {
-  $config: mat-get-typography-config($config-or-theme);
+  $config: mat-private-typography-to-2018-config(mat-get-typography-config($config-or-theme));
 
   @include mat-using-mdc-typography($config) {
     // MDC uses the `subtitle1` level for list items, but the spec shows `body1` as the correct

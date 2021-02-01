@@ -1,6 +1,7 @@
 @import '@material/menu-surface/mixins.import';
 @import '@material/list/mixins.import';
 @import '../mdc-helpers/mdc-helpers';
+@import '../../material/core/typography/typography';
 
 @mixin mat-mdc-autocomplete-color($config-or-theme) {
   $config: mat-get-color-config($config-or-theme);
@@ -11,7 +12,7 @@
 }
 
 @mixin mat-mdc-autocomplete-typography($config-or-theme) {
-  $config: mat-get-typography-config($config-or-theme);
+  $config: mat-private-typography-to-2018-config(mat-get-typography-config($config-or-theme));
   @include mat-using-mdc-typography($config) {
     @include mdc-menu-surface-core-styles($mat-typography-styles-query);
 

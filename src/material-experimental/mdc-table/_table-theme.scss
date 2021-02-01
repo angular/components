@@ -2,6 +2,7 @@
 @import '@material/theme/functions.import';
 @import '@material/data-table/variables.import';
 @import '@material/data-table/mixins.import';
+@import '../../material/core/typography/typography';
 
 @mixin mat-mdc-table-color($config-or-theme) {
   $config: mat-get-color-config($config-or-theme);
@@ -43,7 +44,7 @@
 }
 
 @mixin mat-mdc-table-typography($config-or-theme) {
-  $config: mat-get-typography-config($config-or-theme);
+  $config: mat-private-typography-to-2018-config(mat-get-typography-config($config-or-theme));
   @include mat-using-mdc-typography($config) {
     @include mdc-data-table-core-styles($query: $mat-typography-styles-query);
   }

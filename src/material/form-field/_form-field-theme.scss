@@ -1,6 +1,7 @@
 @import '../core/theming/palette';
 @import '../core/theming/theming';
 @import '../core/style/form-common';
+@import '../core/typography/typography';
 @import '../core/typography/typography-utils';
 
 @import './form-field-fill-theme.scss';
@@ -130,7 +131,7 @@ $mat-form-field-dedupe: 0;
 }
 
 @mixin mat-form-field-typography($config-or-theme) {
-  $config: mat-get-typography-config($config-or-theme);
+  $config: mat-private-typography-to-2014-config(mat-get-typography-config($config-or-theme));
   // The unit-less line-height from the font config.
   $line-height: mat-line-height($config, input);
 

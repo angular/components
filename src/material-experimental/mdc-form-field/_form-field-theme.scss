@@ -6,6 +6,7 @@
 @import '@material/textfield/variables.import';
 @import '@material/typography/mixins.import';
 @import '../mdc-helpers/mdc-helpers';
+@import '../../material/core/typography/typography';
 @import 'form-field-density';
 @import 'form-field-subscript';
 @import 'form-field-focus-overlay';
@@ -60,7 +61,7 @@
 }
 
 @mixin mat-mdc-form-field-typography($config-or-theme) {
-  $config: mat-get-typography-config($config-or-theme);
+  $config: mat-private-typography-to-2018-config(mat-get-typography-config($config-or-theme));
   @include mat-using-mdc-typography($config) {
     @include mdc-text-field-without-ripple($query: $mat-typography-styles-query);
     @include mdc-floating-label-core-styles($query: $mat-typography-styles-query);

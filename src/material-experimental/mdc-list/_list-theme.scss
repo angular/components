@@ -5,6 +5,7 @@
 @import './interactive-list-theme';
 @import './list-option-theme';
 @import '../mdc-helpers/mdc-helpers';
+@import '../../material/core/typography/typography';
 
 
 // TODO: implement mat-list[dense] once density system is in master
@@ -52,7 +53,7 @@
 }
 
 @mixin mat-mdc-list-typography($config-or-theme) {
-  $config: mat-get-typography-config($config-or-theme);
+  $config: mat-private-typography-to-2018-config(mat-get-typography-config($config-or-theme));
   @include mat-using-mdc-typography($config) {
     @include mdc-list-without-ripple($query: $mat-typography-styles-query);
     @include mat-mdc-private-list-option-typography-styles();

@@ -5,6 +5,7 @@
 @import '@material/tab/variables.import';
 @import '@material/tab-bar/mixins.import';
 @import '../mdc-helpers/mdc-helpers';
+@import '../../material/core/typography/typography';
 
 @mixin mat-mdc-tabs-color($config-or-theme) {
   $config: mat-get-color-config($config-or-theme);
@@ -102,7 +103,7 @@
 }
 
 @mixin mat-mdc-tabs-typography($config-or-theme) {
-  $config: mat-get-typography-config($config-or-theme);
+  $config: mat-private-typography-to-2018-config(mat-get-typography-config($config-or-theme));
   @include mat-using-mdc-typography($config) {
     @include mdc-tab-without-ripple($query: $mat-typography-styles-query);
     @include mdc-tab-indicator-core-styles($query: $mat-typography-styles-query);

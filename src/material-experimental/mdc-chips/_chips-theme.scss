@@ -1,6 +1,7 @@
 @import '@material/chips/mixins.import';
 @import '../mdc-helpers/mdc-helpers';
 @import '@material/theme/functions.import';
+@import '../../material/core/typography/typography';
 
 @mixin _selected-color($color) {
   @include mdc-chip-fill-color($color, $query: $mat-theme-styles-query);
@@ -70,7 +71,7 @@
 }
 
 @mixin mat-mdc-chips-typography($config-or-theme) {
-  $config: mat-get-typography-config($config-or-theme);
+  $config: mat-private-typography-to-2018-config(mat-get-typography-config($config-or-theme));
   @include mdc-chip-set-core-styles($query: $mat-typography-styles-query);
   @include mat-using-mdc-typography($config) {
     @include mdc-chip-without-ripple($query: $mat-typography-styles-query);

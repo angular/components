@@ -2,6 +2,7 @@
 @import '../core/style/variables';
 @import '../core/theming/palette';
 @import '../core/theming/theming';
+@import '../core/typography/typography';
 @import '../core/typography/typography-utils';
 @import './toolbar-variables';
 
@@ -68,7 +69,7 @@
 }
 
 @mixin mat-toolbar-typography($config-or-theme) {
-  $config: mat-get-typography-config($config-or-theme);
+  $config: mat-private-typography-to-2014-config(mat-get-typography-config($config-or-theme));
   .mat-toolbar,
   .mat-toolbar h1,
   .mat-toolbar h2,

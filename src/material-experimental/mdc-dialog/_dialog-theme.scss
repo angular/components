@@ -1,5 +1,6 @@
 @import '../mdc-helpers/mdc-helpers';
 @import '@material/dialog/mixins.import';
+@import '../../material/core/typography/typography';
 
 @mixin mat-mdc-dialog-color($config-or-theme) {
   $config: mat-get-color-config($config-or-theme);
@@ -9,7 +10,7 @@
 }
 
 @mixin mat-mdc-dialog-typography($config-or-theme) {
-  $config: mat-get-typography-config($config-or-theme);
+  $config: mat-private-typography-to-2018-config(mat-get-typography-config($config-or-theme));
   @include mat-using-mdc-typography($config) {
     @include mdc-dialog-core-styles($query: $mat-typography-styles-query);
   }

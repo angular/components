@@ -6,6 +6,7 @@
 @import '@material/theme/mixins.import';
 @import '@material/typography/mixins.import';
 @import '../mdc-helpers/mdc-helpers';
+@import '../../material/core/typography/typography';
 
 @mixin mat-mdc-menu-color($config-or-theme) {
   $config: mat-get-color-config($config-or-theme);
@@ -44,7 +45,7 @@
 }
 
 @mixin mat-mdc-menu-typography($config-or-theme) {
-  $config: mat-get-typography-config($config-or-theme);
+  $config: mat-private-typography-to-2018-config(mat-get-typography-config($config-or-theme));
   @include mat-using-mdc-typography($config) {
     @include mdc-menu-surface-core-styles($mat-typography-styles-query);
 

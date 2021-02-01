@@ -5,6 +5,7 @@
 @import '@material/icon-button/mixins.import';
 @import '@material/theme/mixins.import';
 @import '../../material/core/ripple/ripple';
+@import '../../material/core/typography/typography';
 @import '../mdc-helpers/mdc-helpers';
 
 // Selector for the element that has a background color and opacity applied to its ::before and
@@ -167,7 +168,7 @@ $mat-button-state-target: '.mdc-button__ripple';
 }
 
 @mixin mat-mdc-button-typography($config-or-theme) {
-  $config: mat-get-typography-config($config-or-theme);
+  $config: mat-private-typography-to-2018-config(mat-get-typography-config($config-or-theme));
   @include mat-using-mdc-typography($config) {
     @include mdc-button-without-ripple($query: $mat-typography-styles-query);
   }
@@ -253,6 +254,7 @@ $mat-button-state-target: '.mdc-button__ripple';
 }
 
 @mixin mat-mdc-fab-typography($config-or-theme) {
+  $config: mat-private-typography-to-2014-config(mat-get-typography-config($config-or-theme));
   $config: mat-get-typography-config($config-or-theme);
   @include mat-using-mdc-typography($config) {
     @include mdc-fab-without-ripple($query: $mat-typography-styles-query);
@@ -326,6 +328,7 @@ $mat-button-state-target: '.mdc-button__ripple';
 }
 
 @mixin mat-mdc-icon-button-typography($config-or-theme) {
+  $config: mat-private-typography-to-2014-config(mat-get-typography-config($config-or-theme));
   $config: mat-get-typography-config($config-or-theme);
   @include mat-using-mdc-typography($config) {
     @include mdc-icon-button-without-ripple($query: $mat-typography-styles-query);

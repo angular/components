@@ -8,6 +8,7 @@
 @import '@material/ripple/variables.import';
 @import '@material/theme/functions.import';
 @import '../mdc-helpers/mdc-helpers';
+@import '../../material/core/typography/typography';
 
 // Mixin that includes the checkbox theme styles with a given palette.
 // By default, the MDC checkbox always uses the `secondary` palette.
@@ -110,7 +111,7 @@
 }
 
 @mixin mat-mdc-checkbox-typography($config-or-theme) {
-  $config: mat-get-typography-config($config-or-theme);
+  $config: mat-private-typography-to-2018-config(mat-get-typography-config($config-or-theme));
   @include mat-using-mdc-typography($config) {
     @include mdc-checkbox-without-ripple($query: $mat-typography-styles-query);
     @include mdc-form-field-core-styles($query: $mat-typography-styles-query);

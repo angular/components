@@ -2,6 +2,7 @@
 @import '@material/typography/mixins.import';
 @import '../../material/core/theming/theming';
 @import '../../material/core/density/private/compatibility';
+@import '../../material/core/typography/typography';
 @import '../mdc-helpers/mdc-helpers';
 @import './paginator-variables';
 
@@ -47,7 +48,7 @@
 }
 
 @mixin mat-mdc-paginator-typography($config-or-theme) {
-  $config: mat-get-typography-config($config-or-theme);
+  $config: mat-private-typography-to-2018-config(mat-get-typography-config($config-or-theme));
 
   @include mat-using-mdc-typography($config) {
     .mat-mdc-paginator {

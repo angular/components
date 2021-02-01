@@ -2,6 +2,7 @@
 @import '@material/theme/functions.import';
 @import '@material/snackbar/variables.import';
 @import '@material/snackbar/mixins.import';
+@import '../../material/core/typography/typography';
 
 @mixin mat-mdc-snack-bar-color($config-or-theme) {
   $config: mat-get-color-config($config-or-theme);
@@ -40,7 +41,7 @@
 }
 
 @mixin mat-mdc-snack-bar-typography($config-or-theme) {
-  $config: mat-get-typography-config($config-or-theme);
+  $config: mat-private-typography-to-2018-config(mat-get-typography-config($config-or-theme));
   @include mat-using-mdc-typography($config) {
     @include mdc-snackbar-core-styles($query: $mat-typography-styles-query);
   }

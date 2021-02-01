@@ -3,6 +3,7 @@
 @import '@material/radio/mixins';
 @import '@material/radio/variables';
 @import '@material/theme/functions.import';
+@import '../../material/core/typography/typography';
 
 @mixin mat-mdc-radio-color($config-or-theme) {
   $config: mat-get-color-config($config-or-theme);
@@ -41,7 +42,7 @@
 }
 
 @mixin mat-mdc-radio-typography($config-or-theme) {
-  $config: mat-get-typography-config($config-or-theme);
+  $config: mat-private-typography-to-2018-config(mat-get-typography-config($config-or-theme));
   @include mat-using-mdc-typography($config) {
     @include mdc-radio-without-ripple($query: $mat-typography-styles-query);
     @include mdc-form-field-core-styles($query: $mat-typography-styles-query);

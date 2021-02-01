@@ -1,6 +1,7 @@
 @import '../core/style/private';
 @import '../core/theming/palette';
 @import '../core/theming/theming';
+@import '../core/typography/typography';
 @import '../core/typography/typography-utils';
 
 
@@ -17,7 +18,7 @@
 }
 
 @mixin mat-dialog-typography($config-or-theme) {
-  $config: mat-get-typography-config($config-or-theme);
+  $config: mat-private-typography-to-2014-config(mat-get-typography-config($config-or-theme));
   .mat-dialog-title {
     @include mat-typography-level-to-styles($config, title);
   }

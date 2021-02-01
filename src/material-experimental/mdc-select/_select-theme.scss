@@ -4,6 +4,7 @@
 @import '@material/select/variables.import';
 @import '@material/typography/mixins.import';
 @import '../mdc-helpers/mdc-helpers';
+@import '../../material/core/typography/typography';
 
 // Gets the color to use for some text that is highlighted while a select has focus.
 @function _get-mdc-focused-text-color($palette) {
@@ -81,7 +82,7 @@
 }
 
 @mixin mat-mdc-select-typography($config-or-theme) {
-  $config: mat-get-typography-config($config-or-theme);
+  $config: mat-private-typography-to-2018-config(mat-get-typography-config($config-or-theme));
   @include mat-using-mdc-typography($config) {
     @include mdc-menu-surface-core-styles($mat-typography-styles-query);
 
