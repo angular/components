@@ -121,6 +121,8 @@ create_system_config(
     output_name = "system-config.js",
 )
 
+# File group for static files that are listed in the gitignore file that contain
+# secrets like API keys.
 filegroup(
     name = "environment-secret-assets",
     srcs = glob(["*-api-key.txt"]),
