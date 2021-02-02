@@ -1,4 +1,4 @@
-import {Component, NgModule, OnInit} from '@angular/core';
+import {Component, HostBinding, NgModule, OnInit} from '@angular/core';
 import {SvgViewerModule} from '../../shared/svg-viewer/svg-viewer';
 import {MatButtonModule} from '@angular/material/button';
 import {FooterModule} from '../../shared/footer/footer';
@@ -20,6 +20,7 @@ const TOP_COMPONENTS = ['datepicker', 'input', 'slide-toggle', 'slider', 'button
   styleUrls: ['./homepage.scss']
 })
 export class Homepage implements OnInit {
+  @HostBinding('class.main-content') readonly mainContentClass = true;
   isNextVersion = location.hostname.startsWith('next.material.angular.io');
 
   constructor(public _componentPageTitle: ComponentPageTitle, public guideItems: GuideItems) {

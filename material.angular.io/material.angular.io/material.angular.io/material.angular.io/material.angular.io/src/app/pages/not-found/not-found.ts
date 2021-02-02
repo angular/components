@@ -1,4 +1,4 @@
-import {Component, NgModule} from '@angular/core';
+import {Component, HostBinding, NgModule} from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
 import {FooterModule} from '../../shared/footer/footer';
 import {RouterModule, Routes} from '@angular/router';
@@ -9,6 +9,7 @@ import {RouterModule, Routes} from '@angular/router';
   styleUrls: ['./not-found.scss']
 })
 export class NotFound {
+  @HostBinding('class.main-content') readonly mainContentClass = true;
 }
 
 const routes: Routes = [{path: '', component: NotFound}];

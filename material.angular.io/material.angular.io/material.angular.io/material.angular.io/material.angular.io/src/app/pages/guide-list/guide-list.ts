@@ -1,4 +1,4 @@
-import {Component, NgModule, OnInit} from '@angular/core';
+import {Component, HostBinding, NgModule, OnInit} from '@angular/core';
 import {GuideItems} from '../../shared/guide-items/guide-items';
 import {MatListModule} from '@angular/material/list';
 import {RouterModule, Routes} from '@angular/router';
@@ -14,6 +14,8 @@ import {MatCardModule} from '@angular/material/card';
   styleUrls: ['./guide-list.scss']
 })
 export class GuideList implements OnInit {
+  @HostBinding('class.main-content') readonly mainContentClass = true;
+
   constructor(public guideItems: GuideItems, public _componentPageTitle: ComponentPageTitle) {}
 
   ngOnInit(): void {
