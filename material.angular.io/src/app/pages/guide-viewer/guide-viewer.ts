@@ -1,4 +1,4 @@
-import {Component, NgModule, OnInit} from '@angular/core';
+import {Component, HostBinding, NgModule, OnInit} from '@angular/core';
 import {ActivatedRoute, Router, RouterModule, Routes} from '@angular/router';
 import {GuideItem, GuideItems} from '../../shared/guide-items/guide-items';
 import {FooterModule} from '../../shared/footer/footer';
@@ -14,6 +14,7 @@ import {NavigationFocusModule} from '../../shared/navigation-focus/navigation-fo
   styleUrls: ['./guide-viewer.scss'],
 })
 export class GuideViewer implements OnInit {
+  @HostBinding('class.main-content') readonly mainContentClass = true;
   guide: GuideItem | undefined;
 
   constructor(_route: ActivatedRoute,

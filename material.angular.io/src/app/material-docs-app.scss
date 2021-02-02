@@ -1,11 +1,7 @@
 material-docs-app {
   display: flex;
   flex-direction: column;
-  position: absolute;
-  top: 56px;
-  bottom: 0;
-  left: 0;
-  right: 0;
+  height: 100vh;
 }
 
 app-navbar {
@@ -20,21 +16,16 @@ material-docs-app > app-component-sidenav {
   flex: 1;
 }
 
-material-docs-app > app-homepage,
-material-docs-app > app-guides,
-material-docs-app > guide-viewer {
+material-docs-app > router-outlet + .main-content,
+material-docs-app > router-outlet + app-component-sidenav {
+  margin-top: 56px;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
 }
 
 @media (max-width: 720px) {
-  material-docs-app {
-    top: 92px;
-  }
-
-  material-docs-app > app-homepage,
-  material-docs-app > app-guides,
-  material-docs-app > guide-viewer {
-    overflow-y: visible;
+  material-docs-app > router-outlet + .main-content,
+  material-docs-app > router-outlet + app-component-sidenav {
+    margin-top: 92px;
   }
 }
