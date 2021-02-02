@@ -33,8 +33,21 @@ import {
 } from '@angular/core';
 import {MDCSliderFoundation, Thumb, TickMark} from '@material/slider';
 import {SliderAdapter} from './slider-adapter';
-import {MatSliderDragEvent} from './slider-events';
 import {MatSliderThumb} from './slider-thumb';
+
+/**
+ * Represents a drag event emitted by the MatSlider component.
+ */
+export interface MatSliderDragEvent {
+  /** The MatSlider that was interacted with. */
+  source: MatSlider;
+
+  /** The current value of the slider. */
+  value: number;
+
+  /** The thumb that was interacted with. */
+  thumb: Thumb;
+}
 
 /**
  * Allows users to select from a range of values by moving the slider thumb. It is similar in
