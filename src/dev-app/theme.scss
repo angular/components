@@ -15,52 +15,40 @@
 
 // Plus imports for other components in your app.
 
-// Include the common styles for Angular Material. We include this here so that you only
-// have to load a single css file for Angular Material in your app.
-// **Be sure that you only ever include this mixin once!**
-@include mat-core();
-@include angular-material-mdc-typography(mat-mdc-typography-config());
-@include mat-popover-edit-typography(mat-typography-config());
-
-// Include base styles for strong focus indicators.
-.demo-strong-focus {
-  @include mat-strong-focus-indicators();
-  @include mat-mdc-strong-focus-indicators();
-}
-
-// Define the default theme (same as the example above).
+// Define the default (light) theme.
 $candy-app-primary: mat-palette($mat-indigo);
 $candy-app-accent: mat-palette($mat-pink, A200, A100, A400);
 $candy-app-theme: mat-light-theme((
-  color: (
-    primary: $candy-app-primary,
-    accent: $candy-app-accent
-  )
+    // Define the default colors for our app.
+    color: (
+        primary: $candy-app-primary,
+        accent: $candy-app-accent
+    ),
+    // Define the default typography for our app.
+    typography: mat-mdc-typography-config(),
+    // Define the default density level for our app.
+    density: 0,
 ));
+
+// Include the common styles for Angular Material. We include this here so that you only
+// have to load a single css file for Angular Material in your app.
+// **Be sure that you only ever include this mixin once!**
+@include mat-core($candy-app-theme);
 
 // Include the default theme styles.
 @include angular-material-theme($candy-app-theme);
 @include angular-material-mdc-theme($candy-app-theme);
 @include mat-column-resize-theme($candy-app-theme);
 @include mat-popover-edit-theme($candy-app-theme);
-
 // We add this in manually for now, because it isn't included in `angular-material-mdc-theme`.
 @include mat-mdc-slider-theme($candy-app-theme);
 
-// Define an alternate dark theme.
-$dark-primary: mat-palette($mat-blue-grey);
-$dark-accent: mat-palette($mat-amber, A200, A100, A400);
-$dark-warn: mat-palette($mat-deep-orange);
-$dark-theme: mat-dark-theme((
-  color: (
-    primary: $dark-primary,
-    accent: $dark-accent,
-    warn: $dark-warn
-  )
-));
-
-// Include the default theme for focus indicators.
 .demo-strong-focus {
+  // Include base styles for strong focus indicators.
+  @include mat-strong-focus-indicators();
+  @include mat-mdc-strong-focus-indicators();
+
+  // Include the default theme for focus indicators.
   @include mat-strong-focus-indicators-theme($candy-app-theme);
   @include mat-mdc-strong-focus-indicators-theme($candy-app-theme);
 }
@@ -70,17 +58,25 @@ $dark-theme: mat-dark-theme((
 // `.demo-unicorn-dark-theme` will be affected by this alternate dark theme instead of the
 // default theme.
 .demo-unicorn-dark-theme {
-  @include angular-material-color($dark-theme);
-  @include angular-material-mdc-color($dark-theme);
-  @include mat-column-resize-color($dark-theme);
-  @include mat-popover-edit-color($dark-theme);
-  @include mat-mdc-slider-color($dark-theme);
-}
+  // Create the color palettes used in our dark theme.
+  $dark-primary: mat-palette($mat-blue-grey);
+  $dark-accent: mat-palette($mat-amber, A200, A100, A400);
+  $dark-warn: mat-palette($mat-deep-orange);
+  $dark-colors: mat-dark-theme($dark-primary, $dark-accent, $dark-warn);
 
-// Include the dark theme for focus indicators.
-.demo-unicorn-dark-theme.demo-strong-focus {
-  @include mat-strong-focus-indicators-color($dark-theme);
-  @include mat-mdc-strong-focus-indicators-color($dark-theme);
+  // Include the dark theme color styles.
+  @include angular-material-color($dark-colors);
+  @include angular-material-mdc-color($dark-colors);
+  @include mat-column-resize-color($dark-colors);
+  @include mat-popover-edit-color($dark-colors);
+  // We add this in manually for now, because it isn't included in `angular-material-mdc-theme`.
+  @include mat-mdc-slider-color($dark-colors);
+
+  // Include the dark theme colors for focus indicators.
+  .demo-strong-focus {
+    @include mat-strong-focus-indicators-color($dark-colors);
+    @include mat-mdc-strong-focus-indicators-color($dark-colors);
+  }
 }
 
 // Create classes for all density scales which are supported by all MDC-based components.

@@ -132,7 +132,9 @@
 
 // Adds the base typography styles, based on a config.
 /* stylelint-disable-next-line material/theme-mixin-api */
-@mixin mat-base-typography($config, $selector: '.mat-typography') {
+@mixin mat-base-typography($config-or-theme, $selector: '.mat-typography') {
+  $config: mat-private-typography-to-2014-config(mat-get-typography-config($config-or-theme));
+
   .mat-h1, .mat-headline, #{$selector} h1 {
     @include mat-typography-level-to-styles($config, headline);
     margin: 0 0 16px;
