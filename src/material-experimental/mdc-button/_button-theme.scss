@@ -254,8 +254,7 @@ $mat-button-state-target: '.mdc-button__ripple';
 }
 
 @mixin mat-mdc-fab-typography($config-or-theme) {
-  $config: mat-private-typography-to-2014-config(mat-get-typography-config($config-or-theme));
-  $config: mat-get-typography-config($config-or-theme);
+  $config: mat-private-typography-to-2018-config(mat-get-typography-config($config-or-theme));
   @include mat-using-mdc-typography($config) {
     @include mdc-fab-without-ripple($query: $mat-typography-styles-query);
   }
@@ -328,8 +327,7 @@ $mat-button-state-target: '.mdc-button__ripple';
 }
 
 @mixin mat-mdc-icon-button-typography($config-or-theme) {
-  $config: mat-private-typography-to-2014-config(mat-get-typography-config($config-or-theme));
-  $config: mat-get-typography-config($config-or-theme);
+  $config: mat-private-typography-to-2018-config(mat-get-typography-config($config-or-theme));
   @include mat-using-mdc-typography($config) {
     @include mdc-icon-button-without-ripple($query: $mat-typography-styles-query);
   }

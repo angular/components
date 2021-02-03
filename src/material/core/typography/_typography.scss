@@ -125,6 +125,9 @@
         body-2: map-get($config, body-1),
         button: map-get($config, button),
         caption: map-get($config, caption),
+        overline: if(map-get($config, overline), map-get($config, overline),
+            mat-typography-level(12px, 32px, 500)
+        )
     );
   }
   @return $config;
