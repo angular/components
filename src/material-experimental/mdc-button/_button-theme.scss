@@ -1,3 +1,5 @@
+@use '@material/fab' as mdc-fab;
+
 @import '@material/button/mixins.import';
 @import '@material/button/variables.import';
 @import '@material/fab/mixins.import';
@@ -213,31 +215,31 @@ $mat-button-state-target: '.mdc-button__ripple';
         @include mdc-states-base-color(
           $mdc-theme-on-surface, $query: $mat-theme-styles-query,
           $ripple-target: $mat-button-state-target);
-        @include mdc-fab-container-color($mdc-theme-surface, $query: $mat-theme-styles-query);
-        @include mdc-fab-ink-color($mdc-theme-on-surface, $query: $mat-theme-styles-query);
+        @include mdc-fab.container-color($mdc-theme-surface, $query: $mat-theme-styles-query);
+        @include mdc-fab.ink-color($mdc-theme-on-surface, $query: $mat-theme-styles-query);
       }
 
       &.mat-primary {
         @include mdc-states-base-color(
           on-primary, $query: $mat-theme-styles-query, $ripple-target: $mat-button-state-target);
-        @include mdc-fab-container-color(primary, $query: $mat-theme-styles-query);
-        @include mdc-fab-ink-color(on-primary, $query: $mat-theme-styles-query);
+        @include mdc-fab.container-color(primary, $query: $mat-theme-styles-query);
+        @include mdc-fab.ink-color(on-primary, $query: $mat-theme-styles-query);
         @include _mat-button-ripple-ink-color(on-primary);
       }
 
       &.mat-accent {
         @include mdc-states-base-color(
           on-secondary, $query: $mat-theme-styles-query, $ripple-target: $mat-button-state-target);
-        @include mdc-fab-container-color(secondary, $query: $mat-theme-styles-query);
-        @include mdc-fab-ink-color(on-secondary, $query: $mat-theme-styles-query);
+        @include mdc-fab.container-color(secondary, $query: $mat-theme-styles-query);
+        @include mdc-fab.ink-color(on-secondary, $query: $mat-theme-styles-query);
         @include _mat-button-ripple-ink-color(on-secondary);
       }
 
       &.mat-warn {
         @include mdc-states-base-color(
           on-error, $query: $mat-theme-styles-query, $ripple-target: $mat-button-state-target);
-        @include mdc-fab-container-color(error, $query: $mat-theme-styles-query);
-        @include mdc-fab-ink-color(on-error, $query: $mat-theme-styles-query);
+        @include mdc-fab.container-color(error, $query: $mat-theme-styles-query);
+        @include mdc-fab.ink-color(on-error, $query: $mat-theme-styles-query);
         @include _mat-button-ripple-ink-color(on-error);
       }
 
@@ -248,14 +250,14 @@ $mat-button-state-target: '.mdc-button__ripple';
       }
     }
 
-    @include mdc-fab-without-ripple($query: $mat-theme-styles-query);
+    @include mdc-fab.without-ripple($query: $mat-theme-styles-query);
   }
 }
 
 @mixin mat-mdc-fab-typography($config-or-theme) {
   $config: mat-get-typography-config($config-or-theme);
   @include mat-using-mdc-typography($config) {
-    @include mdc-fab-without-ripple($query: $mat-typography-styles-query);
+    @include mdc-fab.without-ripple($query: $mat-typography-styles-query);
   }
 }
 

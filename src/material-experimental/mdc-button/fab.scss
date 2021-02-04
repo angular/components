@@ -1,11 +1,10 @@
-@import '@material/fab/mixins.import';
-@import '@material/fab/variables.import';
+@use '@material/fab' as mdc-fab;
 @import '@material/button/variables.import';
 @import '@material/theme/variables.import';
 @import '../mdc-helpers/mdc-helpers';
 @import '_button-base';
 
-@include mdc-fab-without-ripple($query: $mat-base-styles-query);
+@include mdc-fab.without-ripple($query: $mat-base-styles-query);
 
 .mat-mdc-fab, .mat-mdc-mini-fab {
   @include mat-private-button-interactive();
