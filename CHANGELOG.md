@@ -25,10 +25,10 @@
 | bug fix |  **mdc-dialog:** afterClosed being run outside of NgZone ([#21702](https://github.com/angular/components/issues/21702)) ([698d6d0ac4c869a86658e1db617dc85a342eacf7](https://github.com/angular/components/commit/698d6d0ac4c869a86658e1db617dc85a342eacf7)), closes [#21696](https://github.com/angular/components/issues/21696) |
 | bug fix |  **mdc-form-field:** remove extraneous sass var added by [#21676](https://github.com/angular/components/issues/21676) ([#21772](https://github.com/angular/components/issues/21772)) ([7b7bbfb16aea9793e8d98e2a5caa49b07bd0f079](https://github.com/angular/components/commit/7b7bbfb16aea9793e8d98e2a5caa49b07bd0f079)) |
 | bug fix |  **mdc-form-field:** tweak styles to work with MDC ([95182246065cfb637584ac8b13dedf89f5231da6](https://github.com/angular/components/commit/95182246065cfb637584ac8b13dedf89f5231da6)) |
-| bug fix |  **mdc-paginator:** use caption typography for ([37b96144175487b7f857d29564ee1ba45b9f3500](https://github.com/angular/components/commit/37b96144175487b7f857d29564ee1ba45b9f3500)) |
-| bug fix |  **mdc-typography:** change mdc components to prefer ([64ab8231ea813ef68ce8e1cc8fc0cf0183bf530c](https://github.com/angular/components/commit/64ab8231ea813ef68ce8e1cc8fc0cf0183bf530c)) |
+| bug fix |  **mdc-paginator:** use caption typography for select ([37b96144175487b7f857d29564ee1ba45b9f3500](https://github.com/angular/components/commit/37b96144175487b7f857d29564ee1ba45b9f3500)) |
+| bug fix |  **mdc-typography:** change mdc components to prefer 2018 typography mappings if the config is compatible ([64ab8231ea813ef68ce8e1cc8fc0cf0183bf530c](https://github.com/angular/components/commit/64ab8231ea813ef68ce8e1cc8fc0cf0183bf530c)) |
 | bug fix |  **mdc-typography:** update components using incorrect typography levels ([d9b10c4c7317601fa77f39cc1a0265de2d4c7a3b](https://github.com/angular/components/commit/d9b10c4c7317601fa77f39cc1a0265de2d4c7a3b)) |
-| feature |  **mdc-typography:** add a function to create ([b9003f75977c5dc8c8187185ab2a904e190e7b4c](https://github.com/angular/components/commit/b9003f75977c5dc8c8187185ab2a904e190e7b4c)) |
+| feature |  **mdc-typography:** add a function to create config from MDC ([b9003f75977c5dc8c8187185ab2a904e190e7b4c](https://github.com/angular/components/commit/b9003f75977c5dc8c8187185ab2a904e190e7b4c)) |
 
 
 ## 11.1.1 "silicate-star" (2021-01-27)
