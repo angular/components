@@ -88,23 +88,30 @@
 // New components should not use this function.
 @function mat-private-typography-to-2014-config($config) {
   @if $config == null {
-    @return null
+    @return null;
   }
   @if not mat-private-typography-is-2014-config($config) {
-    @return mat-typography-config(
-        $display-4: map-get($config, headline-1),
-        $display-3: map-get($config, headline-2),
-        $display-2: map-get($config, headline-3),
-        $display-1: map-get($config, headline-4),
-        $headline: map-get($config, headline-5),
-        $title: map-get($config, headline-6),
-        $subheading-2: map-get($config, subtitle-1),
-        $subheading-1: map-get($config, subtitle-2),
-        $body-2: map-get($config, body-1),
-        $body-1: map-get($config, body-2),
-        $button: map-get($config, button),
-        $caption: map-get($config, caption),
+    $args: (
+        display-4: map-get($config, headline-1),
+        display-3: map-get($config, headline-2),
+        display-2: map-get($config, headline-3),
+        display-1: map-get($config, headline-4),
+        headline: map-get($config, headline-5),
+        title: map-get($config, headline-6),
+        subheading-2: map-get($config, subtitle-1),
+        subheading-1: map-get($config, subtitle-2),
+        body-2: map-get($config, body-1),
+        body-1: map-get($config, body-2),
+        button: map-get($config, button),
+        caption: map-get($config, caption),
     );
+    $non-null-args: ();
+    @each $key, $value in $args {
+      @if $value != null {
+        $non-null-args: map-merge($non-null-args, ($key: $value));
+      }
+    }
+    @return mat-typography-config($non-null-args...);
   }
   @return $config;
 }
@@ -115,7 +122,7 @@
 // 2018 - https://material.io/design/typography/the-type-system.html#type-scale
 @function mat-private-typography-to-2018-config($config) {
   @if $config == null {
-    @return null
+    @return null;
   }
   @if mat-private-typography-is-2014-config($config) {
     @return (
