@@ -706,9 +706,9 @@
   integrity sha512-Eyz99eI/rsWDJws3eO2UGAmIoWmZWEzmchIBU30EoVzvQ5wqZciZ2lLOXkUIAosZsijjE1THiqCCf5gJtOmExw==
 
 "@bazel/terser@^2.3.2":
-  version "2.3.2"
-  resolved "https://registry.yarnpkg.com/@bazel/terser/-/terser-2.3.2.tgz#30f0b551f43eeafb64cb834d1f2f3e7f2ddef262"
-  integrity sha512-UasdVrMdaOEBwzNTTyWtUTH+ITQtXhV64XG6SdyWY1wWLgcgoUOiFYPN2lgXRZyKNpFezmq+CHJ5pqfYwzN3Rg==
+  version "2.3.3"
+  resolved "https://registry.yarnpkg.com/@bazel/terser/-/terser-2.3.3.tgz#680cedce0569291534ee832f76cae078948c4a7d"
+  integrity sha512-0PytwAoKO4Yqbfgm3HKzkLF7mycj1O10jndg7Sz8Z20yWmU35087ssULFzFy3sXehKSypFeV+PVJ3eO824/0OQ==
 
 "@bazel/typescript@^2.3.2":
   version "2.3.2"
