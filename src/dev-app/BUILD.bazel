@@ -121,11 +121,11 @@ create_system_config(
     output_name = "system-config.js",
 )
 
-# File group for static files that are listed in the gitignore file that contain
-# secrets like API keys.
+# Variables that are going to be inlined into the dev app index.html.
+# Uses a glob, because the file is optional.
 filegroup(
-    name = "environment-secret-assets",
-    srcs = glob(["*-api-key.txt"]),
+    name = "variables",
+    srcs = glob(["variables.json"]),
 )
 
 # File group for all static files which are needed to serve the dev-app. These files are
@@ -136,9 +136,9 @@ filegroup(
     srcs = [
         "favicon.ico",
         "index.html",
-        ":environment-secret-assets",
         ":system-config",
         ":theme",
+        ":variables",
         "//src/dev-app/icon:icon_demo_assets",
         "//tools:system-rxjs-operators.js",
         "@npm//:node_modules/@material/animation/dist/mdc.animation.js",
