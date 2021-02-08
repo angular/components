@@ -1,8 +1,8 @@
 <div *ngFor="let linkSection of _linkSections" class="docs-toc-container">
-  <div class="docs-toc-heading">{{linkSection.name}}</div>
-  <nav [attr.aria-label]="linkSection.name + ' Table of Contents'">
+  <div class="docs-toc-heading">{{linkSection?.name}}</div>
+  <nav [attr.aria-label]="linkSection?.name + ' Table of Contents'">
     <a [href]="_rootUrl + '#' + link.id"
-      *ngFor="let link of linkSection.links; let i = index"
+      *ngFor="let link of linkSection?.links; let i = index"
       class="docs-level-{{link.type}} docs-link"
       [class.docs-active]="link.active">
       {{link.name}}
