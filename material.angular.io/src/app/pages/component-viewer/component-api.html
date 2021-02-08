@@ -4,22 +4,22 @@
   </span>
 
   <!--
-  The span container is necessary for the layout to display properly. When
+  This container is necessary for the layout to display properly. When
   a component has multiple API docs, they need to be joined together in the
   same container so that they display one after another.
   -->
-  <span>
+  <div class="docs-component-api">
     <doc-viewer [documentUrl]="getApiDocumentUrl(docItem!)"
-      class="docs-component-view-text-content docs-component-api"
+      class="docs-component-view-text-content"
       (contentRendered)="updateTableOfContents(docItem!.name, $event)">
     </doc-viewer>
 
     <doc-viewer *ngFor="let additionalApiDoc of docItem!.additionalApiDocs; let index = index"
       documentUrl="/docs-content/api-docs/{{additionalApiDoc.path}}"
-      class="docs-component-view-text-content docs-component-api"
+      class="docs-component-view-text-content"
       (contentRendered)="updateTableOfContents(additionalApiDoc.name, $event, index + 1)">
     </doc-viewer>
-  </span>
+  </div>
 
   <table-of-contents #toc
       *ngIf="showToc | async"
