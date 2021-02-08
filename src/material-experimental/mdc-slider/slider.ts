@@ -120,7 +120,7 @@ export class MatSlider implements AfterViewInit, OnDestroy {
   @Input() displayWith: ((value: number) => string) | null;
 
   /** Instance of the MDC slider foundation for this slider. */
-  private _foundation = new MDCSliderFoundation(new SliderAdapter());
+  private _foundation = new MDCSliderFoundation(new SliderAdapter(this));
 
   /** Whether the foundation has been initialized. */
   _initialized: boolean = false;
@@ -157,17 +157,35 @@ export class MatSlider implements AfterViewInit, OnDestroy {
     }
 
   ngAfterViewInit() {
-    this._foundation.init();
-    if (this._platform.isBrowser) {
-      this._foundation.layout();
-    }
-    this._initialized = true;
+    this._initInputs().then(() => {
+      this._foundation.init();
+      if (this._platform.isBrowser) {
+        this._foundation.layout();
+      }
+      this._initialized = true;
+    });
   }
 
   ngOnDestroy() {
     if (this._platform.isBrowser) {
       this._foundation.destroy();
     }
+  }
+
+  /**
+   * Sets up the initial state of the slider thumb inputs.
+   *
+   * The slider thumbs need this extra step because are passed in via `ng-content`,
+   * and therefore have no way of knowing which slider thumb they correspond to.
+   *
+   * This method needs to return a promise in order to avoid throwing an
+   * ExpressionChangedAfterItHasBeenCheckedError error.
+   */
+  _initInputs(): Promise<void> {
+    return Promise.resolve().then(() => {
+      this._inputs.get(0)?._init(this._isRange() ? Thumb.START : Thumb.END);
+      this._inputs.get(1)?._init(Thumb.END);
+    });
   }
 
   /** Gets the current value of given slider thumb. */
@@ -224,6 +242,14 @@ export class MatSlider implements AfterViewInit, OnDestroy {
   /** Gets the text representation of the current value of the given thumb. */
   _getValueIndicatorTextByThumb(thumb: Thumb): string {
     return this._getValueIndicatorText(this._getValue(thumb));
+  }
+
+  /** Sets the value indicator text of the given thumb with the given value. */
+  _setValueIndicatorText(value: number, thumb: Thumb) {
+    const valueIndicatorText = this._getValueIndicatorText(value);
+    thumb === Thumb.END
+      ? this._endValueIndicatorText = valueIndicatorText
+      : this._startValueIndicatorText = valueIndicatorText;
   }
 
   /** Determines the class name for a HTML element. */
