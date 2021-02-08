@@ -1,6 +1,4 @@
-@import '../../../styles/constants';
-
-$sidenav-width: 240px;
+@import 'constants';
 
 app-component-sidenav {
   display: flex;
@@ -20,12 +18,6 @@ app-component-sidenav {
 .docs-component-sidenav-inner-content {
   display: flex;
   flex-direction: row;
-
-  // The rule will match the element following the router-outlet which will be the routed component.
-  router-outlet + * {
-    flex-grow: 1;
-    overflow: hidden;
-  }
 }
 
 .mat-drawer {

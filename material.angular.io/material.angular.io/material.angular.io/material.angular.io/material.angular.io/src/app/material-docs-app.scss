@@ -1,3 +1,5 @@
+@import 'constants';
+
 material-docs-app {
   display: flex;
   flex-direction: column;
@@ -23,9 +25,10 @@ material-docs-app > router-outlet + app-component-sidenav {
   -webkit-overflow-scrolling: touch;
 }
 
-@media (max-width: 720px) {
+@media (max-width: $extra-small-breakpoint-width) {
   material-docs-app > router-outlet + .main-content,
   material-docs-app > router-outlet + app-component-sidenav {
     margin-top: 92px;
+    overflow-y: visible;
   }
 }

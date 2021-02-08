@@ -49,7 +49,7 @@ import {NavigationFocusService} from '../../shared/navigation-focus/navigation-f
 // These breakpoint values need to stay in sync with the related Sass variables in
 // src/styles/_constants.scss.
 const EXTRA_SMALL_WIDTH_BREAKPOINT = 720;
-const SMALL_WIDTH_BREAKPOINT = 939;
+const SMALL_WIDTH_BREAKPOINT = 959;
 
 @Component({
   selector: 'app-component-sidenav',

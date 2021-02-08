@@ -12,6 +12,7 @@ Versions of this site are also available for
 - [v11](https://material.angular.io/)
 
 ## Contributing
+
 Please open bugs against the Angular Material and CDK components, directives, documentation
 contents, API docs, and demos in the
 [Angular Components repo](https://github.com/angular/components/issues).
@@ -22,6 +23,7 @@ navigation not working properly, examples or documentation not being presented i
 issues with rendering or layout of the documentation pages, etc.
 
 ### Where does the content come from?
+
 The guides, examples, and docs content repo
 [angular/material2-docs-content](https://github.com/angular/material2-docs-content) contains the
 documentation content and examples. They are generated from:
@@ -30,6 +32,7 @@ documentation content and examples. They are generated from:
 - [CDK components, services, and directives](https://github.com/angular/components/tree/master/src/cdk)
 
 ## Development Setup
+
 1. Make sure you have [NodeJS LTS](https://nodejs.org) installed
 1. Make sure you have [Yarn](https://yarnpkg.com) installed
 1. Install the project's dependencies
@@ -38,19 +41,24 @@ documentation content and examples. They are generated from:
   - `yarn build:content`
 
 ## Development Server
+
 1. Run `yarn start` for a dev server. Navigate to `http://localhost:4200/`.
 
 ## Build
+
 Run `yarn prod-build` to build the project.
 
 ## Running unit tests
+
 1. Run `yarn test` to execute the unit tests via [Karma](https://karma-runner.github.io).
 
 ## Running end-to-end tests
+
 Run `yarn e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
 Before running the tests make sure you are serving the app via `yarn start`.
 
 ## Deployment instructions
+
 ```
 > yarn install
 > yarn upgrade @angular/components-examples

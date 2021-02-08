@@ -32,7 +32,7 @@ const MIN_SCORES_PER_PAGE = [
     url: '',
     minScores: {
       'pwa': 70,
-      'performance': 21,
+      'performance': 20,
       'seo': 98,
       'best-practices': 100,
       'accessibility': 100
