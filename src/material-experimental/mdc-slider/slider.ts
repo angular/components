@@ -36,20 +36,6 @@ import {SliderAdapter} from './slider-adapter';
 import {MatSliderThumb} from './slider-thumb';
 
 /**
- * Represents a drag event emitted by the MatSlider component.
- */
-export interface MatSliderDragEvent {
-  /** The MatSlider that was interacted with. */
-  source: MatSlider;
-
-  /** The current value of the slider. */
-  value: number;
-
-  /** The thumb that was interacted with. */
-  thumb: Thumb;
-}
-
-/**
  * Allows users to select from a range of values by moving the slider thumb. It is similar in
  * behavior to the native `<input type="range">` element.
  */
@@ -135,14 +121,6 @@ export class MatSlider implements AfterViewInit, OnDestroy {
    */
   @Input() displayWith: ((value: number) => string) | null;
 
-  /** Event emitted when the slider thumb starts being dragged. */
-  @Output() readonly dragStart: EventEmitter<MatSliderDragEvent>
-    = new EventEmitter<MatSliderDragEvent>();
-
-  /** Event emitted when the slider thumb stops being dragged. */
-  @Output() readonly dragEnd: EventEmitter<MatSliderDragEvent>
-    = new EventEmitter<MatSliderDragEvent>();
-
   /** Instance of the MDC slider foundation for this slider. */
   private _foundation = new MDCSliderFoundation(new SliderAdapter());
 
@@ -174,8 +152,8 @@ export class MatSlider implements AfterViewInit, OnDestroy {
     readonly _cdr: ChangeDetectorRef,
     private readonly _elementRef: ElementRef<HTMLElement>,
     private readonly _platform: Platform,
-    @Inject(DOCUMENT) protected readonly document: any) {
-      this._document = this.document;
+    @Inject(DOCUMENT) document: any) {
+      this._document = document;
       this._window = this._document.defaultView || window;
       this._hostElement = this._elementRef.nativeElement;
     }
@@ -195,14 +173,14 @@ export class MatSlider implements AfterViewInit, OnDestroy {
   }
 
   /** Gets the current value of given slider thumb. */
-  getValue(thumb: Thumb): number {
+  _getValue(thumb: Thumb): number {
     return thumb === Thumb.START
       ? this._foundation.getValueStart()
       : this._foundation.getValue();
   }
 
   /** Sets the value of a slider thumb. */
-  setValue(value: number, thumb: Thumb): void {
+  _setValue(value: number, thumb: Thumb): void {
     thumb === Thumb.START
       ? this._foundation.setValueStart(value)
       : this._foundation.setValue(value);
@@ -220,7 +198,7 @@ export class MatSlider implements AfterViewInit, OnDestroy {
 
   /** Gets the slider thumb HTML input element of the given thumb. */
   _getInputElement(thumb: Thumb): HTMLInputElement {
-    return this._getInput(thumb)._hostElement;
+    return this._getInput(thumb)._elementRef.nativeElement;
   }
 
   /** Gets the slider thumb HTML element of the given thumb. */
@@ -247,7 +225,7 @@ export class MatSlider implements AfterViewInit, OnDestroy {
 
   /** Gets the text representation of the current value of the given thumb. */
   _getValueIndicatorTextByThumb(thumb: Thumb): string {
-    return this._getValueIndicatorText(this.getValue(thumb));
+    return this._getValueIndicatorText(this._getValue(thumb));
   }
 
   /** Determines the class name for a HTML element. */
@@ -260,11 +238,6 @@ export class MatSlider implements AfterViewInit, OnDestroy {
   /** Returns an array of the thumb types that exist on the current slider instance. */
   _getThumbTypes(): Thumb[] {
     return this._isRange() ? [Thumb.START, Thumb.END] : [Thumb.END];
-  }
-
-  /** Creates a MatSliderDragEvent event. */
-  _createDragEvent(value: number, thumb: Thumb): MatSliderDragEvent {
-    return {source: this, value, thumb};
   }
 
   static ngAcceptInputType_disabled: BooleanInput;

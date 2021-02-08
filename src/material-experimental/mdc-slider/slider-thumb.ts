@@ -10,6 +10,24 @@ import {NumberInput} from '@angular/cdk/coercion';
 import {DOCUMENT} from '@angular/common';
 import {Directive, ElementRef, EventEmitter, Inject, Input, Output} from '@angular/core';
 import {Thumb} from '@material/slider';
+import {MatSlider} from './slider';
+
+/**
+ * Represents a drag event emitted by the MatSlider component.
+ */
+export interface MatSliderDragEvent {
+  /** The MatSliderThumb that was interacted with. */
+  source: MatSliderThumb;
+
+  /** The parent MatSlider that was interacted with. */
+  parent: MatSlider;
+
+  /** The current value of the slider. */
+  value: number;
+
+  /** The thumb that was interacted with. */
+  thumb: Thumb;
+}
 
 /**
  * The native input used by the MatSlider.
@@ -52,6 +70,14 @@ import {Thumb} from '@material/slider';
   @Input()
   set disabled(v: boolean) { throw Error('Invalid attribute "disabled" on MatSliderThumb.'); }
 
+  /** Event emitted when the slider thumb starts being dragged. */
+  @Output() readonly dragStart: EventEmitter<MatSliderDragEvent>
+    = new EventEmitter<MatSliderDragEvent>();
+
+  /** Event emitted when the slider thumb stops being dragged. */
+  @Output() readonly dragEnd: EventEmitter<MatSliderDragEvent>
+    = new EventEmitter<MatSliderDragEvent>();
+
   /** Event emitted every time the MatSliderThumb is blurred. */
   @Output() readonly _blur: EventEmitter<void> = new EventEmitter<void>();
 
@@ -61,19 +87,14 @@ import {Thumb} from '@material/slider';
   /** Indicates which slider thumb this input corresponds to. */
   thumb: Thumb;
 
-  /** The hosts native HTML element. */
-  _hostElement: HTMLInputElement;
-
   constructor(
     @Inject(DOCUMENT) private readonly _document: Document,
-    private readonly _elementRef: ElementRef<HTMLInputElement>,
-    ) {
-      this._hostElement = this._elementRef.nativeElement;
-    }
+    readonly _elementRef: ElementRef<HTMLInputElement>,
+    ) {}
 
   /** Returns true if this slider input currently has focus. */
   _isFocused(): boolean {
-    return this._document.activeElement === this._hostElement;
+    return this._document.activeElement === this._elementRef.nativeElement;
   }
 
   static ngAcceptInputType_value: NumberInput;
