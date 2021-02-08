@@ -16,7 +16,9 @@ const AUDIT_CATEGORIES =
 const LIGHTHOUSE_FLAGS = {
   logLevel : process.env.CI ? 'error' : 'info'
 }; // Be less verbose on CI.
-const SKIPPED_HTTPS_AUDITS = [ 'redirects-http', 'uses-http2', 'uses-long-cache-ttl', 'canonical' ];
+const SKIPPED_HTTPS_AUDITS = [
+  'redirects-http', 'uses-http2', 'uses-long-cache-ttl', 'canonical', 'uses-text-compression'
+];
 const VIEWER_URL = 'https://googlechrome.github.io/lighthouse/viewer';
 const WAIT_FOR_SW_DELAY = 5000;
 

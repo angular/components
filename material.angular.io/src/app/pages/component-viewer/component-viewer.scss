@@ -1,12 +1,18 @@
-@import '../../../styles/constants';
+@import 'constants';
 
 app-component-viewer {
   font-weight: 400;
+  width: calc(100% - #{$sidenav-width + 1} - #{$content-padding-sidenav * 2});
 
   // spacing for the component viewer
-  padding: 20px 50px;
+  padding: 20px $content-padding-sidenav;
 
+  // Sidenav is hidden
+  @media (max-width: $small-breakpoint-width) {
+    width: calc(100% - #{$content-padding-sidenav * 2});
+  }
   @media ($mat-xsmall) {
+    width: calc(100% - #{$content-padding-side-xs * 2});
     padding-left: $content-padding-side-xs;
     padding-right: $content-padding-side-xs;
   }

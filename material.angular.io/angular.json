@@ -70,6 +70,9 @@
                 "bundleName": "assets/purple-green"
               }
             ],
+            "stylePreprocessorOptions": {
+              "includePaths": ["node_modules", "src", "src/styles"]
+            },
             "scripts": []
           },
           "configurations": {
@@ -151,6 +154,9 @@
                 "bundleName": "assets/purple-green"
               }
             ],
+            "stylePreprocessorOptions": {
+              "includePaths": ["node_modules", "src", "src/styles"]
+            },
             "assets": [
               {
                 "glob": "**/*",
