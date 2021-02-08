@@ -14,7 +14,7 @@ import {MatSliderThumb} from './slider-thumb';
 
 @NgModule({
   imports: [MatCommonModule, CommonModule],
-  exports: [MatSlider],
+  exports: [MatSlider, MatSliderThumb],
   declarations: [
     MatSlider,
     MatSliderThumb,
