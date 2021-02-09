@@ -62,7 +62,6 @@ export class SliderAdapter implements MDCSliderAdapter {
   }
   isRTL = (): boolean => {
     // TODO(wagnermaciel): Actually implementing this.
-    // throw Error('Method not implemented.');
     return false;
   }
   setThumbStyleProperty = (propertyName: string, value: string, thumb: Thumb): void => {
@@ -90,6 +89,8 @@ export class SliderAdapter implements MDCSliderAdapter {
   setPointerCapture = (pointerId: number): void => {
     this._delegate._hostElement.setPointerCapture(pointerId);
   }
+  // We ignore emitChangeEvent and emitInputEvent because the slider inputs
+  // are already exposed so users can just listen for those events directly themselves.
   emitChangeEvent = (value: number, thumb: Thumb): void => {};
   emitInputEvent = (value: number, thumb: Thumb): void => {};
   emitDragStartEvent = (value: number, thumb: Thumb): void => {
