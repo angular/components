@@ -711,9 +711,9 @@
   integrity sha512-UasdVrMdaOEBwzNTTyWtUTH+ITQtXhV64XG6SdyWY1wWLgcgoUOiFYPN2lgXRZyKNpFezmq+CHJ5pqfYwzN3Rg==
 
 "@bazel/typescript@^2.3.2":
-  version "2.3.2"
-  resolved "https://registry.yarnpkg.com/@bazel/typescript/-/typescript-2.3.2.tgz#6d49cc064a9323905dcf791fe0e959f75ddf2ade"
-  integrity sha512-O2lZfVGx1Uyc7GzLMyD4uiu1qWxy7xviVTEDPzFGcqZsHMCXMV/fEgMoiD0cI4diHwSWrc7Gm/CG9j/z+SRDzA==
+  version "2.3.3"
+  resolved "https://registry.yarnpkg.com/@bazel/typescript/-/typescript-2.3.3.tgz#8f238a6d395140cdc6ed6900f0861efb744ca91b"
+  integrity sha512-tkkrV1wrpMKj7gDlgloo/24lGmW5btHxzg9xqBZsXVvEfhr3HP9dU296bBxtdS1zZuORCxdIhh7D3iPonQDibg==
   dependencies:
     protobufjs "6.8.8"
     semver "5.6.0"
@@ -10472,29 +10472,10 @@ protobufjs@6.8.8:
     "@types/node" "^10.1.0"
     long "^4.0.0"
 
-protobufjs@^6.10.2:
+protobufjs@^6.10.2, protobufjs@^6.8.6:
   version "6.10.2"
   resolved "https://registry.yarnpkg.com/protobufjs/-/protobufjs-6.10.2.tgz#b9cb6bd8ec8f87514592ba3fdfd28e93f33a469b"
   integrity sha512-27yj+04uF6ya9l+qfpH187aqEzfCF4+Uit0I9ZBQVqK09hk/SQzKa2MUqUpXaVa7LOFRg1TSSr3lVxGOk6c0SQ==
-  dependencies:
-    "@protobufjs/aspromise" "^1.1.2"
-    "@protobufjs/base64" "^1.1.2"
-    "@protobufjs/codegen" "^2.0.4"
-    "@protobufjs/eventemitter" "^1.1.0"
-    "@protobufjs/fetch" "^1.1.0"
-    "@protobufjs/float" "^1.0.2"
-    "@protobufjs/inquire" "^1.1.0"
-    "@protobufjs/path" "^1.1.2"
-    "@protobufjs/pool" "^1.1.0"
-    "@protobufjs/utf8" "^1.1.0"
-    "@types/long" "^4.0.1"
-    "@types/node" "^13.7.0"
-    long "^4.0.0"
-
-protobufjs@^6.8.6:
-  version "6.10.1"
-  resolved "https://registry.yarnpkg.com/protobufjs/-/protobufjs-6.10.1.tgz#e6a484dd8f04b29629e9053344e3970cccf13cd2"
-  integrity sha512-pb8kTchL+1Ceg4lFd5XUpK8PdWacbvV5SK2ULH2ebrYtl4GjJmS24m6CKME67jzV53tbJxHlnNOSqQHbTsR9JQ==
   dependencies:
     "@protobufjs/aspromise" "^1.1.2"
     "@protobufjs/base64" "^1.1.2"
