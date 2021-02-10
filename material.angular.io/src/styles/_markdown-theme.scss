@@ -32,5 +32,11 @@
     code {
       background: rgba(mat-color($foreground, secondary-text), $exportBackgroundOpacity);
     }
+
+    > table {
+      th, td {
+        border-bottom-color: mat-color($foreground, divider);
+      }
+    }
   }
 }
