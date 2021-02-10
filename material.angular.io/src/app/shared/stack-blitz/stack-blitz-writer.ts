@@ -74,8 +74,8 @@ const dependencies = {
   'angular-in-memory-web-api': '~0.11.0',
   'moment': '^2.29.1',
   'rxjs': '^6.6.3',
-  'tslib': '^2.0.3',
-  'zone.js': '^0.11.2',
+  'tslib': '^2.1.0',
+  'zone.js': '^0.11.3',
 };
 
 const testDependencies = {
@@ -95,8 +95,8 @@ const testDependencies = {
   'jasmine-core': '^3.6.0',
   'moment': '^2.29.1',
   'rxjs': '^6.6.3',
-  'tslib': '^2.0.3',
-  'zone.js': '^0.11.2',
+  'tslib': '^2.1.0',
+  'zone.js': '^0.11.3',
 };
 
 /**
