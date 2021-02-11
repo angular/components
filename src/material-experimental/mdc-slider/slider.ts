@@ -151,11 +151,11 @@ export class MatSlider implements AfterViewInit, OnDestroy {
 
   ngAfterViewInit() {
     this._validateInputs();
-    this._foundation.init();
     if (this._platform.isBrowser) {
+      this._foundation.init();
       this._foundation.layout();
+      this._initialized = true;
     }
-    this._initialized = true;
   }
 
   ngOnDestroy() {
