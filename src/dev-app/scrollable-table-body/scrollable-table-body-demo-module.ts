@@ -9,16 +9,16 @@
 import {NgModule} from '@angular/core';
 import {RouterModule} from '@angular/router';
 import {ScrollableTableBodyDemo} from './scrollable-table-body-demo';
-import {
+/*import {
   CdkScrollableTableBodyExamplesModule,
-} from '@angular/components-examples/cdk-experimental/scrollable-table-body';
+} from '@angular/components-examples/cdk-experimental/scrollable-table-body';*/
 import {
   MatScrollableTableBodyExamplesModule,
 } from '@angular/components-examples/material-experimental/scrollable-table-body';
 
 @NgModule({
   imports: [
-      CdkScrollableTableBodyExamplesModule,
+      // CdkScrollableTableBodyExamplesModule,
       MatScrollableTableBodyExamplesModule,
     RouterModule.forChild([{path: '', component: ScrollableTableBodyDemo}]),
   ],

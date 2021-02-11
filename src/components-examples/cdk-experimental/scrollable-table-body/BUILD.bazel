@@ -11,7 +11,7 @@ ng_module(
     ]),
     module_name = "@angular/components-examples/cdk-experimental/scrollable-table-body",
     deps = [
-        "//src/cdk-experimental/scrollable-table-body",
+        "//src/cdk-experimental/table",
         "//src/cdk/table",
         "//src/material/button",
     ],

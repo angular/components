@@ -11,19 +11,19 @@ import {CdkTable} from '@angular/cdk/table/table';
 import {DOCUMENT} from '@angular/common';
 
 /** Interface for a service that constructs the DOM structure for a {@link CdkTable}. */
-export interface _TableLayoutStrategy {
+export interface _TableLayoutStrategy<T> {
   /** Constructs the DOM structure for a native table. */
-  getNativeLayout(table: CdkTable<unknown>): DocumentFragment;
+  getNativeLayout(table: CdkTable<T>): DocumentFragment;
   /** Constructs the DOM structure for a flex table. */
-  getFlexLayout(table: CdkTable<unknown>): DocumentFragment;
+  getFlexLayout(table: CdkTable<T>): DocumentFragment;
 }
 
 /** Injection token for {@link _TableLayoutStrategy}. */
 export const _TABLE_LAYOUT_STRATEGY =
-    new InjectionToken<_TableLayoutStrategy>('_TableLayoutStrategy');
+    new InjectionToken<_TableLayoutStrategy<unknown>>('_TableLayoutStrategy');
 
 
-export class _StandardTableLayoutStrategy implements _TableLayoutStrategy {
+export class _StandardTableLayoutStrategy<T> implements _TableLayoutStrategy<T> {
   private readonly _document: Document;
 
   constructor(@Inject(DOCUMENT) document: any) {

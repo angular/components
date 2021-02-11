@@ -19,9 +19,9 @@ import {
  * A {@link _TableLayoutStrategy} that enables scrollable body content for flex tables.
  */
 @Injectable()
-class ScrollableTableBodyLayoutStrategy implements _TableLayoutStrategy {
+export class ScrollableTableBodyLayoutStrategy<T> implements _TableLayoutStrategy<T> {
   private readonly _document: Document;
-  private defaultLayout: _StandardTableLayoutStrategy;
+  private defaultLayout: _StandardTableLayoutStrategy<T>;
   private _pendingMaxHeight = 'none';
   private _scrollViewport?: HTMLElement;
   readonly headerCssClass = 'cdk-table-scrollable-table-header';
@@ -37,7 +37,7 @@ class ScrollableTableBodyLayoutStrategy implements _TableLayoutStrategy {
    * Returns the DOM structure for a native table. Scrollable body content is not supported for
    * native tables. Return `null` to use the default {@link CdkTable} native table layout.
    */
-  getNativeLayout(table: CdkTable<unknown>): DocumentFragment {
+  getNativeLayout(table: CdkTable<T>): DocumentFragment {
     return this.defaultLayout.getNativeLayout(table);
   }
 
@@ -46,7 +46,7 @@ class ScrollableTableBodyLayoutStrategy implements _TableLayoutStrategy {
    * (header, body, footer) is wrapped in a separate container. The specified max height is applied
    * to the body row outlet to make its content scrollable.
    */
-  getFlexLayout(table: CdkTable<unknown>): DocumentFragment {
+  getFlexLayout(table: CdkTable<T>): DocumentFragment {
     const documentFragment = this._document.createDocumentFragment();
     const sections = [
       {cssClass: this.headerCssClass, outlets: [table._headerRowOutlet]},
@@ -64,7 +64,7 @@ class ScrollableTableBodyLayoutStrategy implements _TableLayoutStrategy {
       documentFragment.appendChild(element);
     }
 
-    this._scrollViewport = documentFragment.querySelector(`.${this.bodyCssClass}`);
+    this._scrollViewport = documentFragment.querySelector(`.${this.bodyCssClass}`) as HTMLElement;
     this._scrollViewport!.style.overflow = 'auto';
     this._applyMaxHeight(this._scrollViewport!, this._pendingMaxHeight);
 
@@ -94,7 +94,7 @@ class ScrollableTableBodyLayoutStrategy implements _TableLayoutStrategy {
     {provide: _TABLE_LAYOUT_STRATEGY, useClass: ScrollableTableBodyLayoutStrategy},
   ]
 })
-export class CdkScrollableTableBody {
+export class CdkScrollableTableBody<T> {
   /**
    * Show a scroll bar if the table's body exceeds this height. The height may be specified with
    * any valid CSS unit of measurement.
@@ -110,6 +110,6 @@ export class CdkScrollableTableBody {
   private _maxHeight = '';
 
   constructor(@Inject(_TABLE_LAYOUT_STRATEGY)
-              private readonly _layoutStrategy: ScrollableTableBodyLayoutStrategy) {
+              private readonly _layoutStrategy: ScrollableTableBodyLayoutStrategy<T>) {
   }
 }

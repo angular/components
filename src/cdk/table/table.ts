@@ -507,7 +507,7 @@ export class CdkTable<T> implements AfterContentChecked, CollectionViewer, OnDes
       // tslint:disable-next-line: lightweight-tokens
       @Optional() private readonly _viewportRuler?: ViewportRuler,
       @Optional() @Inject(_TABLE_LAYOUT_STRATEGY)
-      @Optional() private readonly _layoutStrategy?: _TableLayoutStrategy|null) {
+      @Optional() private readonly _layoutStrategy?: _TableLayoutStrategy<T>|null) {
     if (!role) {
       this._elementRef.nativeElement.setAttribute('role', 'grid');
     }

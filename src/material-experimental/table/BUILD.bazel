@@ -10,7 +10,8 @@ ng_module(
     ),
     module_name = "@angular/material-experimental/table",
     deps = [
-        "//src/mat/table",
+        "//src/material/table",
+        "//src/cdk-experimental/table",
         "@npm//@angular/common",
         "@npm//@angular/core",
         "@npm//rxjs",

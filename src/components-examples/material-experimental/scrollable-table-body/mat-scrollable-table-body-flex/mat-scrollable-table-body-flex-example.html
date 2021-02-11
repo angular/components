@@ -3,7 +3,7 @@
 <button mat-raised-button (click)="nextMaxHeight()">Change max height</button>
 
 <p>Max Height: {{maxHeight}}</p>
-<mat-table [dataSource]="dataSource" class="mat-elevation-z8" [scrollableBody]="maxHeight">
+<mat-table [dataSource]="dataSource" class="mat-elevation-z8">
   <!-- Position Column -->
   <ng-container matColumnDef="position">
     <mat-header-cell *matHeaderCellDef> No. </mat-header-cell>

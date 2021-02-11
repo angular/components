@@ -7,6 +7,7 @@ import {
 } from './mat-scrollable-table-body-flex/mat-scrollable-table-body-flex-example';
 import {MatTableModule} from '@angular/material/table';
 import {MatButtonModule} from '@angular/material/button';
+import {MatScrollableTableBodyModule} from '@angular/material-experimental/table';
 
 export {
   MatScrollableTableBodyFlexExample,
@@ -19,6 +20,7 @@ const EXAMPLES = [
 @NgModule({
   imports: [
     CdkScrollableTableBodyModule,
+    MatScrollableTableBodyModule,
     MatButtonModule,
     MatTableModule,
   ],

@@ -6,8 +6,7 @@ ng_module(
     name = "scrollable-table-body",
     srcs = glob(["**/*.ts"]),
     deps = [
-        "//src/components-examples/cdk-experimental/table",
-        "//src/components-examples/material-experimental/table",
+        "//src/components-examples/material-experimental/scrollable-table-body",
         "//src/dev-app/example",
         "@npm//@angular/forms",
         "@npm//@angular/router",

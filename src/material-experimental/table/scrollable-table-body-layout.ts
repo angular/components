@@ -10,6 +10,7 @@ import {Directive} from '@angular/core';
 import {
   _TABLE_LAYOUT_STRATEGY,
 } from '@angular/cdk/table/table-layout-strategy';
+import {ScrollableTableBodyLayoutStrategy} from '@angular/cdk-experimental/table';
 
 /** A directive that enables scrollable body content for flex tables. */
 @Directive({
