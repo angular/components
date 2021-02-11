@@ -6,23 +6,51 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {ChangeDetectorRef, ElementRef, Inject} from '@angular/core';
 import {SpecificEventListener, EventType} from '@material/base';
 import {MDCSliderAdapter, Thumb, TickMark} from '@material/slider';
-import {MatSlider} from './slider';
+import {MatSliderThumb, MAT_SLIDER} from './slider-thumb';
 
+/**
+ * This is a dummy interface that just contains the properties and methods of MatSlider that are
+ * used by SliderAdapter. Rather than directly referencing MatSlider, we use this interface when
+ * to avoid a circular dependency between MatSlider and SliderAdapter.
+ */
+interface MatSlider {
+  _cdr: ChangeDetectorRef;
+  min: number;
+  max: number;
+  disabled: boolean;
+  _elementRef: ElementRef<HTMLElement>;
+  _trackActive: ElementRef<HTMLElement>;
+  _initialized: boolean;
+  _tickMarks: TickMark[];
+  _document: Document;
+  _window: Window;
+  displayWith: ((value: number) => string) | null;
+  _getInput: (thumb: Thumb) => MatSliderThumb;
+  _getKnobElement: (thumb: Thumb) => HTMLElement;
+  _getThumbElement: (thumb: Thumb) => HTMLElement;
+  _getInputElement: (thumb: Thumb) => HTMLInputElement;
+  _setValue: (value: number, thumb: Thumb) => void;
+  _setValueIndicatorText: (value: number, thumb: Thumb) => void;
+}
+
+// TODO(wagnermaciel): Change to prototype methods once this PR is submitted.
+// https://github.com/material-components/material-components-web/pull/6256
 export class SliderAdapter implements MDCSliderAdapter {
-  constructor(private readonly _delegate: MatSlider) {}
+  constructor(@Inject(MAT_SLIDER) private readonly _delegate: MatSlider) {}
   hasClass = (className: string): boolean => {
-    return this._delegate._hostElement.classList.contains(className);
+    return this._delegate._elementRef.nativeElement.classList.contains(className);
   }
   addClass = (className: string): void => {
-    this._delegate._hostElement.classList.add(className);
+    this._delegate._elementRef.nativeElement.classList.add(className);
   }
   removeClass = (className: string): void => {
-    this._delegate._hostElement.classList.remove(className);
+    this._delegate._elementRef.nativeElement.classList.remove(className);
   }
   getAttribute = (attribute: string): string | null => {
-    return this._delegate._hostElement.getAttribute(attribute);
+    return this._delegate._elementRef.nativeElement.getAttribute(attribute);
   }
   addThumbClass = (className: string, thumb: Thumb): void => {
     this._delegate._getThumbElement(thumb).classList.add(className);
@@ -58,7 +86,7 @@ export class SliderAdapter implements MDCSliderAdapter {
     return this._delegate._getThumbElement(thumb).getBoundingClientRect();
   }
   getBoundingClientRect = (): ClientRect => {
-    return this._delegate._hostElement.getBoundingClientRect();
+    return this._delegate._elementRef.nativeElement.getBoundingClientRect();
   }
   isRTL = (): boolean => {
     // TODO(wagnermaciel): Actually implementing this.
@@ -84,10 +112,10 @@ export class SliderAdapter implements MDCSliderAdapter {
   }
   updateTickMarks = (tickMarks: TickMark[]): void => {
     this._delegate._tickMarks = tickMarks;
-    this._delegate._cdr.markForCheck();
+    this._delegate._cdr.detectChanges();
   }
   setPointerCapture = (pointerId: number): void => {
-    this._delegate._hostElement.setPointerCapture(pointerId);
+    this._delegate._elementRef.nativeElement.setPointerCapture(pointerId);
   }
   // We ignore emitChangeEvent and emitInputEvent because the slider inputs
   // are already exposed so users can just listen for those events directly themselves.
@@ -113,11 +141,11 @@ export class SliderAdapter implements MDCSliderAdapter {
   }
   registerEventHandler =
     <K extends EventType>(evtType: K, handler: SpecificEventListener<K>): void => {
-      this._delegate._hostElement.addEventListener(evtType, handler);
+      this._delegate._elementRef.nativeElement.addEventListener(evtType, handler);
   }
   deregisterEventHandler =
     <K extends EventType>(evtType: K, handler: SpecificEventListener<K>): void => {
-      this._delegate._hostElement.removeEventListener(evtType, handler);
+      this._delegate._elementRef.nativeElement.removeEventListener(evtType, handler);
   }
   registerThumbEventHandler =
     <K extends EventType>(thumb: Thumb, evtType: K, handler: SpecificEventListener<K>): void => {

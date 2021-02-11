@@ -31,7 +31,7 @@ import {
 } from '@angular/core';
 import {MDCSliderFoundation, Thumb, TickMark} from '@material/slider';
 import {SliderAdapter} from './slider-adapter';
-import {MatSliderThumb} from './slider-thumb';
+import {MatSliderThumb, MAT_SLIDER} from './slider-thumb';
 
 /**
  * Allows users to select from a range of values by moving the slider thumb. It is similar in
@@ -51,6 +51,7 @@ import {MatSliderThumb} from './slider-thumb';
   exportAs: 'matSlider',
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
+  providers: [{provide: MAT_SLIDER, useExisting: MatSlider}],
 })
 export class MatSlider implements AfterViewInit, OnDestroy {
   /** The slider thumb(s). */
@@ -58,6 +59,10 @@ export class MatSlider implements AfterViewInit, OnDestroy {
 
   /** The slider thumb knob(s) */
   @ViewChildren('knob') _knobs: QueryList<ElementRef<HTMLElement>>;
+
+  /** The span containing the slider thumb value indicator text */
+  @ViewChildren('valueIndicatorTextElement')
+  _valueIndicatorTextElements: QueryList<ElementRef<HTMLElement>>;
 
   /** The active section of the slider track. */
   @ViewChild('trackActive') _trackActive: ElementRef<HTMLElement>;
@@ -89,9 +94,7 @@ export class MatSlider implements AfterViewInit, OnDestroy {
   /** Whether the slider displays tick marks along the slider track. */
   @Input()
   get showTickMarks(): boolean { return this._showTickMarks; }
-  set showTickMarks(v: boolean) {
-    this._showTickMarks = coerceBooleanProperty(v);
-  }
+  set showTickMarks(v: boolean) { this._showTickMarks = coerceBooleanProperty(v); }
   private _showTickMarks: boolean = false;
 
   /** The minimum value that the slider can have. */
@@ -125,12 +128,6 @@ export class MatSlider implements AfterViewInit, OnDestroy {
   /** Whether the foundation has been initialized. */
   _initialized: boolean = false;
 
-  /** The string representation of the start thumbs value. */
-  _startValueIndicatorText: string;
-
-  /** The string representation of the end thumbs value. */
-  _endValueIndicatorText: string;
-
   /** The injected document if available or fallback to the global document reference. */
   _document: Document;
 
@@ -140,30 +137,25 @@ export class MatSlider implements AfterViewInit, OnDestroy {
    */
   _window: Window;
 
-  /** The hosts native HTML element. */
-  _hostElement: HTMLElement;
-
   /** Used to keep track of & render the active & inactive tick marks on the slider track. */
   _tickMarks: TickMark[];
 
   constructor(
     readonly _cdr: ChangeDetectorRef,
-    private readonly _elementRef: ElementRef<HTMLElement>,
+    readonly _elementRef: ElementRef<HTMLElement>,
     private readonly _platform: Platform,
     @Inject(DOCUMENT) document: any) {
       this._document = document;
       this._window = this._document.defaultView || window;
-      this._hostElement = this._elementRef.nativeElement;
     }
 
   ngAfterViewInit() {
-    this._initInputs().then(() => {
-      this._foundation.init();
-      if (this._platform.isBrowser) {
-        this._foundation.layout();
-      }
-      this._initialized = true;
-    });
+    this._validateInputs();
+    this._foundation.init();
+    if (this._platform.isBrowser) {
+      this._foundation.layout();
+    }
+    this._initialized = true;
   }
 
   ngOnDestroy() {
@@ -173,19 +165,21 @@ export class MatSlider implements AfterViewInit, OnDestroy {
   }
 
   /**
-   * Sets up the initial state of the slider thumb inputs.
-   *
-   * The slider thumbs need this extra step because are passed in via `ng-content`,
-   * and therefore have no way of knowing which slider thumb they correspond to.
-   *
-   * This method needs to return a promise in order to avoid throwing an
-   * ExpressionChangedAfterItHasBeenCheckedError error.
+   * Ensures that there is not an invalid configuration for the slider thumb inputs.
    */
-  _initInputs(): Promise<void> {
-    return Promise.resolve().then(() => {
-      this._inputs.get(0)?._init(this._isRange() ? Thumb.START : Thumb.END);
-      this._inputs.get(1)?._init(Thumb.END);
-    });
+  _validateInputs(): void {
+    if (this._isRange()) {
+      if (!this._getInputElement(Thumb.START).hasAttribute('matSliderStartThumb')) {
+        this._throwInvalidInputConfigurationError('matSliderStartThumb');
+      }
+      if (!this._getInputElement(Thumb.END).hasAttribute('matSliderEndThumb')) {
+        this._throwInvalidInputConfigurationError('matSliderEndThumb');
+      }
+    } else {
+      if (!this._getInputElement(Thumb.END).hasAttribute('matSliderThumb')) {
+        this._throwInvalidInputConfigurationError('matSliderThumb');
+      }
+    }
   }
 
   /** Gets the current value of given slider thumb. */
@@ -229,6 +223,12 @@ export class MatSlider implements AfterViewInit, OnDestroy {
     return thumb === Thumb.END ? knobs[knobs.length - 1] : knobs[0];
   }
 
+    /** Gets the slider knob HTML element of the given thumb. */
+    _getValueIndicatorTextElement(thumb: Thumb): HTMLElement {
+      const elements = this._valueIndicatorTextElements.toArray().map(e => e.nativeElement);
+      return thumb === Thumb.END ? elements[elements.length - 1] : elements[0];
+    }
+
   /**
    * Gets the text representation of the given value.
    *
@@ -236,20 +236,12 @@ export class MatSlider implements AfterViewInit, OnDestroy {
    * current numeric value as a string.
    */
   _getValueIndicatorText(value: number): string {
-    return this.displayWith ? this.displayWith(value) : value.toString();
-  }
-
-  /** Gets the text representation of the current value of the given thumb. */
-  _getValueIndicatorTextByThumb(thumb: Thumb): string {
-    return this._getValueIndicatorText(this._getValue(thumb));
+    return this.displayWith ? this.displayWith(value) : `${value}`;
   }
 
   /** Sets the value indicator text of the given thumb with the given value. */
-  _setValueIndicatorText(value: number, thumb: Thumb) {
-    const valueIndicatorText = this._getValueIndicatorText(value);
-    thumb === Thumb.END
-      ? this._endValueIndicatorText = valueIndicatorText
-      : this._startValueIndicatorText = valueIndicatorText;
+  _setValueIndicatorText(value: number, thumb: Thumb): void {
+    this._getValueIndicatorTextElement(thumb).textContent = this._getValueIndicatorText(value);
   }
 
   /** Determines the class name for a HTML element. */
@@ -262,6 +254,24 @@ export class MatSlider implements AfterViewInit, OnDestroy {
   /** Returns an array of the thumb types that exist on the current slider instance. */
   _getThumbTypes(): Thumb[] {
     return this._isRange() ? [Thumb.START, Thumb.END] : [Thumb.END];
+  }
+
+  _throwInvalidInputConfigurationError(missingSelector: string): void {
+    throw Error(`Invalid slider thumb input configuration! Missing a ${missingSelector}.
+
+    Valid configurations are as follows:
+
+      <mat-slider>
+        <input mat-slider-thumb>
+      </mat-slider>
+
+      or
+
+      <mat-slider>
+        <input matSliderStartThumb>
+        <input matSliderEndThumb>
+      </mat-slider>
+    `);
   }
 
   static ngAcceptInputType_disabled: BooleanInput;
