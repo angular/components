@@ -150,7 +150,13 @@ export class MatSlider implements AfterViewInit, OnDestroy {
     }
 
   ngAfterViewInit() {
-    this._validateInputs();
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      _validateInputs(
+        this._isRange(),
+        this._getInputElement(Thumb.START),
+        this._getInputElement(Thumb.END),
+      );
+    }
     if (this._platform.isBrowser) {
       this._foundation.init();
       this._foundation.layout();
@@ -162,31 +168,6 @@ export class MatSlider implements AfterViewInit, OnDestroy {
     if (this._platform.isBrowser) {
       this._foundation.destroy();
     }
-  }
-
-  /**
-   * Ensures that there is not an invalid configuration for the slider thumb inputs.
-   */
-  _validateInputs(): void {
-    if (this._isRange()) {
-      if (!this._getInputElement(Thumb.START).hasAttribute('matSliderStartThumb')) {
-        this._throwInvalidInputConfigurationError('matSliderStartThumb');
-      }
-      if (!this._getInputElement(Thumb.END).hasAttribute('matSliderEndThumb')) {
-        this._throwInvalidInputConfigurationError('matSliderEndThumb');
-      }
-    } else {
-      if (!this._getInputElement(Thumb.END).hasAttribute('matSliderThumb')) {
-        this._throwInvalidInputConfigurationError('matSliderThumb');
-      }
-    }
-  }
-
-  /** Gets the current value of given slider thumb. */
-  _getValue(thumb: Thumb): number {
-    return thumb === Thumb.START
-      ? this._foundation.getValueStart()
-      : this._foundation.getValue();
   }
 
   /** Sets the value of a slider thumb. */
@@ -203,7 +184,7 @@ export class MatSlider implements AfterViewInit, OnDestroy {
 
   /** Gets the slider thumb input of the given thumb. */
   _getInput(thumb: Thumb): MatSliderThumb {
-    return thumb === Thumb.END ? this._inputs.get(this._inputs.length - 1)! : this._inputs.get(0)!;
+    return thumb === Thumb.END ? this._inputs.last! : this._inputs.first!;
   }
 
   /** Gets the slider thumb HTML input element of the given thumb. */
@@ -213,35 +194,28 @@ export class MatSlider implements AfterViewInit, OnDestroy {
 
   /** Gets the slider thumb HTML element of the given thumb. */
   _getThumbElement(thumb: Thumb): HTMLElement {
-    const thumbs = this._thumbs.toArray().map(e => e.nativeElement);
-    return thumb === Thumb.END ? thumbs[thumbs.length - 1] : thumbs[0];
+    const thumbElementRef = thumb === Thumb.END ? this._thumbs.last : this._thumbs.first;
+    return thumbElementRef.nativeElement;
   }
 
   /** Gets the slider knob HTML element of the given thumb. */
   _getKnobElement(thumb: Thumb): HTMLElement {
-    const knobs = this._knobs.toArray().map(e => e.nativeElement);
-    return thumb === Thumb.END ? knobs[knobs.length - 1] : knobs[0];
+    const knobElementRef = thumb === Thumb.END ? this._knobs.last : this._knobs.first;
+    return knobElementRef.nativeElement;
   }
-
-    /** Gets the slider knob HTML element of the given thumb. */
-    _getValueIndicatorTextElement(thumb: Thumb): HTMLElement {
-      const elements = this._valueIndicatorTextElements.toArray().map(e => e.nativeElement);
-      return thumb === Thumb.END ? elements[elements.length - 1] : elements[0];
-    }
 
   /**
-   * Gets the text representation of the given value.
+   * Sets the value indicator text of the given thumb using the given value.
    *
-   * Uses the `displayWith` function if one has been provided. Otherwise, it just returns the
-   * current numeric value as a string.
+   * Uses the `displayWith` function if one has been provided. Otherwise, it just uses the
+   * numeric value as a string.
    */
-  _getValueIndicatorText(value: number): string {
-    return this.displayWith ? this.displayWith(value) : `${value}`;
-  }
-
-  /** Sets the value indicator text of the given thumb with the given value. */
   _setValueIndicatorText(value: number, thumb: Thumb): void {
-    this._getValueIndicatorTextElement(thumb).textContent = this._getValueIndicatorText(value);
+    const valueIndicatorTextElementRef = thumb === Thumb.END
+        ? this._valueIndicatorTextElements.last
+        : this._valueIndicatorTextElements.first;
+    const valueText = this.displayWith ? this.displayWith(value) : `${value}`;
+    valueIndicatorTextElementRef.nativeElement.textContent = valueText;
   }
 
   /** Determines the class name for a HTML element. */
@@ -256,28 +230,49 @@ export class MatSlider implements AfterViewInit, OnDestroy {
     return this._isRange() ? [Thumb.START, Thumb.END] : [Thumb.END];
   }
 
-  _throwInvalidInputConfigurationError(missingSelector: string): void {
-    throw Error(`Invalid slider thumb input configuration! Missing a ${missingSelector}.
-
-    Valid configurations are as follows:
-
-      <mat-slider>
-        <input mat-slider-thumb>
-      </mat-slider>
-
-      or
-
-      <mat-slider>
-        <input matSliderStartThumb>
-        <input matSliderEndThumb>
-      </mat-slider>
-    `);
-  }
-
   static ngAcceptInputType_disabled: BooleanInput;
   static ngAcceptInputType_discrete: BooleanInput;
   static ngAcceptInputType_showTickMarks: BooleanInput;
   static ngAcceptInputType_min: NumberInput;
   static ngAcceptInputType_max: NumberInput;
   static ngAcceptInputType_step: NumberInput;
+}
+
+/**
+ * Ensures that there is not an invalid configuration for the slider thumb inputs.
+ */
+function _validateInputs(
+  isRange: boolean,
+  startInputElement: HTMLInputElement,
+  endInputElement: HTMLInputElement): void {
+  if (isRange) {
+    if (!startInputElement!.hasAttribute('matSliderStartThumb')) {
+      _throwInvalidInputConfigurationError();
+    }
+    if (!endInputElement.hasAttribute('matSliderEndThumb')) {
+      _throwInvalidInputConfigurationError();
+    }
+  } else {
+    if (!endInputElement.hasAttribute('matSliderThumb')) {
+      _throwInvalidInputConfigurationError();
+    }
+  }
+}
+
+function _throwInvalidInputConfigurationError(): void {
+  throw Error(`Invalid slider thumb input configuration!
+
+  Valid configurations are as follows:
+
+    <mat-slider>
+      <input matSliderThumb>
+    </mat-slider>
+
+    or
+
+    <mat-slider>
+      <input matSliderStartThumb>
+      <input matSliderEndThumb>
+    </mat-slider>
+  `);
 }

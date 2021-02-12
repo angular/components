@@ -67,7 +67,8 @@ export interface MatSliderDragEvent {
     '(blur)': '_blur.emit()',
     '(focus)': '_focus.emit()',
   },
-}) export class MatSliderThumb implements AfterViewInit {
+})
+export class MatSliderThumb implements AfterViewInit {
 
   // ** IMPORTANT NOTE **
   //
@@ -119,13 +120,22 @@ export interface MatSliderDragEvent {
     @Inject(DOCUMENT) private readonly _document: Document,
     @Inject(MAT_SLIDER) private readonly _slider: MatSlider,
     readonly _elementRef: ElementRef<HTMLInputElement>,
-    ) {}
+    ) {
+      this.thumb = _elementRef.nativeElement.hasAttribute('matSliderStartThumb')
+        ? Thumb.START
+        : Thumb.END;
+
+      // Only set the default value if an initial value has not already been provided.
+      // Note that we are only setting the value attribute at this point. We cannot set the value
+      // property yet because the min and max have not been set.
+      if (!_elementRef.nativeElement.hasAttribute('value')) {
+        this.value = _elementRef.nativeElement.hasAttribute('matSliderEndThumb')
+          ? _slider.max
+          : _slider.min;
+      }
+    }
 
   ngAfterViewInit() {
-    this.thumb = this._elementRef.nativeElement.hasAttribute('matSliderStartThumb')
-    ? Thumb.START
-    : Thumb.END;
-
     const min = this._elementRef.nativeElement.hasAttribute('matSliderEndThumb')
       ? this._slider._getInput(Thumb.START).value
       : this._slider.min;
@@ -135,12 +145,8 @@ export interface MatSliderDragEvent {
     this._elementRef.nativeElement.min = `${min}`;
     this._elementRef.nativeElement.max = `${max}`;
 
-    // Only set the default value if an initial value has not already been provided.
-    if (!this._elementRef.nativeElement.hasAttribute('value')) {
-      this.value = this._elementRef.nativeElement.hasAttribute('matSliderEndThumb')
-        ? this._slider.max
-        : this._slider.min;
-    }
+    // We can now set the property value because the min and max have now been set.
+    this._elementRef.nativeElement.value = `${this.value}`;
 
     // Setup for the MDC foundation.
     if (this._slider.disabled) {
