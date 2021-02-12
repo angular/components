@@ -9,7 +9,7 @@
 import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
 import {BACKSPACE, hasModifierKey, TAB} from '@angular/cdk/keycodes';
 import {
-  AfterContentInit, 
+  AfterContentInit,
   Directive,
   ElementRef,
   EventEmitter,
