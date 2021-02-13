@@ -31,8 +31,8 @@ export interface MatChipInputEvent {
   /** The value of the input. */
   value: string;
 
-  /** Call to clear the value of the input */
-  clearInput(): void;
+  /** Reference to the chip input that emitted the event. */
+  chipInput: MatChipInput;
 }
 
 // Increasing integer for generating unique ids.
@@ -142,6 +142,9 @@ export class MatChipInput implements MatChipTextControl, OnChanges, OnDestroy, A
         this._chipList._allowFocusEscape();
       }
 
+      // To prevent the user from accidentally deleting chips when pressing BACKSPACE continuously,
+      // We focus the last chip on backspace only after the user has released the backspace button,
+      // And the input is empty (see behaviour in _keyup)
       if (event.keyCode === BACKSPACE && this._focusLastChipOnBackspace) {
         this._chipList._keyManager.setLastItemActive();
         event.preventDefault();
@@ -193,10 +196,7 @@ export class MatChipInput implements MatChipTextControl, OnChanges, OnDestroy, A
       this.chipEnd.emit({
         input: this._inputElement,
         value: this._inputElement.value,
-        clearInput: () => {
-          this._inputElement.value = '';
-          this._focusLastChipOnBackspace = true;
-        }
+        chipInput: this,
       });
 
       event?.preventDefault();
@@ -211,6 +211,12 @@ export class MatChipInput implements MatChipTextControl, OnChanges, OnDestroy, A
   /** Focuses the input. */
   focus(options?: FocusOptions): void {
     this._inputElement.focus(options);
+  }
+
+  /** Clears the input */
+  clear(): void {
+    this._inputElement.value = '';
+    this._focusLastChipOnBackspace = true;
   }
 
   /** Checks whether a keycode is one of the configured separators. */

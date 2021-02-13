@@ -68,7 +68,7 @@ export class ChipsDemo {
     }
 
     // Clear the input value
-    event.clearInput();
+    event.chipInput.clear();
   }
 
   remove(person: Person): void {

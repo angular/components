@@ -93,6 +93,7 @@ export declare class MatChipInput implements MatChipTextControl, OnChanges, OnDe
     _keydown(event?: KeyboardEvent): void;
     _keyup(event: KeyboardEvent): void;
     _onInput(): void;
+    clear(): void;
     focus(options?: FocusOptions): void;
     ngAfterContentInit(): void;
     ngOnChanges(): void;
@@ -104,9 +105,9 @@ export declare class MatChipInput implements MatChipTextControl, OnChanges, OnDe
 }
 
 export interface MatChipInputEvent {
+    chipInput: MatChipInput;
     input: HTMLInputElement;
     value: string;
-    clearInput(): void;
 }
 
 export declare class MatChipList extends _MatChipListMixinBase implements MatFormFieldControl<any>, ControlValueAccessor, AfterContentInit, DoCheck, OnInit, OnDestroy, CanUpdateErrorState {

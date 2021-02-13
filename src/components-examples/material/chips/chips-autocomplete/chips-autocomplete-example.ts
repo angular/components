@@ -42,7 +42,7 @@ export class ChipsAutocompleteExample {
     }
 
     // Clear the input value
-    event.clearInput();
+    event.chipInput.clear();
 
     this.fruitCtrl.setValue(null);
   }

@@ -1151,10 +1151,10 @@ describe('MatChipList', () => {
 
     describe('keyboard behavior', () => {
       let nativeInput: HTMLInputElement;
-      
+
       const expectNoItemFocused = () => expect(manager.activeItemIndex).toBe(-1);
       const expectLastItemFocused = () => expect(manager.activeItemIndex).toEqual(chips.length - 1);
-      
+
       beforeEach(() => {
         chipListDebugElement = fixture.debugElement.query(By.directive(MatChipList))!;
         chipListInstance = chipListDebugElement.componentInstance;
@@ -1171,13 +1171,13 @@ describe('MatChipList', () => {
           dispatchKeyboardEvent(nativeInput, 'keydown', DELETE);
           expectNoItemFocused();
         });
-        
+
         it('should focus the last chip when pressing BACKSPACE when input is empty', () => {
           dispatchKeyboardEvent(nativeInput, 'keydown', BACKSPACE);
           expectLastItemFocused();
         });
 
-        it('should not focus the last chip when pressing BACKSPACE after changing input, ' + 
+        it('should not focus the last chip when pressing BACKSPACE after changing input, ' +
           'until BACKSPACE is released and pressed again', () => {
           // Change the input
           dispatchKeyboardEvent(nativeInput, 'keydown', A);
@@ -1505,13 +1505,13 @@ class MultiSelectionChipList {
           {{ food.viewValue }}
         </mat-chip>
       </mat-chip-list>
-      
+
       <input placeholder="New food..."
           [matChipInputFor]="chipList1"
           [matChipInputSeparatorKeyCodes]="separatorKeyCodes"
           [matChipInputAddOnBlur]="addOnBlur"
           (matChipInputTokenEnd)="add($event)"
-      />  
+      />
     </mat-form-field>
   `
 })
@@ -1544,7 +1544,7 @@ class InputChipList {
     }
 
     // Clear the input value
-    event.clearInput();
+    event.chipInput.clear();
   }
 
   remove(food: any): void {
