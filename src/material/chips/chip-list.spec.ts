@@ -1184,6 +1184,8 @@ describe('MatChipList', () => {
 
           // It shouldn't focus until backspace is released and pressed again
           dispatchKeyboardEvent(nativeInput, 'keydown', BACKSPACE);
+          dispatchKeyboardEvent(nativeInput, 'keydown', BACKSPACE);
+          dispatchKeyboardEvent(nativeInput, 'keydown', BACKSPACE);
           expectNoItemFocused();
 
           // Still not focused
