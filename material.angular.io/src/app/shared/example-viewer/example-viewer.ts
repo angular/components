@@ -1,7 +1,11 @@
 import {
   Component,
+  ElementRef,
+  HostBinding,
   Input,
-  NgModuleFactory, OnInit, QueryList,
+  NgModuleFactory,
+  OnInit,
+  QueryList,
   Type,
   ViewChildren,
   ɵNgModuleFactory
@@ -53,6 +57,7 @@ export class ExampleViewer implements OnInit {
   @Input() showCompactToggle = false;
 
   /** String key of the currently displayed example. */
+  @HostBinding('attr.id')
   @Input()
   get example() { return this._example; }
   set example(exampleName: string) {
@@ -75,7 +80,8 @@ export class ExampleViewer implements OnInit {
 
   constructor(
     private readonly snackbar: MatSnackBar,
-    private readonly clipboard: Clipboard) {}
+    private readonly clipboard: Clipboard,
+    private readonly elementRef: ElementRef<HTMLElement>) {}
 
   ngOnInit() {
     if (this.file) {
@@ -152,6 +158,17 @@ export class ExampleViewer implements OnInit {
     });
   }
 
+  _copyLink() {
+    // Reconstruct the URL using `origin + pathname` so we drop any pre-existing hash.
+    const fullUrl = location.origin + location.pathname + '#' + this._example;
+
+    if (this.clipboard.copy(fullUrl)) {
+      this.snackbar.open('Link copied', '', {duration: 2500});
+    } else {
+      this.snackbar.open('Link copy failed. Please try again!', '', {duration: 2500});
+    }
+  }
+
   /** Loads the component and module factory for the currently selected example. */
   private async _loadExampleComponent() {
     const {componentName, module} = EXAMPLE_COMPONENTS[this._example];
@@ -170,6 +187,13 @@ export class ExampleViewer implements OnInit {
     // class symbol to Ivy's module factory constructor. There is no equivalent for View Engine,
     // where factories are stored in separate files. Hence the API is currently Ivy-only.
     this._exampleModuleFactory = new ɵNgModuleFactory(moduleExports[module.name]);
+
+    // Since the data is loaded asynchronously, we can't count on the native behavior
+    // that scrolls the element into view automatically. We do it ourselves while giving
+    // the page some time to render.
+    if (typeof location !== 'undefined' && location.hash.slice(1) === this._example) {
+      setTimeout(() => this.elementRef.nativeElement.scrollIntoView(), 300);
+    }
   }
 
   private _generateExampleTabs() {

@@ -2,7 +2,16 @@
   <div class="docs-example-viewer-title" *ngIf="view !== 'snippet'">
     <div class="docs-example-viewer-title-spacer">{{exampleData?.title}}</div>
 
-    <button mat-icon-button type="button" (click)="toggleCompactView()" [matTooltip]="'View snippet only'"
+    <button
+      mat-icon-button
+      type="button"
+      [attr.aria-label]="'Copy link to ' + exampleData?.title + ' example to the clipboard'"
+      matTooltip="Copy link to example"
+      (click)="_copyLink()">
+      <mat-icon>link</mat-icon>
+    </button>
+
+    <button mat-icon-button type="button" (click)="toggleCompactView()" matTooltip="View snippet only"
             aria-label="View less" *ngIf="showCompactToggle">
       <mat-icon>
       <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" focusable="false">
@@ -13,7 +22,7 @@
     </button>
 
     <button mat-icon-button type="button" (click)="toggleSourceView()"
-            [matTooltip]="view==='demo' ? 'View code' : 'Hide code'" aria-label="View source">
+            [matTooltip]="view === 'demo' ? 'View code' : 'Hide code'" aria-label="View source">
       <mat-icon>code</mat-icon>
     </button>
 
@@ -25,7 +34,7 @@
       <mat-tab *ngFor="let tabName of _getExampleTabNames()" [label]="tabName">
         <div class="button-bar">
           <button mat-icon-button type="button" (click)="copySource(snippet.toArray()[selectedTab].viewer.textContent)"
-                  class="docs-example-source-copy docs-example-button" [matTooltip]="'Copy example source'"
+                  class="docs-example-source-copy docs-example-button" matTooltip="Copy example source"
                   title="Copy example source" aria-label="Copy example source to clipboard">
             <mat-icon>content_copy</mat-icon>
           </button>
@@ -38,12 +47,12 @@
   <div class="docs-example-viewer-source-compact" *ngIf="view === 'snippet'">
     <div class="button-bar">
       <button mat-icon-button type="button" (click)="copySource(snippet.first.viewer.textContent)"
-              class="docs-example-source-copy docs-example-button" [matTooltip]="'Copy snippet'"
+              class="docs-example-source-copy docs-example-button" matTooltip="Copy snippet"
               title="Copy example source" aria-label="Copy example source to clipboard">
         <mat-icon>content_copy</mat-icon>
       </button>
       <button mat-icon-button type="button" (click)="toggleCompactView()"
-              class="docs-example-compact-toggle docs-example-button" [matTooltip]="'View full example'"
+              class="docs-example-compact-toggle docs-example-button" matTooltip="View full example"
               aria-label="View less">
         <mat-icon>
           <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" focusable="false">
