@@ -47,9 +47,6 @@ export interface MatSliderDragEvent {
 
   /** The current value of the slider. */
   value: number;
-
-  /** The thumb that was interacted with. */
-  thumb: Thumb;
 }
 
 /**
@@ -88,7 +85,7 @@ export class MatSliderThumb implements AfterViewInit {
     // If the foundation has already been initialized, we need to
     // relay any value updates to it so that it can update the UI.
     if (this._slider._initialized) {
-      this._slider._setValue(value, this.thumb);
+      this._slider._setValue(value, this._thumb);
     } else {
       // Setup for the MDC foundation.
       this._elementRef.nativeElement.setAttribute('value', `${value}`);
@@ -110,7 +107,7 @@ export class MatSliderThumb implements AfterViewInit {
   @Output() readonly _focus: EventEmitter<void> = new EventEmitter<void>();
 
   /** Indicates which slider thumb this input corresponds to. */
-  thumb: Thumb;
+  private _thumb: Thumb;
 
   private _document: Document;
 
@@ -120,7 +117,7 @@ export class MatSliderThumb implements AfterViewInit {
     readonly _elementRef: ElementRef<HTMLInputElement>,
     ) {
       this._document = document;
-      this.thumb = _elementRef.nativeElement.hasAttribute('matSliderStartThumb')
+      this._thumb = _elementRef.nativeElement.hasAttribute('matSliderStartThumb')
         ? Thumb.START
         : Thumb.END;
 
@@ -179,7 +176,6 @@ export class MatSliderThumb implements AfterViewInit {
   exportAs: 'matSlider',
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
-  providers: [],
 })
 export class MatSlider implements AfterViewInit, OnDestroy {
   /** The slider thumb(s). */
@@ -471,11 +467,11 @@ class SliderAdapter implements MDCSliderAdapter {
   emitInputEvent = (value: number, thumb: Thumb): void => {};
   emitDragStartEvent = (value: number, thumb: Thumb): void => {
     const input = this._delegate._getInput(thumb);
-    input.dragStart.emit({ source: input, parent: this._delegate, value, thumb });
+    input.dragStart.emit({ source: input, parent: this._delegate, value });
   }
   emitDragEndEvent = (value: number, thumb: Thumb): void => {
     const input = this._delegate._getInput(thumb);
-    input.dragEnd.emit({ source: input, parent: this._delegate, value, thumb });
+    input.dragEnd.emit({ source: input, parent: this._delegate, value });
   }
   registerEventHandler =
     <K extends EventType>(evtType: K, handler: SpecificEventListener<K>): void => {
