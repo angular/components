@@ -14,30 +14,11 @@ import {
   ElementRef,
   EventEmitter,
   Inject,
-  InjectionToken,
   Input,
   Output,
 } from '@angular/core';
 import {Thumb} from '@material/slider';
-
-/**
- * This is a dummy interface that just contains the properties and methods of MatSlider that are
- * used by MatSliderThumb. Rather than directly referencing MatSlider, we use this interface when
- * defining MAT_SLIDER to avoid a circular dependency between MatSlider and MatSliderThumb.
- */
-interface MatSlider {
-  min: number;
-  max: number;
-  disabled: boolean;
-  _initialized: boolean;
-  _getInput: (thumb: Thumb) => MatSliderThumb;
-  _setValue: (value: number, thumb: Thumb) => void;
-}
-
-/**
- * Injection token that can be used to inject instances of MatSlider.
- */
-export const MAT_SLIDER = new InjectionToken<MatSlider>('MatSlider');
+import {_MatSliderInterface, MAT_SLIDER} from './slider-interface';
 
 /**
  * Represents a drag event emitted by the MatSlider component.
@@ -45,9 +26,6 @@ export const MAT_SLIDER = new InjectionToken<MatSlider>('MatSlider');
 export interface MatSliderDragEvent {
   /** The MatSliderThumb that was interacted with. */
   source: MatSliderThumb;
-
-  /** The parent MatSlider that was interacted with. */
-  parent: MatSlider;
 
   /** The current value of the slider. */
   value: number;
@@ -116,11 +94,14 @@ export class MatSliderThumb implements AfterViewInit {
   /** Indicates which slider thumb this input corresponds to. */
   thumb: Thumb;
 
+  private _document: Document;
+
   constructor(
-    @Inject(DOCUMENT) private readonly _document: Document,
-    @Inject(MAT_SLIDER) private readonly _slider: MatSlider,
+    @Inject(DOCUMENT) document: any,
+    @Inject(MAT_SLIDER) private readonly _slider: _MatSliderInterface,
     readonly _elementRef: ElementRef<HTMLInputElement>,
     ) {
+      this._document = document;
       this.thumb = _elementRef.nativeElement.hasAttribute('matSliderStartThumb')
         ? Thumb.START
         : Thumb.END;

@@ -6,40 +6,15 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {ChangeDetectorRef, ElementRef, Inject} from '@angular/core';
+import {Inject} from '@angular/core';
 import {SpecificEventListener, EventType} from '@material/base';
 import {MDCSliderAdapter, Thumb, TickMark} from '@material/slider';
-import {MatSliderThumb, MAT_SLIDER} from './slider-thumb';
-
-/**
- * This is a dummy interface that just contains the properties and methods of MatSlider that are
- * used by SliderAdapter. Rather than directly referencing MatSlider, we use this interface when
- * to avoid a circular dependency between MatSlider and SliderAdapter.
- */
-interface MatSlider {
-  _cdr: ChangeDetectorRef;
-  min: number;
-  max: number;
-  disabled: boolean;
-  _elementRef: ElementRef<HTMLElement>;
-  _trackActive: ElementRef<HTMLElement>;
-  _initialized: boolean;
-  _tickMarks: TickMark[];
-  _document: Document;
-  _window: Window;
-  displayWith: ((value: number) => string) | null;
-  _getInput: (thumb: Thumb) => MatSliderThumb;
-  _getKnobElement: (thumb: Thumb) => HTMLElement;
-  _getThumbElement: (thumb: Thumb) => HTMLElement;
-  _getInputElement: (thumb: Thumb) => HTMLInputElement;
-  _setValue: (value: number, thumb: Thumb) => void;
-  _setValueIndicatorText: (value: number, thumb: Thumb) => void;
-}
+import {_MatSliderInterface, MAT_SLIDER} from './slider-interface';
 
 // TODO(wagnermaciel): Change to prototype methods once this PR is submitted.
 // https://github.com/material-components/material-components-web/pull/6256
 export class SliderAdapter implements MDCSliderAdapter {
-  constructor(@Inject(MAT_SLIDER) private readonly _delegate: MatSlider) {}
+  constructor(@Inject(MAT_SLIDER) private readonly _delegate: _MatSliderInterface) {}
   hasClass = (className: string): boolean => {
     return this._delegate._elementRef.nativeElement.classList.contains(className);
   }
@@ -125,21 +100,11 @@ export class SliderAdapter implements MDCSliderAdapter {
   emitInputEvent = (value: number, thumb: Thumb): void => {};
   emitDragStartEvent = (value: number, thumb: Thumb): void => {
     const input = this._delegate._getInput(thumb);
-    input.dragStart.emit({
-      source: input,
-      parent: this._delegate,
-      value,
-      thumb,
-    });
+    input.dragStart.emit({ source: input, value, thumb });
   }
   emitDragEndEvent = (value: number, thumb: Thumb): void => {
     const input = this._delegate._getInput(thumb);
-    input.dragEnd.emit({
-      source: input,
-      parent: this._delegate,
-      value,
-      thumb,
-    });
+    input.dragEnd.emit({ source: input, value, thumb });
   }
   registerEventHandler =
     <K extends EventType>(evtType: K, handler: SpecificEventListener<K>): void => {

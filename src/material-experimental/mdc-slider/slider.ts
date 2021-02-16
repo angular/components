@@ -31,7 +31,8 @@ import {
 } from '@angular/core';
 import {MDCSliderFoundation, Thumb, TickMark} from '@material/slider';
 import {SliderAdapter} from './slider-adapter';
-import {MatSliderThumb, MAT_SLIDER} from './slider-thumb';
+import {MatSliderThumb} from './slider-thumb';
+import {_MatSliderInterface, _MatSliderThumbInterface, MAT_SLIDER} from './slider-interface';
 
 /**
  * Allows users to select from a range of values by moving the slider thumb. It is similar in
@@ -53,7 +54,7 @@ import {MatSliderThumb, MAT_SLIDER} from './slider-thumb';
   encapsulation: ViewEncapsulation.None,
   providers: [{provide: MAT_SLIDER, useExisting: MatSlider}],
 })
-export class MatSlider implements AfterViewInit, OnDestroy {
+export class MatSlider implements _MatSliderInterface, AfterViewInit, OnDestroy {
   /** The slider thumb(s). */
   @ViewChildren('thumb') _thumbs: QueryList<ElementRef<HTMLElement>>;
 
@@ -68,7 +69,8 @@ export class MatSlider implements AfterViewInit, OnDestroy {
   @ViewChild('trackActive') _trackActive: ElementRef<HTMLElement>;
 
   /** The sliders hidden range input(s). */
-  @ContentChildren(MatSliderThumb, {descendants: false}) _inputs: QueryList<MatSliderThumb>;
+  @ContentChildren(MatSliderThumb, {descendants: false})
+  _inputs: QueryList<_MatSliderThumbInterface>;
 
   /** Whether the slider is disabled. */
   @Input()
@@ -101,13 +103,13 @@ export class MatSlider implements AfterViewInit, OnDestroy {
   @Input()
   get min(): number { return this._min; }
   set min(v: number) { this._min = coerceNumberProperty(v, this._min); }
-  private _min = 0;
+  private _min: number = 0;
 
   /** The maximum value that the slider can have. */
   @Input()
   get max(): number { return this._max; }
   set max(v: number) { this._max = coerceNumberProperty(v, this._max); }
-  private _max = 100;
+  private _max: number = 100;
 
   /** The values at which the thumb will snap. */
   @Input()
@@ -183,7 +185,7 @@ export class MatSlider implements AfterViewInit, OnDestroy {
   }
 
   /** Gets the slider thumb input of the given thumb. */
-  _getInput(thumb: Thumb): MatSliderThumb {
+  _getInput(thumb: Thumb): _MatSliderThumbInterface {
     return thumb === Thumb.END ? this._inputs.last! : this._inputs.first!;
   }
 
