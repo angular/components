@@ -93,7 +93,7 @@ export class SliderAdapter implements MDCSliderAdapter {
   }
   updateTickMarks = (tickMarks: TickMark[]): void => {
     this._delegate._tickMarks = tickMarks;
-    this._delegate._cdr.detectChanges();
+    this._delegate._cdr.markForCheck();
   }
   setPointerCapture = (pointerId: number): void => {
     this._delegate._elementRef.nativeElement.setPointerCapture(pointerId);

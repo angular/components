@@ -164,6 +164,17 @@ export class MatSlider implements _MatSliderInterface, AfterViewInit, OnDestroy 
       this._foundation.layout();
       this._initialized = true;
     }
+    // The MDC foundation requires access to the view and content children of the MatSlider. In
+    // order to access the view and content children of MatSlider we need to wait until change
+    // detection runs and materializes them. That is why we call init() and layout() in
+    // ngAfterViewInit().
+    //
+    // The MDC foundation then uses the information it gathers from the DOM to compute an initial
+    // value for the tickMarks array. It then tries to update the component data, but because it is
+    // updating the component data AFTER change detection already ran, we will get a changed after
+    // checked error. Because of this, we need to force change detection to update the UI with the
+    // new state.
+    this._cdr.detectChanges();
   }
 
   ngOnDestroy() {
