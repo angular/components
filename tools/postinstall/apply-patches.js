@@ -87,7 +87,7 @@ function applyPatches() {
     const hasFlatModuleBundle = fs.existsSync(filePath.replace('.d.ts', '.metadata.json'));
     if ((filePath.includes('node_modules/') || !hasFlatModuleBundle) && $1`,
       'node_modules/@angular/compiler-cli/src/transformers/compiler_host.js');
-  applyPatch(path.join(__dirname, './flat_module_factory_resolution.patch'));
+//  applyPatch(path.join(__dirname, './flat_module_factory_resolution.patch'));
   // The three replacements below ensure that metadata files can be read by NGC and
   // that metadata files are collected as Bazel action inputs.
   searchAndReplace(
@@ -108,10 +108,7 @@ function applyPatches() {
       'node_modules/@angular/bazel/src/ng_module.bzl');
 
   // Workaround for: https://github.com/bazelbuild/rules_nodejs/issues/1208.
-  applyPatch(path.join(__dirname, './manifest_externs_hermeticity.patch'));
-
-  // Patches the changes from: https://github.com/bazelbuild/rules_typescript/pull/504.
-  applyPatch(path.join(__dirname, './@bazel_typescript_tsc_wrapped_worker_cache_fix.patch'));
+//  applyPatch(path.join(__dirname, './manifest_externs_hermeticity.patch'));
 
   // Workaround for https://github.com/angular/angular/issues/33452:
   searchAndReplace(

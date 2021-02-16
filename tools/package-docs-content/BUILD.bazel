@@ -9,6 +9,7 @@ nodejs_binary(
         ":sources",
         "@npm//fs-extra",
     ],
+    templated_args = ["--bazel_patch_module_resolver"],
     entry_point = ":package-docs-content.ts",
 )
 

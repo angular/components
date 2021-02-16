@@ -25,6 +25,7 @@ ts_library(
 
 nodejs_binary(
     name = "dev-server_bin",
+    templated_args = ["--bazel_patch_module_resolver"],
     data = [
         ":dev-server_lib",
     ],

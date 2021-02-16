@@ -8,21 +8,17 @@ load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 # Add NodeJS rules
 http_archive(
     name = "build_bazel_rules_nodejs",
-    sha256 = "b3521b29c7cb0c47a1a735cce7e7e811a4f80d8e3720cf3a1b624533e4bb7cb6",
-    urls = ["https://github.com/bazelbuild/rules_nodejs/releases/download/2.3.2/rules_nodejs-2.3.2.tar.gz"],
+    sha256 = "dd4dc46066e2ce034cba0c81aa3e862b27e8e8d95871f567359f7a534cccb666",
+    urls = ["https://github.com/bazelbuild/rules_nodejs/releases/download/3.1.0/rules_nodejs-3.1.0.tar.gz"],
 )
-
 # Add sass rules
 http_archive(
     name = "io_bazel_rules_sass",
-    # Patch `rules_sass` to work around a bug that causes error messages to be not
-    # printed in worker mode: https://github.com/bazelbuild/rules_sass/issues/96.
-    # TODO(devversion): remove this patch once the Sass Node entry-point returns a `Promise`.
-    patches = ["//tools/postinstall:sass_worker_async.patch"],
-    sha256 = "cf28ff1bcfafb3c97f138bbc8ca9fe386e968ed3faaa9f8e6214abb5e88a2ecd",
-    strip_prefix = "rules_sass-1.29.0",
+    sha256 = "596ab3616d370135e0ecc710e103422e0aa3719f1c970303a0886b70c81ee819",
+    strip_prefix = "rules_sass-1.32.2",
     urls = [
-        "https://github.com/bazelbuild/rules_sass/archive/1.29.0.zip",
+        "https://github.com/bazelbuild/rules_sass/archive/1.32.2.zip",
+        "https://mirror.bazel.build/github.com/bazelbuild/rules_sass/archive/1.32.2.zip",
     ],
 )
 
@@ -49,10 +45,6 @@ node_repositories(
 
 yarn_install(
     name = "npm",
-    # Redirects Yarn `stdout` output to `stderr`. This ensures that stdout is not accidentally
-    # polluted when Bazel runs Yarn. Workaround until the upstream fix is available:
-    # https://github.com/bazelbuild/bazel/pull/10611.
-    args = ["1>&2"],
     # We add the postinstall patches file, and ngcc main fields update script here so
     # that Yarn will rerun whenever one of these files has been modified.
     data = [
@@ -61,22 +53,15 @@ yarn_install(
     ],
     package_json = "//:package.json",
     quiet = False,
+    strict_visibility = False,
     yarn_lock = "//:yarn.lock",
 )
 
-# Install all bazel dependencies of the @ngdeps npm packages
-load("@npm//:install_bazel_dependencies.bzl", "install_bazel_dependencies")
 
-install_bazel_dependencies(
-    # TODO(crisbeto): supress warnings for now so everything works like it has until now.
-    # Eventually we should remove it and re-test everything.
-    suppress_warning = True,
-)
+load("@npm//@bazel/protractor:package.bzl", "npm_bazel_protractor_dependencies")
 
-# Fetch transitive dependencies which are needed to use the karma rules.
-load("@npm//@bazel/karma:package.bzl", "npm_bazel_karma_dependencies")
+npm_bazel_protractor_dependencies()
 
-npm_bazel_karma_dependencies()
 
 # Setup web testing. We need to setup a browser because the web testing rules for TypeScript need
 # a reference to a registered browser (ideally that's a hermetic version of a browser)

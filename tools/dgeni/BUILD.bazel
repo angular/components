@@ -5,6 +5,7 @@ package(default_visibility = ["//visibility:public"])
 
 nodejs_binary(
     name = "dgeni",
+    templated_args = ["--bazel_patch_module_resolver"],
     data = [
         ":sources",
         "@npm//dgeni",

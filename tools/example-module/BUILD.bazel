@@ -15,6 +15,7 @@ ts_library(
 
 nodejs_binary(
     name = "bazel-bin",
+    templated_args = ["--bazel_patch_module_resolver"],
     data = [
         ":example-module.template",
         ":example-module-lib",

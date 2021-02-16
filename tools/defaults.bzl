@@ -3,7 +3,7 @@
 load("@io_bazel_rules_sass//:defs.bzl", _sass_binary = "sass_binary", _sass_library = "sass_library")
 load("@npm//@angular/bazel:index.bzl", _ng_module = "ng_module", _ng_package = "ng_package")
 load("@npm//@bazel/jasmine:index.bzl", _jasmine_node_test = "jasmine_node_test")
-load("@npm//@bazel/karma:index.bzl", _karma_web_test = "karma_web_test", _karma_web_test_suite = "karma_web_test_suite")
+load("@npm//@bazel/concatjs:index.bzl", _karma_web_test = "karma_web_test", _karma_web_test_suite = "karma_web_test_suite")
 load("@npm//@bazel/protractor:index.bzl", _protractor_web_test_suite = "protractor_web_test_suite")
 load("@npm//@bazel/typescript:index.bzl", _ts_library = "ts_library")
 load("//:packages.bzl", "VERSION_PLACEHOLDER_REPLACEMENTS", "getAngularUmdTargets")
