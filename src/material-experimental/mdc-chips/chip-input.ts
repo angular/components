@@ -7,7 +7,7 @@
  */
 
 import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
-import {hasModifierKey, TAB} from '@angular/cdk/keycodes';
+import {BACKSPACE, hasModifierKey, TAB} from '@angular/cdk/keycodes';
 import {Directive, ElementRef, EventEmitter, Inject, Input, OnChanges, Output} from '@angular/core';
 import {MatChipsDefaultOptions, MAT_CHIPS_DEFAULT_OPTIONS} from './chip-default-options';
 import {MatChipGrid} from './chip-grid';
@@ -21,6 +21,9 @@ export interface MatChipInputEvent {
 
   /** The value of the input. */
   value: string;
+
+  /** Reference to the chip input that emitted the event. */
+  chipInput: MatChipInput;
 }
 
 // Increasing integer for generating unique ids.
@@ -39,6 +42,7 @@ let nextUniqueId = 0;
     // the MDC chips were landed initially with it.
     'class': 'mat-mdc-chip-input mat-mdc-input-element mdc-text-field__input mat-input-element',
     '(keydown)': '_keydown($event)',
+    '(keyup)': '_keyup($event)',
     '(blur)': '_blur()',
     '(focus)': '_focus()',
     '(input)': '_onInput()',
@@ -50,6 +54,9 @@ let nextUniqueId = 0;
   }
 })
 export class MatChipInput implements MatChipTextControl, OnChanges {
+  /** Used to prevent focus moving to chips while user is holding backspace */
+  private _focusLastChipOnBackspace: boolean;
+
   /** Whether the control is focused. */
   focused: boolean = false;
   _chipGrid: MatChipGrid;
@@ -112,15 +119,47 @@ export class MatChipInput implements MatChipTextControl, OnChanges {
     this._chipGrid.stateChanges.next();
   }
 
+  ngOnDestroy(): void {
+    this.chipEnd.complete();
+  }
+
+  ngAfterContentInit(): void {
+    this._focusLastChipOnBackspace = this.empty;
+  }
+
   /** Utility method to make host definition/tests more clear. */
   _keydown(event?: KeyboardEvent) {
-    // Allow the user's focus to escape when they're tabbing forward. Note that we don't
-    // want to do this when going backwards, because focus should go back to the first chip.
-    if (event && event.keyCode === TAB && !hasModifierKey(event, 'shiftKey')) {
-      this._chipGrid._allowFocusEscape();
+    if (event) {
+      // Allow the user's focus to escape when they're tabbing forward. Note that we don't
+      // want to do this when going backwards, because focus should go back to the first chip.
+      if (event.keyCode === TAB && !hasModifierKey(event, 'shiftKey')) {
+        this._chipGrid._allowFocusEscape();
+      }
+
+      // To prevent the user from accidentally deleting chips when pressing BACKSPACE continuously,
+      // We focus the last chip on backspace only after the user has released the backspace button,
+      // And the input is empty (see behaviour in _keyup)
+      if (event.keyCode === BACKSPACE && this._focusLastChipOnBackspace) {
+        this._chipGrid._keyManager.setLastCellActive();
+        event.preventDefault();
+        return;
+      } else {
+        this._focusLastChipOnBackspace = false;
+      }
     }
 
     this._emitChipEnd(event);
+  }
+
+  /**
+   * Pass events to the keyboard manager. Available here for tests.
+   */
+  _keyup(event: KeyboardEvent) {
+    // Allow user to move focus to chips next time he presses backspace
+    if (!this._focusLastChipOnBackspace && event.keyCode === BACKSPACE && this.empty) {
+      this._focusLastChipOnBackspace = true;
+      event.preventDefault();
+    }
   }
 
   /** Checks to see if the blur should emit the (chipEnd) event. */
@@ -146,12 +185,15 @@ export class MatChipInput implements MatChipTextControl, OnChanges {
     if (!this._inputElement.value && !!event) {
       this._chipGrid._keydown(event);
     }
-    if (!event || this._isSeparatorKey(event)) {
-      this.chipEnd.emit({ input: this._inputElement, value: this._inputElement.value });
 
-      if (event) {
-        event.preventDefault();
-      }
+    if (!event || this._isSeparatorKey(event)) {
+      this.chipEnd.emit({
+        input: this._inputElement,
+        value: this._inputElement.value,
+        chipInput: this,
+      });
+
+      event?.preventDefault();
     }
   }
 
@@ -163,6 +205,12 @@ export class MatChipInput implements MatChipTextControl, OnChanges {
   /** Focuses the input. */
   focus(): void {
     this._inputElement.focus();
+  }
+
+  /** Clears the input */
+  clear(): void {
+    this._inputElement.value = '';
+    this._focusLastChipOnBackspace = true;
   }
 
   /** Checks whether a keycode is one of the configured separators. */
