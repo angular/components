@@ -118,7 +118,7 @@ which may be the right time to clean up any subscriptions that may have been reg
 
 Although Angular Material provides a ready-made table DataSource class, `MatTableDataSource`, you may
 want to create your own custom DataSource class for more complex use cases. This can be done by 
-`extending` the abstract DataSource class with a custom DataSource class that then implements the 
+extending the abstract DataSource class with a custom DataSource class that then implements the 
 `connect` and `disconnect` methods. For use cases where the custom DataSource must also inherit 
 functionality by extending a different base class, the DataSource base class can be 
 implemented instead (`MyCustomDataSource extends SomeOtherBaseClass implements DataSource`) to
