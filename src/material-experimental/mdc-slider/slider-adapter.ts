@@ -11,10 +11,14 @@ import {SpecificEventListener, EventType} from '@material/base';
 import {MDCSliderAdapter, Thumb, TickMark} from '@material/slider';
 import {_MatSliderInterface, MAT_SLIDER} from './slider-interface';
 
-// TODO(wagnermaciel): Change to prototype methods once this PR is submitted.
-// https://github.com/material-components/material-components-web/pull/6256
+/** The MDCSliderAdapter implementation. */
 export class SliderAdapter implements MDCSliderAdapter {
   constructor(@Inject(MAT_SLIDER) private readonly _delegate: _MatSliderInterface) {}
+
+  // We manually assign functions instead of using prototype methods because
+  // MDC clobbers the values otherwise.
+  // See https://github.com/material-components/material-components-web/pull/6256
+
   hasClass = (className: string): boolean => {
     return this._delegate._elementRef.nativeElement.classList.contains(className);
   }
