@@ -15,11 +15,13 @@ ts_library(
 
 nodejs_binary(
     name = "bazel-bin",
-    templated_args = ["--bazel_patch_module_resolver"],
     data = [
         ":example-module.template",
         ":example-module-lib",
         "@npm//typescript",
     ],
     entry_point = ":bazel-bin.ts",
+    # TODO(josephperrott): update dependency usages to no longer need bazel patch module resolver
+    # See: https://github.com/bazelbuild/rules_nodejs/wiki#--bazel_patch_module_resolver-now-defaults-to-false-2324
+    templated_args = ["--bazel_patch_module_resolver"],
 )

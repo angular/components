@@ -165,8 +165,8 @@ def karma_web_test_suite(name, **kwargs):
         kwargs["browsers"] = [
             # Note: when changing the browser names here, also update the "yarn test"
             # script to reflect the new browser names.
-            "@npm_angular_dev_infra_private//browsers/chromium:chromium",
-            "@npm_angular_dev_infra_private//browsers/firefox:firefox",
+            "@npm//@angular/dev-infra-private/browsers/chromium:chromium",
+            "@npm//@angular/dev-infra-private/browsers/firefox:firefox",
         ]
 
     for opt_name in kwargs.keys():
@@ -200,7 +200,7 @@ def karma_web_test_suite(name, **kwargs):
 
 def protractor_web_test_suite(**kwargs):
     _protractor_web_test_suite(
-        browsers = ["@npm_angular_dev_infra_private//browsers/chromium:chromium"],
+        browsers = ["@npm//@angular/dev-infra-private/browsers/chromium:chromium"],
         **kwargs
     )
 

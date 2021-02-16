@@ -126,7 +126,7 @@
     "@angular/bazel": "^12.0.0-next.0",
     "@angular/benchpress": "^0.2.1",
     "@angular/compiler-cli": "^12.0.0-next.0",
-    "@angular/dev-infra-private": "https://github.com/angular/dev-infra-private-builds.git#71d57c29a10c03d07f889581608e3a2315a1dc7e",
+    "@angular/dev-infra-private": "https://github.com/angular/dev-infra-private-builds.git#a8dbb0d8cd8de1e86a4ec4ea66b5bd89a47d4876",
     "@angular/platform-browser-dynamic": "^12.0.0-next.0",
     "@angular/platform-server": "^12.0.0-next.0",
     "@angular/router": "^12.0.0-next.0",
