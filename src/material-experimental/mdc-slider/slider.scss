@@ -1,6 +1,6 @@
 @import '@material/slider/slider';
 @include core-styles;
 
-mat-slider {
-	display: block;
+.mdc-slider {
+  display: block;
 }

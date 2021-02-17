@@ -35,9 +35,7 @@ import {
 import {SpecificEventListener, EventType} from '@material/base';
 import {MDCSliderAdapter, MDCSliderFoundation, Thumb, TickMark} from '@material/slider';
 
-/**
- * Represents a drag event emitted by the MatSlider component.
- */
+/** Represents a drag event emitted by the MatSlider component. */
 export interface MatSliderDragEvent {
   /** The MatSliderThumb that was interacted with. */
   source: MatSliderThumb;
@@ -50,7 +48,12 @@ export interface MatSliderDragEvent {
 }
 
 /**
- * The native input used by the MatSlider.
+ * Directive that adds slider-specific behaviors to an input element inside `<mat-slider>`.
+ * Up to two may be placed inside of a `<mat-slider>`.
+ *
+ * If one is used, the selector `matSliderThumb` must be used, and the outcome will be a normal
+ * slider. If two are used, the selectors `matSliderStartThumb` and `matSliderEndThumb` must be
+ * used, and the outcome will be a range slider with two slider thumbs.
  */
 @Directive({
   selector: 'input[matSliderThumb], input[matSliderStartThumb], input[matSliderEndThumb]',
@@ -65,12 +68,12 @@ export class MatSliderThumb implements AfterViewInit {
 
   // ** IMPORTANT NOTE **
   //
-  // The way `value` is implemented for MatSliderThumb goes against our standard practice. Normally
-  // we would define a private variable `_value` as the source of truth for the value of the slider
-  // thumb input. The source of truth for the value of the slider inputs has already been decided
-  // for us by MDC to be the value attribute on the slider thumb inputs. This is because the MDC
-  // foundation and adapter expect that the value attribute is the source of truth for the slider
-  // inputs.
+  // The way `value` is implemented for MatSliderThumb doesn't follow typical Angular conventions.
+  // Normally we would define a private variable `_value` as the source of truth for the value of
+  // the slider thumb input. The source of truth for the value of the slider inputs has already
+  // been decided for us by MDC to be the value attribute on the slider thumb inputs. This is
+  // because the MDC foundation and adapter expect that the value attribute is the source of truth
+  // for the slider inputs.
   //
   // Also, note that the value attribute is completely disconnected from the value property.
 
@@ -107,7 +110,9 @@ export class MatSliderThumb implements AfterViewInit {
   @Output() readonly _focus: EventEmitter<void> = new EventEmitter<void>();
 
   /** Indicates which slider thumb this input corresponds to. */
-  private _thumb: Thumb;
+  private _thumb: Thumb = this._elementRef.nativeElement.hasAttribute('matSliderStartThumb')
+    ? Thumb.START
+    : Thumb.END;
 
   private _document: Document;
 
@@ -117,32 +122,14 @@ export class MatSliderThumb implements AfterViewInit {
     readonly _elementRef: ElementRef<HTMLInputElement>,
     ) {
       this._document = document;
-      this._thumb = _elementRef.nativeElement.hasAttribute('matSliderStartThumb')
-        ? Thumb.START
-        : Thumb.END;
-
-      // Only set the default value if an initial value has not already been provided.
-      // Note that we are only setting the value attribute at this point. We cannot set the value
-      // property yet because the min and max have not been set.
-      if (!_elementRef.nativeElement.hasAttribute('value')) {
-        this.value = _elementRef.nativeElement.hasAttribute('matSliderEndThumb')
-          ? _slider.max
-          : _slider.min;
-      }
+      // By calling this in the constructor we guarantee that the sibling sliders initial value by
+      // has already been set by the time we reach ngAfterViewInit().
+      this._initializeInputValueAttribute();
     }
 
   ngAfterViewInit() {
-    const min = this._elementRef.nativeElement.hasAttribute('matSliderEndThumb')
-      ? this._slider._getInput(Thumb.START).value
-      : this._slider.min;
-    const max = this._elementRef.nativeElement.hasAttribute('matSliderStartThumb')
-      ? this._slider._getInput(Thumb.END).value
-      : this._slider.max;
-    this._elementRef.nativeElement.min = `${min}`;
-    this._elementRef.nativeElement.max = `${max}`;
-
-    // We can now set the property value because the min and max have now been set.
-    this._elementRef.nativeElement.value = `${this.value}`;
+    this._initializeInputMinMax();
+    this._initializeInputValueProperty();
 
     // Setup for the MDC foundation.
     if (this._slider.disabled) {
@@ -153,6 +140,57 @@ export class MatSliderThumb implements AfterViewInit {
   /** Returns true if this slider input currently has focus. */
   _isFocused(): boolean {
     return this._document.activeElement === this._elementRef.nativeElement;
+  }
+
+  /**
+   * Sets the min and max properties on the slider thumb input.
+   *
+   * Must be called AFTER the sibling slider thumb input is guaranteed to have had its value
+   * attribute value set. For a range slider, the min and max of the slider thumb input depends on
+   * the value of its sibling slider thumb inputs value.
+   *
+   * Must be called BEFORE the value property is set. In the case where the min and max have not
+   * yet been set and we are setting the input value property to a value outside of the native
+   * inputs default min or max. The value property would not be set to our desired value, but
+   * instead be capped at either the default min or max.
+   *
+   */
+  private _initializeInputMinMax(): void {
+    const min = this._elementRef.nativeElement.hasAttribute('matSliderEndThumb')
+      ? this._slider._getInput(Thumb.START).value
+      : this._slider.min;
+    const max = this._elementRef.nativeElement.hasAttribute('matSliderStartThumb')
+      ? this._slider._getInput(Thumb.END).value
+      : this._slider.max;
+    this._elementRef.nativeElement.min = `${min}`;
+    this._elementRef.nativeElement.max = `${max}`;
+  }
+
+  /**
+   * Sets the value property on the slider thumb input.
+   *
+   * Must be called AFTER the min and max have been set. In the case where the min and max have not
+   * yet been set and we are setting the input value property to a value outside of the native
+   * inputs default min or max. The value property would not be set to our desired value, but
+   * instead be capped at either the default min or max.
+   */
+  private _initializeInputValueProperty(): void {
+    this._elementRef.nativeElement.value = `${this.value}`;
+  }
+
+  /**
+   * Ensures the value attribute is initialized.
+   *
+   * Must be called BEFORE the min and max are set. For a range slider, the min and max of the
+   * slider thumb input depends on the value of its sibling slider thumb inputs value.
+   */
+  private _initializeInputValueAttribute(): void {
+    // Only set the default value if an initial value has not already been provided.
+    if (!this._elementRef.nativeElement.hasAttribute('value')) {
+      this.value = this._elementRef.nativeElement.hasAttribute('matSliderEndThumb')
+        ? this._slider.max
+        : this._slider.min;
+    }
   }
 
   static ngAcceptInputType_value: NumberInput;
@@ -265,6 +303,12 @@ export class MatSlider implements AfterViewInit, OnDestroy {
   /** Used to keep track of & render the active & inactive tick marks on the slider track. */
   _tickMarks: TickMark[];
 
+  /** The display value of the start thumb. */
+  private _startValueIndicatorText: string;
+
+  /** The display value of the end thumb. */
+  private _endValueIndicatorText: string;
+
   constructor(
     readonly _cdr: ChangeDetectorRef,
     readonly _elementRef: ElementRef<HTMLElement>,
@@ -340,18 +384,21 @@ export class MatSlider implements AfterViewInit, OnDestroy {
     return knobElementRef.nativeElement;
   }
 
+  _getValueIndicatorText(thumb: Thumb) {
+    return thumb === Thumb.START ? this._startValueIndicatorText : this._endValueIndicatorText;
+  }
+
   /**
    * Sets the value indicator text of the given thumb using the given value.
    *
    * Uses the `displayWith` function if one has been provided. Otherwise, it just uses the
    * numeric value as a string.
    */
-  _setValueIndicatorText(value: number, thumb: Thumb): void {
-    const valueIndicatorTextElementRef = thumb === Thumb.END
-        ? this._valueIndicatorTextElements.last
-        : this._valueIndicatorTextElements.first;
+  _setValueIndicatorText(value: number, thumb: Thumb) {
     const valueText = this.displayWith ? this.displayWith(value) : `${value}`;
-    valueIndicatorTextElementRef.nativeElement.textContent = valueText;
+    thumb === Thumb.START
+      ? this._startValueIndicatorText = valueText
+      : this._endValueIndicatorText = valueText;
   }
 
   /** Determines the class name for a HTML element. */
@@ -523,7 +570,7 @@ function _validateInputs(
   startInputElement: HTMLInputElement,
   endInputElement: HTMLInputElement): void {
   if (isRange) {
-    if (!startInputElement!.hasAttribute('matSliderStartThumb')) {
+    if (!startInputElement.hasAttribute('matSliderStartThumb')) {
       _throwInvalidInputConfigurationError();
     }
     if (!endInputElement.hasAttribute('matSliderEndThumb')) {
