@@ -88,7 +88,7 @@ export class MatSliderThumb implements AfterViewInit {
     // If the foundation has already been initialized, we need to
     // relay any value updates to it so that it can update the UI.
     if (this._slider._initialized) {
-      this._slider._setValue(value, this._thumb);
+      this._slider._setValue(value, this._thumbPosition);
     } else {
       // Setup for the MDC foundation.
       this._elementRef.nativeElement.setAttribute('value', `${value}`);
@@ -110,7 +110,7 @@ export class MatSliderThumb implements AfterViewInit {
   @Output() readonly _focus: EventEmitter<void> = new EventEmitter<void>();
 
   /** Indicates which slider thumb this input corresponds to. */
-  private _thumb: Thumb = this._elementRef.nativeElement.hasAttribute('matSliderStartThumb')
+  private _thumbPosition: Thumb = this._elementRef.nativeElement.hasAttribute('matSliderStartThumb')
     ? Thumb.START
     : Thumb.END;
 
@@ -351,8 +351,8 @@ export class MatSlider implements AfterViewInit, OnDestroy {
   }
 
   /** Sets the value of a slider thumb. */
-  _setValue(value: number, thumb: Thumb): void {
-    thumb === Thumb.START
+  _setValue(value: number, thumbPosition: Thumb): void {
+    thumbPosition === Thumb.START
       ? this._foundation.setValueStart(value)
       : this._foundation.setValue(value);
   }
@@ -362,41 +362,43 @@ export class MatSlider implements AfterViewInit, OnDestroy {
     return this._inputs.length === 2;
   }
 
-  /** Gets the slider thumb input of the given thumb. */
-  _getInput(thumb: Thumb): MatSliderThumb {
-    return thumb === Thumb.END ? this._inputs.last! : this._inputs.first!;
+  /** Gets the slider thumb input of the given thumb position. */
+  _getInput(thumbPosition: Thumb): MatSliderThumb {
+    return thumbPosition === Thumb.END ? this._inputs.last! : this._inputs.first!;
   }
 
-  /** Gets the slider thumb HTML input element of the given thumb. */
-  _getInputElement(thumb: Thumb): HTMLInputElement {
-    return this._getInput(thumb)._elementRef.nativeElement;
+  /** Gets the slider thumb HTML input element of the given thumb position. */
+  _getInputElement(thumbPosition: Thumb): HTMLInputElement {
+    return this._getInput(thumbPosition)._elementRef.nativeElement;
   }
 
-  /** Gets the slider thumb HTML element of the given thumb. */
-  _getThumbElement(thumb: Thumb): HTMLElement {
-    const thumbElementRef = thumb === Thumb.END ? this._thumbs.last : this._thumbs.first;
+  /** Gets the slider thumb HTML element of the given thumb position. */
+  _getThumbElement(thumbPosition: Thumb): HTMLElement {
+    const thumbElementRef = thumbPosition === Thumb.END ? this._thumbs.last : this._thumbs.first;
     return thumbElementRef.nativeElement;
   }
 
-  /** Gets the slider knob HTML element of the given thumb. */
-  _getKnobElement(thumb: Thumb): HTMLElement {
-    const knobElementRef = thumb === Thumb.END ? this._knobs.last : this._knobs.first;
+  /** Gets the slider knob HTML element of the given thumb position. */
+  _getKnobElement(thumbPosition: Thumb): HTMLElement {
+    const knobElementRef = thumbPosition === Thumb.END ? this._knobs.last : this._knobs.first;
     return knobElementRef.nativeElement;
   }
 
-  _getValueIndicatorText(thumb: Thumb) {
-    return thumb === Thumb.START ? this._startValueIndicatorText : this._endValueIndicatorText;
+  _getValueIndicatorText(thumbPosition: Thumb) {
+    return thumbPosition === Thumb.START
+      ? this._startValueIndicatorText
+      : this._endValueIndicatorText;
   }
 
   /**
-   * Sets the value indicator text of the given thumb using the given value.
+   * Sets the value indicator text of the given thumb position using the given value.
    *
    * Uses the `displayWith` function if one has been provided. Otherwise, it just uses the
    * numeric value as a string.
    */
-  _setValueIndicatorText(value: number, thumb: Thumb) {
+  _setValueIndicatorText(value: number, thumbPosition: Thumb) {
     const valueText = this.displayWith ? this.displayWith(value) : `${value}`;
-    thumb === Thumb.START
+    thumbPosition === Thumb.START
       ? this._startValueIndicatorText = valueText
       : this._endValueIndicatorText = valueText;
   }
@@ -441,40 +443,40 @@ class SliderAdapter implements MDCSliderAdapter {
   getAttribute = (attribute: string): string | null => {
     return this._delegate._elementRef.nativeElement.getAttribute(attribute);
   }
-  addThumbClass = (className: string, thumb: Thumb): void => {
-    this._delegate._getThumbElement(thumb).classList.add(className);
+  addThumbClass = (className: string, thumbPosition: Thumb): void => {
+    this._delegate._getThumbElement(thumbPosition).classList.add(className);
   }
-  removeThumbClass = (className: string, thumb: Thumb): void => {
-    this._delegate._getThumbElement(thumb).classList.remove(className);
+  removeThumbClass = (className: string, thumbPosition: Thumb): void => {
+    this._delegate._getThumbElement(thumbPosition).classList.remove(className);
   }
-  getInputValue = (thumb: Thumb): string => {
-    return this._delegate._getInputElement(thumb).value;
+  getInputValue = (thumbPosition: Thumb): string => {
+    return this._delegate._getInputElement(thumbPosition).value;
   }
-  setInputValue = (value: string, thumb: Thumb): void => {
-    this._delegate._getInputElement(thumb).value = value;
+  setInputValue = (value: string, thumbPosition: Thumb): void => {
+    this._delegate._getInputElement(thumbPosition).value = value;
   }
-  getInputAttribute = (attribute: string, thumb: Thumb): string | null => {
-    return this._delegate._getInputElement(thumb).getAttribute(attribute);
+  getInputAttribute = (attribute: string, thumbPosition: Thumb): string | null => {
+    return this._delegate._getInputElement(thumbPosition).getAttribute(attribute);
   }
-  setInputAttribute = (attribute: string, value: string, thumb: Thumb): void => {
-    this._delegate._getInputElement(thumb).setAttribute(attribute, value);
+  setInputAttribute = (attribute: string, value: string, thumbPosition: Thumb): void => {
+    this._delegate._getInputElement(thumbPosition).setAttribute(attribute, value);
   }
-  removeInputAttribute = (attribute: string, thumb: Thumb): void => {
-    this._delegate._getInputElement(thumb).removeAttribute(attribute);
+  removeInputAttribute = (attribute: string, thumbPosition: Thumb): void => {
+    this._delegate._getInputElement(thumbPosition).removeAttribute(attribute);
   }
-  focusInput = (thumb: Thumb): void => {
-    this._delegate._getInputElement(thumb).focus();
+  focusInput = (thumbPosition: Thumb): void => {
+    this._delegate._getInputElement(thumbPosition).focus();
   }
-  isInputFocused = (thumb: Thumb): boolean => {
-    return this._delegate._getInput(thumb)._isFocused();
+  isInputFocused = (thumbPosition: Thumb): boolean => {
+    return this._delegate._getInput(thumbPosition)._isFocused();
   }
-  getThumbKnobWidth = (thumb: Thumb): number => {
+  getThumbKnobWidth = (thumbPosition: Thumb): number => {
     // TODO(wagnermaciel): Check if this causes issues for SSR
     // once the mdc-slider is added back to the kitchen sink SSR app.
-    return this._delegate._getKnobElement(thumb).getBoundingClientRect().width;
+    return this._delegate._getKnobElement(thumbPosition).getBoundingClientRect().width;
   }
-  getThumbBoundingClientRect = (thumb: Thumb): ClientRect => {
-    return this._delegate._getThumbElement(thumb).getBoundingClientRect();
+  getThumbBoundingClientRect = (thumbPosition: Thumb): ClientRect => {
+    return this._delegate._getThumbElement(thumbPosition).getBoundingClientRect();
   }
   getBoundingClientRect = (): ClientRect => {
     return this._delegate._elementRef.nativeElement.getBoundingClientRect();
@@ -483,11 +485,11 @@ class SliderAdapter implements MDCSliderAdapter {
     // TODO(wagnermaciel): Actually implementing this.
     return false;
   }
-  setThumbStyleProperty = (propertyName: string, value: string, thumb: Thumb): void => {
-    this._delegate._getThumbElement(thumb).style.setProperty(propertyName, value);
+  setThumbStyleProperty = (propertyName: string, value: string, thumbPosition: Thumb): void => {
+    this._delegate._getThumbElement(thumbPosition).style.setProperty(propertyName, value);
   }
-  removeThumbStyleProperty = (propertyName: string, thumb: Thumb): void => {
-    this._delegate._getThumbElement(thumb).style.removeProperty(propertyName);
+  removeThumbStyleProperty = (propertyName: string, thumbPosition: Thumb): void => {
+    this._delegate._getThumbElement(thumbPosition).style.removeProperty(propertyName);
   }
   setTrackActiveStyleProperty = (propertyName: string, value: string): void => {
     this._delegate._trackActive.nativeElement.style.setProperty(propertyName, value);
@@ -495,8 +497,8 @@ class SliderAdapter implements MDCSliderAdapter {
   removeTrackActiveStyleProperty = (propertyName: string): void => {
     this._delegate._trackActive.nativeElement.style.removeProperty(propertyName);
   }
-  setValueIndicatorText = (value: number, thumb: Thumb): void => {
-    this._delegate._setValueIndicatorText(value, thumb);
+  setValueIndicatorText = (value: number, thumbPosition: Thumb): void => {
+    this._delegate._setValueIndicatorText(value, thumbPosition);
   }
   getValueToAriaValueTextFn = (): ((value: number) => string) | null => {
     return this._delegate.displayWith;
@@ -510,14 +512,14 @@ class SliderAdapter implements MDCSliderAdapter {
   }
   // We ignore emitChangeEvent and emitInputEvent because the slider inputs
   // are already exposed so users can just listen for those events directly themselves.
-  emitChangeEvent = (value: number, thumb: Thumb): void => {};
-  emitInputEvent = (value: number, thumb: Thumb): void => {};
-  emitDragStartEvent = (value: number, thumb: Thumb): void => {
-    const input = this._delegate._getInput(thumb);
+  emitChangeEvent = (value: number, thumbPosition: Thumb): void => {};
+  emitInputEvent = (value: number, thumbPosition: Thumb): void => {};
+  emitDragStartEvent = (value: number, thumbPosition: Thumb): void => {
+    const input = this._delegate._getInput(thumbPosition);
     input.dragStart.emit({ source: input, parent: this._delegate, value });
   }
-  emitDragEndEvent = (value: number, thumb: Thumb): void => {
-    const input = this._delegate._getInput(thumb);
+  emitDragEndEvent = (value: number, thumbPosition: Thumb): void => {
+    const input = this._delegate._getInput(thumbPosition);
     input.dragEnd.emit({ source: input, parent: this._delegate, value });
   }
   registerEventHandler =
@@ -528,21 +530,21 @@ class SliderAdapter implements MDCSliderAdapter {
     <K extends EventType>(evtType: K, handler: SpecificEventListener<K>): void => {
       this._delegate._elementRef.nativeElement.removeEventListener(evtType, handler);
   }
-  registerThumbEventHandler =
-    <K extends EventType>(thumb: Thumb, evtType: K, handler: SpecificEventListener<K>): void => {
-      this._delegate._getThumbElement(thumb).addEventListener(evtType, handler);
+  registerThumbEventHandler = <K extends EventType>
+    (thumbPosition: Thumb, evtType: K, handler: SpecificEventListener<K>): void => {
+      this._delegate._getThumbElement(thumbPosition).addEventListener(evtType, handler);
   }
-  deregisterThumbEventHandler =
-    <K extends EventType>(thumb: Thumb, evtType: K, handler: SpecificEventListener<K>): void => {
-      this._delegate._getThumbElement(thumb).removeEventListener(evtType, handler);
+  deregisterThumbEventHandler = <K extends EventType>
+    (thumbPosition: Thumb, evtType: K, handler: SpecificEventListener<K>): void => {
+      this._delegate._getThumbElement(thumbPosition).removeEventListener(evtType, handler);
   }
-  registerInputEventHandler =
-    <K extends EventType>(thumb: Thumb, evtType: K, handler: SpecificEventListener<K>): void => {
-      this._delegate._getInputElement(thumb).addEventListener(evtType, handler);
+  registerInputEventHandler = <K extends EventType>
+    (thumbPosition: Thumb, evtType: K, handler: SpecificEventListener<K>): void => {
+      this._delegate._getInputElement(thumbPosition).addEventListener(evtType, handler);
   }
-  deregisterInputEventHandler =
-    <K extends EventType>(thumb: Thumb, evtType: K, handler: SpecificEventListener<K>): void => {
-      this._delegate._getInputElement(thumb).removeEventListener(evtType, handler);
+  deregisterInputEventHandler = <K extends EventType>
+    (thumbPosition: Thumb, evtType: K, handler: SpecificEventListener<K>): void => {
+      this._delegate._getInputElement(thumbPosition).removeEventListener(evtType, handler);
   }
   registerBodyEventHandler =
     <K extends EventType>(evtType: K, handler: SpecificEventListener<K>): void => {
