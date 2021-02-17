@@ -1,22 +1,43 @@
-// TODO: disabled until we implement the new MDC slider.
-// @import '@material/slider/mixins.import';
+@import '@material/slider/slider';
+@import '@material/slider/slider-theme';
 @import '../mdc-helpers/mdc-helpers';
+@import '../../material/core/ripple/ripple';
 
 @mixin mat-mdc-slider-color($config-or-theme) {
   $config: mat-get-color-config($config-or-theme);
   @include mat-using-mdc-theme($config) {
-    // TODO: disabled until we implement the new MDC slider.
-    // @include mdc-slider-core-styles($query: $mat-theme-styles-query);
+    @include without-ripple($query: $mat-theme-styles-query);
 
     .mat-mdc-slider {
+      &.mat-primary, &.mat-accent, &.mat-warn {
+        @include value-indicator-color(
+          $color: #000,
+          $opacity: 0.6,
+          $query: $mat-theme-styles-query
+        );
+        @include value-indicator-text-color(
+          $color: on-primary,
+          $query: $mat-theme-styles-query
+        );
+        @include tick-mark-active-color(
+          $color-or-map: (
+            default: on-primary,
+            disabled: on-primary,
+          ),
+          $query: $mat-theme-styles-query
+        );
+      }
+
       &.mat-primary {
-        // TODO: disabled until we implement the new MDC slider.
-        // @include mdc-slider-color-accessible(primary, $mat-theme-styles-query);
+        @include custom-slider-color(primary);
+      }
+
+      &.mat-accent {
+        @include custom-slider-color(secondary);
       }
 
       &.mat-warn {
-        // TODO: disabled until we implement the new MDC slider.
-        // @include mdc-slider-color-accessible(error, $mat-theme-styles-query);
+        @include custom-slider-color(error);
       }
     }
   }
@@ -25,8 +46,7 @@
 @mixin mat-mdc-slider-typography($config-or-theme) {
   $config: mat-get-typography-config($config-or-theme);
   @include mat-using-mdc-typography($config) {
-    // TODO: disabled until we implement the new MDC slider.
-    // @include mdc-slider-core-styles($query: $mat-typography-styles-query);
+    @include without-ripple($query: $mat-typography-styles-query);
   }
 }
 
@@ -51,3 +71,38 @@
   }
 }
 
+@mixin custom-slider-color($color) {
+  @include thumb-color(
+    $color-or-map: (
+      default: $color,
+      disabled: on-surface,
+    ),
+    $query: $mat-theme-styles-query
+  );
+  @include track-active-color(
+    $color-or-map: (
+      default: $color,
+      disabled: on-surface,
+    ),
+    $query: $mat-theme-styles-query
+  );
+  @include track-inactive-color(
+    $color-or-map: (
+      default: $color,
+      disabled: on-surface,
+    ),
+    $query: $mat-theme-styles-query
+  );
+  @include tick-mark-inactive-color(
+    $color-or-map: (
+      default: $color,
+      disabled: on-primary,
+    ),
+    $query: $mat-theme-styles-query
+  );
+  @include mat-ripple-color((
+    foreground: (
+      base: mdc-theme-prop-value($color)
+    ),
+  ));
+}

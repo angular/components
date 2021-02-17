@@ -1,5 +1,7 @@
 @import '@material/slider/slider';
-@include core-styles;
+@import '../mdc-helpers/mdc-helpers';
+
+@include without-ripple($query: $mat-base-styles-query);
 
 .mdc-slider {
   display: block;
