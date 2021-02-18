@@ -46,7 +46,9 @@ export function createMouseEvent(
 
   // IE won't set `defaultPrevented` on synthetic events so we need to do it manually.
   event.preventDefault = function() {
-    defineReadonlyEventProperty(event, 'defaultPrevented', true);
+    if(!event.defaultPrevented) {
+        defineReadonlyEventProperty(event, 'defaultPrevented', true);
+    }
     return originalPreventDefault();
   };
 
@@ -157,7 +159,9 @@ export function createKeyboardEvent(type: string, keyCode: number = 0, key: stri
 
   // IE won't set `defaultPrevented` on synthetic events so we need to do it manually.
   event.preventDefault = function() {
-    defineReadonlyEventProperty(event, 'defaultPrevented', true);
+    if(!event.defaultPrevented) {
+        defineReadonlyEventProperty(event, 'defaultPrevented', true);
+    }
     return originalPreventDefault();
   };
 
