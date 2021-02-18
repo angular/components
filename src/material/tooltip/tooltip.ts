@@ -242,8 +242,11 @@ export abstract class _MatTooltipBase<T extends _TooltipComponentBase> implement
   private readonly _passiveListeners:
       (readonly [string, EventListenerOrEventListenerObject])[] = [];
 
-  /** Reference to the current document. */
-  private _document: Document;
+  /**
+   * Reference to the current document.
+   * @breaking-change 11.0.0 Remove `| null` typing for `document`.
+   */
+  private _document: Document | null;
 
   /** Timer started at the last `touchstart` event. */
   private _touchstartTimeout: number;
@@ -263,10 +266,11 @@ export abstract class _MatTooltipBase<T extends _TooltipComponentBase> implement
     scrollStrategy: any,
     protected _dir: Directionality,
     private _defaultOptions: MatTooltipDefaultOptions,
+
+    /** @breaking-change 11.0.0 _document argument to become required. */
     @Inject(DOCUMENT) _document: any) {
 
     this._scrollStrategy = scrollStrategy;
-    this._document = _document;
 
     if (_defaultOptions) {
       if (_defaultOptions.position) {
@@ -667,7 +671,9 @@ export abstract class _MatTooltipBase<T extends _TooltipComponentBase> implement
   /** Listener for the `wheel` event on the element. */
   private _wheelListener(event: WheelEvent) {
     if (this._isTooltipVisible()) {
-      const elementUnderPointer = this._document.elementFromPoint(event.clientX, event.clientY);
+      // @breaking-change 11.0.0 Remove `|| document` once the document is a required param.
+      const doc = this._document || document;
+      const elementUnderPointer = doc.elementFromPoint(event.clientX, event.clientY);
       const element = this._elementRef.nativeElement;
 
       // On non-touch devices we depend on the `mouseleave` event to close the tooltip, but it
@@ -740,6 +746,8 @@ export class MatTooltip extends _MatTooltipBase<TooltipComponent> {
     @Inject(MAT_TOOLTIP_SCROLL_STRATEGY) scrollStrategy: any,
     @Optional() dir: Directionality,
     @Optional() @Inject(MAT_TOOLTIP_DEFAULT_OPTIONS) defaultOptions: MatTooltipDefaultOptions,
+
+    /** @breaking-change 11.0.0 _document argument to become required. */
     @Inject(DOCUMENT) _document: any) {
 
     super(overlay, elementRef, scrollDispatcher, viewContainerRef, ngZone, platform, ariaDescriber,
