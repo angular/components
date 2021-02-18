@@ -23,25 +23,18 @@
           $color: $indicator-text-color,
           $query: $mat-theme-styles-query
         );
-        @include tick-mark-active-color(
-          $color-or-map: (
-            default: on-primary,
-            disabled: on-primary,
-          ),
-          $query: $mat-theme-styles-query
-        );
       }
 
       &.mat-primary {
-        @include _custom-slider-color(primary);
+        @include _custom-slider-color(primary, on-primary);
       }
 
       &.mat-accent {
-        @include _custom-slider-color(secondary);
+        @include _custom-slider-color(secondary, on-secondary);
       }
 
       &.mat-warn {
-        @include _custom-slider-color(error);
+        @include _custom-slider-color(error, on-error);
       }
     }
   }
@@ -75,7 +68,7 @@
   }
 }
 
-@mixin _custom-slider-color($color) {
+@mixin _custom-slider-color($color, $on-color) {
   @include thumb-color(
     $color-or-map: (
       default: $color,
@@ -97,10 +90,17 @@
     ),
     $query: $mat-theme-styles-query
   );
+  @include tick-mark-active-color(
+    $color-or-map: (
+      default: $on-color,
+      disabled: $on-color,
+    ),
+    $query: $mat-theme-styles-query
+  );
   @include tick-mark-inactive-color(
     $color-or-map: (
       default: $color,
-      disabled: on-primary,
+      disabled: $on-color,
     ),
     $query: $mat-theme-styles-query
   );
