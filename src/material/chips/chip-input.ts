@@ -144,7 +144,7 @@ export class MatChipInput implements MatChipTextControl, OnChanges, OnDestroy, A
 
       // To prevent the user from accidentally deleting chips when pressing BACKSPACE continuously,
       // We focus the last chip on backspace only after the user has released the backspace button,
-      // And the input is empty (see behaviour in _keyup)
+      // and the input is empty (see behaviour in _keyup)
       if (event.keyCode === BACKSPACE && this._focusLastChipOnBackspace) {
         this._chipList._keyManager.setLastItemActive();
         event.preventDefault();

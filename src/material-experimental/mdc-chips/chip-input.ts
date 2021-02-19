@@ -8,11 +8,20 @@
 
 import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
 import {BACKSPACE, hasModifierKey, TAB} from '@angular/cdk/keycodes';
-import {Directive, ElementRef, EventEmitter, Inject, Input, OnChanges, Output} from '@angular/core';
+import {
+  AfterContentInit,
+  Directive,
+  ElementRef,
+  EventEmitter,
+  Inject,
+  Input,
+  OnChanges,
+  OnDestroy,
+  Output
+} from '@angular/core';
 import {MatChipsDefaultOptions, MAT_CHIPS_DEFAULT_OPTIONS} from './chip-default-options';
 import {MatChipGrid} from './chip-grid';
 import {MatChipTextControl} from './chip-text-control';
-
 
 /** Represents an input event on a `matChipInput`. */
 export interface MatChipInputEvent {
@@ -53,7 +62,7 @@ let nextUniqueId = 0;
     '[attr.aria-required]': '_chipGrid && _chipGrid.required || null',
   }
 })
-export class MatChipInput implements MatChipTextControl, OnChanges {
+export class MatChipInput implements MatChipTextControl, AfterContentInit, OnChanges, OnDestroy {
   /** Used to prevent focus moving to chips while user is holding backspace */
   private _focusLastChipOnBackspace: boolean;
 
