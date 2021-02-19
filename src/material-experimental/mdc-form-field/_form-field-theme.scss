@@ -1,4 +1,5 @@
 @use '@material/ripple/mixins' as mdc-ripple;
+@use '@material/textfield/variables' as mdc-text-field;
 
 @import '@material/density/functions.import';
 @import '@material/theme/variables.import';
@@ -15,8 +16,8 @@
 // Mixin that overwrites the default MDC text-field color styles to be based on
 // the given theme palette. The MDC text-field is styled using `primary` by default.
 @mixin _mat-mdc-text-field-color-styles($palette-name, $query: $mat-theme-styles-query) {
-  $_mdc-text-field-focused-label-color: $mdc-text-field-focused-label-color;
-  $mdc-text-field-focused-label-color: rgba(mdc-theme-prop-value($palette-name), 0.87) !global;
+  $_mdc-text-field-focused-label-color: mdc-text-field.$focused-label-color;
+  mdc-text-field.$focused-label-color: rgba(mdc-theme-prop-value($palette-name), 0.87);
 
   @include mdc-text-field-caret-color($palette-name, $query);
   @include mdc-text-field-line-ripple-color($palette-name, $query);
@@ -33,7 +34,7 @@
     @include mdc-text-field-focused-outline-color($palette-name, $query);
   }
 
-  $mdc-text-field-focused-label-color: $_mdc-text-field-focused-label-color !global;
+  mdc-text-field.$focused-label-color: $_mdc-text-field-focused-label-color;
 }
 
 @mixin mat-mdc-form-field-color($config-or-theme) {

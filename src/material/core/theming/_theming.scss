@@ -336,14 +336,15 @@ $_mat-theme-emitted-density: () !default;
   // styles **once** and at root. This matches the old behavior where density styles were
   // part of the base component styles (that did not use view encapsulation).
   // TODO: Remove this compatibility logic when the legacy theming API is removed.
-  $mat-private-density-generate-at-root: mat-private-is-legacy-constructed-theme($theme) !global;
-  $mat-private-density-generate-styles: not $duplicate-legacy-density !global;
+  $mat-private-density-generate-at-root: mat-private-is-legacy-constructed-theme($theme);
+  $mat-private-density-generate-styles: not $duplicate-legacy-density;
 
   @content;
   $mat-theme-ignore-duplication-warnings: $orig-mat-theme-ignore-duplication-warnings !global;
 
-  $mat-private-density-generate-at-root: false !global;
-  $mat-private-density-generate-styles: true !global;
+  // TODO: after the migration is finished, these need to refer to the `compatibility` import.
+  $mat-private-density-generate-at-root: false;
+  $mat-private-density-generate-styles: true;
 }
 
 // Checks whether the given value resolves to a theme object. Theme objects are always
