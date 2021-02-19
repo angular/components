@@ -23,6 +23,7 @@ import {
 } from '@angular/core';
 import {take} from 'rxjs/operators';
 import {InteractivityChecker} from '../interactivity-checker/interactivity-checker';
+import {ConfigurableFocusTrapConfig} from './configurable-focus-trap-config';
 
 
 /**
@@ -372,13 +373,21 @@ export class FocusTrapFactory {
   /**
    * Creates a focus-trapped region around the given element.
    * @param element The element around which focus will be trapped.
-   * @param deferCaptureElements Defers the creation of focus-capturing elements to be done
-   *     manually by the user.
+   * @param config The focus trap configuration.
    * @returns The created focus trap instance.
    */
-  create(element: HTMLElement, deferCaptureElements: boolean = false): FocusTrap {
-    return new FocusTrap(
-        element, this._checker, this._ngZone, this._document, deferCaptureElements);
+  create(element: HTMLElement, config?: ConfigurableFocusTrapConfig): FocusTrap;
+
+  /**
+   * @deprecated Pass a config object instead of the `deferCaptureElements` flag.
+   * @breaking-change 11.0.0
+   */
+  create(element: HTMLElement, deferCaptureElements: boolean): FocusTrap;
+
+  create(element: HTMLElement,
+         configOrDefer: ConfigurableFocusTrapConfig|boolean = false): FocusTrap {
+    return new FocusTrap(element, this._checker, this._ngZone, this._document,
+        typeof configOrDefer === 'boolean' ? configOrDefer : configOrDefer.defer);
   }
 }
 

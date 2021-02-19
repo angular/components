@@ -65,6 +65,7 @@ export declare class CdkTrapFocus implements OnDestroy, AfterContentInit, OnChan
 export declare class ConfigurableFocusTrap extends FocusTrap implements ManagedFocusTrap {
     get enabled(): boolean;
     set enabled(value: boolean);
+    focusEscapePredicate: (target: HTMLElement) => boolean;
     constructor(_element: HTMLElement, _checker: InteractivityChecker, _ngZone: NgZone, _document: Document, _focusTrapManager: FocusTrapManager, _inertStrategy: FocusTrapInertStrategy, config: ConfigurableFocusTrapConfig);
     _disable(): void;
     _enable(): void;
@@ -73,6 +74,7 @@ export declare class ConfigurableFocusTrap extends FocusTrap implements ManagedF
 
 export interface ConfigurableFocusTrapConfig {
     defer: boolean;
+    focusEscapePredicate?: (target: HTMLElement) => boolean;
 }
 
 export declare class ConfigurableFocusTrapFactory {
@@ -157,7 +159,8 @@ export declare class FocusTrap {
 
 export declare class FocusTrapFactory {
     constructor(_checker: InteractivityChecker, _ngZone: NgZone, _document: any);
-    create(element: HTMLElement, deferCaptureElements?: boolean): FocusTrap;
+    create(element: HTMLElement, config?: ConfigurableFocusTrapConfig): FocusTrap;
+    create(element: HTMLElement, deferCaptureElements: boolean): FocusTrap;
     static ɵfac: i0.ɵɵFactoryDeclaration<FocusTrapFactory, never>;
     static ɵprov: i0.ɵɵInjectableDef<FocusTrapFactory>;
 }

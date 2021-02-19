@@ -14,4 +14,7 @@ export interface ConfigurableFocusTrapConfig {
    * Whether to defer the creation of FocusTrap elements to be done manually by the user.
    */
   defer: boolean;
+
+  /** Predicate function that determines whether the focus trap will allow focus to escape. */
+  focusEscapePredicate?: (target: HTMLElement) => boolean;
 }

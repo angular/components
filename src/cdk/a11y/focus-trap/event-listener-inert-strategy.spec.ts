@@ -56,6 +56,20 @@ describe('EventListenerFocusTrapInertStrategy', () => {
           'Expected second focusable element to be focused');
   }));
 
+  it('should allow focus to escape based on the result of a predicate function', fakeAsync(() => {
+    const fixture = createComponent(SimpleFocusTrap, providers);
+    const componentInstance = fixture.componentInstance;
+    fixture.detectChanges();
+
+    componentInstance.focusTrap.focusEscapePredicate = () => true;
+    componentInstance.outsideFocusableElement.nativeElement.focus();
+    flush();
+
+    expect(componentInstance.activeElement).toBe(
+      componentInstance.outsideFocusableElement.nativeElement,
+      'Expected outside focusable element to be focused');
+  }));
+
 });
 
 function createComponent<T>(componentType: Type<T>, providers: Provider[] = []):

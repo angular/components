@@ -31,6 +31,9 @@ export class ConfigurableFocusTrap extends FocusTrap implements ManagedFocusTrap
     }
   }
 
+  /** Determines whether focus is allowed to escape the trap. */
+  focusEscapePredicate: (target: HTMLElement) => boolean;
+
   constructor(
     _element: HTMLElement,
     _checker: InteractivityChecker,
@@ -41,6 +44,7 @@ export class ConfigurableFocusTrap extends FocusTrap implements ManagedFocusTrap
     config: ConfigurableFocusTrapConfig) {
     super(_element, _checker, _ngZone, _document, config.defer);
     this._focusTrapManager.register(this);
+    this.focusEscapePredicate = config.focusEscapePredicate || (() => false);
   }
 
   /** Notifies the FocusTrapManager that this FocusTrap will be destroyed. */
