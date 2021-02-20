@@ -128,7 +128,7 @@ export class MatSliderThumb implements AfterViewInit {
     }
 
   ngAfterViewInit() {
-    this._initializeInputMinMax();
+    this._initializeInputMinMaxAndStep();
     this._initializeInputValueProperty();
 
     // Setup for the MDC foundation.
@@ -143,7 +143,7 @@ export class MatSliderThumb implements AfterViewInit {
   }
 
   /**
-   * Sets the min and max properties on the slider thumb input.
+   * Sets the min, max, and step properties on the slider thumb input.
    *
    * Must be called AFTER the sibling slider thumb input is guaranteed to have had its value
    * attribute value set. For a range slider, the min and max of the slider thumb input depends on
@@ -155,7 +155,7 @@ export class MatSliderThumb implements AfterViewInit {
    * instead be capped at either the default min or max.
    *
    */
-  private _initializeInputMinMax(): void {
+  private _initializeInputMinMaxAndStep(): void {
     const min = this._elementRef.nativeElement.hasAttribute('matSliderEndThumb')
       ? this._slider._getInput(Thumb.START).value
       : this._slider.min;
@@ -164,6 +164,7 @@ export class MatSliderThumb implements AfterViewInit {
       : this._slider.max;
     this._elementRef.nativeElement.min = `${min}`;
     this._elementRef.nativeElement.max = `${max}`;
+    this._elementRef.nativeElement.step = `${this._slider.step}`;
   }
 
   /**
