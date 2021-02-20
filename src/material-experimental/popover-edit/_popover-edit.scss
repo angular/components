@@ -58,7 +58,8 @@
       right: 0;
       transform-origin: 50%;
       transform: scaleX(0.5);
-      transition: background-color variables.$swift-ease-in-duration variables.$swift-ease-in-timing-function;
+      transition: background-color variables.$swift-ease-in-duration
+        variables.$swift-ease-in-timing-function;
       visibility: hidden;
     }
 

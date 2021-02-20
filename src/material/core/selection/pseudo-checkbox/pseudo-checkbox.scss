@@ -20,9 +20,9 @@ $_mat-pseudo-checkmark-size: checkbox-common.$size - (2 * $_mat-pseudo-checkbox-
   box-sizing: border-box;
   position: relative;
   flex-shrink: 0;
-  transition:
-      border-color checkbox-common.$transition-duration variables.$linear-out-slow-in-timing-function,
-      background-color checkbox-common.$transition-duration variables.$linear-out-slow-in-timing-function;
+  transition: border-color checkbox-common.$transition-duration
+    variables.$linear-out-slow-in-timing-function, background-color
+    checkbox-common.$transition-duration variables.$linear-out-slow-in-timing-function;
 
   // Used to render the checkmark/mixedmark inside of the box.
   &::after {
@@ -30,7 +30,8 @@ $_mat-pseudo-checkmark-size: checkbox-common.$size - (2 * $_mat-pseudo-checkbox-
     opacity: 0;
     content: '';
     border-bottom: checkbox-common.$border-width solid currentColor;
-    transition: opacity checkbox-common.$transition-duration variables.$linear-out-slow-in-timing-function;
+    transition: opacity checkbox-common.$transition-duration
+      variables.$linear-out-slow-in-timing-function;
   }
 
   &.mat-pseudo-checkbox-checked, &.mat-pseudo-checkbox-indeterminate {

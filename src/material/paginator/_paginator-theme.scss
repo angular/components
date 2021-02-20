@@ -53,7 +53,8 @@
 
 @mixin density($config-or-theme) {
   $density-scale: theming.get-density-config($config-or-theme);
-  $height: compatibility.density-prop-value(paginator-variables.$density-config, $density-scale, height);
+  $height: compatibility.density-prop-value(paginator-variables.$density-config, $density-scale,
+    height);
 
   @include compatibility.density-legacy-compatibility() {
     .mat-paginator-container {

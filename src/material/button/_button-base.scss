@@ -11,7 +11,7 @@ $margin: 0 !default;
 $line-height: 36px !default;
 $border-radius: 4px !default;
 $focus-transition: opacity 200ms variables.$swift-ease-in-out-timing-function,
-                              background-color 200ms variables.$swift-ease-in-out-timing-function !default;
+                   background-color 200ms variables.$swift-ease-in-out-timing-function !default;
 
 // Stroked button padding is 1px less horizontally than default/flat/raised
 // button's padding.
@@ -82,8 +82,8 @@ $mini-fab-padding: 8px !default;
   transform: translate3d(0, 0, 0);
 
   // Animation.
-  transition: background variables.$swift-ease-out-duration variables.$swift-ease-out-timing-function,
-              elevation.transition-property-value();
+  transition: background variables.$swift-ease-out-duration
+    variables.$swift-ease-out-timing-function, elevation.transition-property-value();
 }
 
 // Applies styles to fab and mini-fab button types only

@@ -8,7 +8,8 @@ $stroke-rotate-fallback-duration: 10 * 1000ms !default;
 $stroke-rotate-fallback-ease: cubic-bezier(0.87, 0.03, 0.33, 1) !default;
 
 $_mat-progress-spinner-default-radius: 45px;
-$_mat-progress-spinner-default-circumference: variables.$pi * $_mat-progress-spinner-default-radius * 2;
+$_mat-progress-spinner-default-circumference:
+  variables.$pi * $_mat-progress-spinner-default-radius * 2;
 
 .mat-progress-spinner {
   display: block;

@@ -56,15 +56,17 @@ $focus-ring-size: 30px !default;
 .mat-slider-track-fill {
   position: absolute;
   transform-origin: 0 0;
-  transition: transform variables.$swift-ease-out-duration variables.$swift-ease-out-timing-function,
-              background-color variables.$swift-ease-out-duration variables.$swift-ease-out-timing-function;
+  transition:
+    transform variables.$swift-ease-out-duration variables.$swift-ease-out-timing-function,
+    background-color variables.$swift-ease-out-duration variables.$swift-ease-out-timing-function;
 }
 
 .mat-slider-track-background {
   position: absolute;
   transform-origin: 100% 100%;
-  transition: transform variables.$swift-ease-out-duration variables.$swift-ease-out-timing-function,
-              background-color variables.$swift-ease-out-duration variables.$swift-ease-out-timing-function;
+  transition:
+    transform variables.$swift-ease-out-duration variables.$swift-ease-out-timing-function,
+    background-color variables.$swift-ease-out-duration variables.$swift-ease-out-timing-function;
 }
 
 .mat-slider-ticks-container {
@@ -79,13 +81,15 @@ $focus-ring-size: 30px !default;
   background-clip: content-box;
   box-sizing: border-box;
   opacity: 0;
-  transition: opacity variables.$swift-ease-out-duration variables.$swift-ease-out-timing-function;
+  transition: opacity variables.$swift-ease-out-duration
+    variables.$swift-ease-out-timing-function;
 }
 
 .mat-slider-thumb-container {
   position: absolute;
   z-index: 1;
-  transition: transform variables.$swift-ease-out-duration variables.$swift-ease-out-timing-function;
+  transition: transform variables.$swift-ease-out-duration
+    variables.$swift-ease-out-timing-function;
 }
 
 .mat-slider-focus-ring {
@@ -95,9 +99,10 @@ $focus-ring-size: 30px !default;
   border-radius: 50%;
   transform: scale(0);
   opacity: 0;
-  transition: transform variables.$swift-ease-out-duration variables.$swift-ease-out-timing-function,
-              background-color variables.$swift-ease-out-duration variables.$swift-ease-out-timing-function,
-              opacity variables.$swift-ease-out-duration variables.$swift-ease-out-timing-function;
+  transition:
+    transform variables.$swift-ease-out-duration variables.$swift-ease-out-timing-function,
+    background-color variables.$swift-ease-out-duration variables.$swift-ease-out-timing-function,
+    opacity variables.$swift-ease-out-duration variables.$swift-ease-out-timing-function;
 
   .mat-slider.cdk-keyboard-focused &,
   .mat-slider.cdk-program-focused & {
@@ -124,9 +129,10 @@ $focus-ring-size: 30px !default;
   border: $thumb-border-width solid transparent;
   border-radius: 50%;
   transform: scale($thumb-default-scale);
-  transition: transform variables.$swift-ease-out-duration variables.$swift-ease-out-timing-function,
-              background-color variables.$swift-ease-out-duration variables.$swift-ease-out-timing-function,
-              border-color variables.$swift-ease-out-duration variables.$swift-ease-out-timing-function;
+  transition:
+    transform variables.$swift-ease-out-duration variables.$swift-ease-out-timing-function,
+    background-color variables.$swift-ease-out-duration variables.$swift-ease-out-timing-function,
+    border-color variables.$swift-ease-out-duration variables.$swift-ease-out-timing-function;
 }
 
 .mat-slider-thumb-label {
@@ -139,9 +145,10 @@ $focus-ring-size: 30px !default;
   width: $thumb-label-size;
   height: $thumb-label-size;
   border-radius: 50%;
-  transition: transform variables.$swift-ease-out-duration variables.$swift-ease-out-timing-function,
-              border-radius  variables.$swift-ease-out-duration variables.$swift-ease-out-timing-function,
-              background-color  variables.$swift-ease-out-duration variables.$swift-ease-out-timing-function;
+  transition:
+    transform variables.$swift-ease-out-duration variables.$swift-ease-out-timing-function,
+    border-radius  variables.$swift-ease-out-duration variables.$swift-ease-out-timing-function,
+    background-color  variables.$swift-ease-out-duration variables.$swift-ease-out-timing-function;
 
   @include a11y.high-contrast(active, off) {
     outline: solid 1px;
@@ -176,7 +183,8 @@ $focus-ring-size: 30px !default;
     border-width: 0;
     border-style: solid;
     opacity: 0;
-    transition: opacity variables.$swift-ease-out-duration variables.$swift-ease-out-timing-function;
+    transition: opacity variables.$swift-ease-out-duration
+      variables.$swift-ease-out-timing-function;
   }
 
   &.cdk-focused,

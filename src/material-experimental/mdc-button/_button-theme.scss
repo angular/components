@@ -63,27 +63,28 @@ $mat-button-state-target: '.mdc-button__ripple';
 
     .mat-mdc-button, .mat-mdc-outlined-button {
       &.mat-unthemed {
-        @include mdc-button-ink-color(mdc-helpers.$mdc-theme-on-surface, $query: mdc-helpers.$mat-theme-styles-query);
+        @include mdc-button-ink-color(mdc-helpers.$mdc-theme-on-surface,
+          $query: mdc-helpers.$mat-theme-styles-query);
       }
 
       &.mat-primary {
         @include mdc-button-ink-color(primary, $query: mdc-helpers.$mat-theme-styles-query);
-        @include mdc-states-base-color(
-          primary, $query: mdc-helpers.$mat-theme-styles-query, $ripple-target: $mat-button-state-target);
+        @include mdc-states-base-color(primary, $query: mdc-helpers.$mat-theme-styles-query,
+          $ripple-target: $mat-button-state-target);
         @include _mat-button-ripple-ink-color(primary);
       }
 
       &.mat-accent {
         @include mdc-button-ink-color(secondary, $query: mdc-helpers.$mat-theme-styles-query);
-        @include mdc-states-base-color(
-          secondary, $query: mdc-helpers.$mat-theme-styles-query, $ripple-target: $mat-button-state-target);
+        @include mdc-states-base-color(secondary, $query: mdc-helpers.$mat-theme-styles-query,
+          $ripple-target: $mat-button-state-target);
         @include _mat-button-ripple-ink-color(secondary);
       }
 
       &.mat-warn {
         @include mdc-button-ink-color(error, $query: mdc-helpers.$mat-theme-styles-query);
-        @include mdc-states-base-color(
-          error, $query: mdc-helpers.$mat-theme-styles-query, $ripple-target: $mat-button-state-target);
+        @include mdc-states-base-color(error, $query: mdc-helpers.$mat-theme-styles-query,
+          $ripple-target: $mat-button-state-target);
         @include _mat-button-ripple-ink-color(error);
       }
     }
@@ -91,35 +92,38 @@ $mat-button-state-target: '.mdc-button__ripple';
     .mat-mdc-raised-button,
     .mat-mdc-unelevated-button {
       &.mat-unthemed {
-        @include mdc-button-container-fill-color(
-            mdc-helpers.$mdc-theme-surface, $query: mdc-helpers.$mat-theme-styles-query);
-        @include mdc-button-ink-color(mdc-helpers.$mdc-theme-on-surface, $query: mdc-helpers.$mat-theme-styles-query);
-        @include mdc-states-base-color(
-          mdc-helpers.$mdc-theme-on-surface, $query: mdc-helpers.$mat-theme-styles-query,
-          $ripple-target: $mat-button-state-target);
+        @include mdc-button-container-fill-color(mdc-helpers.$mdc-theme-surface,
+          $query: mdc-helpers.$mat-theme-styles-query);
+        @include mdc-button-ink-color(mdc-helpers.$mdc-theme-on-surface,
+          $query: mdc-helpers.$mat-theme-styles-query);
+        @include mdc-states-base-color(mdc-helpers.$mdc-theme-on-surface,
+          $query: mdc-helpers.$mat-theme-styles-query, $ripple-target: $mat-button-state-target);
       }
 
       &.mat-primary {
-        @include mdc-button-container-fill-color(primary, $query: mdc-helpers.$mat-theme-styles-query);
+        @include mdc-button-container-fill-color(primary,
+          $query: mdc-helpers.$mat-theme-styles-query);
         @include mdc-button-ink-color(on-primary, $query: mdc-helpers.$mat-theme-styles-query);
-        @include mdc-states-base-color(
-          on-primary, $query: mdc-helpers.$mat-theme-styles-query, $ripple-target: $mat-button-state-target);
+        @include mdc-states-base-color(on-primary, $query: mdc-helpers.$mat-theme-styles-query,
+          $ripple-target: $mat-button-state-target);
         @include _mat-button-ripple-ink-color(on-primary);
       }
 
       &.mat-accent {
-        @include mdc-button-container-fill-color(secondary, $query: mdc-helpers.$mat-theme-styles-query);
+        @include mdc-button-container-fill-color(secondary,
+          $query: mdc-helpers.$mat-theme-styles-query);
         @include mdc-button-ink-color(on-secondary, $query: mdc-helpers.$mat-theme-styles-query);
-        @include mdc-states-base-color(
-          on-secondary, $query: mdc-helpers.$mat-theme-styles-query, $ripple-target: $mat-button-state-target);
+        @include mdc-states-base-color(on-secondary, $query: mdc-helpers.$mat-theme-styles-query,
+          $ripple-target: $mat-button-state-target);
         @include _mat-button-ripple-ink-color(on-secondary);
       }
 
       &.mat-warn {
-        @include mdc-button-container-fill-color(error, $query: mdc-helpers.$mat-theme-styles-query);
+        @include mdc-button-container-fill-color(error,
+          $query: mdc-helpers.$mat-theme-styles-query);
         @include mdc-button-ink-color(on-error, $query: mdc-helpers.$mat-theme-styles-query);
-        @include mdc-states-base-color(
-          on-error, $query: mdc-helpers.$mat-theme-styles-query, $ripple-target: $mat-button-state-target);
+        @include mdc-states-base-color(on-error, $query: mdc-helpers.$mat-theme-styles-query,
+          $ripple-target: $mat-button-state-target);
         @include _mat-button-ripple-ink-color(on-error);
       }
 
@@ -130,7 +134,8 @@ $mat-button-state-target: '.mdc-button__ripple';
 
     .mat-mdc-outlined-button {
       &.mat-unthemed {
-        @include mdc-button-outline-color(mdc-helpers.$mdc-theme-on-surface, $query: mdc-helpers.$mat-theme-styles-query);
+        @include mdc-button-outline-color(mdc-helpers.$mdc-theme-on-surface,
+          $query: mdc-helpers.$mat-theme-styles-query);
       }
 
       &.mat-primary {
@@ -211,32 +216,33 @@ $mat-button-state-target: '.mdc-button__ripple';
           $query: mdc-helpers.$mat-theme-styles-query, $ripple-target: $mat-button-state-target);
 
       &.mat-unthemed {
-        @include mdc-states-base-color(
-          mdc-helpers.$mdc-theme-on-surface, $query: mdc-helpers.$mat-theme-styles-query,
-          $ripple-target: $mat-button-state-target);
-        @include mdc-fab-container-color(mdc-helpers.$mdc-theme-surface, $query: mdc-helpers.$mat-theme-styles-query);
-        @include mdc-fab-ink-color(mdc-helpers.$mdc-theme-on-surface, $query: mdc-helpers.$mat-theme-styles-query);
+        @include mdc-states-base-color(mdc-helpers.$mdc-theme-on-surface,
+          $query: mdc-helpers.$mat-theme-styles-query, $ripple-target: $mat-button-state-target);
+        @include mdc-fab-container-color(mdc-helpers.$mdc-theme-surface,
+          $query: mdc-helpers.$mat-theme-styles-query);
+        @include mdc-fab-ink-color(mdc-helpers.$mdc-theme-on-surface,
+          $query: mdc-helpers.$mat-theme-styles-query);
       }
 
       &.mat-primary {
-        @include mdc-states-base-color(
-          on-primary, $query: mdc-helpers.$mat-theme-styles-query, $ripple-target: $mat-button-state-target);
+        @include mdc-states-base-color(on-primary, $query: mdc-helpers.$mat-theme-styles-query,
+          $ripple-target: $mat-button-state-target);
         @include mdc-fab-container-color(primary, $query: mdc-helpers.$mat-theme-styles-query);
         @include mdc-fab-ink-color(on-primary, $query: mdc-helpers.$mat-theme-styles-query);
         @include _mat-button-ripple-ink-color(on-primary);
       }
 
       &.mat-accent {
-        @include mdc-states-base-color(
-          on-secondary, $query: mdc-helpers.$mat-theme-styles-query, $ripple-target: $mat-button-state-target);
+        @include mdc-states-base-color(on-secondary, $query: mdc-helpers.$mat-theme-styles-query,
+          $ripple-target: $mat-button-state-target);
         @include mdc-fab-container-color(secondary, $query: mdc-helpers.$mat-theme-styles-query);
         @include mdc-fab-ink-color(on-secondary, $query: mdc-helpers.$mat-theme-styles-query);
         @include _mat-button-ripple-ink-color(on-secondary);
       }
 
       &.mat-warn {
-        @include mdc-states-base-color(
-          on-error, $query: mdc-helpers.$mat-theme-styles-query, $ripple-target: $mat-button-state-target);
+        @include mdc-states-base-color(on-error, $query: mdc-helpers.$mat-theme-styles-query,
+          $ripple-target: $mat-button-state-target);
         @include mdc-fab-container-color(error, $query: mdc-helpers.$mat-theme-styles-query);
         @include mdc-fab-ink-color(on-error, $query: mdc-helpers.$mat-theme-styles-query);
         @include _mat-button-ripple-ink-color(on-error);
@@ -290,29 +296,29 @@ $mat-button-state-target: '.mdc-button__ripple';
           $query: mdc-helpers.$mat-theme-styles-query, $ripple-target: $mat-button-state-target);
 
       &.mat-unthemed {
-        @include mdc-states-base-color(
-          mdc-helpers.$mdc-theme-on-surface, $query: mdc-helpers.$mat-theme-styles-query,
-          $ripple-target: $mat-button-state-target);
-        @include mdc-icon-button-ink-color(mdc-helpers.$mdc-theme-on-surface, $query: mdc-helpers.$mat-theme-styles-query);
+        @include mdc-states-base-color(mdc-helpers.$mdc-theme-on-surface,
+          $query: mdc-helpers.$mat-theme-styles-query, $ripple-target: $mat-button-state-target);
+        @include mdc-icon-button-ink-color(mdc-helpers.$mdc-theme-on-surface,
+          $query: mdc-helpers.$mat-theme-styles-query);
       }
 
       &.mat-primary {
-        @include mdc-states-base-color(
-          primary, $query: mdc-helpers.$mat-theme-styles-query, $ripple-target: $mat-button-state-target);
+        @include mdc-states-base-color(primary, $query: mdc-helpers.$mat-theme-styles-query,
+          $ripple-target: $mat-button-state-target);
         @include mdc-icon-button-ink-color(primary, $query: mdc-helpers.$mat-theme-styles-query);
         @include _mat-button-ripple-ink-color(primary);
       }
 
       &.mat-accent {
-        @include mdc-states-base-color(
-          secondary, $query: mdc-helpers.$mat-theme-styles-query, $ripple-target: $mat-button-state-target);
+        @include mdc-states-base-color(secondary, $query: mdc-helpers.$mat-theme-styles-query,
+          $ripple-target: $mat-button-state-target);
         @include mdc-icon-button-ink-color(secondary, $query: mdc-helpers.$mat-theme-styles-query);
         @include _mat-button-ripple-ink-color(secondary);
       }
 
       &.mat-warn {
-        @include mdc-states-base-color(
-          error, $query: mdc-helpers.$mat-theme-styles-query, $ripple-target: $mat-button-state-target);
+        @include mdc-states-base-color(error, $query: mdc-helpers.$mat-theme-styles-query,
+          $ripple-target: $mat-button-state-target);
         @include mdc-icon-button-ink-color(error, $query: mdc-helpers.$mat-theme-styles-query);
         @include _mat-button-ripple-ink-color(error);
       }

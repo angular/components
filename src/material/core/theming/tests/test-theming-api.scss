@@ -127,7 +127,8 @@ $dark-theme-only-typography: theming.dark-theme((typography: $typography-config)
   // by updating immediate properties on the `$theme` object.
   @include assert(theming.get-color-config($legacy-light-theme), $legacy-light-theme,
       'Expected that the theme object is used for the color configuration.');
-  @include assert(theming.get-color-config($new-api-dark-theme), map.get($new-api-dark-theme, color),
+  @include assert(theming.get-color-config($new-api-dark-theme),
+    map.get($new-api-dark-theme, color),
     'Expected that a color config can be read from a theme object.');
   @include assert(theming.get-color-config($light-theme-only-density), null,
       'Expected that by default, no color configuration is used.');
@@ -252,7 +253,8 @@ $dark-theme-only-typography: theming.dark-theme((typography: $typography-config)
     @include all-density.angular-material-density($theme);
   }
 
-  @include all-typography.angular-material-typography(map.get($light-theme-only-typography, typography));
+  @include all-typography.angular-material-typography(
+    map.get($light-theme-only-typography, typography));
   @include all-typography.angular-material-typography($light-theme-only-typography);
 
   @include all-density.angular-material-density(map.get($light-theme-only-density, density));

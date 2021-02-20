@@ -40,7 +40,8 @@
     bottom: 0;
     position: absolute;
     top: 0;
-    transition: background variables.$swift-ease-in-duration variables.$swift-ease-in-timing-function;
+    transition: background variables.$swift-ease-in-duration
+      variables.$swift-ease-in-timing-function;
     width: 1px;
   }
 
@@ -84,7 +85,8 @@
     background: transparent;
     cursor: col-resize;
     height: 100%;
-    transition: background variables.$swift-ease-in-duration variables.$swift-ease-in-timing-function;
+    transition: background variables.$swift-ease-in-duration
+      variables.$swift-ease-in-timing-function;
     @include vendor-prefixes.user-select(none);
     width: 100%;
 

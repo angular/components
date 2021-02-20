@@ -184,8 +184,8 @@ $_mat-checkbox-mark-stroke-size: 2 / 15 * checkbox-common.$size !default;
   display: inline-block;
 
   // Animation
-  transition: background variables.$swift-ease-out-duration variables.$swift-ease-out-timing-function,
-              elevation.transition-property-value();
+  transition: background variables.$swift-ease-out-duration
+    variables.$swift-ease-out-timing-function, elevation.transition-property-value();
 
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
@@ -275,8 +275,8 @@ $_mat-checkbox-mark-stroke-size: 2 / 15 * checkbox-common.$size !default;
   display: inline-flex;
   justify-content: center;
   transition: background-color checkbox-common.$transition-duration
-                  variables.$linear-out-slow-in-timing-function,
-              opacity checkbox-common.$transition-duration variables.$linear-out-slow-in-timing-function;
+    variables.$linear-out-slow-in-timing-function, opacity checkbox-common.$transition-duration
+    variables.$linear-out-slow-in-timing-function;
 
   ._mat-animation-noopable & {
     transition: none;
@@ -426,7 +426,8 @@ $_mat-checkbox-mark-stroke-size: 2 / 15 * checkbox-common.$size !default;
 
   &-unchecked-checked {
     .mat-checkbox-background {
-      animation: checkbox-common.$transition-duration * 2 linear 0ms mat-checkbox-fade-in-background;
+      animation: checkbox-common.$transition-duration * 2 linear 0ms
+        mat-checkbox-fade-in-background;
     }
 
     .mat-checkbox-checkmark-path {
@@ -440,7 +441,8 @@ $_mat-checkbox-mark-stroke-size: 2 / 15 * checkbox-common.$size !default;
 
   &-unchecked-indeterminate {
     .mat-checkbox-background {
-      animation: checkbox-common.$transition-duration * 2 linear 0ms mat-checkbox-fade-in-background;
+      animation: checkbox-common.$transition-duration * 2 linear 0ms
+        mat-checkbox-fade-in-background;
     }
 
     .mat-checkbox-mixedmark {
@@ -451,7 +453,8 @@ $_mat-checkbox-mark-stroke-size: 2 / 15 * checkbox-common.$size !default;
 
   &-checked-unchecked {
     .mat-checkbox-background {
-      animation: checkbox-common.$transition-duration * 2 linear 0ms mat-checkbox-fade-out-background;
+      animation: checkbox-common.$transition-duration * 2 linear 0ms
+        mat-checkbox-fade-out-background;
     }
 
     .mat-checkbox-checkmark-path {
@@ -486,7 +489,8 @@ $_mat-checkbox-mark-stroke-size: 2 / 15 * checkbox-common.$size !default;
 
   &-indeterminate-unchecked {
     .mat-checkbox-background {
-      animation: checkbox-common.$transition-duration * 2 linear 0ms mat-checkbox-fade-out-background;
+      animation: checkbox-common.$transition-duration * 2 linear 0ms
+        mat-checkbox-fade-out-background;
     }
 
     .mat-checkbox-mixedmark {

@@ -13,8 +13,10 @@
                   text-primary-on-dark,
                   $query: mdc-helpers.$mat-theme-styles-query
   );
-  @include mdc-chip-leading-icon-color(text-primary-on-dark, $query: mdc-helpers.$mat-theme-styles-query);
-  @include mdc-chip-trailing-icon-color(text-primary-on-dark, $query: mdc-helpers.$mat-theme-styles-query);
+  @include mdc-chip-leading-icon-color(text-primary-on-dark,
+    $query: mdc-helpers.$mat-theme-styles-query);
+  @include mdc-chip-trailing-icon-color(text-primary-on-dark,
+    $query: mdc-helpers.$mat-theme-styles-query);
 }
 
 @mixin color($config-or-theme) {

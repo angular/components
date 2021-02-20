@@ -66,7 +66,8 @@ $placeholder-arrow-space: 2 * ($arrow-size + $arrow-margin);
   // Animate the arrow position, but only when the transitioning to empty (animate the arrow down)
   // This is in line with the mat-form-field label animation
   .mat-form-field-appearance-standard .mat-select.mat-select-empty & {
-    transition: transform variables.$swift-ease-out-duration variables.$swift-ease-out-timing-function;
+    transition: transform variables.$swift-ease-out-duration
+      variables.$swift-ease-out-timing-function;
   }
 
   ._mat-animation-noopable.mat-form-field-appearance-standard .mat-select.mat-select-empty & {

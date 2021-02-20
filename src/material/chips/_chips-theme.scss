@@ -32,7 +32,8 @@ $chip-remove-font-size: 18px;
 }
 
 @mixin _mat-chip-theme-color($palette) {
-  @include _mat-chip-element-color(theming.color($palette, default-contrast), theming.color($palette));
+  @include _mat-chip-element-color(theming.color($palette, default-contrast),
+    theming.color($palette));
 
   .mat-ripple-element {
     @include _mat-chips-ripple-background($palette, default-contrast, 0.1);

@@ -50,7 +50,8 @@ mat-menu {
   // MDC's menu items are `<li>` nodes which don't need resets, however ours
   // can be anything, including buttons, so we need to do the reset ourselves.
   @include button-common.reset;
-  @include mdc-list-deprecated-single-line-height($height, $query: mdc-helpers.$mat-base-styles-query);
+  @include mdc-list-deprecated-single-line-height($height,
+    $query: mdc-helpers.$mat-base-styles-query);
   cursor: pointer;
   width: 100%;
   text-align: left;

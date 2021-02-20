@@ -16,7 +16,8 @@
 
 // Mixin that overwrites the default MDC text-field color styles to be based on
 // the given theme palette. The MDC text-field is styled using `primary` by default.
-@mixin _mat-mdc-text-field-color-styles($palette-name, $query: mdc-helpers.$mat-theme-styles-query) {
+@mixin _mat-mdc-text-field-color-styles($palette-name,
+  $query: mdc-helpers.$mat-theme-styles-query) {
   $_mdc-text-field-focused-label-color: mdc-text-field.$focused-label-color;
   mdc-text-field.$focused-label-color: rgba(mdc-theme-prop-value($palette-name), 0.87);
 

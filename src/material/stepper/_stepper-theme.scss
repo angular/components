@@ -136,7 +136,8 @@
 
 @mixin density($config-or-theme) {
   $density-scale: theming.get-density-config($config-or-theme);
-  $height: compatibility.density-prop-value(stepper-variables.$density-config, $density-scale, height);
+  $height: compatibility.density-prop-value(stepper-variables.$density-config, $density-scale,
+    height);
   $vertical-padding: ($height - stepper-variables.$label-header-height) / 2;
 
   @include compatibility.density-legacy-compatibility() {
