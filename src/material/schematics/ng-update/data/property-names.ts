@@ -9,6 +9,31 @@
 import {PropertyNameUpgradeData, TargetVersion, VersionChanges} from '@angular/cdk/schematics';
 
 export const propertyNames: VersionChanges<PropertyNameUpgradeData> = {
+  [TargetVersion.V12]: [
+    {
+      pr: 'https://github.com/angular/components/issues/21974',
+      changes: [
+        {
+          replace: 'option',
+          replaceWith: 'options',
+          limitedTo: {classes: ['MatSelectionListChange']}
+        },
+        {
+          replace: 'getHarnessLoaderForContent',
+          replaceWith: 'getChildLoader',
+          limitedTo: {
+            classes: [
+              'MatListItemHarnessBase',
+              'MatActionListItemHarness',
+              'MatListItemHarness',
+              'MatNavListItemHarness',
+              'MatListOptionHarness'
+            ]
+          }
+        }
+      ]
+    }
+  ],
   [TargetVersion.V11]: [
     {
       pr: 'https://github.com/angular/components/pull/20449',

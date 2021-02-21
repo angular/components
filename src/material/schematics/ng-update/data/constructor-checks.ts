@@ -26,6 +26,10 @@ export const constructorChecks: VersionChanges<ConstructorChecksUpgradeData> = {
     {
       pr: 'https://github.com/angular/components/issues/21900',
       changes: ['MatVerticalStepper', 'MatStep']
+    },
+    {
+      pr: 'https://github.com/angular/components/issues/21974',
+      changes: ['MatSelectionList']
     }
   ],
   [TargetVersion.V11]: [

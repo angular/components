@@ -117,8 +117,7 @@ export declare class MatSelectionList extends _MatSelectionListMixinBase impleme
     options: QueryList<MatListOption>;
     selectedOptions: SelectionModel<MatListOption>;
     readonly selectionChange: EventEmitter<MatSelectionListChange>;
-    tabIndex: number;
-    constructor(_element: ElementRef<HTMLElement>, tabIndex: string, _changeDetector: ChangeDetectorRef, _focusMonitor?: FocusMonitor | undefined);
+    constructor(_element: ElementRef<HTMLElement>, _changeDetector: ChangeDetectorRef, _focusMonitor: FocusMonitor);
     _emitChangeEvent(options: MatListOption[]): void;
     _keydown(event: KeyboardEvent): void;
     _removeOptionFromList(option: MatListOption): MatListOption | null;
@@ -137,16 +136,14 @@ export declare class MatSelectionList extends _MatSelectionListMixinBase impleme
     static ngAcceptInputType_disableRipple: BooleanInput;
     static ngAcceptInputType_disabled: BooleanInput;
     static ngAcceptInputType_multiple: BooleanInput;
-    static ɵcmp: i0.ɵɵComponentDeclaration<MatSelectionList, "mat-selection-list", ["matSelectionList"], { "disableRipple": "disableRipple"; "tabIndex": "tabIndex"; "color": "color"; "compareWith": "compareWith"; "disabled": "disabled"; "multiple": "multiple"; }, { "selectionChange": "selectionChange"; }, ["options"], ["*"]>;
-    static ɵfac: i0.ɵɵFactoryDeclaration<MatSelectionList, [null, { attribute: "tabindex"; }, null, null]>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<MatSelectionList, "mat-selection-list", ["matSelectionList"], { "disableRipple": "disableRipple"; "color": "color"; "compareWith": "compareWith"; "disabled": "disabled"; "multiple": "multiple"; }, { "selectionChange": "selectionChange"; }, ["options"], ["*"]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<MatSelectionList, never>;
 }
 
 export declare class MatSelectionListChange {
-    option: MatListOption;
     options: MatListOption[];
     source: MatSelectionList;
     constructor(
     source: MatSelectionList,
-    option: MatListOption,
     options: MatListOption[]);
 }

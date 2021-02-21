@@ -9,7 +9,6 @@
 import {
   ComponentHarness,
   ComponentHarnessConstructor,
-  HarnessLoader,
   HarnessPredicate,
   ContentContainerComponentHarness,
   parallel,
@@ -87,14 +86,5 @@ export abstract class MatListItemHarnessBase
   /** Whether this list item has an icon. */
   async hasIcon(): Promise<boolean> {
     return !!await this._icon();
-  }
-
-  /**
-   * Gets a `HarnessLoader` used to get harnesses within the list item's content.
-   * @deprecated Use `getChildLoader(MatListItemSection.CONTENT)` or `getHarness` instead.
-   * @breaking-change 12.0.0
-   */
-  async getHarnessLoaderForContent(): Promise<HarnessLoader> {
-    return this.getChildLoader(MatListItemSection.CONTENT);
   }
 }

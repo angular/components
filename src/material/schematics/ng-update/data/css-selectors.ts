@@ -28,6 +28,14 @@ export interface MaterialCssSelectorData {
 }
 
 export const cssSelectors: VersionChanges<MaterialCssSelectorData> = {
+  [TargetVersion.V12]: [
+    {
+      pr: 'https://github.com/angular/components/issues/21974',
+      changes: [
+        {replace: '.mat-list-item-avatar', replaceWith: '.mat-list-item-with-avatar'}
+      ]
+    }
+  ],
   [TargetVersion.V6]: [
     {
       pr: 'https://github.com/angular/components/pull/10296',
