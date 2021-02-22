@@ -80,7 +80,7 @@ export class MatSliderThumb implements AfterViewInit {
   /** The current value of this slider input. */
   @Input()
   get value(): number {
-    return coerceNumberProperty(this._elementRef.nativeElement.getAttribute('value'));
+    return coerceNumberProperty(this._hostElement.getAttribute('value'));
   }
   set value(v: number) {
     const value = coerceNumberProperty(v);
@@ -91,7 +91,7 @@ export class MatSliderThumb implements AfterViewInit {
       this._slider._setValue(value, this._thumbPosition);
     } else {
       // Setup for the MDC foundation.
-      this._elementRef.nativeElement.setAttribute('value', `${value}`);
+      this._hostElement.setAttribute('value', `${value}`);
     }
   }
 
@@ -114,32 +114,37 @@ export class MatSliderThumb implements AfterViewInit {
     ? Thumb.START
     : Thumb.END;
 
+  /** The injected document if available or fallback to the global document reference. */
   private _document: Document;
+
+  /** The host native HTML input element. */
+  _hostElement: HTMLInputElement;
 
   constructor(
     @Inject(DOCUMENT) document: any,
     private readonly _slider: MatSlider,
-    readonly _elementRef: ElementRef<HTMLInputElement>,
+    private readonly _elementRef: ElementRef<HTMLInputElement>,
     ) {
       this._document = document;
+      this._hostElement = _elementRef.nativeElement;
       // By calling this in the constructor we guarantee that the sibling sliders initial value by
       // has already been set by the time we reach ngAfterViewInit().
       this._initializeInputValueAttribute();
     }
 
   ngAfterViewInit() {
-    this._initializeInputMinMaxAndStep();
+    this._initializeInputState();
     this._initializeInputValueProperty();
 
     // Setup for the MDC foundation.
     if (this._slider.disabled) {
-      this._elementRef.nativeElement.disabled = true;
+      this._hostElement.disabled = true;
     }
   }
 
   /** Returns true if this slider input currently has focus. */
   _isFocused(): boolean {
-    return this._document.activeElement === this._elementRef.nativeElement;
+    return this._document.activeElement === this._hostElement;
   }
 
   /**
@@ -155,16 +160,16 @@ export class MatSliderThumb implements AfterViewInit {
    * instead be capped at either the default min or max.
    *
    */
-  private _initializeInputMinMaxAndStep(): void {
-    const min = this._elementRef.nativeElement.hasAttribute('matSliderEndThumb')
+  private _initializeInputState(): void {
+    const min = this._hostElement.hasAttribute('matSliderEndThumb')
       ? this._slider._getInput(Thumb.START).value
       : this._slider.min;
-    const max = this._elementRef.nativeElement.hasAttribute('matSliderStartThumb')
+    const max = this._hostElement.hasAttribute('matSliderStartThumb')
       ? this._slider._getInput(Thumb.END).value
       : this._slider.max;
-    this._elementRef.nativeElement.min = `${min}`;
-    this._elementRef.nativeElement.max = `${max}`;
-    this._elementRef.nativeElement.step = `${this._slider.step}`;
+    this._hostElement.min = `${min}`;
+    this._hostElement.max = `${max}`;
+    this._hostElement.step = `${this._slider.step}`;
   }
 
   /**
@@ -176,7 +181,7 @@ export class MatSliderThumb implements AfterViewInit {
    * instead be capped at either the default min or max.
    */
   private _initializeInputValueProperty(): void {
-    this._elementRef.nativeElement.value = `${this.value}`;
+    this._hostElement.value = `${this.value}`;
   }
 
   /**
@@ -187,8 +192,8 @@ export class MatSliderThumb implements AfterViewInit {
    */
   private _initializeInputValueAttribute(): void {
     // Only set the default value if an initial value has not already been provided.
-    if (!this._elementRef.nativeElement.hasAttribute('value')) {
-      this.value = this._elementRef.nativeElement.hasAttribute('matSliderEndThumb')
+    if (!this._hostElement.hasAttribute('value')) {
+      this.value = this._hostElement.hasAttribute('matSliderEndThumb')
         ? this._slider.max
         : this._slider.min;
     }
@@ -370,7 +375,7 @@ export class MatSlider implements AfterViewInit, OnDestroy {
 
   /** Gets the slider thumb HTML input element of the given thumb position. */
   _getInputElement(thumbPosition: Thumb): HTMLInputElement {
-    return this._getInput(thumbPosition)._elementRef.nativeElement;
+    return this._getInput(thumbPosition)._hostElement;
   }
 
   /** Gets the slider thumb HTML element of the given thumb position. */
