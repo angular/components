@@ -12,5 +12,6 @@ import {Component} from '@angular/core';
 @Component({
   selector: 'mdc-slider-demo',
   templateUrl: 'mdc-slider-demo.html',
+  styles: ['.mat-mdc-slider { width: 300px; }'],
 })
 export class MdcSliderDemo {}

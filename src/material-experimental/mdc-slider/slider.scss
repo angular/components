@@ -1,7 +1,8 @@
+@use '@material/slider/slider' as mdc-slider;
 @use '../../cdk/a11y';
+@use '../mdc-helpers/mdc-helpers';
 
-@import '@material/slider/slider';
-@include core-styles;
+@include mdc-slider.without-ripple($query: mdc-helpers.$mat-base-styles-query);
 
 $mat-slider-min-size: 128px !default;
 $mat-slider-horizontal-margin: 8px !default;
