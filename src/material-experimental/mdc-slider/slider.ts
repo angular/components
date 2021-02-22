@@ -32,6 +32,7 @@ import {
   ViewChildren,
   ViewEncapsulation,
 } from '@angular/core';
+import {CanColorCtor, mixinColor} from '@angular/material/core';
 import {SpecificEventListener, EventType} from '@material/base';
 import {MDCSliderAdapter, MDCSliderFoundation, Thumb, TickMark} from '@material/slider';
 
@@ -202,6 +203,16 @@ export class MatSliderThumb implements AfterViewInit {
   static ngAcceptInputType_value: NumberInput;
 }
 
+// Boilerplate for applying mixins to MatSlider.
+/** @docs-private */
+class MatSliderBase {
+  constructor(public _elementRef: ElementRef<HTMLElement>) {}
+}
+const _MatSliderMixinBase:
+    CanColorCtor &
+    typeof MatSliderBase =
+        mixinColor(MatSliderBase, 'primary');
+
 /**
  * Allows users to select from a range of values by moving the slider thumb. It is similar in
  * behavior to the native `<input type="range">` element.
@@ -220,8 +231,9 @@ export class MatSliderThumb implements AfterViewInit {
   exportAs: 'matSlider',
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
+  inputs: ['color'],
 })
-export class MatSlider implements AfterViewInit, OnDestroy {
+export class MatSlider extends _MatSliderMixinBase implements AfterViewInit, OnDestroy {
   /** The slider thumb(s). */
   @ViewChildren('thumb') _thumbs: QueryList<ElementRef<HTMLElement>>;
 
@@ -320,6 +332,7 @@ export class MatSlider implements AfterViewInit, OnDestroy {
     readonly _elementRef: ElementRef<HTMLElement>,
     private readonly _platform: Platform,
     @Inject(DOCUMENT) document: any) {
+      super(_elementRef);
       this._document = document;
       this._window = this._document.defaultView || window;
     }
