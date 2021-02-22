@@ -13,11 +13,13 @@
 </div>
 
 <!-- Thumbs -->
-<div class="mdc-slider__thumb" *ngFor="let thumb of _getThumbTypes()" #thumb>
-  <div class="mdc-slider__value-indicator-container" *ngIf="discrete">
-    <div class="mdc-slider__value-indicator">
-      <span class="mdc-slider__value-indicator-text">{{_getValueIndicatorText(thumb)}}</span>
-    </div>
-  </div>
-  <div class="mdc-slider__thumb-knob" #knob></div>
-</div>
+<mat-slider-visual-start-thumb
+  [_discrete]="discrete"
+  [_valueIndicatorText]="_startValueIndicatorText"
+  *ngIf="_isRange()">
+</mat-slider-visual-start-thumb>
+
+<mat-slider-visual-end-thumb
+  [_discrete]="discrete"
+  [_valueIndicatorText]="_endValueIndicatorText">
+</mat-slider-visual-end-thumb>

@@ -32,7 +32,14 @@ import {
   ViewChildren,
   ViewEncapsulation,
 } from '@angular/core';
-import {CanColorCtor, mixinColor} from '@angular/material/core';
+import {
+  CanColorCtor,
+  MatRipple,
+  mixinColor,
+  RippleAnimationConfig,
+  RippleRef,
+  RippleState,
+} from '@angular/material/core';
 import {SpecificEventListener, EventType} from '@material/base';
 import {MDCSliderAdapter, MDCSliderFoundation, Thumb, TickMark} from '@material/slider';
 
@@ -46,6 +53,173 @@ export interface MatSliderDragEvent {
 
   /** The current value of the slider. */
   value: number;
+}
+
+/**
+ * The visual slider thumb.
+ *
+ * Handles the slider thumb ripple states (hover, focus, and active),
+ * and displaying the value tooltip on discrete sliders.
+ */
+@Component({
+  selector: 'mat-slider-visual-start-thumb, mat-slider-visual-end-thumb',
+  templateUrl: './slider-thumb.html',
+  host: {
+    'class': 'mdc-slider__thumb',
+    '(mouseenter)': '_onMouseEnter()',
+    '(mouseleave)': '_onMouseLeave()',
+  },
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None,
+})
+export class MatSliderVisualThumb implements AfterViewInit {
+  /** Whether the slider displays a numeric value label upon pressing the thumb. */
+  @Input() _discrete: boolean;
+
+  /** The display value of the slider thumb. */
+  @Input() _valueIndicatorText: string;
+
+  /** The MatRipple for this slider thumb. */
+  @ViewChild(MatRipple) private readonly _ripple: MatRipple;
+
+  /** The slider thumb knob */
+  @ViewChild('knob') _knob: ElementRef<HTMLElement>;
+
+  /** Indicates which slider thumb this input corresponds to. */
+  _thumbPosition: Thumb =
+    this._elementRef.nativeElement.tagName.toLowerCase()
+      === 'mat-slider-visual-start-thumb'.toLowerCase()
+        ? Thumb.START
+        : Thumb.END;
+
+  /** The slider input corresponding to this slider thumb. */
+  private _sliderInput: MatSliderThumb;
+
+  /** The RippleRef for the slider thumbs hover state. */
+  private _hoverRippleRef: RippleRef;
+
+  /** The RippleRef for the slider thumbs focus state. */
+  private _focusRippleRef: RippleRef;
+
+  /** The RippleRef for the slider thumbs active state. */
+  private _activeRippleRef: RippleRef;
+
+  /** Whether the slider thumb is currently being pressed. */
+  private _isActive: boolean = false;
+
+  /** Whether the slider thumb is currently being hovered. */
+  private _isHovered: boolean = false;
+
+  constructor(
+    private readonly _slider: MatSlider,
+    private readonly _elementRef: ElementRef<HTMLElement>) {}
+
+  ngAfterViewInit() {
+    this._ripple.radius = 24;
+    this._sliderInput = this._slider._getInput(this._thumbPosition);
+
+    this._sliderInput.dragStart.subscribe((e: MatSliderDragEvent) => this._onDragStart(e));
+    this._sliderInput.dragEnd.subscribe((e: MatSliderDragEvent) => this._onDragEnd(e));
+
+    this._sliderInput._focus.subscribe(() => this._onFocus());
+    this._sliderInput._blur.subscribe(() => this._onBlur());
+  }
+
+  _onMouseEnter(): void {
+    this._isHovered = true;
+    // We don't want to show the hover ripple on top of the focus ripple.
+    // This can happen if the user tabs to a thumb and then the user moves their cursor over it.
+    if (!this._isShowingRipple(this._focusRippleRef)) {
+      this._showHoverRipple();
+    }
+  }
+
+  _onMouseLeave(): void {
+    this._isHovered = false;
+    this._hoverRippleRef?.fadeOut();
+  }
+
+  private _onFocus(): void {
+    // We don't want to show the hover ripple on top of the focus ripple.
+    // Happen when the users cursor is over a thumb and then the user tabs to it.
+    this._hoverRippleRef?.fadeOut();
+    this._showFocusRipple();
+  }
+
+  private _onBlur(): void {
+    // Happens when the user tabs away while still dragging a thumb.
+    if (!this._isActive) {
+      this._focusRippleRef?.fadeOut();
+    }
+    // Happens when the user tabs away from a thumb but their cursor is still over it.
+    if (this._isHovered) {
+      this._showHoverRipple();
+    }
+  }
+
+  private _onDragStart(event: MatSliderDragEvent): void {
+    if (event.source._thumbPosition === this._thumbPosition) {
+      this._isActive = true;
+      this._showActiveRipple();
+    }
+  }
+
+  private _onDragEnd(event: MatSliderDragEvent): void {
+    if (event.source._thumbPosition === this._thumbPosition) {
+      this._isActive = false;
+      this._activeRippleRef?.fadeOut();
+      // Happens when the user starts dragging a thumb, tabs away, and then stops dragging.
+      if (!this._sliderInput._isFocused()) {
+        this._focusRippleRef?.fadeOut();
+      }
+    }
+  }
+
+  /** Handles displaying the hover ripple. */
+  private _showHoverRipple(): void {
+    if (!this._isShowingRipple(this._hoverRippleRef)) {
+      this._hoverRippleRef = this._showRipple({ enterDuration: 0, exitDuration: 0 });
+      this._hoverRippleRef.element.classList.add('mdc-slider-hover-ripple');
+    }
+  }
+
+  /** Handles displaying the focus ripple. */
+  private _showFocusRipple(): void {
+    if (!this._isShowingRipple(this._focusRippleRef)) {
+      this._focusRippleRef = this._showRipple({ enterDuration: 0, exitDuration: 0 });
+      this._focusRippleRef.element.classList.add('mdc-slider-focus-ripple');
+    }
+  }
+
+  /** Handles displaying the active ripple. */
+  private _showActiveRipple(): void {
+    if (!this._isShowingRipple(this._activeRippleRef)) {
+      this._activeRippleRef = this._showRipple({ enterDuration: 225, exitDuration: 400 });
+      this._activeRippleRef.element.classList.add('mdc-slider-active-ripple');
+    }
+  }
+
+  /** Whether the given rippleRef is currently fading in or visible. */
+  private _isShowingRipple(rippleRef?: RippleRef): boolean {
+    return rippleRef?.state === RippleState.FADING_IN || rippleRef?.state === RippleState.VISIBLE;
+  }
+
+  /** Manually launches the slider thumb ripple using the specified ripple animation config. */
+  private _showRipple(animation: RippleAnimationConfig): RippleRef {
+    return this._ripple.launch(
+      {animation, centered: true, persistent: true},
+    );
+  }
+
+  /** Gets the hosts native HTML element. */
+  _getHostElement(): HTMLElement {
+    return this._elementRef.nativeElement;
+  }
+
+  /** Gets the native HTML element of the slider thumb knob. */
+  _getKnob(): HTMLElement {
+    return this._knob.nativeElement;
+  }
 }
 
 /**
@@ -111,7 +285,7 @@ export class MatSliderThumb implements AfterViewInit {
   @Output() readonly _focus: EventEmitter<void> = new EventEmitter<void>();
 
   /** Indicates which slider thumb this input corresponds to. */
-  private _thumbPosition: Thumb = this._elementRef.nativeElement.hasAttribute('matSliderStartThumb')
+  _thumbPosition: Thumb = this._elementRef.nativeElement.hasAttribute('matSliderStartThumb')
     ? Thumb.START
     : Thumb.END;
 
@@ -235,14 +409,7 @@ const _MatSliderMixinBase:
 })
 export class MatSlider extends _MatSliderMixinBase implements AfterViewInit, OnDestroy {
   /** The slider thumb(s). */
-  @ViewChildren('thumb') _thumbs: QueryList<ElementRef<HTMLElement>>;
-
-  /** The slider thumb knob(s) */
-  @ViewChildren('knob') _knobs: QueryList<ElementRef<HTMLElement>>;
-
-  /** The span containing the slider thumb value indicator text */
-  @ViewChildren('valueIndicatorTextElement')
-  _valueIndicatorTextElements: QueryList<ElementRef<HTMLElement>>;
+  @ViewChildren(MatSliderVisualThumb) _thumbs: QueryList<MatSliderVisualThumb>;
 
   /** The active section of the slider track. */
   @ViewChild('trackActive') _trackActive: ElementRef<HTMLElement>;
@@ -322,10 +489,10 @@ export class MatSlider extends _MatSliderMixinBase implements AfterViewInit, OnD
   _tickMarks: TickMark[];
 
   /** The display value of the start thumb. */
-  private _startValueIndicatorText: string;
+  _startValueIndicatorText: string;
 
   /** The display value of the end thumb. */
-  private _endValueIndicatorText: string;
+  _endValueIndicatorText: string;
 
   constructor(
     readonly _cdr: ChangeDetectorRef,
@@ -383,7 +550,7 @@ export class MatSlider extends _MatSliderMixinBase implements AfterViewInit, OnD
 
   /** Gets the slider thumb input of the given thumb position. */
   _getInput(thumbPosition: Thumb): MatSliderThumb {
-    return thumbPosition === Thumb.END ? this._inputs.last! : this._inputs.first!;
+    return thumbPosition === Thumb.END ? this._inputs.last : this._inputs.first;
   }
 
   /** Gets the slider thumb HTML input element of the given thumb position. */
@@ -391,22 +558,18 @@ export class MatSlider extends _MatSliderMixinBase implements AfterViewInit, OnD
     return this._getInput(thumbPosition)._hostElement;
   }
 
+  private _getThumb(thumbPosition: Thumb): MatSliderVisualThumb {
+    return thumbPosition === Thumb.END ? this._thumbs.last : this._thumbs.first;
+  }
+
   /** Gets the slider thumb HTML element of the given thumb position. */
   _getThumbElement(thumbPosition: Thumb): HTMLElement {
-    const thumbElementRef = thumbPosition === Thumb.END ? this._thumbs.last : this._thumbs.first;
-    return thumbElementRef.nativeElement;
+    return this._getThumb(thumbPosition)._getHostElement();
   }
 
   /** Gets the slider knob HTML element of the given thumb position. */
   _getKnobElement(thumbPosition: Thumb): HTMLElement {
-    const knobElementRef = thumbPosition === Thumb.END ? this._knobs.last : this._knobs.first;
-    return knobElementRef.nativeElement;
-  }
-
-  _getValueIndicatorText(thumbPosition: Thumb) {
-    return thumbPosition === Thumb.START
-      ? this._startValueIndicatorText
-      : this._endValueIndicatorText;
+    return this._getThumb(thumbPosition)._getKnob();
   }
 
   /**
