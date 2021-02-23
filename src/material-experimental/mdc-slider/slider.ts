@@ -201,7 +201,7 @@ export class MatSliderVisualThumb implements AfterViewInit, OnDestroy {
   private _showHoverRipple(): void {
     if (!this._isShowingRipple(this._hoverRippleRef)) {
       this._hoverRippleRef = this._showRipple({ enterDuration: 0, exitDuration: 0 });
-      this._hoverRippleRef.element.classList.add('mdc-slider-hover-ripple');
+      this._hoverRippleRef.element.classList.add('mat-mdc-slider-hover-ripple');
     }
   }
 
@@ -209,7 +209,7 @@ export class MatSliderVisualThumb implements AfterViewInit, OnDestroy {
   private _showFocusRipple(): void {
     if (!this._isShowingRipple(this._focusRippleRef)) {
       this._focusRippleRef = this._showRipple({ enterDuration: 0, exitDuration: 0 });
-      this._focusRippleRef.element.classList.add('mdc-slider-focus-ripple');
+      this._focusRippleRef.element.classList.add('mat-mdc-slider-focus-ripple');
     }
   }
 
@@ -217,7 +217,7 @@ export class MatSliderVisualThumb implements AfterViewInit, OnDestroy {
   private _showActiveRipple(): void {
     if (!this._isShowingRipple(this._activeRippleRef)) {
       this._activeRippleRef = this._showRipple({ enterDuration: 225, exitDuration: 400 });
-      this._activeRippleRef.element.classList.add('mdc-slider-active-ripple');
+      this._activeRippleRef.element.classList.add('mat-mdc-slider-active-ripple');
     }
   }
 
