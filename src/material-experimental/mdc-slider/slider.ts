@@ -23,6 +23,7 @@ import {
   Directive,
   ElementRef,
   EventEmitter,
+  forwardRef,
   Inject,
   Input,
   NgZone,
@@ -33,6 +34,7 @@ import {
   ViewChildren,
   ViewEncapsulation,
 } from '@angular/core';
+import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {
   CanColorCtor,
   MatRipple,
@@ -237,6 +239,17 @@ export class MatSliderVisualThumb implements AfterViewInit, OnDestroy {
 }
 
 /**
+ * Provider Expression that allows slider thumb inputs to register as a ControlValueAccessor.
+ * This allows it to support [(ngModel)] and [formControl].
+ * @docs-private
+ */
+export const MAT_SLIDER_THUMB_VALUE_ACCESSOR: any = {
+  provide: NG_VALUE_ACCESSOR,
+  useExisting: forwardRef(() => MatSliderThumb),
+  multi: true
+};
+
+/**
  * Directive that adds slider-specific behaviors to an input element inside `<mat-slider>`.
  * Up to two may be placed inside of a `<mat-slider>`.
  *
@@ -249,11 +262,12 @@ export class MatSliderVisualThumb implements AfterViewInit, OnDestroy {
   host: {
     'class': 'mdc-slider__input',
     'type': 'range',
-    '(blur)': '_blur.emit()',
+    '(blur)': '_onBlur()',
     '(focus)': '_focus.emit()',
   },
+  providers: [MAT_SLIDER_THUMB_VALUE_ACCESSOR],
 })
-export class MatSliderThumb implements AfterViewInit {
+export class MatSliderThumb implements AfterViewInit, ControlValueAccessor {
 
   // ** IMPORTANT NOTE **
   //
@@ -298,6 +312,18 @@ export class MatSliderThumb implements AfterViewInit {
   /** Event emitted every time the MatSliderThumb is focused. */
   @Output() readonly _focus: EventEmitter<void> = new EventEmitter<void>();
 
+  /**
+   * A callback function that is called when the
+   * control's value changes in the UI (ControlValueAccessor).
+   */
+  _onChange: (value: any) => void = () => {};
+
+  /**
+   * A callback function that is called by the forms API on
+   * initialization to update the form model on blur (ControlValueAccessor).
+   */
+  private _onTouched: () => any = () => {};
+
   /** Indicates which slider thumb this input corresponds to. */
   _thumbPosition: Thumb = this._elementRef.nativeElement.hasAttribute('matSliderStartThumb')
     ? Thumb.START
@@ -329,6 +355,37 @@ export class MatSliderThumb implements AfterViewInit {
     if (this._slider.disabled) {
       this._hostElement.disabled = true;
     }
+  }
+
+  _onBlur(): void {
+    this._onTouched();
+    this._blur.emit();
+  }
+
+  /**
+   * Sets the model value. Implemented as part of ControlValueAccessor.
+   * @param value
+   */
+  writeValue(value: any): void {
+    this.value = value;
+  }
+
+  /**
+   * Registers a callback to be triggered when the value has changed.
+   * Implemented as part of ControlValueAccessor.
+   * @param fn Callback to be registered.
+   */
+  registerOnChange(fn: any): void {
+    this._onChange = fn;
+  }
+
+  /**
+   * Registers a callback to be triggered when the component is touched.
+   * Implemented as part of ControlValueAccessor.
+   * @param fn Callback to be registered.
+   */
+  registerOnTouched(fn: any): void {
+    this._onTouched = fn;
   }
 
   /** Returns true if this slider input currently has focus. */
@@ -709,7 +766,9 @@ class SliderAdapter implements MDCSliderAdapter {
   }
   // We ignore emitChangeEvent and emitInputEvent because the slider inputs
   // are already exposed so users can just listen for those events directly themselves.
-  emitChangeEvent = (value: number, thumbPosition: Thumb): void => {};
+  emitChangeEvent = (value: number, thumbPosition: Thumb): void => {
+    this._delegate._getInput(thumbPosition)._onChange(value);
+  }
   emitInputEvent = (value: number, thumbPosition: Thumb): void => {};
   emitDragStartEvent = (value: number, thumbPosition: Thumb): void => {
     const input = this._delegate._getInput(thumbPosition);
