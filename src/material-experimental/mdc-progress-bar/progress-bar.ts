@@ -106,7 +106,7 @@ export class MatProgressBar extends _MatProgressBarMixinBase implements AfterVie
         // Internal client users found production errors where `observe` was not a function
         // on the constructed `observer`. This should not happen, but adding this check for this
         // edge case.
-        if (observer.observe) {
+        if (typeof observer.observe === 'function') {
           observer.observe(this._rootElement);
           return observer;
         }
