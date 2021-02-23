@@ -17,7 +17,10 @@ ng_module(
         ["**/*.ts"],
         exclude = ["**/*.spec.ts"],
     ),
-    assets = [":slider_scss", ":slider_thumb_scss"] + glob(["**/*.html"]),
+    assets = [
+        ":slider_scss",
+        ":slider_thumb_scss",
+    ] + glob(["**/*.html"]),
     module_name = "@angular/material-experimental/mdc-slider",
     deps = [
         "//src/cdk/bidi",
