@@ -61,23 +61,24 @@ export interface MatSliderDragEvent {
  *
  * Handles the slider thumb ripple states (hover, focus, and active),
  * and displaying the value tooltip on discrete sliders.
+ * @docs-private
  */
 @Component({
   selector: 'mat-slider-visual-start-thumb, mat-slider-visual-end-thumb',
   templateUrl: './slider-thumb.html',
   styleUrls: ['slider-thumb.css'],
   host: {
-    'class': 'mdc-slider__thumb',
+    'class': 'mdc-slider__thumb mat-slider-visual-thumb',
   },
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
 export class MatSliderVisualThumb implements AfterViewInit, OnDestroy {
   /** Whether the slider displays a numeric value label upon pressing the thumb. */
-  @Input() _discrete: boolean;
+  @Input() discrete: boolean;
 
   /** The display value of the slider thumb. */
-  @Input() _valueIndicatorText: string;
+  @Input() valueIndicatorText: string;
 
   /** The MatRipple for this slider thumb. */
   @ViewChild(MatRipple) private readonly _ripple: MatRipple;
