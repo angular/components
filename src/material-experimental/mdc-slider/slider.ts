@@ -64,7 +64,7 @@ export interface MatSliderDragEvent {
  * @docs-private
  */
 @Component({
-  selector: 'mat-slider-visual-start-thumb, mat-slider-visual-end-thumb',
+  selector: 'mat-slider-visual-thumb',
   templateUrl: './slider-thumb.html',
   styleUrls: ['slider-thumb.css'],
   host: {
@@ -77,6 +77,9 @@ export class MatSliderVisualThumb implements AfterViewInit, OnDestroy {
   /** Whether the slider displays a numeric value label upon pressing the thumb. */
   @Input() discrete: boolean;
 
+  /** Indicates which slider thumb this input corresponds to. */
+  @Input() thumbPosition: Thumb;
+
   /** The display value of the slider thumb. */
   @Input() valueIndicatorText: string;
 
@@ -85,13 +88,6 @@ export class MatSliderVisualThumb implements AfterViewInit, OnDestroy {
 
   /** The slider thumb knob */
   @ViewChild('knob') _knob: ElementRef<HTMLElement>;
-
-  /** Indicates which slider thumb this input corresponds to. */
-  _thumbPosition: Thumb =
-    this._elementRef.nativeElement.tagName.toLowerCase()
-      === 'mat-slider-visual-start-thumb'.toLowerCase()
-        ? Thumb.START
-        : Thumb.END;
 
   /** The slider input corresponding to this slider thumb. */
   private _sliderInput: MatSliderThumb;
@@ -118,7 +114,7 @@ export class MatSliderVisualThumb implements AfterViewInit, OnDestroy {
 
   ngAfterViewInit() {
     this._ripple.radius = 24;
-    this._sliderInput = this._slider._getInput(this._thumbPosition);
+    this._sliderInput = this._slider._getInput(this.thumbPosition);
 
     this._sliderInput.dragStart.subscribe((e: MatSliderDragEvent) => this._onDragStart(e));
     this._sliderInput.dragEnd.subscribe((e: MatSliderDragEvent) => this._onDragEnd(e));
@@ -181,14 +177,14 @@ export class MatSliderVisualThumb implements AfterViewInit, OnDestroy {
   }
 
   private _onDragStart(event: MatSliderDragEvent): void {
-    if (event.source._thumbPosition === this._thumbPosition) {
+    if (event.source._thumbPosition === this.thumbPosition) {
       this._isActive = true;
       this._showActiveRipple();
     }
   }
 
   private _onDragEnd(event: MatSliderDragEvent): void {
-    if (event.source._thumbPosition === this._thumbPosition) {
+    if (event.source._thumbPosition === this.thumbPosition) {
       this._isActive = false;
       this._activeRippleRef?.fadeOut();
       // Happens when the user starts dragging a thumb, tabs away, and then stops dragging.
@@ -491,7 +487,7 @@ export class MatSlider extends _MatSliderMixinBase implements AfterViewInit, OnD
    * in the thumb label. Can be used to format very large number in order
    * for them to fit into the slider thumb.
    */
-  @Input() displayWith: ((value: number) => string) | null;
+  @Input() displayWith: ((value: number) => string) = (value: number) => `${value}`;
 
   /** Instance of the MDC slider foundation for this slider. */
   private _foundation = new MDCSliderFoundation(new SliderAdapter(this));
@@ -602,10 +598,16 @@ export class MatSlider extends _MatSliderMixinBase implements AfterViewInit, OnD
    * numeric value as a string.
    */
   _setValueIndicatorText(value: number, thumbPosition: Thumb) {
-    const valueText = this.displayWith ? this.displayWith(value) : `${value}`;
     thumbPosition === Thumb.START
-      ? this._startValueIndicatorText = valueText
-      : this._endValueIndicatorText = valueText;
+      ? this._startValueIndicatorText = this.displayWith(value)
+      : this._endValueIndicatorText = this.displayWith(value);
+  }
+
+  /** Gets the value indicator text for the given thumb position. */
+  _getValueIndicatorText(thumbPosition: Thumb): string {
+    return thumbPosition === Thumb.START
+      ? this._startValueIndicatorText
+      : this._endValueIndicatorText;
   }
 
   /** Determines the class name for a HTML element. */
@@ -613,11 +615,6 @@ export class MatSlider extends _MatSliderMixinBase implements AfterViewInit, OnD
     return tickMark === TickMark.ACTIVE
       ? 'mdc-slider__tick-mark--active'
       : 'mdc-slider__tick-mark--inactive';
-  }
-
-  /** Returns an array of the thumb types that exist on the current slider instance. */
-  _getThumbTypes(): Thumb[] {
-    return this._isRange() ? [Thumb.START, Thumb.END] : [Thumb.END];
   }
 
   static ngAcceptInputType_disabled: BooleanInput;

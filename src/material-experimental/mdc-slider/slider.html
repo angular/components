@@ -13,13 +13,9 @@
 </div>
 
 <!-- Thumbs -->
-<mat-slider-visual-start-thumb
+<mat-slider-visual-thumb
+  *ngFor="let thumb of _inputs"
   [discrete]="discrete"
-  [valueIndicatorText]="_startValueIndicatorText"
-  *ngIf="_isRange()">
-</mat-slider-visual-start-thumb>
-
-<mat-slider-visual-end-thumb
-  [discrete]="discrete"
-  [valueIndicatorText]="_endValueIndicatorText">
-</mat-slider-visual-end-thumb>
+  [thumbPosition]="thumb._thumbPosition"
+  [valueIndicatorText]="_getValueIndicatorText(thumb._thumbPosition)">
+</mat-slider-visual-thumb>
