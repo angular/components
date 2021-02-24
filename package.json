@@ -137,7 +137,7 @@
     "@bazel/jasmine": "3.1.0",
     "@bazel/concatjs": "3.1.0",
     "@bazel/protractor": "3.1.0",
-    "@bazel/rollup": "3.1.0",
+    "@bazel/rollup": "3.2.1",
     "@bazel/terser": "3.1.0",
     "@bazel/typescript": "3.1.0",
     "@firebase/app-types": "^0.6.1",
