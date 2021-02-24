@@ -13,3 +13,5 @@ updates:
       - "merge safe"
       - "target: patch"
     open-pull-requests-limit: 5
+    ignore:
+      - dependency-name: "@material/*"
