@@ -68,7 +68,7 @@ export interface MatSliderDragEvent {
   templateUrl: './slider-thumb.html',
   styleUrls: ['slider-thumb.css'],
   host: {
-    'class': 'mdc-slider__thumb mat-slider-visual-thumb',
+    'class': 'mdc-slider__thumb mat-mdc-slider-visual-thumb',
   },
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
@@ -125,8 +125,8 @@ export class MatSliderVisualThumb implements AfterViewInit, OnDestroy {
     // These two listeners don't update any data bindings so we bind them
     // outside of the NgZone to pervent angular from needlessly running change detection.
     this._ngZone.runOutsideAngular(() => {
-      this._elementRef.nativeElement.addEventListener('mouseenter', this._onMouseEnter);
-      this._elementRef.nativeElement.addEventListener('mouseleave', this._onMouseLeave);
+      this._elementRef.nativeElement.addEventListener('mouseenter', this._onMouseEnter.bind(this));
+      this._elementRef.nativeElement.addEventListener('mouseleave', this._onMouseLeave.bind(this));
     });
   }
 
@@ -139,12 +139,7 @@ export class MatSliderVisualThumb implements AfterViewInit, OnDestroy {
     this._elementRef.nativeElement.removeEventListener('mouseleave', this._onMouseLeave);
   }
 
-  // ** IMPORTANT NOTE **
-  //
-  // _onMouseEnter() and _onMouseLeave() must be arrow functions because they are
-  // called from _ngZone.runOutsideAngular() which will change what "this" refers to.
-
-  private _onMouseEnter = () => {
+  private _onMouseEnter(): void {
     this._isHovered = true;
     // We don't want to show the hover ripple on top of the focus ripple.
     // This can happen if the user tabs to a thumb and then the user moves their cursor over it.
@@ -153,7 +148,7 @@ export class MatSliderVisualThumb implements AfterViewInit, OnDestroy {
     }
   }
 
-  private _onMouseLeave = () => {
+  private _onMouseLeave(): void {
     this._isHovered = false;
     this._hoverRippleRef?.fadeOut();
   }
