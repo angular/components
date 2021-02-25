@@ -115,4 +115,10 @@
       base: $ripple-color
     ),
   ));
+  .mat-mdc-slider-hover-ripple {
+    background-color: rgba(theme-variables.prop-value($color), 0.05);
+  }
+  .mat-mdc-slider-focus-ripple, .mat-mdc-slider-active-ripple {
+    background-color: rgba(theme-variables.prop-value($color), 0.2);
+  }
 }
