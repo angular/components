@@ -693,7 +693,7 @@ describe('MatTooltip', () => {
       expect(event.defaultPrevented).toBe(false);
     }));
 
-    it('should not show the tooltip on progammatic focus', fakeAsync(() => {
+    it('should not show the tooltip on programmatic focus', fakeAsync(() => {
       patchElementFocus(buttonElement);
       assertTooltipInstance(tooltipDirective, false);
 
