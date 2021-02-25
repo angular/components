@@ -48,7 +48,7 @@ import {matTooltipAnimations} from './tooltip-animations';
 })
 export class MatTooltip extends _MatTooltipBase<TooltipComponent> {
   protected readonly _tooltipComponent = TooltipComponent;
-  protected readonly _transformOriginSelector = '.mat-mdc-tooltip';
+  protected readonly _cssClassPrefix = 'mat-mdc';
 
   constructor(
     overlay: Overlay,

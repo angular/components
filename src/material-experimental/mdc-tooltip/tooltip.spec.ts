@@ -244,7 +244,7 @@ describe('MDC-based MatTooltip', () => {
       const overlayRef = tooltipDirective._overlayRef;
 
       expect(!!overlayRef).toBeTruthy();
-      expect(overlayRef!.overlayElement.classList).toContain(TOOLTIP_PANEL_CLASS,
+      expect(overlayRef!.overlayElement.classList).toContain('mat-mdc-tooltip-panel',
           'Expected the overlay panel element to have the tooltip panel class set.');
     }));
 
@@ -695,7 +695,7 @@ describe('MDC-based MatTooltip', () => {
       expect(event.defaultPrevented).toBe(false);
     }));
 
-    it('should not show the tooltip on progammatic focus', fakeAsync(() => {
+    it('should not show the tooltip on programmatic focus', fakeAsync(() => {
       patchElementFocus(buttonElement);
       assertTooltipInstance(tooltipDirective, false);
 
@@ -761,19 +761,19 @@ describe('MDC-based MatTooltip', () => {
       setPositionAndShow('below');
 
       const classList = tooltipDirective._overlayRef!.overlayElement.classList;
-      expect(classList).toContain('mat-tooltip-panel-below');
+      expect(classList).toContain('mat-mdc-tooltip-panel-below');
 
       setPositionAndShow('above');
-      expect(classList).not.toContain('mat-tooltip-panel-below');
-      expect(classList).toContain('mat-tooltip-panel-above');
+      expect(classList).not.toContain('mat-mdc-tooltip-panel-below');
+      expect(classList).toContain('mat-mdc-tooltip-panel-above');
 
       setPositionAndShow('left');
-      expect(classList).not.toContain('mat-tooltip-panel-above');
-      expect(classList).toContain('mat-tooltip-panel-left');
+      expect(classList).not.toContain('mat-mdc-tooltip-panel-above');
+      expect(classList).toContain('mat-mdc-tooltip-panel-left');
 
       setPositionAndShow('right');
-      expect(classList).not.toContain('mat-tooltip-panel-left');
-      expect(classList).toContain('mat-tooltip-panel-right');
+      expect(classList).not.toContain('mat-mdc-tooltip-panel-left');
+      expect(classList).toContain('mat-mdc-tooltip-panel-right');
 
       function setPositionAndShow(position: TooltipPosition) {
         tooltipDirective.hide(0);
@@ -804,10 +804,10 @@ describe('MDC-based MatTooltip', () => {
       tick(500);
 
       const classList = tooltipDirective._overlayRef!.overlayElement.classList;
-      expect(classList).not.toContain('mat-tooltip-panel-after');
-      expect(classList).not.toContain('mat-tooltip-panel-before');
-      expect(classList).not.toContain('mat-tooltip-panel-left');
-      expect(classList).toContain('mat-tooltip-panel-right');
+      expect(classList).not.toContain('mat-mdc-tooltip-panel-after');
+      expect(classList).not.toContain('mat-mdc-tooltip-panel-before');
+      expect(classList).not.toContain('mat-mdc-tooltip-panel-left');
+      expect(classList).toContain('mat-mdc-tooltip-panel-right');
 
       tooltipDirective.hide(0);
       fixture.detectChanges();
@@ -819,10 +819,10 @@ describe('MDC-based MatTooltip', () => {
       fixture.detectChanges();
       tick(500);
 
-      expect(classList).not.toContain('mat-tooltip-panel-after');
-      expect(classList).not.toContain('mat-tooltip-panel-before');
-      expect(classList).not.toContain('mat-tooltip-panel-right');
-      expect(classList).toContain('mat-tooltip-panel-left');
+      expect(classList).not.toContain('mat-mdc-tooltip-panel-after');
+      expect(classList).not.toContain('mat-mdc-tooltip-panel-before');
+      expect(classList).not.toContain('mat-mdc-tooltip-panel-right');
+      expect(classList).toContain('mat-mdc-tooltip-panel-left');
     }));
 
     it('should clear the show timeout on destroy', fakeAsync(() => {

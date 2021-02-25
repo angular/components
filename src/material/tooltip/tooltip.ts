@@ -65,7 +65,7 @@ export type TooltipVisibility = 'initial' | 'visible' | 'hidden';
 export const SCROLL_THROTTLE_MS = 20;
 
 /** CSS class that will be attached to the overlay panel. */
-export const TOOLTIP_PANEL_CLASS = 'mat-tooltip-panel';
+export const TOOLTIP_PANEL_CLASS = 'tooltip-panel';
 
 /** Options used to bind passive event listeners. */
 const passiveListenerOptions = normalizePassiveListenerOptions({passive: true});
@@ -140,9 +140,9 @@ export abstract class _MatTooltipBase<T extends _TooltipComponentBase> implement
   private _viewInitialized = false;
   private _pointerExitEventsInitialized = false;
   protected abstract readonly _tooltipComponent: ComponentType<T>;
-  protected abstract readonly _transformOriginSelector: string;
   protected _viewportMargin = 8;
   private _currentPosition: TooltipPosition;
+  protected readonly _cssClassPrefix: string = 'mat';
 
   /** Allows the user to define the position of the tooltip relative to the parent element */
   @Input('matTooltipPosition')
@@ -388,7 +388,7 @@ export abstract class _MatTooltipBase<T extends _TooltipComponentBase> implement
     // Create connected position strategy that listens for scroll events to reposition.
     const strategy = this._overlay.position()
                          .flexibleConnectedTo(this._elementRef)
-                         .withTransformOriginOn(this._transformOriginSelector)
+                         .withTransformOriginOn(`.${this._cssClassPrefix}-tooltip`)
                          .withFlexibleDimensions(false)
                          .withViewportMargin(this._viewportMargin)
                          .withScrollableContainers(scrollableAncestors);
@@ -408,7 +408,7 @@ export abstract class _MatTooltipBase<T extends _TooltipComponentBase> implement
     this._overlayRef = this._overlay.create({
       direction: this._dir,
       positionStrategy: strategy,
-      panelClass: TOOLTIP_PANEL_CLASS,
+      panelClass: `${this._cssClassPrefix}-${TOOLTIP_PANEL_CLASS}`,
       scrollStrategy: this._scrollStrategy()
     });
 
@@ -583,7 +583,7 @@ export abstract class _MatTooltipBase<T extends _TooltipComponentBase> implement
       const overlayRef = this._overlayRef;
 
       if (overlayRef) {
-        const classPrefix = 'mat-tooltip-panel-';
+        const classPrefix = `${this._cssClassPrefix}-${TOOLTIP_PANEL_CLASS}-`;
         overlayRef.removePanelClass(classPrefix + this._currentPosition);
         overlayRef.addPanelClass(classPrefix + newPosition);
       }
@@ -726,7 +726,6 @@ export abstract class _MatTooltipBase<T extends _TooltipComponentBase> implement
 })
 export class MatTooltip extends _MatTooltipBase<TooltipComponent> {
   protected readonly _tooltipComponent = TooltipComponent;
-  protected readonly _transformOriginSelector = '.mat-tooltip';
 
   constructor(
     overlay: Overlay,
