@@ -1,5 +1,6 @@
 @use '@material/slider/slider' as mdc-slider;
 @use '@material/slider/slider-theme';
+@use '@material/theme/variables' as theme-variables;
 @use '../mdc-helpers/mdc-helpers';
 @use '../../material/core/ripple/ripple';
 @use '../../material/core/theming/theming';
@@ -106,9 +107,15 @@
     ),
     $query: mdc-helpers.$mat-theme-styles-query
   );
-  @include ripple.color((
+  @include ripple.theme((
     foreground: (
-      base: mdc-theme-prop-value($color)
+      base: theme-variables.prop-value($color)
     ),
   ));
+  .mat-mdc-slider-hover-ripple {
+    background-color: rgba(theme-variables.prop-value($color), 0.05);
+  }
+  .mat-mdc-slider-focus-ripple, .mat-mdc-slider-active-ripple {
+    background-color: rgba(theme-variables.prop-value($color), 0.2);
+  }
 }
