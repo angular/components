@@ -23,7 +23,6 @@ import {
   Directive,
   ElementRef,
   EventEmitter,
-  forwardRef,
   Inject,
   Input,
   NgZone,
