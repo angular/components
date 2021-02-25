@@ -110,4 +110,10 @@
       base: mdc-theme-prop-value($color)
     ),
   ));
+  .mat-mdc-slider-hover-ripple {
+    background-color: rgba(mdc-theme-prop-value($color), 0.05);
+  }
+  .mat-mdc-slider-focus-ripple, .mat-mdc-slider-active-ripple {
+    background-color: rgba(mdc-theme-prop-value($color), 0.2);
+  }
 }

@@ -17,7 +17,10 @@ ng_module(
         ["**/*.ts"],
         exclude = ["**/*.spec.ts"],
     ),
-    assets = [":slider_scss"] + glob(["**/*.html"]),
+    assets = [
+        ":slider_scss",
+        ":slider_thumb_scss",
+    ] + glob(["**/*.html"]),
     module_name = "@angular/material-experimental/mdc-slider",
     deps = [
         "//src/cdk/bidi",
@@ -48,6 +51,11 @@ sass_binary(
         "//src/material-experimental/mdc-helpers:mdc_helpers_scss_lib",
         "//src/material-experimental/mdc-helpers:mdc_scss_deps_lib",
     ],
+)
+
+sass_binary(
+    name = "slider_thumb_scss",
+    src = "slider-thumb.scss",
 )
 
 ###########
