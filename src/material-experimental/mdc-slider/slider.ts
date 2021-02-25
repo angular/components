@@ -239,17 +239,6 @@ export class MatSliderVisualThumb implements AfterViewInit, OnDestroy {
 }
 
 /**
- * Provider Expression that allows slider thumb inputs to register as a ControlValueAccessor.
- * This allows it to support [(ngModel)] and [formControl].
- * @docs-private
- */
-export const MAT_SLIDER_THUMB_VALUE_ACCESSOR: any = {
-  provide: NG_VALUE_ACCESSOR,
-  useExisting: forwardRef(() => MatSliderThumb),
-  multi: true
-};
-
-/**
  * Directive that adds slider-specific behaviors to an input element inside `<mat-slider>`.
  * Up to two may be placed inside of a `<mat-slider>`.
  *
@@ -265,7 +254,11 @@ export const MAT_SLIDER_THUMB_VALUE_ACCESSOR: any = {
     '(blur)': '_onBlur()',
     '(focus)': '_focus.emit()',
   },
-  providers: [MAT_SLIDER_THUMB_VALUE_ACCESSOR],
+  providers: [{
+    provide: NG_VALUE_ACCESSOR,
+    useExisting: MatSliderThumb,
+    multi: true
+  }],
 })
 export class MatSliderThumb implements AfterViewInit, ControlValueAccessor {
 
@@ -322,7 +315,7 @@ export class MatSliderThumb implements AfterViewInit, ControlValueAccessor {
    * A callback function that is called by the forms API on
    * initialization to update the form model on blur (ControlValueAccessor).
    */
-  private _onTouched: () => any = () => {};
+  private _onTouched: () => void = () => {};
 
   /** Indicates which slider thumb this input corresponds to. */
   _thumbPosition: Thumb = this._elementRef.nativeElement.hasAttribute('matSliderStartThumb')
@@ -386,6 +379,15 @@ export class MatSliderThumb implements AfterViewInit, ControlValueAccessor {
    */
   registerOnTouched(fn: any): void {
     this._onTouched = fn;
+  }
+
+  /**
+   * Sets whether the component should be disabled.
+   * Implemented as part of ControlValueAccessor.
+   * @param isDisabled
+   */
+  setDisabledState(isDisabled: boolean): void {
+    this._slider.disabled = isDisabled;
   }
 
   /** Returns true if this slider input currently has focus. */
