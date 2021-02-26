@@ -49,6 +49,7 @@ import {
   ViewChild,
   ViewContainerRef,
   ViewEncapsulation,
+  NgZone
 } from '@angular/core';
 import {
   BehaviorSubject,
@@ -58,7 +59,7 @@ import {
   Subject,
   Subscription,
 } from 'rxjs';
-import {takeUntil} from 'rxjs/operators';
+import {debounceTime, take, takeUntil} from 'rxjs/operators';
 import {CdkColumnDef} from './cell';
 import {_CoalescedStyleScheduler, _COALESCED_STYLE_SCHEDULER} from './coalesced-style-scheduler';
 import {
@@ -498,6 +499,7 @@ export class CdkTable<T> implements AfterContentChecked, CollectionViewer, OnDes
       protected readonly _differs: IterableDiffers,
       protected readonly _changeDetectorRef: ChangeDetectorRef,
       protected readonly _elementRef: ElementRef, @Attribute('role') role: string,
+      protected readonly _ngZone: NgZone,
       @Optional() protected readonly _dir: Directionality, @Inject(DOCUMENT) _document: any,
       private _platform: Platform,
       @Inject(_VIEW_REPEATER_STRATEGY)
@@ -582,15 +584,17 @@ export class CdkTable<T> implements AfterContentChecked, CollectionViewer, OnDes
   }
 
   ngOnDestroy() {
-    this._rowOutlet.viewContainer.clear();
-    this._noDataRowOutlet.viewContainer.clear();
-    this._headerRowOutlet.viewContainer.clear();
-    this._footerRowOutlet.viewContainer.clear();
+    this._ngZone.onStable.pipe(debounceTime(1000), take(1)).subscribe(() => {
+      this._rowOutlet.viewContainer.clear();
+      this._noDataRowOutlet.viewContainer.clear();
+      this._headerRowOutlet.viewContainer.clear();
+      this._footerRowOutlet.viewContainer.clear();
 
-    this._cachedRenderRowsMap.clear();
+      this._cachedRenderRowsMap.clear();
 
-    this._onDestroy.next();
-    this._onDestroy.complete();
+      this._onDestroy.next();
+      this._onDestroy.complete();
+    });
 
     if (isDataSource(this.dataSource)) {
       this.dataSource.disconnect(this);
