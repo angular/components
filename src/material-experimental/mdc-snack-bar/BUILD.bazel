@@ -22,6 +22,7 @@ ng_module(
     module_name = "@angular/material-experimental/mdc-snack-bar",
     deps = [
         "//src:dev_mode_types",
+        "//src/material-experimental/mdc-button",
         "//src/material-experimental/mdc-core",
         "//src/material/snack-bar",
         "@npm//@angular/core",
