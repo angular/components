@@ -64,8 +64,14 @@ export type TooltipVisibility = 'initial' | 'visible' | 'hidden';
 /** Time in ms to throttle repositioning after scroll events. */
 export const SCROLL_THROTTLE_MS = 20;
 
-/** CSS class that will be attached to the overlay panel. */
-export const TOOLTIP_PANEL_CLASS = 'tooltip-panel';
+/**
+ * CSS class that will be attached to the overlay panel.
+ * @deprecated
+ * @breaking-change 13.0.0 remove this variable
+ */
+export const TOOLTIP_PANEL_CLASS = 'mat-tooltip-panel';
+
+const PANEL_CLASS = 'tooltip-panel';
 
 /** Options used to bind passive event listeners. */
 const passiveListenerOptions = normalizePassiveListenerOptions({passive: true});
@@ -408,7 +414,7 @@ export abstract class _MatTooltipBase<T extends _TooltipComponentBase> implement
     this._overlayRef = this._overlay.create({
       direction: this._dir,
       positionStrategy: strategy,
-      panelClass: `${this._cssClassPrefix}-${TOOLTIP_PANEL_CLASS}`,
+      panelClass: `${this._cssClassPrefix}-${PANEL_CLASS}`,
       scrollStrategy: this._scrollStrategy()
     });
 
@@ -583,7 +589,7 @@ export abstract class _MatTooltipBase<T extends _TooltipComponentBase> implement
       const overlayRef = this._overlayRef;
 
       if (overlayRef) {
-        const classPrefix = `${this._cssClassPrefix}-${TOOLTIP_PANEL_CLASS}-`;
+        const classPrefix = `${this._cssClassPrefix}-${PANEL_CLASS}-`;
         overlayRef.removePanelClass(classPrefix + this._currentPosition);
         overlayRef.addPanelClass(classPrefix + newPosition);
       }
