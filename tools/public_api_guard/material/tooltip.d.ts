@@ -107,7 +107,7 @@ export declare class MatTooltipModule {
 
 export declare const SCROLL_THROTTLE_MS = 20;
 
-export declare const TOOLTIP_PANEL_CLASS = "tooltip-panel";
+export declare const TOOLTIP_PANEL_CLASS = "mat-tooltip-panel";
 
 export declare class TooltipComponent extends _TooltipComponentBase {
     _isHandset: Observable<BreakpointState>;
