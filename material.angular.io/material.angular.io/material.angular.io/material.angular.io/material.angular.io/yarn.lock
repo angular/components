@@ -218,8 +218,8 @@
     tslib "^2.0.0"
 
 "@angular/components-examples@angular/material2-docs-content#11.2.x":
-  version "11.2.1-sha-c3abc1415"
-  resolved "https://codeload.github.com/angular/material2-docs-content/tar.gz/f12afada83c15eb29b672b5dd8d64760ce2b2c2b"
+  version "11.2.2-sha-d2583706c"
+  resolved "https://codeload.github.com/angular/material2-docs-content/tar.gz/321bd6c32051098bf87e8d6adeb8c727a2578486"
   dependencies:
     tslib "^2.0.0"
 
