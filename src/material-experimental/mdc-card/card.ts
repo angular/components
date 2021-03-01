@@ -25,13 +25,18 @@ import {
   selector: 'mat-card',
   templateUrl: 'card.html',
   styleUrls: ['card.css'],
-  host: {'class': 'mat-mdc-card mdc-card'},
+  host: {
+    'class': 'mat-mdc-card mdc-card',
+    '[class.mdc-card--outlined]': 'appearance == "outlined"'
+  },
   exportAs: 'matCard',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MatCard {
   // TODO(jelbourn): add `outline` option to card (supported by MDC)
+  @Input() appearance: 'outlined' | 'raised' = 'raised';
+
 }
 
 // TODO(jelbourn): add `MatActionCard`, which is a card that acts like a button (and has a ripple).
