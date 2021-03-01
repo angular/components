@@ -19,9 +19,9 @@
     $mdc-radio-unchecked-color: rgba(mdc-theme-prop-value(on-surface), 0.54) !global;
     $mdc-radio-disabled-circle-color: rgba(mdc-theme-prop-value(on-surface), 0.38) !global;
 
-    @include mdc-form-field-core-styles($query: mdc-helpers.$mat-theme-styles-query);
-
     .mat-mdc-radio-button {
+      @include mdc-form-field-core-styles($query: mdc-helpers.$mat-theme-styles-query);
+
       &.mat-primary {
         @include mdc-radio-without-ripple($query: mdc-helpers.$mat-theme-styles-query);
       }
