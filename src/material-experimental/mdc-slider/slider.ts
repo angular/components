@@ -94,13 +94,13 @@ export class MatSliderVisualThumb implements AfterViewInit, OnDestroy {
   private _sliderInput: MatSliderThumb;
 
   /** The RippleRef for the slider thumbs hover state. */
-  private _hoverRippleRef: RippleRef;
+  _hoverRippleRef: RippleRef;
 
   /** The RippleRef for the slider thumbs focus state. */
-  private _focusRippleRef: RippleRef;
+  _focusRippleRef: RippleRef;
 
   /** The RippleRef for the slider thumbs active state. */
-  private _activeRippleRef: RippleRef;
+  _activeRippleRef: RippleRef;
 
   /** Whether the slider thumb is currently being pressed. */
   private _isActive: boolean = false;
@@ -332,8 +332,7 @@ export class MatSliderThumb implements AfterViewInit, ControlValueAccessor {
   constructor(
     @Inject(DOCUMENT) document: any,
     private readonly _slider: MatSlider,
-    private readonly _elementRef: ElementRef<HTMLInputElement>,
-    ) {
+    private readonly _elementRef: ElementRef<HTMLInputElement>) {
       this._document = document;
       this._hostElement = _elementRef.nativeElement;
       // By calling this in the constructor we guarantee that the sibling sliders initial value by
@@ -629,26 +628,26 @@ export class MatSlider extends _MatSliderMixinBase implements AfterViewInit, OnD
   }
 
   /** Gets the slider thumb input of the given thumb position. */
-  _getInput(thumbPosition: Thumb): MatSliderThumb {
+  _getInput(thumbPosition: Thumb = Thumb.END): MatSliderThumb {
     return thumbPosition === Thumb.END ? this._inputs.last : this._inputs.first;
   }
 
   /** Gets the slider thumb HTML input element of the given thumb position. */
-  _getInputElement(thumbPosition: Thumb): HTMLInputElement {
+  _getInputElement(thumbPosition: Thumb = Thumb.END): HTMLInputElement {
     return this._getInput(thumbPosition)._hostElement;
   }
 
-  private _getThumb(thumbPosition: Thumb): MatSliderVisualThumb {
+  _getThumb(thumbPosition: Thumb = Thumb.END): MatSliderVisualThumb {
     return thumbPosition === Thumb.END ? this._thumbs.last : this._thumbs.first;
   }
 
   /** Gets the slider thumb HTML element of the given thumb position. */
-  _getThumbElement(thumbPosition: Thumb): HTMLElement {
+  _getThumbElement(thumbPosition: Thumb = Thumb.END): HTMLElement {
     return this._getThumb(thumbPosition)._getHostElement();
   }
 
   /** Gets the slider knob HTML element of the given thumb position. */
-  _getKnobElement(thumbPosition: Thumb): HTMLElement {
+  _getKnobElement(thumbPosition: Thumb = Thumb.END): HTMLElement {
     return this._getThumb(thumbPosition)._getKnob();
   }
 
