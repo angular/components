@@ -304,6 +304,8 @@ export class MatSliderThumb implements AfterViewInit, ControlValueAccessor {
   /** Event emitted every time the MatSliderThumb is focused. */
   @Output() readonly _focus: EventEmitter<void> = new EventEmitter<void>();
 
+  _disabled: boolean = false;
+
   /**
    * A callback function that is called when the
    * control's value changes in the UI (ControlValueAccessor).
@@ -386,7 +388,8 @@ export class MatSliderThumb implements AfterViewInit, ControlValueAccessor {
    * @param isDisabled
    */
   setDisabledState(isDisabled: boolean): void {
-    this._slider.disabled = isDisabled;
+    this._disabled = isDisabled;
+    this._slider._updateDisabled();
   }
 
   /** Returns true if this slider input currently has focus. */
@@ -618,6 +621,11 @@ export class MatSlider extends _MatSliderMixinBase implements AfterViewInit, OnD
   /** Whether this is a ranged slider. */
   _isRange(): boolean {
     return this._inputs.length === 2;
+  }
+
+  /** Sets the disabled state based on the disabled state of the inputs (ControlValueAccessor). */
+  _updateDisabled(): void {
+    this.disabled = this._inputs.some(input => input._disabled);
   }
 
   /** Gets the slider thumb input of the given thumb position. */
