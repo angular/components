@@ -7,6 +7,7 @@
  */
 
 import {Component, ViewEncapsulation} from '@angular/core';
+import {MatCardAppearance} from '@angular/material-experimental/mdc-card';
 
 @Component({
   selector: 'mdc-card-demo',
@@ -15,7 +16,7 @@ import {Component, ViewEncapsulation} from '@angular/core';
   encapsulation: ViewEncapsulation.None,
 })
 export class MdcCardDemo {
-  appearance: 'raised' | 'outlined' = 'raised';
+  appearance: MatCardAppearance = 'raised';
   longText = `Once upon a midnight dreary, while I pondered, weak and weary,
               Over many a quaint and curious volume of forgotten lore—
               While I nodded, nearly napping, suddenly there came a tapping,

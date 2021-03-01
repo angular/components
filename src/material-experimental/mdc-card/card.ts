@@ -14,6 +14,7 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 
+export type MatCardAppearance = 'outlined' | 'raised';
 
 /**
  * Material Design card component. Cards contain content and actions about a single subject.
@@ -34,8 +35,7 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MatCard {
-  // TODO(jelbourn): add `outline` option to card (supported by MDC)
-  @Input() appearance: 'outlined' | 'raised' = 'raised';
+  @Input() appearance: MatCardAppearance = 'raised';
 
 }
 
