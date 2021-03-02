@@ -464,9 +464,9 @@ export class GoogleMap implements OnChanges, OnInit, OnDestroy {
       ...options,
       // It's important that we set **some** kind of `center` and `zoom`, otherwise
       // Google Maps will render a blank rectangle which looks broken.
-      center: this._center || options.center || DEFAULT_OPTIONS.center,
-      zoom: this._zoom ?? options.zoom ?? DEFAULT_OPTIONS.zoom,
-      mapTypeId: this.mapTypeId || options.mapTypeId
+      center: this._center || this.googleMap?.getCenter() || options.center || DEFAULT_OPTIONS.center,
+      zoom: this._zoom ?? this.googleMap?.getZoom() ?? options.zoom ?? DEFAULT_OPTIONS.zoom,
+      mapTypeId: this.mapTypeId || this.googleMap?.getMapTypeId() || options.mapTypeId,
     };
   }
 
