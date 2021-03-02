@@ -28,7 +28,9 @@ export type MatCardAppearance = 'outlined' | 'raised';
   styleUrls: ['card.css'],
   host: {
     'class': 'mat-mdc-card mdc-card',
-    '[class.mdc-card--outlined]': 'appearance == "outlined"'
+    '[class.mdc-card--outlined]': 'appearance == "outlined"',
+    // this class is needed to apply Google specific themes internally
+    '[class.mat-mdc-outlined-card]': 'appearance == "outlined"'
   },
   exportAs: 'matCard',
   encapsulation: ViewEncapsulation.None,
