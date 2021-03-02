@@ -8,7 +8,7 @@
 
 import {dispatchMouseEvent, dispatchPointerEvent} from '@angular/cdk/testing/private';
 import {Component, DebugElement, Type} from '@angular/core';
-import {ComponentFixture, TestBed} from '@angular/core/testing';
+import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 import {RippleRef, RippleState} from '@angular/material/core';
 import {By} from '@angular/platform-browser';
 import {Thumb} from '@material/slider';
@@ -35,17 +35,13 @@ describe('MDC-based MatSlider' , () => {
     let sliderInstance: MatSlider;
     let inputInstance: MatSliderThumb;
 
-    beforeEach(() => {
+    beforeEach(waitForAsync(() => {
       fixture = createComponent(StandardSlider);
       fixture.detectChanges();
       sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider));
       sliderInstance = sliderDebugElement.componentInstance;
       inputInstance = sliderInstance._getInput(Thumb.END);
-    });
-
-    beforeEach(done => {
-      fixture.whenStable().then(() => done());
-    });
+    }));
 
     it('should set the default values', () => {
       expect(inputInstance.value).toBe(0);
@@ -87,18 +83,14 @@ describe('MDC-based MatSlider' , () => {
     let startInputInstance: MatSliderThumb;
     let endInputInstance: MatSliderThumb;
 
-    beforeEach(() => {
+    beforeEach(waitForAsync(() => {
       fixture = createComponent(StandardRangeSlider);
       fixture.detectChanges();
       sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider));
       sliderInstance = sliderDebugElement.componentInstance;
       startInputInstance = sliderInstance._getInput(Thumb.START);
       endInputInstance = sliderInstance._getInput(Thumb.END);
-    });
-
-    beforeEach(done => {
-      fixture.whenStable().then(() => done());
-    });
+    }));
 
     it('should set the default values', () => {
       expect(startInputInstance.value).toBe(0);
@@ -160,7 +152,7 @@ describe('MDC-based MatSlider' , () => {
     let thumbX: number;
     let thumbY: number;
 
-    beforeEach(() => {
+    beforeEach(waitForAsync(() => {
       fixture = createComponent(StandardSlider);
       fixture.detectChanges();
       const sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider));
@@ -168,11 +160,7 @@ describe('MDC-based MatSlider' , () => {
       inputInstance = sliderInstance._getInput(Thumb.END);
       thumbInstance = sliderInstance._getThumb();
       thumbElement = thumbInstance._getHostElement();
-    });
-
-    beforeEach(done => {
-      fixture.whenStable().then(() => done());
-    });
+    }));
 
     beforeEach(() => {
       const thumbDimensions = thumbElement.getBoundingClientRect();
