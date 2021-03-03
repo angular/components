@@ -190,7 +190,8 @@ $mat-fab-state-target: '.mdc-fab__ripple';
 }
 
 @mixin typography($config-or-theme) {
-  $config: typography.typography-to-2018-config(theming.get-typography-config($config-or-theme));
+  $config: typography.private-typography-to-2018-config(
+      theming.get-typography-config($config-or-theme));
   @include mdc-helpers.mat-using-mdc-typography($config) {
     @include mdc-button.without-ripple($query: mdc-helpers.$mat-typography-styles-query);
   }
@@ -282,7 +283,8 @@ $mat-fab-state-target: '.mdc-fab__ripple';
 }
 
 @mixin fab-typography($config-or-theme) {
-  $config: typography.typography-to-2018-config(theming.get-typography-config($config-or-theme));
+  $config: typography.private-typography-to-2018-config(
+      theming.get-typography-config($config-or-theme));
   @include mdc-helpers.mat-using-mdc-typography($config) {
     @include mdc-fab.without-ripple($query: mdc-helpers.$mat-typography-styles-query);
   }
@@ -351,7 +353,8 @@ $mat-fab-state-target: '.mdc-fab__ripple';
 }
 
 @mixin icon-button-typography($config-or-theme) {
-  $config: typography.typography-to-2018-config(theming.get-typography-config($config-or-theme));
+  $config: typography.private-typography-to-2018-config(
+      theming.get-typography-config($config-or-theme));
   @include mdc-helpers.mat-using-mdc-typography($config) {
     @include mdc-icon-button.without-ripple($query: mdc-helpers.$mat-typography-styles-query);
   }

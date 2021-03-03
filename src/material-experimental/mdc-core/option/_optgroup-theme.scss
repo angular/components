@@ -19,7 +19,8 @@
 }
 
 @mixin typography($config-or-theme) {
-  $config: typography.typography-to-2018-config(theming.get-typography-config($config-or-theme));
+  $config: typography.private-typography-to-2018-config(
+      theming.get-typography-config($config-or-theme));
 }
 
 @mixin density($config-or-theme) {
