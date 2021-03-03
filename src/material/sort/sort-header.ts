@@ -164,10 +164,11 @@ export class MatSortHeader extends _MatSortHeaderMixinBase
           if (this._isSorted()) {
             this._updateArrowDirection();
             // If this header wasn't recently active and now becomes sorted, animate the arrow in.
-            if (this._viewState && this._viewState.fromState !== 'active' && this._viewState.toState !== 'active') {
+            if (this._viewState && this._viewState.fromState !== 'active' 
+                && this._viewState.toState !== 'active') {
               this._disableViewStateAnimation = false;
               this._setAnimationTransitionState(
-                  {fromState: this._viewState.toState, toState: 'active'});
+                  {fromState: this._arrowDirection, toState: 'active'});
             }
           }
 
