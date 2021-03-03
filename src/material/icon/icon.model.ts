@@ -776,9 +776,9 @@ export const enum MatIcon {
     'signal_cellular_0_bar'= 'signal_cellular_0_bar' ,
     'signal_cellular_4_bar'= 'signal_cellular_4_bar' ,
     'signal_cellular_alt'= 'signal_cellular_alt' ,
-    'signal_cellular_connected_no_internet_0_bar'= 
+    'signal_cellular_connected_no_internet_0_bar'=
     'signal_cellular_connected_no_internet_0_bar' ,
-    'signal_cellular_connected_no_internet_4_bar'= 
+    'signal_cellular_connected_no_internet_4_bar'=
     'signal_cellular_connected_no_internet_4_bar' ,
     'signal_cellular_no_sim'= 'signal_cellular_no_sim' ,
     'signal_cellular_nodata'= 'signal_cellular_nodata' ,
@@ -791,7 +791,7 @@ export const enum MatIcon {
     'signal_wifi_connected_no_internet_4'= 'signal_wifi_connected_no_internet_4' ,
     'signal_wifi_off'= 'signal_wifi_off' ,
     'signal_wifi_statusbar_4_bar'= 'signal_wifi_statusbar_4_bar' ,
-    'signal_wifi_statusbar_connected_no_internet_4'= 
+    'signal_wifi_statusbar_connected_no_internet_4'=
     'signal_wifi_statusbar_connected_no_internet_4' ,
     'signal_wifi_statusbar_null'= 'signal_wifi_statusbar_null' ,
     'sim_card_download'= 'sim_card_download' ,
@@ -1253,7 +1253,7 @@ export const enum MatIcon {
     'wb_shade'= 'wb_shade' ,
     'wb_sunny'= 'wb_sunny' ,
     'wb_twilight'= 'wb_twilight' ,
-    '360Degrees'= '360' , //[Richard-Grant-93] An enum member cannot have a numeric name.
+    '360Degrees'= '360' ,
     'add_business'= 'add_business' ,
     'add_location'= 'add_location' ,
     'add_location_alt'= 'add_location_alt' ,
@@ -1771,5 +1771,5 @@ export const enum MatIcon {
     'star_outline'= 'star_outline' ,
     'star_purple500'= 'star_purple500' ,
     'toggle_off'= 'toggle_off' ,
-    'toggle_on'= 'toggle_on' 
+    'toggle_on'= 'toggle_on'
 }
