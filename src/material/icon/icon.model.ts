@@ -1761,4 +1761,4 @@ export enum MatIcon{
     "star_purple500"= "star_purple500" ,
     "toggle_off"= "toggle_off" ,
     "toggle_on"= "toggle_on" 
-}
+};
