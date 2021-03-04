@@ -74,7 +74,6 @@ export declare class MatChipInput implements MatChipTextControl, OnChanges, OnDe
     _addOnBlur: boolean;
     _chipList: MatChipList;
     protected _elementRef: ElementRef<HTMLInputElement>;
-    protected _inputElement: HTMLInputElement;
     get addOnBlur(): boolean;
     set addOnBlur(value: boolean);
     chipEnd: EventEmitter<MatChipInputEvent>;
@@ -84,6 +83,7 @@ export declare class MatChipInput implements MatChipTextControl, OnChanges, OnDe
     get empty(): boolean;
     focused: boolean;
     id: string;
+    readonly inputElement: HTMLInputElement;
     placeholder: string;
     separatorKeyCodes: readonly number[] | ReadonlySet<number>;
     constructor(_elementRef: ElementRef<HTMLInputElement>, _defaultOptions: MatChipsDefaultOptions);
@@ -105,7 +105,7 @@ export declare class MatChipInput implements MatChipTextControl, OnChanges, OnDe
 }
 
 export interface MatChipInputEvent {
-    chipInput: MatChipInput;
+    chipInput?: MatChipInput;
     input: HTMLInputElement;
     value: string;
 }
