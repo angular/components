@@ -35,7 +35,7 @@ export class ChipsInputExample {
     }
 
     // Clear the input value
-    event.chipInput.clear();
+    event.chipInput!.clear();
   }
 
   remove(fruit: Fruit): void {

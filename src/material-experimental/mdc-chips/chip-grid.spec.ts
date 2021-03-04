@@ -1091,7 +1091,7 @@ class InputChipGrid {
     }
 
     // Reset the input value
-    event.chipInput.clear();
+    event.chipInput!.clear();
   }
 
   remove(food: any): void {

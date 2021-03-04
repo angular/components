@@ -1546,7 +1546,7 @@ class InputChipList {
     }
 
     // Clear the input value
-    event.chipInput.clear();
+    event.chipInput!.clear();
   }
 
   remove(food: any): void {
