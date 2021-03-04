@@ -100,8 +100,10 @@ $mat-form-field-select-horizontal-end-padding: $mat-form-field-select-arrow-widt
 
 @mixin private-form-field-native-select-color($config) {
   @include mdc-helpers.mat-using-mdc-theme($config) {
-    $_arrow-color: rgba(mdc-theme-color.prop-value(on-surface), 0.54);
-    $_disabled-arrow-color: rgba(mdc-theme-color.prop-value(on-surface), 0.38);
+    // These values are taken from the MDC select implementation:
+    // https://github.com/material-components/material-components-web/blob/master/packages/mdc-select/_select-theme.scss
+    $dropdown-icon-color: rgba(mdc-theme-color.prop-value(on-surface), 0.54);
+    $disabled-dropdown-icon-color: rgba(mdc-theme-color.prop-value(on-surface), 0.38);
 
     select.mat-mdc-input-element {
       // On dark themes we set the native `select` color to some shade of white,
@@ -122,7 +124,7 @@ $mat-form-field-select-horizontal-end-padding: $mat-form-field-select-arrow-widt
 
     .mat-mdc-form-field-type-mat-native-select {
       .mat-mdc-form-field-infix::after {
-        color: $_arrow-color;
+        color: $dropdown-icon-color;
       }
 
       &.mat-focused {
@@ -147,7 +149,7 @@ $mat-form-field-select-horizontal-end-padding: $mat-form-field-select-arrow-widt
 
       &.mat-form-field-disabled {
         .mat-mdc-form-field-infix::after {
-          color: $_disabled-arrow-color;
+          color: $disabled-dropdown-icon-color;
         }
       }
     }
