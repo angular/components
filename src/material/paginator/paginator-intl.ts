@@ -37,10 +37,13 @@ export class MatPaginatorIntl {
   /** A label for the button that moves to the last page. */
   lastPageLabel: string = 'Last page';
 
+  /** A preposition used in the range label. E.g., in English '2 of 5'. */
+  ofPreposition = 'of';
+
   /** A label for the range of items within the current page and the length of the whole list. */
   getRangeLabel: (page: number, pageSize: number, length: number) => string =
     (page: number, pageSize: number, length: number) => {
-      if (length == 0 || pageSize == 0) { return `0 of ${length}`; }
+      if (length == 0 || pageSize == 0) { return `0 ${this.ofPreposition} ${length}`; }
 
       length = Math.max(length, 0);
 
@@ -51,7 +54,7 @@ export class MatPaginatorIntl {
           Math.min(startIndex + pageSize, length) :
           startIndex + pageSize;
 
-      return `${startIndex + 1} – ${endIndex} of ${length}`;
+      return `${startIndex + 1} – ${endIndex} ${this.ofPreposition} ${length}`;
     }
 }
 
