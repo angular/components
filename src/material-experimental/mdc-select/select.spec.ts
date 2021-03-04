@@ -89,6 +89,7 @@ describe('MDC-based MatSelect', () => {
    * that we're only compiling the necessary test components for each test in order to speed up
    * overall test time.
    * @param declarations Components to declare for this block
+   * @param providers Additional providers for this block
    */
   function configureMatSelectTestingModule(declarations: any[], providers: Provider[] = []) {
     TestBed.configureTestingModule({
@@ -1088,7 +1089,7 @@ describe('MDC-based MatSelect', () => {
 
             options[1].click();
             fixture.detectChanges();
-            trigger.click();
+            fixture.componentInstance.select.open();
             fixture.detectChanges();
             flush();
 
@@ -1100,9 +1101,12 @@ describe('MDC-based MatSelect', () => {
 
             fixture.componentInstance.control.setValue(fixture.componentInstance.foods[7].value);
             fixture.detectChanges();
-            trigger.click();
+            fixture.componentInstance.select.close();
             fixture.detectChanges();
             flush();
+
+            fixture.componentInstance.select.open();
+            fixture.detectChanges();
 
             activeOptions = options.filter(option => {
               return option.classList.contains('mat-mdc-option-active');
@@ -1133,7 +1137,7 @@ describe('MDC-based MatSelect', () => {
 
         it('should set the `aria-labelledby` attribute', fakeAsync(() => {
           let group = groups[0];
-          let label = group.querySelector('label')!;
+          let label = group.querySelector('.mat-mdc-optgroup-label') as HTMLElement;
 
           expect(label.getAttribute('id')).toBeTruthy('Expected label to have an id.');
           expect(group.getAttribute('aria-labelledby'))
@@ -3093,6 +3097,7 @@ describe('MDC-based MatSelect', () => {
       const select = fixture.debugElement.nativeElement.querySelector('mat-select');
 
       fixture.detectChanges();
+      select.focus(); // Focus manually since the programmatic click might not do it.
       fixture.debugElement.query(By.css('.mat-mdc-select-trigger'))!.nativeElement.click();
       fixture.detectChanges();
       flush();

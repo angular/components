@@ -1,0 +1,9 @@
+@forward '../core/theming/theming.import';
+@forward 'tree-variables' as mat-tree-*;
+@forward '../core/typography/typography-utils.import';
+@forward 'tree-theme' as mat-tree-*;
+
+@import '../core/density/private/compatibility';
+@import '../core/theming/palette';
+@import '../core/theming/theming';
+@import '../core/typography/typography-utils';

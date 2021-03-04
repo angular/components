@@ -64,8 +64,14 @@ export type TooltipVisibility = 'initial' | 'visible' | 'hidden';
 /** Time in ms to throttle repositioning after scroll events. */
 export const SCROLL_THROTTLE_MS = 20;
 
-/** CSS class that will be attached to the overlay panel. */
+/**
+ * CSS class that will be attached to the overlay panel.
+ * @deprecated
+ * @breaking-change 13.0.0 remove this variable
+ */
 export const TOOLTIP_PANEL_CLASS = 'mat-tooltip-panel';
+
+const PANEL_CLASS = 'tooltip-panel';
 
 /** Options used to bind passive event listeners. */
 const passiveListenerOptions = normalizePassiveListenerOptions({passive: true});
@@ -140,9 +146,9 @@ export abstract class _MatTooltipBase<T extends _TooltipComponentBase> implement
   private _viewInitialized = false;
   private _pointerExitEventsInitialized = false;
   protected abstract readonly _tooltipComponent: ComponentType<T>;
-  protected abstract readonly _transformOriginSelector: string;
   protected _viewportMargin = 8;
   private _currentPosition: TooltipPosition;
+  protected readonly _cssClassPrefix: string = 'mat';
 
   /** Allows the user to define the position of the tooltip relative to the parent element */
   @Input('matTooltipPosition')
@@ -242,11 +248,8 @@ export abstract class _MatTooltipBase<T extends _TooltipComponentBase> implement
   private readonly _passiveListeners:
       (readonly [string, EventListenerOrEventListenerObject])[] = [];
 
-  /**
-   * Reference to the current document.
-   * @breaking-change 11.0.0 Remove `| null` typing for `document`.
-   */
-  private _document: Document | null;
+  /** Reference to the current document. */
+  private _document: Document;
 
   /** Timer started at the last `touchstart` event. */
   private _touchstartTimeout: number;
@@ -266,11 +269,10 @@ export abstract class _MatTooltipBase<T extends _TooltipComponentBase> implement
     scrollStrategy: any,
     protected _dir: Directionality,
     private _defaultOptions: MatTooltipDefaultOptions,
-
-    /** @breaking-change 11.0.0 _document argument to become required. */
     @Inject(DOCUMENT) _document: any) {
 
     this._scrollStrategy = scrollStrategy;
+    this._document = _document;
 
     if (_defaultOptions) {
       if (_defaultOptions.position) {
@@ -392,7 +394,7 @@ export abstract class _MatTooltipBase<T extends _TooltipComponentBase> implement
     // Create connected position strategy that listens for scroll events to reposition.
     const strategy = this._overlay.position()
                          .flexibleConnectedTo(this._elementRef)
-                         .withTransformOriginOn(this._transformOriginSelector)
+                         .withTransformOriginOn(`.${this._cssClassPrefix}-tooltip`)
                          .withFlexibleDimensions(false)
                          .withViewportMargin(this._viewportMargin)
                          .withScrollableContainers(scrollableAncestors);
@@ -412,7 +414,7 @@ export abstract class _MatTooltipBase<T extends _TooltipComponentBase> implement
     this._overlayRef = this._overlay.create({
       direction: this._dir,
       positionStrategy: strategy,
-      panelClass: TOOLTIP_PANEL_CLASS,
+      panelClass: `${this._cssClassPrefix}-${PANEL_CLASS}`,
       scrollStrategy: this._scrollStrategy()
     });
 
@@ -587,7 +589,7 @@ export abstract class _MatTooltipBase<T extends _TooltipComponentBase> implement
       const overlayRef = this._overlayRef;
 
       if (overlayRef) {
-        const classPrefix = 'mat-tooltip-panel-';
+        const classPrefix = `${this._cssClassPrefix}-${PANEL_CLASS}-`;
         overlayRef.removePanelClass(classPrefix + this._currentPosition);
         overlayRef.addPanelClass(classPrefix + newPosition);
       }
@@ -671,9 +673,7 @@ export abstract class _MatTooltipBase<T extends _TooltipComponentBase> implement
   /** Listener for the `wheel` event on the element. */
   private _wheelListener(event: WheelEvent) {
     if (this._isTooltipVisible()) {
-      // @breaking-change 11.0.0 Remove `|| document` once the document is a required param.
-      const doc = this._document || document;
-      const elementUnderPointer = doc.elementFromPoint(event.clientX, event.clientY);
+      const elementUnderPointer = this._document.elementFromPoint(event.clientX, event.clientY);
       const element = this._elementRef.nativeElement;
 
       // On non-touch devices we depend on the `mouseleave` event to close the tooltip, but it
@@ -732,7 +732,6 @@ export abstract class _MatTooltipBase<T extends _TooltipComponentBase> implement
 })
 export class MatTooltip extends _MatTooltipBase<TooltipComponent> {
   protected readonly _tooltipComponent = TooltipComponent;
-  protected readonly _transformOriginSelector = '.mat-tooltip';
 
   constructor(
     overlay: Overlay,
@@ -746,8 +745,6 @@ export class MatTooltip extends _MatTooltipBase<TooltipComponent> {
     @Inject(MAT_TOOLTIP_SCROLL_STRATEGY) scrollStrategy: any,
     @Optional() dir: Directionality,
     @Optional() @Inject(MAT_TOOLTIP_DEFAULT_OPTIONS) defaultOptions: MatTooltipDefaultOptions,
-
-    /** @breaking-change 11.0.0 _document argument to become required. */
     @Inject(DOCUMENT) _document: any) {
 
     super(overlay, elementRef, scrollDispatcher, viewContainerRef, ngZone, platform, ariaDescriber,

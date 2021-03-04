@@ -31,13 +31,16 @@ ng_module(
 
 sass_library(
     name = "table_scss_lib",
-    srcs = ["_table-theme.scss"],
+    srcs = glob(["**/_*.scss"]),
     deps = ["//src/material/core:core_scss_lib"],
 )
 
 sass_library(
     name = "table_flex_scss_lib",
-    srcs = ["_table-flex-styles.scss"],
+    srcs = [
+        "_table-flex-styles.import.scss",
+        "_table-flex-styles.scss",
+    ],
     deps = ["//src/material/core:core_scss_lib"],
 )
 

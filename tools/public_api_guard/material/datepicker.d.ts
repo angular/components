@@ -223,8 +223,7 @@ export declare class MatDatepickerContent<S, D = ExtractDateTypeFromSelection<S>
     comparisonEnd: D | null;
     comparisonStart: D | null;
     datepicker: MatDatepickerBase<any, S, D>;
-    constructor(elementRef: ElementRef, _changeDetectorRef: ChangeDetectorRef, _globalModel: MatDateSelectionModel<S, D>, _dateAdapter: DateAdapter<D>, _rangeSelectionStrategy: MatDateRangeSelectionStrategy<D>,
-    intl?: MatDatepickerIntl);
+    constructor(elementRef: ElementRef, _changeDetectorRef: ChangeDetectorRef, _globalModel: MatDateSelectionModel<S, D>, _dateAdapter: DateAdapter<D>, _rangeSelectionStrategy: MatDateRangeSelectionStrategy<D>, intl: MatDatepickerIntl);
     _applyPendingSelection(): void;
     _getSelected(): D | DateRange<D> | null;
     _handleUserSelection(event: MatCalendarUserEvent<D | null>): void;
@@ -390,13 +389,13 @@ export declare abstract class MatDateSelectionModel<S, D = ExtractDateTypeFromSe
     selection: S, _adapter: DateAdapter<D>);
     protected _isValidDateInstance(date: D): boolean;
     abstract add(date: D | null): void;
-    clone(): MatDateSelectionModel<S, D>;
+    abstract clone(): MatDateSelectionModel<S, D>;
     abstract isComplete(): boolean;
     abstract isValid(): boolean;
     ngOnDestroy(): void;
     updateSelection(value: S, source: unknown): void;
-    static ɵdir: i0.ɵɵDirectiveDefWithMeta<MatDateSelectionModel<any, any>, never, never, {}, {}, never>;
     static ɵfac: i0.ɵɵFactoryDef<MatDateSelectionModel<any, any>, never>;
+    static ɵprov: i0.ɵɵInjectableDef<MatDateSelectionModel<any, any>>;
 }
 
 export declare class MatEndDate<D> extends _MatDateRangeInputBase<D> implements CanUpdateErrorState, DoCheck, OnInit {

@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {FactoryProvider, Injectable, Optional, SkipSelf, OnDestroy, Directive} from '@angular/core';
+import {FactoryProvider, Injectable, Optional, SkipSelf, OnDestroy} from '@angular/core';
 import {DateAdapter} from '@angular/material/core';
 import {Observable, Subject} from 'rxjs';
 
@@ -32,7 +32,10 @@ export class DateRange<D> {
  */
 export type ExtractDateTypeFromSelection<T> = T extends DateRange<infer D> ? D : NonNullable<T>;
 
-/** Event emitted by the date selection model when its selection changes. */
+/**
+ * Event emitted by the date selection model when its selection changes.
+ * @docs-private
+ */
 export interface DateSelectionModelChange<S> {
   /** New value for the selection. */
   selection: S;
@@ -41,8 +44,11 @@ export interface DateSelectionModelChange<S> {
   source: unknown;
 }
 
-/** A selection model containing a date selection. */
-@Directive()
+/**
+ * A selection model containing a date selection.
+ * @docs-private
+ */
+@Injectable()
 export abstract class MatDateSelectionModel<S, D = ExtractDateTypeFromSelection<S>>
     implements OnDestroy {
   private _selectionChanged = new Subject<DateSelectionModelChange<S>>();
@@ -84,21 +90,14 @@ export abstract class MatDateSelectionModel<S, D = ExtractDateTypeFromSelection<
   /** Checks whether the current selection is complete. */
   abstract isComplete(): boolean;
 
-  /**
-   * Clones the selection model.
-   * @deprecated To be turned into an abstract method.
-   * @breaking-change 12.0.0
-   */
-  clone(): MatDateSelectionModel<S, D> {
-    if (typeof ngDevMode === 'undefined' || ngDevMode) {
-      throw Error('Not implemented');
-    }
-
-    return null!;
-  }
+  /** Clones the selection model. */
+  abstract clone(): MatDateSelectionModel<S, D>;
 }
 
-/**  A selection model that contains a single date. */
+/**
+ * A selection model that contains a single date.
+ * @docs-private
+ */
 @Injectable()
 export class MatSingleDateSelectionModel<D> extends MatDateSelectionModel<D | null, D> {
   constructor(adapter: DateAdapter<D>) {
@@ -134,7 +133,10 @@ export class MatSingleDateSelectionModel<D> extends MatDateSelectionModel<D | nu
   }
 }
 
-/**  A selection model that contains a date range. */
+/**
+ * A selection model that contains a date range.
+ * @docs-private
+ */
 @Injectable()
 export class MatRangeDateSelectionModel<D> extends MatDateSelectionModel<DateRange<D>, D> {
   constructor(adapter: DateAdapter<D>) {
@@ -203,7 +205,10 @@ export function MAT_SINGLE_DATE_SELECTION_MODEL_FACTORY(
   return parent || new MatSingleDateSelectionModel(adapter);
 }
 
-/** Used to provide a single selection model to a component. */
+/**
+ * Used to provide a single selection model to a component.
+ * @docs-private
+ */
 export const MAT_SINGLE_DATE_SELECTION_MODEL_PROVIDER: FactoryProvider = {
   provide: MatDateSelectionModel,
   deps: [[new Optional(), new SkipSelf(), MatDateSelectionModel], DateAdapter],
@@ -217,7 +222,10 @@ export function MAT_RANGE_DATE_SELECTION_MODEL_FACTORY(
   return parent || new MatRangeDateSelectionModel(adapter);
 }
 
-/** Used to provide a range selection model to a component. */
+/**
+ * Used to provide a range selection model to a component.
+ * @docs-private
+ */
 export const MAT_RANGE_DATE_SELECTION_MODEL_PROVIDER: FactoryProvider = {
   provide: MatDateSelectionModel,
   deps: [[new Optional(), new SkipSelf(), MatDateSelectionModel], DateAdapter],

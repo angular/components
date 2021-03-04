@@ -20,19 +20,20 @@ import {
   Validators,
 } from '@angular/forms';
 import {
+  ErrorStateMatcher,
+  ShowOnDirtyErrorStateMatcher,
+  ThemePalette,
+} from '@angular/material-experimental/mdc-core';
+import {
+  FloatLabelType,
   getMatFormFieldDuplicatedHintError,
   getMatFormFieldMissingControlError,
   MAT_FORM_FIELD_DEFAULT_OPTIONS,
   MatFormField,
   MatFormFieldAppearance,
   MatFormFieldModule,
-  FloatLabelType,
 } from '@angular/material-experimental/mdc-form-field';
-import {
-  ErrorStateMatcher,
-  ShowOnDirtyErrorStateMatcher,
-  ThemePalette,
-} from '@angular/material-experimental/mdc-core';
+import {MatIconModule} from '@angular/material/icon';
 import {By} from '@angular/platform-browser';
 import {BrowserAnimationsModule, NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {MAT_INPUT_VALUE_ACCESSOR, MatInput, MatInputModule} from './index';
@@ -701,13 +702,19 @@ describe('MatMdcInput without forms', () => {
     const fixture = createComponent(MatInputWithPrefixAndSuffix);
     fixture.detectChanges();
 
-    const prefixEl = fixture.debugElement.query(By.css('.mat-mdc-form-field-prefix'))!;
-    const suffixEl = fixture.debugElement.query(By.css('.mat-mdc-form-field-suffix'))!;
+    const textPrefixEl = fixture.debugElement.query(By.css('.mat-mdc-form-field-text-prefix'))!;
+    const textSuffixEl = fixture.debugElement.query(By.css('.mat-mdc-form-field-text-suffix'))!;
+    const iconPrefixEl = fixture.debugElement.query(By.css('.mat-mdc-form-field-icon-prefix'))!;
+    const iconSuffixEl = fixture.debugElement.query(By.css('.mat-mdc-form-field-icon-suffix'))!;
 
-    expect(prefixEl).not.toBeNull();
-    expect(suffixEl).not.toBeNull();
-    expect(prefixEl.nativeElement.innerText.trim()).toEqual('Prefix');
-    expect(suffixEl.nativeElement.innerText.trim()).toEqual('Suffix');
+    expect(textPrefixEl).not.toBeNull();
+    expect(textSuffixEl).not.toBeNull();
+    expect(iconPrefixEl).not.toBeNull();
+    expect(iconSuffixEl).not.toBeNull();
+    expect(textPrefixEl.nativeElement.innerText.trim()).toEqual('Prefix');
+    expect(textSuffixEl.nativeElement.innerText.trim()).toEqual('Suffix');
+    expect(iconPrefixEl.nativeElement.innerText.trim()).toEqual('favorite');
+    expect(iconSuffixEl.nativeElement.innerText.trim()).toEqual('favorite');
   }));
 
   it('should update empty class when value changes programmatically and OnPush', fakeAsync(() => {
@@ -1267,13 +1274,17 @@ describe('MatFormField default options', () => {
     expect(fixture.componentInstance.formField.hideRequiredMarker).toBe(false);
   });
 
-  it('should be able to change the default value of hideRequiredMarker', () => {
+  it('should be able to change the default value of hideRequiredMarker and appearance', () => {
     const fixture = createComponent(MatInputWithAppearance, [{
-      provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: {hideRequiredMarker: true}}
+      provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: {
+        hideRequiredMarker: true,
+        appearance: 'outline',
+      }}
     ]);
 
     fixture.detectChanges();
     expect(fixture.componentInstance.formField.hideRequiredMarker).toBe(true);
+    expect(fixture.componentInstance.formField.appearance).toBe('outline');
   });
 
 });
@@ -1285,6 +1296,7 @@ function configureTestingModule(component: Type<any>, options:
     imports: [
       FormsModule,
       MatFormFieldModule,
+      MatIconModule,
       MatInputModule,
       animations ? BrowserAnimationsModule : NoopAnimationsModule,
       PlatformModule,
@@ -1597,9 +1609,11 @@ class MatInputWithFormGroupErrorMessages {
 @Component({
   template: `
     <mat-form-field>
-      <div matPrefix>Prefix</div>
+      <mat-icon matIconPrefix>favorite</mat-icon>
+      <div matTextPrefix>Prefix</div>
       <input matInput>
-      <div matSuffix>Suffix</div>
+      <div matTextSuffix>Suffix</div>
+      <mat-icon matIconSuffix>favorite</mat-icon>
     </mat-form-field>
   `
 })
