@@ -95,13 +95,13 @@ export class MatSliderVisualThumb implements AfterViewInit, OnDestroy {
   private _sliderInput: MatSliderThumb;
 
   /** The RippleRef for the slider thumbs hover state. */
-  _hoverRippleRef: RippleRef;
+  private _hoverRippleRef: RippleRef;
 
   /** The RippleRef for the slider thumbs focus state. */
-  _focusRippleRef: RippleRef;
+  private _focusRippleRef: RippleRef;
 
   /** The RippleRef for the slider thumbs active state. */
-  _activeRippleRef: RippleRef;
+  private _activeRippleRef: RippleRef;
 
   /** Whether the slider thumb is currently being pressed. */
   private _isActive: boolean = false;

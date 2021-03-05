@@ -8,8 +8,7 @@
 
 import {dispatchMouseEvent, dispatchPointerEvent} from '@angular/cdk/testing/private';
 import {Component, DebugElement, Type} from '@angular/core';
-import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
-import {RippleRef, RippleState} from '@angular/material/core';
+import {ComponentFixture, fakeAsync, TestBed, tick, waitForAsync} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {Thumb} from '@material/slider';
 import {MatSliderModule} from './module';
@@ -165,9 +164,9 @@ describe('MDC-based MatSlider' , () => {
       thumbY = thumbDimensions.top - (thumbDimensions.height / 2);
     }));
 
-    function isRippleVisible(rippleRef: RippleRef) {
-      return rippleRef?.state === RippleState.FADING_IN
-        || rippleRef?.state === RippleState.VISIBLE;
+    function isRippleVisible(selector: string) {
+      tick(500);
+      return !!document.querySelector(`.mat-mdc-slider-${selector}-ripple`);
     }
 
     function blur() {
@@ -190,83 +189,83 @@ describe('MDC-based MatSlider' , () => {
       dispatchPointerEvent(thumbElement, 'pointerup', thumbX, thumbY);
     }
 
-    it('should show the hover ripple on mouseenter', () => {
-      expect(isRippleVisible(thumbInstance._hoverRippleRef)).toBe(false);
+    it('should show the hover ripple on mouseenter', fakeAsync(() => {
+      expect(isRippleVisible('hover')).toBe(false);
       mouseenter();
-      expect(isRippleVisible(thumbInstance._hoverRippleRef)).toBe(true);
-    });
+      expect(isRippleVisible('hover')).toBe(true);
+    }));
 
-    it('should hide the hover ripple on mouseleave', () => {
+    it('should hide the hover ripple on mouseleave', fakeAsync(() => {
       mouseenter();
       mouseleave();
-      expect(isRippleVisible(thumbInstance._hoverRippleRef)).toBe(false);
-    });
+      expect(isRippleVisible('hover')).toBe(false);
+    }));
 
-    it('should show the focus ripple on pointerdown', () => {
-      expect(isRippleVisible(thumbInstance._focusRippleRef)).toBe(false);
+    it('should show the focus ripple on pointerdown', fakeAsync(() => {
+      expect(isRippleVisible('focus')).toBe(false);
       pointerdown();
-      expect(isRippleVisible(thumbInstance._focusRippleRef)).toBe(true);
-    });
+      expect(isRippleVisible('focus')).toBe(true);
+    }));
 
-    it('should continue to show the focus ripple on pointerup', () => {
+    it('should continue to show the focus ripple on pointerup', fakeAsync(() => {
       pointerdown();
       pointerup();
-      expect(isRippleVisible(thumbInstance._focusRippleRef)).toBe(true);
-    });
+      expect(isRippleVisible('focus')).toBe(true);
+    }));
 
-    it('should hide the focus ripple on blur', () => {
+    it('should hide the focus ripple on blur', fakeAsync(() => {
       pointerdown();
       pointerup();
       blur();
-      expect(isRippleVisible(thumbInstance._focusRippleRef)).toBe(false);
-    });
+      expect(isRippleVisible('focus')).toBe(false);
+    }));
 
-    it('should show the active ripple on pointerdown', () => {
-      expect(isRippleVisible(thumbInstance._activeRippleRef)).toBe(false);
+    it('should show the active ripple on pointerdown', fakeAsync(() => {
+      expect(isRippleVisible('active')).toBe(false);
       pointerdown();
-      expect(isRippleVisible(thumbInstance._activeRippleRef)).toBe(true);
-    });
+      expect(isRippleVisible('active')).toBe(true);
+    }));
 
-    it('should hide the active ripple on pointerup', () => {
+    it('should hide the active ripple on pointerup', fakeAsync(() => {
       pointerdown();
       pointerup();
-      expect(isRippleVisible(thumbInstance._activeRippleRef)).toBe(false);
-    });
+      expect(isRippleVisible('active')).toBe(false);
+    }));
 
     // Edge cases.
 
-    it('should not show the hover ripple if the thumb is already focused', () => {
+    it('should not show the hover ripple if the thumb is already focused', fakeAsync(() => {
       pointerdown();
       mouseenter();
-      expect(isRippleVisible(thumbInstance._hoverRippleRef)).toBe(false);
-    });
+      expect(isRippleVisible('hover')).toBe(false);
+    }));
 
-    it('should hide the hover ripple if the thumb is focused', () => {
+    it('should hide the hover ripple if the thumb is focused', fakeAsync(() => {
       mouseenter();
       pointerdown();
-      expect(isRippleVisible(thumbInstance._hoverRippleRef)).toBe(false);
-    });
+      expect(isRippleVisible('hover')).toBe(false);
+    }));
 
-    it('should not hide the focus ripple if the thumb is pressed', () => {
+    it('should not hide the focus ripple if the thumb is pressed', fakeAsync(() => {
       pointerdown();
       blur();
-      expect(isRippleVisible(thumbInstance._focusRippleRef)).toBe(true);
-    });
+      expect(isRippleVisible('focus')).toBe(true);
+    }));
 
-    it('should not hide the hover ripple on blur if the cursor is thumb being hovered', () => {
+    it('should not hide the hover ripple on blur if the thumb is hovered', fakeAsync(() => {
       mouseenter();
       pointerdown();
       pointerup();
       blur();
-      expect(isRippleVisible(thumbInstance._hoverRippleRef)).toBe(true);
-    });
+      expect(isRippleVisible('hover')).toBe(true);
+    }));
 
-    it('should hide the focus ripple on drag end if the thumb already lost focus', () => {
+    it('should hide the focus ripple on drag end if the thumb already lost focus', fakeAsync(() => {
       pointerdown();
       blur();
       pointerup();
-      expect(isRippleVisible(thumbInstance._focusRippleRef)).toBe(false);
-    });
+      expect(isRippleVisible('focus')).toBe(false);
+    }));
   });
 });
 
