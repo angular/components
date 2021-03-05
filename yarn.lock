@@ -1533,10 +1533,10 @@
   resolved "https://registry.yarnpkg.com/@octokit/openapi-types/-/openapi-types-2.0.0.tgz#6d8f8ad9db3b75a39115f5def2654df8bed39f28"
   integrity sha512-J4bfM7lf8oZvEAdpS71oTvC1ofKxfEZgU5vKVwzZKi4QPiL82udjpseJwxPid9Pu2FNmyRQOX4iEj6W1iOSnPw==
 
-"@octokit/openapi-types@^5.2.1":
-  version "5.2.1"
-  resolved "https://registry.yarnpkg.com/@octokit/openapi-types/-/openapi-types-5.2.1.tgz#5e846f86104aef96ace20091d8afb6be27979d8a"
-  integrity sha512-Bf7MBvQ1nMpv15ANaQtRBsC7YnwQFPM0eUztp3luQs9L6sBEiQ6ArM1Wx5CG+N7tXETtd0oE0DMcU4wbLlCZIw==
+"@octokit/openapi-types@^5.3.0":
+  version "5.3.0"
+  resolved "https://registry.yarnpkg.com/@octokit/openapi-types/-/openapi-types-5.3.0.tgz#29e3faa119da90082dc653ea74c8bb345d197bf7"
+  integrity sha512-5q2qBz4iZ0xS/DEJ0ROusFbN4cVlbJE9GvOByen+mv7artuGXfVhONqcuRd7jYN2glTmCnzcZw+X6LrjRVqs0A==
 
 "@octokit/plugin-paginate-rest@^2.6.2":
   version "2.6.2"
@@ -1550,12 +1550,12 @@
   resolved "https://registry.yarnpkg.com/@octokit/plugin-request-log/-/plugin-request-log-1.0.2.tgz#394d59ec734cd2f122431fbaf05099861ece3c44"
   integrity sha512-oTJSNAmBqyDR41uSMunLQKMX0jmEXbwD1fpz8FG27lScV3RhtGfBa1/BBLym+PxcC16IBlF7KH9vP1BUYxA+Eg==
 
-"@octokit/plugin-rest-endpoint-methods@4.13.1":
-  version "4.13.1"
-  resolved "https://registry.yarnpkg.com/@octokit/plugin-rest-endpoint-methods/-/plugin-rest-endpoint-methods-4.13.1.tgz#d8c807bbd0e187ac903620f53321e2634818bb30"
-  integrity sha512-T9YhQqpbO9Onmg+FYk09uci9pfChg8CZR9GBaPJWj+bDSzictW1xnU0NtCSSKKyrwvpW/opu7CtuDSs/HF1Syg==
+"@octokit/plugin-rest-endpoint-methods@4.13.3":
+  version "4.13.3"
+  resolved "https://registry.yarnpkg.com/@octokit/plugin-rest-endpoint-methods/-/plugin-rest-endpoint-methods-4.13.3.tgz#17ba3a24adce0933129cfefa6d44e7da2eeac04b"
+  integrity sha512-nMGS2osFcWXRfHkDR0d+lB1zpMPTZJ0NjysPUfs7BT5/juNG/Q0+5UB6nC1f62jPzun154qekzwOb7Q5oahCXQ==
   dependencies:
-    "@octokit/types" "^6.11.1"
+    "@octokit/types" "^6.12.0"
     deprecation "^2.3.1"
 
 "@octokit/request-error@^1.0.2":
@@ -1609,15 +1609,15 @@
     universal-user-agent "^3.0.0"
     url-template "^2.0.8"
 
-"@octokit/rest@18.3.1":
-  version "18.3.1"
-  resolved "https://registry.yarnpkg.com/@octokit/rest/-/rest-18.3.1.tgz#6680331e941c422dbff0e758a9bd3dc4edcbd2db"
-  integrity sha512-g57ebsk7dtbLjiPBgEYDAiDTsyQM9kvlIt0J5UN6OSjG82K6fQQck6HXPpwcyNIDqbN7lIaWr3nsz56jBfI6qg==
+"@octokit/rest@18.3.3":
+  version "18.3.3"
+  resolved "https://registry.yarnpkg.com/@octokit/rest/-/rest-18.3.3.tgz#a3b0f24bf5c42cacd93dbc48576b5d4d4e032a38"
+  integrity sha512-OxElwBanZn1AShCaIrRTLM9PwhGE5/busMke/go30OWAQ+eJMD7Us/67mtapE77EYY4FM2tvb4Eg25rZaA/NPA==
   dependencies:
     "@octokit/core" "^3.2.3"
     "@octokit/plugin-paginate-rest" "^2.6.2"
     "@octokit/plugin-request-log" "^1.0.2"
-    "@octokit/plugin-rest-endpoint-methods" "4.13.1"
+    "@octokit/plugin-rest-endpoint-methods" "4.13.3"
 
 "@octokit/types@^2.0.0":
   version "2.3.1"
@@ -1648,12 +1648,12 @@
     "@octokit/openapi-types" "^2.0.0"
     "@types/node" ">= 8"
 
-"@octokit/types@^6.11.1":
-  version "6.11.1"
-  resolved "https://registry.yarnpkg.com/@octokit/types/-/types-6.11.1.tgz#54ece128029526fa99bd71e757b9e35478403d95"
-  integrity sha512-UiSRTG2lrFbMUMwhKNR0uSV33Fzv4bNu1n5iFuuNOg80XCh0VYNhR4TQWgrkLhVxdDuej6s61aP3eQvVm6K6uA==
+"@octokit/types@^6.12.0":
+  version "6.12.0"
+  resolved "https://registry.yarnpkg.com/@octokit/types/-/types-6.12.0.tgz#8376fd60edfd5d1eebfeedb994c6bcb5b862c7a1"
+  integrity sha512-KwOf16soD7aDEEi/PgNeJlHzjZPfrmmNy+7WezSdrpnqZ7YImBJcNnX9+5RUHt1MnA4h8oISRHTqaZDGsX9DRQ==
   dependencies:
-    "@octokit/openapi-types" "^5.2.1"
+    "@octokit/openapi-types" "^5.3.0"
 
 "@opentelemetry/api@^0.12.0":
   version "0.12.0"
@@ -4306,9 +4306,9 @@ copy-props@^2.0.1:
     is-plain-object "^2.0.1"
 
 core-js-bundle@^3.8.2:
-  version "3.9.0"
-  resolved "https://registry.yarnpkg.com/core-js-bundle/-/core-js-bundle-3.9.0.tgz#3947e3da203f2c34aab3d2c6822523f93ced23d9"
-  integrity sha512-CQAn8wNKgDob6Xo2pgMpBArIKDCWhZgkFrjqKpxWaTUbZlESEw0Hfnq8zXQc04aN4hmxLqJ889/g4zBKvKcisA==
+  version "3.9.1"
+  resolved "https://registry.yarnpkg.com/core-js-bundle/-/core-js-bundle-3.9.1.tgz#aec44bc6f3e4151c7461f9fb052edabf59ca3105"
+  integrity sha512-PXvt22/UnyegAVHKa17wZe8PqKCHmkNAV9ifEUy2ntnvA08NmFybuWr561W/ARaDYk512LsfiscPlX81tPeBeA==
 
 core-js@^2.4.0:
   version "2.6.12"
