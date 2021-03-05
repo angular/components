@@ -628,26 +628,26 @@ export class MatSlider extends _MatSliderMixinBase implements AfterViewInit, OnD
   }
 
   /** Gets the slider thumb input of the given thumb position. */
-  _getInput(thumbPosition: Thumb = Thumb.END): MatSliderThumb {
+  _getInput(thumbPosition: Thumb): MatSliderThumb {
     return thumbPosition === Thumb.END ? this._inputs.last : this._inputs.first;
   }
 
   /** Gets the slider thumb HTML input element of the given thumb position. */
-  _getInputElement(thumbPosition: Thumb = Thumb.END): HTMLInputElement {
+  _getInputElement(thumbPosition: Thumb): HTMLInputElement {
     return this._getInput(thumbPosition)._hostElement;
   }
 
-  _getThumb(thumbPosition: Thumb = Thumb.END): MatSliderVisualThumb {
+  _getThumb(thumbPosition: Thumb): MatSliderVisualThumb {
     return thumbPosition === Thumb.END ? this._thumbs.last : this._thumbs.first;
   }
 
   /** Gets the slider thumb HTML element of the given thumb position. */
-  _getThumbElement(thumbPosition: Thumb = Thumb.END): HTMLElement {
+  _getThumbElement(thumbPosition: Thumb): HTMLElement {
     return this._getThumb(thumbPosition)._getHostElement();
   }
 
   /** Gets the slider knob HTML element of the given thumb position. */
-  _getKnobElement(thumbPosition: Thumb = Thumb.END): HTMLElement {
+  _getKnobElement(thumbPosition: Thumb): HTMLElement {
     return this._getThumb(thumbPosition)._getKnob();
   }
 

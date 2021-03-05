@@ -158,15 +158,12 @@ describe('MDC-based MatSlider' , () => {
       const sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider));
       const sliderInstance = sliderDebugElement.componentInstance;
       inputInstance = sliderInstance._getInput(Thumb.END);
-      thumbInstance = sliderInstance._getThumb();
+      thumbInstance = sliderInstance._getThumb(Thumb.END);
       thumbElement = thumbInstance._getHostElement();
-    }));
-
-    beforeEach(() => {
       const thumbDimensions = thumbElement.getBoundingClientRect();
       thumbX = thumbDimensions.left - (thumbDimensions.width / 2);
       thumbY = thumbDimensions.top - (thumbDimensions.height / 2);
-    });
+    }));
 
     function isRippleVisible(rippleRef: RippleRef) {
       return rippleRef?.state === RippleState.FADING_IN
