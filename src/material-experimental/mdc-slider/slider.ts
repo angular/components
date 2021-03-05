@@ -23,6 +23,7 @@ import {
   Directive,
   ElementRef,
   EventEmitter,
+  forwardRef,
   Inject,
   Input,
   NgZone,
@@ -110,7 +111,7 @@ export class MatSliderVisualThumb implements AfterViewInit, OnDestroy {
 
   constructor(
     private readonly _ngZone: NgZone,
-    private readonly _slider: MatSlider,
+    @Inject(forwardRef(() => MatSlider)) private readonly _slider: MatSlider,
     private readonly _elementRef: ElementRef<HTMLElement>) {}
 
   ngAfterViewInit() {
@@ -331,7 +332,7 @@ export class MatSliderThumb implements AfterViewInit, ControlValueAccessor {
 
   constructor(
     @Inject(DOCUMENT) document: any,
-    private readonly _slider: MatSlider,
+    @Inject(forwardRef(() => MatSlider)) private readonly _slider: MatSlider,
     private readonly _elementRef: ElementRef<HTMLInputElement>) {
       this._document = document;
       this._hostElement = _elementRef.nativeElement;
