@@ -699,10 +699,10 @@
     c8 "~7.5.0"
     jasmine-reporters "~2.3.2"
 
-"@bazel/protractor@3.2.1":
-  version "3.2.1"
-  resolved "https://registry.yarnpkg.com/@bazel/protractor/-/protractor-3.2.1.tgz#872340d6287043496242998640dca3f568a9f31b"
-  integrity sha512-4jac5lCz2DeOWQ5P8KUZHUf7YEmJwBk7qllSDfHN3k0cUqWthZCvnclU8oRkLJ+LL9zdNkX1MpB4iLRDYUTl0Q==
+"@bazel/protractor@3.2.2":
+  version "3.2.2"
+  resolved "https://registry.yarnpkg.com/@bazel/protractor/-/protractor-3.2.2.tgz#ec82bdf580e9ad3773f04886a875e5e4f6d0410a"
+  integrity sha512-eZyuPoad89uNF2ofkfF2j6cbJgZaV2FKi5PhA5VvCzrywnAQ9iKQUv3D3B6T9Vf5dgpyR52iJZKmF2KGFPjNhQ==
 
 "@bazel/rollup@3.2.1":
   version "3.2.1"
