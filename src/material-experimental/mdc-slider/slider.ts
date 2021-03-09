@@ -23,6 +23,7 @@ import {
   Directive,
   ElementRef,
   EventEmitter,
+  forwardRef,
   Inject,
   Input,
   NgZone,
@@ -110,7 +111,7 @@ export class MatSliderVisualThumb implements AfterViewInit, OnDestroy {
 
   constructor(
     private readonly _ngZone: NgZone,
-    private readonly _slider: MatSlider,
+    @Inject(forwardRef(() => MatSlider)) private readonly _slider: MatSlider,
     private readonly _elementRef: ElementRef<HTMLElement>) {}
 
   ngAfterViewInit() {
@@ -331,9 +332,8 @@ export class MatSliderThumb implements AfterViewInit, ControlValueAccessor {
 
   constructor(
     @Inject(DOCUMENT) document: any,
-    private readonly _slider: MatSlider,
-    private readonly _elementRef: ElementRef<HTMLInputElement>,
-    ) {
+    @Inject(forwardRef(() => MatSlider)) private readonly _slider: MatSlider,
+    private readonly _elementRef: ElementRef<HTMLInputElement>) {
       this._document = document;
       this._hostElement = _elementRef.nativeElement;
       // By calling this in the constructor we guarantee that the sibling sliders initial value by
@@ -638,7 +638,7 @@ export class MatSlider extends _MatSliderMixinBase implements AfterViewInit, OnD
     return this._getInput(thumbPosition)._hostElement;
   }
 
-  private _getThumb(thumbPosition: Thumb): MatSliderVisualThumb {
+  _getThumb(thumbPosition: Thumb): MatSliderVisualThumb {
     return thumbPosition === Thumb.END ? this._thumbs.last : this._thumbs.first;
   }
 
