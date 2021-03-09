@@ -9,7 +9,7 @@
   // writing, their buffer color is hardcoded to #e6e6e6 which both doesn't account for theming
   // and doesn't match the Material design spec. For now we approximate the buffer background by
   // applying an opacity to the color of the bar.
-  $buffer-color: rgba(mdc-theme-color.prop-value($color), 0.25);
+  $buffer-color: color.adjust(mdc-theme-color.prop-value($color), $alpha: -0.75);
   @include mdc-linear-progress.bar-color($color, $query: mdc-helpers.$mat-theme-styles-query);
   @include mdc-linear-progress.buffer-color($buffer-color,
     $query: mdc-helpers.$mat-theme-styles-query);
