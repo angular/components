@@ -151,6 +151,91 @@ describe('MDC-based MatSlider' , () => {
     });
   });
 
+  describe('disabled slider', () => {
+    let sliderInstance: MatSlider;
+    let inputInstance: MatSliderThumb;
+
+    beforeEach(waitForAsync(() => {
+      const fixture = createComponent(DisabledSlider);
+      fixture.detectChanges();
+      const sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider));
+      sliderInstance = sliderDebugElement.componentInstance;
+      inputInstance = sliderInstance._getInput(Thumb.END);
+    }));
+
+    it('should be disabled', () => {
+      expect(sliderInstance.disabled).toBeTrue();
+    });
+
+    it('should have the disabled class on the root element', () => {
+      expect(sliderInstance._elementRef.nativeElement.classList).toContain('mdc-slider--disabled');
+    });
+
+    it('should set the disabled attribute on the input element', () => {
+      expect(inputInstance._hostElement.disabled).toBeTrue();
+    });
+
+    it('should not update the value on mousedown', () => {
+      setValueByClick(sliderInstance, 19, platform.IOS);
+      expect(inputInstance.value).toBe(0);
+    });
+
+    it('should not update the value on a slide', () => {
+      slideToValue(sliderInstance, 77, Thumb.END, platform.IOS);
+      expect(inputInstance.value).toBe(0);
+    });
+  });
+
+  describe('disabled range slider', () => {
+    let sliderInstance: MatSlider;
+    let startInputInstance: MatSliderThumb;
+    let endInputInstance: MatSliderThumb;
+
+    beforeEach(waitForAsync(() => {
+      const fixture = createComponent(DisabledRangeSlider);
+      fixture.detectChanges();
+      const sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider));
+      sliderInstance = sliderDebugElement.componentInstance;
+      startInputInstance = sliderInstance._getInput(Thumb.START);
+      endInputInstance = sliderInstance._getInput(Thumb.END);
+    }));
+
+    it('should be disabled', () => {
+      expect(sliderInstance.disabled).toBeTrue();
+    });
+
+    it('should have the disabled class on the root element', () => {
+      expect(sliderInstance._elementRef.nativeElement.classList).toContain('mdc-slider--disabled');
+    });
+
+    it('should set the disabled attribute on the input elements', () => {
+      expect(startInputInstance._hostElement.disabled).toBeTrue();
+      expect(endInputInstance._hostElement.disabled).toBeTrue();
+    });
+
+    it('should not update the start value on a slide', () => {
+      slideToValue(sliderInstance, 19, Thumb.START, platform.IOS);
+      expect(startInputInstance.value).toBe(0);
+    });
+
+    it('should not update the end value on a slide', () => {
+      slideToValue(sliderInstance, 27, Thumb.END, platform.IOS);
+      expect(endInputInstance.value).toBe(100);
+    });
+
+    it('should not update the start value on mousedown behind the start thumb', () => {
+      sliderInstance._setValue(19, Thumb.START);
+      setValueByClick(sliderInstance, 12, platform.IOS);
+      expect(startInputInstance.value).toBe(19);
+    });
+
+    it('should update the end value on mousedown in front of the end thumb', () => {
+      sliderInstance._setValue(27, Thumb.END);
+      setValueByClick(sliderInstance, 55, platform.IOS);
+      expect(endInputInstance.value).toBe(27);
+    });
+  });
+
   describe('ripple states', () => {
     let fixture: ComponentFixture<StandardSlider>;
     let inputInstance: MatSliderThumb;
@@ -202,46 +287,46 @@ describe('MDC-based MatSlider' , () => {
     }
 
     it('should show the hover ripple on mouseenter', fakeAsync(() => {
-      expect(isRippleVisible('hover')).toBe(false);
+      expect(isRippleVisible('hover')).toBeFalse();
       mouseenter();
-      expect(isRippleVisible('hover')).toBe(true);
+      expect(isRippleVisible('hover')).toBeTrue();
     }));
 
     it('should hide the hover ripple on mouseleave', fakeAsync(() => {
       mouseenter();
       mouseleave();
-      expect(isRippleVisible('hover')).toBe(false);
+      expect(isRippleVisible('hover')).toBeFalse();
     }));
 
     it('should show the focus ripple on pointerdown', fakeAsync(() => {
-      expect(isRippleVisible('focus')).toBe(false);
+      expect(isRippleVisible('focus')).toBeFalse();
       pointerdown();
-      expect(isRippleVisible('focus')).toBe(true);
+      expect(isRippleVisible('focus')).toBeTrue();
     }));
 
     it('should continue to show the focus ripple on pointerup', fakeAsync(() => {
       pointerdown();
       pointerup();
-      expect(isRippleVisible('focus')).toBe(true);
+      expect(isRippleVisible('focus')).toBeTrue();
     }));
 
     it('should hide the focus ripple on blur', fakeAsync(() => {
       pointerdown();
       pointerup();
       blur();
-      expect(isRippleVisible('focus')).toBe(false);
+      expect(isRippleVisible('focus')).toBeFalse();
     }));
 
     it('should show the active ripple on pointerdown', fakeAsync(() => {
-      expect(isRippleVisible('active')).toBe(false);
+      expect(isRippleVisible('active')).toBeFalse();
       pointerdown();
-      expect(isRippleVisible('active')).toBe(true);
+      expect(isRippleVisible('active')).toBeTrue();
     }));
 
     it('should hide the active ripple on pointerup', fakeAsync(() => {
       pointerdown();
       pointerup();
-      expect(isRippleVisible('active')).toBe(false);
+      expect(isRippleVisible('active')).toBeFalse();
     }));
 
     // Edge cases.
@@ -249,19 +334,19 @@ describe('MDC-based MatSlider' , () => {
     it('should not show the hover ripple if the thumb is already focused', fakeAsync(() => {
       pointerdown();
       mouseenter();
-      expect(isRippleVisible('hover')).toBe(false);
+      expect(isRippleVisible('hover')).toBeFalse();
     }));
 
     it('should hide the hover ripple if the thumb is focused', fakeAsync(() => {
       mouseenter();
       pointerdown();
-      expect(isRippleVisible('hover')).toBe(false);
+      expect(isRippleVisible('hover')).toBeFalse();
     }));
 
     it('should not hide the focus ripple if the thumb is pressed', fakeAsync(() => {
       pointerdown();
       blur();
-      expect(isRippleVisible('focus')).toBe(true);
+      expect(isRippleVisible('focus')).toBeTrue();
     }));
 
     it('should not hide the hover ripple on blur if the thumb is hovered', fakeAsync(() => {
@@ -269,14 +354,14 @@ describe('MDC-based MatSlider' , () => {
       pointerdown();
       pointerup();
       blur();
-      expect(isRippleVisible('hover')).toBe(true);
+      expect(isRippleVisible('hover')).toBeTrue();
     }));
 
     it('should hide the focus ripple on drag end if the thumb already lost focus', fakeAsync(() => {
       pointerdown();
       blur();
       pointerup();
-      expect(isRippleVisible('focus')).toBe(false);
+      expect(isRippleVisible('focus')).toBeFalse();
     }));
   });
 });
@@ -300,6 +385,25 @@ class StandardSlider {}
   `,
 })
 class StandardRangeSlider {}
+
+@Component({
+  template: `
+  <mat-slider disabled>
+    <input matSliderThumb>
+  </mat-slider>
+  `,
+})
+class DisabledSlider {}
+
+@Component({
+  template: `
+  <mat-slider disabled>
+    <input matSliderStartThumb>
+    <input matSliderEndThumb>
+  </mat-slider>
+  `,
+})
+class DisabledRangeSlider {}
 
 /** The pointer event types used by the MDC Slider. */
 const enum PointerEventType {
