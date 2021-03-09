@@ -64,7 +64,7 @@ export abstract class MatListItemBase implements AfterContentInit, OnDestroy, Ri
   private _disableRipple: boolean = false;
 
   /** Whether the list-item is disabled. */
-  @HostBinding('class.mdc-list-item--disabled')
+  @HostBinding('class.mdc-deprecated-list-item--disabled')
   @HostBinding('attr.aria-disabled')
   @Input()
   get disabled(): boolean { return this._disabled || (this._listBase && this._listBase.disabled); }
@@ -145,8 +145,8 @@ export abstract class MatListItemBase implements AfterContentInit, OnDestroy, Ri
             toggleClass(this._hostElement, 'mat-mdc-list-item-single-line', lines.length <= 1);
             lines.forEach((line: ElementRef<Element>, index: number) => {
               toggleClass(line.nativeElement,
-                  'mdc-list-item__primary-text', index === 0 && lines.length > 1);
-              toggleClass(line.nativeElement, 'mdc-list-item__secondary-text', index !== 0);
+                  'mdc-deprecated-list-item__primary-text', index === 0 && lines.length > 1);
+              toggleClass(line.nativeElement, 'mdc-deprecated-list-item__secondary-text', index !== 0);
             });
             setLines(lines, this._elementRef, 'mat-mdc');
           }));
