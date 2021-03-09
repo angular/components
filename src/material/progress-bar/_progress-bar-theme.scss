@@ -1,4 +1,5 @@
 @use 'sass:map';
+@use 'sass:meta';
 @use 'sass:color';
 @use '../core/theming/palette';
 @use '../core/theming/theming';
@@ -7,6 +8,10 @@
 // and the theme's background color.
 @function _get-buffer-color($theme, $background) {
   $theme-color: theming.color($theme);
+  // Return fallback color if the theme uses variables to define colors.
+  @if (meta.type-of($theme-color) != 'color' or meta.type-of($background) != 'color') {
+    @return theming.color($theme, lighter);
+  }
   @return color.mix($theme-color, $background, $weight: 25%);
 }
 
