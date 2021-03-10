@@ -1,6 +1,6 @@
 <!--
-  The background div is named as such because it appears below the other divs and is not sized based
-  on values.
+  All children need to be hidden for screen readers in order to support ChromeVox.
+  More context in the issue: https://github.com/angular/components/issues/22165.
 -->
 <div aria-hidden="true">
   <svg width="100%" height="4" focusable="false" class="mat-progress-bar-background mat-progress-bar-element">
@@ -11,6 +11,10 @@
     </defs>
     <rect [attr.fill]="_rectangleFillValue" width="100%" height="100%"/>
   </svg>
+  <!--
+    The background div is named as such because it appears below the other divs and is not sized based
+    on values.
+  -->
   <div class="mat-progress-bar-buffer mat-progress-bar-element" [ngStyle]="_bufferTransform()"></div>
   <div class="mat-progress-bar-primary mat-progress-bar-fill mat-progress-bar-element" [ngStyle]="_primaryTransform()" #primaryValueBar></div>
   <div class="mat-progress-bar-secondary mat-progress-bar-fill mat-progress-bar-element"></div>
