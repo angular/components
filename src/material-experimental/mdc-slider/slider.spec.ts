@@ -37,15 +37,13 @@ describe('MDC-based MatSlider' , () => {
   }
 
   describe('standard slider', () => {
-    let fixture: ComponentFixture<StandardSlider>;
-    let sliderDebugElement: DebugElement;
     let sliderInstance: MatSlider;
     let inputInstance: MatSliderThumb;
 
     beforeEach(waitForAsync(() => {
-      fixture = createComponent(StandardSlider);
+      const fixture = createComponent(StandardSlider);
       fixture.detectChanges();
-      sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider));
+      const sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider));
       sliderInstance = sliderDebugElement.componentInstance;
       inputInstance = sliderInstance._getInput(Thumb.END);
     }));
@@ -364,6 +362,101 @@ describe('MDC-based MatSlider' , () => {
       expect(isRippleVisible('focus')).toBeFalse();
     }));
   });
+
+  describe('slider with set min and max', () => {
+    let fixture: ComponentFixture<SliderWithMinAndMax>;
+    let sliderInstance: MatSlider;
+    let inputInstance: MatSliderThumb;
+
+    beforeEach(waitForAsync(() => {
+      fixture = createComponent(SliderWithMinAndMax);
+      fixture.detectChanges();
+      const sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider));
+      sliderInstance = sliderDebugElement.componentInstance;
+      inputInstance = sliderInstance._getInput(Thumb.END);
+    }));
+
+    it('should set the default values from the attributes', () => {
+      expect(inputInstance.value).toBe(25);
+      expect(sliderInstance.min).toBe(25);
+      expect(sliderInstance.max).toBe(75);
+    });
+
+    it('should set the correct value on mousedown', () => {
+      setValueByClick(sliderInstance, 33, platform.IOS);
+      expect(inputInstance.value).toBe(33);
+    });
+
+    it('should set the correct value on slide', () => {
+      slideToValue(sliderInstance, 55, Thumb.END, platform.IOS);
+      expect(inputInstance.value).toBe(55);
+    });
+
+    it('should be able to set the min and max values when they are more precise ' +
+      'than the step', () => {
+        sliderInstance.step = 10;
+        fixture.detectChanges();
+        slideToValue(sliderInstance, 25, Thumb.END, platform.IOS);
+        expect(inputInstance.value).toBe(25);
+        slideToValue(sliderInstance, 75, Thumb.END, platform.IOS);
+        expect(inputInstance.value).toBe(75);
+    });
+  });
+
+  describe('range slider with set min and max', () => {
+    let fixture: ComponentFixture<RangeSliderWithMinAndMax>;
+    let sliderInstance: MatSlider;
+    let startInputInstance: MatSliderThumb;
+    let endInputInstance: MatSliderThumb;
+
+    beforeEach(waitForAsync(() => {
+      fixture = createComponent(RangeSliderWithMinAndMax);
+      fixture.detectChanges();
+      const sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider));
+      sliderInstance = sliderDebugElement.componentInstance;
+      startInputInstance = sliderInstance._getInput(Thumb.START);
+      endInputInstance = sliderInstance._getInput(Thumb.END);
+    }));
+
+    it('should set the default values from the attributes', () => {
+      expect(startInputInstance.value).toBe(25);
+      expect(endInputInstance.value).toBe(75);
+      expect(sliderInstance.min).toBe(25);
+      expect(sliderInstance.max).toBe(75);
+    });
+
+    it('should set the correct start value on mousedown behind the start thumb', () => {
+      sliderInstance._setValue(50, Thumb.START);
+      setValueByClick(sliderInstance, 33, platform.IOS);
+      expect(startInputInstance.value).toBe(33);
+    });
+
+    it('should set the correct end value on mousedown behind the end thumb', () => {
+      sliderInstance._setValue(50, Thumb.END);
+      setValueByClick(sliderInstance, 66, platform.IOS);
+      expect(endInputInstance.value).toBe(66);
+    });
+
+    it('should set the correct start value on slide', () => {
+      slideToValue(sliderInstance, 40, Thumb.START, platform.IOS);
+      expect(startInputInstance.value).toBe(40);
+    });
+
+    it('should set the correct end value on slide', () => {
+      slideToValue(sliderInstance, 60, Thumb.END, platform.IOS);
+      expect(endInputInstance.value).toBe(60);
+    });
+
+    it('should be able to set the min and max values when they are more precise ' +
+      'than the step', () => {
+        sliderInstance.step = 10;
+        fixture.detectChanges();
+        slideToValue(sliderInstance, 25, Thumb.START, platform.IOS);
+        expect(startInputInstance.value).toBe(25);
+        slideToValue(sliderInstance, 75, Thumb.END, platform.IOS);
+        expect(endInputInstance.value).toBe(75);
+    });
+  });
 });
 
 
@@ -405,6 +498,25 @@ class DisabledSlider {}
 })
 class DisabledRangeSlider {}
 
+@Component({
+  template: `
+  <mat-slider min="25" max="75">
+    <input matSliderThumb>
+  </mat-slider>
+  `,
+})
+class SliderWithMinAndMax {}
+
+@Component({
+  template: `
+  <mat-slider min="25" max="75">
+    <input matSliderStartThumb>
+    <input matSliderEndThumb>
+  </mat-slider>
+  `,
+})
+class RangeSliderWithMinAndMax {}
+
 /** The pointer event types used by the MDC Slider. */
 const enum PointerEventType {
   POINTER_DOWN = 'pointerdown',
@@ -442,7 +554,7 @@ function slideToValue(slider: MatSlider, value: number, thumbPosition: Thumb, is
   const thumbElement = slider._getThumbElement(thumbPosition);
 
   const sliderDimensions = sliderElement.getBoundingClientRect();
-  let thumbDimensions = thumbElement.getBoundingClientRect();
+  const thumbDimensions = thumbElement.getBoundingClientRect();
 
   const startX = thumbDimensions.left + (thumbDimensions.width / 2);
   const startY = thumbDimensions.top + (thumbDimensions.height / 2);
