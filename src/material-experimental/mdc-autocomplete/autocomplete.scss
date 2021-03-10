@@ -32,8 +32,8 @@
   .mat-mdc-autocomplete-panel-above & {
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
-    // MDC sets the transform-origin programmatically based on whether the dropdown is above or below
-    // the input. We use our own positioning logic, so we need to set this ourselves.
+    // MDC sets the transform-origin programmatically based on whether the dropdown is above or
+    // below the input. We use our own positioning logic, so we need to set this ourselves.
     transform-origin: center bottom;
   }
 
