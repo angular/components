@@ -410,7 +410,7 @@ export class MatSliderThumb implements AfterViewInit, ControlValueAccessor {
    * instead be capped at either the default min or max.
    *
    */
-  private _initializeInputState(): void {
+  _initializeInputState(): void {
     const min = this._hostElement.hasAttribute('matSliderEndThumb')
       ? this._slider._getInput(Thumb.START).value
       : this._slider.min;
@@ -523,19 +523,28 @@ export class MatSlider extends _MatSliderMixinBase implements AfterViewInit, OnD
   /** The minimum value that the slider can have. */
   @Input()
   get min(): number { return this._min; }
-  set min(v: number) { this._min = coerceNumberProperty(v, this._min); }
+  set min(v: number) {
+    this._min = coerceNumberProperty(v, this._min);
+    this._reinitialize();
+  }
   private _min: number = 0;
 
   /** The maximum value that the slider can have. */
   @Input()
   get max(): number { return this._max; }
-  set max(v: number) { this._max = coerceNumberProperty(v, this._max); }
+  set max(v: number) {
+    this._max = coerceNumberProperty(v, this._max);
+    this._reinitialize();
+  }
   private _max: number = 100;
 
   /** The values at which the thumb will snap. */
   @Input()
   get step(): number { return this._step; }
-  set step(v: number) { this._step = coerceNumberProperty(v, this._step); }
+  set step(v: number) {
+    this._step = coerceNumberProperty(v, this._step);
+    this._reinitialize();
+  }
   private _step: number = 1;
 
   /**
@@ -608,6 +617,25 @@ export class MatSlider extends _MatSliderMixinBase implements AfterViewInit, OnD
   ngOnDestroy() {
     if (this._platform.isBrowser) {
       this._foundation.destroy();
+    }
+  }
+
+  /**
+   * Reinitializes the slider foundation and input state(s).
+   *
+   * The MDC Foundation does not support changing some slider attributes after it has been
+   * initialized (e.g. min, max, and step). To continue supporting this feature, we need to
+   * destroy the foundation and re-initialize everything whenever we make these changes.
+   */
+  private _reinitialize(): void {
+    if (this._initialized) {
+      this._foundation.destroy();
+      if (this._isRange()) {
+        this._getInput(Thumb.START)._initializeInputState();
+      }
+      this._getInput(Thumb.END)._initializeInputState();
+      this._foundation.init();
+      this._foundation.layout();
     }
   }
 
