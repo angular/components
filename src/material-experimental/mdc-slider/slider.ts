@@ -28,6 +28,7 @@ import {
   Input,
   NgZone,
   OnDestroy,
+  OnInit,
   Output,
   QueryList,
   ViewChild,
@@ -260,7 +261,7 @@ export class MatSliderVisualThumb implements AfterViewInit, OnDestroy {
     multi: true
   }],
 })
-export class MatSliderThumb implements AfterViewInit, ControlValueAccessor {
+export class MatSliderThumb implements AfterViewInit, ControlValueAccessor, OnInit {
 
   // ** IMPORTANT NOTE **
   //
@@ -336,10 +337,13 @@ export class MatSliderThumb implements AfterViewInit, ControlValueAccessor {
     private readonly _elementRef: ElementRef<HTMLInputElement>) {
       this._document = document;
       this._hostElement = _elementRef.nativeElement;
-      // By calling this in the constructor we guarantee that the sibling sliders initial value by
-      // has already been set by the time we reach ngAfterViewInit().
-      this._initializeInputValueAttribute();
     }
+
+  ngOnInit() {
+    // By calling this in ngOnInit() we guarantee that the sibling sliders initial value by
+    // has already been set by the time we reach ngAfterViewInit().
+    this._initializeInputValueAttribute();
+  }
 
   ngAfterViewInit() {
     this._initializeInputState();
