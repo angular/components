@@ -16,6 +16,7 @@
 <mat-slider-visual-thumb
   *ngFor="let thumb of _inputs"
   [discrete]="discrete"
+  [disableRipple]="_isRippleDisabled()"
   [thumbPosition]="thumb._thumbPosition"
   [valueIndicatorText]="_getValueIndicatorText(thumb._thumbPosition)">
 </mat-slider-visual-thumb>
