@@ -3,6 +3,7 @@
 @use '@material/slider/slider' as mdc-slider;
 @use '@material/slider/slider-theme';
 @use '@material/theme/variables' as theme-variables;
+@use '@material/theme/theme' as mdc-theme;
 @use '../mdc-helpers/mdc-helpers';
 @use '../../material/core/ripple/ripple-theme';
 @use '../../material/core/theming/theming';
@@ -116,9 +117,9 @@
     ),
   ));
   .mat-mdc-slider-hover-ripple {
-    background-color: rgba(theme-variables.prop-value($color), 0.05);
+    background-color: rgba($ripple-color, 0.05);
   }
   .mat-mdc-slider-focus-ripple, .mat-mdc-slider-active-ripple {
-    background-color: rgba(theme-variables.prop-value($color), 0.2);
+    background-color: rgba($ripple-color, 0.2);
   }
 }
