@@ -134,7 +134,7 @@
     "@bazel/bazelisk": "^1.4.0",
     "@bazel/buildifier": "^4.0.0",
     "@bazel/ibazel": "^0.14.0",
-    "@bazel/jasmine": "3.2.1",
+    "@bazel/jasmine": "3.2.2",
     "@bazel/concatjs": "3.2.1",
     "@bazel/protractor": "3.2.1",
     "@bazel/rollup": "3.2.1",
