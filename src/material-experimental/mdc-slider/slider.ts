@@ -6,6 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {Directionality} from '@angular/cdk/bidi';
 import {
   BooleanInput,
   coerceBooleanProperty,
@@ -29,6 +30,7 @@ import {
   NgZone,
   OnDestroy,
   OnInit,
+  Optional,
   Output,
   QueryList,
   ViewChild,
@@ -46,6 +48,7 @@ import {
 } from '@angular/material/core';
 import {SpecificEventListener, EventType} from '@material/base';
 import {MDCSliderAdapter, MDCSliderFoundation, Thumb, TickMark} from '@material/slider';
+import {Subscription} from 'rxjs';
 
 /** Represents a drag event emitted by the MatSlider component. */
 export interface MatSliderDragEvent {
@@ -582,14 +585,19 @@ export class MatSlider extends _MatSliderMixinBase implements AfterViewInit, OnD
   /** The display value of the end thumb. */
   _endValueIndicatorText: string;
 
+  /** Subscription to changes to the directionality (LTR / RTL) context for the application. */
+  private _dirChangeSubscription: Subscription;
+
   constructor(
     readonly _cdr: ChangeDetectorRef,
     readonly _elementRef: ElementRef<HTMLElement>,
     private readonly _platform: Platform,
+    @Optional() private _dir: Directionality,
     @Inject(DOCUMENT) document: any) {
       super(_elementRef);
       this._document = document;
       this._window = this._document.defaultView || window;
+      this._dirChangeSubscription = this._dir.change.subscribe(() => this._reinitialize());
     }
 
   ngAfterViewInit() {
@@ -622,6 +630,12 @@ export class MatSlider extends _MatSliderMixinBase implements AfterViewInit, OnD
     if (this._platform.isBrowser) {
       this._foundation.destroy();
     }
+    this._dirChangeSubscription.unsubscribe();
+  }
+
+  /** Returns true if the language direction for this slider element is right to left. */
+  _isRTL() {
+    return this._dir && this._dir.value === 'rtl';
   }
 
   /**
@@ -777,8 +791,7 @@ class SliderAdapter implements MDCSliderAdapter {
     return this._delegate._elementRef.nativeElement.getBoundingClientRect();
   }
   isRTL = (): boolean => {
-    // TODO(wagnermaciel): Actually implementing this.
-    return false;
+    return this._delegate._isRTL();
   }
   setThumbStyleProperty = (propertyName: string, value: string, thumbPosition: Thumb): void => {
     this._delegate._getThumbElement(thumbPosition).style.setProperty(propertyName, value);
