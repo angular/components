@@ -41,6 +41,7 @@ npm-debug.log
 yarn-error.log
 testem.log
 firebase-debug.log
+ui-debug.log
 .firebase/
 /typings
 
