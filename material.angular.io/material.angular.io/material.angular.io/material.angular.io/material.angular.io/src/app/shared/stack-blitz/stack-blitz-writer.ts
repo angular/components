@@ -73,9 +73,9 @@ const dependencies = {
   '@angular/router': angularVersion,
   'angular-in-memory-web-api': '~0.11.0',
   'moment': '^2.29.1',
-  'rxjs': '^6.6.3',
+  'rxjs': '^6.6.6',
   'tslib': '^2.1.0',
-  'zone.js': '^0.11.3',
+  'zone.js': '^0.11.4',
 };
 
 const testDependencies = {
@@ -90,13 +90,13 @@ const testDependencies = {
   '@angular/platform-browser': angularVersion,
   '@angular/platform-browser-dynamic': angularVersion,
   '@angular/router': angularVersion,
-  '@types/jasmine': '^3.6.0',
+  '@types/jasmine': '^3.6.6',
   'angular-in-memory-web-api': '~0.11.0',
   'jasmine-core': '^3.6.0',
   'moment': '^2.29.1',
-  'rxjs': '^6.6.3',
+  'rxjs': '^6.6.6',
   'tslib': '^2.1.0',
-  'zone.js': '^0.11.3',
+  'zone.js': '^0.11.4',
 };
 
 /**
