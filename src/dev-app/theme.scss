@@ -43,8 +43,6 @@ $candy-app-theme: theming.light-theme((
 @include all-theme.angular-material-mdc-theme($candy-app-theme);
 @include column-resize.theme($candy-app-theme);
 @include popover-edit.theme($candy-app-theme);
-// We add this in manually for now, because it isn't included in `angular-material-mdc-theme`.
-@include slider-theme.theme($candy-app-theme);
 
 .demo-strong-focus {
   // Include base styles for strong focus indicators.
