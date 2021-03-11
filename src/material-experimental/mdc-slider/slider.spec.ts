@@ -12,7 +12,7 @@ import {
   dispatchPointerEvent,
   dispatchTouchEvent,
 } from '@angular/cdk/testing/private';
-import {Component, DebugElement, Type} from '@angular/core';
+import {Component, Type} from '@angular/core';
 import {ComponentFixture, fakeAsync, TestBed, tick, waitForAsync} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {Thumb} from '@material/slider';
@@ -82,16 +82,14 @@ describe('MDC-based MatSlider' , () => {
   });
 
   describe('standard range slider', () => {
-    let fixture: ComponentFixture<StandardRangeSlider>;
-    let sliderDebugElement: DebugElement;
     let sliderInstance: MatSlider;
     let startInputInstance: MatSliderThumb;
     let endInputInstance: MatSliderThumb;
 
     beforeEach(waitForAsync(() => {
-      fixture = createComponent(StandardRangeSlider);
+      const fixture = createComponent(StandardRangeSlider);
       fixture.detectChanges();
-      sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider));
+      const sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider));
       sliderInstance = sliderDebugElement.componentInstance;
       startInputInstance = sliderInstance._getInput(Thumb.START);
       endInputInstance = sliderInstance._getInput(Thumb.END);
@@ -235,7 +233,6 @@ describe('MDC-based MatSlider' , () => {
   });
 
   describe('ripple states', () => {
-    let fixture: ComponentFixture<StandardSlider>;
     let inputInstance: MatSliderThumb;
     let thumbInstance: MatSliderVisualThumb;
     let thumbElement: HTMLElement;
@@ -243,7 +240,7 @@ describe('MDC-based MatSlider' , () => {
     let thumbY: number;
 
     beforeEach(waitForAsync(() => {
-      fixture = createComponent(StandardSlider);
+      const fixture = createComponent(StandardSlider);
       fixture.detectChanges();
       const sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider));
       const sliderInstance = sliderDebugElement.componentInstance;
@@ -457,6 +454,73 @@ describe('MDC-based MatSlider' , () => {
         expect(endInputInstance.value).toBe(75);
     });
   });
+
+  describe('slider with set value', () => {
+    let sliderInstance: MatSlider;
+    let inputInstance: MatSliderThumb;
+
+    beforeEach(waitForAsync(() => {
+      const fixture = createComponent(SliderWithValue);
+      fixture.detectChanges();
+      const sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider));
+      sliderInstance = sliderDebugElement.componentInstance;
+      inputInstance = sliderInstance._getInput(Thumb.END);
+    }));
+
+    it('should set the default value from the attribute', () => {
+      expect(inputInstance.value).toBe(50);
+    });
+
+    it('should set the correct value on mousedown', () => {
+      setValueByClick(sliderInstance, 19, platform.IOS);
+      expect(inputInstance.value).toBe(19);
+    });
+
+    it('should set the correct value on slide', () => {
+      slideToValue(sliderInstance, 77, Thumb.END, platform.IOS);
+      expect(inputInstance.value).toBe(77);
+    });
+  });
+
+  describe('range slider with set value', () => {
+    let sliderInstance: MatSlider;
+    let startInputInstance: MatSliderThumb;
+    let endInputInstance: MatSliderThumb;
+
+    beforeEach(waitForAsync(() => {
+      const fixture = createComponent(RangeSliderWithValue);
+      fixture.detectChanges();
+      const sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider));
+      sliderInstance = sliderDebugElement.componentInstance;
+      startInputInstance = sliderInstance._getInput(Thumb.START);
+      endInputInstance = sliderInstance._getInput(Thumb.END);
+    }));
+
+    it('should set the default value from the attribute', () => {
+      expect(startInputInstance.value).toBe(25);
+      expect(endInputInstance.value).toBe(75);
+    });
+
+    it('should set the correct start value on mousedown behind the start thumb', () => {
+      setValueByClick(sliderInstance, 19, platform.IOS);
+      expect(startInputInstance.value).toBe(19);
+    });
+
+    it('should set the correct start value on mousedown in front of the end thumb', () => {
+      setValueByClick(sliderInstance, 77, platform.IOS);
+      expect(endInputInstance.value).toBe(77);
+    });
+
+    it('should set the correct start value on slide', () => {
+      slideToValue(sliderInstance, 73, Thumb.START, platform.IOS);
+      expect(startInputInstance.value).toBe(73);
+    });
+
+    it('should set the correct end value on slide', () => {
+      slideToValue(sliderInstance, 99, Thumb.END, platform.IOS);
+      expect(endInputInstance.value).toBe(99);
+    });
+  });
 });
 
 
@@ -516,6 +580,25 @@ class SliderWithMinAndMax {}
   `,
 })
 class RangeSliderWithMinAndMax {}
+
+@Component({
+  template: `
+  <mat-slider>
+    <input value="50" matSliderThumb>
+  </mat-slider>
+  `,
+})
+class SliderWithValue {}
+
+@Component({
+  template: `
+  <mat-slider>
+    <input value="25" matSliderStartThumb>
+    <input value="75" matSliderEndThumb>
+  </mat-slider>
+  `,
+})
+class RangeSliderWithValue {}
 
 /** The pointer event types used by the MDC Slider. */
 const enum PointerEventType {
