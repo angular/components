@@ -6,6 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {Directionality} from '@angular/cdk/bidi';
 import {
   BooleanInput,
   coerceBooleanProperty,
@@ -29,6 +30,7 @@ import {
   NgZone,
   OnDestroy,
   OnInit,
+  Optional,
   Output,
   QueryList,
   ViewChild,
@@ -586,10 +588,12 @@ export class MatSlider extends _MatSliderMixinBase implements AfterViewInit, OnD
     readonly _cdr: ChangeDetectorRef,
     readonly _elementRef: ElementRef<HTMLElement>,
     private readonly _platform: Platform,
+    @Optional() private _dir: Directionality,
     @Inject(DOCUMENT) document: any) {
       super(_elementRef);
       this._document = document;
       this._window = this._document.defaultView || window;
+      this._dir.change.subscribe(() => this._reinitialize());
     }
 
   ngAfterViewInit() {
@@ -622,6 +626,12 @@ export class MatSlider extends _MatSliderMixinBase implements AfterViewInit, OnD
     if (this._platform.isBrowser) {
       this._foundation.destroy();
     }
+    this._dir.change.unsubscribe();
+  }
+
+  /** Returns true if the language direction for this slider element is right to left. */
+  _isRTL() {
+    return this._dir && this._dir.value === 'rtl';
   }
 
   /**
@@ -777,8 +787,7 @@ class SliderAdapter implements MDCSliderAdapter {
     return this._delegate._elementRef.nativeElement.getBoundingClientRect();
   }
   isRTL = (): boolean => {
-    // TODO(wagnermaciel): Actually implementing this.
-    return false;
+    return this._delegate._isRTL();
   }
   setThumbStyleProperty = (propertyName: string, value: string, thumbPosition: Thumb): void => {
     this._delegate._getThumbElement(thumbPosition).style.setProperty(propertyName, value);
