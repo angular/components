@@ -135,7 +135,7 @@
     "@bazel/buildifier": "^4.0.0",
     "@bazel/ibazel": "^0.14.0",
     "@bazel/jasmine": "3.2.1",
-    "@bazel/concatjs": "3.2.1",
+    "@bazel/concatjs": "3.2.2",
     "@bazel/protractor": "3.2.1",
     "@bazel/rollup": "3.2.1",
     "@bazel/terser": "3.2.1",

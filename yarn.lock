@@ -677,10 +677,10 @@
   resolved "https://registry.yarnpkg.com/@bazel/buildifier/-/buildifier-4.0.0.tgz#c99fb21295c7e2858fa176c2b950c589217ae8ac"
   integrity sha512-e242AK+shp+5bpAc9l93pmG5YRYRfM0INV3gfbdxNeBxccx1MJUagaiwxqAV+Mw55zk92gsb99f2TAc9tt6C7w==
 
-"@bazel/concatjs@3.2.1":
-  version "3.2.1"
-  resolved "https://registry.yarnpkg.com/@bazel/concatjs/-/concatjs-3.2.1.tgz#638210bf31011b1617e373624c61d9a10bd7f842"
-  integrity sha512-1vYAI1Ugb5PJC/zIetdmx5jHxluhUGuUI9yJcrZYZ24hmSMg+lkcrPlkhwbjtvF26JIDf2g5s5/woDcDrydrjg==
+"@bazel/concatjs@3.2.2":
+  version "3.2.2"
+  resolved "https://registry.yarnpkg.com/@bazel/concatjs/-/concatjs-3.2.2.tgz#a5b0f15e3bd074c06a51cb25ef64b7e1866ba760"
+  integrity sha512-k4JrIF1q9Oe0j90yuduxJO78SUNlYRBEzQCQS+aNvmm5YcrSJ7dZ5H0pjZ2W41MRT8L9S0Ei6TSMERkAcjD1Jw==
   dependencies:
     protobufjs "6.8.8"
     source-map-support "0.5.9"
@@ -10527,29 +10527,10 @@ protobufjs@6.8.8:
     "@types/node" "^10.1.0"
     long "^4.0.0"
 
-protobufjs@^6.10.2:
+protobufjs@^6.10.2, protobufjs@^6.8.6:
   version "6.10.2"
   resolved "https://registry.yarnpkg.com/protobufjs/-/protobufjs-6.10.2.tgz#b9cb6bd8ec8f87514592ba3fdfd28e93f33a469b"
   integrity sha512-27yj+04uF6ya9l+qfpH187aqEzfCF4+Uit0I9ZBQVqK09hk/SQzKa2MUqUpXaVa7LOFRg1TSSr3lVxGOk6c0SQ==
-  dependencies:
-    "@protobufjs/aspromise" "^1.1.2"
-    "@protobufjs/base64" "^1.1.2"
-    "@protobufjs/codegen" "^2.0.4"
-    "@protobufjs/eventemitter" "^1.1.0"
-    "@protobufjs/fetch" "^1.1.0"
-    "@protobufjs/float" "^1.0.2"
-    "@protobufjs/inquire" "^1.1.0"
-    "@protobufjs/path" "^1.1.2"
-    "@protobufjs/pool" "^1.1.0"
-    "@protobufjs/utf8" "^1.1.0"
-    "@types/long" "^4.0.1"
-    "@types/node" "^13.7.0"
-    long "^4.0.0"
-
-protobufjs@^6.8.6:
-  version "6.10.1"
-  resolved "https://registry.yarnpkg.com/protobufjs/-/protobufjs-6.10.1.tgz#e6a484dd8f04b29629e9053344e3970cccf13cd2"
-  integrity sha512-pb8kTchL+1Ceg4lFd5XUpK8PdWacbvV5SK2ULH2ebrYtl4GjJmS24m6CKME67jzV53tbJxHlnNOSqQHbTsR9JQ==
   dependencies:
     "@protobufjs/aspromise" "^1.1.2"
     "@protobufjs/base64" "^1.1.2"
