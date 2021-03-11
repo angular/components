@@ -40,9 +40,14 @@ import {
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {
   CanColorCtor,
+  CanDisableRipple,
+  CanDisableRippleCtor,
   MatRipple,
+  MAT_RIPPLE_GLOBAL_OPTIONS,
   mixinColor,
+  mixinDisableRipple,
   RippleAnimationConfig,
+  RippleGlobalOptions,
   RippleRef,
   RippleState,
 } from '@angular/material/core';
@@ -89,6 +94,9 @@ export class MatSliderVisualThumb implements AfterViewInit, OnDestroy {
   /** The display value of the slider thumb. */
   @Input() valueIndicatorText: string;
 
+  /** Whether ripples on the slider thumb should be disabled. */
+  @Input() disableRipple: boolean = false;
+
   /** The MatRipple for this slider thumb. */
   @ViewChild(MatRipple) private readonly _ripple: MatRipple;
 
@@ -99,13 +107,13 @@ export class MatSliderVisualThumb implements AfterViewInit, OnDestroy {
   private _sliderInput: MatSliderThumb;
 
   /** The RippleRef for the slider thumbs hover state. */
-  private _hoverRippleRef: RippleRef;
+  private _hoverRippleRef: RippleRef | undefined;
 
   /** The RippleRef for the slider thumbs focus state. */
-  private _focusRippleRef: RippleRef;
+  private _focusRippleRef: RippleRef | undefined;
 
   /** The RippleRef for the slider thumbs active state. */
-  private _activeRippleRef: RippleRef;
+  private _activeRippleRef: RippleRef | undefined;
 
   /** Whether the slider thumb is currently being pressed. */
   private _isActive: boolean = false;
@@ -199,7 +207,7 @@ export class MatSliderVisualThumb implements AfterViewInit, OnDestroy {
   private _showHoverRipple(): void {
     if (!this._isShowingRipple(this._hoverRippleRef)) {
       this._hoverRippleRef = this._showRipple({ enterDuration: 0, exitDuration: 0 });
-      this._hoverRippleRef.element.classList.add('mat-mdc-slider-hover-ripple');
+      this._hoverRippleRef?.element.classList.add('mat-mdc-slider-hover-ripple');
     }
   }
 
@@ -207,7 +215,7 @@ export class MatSliderVisualThumb implements AfterViewInit, OnDestroy {
   private _showFocusRipple(): void {
     if (!this._isShowingRipple(this._focusRippleRef)) {
       this._focusRippleRef = this._showRipple({ enterDuration: 0, exitDuration: 0 });
-      this._focusRippleRef.element.classList.add('mat-mdc-slider-focus-ripple');
+      this._focusRippleRef?.element.classList.add('mat-mdc-slider-focus-ripple');
     }
   }
 
@@ -215,7 +223,7 @@ export class MatSliderVisualThumb implements AfterViewInit, OnDestroy {
   private _showActiveRipple(): void {
     if (!this._isShowingRipple(this._activeRippleRef)) {
       this._activeRippleRef = this._showRipple({ enterDuration: 225, exitDuration: 400 });
-      this._activeRippleRef.element.classList.add('mat-mdc-slider-active-ripple');
+      this._activeRippleRef?.element.classList.add('mat-mdc-slider-active-ripple');
     }
   }
 
@@ -225,7 +233,10 @@ export class MatSliderVisualThumb implements AfterViewInit, OnDestroy {
   }
 
   /** Manually launches the slider thumb ripple using the specified ripple animation config. */
-  private _showRipple(animation: RippleAnimationConfig): RippleRef {
+  private _showRipple(animation: RippleAnimationConfig): RippleRef | undefined {
+    if (this.disableRipple) {
+      return;
+    }
     return this._ripple.launch(
       {animation, centered: true, persistent: true},
     );
@@ -466,8 +477,9 @@ class MatSliderBase {
 }
 const _MatSliderMixinBase:
     CanColorCtor &
+    CanDisableRippleCtor &
     typeof MatSliderBase =
-        mixinColor(MatSliderBase, 'primary');
+        mixinColor(mixinDisableRipple(MatSliderBase), 'primary');
 
 /**
  * Allows users to select from a range of values by moving the slider thumb. It is similar in
@@ -487,9 +499,10 @@ const _MatSliderMixinBase:
   exportAs: 'matSlider',
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
-  inputs: ['color'],
+  inputs: ['color', 'disableRipple'],
 })
-export class MatSlider extends _MatSliderMixinBase implements AfterViewInit, OnDestroy {
+export class MatSlider extends _MatSliderMixinBase
+  implements AfterViewInit, CanDisableRipple, OnDestroy {
   /** The slider thumb(s). */
   @ViewChildren(MatSliderVisualThumb) _thumbs: QueryList<MatSliderVisualThumb>;
 
@@ -592,8 +605,10 @@ export class MatSlider extends _MatSliderMixinBase implements AfterViewInit, OnD
     readonly _cdr: ChangeDetectorRef,
     readonly _elementRef: ElementRef<HTMLElement>,
     private readonly _platform: Platform,
+    @Inject(DOCUMENT) document: any,
     @Optional() private _dir: Directionality,
-    @Inject(DOCUMENT) document: any) {
+    @Optional() @Inject(MAT_RIPPLE_GLOBAL_OPTIONS)
+      readonly _globalRippleOptions?: RippleGlobalOptions) {
       super(_elementRef);
       this._document = document;
       this._window = this._document.defaultView || window;
@@ -724,12 +739,18 @@ export class MatSlider extends _MatSliderMixinBase implements AfterViewInit, OnD
       : 'mdc-slider__tick-mark--inactive';
   }
 
+  /** Whether the slider thumb ripples should be disabled. */
+  _isRippleDisabled(): boolean {
+    return this.disabled || this.disableRipple || !!this._globalRippleOptions?.disabled;
+  }
+
   static ngAcceptInputType_disabled: BooleanInput;
   static ngAcceptInputType_discrete: BooleanInput;
   static ngAcceptInputType_showTickMarks: BooleanInput;
   static ngAcceptInputType_min: NumberInput;
   static ngAcceptInputType_max: NumberInput;
   static ngAcceptInputType_step: NumberInput;
+  static ngAcceptInputType_disableRipple: BooleanInput;
 }
 
 /** The MDCSliderAdapter implementation. */
