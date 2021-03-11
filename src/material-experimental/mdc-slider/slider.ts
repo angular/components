@@ -234,7 +234,9 @@ export class MatSliderVisualThumb implements AfterViewInit, OnDestroy {
 
   /** Manually launches the slider thumb ripple using the specified ripple animation config. */
   private _showRipple(animation: RippleAnimationConfig): RippleRef | undefined {
-    if (this.disableRipple) { return; }
+    if (this.disableRipple) {
+      return;
+    }
     return this._ripple.launch(
       {animation, centered: true, persistent: true},
     );
