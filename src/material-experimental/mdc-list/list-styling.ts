@@ -10,10 +10,10 @@ import {Directive, Inject, Optional} from '@angular/core';
 import {LIST_OPTION, ListOption} from './list-option-types';
 
 /**
- * MDC uses the very intuitively named classes `.mdc-deprecated-list-item__graphic` and `.mat-list-item__meta`
- * to position content such as icons or checkboxes that comes either before or after the text
- * content respectively. This directive detects the placement of the checkbox and applies the
- * correct MDC class to position the icon/avatar on the opposite side.
+ * MDC uses the very intuitively named classes `.mdc-deprecated-list-item__graphic` and
+ * `.mat-list-item__meta` to position content such as icons or checkboxes that comes either before
+ * or after the text content respectively. This directive detects the placement of the checkbox and
+ * applies the correct MDC class to position the icon/avatar on the opposite side.
  * @docs-private
  */
 @Directive({

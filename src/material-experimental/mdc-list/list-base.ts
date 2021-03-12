@@ -147,7 +147,8 @@ export abstract class MatListItemBase implements AfterContentInit, OnDestroy, Ri
             lines.forEach((line: ElementRef<Element>, index: number) => {
               toggleClass(line.nativeElement,
                   'mdc-deprecated-list-item__primary-text', index === 0 && lines.length > 1);
-              toggleClass(line.nativeElement, 'mdc-deprecated-list-item__secondary-text', index !== 0);
+              toggleClass(
+                  line.nativeElement, 'mdc-deprecated-list-item__secondary-text', index !== 0);
             });
             setLines(lines, this._elementRef, 'mat-mdc');
           }));
