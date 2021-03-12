@@ -65,6 +65,7 @@ export abstract class MatListItemBase implements AfterContentInit, OnDestroy, Ri
 
   /** Whether the list-item is disabled. */
   @HostBinding('class.mdc-deprecated-list-item--disabled')
+  @HostBinding('class.mdc-list-item--disabled')
   @HostBinding('attr.aria-disabled')
   @Input()
   get disabled(): boolean { return this._disabled || (this._listBase && this._listBase.disabled); }

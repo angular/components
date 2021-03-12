@@ -214,13 +214,13 @@ describe('MDC-based MatSelectionList without forms', () => {
       let selectList =
         selectionList.injector.get<MatSelectionList>(MatSelectionList).selectedOptions;
 
-      expect(selectList.selected.length).toBe(0);
+      expect(selectList.selected.length).toBe(0, 'before click');
       expect(listOptions[0].nativeElement.getAttribute('aria-disabled')).toBe('true');
 
       dispatchMouseEvent(testListItem._hostElement, 'click');
       fixture.detectChanges();
 
-      expect(selectList.selected.length).toBe(0);
+      expect(selectList.selected.length).toBe(0, 'after click');
     });
 
     it('should be able to un-disable disabled items', () => {
@@ -515,7 +515,7 @@ describe('MDC-based MatSelectionList without forms', () => {
     it('should disable list item ripples when the ripples on the list have been disabled',
       fakeAsync(() => {
         const rippleTarget = fixture.nativeElement
-          .querySelector('.mat-mdc-list-option:not(.mdc-list-item--disabled)');
+          .querySelector('.mat-mdc-list-option:not(.mdc-deprecated-list-item--disabled)');
         const {enterDuration, exitDuration} = defaultRippleAnimationConfig;
 
         dispatchMouseEvent(rippleTarget, 'mousedown');
