@@ -10,8 +10,8 @@
   display: block;
 }
 
-// .mdc-deprecated-list-item__primary-text adds its own margin settings, so only reset if it doesn't have that
-// class
+// .mdc-deprecated-list-item__primary-text adds its own margin settings, so only reset if it doesn't
+// have that class
 .mat-mdc-list-base .mdc-deprecated-list-item__text > :not(.mdc-deprecated-list-item__primary-text),
 .mat-mdc-list-base .mdc-deprecated-list-item__text > :not(.mdc-deprecated-list-item__primary-text) {
   margin: 0;
@@ -55,9 +55,9 @@
   border-radius: 50%;
 
   // Avatars that come before the text have the .mdc-deprecated-list-item__graphic class.
-  // MDC's .mdc-deprecated-list--avatar-list class would normally apply overrides to set the appropriate
-  // margins for avatar images, but since ours is a per-list-item setting we need to add similar
-  // styles ourselves.
+  // MDC's .mdc-deprecated-list--avatar-list class would normally apply overrides to set the
+  // appropriate margins for avatar images, but since ours is a per-list-item setting we need to add
+  // similar styles ourselves.
   &.mdc-deprecated-list-item__graphic {
     margin-left: 0;
     margin-right: $margin-value;
