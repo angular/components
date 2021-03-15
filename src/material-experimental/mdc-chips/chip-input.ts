@@ -156,7 +156,9 @@ export class MatChipInput implements MatChipTextControl, AfterContentInit, OnCha
       // We focus the last chip on backspace only after the user has released the backspace button,
       // And the input is empty (see behaviour in _keyup)
       if (event.keyCode === BACKSPACE && this._focusLastChipOnBackspace) {
-        this._chipGrid._keyManager.setLastCellActive();
+        if (this._chipGrid._chips.length) {
+          this._chipGrid._keyManager.setLastCellActive();
+        }
         event.preventDefault();
         return;
       } else {
