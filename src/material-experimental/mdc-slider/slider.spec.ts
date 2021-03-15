@@ -6,8 +6,10 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {LEFT_ARROW, RIGHT_ARROW} from '@angular/cdk/keycodes';
 import {Platform} from '@angular/cdk/platform';
 import {
+  dispatchFakeEvent,
   dispatchMouseEvent,
   dispatchPointerEvent,
   dispatchTouchEvent,
@@ -392,7 +394,6 @@ describe('MDC-based MatSlider' , () => {
     it('should be able to set the min and max values when they are more precise ' +
       'than the step', () => {
         sliderInstance.step = 10;
-        fixture.detectChanges();
         slideToValue(sliderInstance, 25, Thumb.END, platform.IOS);
         expect(inputInstance.value).toBe(25);
         slideToValue(sliderInstance, 75, Thumb.END, platform.IOS);
@@ -521,6 +522,130 @@ describe('MDC-based MatSlider' , () => {
       expect(endInputInstance.value).toBe(99);
     });
   });
+
+  describe('slider with set step', () => {
+    let sliderInstance: MatSlider;
+    let inputInstance: MatSliderThumb;
+
+    beforeEach(waitForAsync(() => {
+      const fixture = createComponent(SliderWithStep);
+      fixture.detectChanges();
+      const sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider));
+      sliderInstance = sliderDebugElement.componentInstance;
+      inputInstance = sliderInstance._getInput(Thumb.END);
+    }));
+
+    it('should set the correct step value on mousedown', () => {
+      expect(inputInstance.value).toBe(0);
+      setValueByClick(sliderInstance, 13, platform.IOS);
+      expect(inputInstance.value).toBe(25);
+    });
+
+    it('should set the correct step value on slide', () => {
+      slideToValue(sliderInstance, 12, Thumb.END, platform.IOS);
+      expect(inputInstance.value).toBe(0);
+    });
+
+    it('should not add decimals to the value if it is a whole number', () => {
+      sliderInstance.step = 0.1;
+      slideToValue(sliderInstance, 100, Thumb.END, platform.IOS);
+      expect(inputInstance.value).toBe(100);
+    });
+
+    it('should truncate long decimal values when using a decimal step', () => {
+      // TODO(wagnermaciel): Uncomment this test once b/182504575 is resolved.
+      // sliderInstance.step = 0.1;
+      // slideToValue(sliderInstance, 33.3333, Thumb.END, platform.IOS);
+      // expect(inputInstance.value).toBe(33);
+    });
+
+    it('should truncate long decimal values when using a decimal step and the arrow keys', () => {
+      sliderInstance.step = 0.1;
+      changeValueUsingArrowKeys(sliderInstance, RIGHT_ARROW, Thumb.END);
+      changeValueUsingArrowKeys(sliderInstance, RIGHT_ARROW, Thumb.END);
+      changeValueUsingArrowKeys(sliderInstance, RIGHT_ARROW, Thumb.END);
+      expect(inputInstance.value).toBe(0.3);
+    });
+  });
+
+  describe('range slider with set step', () => {
+    let sliderInstance: MatSlider;
+    let startInputInstance: MatSliderThumb;
+    let endInputInstance: MatSliderThumb;
+
+    beforeEach(waitForAsync(() => {
+      const fixture = createComponent(RangeSliderWithStep);
+      fixture.detectChanges();
+      const sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider));
+      sliderInstance = sliderDebugElement.componentInstance;
+      startInputInstance = sliderInstance._getInput(Thumb.START);
+      endInputInstance = sliderInstance._getInput(Thumb.END);
+    }));
+
+    it('should set the correct step value on mousedown behind the start thumb', () => {
+      sliderInstance._setValue(50, Thumb.START);
+      setValueByClick(sliderInstance, 13, platform.IOS);
+      expect(startInputInstance.value).toBe(25);
+    });
+
+    it('should set the correct step value on mousedown in front of the end thumb', () => {
+      sliderInstance._setValue(50, Thumb.END);
+      setValueByClick(sliderInstance, 63, platform.IOS);
+      expect(endInputInstance.value).toBe(75);
+    });
+
+    it('should set the correct start thumb step value on slide', () => {
+      slideToValue(sliderInstance, 26, Thumb.START, platform.IOS);
+      expect(startInputInstance.value).toBe(25);
+    });
+
+    it('should set the correct end thumb step value on slide', () => {
+      slideToValue(sliderInstance, 45, Thumb.END, platform.IOS);
+      expect(endInputInstance.value).toBe(50);
+    });
+
+    it('should not add decimals to the end value if it is a whole number', () => {
+      sliderInstance.step = 0.1;
+      slideToValue(sliderInstance, 100, Thumb.END, platform.IOS);
+      expect(endInputInstance.value).toBe(100);
+    });
+
+    it('should not add decimals to the start value if it is a whole number', () => {
+      sliderInstance.step = 0.1;
+      slideToValue(sliderInstance, 100, Thumb.END, platform.IOS);
+      expect(endInputInstance.value).toBe(100);
+    });
+
+    it('should truncate long decimal start values when using a decimal step', () => {
+      // TODO(wagnermaciel): Uncomment this test once b/182504575 is resolved.
+      // sliderInstance.step = 0.1;
+      // slideToValue(sliderInstance, 33.3333, Thumb.START, platform.IOS);
+      // expect(startInputInstance.value).toBe(33);
+    });
+
+    it('should truncate long decimal end values when using a decimal step', () => {
+      // TODO(wagnermaciel): Uncomment this test once b/182504575 is resolved.
+      // sliderInstance.step = 0.1;
+      // slideToValue(sliderInstance, 66.6666, Thumb.END, platform.IOS);
+      // expect(endInputInstance.value).toBe(66);
+    });
+
+    it('should truncate long decimal start values when using a decimal step arrow keys', () => {
+      sliderInstance.step = 0.1;
+      changeValueUsingArrowKeys(sliderInstance, RIGHT_ARROW, Thumb.START);
+      changeValueUsingArrowKeys(sliderInstance, RIGHT_ARROW, Thumb.START);
+      changeValueUsingArrowKeys(sliderInstance, RIGHT_ARROW, Thumb.START);
+      expect(startInputInstance.value).toBe(0.3);
+    });
+
+    it('should truncate long decimal end values when using a decimal step arrow keys', () => {
+      sliderInstance.step = 0.1;
+      changeValueUsingArrowKeys(sliderInstance, LEFT_ARROW, Thumb.END);
+      changeValueUsingArrowKeys(sliderInstance, LEFT_ARROW, Thumb.END);
+      changeValueUsingArrowKeys(sliderInstance, LEFT_ARROW, Thumb.END);
+      expect(endInputInstance.value).toBe(99.7);
+    });
+  });
 });
 
 
@@ -600,6 +725,25 @@ class SliderWithValue {}
 })
 class RangeSliderWithValue {}
 
+@Component({
+  template: `
+  <mat-slider step="25">
+    <input matSliderThumb>
+  </mat-slider>
+  `,
+})
+class SliderWithStep {}
+
+@Component({
+  template: `
+  <mat-slider step="25">
+    <input matSliderStartThumb>
+    <input matSliderEndThumb>
+  </mat-slider>
+  `,
+})
+class RangeSliderWithStep {}
+
 /** The pointer event types used by the MDC Slider. */
 const enum PointerEventType {
   POINTER_DOWN = 'pointerdown',
@@ -648,6 +792,22 @@ function slideToValue(slider: MatSlider, value: number, thumbPosition: Thumb, is
   dispatchPointerOrTouchEvent(sliderElement, PointerEventType.POINTER_DOWN, startX, startY, isIOS);
   dispatchPointerOrTouchEvent(sliderElement, PointerEventType.POINTER_MOVE, endX, endY, isIOS);
   dispatchPointerOrTouchEvent(sliderElement, PointerEventType.POINTER_UP, endX, endY, isIOS);
+}
+
+/**
+ * Mimics changing the slider value using arrow keys.
+ *
+ * Dispatching keydown events on inputs do not trigger value changes. Thus, to mimic this behavior,
+ * we manually change the slider inputs value and then dispatch a change event (which is what the
+ * MDC Foundation is listening for & how it handles these updates).
+ */
+function changeValueUsingArrowKeys(slider: MatSlider, arrow: number, thumbPosition: Thumb) {
+  const input = slider._getInput(thumbPosition);
+  const value = arrow === RIGHT_ARROW
+    ? input.value + slider.step
+    : input.value - slider.step;
+  input._hostElement.value = value.toString();
+  dispatchFakeEvent(input._hostElement, 'change');
 }
 
 /** Dispatch a pointerdown or pointerup event if supported, otherwise dispatch the touch event. */
