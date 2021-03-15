@@ -723,6 +723,7 @@ export class MatSlider extends _MatSliderMixinBase
     thumbPosition === Thumb.START
       ? this._startValueIndicatorText = this.displayWith(value)
       : this._endValueIndicatorText = this.displayWith(value);
+    this._cdr.markForCheck();
   }
 
   /** Gets the value indicator text for the given thumb position. */
