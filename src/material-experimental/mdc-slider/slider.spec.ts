@@ -728,6 +728,56 @@ describe('MDC-based MatSlider' , () => {
       });
     });
   });
+
+  describe('slider with value property binding', () => {
+    let fixture: ComponentFixture<SliderWithOneWayBinding>;
+    let testComponent: SliderWithOneWayBinding;
+    let inputInstance: MatSliderThumb;
+
+    beforeEach(waitForAsync(() => {
+      fixture = createComponent(SliderWithOneWayBinding);
+      fixture.detectChanges();
+      testComponent = fixture.debugElement.componentInstance;
+      const sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider));
+      const sliderInstance = sliderDebugElement.componentInstance;
+      inputInstance = sliderInstance._getInput(Thumb.END);
+    }));
+
+    it('should update when bound value changes', () => {
+      testComponent.value = 75;
+      fixture.detectChanges();
+      expect(inputInstance.value).toBe(75);
+    });
+  });
+
+  describe('range slider with value property binding', () => {
+    let fixture: ComponentFixture<RangeSliderWithOneWayBinding>;
+    let testComponent: RangeSliderWithOneWayBinding;
+    let startInputInstance: MatSliderThumb;
+    let endInputInstance: MatSliderThumb;
+
+    beforeEach(waitForAsync(() => {
+      fixture = createComponent(RangeSliderWithOneWayBinding);
+      fixture.detectChanges();
+      testComponent = fixture.debugElement.componentInstance;
+      const sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider));
+      const sliderInstance = sliderDebugElement.componentInstance;
+      startInputInstance = sliderInstance._getInput(Thumb.START);
+      endInputInstance = sliderInstance._getInput(Thumb.END);
+    }));
+
+    it('should update when bound start value changes', () => {
+      testComponent.startValue = 30;
+      fixture.detectChanges();
+      expect(startInputInstance.value).toBe(30);
+    });
+
+    it('should update when bound end value changes', () => {
+      testComponent.endValue = 70;
+      fixture.detectChanges();
+      expect(endInputInstance.value).toBe(70);
+    });
+  });
 });
 
 
@@ -853,6 +903,30 @@ class DiscreteRangeSliderWithDisplayWith {
     if (v >= 1000) { return `$${v / 1000}k`; }
     return `$${v}`;
   }
+}
+
+@Component({
+  template: `
+  <mat-slider>
+    <input [value]="value" matSliderThumb>
+  </mat-slider>
+  `,
+})
+class SliderWithOneWayBinding {
+  value = 50;
+}
+
+@Component({
+  template: `
+  <mat-slider>
+    <input [value]="startValue" matSliderStartThumb>
+    <input [value]="endValue" matSliderEndThumb>
+  </mat-slider>
+  `,
+})
+class RangeSliderWithOneWayBinding {
+  startValue = 25;
+  endValue = 75;
 }
 
 /** The pointer event types used by the MDC Slider. */
