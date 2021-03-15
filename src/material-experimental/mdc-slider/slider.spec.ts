@@ -6,8 +6,10 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {LEFT_ARROW, RIGHT_ARROW} from '@angular/cdk/keycodes';
 import {Platform} from '@angular/cdk/platform';
 import {
+  dispatchEvent,
   dispatchMouseEvent,
   dispatchPointerEvent,
   dispatchTouchEvent,
@@ -559,9 +561,9 @@ describe('MDC-based MatSlider' , () => {
 
     it('should truncate long decimal values when using a decimal step and the arrow keys', () => {
       sliderInstance.step = 0.1;
-      changeValueUsingArrowKeys(sliderInstance, ArrowKey.RIGHT, Thumb.END);
-      changeValueUsingArrowKeys(sliderInstance, ArrowKey.RIGHT, Thumb.END);
-      changeValueUsingArrowKeys(sliderInstance, ArrowKey.RIGHT, Thumb.END);
+      changeValueUsingArrowKeys(sliderInstance, RIGHT_ARROW, Thumb.END);
+      changeValueUsingArrowKeys(sliderInstance, RIGHT_ARROW, Thumb.END);
+      changeValueUsingArrowKeys(sliderInstance, RIGHT_ARROW, Thumb.END);
       expect(inputInstance.value).toBe(0.3);
     });
   });
@@ -630,17 +632,17 @@ describe('MDC-based MatSlider' , () => {
 
     it('should truncate long decimal start values when using a decimal step arrow keys', () => {
       sliderInstance.step = 0.1;
-      changeValueUsingArrowKeys(sliderInstance, ArrowKey.RIGHT, Thumb.START);
-      changeValueUsingArrowKeys(sliderInstance, ArrowKey.RIGHT, Thumb.START);
-      changeValueUsingArrowKeys(sliderInstance, ArrowKey.RIGHT, Thumb.START);
+      changeValueUsingArrowKeys(sliderInstance, RIGHT_ARROW, Thumb.START);
+      changeValueUsingArrowKeys(sliderInstance, RIGHT_ARROW, Thumb.START);
+      changeValueUsingArrowKeys(sliderInstance, RIGHT_ARROW, Thumb.START);
       expect(startInputInstance.value).toBe(0.3);
     });
 
     it('should truncate long decimal end values when using a decimal step arrow keys', () => {
       sliderInstance.step = 0.1;
-      changeValueUsingArrowKeys(sliderInstance, ArrowKey.LEFT, Thumb.END);
-      changeValueUsingArrowKeys(sliderInstance, ArrowKey.LEFT, Thumb.END);
-      changeValueUsingArrowKeys(sliderInstance, ArrowKey.LEFT, Thumb.END);
+      changeValueUsingArrowKeys(sliderInstance, LEFT_ARROW, Thumb.END);
+      changeValueUsingArrowKeys(sliderInstance, LEFT_ARROW, Thumb.END);
+      changeValueUsingArrowKeys(sliderInstance, LEFT_ARROW, Thumb.END);
       expect(endInputInstance.value).toBe(99.7);
     });
   });
@@ -756,11 +758,6 @@ const enum TouchEventType {
   TOUCH_MOVE = 'touchmove',
 }
 
-const enum ArrowKey {
-  LEFT = 37,
-  RIGHT = 39,
-}
-
 /** Clicks on the MatSlider at the coordinates corresponding to the given value. */
 function setValueByClick(slider: MatSlider, value: number, isIOS: boolean) {
   const {min, max} = slider;
@@ -804,13 +801,13 @@ function slideToValue(slider: MatSlider, value: number, thumbPosition: Thumb, is
  * we manually change the slider inputs value and then dispatch a change event (which is what the
  * MDC Foundation is listening for & how it handles these updates).
  */
-function changeValueUsingArrowKeys(slider: MatSlider, arrow: ArrowKey, thumbPosition: Thumb) {
+function changeValueUsingArrowKeys(slider: MatSlider, arrow: number, thumbPosition: Thumb) {
   const input = slider._getInput(thumbPosition);
-  const value = arrow === ArrowKey.RIGHT
+  const value = arrow === RIGHT_ARROW
     ? input.value + slider.step
     : input.value - slider.step;
   input._hostElement.value = value.toString();
-  input._hostElement.dispatchEvent(new Event('change'));
+  dispatchEvent(input._hostElement, new Event('change'));
 }
 
 /** Dispatch a pointerdown or pointerup event if supported, otherwise dispatch the touch event. */
