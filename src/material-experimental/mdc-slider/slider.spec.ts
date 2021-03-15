@@ -646,6 +646,88 @@ describe('MDC-based MatSlider' , () => {
       expect(endInputInstance.value).toBe(99.7);
     });
   });
+
+  describe('slider with custom thumb label formatting', () => {
+    let fixture: ComponentFixture<DiscreteSliderWithDisplayWith>;
+    let sliderInstance: MatSlider;
+    let valueIndicatorTextElement: Element;
+
+    beforeEach(() => {
+      fixture = createComponent(DiscreteSliderWithDisplayWith);
+      fixture.detectChanges();
+      const sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider))!;
+      const sliderNativeElement = sliderDebugElement.nativeElement;
+      sliderInstance = sliderDebugElement.componentInstance;
+      valueIndicatorTextElement =
+        sliderNativeElement.querySelector('.mdc-slider__value-indicator-text')!;
+    });
+
+    it('should invoke the passed-in `displayWith` function with the value', () => {
+      spyOn(fixture.componentInstance, 'displayWith').and.callThrough();
+      sliderInstance._setValue(1337, Thumb.END);
+      fixture.whenStable().then(() => {
+        expect(fixture.componentInstance.displayWith).toHaveBeenCalledWith(1337);
+      });
+    });
+
+    it('should format the thumb label based on the passed-in `displayWith` function', () => {
+      sliderInstance._setValue(200000, Thumb.END);
+      fixture.whenStable().then(() => {
+        expect(valueIndicatorTextElement.textContent).toBe('200k');
+      });
+    });
+  });
+
+  describe('range slider with custom thumb label formatting', () => {
+    let fixture: ComponentFixture<DiscreteRangeSliderWithDisplayWith>;
+    let sliderInstance: MatSlider;
+    let startValueIndicatorTextElement: Element;
+    let endValueIndicatorTextElement: Element;
+
+    beforeEach(() => {
+      fixture = createComponent(DiscreteRangeSliderWithDisplayWith);
+      fixture.detectChanges();
+      const sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider))!;
+      sliderInstance = sliderDebugElement.componentInstance;
+
+      const startThumbElement = sliderInstance._getThumbElement(Thumb.START);
+      const endThumbElement = sliderInstance._getThumbElement(Thumb.END);
+      startValueIndicatorTextElement =
+        startThumbElement.querySelector('.mdc-slider__value-indicator-text')!;
+      endValueIndicatorTextElement =
+        endThumbElement.querySelector('.mdc-slider__value-indicator-text')!;
+    });
+
+    it('should invoke the passed-in `displayWith` function with the start value', () => {
+      spyOn(fixture.componentInstance, 'displayWith').and.callThrough();
+      sliderInstance._setValue(1337, Thumb.START);
+      fixture.whenStable().then(() => {
+        expect(fixture.componentInstance.displayWith).toHaveBeenCalledWith(1337);
+      });
+    });
+
+    it('should invoke the passed-in `displayWith` function with the end value', () => {
+      spyOn(fixture.componentInstance, 'displayWith').and.callThrough();
+      sliderInstance._setValue(5996, Thumb.END);
+      fixture.whenStable().then(() => {
+        expect(fixture.componentInstance.displayWith).toHaveBeenCalledWith(5996);
+      });
+    });
+
+    it('should format the start thumb label based on the passed-in `displayWith` function', () => {
+      sliderInstance._setValue(200000, Thumb.START);
+      fixture.whenStable().then(() => {
+        expect(startValueIndicatorTextElement.textContent).toBe('200k');
+      });
+    });
+
+    it('should format the end thumb label based on the passed-in `displayWith` function', () => {
+      sliderInstance._setValue(700000, Thumb.END);
+      fixture.whenStable().then(() => {
+        expect(endValueIndicatorTextElement.textContent).toBe('700k');
+      });
+    });
+  });
 });
 
 
@@ -743,6 +825,35 @@ class SliderWithStep {}
   `,
 })
 class RangeSliderWithStep {}
+
+@Component({
+  template: `
+  <mat-slider [displayWith]="displayWith" min="1" max="1000000" discrete>
+    <input matSliderThumb>
+  </mat-slider>
+  `,
+})
+class DiscreteSliderWithDisplayWith {
+  displayWith(v: number) {
+    if (v >= 1000) { return `$${v / 1000}k`; }
+    return `$${v}`;
+  }
+}
+
+@Component({
+  template: `
+  <mat-slider [displayWith]="displayWith" min="1" max="1000000" discrete>
+    <input matSliderStartThumb>
+    <input matSliderEndThumb>
+  </mat-slider>
+  `,
+})
+class DiscreteRangeSliderWithDisplayWith {
+  displayWith(v: number) {
+    if (v >= 1000) { return `$${v / 1000}k`; }
+    return `$${v}`;
+  }
+}
 
 /** The pointer event types used by the MDC Slider. */
 const enum PointerEventType {
