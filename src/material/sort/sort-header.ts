@@ -315,8 +315,7 @@ export class MatSortHeader extends _MatSortHeaderMixinBase
           this._updateArrowDirection();
 
           // Do not show the animation if the header was already shown in the right position.
-          // Or if (this._viewState && (this._viewState.toState === 'hint' || this._viewState.toState === 'active')) {
-          if (this._viewState?.toState === 'hint' || this._viewState?.toState === 'active') {
+          if (this._viewState && (this._viewState.toState === 'hint' || this._viewState.toState === 'active')) {
             this._disableViewStateAnimation = true;
           }
 
