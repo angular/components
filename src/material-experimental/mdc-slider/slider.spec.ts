@@ -658,7 +658,8 @@ describe('MDC-based MatSlider' , () => {
       const sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider))!;
       const sliderNativeElement = sliderDebugElement.nativeElement;
       sliderInstance = sliderDebugElement.componentInstance;
-      valueIndicatorTextElement = sliderNativeElement.querySelector('.mdc-slider__value-indicator-text')!;
+      valueIndicatorTextElement =
+        sliderNativeElement.querySelector('.mdc-slider__value-indicator-text')!;
     });
 
     it('should invoke the passed-in `displayWith` function with the value', () => {
@@ -834,7 +835,7 @@ class RangeSliderWithStep {}
 })
 class DiscreteSliderWithDisplayWith {
   displayWith(v: number) {
-    if (v >= 1000) { return `$${v/1000}k`}
+    if (v >= 1000) { return `$${v / 1000}k`; }
     return `$${v}`;
   }
 }
@@ -849,7 +850,7 @@ class DiscreteSliderWithDisplayWith {
 })
 class DiscreteRangeSliderWithDisplayWith {
   displayWith(v: number) {
-    if (v >= 1000) { return `$${v/1000}k`}
+    if (v >= 1000) { return `$${v / 1000}k`; }
     return `$${v}`;
   }
 }
