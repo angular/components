@@ -58,7 +58,7 @@ export declare class MatFormField extends _MatFormFieldMixinBase implements Afte
     _labelOptions: any, _dir: Directionality, _defaults: MatFormFieldDefaultOptions, _platform: Platform, _ngZone: NgZone, _animationMode: string);
     _animateAndLockLabel(): void;
     _canLabelFloat(): boolean;
-    _getDisplayedMessages(): 'error' | 'hint';
+    _getDisplayedMessages(): 'error' | 'hint' | null;
     _hasFloatingLabel(): boolean;
     _hasLabel(): boolean;
     _hasPlaceholder(): boolean;

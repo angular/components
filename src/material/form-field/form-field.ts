@@ -429,18 +429,26 @@ export class MatFormField extends _MatFormFieldMixinBase
 
   /** Determines whether to display hints, errors or null. */
   _getDisplayedMessages(): 'error' | 'hint' | null {
-    return this._areErrorMessagesVisible() ? 'error' : this._areHintsVisible() ? 'hint' : null;
+    if (this._areErrorMessagesVisible()) {
+      return 'error';
+    }
+    if (this._areHintsVisible()) {
+      return 'hint';
+    }
+    return null;
   }
 
   /**
-   * Makes sure the control element is in an error state and that is has `<mat-error>` child elements.
+   * Makes sure the control element is in an error state and that is has `<mat-error>` child
+   * elements.
    */
   private _areErrorMessagesVisible(): boolean {
     return this._control.errorState && this._errorChildren && this._errorChildren.length > 0;
   }
 
   /**
-   * Makes sure the control element is not in an error state and that is has `<mat-hint>` child elements.
+   * Makes sure the control element is not in an error state and that is has `<mat-hint>` child
+   * elements.
    */
   private _areHintsVisible(): boolean {
     return !this._control.errorState && this._hintChildren && this._hintChildren.length > 0;
