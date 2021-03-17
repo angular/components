@@ -1,3 +1,12 @@
+## 11.2.5 "fauxfur-falafel" (2021-03-17)
+
+### material
+
+|            |                       |
+| ---------- | --------------------- |
+| bug fix |  **select:** float label on focus if there's a placeholder ([#19517](https://github.com/angular/components/issues/19517)) ([77b6a6d860b5a0879fe584323bfb50df33d644d0](https://github.com/angular/components/commit/77b6a6d860b5a0879fe584323bfb50df33d644d0)), closes [#19514](https://github.com/angular/components/issues/19514) |
+
+
 ## 11.2.4 "rayon-crayon" (2021-03-10)
 
 ### material
