@@ -54,6 +54,7 @@ import {
 import {SpecificEventListener, EventType} from '@material/base';
 import {MDCSliderAdapter, MDCSliderFoundation, Thumb, TickMark} from '@material/slider';
 import {Subscription} from 'rxjs';
+import {GlobalChangeListener} from './global-change-listener';
 
 /** Represents a drag event emitted by the MatSlider component. */
 export interface MatSliderDragEvent {
@@ -374,6 +375,12 @@ export class MatSliderThumb implements AfterViewInit, ControlValueAccessor, OnIn
     this._blur.emit();
   }
 
+  _emitChangeEvent() {
+    const event = new Event('change') as any;
+    event.isFake = true;
+    this._hostElement.dispatchEvent(event);
+  }
+
   /**
    * Sets the model value. Implemented as part of ControlValueAccessor.
    * @param value
@@ -605,10 +612,11 @@ export class MatSlider extends _MatSliderMixinBase
     readonly _cdr: ChangeDetectorRef,
     readonly _elementRef: ElementRef<HTMLElement>,
     private readonly _platform: Platform,
+    readonly _globalChangeListener: GlobalChangeListener,
     @Inject(DOCUMENT) document: any,
     @Optional() private _dir: Directionality,
     @Optional() @Inject(MAT_RIPPLE_GLOBAL_OPTIONS)
-      readonly _globalRippleOptions?: RippleGlobalOptions) {
+    readonly _globalRippleOptions?: RippleGlobalOptions) {
       super(_elementRef);
       this._document = document;
       this._window = this._document.defaultView || window;
@@ -756,6 +764,10 @@ export class MatSlider extends _MatSliderMixinBase
 
 /** The MDCSliderAdapter implementation. */
 class SliderAdapter implements MDCSliderAdapter {
+
+  /** The global change listener subscription used to handle change events on the slider inputs. */
+  changeSubscription: Subscription;
+
   constructor(private readonly _delegate: MatSlider) {}
 
   // We manually assign functions instead of using prototype methods because
@@ -840,11 +852,20 @@ class SliderAdapter implements MDCSliderAdapter {
   setPointerCapture = (pointerId: number): void => {
     this._delegate._elementRef.nativeElement.setPointerCapture(pointerId);
   }
-  // We ignore emitChangeEvent and emitInputEvent because the slider inputs
-  // are already exposed so users can just listen for those events directly themselves.
   emitChangeEvent = (value: number, thumbPosition: Thumb): void => {
-    this._delegate._getInput(thumbPosition)._onChange(value);
+    // We block all real slider input change events and emit fake change events from here, instead.
+    // We do this because the mdc implementation of the slider does not trigger real change events
+    // on pointer up (only on left or right arrow key down).
+    //
+    // By stopping real change events from reaching users, and dispatching fake change events
+    // (which we allow to reach the user) the slider inputs change events are triggered at the
+    // appropriate times. This allows users to listen for change events directly on the slider
+    // input as they would with a native range input.
+    const input = this._delegate._getInput(thumbPosition);
+    input._emitChangeEvent();
+    input._onChange(value);
   }
+  // Users can listen for input events directly on the native html inputs that we expose.
   emitInputEvent = (value: number, thumbPosition: Thumb): void => {};
   emitDragStartEvent = (value: number, thumbPosition: Thumb): void => {
     const input = this._delegate._getInput(thumbPosition);
@@ -872,11 +893,34 @@ class SliderAdapter implements MDCSliderAdapter {
   }
   registerInputEventHandler = <K extends EventType>
     (thumbPosition: Thumb, evtType: K, handler: SpecificEventListener<K>): void => {
-      this._delegate._getInputElement(thumbPosition).addEventListener(evtType, handler);
+      if (evtType === 'change') {
+        this.changeSubscription = this._delegate._globalChangeListener.listen((event: Event) => {
+          // We block all real slider input change events and emit fake change events from
+          // #emitChangeEvent, instead. We do this because the mdc implementation of the slider
+          // does not trigger real change events on pointer up (only on left or right arrow key
+          // down).
+          //
+          // By stopping real change events from reaching users, and dispatching fake change events
+          // (which we allow to reach the user) the slider inputs change events are triggered at
+          // the appropriate times. This allows users to listen for change events directly on the
+          // slider input as they would with a native range input.
+          if (event.target === this._delegate._getInputElement(thumbPosition)) {
+            if ((event as any).isFake) { return; }
+            event.stopImmediatePropagation();
+            handler(event as GlobalEventHandlersEventMap[K]);
+          }
+        });
+      } else {
+        this._delegate._getInputElement(thumbPosition).addEventListener(evtType, handler);
+      }
   }
   deregisterInputEventHandler = <K extends EventType>
     (thumbPosition: Thumb, evtType: K, handler: SpecificEventListener<K>): void => {
-      this._delegate._getInputElement(thumbPosition).removeEventListener(evtType, handler);
+      if (evtType === 'change') {
+        this.changeSubscription.unsubscribe();
+      } else {
+        this._delegate._getInputElement(thumbPosition).removeEventListener(evtType, handler);
+      }
   }
   registerBodyEventHandler =
     <K extends EventType>(evtType: K, handler: SpecificEventListener<K>): void => {
