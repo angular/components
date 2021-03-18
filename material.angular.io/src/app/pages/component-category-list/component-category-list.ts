@@ -1,13 +1,18 @@
+import {CommonModule} from '@angular/common';
 import {Component, NgModule, OnDestroy, OnInit} from '@angular/core';
 import {MatCardModule} from '@angular/material/card';
-import {CommonModule} from '@angular/common';
 import {ActivatedRoute, Params, RouterModule} from '@angular/router';
-import {DocumentationItems, SECTIONS} from '../../shared/documentation-items/documentation-items';
-import {ComponentPageTitle} from '../page-title/page-title';
-import {SvgViewerModule} from '../../shared/svg-viewer/svg-viewer';
-import {Observable, combineLatest, Subscription} from 'rxjs';
-import {NavigationFocusModule} from '../../shared/navigation-focus/navigation-focus';
+import {combineLatest, Observable, Subscription} from 'rxjs';
 
+import {
+  DocumentationItems,
+  SECTIONS
+} from '../../shared/documentation-items/documentation-items';
+import {
+  NavigationFocusModule
+} from '../../shared/navigation-focus/navigation-focus';
+import {SvgViewerModule} from '../../shared/svg-viewer/svg-viewer';
+import {ComponentPageTitle} from '../page-title/page-title';
 
 @Component({
   selector: 'app-component-category-list',
@@ -15,9 +20,9 @@ import {NavigationFocusModule} from '../../shared/navigation-focus/navigation-fo
   styleUrls: ['./component-category-list.scss']
 })
 export class ComponentCategoryList implements OnInit, OnDestroy {
-  params: Observable<Params>;
-  routeParamSubscription: Subscription;
-  _categoryListSummary: string;
+  params: Observable<Params> | undefined;
+  routeParamSubscription: Subscription = new Subscription();
+  _categoryListSummary: string | undefined;
 
   constructor(public docItems: DocumentationItems,
               public _componentPageTitle: ComponentPageTitle,

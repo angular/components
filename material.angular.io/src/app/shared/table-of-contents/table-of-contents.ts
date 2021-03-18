@@ -35,7 +35,7 @@ interface Link {
   templateUrl: './table-of-contents.html'
 })
 export class TableOfContents implements OnInit, AfterViewInit, OnDestroy {
-  @Input() container: string;
+  @Input() container: string | undefined;
 
   _linkSections: LinkSection[] = [];
   _links: Link[] = [];

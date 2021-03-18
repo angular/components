@@ -36,11 +36,9 @@ export class ComponentViewer implements OnDestroy {
   sections: Set<string> = new Set(['overview', 'api']);
   private _destroyed = new Subject();
 
-  constructor(_route: ActivatedRoute,
-              private router: Router,
+  constructor(_route: ActivatedRoute, private router: Router,
               public _componentPageTitle: ComponentPageTitle,
-              public docItems: DocumentationItems,
-              ) {
+              public docItems: DocumentationItems) {
     const routeAndParentParams = [_route.params];
     if (_route.parent) {
       routeAndParentParams.push(_route.parent.params);
@@ -78,12 +76,11 @@ export class ComponentViewer implements OnDestroy {
  */
 @Directive()
 export class ComponentBaseView implements OnInit, OnDestroy {
-  @ViewChild('toc') tableOfContents: TableOfContents;
-  @ViewChildren(DocViewer) viewers: QueryList<DocViewer>;
+  @ViewChild('toc') tableOfContents!: TableOfContents;
+  @ViewChildren(DocViewer) viewers!: QueryList<DocViewer>;
 
   showToc: Observable<boolean>;
-
-  destroyed = new Subject<void>();
+  private _destroyed = new Subject();
 
   constructor(
     public componentViewer: ComponentViewer,
@@ -99,7 +96,7 @@ export class ComponentBaseView implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.componentViewer.componentDocItem.pipe(takeUntil(this.destroyed)).subscribe(() => {
+    this.componentViewer.componentDocItem.pipe(takeUntil(this._destroyed)).subscribe(() => {
       if (this.tableOfContents) {
         this.tableOfContents.resetHeaders();
       }
@@ -107,7 +104,7 @@ export class ComponentBaseView implements OnInit, OnDestroy {
 
     this.showToc.pipe(
       skip(1),
-      takeUntil(this.destroyed)
+      takeUntil(this._destroyed)
     ).subscribe(() => {
       if (this.tableOfContents) {
         this.viewers.forEach(viewer => {
@@ -118,7 +115,8 @@ export class ComponentBaseView implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.destroyed.next();
+    this._destroyed.next();
+    this._destroyed.complete();
   }
 
   updateTableOfContents(sectionName: string, docViewerContent: HTMLElement, sectionIndex = 0) {

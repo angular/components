@@ -6,13 +6,15 @@ import {Component, ElementRef, Input, NgModule, OnInit} from '@angular/core';
   template: '<div class="docs-svg-viewer" aria-hidden="true"></div>',
 })
 export class SvgViewer implements OnInit {
-  @Input() src: string;
-  @Input() scaleToContainer: boolean;
+  @Input() src: string | undefined;
+  @Input() scaleToContainer: boolean | undefined;
 
   constructor(private elementRef: ElementRef, private http: HttpClient) { }
 
   ngOnInit() {
-    this.fetchAndInlineSvgContent(this.src);
+    if (this.src) {
+      this.fetchAndInlineSvgContent(this.src);
+    }
   }
 
   private inlineSvgContent(template: string) {

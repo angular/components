@@ -13,6 +13,6 @@ import {DocViewer} from '../doc-viewer/doc-viewer';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CodeSnippet {
-  @Input() source: string;
-  @ViewChild('viewer') viewer: DocViewer;
+  @Input() source: string | undefined;
+  @ViewChild('viewer') viewer!: DocViewer;
 }
