@@ -10,7 +10,7 @@ export class NavigationFocusService implements OnDestroy {
   private subscriptions = new Subscription();
   private navigationFocusRequests: HTMLElement[] = [];
   private skipLinkFocusRequests: HTMLElement[] = [];
-  private skipLinkHref: string|null;
+  private skipLinkHref: string | null | undefined;
 
   readonly navigationEndEvents = this.router.events
     .pipe(filter((event: Event): event is NavigationEnd => event instanceof NavigationEnd));
@@ -53,12 +53,12 @@ export class NavigationFocusService implements OnDestroy {
     this.setSkipLinkHref(skipLinkFocusTarget);
   }
 
-  setSkipLinkHref(el: HTMLElement|null) {
+  setSkipLinkHref(el: HTMLElement | null) {
     const baseUrl = this.router.url.split('#')[0];
     this.skipLinkHref = el ? `${baseUrl}#${el.id}` : null;
   }
 
-  getSkipLinkHref(): string|null {
+  getSkipLinkHref(): string | null | undefined {
     return this.skipLinkHref;
   }
 

@@ -25,7 +25,8 @@
     "noFallthroughCasesInSwitch": true,
     "strictNullChecks": true,
     "strictBindCallApply": true,
-    "strictFunctionTypes": true
+    "strictFunctionTypes": true,
+    "strictPropertyInitialization": true
   },
   "exclude": [
     "src/assets",

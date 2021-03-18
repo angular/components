@@ -28,7 +28,7 @@ import {LiveAnnouncer} from '@angular/cdk/a11y';
 })
 export class ThemePicker implements OnInit, OnDestroy {
   private _queryParamSubscription = Subscription.EMPTY;
-  currentTheme: DocsSiteTheme;
+  currentTheme: DocsSiteTheme | undefined;
 
   // The below colors need to align with the themes defined in theme-picker.scss
   themes: DocsSiteTheme[] = [

@@ -30,19 +30,19 @@ const preferredExampleFileOrder = ['HTML', 'TS', 'CSS'];
   styleUrls: ['./example-viewer.scss']
 })
 export class ExampleViewer implements OnInit {
-  @ViewChildren(CodeSnippet) readonly snippet: QueryList<CodeSnippet>;
+  @ViewChildren(CodeSnippet) readonly snippet!: QueryList<CodeSnippet>;
 
   /** The tab to jump to when expanding from snippet view. */
   selectedTab: number = 0;
 
   /** Map of example files that should be displayed in the view-source tab in order. */
-  exampleTabs: {[tabName: string]: string};
+  exampleTabs: {[tabName: string]: string} = {};
 
   /** Data for the currently selected example. */
   exampleData: LiveExample|null = null;
 
   /** URL to fetch code snippet for snippet view. */
-  fileUrl: string;
+  fileUrl: string | undefined;
 
   /** Component type for the current example. */
   _exampleComponentType: Type<any>|null = null;
@@ -51,7 +51,7 @@ export class ExampleViewer implements OnInit {
   _exampleModuleFactory: NgModuleFactory<any>|null = null;
 
   /** View of the example component. */
-  @Input() view: Views;
+  @Input() view: Views | undefined;
 
   /** Whether to show toggle for compact view. */
   @Input() showCompactToggle = false;
@@ -60,17 +60,18 @@ export class ExampleViewer implements OnInit {
   @HostBinding('attr.id')
   @Input()
   get example() { return this._example; }
-  set example(exampleName: string) {
+  set example(exampleName: string | undefined) {
     if (exampleName && exampleName !== this._example && EXAMPLE_COMPONENTS[exampleName]) {
       this._example = exampleName;
       this.exampleData = EXAMPLE_COMPONENTS[exampleName];
       this._generateExampleTabs();
-      this._loadExampleComponent();
+      this._loadExampleComponent().catch((error) =>
+        console.error(`Could not load example '${exampleName}': ${error}`));
     } else {
       console.error(`Could not find example: ${exampleName}`);
     }
   }
-  private _example: string;
+  private _example: string | undefined;
 
   /** Range of lines of the source code to display in compact view. */
   @Input() region?: string;
@@ -122,7 +123,8 @@ export class ExampleViewer implements OnInit {
     this.view === 'full' ? this.view = 'demo' : this.view = 'full';
   }
 
-  copySource(text: string) {
+  copySource(snippet: QueryList<CodeSnippet>, selectedIndex: number = 0) {
+    const text = snippet.toArray()[selectedIndex].viewer.textContent || '';
     if (this.clipboard.copy(text)) {
       this.snackbar.open('Code copied', '', {duration: 2500});
     } else {
@@ -147,7 +149,7 @@ export class ExampleViewer implements OnInit {
   }
 
   _getExampleTabNames() {
-    return Object.keys(this.exampleTabs).sort((a, b) => {
+    return this.exampleTabs ? Object.keys(this.exampleTabs).sort((a, b) => {
       let indexA = preferredExampleFileOrder.indexOf(a);
       let indexB = preferredExampleFileOrder.indexOf(b);
       // Files which are not part of the preferred example file order should be
@@ -155,7 +157,7 @@ export class ExampleViewer implements OnInit {
       if (indexA === -1) indexA = preferredExampleFileOrder.length;
       if (indexB === -1) indexB = preferredExampleFileOrder.length;
       return (indexA - indexB) || 1;
-    });
+    }) : [];
   }
 
   _copyLink() {
@@ -171,28 +173,30 @@ export class ExampleViewer implements OnInit {
 
   /** Loads the component and module factory for the currently selected example. */
   private async _loadExampleComponent() {
-    const {componentName, module} = EXAMPLE_COMPONENTS[this._example];
-    // Lazily loads the example package that contains the requested example. Webpack needs to be
-    // able to statically determine possible imports for proper chunk generation. Explicitly
-    // specifying the path to the `fesm2015` folder as first segment instructs Webpack to generate
-    // chunks for each example flat esm2015 bundle. To avoid generating unnecessary chunks for
-    // source maps (which would never be loaded), we instruct Webpack to exclude source map
-    // files. More details: https://webpack.js.org/api/module-methods/#magic-comments.
-    const moduleExports: any = await import(
-      /* webpackExclude: /\.map$/ */
+    if (this._example != null) {
+      const {componentName, module} = EXAMPLE_COMPONENTS[this._example];
+      // Lazily loads the example package that contains the requested example. Webpack needs to be
+      // able to statically determine possible imports for proper chunk generation. Explicitly
+      // specifying the path to the `fesm2015` folder as first segment instructs Webpack to generate
+      // chunks for each example flat esm2015 bundle. To avoid generating unnecessary chunks for
+      // source maps (which would never be loaded), we instruct Webpack to exclude source map
+      // files. More details: https://webpack.js.org/api/module-methods/#magic-comments.
+      const moduleExports: any = await import(
+        /* webpackExclude: /\.map$/ */
       '@angular/components-examples/fesm2015/' + module.importSpecifier);
-    this._exampleComponentType = moduleExports[componentName];
-    // The components examples package is built with Ivy. This means that no factory files are
-    // generated. To retrieve the factory of the AOT compiled module, we simply pass the module
-    // class symbol to Ivy's module factory constructor. There is no equivalent for View Engine,
-    // where factories are stored in separate files. Hence the API is currently Ivy-only.
-    this._exampleModuleFactory = new ɵNgModuleFactory(moduleExports[module.name]);
+      this._exampleComponentType = moduleExports[componentName];
+      // The components examples package is built with Ivy. This means that no factory files are
+      // generated. To retrieve the factory of the AOT compiled module, we simply pass the module
+      // class symbol to Ivy's module factory constructor. There is no equivalent for View Engine,
+      // where factories are stored in separate files. Hence the API is currently Ivy-only.
+      this._exampleModuleFactory = new ɵNgModuleFactory(moduleExports[module.name]);
 
-    // Since the data is loaded asynchronously, we can't count on the native behavior
-    // that scrolls the element into view automatically. We do it ourselves while giving
-    // the page some time to render.
-    if (typeof location !== 'undefined' && location.hash.slice(1) === this._example) {
-      setTimeout(() => this.elementRef.nativeElement.scrollIntoView(), 300);
+      // Since the data is loaded asynchronously, we can't count on the native behavior
+      // that scrolls the element into view automatically. We do it ourselves while giving
+      // the page some time to render.
+      if (typeof location !== 'undefined' && location.hash.slice(1) === this._example) {
+        setTimeout(() => this.elementRef.nativeElement.scrollIntoView(), 300);
+      }
     }
   }
 

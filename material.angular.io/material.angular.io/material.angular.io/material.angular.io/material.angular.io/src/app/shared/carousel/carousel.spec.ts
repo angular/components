@@ -99,6 +99,5 @@ describe('HorizontalCarousel', () => {
 })
 class CarouselTestComponent {
   numberOfItems = 6;
-  @ViewChild(Carousel) carousel: Carousel;
+  @ViewChild(Carousel) carousel!: Carousel;
 }
-

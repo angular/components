@@ -18,25 +18,28 @@ export class StackBlitzButton {
    * StackBlitz not yet being ready for people with poor network connections or slow devices.
    */
   isDisabled = false;
-  stackBlitzForm: HTMLFormElement;
-  exampleData: ExampleData;
+  stackBlitzForm: HTMLFormElement | undefined;
+  exampleData: ExampleData | undefined;
 
   @HostListener('mouseover') onMouseOver() {
     this.isDisabled = !this.stackBlitzForm;
   }
 
   @Input()
-  set example(example: string) {
-    this.exampleData = new ExampleData(example);
-
+  set example(example: string | undefined) {
     if (example) {
-      this.stackBlitzWriter.constructStackBlitzForm(example,
-        this.exampleData,
-        example.includes('harness'))
+      this.exampleData = new ExampleData(example);
+      if (this.exampleData) {
+        this.stackBlitzWriter.constructStackBlitzForm(example,
+          this.exampleData,
+          example.includes('harness'))
         .then((stackBlitzForm: HTMLFormElement) => {
           this.stackBlitzForm = stackBlitzForm;
           this.isDisabled = false;
         });
+      } else {
+        this.isDisabled = true;
+      }
     } else {
       this.isDisabled = true;
     }
@@ -49,9 +52,11 @@ export class StackBlitzButton {
     // to submit if it is detached from the document. See the following chromium commit for
     // more details:
     // https://chromium.googlesource.com/chromium/src/+/962c2a22ddc474255c776aefc7abeba00edc7470%5E!
-    document.body.appendChild(this.stackBlitzForm);
-    this.stackBlitzForm.submit();
-    document.body.removeChild(this.stackBlitzForm);
+    if (this.stackBlitzForm) {
+      document.body.appendChild(this.stackBlitzForm);
+      this.stackBlitzForm.submit();
+      document.body.removeChild(this.stackBlitzForm);
+    }
   }
 }
 

@@ -33,7 +33,7 @@
     <mat-tab-group animationDuration="0ms" [(selectedIndex)]="selectedTab">
       <mat-tab *ngFor="let tabName of _getExampleTabNames()" [label]="tabName">
         <div class="button-bar">
-          <button mat-icon-button type="button" (click)="copySource(snippet.toArray()[selectedTab].viewer.textContent)"
+          <button mat-icon-button type="button" (click)="copySource(snippet, selectedTab)"
                   class="docs-example-source-copy docs-example-button" matTooltip="Copy example source"
                   title="Copy example source" aria-label="Copy example source to clipboard">
             <mat-icon>content_copy</mat-icon>
@@ -46,7 +46,7 @@
 
   <div class="docs-example-viewer-source-compact" *ngIf="view === 'snippet'">
     <div class="button-bar">
-      <button mat-icon-button type="button" (click)="copySource(snippet.first.viewer.textContent)"
+      <button mat-icon-button type="button" (click)="copySource(snippet)"
               class="docs-example-source-copy docs-example-button" matTooltip="Copy snippet"
               title="Copy example source" aria-label="Copy example source to clipboard">
         <mat-icon>content_copy</mat-icon>

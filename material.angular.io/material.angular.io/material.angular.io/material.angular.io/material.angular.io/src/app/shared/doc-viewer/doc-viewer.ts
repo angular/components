@@ -26,9 +26,9 @@ import {HeaderLink} from './header-link';
 })
 export class DocViewer implements OnDestroy {
   private _portalHosts: DomPortalOutlet[] = [];
-  private _documentFetchSubscription: Subscription;
+  private _documentFetchSubscription: Subscription = new Subscription();
 
-  @Input() name: string;
+  @Input() name: string | undefined;
 
   /** The URL of the document to display. */
   @Input()
