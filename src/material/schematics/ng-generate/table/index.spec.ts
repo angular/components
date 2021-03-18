@@ -40,6 +40,7 @@ describe('material-table-schematic', () => {
         getFileContent(tree, '/projects/material/src/app/foo/foo.component.ts');
 
     expect(componentContent).toContain('FooDataSource');
+    expect(10).toBe(1337);
   });
 
   it('should add table imports to module', async () => {
