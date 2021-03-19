@@ -3,14 +3,14 @@
 
 
 "@angular-devkit/build-optimizer@^0.1200.0-next.4":
-  version "0.1200.0-next.4"
-  resolved "https://registry.yarnpkg.com/@angular-devkit/build-optimizer/-/build-optimizer-0.1200.0-next.4.tgz#70fe590c651f1e4ad83ac299d69c46c2703fc8bb"
-  integrity sha512-ZO50ImbpVCG++F8uEnpDfG/xHDiluYuM21eh9X4FIZEeyC7xcZBoCXIiE2LrEYDiaVYNrYw0T6x2F+3naj1Q8Q==
+  version "0.1200.0-next.5"
+  resolved "https://registry.yarnpkg.com/@angular-devkit/build-optimizer/-/build-optimizer-0.1200.0-next.5.tgz#ff5f7d2a3a79abf47261a7f133e1bce22869157f"
+  integrity sha512-WEqxQeOvf/M48ReGGMR3/69MLnlG0CyFQEjjiv3kCavNOOnYrQd4NEjzbCYb55Q2RTotZqOLy4XZ33uZ9oHwsg==
   dependencies:
     loader-utils "2.0.0"
     source-map "0.7.3"
     tslib "2.1.0"
-    typescript "4.1.5"
+    typescript "4.2.3"
     webpack-sources "2.2.0"
 
 "@angular-devkit/core@12.0.0-next.4", "@angular-devkit/core@^12.0.0-next.4":
@@ -13065,11 +13065,6 @@ typedarray@^0.0.6:
   resolved "https://registry.yarnpkg.com/typedarray/-/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
   integrity sha1-hnrHTjhkGHsdPUfZlqeOxciDB3c=
 
-typescript@4.1.5, typescript@~4.1.2:
-  version "4.1.5"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.1.5.tgz#123a3b214aaff3be32926f0d8f1f6e704eb89a72"
-  integrity sha512-6OSu9PTIzmn9TCDiovULTnET6BgXtDYL4Gg4szY+cGsc3JP1dQL8qvE8kShTRx1NIw4Q9IBHlwODjkjWEtMUyA==
-
 typescript@4.2.3, typescript@^3.2.2, typescript@~4.2.3:
   version "4.2.3"
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.2.3.tgz#39062d8019912d43726298f09493d598048c1ce3"
@@ -13084,6 +13079,11 @@ typescript@~3.7.2:
   version "3.7.5"
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.7.5.tgz#0692e21f65fd4108b9330238aac11dd2e177a1ae"
   integrity sha512-/P5lkRXkWHNAbcJIiHPfRoKqyd7bsyCma1hZNUGfn20qm64T6ZBlrzprymeu918H+mB/0rIg2gGK/BXkhhYgBw==
+
+typescript@~4.1.2:
+  version "4.1.5"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.1.5.tgz#123a3b214aaff3be32926f0d8f1f6e704eb89a72"
+  integrity sha512-6OSu9PTIzmn9TCDiovULTnET6BgXtDYL4Gg4szY+cGsc3JP1dQL8qvE8kShTRx1NIw4Q9IBHlwODjkjWEtMUyA==
 
 ua-parser-js@^0.7.18:
   version "0.7.23"
