@@ -109,6 +109,7 @@ const INDETERMINATE_ANIMATION_TEMPLATE = `
   host: {
     'role': 'progressbar',
     'class': 'mat-progress-spinner',
+    'tabindex': '-1',
     '[class._mat-animation-noopable]': `_noopAnimations`,
     '[style.width.px]': 'diameter',
     '[style.height.px]': 'diameter',

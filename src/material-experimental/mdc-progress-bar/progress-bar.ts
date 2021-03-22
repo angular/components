@@ -50,6 +50,7 @@ export type ProgressBarMode = 'determinate' | 'indeterminate' | 'buffer' | 'quer
     'role': 'progressbar',
     'aria-valuemin': '0',
     'aria-valuemax': '100',
+    'tabindex': '-1',
     '[attr.aria-valuenow]': '(mode === "indeterminate" || mode === "query") ? null : value',
     '[attr.mode]': 'mode',
     'class': 'mat-mdc-progress-bar',

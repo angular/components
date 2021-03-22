@@ -58,6 +58,7 @@ const BASE_STROKE_WIDTH = 10;
   host: {
     'role': 'progressbar',
     'class': 'mat-mdc-progress-spinner mdc-circular-progress',
+    'tabindex': '-1',
     '[class._mat-animation-noopable]': `_noopAnimations`,
     '[style.width.px]': 'diameter',
     '[style.height.px]': 'diameter',

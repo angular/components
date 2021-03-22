@@ -92,6 +92,7 @@ let progressbarId = 0;
     'role': 'progressbar',
     'aria-valuemin': '0',
     'aria-valuemax': '100',
+    'tabindex': '-1',
     '[attr.aria-valuenow]': '(mode === "indeterminate" || mode === "query") ? null : value',
     '[attr.mode]': 'mode',
     'class': 'mat-progress-bar',
