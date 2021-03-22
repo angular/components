@@ -108,6 +108,8 @@ export class CdkTextareaAutosize implements AfterViewInit, DoCheck, OnDestroy {
   /** Class that should be applied to the textarea while it's being measured. */
   private _measuringClass: string;
 
+  private _isViewInited = false;
+
   constructor(private _elementRef: ElementRef<HTMLElement>,
               private _platform: Platform,
               private _ngZone: NgZone,
@@ -155,6 +157,9 @@ export class CdkTextareaAutosize implements AfterViewInit, DoCheck, OnDestroy {
           .pipe(auditTime(16), takeUntil(this._destroyed))
           .subscribe(() => this.resizeToFitContent(true));
       });
+
+      this._isViewInited = true;
+      this._cacheTextareaPlaceholderHeight();
     }
   }
 
@@ -219,7 +224,11 @@ export class CdkTextareaAutosize implements AfterViewInit, DoCheck, OnDestroy {
   }
 
   private _cacheTextareaPlaceholderHeight(): void {
-    if (this._cachedPlaceholderHeight) {
+    if (!this._isViewInited || this._cachedPlaceholderHeight != undefined) {
+      return;
+    }
+    if (!this.placeholder) {
+      this._cachedPlaceholderHeight = 0;
       return;
     }
 
