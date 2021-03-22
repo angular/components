@@ -27,10 +27,10 @@ export class GlobalChangeAndInputListener<K extends 'change'|'input'> {
   private _document: Document;
 
   /** Stores the subjects that emit the events that occur on the global document. */
-  private subjects = new Map<K, Subject<Event>>();
+  private _subjects = new Map<K, Subject<Event>>();
 
   /** Stores the event handlers that emit the events that occur on the global document. */
-  private handlers = new Map<K, ((event: Event) => void)>();
+  private _handlers = new Map<K, ((event: Event) => void)>();
 
   constructor(@Inject(DOCUMENT) document: any) {
     this._document = document;
@@ -39,29 +39,29 @@ export class GlobalChangeAndInputListener<K extends 'change'|'input'> {
   /** Returns a function for handling the given type of event. */
   private _createHandlerFn(type: K): ((event: Event) => void) {
     return (event: Event) => {
-      this.subjects.get(type)!.next(event);
-    }
+      this._subjects.get(type)!.next(event);
+    };
   }
 
   /** Returns a subscription to global change or input events. */
   listen(type: K, callback: SpecificEventListener<K>): Subscription {
     // This is the first subscription to these events.
-    if (!this.subjects.get(type)) {
-      const handler = this._createHandlerFn(type).bind(this);
-      this.subjects.set(type, new Subject<Event>());
-      this.handlers.set(type, handler);
-      this._document.addEventListener(type, handler, true);
+    if (!this._subjects.get(type)) {
+      const handlerFn = this._createHandlerFn(type).bind(this);
+      this._subjects.set(type, new Subject<Event>());
+      this._handlers.set(type, handlerFn);
+      this._document.addEventListener(type, handlerFn, true);
     }
 
-    const subject = this.subjects.get(type)!;
-    const handler = this.handlers.get(type)!;
+    const subject = this._subjects.get(type)!;
+    const handler = this._handlers.get(type)!;
 
     return subject.pipe(finalize(() => {
         // This is the last event listener unsubscribing.
         if (subject.observers.length === 1) {
           this._document.removeEventListener(type, handler, true);
-          this.subjects.delete(type);
-          this.handlers.delete(type);
+          this._subjects.delete(type);
+          this._handlers.delete(type);
         }
     })).subscribe(callback);
   }

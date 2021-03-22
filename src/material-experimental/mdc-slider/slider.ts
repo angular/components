@@ -874,7 +874,7 @@ class SliderAdapter implements MDCSliderAdapter {
   }
   emitInputEvent = (value: number, thumbPosition: Thumb): void => {
     this._delegate._getInput(thumbPosition)._emitFakeEvent('input');
-  };
+  }
   emitDragStartEvent = (value: number, thumbPosition: Thumb): void => {
     const input = this._delegate._getInput(thumbPosition);
     input.dragStart.emit({ source: input, parent: this._delegate, value });
