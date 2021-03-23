@@ -2218,7 +2218,7 @@ const textareaStyleReset = `
 
 @Component({
   template: `
-    <mat-form-field style="width: 100px">
+    <mat-form-field style="width: 100px" appearance="fill">
       <textarea matInput matTextareaAutosize [placeholder]="placeholder"></textarea>
     </mat-form-field>`,
   styles: [textareaStyleReset],
