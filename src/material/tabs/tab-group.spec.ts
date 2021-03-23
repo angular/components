@@ -701,7 +701,7 @@ describe('MatTabGroup', () => {
     }));
   });
 
-  describe('high tabs', () => {
+  describe('tall tabs', () => {
     beforeEach(() => {
       window.scrollTo({top: 0});
     });
