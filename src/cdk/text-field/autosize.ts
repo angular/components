@@ -159,7 +159,7 @@ export class CdkTextareaAutosize implements AfterViewInit, DoCheck, OnDestroy {
       });
 
       this._isViewInited = true;
-      this._cacheTextareaPlaceholderHeight();
+      this.resizeToFitContent(true);
     }
   }
 
