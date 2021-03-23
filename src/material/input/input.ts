@@ -77,9 +77,11 @@ const _MatInputMixinBase: CanUpdateErrorStateCtor & typeof MatInputBase =
     // Native input properties that are overwritten by Angular inputs need to be synced with
     // the native input element. Otherwise property bindings for those don't work.
     '[attr.id]': 'id',
-    // At the time of writing, we have a lot of customer tests that look up the input based on its
-    // placeholder. Since we sometimes omit the placeholder attribute from the DOM to prevent screen
-    // readers from reading it twice, we have to keep it somewhere in the DOM for the lookup.
+    // TODO(mmalerba): We used to sometimes omit the placeholder attribute from the DOM to prevent
+    //  screen readers from reading it twice, so this was used to let developers look up elements by
+    //  placeholder in queries. Since we no longer remove the placeholder, we should remove this and
+    //  developers can query by placeholder directly.
+    /** @breaking-change 13.0.0 Remove this attribute. */
     '[attr.data-placeholder]': 'placeholder',
     '[disabled]': 'disabled',
     '[required]': 'required',
@@ -96,7 +98,6 @@ export class MatInput extends _MatInputMixinBase implements MatFormFieldControl<
   protected _uid = `mat-input-${nextUniqueId++}`;
   protected _previousNativeValue: any;
   private _inputValueAccessor: {value: any};
-  private _previousPlaceholder: string | null;
 
   /** Whether the component is being rendered on the server. */
   readonly _isServer: boolean;
@@ -243,7 +244,8 @@ export class MatInput extends _MatInputMixinBase implements MatFormFieldControl<
       private _autofillMonitor: AutofillMonitor,
       ngZone: NgZone,
       // TODO: Remove this once the legacy appearance has been removed. We only need
-      // to inject the form-field for determining whether the placeholder has been promoted.
+      //  to inject the form-field for determining whether the placeholder has been promoted.
+      /** @breaking-change: 13.0.0 Remove this parameter. */
       @Optional() @Inject(MAT_FORM_FIELD) private _formField?: MatFormField) {
 
     super(_defaultErrorStateMatcher, _parentForm, _parentFormGroup, ngControl);
@@ -322,10 +324,6 @@ export class MatInput extends _MatInputMixinBase implements MatFormFieldControl<
     // we won't be notified when it changes (e.g. the consumer isn't using forms or they're
     // updating the value using `emitEvent: false`).
     this._dirtyCheckNativeValue();
-
-    // We need to dirty-check and set the placeholder attribute ourselves, because whether it's
-    // present or not depends on a query which is prone to "changed after checked" errors.
-    this._dirtyCheckPlaceholder();
   }
 
   /** Focuses the input. */
@@ -363,21 +361,6 @@ export class MatInput extends _MatInputMixinBase implements MatFormFieldControl<
     // value changes and will not disappear.
     // Listening to the input event wouldn't be necessary when the input is using the
     // FormsModule or ReactiveFormsModule, because Angular forms also listens to input events.
-  }
-
-  /** Does some manual dirty checking on the native input `placeholder` attribute. */
-  private _dirtyCheckPlaceholder() {
-    // If we're hiding the native placeholder, it should also be cleared from the DOM, otherwise
-    // screen readers will read it out twice: once from the label and once from the attribute.
-    // TODO: can be removed once we get rid of the `legacy` style for the form field, because it's
-    // the only one that supports promoting the placeholder to a label.
-    const placeholder = this._formField?._hideControlPlaceholder?.() ? null : this.placeholder;
-    if (placeholder !== this._previousPlaceholder) {
-      const element = this._elementRef.nativeElement;
-      this._previousPlaceholder = placeholder;
-      placeholder ?
-          element.setAttribute('placeholder', placeholder) : element.removeAttribute('placeholder');
-    }
   }
 
   /** Does some manual dirty checking on the native input `value` property. */
