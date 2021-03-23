@@ -9,15 +9,18 @@
 import {
   _getTextWithExcludedElements,
   ElementDimensions,
+  EventData,
   ModifierKeys,
   TestElement,
   TestKey,
-  TextOptions,
-  EventData,
+  TextOptions
 } from '@angular/cdk/testing';
-import {browser, Button, by, ElementFinder, Key} from 'protractor';
+import {Button, By, Key, WebElement} from 'selenium-webdriver';
 
-/** Maps the `TestKey` constants to Protractor's `Key` constants. */
+/**
+ * Maps the `TestKey` constants to WebDriver's `Key` constants.
+ * See https://github.com/SeleniumHQ/selenium/blob/trunk/javascript/webdriver/key.js#L29
+ */
 const keyMap = {
   [TestKey.BACKSPACE]: Key.BACK_SPACE,
   [TestKey.TAB]: Key.TAB,
@@ -52,7 +55,7 @@ const keyMap = {
 };
 
 /** Converts a `ModifierKeys` object to a list of Protractor `Key`s. */
-function toProtractorModifierKeys(modifiers: ModifierKeys): string[] {
+function toWebDriverModifierKeys(modifiers: ModifierKeys): string[] {
   const result: string[] = [];
   if (modifiers.control) {
     result.push(Key.CONTROL);
@@ -69,46 +72,42 @@ function toProtractorModifierKeys(modifiers: ModifierKeys): string[] {
   return result;
 }
 
-/** A `TestElement` implementation for Protractor. */
-export class ProtractorElement implements TestElement {
-  constructor(readonly element: ElementFinder) {}
+/** A `TestElement` implementation for WebDriver. */
+export class WebdriverElement implements TestElement {
+  constructor(private readonly _webElement: () => WebElement) {}
 
   async blur(): Promise<void> {
-    return browser.executeScript('arguments[0].blur()', this.element);
+    return this._executeScript(((element: HTMLElement) => element.blur()), this._webElement());
   }
 
   async clear(): Promise<void> {
-    return this.element.clear();
+    return this._webElement().clear();
   }
 
   async click(...args: [ModifierKeys?] | ['center', ModifierKeys?] |
-    [number, number, ModifierKeys?]): Promise<void> {
+      [number, number, ModifierKeys?]): Promise<void> {
     await this._dispatchClickEventSequence(args, Button.LEFT);
   }
 
   async rightClick(...args: [ModifierKeys?] | ['center', ModifierKeys?] |
-    [number, number, ModifierKeys?]): Promise<void> {
+      [number, number, ModifierKeys?]): Promise<void> {
     await this._dispatchClickEventSequence(args, Button.RIGHT);
   }
 
   async focus(): Promise<void> {
-    return browser.executeScript('arguments[0].focus()', this.element);
+    return this._executeScript((element: HTMLElement) => element.blur(), this._webElement());
   }
 
   async getCssValue(property: string): Promise<string> {
-    return this.element.getCssValue(property);
+    return this._webElement().getCssValue(property);
   }
 
   async hover(): Promise<void> {
-    return browser.actions()
-        .mouseMove(await this.element.getWebElement())
-        .perform();
+    return this._actions().mouseMove(this._webElement()).perform();
   }
 
   async mouseAway(): Promise<void> {
-    return browser.actions()
-        .mouseMove(await this.element.getWebElement(), {x: -1, y: -1})
-        .perform();
+    return this._actions().mouseMove(this._webElement(), {x: -1, y: -1}).perform();
   }
 
   async sendKeys(...keys: (string | TestKey)[]): Promise<void>;
@@ -125,26 +124,27 @@ export class ProtractorElement implements TestElement {
       rest = modifiersAndKeys;
     }
 
-    const modifierKeys = toProtractorModifierKeys(modifiers);
+    const modifierKeys = toWebDriverModifierKeys(modifiers);
     const keys = rest.map(k => typeof k === 'string' ? k.split('') : [keyMap[k]])
         .reduce((arr, k) => arr.concat(k), [])
         // Key.chord doesn't work well with geckodriver (mozilla/geckodriver#1502),
         // so avoid it if no modifier keys are required.
         .map(k => modifierKeys.length > 0 ? Key.chord(...modifierKeys, k) : k);
 
-    return this.element.sendKeys(...keys);
+    return this._webElement().sendKeys(...keys);
   }
 
   async text(options?: TextOptions): Promise<string> {
     if (options?.exclude) {
-      return browser.executeScript(_getTextWithExcludedElements, this.element, options.exclude);
+      return this._executeScript(_getTextWithExcludedElements, this._webElement(), options.exclude);
     }
-    return this.element.getText();
+    return this._webElement().getText();
   }
 
   async getAttribute(name: string): Promise<string|null> {
-    return browser.executeScript(
-        `return arguments[0].getAttribute(arguments[1])`, this.element, name);
+    return this._executeScript(
+        (element: Element, attribute: string) => element.getAttribute(attribute),
+        this._webElement(), name);
   }
 
   async hasClass(name: string): Promise<boolean> {
@@ -153,21 +153,25 @@ export class ProtractorElement implements TestElement {
   }
 
   async getDimensions(): Promise<ElementDimensions> {
-    const {width, height} = await this.element.getSize();
-    const {x: left, y: top} = await this.element.getLocation();
+    const {width, height} = await this._webElement().getSize();
+    const {x: left, y: top} = await this._webElement().getLocation();
     return {width, height, left, top};
   }
 
   async getProperty(name: string): Promise<any> {
-    return browser.executeScript(`return arguments[0][arguments[1]]`, this.element, name);
+    return this._executeScript(
+        (element: Element, property: keyof Element) => element[property],
+        this._webElement(), name);
   }
 
-  async setInputValue(value: string): Promise<void> {
-    return browser.executeScript(`arguments[0].value = arguments[1]`, this.element, value);
+  async setInputValue(newValue: string): Promise<void> {
+    return this._executeScript(
+        (element: HTMLInputElement, value: string) => element.value = value,
+        this._webElement(), newValue);
   }
 
   async selectOptions(...optionIndexes: number[]): Promise<void> {
-    const options = await this.element.all(by.css('option'));
+    const options = await this._webElement().findElements(By.css('option'));
     const indexes = new Set(optionIndexes); // Convert to a set to remove duplicates.
 
     if (options.length && indexes.size) {
@@ -179,48 +183,55 @@ export class ProtractorElement implements TestElement {
         if (indexes.has(i)) {
           // We have to hold the control key while clicking on options so that multiple can be
           // selected in multi-selection mode. The key doesn't do anything for single selection.
-          await browser.actions().keyDown(Key.CONTROL).perform();
+          await this._actions().keyDown(Key.CONTROL).perform();
           await options[i].click();
-          await browser.actions().keyUp(Key.CONTROL).perform();
+          await this._actions().keyUp(Key.CONTROL).perform();
         }
       }
     }
   }
 
   async matchesSelector(selector: string): Promise<boolean> {
-      return browser.executeScript(`
-          return (Element.prototype.matches ||
-                  Element.prototype.msMatchesSelector).call(arguments[0], arguments[1])
-          `, this.element, selector);
+    return this._executeScript((element: Element, s: string) =>
+        (Element.prototype.matches || (Element.prototype as any).msMatchesSelector)
+            .call(element, s),
+        this._webElement(), selector);
   }
 
   async isFocused(): Promise<boolean> {
-    return this.element.equals(browser.driver.switchTo().activeElement());
+    return WebElement.equals(
+        this._webElement(), this._webElement().getDriver().switchTo().activeElement());
   }
 
   async dispatchEvent(name: string, data?: Record<string, EventData>): Promise<void> {
-    return browser.executeScript(_dispatchEvent, name, this.element, data);
+    return this._executeScript(_dispatchEvent, name, this._webElement(), data);
+  }
+
+  private _actions() {
+    return this._webElement().getDriver().actions();
+  }
+
+  private async _executeScript<T>(script: Function, ...var_args: any[]): Promise<T> {
+    return this._webElement().getDriver().executeScript(script, ...var_args);
   }
 
   /** Dispatches all the events that are part of a click event sequence. */
   private async _dispatchClickEventSequence(
-    args: [ModifierKeys?] | ['center', ModifierKeys?] |
-      [number, number, ModifierKeys?],
-    button: string) {
+      args: [ModifierKeys?] | ['center', ModifierKeys?] | [number, number, ModifierKeys?],
+      button: string) {
     let modifiers: ModifierKeys = {};
     if (args.length && typeof args[args.length - 1] === 'object') {
       modifiers = args.pop() as ModifierKeys;
     }
-    const modifierKeys = toProtractorModifierKeys(modifiers);
+    const modifierKeys = toWebDriverModifierKeys(modifiers);
 
     // Omitting the offset argument to mouseMove results in clicking the center.
     // This is the default behavior we want, so we use an empty array of offsetArgs if
     // no args remain after popping the modifiers from the args passed to this function.
     const offsetArgs = (args.length === 2 ?
-      [{x: args[0], y: args[1]}] : []) as [{x: number, y: number}];
+        [{x: args[0], y: args[1]}] : []) as [{x: number, y: number}];
 
-    let actions = browser.actions()
-      .mouseMove(await this.element.getWebElement(), ...offsetArgs);
+    let actions = this._actions().mouseMove(this._webElement(), ...offsetArgs);
 
     for (const modifierKey of modifierKeys) {
       actions = actions.keyDown(modifierKey);
@@ -239,7 +250,7 @@ export class ProtractorElement implements TestElement {
  * Note that this needs to be a pure function, because it gets stringified by
  * Protractor and is executed inside the browser.
  */
-function _dispatchEvent(name: string, element: ElementFinder, data?: Record<string, EventData>) {
+function _dispatchEvent(name: string, element: Element, data?: Record<string, EventData>) {
   const event = document.createEvent('Event');
   event.initEvent(name);
 
@@ -248,6 +259,5 @@ function _dispatchEvent(name: string, element: ElementFinder, data?: Record<stri
     Object.assign(event, data);
   }
 
-  // This type has a string index signature, so we cannot access it using a dotted property access.
-  element['dispatchEvent'](event);
+  element.dispatchEvent(event);
 }
