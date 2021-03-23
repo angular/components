@@ -7,7 +7,7 @@
  */
 
 import {DOCUMENT} from '@angular/common';
-import {Inject, Injectable} from '@angular/core';
+import {Inject, Injectable, NgZone} from '@angular/core';
 import {SpecificEventListener} from '@material/base';
 import {Subject, Subscription} from 'rxjs';
 import {finalize} from 'rxjs/operators';
@@ -32,7 +32,7 @@ export class GlobalChangeAndInputListener<K extends 'change'|'input'> {
   /** Stores the event handlers that emit the events that occur on the global document. */
   private _handlers = new Map<K, ((event: Event) => void)>();
 
-  constructor(@Inject(DOCUMENT) document: any) {
+  constructor(@Inject(DOCUMENT) document: any, private _ngZone: NgZone) {
     this._document = document;
   }
 
@@ -50,7 +50,9 @@ export class GlobalChangeAndInputListener<K extends 'change'|'input'> {
       const handlerFn = this._createHandlerFn(type).bind(this);
       this._subjects.set(type, new Subject<Event>());
       this._handlers.set(type, handlerFn);
-      this._document.addEventListener(type, handlerFn, true);
+      this._ngZone.runOutsideAngular(() => {
+        this._document.addEventListener(type, handlerFn, true);
+      });
     }
 
     const subject = this._subjects.get(type)!;
