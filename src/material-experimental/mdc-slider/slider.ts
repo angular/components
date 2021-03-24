@@ -377,7 +377,7 @@ export class MatSliderThumb implements AfterViewInit, ControlValueAccessor, OnIn
 
   _emitFakeEvent(type: 'change'|'input') {
     const event = new Event(type);
-    (event as any).isFake = true;
+    (event as any)._matIsFake = true;
     this._hostElement.dispatchEvent(event);
   }
 
@@ -906,7 +906,7 @@ class SliderAdapter implements MDCSliderAdapter {
             // listen for these events directly on the slider input as they would with a native
             // range input.
             if (event.target === this._delegate._getInputElement(thumbPosition)) {
-              if ((event as any).isFake) { return; }
+              if ((event as any)._matIsFake) { return; }
               event.stopImmediatePropagation();
               handler(event as GlobalEventHandlersEventMap[K]);
             }
