@@ -15,7 +15,14 @@ import {
   dispatchTouchEvent,
 } from '@angular/cdk/testing/private';
 import {Component, Type} from '@angular/core';
-import {ComponentFixture, fakeAsync, flush, TestBed, tick, waitForAsync} from '@angular/core/testing';
+import {
+  ComponentFixture,
+  fakeAsync,
+  flush,
+  TestBed,
+  tick,
+  waitForAsync,
+} from '@angular/core/testing';
 import {FormsModule} from '@angular/forms';
 import {By} from '@angular/platform-browser';
 import {Thumb} from '@material/slider';
