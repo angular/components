@@ -7,18 +7,18 @@
  */
 
 import {HarnessEnvironment, HarnessLoader, TestElement} from '@angular/cdk/testing';
-import {By, WebDriver, WebElement} from 'selenium-webdriver';
-import {WebdriverElement} from './webdriver-element';
+import * as webdriver from 'selenium-webdriver';
+import {WebDriverElement} from './webdriver-element';
 
-/** A `HarnessEnvironment` implementation for Protractor. */
-export class WebdriverHarnessEnvironment extends HarnessEnvironment<() => WebElement> {
-  protected constructor(rawRootElement: () => WebElement) {
+/** A `HarnessEnvironment` implementation for WebDriver. */
+export class WebDriverHarnessEnvironment extends HarnessEnvironment<() => webdriver.WebElement> {
+  protected constructor(rawRootElement: () => webdriver.WebElement) {
     super(rawRootElement);
   }
 
   /** Creates a `HarnessLoader` rooted at the document root. */
-  static loader(driver: WebDriver): HarnessLoader {
-    return new WebdriverHarnessEnvironment(() => driver.findElement(By.css('body')));
+  static loader(driver: webdriver.WebDriver): HarnessLoader {
+    return new WebDriverHarnessEnvironment(() => driver.findElement(webdriver.By.css('body')));
   }
 
   async forceStabilize(): Promise<void> {
@@ -31,22 +31,23 @@ export class WebdriverHarnessEnvironment extends HarnessEnvironment<() => WebEle
     //  https://github.com/angular/components/issues/17412
   }
 
-  protected getDocumentRoot(): () => WebElement {
-    return () => this.rawRootElement().getDriver().findElement(By.css('body'));
+  protected getDocumentRoot(): () => webdriver.WebElement {
+    return () => this.rawRootElement().getDriver().findElement(webdriver.By.css('body'));
   }
 
-  protected createTestElement(element: () => WebElement): TestElement {
-    return new WebdriverElement(element);
+  protected createTestElement(element: () => webdriver.WebElement): TestElement {
+    return new WebDriverElement(element);
   }
 
-  protected createEnvironment(element: () => WebElement): HarnessEnvironment<() => WebElement> {
-    return new WebdriverHarnessEnvironment(element);
+  protected createEnvironment(element: () => webdriver.WebElement):
+      HarnessEnvironment<() => webdriver.WebElement> {
+    return new WebDriverHarnessEnvironment(element);
   }
 
   // TODO(mmalerba): I'm not so sure about this...
-  //  it feels like maybe the return type should be `() => Promise<WebElement[]>` instead.
-  protected async getAllRawElements(selector: string): Promise<(() => WebElement)[]> {
-    const els = await this.rawRootElement().findElements(By.css(selector));
-    return els.map((x: WebElement) => () => x);
+  //  it feels like maybe the return type should be `() => Promise<webdriver.WebElement[]>` instead.
+  protected async getAllRawElements(selector: string): Promise<(() => webdriver.WebElement)[]> {
+    const els = await this.rawRootElement().findElements(webdriver.By.css(selector));
+    return els.map((x: webdriver.WebElement) => () => x);
   }
 }

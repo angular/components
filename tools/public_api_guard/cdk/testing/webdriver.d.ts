@@ -1,5 +1,5 @@
-export declare class WebdriverElement implements TestElement {
-    constructor(_webElement: () => WebElement);
+export declare class WebDriverElement implements TestElement {
+    constructor(_webElement: () => webdriver.WebElement);
     blur(): Promise<void>;
     clear(): Promise<void>;
     click(...args: [ModifierKeys?] | ['center', ModifierKeys?] | [
@@ -30,13 +30,13 @@ export declare class WebdriverElement implements TestElement {
     text(options?: TextOptions): Promise<string>;
 }
 
-export declare class WebdriverHarnessEnvironment extends HarnessEnvironment<() => WebElement> {
-    protected constructor(rawRootElement: () => WebElement);
-    protected createEnvironment(element: () => WebElement): HarnessEnvironment<() => WebElement>;
-    protected createTestElement(element: () => WebElement): TestElement;
+export declare class WebDriverHarnessEnvironment extends HarnessEnvironment<() => webdriver.WebElement> {
+    protected constructor(rawRootElement: () => webdriver.WebElement);
+    protected createEnvironment(element: () => webdriver.WebElement): HarnessEnvironment<() => webdriver.WebElement>;
+    protected createTestElement(element: () => webdriver.WebElement): TestElement;
     forceStabilize(): Promise<void>;
-    protected getAllRawElements(selector: string): Promise<(() => WebElement)[]>;
-    protected getDocumentRoot(): () => WebElement;
+    protected getAllRawElements(selector: string): Promise<(() => webdriver.WebElement)[]>;
+    protected getDocumentRoot(): () => webdriver.WebElement;
     waitForTasksOutsideAngular(): Promise<void>;
-    static loader(driver: WebDriver): HarnessLoader;
+    static loader(driver: webdriver.WebDriver): HarnessLoader;
 }

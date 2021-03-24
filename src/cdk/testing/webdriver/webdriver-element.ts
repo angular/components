@@ -15,66 +15,12 @@ import {
   TestKey,
   TextOptions
 } from '@angular/cdk/testing';
-import {Button, By, Key, WebElement} from 'selenium-webdriver';
-
-/**
- * Maps the `TestKey` constants to WebDriver's `Key` constants.
- * See https://github.com/SeleniumHQ/selenium/blob/trunk/javascript/webdriver/key.js#L29
- */
-const keyMap = {
-  [TestKey.BACKSPACE]: Key.BACK_SPACE,
-  [TestKey.TAB]: Key.TAB,
-  [TestKey.ENTER]: Key.ENTER,
-  [TestKey.SHIFT]: Key.SHIFT,
-  [TestKey.CONTROL]: Key.CONTROL,
-  [TestKey.ALT]: Key.ALT,
-  [TestKey.ESCAPE]: Key.ESCAPE,
-  [TestKey.PAGE_UP]: Key.PAGE_UP,
-  [TestKey.PAGE_DOWN]: Key.PAGE_DOWN,
-  [TestKey.END]: Key.END,
-  [TestKey.HOME]: Key.HOME,
-  [TestKey.LEFT_ARROW]: Key.ARROW_LEFT,
-  [TestKey.UP_ARROW]: Key.ARROW_UP,
-  [TestKey.RIGHT_ARROW]: Key.ARROW_RIGHT,
-  [TestKey.DOWN_ARROW]: Key.ARROW_DOWN,
-  [TestKey.INSERT]: Key.INSERT,
-  [TestKey.DELETE]: Key.DELETE,
-  [TestKey.F1]: Key.F1,
-  [TestKey.F2]: Key.F2,
-  [TestKey.F3]: Key.F3,
-  [TestKey.F4]: Key.F4,
-  [TestKey.F5]: Key.F5,
-  [TestKey.F6]: Key.F6,
-  [TestKey.F7]: Key.F7,
-  [TestKey.F8]: Key.F8,
-  [TestKey.F9]: Key.F9,
-  [TestKey.F10]: Key.F10,
-  [TestKey.F11]: Key.F11,
-  [TestKey.F12]: Key.F12,
-  [TestKey.META]: Key.META
-};
-
-/** Converts a `ModifierKeys` object to a list of Protractor `Key`s. */
-function toWebDriverModifierKeys(modifiers: ModifierKeys): string[] {
-  const result: string[] = [];
-  if (modifiers.control) {
-    result.push(Key.CONTROL);
-  }
-  if (modifiers.alt) {
-    result.push(Key.ALT);
-  }
-  if (modifiers.shift) {
-    result.push(Key.SHIFT);
-  }
-  if (modifiers.meta) {
-    result.push(Key.META);
-  }
-  return result;
-}
+import * as webdriver from 'selenium-webdriver';
+import {getWebDriverModifierKeys, webDriverKeyMap} from './webdriver-keys';
 
 /** A `TestElement` implementation for WebDriver. */
-export class WebdriverElement implements TestElement {
-  constructor(private readonly _webElement: () => WebElement) {}
+export class WebDriverElement implements TestElement {
+  constructor(private readonly _webElement: () => webdriver.WebElement) {}
 
   async blur(): Promise<void> {
     return this._executeScript(((element: HTMLElement) => element.blur()), this._webElement());
@@ -86,12 +32,12 @@ export class WebdriverElement implements TestElement {
 
   async click(...args: [ModifierKeys?] | ['center', ModifierKeys?] |
       [number, number, ModifierKeys?]): Promise<void> {
-    await this._dispatchClickEventSequence(args, Button.LEFT);
+    await this._dispatchClickEventSequence(args, webdriver.Button.LEFT);
   }
 
   async rightClick(...args: [ModifierKeys?] | ['center', ModifierKeys?] |
       [number, number, ModifierKeys?]): Promise<void> {
-    await this._dispatchClickEventSequence(args, Button.RIGHT);
+    await this._dispatchClickEventSequence(args, webdriver.Button.RIGHT);
   }
 
   async focus(): Promise<void> {
@@ -124,12 +70,12 @@ export class WebdriverElement implements TestElement {
       rest = modifiersAndKeys;
     }
 
-    const modifierKeys = toWebDriverModifierKeys(modifiers);
-    const keys = rest.map(k => typeof k === 'string' ? k.split('') : [keyMap[k]])
+    const modifierKeys = getWebDriverModifierKeys(modifiers);
+    const keys = rest.map(k => typeof k === 'string' ? k.split('') : [webDriverKeyMap[k]])
         .reduce((arr, k) => arr.concat(k), [])
-        // Key.chord doesn't work well with geckodriver (mozilla/geckodriver#1502),
+        // webdriver.Key.chord doesn't work well with geckodriver (mozilla/geckodriver#1502),
         // so avoid it if no modifier keys are required.
-        .map(k => modifierKeys.length > 0 ? Key.chord(...modifierKeys, k) : k);
+        .map(k => modifierKeys.length > 0 ? webdriver.Key.chord(...modifierKeys, k) : k);
 
     return this._webElement().sendKeys(...keys);
   }
@@ -171,7 +117,7 @@ export class WebdriverElement implements TestElement {
   }
 
   async selectOptions(...optionIndexes: number[]): Promise<void> {
-    const options = await this._webElement().findElements(By.css('option'));
+    const options = await this._webElement().findElements(webdriver.By.css('option'));
     const indexes = new Set(optionIndexes); // Convert to a set to remove duplicates.
 
     if (options.length && indexes.size) {
@@ -183,9 +129,9 @@ export class WebdriverElement implements TestElement {
         if (indexes.has(i)) {
           // We have to hold the control key while clicking on options so that multiple can be
           // selected in multi-selection mode. The key doesn't do anything for single selection.
-          await this._actions().keyDown(Key.CONTROL).perform();
+          await this._actions().keyDown(webdriver.Key.CONTROL).perform();
           await options[i].click();
-          await this._actions().keyUp(Key.CONTROL).perform();
+          await this._actions().keyUp(webdriver.Key.CONTROL).perform();
         }
       }
     }
@@ -199,12 +145,12 @@ export class WebdriverElement implements TestElement {
   }
 
   async isFocused(): Promise<boolean> {
-    return WebElement.equals(
+    return webdriver.WebElement.equals(
         this._webElement(), this._webElement().getDriver().switchTo().activeElement());
   }
 
   async dispatchEvent(name: string, data?: Record<string, EventData>): Promise<void> {
-    return this._executeScript(_dispatchEvent, name, this._webElement(), data);
+    return this._executeScript(dispatchEvent, name, this._webElement(), data);
   }
 
   private _actions() {
@@ -223,7 +169,7 @@ export class WebdriverElement implements TestElement {
     if (args.length && typeof args[args.length - 1] === 'object') {
       modifiers = args.pop() as ModifierKeys;
     }
-    const modifierKeys = toWebDriverModifierKeys(modifiers);
+    const modifierKeys = getWebDriverModifierKeys(modifiers);
 
     // Omitting the offset argument to mouseMove results in clicking the center.
     // This is the default behavior we want, so we use an empty array of offsetArgs if
@@ -246,18 +192,13 @@ export class WebdriverElement implements TestElement {
 }
 
 /**
- * Dispatches an event with a particular name and data to an element.
- * Note that this needs to be a pure function, because it gets stringified by
- * Protractor and is executed inside the browser.
+ * Dispatches an event with a particular name and data to an element. Note that this needs to be a
+ * pure function, because it gets stringified by WebDriver and is executed inside the browser.
  */
-function _dispatchEvent(name: string, element: Element, data?: Record<string, EventData>) {
+function dispatchEvent(name: string, element: Element, data?: Record<string, EventData>) {
   const event = document.createEvent('Event');
   event.initEvent(name);
-
-  if (data) {
-    // tslint:disable-next-line:ban Have to use `Object.assign` to preserve the original object.
-    Object.assign(event, data);
-  }
-
+  // tslint:disable-next-line:ban Have to use `Object.assign` to preserve the original object.
+  Object.assign(event, data || {});
   element.dispatchEvent(event);
 }
