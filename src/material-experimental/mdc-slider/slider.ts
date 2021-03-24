@@ -321,12 +321,6 @@ export class MatSliderThumb implements AfterViewInit, ControlValueAccessor, OnIn
   /** Event emitted every time the MatSliderThumb is focused. */
   @Output() readonly _focus: EventEmitter<void> = new EventEmitter<void>();
 
-  /** Event emitted on pointer up or after left or right arrow key presses. */
-  @Output() readonly change: EventEmitter<Event> = new EventEmitter<Event>();
-
-  /** Event emitted on each value change that happens to the slider. */
-  @Output() readonly input: EventEmitter<Event> = new EventEmitter<Event>();
-
   _disabled: boolean = false;
 
   /**
@@ -382,10 +376,9 @@ export class MatSliderThumb implements AfterViewInit, ControlValueAccessor, OnIn
   }
 
   _emitFakeEvent(type: 'change'|'input') {
-    const event = new Event(type) as any;
-    event.isFake = true;
-    const emitter = type === 'change' ? this.change : this.input;
-    emitter.emit(event);
+    const event = new Event(type);
+    (event as any).isFake = true;
+    this._hostElement.dispatchEvent(event);
   }
 
   /**
@@ -393,7 +386,9 @@ export class MatSliderThumb implements AfterViewInit, ControlValueAccessor, OnIn
    * @param value
    */
   writeValue(value: any): void {
-    this.value = value;
+    if (this._slider._initialized) {
+      this.value = coerceNumberProperty(value);
+    }
   }
 
   /**

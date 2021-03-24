@@ -15,7 +15,8 @@ import {
   dispatchTouchEvent,
 } from '@angular/cdk/testing/private';
 import {Component, Type} from '@angular/core';
-import {ComponentFixture, fakeAsync, TestBed, tick, waitForAsync} from '@angular/core/testing';
+import {ComponentFixture, fakeAsync, flush, TestBed, tick, waitForAsync} from '@angular/core/testing';
+import {FormsModule} from '@angular/forms';
 import {By} from '@angular/platform-browser';
 import {Thumb} from '@material/slider';
 import {MatSliderModule} from './module';
@@ -32,7 +33,7 @@ describe('MDC-based MatSlider' , () => {
 
   function createComponent<T>(component: Type<T>): ComponentFixture<T> {
     TestBed.configureTestingModule({
-      imports: [MatSliderModule],
+      imports: [MatSliderModule, FormsModule],
       declarations: [component],
     }).compileComponents();
     return TestBed.createComponent<T>(component);
@@ -778,6 +779,134 @@ describe('MDC-based MatSlider' , () => {
       expect(endInputInstance.value).toBe(70);
     });
   });
+
+  describe('slider with ngModel', () => {
+    let fixture: ComponentFixture<SliderWithNgModel>;
+    let testComponent: SliderWithNgModel;
+    let sliderInstance: MatSlider;
+    let inputInstance: MatSliderThumb;
+
+    beforeEach(waitForAsync(() => {
+      fixture = createComponent(SliderWithNgModel);
+      fixture.detectChanges();
+      testComponent = fixture.debugElement.componentInstance;
+      const sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider));
+      sliderInstance = sliderDebugElement.componentInstance;
+      inputInstance = sliderInstance._getInput(Thumb.END);
+    }));
+
+    it('should update the model on mouseup', () => {
+      expect(testComponent.value).toBe(0);
+      setValueByClick(sliderInstance, 76, platform.IOS);
+      expect(testComponent.value).toBe(76);
+    });
+
+    it('should update the model on slide', () => {
+      expect(testComponent.value).toBe(0);
+      slideToValue(sliderInstance, 19, Thumb.END, platform.IOS);
+      expect(testComponent.value).toBe(19);
+    });
+
+    it('should be able to set a slider value by setting the model', fakeAsync(() => {
+      expect(inputInstance.value).toBe(0);
+      testComponent.value = 5;
+      fixture.detectChanges();
+      flush();
+      expect(inputInstance.value).toBe(5);
+    }));
+
+    it('should be able to reset a slider by setting the model back to undefined', fakeAsync(() => {
+      testComponent.value = 5;
+      fixture.detectChanges();
+      flush();
+      testComponent.value = undefined;
+      fixture.detectChanges();
+      flush();
+      expect(inputInstance.value).toBe(0);
+    }));
+  });
+
+  describe('range slider with ngModel', () => {
+    let fixture: ComponentFixture<RangeSliderWithNgModel>;
+    let testComponent: RangeSliderWithNgModel;
+    let sliderInstance: MatSlider;
+    let startInputInstance: MatSliderThumb;
+    let endInputInstance: MatSliderThumb;
+
+    beforeEach(waitForAsync(() => {
+      fixture = createComponent(RangeSliderWithNgModel);
+      fixture.detectChanges();
+      testComponent = fixture.debugElement.componentInstance;
+      const sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider));
+      sliderInstance = sliderDebugElement.componentInstance;
+      startInputInstance = sliderInstance._getInput(Thumb.START);
+      endInputInstance = sliderInstance._getInput(Thumb.END);
+    }));
+
+    it('should update the model on mouseup behind the start thumb', () => {
+      expect(testComponent.startValue).toBe(0);
+      sliderInstance._setValue(19, Thumb.START);
+      setValueByClick(sliderInstance, 12, platform.IOS);
+      expect(testComponent.startValue).toBe(12);
+    });
+
+    it('should update the model on mouseup in front of the end thumb', () => {
+      expect(testComponent.endValue).toBe(100);
+      sliderInstance._setValue(50, Thumb.END);
+      setValueByClick(sliderInstance, 75, platform.IOS);
+      expect(testComponent.endValue).toBe(75);
+    });
+
+    it('should update the start thumb model on slide', () => {
+      expect(testComponent.startValue).toBe(0);
+      slideToValue(sliderInstance, 19, Thumb.START, platform.IOS);
+      expect(testComponent.startValue).toBe(19);
+    });
+
+    it('should update the end thumb model on slide', () => {
+      expect(testComponent.endValue).toBe(100);
+      slideToValue(sliderInstance, 33, Thumb.END, platform.IOS);
+      expect(testComponent.endValue).toBe(33);
+    });
+
+    it('should be able to set the slider start value by setting the model', fakeAsync(() => {
+      expect(startInputInstance.value).toBe(0);
+      testComponent.startValue = 5;
+      fixture.detectChanges();
+      flush();
+      expect(startInputInstance.value).toBe(5);
+    }));
+
+    it('should be able to set the slider end value by setting the model', fakeAsync(() => {
+      expect(endInputInstance.value).toBe(100);
+      testComponent.endValue = 99;
+      fixture.detectChanges();
+      flush();
+      expect(endInputInstance.value).toBe(99);
+    }));
+
+    it('should be able to reset a sliders start value ' +
+      'by setting the model back to undefined', fakeAsync(() => {
+      testComponent.startValue = 5;
+      fixture.detectChanges();
+      flush();
+      testComponent.startValue = undefined;
+      fixture.detectChanges();
+      flush();
+      expect(startInputInstance.value).toBe(0);
+    }));
+
+    it('should be able to reset a sliders end value ' +
+      'by setting the model back to undefined', fakeAsync(() => {
+      testComponent.endValue = 99;
+      fixture.detectChanges();
+      flush();
+      testComponent.endValue = undefined;
+      fixture.detectChanges();
+      flush();
+      expect(endInputInstance.value).toBe(0);
+    }));
+  });
 });
 
 
@@ -927,6 +1056,28 @@ class SliderWithOneWayBinding {
 class RangeSliderWithOneWayBinding {
   startValue = 25;
   endValue = 75;
+}
+
+@Component({
+  template: `
+  <mat-slider>
+    <input [(ngModel)]="value" matSliderThumb>
+  </mat-slider>`,
+})
+class SliderWithNgModel {
+  value: number | undefined = 0;
+}
+
+@Component({
+  template: `
+  <mat-slider>
+    <input [(ngModel)]="startValue" matSliderStartThumb>
+    <input [(ngModel)]="endValue" matSliderEndThumb>
+  </mat-slider>`,
+})
+class RangeSliderWithNgModel {
+  startValue: number | undefined = 0;
+  endValue: number | undefined = 100;
 }
 
 /** The pointer event types used by the MDC Slider. */
