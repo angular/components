@@ -1,3 +1,37 @@
+## 11.2.6 "wool-mammoth" (2021-03-24)
+
+### cdk
+
+|            |                       |
+| ---------- | --------------------- |
+| bug fix |  **a11y:** FocusTrap deprecation docs don't render correctly ([#22137](https://github.com/angular/components/issues/22137)) ([032c4e4acc390a8e8d8cd9cfdea947ce7456794c](https://github.com/angular/components/commit/032c4e4acc390a8e8d8cd9cfdea947ce7456794c)), closes [#18201](https://github.com/angular/components/issues/18201) [#22136](https://github.com/angular/components/issues/22136) |
+| bug fix |  **platform:** avoid error during server-side rendering if document is stubbed out ([#22260](https://github.com/angular/components/issues/22260)) ([7acd695e0b4caa1610b2b64d094c1d3255a5e265](https://github.com/angular/components/commit/7acd695e0b4caa1610b2b64d094c1d3255a5e265)), closes [#22259](https://github.com/angular/components/issues/22259) |
+| bug fix |  **schematics:** update generated css class ([#22270](https://github.com/angular/components/issues/22270)) ([5b94af258d72756591c40245bfb552149cd78251](https://github.com/angular/components/commit/5b94af258d72756591c40245bfb552149cd78251)), closes [#22269](https://github.com/angular/components/issues/22269) |
+
+### material
+
+|            |                       |
+| ---------- | --------------------- |
+| bug fix |  **autocomplete:** avoid assigning invalid aria-labelledby values ([#22261](https://github.com/angular/components/issues/22261)) ([19ca1b21fc66ca838fda81e07532a0ec18cd8916](https://github.com/angular/components/commit/19ca1b21fc66ca838fda81e07532a0ec18cd8916)), closes [#22256](https://github.com/angular/components/issues/22256) |
+| bug fix |  **progress-bar:** Support ChromeVox ([#22166](https://github.com/angular/components/issues/22166)) ([f950c03fef4739b35fb11e0d9b286e5684b2151f](https://github.com/angular/components/commit/f950c03fef4739b35fb11e0d9b286e5684b2151f)), closes [#22165](https://github.com/angular/components/issues/22165) |
+| bug fix |  **progress-spinner:** resolve accessibility issue in ChromeVox ([#22219](https://github.com/angular/components/issues/22219)) ([0e0b84a9ca6d9dfb74c13737477f4cc3585a5ef0](https://github.com/angular/components/commit/0e0b84a9ca6d9dfb74c13737477f4cc3585a5ef0)), closes [#22166](https://github.com/angular/components/issues/22166) |
+| bug fix |  **select:** trim aria-labelledby ([#22251](https://github.com/angular/components/issues/22251)) ([cdbf876b10e3d6d6b9d16a8faa922ec0bc081b7a](https://github.com/angular/components/commit/cdbf876b10e3d6d6b9d16a8faa922ec0bc081b7a)), closes [#22192](https://github.com/angular/components/issues/22192) |
+| bug fix |  **stepper:** setting invalid value for visibility ([#22254](https://github.com/angular/components/issues/22254)) ([3ead2cd49f28868d47d7699ecda52de9f103f01b](https://github.com/angular/components/commit/3ead2cd49f28868d47d7699ecda52de9f103f01b)) |
+| feature |  **slider:** show background-color in print stylesheet ([#11364](https://github.com/angular/components/issues/11364)) ([#22300](https://github.com/angular/components/issues/22300)) ([059214ecaf39d5a974fa3e04de0c5f18687a4355](https://github.com/angular/components/commit/059214ecaf39d5a974fa3e04de0c5f18687a4355)) |
+
+### google-maps
+
+|            |                       |
+| ---------- | --------------------- |
+| bug fix |  ensure that a mapTypeId is always passed in ([#22098](https://github.com/angular/components/issues/22098)) ([b79a2d53af27f9c0cc64d155219a440c2be2ba6c](https://github.com/angular/components/commit/b79a2d53af27f9c0cc64d155219a440c2be2ba6c)), closes [#22082](https://github.com/angular/components/issues/22082) |
+
+### material-experimental
+
+|            |                       |
+| ---------- | --------------------- |
+| bug fix |  **mdc-select:** fix floating label behavior ([#22134](https://github.com/angular/components/issues/22134)) ([28d12e460f10b3bc648abeee52404e3d9402c6eb](https://github.com/angular/components/commit/28d12e460f10b3bc648abeee52404e3d9402c6eb)) |
+
+
 ## 11.2.5 "fauxfur-falafel" (2021-03-17)
 
 ### material
