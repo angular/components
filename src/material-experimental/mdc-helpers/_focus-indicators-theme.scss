@@ -34,11 +34,12 @@
 @mixin theme($theme-or-color) {
   @if meta.type-of($theme-or-color) != 'map' {
     @include _mat-mdc-strong-focus-indicators-border-color($theme-or-color);
-  }
-  @else {
+  } @else {
     $theme: theming.private-legacy-get-theme($theme-or-color);
-    @include theming.private-check-duplicate-theme-styles($theme,
-      'mat-mdc-strong-focus-indicators') {
+    @include theming.private-check-duplicate-theme-styles(
+      $theme,
+      'mat-mdc-strong-focus-indicators'
+    ) {
       $color: theming.get-color-config($theme);
       @if $color != null {
         @include color($color);

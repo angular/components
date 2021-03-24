@@ -36,7 +36,8 @@ interface GoogleMapsWindow extends Window {
 export const DEFAULT_OPTIONS: google.maps.MapOptions = {
   center: {lat: 37.421995, lng: -122.084092},
   zoom: 17,
-  // Note: the type conversion here isn't necessary for our CI, but it resolves a g3 failure.
+  // Note: the type conversion here isn't necessary for our CI, but it resolves
+  // a g3 failure.
   mapTypeId: 'roadmap' as unknown as google.maps.MapTypeId
 };
 
@@ -464,13 +465,14 @@ export class GoogleMap implements OnChanges, OnInit, OnDestroy {
     const options = this._options || {};
     return {
       ...options,
-      // It's important that we set **some** kind of `center` and `zoom`, otherwise
-      // Google Maps will render a blank rectangle which looks broken.
+      // It's important that we set **some** kind of `center` and `zoom`,
+      // otherwise Google Maps will render a blank rectangle which looks broken.
       center: this._center || options.center || DEFAULT_OPTIONS.center,
       zoom: this._zoom ?? options.zoom ?? DEFAULT_OPTIONS.zoom,
       // Passing in an undefined `mapTypeId` seems to break tile loading
       // so make sure that we have some kind of default (see #22082).
-      mapTypeId: this.mapTypeId || options.mapTypeId || DEFAULT_OPTIONS.mapTypeId
+      mapTypeId:
+          this.mapTypeId || options.mapTypeId || DEFAULT_OPTIONS.mapTypeId
     };
   }
 

@@ -12,7 +12,6 @@ $bar-width: 36px !default;
 $bar-height: 14px !default;
 $bar-track-width: $bar-width - $thumb-size;
 
-
 .mat-slide-toggle {
   display: inline-block;
   height: $height;
@@ -38,7 +37,8 @@ $bar-track-width: $bar-width - $thumb-size;
     // The value is based on MDC.
     opacity: 0.38;
 
-    .mat-slide-toggle-label, .mat-slide-toggle-thumb-container {
+    .mat-slide-toggle-label,
+    .mat-slide-toggle-thumb-container {
       cursor: default;
     }
   }
@@ -61,8 +61,12 @@ $bar-track-width: $bar-width - $thumb-size;
 
 // If the label should be placed before the thumb then we just change the orders.
 .mat-slide-toggle-label-before {
-  .mat-slide-toggle-label { order: 1; }
-  .mat-slide-toggle-bar { order: 2; }
+  .mat-slide-toggle-label {
+    order: 1;
+  }
+  .mat-slide-toggle-bar {
+    order: 2;
+  }
 }
 
 // Apply the margin for slide-toggles and revert it for RTL toggles with labelPosition before.
@@ -201,7 +205,8 @@ $bar-track-width: $bar-width - $thumb-size;
   // We do this here, rather than having a `:not(.mat-slide-toggle-disabled)`
   // above in the `:hover`, because the `:not` will bump the specificity
   // a lot and will cause it to overide the focus styles.
-  &, .mat-slide-toggle.mat-disabled .mat-slide-toggle-bar:hover & {
+  &,
+  .mat-slide-toggle.mat-disabled .mat-slide-toggle-bar:hover & {
     opacity: 0;
   }
 

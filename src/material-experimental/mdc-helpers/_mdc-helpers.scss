@@ -13,9 +13,13 @@
 @use '../../material/core/typography/typography-utils';
 
 // A set of standard queries to use with MDC's queryable mixins.
-$mat-base-styles-query: mdc-feature-targeting.without(mdc-feature-targeting.any(color, typography));
-$mat-base-styles-without-animation-query:
-    mdc-feature-targeting.all($mat-base-styles-query, mdc-feature-targeting.without(animation));
+$mat-base-styles-query: mdc-feature-targeting.without(
+  mdc-feature-targeting.any(color, typography)
+);
+$mat-base-styles-without-animation-query: mdc-feature-targeting.all(
+  $mat-base-styles-query,
+  mdc-feature-targeting.without(animation)
+);
 $mat-theme-styles-query: color;
 $mat-typography-styles-query: typography;
 
@@ -35,7 +39,7 @@ $mat-typography-2014-level-mappings: (
     body2: body-1,
     caption: caption,
     button: button,
-    overline: null
+    overline: null,
   ),
   mat-to-mdc: (
     display-4: headline1,
@@ -50,96 +54,119 @@ $mat-typography-2014-level-mappings: (
     body-1: body2,
     caption: caption,
     button: button,
-    input: null
-  )
+    input: null,
+  ),
 );
 
 // Mappings between Angular Material and MDC's typography levels.
 $mat-typography-2018-level-mappings: (
-    // Maps from MDC typography levels (e.g. body1) to Angular Material typography levels
-    // (e.g. body-1).
-    mdc-to-mat: (
-        headline1: headline-1,
-        headline2: headline-2,
-        headline3: headline-3,
-        headline4: headline-4,
-        headline5: headline-5,
-        headline6: headline-6,
-        subtitle1: subtitle-1,
-        subtitle2: subtitle-2,
-        body1: body-1,
-        body2: body-2,
-        caption: caption,
-        button: button,
-        overline: overline
+  // Maps from MDC typography levels (e.g. body1) to Angular Material typography levels
+  // (e.g. body-1).
+  mdc-to-mat:
+    (
+      headline1: headline-1,
+      headline2: headline-2,
+      headline3: headline-3,
+      headline4: headline-4,
+      headline5: headline-5,
+      headline6: headline-6,
+      subtitle1: subtitle-1,
+      subtitle2: subtitle-2,
+      body1: body-1,
+      body2: body-2,
+      caption: caption,
+      button: button,
+      overline: overline,
     ),
-    // Maps from Angular Material typography levels (e.g. body-1) to MDC typography levels
-    // (e.g. body1).
-    mat-to-mdc: (
-        headline-1: headline1,
-        headline-2: headline2,
-        headline-3: headline3,
-        headline-4: headline4,
-        headline-5: headline5,
-        headline-6: headline6,
-        subtitle-1: subtitle1,
-        subtitle-2: subtitle2,
-        body-1: body1,
-        body-2: body2,
-        caption: caption,
-        button: button,
-        overline: overline
+  // Maps from Angular Material typography levels (e.g. body-1) to MDC typography levels
+  // (e.g. body1).
+  mat-to-mdc:
+    (
+      headline-1: headline1,
+      headline-2: headline2,
+      headline-3: headline3,
+      headline-4: headline4,
+      headline-5: headline5,
+      headline-6: headline6,
+      subtitle-1: subtitle1,
+      subtitle-2: subtitle2,
+      body-1: body1,
+      body-2: body2,
+      caption: caption,
+      button: button,
+      overline: overline,
     )
 );
 
 // Converts an Angular Material typography level config to an MDC one.
 @function mat-typography-level-config-to-mdc($mat-config, $mat-level) {
-  $mappings: if(typography.private-typography-is-2018-config($mat-config),
-      $mat-typography-2018-level-mappings, $mat-typography-2014-level-mappings);
+  $mappings: if(
+    typography.private-typography-is-2018-config($mat-config),
+    $mat-typography-2018-level-mappings,
+    $mat-typography-2014-level-mappings
+  );
   $mdc-level: map.get(map.get($mappings, mat-to-mdc), $mat-level);
 
   $result-with-nulls: map.merge(
-      if($mdc-level,
-          map.get(mdc-typography.$styles, $mdc-level),
-          (
-            text-decoration: none,
-            -moz-osx-font-smoothing: grayscale,
-            -webkit-font-smoothing: antialiased
-          )),
-      if($mat-level,
-          (
-            font-size: typography-utils.font-size($mat-config, $mat-level),
-            line-height: typography-utils.line-height($mat-config, $mat-level),
-            font-weight: typography-utils.font-weight($mat-config, $mat-level),
-            letter-spacing: typography-utils.letter-spacing($mat-config, $mat-level),
-            font-family: typography-utils.font-family($mat-config, $mat-level),
-            // Angular Material doesn't use text-transform, so disable it.
-            text-transform: none,
-          ),
-          ()));
+    if(
+      $mdc-level,
+      map.get(mdc-typography.$styles, $mdc-level),
+      (
+        text-decoration: none,
+        -moz-osx-font-smoothing: grayscale,
+        -webkit-font-smoothing: antialiased,
+      )
+    ),
+    if(
+      $mat-level,
+      (
+        font-size: typography-utils.font-size($mat-config, $mat-level),
+        line-height: typography-utils.line-height($mat-config, $mat-level),
+        font-weight: typography-utils.font-weight($mat-config, $mat-level),
+        letter-spacing: typography-utils.letter-spacing($mat-config, $mat-level),
+        font-family: typography-utils.font-family($mat-config, $mat-level),
+        // Angular Material doesn't use text-transform, so disable it.
+        text-transform: none,
+      ),
+      ()
+    )
+  );
 
   // We need to strip out any keys with a null value. Leaving them in will cause MDC to emit CSS
   // variables with no fallback value, which breaks some builds.
   $result: ();
   @each $property, $value in $result-with-nulls {
     @if $value != null {
-      $result: map.merge($result, ($property: $value));
+      $result: map.merge(
+        $result,
+        (
+          $property: $value,
+        )
+      );
     }
   }
   @return $result;
 }
 
 // Converts an Angular Material typography config to an MDC one.
-@function mat-typography-config-to-mdc($mat-config: typography.define-typography-config()) {
+@function mat-typography-config-to-mdc(
+  $mat-config: typography.define-typography-config()
+) {
   $mdc-config: ();
 
-  $mappings: if(typography.private-typography-is-2018-config($mat-config),
-      $mat-typography-2018-level-mappings, $mat-typography-2014-level-mappings);
+  $mappings: if(
+    typography.private-typography-is-2018-config($mat-config),
+    $mat-typography-2018-level-mappings,
+    $mat-typography-2014-level-mappings
+  );
 
   @each $mdc-level, $mat-level in map.get($mappings, mdc-to-mat) {
     $mdc-config: map.merge(
-        $mdc-config,
-        ($mdc-level: mat-typography-level-config-to-mdc($mat-config, $mat-level)));
+      $mdc-config,
+      (
+        $mdc-level: mat-typography-level-config-to-mdc($mat-config, $mat-level),
+      )
+    );
   }
 
   @return $mdc-config;
@@ -150,11 +177,12 @@ $mat-typography-2018-level-mappings: (
   $mdc-level-config: map.get(mdc-typography.$styles, $mdc-level);
 
   @return typography.define-typography-level(
-      map.get($mdc-level-config, font-size),
-      map.get($mdc-level-config, line-height),
-      map.get($mdc-level-config, font-weight),
-      map.get($mdc-level-config, font-family),
-      map.get($mdc-level-config, letter-spacing));
+    map.get($mdc-level-config, font-size),
+    map.get($mdc-level-config, line-height),
+    map.get($mdc-level-config, font-weight),
+    map.get($mdc-level-config, font-family),
+    map.get($mdc-level-config, letter-spacing)
+  );
 }
 
 // Configures MDC's global variables to reflect the given theme, applies the given styles,
@@ -180,56 +208,78 @@ $mat-typography-2018-level-mappings: (
 
   // Set new values based on the given Angular Material theme.
   mdc-theme-color.$primary: $primary;
-  mdc-theme-color.$on-primary:
-      if(mdc-theme-color.contrast-tone(mdc-theme-color.$primary) == 'dark', #000, #fff);
+  mdc-theme-color.$on-primary: if(
+    mdc-theme-color.contrast-tone(mdc-theme-color.$primary) == 'dark',
+    #000,
+    #fff
+  );
   mdc-theme-color.$secondary: $accent;
-  mdc-theme-color.$on-secondary:
-      if(mdc-theme-color.contrast-tone(mdc-theme-color.$secondary) == 'dark', #000, #fff);
-  mdc-theme-color.$background: theming.get-color-from-palette($background-palette, background);
-  mdc-theme-color.$surface: theming.get-color-from-palette($background-palette, card);
-  mdc-theme-color.$on-surface:
-      if(mdc-theme-color.contrast-tone(mdc-theme-color.$surface) == 'dark', #000, #fff);
+  mdc-theme-color.$on-secondary: if(
+    mdc-theme-color.contrast-tone(mdc-theme-color.$secondary) == 'dark',
+    #000,
+    #fff
+  );
+  mdc-theme-color.$background: theming.get-color-from-palette(
+    $background-palette,
+    background
+  );
+  mdc-theme-color.$surface: theming.get-color-from-palette(
+    $background-palette,
+    card
+  );
+  mdc-theme-color.$on-surface: if(
+    mdc-theme-color.contrast-tone(mdc-theme-color.$surface) == 'dark',
+    #000,
+    #fff
+  );
   mdc-theme-color.$error: $warn;
-  mdc-theme-color.$on-error:
-      if(mdc-theme-color.contrast-tone(mdc-theme-color.$error) == 'dark', #000, #fff);
+  mdc-theme-color.$on-error: if(
+    mdc-theme-color.contrast-tone(mdc-theme-color.$error) == 'dark',
+    #000,
+    #fff
+  );
   mdc-theme-color.$property-values: (
-      // Primary
-      primary: mdc-theme-color.$primary,
-      // Secondary
-      secondary: mdc-theme-color.$secondary,
-      // Background
-      background: mdc-theme-color.$background,
-      // Surface
-      surface: mdc-theme-color.$surface,
-      // Error
-      error: mdc-theme-color.$error,
-      on-primary: mdc-theme-color.$on-primary,
-      on-secondary: mdc-theme-color.$on-secondary,
-      on-surface: mdc-theme-color.$on-surface,
-      on-error: mdc-theme-color.$on-error,
-      // Text-primary on "background" background
-      text-primary-on-background:
-          mdc-theme-color.ink-color-for-fill_(primary, mdc-theme-color.$background),
-      text-secondary-on-background:
-          mdc-theme-color.ink-color-for-fill_(secondary, mdc-theme-color.$background),
-      text-hint-on-background:
-          mdc-theme-color.ink-color-for-fill_(hint, mdc-theme-color.$background),
-      text-disabled-on-background:
-          mdc-theme-color.ink-color-for-fill_(disabled, mdc-theme-color.$background),
-      text-icon-on-background:
-          mdc-theme-color.ink-color-for-fill_(icon, mdc-theme-color.$background),
-      // Text-primary on "light" background
-      text-primary-on-light: mdc-theme-color.ink-color-for-fill_(primary, light),
-      text-secondary-on-light: mdc-theme-color.ink-color-for-fill_(secondary, light),
-      text-hint-on-light: mdc-theme-color.ink-color-for-fill_(hint, light),
-      text-disabled-on-light: mdc-theme-color.ink-color-for-fill_(disabled, light),
-      text-icon-on-light: mdc-theme-color.ink-color-for-fill_(icon, light),
-      // Text-primary on "dark" background
-      text-primary-on-dark: mdc-theme-color.ink-color-for-fill_(primary, dark),
-      text-secondary-on-dark: mdc-theme-color.ink-color-for-fill_(secondary, dark),
-      text-hint-on-dark: mdc-theme-color.ink-color-for-fill_(hint, dark),
-      text-disabled-on-dark: mdc-theme-color.ink-color-for-fill_(disabled, dark),
-      text-icon-on-dark: mdc-theme-color.ink-color-for-fill_(icon, dark)
+    // Primary
+    primary: mdc-theme-color.$primary,
+    // Secondary
+    secondary: mdc-theme-color.$secondary,
+    // Background
+    background: mdc-theme-color.$background,
+    // Surface
+    surface: mdc-theme-color.$surface,
+    // Error
+    error: mdc-theme-color.$error,
+    on-primary: mdc-theme-color.$on-primary,
+    on-secondary: mdc-theme-color.$on-secondary,
+    on-surface: mdc-theme-color.$on-surface,
+    on-error: mdc-theme-color.$on-error,
+    // Text-primary on "background" background
+    text-primary-on-background:
+      mdc-theme-color.ink-color-for-fill_(primary, mdc-theme-color.$background),
+    text-secondary-on-background:
+      mdc-theme-color.ink-color-for-fill_(
+        secondary,
+        mdc-theme-color.$background
+      ),
+    text-hint-on-background:
+      mdc-theme-color.ink-color-for-fill_(hint, mdc-theme-color.$background),
+    text-disabled-on-background:
+      mdc-theme-color.ink-color-for-fill_(disabled, mdc-theme-color.$background),
+    text-icon-on-background:
+      mdc-theme-color.ink-color-for-fill_(icon, mdc-theme-color.$background),
+    // Text-primary on "light" background
+    text-primary-on-light: mdc-theme-color.ink-color-for-fill_(primary, light),
+    text-secondary-on-light:
+      mdc-theme-color.ink-color-for-fill_(secondary, light),
+    text-hint-on-light: mdc-theme-color.ink-color-for-fill_(hint, light),
+    text-disabled-on-light: mdc-theme-color.ink-color-for-fill_(disabled, light),
+    text-icon-on-light: mdc-theme-color.ink-color-for-fill_(icon, light),
+    // Text-primary on "dark" background
+    text-primary-on-dark: mdc-theme-color.ink-color-for-fill_(primary, dark),
+    text-secondary-on-dark: mdc-theme-color.ink-color-for-fill_(secondary, dark),
+    text-hint-on-dark: mdc-theme-color.ink-color-for-fill_(hint, dark),
+    text-disabled-on-dark: mdc-theme-color.ink-color-for-fill_(disabled, dark),
+    text-icon-on-dark: mdc-theme-color.ink-color-for-fill_(icon, dark)
   );
 
   // Apply given rules.

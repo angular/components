@@ -14,8 +14,7 @@
     // (e.g. it resolves to a CSS variable) we fall back to using the color and setting an opacity.
     @if (meta.type-of($foreground-base) == color) {
       background-color: rgba($foreground-base, $color-opacity);
-    }
-    @else {
+    } @else {
       background-color: $foreground-base;
       opacity: $color-opacity;
     }

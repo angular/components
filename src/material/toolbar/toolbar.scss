@@ -12,7 +12,8 @@ $height-mobile-portrait: 56px !default;
   }
 }
 
-.mat-toolbar-row, .mat-toolbar-single-row {
+.mat-toolbar-row,
+.mat-toolbar-single-row {
   display: flex;
   box-sizing: border-box;
 

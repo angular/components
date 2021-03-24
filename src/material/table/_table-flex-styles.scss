@@ -13,11 +13,14 @@ $row-horizontal-padding: 24px;
     min-height: $header-row-height;
   }
 
-  mat-row, mat-footer-row {
+  mat-row,
+  mat-footer-row {
     min-height: $row-height;
   }
 
-  mat-row, mat-header-row, mat-footer-row {
+  mat-row,
+  mat-header-row,
+  mat-footer-row {
     display: flex;
     // Define a border style, but then widths default to 3px. Reset them to 0px except the bottom
     // which should be 1px;
@@ -37,7 +40,9 @@ $row-horizontal-padding: 24px;
     }
   }
 
-  mat-cell, mat-header-cell, mat-footer-cell {
+  mat-cell,
+  mat-header-cell,
+  mat-footer-cell {
     // Note: we use `first-of-type`/`last-of-type` here in order to prevent extra
     // elements like ripples or badges from throwing off the layout (see #11165).
     &:first-of-type {
@@ -59,7 +64,9 @@ $row-horizontal-padding: 24px;
     }
   }
 
-  mat-cell, mat-header-cell, mat-footer-cell {
+  mat-cell,
+  mat-header-cell,
+  mat-footer-cell {
     flex: 1;
     display: flex;
     align-items: center;

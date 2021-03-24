@@ -2,7 +2,6 @@
 @use '../core/style/vendor-prefixes';
 @use '../../cdk/a11y/a11y';
 
-
 // This refers to the thickness of the slider. On a horizontal slider this is the height, on a
 // vertical slider this is the width.
 $thickness: 48px !default;
@@ -26,7 +25,6 @@ $thumb-label-size: 28px !default;
 $tick-size: 2px !default;
 
 $focus-ring-size: 30px !default;
-
 
 .mat-slider {
   display: inline-block;
@@ -60,17 +58,19 @@ $focus-ring-size: 30px !default;
 .mat-slider-track-fill {
   position: absolute;
   transform-origin: 0 0;
-  transition:
-    transform variables.$swift-ease-out-duration variables.$swift-ease-out-timing-function,
-    background-color variables.$swift-ease-out-duration variables.$swift-ease-out-timing-function;
+  transition: transform variables.$swift-ease-out-duration
+      variables.$swift-ease-out-timing-function,
+    background-color variables.$swift-ease-out-duration
+      variables.$swift-ease-out-timing-function;
 }
 
 .mat-slider-track-background {
   position: absolute;
   transform-origin: 100% 100%;
-  transition:
-    transform variables.$swift-ease-out-duration variables.$swift-ease-out-timing-function,
-    background-color variables.$swift-ease-out-duration variables.$swift-ease-out-timing-function;
+  transition: transform variables.$swift-ease-out-duration
+      variables.$swift-ease-out-timing-function,
+    background-color variables.$swift-ease-out-duration
+      variables.$swift-ease-out-timing-function;
 }
 
 .mat-slider-ticks-container {
@@ -103,10 +103,12 @@ $focus-ring-size: 30px !default;
   border-radius: 50%;
   transform: scale(0);
   opacity: 0;
-  transition:
-    transform variables.$swift-ease-out-duration variables.$swift-ease-out-timing-function,
-    background-color variables.$swift-ease-out-duration variables.$swift-ease-out-timing-function,
-    opacity variables.$swift-ease-out-duration variables.$swift-ease-out-timing-function;
+  transition: transform variables.$swift-ease-out-duration
+      variables.$swift-ease-out-timing-function,
+    background-color variables.$swift-ease-out-duration
+      variables.$swift-ease-out-timing-function,
+    opacity variables.$swift-ease-out-duration
+      variables.$swift-ease-out-timing-function;
 
   .mat-slider.cdk-keyboard-focused &,
   .mat-slider.cdk-program-focused & {
@@ -133,10 +135,12 @@ $focus-ring-size: 30px !default;
   border: $thumb-border-width solid transparent;
   border-radius: 50%;
   transform: scale($thumb-default-scale);
-  transition:
-    transform variables.$swift-ease-out-duration variables.$swift-ease-out-timing-function,
-    background-color variables.$swift-ease-out-duration variables.$swift-ease-out-timing-function,
-    border-color variables.$swift-ease-out-duration variables.$swift-ease-out-timing-function;
+  transition: transform variables.$swift-ease-out-duration
+      variables.$swift-ease-out-timing-function,
+    background-color variables.$swift-ease-out-duration
+      variables.$swift-ease-out-timing-function,
+    border-color variables.$swift-ease-out-duration
+      variables.$swift-ease-out-timing-function;
 }
 
 .mat-slider-thumb-label {
@@ -149,10 +153,12 @@ $focus-ring-size: 30px !default;
   width: $thumb-label-size;
   height: $thumb-label-size;
   border-radius: 50%;
-  transition:
-    transform variables.$swift-ease-out-duration variables.$swift-ease-out-timing-function,
-    border-radius  variables.$swift-ease-out-duration variables.$swift-ease-out-timing-function,
-    background-color  variables.$swift-ease-out-duration variables.$swift-ease-out-timing-function;
+  transition: transform variables.$swift-ease-out-duration
+      variables.$swift-ease-out-timing-function,
+    border-radius variables.$swift-ease-out-duration
+      variables.$swift-ease-out-timing-function,
+    background-color variables.$swift-ease-out-duration
+      variables.$swift-ease-out-timing-function;
 
   @include a11y.high-contrast(active, off) {
     outline: solid 1px;
@@ -162,9 +168,9 @@ $focus-ring-size: 30px !default;
 .mat-slider-thumb-label-text {
   z-index: 1;
   opacity: 0;
-  transition: opacity variables.$swift-ease-out-duration variables.$swift-ease-out-timing-function;
+  transition: opacity variables.$swift-ease-out-duration
+    variables.$swift-ease-out-timing-function;
 }
-
 
 // Slider sliding state.
 .mat-slider-sliding {
@@ -177,10 +183,8 @@ $focus-ring-size: 30px !default;
   }
 }
 
-
 // Slider with ticks when not disabled.
 .mat-slider-has-ticks {
-
   .mat-slider-wrapper::after {
     content: '';
     position: absolute;
@@ -205,7 +209,6 @@ $focus-ring-size: 30px !default;
   }
 }
 
-
 // Slider with thumb label.
 .mat-slider-thumb-label-showing {
   .mat-slider-focus-ring {
@@ -217,7 +220,6 @@ $focus-ring-size: 30px !default;
   }
 }
 
-
 // Inverted slider.
 .mat-slider-axis-inverted {
   .mat-slider-track-fill {
@@ -228,7 +230,6 @@ $focus-ring-size: 30px !default;
     transform-origin: 0 0;
   }
 }
-
 
 // Active slider.
 .mat-slider:not(.mat-slider-disabled) {
@@ -256,7 +257,6 @@ $focus-ring-size: 30px !default;
   }
 }
 
-
 // Disabled slider.
 .mat-slider-disabled {
   .mat-slider-focus-ring {
@@ -273,7 +273,6 @@ $focus-ring-size: 30px !default;
     display: none;
   }
 }
-
 
 // Horizontal slider.
 .mat-slider-horizontal {
@@ -341,9 +340,8 @@ $focus-ring-size: 30px !default;
   .mat-slider-thumb-label {
     right: -$thumb-label-size / 2;
     top: -($thumb-label-size + $thumb-arrow-gap);
-    transform: translateY($thumb-label-size / 2 + $thumb-arrow-gap)
-        scale(0.01)
-        rotate(45deg);
+    transform: translateY($thumb-label-size / 2 + $thumb-arrow-gap) scale(0.01)
+      rotate(45deg);
   }
 
   .mat-slider-thumb-label-text {
@@ -363,7 +361,6 @@ $focus-ring-size: 30px !default;
     }
   }
 }
-
 
 // Vertical slider.
 .mat-slider-vertical {
@@ -435,9 +432,8 @@ $focus-ring-size: 30px !default;
   .mat-slider-thumb-label {
     bottom: -$thumb-label-size / 2;
     left: -($thumb-label-size + $thumb-arrow-gap);
-    transform: translateX($thumb-label-size / 2 + $thumb-arrow-gap)
-        scale(0.01)
-        rotate(-45deg);
+    transform: translateX($thumb-label-size / 2 + $thumb-arrow-gap) scale(0.01)
+      rotate(-45deg);
   }
 
   .mat-slider-thumb-label-text {
@@ -450,7 +446,6 @@ $focus-ring-size: 30px !default;
     }
   }
 }
-
 
 // Slider in RTL languages.
 [dir='rtl'] {

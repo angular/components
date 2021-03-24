@@ -12,7 +12,8 @@ tr.mat-header-row {
   height: table-flex-styles.$header-row-height;
 }
 
-tr.mat-row, tr.mat-footer-row {
+tr.mat-row,
+tr.mat-footer-row {
   height: table-flex-styles.$row-height;
 }
 
@@ -24,7 +25,9 @@ th.mat-header-cell {
   }
 }
 
-th.mat-header-cell, td.mat-cell, td.mat-footer-cell {
+th.mat-header-cell,
+td.mat-cell,
+td.mat-footer-cell {
   padding: 0;
   border-bottom-width: 1px;
   border-bottom-style: solid;

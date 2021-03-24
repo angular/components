@@ -292,7 +292,8 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
   }
 
   /**
-   * Updates the position of the menu to ensure that it fits all options within the viewport.
+   * Updates the position of the menu to ensure that it fits all options within
+   * the viewport.
    */
   updatePosition(): void {
     this._overlayRef?.updatePosition();

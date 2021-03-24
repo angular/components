@@ -6,44 +6,18 @@
  * found in the LICENSE file at https://angular.io/license
  */
 import {Directionality} from '@angular/cdk/bidi';
+import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
 import {Platform} from '@angular/cdk/platform';
-import {
-  AfterContentChecked,
-  AfterContentInit,
-  AfterViewInit,
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  ContentChild,
-  ContentChildren,
-  ElementRef,
-  Inject,
-  InjectionToken,
-  Input,
-  NgZone,
-  OnDestroy,
-  Optional,
-  QueryList,
-  ViewChild,
-  ViewEncapsulation
-} from '@angular/core';
+import {DOCUMENT} from '@angular/common';
+import {AfterContentChecked, AfterContentInit, AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ContentChildren, ElementRef, Inject, InjectionToken, Input, NgZone, OnDestroy, Optional, QueryList, ViewChild, ViewEncapsulation} from '@angular/core';
 import {NgControl} from '@angular/forms';
+import {getMatFormFieldDuplicatedHintError, getMatFormFieldMissingControlError, MAT_FORM_FIELD, matFormFieldAnimations, MatFormFieldControl,} from '@angular/material/form-field';
 import {ThemePalette} from '@angular/material-experimental/mdc-core';
-import {
-  getMatFormFieldDuplicatedHintError,
-  getMatFormFieldMissingControlError,
-  MAT_FORM_FIELD,
-  matFormFieldAnimations,
-  MatFormFieldControl,
-} from '@angular/material/form-field';
 import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
-import {
-  MDCTextFieldAdapter,
-  MDCTextFieldFoundation,
-  numbers as mdcTextFieldNumbers
-} from '@material/textfield';
+import {MDCTextFieldAdapter, MDCTextFieldFoundation, numbers as mdcTextFieldNumbers} from '@material/textfield';
 import {merge, Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
+
 import {MAT_ERROR, MatError} from './directives/error';
 import {MatFormFieldFloatingLabel} from './directives/floating-label';
 import {MatHint} from './directives/hint';
@@ -52,8 +26,6 @@ import {MatFormFieldLineRipple} from './directives/line-ripple';
 import {MatFormFieldNotchedOutline} from './directives/notched-outline';
 import {MAT_PREFIX, MatPrefix} from './directives/prefix';
 import {MAT_SUFFIX, MatSuffix} from './directives/suffix';
-import {DOCUMENT} from '@angular/common';
-import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
 
 /** Type for the available floatLabel values. */
 export type FloatLabelType = 'always' | 'auto';
@@ -153,7 +125,9 @@ export class MatFormField implements AfterViewInit, OnDestroy, AfterContentCheck
 
   /** Whether the required marker should be hidden. */
   @Input()
-  get hideRequiredMarker(): boolean { return this._hideRequiredMarker; }
+  get hideRequiredMarker(): boolean {
+    return this._hideRequiredMarker;
+  }
   set hideRequiredMarker(value: boolean) {
     this._hideRequiredMarker = coerceBooleanProperty(value);
   }
