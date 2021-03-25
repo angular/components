@@ -1,4 +1,4 @@
-load("//tools:defaults.bzl", "ng_e2e_test_library", "ng_module", "ng_test_library", "ts_library")
+load("//tools:defaults.bzl", "jasmine_node_test", "ng_e2e_test_library", "ng_module", "ng_test_library", "ts_library")
 
 package(default_visibility = ["//visibility:public"])
 
@@ -76,4 +76,21 @@ ng_e2e_test_library(
         "//src/cdk/testing/private",
         "//src/cdk/testing/protractor",
     ],
+)
+
+ts_library(
+    name = "webdriver_test_lib",
+    testonly = 1,
+    srcs = ["webdriver.e2e.spec.ts"],
+    deps = [
+        "@npm//@types/selenium-webdriver",
+        "@npm//@types/jasmine",
+        "@npm//@types/node",
+    ],
+)
+
+jasmine_node_test(
+    name = "webdriver_test",
+    data = ["@npm//:node_modules"],
+    deps = [":webdriver_test_lib"],
 )
