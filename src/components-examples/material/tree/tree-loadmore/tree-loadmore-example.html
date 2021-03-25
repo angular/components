@@ -6,10 +6,10 @@
   </mat-tree-node>
 
   <!-- expandable node -->
-  <mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding>
+  <mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding matTreeNodeToggle
+                 (expandedChange)="loadChildren(node)">
     <button mat-icon-button
             [attr.aria-label]="'Toggle ' + node.item"
-            (click)="loadChildren(node)"
             matTreeNodeToggle>
       <mat-icon class="mat-icon-rtl-mirror">
         {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
@@ -18,9 +18,9 @@
     {{node.item}}
   </mat-tree-node>
 
-  <mat-tree-node *matTreeNodeDef="let node; when: isLoadMore">
-    <button mat-button (click)="loadMore(node.loadMoreParentItem)">
-      Load more...
-    </button>
+  <mat-tree-node class="example-load-more" *matTreeNodeDef="let node; when: isLoadMore"
+    role="button" (click)="loadMoreOnClick($event, node)"
+    (keydown)="loadMoreOnEnterOrSpace($event, node)">
+    Load more...
   </mat-tree-node>
 </mat-tree>
