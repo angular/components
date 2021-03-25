@@ -19,7 +19,6 @@ import {MatTreeNodeOutlet} from './outlet';
   template: `<ng-container matTreeNodeOutlet></ng-container>`,
   host: {
     'class': 'mat-tree',
-    'role': 'tree',
   },
   styleUrls: ['tree.css'],
   encapsulation: ViewEncapsulation.None,

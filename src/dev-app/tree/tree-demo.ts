@@ -8,7 +8,14 @@
 import {Component} from '@angular/core';
 import {CdkTreeModule} from '@angular/cdk/tree';
 import {CommonModule} from '@angular/common';
-import {CdkTreeFlatExample, CdkTreeNestedExample} from '@angular/components-examples/cdk/tree';
+import {
+  CdkTreeFlatExample,
+  CdkTreeNestedExample,
+  CdkTreeFlatLevelAccessorExample,
+  CdkTreeNestedLevelAccessorExample,
+  CdkTreeFlatChildrenAccessorExample,
+  CdkTreeComplexExample,
+} from '@angular/components-examples/cdk/tree';
 import {
   TreeChecklistExample,
   TreeDynamicExample,
@@ -36,6 +43,10 @@ import {MatTreeModule} from '@angular/material/tree';
     CdkTreeModule,
     CdkTreeFlatExample,
     CdkTreeNestedExample,
+    CdkTreeFlatChildrenAccessorExample,
+    CdkTreeFlatLevelAccessorExample,
+    CdkTreeNestedLevelAccessorExample,
+    CdkTreeComplexExample,
     CommonModule,
     FormsModule,
     TreeChecklistExample,
