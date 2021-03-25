@@ -11,6 +11,7 @@ import {MatTreeFlatDataSource, MatTreeFlattener, MatTreeModule} from '@angular/m
 import {BehaviorSubject, Observable} from 'rxjs';
 import {MatIconModule} from '@angular/material/icon';
 import {MatButtonModule} from '@angular/material/button';
+import {ENTER, SPACE} from '@angular/cdk/keycodes';
 
 const LOAD_MORE = 'LOAD_MORE';
 
@@ -100,6 +101,7 @@ export class LoadmoreDatabase {
 @Component({
   selector: 'tree-loadmore-example',
   templateUrl: 'tree-loadmore-example.html',
+  styleUrl: 'tree-loadmore-example.css',
   providers: [LoadmoreDatabase],
   standalone: true,
   imports: [MatTreeModule, MatButtonModule, MatIconModule],
@@ -157,9 +159,27 @@ export class TreeLoadmoreExample {
 
   isLoadMore = (_: number, _nodeData: LoadmoreFlatNode) => _nodeData.item === LOAD_MORE;
 
+  private loadMoreData(node: LoadmoreFlatNode) {
+    // TODO: set focus to appropriate location
+    if (node.loadMoreParentItem) {
+      this._database.loadMore(node.loadMoreParentItem);
+    }
+  }
+
   /** Load more nodes from data source */
-  loadMore(item: string) {
-    this._database.loadMore(item);
+  loadMoreOnClick(event: MouseEvent, node: LoadmoreFlatNode) {
+    this.loadMoreData(node);
+  }
+
+  loadMoreOnEnterOrSpace(event: KeyboardEvent, node: LoadmoreFlatNode) {
+    if (event.keyCode === ENTER || event.keyCode === SPACE) {
+      // TODO: set focus to an appropriate location
+      this.loadMoreData(node);
+
+      // Prevent default behavior so that the tree node doesn't handle the keypress instead of this
+      // button.
+      event.preventDefault();
+    }
   }
 
   loadChildren(node: LoadmoreFlatNode) {
