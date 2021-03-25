@@ -100,8 +100,28 @@ export class CdkTree<T, K = T> implements AfterContentChecked, CollectionViewer,
   }
   private _dataSource: DataSource<T> | Observable<T[]> | T[];
 
-  /** The tree controller */
+  /**
+   * The tree controller
+   *
+   * @deprecated Use one of levelAccessor or childrenAccessor
+   */
   @Input() treeControl: TreeControl<T, K>;
+
+  /**
+   * Given a data node, determines what tree level the node is at.
+   *
+   * One of levelAccessor or childrenAccessor should be specified, not both.
+   * This is enforced at run-time.
+   */
+  @Input() levelAccessor: (dataNode: T) => number;
+
+  /**
+   * Given a data node, determines what the children of that node are.
+   *
+   * One of levelAccessor or childrenAccessor should be specified, not both.
+   * This is enforced at run-time.
+   */
+  @Input() childrenAccessor: (dataNode: T) => T[] | Observable<T[]>;
 
   /**
    * Tracking function that will be used to check the differences in data changes. Used similarly
@@ -137,8 +157,10 @@ export class CdkTree<T, K = T> implements AfterContentChecked, CollectionViewer,
 
   ngOnInit() {
     this._dataDiffer = this._differs.find([]).create(this.trackBy);
-    if (!this.treeControl && (typeof ngDevMode === 'undefined' || ngDevMode)) {
-      throw getTreeControlMissingError();
+    if (typeof ngDevMode === 'undefined' || ngDevMode) {
+      if (!this.treeControl && !this.getLevel && !this.getChildren) {
+        throw getTreeControlMissingError();
+      }
     }
   }
 
@@ -287,8 +309,8 @@ export class CdkTree<T, K = T> implements AfterContentChecked, CollectionViewer,
 
     // If the tree is flat tree, then use the `getLevel` function in flat tree control
     // Otherwise, use the level of parent node.
-    if (this.treeControl.getLevel) {
-      context.level = this.treeControl.getLevel(nodeData);
+    if (this.getLevel) {
+      context.level = this.getLevel(nodeData);
     } else if (typeof parentData !== 'undefined' && this._levels.has(parentData)) {
       context.level = this._levels.get(parentData)! + 1;
     } else {
@@ -306,6 +328,15 @@ export class CdkTree<T, K = T> implements AfterContentChecked, CollectionViewer,
     if (CdkTreeNode.mostRecentTreeNode) {
       CdkTreeNode.mostRecentTreeNode.data = nodeData;
     }
+  }
+
+  /** Level accessor, used for compatibility between the old Tree and new Tree */
+  get getLevel() {
+    return this.treeControl?.getLevel ?? this.levelAccessor;
+  }
+
+  get getChildren() {
+    return this.treeControl?.getChildren ?? this.childrenAccessor;
   }
 }
 
