@@ -35,6 +35,8 @@ ng_test_library(
         ":tree",
         "//src/cdk/bidi",
         "//src/cdk/collections",
+        "//src/cdk/keycodes",
+        "//src/cdk/testing/testbed",
         "@npm//rxjs",
     ],
 )
