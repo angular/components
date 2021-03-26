@@ -1733,6 +1733,7 @@ describe('CdkDrag', () => {
           fixture.componentInstance.droppedSpy.calls.mostRecent().args[0];
 
       expect(event.distance).toEqual({x: 50, y: 60});
+      expect(event.dropPoint).toEqual({x: 50, y: 60});
     }));
 
     it('should expose whether an item was dropped outside of a container', fakeAsync(() => {

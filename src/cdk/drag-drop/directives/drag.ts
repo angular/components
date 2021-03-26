@@ -489,7 +489,8 @@ export class CdkDrag<T = any> implements AfterViewInit, OnChanges, OnDestroy {
         container: event.container.data,
         isPointerOverContainer: event.isPointerOverContainer,
         item: this,
-        distance: event.distance
+        distance: event.distance,
+        dropPoint: event.dropPoint
       });
     });
   }

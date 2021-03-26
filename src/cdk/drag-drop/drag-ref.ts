@@ -310,6 +310,7 @@ export class DragRef<T = any> {
     container: DropListRef;
     previousContainer: DropListRef;
     distance: Point;
+    dropPoint: Point;
     isPointerOverContainer: boolean;
   }>();
 
@@ -922,10 +923,11 @@ export class DragRef<T = any> {
         container: container,
         previousContainer: this._initialContainer,
         isPointerOverContainer,
-        distance
+        distance,
+        dropPoint: pointerPosition
       });
       container.drop(this, currentIndex, this._initialIndex, this._initialContainer,
-        isPointerOverContainer, distance);
+        isPointerOverContainer, distance, pointerPosition);
       this._dropContainer = this._initialContainer;
     });
   }

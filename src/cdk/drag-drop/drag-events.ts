@@ -67,6 +67,8 @@ export interface CdkDragDrop<T, O = T> {
   isPointerOverContainer: boolean;
   /** Distance in pixels that the user has dragged since the drag sequence started. */
   distance: {x: number, y: number};
+  /** Point where the mouse was when the item was dropped */
+  dropPoint: {x: number, y: number};
 }
 
 /** Event emitted as the user is dragging a draggable item. */
