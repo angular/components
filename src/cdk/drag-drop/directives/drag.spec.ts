@@ -1690,7 +1690,8 @@ describe('CdkDrag', () => {
         container: fixture.componentInstance.dropInstance,
         previousContainer: fixture.componentInstance.dropInstance,
         isPointerOverContainer: true,
-        distance: {x: jasmine.any(Number), y: jasmine.any(Number)}
+        distance: {x: jasmine.any(Number), y: jasmine.any(Number)},
+        dropPoint: {x: jasmine.any(Number), y: jasmine.any(Number)}
       });
 
       expect(dragItems.map(drag => drag.element.nativeElement.textContent!.trim()))
@@ -1817,7 +1818,8 @@ describe('CdkDrag', () => {
         container: fixture.componentInstance.dropInstance,
         previousContainer: fixture.componentInstance.dropInstance,
         isPointerOverContainer: false,
-        distance: {x: jasmine.any(Number), y: jasmine.any(Number)}
+        distance: {x: jasmine.any(Number), y: jasmine.any(Number)},
+        dropPoint: {x: jasmine.any(Number), y: jasmine.any(Number)}
       });
 
       expect(dragItems.map(drag => drag.element.nativeElement.textContent!.trim()))
@@ -1876,7 +1878,8 @@ describe('CdkDrag', () => {
         container: fixture.componentInstance.dropInstance,
         previousContainer: fixture.componentInstance.dropInstance,
         isPointerOverContainer: true,
-        distance: {x: jasmine.any(Number), y: jasmine.any(Number)}
+        distance: {x: jasmine.any(Number), y: jasmine.any(Number)},
+        dropPoint: {x: jasmine.any(Number), y: jasmine.any(Number)}
       });
 
       expect(dragItems.map(drag => drag.element.nativeElement.textContent!.trim()))
@@ -1917,7 +1920,8 @@ describe('CdkDrag', () => {
         container: fixture.componentInstance.dropInstance,
         previousContainer: fixture.componentInstance.dropInstance,
         isPointerOverContainer: true,
-        distance: {x: jasmine.any(Number), y: jasmine.any(Number)}
+        distance: {x: jasmine.any(Number), y: jasmine.any(Number)},
+        dropPoint: {x: jasmine.any(Number), y: jasmine.any(Number)}
       });
 
       expect(dragItems.map(drag => drag.element.nativeElement.textContent!.trim()))
@@ -1954,7 +1958,8 @@ describe('CdkDrag', () => {
         container: fixture.componentInstance.dropInstance,
         previousContainer: fixture.componentInstance.dropInstance,
         isPointerOverContainer: false,
-        distance: {x: jasmine.any(Number), y: jasmine.any(Number)}
+        distance: {x: jasmine.any(Number), y: jasmine.any(Number)},
+        dropPoint: {x: jasmine.any(Number), y: jasmine.any(Number)}
       });
 
       expect(dragItems.map(drag => drag.element.nativeElement.textContent!.trim()))
@@ -1997,7 +2002,8 @@ describe('CdkDrag', () => {
         container: fixture.componentInstance.dropInstance,
         previousContainer: fixture.componentInstance.dropInstance,
         isPointerOverContainer: jasmine.any(Boolean),
-        distance: {x: jasmine.any(Number), y: jasmine.any(Number)}
+        distance: {x: jasmine.any(Number), y: jasmine.any(Number)},
+        dropPoint: {x: jasmine.any(Number), y: jasmine.any(Number)}
       });
     }));
 
@@ -2045,7 +2051,8 @@ describe('CdkDrag', () => {
         container: fixture.componentInstance.dropInstance,
         previousContainer: fixture.componentInstance.dropInstance,
         isPointerOverContainer: jasmine.any(Boolean),
-        distance: {x: jasmine.any(Number), y: jasmine.any(Number)}
+        distance: {x: jasmine.any(Number), y: jasmine.any(Number)},
+        dropPoint: {x: jasmine.any(Number), y: jasmine.any(Number)}
       });
 
       scrollTo(0, 0);
@@ -3636,7 +3643,8 @@ describe('CdkDrag', () => {
         container: dropInstance,
         previousContainer: dropInstance,
         isPointerOverContainer: true,
-        distance: {x: jasmine.any(Number), y: jasmine.any(Number)}
+        distance: {x: jasmine.any(Number), y: jasmine.any(Number)},
+        dropPoint: {x: jasmine.any(Number), y: jasmine.any(Number)}
       });
 
       expect(dragItems.map(drag => drag.element.nativeElement.textContent!.trim()))
@@ -4068,7 +4076,8 @@ describe('CdkDrag', () => {
         container: fixture.componentInstance.dropInstance,
         previousContainer: fixture.componentInstance.dropInstance,
         isPointerOverContainer: true,
-        distance: {x: jasmine.any(Number), y: jasmine.any(Number)}
+        distance: {x: jasmine.any(Number), y: jasmine.any(Number)},
+        dropPoint: {x: jasmine.any(Number), y: jasmine.any(Number)}
       });
     }));
 
@@ -4291,7 +4300,8 @@ describe('CdkDrag', () => {
         container: fixture.componentInstance.dropInstance,
         previousContainer: fixture.componentInstance.dropInstance,
         isPointerOverContainer: jasmine.any(Boolean),
-        distance: {x: jasmine.any(Number), y: jasmine.any(Number)}
+        distance: {x: jasmine.any(Number), y: jasmine.any(Number)},
+        dropPoint: {x: jasmine.any(Number), y: jasmine.any(Number)}
       });
     }));
 
@@ -4346,7 +4356,8 @@ describe('CdkDrag', () => {
           container: fixture.componentInstance.dropInstances.toArray()[1],
           previousContainer: fixture.componentInstance.dropInstances.first,
           isPointerOverContainer: true,
-          distance: {x: jasmine.any(Number), y: jasmine.any(Number)}
+          distance: {x: jasmine.any(Number), y: jasmine.any(Number)},
+          dropPoint: {x: jasmine.any(Number), y: jasmine.any(Number)}
         });
       }));
 
@@ -4451,7 +4462,8 @@ describe('CdkDrag', () => {
         container: dropInstances[1],
         previousContainer: dropInstances[0],
         isPointerOverContainer: true,
-        distance: {x: jasmine.any(Number), y: jasmine.any(Number)}
+        distance: {x: jasmine.any(Number), y: jasmine.any(Number)},
+        dropPoint: {x: jasmine.any(Number), y: jasmine.any(Number)}
       });
     }));
 
@@ -4482,7 +4494,8 @@ describe('CdkDrag', () => {
           container: dropInstances[0],
           previousContainer: dropInstances[0],
           isPointerOverContainer: false,
-          distance: {x: jasmine.any(Number), y: jasmine.any(Number)}
+          distance: {x: jasmine.any(Number), y: jasmine.any(Number)},
+          dropPoint: {x: jasmine.any(Number), y: jasmine.any(Number)}
         });
       }));
 
@@ -4513,7 +4526,8 @@ describe('CdkDrag', () => {
           container: dropInstances[0],
           previousContainer: dropInstances[0],
           isPointerOverContainer: false,
-          distance: {x: jasmine.any(Number), y: jasmine.any(Number)}
+          distance: {x: jasmine.any(Number), y: jasmine.any(Number)},
+          dropPoint: {x: jasmine.any(Number), y: jasmine.any(Number)}
         });
       }));
 
@@ -4649,7 +4663,8 @@ describe('CdkDrag', () => {
         container: dropInstances[1],
         previousContainer: dropInstances[0],
         isPointerOverContainer: true,
-        distance: {x: jasmine.any(Number), y: jasmine.any(Number)}
+        distance: {x: jasmine.any(Number), y: jasmine.any(Number)},
+        dropPoint: {x: jasmine.any(Number), y: jasmine.any(Number)}
       });
     }));
 
@@ -4786,7 +4801,8 @@ describe('CdkDrag', () => {
         container: dropInstances[1],
         previousContainer: dropInstances[0],
         isPointerOverContainer: true,
-        distance: {x: jasmine.any(Number), y: jasmine.any(Number)}
+        distance: {x: jasmine.any(Number), y: jasmine.any(Number)},
+        dropPoint: {x: jasmine.any(Number), y: jasmine.any(Number)}
       });
     }));
 
@@ -4813,7 +4829,8 @@ describe('CdkDrag', () => {
         container: dropInstances[1],
         previousContainer: dropInstances[0],
         isPointerOverContainer: true,
-        distance: {x: jasmine.any(Number), y: jasmine.any(Number)}
+        distance: {x: jasmine.any(Number), y: jasmine.any(Number)},
+        dropPoint: {x: jasmine.any(Number), y: jasmine.any(Number)}
       });
     }));
 
@@ -4845,7 +4862,8 @@ describe('CdkDrag', () => {
         container: dropInstances[1],
         previousContainer: dropInstances[0],
         isPointerOverContainer: true,
-        distance: {x: jasmine.any(Number), y: jasmine.any(Number)}
+        distance: {x: jasmine.any(Number), y: jasmine.any(Number)},
+        dropPoint: {x: jasmine.any(Number), y: jasmine.any(Number)}
       });
     }));
 
@@ -4881,7 +4899,8 @@ describe('CdkDrag', () => {
         container: fixture.componentInstance.dropInstances.toArray()[1],
         previousContainer: fixture.componentInstance.dropInstances.first,
         isPointerOverContainer: true,
-        distance: {x: jasmine.any(Number), y: jasmine.any(Number)}
+        distance: {x: jasmine.any(Number), y: jasmine.any(Number)},
+        dropPoint: {x: jasmine.any(Number), y: jasmine.any(Number)}
       });
 
       expect(dropContainers[0].contains(item.element.nativeElement)).toBe(true,
@@ -4978,7 +4997,8 @@ describe('CdkDrag', () => {
           container: dropInstances[0],
           previousContainer: dropInstances[0],
           isPointerOverContainer: false,
-          distance: {x: jasmine.any(Number), y: jasmine.any(Number)}
+          distance: {x: jasmine.any(Number), y: jasmine.any(Number)},
+          dropPoint: {x: jasmine.any(Number), y: jasmine.any(Number)}
         });
       }));
 
@@ -5160,7 +5180,8 @@ describe('CdkDrag', () => {
           container: dropInstances[2],
           previousContainer: dropInstances[0],
           isPointerOverContainer: false,
-          distance: {x: jasmine.any(Number), y: jasmine.any(Number)}
+          distance: {x: jasmine.any(Number), y: jasmine.any(Number)},
+          dropPoint: {x: jasmine.any(Number), y: jasmine.any(Number)}
         }));
 
       }));
@@ -5419,7 +5440,8 @@ describe('CdkDrag', () => {
         container: fixture.componentInstance.dropInstances.toArray()[1],
         previousContainer: fixture.componentInstance.dropInstances.first,
         isPointerOverContainer: true,
-        distance: {x: jasmine.any(Number), y: jasmine.any(Number)}
+        distance: {x: jasmine.any(Number), y: jasmine.any(Number)},
+        dropPoint: {x: jasmine.any(Number), y: jasmine.any(Number)}
       });
 
       cleanup();
@@ -5454,7 +5476,8 @@ describe('CdkDrag', () => {
         container: fixture.componentInstance.dropInstances.toArray()[1],
         previousContainer: fixture.componentInstance.dropInstances.first,
         isPointerOverContainer: true,
-        distance: {x: jasmine.any(Number), y: jasmine.any(Number)}
+        distance: {x: jasmine.any(Number), y: jasmine.any(Number)},
+        dropPoint: {x: jasmine.any(Number), y: jasmine.any(Number)}
       });
     }));
 
@@ -5488,7 +5511,8 @@ describe('CdkDrag', () => {
           container: fixture.componentInstance.dropInstances.toArray()[1],
           previousContainer: fixture.componentInstance.dropInstances.first,
           isPointerOverContainer: true,
-          distance: {x: jasmine.any(Number), y: jasmine.any(Number)}
+          distance: {x: jasmine.any(Number), y: jasmine.any(Number)},
+          dropPoint: {x: jasmine.any(Number), y: jasmine.any(Number)}
         });
       }));
 
