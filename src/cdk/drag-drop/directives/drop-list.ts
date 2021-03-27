@@ -359,7 +359,7 @@ export class CdkDropList<T = any> implements OnDestroy {
         item: event.item.data,
         isPointerOverContainer: event.isPointerOverContainer,
         distance: event.distance,
-        dropPoint: event.dropPoint
+        dropPosition: event.dropPosition
       });
 
       // Mark for check since all of these events run outside of change

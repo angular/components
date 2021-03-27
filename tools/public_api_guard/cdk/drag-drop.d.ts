@@ -66,7 +66,7 @@ export interface CdkDragDrop<T, O = T> {
         x: number;
         y: number;
     };
-    dropPoint: {
+    dropPosition: {
         x: number;
         y: number;
     };
@@ -273,7 +273,7 @@ export declare class DragRef<T = any> {
         container: DropListRef;
         previousContainer: DropListRef;
         distance: Point;
-        dropPoint: Point;
+        dropPosition: Point;
         isPointerOverContainer: boolean;
     }>;
     ended: Subject<{
@@ -361,7 +361,7 @@ export declare class DropListRef<T = any> {
         previousContainer: DropListRef;
         isPointerOverContainer: boolean;
         distance: Point;
-        dropPoint: Point;
+        dropPosition: Point;
     }>;
     element: HTMLElement | ElementRef<HTMLElement>;
     enterPredicate: (drag: DragRef, drop: DropListRef) => boolean;
@@ -397,7 +397,7 @@ export declare class DropListRef<T = any> {
     _stopScrolling(): void;
     connectedTo(connectedTo: DropListRef[]): this;
     dispose(): void;
-    drop(item: DragRef, currentIndex: number, previousIndex: number, previousContainer: DropListRef, isPointerOverContainer: boolean, distance: Point, dropPoint: Point): void;
+    drop(item: DragRef, currentIndex: number, previousIndex: number, previousContainer: DropListRef, isPointerOverContainer: boolean, distance: Point, dropPosition: Point): void;
     enter(item: DragRef, pointerX: number, pointerY: number, index?: number): void;
     exit(item: DragRef): void;
     getItemIndex(item: DragRef): number;
