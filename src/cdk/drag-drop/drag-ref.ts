@@ -294,7 +294,7 @@ export class DragRef<T = any> {
   released = new Subject<{source: DragRef}>();
 
   /** Emits when the user stops dragging an item in the container. */
-  ended = new Subject<{source: DragRef, distance: Point, dropPosition: Point}>();
+  ended = new Subject<{source: DragRef, distance: Point, dropPoint: Point}>();
 
   /** Emits when the user has moved the item into a new container. */
   entered = new Subject<{container: DropListRef, item: DragRef, currentIndex: number}>();
@@ -310,7 +310,7 @@ export class DragRef<T = any> {
     container: DropListRef;
     previousContainer: DropListRef;
     distance: Point;
-    dropPosition: Point;
+    dropPoint: Point;
     isPointerOverContainer: boolean;
   }>();
 
@@ -771,7 +771,7 @@ export class DragRef<T = any> {
         this.ended.next({
           source: this,
           distance: this._getDragDistance(pointerPosition),
-          dropPosition: pointerPosition
+          dropPoint: pointerPosition
         });
       });
       this._cleanupCachedDimensions();
@@ -917,7 +917,7 @@ export class DragRef<T = any> {
       const isPointerOverContainer = container._isOverContainer(
         pointerPosition.x, pointerPosition.y);
 
-      this.ended.next({source: this, distance, dropPosition: pointerPosition});
+      this.ended.next({source: this, distance, dropPoint: pointerPosition});
       this.dropped.next({
         item: this,
         currentIndex,
@@ -926,7 +926,7 @@ export class DragRef<T = any> {
         previousContainer: this._initialContainer,
         isPointerOverContainer,
         distance,
-        dropPosition: pointerPosition
+        dropPoint: pointerPosition
       });
       container.drop(this, currentIndex, this._initialIndex, this._initialContainer,
         isPointerOverContainer, distance, pointerPosition);

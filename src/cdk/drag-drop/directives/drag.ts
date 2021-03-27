@@ -462,7 +462,7 @@ export class CdkDrag<T = any> implements AfterViewInit, OnChanges, OnDestroy {
       this.ended.emit({
         source: this,
         distance: event.distance,
-        dropPosition: event.dropPosition
+        dropPoint: event.dropPoint
       });
 
       // Since all of these events run outside of change detection,
@@ -494,7 +494,7 @@ export class CdkDrag<T = any> implements AfterViewInit, OnChanges, OnDestroy {
         isPointerOverContainer: event.isPointerOverContainer,
         item: this,
         distance: event.distance,
-        dropPosition: event.dropPosition
+        dropPoint: event.dropPoint
       });
     });
   }
