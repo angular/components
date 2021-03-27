@@ -1,4 +1,5 @@
 load("//tools:defaults.bzl", "jasmine_node_test", "ng_e2e_test_library", "ng_module", "ng_test_library", "ts_library")
+load("@io_bazel_rules_webtesting//web:web.bzl", "web_test")
 
 package(default_visibility = ["//visibility:public"])
 
@@ -65,10 +66,13 @@ ng_test_library(
 
 ng_e2e_test_library(
     name = "e2e_test_sources",
-    srcs = glob([
-        "**/*.e2e.spec.ts",
-        "**/*.spec.d.ts",
-    ]),
+    srcs = glob(
+        [
+            "**/*.e2e.spec.ts",
+            "**/*.spec.d.ts",
+        ],
+        exclude = ["webdriver.e2e.spec.ts"],
+    ),
     deps = [
         ":cross_environment_specs",
         ":test_harnesses",
@@ -83,14 +87,29 @@ ts_library(
     testonly = 1,
     srcs = ["webdriver.e2e.spec.ts"],
     deps = [
-        "@npm//@types/selenium-webdriver",
         "@npm//@types/jasmine",
         "@npm//@types/node",
+        "@npm//@types/selenium-webdriver",
     ],
 )
 
 jasmine_node_test(
-    name = "webdriver_test",
-    data = ["@npm//:node_modules"],
+    name = "webdriver_node_test",
+    data = [
+        "@npm//:node_modules",
+    ],
+    tags = ["manual"],
     deps = [":webdriver_test_lib"],
+)
+
+web_test(
+    name = "webdriver_test_chrome",
+    browser = "@npm//@angular/dev-infra-private/browsers/chromium:chromium",
+    test = ":webdriver_node_test",
+)
+
+web_test(
+    name = "webdriver_test_firefox",
+    browser = "@npm//@angular/dev-infra-private/browsers/firefox:firefox",
+    test = ":webdriver_node_test",
 )
