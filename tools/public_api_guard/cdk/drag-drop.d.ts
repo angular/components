@@ -81,6 +81,10 @@ export interface CdkDragEnd<T = any> {
         x: number;
         y: number;
     };
+    dropPosition: {
+        x: number;
+        y: number;
+    };
     source: CdkDrag<T>;
 }
 
