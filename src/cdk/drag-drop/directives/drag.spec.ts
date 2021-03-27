@@ -376,7 +376,8 @@ describe('CdkDrag', () => {
       // go into an infinite loop trying to stringify the event, if the test fails.
       expect(event).toEqual({
         source: fixture.componentInstance.dragInstance,
-        distance: {x: jasmine.any(Number), y: jasmine.any(Number)}
+        distance: {x: jasmine.any(Number), y: jasmine.any(Number)},
+        dropPosition: {x: jasmine.any(Number), y: jasmine.any(Number)}
       });
     }));
 
@@ -389,7 +390,8 @@ describe('CdkDrag', () => {
 
       expect(event).toEqual({
         source: jasmine.anything(),
-        distance: {x: 25, y: 30}
+        distance: {x: 25, y: 30},
+        dropPosition:  {x: 25, y: 30}
       });
 
       dragElementViaMouse(fixture, fixture.componentInstance.dragElement.nativeElement, 40, 50);
@@ -397,7 +399,8 @@ describe('CdkDrag', () => {
 
       expect(event).toEqual({
         source: jasmine.anything(),
-        distance: {x: 40, y: 50}
+        distance: {x: 40, y: 50},
+        dropPosition:  {x: 40, y: 50}
       });
     }));
 

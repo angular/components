@@ -283,6 +283,7 @@ export declare class DragRef<T = any> {
     ended: Subject<{
         source: DragRef;
         distance: Point;
+        dropPosition: Point;
     }>;
     entered: Subject<{
         container: DropListRef;
