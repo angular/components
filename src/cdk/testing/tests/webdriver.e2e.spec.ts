@@ -20,7 +20,7 @@ const runfiles = require(process.env['BAZEL_NODE_RUNFILES_HELPER']!);
 const webTestMetadata: WebTestMetadata =
     require(runfiles.resolve(process.env['WEB_TEST_METADATA']));
 
-describe('wait for Angular', () => {
+describe('Webdriver test', () => {
   let wd: WebDriver;
 
   beforeAll(async () => {
@@ -35,9 +35,8 @@ describe('wait for Angular', () => {
   });
 
   it('works', async () => {
-    await wd.get('https://material.angular.io');
-    const header = await wd.findElement(By.css('.mat-h1'));
-    console.error(await wd.executeScript('return navigator.userAgent'));
-    expect(await header.getText()).toBe('Angular Matedrial');
+    await wd.get('data:text/html,Test');
+    const body = await wd.findElement(By.css('body'));
+    expect(await body.getText()).toBe('Test test');
   });
 });
