@@ -105,11 +105,13 @@ jasmine_node_test(
 web_test(
     name = "webdriver_test_chrome",
     browser = "@npm//@angular/dev-infra-private/browsers/chromium:chromium",
+    tags = ["e2e"],
     test = ":webdriver_node_test",
 )
 
 web_test(
     name = "webdriver_test_firefox",
     browser = "@npm//@angular/dev-infra-private/browsers/firefox:firefox",
+    tags = ["e2e"],
     test = ":webdriver_node_test",
 )
