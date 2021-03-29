@@ -1,4 +1,3 @@
-import 'jasmine';
 import {Builder, By, Capabilities, WebDriver} from 'selenium-webdriver';
 
 /**
@@ -37,6 +36,6 @@ describe('Webdriver test', () => {
   it('works', async () => {
     await wd.get('data:text/html,Test');
     const body = await wd.findElement(By.css('body'));
-    expect(await body.getText()).toBe('Test test');
+    expect(await body.getText()).toBe('Test');
   });
 });
