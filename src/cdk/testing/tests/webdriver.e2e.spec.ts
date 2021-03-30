@@ -11,13 +11,14 @@ interface WebTestMetadata {
 }
 
 if (process.env['WEB_TEST_METADATA'] === undefined) {
-  console.log(`Test running outside of a "web_test" target. No browser found.`);
+  console.error(`Test running outside of a "web_test" target. No browser found.`);
   process.exit(1);
 }
 
 const runfiles = require(process.env['BAZEL_NODE_RUNFILES_HELPER']!);
 const webTestMetadata: WebTestMetadata =
     require(runfiles.resolve(process.env['WEB_TEST_METADATA']));
+const port = process.env['E2E_APP_PORT'];
 
 describe('Webdriver test', () => {
   let wd: WebDriver;
@@ -34,8 +35,8 @@ describe('Webdriver test', () => {
   });
 
   it('works', async () => {
-    await wd.get('data:text/html,Test');
+    await wd.get(`http://localhost:${port}`);
     const body = await wd.findElement(By.css('body'));
-    expect(await body.getText()).toBe('Test');
+    expect(await body.getText()).toBe('Toggle Navigation Links\ne2e website!\nI am a sibling!');
   });
 });
