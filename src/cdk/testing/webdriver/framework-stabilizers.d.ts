@@ -1,0 +1,20 @@
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+
+declare interface FrameworkStabilizer {
+  (callback: (didWork: boolean) => void): void;
+}
+
+/**
+ * These hooks are exposed by Angular to register a callback for when the application is stable (no
+ * more pending tasks).
+ *
+ * For the implementation, see:
+ * https://github.com/angular/angular/blob/master/packages/platform-browser/src/browser/testability.ts#L30-L49
+ */
+declare const frameworkStabilizers: FrameworkStabilizer[];

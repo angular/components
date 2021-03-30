@@ -177,9 +177,7 @@ export function crossEnvironmentSpecs(
       expect(items4.length).toBe(0);
     });
 
-    // TODO(mmalerba): Fix and re-enable.
-    // tslint:disable-next-line:ban
-    xit('should wait for async operation to complete', async () => {
+    it('should wait for async operation to complete', async () => {
       const asyncCounter = await harness.asyncCounter();
       expect(await asyncCounter.text()).toBe('5');
       await harness.increaseCounter(3);

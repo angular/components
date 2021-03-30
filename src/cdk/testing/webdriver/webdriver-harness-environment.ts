@@ -22,6 +22,14 @@ const defaultEnvironmentOptions: WebDriverHarnessEnvironmentOptions = {
       root().findElements(webdriver.By.css(selector))
 };
 
+/**
+ * This function is meant to be executed in the browser. It taps into the hooks exposed by Angular
+ * and invokes the specified `callback` when the application is stable (no more pending tasks).
+ */
+function whenStable(callback: (didWork: boolean[]) => void): void {
+  Promise.all(frameworkStabilizers.map(stabilizer => new Promise(stabilizer))).then(callback);
+}
+
 /** A `HarnessEnvironment` implementation for WebDriver. */
 export class WebDriverHarnessEnvironment extends HarnessEnvironment<() => webdriver.WebElement> {
   /** The options for this environment. */
@@ -49,8 +57,7 @@ export class WebDriverHarnessEnvironment extends HarnessEnvironment<() => webdri
   }
 
   async forceStabilize(): Promise<void> {
-    // TODO(mmalerba): I think we have to actually do something here for the webdriver environment,
-    //  since we can't rely on protractor magic.
+    await this.rawRootElement().getDriver().executeAsyncScript(whenStable);
   }
 
   async waitForTasksOutsideAngular(): Promise<void> {
@@ -63,7 +70,7 @@ export class WebDriverHarnessEnvironment extends HarnessEnvironment<() => webdri
   }
 
   protected createTestElement(element: () => webdriver.WebElement): TestElement {
-    return new WebDriverElement(element);
+    return new WebDriverElement(element, () => this.forceStabilize());
   }
 
   protected createEnvironment(element: () => webdriver.WebElement):
@@ -71,8 +78,9 @@ export class WebDriverHarnessEnvironment extends HarnessEnvironment<() => webdri
     return new WebDriverHarnessEnvironment(element, this._options);
   }
 
-  // TODO(mmalerba): I'm not so sure about this...
-  //  it feels like maybe the return type should be `() => Promise<webdriver.WebElement[]>` instead.
+  // Note: This seems to be working, though we may need to re-evaluate if we encounter issues with
+  // stale element references. `() => Promise<webdriver.WebElement[]>` seems like a more correct
+  // return type, though supporting it would require changes to the public harness API.
   protected async getAllRawElements(selector: string): Promise<(() => webdriver.WebElement)[]> {
     const els = await this._options.queryFn(selector, this.rawRootElement);
     return els.map((x: webdriver.WebElement) => () => x);
