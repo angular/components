@@ -109,9 +109,7 @@ describe('WebDriverHarnessEnvironment', () => {
         expect(await harness.shadows()).toEqual([]);
       });
 
-      // TODO(mmalerba): Fix and re-enable.
-      // tslint:disable-next-line:ban
-      xit('should pierce shadow boundary when using piercing query', async () => {
+      it('should pierce shadow boundary when using piercing query', async () => {
         const harness = await WebDriverHarnessEnvironment.loader(wd, {queryFn: piercingQueryFn})
             .getHarness(MainComponentHarness);
         const shadows = await harness.shadows();
@@ -120,9 +118,7 @@ describe('WebDriverHarnessEnvironment', () => {
         })).toEqual(['Shadow 1', 'Shadow 2']);
       });
 
-      // TODO(mmalerba): Fix and re-enable.
-      // tslint:disable-next-line:ban
-      xit('should allow querying across shadow boundary', async () => {
+      it('should allow querying across shadow boundary', async () => {
         const harness = await WebDriverHarnessEnvironment.loader(wd, {queryFn: piercingQueryFn})
             .getHarness(MainComponentHarness);
         expect(await (await harness.deepShadow()).text()).toBe('Shadow 2');

@@ -68,7 +68,7 @@ export class WebDriverHarnessEnvironment extends HarnessEnvironment<() => webdri
 
   protected createEnvironment(element: () => webdriver.WebElement):
       HarnessEnvironment<() => webdriver.WebElement> {
-    return new WebDriverHarnessEnvironment(element);
+    return new WebDriverHarnessEnvironment(element, this._options);
   }
 
   // TODO(mmalerba): I'm not so sure about this...
