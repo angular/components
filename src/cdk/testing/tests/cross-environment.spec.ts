@@ -438,9 +438,7 @@ export function crossEnvironmentSpecs(
       expect(await title.getCssValue('height')).toBe('100px');
     });
 
-    // TODO(mmalerba): Fix and re-enable.
-    // tslint:disable-next-line:ban
-    xit('should focus and blur element', async () => {
+    it('should focus and blur element', async () => {
       const button = await harness.button();
       const buttonId = await button.getAttribute('id');
       expect(await getActiveElementId()).not.toBe(buttonId);
@@ -589,9 +587,7 @@ export function crossEnvironmentSpecs(
       }
     });
 
-    // TODO(mmalerba): Fix and re-enable.
-    // tslint:disable-next-line:ban
-    xit('should check if element is focused', async () => {
+    it('should check if element is focused', async () => {
       const button = await harness.button();
       await button.focus();
       expect(await button.isFocused()).toBe(true);

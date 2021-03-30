@@ -41,7 +41,7 @@ export class WebDriverElement implements TestElement {
   }
 
   async focus(): Promise<void> {
-    return this._executeScript((element: HTMLElement) => element.blur(), this.element());
+    return this._executeScript((element: HTMLElement) => element.focus(), this.element());
   }
 
   async getCssValue(property: string): Promise<string> {
