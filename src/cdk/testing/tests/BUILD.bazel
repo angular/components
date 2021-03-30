@@ -90,6 +90,10 @@ ts_library(
         "@npm//@types/jasmine",
         "@npm//@types/node",
         "@npm//@types/selenium-webdriver",
+        "//src/cdk/testing",
+        "//src/cdk/testing/webdriver",
+        ":test_harnesses",
+        ":cross_environment_specs",
     ],
 )
 

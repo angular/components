@@ -20,14 +20,14 @@ import {getWebDriverModifierKeys, webDriverKeyMap} from './webdriver-keys';
 
 /** A `TestElement` implementation for WebDriver. */
 export class WebDriverElement implements TestElement {
-  constructor(private readonly _webElement: () => webdriver.WebElement) {}
+  constructor(readonly element: () => webdriver.WebElement) {}
 
   async blur(): Promise<void> {
-    return this._executeScript(((element: HTMLElement) => element.blur()), this._webElement());
+    return this._executeScript(((element: HTMLElement) => element.blur()), this.element());
   }
 
   async clear(): Promise<void> {
-    return this._webElement().clear();
+    return this.element().clear();
   }
 
   async click(...args: [ModifierKeys?] | ['center', ModifierKeys?] |
@@ -41,19 +41,19 @@ export class WebDriverElement implements TestElement {
   }
 
   async focus(): Promise<void> {
-    return this._executeScript((element: HTMLElement) => element.blur(), this._webElement());
+    return this._executeScript((element: HTMLElement) => element.blur(), this.element());
   }
 
   async getCssValue(property: string): Promise<string> {
-    return this._webElement().getCssValue(property);
+    return this.element().getCssValue(property);
   }
 
   async hover(): Promise<void> {
-    return this._actions().mouseMove(this._webElement()).perform();
+    return this._actions().mouseMove(this.element()).perform();
   }
 
   async mouseAway(): Promise<void> {
-    return this._actions().mouseMove(this._webElement(), {x: -1, y: -1}).perform();
+    return this._actions().mouseMove(this.element(), {x: -1, y: -1}).perform();
   }
 
   async sendKeys(...keys: (string | TestKey)[]): Promise<void>;
@@ -77,20 +77,20 @@ export class WebDriverElement implements TestElement {
         // so avoid it if no modifier keys are required.
         .map(k => modifierKeys.length > 0 ? webdriver.Key.chord(...modifierKeys, k) : k);
 
-    return this._webElement().sendKeys(...keys);
+    return this.element().sendKeys(...keys);
   }
 
   async text(options?: TextOptions): Promise<string> {
     if (options?.exclude) {
-      return this._executeScript(_getTextWithExcludedElements, this._webElement(), options.exclude);
+      return this._executeScript(_getTextWithExcludedElements, this.element(), options.exclude);
     }
-    return this._webElement().getText();
+    return this.element().getText();
   }
 
   async getAttribute(name: string): Promise<string|null> {
     return this._executeScript(
         (element: Element, attribute: string) => element.getAttribute(attribute),
-        this._webElement(), name);
+        this.element(), name);
   }
 
   async hasClass(name: string): Promise<boolean> {
@@ -99,25 +99,25 @@ export class WebDriverElement implements TestElement {
   }
 
   async getDimensions(): Promise<ElementDimensions> {
-    const {width, height} = await this._webElement().getSize();
-    const {x: left, y: top} = await this._webElement().getLocation();
+    const {width, height} = await this.element().getSize();
+    const {x: left, y: top} = await this.element().getLocation();
     return {width, height, left, top};
   }
 
   async getProperty(name: string): Promise<any> {
     return this._executeScript(
         (element: Element, property: keyof Element) => element[property],
-        this._webElement(), name);
+        this.element(), name);
   }
 
   async setInputValue(newValue: string): Promise<void> {
     return this._executeScript(
         (element: HTMLInputElement, value: string) => element.value = value,
-        this._webElement(), newValue);
+        this.element(), newValue);
   }
 
   async selectOptions(...optionIndexes: number[]): Promise<void> {
-    const options = await this._webElement().findElements(webdriver.By.css('option'));
+    const options = await this.element().findElements(webdriver.By.css('option'));
     const indexes = new Set(optionIndexes); // Convert to a set to remove duplicates.
 
     if (options.length && indexes.size) {
@@ -141,24 +141,24 @@ export class WebDriverElement implements TestElement {
     return this._executeScript((element: Element, s: string) =>
         (Element.prototype.matches || (Element.prototype as any).msMatchesSelector)
             .call(element, s),
-        this._webElement(), selector);
+        this.element(), selector);
   }
 
   async isFocused(): Promise<boolean> {
     return webdriver.WebElement.equals(
-        this._webElement(), this._webElement().getDriver().switchTo().activeElement());
+        this.element(), this.element().getDriver().switchTo().activeElement());
   }
 
   async dispatchEvent(name: string, data?: Record<string, EventData>): Promise<void> {
-    return this._executeScript(dispatchEvent, name, this._webElement(), data);
+    return this._executeScript(dispatchEvent, name, this.element(), data);
   }
 
   private _actions() {
-    return this._webElement().getDriver().actions();
+    return this.element().getDriver().actions();
   }
 
   private async _executeScript<T>(script: Function, ...var_args: any[]): Promise<T> {
-    return this._webElement().getDriver().executeScript(script, ...var_args);
+    return this.element().getDriver().executeScript(script, ...var_args);
   }
 
   /** Dispatches all the events that are part of a click event sequence. */
@@ -177,7 +177,7 @@ export class WebDriverElement implements TestElement {
     const offsetArgs = (args.length === 2 ?
         [{x: args[0], y: args[1]}] : []) as [{x: number, y: number}];
 
-    let actions = this._actions().mouseMove(this._webElement(), ...offsetArgs);
+    let actions = this._actions().mouseMove(this.element(), ...offsetArgs);
 
     for (const modifierKey of modifierKeys) {
       actions = actions.keyDown(modifierKey);
