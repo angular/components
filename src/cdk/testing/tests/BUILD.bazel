@@ -87,13 +87,13 @@ ts_library(
     testonly = 1,
     srcs = ["webdriver.e2e.spec.ts"],
     deps = [
+        ":cross_environment_specs",
+        ":test_harnesses",
+        "//src/cdk/testing",
+        "//src/cdk/testing/webdriver",
         "@npm//@types/jasmine",
         "@npm//@types/node",
         "@npm//@types/selenium-webdriver",
-        "//src/cdk/testing",
-        "//src/cdk/testing/webdriver",
-        ":test_harnesses",
-        ":cross_environment_specs",
     ],
 )
 

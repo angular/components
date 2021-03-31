@@ -176,10 +176,12 @@ export class WebDriverElement implements TestElement {
     await this._stabilize();
   }
 
+  /** Gets the webdriver action sequence. */
   private _actions() {
     return this.element().getDriver().actions();
   }
 
+  /** Executes a function in the browser. */
   private async _executeScript<T>(script: Function, ...var_args: any[]): Promise<T> {
     return this.element().getDriver().executeScript(script, ...var_args);
   }
