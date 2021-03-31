@@ -122,6 +122,6 @@ sh_test(
         ":webdriver_web_test_chrome",
         "//src/e2e-app:devserver",
     ],
-    tags = ["manual"],  # TODO(mmalerba): Change to "e2e" once this works on CI.
+    tags = ["e2e"],
     deps = ["@bazel_tools//tools/bash/runfiles"],
 )
