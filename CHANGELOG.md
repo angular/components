@@ -1,3 +1,19 @@
+## 11.2.7 "foam-feather" (2021-03-31)
+
+### material
+
+|            |                       |
+| ---------- | --------------------- |
+| bug fix |  **checkbox:** native input not in sync if checked state is changed inside event ([#22316](https://github.com/angular/components/issues/22316)) ([73d0687603bfe817bec9813d3b7a1514840fd9f4](https://github.com/angular/components/commit/73d0687603bfe817bec9813d3b7a1514840fd9f4)), closes [#22149](https://github.com/angular/components/issues/22149) |
+| bug fix |  **progress-spinner:** not visible in high contrast mode on chromium browsers ([#22364](https://github.com/angular/components/issues/22364)) ([6277ee2665163b94cf22707aba8e95e5464001d4](https://github.com/angular/components/commit/6277ee2665163b94cf22707aba8e95e5464001d4)) |
+
+### radio
+
+|            |                       |
+| ---------- | --------------------- |
+| feature |  **checkbox:** show background-color in print stylesheet ([#22298](https://github.com/angular/components/issues/22298)) ([#22299](https://github.com/angular/components/issues/22299)) ([06877802a70439ac8f9984d19b36efbb61187317](https://github.com/angular/components/commit/06877802a70439ac8f9984d19b36efbb61187317)) |
+
+
 ## 11.2.6 "wool-mammoth" (2021-03-24)
 
 ### cdk
