@@ -6,6 +6,10 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+/**
+ * An Angular framework stabilizer function that takes a callback and calls it when the application
+ * is stable, passing a boolean indicating if any work was done.
+ */
 declare interface FrameworkStabilizer {
   (callback: (didWork: boolean) => void): void;
 }

@@ -25,11 +25,9 @@ const webTestMetadata: WebTestMetadata =
 const port = process.env['E2E_APP_PORT'];
 
 // Kagekiri is available globally in the browser. We declare it here so we can use it in the
-// browser-side script passed to `by.js`.
-// TODO(mmalerba): Replace with type-only import once TS 3.8 is available, see:
-//  https://devblogs.microsoft.com/typescript/announcing-typescript-3-8-beta/#type-only-imports-exports
+// browser-side script passed to `By.js`.
 declare const kagekiri: {
-  querySelectorAll: (selector: string, root: Element) => NodeListOf<Element>;
+  querySelectorAll: (selector: string, root: Element) => NodeListOf<Element>
 };
 
 describe('WebDriverHarnessEnvironment', () => {

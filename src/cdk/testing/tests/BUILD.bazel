@@ -10,7 +10,6 @@ ng_module(
         ["**/*.ts"],
         exclude = [
             "**/*.spec.ts",
-            "**/*.spec.d.ts",
             "harnesses/**",
         ],
     ),
@@ -44,7 +43,6 @@ ng_test_library(
     srcs = glob(
         [
             "**/*.spec.ts",
-            "**/*.spec.d.ts",
         ],
         exclude = [
             "cross-environment.spec.ts",
@@ -69,7 +67,6 @@ ng_e2e_test_library(
     srcs = glob(
         [
             "**/*.e2e.spec.ts",
-            "**/*.spec.d.ts",
         ],
         exclude = ["webdriver.e2e.spec.ts"],
     ),
