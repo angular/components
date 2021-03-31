@@ -10,7 +10,6 @@ ng_module(
         ["**/*.ts"],
         exclude = [
             "**/*.spec.ts",
-            "**/*.spec.d.ts",
             "harnesses/**",
         ],
     ),
@@ -44,7 +43,6 @@ ng_test_library(
     srcs = glob(
         [
             "**/*.spec.ts",
-            "**/*.spec.d.ts",
         ],
         exclude = [
             "cross-environment.spec.ts",
@@ -69,7 +67,6 @@ ng_e2e_test_library(
     srcs = glob(
         [
             "**/*.e2e.spec.ts",
-            "**/*.spec.d.ts",
         ],
         exclude = ["webdriver.e2e.spec.ts"],
     ),
@@ -87,6 +84,10 @@ ts_library(
     testonly = 1,
     srcs = ["webdriver.e2e.spec.ts"],
     deps = [
+        ":cross_environment_specs",
+        ":test_harnesses",
+        "//src/cdk/testing",
+        "//src/cdk/testing/webdriver",
         "@npm//@types/jasmine",
         "@npm//@types/node",
         "@npm//@types/selenium-webdriver",
