@@ -274,9 +274,6 @@ export class CdkTextareaAutosize implements AfterViewInit, DoCheck, OnDestroy {
     }
 
     const scrollHeight = this._measureScrollHeight();
-
-    // The measuring class includes a 2px padding to workaround an issue with Chrome,
-    // so we account for that extra space here by subtracting 4 (2px top + 2px bottom).
     const height = Math.max(scrollHeight, this._cachedPlaceholderHeight || 0);
 
     // Use the scrollHeight to know how large the textarea *would* be if fit its entire value.
