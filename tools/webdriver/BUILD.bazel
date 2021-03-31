@@ -1,0 +1,25 @@
+load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_binary")
+load("//tools:defaults.bzl", "ts_library")
+
+package(default_visibility = ["//visibility:public"])
+
+sh_library(
+    name = "run-webdriver-test",
+    srcs = ["run-webdriver-test.sh"],
+)
+
+ts_library(
+    name = "sources",
+    srcs = ["run-webdriver-test.ts"],
+    deps = ["@npm//@types/node"],
+    tsconfig = ":tsconfig.json",
+)
+
+nodejs_binary(
+    name = "run-webdriver-test-platform-independent",
+    entry_point = ":run-webdriver-test.ts",
+    data = [":sources"],
+    # TODO(josephperrott): update dependency usages to no longer need bazel patch module resolver
+    # See: https://github.com/bazelbuild/rules_nodejs/wiki#--bazel_patch_module_resolver-now-defaults-to-false-2324
+    templated_args = ["--bazel_patch_module_resolver"],
+)

@@ -1,5 +1,6 @@
 load("//tools:defaults.bzl", "jasmine_node_test", "ng_e2e_test_library", "ng_module", "ng_test_library", "ts_library")
 load("@io_bazel_rules_webtesting//web:web.bzl", "web_test")
+load("//tools/webdriver:webdriver.bzl", "webdriver_e2e_test")
 
 package(default_visibility = ["//visibility:public"])
 
@@ -94,34 +95,8 @@ ts_library(
     ],
 )
 
-jasmine_node_test(
-    name = "webdriver_jasmine_node_test",
-    data = [
-        "@npm//:node_modules",
-    ],
-    tags = ["manual"],
-    deps = [":webdriver_test_lib"],
-)
-
-web_test(
-    name = "webdriver_web_test_chrome",
-    browser = "@npm//@angular/dev-infra-private/browsers/chromium:chromium",
-    tags = ["manual"],
-    test = ":webdriver_jasmine_node_test",
-)
-
-sh_test(
+webdriver_e2e_test(
     name = "webdriver_test_chrome",
-    testonly = 1,
-    srcs = ["webdriver-test.sh"],
-    args = [
-        "$(location //src/e2e-app:devserver)",
-        "$(location :webdriver_web_test_chrome)",
-    ],
-    data = [
-        ":webdriver_web_test_chrome",
-        "//src/e2e-app:devserver",
-    ],
-    tags = ["e2e"],
-    deps = ["@bazel_tools//tools/bash/runfiles"],
+    browser = "@npm//@angular/dev-infra-private/browsers/chromium:chromium",
+    deps = [":webdriver_test_lib"],
 )
