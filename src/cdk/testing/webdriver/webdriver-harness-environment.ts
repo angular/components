@@ -10,6 +10,27 @@ import {HarnessEnvironment, HarnessLoader, TestElement} from '@angular/cdk/testi
 import * as webdriver from 'selenium-webdriver';
 import {WebDriverElement} from './webdriver-element';
 
+/**
+ * An Angular framework stabilizer function that takes a callback and calls it when the application
+ * is stable, passing a boolean indicating if any work was done.
+ */
+declare interface FrameworkStabilizer {
+  (callback: (didWork: boolean) => void): void;
+}
+
+declare global {
+  interface Window {
+    /**
+     * These hooks are exposed by Angular to register a callback for when the application is stable
+     * (no more pending tasks).
+     *
+     * For the implementation, see:
+     * https://github.com/angular/angular/blob/master/packages/platform-browser/src/browser/testability.ts#L30-L49
+     */
+    frameworkStabilizers: FrameworkStabilizer[];
+  }
+}
+
 /** Options to configure the environment. */
 export interface WebDriverHarnessEnvironmentOptions {
   /** The query function used to find DOM elements. */
@@ -27,7 +48,22 @@ const defaultEnvironmentOptions: WebDriverHarnessEnvironmentOptions = {
  * and invokes the specified `callback` when the application is stable (no more pending tasks).
  */
 function whenStable(callback: (didWork: boolean[]) => void): void {
-  Promise.all(frameworkStabilizers.map(stabilizer => new Promise(stabilizer))).then(callback);
+  Promise.all(window.frameworkStabilizers.map(stabilizer => new Promise(stabilizer)))
+      .then(callback);
+}
+
+/**
+ * This function is meant to be executed in the browser. It checks whether the Angular framework has
+ * bootstrapped yet.
+ */
+function isBootstrapped() {
+  return !!window.frameworkStabilizers;
+}
+
+/** Waits for angular to be ready after the page load. */
+export async function waitForAngularReady(wd: webdriver.WebDriver) {
+  await wd.wait(wd.executeScript(isBootstrapped));
+  await wd.executeAsyncScript(whenStable);
 }
 
 /** A `HarnessEnvironment` implementation for WebDriver. */
