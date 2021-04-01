@@ -22,7 +22,7 @@ if (process.env['WEB_TEST_METADATA'] === undefined) {
 const runfiles = require(process.env['BAZEL_NODE_RUNFILES_HELPER']!);
 const webTestMetadata: WebTestMetadata =
     require(runfiles.resolve(process.env['WEB_TEST_METADATA']));
-const port = process.env['E2E_APP_PORT'];
+const port = process.env['TEST_SERVER_PORT'];
 
 // Kagekiri is available globally in the browser. We declare it here so we can use it in the
 // browser-side script passed to `By.js`.

@@ -29,7 +29,7 @@ async function getRandomFreePort() {
   let port: number;
   do {
     port = Math.floor(Math.random() * (maxPrivatePort - minPrivatePort + 1)) + minPrivatePort;
-  } while (await isPortFree(port));
+  } while (!await isPortFree(port));
   return port;
 }
 
@@ -55,13 +55,14 @@ async function waitForPortBound(port: number, timeout: number): Promise<boolean>
 }
 
 /** Starts a server and runs a test against it. */
-async function runTest(serverTarget: string, testTarget: string) {
+async function runTest(serverPath: string, testPath: string) {
   let server: child_process.ChildProcess | null = null;
   return new Promise<void>(async (resolve, reject) => {
-    const serverPath = runfiles.resolve(`/${serverTarget}`);
-    const testPath = runfiles.resolve(`/${testTarget}`);
     const port = await getRandomFreePort();
-    process.env['E2E_APP_PORT'] = `${port}`;
+
+    // Expose the chosen test server port so that the test environment can
+    // connect to the server.
+    process.env['TEST_SERVER_PORT'] = `${port}`;
 
     // Start the server.
     server = child_process.spawn(serverPath, ['--port', `${port}`], {stdio: 'inherit'});
@@ -84,8 +85,11 @@ async function runTest(serverTarget: string, testTarget: string) {
 }
 
 if (require.main === module) {
-  console.error(process.argv);
-  runTest(process.argv[2], process.argv[3])
+  const [serverRootpath, testRootpath] = process.argv.slice(2);
+  const serverBinPath = runfiles.resolveWorkspaceRelative(serverRootpath);
+  const testBinPath = runfiles.resolveWorkspaceRelative(testRootpath);
+
+  runTest(serverBinPath, testBinPath)
       .then(() => process.exit())
       .catch(() => process.exit(1));
 }

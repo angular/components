@@ -1,6 +1,5 @@
-load("//tools:defaults.bzl", "jasmine_node_test", "ng_e2e_test_library", "ng_module", "ng_test_library", "ts_library")
-load("@io_bazel_rules_webtesting//web:web.bzl", "web_test")
-load("//tools/webdriver:webdriver.bzl", "webdriver_e2e_test")
+load("//tools:defaults.bzl", "ng_e2e_test_library", "ng_module", "ng_test_library", "ts_library")
+load("//src/cdk/testing/tests:webdriver-test.bzl", "webdriver_test")
 
 package(default_visibility = ["//visibility:public"])
 
@@ -95,8 +94,7 @@ ts_library(
     ],
 )
 
-webdriver_e2e_test(
-    name = "webdriver_test_chrome",
-    browser = "@npm//@angular/dev-infra-private/browsers/chromium:chromium",
-    deps = [":webdriver_test_lib"],
+webdriver_test(
+  name = "webdriver_test",
+  deps = [":webdriver_test_lib"],
 )
