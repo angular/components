@@ -59,6 +59,7 @@ export declare class MatDrawerContainer implements AfterContentInit, DoCheck, On
         right: number | null;
     };
     _drawers: QueryList<MatDrawer>;
+    _element: ElementRef<HTMLElement>;
     _userContent: MatDrawerContent;
     get autosize(): boolean;
     set autosize(value: boolean);

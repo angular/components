@@ -354,7 +354,10 @@ export class MatDrawer implements AfterContentInit, AfterContentChecked, OnDestr
   }
 
   ngAfterContentInit() {
-    this._focusTrap = this._focusTrapFactory.create(this._elementRef.nativeElement);
+    this._focusTrap = this._focusTrapFactory.create(this._elementRef.nativeElement, {
+      defer: false,
+      focusEscapePredicate: target => !!this._container?._element.nativeElement.contains(target)
+    });
     this._updateFocusTrapState();
   }
 
@@ -593,7 +596,7 @@ export class MatDrawerContainer implements AfterContentInit, DoCheck, OnDestroy 
   }
 
   constructor(@Optional() private _dir: Directionality,
-              private _element: ElementRef<HTMLElement>,
+              public _element: ElementRef<HTMLElement>,
               private _ngZone: NgZone,
               private _changeDetectorRef: ChangeDetectorRef,
               viewportRuler: ViewportRuler,
