@@ -75,7 +75,8 @@ async function runTest(serverPath: string, testPath: string) {
 
     // Wait for the server to bind to the port, then run the tests.
     await waitForPortBound(port, 10000);
-    const test = child_process.spawnSync(testPath);
+
+    const test = child_process.spawnSync(testPath, {stdio: 'inherit'});
     if (test.status === 0) {
       resolve();
     } else {
