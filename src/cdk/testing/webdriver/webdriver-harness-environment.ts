@@ -24,8 +24,8 @@ declare global {
      * These hooks are exposed by Angular to register a callback for when the application is stable
      * (no more pending tasks).
      *
-     * For the implementation, see:
-     * https://github.com/angular/angular/blob/master/packages/platform-browser/src/browser/testability.ts#L30-L49
+     * For the implementation, see: https://github.com/
+     *  angular/angular/blob/master/packages/platform-browser/src/browser/testability.ts#L30-L49
      */
     frameworkStabilizers: FrameworkStabilizer[];
   }
@@ -62,7 +62,7 @@ function isBootstrapped() {
 
 /** Waits for angular to be ready after the page load. */
 export async function waitForAngularReady(wd: webdriver.WebDriver) {
-  await wd.wait(wd.executeScript(isBootstrapped));
+  await wd.wait(() => wd.executeScript(isBootstrapped));
   await wd.executeAsyncScript(whenStable);
 }
 
