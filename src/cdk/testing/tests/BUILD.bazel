@@ -95,6 +95,6 @@ ts_library(
 )
 
 webdriver_test(
-  name = "webdriver_test",
-  deps = [":webdriver_test_lib"],
+    name = "webdriver_test",
+    deps = [":webdriver_test_lib"],
 )
