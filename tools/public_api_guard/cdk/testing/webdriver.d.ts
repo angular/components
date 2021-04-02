@@ -1,3 +1,5 @@
+export declare function waitForAngularReady(wd: webdriver.WebDriver): Promise<void>;
+
 export declare class WebDriverElement implements TestElement {
     readonly element: () => webdriver.WebElement;
     constructor(element: () => webdriver.WebElement, _stabilize: () => Promise<void>);

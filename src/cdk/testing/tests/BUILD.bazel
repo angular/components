@@ -1,5 +1,4 @@
-load("//tools:defaults.bzl", "jasmine_node_test", "ng_e2e_test_library", "ng_module", "ng_test_library", "ts_library")
-load("@io_bazel_rules_webtesting//web:web.bzl", "web_test")
+load("//tools:defaults.bzl", "ng_e2e_test_library", "ng_module", "ng_test_library", "ts_library")
 
 package(default_visibility = ["//visibility:public"])
 
@@ -80,7 +79,7 @@ ng_e2e_test_library(
 )
 
 ts_library(
-    name = "webdriver_test_lib",
+    name = "webdriver_test_sources",
     testonly = 1,
     srcs = ["webdriver.e2e.spec.ts"],
     deps = [
@@ -92,36 +91,4 @@ ts_library(
         "@npm//@types/node",
         "@npm//@types/selenium-webdriver",
     ],
-)
-
-jasmine_node_test(
-    name = "webdriver_jasmine_node_test",
-    data = [
-        "@npm//:node_modules",
-    ],
-    tags = ["manual"],
-    deps = [":webdriver_test_lib"],
-)
-
-web_test(
-    name = "webdriver_web_test_chrome",
-    browser = "@npm//@angular/dev-infra-private/browsers/chromium:chromium",
-    tags = ["manual"],
-    test = ":webdriver_jasmine_node_test",
-)
-
-sh_test(
-    name = "webdriver_test_chrome",
-    testonly = 1,
-    srcs = ["webdriver-test.sh"],
-    args = [
-        "$(location //src/e2e-app:devserver)",
-        "$(location :webdriver_web_test_chrome)",
-    ],
-    data = [
-        ":webdriver_web_test_chrome",
-        "//src/e2e-app:devserver",
-    ],
-    tags = ["manual"],  # TODO(mmalerba): Change to "e2e" once this works on CI.
-    deps = ["@bazel_tools//tools/bash/runfiles"],
 )
