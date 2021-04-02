@@ -1,8 +1,12 @@
 export declare function waitForAngularReady(wd: webdriver.WebDriver): Promise<void>;
 
-export declare class WebDriverElement implements TestElement {
+export declare class WebDriverElement extends WebDriverElementBase {
     readonly element: () => webdriver.WebElement;
-    constructor(element: () => webdriver.WebElement, _stabilize: () => Promise<void>);
+    constructor(element: () => webdriver.WebElement, stabilize: () => Promise<void>);
+}
+
+export declare class WebDriverElementBase implements TestElement {
+    constructor(_element: () => webdriver.WebElement, _stabilize: () => Promise<void>);
     blur(): Promise<void>;
     clear(): Promise<void>;
     click(...args: [ModifierKeys?] | ['center', ModifierKeys?] | [

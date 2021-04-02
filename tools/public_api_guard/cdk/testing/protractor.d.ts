@@ -1,34 +1,6 @@
-export declare class ProtractorElement implements TestElement {
+export declare class ProtractorElement extends WebDriverElementBase {
     readonly element: ElementFinder;
     constructor(element: ElementFinder);
-    blur(): Promise<void>;
-    clear(): Promise<void>;
-    click(...args: [ModifierKeys?] | ['center', ModifierKeys?] | [
-        number,
-        number,
-        ModifierKeys?
-    ]): Promise<void>;
-    dispatchEvent(name: string, data?: Record<string, EventData>): Promise<void>;
-    focus(): Promise<void>;
-    getAttribute(name: string): Promise<string | null>;
-    getCssValue(property: string): Promise<string>;
-    getDimensions(): Promise<ElementDimensions>;
-    getProperty(name: string): Promise<any>;
-    hasClass(name: string): Promise<boolean>;
-    hover(): Promise<void>;
-    isFocused(): Promise<boolean>;
-    matchesSelector(selector: string): Promise<boolean>;
-    mouseAway(): Promise<void>;
-    rightClick(...args: [ModifierKeys?] | ['center', ModifierKeys?] | [
-        number,
-        number,
-        ModifierKeys?
-    ]): Promise<void>;
-    selectOptions(...optionIndexes: number[]): Promise<void>;
-    sendKeys(...keys: (string | TestKey)[]): Promise<void>;
-    sendKeys(modifiers: ModifierKeys, ...keys: (string | TestKey)[]): Promise<void>;
-    setInputValue(value: string): Promise<void>;
-    text(options?: TextOptions): Promise<string>;
 }
 
 export declare class ProtractorHarnessEnvironment extends HarnessEnvironment<ElementFinder> {
