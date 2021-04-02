@@ -384,8 +384,7 @@ export class MatSliderThumb implements AfterViewInit, ControlValueAccessor, OnIn
   _emitFakeEvent(type: 'change'|'input') {
     const event = new Event(type) as any;
     event.isFake = true;
-    const emitter = type === 'change' ? this.change : this.input;
-    emitter.emit(event);
+    this._hostElement.dispatchEvent(event);
   }
 
   /**
@@ -773,9 +772,53 @@ export class MatSlider extends _MatSliderMixinBase
 class SliderAdapter implements MDCSliderAdapter {
 
   /** The global change listener subscription used to handle change events on the slider inputs. */
-  changeSubscription: Subscription;
+  private _changeSubscription: Subscription;
 
-  constructor(private readonly _delegate: MatSlider) {}
+  /** The global input listener subscription used to handle input events on the slider inputs. */
+  private _inputSubscription: Subscription;
+
+  /** The MDC Foundations handler function for input change events. */
+  private _inputChangeEventHandlers = new Map<Thumb, SpecificEventListener<EventType>>();
+
+  constructor(private readonly _delegate: MatSlider) {
+    this._changeSubscription = this._subscribeToInputEvents('change',
+      (event: Event, thumbPosition: Thumb) => {
+        const handler = this._inputChangeEventHandlers.get(thumbPosition)!;
+        handler(event);
+      }
+    );
+    this._inputSubscription = this._subscribeToInputEvents('input');
+  }
+
+  /**
+   * Handles "change" and "input" events on the slider inputs.
+   *
+   * Exposes a callback to allow the MDC Foundations "change" event handler to be called for "real"
+   * events.
+   *
+   * ** IMPORTANT NOTE **
+   *
+   * We block all "real" change and input events and emit fake events from #emitChangeEvent and
+   * #emitInputEvent, instead. We do this because interacting with the MDC slider won't trigger all
+   * of the correct change and input events, but it will call #emitChangeEvent and #emitInputEvent
+   * at the correct times. This allows users to listen for these events directly on the slider
+   * input as they would with a native range input.
+   */
+  private _subscribeToInputEvents
+    (type: 'change'|'input', callback?: (event: Event, thumbPosition: Thumb) => void) {
+      return this._delegate._globalChangeAndInputListener.listen(type, (event: Event) => {
+        const targetIsEndInput = event.target === this._delegate._getInputElement(Thumb.END);
+        const targetIsStartInput = this._delegate._isRange() &&
+          event.target === this._delegate._getInputElement(Thumb.START);
+        if (targetIsEndInput || targetIsStartInput) {
+          if ((event as any).isFake) { return; }
+          event.stopImmediatePropagation();
+          if (callback) {
+            callback(event, targetIsStartInput ? Thumb.START : Thumb.END);
+          }
+        }
+      });
+  }
 
   // We manually assign functions instead of using prototype methods because
   // MDC clobbers the values otherwise.
@@ -901,21 +944,13 @@ class SliderAdapter implements MDCSliderAdapter {
   }
   registerInputEventHandler = <K extends EventType>
     (thumbPosition: Thumb, evtType: K, handler: SpecificEventListener<K>): void => {
-      if (evtType === 'change' || evtType === 'input') {
-        this.changeSubscription = this._delegate._globalChangeAndInputListener
-          .listen(evtType as 'change'|'input', (event: Event) => {
-            // We block all real change and input events and emit fake events from #emitChangeEvent
-            // and #emitInputEvent, instead. We do this because interacting with the MDC slider
-            // won't trigger all of the correct change and input events, but it will call
-            // #emitChangeEvent and #emitInputEvent at the correct times. This allows users to
-            // listen for these events directly on the slider input as they would with a native
-            // range input.
-            if (event.target === this._delegate._getInputElement(thumbPosition)) {
-              if ((event as any).isFake) { return; }
-              event.stopImmediatePropagation();
-              handler(event as GlobalEventHandlersEventMap[K]);
-            }
-        });
+      if (evtType === 'change') {
+        // Store the event handler so it can be used by
+        // the custom event listener defined in the constructor.
+        this._inputChangeEventHandlers.set(
+          thumbPosition,
+          handler as SpecificEventListener<EventType>,
+        );
       } else {
         this._delegate._getInputElement(thumbPosition).addEventListener(evtType, handler);
       }
@@ -923,7 +958,10 @@ class SliderAdapter implements MDCSliderAdapter {
   deregisterInputEventHandler = <K extends EventType>
     (thumbPosition: Thumb, evtType: K, handler: SpecificEventListener<K>): void => {
       if (evtType === 'change') {
-        this.changeSubscription.unsubscribe();
+        // Since the "input" event does not get registered/deregistered, we just unsubscribe
+        // from the "input" event subscription at the same time as the "change" event.
+        this._changeSubscription.unsubscribe();
+        this._inputSubscription.unsubscribe();
       } else {
         this._delegate._getInputElement(thumbPosition).removeEventListener(evtType, handler);
       }
