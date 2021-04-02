@@ -19,13 +19,6 @@ def webdriver_test(name, tags = [], **kwargs):
         test = ":%s_jasmine_test" % name,
     )
 
-    web_test(
-        name = "%s_firefox_web_test" % name,
-        browser = "@npm//@angular/dev-infra-private/browsers/firefox:firefox",
-        tags = tags + ["manual"],
-        test = ":%s_jasmine_test" % name,
-    )
-
     server_test(
         name = "%s_chromium" % name,
         server = "//src/e2e-app:devserver",
@@ -33,18 +26,9 @@ def webdriver_test(name, tags = [], **kwargs):
         tags = tags + ["e2e"],
     )
 
-    server_test(
-        name = "%s_firefox" % name,
-        server = "//src/e2e-app:devserver",
-        test = ":%s_firefox_web_test" % name,
-        tags = tags + ["manual"],  # TODO(mmalerba): Fix tests on Firefox and re-enable.
-    )
-
     native.test_suite(
         name = name,
         tests = [
             ":%s_chromium" % name,
-            # TODO(mmalerba): Fix tests on Firefox and re-enable.
-            # ":%s_firefox" % name,
         ],
     )
