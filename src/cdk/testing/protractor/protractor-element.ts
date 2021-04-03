@@ -7,11 +7,11 @@
  */
 
 import {WebDriverElementBase} from '@angular/cdk/testing/webdriver';
-import {ElementFinder} from 'protractor';
+import {browser, ElementFinder} from 'protractor';
 
 /** A `TestElement` implementation for Protractor. */
 export class ProtractorElement extends WebDriverElementBase {
   constructor(readonly element: ElementFinder) {
-    super(() => element.getWebElement(), async () => {});
+    super(() => element.getWebElement(), async () => browser.waitForAngular());
   }
 }
