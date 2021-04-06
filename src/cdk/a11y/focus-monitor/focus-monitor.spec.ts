@@ -149,7 +149,6 @@ describe('FocusMonitor', () => {
 
   it('should detect fake mousedown from a screen reader', fakeAsync(() => {
     // Simulate focus via a fake mousedown from a screen reader.
-    dispatchMouseEvent(buttonElement, 'mousedown');
     const event = createMouseEvent('mousedown');
     Object.defineProperty(event, 'buttons', {get: () => 0});
     dispatchEvent(buttonElement, event);

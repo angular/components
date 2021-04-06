@@ -76,10 +76,10 @@ describe('InputModalityDetector', () => {
     expect(detector.mostRecentModality).toBe('keyboard');
   });
 
-  it('should emit changes in input modality', () => {
+  it('should emit when input modalities are detected', () => {
     detector = new InputModalityDetector(platform, ngZone, document);
     const emitted: InputModality[] = [];
-    detector.modalityChanges.subscribe((modality: InputModality) => {
+    detector.modalityDetected.subscribe((modality: InputModality) => {
       emitted.push(modality);
     });
 
@@ -89,19 +89,16 @@ describe('InputModalityDetector', () => {
     expect(emitted).toEqual(['keyboard']);
 
     dispatchKeyboardEvent(document, 'keydown');
-    expect(emitted).toEqual(['keyboard']);
+    expect(emitted).toEqual(['keyboard', 'keyboard']);
 
     dispatchMouseEvent(document, 'mousedown');
-    expect(emitted).toEqual(['keyboard', 'mouse']);
+    expect(emitted).toEqual(['keyboard', 'keyboard', 'mouse']);
 
     dispatchTouchEvent(document, 'touchstart');
-    expect(emitted).toEqual(['keyboard', 'mouse', 'touch']);
-
-    dispatchTouchEvent(document, 'touchstart');
-    expect(emitted).toEqual(['keyboard', 'mouse', 'touch']);
+    expect(emitted).toEqual(['keyboard', 'keyboard', 'mouse', 'touch']);
 
     dispatchKeyboardEvent(document, 'keydown');
-    expect(emitted).toEqual(['keyboard', 'mouse', 'touch', 'keyboard']);
+    expect(emitted).toEqual(['keyboard', 'keyboard', 'mouse', 'touch', 'keyboard']);
   });
 
   it('should ignore fake screen-reader mouse events', () => {
