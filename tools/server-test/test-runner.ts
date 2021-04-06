@@ -1,3 +1,8 @@
+/**
+ * A generic test runner for brining up a server on a random port, waiting for the server to bind
+ * to that port, and then running tests against it.
+ */
+
 const runfiles = require(process.env['BAZEL_NODE_RUNFILES_HELPER']!);
 import * as child_process from 'child_process';
 import * as net from 'net';

@@ -4,6 +4,7 @@ import * as webdriver from 'selenium-webdriver';
 import {crossEnvironmentSpecs} from './cross-environment.spec';
 import {MainComponentHarness} from './harnesses/main-component-harness';
 
+// Tests are flaky on CI unless we increase the timeout.
 jasmine.DEFAULT_TIMEOUT_INTERVAL = 10_000;  // 10 seconds
 
 /**

@@ -80,7 +80,7 @@ ng_e2e_test_library(
 
 ts_library(
     name = "webdriver_test_sources",
-    testonly = 1,
+    testonly = True,
     srcs = ["webdriver.e2e.spec.ts"],
     deps = [
         ":cross_environment_specs",
