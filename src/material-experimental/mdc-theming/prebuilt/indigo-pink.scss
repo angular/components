@@ -14,7 +14,7 @@ $theme: (
     color: theming.define-light-theme($primary, $accent),
     // TODO(mmalerba): Update to `mat-mdc-typography-config()` once non-MDC components can handle
     //  2018 configs.
-    typography: typography.config()
+    typography: typography.define-typography-config()
 );
 
 // Include non-theme styles for core.
