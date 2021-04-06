@@ -17,11 +17,14 @@
         [attr.aria-labelledby]="ariaLabelledby"
         [attr.aria-describedby]="ariaDescribedby"
         (change)="_onInputChange($event)"
-        (click)="_onInputClick($event)">
+        (click)="_onInputClick($event)"
+        (focus)="_inputFocused = true"
+        (blur)="_inputFocused = false">
 
     <!-- The ripple comes after the input so that we can target it with a CSS
          sibling selector when the input is focused. -->
     <span mat-ripple class="mat-radio-ripple mat-focus-indicator"
+         [class.mat-focus-indicator-render]="_inputFocused"
          [matRippleTrigger]="label"
          [matRippleDisabled]="_isRippleDisabled()"
          [matRippleCentered]="true"

@@ -15,6 +15,7 @@
            [id]="inputId"
            [required]="required"
            [tabIndex]="tabIndex"
+           (focus)="_inputFocused = true"
            (blur)="_onBlur()"
            (click)="_onClick()"
            (change)="$event.stopPropagation()"/>
@@ -29,7 +30,9 @@
       </svg>
       <div class="mdc-checkbox__mixedmark"></div>
     </div>
-    <div class="mat-mdc-checkbox-ripple mat-mdc-focus-indicator" mat-ripple
+    <div class="mat-mdc-checkbox-ripple mat-mdc-focus-indicator"
+      [class.mat-mdc-focus-indicator-render]="_inputFocused"
+      mat-ripple
       [matRippleTrigger]="checkbox"
       [matRippleDisabled]="disableRipple || disabled"
       [matRippleCentered]="true"

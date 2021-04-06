@@ -79,6 +79,22 @@ describe('MDC-based MatList', () => {
       .toBe(true, 'Expected all list items to have a strong focus indicator element.');
   });
 
+  it('should toggle the focus indicator render class on focus and blur', () => {
+    const fixture = TestBed.createComponent(ActionListWithoutType);
+    fixture.detectChanges();
+    const listItem = fixture.debugElement.children[0].queryAll(By.css('.mat-mdc-list-item'))
+      .map(debugEl => debugEl.nativeElement as HTMLElement)[0];
+    const listItemFocusIndicatorHost = listItem.querySelector('.mat-mdc-focus-indicator')!;
+
+    listItem.focus();
+    fixture.detectChanges();
+    expect(listItemFocusIndicatorHost.classList).toContain('mat-mdc-focus-indicator-render');
+
+    listItem.blur();
+    fixture.detectChanges();
+    expect(listItemFocusIndicatorHost.classList).not.toContain('mat-mdc-focus-indicator-render');
+  });
+
   it('should not clear custom classes provided by user', () => {
     const fixture = TestBed.createComponent(ListWithItemWithCssClass);
     fixture.detectChanges();

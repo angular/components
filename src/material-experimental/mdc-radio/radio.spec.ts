@@ -402,6 +402,19 @@ describe('MDC-based MatRadio', () => {
           .every(element => element.classList.contains('mat-mdc-focus-indicator'))).toBe(true);
     });
 
+    it('should toggle the focus indicator render class on focus and blur', () => {
+      const radioRippleNativeElements =
+          radioNativeElements.map(element => element.querySelector('.mat-radio-ripple')!);
+
+      radioInputElements[0].focus();
+      fixture.detectChanges();
+      expect(radioRippleNativeElements[0].classList).toContain('mat-mdc-focus-indicator-render');
+
+      radioInputElements[0].blur();
+      fixture.detectChanges();
+      expect(radioRippleNativeElements[0].classList).not
+        .toContain('mat-mdc-focus-indicator-render');
+    });
   });
 
   describe('group with ngModel', () => {

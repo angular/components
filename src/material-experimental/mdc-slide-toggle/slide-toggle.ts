@@ -107,6 +107,9 @@ export class MatSlideToggle implements ControlValueAccessor, AfterViewInit, OnDe
     }
   };
 
+  /** Whether the underlying input element is focused. */
+  _inputFocused = false;
+
   /** Whether the slide toggle is currently focused. */
   _focused: boolean;
 

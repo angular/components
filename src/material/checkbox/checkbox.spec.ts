@@ -653,6 +653,19 @@ describe('MatCheckbox', () => {
 
       expect(checkboxRippleNativeElement.classList.contains('mat-focus-indicator')).toBe(true);
     });
+
+    it('should toggle the focus indicator render class on focus and blur', () => {
+      const checkboxRippleNativeElement =
+          checkboxNativeElement.querySelector('.mat-checkbox-ripple')!;
+
+      inputElement.focus();
+      fixture.detectChanges();
+      expect(checkboxRippleNativeElement.classList).toContain('mat-focus-indicator-render');
+
+      inputElement.blur();
+      fixture.detectChanges();
+      expect(checkboxRippleNativeElement.classList).not.toContain('mat-focus-indicator-render');
+    });
   });
 
   describe('with change event and no initial value', () => {

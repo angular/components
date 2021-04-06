@@ -390,7 +390,7 @@ export class MatMonthView<D> implements AfterContentInit, OnChanges, OnDestroy {
       const cellClasses = this.dateClass ? this.dateClass(date, 'month') : undefined;
 
       this._weeks[this._weeks.length - 1].push(new MatCalendarCell<D>(i + 1, dateNames[i],
-          ariaLabel, enabled, cellClasses, this._getCellCompareValue(date)!, date));
+          ariaLabel, enabled, false, cellClasses, this._getCellCompareValue(date)!, date));
     }
   }
 

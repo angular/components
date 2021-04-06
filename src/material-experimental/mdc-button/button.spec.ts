@@ -282,6 +282,21 @@ describe('MDC-based MatButton', () => {
     expect(buttonNativeElements
         .every(element => !!element.querySelector('.mat-mdc-focus-indicator'))).toBe(true);
   });
+
+  it('should toggle the focus indicator render class on focus and blur', () => {
+    const fixture = TestBed.createComponent(TestApp);
+    const buttonNativeElement =
+        [...fixture.debugElement.nativeElement.querySelectorAll('a, button')][0];
+    const buttonFocusIndicatorHost = buttonNativeElement.querySelector('.mat-mdc-focus-indicator');
+
+    buttonNativeElement.focus();
+    fixture.detectChanges();
+    expect(buttonFocusIndicatorHost.classList).toContain('mat-mdc-focus-indicator-render');
+
+    buttonNativeElement.blur();
+    fixture.detectChanges();
+    expect(buttonFocusIndicatorHost.classList).not.toContain('mat-mdc-focus-indicator-render');
+  });
 });
 
 describe('MatFabDefaultOptions', () => {

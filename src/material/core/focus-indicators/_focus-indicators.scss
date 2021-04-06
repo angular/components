@@ -54,25 +54,16 @@
     margin: 5px;
   }
 
-  // Render the focus indicator on focus. Defining a pseudo element's
-  // content will cause it to render.
-
-  // Checkboxes, radios, and slide toggles render focus indicators when the
-  // associated visually-hidden input is focused.
-  .mat-checkbox-input:focus ~ .mat-focus-indicator::before,
-  .mat-radio-input:focus ~ .mat-focus-indicator::before,
-  .mat-slide-toggle-input:focus ~ .mat-slide-toggle-thumb-container .mat-focus-indicator::before,
-
-  // For options, render the focus indicator when the class .mat-active
-  // is present.
-  .mat-focus-indicator.mat-option.mat-active::before,
-
-  // For calendar cells, render the focus indicator when the parent cell is
-  // focused.
-  .mat-calendar-body-cell:focus .mat-focus-indicator::before,
-
-  // For all other components, render the focus indicator on focus.
-  .mat-focus-indicator:focus::before {
+  // Render a focus indicator when either:
+  //
+  // 1. The host element is focused.
+  // 2. The host element gains the class `.mat-focus-indicator-render`.
+  // 3. The host element gains the class `.mat-active`.
+  //
+  // Setting the pseudo element's content to the empty string renders the focus indicator.
+  .mat-focus-indicator:focus::before,
+  .mat-focus-indicator.mat-focus-indicator-render::before,
+  .mat-focus-indicator.mat-active::before {
     content: '';
   }
 }

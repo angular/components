@@ -48,6 +48,8 @@ export class MatList extends MatListBase {}
   host: {
     'class': 'mat-mdc-list-item mdc-deprecated-list-item',
     '[class.mat-mdc-list-item-with-avatar]': '_hasIconOrAvatar()',
+    '(focus)': '_itemFocused = true',
+    '(blur)': '_itemFocused = false',
   },
   templateUrl: 'list-item.html',
   encapsulation: ViewEncapsulation.None,

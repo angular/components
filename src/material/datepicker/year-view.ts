@@ -270,7 +270,7 @@ export class MatYearView<D> implements AfterContentInit, OnDestroy {
     const cellClasses = this.dateClass ? this.dateClass(date, 'year') : undefined;
 
     return new MatCalendarCell(month, monthName.toLocaleUpperCase(), ariaLabel,
-        this._shouldEnableMonth(month), cellClasses);
+        this._shouldEnableMonth(month), false, cellClasses);
   }
 
   /** Whether the given month is enabled. */

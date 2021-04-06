@@ -581,6 +581,19 @@ describe('MDC-based MatCheckbox', () => {
 
       expect(checkboxRippleNativeElement.classList.contains('mat-mdc-focus-indicator')).toBe(true);
     });
+
+    it('should toggle the focus indicator render class on focus and blur', () => {
+      const checkboxRippleNativeElement =
+          checkboxNativeElement.querySelector('.mat-mdc-checkbox-ripple')!;
+
+      inputElement.focus();
+      fixture.detectChanges();
+      expect(checkboxRippleNativeElement.classList).toContain('mat-mdc-focus-indicator-render');
+
+      inputElement.blur();
+      fixture.detectChanges();
+      expect(checkboxRippleNativeElement.classList).not.toContain('mat-mdc-focus-indicator-render');
+    });
   });
 
   describe('with change event and no initial value', () => {

@@ -159,6 +159,9 @@ export class MatSlideToggle extends _MatSlideToggleMixinBase implements OnDestro
   /** Reference to the underlying input element. */
   @ViewChild('input') _inputElement: ElementRef<HTMLInputElement>;
 
+  /** Whether the underlying input element is focused. */
+  _inputFocused = false;
+
   constructor(elementRef: ElementRef,
               private _focusMonitor: FocusMonitor,
               private _changeDetectorRef: ChangeDetectorRef,

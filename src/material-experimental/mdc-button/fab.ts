@@ -79,6 +79,8 @@ const defaults = MAT_FAB_DEFAULT_OPTIONS_FACTORY();
     // Add a class that applies to all buttons. This makes it easier to target if somebody
     // wants to target all Material buttons.
     '[class.mat-mdc-button-base]': 'true',
+    '(focus)': '_focused = true',
+    '(blur)': '_focused = false',
   },
   exportAs: 'matButton',
   encapsulation: ViewEncapsulation.None,
@@ -163,6 +165,8 @@ export class MatMiniFabButton extends MatButtonBase {
     // Add a class that applies to all buttons. This makes it easier to target if somebody
     // wants to target all Material buttons.
     '[class.mat-mdc-button-base]': 'true',
+    '(focus)': '_focused = true',
+    '(blur)': '_focused = false',
   },
   exportAs: 'matButton, matAnchor',
   encapsulation: ViewEncapsulation.None,

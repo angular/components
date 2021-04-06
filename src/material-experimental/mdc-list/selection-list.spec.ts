@@ -563,6 +563,20 @@ describe('MDC-based MatSelectionList without forms', () => {
         .every(element => element.querySelector('.mat-mdc-focus-indicator') !== null)).toBe(true);
     });
 
+    it('should toggle the focus indicator render class on focus and blur', () => {
+      const optionNativeElement = listOptions.map(option =>
+        option.nativeElement as HTMLElement)[0];
+      const optionFocusIndicatorHost =
+        optionNativeElement.querySelector('.mat-mdc-focus-indicator')!;
+
+      optionNativeElement.focus();
+      fixture.detectChanges();
+      expect(optionFocusIndicatorHost.classList).toContain('mat-mdc-focus-indicator-render');
+
+      optionNativeElement.blur();
+      fixture.detectChanges();
+      expect(optionFocusIndicatorHost.classList).not.toContain('mat-mdc-focus-indicator-render');
+    });
   });
 
   describe('with list option selected', () => {

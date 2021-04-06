@@ -53,6 +53,9 @@ export abstract class MatListItemBase implements AfterContentInit, OnDestroy, Ri
   /** Host element for the list item. */
   _hostElement: HTMLElement;
 
+  /** Whether the list item is focused. */
+  _itemFocused = false;
+
   @ContentChildren(MatListAvatarCssMatStyler, {descendants: false}) _avatars: QueryList<never>;
   @ContentChildren(MatListIconCssMatStyler, {descendants: false}) _icons: QueryList<never>;
 

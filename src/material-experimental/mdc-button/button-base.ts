@@ -39,6 +39,8 @@ export const MAT_BUTTON_HOST = {
   // Add a class that applies to all buttons. This makes it easier to target if somebody
   // wants to target all Material buttons.
   '[class.mat-mdc-button-base]': 'true',
+  '(focus)': '_focused = true',
+  '(blur)': '_focused = false',
 };
 
 /** Configuration for the ripple animation. */
@@ -104,6 +106,9 @@ export class MatButtonBase extends _MatButtonBaseMixin implements CanDisable, Ca
   /** Whether this button is a FAB. Used to apply the correct class on the ripple. */
   _isFab = false;
 
+  /** Whether the button is focused. */
+  _focused = false;
+
   /** Reference to the MatRipple instance of the button. */
   @ViewChild(MatRipple) ripple: MatRipple;
 
@@ -163,6 +168,8 @@ export const MAT_ANCHOR_HOST = {
   // Add a class that applies to all buttons. This makes it easier to target if somebody
   // wants to target all Material buttons.
   '[class.mat-mdc-button-base]': 'true',
+  '(focus)': '_focused = true',
+  '(blur)': '_focused = false',
 };
 
 /**

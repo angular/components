@@ -354,6 +354,18 @@ describe('MDC-based MatSlideToggle without forms', () => {
       const underlayElement = slideToggleElement.querySelector('.mdc-switch__thumb-underlay')!;
       expect(underlayElement.classList.contains('mat-mdc-focus-indicator')).toBe(true);
     });
+
+    it('should toggle the focus indicator render class on focus and blur', fakeAsync(() => {
+      const underlayElement = slideToggleElement.querySelector('.mdc-switch__thumb-underlay')!;
+
+      inputElement.focus();
+      fixture.detectChanges();
+      expect(underlayElement.classList).toContain('mat-mdc-focus-indicator-render');
+
+      inputElement.blur();
+      fixture.detectChanges();
+      expect(underlayElement.classList).not.toContain('mat-mdc-focus-indicator-render');
+    }));
   });
 
   describe('custom template', () => {

@@ -70,6 +70,7 @@ export interface SelectionList extends MatListBase {
     '[class.mat-mdc-list-item-with-avatar]': '_hasIconOrAvatar()',
     '[class.mat-accent]': 'color !== "primary" && color !== "warn"',
     '[class.mat-warn]': 'color === "warn"',
+    '(focus)': '_itemFocused = true',
     '(blur)': '_handleBlur()',
   },
   templateUrl: 'list-option.html',
@@ -196,6 +197,7 @@ export class MatListOption extends MatListItemBase implements ListOption, OnInit
   }
 
   _handleBlur() {
+    this._itemFocused = false;
     this._selectionList._onTouched();
   }
 

@@ -489,6 +489,9 @@ export abstract class _MatRadioButtonBase extends _MatRadioButtonMixinBase imple
   /** The native `<input type=radio>` element */
   @ViewChild('input') _inputElement: ElementRef<HTMLInputElement>;
 
+  /** Whether the underlying input element is focused. */
+  _inputFocused = false;
+
   constructor(radioGroup: _MatRadioGroupBase<_MatRadioButtonBase>,
               elementRef: ElementRef,
               protected _changeDetector: ChangeDetectorRef,

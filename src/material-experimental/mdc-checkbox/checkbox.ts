@@ -211,6 +211,9 @@ export class MatCheckbox extends _MatCheckboxMixinBase implements AfterViewInit,
   /** Animation config for the ripple. */
   _rippleAnimation = RIPPLE_ANIMATION_CONFIG;
 
+  /** Whether the underlying input element is focused. */
+  _inputFocused = false;
+
   /** ControlValueAccessor onChange */
   private _cvaOnChange = (_: boolean) => {};
 
@@ -321,6 +324,8 @@ export class MatCheckbox extends _MatCheckboxMixinBase implements AfterViewInit,
 
   /** Handles blur events on the native input. */
   _onBlur() {
+    this._inputFocused = false;
+
     // When a focused element becomes disabled, the browser *immediately* fires a blur event.
     // Angular does not expect events to be raised during change detection, so any state change
     // (such as a form control's 'ng-touched') will cause a changed-after-checked error.

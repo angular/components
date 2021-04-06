@@ -193,6 +193,9 @@ export class MatCheckbox extends _MatCheckboxMixinBase implements ControlValueAc
    */
   _onTouched: () => any = () => {};
 
+  /** Whether the underlying input element is focused. */
+  _inputFocused = false;
+
   private _currentAnimationClass: string = '';
 
   private _currentCheckState: TransitionCheckState = TransitionCheckState.Init;

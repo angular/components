@@ -111,6 +111,18 @@ describe('MatCalendarBody', () => {
           .toBe(true);
     });
 
+    it('should toggle the focus indicator render class on focus and blur', () => {
+      const cellEl = cellEls[0];
+      const cellContentEl = cellEl.querySelector('.mat-calendar-body-cell-content')!;
+
+      (cellEl as HTMLElement).focus();
+      fixture.detectChanges();
+      expect(cellContentEl.classList).toContain('mat-focus-indicator-render');
+
+      (cellEl as HTMLElement).blur();
+      fixture.detectChanges();
+      expect(cellContentEl.classList).not.toContain('mat-focus-indicator-render');
+    });
   });
 
   describe('range calendar body', () => {
@@ -676,7 +688,7 @@ function createCalendarCells(weeks: number): MatCalendarCell[][] {
   }
 
   return rows.map(row => row.map(cell => {
-    return new MatCalendarCell(cell, `${cell}`, `${cell}-label`, true,
+    return new MatCalendarCell(cell, `${cell}`, `${cell}-label`, true, false,
         cell % 2 === 0 ? 'even' : undefined);
   }));
 }

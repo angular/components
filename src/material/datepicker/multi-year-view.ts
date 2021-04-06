@@ -263,7 +263,8 @@ export class MatMultiYearView<D> implements AfterContentInit, OnDestroy {
     const yearName = this._dateAdapter.getYearName(date);
     const cellClasses = this.dateClass ? this.dateClass(date, 'multi-year') : undefined;
 
-    return new MatCalendarCell(year, yearName, yearName, this._shouldEnableYear(year), cellClasses);
+    return new MatCalendarCell(
+        year, yearName, yearName, this._shouldEnableYear(year), false, cellClasses);
   }
 
   /** Whether the given year is enabled. */

@@ -15,8 +15,11 @@
            [attr.aria-checked]="_getAriaChecked()"
            [attr.aria-describedby]="ariaDescribedby"
            (change)="_onInteractionEvent($event)"
-           (click)="_onInputClick($event)">
+           (click)="_onInputClick($event)"
+           (focus)="_inputFocused = true"
+           (blur)="_inputFocused = false">
     <span matRipple class="mat-checkbox-ripple mat-focus-indicator"
+         [class.mat-focus-indicator-render]="_inputFocused"
          [matRippleTrigger]="label"
          [matRippleDisabled]="_isRippleDisabled()"
          [matRippleRadius]="20"

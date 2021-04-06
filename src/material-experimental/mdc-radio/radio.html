@@ -12,13 +12,16 @@
            [attr.aria-label]="ariaLabel"
            [attr.aria-labelledby]="ariaLabelledby"
            [attr.aria-describedby]="ariaDescribedby"
-           (change)="_onInputChange($event)">
+           (change)="_onInputChange($event)"
+           (focus)="_inputFocused = true"
+           (blur)="_inputFocused = false">
     <div class="mdc-radio__background">
       <div class="mdc-radio__outer-circle"></div>
       <div class="mdc-radio__inner-circle"></div>
     </div>
     <div class="mdc-radio__ripple"></div>
     <div mat-ripple class="mat-radio-ripple mat-mdc-focus-indicator"
+         [class.mat-mdc-focus-indicator-render]="_inputFocused"
          [matRippleTrigger]="formField"
          [matRippleDisabled]="_isRippleDisabled()"
          [matRippleCentered]="true"

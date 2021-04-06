@@ -2,7 +2,8 @@
      [class.mdc-form-field--align-end]="labelPosition == 'before'">
   <div class="mdc-switch mat-mdc-switch" #switch>
     <div class="mdc-switch__track"></div>
-    <div class="mdc-switch__thumb-underlay mat-mdc-focus-indicator">
+    <div class="mdc-switch__thumb-underlay mat-mdc-focus-indicator"
+         [class.mat-mdc-focus-indicator-render]="_inputFocused">
       <div class="mat-mdc-slide-toggle-ripple" mat-ripple
         [matRippleTrigger]="switch"
         [matRippleDisabled]="disableRipple || disabled"
@@ -21,7 +22,9 @@
             [attr.aria-label]="ariaLabel"
             [attr.aria-labelledby]="ariaLabelledby"
             (change)="_onChangeEvent($event)"
-            (click)="_onInputClick($event)">
+            (click)="_onInputClick($event)"
+            (focus)="_inputFocused = true"
+            (blur)="_inputFocused = false">
       </div>
     </div>
   </div>

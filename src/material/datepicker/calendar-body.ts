@@ -37,6 +37,7 @@ export class MatCalendarCell<D = any> {
               public displayValue: string,
               public ariaLabel: string,
               public enabled: boolean,
+              public focused: boolean,
               public cssClasses: MatCalendarCellCssClasses = {},
               public compareValue = value,
               public rawValue?: D) {}

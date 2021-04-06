@@ -363,6 +363,19 @@ describe('MatSlideToggle without forms', () => {
 
       expect(slideToggleRippleNativeElement.classList.contains('mat-focus-indicator')).toBe(true);
     });
+
+    it('should toggle the focus indicator render class on focus and blur', () => {
+      const slideToggleRippleNativeElement =
+          slideToggleElement.querySelector('.mat-slide-toggle-ripple')!;
+
+      inputElement.focus();
+      fixture.detectChanges();
+      expect(slideToggleRippleNativeElement.classList).toContain('mat-focus-indicator-render');
+
+      inputElement.blur();
+      fixture.detectChanges();
+      expect(slideToggleRippleNativeElement.classList).not.toContain('mat-focus-indicator-render');
+    });
   });
 
   describe('custom template', () => {
