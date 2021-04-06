@@ -265,7 +265,8 @@ changed, you can do so in [scripts/check-mdc-tests-config.ts](https://github.com
 Remember to leave a comment explaining why the change was necessary.
 
 #### Coercion
-When defining public properties, use our coercion API to coerce `@Input`s into specific types.
+When defining public properties that are booleans or numbers, use our coercion API to coerce
+`@Input`s into specific types.
 For example:
 ```ts
 @Input() disabled: boolean;
