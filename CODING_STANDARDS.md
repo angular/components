@@ -244,11 +244,53 @@ activateRipple() {
 }
 ```
 
+##### Selectors
+* Component selectors should be lowercase and delimited by hyphens.
+* Directive selectors should be camel cased.
+
 #### Inheritance
 
 Avoid using inheritance to apply reusable behaviors to multiple components. This limits how many
 behaviors can be composed. Instead, [TypeScript mixins][ts-mixins] can be used to compose multiple
 common behaviors into a single component.
+
+#### MDC checks
+To ensure backwards compatability, we check that tests written for MDC Components include all of
+the same tests that the non-MDC version had. Similarly, we check that the public API of MDC
+Components match that of the non-MDC version.
+
+In the case where old tests no longer make sense and should be omitted or the public API should be
+changed, you can do so in [scripts/check-mdc-tests-config.ts](https://github.com/angular/components/blob/master/scripts/check-mdc-tests-config.ts) and
+[scripts/check-mdc-exports-config.ts](https://github.com/angular/components/blob/master/scripts/check-mdc-exports-config.ts).
+Remember to leave a comment explaining why the change was necessary.
+
+#### Coercion
+When defining public properties, use our coercion API to coerce `@Input`s into specific types.
+For example:
+```ts
+@Input() disabled: boolean;
+get disabled(): boolean { return this._disabled; }
+set disabled(v: boolean) { this._disabled = coerceBooleanProperty(v); }
+private _disabled = false;
+
+...
+
+static ngAcceptInputType_value: BooleanInput;
+```
+The above code would allow users to set `disabled` similar to how it can be set on native inputs:
+```html
+<component disabled></component>
+```
+Even though an empty string is technically what is being provided as the value of `disabled`,
+`ngAcceptInputType` allows the mismatched type to be provided and `coerceBooleanProperty`
+interprets the given value (an empty string) to the correct type & value, which in this case would
+be `true`.
+
+#### Expose native inputs
+Native inputs used in components should be exposed to developers through `ng-content`. This allows
+developers to interact directly with the input and allows us to avoid providing custom
+implementations for all of the input's native behaviors.
+
 
 ### Angular
 
@@ -354,3 +396,13 @@ When it is not super obvious, include a brief description of what a class repres
 ```
 
 [ts-mixins]: https://www.typescriptlang.org/docs/handbook/release-notes/typescript-2-2.html#support-for-mix-in-classes
+
+#### Prefer CSS classes to tag names for styling
+TODO(wagnermaciel): Ask @jelbourn why we prefer this.
+```scss
+/** Do: */
+.mat-slider { ... }
+
+/** Don't: */
+mat-slider { ... }
+```
