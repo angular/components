@@ -291,6 +291,34 @@ Native inputs used in components should be exposed to developers through `ng-con
 developers to interact directly with the input and allows us to avoid providing custom
 implementations for all of the input's native behaviors.
 
+For example:
+
+**Do:**
+
+Implementation
+```html
+<ng-content></ng-content>
+```
+
+Usage
+```html
+<yourComponent>
+  <input>
+</yourComponent>
+```
+
+**Don't:**
+
+Implementation
+```html
+<input>
+```
+
+Usage
+```html
+<component></component>
+```
+
 
 ### Angular
 
@@ -398,11 +426,12 @@ When it is not super obvious, include a brief description of what a class repres
 [ts-mixins]: https://www.typescriptlang.org/docs/handbook/release-notes/typescript-2-2.html#support-for-mix-in-classes
 
 #### Prefer CSS classes to tag names for styling
-TODO(wagnermaciel): Ask @jelbourn why we prefer this.
+Targeting tag names can cause conflicts with the MDC version of the component. For this reason, use
+css class names defined by us instead of tag names.
 ```scss
 /** Do: */
-.mat-slider { ... }
+.mat-mdc-slider { ... }
 
 /** Don't: */
-mat-slider { ... }
+mdc-slider { ... }
 ```
