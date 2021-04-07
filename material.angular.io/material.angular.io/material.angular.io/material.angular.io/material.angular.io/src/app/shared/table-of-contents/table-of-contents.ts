@@ -60,11 +60,13 @@ export class TableOfContents implements OnInit, AfterViewInit, OnDestroy {
       }));
 
     this.subscriptions.add(this._route.fragment.subscribe(fragment => {
-      this._urlFragment = fragment;
+      if (fragment != null) {
+        this._urlFragment = fragment;
 
-      const target = document.getElementById(this._urlFragment);
-      if (target) {
-        target.scrollIntoView();
+        const target = document.getElementById(this._urlFragment);
+        if (target) {
+          target.scrollIntoView();
+        }
       }
     }));
   }

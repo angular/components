@@ -52,22 +52,22 @@
               {
                 "inject": false,
                 "input": "src/styles/custom-themes/pink-bluegrey.scss",
-                "bundleName": "assets/pink-bluegrey"
+                "bundleName": "pink-bluegrey"
               },
               {
                 "inject": false,
                 "input": "src/styles/custom-themes/deeppurple-amber.scss",
-                "bundleName": "assets/deeppurple-amber"
+                "bundleName": "deeppurple-amber"
               },
               {
                 "inject": false,
                 "input": "src/styles/custom-themes/indigo-pink.scss",
-                "bundleName": "assets/indigo-pink"
+                "bundleName": "indigo-pink"
               },
               {
                 "inject": false,
                 "input": "src/styles/custom-themes/purple-green.scss",
-                "bundleName": "assets/purple-green"
+                "bundleName": "purple-green"
               }
             ],
             "stylePreprocessorOptions": {
@@ -136,22 +136,22 @@
               {
                 "inject": false,
                 "input": "src/styles/custom-themes/pink-bluegrey.scss",
-                "bundleName": "assets/pink-bluegrey"
+                "bundleName": "pink-bluegrey"
               },
               {
                 "inject": false,
                 "input": "src/styles/custom-themes/deeppurple-amber.scss",
-                "bundleName": "assets/deeppurple-amber"
+                "bundleName": "deeppurple-amber"
               },
               {
                 "inject": false,
                 "input": "src/styles/custom-themes/indigo-pink.scss",
-                "bundleName": "assets/indigo-pink"
+                "bundleName": "indigo-pink"
               },
               {
                 "inject": false,
                 "input": "src/styles/custom-themes/purple-green.scss",
-                "bundleName": "assets/purple-green"
+                "bundleName": "purple-green"
               }
             ],
             "stylePreprocessorOptions": {
