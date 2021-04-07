@@ -24,12 +24,12 @@
     <!-- The ripple comes after the input so that we can target it with a CSS
          sibling selector when the input is focused. -->
     <span mat-ripple class="mat-radio-ripple mat-focus-indicator"
-         [class.mat-focus-indicator-render]="_inputFocused"
-         [matRippleTrigger]="label"
-         [matRippleDisabled]="_isRippleDisabled()"
-         [matRippleCentered]="true"
-         [matRippleRadius]="20"
-         [matRippleAnimation]="{enterDuration: 150}">
+          [class.mat-focus-indicator-render]="_inputFocused"
+          [matRippleTrigger]="label"
+          [matRippleDisabled]="_isRippleDisabled()"
+          [matRippleCentered]="true"
+          [matRippleRadius]="20"
+          [matRippleAnimation]="{enterDuration: 150}">
 
       <span class="mat-ripple-element mat-radio-persistent-ripple"></span>
     </span>

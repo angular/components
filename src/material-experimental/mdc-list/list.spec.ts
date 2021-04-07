@@ -83,7 +83,7 @@ describe('MDC-based MatList', () => {
     const fixture = TestBed.createComponent(ActionListWithoutType);
     fixture.detectChanges();
     const listItem = fixture.debugElement.children[0].queryAll(By.css('.mat-mdc-list-item'))
-      .map(debugEl => debugEl.nativeElement as HTMLElement)[0];
+        .map(debugEl => debugEl.nativeElement as HTMLElement)[0];
     const listItemFocusIndicatorHost = listItem.querySelector('.mat-mdc-focus-indicator')!;
 
     listItem.focus();

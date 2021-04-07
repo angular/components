@@ -565,9 +565,9 @@ describe('MDC-based MatSelectionList without forms', () => {
 
     it('should toggle the focus indicator render class on focus and blur', () => {
       const optionNativeElement = listOptions.map(option =>
-        option.nativeElement as HTMLElement)[0];
+          option.nativeElement as HTMLElement)[0];
       const optionFocusIndicatorHost =
-        optionNativeElement.querySelector('.mat-mdc-focus-indicator')!;
+          optionNativeElement.querySelector('.mat-mdc-focus-indicator')!;
 
       optionNativeElement.focus();
       fixture.detectChanges();
