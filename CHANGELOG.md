@@ -1,3 +1,29 @@
+## 11.2.8 "linen-library" (2021-04-07)
+
+### cdk
+
+|            |                       |
+| ---------- | --------------------- |
+| bug fix |  **portal:** not marked as attached when going through specific portal methods ([#22372](https://github.com/angular/components/issues/22372)) ([f387ff6fe199ebe53c1bffea862346e9ac4bcf68](https://github.com/angular/components/commit/f387ff6fe199ebe53c1bffea862346e9ac4bcf68)), closes [#22370](https://github.com/angular/components/issues/22370) |
+
+### material
+
+|            |                       |
+| ---------- | --------------------- |
+| bug fix |  **datepicker:** fix high contrast mixin name ([#22418](https://github.com/angular/components/issues/22418)) ([f1cba07e91c889ae01c2bb0671f9ccfb57b5c015](https://github.com/angular/components/commit/f1cba07e91c889ae01c2bb0671f9ccfb57b5c015)) |
+| bug fix |  **datepicker:** toggle icon not visible in high contrast mode on Chromium browsers ([#22352](https://github.com/angular/components/issues/22352)) ([56840c36a77f823b64b343b2d1b50ab4f43ebd03](https://github.com/angular/components/commit/56840c36a77f823b64b343b2d1b50ab4f43ebd03)) |
+| bug fix |  **progress-bar:** fix screenreader not reading aria-label ([#22201](https://github.com/angular/components/issues/22201)) ([14ec1a3f69800ff01edf00c5f9ee18f6170aa29d](https://github.com/angular/components/commit/14ec1a3f69800ff01edf00c5f9ee18f6170aa29d)) |
+| bug fix |  **radio:** ripple not positioned correctly inside parent with centered text ([#22391](https://github.com/angular/components/issues/22391)) ([a140c46f065299b6c546ac5edc162f4169fe3d7e](https://github.com/angular/components/commit/a140c46f065299b6c546ac5edc162f4169fe3d7e)), closes [#22389](https://github.com/angular/components/issues/22389) |
+| bug fix |  **sidenav:** mark sidenav content as scrollable ([#19848](https://github.com/angular/components/issues/19848)) ([3ee9bcf8a3e4077cf2200623e02cc83633b3e795](https://github.com/angular/components/commit/3ee9bcf8a3e4077cf2200623e02cc83633b3e795)), closes [#19846](https://github.com/angular/components/issues/19846) [#18453](https://github.com/angular/components/issues/18453) |
+
+### material-experimental
+
+|            |                       |
+| ---------- | --------------------- |
+| bug fix |  **mdc-list:** align ripple timings with MDC ([#22396](https://github.com/angular/components/issues/22396)) ([1e8de9c8ec962337ec8bd8bf527beb5016a0d8d1](https://github.com/angular/components/commit/1e8de9c8ec962337ec8bd8bf527beb5016a0d8d1)) |
+| bug fix |  **mdc-paginator:** rename module file ([#22387](https://github.com/angular/components/issues/22387)) ([64ba744ed2dd33730b9c302d89e64e31b9eb3be4](https://github.com/angular/components/commit/64ba744ed2dd33730b9c302d89e64e31b9eb3be4)) |
+
+
 ## 11.2.7 "foam-feather" (2021-03-31)
 
 ### material
