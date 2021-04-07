@@ -7,10 +7,10 @@
  */
 
 import {DOCUMENT} from '@angular/common';
-import {Inject, Injectable, NgZone} from '@angular/core';
+import {Inject, Injectable, NgZone, OnDestroy} from '@angular/core';
 import {SpecificEventListener} from '@material/base';
-import {fromEvent, Observable, Subscription} from 'rxjs';
-import {finalize, share} from 'rxjs/operators';
+import {fromEvent, Observable, Subject, Subscription} from 'rxjs';
+import {finalize, share, takeUntil} from 'rxjs/operators';
 
 /**
  * Handles listening for all change and input events that occur on the document.
@@ -21,7 +21,7 @@ import {finalize, share} from 'rxjs/operators';
  * listener once the last observer unsubscribes.
  */
 @Injectable({providedIn: 'root'})
-export class GlobalChangeAndInputListener<K extends 'change'|'input'> {
+export class GlobalChangeAndInputListener<K extends 'change'|'input'> implements OnDestroy {
 
   /** The injected document if available or fallback to the global document reference. */
   private _document: Document;
@@ -29,25 +29,39 @@ export class GlobalChangeAndInputListener<K extends 'change'|'input'> {
   /** Stores the subjects that emit the events that occur on the global document. */
   private _observables = new Map<K, Observable<Event>>();
 
+  /** The notifier that triggers the global event observables to stop emitting and complete. */
+  private _destroyed = new Subject();
+
   constructor(@Inject(DOCUMENT) document: any, private _ngZone: NgZone) {
     this._document = document;
+  }
+
+  ngOnDestroy() {
+    this._destroyed.next();
+    this._destroyed.complete();
+    this._observables.clear();
   }
 
   /** Returns a subscription to global change or input events. */
   listen(type: K, callback: SpecificEventListener<K>): Subscription {
     // If this is the first time we are listening to this event, create the observable for it.
     if (!this._observables.has(type)) {
-      const observable = fromEvent(this._document, type, {capture: true}).pipe(
-        share(),
-        finalize(() => this._observables.delete(type)),
-      );
-      this._observables.set(type, observable);
+      this._observables.set(type, this._createGlobalEventObservable(type));
     }
 
     return this._ngZone.runOutsideAngular(() =>
       this._observables.get(type)!.subscribe((event: Event) =>
         this._ngZone.run(() => callback(event))
       )
+    );
+  }
+
+  /** Creates an observable that emits all events of the given type. */
+  private _createGlobalEventObservable(type: K) {
+    return fromEvent(this._document, type, {capture: true}).pipe(
+      takeUntil(this._destroyed),
+      finalize(() => this._observables.delete(type)),
+      share(),
     );
   }
 }
