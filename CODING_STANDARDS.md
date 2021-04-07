@@ -245,8 +245,11 @@ activateRipple() {
 ```
 
 ##### Selectors
-* Component selectors should be lowercase and delimited by hyphens.
-* Directive selectors should be camel cased.
+* Component selectors should be lowercase and delimited by hyphens. Components should use element
+selectors except when the component API uses a native HTML element.
+* Directive selectors should be camel cased. Exceptions may be made for directives that act like a
+component but would have an empty template, or when the directive is intended to match some
+existing attribute.
 
 #### Inheritance
 
@@ -265,8 +268,8 @@ changed, you can do so in [scripts/check-mdc-tests-config.ts](https://github.com
 Remember to leave a comment explaining why the change was necessary.
 
 #### Coercion
-When defining public properties that are booleans or numbers, use our coercion API to coerce
-`@Input`s into specific types.
+Component and directive inputs for boolean and number values must use a setter to coerce values to
+the expected type using cdk/coercion.
 For example:
 ```ts
 @Input() disabled: boolean;
@@ -278,7 +281,7 @@ private _disabled = false;
 
 static ngAcceptInputType_value: BooleanInput;
 ```
-The above code would allow users to set `disabled` similar to how it can be set on native inputs:
+The above code allows users to set `disabled` similar to how it can be set on native inputs:
 ```html
 <component disabled></component>
 ```
@@ -303,9 +306,9 @@ Implementation
 
 Usage
 ```html
-<yourComponent>
+<your-component>
   <input>
-</yourComponent>
+</your-component>
 ```
 
 **Don't:**
@@ -426,13 +429,20 @@ When it is not super obvious, include a brief description of what a class repres
 
 [ts-mixins]: https://www.typescriptlang.org/docs/handbook/release-notes/typescript-2-2.html#support-for-mix-in-classes
 
-#### Prefer CSS classes to tag names for styling
+#### Prefer CSS classes to tag names and attributes for styling
 Targeting tag names can cause conflicts with the MDC version of the component. For this reason, use
-css class names defined by us instead of tag names.
+CSS class names defined by us instead of tag names. We also prefer classes over attributes for
+consistency.
 ```scss
 /** Do: */
 .mat-mdc-slider { ... }
 
 /** Don't: */
 mdc-slider { ... }
-```
+
+/** Do: */
+.mat-mdc-slider-input { ... }
+
+/** Don't: */
+input[type="button"] { ... }
+ ```
