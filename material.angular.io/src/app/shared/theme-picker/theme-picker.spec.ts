@@ -2,7 +2,6 @@ import {waitForAsync, TestBed} from '@angular/core/testing';
 import {ThemePicker, ThemePickerModule} from './theme-picker';
 import {DocsAppTestingModule} from '../../testing/testing-module';
 
-
 describe('ThemePicker', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
@@ -17,6 +16,6 @@ describe('ThemePicker', () => {
     spyOn(component.styleManager, 'setStyle');
     component.selectTheme(name);
     expect(component.styleManager.setStyle).toHaveBeenCalled();
-    expect(component.styleManager.setStyle).toHaveBeenCalledWith('theme', `assets/${name}.css`);
+    expect(component.styleManager.setStyle).toHaveBeenCalledWith('theme', `${name}.css`);
   });
 });
