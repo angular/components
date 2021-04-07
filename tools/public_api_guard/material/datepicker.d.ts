@@ -144,9 +144,10 @@ export declare class MatCalendarCell<D = any> {
     cssClasses: MatCalendarCellCssClasses;
     displayValue: string;
     enabled: boolean;
+    focused: boolean;
     rawValue?: D | undefined;
     value: number;
-    constructor(value: number, displayValue: string, ariaLabel: string, enabled: boolean, cssClasses?: MatCalendarCellCssClasses, compareValue?: number, rawValue?: D | undefined);
+    constructor(value: number, displayValue: string, ariaLabel: string, enabled: boolean, focused: boolean, cssClasses?: MatCalendarCellCssClasses, compareValue?: number, rawValue?: D | undefined);
 }
 
 export declare type MatCalendarCellClassFunction<D> = (date: D, view: 'month' | 'year' | 'multi-year') => MatCalendarCellCssClasses;

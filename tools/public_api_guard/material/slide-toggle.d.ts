@@ -13,6 +13,7 @@ export declare const MAT_SLIDE_TOGGLE_VALUE_ACCESSOR: any;
 export declare class MatSlideToggle extends _MatSlideToggleMixinBase implements OnDestroy, AfterContentInit, ControlValueAccessor, CanDisable, CanColor, HasTabIndex, CanDisableRipple {
     _animationMode?: string | undefined;
     _inputElement: ElementRef<HTMLInputElement>;
+    _inputFocused: boolean;
     _thumbBarEl: ElementRef;
     _thumbEl: ElementRef;
     ariaLabel: string | null;

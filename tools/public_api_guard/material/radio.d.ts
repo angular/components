@@ -2,6 +2,7 @@ export declare abstract class _MatRadioButtonBase extends _MatRadioButtonMixinBa
     _animationMode?: string | undefined;
     protected _changeDetector: ChangeDetectorRef;
     _inputElement: ElementRef<HTMLInputElement>;
+    _inputFocused: boolean;
     ariaDescribedby: string;
     ariaLabel: string;
     ariaLabelledby: string;
