@@ -383,9 +383,8 @@ export class MatSliderThumb implements AfterViewInit, ControlValueAccessor, OnIn
 
   _emitFakeEvent(type: 'change'|'input') {
     const event = new Event(type) as any;
-    event.isFake = true;
-    const emitter = type === 'change' ? this.change : this.input;
-    emitter.emit(event);
+    event._matIsHandled = true;
+    this._hostElement.dispatchEvent(event);
   }
 
   /**
@@ -772,10 +771,85 @@ export class MatSlider extends _MatSliderMixinBase
 /** The MDCSliderAdapter implementation. */
 class SliderAdapter implements MDCSliderAdapter {
 
-  /** The global change listener subscription used to handle change events on the slider inputs. */
-  changeSubscription: Subscription;
+  /** The global event listener subscription used to handle events on the slider inputs. */
+  private _globalEventSubscriptions = new Subscription();
 
-  constructor(private readonly _delegate: MatSlider) {}
+  /** The MDC Foundations handler function for start input change events. */
+  private _startInputChangeEventHandler: SpecificEventListener<EventType>;
+
+  /** The MDC Foundations handler function for end input change events. */
+  private _endInputChangeEventHandler: SpecificEventListener<EventType>;
+
+  constructor(private readonly _delegate: MatSlider) {
+    this._globalEventSubscriptions.add(this._subscribeToSliderInputEvents('change'));
+    this._globalEventSubscriptions.add(this._subscribeToSliderInputEvents('input'));
+  }
+
+  /**
+   * Handles "change" and "input" events on the slider inputs.
+   *
+   * Exposes a callback to allow the MDC Foundations "change" event handler to be called for "real"
+   * events.
+   *
+   * ** IMPORTANT NOTE **
+   *
+   * We block all "real" change and input events and emit fake events from #emitChangeEvent and
+   * #emitInputEvent, instead. We do this because interacting with the MDC slider won't trigger all
+   * of the correct change and input events, but it will call #emitChangeEvent and #emitInputEvent
+   * at the correct times. This allows users to listen for these events directly on the slider
+   * input as they would with a native range input.
+   */
+  private _subscribeToSliderInputEvents(type: 'change'|'input') {
+      return this._delegate._globalChangeAndInputListener.listen(type, (event: Event) => {
+        const thumbPosition = this._getInputThumbPosition(event.target);
+
+        // Do nothing if the event isn't from a thumb input.
+        if (thumbPosition === null) { return; }
+
+        // Do nothing if the event is "fake".
+        if ((event as any)._matIsHandled) { return ; }
+
+        // Prevent "real" events from reaching end users.
+        event.stopImmediatePropagation();
+
+        // Relay "real" change events to the MDC Foundation.
+        if (type === 'change') {
+          this._callChangeEventHandler(event, thumbPosition);
+        }
+      });
+  }
+
+  /** Calls the MDC Foundations change event handler for the specified thumb position. */
+  private _callChangeEventHandler(event: Event, thumbPosition: Thumb) {
+    if (thumbPosition === Thumb.START) {
+      this._startInputChangeEventHandler(event);
+    } else {
+      this._endInputChangeEventHandler(event);
+    }
+  }
+
+  /** Save the event handler so it can be used in our global change event listener subscription. */
+  private _saveChangeEventHandler(thumbPosition: Thumb, handler: SpecificEventListener<EventType>) {
+    if (thumbPosition === Thumb.START) {
+      this._startInputChangeEventHandler = handler;
+    } else {
+      this._endInputChangeEventHandler = handler;
+    }
+  }
+
+  /**
+   * Returns the thumb position of the given event target.
+   * Returns null if the given event target does not correspond to a slider thumb input.
+   */
+  private _getInputThumbPosition(target: EventTarget | null): Thumb | null {
+    if (target === this._delegate._getInputElement(Thumb.END)) {
+      return Thumb.END;
+    }
+    if (this._delegate._isRange() && target === this._delegate._getInputElement(Thumb.START)) {
+      return Thumb.START;
+    }
+    return null;
+  }
 
   // We manually assign functions instead of using prototype methods because
   // MDC clobbers the values otherwise.
@@ -901,21 +975,8 @@ class SliderAdapter implements MDCSliderAdapter {
   }
   registerInputEventHandler = <K extends EventType>
     (thumbPosition: Thumb, evtType: K, handler: SpecificEventListener<K>): void => {
-      if (evtType === 'change' || evtType === 'input') {
-        this.changeSubscription = this._delegate._globalChangeAndInputListener
-          .listen(evtType as 'change'|'input', (event: Event) => {
-            // We block all real change and input events and emit fake events from #emitChangeEvent
-            // and #emitInputEvent, instead. We do this because interacting with the MDC slider
-            // won't trigger all of the correct change and input events, but it will call
-            // #emitChangeEvent and #emitInputEvent at the correct times. This allows users to
-            // listen for these events directly on the slider input as they would with a native
-            // range input.
-            if (event.target === this._delegate._getInputElement(thumbPosition)) {
-              if ((event as any).isFake) { return; }
-              event.stopImmediatePropagation();
-              handler(event as GlobalEventHandlersEventMap[K]);
-            }
-        });
+      if (evtType === 'change') {
+        this._saveChangeEventHandler(thumbPosition, handler as SpecificEventListener<EventType>);
       } else {
         this._delegate._getInputElement(thumbPosition).addEventListener(evtType, handler);
       }
@@ -923,7 +984,7 @@ class SliderAdapter implements MDCSliderAdapter {
   deregisterInputEventHandler = <K extends EventType>
     (thumbPosition: Thumb, evtType: K, handler: SpecificEventListener<K>): void => {
       if (evtType === 'change') {
-        this.changeSubscription.unsubscribe();
+        this._globalEventSubscriptions.unsubscribe();
       } else {
         this._delegate._getInputElement(thumbPosition).removeEventListener(evtType, handler);
       }
