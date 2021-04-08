@@ -1237,7 +1237,7 @@ export class DragRef<T = any> {
     // Cache the previous transform amount only after the first drag sequence, because
     // we don't want our own transforms to stack on top of each other.
     if (this._initialTransform == null) {
-      this._initialTransform = this._rootElement.style.transform || '';
+      this._initialTransform =  this._rootElement.style.transform == 'none' ? '' this._rootElement.style.transform;
     }
 
     // Preserve the previous `transform` value, if there was one. Note that we apply our own
