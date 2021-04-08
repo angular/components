@@ -58,7 +58,7 @@ export class GlobalChangeAndInputListener<K extends 'change'|'input'> implements
 
   /** Creates an observable that emits all events of the given type. */
   private _createGlobalEventObservable(type: K) {
-    return fromEvent(this._document, type, {capture: true}).pipe(
+    return fromEvent(this._document, type, {capture: true, passive: true}).pipe(
       takeUntil(this._destroyed),
       finalize(() => this._observables.delete(type)),
       share(),
