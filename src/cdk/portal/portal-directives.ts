@@ -118,7 +118,7 @@ export class CdkPortalOutlet extends BasePortalOutlet implements OnInit, OnDestr
   }
 
   /** Emits when a portal is attached to the outlet. */
-  @Output() attached: EventEmitter<CdkPortalOutletAttachedRef> =
+  @Output() readonly attached: EventEmitter<CdkPortalOutletAttachedRef> =
       new EventEmitter<CdkPortalOutletAttachedRef>();
 
   /** Component or view reference that is attached to the portal. */
@@ -214,6 +214,7 @@ export class CdkPortalOutlet extends BasePortalOutlet implements OnInit, OnDestr
     portal.setAttachedHost(this);
     element.parentNode!.insertBefore(anchorNode, element);
     this._getRootNode().appendChild(element);
+    this._attachedPortal = portal;
 
     super.setDisposeFn(() => {
       if (anchorNode.parentNode) {

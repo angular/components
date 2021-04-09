@@ -1,7 +1,7 @@
 @use '../core/style/variables';
 @use '../core/ripple/ripple';
 @use '../core/style/list-common';
-@use '../../cdk/a11y/a11y';
+@use '../../cdk/a11y';
 
 $thumb-size: 20px !default;
 $bar-border-radius: 8px !default;
@@ -59,7 +59,7 @@ $bar-track-width: $bar-width - $thumb-size;
   @include list-common.truncate-line();
 }
 
-/* If the label should be placed before the thumb then we just change the orders. */
+// If the label should be placed before the thumb then we just change the orders.
 .mat-slide-toggle-label-before {
   .mat-slide-toggle-label { order: 1; }
   .mat-slide-toggle-bar { order: 2; }
@@ -216,7 +216,7 @@ $bar-track-width: $bar-width - $thumb-size;
   }
 }
 
-/** Custom styling to make the slide-toggle usable in high contrast mode. */
+// Custom styling to make the slide-toggle usable in high contrast mode.
 @include a11y.high-contrast(active, off) {
   .mat-slide-toggle-thumb,
   .mat-slide-toggle-bar {

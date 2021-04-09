@@ -71,7 +71,7 @@ import {coerceNumberProperty} from '@angular/cdk/coercion';
 })
 export class CdkTree<T, K = T> implements AfterContentChecked, CollectionViewer, OnDestroy, OnInit {
   /** Subject that emits when the component has been destroyed. */
-  private _onDestroy = new Subject<void>();
+  private readonly _onDestroy = new Subject<void>();
 
   /** Differ used to find the changes in the data provided by the data source. */
   private _dataDiffer: IterableDiffer<T>;
@@ -126,7 +126,7 @@ export class CdkTree<T, K = T> implements AfterContentChecked, CollectionViewer,
    * Stream containing the latest information on what rows are being displayed on screen.
    * Can be used by the data source to as a heuristic of what data should be provided.
    */
-  viewChange =
+  readonly viewChange =
     new BehaviorSubject<{start: number, end: number}>({start: 0, end: Number.MAX_VALUE});
 
   constructor(private _differs: IterableDiffers,
@@ -200,7 +200,7 @@ export class CdkTree<T, K = T> implements AfterContentChecked, CollectionViewer,
 
   /** Set up a subscription for the data provided by the data source. */
   private _observeRenderChanges() {
-    let dataStream: Observable<T[] | ReadonlyArray<T>> | undefined;
+    let dataStream: Observable<readonly T[]> | undefined;
 
     if (isDataSource(this._dataSource)) {
       dataStream = this._dataSource.connect(this);
@@ -219,7 +219,7 @@ export class CdkTree<T, K = T> implements AfterContentChecked, CollectionViewer,
   }
 
   /** Check for changes made in the data and render each change (node added/removed/moved). */
-  renderNodeChanges(data: T[] | ReadonlyArray<T>, dataDiffer: IterableDiffer<T> = this._dataDiffer,
+  renderNodeChanges(data: readonly T[], dataDiffer: IterableDiffer<T> = this._dataDiffer,
                     viewContainer: ViewContainerRef = this._nodeOutlet.viewContainer,
                     parentData?: T) {
     const changes = dataDiffer.diff(data);
@@ -324,10 +324,10 @@ export class CdkTreeNode<T, K = T> implements DoCheck, FocusableOption, OnDestro
   static mostRecentTreeNode: CdkTreeNode<any> | null = null;
 
   /** Subject that emits when the component has been destroyed. */
-  protected _destroyed = new Subject<void>();
+  protected readonly _destroyed = new Subject<void>();
 
   /** Emits when the node's data has changed. */
-  _dataChanges = new Subject<void>();
+  readonly _dataChanges = new Subject<void>();
 
   private _parentNodeAriaLevel: number;
 

@@ -77,7 +77,7 @@ export const config = {
       'should calculate the outline gaps inside the shadow DOM',
       'should be legacy appearance if no default options provided',
       'should be legacy appearance if empty default options provided',
-      'should not calculate wrong content height due to long placeholders',
+      'should adjust height due to long placeholders',
       'should work in a tab',
       'should work in a step'
     ],
@@ -140,9 +140,6 @@ export const config = {
           'element is inside an ngIf'
     ],
     'mdc-select': [
-      // TODO(crisbeto): remove this exception once #22187 lands.
-      'should float the label on focus if it has a placeholder',
-
       // These tests are excluded, because they're verifying the functionality that positions
       // the select panel over the trigger which isn't supported in the MDC select.
       'should set the width of the overlay based on a larger trigger width',

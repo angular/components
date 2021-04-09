@@ -1,4 +1,4 @@
-@use '../../cdk/a11y/a11y';
+@use '../../cdk/a11y';
 
 $padding: 14px 16px !default;
 $min-height: 48px !default;
@@ -24,10 +24,8 @@ $spacing-margin-handset: 8px !default;
   }
 }
 
-/**
- * The mat-snack-bar-handset class will be applied to the overlay
- * element causing styling to both it and the snack bar container.
- */
+// The mat-snack-bar-handset class will be applied to the overlay
+// element causing styling to both it and the snack bar container.
 .mat-snack-bar-handset {
   width: 100%;
 

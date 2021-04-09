@@ -1,19 +1,19 @@
 export declare class BidiModule {
-    static ɵfac: i0.ɵɵFactoryDef<BidiModule, never>;
-    static ɵinj: i0.ɵɵInjectorDef<BidiModule>;
-    static ɵmod: i0.ɵɵNgModuleDefWithMeta<BidiModule, [typeof i1.Dir], never, [typeof i1.Dir]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<BidiModule, never>;
+    static ɵinj: i0.ɵɵInjectorDeclaration<BidiModule>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<BidiModule, [typeof i1.Dir], never, [typeof i1.Dir]>;
 }
 
 export declare class Dir implements Directionality, AfterContentInit, OnDestroy {
     _rawDir: string;
-    change: EventEmitter<Direction>;
+    readonly change: EventEmitter<Direction>;
     get dir(): Direction;
     set dir(value: Direction);
     get value(): Direction;
     ngAfterContentInit(): void;
     ngOnDestroy(): void;
-    static ɵdir: i0.ɵɵDirectiveDefWithMeta<Dir, "[dir]", ["dir"], { "dir": "dir"; }, { "change": "dirChange"; }, never>;
-    static ɵfac: i0.ɵɵFactoryDef<Dir, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<Dir, "[dir]", ["dir"], { "dir": "dir"; }, { "change": "dirChange"; }, never>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<Dir, never>;
 }
 
 export declare const DIR_DOCUMENT: InjectionToken<Document>;
@@ -25,6 +25,6 @@ export declare class Directionality implements OnDestroy {
     readonly value: Direction;
     constructor(_document?: any);
     ngOnDestroy(): void;
-    static ɵfac: i0.ɵɵFactoryDef<Directionality, [{ optional: true; }]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<Directionality, [{ optional: true; }]>;
     static ɵprov: i0.ɵɵInjectableDef<Directionality>;
 }

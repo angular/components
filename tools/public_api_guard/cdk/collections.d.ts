@@ -46,8 +46,8 @@ export declare const enum _ViewRepeaterOperation {
 }
 
 export declare class ArrayDataSource<T> extends DataSource<T> {
-    constructor(_data: T[] | ReadonlyArray<T> | Observable<T[] | ReadonlyArray<T>>);
-    connect(): Observable<T[] | ReadonlyArray<T>>;
+    constructor(_data: readonly T[] | Observable<readonly T[]>);
+    connect(): Observable<readonly T[]>;
     disconnect(): void;
 }
 
@@ -56,7 +56,7 @@ export interface CollectionViewer {
 }
 
 export declare abstract class DataSource<T> {
-    abstract connect(collectionViewer: CollectionViewer): Observable<T[] | ReadonlyArray<T>>;
+    abstract connect(collectionViewer: CollectionViewer): Observable<readonly T[]>;
     abstract disconnect(collectionViewer: CollectionViewer): void;
 }
 
@@ -76,7 +76,7 @@ export interface SelectionChange<T> {
 }
 
 export declare class SelectionModel<T> {
-    changed: Subject<SelectionChange<T>>;
+    readonly changed: Subject<SelectionChange<T>>;
     get selected(): T[];
     constructor(_multiple?: boolean, initiallySelectedValues?: T[], _emitChanges?: boolean);
     clear(): void;
@@ -100,7 +100,7 @@ export declare class UniqueSelectionDispatcher implements OnDestroy {
     listen(listener: UniqueSelectionDispatcherListener): () => void;
     ngOnDestroy(): void;
     notify(id: string, name: string): void;
-    static ɵfac: i0.ɵɵFactoryDef<UniqueSelectionDispatcher, never>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<UniqueSelectionDispatcher, never>;
     static ɵprov: i0.ɵɵInjectableDef<UniqueSelectionDispatcher>;
 }
 

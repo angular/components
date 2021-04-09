@@ -92,6 +92,9 @@ let progressbarId = 0;
     'role': 'progressbar',
     'aria-valuemin': '0',
     'aria-valuemax': '100',
+    // set tab index to -1 so screen readers will read the aria-label
+    // Note: there is a known issue with JAWS that does not read progressbar aria labels on FireFox
+    'tabindex': '-1',
     '[attr.aria-valuenow]': '(mode === "indeterminate" || mode === "query") ? null : value',
     '[attr.mode]': 'mode',
     'class': 'mat-progress-bar',
@@ -150,7 +153,7 @@ export class MatProgressBar extends _MatProgressBarMixinBase implements CanColor
    * be emitted when animations are disabled, nor will it be emitted for modes with continuous
    * animations (indeterminate and query).
    */
-  @Output() animationEnd = new EventEmitter<ProgressAnimationEnd>();
+  @Output() readonly animationEnd = new EventEmitter<ProgressAnimationEnd>();
 
   /** Reference to animation end subscription to be unsubscribed on destroy. */
   private _animationEndSubscription: Subscription = Subscription.EMPTY;

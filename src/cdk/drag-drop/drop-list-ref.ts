@@ -98,21 +98,21 @@ export class DropListRef<T = any> {
   sortPredicate: (index: number, drag: DragRef, drop: DropListRef) => boolean = () => true;
 
   /** Emits right before dragging has started. */
-  beforeStarted = new Subject<void>();
+  readonly beforeStarted = new Subject<void>();
 
   /**
    * Emits when the user has moved a new drag item into this container.
    */
-  entered = new Subject<{item: DragRef, container: DropListRef, currentIndex: number}>();
+  readonly entered = new Subject<{item: DragRef, container: DropListRef, currentIndex: number}>();
 
   /**
    * Emits when the user removes an item from the container
    * by dragging it into another container.
    */
-  exited = new Subject<{item: DragRef, container: DropListRef}>();
+  readonly exited = new Subject<{item: DragRef, container: DropListRef}>();
 
   /** Emits when the user drops an item inside the container. */
-  dropped = new Subject<{
+  readonly dropped = new Subject<{
     item: DragRef,
     currentIndex: number,
     previousIndex: number,
@@ -120,10 +120,11 @@ export class DropListRef<T = any> {
     previousContainer: DropListRef,
     isPointerOverContainer: boolean,
     distance: Point;
+    dropPoint: Point;
   }>();
 
   /** Emits as the user is swapping items while actively dragging. */
-  sorted = new Subject<{
+  readonly sorted = new Subject<{
     previousIndex: number,
     currentIndex: number,
     container: DropListRef,
@@ -160,10 +161,10 @@ export class DropListRef<T = any> {
   private _previousSwap = {drag: null as DragRef | null, delta: 0, overlaps: false};
 
   /** Draggable items in the container. */
-  private _draggables: ReadonlyArray<DragRef> = [];
+  private _draggables: readonly DragRef[] = [];
 
   /** Drop lists that are connected to the current one. */
-  private _siblings: ReadonlyArray<DropListRef> = [];
+  private _siblings: readonly DropListRef[] = [];
 
   /** Direction in which the list is oriented. */
   private _orientation: 'horizontal' | 'vertical' = 'vertical';
@@ -187,7 +188,7 @@ export class DropListRef<T = any> {
   private _scrollNode: HTMLElement | Window;
 
   /** Used to signal to the current auto-scroll sequence when to stop. */
-  private _stopScrollTimers = new Subject<void>();
+  private readonly _stopScrollTimers = new Subject<void>();
 
   /** Shadow root of the current element. Necessary for `elementFromPoint` to resolve correctly. */
   private _cachedShadowRoot: DocumentOrShadowRoot | null = null;
@@ -334,7 +335,7 @@ export class DropListRef<T = any> {
    * @param distance Distance the user has dragged since the start of the dragging sequence.
    */
   drop(item: DragRef, currentIndex: number, previousIndex: number, previousContainer: DropListRef,
-    isPointerOverContainer: boolean, distance: Point): void {
+    isPointerOverContainer: boolean, distance: Point, dropPoint: Point): void {
     this._reset();
     this.dropped.next({
       item,
@@ -343,7 +344,8 @@ export class DropListRef<T = any> {
       container: this,
       previousContainer,
       isPointerOverContainer,
-      distance
+      distance,
+      dropPoint
     });
   }
 
@@ -411,7 +413,7 @@ export class DropListRef<T = any> {
   }
 
   /** Gets the scrollable parents that are registered with this drop container. */
-  getScrollableParents(): ReadonlyArray<HTMLElement> {
+  getScrollableParents(): readonly HTMLElement[] {
     return this._scrollableElements;
   }
 

@@ -1,7 +1,7 @@
 @use '../core/style/variables';
 @use '../core/ripple/ripple';
 @use '../core/style/vendor-prefixes';
-@use '../../cdk/a11y/a11y';
+@use '../../cdk/a11y';
 
 
 $size: variables.$toggle-size !default;
@@ -80,6 +80,10 @@ $ripple-radius: 20px;
   // IE to flash the entire circle for a couple of frames, throwing off the entire animation.
   transform: scale(0.001);
 
+  // force browser to show background-color when using the print function
+  -webkit-print-color-adjust: exact;
+  color-adjust: exact;
+
   ._mat-animation-noopable & {
     transition: none;
   }
@@ -151,6 +155,10 @@ $ripple-radius: 20px;
   height: 100%;
   transform: none;
 
+  // Needs an explicit top/left so it stays aligned no matter how the text is aligned (see #22389).
+  top: 0;
+  left: 0;
+
   .mat-radio-container:hover & {
     opacity: 0.04;
   }
@@ -186,6 +194,15 @@ $ripple-radius: 20px;
 }
 
 @include a11y.high-contrast(active, off) {
+  .mat-radio-button:not(.mat-radio-disabled) {
+    &.cdk-keyboard-focused,
+    &.cdk-program-focused {
+      .mat-radio-ripple {
+        outline: solid 3px;
+      }
+    }
+  }
+
   .mat-radio-disabled {
     opacity: 0.5;
   }

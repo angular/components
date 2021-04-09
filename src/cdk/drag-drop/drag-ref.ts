@@ -161,7 +161,7 @@ export class DragRef<T = any> {
   private _parentPositions: ParentPositionTracker;
 
   /** Emits when the item is being moved. */
-  private _moveEvents = new Subject<{
+  private readonly _moveEvents = new Subject<{
     source: DragRef;
     pointerPosition: {x: number, y: number};
     event: MouseEvent | TouchEvent;
@@ -285,31 +285,32 @@ export class DragRef<T = any> {
   private _disabled = false;
 
   /** Emits as the drag sequence is being prepared. */
-  beforeStarted = new Subject<void>();
+  readonly beforeStarted = new Subject<void>();
 
   /** Emits when the user starts dragging the item. */
-  started = new Subject<{source: DragRef}>();
+  readonly started = new Subject<{source: DragRef}>();
 
   /** Emits when the user has released a drag item, before any animations have started. */
-  released = new Subject<{source: DragRef}>();
+  readonly released = new Subject<{source: DragRef}>();
 
   /** Emits when the user stops dragging an item in the container. */
-  ended = new Subject<{source: DragRef, distance: Point}>();
+  readonly ended = new Subject<{source: DragRef, distance: Point, dropPoint: Point}>();
 
   /** Emits when the user has moved the item into a new container. */
-  entered = new Subject<{container: DropListRef, item: DragRef, currentIndex: number}>();
+  readonly entered = new Subject<{container: DropListRef, item: DragRef, currentIndex: number}>();
 
   /** Emits when the user removes the item its container by dragging it into another container. */
-  exited = new Subject<{container: DropListRef, item: DragRef}>();
+  readonly exited = new Subject<{container: DropListRef, item: DragRef}>();
 
   /** Emits when the user drops the item inside a container. */
-  dropped = new Subject<{
+  readonly dropped = new Subject<{
     previousIndex: number;
     currentIndex: number;
     item: DragRef;
     container: DropListRef;
     previousContainer: DropListRef;
     distance: Point;
+    dropPoint: Point;
     isPointerOverContainer: boolean;
   }>();
 
@@ -317,7 +318,7 @@ export class DragRef<T = any> {
    * Emits as the user is dragging the item. Use with caution,
    * because this event will fire for every pixel that the user has dragged.
    */
-  moved: Observable<{
+  readonly moved: Observable<{
     source: DragRef;
     pointerPosition: {x: number, y: number};
     event: MouseEvent | TouchEvent;
@@ -764,11 +765,13 @@ export class DragRef<T = any> {
       // the user starts dragging the item, its position will be calculated relatively
       // to the new passive transform.
       this._passiveTransform.x = this._activeTransform.x;
+      const pointerPosition = this._getPointerPositionOnPage(event);
       this._passiveTransform.y = this._activeTransform.y;
       this._ngZone.run(() => {
         this.ended.next({
           source: this,
-          distance: this._getDragDistance(this._getPointerPositionOnPage(event))
+          distance: this._getDragDistance(pointerPosition),
+          dropPoint: pointerPosition
         });
       });
       this._cleanupCachedDimensions();
@@ -910,11 +913,11 @@ export class DragRef<T = any> {
       const container = this._dropContainer!;
       const currentIndex = container.getItemIndex(this);
       const pointerPosition = this._getPointerPositionOnPage(event);
-      const distance = this._getDragDistance(this._getPointerPositionOnPage(event));
+      const distance = this._getDragDistance(pointerPosition);
       const isPointerOverContainer = container._isOverContainer(
         pointerPosition.x, pointerPosition.y);
 
-      this.ended.next({source: this, distance});
+      this.ended.next({source: this, distance, dropPoint: pointerPosition});
       this.dropped.next({
         item: this,
         currentIndex,
@@ -922,10 +925,11 @@ export class DragRef<T = any> {
         container: container,
         previousContainer: this._initialContainer,
         isPointerOverContainer,
-        distance
+        distance,
+        dropPoint: pointerPosition
       });
       container.drop(this, currentIndex, this._initialIndex, this._initialContainer,
-        isPointerOverContainer, distance);
+        isPointerOverContainer, distance, pointerPosition);
       this._dropContainer = this._initialContainer;
     });
   }

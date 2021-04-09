@@ -212,6 +212,17 @@ describe('MDC-based MatSelect', () => {
           expect(select.getAttribute('aria-labelledby')).toBe(`${labelId} ${valueId}`);
         }));
 
+        it('should trim the trigger aria-labelledby when there is no label', fakeAsync(() => {
+          fixture.componentInstance.hasLabel = false;
+          fixture.detectChanges();
+          flush();
+          fixture.detectChanges();
+
+          // Note that we assert that there are no spaces around the value.
+          const valueId = fixture.nativeElement.querySelector('.mat-mdc-select-value').id;
+          expect(select.getAttribute('aria-labelledby')).toBe(`${valueId}`);
+        }));
+
         it('should set the tabindex of the select to 0 by default', fakeAsync(() => {
           expect(select.getAttribute('tabindex')).toEqual('0');
         }));
@@ -974,6 +985,18 @@ describe('MDC-based MatSelect', () => {
           const labelId = fixture.nativeElement.querySelector('label').id;
           const panel = document.querySelector('.mat-mdc-select-panel')!;
           expect(panel.getAttribute('aria-labelledby')).toBe(`${labelId} myLabelId`);
+        }));
+
+        it('should trim the custom panel aria-labelledby when there is no label', fakeAsync(() => {
+          fixture.componentInstance.hasLabel = false;
+          fixture.componentInstance.ariaLabelledby = 'myLabelId';
+          fixture.componentInstance.select.open();
+          fixture.detectChanges();
+          flush();
+
+          // Note that we assert that there are no spaces around the value.
+          const panel = document.querySelector('.mat-mdc-select-panel')!;
+          expect(panel.getAttribute('aria-labelledby')).toBe(`myLabelId`);
         }));
 
         it('should clear aria-labelledby from the panel if an aria-label is set', fakeAsync(() => {
@@ -2338,6 +2361,22 @@ describe('MDC-based MatSelect', () => {
       fixture.detectChanges();
       const label = fixture.nativeElement.querySelector('.mat-mdc-form-field label');
 
+      expect(label.classList.contains('mdc-floating-label--float-above'))
+          .toBe(true, 'Label should be floating');
+    }));
+
+    it('should float the label on focus if it has a placeholder', fakeAsync(() => {
+      const fixture = TestBed.createComponent(FloatLabelSelect);
+      fixture.detectChanges();
+      expect(fixture.componentInstance.placeholder).toBeTruthy();
+
+      fixture.componentInstance.floatLabel = 'auto';
+      fixture.detectChanges();
+
+      dispatchFakeEvent(fixture.nativeElement.querySelector('.mat-mdc-select'), 'focus');
+      fixture.detectChanges();
+
+      const label = fixture.nativeElement.querySelector('.mat-mdc-form-field label');
       expect(label.classList.contains('mdc-floating-label--float-above'))
           .toBe(true, 'Label should be floating');
     }));
@@ -3835,7 +3874,7 @@ describe('MDC-based MatSelect', () => {
   template: `
     <div [style.height.px]="heightAbove"></div>
     <mat-form-field>
-      <mat-label>Select a food</mat-label>
+      <mat-label *ngIf="hasLabel">Select a food</mat-label>
       <mat-select placeholder="Food" [formControl]="control" [required]="isRequired"
         [tabIndex]="tabIndexOverride" [aria-label]="ariaLabel" [aria-labelledby]="ariaLabelledby"
         [panelClass]="panelClass" [disableRipple]="disableRipple"
@@ -3863,6 +3902,7 @@ class BasicSelect {
   isRequired: boolean;
   heightAbove = 0;
   heightBelow = 0;
+  hasLabel = true;
   tabIndexOverride: number;
   ariaLabel: string;
   ariaLabelledby: string;
@@ -4099,7 +4139,7 @@ class BasicSelectOnPushPreselected {
   template: `
     <mat-form-field [floatLabel]="floatLabel">
       <mat-label>Select a food</mat-label>
-      <mat-select placeholder="Food I want to eat right now" [formControl]="control">
+      <mat-select [placeholder]="placeholder" [formControl]="control">
         <mat-option *ngFor="let food of foods" [value]="food.value">
           {{ food.viewValue }}
         </mat-option>
@@ -4110,6 +4150,7 @@ class BasicSelectOnPushPreselected {
 class FloatLabelSelect {
   floatLabel: FloatLabelType | null = 'auto';
   control = new FormControl();
+  placeholder = 'Food I want to eat right now';
   foods: any[] = [
     { value: 'steak-0', viewValue: 'Steak' },
     { value: 'pizza-1', viewValue: 'Pizza' },
@@ -4214,7 +4255,7 @@ class BasicSelectWithTheming {
   template: `
     <mat-form-field>
       <mat-label>Select a food</mat-label>
-      <mat-select placeholder="Food" [formControl]="control">
+      <mat-select [formControl]="control">
         <mat-option *ngFor="let food of foods" [value]="food.value">
           {{ food.viewValue }}
         </mat-option>

@@ -8,6 +8,13 @@
     "node_modules/codelyzer"
   ],
   "rules": {
+    "ban-types": [
+      true,
+      [
+        "ReadonlyArray<.+>",
+        "Use 'readonly T[]' instead."
+      ]
+    ],
     "max-line-length": [true, {
       "limit": 100,
       "check-strings": true,
@@ -108,6 +115,7 @@
     "contextual-lifecycle": true,
     "contextual-decorator": true,
     "no-output-on-prefix": true,
+    "prefer-output-readonly": true,
     "template-no-negated-async": true,
     "use-lifecycle-interface": true,
 

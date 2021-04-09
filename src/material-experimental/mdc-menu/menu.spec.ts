@@ -1260,6 +1260,9 @@ describe('MDC-based MatMenu', () => {
           .toBe(Math.floor(trigger.getBoundingClientRect().bottom), 'Expected menu to open below');
     });
 
+    it('should not throw if a menu reposition is requested while the menu is closed', () => {
+      expect(() => fixture.componentInstance.trigger.updatePosition()).not.toThrow();
+    });
   });
 
   describe('fallback positions', () => {
@@ -2399,7 +2402,7 @@ class CustomMenuPanel implements MatMenuPanel {
   parentMenu: MatMenuPanel;
 
   @ViewChild(TemplateRef) templateRef: TemplateRef<any>;
-  @Output() close = new EventEmitter<void | 'click' | 'keydown' | 'tab'>();
+  @Output() readonly close = new EventEmitter<void|'click'|'keydown'|'tab'>();
   focusFirstItem = () => {};
   resetActiveItem = () => {};
   setPositionClasses = () => {};

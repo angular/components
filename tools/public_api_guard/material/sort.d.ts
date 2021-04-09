@@ -35,8 +35,8 @@ export declare class MatSort extends _MatSortMixinBase implements CanDisable, Ha
     sort(sortable: MatSortable): void;
     static ngAcceptInputType_disableClear: BooleanInput;
     static ngAcceptInputType_disabled: BooleanInput;
-    static ɵdir: i0.ɵɵDirectiveDefWithMeta<MatSort, "[matSort]", ["matSort"], { "disabled": "matSortDisabled"; "active": "matSortActive"; "start": "matSortStart"; "direction": "matSortDirection"; "disableClear": "matSortDisableClear"; }, { "sortChange": "matSortChange"; }, never>;
-    static ɵfac: i0.ɵɵFactoryDef<MatSort, [{ optional: true; }]>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<MatSort, "[matSort]", ["matSort"], { "disabled": "matSortDisabled"; "active": "matSortActive"; "start": "matSortStart"; "direction": "matSortDirection"; "disableClear": "matSortDisableClear"; }, { "sortChange": "matSortChange"; }, never>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<MatSort, [{ optional: true; }]>;
 }
 
 export interface MatSortable {
@@ -71,7 +71,8 @@ export declare class MatSortHeader extends _MatSortHeaderMixinBase implements Ca
     set disableClear(v: boolean);
     id: string;
     start: 'asc' | 'desc';
-    constructor(_intl: MatSortHeaderIntl, _changeDetectorRef: ChangeDetectorRef, _sort: MatSort, _columnDef: MatSortHeaderColumnDef, _focusMonitor: FocusMonitor, _elementRef: ElementRef<HTMLElement>);
+    constructor(
+    _intl: MatSortHeaderIntl, _changeDetectorRef: ChangeDetectorRef, _sort: MatSort, _columnDef: MatSortHeaderColumnDef, _focusMonitor: FocusMonitor, _elementRef: ElementRef<HTMLElement>);
     _getAriaSortAttribute(): "none" | "ascending" | "descending";
     _getArrowDirectionState(): string;
     _getArrowViewState(): string;
@@ -89,21 +90,20 @@ export declare class MatSortHeader extends _MatSortHeaderMixinBase implements Ca
     ngOnInit(): void;
     static ngAcceptInputType_disableClear: BooleanInput;
     static ngAcceptInputType_disabled: BooleanInput;
-    static ɵcmp: i0.ɵɵComponentDefWithMeta<MatSortHeader, "[mat-sort-header]", ["matSortHeader"], { "disabled": "disabled"; "id": "mat-sort-header"; "arrowPosition": "arrowPosition"; "start": "start"; "disableClear": "disableClear"; }, {}, never, ["*"]>;
-    static ɵfac: i0.ɵɵFactoryDef<MatSortHeader, [null, null, { optional: true; }, { optional: true; }, null, null]>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<MatSortHeader, "[mat-sort-header]", ["matSortHeader"], { "disabled": "disabled"; "id": "mat-sort-header"; "arrowPosition": "arrowPosition"; "start": "start"; "disableClear": "disableClear"; }, {}, never, ["*"]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<MatSortHeader, [null, null, { optional: true; }, { optional: true; }, null, null]>;
 }
 
 export declare class MatSortHeaderIntl {
     readonly changes: Subject<void>;
-    sortButtonLabel: (id: string) => string;
-    static ɵfac: i0.ɵɵFactoryDef<MatSortHeaderIntl, never>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<MatSortHeaderIntl, never>;
     static ɵprov: i0.ɵɵInjectableDef<MatSortHeaderIntl>;
 }
 
 export declare class MatSortModule {
-    static ɵfac: i0.ɵɵFactoryDef<MatSortModule, never>;
-    static ɵinj: i0.ɵɵInjectorDef<MatSortModule>;
-    static ɵmod: i0.ɵɵNgModuleDefWithMeta<MatSortModule, [typeof i1.MatSort, typeof i2.MatSortHeader], [typeof i3.CommonModule, typeof i4.MatCommonModule], [typeof i1.MatSort, typeof i2.MatSortHeader]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<MatSortModule, never>;
+    static ɵinj: i0.ɵɵInjectorDeclaration<MatSortModule>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<MatSortModule, [typeof i1.MatSort, typeof i2.MatSortHeader], [typeof i3.CommonModule, typeof i4.MatCommonModule], [typeof i1.MatSort, typeof i2.MatSortHeader]>;
 }
 
 export interface Sort {

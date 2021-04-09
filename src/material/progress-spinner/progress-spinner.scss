@@ -1,6 +1,6 @@
 @use '../core/style/variables';
 @use '../core/style/private';
-@use '../../cdk/a11y/a11y';
+@use '../../cdk/a11y';
 
 
 // Animation config
@@ -38,6 +38,9 @@ $_mat-progress-spinner-default-circumference:
       // SVG colors aren't inverted automatically in high contrast mode. Set the
       // stroke to currentColor in order to respect the user's color settings.
       stroke: currentColor;
+      // currentColor blends in with the background in Chromium-based browsers
+      // so we have to fall back to `CanvasText` which isn't supported on IE.
+      stroke: CanvasText;
     }
   }
 
@@ -87,10 +90,8 @@ $_mat-progress-spinner-default-circumference:
   $fallback-iterations: 4;
 
   @keyframes mat-progress-spinner-stroke-rotate-100 {
-    /*
-      stylelint-disable declaration-block-single-line-max-declarations,
-        declaration-block-semicolon-space-after
-    */
+    // stylelint-disable declaration-block-single-line-max-declarations
+    // stylelint-disable declaration-block-semicolon-space-after
 
     // .0001 percentage difference is necessary in order to avoid unwanted animation frames
     // for example because the animation duration is 4 seconds, .1% accounts to 4ms
@@ -98,25 +99,25 @@ $_mat-progress-spinner-default-circumference:
     // https://github.com/angular/components/issues/8984
     //
     // NOTE: this is replaced by js for any diameter other that 100
-    0%      { stroke-dashoffset: $start;  transform: rotate(0); }
-    12.5%   { stroke-dashoffset: $end;    transform: rotate(0); }
+    0%        { stroke-dashoffset: $start;  transform: rotate(0); }
+    12.5%     { stroke-dashoffset: $end;    transform: rotate(0); }
     12.5001%  { stroke-dashoffset: $end;    transform: rotateX(180deg) rotate(72.5deg); }
-    25%     { stroke-dashoffset: $start;  transform: rotateX(180deg) rotate(72.5deg); }
+    25%       { stroke-dashoffset: $start;  transform: rotateX(180deg) rotate(72.5deg); }
 
     25.0001%   { stroke-dashoffset: $start;  transform: rotate(270deg); }
-    37.5%   { stroke-dashoffset: $end;    transform: rotate(270deg); }
-    37.5001%  { stroke-dashoffset: $end;    transform: rotateX(180deg) rotate(161.5deg); }
-    50%     { stroke-dashoffset: $start;  transform: rotateX(180deg) rotate(161.5deg); }
+    37.5%      { stroke-dashoffset: $end;    transform: rotate(270deg); }
+    37.5001%   { stroke-dashoffset: $end;    transform: rotateX(180deg) rotate(161.5deg); }
+    50%        { stroke-dashoffset: $start;  transform: rotateX(180deg) rotate(161.5deg); }
 
     50.0001%  { stroke-dashoffset: $start;  transform: rotate(180deg); }
-    62.5%   { stroke-dashoffset: $end;    transform: rotate(180deg); }
+    62.5%     { stroke-dashoffset: $end;    transform: rotate(180deg); }
     62.5001%  { stroke-dashoffset: $end;    transform: rotateX(180deg) rotate(251.5deg); }
-    75%     { stroke-dashoffset: $start;  transform: rotateX(180deg) rotate(251.5deg); }
+    75%       { stroke-dashoffset: $start;  transform: rotateX(180deg) rotate(251.5deg); }
 
     75.0001%  { stroke-dashoffset: $start;  transform: rotate(90deg); }
-    87.5%   { stroke-dashoffset: $end;    transform: rotate(90deg); }
+    87.5%     { stroke-dashoffset: $end;    transform: rotate(90deg); }
     87.5001%  { stroke-dashoffset: $end;    transform: rotateX(180deg) rotate(341.5deg); }
-    100%    { stroke-dashoffset: $start;  transform: rotateX(180deg) rotate(341.5deg); }
+    100%      { stroke-dashoffset: $start;  transform: rotateX(180deg) rotate(341.5deg); }
     // stylelint-enable
   }
 
