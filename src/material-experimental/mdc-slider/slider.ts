@@ -264,6 +264,7 @@ export class MatSliderVisualThumb implements AfterViewInit, OnDestroy {
  */
 @Directive({
   selector: 'input[matSliderThumb], input[matSliderStartThumb], input[matSliderEndThumb]',
+  exportAs: 'matSliderThumb',
   host: {
     'class': 'mdc-slider__input',
     'type': 'range',
@@ -421,6 +422,14 @@ export class MatSliderThumb implements AfterViewInit, ControlValueAccessor, OnIn
   setDisabledState(isDisabled: boolean): void {
     this._disabled = isDisabled;
     this._slider._updateDisabled();
+  }
+
+  focus(): void {
+    this._hostElement.focus();
+  }
+
+  blur(): void {
+    this._hostElement.blur();
   }
 
   /** Returns true if this slider input currently has focus. */
