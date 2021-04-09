@@ -143,7 +143,7 @@ describe('InputModalityDetector', () => {
     expect(detector.mostRecentModality).toBe('keyboard');
   });
 
-  it('should ignore additional keys if specified', () => {
+  it('should ignore keys if specified', () => {
     detector = new InputModalityDetector(platform, ngZone, document, {ignoreKeys: [A, B, C]});
 
     dispatchKeyboardEvent(document, 'keydown', A);
