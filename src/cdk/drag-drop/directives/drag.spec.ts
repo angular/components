@@ -347,6 +347,51 @@ describe('CdkDrag', () => {
       }));
     });
 
+    describe('mouse dragging when initial transform is none', () => {
+      it('should drag an element freely to a particular position', fakeAsync(() => {
+        const fixture = createComponent(StandaloneDraggableWithInitialTransformNone);
+        fixture.detectChanges();
+        const dragElement = fixture.componentInstance.dragElement.nativeElement;
+
+        expect(dragElement.style.transform).toBe('none');
+        dragElementViaMouse(fixture, dragElement, 50, 100);
+        expect(dragElement.style.transform).toBe('translate3d(50px, 100px, 0px)');
+      }));
+
+      it('should drag an SVG element freely to a particular position', fakeAsync(() => {
+        const fixture = createComponent(StandaloneDraggableSvgWithInitialTransformNone);
+        fixture.detectChanges();
+        const dragElement = fixture.componentInstance.dragElement.nativeElement;
+
+        expect(dragElement.style.transform).toBe('none');
+        dragElementViaMouse(fixture, dragElement, 50, 100);
+        expect(dragElement.getAttribute('transform')).toBe('translate(50 100)');
+      }));
+
+      it('should drag an SVG element freely to a particular position in SVG viewBox coordinates',
+        fakeAsync(() => {
+          const fixture = createComponent(StandaloneDraggableSvgWithViewBoxInitialTranformNone);
+          fixture.detectChanges();
+          const dragElement = fixture.componentInstance.dragElement.nativeElement;
+
+          expect(dragElement.style.transform).toBe('none');
+          dragElementViaMouse(fixture, dragElement, 50, 100);
+          expect(dragElement.getAttribute('transform')).toBe('translate(100 200)');
+        }));
+    });
+
+    describe('touch dragging when initial transform is none', () => {
+      it('should drag an element freely to a particular position', fakeAsync(() => {
+        const fixture = createComponent(StandaloneDraggableWithInitialTransformNone);
+        fixture.detectChanges();
+        const dragElement = fixture.componentInstance.dragElement.nativeElement;
+
+        expect(dragElement.style.transform).toBe('none');
+        dragElementViaTouch(fixture, dragElement, 50, 100);
+        expect(dragElement.style.transform).toBe('translate3d(50px, 100px, 0px)');
+      }));
+    });
+
     it('should dispatch an event when the user has started dragging', fakeAsync(() => {
       const fixture = createComponent(StandaloneDraggable);
       fixture.detectChanges();
@@ -5713,6 +5758,21 @@ class StandaloneDraggable {
 }
 
 @Component({
+  template: `
+    <div class="wrapper" style="width: 200px; height: 200px; background: green;">
+      <div
+        cdkDrag
+        #dragElement
+        style="transform: none; width: 100px; height: 100px; background: red;"></div>
+    </div>
+  `
+})
+class StandaloneDraggableWithInitialTransformNone {
+  @ViewChild('dragElement') dragElement: ElementRef<HTMLElement>;
+  @ViewChild(CdkDrag) dragInstance: CdkDrag;
+}
+
+@Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div cdkDrag #dragElement style="width: 100px; height: 100px; background: red;"></div>
@@ -5733,6 +5793,34 @@ class StandaloneDraggableWithOnPush {
   `
 })
 class StandaloneDraggableSvg {
+  @ViewChild('dragElement') dragElement: ElementRef<SVGElement>;
+}
+
+@Component({
+  template: `
+    <svg><g
+      cdkDrag
+      style="transform: none"
+      #dragElement>
+      <circle fill="red" r="50" cx="50" cy="50"/>
+    </g></svg>
+  `
+})
+class StandaloneDraggableSvgWithInitialTransformNone {
+  @ViewChild('dragElement') dragElement: ElementRef<SVGElement>;
+}
+
+@Component({
+  template: `
+    <svg width="400px" height="400px" viewBox="0 0 800 800"><g
+      cdkDrag
+      style="transform: none"
+      #dragElement>
+      <circle fill="red" r="50" cx="50" cy="50"/>
+    </g></svg>
+  `
+})
+class StandaloneDraggableSvgWithViewBoxInitialTranformNone {
   @ViewChild('dragElement') dragElement: ElementRef<SVGElement>;
 }
 
