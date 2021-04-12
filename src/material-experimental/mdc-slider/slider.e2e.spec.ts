@@ -117,7 +117,7 @@ async function getCoordsForValue(slider: ElementFinder, value: number): Promise<
   const max = Number(await inputs[inputs.length - 1].getAttribute('max'));
   const percent = (value - min) / (max - min);
 
-  const {width, height} = await getBoundingClientRect(slider);
+  const {width, height} = await slider.getSize();
 
   // NOTE: We use Math.round here because protractor silently breaks if you pass in an imprecise
   // floating point number with lots of decimals. This allows us to avoid the headache but it may
@@ -127,12 +127,4 @@ async function getCoordsForValue(slider: ElementFinder, value: number): Promise<
   const y = Math.round(height / 2);
 
   return {x, y};
-}
-
-/** Uses browser.executeScript to retrieve the client rect of the given protractor element. */
-async function getBoundingClientRect(elementFinder: ElementFinder): Promise<DOMRect> {
-  return browser.executeScript(
-    'return arguments[0].getBoundingClientRect()',
-    await elementFinder.getWebElement()
-  ) as unknown as DOMRect;
 }
