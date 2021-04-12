@@ -97,6 +97,7 @@ ng_e2e_test_library(
     deps = [
         ":mdc-slider",
         "//src/cdk/testing/private/e2e",
+        "@npm//@material/slider",
     ],
 )
 
