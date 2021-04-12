@@ -36,7 +36,7 @@ var_5: &yarn_install
 var_6: &workspace_location ~/
 
 orbs:
-  build-tools: circleci/build-tools@2.7.1
+  build-tools: circleci/build-tools@2.9.0
 
 commands:
   store_build_output:
@@ -58,6 +58,12 @@ commands:
     description: Checkout and verify clean merge with master
     steps:
       - checkout
+      - run:
+          name: Set git user.name and user.email for rebase.
+          # User is required for rebase.
+          command: |
+            git config user.name "angular-ci"
+            git config user.email "angular-ci"
       - build-tools/merge-with-parent:
           parent: master
 
