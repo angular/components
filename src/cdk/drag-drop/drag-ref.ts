@@ -1245,11 +1245,13 @@ export class DragRef<T = any> {
     }
 
     // Preserve the previous `transform` value, only if is there is one and not 'none'.
-    // 'none' is valid css transform value but none + translate3d(x, y, z) is invalid. 
-    // Note that we apply our own transform before the user's, because things like 
+    // 'none' is valid css transform value but none + translate3d(x, y, z) is invalid.
+    // Note that we apply our own transform before the user's, because things like
     // rotation can affect which direction the element will be translated towards.
-    this._rootElement.style.transform = this._initialTransform && this._initialTransform != 'none'  ?
-      transform + ' ' + this._initialTransform  : transform;
+    this._rootElement.style.transform = this._initialTransform
+                                        && this._initialTransform != 'none'
+                                        ? transform + ' ' + this._initialTransform
+                                        : transform;
   }
 
   /**
