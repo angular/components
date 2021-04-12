@@ -19,7 +19,7 @@ describe('MDC-based MatSlider' , () => {
 
   describe('standard slider', async () => {
     let slider: ElementFinder;
-    beforeAll(() => { slider = getStandardSlider(); });
+    beforeEach(() => { slider = getStandardSlider(); });
 
     it('should update the value on click', async () => {
       await setValueByClick(slider, 15);
@@ -34,7 +34,7 @@ describe('MDC-based MatSlider' , () => {
 
   describe('disabled slider', async () => {
     let slider: ElementFinder;
-    beforeAll(() => { slider = getDisabledSlider(); });
+    beforeEach(() => { slider = getDisabledSlider(); });
 
     it('should not update the value on click', async () => {
       await setValueByClick(slider, 15);
@@ -49,7 +49,7 @@ describe('MDC-based MatSlider' , () => {
 
   describe('range slider', async () => {
     let slider: ElementFinder;
-    beforeAll(() => { slider = getRangeSlider(); });
+    beforeEach(() => { slider = getRangeSlider(); });
 
     it('should update the start thumb value on slide', async () => {
       await slideToValue(slider, 35, Thumb.START);
