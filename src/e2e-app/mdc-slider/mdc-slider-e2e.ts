@@ -20,8 +20,8 @@ import {Component} from '@angular/core';
     </mat-slider>
 
     <mat-slider id="range-slider">
-      <input aria-label="Standard Range slider" matSliderStartThumb>
-      <input aria-label="Standard Range slider" matSliderEndThumb>
+      <input aria-label="Range slider start thumb" matSliderStartThumb>
+      <input aria-label="Range slider end thumb" matSliderEndThumb>
     </mat-slider>
     `,
 })
