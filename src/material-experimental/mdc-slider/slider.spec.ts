@@ -12,12 +12,17 @@ import {
   dispatchPointerEvent,
   dispatchTouchEvent,
 } from '@angular/cdk/testing/private';
-import {Component, Type} from '@angular/core';
+import {Component, QueryList, Type, ViewChild, ViewChildren} from '@angular/core';
 import {ComponentFixture, fakeAsync, TestBed, tick, waitForAsync} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {Thumb} from '@material/slider';
 import {MatSliderModule} from './module';
 import {MatSlider, MatSliderThumb, MatSliderVisualThumb} from './slider';
+
+interface Point {
+  x: number;
+  y: number;
+}
 
 describe('MDC-based MatSlider' , () => {
   let platform: Platform;
@@ -759,6 +764,71 @@ describe('MDC-based MatSlider' , () => {
       expect(endInputInstance.value).toBe(70);
     });
   });
+
+  describe('slider with a two-way binding', () => {
+    let fixture: ComponentFixture<SliderWithTwoWayBinding>;
+    let testComponent: SliderWithTwoWayBinding;
+
+    beforeEach(() => {
+      fixture = createComponent(SliderWithTwoWayBinding);
+      fixture.detectChanges();
+      testComponent = fixture.componentInstance;
+    });
+
+    it('should sync the value binding in both directions', () => {
+      expect(testComponent.value).toBe(0);
+      expect(testComponent.sliderInput.value).toBe(0);
+
+      slideToValue(testComponent.slider, 10, Thumb.END, platform.IOS);
+      expect(testComponent.value).toBe(10);
+      expect(testComponent.sliderInput.value).toBe(10);
+
+      testComponent.value = 20;
+      fixture.detectChanges();
+      expect(testComponent.value).toBe(20);
+      expect(testComponent.sliderInput.value).toBe(20);
+    });
+  });
+
+  describe('range slider with a two-way binding', () => {
+    let fixture: ComponentFixture<RangeSliderWithTwoWayBinding>;
+    let testComponent: RangeSliderWithTwoWayBinding;
+
+    beforeEach(waitForAsync(() => {
+      fixture = createComponent(RangeSliderWithTwoWayBinding);
+      fixture.detectChanges();
+      testComponent = fixture.componentInstance;
+    }));
+
+    it('should sync the start value binding in both directions', () => {
+      expect(testComponent.startValue).toBe(0);
+      expect(testComponent.sliderInputs.get(0)!.value).toBe(0);
+
+      slideToValue(testComponent.slider, 10, Thumb.START, platform.IOS);
+
+      expect(testComponent.startValue).toBe(10);
+      expect(testComponent.sliderInputs.get(0)!.value).toBe(10);
+
+      testComponent.startValue = 20;
+      fixture.detectChanges();
+      expect(testComponent.startValue).toBe(20);
+      expect(testComponent.sliderInputs.get(0)!.value).toBe(20);
+    });
+
+    it('should sync the end value binding in both directions', () => {
+      expect(testComponent.endValue).toBe(100);
+      expect(testComponent.sliderInputs.get(1)!.value).toBe(100);
+
+      slideToValue(testComponent.slider, 90, Thumb.END, platform.IOS);
+      expect(testComponent.endValue).toBe(90);
+      expect(testComponent.sliderInputs.get(1)!.value).toBe(90);
+
+      testComponent.endValue = 80;
+      fixture.detectChanges();
+      expect(testComponent.endValue).toBe(80);
+      expect(testComponent.sliderInputs.get(1)!.value).toBe(80);
+    });
+  });
 });
 
 
@@ -910,6 +980,34 @@ class RangeSliderWithOneWayBinding {
   endValue = 75;
 }
 
+@Component({
+  template: `
+  <mat-slider>
+    <input [(value)]="value" matSliderThumb>
+  </mat-slider>
+  `,
+})
+class SliderWithTwoWayBinding {
+  @ViewChild(MatSlider) slider: MatSlider;
+  @ViewChild(MatSliderThumb) sliderInput: MatSliderThumb;
+  value = 0;
+}
+
+@Component({
+  template: `
+  <mat-slider>
+    <input [(value)]="startValue" matSliderStartThumb>
+    <input [(value)]="endValue" matSliderEndThumb>
+  </mat-slider>
+  `,
+})
+class RangeSliderWithTwoWayBinding {
+  @ViewChild(MatSlider) slider: MatSlider;
+  @ViewChildren(MatSliderThumb) sliderInputs: QueryList<MatSliderThumb>;
+  startValue = 0;
+  endValue = 100;
+}
+
 /** The pointer event types used by the MDC Slider. */
 const enum PointerEventType {
   POINTER_DOWN = 'pointerdown',
@@ -926,13 +1024,8 @@ const enum TouchEventType {
 
 /** Clicks on the MatSlider at the coordinates corresponding to the given value. */
 function setValueByClick(slider: MatSlider, value: number, isIOS: boolean) {
-  const {min, max} = slider;
-  const percent = (value - min) / (max - min);
-
   const sliderElement = slider._elementRef.nativeElement;
-  const {top, left, width, height} = sliderElement.getBoundingClientRect();
-  const x = left + (width * percent);
-  const y = top + (height / 2);
+  const {x, y} = getCoordsForValue(slider, value);
 
   dispatchPointerOrTouchEvent(sliderElement, PointerEventType.POINTER_DOWN, x, y, isIOS);
   dispatchPointerOrTouchEvent(sliderElement, PointerEventType.POINTER_UP, x, y, isIOS);
@@ -940,24 +1033,25 @@ function setValueByClick(slider: MatSlider, value: number, isIOS: boolean) {
 
 /** Slides the MatSlider's thumb to the given value. */
 function slideToValue(slider: MatSlider, value: number, thumbPosition: Thumb, isIOS: boolean) {
-  const {min, max} = slider;
-  const percent = (value - min) / (max - min);
-
   const sliderElement = slider._elementRef.nativeElement;
-  const thumbElement = slider._getThumbElement(thumbPosition);
-
-  const sliderDimensions = sliderElement.getBoundingClientRect();
-  const thumbDimensions = thumbElement.getBoundingClientRect();
-
-  const startX = thumbDimensions.left + (thumbDimensions.width / 2);
-  const startY = thumbDimensions.top + (thumbDimensions.height / 2);
-
-  const endX = sliderDimensions.left + (sliderDimensions.width * percent);
-  const endY = sliderDimensions.top + (sliderDimensions.height / 2);
+  const {x: startX, y: startY} = getCoordsForValue(slider, slider._getInput(thumbPosition).value);
+  const {x: endX, y: endY} = getCoordsForValue(slider, value);
 
   dispatchPointerOrTouchEvent(sliderElement, PointerEventType.POINTER_DOWN, startX, startY, isIOS);
   dispatchPointerOrTouchEvent(sliderElement, PointerEventType.POINTER_MOVE, endX, endY, isIOS);
   dispatchPointerOrTouchEvent(sliderElement, PointerEventType.POINTER_UP, endX, endY, isIOS);
+}
+
+/** Returns the x and y coordinates for the given slider value. */
+function getCoordsForValue(slider: MatSlider, value: number): Point {
+  const {min, max} = slider;
+  const percent = (value - min) / (max - min);
+
+  const {top, left, width, height} = slider._elementRef.nativeElement.getBoundingClientRect();
+  const x = left + (width * percent);
+  const y = top + (height / 2);
+
+  return {x, y};
 }
 
 /** Dispatch a pointerdown or pointerup event if supported, otherwise dispatch the touch event. */
