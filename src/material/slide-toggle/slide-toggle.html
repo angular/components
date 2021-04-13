@@ -2,21 +2,6 @@
   <div #toggleBar class="mat-slide-toggle-bar"
        [class.mat-slide-toggle-bar-no-side-margin]="!labelContent.textContent || !labelContent.textContent.trim()">
 
-    <input #input class="mat-slide-toggle-input cdk-visually-hidden" type="checkbox"
-           role="switch"
-           [id]="inputId"
-           [required]="required"
-           [tabIndex]="tabIndex"
-           [checked]="checked"
-           [disabled]="disabled"
-           [attr.name]="name"
-           [attr.aria-checked]="checked.toString()"
-           [attr.aria-label]="ariaLabel"
-           [attr.aria-labelledby]="ariaLabelledby"
-           [attr.aria-describedby]="ariaDescribedby"
-           (change)="_onChangeEvent($event)"
-           (click)="_onInputClick($event)">
-
     <div class="mat-slide-toggle-thumb-container" #thumbContainer>
       <div class="mat-slide-toggle-thumb"></div>
       <div class="mat-slide-toggle-ripple mat-focus-indicator" mat-ripple
@@ -38,3 +23,25 @@
     <ng-content></ng-content>
   </span>
 </label>
+
+<!--
+  Note that the input is placed outside of the ripple container, because some screen readers have a
+  behavior where any parent of an input that has a `mousedown` or `click` listener is
+  considered as being "clickable", causing the screen reader to read out "clickable" before
+  the label. Since the input is invisible, it doesn't really matter where we place it.
+  See https://github.com/nvaccess/nvda/issues/7430
+ -->
+<input #input class="mat-slide-toggle-input cdk-visually-hidden" type="checkbox"
+  role="switch"
+  [id]="inputId"
+  [required]="required"
+  [tabIndex]="tabIndex"
+  [checked]="checked"
+  [disabled]="disabled"
+  [attr.name]="name"
+  [attr.aria-checked]="checked.toString()"
+  [attr.aria-label]="ariaLabel"
+  [attr.aria-labelledby]="ariaLabelledby"
+  [attr.aria-describedby]="ariaDescribedby"
+  (change)="_onChangeEvent($event)"
+  (click)="_onInputClick($event)">
