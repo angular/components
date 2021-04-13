@@ -308,6 +308,13 @@ export class MatSliderThumb implements AfterViewInit, ControlValueAccessor, OnIn
     }
   }
 
+  /**
+   * Emits when the raw value of the slider changes. This is here primarily
+   * to facilitate the two-way binding for the `value` input.
+   * @docs-private
+   */
+   @Output() readonly valueChange: EventEmitter<number> = new EventEmitter<number>();
+
   /** Event emitted when the slider thumb starts being dragged. */
   @Output() readonly dragStart: EventEmitter<MatSliderDragEvent>
     = new EventEmitter<MatSliderDragEvent>();
@@ -954,6 +961,7 @@ class SliderAdapter implements MDCSliderAdapter {
     const input = this._delegate._getInput(thumbPosition);
     input._emitFakeEvent('change');
     input._onChange(value);
+    input.valueChange.emit(value);
   }
   emitInputEvent = (value: number, thumbPosition: Thumb): void => {
     this._delegate._getInput(thumbPosition)._emitFakeEvent('input');
