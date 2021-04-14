@@ -1,3 +1,26 @@
+## 11.2.9 "earthenware-nightmare" (2021-04-14)
+
+### cdk
+
+|            |                       |
+| ---------- | --------------------- |
+| bug fix |  **testing:** prevent duplicate subscription ([#22460](https://github.com/angular/components/issues/22460)) ([a9e5ad264a0895d871feeef5943473a9d8ca4112](https://github.com/angular/components/commit/a9e5ad264a0895d871feeef5943473a9d8ca4112)) |
+| bug fix |  **testing:** unable to assign value to number inputs using sendKeys ([#22395](https://github.com/angular/components/issues/22395)) ([61eb92ab11896fe8595d73dda95b6267333d22ca](https://github.com/angular/components/commit/61eb92ab11896fe8595d73dda95b6267333d22ca)), closes [#22129](https://github.com/angular/components/issues/22129) |
+
+### material
+
+|            |                       |
+| ---------- | --------------------- |
+| bug fix |  **list:** dispatching model change event multiple times in single selection mode ([#22376](https://github.com/angular/components/issues/22376)) ([11ff7ba75a9c899a85706738f9e3ec5c08c5d0b7](https://github.com/angular/components/commit/11ff7ba75a9c899a85706738f9e3ec5c08c5d0b7)), closes [#22276](https://github.com/angular/components/issues/22276) |
+| bug fix |  **tabs:** pagination not updating on resize ([#22442](https://github.com/angular/components/issues/22442)) ([445eb0470f29f0c237fa7eaf8b56b0eb7d617e8e](https://github.com/angular/components/commit/445eb0470f29f0c237fa7eaf8b56b0eb7d617e8e)), closes [#22399](https://github.com/angular/components/issues/22399) |
+
+### material-experimental
+
+|            |                       |
+| ---------- | --------------------- |
+| bug fix |  **mdc-progress-spinner:** fix aria-valuenow ([#22429](https://github.com/angular/components/issues/22429)) ([1ed3e5fbe2006e9cd9da9f6c4714e3cf1ea455c4](https://github.com/angular/components/commit/1ed3e5fbe2006e9cd9da9f6c4714e3cf1ea455c4)) |
+
+
 ## 11.2.8 "linen-library" (2021-04-07)
 
 ### cdk
