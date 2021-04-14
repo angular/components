@@ -784,8 +784,6 @@ describe('MDC-based MatSlider' , () => {
       fixture = createComponent(SliderWithChangeHandler);
       fixture.detectChanges();
       testComponent = fixture.debugElement.componentInstance;
-      spyOn(testComponent, 'onChange');
-      spyOn(testComponent, 'onInput');
       const sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider));
       sliderElement = sliderDebugElement.nativeElement;
       sliderInstance = sliderDebugElement.componentInstance;
@@ -864,10 +862,6 @@ describe('MDC-based MatSlider' , () => {
       fixture = createComponent(RangeSliderWithChangeHandler);
       fixture.detectChanges();
       testComponent = fixture.debugElement.componentInstance;
-      spyOn(testComponent, 'onStartThumbChange');
-      spyOn(testComponent, 'onStartThumbInput');
-      spyOn(testComponent, 'onEndThumbChange');
-      spyOn(testComponent, 'onEndThumbInput');
       const sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider));
       sliderElement = sliderDebugElement.nativeElement;
       sliderInstance = sliderDebugElement.componentInstance;
@@ -1365,8 +1359,8 @@ class RangeSliderWithOneWayBinding {
   `,
 })
 class SliderWithChangeHandler {
-  onChange() { }
-  onInput() { }
+  onChange = jasmine.createSpy('onChange');
+  onInput = jasmine.createSpy('onChange');
   @ViewChild(MatSlider) slider: MatSlider;
 }
 
@@ -1385,10 +1379,10 @@ class SliderWithChangeHandler {
   `,
 })
 class RangeSliderWithChangeHandler {
-  onStartThumbChange() { }
-  onStartThumbInput() { }
-  onEndThumbChange() { }
-  onEndThumbInput() { }
+  onStartThumbChange = jasmine.createSpy('onStartThumbChange');
+  onStartThumbInput = jasmine.createSpy('onStartThumbInput');
+  onEndThumbChange = jasmine.createSpy('onEndThumbChange');
+  onEndThumbInput = jasmine.createSpy('onEndThumbInput');
   @ViewChild(MatSlider) slider: MatSlider;
 }
 
