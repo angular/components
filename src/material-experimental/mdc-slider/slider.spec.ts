@@ -1055,7 +1055,6 @@ describe('MDC-based MatSlider' , () => {
       // a new value has been committed (should trigger change event)
       dispatchSliderEvent(PointerEventType.POINTER_UP, 25);
 
-      fixture.detectChanges();
       expect(testComponent.onInput).toHaveBeenCalledTimes(2);
       expect(testComponent.onChange).toHaveBeenCalledTimes(1);
     });
