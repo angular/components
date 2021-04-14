@@ -79,11 +79,7 @@ export declare class CdkStepper implements AfterContentInit, AfterViewInit, OnDe
     ngOnDestroy(): void;
     previous(): void;
     reset(): void;
-    static ngAcceptInputType_completed: BooleanInput;
-    static ngAcceptInputType_editable: BooleanInput;
-    static ngAcceptInputType_hasError: BooleanInput;
     static ngAcceptInputType_linear: BooleanInput;
-    static ngAcceptInputType_optional: BooleanInput;
     static ngAcceptInputType_selectedIndex: NumberInput;
     static ɵdir: i0.ɵɵDirectiveDeclaration<CdkStepper, "[cdkStepper]", ["cdkStepper"], { "linear": "linear"; "selectedIndex": "selectedIndex"; "selected": "selected"; "orientation": "orientation"; }, { "selectionChange": "selectionChange"; }, ["_steps", "_stepHeader"]>;
     static ɵfac: i0.ɵɵFactoryDeclaration<CdkStepper, [{ optional: true; }, null, null, null]>;

@@ -170,8 +170,6 @@ export class MatTabNav extends _MatTabNavBase {
     @Optional() @Inject(ANIMATION_MODULE_TYPE) animationMode?: string) {
     super(elementRef, dir, ngZone, changeDetectorRef, viewportRuler, platform, animationMode);
   }
-
-  static ngAcceptInputType_disableRipple: BooleanInput;
 }
 
 // Boilerplate for applying mixins to MatTabLink.

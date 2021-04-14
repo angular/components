@@ -37,7 +37,6 @@ import {
   MatDateFormats,
   ErrorStateMatcher,
 } from '@angular/material/core';
-import {BooleanInput} from '@angular/cdk/coercion';
 import {BACKSPACE} from '@angular/cdk/keycodes';
 import {MatDatepickerInputBase, DateFilterFn} from './datepicker-input-base';
 import {DateRange, DateSelectionModelChange} from './date-selection-model';
@@ -281,8 +280,6 @@ export class MatStartDate<D> extends _MatDateRangeInputBase<D> implements
     const value = element.value;
     return value.length > 0 ? value : element.placeholder;
   }
-
-  static ngAcceptInputType_disabled: BooleanInput;
 }
 
 
@@ -380,6 +377,4 @@ export class MatEndDate<D> extends _MatDateRangeInputBase<D> implements
 
     super._onKeydown(event);
   }
-
-  static ngAcceptInputType_disabled: BooleanInput;
 }

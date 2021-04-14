@@ -150,6 +150,7 @@
       {
         "CanDisable": ["disabled"],
         "CanDisableRipple": ["disableRipple"],
+        "CanStick": ["sticky"],
         "HasTabIndex": ["tabIndex"]
       }
     ],

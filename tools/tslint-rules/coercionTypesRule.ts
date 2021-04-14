@@ -1,6 +1,6 @@
-import * as ts from 'typescript';
 import * as Lint from 'tslint';
 import * as tsutils from 'tsutils';
+import * as ts from 'typescript';
 
 const TYPE_ACCEPT_MEMBER_PREFIX = 'ngAcceptInputType_';
 
@@ -61,6 +61,7 @@ class Walker extends Lint.RuleWalker {
       this._lintClass(node, node, true);
       this._lintSuperClasses(node);
       this._lintInterfaces(node, node, true);
+      this._lintStaticMembers(node);
     }
     super.visitClassDeclaration(node);
   }
@@ -149,24 +150,55 @@ class Walker extends Lint.RuleWalker {
    */
   private _lintInterfaces(node: ts.ClassDeclaration, sourceClass: ts.ClassDeclaration,
                           expectDeclaredMembers: boolean): void {
-    if (!node.heritageClauses) {
-      return;
-    }
+    this._getPropNamesFromInterfaces(node).forEach(propName =>
+      this._checkStaticMember(sourceClass, propName, expectDeclaredMembers));
+  }
 
-    node.heritageClauses.forEach(clause => {
-      if (clause.token === ts.SyntaxKind.ImplementsKeyword) {
-        clause.types.forEach(clauseType => {
-          if (ts.isIdentifier(clauseType.expression)) {
-            const propNames = this._coercionInterfaces[clauseType.expression.text];
+  /**
+   * Checks whether the acceptance members that a class contain are valid.
+   * @param node Class declaration to be checked.
+   */
+  private _lintStaticMembers(node: ts.ClassDeclaration): void {
+    for (const member of node.members) {
+      const memberName = member.name?.getText();
+      const isStaticMember = tsutils.hasModifier(member.modifiers, ts.SyntaxKind.StaticKeyword);
+      const isAcceptanceMember = memberName?.startsWith(TYPE_ACCEPT_MEMBER_PREFIX);
+      // We shouldn't check `any` acceptance members.
+      const isMemberTypedAsAny = this._getTypeCheckersFor(member)
+          .some(typeName => typeName === 'any');
 
-            if (propNames) {
-              propNames.forEach(propName =>
-                  this._checkStaticMember(sourceClass, propName, expectDeclaredMembers));
-            }
-          }
-        });
+      if (!isStaticMember || !isAcceptanceMember || isMemberTypedAsAny) {
+        continue;
       }
-    });
+
+      const possiblePropertyName = memberName!.split(TYPE_ACCEPT_MEMBER_PREFIX)[1];
+      const hasMember = node.members
+          .map(({name}) => name!)
+          .filter(Boolean)
+          .filter(ts.isIdentifier)
+          .some(name => name.getText() === possiblePropertyName);
+      const isImplementedMember = this._getPropNamesFromInterfaces(node)
+          .includes(possiblePropertyName);
+
+      if (!hasMember && !isImplementedMember) {
+        this.addFailureAtNode(member, `Unknown acceptance member ${memberName}.`,
+        Lint.Replacement.deleteText(member.getFullStart(), member.getFullWidth()));
+      }
+    }
+  }
+
+  private _getPropNamesFromInterfaces({heritageClauses}: ts.ClassDeclaration): readonly string[] {
+    return ts.factory.createNodeArray(heritageClauses).reduce<readonly string[]>(
+      (previousClauses, {types}) => [
+        ...previousClauses,
+        ...types
+          .map(({expression}) => expression)
+          .filter(ts.isIdentifier)
+          .reduce<readonly string[]>((previousInterfaces, {text}) =>
+              [...previousInterfaces, ...this._coercionInterfaces[text] ?? []]
+          , [])
+        ]
+    , []);
   }
 
   /**
@@ -188,16 +220,10 @@ class Walker extends Lint.RuleWalker {
 
   /** Checks whether this rule should lint a class declaration. */
   private _shouldLintClass(node: ts.ClassDeclaration): boolean {
-    // We don't need to lint undecorated classes.
-    if (!node.decorators) {
-      return false;
-    }
-    // If the class is a component,  we should lint it.
-    if (node.decorators.some(decorator => isDecoratorCalled(decorator, 'Component'))) {
-      return true;
-    }
-    // If the class is a directive, we should lint it.
-    return node.decorators.some(decorator => isDecoratorCalled(decorator, 'Directive'));
+    // If the class is a component or a directive, we should lint it.
+    return ts.createNodeArray(node.decorators)
+        .some(decorator =>
+          isDecoratorCalled(decorator, 'Component') || isDecoratorCalled(decorator, 'Directive'));
   }
 
   /** Looks for a static member that corresponds to the given property. */
@@ -205,21 +231,24 @@ class Walker extends Lint.RuleWalker {
     : {memberName: string, memberNode?: ts.PropertyDeclaration} {
     const coercionPropertyName = `${TYPE_ACCEPT_MEMBER_PREFIX}${propName}`;
     const correspondingCoercionProperty = node.members
-      .find((member): member is ts.PropertyDeclaration => {
-        return ts.isPropertyDeclaration(member) &&
-          tsutils.hasModifier(member.modifiers, ts.SyntaxKind.StaticKeyword) &&
-          member.name.getText() === coercionPropertyName;
-      });
+      .filter(ts.isPropertyDeclaration)
+      .find(member => tsutils.hasModifier(member.modifiers, ts.SyntaxKind.StaticKeyword) &&
+        member.name.getText() === coercionPropertyName
+      );
     return {memberName: coercionPropertyName, memberNode: correspondingCoercionProperty};
   }
 
   /** Determines whether a setter node should be checked by the lint rule. */
-  private _shouldCheckSetter(node: ts.SetAccessorDeclaration): boolean {
-    const param = node.parameters[0];
-    const types = this._typeChecker.typeToString(this._typeChecker.getTypeAtLocation(param))
-      .split('|').map(name => name.trim());
+  private _shouldCheckSetter({parameters}: ts.SetAccessorDeclaration): boolean {
     // We shouldn't check setters which accept `any` or a `string`.
-    return types.every(typeName => typeName !== 'any' && typeName !== 'string');
+    return this._getTypeCheckersFor(parameters[0])
+        .every(typeName => typeName !== 'any' && typeName !== 'string');
+  }
+
+  private _getTypeCheckersFor(node: ts.Node): readonly string[] {
+    return this._typeChecker
+        .typeToString(this._typeChecker.getTypeAtLocation(node))
+        .split('|').map(name => name.trim());
   }
 }
 
@@ -248,17 +277,11 @@ function usesCoercion(setter: ts.SetAccessorDeclaration, coercionFunctions: Set<
 }
 
 /** Gets the identifier node of the base type that a class is extending. */
-function getBaseTypeIdentifier(node: ts.ClassDeclaration): ts.Identifier|null {
-  if (node.heritageClauses) {
-    for (let clause of node.heritageClauses) {
-      if (clause.token === ts.SyntaxKind.ExtendsKeyword && clause.types.length &&
-          ts.isIdentifier(clause.types[0].expression)) {
-        return clause.types[0].expression;
-      }
-    }
-  }
-
-  return null;
+function getBaseTypeIdentifier(node: ts.ClassDeclaration): ts.Identifier|undefined {
+  return ts.factory.createNodeArray(node.heritageClauses)
+      .filter(({token, types}) => token === ts.SyntaxKind.ExtendsKeyword && types.length > 0)
+      .map(({types: {[0]: {expression}}}) => expression)
+      .find(ts.isIdentifier);
 }
 
 /** Checks whether a node is a decorator with a particular name. */

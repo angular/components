@@ -241,8 +241,6 @@ export class MatStepper extends CdkStepper implements AfterContentInit {
     });
   }
 
-  static ngAcceptInputType_editable: BooleanInput;
-  static ngAcceptInputType_optional: BooleanInput;
-  static ngAcceptInputType_completed: BooleanInput;
-  static ngAcceptInputType_hasError: BooleanInput;
+
+  static ngAcceptInputType_disableRipple: BooleanInput;
 }

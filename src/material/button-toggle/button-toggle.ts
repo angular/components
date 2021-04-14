@@ -574,7 +574,5 @@ export class MatButtonToggle extends _MatButtonToggleMixinBase implements OnInit
 
   static ngAcceptInputType_checked: BooleanInput;
   static ngAcceptInputType_disabled: BooleanInput;
-  static ngAcceptInputType_vertical: BooleanInput;
-  static ngAcceptInputType_multiple: BooleanInput;
   static ngAcceptInputType_disableRipple: BooleanInput;
 }

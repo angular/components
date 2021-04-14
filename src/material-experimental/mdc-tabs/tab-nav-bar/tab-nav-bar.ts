@@ -104,7 +104,6 @@ export class MatTabNav extends _MatTabNavBase implements AfterContentInit {
   }
 
   static ngAcceptInputType_fitInkBarToContent: BooleanInput;
-  static ngAcceptInputType_disableRipple: BooleanInput;
 }
 
 /**

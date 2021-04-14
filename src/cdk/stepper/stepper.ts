@@ -240,10 +240,10 @@ export class CdkStep implements OnChanges {
     }
   }
 
+  static ngAcceptInputType_completed: BooleanInput;
   static ngAcceptInputType_editable: BooleanInput;
   static ngAcceptInputType_hasError: BooleanInput;
   static ngAcceptInputType_optional: BooleanInput;
-  static ngAcceptInputType_completed: BooleanInput;
 }
 
 @Directive({
@@ -538,10 +538,6 @@ export class CdkStepper implements AfterContentInit, AfterViewInit, OnDestroy {
     return index > -1 && (!this.steps || index < this.steps.length);
   }
 
-  static ngAcceptInputType_editable: BooleanInput;
-  static ngAcceptInputType_optional: BooleanInput;
-  static ngAcceptInputType_completed: BooleanInput;
-  static ngAcceptInputType_hasError: BooleanInput;
   static ngAcceptInputType_linear: BooleanInput;
   static ngAcceptInputType_selectedIndex: NumberInput;
 }
