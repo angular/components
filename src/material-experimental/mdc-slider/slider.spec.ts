@@ -13,7 +13,15 @@ import {
   dispatchTouchEvent,
 } from '@angular/cdk/testing/private';
 import {Component, QueryList, Type, ViewChild, ViewChildren} from '@angular/core';
-import {ComponentFixture, fakeAsync, TestBed, tick, waitForAsync} from '@angular/core/testing';
+import {
+  ComponentFixture,
+  fakeAsync,
+  flush,
+  TestBed,
+  tick,
+  waitForAsync,
+} from '@angular/core/testing';
+import {FormsModule} from '@angular/forms';
 import {By} from '@angular/platform-browser';
 import {Thumb} from '@material/slider';
 import {MatSliderModule} from './module';
@@ -35,7 +43,7 @@ describe('MDC-based MatSlider' , () => {
 
   function createComponent<T>(component: Type<T>): ComponentFixture<T> {
     TestBed.configureTestingModule({
-      imports: [MatSliderModule],
+      imports: [FormsModule, MatSliderModule],
       declarations: [component],
     }).compileComponents();
     return TestBed.createComponent<T>(component);
@@ -765,6 +773,122 @@ describe('MDC-based MatSlider' , () => {
     });
   });
 
+  describe('slider with ngModel', () => {
+    let fixture: ComponentFixture<SliderWithNgModel>;
+    let testComponent: SliderWithNgModel;
+    let inputInstance: MatSliderThumb;
+
+    beforeEach(waitForAsync(() => {
+      fixture = createComponent(SliderWithNgModel);
+      fixture.detectChanges();
+      testComponent = fixture.debugElement.componentInstance;
+      const sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider));
+      const sliderInstance = sliderDebugElement.componentInstance;
+      inputInstance = sliderInstance._getInput(Thumb.END);
+    }));
+
+    it('should update the model on mouseup', () => {
+      expect(testComponent.val).toBe(0);
+      setValueByClick(testComponent.slider, 76, platform.IOS);
+      fixture.detectChanges();
+      expect(testComponent.val).toBe(76);
+    });
+
+    it('should update the model on slide', () => {
+      expect(testComponent.val).toBe(0);
+      slideToValue(testComponent.slider, 19, Thumb.END, platform.IOS);
+      fixture.detectChanges();
+      expect(testComponent.val).toBe(19);
+    });
+
+    it('should be able to reset a slider by setting the model back to undefined', fakeAsync(() => {
+      expect(inputInstance.value).toBe(0);
+      testComponent.val = 5;
+      fixture.detectChanges();
+      flush();
+      expect(inputInstance.value).toBe(5);
+
+      testComponent.val = undefined;
+      fixture.detectChanges();
+      flush();
+      expect(inputInstance.value).toBe(0);
+    }));
+  });
+
+  describe('slider with ngModel', () => {
+    let fixture: ComponentFixture<RangeSliderWithNgModel>;
+    let testComponent: RangeSliderWithNgModel;
+
+    let startInputInstance: MatSliderThumb;
+    let endInputInstance: MatSliderThumb;
+
+    beforeEach(waitForAsync(() => {
+      fixture = createComponent(RangeSliderWithNgModel);
+      fixture.detectChanges();
+      testComponent = fixture.debugElement.componentInstance;
+      const sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider));
+      const sliderInstance = sliderDebugElement.componentInstance;
+      startInputInstance = sliderInstance._getInput(Thumb.START);
+      endInputInstance = sliderInstance._getInput(Thumb.END);
+    }));
+
+    it('should update the start thumb model on mouseup', () => {
+      expect(testComponent.startVal).toBe(0);
+      setValueByClick(testComponent.slider, 25, platform.IOS);
+      fixture.detectChanges();
+      expect(testComponent.startVal).toBe(25);
+    });
+
+    it('should update the end thumb model on mouseup', () => {
+      expect(testComponent.endVal).toBe(100);
+      setValueByClick(testComponent.slider, 75, platform.IOS);
+      fixture.detectChanges();
+      expect(testComponent.endVal).toBe(75);
+    });
+
+    it('should update the start thumb model on slide', () => {
+      expect(testComponent.startVal).toBe(0);
+      slideToValue(testComponent.slider, 19, Thumb.START, platform.IOS);
+      fixture.detectChanges();
+      expect(testComponent.startVal).toBe(19);
+    });
+
+    it('should update the end thumb model on slide', () => {
+      expect(testComponent.endVal).toBe(100);
+      slideToValue(testComponent.slider, 19, Thumb.END, platform.IOS);
+      fixture.detectChanges();
+      expect(testComponent.endVal).toBe(19);
+    });
+
+    it('should be able to reset a slider by setting the start thumb model back to undefined',
+      fakeAsync(() => {
+        expect(startInputInstance.value).toBe(0);
+        testComponent.startVal = 5;
+        fixture.detectChanges();
+        flush();
+        expect(startInputInstance.value).toBe(5);
+
+        testComponent.startVal = undefined;
+        fixture.detectChanges();
+        flush();
+        expect(startInputInstance.value).toBe(0);
+    }));
+
+    it('should be able to reset a slider by setting the end thumb model back to undefined',
+      fakeAsync(() => {
+        expect(endInputInstance.value).toBe(100);
+        testComponent.endVal = 5;
+        fixture.detectChanges();
+        flush();
+        expect(endInputInstance.value).toBe(5);
+
+        testComponent.endVal = undefined;
+        fixture.detectChanges();
+        flush();
+        expect(endInputInstance.value).toBe(0);
+    }));
+  });
+
   describe('slider with a two-way binding', () => {
     let fixture: ComponentFixture<SliderWithTwoWayBinding>;
     let testComponent: SliderWithTwoWayBinding;
@@ -978,6 +1102,32 @@ class SliderWithOneWayBinding {
 class RangeSliderWithOneWayBinding {
   startValue = 25;
   endValue = 75;
+}
+
+@Component({
+  template: `
+  <mat-slider>
+    <input [(ngModel)]="val" matSliderThumb>
+  </mat-slider>
+  `,
+})
+class SliderWithNgModel {
+  @ViewChild(MatSlider) slider: MatSlider;
+  val: number | undefined = 0;
+}
+
+@Component({
+  template: `
+  <mat-slider>
+    <input [(ngModel)]="startVal" matSliderStartThumb>
+    <input [(ngModel)]="endVal" matSliderEndThumb>
+  </mat-slider>
+  `,
+})
+class RangeSliderWithNgModel {
+  @ViewChild(MatSlider) slider: MatSlider;
+  startVal: number | undefined = 0;
+  endVal: number | undefined = 100;
 }
 
 @Component({
