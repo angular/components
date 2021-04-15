@@ -347,8 +347,9 @@ export class FocusMonitor implements OnDestroy {
       // for a touch event). We reset the origin at the next tick because Firefox focuses one tick
       // after the interaction event. We wait `TOUCH_BUFFER_MS` ms before resetting the origin for
       // a touch event because when a touch event is fired, the associated focus event isn't yet in
-      // the event queue.
+      // the event queue. Before doing so, clear any pending timeouts.
       if (this._detectionMode === FocusMonitorDetectionMode.IMMEDIATE) {
+        clearTimeout(this._originTimeoutId);
         const ms = (origin === 'touch') ? TOUCH_BUFFER_MS : 1;
         this._originTimeoutId = setTimeout(() => this._origin = null, ms);
       }
@@ -391,7 +392,8 @@ export class FocusMonitor implements OnDestroy {
       return;
     }
 
-    this._originChanged(element, null, elementInfo);
+    this._setClasses(element);
+    this._emitOrigin(elementInfo.subject, null);
   }
 
   private _emitOrigin(subject: Subject<FocusOrigin>, origin: FocusOrigin) {
