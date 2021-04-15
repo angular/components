@@ -23,7 +23,7 @@ import {
   Inject,
   Optional,
 } from '@angular/core';
-import {MDCSwitchAdapter, MDCSwitchFoundation} from '@material/switch';
+import {MDCSwitchAdapter, MDCSwitchFoundation} from '@material/switch/deprecated';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {
   BooleanInput,
