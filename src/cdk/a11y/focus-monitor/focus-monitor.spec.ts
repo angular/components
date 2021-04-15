@@ -161,9 +161,9 @@ describe('FocusMonitor', () => {
         .toBe(2, 'button should have exactly 2 focus classes');
     expect(buttonElement.classList.contains('cdk-focused'))
         .toBe(true, 'button should have cdk-focused class');
-    expect(buttonElement.classList.contains('cdk-keyboard-focused'))
-        .toBe(true, 'button should have cdk-keyboard-focused class');
-    expect(changeHandler).toHaveBeenCalledWith('keyboard');
+    expect(buttonElement.classList.contains('cdk-program-focused'))
+        .toBe(true, 'button should have cdk-program-focused class');
+    expect(changeHandler).toHaveBeenCalledWith('program');
   }));
 
   it('focusVia keyboard should simulate keyboard focus', fakeAsync(() => {

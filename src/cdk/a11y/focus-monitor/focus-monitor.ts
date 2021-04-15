@@ -21,13 +21,10 @@ import {
   AfterViewInit,
 } from '@angular/core';
 import {Observable, of as observableOf, Subject, Subscription} from 'rxjs';
+import {takeUntil} from 'rxjs/operators';
 import {coerceElement} from '@angular/cdk/coercion';
 import {DOCUMENT} from '@angular/common';
-import {
-  InputModality,
-  InputModalityDetector,
-  TOUCH_BUFFER_MS,
-} from '../input-modality/input-modality-detector';
+import {InputModalityDetector, TOUCH_BUFFER_MS} from '../input-modality/input-modality-detector';
 
 
 export type FocusOrigin = 'touch' | 'mouse' | 'keyboard' | 'program' | null;
@@ -133,6 +130,9 @@ export class FocusMonitor implements OnDestroy {
   /** Used to reference correct document/window */
   protected _document?: Document;
 
+  /** Subject for stopping our InputModalityDetector subscription. */
+  private _stopInputModalityDetector = new Subject();
+
   constructor(
       private _ngZone: NgZone,
       private _platform: Platform,
@@ -143,11 +143,6 @@ export class FocusMonitor implements OnDestroy {
           FocusMonitorOptions|null) {
     this._document = document;
     this._detectionMode = options?.detectionMode || FocusMonitorDetectionMode.IMMEDIATE;
-
-    this._inputModalityDetector.inputModalityDetected
-      .subscribe((modality: InputModality) => {
-        this._setOrigin(modality);
-      });
   }
   /**
    * Event listener for `focus` and 'blur' events on the document.
@@ -308,15 +303,16 @@ export class FocusMonitor implements OnDestroy {
   }
 
   private _getFocusOrigin(): FocusOrigin {
-    // If we couldn't detect a cause for the focus event, it's due to one of three reasons:
-    // 1) The window has just regained focus, in which case we want to restore the focused state of
-    //    the element from before the window blurred.
-    // 2) The element was programmatically focused, in which case we should mark the origin as
-    //    'program'.
     if (this._origin) {
       return this._origin;
     }
 
+    // If we couldn't determine a focus origin, it's because either:
+    // 1) The window has just regained focus, and thus we restore the last origin from before the
+    //    window blurred.
+    // 2) The element was programmatically focused, and thus we set the origin as 'program'.
+    // 3) The element was focused via navigating with a screen reader, and thus we set the origin
+    //    as 'program' because keyboard events are rarely fired.
     if (this._windowFocused && this._lastFocusOrigin) {
       return this._lastFocusOrigin;
     } else {
@@ -376,6 +372,8 @@ export class FocusMonitor implements OnDestroy {
       return;
     }
 
+
+
     this._originChanged(element, this._getFocusOrigin(), elementInfo);
   }
 
@@ -429,6 +427,11 @@ export class FocusMonitor implements OnDestroy {
         const window = this._getWindow();
         window.addEventListener('focus', this._windowFocusListener);
       });
+
+      // The InputModalityDetector is also just a collection of global listeners.
+      this._inputModalityDetector.modalityDetected
+        .pipe(takeUntil(this._stopInputModalityDetector))
+        .subscribe(modality => { this._setOrigin(modality); });
     }
   }
 
@@ -453,6 +456,9 @@ export class FocusMonitor implements OnDestroy {
     if (!--this._monitoredElementCount) {
       const window = this._getWindow();
       window.removeEventListener('focus', this._windowFocusListener);
+
+      // Equivalently, stop our InputModalityDetector subscription.
+      this._stopInputModalityDetector.next();
 
       // Clear timeouts for all potentially pending timeouts to prevent the leaks.
       clearTimeout(this._windowFocusTimeoutId);

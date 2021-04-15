@@ -11,7 +11,7 @@ import {Inject, Injectable, InjectionToken, OnDestroy, Optional, NgZone} from '@
 import {normalizePassiveListenerOptions, Platform} from '@angular/cdk/platform';
 import {DOCUMENT} from '@angular/common';
 import {BehaviorSubject, Observable} from 'rxjs';
-import {skip} from 'rxjs/operators';
+import {distinctUntilChanged, skip} from 'rxjs/operators';
 import {
   isFakeMousedownFromScreenReader,
   isFakeTouchstartFromScreenReader,
@@ -89,6 +89,9 @@ export class InputModalityDetector implements OnDestroy {
   /** Emits whenever an input modality is detected. */
   readonly modalityDetected: Observable<InputModality>;
 
+  /** Emits when the input modality changes. */
+  readonly modalityChanged: Observable<InputModality>;
+
   /** The most recently detected input modality. */
   get mostRecentModality(): InputModality {
     return this._modality.value;
@@ -161,6 +164,7 @@ export class InputModalityDetector implements OnDestroy {
 
     // Skip the first emission as it's null.
     this.modalityDetected = this._modality.pipe(skip(1));
+    this.modalityChanged = this.modalityDetected.pipe(distinctUntilChanged());
 
     // If we're not in a browser, this service should do nothing, as there's no relevant input
     // modality to detect.

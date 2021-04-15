@@ -101,6 +101,34 @@ describe('InputModalityDetector', () => {
     expect(emitted).toEqual(['keyboard', 'keyboard', 'mouse', 'touch', 'keyboard']);
   });
 
+  it('should emit changes in input modality', () => {
+    detector = new InputModalityDetector(platform, ngZone, document);
+    const emitted: InputModality[] = [];
+    detector.modalityChanged.subscribe((modality: InputModality) => {
+      emitted.push(modality);
+    });
+
+    expect(emitted.length).toBe(0);
+
+    dispatchKeyboardEvent(document, 'keydown');
+    expect(emitted).toEqual(['keyboard']);
+
+    dispatchKeyboardEvent(document, 'keydown');
+    expect(emitted).toEqual(['keyboard']);
+
+    dispatchMouseEvent(document, 'mousedown');
+    expect(emitted).toEqual(['keyboard', 'mouse']);
+
+    dispatchTouchEvent(document, 'touchstart');
+    expect(emitted).toEqual(['keyboard', 'mouse', 'touch']);
+
+    dispatchTouchEvent(document, 'touchstart');
+    expect(emitted).toEqual(['keyboard', 'mouse', 'touch']);
+
+    dispatchKeyboardEvent(document, 'keydown');
+    expect(emitted).toEqual(['keyboard', 'mouse', 'touch', 'keyboard']);
+  });
+
   it('should ignore fake screen-reader mouse events', () => {
     detector = new InputModalityDetector(platform, ngZone, document);
 
