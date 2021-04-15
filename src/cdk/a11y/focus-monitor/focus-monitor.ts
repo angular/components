@@ -48,7 +48,7 @@ export const enum FocusMonitorDetectionMode {
   IMMEDIATE,
   /**
    * A focus event's origin is always attributed to the last corresponding
-   * mousedown, keydown, or touchstart event, no matter how long ago it occured.
+   * mousedown, keydown, or touchstart event, no matter how long ago it occurred.
    */
   EVENTUAL
 }
@@ -131,7 +131,7 @@ export class FocusMonitor implements OnDestroy {
   protected _document?: Document;
 
   /** Subject for stopping our InputModalityDetector subscription. */
-  private _stopInputModalityDetector = new Subject();
+  private readonly _stopInputModalityDetector = new Subject();
 
   constructor(
       private _ngZone: NgZone,
@@ -343,11 +343,12 @@ export class FocusMonitor implements OnDestroy {
     this._ngZone.runOutsideAngular(() => {
       this._origin = origin;
 
+      // If we're in IMMEDIATE mode, reset the origin at the next tick (or in `TOUCH_BUFFER_MS` ms
+      // for a touch event). We reset the origin at the next tick because Firefox focuses one tick
+      // after the interaction event. We wait `TOUCH_BUFFER_MS` ms before resetting the origin for
+      // a touch event because when a touch event is fired, the associated focus event isn't yet in
+      // the event queue.
       if (this._detectionMode === FocusMonitorDetectionMode.IMMEDIATE) {
-        // When a touch origin is received, we need to wait at least `TOUCH_BUFFER_MS` ms until
-        // clearing the origin. This is because when a touch event is fired, the associated focus
-        // event isn't yet in the event queue. Otherwise, clear the focus origin at the start of the
-        // next tick (because Firefox focuses one tick after the interaction event).
         const ms = (origin === 'touch') ? TOUCH_BUFFER_MS : 1;
         this._originTimeoutId = setTimeout(() => this._origin = null, ms);
       }
@@ -372,8 +373,6 @@ export class FocusMonitor implements OnDestroy {
       return;
     }
 
-
-
     this._originChanged(element, this._getFocusOrigin(), elementInfo);
   }
 
@@ -392,8 +391,7 @@ export class FocusMonitor implements OnDestroy {
       return;
     }
 
-    this._setClasses(element);
-    this._emitOrigin(elementInfo.subject, null);
+    this._originChanged(element, null, elementInfo);
   }
 
   private _emitOrigin(subject: Subject<FocusOrigin>, origin: FocusOrigin) {

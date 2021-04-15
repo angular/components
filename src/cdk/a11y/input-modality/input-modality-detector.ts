@@ -79,10 +79,8 @@ const modalityEventListenerOptions = normalizePassiveListenerOptions({
  * screen reader is akin to visually scanning a page, and should not be interpreted as actual user
  * input interaction.
  *
- * When a user is not navigating but *interacting* with a screen reader, this service's behavior is
- * largely undefined and depends on the events fired. For example, in VoiceOver, no keyboard events
- * are fired when performing an element's default action via Caps Lock + Space, thus no input
- * modality is detected.
+ * When a user is not navigating but *interacting* with a screen reader, this service attempts to
+ * update the input modality to keyboard.
  */
 @Injectable({ providedIn: 'root' })
 export class InputModalityDetector implements OnDestroy {
@@ -110,8 +108,8 @@ export class InputModalityDetector implements OnDestroy {
   private _lastTouchMs = 0;
 
   /**
-   * Handles keyboard events. Must be an arrow function in order to preserve the context when it
-   * gets bound.
+   * Handles keydown events. Must be an arrow function in order to preserve the context when it gets
+   * bound.
    */
   private _onKeydown = (event: KeyboardEvent) => {
     // If this is one of the keys we should ignore, then ignore it and don't update the input
@@ -122,16 +120,21 @@ export class InputModalityDetector implements OnDestroy {
   }
 
   /**
-   * Handles mouse events. Must be an arrow function in order to preserve the context when it gets
-   * bound.
+   * Handles mousedown events. Must be an arrow function in order to preserve the context when it
+   * gets bound.
    */
   private _onMousedown = (event: MouseEvent) => {
-    if (isFakeMousedownFromScreenReader(event)) { return; }
-
     // Touches trigger both touch and mouse events, so we need to distinguish between mouse events
     // that were triggered via mouse vs touch. To do so, check if the mouse event occurs closely
     // after the previous touch event.
     if (Date.now() - this._lastTouchMs < TOUCH_BUFFER_MS) { return; }
+
+    // Fake mousedown events are fired by some screen readers when controls are activated by the
+    // screen reader. Attribute this to keyboard input modality.
+    if (isFakeMousedownFromScreenReader(event)) {
+      this._modality.next('keyboard');
+      return;
+    }
 
     this._modality.next('mouse');
   }
@@ -141,7 +144,12 @@ export class InputModalityDetector implements OnDestroy {
    * gets bound.
    */
   private _onTouchstart = (event: TouchEvent) => {
-    if (isFakeTouchstartFromScreenReader(event)) { return; }
+    // Same scenario as mentioned in _onMousedown, but on touch screen devices, fake touchstart
+    // events are fired. Again, attribute to keyboard input modality.
+    if (isFakeTouchstartFromScreenReader(event)) {
+      this._modality.next('keyboard');
+      return;
+    }
 
     // Store the timestamp of this touch event, as it's used to distinguish between mouse events
     // triggered via mouse vs touch.

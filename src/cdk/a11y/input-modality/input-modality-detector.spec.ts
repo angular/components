@@ -129,7 +129,7 @@ describe('InputModalityDetector', () => {
     expect(emitted).toEqual(['keyboard', 'mouse', 'touch', 'keyboard']);
   });
 
-  it('should ignore fake screen-reader mouse events', () => {
+  it('should detect fake screen reader mouse events as keyboard input modality', () => {
     detector = new InputModalityDetector(platform, ngZone, document);
 
     // Create a fake screen-reader mouse event.
@@ -137,10 +137,10 @@ describe('InputModalityDetector', () => {
     Object.defineProperty(event, 'buttons', {get: () => 0});
     dispatchEvent(document, event);
 
-    expect(detector.mostRecentModality).toBe(null);
+    expect(detector.mostRecentModality).toBe('keyboard');
   });
 
-  it('should ignore fake screen-reader touch events', () => {
+  it('should detect fake screen reader touch events as keyboard input modality', () => {
     detector = new InputModalityDetector(platform, ngZone, document);
 
     // Create a fake screen-reader touch event.
@@ -148,7 +148,7 @@ describe('InputModalityDetector', () => {
     Object.defineProperty(event, 'touches', {get: () => [{identifier: -1}]});
     dispatchEvent(document, event);
 
-    expect(detector.mostRecentModality).toBe(null);
+    expect(detector.mostRecentModality).toBe('keyboard');
   });
 
   it('should ignore certain modifier keys by default', () => {
