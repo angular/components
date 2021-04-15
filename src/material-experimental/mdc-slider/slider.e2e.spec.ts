@@ -57,9 +57,7 @@ describe('MDC-based MatSlider' , () => {
     });
 
     it('should update the end thumb value on slide', async () => {
-      console.log('value:', await getSliderValue(slider, Thumb.END));
       await slideToValue(slider, 55, Thumb.END);
-      console.log('value:', await getSliderValue(slider, Thumb.END));
       expect(await getSliderValue(slider, Thumb.END)).toBe(55);
     });
 
