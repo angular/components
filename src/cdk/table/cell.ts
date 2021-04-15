@@ -11,10 +11,10 @@ import {
   ContentChild,
   Directive,
   ElementRef,
-  Input,
-  TemplateRef,
   Inject,
+  Input,
   Optional,
+  TemplateRef,
 } from '@angular/core';
 import {CanStick, CanStickCtor, mixinHasStickyInput} from './can-stick';
 import {CDK_TABLE} from './tokens';
@@ -178,12 +178,16 @@ export class CdkHeaderCell extends BaseCdkCell {
   selector: 'cdk-footer-cell, td[cdk-footer-cell]',
   host: {
     'class': 'cdk-footer-cell',
-    'role': 'gridcell',
   },
 })
 export class CdkFooterCell extends BaseCdkCell {
   constructor(columnDef: CdkColumnDef, elementRef: ElementRef) {
     super(columnDef, elementRef);
+    if (columnDef._table?._elementRef.nativeElement.nodeType === 1) {
+      const role = columnDef._table._elementRef.nativeElement
+        .getAttribute('role') === 'table' ? 'cell' : 'gridcell';
+      elementRef.nativeElement.setAttribute('role', role);
+    }
   }
 }
 
@@ -192,11 +196,15 @@ export class CdkFooterCell extends BaseCdkCell {
   selector: 'cdk-cell, td[cdk-cell]',
   host: {
     'class': 'cdk-cell',
-    'role': 'gridcell',
   },
 })
 export class CdkCell extends BaseCdkCell {
   constructor(columnDef: CdkColumnDef, elementRef: ElementRef) {
     super(columnDef, elementRef);
+    if (columnDef._table?._elementRef.nativeElement.nodeType === 1) {
+      const role = columnDef._table._elementRef.nativeElement
+        .getAttribute('role') === 'table' ? 'cell' : 'gridcell';
+      elementRef.nativeElement.setAttribute('role', role);
+    }
   }
 }
