@@ -130,13 +130,8 @@ export class InputModalityDetector implements OnDestroy {
     if (Date.now() - this._lastTouchMs < TOUCH_BUFFER_MS) { return; }
 
     // Fake mousedown events are fired by some screen readers when controls are activated by the
-    // screen reader. Attribute this to keyboard input modality.
-    if (isFakeMousedownFromScreenReader(event)) {
-      this._modality.next('keyboard');
-      return;
-    }
-
-    this._modality.next('mouse');
+    // screen reader. Attribute them to keyboard input modality.
+      this._modality.next(isFakeMousedownFromScreenReader(event) ? 'keyboard' : 'mouse');
   }
 
   /**
