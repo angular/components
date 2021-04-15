@@ -1020,6 +1020,153 @@ describe('MDC-based MatSlider' , () => {
     });
   });
 
+  describe('slider with input event', () => {
+    let sliderInstance: MatSlider;
+    let sliderElement: HTMLElement;
+    let testComponent: SliderWithChangeHandler;
+
+    beforeEach(waitForAsync(() => {
+      const fixture = createComponent(SliderWithChangeHandler);
+      fixture.detectChanges();
+
+      testComponent = fixture.debugElement.componentInstance;
+
+      const sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider));
+      sliderInstance = sliderDebugElement.componentInstance;
+      sliderElement = sliderInstance._elementRef.nativeElement;
+    }));
+
+    it('should emit an input event while sliding', () => {
+      const dispatchSliderEvent = (type: PointerEventType, value: number) => {
+        const {x, y} = getCoordsForValue(sliderInstance, value);
+        dispatchPointerOrTouchEvent(sliderElement, type, x, y, platform.IOS);
+      };
+
+      expect(testComponent.onChange).not.toHaveBeenCalled();
+      expect(testComponent.onInput).not.toHaveBeenCalled();
+
+      // pointer down on current value (should not trigger input event)
+      dispatchSliderEvent(PointerEventType.POINTER_DOWN, 0);
+
+      // value changes (should trigger input)
+      dispatchSliderEvent(PointerEventType.POINTER_MOVE, 10);
+      dispatchSliderEvent(PointerEventType.POINTER_MOVE, 25);
+
+      // a new value has been committed (should trigger change event)
+      dispatchSliderEvent(PointerEventType.POINTER_UP, 25);
+
+      expect(testComponent.onInput).toHaveBeenCalledTimes(2);
+      expect(testComponent.onChange).toHaveBeenCalledTimes(1);
+    });
+
+    it('should emit an input event when clicking', () => {
+      expect(testComponent.onChange).not.toHaveBeenCalled();
+      expect(testComponent.onInput).not.toHaveBeenCalled();
+      setValueByClick(sliderInstance, 75, platform.IOS);
+      expect(testComponent.onInput).toHaveBeenCalledTimes(1);
+      expect(testComponent.onChange).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe('range slider with input event', () => {
+    let sliderInstance: MatSlider;
+    let sliderElement: HTMLElement;
+    let testComponent: RangeSliderWithChangeHandler;
+
+    beforeEach(waitForAsync(() => {
+      const fixture = createComponent(RangeSliderWithChangeHandler);
+      fixture.detectChanges();
+
+      testComponent = fixture.debugElement.componentInstance;
+
+      const sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider));
+      sliderInstance = sliderDebugElement.componentInstance;
+      sliderElement = sliderInstance._elementRef.nativeElement;
+    }));
+
+    it('should emit an input event while sliding the start thumb', () => {
+      const dispatchSliderEvent = (type: PointerEventType, value: number) => {
+        const {x, y} = getCoordsForValue(sliderInstance, value);
+        dispatchPointerOrTouchEvent(sliderElement, type, x, y, platform.IOS);
+      };
+
+      expect(testComponent.onStartThumbChange).not.toHaveBeenCalled();
+      expect(testComponent.onStartThumbInput).not.toHaveBeenCalled();
+      expect(testComponent.onEndThumbChange).not.toHaveBeenCalled();
+      expect(testComponent.onEndThumbInput).not.toHaveBeenCalled();
+
+      // pointer down on current start thumb value (should not trigger input event)
+      dispatchSliderEvent(PointerEventType.POINTER_DOWN, 0);
+
+      // value changes (should trigger input)
+      dispatchSliderEvent(PointerEventType.POINTER_MOVE, 10);
+      dispatchSliderEvent(PointerEventType.POINTER_MOVE, 25);
+
+      // a new value has been committed (should trigger change event)
+      dispatchSliderEvent(PointerEventType.POINTER_UP, 25);
+
+      expect(testComponent.onStartThumbChange).toHaveBeenCalledTimes(1);
+      expect(testComponent.onStartThumbInput).toHaveBeenCalledTimes(2);
+      expect(testComponent.onEndThumbChange).not.toHaveBeenCalled();
+      expect(testComponent.onEndThumbInput).not.toHaveBeenCalled();
+    });
+
+    it('should emit an input event while sliding the end thumb', () => {
+      const dispatchSliderEvent = (type: PointerEventType, value: number) => {
+        const {x, y} = getCoordsForValue(sliderInstance, value);
+        dispatchPointerOrTouchEvent(sliderElement, type, x, y, platform.IOS);
+      };
+
+      expect(testComponent.onStartThumbChange).not.toHaveBeenCalled();
+      expect(testComponent.onStartThumbInput).not.toHaveBeenCalled();
+      expect(testComponent.onEndThumbChange).not.toHaveBeenCalled();
+      expect(testComponent.onEndThumbInput).not.toHaveBeenCalled();
+
+      // pointer down on current end thumb value (should not trigger input event)
+      dispatchSliderEvent(PointerEventType.POINTER_DOWN, 100);
+
+      // value changes (should trigger input)
+      dispatchSliderEvent(PointerEventType.POINTER_MOVE, 90);
+      dispatchSliderEvent(PointerEventType.POINTER_MOVE, 55);
+
+      // a new value has been committed (should trigger change event)
+      dispatchSliderEvent(PointerEventType.POINTER_UP, 55);
+
+      expect(testComponent.onStartThumbChange).not.toHaveBeenCalled();
+      expect(testComponent.onStartThumbInput).not.toHaveBeenCalled();
+      expect(testComponent.onEndThumbChange).toHaveBeenCalledTimes(1);
+      expect(testComponent.onEndThumbInput).toHaveBeenCalledTimes(2);
+    });
+
+    it('should emit an input event on the start thumb when clicking near it', () => {
+      expect(testComponent.onStartThumbChange).not.toHaveBeenCalled();
+      expect(testComponent.onStartThumbInput).not.toHaveBeenCalled();
+      expect(testComponent.onEndThumbChange).not.toHaveBeenCalled();
+      expect(testComponent.onEndThumbInput).not.toHaveBeenCalled();
+
+      setValueByClick(sliderInstance, 30, platform.IOS);
+
+      expect(testComponent.onStartThumbChange).toHaveBeenCalledTimes(1);
+      expect(testComponent.onStartThumbInput).toHaveBeenCalledTimes(1);
+      expect(testComponent.onEndThumbChange).not.toHaveBeenCalled();
+      expect(testComponent.onEndThumbInput).not.toHaveBeenCalled();
+    });
+
+    it('should emit an input event on the end thumb when clicking near it', () => {
+      expect(testComponent.onStartThumbChange).not.toHaveBeenCalled();
+      expect(testComponent.onStartThumbInput).not.toHaveBeenCalled();
+      expect(testComponent.onEndThumbChange).not.toHaveBeenCalled();
+      expect(testComponent.onEndThumbInput).not.toHaveBeenCalled();
+
+      setValueByClick(sliderInstance, 55, platform.IOS);
+
+      expect(testComponent.onStartThumbChange).not.toHaveBeenCalled();
+      expect(testComponent.onStartThumbInput).not.toHaveBeenCalled();
+      expect(testComponent.onEndThumbChange).toHaveBeenCalledTimes(1);
+      expect(testComponent.onEndThumbInput).toHaveBeenCalledTimes(1);
+    });
+  });
+
   describe('slider with ngModel', () => {
     let fixture: ComponentFixture<SliderWithNgModel>;
     let testComponent: SliderWithNgModel;
