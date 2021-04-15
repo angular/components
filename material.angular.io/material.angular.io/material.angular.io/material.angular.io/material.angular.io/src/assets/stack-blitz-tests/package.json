@@ -22,7 +22,6 @@
     "@angular/platform-browser": "^12.0.0-next.0",
     "@angular/platform-browser-dynamic": "^12.0.0-next.0",
     "@angular/router": "^12.0.0-next.0",
-    "angular-in-memory-web-api": "~0.12.0",
     "moment": "^2.29.1",
     "rxjs": "^6.6.6",
     "tslib": "^2.1.0",

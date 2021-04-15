@@ -63,7 +63,7 @@
     "@angular/localize": "^12.0.0-next.8",
     "@types/imagemin": "^7.0.0",
     "@types/jasmine": "^3.6.6",
-    "@types/node": "^12.20.6",
+    "@types/node": "^14.14.22",
     "@types/shelljs": "~0.8.8",
     "codelyzer": "^6.0.1",
     "firebase-tools": "^9.9.0",
