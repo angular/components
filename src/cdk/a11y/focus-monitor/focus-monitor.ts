@@ -131,7 +131,7 @@ export class FocusMonitor implements OnDestroy {
   protected _document?: Document;
 
   /** Subject for stopping our InputModalityDetector subscription. */
-  private readonly _stopInputModalityDetector = new Subject();
+  private readonly _stopInputModalityDetector = new Subject<void>();
 
   constructor(
       private _ngZone: NgZone,
