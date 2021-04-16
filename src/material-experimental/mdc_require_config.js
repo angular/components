@@ -26,7 +26,7 @@ require.config({
     '@material/select': '/base/npm/node_modules/@material/select/dist/mdc.select',
     '@material/slider': '/base/npm/node_modules/@material/slider/dist/mdc.slider',
     '@material/snackbar': '/base/npm/node_modules/@material/snackbar/dist/mdc.snackbar',
-    '@material/switch': '/base/npm/node_modules/@material/switch/dist/mdc.switch',
+    '@material/switch/deprecated': '/base/npm/node_modules/@material/switch/dist/mdc.switch',
     '@material/tab': '/base/npm/node_modules/@material/tab/dist/mdc.tab',
     '@material/tab-bar': '/base/npm/node_modules/@material/tab-bar/dist/mdc.tabBar',
     '@material/tab-indicator': '/base/npm/node_modules/@material/tab-indicator/dist/mdc.tabIndicator',

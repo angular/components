@@ -61,7 +61,7 @@ ROLLUP_GLOBALS = {
     "@material/select": "mdc.select",
     "@material/slider": "mdc.slider",
     "@material/snackbar": "mdc.snackbar",
-    "@material/switch": "mdc.switch",
+    "@material/switch/deprecated": "mdc.switch.deprecated",
     "@material/tab": "mdc.tab",
     "@material/tab-bar": "mdc.tabBar",
     "@material/tab-indicator": "mdc.tabIndicator",

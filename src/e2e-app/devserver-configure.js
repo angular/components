@@ -32,7 +32,7 @@ require.config({
     '@material/select': '@material/select/dist/mdc.select',
     '@material/slider': '@material/slider/dist/mdc.slider',
     '@material/snackbar': '@material/snackbar/dist/mdc.snackbar',
-    '@material/switch': '@material/switch/dist/mdc.switch',
+    '@material/switch/deprecated': '@material/switch/dist/mdc.switch',
     '@material/tab': '@material/tab/dist/mdc.tab',
     '@material/tab-bar': '@material/tab-bar/dist/mdc.tabBar',
     '@material/tab-indicator': '@material/tab-indicator/dist/mdc.tabIndicator',

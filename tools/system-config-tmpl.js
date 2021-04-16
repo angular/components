@@ -60,7 +60,7 @@ var pathMapping = {
   '@material/select': 'node:@material/select/dist/mdc.select.js',
   '@material/slider': 'node:@material/slider/dist/mdc.slider.js',
   '@material/snackbar': 'node:@material/snackbar/dist/mdc.snackbar.js',
-  '@material/switch': 'node:@material/switch/dist/mdc.switch.js',
+  '@material/switch/deprecated': 'node:@material/switch/dist/mdc.switch.js',
   '@material/tab': 'node:@material/tab/dist/mdc.tab.js',
   '@material/tab-bar': 'node:@material/tab-bar/dist/mdc.tabBar.js',
   '@material/tab-indicator': 'node:@material/tab-indicator/dist/mdc.tabIndicator.js',
