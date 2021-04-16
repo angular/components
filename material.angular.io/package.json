@@ -18,6 +18,7 @@
     "build:content": "yarn upgrade @angular/components-examples",
     "build:sm": "ng build --configuration production --source-map",
     "prod-build": "ng build --configuration production",
+    "preinstall": "node ./tools/npm/check-npm.js",
     "postinstall": "ngcc --properties es2015 browser module main --first-only --create-ivy-entry-points",
     "publish-prod": "bash ./tools/deploy.sh stable prod",
     "publish-dev": "bash ./tools/deploy.sh",
