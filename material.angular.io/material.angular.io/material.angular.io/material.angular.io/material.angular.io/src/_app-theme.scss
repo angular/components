@@ -1,69 +1,65 @@
-@import '~@angular/material/theming';
+@use '~@angular/material' as mat;
 
-@import './app/pages/component-category-list/component-category-list-theme';
-@import './app/pages/component-sidenav/component-sidenav-theme';
-@import './app/pages/component-viewer/component-viewer-theme';
-@import './app/pages/guide-list/guide-list-theme';
-@import './app/pages/homepage/homepage-theme';
-@import './app/pages/not-found/not-found-theme';
-@import './app/shared/carousel/carousel-theme';
-@import './app/shared/example-viewer/example-viewer-theme';
-@import './app/shared/footer/footer-theme';
-@import './app/shared/navbar/navbar-theme';
-@import './app/shared/table-of-contents/table-of-contents-theme';
-@import './styles/api-theme';
-@import './styles/markdown-theme';
-@import './styles/svg-theme';
-@import './styles/tables-theme';
+@use 'sass:map';
+@use './app/pages/component-category-list/component-category-list-theme';
+@use './app/pages/component-sidenav/component-sidenav-theme';
+@use './app/pages/component-viewer/component-viewer-theme';
+@use './app/pages/guide-list/guide-list-theme';
+@use './app/pages/homepage/homepage-theme';
+@use './app/pages/not-found/not-found-theme';
+@use './app/shared/carousel/carousel-theme';
+@use './app/shared/example-viewer/example-viewer-theme';
+@use './app/shared/footer/footer-theme';
+@use './app/shared/navbar/navbar-theme';
+@use './app/shared/table-of-contents/table-of-contents-theme';
+@use './styles/api-theme';
+@use './styles/markdown-theme';
+@use './styles/svg-theme';
+@use './styles/tables-theme';
 
 // Styles for the docs app that are based on the current theme.
-@mixin material-docs-app-theme($theme) {
-  $primary: map-get($theme, primary);
-  $accent: map-get($theme, accent);
-  $warn: map-get($theme, warn);
-  $background: map-get($theme, background);
-  $foreground: map-get($theme, foreground);
-  $next-theme: mat-palette($mat-red);
+@mixin theme($theme) {
+  $primary: map.get($theme, primary);
+  $accent: map.get($theme, accent);
+  $warn: map.get($theme, warn);
+  $background: map.get($theme, background);
+  $foreground: map.get($theme, foreground);
+  $next-theme: mat.define-palette(mat.$red-palette);
 
   .docs-app-background {
-    background: mat-color($background, background);
+    background: mat.get-color-from-palette($background, background);
   }
 
   .docs-primary-header {
-    background: mat-color($primary);
+    background: mat.get-color-from-palette($primary);
 
     h1 {
-      color: mat-color($primary, default-contrast);
+      color: mat.get-color-from-palette($primary, default-contrast);
     }
   }
 
   .docs-footer {
-    background: mat-color($primary);
-    color: mat-color($primary, default-contrast);
+    background: mat.get-color-from-palette($primary);
+    color: mat.get-color-from-palette($primary, default-contrast);
   }
 
   .is-next-version {
-    background: mat-color($next-theme, 900) !important;
+    background: mat.get-color-from-palette($next-theme, 900) !important;
   }
-  @include carousel-theme($theme);
-  @include component-category-list-theme($theme);
-  @include component-viewer-sidenav-theme($theme);
-  @include component-viewer-theme($theme);
-  @include docs-site-api-theme($theme);
-  @include docs-site-markdown-theme($theme);
-  @include docs-site-svg-theme($theme);
-  @include docs-site-tables-theme($theme);
-  @include example-viewer-theme($theme);
-  @include footer-theme($theme);
-  @include guide-list-theme($theme);
-  @include home-page-theme($theme);
-  @include not-found-theme($theme);
-  @include nav-bar-theme($theme);
-  @include table-of-contents-theme($theme);
+
+  @include carousel-theme.theme($theme);
+  @include component-category-list-theme.theme($theme);
+  @include component-sidenav-theme.theme($theme);
+  @include component-viewer-theme.theme($theme);
+  @include api-theme.theme($theme);
+  @include markdown-theme.theme($theme);
+  @include svg-theme.theme($theme);
+  @include tables-theme.theme($theme);
+  @include example-viewer-theme.theme($theme);
+  @include footer-theme.theme($theme);
+  @include guide-list-theme.theme($theme);
+  @include homepage-theme.theme($theme);
+  @include not-found-theme.theme($theme);
+  @include navbar-theme.theme($theme);
+  @include table-of-contents-theme.theme($theme);
 }
-
-// Define the light theme.
-$primary: mat-palette($mat-indigo);
-$accent:  mat-palette($mat-pink, A200, A100, A400);
-
-$theme: mat-light-theme($primary, $accent);

@@ -1,4 +1,4 @@
-@import 'constants';
+@use '../styles/constants';
 
 material-docs-app {
   display: flex;
@@ -25,7 +25,7 @@ material-docs-app > router-outlet + app-component-sidenav {
   -webkit-overflow-scrolling: touch;
 }
 
-@media (max-width: $extra-small-breakpoint-width) {
+@media (max-width: constants.$extra-small-breakpoint-width) {
   material-docs-app > router-outlet + .main-content,
   material-docs-app > router-outlet + app-component-sidenav {
     margin-top: 92px;

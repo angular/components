@@ -1,9 +1,4 @@
-@import '~@angular/material/theming';
-@import '../../../styles/constants';
-
-/* For desktop, the content should be aligned with the page title. */
-$guide-content-margin-side: 70px;
-$guide-content-margin-side-xs: 15px;
+@use '../../../styles/constants';
 
 :host {
   display: flex;
@@ -12,13 +7,13 @@ $guide-content-margin-side-xs: 15px;
 }
 
 .docs-guide-wrapper {
-  padding: 20px $content-padding-guides-side 0;
+  padding: 20px constants.$content-padding-guides-side 0;
   display: block;
   text-align: center;
 
-  @media ($mat-xsmall) {
-    padding-left: $content-padding-side-xs;
-    padding-right: $content-padding-side-xs;
+  @media (max-width: constants.$small-breakpoint-width) {
+    padding-left: constants.$content-padding-side-xs;
+    padding-right: constants.$content-padding-side-xs;
   }
 }
 
@@ -34,7 +29,7 @@ $guide-content-margin-side-xs: 15px;
   // the page from jumping around while something is loading.
   min-height: 100vh;
 
-  @media (max-width: $extra-small-breakpoint-width) {
+  @media (max-width: constants.$extra-small-breakpoint-width) {
     flex-direction: column;
   }
 }
@@ -43,7 +38,7 @@ $guide-content-margin-side-xs: 15px;
   flex-grow: 1;
   width: 80%;
 
-  @media (max-width: $extra-small-breakpoint-width) {
+  @media (max-width: constants.$extra-small-breakpoint-width) {
     width: 100%;
   }
 }
@@ -54,7 +49,7 @@ table-of-contents {
 
   // Reposition on top of content on small screens and remove
   // sticky positioning
-  @media (max-width: $extra-small-breakpoint-width) {
+  @media (max-width: constants.$extra-small-breakpoint-width) {
     order: -1;
     position: inherit;
     width: auto;
