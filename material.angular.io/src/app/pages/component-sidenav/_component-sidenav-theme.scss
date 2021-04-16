@@ -1,44 +1,49 @@
-@import '~@angular/material/theming';
-@import 'constants';
+@use '~@angular/material' as mat;
+@use 'sass:color';
+@use 'sass:map';
+@use '../../../styles/constants';
 
-@mixin component-viewer-sidenav-theme($theme) {
-  $primary: map-get($theme, primary);
-  $background: map-get($theme, background);
-  $foreground: map-get($theme, foreground);
-  $is-dark-theme: map-get($theme, is-dark);
+@mixin theme($theme) {
+  $primary: map.get($theme, primary);
+  $background: map.get($theme, background);
+  $foreground: map.get($theme, foreground);
+  $is-dark-theme: map.get($theme, is-dark);
   $nav-background-opacity: if($is-dark-theme, 0.2, 0.03);
   $nav-background-focus-opacity: if($is-dark-theme, 0.25, 0.08);
 
   .docs-component-viewer-nav-content {
-    border-right: 1px solid mat-color($foreground, divider);
+    border-right: 1px solid mat.get-color-from-palette($foreground, divider);
 
     &::-webkit-scrollbar-thumb {
       background: rgba(0, 0, 0, .26);
     }
 
     a {
-      color: map-get($foreground, secondary-text);
+      color: map.get($foreground, secondary-text);
 
       &:hover {
-        color: mat-color($foreground, text);
+        color: mat.get-color-from-palette($foreground, text);
       }
 
       &.docs-component-viewer-sidenav-item-selected {
-        background: rgba(mat-color($primary, default), 0.15);
-        color: lighten(mat-color($primary, default), if($is-dark-theme, 25%, 0));
+        background: rgba(mat.get-color-from-palette($primary, default), 0.15);
+        color: color.adjust(
+          mat.get-color-from-palette($primary, default),
+          $lightness: if($is-dark-theme, 25%, 0%)
+        );
       }
 
       &.docs-component-viewer-sidenav-item-selected:hover {
-        background: rgba(mat-color($primary, default), 0.3);
+        background: rgba(mat.get-color-from-palette($primary, default), 0.3);
       }
     }
 
     .mat-list-item {
-      color: rgba(mat-color($foreground, secondary-text), 0.65);
+      color: rgba(mat.get-color-from-palette($foreground, secondary-text), 0.65);
     }
   }
 
-  @media (max-width: $small-breakpoint-width) {
+  @media (max-width: constants.$small-breakpoint-width) {
     .docs-component-viewer-sidenav {
       .docs-component-viewer-nav-content {
         background: none;

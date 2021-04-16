@@ -1,4 +1,4 @@
-@import './constants';
+@use './constants';
 
 .docs-api table,
 .docs-markdown-table {
@@ -23,7 +23,7 @@
   font-weight: 400;
   padding: 8px 16px;
 
-  @media (max-width: $extra-small-breakpoint-width) {
+  @media (max-width: constants.$extra-small-breakpoint-width) {
     &.docs-api-properties-name-cell,
     &.docs-api-method-parameter-cell,
     &.docs-api-method-returns-type-cell,
@@ -35,7 +35,7 @@
 }
 
 
-@media (max-width: $small-breakpoint-width) {
+@media (max-width: constants.$small-breakpoint-width) {
   .docs-api table,
   .docs-markdown-table {
     margin: 0 0 32px 0;

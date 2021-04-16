@@ -1,36 +1,36 @@
-@import '~@angular/material/prebuilt-themes/indigo-pink.css';
-@import '~@angular/material/theming';
+@use 'sass:map';
+@use '~@angular/material' as mat;
 
-@include mat-core();
+@include mat.core();
 
-$primary: mat-palette($mat-red, 500, 200, 900);
-$accent: mat-palette($mat-red, 500, 200, 700);
-$warn: mat-palette($mat-red);
+$_primary: mat.define-palette(mat.$red-palette, 500, 200, 900);
+$_accent: mat.define-palette(mat.$red-palette, 500, 200, 700);
+$_warn: mat.define-palette(mat.$red-palette);
 
-$theme: mat-light-theme($primary, $accent, $warn);
-$background-color: #fff2f4;
+$_theme: mat.define-light-theme($_primary, $_accent, $_warn);
+$_background-color: #fff2f4;
 
-$background: map-get($theme, background);
-$background: map_merge($background, (
-  background: $background-color,
+$_background: map.get($_theme, background);
+$_background: map.merge($_background, (
+  background: $_background-color,
   disabled-button: rgba(red, 0.5),
   selected-button: rgba(red, 0.23)));
-$theme: map_merge($theme, (background: $background));
+$_theme: map.merge($_theme, (background: $_background));
 
-$secondary-text-color: map_get($mat-red, 600);
+$_secondary-text-color: map_get(mat.$red-palette, 600);
 
-$foreground: map-get($theme, foreground);
-$foreground: map_merge($foreground, (
+$_foreground: map.get($_theme, foreground);
+$_foreground: map.merge($_foreground, (
   disabled-button: rgba(red, 0.45),
-  text: $secondary-text-color,
-  divider: $secondary-text-color,
-  secondary-text: $secondary-text-color,
-  dsiabled-text: $secondary-text-color,
-  hint-text: $secondary-text-color,
-  icon: $secondary-text-color));
-$theme: map_merge($theme, (foreground: $foreground));
+  text: $_secondary-text-color,
+  divider: $_secondary-text-color,
+  secondary-text: $_secondary-text-color,
+  dsiabled-text: $_secondary-text-color,
+  hint-text: $_secondary-text-color,
+  icon: $_secondary-text-color));
+$_theme: map.merge($_theme, (foreground: $_foreground));
 
-@include angular-material-theme($theme);
+@include mat.all-component-themes($_theme);
 
 body {
   margin: 0;

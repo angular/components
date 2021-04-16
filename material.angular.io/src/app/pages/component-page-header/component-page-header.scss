@@ -1,10 +1,10 @@
-@import '../../../styles/constants';
+@use '../../../styles/constants';
 
 .component-page-header {
   display: flex;
   align-items: center;
 
-  @media (max-width: $small-breakpoint-width) {
+  @media (max-width: constants.$small-breakpoint-width) {
     padding-left: 0;
   }
 }
@@ -12,7 +12,7 @@
 h1 {
   outline: none;
 
-  @media (max-width: $small-breakpoint-width) {
+  @media (max-width: constants.$small-breakpoint-width) {
     padding: 24px 8px;
     font-size: 20px;
   }
@@ -24,7 +24,7 @@ h1 {
   min-width: 64px;
   display: none;
 
-  @media (max-width: $small-breakpoint-width) {
+  @media (max-width: constants.$small-breakpoint-width) {
     display: flex;
     align-items: center;
     justify-content: center;

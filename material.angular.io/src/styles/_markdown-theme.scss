@@ -1,23 +1,24 @@
-@import '~@angular/material/theming';
+@use 'sass:map';
+@use '~@angular/material' as mat;
 
 // Mixin to apply theme colors for docs generated from markdown files in the material2 repo.
-@mixin docs-site-markdown-theme($theme) {
-  $primary: map-get($theme, primary);
-  $accent: map-get($theme, accent);
-  $warn: map-get($theme, warn);
-  $background: map-get($theme, background);
-  $foreground: map-get($theme, foreground);
-  $is-dark-theme: map-get($theme, is-dark);
+@mixin theme($theme) {
+  $primary: map.get($theme, primary);
+  $accent: map.get($theme, accent);
+  $warn: map.get($theme, warn);
+  $background: map.get($theme, background);
+  $foreground: map.get($theme, foreground);
+  $is-dark-theme: map.get($theme, is-dark);
   $exportBackgroundOpacity: if($is-dark-theme, 0.06, 0.03);
 
   .docs-markdown {
     a:not(.mat-button-base) {
-      color: mat-color($primary, if($is-dark-theme, 200, default));
+      color: mat.get-color-from-palette($primary, if($is-dark-theme, 200, default));
     }
 
     pre {
-      background: rgba(mat-color($foreground, secondary-text), .01);
-      border: .5px solid rgba(mat-color($foreground, secondary-text), .2);
+      background: rgba(mat.get-color-from-palette($foreground, secondary-text), .01);
+      border: .5px solid rgba(mat.get-color-from-palette($foreground, secondary-text), .2);
 
       code {
         background: transparent;
@@ -26,16 +27,16 @@
 
     h3 .material-icons,
     h4 .material-icons {
-      color: mat-color($foreground, secondary-text);
+      color: mat.get-color-from-palette($foreground, secondary-text);
     }
 
     code {
-      background: rgba(mat-color($foreground, secondary-text), $exportBackgroundOpacity);
+      background: rgba(mat.get-color-from-palette($foreground, secondary-text), $exportBackgroundOpacity);
     }
 
     > table {
       th, td {
-        border-bottom-color: mat-color($foreground, divider);
+        border-bottom-color: mat.get-color-from-palette($foreground, divider);
       }
     }
   }

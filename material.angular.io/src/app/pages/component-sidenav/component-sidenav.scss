@@ -1,4 +1,4 @@
-@import 'constants';
+@use '../../../styles/constants';
 
 app-component-sidenav {
   display: flex;
@@ -32,7 +32,7 @@ app-component-sidenav {
   top: 0;
 
   .docs-component-viewer-nav-content {
-    width: $sidenav-width;
+    width: constants.$sidenav-width;
     height: 100vh;
     overflow: auto;
 
@@ -87,7 +87,7 @@ div.docs-component-viewer-nav-content .mat-nav-list .mat-list-item .mat-list-ite
   padding-left: 25px;
 }
 
-@media (max-width: $small-breakpoint-width) {
+@media (max-width: constants.$small-breakpoint-width) {
   // Add specific rule to prevent default rule conflict
   .docs-component-viewer-sidenav-container .docs-component-viewer-sidenav {
     // position right above the content

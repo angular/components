@@ -1,21 +1,24 @@
-@mixin table-of-contents-theme($theme) {
-  $primary: map-get($theme, primary);
-  $accent: map-get($theme, accent);
-  $warn: map-get($theme, warn);
-  $background: map-get($theme, background);
-  $foreground: map-get($theme, foreground);
-  $is-dark-theme: map-get($theme, is-dark);
+@use 'sass:map';
+@use '~@angular/material' as mat;
+
+@mixin theme($theme) {
+  $primary: map.get($theme, primary);
+  $accent: map.get($theme, accent);
+  $warn: map.get($theme, warn);
+  $background: map.get($theme, background);
+  $foreground: map.get($theme, foreground);
+  $is-dark-theme: map.get($theme, is-dark);
 
   .docs-toc-container {
-    border-left: solid 4px mat-color($primary);
+    border-left: solid 4px mat.get-color-from-palette($primary);
 
     .docs-link {
-      color: mat-color($foreground, secondary-text);
+      color: mat.get-color-from-palette($foreground, secondary-text);
       transition: color 100ms;
 
       &:hover,
       &.docs-active {
-        color: mat-color($primary, if($is-dark-theme, 200, default));
+        color: mat.get-color-from-palette($primary, if($is-dark-theme, 200, default));
       }
     }
   }
