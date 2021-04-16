@@ -210,8 +210,8 @@
     tslib "^2.1.0"
 
 "@angular/components-examples@angular/material2-docs-content#master":
-  version "12.0.0-next.6-sha-8d54c76fd"
-  resolved "https://codeload.github.com/angular/material2-docs-content/tar.gz/4cbb2d34851cef3953b89ac64a7fcd9191e587a1"
+  version "12.1.0-next.0-sha-119684eb8"
+  resolved "https://codeload.github.com/angular/material2-docs-content/tar.gz/075d512841d81c7068f3d2131c23b6f754f4037f"
   dependencies:
     tslib "^2.1.0"
 
