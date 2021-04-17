@@ -10,7 +10,7 @@ import {MatMenuModule, MatMenuTrigger} from '@angular/material/menu';
   styleUrls: ['./menu-scene.scss']
 })
 export class MenuScene implements AfterViewInit {
-  @ViewChild('menuTrigger') trigger: MatMenuTrigger;
+  @ViewChild('menuTrigger') trigger!: MatMenuTrigger;
 
   ngAfterViewInit() {
     this.trigger.openMenu();

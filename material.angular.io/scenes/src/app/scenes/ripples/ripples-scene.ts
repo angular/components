@@ -9,8 +9,8 @@ import {MatRipple, MatRippleModule} from '@angular/material/core';
   styleUrls: ['./ripples-scene.scss']
 })
 export class RipplesScene implements AfterViewInit {
-  @ViewChild('button', {read: MatRipple}) buttonRipple: MatRipple;
-  @ViewChild('wrapper', {read: MatRipple}) wrapperRipple: MatRipple;
+  @ViewChild('button', {read: MatRipple}) buttonRipple!: MatRipple;
+  @ViewChild('wrapper', {read: MatRipple}) wrapperRipple!: MatRipple;
 
   ngAfterViewInit() {
     this.buttonRipple.launch(140, 100, {

@@ -22,7 +22,7 @@ export class AutocompleteScene implements AfterViewInit {
   myControl = new FormControl();
   options: string[] = ['hello', 'hello world'];
 
-  @ViewChild(MatInput) input: MatInput;
+  @ViewChild(MatInput) input!: MatInput;
 
   ngAfterViewInit() {
     this.input.focus();

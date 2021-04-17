@@ -10,7 +10,7 @@ import {MatIconModule} from '@angular/material/icon';
   styleUrls: ['./tooltip-scene.scss'],
 })
 export class TooltipScene implements AfterViewInit {
-  @ViewChild(MatTooltip) tooltip: MatTooltip;
+  @ViewChild(MatTooltip) tooltip!: MatTooltip;
 
   ngAfterViewInit() {
     this.tooltip.toggle();
