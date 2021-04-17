@@ -9,7 +9,7 @@ import {MatSelect, MatSelectModule} from '@angular/material/select';
   styleUrls: ['./select-scene.scss']
 })
 export class SelectScene implements AfterViewInit {
-  @ViewChild(MatSelect) select: MatSelect;
+  @ViewChild(MatSelect) select!: MatSelect;
 
   ngAfterViewInit() {
     this.select.open();

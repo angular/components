@@ -10,7 +10,7 @@ import {MatSlider, MatSliderModule} from '@angular/material/slider';
   styleUrls: ['./slider-scene.scss']
 })
 export class SliderScene implements AfterViewInit {
-  @ViewChild('volume') volume: MatSlider;
+  @ViewChild('volume') volume!: MatSlider;
 
   ngAfterViewInit() {
     this.volume.focus();
