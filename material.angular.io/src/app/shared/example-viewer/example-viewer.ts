@@ -59,7 +59,9 @@ export class ExampleViewer implements OnInit {
   /** String key of the currently displayed example. */
   @HostBinding('attr.id')
   @Input()
-  get example() { return this._example; }
+  get example() {
+    return this._example;
+  }
   set example(exampleName: string | undefined) {
     if (exampleName && exampleName !== this._example && EXAMPLE_COMPONENTS[exampleName]) {
       this._example = exampleName;
@@ -120,7 +122,7 @@ export class ExampleViewer implements OnInit {
   }
 
   toggleSourceView(): void {
-    this.view === 'full' ? this.view = 'demo' : this.view = 'full';
+    this.view = this.view === 'full' ? 'demo' : 'full';
   }
 
   copySource(snippet: QueryList<CodeSnippet>, selectedIndex: number = 0) {
@@ -154,8 +156,14 @@ export class ExampleViewer implements OnInit {
       let indexB = preferredExampleFileOrder.indexOf(b);
       // Files which are not part of the preferred example file order should be
       // moved after all items with a preferred index.
-      if (indexA === -1) indexA = preferredExampleFileOrder.length;
-      if (indexB === -1) indexB = preferredExampleFileOrder.length;
+      if (indexA === -1) {
+        indexA = preferredExampleFileOrder.length;
+      }
+
+      if (indexB === -1) {
+        indexB = preferredExampleFileOrder.length;
+      }
+
       return (indexA - indexB) || 1;
     }) : [];
   }

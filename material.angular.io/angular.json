@@ -71,7 +71,11 @@
               }
             ],
             "stylePreprocessorOptions": {
-              "includePaths": ["node_modules", "src", "src/styles"]
+              "includePaths": [
+                "node_modules",
+                "src",
+                "src/styles"
+              ]
             },
             "scripts": []
           },
@@ -155,7 +159,11 @@
               }
             ],
             "stylePreprocessorOptions": {
-              "includePaths": ["node_modules", "src", "src/styles"]
+              "includePaths": [
+                "node_modules",
+                "src",
+                "src/styles"
+              ]
             },
             "assets": [
               {
@@ -172,15 +180,11 @@
           }
         },
         "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
+          "builder": "@angular-eslint/builder:lint",
           "options": {
-            "tsConfig": [
-              "tsconfig.app.json",
-              "tsconfig.spec.json",
-              "e2e/tsconfig.json"
-            ],
-            "exclude": [
-              "**/node_modules/**"
+            "lintFilePatterns": [
+              "src/**/*.ts",
+              "src/**/*.html"
             ]
           }
         },
@@ -292,15 +296,11 @@
           }
         },
         "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
+          "builder": "@angular-eslint/builder:lint",
           "options": {
-            "tsConfig": [
-              "scenes/tsconfig.app.json",
-              "scenes/tsconfig.spec.json",
-              "scenes/e2e/tsconfig.json"
-            ],
-            "exclude": [
-              "**/node_modules/**"
+            "lintFilePatterns": [
+              "scenes/**/*.ts",
+              "scenes/**/*.html"
             ]
           }
         },
@@ -320,6 +320,7 @@
     }
   },
   "cli": {
-    "analytics": "cf155f04-1636-4df9-9ce2-870ba25ad38d"
+    "analytics": "cf155f04-1636-4df9-9ce2-870ba25ad38d",
+    "defaultCollection": "@angular-eslint/schematics"
   }
 }
