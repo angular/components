@@ -8,10 +8,9 @@ import './app/material-docs-example.spec';
 (function bootstrap() {
   if ((window as any).jasmineRef) {
     location.reload();
-
     return;
   }
 
-  window.onload!(new Event("anything"));
+  window.onload?.(new Event('anything'));
   (window as any).jasmineRef = jasmine.getEnv();
 })();
