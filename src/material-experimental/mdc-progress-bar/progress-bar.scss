@@ -8,8 +8,13 @@
   display: block;
 
   &._mat-animation-noopable {
-    // Disable the loading animations.
-    animation: none;
+    .mdc-linear-progress__buffer-dots,
+    .mdc-linear-progress__primary-bar,
+    .mdc-linear-progress__secondary-bar,
+    .mdc-linear-progress__bar-inner.mdc-linear-progress__bar-inner {
+      // Disable the loading animations.
+      animation: none;
+    }
 
     .mdc-linear-progress__primary-bar {
       // There's a `transitionend` event that depends on this element. Add a very short
