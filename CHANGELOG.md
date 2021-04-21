@@ -1,3 +1,13 @@
+## 11.2.10 "walnut-tabletop" (2021-04-21)
+
+### material
+
+|            |                       |
+| ---------- | --------------------- |
+| bug fix |  **autocomplete:** error if keydown is dispatched too early ([#22513](https://github.com/angular/components/issues/22513)) ([da92944699327942495145f67b6982118d513419](https://github.com/angular/components/commit/da92944699327942495145f67b6982118d513419)), closes [#22511](https://github.com/angular/components/issues/22511) |
+| bug fix |  **snack-bar:** clear timeout upon dismiss with action ([#22485](https://github.com/angular/components/issues/22485)) ([1a1528de123b334dffd1f95c4be7458fb2dfb25c](https://github.com/angular/components/commit/1a1528de123b334dffd1f95c4be7458fb2dfb25c)), closes [#4860](https://github.com/angular/components/issues/4860) |
+
+
 ## 11.2.9 "earthenware-nightmare" (2021-04-14)
 
 ### cdk
