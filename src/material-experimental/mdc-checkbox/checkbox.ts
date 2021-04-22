@@ -38,7 +38,7 @@ import {
   mixinDisabled,
   CanColor,
   CanDisable,
-  MatRipple,
+  MatRipple
 } from '@angular/material-experimental/mdc-core';
 import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 import {MDCCheckboxAdapter, MDCCheckboxFoundation} from '@material/checkbox';
@@ -78,7 +78,7 @@ const _MatCheckboxMixinBase:
 /** Configuration for the ripple animation. */
 const RIPPLE_ANIMATION_CONFIG: RippleAnimationConfig = {
   enterDuration: numbers.DEACTIVATION_TIMEOUT_MS,
-  exitDuration: numbers.FG_DEACTIVATION_MS,
+  exitDuration: numbers.FG_DEACTIVATION_MS
 };
 
 @Component({
@@ -96,7 +96,7 @@ const RIPPLE_ANIMATION_CONFIG: RippleAnimationConfig = {
   providers: [MAT_CHECKBOX_CONTROL_VALUE_ACCESSOR],
   exportAs: 'matCheckbox',
   encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MatCheckbox extends _MatCheckboxMixinBase implements AfterViewInit, OnDestroy,
   ControlValueAccessor, CanColor, CanDisable {
@@ -246,7 +246,7 @@ export class MatCheckbox extends _MatCheckboxMixinBase implements AfterViewInit,
             this._nativeCheckbox.nativeElement.setAttribute(attr, value);
           }
         },
-    setNativeControlDisabled: (disabled) => this.disabled = disabled,
+    setNativeControlDisabled: (disabled) => this.disabled = disabled
   };
 
   constructor(
