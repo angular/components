@@ -646,6 +646,26 @@ describe('MatRipple', () => {
       expect(rippleTarget.querySelectorAll('.mat-ripple-element').length).toBe(1);
     });
 
+    it('fades out all ripples when disabled input is set', fakeAsync(() => {
+      controller.ripple.launch(0, 0);
+      controller.ripple.launch(0, 0);
+
+      expect(rippleTarget.querySelectorAll('.mat-ripple-element').length).toBe(2);
+
+      tick(enterDuration);
+
+      expect(rippleTarget.querySelectorAll('.mat-ripple-element').length).toBe(2);
+
+      spyOn(controller.ripple, 'fadeOutAll');
+      controller.disabled = true;
+      fixture.detectChanges();
+
+      tick(exitDuration);
+
+      expect(controller.ripple.fadeOutAll).toHaveBeenCalled();
+      expect(rippleTarget.querySelectorAll('.mat-ripple-element').length).toBe(0);
+    }));
+
     it('allows specifying custom trigger element', () => {
       let alternateTrigger = fixture.debugElement.nativeElement
         .querySelector('.alternateTrigger') as HTMLElement;
