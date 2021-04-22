@@ -13,10 +13,7 @@ export {MapBaseLayer} from './map-base-layer';
 export {MapBicyclingLayer} from './map-bicycling-layer/map-bicycling-layer';
 export {MapCircle} from './map-circle/map-circle';
 export {MapDirectionsRenderer} from './map-directions-renderer/map-directions-renderer';
-export {
-  MapDirectionsService,
-  MapDirectionsResponse,
-} from './map-directions-renderer/map-directions-service';
+export {MapDirectionsService, MapDirectionsResponse} from './map-directions-renderer/map-directions-service';
 export {MapGroundOverlay} from './map-ground-overlay/map-ground-overlay';
 export {MapInfoWindow} from './map-info-window/map-info-window';
 export {MapKmlLayer} from './map-kml-layer/map-kml-layer';
