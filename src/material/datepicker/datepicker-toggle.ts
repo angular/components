@@ -7,25 +7,12 @@
  */
 
 import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
-import {
-  AfterContentInit,
-  Attribute,
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  ContentChild,
-  Directive,
-  Input,
-  OnChanges,
-  OnDestroy,
-  SimpleChanges,
-  ViewEncapsulation,
-  ViewChild,
-} from '@angular/core';
+import {AfterContentInit, Attribute, ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, Directive, Input, OnChanges, OnDestroy, SimpleChanges, ViewChild, ViewEncapsulation,} from '@angular/core';
 import {MatButton} from '@angular/material/button';
-import {merge, of as observableOf, Subscription} from 'rxjs';
-import {MatDatepickerIntl} from './datepicker-intl';
+import {merge, Observable, of as observableOf, Subscription} from 'rxjs';
+
 import {MatDatepickerControl, MatDatepickerPanel} from './datepicker-base';
+import {MatDatepickerIntl} from './datepicker-intl';
 
 
 /** Can be used to override the icon of a `matDatepickerToggle`. */
@@ -130,12 +117,11 @@ export class MatDatepickerToggle<D> implements AfterContentInit, OnChanges, OnDe
         observableOf();
 
     this._stateChanges.unsubscribe();
-    this._stateChanges = merge(
-      this._intl.changes,
-      datepickerStateChanged,
-      inputStateChanged,
-      datepickerToggled
-    ).subscribe(() => this._changeDetectorRef.markForCheck());
+    this._stateChanges =
+        merge(
+            this._intl.changes, datepickerStateChanged as Observable<void>,
+            inputStateChanged, datepickerToggled)
+            .subscribe(() => this._changeDetectorRef.markForCheck());
   }
 
   static ngAcceptInputType_disabled: BooleanInput;

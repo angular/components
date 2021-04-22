@@ -6,45 +6,20 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {
-  FocusMonitor,
-  FocusOrigin,
-  isFakeMousedownFromScreenReader,
-  isFakeTouchstartFromScreenReader,
-} from '@angular/cdk/a11y';
+import {FocusMonitor, FocusOrigin, isFakeMousedownFromScreenReader, isFakeTouchstartFromScreenReader,} from '@angular/cdk/a11y';
 import {Direction, Directionality} from '@angular/cdk/bidi';
 import {ENTER, LEFT_ARROW, RIGHT_ARROW, SPACE} from '@angular/cdk/keycodes';
-import {
-  FlexibleConnectedPositionStrategy,
-  HorizontalConnectionPos,
-  Overlay,
-  OverlayConfig,
-  OverlayRef,
-  VerticalConnectionPos,
-  ScrollStrategy,
-} from '@angular/cdk/overlay';
-import {TemplatePortal} from '@angular/cdk/portal';
-import {
-  AfterContentInit,
-  Directive,
-  ElementRef,
-  EventEmitter,
-  Inject,
-  InjectionToken,
-  Input,
-  OnDestroy,
-  Optional,
-  Output,
-  Self,
-  ViewContainerRef,
-} from '@angular/core';
+import {FlexibleConnectedPositionStrategy, HorizontalConnectionPos, Overlay, OverlayConfig, OverlayRef, ScrollStrategy, VerticalConnectionPos,} from '@angular/cdk/overlay';
 import {normalizePassiveListenerOptions} from '@angular/cdk/platform';
-import {asapScheduler, merge, of as observableOf, Subscription} from 'rxjs';
+import {TemplatePortal} from '@angular/cdk/portal';
+import {AfterContentInit, Directive, ElementRef, EventEmitter, Inject, InjectionToken, Input, OnDestroy, Optional, Output, Self, ViewContainerRef,} from '@angular/core';
+import {asapScheduler, merge, Observable, of as observableOf, Subscription} from 'rxjs';
 import {delay, filter, take, takeUntil} from 'rxjs/operators';
-import {MenuCloseReason, _MatMenuBase} from './menu';
+
+import {_MatMenuBase, MenuCloseReason} from './menu';
 import {throwMatMenuMissingError, throwMatMenuRecursiveError} from './menu-errors';
 import {MatMenuItem} from './menu-item';
-import {MatMenuPanel, MAT_MENU_PANEL} from './menu-panel';
+import {MAT_MENU_PANEL, MatMenuPanel} from './menu-panel';
 import {MenuPositionX, MenuPositionY} from './menu-positions';
 
 /** Injection token that determines the scroll handling while the menu is open. */
@@ -504,7 +479,9 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
       filter(() => this._menuOpen)
     ) : observableOf();
 
-    return merge(backdrop, parentClose, hover, detachments);
+    return merge(
+        backdrop, parentClose as Observable<void|'click'|'keydown'|'tab'>,
+        hover, detachments);
   }
 
   /** Handles mouse presses on the trigger. */

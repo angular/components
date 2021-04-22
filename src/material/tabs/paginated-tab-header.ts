@@ -6,30 +6,16 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {
-  ChangeDetectorRef,
-  ElementRef,
-  NgZone,
-  Optional,
-  QueryList,
-  EventEmitter,
-  AfterContentChecked,
-  AfterContentInit,
-  AfterViewInit,
-  OnDestroy,
-  Directive,
-  Inject,
-  Input,
-} from '@angular/core';
+import {FocusableOption, FocusKeyManager} from '@angular/cdk/a11y';
 import {Direction, Directionality} from '@angular/cdk/bidi';
 import {coerceNumberProperty, NumberInput} from '@angular/cdk/coercion';
+import {ENTER, hasModifierKey, SPACE} from '@angular/cdk/keycodes';
+import {normalizePassiveListenerOptions, Platform} from '@angular/cdk/platform';
 import {ViewportRuler} from '@angular/cdk/scrolling';
-import {FocusKeyManager, FocusableOption} from '@angular/cdk/a11y';
-import {ENTER, SPACE, hasModifierKey} from '@angular/cdk/keycodes';
-import {merge, of as observableOf, Subject, timer, fromEvent} from 'rxjs';
-import {takeUntil} from 'rxjs/operators';
-import {Platform, normalizePassiveListenerOptions} from '@angular/cdk/platform';
+import {AfterContentChecked, AfterContentInit, AfterViewInit, ChangeDetectorRef, Directive, ElementRef, EventEmitter, Inject, Input, NgZone, OnDestroy, Optional, QueryList,} from '@angular/core';
 import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
+import {fromEvent, merge, Observable, of as observableOf, Subject, timer} from 'rxjs';
+import {takeUntil} from 'rxjs/operators';
 
 
 /** Config used to bind passive event listeners */
@@ -200,13 +186,16 @@ export abstract class MatPaginatedTabHeader implements AfterContentChecked, Afte
 
     // On dir change or window resize, realign the ink bar and update the orientation of
     // the key manager if the direction has changed.
-    merge(dirChange, resize, this._items.changes).pipe(takeUntil(this._destroyed)).subscribe(() => {
-      // We need to defer this to give the browser some time to recalculate
-      // the element dimensions. The call has to be wrapped in `NgZone.run`,
-      // because the viewport change handler runs outside of Angular.
-      this._ngZone.run(() => Promise.resolve().then(realign));
-      this._keyManager.withHorizontalOrientation(this._getLayoutDirection());
-    });
+    merge(dirChange as Observable<Direction|null>, resize, this._items.changes)
+        .pipe(takeUntil(this._destroyed))
+        .subscribe(() => {
+          // We need to defer this to give the browser some time to recalculate
+          // the element dimensions. The call has to be wrapped in `NgZone.run`,
+          // because the viewport change handler runs outside of Angular.
+          this._ngZone.run(() => Promise.resolve().then(realign));
+          this._keyManager.withHorizontalOrientation(
+              this._getLayoutDirection());
+        });
 
     // If there is a change in the focus key manager we need to emit the `indexFocused`
     // event in order to provide a public event that notifies about focus changes. Also we realign

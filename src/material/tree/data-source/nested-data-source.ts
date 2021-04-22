@@ -26,10 +26,9 @@ export class MatTreeNestedDataSource<T> extends DataSource<T> {
   private readonly _data = new BehaviorSubject<T[]>([]);
 
   connect(collectionViewer: CollectionViewer): Observable<T[]> {
-    return merge(...[collectionViewer.viewChange, this._data])
-      .pipe(map(() => {
-        return this.data;
-      }));
+    return merge(collectionViewer.viewChange, this._data).pipe(map(() => {
+      return this.data;
+    }));
   }
 
   disconnect() {

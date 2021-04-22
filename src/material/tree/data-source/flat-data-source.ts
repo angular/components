@@ -152,8 +152,8 @@ export class MatTreeFlatDataSource<T, F, K = F> extends DataSource<F> {
   connect(collectionViewer: CollectionViewer): Observable<F[]> {
     return merge(
       collectionViewer.viewChange,
-      this._treeControl.expansionModel.changed,
-      this._flattenedData
+      this._treeControl.expansionModel.changed.asObservable(),
+      this._flattenedData.asObservable()
     ).pipe(map(() => {
       this._expandedData.next(
         this._treeFlattener.expandFlattenedNodes(this._flattenedData.value, this._treeControl));
