@@ -550,7 +550,10 @@ export class MatSlider extends _MatSliderMixinBase
   /** Whether the slider is disabled. */
   @Input()
   get disabled(): boolean { return this._disabled; }
-  set disabled(v: boolean) { this._setDisabled(coerceBooleanProperty(v)); }
+  set disabled(v: boolean) {
+    this._setDisabled(coerceBooleanProperty(v));
+    this._updateInputsDisabledState();
+  }
   private _disabled: boolean = false;
 
   /** Whether the slider displays a numeric value label upon pressing the thumb. */
@@ -705,7 +708,8 @@ export class MatSlider extends _MatSliderMixinBase
       : this._foundation.setValue(value);
   }
 
-  _setDisabled(value: boolean, updateControlValueAccessor: boolean = true) {
+  /** Sets the disabled state of the MatSlider. */
+  private _setDisabled(value: boolean) {
     this._disabled = value;
 
     // If we want to disable the slider after the foundation has been initialized,
@@ -713,13 +717,15 @@ export class MatSlider extends _MatSliderMixinBase
     // this before initializing the foundation because it will throw errors.
     if (this._initialized) {
       this._foundation.setDisabled(value);
+    }
+  }
 
-      if (updateControlValueAccessor) {
-        // Set the disabled state of the individual slider thumb(s) (ControlValueAccessor).
-        this._getInput(Thumb.END)._disabled = true;
-        if (this._isRange()) {
-          this._getInput(Thumb.START)._disabled = true;
-        }
+  /** Sets the disabled state of the individual slider thumb(s) (ControlValueAccessor). */
+  private _updateInputsDisabledState() {
+    if (this._initialized) {
+      this._getInput(Thumb.END)._disabled = true;
+      if (this._isRange()) {
+        this._getInput(Thumb.START)._disabled = true;
       }
     }
   }
@@ -732,7 +738,7 @@ export class MatSlider extends _MatSliderMixinBase
   /** Sets the disabled state based on the disabled state of the inputs (ControlValueAccessor). */
   _updateDisabled(): void {
     const disabled = this._inputs.some(input => input._disabled);
-    this._setDisabled(disabled, false);
+    this._setDisabled(disabled);
   }
 
   /** Gets the slider thumb input of the given thumb position. */
