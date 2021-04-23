@@ -27,17 +27,32 @@ interface BrowserTest {
 }
 
 export class SaucelabsDaemon {
+  /**
+   * Map of browsers and their pending tests. If a browser is acquired on the
+   * remote selenium server, the browser is not immediately ready. If the browser
+   * becomes active, the pending tests will be started.
+   */
   private _pendingTests = new Map<RemoteBrowser, BrowserTest>();
-  _browsers = new Set<RemoteBrowser>();
+
+  /** List of active browsers that are managed by the daemon. */
+  private _activeBrowsers = new Set<RemoteBrowser>();
+
+  /** Map that contains test ids with their acquired browser. */
   private _runningTests = new Map<number, RemoteBrowser>();
+
+  /** Server used for communication with the Karma launcher. */
   private _server = new IpcServer(this);
+
+  /** Base selenium capabilities that will be added to each browser. */
   private _baseCapabilities = {...defaultCapabilities, ...this._userCapabilities};
+
+  /** Id of the keep alive interval that ensures no remote browsers time out. */
   private _keepAliveIntervalId: NodeJS.Timeout|null = null;
 
   constructor(
       private _username: string, private _accessKey: string,
       private _userCapabilities: object = {}) {
-    // Starts the heartbeat for browsers.
+    // Starts the keep alive loop for all active browsers.
     this._keepAliveLoop();
   }
 
@@ -51,7 +66,7 @@ export class SaucelabsDaemon {
 
       // Keep track of the launched browser. We do this before it even completed the
       // launch as we can then handle scheduled tests when the browser is still launching.
-      this._browsers.add(launched);
+      this._activeBrowsers.add(launched);
 
       // See the following link for public API of the selenium server.
       // https://wiki.saucelabs.com/display/DOCS/Instant+Selenium+Node.js+Tests
@@ -80,12 +95,12 @@ export class SaucelabsDaemon {
   }
 
   async quitAllBrowsers() {
-    this._browsers.forEach(b => {
+    this._activeBrowsers.forEach(b => {
       if (b.driver !== null) {
         b.driver.quit();
       }
     });
-    this._browsers.clear();
+    this._activeBrowsers.clear();
     this._runningTests.clear();
     this._pendingTests.clear();
   }
@@ -140,7 +155,7 @@ export class SaucelabsDaemon {
 
   private _findMatchingBrowsers(browserId: string): RemoteBrowser[] {
     const browsers: RemoteBrowser[] = [];
-    for (let browser of this._browsers) {
+    for (let browser of this._activeBrowsers) {
       if (browser.id === browserId) {
         browsers.push(browser);
       }
@@ -153,7 +168,7 @@ export class SaucelabsDaemon {
   // https://saucelabs.com/blog/selenium-tips-how-to-coordinate-multiple-browsers-in-sauce-ondemand.
   private _keepAliveLoop = async () => {
     const pendingCommands: promise.Promise<any>[] = [];
-    for (const browser of this._browsers) {
+    for (const browser of this._activeBrowsers) {
       if (browser.driver !== null) {
         pendingCommands.push(browser.driver.getTitle());
       }

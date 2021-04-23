@@ -1,5 +1,6 @@
 import {createConnection, Socket} from 'net';
 import {Browser, getUniqueId} from '../browser';
+import { IPC_PORT } from '../ipc-defaults';
 import {BackgroundServiceSendMessages, EndTestMessage, StartTestMessage} from '../ipc-messages';
 
 export function SaucelabsLauncher(this: any,
@@ -26,7 +27,7 @@ export function SaucelabsLauncher(this: any,
   this.name = browserDisplayName + ' on SauceLabs (daemon)';
 
   this.on('start', (pageUrl: string) => {
-    daemonConnection = createConnection({port: 5324},
+    daemonConnection = createConnection({port: IPC_PORT},
         () => _startBrowserTest(pageUrl, args));
 
     daemonConnection.on('data', b => _processMessage(

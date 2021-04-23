@@ -338,6 +338,7 @@ jobs:
         name: Running tests
         command: |
           TESTS=$(yarn -s bazel query --output label 'attr("tags", "saucelabs", //src/...)')
+          yarn -s bazel build ${TESTS}
           yarn -s bazel test ${TESTS} --jobs=2
 
     - run:

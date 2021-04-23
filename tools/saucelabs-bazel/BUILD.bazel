@@ -6,6 +6,7 @@ ts_library(
     name = "saucelabs-bazel",
     srcs = [
         "browser.ts",
+        "ipc-defaults.ts",
         "ipc-messages.ts",
     ],
     deps = [],

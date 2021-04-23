@@ -1,4 +1,5 @@
 import {createServer, Server, Socket} from 'net';
+import { IPC_PORT } from '../ipc-defaults';
 import {BackgroundServiceReceiveMessages, NoAvailableBrowserMessage} from '../ipc-messages';
 import {SaucelabsDaemon} from './saucelabs-daemon';
 
@@ -8,9 +9,9 @@ export class IpcServer {
   private readonly _server: Server;
   private _connections = new Map<number, Socket>();
 
-  constructor(private _service: SaucelabsDaemon, port = 5324) {
+  constructor(private _service: SaucelabsDaemon) {
     this._server = createServer(this._connectionHandler.bind(this));
-    this._server.listen(port, () => console.info('Daemon IPC server listening.'));
+    this._server.listen(IPC_PORT, () => console.info('Daemon IPC server listening.'));
   }
 
   private _connectionHandler(socket: Socket) {
