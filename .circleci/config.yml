@@ -311,6 +311,7 @@ jobs:
     <<: *job_defaults
     resource_class: xlarge
     environment:
+      GCP_DECRYPT_TOKEN: *gcp_decrypt_token
       SAUCE_USERNAME: "angular-components"
       SAUCE_ACCESS_KEY: "a8b099ae-f003-4ee3-9bee-648a10284336"
       SAUCE_TUNNEL_IDENTIFIER: angular-material-<< pipeline.id >>
