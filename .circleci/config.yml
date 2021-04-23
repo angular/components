@@ -318,6 +318,7 @@ jobs:
     - checkout_and_rebase
     - *restore_cache
     - *setup_bazel_ci_config
+    - *setup_bazel_remote_execution
     - *yarn_install
 
     - run:
