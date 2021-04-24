@@ -335,6 +335,11 @@ export class MatSliderThumb implements AfterViewInit, ControlValueAccessor, OnIn
   /** Event emitted on each value change that happens to the slider. */
   @Output() readonly input: EventEmitter<Event> = new EventEmitter<Event>();
 
+  /**
+   * Used to determine the disabled state of the MatSlider (ControlValueAccessor).
+   * For ranged sliders, the disabled state of the MatSlider depends on the combined state of the
+   * start and end inputs. See MatSlider._updateDisabled.
+   */
   _disabled: boolean = false;
 
   /**
@@ -546,14 +551,8 @@ export class MatSlider extends _MatSliderMixinBase
   @Input()
   get disabled(): boolean { return this._disabled; }
   set disabled(v: boolean) {
-    this._disabled = coerceBooleanProperty(v);
-
-    // If we want to disable the slider after the foundation has been initialized,
-    // we need to inform the foundation by calling `setDisabled`. Also, we can't call
-    // this before initializing the foundation because it will throw errors.
-    if (this._initialized) {
-      this._foundation.setDisabled(v);
-    }
+    this._setDisabled(coerceBooleanProperty(v));
+    this._updateInputsDisabledState();
   }
   private _disabled: boolean = false;
 
@@ -709,6 +708,28 @@ export class MatSlider extends _MatSliderMixinBase
       : this._foundation.setValue(value);
   }
 
+  /** Sets the disabled state of the MatSlider. */
+  private _setDisabled(value: boolean) {
+    this._disabled = value;
+
+    // If we want to disable the slider after the foundation has been initialized,
+    // we need to inform the foundation by calling `setDisabled`. Also, we can't call
+    // this before initializing the foundation because it will throw errors.
+    if (this._initialized) {
+      this._foundation.setDisabled(value);
+    }
+  }
+
+  /** Sets the disabled state of the individual slider thumb(s) (ControlValueAccessor). */
+  private _updateInputsDisabledState() {
+    if (this._initialized) {
+      this._getInput(Thumb.END)._disabled = true;
+      if (this._isRange()) {
+        this._getInput(Thumb.START)._disabled = true;
+      }
+    }
+  }
+
   /** Whether this is a ranged slider. */
   _isRange(): boolean {
     return this._inputs.length === 2;
@@ -716,7 +737,8 @@ export class MatSlider extends _MatSliderMixinBase
 
   /** Sets the disabled state based on the disabled state of the inputs (ControlValueAccessor). */
   _updateDisabled(): void {
-    this.disabled = this._inputs.some(input => input._disabled);
+    const disabled = this._inputs.some(input => input._disabled);
+    this._setDisabled(disabled);
   }
 
   /** Gets the slider thumb input of the given thumb position. */
