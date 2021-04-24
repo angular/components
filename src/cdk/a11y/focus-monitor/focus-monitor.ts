@@ -307,17 +307,16 @@ export class FocusMonitor implements OnDestroy {
       return this._origin;
     }
 
-    // If we couldn't determine a focus origin, it's because either:
-    // 1) The window has just regained focus, and thus we restore the last origin from before the
-    //    window blurred.
-    // 2) The element was programmatically focused, and thus we set the origin as 'program'.
-    // 3) The element was focused via navigating with a screen reader, and thus we set the origin
-    //    as 'program' because keyboard events are rarely fired.
-    if (this._windowFocused && this._lastFocusOrigin) {
-      return this._lastFocusOrigin;
-    } else {
-      return 'program';
-    }
+    // If the window has just regained focus, we can restore the most recent origin from before the
+    // window blurred. Otherwise, we've reached the point where we can't identify the source of the
+    // focus. This typically means one of two things happened:
+    //
+    // 1) The element was programmatically focused, or
+    // 2) The element was focused via screen reader navigation (which generally doesn't fire
+    //    events).
+    //
+    // Because we can't distinguish between these two cases, we default to setting `program`.
+    return (this._windowFocused && this._lastFocusOrigin) ? this._lastFocusOrigin : 'program';
   }
 
   /**
@@ -338,8 +337,9 @@ export class FocusMonitor implements OnDestroy {
    * function to clear the origin at the end of a timeout. The duration of the timeout depends on
    * the origin being set.
    * @param origin The origin to set.
+   * @param isFromInteractionEvent Whether we are setting the origin from an interaction event.
    */
-  private _setOrigin(origin: FocusOrigin): void {
+  private _setOrigin(origin: FocusOrigin, isFromInteractionEvent = false): void {
     this._ngZone.runOutsideAngular(() => {
       this._origin = origin;
 
@@ -350,7 +350,7 @@ export class FocusMonitor implements OnDestroy {
       // the event queue. Before doing so, clear any pending timeouts.
       if (this._detectionMode === FocusMonitorDetectionMode.IMMEDIATE) {
         clearTimeout(this._originTimeoutId);
-        const ms = (origin === 'touch') ? TOUCH_BUFFER_MS : 1;
+        const ms = ((origin === 'touch') && isFromInteractionEvent) ? TOUCH_BUFFER_MS : 1;
         this._originTimeoutId = setTimeout(() => this._origin = null, ms);
       }
     });
@@ -431,7 +431,7 @@ export class FocusMonitor implements OnDestroy {
       // The InputModalityDetector is also just a collection of global listeners.
       this._inputModalityDetector.modalityDetected
         .pipe(takeUntil(this._stopInputModalityDetector))
-        .subscribe(modality => { this._setOrigin(modality); });
+        .subscribe(modality => { this._setOrigin(modality, true /* isFromInteractionEvent */); });
     }
   }
 

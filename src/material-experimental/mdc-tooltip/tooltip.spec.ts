@@ -728,9 +728,6 @@ describe('MDC-based MatTooltip', () => {
       tick(500);
 
       expect(overlayContainerElement.querySelector('.mat-mdc-tooltip')).toBeNull();
-
-      // Flush due to the additional tick that is necessary for the FocusMonitor.
-      flush();
     }));
 
     it('should not hide the tooltip when calling `show` twice in a row', fakeAsync(() => {

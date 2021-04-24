@@ -6,7 +6,7 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {ALT, CONTROL, META, SHIFT} from '@angular/cdk/keycodes';
+import {ALT, CONTROL, MAC_META, META, SHIFT} from '@angular/cdk/keycodes';
 import {Inject, Injectable, InjectionToken, OnDestroy, Optional, NgZone} from '@angular/core';
 import {normalizePassiveListenerOptions, Platform} from '@angular/cdk/platform';
 import {DOCUMENT} from '@angular/common';
@@ -46,9 +46,13 @@ export const INPUT_MODALITY_DETECTOR_OPTIONS =
  * 2. VoiceOver triggers some keyboard events when linearly navigating with Control + Option (but
  *    confusingly not with Caps Lock). Thus, to have parity with other screen readers, we ignore
  *    these keys so as to not update the input modality.
+ *
+ * Note that we do not by default ignore the right Meta key on Safari because it has the same key
+ * code as the ContextMenu key on other browsers. When we switch to using event.key, we can
+ * distinguish between the two.
  */
 export const INPUT_MODALITY_DETECTOR_DEFAULT_OPTIONS: InputModalityDetectorOptions = {
-  ignoreKeys: [ALT, CONTROL, META, SHIFT],
+  ignoreKeys: [ALT, CONTROL, MAC_META, META, SHIFT],
 };
 
 /**
@@ -80,7 +84,8 @@ const modalityEventListenerOptions = normalizePassiveListenerOptions({
  * input interaction.
  *
  * When a user is not navigating but *interacting* with a screen reader, this service attempts to
- * update the input modality to keyboard.
+ * update the input modality to keyboard, but in general this service's behavior is largely
+ * undefined.
  */
 @Injectable({ providedIn: 'root' })
 export class InputModalityDetector implements OnDestroy {

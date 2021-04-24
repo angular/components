@@ -1,4 +1,4 @@
-import {A, ALT, B, C, CONTROL, META, SHIFT} from '@angular/cdk/keycodes';
+import {A, ALT, B, C, CONTROL, MAC_META, META, SHIFT} from '@angular/cdk/keycodes';
 import {Platform} from '@angular/cdk/platform';
 import {NgZone, PLATFORM_ID} from '@angular/core';
 
@@ -156,6 +156,7 @@ describe('InputModalityDetector', () => {
 
     dispatchKeyboardEvent(document, 'keydown', ALT);
     dispatchKeyboardEvent(document, 'keydown', CONTROL);
+    dispatchKeyboardEvent(document, 'keydown', MAC_META);
     dispatchKeyboardEvent(document, 'keydown', META);
     dispatchKeyboardEvent(document, 'keydown', SHIFT);
 
