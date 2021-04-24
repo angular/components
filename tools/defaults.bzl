@@ -214,14 +214,22 @@ def karma_web_test_suite(name, **kwargs):
     sauce_web_test_args["deps"] = sauce_web_test_args.get("deps", []) + [
         "//test:karma-saucelabs-config",
     ]
+    sauce_web_test_args["tags"] = sauce_web_test_args.get("tags", []) + [
+        "manual", "saucelabs", "no-remote-exec"
+    ]
+    current_package = native.package_name()
+
+    # Do not run brower tests from the `/testing` entry-points, or from the
+    # components examples on remote browsers (i.e. Saucelabs).
+    if current_package.endswith("/testing") or \
+       current_package.startswith("src/components-examples/"):
+        sauce_web_test_args["tags"] += ["skip-on-remote-browsers"]
 
     # Add a saucelabs target for these karma tests
     karma_web_test(
         name = "%s_saucelabs" % name,
         timeout = "long",
         config_file = "//test:karma-saucelabs.conf.js",
-        tags = ["manual", "saucelabs", "no-remote-exec"],
-        flaky = False,
         **sauce_web_test_args
     )
 
