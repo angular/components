@@ -21,7 +21,7 @@ import {
   tick,
   waitForAsync,
 } from '@angular/core/testing';
-import {FormsModule} from '@angular/forms';
+import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {By} from '@angular/platform-browser';
 import {Thumb} from '@material/slider';
 import {MatSliderModule} from './module';
@@ -43,7 +43,7 @@ describe('MDC-based MatSlider' , () => {
 
   function createComponent<T>(component: Type<T>): ComponentFixture<T> {
     TestBed.configureTestingModule({
-      imports: [FormsModule, MatSliderModule],
+      imports: [FormsModule, MatSliderModule, ReactiveFormsModule],
       declarations: [component],
     }).compileComponents();
     return TestBed.createComponent<T>(component);
@@ -1283,6 +1283,225 @@ describe('MDC-based MatSlider' , () => {
     }));
   });
 
+  describe('slider as a custom form control', () => {
+    let fixture: ComponentFixture<SliderWithFormControl>;
+    let testComponent: SliderWithFormControl;
+    let sliderInstance: MatSlider;
+    let inputInstance: MatSliderThumb;
+
+    beforeEach(waitForAsync(() => {
+      fixture = createComponent(SliderWithFormControl);
+      fixture.detectChanges();
+      testComponent = fixture.debugElement.componentInstance;
+      const sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider));
+      sliderInstance = sliderDebugElement.componentInstance;
+      inputInstance = sliderInstance._getInput(Thumb.END);
+    }));
+
+    it('should not update the control when the value is updated', () => {
+      expect(testComponent.control.value).toBe(0);
+      inputInstance.value = 11;
+      fixture.detectChanges();
+      expect(testComponent.control.value).toBe(0);
+    });
+
+    it('should update the control on mouseup', () => {
+      expect(testComponent.control.value).toBe(0);
+      setValueByClick(sliderInstance, 76, platform.IOS);
+      expect(testComponent.control.value).toBe(76);
+    });
+
+    it('should update the control on slide', () => {
+      expect(testComponent.control.value).toBe(0);
+      slideToValue(sliderInstance, 19, Thumb.END, platform.IOS);
+      expect(testComponent.control.value).toBe(19);
+    });
+
+    it('should update the value when the control is set', () => {
+      expect(inputInstance.value).toBe(0);
+      testComponent.control.setValue(7);
+      expect(inputInstance.value).toBe(7);
+    });
+
+    it('should update the disabled state when control is disabled', () => {
+      expect(sliderInstance.disabled).toBe(false);
+      testComponent.control.disable();
+      expect(sliderInstance.disabled).toBe(true);
+    });
+
+    it('should update the disabled state when the control is enabled', () => {
+      sliderInstance.disabled = true;
+      testComponent.control.enable();
+      expect(sliderInstance.disabled).toBe(false);
+    });
+
+    it('should have the correct control state initially and after interaction', () => {
+      let sliderControl = testComponent.control;
+
+      // The control should start off valid, pristine, and untouched.
+      expect(sliderControl.valid).toBe(true);
+      expect(sliderControl.pristine).toBe(true);
+      expect(sliderControl.touched).toBe(false);
+
+      // After changing the value, the control should become dirty (not pristine),
+      // but remain untouched.
+      setValueByClick(sliderInstance, 50, platform.IOS);
+
+      expect(sliderControl.valid).toBe(true);
+      expect(sliderControl.pristine).toBe(false);
+      expect(sliderControl.touched).toBe(false);
+
+      // If the control has been visited due to interaction, the control should remain
+      // dirty and now also be touched.
+      inputInstance.blur();
+      fixture.detectChanges();
+
+      expect(sliderControl.valid).toBe(true);
+      expect(sliderControl.pristine).toBe(false);
+      expect(sliderControl.touched).toBe(true);
+    });
+  });
+
+  describe('slider as a custom form control', () => {
+    let fixture: ComponentFixture<RangeSliderWithFormControl>;
+    let testComponent: RangeSliderWithFormControl;
+    let sliderInstance: MatSlider;
+    let startInputInstance: MatSliderThumb;
+    let endInputInstance: MatSliderThumb;
+
+    beforeEach(waitForAsync(() => {
+      fixture = createComponent(RangeSliderWithFormControl);
+      fixture.detectChanges();
+      testComponent = fixture.debugElement.componentInstance;
+      const sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider));
+      sliderInstance = sliderDebugElement.componentInstance;
+      startInputInstance = sliderInstance._getInput(Thumb.START);
+      endInputInstance = sliderInstance._getInput(Thumb.END);
+    }));
+
+    it('should not update the start input control when the value is updated', () => {
+      expect(testComponent.startInputControl.value).toBe(0);
+      startInputInstance.value = 11;
+      fixture.detectChanges();
+      expect(testComponent.startInputControl.value).toBe(0);
+    });
+
+    it('should not update the end input control when the value is updated', () => {
+      expect(testComponent.endInputControl.value).toBe(100);
+      endInputInstance.value = 11;
+      fixture.detectChanges();
+      expect(testComponent.endInputControl.value).toBe(100);
+    });
+
+    it('should update the start input control on mouseup', () => {
+      expect(testComponent.startInputControl.value).toBe(0);
+      setValueByClick(sliderInstance, 20, platform.IOS);
+      expect(testComponent.startInputControl.value).toBe(20);
+    });
+
+    it('should update the end input control on mouseup', () => {
+      expect(testComponent.endInputControl.value).toBe(100);
+      setValueByClick(sliderInstance, 80, platform.IOS);
+      expect(testComponent.endInputControl.value).toBe(80);
+    });
+
+    it('should update the start input control on slide', () => {
+      expect(testComponent.startInputControl.value).toBe(0);
+      slideToValue(sliderInstance, 20, Thumb.START, platform.IOS);
+      expect(testComponent.startInputControl.value).toBe(20);
+    });
+
+    it('should update the end input control on slide', () => {
+      expect(testComponent.endInputControl.value).toBe(100);
+      slideToValue(sliderInstance, 80, Thumb.END, platform.IOS);
+      expect(testComponent.endInputControl.value).toBe(80);
+    });
+
+    it('should update the start input value when the start input control is set', () => {
+      expect(startInputInstance.value).toBe(0);
+      testComponent.startInputControl.setValue(10);
+      expect(startInputInstance.value).toBe(10);
+    });
+
+    it('should update the end input value when the end input control is set', () => {
+      expect(endInputInstance.value).toBe(100);
+      testComponent.endInputControl.setValue(90);
+      expect(endInputInstance.value).toBe(90);
+    });
+
+    it('should update the disabled state if the start input control is disabled', () => {
+      expect(sliderInstance.disabled).toBe(false);
+      testComponent.startInputControl.disable();
+      expect(sliderInstance.disabled).toBe(true);
+    });
+
+    it('should update the disabled state if the end input control is disabled', () => {
+      expect(sliderInstance.disabled).toBe(false);
+      testComponent.endInputControl.disable();
+      expect(sliderInstance.disabled).toBe(true);
+    });
+
+    it('should update the disabled state when both input controls are enabled', () => {
+      sliderInstance.disabled = true;
+      testComponent.startInputControl.enable();
+      expect(sliderInstance.disabled).toBe(true);
+      testComponent.endInputControl.enable();
+      expect(sliderInstance.disabled).toBe(false);
+    });
+
+    it('should have the correct start input control state initially and after interaction', () => {
+      let sliderControl = testComponent.startInputControl;
+
+      // The control should start off valid, pristine, and untouched.
+      expect(sliderControl.valid).toBe(true);
+      expect(sliderControl.pristine).toBe(true);
+      expect(sliderControl.touched).toBe(false);
+
+      // After changing the value, the control should become dirty (not pristine),
+      // but remain untouched.
+      setValueByClick(sliderInstance, 25, platform.IOS);
+
+      expect(sliderControl.valid).toBe(true);
+      expect(sliderControl.pristine).toBe(false);
+      expect(sliderControl.touched).toBe(false);
+
+      // If the control has been visited due to interaction, the control should remain
+      // dirty and now also be touched.
+      startInputInstance.blur();
+      fixture.detectChanges();
+
+      expect(sliderControl.valid).toBe(true);
+      expect(sliderControl.pristine).toBe(false);
+      expect(sliderControl.touched).toBe(true);
+    });
+
+    it('should have the correct start input control state initially and after interaction', () => {
+      let sliderControl = testComponent.endInputControl;
+
+      // The control should start off valid, pristine, and untouched.
+      expect(sliderControl.valid).toBe(true);
+      expect(sliderControl.pristine).toBe(true);
+      expect(sliderControl.touched).toBe(false);
+
+      // After changing the value, the control should become dirty (not pristine),
+      // but remain untouched.
+      setValueByClick(sliderInstance, 75, platform.IOS);
+
+      expect(sliderControl.valid).toBe(true);
+      expect(sliderControl.pristine).toBe(false);
+      expect(sliderControl.touched).toBe(false);
+
+      // If the control has been visited due to interaction, the control should remain
+      // dirty and now also be touched.
+      endInputInstance.blur();
+      fixture.detectChanges();
+
+      expect(sliderControl.valid).toBe(true);
+      expect(sliderControl.pristine).toBe(false);
+      expect(sliderControl.touched).toBe(true);
+    });
+  });
+
   describe('slider with a two-way binding', () => {
     let fixture: ComponentFixture<SliderWithTwoWayBinding>;
     let testComponent: SliderWithTwoWayBinding;
@@ -1557,6 +1776,28 @@ class RangeSliderWithNgModel {
   @ViewChild(MatSlider) slider: MatSlider;
   startVal: number | undefined = 0;
   endVal: number | undefined = 100;
+}
+
+@Component({
+  template: `
+  <mat-slider>
+    <input [formControl]="control" matSliderThumb>
+  </mat-slider>`,
+})
+class SliderWithFormControl {
+  control = new FormControl(0);
+}
+
+@Component({
+  template: `
+  <mat-slider>
+    <input [formControl]="startInputControl" matSliderStartThumb>
+    <input [formControl]="endInputControl" matSliderEndThumb>
+  </mat-slider>`,
+})
+class RangeSliderWithFormControl {
+  startInputControl = new FormControl(0);
+  endInputControl = new FormControl(100);
 }
 
 @Component({
