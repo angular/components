@@ -4,7 +4,6 @@ import {Browser, getUniqueId} from '../browser';
 import {IpcServer} from './ipc';
 
 const defaultCapabilities = {
-  startConnect: false,
   recordVideo: false,
   recordScreenshots: false,
   idleTimeout: 90,
