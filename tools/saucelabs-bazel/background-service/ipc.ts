@@ -25,14 +25,17 @@ export class IpcServer {
       socket: Socket, socketId: number, message: BackgroundServiceReceiveMessages) {
     switch (message.type) {
       case 'start-test':
-        console.debug(`Starting tests for ${socketId}: ${message.testDescription}`);
+        console.debug(`Requesting test browser: SID#${socketId}: ${message.testDescription}`);
         if (!this._service.startTest(
                 {testId: socketId, pageUrl: message.url, requestedBrowserId: message.browserId})) {
+          console.debug('  Browser not available.', message.browserId);
           this._noAvailableBrowser(socket);
+        } else {
+          console.debug('  Browser available. Test can start.');
         }
         break;
       case 'end-test':
-        console.debug(`Ending tests for ${socketId}`);
+        console.debug(`Ending tests for SID#${socketId}`);
         this._service.endTest(socketId);
         break;
     }
