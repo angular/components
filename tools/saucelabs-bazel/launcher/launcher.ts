@@ -20,6 +20,7 @@ export function SaucelabsLauncher(this: any,
   const browserDisplayName = args.browserName +
     (args.browserVersion ? ' ' + args.browserVersion : '') +
     (args.platformName ? ' (' + args.platformName + ')' : '');
+  const testSuiteDescription = process.env.BAZEL_TARGET ?? '<unknown>';
 
   let daemonConnection: Socket|null = null;
 
@@ -58,7 +59,7 @@ export function SaucelabsLauncher(this: any,
   const _startBrowserTest = (pageUrl: string, browser: Browser) => {
     log.info('Starting browser %s test in daemon with URL: %s', browserDisplayName, pageUrl);
     daemonConnection!.write(JSON.stringify(
-        new StartTestMessage(pageUrl, getUniqueId(browser))));
+        new StartTestMessage(pageUrl, getUniqueId(browser), testSuiteDescription)));
   };
 
   const _endBrowserTest = () => {

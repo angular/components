@@ -1,7 +1,10 @@
 /** Message that can be sent to the daemon to start a given test. */
 export class StartTestMessage {
   readonly type = 'start-test';
-  constructor(public url: string, public browserId: string) {}
+  constructor(
+      public url: string,
+      public browserId: string,
+      public testDescription: string) {}
 }
 
 /** Message that can be sent to the daemon if a test completed. */

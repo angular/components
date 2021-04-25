@@ -25,7 +25,7 @@ export class IpcServer {
       socket: Socket, socketId: number, message: BackgroundServiceReceiveMessages) {
     switch (message.type) {
       case 'start-test':
-        console.debug(`Starting tests for ${socketId}`);
+        console.debug(`Starting tests for ${socketId}: ${message.testDescription}`);
         if (!this._service.startTest(
                 {testId: socketId, pageUrl: message.url, requestedBrowserId: message.browserId})) {
           this._noAvailableBrowser(socket);
