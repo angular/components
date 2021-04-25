@@ -51,8 +51,9 @@ export class SaucelabsDaemon {
   constructor(
       private _username: string, private _accessKey: string,
       private _userCapabilities: object = {}) {
-    // Starts the keep alive loop for all active browsers.
-    this._keepAliveLoop();
+    // Starts the keep alive loop for all active browsers, running every 10 seconds.
+    this._keepAliveIntervalId = setInterval(
+        () => this._keepAliveBrowsers(), 10_000);
   }
 
   async launchBrowsers(browsers: Browser[]) {
@@ -124,9 +125,6 @@ export class SaucelabsDaemon {
 
   startTest(test: BrowserTest): boolean {
     const browsers = this._findMatchingBrowsers(test.requestedBrowserId);
-
-
-    console.debug('   > Browsers Found:', browsers, this._activeBrowsers);
     if (browsers.length === null) {
       return false;
     }
@@ -174,7 +172,7 @@ export class SaucelabsDaemon {
   // Implements a heartbeat for Saucelabs browsers as they could end up not receiving any
   // commands when the daemon is unused (i.e. Bazel takes a while to start tests).
   // https://saucelabs.com/blog/selenium-tips-how-to-coordinate-multiple-browsers-in-sauce-ondemand.
-  private _keepAliveLoop = async () => {
+  async _keepAliveBrowsers() {
     const pendingCommands: promise.Promise<any>[] = [];
     for (const browser of this._activeBrowsers) {
       if (browser.driver !== null) {
@@ -183,6 +181,5 @@ export class SaucelabsDaemon {
     }
     await Promise.all(pendingCommands);
     console.debug(`${Date().toLocaleString()}: Refreshed ${pendingCommands.length} browsers.`);
-    this._keepAliveIntervalId = setTimeout(this._keepAliveLoop, 20 * 1000);
   }
 }
