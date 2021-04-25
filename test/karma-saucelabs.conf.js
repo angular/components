@@ -19,10 +19,18 @@ module.exports = karmaConfig => {
     captureTimeout: 90000,
     browsers: platformMap.saucelabs,
     transports: ['polling', 'websocket'],
+    // Configure the Karma spec reporter so that spec timing is captured.
+    specReporter: {
+      showSpecTiming: true,
+    },
   };
 
+  // Setup the Karma spec reporter so that debugging of slow tests on CI is easier.
+  // Note that we need to override it using `defineProperty` because otherwise
+  // `@bazel/concatjs` always appends the `progress` reporter that causes unreadable
+  // console output on CI.
   Object.defineProperty(config, 'reporters', {
-    get: () => [],
+    get: () => ['spec'],
     set: () => {},
     enumerable: true,
   });

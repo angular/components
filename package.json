@@ -64,6 +64,7 @@
     "@types/youtube": "^0.0.42",
     "@webcomponents/custom-elements": "^1.1.0",
     "core-js-bundle": "^3.8.2",
+    "karma-spec-reporter": "^0.0.32",
     "material-components-web": "12.0.0-canary.b52196498.0",
     "rxjs": "^6.5.3",
     "rxjs-tslint-rules": "^4.33.1",

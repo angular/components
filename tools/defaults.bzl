@@ -201,21 +201,28 @@ def karma_web_test_suite(name, **kwargs):
         if not opt_name in ["wrapped_test_tags", "browsers", "wrapped_test_tags", "tags"]:
             web_test_args[opt_name] = kwargs[opt_name]
 
+    local_web_test_args = dict(**web_test_args)
+    local_web_test_args["deps"] = local_web_test_args.get("deps", []) + [
+        "//test:karma_local_testing_config_lib",
+    ]
+
     # Custom standalone web test that can be run to test against any browser
     # that is manually connected to.
     karma_web_test(
         name = "%s_local" % name,
         config_file = "//test:bazel-karma-local-config.js",
         tags = ["manual"],
-        **web_test_args
+        **local_web_test_args
     )
 
     sauce_web_test_args = dict(**web_test_args)
     sauce_web_test_args["deps"] = sauce_web_test_args.get("deps", []) + [
-        "//test:karma-saucelabs-config",
+        "//test:karma_saucelabs_config_lib",
     ]
     sauce_web_test_args["tags"] = sauce_web_test_args.get("tags", []) + [
-        "manual", "saucelabs", "no-remote-exec"
+        "manual",
+        "saucelabs",
+        "no-remote-exec",
     ]
     current_package = native.package_name()
 

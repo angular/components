@@ -43,11 +43,18 @@ js_library(
 )
 
 js_library(
-    name = "karma-saucelabs-config",
+    name = "karma_local_testing_config_lib",
+    srcs = ["bazel-karma-local-config.js"],
+    deps = ["@npm//karma-spec-reporter"],
+)
+
+js_library(
+    name = "karma_saucelabs_config_lib",
     srcs = ["karma-saucelabs.conf.js"],
     deps = [
         ":karma-browser-config",
         "//tools/saucelabs-bazel/launcher",
         "@npm//@bazel/runfiles",
+        "@npm//karma-spec-reporter",
     ],
 )
