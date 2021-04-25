@@ -153,10 +153,15 @@ export class SaucelabsDaemon {
     return false;
   }
 
-  private _startBrowserTest(browser: RemoteBrowser, test: BrowserTest) {
+  private async _startBrowserTest(browser: RemoteBrowser, test: BrowserTest) {
     this._runningTests.set(test.testId, browser);
     browser.state = 'acquired';
-    browser.driver!.get(test.pageUrl);
+
+    try {
+      await browser.driver!.get(test.pageUrl);
+    } catch (e) {
+      console.error('Could not start browser test with id', test.testId, test.pageUrl);
+    }
   }
 
   private _findMatchingBrowsers(browserId: string): RemoteBrowser[] {
