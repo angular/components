@@ -29,9 +29,9 @@ import {MatListBase, MatListItemBase} from './list-base';
 @Component({
   selector: 'mat-list',
   exportAs: 'matList',
-  template: '<ng-content></ng-content>',
+  template: '<div class="mdc-deprecated-list"><ng-content></ng-content></div>',
   host: {
-    'class': 'mat-mdc-list mat-mdc-list-base mdc-deprecated-list',
+    'class': 'mat-mdc-list mat-mdc-list-base',
   },
   styleUrls: ['list.css'],
   encapsulation: ViewEncapsulation.None,

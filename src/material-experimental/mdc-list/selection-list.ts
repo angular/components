@@ -60,11 +60,11 @@ export class MatSelectionListChange {
   selector: 'mat-selection-list',
   exportAs: 'matSelectionList',
   host: {
-    'class': 'mat-mdc-selection-list mat-mdc-list-base mdc-deprecated-list',
+    'class': 'mat-mdc-selection-list mat-mdc-list-base',
     'role': 'listbox',
     '[attr.aria-multiselectable]': 'multiple',
   },
-  template: '<ng-content></ng-content>',
+  template: '<div class="mdc-deprecated-list"><ng-content></ng-content></div>',
   styleUrls: ['list.css'],
   encapsulation: ViewEncapsulation.None,
   providers: [

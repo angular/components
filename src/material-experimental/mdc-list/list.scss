@@ -3,12 +3,32 @@
 @use '../../material/core/style/layout-common';
 @use '../../cdk/a11y';
 
-@include mdc-list.deprecated-without-ripple($query: mdc-helpers.$mat-base-styles-query);
-
 // MDC expects the list element to be a `<ul>`, since we use `<mat-list>` instead we need to
 // explicitly set `display: block`
 .mat-mdc-list-base {
+  // This mixin needs to be nested so that styles don't leak into other
+  // components based on the MDC list (e.g. select, autocomplete).
+  @include mdc-list.deprecated-without-ripple($query: mdc-helpers.$mat-base-styles-query);
   display: block;
+
+  // MDC does have 2-line support, but it's a per-list setting, whereas ours applies to individual
+  // items. Therefore, we need to add our own styles.
+  .mat-mdc-2-line {
+    height: 72px;
+
+    .mdc-deprecated-list-item__text {
+      align-self: flex-start;
+    }
+  }
+
+  // MDC does not support more than 2 lines, so we need to add our own styles.
+  .mat-mdc-3-line {
+    height: 88px;
+
+    .mdc-deprecated-list-item__text {
+      align-self: flex-start;
+    }
+  }
 }
 
 // .mdc-deprecated-list-item__primary-text adds its own margin settings, so only reset if it doesn't
@@ -24,25 +44,6 @@
 }
 
 
-// MDC does have 2-line support, but it's a per-list setting, whereas ours applies to individual
-// items. Therefore, we need to add our own styles.
-.mat-mdc-2-line {
-  height: 72px;
-
-  .mdc-deprecated-list-item__text {
-    align-self: flex-start;
-  }
-}
-
-// MDC does not support more than 2 lines, so we need to add our own styles.
-.mat-mdc-3-line {
-  height: 88px;
-
-  .mdc-deprecated-list-item__text {
-    align-self: flex-start;
-  }
-}
-
 // MDC supports avatars, but it's a per-list setting, whereas ours applies to individual
 // items. Therefore, we need to add our own styles.
 .mat-mdc-list-avatar {
@@ -51,9 +52,12 @@
   $size: 40px;
   $margin-value: 72px - mdc-list.$deprecated-side-padding - $size;
 
-  width: $size;
-  height: $size;
-  border-radius: 50%;
+  // These styles need the extra specificity in order to override the ones from MDC.
+  .mat-mdc-list-base & {
+    width: $size;
+    height: $size;
+    border-radius: 50%;
+  }
 
   // Avatars that come before the text have the .mdc-deprecated-list-item__graphic class.
   // MDC's .mdc-deprecated-list--avatar-list class would normally apply overrides to set the

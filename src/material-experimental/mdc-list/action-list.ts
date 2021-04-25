@@ -12,9 +12,9 @@ import {MatListBase} from './list-base';
 @Component({
   selector: 'mat-action-list',
   exportAs: 'matActionList',
-  template: '<ng-content></ng-content>',
+  template: '<div class="mdc-deprecated-list"><ng-content></ng-content></div>',
   host: {
-    'class': 'mat-mdc-action-list mat-mdc-list-base mdc-deprecated-list',
+    'class': 'mat-mdc-action-list mat-mdc-list-base',
   },
   styleUrls: ['list.css'],
   encapsulation: ViewEncapsulation.None,
