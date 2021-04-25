@@ -18,7 +18,7 @@ module.exports = karmaConfig => {
     browserDisconnectTolerance: 2,
     captureTimeout: 90000,
     browsers: platformMap.saucelabs,
-    transports: ['websocket'],
+    transports: ['polling'],
     // Configure the Karma spec reporter so that spec timing is captured.
     specReporter: {
       showSpecTiming: true,
