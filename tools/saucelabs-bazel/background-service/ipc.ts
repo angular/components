@@ -28,10 +28,10 @@ export class IpcServer {
         console.debug(`Requesting test browser: SID#${socketId}: ${message.testDescription}`);
         if (!this._service.startTest(
                 {testId: socketId, pageUrl: message.url, requestedBrowserId: message.browserId})) {
-          console.debug('  Browser not available.', message.browserId);
+          console.debug('  > Browser not available.');
           this._noAvailableBrowser(socket);
         } else {
-          console.debug('  Browser available. Test can start.');
+          console.debug('  > Browser available. Test can start.');
         }
         break;
       case 'end-test':

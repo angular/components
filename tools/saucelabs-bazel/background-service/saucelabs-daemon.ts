@@ -62,6 +62,7 @@ export class SaucelabsDaemon {
       const launched: RemoteBrowser = {state: 'launching', driver: null, id: browserId};
 
       console.debug(`Capabilities for ${browser.browserName}:`, JSON.stringify(capabilities));
+      console.debug(`  > Browser-ID: `, browserId);
 
       // Keep track of the launched browser. We do this before it even completed the
       // launch as we can then handle scheduled tests when the browser is still launching.
@@ -123,6 +124,9 @@ export class SaucelabsDaemon {
 
   startTest(test: BrowserTest): boolean {
     const browsers = this._findMatchingBrowsers(test.requestedBrowserId);
+
+
+    console.debug('   > Browsers Found:', browsers, this._activeBrowsers);
     if (browsers.length === null) {
       return false;
     }
