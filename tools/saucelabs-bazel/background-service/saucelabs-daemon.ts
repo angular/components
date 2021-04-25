@@ -133,11 +133,16 @@ export class SaucelabsDaemon {
 
     // Find the first available browser and start the test.
     for (const browser of browsers) {
+      // If the browser is acquired, continue searching.
       if (browser.state === 'acquired') {
         continue;
-      } else if (browser.state === 'launching') {
+      } 
+      // If the browser is launching, check if it can be pre-claimed so that
+      // the test starts once the browser is ready. If it's already claimed,
+      // continue searching.
+      if (browser.state === 'launching') {
         if (this._pendingTests.has(browser)) {
-          return false;
+          continue;
         } else {
           this._pendingTests.set(browser, test);
           return true;
