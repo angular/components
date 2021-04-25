@@ -13,12 +13,12 @@ module.exports = karmaConfig => {
       require(runfiles.resolveWorkspaceRelative('tools/saucelabs-bazel/launcher/index.js')),
     ],
     customLaunchers: customLaunchers,
-    browserNoActivityTimeout: 20000,
+    browserNoActivityTimeout: 90000,
     browserDisconnectTimeout: 90000,
     browserDisconnectTolerance: 2,
     captureTimeout: 90000,
     browsers: platformMap.saucelabs,
-    transports: ['polling', 'websocket'],
+    transports: ['websocket'],
     // Configure the Karma spec reporter so that spec timing is captured.
     specReporter: {
       showSpecTiming: true,
