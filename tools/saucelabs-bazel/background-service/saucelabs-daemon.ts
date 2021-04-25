@@ -77,6 +77,9 @@ export class SaucelabsDaemon {
               .usingServer(
                   `http://${this._username}:${this._accessKey}@ondemand.saucelabs.com:80/wd/hub`)
               .build();
+        
+      // Only wait 30 seconds to load a test page.
+      driver.manage().timeouts().implicitlyWait(30_000);
 
       const sessionId = (await driver.getSession()).getId();
       console.info(chalk.yellow(
