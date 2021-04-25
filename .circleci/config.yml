@@ -342,7 +342,7 @@ jobs:
             except attr("tags", "skip-on-remote-browsers", //src/...)
           ')
           yarn -s bazel build ${TESTS}
-          yarn -s bazel test ${TESTS} --jobs=2 --cache_test_results=no --test_output=streamed
+          yarn -s bazel test ${TESTS} --jobs=2 --cache_test_results=no --config=build-results
 
     - run:
         name: Shutting down tunnel
