@@ -79,7 +79,7 @@ export class SaucelabsDaemon {
               .build();
         
       // Only wait 30 seconds to load a test page.
-      driver.manage().timeouts().implicitlyWait(30_000);
+      driver.manage().timeouts().pageLoadTimeout(30_000);
 
       const sessionId = (await driver.getSession()).getId();
       console.info(chalk.yellow(
