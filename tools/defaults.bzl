@@ -235,7 +235,7 @@ def karma_web_test_suite(name, **kwargs):
     # Add a saucelabs target for these karma tests
     karma_web_test(
         name = "%s_saucelabs" % name,
-        timeout = "long",
+        timeout = "moderate",
         config_file = "//test:karma-saucelabs.conf.js",
         **sauce_web_test_args
     )
