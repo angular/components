@@ -13,7 +13,7 @@ module.exports = karmaConfig => {
       require(runfiles.resolveWorkspaceRelative('tools/saucelabs-bazel/launcher/index.js')),
     ],
     customLaunchers: customLaunchers,
-    browserNoActivityTimeout: 90000,
+    browserNoActivityTimeout: 20000,
     browserDisconnectTimeout: 90000,
     browserDisconnectTolerance: 2,
     captureTimeout: 90000,

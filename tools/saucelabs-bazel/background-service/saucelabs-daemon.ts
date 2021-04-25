@@ -51,9 +51,9 @@ export class SaucelabsDaemon {
   constructor(
       private _username: string, private _accessKey: string,
       private _userCapabilities: object = {}) {
-    // Starts the keep alive loop for all active browsers, running every 10 seconds.
+    // Starts the keep alive loop for all active browsers, running every 15 seconds.
     this._keepAliveIntervalId = setInterval(
-        () => this._keepAliveBrowsers(), 10_000);
+        () => this._keepAliveBrowsers(), 15_000);
   }
 
   async launchBrowsers(browsers: Browser[]) {
