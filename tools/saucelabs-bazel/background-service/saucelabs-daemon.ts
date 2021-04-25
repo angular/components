@@ -161,7 +161,9 @@ export class SaucelabsDaemon {
     browser.state = 'acquired';
 
     try {
+      console.debug(`Opening test url for #${test.testId}: ${test.pageUrl}`);
       await browser.driver!.get(test.pageUrl);
+      console.debug(`Test page loaded for #${test.testId}.`);
     } catch (e) {
       console.error('Could not start browser test with id', test.testId, test.pageUrl);
     }
