@@ -19,8 +19,14 @@ module.exports = karmaConfig => {
     captureTimeout: 90000,
     browsers: platformMap.saucelabs,
     transports: ['polling', 'websocket'],
-    reporters: ['dots'],
   };
+
+  Object.defineProperty(config, 'reporters', {
+    get: () => [],
+    set: () => {},
+    enumerable: true,
+  });
+
 
   karmaConfig.set(config);
 };
