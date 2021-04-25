@@ -70,3 +70,11 @@ function patchTestBedToDestroyFixturesAfterEveryTest(testBedInstance: TestBed) {
   // https://github.com/angular/angular/blob/master/packages/core/testing/src/before_each.ts#L25
   afterEach(() => testBedInstance.resetTestingModule());
 }
+
+jasmine.getEnv().addReporter({
+  specStarted: spec => {
+    if (spec.status !== 'disabled') {
+      console.log(spec.fullName);
+    }
+  }
+});
