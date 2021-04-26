@@ -14,7 +14,6 @@ const defaultCapabilities = {
   // Use a more recent Appium version on all browsers so that our selenium
   // driver is compatible. It relies on the W3C webdriver spec while older Appium
   // versions fall back to MJSONWP.
-  appiumVersion: '1.19.2',
   extendedDebugging: true,
 };
 
