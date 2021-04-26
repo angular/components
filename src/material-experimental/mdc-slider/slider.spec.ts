@@ -6,13 +6,14 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {BidiModule, Directionality} from '@angular/cdk/bidi';
 import {Platform} from '@angular/cdk/platform';
 import {
   dispatchMouseEvent,
   dispatchPointerEvent,
   dispatchTouchEvent,
 } from '@angular/cdk/testing/private';
-import {Component, QueryList, Type, ViewChild, ViewChildren} from '@angular/core';
+import {Component, Provider, QueryList, Type, ViewChild, ViewChildren} from '@angular/core';
 import {
   ComponentFixture,
   fakeAsync,
@@ -24,6 +25,7 @@ import {
 import {FormControl, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {By} from '@angular/platform-browser';
 import {Thumb} from '@material/slider';
+import {of} from 'rxjs';
 import {MatSliderModule} from './module';
 import {MatSlider, MatSliderThumb, MatSliderVisualThumb} from './slider';
 
@@ -41,10 +43,14 @@ describe('MDC-based MatSlider' , () => {
     spyOn(Element.prototype, 'setPointerCapture');
   });
 
-  function createComponent<T>(component: Type<T>): ComponentFixture<T> {
+  function createComponent<T>(
+    component: Type<T>,
+    providers: Provider[] = [],
+    ): ComponentFixture<T> {
     TestBed.configureTestingModule({
-      imports: [FormsModule, MatSliderModule, ReactiveFormsModule],
+      imports: [FormsModule, MatSliderModule, ReactiveFormsModule, BidiModule],
       declarations: [component],
+      providers: [...providers],
     }).compileComponents();
     return TestBed.createComponent<T>(component);
   }
@@ -1155,6 +1161,53 @@ describe('MDC-based MatSlider' , () => {
       expect(testComponent.onStartThumbInput).not.toHaveBeenCalled();
       expect(testComponent.onEndThumbChange).toHaveBeenCalledTimes(1);
       expect(testComponent.onEndThumbInput).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe('slider with direction', () => {
+    let sliderInstance: MatSlider;
+    let inputInstance: MatSliderThumb;
+
+    beforeEach(waitForAsync(() => {
+      const fixture = createComponent(StandardSlider, [{
+        provide: Directionality,
+        useValue: ({value: 'rtl', change: of()})
+      }]);
+      fixture.detectChanges();
+      const sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider));
+      sliderInstance = sliderDebugElement.componentInstance;
+      inputInstance = sliderInstance._getInput(Thumb.END);
+    }));
+
+    it('works in RTL languages', () => {
+      setValueByClick(sliderInstance, 30, platform.IOS);
+      expect(inputInstance.value).toBe(70);
+    });
+  });
+
+  describe('range slider with direction', () => {
+    let sliderInstance: MatSlider;
+    let startInputInstance: MatSliderThumb;
+    let endInputInstance: MatSliderThumb;
+
+    beforeEach(waitForAsync(() => {
+      const fixture = createComponent(StandardRangeSlider, [{
+        provide: Directionality,
+        useValue: ({value: 'rtl', change: of()})
+      }]);
+      fixture.detectChanges();
+      const sliderDebugElement = fixture.debugElement.query(By.directive(MatSlider));
+      sliderInstance = sliderDebugElement.componentInstance;
+      startInputInstance = sliderInstance._getInput(Thumb.START);
+      endInputInstance = sliderInstance._getInput(Thumb.END);
+    }));
+
+    it('works in RTL languages', () => {
+      setValueByClick(sliderInstance, 90, platform.IOS);
+      expect(startInputInstance.value).toBe(10);
+
+      setValueByClick(sliderInstance, 10, platform.IOS);
+      expect(endInputInstance.value).toBe(90);
     });
   });
 

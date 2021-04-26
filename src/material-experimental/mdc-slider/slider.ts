@@ -630,6 +630,7 @@ export class MatSlider extends _MatSliderMixinBase
   private _dirChangeSubscription: Subscription;
 
   constructor(
+    readonly _ngZone: NgZone,
     readonly _cdr: ChangeDetectorRef,
     readonly _elementRef: ElementRef<HTMLElement>,
     private readonly _platform: Platform,
@@ -641,7 +642,7 @@ export class MatSlider extends _MatSliderMixinBase
       super(_elementRef);
       this._document = document;
       this._window = this._document.defaultView || window;
-      this._dirChangeSubscription = this._dir.change.subscribe(() => this._reinitialize());
+      this._dirChangeSubscription = this._dir.change.subscribe(() => this._onDirChange());
     }
 
   ngAfterViewInit() {
@@ -699,6 +700,15 @@ export class MatSlider extends _MatSliderMixinBase
       this._foundation.init();
       this._foundation.layout();
     }
+  }
+
+  /** Handles updating the slider foundation after a dir change. */
+  private _onDirChange(): void {
+    this._ngZone.runOutsideAngular(() => {
+      // We need to call layout() a few milliseconds after the dir change callback
+      // because we need to wait until the bounding client rect of the slider has updated.
+      setTimeout(() => this._foundation.layout(), 10);
+    });
   }
 
   /** Sets the value of a slider thumb. */
