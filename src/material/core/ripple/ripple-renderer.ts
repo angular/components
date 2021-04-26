@@ -209,7 +209,7 @@ export class RippleRenderer implements EventListenerObject {
   /** Fades out all currently active non-persistent ripples. */
   fadeOutAllNonPersistent() {
     this._activeRipples.forEach(ripple => {
-      if(!ripple.config.persistent) {
+      if (!ripple.config.persistent) {
         ripple.fadeOut();
       }
     });
