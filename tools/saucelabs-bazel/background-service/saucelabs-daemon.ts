@@ -4,8 +4,10 @@ import {Browser, getUniqueId} from '../browser';
 import {IpcServer} from './ipc';
 
 const defaultCapabilities = {
-  recordVideo: false,
+  recordVideo: true,
   recordScreenshots: false,
+  extendedDebugging: true,
+
   idleTimeout: 90,
   // These represent the maximum values supported by Saucelabs.
   // See: https://wiki.saucelabs.com/display/DOCS/Test+Configuration+Options
