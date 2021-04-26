@@ -4,15 +4,18 @@ import {Browser, getUniqueId} from '../browser';
 import {IpcServer} from './ipc';
 
 const defaultCapabilities = {
-  recordVideo: true,
+  recordVideo: false,
   recordScreenshots: false,
-  extendedDebugging: true,
-
   idleTimeout: 90,
   // These represent the maximum values supported by Saucelabs.
   // See: https://wiki.saucelabs.com/display/DOCS/Test+Configuration+Options
   commandTimeout: 600,
   maxDuration: 10800,
+  // Use a more recent Appium version on all browsers so that our selenium
+  // driver is compatible. It relies on the W3C webdriver spec while older Appium
+  // versions fall back to MJSONWP.
+  appiumVersion: '1.19.2',
+  extendedDebugging: true,
 };
 
 interface RemoteBrowser {
