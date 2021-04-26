@@ -657,18 +657,15 @@ describe('MDC-based MatSlider' , () => {
     });
 
     it('should invoke the passed-in `displayWith` function with the value', () => {
-      spyOn(fixture.componentInstance, 'displayWith').and.callThrough();
+      spyOn(sliderInstance, 'displayWith').and.callThrough();
       sliderInstance._setValue(1337, Thumb.END);
-      fixture.whenStable().then(() => {
-        expect(fixture.componentInstance.displayWith).toHaveBeenCalledWith(1337);
-      });
+      expect(sliderInstance.displayWith).toHaveBeenCalledWith(1337);
     });
 
     it('should format the thumb label based on the passed-in `displayWith` function', () => {
       sliderInstance._setValue(200000, Thumb.END);
-      fixture.whenStable().then(() => {
-        expect(valueIndicatorTextElement.textContent).toBe('200k');
-      });
+      fixture.detectChanges();
+      expect(valueIndicatorTextElement.textContent).toBe('$200k');
     });
   });
 
@@ -693,33 +690,27 @@ describe('MDC-based MatSlider' , () => {
     });
 
     it('should invoke the passed-in `displayWith` function with the start value', () => {
-      spyOn(fixture.componentInstance, 'displayWith').and.callThrough();
+      spyOn(sliderInstance, 'displayWith').and.callThrough();
       sliderInstance._setValue(1337, Thumb.START);
-      fixture.whenStable().then(() => {
-        expect(fixture.componentInstance.displayWith).toHaveBeenCalledWith(1337);
-      });
+      expect(sliderInstance.displayWith).toHaveBeenCalledWith(1337);
     });
 
     it('should invoke the passed-in `displayWith` function with the end value', () => {
-      spyOn(fixture.componentInstance, 'displayWith').and.callThrough();
+      spyOn(sliderInstance, 'displayWith').and.callThrough();
       sliderInstance._setValue(5996, Thumb.END);
-      fixture.whenStable().then(() => {
-        expect(fixture.componentInstance.displayWith).toHaveBeenCalledWith(5996);
-      });
+      expect(sliderInstance.displayWith).toHaveBeenCalledWith(5996);
     });
 
     it('should format the start thumb label based on the passed-in `displayWith` function', () => {
       sliderInstance._setValue(200000, Thumb.START);
-      fixture.whenStable().then(() => {
-        expect(startValueIndicatorTextElement.textContent).toBe('200k');
-      });
+      fixture.detectChanges();
+      expect(startValueIndicatorTextElement.textContent).toBe('$200k');
     });
 
     it('should format the end thumb label based on the passed-in `displayWith` function', () => {
       sliderInstance._setValue(700000, Thumb.END);
-      fixture.whenStable().then(() => {
-        expect(endValueIndicatorTextElement.textContent).toBe('700k');
-      });
+      fixture.detectChanges();
+      expect(endValueIndicatorTextElement.textContent).toBe('$700k');
     });
   });
 
