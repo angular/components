@@ -1,5 +1,5 @@
 import * as chalk from 'chalk';
-import {Builder, promise, WebDriver} from 'selenium-webdriver';
+import {Builder, WebDriver} from 'selenium-webdriver';
 import {Browser, getUniqueId} from '../browser';
 import {IpcServer} from './ipc';
 
@@ -83,7 +83,7 @@ export class SaucelabsDaemon {
               .build();
         
       // Only wait 30 seconds to load a test page.
-      driver.manage().timeouts().pageLoadTimeout(30_000);
+      driver.manage().setTimeouts({pageLoad: 30000});
 
       const sessionId = (await driver.getSession()).getId();
       console.info(chalk.yellow(
@@ -187,7 +187,7 @@ export class SaucelabsDaemon {
   // commands when the daemon is unused (i.e. Bazel takes a while to start tests).
   // https://saucelabs.com/blog/selenium-tips-how-to-coordinate-multiple-browsers-in-sauce-ondemand.
   async _keepAliveBrowsers() {
-    const pendingCommands: promise.Promise<any>[] = [];
+    const pendingCommands: Promise<any>[] = [];
     for (const browser of this._activeBrowsers) {
       if (browser.driver !== null) {
         pendingCommands.push(browser.driver.getTitle());
