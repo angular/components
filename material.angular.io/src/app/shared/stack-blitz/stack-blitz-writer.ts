@@ -1,14 +1,16 @@
 import {HttpClient} from '@angular/common/http';
-import {Injectable} from '@angular/core';
+import {Injectable, NgZone} from '@angular/core';
 import {VERSION} from '@angular/material/core';
 import {EXAMPLE_COMPONENTS, ExampleData} from '@angular/components-examples';
+import {Observable} from 'rxjs';
+import {shareReplay, take} from 'rxjs/operators';
 
 import {materialVersion} from '../version/version';
 
 const STACKBLITZ_URL = 'https://run.stackblitz.com/api/angular/v1';
 
 const COPYRIGHT =
-  `Copyright 2020 Google LLC. All Rights Reserved.
+  `Copyright ${new Date().getFullYear()} Google LLC. All Rights Reserved.
     Use of this source code is governed by an MIT-style license that
     can be found in the LICENSE file at http://angular.io/license`;
 
@@ -116,17 +118,18 @@ const testDependencies = {
  *  dependencies: dependencies
  * }
  */
-@Injectable()
+@Injectable({providedIn: 'root'})
 export class StackBlitzWriter {
-  constructor(private _http: HttpClient) {}
+  private _fileCache = new Map<string, Observable<string>>();
+
+  constructor(private _http: HttpClient, private _ngZone: NgZone) {}
 
   /**
    * Returns an HTMLFormElement that will open a new StackBlitz template with the example data when
    * called with submit().
    */
-  constructStackBlitzForm(exampleId: string,
-                          data: ExampleData,
-                          isTest: boolean): Promise<HTMLFormElement> {
+  async constructStackBlitzForm(exampleId: string, data: ExampleData,
+                                isTest: boolean): Promise<HTMLFormElement> {
     const liveExample = EXAMPLE_COMPONENTS[exampleId];
     const indexFile = `src%2Fapp%2F${data.indexFilename}`;
     const form = this._createFormElement(indexFile);
@@ -140,26 +143,30 @@ export class StackBlitzWriter {
       'dependencies',
       JSON.stringify(isTest ? testDependencies : dependencies));
 
-    return new Promise(resolve => {
-      const templateContents = (isTest ? TEST_TEMPLATE_FILES : TEMPLATE_FILES)
-        .map(file => this._readFile(form,
-          data,
-          file,
-          isTest ? TEST_TEMPLATE_PATH : TEMPLATE_PATH,
-          isTest));
+    // Run outside the zone since this form doesn't interact with Angular
+    // and the file requests can cause excessive change detections.
+    await this._ngZone.runOutsideAngular(() => {
+      const fileReadPromises: Promise<void>[] = [];
 
-      const exampleContents = data.exampleFiles
-        .map(file => this._readFile(form, data, file, baseExamplePath, isTest));
+      // Read all of the template files.
+      (isTest ? TEST_TEMPLATE_FILES : TEMPLATE_FILES).forEach(file => fileReadPromises.push(
+        this._loadAndAppendFile(form, data, file, isTest ? TEST_TEMPLATE_PATH : TEMPLATE_PATH,
+          isTest)));
+
+      // Read the example-specific files.
+      data.exampleFiles.forEach(file => fileReadPromises.push(this._loadAndAppendFile(form, data,
+        file, baseExamplePath, isTest)));
 
       // TODO(josephperrott): Prevent including assets to be manually checked.
       if (data.selectorName === 'icon-svg-example') {
-        this._readFile(form, data, 'assets/img/examples/thumbup-icon.svg', '', isTest, false);
+        fileReadPromises.push(this._loadAndAppendFile(form, data,
+          'assets/img/examples/thumbup-icon.svg', '', isTest, false));
       }
 
-      Promise.all(templateContents.concat(exampleContents)).then(() => {
-        resolve(form);
-      });
+      return Promise.all(fileReadPromises);
     });
+
+    return form;
   }
 
   /** Constructs a new form element that will navigate to the StackBlitz url. */
@@ -172,7 +179,7 @@ export class StackBlitzWriter {
   }
 
   /** Appends the name and value as an input to the form. */
-  _appendFormInput(form: HTMLFormElement, name: string, value: string): void {
+  private _appendFormInput(form: HTMLFormElement, name: string, value: string): void {
     const input = document.createElement('input');
     input.type = 'hidden';
     input.name = name;
@@ -189,13 +196,18 @@ export class StackBlitzWriter {
    * @param isTest whether file is part of a test example
    * @param prependApp whether to prepend the 'app' prefix to the path
    */
-  _readFile(form: HTMLFormElement,
-            data: ExampleData,
-            filename: string,
-            path: string,
-            isTest: boolean,
-            prependApp = true): void {
-    this._http.get(path + filename, {responseType: 'text'}).subscribe(
+  private _loadAndAppendFile(form: HTMLFormElement, data: ExampleData, filename: string,
+                            path: string, isTest: boolean, prependApp = true): Promise<void> {
+    const url = path + filename;
+    let stream = this._fileCache.get(url);
+
+    if (!stream) {
+      stream = this._http.get(url, {responseType: 'text'}).pipe(shareReplay(1));
+      this._fileCache.set(url, stream);
+    }
+
+    // The `take(1)` is necessary, because the Promise from `toPromise` resolves on complete.
+    return stream.pipe(take(1)).toPromise().then(
       response => this._addFileToForm(form, data, response, filename, path, isTest, prependApp),
       error => console.log(error)
     );
@@ -232,9 +244,9 @@ export class StackBlitzWriter {
    * This will replace those placeholders with the names from the example metadata,
    * e.g. "<basic-button-example>" and "BasicButtonExample"
    */
-  _replaceExamplePlaceholderNames(data: ExampleData,
-                                  fileName: string,
-                                  fileContent: string): string {
+  private _replaceExamplePlaceholderNames(data: ExampleData,
+                                          fileName: string,
+                                          fileContent: string): string {
     if (fileName === 'src/index.html') {
       // Replace the component selector in `index,html`.
       // For example, <material-docs-example></material-docs-example> will be replaced as

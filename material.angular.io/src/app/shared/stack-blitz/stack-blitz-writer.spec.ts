@@ -41,15 +41,16 @@ describe('StackBlitzWriter', () => {
   });
 
   it('should append correct copyright', () => {
+    const year = new Date().getFullYear();
     expect(stackBlitzWriter._appendCopyright('test.ts', 'NoContent')).toBe(`NoContent
 
-/**  Copyright 2020 Google LLC. All Rights Reserved.
+/**  Copyright ${year} Google LLC. All Rights Reserved.
     Use of this source code is governed by an MIT-style license that
     can be found in the LICENSE file at http://angular.io/license */`);
 
     expect(stackBlitzWriter._appendCopyright('test.html', 'NoContent')).toBe(`NoContent
 
-<!-- Copyright 2020 Google LLC. All Rights Reserved.
+<!-- Copyright ${year} Google LLC. All Rights Reserved.
     Use of this source code is governed by an MIT-style license that
     can be found in the LICENSE file at http://angular.io/license -->`);
 
