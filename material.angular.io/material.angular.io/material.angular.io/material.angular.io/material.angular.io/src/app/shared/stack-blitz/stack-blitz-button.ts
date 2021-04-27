@@ -8,7 +8,6 @@ import {StackBlitzWriter} from './stack-blitz-writer';
 @Component({
   selector: 'stack-blitz-button',
   templateUrl: './stack-blitz-button.html',
-  providers: [StackBlitzWriter],
 })
 export class StackBlitzButton {
   /**
@@ -18,28 +17,31 @@ export class StackBlitzButton {
    * StackBlitz not yet being ready for people with poor network connections or slow devices.
    */
   isDisabled = false;
-  stackBlitzForm: HTMLFormElement | undefined;
   exampleData: ExampleData | undefined;
 
-  @HostListener('mouseover') onMouseOver() {
-    this.isDisabled = !this.stackBlitzForm;
+  /**
+   * Form used to submit the data to Stackblitz.
+   * Important! it needs to be constructed ahead-of-time, because doing so on-demand
+   * will cause Firefox to block the submit as a popup, because it didn't happen within
+   * the same tick as the user interaction.
+   */
+  private _stackBlitzForm: HTMLFormElement | undefined;
+
+  @HostListener('mouseover')
+  onMouseOver() {
+    this.isDisabled = !this._stackBlitzForm;
   }
 
   @Input()
   set example(example: string | undefined) {
     if (example) {
+      const isTest = example.includes('harness');
       this.exampleData = new ExampleData(example);
-      if (this.exampleData) {
-        this.stackBlitzWriter.constructStackBlitzForm(example,
-          this.exampleData,
-          example.includes('harness'))
-        .then((stackBlitzForm: HTMLFormElement) => {
-          this.stackBlitzForm = stackBlitzForm;
+      this.stackBlitzWriter.constructStackBlitzForm(example, this.exampleData, isTest)
+        .then(form => {
+          this._stackBlitzForm = form;
           this.isDisabled = false;
         });
-      } else {
-        this.isDisabled = true;
-      }
     } else {
       this.isDisabled = true;
     }
@@ -52,10 +54,10 @@ export class StackBlitzButton {
     // to submit if it is detached from the document. See the following chromium commit for
     // more details:
     // https://chromium.googlesource.com/chromium/src/+/962c2a22ddc474255c776aefc7abeba00edc7470%5E!
-    if (this.stackBlitzForm) {
-      document.body.appendChild(this.stackBlitzForm);
-      this.stackBlitzForm.submit();
-      document.body.removeChild(this.stackBlitzForm);
+    if (this._stackBlitzForm) {
+      document.body.appendChild(this._stackBlitzForm);
+      this._stackBlitzForm.submit();
+      document.body.removeChild(this._stackBlitzForm);
     }
   }
 }
