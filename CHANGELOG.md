@@ -1,3 +1,25 @@
+# 12.0.0-rc.1 "bamboo-eye" (2021-04-28)
+
+### cdk
+
+|            |                       |
+| ---------- | --------------------- |
+| bug fix |  **a11y:** prevent crashing Chrome tabs with hidden text ([#22536](https://github.com/angular/components/issues/22536)) ([723076424294addc02fc52feb5b31a68cb3e47bc](https://github.com/angular/components/commit/723076424294addc02fc52feb5b31a68cb3e47bc)) |
+
+### material
+
+|            |                       |
+| ---------- | --------------------- |
+| bug fix |  **datepicker:** support for date range input in MDC-based form field ([#22565](https://github.com/angular/components/issues/22565)) ([8bb6148f5497f94c2560bbbb942b990fc685e9c9](https://github.com/angular/components/commit/8bb6148f5497f94c2560bbbb942b990fc685e9c9)) |
+| bug fix |  **tabs:** stop scrolling on tab change ([#22265](https://github.com/angular/components/issues/22265)) ([5ecefa712687911cc6f00054371b9a0d17157aec](https://github.com/angular/components/commit/5ecefa712687911cc6f00054371b9a0d17157aec)), closes [#9592](https://github.com/angular/components/issues/9592) [angular#9592](https://github.com/angular/issues/9592) [#9592](https://github.com/angular/components/issues/9592) |
+
+### material-experimental
+
+|            |                       |
+| ---------- | --------------------- |
+| bug fix |  **mdc-card:** reset native header margin ([#22550](https://github.com/angular/components/issues/22550)) ([42a4fd9e61bd76b6eef499cdbe567a198219e400](https://github.com/angular/components/commit/42a4fd9e61bd76b6eef499cdbe567a198219e400)) |
+
+
 # 12.0.0-rc.0 "charcoal-pencil" (2021-04-21)
 
 ### material
