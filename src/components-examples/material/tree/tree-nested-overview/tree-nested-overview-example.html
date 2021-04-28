@@ -1,8 +1,8 @@
 <mat-tree [dataSource]="dataSource" [treeControl]="treeControl" class="example-tree">
   <!-- This is the tree node template for leaf nodes -->
+  <!-- There is inline padding applied to this node using styles.
+    This padding value depends on the mat-icon-button width. -->
   <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle>
-      <!-- use a disabled button to provide padding for tree leaf -->
-      <button mat-icon-button disabled aria-hidden="true"></button>
       {{node.name}}
   </mat-tree-node>
   <!-- This is the tree node template for expandable nodes -->
@@ -16,9 +16,11 @@
         </button>
         {{node.name}}
       </div>
-      <ul [class.example-tree-invisible]="!treeControl.isExpanded(node)"
+      <!-- There is inline padding applied to this div using styles.
+          This padding value depends on the mat-icon-button width.  -->
+      <div [class.example-tree-invisible]="!treeControl.isExpanded(node)"
           role="group">
         <ng-container matTreeNodeOutlet></ng-container>
-      </ul>
+    </div>
   </mat-nested-tree-node>
 </mat-tree>
