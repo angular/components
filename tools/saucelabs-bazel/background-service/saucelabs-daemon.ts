@@ -60,7 +60,7 @@ export class SaucelabsDaemon {
   async launchBrowsers(browsers: Browser[]) {
     return Promise.all(browsers.map(async (browser, id) => {
       const browserId = getUniqueId(browser);
-      const capabilities: any = {...this._baseCapabilities, ...browser};
+      const capabilities: any = {'sauce-options': {...this._baseCapabilities, ...browser}};
       const launched: RemoteBrowser = {state: 'launching', driver: null, id: browserId};
       const browserDescription = `${this._buildName} - ${browser.browserName} - #${id+1}`;
 
@@ -70,10 +70,10 @@ export class SaucelabsDaemon {
       // Set `sauce:options` to provide a build name for the remote browser instances.
       // This helps with debugging. Also ensures the W3C protocol is used.
       // See. https://wiki.saucelabs.com/display/DOCS/Test+Configuration+Options
-      capabilities['sauce:options'] = {
-        name: browserDescription,
-        build: browserDescription,
-      }
+     // capabilities['sauce:options'] = {
+     //   name: browserDescription,
+     //   build: browserDescription,
+     // }
 
       // Keep track of the launched browser. We do this before it even completed the
       // launch as we can then handle scheduled tests when the browser is still launching.
