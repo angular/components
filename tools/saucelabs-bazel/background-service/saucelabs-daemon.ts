@@ -11,9 +11,6 @@ const defaultCapabilities = {
   // See: https://wiki.saucelabs.com/display/DOCS/Test+Configuration+Options
   commandTimeout: 600,
   maxDuration: 10800,
-  // Use a more recent Appium version on all browsers so that our selenium
-  // driver is compatible. It relies on the W3C webdriver spec while older Appium
-  // versions fall back to MJSONWP.
   extendedDebugging: true,
 };
 
@@ -54,20 +51,29 @@ export class SaucelabsDaemon {
 
   constructor(
       private _username: string, private _accessKey: string,
-      private _userCapabilities: object = {}) {
+      private _buildName: string, private _userCapabilities: object = {}) {
     // Starts the keep alive loop for all active browsers, running every 15 seconds.
     this._keepAliveIntervalId = setInterval(
         () => this._keepAliveBrowsers(), 15_000);
   }
 
   async launchBrowsers(browsers: Browser[]) {
-    return Promise.all(browsers.map(async browser => {
+    return Promise.all(browsers.map(async (browser, id) => {
       const browserId = getUniqueId(browser);
-      const capabilities = {...this._baseCapabilities, ...browser};
+      const capabilities: any = {alwaysMatch: {...this._baseCapabilities, ...browser}};
       const launched: RemoteBrowser = {state: 'launching', driver: null, id: browserId};
+      const browserDescription = `${this._buildName} - ${browser.browserName} - #${id+1}`;
 
       console.debug(`Capabilities for ${browser.browserName}:`, JSON.stringify(capabilities));
       console.debug(`  > Browser-ID: `, browserId);
+
+      // Set `sauce:options` to provide a build name for the remote browser instances.
+      // This helps with debugging. Also ensures the W3C protocol is used.
+      // See. https://wiki.saucelabs.com/display/DOCS/Test+Configuration+Options
+      capabilities['sauce:options'] = {
+        name: browserDescription,
+        build: browserDescription,
+      }
 
       // Keep track of the launched browser. We do this before it even completed the
       // launch as we can then handle scheduled tests when the browser is still launching.
@@ -83,7 +89,7 @@ export class SaucelabsDaemon {
               .build();
         
       // Only wait 30 seconds to load a test page.
-      driver.manage().setTimeouts({pageLoad: 30000});
+      await driver.manage().setTimeouts({pageLoad: 30000});
 
       const sessionId = (await driver.getSession()).getId();
       console.info(chalk.yellow(
