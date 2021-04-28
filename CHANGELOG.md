@@ -1,3 +1,25 @@
+## 11.2.11 "metal-mountain" (2021-04-28)
+
+### cdk
+
+|            |                       |
+| ---------- | --------------------- |
+| bug fix |  **a11y:** prevent crashing Chrome tabs with hidden text ([#22536](https://github.com/angular/components/issues/22536)) ([9bb7b0c5ea406ad1462a702f28f7dbcb911f408d](https://github.com/angular/components/commit/9bb7b0c5ea406ad1462a702f28f7dbcb911f408d)) |
+
+### material
+
+|            |                       |
+| ---------- | --------------------- |
+| bug fix |  **datepicker:** support for date range input in MDC-based form field ([#22565](https://github.com/angular/components/issues/22565)) ([6349434d101b7fa60d1cb70cb00b4c2e69c83420](https://github.com/angular/components/commit/6349434d101b7fa60d1cb70cb00b4c2e69c83420)) |
+| bug fix |  **tabs:** stop scrolling on tab change ([#22265](https://github.com/angular/components/issues/22265)) ([7f556b574e86e8834d5f052bca7410ee9f4bc1ad](https://github.com/angular/components/commit/7f556b574e86e8834d5f052bca7410ee9f4bc1ad)), closes [#9592](https://github.com/angular/components/issues/9592) [angular#9592](https://github.com/angular/issues/9592) [#9592](https://github.com/angular/components/issues/9592) |
+
+### material-experimental
+
+|            |                       |
+| ---------- | --------------------- |
+| bug fix |  **mdc-card:** reset native header margin ([#22550](https://github.com/angular/components/issues/22550)) ([90877709d53a5eeb664614d89e8d47d2db23e7d5](https://github.com/angular/components/commit/90877709d53a5eeb664614d89e8d47d2db23e7d5)) |
+
+
 ## 11.2.10 "walnut-tabletop" (2021-04-21)
 
 ### material
