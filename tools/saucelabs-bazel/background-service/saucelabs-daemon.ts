@@ -60,7 +60,7 @@ export class SaucelabsDaemon {
   async launchBrowsers(browsers: Browser[]) {
     return Promise.all(browsers.map(async (browser, id) => {
       const browserId = getUniqueId(browser);
-      const capabilities: any = {alwaysMatch: {...this._baseCapabilities, ...browser}};
+      const capabilities: any = {...this._baseCapabilities, ...browser};
       const launched: RemoteBrowser = {state: 'launching', driver: null, id: browserId};
       const browserDescription = `${this._buildName} - ${browser.browserName} - #${id+1}`;
 
