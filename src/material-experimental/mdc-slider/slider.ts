@@ -626,6 +626,16 @@ export class MatSlider extends _MatSliderMixinBase
   /** The display value of the end thumb. */
   _endValueIndicatorText: string;
 
+  /**
+   * Whether the browser supports pointer events.
+   *
+   * We exclude iOS to mirror the MDC Foundation. The MDC Foundation cannot use pointer events on
+   * iOS because of this open bug - https://bugs.webkit.org/show_bug.cgi?id=220196.
+   */
+  private _SUPPORTS_POINTER_EVENTS = typeof PointerEvent !== 'undefined'
+    && !!PointerEvent
+    && !this._platform.IOS;
+
   /** Subscription to changes to the directionality (LTR / RTL) context for the application. */
   private _dirChangeSubscription: Subscription;
 
@@ -643,6 +653,7 @@ export class MatSlider extends _MatSliderMixinBase
       this._document = document;
       this._window = this._document.defaultView || window;
       this._dirChangeSubscription = this._dir.change.subscribe(() => this._onDirChange());
+      this._attachUISyncEventListener();
     }
 
   ngAfterViewInit() {
@@ -676,12 +687,47 @@ export class MatSlider extends _MatSliderMixinBase
       this._foundation.destroy();
     }
     this._dirChangeSubscription.unsubscribe();
+    this._removeUISyncEventListener();
   }
 
   /** Returns true if the language direction for this slider element is right to left. */
   _isRTL() {
     return this._dir && this._dir.value === 'rtl';
   }
+
+  /**
+   * Attaches an event listener that keeps sync the slider UI and the foundation in sync.
+   *
+   * Because the MDC Foundation stores the value of the bounding client rect when layout is called,
+   * we need to keep calling layout to avoid the position of the slider getting out of sync with
+   * what the foundation has stored. If we don't do this, the foundation will not be able to
+   * correctly calculate the slider value on click/slide.
+   */
+   _attachUISyncEventListener(): void {
+    // Implementation detail: It may seem weird that we are using "mouseenter" instead of
+    // "mousedown" as the default for when a browser does not support pointer events. While we
+    // would prefer to use "mousedown" as the default, for some reason it does not work (the
+    // callback is never triggered).
+    if (this._SUPPORTS_POINTER_EVENTS) {
+      this._elementRef.nativeElement.addEventListener('pointerdown', this._layout);
+    } else {
+      this._elementRef.nativeElement.addEventListener('mouseenter', this._layout);
+      this._elementRef.nativeElement.addEventListener('touchstart', this._layout);
+    }
+  }
+
+  /** Removes the event listener that keeps sync the slider UI and the foundation in sync. */
+  _removeUISyncEventListener(): void {
+    if (this._SUPPORTS_POINTER_EVENTS) {
+      this._elementRef.nativeElement.removeEventListener('pointerdown', this._layout);
+    } else {
+      this._elementRef.nativeElement.removeEventListener('mouseenter', this._layout);
+      this._elementRef.nativeElement.removeEventListener('touchstart', this._layout);
+    }
+  }
+
+  /** Wrapper function for calling layout (needed for adding & removing an event listener). */
+  private _layout = () => this._foundation.layout();
 
   /**
    * Reinitializes the slider foundation and input state(s).
