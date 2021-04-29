@@ -98,6 +98,13 @@ describe('MDC-based MatSlider' , () => {
       setValueByClick(sliderInstance, 0, platform.IOS);
       expect(document.activeElement).toBe(inputInstance._hostElement);
     });
+
+    it('should not break on when the page layout changes', () => {
+      sliderInstance._elementRef.nativeElement.style.marginLeft = '100px';
+      setValueByClick(sliderInstance, 10, platform.IOS);
+      expect(inputInstance.value).toBe(10);
+      sliderInstance._elementRef.nativeElement.style.marginLeft = 'initial';
+    });
   });
 
   describe('standard range slider', () => {
@@ -1891,6 +1898,7 @@ function setValueByClick(slider: MatSlider, value: number, isIOS: boolean) {
   const sliderElement = slider._elementRef.nativeElement;
   const {x, y} = getCoordsForValue(slider, value);
 
+  dispatchPointerEvent(sliderElement, 'mouseenter', x, y);
   dispatchPointerOrTouchEvent(sliderElement, PointerEventType.POINTER_DOWN, x, y, isIOS);
   dispatchPointerOrTouchEvent(sliderElement, PointerEventType.POINTER_UP, x, y, isIOS);
 }
@@ -1901,6 +1909,7 @@ function slideToValue(slider: MatSlider, value: number, thumbPosition: Thumb, is
   const {x: startX, y: startY} = getCoordsForValue(slider, slider._getInput(thumbPosition).value);
   const {x: endX, y: endY} = getCoordsForValue(slider, value);
 
+  dispatchPointerEvent(sliderElement, 'mouseenter', startX, startY);
   dispatchPointerOrTouchEvent(sliderElement, PointerEventType.POINTER_DOWN, startX, startY, isIOS);
   dispatchPointerOrTouchEvent(sliderElement, PointerEventType.POINTER_MOVE, endX, endY, isIOS);
   dispatchPointerOrTouchEvent(sliderElement, PointerEventType.POINTER_UP, endX, endY, isIOS);
@@ -1921,11 +1930,11 @@ function getCoordsForValue(slider: MatSlider, value: number): Point {
 /** Dispatch a pointerdown or pointerup event if supported, otherwise dispatch the touch event. */
 function dispatchPointerOrTouchEvent(
   node: Node, type: PointerEventType, x: number, y: number, isIOS: boolean) {
-  if (isIOS) {
-    dispatchTouchEvent(node, pointerEventTypeToTouchEventType(type), x, y, x, y);
-  } else {
-    dispatchPointerEvent(node, type, x, y);
-  }
+    if (isIOS) {
+      dispatchTouchEvent(node, pointerEventTypeToTouchEventType(type), x, y, x, y);
+    } else {
+      dispatchPointerEvent(node, type, x, y);
+    }
 }
 
 /** Returns the touch event equivalent of the given pointer event. */
