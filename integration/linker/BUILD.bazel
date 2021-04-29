@@ -19,5 +19,5 @@ nodejs_test(
         "@npm//glob",
     ],
     entry_point = "link-packages-test.js",
-    tags = ["partial-compilation-integration-test"],
+    tags = ["partial-compilation-integration"],
 )
