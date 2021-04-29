@@ -578,9 +578,9 @@ describe('MDC-based MatSlider' , () => {
     });
 
     it('should truncate long decimal values when using a decimal step', () => {
-      sliderInstance.step = 0.1;
-      slideToValue(sliderInstance, 66.3333, Thumb.END, platform.IOS);
-      expect(inputInstance.value).toBe(66.3);
+      sliderInstance.step = 0.5;
+      slideToValue(sliderInstance, 55.555, Thumb.END, platform.IOS);
+      expect(inputInstance.value).toBe(55.5);
     });
   });
 
@@ -635,14 +635,14 @@ describe('MDC-based MatSlider' , () => {
 
     it('should truncate long decimal start values when using a decimal step', () => {
       sliderInstance.step = 0.1;
-      slideToValue(sliderInstance, 66.3333, Thumb.START, platform.IOS);
-      expect(startInputInstance.value).toBe(66.3);
+      slideToValue(sliderInstance, 33.7, Thumb.START, platform.IOS);
+      expect(startInputInstance.value).toBe(33.7);
     });
 
     it('should truncate long decimal end values when using a decimal step', () => {
       sliderInstance.step = 0.1;
-      slideToValue(sliderInstance, 66.3333, Thumb.END, platform.IOS);
-      expect(endInputInstance.value).toBe(66.3);
+      slideToValue(sliderInstance, 33.7, Thumb.END, platform.IOS);
+      expect(endInputInstance.value).toBe(33.7);
 
       // NOTE(wagnermaciel): Different browsers treat the clientX dispatched by us differently.
       // Below is an example of a case that should work but because Firefox rounds the clientX
@@ -1619,6 +1619,7 @@ describe('MDC-based MatSlider' , () => {
   });
 });
 
+const SLIDER_STYLES = ['.mat-mdc-slider { width: 300px; }'];
 
 @Component({
   template: `
@@ -1626,6 +1627,7 @@ describe('MDC-based MatSlider' , () => {
     <input matSliderThumb>
   </mat-slider>
   `,
+  styles: SLIDER_STYLES,
 })
 class StandardSlider {}
 
@@ -1636,6 +1638,7 @@ class StandardSlider {}
     <input matSliderEndThumb>
   </mat-slider>
   `,
+  styles: SLIDER_STYLES,
 })
 class StandardRangeSlider {}
 
@@ -1645,6 +1648,7 @@ class StandardRangeSlider {}
     <input matSliderThumb>
   </mat-slider>
   `,
+  styles: SLIDER_STYLES,
 })
 class DisabledSlider {}
 
@@ -1655,6 +1659,7 @@ class DisabledSlider {}
     <input matSliderEndThumb>
   </mat-slider>
   `,
+  styles: SLIDER_STYLES,
 })
 class DisabledRangeSlider {}
 
@@ -1664,6 +1669,7 @@ class DisabledRangeSlider {}
     <input matSliderThumb>
   </mat-slider>
   `,
+  styles: SLIDER_STYLES,
 })
 class SliderWithMinAndMax {}
 
@@ -1674,6 +1680,7 @@ class SliderWithMinAndMax {}
     <input matSliderEndThumb>
   </mat-slider>
   `,
+  styles: SLIDER_STYLES,
 })
 class RangeSliderWithMinAndMax {}
 
@@ -1683,6 +1690,7 @@ class RangeSliderWithMinAndMax {}
     <input value="50" matSliderThumb>
   </mat-slider>
   `,
+  styles: SLIDER_STYLES,
 })
 class SliderWithValue {}
 
@@ -1693,6 +1701,7 @@ class SliderWithValue {}
     <input value="75" matSliderEndThumb>
   </mat-slider>
   `,
+  styles: SLIDER_STYLES,
 })
 class RangeSliderWithValue {}
 
@@ -1702,6 +1711,7 @@ class RangeSliderWithValue {}
     <input matSliderThumb>
   </mat-slider>
   `,
+  styles: SLIDER_STYLES,
 })
 class SliderWithStep {}
 
@@ -1712,6 +1722,7 @@ class SliderWithStep {}
     <input matSliderEndThumb>
   </mat-slider>
   `,
+  styles: SLIDER_STYLES,
 })
 class RangeSliderWithStep {}
 
@@ -1721,6 +1732,7 @@ class RangeSliderWithStep {}
     <input matSliderThumb>
   </mat-slider>
   `,
+  styles: SLIDER_STYLES,
 })
 class DiscreteSliderWithDisplayWith {
   displayWith(v: number) {
@@ -1736,6 +1748,7 @@ class DiscreteSliderWithDisplayWith {
     <input matSliderEndThumb>
   </mat-slider>
   `,
+  styles: SLIDER_STYLES,
 })
 class DiscreteRangeSliderWithDisplayWith {
   displayWith(v: number) {
@@ -1750,6 +1763,7 @@ class DiscreteRangeSliderWithDisplayWith {
     <input [value]="value" matSliderThumb>
   </mat-slider>
   `,
+  styles: SLIDER_STYLES,
 })
 class SliderWithOneWayBinding {
   value = 50;
@@ -1762,6 +1776,7 @@ class SliderWithOneWayBinding {
     <input [value]="endValue" matSliderEndThumb>
   </mat-slider>
   `,
+  styles: SLIDER_STYLES,
 })
 class RangeSliderWithOneWayBinding {
   startValue = 25;
@@ -1774,6 +1789,7 @@ class RangeSliderWithOneWayBinding {
     <input (change)="onChange($event)" (input)="onInput($event)" matSliderThumb>
   </mat-slider>
   `,
+  styles: SLIDER_STYLES,
 })
 class SliderWithChangeHandler {
   onChange = jasmine.createSpy('onChange');
@@ -1794,6 +1810,7 @@ class SliderWithChangeHandler {
       matSliderEndThumb>
   </mat-slider>
   `,
+  styles: SLIDER_STYLES,
 })
 class RangeSliderWithChangeHandler {
   onStartThumbChange = jasmine.createSpy('onStartThumbChange');
@@ -1809,6 +1826,7 @@ class RangeSliderWithChangeHandler {
     <input [(ngModel)]="val" matSliderThumb>
   </mat-slider>
   `,
+  styles: SLIDER_STYLES,
 })
 class SliderWithNgModel {
   @ViewChild(MatSlider) slider: MatSlider;
@@ -1822,6 +1840,7 @@ class SliderWithNgModel {
     <input [(ngModel)]="endVal" matSliderEndThumb>
   </mat-slider>
   `,
+  styles: SLIDER_STYLES,
 })
 class RangeSliderWithNgModel {
   @ViewChild(MatSlider) slider: MatSlider;
@@ -1834,6 +1853,7 @@ class RangeSliderWithNgModel {
   <mat-slider>
     <input [formControl]="control" matSliderThumb>
   </mat-slider>`,
+  styles: SLIDER_STYLES,
 })
 class SliderWithFormControl {
   control = new FormControl(0);
@@ -1845,6 +1865,7 @@ class SliderWithFormControl {
     <input [formControl]="startInputControl" matSliderStartThumb>
     <input [formControl]="endInputControl" matSliderEndThumb>
   </mat-slider>`,
+  styles: SLIDER_STYLES,
 })
 class RangeSliderWithFormControl {
   startInputControl = new FormControl(0);
@@ -1857,6 +1878,7 @@ class RangeSliderWithFormControl {
     <input [(value)]="value" matSliderThumb>
   </mat-slider>
   `,
+  styles: SLIDER_STYLES,
 })
 class SliderWithTwoWayBinding {
   @ViewChild(MatSlider) slider: MatSlider;
@@ -1871,6 +1893,7 @@ class SliderWithTwoWayBinding {
     <input [(value)]="endValue" matSliderEndThumb>
   </mat-slider>
   `,
+  styles: SLIDER_STYLES,
 })
 class RangeSliderWithTwoWayBinding {
   @ViewChild(MatSlider) slider: MatSlider;
