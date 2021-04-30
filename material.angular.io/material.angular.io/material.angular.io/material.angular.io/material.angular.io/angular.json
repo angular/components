@@ -16,7 +16,6 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "aot": true,
             "sourceMap": true,
             "outputPath": "dist/material-angular-io",
             "index": "src/index.html",
@@ -77,7 +76,12 @@
                 "src/styles"
               ]
             },
-            "scripts": []
+            "scripts": [],
+            "vendorChunk": true,
+            "extractLicenses": false,
+            "buildOptimizer": false,
+            "optimization": false,
+            "namedChunks": true
           },
           "configurations": {
             "production": {
@@ -92,7 +96,6 @@
               "outputHashing": "all",
               "sourceMap": false,
               "namedChunks": false,
-              "aot": true,
               "extractLicenses": true,
               "vendorChunk": false,
               "buildOptimizer": true,
@@ -221,7 +224,6 @@
             "main": "scenes/src/main.ts",
             "polyfills": "scenes/src/polyfills.ts",
             "tsConfig": "scenes/tsconfig.app.json",
-            "aot": true,
             "assets": [
               "scenes/src/favicon.ico",
               "scenes/src/assets"
@@ -229,7 +231,13 @@
             "styles": [
               "scenes/src/styles.scss"
             ],
-            "scripts": []
+            "scripts": [],
+            "vendorChunk": true,
+            "extractLicenses": false,
+            "buildOptimizer": false,
+            "sourceMap": true,
+            "optimization": false,
+            "namedChunks": true
           },
           "configurations": {
             "production": {
