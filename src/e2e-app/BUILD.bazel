@@ -119,8 +119,10 @@ concatjs_devserver(
 )
 
 # Bundles the `e2e-app` using rollup while running the Angular linker to transform
-# partial declarations to their corresponding Angular definitions. This target can
-# only be run if the e2e-app is built in partial compilation mode.
+# partial declarations to their corresponding Angular definitions. This target should
+# only be run if the e2e-app is built in partial compilation mode. Technically this
+# target could be run with full compilation mode too, but we want to raise an error if
+# the partial compilation is not enabled (as the mode has been forgotten most likely).
 rollup_bundle(
     name = "linked_app_bundle",
     testonly = True,

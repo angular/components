@@ -55,7 +55,7 @@ function applyPatches() {
   // Workaround for https://github.com/angular/angular/issues/18810.
   shelljs.exec('ngc -p angular-tsconfig.json');
 
-  // TODO: Remove once https://github.com/bazelbuild/rules_nodejs/commit/4965db6b775d99c370fe0fad7582168d55d520ec is available.
+  // TODO(devversion): Remove once https://github.com/bazelbuild/rules_nodejs/commit/4965db6b775d99c370fe0fad7582168d55d520ec is available.
   applyPatch(path.join(__dirname, 'bazel-protractor-server-configuration.patch'));
 
   // Workaround for: https://github.com/angular/angular/issues/32651. We just do not
