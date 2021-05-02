@@ -631,7 +631,12 @@ export class MatSlider extends _MatSliderMixinBase
   private _pointerDown = (event: TouchEvent | MouseEvent) => {
     // Don't do anything if the slider is disabled or the
     // user is using anything other than the main mouse button.
-    if (this.disabled || this._isSliding || (!isTouchEvent(event) && event.button !== 0)) {
+    if (
+      this.disabled ||
+      this._isSliding ||
+      (!isTouchEvent(event) && event.button !== 0) ||
+      (isTouchEvent(event) && !this.isMyEvent(event))
+    ) {
       return;
     }
 
@@ -660,6 +665,9 @@ export class MatSlider extends _MatSliderMixinBase
    * starting to drag. Bound on the document level.
    */
   private _pointerMove = (event: TouchEvent | MouseEvent) => {
+    if (isTouchEvent(event) && !this.isMyEvent(event)) {
+      return;
+    }
     if (this._isSliding) {
       // Prevent the slide from selecting anything else.
       event.preventDefault();
@@ -676,6 +684,9 @@ export class MatSlider extends _MatSliderMixinBase
 
   /** Called when the user has lifted their pointer. Bound on the document level. */
   private _pointerUp = (event: TouchEvent | MouseEvent) => {
+    if (isTouchEvent(event) && !this.isMyEvent(event)) {
+      return;
+    }
     if (this._isSliding) {
       event.preventDefault();
       this._removeGlobalEvents();
@@ -908,6 +919,21 @@ export class MatSlider extends _MatSliderMixinBase
   static ngAcceptInputType_vertical: BooleanInput;
   static ngAcceptInputType_disabled: BooleanInput;
   static ngAcceptInputType_tabIndex: NumberInput;
+
+  private isMyEvent(event: TouchEvent): boolean {
+    if (event.target instanceof Element) {
+      // I encountered that element of the event is either:
+      //   * mat-slider-thumb
+      //   * mat-slider-track-background (left or upper part of the slider bar)
+      //   * mat-slider-track-fill (right or lower part of the slider bar)
+      // All three elements are great-grand-children of the main component's element
+      return (
+        (event.target as Element)?.parentElement?.parentElement
+          ?.parentElement === this._elementRef.nativeElement
+      );
+    }
+    return false;
+  }
 }
 
 /** Returns whether an event is a touch event. */
@@ -919,8 +945,11 @@ function isTouchEvent(event: MouseEvent | TouchEvent): event is TouchEvent {
 }
 
 /** Gets the coordinates of a touch or mouse event relative to the viewport. */
-function getPointerPositionOnPage(event: MouseEvent | TouchEvent) {
-  // `touches` will be empty for start/end events so we have to fall back to `changedTouches`.
-  const point = isTouchEvent(event) ? (event.touches[0] || event.changedTouches[0]) : event;
-  return {x: point.clientX, y: point.clientY};
+function getPointerPositionOnPage(
+  event: MouseEvent | TouchEvent
+): { x: number; y: number } {
+  // I didn't see that targetTouches was ever empty.
+  // TODO investigate if it can be empty or more than one element ins some cases (dragStart, dragStop, multitouch on this component?)
+  const point = isTouchEvent(event) ? event.targetTouches[0] : event;
+  return { x: point.clientX, y: point.clientY };
 }
