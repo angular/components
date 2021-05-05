@@ -1,3 +1,20 @@
+## 11.2.12 "glass-grass" (2021-05-05)
+
+### material
+
+|            |                       |
+| ---------- | --------------------- |
+| bug fix |  **core:** `mat-ripple-element` is not fired on disable ([#22537](https://github.com/angular/components/issues/22537)) ([62e9c319ebe8122ffcd777dc1b2819e247a099b0](https://github.com/angular/components/commit/62e9c319ebe8122ffcd777dc1b2819e247a099b0)), closes [#22520](https://github.com/angular/components/issues/22520) [#22520](https://github.com/angular/components/issues/22520) [#22520](https://github.com/angular/components/issues/22520) [#22520](https://github.com/angular/components/issues/22520) |
+| bug fix |  **datepicker:** Only update selection when value changed ([#21846](https://github.com/angular/components/issues/21846)) ([#22369](https://github.com/angular/components/issues/22369)) ([35c04832023ecffc476c89874a2a4b4b562450c2](https://github.com/angular/components/commit/35c04832023ecffc476c89874a2a4b4b562450c2)) |
+| bug fix |  **paginator:** add `role="group"` to host ([#22512](https://github.com/angular/components/issues/22512)) ([a80f890a0dd7cb50e483047c053505d74321bd33](https://github.com/angular/components/commit/a80f890a0dd7cb50e483047c053505d74321bd33)) |
+
+### material-experimental
+
+|            |                       |
+| ---------- | --------------------- |
+| bug fix |  **mdc-progress-spinner:** set to display block ([#22618](https://github.com/angular/components/issues/22618)) ([638ed6179c11ce033143470802399d9ca60f45e9](https://github.com/angular/components/commit/638ed6179c11ce033143470802399d9ca60f45e9)) |
+
+
 ## 11.2.11 "metal-mountain" (2021-04-28)
 
 ### cdk
