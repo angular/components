@@ -1,3 +1,31 @@
+# 12.0.0-rc.2 "grass-glass" (2021-05-05)
+
+### cdk
+
+|            |                       |
+| ---------- | --------------------- |
+| performance |  **a11y:** only check for high contrast mode once ([#22561](https://github.com/angular/components/issues/22561)) ([0f0564b01891d85ecfc23543cbc12e6398122527](https://github.com/angular/components/commit/0f0564b01891d85ecfc23543cbc12e6398122527)) |
+
+### material
+
+|            |                       |
+| ---------- | --------------------- |
+| bug fix |  **core:** `mat-ripple-element` is not fired on disable ([#22537](https://github.com/angular/components/issues/22537)) ([62b2142cc41ca599cf443fc683531bb0199f346e](https://github.com/angular/components/commit/62b2142cc41ca599cf443fc683531bb0199f346e)), closes [#22520](https://github.com/angular/components/issues/22520) [#22520](https://github.com/angular/components/issues/22520) [#22520](https://github.com/angular/components/issues/22520) [#22520](https://github.com/angular/components/issues/22520) |
+| bug fix |  **core:** update mixin functions to avoid unknown cast ([#22577](https://github.com/angular/components/issues/22577)) ([33104b69d81f2579074a8da047c6f08bef63571e](https://github.com/angular/components/commit/33104b69d81f2579074a8da047c6f08bef63571e)) |
+| bug fix |  **datepicker:** Only update selection when value changed ([#21846](https://github.com/angular/components/issues/21846)) ([#22369](https://github.com/angular/components/issues/22369)) ([6fe273cd412a3f7b979520fc4cca28f0554fa5b3](https://github.com/angular/components/commit/6fe273cd412a3f7b979520fc4cca28f0554fa5b3)) |
+| bug fix |  **form-field:** handle datepicker inputs in harness ([#22403](https://github.com/angular/components/issues/22403)) ([ec266be5583d25e6fa16d03353ae18fa1ecba089](https://github.com/angular/components/commit/ec266be5583d25e6fa16d03353ae18fa1ecba089)) |
+| bug fix |  **paginator:** add `role="group"` to host ([#22512](https://github.com/angular/components/issues/22512)) ([1d339e638d35f7f497dab4e27f167f659316b387](https://github.com/angular/components/commit/1d339e638d35f7f497dab4e27f167f659316b387)) |
+| bug fix |  **schematics:** migrate more cases in the theming API schematic ([#22604](https://github.com/angular/components/issues/22604)) ([8b6fdac1f7d1b67354293385337d475b98b813d7](https://github.com/angular/components/commit/8b6fdac1f7d1b67354293385337d475b98b813d7)), closes [#22438](https://github.com/angular/components/issues/22438) [#22599](https://github.com/angular/components/issues/22599) |
+
+### material-experimental
+
+|            |                       |
+| ---------- | --------------------- |
+| bug fix |  **mdc-progress-spinner:** set to display block ([#22618](https://github.com/angular/components/issues/22618)) ([53374213644f705be76844a532ab17d227ad06f4](https://github.com/angular/components/commit/53374213644f705be76844a532ab17d227ad06f4)) |
+| bug fix |  **mdc-theming:** prefix elevation mixins with mdc ([#22600](https://github.com/angular/components/issues/22600)) ([7a52bdf8faf008c0966ad27fdb0dd8cf18b765e9](https://github.com/angular/components/commit/7a52bdf8faf008c0966ad27fdb0dd8cf18b765e9)) |
+| bug fix |  **mdc-typography:** add missing [@import](https://github.com/import) forward ([#22519](https://github.com/angular/components/issues/22519)) ([efc59522e93b3ba1266d1290db5d391c4db04f09](https://github.com/angular/components/commit/efc59522e93b3ba1266d1290db5d391c4db04f09)) |
+
+
 # 12.0.0-rc.1 "bamboo-eye" (2021-04-28)
 
 ### cdk
