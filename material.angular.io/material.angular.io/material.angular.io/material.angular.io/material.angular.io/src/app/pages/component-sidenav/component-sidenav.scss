@@ -33,7 +33,7 @@ app-component-sidenav {
 
   .docs-component-viewer-nav-content {
     width: constants.$sidenav-width;
-    height: 100vh;
+    height: calc(100vh - 56px);
     overflow: auto;
 
     &::-webkit-scrollbar {
