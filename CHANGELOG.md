@@ -5,7 +5,7 @@
 |            |                       |
 | ---------- | --------------------- |
 | bug fix |  **a11y:** not restoring focus to elements inside the shadow DOM ([#22622](https://github.com/angular/components/issues/22622)) ([52b0b8ce3f0788b4c6b96fec99520e1e635dd9bc](https://github.com/angular/components/commit/52b0b8ce3f0788b4c6b96fec99520e1e635dd9bc)) |
-| bug fix |  **overlay:** not emitting for auxiliar button clicks ([#22616](https://github.com/angular/components/issues/22616)) ([ba893982608c83e7fcc5526a3e8224df78b3d1bc](https://github.com/angular/components/commit/ba893982608c83e7fcc5526a3e8224df78b3d1bc)) |
+| bug fix |  **overlay:** not emitting for auxiliary button clicks ([#22616](https://github.com/angular/components/issues/22616)) ([ba893982608c83e7fcc5526a3e8224df78b3d1bc](https://github.com/angular/components/commit/ba893982608c83e7fcc5526a3e8224df78b3d1bc)) |
 | bug fix |  **testing:** incorrectly handling ancestor of compound selector ([#22476](https://github.com/angular/components/issues/22476)) ([f053befa68b56f069015d9d020c1ccab11893452](https://github.com/angular/components/commit/f053befa68b56f069015d9d020c1ccab11893452)), closes [#22475](https://github.com/angular/components/issues/22475) |
 
 ### material
