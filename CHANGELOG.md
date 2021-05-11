@@ -1,3 +1,26 @@
+# 12.0.0-rc.3 "resin-ensign" (2021-05-11)
+
+### cdk
+
+|            |                       |
+| ---------- | --------------------- |
+| bug fix |  **a11y:** not restoring focus to elements inside the shadow DOM ([#22622](https://github.com/angular/components/issues/22622)) ([52b0b8ce3f0788b4c6b96fec99520e1e635dd9bc](https://github.com/angular/components/commit/52b0b8ce3f0788b4c6b96fec99520e1e635dd9bc)) |
+| bug fix |  **overlay:** not emitting for auxiliary button clicks ([#22616](https://github.com/angular/components/issues/22616)) ([ba893982608c83e7fcc5526a3e8224df78b3d1bc](https://github.com/angular/components/commit/ba893982608c83e7fcc5526a3e8224df78b3d1bc)) |
+| bug fix |  **testing:** incorrectly handling ancestor of compound selector ([#22476](https://github.com/angular/components/issues/22476)) ([f053befa68b56f069015d9d020c1ccab11893452](https://github.com/angular/components/commit/f053befa68b56f069015d9d020c1ccab11893452)), closes [#22475](https://github.com/angular/components/issues/22475) |
+
+### material
+
+|            |                       |
+| ---------- | --------------------- |
+| bug fix |  **datepicker:** add label to dialog overlay ([#22625](https://github.com/angular/components/issues/22625)) ([fde47d8ce8b632211bfde23b065ef39c8e281fc8](https://github.com/angular/components/commit/fde47d8ce8b632211bfde23b065ef39c8e281fc8)) |
+| bug fix |  **schematics:** external stylesheets cannot be migrated ([bd72e4fe975663363b4a849c682e31863a1ebb06](https://github.com/angular/components/commit/bd72e4fe975663363b4a849c682e31863a1ebb06)) |
+| bug fix |  **schematics:** log message at the end of the theming migration ([8950e15ef11f41dfc345c5112d7bc253f8c1f56d](https://github.com/angular/components/commit/8950e15ef11f41dfc345c5112d7bc253f8c1f56d)) |
+| bug fix |  **schematics:** only migrate unprefixed variables when there is an import ([5c0da5aa0305ee55d647994d476d63f60f7f398c](https://github.com/angular/components/commit/5c0da5aa0305ee55d647994d476d63f60f7f398c)) |
+| bug fix |  **schematics:** run theming API migration during ng update ([d8f3c0bc421c05e17e998ce1d9e704ceb3306abc](https://github.com/angular/components/commit/d8f3c0bc421c05e17e998ce1d9e704ceb3306abc)) |
+| bug fix |  **schematics:** theming migration schematic not inserting use statement at the top of the file in some cases ([978f1431c4d5fef9db7e1f95843c844fd5da5503](https://github.com/angular/components/commit/978f1431c4d5fef9db7e1f95843c844fd5da5503)) |
+| bug fix |  **tabs:** coloring issues when a backgroundColor is set ([#22612](https://github.com/angular/components/issues/22612)) ([cc95e868b08a1682a84da67a46972e302fa4635c](https://github.com/angular/components/commit/cc95e868b08a1682a84da67a46972e302fa4635c)), closes [#22587](https://github.com/angular/components/issues/22587) |
+
+
 # 12.0.0-rc.2 "grass-glass" (2021-05-05)
 
 ### cdk
