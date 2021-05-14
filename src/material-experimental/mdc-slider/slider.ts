@@ -979,6 +979,9 @@ class SliderAdapter implements MDCSliderAdapter {
   setInputAttribute = (attribute: string, value: string, thumbPosition: Thumb): void => {
     const input = this._delegate._getInputElement(thumbPosition);
 
+    // TODO(wagnermaciel): remove this check once this component is
+    // added to the internal allowlist for calling setAttribute.
+
     // Explicitly check the attribute we are setting to prevent xss.
     switch (attribute) {
       case 'aria-valuetext':
