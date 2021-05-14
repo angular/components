@@ -998,6 +998,9 @@ class SliderAdapter implements MDCSliderAdapter {
         break;
       case 'step':
         input.setAttribute('step', value);
+        break;
+      default:
+        throw Error(`Tried to set invalid attribute ${attribute} on the mdc-slider.`);
     }
   }
   removeInputAttribute = (attribute: string, thumbPosition: Thumb): void => {
