@@ -59,7 +59,7 @@ const TEST_TEMPLATE_FILES = [
 ];
 
 const TAGS: string[] = ['angular', 'material', 'example'];
-const angularVersion = '^12.0.0-next.0';
+const angularVersion = '^12.0.0';
 
 const dependencies = {
   '@angular/cdk': materialVersion,
@@ -74,8 +74,8 @@ const dependencies = {
   '@angular/platform-browser-dynamic': angularVersion,
   '@angular/router': angularVersion,
   'moment': '^2.29.1',
-  'rxjs': '^6.6.6',
-  'tslib': '^2.1.0',
+  'rxjs': '^6.6.7',
+  'tslib': '^2.2.0',
   'zone.js': '^0.11.4',
 };
 
@@ -94,8 +94,8 @@ const testDependencies = {
   '@types/jasmine': '^3.6.6',
   'jasmine-core': '^3.6.0',
   'moment': '^2.29.1',
-  'rxjs': '^6.6.6',
-  'tslib': '^2.1.0',
+  'rxjs': '^6.6.7',
+  'tslib': '^2.2.0',
   'zone.js': '^0.11.4',
 };
 
