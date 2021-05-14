@@ -54,7 +54,7 @@
     "material-components-web": "12.0.0-canary.b52196498.0",
     "moment": "^2.29.1",
     "rxjs": "^6.6.7",
-    "tslib": "^2.1.0",
+    "tslib": "^2.2.0",
     "zone.js": "~0.11.4"
   },
   "devDependencies": {
@@ -78,7 +78,7 @@
     "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-jsdoc": "^32.3.0",
     "eslint-plugin-prefer-arrow": "^1.2.3",
-    "firebase-tools": "^9.9.0",
+    "firebase-tools": "^9.10.2",
     "imagemin": "^7.0.1",
     "imagemin-pngquant": "^9.0.2",
     "jasmine-core": "^3.6.0",
