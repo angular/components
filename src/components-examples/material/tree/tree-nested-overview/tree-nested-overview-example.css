@@ -13,7 +13,7 @@
  * This padding sets alignment of the nested nodes.
  */
 .example-tree .mat-nested-tree-node div[role=group] {
-  padding-inline-start: 40px;
+  padding-left: 40px;
 }
 
 /*
@@ -22,5 +22,5 @@
  * under the same parent.
  */
 .example-tree div[role=group] > .mat-tree-node {
-  padding-inline-start: 40px;
+  padding-left: 40px;
 }
