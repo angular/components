@@ -231,7 +231,7 @@ function getMixinValueFormatter(namespace: string): (name: string) => string {
 
 /** Formats a migration key as a Sass function invocation. */
 function functionKeyFormatter(namespace: string|null, name: string): RegExp {
-  return new RegExp(escapeRegExp(`${namespace ? namespace + '.' : ''}${name}(`), 'g');
+  return new RegExp(escapeRegExp(`${namespace ? namespace + '.' : ''}[^a-zA-Z]${name}(`), 'g');
 }
 
 /** Returns a function that can be used to format a Sass function replacement. */
