@@ -27,6 +27,9 @@
   mdc-autocomplete-typography, mdc-autocomplete-density, mdc-autocomplete-theme;
 @forward './mdc-button/button-theme' as mdc-button-* show mdc-button-color, mdc-button-typography,
   mdc-button-density, mdc-button-theme;
+@forward './mdc-button/button-theme' as mdc-* show mdc-fab-theme, mdc-fab-typography,
+  mdc-fab-color, mdc-fab-density, mdc-icon-button-theme, mdc-icon-button-color,
+  mdc-icon-button-density, mdc-icon-button-typography;
 @forward './mdc-card/card-theme' as mdc-card-* show mdc-card-color, mdc-card-typography,
   mdc-card-density, mdc-card-theme;
 @forward './mdc-checkbox/checkbox-theme' as mdc-checkbox-* show mdc-checkbox-color,
