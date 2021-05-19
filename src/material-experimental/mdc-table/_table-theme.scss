@@ -43,7 +43,6 @@
   mdc-data-table-theme.$sort-icon-active-color: $orig-sort-icon-active-color;
   mdc-data-table-theme.$stroke-color: $orig-stroke-color;
 
-
   .mat-mdc-table {
     $background: map.get($config, background);
     background: theming.get-color-from-palette($background, 'card');
