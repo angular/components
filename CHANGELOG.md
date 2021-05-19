@@ -1,3 +1,24 @@
+## 12.0.1 "acrylic-apple" (2021-05-19)
+
+### material
+
+|            |                       |
+| ---------- | --------------------- |
+| bug fix |  **core:** reduce the number of module resolutions required for the legacy theming bundle ([7f17d610602f9de128d8cce3825d5658bd577f8d](https://github.com/angular/components/commit/7f17d610602f9de128d8cce3825d5658bd577f8d)), closes [#22676](https://github.com/angular/components/issues/22676) |
+| bug fix |  **datepicker:** pass correct inject flags to injector ([#22665](https://github.com/angular/components/issues/22665)) ([f1e109c06a066efecdb3568aaa4e63456cd287c3](https://github.com/angular/components/commit/f1e109c06a066efecdb3568aaa4e63456cd287c3)) |
+| bug fix |  **stepper:** strong focus indicator not working for below label position ([#22696](https://github.com/angular/components/issues/22696)) ([ae24d90c30087e8630e58f39248c3da9740a8d61](https://github.com/angular/components/commit/ae24d90c30087e8630e58f39248c3da9740a8d61)), closes [#22677](https://github.com/angular/components/issues/22677) |
+| bug fix |  **table:** Make table data source interface generic ([#22673](https://github.com/angular/components/issues/22673)) ([06c8e7903ffe14f247544f887b5be682670e6f95](https://github.com/angular/components/commit/06c8e7903ffe14f247544f887b5be682670e6f95)) |
+| bug fix |  **tooltip:** not updating position after direction changes ([#22641](https://github.com/angular/components/issues/22641)) ([0e54ec70ca2312d64847491b5882b73c0ecedf2e](https://github.com/angular/components/commit/0e54ec70ca2312d64847491b5882b73c0ecedf2e)) |
+
+### material-experimental
+
+|            |                       |
+| ---------- | --------------------- |
+| bug fix |  **mdc-progress-spinner:** set line-height ([#22668](https://github.com/angular/components/issues/22668)) ([e89422add78d8e87ae2d18e94273a14f2001c728](https://github.com/angular/components/commit/e89422add78d8e87ae2d18e94273a14f2001c728)) |
+| bug fix |  **mdc-radio:** not removing animations when noop animations are enabled ([#22651](https://github.com/angular/components/issues/22651)) ([90ecea89afa2b067e9074947059bfc2c0b2e5305](https://github.com/angular/components/commit/90ecea89afa2b067e9074947059bfc2c0b2e5305)) |
+| bug fix |  **mdc-table:** add background color; disable hover styles; fix sticky columns ([#22723](https://github.com/angular/components/issues/22723)) ([c20e93998110468fefd7d4aa91e9431a6a2b2e8b](https://github.com/angular/components/commit/c20e93998110468fefd7d4aa91e9431a6a2b2e8b)) |
+
+
 # 12.0.0 "azurite-insight" (2021-05-12)
 
 ## Highlights
