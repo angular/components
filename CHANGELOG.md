@@ -1,3 +1,26 @@
+## 11.2.13 "denim-doily" (2021-05-19)
+
+### cdk
+
+|            |                       |
+| ---------- | --------------------- |
+| bug fix |  **a11y:** not restoring focus to elements inside the shadow DOM ([#22622](https://github.com/angular/components/issues/22622)) ([bad81f0818ac7b957643fd3aa17bd6fa27963d24](https://github.com/angular/components/commit/bad81f0818ac7b957643fd3aa17bd6fa27963d24)) |
+| bug fix |  **overlay:** not emitting for auxiliar button clicks ([#22616](https://github.com/angular/components/issues/22616)) ([97c449a44b1075c1ba65c6196b0753e815bf1a3d](https://github.com/angular/components/commit/97c449a44b1075c1ba65c6196b0753e815bf1a3d)) |
+| bug fix |  **testing:** incorrectly handling ancestor of compound selector ([#22476](https://github.com/angular/components/issues/22476)) ([ea84e7d6901885cedf290f88134048338f7c5be9](https://github.com/angular/components/commit/ea84e7d6901885cedf290f88134048338f7c5be9)), closes [#22475](https://github.com/angular/components/issues/22475) |
+
+### material
+
+|            |                       |
+| ---------- | --------------------- |
+| bug fix |  **sort:** fix undefined object access ([d48e6dae300c3fb4125fb64e44b97c006f0e54fa](https://github.com/angular/components/commit/d48e6dae300c3fb4125fb64e44b97c006f0e54fa)) |
+
+### material-experimental
+
+|            |                       |
+| ---------- | --------------------- |
+| bug fix |  **mdc-core:** update the required MDC version ([#22608](https://github.com/angular/components/issues/22608)) ([b5224ea4a99b55678faed5d6b8546007b820d39b](https://github.com/angular/components/commit/b5224ea4a99b55678faed5d6b8546007b820d39b)), closes [#22409](https://github.com/angular/components/issues/22409) [#21968](https://github.com/angular/components/issues/21968) |
+
+
 ## 11.2.12 "glass-grass" (2021-05-05)
 
 ### material
