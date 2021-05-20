@@ -274,7 +274,7 @@ if all rows are selected.
 isAllSelected() {
   const numSelected = this.selection.selected.length;
   const numRows = this.dataSource.data.length;
-  return numSelected == numRows;
+  return numSelected === numRows;
 }
 
 /** Selects all rows if they are not all selected; otherwise clear selection. */
