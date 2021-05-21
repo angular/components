@@ -24,7 +24,7 @@ import {Observable, of as observableOf, Subject, Subscription} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 import {coerceElement} from '@angular/cdk/coercion';
 import {DOCUMENT} from '@angular/common';
-import {InputModalityDetector, TOUCH_BUFFER_MS} from '../input-modality/input-modality-detector';
+import {getTarget, InputModalityDetector, TOUCH_BUFFER_MS} from '../input-modality/input-modality-detector';
 
 
 export type FocusOrigin = 'touch' | 'mouse' | 'keyboard' | 'program' | null;
@@ -528,14 +528,6 @@ export class FocusMonitor implements OnDestroy {
     return results;
   }
 }
-
-/** Gets the target of an event, accounting for Shadow DOM. */
-export function getTarget(event: Event): HTMLElement|null {
-  // If an event is bound outside the Shadow DOM, the `event.target` will
-  // point to the shadow root so we have to use `composedPath` instead.
-  return (event.composedPath ? event.composedPath()[0] : event.target) as HTMLElement | null;
-}
-
 
 /**
  * Directive that determines how a particular element was focused (via keyboard, mouse, touch, or
