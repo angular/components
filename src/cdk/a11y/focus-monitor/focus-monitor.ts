@@ -24,7 +24,11 @@ import {Observable, of as observableOf, Subject, Subscription} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 import {coerceElement} from '@angular/cdk/coercion';
 import {DOCUMENT} from '@angular/common';
-import {getTarget, InputModalityDetector, TOUCH_BUFFER_MS} from '../input-modality/input-modality-detector';
+import {
+  getTarget,
+  InputModalityDetector,
+  TOUCH_BUFFER_MS,
+} from '../input-modality/input-modality-detector';
 
 
 export type FocusOrigin = 'touch' | 'mouse' | 'keyboard' | 'program' | null;
