@@ -16,6 +16,7 @@ import {
   isFakeMousedownFromScreenReader,
   isFakeTouchstartFromScreenReader,
 } from '../fake-event-detection';
+import {getTarget} from '../focus-monitor/focus-monitor';
 
 /**
  * The input modalities detected by this service. Null is used if the input modality is unknown.
@@ -100,6 +101,12 @@ export class InputModalityDetector implements OnDestroy {
     return this._modality.value;
   }
 
+  /**
+   * The most recently detected input modality event target. Is null if no input modality has been
+   * detected or if the associated event target is null for some unknown reason.
+   */
+  _mostRecentTarget: HTMLElement | null = null;
+
   /** The underlying BehaviorSubject that emits whenever an input modality is detected. */
   private readonly _modality = new BehaviorSubject<InputModality>(null);
 
@@ -122,6 +129,7 @@ export class InputModalityDetector implements OnDestroy {
     if (this._options?.ignoreKeys?.some(keyCode => keyCode === event.keyCode)) { return; }
 
     this._modality.next('keyboard');
+    this._mostRecentTarget = getTarget(event);
   }
 
   /**
@@ -137,6 +145,7 @@ export class InputModalityDetector implements OnDestroy {
     // Fake mousedown events are fired by some screen readers when controls are activated by the
     // screen reader. Attribute them to keyboard input modality.
     this._modality.next(isFakeMousedownFromScreenReader(event) ? 'keyboard' : 'mouse');
+    this._mostRecentTarget = getTarget(event);
   }
 
   /**
@@ -156,6 +165,7 @@ export class InputModalityDetector implements OnDestroy {
     this._lastTouchMs = Date.now();
 
     this._modality.next('touch');
+    this._mostRecentTarget = getTarget(event);
   }
 
   constructor(
