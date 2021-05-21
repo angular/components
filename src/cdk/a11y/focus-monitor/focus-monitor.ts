@@ -340,6 +340,16 @@ export class FocusMonitor implements OnDestroy {
    * @param focusEventTarget The target of the focus event under examination.
    */
   private _shouldBeAttributedToTouch(focusEventTarget: HTMLElement | null): boolean {
+    // Please note that this check is not perfect. Consider the following edge case:
+    //
+    // <div #parent tabindex="0">
+    //   <div #child tabindex="0" (click)="#parent.focus()"></div>
+    // </div>
+    //
+    // Suppose there is a FocusMonitor in IMMEDIATE mode attached to #parent. When the user touches
+    // #child, #parent is programmatically focused. This code will attribute the focus to touch
+    // instead of program. This is a relatively minor edge-case that can be worked around by using
+    // focusVia(parent, 'program') to focus #parent.
     return (this._detectionMode === FocusMonitorDetectionMode.EVENTUAL) ||
         !!focusEventTarget?.contains(this._inputModalityDetector._mostRecentTarget);
   }
