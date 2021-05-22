@@ -462,7 +462,7 @@ export class CdkTable<T> implements AfterContentChecked, CollectionViewer, OnDes
    * data source, even if the set of rows is empty.
    */
   @Output()
-  readonly dataRowsChange = new EventEmitter<void>();
+  readonly contentChanged = new EventEmitter<void>();
 
   // TODO(andrewseguin): Remove max value as the end index
   //   and instead calculate the view on init and scroll.
@@ -621,7 +621,7 @@ export class CdkTable<T> implements AfterContentChecked, CollectionViewer, OnDes
     const changes = this._dataDiffer.diff(this._renderRows);
     if (!changes) {
       this._updateNoDataRow();
-      this.dataRowsChange.next();
+      this.contentChanged.next();
       return;
     }
     const viewContainer = this._rowOutlet.viewContainer;
@@ -650,7 +650,7 @@ export class CdkTable<T> implements AfterContentChecked, CollectionViewer, OnDes
     this._updateNoDataRow();
     this.updateStickyColumnStyles();
 
-    this.dataRowsChange.next();
+    this.contentChanged.next();
   }
 
   /** Adds a column definition that was not included as part of the content children. */

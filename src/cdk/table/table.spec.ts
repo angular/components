@@ -73,7 +73,7 @@ describe('CdkTable', () => {
       it('with a connected data source', () => {
         expect(table.dataSource).toBe(dataSource);
         expect(dataSource.isConnected).toBe(true);
-        expect(component.dataRowsChangeCount).toBe(1);
+        expect(component.contentChangedCount).toBe(1);
       });
 
       it('with a rendered header with the right number of header cells', () => {
@@ -137,7 +137,7 @@ describe('CdkTable', () => {
       fixture.detectChanges();
 
       // Expect it to have emitted once on init, and once again for the data changes.
-      expect(component.dataRowsChangeCount).toBe(2);
+      expect(component.contentChangedCount).toBe(2);
 
       expect(getRows(tableElement).length).toBe(dataSource.data.length);
 
@@ -308,7 +308,7 @@ describe('CdkTable', () => {
       fixture.detectChanges();
 
       // Expect it to have emitted once on init, once when empty, and again with original data.
-      expect(component.dataRowsChangeCount).toBe(3);
+      expect(component.contentChangedCount).toBe(3);
 
       expect(tableElement.textContent!.trim()).not.toContain('No data');
     });
@@ -320,7 +320,7 @@ describe('CdkTable', () => {
       fixture.detectChanges();
       tableElement = fixture.nativeElement.querySelector('.cdk-table');
       expect(tableElement.textContent!.trim()).toContain('No data');
-      expect(component.dataRowsChangeCount).toBe(1);
+      expect(component.contentChangedCount).toBe(1);
     });
   });
 
@@ -331,7 +331,7 @@ describe('CdkTable', () => {
     expect(getRows(tableElement).length).toBe(0);
 
     // Emits that the data rows are changed even when the result is empty.
-    expect(component.dataRowsChangeCount).toBe(1);
+    expect(component.contentChangedCount).toBe(1);
   }));
 
   it('should be able to render multiple header and footer rows', () => {
@@ -1862,7 +1862,7 @@ class BooleanDataSource extends DataSource<boolean> {
 @Component({
   template: `
     <cdk-table [dataSource]="dataSource"
-               (dataRowsChange)="dataRowsChangeCount = dataRowsChangeCount + 1">
+               (contentChanged)="contentChangedCount = contentChangedCount + 1">
       <ng-container cdkColumnDef="column_a">
         <cdk-header-cell *cdkHeaderCellDef> Column A</cdk-header-cell>
         <cdk-cell *cdkCellDef="let row"> {{row.a}} </cdk-cell>
@@ -1895,7 +1895,7 @@ class BooleanDataSource extends DataSource<boolean> {
 class SimpleCdkTableApp {
   dataSource: FakeDataSource | undefined = new FakeDataSource();
   columnsToRender = ['column_a', 'column_b', 'column_c'];
-  dataRowsChangeCount = 0;
+  contentChangedCount = 0;
 
   @ViewChild(CdkTable) table: CdkTable<TestData>;
 }
@@ -1951,7 +1951,7 @@ class BooleanRowCdkTableApp {
 @Component({
   template: `
     <cdk-table [dataSource]="dataSource"
-               (dataRowsChange)="dataRowsChangeCount = dataRowsChangeCount + 1">
+               (contentChanged)="contentChangedCount = contentChangedCount + 1">
       <ng-container cdkColumnDef="column_a">
         <cdk-header-cell *cdkHeaderCellDef></cdk-header-cell>
         <cdk-cell *cdkCellDef="let data"> {{data}} </cdk-cell>
@@ -1964,7 +1964,7 @@ class BooleanRowCdkTableApp {
 })
 class NullDataCdkTableApp {
   dataSource = observableOf(null);
-  dataRowsChangeCount = 0;
+  contentChangedCount = 0;
 }
 
 
