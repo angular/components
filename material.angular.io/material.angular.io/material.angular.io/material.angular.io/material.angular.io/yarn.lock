@@ -270,10 +270,10 @@
     "@types/googlemaps" "^3.43.1"
     tslib "^2.1.0"
 
-"@angular/localize@^12.0.0":
-  version "12.0.0"
-  resolved "https://registry.yarnpkg.com/@angular/localize/-/localize-12.0.0.tgz#dbe60215fe54ccc3e32d915bf9e4d742988cf3db"
-  integrity sha512-vJ/xeIhF4odmSgf2XAAIb57AmUgS1DiprQeeG5aY1lZ9ZMBDC1BkeONseQDBg0d9HkT9KdqElDBuSMGfQfzEkw==
+"@angular/localize@^12.0.1":
+  version "12.0.1"
+  resolved "https://registry.yarnpkg.com/@angular/localize/-/localize-12.0.1.tgz#6477066b6e4830c9dffa931064794108961d4364"
+  integrity sha512-+nLvfbX2tQUMCDILlUOhb1o3B7DzcJgrEy3QEG3dGkT7A7RjA5zShXN+CXuaeEMlTSGURVx3IEzuudpGcgLz9Q==
   dependencies:
     "@babel/core" "7.8.3"
     glob "7.1.7"
