@@ -12,6 +12,6 @@ table {
     border-color: currentColor;
 }
 
-.row-is-clicked {
+.demo-row-is-clicked {
     font-weight: bold;
 }
