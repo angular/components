@@ -26,8 +26,8 @@
   <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
   <tr
       mat-row
-      (click)="clickedRows.push(row)"
-      [class.demo-row-is-clicked]="clickedRows.includes(row)"
+      (click)="clickedRows.add(row)"
+      [class.demo-row-is-clicked]="clickedRows.has(row)"
       *matRowDef="let row; columns: displayedColumns;"
   ></tr>
 </table>
@@ -38,7 +38,7 @@
   </h3>
 </div>
 
-<div *ngIf="!clickedRows.length">
+<div *ngIf="!clickedRows.size">
   Clicked rows will be logged here
 </div>
 
