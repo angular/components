@@ -1081,7 +1081,7 @@ describe('MatInput with forms', () => {
       expect(testComponent.formControl.untouched).toBe(true, 'Expected untouched form control');
       expect(containerEl.querySelectorAll('mat-error').length).toBe(0, 'Expected no error message');
       expect(inputEl.getAttribute('aria-invalid'))
-        .toBe(null, 'Expected aria-invalid not to be present.');
+        .toBe('false', 'Expected aria-invalid to be set to "false".');
     }));
 
     it('should display an error message when the input is touched and invalid', fakeAsync(() => {
@@ -1135,7 +1135,7 @@ describe('MatInput with forms', () => {
       expect(component.formGroup.invalid).toBe(true, 'Expected form control to be invalid');
       expect(containerEl.querySelectorAll('mat-error').length).toBe(0, 'Expected no error message');
       expect(inputEl.getAttribute('aria-invalid'))
-        .toBe(null, 'Expected aria-invalid not to be present.');
+        .toBe('false', 'Expected aria-invalid to be set to "false".');
       expect(component.formGroupDirective.submitted)
         .toBe(false, 'Expected form not to have been submitted');
 
@@ -1219,7 +1219,7 @@ describe('MatInput with forms', () => {
       expect(describedBy).toBe(errorIds);
     }));
 
-    it('should not set `aria-invalid` if the input is empty', fakeAsync(() => {
+    it('should set `aria-invalid` to true if the input is empty', fakeAsync(() => {
       // Submit the form since it's the one that triggers the default error state matcher.
       dispatchFakeEvent(fixture.nativeElement.querySelector('form'), 'submit');
       fixture.detectChanges();
@@ -1228,7 +1228,7 @@ describe('MatInput with forms', () => {
       expect(testComponent.formControl.invalid).toBe(true, 'Expected form control to be invalid');
       expect(inputEl.value).toBeFalsy();
       expect(inputEl.getAttribute('aria-invalid'))
-          .toBe(null, 'Expected aria-invalid not to be present.');
+          .toBe('true', 'Expected aria-invalid to be set to "true".');
 
       inputEl.value = 'not valid';
       fixture.detectChanges();
@@ -1751,6 +1751,48 @@ describe('MatInput with textarea autosize', () => {
     fixture.detectChanges();
     const textarea = fixture.nativeElement.querySelector('textarea');
     expect(textarea.getBoundingClientRect().height).toBeGreaterThan(1);
+  });
+});
+
+describe('MatInput that is requried with a formControl', () => {
+  let fixture: ComponentFixture<MatInputWithRequiredAndFormControl>;
+  let input: HTMLInputElement;
+  let formControl: FormControl;
+
+  beforeEach(() => {
+    fixture = createComponent(MatInputWithRequiredAndFormControl);
+    formControl = fixture.componentInstance.formControl;
+    input = fixture.debugElement.query(By.css('input')).nativeElement!;
+    fixture.detectChanges();
+  });
+
+  it('should set aria-required.', () => {
+    expect(input.getAttribute('aria-required'))
+      .toBe('true', 'Expected "aria-required" to be "true"');
+  });
+
+  it('should not set any value for aria-invalid.', () => {
+    expect(input.getAttribute('aria-invalid'))
+      .toBe(null, 'Expected "aria-invalid" not to be set');
+  });
+
+  it('should not set aria-invalid when empty and invalid.', () => {
+    formControl.setErrors({error: 'True!'});
+    formControl.markAsTouched();
+    fixture.detectChanges();
+
+    expect(input.getAttribute('aria-invalid'))
+      .toBe(null, 'Expected "aria-invalid" not to be set');
+  });
+
+  it('should set aria-invalid when not empty and invalid.', () => {
+    input.value = 'Some value';
+    formControl.setErrors({error: 'True!'});
+    formControl.markAsTouched();
+    fixture.detectChanges();
+
+    expect(input.getAttribute('aria-invalid'))
+      .toBe('true', 'Expected "aria-invalid" to be "true"');
   });
 });
 
@@ -2384,4 +2426,15 @@ class MatInputWithAnotherNgIf {
 })
 class MatInputWithColor {
   color: ThemePalette;
+}
+
+@Component({
+  template: `
+    <mat-form-field>
+      <input matInput required [formControl]="formControl">
+    </mat-form-field>
+  `
+})
+class MatInputWithRequiredAndFormControl {
+  formControl = new FormControl();
 }
