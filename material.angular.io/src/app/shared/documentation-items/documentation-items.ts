@@ -372,6 +372,15 @@ const DOCS: { [key: string]: DocItem[] } = {
         prefix: 'tree-',
       },
     },
+    {
+      id: 'core',
+      name: 'Core',
+      summary: 'Reusable parts used by other components in the library.',
+      exampleSpecs: {
+        prefix: 'core-',
+      },
+      additionalApiDocs: [{name: 'Testing', path: 'material-core-testing.html'}],
+    },
   ],
   [CDK]: [
     {
