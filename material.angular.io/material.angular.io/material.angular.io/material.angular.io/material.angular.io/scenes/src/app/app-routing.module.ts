@@ -1,42 +1,43 @@
+import {ComponentType} from '@angular/cdk/overlay';
 import {NgModule} from '@angular/core';
 import {RouterModule} from '@angular/router';
 import {SceneViewer} from './scene-viewer/scene-viewer';
+import {AutocompleteScene} from './scenes/autocomplete/autocomplete-scene';
+import {BadgeScene} from './scenes/badge/badge-scene';
 import {BottomSheetScene} from './scenes/bottom-sheet/bottom-sheet-scene';
-import {GridListScene} from './scenes/grid-list/grid-list-scene';
-import {RipplesScene} from './scenes/ripples/ripples-scene';
-import {InputScene} from './scenes/input/input-scene';
 import {ButtonToggleScene} from './scenes/button-toggle/button-toggle-scene';
-import {SliderScene} from './scenes/slider/slider-scene';
-import {SlideToggleScene} from './scenes/slide-toggle/slide-toggle-scene';
-import {DividerScene} from './scenes/divider/divider-scene';
-import {ComponentType} from '@angular/cdk/overlay';
-import {ProgressSpinnerScene} from './scenes/progress-spinner/progress-spinner-scene';
 import {ButtonScene} from './scenes/button/button-scene';
-import {DatepickerScene} from './scenes/datepicker/datepicker-scene';
+import {CardScene} from './scenes/card/card-scene';
 import {CheckboxScene} from './scenes/checkbox/checkbox-scene';
 import {ChipsScene} from './scenes/chips/chips-scene';
-import {ProgressBarScene} from './scenes/progress-bar/progress-bar-scene';
-import {SnackBarScene} from './scenes/snack-bar/snack-bar-scene';
-import {StepperScene} from './scenes/stepper/stepper-scene';
-import {RadioScene} from './scenes/radio/radio-scene';
-import {MenuScene} from './scenes/menu/menu-scene';
-import {BadgeScene} from './scenes/badge/badge-scene';
-import {PaginatorScene} from './scenes/paginator/paginator-scene';
-import {TableScene} from './scenes/table/table-scene';
-import {SortScene} from './scenes/sort/sort-scene';
-import {TabsScene} from './scenes/tabs/tabs-scene';
-import {ExpansionScene} from './scenes/expansion/expansion-scene';
-import {SelectScene} from './scenes/select/select-scene';
-import {AutocompleteScene} from './scenes/autocomplete/autocomplete-scene';
-import {TreeScene} from './scenes/tree/tree-scene';
-import {CardScene} from './scenes/card/card-scene';
-import {ListScene} from './scenes/list/list-scene';
-import {TooltipScene} from './scenes/tooltip/tooltip-scene';
+import {CoreScene} from './scenes/core/core-scene';
+import {DatepickerScene} from './scenes/datepicker/datepicker-scene';
 import {DialogScene} from './scenes/dialog/dialog-scene';
+import {DividerScene} from './scenes/divider/divider-scene';
+import {ExpansionScene} from './scenes/expansion/expansion-scene';
 import {FormFieldScene} from './scenes/form-field/form-field-scene';
-import {ToolbarScene} from './scenes/toolbar/toolbar-scene';
-import {SidenavScene} from './scenes/sidenav/sidenav-scene';
+import {GridListScene} from './scenes/grid-list/grid-list-scene';
 import {IconScene} from './scenes/icon/icon-scene';
+import {InputScene} from './scenes/input/input-scene';
+import {ListScene} from './scenes/list/list-scene';
+import {MenuScene} from './scenes/menu/menu-scene';
+import {PaginatorScene} from './scenes/paginator/paginator-scene';
+import {ProgressBarScene} from './scenes/progress-bar/progress-bar-scene';
+import {ProgressSpinnerScene} from './scenes/progress-spinner/progress-spinner-scene';
+import {RadioScene} from './scenes/radio/radio-scene';
+import {RipplesScene} from './scenes/ripples/ripples-scene';
+import {SelectScene} from './scenes/select/select-scene';
+import {SidenavScene} from './scenes/sidenav/sidenav-scene';
+import {SlideToggleScene} from './scenes/slide-toggle/slide-toggle-scene';
+import {SliderScene} from './scenes/slider/slider-scene';
+import {SnackBarScene} from './scenes/snack-bar/snack-bar-scene';
+import {SortScene} from './scenes/sort/sort-scene';
+import {StepperScene} from './scenes/stepper/stepper-scene';
+import {TableScene} from './scenes/table/table-scene';
+import {TabsScene} from './scenes/tabs/tabs-scene';
+import {ToolbarScene} from './scenes/toolbar/toolbar-scene';
+import {TooltipScene} from './scenes/tooltip/tooltip-scene';
+import {TreeScene} from './scenes/tree/tree-scene';
 
 let hue = 0;
 
@@ -59,6 +60,7 @@ const routes: SceneViewerRoute[] = [
   {path: 'card', component: SceneViewer, data: {scene: CardScene}},
   {path: 'checkbox', component: SceneViewer, data: {scene: CheckboxScene}},
   {path: 'chips', component: SceneViewer, data: {scene: ChipsScene}},
+  {path: 'core', component: SceneViewer, data: {scene: CoreScene}},
   {path: 'datepicker', component: SceneViewer, data: {scale: 0.8, scene: DatepickerScene}},
   {path: 'dialog', component: SceneViewer, data: {scene: DialogScene}},
   {path: 'divider', component: SceneViewer, data: {scale: 2, scene: DividerScene}},
