@@ -30,7 +30,7 @@
     }
   }
 
-  .docs-api-async-method-marker {
+  .docs-api-modifier-method-marker {
     $async-method-marker-hue: if($is-dark-theme, 200, 400);
     background-color: mat.get-color-from-palette($primary, $async-method-marker-hue);
     color: mat.get-color-from-palette($primary, '#{$async-method-marker-hue}-contrast');
