@@ -10,24 +10,13 @@
   $foreground: map.get($theme, foreground);
   $is-dark-theme: map.get($theme, is-dark);
 
-  @if $is-dark-theme {
-    .docs-api-method-name-cell {
-      color: mat.get-color-from-palette($primary, 200);
-    }
+  .docs-api-method-name-cell {
+    color: mat.get-color-from-palette($primary, if($is-dark-theme, 200, 800));
+  }
 
-    .docs-api-method-returns-type,
-    .docs-api-method-parameter-type {
-      color: mat.get-color-from-palette($primary, 200);
-    }
-  } @else {
-    .docs-api-method-name-cell {
-      color: mat.get-color-from-palette($primary, 800);
-    }
-
-    .docs-api-method-returns-type,
-    .docs-api-method-parameter-type {
-      color: mat.get-color-from-palette($primary, darker);
-    }
+  .docs-api-method-returns-type,
+  .docs-api-method-parameter-type {
+    color: mat.get-color-from-palette($primary, if($is-dark-theme, 200, darker));
   }
 
   .docs-api-modifier-method-marker {
@@ -45,6 +34,10 @@
   // Prevent p tags from not breaking, causing x axis overflows.
   .docs-api > p {
     word-break: break-word;
+  }
+
+  .docs-api a {
+    color: mat.get-color-from-palette($primary, if($is-dark-theme, 200, default));
   }
 
   .docs-api-class-name,
