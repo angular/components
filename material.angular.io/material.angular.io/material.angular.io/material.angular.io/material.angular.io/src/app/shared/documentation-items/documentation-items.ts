@@ -399,6 +399,22 @@ const DOCS: { [key: string]: DocItem[] } = {
       },
     },
     {
+      id: 'coercion',
+      name: 'Coercion',
+      summary: 'Utility functions for coercing @Input into specific types.',
+      exampleSpecs: {
+        prefix: 'cdk-coercion-',
+      },
+    },
+    {
+      id: 'collections',
+      name: 'Collections',
+      summary: 'Utilities for managing collections.',
+      exampleSpecs: {
+        prefix: 'cdk-collections-',
+      },
+    },
+    {
       id: 'drag-drop',
       name: 'Drag and Drop',
       summary: 'Directives enabling drag-and-drop interactions',
