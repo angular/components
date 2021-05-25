@@ -1,24 +1,24 @@
-table {
+.demo-table {
   width: 100%;
 }
 
-.mat-column-position {
+.mat-column-demo-position {
     width: 32px;
     border-right: 1px solid currentColor;
     padding-right: 24px;
     text-align: center;
 }
 
-.mat-column-name {
+.mat-column-demo-name {
     padding-left: 16px;
     font-size: 20px;
 }
 
-.mat-column-weight {
+.mat-column-demo-weight {
     font-style: italic;
 }
 
-.mat-column-symbol {
+.mat-column-demo-symbol {
     width: 32px;
     text-align: center;
     font-weight: bold;

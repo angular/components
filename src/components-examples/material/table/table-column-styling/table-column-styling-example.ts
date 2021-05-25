@@ -29,6 +29,6 @@ const ELEMENT_DATA: PeriodicElement[] = [
   templateUrl: 'table-column-styling-example.html',
 })
 export class TableColumnStylingExample {
-  displayedColumns: string[] = ['position', 'name', 'weight', 'symbol'];
+  displayedColumns: string[] = ['demo-position', 'demo-name', 'demo-weight', 'demo-symbol'];
   dataSource = ELEMENT_DATA;
 }
