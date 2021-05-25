@@ -26,8 +26,8 @@
   <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
   <tr
       mat-row
-      (click)="recordClick(row)"
-      [class.demo-row-is-clicked]="isClicked(row)"
+      (click)="clickedRows.push(row)"
+      [class.demo-row-is-clicked]="clickedRows.includes(row)"
       *matRowDef="let row; columns: displayedColumns;"
   ></tr>
 </table>

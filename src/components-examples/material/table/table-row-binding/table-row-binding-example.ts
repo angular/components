@@ -31,20 +31,5 @@ const ELEMENT_DATA: PeriodicElement[] = [
 export class TableRowBindingExample {
   displayedColumns: string[] = ['position', 'name', 'weight', 'symbol'];
   dataSource = ELEMENT_DATA;
-
   clickedRows: PeriodicElement[] = [];
-
-  recordClick(rowData: PeriodicElement) {
-    this.clickedRows.push(rowData);
-  }
-
-  isClicked(rowData: PeriodicElement) {
-    for (const clickedRow of this.clickedRows) {
-      if (rowData === clickedRow) {
-        return true;
-      }
-    }
-
-    return false;
-  }
 }
