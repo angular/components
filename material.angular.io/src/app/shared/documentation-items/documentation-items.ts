@@ -130,6 +130,15 @@ const DOCS: { [key: string]: DocItem[] } = {
       additionalApiDocs: [{name: 'Testing', path: 'material-chips-testing.html'}],
     },
     {
+      id: 'core',
+      name: 'Core',
+      summary: 'Reusable parts used by other components in the library.',
+      exampleSpecs: {
+        prefix: 'core-',
+      },
+      additionalApiDocs: [{name: 'Testing', path: 'material-core-testing.html'}],
+    },
+    {
       id: 'datepicker',
       name: 'Datepicker',
       summary: 'Captures dates, agnostic about their internal representation.',
@@ -371,15 +380,6 @@ const DOCS: { [key: string]: DocItem[] } = {
       exampleSpecs: {
         prefix: 'tree-',
       },
-    },
-    {
-      id: 'core',
-      name: 'Core',
-      summary: 'Reusable parts used by other components in the library.',
-      exampleSpecs: {
-        prefix: 'core-',
-      },
-      additionalApiDocs: [{name: 'Testing', path: 'material-core-testing.html'}],
     },
   ],
   [CDK]: [
