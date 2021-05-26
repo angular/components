@@ -7,6 +7,7 @@ import {RouterModule} from '@angular/router';
 import {MaterialDocsApp} from './material-docs-app';
 import {MATERIAL_DOCS_ROUTES} from './routes';
 import {NavBarModule} from './shared/navbar';
+import {CookiePopupModule} from './shared/cookie-popup/cookie-popup-module';
 
 @NgModule({
   imports: [
@@ -18,6 +19,7 @@ import {NavBarModule} from './shared/navbar';
       relativeLinkResolution: 'corrected'
     }),
     NavBarModule,
+    CookiePopupModule,
   ],
   declarations: [MaterialDocsApp],
   providers: [{provide: LocationStrategy, useClass: PathLocationStrategy}],
