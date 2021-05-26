@@ -47,42 +47,50 @@ import {TableWithRipplesExample} from './table-with-ripples/table-with-ripples-e
 import {TableColumnStylingExample} from './table-column-styling/table-column-styling-example';
 import {TableRowBindingExample} from './table-row-binding/table-row-binding-example';
 import {
+  TableDynamicArrayDataExample
+} from './table-dynamic-array-data/table-dynamic-array-data-example';
+import {
+  TableDynamicObservableDataExample
+} from './table-dynamic-observable-data/table-dynamic-observable-data-example';
+import {
   TableGeneratedColumnsExample
 } from './table-generated-columns/table-generated-columns-example';
 
 export {
-  TableBasicExample,          TableFlexBasicExample,
-  TableDynamicColumnsExample, TableExpandableRowsExample,
-  TableFilteringExample,      TableFooterRowExample,
-  TableHttpExample,           TableMultipleHeaderFooterExample,
-  TableOverviewExample,       TablePaginationExample,
-  TableRowContextExample,     TableSelectionExample,
-  TableSortingExample,        TableStickyColumnsExample,
-  TableStickyComplexExample,  TableStickyComplexFlexExample,
-  TableStickyFooterExample,   TableStickyHeaderExample,
-  TableTextColumnExample,     TableTextColumnAdvancedExample,
-  TableWrappedExample,        WrapperTable,
-  TableReorderableExample,    TableRecycleRowsExample,
-  TableHarnessExample,        TableColumnStylingExample,
-  TableRowBindingExample,     TableWithRipplesExample,
+  TableBasicExample,             TableFlexBasicExample,
+  TableDynamicColumnsExample,    TableExpandableRowsExample,
+  TableFilteringExample,         TableFooterRowExample,
+  TableHttpExample,              TableMultipleHeaderFooterExample,
+  TableOverviewExample,          TablePaginationExample,
+  TableRowContextExample,        TableSelectionExample,
+  TableSortingExample,           TableStickyColumnsExample,
+  TableStickyComplexExample,     TableStickyComplexFlexExample,
+  TableStickyFooterExample,      TableStickyHeaderExample,
+  TableTextColumnExample,        TableTextColumnAdvancedExample,
+  TableWrappedExample,           WrapperTable,
+  TableReorderableExample,       TableRecycleRowsExample,
+  TableHarnessExample,           TableColumnStylingExample,
+  TableRowBindingExample,        TableWithRipplesExample,
+  TableDynamicArrayDataExample,  TableDynamicObservableDataExample,
   TableGeneratedColumnsExample,
 };
 
 const EXAMPLES = [
-  TableBasicExample,          TableFlexBasicExample,
-  TableDynamicColumnsExample, TableExpandableRowsExample,
-  TableFilteringExample,      TableFooterRowExample,
-  TableHttpExample,           TableMultipleHeaderFooterExample,
-  TableOverviewExample,       TablePaginationExample,
-  TableRowContextExample,     TableSelectionExample,
-  TableSortingExample,        TableStickyColumnsExample,
-  TableStickyComplexExample,  TableStickyComplexFlexExample,
-  TableStickyFooterExample,   TableStickyHeaderExample,
-  TableTextColumnExample,     TableTextColumnAdvancedExample,
-  TableWrappedExample,        WrapperTable,
-  TableReorderableExample,    TableRecycleRowsExample,
-  TableHarnessExample,        TableColumnStylingExample,
-  TableRowBindingExample,     TableWithRipplesExample,
+  TableBasicExample,             TableFlexBasicExample,
+  TableDynamicColumnsExample,    TableExpandableRowsExample,
+  TableFilteringExample,         TableFooterRowExample,
+  TableHttpExample,              TableMultipleHeaderFooterExample,
+  TableOverviewExample,          TablePaginationExample,
+  TableRowContextExample,        TableSelectionExample,
+  TableSortingExample,           TableStickyColumnsExample,
+  TableStickyComplexExample,     TableStickyComplexFlexExample,
+  TableStickyFooterExample,      TableStickyHeaderExample,
+  TableTextColumnExample,        TableTextColumnAdvancedExample,
+  TableWrappedExample,           WrapperTable,
+  TableReorderableExample,       TableRecycleRowsExample,
+  TableHarnessExample,           TableColumnStylingExample,
+  TableRowBindingExample,        TableWithRipplesExample,
+  TableDynamicArrayDataExample,  TableDynamicObservableDataExample,
   TableGeneratedColumnsExample,
 ];
 
