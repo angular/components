@@ -1,0 +1,26 @@
+@use '~@angular/cdk' as cdk;
+@use '~@angular/material' as mat;
+
+$_inner-spacing: 16px;
+
+.popup {
+  @include mat.elevation(6);
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  margin: 24px;
+  max-width: 430px;
+  z-index: cdk.$overlay-container-z-index + 1;
+  padding: $_inner-spacing $_inner-spacing $_inner-spacing / 2;
+  border-radius: 4px;
+}
+
+.buttons {
+  display: flex;
+  justify-content: flex-end;
+  margin: $_inner-spacing $_inner-spacing / -2 0 0;
+
+  .mat-button {
+    text-transform: uppercase;
+  }
+}
