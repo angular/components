@@ -57,43 +57,6 @@ import {
 } from './table-generated-columns/table-generated-columns-example';
 
 export {
-<<<<<<< HEAD
-  TableBasicExample,             TableFlexBasicExample,
-  TableDynamicColumnsExample,    TableExpandableRowsExample,
-  TableFilteringExample,         TableFooterRowExample,
-  TableHttpExample,              TableMultipleHeaderFooterExample,
-  TableOverviewExample,          TablePaginationExample,
-  TableRowContextExample,        TableSelectionExample,
-  TableSortingExample,           TableStickyColumnsExample,
-  TableStickyComplexExample,     TableStickyComplexFlexExample,
-  TableStickyFooterExample,      TableStickyHeaderExample,
-  TableTextColumnExample,        TableTextColumnAdvancedExample,
-  TableWrappedExample,           WrapperTable,
-  TableReorderableExample,       TableRecycleRowsExample,
-  TableHarnessExample,           TableColumnStylingExample,
-  TableRowBindingExample,        TableWithRipplesExample,
-  TableDynamicArrayDataExample,  TableDynamicObservableDataExample,
-  TableGeneratedColumnsExample,
-};
-
-const EXAMPLES = [
-  TableBasicExample,             TableFlexBasicExample,
-  TableDynamicColumnsExample,    TableExpandableRowsExample,
-  TableFilteringExample,         TableFooterRowExample,
-  TableHttpExample,              TableMultipleHeaderFooterExample,
-  TableOverviewExample,          TablePaginationExample,
-  TableRowContextExample,        TableSelectionExample,
-  TableSortingExample,           TableStickyColumnsExample,
-  TableStickyComplexExample,     TableStickyComplexFlexExample,
-  TableStickyFooterExample,      TableStickyHeaderExample,
-  TableTextColumnExample,        TableTextColumnAdvancedExample,
-  TableWrappedExample,           WrapperTable,
-  TableReorderableExample,       TableRecycleRowsExample,
-  TableHarnessExample,           TableColumnStylingExample,
-  TableRowBindingExample,        TableWithRipplesExample,
-  TableDynamicArrayDataExample,  TableDynamicObservableDataExample,
-  TableGeneratedColumnsExample,
-=======
   TableBasicExample,
   TableColumnStylingExample,
   TableDynamicArrayDataExample,
@@ -103,6 +66,7 @@ const EXAMPLES = [
   TableFilteringExample,
   TableFlexBasicExample,
   TableFooterRowExample,
+  TableGeneratedColumnsExample,
   TableHarnessExample,
   TableHttpExample,
   TableMultipleHeaderFooterExample,
@@ -136,6 +100,7 @@ const EXAMPLES = [
   TableFilteringExample,
   TableFlexBasicExample,
   TableFooterRowExample,
+  TableGeneratedColumnsExample,
   TableHarnessExample,
   TableHttpExample,
   TableMultipleHeaderFooterExample,
@@ -157,7 +122,6 @@ const EXAMPLES = [
   TableWithRipplesExample,
   TableWrappedExample,
   WrapperTable,
->>>>>>> 045e8744f (docs(material/table): flat list)
 ];
 
 @NgModule({
