@@ -2,6 +2,7 @@ import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MatButtonModule} from '@angular/material/button';
+import {MatCardModule} from '@angular/material/card';
 import {MatNativeDateModule} from '@angular/material/core';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import {MatIconModule} from '@angular/material/icon';
@@ -107,6 +108,7 @@ const EXAMPLES = [
   imports: [
     CommonModule,
     MatButtonModule,
+    MatCardModule,
     MatDatepickerModule,
     MatInputModule,
     MatIconModule,
