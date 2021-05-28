@@ -118,7 +118,7 @@ describe('DocViewer', () => {
   });
 
   it('should show error message when doc not found', () => {
-    spyOn(console, 'log');
+    spyOn(console, 'error');
 
     const fixture = TestBed.createComponent(DocViewerTestComponent);
     const docViewer = fixture.debugElement.query(By.directive(DocViewer));
@@ -138,7 +138,7 @@ describe('DocViewer', () => {
     expect(docViewer).not.toBeNull();
     expect(docViewer.nativeElement.innerHTML).toContain(
         'Failed to load document: http://material.angular.io/error-doc.html');
-    expect(console.log).toHaveBeenCalledTimes(1);
+    expect(console.error).toHaveBeenCalledTimes(1);
   });
 
   // TODO(mmalerba): Add test that example-viewer is instantiated.
