@@ -676,7 +676,7 @@ describe('MDC-based MatSlider' , () => {
 
     it('should set the aria-valuetext attribute with the given `displayWith` function', () => {
       expect(inputInstance._hostElement.getAttribute('aria-valuetext')).toBe('$1');
-      setValueByClick(sliderInstance, 10000, platform.IOS);
+      sliderInstance._setValue(10000, Thumb.END);
       expect(inputInstance._hostElement.getAttribute('aria-valuetext')).toBe('$10k');
     });
 
@@ -720,8 +720,8 @@ describe('MDC-based MatSlider' , () => {
     it('should set the aria-valuetext attribute with the given `displayWith` function', () => {
       expect(startInputInstance._hostElement.getAttribute('aria-valuetext')).toBe('$1');
       expect(endInputInstance._hostElement.getAttribute('aria-valuetext')).toBe('$1000k');
-      setValueByClick(sliderInstance, 250000, platform.IOS);
-      setValueByClick(sliderInstance, 810000, platform.IOS);
+      sliderInstance._setValue(250000, Thumb.START);
+      sliderInstance._setValue(810000, Thumb.END);
       expect(startInputInstance._hostElement.getAttribute('aria-valuetext')).toBe('$250k');
       expect(endInputInstance._hostElement.getAttribute('aria-valuetext')).toBe('$810k');
     });
