@@ -1,3 +1,19 @@
+## 12.0.3 "paper-platypus" (2021-06-03)
+
+### material
+
+|            |                       |
+| ---------- | --------------------- |
+| bug fix |  **radio:** disable ripples under noop animations module ([#22855](https://github.com/angular/components/issues/22855)) ([a3bb57387027278743b52a8bf88de2ccf481d7e8](https://github.com/angular/components/commit/a3bb57387027278743b52a8bf88de2ccf481d7e8)) |
+| bug fix |  **schematics:** don't insert duplicate `[@use](https://github.com/use)` statements in themingApi ([#22755](https://github.com/angular/components/issues/22755)) ([48d2df24289f226631626bdaf83c7efde06310ea](https://github.com/angular/components/commit/48d2df24289f226631626bdaf83c7efde06310ea)) |
+
+### material-experimental
+
+|            |                       |
+| ---------- | --------------------- |
+| bug fix |  **mdc-table:** add background inherit to header cells ([#22751](https://github.com/angular/components/issues/22751)) ([6b5d8e4648b22b978e0fff71d52e46d5ef7b3348](https://github.com/angular/components/commit/6b5d8e4648b22b978e0fff71d52e46d5ef7b3348)) |
+
+
 ## 12.0.2 "cardboard-box" (2021-05-26)
 
 ### material
