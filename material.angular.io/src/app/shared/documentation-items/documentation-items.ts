@@ -392,6 +392,14 @@ const DOCS: { [key: string]: DocItem[] } = {
       },
     },
     {
+      id: 'accordion',
+      name: 'Accordion',
+      summary: 'Component with one or more expandable sections.',
+      exampleSpecs: {
+        prefix: 'cdk-accordion-',
+      },
+    },
+    {
       id: 'bidi',
       name: 'Bidirectionality',
       summary: 'Utilities to respond to changes in LTR/RTL layout direction.',
