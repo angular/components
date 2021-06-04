@@ -507,8 +507,8 @@ export class MatSliderThumb implements AfterViewInit, ControlValueAccessor, OnIn
   /**
    * Initializes the aria-valuetext attribute.
    *
-   * Must be called AFTER the value attribute is set. This is because the parent sliders
-   * displayWith function to set the aria-valutext attribute.
+   * Must be called AFTER the value attribute is set. This is because the slider's parent
+   * `displayWith` function is used to set the `aria-valuetext` attribute.
    */
   private _initializeAriaValueText(): void {
     this._hostElement.setAttribute('aria-valuetext', this._slider.displayWith(this.value));
