@@ -59,7 +59,7 @@ export declare class CdkDrag<T = any> implements AfterViewInit, OnChanges, OnDes
     static ɵfac: i0.ɵɵFactoryDeclaration<CdkDrag<any>, [null, { optional: true; skipSelf: true; }, null, null, null, { optional: true; }, { optional: true; }, null, null, { optional: true; self: true; }, { optional: true; skipSelf: true; }]>;
 }
 
-export interface CdkDragDrop<T, O = T> {
+export interface CdkDragDrop<T, O = T, I = T> {
     container: CdkDropList<T>;
     currentIndex: number;
     distance: {
@@ -71,7 +71,7 @@ export interface CdkDragDrop<T, O = T> {
         y: number;
     };
     isPointerOverContainer: boolean;
-    item: CdkDrag;
+    item: CdkDrag<I>;
     previousContainer: CdkDropList<O>;
     previousIndex: number;
 }
