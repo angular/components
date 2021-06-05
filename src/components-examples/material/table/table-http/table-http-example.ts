@@ -1,5 +1,5 @@
 import {HttpClient} from '@angular/common/http';
-import {Component, ViewChild, AfterViewInit} from '@angular/core';
+import {Component, ViewChild, AfterViewInit, ChangeDetectorRef} from '@angular/core';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatSort, SortDirection} from '@angular/material/sort';
 import {merge, Observable, of as observableOf} from 'rxjs';
@@ -16,7 +16,7 @@ import {catchError, map, startWith, switchMap} from 'rxjs/operators';
 export class TableHttpExample implements AfterViewInit {
   displayedColumns: string[] = ['created', 'state', 'number', 'title'];
   exampleDatabase: ExampleHttpDatabase | null;
-  data: GithubIssue[] = [];
+  filteredAndPagedIssues: Observable<GithubIssue[]>;
 
   resultsLength = 0;
   isLoadingResults = true;
@@ -25,15 +25,12 @@ export class TableHttpExample implements AfterViewInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  constructor(private _httpClient: HttpClient) {}
+  constructor(private _httpClient: HttpClient, private _changeDetectorRef: ChangeDetectorRef) {}
 
   ngAfterViewInit() {
     this.exampleDatabase = new ExampleHttpDatabase(this._httpClient);
 
-    // If the user changes the sort order, reset back to the first page.
-    this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
-
-    merge(this.sort.sortChange, this.paginator.page)
+    this.filteredAndPagedIssues = merge(this.sort.sortChange, this.paginator.page)
       .pipe(
         startWith({}),
         switchMap(() => {
@@ -57,7 +54,12 @@ export class TableHttpExample implements AfterViewInit {
           this.resultsLength = data.total_count;
           return data.items;
         })
-      ).subscribe(data => this.data = data);
+      );
+    this._changeDetectorRef.detectChanges();
+  }
+
+  resetPaging(): void {
+    this.paginator.pageIndex = 0;
   }
 }
 
