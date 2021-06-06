@@ -1,6 +1,9 @@
 :host,
 .docs-guide {
-  height: 100%;
+  // Ensures that the footer is pushed to the bottom if the page is too short.
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
 }
 
 .docs-guide-list {
