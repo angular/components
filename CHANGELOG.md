@@ -1,3 +1,19 @@
+## 12.0.4 "glass-gopher" (2021-06-08)
+
+### material
+
+|            |                       |
+| ---------- | --------------------- |
+| bug fix |  **input:** Do not set `aria-invalid` on required empty `matInput`s ([#22802](https://github.com/angular/components/issues/22802)) ([0bba6eabd7b5ea4cc27ac3b1ac39baedf687a44e](https://github.com/angular/components/commit/0bba6eabd7b5ea4cc27ac3b1ac39baedf687a44e)), closes [#22777](https://github.com/angular/components/issues/22777) |
+| bug fix |  **menu:** not interrupting keyboard events to other overlays ([#22856](https://github.com/angular/components/issues/22856)) ([38aeb865b73de83c9aa7ef50fdcbd35d1301ba10](https://github.com/angular/components/commit/38aeb865b73de83c9aa7ef50fdcbd35d1301ba10)), closes [#22694](https://github.com/angular/components/issues/22694) |
+
+### material-experimental
+
+|            |                       |
+| ---------- | --------------------- |
+| bug fix |  **mdc-button:** set proper touch target ([#22846](https://github.com/angular/components/issues/22846)) ([f2c994b495e57d1b50dec9d4c0cc030db637559b](https://github.com/angular/components/commit/f2c994b495e57d1b50dec9d4c0cc030db637559b)), closes [#22799](https://github.com/angular/components/issues/22799) |
+
+
 ## 12.0.3 "paper-platypus" (2021-06-03)
 
 ### material
