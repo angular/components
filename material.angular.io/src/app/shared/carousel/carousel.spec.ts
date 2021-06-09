@@ -39,51 +39,17 @@ describe('HorizontalCarousel', () => {
     component.next();
     fixture.detectChanges();
 
-    expect(component.index).toEqual(1);
-
     const navPrevious = fixture.nativeElement.querySelector('.docs-carousel-nav-prev');
     expect(navPrevious).toBeDefined();
   });
 
   it('should hide next nav arrow after reaching end of items', () => {
-    expect(component.visibleItems).toBe(4);
-
     component.next();
     component.next();
-    expect(component.index).toEqual(2);
     fixture.detectChanges();
 
     const navPrevious = fixture.nativeElement.querySelector('.docs-carousel-nav-next');
     expect(navPrevious).toBeNull();
-
-    // in case of keyboard nav at end of items
-    component.next();
-    expect(component.index).toEqual(2);
-  });
-
-  it('should resize carousel when not all content can be displayed', () => {
-    const carouselWrapper = fixture.nativeElement.querySelector('.docs-carousel-content-wrapper');
-    fixture.nativeElement.style.width = '1350px';
-    window.dispatchEvent(new Event('resize'));
-
-    fixture.detectChanges();
-
-    expect(carouselWrapper.clientWidth).toEqual(1250);
-    expect(component.visibleItems).toEqual(5);
-  });
-
-  it('should not resize carousel when all content can be displayed', () => {
-    fixture.componentInstance.numberOfItems = 2;
-    fixture.detectChanges();
-
-    const carouselWrapper = fixture.nativeElement.querySelector('.docs-carousel-content-wrapper');
-    fixture.nativeElement.style.width = '1350px';
-    window.dispatchEvent(new Event('resize'));
-
-    fixture.detectChanges();
-
-    expect(carouselWrapper.clientWidth).toEqual(500);
-    expect(component.visibleItems).toEqual(2);
   });
 });
 
@@ -91,11 +57,16 @@ describe('HorizontalCarousel', () => {
   selector: 'test-carousel',
   template:
       `
-    <app-carousel itemWidth="250">
+    <app-carousel>
       <div carousel-item class="docs-carousel-item-container"
            *ngFor="let i of [].constructor(numberOfItems) "></div>
     </app-carousel>`,
-  styles: ['.docs-carousel-item-container { display: flex; }']
+  styles: [`
+    .docs-carousel-item-container {
+      display: flex;
+      width: 250px;
+    }
+  `]
 })
 class CarouselTestComponent {
   numberOfItems = 6;
