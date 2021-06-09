@@ -1,3 +1,11 @@
+## 12.0.4 "glass-gopher" (2021-06-09)
+
+### material
+
+|            |                       |
+| ---------- | --------------------- |
+| bug fix |  **input:** Do not set `aria-invalid` on required empty `matInput`s ([#22802](https://github.com/angular/components/issues/22802)) ([0bba6eabd7b5ea4cc27ac3b1ac39baedf687a44e](https://github.com/angular/components/commit/0bba6eabd7b5ea4cc27ac3b1ac39baedf687a44e)), closes [#22777](https://github.com/angular/components/issues/22777) |
+
 ## 12.0.3 "paper-platypus" (2021-06-03)
 
 ### material
