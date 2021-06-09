@@ -57,21 +57,5 @@
       }
       outline: none;
     }
-
-    .docs-featured-components-carousel-item:hover {
-      img {
-        transform: scale(1.2);
-      }
-
-      box-shadow:inset 0 0 0 1.5px mat.get-color-from-palette($foreground, divider);
-    }
-
-    .docs-featured-components-carousel-item:focus {
-      img {
-        transform: scale(1.2);
-      }
-
-      box-shadow:inset 0 0 0 1.5px mat.get-color-from-palette($foreground, disabled);
-    }
   }
 }

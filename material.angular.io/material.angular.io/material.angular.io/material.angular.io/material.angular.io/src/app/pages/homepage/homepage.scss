@@ -53,6 +53,9 @@ $margin-promotion-sections-small: 15px;
   display: flex;
   flex-direction: column;
   padding: 16px;
+  width: 75%;
+  max-width: 1080px;
+  margin: auto;
 
   a {
     text-decoration: none;
@@ -61,7 +64,7 @@ $margin-promotion-sections-small: 15px;
   h2 {
     font-size: 25px;
     font-weight: 400;
-    margin: 16px 0;
+    margin: 0 0 16px;
     padding: 0;
   }
 
@@ -74,7 +77,7 @@ $margin-promotion-sections-small: 15px;
   }
 
   mat-divider {
-    width: 75%;
+    width: 100%;
   }
 
   mat-icon {
@@ -82,8 +85,19 @@ $margin-promotion-sections-small: 15px;
   }
 }
 
+.carousel-item {
+  width: 48%;
+
+  & + & {
+    margin-left: 2%;
+  }
+
+  @media (min-width: 1020px) {
+    max-width: 32%;
+  }
+}
+
 .docs-homepage-row {
-  width: 75%;
   display: flex;
   flex-direction: row;
   margin: $margin-promotion-sections 0;
@@ -91,18 +105,30 @@ $margin-promotion-sections-small: 15px;
 
 .docs-homepage-carousel-row {
   margin: $margin-promotion-sections 0;
-  width: 75%;
   display: flex;
   flex-direction: column;
-
-  a.docs-link {
-    width: 100%;
-    text-align: right;
-  }
+  width: 100%;
 
   h2 {
     margin-top: 0;
   }
+}
+
+.docs-homepage-header {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+
+  h2 {
+    margin: 0;
+  }
+}
+
+.docs-link {
+  display: inline-flex;
+  align-items: center;
 }
 
 .docs-homepage-guides {
@@ -113,9 +139,18 @@ $margin-promotion-sections-small: 15px;
   }
 
   .docs-homepage-guides-carousel-item {
-    padding: 15px;
     display: flex;
     text-decoration: none;
+    box-sizing: border-box;
+
+    // We need a slight padding so the box shadow doesn't get cut off by the carousel.
+    padding: 3px;
+
+    .mat-card {
+      // Ensures that the cards stretch to the full width of the item.
+      width: 100%;
+      min-height: 140px;
+    }
   }
 
   .docs-homepage-guides-card.mat-card {
@@ -131,22 +166,27 @@ $margin-promotion-sections-small: 15px;
   }
 }
 
-
 .docs-homepage-featured-components {
   .docs-featured-components-carousel-item {
-    padding: 15px;
     text-align: center;
+    box-sizing: border-box;
+    font-size: 18px;
 
     .docs-homepage-img-container {
       overflow: hidden;
-      width: 259px;
-      height: 144px;
-      margin-bottom: 10px;
+      margin-bottom: 16px;
+      max-height: 200px;
     }
 
     img {
       transition: 0.3s ease-in-out;
       width: 100%;
+    }
+
+    &:hover, &:focus {
+      img {
+        transform: scale(1.1);
+      }
     }
   }
 }
@@ -154,8 +194,11 @@ $margin-promotion-sections-small: 15px;
 .docs-homepage-row-column {
   display: flex;
   flex-direction: column;
-  margin: 0 auto;
-  width: 30%;
+  width: 32%;
+
+  & + & {
+    margin-left: 2%;
+  }
 }
 
 .docs-header-start {
@@ -187,6 +230,10 @@ $margin-promotion-sections-small: 15px;
 
   .docs-homepage-row-column {
     width: 100%;
+
+    & + & {
+      margin-left: 0;
+    }
   }
 }
 
@@ -194,7 +241,6 @@ $margin-promotion-sections-small: 15px;
   * Rules for when the device is detected to be a small screen.
   */
 @media (max-width: 720px) {
-
   .docs-header-start {
     margin: $margin-promotion-sections-small 0 0 0;
   }

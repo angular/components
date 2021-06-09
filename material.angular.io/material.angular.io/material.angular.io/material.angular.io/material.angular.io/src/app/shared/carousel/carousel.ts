@@ -11,6 +11,7 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import {FocusableOption, FocusKeyManager} from '@angular/cdk/a11y';
+import {LEFT_ARROW, RIGHT_ARROW, TAB} from '@angular/cdk/keycodes';
 
 
 @Directive({
@@ -18,11 +19,9 @@ import {FocusableOption, FocusKeyManager} from '@angular/cdk/a11y';
 })
 export class CarouselItem implements FocusableOption {
   @HostBinding('attr.role') readonly role = 'listitem';
-  @HostBinding('style.width.px') width = this.carousel.itemWidth;
   @HostBinding('tabindex') tabindex = '-1';
 
-  constructor(readonly carousel: Carousel, readonly element: ElementRef) {
-  }
+  constructor(readonly element: ElementRef<HTMLElement>) {}
 
   focus(): void {
     this.element.nativeElement.focus({preventScroll: true});
@@ -37,148 +36,108 @@ export class CarouselItem implements FocusableOption {
 })
 export class Carousel implements AfterContentInit {
   @Input('aria-label') ariaLabel: string | undefined;
-  @Input() itemWidth: number | undefined;
   @ContentChildren(CarouselItem) items!: QueryList<CarouselItem>;
-  @ViewChild('contentWrapper') wrapper!: ElementRef;
+  @ViewChild('list') list!: ElementRef<HTMLElement>;
   position = 0;
   showPrevArrow = false;
   showNextArrow = true;
-  visibleItems: number | undefined;
-  shiftWidth: number | undefined;
-  itemsArray: CarouselItem[] | undefined;
-  private focusKeyManager: FocusKeyManager<CarouselItem> | undefined;
+  index = 0;
+  private _keyManager!: FocusKeyManager<CarouselItem>;
 
-  constructor(private readonly element: ElementRef) {}
+  onKeydown({keyCode}: KeyboardEvent) {
+    const manager = this._keyManager;
+    const previousActiveIndex = manager.activeItemIndex;
 
-  private _index = 0;
-
-  get index(): number {
-    return this._index;
-  }
-
-  set index(i: number) {
-    this._index = i;
-    let lastVisibleIndex = this.items.length;
-    if (this.visibleItems) {
-      lastVisibleIndex -= this.visibleItems;
+    if (keyCode === LEFT_ARROW) {
+      manager.setPreviousItemActive();
+    } else if (keyCode === RIGHT_ARROW) {
+      manager.setNextItemActive();
+    } else if (keyCode === TAB && !manager.activeItem) {
+      manager.setFirstItemActive();
     }
 
-    this.showPrevArrow = i > 0;
-    this.showNextArrow = i < lastVisibleIndex;
-  }
+    if (manager.activeItemIndex != null && manager.activeItemIndex !== previousActiveIndex) {
+      this.index = manager.activeItemIndex;
+      this._updateItemTabIndices();
 
-  onKeydown(event: KeyboardEvent) {
-    if (this.focusKeyManager != null) {
-      switch (event.key) {
-        case 'Tab':
-          if (!this.focusKeyManager.activeItem) {
-            this.focusKeyManager.setFirstItemActive();
-            this._updateItemTabIndices();
-          }
-          break;
-
-        case 'ArrowLeft':
-          if (this.focusKeyManager.activeItemIndex === this.index) {
-            this.previous();
-          }
-          this.focusKeyManager.setPreviousItemActive();
-          this._updateItemTabIndices();
-          break;
-
-        case 'ArrowRight':
-          if (this.focusKeyManager.activeItemIndex === this.index + (this.visibleItems || 0) - 1) {
-            this.next();
-          }
-          this.focusKeyManager.setNextItemActive();
-          this._updateItemTabIndices();
-          break;
-
-        default:
-          break;
+      if (this._isOutOfView(this.index)) {
+        this._scrollToActiveItem();
       }
     }
-  }
-
-  onResize() {
-    this._resizeCarousel();
   }
 
   ngAfterContentInit(): void {
-    this.focusKeyManager =
-      new FocusKeyManager<CarouselItem>(this.items) as FocusKeyManager<CarouselItem>;
-    // timeout to make sure clientWidth is defined
-    setTimeout(() => {
-      this.itemsArray = this.items.toArray();
-      this.shiftWidth = this.calculateShiftWidth(this.itemsArray);
-      this._resizeCarousel();
-    });
+    this._keyManager = new FocusKeyManager<CarouselItem>(this.items);
   }
 
+  /** Goes to the next set of items */
   next() {
-    // prevent keyboard navigation from going out of bounds
-    if (this.showNextArrow) {
-      this._shiftItems(1);
+    for (let i = this.index; i < this.items.length; i++) {
+      if (this._isOutOfView(i)) {
+        this.index = i;
+        this._scrollToActiveItem();
+        break;
+      }
     }
   }
 
+  /** Goes to the previous set of items. */
   previous() {
-    // prevent keyboard navigation from going out of bounds
-    if (this.showPrevArrow) {
-      this._shiftItems(-1);
+    for (let i = this.index; i > -1; i--) {
+      if (this._isOutOfView(i)) {
+        this.index = i;
+        this._scrollToActiveItem();
+        break;
+      }
     }
   }
 
-  /**
-   * @param items array of carousel items
-   * @return width to shift the carousel
-   */
-  calculateShiftWidth(items: CarouselItem[]): number {
-    return items[0].element.nativeElement.clientWidth;
-  }
-
+  /** Updates the `tabindex` of each of the items based on their active state. */
   private _updateItemTabIndices() {
     this.items.forEach((item: CarouselItem) => {
-      if (this.focusKeyManager != null) {
-        item.tabindex = item === this.focusKeyManager.activeItem ? '0' : '-1';
+      if (this._keyManager != null) {
+        item.tabindex = item === this._keyManager.activeItem ? '0' : '-1';
       }
     });
   }
 
-  private _shiftItems(shiftIndex: number) {
-    this.index += shiftIndex;
-    this.position += shiftIndex *
-      (this.shiftWidth || this.calculateShiftWidth(this.items.toArray()));
-    this.items.forEach((item: CarouselItem) => {
-      item.element.nativeElement.style.transform = `translateX(-${this.position}px)`;
-    });
+  /** Scrolls an item into the viewport. */
+  private _scrollToActiveItem() {
+    if (!this._isOutOfView(this.index)) {
+      return;
+    }
+
+    const itemsArray = this.items.toArray();
+    let targetItemIndex = this.index;
+
+    // Only shift the carousel by one if we're going forwards. This
+    // looks better compared to moving the carousel by an entire page.
+    if (this.index > 0 && !this._isOutOfView(this.index - 1)) {
+      targetItemIndex = itemsArray.findIndex((_, i) => !this._isOutOfView(i)) + 1;
+    }
+
+    this.position = itemsArray[targetItemIndex].element.nativeElement.offsetLeft;
+    this.list.nativeElement.style.transform = `translateX(-${this.position}px)`;
+    this.showPrevArrow = this.index > 0;
+    this.showNextArrow = false;
+
+    for (let i = itemsArray.length - 1; i > -1; i--) {
+      if (this._isOutOfView(i, 'end')) {
+        this.showNextArrow = true;
+        break;
+      }
+    }
   }
 
-  private _resizeCarousel() {
-    if (this.shiftWidth == null) {
-      this.shiftWidth = this.calculateShiftWidth(this.items.toArray());
+  /** Checks whether an item at a specific index is outside of the viewport. */
+  private _isOutOfView(index: number, side?: 'start' | 'end') {
+    const {offsetWidth, offsetLeft} = this.items.toArray()[index].element.nativeElement;
+
+    if ((!side || side === 'start') && offsetLeft - this.position < 0) {
+      return true;
     }
-    const newVisibleItems = Math.max(1, Math.min(
-      Math.floor((this.element.nativeElement.offsetWidth) / this.shiftWidth),
-      this.items.length));
-    if (this.visibleItems !== newVisibleItems) {
-      if ((this.visibleItems || 0) < newVisibleItems) {
-        const lastVisibleIndex = this.items.length - (this.visibleItems || 0);
-        const shiftIndex = this.index - (lastVisibleIndex) + 1;
-        if (shiftIndex > 0) {
-          this._shiftItems(-shiftIndex);
-        }
-      } else {
-        if (this.focusKeyManager != null) {
-          if (this.focusKeyManager.activeItemIndex && this.focusKeyManager.activeItemIndex >
-            this.index + newVisibleItems - 1) {
-            this.focusKeyManager.setPreviousItemActive();
-            this._updateItemTabIndices();
-          }
-        }
-      }
-      this.visibleItems = newVisibleItems;
-      this.showNextArrow = this.index < (this.items.length - this.visibleItems);
-    }
-    this.wrapper.nativeElement.style.width = `${this.visibleItems * this.shiftWidth}px`;
+
+    return (!side || side === 'end') &&
+           (offsetWidth + offsetLeft - this.position) > this.list.nativeElement.clientWidth;
   }
 }

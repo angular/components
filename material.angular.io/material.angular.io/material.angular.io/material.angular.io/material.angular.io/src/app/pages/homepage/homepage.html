@@ -43,9 +43,16 @@
   <mat-divider></mat-divider>
 
   <div class="docs-homepage-featured-components docs-homepage-carousel-row">
-    <h2>Featured components</h2>
-    <app-carousel [itemWidth]="260" [aria-label]="'Featured components'">
-      <a *ngFor="let comp of getTopComponents()" carousel-item class='docs-featured-components-carousel-item'
+    <div class="docs-homepage-header">
+      <h2>Featured components</h2>
+
+      <a class="docs-link" routerLink="/components">
+        View all components
+        <mat-icon>chevron_right</mat-icon>
+      </a>
+    </div>
+    <app-carousel [aria-label]="'Featured components'">
+      <a *ngFor="let comp of getTopComponents()" carousel-item class="carousel-item docs-featured-components-carousel-item"
          routerLink="/components/{{comp}}">
         <div class="docs-homepage-img-container">
           <img alt="" src="../../../assets/screenshots/{{comp}}.scene.png" role="presentation">
@@ -53,19 +60,21 @@
         {{(comp[0].toUpperCase() + comp.slice(1)).replace('-', ' ')}}
       </a>
     </app-carousel>
-
-    <a class="docs-link" routerLink="/components">
-      View all components
-      <mat-icon>chevron_right</mat-icon>
-    </a>
   </div>
 
   <mat-divider></mat-divider>
 
   <div class="docs-homepage-guides docs-homepage-carousel-row">
-    <h2>Guides</h2>
-    <app-carousel [itemWidth]="260" [aria-label]="'Guides'">
-      <a carousel-item class='docs-homepage-guides-carousel-item' *ngFor="let guide of guideItems.getAllItems()"
+    <div class="docs-homepage-header">
+      <h2>Guides</h2>
+
+      <a class="docs-link" routerLink="/guides">
+        View all guides
+        <mat-icon>chevron_right</mat-icon>
+      </a>
+    </div>
+    <app-carousel [aria-label]="'Guides'">
+      <a carousel-item class="carousel-item docs-homepage-guides-carousel-item" *ngFor="let guide of guideItems.getAllItems()"
          routerLink='/guide/{{guide.id}}'>
         <mat-card class="docs-homepage-guides-card">
           <mat-card-title>{{guide.name}}</mat-card-title>
@@ -76,11 +85,6 @@
         </mat-card>
       </a>
     </app-carousel>
-
-    <a class="docs-link" routerLink="/guides">
-      View all guides
-      <mat-icon>chevron_right</mat-icon>
-    </a>
   </div>
 
 </main>

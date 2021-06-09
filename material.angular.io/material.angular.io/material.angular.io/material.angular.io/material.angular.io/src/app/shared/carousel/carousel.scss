@@ -1,24 +1,21 @@
 app-carousel {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0 40px;
+  display: block;
+  position: relative;
 }
 
 .docs-carousel-content {
   display: flex;
   flex-direction: row;
-  overflow: hidden;
   outline: none;
+  transition: transform 0.5s ease-in-out;
 }
 
 .docs-carousel-content-wrapper {
-  position: relative;
+  overflow: hidden;
 }
 
 [carousel-item] {
   flex-shrink: 0;
-  transition: transform 0.5s ease-in-out;
 }
 
 .docs-carousel-nav {
@@ -28,9 +25,9 @@ app-carousel {
 }
 
 .docs-carousel-nav-prev {
-  left: -40px;
+  left: -50px;
 }
 
 .docs-carousel-nav-next {
-  right: -40px;
+  right: -50px;
 }
