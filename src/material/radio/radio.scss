@@ -170,7 +170,7 @@ $ripple-radius: 20px;
 
   // We do this here, rather than having a `:not(.mat-radio-disabled)`
   // above in the `:hover`, because the `:not` will bump the specificity
-  // a lot and will cause it to overide the focus styles.
+  // a lot and will cause it to override the focus styles.
   &, .mat-radio-disabled .mat-radio-container:hover & {
     opacity: 0;
   }
@@ -187,10 +187,14 @@ $ripple-radius: 20px;
 }
 
 .mat-radio-input {
-  // Move the input in the middle and towards the bottom so
-  // the native validation messages are aligned correctly.
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  position: absolute;
+  // Keep the input aligned with the bottom so the native validation messages are aligned correctly.
   bottom: 0;
-  left: 50%;
+  left: 0;
+  opacity: 0;
 }
 
 @include a11y.high-contrast(active, off) {

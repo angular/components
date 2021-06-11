@@ -512,8 +512,12 @@ $_mark-stroke-size: private.private-div(2, 15) * checkbox-common.$size !default;
 }
 
 .mat-checkbox-input {
-  // Move the input to the bottom and in the middle.
-  // Visual improvement to properly show browser popups when being required.
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  position: absolute;
+  // Keep the input aligned with the bottom so the native validation messages are aligned correctly.
   bottom: 0;
-  left: 50%;
+  left: 0;
+  opacity: 0;
 }
