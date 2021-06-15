@@ -75,6 +75,12 @@ export class ThemePicker implements OnInit, OnDestroy {
     const themeName = this._themeStorage.getStoredThemeName();
     if (themeName) {
       this.selectTheme(themeName);
+    } else {
+      this.themes.find(themes => {
+        if (themes.isDefault === true) {
+          this.selectTheme(themes.name);
+        }
+      });
     }
   }
 
