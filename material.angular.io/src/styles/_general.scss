@@ -27,7 +27,7 @@ h1, h2 {
   }
 }
 
-// These styles are for controlling SVGs without using the /deep/ selector
+// These styles are for controlling SVGs without using the ::ng-deep selector
 
 .docs-component-category-list-card-image svg {
   width: 100%;
