@@ -115,7 +115,7 @@ export class MatTooltip extends _MatTooltipBase<TooltipComponent> {
   }
 })
 export class TooltipComponent extends _TooltipComponentBase {
-  constructor(changeDetectorRef: ChangeDetectorRef) {
-    super(changeDetectorRef);
+  constructor(changeDetectorRef: ChangeDetectorRef, elementRef: ElementRef) {
+    super(changeDetectorRef, elementRef);
   }
 }

@@ -43,6 +43,7 @@ import {
   AfterViewInit,
 } from '@angular/core';
 import {DOCUMENT} from '@angular/common';
+import {numbers} from '@material/tooltip';
 import {Observable, Subject} from 'rxjs';
 import {take, takeUntil} from 'rxjs/operators';
 
@@ -770,13 +771,16 @@ export abstract class _TooltipComponentBase implements OnDestroy {
   /** Property watched by the animation framework to show or hide the tooltip */
   _visibility: TooltipVisibility = 'initial';
 
+  /* Whether the tooltip text overflows to multiple lines */
+  _isMultiline: boolean = false;
+
   /** Whether interactions on the page should close the tooltip */
   private _closeOnInteraction: boolean = false;
 
   /** Subject for notifying that the tooltip has been hidden from the view */
   private readonly _onHide: Subject<void> = new Subject();
 
-  constructor(private _changeDetectorRef: ChangeDetectorRef) {}
+  constructor(private _changeDetectorRef: ChangeDetectorRef, private _elementRef: ElementRef) {}
 
   /**
    * Shows the tooltip with an animation originating from the provided origin
@@ -791,6 +795,7 @@ export abstract class _TooltipComponentBase implements OnDestroy {
     this._showTimeoutId = setTimeout(() => {
       this._visibility = 'visible';
       this._showTimeoutId = undefined;
+      this._isMultiline = this._isTooltipMultiline();
 
       // Mark for check so if any parent component has set the
       // ChangeDetectionStrategy to OnPush it will be checked anyways
@@ -867,6 +872,12 @@ export abstract class _TooltipComponentBase implements OnDestroy {
   _markForCheck(): void {
     this._changeDetectorRef.markForCheck();
   }
+
+  /** Whether the tooltip text has overflown to the next line */
+  private _isTooltipMultiline() {
+    const rect = this._elementRef.nativeElement.getBoundingClientRect();
+    return Number(rect.height) > numbers.MIN_HEIGHT && Number(rect.width) >= numbers.MAX_WIDTH;
+  }
 }
 
 /**
@@ -895,7 +906,8 @@ export class TooltipComponent extends _TooltipComponentBase {
 
   constructor(
     changeDetectorRef: ChangeDetectorRef,
+    elementRef: ElementRef,
     private _breakpointObserver: BreakpointObserver) {
-    super(changeDetectorRef);
+    super(changeDetectorRef, elementRef);
   }
 }
