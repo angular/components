@@ -13,6 +13,15 @@
 
     .docs-navbar, .docs-navbar-header {
       background: mat.get-color-from-palette($primary);
+
+      & a:hover, & a:focus {
+        background: rgba(0, 0, 0, 0.4);
+        color: mat.get-color-from-palette($accent, 200);
+      }
+
+      .docs-navbar-header-item-selected {
+        background: rgba(0, 0, 0, 0.2);
+      }
     }
   }
 }

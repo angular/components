@@ -14,8 +14,9 @@
   </a>
   <a mat-button class="docs-navbar-hide-small docs-button"
      *ngFor="let key of sectionKeys"
-     [routerLink]="key">{{sections[key].name}}</a>
-  <a mat-button class="docs-navbar-hide-small docs-button" routerLink="guides">Guides</a>
+     [routerLink]="key"
+     routerLinkActive="docs-navbar-header-item-selected">{{sections[key].name}}</a>
+  <a mat-button class="docs-navbar-hide-small docs-button" routerLink="guides" routerLinkActive="docs-navbar-header-item-selected">Guides</a>
   <div class="flex-spacer"></div>
   <version-picker></version-picker>
   <theme-picker></theme-picker>
