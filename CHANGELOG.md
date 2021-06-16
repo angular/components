@@ -1,3 +1,29 @@
+## 12.0.5 "honeycomb-heart" (2021-06-16)
+
+### cdk
+
+|            |                       |
+| ---------- | --------------------- |
+| bug fix |  **drag-drop:** error if dragged item is destroyed as a result of the `entered` event ([#22904](https://github.com/angular/components/issues/22904)) ([db855c2d3371ec5ef9e1a7c236408442be78dc39](https://github.com/angular/components/commit/db855c2d3371ec5ef9e1a7c236408442be78dc39)), closes [#22813](https://github.com/angular/components/issues/22813) |
+| bug fix |  **overlay:** expand test environment check ([#22927](https://github.com/angular/components/issues/22927)) ([1208456477b618167bc44a8e5df5ed2839b81a3d](https://github.com/angular/components/commit/1208456477b618167bc44a8e5df5ed2839b81a3d)), closes [#22926](https://github.com/angular/components/issues/22926) |
+| bug fix |  **schematics:** avoid runtime errors thrown by devkit tree ([#22982](https://github.com/angular/components/issues/22982)) ([ce1e11c2a85e769fc4a7d659ca17935d0286a975](https://github.com/angular/components/commit/ce1e11c2a85e769fc4a7d659ca17935d0286a975)), closes [#22919](https://github.com/angular/components/issues/22919) |
+
+### material
+
+|            |                       |
+| ---------- | --------------------- |
+| bug fix |  **multiple:** add inject flags to manual injector calls ([#22922](https://github.com/angular/components/issues/22922)) ([2e2f755e361f0d31edd49f140f3b678cfe7f1332](https://github.com/angular/components/commit/2e2f755e361f0d31edd49f140f3b678cfe7f1332)), closes [#22665](https://github.com/angular/components/issues/22665) |
+| bug fix |  **slider:** make value non-nullable ([#22912](https://github.com/angular/components/issues/22912)) ([383f7b650b46172b8ac4f91813cd485db8dba84f](https://github.com/angular/components/commit/383f7b650b46172b8ac4f91813cd485db8dba84f)), closes [#22444](https://github.com/angular/components/issues/22444) |
+
+### material-experimental
+
+|            |                       |
+| ---------- | --------------------- |
+| bug fix |  **mdc-button:** set proper touch target ([#22931](https://github.com/angular/components/issues/22931)) ([0012409b717bd8b5dc97ffed4e4e70afc9a84bca](https://github.com/angular/components/commit/0012409b717bd8b5dc97ffed4e4e70afc9a84bca)), closes [#22799](https://github.com/angular/components/issues/22799) |
+| bug fix |  **mdc-checkbox:** add larger touch target ([#22892](https://github.com/angular/components/issues/22892)) ([dee60fa411bb1e81d2487f1b54faf280bfdf56c0](https://github.com/angular/components/commit/dee60fa411bb1e81d2487f1b54faf280bfdf56c0)) |
+| bug fix |  **mdc-tabs:** ink bar animation not always disabled ([#22848](https://github.com/angular/components/issues/22848)) ([2af24d86e8aaf582a8ce8878d9ab9054807d2676](https://github.com/angular/components/commit/2af24d86e8aaf582a8ce8878d9ab9054807d2676)) |
+
+
 ## 12.0.4 "glass-gopher" (2021-06-09)
 
 ### material
