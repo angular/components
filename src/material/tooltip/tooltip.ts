@@ -869,6 +869,11 @@ export abstract class _TooltipComponentBase implements OnDestroy {
     this._changeDetectorRef.markForCheck();
   }
 
+  /**
+   * Callback for when the timeout in this.show() gets completed.
+   * This method is only needed by the mdc-tooltip, and so it is only implemented
+   * in the mdc-tooltip, not here.
+   */
   protected _onShow(): void {}
 }
 
