@@ -865,7 +865,7 @@ describe('MDC-based MatTooltip', () => {
       fixture.destroy();
     }));
 
-    it('should set the multiline class on tooltips that have messages that overflow', fakeAsync(() => {
+    it('should set the multiline class on tooltips with messages that overflow', fakeAsync(() => {
       fixture.componentInstance.message = 'This is a very long message that should cause the'
         + 'tooltip message body to overflow onto a new line.';
       tooltipDirective.show();
