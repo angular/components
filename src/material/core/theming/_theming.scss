@@ -231,15 +231,20 @@ $_emitted-density: () !default;
   @return private-create-backwards-compatibility-theme(_mat-validate-theme($result));
 }
 
-/// Gets the list of palette keys used in the theme. If the list does not exist it returns the defaults
+/// Gets the list of palette keys used in the theme. If the list does not exist it returns
+/// the defaults.
 /// @param {Map} $theme-or-config  The theme map returned from `define-light-theme` or
 ///     `define-dark-theme`.
 /// @returns {List} List of palette keys.
 @function get-theme-palettes($theme-or-config) {
   $palettes: map.get($theme-or-config, palettes);
   @if not $palettes {
-    @return primary accent warn;
+    $palettes: primary accent warn;
   }
+  @if null == index($palettes, primary) {
+    $palettes: primary accent warn;
+  }
+
   @return $palettes;
 }
 

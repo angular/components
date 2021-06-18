@@ -91,7 +91,7 @@
 
       @each $palette-key in $palettes {
         &.mat-#{$palette-key} .mat-form-field-required-marker {
-          color: $underline-color-warn
+          color: $underline-color-warn;
         }
       }
     }
