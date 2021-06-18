@@ -231,25 +231,15 @@ export class MatSlider extends _MatSliderBase
   get value(): number {
     // If the value needs to be read and it is still uninitialized, initialize it to the min.
     if (this._value === null) {
-      this.value = this._min;
+      this._updateValue(this._min);
     }
     return this._value as number;
   }
   set value(v: number) {
-    if (v !== this._value) {
-      let value = coerceNumberProperty(v, 0);
-
-      // While incrementing by a decimal we can end up with values like 33.300000000000004.
-      // Truncate it to ensure that it matches the label and to make it easier to work with.
-      if (this._roundToDecimal && value !== this.min && value !== this.max) {
-        value = parseFloat(value.toFixed(this._roundToDecimal));
-      }
-
-      this._value = value;
-      this._percent = this._calculatePercentage(this._value);
-
-      // Since this also modifies the percentage, we need to let the change detection know.
-      this._changeDetectorRef.markForCheck();
+    // Don't overwrite the value if the user is currently
+    // dragging so the selection doesn't jump around.
+    if (!this._isSliding) {
+      this._updateValue(v);
     }
   }
   private _value: number | null = null;
@@ -579,10 +569,10 @@ export class MatSlider extends _MatSliderBase
         this._increment(-10);
         break;
       case END:
-        this.value = this.max;
+        this._updateValue(this.max);
         break;
       case HOME:
-        this.value = this.min;
+        this._updateValue(this.min);
         break;
       case LEFT_ARROW:
         // NOTE: For a sighted user it would make more sense that when they press an arrow key on an
@@ -622,6 +612,25 @@ export class MatSlider extends _MatSliderBase
   _onKeyup() {
     if (this._isSliding === 'keyboard') {
       this._isSliding = null;
+    }
+  }
+
+  /** Updates the control value and any related properties. */
+  private _updateValue(v: number | null) {
+    if (v !== this._value) {
+      let value = coerceNumberProperty(v, 0);
+
+      // While incrementing by a decimal we can end up with values like 33.300000000000004.
+      // Truncate it to ensure that it matches the label and to make it easier to work with.
+      if (this._roundToDecimal && value !== this.min && value !== this.max) {
+        value = parseFloat(value.toFixed(this._roundToDecimal));
+      }
+
+      this._value = value;
+      this._percent = this._calculatePercentage(this._value);
+
+      // Since this also modifies the percentage, we need to let the change detection know.
+      this._changeDetectorRef.markForCheck();
     }
   }
 
@@ -760,7 +769,8 @@ export class MatSlider extends _MatSliderBase
 
   /** Increments the slider by the given number of steps (negative number decrements). */
   private _increment(numSteps: number) {
-    this.value = this._clamp((this.value || 0) + this.step * numSteps, this.min, this.max);
+    const value = this._clamp((this.value || 0) + this.step * numSteps, this.min, this.max);
+    this._updateValue(value);
   }
 
   /** Calculate the new value from the new physical location. The value will always be snapped. */
@@ -785,9 +795,9 @@ export class MatSlider extends _MatSliderBase
     // is slightly more intuitive than using `Math.ceil` below, because it
     // follows the user's pointer closer.
     if (percent === 0) {
-      this.value = this.min;
+      this._updateValue(this.min);
     } else if (percent === 1) {
-      this.value = this.max;
+      this._updateValue(this.max);
     } else {
       const exactValue = this._calculateValue(percent);
 
@@ -796,7 +806,7 @@ export class MatSlider extends _MatSliderBase
       const closestValue = Math.round((exactValue - this.min) / this.step) * this.step + this.min;
 
       // The value needs to snap to the min and max.
-      this.value = this._clamp(closestValue, this.min, this.max);
+      this._updateValue(this._clamp(closestValue, this.min, this.max));
     }
   }
 
