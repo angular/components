@@ -11,6 +11,7 @@
 
 // Color styles that apply to all appearances of the form-field.
 @mixin color($config-or-theme) {
+  $palettes: theming.get-theme-palettes($config-or-theme);
   $config: theming.get-color-config($config-or-theme);
   $primary: map.get($config, primary);
   $accent: map.get($config, accent);
@@ -28,7 +29,6 @@
   // Underline colors.
   $underline-color-base:
     theming.get-color-from-palette($foreground, divider, if($is-dark-theme, 1, 0.87));
-  $underline-color-accent: theming.get-color-from-palette($accent, text);
   $underline-color-warn: theming.get-color-from-palette($warn, text);
   $underline-focused-color: theming.get-color-from-palette($primary, text);
 
@@ -43,12 +43,10 @@
   .mat-form-field.mat-focused .mat-form-field-label {
     color: $focused-label-color;
 
-    &.mat-accent {
-      color: $underline-color-accent;
-    }
-
-    &.mat-warn {
-      color: $underline-color-warn;
+    @each $palette-key in $palettes {
+      &.mat-#{$palette-key} {
+        color: theming.get-color-from-palette(map.get($config, $palette-key), text);
+      }
     }
   }
 
@@ -64,12 +62,10 @@
     .mat-form-field-ripple {
       background-color: $underline-focused-color;
 
-      &.mat-accent {
-        background-color: $underline-color-accent;
-      }
-
-      &.mat-warn {
-        background-color: $underline-color-warn;
+      @each $palette-key in $palettes {
+        &.mat-#{$palette-key} {
+          color: theming.get-color-from-palette(map.get($config, $palette-key), text);
+        }
       }
     }
   }
@@ -79,12 +75,10 @@
       color: $underline-focused-color;
     }
 
-    &.mat-accent .mat-form-field-infix::after {
-      color: $underline-color-accent;
-    }
-
-    &.mat-warn .mat-form-field-infix::after {
-      color: $underline-color-warn;
+    @each $palette-key in $palettes {
+      &.mat-#{$palette-key} .mat-form-field-infix::after {
+        color: theming.get-color-from-palette(map.get($config, $palette-key), text);
+      }
     }
   }
 
@@ -95,15 +89,17 @@
     .mat-form-field-label {
       color: $underline-color-warn;
 
-      &.mat-accent,
-      .mat-form-field-required-marker {
-        color: $underline-color-warn;
+      @each $palette-key in $palettes {
+        &.mat-#{$palette-key} .mat-form-field-required-marker {
+          color: $underline-color-warn;
+        }
       }
     }
 
-    .mat-form-field-ripple,
-    .mat-form-field-ripple.mat-accent {
-      background-color: $underline-color-warn;
+    @each $palette-key in $palettes {
+      .mat-form-field-ripple, .mat-form-field-ripple.mat-#{$palette-key} {
+        background-color: $underline-color-warn;
+      }
     }
   }
 

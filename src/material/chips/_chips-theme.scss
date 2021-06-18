@@ -41,11 +41,9 @@ $chip-remove-font-size: 18px;
 }
 
 @mixin color($config-or-theme) {
+  $palettes: theming.get-theme-palettes($config-or-theme);
   $config: theming.get-color-config($config-or-theme);
   $is-dark-theme: map.get($config, is-dark);
-  $primary: map.get($config, primary);
-  $accent: map.get($config, accent);
-  $warn: map.get($config, warn);
   $background: map.get($config, background);
   $foreground: map.get($config, foreground);
 
@@ -75,16 +73,12 @@ $chip-remove-font-size: 18px;
   }
 
   .mat-chip.mat-standard-chip.mat-chip-selected {
-    &.mat-primary {
-      @include _palette-styles($primary);
-    }
+    @each $palette-key in $palettes {
+      $palette: map.get($config, $palette-key);
 
-    &.mat-warn {
-      @include _palette-styles($warn);
-    }
-
-    &.mat-accent {
-      @include _palette-styles($accent);
+      &.mat-#{$palette-key} {
+        @include _palette-styles($palette);
+      }
     }
   }
 }

@@ -15,10 +15,9 @@
 }
 
 @mixin color($config-or-theme) {
+  $palettes: theming.get-theme-palettes($config-or-theme);
   $config: theming.get-color-config($config-or-theme);
   $primary: map.get($config, primary);
-  $accent: map.get($config, accent);
-  $warn: map.get($config, warn);
   $background: map.get(map.get($config, background), background);
 
   .mat-progress-bar-background {
@@ -33,31 +32,21 @@
     background-color: theming.get-color-from-palette($primary);
   }
 
-  .mat-progress-bar.mat-accent {
-    .mat-progress-bar-background {
-      fill: _get-buffer-color($accent, $background);
-    }
+  @each $palette-key in $palettes {
+    $palette: map.get($config, $palette-key);
 
-    .mat-progress-bar-buffer {
-      background-color: _get-buffer-color($accent, $background);
-    }
+    .mat-progress-bar.mat-#{$palette-key} {
+      .mat-progress-bar-background {
+        fill: _get-buffer-color($palette, $background);
+      }
 
-    .mat-progress-bar-fill::after {
-      background-color: theming.get-color-from-palette($accent);
-    }
-  }
+      .mat-progress-bar-buffer {
+        background-color: _get-buffer-color($palette, $background);
+      }
 
-  .mat-progress-bar.mat-warn {
-    .mat-progress-bar-background {
-      fill: _get-buffer-color($warn, $background);
-    }
-
-    .mat-progress-bar-buffer {
-      background-color: _get-buffer-color($warn, $background);
-    }
-
-    .mat-progress-bar-fill::after {
-      background-color: theming.get-color-from-palette($warn);
+      .mat-progress-bar-fill::after {
+        background-color: theming.get-color-from-palette($palette);
+      }
     }
   }
 }
