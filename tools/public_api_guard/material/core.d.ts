@@ -26,6 +26,7 @@ export declare class _MatOptionBase implements FocusableOption, AfterViewChecked
     value: any;
     get viewValue(): string;
     constructor(_element: ElementRef<HTMLElement>, _changeDetectorRef: ChangeDetectorRef, _parent: MatOptionParentComponent, group: _MatOptgroupBase);
+    _getAriaChecked(): boolean | null;
     _getAriaSelected(): boolean | null;
     _getHostElement(): HTMLElement;
     _getTabIndex(): string;

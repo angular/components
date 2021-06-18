@@ -37,6 +37,7 @@ import {MatOptgroup} from './optgroup';
     '[class.mat-mdc-option-active]': 'active',
     '[class.mdc-deprecated-list-item--disabled]': 'disabled',
     '[id]': 'id',
+    '[attr.aria-checked]': '_getAriaChecked()',
     '[attr.aria-selected]': '_getAriaSelected()',
     '[attr.aria-disabled]': 'disabled.toString()',
     '(click)': '_selectViaInteraction()',

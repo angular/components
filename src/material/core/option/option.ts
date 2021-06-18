@@ -184,6 +184,14 @@ export class _MatOptionBase implements FocusableOption, AfterViewChecked, OnDest
   }
 
   /**
+   * Gets the `aria-checked` value for the option. We explicitly omit the `aria-checked`
+   * attribute from single-selection because there are no checkboxes.
+   */
+  _getAriaChecked(): boolean|null {
+    return this.multiple ? this.selected : null;
+  }
+
+  /**
    * Gets the `aria-selected` value for the option. We explicitly omit the `aria-selected`
    * attribute from single-selection, unselected options. Including the `aria-selected="false"`
    * attributes adds a significant amount of noise to screen-reader users without providing useful
@@ -244,6 +252,7 @@ export class _MatOptionBase implements FocusableOption, AfterViewChecked, OnDest
     '[class.mat-option-multiple]': 'multiple',
     '[class.mat-active]': 'active',
     '[id]': 'id',
+    '[attr.aria-checked]': '_getAriaChecked()',
     '[attr.aria-selected]': '_getAriaSelected()',
     '[attr.aria-disabled]': 'disabled.toString()',
     '[class.mat-option-disabled]': 'disabled',
