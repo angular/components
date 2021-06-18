@@ -2,24 +2,19 @@
 @use '../core/theming/theming';
 
 @mixin color($config-or-theme) {
+  $palettes: theming.get-theme-palettes($config-or-theme);
   $config: theming.get-color-config($config-or-theme);
-  $primary: map.get($config, primary);
-  $accent: map.get($config, accent);
-  $warn: map.get($config, warn);
   $background: map.get($config, background);
   $foreground: map.get($config, foreground);
 
   .mat-icon {
-    &.mat-primary {
-      color: theming.get-color-from-palette($primary, text);
-    }
 
-    &.mat-accent {
-      color: theming.get-color-from-palette($accent, text);
-    }
+    @each $palette-key in $palettes {
+      $palette: map.get($config, $palette-key);
 
-    &.mat-warn {
-      color: theming.get-color-from-palette($warn, text);
+      &.mat-#{$palette-key} {
+        color: theming.get-color-from-palette($palette, text);
+      }
     }
   }
 }

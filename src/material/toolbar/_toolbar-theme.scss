@@ -41,10 +41,8 @@
 }
 
 @mixin color($config-or-theme) {
+  $palettes: theming.get-theme-palettes($config-or-theme);
   $config: theming.get-color-config($config-or-theme);
-  $primary: map.get($config, primary);
-  $accent: map.get($config, accent);
-  $warn: map.get($config, warn);
   $background: map.get($config, background);
   $foreground: map.get($config, foreground);
 
@@ -52,16 +50,12 @@
     background: theming.get-color-from-palette($background, app-bar);
     color: theming.get-color-from-palette($foreground, text);
 
-    &.mat-primary {
-      @include _palette-styles($primary);
-    }
+    @each $palette-key in $palettes {
+      $palette: map.get($config, $palette-key);
 
-    &.mat-accent {
-      @include _palette-styles($accent);
-    }
-
-    &.mat-warn {
-      @include _palette-styles($warn);
+      &.mat-#{$palette-key} {
+        @include _palette-styles($palette);
+      }
     }
 
     @include _form-field-overrides;

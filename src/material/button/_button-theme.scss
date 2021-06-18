@@ -9,21 +9,15 @@ $_ripple-opacity: 0.1;
 
 // Applies a focus style to an mat-button element for each of the supported palettes.
 @mixin _focus-overlay-color($config-or-theme) {
+  $palettes: theming.get-theme-palettes($config-or-theme);
   $config: theming.get-color-config($config-or-theme);
-  $primary: map.get($config, primary);
-  $accent: map.get($config, accent);
-  $warn: map.get($config, warn);
 
-  &.mat-primary .mat-button-focus-overlay {
-    background-color: theming.get-color-from-palette($primary);
-  }
+  @each $palette-key in $palettes {
+    $palette: map.get($config, $palette-key);
 
-  &.mat-accent .mat-button-focus-overlay {
-    background-color: theming.get-color-from-palette($accent);
-  }
-
-  &.mat-warn .mat-button-focus-overlay {
-    background-color: theming.get-color-from-palette($warn);
+    &.mat-#{$palette-key} .mat-button-focus-overlay {
+      background-color: theming.get-color-from-palette($palette);
+    }
   }
 
   &.mat-button-disabled .mat-button-focus-overlay {
@@ -43,42 +37,36 @@ $_ripple-opacity: 0.1;
 }
 
 @mixin _ripple-color($theme, $hue, $opacity: $_ripple-opacity) {
-  $primary: map.get($theme, primary);
-  $accent: map.get($theme, accent);
-  $warn: map.get($theme, warn);
+  $palettes: theming.get-theme-palettes($theme);
 
-  &.mat-primary .mat-ripple-element {
-    @include _ripple-background($primary, $hue, $opacity);
-  }
+  @each $palette-key in $palettes {
+    $palette: map.get($theme, $palette-key);
 
-  &.mat-accent .mat-ripple-element {
-    @include _ripple-background($accent, $hue, $opacity);
-  }
-
-  &.mat-warn .mat-ripple-element {
-    @include _ripple-background($warn, $hue, $opacity);
+    &.mat-#{$palette-key} .mat-ripple-element {
+      @include _ripple-background($palette, $hue, $opacity);
+    }
   }
 }
 
 // Applies a property to an mat-button element for each of the supported palettes.
 @mixin _theme-property($theme, $property, $hue) {
-  $primary: map.get($theme, primary);
-  $accent: map.get($theme, accent);
-  $warn: map.get($theme, warn);
+  $palettes: theming.get-theme-palettes($theme);
   $background: map.get($theme, background);
   $foreground: map.get($theme, foreground);
 
-  &.mat-primary {
-    #{$property}: theming.get-color-from-palette($primary, $hue);
-  }
-  &.mat-accent {
-    #{$property}: theming.get-color-from-palette($accent, $hue);
-  }
-  &.mat-warn {
-    #{$property}: theming.get-color-from-palette($warn, $hue);
+  @each $palette-key in $palettes {
+    $palette: map.get($theme, $palette-key);
+    &.mat-#{$palette-key} {
+      #{$property}: theming.get-color-from-palette($palette, $hue);
+
+      &.mat-button-disabled {
+        $palette: if($property == 'color', $foreground, $background);
+        #{$property}: theming.get-color-from-palette($palette, disabled-button);
+      }
+    }
   }
 
-  &.mat-primary, &.mat-accent, &.mat-warn, &.mat-button-disabled {
+  &.mat-button-disabled {
     &.mat-button-disabled {
       $palette: if($property == 'color', $foreground, $background);
       #{$property}: theming.get-color-from-palette($palette, disabled-button);
@@ -88,9 +76,6 @@ $_ripple-opacity: 0.1;
 
 @mixin color($config-or-theme) {
   $config: theming.get-color-config($config-or-theme);
-  $primary: map.get($config, primary);
-  $accent: map.get($config, accent);
-  $warn: map.get($config, warn);
   $background: map.get($config, background);
   $foreground: map.get($config, foreground);
 
