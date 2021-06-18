@@ -5,11 +5,9 @@
 
 
 @mixin color($config-or-theme) {
+  $palettes: theming.get-theme-palettes($config-or-theme);
   $config: theming.get-color-config($config-or-theme);
   $is-dark-theme: map.get($config, is-dark);
-  $primary: map.get($config, primary);
-  $accent: map.get($config, accent);
-  $warn: map.get($config, warn);
   $background: map.get($config, background);
   $foreground: map.get($config, foreground);
 
@@ -43,16 +41,12 @@
   }
 
   .mat-checkbox-indeterminate, .mat-checkbox-checked {
-    &.mat-primary .mat-checkbox-background {
-      background-color: theming.get-color-from-palette($primary);
-    }
+    @each $palette-key in $palettes {
+      $palette: map.get($config, $palette-key);
 
-    &.mat-accent .mat-checkbox-background {
-      background-color: theming.get-color-from-palette($accent);
-    }
-
-    &.mat-warn .mat-checkbox-background {
-      background-color: theming.get-color-from-palette($warn);
+      &.mat-#{$palette-key} .mat-checkbox-background {
+        background-color: theming.get-color-from-palette($palette);
+      }
     }
   }
 
@@ -83,16 +77,12 @@
 
   .mat-checkbox-checked:not(.mat-checkbox-disabled),
   .mat-checkbox:active:not(.mat-checkbox-disabled) {
-    &.mat-primary .mat-ripple-element {
-      background: theming.get-color-from-palette($primary);
-    }
+    @each $palette-key in $palettes {
+      $palette: map.get($config, $palette-key);
 
-    &.mat-accent .mat-ripple-element {
-      background: theming.get-color-from-palette($accent);
-    }
-
-    &.mat-warn .mat-ripple-element {
-      background: theming.get-color-from-palette($warn);
+      &.mat-#{$palette-key} .mat-ripple-element {
+        background: theming.get-color-from-palette($palette);
+      }
     }
   }
 }

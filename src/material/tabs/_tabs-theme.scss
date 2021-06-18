@@ -4,10 +4,8 @@
 @use '../core/typography/typography-utils';
 
 @mixin color($config-or-theme) {
+  $palettes: theming.get-theme-palettes($config-or-theme);
   $config: theming.get-color-config($config-or-theme);
-  $primary: map.get($config, primary);
-  $accent: map.get($config, accent);
-  $warn: map.get($config, warn);
   $background: map.get($config, background);
   $foreground: map.get($config, foreground);
   $header-border: 1px solid theming.get-color-from-palette($foreground, divider);
@@ -49,32 +47,26 @@
   }
 
   .mat-tab-group, .mat-tab-nav-bar {
-    $theme-colors: (
-      primary: $primary,
-      accent: $accent,
-      warn: $warn
-    );
+    @each $palette-key in $palettes {
+      $palette: map.get($config, $palette-key);
 
-    @each $name, $color in $theme-colors {
       // Set the foreground color of the tabs
-      &.mat-#{$name} {
-        @include _label-focus-color($color);
-        @include _ink-bar-color($color);
+      &.mat-#{$palette-key} {
+        @include _label-focus-color($palette);
+        @include _ink-bar-color($palette);
 
         // Override ink bar when background color is the same
-        &.mat-background-#{$name} {
+        &.mat-background-#{$palette-key} {
           > .mat-tab-header, > .mat-tab-link-container {
-            @include _ink-bar-color($color, default-contrast);
+            @include _ink-bar-color($palette, default-contrast);
           }
         }
       }
-    }
 
-    @each $name, $color in $theme-colors {
       // Set background color of the tabs and override focus color
-      &.mat-background-#{$name} {
-        @include _label-focus-color($color);
-        @include _tabs-background($color);
+      &.mat-background-#{$palette-key} {
+        @include _label-focus-color($palette);
+        @include _tabs-background($palette);
       }
     }
   }
