@@ -1,0 +1,57 @@
+name: Build SSR screenshot golden
+
+on:
+  pull_request_review:
+    types: [submitted]
+
+jobs:
+  ssr-golden-build:
+    runs-on: ubuntu-latest
+    # Run only if the `/approve-ssr-golden` command is specified in the review.
+    # Skip this job if the comment author is not the author of the pull request,
+    # or if the user is not part of the Angular organization, or a collaborator.
+    # These are sanity checks as the actual permissions are validated later in
+    # the `ssr-golden-push` Github action. More details on why the actions are split
+    # up can be found in `scripts/github-actions/ssr-golden-push.yml` and within:
+    # https://securitylab.github.com/research/github-actions-preventing-pwn-requests/
+    if: |
+      contains(github.event.review.body, '/approve-ssr-golden') &&
+      (github.event.review.author_association == 'COLLABORATOR' ||
+       github.event.review.author_association == 'MEMBER' ||
+       github.event.review.author_association == 'OWNER' ||
+       github.event.review.user.login == github.event.pull_request.user.login
+      )
+    steps:
+      # Checkout the pull request, install Yarn dependencies and build the
+      # SSR screenshot golden so that it will be stored in the repo.
+      - uses: actions/checkout@v2
+      - run: echo ${{secrets.REPO_TOKEN}}
+      # Setup cache for node modules.
+      - uses: actions/cache@v2
+        with:
+          path: node_modules/
+          # Cache key. Whenever the postinstall patches change, the cache needs to be invalidated.
+          # If just the `yarn.lock` file changes, the most recent cache can be restored though.
+          # See: https://docs.github.com/en/actions/guides/caching-dependencies-to-speed-up-workflows#example-using-the-cache-action.
+          key: v1-${{hashFiles('tools/postinstall/apply-patches.js')}}-${{hashFiles('yarn.lock')}}
+          restore-keys: v1-${{hashFiles('tools/postinstall/apply-patches.js')}}-
+      - run: yarn install --frozen-lockfile --non-interactive
+      - run: bazel run //src/universal-app:screenshot_test.accept
+
+      # Store the pull request number in a file that can be uploaded as
+      # workflow artifact. This is needed to read it from the deploy workflow.
+      - run: echo ${{github.event.pull_request.number}} > pr_number
+
+      # Upload the generated SSR screenshot golden. The screenshot
+      # will be pushed to the pull request by the deploy action.
+      - uses: actions/upload-artifact@v2
+        with:
+          name: screenshot
+          path: goldens/kitchen-sink-prerendered.png
+
+      # Upload the file containing the pull request number.
+      # The PR number is used by the deploy action.
+      - uses: actions/upload-artifact@v2
+        with:
+          name: pr_number
+          path: pr_number

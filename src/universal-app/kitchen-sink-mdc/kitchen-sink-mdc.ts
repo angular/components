@@ -22,7 +22,11 @@ import {MatSelectModule} from '@angular/material-experimental/mdc-select';
 import {MatPaginatorModule} from '@angular/material-experimental/mdc-paginator';
 
 @Component({
-  template: `<button>Do the thing</button>`
+  template: `
+    <mat-dialog-content>
+      <button>MDC dialog</button>
+    </mat-dialog-content>
+  `,
 })
 export class TestEntryComponent {}
 
@@ -32,7 +36,8 @@ export class TestEntryComponent {}
 })
 export class KitchenSinkMdc {
   constructor(dialog: MatDialog) {
-    dialog.open(TestEntryComponent);
+    // The MDC component is on the right, so we show the MDC dialog on the right too.
+    dialog.open(TestEntryComponent, {position: {top: '0', right: '0'}});
   }
 }
 

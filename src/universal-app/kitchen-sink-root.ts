@@ -7,10 +7,33 @@ import {KitchenSinkModule} from './kitchen-sink/kitchen-sink';
 @Component({
   selector: 'kitchen-sink-root',
   template: `
-    <h1>Kitchen sink app</h1>
-    <kitchen-sink></kitchen-sink>
-    <kitchen-sink-mdc></kitchen-sink-mdc>
+    <div class="kitchen-sink-row">
+      <kitchen-sink class="kitchen-sink"></kitchen-sink>
+      <kitchen-sink-mdc class="kitchen-sink"></kitchen-sink-mdc>
+    </div>
   `,
+  styles: [`
+    /**
+      Align both components (the non-MDC and MDC kitchen-sinks) next to each other.
+      This reduces the overall height of the page and makes it easier to capture
+      in screenshot tests where browsers (even headless ones) seem to have a limit.
+    */
+    .kitchen-sink-row {
+      display: flex;
+      flex-direction: row;
+    }
+
+    /** Add padding for the kitchen-sink components, and expand them equally in the row. */
+    .kitchen-sink {
+      flex: 1;
+      padding: 16px;
+    }
+
+    /** The first kitchen-sink should have a border to split up the two components visually. */
+    .kitchen-sink:first-child {
+      border-right: 2px solid grey;
+    }
+  `]
 })
 export class KitchenSinkRoot {
 }

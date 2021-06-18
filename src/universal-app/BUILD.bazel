@@ -4,6 +4,7 @@ load("//src/cdk-experimental:config.bzl", "CDK_EXPERIMENTAL_TARGETS")
 load("//src/material:config.bzl", "MATERIAL_TARGETS")
 load("//src/material-experimental:config.bzl", "MATERIAL_EXPERIMENTAL_TARGETS")
 load("//tools:defaults.bzl", "ng_module", "sass_binary", "ts_library")
+load(":ssr-screenshot-test.bzl", "ssr_screenshot_test")
 
 package(default_visibility = ["//visibility:public"])
 
@@ -53,13 +54,36 @@ sass_binary(
     ],
 )
 
+prerenderStaticAssets = [
+    "index.html",
+    ":theme_scss",
+]
+
+ts_library(
+    name = "ssr_screenshot_test_lib",
+    testonly = True,
+    srcs = ["ssr-screenshot-test-runner.ts"],
+    deps = [
+        ":server",
+        "@npm//@bazel/runfiles",
+        "@npm//@types/node",
+        "@npm//@types/selenium-webdriver",
+        "@npm//fast-png",
+        "@npm//pixelmatch",
+        "@npm//puppeteer-core",
+    ],
+)
+
+# Screenshot test that compares the pre-rendered universal-app against the golden.
+ssr_screenshot_test(
+    name = "screenshot_test",
+    data = prerenderStaticAssets,
+    golden = "//goldens:kitchen-sink-prerendered.png",
+)
+
 nodejs_test(
     name = "server_test",
-    data = [
-        "index.html",
-        ":server",
-        ":theme_scss",
-    ],
+    data = [":server"] + prerenderStaticAssets,
     entry_point = ":prerender.ts",
     templated_args = [
         # TODO(josephperrott): update dependency usages to no longer need bazel patch module resolver

@@ -51,7 +51,7 @@ export class TableDataSource extends DataSource<any> {
 
 
 @Component({
-  template: `<button>Do the thing</button>`
+  template: `<button>Non-MDC dialog</button>`
 })
 export class TestEntryComponent {}
 
@@ -77,15 +77,18 @@ export class KitchenSink {
   virtualScrollData = Array(10000).fill(50);
 
   constructor(
-    snackBar: MatSnackBar,
-    dialog: MatDialog,
-    viewportRuler: ViewportRuler,
-    focusMonitor: FocusMonitor,
-    elementRef: ElementRef<HTMLElement>,
-    bottomSheet: MatBottomSheet) {
+      snackBar: MatSnackBar,
+      dialog: MatDialog,
+      viewportRuler: ViewportRuler,
+      focusMonitor: FocusMonitor,
+      elementRef: ElementRef<HTMLElement>,
+      bottomSheet: MatBottomSheet) {
     focusMonitor.focusVia(elementRef, 'program');
     snackBar.open('Hello there');
-    dialog.open(TestEntryComponent);
+    // The non-MDC component is on the left, so we show the dialog on the left side too.
+    // Since the "overlay active" indicator is on the left top too, we shift the dialog
+    // to the right a little more (to avoid content overlapping).
+    dialog.open(TestEntryComponent, {position: {left: '30%', top: '0'}});
     bottomSheet.open(TestEntryComponent);
 
     // Do a sanity check on the viewport ruler.
