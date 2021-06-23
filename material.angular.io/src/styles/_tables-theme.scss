@@ -3,26 +3,23 @@
 
 // Mixin to apply theme colors for both generated API docs and markdown docs (guides/overviews).
 @mixin theme($theme) {
-  $primary: map.get($theme, primary);
-  $accent: map.get($theme, accent);
-  $warn: map.get($theme, warn);
   $background: map.get($theme, background);
   $foreground: map.get($theme, foreground);
-  $is-dark-theme: map.get($theme, is-dark);
-  $tableBorderOpacity: if($is-dark-theme, 0.08, 0.03);
 
   .docs-api table,
-  .docs-markdown-table {
+  .docs-markdown > table {
     color: mat.get-color-from-palette($foreground, text);
   }
 
   .docs-api th,
-  .docs-markdown-th {
+  .docs-markdown > table th {
     background: mat.get-color-from-palette($background, app-bar);
   }
 
   .docs-api td,
-  .docs-markdown-td {
-    border: 1px solid rgba(mat.get-color-from-palette($foreground, secondary-text), $tableBorderOpacity);
+  .docs-api thead,
+  .docs-markdown > table td,
+  .docs-markdown > table thead {
+    border: 1px solid mat.get-color-from-palette($foreground, divider);
   }
 }

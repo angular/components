@@ -33,11 +33,5 @@
     code {
       background: rgba(mat.get-color-from-palette($foreground, secondary-text), $exportBackgroundOpacity);
     }
-
-    > table {
-      th, td {
-        border-bottom-color: mat.get-color-from-palette($foreground, divider);
-      }
-    }
   }
 }
