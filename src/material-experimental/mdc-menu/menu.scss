@@ -98,6 +98,10 @@ mat-menu {
   @include menu-common.item-submenu-trigger(mdc-list-variables.$side-padding);
 }
 
+.mat-mdc-menu-submenu-icon {
+  @include menu-common.item-submenu-icon(mdc-list-variables.$side-padding);
+}
+
 // Increase specificity because ripple styles are part of the `mat-core` mixin and can
 // potentially overwrite the absolute position of the container.
 .mat-mdc-menu-item .mat-mdc-menu-ripple {
