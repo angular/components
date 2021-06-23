@@ -1,25 +1,35 @@
 @use './constants';
 
 .docs-api table,
-.docs-markdown-table {
+.docs-markdown > table {
   border-collapse: collapse;
-  border-radius: 2px;
   border-spacing: 0;
-  margin: 0 0 32px 0;
+  margin: 0 0 32px;
   width: 100%;
-  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.24), 0 0 2px rgba(0, 0, 0, 0.12);
 }
 
+
+// Styles specific only to the table inside markdown.
+.docs-markdown > table {
+  font-size: 14px;
+
+  // Code tends to wrap inside tables which doesn't look great with the background color.
+  code {
+    background: transparent;
+  }
+}
+
+
 .docs-api th,
-.docs-markdown-th {
+.docs-markdown > table th {
   font-weight: 400;
   max-width: 100px;
-  padding: 13px 16px;
+  padding: 14px 16px;
   text-align: left;
 }
 
 .docs-api td,
-.docs-markdown-td {
+.docs-markdown > table td {
   font-weight: 400;
   padding: 8px 16px;
 
@@ -37,17 +47,17 @@
 
 @media (max-width: constants.$small-breakpoint-width) {
   .docs-api table,
-  .docs-markdown-table {
+  .docs-markdown > table {
     margin: 0 0 32px 0;
   }
 
   .docs-api th,
-  .docs-markdown-th {
+  .docs-markdown > table th {
     padding: 6px 16px;
   }
 
   .docs-api td,
-  .docs-markdown-td {
+  .docs-markdown > table td {
     padding: 4px 8px;
   }
 }

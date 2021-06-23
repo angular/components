@@ -52,30 +52,6 @@
   code {
     padding: 3px;
   }
-
-  // Target direct descendants here so that the styles don't bleed into the live examples.
-  > table {
-    text-align: left;
-    table-layout: fixed;
-    border-collapse: collapse;
-    margin-bottom: 1em;
-    font-size: 14px;
-
-    tr {
-      height: 48px;
-    }
-
-    th, td {
-      padding: 8px 4px 8px 0;
-      border-bottom-width: 1px;
-      border-bottom-style: solid;
-    }
-
-    // Code tends to wrap inside tables which doesn't look great with the background color.
-    code {
-      background: transparent;
-    }
-  }
 }
 
 .docs-header-link {
