@@ -237,7 +237,7 @@ You can use one of these pre-built themes if you don't want to define a custom t
 |------------------------|----------------|----------------------------------|
 | `deeppurple-amber.css` | Dark           | deep-purple, amber, red          |
 | `indigo-pink.css`      | Light          | indigo, pink, red                |
-| `pink-bluegray.css`    | Dark           | pink, bluegray, red              |
+| `pink-bluegrey.css`    | Dark           | pink, bluegrey, red              |
 | `purple-green.css`     | Light          | purple, green, red               |
 
 These files include the CSS for every component in the library. To include only the CSS for a subset
@@ -286,7 +286,7 @@ $light-theme: mat.define-light-theme((
 
 // Define a dark theme
 $dark-primary: mat.define-palette(mat.$pink-palette);
-$dark-accent: mat.define-palette(mat.$blue-gray-palette);
+$dark-accent: mat.define-palette(mat.$blue-grey-palette);
 $dark-theme: mat.define-dark-theme((
  color: (
    primary: $dark-primary,
