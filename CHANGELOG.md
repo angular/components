@@ -1,3 +1,31 @@
+## 12.0.6 "vinyl-vervet" (2021-06-25)
+
+### cdk
+
+|            |                       |
+| ---------- | --------------------- |
+| bug fix |  **drag-drop:** resolve various event tracking issues inside the shadow dom ([#23026](https://github.com/angular/components/issues/23026)) ([e8066a13b6380e6ac84ee5ff707ad7ea8ac9d62b](https://github.com/angular/components/commit/e8066a13b6380e6ac84ee5ff707ad7ea8ac9d62b)), closes [#22939](https://github.com/angular/components/issues/22939) |
+
+### material
+
+|            |                       |
+| ---------- | --------------------- |
+| bug fix |  **badge:** avoid emitting the structural styles more than once ([#23011](https://github.com/angular/components/issues/23011)) ([85591e2f2953f2d70309b9ebb28f58679c28e2bd](https://github.com/angular/components/commit/85591e2f2953f2d70309b9ebb28f58679c28e2bd)) |
+| bug fix |  **datepicker:** correct structure for grid role ([#23022](https://github.com/angular/components/issues/23022)) ([539e4cdfd8403e6c4a83ab0c75da88a9d97c3937](https://github.com/angular/components/commit/539e4cdfd8403e6c4a83ab0c75da88a9d97c3937)), closes [#21357](https://github.com/angular/components/issues/21357) |
+| bug fix |  **datepicker:** incorrect appearance when used in MDC form field ([#23028](https://github.com/angular/components/issues/23028)) ([7926ca1be79f1263f8dae807a0a31ad7aafcb379](https://github.com/angular/components/commit/7926ca1be79f1263f8dae807a0a31ad7aafcb379)) |
+| bug fix |  **datepicker:** Return union of view component types ([#23000](https://github.com/angular/components/issues/23000)) ([bb6dbe810f668d64d770f5656328ccdd39530bcb](https://github.com/angular/components/commit/bb6dbe810f668d64d770f5656328ccdd39530bcb)), closes [#22996](https://github.com/angular/components/issues/22996) |
+| bug fix |  **slide-toggle:** Made label non user selectable ([#22756](https://github.com/angular/components/issues/22756)) ([dcaee6fcf83f20458e490491c48085ddadd10ae6](https://github.com/angular/components/commit/dcaee6fcf83f20458e490491c48085ddadd10ae6)) |
+| bug fix |  **tabs:** update tab nav bar focused index on direct focus ([#22584](https://github.com/angular/components/issues/22584)) ([daf8ff288b7fba632775a0ee2238c58787403508](https://github.com/angular/components/commit/daf8ff288b7fba632775a0ee2238c58787403508)), closes [#22576](https://github.com/angular/components/issues/22576) |
+
+### material-experimental
+
+|            |                       |
+| ---------- | --------------------- |
+| bug fix |  **mdc-radio:** add accessible touch targets ([#22994](https://github.com/angular/components/issues/22994)) ([6074fd136a05128ac6525f03ce18345a2422dbd7](https://github.com/angular/components/commit/6074fd136a05128ac6525f03ce18345a2422dbd7)), closes [#22892](https://github.com/angular/components/issues/22892) [#22991](https://github.com/angular/components/issues/22991) |
+| bug fix |  **mdc-snack-bar:** increase the specificity of styles targeting the action buttons ([#22959](https://github.com/angular/components/issues/22959)) ([a9df43db51e77dfbb6a43ec5a6a9e7d06860facc](https://github.com/angular/components/commit/a9df43db51e77dfbb6a43ec5a6a9e7d06860facc)) |
+| bug fix |  **mdc-tooltip:** fix text alignment of multili… ([#22981](https://github.com/angular/components/issues/22981)) ([f2a081429cf016b8a5d247b463b04e2575922294](https://github.com/angular/components/commit/f2a081429cf016b8a5d247b463b04e2575922294)) |
+
+
 ## 12.0.5 "honeycomb-heart" (2021-06-16)
 
 ### cdk
