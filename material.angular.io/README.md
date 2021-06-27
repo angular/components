@@ -37,9 +37,9 @@ documentation content and examples. They are generated from:
 1. Make sure you have [NodeJS LTS](https://nodejs.org) installed
 1. Make sure you have [Yarn](https://yarnpkg.com) installed
 1. Install the project's dependencies
-  - `yarn install`
+   - `yarn install`
 1. Update to the latest version of the docs-content and examples
-  - `yarn build:content`
+   - `yarn build:content`
 
 ## Development Server
 
