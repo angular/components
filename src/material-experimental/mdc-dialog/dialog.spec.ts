@@ -383,6 +383,7 @@ describe('MDC-based MatDialog', () => {
 
   it('should notify the observers if all open dialogs have finished closing', fakeAsync(() => {
        const ref1 = dialog.open(PizzaMsg, {viewContainerRef: testViewContainerRef});
+       flush();
        const ref2 = dialog.open(ContentElementDialog, {viewContainerRef: testViewContainerRef});
        const spy = jasmine.createSpy('afterAllClosed spy');
 
@@ -615,7 +616,9 @@ describe('MDC-based MatDialog', () => {
 
   it('should close all of the dialogs', fakeAsync(() => {
        dialog.open(PizzaMsg);
+       flush();
        dialog.open(PizzaMsg);
+       flush();
        dialog.open(PizzaMsg);
 
        expect(overlayContainerElement.querySelectorAll('mat-dialog-container').length).toBe(3);
@@ -629,6 +632,7 @@ describe('MDC-based MatDialog', () => {
 
   it('should close all dialogs when the user goes forwards/backwards in history', fakeAsync(() => {
        dialog.open(PizzaMsg);
+       flush();
        dialog.open(PizzaMsg);
 
        expect(overlayContainerElement.querySelectorAll('mat-dialog-container').length).toBe(2);
@@ -642,6 +646,7 @@ describe('MDC-based MatDialog', () => {
 
   it('should close all open dialogs when the location hash changes', fakeAsync(() => {
        dialog.open(PizzaMsg);
+       flush();
        dialog.open(PizzaMsg);
 
        expect(overlayContainerElement.querySelectorAll('mat-dialog-container').length).toBe(2);
@@ -655,7 +660,9 @@ describe('MDC-based MatDialog', () => {
 
   it('should close all of the dialogs when the injectable is destroyed', fakeAsync(() => {
        dialog.open(PizzaMsg);
+       flush();
        dialog.open(PizzaMsg);
+       flush();
        dialog.open(PizzaMsg);
 
        expect(overlayContainerElement.querySelectorAll('mat-dialog-container').length).toBe(3);
@@ -685,6 +692,7 @@ describe('MDC-based MatDialog', () => {
 
   it('should allow the consumer to disable closing a dialog on navigation', fakeAsync(() => {
        dialog.open(PizzaMsg);
+       flush();
        dialog.open(PizzaMsg, {closeOnNavigation: false});
 
        expect(overlayContainerElement.querySelectorAll('mat-dialog-container').length).toBe(2);
@@ -772,14 +780,15 @@ describe('MDC-based MatDialog', () => {
        expect(dialogRef.componentInstance).toBeFalsy('Expected reference to have been cleared.');
      }));
 
-  it('should assign a unique id to each dialog', () => {
+  it('should assign a unique id to each dialog', fakeAsync(() => {
     const one = dialog.open(PizzaMsg);
+    flush();
     const two = dialog.open(PizzaMsg);
 
     expect(one.id).toBeTruthy();
     expect(two.id).toBeTruthy();
     expect(one.id).not.toBe(two.id);
-  });
+  }));
 
   it('should allow for the id to be overwritten', () => {
     const dialogRef = dialog.open(PizzaMsg, {id: 'pizza'});
@@ -1064,7 +1073,7 @@ describe('MDC-based MatDialog', () => {
          expect(document.activeElement!.id)
              .not.toBe(
                  'dialog-trigger',
-                 'Expcted the focus not to have changed before the animation finishes.');
+                 'Expected the focus not to have changed before the animation finishes.');
 
          flushMicrotasks();
          viewContainerFixture.detectChanges();
@@ -1789,6 +1798,15 @@ describe('MDC-based MatDialog with animations enabled', () => {
        flush();
        expect(dialogRef.getState()).toBe(MatDialogState.CLOSED);
      }));
+
+  it('should not allow another dialog to open until the previous dialog finished animating open',
+    () => {
+      const openTwoDialogs = () => {
+        dialog.open(PizzaMsg);
+        dialog.open(PizzaMsg);
+      };
+      expect(openTwoDialogs).toThrowError(/Ignoring attempt to open dialog/);
+    });
 });
 
 @Directive({selector: 'dir-with-view-container'})

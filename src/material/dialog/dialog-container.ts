@@ -105,9 +105,6 @@ export abstract class _MatDialogContainerBase extends BasePortalOutlet {
     // Save the previously focused element. This element will be re-focused
     // when the dialog closes.
     this._capturePreviouslyFocusedElement();
-    // Move focus onto the dialog immediately in order to prevent the user
-    // from accidentally opening multiple dialogs at the same time.
-    this._focusDialogContainer();
   }
 
   /**
@@ -154,7 +151,7 @@ export abstract class _MatDialogContainerBase extends BasePortalOutlet {
       const focusContainer = !this._config.autoFocus || !this._focusTrap.focusInitialElement();
 
       if (focusContainer) {
-        this._elementRef.nativeElement.focus();
+        this._focusDialogContainer();
       }
     }
   }
@@ -165,14 +162,20 @@ export abstract class _MatDialogContainerBase extends BasePortalOutlet {
     // ready in instances where change detection has to run first. To deal with this, we simply
     // wait for the microtask queue to be empty.
     if (this._config.autoFocus) {
-      this._focusTrap.focusInitialElementWhenReady();
+      this._focusTrap.focusInitialElementWhenReady().then(focusedSuccessfully => {
+        // If we weren't able to find a focusable element in the dialog, then focus the dialog
+        // container instead.
+        if (!focusedSuccessfully) {
+          this._focusDialogContainer();
+        }
+      });
     } else if (!this._containsFocus()) {
       // Otherwise ensure that focus is on the dialog container. It's possible that a different
       // component tried to move focus while the open animation was running. See:
       // https://github.com/angular/components/issues/16215. Note that we only want to do this
       // if the focus isn't inside the dialog already, because it's possible that the consumer
       // turned off `autoFocus` in order to move focus themselves.
-      this._elementRef.nativeElement.focus();
+      this._focusDialogContainer();
     }
   }
 
