@@ -12,6 +12,7 @@ import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 
 describe('DialogHarnessExample', () => {
   let fixture: ComponentFixture<DialogHarnessExample>;
+  let fixtureTwo: ComponentFixture<DialogHarnessExample>;
   let loader: HarnessLoader;
 
   beforeAll(() => {
@@ -27,6 +28,8 @@ describe('DialogHarnessExample', () => {
     }).compileComponents();
     fixture = TestBed.createComponent(DialogHarnessExample);
     fixture.detectChanges();
+    fixtureTwo = TestBed.createComponent(DialogHarnessExample);
+    fixtureTwo.detectChanges();
     loader = TestbedHarnessEnvironment.documentRootLoader(fixture);
   }));
 
@@ -38,7 +41,7 @@ describe('DialogHarnessExample', () => {
 
   it('should load harness for dialog with specific id', async () => {
     fixture.componentInstance.open({id: 'my-dialog'});
-    fixture.componentInstance.open({id: 'other'});
+    fixtureTwo.componentInstance.open({id: 'other'});
     let dialogs = await loader.getAllHarnesses(MatDialogHarness);
     expect(dialogs.length).toBe(2);
 
@@ -48,7 +51,7 @@ describe('DialogHarnessExample', () => {
 
   it('should be able to get role of dialog', async () => {
     fixture.componentInstance.open({role: 'alertdialog'});
-    fixture.componentInstance.open({role: 'dialog'});
+    fixtureTwo.componentInstance.open({role: 'dialog'});
     const dialogs = await loader.getAllHarnesses(MatDialogHarness);
     expect(await dialogs[0].getRole()).toBe('alertdialog');
     expect(await dialogs[1].getRole()).toBe('dialog');
@@ -57,7 +60,7 @@ describe('DialogHarnessExample', () => {
 
   it('should be able to close dialog', async () => {
     fixture.componentInstance.open({disableClose: true});
-    fixture.componentInstance.open();
+    fixtureTwo.componentInstance.open();
     let dialogs = await loader.getAllHarnesses(MatDialogHarness);
 
     expect(dialogs.length).toBe(2);

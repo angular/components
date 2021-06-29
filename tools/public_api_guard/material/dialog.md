@@ -113,6 +113,7 @@ export abstract class _MatDialogBase<C extends _MatDialogContainerBase> implemen
     readonly afterAllClosed: Observable<void>;
     get afterOpened(): Subject<MatDialogRef<any>>;
     closeAll(): void;
+    _dialogOpenedWithinPreviousTransitionTime(): boolean;
     // (undocumented)
     _getAfterAllClosed(): Subject<void>;
     getDialogById(id: string): MatDialogRef<any> | undefined;
@@ -289,6 +290,9 @@ export class MatDialogTitle implements OnInit {
 
 // @public
 export function throwMatDialogContentAlreadyAttachedError(): void;
+
+// @public
+export const _transitionTime = 150;
 
 // (No @packageDocumentation comment for this package)
 

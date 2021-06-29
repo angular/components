@@ -12,6 +12,7 @@ export function runHarnessTests(
     dialogModule: typeof MatDialogModule, dialogHarness: typeof MatDialogHarness,
     dialogService: typeof MatDialog) {
   let fixture: ComponentFixture<DialogHarnessTest>;
+  let fixtureTwo: ComponentFixture<DialogHarnessTest>;
   let loader: HarnessLoader;
   let overlayContainer: OverlayContainer;
 
@@ -32,6 +33,8 @@ export function runHarnessTests(
 
     fixture = TestBed.createComponent(DialogHarnessTest);
     fixture.detectChanges();
+    fixtureTwo = TestBed.createComponent(DialogHarnessTest);
+    fixtureTwo.detectChanges();
     loader = TestbedHarnessEnvironment.documentRootLoader(fixture);
     inject([OverlayContainer], (oc: OverlayContainer) => {
       overlayContainer = oc;
@@ -57,7 +60,7 @@ export function runHarnessTests(
 
   it('should load harness for dialog with specific id', async () => {
     fixture.componentInstance.open({id: 'my-dialog'});
-    fixture.componentInstance.open({id: 'other'});
+    fixtureTwo.componentInstance.open({id: 'other'});
     let dialogs = await loader.getAllHarnesses(dialogHarness);
     expect(dialogs.length).toBe(2);
 
@@ -67,7 +70,7 @@ export function runHarnessTests(
 
   it('should be able to get id of dialog', async () => {
     fixture.componentInstance.open({id: 'my-dialog'});
-    fixture.componentInstance.open({id: 'other'});
+    fixtureTwo.componentInstance.open({id: 'other'});
     const dialogs = await loader.getAllHarnesses(dialogHarness);
     expect(await dialogs[0].getId()).toBe('my-dialog');
     expect(await dialogs[1].getId()).toBe('other');
@@ -75,7 +78,7 @@ export function runHarnessTests(
 
   it('should be able to get role of dialog', async () => {
     fixture.componentInstance.open({role: 'alertdialog'});
-    fixture.componentInstance.open({role: 'dialog'});
+    fixtureTwo.componentInstance.open({role: 'dialog'});
     fixture.componentInstance.open({role: undefined});
     const dialogs = await loader.getAllHarnesses(dialogHarness);
     expect(await dialogs[0].getRole()).toBe('alertdialog');
@@ -85,7 +88,7 @@ export function runHarnessTests(
 
   it('should be able to get aria-label of dialog', async () => {
     fixture.componentInstance.open();
-    fixture.componentInstance.open({ariaLabel: 'Confirm purchase.'});
+    fixtureTwo.componentInstance.open({ariaLabel: 'Confirm purchase.'});
     const dialogs = await loader.getAllHarnesses(dialogHarness);
     expect(await dialogs[0].getAriaLabel()).toBe(null);
     expect(await dialogs[1].getAriaLabel()).toBe('Confirm purchase.');
@@ -93,7 +96,7 @@ export function runHarnessTests(
 
   it('should be able to get aria-labelledby of dialog', async () => {
     fixture.componentInstance.open();
-    fixture.componentInstance.open({ariaLabelledBy: 'dialog-label'});
+    fixtureTwo.componentInstance.open({ariaLabelledBy: 'dialog-label'});
     const dialogs = await loader.getAllHarnesses(dialogHarness);
     expect(await dialogs[0].getAriaLabelledby()).toBe(null);
     expect(await dialogs[1].getAriaLabelledby()).toBe('dialog-label');
@@ -101,7 +104,7 @@ export function runHarnessTests(
 
   it('should be able to get aria-describedby of dialog', async () => {
     fixture.componentInstance.open();
-    fixture.componentInstance.open({ariaDescribedBy: 'dialog-description'});
+    fixtureTwo.componentInstance.open({ariaDescribedBy: 'dialog-description'});
     const dialogs = await loader.getAllHarnesses(dialogHarness);
     expect(await dialogs[0].getAriaDescribedby()).toBe(null);
     expect(await dialogs[1].getAriaDescribedby()).toBe('dialog-description');
@@ -109,7 +112,7 @@ export function runHarnessTests(
 
   it('should be able to close dialog', async () => {
     fixture.componentInstance.open({disableClose: true});
-    fixture.componentInstance.open();
+    fixtureTwo.componentInstance.open();
     let dialogs = await loader.getAllHarnesses(dialogHarness);
 
     expect(dialogs.length).toBe(2);

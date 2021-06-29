@@ -670,8 +670,8 @@ describe('MatDialog', () => {
 
   it('should close all of the dialogs', fakeAsync(() => {
     dialog.open(PizzaMsg);
-    dialog.open(PizzaMsg);
-    dialog.open(PizzaMsg);
+    dialog.open(PizzaMsgTwo);
+    dialog.open(PizzaMsgThree);
 
     expect(overlayContainerElement.querySelectorAll('mat-dialog-container').length).toBe(3);
 
@@ -697,7 +697,7 @@ describe('MatDialog', () => {
 
   it('should close all dialogs when the user goes forwards/backwards in history', fakeAsync(() => {
     dialog.open(PizzaMsg);
-    dialog.open(PizzaMsg);
+    dialog.open(PizzaMsgTwo);
 
     expect(overlayContainerElement.querySelectorAll('mat-dialog-container').length).toBe(2);
 
@@ -710,7 +710,7 @@ describe('MatDialog', () => {
 
   it('should close all open dialogs when the location hash changes', fakeAsync(() => {
     dialog.open(PizzaMsg);
-    dialog.open(PizzaMsg);
+    dialog.open(PizzaMsgTwo);
 
     expect(overlayContainerElement.querySelectorAll('mat-dialog-container').length).toBe(2);
 
@@ -723,8 +723,8 @@ describe('MatDialog', () => {
 
   it('should close all of the dialogs when the injectable is destroyed', fakeAsync(() => {
     dialog.open(PizzaMsg);
-    dialog.open(PizzaMsg);
-    dialog.open(PizzaMsg);
+    dialog.open(PizzaMsgTwo);
+    dialog.open(PizzaMsgThree);
 
     expect(overlayContainerElement.querySelectorAll('mat-dialog-container').length).toBe(3);
 
@@ -754,7 +754,7 @@ describe('MatDialog', () => {
 
   it('should allow the consumer to disable closing a dialog on navigation', fakeAsync(() => {
     dialog.open(PizzaMsg);
-    dialog.open(PizzaMsg, {closeOnNavigation: false});
+    dialog.open(PizzaMsgTwo, {closeOnNavigation: false});
 
     expect(overlayContainerElement.querySelectorAll('mat-dialog-container').length).toBe(2);
 
@@ -849,7 +849,7 @@ describe('MatDialog', () => {
 
   it('should assign a unique id to each dialog', () => {
     const one = dialog.open(PizzaMsg);
-    const two = dialog.open(PizzaMsg);
+    const two = dialog.open(PizzaMsgTwo);
 
     expect(one.id).toBeTruthy();
     expect(two.id).toBeTruthy();
@@ -1320,7 +1320,7 @@ describe('MatDialog', () => {
 
       tick(500);
       viewContainerFixture.detectChanges();
-      expect(lastFocusOrigin!).toBeNull('Expected the trigger button to be blurred');
+      expect(lastFocusOrigin!).toBe('program');
 
       dispatchKeyboardEvent(document.body, 'keydown', ESCAPE);
 
@@ -1329,7 +1329,8 @@ describe('MatDialog', () => {
       tick(500);
 
       expect(lastFocusOrigin!)
-        .toBe('keyboard', 'Expected the trigger button to be focused via keyboard');
+        .withContext('Expected the trigger button to be focused via keyboard')
+        .toBe('keyboard');
 
       focusMonitor.stopMonitoring(button);
       document.body.removeChild(button);
@@ -1353,7 +1354,7 @@ describe('MatDialog', () => {
 
       tick(500);
       viewContainerFixture.detectChanges();
-      expect(lastFocusOrigin!).toBeNull('Expected the trigger button to be blurred');
+      expect(lastFocusOrigin!).toBe('program');
 
       const backdrop = overlayContainerElement
           .querySelector('.cdk-overlay-backdrop') as HTMLElement;
@@ -1363,7 +1364,8 @@ describe('MatDialog', () => {
       tick(500);
 
       expect(lastFocusOrigin!)
-        .toBe('mouse', 'Expected the trigger button to be focused via mouse');
+        .withContext('Expected the trigger button to be focused via mouse')
+        .toBe('mouse');
 
       focusMonitor.stopMonitoring(button);
       document.body.removeChild(button);
@@ -1384,12 +1386,18 @@ describe('MatDialog', () => {
       // Patch the element focus after the initial and real focus, because otherwise the
       // `activeElement` won't be set, and the dialog won't be able to restore focus to an element.
       patchElementFocus(button);
+      expect(lastFocusOrigin!)
+        .withContext('Expected the trigger button to be focused via program')
+        .toBe('program');
 
       dialog.open(ContentElementDialog, {viewContainerRef: testViewContainerRef});
 
       tick(500);
       viewContainerFixture.detectChanges();
-      expect(lastFocusOrigin!).toBeNull('Expected the trigger button to be blurred');
+      tick(500);
+      expect(lastFocusOrigin!)
+        .withContext('Expected the trigger button to be blurred')
+        .toBeNull();
 
       const closeButton = overlayContainerElement
         .querySelector('button[mat-dialog-close]') as HTMLElement;
@@ -1402,7 +1410,8 @@ describe('MatDialog', () => {
       tick(500);
 
       expect(lastFocusOrigin!)
-        .toBe('keyboard', 'Expected the trigger button to be focused via keyboard');
+        .withContext('Expected the trigger button to be focused via keyboard')
+        .toBe('keyboard');
 
       focusMonitor.stopMonitoring(button);
       document.body.removeChild(button);
@@ -1421,12 +1430,18 @@ describe('MatDialog', () => {
       // Patch the element focus after the initial and real focus, because otherwise the
       // `activeElement` won't be set, and the dialog won't be able to restore focus to an element.
       patchElementFocus(button);
+      expect(lastFocusOrigin!)
+        .withContext('Expected the trigger button to be focused via program')
+        .toBe('program');
 
       dialog.open(ContentElementDialog, {viewContainerRef: testViewContainerRef});
 
       tick(500);
       viewContainerFixture.detectChanges();
-      expect(lastFocusOrigin!).toBeNull('Expected the trigger button to be blurred');
+      tick(500);
+      expect(lastFocusOrigin!)
+        .withContext('Expected the trigger button to be blurred')
+        .toBeNull();
 
       const closeButton = overlayContainerElement
         .querySelector('button[mat-dialog-close]') as HTMLElement;
@@ -1440,7 +1455,8 @@ describe('MatDialog', () => {
       tick(500);
 
       expect(lastFocusOrigin!)
-        .toBe('mouse', 'Expected the trigger button to be focused via mouse');
+        .withContext('Expected the trigger button to be focused via mouse')
+        .toBe('mouse');
 
       focusMonitor.stopMonitoring(button);
       document.body.removeChild(button);
@@ -2020,10 +2036,24 @@ class ComponentWithTemplateRef {
   }
 }
 
-/** Simple component for testing ComponentPortal. */
+/** Simple components for testing ComponentPortal and multiple dialogs. */
 @Component({template: '<p>Pizza</p> <input> <button>Close</button>'})
 class PizzaMsg {
   constructor(public dialogRef: MatDialogRef<PizzaMsg>,
+              public dialogInjector: Injector,
+              public directionality: Directionality) {}
+}
+
+@Component({template: '<p>Pizza</p> <input> <button>Close</button>'})
+class PizzaMsgTwo {
+  constructor(public dialogRef: MatDialogRef<PizzaMsgTwo>,
+              public dialogInjector: Injector,
+              public directionality: Directionality) {}
+}
+
+@Component({template: '<p>Pizza</p> <input> <button>Close</button>'})
+class PizzaMsgThree {
+  constructor(public dialogRef: MatDialogRef<PizzaMsgThree>,
               public dialogInjector: Injector,
               public directionality: Directionality) {}
 }
@@ -2097,6 +2127,8 @@ const TEST_DIRECTIVES = [
   ComponentWithChildViewContainer,
   ComponentWithTemplateRef,
   PizzaMsg,
+  PizzaMsgTwo,
+  PizzaMsgThree,
   DirectiveWithViewContainer,
   ComponentWithOnPushViewContainer,
   ContentElementDialog,
@@ -2114,6 +2146,8 @@ const TEST_DIRECTIVES = [
     ComponentWithChildViewContainer,
     ComponentWithTemplateRef,
     PizzaMsg,
+    PizzaMsgTwo,
+    PizzaMsgThree,
     ContentElementDialog,
     DialogWithInjectedData,
     DialogWithoutFocusableElements,

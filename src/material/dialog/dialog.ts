@@ -35,6 +35,7 @@ import {startWith} from 'rxjs/operators';
 import {MatDialogConfig} from './dialog-config';
 import {MatDialogContainer, _MatDialogContainerBase} from './dialog-container';
 import {MatDialogRef} from './dialog-ref';
+import {_transitionTime} from './dialog-animations';
 
 
 /** Injection token that can be used to access the data that was passed in to a dialog. */
@@ -77,6 +78,9 @@ export abstract class _MatDialogBase<C extends _MatDialogContainerBase> implemen
   private readonly _afterOpenedAtThisLevel = new Subject<MatDialogRef<any>>();
   private _ariaHiddenElements = new Map<Element, string|null>();
   private _scrollStrategy: () => ScrollStrategy;
+  private _lastDialogOpenTime: number;
+  private _lastDialogOpenType: any;
+  private _lastDialogRef: MatDialogRef<any>;
 
   /** Keeps track of the currently-open dialogs. */
   get openDialogs(): MatDialogRef<any>[] {
@@ -144,6 +148,13 @@ export abstract class _MatDialogBase<C extends _MatDialogContainerBase> implemen
       (typeof ngDevMode === 'undefined' || ngDevMode)) {
       throw Error(`Dialog with id "${config.id}" exists already. The dialog id must be unique.`);
     }
+    // If there are open dialogs, and the last opened dialog was of the same component or template
+    // ref as the one opening now, check if we're still within the animation transition time of the
+    // previous dialog, if so, just return the MatDialogRef of the previous dialog.
+    if (this.openDialogs.length && componentOrTemplateRef === this._lastDialogOpenType &&
+        this._dialogOpenedWithinPreviousTransitionTime()) {
+      return this._lastDialogRef;
+    }
 
     const overlayRef = this._createOverlay(config);
     const dialogContainer = this._attachDialogContainer(overlayRef, config);
@@ -151,6 +162,9 @@ export abstract class _MatDialogBase<C extends _MatDialogContainerBase> implemen
                                                       dialogContainer,
                                                       overlayRef,
                                                       config);
+    this._lastDialogOpenTime = new Date().getTime();
+    this._lastDialogOpenType = componentOrTemplateRef;
+    this._lastDialogRef = dialogRef;
 
     // If this is the first dialog that we're opening, hide all the non-overlay content.
     if (!this.openDialogs.length) {
@@ -382,6 +396,16 @@ export abstract class _MatDialogBase<C extends _MatDialogContainerBase> implemen
       // they'll be removed from the list instantaneously.
       dialogs[i].close();
     }
+  }
+
+  /**
+   * Check if a dialog was opened within the dialog animation transition time of a previous dialog.
+   * @return true if a dialog was opened within the dialog animation transition time, false
+   *  otherwise.
+   * @docs-private
+   */
+  _dialogOpenedWithinPreviousTransitionTime(): boolean {
+    return new Date().getTime() - this._lastDialogOpenTime < _transitionTime;
   }
 
 }
