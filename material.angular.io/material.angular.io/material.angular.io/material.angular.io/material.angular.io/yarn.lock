@@ -168,17 +168,17 @@
   dependencies:
     tslib "^2.2.0"
 
-"@angular/cdk-experimental@^12.1.0":
-  version "12.1.0"
-  resolved "https://registry.yarnpkg.com/@angular/cdk-experimental/-/cdk-experimental-12.1.0.tgz#e4e0763b71736a92f93d63b1df1e34dcb7e4d904"
-  integrity sha512-FlFT5YP4ZNvBedxSYI8/tnTy3KjdoktBDm8vVLDQLJY1qJXuoLO6aoF+8Dlv9SucgF9g0Pj2IBNcPDtmt9D7pQ==
+"@angular/cdk-experimental@^12.1.1":
+  version "12.1.1"
+  resolved "https://registry.yarnpkg.com/@angular/cdk-experimental/-/cdk-experimental-12.1.1.tgz#5d760cefc1e7a633c2ca78f20941f840a4239bc5"
+  integrity sha512-troV5cZ5Ss5B9Grv61hvtOwqTHQmdA2/Kzm+9mrPIHNEimpFEfG5lATfGA2C3QFk9Cs0yloiXu39oEJYEqyuBA==
   dependencies:
     tslib "^2.2.0"
 
-"@angular/cdk@^12.1.0":
-  version "12.1.0"
-  resolved "https://registry.yarnpkg.com/@angular/cdk/-/cdk-12.1.0.tgz#0d3496b308e43743b7fd8e899ba5b0ad4d21a6bf"
-  integrity sha512-AkkhEveUDwblJyTd1NvuP7eH7Pwj14hyMmMnzfKBcaImvsSXK/z0T58wzp5vVYUtAQc05MuojwfsJQCev5QwNg==
+"@angular/cdk@^12.1.1":
+  version "12.1.1"
+  resolved "https://registry.yarnpkg.com/@angular/cdk/-/cdk-12.1.1.tgz#83b7ec7d5b97a003d31ea0dd25403e890d5e06ea"
+  integrity sha512-MJENa8qmfLAr6t59u1+mEC2YPbCn4n3vsY6k8fKyf+ILXwwGHWNZlYblaRMBjrF/crSx1Kd5vb30RCqIcNTGsA==
   dependencies:
     tslib "^2.2.0"
   optionalDependencies:
@@ -244,8 +244,8 @@
     tslib "^2.2.0"
 
 "@angular/components-examples@angular/material2-docs-content#12.1.x":
-  version "12.1.0-sha-4ea82719d"
-  resolved "https://codeload.github.com/angular/material2-docs-content/tar.gz/22388a6e6a5fa06609a8aee9a18922afd4f42519"
+  version "12.1.1-sha-b1974ee00"
+  resolved "https://codeload.github.com/angular/material2-docs-content/tar.gz/4b6646c4a7c4c623df53db75a175774a6b9158b8"
   dependencies:
     tslib "^2.2.0"
 
@@ -263,10 +263,10 @@
   dependencies:
     tslib "^2.2.0"
 
-"@angular/google-maps@^12.1.0":
-  version "12.1.0"
-  resolved "https://registry.yarnpkg.com/@angular/google-maps/-/google-maps-12.1.0.tgz#6ceab6569abefe99f918d92331dd692f803500ea"
-  integrity sha512-2VMQxs4gLqPVSsUl6749TI6NJLy+cOQqTcc/Qoo/dAb/W+u9rCpJKJ8X7w9o06lDq7TThyz/AkYkC0HJ8tGmVQ==
+"@angular/google-maps@^12.1.1":
+  version "12.1.1"
+  resolved "https://registry.yarnpkg.com/@angular/google-maps/-/google-maps-12.1.1.tgz#8f861b2dcb6976372d14e1182e0ec97f0abb6bc6"
+  integrity sha512-ZUO0yxu8+edHM4MrucK5EpqYE5pH4JkDZPF7DVsjlV1pN0ndKVFTbOuzjVDYsRO5VMhSMfhZF5pxAYkdj1DIkw==
   dependencies:
     "@types/googlemaps" "^3.43.1"
     tslib "^2.2.0"
@@ -280,24 +280,24 @@
     glob "7.1.7"
     yargs "^17.0.0"
 
-"@angular/material-experimental@^12.1.0":
-  version "12.1.0"
-  resolved "https://registry.yarnpkg.com/@angular/material-experimental/-/material-experimental-12.1.0.tgz#71032fc6c7f383f0c75a6ce7889803ee062c235b"
-  integrity sha512-pNfKVXypgzDUuBYOMhkrTgyIDCUth+oL/zYGZBKHjI+s/sxtKv3LmmUtMbTPcGiIcDFgpNULsasOPP8X9yQPvg==
+"@angular/material-experimental@^12.1.1":
+  version "12.1.1"
+  resolved "https://registry.yarnpkg.com/@angular/material-experimental/-/material-experimental-12.1.1.tgz#611c4434e067391aa77ca419a1c7db849b0e3a0d"
+  integrity sha512-Pok4WIzcm+mm5SCn/wtkuElfS0K5OT8ZHamLjYQbXhKYw4zyxJ1lfKiek+F8q+4d/G/aC5n2R5n8GWJwX+g3Lg==
   dependencies:
     tslib "^2.2.0"
 
-"@angular/material-moment-adapter@^12.1.0":
-  version "12.1.0"
-  resolved "https://registry.yarnpkg.com/@angular/material-moment-adapter/-/material-moment-adapter-12.1.0.tgz#e44cd282fb110048d526268c85f79be4cb86e87f"
-  integrity sha512-Mq4Sx8uXVurEuMZYhdrcd1BhQiaRw9qR2vmJu0YX0nyX44y6ROJraQdXjro6GyrTE/bSMp0v5xXMQOm5So+j4Q==
+"@angular/material-moment-adapter@^12.1.1":
+  version "12.1.1"
+  resolved "https://registry.yarnpkg.com/@angular/material-moment-adapter/-/material-moment-adapter-12.1.1.tgz#57ebd920711f1c568e31a3ae1994f1d08fbf2b73"
+  integrity sha512-YQs4BFiQ0rCYhWzcPJ6IS6zJRM+iKAjAEo/Z89G4tR1vekA4Fl95PBs9DVoCLS2uptOPL99tnUMqeNtFjUM6wQ==
   dependencies:
     tslib "^2.2.0"
 
-"@angular/material@^12.1.0":
-  version "12.1.0"
-  resolved "https://registry.yarnpkg.com/@angular/material/-/material-12.1.0.tgz#6bd0ce14f5bb491ba332104b9c329a7bc1382384"
-  integrity sha512-YxR09gfqfGmJysySlUWqcGYPWBVNTu2Cb48z1nxTFz13A4idw3qZa1NdHKPxi0f53x1koEd9DxKnx8M1XwvmSg==
+"@angular/material@^12.1.1":
+  version "12.1.1"
+  resolved "https://registry.yarnpkg.com/@angular/material/-/material-12.1.1.tgz#9b01743b54b68ef8a4f8904032caef625403df70"
+  integrity sha512-q2vhbVQfjr+88beqCotCVlaPRyy9y2O2asiR3+0BU9OJ1DjTo1QpBmMpck5InP7Es49t9RTk9RzzC0t18p45yA==
   dependencies:
     tslib "^2.2.0"
 
@@ -322,10 +322,10 @@
   dependencies:
     tslib "^2.2.0"
 
-"@angular/youtube-player@^12.1.0":
-  version "12.1.0"
-  resolved "https://registry.yarnpkg.com/@angular/youtube-player/-/youtube-player-12.1.0.tgz#8e14a51fcc2abb5520d3ba6a33212abf60074283"
-  integrity sha512-D8HfBxrGkACuYRbq58Dl+ZgembapPMfDY2naR47N9GHD2v5lbj4kqGHJlKrfJGz6TGky/X0kddrfk2Psrh4CGA==
+"@angular/youtube-player@^12.1.1":
+  version "12.1.1"
+  resolved "https://registry.yarnpkg.com/@angular/youtube-player/-/youtube-player-12.1.1.tgz#af62d83d6e4b666bc450f855c17006bad8ea515e"
+  integrity sha512-qERUwfQ8akv3xsdLhfyI3UtggA+PNMQAyg5HvYq0LvZ34+7Fj8J/6zYEExT1y/O7NH8Q50W6mIqF3lRD7nDoQQ==
   dependencies:
     "@types/youtube" "^0.0.42"
     tslib "^2.2.0"
