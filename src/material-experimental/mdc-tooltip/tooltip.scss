@@ -1,7 +1,4 @@
-@use 'sass:map';
 @use '@material/tooltip/tooltip';
-@use '@material/tooltip/tooltip-theme';
-@use '../../material/core/theming/palette';
 
 // Only include the structural styles, because we handle the animation ourselves.
 @include tooltip.core-styles($query: structure);
@@ -14,8 +11,4 @@
   // depending on the state of the overlay. For tooltips the overlay panel should never enable
   // pointer events. To overwrite the inline CSS from the overlay reference `!important` is needed.
   pointer-events: none !important;
-
-  @include tooltip-theme.fill-color(
-    map.get(palette.$light-theme-background-palette, tooltip)
-  );
 }
