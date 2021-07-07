@@ -61,6 +61,10 @@ $mat-progress-bar-piece-animation-duration: 250ms !default;
     transform-origin: top left;
     transition: transform $mat-progress-bar-piece-animation-duration ease;
 
+    // Prevents elements from extra repainting due to `transition`.
+    will-change: transform;
+    z-index: 1;
+
     @include cdk-high-contrast(active, off) {
       border-top: solid $mat-progress-bar-height;
     }
