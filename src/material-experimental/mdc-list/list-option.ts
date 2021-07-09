@@ -32,6 +32,7 @@ import {
   RippleGlobalOptions,
   ThemePalette,
 } from '@angular/material-experimental/mdc-core';
+import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 import {MatListBase, MatListItemBase} from './list-base';
 import {LIST_OPTION, ListOption, MatListOptionCheckboxPosition} from './list-option-types';
 
@@ -79,6 +80,7 @@ export interface SelectionList extends MatListBase {
     '[class.mdc-list-item--with-trailing-checkbox]': '_hasCheckboxAt("after")',
     '[class.mat-accent]': 'color !== "primary" && color !== "warn"',
     '[class.mat-warn]': 'color === "warn"',
+    '[class._mat-animation-noopable]': '_noopAnimations',
     '(blur)': '_handleBlur()',
   },
   templateUrl: 'list-option.html',
@@ -144,8 +146,9 @@ export class MatListOption extends MatListItemBase implements ListOption, OnInit
       platform: Platform,
       @Inject(SELECTION_LIST) public _selectionList: SelectionList,
       private _changeDetectorRef: ChangeDetectorRef,
-      @Optional() @Inject(MAT_RIPPLE_GLOBAL_OPTIONS) globalRippleOptions?: RippleGlobalOptions) {
-    super(element, ngZone, _selectionList, platform, globalRippleOptions);
+      @Optional() @Inject(MAT_RIPPLE_GLOBAL_OPTIONS) globalRippleOptions?: RippleGlobalOptions,
+      @Optional() @Inject(ANIMATION_MODULE_TYPE) animationMode?: string) {
+    super(element, ngZone, _selectionList, platform, globalRippleOptions, animationMode);
 
     // By default, we mark all options as unselected. The MDC list foundation will
     // automatically update the attribute based on selection. Note that we need to
