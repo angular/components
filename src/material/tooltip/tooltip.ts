@@ -43,8 +43,8 @@ import {
   AfterViewInit,
 } from '@angular/core';
 import {DOCUMENT} from '@angular/common';
-import {Observable, Subject} from 'rxjs';
-import {take, takeUntil} from 'rxjs/operators';
+import {Observable, Subject, Subscription} from 'rxjs';
+import {take} from 'rxjs/operators';
 
 import {matTooltipAnimations} from './tooltip-animations';
 
@@ -250,8 +250,12 @@ export abstract class _MatTooltipBase<T extends _TooltipComponentBase> implement
   /** Timer started at the last `touchstart` event. */
   private _touchstartTimeout: number;
 
-  /** Emits when the component is destroyed. */
-  private readonly _destroyed = new Subject<void>();
+  private _updatePositionOnDirectionChangeSubscription: Subscription | undefined = undefined;
+  private _detachAfterTooltipIsHiddenSubscription: Subscription | undefined = undefined;
+  private _showOrHideOnFocusChangeSubscription: Subscription | undefined = undefined;
+  private _updatePositionOnChangeSubscription: Subscription | undefined = undefined;
+  private _detachOnOverlayCloseSubscription: Subscription | undefined = undefined;
+  private _updatePositionOnMessageChangeSubscription: Subscription | undefined = undefined;
 
   constructor(
     private _overlay: Overlay,
@@ -280,11 +284,12 @@ export abstract class _MatTooltipBase<T extends _TooltipComponentBase> implement
       }
     }
 
-    _dir.change.pipe(takeUntil(this._destroyed)).subscribe(() => {
-      if (this._overlayRef) {
-        this._updatePosition(this._overlayRef);
-      }
-    });
+    this._updatePositionOnDirectionChangeSubscription = _dir.change
+        .subscribe(() => {
+            if (this._overlayRef) {
+                this._updatePosition(this._overlayRef);
+            }
+        });
 
     _ngZone.runOutsideAngular(() => {
       _elementRef.nativeElement.addEventListener('keydown', this._handleKeydown);
@@ -296,8 +301,7 @@ export abstract class _MatTooltipBase<T extends _TooltipComponentBase> implement
     this._viewInitialized = true;
     this._setupPointerEnterEventsIfNeeded();
 
-    this._focusMonitor.monitor(this._elementRef)
-      .pipe(takeUntil(this._destroyed))
+    this._showOrHideOnFocusChangeSubscription = this._focusMonitor.monitor(this._elementRef)
       .subscribe(origin => {
         // Note that the focus monitor runs outside the Angular zone.
         if (!origin) {
@@ -328,8 +332,12 @@ export abstract class _MatTooltipBase<T extends _TooltipComponentBase> implement
     });
     this._passiveListeners.length = 0;
 
-    this._destroyed.next();
-    this._destroyed.complete();
+    this._updatePositionOnDirectionChangeSubscription?.unsubscribe();
+    this._detachAfterTooltipIsHiddenSubscription?.unsubscribe();
+    this._showOrHideOnFocusChangeSubscription?.unsubscribe();
+    this._updatePositionOnChangeSubscription?.unsubscribe();
+    this._detachOnOverlayCloseSubscription?.unsubscribe();
+    this._updatePositionOnMessageChangeSubscription?.unsubscribe();
 
     this._ariaDescriber.removeDescription(nativeElement, this.message, 'tooltip');
     this._focusMonitor.stopMonitoring(nativeElement);
@@ -347,9 +355,12 @@ export abstract class _MatTooltipBase<T extends _TooltipComponentBase> implement
     this._portal = this._portal ||
        new ComponentPortal(this._tooltipComponent, this._viewContainerRef);
     this._tooltipInstance = overlayRef.attach(this._portal).instance;
-    this._tooltipInstance.afterHidden()
-      .pipe(takeUntil(this._destroyed))
-      .subscribe(() => this._detach());
+
+    this._detachAfterTooltipIsHiddenSubscription?.unsubscribe();
+    this._detachAfterTooltipIsHiddenSubscription = this._tooltipInstance
+        .afterHidden()
+        .subscribe(() => this._detach());
+
     this._setTooltipClass(this._tooltipClass);
     this._updateTooltipMessage();
     this._tooltipInstance!.show(delay);
@@ -401,7 +412,7 @@ export abstract class _MatTooltipBase<T extends _TooltipComponentBase> implement
                          .withViewportMargin(this._viewportMargin)
                          .withScrollableContainers(scrollableAncestors);
 
-    strategy.positionChanges.pipe(takeUntil(this._destroyed)).subscribe(change => {
+    this._updatePositionOnChangeSubscription = strategy.positionChanges.subscribe(change => {
       this._updateCurrentPositionClass(change.connectionPair);
 
       if (this._tooltipInstance) {
@@ -422,9 +433,8 @@ export abstract class _MatTooltipBase<T extends _TooltipComponentBase> implement
 
     this._updatePosition(this._overlayRef);
 
-    this._overlayRef.detachments()
-      .pipe(takeUntil(this._destroyed))
-      .subscribe(() => this._detach());
+    this._detachOnOverlayCloseSubscription = this._overlayRef.detachments()
+        .subscribe(() => this._detach());
 
     return this._overlayRef;
   }
@@ -528,14 +538,13 @@ export abstract class _MatTooltipBase<T extends _TooltipComponentBase> implement
       this._tooltipInstance.message = this.message;
       this._tooltipInstance._markForCheck();
 
-      this._ngZone.onMicrotaskEmpty.pipe(
-        take(1),
-        takeUntil(this._destroyed)
-      ).subscribe(() => {
-        if (this._tooltipInstance) {
-          this._overlayRef!.updatePosition();
-        }
-      });
+      this._updatePositionOnMessageChangeSubscription = this._ngZone.onMicrotaskEmpty
+          .pipe(take(1))
+          .subscribe(() => {
+              if (this._tooltipInstance) {
+                  this._overlayRef!.updatePosition();
+              }
+          });
     }
   }
 
