@@ -7,7 +7,12 @@
  */
 
 import {Direction, Directionality} from '@angular/cdk/bidi';
-import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
+import {
+  BooleanInput,
+  NumberInput,
+  coerceBooleanProperty,
+  coerceNumberProperty,
+} from '@angular/cdk/coercion';
 import {ESCAPE, hasModifierKey} from '@angular/cdk/keycodes';
 import {TemplatePortal} from '@angular/cdk/portal';
 import {
@@ -100,6 +105,9 @@ export class CdkOverlayOrigin {
 export class CdkConnectedOverlay implements OnDestroy, OnChanges {
   private _overlayRef: OverlayRef;
   private _templatePortal: TemplatePortal;
+  private _viewportMargin = 0;
+  private _open = false;
+  private _disableClose = false;
   private _hasBackdrop = false;
   private _lockPosition = false;
   private _growAfterOpen = false;
@@ -131,7 +139,7 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
   @Input('cdkConnectedOverlayOffsetX')
   get offsetX(): number { return this._offsetX; }
   set offsetX(offsetX: number) {
-    this._offsetX = offsetX;
+    this._offsetX = coerceNumberProperty(offsetX);
 
     if (this._position) {
       this._updatePositionStrategy(this._position);
@@ -142,7 +150,7 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
   @Input('cdkConnectedOverlayOffsetY')
   get offsetY() { return this._offsetY; }
   set offsetY(offsetY: number) {
-    this._offsetY = offsetY;
+    this._offsetY = coerceNumberProperty(offsetY);
 
     if (this._position) {
       this._updatePositionStrategy(this._position);
@@ -168,16 +176,22 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
   @Input('cdkConnectedOverlayPanelClass') panelClass: string | string[];
 
   /** Margin between the overlay and the viewport edges. */
-  @Input('cdkConnectedOverlayViewportMargin') viewportMargin: number = 0;
+  @Input('cdkConnectedOverlayViewportMargin')
+  get viewportMargin(): number { return this._viewportMargin; }
+  set viewportMargin(value: number) { this._viewportMargin = coerceNumberProperty(value); }
 
   /** Strategy to be used when handling scroll events while the overlay is open. */
   @Input('cdkConnectedOverlayScrollStrategy') scrollStrategy: ScrollStrategy;
 
   /** Whether the overlay is open. */
-  @Input('cdkConnectedOverlayOpen') open: boolean = false;
+  @Input('cdkConnectedOverlayOpen')
+  get open() { return this._open; }
+  set open(value: any) { this._open = coerceBooleanProperty(value); }
 
   /** Whether the overlay can be closed by user interaction. */
-  @Input('cdkConnectedOverlayDisableClose') disableClose: boolean = false;
+  @Input('cdkConnectedOverlayDisableClose')
+  get disableClose() { return this._disableClose; }
+  set disableClose(value: any) { this._disableClose = coerceBooleanProperty(value); }
 
   /** CSS selector which to set the transform origin. */
   @Input('cdkConnectedOverlayTransformOriginOn') transformOriginSelector: string;
@@ -428,6 +442,11 @@ export class CdkConnectedOverlay implements OnDestroy, OnChanges {
     this._positionSubscription.unsubscribe();
   }
 
+  static ngAcceptInputType_offsetX: NumberInput;
+  static ngAcceptInputType_offsetY: NumberInput;
+  static ngAcceptInputType_viewportMargin: NumberInput;
+  static ngAcceptInputType_open: BooleanInput;
+  static ngAcceptInputType_disableClose: BooleanInput;
   static ngAcceptInputType_hasBackdrop: BooleanInput;
   static ngAcceptInputType_lockPosition: BooleanInput;
   static ngAcceptInputType_flexibleDimensions: BooleanInput;

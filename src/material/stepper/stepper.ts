@@ -7,6 +7,7 @@
  */
 
 import {Directionality} from '@angular/cdk/bidi';
+import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
 import {
   CdkStep,
   CdkStepper,
@@ -190,7 +191,10 @@ export class MatStepper extends CdkStepper implements AfterContentInit {
   @Output() readonly animationDone: EventEmitter<void> = new EventEmitter<void>();
 
   /** Whether ripples should be disabled for the step headers. */
-  @Input() disableRipple: boolean;
+  @Input()
+  get disableRipple(): boolean { return this._disableRipple; }
+  set disableRipple(value: boolean) { this._disableRipple = coerceBooleanProperty(value); }
+  private _disableRipple: boolean;
 
   /** Theme color for all of the steps in stepper. */
   @Input() color: ThemePalette;
@@ -243,4 +247,6 @@ export class MatStepper extends CdkStepper implements AfterContentInit {
   _stepIsNavigable(index: number, step: MatStep): boolean {
     return step.completed || this.selectedIndex === index || !this.linear;
   }
+
+  static ngAcceptInputType_disableRipple: BooleanInput;
 }

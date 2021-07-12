@@ -90,7 +90,10 @@ export interface MatSliderDragEvent {
 })
 export class MatSliderVisualThumb implements AfterViewInit, OnDestroy {
   /** Whether the slider displays a numeric value label upon pressing the thumb. */
-  @Input() discrete: boolean;
+  @Input()
+  get discrete(): boolean { return this._discrete; }
+  set discrete(value: boolean) { this._discrete = coerceBooleanProperty(value); }
+  private _discrete: boolean;
 
   /** Indicates which slider thumb this input corresponds to. */
   @Input() thumbPosition: Thumb;
@@ -99,7 +102,10 @@ export class MatSliderVisualThumb implements AfterViewInit, OnDestroy {
   @Input() valueIndicatorText: string;
 
   /** Whether ripples on the slider thumb should be disabled. */
-  @Input() disableRipple: boolean = false;
+  @Input()
+  get disableRipple(): boolean { return this._disableRipple; }
+  set disableRipple(value: boolean) { this._disableRipple = coerceBooleanProperty(value); }
+  private _disableRipple = false;
 
   /** The MatRipple for this slider thumb. */
   @ViewChild(MatRipple) private readonly _ripple: MatRipple;
@@ -260,6 +266,9 @@ export class MatSliderVisualThumb implements AfterViewInit, OnDestroy {
   _getKnob(): HTMLElement {
     return this._knob.nativeElement;
   }
+
+  static ngAcceptInputType_discrete: BooleanInput;
+  static ngAcceptInputType_disableRipple: BooleanInput;
 }
 
 /**

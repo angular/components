@@ -358,7 +358,6 @@ export class MatCalendarBody implements OnChanges, OnDestroy {
 
     return null;
   }
-
 }
 
 /** Checks whether a node is a table cell element. */

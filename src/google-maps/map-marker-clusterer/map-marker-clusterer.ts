@@ -25,6 +25,13 @@ import {
   SimpleChanges,
   ViewEncapsulation
 } from '@angular/core';
+import {
+  BooleanInput,
+  NumberInput,
+  coerceArray,
+  coerceBooleanProperty,
+  coerceNumberProperty
+} from '@angular/cdk/coercion';
 import {Observable, Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 
@@ -59,18 +66,25 @@ export class MapMarkerClusterer implements OnInit, AfterContentInit, OnChanges, 
   ariaLabelFn: AriaLabelFn = () => ''
 
   @Input()
-  set averageCenter(averageCenter: boolean) {
-    this._averageCenter = averageCenter;
+  set averageCenter(averageCenter: boolean | undefined) {
+    this._averageCenter = averageCenter === undefined
+      ? averageCenter
+      : coerceBooleanProperty(averageCenter);
   }
-  private _averageCenter: boolean;
-
-  @Input() batchSize?: number;
+  private _averageCenter: boolean | undefined;
 
   @Input()
-  set batchSizeIE(batchSizeIE: number) {
-    this._batchSizeIE = batchSizeIE;
+  get batchSize(): number | undefined { return this._batchSize; }
+  set batchSize(batchSize: any) {
+    this._batchSize = batchSize === undefined ? batchSize : coerceNumberProperty(batchSize);
   }
-  private _batchSizeIE: number;
+  private _batchSize?: number;
+
+  @Input()
+  set batchSizeIE(batchSizeIE: number | undefined) {
+    this._batchSizeIE = batchSizeIE === undefined ? batchSizeIE : coerceNumberProperty(batchSizeIE);
+  }
+  private _batchSizeIE?: number;
 
   @Input()
   set calculator(calculator: Calculator) {
@@ -85,22 +99,26 @@ export class MapMarkerClusterer implements OnInit, AfterContentInit, OnChanges, 
   private _clusterClass: string;
 
   @Input()
-  set enableRetinaIcons(enableRetinaIcons: boolean) {
-    this._enableRetinaIcons = enableRetinaIcons;
+  set enableRetinaIcons(enableRetinaIcons: boolean | undefined) {
+    this._enableRetinaIcons = enableRetinaIcons === undefined
+      ? enableRetinaIcons
+      : coerceBooleanProperty(enableRetinaIcons);
   }
-  private _enableRetinaIcons: boolean;
+  private _enableRetinaIcons: boolean | undefined;
 
   @Input()
-  set gridSize(gridSize: number) {
-    this._gridSize = gridSize;
+  set gridSize(gridSize: number | undefined) {
+    this._gridSize = gridSize === undefined ? gridSize : coerceNumberProperty(gridSize);
   }
-  private _gridSize: number;
+  private _gridSize: number | undefined;
 
   @Input()
-  set ignoreHidden(ignoreHidden: boolean) {
-    this._ignoreHidden = ignoreHidden;
+  set ignoreHidden(ignoreHidden: boolean | undefined) {
+    this._ignoreHidden = ignoreHidden === undefined
+      ? ignoreHidden
+      : coerceBooleanProperty(ignoreHidden);
   }
-  private _ignoreHidden: boolean;
+  private _ignoreHidden: boolean | undefined;
 
   @Input()
   set imageExtension(imageExtension: string) {
@@ -115,20 +133,20 @@ export class MapMarkerClusterer implements OnInit, AfterContentInit, OnChanges, 
   private _imagePath: string;
 
   @Input()
-  set imageSizes(imageSizes: number[]) {
-    this._imageSizes = imageSizes;
+  set imageSizes(imageSizes: number | number[] | undefined) {
+    this._imageSizes = imageSizes === undefined ? imageSizes : coerceArray(imageSizes);
   }
-  private _imageSizes: number[];
+  private _imageSizes: number[] | undefined;
 
   @Input()
-  set maxZoom(maxZoom: number) {
-    this._maxZoom = maxZoom;
+  set maxZoom(maxZoom: number | undefined) {
+    this._maxZoom = maxZoom === undefined ? maxZoom : coerceNumberProperty(maxZoom);
   }
-  private _maxZoom: number;
+  private _maxZoom: number | undefined;
 
   @Input()
   set minimumClusterSize(minimumClusterSize: number) {
-    this._minimumClusterSize = minimumClusterSize;
+    this._minimumClusterSize = coerceNumberProperty(minimumClusterSize);
   }
   private _minimumClusterSize: number;
 
@@ -145,14 +163,14 @@ export class MapMarkerClusterer implements OnInit, AfterContentInit, OnChanges, 
   private _title: string;
 
   @Input()
-  set zIndex(zIndex: number) {
-    this._zIndex = zIndex;
+  set zIndex(zIndex: number | undefined) {
+    this._zIndex = zIndex === undefined ? zIndex : coerceNumberProperty(zIndex);
   }
-  private _zIndex: number;
+  private _zIndex: number | undefined;
 
   @Input()
   set zoomOnClick(zoomOnClick: boolean) {
-    this._zoomOnClick = zoomOnClick;
+    this._zoomOnClick = coerceBooleanProperty(zoomOnClick);
   }
   private _zoomOnClick: boolean;
 
@@ -480,4 +498,15 @@ export class MapMarkerClusterer implements OnInit, AfterContentInit, OnChanges, 
       }
     }
   }
+
+  static ngAcceptInputType_averageCenter: BooleanInput;
+  static ngAcceptInputType_batchSize: NumberInput;
+  static ngAcceptInputType_batchSizeIE: NumberInput;
+  static ngAcceptInputType_enableRetinaIcons: BooleanInput;
+  static ngAcceptInputType_gridSize: NumberInput;
+  static ngAcceptInputType_ignoreHidden: BooleanInput;
+  static ngAcceptInputType_maxZoom: NumberInput;
+  static ngAcceptInputType_minimumClusterSize: NumberInput;
+  static ngAcceptInputType_zIndex: NumberInput;
+  static ngAcceptInputType_zoomOnClick: BooleanInput;
 }

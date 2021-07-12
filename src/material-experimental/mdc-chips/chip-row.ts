@@ -7,7 +7,7 @@
  */
 
 import {Directionality} from '@angular/cdk/bidi';
-import {BooleanInput} from '@angular/cdk/coercion';
+import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
 import {BACKSPACE, DELETE} from '@angular/cdk/keycodes';
 import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 import {
@@ -78,7 +78,10 @@ export class MatChipRow extends MatChip implements AfterContentInit, AfterViewIn
   GridKeyManagerRow<HTMLElement> {
   protected override basicChipAttrName = 'mat-basic-chip-row';
 
-  @Input() editable: boolean = false;
+  @Input()
+  get editable(): boolean { return this._editable; }
+  set editable(value: boolean) { this._editable = coerceBooleanProperty(value); }
+  private _editable = false;
 
   /** Emitted when the chip is edited. */
   @Output() readonly edited: EventEmitter<MatChipEditedEvent> =

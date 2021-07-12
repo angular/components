@@ -1,5 +1,10 @@
 {
   "extends": "../bazel-tsconfig-build.json",
+  "references": [
+    {
+      "path": "../cdk/tsconfig-tests.json"
+    }
+  ],
   "compilerOptions": {
     "baseUrl": ".",
     "outDir": "../../dist/packages/youtube-player",
@@ -13,7 +18,10 @@
     "target": "es5",
     "types": ["jasmine"],
     "experimentalDecorators": true,
-    "emitDecoratorMetadata": true
+    "emitDecoratorMetadata": true,
+    "paths": {
+      "@angular/cdk/*": ["../../dist/packages/cdk/*"]
+    }
   },
   "include": [
     "**/*.ts",

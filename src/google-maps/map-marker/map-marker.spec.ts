@@ -44,9 +44,9 @@ describe('MapMarker', () => {
       ...DEFAULT_MARKER_OPTIONS,
       title: undefined,
       label: undefined,
-      clickable: undefined,
+      clickable: false,
       icon: undefined,
-      visible: undefined,
+      visible: false,
       map: mapSpy,
     });
   });
@@ -83,7 +83,7 @@ describe('MapMarker', () => {
       label: 'marker label',
       clickable: false,
       icon: 'icon name',
-      visible: undefined
+      visible: false
     };
     const markerSpy = createMarkerSpy(options);
     const markerConstructorSpy = createMarkerConstructorSpy(markerSpy).and.callThrough();
@@ -110,7 +110,7 @@ describe('MapMarker', () => {
       clickable: true,
       icon: 'icon name',
       map: mapSpy,
-      visible: undefined
+      visible: false
     };
     const markerSpy = createMarkerSpy(options);
     const markerConstructorSpy = createMarkerConstructorSpy(markerSpy).and.callThrough();

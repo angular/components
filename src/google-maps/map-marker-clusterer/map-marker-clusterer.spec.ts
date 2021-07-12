@@ -80,11 +80,11 @@ describe('MapMarkerClusterer', () => {
       imagePath: undefined,
       imageSizes: undefined,
       maxZoom: undefined,
-      minimumClusterSize: undefined,
+      minimumClusterSize: 0,
       styles: undefined,
       title: undefined,
       zIndex: undefined,
-      zoomOnClick: undefined,
+      zoomOnClick: false,
     });
   });
 

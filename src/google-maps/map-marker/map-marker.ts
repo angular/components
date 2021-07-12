@@ -19,6 +19,7 @@ import {
   OnChanges,
   SimpleChanges,
 } from '@angular/core';
+import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
 import {Observable} from 'rxjs';
 
 import {GoogleMap} from '../google-map/google-map';
@@ -81,7 +82,7 @@ export class MapMarker implements OnInit, OnChanges, OnDestroy, MapAnchorPoint {
    */
   @Input()
   set clickable(clickable: boolean) {
-    this._clickable = clickable;
+    this._clickable = coerceBooleanProperty(clickable);
   }
   private _clickable: boolean;
 
@@ -111,7 +112,7 @@ export class MapMarker implements OnInit, OnChanges, OnDestroy, MapAnchorPoint {
    */
   @Input()
   set visible(value: boolean) {
-    this._visible = value;
+    this._visible = coerceBooleanProperty(value);
   }
   private _visible: boolean;
 
@@ -471,4 +472,7 @@ export class MapMarker implements OnInit, OnChanges, OnDestroy, MapAnchorPoint {
       }
     }
   }
+
+  static ngAcceptInputType_clickable: BooleanInput;
+  static ngAcceptInputType_visible: BooleanInput;
 }

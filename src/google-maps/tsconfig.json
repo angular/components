@@ -4,7 +4,9 @@
   "compilerOptions": {
     "rootDir": "..",
     "baseUrl": ".",
-    "paths": {},
+    "paths": {
+      "@angular/cdk/*": ["../cdk/*"]
+    },
     "types": [
       "jasmine"
     ]

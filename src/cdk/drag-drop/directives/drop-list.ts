@@ -8,10 +8,10 @@
 
 import {
   BooleanInput,
-  coerceArray,
-  coerceNumberProperty,
-  coerceBooleanProperty,
   NumberInput,
+  coerceArray,
+  coerceBooleanProperty,
+  coerceNumberProperty,
 } from '@angular/cdk/coercion';
 import {
   ElementRef,

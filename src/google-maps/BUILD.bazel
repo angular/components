@@ -12,6 +12,7 @@ ng_module(
     ),
     deps = [
         "//src:dev_mode_types",
+        "//src/cdk/coercion",
         "@npm//@angular/common",
         "@npm//@angular/core",
         "@npm//@types/googlemaps",
