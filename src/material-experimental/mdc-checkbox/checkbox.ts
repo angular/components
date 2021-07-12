@@ -6,7 +6,12 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
+import {
+  BooleanInput,
+  NumberInput,
+  coerceBooleanProperty,
+  coerceNumberProperty,
+} from '@angular/cdk/coercion';
 import {
   AfterViewInit,
   Attribute,
@@ -111,7 +116,10 @@ export class MatCheckbox extends _MatCheckboxBase implements AfterViewInit, OnDe
   @Input() name: string|null = null;
 
   /** The `tabindex` attribute to use for the input element. */
-  @Input() tabIndex: number;
+  @Input()
+  get tabIndex(): number { return this._tabIndex; }
+  set tabIndex(value: number) { this._tabIndex = coerceNumberProperty(value); }
+  private _tabIndex: number;
 
   /** The `value` attribute to use for the input element */
   @Input() value: string;
@@ -397,6 +405,7 @@ export class MatCheckbox extends _MatCheckboxBase implements AfterViewInit, OnDe
     }
   }
 
+  static ngAcceptInputType_tabIndex: NumberInput;
   static ngAcceptInputType_checked: BooleanInput;
   static ngAcceptInputType_indeterminate: BooleanInput;
   static ngAcceptInputType_disabled: BooleanInput;

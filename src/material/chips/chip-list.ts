@@ -8,7 +8,12 @@
 
 import {FocusKeyManager} from '@angular/cdk/a11y';
 import {Directionality} from '@angular/cdk/bidi';
-import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
+import {
+  BooleanInput,
+  NumberInput,
+  coerceBooleanProperty,
+  coerceNumberProperty,
+} from '@angular/cdk/coercion';
 import {SelectionModel} from '@angular/cdk/collections';
 import {
   AfterContentInit,
@@ -285,8 +290,9 @@ export class MatChipList extends _MatChipListBase implements MatFormFieldControl
 
   @Input()
   set tabIndex(value: number) {
-    this._userTabIndex = value;
-    this._tabIndex = value;
+    const newValue = coerceNumberProperty(value);
+    this._userTabIndex = newValue;
+    this._tabIndex = newValue;
   }
 
   /** Combined stream of all of the child chips' selection change events. */
@@ -791,4 +797,5 @@ export class MatChipList extends _MatChipListBase implements MatFormFieldControl
   static ngAcceptInputType_required: BooleanInput;
   static ngAcceptInputType_disabled: BooleanInput;
   static ngAcceptInputType_selectable: BooleanInput;
+  static ngAcceptInputType_tabIndex: NumberInput;
 }

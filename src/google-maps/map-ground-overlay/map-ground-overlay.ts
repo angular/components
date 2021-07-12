@@ -10,6 +10,12 @@
 /// <reference types="googlemaps" />
 
 import {Directive, Input, NgZone, OnDestroy, OnInit, Output} from '@angular/core';
+import {
+  BooleanInput,
+  NumberInput,
+  coerceBooleanProperty,
+  coerceNumberProperty
+} from '@angular/cdk/coercion';
 import {BehaviorSubject, Observable, Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 
@@ -27,6 +33,7 @@ import {MapEventManager} from '../map-event-manager';
 })
 export class MapGroundOverlay implements OnInit, OnDestroy {
   private _eventManager = new MapEventManager(this._ngZone);
+  private _clickable = false;
 
   private readonly _opacity = new BehaviorSubject<number>(1);
   private readonly _url = new BehaviorSubject<string>('');
@@ -58,12 +65,14 @@ export class MapGroundOverlay implements OnInit, OnDestroy {
   }
 
   /** Whether the overlay is clickable */
-  @Input() clickable: boolean = false;
+  @Input()
+  get clickable() { return this._clickable; }
+  set clickable(value: any) { this._clickable = coerceBooleanProperty(value); }
 
   /** Opacity of the overlay. */
   @Input()
   set opacity(opacity: number) {
-    this._opacity.next(opacity);
+    this._opacity.next(coerceNumberProperty(opacity));
   }
 
   /**
@@ -189,4 +198,7 @@ export class MapGroundOverlay implements OnInit, OnDestroy {
       }
     }
   }
+
+  static ngAcceptInputType_clickable: BooleanInput;
+  static ngAcceptInputType_opacity: NumberInput;
 }

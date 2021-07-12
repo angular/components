@@ -22,7 +22,12 @@ import {
   Input,
 } from '@angular/core';
 import {Direction, Directionality} from '@angular/cdk/bidi';
-import {coerceNumberProperty, NumberInput} from '@angular/cdk/coercion';
+import {
+  BooleanInput,
+  NumberInput,
+  coerceBooleanProperty,
+  coerceNumberProperty,
+} from '@angular/cdk/coercion';
 import {ViewportRuler} from '@angular/cdk/scrolling';
 import {FocusKeyManager, FocusableOption} from '@angular/cdk/a11y';
 import {ENTER, SPACE, hasModifierKey} from '@angular/cdk/keycodes';
@@ -119,7 +124,9 @@ export abstract class MatPaginatedTabHeader implements AfterContentChecked, Afte
    * layout recalculations if it's known that pagination won't be required.
    */
   @Input()
-  disablePagination: boolean = false;
+  get disablePagination(): boolean { return this._disablePagination; }
+  set disablePagination(value: boolean) { this._disablePagination = coerceBooleanProperty(value); }
+  private _disablePagination = false;
 
   /** The index of the active tab. */
   get selectedIndex(): number { return this._selectedIndex; }
@@ -586,5 +593,6 @@ export abstract class MatPaginatedTabHeader implements AfterContentChecked, Afte
     return {maxScrollDistance, distance: this._scrollDistance};
   }
 
+  static ngAcceptInputType_disablePagination: BooleanInput;
   static ngAcceptInputType_selectedIndex: NumberInput;
 }

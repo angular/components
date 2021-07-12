@@ -8,9 +8,9 @@
 
 import {
   BooleanInput,
+  NumberInput,
   coerceBooleanProperty,
   coerceNumberProperty,
-  NumberInput
 } from '@angular/cdk/coercion';
 import {
   AfterContentChecked,
@@ -145,7 +145,9 @@ export abstract class _MatTabGroupBase extends _MatTabGroupMixinBase implements 
    * layout recalculations if it's known that pagination won't be required.
    */
   @Input()
-  disablePagination: boolean;
+  get disablePagination(): boolean { return this._disablePagination; }
+  set disablePagination(value: boolean) { this._disablePagination = coerceBooleanProperty(value); }
+  private _disablePagination: boolean;
 
   /** Background color of the tab group. */
   @Input()
@@ -416,7 +418,8 @@ export abstract class _MatTabGroupBase extends _MatTabGroupMixinBase implements 
   static ngAcceptInputType_animationDuration: NumberInput;
   static ngAcceptInputType_selectedIndex: NumberInput;
   static ngAcceptInputType_disableRipple: BooleanInput;
-  static ngAcceptInputType_contentTabIndex: BooleanInput;
+  static ngAcceptInputType_contentTabIndex: NumberInput;
+  static ngAcceptInputType_disablePagination: BooleanInput;
 }
 
 /**

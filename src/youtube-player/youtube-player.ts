@@ -25,7 +25,12 @@ import {
   PLATFORM_ID,
 } from '@angular/core';
 import {isPlatformBrowser} from '@angular/common';
-
+import {
+  BooleanInput,
+  NumberInput,
+  coerceBooleanProperty,
+  coerceNumberProperty
+} from '@angular/cdk/coercion';
 import {
   combineLatest,
   ConnectableObservable,
@@ -40,7 +45,6 @@ import {
   BehaviorSubject,
   fromEventPattern,
 } from 'rxjs';
-
 import {
   combineLatest as combineLatestOp,
   distinctUntilChanged,
@@ -125,7 +129,7 @@ export class YouTubePlayer implements AfterViewInit, OnDestroy, OnInit {
   @Input()
   get height(): number | undefined { return this._height.value; }
   set height(height: number | undefined) {
-    this._height.next(height || DEFAULT_PLAYER_HEIGHT);
+    this._height.next(coerceNumberProperty(height, DEFAULT_PLAYER_HEIGHT));
   }
   private readonly _height = new BehaviorSubject<number>(DEFAULT_PLAYER_HEIGHT);
 
@@ -133,21 +137,21 @@ export class YouTubePlayer implements AfterViewInit, OnDestroy, OnInit {
   @Input()
   get width(): number | undefined { return this._width.value; }
   set width(width: number | undefined) {
-    this._width.next(width || DEFAULT_PLAYER_WIDTH);
+    this._width.next(coerceNumberProperty(width, DEFAULT_PLAYER_WIDTH));
   }
   private readonly _width = new BehaviorSubject<number>(DEFAULT_PLAYER_WIDTH);
 
   /** The moment when the player is supposed to start playing */
   @Input()
   set startSeconds(startSeconds: number | undefined) {
-    this._startSeconds.next(startSeconds);
+    this._startSeconds.next(coerceNumberProperty(startSeconds));
   }
   private readonly _startSeconds = new BehaviorSubject<number | undefined>(undefined);
 
   /** The moment when the player is supposed to stop playing */
   @Input()
   set endSeconds(endSeconds: number | undefined) {
-    this._endSeconds.next(endSeconds);
+    this._endSeconds.next(coerceNumberProperty(endSeconds));
   }
   private readonly _endSeconds = new BehaviorSubject<number | undefined>(undefined);
 
@@ -175,7 +179,12 @@ export class YouTubePlayer implements AfterViewInit, OnDestroy, OnInit {
    * page. Set this to true if you don't want the `onYouTubeIframeAPIReady` field to be
    * set on the global window.
    */
-  @Input() showBeforeIframeApiLoads: boolean | undefined;
+  @Input()
+  get showBeforeIframeApiLoads(): boolean | undefined { return this._showBeforeIframeApiLoads; }
+  set showBeforeIframeApiLoads(value: boolean | undefined) {
+    this._showBeforeIframeApiLoads = coerceBooleanProperty(value);
+  }
+  private _showBeforeIframeApiLoads: boolean | undefined;
 
   /** Outputs are direct proxies from the player itself. */
   @Output() readonly ready: Observable<YT.PlayerEvent> =
@@ -554,6 +563,12 @@ export class YouTubePlayer implements AfterViewInit, OnDestroy, OnInit {
       takeUntil(this._destroyed)
     );
   }
+
+  static ngAcceptInputType_height: NumberInput;
+  static ngAcceptInputType_width: NumberInput;
+  static ngAcceptInputType_startSeconds: NumberInput;
+  static ngAcceptInputType_endSeconds: NumberInput;
+  static ngAcceptInputType_showBeforeIframeApiLoads: BooleanInput;
 }
 
 /** Listens to changes to the given width and height and sets it on the player. */

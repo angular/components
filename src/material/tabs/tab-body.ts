@@ -28,6 +28,7 @@ import {
 import {AnimationEvent} from '@angular/animations';
 import {TemplatePortal, CdkPortalOutlet} from '@angular/cdk/portal';
 import {Directionality, Direction} from '@angular/cdk/bidi';
+import {NumberInput, coerceNumberProperty} from '@angular/cdk/coercion';
 import {DOCUMENT} from '@angular/common';
 import {Subscription, Subject} from 'rxjs';
 import {matTabsAnimations} from './tabs-animations';
@@ -137,7 +138,10 @@ export abstract class _MatTabBodyBase implements OnInit, OnDestroy {
   @Input('content') _content: TemplatePortal;
 
   /** Position that will be used when the tab is immediately becoming visible after creation. */
-  @Input() origin: number | null;
+  @Input()
+  get origin(): number | null { return this._origin; }
+  set origin(value: number | null) { this._origin = coerceNumberProperty(value); }
+  private _origin: number | null;
 
   // Note that the default value will always be overwritten by `MatTabBody`, but we need one
   // anyway to prevent the animations module from throwing an error if the body is used on its own.
@@ -147,7 +151,7 @@ export abstract class _MatTabBodyBase implements OnInit, OnDestroy {
   /** The shifted index position of the tab body, where zero represents the active center tab. */
   @Input()
   set position(position: number) {
-    this._positionIndex = position;
+    this._positionIndex = coerceNumberProperty(position);
     this._computePositionAnimationState();
   }
 
@@ -237,6 +241,9 @@ export abstract class _MatTabBodyBase implements OnInit, OnDestroy {
 
     return 'right-origin-center';
   }
+
+  static ngAcceptInputType_origin: NumberInput;
+  static ngAcceptInputType_position: NumberInput;
 }
 
 /**

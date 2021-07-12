@@ -15,6 +15,7 @@ import {
   Optional,
 } from '@angular/core';
 import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
+import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
 
 /**
  * Possible states for a pseudo checkbox.
@@ -52,9 +53,14 @@ export type MatPseudoCheckboxState = 'unchecked' | 'checked' | 'indeterminate';
 export class MatPseudoCheckbox {
   /** Display state of the checkbox. */
   @Input() state: MatPseudoCheckboxState = 'unchecked';
+  private _disabled = false;
 
   /** Whether the checkbox is disabled. */
-  @Input() disabled: boolean = false;
+  @Input()
+  get disabled(): boolean { return this._disabled; }
+  set disabled(value: boolean) { this._disabled = coerceBooleanProperty(value, 0); }
 
   constructor(@Optional() @Inject(ANIMATION_MODULE_TYPE) public _animationMode?: string) { }
+
+  static ngAcceptInputType_disabled: BooleanInput;
 }
