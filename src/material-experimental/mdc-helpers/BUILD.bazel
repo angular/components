@@ -16,6 +16,7 @@ npm_sass_library(
         "@npm//@material/chips",
         "@npm//@material/circular-progress",
         "@npm//@material/data-table",
+        "@npm//@material/density",
         "@npm//@material/dialog",
         "@npm//@material/fab",
         "@npm//@material/form-field",
