@@ -19,13 +19,14 @@ export declare abstract class _MatTabBodyBase implements OnInit, OnDestroy {
     animationDuration: string;
     origin: number | null;
     set position(position: number);
+    preserveContent: boolean;
     constructor(_elementRef: ElementRef<HTMLElement>, _dir: Directionality, changeDetectorRef: ChangeDetectorRef);
     _getLayoutDirection(): Direction;
     _isCenterPosition(position: MatTabBodyPositionState | string): boolean;
     _onTranslateTabStarted(event: AnimationEvent): void;
     ngOnDestroy(): void;
     ngOnInit(): void;
-    static ɵdir: i0.ɵɵDirectiveDeclaration<_MatTabBodyBase, never, never, { "_content": "content"; "origin": "origin"; "animationDuration": "animationDuration"; "position": "position"; }, { "_onCentering": "_onCentering"; "_beforeCentering": "_beforeCentering"; "_afterLeavingCenter": "_afterLeavingCenter"; "_onCentered": "_onCentered"; }, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<_MatTabBodyBase, never, never, { "_content": "content"; "origin": "origin"; "animationDuration": "animationDuration"; "preserveContent": "preserveContent"; "position": "position"; }, { "_onCentering": "_onCentering"; "_beforeCentering": "_beforeCentering"; "_afterLeavingCenter": "_afterLeavingCenter"; "_onCentered": "_onCentered"; }, never>;
     static ɵfac: i0.ɵɵFactoryDeclaration<_MatTabBodyBase, [null, { optional: true; }, null]>;
 }
 
@@ -48,6 +49,7 @@ export declare abstract class _MatTabGroupBase extends _MatTabGroupMixinBase imp
     set dynamicHeight(value: boolean);
     readonly focusChange: EventEmitter<MatTabChangeEvent>;
     headerPosition: MatTabHeaderPosition;
+    preserveContent: boolean;
     get selectedIndex(): number | null;
     set selectedIndex(value: number | null);
     readonly selectedIndexChange: EventEmitter<number>;
@@ -71,7 +73,7 @@ export declare abstract class _MatTabGroupBase extends _MatTabGroupMixinBase imp
     static ngAcceptInputType_disableRipple: BooleanInput;
     static ngAcceptInputType_dynamicHeight: BooleanInput;
     static ngAcceptInputType_selectedIndex: NumberInput;
-    static ɵdir: i0.ɵɵDirectiveDeclaration<_MatTabGroupBase, never, never, { "dynamicHeight": "dynamicHeight"; "selectedIndex": "selectedIndex"; "headerPosition": "headerPosition"; "animationDuration": "animationDuration"; "contentTabIndex": "contentTabIndex"; "disablePagination": "disablePagination"; "backgroundColor": "backgroundColor"; }, { "selectedIndexChange": "selectedIndexChange"; "focusChange": "focusChange"; "animationDone": "animationDone"; "selectedTabChange": "selectedTabChange"; }, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<_MatTabGroupBase, never, never, { "dynamicHeight": "dynamicHeight"; "selectedIndex": "selectedIndex"; "headerPosition": "headerPosition"; "animationDuration": "animationDuration"; "contentTabIndex": "contentTabIndex"; "disablePagination": "disablePagination"; "preserveContent": "preserveContent"; "backgroundColor": "backgroundColor"; }, { "selectedIndexChange": "selectedIndexChange"; "focusChange": "focusChange"; "animationDone": "animationDone"; "selectedTabChange": "selectedTabChange"; }, never>;
     static ɵfac: i0.ɵɵFactoryDeclaration<_MatTabGroupBase, [null, null, { optional: true; }, { optional: true; }]>;
 }
 
@@ -259,6 +261,7 @@ export interface MatTabsConfig {
     disablePagination?: boolean;
     dynamicHeight?: boolean;
     fitInkBarToContent?: boolean;
+    preserveContent?: boolean;
 }
 
 export declare class MatTabsModule {
