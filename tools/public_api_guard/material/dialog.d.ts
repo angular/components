@@ -29,7 +29,7 @@ export declare abstract class _MatDialogContainerBase extends BasePortalOutlet {
     _portalOutlet: CdkPortalOutlet;
     attachDomPortal: (portal: DomPortal) => void;
     constructor(_elementRef: ElementRef, _focusTrapFactory: FocusTrapFactory, _changeDetectorRef: ChangeDetectorRef, _document: any,
-    _config: MatDialogConfig, _focusMonitor?: FocusMonitor | undefined);
+    _config: MatDialogConfig, _interactivityChecker: InteractivityChecker, _ngZone: NgZone, _focusMonitor?: FocusMonitor | undefined);
     _initializeWithAttachedContent(): void;
     _recaptureFocus(): void;
     protected _restoreFocus(): void;
@@ -38,8 +38,10 @@ export declare abstract class _MatDialogContainerBase extends BasePortalOutlet {
     attachComponentPortal<T>(portal: ComponentPortal<T>): ComponentRef<T>;
     attachTemplatePortal<C>(portal: TemplatePortal<C>): EmbeddedViewRef<C>;
     static ɵdir: i0.ɵɵDirectiveDeclaration<_MatDialogContainerBase, never, never, {}, {}, never>;
-    static ɵfac: i0.ɵɵFactoryDeclaration<_MatDialogContainerBase, [null, null, null, { optional: true; }, null, null]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<_MatDialogContainerBase, [null, null, null, { optional: true; }, null, null, null, null]>;
 }
+
+export declare type AutoFocusTarget = 'dialog' | 'first-tabbable' | 'first-heading';
 
 export interface DialogPosition {
     bottom?: string;
@@ -101,7 +103,7 @@ export declare class MatDialogConfig<D = any> {
     ariaDescribedBy?: string | null;
     ariaLabel?: string | null;
     ariaLabelledBy?: string | null;
-    autoFocus?: boolean;
+    autoFocus?: AutoFocusTarget | string | boolean;
     backdropClass?: string | string[];
     closeOnNavigation?: boolean;
     componentFactoryResolver?: ComponentFactoryResolver;

@@ -10,8 +10,8 @@ export declare class MatDrawer implements AfterContentInit, AfterContentChecked,
     _container?: MatDrawerContainer | undefined;
     readonly _modeChanged: Subject<void>;
     readonly _openedStream: Observable<void>;
-    get autoFocus(): boolean;
-    set autoFocus(value: boolean);
+    get autoFocus(): AutoFocusTarget | string | boolean;
+    set autoFocus(value: AutoFocusTarget | string | boolean);
     readonly closedStart: Observable<void>;
     get disableClose(): boolean;
     set disableClose(value: boolean);
@@ -24,7 +24,7 @@ export declare class MatDrawer implements AfterContentInit, AfterContentChecked,
     readonly openedStart: Observable<void>;
     get position(): 'start' | 'end';
     set position(value: 'start' | 'end');
-    constructor(_elementRef: ElementRef<HTMLElement>, _focusTrapFactory: FocusTrapFactory, _focusMonitor: FocusMonitor, _platform: Platform, _ngZone: NgZone, _doc: any, _container?: MatDrawerContainer | undefined);
+    constructor(_elementRef: ElementRef<HTMLElement>, _focusTrapFactory: FocusTrapFactory, _focusMonitor: FocusMonitor, _platform: Platform, _ngZone: NgZone, _interactivityChecker: InteractivityChecker, _doc: any, _container?: MatDrawerContainer | undefined);
     _animationDoneListener(event: AnimationEvent): void;
     _animationStartListener(event: AnimationEvent): void;
     _closeViaBackdropClick(): Promise<MatDrawerToggleResult>;
@@ -35,11 +35,11 @@ export declare class MatDrawer implements AfterContentInit, AfterContentChecked,
     ngOnDestroy(): void;
     open(openedVia?: FocusOrigin): Promise<MatDrawerToggleResult>;
     toggle(isOpen?: boolean, openedVia?: FocusOrigin): Promise<MatDrawerToggleResult>;
-    static ngAcceptInputType_autoFocus: BooleanInput;
+    static ngAcceptInputType_autoFocus: AutoFocusTarget | string | BooleanInput;
     static ngAcceptInputType_disableClose: BooleanInput;
     static ngAcceptInputType_opened: BooleanInput;
     static ɵcmp: i0.ɵɵComponentDeclaration<MatDrawer, "mat-drawer", ["matDrawer"], { "position": "position"; "mode": "mode"; "disableClose": "disableClose"; "autoFocus": "autoFocus"; "opened": "opened"; }, { "openedChange": "openedChange"; "_openedStream": "opened"; "openedStart": "openedStart"; "_closedStream": "closed"; "closedStart": "closedStart"; "onPositionChanged": "positionChanged"; }, never, ["*"]>;
-    static ɵfac: i0.ɵɵFactoryDeclaration<MatDrawer, [null, null, null, null, null, { optional: true; }, { optional: true; }]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<MatDrawer, [null, null, null, null, null, null, { optional: true; }, { optional: true; }]>;
 }
 
 export declare const matDrawerAnimations: {

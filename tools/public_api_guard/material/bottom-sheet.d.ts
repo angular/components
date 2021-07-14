@@ -1,3 +1,5 @@
+export declare type AutoFocusTarget = 'dialog' | 'first-tabbable' | 'first-heading';
+
 export declare const MAT_BOTTOM_SHEET_DATA: InjectionToken<any>;
 
 export declare const MAT_BOTTOM_SHEET_DEFAULT_OPTIONS: InjectionToken<MatBottomSheetConfig<any>>;
@@ -20,7 +22,7 @@ export declare const matBottomSheetAnimations: {
 
 export declare class MatBottomSheetConfig<D = any> {
     ariaLabel?: string | null;
-    autoFocus?: boolean;
+    autoFocus?: AutoFocusTarget | string | boolean;
     backdropClass?: string;
     closeOnNavigation?: boolean;
     data?: D | null;
@@ -39,7 +41,7 @@ export declare class MatBottomSheetContainer extends BasePortalOutlet implements
     _portalOutlet: CdkPortalOutlet;
     attachDomPortal: (portal: DomPortal) => void;
     bottomSheetConfig: MatBottomSheetConfig;
-    constructor(_elementRef: ElementRef<HTMLElement>, _changeDetectorRef: ChangeDetectorRef, _focusTrapFactory: FocusTrapFactory, breakpointObserver: BreakpointObserver, document: any,
+    constructor(_elementRef: ElementRef<HTMLElement>, _changeDetectorRef: ChangeDetectorRef, _focusTrapFactory: FocusTrapFactory, _interactivityChecker: InteractivityChecker, _ngZone: NgZone, breakpointObserver: BreakpointObserver, document: any,
     bottomSheetConfig: MatBottomSheetConfig);
     _onAnimationDone(event: AnimationEvent): void;
     _onAnimationStart(event: AnimationEvent): void;
@@ -49,7 +51,7 @@ export declare class MatBottomSheetContainer extends BasePortalOutlet implements
     exit(): void;
     ngOnDestroy(): void;
     static ɵcmp: i0.ɵɵComponentDeclaration<MatBottomSheetContainer, "mat-bottom-sheet-container", never, {}, {}, never, never>;
-    static ɵfac: i0.ɵɵFactoryDeclaration<MatBottomSheetContainer, [null, null, null, null, { optional: true; }, null]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<MatBottomSheetContainer, [null, null, null, null, null, null, { optional: true; }, null]>;
 }
 
 export declare class MatBottomSheetModule {
