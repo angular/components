@@ -3,5 +3,5 @@ import {runHarnessTests} from '@angular/material/snack-bar/testing/shared.spec';
 import {MatSnackBarHarness} from './snack-bar-harness';
 
 describe('MDC-based MatSnackBarHarness', () => {
-  runHarnessTests(MatSnackBarModule, MatSnackBar, MatSnackBarHarness as any);
+  runHarnessTests(MatSnackBarModule, MatSnackBar as any, MatSnackBarHarness as any);
 });

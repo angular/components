@@ -1,3 +1,19 @@
+export declare abstract class _MatSnackBarBase implements OnDestroy {
+    get _openedSnackBarRef(): MatSnackBarRef<any> | null;
+    set _openedSnackBarRef(value: MatSnackBarRef<any> | null);
+    protected abstract handsetCssClass: string;
+    protected abstract simpleSnackBarComponent: Type<TextOnlySnackBar>;
+    protected abstract snackBarContainerComponent: Type<_SnackBarContainer>;
+    constructor(_overlay: Overlay, _live: LiveAnnouncer, _injector: Injector, _breakpointObserver: BreakpointObserver, _parentSnackBar: _MatSnackBarBase, _defaultConfig: MatSnackBarConfig);
+    dismiss(): void;
+    ngOnDestroy(): void;
+    open(message: string, action?: string, config?: MatSnackBarConfig): MatSnackBarRef<TextOnlySnackBar>;
+    openFromComponent<T>(component: ComponentType<T>, config?: MatSnackBarConfig): MatSnackBarRef<T>;
+    openFromTemplate(template: TemplateRef<any>, config?: MatSnackBarConfig): MatSnackBarRef<EmbeddedViewRef<any>>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<_MatSnackBarBase, never>;
+    static ɵprov: i0.ɵɵInjectableDeclaration<_MatSnackBarBase>;
+}
+
 export interface _SnackBarContainer {
     readonly _onAnnounce: Subject<any>;
     readonly _onEnter: Subject<any>;
@@ -15,18 +31,11 @@ export declare const MAT_SNACK_BAR_DEFAULT_OPTIONS: InjectionToken<MatSnackBarCo
 
 export declare function MAT_SNACK_BAR_DEFAULT_OPTIONS_FACTORY(): MatSnackBarConfig;
 
-export declare class MatSnackBar implements OnDestroy {
-    get _openedSnackBarRef(): MatSnackBarRef<any> | null;
-    set _openedSnackBarRef(value: MatSnackBarRef<any> | null);
+export declare class MatSnackBar extends _MatSnackBarBase {
     protected handsetCssClass: string;
-    protected simpleSnackBarComponent: Type<TextOnlySnackBar>;
-    protected snackBarContainerComponent: Type<_SnackBarContainer>;
-    constructor(_overlay: Overlay, _live: LiveAnnouncer, _injector: Injector, _breakpointObserver: BreakpointObserver, _parentSnackBar: MatSnackBar, _defaultConfig: MatSnackBarConfig);
-    dismiss(): void;
-    ngOnDestroy(): void;
-    open(message: string, action?: string, config?: MatSnackBarConfig): MatSnackBarRef<TextOnlySnackBar>;
-    openFromComponent<T>(component: ComponentType<T>, config?: MatSnackBarConfig): MatSnackBarRef<T>;
-    openFromTemplate(template: TemplateRef<any>, config?: MatSnackBarConfig): MatSnackBarRef<EmbeddedViewRef<any>>;
+    protected simpleSnackBarComponent: typeof SimpleSnackBar;
+    protected snackBarContainerComponent: typeof MatSnackBarContainer;
+    constructor(overlay: Overlay, live: LiveAnnouncer, injector: Injector, breakpointObserver: BreakpointObserver, parentSnackBar: MatSnackBar, defaultConfig: MatSnackBarConfig);
     static ɵfac: i0.ɵɵFactoryDeclaration<MatSnackBar, [null, null, null, null, { optional: true; skipSelf: true; }, null]>;
     static ɵprov: i0.ɵɵInjectableDeclaration<MatSnackBar>;
 }

@@ -217,7 +217,7 @@ describe('MatSnackBar', () => {
     viewContainerFixture.detectChanges();
 
     expect(snackBarRef.instance instanceof MatSimpleSnackBar)
-        .toBe(true, 'Expected the snack bar content component to be SimpleSnackBar');
+        .toBe(true, 'Expected the snack bar content component to be MatSimpleSnackBar');
     expect(snackBarRef.instance.snackBarRef)
         .toBe(snackBarRef,
             'Expected the snack bar reference to be placed in the component instance');
@@ -241,7 +241,7 @@ describe('MatSnackBar', () => {
     viewContainerFixture.detectChanges();
 
     expect(snackBarRef.instance instanceof MatSimpleSnackBar)
-        .toBe(true, 'Expected the snack bar content component to be SimpleSnackBar');
+        .toBe(true, 'Expected the snack bar content component to be MatSimpleSnackBar');
     expect(snackBarRef.instance.snackBarRef)
         .toBe(snackBarRef,
             'Expected the snack bar reference to be placed in the component instance');

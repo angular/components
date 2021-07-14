@@ -20,6 +20,10 @@ export const config = {
       'MAT_SLIDER_VALUE_ACCESSOR',
       // Irrelevant for the MDC implementation, because the slider doesn't dispatch any events.
       'MatSliderChange'
+    ],
+    'mdc-snack-bar': [
+      // TODO: needs to be renamed to match the non-MDC version.
+      'SimpleSnackBar'
     ]
   }
 };
