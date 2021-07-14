@@ -244,6 +244,18 @@ describe('DragDropRegistry', () => {
     subscription.unsubscribe();
   });
 
+  it('should dispatch an event if the window is blurred while scrolling', () => {
+    const spy = jasmine.createSpy('blur spy');
+    const subscription = registry.pageBlurred.subscribe(spy);
+    const item = new DragItem();
+
+    registry.startDragging(item, createMouseEvent('mousedown'));
+    dispatchFakeEvent(window, 'blur');
+
+    expect(spy).toHaveBeenCalled();
+    subscription.unsubscribe();
+  });
+
   class DragItem {
     isDragging() { return this.shouldBeDragging; }
     constructor(public shouldBeDragging = false) {

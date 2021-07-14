@@ -226,12 +226,18 @@ export class DragRef<T = any> {
   /** Subscription to the viewport being resized. */
   private _resizeSubscription = Subscription.EMPTY;
 
+  /** Subscription to the page being blurred. */
+  private _blurSubscription = Subscription.EMPTY;
+
   /**
    * Time at which the last touch event occurred. Used to avoid firing the same
    * events multiple times on touch devices where the browser will fire a fake
    * mouse event for each touch event, after a certain time.
    */
   private _lastTouchEventTime: number;
+
+  /** Last pointer move event that was captured. */
+  private _lastPointerMove: MouseEvent | TouchEvent | null;
 
   /** Time at which the last dragging sequence was started. */
   private _dragStartTime: number;
@@ -507,7 +513,7 @@ export class DragRef<T = any> {
     this._resizeSubscription.unsubscribe();
     this._parentPositions.clear();
     this._boundaryElement = this._rootElement = this._ownerSVGElement = this._placeholderTemplate =
-        this._previewTemplate = this._anchor = this._parentDragRef = null!;
+        this._previewTemplate = this._anchor = this._parentDragRef = this._lastPointerMove = null!;
   }
 
   /** Checks whether the element is currently being dragged. */
@@ -602,6 +608,7 @@ export class DragRef<T = any> {
     this._pointerMoveSubscription.unsubscribe();
     this._pointerUpSubscription.unsubscribe();
     this._scrollSubscription.unsubscribe();
+    this._blurSubscription.unsubscribe();
   }
 
   /** Destroys the preview element and its ViewRef. */
@@ -703,6 +710,7 @@ export class DragRef<T = any> {
     const constrainedPointerPosition = this._getConstrainedPointerPosition(pointerPosition);
     this._hasMoved = true;
     this._lastKnownPointerPosition = pointerPosition;
+    this._lastPointerMove = event;
     this._updatePointerDirectionDelta(constrainedPointerPosition);
 
     if (this._dropContainer) {
@@ -895,6 +903,7 @@ export class DragRef<T = any> {
     }
 
     this._hasStartedDragging = this._hasMoved = false;
+    this._lastPointerMove = null;
 
     // Avoid multiple subscriptions and memory leaks when multi touch
     // (isDragging check above isn't enough because of possible temporal and/or dimensional delays)
@@ -904,6 +913,15 @@ export class DragRef<T = any> {
     this._scrollSubscription = this._dragDropRegistry
       .scrolled(this._getShadowRoot())
       .subscribe(scrollEvent => this._updateOnScroll(scrollEvent));
+
+    // If the page is blurred while dragging (e.g. there was an `alert` or the browser window was
+    // minimized) we won't get a mouseup/touchend so we need to use a different event to stop the
+    // drag sequence. Use the last known location to figure out where the element should be dropped.
+    this._blurSubscription = this._dragDropRegistry.pageBlurred.subscribe(() => {
+      if (this._lastPointerMove) {
+        this._endDragSequence(this._lastPointerMove);
+      }
+    });
 
     if (this._boundaryElement) {
       this._boundaryRect = getMutableClientRect(this._boundaryElement);

@@ -4531,6 +4531,27 @@ describe('CdkDrag', () => {
          'Expected placeholder to preserve transform when dragging stops.');
     }));
 
+    it('should stop dragging if the page is blurred', fakeAsync(() => {
+      const fixture = createComponent(DraggableInDropZone);
+      fixture.detectChanges();
+      const dragItems = fixture.componentInstance.dragItems;
+
+      expect(fixture.componentInstance.droppedSpy).not.toHaveBeenCalled();
+
+      const item = dragItems.first;
+      const targetRect = dragItems.toArray()[2].element.nativeElement.getBoundingClientRect();
+
+      startDraggingViaMouse(fixture, item.element.nativeElement);
+      dispatchMouseEvent(document, 'mousemove', targetRect.left + 1, targetRect.top + 1);
+      fixture.detectChanges();
+
+      dispatchFakeEvent(window, 'blur');
+      fixture.detectChanges();
+      flush();
+
+      expect(fixture.componentInstance.droppedSpy).toHaveBeenCalledTimes(1);
+    }));
+
   });
 
   describe('in a connected drop container', () => {
