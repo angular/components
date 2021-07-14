@@ -64,7 +64,7 @@ export class Overlay {
    * @returns Reference to the created overlay.
    */
   create(config?: OverlayConfig): OverlayRef {
-    const host = this._createHostElement();
+    const host = this._createHostElement(config && config.container);
     const pane = this._createPaneElement(host);
     const portalOutlet = this._createPortalOutlet(pane);
     const overlayConfig = new OverlayConfig(config);
@@ -103,9 +103,11 @@ export class Overlay {
    * and can be used for advanced positioning.
    * @returns Newly-create host element.
    */
-  private _createHostElement(): HTMLElement {
+  private _createHostElement(containerElement?: HTMLElement): HTMLElement {
+    const container = containerElement ? containerElement :
+      this._overlayContainer.getContainerElement();
     const host = this._document.createElement('div');
-    this._overlayContainer.getContainerElement().appendChild(host);
+    container.appendChild(host);
     return host;
   }
 

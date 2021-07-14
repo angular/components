@@ -681,6 +681,16 @@ describe('Overlay', () => {
       expect(style.maxHeight).toBeFalsy();
     });
 
+    it('should not user the default container when a custom container element is provided', () => {
+      const mockDiv = document.createElement('div');
+      mockDiv.setAttribute('data-test', 'test');
+
+      const overlayRef = overlay.create({container: mockDiv});
+      const spy = spyOn(overlayContainer, 'getContainerElement');
+
+      expect(spy).not.toHaveBeenCalled();
+      expect(overlayRef.hostElement.parentElement).toBe(mockDiv);
+    });
   });
 
   describe('backdrop', () => {

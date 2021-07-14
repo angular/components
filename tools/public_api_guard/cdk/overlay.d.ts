@@ -200,6 +200,7 @@ export declare class Overlay {
 
 export declare class OverlayConfig {
     backdropClass?: string | string[];
+    container?: HTMLElement;
     direction?: Direction | Directionality;
     disposeOnNavigation?: boolean;
     hasBackdrop?: boolean;

@@ -59,6 +59,12 @@ export class OverlayConfig {
    */
   disposeOnNavigation?: boolean = false;
 
+  /**
+   * The element on which the overlay will be attached to.
+   * The default containing element is the document body.
+   */
+  container?: HTMLElement;
+
   constructor(config?: OverlayConfig) {
     if (config) {
       // Use `Iterable` instead of `Array` because TypeScript, as of 3.6.3,
