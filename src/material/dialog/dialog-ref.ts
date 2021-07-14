@@ -244,7 +244,8 @@ export class MatDialogRef<T, R = any> {
  * More details. See: https://github.com/angular/components/pull/9257#issuecomment-651342226.
  */
 // TODO: TODO: Move this back into `MatDialogRef` when we provide an official mock dialog ref.
-export function _closeDialogVia<R>(ref: MatDialogRef<R>, interactionType: FocusOrigin, result?: R) {
+export function _closeDialogVia<T, R>(
+  ref: MatDialogRef<T, R>, interactionType: FocusOrigin, result?: R) {
   // Some mock dialog ref instances in tests do not have the `_containerInstance` property.
   // For those, we keep the behavior as is and do not deal with the interaction type.
   if (ref._containerInstance !== undefined) {
