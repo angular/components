@@ -85,6 +85,9 @@ export class MatTab extends _MatTabBase implements OnInit, CanDisable, OnChanges
   get content(): TemplatePortal | null {
     return this._contentPortal;
   }
+  set content(contentPortal: TemplatePortal | null) {
+    this._contentPortal = contentPortal;
+  }
 
   /** Emits whenever the internal state of the tab changes. */
   readonly _stateChanges = new Subject<void>();

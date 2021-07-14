@@ -143,6 +143,7 @@ export declare class MatTab extends _MatTabBase implements OnInit, CanDisable, O
     ariaLabel: string;
     ariaLabelledby: string;
     get content(): TemplatePortal | null;
+    set content(contentPortal: TemplatePortal | null);
     isActive: boolean;
     origin: number | null;
     position: number | null;
