@@ -655,6 +655,110 @@ describe('MatDrawer', () => {
     expect(scrollable.getElementRef().nativeElement).toBe(content.nativeElement);
   });
 
+  describe('DOM position', () => {
+    it('should project start drawer before the content', () => {
+      const fixture = TestBed.createComponent(BasicTestApp);
+      fixture.componentInstance.position = 'start';
+      fixture.detectChanges();
+
+      const allNodes = getDrawerNodesArray(fixture);
+      const drawerIndex = allNodes.indexOf(fixture.nativeElement.querySelector('.mat-drawer'));
+      const contentIndex =
+          allNodes.indexOf(fixture.nativeElement.querySelector('.mat-drawer-content'));
+
+      expect(drawerIndex).toBeGreaterThan(-1, 'Expected drawer to be inside the container');
+      expect(contentIndex).toBeGreaterThan(-1, 'Expected content to be inside the container');
+      expect(drawerIndex).toBeLessThan(contentIndex, 'Expected drawer to be before the content');
+    });
+
+    it('should project end drawer after the content', () => {
+      const fixture = TestBed.createComponent(BasicTestApp);
+      fixture.componentInstance.position = 'end';
+      fixture.detectChanges();
+
+      const allNodes = getDrawerNodesArray(fixture);
+      const drawerIndex = allNodes.indexOf(fixture.nativeElement.querySelector('.mat-drawer'));
+      const contentIndex =
+          allNodes.indexOf(fixture.nativeElement.querySelector('.mat-drawer-content'));
+
+      expect(drawerIndex).toBeGreaterThan(-1, 'Expected drawer to be inside the container');
+      expect(contentIndex).toBeGreaterThan(-1, 'Expected content to be inside the container');
+      expect(drawerIndex).toBeGreaterThan(contentIndex, 'Expected drawer to be after the content');
+    });
+
+    it('should move the drawer before/after the content when its position changes after being ' +
+      'initialized at `start`', () => {
+        const fixture = TestBed.createComponent(BasicTestApp);
+        fixture.componentInstance.position = 'start';
+        fixture.detectChanges();
+
+        const drawer = fixture.nativeElement.querySelector('.mat-drawer');
+        const content = fixture.nativeElement.querySelector('.mat-drawer-content');
+
+        let allNodes = getDrawerNodesArray(fixture);
+        const startDrawerIndex = allNodes.indexOf(drawer);
+        const startContentIndex = allNodes.indexOf(content);
+
+        expect(startDrawerIndex).toBeGreaterThan(-1, 'Expected drawer to be inside the container');
+        expect(startContentIndex)
+            .toBeGreaterThan(-1, 'Expected content to be inside the container');
+        expect(startDrawerIndex)
+            .toBeLessThan(startContentIndex, 'Expected drawer to be before the content on init');
+
+        fixture.componentInstance.position = 'end';
+        fixture.detectChanges();
+        allNodes = getDrawerNodesArray(fixture);
+
+        expect(allNodes.indexOf(drawer)).toBeGreaterThan(allNodes.indexOf(content),
+            'Expected drawer to be after content when position changes to `end`');
+
+        fixture.componentInstance.position = 'start';
+        fixture.detectChanges();
+        allNodes = getDrawerNodesArray(fixture);
+
+        expect(allNodes.indexOf(drawer)).toBeLessThan(allNodes.indexOf(content),
+            'Expected drawer to be before content when position changes back to `start`');
+      });
+
+    it('should move the drawer before/after the content when its position changes after being ' +
+      'initialized at `end`', () => {
+        const fixture = TestBed.createComponent(BasicTestApp);
+        fixture.componentInstance.position = 'end';
+        fixture.detectChanges();
+
+        const drawer = fixture.nativeElement.querySelector('.mat-drawer');
+        const content = fixture.nativeElement.querySelector('.mat-drawer-content');
+
+        let allNodes = getDrawerNodesArray(fixture);
+        const startDrawerIndex = allNodes.indexOf(drawer);
+        const startContentIndex = allNodes.indexOf(content);
+
+        expect(startDrawerIndex).toBeGreaterThan(-1, 'Expected drawer to be inside the container');
+        expect(startContentIndex)
+            .toBeGreaterThan(-1, 'Expected content to be inside the container');
+        expect(startDrawerIndex)
+            .toBeGreaterThan(startContentIndex, 'Expected drawer to be after the content on init');
+
+        fixture.componentInstance.position = 'start';
+        fixture.detectChanges();
+        allNodes = getDrawerNodesArray(fixture);
+
+        expect(allNodes.indexOf(drawer)).toBeLessThan(allNodes.indexOf(content),
+            'Expected drawer to be before content when position changes to `start`');
+
+        fixture.componentInstance.position = 'end';
+        fixture.detectChanges();
+        allNodes = getDrawerNodesArray(fixture);
+
+        expect(allNodes.indexOf(drawer)).toBeGreaterThan(allNodes.indexOf(content),
+            'Expected drawer to be after content when position changes back to `end`');
+      });
+
+    function getDrawerNodesArray(fixture: ComponentFixture<any>): HTMLElement[] {
+      return Array.from(fixture.nativeElement.querySelector('.mat-drawer-container').childNodes);
+    }
+
+  });
 });
 
 describe('MatDrawerContainer', () => {
@@ -938,6 +1042,32 @@ describe('MatDrawerContainer', () => {
       expect(spy).toHaveBeenCalled();
       subscription.unsubscribe();
     }));
+
+    it('should position the drawers before/after the content in the DOM based on their position',
+      fakeAsync(() => {
+        const fixture = TestBed.createComponent(DrawerContainerTwoDrawerTestApp);
+        fixture.detectChanges();
+
+        const drawerDebugElements = fixture.debugElement.queryAll(By.directive(MatDrawer));
+        const [start, end] = drawerDebugElements.map(el => el.componentInstance);
+        const [startNode, endNode] = drawerDebugElements.map(el => el.nativeElement);
+        const contentNode = fixture.nativeElement.querySelector('.mat-drawer-content');
+        const allNodes: HTMLElement[] =
+            Array.from(fixture.nativeElement.querySelector('.mat-drawer-container').childNodes);
+        const startIndex = allNodes.indexOf(startNode);
+        const endIndex = allNodes.indexOf(endNode);
+        const contentIndex = allNodes.indexOf(contentNode);
+
+        expect(start.position).toBe('start');
+        expect(end.position).toBe('end');
+        expect(contentIndex).toBeGreaterThan(-1, 'Expected content to be inside the container');
+        expect(startIndex).toBeGreaterThan(-1, 'Expected start drawer to be inside the container');
+        expect(endIndex).toBeGreaterThan(-1, 'Expected end drawer to be inside the container');
+
+        expect(startIndex).toBeLessThan(contentIndex, 'Expected start drawer to be before content');
+        expect(endIndex).toBeGreaterThan(contentIndex, 'Expected end drawer to be after content');
+      }));
+
 });
 
 
@@ -961,7 +1091,7 @@ class DrawerContainerTwoDrawerTestApp {
 @Component({
   template: `
     <mat-drawer-container (backdropClick)="backdropClicked()" [hasBackdrop]="hasBackdrop">
-      <mat-drawer #drawer="matDrawer" position="start"
+      <mat-drawer #drawer="matDrawer" [position]="position"
                  (opened)="open()"
                  (openedStart)="openStart()"
                  (closed)="close()"
@@ -987,6 +1117,7 @@ class BasicTestApp {
   closeStartCount = 0;
   backdropClickedCount = 0;
   hasBackdrop: boolean | null = null;
+  position = 'start';
 
   @ViewChild('drawer') drawer: MatDrawer;
   @ViewChild('drawerButton') drawerButton: ElementRef<HTMLButtonElement>;
