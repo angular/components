@@ -238,6 +238,125 @@ describe('LiveAnnouncer', () => {
 
   });
 
+  describe('with a queue', () => {
+    beforeEach(() => {
+      return TestBed.configureTestingModule({
+        imports: [A11yModule],
+        declarations: [TestApp],
+        providers: [{
+          provide: LIVE_ANNOUNCER_DEFAULT_OPTIONS,
+          useValue: {
+            useQueue: true,
+          } as LiveAnnouncerDefaultOptions,
+        }],
+      });
+    });
+
+    beforeEach(fakeAsync(inject([LiveAnnouncer], (la: LiveAnnouncer) => {
+      announcer = la;
+    })));
+
+    afterEach(() => {
+      getLiveElements().forEach((el) => {
+        document.body.removeChild(el);
+      });
+    });
+
+    it('should apply the aria-live value polite by default', fakeAsync(() => {
+      // There is a live element for the non-queue announcer.
+      expect(getLiveElements().length).toBe(1);
+
+      announcer.announce('Hey Google');
+      tick(100);
+
+      expect(getLiveElements().length).toBe(2);
+      const liveElement = getLiveElements()[1];
+      expect(liveElement.textContent).toBe('Hey Google');
+      expect(liveElement.getAttribute('aria-live')).toBe('polite');
+      tick(1000);
+    }));
+
+    it('should correctly update the politeness attribute', fakeAsync(() => {
+      // There is a live element for the non-queue announcer.
+      expect(getLiveElements().length).toBe(1);
+
+      announcer.announce('Hey Google', 'assertive');
+      tick(100);
+
+      expect(getLiveElements().length).toBe(2);
+      const liveElement = getLiveElements()[1];
+      expect(liveElement.textContent).toBe('Hey Google');
+      expect(liveElement.getAttribute('aria-live')).toBe('assertive');
+      tick(1000);
+    }));
+
+    it('clears an announcement after a delay', fakeAsync(() => {
+      // There is a live element for the non-queue announcer.
+      expect(getLiveElements().length).toBe(1);
+      announcer.announce('Hey Google', 200);
+      tick(100);
+
+      // Announcement was added.
+      const announcements = getLiveElements();
+      expect(announcements.length).toBe(2);
+      expect(announcements[1].textContent).toBe('Hey Google');
+
+      // Announcement was removed.
+      tick(200);
+      expect(getLiveElements().length).toBe(1);
+    }));
+
+    it('clears an announcement after 1s by default', fakeAsync(() => {
+      // There is a live element for the non-queue announcer.
+      expect(getLiveElements().length).toBe(1);
+
+      announcer.announce('Hey Google');
+      tick(100);
+
+      // Announcement was added.
+      const announcements = getLiveElements();
+      expect(announcements.length).toBe(2);
+      expect(announcements[1].textContent).toBe('Hey Google');
+
+      // Announcement still here.
+      tick(999);
+      expect(getLiveElements().length).toBe(2);
+      // Announcement was removed.
+      tick(1);
+      expect(getLiveElements().length).toBe(1);
+    }));
+
+    it('announces messages with a delay between them', fakeAsync(() => {
+      // There is a live element for the non-queue announcer.
+      expect(getLiveElements().length).toBe(1);
+      announcer.announce('Hey');
+      announcer.announce('Google');
+
+      const announcements = getLiveElements();
+      const helloAnnouncement = announcements[1];
+      const worldAnnouncement = announcements[2];
+      // There are no messages at first, we just added the elements to let screen
+      // readers notice that there are aria-live sections on the page.
+      expect(helloAnnouncement.textContent).toBe('');
+      expect(worldAnnouncement.textContent).toBe('');
+
+      // Wait for the first message to be added.
+      tick(100);
+      expect(helloAnnouncement.textContent).toBe('Hey');
+      expect(worldAnnouncement.textContent).toBe('');
+
+      // Wait for the second message to be added.
+      tick(100);
+      expect(helloAnnouncement.textContent).toBe('Hey');
+      expect(worldAnnouncement.textContent).toBe('Google');
+
+      // Wait for messages to be removed.
+      tick(1000);
+      expect(getLiveElements().length).toBe(1);
+    }));
+
+  });
+
 });
 
 describe('CdkAriaLive', () => {
@@ -338,6 +457,10 @@ describe('CdkAriaLive', () => {
 
 function getLiveElement(): Element {
   return document.body.querySelector('.cdk-live-announcer-element')!;
+}
+
+function getLiveElements(): NodeListOf<Element> {
+  return document.body.querySelectorAll('.cdk-live-announcer-element') as NodeListOf<Element>;
 }
 
 @Component({template: `<button (click)="announceText('Test')">Announce</button>`})

@@ -32,6 +32,12 @@ export interface LiveAnnouncerDefaultOptions {
 
   /** Default duration for the announcement messages. */
   duration?: number;
+
+  /**
+   * Indicates whether announcements should be queued or each next one should
+   * override the previous one.
+   */
+  useQueue?: boolean;
 }
 
 /** Injection token that can be used to configure the default options for the LiveAnnouncer. */
