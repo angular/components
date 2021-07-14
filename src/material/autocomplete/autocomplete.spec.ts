@@ -822,9 +822,7 @@ describe('MatAutocomplete', () => {
           .toBe(false, `Expected control to stay pristine if value is set programmatically.`);
     });
 
-    it('should mark the autocomplete control as touched on blur', () => {
-      fixture.componentInstance.trigger.openPanel();
-      fixture.detectChanges();
+    it('should mark the autocomplete control as touched on blur while panel is closed', () => {
       expect(fixture.componentInstance.stateCtrl.touched)
           .toBe(false, `Expected control to start out untouched.`);
 
@@ -833,6 +831,28 @@ describe('MatAutocomplete', () => {
 
       expect(fixture.componentInstance.stateCtrl.touched)
           .toBe(true, `Expected control to become touched on blur.`);
+    });
+
+    it('should defer marking the control as touched if it is blurred while open', () => {
+      fixture.componentInstance.trigger.openPanel();
+      fixture.detectChanges();
+      zone.simulateZoneExit();
+
+      expect(fixture.componentInstance.stateCtrl.touched)
+          .toBe(false, 'Expected control to start out untouched.');
+
+      dispatchFakeEvent(input, 'blur');
+      fixture.detectChanges();
+
+      expect(fixture.componentInstance.stateCtrl.touched)
+          .toBe(false, 'Expected control to stay untouched.');
+
+      // Simulate clicking outside the panel.
+      dispatchFakeEvent(document, 'click');
+      fixture.detectChanges();
+
+      expect(fixture.componentInstance.stateCtrl.touched)
+          .toBe(true, 'Expected control to become touched once panel closes.');
     });
 
     it('should disable the input when used with a value accessor and without `matInput`', () => {
