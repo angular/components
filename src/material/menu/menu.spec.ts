@@ -11,7 +11,7 @@ import {
   TAB,
 } from '@angular/cdk/keycodes';
 import {Overlay, OverlayContainer} from '@angular/cdk/overlay';
-import {ScrollDispatcher} from '@angular/cdk/scrolling';
+import {ScrollDispatcher, ViewportRuler} from '@angular/cdk/scrolling';
 import {
   createKeyboardEvent,
   createMouseEvent,
@@ -59,6 +59,7 @@ describe('MatMenu', () => {
   let overlayContainer: OverlayContainer;
   let overlayContainerElement: HTMLElement;
   let focusMonitor: FocusMonitor;
+  let viewportRuler: ViewportRuler;
 
   function createComponent<T>(component: Type<T>,
                               providers: Provider[] = [],
@@ -69,11 +70,13 @@ describe('MatMenu', () => {
       providers
     }).compileComponents();
 
-    inject([OverlayContainer, FocusMonitor], (oc: OverlayContainer, fm: FocusMonitor) => {
-      overlayContainer = oc;
-      overlayContainerElement = oc.getContainerElement();
-      focusMonitor = fm;
-    })();
+    inject([OverlayContainer, FocusMonitor, ViewportRuler],
+      (oc: OverlayContainer, fm: FocusMonitor, vr: ViewportRuler) => {
+        overlayContainer = oc;
+        overlayContainerElement = oc.getContainerElement();
+        focusMonitor = fm;
+        viewportRuler = vr;
+      })();
 
     return TestBed.createComponent<T>(component);
   }
@@ -1001,6 +1004,28 @@ describe('MatMenu', () => {
     const items = document.querySelectorAll('.mat-menu-panel [mat-menu-item]');
     expect(document.activeElement).toBe(items[3], 'Expected fourth item to be focused');
   }));
+
+  it('should keep the panel in the viewport when more items are added while open', () => {
+    const fixture = createComponent(SimpleMenu, [], [FakeIcon]);
+    fixture.detectChanges();
+
+    const triggerEl = fixture.componentInstance.triggerEl.nativeElement;
+    triggerEl.style.position = 'absolute';
+    triggerEl.style.left = '200px';
+    triggerEl.style.bottom = '300px';
+    triggerEl.click();
+    fixture.detectChanges();
+
+    const panel = overlayContainerElement.querySelector('.mat-menu-panel')!;
+    const viewportHeight = viewportRuler.getViewportSize().height;
+    let panelRect = panel.getBoundingClientRect();
+    expect(Math.floor(panelRect.bottom)).toBeLessThan(viewportHeight);
+
+    fixture.componentInstance.extraItems = new Array(50).fill('Hello there');
+    fixture.detectChanges();
+    panelRect = panel.getBoundingClientRect();
+    expect(Math.floor(panelRect.bottom)).toBe(viewportHeight);
+  });
 
   describe('lazy rendering', () => {
     it('should be able to render the menu content lazily', fakeAsync(() => {

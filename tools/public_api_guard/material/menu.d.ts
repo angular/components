@@ -5,6 +5,7 @@ export declare class _MatMenuBase implements AfterContentInit, MatMenuPanel<MatM
     _classList: {
         [key: string]: boolean;
     };
+    _directDescendantItems: QueryList<MatMenuItem>;
     protected _elevationPrefix: string;
     _isAnimating: boolean;
     _panelAnimationState: 'void' | 'enter';
