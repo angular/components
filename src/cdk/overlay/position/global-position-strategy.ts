@@ -21,15 +21,12 @@ const wrapperClass = 'cdk-global-overlay-wrapper';
 export class GlobalPositionStrategy implements PositionStrategy {
   /** The overlay to which this strategy is attached. */
   private _overlayRef: OverlayReference;
-  private _cssPosition: string = 'static';
-  private _topOffset: string = '';
-  private _bottomOffset: string = '';
-  private _leftOffset: string = '';
-  private _rightOffset: string = '';
-  private _alignItems: string = '';
-  private _justifyContent: string = '';
   private _width: string = '';
   private _height: string = '';
+  private _yPosition: 'top' | 'bottom' | 'center' = 'center';
+  private _yOffset = '';
+  private _xPosition: 'left' | 'right' | 'start' | 'end' | 'center' = 'center';
+  private _xOffset = '';
   private _isDisposed: boolean;
 
   attach(overlayRef: OverlayReference): void {
@@ -50,46 +47,64 @@ export class GlobalPositionStrategy implements PositionStrategy {
   }
 
   /**
-   * Sets the top position of the overlay. Clears any previously set vertical position.
-   * @param value New top offset.
+   * Positions the overlay to the top of the viewport.
+   * @param offset Offset from the top of the viewport.
    */
-  top(value: string = ''): this {
-    this._bottomOffset = '';
-    this._topOffset = value;
-    this._alignItems = 'flex-start';
+  top(offset: string = ''): this {
+    this._yOffset = offset;
+    this._yPosition = 'top';
     return this;
   }
 
   /**
-   * Sets the left position of the overlay. Clears any previously set horizontal position.
-   * @param value New left offset.
+   * Positions the overlay to the left of the viewport, no matter what layout direction it has.
+   * @param offset Offset from the left of the viewport.
    */
-  left(value: string = ''): this {
-    this._rightOffset = '';
-    this._leftOffset = value;
-    this._justifyContent = 'flex-start';
+  left(offset: string = ''): this {
+    this._xOffset = offset;
+    this._xPosition = 'left';
     return this;
   }
 
   /**
-   * Sets the bottom position of the overlay. Clears any previously set vertical position.
-   * @param value New bottom offset.
+   * Positions the overlay to the bottom of the viewport.
+   * @param offset Offset from the bottom of the viewport.
    */
-  bottom(value: string = ''): this {
-    this._topOffset = '';
-    this._bottomOffset = value;
-    this._alignItems = 'flex-end';
+  bottom(offset: string = ''): this {
+    this._yOffset = offset;
+    this._yPosition = 'bottom';
     return this;
   }
 
   /**
-   * Sets the right position of the overlay. Clears any previously set horizontal position.
-   * @param value New right offset.
+   * Positions the overlay to the right of the viewport, no matter what layout direction it has.
+   * @param offset Offset from the right of the viewport.
    */
-  right(value: string = ''): this {
-    this._leftOffset = '';
-    this._rightOffset = value;
-    this._justifyContent = 'flex-end';
+  right(offset: string = ''): this {
+    this._xOffset = offset;
+    this._xPosition = 'right';
+    return this;
+  }
+
+  /**
+   * Sets the overlay to the start of the viewport, depending on the overlay direction.
+   * This will be to the left in LTR layouts and to the right in RTL.
+   * @param offset Offset from the edge of the screen.
+   */
+  start(offset: string = ''): this {
+    this._xOffset = offset;
+    this._xPosition = 'start';
+    return this;
+  }
+
+  /**
+   * Sets the overlay to the end of the viewport, depending on the overlay direction.
+   * This will be to the right in LTR layouts and to the left in RTL.
+   * @param offset Offset from the edge of the screen.
+   */
+  end(offset: string = ''): this {
+    this._xOffset = offset;
+    this._xPosition = 'end';
     return this;
   }
 
@@ -126,26 +141,22 @@ export class GlobalPositionStrategy implements PositionStrategy {
   }
 
   /**
-   * Centers the overlay horizontally with an optional offset.
-   * Clears any previously set horizontal position.
-   *
-   * @param offset Overlay offset from the horizontal center.
+   * Centers the overlay horizontally in the viewport.
+   * @param offset Offset from the center of the viewport.
    */
   centerHorizontally(offset: string = ''): this {
-    this.left(offset);
-    this._justifyContent = 'center';
+    this._xOffset = offset;
+    this._xPosition = 'center';
     return this;
   }
 
   /**
-   * Centers the overlay vertically with an optional offset.
-   * Clears any previously set vertical position.
-   *
-   * @param offset Overlay offset from the vertical center.
+   * Centers the overlay vertically in the viewport.
+   * @param offset Offset from the center of the viewport.
    */
   centerVertically(offset: string = ''): this {
-    this.top(offset);
-    this._alignItems = 'center';
+    this._yPosition = 'center';
+    this._yOffset = offset;
     return this;
   }
 
@@ -161,40 +172,96 @@ export class GlobalPositionStrategy implements PositionStrategy {
       return;
     }
 
+    this._overlayRef.overlayElement.style.position = 'static';
+    this._applyYPosition();
+    this._applyXPosition();
+  }
+
+  private _applyYPosition() {
     const styles = this._overlayRef.overlayElement.style;
     const parentStyles = this._overlayRef.hostElement.style;
     const config = this._overlayRef.getConfig();
-    const {width, height, maxWidth, maxHeight} = config;
-    const shouldBeFlushHorizontally = (width === '100%' || width === '100vw') &&
-                                      (!maxWidth || maxWidth === '100%' || maxWidth === '100vw');
+    const {height, maxHeight} = config;
     const shouldBeFlushVertically = (height === '100%' || height === '100vh') &&
                                     (!maxHeight || maxHeight === '100%' || maxHeight === '100vh');
 
-    styles.position = this._cssPosition;
-    styles.marginLeft = shouldBeFlushHorizontally ? '0' : this._leftOffset;
-    styles.marginTop = shouldBeFlushVertically ? '0' : this._topOffset;
-    styles.marginBottom = this._bottomOffset;
-    styles.marginRight = this._rightOffset;
+    if (shouldBeFlushVertically) {
+      parentStyles.alignItems = 'flex-start';
+      styles.marginTop = styles.marginBottom = '0';
+      return;
+    }
+
+    switch (this._yPosition) {
+      case 'top':
+      case 'center':
+        parentStyles.alignItems = this._yPosition === 'center' ? 'center' : 'flex-start';
+        styles.marginTop = shouldBeFlushVertically ? '0' : this._yOffset;
+        styles.marginBottom = '';
+        break;
+
+      case 'bottom':
+        parentStyles.alignItems = 'flex-end';
+        styles.marginTop = '';
+        styles.marginBottom = shouldBeFlushVertically ? '0' : this._yOffset;
+        break;
+
+      default:
+        throw Error(`Unsupported Y axis position ${this._yPosition}.`);
+    }
+  }
+
+  private _applyXPosition() {
+    const styles = this._overlayRef.overlayElement.style;
+    const parentStyles = this._overlayRef.hostElement.style;
+    const config = this._overlayRef.getConfig();
+    const {width, maxWidth} = config;
+    const isRtl = this._overlayRef.getConfig().direction === 'rtl';
+    const shouldBeFlushHorizontally = (width === '100%' || width === '100vw') &&
+                                      (!maxWidth || maxWidth === '100%' || maxWidth === '100vw');
 
     if (shouldBeFlushHorizontally) {
       parentStyles.justifyContent = 'flex-start';
-    } else if (this._justifyContent === 'center') {
-      parentStyles.justifyContent = 'center';
-    } else if (this._overlayRef.getConfig().direction === 'rtl') {
-      // In RTL the browser will invert `flex-start` and `flex-end` automatically, but we
-      // don't want that because our positioning is explicitly `left` and `right`, hence
-      // why we do another inversion to ensure that the overlay stays in the same position.
-      // TODO: reconsider this if we add `start` and `end` methods.
-      if (this._justifyContent === 'flex-start') {
-        parentStyles.justifyContent = 'flex-end';
-      } else if (this._justifyContent === 'flex-end') {
-        parentStyles.justifyContent = 'flex-start';
-      }
-    } else {
-      parentStyles.justifyContent = this._justifyContent;
+      styles.marginLeft = styles.marginRight = '0';
+      return;
     }
 
-    parentStyles.alignItems = shouldBeFlushVertically ? 'flex-start' : this._alignItems;
+    switch (this._xPosition) {
+      // In RTL the browser will invert `flex-start` and `flex-end` automatically, but we don't
+      // want that if the positioning is explicitly `left` and `right`, hence why we do another
+      // inversion to ensure that the overlay stays in the same position.
+      case 'left':
+        parentStyles.justifyContent = isRtl ? 'flex-end' : 'flex-start';
+        styles.marginLeft = this._xOffset;
+        styles.marginRight = '';
+        break;
+
+      case 'right':
+        parentStyles.justifyContent = isRtl ? 'flex-start' : 'flex-end';
+        styles.marginRight = this._xOffset;
+        styles.marginLeft = '';
+        break;
+
+      case 'center':
+        parentStyles.justifyContent = 'center';
+        styles.marginLeft = isRtl ? '' : this._xOffset;
+        styles.marginRight = isRtl ? this._xOffset : '';
+        break;
+
+      case 'start':
+        parentStyles.justifyContent = 'flex-start';
+        styles.marginLeft = isRtl ? '' : this._xOffset;
+        styles.marginRight = isRtl ? this._xOffset : '';
+        break;
+
+      case 'end':
+        parentStyles.justifyContent = 'flex-end';
+        styles.marginLeft = isRtl ? this._xOffset : '';
+        styles.marginRight = isRtl ? '' : this._xOffset;
+        break;
+
+      default:
+        throw Error(`Unsupported X axis position ${this._xPosition}.`);
+    }
   }
 
   /**

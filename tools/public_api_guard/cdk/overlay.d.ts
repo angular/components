@@ -164,14 +164,16 @@ export declare class FullscreenOverlayContainer extends OverlayContainer impleme
 export declare class GlobalPositionStrategy implements PositionStrategy {
     apply(): void;
     attach(overlayRef: OverlayReference): void;
-    bottom(value?: string): this;
+    bottom(offset?: string): this;
     centerHorizontally(offset?: string): this;
     centerVertically(offset?: string): this;
     dispose(): void;
+    end(offset?: string): this;
     height(value?: string): this;
-    left(value?: string): this;
-    right(value?: string): this;
-    top(value?: string): this;
+    left(offset?: string): this;
+    right(offset?: string): this;
+    start(offset?: string): this;
+    top(offset?: string): this;
     width(value?: string): this;
 }
 

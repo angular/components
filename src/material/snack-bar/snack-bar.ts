@@ -254,32 +254,22 @@ export class MatSnackBar implements OnDestroy {
    * @param config The user-specified snack bar config.
    */
   private _createOverlay(config: MatSnackBarConfig): OverlayRef {
-    const overlayConfig = new OverlayConfig();
-    overlayConfig.direction = config.direction;
+    const {horizontalPosition, verticalPosition, direction} = config;
+    const positionStrategy = this._overlay.position().global();
+    const overlayConfig = new OverlayConfig({direction, positionStrategy});
 
-    let positionStrategy = this._overlay.position().global();
     // Set horizontal position.
-    const isRtl = config.direction === 'rtl';
-    const isLeft = (
-        config.horizontalPosition === 'left' ||
-        (config.horizontalPosition === 'start' && !isRtl) ||
-        (config.horizontalPosition === 'end' && isRtl));
-    const isRight = !isLeft && config.horizontalPosition !== 'center';
-    if (isLeft) {
-      positionStrategy.left('0');
-    } else if (isRight) {
-      positionStrategy.right('0');
-    } else {
-      positionStrategy.centerHorizontally();
+    if (horizontalPosition && horizontalPosition !== 'center') {
+      positionStrategy[horizontalPosition]('0');
     }
+
     // Set horizontal position.
-    if (config.verticalPosition === 'top') {
+    if (verticalPosition === 'top') {
       positionStrategy.top('0');
     } else {
       positionStrategy.bottom('0');
     }
 
-    overlayConfig.positionStrategy = positionStrategy;
     return this._overlay.create(overlayConfig);
   }
 
