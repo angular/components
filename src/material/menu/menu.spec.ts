@@ -612,6 +612,23 @@ describe('MatMenu', () => {
     expect(items.every(item => item.getAttribute('role') === 'menuitem')).toBe(true);
   });
 
+  it('should prevent the default action when clicking on a disabled item', () => {
+    const fixture = createComponent(SimpleMenu, [], [FakeIcon]);
+    fixture.detectChanges();
+    fixture.componentInstance.trigger.openMenu();
+    fixture.detectChanges();
+
+    const item = overlayContainerElement.querySelector('.mat-menu-item[disabled]')!;
+    const itemEvent = dispatchFakeEvent(item, 'click');
+    fixture.detectChanges();
+    expect(itemEvent.defaultPrevented).toBe(true);
+
+    const contentWrapper = item.querySelector('span')!;
+    const wrapperEvent = dispatchFakeEvent(contentWrapper, 'click');
+    fixture.detectChanges();
+    expect(wrapperEvent.defaultPrevented).toBe(true);
+  });
+
   it('should be able to set an alternate role on the menu items', () => {
     const fixture = createComponent(MenuWithCheckboxItems);
     fixture.detectChanges();

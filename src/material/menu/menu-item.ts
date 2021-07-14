@@ -18,7 +18,9 @@ import {
   Optional,
   Input,
   HostListener,
+  NgZone,
   AfterViewInit,
+  ViewChild,
 } from '@angular/core';
 import {
   CanDisable,
@@ -61,6 +63,9 @@ export class MatMenuItem extends _MatMenuItemBase
   /** ARIA role for the menu item. */
   @Input() role: 'menuitem' | 'menuitemradio' | 'menuitemcheckbox' = 'menuitem';
 
+  /** Reference to the element wrapping the projected content. */
+  @ViewChild('content') _content: ElementRef<HTMLElement> | undefined;
+
   /** Stream that emits when the menu item is hovered. */
   readonly _hovered: Subject<MatMenuItem> = new Subject<MatMenuItem>();
 
@@ -81,9 +86,11 @@ export class MatMenuItem extends _MatMenuItemBase
      */
     @Inject(DOCUMENT) _document?: any,
     private _focusMonitor?: FocusMonitor,
-    @Inject(MAT_MENU_PANEL) @Optional() public _parentMenu?: MatMenuPanel<MatMenuItem>) {
+    @Inject(MAT_MENU_PANEL) @Optional() public _parentMenu?: MatMenuPanel<MatMenuItem>,
+    private _ngZone?: NgZone) {
 
     // @breaking-change 8.0.0 make `_focusMonitor` and `document` required params.
+    // @breaking-change 11.0.0 make `_ngZone` a required parameter.
     super();
 
     if (_parentMenu && _parentMenu.addItem) {
@@ -109,6 +116,13 @@ export class MatMenuItem extends _MatMenuItemBase
       // mouse or touch interaction.
       this._focusMonitor.monitor(this._elementRef, false);
     }
+
+    // @breaking-change 11.0.0 Remove null check for `_ngZone`.
+    if (this._ngZone) {
+      this._ngZone.runOutsideAngular(() => this._bindDisabledClickEvents());
+    } else {
+      this._bindDisabledClickEvents();
+    }
   }
 
   ngOnDestroy() {
@@ -118,6 +132,11 @@ export class MatMenuItem extends _MatMenuItemBase
 
     if (this._parentMenu && this._parentMenu.removeItem) {
       this._parentMenu.removeItem(this);
+    }
+
+    this._elementRef.nativeElement.removeEventListener('click', this._preventDisabledClicks);
+    if (this._content) {
+      this._content.nativeElement.removeEventListener('click', this._preventDisabledClicks);
     }
 
     this._hovered.complete();
@@ -132,20 +151,6 @@ export class MatMenuItem extends _MatMenuItemBase
   /** Returns the host DOM element. */
   _getHostElement(): HTMLElement {
     return this._elementRef.nativeElement;
-  }
-
-  /** Prevents the default element actions if it is disabled. */
-  // We have to use a `HostListener` here in order to support both Ivy and ViewEngine.
-  // In Ivy the `host` bindings will be merged when this class is extended, whereas in
-  // ViewEngine they're overwritten.
-  // TODO(crisbeto): we move this back into `host` once Ivy is turned on by default.
-  // tslint:disable-next-line:no-host-decorator-in-concrete
-  @HostListener('click', ['$event'])
-  _checkDisabled(event: Event): void {
-    if (this.disabled) {
-      event.preventDefault();
-      event.stopPropagation();
-    }
   }
 
   /** Emits to the hover stream. */
@@ -171,6 +176,26 @@ export class MatMenuItem extends _MatMenuItemBase
     }
 
     return clone.textContent?.trim() || '';
+  }
+
+  /** Binds the click events that prevent the default actions while disabled. */
+  private _bindDisabledClickEvents() {
+    // We need to bind this event both on the root node and the content wrapper, because browsers
+    // won't dispatch events on disabled `button` nodes, but they'll still be dispatched if the
+    // user interacts with a non-disabled child of the button. This means that can get regions
+    // inside a disabled menu item where clicks land and others where they don't.
+    this._elementRef.nativeElement.addEventListener('click', this._preventDisabledClicks);
+    if (this._content) {
+      this._content.nativeElement.addEventListener('click', this._preventDisabledClicks);
+    }
+  }
+
+  /** Prevents the default click action if the menu item is disabled. */
+  private _preventDisabledClicks = (event: Event) => {
+    if (this.disabled) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
   }
 
   static ngAcceptInputType_disabled: BooleanInput;
