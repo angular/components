@@ -53,10 +53,21 @@ let nextUniqueId = 0;
 // Boilerplate for applying mixins to MatInput.
 /** @docs-private */
 const _MatInputBase = mixinErrorState(class {
+  /**
+   * Emits whenever the component state changes and should cause the parent
+   * form-field to update. Implemented as part of `MatFormFieldControl`.
+   * @docs-private
+   */
+  readonly stateChanges = new Subject<void>();
+
   constructor(public _defaultErrorStateMatcher: ErrorStateMatcher,
               public _parentForm: NgForm,
               public _parentFormGroup: FormGroupDirective,
-              /** @docs-private */
+              /**
+               * Form control bound to the component.
+               * Implemented as part of `MatFormFieldControl`.
+               * @docs-private
+               */
               public ngControl: NgControl) {}
 });
 

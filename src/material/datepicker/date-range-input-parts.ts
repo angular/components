@@ -71,7 +71,10 @@ export const MAT_DATE_RANGE_INPUT_PARENT =
 abstract class MatDateRangeInputPartBase<D>
   extends MatDatepickerInputBase<DateRange<D>> implements OnInit, DoCheck {
 
-  /** @docs-private */
+  /**
+   * Form control bound to this input part.
+   * @docs-private
+   */
   ngControl: NgControl;
 
   /** @docs-private */

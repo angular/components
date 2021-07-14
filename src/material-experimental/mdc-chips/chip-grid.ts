@@ -36,7 +36,7 @@ import {
 } from '@angular/material-experimental/mdc-core';
 import {MatFormFieldControl} from '@angular/material-experimental/mdc-form-field';
 import {MatChipTextControl} from './chip-text-control';
-import {merge, Observable, Subscription} from 'rxjs';
+import {merge, Observable, Subject, Subscription} from 'rxjs';
 import {startWith, takeUntil} from 'rxjs/operators';
 import {MatChipEvent} from './chip';
 import {MatChipRow} from './chip-row';
@@ -57,13 +57,24 @@ export class MatChipGridChange {
  * @docs-private
  */
 class MatChipGridBase extends MatChipSet {
+  /**
+   * Emits whenever the component state changes and should cause the parent
+   * form-field to update. Implemented as part of `MatFormFieldControl`.
+   * @docs-private
+   */
+  readonly stateChanges = new Subject<void>();
+
   constructor(_elementRef: ElementRef,
               _changeDetectorRef: ChangeDetectorRef,
               _dir: Directionality,
               public _defaultErrorStateMatcher: ErrorStateMatcher,
               public _parentForm: NgForm,
               public _parentFormGroup: FormGroupDirective,
-              /** @docs-private */
+              /**
+               * Form control bound to the component.
+               * Implemented as part of `MatFormFieldControl`.
+               * @docs-private
+               */
               public ngControl: NgControl) {
     super(_elementRef, _changeDetectorRef, _dir);
   }

@@ -79,7 +79,6 @@ export declare type CanDisableRippleCtor = Constructor<CanDisableRipple> & Abstr
 export interface CanUpdateErrorState {
     errorState: boolean;
     errorStateMatcher: ErrorStateMatcher;
-    readonly stateChanges: Subject<void>;
     updateErrorState(): void;
 }
 
