@@ -23,6 +23,7 @@ export declare abstract class _MatRadioButtonBase extends _MatRadioButtonMixinBa
     get value(): any;
     set value(value: any);
     constructor(radioGroup: _MatRadioGroupBase<_MatRadioButtonBase>, elementRef: ElementRef, _changeDetector: ChangeDetectorRef, _focusMonitor: FocusMonitor, _radioDispatcher: UniqueSelectionDispatcher, animationMode?: string, _providerOverride?: MatRadioDefaultOptions | undefined, tabIndex?: string);
+    _getInputTabindex(): number;
     _isRippleDisabled(): boolean;
     _markForCheck(): void;
     _onInputClick(event: Event): void;

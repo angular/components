@@ -23,6 +23,7 @@ describe('MatRadio', () => {
         TranscludingWrapper,
         RadioButtonWithPredefinedTabindex,
         RadioButtonWithPredefinedAriaAttributes,
+        RadiosInsidePreCheckedRadioGroup,
       ]
     });
 
@@ -393,6 +394,41 @@ describe('MatRadio', () => {
 
       expect(radioRippleNativeElements
           .every(element => element.classList.contains('mat-focus-indicator'))).toBe(true);
+    });
+
+    it('should set the input tabindex based on the selected radio button', () => {
+      const getTabIndexes = () => {
+        return radioInputElements.map(element => parseInt(element.getAttribute('tabindex') || ''));
+      };
+
+      expect(getTabIndexes()).toEqual([0, 0, 0]);
+
+      radioLabelElements[0].click();
+      fixture.detectChanges();
+
+      expect(getTabIndexes()).toEqual([0, -1, -1]);
+
+      radioLabelElements[1].click();
+      fixture.detectChanges();
+
+      expect(getTabIndexes()).toEqual([-1, 0, -1]);
+
+      radioLabelElements[2].click();
+      fixture.detectChanges();
+
+      expect(getTabIndexes()).toEqual([-1, -1, 0]);
+    });
+
+    it('should set the input tabindex correctly with a pre-checked radio button', () => {
+      const precheckedFixture = TestBed.createComponent(RadiosInsidePreCheckedRadioGroup);
+      precheckedFixture.detectChanges();
+
+      const radios: NodeListOf<HTMLElement> =
+          precheckedFixture.nativeElement.querySelectorAll('mat-radio-button input');
+
+      expect(Array.from(radios).map(radio => {
+        return radio.getAttribute('tabindex');
+      })).toEqual(['-1', '-1', '0']);
     });
 
   });
@@ -906,6 +942,18 @@ class RadiosInsideRadioGroup {
   groupValue: string | null = null;
   disableRipple: boolean = false;
   color: string | null;
+}
+
+@Component({
+  template: `
+  <mat-radio-group name="test-name">
+    <mat-radio-button value="fire">Charmander</mat-radio-button>
+    <mat-radio-button value="water">Squirtle</mat-radio-button>
+    <mat-radio-button value="leaf" checked>Bulbasaur</mat-radio-button>
+  </mat-radio-group>
+  `
+})
+class RadiosInsidePreCheckedRadioGroup {
 }
 
 
