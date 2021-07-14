@@ -50,6 +50,7 @@ export declare class MatCheckbox extends _MatCheckboxBase implements ControlValu
     setDisabledState(isDisabled: boolean): void;
     toggle(): void;
     writeValue(value: any): void;
+    static ngAcceptInputType_checked: BooleanInput;
     static ngAcceptInputType_disableRipple: BooleanInput;
     static ngAcceptInputType_disabled: BooleanInput;
     static ngAcceptInputType_indeterminate: BooleanInput;
