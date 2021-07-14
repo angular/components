@@ -60,6 +60,14 @@ export declare abstract class DataSource<T> {
     abstract disconnect(collectionViewer: CollectionViewer): void;
 }
 
+export declare class DifferDataSource<T> extends DataSource<T> {
+    constructor(_differs: IterableDiffers, _iterable: T[], trackBy?: TrackByFunction<T>);
+    connect(): Observable<T[] | ReadonlyArray<T>>;
+    disconnect(): void;
+    doCheck(): void;
+    switchTrackBy(trackBy?: TrackByFunction<T>): void;
+}
+
 export declare function getMultipleValuesInSingleSelectionError(): Error;
 
 export declare function isDataSource(value: any): value is DataSource<any>;

@@ -574,6 +574,28 @@ describe('CdkVirtualScrollViewport', () => {
       expect(dataSource.disconnect).toHaveBeenCalled();
     }));
 
+    it('should work if the iterable is mutated', fakeAsync(() => {
+      testComponent.items = [];
+      finishInit(fixture);
+
+      expect(viewport.getRenderedRange())
+          .toEqual({start: 0, end: 0}, 'no items should be rendered');
+
+      testComponent.items.push(1, 2, 3);
+      fixture.detectChanges();
+      flush();
+
+      expect(viewport.getRenderedRange())
+          .toEqual({start: 0, end: 3}, 'newly emitted items should be rendered');
+
+      testComponent.items.pop();
+      fixture.detectChanges();
+      flush();
+
+      expect(viewport.getRenderedRange())
+          .toEqual({start: 0, end: 2}, 'last item to be removed');
+    }));
+
     it('should trackBy value by default', fakeAsync(() => {
       testComponent.items = [];
       spyOn(testComponent.virtualForOf._viewContainerRef, 'detach').and.callThrough();

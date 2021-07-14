@@ -10,6 +10,7 @@ import {
   ArrayDataSource,
   CollectionViewer,
   DataSource,
+  DifferDataSource,
   ListRange,
   isDataSource,
   _RecycleViewRepeaterStrategy,
@@ -95,6 +96,12 @@ export class CdkVirtualForOf<T> implements
   /** Subject that emits when a new DataSource instance is given. */
   private readonly _dataSourceChanges = new Subject<DataSource<T>>();
 
+  /**
+   * Current differ data source. Needs to be kept in a separate
+   * property so we can run change detection on it.
+   */
+  private _differDataSource: DifferDataSource<T> | null = null;
+
   /** The DataSource to display. */
   @Input()
   get cdkVirtualForOf(): DataSource<T> | Observable<T[]> | NgIterable<T> | null | undefined {
@@ -102,13 +109,20 @@ export class CdkVirtualForOf<T> implements
   }
   set cdkVirtualForOf(value: DataSource<T> | Observable<T[]> | NgIterable<T> | null | undefined) {
     this._cdkVirtualForOf = value;
+
+    let dataSource: DataSource<T>;
+
     if (isDataSource(value)) {
-      this._dataSourceChanges.next(value);
+      dataSource = value;
+    } else if (Array.isArray(value)) {
+      this._differDataSource = dataSource =
+          new DifferDataSource(this._differs, value, this.cdkVirtualForTrackBy);
     } else {
       // If value is an an NgIterable, convert it to an array.
-      this._dataSourceChanges.next(new ArrayDataSource<T>(
-          isObservable(value) ? value : Array.from(value || [])));
+      dataSource = new ArrayDataSource<T>(isObservable(value) ? value : Array.from(value || []));
     }
+
+    this._dataSourceChanges.next(dataSource);
   }
 
   _cdkVirtualForOf: DataSource<T> | Observable<T[]> | NgIterable<T> | null | undefined;
@@ -126,6 +140,10 @@ export class CdkVirtualForOf<T> implements
     this._cdkVirtualForTrackBy = fn ?
         (index, item) => fn(index + (this._renderedRange ? this._renderedRange.start : 0), item) :
         undefined;
+
+    if (this._differDataSource) {
+      this._differDataSource.switchTrackBy(this._cdkVirtualForTrackBy);
+    }
   }
   private _cdkVirtualForTrackBy: TrackByFunction<T> | undefined;
 
@@ -255,6 +273,10 @@ export class CdkVirtualForOf<T> implements
   }
 
   ngDoCheck() {
+    if (this._differDataSource) {
+      this._differDataSource.doCheck();
+    }
+
     if (this._differ && this._needsUpdate) {
       // TODO(mmalerba): We should differentiate needs update due to scrolling and a new portion of
       // this list being rendered (can use simpler algorithm) vs needs update due to data actually
@@ -303,6 +325,10 @@ export class CdkVirtualForOf<T> implements
 
     if (oldDs) {
       oldDs.disconnect(this);
+
+      if (oldDs === this._differDataSource) {
+        this._differDataSource = null;
+      }
     }
 
     this._needsUpdate = true;
