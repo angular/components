@@ -1,8 +1,9 @@
-export declare abstract class _MatSelectBase<C> extends _MatSelectMixinBase implements AfterContentInit, OnChanges, OnDestroy, OnInit, DoCheck, ControlValueAccessor, CanDisable, HasTabIndex, MatFormFieldControl<any>, CanUpdateErrorState, CanDisableRipple {
+export declare abstract class _MatSelectBase<C> extends _MatSelectMixinBase implements AfterContentInit, OnChanges, OnDestroy, OnInit, DoCheck, ControlValueAccessor, HasTabIndex, MatFormFieldControl<any>, CanUpdateErrorState, CanDisableRipple {
     _ariaDescribedby: string;
     protected _changeDetectorRef: ChangeDetectorRef;
     readonly _closedStream: Observable<void>;
     protected readonly _destroy: Subject<void>;
+    protected _disabled: boolean;
     _keyManager: ActiveDescendantKeyManager<MatOption>;
     protected _ngZone: NgZone;
     _onChange: (value: any) => void;
@@ -25,6 +26,8 @@ export declare abstract class _MatSelectBase<C> extends _MatSelectMixinBase impl
     abstract customTrigger: {};
     get disableOptionCentering(): boolean;
     set disableOptionCentering(value: boolean);
+    get disabled(): boolean;
+    set disabled(value: boolean);
     get empty(): boolean;
     errorStateMatcher: ErrorStateMatcher;
     get focused(): boolean;
@@ -92,7 +95,7 @@ export declare abstract class _MatSelectBase<C> extends _MatSelectMixinBase impl
     static ngAcceptInputType_required: BooleanInput;
     static ngAcceptInputType_tabIndex: NumberInput;
     static ngAcceptInputType_typeaheadDebounceInterval: NumberInput;
-    static ɵdir: i0.ɵɵDirectiveDeclaration<_MatSelectBase<any>, never, never, { "panelClass": "panelClass"; "placeholder": "placeholder"; "required": "required"; "multiple": "multiple"; "disableOptionCentering": "disableOptionCentering"; "compareWith": "compareWith"; "value": "value"; "ariaLabel": "aria-label"; "ariaLabelledby": "aria-labelledby"; "errorStateMatcher": "errorStateMatcher"; "typeaheadDebounceInterval": "typeaheadDebounceInterval"; "sortComparator": "sortComparator"; "id": "id"; }, { "openedChange": "openedChange"; "_openedStream": "opened"; "_closedStream": "closed"; "selectionChange": "selectionChange"; "valueChange": "valueChange"; }, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<_MatSelectBase<any>, never, never, { "panelClass": "panelClass"; "placeholder": "placeholder"; "required": "required"; "multiple": "multiple"; "disableOptionCentering": "disableOptionCentering"; "compareWith": "compareWith"; "value": "value"; "disabled": "disabled"; "ariaLabel": "aria-label"; "ariaLabelledby": "aria-labelledby"; "errorStateMatcher": "errorStateMatcher"; "typeaheadDebounceInterval": "typeaheadDebounceInterval"; "sortComparator": "sortComparator"; "id": "id"; }, { "openedChange": "openedChange"; "_openedStream": "opened"; "_closedStream": "closed"; "selectionChange": "selectionChange"; "valueChange": "valueChange"; }, never>;
     static ɵfac: i0.ɵɵFactoryDeclaration<_MatSelectBase<any>, [null, null, null, null, null, { optional: true; }, { optional: true; }, { optional: true; }, { optional: true; }, { optional: true; self: true; }, { attribute: "tabindex"; }, null, null, { optional: true; }]>;
 }
 

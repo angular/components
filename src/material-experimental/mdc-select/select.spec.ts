@@ -131,6 +131,7 @@ describe('MDC-based MatSelect', () => {
         SelectWithGroupsAndNgContainer,
         SelectWithFormFieldLabel,
         SelectWithChangeEvent,
+        SelectWithFormControlAndDisabledBinding,
       ]);
     }));
 
@@ -2013,6 +2014,19 @@ describe('MDC-based MatSelect', () => {
         expect(fixture.componentInstance.select.panelOpen)
             .toBe(true, `Expected select panelOpen property to become true.`);
       }));
+
+      it('should pick the form control disabled state over its property binding', () => {
+        const fixture = TestBed.createComponent(SelectWithFormControlAndDisabledBinding);
+        fixture.detectChanges();
+
+        fixture.componentInstance.control.enable();
+        fixture.detectChanges();
+        fixture.componentInstance.isDisabled = true;
+        fixture.detectChanges();
+
+        expect(fixture.componentInstance.select.disabled).toBe(false);
+      });
+
     });
 
     describe('keyboard scrolling', () => {
@@ -4729,3 +4743,18 @@ class SelectWithResetOptionAndFormControl {
   `
 })
 class SelectInNgContainer {}
+
+
+@Component({
+  template: `
+    <mat-form-field>
+      <mat-select [disabled]="isDisabled" [formControl]="control"></mat-select>
+    </mat-form-field>
+  `
+})
+class SelectWithFormControlAndDisabledBinding {
+  @ViewChild(MatSelect) select: MatSelect;
+  control = new FormControl();
+  isDisabled: boolean;
+}
+
