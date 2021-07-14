@@ -28,11 +28,12 @@ export declare const CDK_DESCRIBEDBY_HOST_ATTRIBUTE = "cdk-describedby-host";
 export declare const CDK_DESCRIBEDBY_ID_PREFIX = "cdk-describedby-message";
 
 export declare class CdkAriaLive implements OnDestroy {
+    duration: number;
     get politeness(): AriaLivePoliteness;
     set politeness(value: AriaLivePoliteness);
     constructor(_elementRef: ElementRef, _liveAnnouncer: LiveAnnouncer, _contentObserver: ContentObserver, _ngZone: NgZone);
     ngOnDestroy(): void;
-    static ɵdir: i0.ɵɵDirectiveDeclaration<CdkAriaLive, "[cdkAriaLive]", ["cdkAriaLive"], { "politeness": "cdkAriaLive"; }, {}, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<CdkAriaLive, "[cdkAriaLive]", ["cdkAriaLive"], { "politeness": "cdkAriaLive"; "duration": "cdkAriaLiveDuration"; }, {}, never>;
     static ɵfac: i0.ɵɵFactoryDeclaration<CdkAriaLive, never>;
 }
 
