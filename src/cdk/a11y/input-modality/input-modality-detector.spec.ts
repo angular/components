@@ -9,7 +9,7 @@ import {
   dispatchTouchEvent,
   dispatchEvent,
   createTouchEvent,
-} from '@angular/cdk/testing/private';
+} from '../../testing/private';
 import {fakeAsync, inject, tick} from '@angular/core/testing';
 import {InputModality, InputModalityDetector, TOUCH_BUFFER_MS} from './input-modality-detector';
 
