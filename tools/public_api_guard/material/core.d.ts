@@ -12,7 +12,7 @@ export declare class _MatOptgroupBase extends _MatOptgroupMixinBase implements C
     static ɵfac: i0.ɵɵFactoryDeclaration<_MatOptgroupBase, [{ optional: true; }]>;
 }
 
-export declare class _MatOptionBase implements FocusableOption, AfterViewChecked, OnDestroy {
+export declare class _MatOptionBase<T = any> implements FocusableOption, AfterViewChecked, OnDestroy {
     readonly _stateChanges: Subject<void>;
     get active(): boolean;
     get disableRipple(): boolean | undefined;
@@ -21,9 +21,9 @@ export declare class _MatOptionBase implements FocusableOption, AfterViewChecked
     readonly group: _MatOptgroupBase;
     id: string;
     get multiple(): boolean | undefined;
-    readonly onSelectionChange: EventEmitter<MatOptionSelectionChange>;
+    readonly onSelectionChange: EventEmitter<MatOptionSelectionChange<T>>;
     get selected(): boolean;
-    value: any;
+    value: T;
     get viewValue(): string;
     constructor(_element: ElementRef<HTMLElement>, _changeDetectorRef: ChangeDetectorRef, _parent: MatOptionParentComponent, group: _MatOptgroupBase);
     _getAriaSelected(): boolean | null;
@@ -40,8 +40,8 @@ export declare class _MatOptionBase implements FocusableOption, AfterViewChecked
     setActiveStyles(): void;
     setInactiveStyles(): void;
     static ngAcceptInputType_disabled: BooleanInput;
-    static ɵdir: i0.ɵɵDirectiveDeclaration<_MatOptionBase, never, never, { "value": "value"; "id": "id"; "disabled": "disabled"; }, { "onSelectionChange": "onSelectionChange"; }, never>;
-    static ɵfac: i0.ɵɵFactoryDeclaration<_MatOptionBase, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<_MatOptionBase<any>, never, never, { "value": "value"; "id": "id"; "disabled": "disabled"; }, { "onSelectionChange": "onSelectionChange"; }, never>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<_MatOptionBase<any>, never>;
 }
 
 export declare class AnimationCurves {
@@ -209,10 +209,10 @@ export declare class MatOptgroup extends _MatOptgroupBase {
     static ɵfac: i0.ɵɵFactoryDeclaration<MatOptgroup, never>;
 }
 
-export declare class MatOption extends _MatOptionBase {
+export declare class MatOption<T = any> extends _MatOptionBase<T> {
     constructor(element: ElementRef<HTMLElement>, changeDetectorRef: ChangeDetectorRef, parent: MatOptionParentComponent, group: MatOptgroup);
-    static ɵcmp: i0.ɵɵComponentDeclaration<MatOption, "mat-option", ["matOption"], {}, {}, never, ["*"]>;
-    static ɵfac: i0.ɵɵFactoryDeclaration<MatOption, [null, null, { optional: true; }, { optional: true; }]>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<MatOption<any>, "mat-option", ["matOption"], {}, {}, never, ["*"]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<MatOption<any>, [null, null, { optional: true; }, { optional: true; }]>;
 }
 
 export declare class MatOptionModule {
@@ -227,11 +227,11 @@ export interface MatOptionParentComponent {
     multiple?: boolean;
 }
 
-export declare class MatOptionSelectionChange {
+export declare class MatOptionSelectionChange<T = any> {
     isUserInput: boolean;
-    source: _MatOptionBase;
+    source: _MatOptionBase<T>;
     constructor(
-    source: _MatOptionBase,
+    source: _MatOptionBase<T>,
     isUserInput?: boolean);
 }
 
