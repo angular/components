@@ -395,6 +395,9 @@ export class CdkTrapFocus implements OnDestroy, AfterContentInit, OnChanges, DoC
   /** Previously focused element to restore focus to upon destroy when using autoCapture. */
   private _previouslyFocusedElement: HTMLElement | null = null;
 
+  /** Whether the focus trap has been initialized. */
+  private _hasInitialized: boolean;
+
   /** Whether the focus trap is active. */
   @Input('cdkTrapFocus')
   get enabled(): boolean { return this.focusTrap.enabled; }
@@ -416,7 +419,12 @@ export class CdkTrapFocus implements OnDestroy, AfterContentInit, OnChanges, DoC
        * @deprecated No longer being used. To be removed.
        * @breaking-change 13.0.0
        */
-      @Inject(DOCUMENT) _document: any) {
+      @Inject(DOCUMENT) _document: any,
+      /**
+       * @deprecated _ngZone parameter to become required.
+       * @breaking-change 14.0.0
+       */
+       private _ngZone?: NgZone) {
     this.focusTrap = this._focusTrapFactory.create(this._elementRef.nativeElement, true);
   }
 
@@ -432,15 +440,32 @@ export class CdkTrapFocus implements OnDestroy, AfterContentInit, OnChanges, DoC
   }
 
   ngAfterContentInit() {
-    this.focusTrap.attachAnchors();
+    // We have to delay attaching the anchors, because the lifecycle hook may be fired before the
+    // focus trap element is at its final place in the DOM when inserted via a portal (see #16346).
+    // It has to happen outside the `NgZone`, because the promise can delay `NgZone.onStable` which
+    // overlays depend on for positioning.
+    const attachAnchor = () => {
+      Promise.resolve().then(() => {
+        this.focusTrap.attachAnchors();
 
-    if (this.autoCapture) {
-      this._captureFocus();
+        if (this.autoCapture) {
+          this._captureFocus();
+        }
+
+        this._hasInitialized = true;
+      });
+    };
+
+    // @breaking-change 11.0.0 Remove null check for `_ngZone`.
+    if (this._ngZone) {
+      this._ngZone.runOutsideAngular(attachAnchor);
+    } else {
+      attachAnchor();
     }
   }
 
   ngDoCheck() {
-    if (!this.focusTrap.hasAttached()) {
+    if (this._hasInitialized && !this.focusTrap.hasAttached()) {
       this.focusTrap.attachAnchors();
     }
   }

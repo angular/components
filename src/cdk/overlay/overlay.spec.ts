@@ -15,6 +15,8 @@ import {
   Injectable,
   EventEmitter,
   NgZone,
+  ComponentFactoryResolver,
+  TemplateRef,
 } from '@angular/core';
 import {Direction, Directionality} from '@angular/cdk/bidi';
 import {MockNgZone, dispatchFakeEvent} from '@angular/cdk/testing/private';
@@ -997,6 +999,31 @@ describe('Overlay', () => {
     }));
 
   });
+
+  it('should insert component that adds content through ViewContainerRef', () => {
+    componentPortal = new ComponentPortal(FoodRenderer);
+    const overlayRef = overlay.create();
+    overlayRef.attach(componentPortal);
+
+    expect(overlayContainerElement.textContent).toContain('Food:Pizza');
+    overlayRef.dispose();
+  });
+
+  it('should insert template that has component that adds content via ViewContainerRef', () => {
+    const fixture = TestBed.createComponent(FoodRendererInTemplate);
+    fixture.detectChanges();
+
+    const portal = new TemplatePortal(
+      fixture.componentInstance.foodRendererTemplate,
+      fixture.componentInstance.viewContainerRef
+    );
+    const overlayRef = overlay.create();
+    overlayRef.attach(portal);
+
+    expect(overlayContainerElement.textContent).toContain('Food:Pizza');
+    overlayRef.dispose();
+  });
+
 });
 
 /** Simple component for testing ComponentPortal. */
@@ -1015,9 +1042,42 @@ class TestComponentWithTemplatePortals {
   constructor(public viewContainerRef: ViewContainerRef) { }
 }
 
+@Component({
+  selector: 'food-renderer',
+  template: '<p>Food:</p>',
+})
+class FoodRenderer {
+  constructor(
+    private _componentFactoryResolver: ComponentFactoryResolver,
+    private _viewContainerRef: ViewContainerRef) {
+      const factory = this._componentFactoryResolver.resolveComponentFactory(PizzaMsg);
+      this._viewContainerRef.clear();
+      this._viewContainerRef.createComponent(factory);
+  }
+}
+
+@Component({
+  template: `
+    <ng-template #foodRenderer>
+      <food-renderer></food-renderer>
+    </ng-template>
+  `
+})
+class FoodRendererInTemplate {
+  @ViewChild('foodRenderer') foodRendererTemplate: TemplateRef<any>;
+
+  constructor(public viewContainerRef: ViewContainerRef) { }
+}
+
 // Create a real (non-test) NgModule as a workaround for
 // https://github.com/angular/angular/issues/10760
-const TEST_COMPONENTS = [PizzaMsg, TestComponentWithTemplatePortals];
+const TEST_COMPONENTS = [
+  PizzaMsg,
+  TestComponentWithTemplatePortals,
+  FoodRenderer,
+  FoodRendererInTemplate,
+];
+
 @NgModule({
   imports: [OverlayModule, PortalModule],
   exports: TEST_COMPONENTS,
