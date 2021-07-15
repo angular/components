@@ -63,7 +63,7 @@ export declare class MatFormField extends _MatFormFieldBase implements AfterCont
     _hasPlaceholder(): boolean;
     _hideControlPlaceholder(): boolean;
     _shouldAlwaysFloat(): boolean;
-    _shouldForward(prop: keyof NgControl): boolean;
+    _shouldForward(prop: keyof AbstractControlDirective): boolean;
     _shouldLabelFloat(): boolean;
     protected _validateControlChild(): void;
     getConnectedOverlayOrigin(): ElementRef;
@@ -92,7 +92,7 @@ export declare abstract class MatFormFieldControl<T> {
     readonly errorState: boolean;
     readonly focused: boolean;
     readonly id: string;
-    readonly ngControl: NgControl | null;
+    readonly ngControl: NgControl | AbstractControlDirective | null;
     readonly placeholder: string;
     readonly required: boolean;
     readonly shouldLabelFloat: boolean;
