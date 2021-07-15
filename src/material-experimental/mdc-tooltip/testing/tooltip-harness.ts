@@ -14,6 +14,7 @@ export class MatTooltipHarness extends _MatTooltipHarnessBase {
   protected _optionalPanel =
       this.documentRootLocatorFactory().locatorForOptional('.mat-mdc-tooltip');
   static hostSelector = '.mat-mdc-tooltip-trigger';
+  protected _hiddenClass = 'mat-mdc-tooltip-hide';
 
   /**
    * Gets a `HarnessPredicate` that can be used to search

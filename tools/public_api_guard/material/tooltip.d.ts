@@ -43,27 +43,31 @@ export declare abstract class _MatTooltipBase<T extends _TooltipComponentBase> i
     static ɵfac: i0.ɵɵFactoryDeclaration<_MatTooltipBase<any>, never>;
 }
 
-export declare abstract class _TooltipComponentBase implements OnDestroy {
+export declare abstract class _TooltipComponentBase implements AfterViewInit, OnDestroy {
+    _animationMode?: string | undefined;
+    protected readonly abstract _hideAnimation: string;
     _hideTimeoutId: number | undefined;
+    protected readonly abstract _showAnimation: string;
     _showTimeoutId: number | undefined;
+    abstract _tooltip: ElementRef<HTMLElement>;
     _visibility: TooltipVisibility;
     message: string;
     tooltipClass: string | string[] | Set<string> | {
         [key: string]: any;
     };
-    constructor(_changeDetectorRef: ChangeDetectorRef);
-    _animationDone(event: AnimationEvent): void;
-    _animationStart(): void;
+    constructor(_changeDetectorRef: ChangeDetectorRef, _animationMode?: string | undefined,
+    _ngZone?: NgZone | undefined);
     _handleBodyInteraction(): void;
     _markForCheck(): void;
     protected _onShow(): void;
     afterHidden(): Observable<void>;
     hide(delay: number): void;
     isVisible(): boolean;
+    ngAfterViewInit(): void;
     ngOnDestroy(): void;
-    show(delay: number): void;
+    show(delay: number, isUserInteraction?: boolean): void;
     static ɵdir: i0.ɵɵDirectiveDeclaration<_TooltipComponentBase, never, never, {}, {}, never>;
-    static ɵfac: i0.ɵɵFactoryDeclaration<_TooltipComponentBase, never>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<_TooltipComponentBase, [null, { optional: true; }, null]>;
 }
 
 export declare function getMatTooltipInvalidPositionError(position: string): Error;
@@ -112,10 +116,14 @@ export declare const SCROLL_THROTTLE_MS = 20;
 export declare const TOOLTIP_PANEL_CLASS = "mat-tooltip-panel";
 
 export declare class TooltipComponent extends _TooltipComponentBase {
+    _hideAnimation: string;
     _isHandset: Observable<BreakpointState>;
-    constructor(changeDetectorRef: ChangeDetectorRef, _breakpointObserver: BreakpointObserver);
+    _showAnimation: string;
+    _tooltip: ElementRef<HTMLElement>;
+    constructor(changeDetectorRef: ChangeDetectorRef, _breakpointObserver: BreakpointObserver, animationMode?: string,
+    ngZone?: NgZone);
     static ɵcmp: i0.ɵɵComponentDeclaration<TooltipComponent, "mat-tooltip-component", never, {}, {}, never, never>;
-    static ɵfac: i0.ɵɵFactoryDeclaration<TooltipComponent, never>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<TooltipComponent, [null, null, { optional: true; }, null]>;
 }
 
 export declare type TooltipPosition = 'left' | 'right' | 'above' | 'below' | 'before' | 'after';

@@ -11,4 +11,46 @@
   // depending on the state of the overlay. For tooltips the overlay panel should never enable
   // pointer events. To overwrite the inline CSS from the overlay reference `!important` is needed.
   pointer-events: none !important;
+
+  opacity: 0;
+  transform: scale(0.8);
+
+  // Use a very short animation if animations are disabled so the `animationend` event still fires.
+  &._mat-animation-noopable {
+    animation-duration: 1ms;
+  }
+}
+
+// TODO(crisbeto): we may be able to use MDC directly for these animations.
+
+@keyframes mat-mdc-tooltip-show {
+  0% {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes mat-mdc-tooltip-hide {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  100% {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+}
+
+.mat-mdc-tooltip-show {
+  animation: mat-mdc-tooltip-show 150ms cubic-bezier(0, 0, 0.2, 1) forwards;
+}
+
+.mat-mdc-tooltip-hide {
+  animation: mat-mdc-tooltip-hide 75ms cubic-bezier(0.4, 0, 1, 1) forwards;
 }

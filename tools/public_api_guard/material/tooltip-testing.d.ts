@@ -1,4 +1,5 @@
 export declare abstract class _MatTooltipHarnessBase extends ComponentHarness {
+    protected abstract _hiddenClass: string;
     protected abstract _optionalPanel: AsyncFactoryFn<TestElement | null>;
     getTooltipText(): Promise<string>;
     hide(): Promise<void>;
@@ -7,6 +8,7 @@ export declare abstract class _MatTooltipHarnessBase extends ComponentHarness {
 }
 
 export declare class MatTooltipHarness extends _MatTooltipHarnessBase {
+    protected _hiddenClass: string;
     protected _optionalPanel: AsyncFactoryFn<TestElement | null>;
     static hostSelector: string;
     static with(options?: TooltipHarnessFilters): HarnessPredicate<MatTooltipHarness>;
