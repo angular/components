@@ -1,3 +1,5 @@
+export declare const YOUTUBE_PLAYER_CONFIG: InjectionToken<YouTubePlayerConfig>;
+
 export declare class YouTubePlayer implements AfterViewInit, OnDestroy, OnInit {
     readonly apiChange: Observable<YT.PlayerEvent>;
     set endSeconds(endSeconds: number | undefined);
@@ -18,7 +20,7 @@ export declare class YouTubePlayer implements AfterViewInit, OnDestroy, OnInit {
     get width(): number | undefined;
     set width(width: number | undefined);
     youtubeContainer: ElementRef<HTMLElement>;
-    constructor(_ngZone: NgZone, platformId: Object);
+    constructor(_ngZone: NgZone, platformId: Object, _config?: YouTubePlayerConfig | undefined);
     createEventsBoundInZone(): YT.Events;
     getAvailablePlaybackRates(): number[];
     getAvailableQualityLevels(): YT.SuggestedVideoQuality[];
@@ -44,7 +46,12 @@ export declare class YouTubePlayer implements AfterViewInit, OnDestroy, OnInit {
     stopVideo(): void;
     unMute(): void;
     static ɵcmp: i0.ɵɵComponentDeclaration<YouTubePlayer, "youtube-player", never, { "videoId": "videoId"; "height": "height"; "width": "width"; "startSeconds": "startSeconds"; "endSeconds": "endSeconds"; "suggestedQuality": "suggestedQuality"; "playerVars": "playerVars"; "showBeforeIframeApiLoads": "showBeforeIframeApiLoads"; }, { "ready": "ready"; "stateChange": "stateChange"; "error": "error"; "apiChange": "apiChange"; "playbackQualityChange": "playbackQualityChange"; "playbackRateChange": "playbackRateChange"; }, never, never>;
-    static ɵfac: i0.ɵɵFactoryDeclaration<YouTubePlayer, never>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<YouTubePlayer, [null, null, { optional: true; }]>;
+}
+
+export interface YouTubePlayerConfig {
+    apiUrl?: string;
+    loadApi?: boolean;
 }
 
 export declare class YouTubePlayerModule {
