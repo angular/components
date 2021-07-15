@@ -15,7 +15,8 @@ export declare class MatProgressBar extends _MatProgressBarBase implements CanCo
     get value(): number;
     set value(v: number);
     constructor(elementRef: ElementRef, _ngZone: NgZone, _animationMode?: string | undefined,
-    location?: MatProgressBarLocation);
+    location?: MatProgressBarLocation,
+    _changeDetectorRef?: ChangeDetectorRef | undefined);
     _bufferTransform(): {
         transform: string;
     } | null;
@@ -26,7 +27,7 @@ export declare class MatProgressBar extends _MatProgressBarBase implements CanCo
     ngOnDestroy(): void;
     static ngAcceptInputType_value: NumberInput;
     static ɵcmp: i0.ɵɵComponentDeclaration<MatProgressBar, "mat-progress-bar", ["matProgressBar"], { "color": "color"; "value": "value"; "bufferValue": "bufferValue"; "mode": "mode"; }, { "animationEnd": "animationEnd"; }, never, never>;
-    static ɵfac: i0.ɵɵFactoryDeclaration<MatProgressBar, [null, null, { optional: true; }, { optional: true; }]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<MatProgressBar, [null, null, { optional: true; }, { optional: true; }, null]>;
 }
 
 export interface MatProgressBarLocation {
