@@ -33,10 +33,22 @@ screen-readers, which will read the text character-by-character. We leave the de
 approach this to the consuming app.
 
 ### Accessibility
-Angular Material uses native `<button>` and `<a>` elements to ensure an accessible experience by
-default. The `<button>` element should be used for any interaction that _performs an action on the
-current page_. The `<a>` element should be used for any interaction that _navigates to another
-view_.
+Angular Material uses native <button> and <a> elements. Both of the two look the same when applied Material Design Styling, but have different semantic meaning for assitive technology. To ensure an accessible experience, choose the element which is most approprite for the purpose of the interaction.
 
-Buttons or links containing only icons (such as `mat-fab`, `mat-mini-fab`, and `mat-icon-button`)
-should be given a meaningful label via `aria-label` or `aria-labelledby`.
+#### Performing an Action
+Use the `<button>` element for interactions that _perform an action on the current page_.
+ - submitting a form
+ - sending a chat message
+ - copying content to the clipboard
+
+#### Navigation
+Use the `<a>` element for interactions that _navigate to another view_.
+ - navigating to a different page
+ - navigating to a view in a single-page application
+ - navigating to an element on the same page
+
+Use the `href` attribute when using the `<a>` element. The content of the `<a>` element should describe the link's destination.
+
+#### Icon Buttons
+
+For buttons or links containg only icons, follow the [instructions for interactive icons](https://material.angular.io/components/icon/overview#interactive-icons). This applies to `mat-fab`, `mat-mini-fab`, `mat-icon-button`, and any buttons that do not have text content.
