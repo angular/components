@@ -90,10 +90,6 @@ $ripple-radius: 20px;
   // force browser to show background-color when using the print function
   @include vendor-prefixes.private-color-adjust(exact);
 
-  ._mat-animation-noopable & {
-    transition: none;
-  }
-
   .mat-radio-checked & {
     transform: scale(0.5);
     opacity: 1;
@@ -104,6 +100,10 @@ $ripple-radius: 20px;
       // displayed in high contrast mode. Use a border as a fallback.
       border: solid private.private-div($size, 2);
     }
+  }
+
+  ._mat-animation-noopable & {
+    transition: none;
   }
 }
 
