@@ -10,7 +10,8 @@ import {MatSlideToggleHarness} from '@angular/material/slide-toggle/testing/slid
 /** Shared tests to run on both the original and MDC-based slide-toggles. */
 export function runHarnessTests(
     slideToggleModule: typeof MatSlideToggleModule,
-    slideToggleHarness: typeof MatSlideToggleHarness) {
+    slideToggleHarness: typeof MatSlideToggleHarness,
+    config: {supportsRequiredState: boolean}) {
   let platform: Platform;
   let fixture: ComponentFixture<SlideToggleHarnessTest>;
   let loader: HarnessLoader;
@@ -64,6 +65,10 @@ export function runHarnessTests(
   });
 
   it('should get required state', async () => {
+    if (!config.supportsRequiredState) {
+      return;
+    }
+
     const [requiredToggle, optionalToggle] = await loader.getAllHarnesses(slideToggleHarness);
     expect(await requiredToggle.isRequired()).toBe(true);
     expect(await optionalToggle.isRequired()).toBe(false);
@@ -144,7 +149,7 @@ export function runHarnessTests(
 
   it('should not toggle disabled slide-toggle', async () => {
     if (platform.FIREFOX) {
-      // do run this test on firefox as click events on the label of the underlying
+      // do not run this test on firefox as click events on the label of the underlying
       // input checkbox cause the value to be changed. Read more in the bug report:
       // https://bugzilla.mozilla.org/show_bug.cgi?id=1540995
       return;

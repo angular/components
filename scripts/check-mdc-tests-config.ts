@@ -175,6 +175,10 @@ export const config = {
       'should re-add margin if label is added asynchronously',
       'should properly update margin if label content is projected',
 
+      // The MDC implementation uses a `button` instead of an `input` which can't be required.
+      'should forward the required attribute',
+      'should prevent the form from submit when being required',
+
       // TODO: the focus origin functionality has to be implemeted for the MDC slide toggle.
       'should not change focus origin if origin not specified'
     ],

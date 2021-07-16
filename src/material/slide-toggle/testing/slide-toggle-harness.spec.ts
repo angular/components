@@ -3,5 +3,5 @@ import {runHarnessTests} from '@angular/material/slide-toggle/testing/shared.spe
 import {MatSlideToggleHarness} from './slide-toggle-harness';
 
 describe('Non-MDC-based MatSlideToggleHarness', () => {
-  runHarnessTests(MatSlideToggleModule, MatSlideToggleHarness);
+  runHarnessTests(MatSlideToggleModule, MatSlideToggleHarness, {supportsRequiredState: false});
 });

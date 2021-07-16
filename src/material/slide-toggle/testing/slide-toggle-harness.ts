@@ -6,32 +6,38 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {ComponentHarness, HarnessPredicate} from '@angular/cdk/testing';
+import {
+  AsyncFactoryFn,
+  ComponentHarness,
+  HarnessPredicate,
+  TestElement,
+} from '@angular/cdk/testing';
 import {coerceBooleanProperty} from '@angular/cdk/coercion';
 import {SlideToggleHarnessFilters} from './slide-toggle-harness-filters';
 
 export abstract class _MatSlideToggleHarnessBase extends ComponentHarness {
   private _label = this.locatorFor('label');
-  protected _input = this.locatorFor('input');
+  protected abstract _nativeElement: AsyncFactoryFn<TestElement>;
 
   /** Toggle the checked state of the slide-toggle. */
   abstract toggle(): Promise<void>;
 
   /** Whether the slide-toggle is checked. */
   async isChecked(): Promise<boolean> {
-    const checked = (await this._input()).getProperty<boolean>('checked');
+    // Use aria-checked since it applies for both MDC and non-MDC.
+    const checked = (await this._nativeElement()).getAttribute('aria-checked');
     return coerceBooleanProperty(await checked);
   }
 
   /** Whether the slide-toggle is disabled. */
   async isDisabled(): Promise<boolean> {
-    const disabled = (await this._input()).getAttribute('disabled');
+    const disabled = (await this._nativeElement()).getAttribute('disabled');
     return coerceBooleanProperty(await disabled);
   }
 
   /** Whether the slide-toggle is required. */
   async isRequired(): Promise<boolean> {
-    const required = (await this._input()).getAttribute('required');
+    const required = (await this._nativeElement()).getAttribute('required');
     return coerceBooleanProperty(await required);
   }
 
@@ -43,17 +49,17 @@ export abstract class _MatSlideToggleHarnessBase extends ComponentHarness {
 
   /** Gets the slide-toggle's name. */
   async getName(): Promise<string | null> {
-    return (await this._input()).getAttribute('name');
+    return (await this._nativeElement()).getAttribute('name');
   }
 
   /** Gets the slide-toggle's aria-label. */
   async getAriaLabel(): Promise<string | null> {
-    return (await this._input()).getAttribute('aria-label');
+    return (await this._nativeElement()).getAttribute('aria-label');
   }
 
   /** Gets the slide-toggle's aria-labelledby. */
   async getAriaLabelledby(): Promise<string | null> {
-    return (await this._input()).getAttribute('aria-labelledby');
+    return (await this._nativeElement()).getAttribute('aria-labelledby');
   }
 
   /** Gets the slide-toggle's label text. */
@@ -63,17 +69,17 @@ export abstract class _MatSlideToggleHarnessBase extends ComponentHarness {
 
   /** Focuses the slide-toggle. */
   async focus(): Promise<void> {
-    return (await this._input()).focus();
+    return (await this._nativeElement()).focus();
   }
 
   /** Blurs the slide-toggle. */
   async blur(): Promise<void> {
-    return (await this._input()).blur();
+    return (await this._nativeElement()).blur();
   }
 
   /** Whether the slide-toggle is focused. */
   async isFocused(): Promise<boolean> {
-    return (await this._input()).isFocused();
+    return (await this._nativeElement()).isFocused();
   }
 
   /**
@@ -101,6 +107,9 @@ export abstract class _MatSlideToggleHarnessBase extends ComponentHarness {
 
 /** Harness for interacting with a standard mat-slide-toggle in tests. */
 export class MatSlideToggleHarness extends _MatSlideToggleHarnessBase {
+  private _inputContainer = this.locatorFor('.mat-slide-toggle-bar');
+  protected _nativeElement = this.locatorFor('input');
+
   /** The selector for the host element of a `MatSlideToggle` instance. */
   static hostSelector = '.mat-slide-toggle';
 
@@ -119,8 +128,6 @@ export class MatSlideToggleHarness extends _MatSlideToggleHarnessBase {
         // to retrieve the harness of a specific checkbox with name through a CSS selector.
         .addOption('name', options.name, async (harness, name) => await harness.getName() === name);
   }
-
-  private _inputContainer = this.locatorFor('.mat-slide-toggle-bar');
 
   /** Toggle the checked state of the slide-toggle. */
   async toggle(): Promise<void> {
