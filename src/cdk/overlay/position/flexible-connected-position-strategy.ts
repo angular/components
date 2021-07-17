@@ -22,6 +22,9 @@ import {isElementScrolledOutsideView, isElementClippedByScrolling} from './scrol
 import {coerceCssPixelValue, coerceArray} from '@angular/cdk/coercion';
 import {Platform} from '@angular/cdk/platform';
 import {OverlayContainer} from '../overlay-container';
+import {_CoalescedStyleScheduler} from './coalesced-style-scheduler';
+import {Schedulable, ScheduleType, Scheduler} from './scheduler';
+
 
 // TODO: refactor clipping detection into a separate thing (part of scrolling module)
 // TODO: doesn't handle both flexible width and height when it has to scroll along both axis.
@@ -45,7 +48,7 @@ export type FlexibleConnectedPositionStrategyOrigin = ElementRef | Element | Poi
  * a basic dropdown is connecting the bottom-left corner of the origin to the top-left corner
  * of the overlay.
  */
-export class FlexibleConnectedPositionStrategy implements PositionStrategy {
+export class FlexibleConnectedPositionStrategy implements PositionStrategy, Schedulable {
   /** The overlay to which this strategy is attached. */
   private _overlayRef: OverlayReference;
 
@@ -135,11 +138,21 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
     return this._preferredPositions;
   }
 
+  /** Optional scheduler that can be used to coalesce style updates */
+  private _scheduler: ScheduleType;
+
   constructor(
       connectedTo: FlexibleConnectedPositionStrategyOrigin, private _viewportRuler: ViewportRuler,
       private _document: Document, private _platform: Platform,
       private _overlayContainer: OverlayContainer) {
     this.setOrigin(connectedTo);
+  }
+
+  /** Uses scheduler to coalesce style updates */
+  withStyleScheduler(scheduler: Scheduler) {
+    this._scheduler = scheduler;
+
+    return this;
   }
 
   /** Attaches this position strategy to an overlay. */
@@ -320,7 +333,7 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
         width: '',
         alignItems: '',
         justifyContent: '',
-      } as CSSStyleDeclaration);
+      } as CSSStyleDeclaration, this._scheduler);
     }
 
     if (this._pane) {
@@ -697,8 +710,16 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
       xOrigin = position.overlayX === 'start' ? 'left' : 'right';
     }
 
-    for (let i = 0; i < elements.length; i++) {
-      elements[i].style.transformOrigin = `${xOrigin} ${yOrigin}`;
+    if (this._scheduler) {
+      this._scheduler.schedule(() => {
+        for (let i = 0; i < elements.length; i++) {
+          elements[i].style.transformOrigin = `${xOrigin} ${yOrigin}`;
+        }
+      });
+    } else {
+      for (let i = 0; i < elements.length; i++) {
+        elements[i].style.transformOrigin = `${xOrigin} ${yOrigin}`;
+      }
     }
   }
 
@@ -837,7 +858,7 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
 
     this._lastBoundingBoxSize = boundingBoxRect;
 
-    extendStyles(this._boundingBox!.style, styles);
+    extendStyles(this._boundingBox!.style, styles, this._scheduler);
   }
 
   /** Resets the styles for the bounding box so that a new positioning can be computed. */
@@ -851,7 +872,7 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
       width: '',
       alignItems: '',
       justifyContent: '',
-    } as CSSStyleDeclaration);
+    } as CSSStyleDeclaration, this._scheduler);
   }
 
   /** Resets the styles for the overlay pane so that a new positioning can be computed. */
@@ -863,7 +884,7 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
       right: '',
       position: '',
       transform: '',
-    } as CSSStyleDeclaration);
+    } as CSSStyleDeclaration, this._scheduler);
   }
 
   /** Sets positioning styles to the overlay element. */
@@ -875,8 +896,12 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
 
     if (hasExactPosition) {
       const scrollPosition = this._viewportRuler.getViewportScrollPosition();
-      extendStyles(styles, this._getExactOverlayY(position, originPoint, scrollPosition));
-      extendStyles(styles, this._getExactOverlayX(position, originPoint, scrollPosition));
+      extendStyles(styles,
+        this._getExactOverlayY(position, originPoint, scrollPosition),
+        this._scheduler);
+      extendStyles(styles,
+        this._getExactOverlayX(position, originPoint, scrollPosition),
+        this._scheduler);
     } else {
       styles.position = 'static';
     }
@@ -921,7 +946,7 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
       }
     }
 
-    extendStyles(this._pane.style, styles);
+    extendStyles(this._pane.style, styles, this._scheduler);
   }
 
   /** Gets the exact top/bottom for the overlay when not using flexible sizing or when pushing. */
@@ -1200,16 +1225,30 @@ export interface ConnectedPosition {
   panelClass?: string | string[];
 }
 
-/** Shallow-extends a stylesheet object with another stylesheet object. */
-function extendStyles(destination: CSSStyleDeclaration,
-                      source: CSSStyleDeclaration): CSSStyleDeclaration {
-  for (let key in source) {
-    if (source.hasOwnProperty(key)) {
-      destination[key] = source[key];
-    }
-  }
 
-  return destination;
+/** Shallow-extends a stylesheet object with another stylesheet object, but schedules the process */
+function extendStyles(
+    destination: CSSStyleDeclaration,
+    source: CSSStyleDeclaration,
+    _scheduler: ScheduleType = undefined
+  ): Promise<CSSStyleDeclaration> {
+  return _scheduler ? new Promise((resolve, reject) => {
+    _scheduler!.schedule(() => {
+      for (let key in source) {
+        if (source.hasOwnProperty(key)) {
+          destination[key] = source[key];
+        }
+      }
+      resolve(destination);
+    });
+  }) : new Promise((resolve, reject) => {
+    for (let key in source) {
+      if (source.hasOwnProperty(key)) {
+        destination[key] = source[key];
+      }
+    }
+    resolve(destination);
+  });
 }
 
 

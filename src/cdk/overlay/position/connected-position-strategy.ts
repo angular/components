@@ -9,7 +9,7 @@
 import {Direction} from '@angular/cdk/bidi';
 import {Platform} from '@angular/cdk/platform';
 import {CdkScrollable, ViewportRuler} from '@angular/cdk/scrolling';
-import {ElementRef} from '@angular/core';
+import {ElementRef, Inject} from '@angular/core';
 import {Observable} from 'rxjs';
 
 import {OverlayContainer} from '../overlay-container';
@@ -23,6 +23,8 @@ import {
 } from './connected-position';
 import {FlexibleConnectedPositionStrategy} from './flexible-connected-position-strategy';
 import {PositionStrategy} from './position-strategy';
+import {_CoalescedStyleScheduler} from './coalesced-style-scheduler';
+import {Scheduler} from './scheduler';
 
 /**
  * A strategy for positioning overlays. Using this strategy, an overlay is given an
@@ -54,13 +56,16 @@ export class ConnectedPositionStrategy implements PositionStrategy {
   constructor(
       originPos: OriginConnectionPosition, overlayPos: OverlayConnectionPosition,
       connectedTo: ElementRef<HTMLElement>, viewportRuler: ViewportRuler, document: Document,
-      platform: Platform, overlayContainer: OverlayContainer) {
+      platform: Platform, overlayContainer: OverlayContainer,
+      @Inject(_CoalescedStyleScheduler) private _scheduler: Scheduler) {
     // Since the `ConnectedPositionStrategy` is deprecated and we don't want to maintain
     // the extra logic, we create an instance of the positioning strategy that has some
     // defaults that make it behave as the old position strategy and to which we'll
     // proxy all of the API calls.
     this._positionStrategy = new FlexibleConnectedPositionStrategy(
-                                 connectedTo, viewportRuler, document, platform, overlayContainer)
+                                 connectedTo, viewportRuler, document, platform,
+                                 overlayContainer)
+                                 .withStyleScheduler(this._scheduler)
                                  .withFlexibleDimensions(false)
                                  .withPush(false)
                                  .withViewportMargin(0);

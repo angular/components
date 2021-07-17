@@ -20,6 +20,7 @@ import {
   FlexibleConnectedPositionStrategyOrigin,
 } from './flexible-connected-position-strategy';
 import {GlobalPositionStrategy} from './global-position-strategy';
+import {_CoalescedStyleScheduler} from './coalesced-style-scheduler';
 
 
 /** Builder for overlay position strategy. */
@@ -27,7 +28,8 @@ import {GlobalPositionStrategy} from './global-position-strategy';
 export class OverlayPositionBuilder {
   constructor(
       private _viewportRuler: ViewportRuler, @Inject(DOCUMENT) private _document: any,
-      private _platform: Platform, private _overlayContainer: OverlayContainer) {}
+      private _platform: Platform, private _overlayContainer: OverlayContainer,
+      private _scheduler: _CoalescedStyleScheduler) {}
 
   /**
    * Creates a global position strategy.
@@ -50,7 +52,7 @@ export class OverlayPositionBuilder {
       overlayPos: OverlayConnectionPosition): ConnectedPositionStrategy {
     return new ConnectedPositionStrategy(
         originPos, overlayPos, elementRef, this._viewportRuler, this._document, this._platform,
-        this._overlayContainer);
+        this._overlayContainer, this._scheduler);
   }
 
   /**
@@ -60,7 +62,8 @@ export class OverlayPositionBuilder {
   flexibleConnectedTo(origin: FlexibleConnectedPositionStrategyOrigin):
     FlexibleConnectedPositionStrategy {
     return new FlexibleConnectedPositionStrategy(origin, this._viewportRuler, this._document,
-        this._platform, this._overlayContainer);
+        this._platform, this._overlayContainer)
+        .withStyleScheduler(this._scheduler);
   }
 
 }
