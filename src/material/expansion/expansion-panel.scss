@@ -48,6 +48,18 @@
   display: flex;
   flex-direction: column;
   overflow: visible;
+
+  // If the expansion panel is inside an element being animated by Angular,
+  // the default behavior is to block all child animations. This means that the
+  // default `height: 0` won't kick in until the parent animation is over, which
+  // will cause the panel to appear open, before it snaps into place. We don't want
+  // to set the default height to zero, because it'll break the `height: '*'` from
+  // the animation definitions. Instead we add a fallback that only applies only if
+  // it's inside a parent that is mid-animation.
+  .ng-animating .mat-expansion-panel:not(.mat-expanded) & {
+    height: 0;
+    overflow: hidden;
+  }
 }
 
 .mat-expansion-panel-body {

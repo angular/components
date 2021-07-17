@@ -41,6 +41,19 @@
       }
     }
   }
+
+  // If the panel, that the header is in, is inside an element being animated by Angular,
+  // the default behavior is to block all child animations. This means that the header's
+  // height won't kick in until the parent animation is done. We add a fallback to the
+  // header's default height. If the animations aren't blocked, these styles will be overridden
+  // by the inline styles from the animations module.
+  .ng-animating .mat-expansion-panel & {
+    min-height: 48px;
+  }
+
+  .ng-animating .mat-expansion-panel.mat-expanded & {
+    min-height: 64px;
+  }
 }
 
 .mat-content {
