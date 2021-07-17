@@ -153,6 +153,11 @@
   }
 }
 
+// Prevents the content from shifting on IE when the user has their pointer down.
+.mat-button-wrapper {
+  position: relative;
+}
+
 // Add an outline to make buttons more visible in high contrast mode. Stroked buttons
 // don't need a special look in high-contrast mode, because those already have an outline.
 @include a11y.high-contrast(active, off) {
