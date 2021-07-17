@@ -545,10 +545,10 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
     }
 
     // How much the overlay would overflow at this position, on each side.
-    let leftOverflow = 0 - x;
-    let rightOverflow = (x + overlay.width) - viewport.width;
-    let topOverflow = 0 - y;
-    let bottomOverflow = (y + overlay.height) - viewport.height;
+    let leftOverflow = viewport.left - x;
+    let rightOverflow = (x + overlay.width) - (viewport.left + viewport.width);
+    let topOverflow = viewport.top - y;
+    let bottomOverflow = (y + overlay.height) - (viewport.top + viewport.height);
 
     // Visible parts of the element on each axis.
     let visibleWidth = this._subtractOverflows(overlay.width, leftOverflow, rightOverflow);
