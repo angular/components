@@ -235,6 +235,8 @@ export abstract class _MatRadioGroupBase<T extends _MatRadioButtonBase> implemen
   _touch() {
     if (this.onTouched) {
       this.onTouched();
+      // marks for check to update control touched status
+      this._changeDetector.markForCheck();
     }
   }
 
