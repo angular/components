@@ -71,14 +71,16 @@ describe('MatPaginator', () => {
       expect(rangeElement.innerText.trim()).toBe('11 – 15 of 0');
     });
 
-    it('should show right aria-labels for select and buttons', () => {
+    it('should set the proper labels and descriptions on the form controls', fakeAsync(() => {
       const fixture = createComponent(MatPaginatorApp);
+      fixture.detectChanges();
+      tick(); // Flushes the tooltip's ARIA description.
       const select = fixture.nativeElement.querySelector('.mat-select');
       expect(select.getAttribute('aria-label')).toBe('Items per page:');
 
-      expect(getPreviousButton(fixture).getAttribute('aria-label')).toBe('Previous page');
-      expect(getNextButton(fixture).getAttribute('aria-label')).toBe('Next page');
-    });
+      expect(getAriaDescription(getPreviousButton(fixture))).toBe('Previous page');
+      expect(getAriaDescription(getNextButton(fixture))).toBe('Next page');
+    }));
 
     it('should re-render when the i18n labels change', () => {
       const fixture = createComponent(MatPaginatorApp);
@@ -194,17 +196,18 @@ describe('MatPaginator', () => {
     let component: MatPaginatorApp;
     let paginator: MatPaginator;
 
-    beforeEach(() => {
+    beforeEach(fakeAsync(() => {
       fixture = createComponent(MatPaginatorApp);
       component = fixture.componentInstance;
       paginator = component.paginator;
       component.showFirstLastButtons = true;
       fixture.detectChanges();
-    });
+      tick(); // Flushes the tooltip's ARIA description.
+    }));
 
-    it('should show right aria-labels for first/last buttons', () => {
-      expect(getFirstButton(fixture).getAttribute('aria-label')).toBe('First page');
-      expect(getLastButton(fixture).getAttribute('aria-label')).toBe('Last page');
+    it('should show right aria descriptions for first/last buttons', () => {
+      expect(getAriaDescription(getFirstButton(fixture))).toBe('First page');
+      expect(getAriaDescription(getLastButton(fixture))).toBe('Last page');
     });
 
     it('should be able to go to the last page via the last page button', () => {
@@ -489,6 +492,17 @@ function getFirstButton(fixture: ComponentFixture<any>) {
 
 function getLastButton(fixture: ComponentFixture<any>) {
   return fixture.nativeElement.querySelector('.mat-paginator-navigation-last');
+}
+
+function getAriaDescription(element: HTMLElement) {
+  const describedBy = element.getAttribute('aria-describedby');
+
+  if (describedBy) {
+    const descriptionElement = document.getElementById(describedBy);
+    return descriptionElement ? descriptionElement.textContent!.trim() : null;
+  }
+
+  return null;
 }
 
 @Component({
