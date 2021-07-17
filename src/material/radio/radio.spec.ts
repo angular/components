@@ -346,6 +346,27 @@ describe('MatRadio', () => {
       expect(radioInstances[2].checked).toBeFalsy('should not select the third button');
     });
 
+    it(`should update checked status if changed value to radio group's value`, () => {
+      groupInstance.value = 'apple';
+      radioInstances[0].value = 'apple';
+      fixture.detectChanges();
+
+      expect(groupInstance.selected).toBe(
+        radioInstances[0], 'expect group selected to be first button');
+      expect(radioInstances[0].checked).toBeTruthy('expect group select the first button');
+      expect(radioInstances[1].checked).toBeFalsy('should not select the second button');
+      expect(radioInstances[2].checked).toBeFalsy('should not select the third button');
+
+      radioInstances[0].value = 'watermelon';
+      fixture.detectChanges();
+
+      expect(groupInstance.value).toBeFalsy();
+      expect(groupInstance.selected).toBeFalsy('expect group selected to be null');
+      expect(radioInstances[0].checked).toBeFalsy('should not select the first button');
+      expect(radioInstances[1].checked).toBeFalsy('should not select the second button');
+      expect(radioInstances[2].checked).toBeFalsy('should not select the third button');
+    });
+
     it('should apply class based on color attribute', () => {
       expect(radioNativeElements.every(radioEl => radioEl.classList.contains('mat-accent')))
         .toBe(true, 'Expected every radio element to use the accent color by default.');
