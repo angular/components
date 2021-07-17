@@ -14,9 +14,9 @@ import {GoogleMapDemo} from './google-map-demo';
 
 @NgModule({
   imports: [
-    GoogleMapsModule,
+    GoogleMapsModule
   ],
-  declarations: [GoogleMapDemo],
+  declarations: [GoogleMapDemo]
 })
 export class GoogleMapDemoModule {
 }
@@ -27,7 +27,7 @@ import {Component} from '@angular/core';
 
 @Component({
   selector: 'google-map-demo',
-  templateUrl: 'google-map-demo.html',
+  templateUrl: 'google-map-demo.html'
 })
 export class GoogleMapDemo {
 
