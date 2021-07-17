@@ -1116,17 +1116,31 @@ describe('MatDialog', () => {
     beforeEach(() => document.body.appendChild(overlayContainerElement));
     afterEach(() => document.body.removeChild(overlayContainerElement));
 
-    it('should focus the first tabbable element of the dialog on open', fakeAsync(() => {
+    it('should focus the dialog container by default', fakeAsync(() => {
       dialog.open(PizzaMsg, {
-        viewContainerRef: testViewContainerRef
+        viewContainerRef: testViewContainerRef,
       });
 
       viewContainerFixture.detectChanges();
       flushMicrotasks();
 
       expect(document.activeElement!.tagName)
-          .toBe('INPUT', 'Expected first tabbable element (input) in the dialog to be focused.');
+          .toBe('MAT-DIALOG-CONTAINER', 'Expected dialog container to be focused.');
     }));
+
+    it('should focus the first tabbable element of the dialog on open when autoFocus is enabled',
+      fakeAsync(() => {
+        dialog.open(PizzaMsg, {
+          viewContainerRef: testViewContainerRef,
+          autoFocus: true
+        });
+
+        viewContainerFixture.detectChanges();
+        flushMicrotasks();
+
+        expect(document.activeElement!.tagName)
+            .toBe('INPUT', 'Expected first tabbable element (input) in the dialog to be focused.');
+      }));
 
     it('should allow disabling focus of the first tabbable element', fakeAsync(() => {
       dialog.open(PizzaMsg, {
