@@ -157,6 +157,19 @@ describe('MatProgressSpinner', () => {
         .toBe('0 0 25.2 25.2', 'Expected the custom diameter to be applied to the svg viewBox.');
   });
 
+  it('should allow a custom diameter value of 10 or lower', () => {
+    const fixture = TestBed.createComponent(ProgressSpinnerCustomDiameter);
+
+    fixture.componentInstance.diameter = 8;
+    fixture.detectChanges();
+
+    const circleElement = fixture.nativeElement.querySelector('circle');
+    const svgElement = fixture.nativeElement.querySelector('svg');
+
+    expect(circleElement.getAttribute('r')).toEqual('0.36');
+    expect(svgElement.getAttribute('viewBox')).toBe('0 0 1.52 1.52');
+  });
+
   it('should add a style tag with the indeterminate animation to the document head when using a ' +
     'non-default diameter', inject([Platform], (platform: Platform) => {
       // On Edge and IE we use a fallback animation because the

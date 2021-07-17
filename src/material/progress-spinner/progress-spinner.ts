@@ -237,7 +237,9 @@ export class MatProgressSpinner extends _MatProgressSpinnerBase implements OnIni
 
   /** The radius of the spinner, adjusted for stroke width. */
   _getCircleRadius() {
-    return (this.diameter - BASE_STROKE_WIDTH) / 2;
+    // In the general case adjust the diameter by the base stroke width.
+    // For small diameters adjust by a diameter percentage so that the radius is greater than 0.
+    return Math.max(this.diameter - BASE_STROKE_WIDTH, this.diameter * 0.09) / 2;
   }
 
   /** The view box of the spinner's svg element. */
