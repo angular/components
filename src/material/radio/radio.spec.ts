@@ -66,6 +66,11 @@ describe('MatRadio', () => {
       }
     });
 
+    it('should clear the name attribute from the radio group host node', () => {
+      expect(groupInstance.name).toBeTruthy();
+      expect(groupDebugElement.nativeElement.getAttribute('name')).toBeFalsy();
+    });
+
     it('should coerce the disabled binding on the radio group', () => {
       (groupInstance as any).disabled = '';
       fixture.detectChanges();
@@ -745,6 +750,10 @@ describe('MatRadio', () => {
 
     it('should default the radio color to `accent`', () => {
       expect(seasonRadioInstances.every(radio => radio.color === 'accent')).toBe(true);
+    });
+
+    it('should clear the name attribute from the radio host node', () => {
+      expect(radioDebugElements.every(el => !el.nativeElement.getAttribute('name'))).toBe(true);
     });
 
   });
