@@ -268,7 +268,7 @@ $item-inset-divider-offset: 72px;
   }
 }
 
-mat-action-list {
+.mat-action-list {
   // Remove the native button look and make it look like a list item
   button {
     background: none;
@@ -277,6 +277,8 @@ mat-action-list {
     font: inherit;
     outline: inherit;
     -webkit-tap-highlight-color: transparent;
+    // Set the text alignment to "start" as buttons align their content
+    // centered by default. List content is aligned on the start.
     text-align: left;
 
     [dir='rtl'] & {

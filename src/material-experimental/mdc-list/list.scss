@@ -10,6 +10,28 @@
   display: block;
 }
 
+// Remove the browser button appearance for action list button items. These
+// buttons should appear as if they were standard Material Design list items.
+.mat-mdc-action-list button.mdc-list-item {
+  background: none;
+  color: inherit;
+  border: none;
+  font: inherit;
+  outline: inherit;
+  -webkit-tap-highlight-color: transparent;
+  // Set the text alignment to "start" as buttons align their content
+  // centered by default. List content is aligned on the start.
+  text-align: left;
+
+  [dir='rtl'] & {
+    text-align: right;
+  }
+
+  &::-moz-focus-inner {
+    border: 0;
+  }
+}
+
 // MDC expects that the list items are always `<li>`, since we actually use `<button>` in some
 // cases, we need to make sure it expands to fill the available width.
 .mat-mdc-list-item,
