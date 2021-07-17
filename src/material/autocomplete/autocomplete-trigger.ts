@@ -531,12 +531,14 @@ export abstract class _MatAutocompleteTriggerBase implements ControlValueAccesso
    * stemmed from the user.
    */
   private _setValueAndClose(event: MatOptionSelectionChange | null): void {
-    if (event && event.source) {
-      this._clearPreviousSelectedOption(event.source);
-      this._setTriggerValue(event.source.value);
-      this._onChange(event.source.value);
+    const source = event && event.source;
+
+    if (source) {
+      this._clearPreviousSelectedOption(source);
+      this._setTriggerValue(source.value);
+      this._onChange(source.value);
+      this.autocomplete._emitSelectEvent(source);
       this._element.nativeElement.focus();
-      this.autocomplete._emitSelectEvent(event.source);
     }
 
     this.closePanel();
