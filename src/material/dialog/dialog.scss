@@ -56,8 +56,12 @@ $button-margin: 8px !default;
   // Pull the actions down to avoid their padding stacking with the dialog's padding.
   margin-bottom: -$padding;
 
-  &[align='end'] {
+  &, &[align='end'] {
     justify-content: flex-end;
+  }
+
+  &[align='start'] {
+    justify-content: flex-start;
   }
 
   &[align='center'] {
