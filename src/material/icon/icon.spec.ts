@@ -189,6 +189,17 @@ describe('MatIcon', () => {
         expect(matIconElement.textContent.trim()).toBe('house');
       });
 
+    it('should be able to provide multiple alternate icon set classes', () => {
+      iconRegistry.setDefaultFontSetClass('myfont', 'myfont-48x48');
+
+      let fixture = TestBed.createComponent(IconWithLigature);
+
+      const testComponent = fixture.componentInstance;
+      const matIconElement = fixture.debugElement.nativeElement.querySelector('mat-icon');
+      testComponent.iconName = 'home';
+      fixture.detectChanges();
+      expect(sortedClassNames(matIconElement)).toEqual(['mat-icon', 'myfont', 'myfont-48x48']);
+    });
   });
 
   describe('Icons from URLs', () => {
