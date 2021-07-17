@@ -132,6 +132,14 @@ describe('MDC-based MatMenu', () => {
     expect(overlayContainerElement.querySelector('.cdk-overlay-backdrop')).toBeFalsy();
   }));
 
+  it('should set the correct aria-haspopup value on the trigger element', fakeAsync(() => {
+    const fixture = createComponent(SimpleMenu, [], [FakeIcon]);
+    fixture.detectChanges();
+    const triggerElement = fixture.componentInstance.triggerEl.nativeElement;
+
+    expect(triggerElement.getAttribute('aria-haspopup')).toBe('menu');
+  }));
+
   it('should be able to remove the backdrop on repeat openings', fakeAsync(() => {
     const fixture = createComponent(SimpleMenu, [], [FakeIcon]);
     fixture.detectChanges();
