@@ -949,7 +949,7 @@ describe('MatCheckbox', () => {
     let inputElement: HTMLInputElement;
     let ngModel: NgModel;
 
-    beforeEach(() => {
+    beforeEach(fakeAsync(() => {
       fixture = createComponent(CheckboxWithNgModel);
 
       fixture.componentInstance.isRequired = false;
@@ -960,7 +960,7 @@ describe('MatCheckbox', () => {
       checkboxInstance = checkboxDebugElement.componentInstance;
       inputElement = <HTMLInputElement>checkboxNativeElement.querySelector('input');
       ngModel = checkboxDebugElement.injector.get<NgModel>(NgModel);
-    });
+    }));
 
     it('should be pristine, untouched, and valid initially', () => {
       expect(ngModel.valid).toBe(true);
@@ -1059,6 +1059,18 @@ describe('MatCheckbox', () => {
       expect(checkboxInstance.checked).toBe(false);
       expect(ngModel.valid).toBe(false);
     });
+
+    it('should updated the ngModel value when using the `toggle` method', fakeAsync(() => {
+      const checkbox = fixture.debugElement.query(By.directive(MatCheckbox)).componentInstance;
+
+      expect(fixture.componentInstance.isGood).toBe(false);
+
+      checkbox.toggle();
+      fixture.detectChanges();
+
+      expect(fixture.componentInstance.isGood).toBe(true);
+    }));
+
   });
 
   describe('with name attribute', () => {
