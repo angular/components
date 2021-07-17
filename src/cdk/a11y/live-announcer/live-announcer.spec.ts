@@ -92,6 +92,19 @@ describe('LiveAnnouncer', () => {
       expect(ariaLiveElement.textContent).toBe('Hello there');
     }));
 
+    it('should synchronously clear a message even if not yet displayed', fakeAsync(() => {
+      announcer.announce('Hey Google');
+
+      announcer.clear();
+      expect(ariaLiveElement.textContent).toBeFalsy();
+
+      // This flushes our 100ms timeout for the screenreaders.
+      tick(110);
+
+      // Should not have displayed in the meantime
+      expect(ariaLiveElement.textContent).toBeFalsy();
+    }));
+
     it('should remove the aria-live element from the DOM on destroy', fakeAsync(() => {
       announcer.announce('Hey Google');
 

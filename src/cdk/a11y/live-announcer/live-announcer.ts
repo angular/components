@@ -135,6 +135,7 @@ export class LiveAnnouncer implements OnDestroy {
    * through the page landmarks.
    */
   clear() {
+    clearTimeout(this._previousTimeout);
     if (this._liveElement) {
       this._liveElement.textContent = '';
     }
