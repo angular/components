@@ -218,21 +218,12 @@ export class _MatTableDataSource<T,
    * @returns Whether the filter matches against the data
    */
   filterPredicate: ((data: T, filter: string) => boolean) = (data: T, filter: string): boolean => {
-    // Transform the data into a lowercase string of all property values.
-    const dataStr = Object.keys(data).reduce((currentTerm: string, key: string) => {
-      // Use an obscure Unicode character to delimit the words in the concatenated string.
-      // This avoids matches where the values of two columns combined will match the user's query
-      // (e.g. `Flute` and `Stop` will match `Test`). The character is intended to be something
-      // that has a very low chance of being typed in by somebody in a text field. This one in
-      // particular is "White up-pointing triangle with dot" from
-      // https://en.wikipedia.org/wiki/List_of_Unicode_characters
-      return currentTerm + (data as {[key: string]: any})[key] + '◬';
-    }, '').toLowerCase();
-
     // Transform the filter by converting it to lowercase and removing whitespace.
     const transformedFilter = filter.trim().toLowerCase();
-
-    return dataStr.indexOf(transformedFilter) != -1;
+    // Loops over the values in the array and returns true if any of them match the filter string
+    return Object.keys(data).some(
+      (key)=>(data as {[key: string]: any})[key].toLowerCase().includes(transformedFilter)
+    );
   }
 
   constructor(initialData: T[] = []) {
