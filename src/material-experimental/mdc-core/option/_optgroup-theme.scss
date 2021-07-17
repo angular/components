@@ -1,4 +1,5 @@
 @use '@material/theme/theme' as mdc-theme;
+@use '@material/typography' as mdc-typography;
 @use '../../mdc-helpers/mdc-helpers';
 @use '../../../material/core/theming/theming';
 @use '../../../material/core/typography/typography';
@@ -18,6 +19,14 @@
 @mixin typography($config-or-theme) {
   $config: typography.private-typography-to-2018-config(
       theming.get-typography-config($config-or-theme));
+
+  @include mdc-helpers.mat-using-mdc-typography($config) {
+    // MDC uses the `subtitle1` level for list items, but the spec shows `body1` as the correct
+    // level. Class is repeated for increased specificity.
+    .mat-mdc-optgroup .mdc-list-item__primary-text {
+      @include mdc-typography.typography(body1, $query: mdc-helpers.$mat-typography-styles-query);
+    }
+  }
 }
 
 @mixin density($config-or-theme) {
