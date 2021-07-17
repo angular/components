@@ -135,6 +135,14 @@ updates. This can be based on _anything_: websocket connections, user interactio
 time-based intervals, etc. Most commonly, updates will be triggered by user interactions like
 sorting and pagination.
 
+##### `fixedLayout`
+Enabling this option will enforce uniform column widths and optimize the rendering of sticky
+elements in the table.
+
+```html
+<table cdk-table [dataSource]="dataSource" fixedLayout>
+```
+
 ##### `trackBy`
 
 To improve performance, a `trackBy` function can be provided to the table similar to Angular’s
@@ -143,6 +151,16 @@ table how to uniquely identify rows to track how the data changes with each upda
 
 ```html
 <table cdk-table [dataSource]="dataSource" [trackBy]="myTrackById">
+```
+
+##### `recycleRows`
+When the rendered rows change, the table discards the old rows and creates new ones from
+scratch. Tables that do not animate rows or use multiple row templates can improve performance by
+enabling  row recycling, which caches row templates when they're no longer needed, and reuses them
+when creating new rows.
+
+```html
+<table cdk-table [dataSource]="dataSource" recycleRows>
 ```
 
 ### Alternate HTML to using native table
