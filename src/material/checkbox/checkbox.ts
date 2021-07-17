@@ -111,6 +111,8 @@ const _MatCheckboxBase = mixinTabIndex(mixinColor(mixinDisableRipple(mixinDisabl
     'class': 'mat-checkbox',
     '[id]': 'id',
     '[attr.tabindex]': 'null',
+    '[attr.aria-label]': 'null',
+    '[attr.aria-labelledby]': 'null',
     '[class.mat-checkbox-indeterminate]': 'indeterminate',
     '[class.mat-checkbox-checked]': 'checked',
     '[class.mat-checkbox-disabled]': 'disabled',
