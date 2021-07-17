@@ -953,6 +953,13 @@ export abstract class _MatSelectBase<C> extends _MatSelectMixinBase implements A
 
     if (this.multiple) {
       valueToEmit = (this.selected as MatOption[]).map(option => option.value);
+      let clearSelection : Array<any> = valueToEmit.filter((value : any) => value == undefined);
+      if (clearSelection.length) {
+        valueToEmit = [];
+        this._selectionModel.clear();
+        this.close();
+        this.focus();
+      }
     } else {
       valueToEmit = this.selected ? (this.selected as MatOption).value : fallbackValue;
     }
