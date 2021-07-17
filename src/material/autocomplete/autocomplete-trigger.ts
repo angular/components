@@ -324,10 +324,12 @@ export abstract class _MatAutocompleteTriggerBase implements ControlValueAccesso
 
   /** Stream of clicks outside of the autocomplete panel. */
   private _getOutsideClickStream(): Observable<any> {
+    // Use capturing so we can close even if propagation is stopped.
+    const eventOptions = {capture: true};
     return merge(
-            fromEvent(this._document, 'click') as Observable<MouseEvent>,
-            fromEvent(this._document, 'auxclick') as Observable<MouseEvent>,
-            fromEvent(this._document, 'touchend') as Observable<TouchEvent>)
+            fromEvent(this._document, 'click', eventOptions) as Observable<MouseEvent>,
+            fromEvent(this._document, 'auxclick', eventOptions) as Observable<MouseEvent>,
+            fromEvent(this._document, 'touchend', eventOptions) as Observable<TouchEvent>)
         .pipe(filter(event => {
           // If we're in the Shadow DOM, the event target will be the shadow root, so we have to
           // fall back to check the first element in the path of the click event.

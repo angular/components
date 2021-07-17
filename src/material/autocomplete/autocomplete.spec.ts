@@ -198,6 +198,21 @@ describe('MatAutocomplete', () => {
           .toBe(false, `Expected clicking outside the panel to set its state to closed.`);
       expect(overlayContainerElement.textContent)
           .toEqual('', `Expected clicking outside the panel to close the panel.`);
+
+    }));
+
+    it('should close the panel when clicking away and propagation is stopped', fakeAsync(() => {
+      const trigger = fixture.componentInstance.trigger;
+      dispatchFakeEvent(input, 'focusin');
+      fixture.detectChanges();
+      zone.simulateZoneExit();
+
+      expect(trigger.panelOpen).toBe(true, 'Expected panel to be open.');
+
+      fixture.nativeElement.querySelector('.stop-propagation').click();
+      fixture.detectChanges();
+
+      expect(trigger.panelOpen).toBe(false, 'Expected panel to be closed.');
     }));
 
     it('should close the panel when the user taps away on a touch device', fakeAsync(() => {
@@ -2819,6 +2834,8 @@ const SIMPLE_AUTOCOMPLETE_TEMPLATE = `
       <span>{{ state.code }}: {{ state.name }}</span>
     </mat-option>
   </mat-autocomplete>
+
+  <button class="stop-propagation" (click)="$event.stopPropagation()">Click me</button>
 `;
 
 @Component({template: SIMPLE_AUTOCOMPLETE_TEMPLATE})
