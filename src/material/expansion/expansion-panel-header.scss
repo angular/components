@@ -52,9 +52,13 @@
 
 .mat-expansion-panel-header-title,
 .mat-expansion-panel-header-description {
-  display: flex;
+  display: block;
   flex-grow: 1;
   margin-right: 16px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  flex-basis: 5%;
 
   [dir='rtl'] & {
     margin-right: 0;
