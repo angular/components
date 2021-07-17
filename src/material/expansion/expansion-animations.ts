@@ -53,9 +53,11 @@ export const matExpansionAnimations: {
   ]),
   /** Animation that expands and collapses the panel content. */
   bodyExpansion: trigger('bodyExpansion', [
+    // Note: we also have `void` here as a fallback, because Angular will reset the
+    // state back to void when the element is being removed. See #11765.
     state('collapsed, void', style({height: '0px', visibility: 'hidden'})),
     state('expanded', style({height: '*', visibility: 'visible'})),
-    transition('expanded <=> collapsed, void => collapsed',
-      animate(EXPANSION_PANEL_ANIMATION_TIMING)),
+    transition('expanded <=> collapsed, expanded <=> void, void => collapsed',
+        animate(EXPANSION_PANEL_ANIMATION_TIMING)),
   ])
 };
