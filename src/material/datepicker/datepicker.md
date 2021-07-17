@@ -1,6 +1,24 @@
 The datepicker allows users to enter a date either through text input, or by choosing a date from
 the calendar. It is made up of several components, directives and [the date implementation module](#choosing-a-date-implementation-and-date-format-settings) that work together.
 
+To start using the datepicker you will need to import the datepicker module and set the datepicker adapter to use:
+
+```ts
+import { NgModule } from '@angular/core';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+
+@NgModule({
+  imports: [
+    // ...
+    MatDatepickerModule,
+    MatNativeDateModule,
+  ],
+  // ...
+})
+export class AppModule {}
+```
+
 <!-- example(datepicker-overview) -->
 
 ### Connecting a datepicker to an input
