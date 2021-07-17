@@ -70,7 +70,9 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
           const itemArray = newItems.toArray();
           const newIndex = itemArray.indexOf(this._activeItem);
 
-          if (newIndex > -1 && newIndex !== this._activeItemIndex) {
+          if (newIndex === -1) {
+            this.updateActiveItem(this._activeItemIndex);
+          } else if (newIndex !== this._activeItemIndex) {
             this._activeItemIndex = newIndex;
           }
         }
@@ -349,7 +351,7 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
 
     // Explicitly check for `null` and `undefined` because other falsy values are valid.
     this._activeItem = activeItem == null ? null : activeItem;
-    this._activeItemIndex = index;
+    this._activeItemIndex = activeItem == null ? -1 : index;
   }
 
   /**
