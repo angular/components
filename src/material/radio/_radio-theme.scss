@@ -28,6 +28,12 @@
     border-color: theming.get-color-from-palette($foreground, secondary-text);
   }
 
+  .mat-radio-label-content {
+    // Explicitly set the text color since the radio button may be
+    // inside an overlay that doesn't have the proper theme text color.
+    color: theming.get-color-from-palette($foreground, 'text');
+  }
+
   .mat-radio-button {
     &.mat-primary {
       @include _color($primary);
