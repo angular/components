@@ -1,7 +1,8 @@
+import * as fs from 'fs';
+import * as minimatch from 'minimatch';
 import * as path from 'path';
 import * as Lint from 'tslint';
 import * as ts from 'typescript';
-import * as minimatch from 'minimatch';
 
 const hooks = new Set([
   'ngOnChanges',
@@ -12,7 +13,7 @@ const hooks = new Set([
   'ngAfterViewInit',
   'ngAfterViewChecked',
   'ngOnDestroy',
-  'ngDoBootstrap'
+  'ngDoBootstrap',
 ]);
 
 /** Rule that prevents direct calls of the Angular lifecycle hooks */
@@ -29,7 +30,14 @@ class Walker extends Lint.RuleWalker {
   constructor(sourceFile: ts.SourceFile, options: Lint.IOptions) {
     super(sourceFile, options);
     const fileGlobs = options.ruleArguments;
-    const relativeFilePath = path.relative(process.cwd(), sourceFile.fileName);
+
+    // Since tslint resolved file names are lowercase when working on a case insensitive
+    // filesystem, we need to transform the current working directory and the source
+    // file name to the real native paths using fs.realpathSync.native function.
+    const cwd = fs.realpathSync.native(process.cwd());
+    const fileName = fs.realpathSync.native(sourceFile.fileName);
+
+    const relativeFilePath = path.relative(cwd, fileName);
     this._enabled = fileGlobs.some(p => minimatch(relativeFilePath, p));
   }
 
