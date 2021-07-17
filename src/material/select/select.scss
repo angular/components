@@ -74,6 +74,13 @@ $placeholder-arrow-space: 2 * ($arrow-size + $arrow-margin);
   ._mat-animation-noopable.mat-form-field-appearance-standard .mat-select.mat-select-empty & {
     transition: none;
   }
+
+  // On Safari the arrow won't necessarily get redrawn when the form field is focused or blurred,
+  // which means that its highlighted styling will be stuck in an incorrect state. We can get
+  // Safari to redraw it by adding a transform.
+  .mat-form-field.mat-focused & {
+    transform: translateX(0);
+  }
 }
 
 .mat-select-arrow {
