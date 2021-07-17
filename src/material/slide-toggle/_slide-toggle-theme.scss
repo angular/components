@@ -49,6 +49,10 @@
   .mat-slide-toggle {
     @include _checked-color($accent, $thumb-checked-hue);
 
+    // Explicitly set the text color since the slide toggle may be
+    // inside an overlay that doesn't have the proper theme text color.
+    color: mat-color($foreground, 'text');
+
     &.mat-primary {
       @include _checked-color($primary, $thumb-checked-hue);
     }
