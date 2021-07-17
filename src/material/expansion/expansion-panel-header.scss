@@ -54,6 +54,7 @@
 .mat-expansion-panel-header-description {
   display: flex;
   flex-grow: 1;
+  flex-basis: 0;
   margin-right: 16px;
 
   [dir='rtl'] & {
