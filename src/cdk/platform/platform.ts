@@ -72,8 +72,11 @@ export class Platform {
   // Safari browsers will include the Safari keyword in their userAgent. Some browsers may fake
   // this and just place the Safari keyword in the userAgent. To be more safe about Safari every
   // Safari browser should also use Webkit as its layout engine.
+  // The userAgent for Chrome for iOS is the same as the Mobile Safari userAgent with
+  // CriOS/<ChromeRevision> instead of Version/<VersionNum>.
   /** Whether the current browser is Safari. */
-  SAFARI: boolean = this.isBrowser && /safari/i.test(navigator.userAgent) && this.WEBKIT;
+  SAFARI: boolean = this.isBrowser && /safari/i.test(navigator.userAgent) &&
+      !/crios/i.test(navigator.userAgent) && this.WEBKIT;
 
   constructor(@Inject(PLATFORM_ID) private _platformId: Object) {}
 }
