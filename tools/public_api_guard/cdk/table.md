@@ -310,6 +310,7 @@ export class CdkTable<T> implements AfterContentChecked, CollectionViewer, OnDes
     _contentHeaderRowDefs: QueryList<CdkHeaderRowDef>;
     _contentRowDefs: QueryList<CdkRowDef<T>>;
     protected _data: readonly T[];
+    protected _columnDefsByName: Map<string, CdkColumnDef>;
     get dataSource(): CdkTableDataSourceInput<T>;
     set dataSource(dataSource: CdkTableDataSourceInput<T>);
     // (undocumented)
