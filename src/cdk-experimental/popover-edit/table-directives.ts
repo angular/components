@@ -156,6 +156,8 @@ const POPOVER_EDIT_HOST_BINDINGS = {
   '[attr.tabindex]': 'disabled ? null : 0',
   'class': 'cdk-popover-edit-cell',
   '[attr.aria-haspopup]': '!disabled',
+  '[attr.aria-expanded]': '_isOpen',
+  '[attr.aria-controls]': '_isOpen ? _panelId : null',
 };
 
 const POPOVER_EDIT_INPUTS = [
@@ -164,6 +166,8 @@ const POPOVER_EDIT_INPUTS = [
   'colspan: cdkPopoverEditColspan',
   'disabled: cdkPopoverEditDisabled',
 ];
+
+let popupIdSequence = 0;
 
 /**
  * Attaches an ng-template to a cell and shows it when instructed to by the
@@ -177,7 +181,19 @@ const POPOVER_EDIT_INPUTS = [
 })
 export class CdkPopoverEdit<C> implements AfterViewInit, OnDestroy {
   /** The edit lens template shown over the cell on edit. */
-  template: TemplateRef<any>|null = null;
+  get template(): TemplateRef<any>|null {
+    return this._template;
+  }
+  set template(template: TemplateRef<any>|null) {
+    if (this._template === template) { return; }
+
+    if (this._template) {
+      this._disposeOverlay();
+    }
+
+    this._template = template;
+  }
+  private _template: TemplateRef<any>|null = null;
 
   /**
    * Implicit context to pass along to the template. Can be omitted if the template
@@ -214,7 +230,7 @@ export class CdkPopoverEdit<C> implements AfterViewInit, OnDestroy {
     this._disabled = value;
 
     if (value) {
-      this.services.editEventDispatcher.doneEditingCell(this.elementRef.nativeElement!);
+      this.closeEditOverlay();
       this.services.editEventDispatcher.disabledCells.set(this.elementRef.nativeElement!, true);
     } else {
       this.services.editEventDispatcher.disabledCells.delete(this.elementRef.nativeElement!);
@@ -225,6 +241,9 @@ export class CdkPopoverEdit<C> implements AfterViewInit, OnDestroy {
   protected focusTrap?: FocusTrap;
   protected overlayRef?: OverlayRef;
   protected readonly destroyed = new Subject<void>();
+
+  _isOpen = false;
+  _panelId?: string;
 
   constructor(
       protected readonly services: EditServices, protected readonly elementRef: ElementRef,
@@ -238,14 +257,7 @@ export class CdkPopoverEdit<C> implements AfterViewInit, OnDestroy {
     this.destroyed.next();
     this.destroyed.complete();
 
-    if (this.focusTrap) {
-      this.focusTrap.destroy();
-      this.focusTrap = undefined;
-    }
-
-    if (this.overlayRef) {
-      this.overlayRef.dispose();
-    }
+    this._disposeOverlay();
   }
 
   protected initFocusTrap(): void {
@@ -260,10 +272,26 @@ export class CdkPopoverEdit<C> implements AfterViewInit, OnDestroy {
     return EDIT_PANE_CLASS;
   }
 
+  private _disposeOverlay() {
+    this.closeEditOverlay();
+
+    if (this.focusTrap) {
+      this.focusTrap.destroy();
+      this.focusTrap = undefined;
+    }
+
+    if (this.overlayRef) {
+      this.overlayRef.dispose();
+      this.overlayRef = undefined;
+    }
+  }
+
   private _startListeningToEditEvents(): void {
     this.services.editEventDispatcher.editingCell(this.elementRef.nativeElement!)
         .pipe(takeUntil(this.destroyed))
         .subscribe((open) => {
+          this._isOpen = open;
+
           if (open && this.template) {
             if (!this.overlayRef) {
               this._createEditOverlay();
@@ -289,6 +317,8 @@ export class CdkPopoverEdit<C> implements AfterViewInit, OnDestroy {
 
     this.initFocusTrap();
     this.overlayRef.overlayElement.setAttribute('aria-role', 'dialog');
+    this._panelId = this.panelClass() + (++popupIdSequence);
+    this.overlayRef.overlayElement.id = this._panelId;
 
     this.overlayRef.detachments().subscribe(() => this.closeEditOverlay());
   }
