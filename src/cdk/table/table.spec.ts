@@ -12,7 +12,7 @@ import {
 } from '@angular/core';
 import {ComponentFixture, fakeAsync, flush, flushMicrotasks, TestBed} from '@angular/core/testing';
 import {BehaviorSubject, combineLatest, Observable, of as observableOf} from 'rxjs';
-import {map} from 'rxjs/operators';
+import {map, debounceTime, take} from 'rxjs/operators';
 import {CdkColumnDef} from './cell';
 import {
   CdkTableModule,
@@ -224,17 +224,22 @@ describe('CdkTable', () => {
       });
     });
 
-    it('should clear the row view containers on destroy', () => {
+    it('should clear the row view containers on destroy', (done) => {
       const rowOutlet = fixture.componentInstance.table._rowOutlet.viewContainer;
       const headerPlaceholder = fixture.componentInstance.table._headerRowOutlet.viewContainer;
 
       spyOn(rowOutlet, 'clear').and.callThrough();
       spyOn(headerPlaceholder, 'clear').and.callThrough();
 
-      fixture.destroy();
+      fixture.ngZone!.run(() => {
+        fixture.destroy();
 
-      expect(rowOutlet.clear).toHaveBeenCalled();
-      expect(headerPlaceholder.clear).toHaveBeenCalled();
+        fixture.ngZone!.onStable.pipe(debounceTime(1000), take(1)).subscribe(() => {
+          expect(rowOutlet.clear).toHaveBeenCalled();
+          expect(headerPlaceholder.clear).toHaveBeenCalled();
+          done();
+        });
+      });
     });
 
     it('should match the right table content with dynamic data', () => {
