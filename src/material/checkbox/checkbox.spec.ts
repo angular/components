@@ -331,8 +331,7 @@ describe('MatCheckbox', () => {
       fixture.detectChanges();
       flush();
 
-      // The change event shouldn't fire, because the value change was not caused
-      // by any interaction.
+      // The change event should fire, because the value change was caused by an interaction.
       expect(testComponent.onCheckboxChange).toHaveBeenCalledTimes(1);
     }));
 
