@@ -49,8 +49,16 @@ describe('MatTableDataSource', () => {
       testSortWithValues(['apples', 'bananas', 'cherries', 'lemons', 'strawberries']);
     });
 
-    it('should be able to correctly sort an array of strings and numbers', () => {
-      testSortWithValues([3, 'apples', 'bananas', 'cherries', 'lemons', 'strawberries']);
+    it('should be able to correctly sort array with mix of strings and numbers', () => {
+      testSortWithValues([-2, -1, 0, 1, 2, 'apples', 'avocados', 'bananas']);
+    });
+
+    it('should be able to correctly sort array with mix of strings, numbers, and undefined', () => {
+      testSortWithValues([undefined, -2, -1, 0, 1, 2, 'apples', 'avocados', 'bananas']);
+    });
+
+    it('should be able to correctly sort array with mix of strings, numbers, and null', () => {
+      testSortWithValues([null, -2, -1, 0, 1, 2, 'apples', 'avocados', 'bananas']);
     });
 
     it('should unsubscribe from the re-render stream when disconnected', () => {

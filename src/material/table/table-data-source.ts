@@ -191,11 +191,23 @@ export class _MatTableDataSource<T,
       // If neither value exists, return 0 (equal).
       let comparatorResult = 0;
       if (valueA != null && valueB != null) {
-        // Check if one value is greater than the other; if equal, comparatorResult should remain 0.
-        if (valueA > valueB) {
-          comparatorResult = 1;
-        } else if (valueA < valueB) {
-          comparatorResult = -1;
+
+        // Check that both values have same type
+        if (typeof valueA === typeof valueB) {
+          // Check if one value is greater than the other;
+          // If equal, comparatorResult should remain 0.
+          if (valueA > valueB) {
+            comparatorResult = 1;
+          } else if (valueA < valueB) {
+            comparatorResult = -1;
+          }
+        } else {
+          // If one value is string and other is number than number must go first
+          if (typeof valueA === 'number' && typeof valueB === 'string') {
+            comparatorResult = -1;
+          }  else if (typeof valueA === 'string' && typeof valueB === 'number') {
+            comparatorResult = 1;
+          }
         }
       } else if (valueA != null) {
         comparatorResult = 1;
