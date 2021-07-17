@@ -166,7 +166,8 @@ describe('MatBadge', () => {
     let encapsulationAttr: Attr | undefined;
 
     for (let i = 0; i < badge.attributes.length; i++) {
-      if (badge.attributes[i].name.startsWith('_ngcontent-')) {
+      if (badge.attributes[i].name.startsWith('_c-') ||
+          badge.attributes[i].name.startsWith('_ngcontent-')) {
         encapsulationAttr = badge.attributes[i];
         break;
       }
