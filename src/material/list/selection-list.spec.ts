@@ -803,32 +803,43 @@ describe('MatSelectionList without forms', () => {
 
   });
 
-  describe('with list option selected', () => {
-    let fixture: ComponentFixture<SelectionListWithSelectedOption>;
-    let listItemEl: DebugElement;
-    let selectionList: DebugElement;
-
+  describe('with preselected list option', () => {
     beforeEach(waitForAsync(() => {
       TestBed.configureTestingModule({
-        imports: [MatListModule],
-        declarations: [SelectionListWithSelectedOption],
+        imports: [MatListModule, ReactiveFormsModule],
+        declarations: [
+          SelectionListWithSelectedOption,
+          SelectionListWithFormControlAndSelectedOption
+        ],
       });
 
       TestBed.compileComponents();
     }));
 
-    beforeEach(waitForAsync(() => {
-      fixture = TestBed.createComponent(SelectionListWithSelectedOption);
-      listItemEl = fixture.debugElement.query(By.directive(MatListOption))!;
-      selectionList = fixture.debugElement.query(By.directive(MatSelectionList))!;
-      fixture.detectChanges();
-    }));
-
     it('should set its initial selected state in the selectedOptions', () => {
-      let optionEl = listItemEl.injector.get<MatListOption>(MatListOption);
-      let selectedOptions = selectionList.componentInstance.selectedOptions;
+      const fixture = TestBed.createComponent(SelectionListWithSelectedOption);
+      const listItemEl = fixture.debugElement.query(By.directive(MatListOption));
+      const selectionList = fixture.debugElement.query(By.directive(MatSelectionList));
+      fixture.detectChanges();
+
+      const optionEl = listItemEl.injector.get<MatListOption>(MatListOption);
+      const selectedOptions = selectionList.componentInstance.selectedOptions;
       expect(selectedOptions.isSelected(optionEl)).toBeTruthy();
     });
+
+    it('should not reset the option selected state when using a form control with a default value',
+      () => {
+        const fixture = TestBed.createComponent(SelectionListWithFormControlAndSelectedOption);
+        const listItemEl = fixture.debugElement.query(By.directive(MatListOption));
+        const selectionList = fixture.debugElement.query(By.directive(MatSelectionList));
+        fixture.detectChanges();
+
+        const optionEl = listItemEl.injector.get<MatListOption>(MatListOption);
+        const selectedOptions = selectionList.componentInstance.selectedOptions;
+        expect(selectedOptions.isSelected(optionEl)).toBeTruthy();
+        expect(optionEl.selected).toBe(true);
+      });
+
   });
 
   describe('with changing option value', () => {
@@ -1694,6 +1705,14 @@ class SelectionListWithSelectedOption {
 })
 class SelectionListWithSelectedOptionAndValue {
   itemValue = 'item1';
+}
+
+@Component({template: `
+  <mat-selection-list [formControl]="formControl">
+    <mat-list-option [selected]="true" value="item-0">Item</mat-list-option>
+  </mat-selection-list>`})
+class SelectionListWithFormControlAndSelectedOption {
+  formControl = new FormControl([]);
 }
 
 @Component({template: `

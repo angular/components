@@ -453,7 +453,7 @@ export class MatSelectionList extends _MatSelectionListBase implements CanDisabl
       .skipPredicate(() => false)
       .withAllowedModifierKeys(['shiftKey']);
 
-    if (this._value) {
+    if (this._value && this._value.length) {
       this._setOptionsFromValues(this._value);
     }
 

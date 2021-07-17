@@ -572,44 +572,44 @@ describe('MDC-based MatSelectionList without forms', () => {
 
   });
 
-  describe('with list option selected', () => {
-    let fixture: ComponentFixture<SelectionListWithSelectedOption>;
-    let listOptionElements: DebugElement[];
-    let selectionList: DebugElement;
-
+  describe('with preselected list option', () => {
     beforeEach(waitForAsync(() => {
       TestBed.configureTestingModule({
-        imports: [MatListModule],
-        declarations: [SelectionListWithSelectedOption],
+        imports: [MatListModule, ReactiveFormsModule],
+        declarations: [
+          SelectionListWithSelectedOption,
+          SelectionListWithFormControlAndSelectedOption
+        ],
       });
 
       TestBed.compileComponents();
     }));
 
-    beforeEach(waitForAsync(() => {
-      fixture = TestBed.createComponent(SelectionListWithSelectedOption);
-      listOptionElements = fixture.debugElement.queryAll(By.directive(MatListOption))!;
-      selectionList = fixture.debugElement.query(By.directive(MatSelectionList))!;
-      fixture.detectChanges();
-    }));
-
     it('should set its initial selected state in the selectedOptions', () => {
-      let options = listOptionElements.map(optionEl =>
-          optionEl.injector.get<MatListOption>(MatListOption));
-      let selectedOptions = selectionList.componentInstance.selectedOptions;
-      expect(selectedOptions.isSelected(options[0])).toBeFalse();
-      expect(selectedOptions.isSelected(options[1])).toBeTrue();
-      expect(selectedOptions.isSelected(options[2])).toBeTrue();
-      expect(selectedOptions.isSelected(options[3])).toBeFalse();
+      const fixture = TestBed.createComponent(SelectionListWithSelectedOption);
+      const listItemEl = fixture.debugElement.query(By.directive(MatListOption));
+      const selectionList = fixture.debugElement.query(By.directive(MatSelectionList));
+      fixture.detectChanges();
+
+      const optionEl = listItemEl.injector.get<MatListOption>(MatListOption);
+      const selectedOptions = selectionList.componentInstance.selectedOptions;
+      expect(selectedOptions.isSelected(optionEl)).toBeTruthy();
+      expect(optionEl.selected).toBe(true);
     });
 
-    it('should focus the first selected option on first focus if an item is pre-selected',
-        fakeAsync(() => {
-      // MDC manages the focus through setting a `tabindex` on the designated list item. We
-      // assert that the proper tabindex is set on the pre-selected option at index 1, and
-      // ensure that other options are not reachable through tab.
-      expect(listOptionElements.map(el => el.nativeElement.tabIndex)).toEqual([-1, 0, -1, -1]);
-    }));
+    it('should not reset the option selected state when using a form control with a default value',
+      () => {
+        const fixture = TestBed.createComponent(SelectionListWithFormControlAndSelectedOption);
+        const listItemEl = fixture.debugElement.query(By.directive(MatListOption));
+        const selectionList = fixture.debugElement.query(By.directive(MatSelectionList));
+        fixture.detectChanges();
+
+        const optionEl = listItemEl.injector.get<MatListOption>(MatListOption);
+        const selectedOptions = selectionList.componentInstance.selectedOptions;
+        expect(selectedOptions.isSelected(optionEl)).toBeTruthy();
+        expect(optionEl.selected).toBe(true);
+      });
+
   });
 
   describe('with option disabled', () => {
@@ -1514,10 +1514,7 @@ class SelectionListWithDisabledOption {
 
 @Component({template: `
   <mat-selection-list>
-    <mat-list-option>Not selected - Item #1</mat-list-option>
-    <mat-list-option [selected]="true">Pre-selected - Item #2</mat-list-option>
-    <mat-list-option [selected]="true">Pre-selected - Item #3</mat-list-option>
-    <mat-list-option>Not selected - Item #4</mat-list-option>
+    <mat-list-option [selected]="true">Item</mat-list-option>
   </mat-selection-list>`})
 class SelectionListWithSelectedOption {
 }
@@ -1530,6 +1527,14 @@ class SelectionListWithSelectedOption {
 })
 class SelectionListWithSelectedOptionAndValue {
   itemValue = 'item1';
+}
+
+@Component({template: `
+  <mat-selection-list [formControl]="formControl">
+    <mat-list-option [selected]="true" value="item-0">Item</mat-list-option>
+  </mat-selection-list>`})
+class SelectionListWithFormControlAndSelectedOption {
+  formControl = new FormControl([]);
 }
 
 @Component({template: `

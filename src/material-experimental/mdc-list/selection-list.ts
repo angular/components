@@ -144,7 +144,7 @@ export class MatSelectionList extends MatInteractiveListBase<MatListOption>
     // Update the options if a control value has been set initially. Note that this should happen
     // before watching for selection changes as otherwise we would sync options with MDC multiple
     // times as part of view initialization (also the foundation would not be initialized yet).
-    if (this._value) {
+    if (this._value && this._value.length) {
       this._setOptionsFromValues(this._value);
     }
 
