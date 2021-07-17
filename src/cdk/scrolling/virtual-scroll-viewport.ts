@@ -284,6 +284,9 @@ export class CdkVirtualScrollViewport extends CdkScrollable implements OnInit, O
 
   /** Sets the currently rendered range of indices. */
   setRenderedRange(range: ListRange) {
+    // The range should never be greater than the data.
+    range.end = Math.min(range.end, this.getDataLength());
+
     if (!rangesEqual(this._renderedRange, range)) {
       if (this.appendOnly) {
         range = {start: 0, end: Math.max(this._renderedRange.end, range.end)};
