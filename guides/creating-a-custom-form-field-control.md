@@ -335,6 +335,28 @@ get errorState(): boolean {
 }
 ```
 
+To achieve a reactive errorState, add the `NgControl` as seen above to your constructor. Then set your errorState as an `Input()`. You will also want to inject `FormGroupDirective` so you can check if the form has been submitted:
+
+```ts
+constructor(
+  ...,
+  @Optional() private _parentFormGroup: FormGroupDirective,
+  @Optional() @Self() public ngControl: NgControl,
+  ...,
+) { }
+```
+
+```ts
+/** This property indicates whether the associated NgControl is in an error state. */
+@Input() get errorState() {
+  return !!(
+    this.ngControl &&
+    this.ngControl.invalid &&
+    (this.ngControl.touched || (this._parentFormGroup && this._parentFormGroup.submitted))
+  );
+}
+```
+
 #### `controlType`
 
 This property allows us to specify a unique string for the type of control in form field. The
