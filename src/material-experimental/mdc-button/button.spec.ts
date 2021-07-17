@@ -163,11 +163,13 @@ describe('MDC-based MatButton', () => {
       let fixture = TestBed.createComponent(TestApp);
       let testComponent = fixture.debugElement.componentInstance;
       let buttonDebugElement = fixture.debugElement.query(By.css('a'))!;
-      expect(buttonDebugElement.nativeElement.getAttribute('tabIndex')).toBe(null);
+      fixture.detectChanges();
+
+      expect(buttonDebugElement.nativeElement.hasAttribute('tabindex')).toBe(false);
 
       testComponent.isDisabled = true;
       fixture.detectChanges();
-      expect(buttonDebugElement.nativeElement.getAttribute('tabIndex')).toBe('-1');
+      expect(buttonDebugElement.nativeElement.getAttribute('tabindex')).toBe('-1');
     });
 
     it('should add aria-disabled attribute if disabled', () => {
@@ -208,14 +210,22 @@ describe('MDC-based MatButton', () => {
       fixture.componentInstance.tabIndex = 3;
       fixture.detectChanges();
 
-      expect(buttonElement.getAttribute('tabIndex'))
+      expect(buttonElement.getAttribute('tabindex'))
           .toBe('3', 'Expected custom tabindex to be set');
 
       testComponent.isDisabled = true;
       fixture.detectChanges();
 
-      expect(buttonElement.getAttribute('tabIndex'))
+      expect(buttonElement.getAttribute('tabindex'))
           .toBe('-1', 'Expected custom tabindex to be overwritten when disabled.');
+    });
+
+    it('should not set a default tabindex on enabled links', () => {
+      const fixture = TestBed.createComponent(TestApp);
+      const buttonElement = fixture.debugElement.query(By.css('a'))!.nativeElement;
+      fixture.detectChanges();
+
+      expect(buttonElement.hasAttribute('tabindex')).toBe(false);
     });
   });
 
