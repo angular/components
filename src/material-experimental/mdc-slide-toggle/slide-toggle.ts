@@ -81,6 +81,7 @@ export class MatSlideToggleChange {
     // Needs to be `-1` so it can still receive programmatic focus.
     '[attr.tabindex]': 'disabled ? null : -1',
     '[attr.aria-label]': 'null',
+    '[attr.name]': 'null',
     '[attr.aria-labelledby]': 'null',
     '[class.mat-primary]': 'color === "primary"',
     '[class.mat-accent]': 'color !== "primary" && color !== "warn"',
