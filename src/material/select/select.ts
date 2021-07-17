@@ -373,6 +373,7 @@ export abstract class _MatSelectBase<C> extends _MatSelectMixinBase implements A
       }
 
       this._value = newValue;
+      this._onChange(newValue);
     }
   }
   private _value: any;
