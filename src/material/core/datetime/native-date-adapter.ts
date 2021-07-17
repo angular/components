@@ -8,6 +8,7 @@
 
 import {Platform} from '@angular/cdk/platform';
 import {Inject, Injectable, Optional} from '@angular/core';
+import {getLocaleFirstDayOfWeek} from '@angular/common';
 import {DateAdapter, MAT_DATE_LOCALE} from './date-adapter';
 
 // TODO(mmalerba): Remove when we no longer support safari 9.
@@ -146,8 +147,7 @@ export class NativeDateAdapter extends DateAdapter<Date> {
   }
 
   getFirstDayOfWeek(): number {
-    // We can't tell using native JS Date what the first day of the week is, we default to Sunday.
-    return 0;
+    return getLocaleFirstDayOfWeek(this.locale);
   }
 
   getNumDaysInMonth(date: Date): number {
