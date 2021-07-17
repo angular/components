@@ -357,28 +357,39 @@ export class MatChipList extends _MatChipListBase implements MatFormFieldControl
     });
 
     // When the list changes, re-subscribe
-    this.chips.changes.pipe(startWith(null), takeUntil(this._destroyed)).subscribe(() => {
-      if (this.disabled) {
-        // Since this happens after the content has been
-        // checked, we need to defer it to the next tick.
-        Promise.resolve().then(() => {
-          this._syncChipsState();
+    this.chips.changes
+      .pipe(startWith(null), takeUntil(this._destroyed))
+      .subscribe((chips: QueryList<MatChip> | null) => {
+        if (this.disabled) {
+          // Since this happens after the content has been
+          // checked, we need to defer it to the next tick.
+          Promise.resolve().then(() => {
+            this._syncChipsState();
+          });
+        }
+
+        // Reset chips selected/deselected status
+        this._initializeSelection().then(() => {
+          // Sync the model value after the selection has been set. We only do it
+          // after the first run, in order to avoid marking form controls as dirty on init.
+          if (chips) {
+            this._updateValue();
+          }
         });
-      }
 
-      this._resetChips();
+        this._resetChips();
 
-      // Reset chips selected/deselected status
-      this._initializeSelection();
+        // Reset chips selected/deselected status
+        this._initializeSelection();
 
-      // Check to see if we need to update our tab index
-      this._updateTabIndex();
+        // Check to see if we need to update our tab index
+        this._updateTabIndex();
 
-      // Check to see if we have a destroyed chip and need to refocus
-      this._updateFocusForDestroyedChips();
+        // Check to see if we have a destroyed chip and need to refocus
+        this._updateFocusForDestroyedChips();
 
-      this.stateChanges.next();
-    });
+        this.stateChanges.next();
+      });
   }
 
   ngOnInit() {
@@ -557,7 +568,6 @@ export class MatChipList extends _MatChipListBase implements MatFormFieldControl
    * @returns Chip that has the corresponding value.
    */
   private _selectValue(value: any, isUserInput: boolean = true): MatChip | undefined {
-
     const correspondingChip = this.chips.find(chip => {
       return chip.value != null && this._compareWith(chip.value,  value);
     });
@@ -570,10 +580,10 @@ export class MatChipList extends _MatChipListBase implements MatFormFieldControl
     return correspondingChip;
   }
 
-  private _initializeSelection(): void {
+  private _initializeSelection(): Promise<void> {
     // Defer setting the value in order to avoid the "Expression
     // has changed after it was checked" errors from Angular.
-    Promise.resolve().then(() => {
+    return Promise.resolve().then(() => {
       if (this.ngControl || this._value) {
         this._setSelectionByValue(this.ngControl ? this.ngControl.value : this._value, false);
         this.stateChanges.next();
@@ -612,19 +622,25 @@ export class MatChipList extends _MatChipListBase implements MatFormFieldControl
     }
   }
 
-  /** Emits change event to set the model value. */
-  private _propagateChanges(fallbackValue?: any): void {
+  /** Updates the model value based on the currently-selected chips. */
+  private _updateValue(): any {
     let valueToEmit: any = null;
 
     if (Array.isArray(this.selected)) {
       valueToEmit = this.selected.map(chip => chip.value);
     } else {
-      valueToEmit = this.selected ? this.selected.value : fallbackValue;
+      valueToEmit = this.selected ? this.selected.value : undefined;
     }
+
     this._value = valueToEmit;
+    this._onChange(valueToEmit);
+  }
+
+  /** Emits change event to set the model value. */
+  private _propagateChanges(): void {
+    const valueToEmit = this._updateValue();
     this.change.emit(new MatChipListChange(this, valueToEmit));
     this.valueChange.emit(valueToEmit);
-    this._onChange(valueToEmit);
     this._changeDetectorRef.markForCheck();
   }
 
