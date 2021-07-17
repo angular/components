@@ -56,6 +56,9 @@ is reused instead. The size of the view cache can be adjusted via the `templateC
 property; setting this size to `0` disables caching. If your templates are expensive in terms of
 memory you may wish to reduce this number to avoid spending too much memory on the template cache.
 
+Recycled components within the `<cdk-virtual-scroll-viewport>` preserve state like bound parameter values. 
+When rendering dynamic components, you may want to disable caching completely.
+
 <!-- example(cdk-virtual-scroll-template-cache) -->
 
 ##### Specifying data
