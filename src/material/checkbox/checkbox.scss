@@ -176,6 +176,7 @@ $_mark-stroke-size: private.private-div(2, 15) * checkbox-common.$size !default;
 
 .mat-checkbox {
   @include private.private-animation-noop();
+  position: relative;
 
   // The host node defaults to `diplay: inline` so
   // we have to change it in order for margins to work.
@@ -514,6 +515,12 @@ $_mark-stroke-size: private.private-div(2, 15) * checkbox-common.$size !default;
 .mat-checkbox-input {
   // Move the input to the bottom and in the middle.
   // Visual improvement to properly show browser popups when being required.
-  bottom: 0;
-  left: 50%;
+  $offset: checkbox-common.$size / 2;
+  bottom: $offset;
+  left: $offset;
+
+  [dir='rtl'] & {
+    left: auto;
+    right: $offset;
+  }
 }

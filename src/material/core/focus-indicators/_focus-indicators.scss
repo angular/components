@@ -59,7 +59,7 @@
 
   // Checkboxes, radios, and slide toggles render focus indicators when the
   // associated visually-hidden input is focused.
-  .mat-checkbox-input:focus ~ .mat-focus-indicator::before,
+  .mat-checkbox.cdk-focused .mat-focus-indicator::before,
   .mat-radio-input:focus ~ .mat-focus-indicator::before,
   .mat-slide-toggle-input:focus ~ .mat-slide-toggle-thumb-container .mat-focus-indicator::before,
 

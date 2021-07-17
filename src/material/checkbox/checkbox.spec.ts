@@ -1189,12 +1189,12 @@ describe('MatCheckbox', () => {
 
     it('should not add the "name" attribute if it is not passed in', () => {
       fixture.detectChanges();
-      expect(checkboxInnerContainer.querySelector('input')!.hasAttribute('name')).toBe(false);
+      expect(fixture.nativeElement.querySelector('input')!.hasAttribute('name')).toBe(false);
     });
 
     it('should not add the "value" attribute if it is not passed in', () => {
       fixture.detectChanges();
-      expect(checkboxInnerContainer.querySelector('input')!.hasAttribute('value')).toBe(false);
+      expect(fixture.nativeElement.querySelector('input')!.hasAttribute('value')).toBe(false);
     });
   });
 

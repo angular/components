@@ -31,8 +31,15 @@
       </svg>
       <div class="mdc-checkbox__mixedmark"></div>
     </div>
+    <!--
+      Note that we use the input as the ripple target, because some screen readers have a
+      behavior where any parent of an input that has a `mousedown` or `click` listener is
+      considered as being "clickable", causing the screen reader to read out "clickable" before
+      the label. MDC stretches the input to the size of the container so we can bind to it
+      directly for the same result. See https://github.com/nvaccess/nvda/issues/7430
+     -->
     <div class="mat-mdc-checkbox-ripple mat-mdc-focus-indicator" mat-ripple
-      [matRippleTrigger]="checkbox"
+      [matRippleTrigger]="nativeCheckbox"
       [matRippleDisabled]="disableRipple || disabled"
       [matRippleCentered]="true"
       [matRippleAnimation]="_rippleAnimation"></div>
