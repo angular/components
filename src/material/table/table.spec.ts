@@ -266,6 +266,45 @@ describe('MatTable', () => {
       ]);
     });
 
+    it('should fall back to empty table if invalid data is passed in', () => {
+      component.underlyingDataSource.addData();
+      fixture.detectChanges();
+      expectTableToMatchContent(tableElement, [
+        ['Column A', 'Column B', 'Column C'],
+        ['a_1', 'b_1', 'c_1'],
+        ['a_2', 'b_2', 'c_2'],
+        ['a_3', 'b_3', 'c_3'],
+        ['a_4', 'b_4', 'c_4'],
+        ['Footer A', 'Footer B', 'Footer C'],
+      ]);
+
+      dataSource.data = null!;
+      fixture.detectChanges();
+      expectTableToMatchContent(tableElement, [
+        ['Column A', 'Column B', 'Column C'],
+        ['Footer A', 'Footer B', 'Footer C'],
+      ]);
+
+      component.underlyingDataSource.addData();
+      fixture.detectChanges();
+      expectTableToMatchContent(tableElement, [
+        ['Column A', 'Column B', 'Column C'],
+        ['a_1', 'b_1', 'c_1'],
+        ['a_2', 'b_2', 'c_2'],
+        ['a_3', 'b_3', 'c_3'],
+        ['a_4', 'b_4', 'c_4'],
+        ['a_5', 'b_5', 'c_5'],
+        ['Footer A', 'Footer B', 'Footer C'],
+      ]);
+
+      dataSource.data = {} as any;
+      fixture.detectChanges();
+      expectTableToMatchContent(tableElement, [
+        ['Column A', 'Column B', 'Column C'],
+        ['Footer A', 'Footer B', 'Footer C'],
+      ]);
+    });
+
     it('should update the page index when switching to a smaller data set from a page',
       fakeAsync(() => {
         // Add 20 rows so we can switch pages.
