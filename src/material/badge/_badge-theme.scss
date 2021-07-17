@@ -147,9 +147,8 @@ $_badge-structure-emitted: false !default;
 }
 
 @mixin color($config-or-theme) {
+  $palettes: theming.get-theme-palettes($config-or-theme);
   $config: theming.get-color-config($config-or-theme);
-  $accent: map.get($config, accent);
-  $warn: map.get($config, warn);
   $primary: map.get($config, primary);
   $background: map.get($config, background);
   $foreground: map.get($config, foreground);
@@ -164,17 +163,13 @@ $_badge-structure-emitted: false !default;
     }
   }
 
-  .mat-badge-accent {
-    .mat-badge-content {
-      background: theming.get-color-from-palette($accent);
-      color: theming.get-color-from-palette($accent, default-contrast);
-    }
-  }
-
-  .mat-badge-warn {
-    .mat-badge-content {
-      color: theming.get-color-from-palette($warn, default-contrast);
-      background: theming.get-color-from-palette($warn);
+  @each $palette-key in $palettes {
+    $palette: map.get($config, $palette-key);
+    .mat-badge-#{$palette-key} {
+      .mat-badge-content {
+        background: theming.get-color-from-palette($palette);
+        color: theming.get-color-from-palette($palette, default-contrast);
+      }
     }
   }
 

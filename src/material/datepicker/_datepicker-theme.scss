@@ -61,6 +61,7 @@ $calendar-weekday-table-font-size: 11px !default;
 }
 
 @mixin color($config-or-theme) {
+  $palettes: theming.get-theme-palettes($config-or-theme);
   $config: theming.get-color-config($config-or-theme);
   $foreground: map.get($config, foreground);
   $background: map.get($config, background);
@@ -152,12 +153,10 @@ $calendar-weekday-table-font-size: 11px !default;
     background-color: theming.get-color-from-palette($background, card);
     color: theming.get-color-from-palette($foreground, text);
 
-    &.mat-accent {
-      @include _color(map.get($config, accent));
-    }
-
-    &.mat-warn {
-      @include _color(map.get($config, warn));
+    @each $palette-key in $palettes {
+      &.mat-#{$palette-key} {
+        @include _color(map.get($config, $palette-key));
+      }
     }
   }
 
@@ -168,12 +167,10 @@ $calendar-weekday-table-font-size: 11px !default;
   .mat-datepicker-toggle-active {
     color: theming.get-color-from-palette(map.get($config, primary), text);
 
-    &.mat-accent {
-      color: theming.get-color-from-palette(map.get($config, accent), text);
-    }
-
-    &.mat-warn {
-      color: theming.get-color-from-palette(map.get($config, warn), text);
+    @each $palette-key in $palettes {
+      &.mat-#{$palette-key} {
+        color: theming.get-color-from-palette(map.get($config, $palette-key), text);
+      }
     }
   }
 

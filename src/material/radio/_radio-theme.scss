@@ -17,10 +17,8 @@
 }
 
 @mixin color($config-or-theme) {
+  $palettes: theming.get-theme-palettes($config-or-theme);
   $config: theming.get-color-config($config-or-theme);
-  $primary: map.get($config, primary);
-  $accent: map.get($config, accent);
-  $warn: map.get($config, warn);
   $background: map.get($config, background);
   $foreground: map.get($config, foreground);
 
@@ -29,16 +27,13 @@
   }
 
   .mat-radio-button {
-    &.mat-primary {
-      @include _color($primary);
-    }
 
-    &.mat-accent {
-      @include _color($accent);
-    }
+    @each $palette-key in $palettes {
+      $palette: map.get($config, $palette-key);
 
-    &.mat-warn {
-      @include _color($warn);
+      &.mat-#{$palette-key} {
+        @include _color($palette);
+      }
     }
 
     // This needs extra specificity, because the classes above are combined

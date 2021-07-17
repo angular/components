@@ -109,28 +109,44 @@ $_emitted-density: () !default;
 
 // Creates a light-themed color configuration from the specified
 // primary, accent and warn palettes.
-@function _mat-create-light-color-config($primary, $accent, $warn: null) {
-  @return (
-    primary: $primary,
-    accent: $accent,
+@function _mat-create-light-color-config($primary, $accent: null, $warn: null) {
+  @if $accent != null {
+    $primary: (
+      primary: $primary,
+      accent: $accent,
+      warn: $warn
+    );
+  }
+
+  $warn: map.get($primary, warn);
+
+  @return map.merge($primary, (
     warn: if($warn != null, $warn, define-palette(palette.$red-palette)),
     is-dark: false,
     foreground: palette.$light-theme-foreground-palette,
     background: palette.$light-theme-background-palette,
-  );
+  ));
 }
 
 // Creates a dark-themed color configuration from the specified
 // primary, accent and warn palettes.
-@function _mat-create-dark-color-config($primary, $accent, $warn: null) {
-  @return (
-    primary: $primary,
-    accent: $accent,
+@function _mat-create-dark-color-config($primary, $accent: null, $warn: null) {
+  @if $accent != null {
+    $primary: (
+      primary: $primary,
+      accent: $accent,
+      warn: $warn
+    );
+  }
+
+  $warn: map.get($primary, warn);
+
+  @return map.merge($primary, (
     warn: if($warn != null, $warn, define-palette(palette.$red-palette)),
     is-dark: true,
     foreground: palette.$dark-theme-foreground-palette,
     background: palette.$dark-theme-background-palette,
-  );
+  ));
 }
 
 // TODO: Remove legacy API and rename `$primary` below to `$config`. Currently it cannot be renamed
@@ -154,21 +170,22 @@ $_emitted-density: () !default;
   // If the legacy pattern is used, we generate a container object only with a light-themed
   // configuration for the `color` theming part.
   @if $accent != null {
+    $palettes: private-create-theme-palette-keys($primary);
     @return private-create-backwards-compatibility-theme(_mat-validate-theme((
       _is-legacy-theme: true,
-      color: _mat-create-light-color-config($primary, $accent, $warn),
+      color: map.merge($palettes, _mat-create-light-color-config($primary, $accent, $warn)),
     )));
   }
-  // If the map pattern is used (1), we just pass-through the configurations for individual
-  // parts of the theming system, but update the `color` configuration if set. As explained
-  // above, the color shorthand will be expanded to an actual light-themed color configuration.
+  // If the map pattern is used (1), we just pass-through the configurations, but update the
+  // `color` configuration if set. As explained above, the color shorthand will be expanded to
+  // an actual light-themed color configuration.
   $result: $primary;
   @if map.get($primary, color) {
     $color-settings: map.get($primary, color);
-    $primary: map.get($color-settings, primary);
-    $accent: map.get($color-settings, accent);
-    $warn: map.get($color-settings, warn);
-    $result: map.merge($result, (color: _mat-create-light-color-config($primary, $accent, $warn)));
+    $palettes: private-create-theme-palette-keys($primary);
+    $result: map.merge($result, (
+      color: map.merge($palettes, _mat-create-light-color-config($color-settings))
+    ));
   }
   @return private-create-backwards-compatibility-theme(_mat-validate-theme($result));
 }
@@ -194,23 +211,41 @@ $_emitted-density: () !default;
   // If the legacy pattern is used, we generate a container object only with a dark-themed
   // configuration for the `color` theming part.
   @if $accent != null {
+    $palettes: private-create-theme-palette-keys($primary);
     @return private-create-backwards-compatibility-theme(_mat-validate-theme((
       _is-legacy-theme: true,
-      color: _mat-create-dark-color-config($primary, $accent, $warn),
+      color: map.merge($palettes, _mat-create-dark-color-config($primary, $accent, $warn)),
     )));
   }
-  // If the map pattern is used (1), we just pass-through the configurations for individual
-  // parts of the theming system, but update the `color` configuration if set. As explained
-  // above, the color shorthand will be expanded to an actual dark-themed color configuration.
+  // If the map pattern is used (1), we just pass-through the configurations, but update the
+  // `color` configuration if set. As explained above, the color shorthand will be expanded to
+  // an actual dark-themed color configuration.
   $result: $primary;
   @if map.get($primary, color) {
     $color-settings: map.get($primary, color);
-    $primary: map.get($color-settings, primary);
-    $accent: map.get($color-settings, accent);
-    $warn: map.get($color-settings, warn);
-    $result: map.merge($result, (color: _mat-create-dark-color-config($primary, $accent, $warn)));
+    $palettes: private-create-theme-palette-keys($primary);
+    $result: map.merge($result, (
+      color: map.merge($palettes, _mat-create-dark-color-config($color-settings))
+    ));
   }
   @return private-create-backwards-compatibility-theme(_mat-validate-theme($result));
+}
+
+/// Gets the list of palette keys used in the theme. If the list does not exist it returns
+/// the defaults.
+/// @param {Map} $theme-or-config  The theme map returned from `define-light-theme` or
+///     `define-dark-theme`.
+/// @returns {List} List of palette keys.
+@function get-theme-palettes($theme-or-config) {
+  $palettes: map.get($theme-or-config, palettes);
+  @if not $palettes {
+    $palettes: primary accent warn;
+  }
+  @if null == index($palettes, primary) {
+    $palettes: primary accent warn;
+  }
+
+  @return $palettes;
 }
 
 /// Gets the color configuration from the given theme or configuration.
@@ -423,4 +458,23 @@ $_emitted-density: () !default;
     _is-legacy-theme: true,
     color: $theme-or-color-config
   ));
+}
+
+// Creates a list of palette keys used in the theme. This allows for extra palettes to be used
+// in theming by creating a list that can be iterated over. If a legacy theme is created without
+// the color configuration, the list contains the existing keys of `primary accent warn`.
+@function private-create-theme-palette-keys($theme) {
+  $color-settings: map.get($theme, color);
+
+  @if not $color-settings {
+    @return ( palettes: primary accent warn );
+  }
+
+  $palette-keys: primary accent warn;
+  @each $key, $palette in $color-settings {
+    @if null == index($palette-keys, $key) {
+      $palette-keys: list.append($palette-keys, $key);
+    }
+  }
+  @return ( palettes: $palette-keys);
 }

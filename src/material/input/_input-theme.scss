@@ -9,9 +9,9 @@
 
 
 @mixin color($config-or-theme) {
+  $palettes: theming.get-theme-palettes($config-or-theme);
   $config: theming.get-color-config($config-or-theme);
   $primary: map.get($config, primary);
-  $accent: map.get($config, accent);
   $warn: map.get($config, warn);
   $foreground: map.get($config, foreground);
 
@@ -47,11 +47,14 @@
     }
   }
 
-  .mat-form-field.mat-accent .mat-input-element {
-    caret-color: theming.get-color-from-palette($accent, text);
+  @each $palette-key in $palettes {
+    $palette: map.get($config, $palette-key);
+
+    .mat-form-field.mat-#{$palette-key} .mat-input-element {
+      caret-color: theming.get-color-from-palette($palette, text);
+    }
   }
 
-  .mat-form-field.mat-warn .mat-input-element,
   .mat-form-field-invalid .mat-input-element {
     caret-color: theming.get-color-from-palette($warn, text);
   }
