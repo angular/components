@@ -119,7 +119,7 @@ linear stepper) and the user has interacted with the step. The user, however, ca
 this default `completed` behavior by setting the `completed` attribute as needed.
 
 #### Overriding icons
-By default, the step headers will use the `create` and `done` icons from the Material design icon
+By default, the step headers will use the `edit` and `done` icons from the Material design icon
 set via `<mat-icon>` elements. If you want to provide a different set of icons, you can do so
 by placing a `matStepperIcon` for each of the icons that you want to override. The `index`,
 `active`, and `optional` values of the individual steps are available through template variables:
