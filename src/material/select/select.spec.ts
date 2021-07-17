@@ -179,6 +179,11 @@ describe('MatSelect', () => {
           expect(ariaOwns).toBe(document.querySelector('.mat-select-panel')!.id);
         }));
 
+        it('should set the trigger as `role="presentation"`', fakeAsync(() => {
+          const trigger = select.querySelector('.mat-select-trigger')!;
+          expect(trigger.getAttribute('role')).toBe('presentation');
+        }));
+
         it('should set aria-expanded based on the select open state', fakeAsync(() => {
           expect(select.getAttribute('aria-expanded')).toBe('false');
 
