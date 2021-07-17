@@ -53,7 +53,8 @@ export const MAT_RIPPLE_GLOBAL_OPTIONS =
   exportAs: 'matRipple',
   host: {
     'class': 'mat-ripple',
-    '[class.mat-ripple-unbounded]': 'unbounded'
+    '[class.mat-ripple-unbounded]': 'unbounded',
+    '[class.mat-ripple-centered]': 'centered'
   }
 })
 export class MatRipple implements OnInit, OnDestroy, RippleTarget {
