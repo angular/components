@@ -271,17 +271,20 @@ describe('MatExpansionPanel', () => {
   it('should be able to hide the toggle', () => {
     const fixture = TestBed.createComponent(PanelWithContent);
     const header = fixture.debugElement.query(By.css('.mat-expansion-panel-header'))!.nativeElement;
+    const content = fixture.debugElement.query(By.css('.mat-content'))!.nativeElement;
 
     fixture.detectChanges();
 
     expect(header.querySelector('.mat-expansion-indicator'))
         .toBeTruthy('Expected indicator to be shown.');
+    expect(content.classList).not.toContain('mat-content-hide-toggle');
 
     fixture.componentInstance.hideToggle = true;
     fixture.detectChanges();
 
     expect(header.querySelector('.mat-expansion-indicator'))
         .toBeFalsy('Expected indicator to be hidden.');
+    expect(content.classList).toContain('mat-content-hide-toggle');
   });
 
   it('should update the indicator rotation when the expanded state is toggled programmatically',
