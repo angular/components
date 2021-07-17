@@ -17,9 +17,11 @@
     role="tablist"
     (cdkObserveContent)="_onContentChanges()">
     <div class="mat-tab-labels">
-      <ng-content></ng-content>
+      <div class="mat-tab-label-group">
+        <ng-content></ng-content>
+        <mat-ink-bar></mat-ink-bar>
+      </div>
     </div>
-    <mat-ink-bar></mat-ink-bar>
   </div>
 </div>
 
