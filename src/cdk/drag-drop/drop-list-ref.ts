@@ -831,7 +831,101 @@ export class DropListRef<T = any> {
    * @param y Position of the item along the Y axis.
    */
   _getSiblingContainerFromPosition(item: DragRef, x: number, y: number): DropListRef | undefined {
-    return this._siblings.find(sibling => sibling._canReceive(item, x, y));
+    // Possible targets include siblings and 'this'
+    let targets = [this, ...this._siblings];
+
+    // Only consider targets where the drag postition is within the client rect
+    // (this avoids calling enterPredicate on each possible target)
+    let matchingTargets = targets.filter(ref => {
+      return ref._clientRect && isInsideClientRect(ref._clientRect, x, y);
+    });
+
+    // Stop if no targets match the coordinates
+    if (matchingTargets.length == 0) {
+        return undefined;
+    }
+
+    // Order candidates by DOM hierarchy and z-index
+    let orderedMatchingTargets = this._orderByHierarchy(matchingTargets);
+
+    // The drop target is the last matching target in the list
+    let matchingTarget = orderedMatchingTargets[orderedMatchingTargets.length - 1];
+
+    // Only return matching target if it is a sibling
+    if (matchingTarget === this) {
+      return undefined;
+    }
+
+    // Can the matching target receive the item?
+    if (!matchingTarget._canReceive(item, x, y)) {
+      return undefined;
+    }
+
+    // Return matching target
+    return matchingTarget;
+  }
+
+  /**
+   * Sort a list of DropListRef in such that forevery nested pair drop containers, the
+   * outer drop container appear before the inner drop container.
+   * @param refs List of DropListRefs.
+   */
+  private _orderByHierarchy(refs: DropListRef[]): DropListRef[] {
+    // Build a map from HTMLElement to DropListRef
+    let refsByElement: Map<HTMLElement, DropListRef> = new Map();
+    refs.forEach(ref => {
+      refsByElement.set(coerceElement(ref.element), ref);
+    });
+
+    // Function to identify the closest ancestor among th DropListRefs
+    let findAncestor = (ref: DropListRef) => {
+      let ancestor = coerceElement(ref.element).parentElement;
+
+      while (ancestor) {
+          if (refsByElement.has(ancestor)) {
+              return refsByElement.get(ancestor);
+          }
+          ancestor = ancestor.parentElement;
+      }
+
+      return undefined;
+    };
+
+    // Node type for tree structure
+    type NodeType = {ref: DropListRef, parent?: NodeType, children: NodeType[]};
+
+    // Add all refs as nodes to the tree
+    let tree: Map<DropListRef, NodeType> = new Map();
+    refs.forEach(ref => {
+      tree.set(ref, {ref: ref, children: []});
+    });
+
+    // Build parent-child links in tree
+    refs.forEach(ref => {
+      let parent = findAncestor(ref);
+
+      if (parent) {
+          let node = tree.get(ref);
+          let parentNode = tree.get(parent);
+
+          node!.parent = parentNode;
+          parentNode!.children.push(node!);
+      }
+    });
+
+    // Find tree roots
+    let roots = Array.from(tree.values()).filter(node => !node.parent);
+
+    // Function to recursively build ordered list from roots and down
+    let buildOrderedList = (nodes: NodeType[], list: DropListRef[]) => {
+      list.push(... nodes.map(node => node.ref));
+      nodes.forEach(node => {buildOrderedList(node.children, list); });
+    };
+
+    // Build and return the ordered list
+    let ordered: DropListRef[] = [];
+    buildOrderedList(roots, ordered);
+    return ordered;
   }
 
   /**
