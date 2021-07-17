@@ -19,10 +19,13 @@ import {Directive, Input} from '@angular/core';
   exportAs: 'matTextareaAutosize',
   inputs: ['cdkAutosizeMinRows', 'cdkAutosizeMaxRows'],
   host: {
-    'class': 'cdk-textarea-autosize mat-autosize',
+    'class': 'mat-autosize',
+
+    // Remove the class when disabled, because it removes the native browser resizing.
+    '[class.cdk-textarea-autosize]': 'enabled',
     // Textarea elements that have the directive applied should have a single row by default.
     // Browsers normally show two rows by default and therefore this limits the minRows binding.
-    'rows': '1',
+    '[attr.rows]': 'enabled ? 1 : null',
   },
 })
 export class MatTextareaAutosize extends CdkTextareaAutosize {
