@@ -37,7 +37,9 @@ $calendar-weekday-table-font-size: 11px !default;
     }
   }
 
-  .mat-calendar-body-today.mat-calendar-body-selected {
+  .mat-calendar-body-today.mat-calendar-body-selected,
+  .cdk-keyboard-focused .mat-calendar-body-active .mat-calendar-body-selected,
+  .cdk-program-focused .mat-calendar-body-active .mat-calendar-body-selected {
     box-shadow: inset 0 0 0 $selected-today-box-shadow-width
                 theming.get-color-from-palette($palette, default-contrast);
   }
