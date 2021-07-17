@@ -475,6 +475,7 @@ export abstract class _MatAutocompleteTriggerBase implements ControlValueAccesso
               const wasOpen = this.panelOpen;
               this._resetActiveItem();
               this.autocomplete._setVisibility();
+              this._changeDetectorRef.detectChanges();
 
               if (this.panelOpen) {
                 this._overlayRef!.updatePosition();

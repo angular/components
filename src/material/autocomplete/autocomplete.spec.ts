@@ -2056,6 +2056,22 @@ describe('MatAutocomplete', () => {
             .toBe(false, 'Expected no active descendant when closed.');
       }));
 
+    it('should be able to preselect the first option when the floating label is disabled',
+      fakeAsync(() => {
+        fixture.componentInstance.floatLabel = 'never';
+        fixture.componentInstance.trigger.autocomplete.autoActiveFirstOption = true;
+        fixture.detectChanges();
+
+        fixture.componentInstance.trigger.openPanel();
+        fixture.detectChanges();
+        zone.simulateZoneExit();
+        // Note: should not have a detectChanges call here
+        // in order for the test to fail when it's supposed to.
+
+        expect(overlayContainerElement.querySelectorAll('mat-option')[0].classList)
+            .toContain('mat-active', 'Expected first option to be highlighted.');
+    }));
+
     it('should be able to configure preselecting the first option globally', fakeAsync(() => {
       overlayContainer.ngOnDestroy();
       fixture.destroy();
