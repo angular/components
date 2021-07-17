@@ -200,7 +200,10 @@ export class DevAppLayout {
 
   /** Selects the next possible density scale. */
   selectNextDensity() {
+    // The class has to be toggled on the `body` too so it applies to overlay-based components.
+    document.body.classList.remove(this.getDensityClass());
     this.currentDensityIndex = this.getNextDensityIndex();
+    document.body.classList.add(this.getDensityClass());
   }
 
   /**
