@@ -121,7 +121,7 @@ export class EditEventDispatcher<R> {
   private readonly _hoveredContentStateDistinct = combineLatest([
       this._getFirstRowWithHoverContent(),
       this._getLastRowWithHoverContent(),
-      this.editingOrFocused,
+      this.editingOrFocused.pipe(this._startWithNullDistinct),
       this.hovering.pipe(
           distinctUntilChanged(),
           audit(row => this.mouseMove.pipe(
