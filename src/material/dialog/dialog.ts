@@ -30,11 +30,12 @@ import {
   TemplateRef,
   Type,
 } from '@angular/core';
-import {defer, Observable, of as observableOf, Subject} from 'rxjs';
+import {defer, Observable, of as observableOf, Subject, Subscription} from 'rxjs';
 import {startWith} from 'rxjs/operators';
 import {MatDialogConfig} from './dialog-config';
 import {MatDialogContainer, _MatDialogContainerBase} from './dialog-container';
 import {MatDialogRef} from './dialog-ref';
+import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 
 
 /** Injection token that can be used to access the data that was passed in to a dialog. */
@@ -77,6 +78,8 @@ export abstract class _MatDialogBase<C extends _MatDialogContainerBase> implemen
   private readonly _afterOpenedAtThisLevel = new Subject<MatDialogRef<any>>();
   private _ariaHiddenElements = new Map<Element, string|null>();
   private _scrollStrategy: () => ScrollStrategy;
+  private _dialogAnimatingOpen = false;
+  private _animationStateSubscriptions: Subscription;
 
   /** Keeps track of the currently-open dialogs. */
   get openDialogs(): MatDialogRef<any>[] {
@@ -111,7 +114,8 @@ export abstract class _MatDialogBase<C extends _MatDialogContainerBase> implemen
       scrollStrategy: any,
       private _dialogRefConstructor: Type<MatDialogRef<any>>,
       private _dialogContainerType: Type<C>,
-      private _dialogDataToken: InjectionToken<any>) {
+      private _dialogDataToken: InjectionToken<any>,
+      private _animationMode?: 'NoopAnimations' | 'BrowserAnimations') {
     this._scrollStrategy = scrollStrategy;
   }
 
@@ -144,9 +148,30 @@ export abstract class _MatDialogBase<C extends _MatDialogContainerBase> implemen
       (typeof ngDevMode === 'undefined' || ngDevMode)) {
       throw Error(`Dialog with id "${config.id}" exists already. The dialog id must be unique.`);
     }
+    if (this._dialogAnimatingOpen) {
+      throw Error(`Ignoring attempt to open dialog with id "${
+        config.id}" since another dialog is currently animating open.`);
+    }
 
     const overlayRef = this._createOverlay(config);
     const dialogContainer = this._attachDialogContainer(overlayRef, config);
+    if (this._animationMode !== 'NoopAnimations') {
+      const animationStateSubscription =
+        dialogContainer._animationStateChanged.subscribe((dialogAnimationEvent) => {
+          if (dialogAnimationEvent.state === 'opening') {
+            this._dialogAnimatingOpen = true;
+          }
+          if (dialogAnimationEvent.state === 'opened') {
+            this._dialogAnimatingOpen = false;
+            animationStateSubscription.unsubscribe();
+          }
+        });
+      if (!this._animationStateSubscriptions) {
+        this._animationStateSubscriptions = new Subscription();
+      }
+      this._animationStateSubscriptions.add(animationStateSubscription);
+    }
+
     const dialogRef = this._attachDialogContent<T, R>(componentOrTemplateRef,
                                                       dialogContainer,
                                                       overlayRef,
@@ -188,6 +213,10 @@ export abstract class _MatDialogBase<C extends _MatDialogContainerBase> implemen
     this._closeDialogs(this._openDialogsAtThisLevel);
     this._afterAllClosedAtThisLevel.complete();
     this._afterOpenedAtThisLevel.complete();
+    // Clean up any subscriptions to dialogs that never finished opening.
+    if (this._animationStateSubscriptions) {
+      this._animationStateSubscriptions.unsubscribe();
+    }
   }
 
   /**
@@ -392,8 +421,7 @@ export abstract class _MatDialogBase<C extends _MatDialogContainerBase> implemen
 @Injectable()
 export class MatDialog extends _MatDialogBase<MatDialogContainer> {
   constructor(
-      overlay: Overlay,
-      injector: Injector,
+      overlay: Overlay, injector: Injector,
       /**
        * @deprecated `_location` parameter to be removed.
        * @breaking-change 10.0.0
@@ -401,10 +429,11 @@ export class MatDialog extends _MatDialogBase<MatDialogContainer> {
       @Optional() location: Location,
       @Optional() @Inject(MAT_DIALOG_DEFAULT_OPTIONS) defaultOptions: MatDialogConfig,
       @Inject(MAT_DIALOG_SCROLL_STRATEGY) scrollStrategy: any,
-      @Optional() @SkipSelf() parentDialog: MatDialog,
-      overlayContainer: OverlayContainer) {
+      @Optional() @SkipSelf() parentDialog: MatDialog, overlayContainer: OverlayContainer,
+      @Optional() @Inject(ANIMATION_MODULE_TYPE) animationMode?: 'NoopAnimations'|
+      'BrowserAnimations') {
     super(overlay, injector, defaultOptions, parentDialog, overlayContainer, scrollStrategy,
-        MatDialogRef, MatDialogContainer, MAT_DIALOG_DATA);
+        MatDialogRef, MatDialogContainer, MAT_DIALOG_DATA, animationMode);
   }
 }
 
