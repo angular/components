@@ -48,6 +48,7 @@ $button-margin: 8px !default;
   flex-wrap: wrap;
   min-height: 52px;
   align-items: center;
+  margin-top: auto;
 
   // Explicitly set a box-sizing since people commonly set `border-box`
   // on all elements which will break the height of the dialog actions.
