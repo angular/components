@@ -1244,10 +1244,11 @@ describe('MDC-based MatMenu', () => {
       TestBed.resetTestingModule();
 
       const newFixture = createComponent(SimpleMenu, [], [FakeIcon]);
-      overlayContainerElement = TestBed.inject(OverlayContainer).getContainerElement();
       newFixture.detectChanges();
       newFixture.componentInstance.trigger.openMenu();
       newFixture.detectChanges();
+
+      console.log(overlayContainerElement.querySelectorAll('.mat-mdc-menu-panel').length);
       const panel = overlayContainerElement.querySelector('.mat-mdc-menu-panel') as HTMLElement;
 
       expect(panel.classList).toContain('mat-menu-below');
