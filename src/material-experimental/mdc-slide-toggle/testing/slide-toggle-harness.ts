@@ -15,6 +15,7 @@ import {
 
 /** Harness for interacting with a MDC-based mat-slide-toggle in tests. */
 export class MatSlideToggleHarness extends _MatSlideToggleHarnessBase {
+  protected _nativeElement = this.locatorFor('button');
   static hostSelector = '.mat-mdc-slide-toggle';
 
   /**
@@ -34,10 +35,12 @@ export class MatSlideToggleHarness extends _MatSlideToggleHarnessBase {
         .addOption('name', options.name, async (harness, name) => await harness.getName() === name);
   }
 
-  private _inputContainer = this.locatorFor('.mdc-switch');
-
   async toggle(): Promise<void> {
-    const elToClick = await this.isDisabled() ? this._inputContainer() : this._input();
-    return (await elToClick).click();
+    return (await this._nativeElement()).click();
+  }
+
+  override async isRequired(): Promise<boolean> {
+    // The MDC version no longer supports the `required` input so we turn this into a noop.
+    return false;
   }
 }
