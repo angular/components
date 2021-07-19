@@ -9,10 +9,10 @@
 import {
   Directive,
   ElementRef,
+  Inject,
   Input,
   OnChanges,
   OnInit,
-  Optional,
   SimpleChanges,
 } from '@angular/core';
 import {_closeDialogVia} from '@angular/material/dialog';
@@ -47,22 +47,22 @@ export class MatDialogClose implements OnInit, OnChanges {
 
   @Input('matDialogClose') _matDialogClose: any;
 
+  /** Reference to the dialog that the close button is placed inside of. */
+  dialogRef: MatDialogRef<any>;
+
   constructor(
-      // The dialog title directive is always used in combination with a `MatDialogRef`.
-      // tslint:disable-next-line: lightweight-tokens
-      @Optional() public dialogRef: MatDialogRef<any>,
-      private _elementRef: ElementRef<HTMLElement>,
-      private _dialog: MatDialog) {}
+    /**
+     * @deprecated `_dialogRef` parameter to be removed.
+     * @breaking-change 12.0.0
+     */
+    @Inject(ElementRef) _dialogRef: any,
+    private _elementRef: ElementRef<HTMLElement>,
+    private _dialog: MatDialog) {}
 
   ngOnInit() {
-    if (!this.dialogRef) {
-      // When this directive is included in a dialog via TemplateRef (rather than being
-      // in a Component), the DialogRef isn't available via injection because embedded
-      // views cannot be given a custom injector. Instead, we look up the DialogRef by
-      // ID. This must occur in `onInit`, as the ID binding for the dialog container won't
-      // be resolved at constructor time.
-      this.dialogRef = getClosestDialog(this._elementRef, this._dialog.openDialogs)!;
-    }
+    // Always resolve the closest dialog using the DOM, rather than DI, because DI won't work for
+    // `TemplateRef`-based dialogs and it may give us wrong results for stacked ones (see #21554).
+    this.dialogRef = getClosestDialog(this._elementRef, this._dialog.openDialogs)!;
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -97,17 +97,19 @@ export class MatDialogClose implements OnInit, OnChanges {
 export class MatDialogTitle implements OnInit {
   @Input() id: string = `mat-mdc-dialog-title-${dialogElementUid++}`;
 
+  private _dialogRef: MatDialogRef<unknown>;
+
   constructor(
-      // The dialog title directive is always used in combination with a `MatDialogRef`.
-      // tslint:disable-next-line: lightweight-tokens
-      @Optional() private _dialogRef: MatDialogRef<any>,
+      /**
+       * @deprecated `_dialogRef` parameter to be removed.
+       * @breaking-change 12.0.0
+       */
+      @Inject(ElementRef) _dialogRef: any,
       private _elementRef: ElementRef<HTMLElement>,
       private _dialog: MatDialog) {}
 
   ngOnInit() {
-    if (!this._dialogRef) {
-      this._dialogRef = getClosestDialog(this._elementRef, this._dialog.openDialogs)!;
-    }
+    this._dialogRef = getClosestDialog(this._elementRef, this._dialog.openDialogs)!;
 
     if (this._dialogRef) {
       Promise.resolve().then(() => {
