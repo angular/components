@@ -245,7 +245,7 @@ export class CdkTable<T> implements AfterContentChecked, CollectionViewer, OnDes
    * name. Collection populated by the column definitions gathered by `ContentChildren` as well as
    * any custom column definitions added to `_customColumnDefs`.
    */
-  private _columnDefsByName = new Map<string, CdkColumnDef>();
+  protected _columnDefsByName = new Map<string, CdkColumnDef>();
 
   /**
    * Set of all row definitions that can be used by this table. Populated by the rows gathered by
