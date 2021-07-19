@@ -827,6 +827,54 @@ describe('MDC-based MatAutocomplete', () => {
           .toBe(false, `Expected control to stay pristine if value is set programmatically.`);
     });
 
+    it('should mark the autocomplete control as touched when the panel is closed via the keyboard',
+    fakeAsync(() => {
+      fixture.componentInstance.trigger.openPanel();
+      fixture.detectChanges();
+      zone.simulateZoneExit();
+
+      expect(fixture.componentInstance.stateCtrl.touched)
+          .toBe(false, `Expected control to start out untouched.`);
+
+      dispatchKeyboardEvent(input, 'keydown', TAB);
+      fixture.detectChanges();
+
+      expect(fixture.componentInstance.stateCtrl.touched)
+          .toBe(true, `Expected control to become touched on blur.`);
+    }));
+
+  it('should mark the autocomplete control as touched when the panel is closed by clicking away',
+    fakeAsync(() => {
+      fixture.componentInstance.trigger.openPanel();
+      fixture.detectChanges();
+      zone.simulateZoneExit();
+
+      expect(fixture.componentInstance.stateCtrl.touched)
+          .toBe(false, `Expected control to start out untouched.`);
+
+      dispatchFakeEvent(document, 'click');
+      fixture.detectChanges();
+
+      expect(fixture.componentInstance.stateCtrl.touched)
+          .toBe(true, `Expected control to become touched on blur.`);
+    }));
+
+  it('should not mark the autocomplete control as touched when the panel is closed ' +
+    'programmatically', fakeAsync(() => {
+      fixture.componentInstance.trigger.openPanel();
+      fixture.detectChanges();
+      zone.simulateZoneExit();
+
+      expect(fixture.componentInstance.stateCtrl.touched)
+          .toBe(false, `Expected control to start out untouched.`);
+
+      fixture.componentInstance.trigger.closePanel();
+      fixture.detectChanges();
+
+      expect(fixture.componentInstance.stateCtrl.touched)
+          .toBe(false, `Expected control to stay untouched.`);
+    }));
+
     it('should mark the autocomplete control as touched on blur', () => {
       fixture.componentInstance.trigger.openPanel();
       fixture.detectChanges();
