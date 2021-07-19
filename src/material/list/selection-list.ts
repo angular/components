@@ -7,7 +7,12 @@
  */
 
 import {FocusableOption, FocusKeyManager, FocusMonitor} from '@angular/cdk/a11y';
-import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
+import {
+  BooleanInput,
+  NumberInput,
+  coerceBooleanProperty,
+  coerceNumberProperty,
+} from '@angular/cdk/coercion';
 import {SelectionModel} from '@angular/cdk/collections';
 import {
   A,
@@ -368,7 +373,10 @@ export class MatSelectionList extends _MatSelectionListBase implements CanDisabl
    * Tabindex of the selection list.
    * @breaking-change 11.0.0 Remove `tabIndex` input.
    */
-  @Input() tabIndex: number = 0;
+  @Input()
+  get tabIndex(): number { return this._tabIndex; }
+  set tabIndex(value: number) { this._tabIndex = coerceNumberProperty(value); }
+  private _tabIndex = -1;
 
   /** Theme color of the selection list. This sets the checkbox color for all list options. */
   @Input() color: ThemePalette = 'accent';
@@ -413,9 +421,6 @@ export class MatSelectionList extends _MatSelectionListBase implements CanDisabl
 
   /** The currently selected options. */
   selectedOptions = new SelectionModel<MatListOption>(this._multiple);
-
-  /** The tabindex of the selection list. */
-  _tabIndex = -1;
 
   /** View to model callback that should be called whenever the selected options change. */
   private _onChange: (value: any) => void = (_: any) => {};
@@ -739,6 +744,7 @@ export class MatSelectionList extends _MatSelectionListBase implements CanDisabl
     this._tabIndex = (this.options.length === 0) ? -1 : 0;
   }
 
+  static ngAcceptInputType_tabIndex: NumberInput;
   static ngAcceptInputType_disabled: BooleanInput;
   static ngAcceptInputType_disableRipple: BooleanInput;
   static ngAcceptInputType_multiple: BooleanInput;

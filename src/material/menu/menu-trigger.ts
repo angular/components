@@ -13,6 +13,7 @@ import {
   isFakeTouchstartFromScreenReader,
 } from '@angular/cdk/a11y';
 import {Direction, Directionality} from '@angular/cdk/bidi';
+import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
 import {ENTER, LEFT_ARROW, RIGHT_ARROW, SPACE} from '@angular/cdk/keycodes';
 import {
   FlexibleConnectedPositionStrategy,
@@ -160,7 +161,10 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
    * Note that disabling this option can have accessibility implications
    * and it's up to you to manage focus, if you decide to turn it off.
    */
-  @Input('matMenuTriggerRestoreFocus') restoreFocus: boolean = true;
+  @Input('matMenuTriggerRestoreFocus')
+  get restoreFocus(): boolean { return this._restoreFocus; }
+  set restoreFocus(value: boolean) { this._restoreFocus = coerceBooleanProperty(value); }
+  private _restoreFocus = true;
 
   /** Event emitted when the associated menu is opened. */
   @Output() readonly menuOpened: EventEmitter<void> = new EventEmitter<void>();
@@ -596,4 +600,5 @@ export class MatMenuTrigger implements AfterContentInit, OnDestroy {
     return this._portal;
   }
 
+  static ngAcceptInputType_restoreFocus: BooleanInput;
 }

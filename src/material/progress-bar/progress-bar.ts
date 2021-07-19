@@ -140,7 +140,7 @@ export class MatProgressBar extends _MatProgressBarBase implements CanColor,
   /** Buffer value of the progress bar. Defaults to zero. */
   @Input()
   get bufferValue(): number { return this._bufferValue; }
-  set bufferValue(v: number) { this._bufferValue = clamp(v || 0); }
+  set bufferValue(v: number) { this._bufferValue = clamp(coerceNumberProperty(v) || 0); }
   private _bufferValue: number = 0;
 
   @ViewChild('primaryValueBar') _primaryValueBar: ElementRef;
@@ -212,6 +212,7 @@ export class MatProgressBar extends _MatProgressBarBase implements CanColor,
   }
 
   static ngAcceptInputType_value: NumberInput;
+  static ngAcceptInputType_bufferValue: NumberInput;
 }
 
 /** Clamps a value to be between two numbers, by default 0 and 100. */

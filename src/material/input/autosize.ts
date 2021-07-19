@@ -8,6 +8,12 @@
 
 import {CdkTextareaAutosize} from '@angular/cdk/text-field';
 import {Directive, Input} from '@angular/core';
+import {
+  BooleanInput,
+  NumberInput,
+  coerceBooleanProperty,
+  coerceNumberProperty,
+} from '@angular/cdk/coercion';
 
 /**
  * Directive to automatically resize a textarea to fit its content.
@@ -28,17 +34,22 @@ import {Directive, Input} from '@angular/core';
 export class MatTextareaAutosize extends CdkTextareaAutosize {
   @Input()
   get matAutosizeMinRows(): number { return this.minRows; }
-  set matAutosizeMinRows(value: number) { this.minRows = value; }
+  set matAutosizeMinRows(value: number) { this.minRows = coerceNumberProperty(value); }
 
   @Input()
   get matAutosizeMaxRows(): number { return this.maxRows; }
-  set matAutosizeMaxRows(value: number) { this.maxRows = value; }
+  set matAutosizeMaxRows(value: number) { this.maxRows = coerceNumberProperty(value); }
 
   @Input('mat-autosize')
   get matAutosize(): boolean { return this.enabled; }
-  set matAutosize(value: boolean) { this.enabled = value; }
+  set matAutosize(value: boolean) { this.enabled = coerceBooleanProperty(value); }
 
   @Input()
   get matTextareaAutosize(): boolean { return this.enabled; }
-  set matTextareaAutosize(value: boolean) { this.enabled = value; }
+  set matTextareaAutosize(value: boolean) { this.enabled = coerceBooleanProperty(value); }
+
+  static ngAcceptInputType_matAutosizeMinRows: NumberInput;
+  static ngAcceptInputType_matAutosizeMaxRows: NumberInput;
+  static ngAcceptInputType_matAutosize: BooleanInput;
+  static ngAcceptInputType_matTextareaAutosize: BooleanInput;
 }

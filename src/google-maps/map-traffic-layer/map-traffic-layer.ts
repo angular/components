@@ -10,6 +10,7 @@
 /// <reference types="googlemaps" />
 
 import {Directive, Input, NgZone, OnDestroy, OnInit} from '@angular/core';
+import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
 import {BehaviorSubject, Observable, Subject} from 'rxjs';
 import {map, take, takeUntil} from 'rxjs/operators';
 
@@ -40,7 +41,7 @@ export class MapTrafficLayer implements OnInit, OnDestroy {
    */
   @Input()
   set autoRefresh(autoRefresh: boolean) {
-    this._autoRefresh.next(autoRefresh);
+    this._autoRefresh.next(coerceBooleanProperty(autoRefresh));
   }
 
   constructor(private readonly _map: GoogleMap, private readonly _ngZone: NgZone) {}
@@ -94,4 +95,6 @@ export class MapTrafficLayer implements OnInit, OnDestroy {
           'Please wait for the Traffic Layer to load before trying to interact with it.');
     }
   }
+
+  static ngAcceptInputType_autoRefresh: BooleanInput;
 }

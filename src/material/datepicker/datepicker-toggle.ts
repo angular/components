@@ -6,7 +6,6 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
-import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
 import {
   AfterContentInit,
   Attribute,
@@ -22,6 +21,12 @@ import {
   ViewEncapsulation,
   ViewChild,
 } from '@angular/core';
+import {
+  BooleanInput,
+  NumberInput,
+  coerceBooleanProperty,
+  coerceNumberProperty,
+} from '@angular/cdk/coercion';
 import {MatButton} from '@angular/material/button';
 import {merge, Observable, of as observableOf, Subscription} from 'rxjs';
 import {MatDatepickerIntl} from './datepicker-intl';
@@ -63,7 +68,10 @@ export class MatDatepickerToggle<D> implements AfterContentInit, OnChanges, OnDe
   @Input('for') datepicker: MatDatepickerPanel<MatDatepickerControl<any>, D>;
 
   /** Tabindex for the toggle. */
-  @Input() tabIndex: number | null;
+  @Input()
+  get tabIndex(): number | null { return this._tabIndex; }
+  set tabIndex(value: number | null) { this._tabIndex = coerceNumberProperty(value); }
+  private _tabIndex: number | null;
 
   /** Screenreader label for the button. */
   @Input('aria-label') ariaLabel: string;
@@ -83,7 +91,10 @@ export class MatDatepickerToggle<D> implements AfterContentInit, OnChanges, OnDe
   private _disabled: boolean;
 
   /** Whether ripples on the toggle should be disabled. */
-  @Input() disableRipple: boolean;
+  @Input()
+  get disableRipple(): boolean { return this._disableRipple; }
+  set disableRipple(value: boolean) { this._disableRipple = coerceBooleanProperty(value); }
+  private _disableRipple: boolean;
 
   /** Custom icon set by the consumer. */
   @ContentChild(MatDatepickerToggleIcon) _customIcon: MatDatepickerToggleIcon;
@@ -138,5 +149,7 @@ export class MatDatepickerToggle<D> implements AfterContentInit, OnChanges, OnDe
     ).subscribe(() => this._changeDetectorRef.markForCheck());
   }
 
+  static ngAcceptInputType_tabIndex: NumberInput;
   static ngAcceptInputType_disabled: BooleanInput;
+  static ngAcceptInputType_disableRipple: BooleanInput;
 }

@@ -26,6 +26,7 @@ import {
   EventEmitter,
 } from '@angular/core';
 import {isPlatformBrowser} from '@angular/common';
+import {NumberInput, coerceNumberProperty} from '@angular/cdk/coercion';
 import {Observable} from 'rxjs';
 import {MapEventManager} from '../map-event-manager';
 
@@ -93,9 +94,7 @@ export class GoogleMap implements OnChanges, OnInit, OnDestroy {
   private _center: google.maps.LatLngLiteral|google.maps.LatLng;
 
   @Input()
-  set zoom(zoom: number) {
-    this._zoom = zoom;
-  }
+  set zoom(zoom: number) { this._zoom = coerceNumberProperty(zoom); }
   private _zoom: number;
 
   @Input()
@@ -505,6 +504,8 @@ export class GoogleMap implements OnChanges, OnInit, OnDestroy {
                   'Please wait for the API to load before trying to interact with it.');
     }
   }
+
+  static ngAcceptInputType_zoom: NumberInput;
 }
 
 const cssUnitsPattern = /([A-Za-z%]+)$/;

@@ -7,7 +7,12 @@
  */
 
 import {FocusableOption, FocusMonitor, FocusOrigin} from '@angular/cdk/a11y';
-import {BooleanInput, coerceBooleanProperty, NumberInput} from '@angular/cdk/coercion';
+import {
+  BooleanInput,
+  NumberInput,
+  coerceBooleanProperty,
+  coerceNumberProperty
+} from '@angular/cdk/coercion';
 import {
   AfterViewChecked,
   Attribute,
@@ -199,7 +204,7 @@ export class MatCheckbox extends _MatCheckboxBase implements ControlValueAccesso
     super(elementRef);
     this._options = this._options || defaults;
     this.color = this.defaultColor = this._options.color || defaults.color;
-    this.tabIndex = parseInt(tabIndex) || 0;
+    this.tabIndex = coerceNumberProperty(tabIndex, 0);
   }
 
   ngAfterViewInit() {
@@ -233,8 +238,10 @@ export class MatCheckbox extends _MatCheckboxBase implements ControlValueAccesso
   @Input()
   get checked(): boolean { return this._checked; }
   set checked(value: boolean) {
-    if (value != this.checked) {
-      this._checked = value;
+    const newValue = coerceBooleanProperty(value);
+
+    if (newValue != this.checked) {
+      this._checked = newValue;
       this._changeDetectorRef.markForCheck();
     }
   }
@@ -265,8 +272,9 @@ export class MatCheckbox extends _MatCheckboxBase implements ControlValueAccesso
   @Input()
   get indeterminate(): boolean { return this._indeterminate; }
   set indeterminate(value: boolean) {
-    const changed = value != this._indeterminate;
-    this._indeterminate = coerceBooleanProperty(value);
+    const newValue = coerceBooleanProperty(value);
+    const changed = newValue != this._indeterminate;
+    this._indeterminate = coerceBooleanProperty(newValue);
 
     if (changed) {
       if (this._indeterminate) {
@@ -489,9 +497,10 @@ export class MatCheckbox extends _MatCheckboxBase implements ControlValueAccesso
     }
   }
 
-  static ngAcceptInputType_disabled: BooleanInput;
   static ngAcceptInputType_required: BooleanInput;
   static ngAcceptInputType_disableRipple: BooleanInput;
-  static ngAcceptInputType_indeterminate: BooleanInput;
   static ngAcceptInputType_tabIndex: NumberInput;
+  static ngAcceptInputType_checked: BooleanInput;
+  static ngAcceptInputType_disabled: BooleanInput;
+  static ngAcceptInputType_indeterminate: BooleanInput;
 }

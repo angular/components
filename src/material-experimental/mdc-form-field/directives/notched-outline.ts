@@ -6,6 +6,12 @@
  * found in the LICENSE file at https://angular.io/license
  */
 
+import {
+  BooleanInput,
+  NumberInput,
+  coerceBooleanProperty,
+  coerceNumberProperty,
+} from '@angular/cdk/coercion';
 import {Platform} from '@angular/cdk/platform';
 import {
   AfterViewInit,
@@ -42,10 +48,16 @@ import {MDCNotchedOutline} from '@material/notched-outline';
 })
 export class MatFormFieldNotchedOutline implements AfterViewInit, OnChanges, OnDestroy {
   /** Width of the notch. */
-  @Input('matFormFieldNotchedOutlineWidth') width: number = 0;
+  @Input('matFormFieldNotchedOutlineWidth')
+  get width(): number { return this._width; }
+  set width(value: number) { this._width = coerceNumberProperty(value); }
+  private _width = 0;
 
   /** Whether the notch should be opened. */
-  @Input('matFormFieldNotchedOutlineOpen') open: boolean = false;
+  @Input('matFormFieldNotchedOutlineOpen')
+  get open(): boolean { return this._open; }
+  set open(value: boolean) { this._open = coerceBooleanProperty(value); }
+  private _open = false;
 
   /** Instance of the MDC notched outline. */
   private _mdcNotchedOutline: MDCNotchedOutline|null = null;
@@ -89,4 +101,7 @@ export class MatFormFieldNotchedOutline implements AfterViewInit, OnChanges, OnD
       this._mdcNotchedOutline.closeNotch();
     }
   }
+
+  static ngAcceptInputType_width: NumberInput;
+  static ngAcceptInputType_open: BooleanInput;
 }

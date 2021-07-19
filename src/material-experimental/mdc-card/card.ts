@@ -36,7 +36,6 @@ export type MatCardAppearance = 'outlined' | 'raised';
 })
 export class MatCard {
   @Input() appearance: MatCardAppearance = 'raised';
-
 }
 
 // TODO(jelbourn): add `MatActionCard`, which is a card that acts like a button (and has a ripple).

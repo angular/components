@@ -7,7 +7,12 @@
  */
 
 import {FocusableOption} from '@angular/cdk/a11y';
-import {BooleanInput, coerceBooleanProperty, NumberInput} from '@angular/cdk/coercion';
+import {
+  BooleanInput,
+  NumberInput,
+  coerceBooleanProperty,
+  coerceNumberProperty,
+} from '@angular/cdk/coercion';
 import {BACKSPACE, DELETE, SPACE} from '@angular/cdk/keycodes';
 import {Platform} from '@angular/cdk/platform';
 import {DOCUMENT} from '@angular/common';
@@ -297,7 +302,7 @@ export class MatChip extends _MatChipMixinBase implements FocusableOption, OnDes
 
     this.rippleConfig = globalRippleOptions || {};
     this._animationsDisabled = animationMode === 'NoopAnimations';
-    this.tabIndex = tabIndex != null ? (parseInt(tabIndex) || -1) : -1;
+    this.tabIndex = coerceNumberProperty(tabIndex, -1);
   }
 
   _addHostClassName() {

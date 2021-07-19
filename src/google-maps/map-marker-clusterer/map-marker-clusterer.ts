@@ -25,6 +25,13 @@ import {
   SimpleChanges,
   ViewEncapsulation
 } from '@angular/core';
+import {
+  BooleanInput,
+  NumberInput,
+  coerceArray,
+  coerceBooleanProperty,
+  coerceNumberProperty
+} from '@angular/cdk/coercion';
 import {Observable, Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 
@@ -60,15 +67,18 @@ export class MapMarkerClusterer implements OnInit, AfterContentInit, OnChanges, 
 
   @Input()
   set averageCenter(averageCenter: boolean) {
-    this._averageCenter = averageCenter;
+    this._averageCenter = coerceBooleanProperty(averageCenter);
   }
   private _averageCenter: boolean;
 
-  @Input() batchSize?: number;
+  @Input()
+  get batchSize(): number | undefined { return this._batchSize; }
+  set batchSize(value: any) { this._batchSize = coerceNumberProperty(value); }
+  private _batchSize?: number;
 
   @Input()
   set batchSizeIE(batchSizeIE: number) {
-    this._batchSizeIE = batchSizeIE;
+    this._batchSizeIE = coerceNumberProperty(batchSizeIE);
   }
   private _batchSizeIE: number;
 
@@ -86,19 +96,19 @@ export class MapMarkerClusterer implements OnInit, AfterContentInit, OnChanges, 
 
   @Input()
   set enableRetinaIcons(enableRetinaIcons: boolean) {
-    this._enableRetinaIcons = enableRetinaIcons;
+    this._enableRetinaIcons = coerceBooleanProperty(enableRetinaIcons);
   }
   private _enableRetinaIcons: boolean;
 
   @Input()
   set gridSize(gridSize: number) {
-    this._gridSize = gridSize;
+    this._gridSize = coerceNumberProperty(gridSize);
   }
   private _gridSize: number;
 
   @Input()
   set ignoreHidden(ignoreHidden: boolean) {
-    this._ignoreHidden = ignoreHidden;
+    this._ignoreHidden = coerceBooleanProperty(ignoreHidden);
   }
   private _ignoreHidden: boolean;
 
@@ -115,20 +125,20 @@ export class MapMarkerClusterer implements OnInit, AfterContentInit, OnChanges, 
   private _imagePath: string;
 
   @Input()
-  set imageSizes(imageSizes: number[]) {
-    this._imageSizes = imageSizes;
+  set imageSizes(imageSizes: number | number[]) {
+    this._imageSizes = coerceArray(imageSizes);
   }
   private _imageSizes: number[];
 
   @Input()
   set maxZoom(maxZoom: number) {
-    this._maxZoom = maxZoom;
+    this._maxZoom = coerceNumberProperty(maxZoom);
   }
   private _maxZoom: number;
 
   @Input()
   set minimumClusterSize(minimumClusterSize: number) {
-    this._minimumClusterSize = minimumClusterSize;
+    this._minimumClusterSize = coerceNumberProperty(minimumClusterSize);
   }
   private _minimumClusterSize: number;
 
@@ -146,13 +156,13 @@ export class MapMarkerClusterer implements OnInit, AfterContentInit, OnChanges, 
 
   @Input()
   set zIndex(zIndex: number) {
-    this._zIndex = zIndex;
+    this._zIndex = coerceNumberProperty(zIndex);
   }
   private _zIndex: number;
 
   @Input()
   set zoomOnClick(zoomOnClick: boolean) {
-    this._zoomOnClick = zoomOnClick;
+    this._zoomOnClick = coerceBooleanProperty(zoomOnClick);
   }
   private _zoomOnClick: boolean;
 
@@ -480,4 +490,15 @@ export class MapMarkerClusterer implements OnInit, AfterContentInit, OnChanges, 
       }
     }
   }
+
+  static ngAcceptInputType_averageCenter: BooleanInput;
+  static ngAcceptInputType_batchSize: NumberInput;
+  static ngAcceptInputType_batchSizeIE: NumberInput;
+  static ngAcceptInputType_enableRetinaIcons: BooleanInput;
+  static ngAcceptInputType_gridSize: NumberInput;
+  static ngAcceptInputType_ignoreHidden: BooleanInput;
+  static ngAcceptInputType_maxZoom: NumberInput;
+  static ngAcceptInputType_minimumClusterSize: NumberInput;
+  static ngAcceptInputType_zIndex: NumberInput;
+  static ngAcceptInputType_zoomOnClick: BooleanInput;
 }

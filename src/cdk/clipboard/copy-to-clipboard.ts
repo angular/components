@@ -17,6 +17,7 @@ import {
   Optional,
   OnDestroy,
 } from '@angular/core';
+import {coerceNumberProperty, NumberInput} from '@angular/cdk/coercion';
 import {Clipboard} from './clipboard';
 import {PendingCopy} from './pending-copy';
 
@@ -54,7 +55,10 @@ export class CdkCopyToClipboard implements OnDestroy {
    * How many times to attempt to copy the text. This may be necessary for longer text, because
    * the browser needs time to fill an intermediate textarea element and copy the content.
    */
-  @Input('cdkCopyToClipboardAttempts') attempts: number = 1;
+  @Input('cdkCopyToClipboardAttempts')
+  get attempts(): number { return this._attempts; }
+  set attempts(value: number) { this._attempts = coerceNumberProperty(value); }
+  private _attempts = 1;
 
   /**
    * Emits when some text is copied to the clipboard. The
@@ -115,4 +119,6 @@ export class CdkCopyToClipboard implements OnDestroy {
     this._pending.clear();
     this._destroyed = true;
   }
+
+  static ngAcceptInputType_attempts: NumberInput;
 }

@@ -7,7 +7,12 @@
  */
 
 import {FocusMonitor} from '@angular/cdk/a11y';
-import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
+import {
+  BooleanInput,
+  NumberInput,
+  coerceBooleanProperty,
+  coerceNumberProperty
+} from '@angular/cdk/coercion';
 import {SelectionModel} from '@angular/cdk/collections';
 import {
   AfterContentInit,
@@ -445,7 +450,10 @@ export class MatButtonToggle extends _MatButtonToggleBase implements OnInit, Aft
   @Input() value: any;
 
   /** Tabindex for the toggle. */
-  @Input() tabIndex: number | null;
+  @Input()
+  get tabIndex(): number | null { return this._tabIndex; }
+  set tabIndex(value: number | null) { this._tabIndex = coerceNumberProperty(value); }
+  private _tabIndex: number | null;
 
   /** The appearance style of the button. */
   @Input()
@@ -573,6 +581,7 @@ export class MatButtonToggle extends _MatButtonToggleBase implements OnInit, Aft
     this._changeDetectorRef.markForCheck();
   }
 
+  static ngAcceptInputType_tabIndex: NumberInput;
   static ngAcceptInputType_checked: BooleanInput;
   static ngAcceptInputType_disabled: BooleanInput;
   static ngAcceptInputType_vertical: BooleanInput;

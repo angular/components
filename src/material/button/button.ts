@@ -7,7 +7,7 @@
  */
 
 import {FocusMonitor, FocusableOption, FocusOrigin} from '@angular/cdk/a11y';
-import {BooleanInput} from '@angular/cdk/coercion';
+import {BooleanInput, NumberInput, coerceNumberProperty} from '@angular/cdk/coercion';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -172,7 +172,10 @@ export class MatButton extends _MatButtonBase
 })
 export class MatAnchor extends MatButton {
   /** Tabindex of the button. */
-  @Input() tabIndex: number;
+  @Input()
+  get tabIndex(): number { return this._tabIndex; }
+  set tabIndex(value: number) { this._tabIndex = coerceNumberProperty(value); }
+  private _tabIndex: number;
 
   constructor(
     focusMonitor: FocusMonitor,
@@ -188,4 +191,6 @@ export class MatAnchor extends MatButton {
       event.stopImmediatePropagation();
     }
   }
+
+  static ngAcceptInputType_tabIndex: NumberInput;
 }

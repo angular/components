@@ -7,6 +7,7 @@
  */
 
 import {Directive, ElementRef, Input} from '@angular/core';
+import {BooleanInput, coerceBooleanProperty} from '@angular/cdk/coercion';
 import {ponyfill} from '@material/dom';
 
 /**
@@ -31,10 +32,21 @@ import {ponyfill} from '@material/dom';
   },
 })
 export class MatFormFieldFloatingLabel {
+  private _floating = false;
+  private _required = false;
+
   /** Whether the label is floating. */
-  @Input() floating: boolean = false;
+  @Input()
+  get floating(): boolean { return this._floating; }
+  set floating(value: boolean) { this._floating = coerceBooleanProperty(value); }
+
   /** Whether the label is required. */
-  @Input() required: boolean = false;
+  @Input()
+  get required(): boolean { return this._required; }
+  set required(value: boolean) { this._required = coerceBooleanProperty(value); }
+
+  /** Gets the HTML element for the floating label. */
+  get element(): HTMLElement { return this._elementRef.nativeElement; }
 
   constructor(private _elementRef: ElementRef) {}
 
@@ -43,8 +55,6 @@ export class MatFormFieldFloatingLabel {
     return ponyfill.estimateScrollWidth(this._elementRef.nativeElement);
   }
 
-  /** Gets the HTML element for the floating label. */
-  get element(): HTMLElement {
-    return this._elementRef.nativeElement;
-  }
+  static ngAcceptInputType_floating: BooleanInput;
+  static ngAcceptInputType_required: BooleanInput;
 }

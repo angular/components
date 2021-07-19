@@ -18,6 +18,12 @@ import {
   OnInit,
   Optional,
 } from '@angular/core';
+import {
+  BooleanInput,
+  coerceBooleanProperty,
+  NumberInput,
+  coerceNumberProperty
+} from '@angular/cdk/coercion';
 import {RippleAnimationConfig, RippleConfig, RippleRef} from './ripple-ref';
 import {RippleRenderer, RippleTarget} from './ripple-renderer';
 import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
@@ -62,20 +68,29 @@ export class MatRipple implements OnInit, OnDestroy, RippleTarget {
   @Input('matRippleColor') color: string;
 
   /** Whether the ripples should be visible outside the component's bounds. */
-  @Input('matRippleUnbounded') unbounded: boolean;
+  @Input('matRippleUnbounded')
+  get unbounded(): boolean { return this._unbounded; }
+  set unbounded(value: boolean) { this._unbounded = coerceBooleanProperty(value); }
+  private _unbounded = false;
 
   /**
    * Whether the ripple always originates from the center of the host element's bounds, rather
    * than originating from the location of the click event.
    */
-  @Input('matRippleCentered') centered: boolean;
+  @Input('matRippleCentered')
+  get centered(): boolean { return this._centered; }
+  set centered(value: boolean) { this._centered = coerceBooleanProperty(value); }
+  private _centered = false;
 
   /**
    * If set, the radius in pixels of foreground ripples when fully expanded. If unset, the radius
    * will be the distance from the center of the ripple to the furthest corner of the host element's
    * bounding rectangle.
    */
-  @Input('matRippleRadius') radius: number = 0;
+  @Input('matRippleRadius')
+  get radius(): number { return this._radius; }
+  set radius(value: number) { this._radius = coerceNumberProperty(value, 0); }
+  private _radius = 0;
 
   /**
    * Configuration for the ripple animation. Allows modifying the enter and exit animation
@@ -91,13 +106,14 @@ export class MatRipple implements OnInit, OnDestroy, RippleTarget {
   @Input('matRippleDisabled')
   get disabled() { return this._disabled; }
   set disabled(value: boolean) {
-    if (value) {
+    const newValue = coerceBooleanProperty(value);
+    if (newValue) {
       this.fadeOutAllNonPersistent();
     }
-    this._disabled = value;
+    this._disabled = newValue;
     this._setupTriggerEventsIfEnabled();
   }
-  private _disabled: boolean = false;
+  private _disabled = false;
 
   /**
    * The element that triggers the ripple when click events are received.
@@ -118,14 +134,13 @@ export class MatRipple implements OnInit, OnDestroy, RippleTarget {
   private _globalOptions: RippleGlobalOptions;
 
   /** Whether ripple directive is initialized and the input bindings are set. */
-  private _isInitialized: boolean = false;
+  private _isInitialized = false;
 
   constructor(private _elementRef: ElementRef<HTMLElement>,
               ngZone: NgZone,
               platform: Platform,
               @Optional() @Inject(MAT_RIPPLE_GLOBAL_OPTIONS) globalOptions?: RippleGlobalOptions,
               @Optional() @Inject(ANIMATION_MODULE_TYPE) private _animationMode?: string) {
-
     this._globalOptions = globalOptions || {};
     this._rippleRenderer = new RippleRenderer(this, ngZone, _elementRef, platform);
   }
@@ -206,5 +221,9 @@ export class MatRipple implements OnInit, OnDestroy, RippleTarget {
       return this._rippleRenderer.fadeInRipple(0, 0, {...this.rippleConfig, ...configOrX});
     }
   }
-}
 
+  static ngAcceptInputType_unbounded: BooleanInput;
+  static ngAcceptInputType_centered: BooleanInput;
+  static ngAcceptInputType_radius: NumberInput;
+  static ngAcceptInputType_disabled: BooleanInput;
+}

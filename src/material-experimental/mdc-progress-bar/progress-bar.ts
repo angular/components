@@ -20,6 +20,7 @@ import {
   AfterViewInit,
   OnDestroy,
 } from '@angular/core';
+import {NumberInput, coerceNumberProperty} from '@angular/cdk/coercion';
 import {CanColor, mixinColor} from '@angular/material-experimental/mdc-core';
 import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 import {ProgressAnimationEnd} from '@angular/material/progress-bar';
@@ -134,7 +135,7 @@ export class MatProgressBar extends _MatProgressBarBase implements AfterViewInit
   @Input()
   get value(): number { return this._value; }
   set value(v: number) {
-    this._value = clamp(v || 0);
+    this._value = clamp(coerceNumberProperty(v, 0));
     this._syncFoundation();
   }
   private _value = 0;
@@ -143,7 +144,7 @@ export class MatProgressBar extends _MatProgressBarBase implements AfterViewInit
   @Input()
   get bufferValue(): number { return this._bufferValue || 0; }
   set bufferValue(v: number) {
-    this._bufferValue = clamp(v || 0);
+    this._bufferValue = clamp(coerceNumberProperty(v, 0));
     this._syncFoundation();
   }
   private _bufferValue = 0;
@@ -229,6 +230,9 @@ export class MatProgressBar extends _MatProgressBarBase implements AfterViewInit
       }
     }
   }
+
+  static ngAcceptInputType_value: NumberInput;
+  static ngAcceptInputType_bufferValue: NumberInput;
 }
 
 /** Clamps a value to be between two numbers, by default 0 and 100. */

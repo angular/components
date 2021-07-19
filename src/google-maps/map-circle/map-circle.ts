@@ -10,6 +10,7 @@
 /// <reference types="googlemaps" />
 
 import {Directive, Input, NgZone, OnDestroy, OnInit, Output} from '@angular/core';
+import {NumberInput, coerceNumberProperty} from '@angular/cdk/coercion';
 import {BehaviorSubject, combineLatest, Observable, Subject} from 'rxjs';
 import {map, take, takeUntil} from 'rxjs/operators';
 
@@ -52,7 +53,7 @@ export class MapCircle implements OnInit, OnDestroy {
 
   @Input()
   set radius(radius: number) {
-    this._radius.next(radius);
+    this._radius.next(coerceNumberProperty(radius));
   }
 
   /**
@@ -282,4 +283,6 @@ export class MapCircle implements OnInit, OnDestroy {
       }
     }
   }
+
+  static ngAcceptInputType_radius: NumberInput;
 }

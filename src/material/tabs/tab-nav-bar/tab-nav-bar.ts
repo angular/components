@@ -7,7 +7,12 @@
  */
 import {FocusableOption, FocusMonitor} from '@angular/cdk/a11y';
 import {Directionality} from '@angular/cdk/bidi';
-import {BooleanInput, coerceBooleanProperty, NumberInput} from '@angular/cdk/coercion';
+import {
+  BooleanInput,
+  NumberInput,
+  coerceBooleanProperty,
+  coerceNumberProperty,
+} from '@angular/cdk/coercion';
 import {Platform} from '@angular/cdk/platform';
 import {ViewportRuler} from '@angular/cdk/scrolling';
 import {
@@ -223,7 +228,7 @@ export class _MatTabLinkBase extends _MatTabLinkMixinBase implements AfterViewIn
     super();
 
     this.rippleConfig = globalRippleOptions || {};
-    this.tabIndex = parseInt(tabIndex) || 0;
+    this.tabIndex =  coerceNumberProperty(tabIndex, 0);
 
     if (animationMode === 'NoopAnimations') {
       this.rippleConfig.animation = {enterDuration: 0, exitDuration: 0};
