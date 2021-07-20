@@ -1115,7 +1115,20 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
     const origin = this._origin;
 
     if (origin instanceof ElementRef) {
-      return origin.nativeElement.getBoundingClientRect();
+      const parentZoom = Number(window.getComputedStyle(origin.nativeElement.parentElement).zoom);
+      const rect = origin.nativeElement.getBoundingClientRect();
+      if (parentZoom !== 1) {
+        const {bottom, height: h, left, right, top, width: w} = rect;
+        return {
+          bottom : bottom * parentZoom,
+          height: h,
+          left: left * parentZoom,
+          right,
+          top: top * parentZoom,
+          width: w
+        };
+      }
+      return rect;
     }
 
     // Check for Element so SVG elements are also supported.
