@@ -199,18 +199,33 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
 
     this._clearPanelClasses();
     this._resetOverlayElementStyles();
-    this._resetBoundingBoxStyles();
+
 
     // We need the bounding rects for the origin and the overlay to determine how to position
     // the overlay relative to the origin.
     // We use the viewport rect to determine whether a position would go off-screen.
     this._viewportRect = this._getNarrowedViewportRect();
     this._originRect = this._getOriginRect();
+    const originRect = this._originRect;
+    const viewportRect = this._viewportRect;
+
+    // Calculate the maximum sizes the overlay can have when connected
+    const topSpace = originRect.top - this._viewportMargin;
+    const bottomSpace = viewportRect.height - originRect.bottom - this._viewportMargin;
+    const maxVertical = Math.max(topSpace, bottomSpace);
+
+    const leftSpace = originRect.left - this._viewportMargin;
+    const rightSpace = viewportRect.width - originRect.right - this._viewportMargin;
+    const maxHorizontal = Math.max(leftSpace, rightSpace);
+
+    // Reset the bounding box, but constrain its max size to be the max size the pane will have later
+    this._resetBoundingBoxStyles(maxVertical, maxHorizontal);
+
+    // We need the bounding rects for the overlay to determine how to position
+    // the overlay relative to the origin.
     this._overlayRect = this._pane.getBoundingClientRect();
 
-    const originRect = this._originRect;
     const overlayRect = this._overlayRect;
-    const viewportRect = this._viewportRect;
 
     // Positions where the overlay will fit with flexible dimensions.
     const flexibleFits: FlexibleFit[] = [];
@@ -841,14 +856,12 @@ export class FlexibleConnectedPositionStrategy implements PositionStrategy {
   }
 
   /** Resets the styles for the bounding box so that a new positioning can be computed. */
-  private _resetBoundingBoxStyles() {
+  private _resetBoundingBoxStyles(maxVertical: number, maxHorizontal: number) {
     extendStyles(this._boundingBox!.style, {
       top: '0',
       left: '0',
-      right: '0',
-      bottom: '0',
-      height: '',
-      width: '',
+      height: `${maxVertical}px`,
+      width: `${maxHorizontal}px`,
       alignItems: '',
       justifyContent: '',
     } as CSSStyleDeclaration);
