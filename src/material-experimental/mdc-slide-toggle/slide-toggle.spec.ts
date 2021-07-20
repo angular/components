@@ -338,26 +338,24 @@ describe('MDC-based MatSlideToggle without forms', () => {
 
     it('should show ripples', () => {
       const rippleSelector = '.mat-ripple-element';
-      const switchElement = slideToggleElement.querySelector('.mdc-switch')!;
 
       expect(slideToggleElement.querySelectorAll(rippleSelector).length).toBe(0);
 
-      dispatchFakeEvent(switchElement, 'mousedown');
-      dispatchFakeEvent(switchElement, 'mouseup');
+      dispatchFakeEvent(inputElement, 'mousedown');
+      dispatchFakeEvent(inputElement, 'mouseup');
 
       expect(slideToggleElement.querySelectorAll(rippleSelector).length).toBe(1);
     });
 
     it('should not show ripples when disableRipple is set', () => {
-      const switchElement = slideToggleElement.querySelector('.mdc-switch')!;
       const rippleSelector = '.mat-ripple-element';
       testComponent.disableRipple = true;
       fixture.detectChanges();
 
       expect(slideToggleElement.querySelectorAll(rippleSelector).length).toBe(0);
 
-      dispatchFakeEvent(switchElement, 'mousedown');
-      dispatchFakeEvent(switchElement, 'mouseup');
+      dispatchFakeEvent(inputElement, 'mousedown');
+      dispatchFakeEvent(inputElement, 'mouseup');
 
       expect(slideToggleElement.querySelectorAll(rippleSelector).length).toBe(0);
     });

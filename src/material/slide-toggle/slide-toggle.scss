@@ -23,6 +23,7 @@ $bar-track-width: $bar-width - $thumb-size;
   line-height: $height;
   white-space: nowrap;
   outline: none;
+  position: relative;
 
   -webkit-tap-highlight-color: transparent;
 
