@@ -24,11 +24,7 @@
     border-bottom-color: theming.get-color-from-palette($foreground, divider);
   }
 
-  .mat-header-cell {
-    color: theming.get-color-from-palette($foreground, secondary-text);
-  }
-
-  .mat-cell, .mat-footer-cell {
+  .mat-cell, .mat-header-cell, .mat-footer-cell {
     color: theming.get-color-from-palette($foreground, text);
   }
 }
@@ -41,7 +37,7 @@
   }
 
   .mat-header-cell {
-    font-size: typography-utils.font-size($config, caption);
+    font-size: typography-utils.font-size($config, subheading-1);
     font-weight: typography-utils.font-weight($config, body-2);
   }
 
