@@ -26,8 +26,6 @@ th.mat-header-cell {
 
 th.mat-header-cell, td.mat-cell, td.mat-footer-cell {
   padding: 0;
-  border-bottom-width: 1px;
-  border-bottom-style: solid;
 
   // Note: we use `first-of-type`/`last-of-type` here in order to prevent extra
   // elements like ripples or badges from throwing off the layout (see #11165).
@@ -48,6 +46,20 @@ th.mat-header-cell, td.mat-cell, td.mat-footer-cell {
       padding-left: table-flex-styles.$row-horizontal-padding;
     }
   }
+}
+
+th.mat-header-cell, td.mat-cell, td.mat-footer-cell {
+  border-bottom-width: 1px;
+  border-bottom-style: solid;
+}
+
+.mat-row:last-child td.mat-cell {
+  border-bottom: none;
+}
+
+td.mat-footer-cell {
+  border-top-width: 1px;
+  border-top-style: solid;
 }
 
 .mat-table-sticky {

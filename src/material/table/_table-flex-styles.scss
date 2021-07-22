@@ -17,13 +17,29 @@ $row-horizontal-padding: 24px;
     min-height: $row-height;
   }
 
-  mat-row, mat-header-row, mat-footer-row {
-    display: flex;
+  mat-row, mat-header-row {
     // Define a border style, but then widths default to 3px. Reset them to 0px except the bottom
     // which should be 1px;
     border-width: 0;
     border-bottom-width: 1px;
     border-style: solid;
+  }
+
+  mat-row:last-child {
+    // Remove the last row's border to account for the table's border or the footer's top border.
+    border-bottom: none;
+  }
+
+  mat-footer-row {
+    // Define a border style, but then widths default to 3px. Reset them to 0px except the top
+    // which should be 1px;
+    border-width: 0;
+    border-top-width: 1px;
+    border-style: solid;
+  }
+
+  mat-row, mat-header-row, mat-footer-row {
+    display: flex;
     align-items: center;
     box-sizing: border-box;
 
