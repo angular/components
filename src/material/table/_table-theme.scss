@@ -19,7 +19,7 @@
     background: inherit;
   }
 
-  mat-row, mat-header-row, mat-footer-row,
+  mat-cell, mat-header-cell, mat-footer-cell,
   th.mat-header-cell, td.mat-cell, td.mat-footer-cell {
     border-bottom-color: theming.get-color-from-palette($foreground, divider);
   }

@@ -19,11 +19,6 @@ $row-horizontal-padding: 24px;
 
   mat-row, mat-header-row, mat-footer-row {
     display: flex;
-    // Define a border style, but then widths default to 3px. Reset them to 0px except the bottom
-    // which should be 1px;
-    border-width: 0;
-    border-bottom-width: 1px;
-    border-style: solid;
     align-items: center;
     box-sizing: border-box;
 
@@ -38,6 +33,12 @@ $row-horizontal-padding: 24px;
   }
 
   mat-cell, mat-header-cell, mat-footer-cell {
+    // Define a border style, but then widths default to 3px. Reset them to 0px except the bottom
+    // which should be 1px;
+    border-width: 0;
+    border-bottom-width: 1px;
+    border-style: solid;
+
     // Note: we use `first-of-type`/`last-of-type` here in order to prevent extra
     // elements like ripples or badges from throwing off the layout (see #11165).
     &:first-of-type {
