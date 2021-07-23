@@ -1,4 +1,4 @@
-load("//:packages.bzl", "ANGULAR_PACKAGE_BUNDLES")
+load("//:packages.bzl", "ANGULAR_PACKAGE_BUNDLES", "MDC_PACKAGE_UMD_BUNDLES")
 load("//src/cdk:config.bzl", "CDK_ENTRYPOINTS")
 load("//src/cdk-experimental:config.bzl", "CDK_EXPERIMENTAL_ENTRYPOINTS")
 load("//src/material:config.bzl", "MATERIAL_ENTRYPOINTS", "MATERIAL_TESTING_ENTRYPOINTS")
@@ -30,6 +30,7 @@ def create_system_config(
         configuration_env_vars = ["angular_ivy_enabled"],
         substitutions = {
             "$ANGULAR_PACKAGE_BUNDLES": str(ANGULAR_PACKAGE_BUNDLES),
+            "$MDC_PACKAGE_UMD_BUNDLES": str(MDC_PACKAGE_UMD_BUNDLES),
             "$BASE_URL": base_url,
             "$CDK_ENTRYPOINTS_TMPL": str(CDK_ENTRYPOINTS),
             "$CDK_EXPERIMENTAL_ENTRYPOINTS_TMPL": str(CDK_EXPERIMENTAL_ENTRYPOINTS),
