@@ -22,7 +22,7 @@ var frameworkPackages = $ANGULAR_PACKAGE_BUNDLES;
 var mdcPackageUmdBundles = $MDC_PACKAGE_UMD_BUNDLES;
 
 /** Whether Ivy is enabled. */
-var isRunningWithIvy = '$ANGULAR_IVY_ENABLED_TMPL'.toString() === 'True';
+var isRunningWithIvy = 'TMPL_angular_ivy_enabled'.toString() === 'True';
 
 /** Path that relatively resolves to the directory that contains all packages. */
 var packagesPath = '$PACKAGES_DIR';
