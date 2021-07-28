@@ -35,6 +35,8 @@ var pathMapping = {
   'tslib': 'node:tslib/tslib.js',
   'moment': 'node:moment/min/moment-with-locales.min.js',
   'luxon': 'node:luxon/build/amd/luxon.js',
+  'date-fns': 'amd_date_fns.js',
+  'date-fns/locale': 'amd_date_fns_locales.js',
   'moment/locale': 'node:moment/locale',
   'kagekiri': 'node:kagekiri/dist/kagekiri.umd.min.js',
 
@@ -128,6 +130,7 @@ function setupLocalReleasePackages() {
   configureEntryPoint('material-experimental');
   configureEntryPoint('material-moment-adapter');
   configureEntryPoint('material-luxon-adapter');
+  configureEntryPoint('material-date-fns-adapter');
   configureEntryPoint('google-maps');
   configureEntryPoint('youtube-player');
 

@@ -46,6 +46,7 @@ module.exports = config => {
         watched: false
       },
       {pattern: 'node_modules/luxon/build/amd/**/*', included: false, watched: false},
+      {pattern: 'node_modules/date-fns/**/*', included: false, watched: false},
       {pattern: 'node_modules/@material/*/dist/*', included: false, watched: false},
       {pattern: 'node_modules/kagekiri/**', included: false, watched: false},
 
@@ -56,7 +57,10 @@ module.exports = config => {
       // The Karma system configuration is built by Bazel. The built System config
       // is copied into the "dist/" folder so that the Karma config can use it.
       {pattern: 'dist/karma-system-config.js', included: true, watched: false},
-      {pattern: 'test/karma-test-shim.js', included: true, watched: false},
+
+      // We transpile the date-fns bundles to AMD manually since they only ship esm bundles.
+      {pattern: 'dist/amd_date_fns.js', included: false, watched: false},
+      {pattern: 'dist/amd_date_fns_locales.js', included: false, watched: false},
 
       // Needed for exposing the RxJS operators through the RxJS UMD bundle. This
       // is done for performance reasons since fetching individual files is slow.
