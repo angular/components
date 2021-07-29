@@ -31,7 +31,6 @@ const TEMPLATE_FILES = [
   'tsconfig.json',
   'tsconfig.app.json',
   'tsconfig.spec.json',
-  'tslint.json',
   'src/index.html',
   'src/styles.scss',
   'src/polyfills.ts',
@@ -50,12 +49,11 @@ const TEST_TEMPLATE_FILES = [
   'tsconfig.json',
   'tsconfig.app.json',
   'tsconfig.spec.json',
-  'tslint.json',
   'src/index.html',
   'src/styles.scss',
   'src/polyfills.ts',
   'src/main.ts',
-  'src/test/jasmine-setup.ts',
+  'src/test/jasmine-setup.ts'
 ];
 
 const TAGS: string[] = ['angular', 'material', 'example'];
@@ -91,8 +89,8 @@ const testDependencies = {
   '@angular/platform-browser': angularVersion,
   '@angular/platform-browser-dynamic': angularVersion,
   '@angular/router': angularVersion,
-  '@types/jasmine': '^3.6.6',
-  'jasmine-core': '^3.6.0',
+  '@types/jasmine': '^3.7.7',
+  'jasmine-core': '^3.7.1',
   'moment': '^2.29.1',
   'rxjs': '^6.6.7',
   'tslib': '^2.2.0',
