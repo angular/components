@@ -33,15 +33,17 @@ var nodeModulesPath = '$NODE_MODULES_BASE_PATH';
 /** Path mappings that will be registered in SystemJS. */
 var pathMapping = {
   'tslib': 'node:tslib/tslib.js',
-  'moment': 'node:moment/min/moment-with-locales.min.js',
   'luxon': 'node:luxon/build/amd/luxon.js',
-  'date-fns': 'amd_date_fns.js',
-  'date-fns/locale': 'amd_date_fns_locales.js',
+  'moment': 'node:moment/min/moment-with-locales.min.js',
   'moment/locale': 'node:moment/locale',
   'kagekiri': 'node:kagekiri/dist/kagekiri.umd.min.js',
 
   'rxjs': 'node:rxjs/bundles/rxjs.umd.min.js',
   'rxjs/operators': 'tools/system-rxjs-operators.js',
+
+  // These path mappings are only for the legacy Karma setup.
+  'date-fns': 'dist/amd_date_fns.js',
+  'date-fns/locale': 'dist/amd_date_fns_locales.js',
 };
 
 /** Package configurations that will be used in SystemJS. */
