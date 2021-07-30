@@ -35,6 +35,8 @@ function range<T>(length: number, valueFunction: (index: number) => T): T[] {
   return valuesArray;
 }
 
+// date-fns doesn't have a way to read/print month names or days of the week directly,
+// so we get them by formatting a date with a format that produces the desired month/day.
 const MONTH_FORMATS = {
   long: 'LLLL',
   short: 'LLL',
@@ -175,8 +177,6 @@ export class DateFnsAdapter extends DateAdapter<Date, Locale> {
       return new Date(value);
     } else if (value instanceof Date) {
       return this.clone(value);
-    } else if (value != null && value !== '') {
-      return new Date(Date.parse(value));
     }
 
     return null;
