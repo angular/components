@@ -2,17 +2,15 @@
   <mat-card-subtitle>Dog Breed</mat-card-subtitle>
   <mat-card-title>Shiba Inu</mat-card-title>
   <mat-card-content>
-    <p>This card indeterminates progress bar and divider.</p>
+    <p>This card has divider and indeterminates progress as footer</p>
     <p>{{ longText }}</p>
   </mat-card-content>
-  <!-- <mat-divider [inset]="true"></mat-divider> -->
-  <hr/>
+  <mat-divider [inset]="true"></mat-divider>
   <mat-card-actions>
     <button mat-button>LIKE</button>
     <button mat-button>SHARE</button>
   </mat-card-actions>
   <mat-card-footer>
-    <!-- <mat-progress-bar mode="indeterminate"></mat-progress-bar> -->
-    <div class="example-card-footer">This is the footer!</div>
+    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
   </mat-card-footer>
 </mat-card>
