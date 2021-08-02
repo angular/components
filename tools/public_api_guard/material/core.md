@@ -301,7 +301,6 @@ export class _MatOptionBase implements FocusableOption, AfterViewChecked, OnDest
     _getAriaSelected(): boolean | null;
     _getHostElement(): HTMLElement;
     getLabel(): string;
-    _getTabIndex(): string;
     // (undocumented)
     readonly group: _MatOptgroupBase;
     _handleKeydown(event: KeyboardEvent): void;

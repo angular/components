@@ -31,7 +31,6 @@ import {MatOptgroup} from './optgroup';
   exportAs: 'matOption',
   host: {
     'role': 'option',
-    '[attr.tabindex]': '_getTabIndex()',
     '[class.mdc-list-item--selected]': 'selected',
     '[class.mat-mdc-option-multiple]': 'multiple',
     '[class.mat-mdc-option-active]': 'active',

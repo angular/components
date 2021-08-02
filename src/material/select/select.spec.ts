@@ -674,8 +674,8 @@ describe('MatSelect', () => {
               flush();
             }));
 
-        it('should not shift focus when the selected options are updated programmatically ' +
-            'in a multi select', fakeAsync(() => {
+        it('should not shift active option when the selected options are updated ' +
+            'programmatically in a multi select', fakeAsync(() => {
           fixture.destroy();
 
           const multiFixture = TestBed.createComponent(MultiSelect);
@@ -688,14 +688,14 @@ describe('MatSelect', () => {
           const options =
               overlayContainerElement.querySelectorAll('mat-option') as NodeListOf<HTMLElement>;
 
-          options[3].focus();
-          expect(document.activeElement).toBe(options[3], 'Expected fourth option to be focused.');
+          expect(select.getAttribute('aria-activedescendant'))
+              .toBe(options[0].id, 'Expected first option to be active.');
 
           multiFixture.componentInstance.control.setValue(['steak-0', 'sushi-7']);
           multiFixture.detectChanges();
 
-          expect(document.activeElement)
-              .toBe(options[3], 'Expected fourth option to remain focused.');
+          expect(select.getAttribute('aria-activedescendant'))
+              .toBe(options[0].id, 'Expected first option to remain active.');
         }));
 
         it('should not cycle through the options if the control is disabled', fakeAsync(() => {
@@ -1084,12 +1084,6 @@ describe('MatSelect', () => {
             option.getAttribute('aria-selected') === 'false')).toBe(true,
             'Expected all unselected multi-select options to have aria-selected="false".');
           }));
-
-        it('should set the tabindex of each option according to disabled state', fakeAsync(() => {
-          expect(options[0].getAttribute('tabindex')).toEqual('0');
-          expect(options[1].getAttribute('tabindex')).toEqual('0');
-          expect(options[2].getAttribute('tabindex')).toEqual('-1');
-        }));
 
         it('should set aria-disabled for disabled options', fakeAsync(() => {
           expect(options[0].getAttribute('aria-disabled')).toEqual('false');

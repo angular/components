@@ -193,11 +193,6 @@ export class _MatOptionBase implements FocusableOption, AfterViewChecked, OnDest
     return this.selected || (this.multiple ? false : null);
   }
 
-  /** Returns the correct tabindex for the option depending on disabled state. */
-  _getTabIndex(): string {
-    return this.disabled ? '-1' : '0';
-  }
-
   /** Gets the host DOM element. */
   _getHostElement(): HTMLElement {
     return this._element.nativeElement;
@@ -239,7 +234,6 @@ export class _MatOptionBase implements FocusableOption, AfterViewChecked, OnDest
   exportAs: 'matOption',
   host: {
     'role': 'option',
-    '[attr.tabindex]': '_getTabIndex()',
     '[class.mat-selected]': 'selected',
     '[class.mat-option-multiple]': 'multiple',
     '[class.mat-active]': 'active',
