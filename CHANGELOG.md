@@ -1,3 +1,27 @@
+## 12.1.5 "corduroy-aardvark" (2021-08-04)
+
+### cdk
+
+|            |                       |
+| ---------- | --------------------- |
+| bug fix |  **overlay:** expand `OverlayReference` interface to cover more properties ([#23254](https://github.com/angular/components/issues/23254)) ([786aa2626a3d755e2a5cabb0917c34d6927c9452](https://github.com/angular/components/commit/786aa2626a3d755e2a5cabb0917c34d6927c9452)), closes [#23234](https://github.com/angular/components/issues/23234) |
+| bug fix |  **text-field:** avoid page jump on firefox ([#23296](https://github.com/angular/components/issues/23296)) ([2e93727a23d9438559afaa3ded0178ec21c925e1](https://github.com/angular/components/commit/2e93727a23d9438559afaa3ded0178ec21c925e1)), closes [#23233](https://github.com/angular/components/issues/23233) |
+| performance |  **drag-drop:** avoid excessive change detections with zone-patch-rxjs ([#23272](https://github.com/angular/components/issues/23272)) ([53b34f90b6729c0d710ddb3fc00d22a83557e28c](https://github.com/angular/components/commit/53b34f90b6729c0d710ddb3fc00d22a83557e28c)), closes [#23248](https://github.com/angular/components/issues/23248) |
+
+### material
+
+|            |                       |
+| ---------- | --------------------- |
+| bug fix |  **core:** handle hues inferred as numbers ([#23237](https://github.com/angular/components/issues/23237)) ([dbb7226eba5868b585c2572b7408ab3462b3fc64](https://github.com/angular/components/commit/dbb7226eba5868b585c2572b7408ab3462b3fc64)), closes [#23230](https://github.com/angular/components/issues/23230) |
+
+### material-experimental
+
+|            |                       |
+| ---------- | --------------------- |
+| bug fix |  **mdc-paginator:** add screen reader announcement for current range when navigating between pages ([#23285](https://github.com/angular/components/issues/23285)) ([ff7f75010bd804e9f3bfd34cf50dd13798b754de](https://github.com/angular/components/commit/ff7f75010bd804e9f3bfd34cf50dd13798b754de)) |
+| bug fix |  **mdc-table:** flex tables should stretch cells ([#23259](https://github.com/angular/components/issues/23259)) ([6c8785274069927d96d183ad3c1d3ef5fadf65dc](https://github.com/angular/components/commit/6c8785274069927d96d183ad3c1d3ef5fadf65dc)) |
+
+
 ## 12.1.4 "tallow-wire" (2021-07-28)
 
 ### cdk
