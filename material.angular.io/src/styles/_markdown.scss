@@ -59,12 +59,19 @@
   padding-top: 20px;
   margin-top: -20px;
 
-  header-link a {
-    text-decoration: none;
+  header-link {
     // deduct -30px so the anchor icon will be positioned outside the content
     margin-left: -30px;
+    // Slight margin to try and center the icon better.
+    margin-top: 2px;
     display: inline-block;
     vertical-align: middle;
+    user-select: none;
+
+    a {
+      display: inline-flex;
+      text-decoration: none;
+    }
   }
 
   .material-icons {
