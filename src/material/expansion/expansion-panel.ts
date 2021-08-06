@@ -63,7 +63,7 @@ export interface MatExpansionPanelDefaultOptions {
 }
 
 /**
- * Injection token that can be used to configure the default
+ * Injection token that can be used to configure the defalt
  * options for the expansion panel component.
  */
 export const MAT_EXPANSION_PANEL_DEFAULT_OPTIONS =
