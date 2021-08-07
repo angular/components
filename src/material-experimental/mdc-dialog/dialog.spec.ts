@@ -156,8 +156,9 @@ describe('MDC-based MatDialog', () => {
 
     expect(dialogRef.componentInstance.dialogRef).toBe(dialogRef);
     expect(dialogInjector.get<DirectiveWithViewContainer>(DirectiveWithViewContainer))
-        .toBeTruthy('Expected the dialog component to be created with the injector from ' +
-          'the viewContainerRef.');
+      .withContext('Expected the dialog component to be created with the injector from ' +
+                   'the viewContainerRef.')
+      .toBeTruthy();
   });
 
   it('should open a dialog with a component and no ViewContainerRef', () => {
@@ -262,8 +263,8 @@ describe('MDC-based MatDialog', () => {
 
        // beforeClose should emit before dialog container is destroyed
        const beforeCloseHandler = jasmine.createSpy('beforeClose callback').and.callFake(() => {
-         expect(overlayContainerElement.querySelector('mat-dialog-container'))
-             .not.toBeNull('dialog container exists when beforeClose is called');
+         expect(overlayContainerElement.querySelector('mat-dialog-container')).not
+          .withContext('dialog container exists when beforeClose is called').toBeNull();
        });
 
        dialogRef.beforeClosed().subscribe(beforeCloseHandler);
@@ -311,7 +312,7 @@ describe('MDC-based MatDialog', () => {
        flushMicrotasks();
 
        expect(overlayContainerElement.querySelectorAll('mat-dialog-container').length)
-           .toBe(1, 'Expected one open dialog.');
+        .withContext('Expected one open dialog.').toBe(1);
 
        dialogRef.close();
        flushMicrotasks();
@@ -319,7 +320,7 @@ describe('MDC-based MatDialog', () => {
        tick(500);
 
        expect(overlayContainerElement.querySelectorAll('mat-dialog-container').length)
-           .toBe(0, 'Expected no open dialogs.');
+        .withContext('Expected no open dialogs.').toBe(0);
      }));
 
   it('should close when clicking on the overlay backdrop', fakeAsync(() => {
@@ -446,7 +447,7 @@ describe('MDC-based MatDialog', () => {
        let overlayPane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
 
        expect(overlayPane.style.maxWidth)
-           .toBe('80vw', 'Expected dialog to set a default max-width on overlay pane');
+        .withContext('Expected dialog to set a default max-width on overlay pane').toBe('80vw');
 
        dialogRef.close();
 
@@ -707,7 +708,7 @@ describe('MDC-based MatDialog', () => {
        dialogRef.afterClosed().subscribe(() => {
          spy();
          expect(dialogRef.componentInstance)
-             .toBeTruthy('Expected component instance to be defined.');
+          .withContext('Expected component instance to be defined.').toBeTruthy();
        });
 
        dialogRef.close();
@@ -769,7 +770,8 @@ describe('MDC-based MatDialog', () => {
        viewContainerFixture.detectChanges();
        flush();
 
-       expect(dialogRef.componentInstance).toBeFalsy('Expected reference to have been cleared.');
+       expect(dialogRef.componentInstance)
+        .withContext('Expected reference to have been cleared.').toBeFalsy();
      }));
 
   it('should assign a unique id to each dialog', () => {
@@ -804,16 +806,17 @@ describe('MDC-based MatDialog', () => {
        viewContainerFixture.detectChanges();
        flush();
 
-       expect(sibling.getAttribute('aria-hidden')).toBe('true', 'Expected sibling to be hidden');
+       expect(sibling.getAttribute('aria-hidden'))
+        .withContext('Expected sibling to be hidden').toBe('true');
        expect(overlayContainerElement.hasAttribute('aria-hidden'))
-           .toBe(false, 'Expected overlay container not to be hidden.');
+        .withContext('Expected overlay container not to be hidden.').toBe(false);
 
        dialogRef.close();
        viewContainerFixture.detectChanges();
        flush();
 
        expect(sibling.hasAttribute('aria-hidden'))
-           .toBe(false, 'Expected sibling to no longer be hidden.');
+        .withContext('Expected sibling to no longer be hidden.').toBe(false);
        sibling.parentNode!.removeChild(sibling);
      }));
 
@@ -827,14 +830,15 @@ describe('MDC-based MatDialog', () => {
        viewContainerFixture.detectChanges();
        flush();
 
-       expect(sibling.getAttribute('aria-hidden')).toBe('true', 'Expected sibling to be hidden.');
+       expect(sibling.getAttribute('aria-hidden'))
+        .withContext('Expected sibling to be hidden.').toBe('true');
 
        dialogRef.close();
        viewContainerFixture.detectChanges();
        flush();
 
        expect(sibling.getAttribute('aria-hidden'))
-           .toBe('true', 'Expected sibling to remain hidden.');
+        .withContext('Expected sibling to remain hidden.').toBe('true');
        sibling.parentNode!.removeChild(sibling);
      }));
 
@@ -849,7 +853,7 @@ describe('MDC-based MatDialog', () => {
        flush();
 
        expect(sibling.hasAttribute('aria-hidden'))
-           .toBe(false, 'Expected live element not to be hidden.');
+        .withContext('Expected live element not to be hidden.').toBe(false);
        sibling.parentNode!.removeChild(sibling);
      }));
 
@@ -862,7 +866,8 @@ describe('MDC-based MatDialog', () => {
         .not.toContain('custom-class-one', 'Expected class to be initially missing');
 
     dialogRef.addPanelClass('custom-class-one');
-    expect(pane.classList).toContain('custom-class-one', 'Expected class to be added');
+    expect(pane.classList)
+      .withContext('Expected class to be added').toContain('custom-class-one');
 
     dialogRef.removePanelClass('custom-class-one');
     expect(pane.classList).not.toContain('custom-class-one', 'Expected class to be removed');
@@ -924,14 +929,16 @@ describe('MDC-based MatDialog', () => {
              overlayContainerElement.querySelector('.cdk-overlay-backdrop') as HTMLElement;
          let input = overlayContainerElement.querySelector('input') as HTMLInputElement;
 
-         expect(document.activeElement).toBe(input, 'Expected input to be focused on open');
+         expect(document.activeElement)
+          .withContext('Expected input to be focused on open').toBe(input);
 
          input.blur();  // Programmatic clicks might not move focus so we simulate it.
          backdrop.click();
          viewContainerFixture.detectChanges();
          flush();
 
-         expect(document.activeElement).toBe(input, 'Expected input to stay focused after click');
+         expect(document.activeElement)
+          .withContext('Expected input to stay focused after click').toBe(input);
        }));
 
     it('should recapture focus to the container when clicking on the backdrop with ' +
@@ -949,7 +956,9 @@ describe('MDC-based MatDialog', () => {
          let container =
              overlayContainerElement.querySelector('.mat-mdc-dialog-container') as HTMLInputElement;
 
-         expect(document.activeElement).toBe(container, 'Expected container to be focused on open');
+         expect(document.activeElement)
+          .withContext('Expected container to be focused on open')
+          .toBe(container);
 
          container.blur();  // Programmatic clicks might not move focus so we simulate it.
          backdrop.click();
@@ -957,7 +966,8 @@ describe('MDC-based MatDialog', () => {
          flush();
 
          expect(document.activeElement)
-             .toBe(container, 'Expected container to stay focused after click');
+          .withContext('Expected container to stay focused after click')
+          .toBe(container);
        }));
   });
 
@@ -1022,7 +1032,8 @@ describe('MDC-based MatDialog', () => {
          flushMicrotasks();
 
          expect(document.activeElement!.tagName)
-             .toBe('INPUT', 'Expected first tabbable element (input) in the dialog to be focused.');
+          .withContext('Expected first tabbable element (input) in the dialog to be focused.')
+          .toBe('INPUT');
        }));
 
     it('should allow disabling focus of the first tabbable element', fakeAsync(() => {
@@ -1071,9 +1082,8 @@ describe('MDC-based MatDialog', () => {
          tick(500);
 
          expect(document.activeElement!.id)
-             .toBe(
-                 'dialog-trigger',
-                 'Expected that the trigger was refocused after the dialog is closed.');
+          .withContext('Expected that the trigger was refocused after the dialog is closed.')
+          .toBe('dialog-trigger');
 
          document.body.removeChild(button);
        }));
@@ -1123,7 +1133,8 @@ describe('MDC-based MatDialog', () => {
 
          tick(500);
          viewContainerFixture.detectChanges();
-         expect(lastFocusOrigin!).toBeNull('Expected the trigger button to be blurred');
+         expect(lastFocusOrigin!)
+          .withContext('Expected the trigger button to be blurred').toBeNull();
 
          dispatchKeyboardEvent(document.body, 'keydown', ESCAPE);
 
@@ -1132,7 +1143,7 @@ describe('MDC-based MatDialog', () => {
          tick(500);
 
          expect(lastFocusOrigin!)
-             .toBe('keyboard', 'Expected the trigger button to be focused via keyboard');
+          .withContext('Expected the trigger button to be focused via keyboard').toBe('keyboard');
 
          focusMonitor.stopMonitoring(button);
          document.body.removeChild(button);
@@ -1157,7 +1168,8 @@ describe('MDC-based MatDialog', () => {
 
          tick(500);
          viewContainerFixture.detectChanges();
-         expect(lastFocusOrigin!).toBeNull('Expected the trigger button to be blurred');
+         expect(lastFocusOrigin!)
+          .withContext('Expected the trigger button to be blurred').toBeNull();
 
          const backdrop =
              overlayContainerElement.querySelector('.cdk-overlay-backdrop') as HTMLElement;
@@ -1167,7 +1179,7 @@ describe('MDC-based MatDialog', () => {
          tick(500);
 
          expect(lastFocusOrigin!)
-             .toBe('mouse', 'Expected the trigger button to be focused via mouse');
+          .withContext('Expected the trigger button to be focused via mouse').toBe('mouse');
 
          focusMonitor.stopMonitoring(button);
          document.body.removeChild(button);
@@ -1193,7 +1205,8 @@ describe('MDC-based MatDialog', () => {
 
          tick(500);
          viewContainerFixture.detectChanges();
-         expect(lastFocusOrigin!).toBeNull('Expected the trigger button to be blurred');
+         expect(lastFocusOrigin!)
+          .withContext('Expected the trigger button to be blurred').toBeNull();
 
          const closeButton =
              overlayContainerElement.querySelector('button[mat-dialog-close]') as HTMLElement;
@@ -1206,7 +1219,7 @@ describe('MDC-based MatDialog', () => {
          tick(500);
 
          expect(lastFocusOrigin!)
-             .toBe('keyboard', 'Expected the trigger button to be focused via keyboard');
+          .withContext('Expected the trigger button to be focused via keyboard').toBe('keyboard');
 
          focusMonitor.stopMonitoring(button);
          document.body.removeChild(button);
@@ -1231,7 +1244,8 @@ describe('MDC-based MatDialog', () => {
 
          tick(500);
          viewContainerFixture.detectChanges();
-         expect(lastFocusOrigin!).toBeNull('Expected the trigger button to be blurred');
+         expect(lastFocusOrigin!)
+          .withContext('Expected the trigger button to be blurred').toBeNull();
 
          const closeButton =
              overlayContainerElement.querySelector('button[mat-dialog-close]') as HTMLElement;
@@ -1245,7 +1259,7 @@ describe('MDC-based MatDialog', () => {
          tick(500);
 
          expect(lastFocusOrigin!)
-             .toBe('mouse', 'Expected the trigger button to be focused via mouse');
+          .withContext('Expected the trigger button to be focused via mouse').toBe('mouse');
 
          focusMonitor.stopMonitoring(button);
          document.body.removeChild(button);
@@ -1276,9 +1290,8 @@ describe('MDC-based MatDialog', () => {
          flush();
 
          expect(document.activeElement!.id)
-             .toBe(
-                 'input-to-be-focused',
-                 'Expected that the trigger was refocused after the dialog is closed.');
+          .withContext('Expected that the trigger was refocused after the dialog is closed.')
+          .toBe('input-to-be-focused');
 
          document.body.removeChild(button);
          document.body.removeChild(input);
@@ -1293,7 +1306,7 @@ describe('MDC-based MatDialog', () => {
          flushMicrotasks();
 
          expect(document.activeElement!.tagName)
-             .toBe('MAT-DIALOG-CONTAINER', 'Expected dialog container to be focused.');
+          .withContext('Expected dialog container to be focused.').toBe('MAT-DIALOG-CONTAINER');
        }));
 
     it('should be able to disable focus restoration', fakeAsync(() => {
@@ -1349,14 +1362,14 @@ describe('MDC-based MatDialog', () => {
          otherButton.focus();
 
          expect(document.activeElement!.id)
-             .toBe('other-button', 'Expected focus to be on the alternate button.');
+          .withContext('Expected focus to be on the alternate button.').toBe('other-button');
 
          flushMicrotasks();
          viewContainerFixture.detectChanges();
          flush();
 
          expect(document.activeElement!.id)
-             .toBe('other-button', 'Expected focus to stay on the alternate button.');
+          .withContext('Expected focus to stay on the alternate button.').toBe('other-button');
 
          body.removeChild(button);
          body.removeChild(otherButton);
@@ -1451,9 +1464,9 @@ describe('MDC-based MatDialog', () => {
            flush();
            viewContainerFixture.detectChanges();
 
-           expect(title.id).toBeTruthy('Expected title element to have an id.');
+           expect(title.id).withContext('Expected title element to have an id.').toBeTruthy();
            expect(container.getAttribute('aria-labelledby'))
-               .toBe(title.id, 'Expected the aria-labelledby to match the title id.');
+            .withContext('Expected the aria-labelledby to match the title id.').toBe(title.id);
          }));
     }
   });
@@ -1497,7 +1510,7 @@ describe('MDC-based MatDialog', () => {
          flush();
          viewContainerFixture.detectChanges();
 
-         expect(title.id).toBeTruthy('Expected title element to have an id.');
+         expect(title.id).withContext('Expected title element to have an id.').toBeTruthy();
          expect(container.getAttribute('aria-labelledby')).toBe('Labelled By');
        }));
   });
@@ -1584,14 +1597,15 @@ describe('MDC-based MatDialog with a parent MatDialog', () => {
        flush();
 
        expect(overlayContainerElement.textContent)
-           .toContain('Pizza', 'Expected a dialog to be opened');
+        .withContext('Expected a dialog to be opened').toContain('Pizza');
 
        childDialog.closeAll();
        fixture.detectChanges();
        flush();
 
        expect(overlayContainerElement.textContent!.trim())
-           .toBe('', 'Expected closeAll on child MatDialog to close dialog opened by parent');
+        .withContext('Expected closeAll on child MatDialog to close dialog opened by parent')
+        .toBe('');
      }));
 
   it('should close dialogs opened by a child when calling closeAll on a parent MatDialog',
@@ -1600,14 +1614,15 @@ describe('MDC-based MatDialog with a parent MatDialog', () => {
        fixture.detectChanges();
 
        expect(overlayContainerElement.textContent)
-           .toContain('Pizza', 'Expected a dialog to be opened');
+        .withContext('Expected a dialog to be opened').toContain('Pizza');
 
        parentDialog.closeAll();
        fixture.detectChanges();
        flush();
 
        expect(overlayContainerElement.textContent!.trim())
-           .toBe('', 'Expected closeAll on parent MatDialog to close dialog opened by child');
+        .withContext('Expected closeAll on parent MatDialog to close dialog opened by child')
+        .toBe('');
      }));
 
   it('should close the top dialog via the escape key', fakeAsync(() => {
@@ -1626,14 +1641,14 @@ describe('MDC-based MatDialog with a parent MatDialog', () => {
        flush();
 
        expect(overlayContainerElement.textContent)
-           .toContain('Pizza', 'Expected a dialog to be opened');
+        .withContext('Expected a dialog to be opened').toContain('Pizza');
 
        childDialog.ngOnDestroy();
        fixture.detectChanges();
        flush();
 
        expect(overlayContainerElement.textContent)
-           .toContain('Pizza', 'Expected a dialog to be opened');
+        .withContext('Expected a dialog to be opened').toContain('Pizza');
      }));
 });
 
