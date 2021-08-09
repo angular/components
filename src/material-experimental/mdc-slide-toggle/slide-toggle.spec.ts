@@ -63,7 +63,7 @@ describe('MDC-based MatSlideToggle without forms', () => {
       labelElement = fixture.debugElement.query(By.css('label'))!.nativeElement;
     }));
 
-    it('should apply class based on color attribute', () => {
+    it('should apply class based on color attribute', fakeAsync(() => {
       testComponent.slideColor = 'primary';
       fixture.detectChanges();
 
@@ -73,18 +73,18 @@ describe('MDC-based MatSlideToggle without forms', () => {
       fixture.detectChanges();
 
       expect(slideToggleElement.classList).toContain('mat-accent');
-    });
+    }));
 
-    it('should correctly update the disabled property', () => {
+    it('should correctly update the disabled property', fakeAsync(() => {
       expect(inputElement.disabled).toBeFalsy();
 
       testComponent.isDisabled = true;
       fixture.detectChanges();
 
       expect(inputElement.disabled).toBeTruthy();
-    });
+    }));
 
-    it('should correctly update the checked property', () => {
+    it('should correctly update the checked property', fakeAsync(() => {
       expect(slideToggle.checked).toBeFalsy();
       expect(inputElement.getAttribute('aria-checked')).toBe('false');
 
@@ -93,20 +93,21 @@ describe('MDC-based MatSlideToggle without forms', () => {
 
       expect(inputElement.checked).toBeTruthy();
       expect(inputElement.getAttribute('aria-checked')).toBe('true');
-    });
+    }));
 
-    it('should set the toggle to checked on click', () => {
+    it('should set the toggle to checked on click', fakeAsync(() => {
       expect(slideToggle.checked).toBe(false);
       expect(inputElement.getAttribute('aria-checked')).toBe('false');
       expect(slideToggleElement.classList).not.toContain('mat-mdc-slide-toggle-checked');
 
       labelElement.click();
       fixture.detectChanges();
+      flush();
 
       expect(slideToggleElement.classList).toContain('mat-mdc-slide-toggle-checked');
       expect(slideToggle.checked).toBe(true);
       expect(inputElement.getAttribute('aria-checked')).toBe('true');
-    });
+    }));
 
     it('should not trigger the click event multiple times', fakeAsync(() => {
       // By default, when clicking on a label element, a generated click will be dispatched
@@ -126,17 +127,18 @@ describe('MDC-based MatSlideToggle without forms', () => {
       expect(testComponent.onSlideClick).toHaveBeenCalledTimes(1);
     }));
 
-    it('should trigger the change event properly', () => {
+    it('should trigger the change event properly', fakeAsync(() => {
       expect(inputElement.checked).toBe(false);
       expect(slideToggleElement.classList).not.toContain('mat-mdc-slide-toggle-checked');
 
       labelElement.click();
       fixture.detectChanges();
+      flush();
 
       expect(inputElement.checked).toBe(true);
       expect(slideToggleElement.classList).toContain('mat-mdc-slide-toggle-checked');
       expect(testComponent.onSlideChange).toHaveBeenCalledTimes(1);
-    });
+    }));
 
     it('should not trigger the change event by changing the native value', fakeAsync(() => {
       expect(inputElement.checked).toBe(false);
@@ -166,7 +168,7 @@ describe('MDC-based MatSlideToggle without forms', () => {
       expect(testComponent.onSlideChange).not.toHaveBeenCalled();
     }));
 
-    it('should add a suffix to the inputs id', () => {
+    it('should add a suffix to the inputs id', fakeAsync(() => {
       testComponent.slideId = 'myId';
       fixture.detectChanges();
 
@@ -184,9 +186,9 @@ describe('MDC-based MatSlideToggle without forms', () => {
 
       // Once the id binding is set to null, the id property should auto-generate a unique id.
       expect(inputElement.id).toMatch(/mat-mdc-slide-toggle-\d+-input/);
-    });
+    }));
 
-    it('should forward the tabIndex to the underlying input', () => {
+    it('should forward the tabIndex to the underlying input', fakeAsync(() => {
       fixture.detectChanges();
 
       expect(inputElement.tabIndex).toBe(0);
@@ -195,9 +197,9 @@ describe('MDC-based MatSlideToggle without forms', () => {
       fixture.detectChanges();
 
       expect(inputElement.tabIndex).toBe(4);
-    });
+    }));
 
-    it('should forward the specified name to the input', () => {
+    it('should forward the specified name to the input', fakeAsync(() => {
       testComponent.slideName = 'myName';
       fixture.detectChanges();
 
@@ -212,9 +214,9 @@ describe('MDC-based MatSlideToggle without forms', () => {
       fixture.detectChanges();
 
       expect(inputElement.name).toBe('');
-    });
+    }));
 
-    it('should forward the aria-label attribute to the input', () => {
+    it('should forward the aria-label attribute to the input', fakeAsync(() => {
       testComponent.slideLabel = 'ariaLabel';
       fixture.detectChanges();
 
@@ -224,9 +226,9 @@ describe('MDC-based MatSlideToggle without forms', () => {
       fixture.detectChanges();
 
       expect(inputElement.hasAttribute('aria-label')).toBeFalsy();
-    });
+    }));
 
-    it('should forward the aria-labelledby attribute to the input', () => {
+    it('should forward the aria-labelledby attribute to the input', fakeAsync(() => {
       testComponent.slideLabelledBy = 'ariaLabelledBy';
       fixture.detectChanges();
 
@@ -236,9 +238,9 @@ describe('MDC-based MatSlideToggle without forms', () => {
       fixture.detectChanges();
 
       expect(inputElement.hasAttribute('aria-labelledby')).toBeFalsy();
-    });
+    }));
 
-    it('should forward the aria-describedby attribute to the input', () => {
+    it('should forward the aria-describedby attribute to the input', fakeAsync(() => {
       testComponent.slideAriaDescribedBy = 'some-element';
       fixture.detectChanges();
 
@@ -248,13 +250,13 @@ describe('MDC-based MatSlideToggle without forms', () => {
       fixture.detectChanges();
 
       expect(inputElement.hasAttribute('aria-describedby')).toBe(false);
-    });
+    }));
 
-    it('should set the `for` attribute to the id of the input element', () => {
+    it('should set the `for` attribute to the id of the input element', fakeAsync(() => {
       expect(labelElement.getAttribute('for')).toBeTruthy();
       expect(inputElement.getAttribute('id')).toBeTruthy();
       expect(labelElement.getAttribute('for')).toBe(inputElement.getAttribute('id'));
-    });
+    }));
 
     it('should emit the new values properly', fakeAsync(() => {
       labelElement.click();
@@ -291,14 +293,15 @@ describe('MDC-based MatSlideToggle without forms', () => {
       expect(inputElement.required).toBe(false);
     });
 
-    it('should focus on underlying input element when focus() is called', () => {
+    it('should focus on underlying input element when focus() is called', fakeAsync(() => {
       expect(document.activeElement).not.toBe(inputElement);
 
       slideToggle.focus();
       fixture.detectChanges();
+      flush();
 
       expect(document.activeElement).toBe(inputElement);
-    });
+    }));
 
     it('should focus on underlying input element when the host is focused', fakeAsync(() => {
       expect(document.activeElement).not.toBe(inputElement);
@@ -325,7 +328,7 @@ describe('MDC-based MatSlideToggle without forms', () => {
         expect(document.activeElement).not.toBe(inputElement);
       })));
 
-    it('should set a element class if labelPosition is set to before', () => {
+    it('should set a element class if labelPosition is set to before', fakeAsync(() => {
       const formField = slideToggleElement.querySelector('.mdc-form-field')!;
 
       expect(formField.classList).not.toContain('mdc-form-field--align-end');
@@ -334,9 +337,9 @@ describe('MDC-based MatSlideToggle without forms', () => {
       fixture.detectChanges();
 
       expect(formField.classList).toContain('mdc-form-field--align-end');
-    });
+    }));
 
-    it('should show ripples', () => {
+    it('should show ripples', fakeAsync(() => {
       const rippleSelector = '.mat-ripple-element';
       const switchElement = slideToggleElement.querySelector('.mdc-switch')!;
 
@@ -346,9 +349,10 @@ describe('MDC-based MatSlideToggle without forms', () => {
       dispatchFakeEvent(switchElement, 'mouseup');
 
       expect(slideToggleElement.querySelectorAll(rippleSelector).length).toBe(1);
-    });
+      flush();
+    }));
 
-    it('should not show ripples when disableRipple is set', () => {
+    it('should not show ripples when disableRipple is set', fakeAsync(() => {
       const switchElement = slideToggleElement.querySelector('.mdc-switch')!;
       const rippleSelector = '.mat-ripple-element';
       testComponent.disableRipple = true;
@@ -360,12 +364,13 @@ describe('MDC-based MatSlideToggle without forms', () => {
       dispatchFakeEvent(switchElement, 'mouseup');
 
       expect(slideToggleElement.querySelectorAll(rippleSelector).length).toBe(0);
-    });
+      flush();
+    }));
 
-    it('should have a focus indicator', () => {
+    it('should have a focus indicator', fakeAsync(() => {
       const underlayElement = slideToggleElement.querySelector('.mdc-switch__thumb-underlay')!;
       expect(underlayElement.classList.contains('mat-mdc-focus-indicator')).toBe(true);
-    });
+    }));
   });
 
   describe('custom template', () => {
@@ -391,21 +396,21 @@ describe('MDC-based MatSlideToggle without forms', () => {
         .toBe(5);
     }));
 
-    it('should add the disabled class if disabled through attribute', () => {
+    it('should add the disabled class if disabled through attribute', fakeAsync(() => {
       const fixture = TestBed.createComponent(SlideToggleCheckedAndDisabledAttr);
       fixture.detectChanges();
 
       const switchEl = fixture.nativeElement.querySelector('.mdc-switch');
       expect(switchEl.classList).toContain('mdc-switch--disabled');
-    });
+    }));
 
-    it('should add the checked class if checked through attribute', () => {
+    it('should add the checked class if checked through attribute', fakeAsync(() => {
       const fixture = TestBed.createComponent(SlideToggleCheckedAndDisabledAttr);
       fixture.detectChanges();
 
       const switchEl = fixture.nativeElement.querySelector('.mdc-switch');
       expect(switchEl.classList).toContain('mdc-switch--checked');
-    });
+    }));
 
     it('should set the tabindex of the host element to -1', fakeAsync(() => {
       const fixture = TestBed.createComponent(SlideToggleWithTabindexAttr);
@@ -469,7 +474,7 @@ describe('MDC-based MatSlideToggle without forms', () => {
       expect(testComponent.dragTriggered).toBe(0);
     }));
 
-  it('should be able to change the default color', () => {
+  it('should be able to change the default color', fakeAsync(() => {
     TestBed
       .resetTestingModule()
       .configureTestingModule({
@@ -483,16 +488,16 @@ describe('MDC-based MatSlideToggle without forms', () => {
     fixture.detectChanges();
     const slideToggle = fixture.nativeElement.querySelector('.mat-mdc-slide-toggle');
     expect(slideToggle.classList).toContain('mat-warn');
-  });
+  }));
 
-  it('should clear static aria attributes from the host node', () => {
+  it('should clear static aria attributes from the host node', fakeAsync(() => {
     const fixture = TestBed.createComponent(SlideToggleWithStaticAriaAttributes);
     fixture.detectChanges();
 
     const host: HTMLElement = fixture.nativeElement.querySelector('mat-slide-toggle');
     expect(host.hasAttribute('aria-label')).toBe(false);
     expect(host.hasAttribute('aria-labelledby')).toBe(false);
-  });
+  }));
 });
 
 describe('MDC-based MatSlideToggle with forms', () => {
@@ -536,10 +541,10 @@ describe('MDC-based MatSlideToggle with forms', () => {
       labelElement = fixture.debugElement.query(By.css('label'))!.nativeElement;
     }));
 
-    it('should be initially set to ng-pristine', () => {
+    it('should be initially set to ng-pristine', fakeAsync(() => {
       expect(slideToggleElement.classList).toContain('ng-pristine');
       expect(slideToggleElement.classList).not.toContain('ng-dirty');
-    });
+    }));
 
     it('should update the model programmatically', fakeAsync(() => {
       expect(slideToggleElement.classList).not.toContain('mat-mdc-slide-toggle-checked');
@@ -567,6 +572,7 @@ describe('MDC-based MatSlideToggle with forms', () => {
       // Dispatch a change event on the input element to fake a user interaction that triggered
       // the state change.
       dispatchFakeEvent(inputElement, 'change');
+      flush();
 
       expect(slideToggleModel.valid).toBe(true);
       expect(slideToggleModel.pristine).toBe(false);
@@ -700,16 +706,16 @@ describe('MDC-based MatSlideToggle with forms', () => {
     let slideToggle: MatSlideToggle;
     let inputElement: HTMLInputElement;
 
-    beforeEach(() => {
+    beforeEach(fakeAsync(() => {
       fixture = TestBed.createComponent(SlideToggleWithFormControl);
       fixture.detectChanges();
 
       testComponent = fixture.debugElement.componentInstance;
       slideToggle = fixture.debugElement.query(By.directive(MatSlideToggle))!.componentInstance;
       inputElement = fixture.debugElement.query(By.css('input'))!.nativeElement;
-    });
+    }));
 
-    it('should toggle the disabled state', () => {
+    it('should toggle the disabled state', fakeAsync(() => {
       expect(slideToggle.disabled).toBe(false);
       expect(inputElement.disabled).toBe(false);
 
@@ -724,7 +730,7 @@ describe('MDC-based MatSlideToggle with forms', () => {
 
       expect(slideToggle.disabled).toBe(false);
       expect(inputElement.disabled).toBe(false);
-    });
+    }));
   });
 
   describe('with form element', () => {
@@ -743,7 +749,7 @@ describe('MDC-based MatSlideToggle with forms', () => {
       inputElement = fixture.debugElement.query(By.css('input'))!.nativeElement;
     }));
 
-    it('should prevent the form from submit when being required', () => {
+    it('should prevent the form from submit when being required', fakeAsync(() => {
       if (typeof (inputElement as any).reportValidity === 'undefined') {
         // If the browser does not report the validity then the tests will break.
         // e.g Safari 8 on Mobile.
@@ -756,6 +762,7 @@ describe('MDC-based MatSlideToggle with forms', () => {
 
       buttonElement.click();
       fixture.detectChanges();
+      flush();
 
       expect(testComponent.isSubmitted).toBe(false);
 
@@ -766,9 +773,9 @@ describe('MDC-based MatSlideToggle with forms', () => {
       fixture.detectChanges();
 
       expect(testComponent.isSubmitted).toBe(true);
-    });
+    })));
 
-    it('should have proper invalid state if unchecked', () => {
+    it('should have proper invalid state if unchecked', fakeAsync(() => {
       testComponent.isRequired = true;
       fixture.detectChanges();
 
@@ -781,6 +788,7 @@ describe('MDC-based MatSlideToggle with forms', () => {
       // should become valid.
       inputElement.click();
       fixture.detectChanges();
+      flush();
 
       expect(slideToggleEl.classList).not.toContain('ng-invalid');
       expect(slideToggleEl.classList).toContain('ng-valid');
@@ -789,14 +797,15 @@ describe('MDC-based MatSlideToggle with forms', () => {
       // should become invalid.
       inputElement.click();
       fixture.detectChanges();
+      flush();
 
       expect(slideToggleEl.classList).toContain('ng-invalid');
       expect(slideToggleEl.classList).not.toContain('ng-valid');
-    });
+    }));
   });
 
   describe('with model and change event', () => {
-    it('should report changes to NgModel before emitting change event', () => {
+    it('should report changes to NgModel before emitting change event', fakeAsync(() => {
       const fixture = TestBed.createComponent(SlideToggleWithModelAndChangeEvent);
       fixture.detectChanges();
 
@@ -809,9 +818,10 @@ describe('MDC-based MatSlideToggle with forms', () => {
       });
 
       labelEl.click();
+      flush();
 
       expect(fixture.componentInstance.onChange).toHaveBeenCalledTimes(1);
-    });
+    }));
   });
 });
 
