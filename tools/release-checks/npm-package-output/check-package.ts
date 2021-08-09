@@ -34,8 +34,7 @@ type PackageFailures = Map<string, string[]>;
  * @returns Whether the package passed all checks or not.
  */
 export function checkReleasePackage(
-    releasesPath: string, packageName: string, expectedVersion: string): boolean {
-  const packagePath = join(releasesPath, packageName);
+    packagePath: string, packageName: string, expectedVersion: string): boolean {
   const failures = new Map() as PackageFailures;
   const addFailure = (message: string, filePath?: string) => {
     const filePaths = failures.get(message) || [];
@@ -67,10 +66,10 @@ export function checkReleasePackage(
   });
 
   // Special release validation checks for the "material" release package.
-  if (packageName === 'material') {
-    checkMaterialPackage(join(releasesPath, packageName)).forEach(message => addFailure(message));
-  } else if (packageName === 'cdk') {
-    checkCdkPackage(join(releasesPath, packageName)).forEach(message => addFailure(message));
+  if (packageName === '@angular/material') {
+    checkMaterialPackage(packagePath).forEach(message => addFailure(message));
+  } else if (packageName === '@angular/cdk') {
+    checkCdkPackage(packagePath).forEach(message => addFailure(message));
   }
 
   if (!existsSync(join(packagePath, 'LICENSE'))) {
