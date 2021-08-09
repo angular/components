@@ -1,11 +1,11 @@
 // Default minimum and maximum height for collapsed panel headers.
-$header-collapsed-height: 48px !default;
+$header-collapsed-height: fit-content !default;
 $header-collapsed-minimum-height: 36px !default;
 $header-collapsed-maximum-height:
     $header-collapsed-height !default;
 
 // Default minimum and maximum height for expanded panel headers.
-$header-expanded-height: 64px !default;
+$header-expanded-height: fit-content !default;
 $header-expanded-minimum-height: 48px !default;
 $header-expanded-maximum-height:
     $header-expanded-height !default;
