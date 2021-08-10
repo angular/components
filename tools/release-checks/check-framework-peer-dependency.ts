@@ -1,4 +1,5 @@
 import {FatalReleaseActionError} from '@angular/dev-infra-private/release/publish/actions-error';
+import {error} from '@angular/dev-infra-private/utils/console';
 import {SemVer} from 'semver';
 import {join} from 'path';
 import {existsSync, readFileSync} from 'fs';
@@ -22,10 +23,10 @@ export async function assertValidFrameworkPeerDependency(newVersion: SemVer) {
     `^${newVersion.major}.0.0 || ^${newVersion.major + 1}.0.0-0`;
 
   if (requiredRange !== currentVersionRange) {
-    console.error(chalk.red(
+    error(chalk.red(
       `  ✘   Cannot stage release. The required Angular version range ` +
       `is invalid. The version range should be: ${requiredRange}`));
-    console.error(chalk.red(
+    error(chalk.red(
       `      Please manually update the version range ` +
       `in: ${bzlConfigPath}`));
     throw new FatalReleaseActionError();
@@ -38,7 +39,7 @@ export async function assertValidFrameworkPeerDependency(newVersion: SemVer) {
  */
 function _extractAngularVersionPlaceholderOrThrow(): string {
   if (!existsSync(bzlConfigPath)) {
-    console.error(chalk.red(
+    error(chalk.red(
       `  ✘   Cannot stage release. Could not find the file which sets ` +
       `the Angular peerDependency placeholder value. Looked for: ${bzlConfigPath}`));
     throw new FatalReleaseActionError();
@@ -47,7 +48,7 @@ function _extractAngularVersionPlaceholderOrThrow(): string {
   const configFileContent = readFileSync(bzlConfigPath, 'utf8');
   const matches = configFileContent.match(/ANGULAR_PACKAGE_VERSION = ["']([^"']+)/);
   if (!matches || !matches[1]) {
-    console.error(chalk.red(
+    error(chalk.red(
       `  ✘   Cannot stage release. Could not find the ` +
       `"ANGULAR_PACKAGE_VERSION" variable. Please ensure this variable exists. ` +
       `Looked in: ${bzlConfigPath}`));

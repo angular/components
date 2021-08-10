@@ -1,3 +1,4 @@
+import {error} from '@angular/dev-infra-private/utils/console';
 import {dirname, join} from 'path';
 import * as chalk from 'chalk';
 import {releasePackages} from '../../.ng-dev/release';
@@ -16,8 +17,8 @@ export async function assertValidUpdateMigrationCollections(newVersion: semver.S
       .map(f => chalk.yellow(`       ⮑  ${chalk.bold(packageName)}: ${f}`)));
   });
   if (failures.length) {
-    console.error(chalk.red(`  ✘   Failures in ng-update migration collection detected:`));
-    failures.forEach(f => console.error(f));
+    error(chalk.red(`  ✘   Failures in ng-update migration collection detected:`));
+    failures.forEach(f => error(f));
     process.exit(1);
   }
 }

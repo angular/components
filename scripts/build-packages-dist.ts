@@ -60,7 +60,9 @@ export function performDefaultSnapshotBuild(): BuiltPackage[] {
  * Builds the release packages with the given compile mode and copies
  * the package output into the given directory.
  */
-function buildReleasePackages(useIvy, distPath, isSnapshotBuild): BuiltPackage[] {
+function buildReleasePackages(useIvy: boolean, distPath: string,
+                              isSnapshotBuild: boolean): BuiltPackage[] {
+
   console.log('######################################');
   console.log('  Building release packages...');
   console.log(`  Compiling with Ivy: ${useIvy}`);
@@ -133,7 +135,7 @@ function getPackageNamesOfTargets(targets: string[]): string[] {
 function exec(command: string): void;
 /** Executes the given command in the project directory and returns its stdout. */
 function exec(command: string, captureStdout: true): string;
-function exec(command: string, captureStdout?: boolean) {
+function exec(command: string, captureStdout?: true) {
   const stdout = execSync(command, {
     cwd: projectDir,
     stdio: ['inherit', captureStdout ? 'pipe' : 'inherit', 'inherit'],

@@ -32,6 +32,8 @@ const orderedChangelogPackages = [
   'google-maps',
   'youtube-player',
   'material-moment-adapter',
+  'material-luxon-adapter',
+  'material-date-fns-adapter',
   'cdk-experimental',
   'material-experimental',
 ];
