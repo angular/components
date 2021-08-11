@@ -773,7 +773,7 @@ describe('MDC-based MatSlideToggle with forms', () => {
       fixture.detectChanges();
 
       expect(testComponent.isSubmitted).toBe(true);
-    })));
+    }));
 
     it('should have proper invalid state if unchecked', fakeAsync(() => {
       testComponent.isRequired = true;
