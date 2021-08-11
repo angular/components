@@ -38,9 +38,6 @@
       "@angular/material-luxon-adapter"
     ]
   },
-  "sideEffects": false,
-  "publishConfig":{
-    "registry":"https://wombat-dressing-room.appspot.com"
-  }
+  "sideEffects": false
 }
 
