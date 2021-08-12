@@ -27,7 +27,6 @@ def create_system_config(
     expand_template(
         name = name,
         output_name = output_name,
-        configuration_env_vars = ["angular_ivy_enabled"],
         substitutions = {
             "$ANGULAR_PACKAGE_BUNDLES": str(ANGULAR_PACKAGE_BUNDLES),
             "$MDC_PACKAGE_UMD_BUNDLES": str(MDC_PACKAGE_UMD_BUNDLES),

@@ -47,18 +47,16 @@ test --test_output=errors
 # See https://docs.bazel.build/versions/master/user-manual.html#flag--workspace_status_command
 build:release --workspace_status_command="yarn -s ng-dev release build-env-stamp --mode=release"
 build:release --stamp
+build:release --//tools:partial_compilation=True
 
 build:snapshot-build --workspace_status_command="yarn -s ng-dev release build-env-stamp --mode=snapshot"
 build:snapshot-build --stamp
+build:snapshot-build --//tools:partial_compilation=True
 
-################################
-# View Engine / Ivy toggle     #
-################################
-build:view-engine --define=angular_ivy_enabled=False
-build:ivy --define=angular_ivy_enabled=True
-
-# Set Ivy as the default
-build --config=ivy
+##################################
+# Always enable Ivy compilation  #
+##################################
+build --define=angular_ivy_enabled=True
 
 ################################
 # Remote Execution Setup       #

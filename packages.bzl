@@ -100,20 +100,10 @@ def getUmdFilePaths(packages, ngcc_artifacts):
 
 ANGULAR_PACKAGE_BUNDLES = getFrameworkPackageBundles()
 
-ANGULAR_LIBRARY_VIEW_ENGINE_UMDS = getUmdFilePaths(ANGULAR_NO_NGCC_BUNDLES, False) + \
-                                   getUmdFilePaths(ANGULAR_NGCC_BUNDLES, False)
-
 ANGULAR_LIBRARY_IVY_UMDS = getUmdFilePaths(ANGULAR_NO_NGCC_BUNDLES, False) + \
                            getUmdFilePaths(ANGULAR_NGCC_BUNDLES, True)
 
-"""
-  Gets the list of targets for the Angular library UMD bundles. Conditionally
-  switches between View Engine or Ivy UMD bundles based on the
-  "--config={ivy,view-engine}" flag.
-"""
+"""Gets the list of targets for the Angular library UMD bundles."""
 
 def getAngularUmdTargets():
-    return select({
-        "//tools:view_engine_mode": ANGULAR_LIBRARY_VIEW_ENGINE_UMDS,
-        "//conditions:default": ANGULAR_LIBRARY_IVY_UMDS,
-    })
+    return ANGULAR_LIBRARY_IVY_UMDS

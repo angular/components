@@ -21,9 +21,6 @@ var frameworkPackages = $ANGULAR_PACKAGE_BUNDLES;
 /** Map of MDC packages and their corresponding UMD bundles. */
 var mdcPackageUmdBundles = $MDC_PACKAGE_UMD_BUNDLES;
 
-/** Whether Ivy is enabled. */
-var isRunningWithIvy = 'TMPL_angular_ivy_enabled'.toString() === 'True';
-
 /** Path that relatively resolves to the directory that contains all packages. */
 var packagesPath = '$PACKAGES_DIR';
 
@@ -102,11 +99,10 @@ function setupFrameworkPackages() {
       // the UMD bundle names. e.g. "animations-browser" results in "@angular/animations/browser".
       var entryPointName = segments.length ? moduleName + '/' + segments.join('/') : moduleName;
       var bundlePath = 'bundles/' + bundleName;
-      // When running with Ivy, we need to load the ngcc processed UMD bundles.
-      // These are stored in the `__ivy_ngcc_` folder that has been generated
-      // since we run ngcc with `--create-ivy-entry-points`. Filter out the compiler
-      // and localize package because it won't be processed by ngcc.
-      if (isRunningWithIvy && entryPointName !== '@angular/compiler' &&
+      // We need to load the ngcc processed UMD bundles. These are stored in the `__ivy_ngcc_`
+      // folder that has been generated since we run ngcc with `--create-ivy-entry-points`.
+      // Filter out the compiler and localize package because it won't be processed by ngcc.
+      if (entryPointName !== '@angular/compiler' &&
           !entryPointName.startsWith('@angular/localize')) {
         bundlePath = '__ivy_ngcc__/' + bundlePath;
       }
