@@ -96,7 +96,7 @@ export class MatInput extends _MatInputBase implements MatFormFieldControl<any>,
     get required(): boolean;
     set required(value: boolean);
     // (undocumented)
-    protected _required: boolean;
+    protected _required: boolean | undefined;
     setDescribedByIds(ids: string[]): void;
     get shouldLabelFloat(): boolean;
     readonly stateChanges: Subject<void>;
