@@ -57,22 +57,22 @@ export abstract class HarnessEnvironment<E> implements HarnessLoader, LocatorFac
   }
 
   // Implemented as part of the `LocatorFactory` interface.
-  locatorFor<T extends (HarnessQuery<any> | string)[]>(...queries: T):
-      AsyncFactoryFn<LocatorFnResult<T>> {
+  locatorFor<T extends (HarnessQuery<any> | string)>(...queries: [T, ...T[]]):
+      AsyncFactoryFn<LocatorFnResult<T[]>> {
     return () => _assertResultFound(
         this._getAllHarnessesAndTestElements(queries),
         _getDescriptionForLocatorForQueries(queries));
   }
 
   // Implemented as part of the `LocatorFactory` interface.
-  locatorForOptional<T extends (HarnessQuery<any> | string)[]>(...queries: T):
-      AsyncFactoryFn<LocatorFnResult<T> | null> {
+  locatorForOptional<T extends (HarnessQuery<any> | string)>(...queries: [T, ...T[]]):
+      AsyncFactoryFn<LocatorFnResult<T[]> | null> {
     return async () => (await this._getAllHarnessesAndTestElements(queries))[0] || null;
   }
 
   // Implemented as part of the `LocatorFactory` interface.
-  locatorForAll<T extends (HarnessQuery<any> | string)[]>(...queries: T):
-      AsyncFactoryFn<LocatorFnResult<T>[]> {
+  locatorForAll<T extends (HarnessQuery<any> | string)>(...queries: [T, ...T[]]):
+      AsyncFactoryFn<LocatorFnResult<T[]>[]> {
     return () => this._getAllHarnessesAndTestElements(queries);
   }
 

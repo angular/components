@@ -137,8 +137,8 @@ export interface LocatorFactory {
    * - `await lf.locatorFor('div', DivHarness)()` gets a `TestElement` instance for `#d1`
    * - `await lf.locatorFor('span')()` throws because the `Promise` rejects.
    */
-  locatorFor<T extends (HarnessQuery<any> | string)[]>(...queries: T):
-      AsyncFactoryFn<LocatorFnResult<T>>;
+  locatorFor<T extends (HarnessQuery<any> | string)>(...queries: [T, ...T[]]):
+      AsyncFactoryFn<LocatorFnResult<T[]>>;
 
   /**
    * Creates an asynchronous locator function that can be used to find a `ComponentHarness` instance
@@ -161,8 +161,8 @@ export interface LocatorFactory {
    * - `await lf.locatorForOptional('div', DivHarness)()` gets a `TestElement` instance for `#d1`
    * - `await lf.locatorForOptional('span')()` gets `null`.
    */
-  locatorForOptional<T extends (HarnessQuery<any> | string)[]>(...queries: T):
-      AsyncFactoryFn<LocatorFnResult<T> | null>;
+  locatorForOptional<T extends (HarnessQuery<any> | string)>(...queries: [T, ...T[]]):
+      AsyncFactoryFn<LocatorFnResult<T[]> | null>;
 
   /**
    * Creates an asynchronous locator function that can be used to find `ComponentHarness` instances
@@ -200,8 +200,8 @@ export interface LocatorFactory {
    *   ]`
    * - `await lf.locatorForAll('span')()` gets `[]`.
    */
-  locatorForAll<T extends (HarnessQuery<any> | string)[]>(...queries: T):
-      AsyncFactoryFn<LocatorFnResult<T>[]>;
+  locatorForAll<T extends (HarnessQuery<any> | string)>(...queries: [T, ...T[]]):
+      AsyncFactoryFn<LocatorFnResult<T[]>[]>;
 
   /** @return A `HarnessLoader` rooted at the root element of this `LocatorFactory`. */
   rootHarnessLoader(): Promise<HarnessLoader>;
@@ -286,8 +286,8 @@ export abstract class ComponentHarness {
    * - `await ch.locatorFor('div', DivHarness)()` gets a `TestElement` instance for `#d1`
    * - `await ch.locatorFor('span')()` throws because the `Promise` rejects.
    */
-  protected locatorFor<T extends (HarnessQuery<any> | string)[]>(...queries: T):
-      AsyncFactoryFn<LocatorFnResult<T>> {
+  protected locatorFor<T extends (HarnessQuery<any> | string)>(...queries: [T, ...T[]]):
+      AsyncFactoryFn<LocatorFnResult<T[]>> {
     return this.locatorFactory.locatorFor(...queries);
   }
 
@@ -312,8 +312,8 @@ export abstract class ComponentHarness {
    * - `await ch.locatorForOptional('div', DivHarness)()` gets a `TestElement` instance for `#d1`
    * - `await ch.locatorForOptional('span')()` gets `null`.
    */
-  protected locatorForOptional<T extends (HarnessQuery<any> | string)[]>(...queries: T):
-      AsyncFactoryFn<LocatorFnResult<T> | null> {
+  protected locatorForOptional<T extends (HarnessQuery<any> | string)>(...queries: [T, ...T[]]):
+      AsyncFactoryFn<LocatorFnResult<T[]> | null> {
     return this.locatorFactory.locatorForOptional(...queries);
   }
 
@@ -353,8 +353,8 @@ export abstract class ComponentHarness {
    *   ]`
    * - `await ch.locatorForAll('span')()` gets `[]`.
    */
-  protected locatorForAll<T extends (HarnessQuery<any> | string)[]>(...queries: T):
-      AsyncFactoryFn<LocatorFnResult<T>[]> {
+  protected locatorForAll<T extends (HarnessQuery<any> | string)>(...queries: [T, ...T[]]):
+      AsyncFactoryFn<LocatorFnResult<T[]>[]> {
     return this.locatorFactory.locatorForAll(...queries);
   }
 

@@ -33,9 +33,9 @@ export abstract class ComponentHarness {
     host(): Promise<TestElement>;
     // (undocumented)
     protected readonly locatorFactory: LocatorFactory;
-    protected locatorFor<T extends (HarnessQuery<any> | string)[]>(...queries: T): AsyncFactoryFn<LocatorFnResult<T>>;
-    protected locatorForAll<T extends (HarnessQuery<any> | string)[]>(...queries: T): AsyncFactoryFn<LocatorFnResult<T>[]>;
-    protected locatorForOptional<T extends (HarnessQuery<any> | string)[]>(...queries: T): AsyncFactoryFn<LocatorFnResult<T> | null>;
+    protected locatorFor<T extends (HarnessQuery<any> | string)>(...queries: [T, ...T[]]): AsyncFactoryFn<LocatorFnResult<T[]>>;
+    protected locatorForAll<T extends (HarnessQuery<any> | string)>(...queries: [T, ...T[]]): AsyncFactoryFn<LocatorFnResult<T[]>[]>;
+    protected locatorForOptional<T extends (HarnessQuery<any> | string)>(...queries: [T, ...T[]]): AsyncFactoryFn<LocatorFnResult<T[]> | null>;
     protected waitForTasksOutsideAngular(): Promise<void>;
 }
 
@@ -109,11 +109,11 @@ export abstract class HarnessEnvironment<E> implements HarnessLoader, LocatorFac
     // (undocumented)
     harnessLoaderForOptional(selector: string): Promise<HarnessLoader | null>;
     // (undocumented)
-    locatorFor<T extends (HarnessQuery<any> | string)[]>(...queries: T): AsyncFactoryFn<LocatorFnResult<T>>;
+    locatorFor<T extends (HarnessQuery<any> | string)>(...queries: [T, ...T[]]): AsyncFactoryFn<LocatorFnResult<T[]>>;
     // (undocumented)
-    locatorForAll<T extends (HarnessQuery<any> | string)[]>(...queries: T): AsyncFactoryFn<LocatorFnResult<T>[]>;
+    locatorForAll<T extends (HarnessQuery<any> | string)>(...queries: [T, ...T[]]): AsyncFactoryFn<LocatorFnResult<T[]>[]>;
     // (undocumented)
-    locatorForOptional<T extends (HarnessQuery<any> | string)[]>(...queries: T): AsyncFactoryFn<LocatorFnResult<T> | null>;
+    locatorForOptional<T extends (HarnessQuery<any> | string)>(...queries: [T, ...T[]]): AsyncFactoryFn<LocatorFnResult<T[]> | null>;
     // (undocumented)
     protected rawRootElement: E;
     // (undocumented)
@@ -156,9 +156,9 @@ export interface LocatorFactory {
     harnessLoaderFor(selector: string): Promise<HarnessLoader>;
     harnessLoaderForAll(selector: string): Promise<HarnessLoader[]>;
     harnessLoaderForOptional(selector: string): Promise<HarnessLoader | null>;
-    locatorFor<T extends (HarnessQuery<any> | string)[]>(...queries: T): AsyncFactoryFn<LocatorFnResult<T>>;
-    locatorForAll<T extends (HarnessQuery<any> | string)[]>(...queries: T): AsyncFactoryFn<LocatorFnResult<T>[]>;
-    locatorForOptional<T extends (HarnessQuery<any> | string)[]>(...queries: T): AsyncFactoryFn<LocatorFnResult<T> | null>;
+    locatorFor<T extends (HarnessQuery<any> | string)>(...queries: [T, ...T[]]): AsyncFactoryFn<LocatorFnResult<T[]>>;
+    locatorForAll<T extends (HarnessQuery<any> | string)>(...queries: [T, ...T[]]): AsyncFactoryFn<LocatorFnResult<T[]>[]>;
+    locatorForOptional<T extends (HarnessQuery<any> | string)>(...queries: [T, ...T[]]): AsyncFactoryFn<LocatorFnResult<T[]> | null>;
     rootElement: TestElement;
     rootHarnessLoader(): Promise<HarnessLoader>;
     waitForTasksOutsideAngular(): Promise<void>;
