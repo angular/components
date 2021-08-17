@@ -94,11 +94,6 @@ export class MatBadge extends _MatBadgeBase implements OnDestroy, OnChanges, Can
       const badgeElement = this._badgeElement;
       this._updateHostAriaDescription(newDescription, this._description);
       this._description = newDescription;
-
-      if (badgeElement) {
-        newDescription ? badgeElement.setAttribute('aria-label', newDescription) :
-            badgeElement.removeAttribute('aria-label');
-      }
     }
   }
   private _description: string;
@@ -160,7 +155,7 @@ export class MatBadge extends _MatBadgeBase implements OnDestroy, OnChanges, Can
 
     if (badgeElement) {
       if (this.description) {
-        this._ariaDescriber.removeDescription(badgeElement, this.description);
+        this._ariaDescriber.removeDescription(this._elementRef.nativeElement, this.description);
       }
 
       // When creating a badge through the Renderer, Angular will keep it in an index.
@@ -197,16 +192,14 @@ export class MatBadge extends _MatBadgeBase implements OnDestroy, OnChanges, Can
 
     // Clear any existing badges which may have persisted from a server-side render.
     this._clearExistingBadges(contentClass);
+    // Hide badge element from screen readers.
+    badgeElement.setAttribute('aria-hidden', 'true');
     badgeElement.setAttribute('id', `mat-badge-content-${this._id}`);
     badgeElement.classList.add(contentClass);
     badgeElement.textContent = this._stringifyContent();
 
     if (this._animationMode === 'NoopAnimations') {
       badgeElement.classList.add('_mat-animation-noopable');
-    }
-
-    if (this.description) {
-      badgeElement.setAttribute('aria-label', this.description);
     }
 
     this._elementRef.nativeElement.appendChild(badgeElement);
@@ -225,17 +218,17 @@ export class MatBadge extends _MatBadgeBase implements OnDestroy, OnChanges, Can
     return badgeElement;
   }
 
-  /** Sets the aria-label property on the element */
+  /** Sets the aria-describedby property on the host element */
   private _updateHostAriaDescription(newDescription: string, oldDescription: string): void {
     // ensure content available before setting label
-    const content = this._updateTextContent();
+    this._updateTextContent();
 
     if (oldDescription) {
-      this._ariaDescriber.removeDescription(content, oldDescription);
+      this._ariaDescriber.removeDescription(this._elementRef.nativeElement, oldDescription);
     }
 
     if (newDescription) {
-      this._ariaDescriber.describe(content, newDescription);
+      this._ariaDescriber.describe(this._elementRef.nativeElement, newDescription);
     }
   }
 
