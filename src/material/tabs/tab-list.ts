@@ -124,6 +124,7 @@ export class MatTabList extends _MatTabListMixinBase implements CanDisableRipple
     this.focusChange.emit(index);
   }
 
+  // TODO: extract to common helper
   /** Returns a unique id for each tab label element */
   _getTabLabelId(i: number): string|null {
     if (this.groupId == null) {
@@ -132,6 +133,7 @@ export class MatTabList extends _MatTabListMixinBase implements CanDisableRipple
     return `mat-tab-label-${this.groupId}-${i}`;
   }
 
+  // TODO: extract to common helper
   /** Returns a unique id for each tab content element */
   _getTabContentId(i: number): string|null {
     if (this.groupId == null) {

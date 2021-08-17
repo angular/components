@@ -15,6 +15,7 @@ import {MatCommonModule, MatRippleModule} from '@angular/material/core';
 import {MatInkBar} from './ink-bar';
 import {MatTab} from './tab';
 import {MatTabBody, MatTabBodyPortal} from './tab-body';
+import {MatTabGroupBody} from './tab-group-body';
 import {MatTabContent} from './tab-content';
 import {MatTabGroup} from './tab-group';
 import {MatTabHeader} from './tab-header';
@@ -56,6 +57,7 @@ import {MatTabLink, MatTabNav} from './tab-nav-bar/tab-nav-bar';
     MatTabHeader,
     MatTabContent,
     MatTabList,
+    MatTabGroupBody,
   ],
 })
 export class MatTabsModule {}

@@ -23,6 +23,7 @@ ng_module(
         ":tab-header.css",
         ":tab-group.css",
         ":tab-list.css",
+        ":tab-group-body.css",
         ":tab-nav-bar/tab-nav-bar.css",
     ] + glob(["**/*.html"]),
     deps = [
@@ -79,6 +80,15 @@ sass_binary(
     name = "tab_list_scss",
     src = "tab-list.scss",
     deps = [
+        "//src/material/core:core_scss_lib",
+    ],
+)
+
+sass_binary(
+    name = "tab_group_body",
+    src = "tab-group-body.scss",
+    deps = [
+        ":tabs_scss_lib",
         "//src/material/core:core_scss_lib",
     ],
 )

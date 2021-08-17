@@ -1,0 +1,17 @@
+<div class="mat-tab-body-wrapper"
+     [class._mat-animation-noopable]="_animationMode === 'NoopAnimations'"
+     #tabBodyWrapper>
+  <mat-tab-body role="tabpanel"
+                *ngFor="let tab of _tabs; let i = index"
+                [id]="_getTabContentId(i)"
+                [attr.tabindex]="(contentTabIndex != null && _selectedIndex === i) ? contentTabIndex : null"
+                [attr.aria-labelledby]="_getTabLabelId(i)"
+                [class.mat-tab-body-active]="_selectedIndex === i"
+                [content]="tab.content!"
+                [position]="tab.position!"
+                [origin]="tab.origin"
+                [animationDuration]="animationDuration"
+                (_onCentered)="_removeTabBodyWrapperHeight()"
+                (_onCentering)="_setTabBodyWrapperHeight($event)">
+  </mat-tab-body>
+</div>

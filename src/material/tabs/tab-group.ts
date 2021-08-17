@@ -42,6 +42,7 @@ import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
 import {merge, Subscription} from 'rxjs';
 import {startWith} from 'rxjs/operators';
 import {MAT_TAB_GROUP, MatTab} from './tab';
+import {MatTabGroupBody} from './tab-group-body';
 import {MAT_TABS_CONFIG, MatTabsConfig} from './tab-config';
 import {MatTabChangeEvent, MatTabList} from './tab-list';
 
@@ -79,9 +80,6 @@ export abstract class _MatTabGroupBase extends _MatTabGroupMixinBase implements 
   /** The tab index that should be selected after the content has been checked. */
   private _indexToSelect: number | null = 0;
 
-  /** Snapshot of the height of the tab body wrapper before another tab is activated. */
-  private _tabBodyWrapperHeight: number = 0;
-
   /** Subscription to tabs being added/removed. */
   private _tabsSubscription = Subscription.EMPTY;
 
@@ -92,7 +90,7 @@ export abstract class _MatTabGroupBase extends _MatTabGroupMixinBase implements 
   @Input()
   get dynamicHeight(): boolean { return this._dynamicHeight; }
   set dynamicHeight(value: boolean) { this._dynamicHeight = coerceBooleanProperty(value); }
-  private _dynamicHeight: boolean;
+  protected _dynamicHeight: boolean;
 
   /** The index of the active tab. */
   @Input()
@@ -321,39 +319,7 @@ export abstract class _MatTabGroupBase extends _MatTabGroupMixinBase implements 
     return Math.min(this._tabs.length - 1, Math.max(index || 0, 0));
   }
 
-  /** Returns a unique id for each tab label element */
-  _getTabLabelId(i: number): string {
-    return `mat-tab-label-${this._groupId}-${i}`;
-  }
-
-  /** Returns a unique id for each tab content element */
-  _getTabContentId(i: number): string {
-    return `mat-tab-content-${this._groupId}-${i}`;
-  }
-
-  /**
-   * Sets the height of the body wrapper to the height of the activating tab if dynamic
-   * height property is true.
-   */
-  _setTabBodyWrapperHeight(tabHeight: number): void {
-    if (!this._dynamicHeight || !this._tabBodyWrapperHeight) { return; }
-
-    const wrapper: HTMLElement = this._tabBodyWrapper.nativeElement;
-
-    wrapper.style.height = this._tabBodyWrapperHeight + 'px';
-
-    // This conditional forces the browser to paint the height so that
-    // the animation to the new height can have an origin.
-    if (this._tabBodyWrapper.nativeElement.offsetHeight) {
-      wrapper.style.height = tabHeight + 'px';
-    }
-  }
-
-  /** Removes the height of the tab body wrapper. */
-  _removeTabBodyWrapperHeight(): void {
-    const wrapper = this._tabBodyWrapper.nativeElement;
-    this._tabBodyWrapperHeight = wrapper.clientHeight;
-    wrapper.style.height = '';
+  _handleAnimationDone() {
     this.animationDone.emit();
   }
 
@@ -391,8 +357,12 @@ export abstract class _MatTabGroupBase extends _MatTabGroupMixinBase implements 
 })
 export class MatTabGroup extends _MatTabGroupBase {
   @ContentChildren(MatTab, {descendants: true}) _allTabs: QueryList<MatTab>;
-  @ViewChild('tabBodyWrapper') _tabBodyWrapper: ElementRef;
+  @ViewChild('tabBody') _tabBody: MatTabGroupBody;
   @ViewChild('tabList') _tabList: MatTabList;
+
+  get _tabBodyWrapper(): ElementRef {
+    return this._tabBody.tabBodyWrapper;
+  }
 
   constructor(elementRef: ElementRef,
               changeDetectorRef: ChangeDetectorRef,

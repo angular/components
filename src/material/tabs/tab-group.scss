@@ -1,6 +1,4 @@
 @use '../core/style/variables';
-@use '../core/style/layout-common';
-@use '../core/style/private';
 @use './tabs-common';
 
 .mat-tab-group {
@@ -37,36 +35,4 @@
 .mat-tab-group[mat-stretch-tabs] > mat-tab-list > .mat-tab-header .mat-tab-label {
   flex-basis: 0;
   flex-grow: 1;
-}
-
-// The bottom section of the view; contains the tab bodies
-.mat-tab-body-wrapper {
-  @include private.private-animation-noop();
-  position: relative;
-  overflow: hidden;
-  display: flex;
-  transition: height tabs-common.$tab-animation-duration variables.$ease-in-out-curve-function;
-}
-
-// Wraps each tab body
-.mat-tab-body {
-  @include layout-common.fill;
-  display: block;
-  overflow: hidden;
-  outline: 0;
-
-  // Fix for auto content wrapping in IE11
-  flex-basis: 100%;
-
-  &.mat-tab-body-active {
-    position: relative;
-    overflow-x: hidden;
-    overflow-y: auto;
-    z-index: 1;
-    flex-grow: 1;
-  }
-
-  .mat-tab-group.mat-tab-group-dynamic-height &.mat-tab-body-active {
-    overflow-y: hidden;
-  }
 }

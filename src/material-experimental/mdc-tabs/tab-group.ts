@@ -73,6 +73,9 @@ export class MatTabGroup extends _MatTabGroupBase {
   }
   private _fitInkBarToContent = false;
 
+  /** Snapshot of the height of the tab body wrapper before another tab is activated. */
+  private _tabBodyWrapperHeight: number = 0;
+
   constructor(elementRef: ElementRef,
               changeDetectorRef: ChangeDetectorRef,
               @Inject(MAT_TABS_CONFIG) @Optional() defaultConfig?: MatTabsConfig,
@@ -125,6 +128,42 @@ export class MatTabGroup extends _MatTabGroupBase {
     if (focusOrigin && focusOrigin !== 'mouse' && focusOrigin !== 'touch') {
       this._tabHeader.focusIndex = index;
     }
+  }
+
+  /** Returns a unique id for each tab label element */
+  _getTabLabelId(i: number): string {
+    return `mat-tab-label-${this._groupId}-${i}`;
+  }
+
+  /** Returns a unique id for each tab content element */
+  _getTabContentId(i: number): string {
+    return `mat-tab-content-${this._groupId}-${i}`;
+  }
+
+  /**
+   * Sets the height of the body wrapper to the height of the activating tab if dynamic
+   * height property is true.
+   */
+  _setTabBodyWrapperHeight(tabHeight: number): void {
+    if (!this._dynamicHeight || !this._tabBodyWrapperHeight) { return; }
+
+    const wrapper: HTMLElement = this._tabBodyWrapper.nativeElement;
+
+    wrapper.style.height = this._tabBodyWrapperHeight + 'px';
+
+    // This conditional forces the browser to paint the height so that
+    // the animation to the new height can have an origin.
+    if (this._tabBodyWrapper.nativeElement.offsetHeight) {
+      wrapper.style.height = tabHeight + 'px';
+    }
+  }
+
+  /** Removes the height of the tab body wrapper. */
+  _removeTabBodyWrapperHeight(): void {
+    const wrapper = this._tabBodyWrapper.nativeElement;
+    this._tabBodyWrapperHeight = wrapper.clientHeight;
+    wrapper.style.height = '';
+    this.animationDone.emit();
   }
 
   static ngAcceptInputType_fitInkBarToContent: BooleanInput;
