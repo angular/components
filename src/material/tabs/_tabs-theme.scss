@@ -63,7 +63,7 @@
 
         // Override ink bar when background color is the same
         &.mat-background-#{$name} {
-          > .mat-tab-header, > .mat-tab-link-container {
+          > mat-tab-list > .mat-tab-header, > .mat-tab-link-container {
             @include _ink-bar-color($color, default-contrast);
           }
         }
@@ -72,7 +72,8 @@
 
     @each $name, $color in $theme-colors {
       // Set background color of the tabs and override focus color
-      &.mat-background-#{$name} {
+      &.mat-background-#{$name},
+      &.mat-background-#{$name} > mat-tab-list {
         @include _label-focus-color($color);
         @include _tabs-background($color);
       }

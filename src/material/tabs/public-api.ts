@@ -25,3 +25,4 @@ export {MatTabContent} from './tab-content';
 export {ScrollDirection} from './paginated-tab-header';
 export * from './tabs-animations';
 export {MAT_TABS_CONFIG, MatTabsConfig} from './tab-config';
+export {MatTabList, MatTabChangeEvent} from './tab-list';

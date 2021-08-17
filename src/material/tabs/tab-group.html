@@ -1,37 +1,12 @@
-<mat-tab-header #tabHeader
-               [selectedIndex]="selectedIndex || 0"
-               [disableRipple]="disableRipple"
-               [disablePagination]="disablePagination"
-               (indexFocused)="_focusChanged($event)"
-               (selectFocusedIndex)="selectedIndex = $event">
-  <div class="mat-tab-label mat-focus-indicator" role="tab" matTabLabelWrapper mat-ripple cdkMonitorElementFocus
-       *ngFor="let tab of _tabs; let i = index"
-       [id]="_getTabLabelId(i)"
-       [attr.tabIndex]="_getTabIndex(tab, i)"
-       [attr.aria-posinset]="i + 1"
-       [attr.aria-setsize]="_tabs.length"
-       [attr.aria-controls]="_getTabContentId(i)"
-       [attr.aria-selected]="selectedIndex == i"
-       [attr.aria-label]="tab.ariaLabel || null"
-       [attr.aria-labelledby]="(!tab.ariaLabel && tab.ariaLabelledby) ? tab.ariaLabelledby : null"
-       [class.mat-tab-label-active]="selectedIndex == i"
-       [disabled]="tab.disabled"
-       [matRippleDisabled]="tab.disabled || disableRipple"
-       (click)="_handleClick(tab, tabHeader, i)"
-       (cdkFocusChange)="_tabFocusChanged($event, i)">
-
-
-    <div class="mat-tab-label-content">
-      <!-- If there is a label template, use it. -->
-      <ng-template [ngIf]="tab.templateLabel">
-        <ng-template [cdkPortalOutlet]="tab.templateLabel"></ng-template>
-      </ng-template>
-
-      <!-- If there is not a label template, fall back to the text label. -->
-      <ng-template [ngIf]="!tab.templateLabel">{{tab.textLabel}}</ng-template>
-    </div>
-  </div>
-</mat-tab-header>
+<mat-tab-list #tabList
+              [tabs]="_tabs"
+              [groupId]="_groupId"
+              [selectedIndex]="selectedIndex || 0"
+              [disableRipple]="disableRipple"
+              [disablePagination]="disablePagination"
+              (focusChange)="_focusChanged($event)"
+              (selectedIndexChange)="_handleSelectedIndexChange($event)">
+</mat-tab-list>
 
 <div
   class="mat-tab-body-wrapper"

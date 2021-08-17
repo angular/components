@@ -20,6 +20,7 @@ import {MatTabGroup} from './tab-group';
 import {MatTabHeader} from './tab-header';
 import {MatTabLabel} from './tab-label';
 import {MatTabLabelWrapper} from './tab-label-wrapper';
+import {MatTabList} from './tab-list';
 import {MatTabLink, MatTabNav} from './tab-nav-bar/tab-nav-bar';
 
 
@@ -54,6 +55,7 @@ import {MatTabLink, MatTabNav} from './tab-nav-bar/tab-nav-bar';
     MatTabBodyPortal,
     MatTabHeader,
     MatTabContent,
+    MatTabList,
   ],
 })
 export class MatTabsModule {}

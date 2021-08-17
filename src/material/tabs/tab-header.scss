@@ -9,7 +9,9 @@
 }
 
 .mat-tab-labels {
-  @include tabs-common.paginated-tab-header-item-wrapper('.mat-tab-header');
+  @include tabs-common.paginated-tab-header-item-wrapper(
+    'mat-tab-list > .mat-tab-header'
+  );
 }
 
 .mat-tab-label-container {
