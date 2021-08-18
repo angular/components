@@ -72,7 +72,7 @@ export abstract class _MatTabGroupBase extends _MatTabGroupMixinBase implements 
    * inside the current one. We filter out only the tabs that belong to this group in `_tabs`.
    */
   abstract _allTabs: QueryList<MatTab>;
-  abstract _tabBodyWrapper: ElementRef;
+  protected abstract _getTabBodyWrapper(): ElementRef;
 
   /** All of the tabs that belong to the group. */
   readonly _tabs: QueryList<MatTab> = new QueryList<MatTab>();
@@ -209,7 +209,7 @@ export abstract class _MatTabGroupBase extends _MatTabGroupMixinBase implements 
         this.selectedTabChange.emit(this._createChangeEvent(indexToSelect));
         // Preserve the height so page doesn't scroll up during tab change.
         // Fixes https://stackblitz.com/edit/mat-tabs-scroll-page-top-on-tab-change
-        const wrapper = this._tabBodyWrapper.nativeElement;
+        const wrapper = this._getTabBodyWrapper().nativeElement;
         wrapper.style.minHeight = wrapper.clientHeight + 'px';
       }
 
@@ -222,7 +222,7 @@ export abstract class _MatTabGroupBase extends _MatTabGroupMixinBase implements 
           this.selectedIndexChange.emit(indexToSelect);
           // Clear the min-height, this was needed during tab change to avoid
           // unnecessary scrolling.
-          this._tabBodyWrapper.nativeElement.style.minHeight = '';
+          this._getTabBodyWrapper().nativeElement.style.minHeight = '';
         }
       });
     }
@@ -374,7 +374,7 @@ export class MatTabGroup extends _MatTabGroupBase {
   @ViewChild('tabBody') _tabBody: MatTabGroupBody;
   @ViewChild('tabList') _tabList: MatTabList;
 
-  get _tabBodyWrapper(): ElementRef {
+  protected _getTabBodyWrapper(): ElementRef {
     return this._tabBody.tabBodyWrapper;
   }
 

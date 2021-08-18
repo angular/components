@@ -43,7 +43,7 @@ export class MatTabGroupList extends _MatTabGroupBase implements OnInit, OnDestr
   @Input('tabBody') _tabBody: MatTabGroupBody;
   @ViewChild('tabList') _tabList: MatTabList;
 
-  get _tabBodyWrapper(): ElementRef {
+  protected _getTabBodyWrapper(): ElementRef {
     return this._tabBody.tabBodyWrapper;
   }
 

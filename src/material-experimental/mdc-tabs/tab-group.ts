@@ -64,6 +64,10 @@ export class MatTabGroup extends _MatTabGroupBase {
   @ViewChild('tabBodyWrapper') _tabBodyWrapper: ElementRef;
   @ViewChild('tabHeader') _tabHeader: MatTabHeader;
 
+  protected _getTabBodyWrapper() {
+    return this._tabBodyWrapper;
+  }
+
   /** Whether the ink bar should fit its width to the size of the tab label content. */
   @Input()
   get fitInkBarToContent(): boolean { return this._fitInkBarToContent; }
