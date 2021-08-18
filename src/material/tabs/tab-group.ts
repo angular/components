@@ -39,7 +39,7 @@ import {
   ThemePalette,
 } from '@angular/material/core';
 import {ANIMATION_MODULE_TYPE} from '@angular/platform-browser/animations';
-import {merge, Subscription} from 'rxjs';
+import {BehaviorSubject, merge, Observable, Subscription} from 'rxjs';
 import {startWith} from 'rxjs/operators';
 import {MAT_TAB_GROUP, MatTab} from './tab';
 import {MatTabGroupBody} from './tab-group-body';
@@ -75,7 +75,7 @@ export abstract class _MatTabGroupBase extends _MatTabGroupMixinBase implements 
   abstract _tabBodyWrapper: ElementRef;
 
   /** All of the tabs that belong to the group. */
-  _tabs: QueryList<MatTab> = new QueryList<MatTab>();
+  readonly _tabs: QueryList<MatTab> = new QueryList<MatTab>();
 
   /** The tab index that should be selected after the content has been checked. */
   private _indexToSelect: number | null = 0;
@@ -94,11 +94,21 @@ export abstract class _MatTabGroupBase extends _MatTabGroupMixinBase implements 
 
   /** The index of the active tab. */
   @Input()
-  get selectedIndex(): number | null { return this._selectedIndex; }
+  get selectedIndex(): number | null { return this._selectedIndex.value; }
   set selectedIndex(value: number | null) {
     this._indexToSelect = coerceNumberProperty(value, null);
   }
-  private _selectedIndex: number | null = null;
+  private readonly _selectedIndex = new BehaviorSubject<number | null>(null);
+  protected readonly _selectedIndexObs: Observable<number|null> = this._selectedIndex;
+
+  get _animationMode(): string|null|undefined {
+    return this._animationModeSub.value;
+  }
+  set _animationMode(animationMode: string|null|undefined) {
+    this._animationModeSub.next(animationMode);
+  }
+  private readonly _animationModeSub = new BehaviorSubject<string | undefined | null>(null);
+  readonly _animationModeObs: Observable<string|undefined|null> = this._animationModeSub;
 
   /** Position of the tab header. */
   @Input() headerPosition: MatTabHeaderPosition = 'above';
@@ -166,7 +176,7 @@ export abstract class _MatTabGroupBase extends _MatTabGroupMixinBase implements 
   constructor(elementRef: ElementRef,
               protected _changeDetectorRef: ChangeDetectorRef,
               @Inject(MAT_TABS_CONFIG) @Optional() defaultConfig?: MatTabsConfig,
-              @Optional() @Inject(ANIMATION_MODULE_TYPE) public _animationMode?: string) {
+              @Optional() @Inject(ANIMATION_MODULE_TYPE) animationMode?: string) {
     super(elementRef);
     this._groupId = nextId++;
     this.animationDuration = defaultConfig && defaultConfig.animationDuration ?
@@ -176,6 +186,7 @@ export abstract class _MatTabGroupBase extends _MatTabGroupMixinBase implements 
     this.dynamicHeight = defaultConfig && defaultConfig.dynamicHeight != null ?
         defaultConfig.dynamicHeight : false;
     this.contentTabIndex = defaultConfig?.contentTabIndex ?? null;
+    this._animationModeSub.next(animationMode);
   }
 
   /**
@@ -191,8 +202,8 @@ export abstract class _MatTabGroupBase extends _MatTabGroupMixinBase implements 
 
     // If there is a change in selected index, emit a change event. Should not trigger if
     // the selected index has not yet been initialized.
-    if (this._selectedIndex != indexToSelect) {
-      const isFirstRun = this._selectedIndex == null;
+    if (this._selectedIndex.value != indexToSelect) {
+      const isFirstRun = this._selectedIndex.value == null;
 
       if (!isFirstRun) {
         this.selectedTabChange.emit(this._createChangeEvent(indexToSelect));
@@ -222,13 +233,13 @@ export abstract class _MatTabGroupBase extends _MatTabGroupMixinBase implements 
 
       // If there is already a selected tab, then set up an origin for the next selected tab
       // if it doesn't have one already.
-      if (this._selectedIndex != null && tab.position == 0 && !tab.origin) {
-        tab.origin = indexToSelect - this._selectedIndex;
+      if (this._selectedIndex.value != null && tab.position == 0 && !tab.origin) {
+        tab.origin = indexToSelect - this._selectedIndex.value;
       }
     });
 
-    if (this._selectedIndex !== indexToSelect) {
-      this._selectedIndex = indexToSelect;
+    if (this._selectedIndex.value !== indexToSelect) {
+      this._selectedIndex.next(indexToSelect);
       this._changeDetectorRef.markForCheck();
     }
   }
@@ -244,7 +255,7 @@ export abstract class _MatTabGroupBase extends _MatTabGroupMixinBase implements 
 
       // Maintain the previously-selected tab if a new tab is added or removed and there is no
       // explicit change that selects a different tab.
-      if (indexToSelect === this._selectedIndex) {
+      if (indexToSelect === this._selectedIndex.value) {
         const tabs = this._tabs.toArray();
 
         for (let i = 0; i < tabs.length; i++) {
@@ -252,7 +263,8 @@ export abstract class _MatTabGroupBase extends _MatTabGroupMixinBase implements 
             // Assign both to the `_indexToSelect` and `_selectedIndex` so we don't fire a changed
             // event, otherwise the consumer may end up in an infinite loop in some edge cases like
             // adding a tab within the `selectedIndexChange` event.
-            this._indexToSelect = this._selectedIndex = i;
+            this._selectedIndex.next(i);
+            this._indexToSelect = i;
             break;
           }
         }
@@ -281,6 +293,8 @@ export abstract class _MatTabGroupBase extends _MatTabGroupMixinBase implements 
     this._tabs.destroy();
     this._tabsSubscription.unsubscribe();
     this._tabLabelSubscription.unsubscribe();
+    this._selectedIndex.complete();
+    this._animationModeSub.complete();
   }
 
   _focusChanged(index: number) {

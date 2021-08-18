@@ -1,0 +1,9 @@
+<mat-tab-list #tabList
+              [tabs]="_tabs"
+              [groupId]="_groupId"
+              [selectedIndex]="selectedIndex || 0"
+              [disableRipple]="disableRipple"
+              [disablePagination]="disablePagination"
+              (focusChange)="_focusChanged($event)"
+              (selectedIndexChange)="_handleSelectedIndexChange($event)">
+</mat-tab-list>
