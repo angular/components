@@ -1,9 +1,18 @@
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+
 import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
   EventEmitter,
   Input,
+  OnDestroy,
   Output,
   QueryList,
   ViewChild,
@@ -16,18 +25,18 @@ import {MatTab} from './tab';
   selector: 'mat-tab-group-body',
   templateUrl: 'tab-group-body.html',
   styleUrls: ['tab-group-body.css'],
+  // tslint:disable-next-line:validate-decorators
   changeDetection: ChangeDetectionStrategy.Default,
   encapsulation: ViewEncapsulation.None,
   exportAs: 'matTabGroupBody',
 })
-export class MatTabGroupBody {
+export class MatTabGroupBody implements OnDestroy {
   /** Snapshot of the height of the tab body wrapper before another tab is activated. */
   private _tabBodyWrapperHeight: number = 0;
 
   @ViewChild('tabBodyWrapper') _tabBodyWrapper: ElementRef;
-  get tabBodyWrapper():ElementRef {
-    return this._tabBodyWrapper;
-  }
+
+  get tabBodyWrapper(): ElementRef { return this._tabBodyWrapper; }
 
   /** All of the tabs that belong to the group. */
   @Input('tabs') _tabs: QueryList<MatTab>;

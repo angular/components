@@ -22,7 +22,7 @@ import {
   ViewEncapsulation
 } from '@angular/core';
 
-import {CanColor, CanDisableRipple, mixinColor, mixinDisableRipple, ThemePalette} from '../core';
+import {CanColor, CanDisableRipple, mixinColor, mixinDisableRipple} from '@angular/material/core';
 
 import {MAT_TABS_CONFIG, MatTab, MatTabsConfig} from '.';
 
@@ -98,7 +98,7 @@ export class MatTabList extends _MatTabListMixinBase implements CanDisableRipple
     super(elementRef);
     this.disablePagination = defaultConfig && defaultConfig.disablePagination != null ?
         defaultConfig.disablePagination :
-        false
+        false;
   }
 
   /** Re-aligns the ink bar to the selected tab element. */
@@ -175,5 +175,5 @@ export class MatTabList extends _MatTabListMixinBase implements CanDisableRipple
 
   static ngAcceptInputType_selectedIndex: NumberInput;
   static ngAcceptInputType_disableRipple: BooleanInput;
-  static ngAcceptInputType_contentTabIndex: BooleanInput
+  static ngAcceptInputType_contentTabIndex: BooleanInput;
 }

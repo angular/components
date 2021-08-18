@@ -84,7 +84,7 @@ export class MatTabGroupList extends _MatTabGroupBase implements OnInit, OnDestr
 
   private _connectTabBody(): void {
     this._tabBody.tabs = this._tabs;
-    this._tabBody.groupId= this._groupId;
+    this._tabBody.groupId = this._groupId;
     this._tabBody.selectedIndexObs = this._selectedIndexObs;
     this._tabBody.animationModeObs = this._animationModeObs;
     this._tabBody.contentTabIndex = this.contentTabIndex;
