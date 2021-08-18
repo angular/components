@@ -17,6 +17,7 @@ export const enum MatDialogSection {
   ACTIONS = '.mat-dialog-actions'
 }
 
+// @breaking-change 14.0.0 change generic type to MatDialogSection.
 /** Harness for interacting with a standard `MatDialog` in tests. */
 export class MatDialogHarness extends ContentContainerComponentHarness<MatDialogSection | string> {
   // Developers can provide a custom component or template for the
@@ -81,17 +82,17 @@ export class MatDialogHarness extends ContentContainerComponentHarness<MatDialog
     return (await this.host()).text();
   }
 
-  /** Gets the dialog's title text. */
+  /** Gets the dialog's title text. This only works if the dialog is using mat-dialog-title. */
   async getTitleText() {
     return (await this._title())?.text() ?? '';
   }
 
-  /** Gets the dialog's content text. */
+  /** Gets the dialog's content text. This only works if the dialog is using mat-dialog-content. */
   async getContentText() {
     return (await this._content())?.text() ?? '';
   }
 
-  /** Gets the dialog's actions text. */
+  /** Gets the dialog's actions text. This only works if the dialog is using mat-dialog-actions. */
   async getActionsText() {
     return (await this._actions())?.text() ?? '';
   }
