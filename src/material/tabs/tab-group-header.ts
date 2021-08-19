@@ -23,6 +23,10 @@ import {_MatTabGroupBase} from './tab-group';
 import {MatTabGroupBody} from './tab-group-body';
 import {MatTabList} from './tab-list';
 
+/**
+ * Tab-header subcomponent of the Material design tab-roup component.
+ * See: https://material.io/design/components/tabs.html
+ */
 @Component({
   selector: 'mat-tab-group-header',
   exportAs: 'matTabGroupHeader',

@@ -22,6 +22,10 @@ import {Observable, Subscription} from 'rxjs';
 import {MatTab} from './tab';
 import {MatTabList} from './tab-list';
 
+/**
+ * Tab-body subcomponent of the Material design tab-roup component.
+ * See: https://material.io/design/components/tabs.html
+ */
 @Component({
   selector: 'mat-tab-group-body',
   templateUrl: 'tab-group-body.html',

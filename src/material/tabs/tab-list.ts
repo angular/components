@@ -49,8 +49,8 @@ export interface MatTabListBaseHeader {
 }
 
 /**
- * Tab-list subcomponent of the Material design tab-group component.
- * See: https://material.io/design/components/tabs.html
+ * Wrapper for the tab header.
+ * @docs-private
  */
 @Component({
   selector: 'mat-tab-list',
