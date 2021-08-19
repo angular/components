@@ -24,21 +24,21 @@ import {MatTabGroupBody} from './tab-group-body';
 import {MatTabList} from './tab-list';
 
 @Component({
-  selector: 'mat-tab-group-list',
-  exportAs: 'matTabGroupList',
-  templateUrl: 'tab-group-list.html',
+  selector: 'mat-tab-group-header',
+  exportAs: 'matTabGroupHeader',
+  templateUrl: 'tab-group-header.html',
   styleUrls: ['tab-group.css'],
   encapsulation: ViewEncapsulation.None,
   // tslint:disable-next-line:validate-decorators
   changeDetection: ChangeDetectionStrategy.Default,
   inputs: ['color', 'disableRippel'],
-  providers: [{provide: MAT_TAB_GROUP, useExisting: MatTabGroupList}],
+  providers: [{provide: MAT_TAB_GROUP, useExisting: MatTabGroupHeader}],
   host: {
     'class': 'mat-tab-group',
     '[class.mat-tab-group-dynamic-height]': 'dynamicHeight',
   },
 })
-export class MatTabGroupList extends _MatTabGroupBase implements OnInit, OnDestroy {
+export class MatTabGroupHeader extends _MatTabGroupBase implements OnInit, OnDestroy {
   @ContentChildren(MatTab, {descendants: true}) _allTabs: QueryList<MatTab>;
   @Input('tabBody') _tabBody: MatTabGroupBody;
   @ViewChild('tabList') _tabList: MatTabList;

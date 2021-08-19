@@ -22,7 +22,7 @@ import {MatTabHeader} from './tab-header';
 import {MatTabLabel} from './tab-label';
 import {MatTabLabelWrapper} from './tab-label-wrapper';
 import {MatTabList} from './tab-list';
-import {MatTabGroupList} from './tab-group-list';
+import {MatTabGroupHeader} from './tab-group-header';
 import {MatTabLink, MatTabNav} from './tab-nav-bar/tab-nav-bar';
 
 
@@ -44,7 +44,7 @@ import {MatTabLink, MatTabNav} from './tab-nav-bar/tab-nav-bar';
     MatTabNav,
     MatTabLink,
     MatTabContent,
-    MatTabGroupList,
+    MatTabGroupHeader,
     MatTabGroupBody,
   ],
   declarations: [
@@ -60,7 +60,7 @@ import {MatTabLink, MatTabNav} from './tab-nav-bar/tab-nav-bar';
     MatTabHeader,
     MatTabContent,
     MatTabList,
-    MatTabGroupList,
+    MatTabGroupHeader,
     MatTabGroupBody,
   ],
 })

@@ -372,7 +372,7 @@ export abstract class _MatTabGroupBase extends _MatTabGroupMixinBase implements 
 export class MatTabGroup extends _MatTabGroupBase {
   @ContentChildren(MatTab, {descendants: true}) _allTabs: QueryList<MatTab>;
   @ViewChild('tabBody') _tabBody: MatTabGroupBody;
-  @ViewChild('tabList') _tabList: MatTabList;
+  @ViewChild('tabHeader') _tabHeader: MatTabList;
 
   protected _getTabBodyWrapper(): ElementRef {
     return this._tabBody.tabBodyWrapper;
@@ -390,12 +390,12 @@ export class MatTabGroup extends _MatTabGroupBase {
    * @param index Index of the tab to be focused.
    */
   focusTab(index: number) {
-    this._tabList.focusTab(index);
+    this._tabHeader.focusTab(index);
   }
 
   /** Re-aligns the ink bar to the selected tab element. */
   realignInkBar() {
-    this._tabList.realignInkBar();
+    this._tabHeader.realignInkBar();
   }
 
   /** Handle click events, setting new selected index if appropriate. */
