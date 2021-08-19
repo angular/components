@@ -25,6 +25,7 @@ import {
 import {CanColor, CanDisableRipple, mixinColor, mixinDisableRipple} from '@angular/material/core';
 
 import {MAT_TABS_CONFIG, MatTab, MatTabsConfig} from '.';
+import {MatTabGroupBody} from './tab-group-body';
 
 /** A simple change event emitted on focus or selection changes. */
 export class MatTabChangeEvent {
@@ -124,22 +125,14 @@ export class MatTabList extends _MatTabListMixinBase implements CanDisableRipple
     this.focusChange.emit(index);
   }
 
-  // TODO: extract to common helper
   /** Returns a unique id for each tab label element */
   _getTabLabelId(i: number): string|null {
-    if (this.groupId == null) {
-      return null;
-    }
-    return `mat-tab-label-${this.groupId}-${i}`;
+    return MatTabList.getTabLabelId(i, this.groupId);
   }
 
-  // TODO: extract to common helper
   /** Returns a unique id for each tab content element */
   _getTabContentId(i: number): string|null {
-    if (this.groupId == null) {
-      return null;
-    }
-    return `mat-tab-content-${this.groupId}-${i}`;
+    return MatTabGroupBody.getTabContentId(i, this.groupId);
   }
 
   /** Handle click events, setting new selected index if appropriate. */
@@ -171,6 +164,14 @@ export class MatTabList extends _MatTabListMixinBase implements CanDisableRipple
     if (focusOrigin && focusOrigin !== 'mouse' && focusOrigin !== 'touch') {
       this._tabHeader.focusIndex = index;
     }
+  }
+
+  /** Returns a unique id for each tab label element */
+  static getTabLabelId(i: number, groupId: number|null): string|null {
+    if (groupId == null) {
+      return null;
+    }
+    return `mat-tab-label-${groupId}-${i}`;
   }
 
   static ngAcceptInputType_selectedIndex: NumberInput;

@@ -20,6 +20,7 @@ import {
 } from '@angular/core';
 import {Observable, Subscription} from 'rxjs';
 import {MatTab} from './tab';
+import {MatTabList} from './tab-list';
 
 @Component({
   selector: 'mat-tab-group-body',
@@ -103,16 +104,14 @@ export class MatTabGroupBody implements OnDestroy {
     return this._tabBodyWrapper;
   }
 
-  // TODO: Extract to common helper
   /** Returns a unique id for each tab content element */
-  _getTabContentId(i: number): string {
-    return `mat-tab-content-${this.groupId}-${i}`;
+  _getTabContentId(i: number): string|null {
+    return MatTabGroupBody.getTabContentId(i, this.groupId);
   }
 
-  // TODO: Extract to common helper
   /** Returns a unique id for each tab label element */
-  _getTabLabelId(i: number): string {
-    return `mat-tab-label-${this.groupId}-${i}`;
+  _getTabLabelId(i: number): string|null {
+    return MatTabList.getTabLabelId(i, this.groupId);
   }
 
   /**
@@ -139,5 +138,13 @@ export class MatTabGroupBody implements OnDestroy {
     this._tabBodyWrapperHeight = wrapper.clientHeight;
     wrapper.style.height = '';
     this.animationDone.emit();
+  }
+
+  /** Returns a unique id for each tab content element */
+  static getTabContentId(i: number, groupId: number|null): string|null {
+    if (groupId == null) {
+      return null;
+    }
+    return `mat-tab-content-${groupId}-${i}`;
   }
 }
