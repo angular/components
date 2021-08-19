@@ -81,8 +81,8 @@ export class MatTabGroupBody implements OnDestroy {
   /** Event emitted when the tab completes its animation towards the center. */
   @Output() readonly _onCentered: EventEmitter<void> = new EventEmitter<void>(true);
 
-  // TODO: Add JSDoc
-  set selectedIndexObs(obs: Observable<number|null>) {
+  /** Set and subscribe to observable for changes in selected index. */
+  setSelectedIndexObs(obs: Observable<number|null>) {
     this._selectedIndexSubscription.unsubscribe();
     this._selectedIndexSubscription = obs.subscribe(selectedIndex => {
       this._selectedIndex = selectedIndex;
@@ -90,8 +90,8 @@ export class MatTabGroupBody implements OnDestroy {
   }
   private _selectedIndexSubscription = Subscription.EMPTY;
 
-  // TODO: Add JSDoc
-  set animationModeObs(obs: Observable<string|undefined|null>) {
+  /** Set and subscribe to observable for changes in animation mode. */
+  setAnimationModeObs(obs: Observable<string|undefined|null>) {
     this._animationModeSubscription.unsubscribe();
     this._animationModeSubscription = obs.subscribe(animationMode => {
       this._animationMode = animationMode;

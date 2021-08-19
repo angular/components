@@ -89,8 +89,8 @@ export class MatTabGroupHeader extends _MatTabGroupBase implements OnInit, OnDes
   private _connectTabBody(): void {
     this._tabBody.tabs = this._tabs;
     this._tabBody.groupId = this._groupId;
-    this._tabBody.selectedIndexObs = this._selectedIndexObs;
-    this._tabBody.animationModeObs = this._animationModeObs;
+    this._tabBody.setSelectedIndexObs(this._selectedIndexObs);
+    this._tabBody.setAnimationModeObs(this._animationModeObs);
     this._tabBody.contentTabIndex = this.contentTabIndex;
     this._animationDoneSubscription.unsubscribe();
     this._animationDoneSubscription = this._tabBody.animationDone.subscribe(() => {
