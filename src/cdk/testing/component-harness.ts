@@ -563,13 +563,38 @@ function _valueAsString(value: unknown) {
   }
   // `JSON.stringify` doesn't handle RegExp properly, so we need a custom replacer.
   try {
-    return JSON.stringify(value, (_, v) => {
+    const stringifiedValue = JSON.stringify(value, (_, v) => {
+      // JSON.stringify automatically wraps string values in `"` characters, so if we just return
+      // `v.toString()` for a regex it will wind up with extra quotes around it.
+      // e.g. `"/stuff/i"` instead of `/stuff/i`. Therefore to distinguish between regexes which
+      // don't need the quotes and strings that do, we use some custom escaping.
+      //
+      // The escaping rules are:
+      // 1. Any `#` within a regex or string becomes `@#@`.
+      // 2. Any regex is wrapped with `##`.
+      // 3. Any `"` in a regex becomes `##`.
+      //
+      // This guarantees that if we see `##`, we know it's part of a regex.
+      // e.g. the regex /stuff/i would become `"##/stuff/i##"`, while the string `##stuff##`
+      // would become `"@#@@#@stuff@#@@#@"` in the final stringified output.
+      //
+      // Knowing this, we can delete instances of `"##` and `##"` in the final output and then
+      // transform `@#@` back to `#`, giving us the string representation we want.
       if (v instanceof RegExp) {
-        return `/${v.toString()}/`;
+        // Replace all `#` in the regex with an escaped `@#@` and wrap it in extra `##`s.
+        return `##${v.toString().replace(/#/g, '@#@').replace(/"/g, '##')}##`;
       }
 
-      return typeof v === 'string' ? v.replace('/\//g', '\\/') : v;
-    }).replace(/"\/\//g, '\\/').replace(/\/\/"/g, '\\/').replace(/\\\//g, '/');
+      // Replace all `#` in the string with an escaped `@#@`.
+      return typeof v === 'string' ? v.replace(/#/g, '@#@') : v;
+    });
+    return stringifiedValue
+        // Delete all `"##` and `##"` to unquote regexes.
+        .replace(/"##/g, '').replace(/##"/g, '')
+        // Transform remaining `##` back to `"`.
+        .replace(/##/g, '"')
+        // Unescape the strings by changing `@#@` back to `#`.
+        .replace(/@#@/g, '#');
   } catch {
     // `JSON.stringify` will throw if the object is cyclical,
     // in this case the best we can do is report the value as `{...}`.
