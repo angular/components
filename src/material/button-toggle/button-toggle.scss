@@ -35,6 +35,10 @@ $legacy-border-radius: 2px !default;
 
 .mat-button-toggle-vertical {
   flex-direction: column;
+  
+  .mat-button-toggle {
+    margin-left: 0px !important;
+  }
 
   .mat-button-toggle-label-content {
     // Vertical button toggles shouldn't be an inline-block, because the toggles should
