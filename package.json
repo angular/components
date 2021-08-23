@@ -77,7 +77,7 @@
     "@angular-devkit/schematics": "12.1.2",
     "@angular/bazel": "https://github.com/angular/bazel-builds.git#2566cc859235399edc72749a957f1cdcba2dc121",
     "@angular/compiler-cli": "12.1.2",
-    "@angular/dev-infra-private": "https://github.com/angular/dev-infra-private-builds.git#6254699cc7ccff62be948dc5edcdea87a936ff24",
+    "@angular/dev-infra-private": "https://github.com/angular/dev-infra-private-builds.git#56655ed6ccf24b7f3ad6b9ccdd1ef2896c7fa9f4",
     "@angular/localize": "12.1.2",
     "@angular/platform-browser-dynamic": "12.1.2",
     "@angular/platform-server": "12.1.2",
