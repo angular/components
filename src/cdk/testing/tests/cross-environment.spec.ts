@@ -315,13 +315,13 @@ export function crossEnvironmentSpecs(
     it('should have correct description for debugging', () => {
       const predicate = new HarnessPredicate(MainComponentHarness, {})
           .addOption('test', {
-            regexes: [/test/gim, /#test#/, /"##@@##"/],
-            strings: [`test`, `#test#`, `"##@@##"`],
+            regexes: [/test/gim, /"test"/],
+            strings: [`test`, `"test"`],
             numbers: [10]
           }, async () => true);
       expect(predicate.getDescription()).toBe(`test = {` +
-          `"regexes":[/test/gim,/#test#/,/"##@@##"/],` +
-          `"strings":["test","#test#","\\"##@@##\\""],` +
+          `"regexes":[/test/gim,/"test"/],` +
+          `"strings":["test","\\"test\\""],` +
           `"numbers":[10]}`);
     });
   });
