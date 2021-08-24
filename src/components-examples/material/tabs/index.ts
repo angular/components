@@ -22,6 +22,7 @@ import {TabGroupLazyLoadedExample} from './tab-group-lazy-loaded/tab-group-lazy-
 import {TabGroupStretchedExample} from './tab-group-stretched/tab-group-stretched-example';
 import {TabGroupThemeExample} from './tab-group-theme/tab-group-theme-example';
 import {TabNavBarBasicExample} from './tab-nav-bar-basic/tab-nav-bar-basic-example';
+import {TabGroupHeaderExample} from './tab-group-header/tab-group-header-example';
 
 export {
   TabGroupAlignExample,
@@ -37,6 +38,7 @@ export {
   TabGroupStretchedExample,
   TabGroupThemeExample,
   TabNavBarBasicExample,
+  TabGroupHeaderExample,
 };
 
 const EXAMPLES = [
@@ -53,6 +55,7 @@ const EXAMPLES = [
   TabGroupStretchedExample,
   TabGroupThemeExample,
   TabNavBarBasicExample,
+  TabGroupHeaderExample,
 ];
 
 @NgModule({
